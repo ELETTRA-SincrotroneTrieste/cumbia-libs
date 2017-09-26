@@ -127,10 +127,61 @@ and then proceed the same way to build the library and install the documentation
 If you rely on the Epics control system, please install this module as follows:
 
 > cd ../cumbia-epics
-> ./configure --prefix=/usr --includedir=/usr/local/include/cumbia-epics
+> ./configure --prefix=/usr/local --includedir=/usr/local/include/cumbia-epics
+> make && make install
+
+> make doc && make install-html
 
 ##### Note
 Check that the PKG_CONFIG_PATH contains the epics-base lib/pkgconfig directory.
+
+
+### 6. qumbia-epics-controls
+
+The *qumbia-epics-controls* module integrates *cumbia-epics* with *cumbia-qtcontrols*.
+
+#### Installation
+
+
+
+> cd ../qumbia-epics-controls
+
+The same care needed for the *cumbia-qtcontrols* Qwt and cumbia-qtcontrols.pri configuration must be taken.
+Then build the library and install the documentation:
+
+> qmake
+> make && make install
+
+### 7. Build some basic applications
+
+> cd ../qumbia-apps
+
+Some base tools are provided to test the cumbia-libs and perform some basic operations on the
+underlying control system (reading or writing quantities).
+
+> cd generic_client
+
+Check generic_client.pro and adjust the include directives if needed.
+Beware that the lines
+
+> CONFIG+=link_pkgconfig  and PKGCONFIG +=
+
+tell Qt to rely on pkgconfig for dependency resolution. See the comments on the *cumbia-qtcontrols* section above.
+
+To build generic_client type
+
+> qmake
+> make
+
+Read the README.txt for details
+
+> ./generic_client test/device/1/double_scalar,giacomo:ai1,test/device/1/double_spectrum_ro
+
+starts the generic_client and performs readings on the two Tango attributes specified and the Epics PV giacomo:ai1
+
+# Contacts
+
+[Giacomo Strangolino] (mailto:giacomo.strangolino@elettra.eu)
 
 
 
