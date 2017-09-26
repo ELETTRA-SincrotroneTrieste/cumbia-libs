@@ -1,0 +1,6 @@
+Cumbia over tango 
+
+set the PKG_CONFIG_PATH according to the tango, omniorb and zeromq installation path
+
+export PKG_CONFIG_PATH=/usr/local/tango-9.2.5a/lib/pkgconfig:/usr/local/omniorb-4.2.1/lib/pkgconfig:/usr/local/zeromq-4.0.7/lib/pkgconfig:/runtime/lib/pkgconfig
+

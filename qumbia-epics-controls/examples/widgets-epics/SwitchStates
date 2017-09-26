@@ -1,0 +1,108 @@
+See ifArgument ./widgets matches regexp
+See ifArgument test/device/1/double_scalar matches regexp
+See ifArgument test/device/1- matches regexp
+CuTControlsUtils::replaceWildcards: test/device/1/double_scalar --> test/device/1/double_scalar
+CuTControlsReader::setSource: source is: test/device/1/double_scalar
+[0;35;4mCuActivityManager::addConnection: adding  tern 0x75ac40 0x784060 0x7260e0  token [1;36mCuData { ["activity" -> attconfig], ["device" -> test/device/1], ["point" -> double_scalar], ["src" -> test/device/1/double_scalar] } (size: 4 isEmpty: 0)[0m[0m
+Cumbia::registerActivity: [1;32mgot thread "0x7fd7c042f840", is running? [0][0m...
+> CuTWriter.start writer 0x7260e0 thread 0x7fd7c042f840 ACTIVITY 0x784060
+[1;32;4mCuThread.run 0x7fd7a5004700[0m
+[1;33mCuThread.run: EVENT QUEUE SIZE 1 this thread  0x7fd7a5004700 this 0x75ac40[0m
+1 - 0 activity
+[1;32;4mCuThread.run pthread 0x7fd7a5004700: registerActivity event[0m
+>>> CuVariant::operator ==[1;33mWARNING WARNING WARNING --- CHECK ME --- [0m
+[0;35;4mCuActivityManager::addConnection: adding  tern 0x75ac40 0x73b290 0x723230  token [1;36mCuData { ["activity" -> event], ["device" -> test/device/1], ["point" -> double_scalar], ["src" -> test/device/1/double_scalar] } (size: 4 isEmpty: 0)[0m[0m
+Cumbia::registerActivity: [1;32mgot thread "0x7fd7c042f840", is running? [1][0m...
+> CuTReader.m_startEventActivity reader 0x723230 thread 0x7fd7c042f840 ACTIVITY 0x73b290
+See ifArgument ./widgets matches regexp
+See ifArgument test/device/1/double_scalar matches regexp
+See ifArgument test/device/1- matches regexp
+CuTControlsUtils::replaceWildcards: test/device/1- --> test/device/1-
+CuTControlsWriter::setTargets: targets is: test/device/1-
+CumbiaTango.addAction: source "test/device/1-" is not valid, ignoring
+CuTangoUtils.extractData format is 0 type 5
+[1;21mprops size 0[0m
+[1;33mcalling publishResult on thread from activity 0x784060 from this thread 0x7fd7a5004700 data CuData { ["abs_change" -> 0.01], ["activity" -> attconfig], ["archive_abs_change" -> 0.1], ["archive_period" -> 1000], ["archive_rel_change" -> 0.1], ["data" -> true], ["data_format" -> 0], ["data_type" -> 5], ["delta_t" -> Not specified], ["delta_val" -> Not specified], ["description" -> Un doppio scalare del device primo], ["device" -> test/device/1], ["disp_level" -> 0], ["display_unit" -> Pluteross], ["err" -> false], ["format" -> %7.0f], ["label" -> Doppio Scalare], ["max_alarm" -> 200], ["max_dim_x" -> 1], ["max_dim_y" -> 0], ["max_value" -> 255], ["max_warning" -> 100], ["min_alarm" -> -200], ["min_value" -> -255], ["min_warning" -> -100], ["mode" -> ATTCONF], ["msg" -> successfully got configuration for test/device/1/double_scalar], ["name" -> double_scalar], ["periodic_period" -> 1000], ["point" -> double_scalar], ["properties" -> ], ["quality" -> 0], ["quality_color" -> white], ["rel_change" -> Not specified], ["root_attr_name" -> ], ["src" -> test/device/1/double_scalar], ["standard_unit" -> Pipperos], ["success_color" -> dark_green], ["unit" -> Pippeross], ["value" -> -26.760615], ["worker_activity" -> 0x784060], ["worker_thread" -> 0x7fd7a5004700], ["writable" -> 3], ["writable_attr_name" -> double_scalar] } (size: 44 isEmpty: 0)[0m
+CuActivityManager.getThread: activity: 0x784060 this thread 0x7fd7a5004700
+[1;34;4mCuThread.publishResult: thread (should be CuThread's!) 0x7fd7a5004700 data [0mCuData { ["abs_change" -> 0.01], ["activity" -> attconfig], ["archive_abs_change" -> 0.1], ["archive_period" -> 1000], ["archive_rel_change" -> 0.1], ["data" -> true], ["data_format" -> 0], ["data_type" -> 5], ["delta_t" -> Not specified], ["delta_val" -> Not specified], ["description" -> Un doppio scalare del device primo], ["device" -> test/device/1], ["disp_level" -> 0], ["display_unit" -> Pluteross], ["err" -> false], ["format" -> %7.0f], ["label" -> Doppio Scalare], ["max_alarm" -> 200], ["max_dim_x" -> 1], ["max_dim_y" -> 0], ["max_value" -> 255], ["max_warning" -> 100], ["min_alarm" -> -200], ["min_value" -> -255], ["min_warning" -> -100], ["mode" -> ATTCONF], ["msg" -> successfully got configuration for test/device/1/double_scalar], ["name" -> double_scalar], ["periodic_period" -> 1000], ["point" -> double_scalar], ["properties" -> ], ["quality" -> 0], ["quality_color" -> white], ["rel_change" -> Not specified], ["root_attr_name" -> ], ["src" -> test/device/1/double_scalar], ["standard_unit" -> Pipperos], ["success_color" -> dark_green], ["unit" -> Pippeross], ["value" -> -26.760615], ["worker_activity" -> 0x784060], ["worker_thread" -> 0x7fd7a5004700], ["writable" -> 3], ["writable_attr_name" -> double_scalar] } (size: 44 isEmpty: 0)[0m
+[1;34;4mCuThread.unregisterActivity: [1;31mUNREGISTER ACTIVITY 0x784060[0m (should be Main's!) 0x7fd7a5004700[0m
+[1;33mCuThread.run: EVENT QUEUE SIZE 2 this thread  0x7fd7a5004700 this 0x75ac40[0m
+1 - 0 activity
+2 - 1 activity
+[1;32;4mCuThread.run pthread 0x7fd7a5004700: registerActivity event[0m
+[1;32;4mCuEventActivity.init: got TDevice 0x7fd79c000c90 DeviceProxy 0x7fd79c000d10 name test/device/1 from THIS THREAD 0x7fd7a5004700 is valid: 1[0m
+[1;33mcalling publishResult on thread from activity 0x73b290 from this thread 0x7fd7a5004700 data CuData { ["activity" -> event], ["conn" -> true], ["device" -> test/device/1], ["msg" -> connect: Fri Apr 21 15:07:40 2017
+], ["point" -> double_scalar], ["src" -> test/device/1/double_scalar], ["worker_activity" -> 0x73b290], ["worker_thread" -> 0x7fd7a5004700] } (size: 8 isEmpty: 0)[0m
+CuActivityManager.getThread: activity: 0x73b290 this thread 0x7fd7a5004700
+[1;34;4mCuThread.publishResult: thread (should be CuThread's!) 0x7fd7a5004700 data [0mCuData { ["activity" -> event], ["conn" -> true], ["device" -> test/device/1], ["msg" -> connect: Fri Apr 21 15:07:40 2017
+], ["point" -> double_scalar], ["src" -> test/device/1/double_scalar], ["worker_activity" -> 0x73b290], ["worker_thread" -> 0x7fd7a5004700] } (size: 8 isEmpty: 0)[0m
+[1;34;4mCuThread.onEventPosted: thread (should be main!) 0x7fd7c042f840 event type 1[0m
+[1;36mCuAttConfiguration got "CuData { ["abs_change" -> 0.01], ["activity" -> attconfig], ["archive_abs_change" -> 0.1], ["archive_period" -> 1000], ["archive_rel_change" -> 0.1], ["data" -> true], ["data_format" -> 0], ["data_type" -> 5], ["delta_t" -> Not specified], ["delta_val" -> Not specified], ["description" -> Un doppio scalare del device primo], ["device" -> test/device/1], ["disp_level" -> 0], ["display_unit" -> Pluteross], ["err" -> false], ["format" -> %7.0f], ["label" -> Doppio Scalare], ["max_alarm" -> 200], ["max_dim_x" -> 1], ["max_dim_y" -> 0], ["max_value" -> 255], ["max_warning" -> 100], ["min_alarm" -> -200], ["min_value" -> -255], ["min_warning" -> -100], ["mode" -> ATTCONF], ["msg" -> successfully got configuration for test/device/1/double_scalar], ["name" -> double_scalar], ["periodic_period" -> 1000], ["point" -> double_scalar], ["properties" -> ], ["quality" -> 0], ["quality_color" -> white], ["rel_change" -> Not specified], ["root_attr_name" -> ], ["src" -> test/device/1/double_scalar], ["standard_unit" -> Pipperos], ["success_color" -> dark_green], ["unit" -> Pippeross], ["value" -> -26.760615], ["worker_activity" -> 0x784060], ["worker_thread" -> 0x7fd7a5004700], ["writable" -> 3], ["writable_attr_name" -> double_scalar] } (size: 44 isEmpty: 0)"[0m
+[1;34;4mCuThread.onEventPosted: thread (should be main!) 0x7fd7c042f840 event type 1[0m
+CuTReader.onResult: data received CuData { ["activity" -> event], ["conn" -> true], ["device" -> test/device/1], ["msg" -> connect: Fri Apr 21 15:07:40 2017
+], ["point" -> double_scalar], ["src" -> test/device/1/double_scalar], ["worker_activity" -> 0x73b290], ["worker_thread" -> 0x7fd7a5004700] } (size: 8 isEmpty: 0)
+[0;33;4mReadActivity.push_event: in thread: 0x7fd7a5004700 attribute tango://hokuto.elettra.trieste.it:20000/test/device/1/double_scalar activity 0x73b290[0m
+CuTangoUtils.extractData format is 0 type 5
+[1;33mcalling publishResult on thread from activity 0x73b290 from this thread 0x7fd7a5004700 data CuData { ["activity" -> event], ["device" -> test/device/1], ["err" -> false], ["mode" -> EVENT], ["msg" -> event: Fri Apr 21 15:07:38 2017], ["point" -> double_scalar], ["quality" -> 0], ["quality_color" -> white], ["src" -> test/device/1/double_scalar], ["value" -> -26.760615], ["worker_activity" -> 0x73b290], ["worker_thread" -> 0x7fd7a5004700] } (size: 12 isEmpty: 0)[0m
+CuActivityManager.getThread: activity: 0x73b290 this thread 0x7fd7a5004700
+[1;34;4mCuThread.publishResult: thread (should be CuThread's!) 0x7fd7a5004700 data [0mCuData { ["activity" -> event], ["device" -> test/device/1], ["err" -> false], ["mode" -> EVENT], ["msg" -> event: Fri Apr 21 15:07:38 2017], ["point" -> double_scalar], ["quality" -> 0], ["quality_color" -> white], ["src" -> test/device/1/double_scalar], ["value" -> -26.760615], ["worker_activity" -> 0x73b290], ["worker_thread" -> 0x7fd7a5004700] } (size: 12 isEmpty: 0)[0m
+[1;34;4mCuThread.onEventPosted: thread (should be main!) 0x7fd7c042f840 event type 1[0m
+CuTReader.onResult: data received CuData { ["activity" -> event], ["device" -> test/device/1], ["err" -> false], ["mode" -> EVENT], ["msg" -> event: Fri Apr 21 15:07:38 2017], ["point" -> double_scalar], ["quality" -> 0], ["quality_color" -> white], ["src" -> test/device/1/double_scalar], ["value" -> -26.760615], ["worker_activity" -> 0x73b290], ["worker_thread" -> 0x7fd7a5004700] } (size: 12 isEmpty: 0)
+[1;32;4msubscribed test/device/1/double_scalar to change events err flag is 0[0m
+[1;33mCuThread.run: EVENT QUEUE SIZE 1 this thread  0x7fd7a5004700 this 0x75ac40[0m
+1 - 1 activity
+[1;32;4mCuThread.run pthread 0x7fd7a5004700: unregister activity event[0m
+[1;32;4mCuThread.mRemoveActivityTimer pthread 0x7fd7a5004700 Searching timer in map sized 0 for activity 0x784060 (type 105) [0m[1;36mAND UNREGISTERING/DELETING ACTIVITY[0m[0m
+[1;33mcalling publishResult on thread from activity 0x784060 from this thread 0x7fd7a5004700 data CuData { ["activity" -> attconfig], ["device" -> test/device/1], ["err" -> false], ["exit" -> true], ["mode" -> ATTCONF], ["msg" -> successfully got configuration for test/device/1/double_scalar], ["point" -> double_scalar], ["src" -> test/device/1/double_scalar], ["worker_activity" -> 0x784060], ["worker_thread" -> 0x7fd7a5004700] } (size: 10 isEmpty: 0)[0m
+CuActivityManager.getThread: activity: 0x784060 this thread 0x7fd7a5004700
+[1;34;4mCuThread.publishResult: thread (should be CuThread's!) 0x7fd7a5004700 data [0mCuData { ["activity" -> attconfig], ["device" -> test/device/1], ["err" -> false], ["exit" -> true], ["mode" -> ATTCONF], ["msg" -> successfully got configuration for test/device/1/double_scalar], ["point" -> double_scalar], ["src" -> test/device/1/double_scalar], ["worker_activity" -> 0x784060], ["worker_thread" -> 0x7fd7a5004700] } (size: 10 isEmpty: 0)[0m
+CuActivityManager.getThread: activity: 0x784060 this thread 0x7fd7a5004700
+[1;33mCuThread.run: EVENT QUEUE SIZE 0 this thread  0x7fd7a5004700 this 0x75ac40[0m
+[1;34;4mCuThread.onEventPosted: thread (should be main!) 0x7fd7c042f840 event type 1[0m
+[1;36mCuAttConfiguration got "CuData { ["activity" -> attconfig], ["device" -> test/device/1], ["err" -> false], ["exit" -> true], ["mode" -> ATTCONF], ["msg" -> successfully got configuration for test/device/1/double_scalar], ["point" -> double_scalar], ["src" -> test/device/1/double_scalar], ["worker_activity" -> 0x784060], ["worker_thread" -> 0x7fd7a5004700] } (size: 10 isEmpty: 0)"[0m
+[1;34;4mCuThread.onEventPosted: thread (should be main!) 0x7fd7c042f840 event type 2[0m
+[0;35;4mCuActivityManager::removeConnection: removing connections for activity 0x784060[0m
+[1;32mX [0m~CuIsolatedActivity 0x784060
+[1;32mX [0m~CuActivity 0x784060 deleted from this thread 0x7fd7c042f840
+[0;33;4mReadActivity.push_event: in thread: 0x7fd795954700 attribute tango://hokuto.elettra.trieste.it:20000/test/device/1/double_scalar activity 0x73b290[0m
+CuTangoUtils.extractData format is 0 type 5
+[1;33mcalling publishResult on thread from activity 0x73b290 from this thread 0x7fd795954700 data CuData { ["activity" -> event], ["device" -> test/device/1], ["err" -> false], ["mode" -> EVENT], ["msg" -> event: Fri Apr 21 15:07:41 2017], ["point" -> double_scalar], ["quality" -> 0], ["quality_color" -> white], ["src" -> test/device/1/double_scalar], ["value" -> -22.313205], ["worker_activity" -> 0x73b290], ["worker_thread" -> 0x7fd795954700] } (size: 12 isEmpty: 0)[0m
+CuActivityManager.getThread: activity: 0x73b290 this thread 0x7fd795954700
+[1;34;4mCuThread.publishResult: thread (should be CuThread's!) 0x7fd795954700 data [0mCuData { ["activity" -> event], ["device" -> test/device/1], ["err" -> false], ["mode" -> EVENT], ["msg" -> event: Fri Apr 21 15:07:41 2017], ["point" -> double_scalar], ["quality" -> 0], ["quality_color" -> white], ["src" -> test/device/1/double_scalar], ["value" -> -22.313205], ["worker_activity" -> 0x73b290], ["worker_thread" -> 0x7fd795954700] } (size: 12 isEmpty: 0)[0m
+[1;34;4mCuThread.onEventPosted: thread (should be main!) 0x7fd7c042f840 event type 1[0m
+CuTReader.onResult: data received CuData { ["activity" -> event], ["device" -> test/device/1], ["err" -> false], ["mode" -> EVENT], ["msg" -> event: Fri Apr 21 15:07:41 2017], ["point" -> double_scalar], ["quality" -> 0], ["quality_color" -> white], ["src" -> test/device/1/double_scalar], ["value" -> -22.313205], ["worker_activity" -> 0x73b290], ["worker_thread" -> 0x7fd795954700] } (size: 12 isEmpty: 0)
+[0;33;4mReadActivity.push_event: in thread: 0x7fd795954700 attribute tango://hokuto.elettra.trieste.it:20000/test/device/1/double_scalar activity 0x73b290[0m
+CuTangoUtils.extractData format is 0 type 5
+[1;33mcalling publishResult on thread from activity 0x73b290 from this thread 0x7fd795954700 data CuData { ["activity" -> event], ["device" -> test/device/1], ["err" -> false], ["mode" -> EVENT], ["msg" -> event: Fri Apr 21 15:07:44 2017], ["point" -> double_scalar], ["quality" -> 0], ["quality_color" -> white], ["src" -> test/device/1/double_scalar], ["value" -> -13.399350], ["worker_activity" -> 0x73b290], ["worker_thread" -> 0x7fd795954700] } (size: 12 isEmpty: 0)[0m
+CuActivityManager.getThread: activity: 0x73b290 this thread 0x7fd795954700
+[1;34;4mCuThread.publishResult: thread (should be CuThread's!) 0x7fd795954700 data [0mCuData { ["activity" -> event], ["device" -> test/device/1], ["err" -> false], ["mode" -> EVENT], ["msg" -> event: Fri Apr 21 15:07:44 2017], ["point" -> double_scalar], ["quality" -> 0], ["quality_color" -> white], ["src" -> test/device/1/double_scalar], ["value" -> -13.399350], ["worker_activity" -> 0x73b290], ["worker_thread" -> 0x7fd795954700] } (size: 12 isEmpty: 0)[0m
+[1;34;4mCuThread.onEventPosted: thread (should be main!) 0x7fd7c042f840 event type 1[0m
+CuTReader.onResult: data received CuData { ["activity" -> event], ["device" -> test/device/1], ["err" -> false], ["mode" -> EVENT], ["msg" -> event: Fri Apr 21 15:07:44 2017], ["point" -> double_scalar], ["quality" -> 0], ["quality_color" -> white], ["src" -> test/device/1/double_scalar], ["value" -> -13.399350], ["worker_activity" -> 0x73b290], ["worker_thread" -> 0x7fd795954700] } (size: 12 isEmpty: 0)
+[1;32mX [0m~Cumbia 0x76c280
+[1;35;4mCuThread::wait: d->thread 0x727220. Joining![0m
+[1;32;4mCuThread.run pthread 0x7fd7a5004700: [1;31mThreadExit[0m  event[0m
+[0;31;4mCuThread.run(): calling exitOnThreadQuit on activities ......[0m
+[0;35;4mCuActivityManager::activitiesForThread: returning vector of activities for thread 0x75ac40 (there are 1)[0m
+[1;32;4mCuThread.mRemoveActivityTimer pthread 0x7fd7a5004700 Searching timer in map sized 0 for activity 0x73b290 (type 102) [0m[1;36mAND UNREGISTERING/DELETING ACTIVITY[0m[0m
+[1;32;4mCuEventActivity.onExit: unsubscribe events for test/device/1/double_scalar[0m
+[1;32;4mReadActivity.onExit: unsubscribed! OK![0m
+[1;31mCuEventActivity::onExit(): refcnt = 0 called actionRemove for device test/device/1 att test/device/1/double_scalar[0m
+CuDeviceFactoryService.removeDevice: deleting device with name "test/device/1"
+[1;32mX [0m~TDevice 0x7fd79c000c90: deleting device 0x7fd79c000d10 "test/device/1"
+[1;33mcalling publishResult on thread from activity 0x73b290 from this thread 0x7fd7a5004700 data CuData { ["activity" -> event], ["device" -> test/device/1], ["err" -> false], ["exit" -> true], ["msg" -> successfully unsubscribed events], ["point" -> double_scalar], ["src" -> test/device/1/double_scalar], ["value" -> -], ["worker_activity" -> 0x73b290], ["worker_thread" -> 0x7fd7a5004700] } (size: 10 isEmpty: 0)[0m
+CuActivityManager.getThread: activity: 0x73b290 this thread 0x7fd7a5004700
+[1;34;4mCuThread.publishResult: thread (should be CuThread's!) 0x7fd7a5004700 data [0mCuData { ["activity" -> event], ["device" -> test/device/1], ["err" -> false], ["exit" -> true], ["msg" -> successfully unsubscribed events], ["point" -> double_scalar], ["src" -> test/device/1/double_scalar], ["value" -> -], ["worker_activity" -> 0x73b290], ["worker_thread" -> 0x7fd7a5004700] } (size: 10 isEmpty: 0)[0m
+[0;31;4mCuThread.run <|---------------- LEFT LOOP
+[0m
+[1;35;4mCuThread::wait: THREAD  0x727220 JOINED[0m
+[0;34m~Cumbia: deleting thread 0x75ac40[0m
+[1;32mX [0m~CuThread 0x75ac40
+[1;32mX [0m~QThreadsEventBridge 0x74be10
+[1;31mx deleting FAMIGERATED threadseventbirds 0x74be20[0m
+[0;35;4mCuActivityManager::activitiesForThread: returning vector of activities for thread 0x75ac40 (there are 1)[0m
+[0;35;4mCuActivityManager::removeConnection: removing connections for activity 0x73b290[0m
+[1;32mX [0m~CuActivity 0x73b290 deleted from this thread 0x7fd7c042f840
+[1;32mX [0m~CuThreadService 0x76c1b0
+[1;32mX [0m~CuActivityManager 0x7d0880
+[1;32mX [0m~CuDeviceFactoryService deleted 0x6e2d30
+[1;32mX [0m~CuActionFactoryService 0x7d0960

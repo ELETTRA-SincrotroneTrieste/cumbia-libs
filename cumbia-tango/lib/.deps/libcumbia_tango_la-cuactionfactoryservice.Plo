@@ -1,0 +1,1298 @@
+lib/libcumbia_tango_la-cuactionfactoryservice.lo: \
+ lib/cuactionfactoryservice.cpp /usr/include/stdc-predef.h \
+ lib/cuactionfactoryservice.h /usr/local/include/cumbia/cuservicei.h \
+ /usr/local/include/cumbia/cuservices.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/string \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/c++config.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/os_defines.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/bits/long-double.h \
+ /usr/include/gnu/stubs.h /usr/include/gnu/stubs-64.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/cpu_defines.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stringfwd.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/memoryfwd.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/char_traits.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_algobase.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/functexcept.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/exception_defines.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/cpp_type_traits.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/type_traits.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/numeric_traits.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_pair.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/move.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/concept_check.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/type_traits \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_iterator_base_types.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_iterator_base_funcs.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/debug/assertions.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_iterator.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/ptr_traits.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/debug/debug.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/predefined_ops.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/postypes.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cwchar \
+ /usr/include/wchar.h /usr/include/bits/libc-header-start.h \
+ /usr/include/stdio.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/stdarg.h \
+ /usr/include/bits/wchar.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/stddef.h \
+ /usr/include/xlocale.h /usr/include/bits/wchar2.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cstdint \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/stdint.h \
+ /usr/include/stdint.h /usr/include/bits/types.h \
+ /usr/include/bits/typesizes.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/allocator.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/c++allocator.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/new_allocator.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/new \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/exception \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/atomic_lockfree_defines.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/exception_ptr.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/nested_exception.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/localefwd.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/c++locale.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/clocale \
+ /usr/include/locale.h /usr/include/bits/locale.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/iosfwd \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cctype \
+ /usr/include/ctype.h /usr/include/endian.h /usr/include/bits/endian.h \
+ /usr/include/bits/byteswap.h /usr/include/bits/byteswap-16.h \
+ /usr/include/bits/uintn-identity.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/ostream_insert.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/cxxabi_forced.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_function.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/backward/binders.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/range_access.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/initializer_list \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/basic_string.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/atomicity.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/gthr.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/gthr-default.h \
+ /usr/include/pthread.h /usr/include/sched.h \
+ /usr/include/bits/types/time_t.h \
+ /usr/include/bits/types/struct_timespec.h /usr/include/bits/sched.h \
+ /usr/include/time.h /usr/include/bits/time.h /usr/include/bits/timex.h \
+ /usr/include/bits/types/struct_timeval.h \
+ /usr/include/bits/types/clock_t.h /usr/include/bits/types/struct_tm.h \
+ /usr/include/bits/types/clockid_t.h /usr/include/bits/types/timer_t.h \
+ /usr/include/bits/types/struct_itimerspec.h \
+ /usr/include/bits/pthreadtypes.h /usr/include/bits/setjmp.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/atomic_word.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/alloc_traits.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/alloc_traits.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/string_conversions.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cstdlib \
+ /usr/include/stdlib.h /usr/include/bits/waitflags.h \
+ /usr/include/bits/waitstatus.h /usr/include/sys/types.h \
+ /usr/include/sys/select.h /usr/include/bits/select.h \
+ /usr/include/bits/sigset.h /usr/include/bits/select2.h \
+ /usr/include/alloca.h /usr/include/bits/stdlib-bsearch.h \
+ /usr/include/bits/stdlib-float.h /usr/include/bits/stdlib.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cstdio \
+ /usr/include/libio.h /usr/include/_G_config.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+ /usr/include/bits/stdio.h /usr/include/bits/stdio2.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cerrno \
+ /usr/include/errno.h /usr/include/bits/errno.h \
+ /usr/include/linux/errno.h /usr/include/asm/errno.h \
+ /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/functional_hash.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/hash_bytes.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/basic_string.tcc \
+ lib/cutangoactioni.h lib/tsource.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/list \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_list.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/allocated_ptr.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/aligned_buffer.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/list.tcc \
+ /usr/local/include/cumbia/cuvariant.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/vector \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_construct.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_uninitialized.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_vector.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_bvector.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/vector.tcc \
+ /usr/local/include/cumbia/cumacros.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/stdlib.h \
+ /usr/local/include/cumbia/cuvariant_t.h \
+ /usr/local/include/cumbia/cuvariantprivate.h \
+ /usr/local/include/cumbia/cuthreadlistener.h \
+ /usr/local/include/cumbia/cudata.h lib/cutangoactionfactoryi.h \
+ lib/cutango-world.h /usr/local/tango-9.2.5a/include/tango/tango.h \
+ /usr/local/tango-9.2.5a/include/tango/tango_config.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/acconfig.h \
+ /usr/local/tango-9.2.5a/include/tango/idl/tango.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/omniInternal.h \
+ /usr/include/strings.h /usr/include/bits/strings_fortified.h \
+ /usr/include/string.h /usr/include/bits/string3.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_sysdep.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/local_config.h \
+ /usr/local/omniorb-4.2.1/include/omniconfig.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_sysdep_auto.h \
+ /usr/local/omniorb-4.2.1/include/omnithread.h \
+ /usr/local/omniorb-4.2.1/include/omnithread/posix.h \
+ /usr/local/omniorb-4.2.1/include/omnithread/atomic.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/finalCleanup.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_basetypes.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/seqTemplatedecls.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/templatedecls.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/valueTemplatedecls.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/stringtypes.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/wstringtypes.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/IOP.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/GIOP.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/IIOP.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/omniObjKey.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/tracedthread.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/userexception.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/codeSets.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/cdrStream.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include-fixed/limits.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include-fixed/syslimits.h \
+ /usr/include/limits.h /usr/include/bits/posix1_lim.h \
+ /usr/include/bits/local_lim.h /usr/include/linux/limits.h \
+ /usr/include/bits/posix2_lim.h /usr/include/bits/xopen_lim.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/seqTemplatedefns.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/valueTemplatedefns.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/omniObjRef.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/omniServer.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/proxyFactory.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/omniServant.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/omniutilities.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_primitive_types.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_String.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Exception.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Environment.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_NamedValue.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Context.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Principal.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_ExceptionList.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_TypeCode_member.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Object.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Object_vartypes.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_LocalObject.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_LocalObject_vartypes.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Any.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Any_vartypes.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/corbaidl_defs.hh \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_TypeCode.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Request.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_ServerRequest.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_ValueBase.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_ValueBase_vartypes.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_AbstractBase.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_UnknownUserException.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Policy.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Current.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_DomainManager.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_BOA.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_ORB.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Fixed.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_static_fns.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/CORBA_vartypes.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/boxes_defs.hh \
+ /usr/local/omniorb-4.2.1/include/omniORB4/pollable_defs.hh \
+ /usr/local/omniorb-4.2.1/include/omniORB4/omniIOR.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/giopEndpoint.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/omniORB.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/omniORBcompat.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/valueType.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/valueFactoryManager.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/templatedefns.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/corba_operators.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/poa.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/minorCode.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/poa_enums_defs.hh \
+ /usr/local/omniorb-4.2.1/include/omniORB4/poa_defs.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/poa_enums_operators.hh \
+ /usr/local/omniorb-4.2.1/include/omniORB4/poa_poa.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/fixed.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/BiDirPolicy.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/omniPolicy.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/dynAny.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/omniAsyncInvoker.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/corbaidl_operators.hh \
+ /usr/local/omniorb-4.2.1/include/omniORB4/boxes_operators.hh \
+ /usr/local/omniorb-4.2.1/include/omniORB4/pollable_operators.hh \
+ /usr/local/omniorb-4.2.1/include/omniORB4/corbaidl_poa.hh \
+ /usr/local/omniorb-4.2.1/include/omniORB4/boxes_poa.hh \
+ /usr/local/omniorb-4.2.1/include/omniORB4/pollable_poa.hh \
+ /usr/local/omniorb-4.2.1/include/omniORB4/boa.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/Naming.hh \
+ /usr/local/omniorb-4.2.1/include/omniORB4/messaging.hh \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/iostream \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ostream \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ios \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/ios_base.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/locale_classes.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/locale_classes.tcc \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/system_error \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/error_constants.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/stdexcept \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/streambuf \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/streambuf.tcc \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/basic_ios.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/locale_facets.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cwctype \
+ /usr/include/wctype.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/ctype_base.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/streambuf_iterator.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/ctype_inline.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/locale_facets.tcc \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/basic_ios.tcc \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/ostream.tcc \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/istream \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/istream.tcc \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/sstream \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/sstream.tcc \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/fstream \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/codecvt.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/basic_file.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/c++io.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/fstream.tcc \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/memory \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_tempbuf.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_raw_storage_iter.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/typeinfo \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/concurrence.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/uses_allocator.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/functional \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/tuple \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/utility \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_relops.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/array \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/unique_ptr.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/shared_ptr.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/shared_ptr_base.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/shared_ptr_atomic.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/atomic_base.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/backward/auto_ptr.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cmath \
+ /usr/include/math.h /usr/include/bits/math-vector.h \
+ /usr/include/bits/libm-simd-decl-stubs.h /usr/include/bits/huge_val.h \
+ /usr/include/bits/huge_valf.h /usr/include/bits/huge_vall.h \
+ /usr/include/bits/inf.h /usr/include/bits/nan.h \
+ /usr/include/bits/flt-eval-method.h /usr/include/bits/fp-logb.h \
+ /usr/include/bits/fp-fast.h /usr/include/bits/mathcalls.h \
+ /usr/include/bits/iscanonical.h /usr/include/bits/mathinline.h \
+ /usr/local/tango-9.2.5a/include/tango/apiexcept.h \
+ /usr/local/tango-9.2.5a/include/tango/except.h \
+ /usr/local/tango-9.2.5a/include/tango/devasyn.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/map \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_tree.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_map.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_multimap.h \
+ /usr/local/tango-9.2.5a/include/tango/dbapi.h \
+ /usr/local/tango-9.2.5a/include/tango/devapi.h \
+ /usr/local/tango-9.2.5a/include/tango/tango_const.h \
+ /usr/local/tango-9.2.5a/include/tango/cbthread.h \
+ /usr/local/tango-9.2.5a/include/tango/lockthread.h \
+ /usr/include/sys/time.h \
+ /usr/local/tango-9.2.5a/include/tango/readers_writers_lock.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bitset \
+ /usr/local/tango-9.2.5a/include/tango/ApiUtil.h \
+ /usr/local/tango-9.2.5a/include/tango/DeviceData.h \
+ /usr/local/tango-9.2.5a/include/tango/DevicePipe.h \
+ /usr/local/tango-9.2.5a/include/tango/DeviceAttribute.h \
+ /usr/local/tango-9.2.5a/include/tango/Connection.h \
+ /usr/local/tango-9.2.5a/include/tango/DeviceProxy.h \
+ /usr/local/tango-9.2.5a/include/tango/AttributeProxy.h \
+ /usr/local/tango-9.2.5a/include/tango/Database.h \
+ /usr/local/tango-9.2.5a/include/tango/DbDevice.h \
+ /usr/local/tango-9.2.5a/include/tango/group.h \
+ /usr/local/tango-9.2.5a/include/tango/filedatabase.h \
+ /usr/local/tango-9.2.5a/include/tango/devapi_attr.tpp \
+ /usr/local/tango-9.2.5a/include/tango/attrmanip.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/algorithm \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_algo.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/algorithmfwd.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_heap.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/uniform_int_dist.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/limits \
+ /usr/local/tango-9.2.5a/include/tango/seqvec.h \
+ /usr/local/tango-9.2.5a/include/tango/log4tango.h \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/Logger.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/Portability.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/config.h \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/Export.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/AppenderAttachable.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/Appender.hh \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/set \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_set.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_multiset.h \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/Level.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/Layout.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/threading/Threading.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/threading/PThreads.hh \
+ /usr/include/assert.h \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/LoggingEvent.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/TimeStamp.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/LoggerStream.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/LogSeparator.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/RollingFileAppender.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/FileAppender.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/LayoutAppender.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/PatternLayout.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/OstreamAppender.hh \
+ /usr/local/tango-9.2.5a/include/tango/log4tango/XmlLayout.hh \
+ /usr/local/tango-9.2.5a/include/tango/logstream.h \
+ /usr/local/tango-9.2.5a/include/tango/logging.h \
+ /usr/local/tango-9.2.5a/include/tango/attrprop.h \
+ /usr/local/tango-9.2.5a/include/tango/tango_monitor.h \
+ /usr/local/tango-9.2.5a/include/tango/device.h \
+ /usr/local/tango-9.2.5a/include/tango/blackbox.h \
+ /usr/local/omniorb-4.2.1/include/omniORB4/omniInterceptors.h \
+ /usr/local/tango-9.2.5a/include/tango/classattribute.h \
+ /usr/local/tango-9.2.5a/include/tango/classpipe.h \
+ /usr/local/tango-9.2.5a/include/tango/attrdesc.h \
+ /usr/local/tango-9.2.5a/include/tango/attribute.h \
+ /usr/local/tango-9.2.5a/include/tango/fwdattrdesc.h \
+ /usr/local/tango-9.2.5a/include/tango/encoded_attribute.h \
+ /usr/local/tango-9.2.5a/include/tango/encoded_format.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/iterator \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stream_iterator.h \
+ /usr/local/tango-9.2.5a/include/tango/w_attribute.h \
+ /usr/local/tango-9.2.5a/include/tango/fwdattribute.h \
+ /usr/local/tango-9.2.5a/include/tango/multiattribute.h \
+ /usr/local/tango-9.2.5a/include/tango/pollobj.h \
+ /usr/local/tango-9.2.5a/include/tango/pollring.h \
+ /usr/local/tango-9.2.5a/include/tango/deviceclass.h \
+ /usr/local/tango-9.2.5a/include/tango/devintr.h \
+ /usr/local/tango-9.2.5a/include/tango/dintrthread.h \
+ /usr/local/tango-9.2.5a/include/tango/utils.h \
+ /usr/local/tango-9.2.5a/include/tango/pollext.h \
+ /usr/local/tango-9.2.5a/include/tango/subdev_diag.h \
+ /usr/local/tango-9.2.5a/include/tango/rootattreg.h \
+ /usr/local/tango-9.2.5a/include/tango/pollthread.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h \
+ /usr/include/bits/unistd.h \
+ /usr/local/tango-9.2.5a/include/tango/auto_tango_monitor.h \
+ /usr/local/tango-9.2.5a/include/tango/device_2.h \
+ /usr/local/tango-9.2.5a/include/tango/device_3.h \
+ /usr/local/tango-9.2.5a/include/tango/device_4.h \
+ /usr/local/tango-9.2.5a/include/tango/device_5.h \
+ /usr/local/tango-9.2.5a/include/tango/command.h \
+ /usr/local/tango-9.2.5a/include/tango/pipedesc.h \
+ /usr/local/tango-9.2.5a/include/tango/pipe.h \
+ /usr/local/tango-9.2.5a/include/tango/w_pipe.h \
+ /usr/local/tango-9.2.5a/include/tango/pipe.tpp \
+ /usr/local/tango-9.2.5a/include/tango/dserver.h \
+ /usr/local/tango-9.2.5a/include/tango/attribute_spec.tpp \
+ /usr/local/tango-9.2.5a/include/tango/utils_spec.tpp \
+ /usr/local/tango-9.2.5a/include/tango/w_attribute_spec.tpp \
+ /usr/local/tango-9.2.5a/include/tango/attrprop.tpp \
+ /usr/local/tango-9.2.5a/include/tango/attrsetval.tpp \
+ /usr/local/tango-9.2.5a/include/tango/w_attrsetval.tpp \
+ /usr/local/tango-9.2.5a/include/tango/event.h \
+ /usr/local/tango-9.2.5a/include/tango/zmq.hpp \
+ /usr/local/zeromq-4.0.7/include/zmq.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cassert \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cstring \
+ lib/tdevice.h lib/tsource.h lib/cutangoactioni.h \
+ /usr/local/include/cumbia/culog.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/mutex \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/chrono \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ratio \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ctime \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/parse_numbers.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/std_mutex.h
+
+/usr/include/stdc-predef.h:
+
+lib/cuactionfactoryservice.h:
+
+/usr/local/include/cumbia/cuservicei.h:
+
+/usr/local/include/cumbia/cuservices.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/string:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/c++config.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/os_defines.h:
+
+/usr/include/features.h:
+
+/usr/include/sys/cdefs.h:
+
+/usr/include/bits/wordsize.h:
+
+/usr/include/bits/long-double.h:
+
+/usr/include/gnu/stubs.h:
+
+/usr/include/gnu/stubs-64.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/cpu_defines.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stringfwd.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/memoryfwd.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/char_traits.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_algobase.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/functexcept.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/exception_defines.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/cpp_type_traits.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/type_traits.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/numeric_traits.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_pair.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/move.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/concept_check.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/type_traits:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_iterator_base_types.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_iterator_base_funcs.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/debug/assertions.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_iterator.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/ptr_traits.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/debug/debug.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/predefined_ops.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/postypes.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cwchar:
+
+/usr/include/wchar.h:
+
+/usr/include/bits/libc-header-start.h:
+
+/usr/include/stdio.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/stdarg.h:
+
+/usr/include/bits/wchar.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/stddef.h:
+
+/usr/include/xlocale.h:
+
+/usr/include/bits/wchar2.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cstdint:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/stdint.h:
+
+/usr/include/stdint.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/allocator.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/c++allocator.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/new_allocator.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/new:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/exception:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/atomic_lockfree_defines.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/exception_ptr.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/nested_exception.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/localefwd.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/c++locale.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/clocale:
+
+/usr/include/locale.h:
+
+/usr/include/bits/locale.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/iosfwd:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cctype:
+
+/usr/include/ctype.h:
+
+/usr/include/endian.h:
+
+/usr/include/bits/endian.h:
+
+/usr/include/bits/byteswap.h:
+
+/usr/include/bits/byteswap-16.h:
+
+/usr/include/bits/uintn-identity.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/ostream_insert.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/cxxabi_forced.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_function.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/backward/binders.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/range_access.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/initializer_list:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/basic_string.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/atomicity.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/gthr.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/gthr-default.h:
+
+/usr/include/pthread.h:
+
+/usr/include/sched.h:
+
+/usr/include/bits/types/time_t.h:
+
+/usr/include/bits/types/struct_timespec.h:
+
+/usr/include/bits/sched.h:
+
+/usr/include/time.h:
+
+/usr/include/bits/time.h:
+
+/usr/include/bits/timex.h:
+
+/usr/include/bits/types/struct_timeval.h:
+
+/usr/include/bits/types/clock_t.h:
+
+/usr/include/bits/types/struct_tm.h:
+
+/usr/include/bits/types/clockid_t.h:
+
+/usr/include/bits/types/timer_t.h:
+
+/usr/include/bits/types/struct_itimerspec.h:
+
+/usr/include/bits/pthreadtypes.h:
+
+/usr/include/bits/setjmp.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/atomic_word.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/alloc_traits.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/alloc_traits.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/string_conversions.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cstdlib:
+
+/usr/include/stdlib.h:
+
+/usr/include/bits/waitflags.h:
+
+/usr/include/bits/waitstatus.h:
+
+/usr/include/sys/types.h:
+
+/usr/include/sys/select.h:
+
+/usr/include/bits/select.h:
+
+/usr/include/bits/sigset.h:
+
+/usr/include/bits/select2.h:
+
+/usr/include/alloca.h:
+
+/usr/include/bits/stdlib-bsearch.h:
+
+/usr/include/bits/stdlib-float.h:
+
+/usr/include/bits/stdlib.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cstdio:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/bits/stdio_lim.h:
+
+/usr/include/bits/sys_errlist.h:
+
+/usr/include/bits/stdio.h:
+
+/usr/include/bits/stdio2.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cerrno:
+
+/usr/include/errno.h:
+
+/usr/include/bits/errno.h:
+
+/usr/include/linux/errno.h:
+
+/usr/include/asm/errno.h:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/asm-generic/errno-base.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/functional_hash.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/hash_bytes.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/basic_string.tcc:
+
+lib/cutangoactioni.h:
+
+lib/tsource.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/list:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_list.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/allocated_ptr.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/aligned_buffer.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/list.tcc:
+
+/usr/local/include/cumbia/cuvariant.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/vector:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_construct.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_uninitialized.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_vector.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_bvector.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/vector.tcc:
+
+/usr/local/include/cumbia/cumacros.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/stdlib.h:
+
+/usr/local/include/cumbia/cuvariant_t.h:
+
+/usr/local/include/cumbia/cuvariantprivate.h:
+
+/usr/local/include/cumbia/cuthreadlistener.h:
+
+/usr/local/include/cumbia/cudata.h:
+
+lib/cutangoactionfactoryi.h:
+
+lib/cutango-world.h:
+
+/usr/local/tango-9.2.5a/include/tango/tango.h:
+
+/usr/local/tango-9.2.5a/include/tango/tango_config.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/acconfig.h:
+
+/usr/local/tango-9.2.5a/include/tango/idl/tango.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/omniInternal.h:
+
+/usr/include/strings.h:
+
+/usr/include/bits/strings_fortified.h:
+
+/usr/include/string.h:
+
+/usr/include/bits/string3.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_sysdep.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/local_config.h:
+
+/usr/local/omniorb-4.2.1/include/omniconfig.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_sysdep_auto.h:
+
+/usr/local/omniorb-4.2.1/include/omnithread.h:
+
+/usr/local/omniorb-4.2.1/include/omnithread/posix.h:
+
+/usr/local/omniorb-4.2.1/include/omnithread/atomic.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/finalCleanup.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_basetypes.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/seqTemplatedecls.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/templatedecls.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/valueTemplatedecls.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/stringtypes.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/wstringtypes.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/IOP.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/GIOP.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/IIOP.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/omniObjKey.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/tracedthread.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/userexception.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/codeSets.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/cdrStream.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include-fixed/limits.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include-fixed/syslimits.h:
+
+/usr/include/limits.h:
+
+/usr/include/bits/posix1_lim.h:
+
+/usr/include/bits/local_lim.h:
+
+/usr/include/linux/limits.h:
+
+/usr/include/bits/posix2_lim.h:
+
+/usr/include/bits/xopen_lim.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/seqTemplatedefns.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/valueTemplatedefns.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/omniObjRef.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/omniServer.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/proxyFactory.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/omniServant.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/omniutilities.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_primitive_types.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_String.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Exception.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Environment.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_NamedValue.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Context.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Principal.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_ExceptionList.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_TypeCode_member.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Object.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Object_vartypes.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_LocalObject.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_LocalObject_vartypes.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Any.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Any_vartypes.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/corbaidl_defs.hh:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_TypeCode.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Request.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_ServerRequest.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_ValueBase.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_ValueBase_vartypes.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_AbstractBase.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_UnknownUserException.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Policy.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Current.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_DomainManager.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_BOA.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_ORB.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_Fixed.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_static_fns.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/CORBA_vartypes.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/boxes_defs.hh:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/pollable_defs.hh:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/omniIOR.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/giopEndpoint.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/omniORB.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/omniORBcompat.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/valueType.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/valueFactoryManager.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/templatedefns.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/corba_operators.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/poa.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/minorCode.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/poa_enums_defs.hh:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/poa_defs.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/poa_enums_operators.hh:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/poa_poa.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/fixed.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/BiDirPolicy.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/omniPolicy.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/dynAny.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/omniAsyncInvoker.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/corbaidl_operators.hh:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/boxes_operators.hh:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/pollable_operators.hh:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/corbaidl_poa.hh:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/boxes_poa.hh:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/pollable_poa.hh:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/boa.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/Naming.hh:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/messaging.hh:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/iostream:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ostream:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ios:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/ios_base.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/locale_classes.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/locale_classes.tcc:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/system_error:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/error_constants.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/stdexcept:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/streambuf:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/streambuf.tcc:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/basic_ios.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/locale_facets.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cwctype:
+
+/usr/include/wctype.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/ctype_base.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/streambuf_iterator.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/ctype_inline.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/locale_facets.tcc:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/basic_ios.tcc:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/ostream.tcc:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/istream:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/istream.tcc:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/sstream:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/sstream.tcc:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/fstream:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/codecvt.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/basic_file.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/x86_64-pc-linux-gnu/bits/c++io.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/fstream.tcc:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/memory:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_tempbuf.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_raw_storage_iter.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/typeinfo:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ext/concurrence.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/uses_allocator.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/functional:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/tuple:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/utility:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_relops.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/array:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/unique_ptr.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/shared_ptr.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/shared_ptr_base.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/shared_ptr_atomic.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/atomic_base.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/backward/auto_ptr.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cmath:
+
+/usr/include/math.h:
+
+/usr/include/bits/math-vector.h:
+
+/usr/include/bits/libm-simd-decl-stubs.h:
+
+/usr/include/bits/huge_val.h:
+
+/usr/include/bits/huge_valf.h:
+
+/usr/include/bits/huge_vall.h:
+
+/usr/include/bits/inf.h:
+
+/usr/include/bits/nan.h:
+
+/usr/include/bits/flt-eval-method.h:
+
+/usr/include/bits/fp-logb.h:
+
+/usr/include/bits/fp-fast.h:
+
+/usr/include/bits/mathcalls.h:
+
+/usr/include/bits/iscanonical.h:
+
+/usr/include/bits/mathinline.h:
+
+/usr/local/tango-9.2.5a/include/tango/apiexcept.h:
+
+/usr/local/tango-9.2.5a/include/tango/except.h:
+
+/usr/local/tango-9.2.5a/include/tango/devasyn.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/map:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_tree.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_map.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_multimap.h:
+
+/usr/local/tango-9.2.5a/include/tango/dbapi.h:
+
+/usr/local/tango-9.2.5a/include/tango/devapi.h:
+
+/usr/local/tango-9.2.5a/include/tango/tango_const.h:
+
+/usr/local/tango-9.2.5a/include/tango/cbthread.h:
+
+/usr/local/tango-9.2.5a/include/tango/lockthread.h:
+
+/usr/include/sys/time.h:
+
+/usr/local/tango-9.2.5a/include/tango/readers_writers_lock.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bitset:
+
+/usr/local/tango-9.2.5a/include/tango/ApiUtil.h:
+
+/usr/local/tango-9.2.5a/include/tango/DeviceData.h:
+
+/usr/local/tango-9.2.5a/include/tango/DevicePipe.h:
+
+/usr/local/tango-9.2.5a/include/tango/DeviceAttribute.h:
+
+/usr/local/tango-9.2.5a/include/tango/Connection.h:
+
+/usr/local/tango-9.2.5a/include/tango/DeviceProxy.h:
+
+/usr/local/tango-9.2.5a/include/tango/AttributeProxy.h:
+
+/usr/local/tango-9.2.5a/include/tango/Database.h:
+
+/usr/local/tango-9.2.5a/include/tango/DbDevice.h:
+
+/usr/local/tango-9.2.5a/include/tango/group.h:
+
+/usr/local/tango-9.2.5a/include/tango/filedatabase.h:
+
+/usr/local/tango-9.2.5a/include/tango/devapi_attr.tpp:
+
+/usr/local/tango-9.2.5a/include/tango/attrmanip.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/algorithm:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_algo.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/algorithmfwd.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_heap.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/uniform_int_dist.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/limits:
+
+/usr/local/tango-9.2.5a/include/tango/seqvec.h:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango.h:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/Logger.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/Portability.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/config.h:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/Export.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/AppenderAttachable.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/Appender.hh:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/set:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_set.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stl_multiset.h:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/Level.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/Layout.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/threading/Threading.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/threading/PThreads.hh:
+
+/usr/include/assert.h:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/LoggingEvent.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/TimeStamp.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/LoggerStream.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/LogSeparator.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/RollingFileAppender.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/FileAppender.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/LayoutAppender.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/PatternLayout.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/OstreamAppender.hh:
+
+/usr/local/tango-9.2.5a/include/tango/log4tango/XmlLayout.hh:
+
+/usr/local/tango-9.2.5a/include/tango/logstream.h:
+
+/usr/local/tango-9.2.5a/include/tango/logging.h:
+
+/usr/local/tango-9.2.5a/include/tango/attrprop.h:
+
+/usr/local/tango-9.2.5a/include/tango/tango_monitor.h:
+
+/usr/local/tango-9.2.5a/include/tango/device.h:
+
+/usr/local/tango-9.2.5a/include/tango/blackbox.h:
+
+/usr/local/omniorb-4.2.1/include/omniORB4/omniInterceptors.h:
+
+/usr/local/tango-9.2.5a/include/tango/classattribute.h:
+
+/usr/local/tango-9.2.5a/include/tango/classpipe.h:
+
+/usr/local/tango-9.2.5a/include/tango/attrdesc.h:
+
+/usr/local/tango-9.2.5a/include/tango/attribute.h:
+
+/usr/local/tango-9.2.5a/include/tango/fwdattrdesc.h:
+
+/usr/local/tango-9.2.5a/include/tango/encoded_attribute.h:
+
+/usr/local/tango-9.2.5a/include/tango/encoded_format.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/iterator:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/stream_iterator.h:
+
+/usr/local/tango-9.2.5a/include/tango/w_attribute.h:
+
+/usr/local/tango-9.2.5a/include/tango/fwdattribute.h:
+
+/usr/local/tango-9.2.5a/include/tango/multiattribute.h:
+
+/usr/local/tango-9.2.5a/include/tango/pollobj.h:
+
+/usr/local/tango-9.2.5a/include/tango/pollring.h:
+
+/usr/local/tango-9.2.5a/include/tango/deviceclass.h:
+
+/usr/local/tango-9.2.5a/include/tango/devintr.h:
+
+/usr/local/tango-9.2.5a/include/tango/dintrthread.h:
+
+/usr/local/tango-9.2.5a/include/tango/utils.h:
+
+/usr/local/tango-9.2.5a/include/tango/pollext.h:
+
+/usr/local/tango-9.2.5a/include/tango/subdev_diag.h:
+
+/usr/local/tango-9.2.5a/include/tango/rootattreg.h:
+
+/usr/local/tango-9.2.5a/include/tango/pollthread.h:
+
+/usr/include/unistd.h:
+
+/usr/include/bits/posix_opt.h:
+
+/usr/include/bits/environments.h:
+
+/usr/include/bits/confname.h:
+
+/usr/include/getopt.h:
+
+/usr/include/bits/unistd.h:
+
+/usr/local/tango-9.2.5a/include/tango/auto_tango_monitor.h:
+
+/usr/local/tango-9.2.5a/include/tango/device_2.h:
+
+/usr/local/tango-9.2.5a/include/tango/device_3.h:
+
+/usr/local/tango-9.2.5a/include/tango/device_4.h:
+
+/usr/local/tango-9.2.5a/include/tango/device_5.h:
+
+/usr/local/tango-9.2.5a/include/tango/command.h:
+
+/usr/local/tango-9.2.5a/include/tango/pipedesc.h:
+
+/usr/local/tango-9.2.5a/include/tango/pipe.h:
+
+/usr/local/tango-9.2.5a/include/tango/w_pipe.h:
+
+/usr/local/tango-9.2.5a/include/tango/pipe.tpp:
+
+/usr/local/tango-9.2.5a/include/tango/dserver.h:
+
+/usr/local/tango-9.2.5a/include/tango/attribute_spec.tpp:
+
+/usr/local/tango-9.2.5a/include/tango/utils_spec.tpp:
+
+/usr/local/tango-9.2.5a/include/tango/w_attribute_spec.tpp:
+
+/usr/local/tango-9.2.5a/include/tango/attrprop.tpp:
+
+/usr/local/tango-9.2.5a/include/tango/attrsetval.tpp:
+
+/usr/local/tango-9.2.5a/include/tango/w_attrsetval.tpp:
+
+/usr/local/tango-9.2.5a/include/tango/event.h:
+
+/usr/local/tango-9.2.5a/include/tango/zmq.hpp:
+
+/usr/local/zeromq-4.0.7/include/zmq.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cassert:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/cstring:
+
+lib/tdevice.h:
+
+lib/tsource.h:
+
+lib/cutangoactioni.h:
+
+/usr/local/include/cumbia/culog.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/mutex:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/chrono:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ratio:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/ctime:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/parse_numbers.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6/bits/std_mutex.h:

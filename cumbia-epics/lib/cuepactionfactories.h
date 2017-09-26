@@ -1,0 +1,73 @@
+#ifndef CUEPICSACTIONFACTORIES_H
+#define CUEPICSACTIONFACTORIES_H
+
+#include <cuepactionfactoryi.h>
+#include <cuepactioni.h>
+#include <cuvariant.h>
+#include <cumonitor.h>
+#include <cuepreadoptions.h>
+
+class CumbiaEpics;
+
+class CuEpicsReaderFactory : public CuEpicsActionFactoryI
+{
+public:
+    CuEpicsReaderFactory();
+
+    void setOptions(const CuEpicsReadOptions& o);
+
+    virtual ~CuEpicsReaderFactory();
+
+    // CuEpicsActionFactoryI interface
+public:
+    CuEpicsActionI *create(const std::string &s, CumbiaEpics *ct) const;
+
+    CuEpicsActionI::Type getType() const;
+
+    bool isShareable() const;
+
+private:
+    CuEpicsReadOptions *options;
+
+};
+
+class CuEpicsWriterFactory : public CuEpicsActionFactoryI
+{
+public:
+    CuEpicsWriterFactory();
+
+    void setWriteValue(const CuVariant &write_val);
+
+    // CuEpicsActionFactoryI interface
+public:
+    CuEpicsActionI *create(const std::string &s, CumbiaEpics *ct) const;
+
+    CuEpicsActionI::Type getType() const;
+
+    bool isShareable() const;
+
+private:
+    CuVariant m_write_val;
+};
+
+class CuEpicsAttConfFactory : public CuEpicsActionFactoryI
+{
+public:
+    CuEpicsAttConfFactory();
+
+    void fetchAttributeHistory(bool fetch);
+
+    void setDesiredAttributeProperties(const std::vector<std::string> props);
+
+    // CuEpicsActionFactoryI interface
+public:
+    CuEpicsActionI *create(const std::string &s, CumbiaEpics *ct) const;
+
+    CuEpicsActionI::Type getType() const;
+
+private:
+    std::vector<std::string> m_props;
+    bool m_fetchAttHistory;
+};
+
+#endif // CUEPICSACTIONFACTORIES_H

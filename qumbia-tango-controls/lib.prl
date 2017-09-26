@@ -1,0 +1,5 @@
+QMAKE_PRL_BUILD_DIR = /archivi/devel/utils/git/cppqtclients/qumbia-tango-controls
+QMAKE_PRO_INPUT = qumbia-tango-controls.pro
+QMAKE_PRL_TARGET = lib.so.1.0.0
+QMAKE_PRL_CONFIG = lex yacc debug exceptions depend_includepath testcase_targets import_plugins import_qpa_plugin file_copies qt warn_on link_prl incremental shared qpa qt_no_framework linux unix posix gcc c++11 debug create_pc create_prl no_install_prl have_target dll debug_info thread uic opengl moc resources
+QMAKE_PRL_VERSION = 1.0.0
