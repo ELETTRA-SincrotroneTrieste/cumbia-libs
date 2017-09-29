@@ -21,6 +21,36 @@ class CuActivityEvent;
  * From within \a init, \a execute and \a exit, computed results can be forwarded to the main execution thread,
  * where they can be used to update a graphical interface.
  *
+ * In asynchronous environments, threads have always posed some kind of challenge for the programmer. Shared data,
+ * message exchange, proper termination are some aspects that cannot be overlooked. The \a Android \a AsyncTask offers a
+ * simple approach to writing code that is executed in a separate thread.
+ * The API provides a method that is called in the secondary thread context and functions to post results on the main one.
+ *
+ * \par Acvivities
+ * Cumbia \a CuActivity’s purpose is to replicate the carefree approach supplied by the \a AsyncTask.
+ * In this respect, a \a CuActivity is an interface to allow subclasses do work within three specific
+ * methods: init, execute and onExit. Therein, the code is run in a separate thread. The \a publishProgress
+ * and \a publishResult methods hand data to the main thread. To accomplish all this, an event loop must be running.
+ * By an initial parametrization, either a custom one (such as Qt’s, used in qumbia-qtcontrols) or the builtin
+ * cumbia \a CuEventLoop can be installed.
+ * New activities must be registered in the \a CuActivityManager service, and unregistered when they are no
+ * longer needed. In this way, a \a token can be used to group several activities by a smaller number of threads.
+ * In other words, <em>activities with the same token run in the same thread</em>.
+ *
+ * \par Services
+ * By means of the reference to the \a Cumbia instance, that must be maintained throughout the entire life of an application,
+ * you can access services. They are registered in the \a CuServiceProvider and accessed by name. The activity manager,
+ * the thread and the log services are some examples, but others can be written and installed, as long as they adhere
+ * to the \a CuServiceI interface (e.g \a cumbia-tango’s \a CuActionFactoryService and \a CuDeviceFactoryService).
+ * \a Cumbia can be subclassed in order to provide additional features specific to the engine employed.
+ * \a CumbiaPool allows to register and use multiple engines in the same application.
+ *
+ * \par Data interchange
+ * Data transfer is realised with the aid of the \a CuData and \a CuVariant classes. The former is a bundle pairing keys to values.
+ * The latter memorises data and implements several methods to store, extract and convert it to different types and formats.
+ * The \a cumbia-qtcontrols module handles these structures to provide a primary data display facility, unaware of the specific
+ * engine underneath (\a Tango, \a Epics, ...)
+ *
  */
 class Cumbia
 {

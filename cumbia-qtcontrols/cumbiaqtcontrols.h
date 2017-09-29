@@ -5,6 +5,27 @@
 
 /*! \mainpage Cumbia Qt controls module
  *
+ * \section Introduction Introduction
+ * This module combines cumbia to the \a Qt cross platform software framework, offering graphical control system components.
+ * Labels, gauges and advanced graphs are supplied, as well as buttons and boxes to set values.
+ * As mentioned earlier, elementary data representation is provided, due to the component unawareness of the \a cumbia
+ * engine lying beneath. In order to display real data on the controls, you have to combine different building
+ * blocks at the moment of setting up each reader or writer in your application, as described later.
+ * When data is ready, it is delivered to the main thread through the onUpdate method that there must be in the control
+ * component (such as a label), for it must implement the \a CuDataListener interface.
+ * For an event loop must be executing, messages are posted to the main thread relying on an implementation of the
+ * \a CuThreadsEventBridge_I interface. In \a Qt, we use \a QCoreApplication’s event loop in conjunction with \a cumbia-qtcontrols’
+ * \a QThreadsEventBridge, which exploits \a QCoreApplication’s \a postEvent, a familiar scheme for \a Qt developers.
+ * From within \a onUpdate, data is extracted and presented to the user by way of the control widget.
+ *
+ * Not strictly related to widgets themselves, but targeted to associate with them are a couple of abstract classes
+ * that define an interface to readers and writers. They compel readers and writers to provide methods to set and
+ * remove sources and targets of execution, as well as means to send and receive messages to and from actions.
+ * \a CuControlsReaderA and \a CuControlsWriterA, that’s their names, keep also references to the currently active
+ * \a Cumbia and data listener instances. Object composition to accomplish the set up of a \a Tango (\a Epics) reader (writer)
+ * will be discussed in the \a cumbia-tango-controls documentation.
+ *
+ *
  * \section DeveloperObs Observations for developers
  *
  * \subsection Unlinking Unlinking a source from cumbia
