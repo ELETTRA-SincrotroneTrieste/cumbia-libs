@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cuuimake>
+
+<srcdirs>
+    <srcdir name="." filters="*.cpp *.h" />
+    <srcdir name="src" filters="*.cpp *.h" />
+    <uidir name="." filters="*.ui" />
+    <uidir name="src" filters="*.ui" />
+    <uihdir name="." filters="ui_*.h" />
+    <uihdir name="ui" filters="ui_*.h" />
+    <!-- <srcdir name="mysrcdir" /> -->
+</srcdirs>
+
+<factories>
+
+
+
+<!-- factory nodes must be in the desired order: the parsing stops at the first match -->
+
+
+<factory name="cumbiapool">
+        <find declaration="CumbiaPool *" />
+        <find declaration="CuControlsFactoryPool" />
+        <find declaration="CuControlsFactoryPoolw" />
+    </factory>
+
+    <factory name="cumbia">
+        <find declaration="Cumbia *" />
+        <find declaration="CuControlsReaderFactoryI" />
+    </factory>
+
+
+</factories>
+
+<widgets>
+
+    <widget class="QuLabel">
+
+    </widget>
+
+    <widget class="QuLed">
+
+    </widget>
+
+    <widget class="QuButton">
+
+    </widget>
+
+    <widget class="QuTable">
+
+    </widget>
+
+    <widget class="QuTrendPlot">
+
+    </widget>
+
+    <widget class="QuSpectrumPlot">
+
+    </widget>
+
+</widgets>
+
+<defaults>
+
+    <params factory="cumbia">
+        <!-- parameter adding occurs in the given order -->
+        <param add="Cumbia *" />
+        <param add="const CuControlsReaderFactoryI &egrave;" />
+    </params>
+
+    <params factory="cumbiapool">
+        <!-- parameter adding occurs in the given order -->
+        <param add="CumbiaPool *"  />
+        <param add="const CuControlsFactoryPool &egrave;"  />
+    </params>
+
+</defaults>
+
+</cuuimake>
+
