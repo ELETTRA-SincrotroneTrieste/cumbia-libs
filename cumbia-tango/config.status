@@ -431,7 +431,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/giacomo/devel/utils/git/cppqtclients/cumbia-tango'
+ac_pwd='/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia-tango'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/bin/mkdir -p'
@@ -660,8 +660,8 @@ postuninstall_cmds=''
 finish_cmds='PATH="\$PATH:/sbin" ldconfig -n $libdir'
 finish_eval=''
 hardcode_into_libs='yes'
-sys_lib_search_path_spec='/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0 /usr/lib64 /lib64 /usr/x86_64-pc-linux-gnu/lib /usr/lib /lib '
-configure_time_dlsearch_path='/lib /usr/lib /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/32 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0 /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/32 /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0 /usr/lib/llvm/4/lib32 /usr/lib/llvm/4/lib64 /usr/lib32/qt4 /usr/lib64/qt4 /lib64 /usr/lib64 /usr/local/lib64 /lib32 /usr/lib32 /usr/local/lib32 /lib /usr/lib /usr/local/lib '
+sys_lib_search_path_spec='/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0 /usr/lib64 /lib64 /usr/x86_64-pc-linux-gnu/lib /usr/lib /lib '
+configure_time_dlsearch_path='/lib /usr/lib /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/32 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0 /usr/lib/llvm/5/lib32 /usr/lib/llvm/5/lib64 /usr/lib32/qt4 /usr/lib64/qt4 /lib64 /usr/lib64 /usr/local/lib64 /lib32 /usr/lib32 /usr/local/lib32 /lib /usr/lib /usr/local/lib '
 configure_time_lt_sys_library_path=''
 hardcode_action='immediate'
 enable_dlopen='unknown'
@@ -717,12 +717,12 @@ prelink_cmds_CXX=''
 postlink_cmds_CXX=''
 file_list_spec_CXX=''
 hardcode_action_CXX='immediate'
-compiler_lib_search_dirs_CXX='/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0 /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/../../../../lib64 /lib/../lib64 /usr/lib/../lib64 /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/../../../../x86_64-pc-linux-gnu/lib /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/../../..'
-predep_objects_CXX='/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/../../../../lib64/crti.o /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/crtbeginS.o'
-postdep_objects_CXX='/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/crtendS.o /usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/../../../../lib64/crtn.o'
+compiler_lib_search_dirs_CXX='/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/../../../../lib64 /lib/../lib64 /usr/lib/../lib64 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/../../../../x86_64-pc-linux-gnu/lib /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/../../..'
+predep_objects_CXX='/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/../../../../lib64/crti.o /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/crtbeginS.o'
+postdep_objects_CXX='/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/crtendS.o /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/../../../../lib64/crtn.o'
 predeps_CXX=''
 postdeps_CXX='-lstdc++ -lm -lgcc_s -lc -lgcc_s'
-compiler_lib_search_path_CXX='-L/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0 -L/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/../../../../x86_64-pc-linux-gnu/lib -L/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/../../..'
+compiler_lib_search_path_CXX='-L/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0 -L/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/../../../../x86_64-pc-linux-gnu/lib -L/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/../../..'
 
 LTCC='gcc'
 LTCFLAGS='-g -O2'
@@ -945,12 +945,12 @@ S["SET_MAKE"]=""
 S["mkdir_p"]="$(MKDIR_P)"
 S["MKDIR_P"]="/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
-S["install_sh"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-tango/install-sh"
-S["MAKEINFO"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-tango/missing makeinfo"
-S["AUTOHEADER"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-tango/missing autoheader"
-S["AUTOMAKE"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-tango/missing automake-1.15"
-S["AUTOCONF"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-tango/missing autoconf"
-S["ACLOCAL"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-tango/missing aclocal-1.15"
+S["install_sh"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia-tango/install-sh"
+S["MAKEINFO"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia-tango/missing makeinfo"
+S["AUTOHEADER"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia-tango/missing autoheader"
+S["AUTOMAKE"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia-tango/missing automake-1.15"
+S["AUTOCONF"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia-tango/missing autoconf"
+S["ACLOCAL"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia-tango/missing aclocal-1.15"
 S["VERSION"]="0.1.0"
 S["PACKAGE"]="cumbia-tango"
 S["CYGPATH_W"]="echo"

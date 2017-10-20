@@ -184,6 +184,7 @@ am_libcumbia_la_OBJECTS = src/lib/libcumbia_la-cumbia.lo \
 	src/lib/libcumbia_la-cuvariant.lo \
 	src/lib/libcumbia_la-cuvariantprivate.lo \
 	src/lib/libcumbia_la-cudata.lo \
+	src/lib/libcumbia_la-cudatalistener.lo \
 	src/lib/services/libcumbia_la-cuthreadservice.lo \
 	src/lib/services/libcumbia_la-cuserviceprovider.lo \
 	src/lib/threads/libcumbia_la-cuthreadevents.lo \
@@ -304,13 +305,13 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia/missing aclocal-1.15
+ACLOCAL = ${SHELL} /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia/missing aclocal-1.15
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = ar
-AUTOCONF = ${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia/missing autoconf
-AUTOHEADER = ${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia/missing autoheader
-AUTOMAKE = ${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia/missing automake-1.15
+AUTOCONF = ${SHELL} /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia/missing autoconf
+AUTOHEADER = ${SHELL} /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia/missing autoheader
+AUTOMAKE = ${SHELL} /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia/missing automake-1.15
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -374,7 +375,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia/missing makeinfo
+MAKEINFO = ${SHELL} /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia/missing makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -398,10 +399,10 @@ SET_MAKE =
 SHELL = /bin/sh
 STRIP = strip
 VERSION = 0.1.0
-abs_builddir = /home/giacomo/devel/utils/git/cppqtclients/cumbia
-abs_srcdir = /home/giacomo/devel/utils/git/cppqtclients/cumbia
-abs_top_builddir = /home/giacomo/devel/utils/git/cppqtclients/cumbia
-abs_top_srcdir = /home/giacomo/devel/utils/git/cppqtclients/cumbia
+abs_builddir = /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia
+abs_srcdir = /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia
+abs_top_builddir = /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia
+abs_top_srcdir = /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -431,7 +432,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = /usr/local/include/cumbia
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia/install-sh
+install_sh = ${SHELL} /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -490,6 +491,7 @@ src/lib/threads/cuthreadlistener.cpp \
 src/lib/cuvariant.cpp \
 src/lib/cuvariantprivate.cpp \
 src/lib/cudata.cpp \
+src/lib/cudatalistener.cpp \
 src/lib/services/cuthreadservice.cpp \
 src/lib/services/cuserviceprovider.cpp \
 src/lib/threads/cuthreadevents.cpp \
@@ -693,6 +695,8 @@ src/lib/libcumbia_la-cuvariantprivate.lo: src/lib/$(am__dirstamp) \
 	src/lib/$(DEPDIR)/$(am__dirstamp)
 src/lib/libcumbia_la-cudata.lo: src/lib/$(am__dirstamp) \
 	src/lib/$(DEPDIR)/$(am__dirstamp)
+src/lib/libcumbia_la-cudatalistener.lo: src/lib/$(am__dirstamp) \
+	src/lib/$(DEPDIR)/$(am__dirstamp)
 src/lib/services/$(am__dirstamp):
 	@$(MKDIR_P) src/lib/services
 	@: > src/lib/services/$(am__dirstamp)
@@ -749,6 +753,7 @@ include src/lib/$(DEPDIR)/libcumbia_la-cuactivity.Plo
 include src/lib/$(DEPDIR)/libcumbia_la-cuactivityevent.Plo
 include src/lib/$(DEPDIR)/libcumbia_la-cucontinuousactivity.Plo
 include src/lib/$(DEPDIR)/libcumbia_la-cudata.Plo
+include src/lib/$(DEPDIR)/libcumbia_la-cudatalistener.Plo
 include src/lib/$(DEPDIR)/libcumbia_la-cuisolatedactivity.Plo
 include src/lib/$(DEPDIR)/libcumbia_la-cumbia.Plo
 include src/lib/$(DEPDIR)/libcumbia_la-cumbiapool.Plo
@@ -867,6 +872,13 @@ src/lib/libcumbia_la-cudata.lo: src/lib/cudata.cpp
 #	$(AM_V_CXX)source='src/lib/cudata.cpp' object='src/lib/libcumbia_la-cudata.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -c -o src/lib/libcumbia_la-cudata.lo `test -f 'src/lib/cudata.cpp' || echo '$(srcdir)/'`src/lib/cudata.cpp
+
+src/lib/libcumbia_la-cudatalistener.lo: src/lib/cudatalistener.cpp
+	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -MT src/lib/libcumbia_la-cudatalistener.lo -MD -MP -MF src/lib/$(DEPDIR)/libcumbia_la-cudatalistener.Tpo -c -o src/lib/libcumbia_la-cudatalistener.lo `test -f 'src/lib/cudatalistener.cpp' || echo '$(srcdir)/'`src/lib/cudatalistener.cpp
+	$(AM_V_at)$(am__mv) src/lib/$(DEPDIR)/libcumbia_la-cudatalistener.Tpo src/lib/$(DEPDIR)/libcumbia_la-cudatalistener.Plo
+#	$(AM_V_CXX)source='src/lib/cudatalistener.cpp' object='src/lib/libcumbia_la-cudatalistener.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -c -o src/lib/libcumbia_la-cudatalistener.lo `test -f 'src/lib/cudatalistener.cpp' || echo '$(srcdir)/'`src/lib/cudatalistener.cpp
 
 src/lib/services/libcumbia_la-cuthreadservice.lo: src/lib/services/cuthreadservice.cpp
 	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -MT src/lib/services/libcumbia_la-cuthreadservice.lo -MD -MP -MF src/lib/services/$(DEPDIR)/libcumbia_la-cuthreadservice.Tpo -c -o src/lib/services/libcumbia_la-cuthreadservice.lo `test -f 'src/lib/services/cuthreadservice.cpp' || echo '$(srcdir)/'`src/lib/services/cuthreadservice.cpp

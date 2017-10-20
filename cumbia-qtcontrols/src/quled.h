@@ -7,6 +7,8 @@
 class QuLedPrivate;
 class Cumbia;
 class CuControlsReaderFactoryI;
+class CumbiaPool;
+class CuControlsFactoryPool;
 
 class QuLed : public ELed, public CuDataListener
 {
@@ -16,12 +18,16 @@ class QuLed : public ELed, public CuDataListener
 public:
     QuLed(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
 
+    QuLed(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+
     virtual ~QuLed();
 
     QString source() const;
 
 public slots:
     void setSource(const QString& s);
+
+    void unsetSource();
 
 signals:
     void newData(const CuData&);
@@ -30,6 +36,8 @@ protected:
 
 private:
     QuLedPrivate *d;
+
+    void m_init();
 
     // CuTangoListener interface
 public:

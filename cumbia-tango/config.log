@@ -29,6 +29,7 @@ uname -v = #2 SMP Mon Jun 12 11:49:09 CEST 2017
 
 PATH: /usr/lib64/qt5/bin
 PATH: /usr/x86_64-pc-linux-gnu/gcc-bin/6.3.0
+PATH: /usr/lib/llvm/5/bin
 PATH: /usr/lib/llvm/4/bin
 PATH: /usr/local/bin
 PATH: /usr/bin
@@ -58,24 +59,24 @@ configure:2667: result: x86_64-pc-linux-gnu
 configure:2708: checking how to print strings
 configure:2735: result: printf
 configure:2807: checking for gcc
-configure:2823: found /usr/x86_64-pc-linux-gnu/gcc-bin/6.3.0/gcc
+configure:2823: found /usr/bin/gcc
 configure:2834: result: gcc
 configure:3063: checking for C compiler version
 configure:3072: gcc --version >&5
-gcc (Gentoo 6.3.0 p1.0) 6.3.0
-Copyright (C) 2016 Free Software Foundation, Inc.
+gcc (Gentoo 6.4.0 p1.0) 6.4.0
+Copyright (C) 2017 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 configure:3083: $? = 0
 configure:3072: gcc -v >&5
 Using built-in specs.
-COLLECT_GCC=gcc
-COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-pc-linux-gnu/6.3.0/lto-wrapper
+COLLECT_GCC=/usr/x86_64-pc-linux-gnu/gcc-bin/6.4.0/gcc
+COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-pc-linux-gnu/6.4.0/lto-wrapper
 Target: x86_64-pc-linux-gnu
-Configured with: /var/tmp/portage/sys-devel/gcc-6.3.0/work/gcc-6.3.0/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/usr --bindir=/usr/x86_64-pc-linux-gnu/gcc-bin/6.3.0 --includedir=/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include --datadir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.3.0 --mandir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.3.0/man --infodir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.3.0/info --with-gxx-include-dir=/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6 --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/6.3.0/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 6.3.0 p1.0' --disable-esp --enable-libstdcxx-time --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu --enable-multilib --with-multilib-list=m32,m64 --disable-altivec --disable-fixed-point --enable-targets=all --disable-libgcj --enable-libgomp --disable-libmudflap --disable-libssp --disable-libcilkrts --disable-libmpx --enable-vtable-verify --enable-libvtv --enable-lto --without-isl --enable-libsanitizer --disable-default-pie --disable-default-ssp
+Configured with: /var/tmp/portage/sys-devel/gcc-6.4.0/work/gcc-6.4.0/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/usr --bindir=/usr/x86_64-pc-linux-gnu/gcc-bin/6.4.0 --includedir=/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include --datadir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.4.0 --mandir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.4.0/man --infodir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.4.0/info --with-gxx-include-dir=/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6 --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/6.4.0/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 6.4.0 p1.0' --disable-esp --enable-libstdcxx-time --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu --enable-multilib --with-multilib-list=m32,m64 --disable-altivec --disable-fixed-point --enable-targets=all --disable-libgcj --enable-libgomp --disable-libmudflap --disable-libssp --disable-libcilkrts --disable-libmpx --enable-vtable-verify --enable-libvtv --enable-lto --without-isl --enable-libsanitizer --disable-default-pie --enable-default-ssp
 Thread model: posix
-gcc version 6.3.0 (Gentoo 6.3.0 p1.0) 
+gcc version 6.4.0 (Gentoo 6.4.0 p1.0) 
 configure:3083: $? = 0
 configure:3072: gcc -V >&5
 gcc: error: unrecognized command line option '-V'
@@ -350,24 +351,24 @@ configure:12013: result: yes
 configure:12098: checking dependency style of gcc
 configure:12209: result: gcc3
 configure:12331: checking for g++
-configure:12347: found /usr/x86_64-pc-linux-gnu/gcc-bin/6.3.0/g++
+configure:12347: found /usr/bin/g++
 configure:12358: result: g++
 configure:12385: checking for C++ compiler version
 configure:12394: g++ --version >&5
-g++ (Gentoo 6.3.0 p1.0) 6.3.0
-Copyright (C) 2016 Free Software Foundation, Inc.
+g++ (Gentoo 6.4.0 p1.0) 6.4.0
+Copyright (C) 2017 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 configure:12405: $? = 0
 configure:12394: g++ -v >&5
 Using built-in specs.
-COLLECT_GCC=g++
-COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-pc-linux-gnu/6.3.0/lto-wrapper
+COLLECT_GCC=/usr/x86_64-pc-linux-gnu/gcc-bin/6.4.0/g++
+COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-pc-linux-gnu/6.4.0/lto-wrapper
 Target: x86_64-pc-linux-gnu
-Configured with: /var/tmp/portage/sys-devel/gcc-6.3.0/work/gcc-6.3.0/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/usr --bindir=/usr/x86_64-pc-linux-gnu/gcc-bin/6.3.0 --includedir=/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include --datadir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.3.0 --mandir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.3.0/man --infodir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.3.0/info --with-gxx-include-dir=/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6 --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/6.3.0/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 6.3.0 p1.0' --disable-esp --enable-libstdcxx-time --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu --enable-multilib --with-multilib-list=m32,m64 --disable-altivec --disable-fixed-point --enable-targets=all --disable-libgcj --enable-libgomp --disable-libmudflap --disable-libssp --disable-libcilkrts --disable-libmpx --enable-vtable-verify --enable-libvtv --enable-lto --without-isl --enable-libsanitizer --disable-default-pie --disable-default-ssp
+Configured with: /var/tmp/portage/sys-devel/gcc-6.4.0/work/gcc-6.4.0/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/usr --bindir=/usr/x86_64-pc-linux-gnu/gcc-bin/6.4.0 --includedir=/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include --datadir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.4.0 --mandir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.4.0/man --infodir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.4.0/info --with-gxx-include-dir=/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6 --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/6.4.0/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 6.4.0 p1.0' --disable-esp --enable-libstdcxx-time --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu --enable-multilib --with-multilib-list=m32,m64 --disable-altivec --disable-fixed-point --enable-targets=all --disable-libgcj --enable-libgomp --disable-libmudflap --disable-libssp --disable-libcilkrts --disable-libmpx --enable-vtable-verify --enable-libvtv --enable-lto --without-isl --enable-libsanitizer --disable-default-pie --enable-default-ssp
 Thread model: posix
-gcc version 6.3.0 (Gentoo 6.3.0 p1.0) 
+gcc version 6.4.0 (Gentoo 6.4.0 p1.0) 
 configure:12405: $? = 0
 configure:12394: g++ -V >&5
 g++: error: unrecognized command line option '-V'
@@ -487,20 +488,20 @@ configure:16034: checking for gcc
 configure:16061: result: gcc
 configure:16290: checking for C compiler version
 configure:16299: gcc --version >&5
-gcc (Gentoo 6.3.0 p1.0) 6.3.0
-Copyright (C) 2016 Free Software Foundation, Inc.
+gcc (Gentoo 6.4.0 p1.0) 6.4.0
+Copyright (C) 2017 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 configure:16310: $? = 0
 configure:16299: gcc -v >&5
 Using built-in specs.
-COLLECT_GCC=gcc
-COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-pc-linux-gnu/6.3.0/lto-wrapper
+COLLECT_GCC=/usr/x86_64-pc-linux-gnu/gcc-bin/6.4.0/gcc
+COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-pc-linux-gnu/6.4.0/lto-wrapper
 Target: x86_64-pc-linux-gnu
-Configured with: /var/tmp/portage/sys-devel/gcc-6.3.0/work/gcc-6.3.0/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/usr --bindir=/usr/x86_64-pc-linux-gnu/gcc-bin/6.3.0 --includedir=/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include --datadir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.3.0 --mandir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.3.0/man --infodir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.3.0/info --with-gxx-include-dir=/usr/lib/gcc/x86_64-pc-linux-gnu/6.3.0/include/g++-v6 --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/6.3.0/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 6.3.0 p1.0' --disable-esp --enable-libstdcxx-time --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu --enable-multilib --with-multilib-list=m32,m64 --disable-altivec --disable-fixed-point --enable-targets=all --disable-libgcj --enable-libgomp --disable-libmudflap --disable-libssp --disable-libcilkrts --disable-libmpx --enable-vtable-verify --enable-libvtv --enable-lto --without-isl --enable-libsanitizer --disable-default-pie --disable-default-ssp
+Configured with: /var/tmp/portage/sys-devel/gcc-6.4.0/work/gcc-6.4.0/configure --host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/usr --bindir=/usr/x86_64-pc-linux-gnu/gcc-bin/6.4.0 --includedir=/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include --datadir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.4.0 --mandir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.4.0/man --infodir=/usr/share/gcc-data/x86_64-pc-linux-gnu/6.4.0/info --with-gxx-include-dir=/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6 --with-python-dir=/share/gcc-data/x86_64-pc-linux-gnu/6.4.0/python --enable-languages=c,c++,fortran --enable-obsolete --enable-secureplt --disable-werror --with-system-zlib --enable-nls --without-included-gettext --enable-checking=release --with-bugurl=https://bugs.gentoo.org/ --with-pkgversion='Gentoo 6.4.0 p1.0' --disable-esp --enable-libstdcxx-time --enable-shared --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu --enable-multilib --with-multilib-list=m32,m64 --disable-altivec --disable-fixed-point --enable-targets=all --disable-libgcj --enable-libgomp --disable-libmudflap --disable-libssp --disable-libcilkrts --disable-libmpx --enable-vtable-verify --enable-libvtv --enable-lto --without-isl --enable-libsanitizer --disable-default-pie --enable-default-ssp
 Thread model: posix
-gcc version 6.3.0 (Gentoo 6.3.0 p1.0) 
+gcc version 6.4.0 (Gentoo 6.4.0 p1.0) 
 configure:16310: $? = 0
 configure:16299: gcc -V >&5
 gcc: error: unrecognized command line option '-V'
@@ -1075,7 +1076,7 @@ pkg_cv_tango_LIBS='-L/usr/local/tango-9.2.5a/lib -L/usr/local/omniorb-4.2.1/lib 
 ## Output variables. ##
 ## ----------------- ##
 
-ACLOCAL='${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-tango/missing aclocal-1.15'
+ACLOCAL='${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia-tango/missing aclocal-1.15'
 AMDEPBACKSLASH='\'
 AMDEP_FALSE='#'
 AMDEP_TRUE=''
@@ -1085,9 +1086,9 @@ AM_DEFAULT_V='$(AM_DEFAULT_VERBOSITY)'
 AM_DEFAULT_VERBOSITY='1'
 AM_V='$(V)'
 AR='ar'
-AUTOCONF='${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-tango/missing autoconf'
-AUTOHEADER='${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-tango/missing autoheader'
-AUTOMAKE='${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-tango/missing automake-1.15'
+AUTOCONF='${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia-tango/missing autoconf'
+AUTOHEADER='${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia-tango/missing autoheader'
+AUTOMAKE='${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia-tango/missing automake-1.15'
 AWK='gawk'
 CC='gcc'
 CCDEPMODE='depmode=gcc3'
@@ -1172,7 +1173,7 @@ LIPO=''
 LN_S='ln -s'
 LTLIBOBJS=''
 LT_SYS_LIBRARY_PATH=''
-MAKEINFO='${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-tango/missing makeinfo'
+MAKEINFO='${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia-tango/missing makeinfo'
 MANIFEST_TOOL=':'
 MKDIR_P='/bin/mkdir -p'
 NM='/usr/bin/nm -B'
@@ -1237,7 +1238,7 @@ host_vendor='pc'
 htmldir='${docdir}'
 includedir='/usr/local/include/cumbia-tango'
 infodir='${datarootdir}/info'
-install_sh='${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-tango/install-sh'
+install_sh='${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia-tango/install-sh'
 libdir='${exec_prefix}/lib'
 libexecdir='${exec_prefix}/libexec'
 localedir='${datarootdir}/locale'

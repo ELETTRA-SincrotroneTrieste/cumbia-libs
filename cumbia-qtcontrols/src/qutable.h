@@ -7,6 +7,8 @@
 class QuTablePrivate;
 class Cumbia;
 class CuControlsReaderFactoryI;
+class CumbiaPool;
+class CuControlsFactoryPool;
 
 class QuTable : public EFlag, public CuDataListener
 {
@@ -15,6 +17,8 @@ class QuTable : public EFlag, public CuDataListener
 
 public:
     QuTable(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
+
+    QuTable(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
 
     virtual ~QuTable();
 
@@ -25,6 +29,8 @@ public:
 public slots:
     void setSource(const QString& s);
 
+    void unsetSource();
+
 signals:
     void newData(const CuData&da);
 
@@ -32,6 +38,9 @@ protected:
 
     void configure(const CuData &da);
 private:
+
+    void m_init();
+
     QuTablePrivate *d;
 
     // CuDataListener interface

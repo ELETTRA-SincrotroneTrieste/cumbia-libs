@@ -69,3 +69,32 @@ CuControlsReaderA *CuLinkControl::make_reader(const std::string &s, CuDataListen
 
     return reader;
 }
+
+CuControlsWriterA *CuLinkControl::make_writer(const std::string &s, CuDataListener *datal) const
+{
+    CuControlsWriterA *writer = NULL;
+    Cumbia *cumbia = NULL;
+    CuControlsWriterFactoryI *w_fa;
+    printf("\e[1;35mCuLinkControl.make_writer: src %s cu_pool %p ctrl_factroypool isEmpty %d\e[0m", s.c_str(), ctrl_factory_pool,
+           ctrl_factory_pool.isEmpty());
+    if(cu_pool && !ctrl_factory_pool.isEmpty()) /* pick Cumbia impl */
+    {
+        // pick a cumbia and reader factory implementation from the pool
+        cumbia = cu_pool->getBySrc(s);
+        w_fa = ctrl_factory_pool.getWFactoryBySrc(s);
+    }
+    else
+    {
+        // use specific cumbia and reader factory implementations
+        cumbia = cu;
+        w_fa = w_factory;
+    }
+
+    if(!cumbia || !w_fa)
+        return writer;
+
+    writer = w_fa->create(cumbia, datal);
+
+    printf("\e[1;35mCuLinkControl.make_writer: got cumbia %p and w_factort %p writer is %p\e[0m\n", cumbia, w_fa, writer);
+    return writer;
+}

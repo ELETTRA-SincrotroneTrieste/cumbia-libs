@@ -12,10 +12,12 @@
 #include "cuthreadlistener.h"
 #include "cuisolatedactivity.h"
 
+#include <set>
 #include <thread>
 #include <queue>
 #include <mutex>
 #include <atomic>
+#include <algorithm>
 #include <condition_variable>
 #include <vector>
 #include <chrono>
@@ -41,6 +43,8 @@ public:
     std::thread *thread;
 
     std::map< CuActivity *, CuTimer *> timerActivityMap;
+
+    std::set<CuActivity *> activity_set;
 
     CuThreadsEventBridge_I *eventBridge;
 
@@ -303,8 +307,9 @@ bool CuThread::isRunning()
 void CuThread::mActivityInit(CuActivity *a)
 {
     int repeat_timeout;
-    a->doInit();
+    d->activity_set.insert(a);
 
+    a->doInit();
     a->doExecute();
 
     repeat_timeout = a->repeat();
@@ -336,6 +341,10 @@ void CuThread::mOnActivityExited(CuActivity *a)
  */
 void CuThread::mExitActivity(CuActivity *a, bool onThreadQuit)
 {
+    std::set<CuActivity *>::iterator it = d->activity_set.find(a);
+    if(it == d->activity_set.end())
+        return;
+
     mRemoveActivityTimer(a);
     if(a->getStateFlags() & CuActivity::CuAStateOnExit)
     {
@@ -348,6 +357,8 @@ void CuThread::mExitActivity(CuActivity *a, bool onThreadQuit)
         a->exitOnThreadQuit(); // will not call thread->publishExitEvent
     else
         a->doOnExit();
+
+    d->activity_set.erase(it);
 }
 
 void CuThread::mRemoveActivityTimer(CuActivity *a)

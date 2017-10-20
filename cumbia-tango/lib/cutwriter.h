@@ -28,7 +28,7 @@ public:
     size_t dataListenersCount();
     void start();
     void stop();
-    bool stopping() const;
+    bool exiting() const;
 
     void sendData(const CuData &data);
     void getData(CuData &d_inout) const;

@@ -36,7 +36,7 @@ public:
 
     virtual void getData(CuData& d_inout) const = 0;
 
-    virtual bool stopping() const = 0;
+    virtual bool exiting() const = 0;
 
 };
 

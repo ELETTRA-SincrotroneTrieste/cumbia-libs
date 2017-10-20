@@ -24,15 +24,19 @@ public:
 
     CuTangoActionI* registerAction(const std::string& src, const CuTangoActionFactoryI& f, CumbiaTango *ct);
 
-    CuTangoActionI *findAction(const std::string &name, CuTangoActionI::Type at);
+    CuTangoActionI *findActive(const std::string &name, CuTangoActionI::Type at);
 
-    CuTangoActionI *findAction(const std::string& src, CuTangoActionI::Type at, CuDataListener *l);
+    CuTangoActionI *find(const std::string &name, CuTangoActionI::Type at);
+
+    size_t count() const;
+
+//    CuTangoActionI *findAction(const std::string& src, CuTangoActionI::Type at, CuDataListener *l);
 
     std::string getLastError() const;
 
     void unregisterAction(const std::string& src, CuTangoActionI::Type at);
 
-    void deleteActions();
+    void cleanup();
 
     // CuServiceI interface
 public:

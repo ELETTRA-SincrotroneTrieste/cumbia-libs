@@ -35,9 +35,16 @@ CuActionFactoryService::~CuActionFactoryService()
     delete d;
 }
 
-/*
- * same source, different CuTangoActionI type: two distinct actions.
- * Share actions of the same type among same sources.
+/** Create and register a new action if an action with the same source and type is not already running.
+ *
+ * \par Rules
+ *  \li same source, different CuTangoActionI type: two distinct actions.
+ *  \li Share actions of the same type among sources with the same name.
+ *  \li If an action with the same source and type exists, but is stopping, it is discarded and a new
+ *      action is created.
+ *
+ * @see findAction
+ * @see unregisterAction
  */
 CuTangoActionI* CuActionFactoryService::registerAction(const std::string& src,
                                                        const CuTangoActionFactoryI& f,
@@ -47,7 +54,7 @@ CuTangoActionI* CuActionFactoryService::registerAction(const std::string& src,
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuTangoActionI *>::iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src)
+        if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src && !(*it)->exiting())
             break;
 
     if(it == d->actions.end())
@@ -58,14 +65,29 @@ CuTangoActionI* CuActionFactoryService::registerAction(const std::string& src,
     return action;
 }
 
-CuTangoActionI *CuActionFactoryService::findAction(const string &src, CuTangoActionI::Type at)
+CuTangoActionI *CuActionFactoryService::findActive(const string &src, CuTangoActionI::Type at)
 {
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuTangoActionI *>::iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == at && (*it)->getSource().getName() == src )
+        if((*it)->getType() == at && (*it)->getSource().getName() == src && !(*it)->exiting())
             return (*it);
     return NULL;
+}
+
+CuTangoActionI *CuActionFactoryService::find(const string &src, CuTangoActionI::Type at)
+{
+    std::lock_guard<std::mutex> lock(d->mutex);
+    std::list<CuTangoActionI *>::iterator it;
+    for(it = d->actions.begin(); it != d->actions.end(); ++it)
+        if((*it)->getType() == at && (*it)->getSource().getName() == src)
+            return (*it);
+    return NULL;
+}
+
+size_t CuActionFactoryService::count() const
+{
+    return d->actions.size();
 }
 
 string CuActionFactoryService::getLastError() const
@@ -73,39 +95,41 @@ string CuActionFactoryService::getLastError() const
     return d->lastError;
 }
 
+/** \brief Unregister the action with the given source and type if the action's exiting() method returns true
+ *
+ */
 void CuActionFactoryService::unregisterAction(const string &src, CuTangoActionI::Type at)
 {
-    printf("\e[1;31mCuActionFactoryService::unregisterAction for src %s and type %d\e[0m\n",
-           src.c_str(), at);
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuTangoActionI *>::iterator it;
+    size_t siz = d->actions.size();
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == at && (*it)->getSource().getName() == src)
+        if((*it)->getType() == at && (*it)->getSource().getName() == src && (*it)->exiting())
             it = d->actions.erase(it);
+    if(d->actions.size() == siz) // nothing removed
+        perr("CuActionFactoryService::unregisterAction: no actions unregistered");
 }
 
-void CuActionFactoryService::deleteActions()
+void CuActionFactoryService::cleanup()
 {
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuTangoActionI *>::iterator it = d->actions.begin();
     while(it != d->actions.end())
     {
-        printf("CuActionFactoryService::deleteActions: deleting action %p (%s) type %d\n",
-               (*it), (*it)->getSource().getName().c_str(), (*it)->getType());
         delete (*it);
         it = d->actions.erase(it);
     }
 }
 
-CuTangoActionI *CuActionFactoryService::findAction(const std::string& src, CuTangoActionI::Type at, CuDataListener *l)
-{
-    std::lock_guard<std::mutex> lock(d->mutex);
-    std::list<CuTangoActionI *>::iterator it;
-    for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == at && (*it)->getSource().getName() == src)
-            return (*it);
-    return NULL;
-}
+//CuTangoActionI *CuActionFactoryService::findAction(const std::string& src, CuTangoActionI::Type at, CuDataListener *l)
+//{
+//    std::lock_guard<std::mutex> lock(d->mutex);
+//    std::list<CuTangoActionI *>::iterator it;
+//    for(it = d->actions.begin(); it != d->actions.end(); ++it)
+//        if((*it)->getType() == at && (*it)->getSource().getName() == src)
+//            return (*it);
+//    return NULL;
+//}
 
 std::string CuActionFactoryService::getName() const
 {

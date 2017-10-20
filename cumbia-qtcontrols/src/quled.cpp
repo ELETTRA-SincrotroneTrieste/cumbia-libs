@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QPaintEvent>
 
+#include "culinkcontrol.h"
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
 
@@ -16,12 +17,26 @@ public:
     bool read_ok;
     CuControlsReaderA *reader;
     QuPalette palette;
+    CuLinkControl *link_ctrl;
 };
 
 QuLed::QuLed(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac) : ELed(w)
 {
+    m_init();
+    d->link_ctrl = new CuLinkControl(cumbia, r_fac);
+}
+
+QuLed::QuLed(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) : ELed(w)
+{
+    m_init();
+    d->link_ctrl = new CuLinkControl(cumbia_pool, fpool);
+}
+
+void QuLed::m_init()
+{
     d = new QuLedPrivate;
-    d->reader = r_fac.create(cumbia, this);
+    d->reader = NULL;
+    d->link_ctrl = NULL;
     d->auto_configure = true;
     d->read_ok = false;
     setProperty("trueColor", QColor(Qt::green));
@@ -30,18 +45,31 @@ QuLed::QuLed(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac) 
 
 QuLed::~QuLed()
 {
-    delete d->reader;
+    if(d->reader) delete d->reader;
     delete d;
 }
 
 QString QuLed::source() const
 {
-    return d->reader->source();
+    if(d->reader)
+        return d->reader->source();
+    return "";
 }
 
 void QuLed::setSource(const QString &s)
 {
-    d->reader->setSource(s);
+    if(d->reader && d->reader->source() != s)
+        delete d->reader;
+
+    d->reader = d->link_ctrl->make_reader(s.toStdString(), this);
+    if(d->reader)
+        d->reader->setSource(s);
+}
+
+void QuLed::unsetSource()
+{
+    if(d->reader)
+        d->reader->unsetSource();
 }
 
 void QuLed::onUpdate(const CuData &da)

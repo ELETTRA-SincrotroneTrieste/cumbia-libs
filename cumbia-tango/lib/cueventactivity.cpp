@@ -137,13 +137,15 @@ void CuEventActivity::onExit()
 
     }
     refcnt = d->tdev->removeRef();
-    cuprintf("\e[1;31mCuEventActivity::onExit(): refcnt = %d called actionRemove for device %s att %s\e[0m\n",
+    printf("\e[1;31mCuEventActivity::onExit(): refcnt = %d called actionRemove for device %s att %s\e[0m\n",
            refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
     if(refcnt == 0)
         d->device_srvc->removeDevice(at["device"].toString());
     CuTangoWorld().fillThreadInfo(at, this); /* put thread and activity addresses as info */
     at["exit"] = true;
+    printf("calling publishResut\n");
     publishResult(at);
+    printf("calledg publishResut\n");
 }
 
 void CuEventActivity::push_event(Tango::EventData *e)

@@ -61,7 +61,6 @@ QuLabel::~QuLabel()
     if(d->reader)
         delete d->reader;
     delete d;
-    printf("~Qulabel %p out\n", this);
 }
 
 QString QuLabel::source() const

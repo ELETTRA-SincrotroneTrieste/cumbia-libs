@@ -33,7 +33,7 @@ public:
     size_t dataListenersCount();
     void start();
     void stop();
-    bool stopping() const;
+    bool exiting() const;
 
 private:
     CuTAttConfigurationPrivate *d;

@@ -5,6 +5,7 @@
 #include <cuserviceprovider.h>
 #include "tsource.h"
 #include <cuactivity.h>
+#include <cudatalistener.h>
 #include "cudevicefactoryservice.h"
 #include "cutattconfigactivity.h"
 #include "cuactionfactoryservice.h"
@@ -23,7 +24,6 @@ public:
     CuVariant write_val;
     std::vector<std::string> desired_props;
     CuData conf_data;
-    bool iter_lock;
 };
 
 CuTAttConfiguration::CuTAttConfiguration(const TSource& src,
@@ -33,7 +33,6 @@ CuTAttConfiguration::CuTAttConfiguration(const TSource& src,
     d->cumbia_t = ct;
     d->tsrc = src;
     d->exit = false;
-    d->iter_lock = false;
 }
 
 CuTAttConfiguration::~CuTAttConfiguration()
@@ -63,21 +62,13 @@ void CuTAttConfiguration::onResult(const CuData &data)
         // iterator can be invalidated if listener's onUpdate wants to unset source
         std::list <CuDataListener *> listeners = d->listeners;
         std::list<CuDataListener *>::iterator it;
-        printf("1. CuTAttConfiguration::onResult: this is %p calling on update there are %d listeners\e[0m\n",
-               this, d->listeners.size());
-        d->iter_lock = true;
         for(it = listeners.begin(); it != listeners.end(); ++it)
-        {
-            printf("2. CuTAttConfiguration::onResult: this is %p calling on update on %p this thread 0x%lx\n", this, (*it), pthread_self());
-            (*it)->onUpdate(data);
-        }
-        d->iter_lock = false;
+            (*it)->onUpdate(data);        
     }
     else
     {
         CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
                                                                             ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
-        printf("\e[1;31mCuTAttConfiguration %p - EXITING \e[0m\n", this);
         af->unregisterAction(d->tsrc.getName(), getType());
         d->listeners.clear();
         delete this;
@@ -103,11 +94,9 @@ CuTangoActionI::Type CuTAttConfiguration::getType() const
 
 void CuTAttConfiguration::addDataListener(CuDataListener *l)
 {
-    printf("\e[1;35mCuTAttConfiguration.addDataListener: adding %p to this %p \e[0m\n", l, this);
-    if(d->iter_lock)
-        perr("CuTAttConfiguration::addDataListener not permitted here");
     std::list<CuDataListener *>::iterator it = d->listeners.begin();
     d->listeners.insert(it, l);
+    l->setValid();
     /* if a new listener is added after onResult, call onUpdate.
      * This happens when multiple items connect to the same source
      */
@@ -119,13 +108,15 @@ void CuTAttConfiguration::addDataListener(CuDataListener *l)
 
 void CuTAttConfiguration::removeDataListener(CuDataListener *l)
 {
-    if(d->iter_lock)
-        perr("CuTAttConfiguration::removeDataListener not permitted here");
-    d->listeners.remove(l);
-    printf("\e[1;35;3mCuTAttConfiguration::removeDataListener removed listener %p from this %p size now is %d this thread 0x%lx\e[0m\n",
-        l, this, d->listeners.size(), pthread_self());
-    if(!d->listeners.size())
+    if(l->invalid()) {
+        d->listeners.remove(l);
+        if(!d->listeners.size())
+            stop();
+    }
+    else if(d->listeners.size() == 1)
         stop();
+    else
+        d->listeners.remove(l);
 }
 
 void CuTAttConfiguration::sendData(const CuData &)
@@ -168,7 +159,7 @@ void CuTAttConfiguration::stop()
     d->exit = true;
 }
 
-bool CuTAttConfiguration::stopping() const
+bool CuTAttConfiguration::exiting() const
 {
     return d->exit;
 }

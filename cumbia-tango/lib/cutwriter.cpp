@@ -98,14 +98,21 @@ CuTangoActionI::Type CuTWriter::getType() const
 void CuTWriter::addDataListener(CuDataListener *l)
 {
     std::list<CuDataListener *>::iterator it = d->listeners.begin();
+    l->setValid();
     d->listeners.insert(it, l);
 }
 
 void CuTWriter::removeDataListener(CuDataListener *l)
 {
-    d->listeners.remove(l);
-    if(d->listeners.size() == 0)
+    if(l->invalid()) {
+        d->listeners.remove(l);
+        if(!d->listeners.size())
+            stop();
+    }
+    else if(d->listeners.size() == 1)
         stop();
+    else
+        d->listeners.remove(l);
 }
 
 size_t CuTWriter::dataListenersCount()
@@ -137,7 +144,7 @@ void CuTWriter::stop()
     d->exit = true;
 }
 
-bool CuTWriter::stopping() const
+bool CuTWriter::exiting() const
 {
     return d->exit;
 }

@@ -6,6 +6,8 @@
 
 class QuButtonPrivate;
 class Cumbia;
+class CumbiaPool;
+class CuControlsFactoryPool;
 class CuControlsWriterFactoryI;
 
 class QuButton : public QPushButton, public CuDataListener
@@ -14,6 +16,8 @@ class QuButton : public QPushButton, public CuDataListener
     Q_PROPERTY(QString targets READ targets WRITE setTargets DESIGNABLE true)
 public:
     QuButton(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac);
+
+    QuButton(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
 
     virtual ~QuButton();
 
@@ -27,6 +31,8 @@ public slots:
 
 private:
     QuButtonPrivate *d;
+
+    void m_init();
 
     // CuTangoListener interface
 public:

@@ -6,6 +6,7 @@ class CumbiaPool;
 class CuControlsReaderFactoryI;
 class CuControlsWriterFactoryI;
 class CuControlsReaderA;
+class CuControlsWriterA;
 class CuDataListener;
 
 #include <string>
@@ -49,6 +50,7 @@ public:
 
     CuControlsReaderA *make_reader(const std::string &s, CuDataListener* datal) const;
 
+    CuControlsWriterA *make_writer(const std::string &s, CuDataListener *datal) const;
 };
 
 #endif // CULINKCONTROL_H

@@ -3,6 +3,7 @@
 #include "cumbiatango.h"
 #include "cutangoactionfactories.h"
 #include "cutangoactioni.h"
+#include "cudatalistener.h"
 
 #include <assert.h>
 #include <QCoreApplication>
@@ -65,9 +66,9 @@ CuTControlsReader::CuTControlsReader(Cumbia *cumbia_tango, CuDataListener *tl)
 CuTControlsReader::~CuTControlsReader()
 {
     pdelete("~CuTControlsReader %p", this);
+    d->tlistener->invalidate();
     unsetSource();
     delete d;
-    printf("~CuTControlsReader %p out\n", this);
 }
 
 QString CuTControlsReader::source() const
@@ -85,7 +86,6 @@ QString CuTControlsReader::source() const
  */
 void CuTControlsReader::unsetSource()
 {
-    printf("\e[1;36;2mCuTControlsReader.unsetSource on %s listener %p\e[0m\n", qstoc(d->source), d->tlistener);
     d->cumbia_tango->unlinkListener(d->source.toStdString(), CuTangoActionI::AttConfig, d->tlistener);
     d->cumbia_tango->unlinkListener(d->source.toStdString(), CuTangoActionI::Reader, d->tlistener);
     d->source = QString();

@@ -7,7 +7,7 @@
 #include <cudatalistener.h>
 #include <cuserviceprovider.h>
 #include <cumacros.h>
-#include <list>
+#include <set>
 #include <cuthreadfactoryimpl_i.h>
 #include <cuthreadseventbridgefactory_i.h>
 #include <cuactivitymanager.h>
@@ -22,7 +22,7 @@ class TSource;
 class CuTReaderPrivate
 {
 public:
-    std::list<CuDataListener *> listeners;
+    std::set<CuDataListener *> listeners;
     TSource tsrc;
     CumbiaTango *cumbia_t;
     CuActivity *current_activity;
@@ -64,13 +64,12 @@ void CuTReader::onProgress(int step, int total, const CuData &data)
 void CuTReader::onResult(const CuData &data)
 {
     bool polling_fallback = false;
-    printf("CuTReader %p onResult: data received %s listeners size %d\n", this, data.toString().c_str(), d->listeners.size());
     // iterator can be invalidated if listener's onUpdate unsets source: use a copy
-    std::list<CuDataListener *> lis_copy = d->listeners;
-    std::list<CuDataListener *>::iterator it;
+    std::set<CuDataListener *> lis_copy = d->listeners;
+    std::set<CuDataListener *>::iterator it;
     for(it = lis_copy.begin(); it != lis_copy.end(); ++it)
     {
-        printf("CuTReader::onResult: calling on update on %p this thread 0x%lx\n", (*it), pthread_self());
+        printf("\e[1;33m - calling onUpdate from this %p to listener %p\e[0m\n", this, (*it));
         (*it)->onUpdate(data);
     }
     if(!d->exit && data["activity"].toString() == "event" && data["err"].toBool()
@@ -200,15 +199,33 @@ void CuTReader::stop()
 
 void CuTReader::addDataListener(CuDataListener *l)
 {
-    std::list<CuDataListener *>::iterator it = d->listeners.begin();
+    printf("\e[1;32mADD DATA LISTENER ADDING %p which should be set to VALIDDDDDDDDDDD\e[0m\n", l);
+    std::set<CuDataListener *>::iterator it = d->listeners.begin();
+    //l->setValid();
     d->listeners.insert(it, l);
 }
 
 void CuTReader::removeDataListener(CuDataListener *l)
 {
-    d->listeners.remove(l);
-    if(d->listeners.size() == 0)
-       stop();
+    printf("\e[1;31mremoveDataListener: size of listeners %d to remove %p\e[0m\n", d->listeners.size(), l);
+    if(l->invalid())
+    {
+        printf("\e[1;31m listener %p is INVALID removing please on %s listeners remained %ld\e[0m\n",
+               l, this->getSource().getName().c_str(), d->listeners.size());
+        d->listeners.erase(l);
+        if(!d->listeners.size())
+        {
+            printf("\e[1;31mSTOPPINGGGGGGGGGGGGG CUZ l->invalid AND no mo re listeners\e[0m\n");
+            stop();
+        }
+    }
+    else if(d->listeners.size() == 1)
+    {
+        printf("\e[1;31STOPPINGGGGGGGGGGGGG\e[0m\n");
+        stop();
+    }
+    else
+        d->listeners.erase(l);
 }
 
 size_t CuTReader::dataListenersCount()
@@ -216,7 +233,7 @@ size_t CuTReader::dataListenersCount()
     return d->listeners.size();
 }
 
-bool CuTReader::stopping() const
+bool CuTReader::exiting() const
 {
     return d->exit;
 }

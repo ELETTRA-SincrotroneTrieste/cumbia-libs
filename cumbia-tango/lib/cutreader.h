@@ -53,7 +53,7 @@ public:
 
     size_t dataListenersCount();
 
-    bool stopping() const;
+    bool exiting() const;
 
 private:
     CuTReaderPrivate *d;

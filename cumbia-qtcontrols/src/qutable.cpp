@@ -5,6 +5,7 @@
 #include <cudata.h>
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
+#include "culinkcontrol.h"
 #include <QVector>
 #include <QtDebug>
 
@@ -15,20 +16,41 @@ public:
     bool auto_configure, read_ok;
     QStringList desired_att_props;
     QuPalette palette;
+    CuLinkControl *link_ctrl;
 };
 
 QuTable::QuTable(QWidget *parent, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac) :
     EFlag(parent)
 {
+    m_init();
+    d->link_ctrl = new CuLinkControl(cumbia, r_fac);
+}
+
+
+QuTable::QuTable(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) :
+    EFlag(w), CuDataListener()
+{
+    m_init();
+    d->link_ctrl = new CuLinkControl(cumbia_pool, fpool);
+}
+
+QuTable::~QuTable()
+{
+    if(d->reader) delete d->reader;
+    delete d;
+}
+
+void QuTable::m_init()
+{
     d = new QuTablePrivate;
-    d->reader = r_fac.create(cumbia, this);
+    d->reader = NULL;
+    d->link_ctrl = NULL;
     d->auto_configure = true;
     d->read_ok = false;
     d->desired_att_props = QStringList()
             << "numRows" << "numColumns"
             << "displayMask" << "trueStrings"
             << "trueColours" << "falseColours" << "falseStrings";
-    d->reader->requestProperties(d->desired_att_props);
 
     QColor background = d->palette["white"];
     QColor border = d->palette["gray"];
@@ -46,20 +68,30 @@ QuTable::QuTable(QWidget *parent, Cumbia *cumbia, const CuControlsReaderFactoryI
     }
 }
 
-QuTable::~QuTable()
-{
-    delete d->reader;
-    delete d;
-}
-
 QString QuTable::source() const
 {
-    return d->reader->source();
+    if(d->reader)
+        return d->reader->source();
+    return "";
 }
 
 void QuTable::setSource(const QString &s)
 {
-    d->reader->setSource(s);
+    if(d->reader && d->reader->source() != s)
+        delete d->reader;
+
+    d->reader = d->link_ctrl->make_reader(s.toStdString(), this);
+    if(d->reader)
+    {
+        d->reader->requestProperties(d->desired_att_props);
+        d->reader->setSource(s);
+    }
+}
+
+void QuTable::unsetSource()
+{
+    if(d->reader)
+        d->reader->unsetSource();
 }
 
 void QuTable::onUpdate(const CuData& da)
@@ -229,6 +261,7 @@ void QuTable::configure (const CuData& da)
         perr("QuTable::configure: error converting string to number: %s", outr.what());
     }
 }
+
 
 
 

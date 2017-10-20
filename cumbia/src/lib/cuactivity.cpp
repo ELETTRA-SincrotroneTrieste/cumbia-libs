@@ -98,18 +98,15 @@ int CuActivity::getStateFlags() const
 
 void CuActivity::setFlags(int f)
 {
-    printf("\e[1;31m*\n*\n* setFlags called with %d\n*\n*\n*\e[0m\n", f);
     d->flags = f;
 }
 
 void CuActivity::setFlag(CuActivity::Flags f, bool on)
 {
-    printf("\e[0;31mCuActivity %p flags prima %d\e[0m\n", this, d->flags);
     if(!on)
         d->flags = d->flags & (~f);
     else
         d->flags = d->flags | f;
-    printf("\e[0;31mCuActivity %p flags dopo %d\e[0m\n", this, d->flags);
 }
 
 /** \brief Publish a result from the activity thread (whence the method is called) to

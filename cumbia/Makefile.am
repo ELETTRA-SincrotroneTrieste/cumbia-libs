@@ -36,6 +36,7 @@ src/lib/threads/cuthreadlistener.cpp \
 src/lib/cuvariant.cpp \
 src/lib/cuvariantprivate.cpp \
 src/lib/cudata.cpp \
+src/lib/cudatalistener.cpp \
 src/lib/services/cuthreadservice.cpp \
 src/lib/services/cuserviceprovider.cpp \
 src/lib/threads/cuthreadevents.cpp \

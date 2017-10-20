@@ -72,10 +72,10 @@ unix {
     inc.path = $${QUMBIA_TANGO_CONTROLS_INCLUDES}
 
     other_inst.files = $${DISTFILES}
-    other_inst.path = $${CUMBIA_QTCONTROLS_INCLUDES}
+    other_inst.path = $${QUMBIA_TANGO_CONTROLS_INCLUDES}
 
     target.path = $${QUMBIA_TANGO_CONTROLS_LIBDIR}
-    INSTALLS += target doc inc
+    INSTALLS += target doc inc other_inst
 
 # generate pkg config file
     CONFIG += create_pc create_prl no_install_prl
