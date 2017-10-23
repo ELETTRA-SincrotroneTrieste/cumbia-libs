@@ -4,6 +4,8 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+    a.setApplicationName("cuuimake");
+    a.setApplicationVersion(CUUIMAKE_VERSION_STR);
     CuUiMake cuuim;
 
     bool success = cuuim.make();

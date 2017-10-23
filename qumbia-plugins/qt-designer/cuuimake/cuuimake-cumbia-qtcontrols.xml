@@ -6,7 +6,7 @@
     <srcdir name="src" filters="*.cpp *.h" />
     <uidir name="." filters="*.ui" />
     <uidir name="src" filters="*.ui" />
-    <uihdir name="." filters="ui_*.h" />
+    <!-- uihdir is where ui_*.h files are generated/expanded/searched. Only one <uihdir> directive is allowed -->
     <uihdir name="ui" filters="ui_*.h" />
     <!-- <srcdir name="mysrcdir" /> -->
 </srcdirs>
@@ -65,13 +65,13 @@
     <params factory="cumbia">
         <!-- parameter adding occurs in the given order -->
         <param add="Cumbia *" />
-        <param add="const CuControlsReaderFactoryI &egrave;" />
+        <param add="CuControlsReaderFactoryI" />
     </params>
 
     <params factory="cumbiapool">
         <!-- parameter adding occurs in the given order -->
         <param add="CumbiaPool *"  />
-        <param add="const CuControlsFactoryPool &egrave;"  />
+        <param add="CuControlsFactoryPool"  />
     </params>
 
 </defaults>

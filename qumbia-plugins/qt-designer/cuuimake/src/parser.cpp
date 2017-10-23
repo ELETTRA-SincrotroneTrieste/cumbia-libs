@@ -152,7 +152,10 @@ bool Parser::find_match(const QString &contents, const QString &classname, QStri
     {
         int pos = re.indexIn(contents);
         if(pos > -1 && re.capturedTexts().count() == 3)
+        {
+            qDebug() << __FUNCTION__ << "CAPTURED" << re.capturedTexts();
             varname = re.capturedTexts().at(index);
+        }
     }
     return varname != QString();
 }

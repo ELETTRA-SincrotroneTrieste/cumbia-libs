@@ -31,6 +31,11 @@ DEFINES -= QT_NO_DEBUG_OUTPUT
 # where config files are searched
 DEFINES += SHAREDIR=\"\\\"$${SHAREDIR}\"\\\"
 
+CUUIMAKE_VERSION_HEX = 0x0001
+CUUIMAKE_VERSION = 0.1
+
+DEFINES += CUUIMAKE_VERSION_STR=\"\\\"$${CUUIMAKE_VERSION}\"\\\"
+
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.

@@ -5,22 +5,31 @@ class Substitutions;
 
 #include <QStringList>
 #include <QMap>
-
-class SearchDirInfoSet;
+#include "defs.h"
 
 class Processor
 {
 public:
     Processor();
 
-    void apply(const Substitutions& subs, const SearchDirInfoSet &dirInfoSet) const;
+    bool expand(const Substitutions& subs, const QMap<QString,
+                Expand>& widgetExpMap, const QString& ui_h_fname,
+                const SearchDirInfoSet &dirInfoSet);
 
     QMap<QString, bool> findUI_H(const SearchDirInfoSet &dirInfoSet);
 
     void setDebug(bool d) { m_debug = d; }
 
+    bool error() const { return m_error; }
+
+    QString lastError() const { return m_lastError;}
+
 private:
     bool m_debug;
+
+    bool m_error;
+
+    QString m_lastError;
 };
 
 #endif // PROCESSOR_H

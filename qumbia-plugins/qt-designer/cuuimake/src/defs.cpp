@@ -109,13 +109,13 @@ bool Defs::loadXmlConf(const QString &fname)
     m_error = !file.open(QIODevice::ReadOnly);
     if(m_error) {
         m_lastError = "Defs.loadXmlConf: " + file.errorString();
-        return m_error;
+        return false;
     }
     m_error = !doc.setContent(&file, &m_lastError);
     file.close();
     if(m_error) {
         m_lastError = "Defs.loadXmlConf: error parsing document: " + m_lastError;
-        return m_error;
+        return false;
     }
 
     QDomNodeList srcdirs_node = doc.elementsByTagName("srcdirs");
@@ -123,14 +123,15 @@ bool Defs::loadXmlConf(const QString &fname)
     if(m_error)
     {
         m_lastError = "Defs.loadXmlConf: there must be only one \"srcdirs\" node";
-        return m_error;
+        return false;
     }
     else
     {
         QDomNodeList srcnodes = srcdirs_node.at(0).childNodes();
+        QDomElement srcel;
         for(int i = 0; i < srcnodes.size(); i++)
         {
-            QDomElement srcel = srcnodes.at(i).toElement();
+            srcel = srcnodes.at(i).toElement();
             if(!srcel.isNull() && srcel.tagName() == "srcdir" && srcel.hasAttribute("name") && srcel.hasAttribute("filters"))
                 m_srcd_infoset.add(srcel.attribute("name"), srcel.attribute("filters"), SearchDirInfoSet::Source);
             else if(!srcel.isNull() &&  srcel.tagName() == "uidir" && srcel.hasAttribute("name") && srcel.hasAttribute("filters"))
@@ -140,10 +141,17 @@ bool Defs::loadXmlConf(const QString &fname)
             else if(!srcel.isNull())
             {
                 m_error = true;
-                m_lastError = "Defs.loadXmlConf: \"srcdir\", \"uidir\" and \"uihdir\" nodes must have the \"name\" and \"filters\" attributes";
-                return m_error;
+                m_lastError = "Defs.loadXmlConf: \"srcdir\", \"uidir\" and \"uihdir\" "
+                              "nodes must have the \"name\" and \"filters\" attributes, line: " + QString::number(srcel.lineNumber());
+                return false;
             }
 
+        }
+        m_error = (m_srcd_infoset.getDirInfoList(SearchDirInfoSet::Ui_H).size() != 1);
+        if(m_error)
+        {
+            m_lastError = "Defs.loadXmlConf: there must be one and only one \"uihdir\" node, line: " + QString::number(srcel.lineNumber());
+            return false;
         }
     }
 
@@ -152,7 +160,7 @@ bool Defs::loadXmlConf(const QString &fname)
     if(m_error)
     {
         m_lastError = "Defs.loadXmlConf: there must be only one \"factories\" node";
-        return m_error;
+        return false;
     }
     QDomNodeList factories = factories_el.at(0).childNodes();
     for(int i = 0; i < factories.size(); i++)
@@ -250,15 +258,15 @@ bool Defs::loadLocalConf(const QString &fname)
     m_error = !file.open(QIODevice::ReadOnly | QIODevice::Text);
     if(m_error) {
         m_lastError = "Defs.loadConf: " + file.errorString();
-        return m_error;
+        return false;
     }
     while (!file.atEnd()) {
-          QByteArray line = file.readLine().replace("\n", "");
-          m_widgetmap[line] = Expand(line, m_default_pars, true);
+        QByteArray line = file.readLine().replace("\n", "");
+        m_widgetmap[line] = Expand(line, m_default_pars, true);
     }
     if(m_error) {
         m_lastError = "Defs.loadConf: error parsing document: " + m_lastError;
-        return m_error;
+        return false;
     }
     return true;
 }

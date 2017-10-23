@@ -62,11 +62,11 @@ bool CuUiMake::make()
     if(success)
     {
         SearchDirInfoSet searchDirInfoSet = defs.srcDirsInfo();
-        Substitutions subst;
+        Substitutions substitutions;
         print(Analysis, false, "parsing files to find substitutions...\n");
         Parser p;
         p.setDebug(m_debug);
-        QString mode = p.detect(searchDirInfoSet, defs.getSearchList(), subst);
+        QString mode = p.detect(searchDirInfoSet, defs.getSearchList(), substitutions);
         success = !mode.isEmpty();
         if(!success)
         {
@@ -87,8 +87,8 @@ bool CuUiMake::make()
         }
         else
         {
-            print(Analysis, false, "substitutions: %s\n", qstoc(subst.toString()));
-            print(Expand, false, "processing ui_h file[s]...\n", qstoc(subst.toString()));
+            print(Analysis, false, "substitutions: %s\n", qstoc(substitutions.toString()));
+            print(Expand, false, "processing ui_h file[s]...\n", qstoc(substitutions.toString()));
             Processor processor;
             QMap<QString, bool> uifmap = processor.findUI_H(searchDirInfoSet);
             foreach(QString uif, uifmap.keys())
@@ -96,11 +96,15 @@ bool CuUiMake::make()
                 if(uifmap[uif])
                 {
                     // ui file more recent than ui_*.h file or ui_h file not existing
-                    print(Expand, false, "processing \"%s\"...\n", qstoc(uif));
-
+                    print(Expand, false, "expanding \"%s\"...\n", qstoc(uif));
+                    success = processor.expand(substitutions, defs.getWidgetMap(), uif, searchDirInfoSet);
+                    if(!success)
+                        print(Expand, true, "error expanding file \"%s\": \"%s\"\n", qstoc(uif), qstoc(processor.lastError()));
+                    else
+                        print(Expand, false, "file \"%s\": successfully expanded\n", qstoc(uif), qstoc(processor.lastError()));
                 }
                 else
-                    print(Expand, false, "no need to process \"%s\"...\n", qstoc(uif));
+                    print(Expand, false, "no need to expand \"%s\"...\n", qstoc(uif));
             }
 
         }

@@ -188,6 +188,7 @@ public:
 
     void setDebug(bool db);
 
+    // get Expand from widget name
     QMap<QString, Expand> getWidgetMap() const;
 
     QList<Search > getSearchList() const;
