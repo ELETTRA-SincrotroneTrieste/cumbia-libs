@@ -116,7 +116,34 @@ template<typename T> void CuVariant::toVector(std::vector<T> &v) const
         }
         else if(d->type == String) {
             d->mIsValid = false;
-            perr("CuVariant.toVector: string to number conversion not supported. Use toString instead");
+            perr("CuVariant.toVector: string to number conversion not supported. Use toStringVector instead");
+        }
+        else
+            d->mIsValid = false;
+    }
+    else if(d->format == Scalar)
+    {
+        if(d->type == Short)
+            v.push_back(static_cast<T>(toShortInt()));
+        else if(d->type == UShort)
+            v.push_back(static_cast<T>(toUShortInt()));
+        else if(d->type == Int)
+            v.push_back(static_cast<T>(toInt()));
+        else if(d->type == UInt)
+            v.push_back(static_cast<T>(toUInt()));
+        else if(d->type == LongInt)
+            v.push_back(static_cast<T>(toLongInt()));
+        else if(d->type == LongUInt)
+            v.push_back(static_cast<T>(toULongInt()));
+        else if(d->type == Float)
+            v.push_back(static_cast<T>(toFloat()));
+        else if(d->type == Double)
+            v.push_back(static_cast<T>(toDouble()));
+        else if(d->type == LongDouble)
+            v.push_back(static_cast<T>(toLongDouble()));
+        else if(d->type == String) {
+            d->mIsValid = false;
+            perr("CuVariant.toVector: string to number conversion not supported. Use toStringVector instead");
         }
         else
             d->mIsValid = false;

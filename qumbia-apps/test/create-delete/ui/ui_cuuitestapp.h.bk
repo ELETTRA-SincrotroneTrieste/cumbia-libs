@@ -1,0 +1,83 @@
+/********************************************************************************
+** Form generated from reading UI file 'cuuitestapp.ui'
+**
+** Created by: Qt User Interface Compiler version 5.9.2
+**
+** WARNING! All changes made in this file will be lost when recompiling UI file!
+********************************************************************************/
+
+#ifndef UI_CUUITESTAPP_H
+#define UI_CUUITESTAPP_H
+
+#include <QtCore/QVariant>
+#include <QtWidgets/QAction>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QWidget>
+#include "qubutton.h"
+#include "qulabel.h"
+#include "quled.h"
+#include "qulineedit.h"
+
+QT_BEGIN_NAMESPACE
+
+class Ui_CuUiTestApp
+{
+public:
+    QGridLayout *gridLayout;
+    QuLabel *quLabel;
+    QuLed *quLed;
+    QuLineEdit *quLineEdit;
+    QuButton *quButton;
+
+    void setupUi(QWidget *CuUiTestApp)
+    {
+        if (CuUiTestApp->objectName().isEmpty())
+            CuUiTestApp->setObjectName(QStringLiteral("CuUiTestApp"));
+        CuUiTestApp->resize(400, 300);
+        gridLayout = new QGridLayout(CuUiTestApp);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        quLabel = new QuLabel(CuUiTestApp);
+        quLabel->setObjectName(QStringLiteral("quLabel"));
+
+        gridLayout->addWidget(quLabel, 0, 0, 1, 1);
+
+        quLed = new QuLed(CuUiTestApp);
+        quLed->setObjectName(QStringLiteral("quLed"));
+
+        gridLayout->addWidget(quLed, 0, 1, 1, 1);
+
+        quLineEdit = new QuLineEdit(CuUiTestApp);
+        quLineEdit->setObjectName(QStringLiteral("quLineEdit"));
+
+        gridLayout->addWidget(quLineEdit, 1, 0, 1, 1);
+
+        quButton = new QuButton(CuUiTestApp);
+        quButton->setObjectName(QStringLiteral("quButton"));
+
+        gridLayout->addWidget(quButton, 1, 1, 1, 1);
+
+
+        retranslateUi(CuUiTestApp);
+
+        QMetaObject::connectSlotsByName(CuUiTestApp);
+    } // setupUi
+
+    void retranslateUi(QWidget *CuUiTestApp)
+    {
+        CuUiTestApp->setWindowTitle(QApplication::translate("CuUiTestApp", "CuUiTestApp", Q_NULLPTR));
+    } // retranslateUi
+
+};
+
+namespace Ui {
+    class CuUiTestApp: public Ui_CuUiTestApp {};
+} // namespace Ui
+
+QT_END_NAMESPACE
+
+#endif // UI_CUUITESTAPP_H

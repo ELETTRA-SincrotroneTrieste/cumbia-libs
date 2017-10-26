@@ -13,128 +13,129 @@ Processor::Processor()
     m_error = false;
 }
 
-
-
 bool Processor::expand(const Substitutions& subs, const QMap<QString,
-                       Expand>& widgetExpMap, const QString& ui_h_fname,
+                       Expand>& objectExpMap, const QString& ui_h_fname,
                        const SearchDirInfoSet &dirInfoSet)
 {
-    // 1. Find ui files.
-    QStringList uifiles;
     QString mode = subs.selectedMode();
     QDir wd;
-    QList<SearchDirInfo> dilist = dirInfoSet.getDirInfoList(SearchDirInfoSet::Ui_H);
-    m_error = dilist.size() != 1;
+    bool ok = true;
+
+
+    bool file_exists = wd.exists(ui_h_fname);
+
+    QString filename = m_getUiHFileName(ui_h_fname, dirInfoSet);
+    if(filename.isEmpty()) // m_getUiHFileName sets m_lastError
+        return false;
+
+    QFile f(filename);
+    m_error = !f.open(QIODevice::ReadOnly | QIODevice::Text);
     if(m_error)
     {
-        m_lastError = "Processor.expand: number of directories defined to generate ui files is not one";
+        m_lastError = "Processor::expand: error opening file \"" + ui_h_fname +
+                "\" in read mode under \"" + wd.absolutePath() + "\": " + f.errorString();
         return false;
     }
-    bool ok = true;
-    QString dnam = dilist.at(0).name();
-    if(dnam != ".")
-    {
-        if(!wd.cd(dnam))
-        {
-            ok = wd.mkdir(dnam);
-            if(ok)
-            {
-                qDebug() << __FUNCTION__ << "changing into " << dnam;
-                wd.cd(dnam);
-            }
-        }
-    }
-    if(ok)
-    {
-        bool file_exists = wd.exists(ui_h_fname);
-        QFile f(dnam + "/" + ui_h_fname);
-        m_error = !f.open(QIODevice::ReadOnly | QIODevice::Text);
-        if(m_error)
-        {
-            m_lastError = "Processor::expand: error opening file \"" + ui_h_fname +
-                    "\" in read mode under \"" + wd.absolutePath() + "\": " + f.errorString();
-            return false;
-        }
-        qDebug() << __FUNCTION__ << " file " << ui_h_fname << " exists? " << file_exists << wd.absolutePath() << "dir " << dilist.at(0).name();
 
-        QTextStream in(&f);
-        int pos;
-        QStringList list;
-        QString line;
-        QString expanded_ui_h;
-        QString expanded_params;
-        QString replacement;
-        QString par;
-        QString class_name;
-        QString comment;
-        int i;
-        while (!in.atEnd())
+    QTextStream in(&f);
+    int pos;
+    QStringList list;
+    QString line;
+    QString expanded_ui_h;
+    QString expanded_params;
+    QString replacement;
+    QString par;
+    QString class_name;
+    QString comment;
+    int i;
+    while (!in.atEnd())
+    {
+        // The returned line has no trailing end-of-line characters ("\n" or "\r\n")
+        line = in.readLine();
+        foreach(QString objectnam, objectExpMap.keys())
         {
-            // The returned line has no trailing end-of-line characters ("\n" or "\r\n")
-            line = in.readLine();
-            foreach(QString widgetnam, widgetExpMap.keys())
+            qDebug() << __FUNCTION__ << "PRICESSING" << objectnam;
+            bool isSetupUi = false;
+            // match and capture "new QuLabel(parentname);" \s*=\s*new\s+QuLabel\(([A-Za-z_0-9]+)\)
+            QRegExp re(QString("\\s*=\\s*new\\s+%1\\(([A-Za-z_0-9]+)\\);").arg(objectnam));
+            re.setMinimal(true);
+            pos = re.indexIn(line);
+            if(pos < 0)
             {
-                // match and capture "new QuLabel(parentname);" \s*=\s*new\s+QuLabel\(([A-Za-z_0-9]+)\)
-                QRegExp re(QString("\\s*=\\s*new\\s+%1\\(([A-Za-z_0-9]+)\\);").arg(widgetnam));
-                re.setMinimal(true);
+                // expand setupUi
+                re.setPattern(QString("\\s*void\\s*%1\\(([A-Za-z_0-9\\s\\*]*)\\)").arg(objectnam));
                 pos = re.indexIn(line);
+                isSetupUi = pos > -1;
+                if(pos > -1)
+                    qDebug() << __FUNCTION__ << "DETECTED setupUI regex";
+            }
 
-                if( pos > -1 && !line.contains("//") )
+            if( pos > -1 && !line.contains("//") )
+            {
+                qDebug() << __FUNCTION__ << "PRECEISSING" << line;
+                list = re.capturedTexts();
+                if(list.size() == 2) // full match [0] and capture [1]
                 {
-                    list = re.capturedTexts();
-                    if(list.size() == 2) // full match [0] and capture [1]
+                    expanded_params = list.at(1);
+                    // get Expand from object name
+                    const Expand& expand = objectExpMap.value(objectnam);
+                    // expand.params is of type Params
+                    // params.map is a QMap<QString, QStringList> where the key is the mode (factory)
+                    // and the values are the ordered list of the class names
+                    const QList<Par> & parlist = expand.params.getParList(mode);
+                    // with the class names, get the substitutions in the correct order
+                    qDebug() << __FUNCTION__ << list << objectnam;
+                    for(i = 0; i< parlist.size() && !m_error; i++)
                     {
-                        expanded_params = list.at(1);
-                        // get Expand from widget name
-                        const Expand& expand = widgetExpMap.value(widgetnam);
-                        // expand.params is of type Params
-                        // params.map is a QMap<QString, QStringList> where the key is the mode (factory)
-                        // and the values are the ordered list of the class names
-                        const QStringList& classnamlist = expand.params.map[mode];
-                        // with the class names, get the substitutions in the correct order
-                        for(i = 0; i< classnamlist.size() && !m_error; i++)
-                        {
-                            class_name = classnamlist.at(i);
-                            par = subs.getSubstitution(class_name);
-                            m_error = (par.isEmpty());
-                            expanded_params += ", " + par;
-                        }
-                        if(m_error)
-                        {
-                            m_lastError = "Processor::expand: error: no substitutions found for class name \"" + class_name + "\"." +
-                                    " File \"" + ui_h_fname + "\" left unchanged.";
-                            return false;
-                        }
-
-                        replacement = " = new " + widgetnam + "(" + expanded_params + ");";
+                        QString pardef;
+                        Par p = parlist[i];
+                        qDebug() << __FUNCTION__ << objectnam << p.toString() << isSetupUi;
+                        class_name = p.classname;
+                        pardef = p.pardef;
+                        par = subs.getSubstitution(class_name);
+                        m_error = (par.isEmpty());
+                        qDebug() << __FUNCTION__ << class_name << "parameter def " << pardef << isSetupUi;
+                        expanded_params += ", " + pardef + par;
+                    }
+                    if(m_error)
+                    {
+                        m_lastError = "Processor::expand: error: no substitutions found for class name \"" + class_name + "\"." +
+                                " File \"" + ui_h_fname + "\" left unchanged.";
+                        return false;
+                    }
+                    if(parlist.size() > 0)
+                    {
                         comment = line + " // expanded by " + qApp->applicationName() + " v." + qApp->applicationVersion();
                         expanded_ui_h += "// " + comment + "\n";
-                        line = line.replace(re, replacement);
+                        line = line.replace(list.at(1), expanded_params);
                         expanded_ui_h += line + "\n";
+                        qDebug() << __FUNCTION__ << "BREAKING CUZ PARLIST SIZE > 0";
                         break; // go to next line
                     }
                 }
+                else
+                    qDebug() << __FUNCTION__ << "regexp matches " << list.size();
             }
-            if(pos < 0)
-                expanded_ui_h += line + "\n";
-
-        } // while (!in.atEnd)
-
-        f.close();
-
-        m_error = !f.open(QIODevice::WriteOnly | QIODevice::Text);
-        if(m_error)
-        {
-            m_lastError = "Processor::expand: error opening file \"" + ui_h_fname + "\" under \"" +
-                    wd.absolutePath() + "\" in write mode: " + f.errorString();
-            return false;
         }
+        if(pos < 0)
+            expanded_ui_h += line + "\n";
 
-        QTextStream out(&f);
-        out << expanded_ui_h;
-        f.close();
+    } // while (!in.atEnd)
 
+    f.close();
+
+    m_error = !f.open(QIODevice::WriteOnly | QIODevice::Text);
+    if(m_error)
+    {
+        m_lastError = "Processor::expand: error opening file \"" + ui_h_fname + "\" under \"" +
+                wd.absolutePath() + "\" in write mode: " + f.errorString();
+        return false;
     }
+
+    QTextStream out(&f);
+    out << expanded_ui_h;
+    f.close();
+
     return true;
 
 }
@@ -204,4 +205,37 @@ QMap<QString, bool> Processor::findUI_H(const SearchDirInfoSet &dirInfoSet)
             fmap.insert(ui_h, false); // no need to process
     }
     return fmap;
+}
+
+QString Processor::m_getUiHFileName(const QString& ui_h_fname,
+                                    const SearchDirInfoSet &dirInfoSet)
+{
+    // 1. Find ui files.
+    QDir wd;
+    QList<SearchDirInfo> dilist = dirInfoSet.getDirInfoList(SearchDirInfoSet::Ui_H);
+    m_error = dilist.size() != 1;
+    if(m_error)
+    {
+        m_lastError = "Processor.expand: number of directories defined to generate ui files is not one";
+        return "";
+    }
+    bool ok = true;
+    QString dnam = dilist.at(0).name();
+    if(dnam != ".")
+    {
+        if(!wd.cd(dnam))
+        {
+            ok = wd.mkdir(dnam);
+            if(ok)
+            {
+                qDebug() << __FUNCTION__ << "changing into " << dnam;
+                wd.cd(dnam);
+            }
+        }
+    }
+    if(ok)
+        ok = wd.exists(ui_h_fname);
+    if(ok)
+        return  dnam + "/" + ui_h_fname;
+    return "";
 }

@@ -29,6 +29,8 @@ private:
 
     bool m_error;
 
+    QString m_getUiHFileName(const QString& ui_h_fname, const SearchDirInfoSet &dirInfoSet);
+
     QString m_lastError;
 };
 

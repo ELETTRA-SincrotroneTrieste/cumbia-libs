@@ -28,29 +28,81 @@ public:
     }
 };
 
+class Par
+{
+public:
+    Par(const QString& n, const QString& t = "")
+    {
+        classname = n; // the class name only: CuTReaderFactory
+        pardef = t; // the class name and the parameter type definition, e.g: const CuTReaderFactory&
+    }
+
+    Par() { }
+
+    bool isValid() const { return classname != "" ; }
+
+    QString classname; // class name: ClassName
+    QString pardef; // parameter definition: const ClassName&
+
+    QString toString() const
+    {
+        return "name: " + classname + ", type " + pardef;
+    }
+};
+
 class Params
 {
 public:
     Params() {}
 
-    QMap<QString, QStringList> map;
+
+    void add(const QString& mode, const QList<Par>& p)
+    {
+        m_map[mode] = p;
+    }
+
+    // returns the parameter type for the given mode (factory) and the parameter name
+    QString getType(const QString& mode, const QString& name)
+    {
+        const QList<Par> &lp = m_map[mode];
+        foreach(Par p, lp)
+            if(p.classname == name)
+                return p.pardef;
+        return QString();
+    }
+
+    // returns the parameter name for the given mode (factory) and parameter type
+    QString getName(const QString& mode, const QString& type)
+    {
+        const QList<Par> &lp = m_map[mode];
+        foreach(Par p, lp)
+            if(p.pardef == type)
+                return p.classname;
+        return QString();
+    }
+
+    QList<Par> getParList(const QString& mode) const { return m_map[mode]; }
 
     bool isValid() const {
-        return map.size() > 0;
+        return m_map.size() > 0;
     }
 
     QString toString() const {
         QString s;
         s += "Params:\n";
-        foreach(QString nam, map.keys())
+        foreach(QString nam, m_map.keys())
         {
             s += "\n\t- factory: " + nam;
-            foreach(QString p, map[nam])
-                s += "\n\t\t: " + p;
+            const QList<Par> &lp = m_map[nam];
+            foreach(Par p, lp)
+                s += "\n\t\t: " + p.toString();
         }
         s += "\n";
         return s;
     }
+
+private:
+    QMap<QString, QList<Par> > m_map;
 };
 
 class Substitutions
@@ -93,29 +145,40 @@ class Expand
 public:
     Expand(const QString& wnam, const Params& par, bool from_local_file)
     {
-        widget = wnam;
+        object = wnam;
         params = par;
         m_fromLocalConf = from_local_file;
+        m_method = false;
+    }
+
+    Expand(const QString& wnam, const Params& par, bool from_local_file, bool method)
+    {
+        object = wnam;
+        params = par;
+        m_fromLocalConf = from_local_file;
+        m_method = method;
     }
 
     Expand() {}
 
 
-    QString widget;
+    QString object;
     Params params;
 
     bool fromLocalConf() const { return m_fromLocalConf; }
 
+    bool isMethod() const { return m_method; }
+
     QString toString() const {
         QString s;
-        s += "Expand: widget \"" + widget + "\" must add the following parameters to the constructor:\n";
+        s += "Expand: object \"" + object + "\" is method: " + QString::number(m_method) + " must add the following parameters to the constructor:\n";
         s += params.toString();
         s += "\n";
         return s;
     }
 
 private:
-    bool m_fromLocalConf;
+    bool m_fromLocalConf, m_method;
 
 };
 
@@ -189,7 +252,7 @@ public:
     void setDebug(bool db);
 
     // get Expand from widget name
-    QMap<QString, Expand> getWidgetMap() const;
+    QMap<QString, Expand> getObjectMap() const;
 
     QList<Search > getSearchList() const;
 
@@ -201,9 +264,7 @@ private:
 
     bool loadLocalConf(const QString& fname);
 
-    QMap<QString, Expand> m_widgetmap;
-
-    Params m_default_pars;
+    QMap<QString, Expand> m_objectmap;
 
     QList<Search> m_searchlist;
 

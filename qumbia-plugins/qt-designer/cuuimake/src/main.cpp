@@ -7,8 +7,10 @@ int main(int argc, char *argv[])
     a.setApplicationName("cuuimake");
     a.setApplicationVersion(CUUIMAKE_VERSION_STR);
     CuUiMake cuuim;
+    bool success = true;
 
-    bool success = cuuim.make();
+    if(!cuuim.dummy())
+        success = cuuim.make();
 
     if(success)
         return EXIT_SUCCESS;

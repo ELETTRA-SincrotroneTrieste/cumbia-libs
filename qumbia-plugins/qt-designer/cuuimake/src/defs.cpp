@@ -24,8 +24,8 @@ bool Defs::loadConf(const QString &default_conf, const QString& localfname)
         foreach(Search s, m_searchlist)
             printf("Search analysis parameters: %s\n", s.toString().toStdString().c_str());
 
-        foreach(QString s, m_widgetmap.keys())
-            printf("%s:\n%s\n", s.toStdString().c_str(), m_widgetmap[s].toString().toStdString().c_str());
+        foreach(QString s, m_objectmap.keys())
+            printf("%s:\n%s\n", s.toStdString().c_str(), m_objectmap[s].toString().toStdString().c_str());
     }
 
     return success;
@@ -57,7 +57,7 @@ void Defs::m_getParams(const QDomNode &parent, Params& params)
             QDomElement defel = nld.at(k).toElement();
             if(!defel.isNull() && defel.tagName() == "params")
             {
-                QStringList list;
+                QList<Par> parlist;
                 QString facname = defel.attribute("factory");
                 QDomNodeList params_nl = defel.childNodes();
                 for(int l = 0; l < params_nl.size() && !m_error; l++)
@@ -66,7 +66,12 @@ void Defs::m_getParams(const QDomNode &parent, Params& params)
                     if(!param.isNull() && param.tagName() == "param")
                     {
                         if(param.hasAttribute("add"))
-                            list << (param.attribute("add"));
+                        {
+                            Par p(param.attribute("add"));
+                            if(param.hasAttribute("definition"))
+                                p.pardef = param.attribute("definition");
+                            parlist << p;
+                        }
                         else
                         {
                             m_error = true;
@@ -75,8 +80,8 @@ void Defs::m_getParams(const QDomNode &parent, Params& params)
                     }
                 }
 
-                if(!facname.isEmpty() && !list.isEmpty() && !m_error)
-                    params.map[facname] = list; // must be ordered by pos
+                if(!facname.isEmpty() && !parlist.isEmpty() && !m_error)
+                    params.add(facname, parlist);
             }
         }
     }
@@ -87,9 +92,9 @@ void Defs::setDebug(bool db)
     m_debug = db;
 }
 
-QMap<QString, Expand> Defs::getWidgetMap() const
+QMap<QString, Expand> Defs::getObjectMap() const
 {
-    return m_widgetmap;
+    return m_objectmap;
 }
 
 QList<Search> Defs::getSearchList() const
@@ -194,23 +199,6 @@ bool Defs::loadXmlConf(const QString &fname)
     }
     else
     {
-        // default parameter expansion
-        QDomNodeList defaults = doc.elementsByTagName("defaults");
-        if(defaults.size() == 1)
-        {
-            m_getParams(defaults.at(0), m_default_pars);
-            if(m_error) // m_getParams issues an error
-                return false;
-        }
-        else
-        {
-            m_error = true;
-            m_lastError = "Defs.loadConf: there must be one (and only one) \"defaults\" node";
-        }
-
-        if(m_error)
-            return false;
-
         QDomNodeList widgetsnl = doc.elementsByTagName("widgets");
         if(widgetsnl.size() == 1)
         {
@@ -228,11 +216,9 @@ bool Defs::loadXmlConf(const QString &fname)
                     if(m_error)
                         return false;
                     if(custom_pars.isValid())
-                        m_widgetmap[nam] = Expand(nam, custom_pars, false);
-                    else if(!nam.isEmpty() && m_default_pars.isValid())
-                        m_widgetmap[nam] = Expand(nam, m_default_pars, false);
+                        m_objectmap[nam] = Expand(nam, custom_pars, false);
 
-                    if(m_widgetmap.isEmpty())
+                    if(m_objectmap.isEmpty())
                     {
                         m_error = true;
                         m_lastError = "Defs.loadConf: no valid \"widget\" configurations";
@@ -245,6 +231,31 @@ bool Defs::loadXmlConf(const QString &fname)
             m_error = true;
             m_lastError = "Defs.loadConf: there must be one (and only one) \"widgets\" node";
         }
+        QDomNodeList methodsnl = doc.elementsByTagName("methods");
+        if(methodsnl.size() == 1)
+        {
+            QDomElement methods_el = methodsnl.at(0).toElement();
+            for(int i = 0; i < methods_el.childNodes().count(); i++)
+            {
+                QDomElement method = methods_el.childNodes().at(i).toElement();
+                if(!method.isNull() && method.hasAttribute("name"))
+                {
+                    QString methodnam = method.attribute("name");
+                    Params methodParams;
+                    m_getParams(method, methodParams);
+                    if(m_error)
+                        return false;
+                    if(methodParams.isValid())
+                        m_objectmap[methodnam] = Expand(methodnam, methodParams, false, true);
+                }
+            }
+
+        }
+        else
+        {
+            m_error = true;
+            m_lastError = "Defs.loadConf: there must be one (and only one) \"methods\" node";
+        }
 
         if(m_error)
             return false;
@@ -254,19 +265,19 @@ bool Defs::loadXmlConf(const QString &fname)
 
 bool Defs::loadLocalConf(const QString &fname)
 {
-    QFile file(fname);
-    m_error = !file.open(QIODevice::ReadOnly | QIODevice::Text);
-    if(m_error) {
-        m_lastError = "Defs.loadConf: " + file.errorString();
-        return false;
-    }
-    while (!file.atEnd()) {
-        QByteArray line = file.readLine().replace("\n", "");
-        m_widgetmap[line] = Expand(line, m_default_pars, true);
-    }
-    if(m_error) {
-        m_lastError = "Defs.loadConf: error parsing document: " + m_lastError;
-        return false;
-    }
+//    QFile file(fname);
+//    m_error = !file.open(QIODevice::ReadOnly | QIODevice::Text);
+//    if(m_error) {
+//        m_lastError = "Defs.loadConf: " + file.errorString();
+//        return false;
+//    }
+//    while (!file.atEnd()) {
+//        QByteArray line = file.readLine().replace("\n", "");
+//        m_widgetmap[line] = Expand(line, m_default_pars, true);
+//    }
+//    if(m_error) {
+//        m_lastError = "Defs.loadConf: error parsing document: " + m_lastError;
+//        return false;
+//    }
     return true;
 }

@@ -46,7 +46,10 @@ SOURCES += src/main.cpp \
     src/cuuimake.cpp \
     src/conf.cpp \
     src/parser.cpp \
-    src/processor.cpp
+    src/processor.cpp \
+    src/uicproc.cpp \
+    src/options.cpp \
+    src/xmakeprocess.cpp
 
 DISTFILES += \
     cuuimake-cumbia-qtcontrols.xml
@@ -65,4 +68,7 @@ HEADERS += \
     src/cuuimake.h \
     src/conf.h \
     src/parser.h \
-    src/processor.h
+    src/processor.h \
+    src/uicproc.h \
+    src/options.h \
+    src/xmakeprocess.h

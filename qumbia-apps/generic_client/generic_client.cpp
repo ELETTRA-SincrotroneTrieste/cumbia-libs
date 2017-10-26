@@ -57,6 +57,10 @@ GenericClient::GenericClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
     cu_pool->setSrcPatterns("epics", ew.srcPatterns());
 
+   // m_log = new CuLog(&m_log_impl);
+    cuta->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+    cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+
     ui->setupUi(this);
     connect(ui->pbSetSources, SIGNAL(clicked()), this, SLOT(sourcesChanged()));
     connect(ui->pbApplyRefresh, SIGNAL(clicked()), this, SLOT(changeRefresh()));
@@ -106,12 +110,12 @@ void GenericClient::configure(const CuData &d)
 //       delete l;
 
 
-    for(int i = 0; i < 10; i++)
-    {
-        QuLabel *l = new QuLabel(this, cu_pool, m_ctrl_factory_pool);
-        l->setSource(d["src"].toString().c_str());
-        lo->addWidget(l, ++layout_row, 0, 1, m_layoutColumnCount);
-    }
+//    for(int i = 0; i < 10; i++)
+//    {
+//        QuLabel *l = new QuLabel(this, cu_pool, m_ctrl_factory_pool);
+//        l->setSource(d["src"].toString().c_str());
+//        lo->addWidget(l, ++layout_row, 0, 1, m_layoutColumnCount);
+//    }
 
 //       foreach(QuLabel *l, findChildren<QuLabel *>())
 //         delete l;
@@ -178,8 +182,8 @@ void GenericClient::configure(const CuData &d)
         //splot->setContextMenuStrategy(ctx_menu_strat);
         splot->addSource(d["src"].toString().c_str());
     }
-    foreach(QuLabel *l, findChildren<QuLabel *>())
-       delete l;
+//    foreach(QuLabel *l, findChildren<QuLabel *>())
+//       delete l;
 }
 
 void GenericClient::changeRefresh()

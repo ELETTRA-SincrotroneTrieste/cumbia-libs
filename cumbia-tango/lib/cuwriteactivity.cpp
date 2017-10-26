@@ -76,6 +76,7 @@ void CuWriteActivity::execute()
                 success = tangoworld.get_command_info(d->tdev->getDevice(), at["point"].toString(), d->point_info);
             if(success)
             {
+                printf("calling cmd_inout with write value %s WHOLE at %s\n", at["write_value"].toString().c_str(), at.toString().c_str());
                 success = tangoworld.cmd_inout(dev, at["point"].toString(), at["write_value"], d->point_info, at);
             }
         }

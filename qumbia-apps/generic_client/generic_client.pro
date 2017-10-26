@@ -34,10 +34,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 DEFINES -= QT_NO_DEBUG_OUTPUT
 
 SOURCES += main.cpp \
-    generic_client.cpp
+    generic_client.cpp \
+    src/element.cpp
 
 HEADERS  += \
-    generic_client.h
+    generic_client.h \
+    src/element.h
 
 FORMS    += generic_client.ui
 

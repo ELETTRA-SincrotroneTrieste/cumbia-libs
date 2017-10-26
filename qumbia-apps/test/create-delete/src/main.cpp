@@ -9,9 +9,9 @@ int main(int argc, char *argv[])
 {
     QApplication a( argc, argv );
     a.setApplicationName("CreateDelete");
-    CumbiaPool *cu_p = new CumbiaPool();
+    CumbiaPool *cu_poo = new CumbiaPool();
 
-    CreateDelete *w = new CreateDelete(cu_p, NULL);
+    CreateDelete *w = new CreateDelete(cu_poo, NULL);
 
     w->show();
 

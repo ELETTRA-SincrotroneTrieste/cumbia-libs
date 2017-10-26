@@ -141,6 +141,8 @@ public:
 
     double toDouble(bool *ok = NULL) const;
 
+    long double toLongDouble(bool *ok = NULL) const;
+
     bool isValid() const;
 
     bool isNull() const;
@@ -172,6 +174,8 @@ public:
     std::vector<std::string> toStringVector(bool *ok = NULL) const;
 
     double *toDoubleP() const;
+
+    long double *toLongDoubleP() const;
 
     long int *toLongIntP() const;
 

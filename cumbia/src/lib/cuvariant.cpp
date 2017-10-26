@@ -694,6 +694,16 @@ double CuVariant::toDouble(bool *ok) const
     return v;
 }
 
+long double CuVariant::toLongDouble(bool *ok) const
+{
+    long double v = nan("NaN");
+    if(d->type == LongDouble && d->format == Scalar && d->val != NULL)
+        v = *((long double *)d->val);
+    if(ok)
+        *ok = d->mIsValid && d->val != NULL;
+    return v;
+}
+
 /** \brief The conversion method that tries to convert the stored data into a long scalar integer
  *
  * @return an int representing the data saved into XVariant
@@ -878,9 +888,9 @@ std::vector<std::string> CuVariant::toStringVector(bool *ok) const
 {
     std::vector<std::string> ret;
     if(ok)
-        *ok = (d->type == String && d->format == Vector);
+        *ok = (d->type == String && (d->format == Vector || d->format == Scalar) );
 
-    if(d->type == String && d->format == Vector)
+    if(d->type == String && (d->format == Vector || d->format == Scalar) )
     {
         char **str_array = static_cast<char **>(d->val);
         for(size_t i = 0; i < d->mSize; i++)
@@ -905,6 +915,11 @@ std::vector<std::string> CuVariant::toStringVector(bool *ok) const
 double *CuVariant::toDoubleP() const
 {
     return (double *) d->val ;
+}
+
+long double *CuVariant::toLongDoubleP() const
+{
+    return static_cast<long double *>(d->val);
 }
 
 /** \brief Returns a pointer to a long unsigned int addressing the start of data.

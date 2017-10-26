@@ -553,7 +553,7 @@ void CuTangoWorld::fillFromCommandInfo(const Tango::CommandInfo &ci, CuData &d)
     case Tango::DEVVAR_DOUBLESTRINGARRAY:
         d["data_format"] = Tango::SPECTRUM;
     default:
-        Tango::FMT_UNKNOWN;
+        d["data_format"] = Tango::FMT_UNKNOWN;
     };
 }
 
@@ -593,8 +593,20 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
     {
         std::string cmdnam(cmd);
         Tango::DeviceData din = toDeviceData(argins, point_info);
-        Tango::DeviceData dout = dev->command_inout(cmdnam, din);
-        extractData(&dout, data);
+        Tango::DeviceData dout;
+        if(argins.isNull())
+        {
+            printf("CHIAMO command_inout void\n");
+           dout = dev->command_inout(cmdnam);
+        }
+        else
+        {
+
+            printf("CHIAMO command_inout PIENOOOOOOOOOOOO\n");
+            dout = dev->command_inout(cmdnam, din);
+        }
+        if(point_info["out_type"].toLongInt() != Tango::DEV_VOID)
+            extractData(&dout, data);
     }
     catch(Tango::DevFailed &e)
     {
@@ -820,15 +832,20 @@ std::vector<string> CuTangoWorld::srcPatterns() const
 Tango::DeviceData CuTangoWorld::toDeviceData(const CuVariant &arg,
                                              const CuData &info)
 {
-    bool type_match = true;
+    bool type_match = false;
     d->error = false;
     d->message = "";
     long in_type = info["in_type"].toLongInt();
     Tango::DeviceData dd;
     cuprintf("\e[1;35mtoDeviceData... enter arg is %s arg format %d type %d CmdInfo in_type %ld...\n",
              arg.toString().c_str(), arg.getFormat(), arg.getType(), in_type);
-    if(arg.getFormat() == CuVariant::Scalar)
+    if((arg.isNull() || arg.getFormat() < 0) && in_type == static_cast<Tango::CmdArgType>(Tango::DEV_VOID))
     {
+       type_match = true;
+    }
+    else if(arg.getFormat() == CuVariant::Scalar)
+    {
+        printf("ENTRO IN SCALAR\n");
         if(in_type == Tango::DEV_BOOLEAN && arg.getType() == CuVariant::Boolean)
             dd << (bool) arg.toBool();
         else if(in_type == Tango::DEV_SHORT  && arg.getType() == CuVariant::Short)
@@ -854,11 +871,10 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const CuVariant &arg,
             std::string s = arg.toString();
             dd << s;
         }
-        else
-            type_match = false;
     }
     else if(arg.getFormat() == CuVariant::Vector)
     {
+        printf("ENTRO IN VECTRIR\n");
         /*
          * Tango::DEVVAR_SHORTARRAY Tango::DEVVAR_USHORTARRAY)
          Tango::DEVVAR_LONGARRAY  Tango::DEVVAR_ULONGARRAY) ango::DEVVAR_FLOATARRAY)
@@ -908,12 +924,13 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const CuVariant &arg,
     }
     if(!type_match)
     {
-        printf("NOT TYPE MATCH, try with strings!\e[0m\n");
+        printf("NOT TYPE MATCH, try with strings toDeviceData!\e[0m\n");
         /* no match between CommandInfo argin type and CuVariant type: try to get CuVariant
          * data as string and convert it according to CommandInfo type
          */
         return toDeviceData(arg.toStringVector(), info);
     }
+    printf("SHOULD RETURN A DUCKING dd\n");
     return dd;
 }
 
@@ -923,6 +940,7 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const std::vector<std::string> &arg
     d->error = false;
     d->message = "";
     long in_type = cmdinfo["in_type"].toLongInt();
+    printf("argis size %d in type %s as int %ld\n", argins.size(), cmdArgTypeToStr(Tango::CmdArgType(in_type)).c_str(), in_type);
     Tango::DeviceData dd;
     if(argins.size() == 0)
         return dd;
@@ -944,6 +962,7 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const std::vector<std::string> &arg
                 dd << (unsigned short) std::stoul(v);
                 break;
             case Tango::DEV_LONG:
+                printf("ddiing with dev long from %s\n", v.c_str());
                 dd << (Tango::DevLong) std::stol(v);
                 break;
             case Tango::DEV_STATE:
