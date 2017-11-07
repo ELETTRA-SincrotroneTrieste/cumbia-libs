@@ -3,12 +3,25 @@
 
 #include "cuvariantprivate.h"
 #include <cuvariant.h>
+#include <string> // stold
+#include <stdexcept>
 
-template<typename T> void CuVariant::to(T &val) const
+/** \brief convert the current CuVariant into a variable of type T, if possible.
+ *
+ * @param val a reference to a variable of type T
+ * @return true the conversion is successful
+ * @return false the conversion was not possible
+ *
+ * This method tries to convert the value stored into the CuVariant into the desired
+ * type passed as reference.
+ *
+ * @see toVector
+ */
+template<typename T> bool CuVariant::to(T &val) const
 {
     val = 0;
-    d->mIsValid = true;
-    if(d->format == Scalar)
+    bool valid = (d->format == Scalar);
+    if(valid)
     {
         switch(d->type)
         {
@@ -44,22 +57,46 @@ template<typename T> void CuVariant::to(T &val) const
             val = *(static_cast<bool *>(d->val));
             break;
         case String:
-            d->mIsValid = false;
-            perr("CuVariant.to: string to number conversion not supported. Use toString instead");
+            try
+            {
+                // try converting to long double
+                val = std::stold(this->toString());
+        }
+
+            catch(const std::invalid_argument& ) {
+                perr("CuVariant.toVector: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
+                valid = false;
+            }
+            catch(const std::out_of_range& ) {
+                perr("CuVariant.toVector: string \"%s\" to number conversion failed: out of range", toString().c_str());
+                valid = false;
+            }
             break;
         default:
-            d->mIsValid = false;
+            valid = false;
             break;
         }
-        if(!d->mIsValid)
+        if(!valid)
             perr("CuVariant.to: unsupported scalar conversion from type %s and format %s", dataTypeStr(d->type).c_str(),
                  dataFormatStr(d->format).c_str());
     }
+    return valid;
 }
 
-template<typename T> void CuVariant::toVector(std::vector<T> &v) const
+/** \brief convert the current CuVariant into a vector of type T, if possible.
+ *
+ * @param val a reference to a std vector of type T
+ * @return true the conversion is successful
+ * @return false the conversion was not possible
+ *
+ * This method tries to convert the value stored into the CuVariant into the desired
+ * vector of type T passed as reference.
+ *
+ * @see to
+ */
+template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
 {
-    d->mIsValid = true;
+    bool valid = true;
     size_t i;
     if(d->format == Vector)
     {
@@ -115,11 +152,28 @@ template<typename T> void CuVariant::toVector(std::vector<T> &v) const
                 v.push_back(static_cast<T>(bv[i]));
         }
         else if(d->type == String) {
-            d->mIsValid = false;
-            perr("CuVariant.toVector: string to number conversion not supported. Use toStringVector instead");
+            long double ld;
+            std::vector<std::string> sv = toStringVector();
+            for(i = 0; i < sv.size() && valid; i++)
+            {
+                try
+                {
+                    // try converting to long double
+                    ld = std::stold(sv[i]);
+                    v.push_back(static_cast<T>(ld));
+                }
+                catch(const std::invalid_argument& ) {
+                    perr("CuVariant.toVector: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
+                    valid = false;
+                }
+                catch(const std::out_of_range &) {
+                    perr("CuVariant.toVector: string \"%s\" to number conversion failed: out of range", toString().c_str());
+                    valid = false;
+                }
+            }
         }
         else
-            d->mIsValid = false;
+            valid = false;
     }
     else if(d->format == Scalar)
     {
@@ -141,13 +195,27 @@ template<typename T> void CuVariant::toVector(std::vector<T> &v) const
             v.push_back(static_cast<T>(toDouble()));
         else if(d->type == LongDouble)
             v.push_back(static_cast<T>(toLongDouble()));
-        else if(d->type == String) {
-            d->mIsValid = false;
-            perr("CuVariant.toVector: string to number conversion not supported. Use toStringVector instead");
+        else if(d->type == String)
+        {
+            try
+            {
+                // try converting to long double
+                long double ld = std::stold(toString());
+                v.push_back(static_cast<T>(ld));
+            }
+            catch(const std::invalid_argument &) {
+                perr("CuVariant.toVector: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
+                valid = false;
+            }
+            catch(const std::out_of_range &) {
+                perr("CuVariant.toVector: string \"%s\" to number conversion failed: out of range", toString().c_str());
+                valid = false;
+            }
         }
         else
-            d->mIsValid = false;
+            valid = false;
     }
+    return valid;
 }
 
 

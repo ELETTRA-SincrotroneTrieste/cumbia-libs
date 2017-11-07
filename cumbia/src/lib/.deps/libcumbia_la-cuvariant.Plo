@@ -13,6 +13,7 @@ src/lib/libcumbia_la-cuvariant.lo: src/lib/cuvariant.cpp \
  /usr/include/bits/select.h /usr/include/bits/sigset.h \
  /usr/include/bits/types/struct_timeval.h \
  /usr/include/bits/types/struct_timespec.h /usr/include/bits/select2.h \
+ /usr/include/sys/sysmacros.h /usr/include/bits/sysmacros.h \
  /usr/include/bits/pthreadtypes.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/vector \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/stl_algobase.h \
@@ -106,6 +107,7 @@ src/lib/libcumbia_la-cuvariant.lo: src/lib/cuvariant.cpp \
  src/lib/cumacros.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdlib.h \
  src/lib/cuvariant_t.h src/lib/cuvariantprivate.h src/lib/cuvariant.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdexcept \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include-fixed/limits.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include-fixed/syslimits.h \
  /usr/include/limits.h /usr/include/bits/posix1_lim.h \
@@ -177,6 +179,10 @@ src/lib/cuvariant.h:
 /usr/include/bits/types/struct_timespec.h:
 
 /usr/include/bits/select2.h:
+
+/usr/include/sys/sysmacros.h:
+
+/usr/include/bits/sysmacros.h:
 
 /usr/include/bits/pthreadtypes.h:
 
@@ -401,6 +407,8 @@ src/lib/cuvariant_t.h:
 src/lib/cuvariantprivate.h:
 
 src/lib/cuvariant.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdexcept:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include-fixed/limits.h:
 

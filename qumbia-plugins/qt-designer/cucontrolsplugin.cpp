@@ -2,7 +2,6 @@
 
 /* Qu widgets includes */
 #include "qulabel.h"
-#include "qubutton.h"
 #include "quled.h"
 #include "qulineedit.h"
 #include "qutable.h"
@@ -11,6 +10,8 @@
 #include "forms/tlabelbooleditor.h"
 #include "forms/tledbooleditor.h"
 #include "forms/ttablebooleditor.h"
+#include "qubutton.h"
+#include "quapplynumeric.h"
 
 #include <cumbiatango.h>
 #include <cumbiaepics.h>
@@ -177,12 +178,13 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
     cuepsp->registerService(CuServices::Log, new CuLog(new QuLogImpl()));
 
     d_plugins.append(new QuLabelInterface(this, cumbia_pool, m_ctrl_factory_pool));
-    d_plugins.append(new QuButtonInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuLedInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuLineEditInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuTableInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuTrendPlotInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuSpectrumPlotInterface(this, cumbia_pool, m_ctrl_factory_pool));
+    d_plugins.append(new QuButtonInterface(this, cumbia_pool, m_ctrl_factory_pool));
+    d_plugins.append(new QuApplyNumericInterface(this, cumbia_pool, m_ctrl_factory_pool));
 }
 
 CuCustomWidgetCollectionInterface::~CuCustomWidgetCollectionInterface()
@@ -228,7 +230,7 @@ QObject *TaskMenuFactory::createExtension(QObject *object, const QString &iid, Q
         return 0;
 
     if (qobject_cast<QuLabel*>(object) || qobject_cast<QuLed *>(object)
-            || qobject_cast<QuButton *>(object) || qobject_cast<QuTable *>(object)
+            || qobject_cast<QuButton *>(object) || qobject_cast<QuApplyNumeric *>(object) || qobject_cast<QuTable *>(object)
              || qobject_cast<QuTrendPlot *>(object)|| qobject_cast<QuSpectrumPlot *>(object) )
         return new TaskMenuExtension((QWidget*)object, parent);
 
@@ -252,7 +254,7 @@ QList<QAction *> TaskMenuExtension::taskActions() const
     /* 1. edit Tango action */
     if (cname == "QuLabel" || cname == "QuLed" || cname == "QuLineEdit"
         || cname == "QuButton" || cname == "QuTable" || cname == "QuTrendPlot"
-            || cname == "QuSpectrumPlot")
+            || cname == "QuSpectrumPlot" || cname == "QuApplyNumeric")
         list.append(d_editTangoAction);
     /* 2. edit action */
     if ((cname == "QuLabel") || (cname == "QuLed") || cname == "QuTable")
@@ -309,7 +311,8 @@ void TaskMenuExtension::setupSourceTargetDialog(QWidget *cb_widget)
         formWindow->cursor()->setProperty("source", wins->ui.lineEdit->text());
 
         QString targets;
-        QList<QListWidgetItem *>itemList = d->ui.listWidget->findItems("*", Qt::MatchWildcard);
+
+        QList<QListWidgetItem *>itemList = wint->ui.listWidget->findItems("*", Qt::MatchWildcard);
         for(int i = 0; i < itemList.size(); i++)
         {
             QListWidgetItem *it = itemList.at(i);
@@ -347,6 +350,12 @@ void TaskMenuExtension::editTango()
         src = b->targets();
         edit_source = false;
     }
+    else if(QuApplyNumeric *an = qobject_cast<QuApplyNumeric *>(d_widget))
+    {
+        src = an->targets();
+        edit_source = false;
+    }
+
     else
         return;
 
@@ -477,6 +486,34 @@ QWidget *QuButtonInterface::createWidget(QWidget *parent)
     DropEventFilter *dropEventFilter = new DropEventFilter(button);
     button->installEventFilter(dropEventFilter);
     return button;
+}
+
+QuApplyNumericInterface::QuApplyNumericInterface(QObject* parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p)
+    : CuCustomWidgetInterface(parent, cumbia_p, ctrl_factory_p)
+{
+    d_name = "QuApplyNumeric";
+    d_include = "quapplynumeric.h";
+    d_icon = QPixmap(":pixmaps/eapplynumeric.png");
+    d_domXml =
+            "<widget class=\"QuApplyNumeric\" name=\"quApplyNum\">\n"
+            " <property name=\"geometry\">\n"
+            "  <rect>\n"
+            "   <x>0</x>\n"
+            "   <y>0</y>\n"
+            "   <width>120</width>\n"
+            "   <height>40</height>\n"
+            "  </rect>\n"
+            " </property>\n"
+            "</widget>\n";
+}
+
+QWidget* QuApplyNumericInterface::createWidget(QWidget* parent)
+{
+    QuApplyNumeric * an = new QuApplyNumeric(parent, cumbia_pool, ctrl_factory_pool);
+   // label->setDesignerMode(true);
+    DropEventFilter *dropEventFilter = new DropEventFilter(an);
+    an->installEventFilter(dropEventFilter);
+    return an;
 }
 
 QuLedInterface::QuLedInterface(QObject *parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p)

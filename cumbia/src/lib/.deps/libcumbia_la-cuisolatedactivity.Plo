@@ -15,6 +15,7 @@ src/lib/libcumbia_la-cuisolatedactivity.lo: \
  /usr/include/bits/select.h /usr/include/bits/sigset.h \
  /usr/include/bits/types/struct_timeval.h \
  /usr/include/bits/types/struct_timespec.h /usr/include/bits/select2.h \
+ /usr/include/sys/sysmacros.h /usr/include/bits/sysmacros.h \
  /usr/include/bits/pthreadtypes.h src/lib/cuvariant.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/vector \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/stl_algobase.h \
@@ -108,6 +109,7 @@ src/lib/libcumbia_la-cuisolatedactivity.lo: \
  src/lib/cumacros.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdlib.h \
  src/lib/cuvariant_t.h src/lib/cuvariantprivate.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdexcept \
  src/lib/services/cuactivitymanager.h src/lib/services/cuservicei.h \
  src/lib/services/cuservices.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/map \
@@ -118,7 +120,6 @@ src/lib/libcumbia_la-cuisolatedactivity.lo: \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/utility \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/stl_relops.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/array \
- /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdexcept \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/uses_allocator.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/stl_multimap.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/mutex \
@@ -191,6 +192,10 @@ src/lib/cudata.h:
 /usr/include/bits/types/struct_timespec.h:
 
 /usr/include/bits/select2.h:
+
+/usr/include/sys/sysmacros.h:
+
+/usr/include/bits/sysmacros.h:
 
 /usr/include/bits/pthreadtypes.h:
 
@@ -416,6 +421,8 @@ src/lib/cuvariant_t.h:
 
 src/lib/cuvariantprivate.h:
 
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdexcept:
+
 src/lib/services/cuactivitymanager.h:
 
 src/lib/services/cuservicei.h:
@@ -437,8 +444,6 @@ src/lib/services/cuservices.h:
 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/stl_relops.h:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/array:
-
-/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdexcept:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/uses_allocator.h:
 

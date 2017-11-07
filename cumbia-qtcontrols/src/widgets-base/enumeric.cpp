@@ -31,8 +31,6 @@ ENumeric::ENumeric(QWidget *parent, int id, int dd) : QFrame(parent), FloatDeleg
     box = NULL;
     text = NULL;
     setFrameShape(QFrame::NoFrame);
-    setMinimumHeight(35);
-    setMinimumWidth(15*digits);
     LeftClickWithModifiersEater *leftClickWithModifiersEater = new LeftClickWithModifiersEater(this);
     leftClickWithModifiersEater->setObjectName("leftClickWithModifiersEater");
     init();
@@ -40,12 +38,18 @@ ENumeric::ENumeric(QWidget *parent, int id, int dd) : QFrame(parent), FloatDeleg
 
 QSize ENumeric::sizeHint() const
 {
-    return QWidget::sizeHint();
+    QFontMetrics fm(font());
+    int w = fm.width('X') * digits + fm.width("+") + fm.width(".") + 12;
+    int h = fm.height() * 3;
+    return QSize(w, h);
 }
 
 QSize ENumeric::minimumSizeHint() const
 {
-    return sizeHint();
+    QFontMetrics fm(font());
+    int w = fm.width('X') * digits + 4 + fm.width("+") + fm.width(".") + 4;
+    int h = ceil(fm.height() * 2.5);
+    return QSize(w, h);
 }
 
 void ENumeric::clearContainers()
@@ -121,15 +125,13 @@ void ENumeric::init()
             box->addWidget(signLabel, 1, 0);
         }
     }
-    for (int i = 0; i < box->rowCount(); i++)
-        box->setRowStretch(i, 10);
-    for (int i = 0; i < box->columnCount(); i++)
-        box->setColumnStretch(i, 10);
-    box->setColumnStretch(0, 3);
-    box->setColumnStretch(intDig+1, 1);
+//    for (int i = 0; i < box->rowCount(); i++)
+//        box->setRowStretch(i, 10);
+//    for (int i = 0; i < box->columnCount(); i++)
+//        box->setColumnStretch(i, 10);
+//    box->setColumnStretch(0, 3);
+//    box->setColumnStretch(intDig+1, 1);
 
-    /*QFontMetrics fm(labels[0]->font());
-	fontratio = ((double)fm.height())/fm.maxWidth();*/
     showData();
     connect(bup, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(upData(QAbstractButton*)));
     connect(bdown, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(downData(QAbstractButton*)));
@@ -248,7 +250,8 @@ void ENumeric::showData()
         temp -= num * (long) pow(10.0, digits-i-1);
         labels[i]->setText(QString().setNum(abs(num)));
     }
-    QTimer::singleShot(1000, this, SLOT(valueUpdated()));
+    valueUpdated();
+    QTimer::singleShot(200, this, SLOT(valueUpdated()));
 }
 
 void ENumeric::valueUpdated()
@@ -349,14 +352,6 @@ void ENumeric::resizeEvent(QResizeEvent *e)
     if (text != NULL)
         text->setGeometry(QRect(box->cellRect(1, 0).topLeft(), box->cellRect(1, box->columnCount() - 1).bottomRight()));
 
-    /* rescale font if required. Take the only ESimpleLabel we have, then ask it to calculateFontPointSizeF
-	 * providing its text and its size as input parameters to the public method calculateFontPointSizeF of
-	 * the class FontScalingWidget, which ESimpleLabel inherits. We must provide text and size because the
-	 * method belongs to FontScalingWidget, not to ESimpleLabel.
-	 */
-    QFont labelFont;
-    ESimpleLabel *l1 = findChild<ESimpleLabel *>();
-    labelFont = l1->font();
     QWidget::resizeEvent(e);
 }
 
@@ -365,18 +360,18 @@ void ENumeric::formatDigit(QPushButton *up, QLabel *l, QPushButton *down)
 {
     up->setText("");
     // 	up->setAutoRepeat(true); /* used to cause infinite loop */
-    up->setMinimumSize(QSize(MIN_SIZE,MIN_SIZE));
+   // up->setMinimumSize(QSize(MIN_SIZE,MIN_SIZE));
     up->setFlat(true);
     up->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     up->setFocusPolicy(Qt::NoFocus);
 
     l->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     l->setAlignment(Qt::AlignCenter);
-    l->setMinimumSize(QSize(MIN_SIZE,2*MIN_SIZE));
+  //  l->setMinimumSize(QSize(MIN_SIZE,2*MIN_SIZE));
 
     down->setText("");
     // 	down->setAutoRepeat(true); /* used to cause infinite loop */
-    down->setMinimumSize(QSize(MIN_SIZE, MIN_SIZE));
+ //   down->setMinimumSize(QSize(MIN_SIZE, MIN_SIZE));
     down->setFlat(true);
     down->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
     down->setFocusPolicy(Qt::NoFocus);
@@ -396,6 +391,5 @@ void ENumeric::setDisabled(bool b)
 
 void ENumeric::showEvent(QShowEvent *e)
 {
-    QTimer::singleShot(1000, this, SLOT(valueUpdated()));
-    QWidget::showEvent(e);
+    QTimer::singleShot(200, this, SLOT(valueUpdated()));
 }

@@ -10,14 +10,14 @@ NumberDelegate::NumberDelegate()
 	d_decDigits = 2;
 }
 
-bool NumberDelegate::configureNumber(const QString& format)
+bool NumberDelegate::configureNumber(const QString& fmt)
 {
 	bool decodeOk;
-    if(format.isEmpty())
-    {
-        perr("NumberDelegate::configureNumber: format is empty");
-        return false;
-    }
+    QString format;
+    if(fmt.isEmpty())
+        format = "%.3f";
+    else
+        format = fmt;
 	/* first apply format, if - correctly - specified */
 	DecIntFromFormat diff(format);
 	decodeOk = diff.decode();

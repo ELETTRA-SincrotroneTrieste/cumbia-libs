@@ -98,6 +98,7 @@ src/lib/threads/libcumbia_la-cutimer.lo: src/lib/threads/cutimer.cpp \
  /usr/include/bits/waitstatus.h /usr/include/sys/types.h \
  /usr/include/sys/select.h /usr/include/bits/select.h \
  /usr/include/bits/sigset.h /usr/include/bits/select2.h \
+ /usr/include/sys/sysmacros.h /usr/include/bits/sysmacros.h \
  /usr/include/alloca.h /usr/include/bits/stdlib-bsearch.h \
  /usr/include/bits/stdlib-float.h /usr/include/bits/stdlib.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/cstdio \
@@ -375,6 +376,10 @@ src/lib/threads/cutimer.h:
 /usr/include/bits/sigset.h:
 
 /usr/include/bits/select2.h:
+
+/usr/include/sys/sysmacros.h:
+
+/usr/include/bits/sysmacros.h:
 
 /usr/include/alloca.h:
 

@@ -19,7 +19,7 @@ class $MAINCLASS$ : public QWidget
     Q_OBJECT
 
 public:
-    explicit $MAINCLASS$(QWidget *parent = 0);
+    explicit $MAINCLASS$(CumbiaPool *cu_p, QWidget *parent = 0);
     ~$MAINCLASS$();
 
 private:

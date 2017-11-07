@@ -195,9 +195,9 @@ public:
 
     char **toCharP() const;
 
-    template<typename T> void to(T &val) const;
+    template<typename T> bool to(T &val) const;
 
-    template<typename T> void toVector(std::vector<T> &v) const;
+    template<typename T> bool toVector(std::vector<T> &v) const;
 
     CuVariant &toVector();
 

@@ -41,7 +41,7 @@ $MAINCLASS$::$MAINCLASS$(CumbiaPool *cumbia_pool, QWidget *parent) :
     cuta->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
     cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
 
-    ui->setupUi(this);
+    ui->setupUi(this, cu_pool, m_ctrl_factory_pool);
 }
 
 $MAINCLASS$::~$MAINCLASS$()

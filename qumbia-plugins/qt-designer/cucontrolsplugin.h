@@ -124,6 +124,16 @@ class QuButtonInterface : public CuCustomWidgetInterface
     virtual QWidget* createWidget(QWidget* parent);
 };
 
+class QuApplyNumericInterface : public CuCustomWidgetInterface
+{
+   Q_OBJECT
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
+
+  public:
+    QuApplyNumericInterface(QObject* parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p);
+    virtual QWidget* createWidget(QWidget* parent);
+};
+
 class QuLedInterface : public CuCustomWidgetInterface
 {
    Q_OBJECT

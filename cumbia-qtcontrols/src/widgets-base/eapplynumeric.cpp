@@ -36,7 +36,6 @@ void EApplyNumeric::init()
 	box->addWidget(data, 3);
 	box->addWidget(button, 1);
 
-	setMinimumWidth(data->minimumWidth() + button->minimumWidth());
 	connect(data, SIGNAL(valueChanged(double)), this, SLOT(numericValueChanged(double)));
         /* map ENumeric valueChanged() signal into EApplyNumeric omonimous signal */
         connect(data, SIGNAL(valueChanged(double)), this, SIGNAL(valueChanged(double)));
@@ -61,6 +60,22 @@ bool EApplyNumeric::isModified()
   if(button)
 	return button->isModified();
   return false;
+}
+
+QSize EApplyNumeric::sizeHint() const
+{
+    int w = button->sizeHint().width() + data->sizeHint().width();
+    int h = data->sizeHint().height();
+    printf("\e[1;33mEApplyNumeric.sizeHint %d x %d\e[0m\n", w, h);
+    return QSize(w, h);
+}
+
+QSize EApplyNumeric::minimumSizeHint() const
+{
+    int w = button->minimumSizeHint().width() + data->minimumSizeHint().width();
+    int h = data->minimumSizeHint().height();
+    printf("\e[0;33mEApplyNumeric.sizeHint %d x %d\e[0m\n", w, h);
+    return QSize(w, h);
 }
 
 void EApplyNumeric::numericValueChanged(double val)

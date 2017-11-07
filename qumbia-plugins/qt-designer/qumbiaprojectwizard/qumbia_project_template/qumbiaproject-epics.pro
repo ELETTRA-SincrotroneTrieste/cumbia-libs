@@ -1,4 +1,4 @@
-include ($INCLUDEDIR$/qumbia-epics-controls/qumbia-epics-controls.pri)
+include ($INCLUDE_DIR$/qumbia-epics-controls/qumbia-epics-controls.pri)
 
 TEMPLATE = app
 
@@ -38,4 +38,14 @@ TARGET   = bin/$PROJECT_NAME$
 # unix:LIBS += -L. -lmylib
 
 # unix:INCLUDEPATH +=  . ../../src
+
+message("")
+message("NOTE")
+message("You need to run cuuimake in order to build the project")
+message("")
+message("        cuuimake --show-config to see cuuimake configuration options")
+message("        cuuimake --configure to configure cuuimake")
+message("        cuuimake -jN to execute cuuimake and then make -jN")
+message("        cuuimake --make to run cuuimake and then make")
+message("")
 

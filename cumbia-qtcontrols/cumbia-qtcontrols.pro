@@ -62,7 +62,8 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/quspectrumplot.cpp \
     src/widgets-base/eplotlight/quplotbasecontextmenustrategy.cpp \
     src/cucontrolsfactorypool.cpp \
-    src/widgets-base/culinkcontrol.cpp
+    src/widgets-base/culinkcontrol.cpp \
+    src/quapplynumeric.cpp
 
 HEADERS += cumbiaqtcontrols.h\
         cumbia-qtcontrols_global.h \
@@ -108,7 +109,8 @@ HEADERS += cumbiaqtcontrols.h\
     src/quspectrumplot.h \
     src/quwidgetcontextmenustrategyi.h \
     src/widgets-base/eplotlight/quplotbasecontextmenustrategy.h \
-    src/widgets-base/culinkcontrol.h
+    src/widgets-base/culinkcontrol.h \
+    src/quapplynumeric.h
 
 
 RESOURCES += \

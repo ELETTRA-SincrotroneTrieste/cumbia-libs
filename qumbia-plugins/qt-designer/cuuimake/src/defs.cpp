@@ -265,19 +265,39 @@ bool Defs::loadXmlConf(const QString &fname)
 
 bool Defs::loadLocalConf(const QString &fname)
 {
-//    QFile file(fname);
-//    m_error = !file.open(QIODevice::ReadOnly | QIODevice::Text);
-//    if(m_error) {
-//        m_lastError = "Defs.loadConf: " + file.errorString();
-//        return false;
-//    }
-//    while (!file.atEnd()) {
-//        QByteArray line = file.readLine().replace("\n", "");
-//        m_widgetmap[line] = Expand(line, m_default_pars, true);
-//    }
-//    if(m_error) {
-//        m_lastError = "Defs.loadConf: error parsing document: " + m_lastError;
-//        return false;
-//    }
+    QFile file(fname);
+    m_error = !file.open(QIODevice::ReadOnly | QIODevice::Text);
+    if(m_error) {
+        m_lastError = "Defs.loadConf: " + file.errorString();
+        return false;
+    }
+    Params pars;
+    while (!file.atEnd()) {
+        QString line = QString(file.readLine().replace("\n", ""));
+        line = line.trimmed();
+        QString objectname;
+        if(!line.startsWith("#"))
+        {
+            QStringList parts = line.split(QRegExp("\\s*,\\s*"));
+            if(parts.size() > 2)
+            {
+                QString facname = parts.at(1);
+                objectname = parts.at(0);
+                QList<Par> parlist;
+                for(int i = 2; i < parts.size(); i++)
+                {
+                    Par p(parts.at(i));
+                    parlist << p;
+                }
+                if(parlist.size() > 0)
+                    pars.add(facname, parlist);
+            }
+            m_objectmap[objectname] = Expand(objectname, pars, true);
+        }
+    }
+    if(m_error) {
+        m_lastError = "Defs.loadConf: error parsing document: " + m_lastError;
+        return false;
+    }
     return true;
 }

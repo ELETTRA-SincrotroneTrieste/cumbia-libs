@@ -15,6 +15,7 @@ src/lib/threads/libcumbia_la-cuthreadlistener.lo: \
  /usr/include/bits/select.h /usr/include/bits/sigset.h \
  /usr/include/bits/types/struct_timeval.h \
  /usr/include/bits/types/struct_timespec.h /usr/include/bits/select2.h \
+ /usr/include/sys/sysmacros.h /usr/include/bits/sysmacros.h \
  /usr/include/bits/pthreadtypes.h src/lib/cuvariant.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/vector \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/stl_algobase.h \
@@ -107,7 +108,8 @@ src/lib/threads/libcumbia_la-cuthreadlistener.lo: \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/basic_string.tcc \
  src/lib/cumacros.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdlib.h \
- src/lib/cuvariant_t.h src/lib/cuvariantprivate.h
+ src/lib/cuvariant_t.h src/lib/cuvariantprivate.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdexcept
 
 /usr/include/stdc-predef.h:
 
@@ -164,6 +166,10 @@ src/lib/cudata.h:
 /usr/include/bits/types/struct_timespec.h:
 
 /usr/include/bits/select2.h:
+
+/usr/include/sys/sysmacros.h:
+
+/usr/include/bits/sysmacros.h:
 
 /usr/include/bits/pthreadtypes.h:
 
@@ -388,3 +394,5 @@ src/lib/cumacros.h:
 src/lib/cuvariant_t.h:
 
 src/lib/cuvariantprivate.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdexcept:

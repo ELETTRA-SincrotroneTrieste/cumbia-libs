@@ -158,7 +158,13 @@ public:
 	
     QFont numericFont() const { return data->font(); }
     void setNumericFont(const QFont f) { data->setFont(f); }
+
+    QSize sizeHint() const;
+
+    QSize minimumSizeHint() const;
 	
+protected:
+
 signals:
 	/**
 	 * signal emitted when the button is clicked, the parameter

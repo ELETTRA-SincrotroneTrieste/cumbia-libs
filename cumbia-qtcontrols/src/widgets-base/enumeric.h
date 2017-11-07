@@ -113,6 +113,9 @@ public:
      */
     int decDigits() const { return decDig; }
 
+    virtual QSize sizeHint() const;
+
+    virtual QSize minimumSizeHint() const;
 
 public slots:
     virtual void setEnabled(bool);
@@ -123,10 +126,6 @@ signals:
 
   protected:
 	virtual void showEvent(QShowEvent *);
-	
-	virtual QSize sizeHint() const;
-	
-	virtual QSize minimumSizeHint() const;
 	
 private:
     int intDig;

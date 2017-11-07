@@ -708,8 +708,11 @@ install_templates: first FORCE
 	-$(QINSTALL) /archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-plugins/qt-designer/qumbiaprojectwizard/qumbia_project_template/mainwindow.h $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/mainwindow.h
 	-$(QINSTALL) /archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-plugins/qt-designer/qumbiaprojectwizard/qumbia_project_template/mainwindow.ui $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/mainwindow.ui
 	-$(QINSTALL) /archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-plugins/qt-designer/qumbiaprojectwizard/qumbia_project_template/qumbiaproject-epics.pro $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/qumbiaproject-epics.pro
+	-$(QINSTALL) /archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-plugins/qt-designer/qumbiaprojectwizard/qumbia_project_template/qumbiaproject-epics.pro.user $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/qumbiaproject-epics.pro.user
 	-$(QINSTALL) /archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-plugins/qt-designer/qumbiaprojectwizard/qumbia_project_template/qumbiaproject-tango-epics.pro $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/qumbiaproject-tango-epics.pro
+	-$(QINSTALL) /archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-plugins/qt-designer/qumbiaprojectwizard/qumbia_project_template/qumbiaproject-tango-epics.pro.user $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/qumbiaproject-tango-epics.pro.user
 	-$(QINSTALL) /archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-plugins/qt-designer/qumbiaprojectwizard/qumbia_project_template/qumbiaproject-tango.pro $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/qumbiaproject-tango.pro
+	-$(QINSTALL) /archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-plugins/qt-designer/qumbiaprojectwizard/qumbia_project_template/qumbiaproject-tango.pro.user $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/qumbiaproject-tango.pro.user
 	-$(QINSTALL) /archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-plugins/qt-designer/qumbiaprojectwizard/qumbia_project_template/README $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/README
 	-$(QINSTALL) /archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-plugins/qt-designer/qumbiaprojectwizard/qumbia_project_template/widget-cumbia-tango.cpp $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/widget-cumbia-tango.cpp
 	-$(QINSTALL) /archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-plugins/qt-designer/qumbiaprojectwizard/qumbia_project_template/widget-epics.cpp $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/widget-epics.cpp
@@ -730,8 +733,11 @@ uninstall_templates: FORCE
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/widget-epics.cpp
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/widget-cumbia-tango.cpp
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/README
+	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/qumbiaproject-tango.pro.user
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/qumbiaproject-tango.pro
+	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/qumbiaproject-tango-epics.pro.user
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/qumbiaproject-tango-epics.pro
+	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/qumbiaproject-epics.pro.user
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/qumbiaproject-epics.pro
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/mainwindow.ui
 	-$(DEL_FILE) -r $(INSTALL_ROOT)/usr/local/share/qumbiaprojectwizard/mainwindow.h

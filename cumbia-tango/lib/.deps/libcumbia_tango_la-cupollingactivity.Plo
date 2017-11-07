@@ -16,6 +16,7 @@ lib/libcumbia_tango_la-cupollingactivity.lo: lib/cupollingactivity.cpp \
  /usr/include/bits/select.h /usr/include/bits/sigset.h \
  /usr/include/bits/types/struct_timeval.h \
  /usr/include/bits/types/struct_timespec.h /usr/include/bits/select2.h \
+ /usr/include/sys/sysmacros.h /usr/include/bits/sysmacros.h \
  /usr/include/bits/pthreadtypes.h /usr/local/include/cumbia/cuvariant.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/vector \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/stl_algobase.h \
@@ -110,6 +111,7 @@ lib/libcumbia_tango_la-cupollingactivity.lo: lib/cupollingactivity.cpp \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdlib.h \
  /usr/local/include/cumbia/cuvariant_t.h \
  /usr/local/include/cumbia/cuvariantprivate.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdexcept \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/list \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/stl_list.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/allocated_ptr.h \
@@ -124,7 +126,6 @@ lib/libcumbia_tango_la-cupollingactivity.lo: lib/cupollingactivity.cpp \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/utility \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/stl_relops.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/array \
- /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdexcept \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/uses_allocator.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/stl_multimap.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/mutex \
@@ -457,6 +458,10 @@ lib/cupollingactivity.h:
 
 /usr/include/bits/select2.h:
 
+/usr/include/sys/sysmacros.h:
+
+/usr/include/bits/sysmacros.h:
+
 /usr/include/bits/pthreadtypes.h:
 
 /usr/local/include/cumbia/cuvariant.h:
@@ -681,6 +686,8 @@ lib/cupollingactivity.h:
 
 /usr/local/include/cumbia/cuvariantprivate.h:
 
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdexcept:
+
 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/list:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/stl_list.h:
@@ -710,8 +717,6 @@ lib/cudevicefactoryservice.h:
 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/stl_relops.h:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/array:
-
-/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/stdexcept:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/uses_allocator.h:
 
