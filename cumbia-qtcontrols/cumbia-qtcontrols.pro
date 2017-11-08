@@ -63,7 +63,8 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/widgets-base/eplotlight/quplotbasecontextmenustrategy.cpp \
     src/cucontrolsfactorypool.cpp \
     src/widgets-base/culinkcontrol.cpp \
-    src/quapplynumeric.cpp
+    src/quapplynumeric.cpp \
+    src/widgets-base/ereaderwriter.cpp
 
 HEADERS += cumbiaqtcontrols.h\
         cumbia-qtcontrols_global.h \
@@ -110,7 +111,8 @@ HEADERS += cumbiaqtcontrols.h\
     src/quwidgetcontextmenustrategyi.h \
     src/widgets-base/eplotlight/quplotbasecontextmenustrategy.h \
     src/widgets-base/culinkcontrol.h \
-    src/quapplynumeric.h
+    src/quapplynumeric.h \
+    src/widgets-base/ereaderwriter.h
 
 
 RESOURCES += \

@@ -74,7 +74,7 @@ QSize EApplyNumeric::minimumSizeHint() const
 {
     int w = button->minimumSizeHint().width() + data->minimumSizeHint().width();
     int h = data->minimumSizeHint().height();
-    printf("\e[0;33mEApplyNumeric.sizeHint %d x %d\e[0m\n", w, h);
+    printf("\e[0;33mEApplyNumeric.minimumSizeHint %d x %d\e[0m\n", w, h);
     return QSize(w, h);
 }
 
