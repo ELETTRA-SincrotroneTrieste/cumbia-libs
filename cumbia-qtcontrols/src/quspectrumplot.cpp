@@ -9,9 +9,11 @@
 #include "cucontrolsfactories_i.h"
 #include "cucontrolsreader_abs.h"
 #include "quwidgetupdatestrategy_i.h"
-#include "culinkcontrol.h"
+#include "culinkstats.h"
+#include "cucontext.h"
 
 #include "qutimescaledraw.h"
+#include <QImage>
 #include <quplotcurve.h>
 #include <qwt_date_scale_engine.h>
 
@@ -20,7 +22,7 @@ class QuSpectrumPlotPrivate
 public:
     bool auto_configure, timeScaleDrawEnabled;
     bool read_ok;
-    CuLinkControl *link_ctrl;
+    CuContext *context;
 
     QuPlotCommon *plot_common;
     QuTimeScaleDraw *timeScaleDraw;
@@ -37,29 +39,28 @@ public:
 QuSpectrumPlot::QuSpectrumPlot(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac)
     : QuPlotBase(w)
 {
+    d = new QuSpectrumPlotPrivate;
+    d->plot_common = new QuPlotCommon(cumbia, r_fac);
     m_init();
-    d->link_ctrl = new CuLinkControl(cumbia, r_fac);
 }
 
 QuSpectrumPlot::QuSpectrumPlot(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
     : QuPlotBase(w)
 {
+    d = new QuSpectrumPlotPrivate;
+    d->plot_common = new QuPlotCommon(cumbia_pool, fpool);
     m_init();
-    d->link_ctrl = new CuLinkControl(cumbia_pool, fpool);
 }
 
 QuSpectrumPlot::~QuSpectrumPlot()
 {
     pdelete("~QuSpectrumPlot %p", this);
     delete d->plot_common;
-    delete d->link_ctrl;
     delete d;
 }
 
 void QuSpectrumPlot::m_init()
 {
-    d = new QuSpectrumPlotPrivate;
-    d->plot_common = new QuPlotCommon();
     d->auto_configure = true;
     d->read_ok = false;
 }
@@ -85,12 +86,12 @@ void QuSpectrumPlot::setSource(const QString &s)
 void QuSpectrumPlot::setSources(const QStringList &l)
 {
     unsetSources();
-    d->plot_common->setSources(l, d->link_ctrl, this);
+    d->plot_common->setSources(l, this);
 }
 
 void QuSpectrumPlot::addSource(const QString &s)
 {
-    d->plot_common->addSource(s, d->link_ctrl, this);
+    d->plot_common->addSource(s, this);
 }
 
 void QuSpectrumPlot::unsetSources()
@@ -103,21 +104,40 @@ void QuSpectrumPlot::unsetSource(const QString& src)
     d->plot_common->unsetSource(src, this);
 }
 
+/** \brief Changes the refresh period on the plot, issuing a setData on every reader
+ *  with a CuData containing the "period" property set to p.
+ *
+ * QuContext options are left unchanged.
+ *
+ * \note The effect on the refresh period of the sources depends on the CuControlsReaderA
+ * implementation. For example, in the context of the Tango control system, you should expect
+ * that a reader managed by events is not affected by a period change.
+ */
 void QuSpectrumPlot::setPeriod(int p)
 {
-    sendData(CuData("period", p));
+    d->plot_common->getContext()->sendData(CuData("period", p));
 }
 
+/** \brief Get the refresh period of the sources issuing a getData on the first reader in the list.
+ *
+ * \par Note 1
+ * The effective period of the reader is returned, not the "period" property stored in the CuData
+ * options.
+ *
+ * \par Note 2
+ * If each source has been configured with different periods, you should call getContext()->getData
+ * with a list of CuData as parameter.
+ */
 int QuSpectrumPlot::period() const
 {
     CuData d_inout("period", -1);
-    d->plot_common->getData(d_inout);
+    d->plot_common->getContext()->getData(d_inout);
     return d_inout["period"].toInt();
 }
 
-void QuSpectrumPlot::sendData(const CuData &da)
+void QuSpectrumPlot::setOptions(const CuData &options)
 {
-    d->plot_common->sendData(da);
+    d->plot_common->getContext()->setOptions(options);
 }
 
 void QuSpectrumPlot::onUpdate(const CuData &da)
@@ -137,6 +157,11 @@ void QuSpectrumPlot::update(const CuData &da)
     const CuVariant &v = da["value"];
     QString src = QString::fromStdString(da["src"].toString());
 
+    // update link statistics
+    CuLinkStats *link_s = d->plot_common->getContext()->getLinkStats();
+    link_s->addOperation();
+    if(!d->read_ok)
+        link_s->addError(da["msg"].toString());
 
     if(d->read_ok && d->auto_configure && da["type"].toString() == "property")
     {
@@ -169,6 +194,12 @@ void QuSpectrumPlot::update(const CuData &da)
     }
     setToolTip(da["msg"].toString().c_str());
 }
+
+CuContext *QuSpectrumPlot::getContext() const
+{
+    return d->plot_common->getContext();
+}
+
 
 
 

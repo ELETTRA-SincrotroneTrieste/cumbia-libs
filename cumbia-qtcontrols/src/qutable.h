@@ -9,7 +9,15 @@ class Cumbia;
 class CuControlsReaderFactoryI;
 class CumbiaPool;
 class CuControlsFactoryPool;
+class CuContext;
 
+/** \brief A widget to organise data in a table
+ *
+ * A default set of options for the object is configured when QuTable is initialised.
+ * It includes numRows, numColumns, displayMask, trueColours, falseColours,
+ * trueStrings, falseStrings. If they are provided by the underline engine, they are
+ * used to configure the table.
+ */
 class QuTable : public EFlag, public CuDataListener
 {
     Q_OBJECT
@@ -25,6 +33,12 @@ public:
     QString source() const;
 
     int maximumLength() const;
+
+    void getData(CuData &d_inout) const;
+
+    CuContext *getContext() const;
+
+    void setOptions(const CuData& data);
 
 public slots:
     void setSource(const QString& s);

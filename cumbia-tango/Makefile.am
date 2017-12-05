@@ -41,7 +41,7 @@ lib/cupollingactivity.cpp \
 lib/cuwriteactivity.cpp \
 lib/cutwriter.cpp \
 lib/cutattconfiguration.cpp \
-lib/cutangoreadoptions.cpp \
+lib/cutangoopt_builder.cpp \
 lib/cutattconfigactivity.cpp
 
 
@@ -65,7 +65,7 @@ lib/cupollingactivity.h \
 lib/cuwriteactivity.h \
 lib/cutwriter.h \
 lib/cutattconfiguration.h \
-lib/cutangoreadoptions.h \
+lib/cutangoopt_builder.h \
 lib/cutattconfigactivity.h
 
 

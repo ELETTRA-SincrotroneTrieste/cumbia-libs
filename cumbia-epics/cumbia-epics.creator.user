@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.4.1, 2017-11-07T15:41:12. -->
+<!-- Written by QtCreator 4.4.1, 2017-12-04T14:33:14. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -59,14 +59,14 @@
  <data>
   <variable>ProjectExplorer.Project.Target.0</variable>
   <valuemap type="QVariantMap">
-   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">qt5</value>
-   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">qt5</value>
-   <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">{d2bfeff4-bafa-4474-a120-759df8ecaf58}</value>
+   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">QT-5.9.2</value>
+   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">QT-5.9.2</value>
+   <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">{6628b3cc-b512-400d-a8cb-e0bfb8960369}</value>
    <value type="int" key="ProjectExplorer.Target.ActiveBuildConfiguration">0</value>
    <value type="int" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>
    <value type="int" key="ProjectExplorer.Target.ActiveRunConfiguration">0</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.0">
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/archivi/devel/utils/git/cppqtclients/cumbia-epics</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-epics</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <valuelist type="QVariantList" key="GenericProjectManager.GenericMakeStep.BuildTargets">
@@ -165,7 +165,7 @@
      <value type="int">13</value>
      <value type="int">14</value>
     </valuelist>
-    <value type="int" key="PE.EnvironmentAspect.Base">2</value>
+    <value type="int" key="PE.EnvironmentAspect.Base">-1</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.Arguments"></value>
     <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.Executable"></value>

@@ -1545,8 +1545,8 @@ SKIP_FUNCTION_MACROS   = YES
 
 TAGFILES               = ../qumbia-tango-controls/doc/qumbia-tango-controls.tag=../../qumbia-tango-controls/html \
 			../cumbia/doc/cumbia.tag=../../cumbia/html \
-			../cumbia-tango/doc/cumbia-tango.tag=../../cumbia-tango/html \
-			../cumbia-epics/doc/cumbia-epics.tag=../../cumbia-epics/html \
+			../cumbia-tango/doc/cumbia-tango.tag=../../cumbia-tango \
+			../cumbia-epics/doc/cumbia-epics.tag=../../cumbia-epics \
 			../qumbia-epics-controls/doc/qumbia-epics-controls.tag=../../qumbia-epics-controls/html
 
 # When a file name is specified after GENERATE_TAGFILE, doxygen will create

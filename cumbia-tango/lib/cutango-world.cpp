@@ -64,7 +64,7 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
     d->error = false;
     d->message = "";
     int t = (Tango::CmdArgType) data->get_type();
-    da["data_format_str"] = cmdArgTypeToStr(static_cast<Tango::CmdArgType>(t));
+    da["data_format_str"] = cmdArgTypeToDataFormat(static_cast<Tango::CmdArgType>(t));
     da["data_type"] = t;
     struct timeval tv;
     gettimeofday(&tv, NULL);
@@ -795,7 +795,7 @@ string CuTangoWorld::formatToStr(Tango::AttrDataFormat f) const
  *
  * CuData "data_format_str" property
  */
-string CuTangoWorld::cmdArgTypeToStr(Tango::CmdArgType t) const
+string CuTangoWorld::cmdArgTypeToDataFormat(Tango::CmdArgType t) const
 {
     switch (t)
     {
@@ -940,7 +940,7 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const std::vector<std::string> &arg
     d->error = false;
     d->message = "";
     long in_type = cmdinfo["in_type"].toLongInt();
-    printf("argis size %d in type %s as int %ld\n", argins.size(), cmdArgTypeToStr(Tango::CmdArgType(in_type)).c_str(), in_type);
+    printf("argis size %d in type %s as int %ld\n", argins.size(), cmdArgTypeToDataFormat(Tango::CmdArgType(in_type)).c_str(), in_type);
     Tango::DeviceData dd;
     if(argins.size() == 0)
         return dd;
@@ -1086,7 +1086,7 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &name,
     int tango_type = attinfo["data_type"].toInt();
     Tango::AttrDataFormat tango_format = static_cast<Tango::AttrDataFormat>(attinfo["data_format"].toInt());
 
-    printf("\e[0;33mtoDeviceAttribute dealing wit %d tango tp %d format %d tango fmt %d ARGIN DATA %s\e[0m\n",
+    printf("\e[0;33mtoDeviceAttribute dealing with data type %d tango tp %d format %d tango fmt %d ARGIN DATA %s\e[0m\n",
            t, tango_type, arg.getFormat(), tango_format, arg.toString().c_str());
     if(tango_format == Tango::SCALAR && arg.getFormat() == CuVariant::Scalar)
     {
@@ -1147,6 +1147,7 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &name,
         else if(t == CuVariant::String && tango_type == Tango::DEV_STRING)
         {
             std::string s = arg.toString(&ok);
+            cout <<  "String and DEV_STRING ok is " << ok << endl;
             if(ok)
                 da = Tango::DeviceAttribute(attname, s);
         }

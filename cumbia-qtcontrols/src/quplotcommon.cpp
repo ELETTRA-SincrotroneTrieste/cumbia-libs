@@ -6,7 +6,8 @@
 
 #include "cucontrolsfactories_i.h"
 #include "cucontrolsreader_abs.h"
-#include "culinkcontrol.h"
+#include "culinkstats.h"
+#include "cucontext.h"
 #include <cumbia.h>
 
 #include <quplot_base.h>
@@ -17,19 +18,26 @@ public:
     QPointF pressed_pt, selected_pt;
     bool  auto_scale, bounds_from_autoconf;
     double default_lbound, default_ubound;
+    CuContext *context;
 };
 
-QuPlotCommon::QuPlotCommon()
+QuPlotCommon::QuPlotCommon(Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac)
 {
     d = new QuPlotCommonPrivate;
+    d->context = new CuContext(cumbia, r_fac);
+    d->auto_scale = d->bounds_from_autoconf = true;
+}
+
+QuPlotCommon::QuPlotCommon(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
+{
+    d = new QuPlotCommonPrivate;
+    d->context = new CuContext(cumbia_pool, fpool);
     d->auto_scale = d->bounds_from_autoconf = true;
 }
 
 QuPlotCommon::~QuPlotCommon()
 {
-    foreach(CuControlsReaderA *r, readers)
-        delete r;
-
+    delete d->context; // deletes readers
     delete d;
 }
 
@@ -45,56 +53,42 @@ QColor QuPlotCommon::pick_color(int i)
 QStringList QuPlotCommon::sources() const
 {
     QStringList l;
-    foreach(CuControlsReaderA *r, readers)
+    foreach(CuControlsReaderA *r, d->context->readers())
         l.append(r->source());
     return l;
 }
 
 void QuPlotCommon::unsetSources(QuPlotBase *plot)
 {
-    foreach(CuControlsReaderA *r, readers)
-    {
+    foreach(CuControlsReaderA *r, d->context->readers())
         plot->removeCurve(r->source());
-        r->unsetSource();
-        delete r;
-    }
-    readers.clear();
+
+    d->context->unlinkReader();
 }
 
 void QuPlotCommon::unsetSource(const QString &src, QuPlotBase *plot)
 {
-    QList<CuControlsReaderA *>::iterator it;
-    for(it = readers.begin(); it != readers.end(); ++it)
-    {
-        if((*it)->source() == src)
-        {
-            plot->removeCurve(src);
-            (*it)->unsetSource();
-            delete (*it);
-            readers.erase(it);
-        }
-    }
+    d->context->unlinkReader(src.toStdString());
+    plot->removeCurve(src);
 }
 
 /* Add a list of sources to the plot
  * For each source in l, addSource is called.
  */
 void QuPlotCommon::setSources(const QStringList &l,
-                              const CuLinkControl *link_ctrl,
                               CuDataListener *data_listener)
 {
+    QStringList srcs = sources();
     foreach(QString s, l)
     {
-        if(!sources().contains(s))
-            addSource(s, link_ctrl, data_listener);
+        if(!srcs.contains(s))
+            d->context->add_reader(s.toStdString(), data_listener);
     }
 }
 
-void QuPlotCommon::addSource(const QString &s, const CuLinkControl *link_ctrl, CuDataListener *dl)
+void QuPlotCommon::addSource(const QString &s, CuDataListener *dl)
 {
-    CuControlsReaderA* r = link_ctrl->make_reader(s.toStdString(), dl);
-    r->setSource(s);
-    readers.append(r);
+    d->context->add_reader(s.toStdString(), dl);
 }
 
 void QuPlotCommon::configure(const QString &curveName, const QPointF &pxy)
@@ -103,15 +97,8 @@ void QuPlotCommon::configure(const QString &curveName, const QPointF &pxy)
     Q_UNUSED(pxy);
 }
 
-void QuPlotCommon::getData(CuData& d_inout) const
+CuContext *QuPlotCommon::getContext() const
 {
-    if(readers.size())
-        readers.first()->getData(d_inout);
-}
-
-void QuPlotCommon::sendData(const CuData& data)
-{
-    foreach(CuControlsReaderA* r, readers)
-        r->sendData(data);
+    return d->context;
 }
 

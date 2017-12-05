@@ -8,8 +8,10 @@
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
 #include "cucontrolsreader_abs.h"
+#include "cucontext.h"
 #include "quwidgetupdatestrategy_i.h"
-#include "culinkcontrol.h"
+#include "cucontext.h"
+#include "culinkstats.h"
 #include "qutimescaledraw.h"
 #include <quplotcurve.h>
 #include <qwt_date_scale_engine.h>
@@ -21,7 +23,6 @@ class QuTrendPlotPrivate
 public:
     bool auto_configure, timeScaleDrawEnabled;
     bool read_ok;
-    CuLinkControl *link_ctrl;
     QuPlotCommon *plot_common;
     QuTimeScaleDraw *timeScaleDraw;
     QwtPlotDirectPainter *directPainter;
@@ -30,29 +31,28 @@ public:
 QuTrendPlot::QuTrendPlot(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac)
     : QuPlotBase(w)
 {
+    d = new QuTrendPlotPrivate;
+    d->plot_common = new QuPlotCommon(cumbia, r_fac);
     m_init();
-    d->link_ctrl = new CuLinkControl(cumbia, r_fac);
 }
 
 QuTrendPlot::QuTrendPlot(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
     : QuPlotBase(w)
 {
+    d = new QuTrendPlotPrivate;
+    d->plot_common = new QuPlotCommon(cumbia_pool, fpool);
     m_init();
-    d->link_ctrl = new CuLinkControl(cumbia_pool, fpool);
 }
 
 QuTrendPlot::~QuTrendPlot()
 {
     pdelete("~QuTrendPlot %p", this);
     delete d->plot_common;
-    delete d->link_ctrl;
     delete d;
 }
 
 void QuTrendPlot::m_init()
 {
-    d = new QuTrendPlotPrivate;
-    d->plot_common = new QuPlotCommon();
     d->auto_configure = true;
     d->read_ok = false;
     setTimeScaleDrawEnabled(true);
@@ -84,12 +84,12 @@ void QuTrendPlot::setSource(const QString &s)
 void QuTrendPlot::setSources(const QStringList &l)
 {
     unsetSources();
-    d->plot_common->setSources(l, d->link_ctrl, this);
+    d->plot_common->setSources(l, this);
 }
 
 void QuTrendPlot::addSource(const QString &s)
 {
-    d->plot_common->addSource(s, d->link_ctrl, this);
+    d->plot_common->addSource(s, this);
 }
 
 void QuTrendPlot::unsetSource(const QString &s)
@@ -99,12 +99,7 @@ void QuTrendPlot::unsetSource(const QString &s)
 
 void QuTrendPlot::setPeriod(int p)
 {
-    sendData(CuData("period", p));
-}
-
-void QuTrendPlot::sendData(const CuData &da)
-{
-    d->plot_common->sendData(da);
+    d->plot_common->getContext()->sendData(CuData("period", p));
 }
 
 void QuTrendPlot::unsetSources()
@@ -126,6 +121,12 @@ void QuTrendPlot::update(const CuData &da)
 {
     d->read_ok = !da["err"].toBool();
     QString src = QString::fromStdString(da["src"].toString());
+
+    // update link statistics
+    CuLinkStats *link_s = d->plot_common->getContext()->getLinkStats();
+    link_s->addOperation();
+    if(!d->read_ok)
+        link_s->addError(da["msg"].toString());
 
     if(d->read_ok && d->auto_configure && da["type"].toString() == "property")
     {
@@ -225,7 +226,12 @@ bool QuTrendPlot::showDateOnTimeAxis() const
 int QuTrendPlot::period() const
 {
     CuData d_inout("period", -1);
-    d->plot_common->getData(d_inout);
+    d->plot_common->getContext()->getData(d_inout);
     return d_inout["period"].toInt();
+}
+
+CuContext *QuTrendPlot::getContext() const
+{
+    return d->plot_common->getContext();
 }
 

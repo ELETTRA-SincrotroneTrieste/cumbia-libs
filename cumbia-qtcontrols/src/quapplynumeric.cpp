@@ -8,15 +8,14 @@
 #include "cucontrolsfactories_i.h"
 #include "cucontrolsutils.h"
 #include "cumbiapool.h"
-#include "culinkcontrol.h"
+#include "cucontext.h"
 #include "qupalette.h"
 #include "qulogimpl.h"
 
 class QuApplyNumericPrivate
 {
 public:
-    CuLinkControl *link_ctrl;
-    CuControlsWriterA *writer;
+    CuContext *context;
     bool auto_configure;
     bool write_ok;
     QuPalette palette;
@@ -27,26 +26,27 @@ QuApplyNumeric::QuApplyNumeric(QWidget *parent, Cumbia *cumbia, const CuControls
     : EApplyNumeric(parent)
 {
     m_init();
-    d->link_ctrl = new CuLinkControl(cumbia, w_fac);
+    d->context = new CuContext(cumbia, w_fac);
 }
 
 QuApplyNumeric::QuApplyNumeric(QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
     : EApplyNumeric(parent)
 {
     m_init();
-    d->link_ctrl = new CuLinkControl(cumbia_pool, fpool);
+    d->context = new CuContext(cumbia_pool, fpool);
 }
 
 QuApplyNumeric::~QuApplyNumeric()
 {
-    delete d->link_ctrl;
+    delete d->context;
     delete d;
 }
 
 QString QuApplyNumeric::targets() const
 {
-    if(d->writer)
-        return d->writer->targets();
+    CuControlsWriterA *w = d->context->getWriter();
+    if(w != NULL)
+        return w->targets();
     return "";
 }
 
@@ -57,29 +57,32 @@ void QuApplyNumeric::execute()
     CuVariant args = cu.getArgs(targets(), this);
     printf("QuApplyNumeric.execute: got args %s type %d format %d\n", args.toString().c_str(), args.getType(),
            args.getFormat());
-    d->writer->setArgs(args);
-    d->writer->execute();
+    CuControlsWriterA *w = d->context->getWriter();
+    if(w)
+    {
+        w->setArgs(args);
+        w->execute();
+    }
 }
 
 void QuApplyNumeric::setTargets(const QString &targets)
 {
     printf("\e[1;32mQuApplyNumeric.setTargets!!!!! %s\e[0m\n", qstoc(targets));
-    if(d->writer && d->writer->targets() != targets)
-        delete d->writer;
-    d->writer = d->link_ctrl->make_writer(targets.toStdString(), this);
-    if(d->writer)
-        d->writer->setTargets(targets);
+    d->context->replace_writer(targets.toStdString(), this);
 }
 
 void QuApplyNumeric::execute(double val)
 {
     cuprintf("QuApplyNumeric.execute\n");
-    CuControlsUtils cu;
-    CuVariant args = cu.getArgs(targets(), this);
+    CuVariant args(val);
     printf("QuApplyNumeric.execute: got args %s type %d format %d\n", args.toString().c_str(), args.getType(),
            args.getFormat());
-    d->writer->setArgs(args);
-    d->writer->execute();
+    CuControlsWriterA *w = d->context->getWriter();
+    if(w)
+    {
+        w->setArgs(args);
+        w->execute();
+    }
 }
 
 void QuApplyNumeric::m_init()
@@ -87,7 +90,6 @@ void QuApplyNumeric::m_init()
     printf("\e[1;32mQuApplyNumeric> initializing\e[0m\n");
     d = new QuApplyNumericPrivate;
     connect(this, SIGNAL(clicked(double)), this, SLOT(execute(double)));
-    d->writer = NULL;
     d->auto_configure = true;
     d->write_ok = false;
 }
@@ -100,9 +102,9 @@ void QuApplyNumeric::onUpdate(const CuData &da)
              da["src"].toString().c_str(), da["msg"].toString().c_str(),
                 da["data_format_str"].toString().c_str(), da["writable"].toInt());
 
-        Cumbia* cumbia = d->link_ctrl->cu;
+        Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->link_ctrl->cu_pool->getBySrc(da["src"].toString());
+            cumbia = d->context->cumbiaPool()->getBySrc(da["src"].toString());
         CuLog *log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log));
         if(log)
         {

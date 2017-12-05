@@ -3,44 +3,45 @@
 #include <cumacros.h>
 #include <cumbiapool.h>
 #include <cudata.h>
+#include <QContextMenuEvent>
 #include <QPainter>
 #include <QPaintEvent>
 
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
 #include "cucontrolsfactorypool.h"
-#include "culinkcontrol.h"
+#include "culinkstats.h"
+#include "cucontextmenu.h"
+#include "cucontext.h"
 
 class QuLabelPrivate
 {
 public:
     bool auto_configure;
     bool read_ok;
-    CuControlsReaderA *reader;
     QuPalette palette;
     int max_len;
-    CuLinkControl *link_ctrl;
+    CuContext *context;
 };
 
 QuLabel::QuLabel(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_factory) :
     ESimpleLabel(w), CuDataListener()
 {
     m_init();
-    d->link_ctrl = new CuLinkControl(cumbia, r_factory);
+    d->context = new CuContext(cumbia, r_factory);
 }
 
 QuLabel::QuLabel(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) :
     ESimpleLabel(w), CuDataListener()
 {
     m_init();
-    d->link_ctrl = new CuLinkControl(cumbia_pool, fpool);
+    d->context = new CuContext(cumbia_pool, fpool);
 }
 
 void QuLabel::m_init()
 {
     d = new QuLabelPrivate;
-    d->link_ctrl = NULL;
-    d->reader = NULL;
+    d->context = NULL;
     d->auto_configure = true;
     d->read_ok = false;
     d->max_len = -1;
@@ -57,16 +58,14 @@ void QuLabel::m_init()
 QuLabel::~QuLabel()
 {
     pdelete("~QuLabel %p", this);
-    delete d->link_ctrl;
-    if(d->reader)
-        delete d->reader;
+    delete d->context;
     delete d;
 }
 
 QString QuLabel::source() const
 {
-    if(d->reader)
-        return d->reader->source();
+    if(CuControlsReaderA* r = d->context->getReader())
+        return r->source();
     return "";
 }
 
@@ -75,25 +74,41 @@ int QuLabel::maximumLength() const
     return d->max_len;
 }
 
+CuContext *QuLabel::getContext() const
+{
+    return d->context;
+}
+
+/** \brief Connect the reader to the specified source.
+ *
+ * If a reader with a different source is configured, it is deleted.
+ * If options have been set with QuContext::setOptions, they are used to set up the reader as desired.
+ *
+ * @see QuContext::setOptions
+ * @see source
+ */
 void QuLabel::setSource(const QString &s)
 {
-    if(d->reader && d->reader->source() != s)
-        delete d->reader;
-
-    d->reader = d->link_ctrl->make_reader(s.toStdString(), this);
-    if(d->reader)
-        d->reader->setSource(s);
+    CuControlsReaderA * r = d->context->replace_reader(s.toStdString(), this);
+    if(r)
+        r->setSource(s);
 }
 
 void QuLabel::unsetSource()
 {
-    if(d->reader)
-        d->reader->unsetSource();
+    d->context->unlinkReader();
 }
 
 void QuLabel::setMaximumLength(int len)
 {
     d->max_len = len;
+}
+
+void QuLabel::contextMenuEvent(QContextMenuEvent *e)
+{
+    CuContextMenu* m = new CuContextMenu(this);
+    connect(m, SIGNAL(linkStatsTriggered(QWidget*)), this, SIGNAL(linkStatsRequest(QWidget*)));
+    m->popup(e->globalPos());
 }
 
 void QuLabel::onUpdate(const CuData &da)
@@ -102,6 +117,11 @@ void QuLabel::onUpdate(const CuData &da)
     QColor background, border;
     d->read_ok = !da["err"].toBool();
     setEnabled(d->read_ok);
+
+    // update link statistics
+    d->context->getLinkStats()->addOperation();
+    if(!d->read_ok)
+        d->context->getLinkStats()->addError(da["msg"].toString());
 
     if(da.containsKey("quality_color"))
         background = d->palette[QString::fromStdString(da["quality_color"].toString())];

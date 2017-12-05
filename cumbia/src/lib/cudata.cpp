@@ -83,29 +83,29 @@ CuVariant CuData::value() const
     return CuVariant();
 }
 
-CuVariant CuData::value(std::string& key) const
+CuVariant CuData::value(const std::string & key) const
 {
     if(d->datamap.count(key) > 0)
         return d->datamap[key];
     return CuVariant();
 }
 
-void CuData::add(std::string key, const CuVariant &value)
+void CuData::add(const std::string & key, const CuVariant &value)
 {
     d->datamap[key] = value;
 }
 
-bool CuData::containsKey(std::string key) const
+bool CuData::containsKey(const std::string &key) const
 {
     return d->datamap.count(key) > 0;
 }
 
-CuVariant &CuData::operator [](std::string  key)
+CuVariant &CuData::operator [](const std::string &key)
 {
     return d->datamap[key];
 }
 
-const CuVariant &CuData::operator [](std::string key) const
+const CuVariant &CuData::operator [](const std::string &key) const
 {
     d->emptyVariant = CuVariant();
     if(d->datamap.count(key) > 0)

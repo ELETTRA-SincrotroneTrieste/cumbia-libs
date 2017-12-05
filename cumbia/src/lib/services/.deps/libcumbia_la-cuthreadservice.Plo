@@ -32,15 +32,19 @@ src/lib/services/libcumbia_la-cuthreadservice.lo: \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/postypes.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/cwchar \
  /usr/include/wchar.h /usr/include/bits/libc-header-start.h \
- /usr/include/stdio.h \
- /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/stdarg.h \
- /usr/include/bits/wchar.h \
+ /usr/include/bits/floatn.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/stddef.h \
- /usr/include/xlocale.h /usr/include/bits/wchar2.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/stdarg.h \
+ /usr/include/bits/wchar.h /usr/include/bits/types/wint_t.h \
+ /usr/include/bits/types/mbstate_t.h \
+ /usr/include/bits/types/__mbstate_t.h /usr/include/bits/types/__FILE.h \
+ /usr/include/bits/types/FILE.h /usr/include/bits/types/locale_t.h \
+ /usr/include/bits/types/__locale_t.h /usr/include/bits/wchar2.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/cstdint \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/stdint.h \
  /usr/include/stdint.h /usr/include/bits/types.h \
- /usr/include/bits/typesizes.h \
+ /usr/include/bits/typesizes.h /usr/include/bits/stdint-intn.h \
+ /usr/include/bits/stdint-uintn.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/allocator.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/x86_64-pc-linux-gnu/bits/c++allocator.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/ext/new_allocator.h \
@@ -71,12 +75,13 @@ src/lib/services/libcumbia_la-cuthreadservice.lo: \
  /usr/include/pthread.h /usr/include/sched.h \
  /usr/include/bits/types/time_t.h \
  /usr/include/bits/types/struct_timespec.h /usr/include/bits/sched.h \
- /usr/include/time.h /usr/include/bits/time.h /usr/include/bits/timex.h \
- /usr/include/bits/types/struct_timeval.h \
+ /usr/include/bits/cpu-set.h /usr/include/time.h /usr/include/bits/time.h \
+ /usr/include/bits/timex.h /usr/include/bits/types/struct_timeval.h \
  /usr/include/bits/types/clock_t.h /usr/include/bits/types/struct_tm.h \
  /usr/include/bits/types/clockid_t.h /usr/include/bits/types/timer_t.h \
  /usr/include/bits/types/struct_itimerspec.h \
- /usr/include/bits/pthreadtypes.h /usr/include/bits/setjmp.h \
+ /usr/include/bits/pthreadtypes.h /usr/include/bits/thread-shared-types.h \
+ /usr/include/bits/pthreadtypes-arch.h /usr/include/bits/setjmp.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/x86_64-pc-linux-gnu/bits/atomic_word.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/ext/alloc_traits.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/alloc_traits.h \
@@ -85,12 +90,12 @@ src/lib/services/libcumbia_la-cuthreadservice.lo: \
  /usr/include/stdlib.h /usr/include/bits/waitflags.h \
  /usr/include/bits/waitstatus.h /usr/include/sys/types.h \
  /usr/include/sys/select.h /usr/include/bits/select.h \
- /usr/include/bits/sigset.h /usr/include/bits/select2.h \
- /usr/include/sys/sysmacros.h /usr/include/bits/sysmacros.h \
- /usr/include/alloca.h /usr/include/bits/stdlib-bsearch.h \
- /usr/include/bits/stdlib-float.h /usr/include/bits/stdlib.h \
+ /usr/include/bits/types/sigset_t.h /usr/include/bits/types/__sigset_t.h \
+ /usr/include/bits/select2.h /usr/include/alloca.h \
+ /usr/include/bits/stdlib-bsearch.h /usr/include/bits/stdlib-float.h \
+ /usr/include/bits/stdlib.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/cstdio \
- /usr/include/libio.h /usr/include/_G_config.h \
+ /usr/include/stdio.h /usr/include/libio.h /usr/include/_G_config.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
  /usr/include/bits/stdio.h /usr/include/bits/stdio2.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/cerrno \
@@ -227,15 +232,27 @@ src/lib/services/cuservicei.h:
 
 /usr/include/bits/libc-header-start.h:
 
-/usr/include/stdio.h:
+/usr/include/bits/floatn.h:
+
+/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/stddef.h:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/stdarg.h:
 
 /usr/include/bits/wchar.h:
 
-/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/stddef.h:
+/usr/include/bits/types/wint_t.h:
 
-/usr/include/xlocale.h:
+/usr/include/bits/types/mbstate_t.h:
+
+/usr/include/bits/types/__mbstate_t.h:
+
+/usr/include/bits/types/__FILE.h:
+
+/usr/include/bits/types/FILE.h:
+
+/usr/include/bits/types/locale_t.h:
+
+/usr/include/bits/types/__locale_t.h:
 
 /usr/include/bits/wchar2.h:
 
@@ -248,6 +265,10 @@ src/lib/services/cuservicei.h:
 /usr/include/bits/types.h:
 
 /usr/include/bits/typesizes.h:
+
+/usr/include/bits/stdint-intn.h:
+
+/usr/include/bits/stdint-uintn.h:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/bits/allocator.h:
 
@@ -321,6 +342,8 @@ src/lib/services/cuservicei.h:
 
 /usr/include/bits/sched.h:
 
+/usr/include/bits/cpu-set.h:
+
 /usr/include/time.h:
 
 /usr/include/bits/time.h:
@@ -340,6 +363,10 @@ src/lib/services/cuservicei.h:
 /usr/include/bits/types/struct_itimerspec.h:
 
 /usr/include/bits/pthreadtypes.h:
+
+/usr/include/bits/thread-shared-types.h:
+
+/usr/include/bits/pthreadtypes-arch.h:
 
 /usr/include/bits/setjmp.h:
 
@@ -365,13 +392,11 @@ src/lib/services/cuservicei.h:
 
 /usr/include/bits/select.h:
 
-/usr/include/bits/sigset.h:
+/usr/include/bits/types/sigset_t.h:
+
+/usr/include/bits/types/__sigset_t.h:
 
 /usr/include/bits/select2.h:
-
-/usr/include/sys/sysmacros.h:
-
-/usr/include/bits/sysmacros.h:
 
 /usr/include/alloca.h:
 
@@ -382,6 +407,8 @@ src/lib/services/cuservicei.h:
 /usr/include/bits/stdlib.h:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/cstdio:
+
+/usr/include/stdio.h:
 
 /usr/include/libio.h:
 

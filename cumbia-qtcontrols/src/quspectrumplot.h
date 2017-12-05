@@ -11,6 +11,7 @@ class Cumbia;
 class CumbiaPool;
 class CuControlsFactoryPool;
 class CuData;
+class CuContext;
 class CuVariant;
 class CuControlsReaderFactoryI;
 
@@ -49,6 +50,8 @@ public:
 
     int period() const;
 
+    CuContext *getContext() const;
+
 public slots:
 
     void setSource(const QString& s);
@@ -61,7 +64,7 @@ public slots:
 
     void unsetSources();
 
-    void sendData(const CuData &d);
+    void setOptions(const CuData &options);
 
     void setPeriod(int p);
 

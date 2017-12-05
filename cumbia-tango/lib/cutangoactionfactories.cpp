@@ -7,24 +7,26 @@
 
 CuTangoReaderFactory::CuTangoReaderFactory()
 {
-    options = new CuTangoReadOptions(1000, CuTReader::ChangeEventRefresh);
+
 }
 
-void CuTangoReaderFactory::setOptions(const CuTangoReadOptions &o)
+void CuTangoReaderFactory::setOptions(const CuData &o)
 {
-    *options = o;
+    options = o;
 }
 
 CuTangoReaderFactory::~CuTangoReaderFactory()
 {
-    delete options;
+
 }
 
 CuTangoActionI *CuTangoReaderFactory::create(const std::string &s, CumbiaTango *ct) const
 {
     CuTReader* reader = new CuTReader(s, ct);
-    reader->setPeriod(options->period);
-    reader->setRefreshMode(options->mode);
+    if(options.containsKey("period") && options["period"].toInt() > 0)
+        reader->setPeriod(options["period"].toInt());
+    if(options.containsKey("refresh_mode"))
+        reader->setRefreshMode(static_cast<CuTReader::RefreshMode>(options["refresh_mode"].toInt()));
     return reader;
 }
 
@@ -36,6 +38,16 @@ CuTangoActionI::Type CuTangoReaderFactory::getType() const
 CuTangoWriterFactory::CuTangoWriterFactory()
 {
 
+}
+
+CuTangoWriterFactory::~CuTangoWriterFactory()
+{
+
+}
+
+void CuTangoWriterFactory::setOptions(const CuData &o)
+{
+    options = o;
 }
 
 void CuTangoWriterFactory::setWriteValue(const CuVariant &write_val)
@@ -57,23 +69,24 @@ CuTangoActionI::Type CuTangoWriterFactory::getType() const
 
 CuTangoAttConfFactory::CuTangoAttConfFactory()
 {
-    m_fetchAttHistory = false;
+
 }
 
-void CuTangoAttConfFactory::fetchAttributeHistory(bool fetch)
+CuTangoAttConfFactory::~CuTangoAttConfFactory()
 {
-    m_fetchAttHistory = fetch;
+
 }
 
-void CuTangoAttConfFactory::setDesiredAttributeProperties(const std::vector<std::__cxx11::string> props)
+void CuTangoAttConfFactory::setOptions(const CuData &o)
 {
-    m_props = props;
+    options = o;
 }
 
 CuTangoActionI *CuTangoAttConfFactory::create(const std::string &s, CumbiaTango *ct) const
 {
     CuTAttConfiguration *w = new CuTAttConfiguration(s, ct);
-    w->setDesiredAttributeProperties(this->m_props);
+    if(options.containsKey("fetch_props"))
+        w->setDesiredAttributeProperties(options["fetch_props"].toStringVector());
     return w;
 }
 

@@ -8,6 +8,7 @@
 
 class QString;
 class Cumbia;
+class CuData;
 class CuDataListener;
 class QStringList;
 
@@ -41,9 +42,11 @@ public:
 
     virtual void setTargets(const QString &s) = 0;
 
-    virtual void requestProperties(const QStringList &props) = 0;
-
     virtual void execute() = 0;
+
+    virtual void sendData(const CuData& d) = 0;
+
+    virtual void getData(CuData& d_ino) const = 0;
 
     CuVariant getArgs() const { return d->argins; }
 

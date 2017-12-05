@@ -2,6 +2,7 @@
 #include "quconnectionsettingswidget.h"
 #include "qutrealtimeplot.h"
 #include "rtconfwidget.h"
+#include "qucontext.h"
 #include <qutrendplot.h>
 #include <quspectrumplot.h>
 #include <cumacros.h>
@@ -74,7 +75,7 @@ void QuTPlotSettings::configure()
 void QuTPlotSettings::apply(const CuData &da)
 {
     if(qobject_cast<QuTrendPlot *>(m_plot))
-        qobject_cast<QuTrendPlot *>(m_plot)->sendData(da);
+        qobject_cast<QuTrendPlot *>(m_plot)->getContext()->setOptions(da);
     else if(qobject_cast<QuSpectrumPlot *>(m_plot))
-        qobject_cast<QuSpectrumPlot *>(m_plot)->sendData(da);
+        qobject_cast<QuSpectrumPlot *>(m_plot)->getContext()->setOptions(da);
 }

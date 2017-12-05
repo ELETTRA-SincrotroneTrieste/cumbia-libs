@@ -2,6 +2,8 @@
 #define CUMBIAQTCONTROLS_H
 
 #include "cumbia-qtcontrols_global.h"
+#include <QMetaType>
+#include <cudata.h>
 
 /*! \mainpage Cumbia Qt controls module
  *

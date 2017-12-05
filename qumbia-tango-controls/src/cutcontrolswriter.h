@@ -10,19 +10,27 @@
 
 class CumbiaTango;
 class CuDataListener;
-class CuEpControlsWriterPrivate;
+class CuTangoControlsWriterPrivate;
 class CuVariant;
-
+class CuTWriterFactoryPrivate;
 
 class CuTWriterFactory : public CuControlsWriterFactoryI
 {
-    // CuControlsWriterFactoryI interface
 public:
-    CuControlsWriterA *create(Cumbia *, CuDataListener *l) const;
+    CuTWriterFactory();
+
+    virtual ~CuTWriterFactory();
 
     // CuControlsWriterFactoryI interface
-public:
+
+    CuControlsWriterA *create(Cumbia *, CuDataListener *l) const;
+
     CuControlsWriterFactoryI *clone() const;
+
+    void setOptions(const CuData& o);
+
+private:
+    CuTWriterFactoryPrivate *d;
 };
 
 class CuTControlsWriter: public CuControlsWriterA
@@ -38,12 +46,16 @@ public:
 
     void setTargets(const QString &s);
 
-    void requestProperties(const QStringList &props);
-
     virtual void execute();
 
+    void sendData(const CuData &d);
+
+    void getData(CuData &d_ino) const;
+
+    void setOptions(const CuData& o);
+
 private:
-    CuEpControlsWriterPrivate *d;
+    CuTangoControlsWriterPrivate *d;
 };
 
 #endif // CUTCONTROLSWRITER_H

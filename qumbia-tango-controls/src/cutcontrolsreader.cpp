@@ -12,7 +12,7 @@
 class CuTReaderFactoryPrivate
 {
 public:
-    CuTangoReadOptions r_options;
+    CuData r_options;
 };
 
 CuTReaderFactory::CuTReaderFactory()
@@ -25,14 +25,20 @@ CuTReaderFactory::~CuTReaderFactory()
     delete d;
 }
 
-void CuTReaderFactory::setReadOptions(const CuTangoReadOptions &o)
+void CuTReaderFactory::setOptions(const CuData &o)
 {
     d->r_options = o;
+}
+
+CuData CuTReaderFactory::getOptions() const
+{
+    return d->r_options;
 }
 
 CuControlsReaderA *CuTReaderFactory::create(Cumbia *c, CuDataListener *l) const
 {
     CuTControlsReader *r = new CuTControlsReader(c, l);
+    printf("CuTReaderFactory.create options are %s\n", d->r_options.toString().c_str());
     r->setOptions(d->r_options);
     return r;
 }
@@ -51,7 +57,7 @@ public:
     CumbiaTango *cumbia_tango;
     CuDataListener *tlistener;
     std::vector<std::string> attr_props;
-    CuTangoReadOptions read_options;
+    CuData ta_options;
 };
 
 CuTControlsReader::CuTControlsReader(Cumbia *cumbia_tango, CuDataListener *tl)
@@ -91,17 +97,9 @@ void CuTControlsReader::unsetSource()
     d->source = QString();
 }
 
-void CuTControlsReader::requestProperties(const QStringList &props)
+void CuTControlsReader::setOptions(const CuData &o)
 {
-    std::vector<std::string> vs;
-    foreach(QString p, props)
-        vs.push_back(p.toStdString());
-    d->attr_props = vs;
-}
-
-void CuTControlsReader::setOptions(const CuTangoReadOptions &o)
-{
-    d->read_options = o;
+    d->ta_options = o;
 }
 
 void CuTControlsReader::sendData(const CuData &data)
@@ -123,8 +121,8 @@ void CuTControlsReader::setSource(const QString &s)
     CuEpControlsUtils tcu;
     CuTangoAttConfFactory acf;
     CuTangoReaderFactory readf;
-    readf.setOptions(d->read_options);
-    acf.setDesiredAttributeProperties(d->attr_props);
+    acf.setOptions(d->ta_options);
+    readf.setOptions(d->ta_options);
     d->source = tcu.replaceWildcards(s, qApp->arguments());
     d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, acf);
     d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, readf);

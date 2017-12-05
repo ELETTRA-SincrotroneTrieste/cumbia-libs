@@ -38,18 +38,24 @@ ENumeric::ENumeric(QWidget *parent, int id, int dd) : QFrame(parent), FloatDeleg
 
 QSize ENumeric::sizeHint() const
 {
-    QFontMetrics fm(font());
-    int w = fm.width('X') * digits + fm.width("+") + fm.width(".") + 12;
-    int h = fm.height() * 3;
-    return QSize(w, h);
+    return QSize(neededWidth() + 5, neededHeight() + 2);
 }
 
 QSize ENumeric::minimumSizeHint() const
 {
+    return QSize(neededWidth(), neededHeight());
+}
+
+int ENumeric::neededWidth() const
+{
     QFontMetrics fm(font());
-    int w = fm.width('X') * digits + 4 + fm.width("+") + fm.width(".") + 4;
-    int h = ceil(fm.height() * 2.5);
-    return QSize(w, h);
+    return fm.width('X') * digits + 4 + fm.width("+") + fm.width(".") + 4;
+}
+
+int ENumeric::neededHeight() const
+{
+    QFontMetrics fm(font());
+    return ceil(fm.height() * 2.5);
 }
 
 void ENumeric::clearContainers()
@@ -151,6 +157,8 @@ void ENumeric::setValue(double v)
         if (valChanged)
             emit valueChanged(temp*pow(10.0, -decDig));
     }
+    else
+        perr("ENumeric \"%s\": value %f outta range [%f, %f]", qstoc(objectName()), v, minVal, maxVal);
 }
 
 void ENumeric::silentSetValue(double v)

@@ -117,6 +117,10 @@ public:
 
     virtual QSize minimumSizeHint() const;
 
+    int neededWidth() const;
+
+    int neededHeight() const;
+
 public slots:
     virtual void setEnabled(bool);
     virtual void setDisabled(bool);

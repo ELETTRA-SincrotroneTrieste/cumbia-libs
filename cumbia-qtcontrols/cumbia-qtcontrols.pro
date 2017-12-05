@@ -8,6 +8,8 @@ include(cumbia-qtcontrols.pri)
 
 CONFIG += debug
 
+QT+= qml  quick
+
 # remove ourselves (defined in .pri)
 PKGCONFIG -= cumbia-qtcontrols$${QTVER_SUFFIX}
 
@@ -62,9 +64,15 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/quspectrumplot.cpp \
     src/widgets-base/eplotlight/quplotbasecontextmenustrategy.cpp \
     src/cucontrolsfactorypool.cpp \
-    src/widgets-base/culinkcontrol.cpp \
     src/quapplynumeric.cpp \
-    src/widgets-base/ereaderwriter.cpp
+    src/widgets-base/einputoutputwidget.cpp \
+    src/widgets-base/qml/qmlcirculargauge.cpp \
+    src/quinputoutput.cpp \
+    src/culinkstats.cpp \
+    src/cucontextmenu.cpp \
+    src/cucontextactionbridge.cpp \
+    src/cuinfodialog.cpp \
+    src/widgets-base/cucontext.cpp
 
 HEADERS += cumbiaqtcontrols.h\
         cumbia-qtcontrols_global.h \
@@ -110,13 +118,21 @@ HEADERS += cumbiaqtcontrols.h\
     src/quspectrumplot.h \
     src/quwidgetcontextmenustrategyi.h \
     src/widgets-base/eplotlight/quplotbasecontextmenustrategy.h \
-    src/widgets-base/culinkcontrol.h \
     src/quapplynumeric.h \
-    src/widgets-base/ereaderwriter.h
+    src/widgets-base/einputoutputwidget.h \
+    src/widgets-base/qml/qmlcirculargauge.h \
+    src/quinputoutput.h \
+    src/culinkstats.h \
+    src/cucontextmenu.h \
+    src/cucontextactionbridge.h \
+    src/cuinfodialog.h \
+    src/widgets-base/cucontext.h \
+    src/cucontextwidgeti.h
 
 
 RESOURCES += \
-    src/widgets-base/eimage/confdialog.qrc
+    src/widgets-base/eimage/confdialog.qrc \
+    src/widgets-base/qml/qmlcontrols.qrc
 
 FORMS += \
     src/widgets-base/eimage/confdialog.ui \
@@ -182,7 +198,8 @@ SOURCES += \
     src/widgets-base/esimplelabel.cpp
 
 DISTFILES += \
-    cumbia-qtcontrols.pri
+    cumbia-qtcontrols.pri \
+    src/widgets-base/qml/qmlcirculargauge.qml
 
 unix:INCLUDEPATH -= \
     $${QUMBIA_TANGO_CONTROLS_INCLUDES}

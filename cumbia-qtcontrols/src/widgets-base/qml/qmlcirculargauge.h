@@ -1,11 +1,15 @@
 #ifndef QMLCIRCULARGAUGE_H
 #define QMLCIRCULARGAUGE_H
 
+#include <QtQml>
+#include <QObject>
+#include <QWidget>
 
-class QmlCircularGauge
+class QmlCircularGauge : public QWidget
 {
+    Q_OBJECT
 public:
-    QmlCircularGauge();
+    QmlCircularGauge(QWidget *parent);
 };
 
 #endif // QMLCIRCULARGAUGE_H

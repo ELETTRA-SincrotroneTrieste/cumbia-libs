@@ -29,7 +29,7 @@ QString CuControlsUtils::findInput(const QString &objectName, const QObject *lea
         else
         {
             o = parent->findChild<QObject *>(objectName);
-            qDebug() << "findinc child " << objectName << " under " << parent << "AMONGST" << " FOUND " << o;
+            qDebug() << "findind child " << objectName << " under " << parent << "AMONGST" << " FOUND " << o;
             foreach(QObject *c, parent->findChildren<QObject *>())
                 qDebug() << "---" << c << c->objectName();
         }
@@ -43,8 +43,14 @@ QString CuControlsUtils::findInput(const QString &objectName, const QObject *lea
               "  Please reorganise QObjects hierarchy for better performance.", qstoc(objectName));
         o = qApp->activeWindow()->findChild<QObject*>(objectName);
     }
-    if(o)
+    // let cumbia-qtcontrols findInput deal with labels, line edits, combo boxes (currentText), spin boxes
+    // and our Numeric
+    if(o && o->metaObject()->indexOfProperty("text") > -1)
         ret = o->property("text").toString();
+    else if(o && o->metaObject()->indexOfProperty("value") > -1)
+        ret = o->property("value").toString();
+    else if(o && o->metaObject()->indexOfProperty("currentText") > -1)
+        ret = o->property("currentText").toString();
 
     return ret;
 }
@@ -80,7 +86,7 @@ CuVariant CuControlsUtils::getArgs(const QString &target, const QObject *leaf) c
         cuprintf("argin %d args.size %d: %s\n", i, args.size(), argins.at(i).c_str());
     if(args.size() > 1)
         return CuVariant(argins);
-    else if(args.size() == 1)
+    else if(args.size() == 1 && argins.size() > 0)
         return CuVariant(argins.at(0));
 
     return CuVariant();

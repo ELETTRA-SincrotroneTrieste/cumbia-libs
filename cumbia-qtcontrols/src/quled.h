@@ -9,6 +9,7 @@ class Cumbia;
 class CuControlsReaderFactoryI;
 class CumbiaPool;
 class CuControlsFactoryPool;
+class CuContext;
 
 class QuLed : public ELed, public CuDataListener
 {
@@ -23,6 +24,8 @@ public:
     virtual ~QuLed();
 
     QString source() const;
+
+    CuContext *getContext() const;
 
 public slots:
     void setSource(const QString& s);

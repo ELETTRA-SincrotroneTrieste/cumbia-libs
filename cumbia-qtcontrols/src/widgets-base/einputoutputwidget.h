@@ -1,42 +1,66 @@
-#ifndef EREADERWRITER_H
-#define EREADERWRITER_H
+#ifndef EINPUTOUTPUTWIDGET_H
+#define EINPUTOUTPUTWIDGET_H
 
 #include <QComboBox>
 #include <QStyledItemDelegate>
 #include <QStandardItemModel>
 #include <QAbstractItemView>
-#include "elabel.h"
 
 class EReaderWriterPrivate;
+class QPushButton;
 
+class Container : public QFrame
+{
+  Q_OBJECT
+public:
+    Container(QWidget *parent);
 
+signals:
+    void visibilityChanged(bool);
 
-class EReaderWriter : public ELabel
+protected:
+    void hideEvent(QHideEvent *e);
+};
+
+class EInputOutputWidget : public QFrame
 {
     Q_OBJECT
-    Q_PROPERTY(WriterType writerType READ writerType WRITE setWriterType  DESIGNABLE true)
 public:
-    enum WriterType { SpinBox, DoubleSpinBox, ComboBox, LineEdit,  Numeric};
-    enum WriterPosition { AutoPosition, North, South, East, West };
 
-    EReaderWriter(QWidget *parent);
+    EInputOutputWidget(QWidget *outputw, QWidget *parent);
 
-    WriterType writerType() const;
+    EInputOutputWidget(QWidget *parent);
+
+    void setInputWidget(QWidget *inputw);
+
+    void setOutputWidget(QWidget *outputw);
 
     QSize minimumSizeHint() const;
 
     QSize sizeHint() const;
 
+    QWidget *outputWidget() const;
+
+    QWidget *inputWidget() const;
+
+    QFrame *getContainer() const;
+
+    virtual QPushButton *getApplyButton();
 
 public slots:
 
-    void setWriterType(WriterType t);
+    void setInputValue(double val);
 
-    void setValue(double d);
+    void setInputValue(int val);
 
-    void setValue(int i);
+    void setInputText(const QString& text);
 
-    void setValue(const QString& s);
+    void setOutputValue(int val);
+
+    void setOutputValue(double val);
+
+    void setOutputText(const QString& text);
+
 
 signals:
 
@@ -44,25 +68,27 @@ signals:
 
     void applyClicked();
 
+    void applyClicked(double val);
+
+    void applyClicked(const QString& text);
+
     void editButtonClicked();
 
 private slots:
     void m_editToggled(bool en);
+    void m_applyClicked();
 
 protected:
-  virtual void enterEvent(QEvent *e);
-  virtual void leaveEvent(QEvent *e);
-  virtual void mouseMoveEvent(QMouseEvent *e);
-  virtual void mousePressEvent(QMouseEvent *);
 
 private:
     EReaderWriterPrivate *d;
 
-    void m_setData(const QVariant& d);
-    void m_init();
+    void m_init(QWidget *outputw);
+    void m_createContainer();
     void m_showWriter();
-    void m_repositionAll();
-    void m_showEditButton();
+    void m_show();
+    void m_setValue(const QVariant &d, QWidget *w);
+    void m_setText(const QString& s,  QWidget *w);
 };
 
 

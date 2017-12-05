@@ -505,6 +505,19 @@ size_t CuVariant::getSize() const
     return d->mSize;
 }
 
+bool CuVariant::isInteger() const
+{
+    return d->type == Short || d->type == UShort
+            || d->type ==  Int|| d->type ==  UInt ||
+            d->type == LongInt || d->type ==  LongUInt;
+}
+
+bool CuVariant::isFloatingPoint() const
+{
+    return d->type == Double || d->type == LongDouble
+        || d->type == Float;
+}
+
 void CuVariant::init(DataFormat df, DataType dt)
 {
     d->mIsValid = (dt > TypeInvalid && dt < EndDataTypes) && (df > FormatInvalid && df < EndFormatTypes);
@@ -834,11 +847,9 @@ std::string CuVariant::toString(bool *ok, const char *double_format) const
     const size_t MAXLEN = 128;
     std::string ret;
     char converted[MAXLEN + 1];
-
-    if(ok)
-        *ok = false;
+    bool success = true;
     memset(converted, 0, sizeof(char) * (MAXLEN + 1));
-    for(size_t i = 0; i < d->mSize; i++)
+    for(size_t i = 0; i < d->mSize && success; i++)
     {
         if(i > 0)
             ret += ",";
@@ -862,9 +873,10 @@ std::string CuVariant::toString(bool *ok, const char *double_format) const
             snprintf(converted, MAXLEN, "%f", static_cast<float *>(d->val)[i]);
         else if(d->type == Boolean)
             static_cast<bool *>(d->val)[i] ? sprintf(converted, "true") : sprintf(converted, "false");
-        else if(ok)
+        else
         {
-            *ok = false;
+            success = false;
+            ret = "";
             perr("CuVariant.toString: error converting data to string: format is %d type is %d",
                  d->format, d->type);
         }
@@ -873,6 +885,8 @@ std::string CuVariant::toString(bool *ok, const char *double_format) const
             ret += std::string(converted);
     }
 
+    if(ok)
+        *ok = success;
     return ret;
 }
 

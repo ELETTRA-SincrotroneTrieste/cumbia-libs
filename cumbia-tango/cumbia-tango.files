@@ -36,8 +36,8 @@ lib/cutangoactionfactories.h
 lib/cutangoactionfactoryi.h
 lib/cutangoactioni.cpp
 lib/cutangoactioni.h
-lib/cutangoreadoptions.cpp
-lib/cutangoreadoptions.h
+lib/cutangoopt_builder.cpp
+lib/cutangoopt_builder.h
 lib/cutattconfigactivity.cpp
 lib/cutattconfigactivity.h
 lib/cutattconfiguration.cpp

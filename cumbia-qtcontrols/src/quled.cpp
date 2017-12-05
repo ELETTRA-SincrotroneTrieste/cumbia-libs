@@ -6,7 +6,8 @@
 #include <QPainter>
 #include <QPaintEvent>
 
-#include "culinkcontrol.h"
+#include "cucontext.h"
+#include "culinkstats.h"
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
 
@@ -15,28 +16,25 @@ class QuLedPrivate
 public:
     bool auto_configure;
     bool read_ok;
-    CuControlsReaderA *reader;
     QuPalette palette;
-    CuLinkControl *link_ctrl;
+    CuContext *context;
 };
 
 QuLed::QuLed(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac) : ELed(w)
 {
     m_init();
-    d->link_ctrl = new CuLinkControl(cumbia, r_fac);
+    d->context = new CuContext(cumbia, r_fac);
 }
 
 QuLed::QuLed(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) : ELed(w)
 {
     m_init();
-    d->link_ctrl = new CuLinkControl(cumbia_pool, fpool);
+    d->context = new CuContext(cumbia_pool, fpool);
 }
 
 void QuLed::m_init()
 {
     d = new QuLedPrivate;
-    d->reader = NULL;
-    d->link_ctrl = NULL;
     d->auto_configure = true;
     d->read_ok = false;
     setProperty("trueColor", QColor(Qt::green));
@@ -45,31 +43,25 @@ void QuLed::m_init()
 
 QuLed::~QuLed()
 {
-    if(d->reader) delete d->reader;
+    delete d->context;
     delete d;
 }
 
 QString QuLed::source() const
 {
-    if(d->reader)
-        return d->reader->source();
+    if(d->context->getReader())
+        return d->context->getReader()->source();
     return "";
 }
 
 void QuLed::setSource(const QString &s)
 {
-    if(d->reader && d->reader->source() != s)
-        delete d->reader;
-
-    d->reader = d->link_ctrl->make_reader(s.toStdString(), this);
-    if(d->reader)
-        d->reader->setSource(s);
+    d->context->replace_reader(s.toStdString(), this);
 }
 
 void QuLed::unsetSource()
 {
-    if(d->reader)
-        d->reader->unsetSource();
+    d->context->unlinkReader();
 }
 
 void QuLed::onUpdate(const CuData &da)
@@ -77,6 +69,11 @@ void QuLed::onUpdate(const CuData &da)
     QColor background, border;
     d->read_ok = !da["err"].toBool();
     setEnabled(d->read_ok);
+
+    // update link statistics
+    d->context->getLinkStats()->addOperation();
+    if(!d->read_ok)
+        d->context->getLinkStats()->addError(da["msg"].toString());
 
     if(da.containsKey("quality_color"))
         background = d->palette[QString::fromStdString(da["quality_color"].toString())];
@@ -111,4 +108,9 @@ void QuLed::onUpdate(const CuData &da)
         setBorderColor(d->palette[QString::fromStdString(da["success_color"].toString())]);
 
     emit newData(da);
+}
+
+CuContext *QuLed::getContext() const
+{
+    return d->context;
 }

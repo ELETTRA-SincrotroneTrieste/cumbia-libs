@@ -37,6 +37,8 @@ public:
 
     void setRefreshMode(RefreshMode rm);
 
+    std::string refreshModeStr() const;
+
     RefreshMode refreshMode() const;
 
     void setPeriod(int millis);

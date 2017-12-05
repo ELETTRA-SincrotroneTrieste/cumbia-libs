@@ -11,7 +11,7 @@
 class CuTControlsReaderPrivate;
 class CumbiaTango;
 class CuDataListener;
-class CuTangoReadOptions;
+class CuTangoOptBuilder;
 
 class CuTReaderFactoryPrivate;
 
@@ -25,7 +25,9 @@ public:
 
     CuControlsReaderA *create(Cumbia *c, CuDataListener *l) const;
 
-    void setReadOptions(const CuTangoReadOptions& o);
+    void setOptions(const CuData& o);
+
+    CuData getOptions() const;
 
     // CuControlsReaderFactoryI interface
 public:
@@ -48,9 +50,7 @@ public:
 
     void unsetSource() ;
 
-    void requestProperties(const QStringList &props);
-
-    void setOptions(const CuTangoReadOptions& o);
+    void setOptions(const CuData& o);
 
     void sendData(const CuData& d);
 

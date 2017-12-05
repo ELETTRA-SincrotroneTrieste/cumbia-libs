@@ -1,17 +1,26 @@
-#ifndef CULINKSTATSCONNECTOR_H
-#define CULINKSTATSCONNECTOR_H
+#ifndef CUCONTEXTACTIONBRIDGE_H
+#define CUCONTEXTACTIONBRIDGE_H
 
 #include <QObject>
 
-class CuLinkStatsConnector : public QObject
+class CuLinkStatsConnectorPrivate;
+class QPoint;
+
+class CuContextActionBridge : public QObject
 {
     Q_OBJECT
 public:
-    explicit CuLinkStatsConnector(QObject *parent = nullptr);
+    explicit CuContextActionBridge(QWidget *parent);
+
+    virtual ~CuContextActionBridge();
+
+    void connectObject(QObject *w);
 
 signals:
+    void linkStatsRequest(QWidget *sender);
 
-public slots:
+private:
+    CuLinkStatsConnectorPrivate *d;
 };
 
 #endif // CULINKSTATSCONNECTOR_H

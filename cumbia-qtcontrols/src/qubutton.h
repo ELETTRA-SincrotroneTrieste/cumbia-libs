@@ -15,9 +15,9 @@ class QuButton : public QPushButton, public CuDataListener
     Q_OBJECT
     Q_PROPERTY(QString targets READ targets WRITE setTargets DESIGNABLE true)
 public:
-    QuButton(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac);
+    QuButton(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac, const QString& text = "Apply");
 
-    QuButton(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    QuButton(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool, const QString& text = "Apply");
 
     virtual ~QuButton();
 
@@ -32,7 +32,7 @@ public slots:
 private:
     QuButtonPrivate *d;
 
-    void m_init();
+    void m_init(const QString& text);
 
     // CuTangoListener interface
 public:

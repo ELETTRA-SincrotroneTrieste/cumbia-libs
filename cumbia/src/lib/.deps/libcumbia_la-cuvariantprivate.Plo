@@ -11,21 +11,25 @@ src/lib/libcumbia_la-cuvariantprivate.lo: src/lib/cuvariantprivate.cpp \
  /usr/include/stdlib.h /usr/include/bits/libc-header-start.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/stddef.h \
  /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
- /usr/include/xlocale.h /usr/include/sys/types.h \
+ /usr/include/bits/floatn.h /usr/include/bits/types/locale_t.h \
+ /usr/include/bits/types/__locale_t.h /usr/include/sys/types.h \
  /usr/include/bits/types.h /usr/include/bits/typesizes.h \
  /usr/include/bits/types/clock_t.h /usr/include/bits/types/clockid_t.h \
  /usr/include/bits/types/time_t.h /usr/include/bits/types/timer_t.h \
- /usr/include/endian.h /usr/include/bits/endian.h \
- /usr/include/bits/byteswap.h /usr/include/bits/byteswap-16.h \
- /usr/include/bits/uintn-identity.h /usr/include/sys/select.h \
- /usr/include/bits/select.h /usr/include/bits/sigset.h \
+ /usr/include/bits/stdint-intn.h /usr/include/endian.h \
+ /usr/include/bits/endian.h /usr/include/bits/byteswap.h \
+ /usr/include/bits/byteswap-16.h /usr/include/bits/uintn-identity.h \
+ /usr/include/sys/select.h /usr/include/bits/select.h \
+ /usr/include/bits/types/sigset_t.h /usr/include/bits/types/__sigset_t.h \
  /usr/include/bits/types/struct_timeval.h \
  /usr/include/bits/types/struct_timespec.h /usr/include/bits/select2.h \
- /usr/include/sys/sysmacros.h /usr/include/bits/sysmacros.h \
- /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
+ /usr/include/bits/pthreadtypes.h /usr/include/bits/thread-shared-types.h \
+ /usr/include/bits/pthreadtypes-arch.h /usr/include/alloca.h \
  /usr/include/bits/stdlib-bsearch.h /usr/include/bits/stdlib-float.h \
- /usr/include/bits/stdlib.h /usr/include/stdio.h /usr/include/libio.h \
- /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/include/bits/stdlib.h /usr/include/stdio.h \
+ /usr/include/bits/types/__FILE.h /usr/include/bits/types/FILE.h \
+ /usr/include/libio.h /usr/include/_G_config.h \
+ /usr/include/bits/types/__mbstate_t.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/stdarg.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
  /usr/include/bits/stdio.h /usr/include/bits/stdio2.h
@@ -66,7 +70,11 @@ src/lib/cuvariantprivate.h:
 
 /usr/include/bits/waitstatus.h:
 
-/usr/include/xlocale.h:
+/usr/include/bits/floatn.h:
+
+/usr/include/bits/types/locale_t.h:
+
+/usr/include/bits/types/__locale_t.h:
 
 /usr/include/sys/types.h:
 
@@ -82,6 +90,8 @@ src/lib/cuvariantprivate.h:
 
 /usr/include/bits/types/timer_t.h:
 
+/usr/include/bits/stdint-intn.h:
+
 /usr/include/endian.h:
 
 /usr/include/bits/endian.h:
@@ -96,7 +106,9 @@ src/lib/cuvariantprivate.h:
 
 /usr/include/bits/select.h:
 
-/usr/include/bits/sigset.h:
+/usr/include/bits/types/sigset_t.h:
+
+/usr/include/bits/types/__sigset_t.h:
 
 /usr/include/bits/types/struct_timeval.h:
 
@@ -104,11 +116,11 @@ src/lib/cuvariantprivate.h:
 
 /usr/include/bits/select2.h:
 
-/usr/include/sys/sysmacros.h:
-
-/usr/include/bits/sysmacros.h:
-
 /usr/include/bits/pthreadtypes.h:
+
+/usr/include/bits/thread-shared-types.h:
+
+/usr/include/bits/pthreadtypes-arch.h:
 
 /usr/include/alloca.h:
 
@@ -120,11 +132,15 @@ src/lib/cuvariantprivate.h:
 
 /usr/include/stdio.h:
 
+/usr/include/bits/types/__FILE.h:
+
+/usr/include/bits/types/FILE.h:
+
 /usr/include/libio.h:
 
 /usr/include/_G_config.h:
 
-/usr/include/wchar.h:
+/usr/include/bits/types/__mbstate_t.h:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/stdarg.h:
 

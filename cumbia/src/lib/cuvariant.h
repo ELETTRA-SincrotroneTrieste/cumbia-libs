@@ -119,6 +119,10 @@ public:
 
     size_t getSize() const;
 
+    bool isInteger() const;
+
+    bool isFloatingPoint() const;
+
     std::vector<double> toDoubleVector() const;
 
     std::vector<long double> toLongDoubleVector() const;

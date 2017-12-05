@@ -13,7 +13,7 @@ class CuControlsFactoryPool;
 class CuData;
 class CuVariant;
 class CuControlsReaderFactoryI;
-
+class CuContext;
 
 /** \brief Draw a line for each data source over time
  *
@@ -56,6 +56,8 @@ public:
 
     int period() const;
 
+    CuContext *getContext() const;
+
 public slots:
 
     void setSource(const QString& s);
@@ -69,8 +71,6 @@ public slots:
     void unsetSources();
 
     void setPeriod(int p);
-
-    void sendData(const CuData &d);
 
     void setTimeScaleDrawEnabled(bool enable);
 

@@ -29,8 +29,6 @@ public:
 
     virtual void unsetSource() = 0;
 
-    virtual void requestProperties(const QStringList& props) = 0;
-
     virtual void sendData(const CuData& d) = 0;
 
     virtual void getData(CuData& d_ino) const = 0;

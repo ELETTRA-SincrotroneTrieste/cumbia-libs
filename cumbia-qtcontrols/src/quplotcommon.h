@@ -15,20 +15,25 @@ class Cumbia;
 class QuPlotCommonPrivate;
 class CuVariant;
 class CuData;
-class CuLinkControl;
+class CuContext;
+class CuLinkStats;
+class CuControlsFactoryPool;
+class CumbiaPool;
 
 class QuPlotCommon
 {
 public:
-    QuPlotCommon();
+    QuPlotCommon(Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
+
+    QuPlotCommon(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+
     virtual ~QuPlotCommon();
+
     QColor pick_color(int i);
 
-    void setSources(const QStringList &l,
-                    const CuLinkControl *link_ctrl,
-                    CuDataListener *data_listener);
+    void setSources(const QStringList &l, CuDataListener *data_listener);
 
-    void addSource(const QString& s, const CuLinkControl *link_ctrl, CuDataListener *dl);
+    void addSource(const QString& s, CuDataListener *dl);
 
     void unsetSource(const QString& src, QuPlotBase *plot);
 
@@ -40,11 +45,7 @@ public:
 
     void configure(const QString& curveName, const QPointF &pxy);
 
-    QList<CuControlsReaderA *> readers;
-
-    void getData(CuData &d_inout) const;
-
-    void sendData(const CuData& data);
+    CuContext *getContext() const;
 
 private:
     QuPlotCommonPrivate* d;

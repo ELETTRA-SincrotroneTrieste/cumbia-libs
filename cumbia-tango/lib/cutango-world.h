@@ -63,7 +63,7 @@ public:
 
     std::string formatToStr(Tango::AttrDataFormat f) const;
 
-    std::string cmdArgTypeToStr(Tango::CmdArgType t)  const;
+    std::string cmdArgTypeToDataFormat(Tango::CmdArgType t)  const;
 
     bool error() const;
 

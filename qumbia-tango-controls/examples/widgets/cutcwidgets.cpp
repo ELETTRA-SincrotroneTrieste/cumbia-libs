@@ -22,7 +22,7 @@
 #include <QMessageBox>
 #include <QSpinBox>
 #include <QComboBox>
-#include <cutangoreadoptions.h>
+#include <cutangoopt_builder.h>
 #include <QTimer>
 
 
@@ -197,10 +197,10 @@ void CuTCWidgets::sourcesChanged()
     for(int i = 0; i < srcCnt; i++)
     {
         CuTReaderFactory rf;
-        CuTangoReadOptions o(1000, CuTReader::PolledRefresh);
-        rf.setReadOptions(o);
-
+        CuTangoOptBuilder obu;
+        obu.setPeriod(1000).setRefreshMode(CuTReader::PolledRefresh);
         QuLabel *l = new QuLabel(this, cu_t, rf);
+        l->setOptions(obu.options());
         l->setMaximumLength(30); /* truncate if text is too long */
         if(i == 0) /* configure only once! */
             connect(l, SIGNAL(newData(const CuData&)), this, SLOT(configure(const CuData&)));

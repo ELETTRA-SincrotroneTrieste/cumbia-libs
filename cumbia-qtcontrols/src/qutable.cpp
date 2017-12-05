@@ -5,25 +5,25 @@
 #include <cudata.h>
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
-#include "culinkcontrol.h"
+#include "cucontext.h"
+#include "culinkstats.h"
 #include <QVector>
 #include <QtDebug>
 
 class QuTablePrivate
 {
 public:
-    CuControlsReaderA *reader;
     bool auto_configure, read_ok;
-    QStringList desired_att_props;
+    std::vector<std::string> desired_att_props;
     QuPalette palette;
-    CuLinkControl *link_ctrl;
+    CuContext *context;
 };
 
 QuTable::QuTable(QWidget *parent, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac) :
     EFlag(parent)
 {
     m_init();
-    d->link_ctrl = new CuLinkControl(cumbia, r_fac);
+    d->context = new CuContext(cumbia, r_fac);
 }
 
 
@@ -31,26 +31,28 @@ QuTable::QuTable(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPoo
     EFlag(w), CuDataListener()
 {
     m_init();
-    d->link_ctrl = new CuLinkControl(cumbia_pool, fpool);
+    d->context = new CuContext(cumbia_pool, fpool);
 }
 
 QuTable::~QuTable()
 {
-    if(d->reader) delete d->reader;
+    delete d->context;
     delete d;
 }
 
 void QuTable::m_init()
 {
     d = new QuTablePrivate;
-    d->reader = NULL;
-    d->link_ctrl = NULL;
     d->auto_configure = true;
     d->read_ok = false;
-    d->desired_att_props = QStringList()
-            << "numRows" << "numColumns"
-            << "displayMask" << "trueStrings"
-            << "trueColours" << "falseColours" << "falseStrings";
+    d->desired_att_props.push_back("numRows");
+    d->desired_att_props.push_back("numColumns");
+    d->desired_att_props.push_back("displayMask");
+    d->desired_att_props.push_back("trueStrings");
+    d->desired_att_props.push_back("trueColours");
+    d->desired_att_props.push_back("falseColours");
+    d->desired_att_props.push_back("falseStrings");
+    d->context->setOptions(CuData("fetch_props", d->desired_att_props));
 
     QColor background = d->palette["white"];
     QColor border = d->palette["gray"];
@@ -70,28 +72,24 @@ void QuTable::m_init()
 
 QString QuTable::source() const
 {
-    if(d->reader)
-        return d->reader->source();
+    if(d->context->getReader())
+        return d->context->getReader()->source();
     return "";
+}
+
+CuContext *QuTable::getContext() const
+{
+    return d->context;
 }
 
 void QuTable::setSource(const QString &s)
 {
-    if(d->reader && d->reader->source() != s)
-        delete d->reader;
-
-    d->reader = d->link_ctrl->make_reader(s.toStdString(), this);
-    if(d->reader)
-    {
-        d->reader->requestProperties(d->desired_att_props);
-        d->reader->setSource(s);
-    }
+    d->context->replace_reader(s.toStdString(), this);
 }
 
 void QuTable::unsetSource()
 {
-    if(d->reader)
-        d->reader->unsetSource();
+    d->context->unlinkReader();
 }
 
 void QuTable::onUpdate(const CuData& da)
@@ -102,6 +100,11 @@ void QuTable::onUpdate(const CuData& da)
     QColor background, border;
     d->read_ok = !da["err"].toBool();
     setEnabled(d->read_ok);
+
+    // update link statistics
+    d->context->getLinkStats()->addOperation();
+    if(!d->read_ok)
+        d->context->getLinkStats()->addError(da["msg"].toString());
 
     if(da.containsKey("quality_color"))
         background = d->palette[QString::fromStdString(da["quality_color"].toString())];

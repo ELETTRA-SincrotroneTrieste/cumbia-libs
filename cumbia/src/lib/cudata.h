@@ -30,15 +30,15 @@ public:
 
     CuVariant value() const;
 
-    CuVariant value(std::string &key) const;
+    CuVariant value(const std::string &key) const;
 
-    void add(std::string key, const CuVariant &value);
+    void add(const std::string& key, const CuVariant &value);
 
-    bool containsKey(std::string key) const;
+    bool containsKey(const std::string & key) const;
 
-    CuVariant& operator [] (std::string key);
+    CuVariant& operator [] (const std::string& key);
 
-    const CuVariant& operator [] (std::string  key) const;
+    const CuVariant& operator [] (const std::string& key) const;
 
     virtual bool operator ==(const CuData &other) const;
 

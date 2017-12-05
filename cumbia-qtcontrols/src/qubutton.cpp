@@ -8,15 +8,14 @@
 #include "cucontrolsfactories_i.h"
 #include "cucontrolsutils.h"
 #include "cumbiapool.h"
-#include "culinkcontrol.h"
+#include "cucontext.h"
 #include "qupalette.h"
 #include "qulogimpl.h"
 
 class QuButtonPrivate
 {
 public:
-    CuLinkControl *link_ctrl;
-    CuControlsWriterA *writer;
+    CuContext *context;
     bool auto_configure;
     bool write_ok;
     QuPalette palette;
@@ -25,22 +24,32 @@ public:
 
 QuButton::QuButton(QWidget *parent,
                    Cumbia *cumbia,
-                   const CuControlsWriterFactoryI &w_fac) : QPushButton(parent)
+                   const CuControlsWriterFactoryI &w_fac, const QString &text) : QPushButton(parent)
 {
-    m_init();
-    d->link_ctrl = new CuLinkControl(cumbia, w_fac);
+    m_init(text);
+    d->context = new CuContext(cumbia, w_fac);
 }
 
-QuButton::QuButton(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) : QPushButton(w)
+QuButton::QuButton(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool, const QString &text)
+    : QPushButton(w)
 {
-    m_init();
-    d->link_ctrl = new CuLinkControl(cumbia_pool, fpool);
+    m_init(text);
+    d->context = new CuContext(cumbia_pool, fpool);
 }
 
 QuButton::~QuButton()
 {
-    delete d->link_ctrl;
+    delete d->context;
     delete d;
+}
+
+void QuButton::m_init(const QString& text)
+{
+    d = new QuButtonPrivate;
+    connect(this, SIGNAL(clicked()), this, SLOT(execute()));
+    d->auto_configure = true;
+    d->write_ok = false;
+    setText(text);
 }
 
 void QuButton::execute()
@@ -50,34 +59,23 @@ void QuButton::execute()
     CuVariant args = cu.getArgs(targets(), this);
     printf("QuButton.execute: got args %s type %d format %d\n", args.toString().c_str(), args.getType(),
            args.getFormat());
-    d->writer->setArgs(args);
-    d->writer->execute();
+    CuControlsWriterA *w = d->context->getWriter();
+    if(w) {
+        w->setArgs(args);
+        w->execute();
+    }
 }
 
 void QuButton::setTargets(const QString &targets)
 {
     printf("\e[1;32mQuButton.setTargets!!!!! %s\e[0m\n", qstoc(targets));
-    if(d->writer && d->writer->targets() != targets)
-        delete d->writer;
-    d->writer = d->link_ctrl->make_writer(targets.toStdString(), this);
-    if(d->writer)
-        d->writer->setTargets(targets);
-}
-
-void QuButton::m_init()
-{
-    printf("\e[1;32mQuButton> initializing\e[0m\n");
-    d = new QuButtonPrivate;
-    connect(this, SIGNAL(clicked()), this, SLOT(execute()));
-    d->writer = NULL;
-    d->auto_configure = true;
-    d->write_ok = false;
+    d->context->replace_writer(targets.toStdString(), this);
 }
 
 QString QuButton::targets() const
 {
-    if(d->writer)
-        return d->writer->targets();
+    if(d->context->getWriter())
+        return d->context->getWriter()->targets();
     return "";
 }
 
@@ -85,9 +83,9 @@ void QuButton::onUpdate(const CuData &data)
 {
     if(data["err"].toBool())
     {
-        Cumbia* cumbia = d->link_ctrl->cu;
+        Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->link_ctrl->cu_pool->getBySrc(data["src"].toString());
+            cumbia = d->context->cumbiaPool()->getBySrc(data["src"].toString());
         CuLog *log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log));
         if(log)
         {

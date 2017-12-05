@@ -431,7 +431,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia'
+ac_pwd='/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/bin/mkdir -p'
@@ -661,7 +661,7 @@ finish_cmds='PATH="\$PATH:/sbin" ldconfig -n $libdir'
 finish_eval=''
 hardcode_into_libs='yes'
 sys_lib_search_path_spec='/usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0 /usr/lib64 /lib64 /usr/x86_64-pc-linux-gnu/lib /usr/lib /lib '
-configure_time_dlsearch_path='/lib /usr/lib /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/32 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0 /usr/lib/llvm/5/lib32 /usr/lib/llvm/5/lib64 /usr/lib32/qt4 /usr/lib64/qt4 /lib64 /usr/lib64 /usr/local/lib64 /lib32 /usr/lib32 /usr/local/lib32 /lib /usr/lib /usr/local/lib '
+configure_time_dlsearch_path='/lib /usr/lib /usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0/32 /usr/lib/gcc/x86_64-pc-linux-gnu/7.2.0 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/32 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0 /usr/lib/llvm/5/lib32 /usr/lib/llvm/5/lib64 /usr/lib32/qt4 /usr/lib64/qt4 /lib64 /usr/lib64 /usr/local/lib64 /lib32 /usr/lib32 /usr/local/lib32 /lib /usr/lib /usr/local/lib '
 configure_time_lt_sys_library_path=''
 hardcode_action='immediate'
 enable_dlopen='unknown'
@@ -935,12 +935,12 @@ S["SET_MAKE"]=""
 S["mkdir_p"]="$(MKDIR_P)"
 S["MKDIR_P"]="/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
-S["install_sh"]="${SHELL} /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia/install-sh"
-S["MAKEINFO"]="${SHELL} /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia/missing makeinfo"
-S["AUTOHEADER"]="${SHELL} /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia/missing autoheader"
-S["AUTOMAKE"]="${SHELL} /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia/missing automake-1.15"
-S["AUTOCONF"]="${SHELL} /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia/missing autoconf"
-S["ACLOCAL"]="${SHELL} /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia/missing aclocal-1.15"
+S["install_sh"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia/install-sh"
+S["MAKEINFO"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia/missing makeinfo"
+S["AUTOHEADER"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia/missing autoheader"
+S["AUTOMAKE"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia/missing automake-1.15"
+S["AUTOCONF"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia/missing autoconf"
+S["ACLOCAL"]="${SHELL} /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia/missing aclocal-1.15"
 S["VERSION"]="0.1.0"
 S["PACKAGE"]="cumbia"
 S["CYGPATH_W"]="echo"
