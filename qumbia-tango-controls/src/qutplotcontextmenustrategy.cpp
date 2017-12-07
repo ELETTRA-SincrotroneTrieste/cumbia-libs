@@ -2,7 +2,7 @@
 #include "quconnectionsettingswidget.h"
 #include "qutrealtimeplot.h"
 #include "rtconfwidget.h"
-#include "qucontext.h"
+#include "cucontext.h"
 #include <qutrendplot.h>
 #include <quspectrumplot.h>
 #include <cumacros.h>

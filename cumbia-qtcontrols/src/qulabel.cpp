@@ -96,7 +96,7 @@ void QuLabel::setSource(const QString &s)
 
 void QuLabel::unsetSource()
 {
-    d->context->unlinkReader();
+    d->context->disposeReader();
 }
 
 void QuLabel::setMaximumLength(int len)
@@ -106,8 +106,9 @@ void QuLabel::setMaximumLength(int len)
 
 void QuLabel::contextMenuEvent(QContextMenuEvent *e)
 {
-    CuContextMenu* m = new CuContextMenu(this);
-    connect(m, SIGNAL(linkStatsTriggered(QWidget*)), this, SIGNAL(linkStatsRequest(QWidget*)));
+    CuContextMenu* m = new CuContextMenu(this, this);
+    connect(m, SIGNAL(linkStatsTriggered(QWidget*, CuContextWidgetI *)),
+            this, SIGNAL(linkStatsRequest(QWidget*, CuContextWidgetI *)));
     m->popup(e->globalPos());
 }
 

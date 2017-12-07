@@ -5,6 +5,7 @@
 #include <cucontrolsfactories_i.h>
 #include <cucontrolsfactorypool.h>
 #include <cudata.h>
+#include <cucontextwidgeti.h>
 
 class Cumbia;
 class CumbiaPool;
@@ -13,7 +14,7 @@ class CuContext;
 
 class QuInputOutputPrivate;
 
-class QuInputOutput : public EInputOutputWidget
+class QuInputOutput : public EInputOutputWidget, public CuContextWidgetI
 {
     Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)
@@ -37,6 +38,8 @@ public:
     QPushButton *getApplyButton();
 
     QString source() const;
+
+    CuContext *getContext() const;
 
     CuContext *getOutputContext() const;
 

@@ -22,7 +22,6 @@ class CuContextPrivate
     CuControlsReaderFactoryI *r_factory;
     CuControlsWriterFactoryI *w_factory;
     CuControlsFactoryPool ctrl_factory_pool;
-
 };
 
 CuContext::CuContext(Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac)
@@ -58,8 +57,8 @@ CuContext::CuContext(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool
 
 CuContext::~CuContext()
 {
-    unlinkReader();
-    unlinkWriter();
+    disposeReader();
+    disposeWriter();
 
     if(d->r_factory)
         delete d->r_factory;
@@ -77,6 +76,7 @@ bool CuContext::isAuto() const
 
 CuControlsReaderA *CuContext::m_make_reader(const std::string &s, CuDataListener *datal) const
 {
+    CuControlsReaderA *reader = NULL;
     Cumbia *cumbia = NULL;
     CuControlsReaderFactoryI *r_fa;
 
@@ -134,7 +134,7 @@ CuControlsWriterA *CuContext::m_make_writer(const std::string &s, CuDataListener
 
 CuControlsReaderA *CuContext::replace_reader(const std::string &s, CuDataListener* datal)
 {
-    unlinkReader(std::string()); // all
+    disposeReader(std::string()); // all
     CuControlsReaderA *reader = m_make_reader(s, datal);
     if(reader)
         d->readers.append(reader);
@@ -144,7 +144,7 @@ CuControlsReaderA *CuContext::replace_reader(const std::string &s, CuDataListene
 CuControlsWriterA *CuContext::replace_writer(const std::string &s, CuDataListener *datal)
 {
     // replace
-    unlinkWriter(std::string());
+    disposeWriter(std::string());
     CuControlsWriterA *writer = m_make_writer(s, datal);
     // store the new writer
     if(writer)
@@ -154,7 +154,7 @@ CuControlsWriterA *CuContext::replace_writer(const std::string &s, CuDataListene
 
 CuControlsReaderA *CuContext::add_reader(const std::string &s, CuDataListener *datal)
 {
-    unlinkReader(s);
+    disposeReader(s);
     CuControlsReaderA *r = m_make_reader(s, datal);
     if(r)
         d->readers.append(r);
@@ -169,7 +169,7 @@ CuControlsWriterA *CuContext::add_writer(const std::string &s, CuDataListener *d
     return w;
 }
 
-void CuContext::unlinkReader(const std::string &src)
+void CuContext::disposeReader(const std::string &src)
 {
     CuControlsReaderA *removed = NULL;
     foreach(CuControlsReaderA *r, d->readers)
@@ -177,7 +177,6 @@ void CuContext::unlinkReader(const std::string &src)
         printf("enter in unlink reader loop readers size %d\n", d->readers.size());
         if(r->source().toStdString() == src || src == std::string())
         {
-            r->unsetSource();
             removed = r;
             delete r;
         }
@@ -189,14 +188,13 @@ void CuContext::unlinkReader(const std::string &src)
     qDebug() << __FUNCTION__ << "src was" << src.c_str() << " readers " << d->readers.size() << "remvoed" << removed;
 }
 
-void CuContext::unlinkWriter(const std::string &src)
+void CuContext::disposeWriter(const std::string &src)
 {
     CuControlsWriterA *removed = NULL;
     foreach(CuControlsWriterA *w, d->writers)
     {
         if(w->targets().toStdString() == src || src == std::string())
         {
-            w->clearTargets();
             removed = w;
             delete w;
         }

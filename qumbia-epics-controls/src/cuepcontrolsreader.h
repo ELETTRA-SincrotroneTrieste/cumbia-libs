@@ -25,14 +25,16 @@ public:
 
     CuControlsReaderA *create(Cumbia *c, CuDataListener *l) const;
 
-    void setReadOptions(const CuEpicsReadOptions& o);
-
     // CuControlsReaderFactoryI interface
 public:
     CuControlsReaderFactoryI *clone() const;
 
+    void setOptions(const CuData &options);
+
 private:
     CuEpReaderFactoryPrivate *d;
+
+public:
 };
 
 class CuEpControlsReader : public CuControlsReaderA
@@ -48,9 +50,7 @@ public:
 
     void unsetSource() ;
 
-    void requestProperties(const QStringList &props);
-
-    void setOptions(const CuEpicsReadOptions& o);
+    void setOptions(const CuData& o);
 
     void sendData(const CuData& d);
 

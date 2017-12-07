@@ -85,8 +85,7 @@ unix {
 
 # remove ourselves (added in .pri)
 #
-unix:INCLUDEPATH -= \
-    $${QUMBIA_EPICS_CONTROLS_INCLUDES}
+unix:INCLUDEPATH -=  $${QUMBIA_EPICS_CONTROLS_INCLUDES}
 
 unix:LIBS -=  \
     -L$${QUMBIA_EPICS_CONTROLS_LIBDIR} -l$${QUMBIA_EPICS_CONTROLS_LIB}

@@ -11,6 +11,7 @@
 #include "quwidgetupdatestrategy_i.h"
 #include "culinkstats.h"
 #include "cucontext.h"
+#include "quplotbasecontextmenustrategy.h"
 
 #include "qutimescaledraw.h"
 #include <QImage>
@@ -63,6 +64,7 @@ void QuSpectrumPlot::m_init()
 {
     d->auto_configure = true;
     d->read_ok = false;
+    setContextMenuStrategy(new QuPlotBaseContextMenuStrategy());
 }
 
 QString QuSpectrumPlot::source() const
@@ -193,6 +195,11 @@ void QuSpectrumPlot::update(const CuData &da)
         }
     }
     setToolTip(da["msg"].toString().c_str());
+}
+
+void QuSpectrumPlot::requestLinkStats()
+{
+    emit linkStatsRequest(this, this);
 }
 
 CuContext *QuSpectrumPlot::getContext() const

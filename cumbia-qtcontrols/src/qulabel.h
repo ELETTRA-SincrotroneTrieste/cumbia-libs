@@ -44,7 +44,7 @@ public slots:
 signals:
     void newData(const CuData&);
 
-    void linkStatsRequest(QWidget *myself);
+    void linkStatsRequest(QWidget *myself, CuContextWidgetI *myself_as_cwi);
 
 protected:
     void contextMenuEvent(QContextMenuEvent* e);

@@ -11,7 +11,7 @@
 class CuEpReaderFactoryPrivate
 {
 public:
-    CuEpicsReadOptions r_options;
+    CuData r_options;
 };
 
 CuEpReaderFactory::CuEpReaderFactory()
@@ -22,11 +22,6 @@ CuEpReaderFactory::CuEpReaderFactory()
 CuEpReaderFactory::~CuEpReaderFactory()
 {
     delete d;
-}
-
-void CuEpReaderFactory::setReadOptions(const CuEpicsReadOptions &o)
-{
-    d->r_options = o;
 }
 
 CuControlsReaderA *CuEpReaderFactory::create(Cumbia *c, CuDataListener *l) const
@@ -44,6 +39,11 @@ CuControlsReaderFactoryI *CuEpReaderFactory::clone() const
     return f;
 }
 
+void CuEpReaderFactory::setOptions(const CuData &options)
+{
+    d->r_options = options;
+}
+
 class CuEpControlsReaderPrivate
 {
 public:
@@ -51,7 +51,7 @@ public:
     CumbiaEpics *cumbia_ep;
     CuDataListener *tlistener;
     std::vector<std::string> attr_props;
-    CuEpicsReadOptions read_options;
+    CuData read_options;
 };
 
 CuEpControlsReader::CuEpControlsReader(Cumbia *cumbia_epics, CuDataListener *tl)
@@ -81,15 +81,7 @@ void CuEpControlsReader::unsetSource()
     d->source = QString();
 }
 
-void CuEpControlsReader::requestProperties(const QStringList &props)
-{
-    std::vector<std::string> vs;
-    foreach(QString p, props)
-        vs.push_back(p.toStdString());
-    d->attr_props = vs;
-}
-
-void CuEpControlsReader::setOptions(const CuEpicsReadOptions &o)
+void CuEpControlsReader::setOptions(const CuData &o)
 {
     d->read_options = o;
 }

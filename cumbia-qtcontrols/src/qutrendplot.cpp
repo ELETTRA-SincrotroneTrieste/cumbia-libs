@@ -10,6 +10,7 @@
 #include "cucontrolsreader_abs.h"
 #include "cucontext.h"
 #include "quwidgetupdatestrategy_i.h"
+#include "quplotbasecontextmenustrategy.h"
 #include "cucontext.h"
 #include "culinkstats.h"
 #include "qutimescaledraw.h"
@@ -59,7 +60,7 @@ void QuTrendPlot::m_init()
     setUpperBoundExtra(QwtPlot::xBottom, 0.8);
     setUpperBoundExtra(QwtPlot::xTop, 0.2);
     d->directPainter = new QwtPlotDirectPainter( this );
-
+    setContextMenuStrategy(new QuPlotBaseContextMenuStrategy());
     if ( QwtPainter::isX11GraphicsSystem() )
         canvas()->setAttribute( Qt::WA_PaintOnScreen, true );
 }
@@ -216,6 +217,12 @@ void QuTrendPlot::refresh()
         }
     }
     resetZoom();
+}
+
+void QuTrendPlot::requestLinkStats()
+{
+    printf("\e[1;31mEMITTING\e[0m\n\n\n\n");
+    emit linkStatsRequest(this, this);
 }
 
 bool QuTrendPlot::showDateOnTimeAxis() const

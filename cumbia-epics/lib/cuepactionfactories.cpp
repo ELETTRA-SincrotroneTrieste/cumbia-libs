@@ -4,27 +4,29 @@
 #include "cuepconfiguration.h"
 #include <cumacros.h>
 #include <cadef.h>
+#include <cudata.h>
 
 CuEpicsReaderFactory::CuEpicsReaderFactory()
 {
-    options = new CuEpicsReadOptions(1000, CuMonitor::MonitorRefresh);
+    options["period"] = 1000;
+    options["refresh_mode"] = CuMonitor::MonitorRefresh;
 }
 
-void CuEpicsReaderFactory::setOptions(const CuEpicsReadOptions &o)
+void CuEpicsReaderFactory::setOptions(const CuData &o)
 {
-    *options = o;
+    options = o;
 }
 
 CuEpicsReaderFactory::~CuEpicsReaderFactory()
 {
-    delete options;
+
 }
 
 CuEpicsActionI *CuEpicsReaderFactory::create(const std::string &s, CumbiaEpics *ct) const
 {
     CuMonitor* monitor = new CuMonitor(s, ct);
-    monitor->setPeriod(options->period);
-    monitor->setRefreshMode(options->mode);
+    monitor->setPeriod(options["period"].toInt());
+    monitor->setRefreshMode(static_cast<CuMonitor::RefreshMode>(options["refresh_mode"].toInt()));
     return monitor;
 }
 

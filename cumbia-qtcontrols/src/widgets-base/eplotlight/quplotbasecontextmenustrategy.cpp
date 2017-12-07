@@ -13,5 +13,7 @@ QMenu *QuPlotBaseContextMenuStrategy::createMenu(QWidget *w)
     rClickM->addAction("Save Data", plot, SLOT(saveData()))->setObjectName("save");
     rClickM->addSeparator();
     rClickM->addAction("Configure", plot, SLOT(configurePlot()))->setObjectName("configure");
+    rClickM->addSeparator();
+    rClickM->addAction("Link stats...", plot, SLOT(requestLinkStats()))->setObjectName("linkstats");
     return rClickM;
 }

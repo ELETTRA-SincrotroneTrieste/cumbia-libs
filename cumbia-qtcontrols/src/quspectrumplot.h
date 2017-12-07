@@ -5,6 +5,7 @@
 #include <cudatalistener.h>
 #include "quwidgetinterface.h"
 #include "quplot_base.h"
+#include <cucontextwidgeti.h>
 
 class QuSpectrumPlotPrivate;
 class Cumbia;
@@ -29,9 +30,7 @@ class CuControlsReaderFactoryI;
  * from within onUpdate and the base operations aforementioned are performed.
  * <em>Strategies</em> must implement QuWidgetUpdateStrategyI interface.
  */
-class QuSpectrumPlot :
-        public QuPlotBase,
-        public CuDataListener
+class QuSpectrumPlot : public QuPlotBase, public CuDataListener, public CuContextWidgetI
 {
     Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)
@@ -68,9 +67,11 @@ public slots:
 
     void setPeriod(int p);
 
+    void requestLinkStats();
 signals:
     void newData(const CuData&);
 
+    void linkStatsRequest(QWidget *myself, CuContextWidgetI *myself_as_cwi);
 
 private:
     QuSpectrumPlotPrivate *d;

@@ -54,9 +54,9 @@ public:
 
     CuControlsWriterA *add_writer(const std::string &s, CuDataListener *datal);
 
-    void unlinkReader(const std::string &src = std::string());
+    void disposeReader(const std::string &src = std::string());
 
-    void unlinkWriter(const std::string &src =  std::string());
+    void disposeWriter(const std::string &src =  std::string());
 
     void setOptions(const CuData& options);
 

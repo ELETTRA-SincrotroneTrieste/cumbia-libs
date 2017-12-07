@@ -63,12 +63,12 @@ void QuPlotCommon::unsetSources(QuPlotBase *plot)
     foreach(CuControlsReaderA *r, d->context->readers())
         plot->removeCurve(r->source());
 
-    d->context->unlinkReader();
+    d->context->disposeReader();
 }
 
 void QuPlotCommon::unsetSource(const QString &src, QuPlotBase *plot)
 {
-    d->context->unlinkReader(src.toStdString());
+    d->context->disposeReader(src.toStdString());
     plot->removeCurve(src);
 }
 
@@ -78,17 +78,21 @@ void QuPlotCommon::unsetSource(const QString &src, QuPlotBase *plot)
 void QuPlotCommon::setSources(const QStringList &l,
                               CuDataListener *data_listener)
 {
+
     QStringList srcs = sources();
     foreach(QString s, l)
     {
-        if(!srcs.contains(s))
-            d->context->add_reader(s.toStdString(), data_listener);
+        if(!srcs.contains(s)) {
+            CuControlsReaderA* r = d->context->add_reader(s.toStdString(), data_listener);
+            if(r) r->setSource(s);
+        }
     }
 }
 
 void QuPlotCommon::addSource(const QString &s, CuDataListener *dl)
 {
-    d->context->add_reader(s.toStdString(), dl);
+    CuControlsReaderA* r = d->context->add_reader(s.toStdString(), dl);
+    if(r) r->setSource(s);
 }
 
 void QuPlotCommon::configure(const QString &curveName, const QPointF &pxy)

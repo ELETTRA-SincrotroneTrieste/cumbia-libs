@@ -26,6 +26,8 @@
 #include <cuepics-world.h>
 #include <cuepreadoptions.h>
 #include <queplotupdatestrategy.h>
+#include <cucontext.h>
+#include <cucontextactionbridge.h>
 #include <QTimer>
 
 #include <cuthreadfactoryimpl.h>
@@ -165,6 +167,7 @@ void GenericClient::configure(const CuData &d)
             lo->addWidget(plot, layout_row, 0, plotRowCnt, m_layoutColumnCount);
         }
         //  plot->setContextMenuStrategy(ctx_menu_strat);
+        printf("addSource to plto scalar\n");
         plot->addSource(d["src"].toString().c_str());
     }
     else if(format == "vector")
@@ -184,6 +187,10 @@ void GenericClient::configure(const CuData &d)
     }
 //    foreach(QuLabel *l, findChildren<QuLabel *>())
 //       delete l;
+
+    CuContextActionBridge *cab = findChild<CuContextActionBridge *>();
+    if(cab) delete cab;
+    cab = new CuContextActionBridge(this, cu_pool, m_ctrl_factory_pool);
 }
 
 void GenericClient::changeRefresh()
@@ -195,10 +202,10 @@ void GenericClient::changeRefresh()
     options["refresh_mode"] = refmode;
     QuTrendPlot *tp = findChild<QuTrendPlot *>();
     if(tp)
-        tp->sendData(options);
+        tp->getContext()->sendData(options);
     QuSpectrumPlot *sp = findChild<QuSpectrumPlot *>();
     if(sp)
-        sp->sendData(options);
+        sp->getContext()->sendData(options);
 }
 
 void GenericClient::sourcesChanged()

@@ -7,6 +7,22 @@
 #include <cumacros.h>
 #include <assert.h>
 
+class CuEpWriterFactoryPrivate
+{
+  public:
+    CuData options;
+};
+
+CuEpWriterFactory::CuEpWriterFactory()
+{
+    d = new CuEpWriterFactoryPrivate;
+}
+
+CuEpWriterFactory::~CuEpWriterFactory()
+{
+    delete d;
+}
+
 CuControlsWriterA *CuEpWriterFactory::create(Cumbia *c, CuDataListener *l) const
 {
     return new CuEpControlsWriter(c, l);
@@ -15,6 +31,11 @@ CuControlsWriterA *CuEpWriterFactory::create(Cumbia *c, CuDataListener *l) const
 CuControlsWriterFactoryI *CuEpWriterFactory::clone() const
 {
     return new CuEpWriterFactory();
+}
+
+void CuEpWriterFactory::setOptions(const CuData &options)
+{
+    d->options = options;
 }
 
 class CuEpControlsWriterPrivate
@@ -65,6 +86,20 @@ void CuEpControlsWriter::execute()
     CuEpicsWriterFactory wtf;
     wtf.setWriteValue(getArgs());
     d->cumbia_epics->addAction(d->targets.toStdString(), d->tlistener, wtf);
+}
+
+void CuEpControlsWriter::sendData(const CuData &data)
+{
+    CuEpicsActionI *a = d->cumbia_epics->findAction(d->targets.toStdString(), CuEpicsActionI::Writer);
+    if(a)
+        a->sendData(data);
+}
+
+void CuEpControlsWriter::getData(CuData &d_ino) const
+{
+    CuEpicsActionI *a = d->cumbia_epics->findAction(d->targets.toStdString(), CuEpicsActionI::Writer);
+    if(a)
+        a->getData(d_ino);
 }
 
 void CuEpControlsWriter::setTargets(const QString &s)

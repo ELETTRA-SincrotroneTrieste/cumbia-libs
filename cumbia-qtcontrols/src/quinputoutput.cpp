@@ -103,9 +103,25 @@ QPushButton *QuInputOutput::getApplyButton()
     return findChild<QuButton *>();
 }
 
+/** \brief Returns the name of the link
+ *
+ * @return a string with the name of the link.
+ * \note This method returns the source property of the output widget
+ */
 QString QuInputOutput::source() const
 {
     return outputWidget()->property("source").toString();
+}
+
+/** \brief Provided to implement CuContextWidgetI interface, returns getOutputContext
+ *
+ * @return the output widget's context
+ *
+ * @see getOutputContext
+ */
+CuContext *QuInputOutput::getContext() const
+{
+    return getOutputContext();
 }
 
 /** \brief Returns the context of the output widget

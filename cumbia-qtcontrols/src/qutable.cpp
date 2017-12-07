@@ -89,7 +89,7 @@ void QuTable::setSource(const QString &s)
 
 void QuTable::unsetSource()
 {
-    d->context->unlinkReader();
+    d->context->disposeReader();
 }
 
 void QuTable::onUpdate(const CuData& da)

@@ -13,16 +13,25 @@ class CuDataListener;
 class CuEpControlsWriterPrivate;
 class CuVariant;
 
+class CuEpWriterFactoryPrivate;
 
 class CuEpWriterFactory : public CuControlsWriterFactoryI
 {
-    // CuControlsWriterFactoryI interface
 public:
+    CuEpWriterFactory();
+
+    virtual ~CuEpWriterFactory();
+
     CuControlsWriterA *create(Cumbia *, CuDataListener *l) const;
 
     // CuControlsWriterFactoryI interface
 public:
     CuControlsWriterFactoryI *clone() const;
+
+    void setOptions(const CuData &options);
+
+private:
+    CuEpWriterFactoryPrivate *d;
 };
 
 class CuEpControlsWriter : public CuControlsWriterA
@@ -42,8 +51,14 @@ public:
 
     virtual void execute();
 
+    // CuControlsWriterA interface
+public:
+    void sendData(const CuData &d);
+    void getData(CuData &d_ino) const;
+
 private:
     CuEpControlsWriterPrivate *d;
+
 };
 
 #endif // CUEPCONTROLSWRITER_H

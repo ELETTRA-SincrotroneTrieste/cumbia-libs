@@ -61,7 +61,7 @@ void QuLed::setSource(const QString &s)
 
 void QuLed::unsetSource()
 {
-    d->context->unlinkReader();
+    d->context->disposeReader();
 }
 
 void QuLed::onUpdate(const CuData &da)

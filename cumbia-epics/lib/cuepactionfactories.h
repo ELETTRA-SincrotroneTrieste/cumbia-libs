@@ -14,7 +14,7 @@ class CuEpicsReaderFactory : public CuEpicsActionFactoryI
 public:
     CuEpicsReaderFactory();
 
-    void setOptions(const CuEpicsReadOptions& o);
+    void setOptions(const CuData& o);
 
     virtual ~CuEpicsReaderFactory();
 
@@ -27,7 +27,7 @@ public:
     bool isShareable() const;
 
 private:
-    CuEpicsReadOptions *options;
+    CuData options;
 
 };
 
