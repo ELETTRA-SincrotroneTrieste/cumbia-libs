@@ -68,7 +68,8 @@ void QuApplyNumeric::execute()
 void QuApplyNumeric::setTargets(const QString &targets)
 {
     printf("\e[1;32mQuApplyNumeric.setTargets!!!!! %s\e[0m\n", qstoc(targets));
-    d->context->replace_writer(targets.toStdString(), this);
+    CuControlsWriterA* w = d->context->replace_writer(targets.toStdString(), this);
+    if(w) w->setTargets(targets);
 }
 
 void QuApplyNumeric::execute(double val)

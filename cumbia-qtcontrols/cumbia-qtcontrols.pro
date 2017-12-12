@@ -72,7 +72,8 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/cucontextmenu.cpp \
     src/cucontextactionbridge.cpp \
     src/cuinfodialog.cpp \
-    src/widgets-base/cucontext.cpp
+    src/widgets-base/cucontext.cpp \
+    src/quapplication.cpp
 
 HEADERS += cumbiaqtcontrols.h\
         cumbia-qtcontrols_global.h \
@@ -127,7 +128,8 @@ HEADERS += cumbiaqtcontrols.h\
     src/cucontextactionbridge.h \
     src/cuinfodialog.h \
     src/widgets-base/cucontext.h \
-    src/cucontextwidgeti.h
+    src/cucontextwidgeti.h \
+    src/quapplication.h
 
 
 RESOURCES += \

@@ -203,6 +203,7 @@ void CuContext::disposeWriter(const std::string &src)
         d->writers.clear();
     else if(removed)
         d->writers.removeAll(removed);
+    qDebug() << __FUNCTION__ << "target was" << src.c_str() << " writers " << d->writers.size() << "remvoed" << removed;
 }
 
 /** Set the options bundle on the context.

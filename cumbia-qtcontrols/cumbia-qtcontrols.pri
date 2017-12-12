@@ -102,8 +102,13 @@ DEFINES += CUMBIA_PRINTINFO
 VERSION_HEX = 0x000001
 VERSION = 0.0.1
 
+# cumbia-qtcontrols plugin directory. Does not include "plugins"
+# application will cd into "plugins" under CU_QTC_PLUGINDIR
+CU_QTC_PLUGINDIR = $${CUMBIA_QTCONTROLS_LIBDIR}/cumbia-qtcontrols
+
 DEFINES += CUMBIA_QTCONTROLS_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
-    CUMBIA_QTCONTROLS_VERSION=$${VERSION_HEX}
+    CUMBIA_QTCONTROLS_VERSION=$${VERSION_HEX} \
+    CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${CU_QTC_PLUGINDIR}\\\"\" \
 
 QMAKE_CXXFLAGS += -std=c++11 -Wall
 

@@ -11,6 +11,7 @@
 #include "cucontext.h"
 #include "qupalette.h"
 #include "qulogimpl.h"
+#include <QtDebug>
 
 class QuButtonPrivate
 {
@@ -60,6 +61,7 @@ void QuButton::execute()
     printf("QuButton.execute: got args %s type %d format %d\n", args.toString().c_str(), args.getType(),
            args.getFormat());
     CuControlsWriterA *w = d->context->getWriter();
+    qDebug() << __FUNCTION__ << "writer " << w->targets();
     if(w) {
         w->setArgs(args);
         w->execute();
@@ -69,7 +71,8 @@ void QuButton::execute()
 void QuButton::setTargets(const QString &targets)
 {
     printf("\e[1;32mQuButton.setTargets!!!!! %s\e[0m\n", qstoc(targets));
-    d->context->replace_writer(targets.toStdString(), this);
+    CuControlsWriterA * w = d->context->replace_writer(targets.toStdString(), this);
+    if(w) w->setTargets(targets);
 }
 
 QString QuButton::targets() const

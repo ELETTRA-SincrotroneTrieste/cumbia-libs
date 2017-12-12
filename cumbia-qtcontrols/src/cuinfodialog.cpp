@@ -268,6 +268,8 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
         map["activity"] = "Activity: ";
         map["data_format_str"] = "Format: ";
         map["msg"] = "Message: ";
+        map["mode"] = "Mode";
+        map["period"] = "Period";
 
         foreach(QString k, map.keys())
         {
