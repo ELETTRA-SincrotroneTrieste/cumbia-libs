@@ -129,7 +129,8 @@ HEADERS += cumbiaqtcontrols.h\
     src/cuinfodialog.h \
     src/widgets-base/cucontext.h \
     src/cucontextwidgeti.h \
-    src/quapplication.h
+    src/quapplication.h \
+    src/qudbusplugininterface.h
 
 
 RESOURCES += \
@@ -229,9 +230,12 @@ unix {
     other_inst.path = $${CUMBIA_QTCONTROLS_INCLUDES}
 
     target.path = $${CUMBIA_QTCONTROLS_LIBDIR}
-    INSTALLS += target doc inc other_inst
-
-
+  #  INSTALLS += target doc inc other_inst
+message("")
+message("")
+message("WARNING DOC INSTALL IS DISABLED!!!!!!!!!!!!")
+    INSTALLS += target inc other_inst
+message("")
 # generate pkg config file
     CONFIG += create_pc create_prl no_install_prl
 

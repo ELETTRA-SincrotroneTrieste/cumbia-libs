@@ -3,30 +3,35 @@
 
 #include <QApplication>
 
+#include <qudbusplugininterface.h>
+
 class QuApplicationPrivate;
-
-class QuAppDBusInterface
-{
-  public:
-    virtual ~QuAppDBusInterface() {}
-
-    virtual void registerApp(const QString& key) = 0;
-
-    virtual void unregisterApp(const QString& key) = 0;
-};
-
-#define QuAppDBusInterface_iid "eu.elettra.cumbia-qtcontrols.QuAppDBusInterface"
-
-Q_DECLARE_INTERFACE(QuAppDBusInterface, QuAppDBusInterface_iid)
-
 
 
 class QuApplication : public QApplication
 {
+    Q_OBJECT
 public:
     QuApplication(int & argc, char **argv);
 
-    void init();
+    int exec();
+
+public slots:
+    void raise();
+
+    void minimize();
+
+    void quit();
+
+    QStringList arguments() const;
+
+    QString exename() const;
+
+    QStringList cmdOpt() const;
+
+signals:
+    void dbusRegistered(const QString& exename, const QStringList& args, const QString& dbus_servicenam);
+    void dbusUnregistered(const QString& exename, const QStringList& args, const QString& dbus_servicenam);
 
 private:
     bool m_loadPlugin();

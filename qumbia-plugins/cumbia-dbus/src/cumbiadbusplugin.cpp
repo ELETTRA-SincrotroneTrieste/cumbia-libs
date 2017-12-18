@@ -1,18 +1,28 @@
 #include "cumbiadbusplugin.h"
+#include "quappdbus.h"
+#include "quappdbuscontroller.h"
 #include <cumacros.h>
 #include <QtDebug>
+#include <QDBusConnection>
+#include <QDBusError>
+#include <errno.h>
+#include <QUrl>
+#include <QStringList>
+#include <unistd.h>
+#include "cumbiadbus_adaptor.h"
 
 CumbiaDBusPlugin::CumbiaDBusPlugin(QObject *parent) : QObject(parent)
 {
     qDebug() << __FUNCTION__ << "constructor: parent" << parent;
 }
 
-void CumbiaDBusPlugin::registerApp(const QString &key)
+QuAppDBusInterface *CumbiaDBusPlugin::getAppIface() const
 {
-    qDebug() << __FUNCTION__ << "key" << key;
+    return new QuAppDBus();
 }
 
-void CumbiaDBusPlugin::unregisterApp(const QString &key)
+QuAppDBusControllerInterface *CumbiaDBusPlugin::getAppCtrlIface() const
 {
-    qDebug() << __FUNCTION__  << "key" << key;
+    return new QuAppDBusController();
 }
+

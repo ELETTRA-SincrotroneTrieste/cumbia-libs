@@ -5,23 +5,21 @@
 #include <QtPlugin>
 
 #include "quapplication.h"
+#include "qudbusplugininterface.h"
 
-class CumbiaDBusPlugin : public QObject, QuAppDBusInterface
+class CumbiaDBusPlugin : public QObject, QuDBusPluginInterface
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "eu.elettra.cumbia-qtcontrols.QuAppDBusInterface" FILE "cumbiadbusplugin.json")
-    Q_INTERFACES(QuAppDBusInterface)
+    Q_PLUGIN_METADATA(IID "eu.elettra.qudbus.QuDBusPluginInterface" FILE "cumbiadbusplugin.json")
+    Q_INTERFACES(QuDBusPluginInterface)
 public:
-    explicit CumbiaDBusPlugin(QObject *parent = nullptr);
+    explicit CumbiaDBusPlugin(QObject *parent = NULL);
 
-signals:
 
-public slots:
-
-    // QuAppDBusInterface interface
+    // QuDBusPluginInterface interface
 public:
-    void registerApp(const QString &key);
-    void unregisterApp(const QString &key);
+    QuAppDBusInterface *getAppIface() const;
+    QuAppDBusControllerInterface *getAppCtrlIface() const;
 };
 
 #endif // CUMBIADBUSPLUGIN_H
