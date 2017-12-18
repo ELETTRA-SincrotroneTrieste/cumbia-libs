@@ -18,6 +18,8 @@ public:
 
     int closeAll(const QList<QuAppInfo> &ail);
 
+    int raise(const QAppInfo &ai);
+
     QStringList args_noPath(const QStringList& args) const;
 
     // QuAppDBusControllerInterface interface

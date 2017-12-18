@@ -68,29 +68,22 @@ QList<QuAppInfo>  QuAppDBusController::findApps(const QStringList &args)
         /* populate the refreshed information list */
         foreach(QString service, services.value())
         {
-            qDebug() << __FUNCTION__ << service;
             if(service.contains("quapplication"))
             {
                 EuElettraQudbusQuAppDBusInterfaceInterface quappdbusi(service,  "/QuApplication", QDBusConnection::sessionBus(), this);
                 if(quappdbusi.isValid())
                 {
                     /* retrieve pid from service */
-                    QDBusPendingReply<QStringList> argsReply = quappdbusi.arguments();
-                    if(argsReply.isValid())
+                    QDBusReply<QStringList> argsReply = quappdbusi.arguments();
+                    if(!argsReply.isValid())
                         perr("QuAppDBusController.findApps: reply error: %s", qstoc(argsReply.error().message()));
                     else
                     {
                         QStringList arguments = args_noPath(argsReply.value());
                         if(args.isEmpty() || arguments == args)
-                        {
-                            QuAppInfo ai(arguments);
-                            ai.dbus_servicename = service;
-                            il.append(ai);
-                        }
+                            il.append(QuAppInfo(arguments, service));
                     }
                 }
-                else
-                    qDebug() << __FUNCTION__ << "interface " << service << "is not valid";
             }
         }
     }
@@ -100,23 +93,24 @@ QList<QuAppInfo>  QuAppDBusController::findApps(const QStringList &args)
 int QuAppDBusController::closeAll(const QList<QuAppInfo> &ail)
 {
     int ret = 0;
+    foreach(QuAppInfo ai, ail)
+    {
+        EuElettraQudbusQuAppDBusInterfaceInterface quappdbusi(ai.dbus_servicename,  "/QuApplication", QDBusConnection::sessionBus(), this);
+        quappdbusi.quit();
+        ret++;
+
+    }
+    return ret;
+}
+
+int QuAppDBusController::raise(const QAppInfo &ai)
+{
     QDBusConnection connection = QDBusConnection::sessionBus();
     if(connection.isConnected())
     {
-        foreach(QuAppInfo ai, ail)
-        {
-            if(connection.isConnected())
-            {
-                EuElettraQudbusQuAppDBusInterfaceInterface quappdbusi(ai.dbus_servicename,  "/QuApplication", QDBusConnection::sessionBus(), this);
-                quappdbusi.quit();
-                ret++;
-            }
-        }
+        EuElettraQudbusQuAppDBusInterfaceInterface quappdbusi(ai.dbus_servicename,  "/QuApplication", QDBusConnection::sessionBus(), this);
+        quappdbusi
     }
-    else
-        perr("QuAppDBusController.closeAll: failed to connect to session bus: %s %s",
-             qstoc(connection.lastError().name()), qstoc(connection.lastError().message()));
-    return ret;
 }
 
 void QuAppDBusController::start_monitor(const QString &serviceName)
@@ -129,6 +123,28 @@ void QuAppDBusController::start_monitor(const QString &serviceName)
             SLOT(onAppUnregistered(QString,QStringList,QString)));
     quappdbusi->setObjectName(serviceName);
     qDebug() << __FUNCTION__ << "mapped signals to monitor " << serviceName;
+    if(!d->dbus_if)
+        return;
+
+    QDBusReply<QStringList> services = d->dbus_if->registeredServiceNames();
+    int idx = services.value().indexOf(serviceName);
+    if(idx > -1)
+    {
+        EuElettraQudbusQuAppDBusInterfaceInterface quappdbusi(serviceName,  "/QuApplication", QDBusConnection::sessionBus(), this);
+        if(quappdbusi.isValid())
+        {
+            /* retrieve pid from service */
+            QDBusReply<QStringList> argsReply = quappdbusi.arguments();
+            if(!argsReply.isValid())
+                perr("QuAppDBusController.findApps: reply error: %s", qstoc(argsReply.error().message()));
+            else
+            {
+                QStringList arguments = args_noPath(argsReply.value());
+                QuAppInfo ai(arguments, serviceName);
+                onAppRegistered(ai.exename(), ai.args, serviceName);
+            }
+        }
+    }
 }
 
 void QuAppDBusController::stop_monitor(const QString &serviceName)
@@ -153,7 +169,7 @@ void QuAppDBusController::removeCtrlListener(QuAppDBusControllerListener *l)
 
 void QuAppDBusController::onAppRegistered(const QString &exenam, const QStringList &args, const QString &dbus_servicenam)
 {
-    qDebug() << __FUNCTION__ << exenam << args << dbus_servicenam;
+    qDebug() << "QuAppDBusController::" << __FUNCTION__ << exenam << args << dbus_servicenam;
     QuAppInfo ai(exenam, args, dbus_servicenam);
     foreach(QuAppDBusControllerListener *l, d->ctrl_listeners)
         l->onAppRegistered(ai);

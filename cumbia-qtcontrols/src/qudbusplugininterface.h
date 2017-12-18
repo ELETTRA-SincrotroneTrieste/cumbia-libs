@@ -109,7 +109,9 @@ public:
 
     virtual QList<QuAppInfo> findApps(const QStringList& args) = 0;
 
-    virtual int closeAll(const QList<QuAppInfo> &ail) = 0;
+    virtual int close(const QuAppInfo &ai) = 0;
+
+    virtual void raise(const QuAppInfo &ai) = 0;
 
     virtual void addCtrlListener(QuAppDBusControllerListener *l) = 0;
 
