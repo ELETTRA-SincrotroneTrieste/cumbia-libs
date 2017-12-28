@@ -9,7 +9,6 @@
 #include "cucontrolsutils.h"
 #include "cumbiapool.h"
 #include "cucontext.h"
-#include "qupalette.h"
 #include "qulogimpl.h"
 
 class QuApplyNumericPrivate
@@ -18,7 +17,6 @@ public:
     CuContext *context;
     bool auto_configure;
     bool write_ok;
-    QuPalette palette;
     CuLog *log;
 };
 
@@ -106,8 +104,8 @@ void QuApplyNumeric::onUpdate(const CuData &da)
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
             cumbia = d->context->cumbiaPool()->getBySrc(da["src"].toString());
-        CuLog *log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log));
-        if(log)
+        CuLog *log;
+        if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::Write, true);
             log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);

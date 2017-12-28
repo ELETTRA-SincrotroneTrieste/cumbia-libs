@@ -6,6 +6,9 @@
 
 class QuApplication;
 
+/** \brief An implementation of QuAppDBusInterface to register and unregister an application.
+ *
+ */
 class QuAppDBus : public QObject, public QuAppDBusInterface
 {
     Q_OBJECT
@@ -14,8 +17,8 @@ public:
 
     // QuAppDBusInterface interface
 public:
-    void registerApp(QuApplication *app, const QString &key);
-    void unregisterApp(QuApplication *app, const QString& key);
+    void registerApp(QuApplication *app);
+    void unregisterApp(QuApplication *app);
     QString getServiceName(QuApplication *app) const;
 
 signals:

@@ -41,3 +41,8 @@ CuActivityEvent::~CuActivityEvent()
 {
 
 }
+
+CuActivityEvent::Type CuExecuteEvent::getType() const
+{
+    return CuActivityDataEvent::Execute;
+}

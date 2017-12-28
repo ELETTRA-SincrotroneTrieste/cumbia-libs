@@ -87,9 +87,9 @@ class QuAppDBusInterface
 public:
     virtual ~QuAppDBusInterface() {}
 
-    virtual void registerApp(QuApplication *app, const QString& key) = 0;
+    virtual void registerApp(QuApplication *app) = 0;
 
-    virtual void unregisterApp(QuApplication *app, const QString& key) = 0;
+    virtual void unregisterApp(QuApplication *app) = 0;
 
     virtual QString getServiceName(QuApplication *app) const = 0;
 };
@@ -109,7 +109,7 @@ public:
 
     virtual QList<QuAppInfo> findApps(const QStringList& args) = 0;
 
-    virtual int close(const QuAppInfo &ai) = 0;
+    virtual void close(const QuAppInfo &ai) = 0;
 
     virtual void raise(const QuAppInfo &ai) = 0;
 

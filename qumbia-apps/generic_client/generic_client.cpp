@@ -85,6 +85,9 @@ GenericClient::GenericClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     connect(t, SIGNAL(timeout()), this, SLOT(switchSources()));
     t->setInterval(1000);
     // t->start();
+
+
+    new CuContextActionBridge(this, cumbia_pool, m_ctrl_factory_pool);
 }
 
 GenericClient::~GenericClient()

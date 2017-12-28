@@ -4,7 +4,6 @@
 #include <eapplynumeric.h>
 #include <cudatalistener.h>
 
-class QuButtonPrivate;
 class Cumbia;
 class CumbiaPool;
 class CuControlsFactoryPool;

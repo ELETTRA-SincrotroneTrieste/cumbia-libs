@@ -137,6 +137,11 @@ void CuTReader::sendData(const CuData &data)
         setRefreshMode(d->refresh_mode);
     if(d->current_activity && d->current_activity->getType() == CuPollingActivity::CuPollingActivityType)
         static_cast<CuPollingActivity *>(d->current_activity)->setInterval(d->period);
+    if(d->current_activity && d->current_activity->getType() == CuPollingActivity::CuPollingActivityType && data.containsKey("read"))
+    {
+        printf("POST EVENT TO ACTIVITY!\n");
+        d->cumbia_t->postEvent(d->current_activity, new CuExecuteEvent());
+    }
     if(!d->current_activity)
         perr("CuTReader.sendData: cannot send data without a running activity");
 }
@@ -175,13 +180,20 @@ void CuTReader::setRefreshMode(CuTReader::RefreshMode rm)
         d->cumbia_t->unregisterActivity(d->current_activity);
         m_startEventActivity();
     }
-    else if(d->current_activity && rm == CuTReader::PolledRefresh &&
-            d->current_activity->getType() == CuEventActivity::CuEventActivityType)
+    else if(d->current_activity && d->current_activity->getType() == CuEventActivity::CuEventActivityType
+            && (rm == CuTReader::PolledRefresh || rm == CuTReader::Manual))
     {
         cuprintf("CuTReader.setRefreshMode: changing from polling to event mode...\n");
         d->cumbia_t->unregisterActivity(d->current_activity);
         m_startPollingActivity(false);
     }
+    // if the desired mode is Manual, the current activity is a polling activity
+    if(d->current_activity && rm == CuTReader::Manual && d->current_activity->getType() != CuTReader::Manual)
+    {
+        printf("mode is set to MANUAL -----> pausing activity!\n");
+        d->cumbia_t->pauseActivity(d->current_activity);
+    }
+
 }
 
 string CuTReader::refreshModeStr() const
@@ -225,6 +237,8 @@ void CuTReader::start()
         m_startEventActivity();
     else
         m_startPollingActivity(false);
+    if(d->refresh_mode == Manual)
+        d->cumbia_t->pauseActivity(d->current_activity);
 }
 
 /*
@@ -246,9 +260,7 @@ void CuTReader::stop()
 
 void CuTReader::addDataListener(CuDataListener *l)
 {
-    printf("\e[1;32mADD DATA LISTENER ADDING %p which should be set to VALIDDDDDDDDDDD\e[0m\n", l);
     std::set<CuDataListener *>::iterator it = d->listeners.begin();
-    //l->setValid();
     d->listeners.insert(it, l);
 }
 

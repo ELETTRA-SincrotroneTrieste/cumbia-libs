@@ -26,7 +26,7 @@ int QuApplication::exec()
 {
     if(d->dbus_i)
     {
-        d->dbus_i->registerApp(this, applicationName());
+        d->dbus_i->registerApp(this);
         emit dbusRegistered(exename(), cmdOpt(), d->dbus_i->getServiceName(this));
     }
     else
@@ -35,7 +35,7 @@ int QuApplication::exec()
     int ret = QApplication::exec();
     if(d->dbus_i)
     {
-        d->dbus_i->unregisterApp(this, applicationName());
+        d->dbus_i->unregisterApp(this);
         emit dbusUnregistered(exename(), cmdOpt(), d->dbus_i->getServiceName(this));
         delete d->dbus_i;
     }

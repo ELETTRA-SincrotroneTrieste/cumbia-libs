@@ -80,6 +80,7 @@ void CuPollingActivity::execute()
     tangoworld.fillThreadInfo(at, this); /* put thread and activity addresses as info */
     at["err"] = d->tdev->isValid();
     at["mode"] = "POLLED";
+    at["period"] = getTimeout();
     bool success = false;
     if(dev && !is_command)
     {

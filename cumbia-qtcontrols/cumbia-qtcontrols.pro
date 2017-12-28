@@ -73,7 +73,12 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/cucontextactionbridge.cpp \
     src/cuinfodialog.cpp \
     src/widgets-base/cucontext.cpp \
-    src/quapplication.cpp
+    src/quapplication.cpp \
+    src/qumbiaizer.cpp \
+    src/qumbiaizerprivate.cpp \
+    src/quwatcher.cpp \
+    src/quwriter.cpp \
+    src/quvaluefilter.cpp
 
 HEADERS += cumbiaqtcontrols.h\
         cumbia-qtcontrols_global.h \
@@ -130,7 +135,13 @@ HEADERS += cumbiaqtcontrols.h\
     src/widgets-base/cucontext.h \
     src/cucontextwidgeti.h \
     src/quapplication.h \
-    src/qudbusplugininterface.h
+    src/qudbusplugininterface.h \
+    src/quwriter.h \
+    src/quwatcher.h \
+    src/qumbiaizer.h \
+    src/qumbiaizerprivate.h \
+    src/quvaluefilter.h \
+    src/qumultireaderplugininterface.h
 
 
 RESOURCES += \

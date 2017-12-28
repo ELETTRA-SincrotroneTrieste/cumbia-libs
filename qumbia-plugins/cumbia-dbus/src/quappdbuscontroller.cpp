@@ -26,6 +26,8 @@ QuAppDBusController::QuAppDBusController(QObject *parent) : QObject(parent)
 
 QuAppDBusController::~QuAppDBusController()
 {
+    if(d->dbus_if)
+       d->dbus_if->unregisterService(SERVICE_NAME);
     delete d;
 }
 
@@ -90,27 +92,16 @@ QList<QuAppInfo>  QuAppDBusController::findApps(const QStringList &args)
     return il;
 }
 
-int QuAppDBusController::closeAll(const QList<QuAppInfo> &ail)
+void QuAppDBusController::close(const QuAppInfo &ai)
 {
-    int ret = 0;
-    foreach(QuAppInfo ai, ail)
-    {
-        EuElettraQudbusQuAppDBusInterfaceInterface quappdbusi(ai.dbus_servicename,  "/QuApplication", QDBusConnection::sessionBus(), this);
-        quappdbusi.quit();
-        ret++;
-
-    }
-    return ret;
+    EuElettraQudbusQuAppDBusInterfaceInterface quappdbusi(ai.dbus_servicename,  "/QuApplication", QDBusConnection::sessionBus(), this);
+    quappdbusi.quit();
 }
 
-int QuAppDBusController::raise(const QAppInfo &ai)
+void QuAppDBusController::raise(const QuAppInfo &ai)
 {
-    QDBusConnection connection = QDBusConnection::sessionBus();
-    if(connection.isConnected())
-    {
-        EuElettraQudbusQuAppDBusInterfaceInterface quappdbusi(ai.dbus_servicename,  "/QuApplication", QDBusConnection::sessionBus(), this);
-        quappdbusi
-    }
+    EuElettraQudbusQuAppDBusInterfaceInterface quappdbusi(ai.dbus_servicename,  "/QuApplication", QDBusConnection::sessionBus(), this);
+    quappdbusi.raise();
 }
 
 void QuAppDBusController::start_monitor(const QString &serviceName)

@@ -248,6 +248,7 @@ void CuContext::setOptions(const CuData &options)
  */
 void CuContext::sendData(const CuData &data)
 {
+    printf("sendData with %s\n", data.toString().c_str());
     foreach(CuControlsReaderA *r, d->readers)
         r->sendData(data);
     foreach(CuControlsWriterA *w, d->writers)

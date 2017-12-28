@@ -16,11 +16,22 @@ QuAppDBus::QuAppDBus(QObject *parent) : QObject(parent)
     qDebug() << __FUNCTION__ << "constructor: parent" << parent;
 }
 
-void QuAppDBus::registerApp(QuApplication *app, const QString &key)
+/** \brief Register a QuApplication on the DBus service.
+ *
+ * @param app a reference to the QuApplication to be registered.
+ *
+ * The application is registered with a service name formed by:
+ * "eu.elettra." + hostname + ".display" + $DISPLAY  + ".quapplication.pid" + getpid() + "."  + appname
+ *
+ * The getServiceName method provides the service name string.
+ *
+ * @see unregisterApp
+ *
+ */
+void QuAppDBus::registerApp(QuApplication *app)
 {
     QStringList args = app->arguments();
     args.removeFirst();
-    qDebug() << __FUNCTION__ << "key" << key;
     new QuAppDBusInterfaceAdaptor(app);
     QDBusConnection connection = QDBusConnection::sessionBus();
     QString serviceName = getServiceName(app);
@@ -35,9 +46,15 @@ void QuAppDBus::registerApp(QuApplication *app, const QString &key)
         emit onAppRegistered(app->arguments().first(), args, serviceName);
 }
 
-void QuAppDBus::unregisterApp(QuApplication *app, const QString &key)
+/** \brief unregister the QuApplication from the DBus service
+ *
+ * Unregisters the application with the service name returned by getServiceName, which is the
+ * same method used by registerApp in the registration phase.
+ *
+ * @see registerApp
+ */
+void QuAppDBus::unregisterApp(QuApplication *app)
 {
-    qDebug() << __FUNCTION__  << "key" << key;
     QStringList args = app->arguments();
     args.removeFirst();
     emit onAppUnregistered(app->arguments().first(), args, getServiceName(app));

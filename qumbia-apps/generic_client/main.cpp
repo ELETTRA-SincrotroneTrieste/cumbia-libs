@@ -1,13 +1,14 @@
 #include "generic_client.h"
-#include <QApplication>
+#include <quapplication.h>
 #include <cumbiapool.h>
 #include <cuthreadfactoryimpl.h>
+#include <cucontextactionbridge.h>
 #include <qthreadseventbridgefactory.h>
 
 int main(int argc, char *argv[])
 {
 
-    QApplication a(argc, argv);
+    QuApplication a(argc, argv);
     CumbiaPool *cu_p = new CumbiaPool();
     GenericClient *w = new GenericClient(cu_p, NULL);
     w->show();

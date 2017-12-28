@@ -56,4 +56,6 @@ void CuContinuousActivity::event(CuActivityEvent *e)
         d->pause = true;
     else if(e->getType() == CuActivityEvent::Resume)
         d->pause = false;
+    else if(e->getType() == CuActivityEvent::Execute)
+        execute();
 }

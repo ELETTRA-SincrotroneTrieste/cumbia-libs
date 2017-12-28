@@ -9,7 +9,7 @@
 class CuActivityEvent
 {
 public:
-    enum Type { Pause = 0, Resume, TimeoutChange, Data, User = 100, MaxUser = 2048 };
+    enum Type { Pause = 0, Resume, TimeoutChange, Data, Execute, User = 100, MaxUser = 2048 };
 
     virtual ~CuActivityEvent();
 
@@ -23,6 +23,12 @@ public:
 };
 
 class CuResumeEvent : public CuActivityEvent
+{
+public:
+    CuActivityEvent::Type getType() const;
+};
+
+class CuExecuteEvent : public CuActivityEvent
 {
 public:
     CuActivityEvent::Type getType() const;

@@ -809,6 +809,9 @@ string CuTangoWorld::cmdArgTypeToDataFormat(Tango::CmdArgType t) const
     case Tango::DEVVAR_DOUBLEARRAY: case Tango::DEVVAR_STRINGARRAY:
         return "vector";
 
+    case Tango::DEV_VOID:
+        return "void";
+
     default:
         return "data format type unknown";
     }
@@ -986,6 +989,8 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const std::vector<std::string> &arg
             case Tango::DEV_STRING:
             case Tango::CONST_DEV_STRING:
                 dd << v;
+                break;
+            case Tango::DEV_VOID:
                 break;
             default:
                 perr("CuTangoWorld::toDeviceData: in_type %ld not supported by the library", in_type);

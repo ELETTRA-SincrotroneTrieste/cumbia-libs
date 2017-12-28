@@ -38,7 +38,6 @@ CuData CuTReaderFactory::getOptions() const
 CuControlsReaderA *CuTReaderFactory::create(Cumbia *c, CuDataListener *l) const
 {
     CuTControlsReader *r = new CuTControlsReader(c, l);
-    printf("CuTReaderFactory.create options are %s\n", d->r_options.toString().c_str());
     r->setOptions(d->r_options);
     return r;
 }
