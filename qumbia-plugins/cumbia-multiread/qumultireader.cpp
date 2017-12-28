@@ -44,7 +44,7 @@ void QuMultiReader::setSources(const QStringList &srcs, bool sequential)
     if(sequential)
     {
         CuData opt("period", d->period);
-        opt("")
+        opt("refresh_mode", CuTReader::Manual);
         d->context->setOptions(opt);
     }
     foreach(QString src, srcs) {
