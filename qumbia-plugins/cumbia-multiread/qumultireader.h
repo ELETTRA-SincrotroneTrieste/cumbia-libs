@@ -13,6 +13,48 @@ class CumbiaPool;
 class CuControlsReaderFactoryI;
 class CuControlsFactoryPool;
 
+/** \mainpage This plugin allows parallel and sequential reading from multiple sources
+ *
+ * Please read QuMultiReaderPluginInterface documentation and the <em>multireader</em> example
+ * under the examples subfolder of the plugin directory.
+ *
+ * \code
+ *
+void Multireader::m_loadMultiReaderPlugin()
+{
+    QDir pluginsDir(CUMBIA_QTCONTROLS_PLUGIN_DIR);
+    pluginsDir.cd("plugins");
+    foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
+        QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
+        QObject *plugin = pluginLoader.instance();
+        if (plugin) {
+            m_multir = qobject_cast<QuMultiReaderPluginInterface *>(plugin);
+
+            // configure multi reader
+            // cu_t is a reference to CumbiaTango
+            // cu_tango_r_fac is a CuTReaderFactory
+            // CuTReader::Manual is the CuTReader::RefreshMode enum value that identifies
+            // manual refresh mode for the Tango engine. It tells the QuMultiReader to
+            // perform a sequential read of the sources, one after another, and emit the
+            // onSeqReadComplete when each cycle is over.
+            // A value of -1 instead of CuTReader::Manual would configure the QuMultiReader to
+            // read the n sources concurrently. In this case, no onSeqReadComplete is emitted.
+            //
+            m_multir->init(cu_t, cu_tango_r_fac,  CuTReader::Manual);
+            // get multi reader as qobject in order to connect signals to slots
+            connect(m_multir->get_qobject(), SIGNAL(onNewData(const CuData&)), this, SLOT(newData(const CuData&)));
+            connect(m_multir->get_qobject(), SIGNAL(onSeqReadComplete(const QList<CuData >&)), this, SLOT(seqReadComplete(const QList<CuData >&)));
+            // set the sources
+            m_multir->setSources(srcs);
+        }
+        else
+            perr("Multireader.m_loadMultiReaderPlugin: error loading plugin: %s", qstoc(pluginLoader.errorString()));
+    }
+}
+ *
+ * \endcode
+ *
+ */
 class QuMultiReader : public QObject, public QuMultiReaderPluginInterface, public CuDataListener
 {
     Q_OBJECT

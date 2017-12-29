@@ -90,9 +90,12 @@ Multireader::Multireader(CumbiaTango *cut, QWidget *parent) :
     int manual_code;
     m_sequential ? manual_code = CuTReader::Manual : manual_code = -1;
 
+    // configure multi reader
     m_multir->init(cu_t, cu_tango_r_fac, manual_code);
+    // get multi reader as qobject in order to connect signals to slots
     connect(m_multir->get_qobject(), SIGNAL(onNewData(const CuData&)), this, SLOT(newData(const CuData&)));
     connect(m_multir->get_qobject(), SIGNAL(onSeqReadComplete(const QList<CuData >&)), this, SLOT(seqReadComplete(const QList<CuData >&)));
+    // set the sources
     m_multir->setSources(srcs);
 }
 
@@ -101,6 +104,8 @@ Multireader::~Multireader()
     if(m_multir) delete m_multir;
 }
 
+// single read complete
+//
 void Multireader::newData(const CuData &da)
 {
     QString src = QString::fromStdString(da["src"].toString());
@@ -114,6 +119,8 @@ void Multireader::newData(const CuData &da)
     le->setToolTip(QString::fromStdString(da["msg"].toString()));
 }
 
+// read  cycle complete
+//
 void Multireader::seqReadComplete(const QList<CuData> &da)
 {
     double sum = 0;
@@ -131,8 +138,6 @@ void Multireader::seqReadComplete(const QList<CuData> &da)
     lie->setText(QString::number(sum));
     lie = findChild<QLineEdit *>("avg");
     (cnt > 0) ? lie->setText(QString::number(sum / cnt)) : lie->setText("0");
-
-
 }
 
 void Multireader::m_loadMultiReaderPlugin()
