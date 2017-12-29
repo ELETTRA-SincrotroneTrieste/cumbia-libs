@@ -96,6 +96,8 @@ DEFINES += QUMBIA_TANGO_CONTROLS_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
     VER_MIN=$${VER_MIN} \
     VER_FIX=$${VER_FIX}
 
+DEFINES += CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${INSTALL_ROOT}/lib/cumbia-qtcontrols\\\"\"
+
 QMAKE_CXXFLAGS += -std=c++11 -Wall
 
 
