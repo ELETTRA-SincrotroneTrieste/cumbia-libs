@@ -12,7 +12,7 @@ QT       += core gui
 
 TARGET = cumbia-multiread
 TEMPLATE = lib
-CONFIG += plugin
+CONFIG += plugin debug
 
 INC_DIR = $${CUMBIA_QTCONTROLS_INCLUDES}/plugins
 SHAREDIR = $${CUMBIA_QTCONTROLS_SHARE}/plugins
@@ -59,8 +59,3 @@ INSTALLS += target \
     inc \
     doc
 
-
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}

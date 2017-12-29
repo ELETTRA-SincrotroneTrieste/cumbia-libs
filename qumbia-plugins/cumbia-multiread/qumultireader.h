@@ -30,17 +30,21 @@ public:
     // QuMultiReaderPluginInterface interface
 public:
 
-    void init(Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
-    void init(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
-    void setSources(const QStringList &srcs, bool sequential  = false);
+    void init(Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac, int manual_mode_code = -1);
+    void init(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool, int manual_mode_code = -1);
+    void setSources(const QStringList &srcs);
     void unsetSources();
-    void addSource(const QString &src, int after);
+    void insertSource(const QString &src, int i);
     void removeSource(const QString &src);
+    const QObject *get_qobject() const;
     QStringList sources() const;
 
     int period() const;
 
     void setPeriod(int ms);
+
+public slots:
+    void startRead();
 
 signals:
     void onNewData(const CuData& da);
@@ -48,6 +52,8 @@ signals:
 
 private:
     QuMultiReaderPrivate *d;
+
+    void m_startTimer();
 
     // CuDataListener interface
 public:
