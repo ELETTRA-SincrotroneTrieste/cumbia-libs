@@ -60,6 +60,9 @@ void CuPollingActivity::init()
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
+
+    omni_thread::ensure_self se;
+
     /* get a reference to TDevice */
     d->tdev = d->device_srvc->getDevice(tk["device"].toString());
     /* if polling activity is a fallback because event subscription fails, no need to add ref */

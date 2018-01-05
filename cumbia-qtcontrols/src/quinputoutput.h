@@ -5,7 +5,7 @@
 #include <cucontrolsfactories_i.h>
 #include <cucontrolsfactorypool.h>
 #include <cudata.h>
-#include <cucontextwidgeti.h>
+#include <cucontexti.h>
 
 class Cumbia;
 class CumbiaPool;
@@ -14,7 +14,7 @@ class CuContext;
 
 class QuInputOutputPrivate;
 
-class QuInputOutput : public EInputOutputWidget, public CuContextWidgetI
+class QuInputOutput : public EInputOutputWidget, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)

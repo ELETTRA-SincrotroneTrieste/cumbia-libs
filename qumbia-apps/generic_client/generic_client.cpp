@@ -73,7 +73,7 @@ GenericClient::GenericClient(CumbiaPool *cumbia_pool, QWidget *parent) :
         for(int i = 1; i < qApp->arguments().count(); i++)
         {
             if(i > 1 && i < qApp->arguments().count() - 1)
-                ui->leSrcs->setText(ui->leSrcs->text() + ",");
+                ui->leSrcs->setText(ui->leSrcs->text() + " ");
             ui->leSrcs->setText(ui->leSrcs->text() + qApp->arguments().at(i));
         }
         sourcesChanged();
@@ -222,7 +222,7 @@ void GenericClient::sourcesChanged()
 
     //  unsetSources();
 
-    QStringList srcs = ui->leSrcs->text().split(",", QString::SkipEmptyParts);
+    QStringList srcs = ui->leSrcs->text().split(QRegExp("\\s+"), QString::SkipEmptyParts);
     const int srcCnt = srcs.size();
     const int colSpan = m_layoutColumnCount / srcCnt;
 

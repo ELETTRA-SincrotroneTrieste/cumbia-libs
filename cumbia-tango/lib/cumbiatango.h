@@ -36,6 +36,10 @@ class CuThreadsEventBridgeFactory_I;
  *
  * As previously stated, activities identified by the same token (a CuData object) belong to the same thread.
  * <em>cumbia-tango groups threads by Tango device name</em>.
+ *
+ * \par Tutorials
+ * \li \ref md_lib_tutorial_activity
+ *
  */
 
 class CumbiaTango : public Cumbia

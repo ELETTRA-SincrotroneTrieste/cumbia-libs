@@ -16,7 +16,7 @@ public:
 
     virtual ~CuTangoActionI() {}
 
-    enum Type { Reader = 0, Writer, MultiReader, MultiWriter, AttConfig };
+    enum Type { Reader = 0, Writer, AttConfig, DbReadProp, DbWriteProp };
 
     virtual TSource getSource() const  = 0;
 

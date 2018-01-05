@@ -6,7 +6,7 @@
 #include <QtDebug>
 #include <cumacros.h>
 #include <egauge.h>
-#include <cucontextwidgeti.h>
+#include <cucontexti.h>
 #include <culinkstats.h>
 #include <cucontext.h>
 #include <qutrendplot.h>
@@ -68,7 +68,7 @@ CuInfoDialog::~CuInfoDialog()
     delete d;
 }
 
-int CuInfoDialog::exec(QWidget *sender, CuContextWidgetI *sender_cwi)
+int CuInfoDialog::exec(QWidget *sender, CuContextI *sender_cwi)
 {
     d->layout_col_cnt = 6;
     resize(700, 720);
@@ -98,8 +98,6 @@ int CuInfoDialog::exec(QWidget *sender, CuContextWidgetI *sender_cwi)
     lFTitleMon->setAlignment(Qt::AlignHCenter);
     lFTitleMon->setFont(f);
 
-
-
     row++;
 
     // operation count
@@ -127,6 +125,7 @@ int CuInfoDialog::exec(QWidget *sender, CuContextWidgetI *sender_cwi)
         l_lasterr->setAlignment(Qt::AlignRight);
         lo->addWidget(l_lasterr, row, 4, 1, 1);
         QLineEdit *le_lasterr = new QLineEdit(this);
+        le_lasterr->setObjectName("le_lasterr");
         lo->addWidget(le_lasterr, row, 5, 1, 1);
         le_lasterr->setText(lis->last_error_msg.c_str());
     }
@@ -177,6 +176,7 @@ int CuInfoDialog::exec(QWidget *sender, CuContextWidgetI *sender_cwi)
         {
             connect(llive, SIGNAL(newData(CuData)), this, SLOT(newLiveData(CuData)));
             llive->setSource(r->source());
+            llive->setMaximumLength(80);
             gblilo->addWidget(llive);
         }
         row++;
@@ -208,6 +208,7 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
     CuLinkStats *lis = m_ctxwi->getContext()->getLinkStats();
     findChild<QLineEdit *>("leopcnt")->setText(QString::number(lis->opCnt()));
     findChild<QLineEdit *>("leerrcnt")->setText(QString::number(lis->errorCnt()));
+    findChild<QLineEdit *>("le_lasterr")->setTabletTracking(lis->last_error_msg.c_str());
     HealthWidget *healthw  = findChild<HealthWidget *>();
     healthw->setData(lis->errorCnt(), lis->opCnt());
 
@@ -252,7 +253,6 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
             glo->addWidget(lewv, row, 5, 1, 1);
         }
 
-        printf("\e[1;36mupdate: received: %s\e[0m\n", d.toString().c_str());
         QString datetime = QDateTime::fromMSecsSinceEpoch(x).toString();
         container->findChild<QLineEdit *>("lev")->setText(d["value"].toString().c_str());
         container->findChild<QLineEdit *>("lexv")->setText(datetime);

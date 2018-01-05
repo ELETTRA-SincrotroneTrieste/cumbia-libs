@@ -3,7 +3,7 @@
 
 #include <esimplelabel.h>
 #include <cudatalistener.h>
-#include <cucontextwidgeti.h>
+#include <cucontexti.h>
 #include <cudata.h>
 
 class QuLabelPrivate;
@@ -14,7 +14,7 @@ class CuControlsFactoryPool;
 class CuContext;
 class CuLinkStats;
 
-class QuLabel : public ESimpleLabel, public CuDataListener, public CuContextWidgetI
+class QuLabel : public ESimpleLabel, public CuDataListener, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)
@@ -44,7 +44,7 @@ public slots:
 signals:
     void newData(const CuData&);
 
-    void linkStatsRequest(QWidget *myself, CuContextWidgetI *myself_as_cwi);
+    void linkStatsRequest(QWidget *myself, CuContextI *myself_as_cwi);
 
 protected:
     void contextMenuEvent(QContextMenuEvent* e);

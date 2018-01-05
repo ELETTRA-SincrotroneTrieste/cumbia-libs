@@ -17,6 +17,7 @@ public:
     TDevice *tdev;
     int event_id;
     pthread_t my_thread_id, other_thread_id;
+    omni_thread::ensure_self *se;
 };
 
 CuEventActivity::CuEventActivity(const CuData &token,  CuDeviceFactoryService *df) : CuActivity(token)
@@ -28,6 +29,7 @@ CuEventActivity::CuEventActivity(const CuData &token,  CuDeviceFactoryService *d
     d->tdev = NULL;
     d->event_id = -1;
     d->other_thread_id = pthread_self();
+    d->se = NULL;
 }
 
 CuEventActivity::~CuEventActivity()
@@ -59,6 +61,10 @@ int CuEventActivity::repeat() const
 
 void CuEventActivity::init()
 {
+    // hack to FIX event failure if subscribing to more than one device
+    // in the same application
+    d->se = new omni_thread::ensure_self;
+
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
@@ -146,6 +152,9 @@ void CuEventActivity::onExit()
     printf("calling publishResut\n");
     publishResult(at);
     printf("calledg publishResut\n");
+
+    // delete omni_thread::ensure_self
+    if(d->se) delete d->se;
 }
 
 void CuEventActivity::push_event(Tango::EventData *e)

@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <cudatalistener.h>
-#include <cucontextwidgeti.h>
+#include <cucontexti.h>
 #include "qumbiaizer.h"
 
 class Cumbia;
@@ -96,7 +96,7 @@ class QuWatcherPrivate;
   *
   *
   */
-class QuWatcher : public Qumbiaizer, public CuDataListener, public CuContextWidgetI
+class QuWatcher : public Qumbiaizer, public CuDataListener, public CuContextI
 {
 Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource)
@@ -120,7 +120,7 @@ private:
     QuWatcherPrivate *d;
 
 
-    // CuContextWidgetI interface
+    // CuContextI interface
 public:
     CuContext *getContext() const;
 

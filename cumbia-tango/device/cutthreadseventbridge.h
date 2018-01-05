@@ -3,6 +3,7 @@
 
 #include <cuthreadseventbridgefactory_i.h>
 #include <cuthreadseventbridge_i.h>
+#include <cuthreadseventbridge.h>
 #include <cumacros.h>
 #include <cueventloop.h>
 #include <cuevent.h>
@@ -11,7 +12,7 @@
 
 class CuThreadsEventBridgeListener;
 
-class CuTThreadsEventBridge : public CuThreadsEventBridge_I, public CuEventLoopListener
+class CuTThreadsEventBridge : public CuThreadsEventBridge
 {
 public:
     CuTThreadsEventBridge(const CuServiceProvider *sp)

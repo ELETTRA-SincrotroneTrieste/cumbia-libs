@@ -133,7 +133,6 @@ HEADERS += cumbiaqtcontrols.h\
     src/cucontextactionbridge.h \
     src/cuinfodialog.h \
     src/widgets-base/cucontext.h \
-    src/cucontextwidgeti.h \
     src/quapplication.h \
     src/qudbusplugininterface.h \
     src/quwriter.h \
@@ -141,7 +140,8 @@ HEADERS += cumbiaqtcontrols.h\
     src/qumbiaizer.h \
     src/qumbiaizerprivate.h \
     src/quvaluefilter.h \
-    src/qumultireaderplugininterface.h
+    src/qumultireaderplugininterface.h \
+    src/cucontexti.h
 
 
 RESOURCES += \

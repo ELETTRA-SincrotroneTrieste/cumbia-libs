@@ -42,7 +42,9 @@ lib/cuwriteactivity.cpp \
 lib/cutwriter.cpp \
 lib/cutattconfiguration.cpp \
 lib/cutangoopt_builder.cpp \
-lib/cutattconfigactivity.cpp
+lib/cutattconfigactivity.cpp \
+lib/cutdbpropertyreader.cpp \
+lib/cugettdbpropactivity.cpp
 
 
 # Header files that must be installed are specified by the HEADERS family of variables.
@@ -66,7 +68,9 @@ lib/cuwriteactivity.h \
 lib/cutwriter.h \
 lib/cutattconfiguration.h \
 lib/cutangoopt_builder.h \
-lib/cutattconfigactivity.h
+lib/cutattconfigactivity.h \
+lib/cutdbpropertyreader.h \
+lib/cugettdbpropactivity.h
 
 
 

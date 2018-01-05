@@ -69,7 +69,6 @@ void CuTReader::onResult(const CuData &data)
     std::set<CuDataListener *>::iterator it;
     for(it = lis_copy.begin(); it != lis_copy.end(); ++it)
     {
-        printf("\e[1;33m - calling onUpdate from this %p to listener %p\e[0m\n", this, (*it));
         (*it)->onUpdate(data);
     }
     if(!d->exit && data["activity"].toString() == "event" && data["err"].toBool()
@@ -139,7 +138,6 @@ void CuTReader::sendData(const CuData &data)
         static_cast<CuPollingActivity *>(d->current_activity)->setInterval(d->period);
     if(d->current_activity && d->current_activity->getType() == CuPollingActivity::CuPollingActivityType && data.containsKey("read"))
     {
-        printf("POST EVENT TO ACTIVITY!\n");
         d->cumbia_t->postEvent(d->current_activity, new CuExecuteEvent());
     }
     if(!d->current_activity)
@@ -171,19 +169,16 @@ void CuTReader::getData(CuData &d_inout) const
 
 void CuTReader::setRefreshMode(CuTReader::RefreshMode rm)
 {
-    cuprintf("CuTReader.setRefreshMode -> %d\n", rm);
     d->refresh_mode = rm;
     if(d->current_activity && rm == CuTReader::ChangeEventRefresh &&
             d->current_activity->getType() == CuPollingActivity::CuPollingActivityType)
     {
-        cuprintf("CuTReader.setRefreshMode: changing from event to polling...\n");
         d->cumbia_t->unregisterActivity(d->current_activity);
         m_startEventActivity();
     }
     else if(d->current_activity && d->current_activity->getType() == CuEventActivity::CuEventActivityType
             && (rm == CuTReader::PolledRefresh || rm == CuTReader::Manual))
     {
-        cuprintf("CuTReader.setRefreshMode: changing from polling to event mode...\n");
         d->cumbia_t->unregisterActivity(d->current_activity);
         m_startPollingActivity(false);
     }
@@ -250,7 +245,6 @@ void CuTReader::stop()
         d->log.write("CuTReader.stop", CuLog::Error, CuLog::Read, "stop called twice for reader %s", this->getToken()["source"].toString().c_str());
     else
     {
-        cuprintf("\e[1;35mCuTReader.stop(): unregistering activity %p\n", d->current_activity);
         d->exit = true;
         int t = d->current_activity->getType();
         if(t == CuEventActivity::CuEventActivityType || t == CuPollingActivity::CuPollingActivityType)
@@ -266,21 +260,14 @@ void CuTReader::addDataListener(CuDataListener *l)
 
 void CuTReader::removeDataListener(CuDataListener *l)
 {
-    printf("\e[1;31mremoveDataListener: size of listeners %d to remove %p\e[0m\n", d->listeners.size(), l);
     if(l->invalid())
     {
-        printf("\e[1;31m listener %p is INVALID removing please on %s listeners remained %ld\e[0m\n",
-               l, this->getSource().getName().c_str(), d->listeners.size());
         d->listeners.erase(l);
-        if(!d->listeners.size())
-        {
-            printf("\e[1;31mSTOPPINGGGGGGGGGGGGG CUZ l->invalid AND no mo re listeners\e[0m\n");
+        if(!d->listeners.size()) {
             stop();
         }
     }
-    else if(d->listeners.size() == 1)
-    {
-        printf("\e[1;31STOPPINGGGGGGGGGGGGG\e[0m\n");
+    else if(d->listeners.size() == 1) {
         stop();
     }
     else

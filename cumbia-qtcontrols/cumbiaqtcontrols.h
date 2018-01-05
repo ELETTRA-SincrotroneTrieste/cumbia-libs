@@ -165,7 +165,7 @@ protected slots:
  * \code
     #include <esimplelabel.h>
     #include <cudatalistener.h>
-    #include <cucontextwidgeti.h>
+    #include <cucontexti.h>
 
     class QuLabelPrivate;
     class CuData;
@@ -175,7 +175,7 @@ protected slots:
     class CuControlsFactoryPool;
     class CuContext;
 
-    class QuLabel : public ESimpleLabel, public CuDataListener, public CuContextWidgetI
+    class QuLabel : public ESimpleLabel, public CuDataListener, public CuContextI
     {
         Q_OBJECT
         // source property, same property name, getter and setter as QTango's
@@ -190,7 +190,7 @@ protected slots:
 
         // CuTangoListener interface
         void onUpdate(const CuData &d);
-        // CuContextWidgetI interface
+        // CuContextI interface
         CuContext *getContext() const;
 
         // return the source property
@@ -213,7 +213,7 @@ protected slots:
         // this signal must be provided in conjunction with contextMenuEvent
         // in order for the client to be able to
         // receive statistics and information about the health of the reader.
-        void linkStatsRequest(QWidget *myself, CuContextWidgetI *myself_as_cwi);
+        void linkStatsRequest(QWidget *myself, CuContextI *myself_as_cwi);
 
     protected:
         void contextMenuEvent(QContextMenuEvent* e);
@@ -226,7 +226,7 @@ protected slots:
  *
  * \endcode
  *
- * CuDataListener and CuContextWidgetI are pure interfaces. onUpdate and getContext must be implemented
+ * CuDataListener and CuContextI are pure interfaces. onUpdate and getContext must be implemented
  * in order to make a <em>label</em> widget a cumbia widget.
  *
  * \li onUpdate replaces the work that used to be done by the QTango refresh and the configure methods at once.
@@ -435,7 +435,7 @@ public:
 * a write operation.
 *
 * \note To provide a contextual menu for the writer, you must follow the same instructions given for the
-* reader, inheriting from CuContextWidgetI and implementing the contextMenuEvent method and the getContext
+* reader, inheriting from CuContextI and implementing the contextMenuEvent method and the getContext
 * pure virtual function.
 *
 * \code

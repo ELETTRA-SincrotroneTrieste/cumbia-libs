@@ -113,7 +113,7 @@ QString QuInputOutput::source() const
     return outputWidget()->property("source").toString();
 }
 
-/** \brief Provided to implement CuContextWidgetI interface, returns getOutputContext
+/** \brief Provided to implement CuContextI interface, returns getOutputContext
  *
  * @return the output widget's context
  *

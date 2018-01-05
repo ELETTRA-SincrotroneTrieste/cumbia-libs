@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QLabel>
 
-class CuContextWidgetI;
+class CuContextI;
 class CuData;
 class Cumbia;
 class CumbiaPool;
@@ -36,14 +36,14 @@ public:
     virtual ~CuInfoDialog();
 
 public slots:
-    int exec(QWidget *sender, CuContextWidgetI *sender_cwi);
+    int exec(QWidget *sender, CuContextI *sender_cwi);
 
 private slots:
     void onMonitorUpdate(const CuData& d);
     void newLiveData(const CuData &d);
 
 private:
-    CuContextWidgetI* m_ctxwi;
+    CuContextI* m_ctxwi;
     QWidget *m_senderw;
 
     void m_makeMonitor(QFrame *monitorF);

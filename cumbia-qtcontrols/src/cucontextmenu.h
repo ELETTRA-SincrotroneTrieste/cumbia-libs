@@ -2,7 +2,7 @@
 #define INFOCONTEXTMENUFILTER_H
 
 #include <QMenu>
-class CuContextWidgetI;
+class CuContextI;
 
 /** \brief A QObject filter that installs a minimal context menu with an action
  *         to trigger a link statistics request.
@@ -12,7 +12,7 @@ class CuContextMenu : public QMenu
 {
     Q_OBJECT
 public:
-    explicit CuContextMenu(QWidget *parent, CuContextWidgetI *parent_as_cwi);
+    explicit CuContextMenu(QWidget *parent, CuContextI *parent_as_cwi);
 
 private slots:
     void onInfoActionTriggered();
@@ -29,12 +29,12 @@ signals:
      * @see CuContextMenu
      *
      */
-    void linkStatsTriggered(QWidget *sender, CuContextWidgetI *sender_cwi);
+    void linkStatsTriggered(QWidget *sender, CuContextI *sender_cwi);
 
 public slots:
 
 private:
-    CuContextWidgetI *m_parent_as_cwi;
+    CuContextI *m_parent_as_cwi;
 };
 
 #endif // INFOCONTEXTMENUFILTER_H

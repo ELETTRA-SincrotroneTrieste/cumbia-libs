@@ -3,7 +3,7 @@
 
 #include <eled.h>
 #include <cudatalistener.h>
-#include <cucontextwidgeti.h>
+#include <cucontexti.h>
 
 class QuLedPrivate;
 class Cumbia;
@@ -12,7 +12,7 @@ class CumbiaPool;
 class CuControlsFactoryPool;
 class CuContext;
 
-class QuLed : public ELed, public CuDataListener, public CuContextWidgetI
+class QuLed : public ELed, public CuDataListener, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)

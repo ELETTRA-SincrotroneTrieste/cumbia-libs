@@ -594,15 +594,10 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
         std::string cmdnam(cmd);
         Tango::DeviceData din = toDeviceData(argins, point_info);
         Tango::DeviceData dout;
-        if(argins.isNull())
-        {
-            printf("CHIAMO command_inout void\n");
-           dout = dev->command_inout(cmdnam);
+        if(argins.isNull()) {
+            dout = dev->command_inout(cmdnam);
         }
-        else
-        {
-
-            printf("CHIAMO command_inout PIENOOOOOOOOOOOO\n");
+        else  {
             dout = dev->command_inout(cmdnam, din);
         }
         if(point_info["out_type"].toLongInt() != Tango::DEV_VOID)
@@ -756,6 +751,138 @@ bool CuTangoWorld::get_att_props(Tango::DeviceProxy *dev,
     return !d->error;
 }
 
+Tango::Database *CuTangoWorld::getTangoDb(const std::string& dbhost) const
+{
+    std::string db = dbhost;
+    if(dbhost.size() == 0)
+        return new Tango::Database();
+    else
+        return new Tango::Database(db);
+}
+
+/**
+ * @brief CuTangoWorld::get_properties
+ * @param in_list list of properties to fetch, described with a CuData bundle
+ * @param res the result of the database query
+ * @return true if no errors occurred.
+ *
+ * \par Results
+ * Results are stored into the res CuData passed as reference.
+ *
+ * \li device attribute properties:  res["the/device/name/attname/property_name"] = property as std vector of strings
+ * \li device properties: res["the/device/name/property_name"] = property as std vector of strings
+ * \li class properties: res["classname/property_name"] = property as std vector of strings
+ *
+ */
+bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res, const std::string& dbhost)
+{
+    // maps tango host name to device attribute props, device props, class attribute props
+    // and class props
+    std::map<std::string, std::list<CuData> > daprops, dprops, cprops;
+    std::vector<std::string> names;
+    d->error = false;
+
+    // divide in_list by type and by device name
+    for(std::list<CuData>::const_iterator it = in_list.begin(); it != in_list.end(); ++it)
+    {
+        const CuData& in = *it;
+
+        if(in.containsKey("device") && in.containsKey("attribute"))
+            daprops[in["device"].toString()].push_back(in);
+        else if(in.containsKey("device") && !in.containsKey("attribute")) // device property
+            dprops[in["device"].toString()].push_back(in);
+        else if(in.containsKey("class")) // class property
+            cprops[in["class"].toString()].push_back(in);
+
+        // store names
+        names.push_back(in["name"].toString());
+    }
+    Tango::Database *db = getTangoDb(dbhost);
+    d->error = false;
+    d->message = "";
+    std::string attnam;
+    std::vector<std::string> vs;
+
+    try {
+        // 1. device attribute properties
+        // scan the per-device map
+        for(std::map<std::string, std::list< CuData> >::const_iterator it = daprops.begin(); it != daprops.end(); ++it)
+        {
+            Tango::DbData db_data;
+            std::vector<std::string> requested_p;
+            for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit) {
+                db_data.push_back(Tango::DbDatum((*dit)["attribute"].toString().c_str()));
+                if((*dit).containsKey("name"))
+                    requested_p.push_back((*dit)["name"].toString());
+                printf("FINDING %s / %s dev %s\n", (*dit)["name"].toString().c_str(), (*dit)["attribute"].toString().c_str(),
+                        (*dit)["device"].toString().c_str());
+            }
+
+            db->get_device_attribute_property(it->first, db_data);
+            for(size_t i = 0; i < db_data.size(); i++) {
+                if(i == 0)
+                    attnam = db_data[i].name;
+                else if(!db_data[i].is_empty() && (requested_p.size() == 0 || find(requested_p.begin(), requested_p.end(), db_data[i].name) != requested_p.end()))
+                {
+                    db_data[i] >> vs;
+                    res[it->first + "/" + attnam + ":" + db_data[i].name] = vs;
+                }
+            }
+        }
+        // 2. device properties
+        // scan the per-device map
+        for(std::map<std::string, std::list< CuData> >::const_iterator it = dprops.begin(); it != dprops.end(); ++it)
+        {
+            Tango::DbData db_data;
+            for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit)
+                db_data.push_back(Tango::DbDatum((*dit)["name"].toString().c_str()));
+
+            printf("gettin dev props for dev %s \n", it->first.c_str());
+            db->get_device_property(it->first, db_data);
+            for(size_t i = 0; i < db_data.size(); i++) {
+                if(!db_data[i].is_empty()) {
+                    db_data[i] >> vs;
+                    res[it->first + ":" + db_data[i].name] = vs;
+                }
+            }
+        }
+        // 3. class properties
+        // scan the per-class map
+        for(std::map<std::string, std::list< CuData> >::const_iterator it = cprops.begin(); it != cprops.end(); ++it)
+        {
+            Tango::DbData db_data;
+            for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit)
+                db_data.push_back(Tango::DbDatum((*dit)["name"].toString().c_str()));
+
+            db->get_class_property(it->first, db_data); // it->first is class name
+            for(size_t i = 0; i < db_data.size(); i++) {
+                if(!db_data[i].is_empty()) {
+                    db_data[i] >> vs;
+                    res[it->first + ":" + db_data[i].name] = vs;
+                }
+            }
+        }
+    }
+    catch(Tango::DevFailed& e)
+    {
+        d->error = true;
+        d->message = strerror(e);
+    }
+
+    res["err"] = d->error;
+    if(!d->error) {
+        time_t tp;
+        time(&tp);
+        d->message = std::string("CuTangoWorld.get_properties successfully completed on ") +  std::string(ctime(&tp));
+        d->message.pop_back(); // remove last newline
+    }
+    res["msg"] = d->message;
+
+    printf("\e[0;33mPROPERTIES\n%s\n\e[0m\n", res.toString().c_str());
+
+    return !d->error;
+}
+
 bool CuTangoWorld::source_valid(const string &src)
 {
     //  (tango://){0,1}([A-Za-z_0-9\.]*[:]{1}[0-9]+[/]){0,1}(([A-Za-z_0-9\.]+/[A-Za-z_0-9\.]+/[A-Za-z_0-9\.]+([/]{1,1}|[->]{2,2})[A-Za-z_0-9\.]+)([\(]{1}[&A-Za-z_0-9\\.,]+[\)]){0,1})    const char* SOURCE_REGEXP = "(tango://){0,1}"
@@ -844,7 +971,7 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const CuVariant &arg,
              arg.toString().c_str(), arg.getFormat(), arg.getType(), in_type);
     if((arg.isNull() || arg.getFormat() < 0) && in_type == static_cast<Tango::CmdArgType>(Tango::DEV_VOID))
     {
-       type_match = true;
+        type_match = true;
     }
     else if(arg.getFormat() == CuVariant::Scalar)
     {
@@ -877,7 +1004,6 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const CuVariant &arg,
     }
     else if(arg.getFormat() == CuVariant::Vector)
     {
-        printf("ENTRO IN VECTRIR\n");
         /*
          * Tango::DEVVAR_SHORTARRAY Tango::DEVVAR_USHORTARRAY)
          Tango::DEVVAR_LONGARRAY  Tango::DEVVAR_ULONGARRAY) ango::DEVVAR_FLOATARRAY)
@@ -927,13 +1053,12 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const CuVariant &arg,
     }
     if(!type_match)
     {
-        printf("NOT TYPE MATCH, try with strings toDeviceData!\e[0m\n");
+        //        printf("NOT TYPE MATCH, try with strings toDeviceData!\e[0m\n");
         /* no match between CommandInfo argin type and CuVariant type: try to get CuVariant
          * data as string and convert it according to CommandInfo type
          */
         return toDeviceData(arg.toStringVector(), info);
     }
-    printf("SHOULD RETURN A DUCKING dd\n");
     return dd;
 }
 
@@ -943,7 +1068,7 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const std::vector<std::string> &arg
     d->error = false;
     d->message = "";
     long in_type = cmdinfo["in_type"].toLongInt();
-    printf("argis size %d in type %s as int %ld\n", argins.size(), cmdArgTypeToDataFormat(Tango::CmdArgType(in_type)).c_str(), in_type);
+    //    printf("argis size %d in type %s as int %ld\n", argins.size(), cmdArgTypeToDataFormat(Tango::CmdArgType(in_type)).c_str(), in_type);
     Tango::DeviceData dd;
     if(argins.size() == 0)
         return dd;
@@ -1091,8 +1216,8 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &name,
     int tango_type = attinfo["data_type"].toInt();
     Tango::AttrDataFormat tango_format = static_cast<Tango::AttrDataFormat>(attinfo["data_format"].toInt());
 
-    printf("\e[0;33mtoDeviceAttribute dealing with data type %d tango tp %d format %d tango fmt %d ARGIN DATA %s\e[0m\n",
-           t, tango_type, arg.getFormat(), tango_format, arg.toString().c_str());
+    //    printf("\e[0;33mtoDeviceAttribute dealing with data type %d tango tp %d format %d tango fmt %d ARGIN DATA %s\e[0m\n",
+    //           t, tango_type, arg.getFormat(), tango_format, arg.toString().c_str());
     if(tango_format == Tango::SCALAR && arg.getFormat() == CuVariant::Scalar)
     {
         if(t == CuVariant::Double && tango_type == Tango::DEV_DOUBLE)
@@ -1166,7 +1291,7 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &name,
         {
             std::vector<std::string> vs1el;
             vs1el.push_back(arg.toString());
-            printf("NOT TYPE MATCH FOR DEVICE ATTRIBUTE, try with string vector (1 elem) conversion!\e[0m\n");
+            //            printf("NOT TYPE MATCH FOR DEVICE ATTRIBUTE, try with string vector (1 elem) conversion!\e[0m\n");
             return toDeviceAttribute(attname, vs1el, attinfo);
         }
     }
@@ -1235,7 +1360,7 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &name,
         }
         else
         {
-            printf("NOT TYPE MATCH FOR DEVICE ATTRIBUTE, try with string vector conversion!\e[0m\n");
+            //            printf("NOT TYPE MATCH FOR DEVICE ATTRIBUTE, try with string vector conversion!\e[0m\n");
             /* no match between AttributeInfo data type and CuVariant type: try to get CuVariant
              * data as string and convert it according to AttributeInfo data type
              */
@@ -1418,5 +1543,3 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &aname,
 
     return da;
 }
-
-

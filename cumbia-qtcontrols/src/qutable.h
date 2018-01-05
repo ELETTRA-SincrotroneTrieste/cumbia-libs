@@ -3,7 +3,7 @@
 
 #include <eflag.h>
 #include <cudatalistener.h>
-#include <cucontextwidgeti.h>
+#include <cucontexti.h>
 
 class QuTablePrivate;
 class Cumbia;
@@ -19,7 +19,7 @@ class CuContext;
  * trueStrings, falseStrings. If they are provided by the underline engine, they are
  * used to configure the table.
  */
-class QuTable : public EFlag, public CuDataListener, public CuContextWidgetI
+class QuTable : public EFlag, public CuDataListener, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)

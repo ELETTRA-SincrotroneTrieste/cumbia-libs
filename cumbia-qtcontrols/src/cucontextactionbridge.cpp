@@ -1,5 +1,5 @@
 #include "cucontextactionbridge.h"
-#include "cucontextwidgeti.h"
+#include "cucontexti.h"
 #include "cuinfodialog.h"
 #include <QWidget>
 #include <QPoint>
@@ -75,8 +75,8 @@ CuContextActionBridge::~CuContextActionBridge()
  */
 void CuContextActionBridge::connectObject(QObject *o)
 {
-    bool res = QObject::connect(o, SIGNAL(linkStatsRequest(QWidget*, CuContextWidgetI *)),
-                                this, SIGNAL(linkStatsRequest(QWidget*, CuContextWidgetI *)));
+    bool res = QObject::connect(o, SIGNAL(linkStatsRequest(QWidget*, CuContextI *)),
+                                this, SIGNAL(linkStatsRequest(QWidget*, CuContextI *)));
 
     if(!res)
         perr("CuLinkStatsConnector.connectObject: object \"%s\" of type %s must implement the\n"
@@ -84,7 +84,7 @@ void CuContextActionBridge::connectObject(QObject *o)
              qstoc(o->objectName()), o->metaObject()->className());
 }
 
-void CuContextActionBridge::onLinkStatsRequest(QWidget *sender, CuContextWidgetI *w)
+void CuContextActionBridge::onLinkStatsRequest(QWidget *sender, CuContextI *w)
 {
     if(d->cumbia)
     {
@@ -104,18 +104,12 @@ void CuContextActionBridge::m_connect()
     foreach(QWidget *w, qobject_cast<QWidget *>(parent())->findChildren<QWidget *>())
     {
         const QMetaObject *mo = w->metaObject();
-        bool hasSignal = mo->indexOfSignal(mo->normalizedSignature("linkStatsRequest(QWidget*, CuContextWidgetI *)")) > -1;
-        qDebug() << __FUNCTION__ << mo->className() << " has linkStatsRequest signal: " << hasSignal;
+        bool hasSignal = mo->indexOfSignal(mo->normalizedSignature("linkStatsRequest(QWidget*, CuContextI *)")) > -1;
+  //      qDebug() << __FUNCTION__ << mo->className() << " has linkStatsRequest signal: " << hasSignal;
         if(hasSignal)
         {
-            res = connect(w, SIGNAL(linkStatsRequest(QWidget*, CuContextWidgetI *)),
-                          this, SLOT(onLinkStatsRequest(QWidget*, CuContextWidgetI *)));
-            if(!res)
-                perr("CuLinkStatsConnector.connectObject: error connecting linkStatsRequest signal of object %s [%s]",
-                     qstoc(w->objectName()), w->metaObject()->className());
-            else
-                printf("connected %s [%s]\n",
-                       qstoc(w->objectName()), w->metaObject()->className());
+            res = connect(w, SIGNAL(linkStatsRequest(QWidget*, CuContextI *)),
+                          this, SLOT(onLinkStatsRequest(QWidget*, CuContextI *)));
         }
     }
 }

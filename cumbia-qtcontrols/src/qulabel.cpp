@@ -107,8 +107,8 @@ void QuLabel::setMaximumLength(int len)
 void QuLabel::contextMenuEvent(QContextMenuEvent *e)
 {
     CuContextMenu* m = new CuContextMenu(this, this);
-    connect(m, SIGNAL(linkStatsTriggered(QWidget*, CuContextWidgetI *)),
-            this, SIGNAL(linkStatsRequest(QWidget*, CuContextWidgetI *)));
+    connect(m, SIGNAL(linkStatsTriggered(QWidget*, CuContextI *)),
+            this, SIGNAL(linkStatsRequest(QWidget*, CuContextI *)));
     m->popup(e->globalPos());
 }
 

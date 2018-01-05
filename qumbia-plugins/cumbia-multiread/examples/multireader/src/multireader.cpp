@@ -89,6 +89,7 @@ Multireader::Multireader(CumbiaTango *cut, QWidget *parent) :
     }
     int manual_code;
     m_sequential ? manual_code = CuTReader::Manual : manual_code = -1;
+    m_sequential ? setWindowTitle("Multi reader example: sequential mode") : setWindowTitle("Multi reader example: parallel readings");
 
     // configure multi reader
     m_multir->init(cu_t, cu_tango_r_fac, manual_code);

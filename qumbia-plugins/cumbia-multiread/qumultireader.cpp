@@ -94,6 +94,10 @@ void QuMultiReader::removeSource(const QString &src)
     d->readersMap.remove(src);
 }
 
+/** \brief returns a reference to this object, so that it can be used as a QObject
+ *         to benefit from signal/slot connections.
+ *
+ */
 const QObject *QuMultiReader::get_qobject() const
 {
     return this;

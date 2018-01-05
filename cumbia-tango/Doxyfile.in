@@ -38,7 +38,7 @@ PROJECT_NUMBER         = 1.x
 # for a project that appears at the top of each page and should give viewer
 # a quick idea about the purpose of the project. Keep the description short.
 
-PROJECT_BRIEF          = C++ multi threaded library based on cumbia and the Tango control system
+PROJECT_BRIEF          = "C++ multi threaded library based on cumbia and the Tango control system"
 
 # With the PROJECT_LOGO tag one can specify an logo or icon that is
 # included in the documentation. The maximum height of the logo should not
@@ -666,7 +666,9 @@ INPUT_ENCODING         = UTF-8
 # *.hxx *.hpp *.h++ *.idl *.odl *.cs *.php *.php3 *.inc *.m *.mm *.dox *.py
 # *.f90 *.f *.for *.vhd *.vhdl
 
-FILE_PATTERNS          =
+FILE_PATTERNS          = *.cpp *.h *.md *.dox
+
+MARKDOWN_SUPPORT = YES
 
 # The RECURSIVE tag can be used to turn specify whether or not subdirectories
 # should be searched for input files as well. Possible values are YES and NO.

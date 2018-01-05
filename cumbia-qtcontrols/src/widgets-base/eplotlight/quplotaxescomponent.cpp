@@ -107,10 +107,20 @@ void QuPlotAxesComponent::restoreDefaultBounds(QuPlotBase *plot, int axisId)
  */
 bool QuPlotAxesComponent::applyScaleFromCurveBounds(QuPlotBase *plot, int axisId)
 {
+
     QPair<double, double> &bounds = d->bounds_from_curves[axisId];
     double lb = plot->axisScaleDiv(axisId).lowerBound();
     double ub = plot->axisScaleDiv(axisId).upperBound();
     double margin;
+    if(bounds.second == bounds.first) {
+        bounds.second += d->margin[axisId] / 2.0;
+        bounds.first -= d->margin[axisId] / 2.0;
+    }
+
+    if(bounds.second == bounds.first) {
+        bounds.second += 5;
+        bounds.first -= 5;
+    }
     margin = (bounds.second - bounds.first) *  d->margin[axisId];
     bounds.second += margin/2.0;
     bounds.first -= margin/2.0;
@@ -146,7 +156,7 @@ bool QuPlotAxesComponent::setBoundsFromCurves(const QuPlotBase *plot, int axisId
         if(c->maxXValue() > max || min == max)
             max = (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop) ? c->maxXValue() : c->maxYValue();
     }
-    if(min < max) /* values must be well ordered */
+    if(min <= max) /* values must be well ordered */
     {
         d->bounds_from_curves[axisId].first  = min;
         d->bounds_from_curves[axisId].second = max;

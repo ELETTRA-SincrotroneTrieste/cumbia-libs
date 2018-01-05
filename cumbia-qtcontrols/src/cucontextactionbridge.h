@@ -5,7 +5,7 @@
 
 class CuLinkStatsConnectorPrivate;
 class QPoint;
-class CuContextWidgetI;
+class CuContextI;
 class Cumbia;
 class CumbiaPool;
 class CuControlsReaderFactoryI;
@@ -24,7 +24,7 @@ public:
     void connectObject(QObject *w);
 
 private slots:
-    void onLinkStatsRequest(QWidget *sender, CuContextWidgetI *);
+    void onLinkStatsRequest(QWidget *sender, CuContextI *);
 
 private:
     CuLinkStatsConnectorPrivate *d;

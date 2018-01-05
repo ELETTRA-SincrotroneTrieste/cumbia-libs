@@ -1,3 +1,8 @@
+lib/cugettdbpropactivity.cpp
+lib/cugettdbpropactivity.h
+lib/cutdbpropertyreader.cpp
+lib/cutdbpropertyreader.h
+lib/tutorial_activity.dox
 configure.ac
 device/ClassFactory.cpp
 device/CumbiaAbstractDevice.cpp
