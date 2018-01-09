@@ -36,6 +36,7 @@ void CuTAttConfigActivity::setDesiredAttributeProperties(const std::vector<strin
 
 CuTAttConfigActivity::~CuTAttConfigActivity()
 {
+    pdelete("CuTAttConfigActivity %p", this);
     delete d;
 }
 

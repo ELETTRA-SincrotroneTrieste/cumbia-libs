@@ -12,16 +12,14 @@ CuGetTDbPropActivity::CuGetTDbPropActivity(const std::list<CuData> &in_data)
 {
     d = new CuGetTDbPropActivityPrivate;
     d->in_data = in_data;
+    setFlag(CuActivity::CuAUnregisterAfterExec, true);
+    setFlag(CuActivity::CuADeleteOnExit, true);
 }
 
 CuGetTDbPropActivity::~CuGetTDbPropActivity()
 {
+    pdelete("~CuGetTDbPropActivity %p", this);
     delete d;
-}
-
-int CuGetTDbPropActivity::getType() const
-{
-
 }
 
 void CuGetTDbPropActivity::event(CuActivityEvent *e)
@@ -31,17 +29,11 @@ void CuGetTDbPropActivity::event(CuActivityEvent *e)
 
 bool CuGetTDbPropActivity::matches(const CuData &token) const
 {
-
-}
-
-int CuGetTDbPropActivity::repeat() const
-{
-
+    return getToken() == token;
 }
 
 void CuGetTDbPropActivity::init()
 {
-
 }
 
 void CuGetTDbPropActivity::execute()

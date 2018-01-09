@@ -37,24 +37,66 @@ class CuThreadsEventBridgeFactory_I;
  * As previously stated, activities identified by the same token (a CuData object) belong to the same thread.
  * <em>cumbia-tango groups threads by Tango device name</em>.
  *
+ * \section rel_classes Relevant classes
+ *
+ * \subsection readers Readers
+ *
+ * \subsubsection read_att_cmd Tango attributes and commands with output arguments.
+ *
+ * The CuTReader is able to read device attributes as well as commands that return a value. What they read is
+ * determined by the source, expressed as a string with the same syntax known by QTango users.
+ *
+ * \li tango/device/devname/attribute_name reads an attribute
+ * \li tango/device/devname->command_name reads a command
+ * \li tango/device/devname->command_name(10,100) reads the output of a command accepting two numbers in input
+ *
+ * The refresh mode is normally automatically chosen by cumbia-tango. If possible, events are used. If not,
+ * the second choice is polling. CuEventActivity and CuPollingActivity are the two cumbia <em>activities</em>
+ * involved respectively. Before starting either activity, CuTAttConfigActivity is used to get either the attribute
+ * properties or the command information.
+ * In any of the methods involving data exchange, CuData is used to hand results to the CuDataListener implementations
+ * installed on the reader.
+ *
+ * The <em>refresh mode</em> as well as the polling period (if pertinent) can be changed at runtime.
+ *
+ * \subsubsection read_dbprop Tango database properties.
+ *
+ * CuTDbPropertyReader class deals with fetching <em>device, attribute and class</em> properties from the Tango
+ * database. Property retrieval is performed in a separate thread. CuData and CuDataListener have the same role
+ * as the aforementioned reader. A list of properties (also of mixed type - device, attribute or class) can be
+ * requested setting up a set of CuData input descriptive elements. See CuTDbPropertyReader documentation.
+ *
+ * \subsubsection multi_readers Multiple source readers.
+ * A cumbia <em>plugin</em> is available to sequentially or concurrently perform readings.
+ * See qumbia-plugins/cumbia-multiread.
+ *
+ * \subsection writers Writers
+ *
+ * CuTWriter is the class in charge of writing attributes and imparting commands. The syntax used for the target name
+ * is the same as the =reader's one. Writing is performed in a separate thread.
+ *
+ * \section cut_graphical cumbiatango in graphical applications
+ *
+ * The classes listed above are rarely supposed to be directly instantiated and used. In graphical applications, the
+ * cumbia-qtcontrols and the cumbia-tango-controls modules have to be used.
+ * See the cumbia-qtcontrols and the cumbia-tango-controls modules for further information.
+ *
+ * Graphical applications would normally instantiate CumbiaTango as explained in the constructor documentation and then
+ * pass the reference to the objects (readers, writers) that need it to communicate with the cumbia-tango engine.
+ * The other class methods should seldom be necessary.
+ *
+ *
  * \par Tutorials
  * \li \ref md_lib_tutorial_activity
  *
  */
-
 class CumbiaTango : public Cumbia
 {
 
 public:
     enum Type { CumbiaTangoType = Cumbia::CumbiaUserType + 1 };
 
-    CumbiaTango();
-
     CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb);
-
-    void setThreadFactoryImpl( CuThreadFactoryImplI *tfi);
-
-    void setThreadEventsBridgeFactory( CuThreadsEventBridgeFactory_I *teb);
 
     ~CumbiaTango();
 

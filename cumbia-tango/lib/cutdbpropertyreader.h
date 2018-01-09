@@ -8,6 +8,16 @@ class CuTDbPropertyReaderPrivate;
 class CumbiaTango;
 class CuDataListener;
 
+
+/** \brief Read Tango device, attribute and class properties.
+ *
+ * CuTDbPropertyReader fetches properties from the Tango database and
+ * provides a notification through the CuThreadListener interface when
+ * data is available. Data is retrieved in a separate thread.
+ *
+ * @see CuTDbPropertyReader
+ * @see get
+ */
 class CuTDbPropertyReader : public CuThreadListener
 {
 public:

@@ -14,6 +14,8 @@ public:
 
     void get(const char* id, const std::vector<std::string>& props);
 
+    void exit();
+
     // CuDataListener interface
 public:
     void onUpdate(const CuData &data);

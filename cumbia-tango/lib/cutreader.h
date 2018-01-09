@@ -10,10 +10,28 @@ class CuTReaderPrivate;
 class CuActivityManager;
 class CuDataListener;
 
+/** \brief Low level class to read tango attributes and commands with output arguments.
+ *
+ * This class implements the CuTangoActionI interface, which in turn implements CuThreadListener.
+ *
+ * Programmers of graphical interfaces should employ cumbia-tango-controls CuTControlsReader higher level
+ * class to create and communicate with CuTReader.
+ */
 class CuTReader: public CuTangoActionI /* CuTangoActionI implements CuThreadListener */
 {
 public:
 
+    /** \brief The reader refresh mode.
+     *
+     * Each refresh mode reflects the way a tango attribute can be read.
+     * Commands are always <em>polled</em> with a given period (default: 1000ms).
+     * The preferred read mode for attributes is by events (ChangeEventRefresh). If they are not available,
+     * the second choice mode is PolledRefresh.
+     *
+     * Manual mode starts (or switches to) a polling activity that is immediately paused. A specific argument
+     * must be specified to sendData to trigger a manual reading.
+     *
+     */
     enum RefreshMode { PolledRefresh = 0, ChangeEventRefresh, ArchiveEventRefresh, PeriodicEventRefresh, Manual };
 
     CuTReader(const TSource& src, CumbiaTango *ct);

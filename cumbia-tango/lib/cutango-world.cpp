@@ -793,9 +793,6 @@ bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res,
             dprops[in["device"].toString()].push_back(in);
         else if(in.containsKey("class")) // class property
             cprops[in["class"].toString()].push_back(in);
-
-        // store names
-        names.push_back(in["name"].toString());
     }
     Tango::Database *db = getTangoDb(dbhost);
     d->error = false;
@@ -809,23 +806,26 @@ bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res,
         for(std::map<std::string, std::list< CuData> >::const_iterator it = daprops.begin(); it != daprops.end(); ++it)
         {
             Tango::DbData db_data;
-            std::vector<std::string> requested_p;
+            std::vector<std::string> req_a, req_p; // requested attributes, requested properties
             for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit) {
-                db_data.push_back(Tango::DbDatum((*dit)["attribute"].toString().c_str()));
-                if((*dit).containsKey("name"))
-                    requested_p.push_back((*dit)["name"].toString());
-                printf("FINDING %s / %s dev %s\n", (*dit)["name"].toString().c_str(), (*dit)["attribute"].toString().c_str(),
-                        (*dit)["device"].toString().c_str());
+                const std::string &attname = (*dit)["attribute"].toString();
+                if(find(req_a.begin(), req_a.end(), attname) == req_a.end()) {
+                    db_data.push_back(Tango::DbDatum(attname.c_str()));
+                    req_a.push_back(attname);
+                    if((*dit).containsKey("name"))
+                        req_p.push_back((*dit)["name"].toString());
+                }
             }
 
             db->get_device_attribute_property(it->first, db_data);
             for(size_t i = 0; i < db_data.size(); i++) {
                 if(i == 0)
                     attnam = db_data[i].name;
-                else if(!db_data[i].is_empty() && (requested_p.size() == 0 || find(requested_p.begin(), requested_p.end(), db_data[i].name) != requested_p.end()))
+                else if(!db_data[i].is_empty() && (req_p.size() == 0 || find(req_p.begin(), req_p.end(), db_data[i].name) != req_p.end()))
                 {
                     db_data[i] >> vs;
-                    res[it->first + "/" + attnam + ":" + db_data[i].name] = vs;
+                    names.push_back(it->first + "/" + attnam + ":" + db_data[i].name);
+                    res[names.at(names.size() - 1)] = vs;
                 }
             }
         }
@@ -837,12 +837,12 @@ bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res,
             for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit)
                 db_data.push_back(Tango::DbDatum((*dit)["name"].toString().c_str()));
 
-            printf("gettin dev props for dev %s \n", it->first.c_str());
             db->get_device_property(it->first, db_data);
             for(size_t i = 0; i < db_data.size(); i++) {
                 if(!db_data[i].is_empty()) {
                     db_data[i] >> vs;
-                    res[it->first + ":" + db_data[i].name] = vs;
+                    names.push_back(it->first + ":" + db_data[i].name);
+                    res[names.at(names.size() - 1)] = vs;
                 }
             }
         }
@@ -858,10 +858,12 @@ bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res,
             for(size_t i = 0; i < db_data.size(); i++) {
                 if(!db_data[i].is_empty()) {
                     db_data[i] >> vs;
-                    res[it->first + ":" + db_data[i].name] = vs;
+                    names.push_back(it->first + ":" + db_data[i].name);
+                    res[names.at(names.size() -1)] = vs;
                 }
             }
         }
+        res["list"] = names;
     }
     catch(Tango::DevFailed& e)
     {
@@ -877,8 +879,6 @@ bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res,
         d->message.pop_back(); // remove last newline
     }
     res["msg"] = d->message;
-
-    printf("\e[0;33mPROPERTIES\n%s\n\e[0m\n", res.toString().c_str());
 
     return !d->error;
 }
@@ -975,7 +975,6 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const CuVariant &arg,
     }
     else if(arg.getFormat() == CuVariant::Scalar)
     {
-        printf("ENTRO IN SCALAR\n");
         if(in_type == Tango::DEV_BOOLEAN && arg.getType() == CuVariant::Boolean)
             dd << (bool) arg.toBool();
         else if(in_type == Tango::DEV_SHORT  && arg.getType() == CuVariant::Short)
@@ -1053,7 +1052,6 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const CuVariant &arg,
     }
     if(!type_match)
     {
-        //        printf("NOT TYPE MATCH, try with strings toDeviceData!\e[0m\n");
         /* no match between CommandInfo argin type and CuVariant type: try to get CuVariant
          * data as string and convert it according to CommandInfo type
          */
@@ -1068,7 +1066,6 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const std::vector<std::string> &arg
     d->error = false;
     d->message = "";
     long in_type = cmdinfo["in_type"].toLongInt();
-    //    printf("argis size %d in type %s as int %ld\n", argins.size(), cmdArgTypeToDataFormat(Tango::CmdArgType(in_type)).c_str(), in_type);
     Tango::DeviceData dd;
     if(argins.size() == 0)
         return dd;
@@ -1090,7 +1087,6 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const std::vector<std::string> &arg
                 dd << (unsigned short) std::stoul(v);
                 break;
             case Tango::DEV_LONG:
-                printf("ddiing with dev long from %s\n", v.c_str());
                 dd << (Tango::DevLong) std::stol(v);
                 break;
             case Tango::DEV_STATE:
@@ -1215,9 +1211,6 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &name,
     CuVariant::DataType t = arg.getType();
     int tango_type = attinfo["data_type"].toInt();
     Tango::AttrDataFormat tango_format = static_cast<Tango::AttrDataFormat>(attinfo["data_format"].toInt());
-
-    //    printf("\e[0;33mtoDeviceAttribute dealing with data type %d tango tp %d format %d tango fmt %d ARGIN DATA %s\e[0m\n",
-    //           t, tango_type, arg.getFormat(), tango_format, arg.toString().c_str());
     if(tango_format == Tango::SCALAR && arg.getFormat() == CuVariant::Scalar)
     {
         if(t == CuVariant::Double && tango_type == Tango::DEV_DOUBLE)
@@ -1291,7 +1284,6 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &name,
         {
             std::vector<std::string> vs1el;
             vs1el.push_back(arg.toString());
-            //            printf("NOT TYPE MATCH FOR DEVICE ATTRIBUTE, try with string vector (1 elem) conversion!\e[0m\n");
             return toDeviceAttribute(attname, vs1el, attinfo);
         }
     }
@@ -1358,9 +1350,8 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &name,
             if(ok)
                 da = Tango::DeviceAttribute(attname, vs);
         }
-        else
+        else // try conversion to string vector
         {
-            //            printf("NOT TYPE MATCH FOR DEVICE ATTRIBUTE, try with string vector conversion!\e[0m\n");
             /* no match between AttributeInfo data type and CuVariant type: try to get CuVariant
              * data as string and convert it according to AttributeInfo data type
              */
@@ -1397,9 +1388,6 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &aname,
         return da;
     }
 
-    printf("\n\n\e[1;33m---> GUESSING DeviceAttribute from string!!! <---\e[0m\n\n");
-    for(size_t i = 0; i < argins.size(); i++)
-        cuprintf("\t* argin %ld: %s\n", i, argins.at(i).c_str());
     std::string v = argins[0];
     try{
         if(argins.size() == 1 && tango_fmt == Tango::SCALAR)

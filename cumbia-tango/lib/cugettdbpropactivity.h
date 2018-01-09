@@ -1,12 +1,12 @@
 #ifndef GETTDBPROPACTIVITY_H
 #define GETTDBPROPACTIVITY_H
 
-#include <cuactivity.h>
+#include <cuisolatedactivity.h>
 #include <list>
 
 class CuGetTDbPropActivityPrivate;
 
-class CuGetTDbPropActivity : public CuActivity
+class CuGetTDbPropActivity : public CuIsolatedActivity
 {
 public:
     CuGetTDbPropActivity(const std::list<CuData> &in_data);
@@ -15,10 +15,8 @@ public:
 
     // CuActivity interface
 public:
-    int getType() const;
     void event(CuActivityEvent *e);
     bool matches(const CuData &token) const;
-    int repeat() const;
 
 protected:
     void init();

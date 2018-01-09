@@ -194,6 +194,7 @@ am_libcumbia_la_OBJECTS = src/lib/libcumbia_la-cumbia.lo \
 	src/lib/threads/libcumbia_la-cueventloop.lo \
 	src/lib/services/libcumbia_la-cuactivitymanager.lo \
 	src/lib/threads/libcumbia_la-cuevent.lo \
+	src/lib/threads/libcumbia_la-cuthreadseventbridge.lo \
 	src/lib/services/libcumbia_la-culog.lo
 libcumbia_la_OBJECTS = $(am_libcumbia_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
@@ -501,6 +502,7 @@ src/lib/threads/cuthread.cpp \
 src/lib/threads/cueventloop.cpp \
 src/lib/services/cuactivitymanager.cpp \
 src/lib/threads/cuevent.cpp \
+src/lib/threads/cuthreadseventbridge.cpp \
 src/lib/cumbia.h \
 src/lib/cumbiapool.h \
 src/lib/cucontinuousactivity.h \
@@ -732,6 +734,9 @@ src/lib/services/libcumbia_la-cuactivitymanager.lo:  \
 src/lib/threads/libcumbia_la-cuevent.lo:  \
 	src/lib/threads/$(am__dirstamp) \
 	src/lib/threads/$(DEPDIR)/$(am__dirstamp)
+src/lib/threads/libcumbia_la-cuthreadseventbridge.lo:  \
+	src/lib/threads/$(am__dirstamp) \
+	src/lib/threads/$(DEPDIR)/$(am__dirstamp)
 src/lib/services/libcumbia_la-culog.lo:  \
 	src/lib/services/$(am__dirstamp) \
 	src/lib/services/$(DEPDIR)/$(am__dirstamp)
@@ -772,6 +777,7 @@ include src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadevents.Plo
 include src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadfactory.Plo
 include src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadfactoryimpl.Plo
 include src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadlistener.Plo
+include src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadseventbridge.Plo
 include src/lib/threads/$(DEPDIR)/libcumbia_la-cutimer.Plo
 
 .cpp.o:
@@ -944,6 +950,13 @@ src/lib/threads/libcumbia_la-cuevent.lo: src/lib/threads/cuevent.cpp
 #	$(AM_V_CXX)source='src/lib/threads/cuevent.cpp' object='src/lib/threads/libcumbia_la-cuevent.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -c -o src/lib/threads/libcumbia_la-cuevent.lo `test -f 'src/lib/threads/cuevent.cpp' || echo '$(srcdir)/'`src/lib/threads/cuevent.cpp
+
+src/lib/threads/libcumbia_la-cuthreadseventbridge.lo: src/lib/threads/cuthreadseventbridge.cpp
+	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -MT src/lib/threads/libcumbia_la-cuthreadseventbridge.lo -MD -MP -MF src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadseventbridge.Tpo -c -o src/lib/threads/libcumbia_la-cuthreadseventbridge.lo `test -f 'src/lib/threads/cuthreadseventbridge.cpp' || echo '$(srcdir)/'`src/lib/threads/cuthreadseventbridge.cpp
+	$(AM_V_at)$(am__mv) src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadseventbridge.Tpo src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadseventbridge.Plo
+#	$(AM_V_CXX)source='src/lib/threads/cuthreadseventbridge.cpp' object='src/lib/threads/libcumbia_la-cuthreadseventbridge.lo' libtool=yes \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -c -o src/lib/threads/libcumbia_la-cuthreadseventbridge.lo `test -f 'src/lib/threads/cuthreadseventbridge.cpp' || echo '$(srcdir)/'`src/lib/threads/cuthreadseventbridge.cpp
 
 src/lib/services/libcumbia_la-culog.lo: src/lib/services/culog.cpp
 	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -MT src/lib/services/libcumbia_la-culog.lo -MD -MP -MF src/lib/services/$(DEPDIR)/libcumbia_la-culog.Tpo -c -o src/lib/services/libcumbia_la-culog.lo `test -f 'src/lib/services/culog.cpp' || echo '$(srcdir)/'`src/lib/services/culog.cpp

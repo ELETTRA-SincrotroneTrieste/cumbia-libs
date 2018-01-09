@@ -46,6 +46,7 @@ src/lib/threads/cuthread.cpp \
 src/lib/threads/cueventloop.cpp \
 src/lib/services/cuactivitymanager.cpp \
 src/lib/threads/cuevent.cpp \
+src/lib/threads/cuthreadseventbridge.cpp \
 src/lib/cumbia.h \
 src/lib/cumbiapool.h \
 src/lib/cucontinuousactivity.h \

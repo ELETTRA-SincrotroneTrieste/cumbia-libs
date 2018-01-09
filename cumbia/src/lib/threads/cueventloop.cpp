@@ -62,7 +62,6 @@ void CuEventLoopService::exit()
 {
     std::unique_lock<std::mutex> lk(d->m_mutex);
     d->m_eventQueue.push(new CuExitLoopEvent);
-    printf("pushed in queue, notifying now! [exit]\n");
     d->m_evloop_cv.notify_one();
 }
 
@@ -70,9 +69,9 @@ void CuEventLoopService::wait()
 {
     if(d->thread)
     {
-        pbgreen2("JUANZANGGGG_G_G_G");
+        pbgreen2("joining...");
         d->thread->join();
-        pbgreen2("JUANZAZZZZZ\n");
+        pbgreen2("joined\n");
         delete d->thread;
         d->thread = NULL;
     }
@@ -104,19 +103,15 @@ void CuEventLoopService::run()
             }
 
             if(d->eventLoopListener)
-            {
-                printf("\e[1;32mcall onEvent on eventLoopListener\e[0m\n");
                 d->eventLoopListener->onEvent(event);
-            }
-            printf("\e[1;32m AFTER call onEvent on eventLoopListener\e[0m\n");
+
             if(event->getType() == CuEventI::ExitLoop)
                 repeat = false; /* leave loop */
 
-            printf("\e[1;32mCuEventLoopService.run: repeat is %d\e[0m\n", repeat);
             delete event;
         }
     }
-    printf("\e[1;32mCuEventLoopService.run leaving loop!\e[0m\n");
+    pblue("\e[1;32mCuEventLoopService.run leaving loop!\e[0m\n");
 }
 
 std::string CuEventLoopService::getName() const

@@ -14,11 +14,21 @@
 #include <cuthreadfactoryimpl.h>
 #include <cuthreadseventbridgefactory_i.h>
 
-CumbiaTango::CumbiaTango()
-{
-    m_init();
-}
-
+/** \brief CumbiaTango two parameters constructor
+ *
+ * The class constructor accepts a factory providing a thread implementation for cumbia (mainly CuThread)
+ * and a <em>bridge</em> to forward events from the secondary threads to the main.
+ *
+ * @param tfi a CuThreadFactoryImplI implementation, mainly CuThreadFactoryImpl
+ * @param teb a CuThreadsEventBridgeFactory_I implementation, for example CuThreadsEventBridgeFactory
+ *        or cumbia-qtcontrols QThreadsEventBridgeFactory
+ *
+ * \par example
+ * \code
+ * CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+ * \endcode
+ *
+ */
 CumbiaTango::CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb)
 {
     m_threadsEventBridgeFactory = teb;
@@ -30,16 +40,6 @@ void CumbiaTango::m_init()
 {
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType), new CuActionFactoryService());
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType), new CuDeviceFactoryService());
-}
-
-void CumbiaTango::setThreadFactoryImpl( CuThreadFactoryImplI *tfi)
-{
-    m_threadFactoryImplI = tfi;
-}
-
-void CumbiaTango::setThreadEventsBridgeFactory( CuThreadsEventBridgeFactory_I *teb)
-{
-    m_threadsEventBridgeFactory = teb;
 }
 
 CumbiaTango::~CumbiaTango()

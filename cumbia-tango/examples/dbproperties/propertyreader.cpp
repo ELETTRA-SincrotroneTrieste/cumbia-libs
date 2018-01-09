@@ -2,11 +2,13 @@
 #include <cutdbpropertyreader.h>
 #include <cumacros.h>
 #include <cudata.h>
-#include <algorithm>
+#include <algorithm> // for find in vector
 #include <list>
 #include <cuthreadfactoryimpl.h>
 #include <cuthreadseventbridge.h>
 #include <cumbiatango.h>
+#include <cuserviceprovider.h>
+
 
 PropertyReader::PropertyReader()
 {
@@ -40,8 +42,7 @@ void PropertyReader::get(const char *id, const std::vector<std::string> &props)
             }
             else
                 devpd["attribute"] = props[i].substr(props[i].rfind('/') + 1, cpos); // cpos == npos
-            printf("\e[1;34mDO IN INGRESSO name %s att %s\e[0m\n", devpd["name"].toString().c_str(),
-                    devpd["attribute"].toString().c_str());
+
             in_data.push_back(devpd);
         }
         else if(cnt == 0 && cpos < std::string::npos) { // class
@@ -54,11 +55,25 @@ void PropertyReader::get(const char *id, const std::vector<std::string> &props)
     pr->addListener(this);
     pr->get(in_data);
     static_cast<CuEventLoopService*>(m_ct->getServiceProvider()->get(CuServices::EventLoop))->wait();
+    delete m_ct;
+    delete pr;
+}
+
+void PropertyReader::exit()
+{
+
+    static_cast<CuEventLoopService*>(m_ct->getServiceProvider()->get(CuServices::EventLoop))->exit();
 }
 
 void PropertyReader::onUpdate(const CuData &data)
 {
     pr_thread();
-    printf("\e[1;32mPropertyReader.onUpdate! \n\e[0;36m%s\e[0m\n", data.toString().c_str());
-    static_cast<CuEventLoopService*>(m_ct->getServiceProvider()->get(CuServices::EventLoop))->exit();
+    if(data["err"].toBool())
+        printf("\n\e[1;31m** \e[0m error fetching properties: \e[1;31m%s\e[0m\n", data["msg"].toString().c_str());
+    else
+        printf("\n\e[1;32m** %45s     VALUES\e[0m\n", "PROPERTIES");
+    std::vector<std::string> plist = data["list"].toStringVector();
+    for(size_t i = 0; i < plist.size(); i++)
+        printf("\e[1;32m--\e[0m %55s \e[1;33m--> \e[0m%s\n", plist[i].c_str(), data[plist[i]].toString().c_str());
+    exit();
 }

@@ -1,9 +1,5 @@
-#include <iostream>
 #include "propertyreader.h"
 #include <unistd.h>
-#include <cumbiatango.h>
-#include <cuthreadfactoryimpl.h>
-#include <cuthreadseventbridge.h>
 
 int main(int argc, char *argv[])
 {
