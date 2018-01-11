@@ -23,7 +23,7 @@ PointEditor::PointEditor(QWidget *parent, const QString &defaultTxt) : QDialog(p
     cb->insertItems(0, QStringList() << "no wildcard" << "$1" << "$2" << "$3" << "$4" << "$5");
     cb->setCurrentIndex(1);
 
-    label->setText("Set the tango point");
+    label->setText("Set the connection point");
     pb->setText("Apply");
     pbCancel->setText("Cancel");
 
@@ -34,7 +34,7 @@ PointEditor::PointEditor(QWidget *parent, const QString &defaultTxt) : QDialog(p
     le->setText(defaultTxt);
     d_savedPoint = d_point = defaultTxt;
 
-    setWindowTitle("Edit tango source or target");
+    setWindowTitle("Edit source or target");
     lo->addWidget(label, 0, 0, 1, 5);
     lo->addWidget(cbox, 1, 0, 1, 1);
     lo->addWidget(cb, 1, 1, 1, 2);

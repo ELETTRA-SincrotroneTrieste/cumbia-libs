@@ -56,6 +56,8 @@ private:
 
     void m_init();
 
+    void m_initCtx();
+
     QuTablePrivate *d;
 
     // CuDataListener interface

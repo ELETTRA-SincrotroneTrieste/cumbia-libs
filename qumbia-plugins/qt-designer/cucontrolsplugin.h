@@ -56,7 +56,7 @@ public:
     virtual QIcon icon() const { return d_icon; }
     virtual QString codeTemplate() const { return d_codeTemplate; }
     virtual QString domXml() const { return d_domXml; }
-    virtual QString group() const { return "QumbiaTangoControls"; }
+    virtual QString group() const { return "cumbia-qtcontrols"; }
     virtual QString includeFile() const { return d_include; }
     virtual QString name() const { return d_name; }
     virtual QString toolTip() const { return d_toolTip; }
@@ -206,12 +206,12 @@ public:
     QList<QAction *> taskActions() const;
 
 private slots:
-    void editTango();
+    void editConnection();
     void editAttributes();
 
 protected:
     QWidget *d_widget;
-    QAction *d_editTangoAction;
+    QAction *d_editConnectionAction;
     QAction *d_editAction;
     void setupSourceTargetDialog(QWidget *s);
 

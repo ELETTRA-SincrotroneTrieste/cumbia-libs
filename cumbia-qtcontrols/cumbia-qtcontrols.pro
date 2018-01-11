@@ -78,7 +78,8 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/qumbiaizerprivate.cpp \
     src/quwatcher.cpp \
     src/quwriter.cpp \
-    src/quvaluefilter.cpp
+    src/quvaluefilter.cpp \
+    src/widgets-base/quledbase.cpp
 
 HEADERS += cumbiaqtcontrols.h\
         cumbia-qtcontrols_global.h \
@@ -96,7 +97,6 @@ HEADERS += cumbiaqtcontrols.h\
 #    src/cucharts/quplotcommon.h \
 #    src/cucharts/quspectrumplot.h \
 #    src/cucharts/quchartconfdialog.h \
-    src/quled.h \
     src/qutable.h \
     src/qutrendplot.h \
     src/widgets-base/eplotlight/scrollbar.h \
@@ -141,7 +141,9 @@ HEADERS += cumbiaqtcontrols.h\
     src/qumbiaizerprivate.h \
     src/quvaluefilter.h \
     src/qumultireaderplugininterface.h \
-    src/cucontexti.h
+    src/cucontexti.h \
+    src/quled.h \
+    src/widgets-base/quledbase.h
 
 
 RESOURCES += \
@@ -176,7 +178,6 @@ HEADERS += \
     src/widgets-base/eflag.h \
     src/widgets-base/egauge.h \
     src/widgets-base/elabel.h \
-    src/widgets-base/eled.h \
     src/widgets-base/elettracolors.h \
     src/widgets-base/elineedit.h \
     src/widgets-base/enumeric.h \
@@ -205,7 +206,6 @@ SOURCES += \
     src/widgets-base/eflag.cpp \
     src/widgets-base/egauge.cpp \
     src/widgets-base/elabel.cpp \
-    src/widgets-base/eled.cpp \
     src/widgets-base/elettracolors.cpp \
     src/widgets-base/elineedit.cpp \
     src/widgets-base/enumeric.cpp \
@@ -241,12 +241,8 @@ unix {
     other_inst.path = $${CUMBIA_QTCONTROLS_INCLUDES}
 
     target.path = $${CUMBIA_QTCONTROLS_LIBDIR}
-  #  INSTALLS += target doc inc other_inst
-message("")
-message("")
-message("WARNING DOC INSTALL IS DISABLED!!!!!!!!!!!!")
-    INSTALLS += target inc other_inst
-message("")
+    INSTALLS += target doc inc other_inst
+
 # generate pkg config file
     CONFIG += create_pc create_prl no_install_prl
 

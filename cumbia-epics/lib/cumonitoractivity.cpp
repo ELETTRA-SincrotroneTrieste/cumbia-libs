@@ -90,6 +90,7 @@ void CuMonitorActivity::init()
             /* Connect channels */
             memset(pv[0].name, 0, 256);
             strncpy(pv[0].name, tk["src"].toString().c_str(), 255);
+            pv[0].onceConnected = 0;
             pv[0].monitor_activity = this;
 
             /* Create CA connections */

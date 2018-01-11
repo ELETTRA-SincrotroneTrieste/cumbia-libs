@@ -77,17 +77,17 @@ bool DropEventFilter::eventFilter(QObject *obj, QEvent *event)
                 if(obj->metaObject()->indexOfProperty("targets") > -1 &&
                         obj->inherits("TCheckBox"))
                 {
-                    pointEditor.textLabel()->setText("TCheckBox: set tango <b>source</b> and <b>target</b> point");
+                    pointEditor.textLabel()->setText("TCheckBox: set <b>source</b> and <b>target</b> point");
                     pointEditor.setWindowTitle("TCheckBox source and target editor");
                 }
                 else if(obj->metaObject()->indexOfProperty("source") > -1)
                 {
-                    pointEditor.textLabel()->setText("Set tango <b>source</b> point on " + obj->objectName());
+                    pointEditor.textLabel()->setText("Set <b>source</b> point on " + obj->objectName());
                     pointEditor.setWindowTitle(QString("%1 source editor").arg(obj->objectName()));
                 }
                 else if(obj->metaObject()->indexOfProperty("targets") > -1 && !obj->inherits("TCheckBox"))
                 {
-                    pointEditor.textLabel()->setText("Set tango <b>target</b> point on " + obj->objectName());
+                    pointEditor.textLabel()->setText("Set <b>target</b> point on " + obj->objectName());
                     pointEditor.setWindowTitle(QString("%1 target editor").arg(obj->objectName()));
                 }
                 pointEditor.exec();
@@ -239,11 +239,11 @@ QObject *TaskMenuFactory::createExtension(QObject *object, const QString &iid, Q
 /* */
 
 /* TaskMenuExtension */
-TaskMenuExtension::TaskMenuExtension(QWidget *widget, QObject *parent): QObject(parent), d_widget(widget), d_editTangoAction(0), d_editAction(0), editSourceDialog(0)
+TaskMenuExtension::TaskMenuExtension(QWidget *widget, QObject *parent): QObject(parent), d_widget(widget), d_editConnectionAction(0), d_editAction(0), editSourceDialog(0)
 {
-    d_editTangoAction = new QAction(tr("Edit Tango Connection..."), this);
+    d_editConnectionAction = new QAction(tr("Edit Connection..."), this);
     d_editAction = new QAction(tr("Edit Properties..."), this);
-    connect(d_editTangoAction, SIGNAL(triggered()), this, SLOT(editTango()));
+    connect(d_editConnectionAction, SIGNAL(triggered()), this, SLOT(editConnection()));
     connect(d_editAction, SIGNAL(triggered()), this, SLOT(editAttributes()));
 }
 
@@ -251,11 +251,11 @@ QList<QAction *> TaskMenuExtension::taskActions() const
 {
     QList<QAction *> list;
     QString cname(d_widget->metaObject()->className());
-    /* 1. edit Tango action */
+    /* 1. edit connection action */
     if (cname == "QuLabel" || cname == "QuLed" || cname == "QuLineEdit"
         || cname == "QuButton" || cname == "QuTable" || cname == "QuTrendPlot"
             || cname == "QuSpectrumPlot" || cname == "QuApplyNumeric")
-        list.append(d_editTangoAction);
+        list.append(d_editConnectionAction);
     /* 2. edit action */
     if ((cname == "QuLabel") || (cname == "QuLed") || cname == "QuTable")
          list.append(d_editAction);
@@ -264,7 +264,7 @@ QList<QAction *> TaskMenuExtension::taskActions() const
 
 QAction *TaskMenuExtension::preferredEditAction() const
 {
-    return d_editTangoAction;
+    return d_editConnectionAction;
 }
 
 void TaskMenuExtension::setupSourceTargetDialog(QWidget *cb_widget)
@@ -330,7 +330,7 @@ void TaskMenuExtension::setupSourceTargetDialog(QWidget *cb_widget)
     delete w;
 }
 
-void TaskMenuExtension::editTango()
+void TaskMenuExtension::editConnection()
 {
     QString src;
     bool edit_source = true;

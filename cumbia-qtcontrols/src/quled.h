@@ -1,7 +1,7 @@
 #ifndef QULED_H
 #define QULED_H
 
-#include <eled.h>
+#include <quledbase.h>
 #include <cudatalistener.h>
 #include <cucontexti.h>
 
@@ -12,7 +12,7 @@ class CumbiaPool;
 class CuControlsFactoryPool;
 class CuContext;
 
-class QuLed : public ELed, public CuDataListener, public CuContextI
+class QuLed : public QuLedBase, public CuDataListener, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)

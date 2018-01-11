@@ -1,4 +1,4 @@
-#include "eled.h"
+#include "quledbase.h"
 #include "elettracolors.h"
 #include <QPainter>
 #include <QRadialGradient>
@@ -33,18 +33,18 @@ public:
     }
 };
 
-ELed::ELed(QWidget *parent) : QWidget(parent)
+QuLedBase::QuLedBase(QWidget *parent) : QWidget(parent)
 {
     d_ptr = new ELedPrivate();
     d_ptr->ledColor = QColor(Qt::gray);
 }
 
-ELed::~ELed()
+QuLedBase::~QuLedBase()
 {
     delete d_ptr;
 }
 
-void ELed::setColor(const QColor &c, bool up)
+void QuLedBase::setColor(const QColor &c, bool up)
 {
     if(c == d_ptr->ledColor)
         return;
@@ -55,11 +55,11 @@ void ELed::setColor(const QColor &c, bool up)
         update();
 }
 
-QColor ELed::color(){ return d_ptr->ledColor; }
+QColor QuLedBase::color(){ return d_ptr->ledColor; }
 
-int ELed::angle() { return d_ptr->angleDeg; }
+int QuLedBase::angle() { return d_ptr->angleDeg; }
 
-void ELed::paintEvent(QPaintEvent *)
+void QuLedBase::paintEvent(QPaintEvent *)
 {
     QPainter	painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -119,7 +119,7 @@ void ELed::paintEvent(QPaintEvent *)
 
 }
 
-void ELed::setAlphaChannel(int a)
+void QuLedBase::setAlphaChannel(int a)
 {
     if(a < 0)
     {
@@ -136,33 +136,33 @@ void ELed::setAlphaChannel(int a)
     update();
 }
 
-int ELed::alphaChannel() { return d_ptr->alphaChannel; }
+int QuLedBase::alphaChannel() { return d_ptr->alphaChannel; }
 
-bool ELed::gradientEnabled() { return d_ptr->gradientEnabled; }
+bool QuLedBase::gradientEnabled() { return d_ptr->gradientEnabled; }
 
-void ELed::setLinearGradient(bool l)
+void QuLedBase::setLinearGradient(bool l)
 {
     d_ptr->linearGradient = l;
     update();
 }
 
-double ELed::gradientStop() { return d_ptr->gradientStop; }
+double QuLedBase::gradientStop() { return d_ptr->gradientStop; }
 
-void ELed::setGradientEnabled(bool grad)
+void QuLedBase::setGradientEnabled(bool grad)
 {
     d_ptr->gradientEnabled = grad;
     update();
 }
 
-bool ELed::linearGradient() { return d_ptr->linearGradient; }
+bool QuLedBase::linearGradient() { return d_ptr->linearGradient; }
 
-void ELed::setAngle(int deg)
+void QuLedBase::setAngle(int deg)
 {
     d_ptr->angleDeg = deg;
     update();
 }
 
-void ELed::setLedWidth(int w)
+void QuLedBase::setLedWidth(int w)
 {
     //  setMinimumWidth(w + 2);
     //  if(maximumWidth() < minimumWidth())
@@ -174,7 +174,7 @@ void ELed::setLedWidth(int w)
     update();
 }
 
-void ELed::setLedHeight(int h)
+void QuLedBase::setLedHeight(int h)
 {
     //  setMinimumHeight(h + 2);
     //   if(maximumHeight() < minimumHeight())
@@ -186,57 +186,57 @@ void ELed::setLedHeight(int h)
     update();
 }
 
-int ELed::ledWidth() { return d_ptr->width; }
+int QuLedBase::ledWidth() { return d_ptr->width; }
 
-int ELed::ledHeight() { return d_ptr->height; }
+int QuLedBase::ledHeight() { return d_ptr->height; }
 
-bool ELed::rectangular() { return d_ptr->rectangular; }
+bool QuLedBase::rectangular() { return d_ptr->rectangular; }
 
-void ELed::setRectangular(bool re)
+void QuLedBase::setRectangular(bool re)
 {
     d_ptr->rectangular = re;
     update();
 }
 
-void ELed::setScaleContents(bool s)
+void QuLedBase::setScaleContents(bool s)
 {
     d_ptr->scaleContents = s;
     update();
 }
 
-void ELed::setBorderColor(const QColor &c)
+void QuLedBase::setBorderColor(const QColor &c)
 {
     d_ptr->borderColor = c;
     update();
 }
 
-QColor ELed::borderColor() const
+QColor QuLedBase::borderColor() const
 {
     return d_ptr->borderColor;
 }
 
-void ELed::setGradientStop(double val)
+void QuLedBase::setGradientStop(double val)
 {
     d_ptr->gradientStop = val;
     update();
 }
 
-double ELed::gradientStart() { return d_ptr->gradientStart; }
+double QuLedBase::gradientStart() { return d_ptr->gradientStart; }
 
-void ELed::setGradientStart(double val)
+void QuLedBase::setGradientStart(double val)
 {
     d_ptr->gradientStart = val;
     update();
 }
 
-bool ELed::scaleContents() { return d_ptr->scaleContents; }
+bool QuLedBase::scaleContents() { return d_ptr->scaleContents; }
 
-QSize ELed::sizeHint() const
+QSize QuLedBase::sizeHint() const
 {
     return QSize(d_ptr->width, d_ptr->height);
 }
 
-QSize ELed::minimumSizeHint() const
+QSize QuLedBase::minimumSizeHint() const
 {
     return this->sizeHint();
 }

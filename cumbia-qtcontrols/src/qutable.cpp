@@ -24,6 +24,7 @@ QuTable::QuTable(QWidget *parent, Cumbia *cumbia, const CuControlsReaderFactoryI
 {
     m_init();
     d->context = new CuContext(cumbia, r_fac);
+    m_initCtx();
 }
 
 
@@ -32,6 +33,7 @@ QuTable::QuTable(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPoo
 {
     m_init();
     d->context = new CuContext(cumbia_pool, fpool);
+    m_initCtx();
 }
 
 QuTable::~QuTable()
@@ -45,14 +47,6 @@ void QuTable::m_init()
     d = new QuTablePrivate;
     d->auto_configure = true;
     d->read_ok = false;
-    d->desired_att_props.push_back("numRows");
-    d->desired_att_props.push_back("numColumns");
-    d->desired_att_props.push_back("displayMask");
-    d->desired_att_props.push_back("trueStrings");
-    d->desired_att_props.push_back("trueColours");
-    d->desired_att_props.push_back("falseColours");
-    d->desired_att_props.push_back("falseStrings");
-    d->context->setOptions(CuData("fetch_props", d->desired_att_props));
 
     QColor background = d->palette["white"];
     QColor border = d->palette["gray"];
@@ -68,6 +62,18 @@ void QuTable::m_init()
         l->setValue(QString("No Link"));
         l->decorate(background, border);
     }
+}
+
+void QuTable::m_initCtx()
+{
+    d->desired_att_props.push_back("numRows");
+    d->desired_att_props.push_back("numColumns");
+    d->desired_att_props.push_back("displayMask");
+    d->desired_att_props.push_back("trueStrings");
+    d->desired_att_props.push_back("trueColours");
+    d->desired_att_props.push_back("falseColours");
+    d->desired_att_props.push_back("falseStrings");
+    d->context->setOptions(CuData("fetch_props", d->desired_att_props));
 }
 
 QString QuTable::source() const

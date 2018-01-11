@@ -1,5 +1,5 @@
-#ifndef _ELED_H
-#define _ELED_H
+#ifndef _CU_ELED_H
+#define _CU_ELED_H
 
 #include <QWidget>
 
@@ -19,7 +19,7 @@ class ELedPrivate;
  *
  * scaleContents property and gradientStop and gradientStart properties were introduced in QTango <em>4.x</em>.
  */
-class ELed : public QWidget
+class QuLedBase : public QWidget
 {
     Q_OBJECT
 
@@ -35,8 +35,8 @@ public:
     Q_PROPERTY(double gradientStop READ gradientStop WRITE setGradientStop)
     Q_PROPERTY(double gradientStart READ gradientStart WRITE setGradientStart)
 
-    ELed(QWidget*);
-    virtual ~ELed();
+    QuLedBase(QWidget*);
+    virtual ~QuLedBase();
 
     void setColor(const QColor &, bool = true);
     QColor color();

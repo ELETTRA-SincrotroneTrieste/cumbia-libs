@@ -30,8 +30,8 @@
 EditTargetDialog::EditTargetDialog(QWidget *parent) : EStringListEditor(parent)
 {
   ui.tdbBrowserButton->setVisible(false);
-  ui.groupBox->setTitle("Edit Tango Targets");
-  setWindowTitle("Edit tango targets");
+  ui.groupBox->setTitle("Edit targets");
+  setWindowTitle("Edit targets");
 }
 
 

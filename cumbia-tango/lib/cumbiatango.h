@@ -15,7 +15,7 @@ class CuThreadsEventBridgeFactory_I;
  * \a cumbia-tango integrates cumbia with the Tango control system framework, providing specialised Activities to read,
  * write attributes and impart commands.
  *
- * Implementation
+ * \subsubsection Implementation
  * The \a CumbiaTango class is an extension of the \a Cumbia base one. Its main task is managing the so called  \a actions.
  * An \a action represents a task associated to either a Tango device attribute or a command (called source).
  * Read, write, configure are the main sort of jobs an action can accomplish.
@@ -88,6 +88,16 @@ class CuThreadsEventBridgeFactory_I;
  *
  * \par Tutorials
  * \li \ref md_lib_tutorial_activity
+ *
+ * \par See also
+ * \li <a href="../cumbia-qtcontrols/html/index.html">cumbia-qtcontrols module</a>.
+ * \li <a href="../qumbia-tango-controls/html/index.html">qumbia-tango-controls module</a>.
+ * \li <a href="../cumbia-epics/index.html">qumbia-epics module</a>.
+ * \li <a href="../qumbia-epics-controls/html/index.html">qumbia-epics-controls module</a>.
+ *
+ * \li <a href="../qumbia-tango-controls/html/md_src_tutorial_qumbiatango_app.html">Setting up a graphical application with cumbia and tango</a>.
+ *
+ *
  *
  */
 class CumbiaTango : public Cumbia

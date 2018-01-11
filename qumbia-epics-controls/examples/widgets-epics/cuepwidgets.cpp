@@ -135,12 +135,12 @@ void CuEpWidgets::changeRefresh()
     CuData options;
     options["period"] = period;
     options["refresh_mode"] = refmode;
-    QuTrendPlot *tp = findChild<QuTrendPlot *>();
-    if(tp)
-        tp->sendData(options);
-    QuSpectrumPlot *sp = findChild<QuSpectrumPlot *>();
-    if(sp)
-        sp->sendData(options);
+   // QuTrendPlot *tp = findChild<QuTrendPlot *>();
+   // if(tp)
+    //    tp->sendData(options);
+    //QuSpectrumPlot *sp = findChild<QuSpectrumPlot *>();
+    //if(sp)
+     ///   sp->sendData(options);
 }
 
 void CuEpWidgets::sourcesChanged()

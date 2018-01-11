@@ -20,13 +20,13 @@ public:
     CuContext *context;
 };
 
-QuLed::QuLed(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac) : ELed(w)
+QuLed::QuLed(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac) : QuLedBase(w)
 {
     m_init();
     d->context = new CuContext(cumbia, r_fac);
 }
 
-QuLed::QuLed(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) : ELed(w)
+QuLed::QuLed(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) : QuLedBase(w)
 {
     m_init();
     d->context = new CuContext(cumbia_pool, fpool);
@@ -56,7 +56,9 @@ QString QuLed::source() const
 
 void QuLed::setSource(const QString &s)
 {
-    d->context->replace_reader(s.toStdString(), this);
+    CuControlsReaderA * r = d->context->replace_reader(s.toStdString(), this);
+    if(r)
+        r->setSource(s);
 }
 
 void QuLed::unsetSource()
