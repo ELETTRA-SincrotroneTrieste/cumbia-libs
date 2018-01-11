@@ -12,7 +12,7 @@ QT -= gui
 
 QT += xml
 
-CONFIG -= QT_NO_DEBUG_OUTPUT
+# CONFIG -= QT_NO_DEBUG_OUTPUT
 
 CONFIG += c++11 console
 
