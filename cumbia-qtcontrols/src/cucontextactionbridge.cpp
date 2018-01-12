@@ -27,15 +27,18 @@ public:
     CuControlsReaderFactoryI* rfac;
 };
 
-/** \brief Connect the receiver onCustomContextMenuRequested slot to the customContextMenuRequested
- *         signal of the widgets children of parent whose contextMenuPolicy is Qt::CustomContextMenu
- *         and so emit the customContextMenuRequested signal when  the user has requested a context
- *         menu on the widget.
+/** \brief the class constructor accepting a parent widget whose children implementing the linkStatsRequest signal
+ *         are connected to a dialog window to display context and link statistics, a pointer to a Cumbia reference
+ *         and a CuControlsReaderFactoryI const reference for the
+ *         live readings.
  *
  * @param a receiver (typically a widget displaying statistics on the link) implementing the
  *        onCustomContextMenuRequested slot.
- * @param parent a QWidget where children with the contextMenuPolicy set to Qt::CustomContextMenu
- *        are searched for and connected to the aforementioned receiver's slot.
+ * @param parent a QWidget whose children implementing the linkStatsRequest signal are used to provide link and context
+ *        statistics.
+ *
+ * @see CuContext
+ *
  *
  */
 CuContextActionBridge::CuContextActionBridge(QWidget *parent, Cumbia* cumbia, const CuControlsReaderFactoryI &r_fac)
@@ -48,6 +51,20 @@ CuContextActionBridge::CuContextActionBridge(QWidget *parent, Cumbia* cumbia, co
     m_connect();
 }
 
+/** \brief the class constructor accepting a parent widget whose children implementing the linkStatsRequest signal
+ *         are connected to a dialog window to display context and link statistics, a pointer to a CumbiaPool instance
+ *         and a CuControlsReaderFactoryI const reference for the
+ *         live readings.
+ *
+ * @param a receiver (typically a widget displaying statistics on the link) implementing the
+ *        onCustomContextMenuRequested slot.
+ * @param parent a QWidget whose children implementing the linkStatsRequest signal are used to provide link and context
+ *        statistics.
+ *
+ * @see CuContext
+ *
+ *
+ */
 CuContextActionBridge::CuContextActionBridge(QWidget *parent, CumbiaPool *cumbia_pool,
                                              const CuControlsFactoryPool &fpool)
     : QObject(parent)
@@ -65,13 +82,12 @@ CuContextActionBridge::~CuContextActionBridge()
     delete d;
 }
 
-/** \brief Explicitly connect an object implementing the onCustomContextMenuRequested(QPoint)
- *         slot to another object o, implementing the customContextMenuRequested(QPoint) signal.
+/** \brief Register an object implementing the linkStatsRequest(QWidget*, CuContextI *) signal.
  *
- * This method can be used to connect the object o if it is not a child
- * of the parent object that had been passed to the CuLinkStatsConnector constructor.
+ * This method can be used to connect an object o if it was not available as a child of the main
+ * widget when the CuContextActionBridge had been instantiated.
  *
- * @see CuLinkStatsConnector::CuLinkStatsConnector
+ * @param o the object to register.
  */
 void CuContextActionBridge::connectObject(QObject *o)
 {
@@ -84,6 +100,7 @@ void CuContextActionBridge::connectObject(QObject *o)
              qstoc(o->objectName()), o->metaObject()->className());
 }
 
+/// @private // no doxygen
 void CuContextActionBridge::onLinkStatsRequest(QWidget *sender, CuContextI *w)
 {
     if(d->cumbia)
@@ -98,6 +115,7 @@ void CuContextActionBridge::onLinkStatsRequest(QWidget *sender, CuContextI *w)
     }
 }
 
+/// @private // no doxygen
 void CuContextActionBridge::m_connect()
 {
     bool res;

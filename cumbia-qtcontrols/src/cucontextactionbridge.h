@@ -11,6 +11,14 @@ class CumbiaPool;
 class CuControlsReaderFactoryI;
 class CuControlsFactoryPool;
 
+/** \brief All the children of a parent widget that implement the signal \a linkStatsRequest can be bridged
+ *         by this class to a CuInfoDialog dialog window that shows statistics about the context of a cumbia-qtcontrols
+ *         widget.
+ *
+ * @see CuContext
+ * @see CuContextManu
+ *
+ */
 class CuContextActionBridge : public QObject
 {
     Q_OBJECT

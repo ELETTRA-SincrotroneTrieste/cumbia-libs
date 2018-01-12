@@ -12,8 +12,6 @@ QT -= gui
 
 QT += xml
 
-# CONFIG -= QT_NO_DEBUG_OUTPUT
-
 CONFIG += c++11 console
 
 CONFIG += debug
@@ -26,7 +24,7 @@ CONFIG -= app_bundle
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
-DEFINES -= QT_NO_DEBUG_OUTPUT
+DEFINES += QT_NO_DEBUG_OUTPUT
 
 # where config files are searched
 DEFINES += SHAREDIR=\"\\\"$${SHAREDIR}\"\\\"

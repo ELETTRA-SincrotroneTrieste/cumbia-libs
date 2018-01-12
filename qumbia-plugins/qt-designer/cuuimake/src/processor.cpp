@@ -164,7 +164,7 @@ QMap<QString, bool> Processor::findUI_H(const SearchDirInfoSet &dirInfoSet)
             if(!newest_h_cpp_ui_creat.isValid() || fi.created() > newest_h_cpp_ui_creat)
             {
                 newest_h_cpp_ui_creat = fi.created();
-                qDebug() << __FUNCTION__ << "newest file among h cpp ui is " << fi.fileName() << " date time " << newest_h_cpp_ui_creat;
+          //      qDebug() << __FUNCTION__ << "newest file among h cpp ui is " << fi.fileName() << " date time " << newest_h_cpp_ui_creat;
             }
             if(fi.fileName().endsWith(".ui"))
                 ui_files << fi.fileName();
@@ -186,7 +186,7 @@ QMap<QString, bool> Processor::findUI_H(const SearchDirInfoSet &dirInfoSet)
                 if(!oldest_ui_h_creat.isValid() || fi.created() < oldest_ui_h_creat)
                 {
                     oldest_ui_h_creat = fi.created();
-                    qDebug() << __FUNCTION__ << "oldst file ui_*h is " << fi.fileName() << " date time " << oldest_ui_h_creat;
+                //    qDebug() << __FUNCTION__ << "oldst file ui_*h is " << fi.fileName() << " date time " << oldest_ui_h_creat;
                 }
             }
         }
@@ -205,6 +205,29 @@ QMap<QString, bool> Processor::findUI_H(const SearchDirInfoSet &dirInfoSet)
             fmap.insert(ui_h, false); // no need to process
     }
     return fmap;
+}
+
+int Processor::remove_UI_H(const SearchDirInfoSet &dirInfoSet)
+{
+    int remcnt = 0;
+    QList<SearchDirInfo > di_ui_h_list = dirInfoSet.getDirInfoList(SearchDirInfoSet::Ui_H);
+    // find ui_*.h files
+    QDir wd2;
+    foreach (SearchDirInfo di, di_ui_h_list ) {
+        QString d = di.name();
+        if(d != ".")
+            wd2.cd(d);
+        QFileInfoList ui_hfinfol = wd2.entryInfoList(di.filters(), QDir::Files);
+        foreach(QFileInfo fi, ui_hfinfol)
+        {
+            if(fi.fileName().contains(QRegExp("ui_[A-Za-z_0-9]+\\.h")))
+            {
+                bool ok = wd2.remove(fi.fileName());
+                if(ok) remcnt++;
+            }
+         }
+    }
+    return remcnt;
 }
 
 QString Processor::m_getUiHFileName(const QString& ui_h_fname,

@@ -59,6 +59,26 @@ bool XMakeProcess::make(const QString& minus_jN)
     return !m_error;
 }
 
+bool XMakeProcess::clean()
+{
+    QProcess p;
+    QString program = "make";
+    QString clean_arg = "clean";
+    p.start(program, QStringList() << clean_arg);
+
+    bool finished = p.waitForFinished(5000);
+    QProcess::ExitStatus es = p.exitStatus();
+    if(finished && es == QProcess::NormalExit) // do not evaluate exit code for make clean
+        m_error = false;
+    else
+    {
+        m_error = true;
+        if(es == QProcess::CrashExit)
+            m_lastError = "XMakeProcess.clean: process \"" + program + "\" crashed";
+    }
+    return !m_error;
+}
+
 void XMakeProcess::onStdErrReady()
 {
     QProcess *p = qobject_cast<QProcess *>(sender());

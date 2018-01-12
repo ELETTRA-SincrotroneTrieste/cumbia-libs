@@ -152,7 +152,7 @@
         <params factory="cumbiaepics">
             <param add="CumbiaEpics *" definition="CumbiaEpics *" />
             <param add="CuEpReaderFactory" definition="const CuEpReaderFactory&amp; " />
-            <param add="CuEpWriterFactory" definition="const CuEpReaderFactory&amp; " />
+            <param add="CuEpWriterFactory" definition="const CuEpWriterFactory&amp; " />
         </params>
         <params factory="cumbiapool">
             <!-- parameter adding occurs in the given order -->

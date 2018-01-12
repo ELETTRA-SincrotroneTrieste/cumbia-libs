@@ -9,7 +9,7 @@ class CuUiMake
 {
 public:
 
-    enum Step { Uic, Analysis, Expand, Conf, Help, Info, QMake, Make };
+    enum Step { Uic, Analysis, Expand, Conf, Help, Info, QMake, Make, Clean };
 
     CuUiMake();
 

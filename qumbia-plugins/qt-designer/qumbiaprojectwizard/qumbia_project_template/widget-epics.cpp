@@ -2,14 +2,12 @@
 #include "ui_$HFILE$"
 
 #include <cumbiapool.h>
-#include <cumbiatango.h>
-#include <cutcontrolsreader.h>
-#include <cutcontrolswriter.h>
-#include <cutango-world.h>
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
 #include <cuserviceprovider.h>
+#include <cucontextactionbridge.h>
 #include <cumacros.h>
+#include <cumbiaepics.h>
 
 $MAINCLASS$::$MAINCLASS$(CumbiaEpics *cue, QWidget *parent) :
     QWidget(parent),
@@ -20,6 +18,11 @@ $MAINCLASS$::$MAINCLASS$(CumbiaEpics *cue, QWidget *parent) :
     cu_e->getServiceProvider()->registerService(CuServices::Log, m_log);
 
     ui->setupUi(this, cu_e, cu_ep_r_fac, cu_ep_w_fac);
+
+    // after all cumbia widgets have been instantiated
+    // if you add widgets later, you can use the connectObject(QObject *w)
+    // method from CuContextActionBridge.
+    new CuContextActionBridge(this, cu_e, cu_ep_r_fac);
 }
 
 $MAINCLASS$::~$MAINCLASS$()

@@ -66,6 +66,8 @@ void CuUiMake::print(CuUiMake::Step step, bool err, const char *fmt, ...) const
         fprintf(fd, "[\e[1;36mcuuimake\e[0m:%s   qmake\e[0m] ", color);
     else if(step == Make)
         fprintf(fd, "[\e[1;36mcuuimake\e[0m:%s    make\e[0m] ", color);
+    else if(step == Clean)
+        fprintf(fd, "[\e[1;36mcuuimake\e[0m:%s   clean\e[0m] ", color);
 
     vfprintf(fd, fmt, s);
 
@@ -78,6 +80,7 @@ bool CuUiMake::make()
     Defs defs;
     defs.setDebug(m_debug);
     QString fname (SHAREDIR + QString("/cuuimake-cumbia-qtcontrols.xml"));
+
     QString localfname = m_findLocalConfFile();
     bool success = defs.loadConf(fname, localfname);
     if(localfname.isEmpty())
@@ -88,9 +91,24 @@ bool CuUiMake::make()
     else
         print(Analysis, false, "default configuration loaded\n");
 
+    if(success && m_options->getopt("clean").toBool())
+    {
+        print(Clean, false, "cleaning and removing ui_*.h files\n");
+        XMakeProcess xmake;
+        success = xmake.clean();
+        if(!success)
+            print(Clean, true, "failed to execute clean: %s\n", qstoc(xmake.lastError()));
+        else {
+            Processor p;
+            int remcnt = p.remove_UI_H(defs.srcDirsInfo());
+            print(Clean, false, "removed %d ui_.*.h files\n", remcnt);
+        }
+
+    }
+
     if(success && m_options->getopt("qmake").toBool())
     {
-        print(QMake, false, "running qmake");
+        print(QMake, false, "running qmake\n");
         XMakeProcess xmake;
         success = xmake.qmake();
         if(!success)

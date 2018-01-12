@@ -16,6 +16,8 @@ public:
 
     bool error() const { return m_error; }
 
+    bool clean();
+
     QString lastError() const { return m_lastError; }
 
 private slots:

@@ -18,6 +18,8 @@ public:
 
     QMap<QString, bool> findUI_H(const SearchDirInfoSet &dirInfoSet);
 
+    int remove_UI_H(const SearchDirInfoSet &dirInfoSet);
+
     void setDebug(bool d) { m_debug = d; }
 
     bool error() const { return m_error; }

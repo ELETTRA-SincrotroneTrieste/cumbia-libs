@@ -35,6 +35,6 @@ int main(int argc, char *argv[])
 
     ret = a.exec();
     delete w;
-    delete cu_t;
+    delete cu_ep;
     return ret;
 }

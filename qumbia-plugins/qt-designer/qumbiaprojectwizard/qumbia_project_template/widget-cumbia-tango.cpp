@@ -12,6 +12,7 @@
 #include <cuepics-world.h>
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
+#include <cucontextactionbridge.h>
 #include <cumacros.h>
 
 $MAINCLASS$::$MAINCLASS$(CumbiaPool *cumbia_pool, QWidget *parent) :
@@ -37,6 +38,10 @@ $MAINCLASS$::$MAINCLASS$(CumbiaPool *cumbia_pool, QWidget *parent) :
     cu_pool->setSrcPatterns("epics", ew.srcPatterns());
 
     ui->setupUi(this);
+
+
+    // after all cumbia widgets have been instantiated
+    new CuContextActionBridge(this, cumbia_pool, m_ctrl_factory_pool);
 }
 
 $MAINCLASS$::~$MAINCLASS$()

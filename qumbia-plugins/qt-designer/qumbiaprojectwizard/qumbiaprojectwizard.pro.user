@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.4.1, 2017-11-08T11:03:57. -->
+<!-- Written by QtCreator 4.4.1, 2018-01-12T11:13:56. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -59,9 +59,9 @@
  <data>
   <variable>ProjectExplorer.Project.Target.0</variable>
   <valuemap type="QVariantMap">
-   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">qt5</value>
-   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">qt5</value>
-   <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">{d2bfeff4-bafa-4474-a120-759df8ecaf58}</value>
+   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Qt 5.9.2 (qt5)</value>
+   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Qt 5.9.2 (qt5)</value>
+   <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">{20c66a31-36e1-456b-b846-623ffb345614}</value>
    <value type="int" key="ProjectExplorer.Target.ActiveBuildConfiguration">0</value>
    <value type="int" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>
    <value type="int" key="ProjectExplorer.Target.ActiveRunConfiguration">0</value>
@@ -183,8 +183,8 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">qumbiaprojectwizard</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">qumbiaprojectwizard2</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-plugins/qt-designer/qumbiaprojectwizard/qumbiaprojectwizard.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/qumbia-plugins/qt-designer/qumbiaprojectwizard/qumbiaprojectwizard.pro</value>
     <value type="bool" key="QmakeProjectManager.QmakeRunConfiguration.UseLibrarySearchPath">true</value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.CommandLineArguments"></value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.ProFile">qumbiaprojectwizard.pro</value>
