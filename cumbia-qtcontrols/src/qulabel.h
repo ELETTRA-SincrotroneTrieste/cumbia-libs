@@ -32,8 +32,6 @@ public:
 
     CuContext *getContext() const;
 
-    CuLinkStats *getLinkStats() const;
-
 public slots:
     void setSource(const QString& s);
 

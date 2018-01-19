@@ -38,7 +38,7 @@ PROJECT_NUMBER         = 1.x
 # for a project that appears at the top of each page and should give viewer
 # a quick idea about the purpose of the project. Keep the description short.
 
-PROJECT_BRIEF          = Qt widgets on top of the cumbia/tango C++ library
+PROJECT_BRIEF          = "Library on top of cumbia-qtcontrols and cumbia-tango"
 
 # With the PROJECT_LOGO tag one can specify an logo or icon that is
 # included in the documentation. The maximum height of the logo should not

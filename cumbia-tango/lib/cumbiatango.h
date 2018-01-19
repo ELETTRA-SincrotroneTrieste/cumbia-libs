@@ -88,6 +88,10 @@ class CuThreadsEventBridgeFactory_I;
  *
  * \par Tutorials
  * \li \ref md_lib_tutorial_activity
+ * \li \ref md_lib_cudata_for_tango
+ * \li <a href="../qumbia-tango-controls/html/md_src_tutorial_qumbiatango_app.html">Setting up a graphical application with cumbia and tango</a>.
+ * \li <a href="../qumbia-tango-controls/html/md_src_cuuimake.html">Using <em>cuuimake</em></a>.
+ * \li <a href="../qumbia-tango-controls/html/md_src_tutorial_qumbiatango_widget.html">Writing a <em>Qt widget</em> to <em>read from Tango</em></a>.
  *
  * \par See also
  * \li <a href="../cumbia-qtcontrols/html/index.html">cumbia-qtcontrols module</a>.
@@ -95,7 +99,6 @@ class CuThreadsEventBridgeFactory_I;
  * \li <a href="../cumbia-epics/index.html">qumbia-epics module</a>.
  * \li <a href="../qumbia-epics-controls/html/index.html">qumbia-epics-controls module</a>.
  *
- * \li <a href="../qumbia-tango-controls/html/md_src_tutorial_qumbiatango_app.html">Setting up a graphical application with cumbia and tango</a>.
  *
  *
  *
