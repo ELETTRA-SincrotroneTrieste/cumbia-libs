@@ -86,9 +86,12 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
         {
         case Tango::DEV_STATE:
         {
+            CuTangoWorldConfig wc;
             Tango::DevState temp;
             *data >> temp;
-            da["value"] = (long int) temp;
+            da["value"] = wc.stateString(temp);
+            da["state"] = static_cast<long int>(temp);
+            da["state_color"] = wc.stateColorName(temp);
             break;
         }
         case Tango::DEV_BOOLEAN:

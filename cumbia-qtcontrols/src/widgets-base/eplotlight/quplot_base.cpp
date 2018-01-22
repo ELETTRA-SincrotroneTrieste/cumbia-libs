@@ -171,19 +171,21 @@ void QuPlotBase::update(const CuData &)
 void QuPlotBase::configure(const CuData &da)
 {
     CuVariant m, M;
-    m = da["min"];
-    M = da["max"];
-    bool okl, oku;
-    double lb, ub;
-    QString min = QString::fromStdString(m.toString());
-    QString max = QString::fromStdString(M.toString());
-    lb = min.toDouble(&okl);
-    ub = max.toDouble(&oku);
+    m = da["min"];  // min value
+    M = da["max"];  // max value
+    bool okl, oku;  // toDouble ok for lower and upper bound
+    double lb, ub;  // double for lower and upper bound
+    QString min = QString::fromStdString(m.toString()); // min is of type string
+    QString max = QString::fromStdString(M.toString()); // max is of type string
+    lb = min.toDouble(&okl);  // string to double, see if ok
+    ub = max.toDouble(&oku);  // string to double, see if ok
 
     if(okl && oku)
     {
+        // get current default lower and upper bounds
         double current_def_lb = defaultLowerBound(QwtPlot::yLeft);
         double current_def_ub = defaultUpperBound(QwtPlot::yLeft);
+        // if the minimum saved into lb is smaller than the current lower bound
         if(current_def_lb > lb)
             current_def_lb = lb;
         if(current_def_ub < ub)
