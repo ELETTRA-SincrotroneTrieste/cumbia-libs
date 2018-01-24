@@ -159,6 +159,7 @@ doc.commands = doxygen \
     Doxyfile;
 
 packagesExist(qumbia-epics-controls$${QTVER_SUFFIX}) {
+message("Linikgin")
 unix:INCLUDEPATH += \
     $${QUMBIA_EPICS_CONTROLS_INCLUDES}
 
@@ -167,6 +168,7 @@ unix:LIBS +=  \
     -l$${QUMBIA_EPICS_CONTROLS_LIB} \
     -lca
 }
+
 # need to adjust qwt path
 !packagesExist($${QWT_PKGCONFIG}){
     unix:INCLUDEPATH += $${QWT_INCLUDES} $${QWT_INCLUDES_USR}
