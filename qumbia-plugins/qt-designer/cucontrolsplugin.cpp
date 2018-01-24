@@ -20,6 +20,7 @@
     #include <cuepactionfactories.h>
     #include <cuepcontrolsreader.h>
     #include <cuepcontrolswriter.h>
+    #include <cuepics-world.h>
 #endif
 
 #include <cumacros.h>
@@ -29,7 +30,6 @@
 #include <cutcontrolswriter.h>
 #include <cutangoactionfactories.h>
 #include <cutango-world.h>
-#include <cuepics-world.h>
 #include <culog.h>
 #include <qulogimpl.h>
 #include <cuservices.h>
