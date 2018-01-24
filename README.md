@@ -169,7 +169,7 @@ Then build the library and install the documentation:
 
 > cd ../qumbia-plugins/cumbia-dbus
 
-Adjust cumbia-dbus.pro *include()* directive if needed
+Adjust cumbia-dbus.pro *include()* directive if necessary
 
 > qmake
 
@@ -177,7 +177,21 @@ Adjust cumbia-dbus.pro *include()* directive if needed
 
 > make install
 
-#### 7b.
+#### 7b. cumbia-multiread - Multiple reader for cumbia
+
+cd ../cumbia-multiread
+
+Adjust cumbia-multiread.pro if necessary
+
+> qmake
+
+> make
+
+> make install
+
+#### 7c. Qt designer plugin
+
+> cd ../qt-designer/
 
 
 ### 8. Build some basic applications
