@@ -34,11 +34,14 @@ shows the list of the required packages to build all the modules in cumbia-libs:
 ### 1. Install cumbia base library
 
 > cd cumbia
+
 > ./configure --prefix=/usr/local --includedir=/usr/local/include/cumbia
+
 > make && make install
 
 #### 1b. Install the documentation
 > make doc
+
 This generates the documentation under the doc/ subdirectory. To install it under
 /usr/local/share/doc/cumbia execute:
 
@@ -47,8 +50,14 @@ This generates the documentation under the doc/ subdirectory. To install it unde
 ### 2. Install the cumbia-tango module if you want to connect to the Tango control system
 
 > cd ../cumbia-tango
+
 > ./configure --prefix=/usr/local --includedir=/usr/local/include/cumbia-tango
+
 > make && make install
+
+*Note* if you installed cumbia outside a system wide directory, you may have to
+update the PKG_CONFIG_PATH environment so that it contains cumbia's lib/pkgconfig
+directory containing the *cumbia.pc* file.
 
 #### 2b. Install the documentation
 > make doc
