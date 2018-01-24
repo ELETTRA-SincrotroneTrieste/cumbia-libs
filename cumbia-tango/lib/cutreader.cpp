@@ -59,7 +59,9 @@ void CuTReader::onProgress(int step, int total, const CuData &data)
 }
 
 /*
- * this is invoked in main thread
+ * \brief delivers to the main thread the result of a task executed in background.
+ *
+ * See  \ref md_lib_cudata_for_tango
  */
 void CuTReader::onResult(const CuData &data)
 {

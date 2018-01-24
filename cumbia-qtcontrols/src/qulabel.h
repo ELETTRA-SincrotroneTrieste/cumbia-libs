@@ -14,6 +14,19 @@ class CuControlsFactoryPool;
 class CuContext;
 class CuLinkStats;
 
+/** \brief A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors.
+ *
+ * \li Colors and strings can be associated to boolean values.
+ * \li Scalar numbers and strings can be displayed by QuLabel.
+ * \li Vectors are usually displayed only partially, according to the number of maximum characters allowed by
+ *     setMaximumLength
+ *
+ * Connection is initiated with setSource. When new data arrives, it is displayed and the newData convenience
+ * signal is emitted.
+ *
+ * getContext returns a pointer to the CuContext used as a delegate for the connection.
+ *
+ */
 class QuLabel : public ESimpleLabel, public CuDataListener, public CuContextI
 {
     Q_OBJECT

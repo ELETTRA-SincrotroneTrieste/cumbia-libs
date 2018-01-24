@@ -74,6 +74,13 @@ int QuLabel::maximumLength() const
     return d->max_len;
 }
 
+/** \brief returns the pointer to the CuContext
+ *
+ * CuContext sets up the connection and is used as a mediator to send and get data
+ * to and from the reader.
+ *
+ * @see CuContext
+ */
 CuContext *QuLabel::getContext() const
 {
     return d->context;

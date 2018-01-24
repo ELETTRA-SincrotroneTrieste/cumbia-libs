@@ -248,3 +248,5 @@ property2           |CuVariant                      |The property value correspo
 propertyN           |CuVariant                      |The N-th property value corresponding to the "propertyN" property  |std::string nthpropval = data["propertyN"].toString(); |always use toString, properties are fetched as strings
 
 and is delivered as argument of the *onUpdate* method.
+
+
