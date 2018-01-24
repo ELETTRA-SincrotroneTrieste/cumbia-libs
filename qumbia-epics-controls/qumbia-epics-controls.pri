@@ -71,7 +71,7 @@ PKGCONFIG += cumbia cumbia-qtcontrols$${QTVER_SUFFIX}
 
 packagesExist(epics-base-linux-x86_64) {
     PKGCONFIG += epics-base-linux-x86_64
-    DEFINES += EPICS
+    DEFINES += EPICS=1
 }
 else {
     message("package epics-base-linux-x86_64 not found")
@@ -79,7 +79,7 @@ else {
 
 packagesExist(cumbia-epics) {
     PKGCONFIG += cumbia-epics
-    DEFINES += CUMBIA_EPICS
+    DEFINES += CUMBIA_EPICS=1
 }
 else {
     message("package cumbia-epics not found")
@@ -87,7 +87,7 @@ else {
 
 packagesExist(qumbia-epics-controls$${QTVER_SUFFIX}) {
     PKGCONFIG += qumbia-epics-controls$${QTVER_SUFFIX}
-    DEFINES += QUMBIA_EPICS_CONTROLS
+    DEFINES += QUMBIA_EPICS_CONTROLS=1
 }
 else {
     message("package cumbia-epics-controls not found")

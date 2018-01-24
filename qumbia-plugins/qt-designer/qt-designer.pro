@@ -1,6 +1,9 @@
 include(../../qumbia-tango-controls/qumbia-tango-controls.pri)
 include(../../qumbia-epics-controls/qumbia-epics-controls.pri)
 
+
+INSTALL_ROOT = /usr/local
+
 DESIGNER_PLUGIN_DIR=$${INSTALL_ROOT}/lib/plugins/designer
 
 greaterThan(QT_MAJOR_VERSION, 4) {
@@ -52,7 +55,7 @@ CONFIG	+= qt thread warn_on
 # Debug or release?
 CONFIG += debug
 
-unix:LIBS += -L.. -l$${QUMBIA_TANGO_CONTROLS_LIB} -l$${QUMBIA_EPICS_CONTROLS_LIB} -lcumbia-epics -lca
+unix:LIBS += -L.. 
 
 # the same goes for INCLUDEPATH
 INCLUDEPATH -= $${INC_DIR}

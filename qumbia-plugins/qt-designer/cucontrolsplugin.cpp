@@ -16,11 +16,11 @@
 #include <cumbiatango.h>
 
 #ifdef CUMBIA_EPICS
+    #include<cuepics-world.h>
     #include <cumbiaepics.h>
     #include <cuepactionfactories.h>
     #include <cuepcontrolsreader.h>
     #include <cuepcontrolswriter.h>
-    #include <cuepics-world.h>
 #endif
 
 #include <cumacros.h>
