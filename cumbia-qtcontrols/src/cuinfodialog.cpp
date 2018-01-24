@@ -20,7 +20,7 @@
 #include <QPaintEvent>
 #include <QPainter>
 #include <QMap>
-#include <eled.h>
+#include <quledbase.h>
 #include <cumacros.h>
 #include <qulabel.h>
 #include <quspectrumplot.h>

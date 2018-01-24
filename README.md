@@ -57,7 +57,9 @@ This generates the documentation under the doc/ subdirectory. To install it unde
 
 *Note* if you installed cumbia outside a system wide directory, you may have to
 update the PKG_CONFIG_PATH environment so that it contains cumbia's lib/pkgconfig
-directory containing the *cumbia.pc* file.
+directory containing the *cumbia.pc* file. For example:
+
+> export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/home/giacomo/devel/usr/local/lib/pkgconfig
 
 #### 2b. Install the documentation
 > make doc
