@@ -168,6 +168,9 @@ unix:LIBS +=  \
     -l$${QUMBIA_EPICS_CONTROLS_LIB} \
     -lca
 }
+else {
+message("not linking")
+}
 
 # need to adjust qwt path
 !packagesExist($${QWT_PKGCONFIG}){
