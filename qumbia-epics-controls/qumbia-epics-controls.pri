@@ -67,7 +67,7 @@ QWT_HOME_USR = /usr
 QWT_INCLUDES_USR = $${QWT_HOME_USR}/include/qwt
 
 CONFIG+=link_pkgconfig
-PKGCONFIG += cumbia cumbia-qtcontrols$${QTVER_SUFFIX} qumbia-epics-controls$${QTVER_SUFFIX}
+PKGCONFIG += cumbia cumbia-qtcontrols$${QTVER_SUFFIX}
 
 packagesExist(epics-base-linux-x86_64) {
     PKGCONFIG += epics-base-linux-x86_64
@@ -83,6 +83,14 @@ packagesExist(cumbia-epics) {
 }
 else {
     message("package cumbia-epics not found")
+}
+
+packagesExist(qumbia-epics-controls$${QTVER_SUFFIX}) {
+    PKGCONFIG += qumbia-epics-controls$${QTVER_SUFFIX}
+    DEFINES += CUMBIA_EPICS_CONTROLS
+}
+else {
+    message("package cumbia-epics-controls not found")
 }
 
 
