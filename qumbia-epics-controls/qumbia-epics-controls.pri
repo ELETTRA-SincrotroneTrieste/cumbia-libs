@@ -158,7 +158,7 @@ SHAREDIR = $${INSTALL_ROOT}/share
 doc.commands = doxygen \
     Doxyfile;
 
-contains(DEFINES, QUMBIA_EPICS_CONTROLS) {
+packagesExist(qumbia-epics-controls$${QTVER_SUFFIX}) {
 unix:INCLUDEPATH += \
     $${QUMBIA_EPICS_CONTROLS_INCLUDES}
 
