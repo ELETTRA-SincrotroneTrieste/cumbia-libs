@@ -56,7 +56,7 @@
       <property name="spacing">
        <number>6</number>
       </property>
-      <item row="1" column="3">
+      <item row="1" column="4">
        <widget class="QPushButton" name="pushColorTrue">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -75,7 +75,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="3">
+      <item row="2" column="4">
        <spacer>
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -88,7 +88,7 @@
         </property>
        </spacer>
       </item>
-      <item row="0" column="3">
+      <item row="0" column="4">
        <spacer>
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -101,7 +101,7 @@
         </property>
        </spacer>
       </item>
-      <item row="5" column="3">
+      <item row="5" column="4">
        <spacer>
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -114,7 +114,7 @@
         </property>
        </spacer>
       </item>
-      <item row="3" column="3">
+      <item row="3" column="4">
        <spacer>
         <property name="orientation">
          <enum>Qt::Vertical</enum>
@@ -127,7 +127,7 @@
         </property>
        </spacer>
       </item>
-      <item row="4" column="3">
+      <item row="4" column="4">
        <widget class="QPushButton" name="pushColorFalse">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -166,11 +166,11 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="ELed" name="eLed"/>
+      <item row="1" column="1" colspan="2">
+       <widget class="QuLedBase" name="ledTrue" native="true"/>
       </item>
-      <item row="4" column="1">
-       <widget class="ELed" name="eLed_2"/>
+      <item row="4" column="1" colspan="2">
+       <widget class="QuLedBase" name="ledFalse" native="true"/>
       </item>
      </layout>
     </widget>
@@ -226,9 +226,10 @@
  <layoutdefault spacing="3" margin="3"/>
  <customwidgets>
   <customwidget>
-   <class>ELed</class>
+   <class>QuLedBase</class>
    <extends>QWidget</extends>
-   <header>eled.h</header>
+   <header>quledbase.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
