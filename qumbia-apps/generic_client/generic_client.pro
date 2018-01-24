@@ -43,4 +43,3 @@ HEADERS  += \
 
 FORMS    += generic_client.ui
 
-LIBS += -lca

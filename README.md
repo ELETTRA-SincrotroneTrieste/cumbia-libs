@@ -193,6 +193,14 @@ Adjust cumbia-multiread.pro if necessary
 
 > cd ../qt-designer/
 
+Adjust qt-designer.pro if necessary
+
+> qmake
+
+> make
+
+> make install
+
 
 ### 8. Build some basic applications
 

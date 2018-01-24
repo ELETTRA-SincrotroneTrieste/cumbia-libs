@@ -13,16 +13,15 @@
 #include "qubutton.h"
 #include "quapplynumeric.h"
 
-#include <cumbiatango.h>
-
 #ifdef CUMBIA_EPICS
-    #include<cuepics-world.h>
+    #include <cuepics-world.h>
     #include <cumbiaepics.h>
     #include <cuepactionfactories.h>
     #include <cuepcontrolsreader.h>
     #include <cuepcontrolswriter.h>
 #endif
 
+#include <cumbiatango.h>
 #include <cumacros.h>
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>

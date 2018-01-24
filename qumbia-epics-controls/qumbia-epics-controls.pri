@@ -71,7 +71,7 @@ PKGCONFIG += cumbia cumbia-qtcontrols$${QTVER_SUFFIX}
 
 packagesExist(epics-base-linux-x86_64) {
     PKGCONFIG += epics-base-linux-x86_64
-    DEFINES += EPICS=1
+    DEFINES += _EPICS=1
 }
 else {
     message("package epics-base-linux-x86_64 not found")
@@ -79,7 +79,7 @@ else {
 
 packagesExist(cumbia-epics) {
     PKGCONFIG += cumbia-epics
-    DEFINES += CUMBIA_EPICS=1
+    DEFINES += _CUMBIA_EPICS=1
 }
 else {
     message("package cumbia-epics not found")
@@ -87,7 +87,7 @@ else {
 
 packagesExist(qumbia-epics-controls$${QTVER_SUFFIX}) {
     PKGCONFIG += qumbia-epics-controls$${QTVER_SUFFIX}
-    DEFINES += QUMBIA_EPICS_CONTROLS=1
+    DEFINES += _QUMBIA_EPICS_CONTROLS=1
 }
 else {
     message("package cumbia-epics-controls not found")
@@ -159,7 +159,6 @@ doc.commands = doxygen \
     Doxyfile;
 
 packagesExist(qumbia-epics-controls$${QTVER_SUFFIX}) {
-message("Linikgin")
 unix:INCLUDEPATH += \
     $${QUMBIA_EPICS_CONTROLS_INCLUDES}
 
@@ -169,7 +168,6 @@ unix:LIBS +=  \
     -lca
 }
 else {
-message("not linking")
 }
 
 # need to adjust qwt path
