@@ -87,7 +87,7 @@ else {
 
 packagesExist(qumbia-epics-controls$${QTVER_SUFFIX}) {
     PKGCONFIG += qumbia-epics-controls$${QTVER_SUFFIX}
-    DEFINES += CUMBIA_EPICS_CONTROLS
+    DEFINES += QUMBIA_EPICS_CONTROLS
 }
 else {
     message("package cumbia-epics-controls not found")
@@ -158,6 +158,7 @@ SHAREDIR = $${INSTALL_ROOT}/share
 doc.commands = doxygen \
     Doxyfile;
 
+contains(DEFINES, QUMBIA_EPICS_CONTROLS) {
 unix:INCLUDEPATH += \
     $${QUMBIA_EPICS_CONTROLS_INCLUDES}
 
@@ -165,7 +166,7 @@ unix:LIBS +=  \
     -L$${QUMBIA_EPICS_CONTROLS_LIBDIR} \
     -l$${QUMBIA_EPICS_CONTROLS_LIB} \
     -lca
-
+}
 # need to adjust qwt path
 !packagesExist($${QWT_PKGCONFIG}){
     unix:INCLUDEPATH += $${QWT_INCLUDES} $${QWT_INCLUDES_USR}
