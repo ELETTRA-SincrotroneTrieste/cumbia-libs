@@ -163,7 +163,24 @@ Then build the library and install the documentation:
 > qmake
 > make && make install
 
-### 7. Build some basic applications
+### 7. Plugins
+
+#### 7a. cumbia-dbus - DBus plugin for cumbia
+
+> cd ../qumbia-plugins/cumbia-dbus
+
+Adjust cumbia-dbus.pro *include()* directive if needed
+
+> qmake
+
+> make
+
+> make install
+
+#### 7b.
+
+
+### 8. Build some basic applications
 
 > cd ../qumbia-apps
 
