@@ -14,16 +14,20 @@
 #include "quapplynumeric.h"
 
 #include <cumbiatango.h>
-#include <cumbiaepics.h>
+
+#ifdef CUMBIA_EPICS
+    #include <cumbiaepics.h>
+    #include <cuepactionfactories.h>
+    #include <cuepcontrolsreader.h>
+    #include <cuepcontrolswriter.h>
+#endif
+
 #include <cumacros.h>
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
 #include <cutcontrolsreader.h>
 #include <cutcontrolswriter.h>
 #include <cutangoactionfactories.h>
-#include <cuepactionfactories.h>
-#include <cuepcontrolsreader.h>
-#include <cuepcontrolswriter.h>
 #include <cutango-world.h>
 #include <cuepics-world.h>
 #include <culog.h>
@@ -151,31 +155,35 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
     printf("\e[1;32mo\e[0m CuCustomWidgetCollectionInterface %p\n", this);
     cumbia_pool = new CumbiaPool();
     printf("\e[1;32m+-o\e[0m cumbia_pool %p created\n", cumbia_pool);
+
+#ifdef CUMBIA_EPICS
     CumbiaEpics* cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
     printf("\e[1;32m+-o\e[0m cumbia_epics %p created\n", cuep);
+    cumbia_pool->registerCumbiaImpl("epics", cuep);
+    m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
+    m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
+    CuEpicsWorld ew;
+    m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
+    cumbia_pool->setSrcPatterns("epics", ew.srcPatterns());
+    CuServiceProvider *cuepsp = cuep->getServiceProvider();
+    cuepsp->registerService(CuServices::Log, new CuLog(new QuLogImpl()));
+#endif
+
+    CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
     printf("\e[1;32m+-o\e[0m cumbia_tango %p created\n", cuta);
 
     cumbia_pool->registerCumbiaImpl("tango", cuta);
-    cumbia_pool->registerCumbiaImpl("epics", cuep);
     m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
     m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
-    m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
-    m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
     printf("\e[1;32m+-o\e[0m registered \"tango\" and \"epics\" implementations in the cumbia_pool %p\n", cumbia_pool);
 
 
     CuTangoWorld tw;
     m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
     cumbia_pool->setSrcPatterns("tango", tw.srcPatterns());
-    CuEpicsWorld ew;
-    m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
-    cumbia_pool->setSrcPatterns("epics", ew.srcPatterns());
 
     CuServiceProvider* cutangosp = cuta->getServiceProvider();
     cutangosp->registerService(CuServices::Log, new CuLog(new QuLogImpl()));
-    CuServiceProvider *cuepsp = cuep->getServiceProvider();
-    cuepsp->registerService(CuServices::Log, new CuLog(new QuLogImpl()));
 
     d_plugins.append(new QuLabelInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuLedInterface(this, cumbia_pool, m_ctrl_factory_pool));
@@ -197,6 +205,8 @@ CuCustomWidgetCollectionInterface::~CuCustomWidgetCollectionInterface()
         cumbia_pool->unregisterCumbiaImpl("tango");
         delete c;
     }
+
+#ifdef CUMBIA_EPICS
     c = cumbia_pool->get("epics");
     if(c)
     {
@@ -204,6 +214,7 @@ CuCustomWidgetCollectionInterface::~CuCustomWidgetCollectionInterface()
         cumbia_pool->unregisterCumbiaImpl("epics");
         delete c;
     }
+#endif
 
     if(cumbia_pool)
     {
