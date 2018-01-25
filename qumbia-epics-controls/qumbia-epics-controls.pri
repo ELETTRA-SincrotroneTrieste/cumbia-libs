@@ -71,7 +71,6 @@ PKGCONFIG += cumbia cumbia-qtcontrols$${QTVER_SUFFIX}
 
 packagesExist(epics-base-linux-x86_64) {
     PKGCONFIG += epics-base-linux-x86_64
-    DEFINES += _EPICS=1
 }
 else {
     message("package epics-base-linux-x86_64 not found")
@@ -79,7 +78,6 @@ else {
 
 packagesExist(cumbia-epics) {
     PKGCONFIG += cumbia-epics
-    DEFINES += _CUMBIA_EPICS=1
 }
 else {
     message("package cumbia-epics not found")
@@ -87,7 +85,6 @@ else {
 
 packagesExist(qumbia-epics-controls$${QTVER_SUFFIX}) {
     PKGCONFIG += qumbia-epics-controls$${QTVER_SUFFIX}
-    DEFINES += _QUMBIA_EPICS_CONTROLS=1
 }
 else {
     message("package cumbia-epics-controls not found")
@@ -110,19 +107,12 @@ else:packagesExist(Qt5Qwt6){
     warning("Qwt: QWT_CONFIG     += QwtPkgConfig in qwtconfig.pri qwt project configuration file")
 }
 
-DEFINES += CUMBIA_PRINTINFO
 
 VERSION_HEX = 0x000001
 VERSION = 0.0.1
 VER_MAJ = 0
 VER_MIN = 0
 VER_FIX = 1
-
-DEFINES += QUMBIA_EPICS_CONTROLS_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
-    QUMBIA_EPICS_CONTROLS_VERSION=$${VERSION_HEX} \
-    VER_MAJ=$${VER_MAJ} \
-    VER_MIN=$${VER_MIN} \
-    VER_FIX=$${VER_FIX}
 
 QMAKE_CXXFLAGS += -std=c++11 -Wall
 
@@ -151,6 +141,19 @@ QMAKE_CLEAN = moc \
     Makefile \
     *.tag
 
+
+packagesExist(qumbia-epics-controls$${QTVER_SUFFIX}) {
+
+DEFINES += CUMBIA_PRINTINFO
+
+DEFINES += QUMBIA_EPICS_CONTROLS
+
+DEFINES += QUMBIA_EPICS_CONTROLS_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
+    QUMBIA_EPICS_CONTROLS_VERSION=$${VERSION_HEX} \
+    VER_MAJ=$${VER_MAJ} \
+    VER_MIN=$${VER_MIN} \
+    VER_FIX=$${VER_FIX}
+
 QMAKE_EXTRA_TARGETS += docs
 
 SHAREDIR = $${INSTALL_ROOT}/share
@@ -158,7 +161,6 @@ SHAREDIR = $${INSTALL_ROOT}/share
 doc.commands = doxygen \
     Doxyfile;
 
-packagesExist(qumbia-epics-controls$${QTVER_SUFFIX}) {
 unix:INCLUDEPATH += \
     $${QUMBIA_EPICS_CONTROLS_INCLUDES}
 
@@ -166,12 +168,15 @@ unix:LIBS +=  \
     -L$${QUMBIA_EPICS_CONTROLS_LIBDIR} \
     -l$${QUMBIA_EPICS_CONTROLS_LIB} \
     -lca
-}
-else {
-}
+
 
 # need to adjust qwt path
 !packagesExist($${QWT_PKGCONFIG}){
     unix:INCLUDEPATH += $${QWT_INCLUDES} $${QWT_INCLUDES_USR}
     unix:LIBS += -L$${QWT_HOME_USR}/lib -l$${QWT_LIB}$${QTVER_SUFFIX}
 }
+
+}
+else {
+}
+

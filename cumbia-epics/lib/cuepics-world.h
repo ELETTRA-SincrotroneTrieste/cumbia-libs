@@ -50,7 +50,7 @@
 
 
 #define DEFAULT_CA_PRIORITY 0  /* Default CA priority */
-#define DEFAULT_TIMEOUT 1.0     /* Default CA timeout */
+#define DEFAULT_CA_TIMEOUT 1.0     /* Default CA timeout */
 
 class CuMonitorActivity;
 

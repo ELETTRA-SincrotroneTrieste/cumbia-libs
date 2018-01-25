@@ -1,10 +1,7 @@
 #include "generic_client.h"
 #include "ui_generic_client.h"
 #include <cumbiapool.h>
-#include <cumbiaepics.h>
 #include <cumbiatango.h>
-#include <cuepcontrolsreader.h>
-#include <cuepcontrolswriter.h>
 #include <cutcontrolsreader.h>
 #include <cutcontrolswriter.h>
 #include <cumacros.h>
@@ -23,12 +20,18 @@
 #include <QSpinBox>
 #include <QComboBox>
 #include <cutango-world.h>
-#include <cuepics-world.h>
-#include <cuepreadoptions.h>
 #include <queplotupdatestrategy.h>
 #include <cucontext.h>
 #include <cucontextactionbridge.h>
 #include <QTimer>
+
+#ifdef QUMBIA_EPICS_CONTROLS
+    #include <cumbiaepics.h>
+    #include <cuepcontrolsreader.h>
+    #include <cuepcontrolswriter.h>
+    #include <cuepics-world.h>
+    #include <cuepreadoptions.h>
+#endif
 
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
@@ -43,25 +46,28 @@ GenericClient::GenericClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     cu_pool = cumbia_pool;
     m_switchCnt = 0;
     // setup Cumbia pool and register cumbia implementations for tango and epics
+#ifdef QUMBIA_EPICS_CONTROLS
     CumbiaEpics* cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    cu_pool->registerCumbiaImpl("tango", cuta);
     cu_pool->registerCumbiaImpl("epics", cuep);
-    m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
-    m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
     m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
     m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
+    CuEpicsWorld ew;
+    m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
+    cu_pool->setSrcPatterns("epics", ew.srcPatterns());
+    cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+#endif
+
+    CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    cu_pool->registerCumbiaImpl("tango", cuta);
+    m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
+    m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
 
     CuTangoWorld tw;
     m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
     cu_pool->setSrcPatterns("tango", tw.srcPatterns());
-    CuEpicsWorld ew;
-    m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
-    cu_pool->setSrcPatterns("epics", ew.srcPatterns());
 
    // m_log = new CuLog(&m_log_impl);
     cuta->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
-    cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
 
     ui->setupUi(this);
     connect(ui->pbSetSources, SIGNAL(clicked()), this, SLOT(sourcesChanged()));

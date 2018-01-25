@@ -13,7 +13,7 @@
 #include "qubutton.h"
 #include "quapplynumeric.h"
 
-#ifdef CUMBIA_EPICS
+#ifdef QUMBIA_EPICS_CONTROLS
     #include <cuepics-world.h>
     #include <cumbiaepics.h>
     #include <cuepactionfactories.h>
@@ -155,7 +155,7 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
     cumbia_pool = new CumbiaPool();
     printf("\e[1;32m+-o\e[0m cumbia_pool %p created\n", cumbia_pool);
 
-#ifdef CUMBIA_EPICS
+#ifdef QUMBIA_EPICS_CONTROLS
     CumbiaEpics* cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
     printf("\e[1;32m+-o\e[0m cumbia_epics %p created\n", cuep);
     cumbia_pool->registerCumbiaImpl("epics", cuep);

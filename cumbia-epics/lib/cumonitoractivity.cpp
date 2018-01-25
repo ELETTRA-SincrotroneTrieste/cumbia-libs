@@ -60,7 +60,7 @@ bool CuMonitorActivity::matches(const CuData &token) const
 
 void CuMonitorActivity::init()
 {
-    int caTimeout = DEFAULT_TIMEOUT;
+    int caTimeout = DEFAULT_CA_TIMEOUT;
     int reqElems = 1;
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
