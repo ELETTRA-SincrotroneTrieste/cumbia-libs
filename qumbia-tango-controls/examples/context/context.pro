@@ -1,4 +1,4 @@
-include (/usr/local/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+include (../../qumbia-tango-controls.pri)
 
 TEMPLATE = app
 
