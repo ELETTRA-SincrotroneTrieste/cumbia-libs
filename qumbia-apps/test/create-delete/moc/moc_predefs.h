@@ -70,7 +70,7 @@
 #define __INT32_MAX__ 0x7fffffff
 #define __SIZEOF_LONG__ 8
 #define __STDC_IEC_559__ 1
-#define __STDC_ISO_10646__ 201505L
+#define __STDC_ISO_10646__ 201706L
 #define __UINT16_C(c) c
 #define __DECIMAL_DIG__ 21
 #define __gnu_linux__ 1
@@ -91,7 +91,6 @@
 #define __INT64_MAX__ 0x7fffffffffffffffL
 #define __DEC32_MIN_EXP__ (-94)
 #define __INT_FAST16_TYPE__ long int
-#define __STRICT_ANSI__ 1
 #define __LDBL_HAS_DENORM__ 1
 #define __cplusplus 201103L
 #define __cpp_ref_qualifiers 200710
@@ -144,6 +143,7 @@
 #define __DEC128_MIN_EXP__ (-6142)
 #define __INT_FAST32_TYPE__ long int
 #define __UINT_LEAST16_TYPE__ short unsigned int
+#define unix 1
 #define __INT16_MAX__ 0x7fff
 #define __cpp_rtti 199711
 #define __SIZE_TYPE__ long unsigned int
@@ -155,6 +155,7 @@
 #define __INT_LEAST16_TYPE__ short int
 #define __LDBL_EPSILON__ 1.08420217248550443401e-19L
 #define __UINTMAX_C(c) c ## UL
+#define __GLIBCXX_BITSIZE_INT_N_0 128
 #define __k8 1
 #define __SIG_ATOMIC_MAX__ 0x7fffffff
 #define __GCC_ATOMIC_WCHAR_T_LOCK_FREE 2
@@ -186,6 +187,7 @@
 #define __DEC32_MAX_EXP__ 97
 #define __INT_FAST8_MAX__ 0x7f
 #define __INTPTR_MAX__ 0x7fffffffffffffffL
+#define linux 1
 #define __cpp_range_based_for 200907
 #define __SSE2__ 1
 #define __EXCEPTIONS 1
@@ -254,6 +256,7 @@
 #define __DEC128_MAX_EXP__ 6145
 #define __ATOMIC_CONSUME 1
 #define __GNUC_MINOR__ 4
+#define __GLIBCXX_TYPE_INT_N_0 __int128
 #define __UINTMAX_MAX__ 0xffffffffffffffffUL
 #define __DEC32_MANT_DIG__ 7
 #define __DBL_MAX_10_EXP__ 308

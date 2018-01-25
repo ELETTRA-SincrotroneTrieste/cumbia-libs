@@ -17,7 +17,9 @@ int main(int argc, char *argv[])
 
     int ret = a.exec();
     delete w;
-    delete cu_p->get("tango");
-    delete cu_p->get("epics");
+    delete cu_poo->get("tango");
+#ifdef QUMBIA_EPICS_CONTROLS
+    delete cu_poo->get("epics");
+#endif
     return ret;
 }
