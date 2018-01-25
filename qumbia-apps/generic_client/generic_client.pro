@@ -40,3 +40,8 @@ HEADERS  += \
 
 FORMS    += generic_client.ui
 
+inst.files = $${TARGET}
+inst.path = $${INSTALL_ROOT}/bin
+
+INSTALLS += inst
+
