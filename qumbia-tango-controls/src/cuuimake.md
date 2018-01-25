@@ -2,12 +2,12 @@
 
 ### cumbia ui make. A tool to configure a Qt project with cumbia widgets
 
-\b cuuimake is a command line tool that can be found and built under the qumbia-plugins/qt-designer/cuuimake/ folder.
+\b cuuimake is a command line tool that can be found and built under the qumbia-apps/cuuimake/ folder.
 
 ### Installation
 
 \li git clone https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs.git
-\li cd cumbia-libs/qumbia-plugins/qt-designer/cuuimake/
+\li cd cqumbia-apps/cuuimake/
 \li qmake
 \li make
 \li make install

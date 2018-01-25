@@ -250,6 +250,29 @@ qumbia-tango-controls, cumbia-epics, qumbia-epics-controls have been installed, 
 
 > make install
 
+qumbiaprojectwizard is an *essential tool* to create a project skeleton that is later typically edited with the Qt designer.
+You will have to build and install the *cuuimake* tool below in order to successfully build a cumbia Qt application
+generated with qumbiaprojectwizard and edited with the Qt designer.
+
+#### 8c. cuuimake: a tool to configure a Qt project with cumbia widgets (parses Qt designer-generated ui files and
+expands .h and .cpp files in the project to make their constructors compatible with cumbia-qtcontrols classes
+constructors). This is an essential tool.
+
+> cd ../cuuimake
+
+Edit cuuimake.pro if you need to adjust the INSTALL_ROOT and the SHAREDIR paths.
+
+> qmake
+
+> make
+
+Install the cuuimake utility that must be used before building any cumbia project created with qumbiaprojectwizard and
+edited with the Qt designer.
+
+> make install
+
+Extensive information about cuuimake can be found in the qumbia-tango-controls documentation installed according to the
+instructions given in the fourth paragraph. (qumbia-tango-controls/html/md_src_cuuimake.html)
 
 ### 9. Test applications.
 

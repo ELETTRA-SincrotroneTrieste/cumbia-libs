@@ -48,7 +48,7 @@ QString UicProc::getUicCmd(const QString &ui_h_fname, const SearchDirInfoSet &di
     }
     QString binpath;
     QTextStream in(&mkf);
-    QRegExp re("QMAKE\\s*=\\s*([A-Za-z_0-9/]*)/qmake");
+    QRegExp re("QMAKE\\s*=\\s*([A-Za-z_0-9\\.\\-/]*)/qmake");
     while(!in.atEnd())
     {
         QStringList list;
