@@ -202,12 +202,16 @@ Adjust qt-designer.pro if necessary
 > make install
 
 
+
+
 ### 8. Build some basic applications
 
 > cd ../qumbia-apps
 
 Some base tools are provided to test the cumbia-libs and perform some basic operations on the
 underlying control system (reading or writing quantities).
+
+#### 8a. generic_client: a client to read/write from/to Tango and Epics
 
 > cd generic_client
 
@@ -228,6 +232,71 @@ Read the README.txt for details
 > ./generic_client test/device/1/double_scalar,giacomo:ai1,test/device/1/double_spectrum_ro
 
 starts the generic_client and performs readings on the two Tango attributes specified and the Epics PV giacomo:ai1
+
+> make install copies the generic_client binary file into INSTALL_ROOT/bin. See generic_client.pro
+
+#### 8b. qumbiaprojectwizard: create a new Qt + cumbia project with a graphical interface.
+
+> cd ../qumbiaprojectwizard
+
+Check INSTALL_ROOT, SHAREDIR, TEMPLATES_INSTALLDIR directives in qumbiaprojectwizard.pro before building the project,
+so that make install  places the binary and the templates under $${INSTALL_ROOT}/bin and $${TEMPLATES_INSTALLDIR}/
+INCLUDEDIR variable in qumbiaprojectwizard.pro must correctly point to the root include dir where cumbia, cumbia-tango,
+qumbia-tango-controls, cumbia-epics, qumbia-epics-controls have been installed, for example */usr/local/*
+
+> qmake
+
+> make
+
+> make install
+
+
+### 9. Test applications.
+
+#### 9a. Creation and deletion of objects
+
+This application lets you create and destroy objects during execution, to check for memory leaks and
+test stability.
+
+> cd qumbia-apps/test/create-delete
+
+> make
+
+Test with an arbitrary number of sources. For example, Tango attributes:
+
+> ./bin/create-delete test/device/1/double_scalar test/device/2/double_scalar test/device/1/long_scalar
+
+#### 9b. Watcher application example
+
+This example shows how to use QuWatcher class to read data and display it on arbitrary objects or internal
+class attributes.
+
+> cd ../watcher
+
+> qmake
+
+> make
+
+Launch the watcher application with a Tango device name
+
+> ./bin/watcher   test/device/1
+
+
+#### 9c. context: an example to understand the *context* (Tango):
+
+This example shows how to send and receive data to/from a reader. The application relies on the Tango engine.
+You can start, stop a reader, change the *refresh mode*, the *period*, *get* and *send* data from the link.
+
+> cd qumbia-tango-controls/examples/context
+
+> qmake
+
+> make
+
+Start the application with a Tango attribute as parameter
+
+> ./bin/context test/device/1/double_scalar
+
 
 # Contacts
 
