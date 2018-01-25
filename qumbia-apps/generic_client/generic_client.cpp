@@ -20,7 +20,6 @@
 #include <QSpinBox>
 #include <QComboBox>
 #include <cutango-world.h>
-#include <queplotupdatestrategy.h>
 #include <cucontext.h>
 #include <cucontextactionbridge.h>
 #include <QTimer>
@@ -31,6 +30,7 @@
     #include <cuepcontrolswriter.h>
     #include <cuepics-world.h>
     #include <cuepreadoptions.h>
+    #include <queplotupdatestrategy.h>
 #endif
 
 #include <cuthreadfactoryimpl.h>
