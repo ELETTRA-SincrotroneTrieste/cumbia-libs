@@ -1,0 +1,16 @@
+This is options README file.
+
+DEPENDENCIES:
+This application shows the usage of the QuContext cumbia-qtcontrols objects' context
+to store data on the object and send/receive data to and from the link (reader or writer)
+connected to the object itself.
+
+
+If you experience problems, please contact:
+
+Giacomo  <giacomo.strangolino@elettra.eu>
+
+Thank you.
+
+Sincrotrone Trieste s.c.p.a - ELETTRA Laboratory - Controls Group
+
