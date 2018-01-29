@@ -68,7 +68,7 @@ EInputOutputWidget::EInputOutputWidget(QWidget* outputw, QWidget *parent) : QFra
     setOutputWidget(outputw);
 }
 
-EInputOutputWidget::EInputOutputWidget(QWidget *parent)
+EInputOutputWidget::EInputOutputWidget(QWidget *parent) : QFrame(parent)
 {
     d = new EReaderWriterPrivate;
     m_createContainer();

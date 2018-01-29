@@ -23,6 +23,10 @@ public:
     CuLog *log;
 };
 
+/** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsWriterFactoryI interface.
+ *
+ *  Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ */
 QuButton::QuButton(QWidget *parent,
                    Cumbia *cumbia,
                    const CuControlsWriterFactoryI &w_fac, const QString &text) : QPushButton(parent)
@@ -31,6 +35,10 @@ QuButton::QuButton(QWidget *parent,
     d->context = new CuContext(cumbia, w_fac);
 }
 
+/** \brief Constructor with the parent widget, *CumbiaPool*  and *CuControlsFactoryPool*
+ *
+ *   Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ */
 QuButton::QuButton(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool, const QString &text)
     : QPushButton(w)
 {
@@ -96,4 +104,9 @@ void QuButton::onUpdate(const CuData &data)
             log->write(QString("QuButton [" + objectName() + "]").toStdString(), data["msg"].toString(), CuLog::Error, CuLog::Write);
         }
     }
+}
+
+CuContext *QuButton::getContext() const
+{
+    return d->context;
 }

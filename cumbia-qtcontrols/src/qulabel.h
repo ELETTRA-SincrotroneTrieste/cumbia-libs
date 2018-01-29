@@ -65,7 +65,7 @@ private:
 
     void m_init();
 
-    // CuTangoListener interface
+    // CuDataListener interface
 public:
     void onUpdate(const CuData &d);
 };

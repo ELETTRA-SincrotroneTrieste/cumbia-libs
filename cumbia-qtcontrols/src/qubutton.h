@@ -3,6 +3,7 @@
 
 #include <QPushButton>
 #include <cudatalistener.h>
+#include <cucontexti.h>
 
 class QuButtonPrivate;
 class Cumbia;
@@ -10,7 +11,7 @@ class CumbiaPool;
 class CuControlsFactoryPool;
 class CuControlsWriterFactoryI;
 
-class QuButton : public QPushButton, public CuDataListener
+class QuButton : public QPushButton, public CuDataListener, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString targets READ targets WRITE setTargets DESIGNABLE true)
@@ -37,6 +38,10 @@ private:
     // CuTangoListener interface
 public:
     void onUpdate(const CuData &d);
+
+    // CuContextI interface
+public:
+    CuContext *getContext() const;
 };
 
 #endif // QUPUSHBUTTON_H

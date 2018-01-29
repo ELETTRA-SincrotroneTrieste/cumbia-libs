@@ -20,6 +20,10 @@ public:
     CuLog *log;
 };
 
+/** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsWriterFactoryI interface.
+ *
+ *  Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ */
 QuApplyNumeric::QuApplyNumeric(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac)
     : EApplyNumeric(parent)
 {
@@ -27,6 +31,10 @@ QuApplyNumeric::QuApplyNumeric(QWidget *parent, Cumbia *cumbia, const CuControls
     d->context = new CuContext(cumbia, w_fac);
 }
 
+/** \brief Constructor with the parent widget, *CumbiaPool*  and *CuControlsFactoryPool*
+ *
+ *   Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ */
 QuApplyNumeric::QuApplyNumeric(QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
     : EApplyNumeric(parent)
 {
@@ -157,4 +165,9 @@ void QuApplyNumeric::onUpdate(const CuData &da)
                  da["data_format_str"].toString().c_str(), da["writable"].toInt());
 
     }
+}
+
+CuContext *QuApplyNumeric::getContext() const
+{
+    return d->context;
 }

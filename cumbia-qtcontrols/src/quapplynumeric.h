@@ -3,6 +3,7 @@
 
 #include <eapplynumeric.h>
 #include <cudatalistener.h>
+#include <cucontexti.h>
 
 class Cumbia;
 class CumbiaPool;
@@ -11,7 +12,7 @@ class CuControlsWriterFactoryI;
 
 class QuApplyNumericPrivate;
 
-class QuApplyNumeric : public EApplyNumeric, public CuDataListener
+class QuApplyNumeric : public EApplyNumeric, public CuDataListener, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString targets READ targets WRITE setTargets DESIGNABLE true)
@@ -40,6 +41,10 @@ private:
     // CuTangoListener interface
 public:
     void onUpdate(const CuData &d);
+
+    // CuContextI interface
+public:
+    CuContext *getContext() const;
 };
 
 

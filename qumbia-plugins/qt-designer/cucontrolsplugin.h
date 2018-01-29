@@ -144,6 +144,16 @@ class QuLedInterface : public CuCustomWidgetInterface
     virtual QWidget* createWidget(QWidget* parent);
 };
 
+class QuCheckBoxInterface : public CuCustomWidgetInterface
+{
+   Q_OBJECT
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
+
+  public:
+    QuCheckBoxInterface(QObject* parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p);
+    virtual QWidget* createWidget(QWidget* parent);
+};
+
 class QuLineEditInterface : public CuCustomWidgetInterface
 {
    Q_OBJECT
@@ -181,6 +191,16 @@ class QuSpectrumPlotInterface : public CuCustomWidgetInterface
 
   public:
     QuSpectrumPlotInterface(QObject* parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p);
+    virtual QWidget* createWidget(QWidget* parent);
+};
+
+class QuInputOutputInterface : public CuCustomWidgetInterface
+{
+   Q_OBJECT
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
+
+  public:
+    QuInputOutputInterface(QObject* parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p);
     virtual QWidget* createWidget(QWidget* parent);
 };
 

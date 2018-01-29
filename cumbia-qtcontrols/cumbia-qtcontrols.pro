@@ -68,6 +68,7 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/widgets-base/einputoutputwidget.cpp \
     src/widgets-base/qml/qmlcirculargauge.cpp \
     src/quinputoutput.cpp \
+    src/qucheckbox.cpp \
     src/culinkstats.cpp \
     src/cucontextmenu.cpp \
     src/cucontextactionbridge.cpp \
@@ -138,6 +139,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/quwriter.h \
     src/quwatcher.h \
     src/qumbiaizer.h \
+    src/qucheckbox.h \
     src/qumbiaizerprivate.h \
     src/quvaluefilter.h \
     src/qumultireaderplugininterface.h \

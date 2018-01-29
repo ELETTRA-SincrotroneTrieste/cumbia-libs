@@ -19,7 +19,10 @@ public:
     bool read_ok;
     QuInputOutput::WriterType w_type;
 };
-
+/** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
+ *
+ *  Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ */
 QuInputOutput::QuInputOutput(QWidget *parent, Cumbia* cumbia,
                              const CuControlsReaderFactoryI& r_fac,
                              const CuControlsWriterFactoryI &w_fac)
@@ -42,6 +45,10 @@ QuInputOutput::QuInputOutput(QWidget *parent, Cumbia* cumbia,
     delete rf;
 }
 
+/** \brief Constructor with the parent widget, *CumbiaPool*  and *CuControlsFactoryPool*
+ *
+ *   Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ */
 QuInputOutput::QuInputOutput(QWidget *parent, CumbiaPool *cu_poo, const CuControlsFactoryPool &f_poo)
     : EInputOutputWidget(parent)
 {
@@ -66,6 +73,9 @@ QuInputOutput::~QuInputOutput()
 
 /** \brief sets the writer type to t
  *
+ * @param t the writer type, one of the values of the QuInputOutput::WriterType enum
+ *
+ * The current input widget is destroyed and replaced if necessary.
  */
 void QuInputOutput::setWriterType(QuInputOutput::WriterType t)
 {
@@ -98,6 +108,10 @@ void QuInputOutput::setWriterType(QuInputOutput::WriterType t)
     }
 }
 
+/** \brief returns the apply button (of type QuButton)
+ *
+ * @return the QuButton used as apply button
+ */
 QPushButton *QuInputOutput::getApplyButton()
 {
     return findChild<QuButton *>();
@@ -144,9 +158,20 @@ CuContext *QuInputOutput::getOutputContext() const
  */
 CuContext *QuInputOutput::getInputContext() const
 {
-    return NULL;
+    return findChild<QuButton *>()->getContext();
 }
 
+/** \brief Set the object name and the name of the input and output widget as well.
+ *
+ * @param name the object name.
+ *
+ * If you set the object name, you will be able to find the input and output widgets
+ * with the following names:
+ *
+ * \li name + "_inputWidget"
+ * \li name + "_outputWidget"
+ *
+ */
 void QuInputOutput::setObjectName(const QString &name)
 {
     EInputOutputWidget::setObjectName(name);
@@ -156,6 +181,15 @@ void QuInputOutput::setObjectName(const QString &name)
         outputWidget()->setObjectName(name + "_outputWidget");
 }
 
+/** \brief Link the reader/writer to the specified source.
+ *
+ * @param s the name of the source of the connection.
+ *
+ * \note The QuInputOutput reads and writes from *the same source* specified in s.
+ *
+ * Any cumbia widget with the *source* property can be used as output widget.
+ *
+ */
 void QuInputOutput::setSource(const QString &s)
 {
     QWidget *w = outputWidget();
@@ -170,6 +204,10 @@ void QuInputOutput::setSource(const QString &s)
     findChild<QuButton *>()->setTargets(s + "(&inputWidget)");
 }
 
+/** \brief unlink the QuInputOutput
+ *
+ * The unsetSource method is invoked on the outputWidget.
+ */
 void QuInputOutput::unsetSource()
 {
     QWidget *w = outputWidget();
@@ -181,6 +219,7 @@ void QuInputOutput::unsetSource()
              w->metaObject()->className());
 }
 
+/// @private
 void QuInputOutput::onNewData(const CuData &da)
 {
     if(!da["err"].toBool() && da["type"].toString() == "property")
@@ -190,6 +229,7 @@ void QuInputOutput::onNewData(const CuData &da)
     }
 }
 
+/// @private
 void QuInputOutput::m_configure(const CuData &da)
 {
     std::string target = da["src"].toString();

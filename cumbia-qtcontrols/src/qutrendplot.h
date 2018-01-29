@@ -34,7 +34,10 @@ class QuTrendPlot : public QuPlotBase, public CuDataListener, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)
+    Q_PROPERTY(QStringList sources READ sources WRITE setSources DESIGNABLE true)
     Q_PROPERTY(int period READ period WRITE setPeriod DESIGNABLE true)
+    Q_PROPERTY(bool timeScaleDrawEnabled READ timeScaleDrawEnabled WRITE setTimeScaleDrawEnabled DESIGNABLE true)
+    Q_PROPERTY(bool showDateOnTimeAxis READ showDateOnTimeAxis WRITE setShowDateOnTimeAxis DESIGNABLE true)
 
 public:
     QuTrendPlot(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
@@ -50,8 +53,6 @@ public:
     bool timeScaleDrawEnabled();
 
     bool showDateOnTimeAxis() const;
-
-    void setDefaultBounds(const CuVariant &lb, const CuVariant &ub, Axis axisId = QwtPlot::yLeft);
 
     int period() const;
 

@@ -14,6 +14,8 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     CONFIG += designer
 }
 
+CONFIG += debug
+
 lessThan(QT_MAJOR_VERSION, 5) {
 	CONFIG += designer
 }

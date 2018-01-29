@@ -19,6 +19,10 @@ public:
     CuContext *context;
 };
 
+/** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
+ *
+ *  Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ */
 QuTable::QuTable(QWidget *parent, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac) :
     EFlag(parent)
 {
@@ -27,7 +31,10 @@ QuTable::QuTable(QWidget *parent, Cumbia *cumbia, const CuControlsReaderFactoryI
     m_initCtx();
 }
 
-
+/** \brief Constructor with the parent widget, *CumbiaPool*  and *CuControlsFactoryPool*
+ *
+ *   Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ */
 QuTable::QuTable(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) :
     EFlag(w), CuDataListener()
 {

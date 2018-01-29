@@ -12,6 +12,8 @@
 #include "forms/ttablebooleditor.h"
 #include "qubutton.h"
 #include "quapplynumeric.h"
+#include "qucheckbox.h"
+#include "quinputoutput.h"
 
 #ifdef QUMBIA_EPICS_CONTROLS
     #include <cuepics-world.h>
@@ -192,6 +194,8 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
     d_plugins.append(new QuSpectrumPlotInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuButtonInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuApplyNumericInterface(this, cumbia_pool, m_ctrl_factory_pool));
+    d_plugins.append(new QuCheckBoxInterface(this, cumbia_pool, m_ctrl_factory_pool));
+    d_plugins.append(new QuInputOutputInterface(this, cumbia_pool, m_ctrl_factory_pool));
 }
 
 CuCustomWidgetCollectionInterface::~CuCustomWidgetCollectionInterface()
@@ -241,7 +245,8 @@ QObject *TaskMenuFactory::createExtension(QObject *object, const QString &iid, Q
 
     if (qobject_cast<QuLabel*>(object) || qobject_cast<QuLed *>(object)
             || qobject_cast<QuButton *>(object) || qobject_cast<QuApplyNumeric *>(object) || qobject_cast<QuTable *>(object)
-             || qobject_cast<QuTrendPlot *>(object)|| qobject_cast<QuSpectrumPlot *>(object) )
+             || qobject_cast<QuTrendPlot *>(object)|| qobject_cast<QuSpectrumPlot *>(object)
+            || qobject_cast<QuCheckBox *>(object)|| qobject_cast<QuInputOutput *>(object) )
         return new TaskMenuExtension((QWidget*)object, parent);
 
     return QExtensionFactory::createExtension(object, iid, parent);
@@ -264,7 +269,8 @@ QList<QAction *> TaskMenuExtension::taskActions() const
     /* 1. edit connection action */
     if (cname == "QuLabel" || cname == "QuLed" || cname == "QuLineEdit"
         || cname == "QuButton" || cname == "QuTable" || cname == "QuTrendPlot"
-            || cname == "QuSpectrumPlot" || cname == "QuApplyNumeric")
+            || cname == "QuSpectrumPlot" || cname == "QuApplyNumeric"
+             || cname == "QuCheckBox" || cname == "QuInputOutput")
         list.append(d_editConnectionAction);
     /* 2. edit action */
     if ((cname == "QuLabel") || (cname == "QuLed") || cname == "QuTable")
@@ -354,6 +360,10 @@ void TaskMenuExtension::editConnection()
     else if(QuTrendPlot *t = qobject_cast<QuTrendPlot *>(d_widget))
         src = t->source();
     else if(QuSpectrumPlot *t = qobject_cast<QuSpectrumPlot *>(d_widget))
+        src = t->source();
+    else if(QuCheckBox *t = qobject_cast<QuCheckBox *>(d_widget))
+        src = t->source();
+    else if(QuInputOutput *t = qobject_cast<QuInputOutput *>(d_widget))
         src = t->source();
     else if(QuButton *b = qobject_cast<QuButton *>(d_widget))
     {
@@ -659,4 +669,59 @@ QWidget *QuSpectrumPlotInterface::createWidget(QWidget *parent)
     DropEventFilter *dropEventFilter = new DropEventFilter(t);
     t->installEventFilter(dropEventFilter);
     return t;
+}
+
+QuCheckBoxInterface::QuCheckBoxInterface(QObject *parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p)
+    : CuCustomWidgetInterface(parent, cumbia_p ,ctrl_factory_p)
+{
+    d_name = "QuCheckBox";
+    d_include = "qucheckbox.h";
+    d_icon = QPixmap(":pixmaps/qucheckbox.png");
+    d_domXml =
+            "<widget class=\"QuCheckBox\" name=\"quCheckBox\">\n"
+            " <property name=\"geometry\">\n"
+            "  <rect>\n"
+            "   <x>0</x>\n"
+            "   <y>0</y>\n"
+            "   <width>120</width>\n"
+            "   <height>40</height>\n"
+            "  </rect>\n"
+            " </property>\n"
+            "</widget>\n";
+}
+
+QWidget *QuCheckBoxInterface::createWidget(QWidget *parent)
+{
+    QuCheckBox *cb = new QuCheckBox(parent, cumbia_pool, ctrl_factory_pool);
+    DropEventFilter *dropEventFilter = new DropEventFilter(cb);
+    cb->installEventFilter(dropEventFilter);
+    return cb;
+}
+
+QuInputOutputInterface::QuInputOutputInterface(QObject *parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p)
+ : CuCustomWidgetInterface(parent, cumbia_p ,ctrl_factory_p)
+{
+    d_name = "QuInputOutput";
+    d_include = "quinputoutput.h";
+    d_icon = QPixmap(":pixmaps/quinputoutput.png");
+    d_domXml =
+            "<widget class=\"QuInputOutput\" name=\"quInputOutput\">\n"
+            " <property name=\"geometry\">\n"
+            "  <rect>\n"
+            "   <x>0</x>\n"
+            "   <y>0</y>\n"
+            "   <width>120</width>\n"
+            "   <height>40</height>\n"
+            "  </rect>\n"
+            " </property>\n"
+            "</widget>\n";
+}
+
+QWidget *QuInputOutputInterface::createWidget(QWidget *parent)
+{
+    QuInputOutput *qio = new QuInputOutput(parent, cumbia_pool, ctrl_factory_pool);
+    DropEventFilter *dropEventFilter = new DropEventFilter(qio);
+    qio->installEventFilter(dropEventFilter);
+    printf("returning qui\n");
+    return qio;
 }

@@ -29,6 +29,10 @@ public:
     QwtPlotDirectPainter *directPainter;
 };
 
+/** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
+ *
+ *  Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ */
 QuTrendPlot::QuTrendPlot(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac)
     : QuPlotBase(w)
 {
@@ -37,6 +41,10 @@ QuTrendPlot::QuTrendPlot(QWidget *w, Cumbia *cumbia, const CuControlsReaderFacto
     m_init();
 }
 
+/** \brief Constructor with the parent widget, *CumbiaPool*  and *CuControlsFactoryPool*
+ *
+ *   Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ */
 QuTrendPlot::QuTrendPlot(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
     : QuPlotBase(w)
 {
@@ -75,6 +83,14 @@ QStringList QuTrendPlot::sources() const
     return d->plot_common->sources();
 }
 
+/** \brief Set the source name. Replcace currently configured sources, if any.
+ *
+ * Connect the plot to the source (or sources) specified.
+ * More than one source can be set using a ";" separator.
+ *
+ * @see setSources
+ *
+ */
 void QuTrendPlot::setSource(const QString &s)
 {
     QStringList sl = s.split(";", QString::SkipEmptyParts);
@@ -82,6 +98,10 @@ void QuTrendPlot::setSource(const QString &s)
     setSources(sl);
 }
 
+/** \brief Set a list of sources to display on the plot. Replace currently configured ones, if any.
+ *
+ * @param l a list of strings with the source names.
+ */
 void QuTrendPlot::setSources(const QStringList &l)
 {
     unsetSources();

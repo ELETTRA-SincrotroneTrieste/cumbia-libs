@@ -14,12 +14,39 @@ class CuContext;
 
 class QuInputOutputPrivate;
 
+/** \brief This element is a graphical interface to integrate a reader and a writer into
+ *         one single object that saves space in the user interface.
+ *
+ * The source linked to this object is read and displayed on an outputWidget and can be
+ * written by an inputWidget. Two contexts are available for this element, an input and
+ * an output context. The first is the output widget's context, the second is the input
+ * widget's. getOutputContext and getInputContext return a reference to them respectively.
+ *
+ * By default a QuLabel is used as output widget.
+ * A QuButton is used to apply the value edited in the input widget. It can be retrieved with
+ * getApplyButton.
+ * The input widget is chosen automatically. setWriterType can be manually used to set it manually.
+ *
+ * QuInputOutput is composed by output and input widgets that are already part of the cumbia
+ * widget. It does not use a CuContext of its own.
+ *
+ * Output widget's newData(const CuData&) signal can be connected to a consistent receiver's slot if
+ * this needs to be notified:
+ *
+ * \code
+ * connect(qu_io->outputWidget(), SIGNAL(newData(const CuData&)), receiver, SLOT(onNewData(const CuData &)));
+ * \endcode
+ *
+ */
 class QuInputOutput : public EInputOutputWidget, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)
 
 public:
+    /** \brief this enum describes the type of available writers
+     *
+     */
     enum WriterType { None, LineEdit, Numeric, SpinBox, DoubleSpinBox, ComboBox };
 
     QuInputOutput(QWidget *_parent,

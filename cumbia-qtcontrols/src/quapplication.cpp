@@ -15,6 +15,12 @@ public:
     QString cumbia_dbus_plugin;
 };
 
+/** \brief The class constructor.
+ *
+ * QuApplication is build the very same way as QApplication.
+ * Just replace QApplication with QuApplication in your main.cpp
+ *
+ */
 QuApplication::QuApplication(int & argc, char **argv) : QApplication(argc, argv)
 {
     d = new QuApplicationPrivate;
