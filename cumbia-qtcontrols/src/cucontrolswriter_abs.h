@@ -36,11 +36,11 @@ public:
         delete d;
     }
 
-    virtual QString targets() const = 0;
+    virtual QString target() const = 0;
 
     virtual void clearTargets() = 0;
 
-    virtual void setTargets(const QString &s) = 0;
+    virtual void setTarget(const QString &s) = 0;
 
     virtual void execute() = 0;
 

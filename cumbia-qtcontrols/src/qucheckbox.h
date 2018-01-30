@@ -14,6 +14,21 @@ class CuControlsFactoryPool;
 class CuData;
 class CuContext;
 
+/** \brief A check box that reads, displays and writes a boolean value.
+ *
+ * Derives from QCheckBox, acts as a reader to display a boolean value and as
+ * a writer when it is checked.
+ * When checked, the current value read from the source is inverted and written on the same
+ * source.
+ *
+ * setSource creates the link to the specified source.
+ * The textFromLabel property, if true, reads the "label" value from the CuData
+ * delivered at configuration time and sets
+ * the text on the check box accordingly (Tango attributes have a *label*
+ * attribute property that can be used, see <a href="../../cumbia-tango/md_lib_cudata_for_tango.html">CuData bundle description for data exchange with the Tango world.</a>).
+ * Otherwise, provide a text as you would do for a Qt QCheckBox.
+ *
+ */
 class QuCheckBox : public QCheckBox, public CuDataListener, public CuContextI
 {
     Q_OBJECT

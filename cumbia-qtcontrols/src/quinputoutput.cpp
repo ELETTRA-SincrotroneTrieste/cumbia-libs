@@ -140,7 +140,7 @@ CuContext *QuInputOutput::getContext() const
 
 /** \brief Returns the context of the output widget
  *
- * @return a reference to the QuContext of the output widget.
+ * @return a pointer to the QuContext of the output widget.
  *
  * \note The current implementation works only if the reader is a QuLabel.
  */
@@ -154,7 +154,7 @@ CuContext *QuInputOutput::getOutputContext() const
 
 /** \brief Returns the context of the input widget.
  *
- * \note The current implementation returns NULL
+ * @return a pointer to the QuContext of the input widget.
  */
 CuContext *QuInputOutput::getInputContext() const
 {
@@ -201,7 +201,7 @@ void QuInputOutput::setSource(const QString &s)
              w->metaObject()->className());
 
     // there is (or there will be) an inputWidget providing arguments for the QuButton
-    findChild<QuButton *>()->setTargets(s + "(&inputWidget)");
+    findChild<QuButton *>()->setTarget(s + "(&inputWidget)");
 }
 
 /** \brief unlink the QuInputOutput

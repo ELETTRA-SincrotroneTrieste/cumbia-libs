@@ -102,7 +102,7 @@ void CuTControlsWriter::getData(CuData & /*d_ino*/) const
 
 void CuTControlsWriter::setTargets(const QString &s)
 {
-    CuEpControlsUtils tcu;
+    CuTControlsUtils tcu;
     CuTangoAttConfFactory att_conf_factory;
     CuData options;
     options["fetch_props"] = d->attr_props;

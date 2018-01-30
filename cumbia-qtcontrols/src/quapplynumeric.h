@@ -15,7 +15,7 @@ class QuApplyNumericPrivate;
 class QuApplyNumeric : public EApplyNumeric, public CuDataListener, public CuContextI
 {
     Q_OBJECT
-    Q_PROPERTY(QString targets READ targets WRITE setTargets DESIGNABLE true)
+    Q_PROPERTY(QString target READ target WRITE setTarget DESIGNABLE true)
 
 public:
     QuApplyNumeric(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac);
@@ -24,12 +24,12 @@ public:
 
     virtual ~QuApplyNumeric();
 
-    QString targets() const;
+    QString target() const;
 
 public slots:
     virtual void execute();
 
-    void setTargets(const QString& targets);
+    void setTarget(const QString& target);
 
     void execute(double val);
 

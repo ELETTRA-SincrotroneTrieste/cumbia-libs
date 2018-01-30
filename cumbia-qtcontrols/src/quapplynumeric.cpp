@@ -48,11 +48,11 @@ QuApplyNumeric::~QuApplyNumeric()
     delete d;
 }
 
-QString QuApplyNumeric::targets() const
+QString QuApplyNumeric::target() const
 {
     CuControlsWriterA *w = d->context->getWriter();
     if(w != NULL)
-        return w->targets();
+        return w->target();
     return "";
 }
 
@@ -60,7 +60,7 @@ void QuApplyNumeric::execute()
 {
     cuprintf("QuApplyNumeric.execute\n");
     CuControlsUtils cu;
-    CuVariant args = cu.getArgs(targets(), this);
+    CuVariant args = cu.getArgs(target(), this);
     printf("QuApplyNumeric.execute: got args %s type %d format %d\n", args.toString().c_str(), args.getType(),
            args.getFormat());
     CuControlsWriterA *w = d->context->getWriter();
@@ -71,11 +71,11 @@ void QuApplyNumeric::execute()
     }
 }
 
-void QuApplyNumeric::setTargets(const QString &targets)
+void QuApplyNumeric::setTarget(const QString &targets)
 {
     printf("\e[1;32mQuApplyNumeric.setTargets!!!!! %s\e[0m\n", qstoc(targets));
     CuControlsWriterA* w = d->context->replace_writer(targets.toStdString(), this);
-    if(w) w->setTargets(targets);
+    if(w) w->setTarget(targets);
 }
 
 void QuApplyNumeric::execute(double val)
@@ -146,7 +146,7 @@ void QuApplyNumeric::onUpdate(const CuData &da)
             }
             else
                 pinfo("QuApplyNumeric: maximum and minimum values not set on the tango attribute \"%s\", object \"%s\": "
-                      "not setting format nor maximum/minimum", qstoc(targets()), qstoc(objectName()));
+                      "not setting format nor maximum/minimum", qstoc(target()), qstoc(objectName()));
             /* can set current values instead */
             double val;
             bool can_be_double = da["w_value"].to<double>(val);

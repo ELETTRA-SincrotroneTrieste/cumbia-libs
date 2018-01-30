@@ -3,10 +3,10 @@
 
 #include <QStringList>
 
-class CuEpControlsUtils
+class CuTControlsUtils
 {
 public:
-    CuEpControlsUtils();
+    CuTControlsUtils();
 
     QString replaceWildcards(const QString &s, const QStringList& args);
 };

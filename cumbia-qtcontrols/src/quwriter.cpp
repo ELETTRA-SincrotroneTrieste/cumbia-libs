@@ -129,14 +129,14 @@ void QuWriter::setTargets(const QString &targets)
     // only one writer at a time: use replace_writer from CuContext
     CuControlsWriterA* w = d->context->replace_writer(targets.toStdString(), this);
     if(w)
-        w->setTargets(targets); // setTargets must be called on a valid writer
+        w->setTarget(targets); // setTargets must be called on a valid writer
 }
 
 QString QuWriter::targets() const
 {
     CuControlsWriterA *w = d->context->getWriter();
     if(w != NULL)
-        return w->targets(); // if the writer is configured
+        return w->target(); // if the writer is configured
     return ""; // empty string otherwise
 }
 

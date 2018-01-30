@@ -117,7 +117,7 @@ void CuTControlsReader::getData(CuData &d_ino) const
 
 void CuTControlsReader::setSource(const QString &s)
 {
-    CuEpControlsUtils tcu;
+    CuTControlsUtils tcu;
     CuTangoAttConfFactory acf;
     CuTangoReaderFactory readf;
     acf.setOptions(d->ta_options);

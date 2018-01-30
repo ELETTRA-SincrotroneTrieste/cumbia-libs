@@ -4,7 +4,7 @@
 // (tango://){0,1}([A-Za-z_0-9\.]*[:]{1}[0-9]+[/]){0,1}[A-Za-z_0-9\.]+/[A-Za-z_0-9\.]+/[A-Za-z_0-9\\.]+
 #define DEVICE_REGEXP "(tango://){0,1}([A-Za-z_0-9\\.]*[:]{1}[0-9]+[/]){0,1}[A-Za-z_0-9\\.]+/[A-Za-z_0-9\\.]+/[A-Za-z_0-9\\\\.]+"
 
-CuEpControlsUtils::CuEpControlsUtils()
+CuTControlsUtils::CuTControlsUtils()
 {
 
 }
@@ -20,7 +20,7 @@ CuEpControlsUtils::CuEpControlsUtils()
  * \li source: $2/double_scalar  args: ./bin/app 1 --verbose test/dev/1 test/dev/c --> will be test/dev/c/double_scalar
  *
  */
-QString CuEpControlsUtils::replaceWildcards(const QString &s, const QStringList &args)
+QString CuTControlsUtils::replaceWildcards(const QString &s, const QStringList &args)
 {
     QString ret(s);
     QStringList devs;

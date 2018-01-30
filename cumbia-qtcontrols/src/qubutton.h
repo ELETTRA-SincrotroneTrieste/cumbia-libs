@@ -11,10 +11,20 @@ class CumbiaPool;
 class CuControlsFactoryPool;
 class CuControlsWriterFactoryI;
 
+/** \brief A push button to write values or send commands to a target.
+ *
+ * Derives from QPushButton and acts as a writer when clicked.
+ * Set up the link with setTarget.
+ * When clicked, the execute method is called, the (optional) input arguments
+ * are evaluated and the write is performed on the target.
+ *
+ * See also \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ *
+ */
 class QuButton : public QPushButton, public CuDataListener, public CuContextI
 {
     Q_OBJECT
-    Q_PROPERTY(QString targets READ targets WRITE setTargets DESIGNABLE true)
+    Q_PROPERTY(QString target READ target WRITE setTarget DESIGNABLE true)
 public:
     QuButton(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac, const QString& text = "Apply");
 
@@ -22,12 +32,12 @@ public:
 
     virtual ~QuButton();
 
-    QString targets() const;
+    QString target() const;
 
 public slots:
     virtual void execute();
 
-    void setTargets(const QString& targets);
+    void setTarget(const QString& target);
 
 
 private:

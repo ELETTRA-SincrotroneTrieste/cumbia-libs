@@ -13,6 +13,7 @@
 #include "qulogimpl.h"
 #include <QtDebug>
 
+/// @private
 class QuButtonPrivate
 {
 public:
@@ -46,12 +47,17 @@ QuButton::QuButton(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryP
     d->context = new CuContext(cumbia_pool, fpool);
 }
 
+/** \brief the class destructor.
+ *
+ * Deletes the context.
+ */
 QuButton::~QuButton()
 {
     delete d->context;
     delete d;
 }
 
+/// @private
 void QuButton::m_init(const QString& text)
 {
     d = new QuButtonPrivate;
@@ -61,35 +67,57 @@ void QuButton::m_init(const QString& text)
     setText(text);
 }
 
+
+/*! \brief executes the target specified with setTarget
+ *
+ * If target contains an expression, this is evaluated and then execution is performed.
+ *
+ */
 void QuButton::execute()
 {
     cuprintf("QuButton.execute\n");
     CuControlsUtils cu;
-    CuVariant args = cu.getArgs(targets(), this);
+    CuVariant args = cu.getArgs(target(), this);
     printf("QuButton.execute: got args %s type %d format %d\n", args.toString().c_str(), args.getType(),
            args.getFormat());
     CuControlsWriterA *w = d->context->getWriter();
-    qDebug() << __FUNCTION__ << "writer " << w->targets();
+    qDebug() << __FUNCTION__ << "writer " << w->target();
     if(w) {
         w->setArgs(args);
         w->execute();
     }
 }
 
-void QuButton::setTargets(const QString &targets)
+/** \brief specify the name of the target that will be executed.
+ *
+ * Refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ */
+void QuButton::setTarget(const QString &targets)
 {
-    printf("\e[1;32mQuButton.setTargets!!!!! %s\e[0m\n", qstoc(targets));
     CuControlsWriterA * w = d->context->replace_writer(targets.toStdString(), this);
-    if(w) w->setTargets(targets);
+    if(w) w->setTarget(targets);
 }
 
-QString QuButton::targets() const
+/** \brief get the name of the target
+ *
+ * Refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ *
+ * @return the target name, or an empty string if setTarget hasn't been called yet.
+ */
+QString QuButton::target() const
 {
     if(d->context->getWriter())
-        return d->context->getWriter()->targets();
+        return d->context->getWriter()->target();
     return "";
 }
 
+/** \brief the onUpdate method implementation for QuButton that can be overridden
+ *         by subclasses.
+ *
+ * This method simply writes a log message if an error occurs.
+ *
+ * Implements CuDataListener::onUpdate.
+ */
 void QuButton::onUpdate(const CuData &data)
 {
     if(data["err"].toBool())
@@ -106,6 +134,10 @@ void QuButton::onUpdate(const CuData &data)
     }
 }
 
+/** \brief Returns a pointer to the CuContext in use.
+ *
+ * @return a pointer to CuContext
+ */
 CuContext *QuButton::getContext() const
 {
     return d->context;

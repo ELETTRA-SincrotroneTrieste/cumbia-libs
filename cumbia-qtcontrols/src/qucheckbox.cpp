@@ -76,6 +76,8 @@ QString QuCheckBox::source() const
  *
  * \note the reader and the writer are connected to the same source.
  *
+ * Refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ *
  * @see QuContext::setOptions
  * @see source
  */
@@ -86,9 +88,16 @@ void QuCheckBox::setSource(const QString &s)
         r->setSource(s);
     CuControlsWriterA *w = d->in_ctx->replace_writer(s.toStdString(), this);
     if(w)
-        w->setTargets(s);
+        w->setTarget(s);
 }
 
+/** \brief set the textFromLabel property to true
+ *
+ * @param tfl true the text of the check box is taken from the configuration data,
+ *        taking the "label" value stored on the CuData (this is done within onUpdate)
+ * @param tfl false the "label" value possibly stored in the configuration data is
+ *        ignored.
+ */
 void QuCheckBox::setTextFromLabel(bool tfl)
 {
     d->text_from_label = tfl;
@@ -96,6 +105,11 @@ void QuCheckBox::setTextFromLabel(bool tfl)
         setText(property("label").toString());
 }
 
+/** \brief Reimplemented from QWidget's contextMenuEvent, emits a signal
+ *         to request statistics on the link.
+ *
+ *  A pop up menu appears and an action to view link statistics is made available.
+ */
 void QuCheckBox::contextMenuEvent(QContextMenuEvent *e)
 {
     CuContextMenu* m = new CuContextMenu(this, this);
@@ -125,11 +139,9 @@ CuContext *QuCheckBox::getContext() const
     return d->out_ctx;
 }
 
-/** \brief Returns the context of the output widget
+/** \brief Returns the reader's context
  *
- * @return a reference to the QuContext of the output widget.
- *
- * \note The current implementation works only if the reader is a QuLabel.
+ * @return a pointer to the output QuContext used to read.
  */
 CuContext *QuCheckBox::getOutputContext() const
 {
@@ -137,16 +149,40 @@ CuContext *QuCheckBox::getOutputContext() const
     return NULL;
 }
 
+/** \brief Returns the writer's context
+ *
+ * @return a pointer to the input QuContext used to write.
+ */
 CuContext *QuCheckBox::getInputContext() const
 {
     return d->in_ctx;
 }
 
+/** \brief returns the textFromLabel property value
+ *
+ * @return true: enabled
+ * @return false: disabled
+ *
+ * @see setTextFromLabel
+ */
 bool QuCheckBox::textFromLabel() const
 {
     return d->text_from_label;
 }
 
+/** \brief determines the behaviour of the checkbox as a reader
+ *
+ * Implements CuDataListener::onUpdate
+ *
+ * \li if data is of type "property", the checkbox text is configured according to the
+ *     "label" value, if available
+ *
+ * \li if an error occurred, the widget is disabled
+ * \li a message is set as a tooltip according to the "msg" value of da.
+ * \li if the "value" contained in da can be converted to a boolean, the
+ *     checkbox is set accordingly. If not, it is set as *partially checked*.
+ *
+ */
 void QuCheckBox::onUpdate(const CuData &da)
 {
     d->read_ok = !da["err"].toBool();
