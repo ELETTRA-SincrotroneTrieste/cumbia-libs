@@ -13,6 +13,8 @@ class CuControlsWriterFactoryI;
 
 /** \brief A push button to write values or send commands to a target.
  *
+ * \ingroup inputw
+ *
  * Derives from QPushButton and acts as a writer when clicked.
  * Set up the link with setTarget.
  * When clicked, the execute method is called, the (optional) input arguments

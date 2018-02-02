@@ -36,7 +36,6 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/qulabel.cpp \
     src/qupalette.cpp \
     src/cucontrolsutils.cpp \
-    src/qulineedit.cpp \
     src/qulogimpl.cpp \
     src/qutrendplot.cpp \
 #    src/cucharts/callout.cpp \
@@ -73,7 +72,7 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/cucontextmenu.cpp \
     src/cucontextactionbridge.cpp \
     src/cuinfodialog.cpp \
-    src/widgets-base/cucontext.cpp \
+    src/cucontext.cpp \
     src/quapplication.cpp \
     src/qumbiaizer.cpp \
     src/qumbiaizerprivate.cpp \
@@ -92,7 +91,6 @@ HEADERS += cumbiaqtcontrols.h\
     src/cucontrolsfactorypool.h \
     src/qupalette.h \
     src/cucontrolsutils.h \
-    src/qulineedit.h \
     src/qulogimpl.h \
 #    src/cucharts/callout.h \
 #    src/cucharts/quplotcommon.h \
@@ -133,7 +131,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/cucontextmenu.h \
     src/cucontextactionbridge.h \
     src/cuinfodialog.h \
-    src/widgets-base/cucontext.h \
+    src/cucontext.h \
     src/quapplication.h \
     src/qudbusplugininterface.h \
     src/quwriter.h \
@@ -176,12 +174,10 @@ HEADERS += \
     src/widgets-base/eapplybutton.h \
     src/widgets-base/eapplynumeric.h \
     src/widgets-base/earrow.h \
-    src/widgets-base/econstants.h \
     src/widgets-base/eflag.h \
     src/widgets-base/egauge.h \
     src/widgets-base/elabel.h \
     src/widgets-base/elettracolors.h \
-    src/widgets-base/elineedit.h \
     src/widgets-base/enumeric.h \
     src/widgets-base/esimplelabel.h
 
@@ -209,7 +205,6 @@ SOURCES += \
     src/widgets-base/egauge.cpp \
     src/widgets-base/elabel.cpp \
     src/widgets-base/elettracolors.cpp \
-    src/widgets-base/elineedit.cpp \
     src/widgets-base/enumeric.cpp \
     src/widgets-base/esimplelabel.cpp
 

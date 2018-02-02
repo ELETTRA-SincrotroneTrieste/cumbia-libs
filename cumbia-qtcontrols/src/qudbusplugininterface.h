@@ -7,6 +7,10 @@
 
 class QuApplication;
 
+/*! \brief a class that groups information about a QuApplication
+ *
+ * \ingroup plugins
+ */
 class QuAppInfo
 {
 public:
@@ -82,6 +86,14 @@ private:
     QString m_argv0;
 };
 
+/** \brief an interface defining the behaviour of a *cumbia* application
+ *         that wants to register with the DBus session bus.
+ *
+ * \ingroup plugins
+ *
+ * QuAppDBus class in qumbia-plugins implements this interface.
+ * Plugins can be found in the qumbia-plugins directory of cumbia-libs.
+ */
 class QuAppDBusInterface
 {
 public:
@@ -94,6 +106,12 @@ public:
     virtual QString getServiceName(QuApplication *app) const = 0;
 };
 
+/*! \brief interface to listen for applications registering and unregistering
+ *         to/from the DBus session bus.
+ *
+ * \ingroup plugins
+ *
+ */
 class QuAppDBusControllerListener
 {
 public:
@@ -102,6 +120,15 @@ public:
     virtual void onAppUnregistered (const QuAppInfo& ai) = 0;
 };
 
+/*! this class remotely controls an application registered with the DBus session bus
+ *
+ * \ingroup plugins
+ *
+ * The implementation of this interface can:
+ * \li find other applications registered with DBus by name and arguments
+ * \li close an application matching the characteristics described in QuAppInfo
+ * \li raise an application matching the characteristics described in QuAppInfo
+ */
 class QuAppDBusControllerInterface
 {
 public:
@@ -122,13 +149,32 @@ public:
 
 };
 
+/** \brief Interface for the QuDBus plugin.
+ *
+ * \ingroup plugins
+ *
+ * The DBus plugin for QuApplication must implement this interface.
+ *
+ * CumbiaDBusPlugin implements this interface. Plugins can be found
+ * in the qumbia-plugins directory of cumbia-libs.
+ */
 class QuDBusPluginInterface
 {
 public:
     virtual ~QuDBusPluginInterface() {}
 
+    /*! returns the QuAppDBusInterface that registers and unregisters
+     *  an application with DBus
+     *
+     * @return an instance of a QuAppDBusInterface implementation.
+     */
     virtual QuAppDBusInterface *getAppIface() const = 0;
 
+    /*! \brief returns the QuAppDBusControllerInterface interface
+     *
+     * @return QuAppDBusControllerInterface the object that controls an application
+     *         raising or closing it or finds applications registered with DBus
+     */
     virtual QuAppDBusControllerInterface *getAppCtrlIface() const = 0;
 };
 

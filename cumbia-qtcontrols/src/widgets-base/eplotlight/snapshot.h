@@ -3,10 +3,11 @@
 
 #include <QWidget>
 
+/*! @private */
 class PlotSnapshot : public QObject
 {
   public:
-	PlotSnapshot() {};
+    PlotSnapshot() {}
 	void copy(QWidget *w);
 	bool grab(QWidget *w);
 };

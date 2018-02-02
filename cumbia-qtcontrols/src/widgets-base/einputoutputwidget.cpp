@@ -7,17 +7,19 @@
 #include <QMetaObject>
 #include <QMetaProperty>
 
-
+/*! @private */
 Container::Container(QWidget *parent) : QFrame(parent) {
     setFrameShape(QFrame::StyledPanel);
     setWindowFlag(Qt::Popup, true);
 }
 
+/*! @private */
 void Container::hideEvent(QHideEvent *e) {
     QFrame::hideEvent(e);
     emit visibilityChanged(false);
 }
 
+/*! @private */
 class EReaderWriterPrivate
 {
 public:
@@ -68,17 +70,30 @@ EInputOutputWidget::EInputOutputWidget(QWidget* outputw, QWidget *parent) : QFra
     setOutputWidget(outputw);
 }
 
+/** \brief single parameter constructor.
+ *
+ * setOutputWidget must be called manually later.
+ *
+ * @see EInputOutputWidget::EInputOutputWidget(QWidget* outputw, QWidget *parent)
+ */
 EInputOutputWidget::EInputOutputWidget(QWidget *parent) : QFrame(parent)
 {
     d = new EReaderWriterPrivate;
     m_createContainer();
 }
 
+/*! \brief sets the *output widget* that's used to display a value
+ *
+ * @param outputw an output widget, with either the *value* or *text*
 void EInputOutputWidget::setOutputWidget(QWidget *outputw)
 {
     m_init(outputw);
 }
 
+/*! \brief sets a QWidget as input widget
+ *
+ * @param inputw a QWidget that will be used as input widget
+ */
 void EInputOutputWidget::setInputWidget(QWidget *inputw)
 {
     if(d->input_w == NULL)
@@ -103,6 +118,12 @@ void EInputOutputWidget::setInputWidget(QWidget *inputw)
         perr("EInputOutputWidget.setInputWidget: this method can be called only once in \"%s\"", qstoc(objectName()));
 }
 
+/*! calculates the minimum size hint for the widget
+ *
+ * @return the minimum size hint for the widget
+ *
+ * @see sizeHint
+ */
 QSize EInputOutputWidget::minimumSizeHint() const
 {
     int width, height;
@@ -118,6 +139,13 @@ QSize EInputOutputWidget::minimumSizeHint() const
     return QSize(width, height);
 }
 
+/*! calculates the size hint for the widget
+ *
+ * @return the size hint for the widget, calculated according to the input widget
+ *         and apply button size hint widths and the output widget's height
+ *
+ * @see minimumSizeHint
+ */
 QSize EInputOutputWidget::sizeHint() const
 {
     int width;
@@ -128,11 +156,18 @@ QSize EInputOutputWidget::sizeHint() const
     return QSize(width, d->output_w->height());
 }
 
+/*! \brief returns the input widget
+ * @return the input widget
+ */
 QWidget *EInputOutputWidget::inputWidget() const
 {
     return d->input_w;
 }
 
+/*! \brief Returns the QFrame containing the writer
+ *
+ * @return QFrame containing the writer
+ */
 QFrame *EInputOutputWidget::getContainer() const
 {
     return d->w_container;
@@ -182,7 +217,7 @@ void EInputOutputWidget::setInputText(const QString &text)
     m_setText(text, d->input_w);
 }
 
-/** \brief Tries to write the "value" property on the output widget.
+/** \brief sets the "value" property on the output widget.
  *
  * @param s the value to display on the output widget
  *
@@ -194,6 +229,13 @@ void EInputOutputWidget::setOutputValue(int val)
     m_setValue(val, d->output_w);
 }
 
+/** \brief sets the "value" property on the output widget.
+ *
+ * @param s the value to display on the output widget
+ *
+ * \par Note
+ * The output widget must declare the value Q_PROPERTY
+ */
 void EInputOutputWidget::setOutputValue(double val)
 {
     m_setValue(val, d->output_w);
@@ -211,6 +253,10 @@ void EInputOutputWidget::setOutputText(const QString &text)
     m_setText(text, d->output_w);
 }
 
+/*! \brief returns the output widget
+ *
+ * @return the output widget as QWidget
+ */
 QWidget *EInputOutputWidget::outputWidget() const
 {
     return d->output_w;
@@ -232,6 +278,7 @@ void EInputOutputWidget::m_setValue(const QVariant& dv, QWidget *w)
         perr("EInputOutputWidget::setValue: failed to write \"value\" property on \"%s\"", qstoc(objectName()));
 }
 
+/*! @private */
 void EInputOutputWidget::m_setText(const QString &s, QWidget *w)
 {
     bool success;
@@ -248,6 +295,7 @@ void EInputOutputWidget::m_setText(const QString &s, QWidget *w)
         perr("EInputOutputWidget::setValue: failed to write \"text\" property on \"%s\"", qstoc(objectName()));
 }
 
+/*! @private */
 void EInputOutputWidget::m_editToggled(bool en)
 {
     if(en)
@@ -255,7 +303,7 @@ void EInputOutputWidget::m_editToggled(bool en)
     d->w_container->setVisible(en);
 }
 
-/*
+/** @private
  * emits applyClicked
  * If the input widget has the "value" property, the applyClicked(double) signal is emitted with the value
  * If the input widget has the "text" property, the applyClicked(QString) signal is emitted with the text
@@ -296,6 +344,7 @@ void EInputOutputWidget::m_applyClicked()
         emit applyClicked(text);
 }
 
+/*! @private */
 void EInputOutputWidget::m_init(QWidget *outputw)
 {
     setFrameStyle(QFrame::Sunken);
@@ -327,12 +376,14 @@ void EInputOutputWidget::m_init(QWidget *outputw)
     outputw->setObjectName(objectName() + "_outputWidget");
 }
 
+/*! @private */
 void EInputOutputWidget::m_createContainer()
 {
     d->w_container = new Container(this);
     d->w_container->setVisible(false);
 }
 
+/*! @private */
 void EInputOutputWidget::m_show()
 {
     QPoint wbl = frameGeometry().bottomLeft(); // writer top left

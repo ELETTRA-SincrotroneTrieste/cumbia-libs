@@ -8,6 +8,7 @@
 class QwtPlotPicker;
 class QwtPlotMarker;
 
+/*! @private */
 class Arrow: public QwtPlotItem
 {
 public:
@@ -16,7 +17,11 @@ public:
     QPointF begin, end;
 };
 
-
+/**
+ * \brief QuPlot component to draw markers on the canvas
+ *
+ * \ingroup plots
+ */
 class QuPlotMarkerComponent : public QuPlotComponent
 {
 public:

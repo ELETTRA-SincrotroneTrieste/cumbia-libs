@@ -13,6 +13,8 @@ class QStringList;
 
 /** Interface for a plugin implementing reader that connects to multiple quantities.
  *
+ * \ingroup plugins
+ *
  * \li Readings can be sequential or parallel (see the init method). Sequential readings must notify when a reading is performed
  *     and when a complete read cycle is over, providing the read data through two Qt signals: onNewData(const CuData& da) and
  *     onSeqReadComplete(const QList<CuData >& data). Parallel readings must notify only when a new result is available, emitting

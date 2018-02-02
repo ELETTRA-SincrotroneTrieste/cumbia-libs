@@ -28,9 +28,6 @@ class CuLinkStats
 public:
     CuLinkStats(int errorHistoryBufSiz = 10);
 
-    /** \brief Increment operation count.
-     *
-     */
     void addOperation();
 
     int opCnt() const;

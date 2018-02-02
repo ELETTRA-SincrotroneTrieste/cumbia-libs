@@ -2,26 +2,54 @@
 #include <cumacros.h>
 #include <regex>
 
+/*! the class constructor
+ *
+ * Creates an empty CumbiaPool.
+ */
 CumbiaPool::CumbiaPool()
 {
 
 }
 
+/*! \brief register a cumbia implementation with a given domain
+ *
+ * @param domain a string identifying a domain name, e.g. "tango" or "epics"
+ * @param cumbia, an instance of a Cumbia implementation, such as CumbiaEpics or CumbiaTango.
+ */
 void CumbiaPool::registerCumbiaImpl(const std::string &domain, Cumbia *cumbia)
 {
     m_map[domain] = cumbia;
 }
 
+/*! \brief associate to a domain name a list of regular expressions describing the source syntax
+ *         for that domain.
+ *
+ * \code
+ * std::vector<std::string> epics_patterns, tango_patterns;
+ * tango_patterns.push_back(".+/.+"); // e.g. test/device/1/double_scalar
+ * tango_patterns.push_back(".+->.+"); // e.g. test/device/1->DevLong
+ * cu_pool->setSrcPatterns("tango", tango_patterns);
+ * \endcode
+ *
+ */
 void CumbiaPool::setSrcPatterns(const std::string &domain, const std::vector<std::string> &regexps)
 {
     m_dom_patterns[domain] = regexps;
 }
 
+/*! \brief remove the source patterns for the given domain
+ *
+ * @param domain the domain name whose patterns will be removed
+ */
 void CumbiaPool::clearSrcPatterns(const std::string &domain)
 {
     m_dom_patterns.erase(domain);
 }
 
+/*! \brief remove the domain from the list of the registered ones.
+ *
+ * @param domain the domain with this name will be removed from the CumbiaPool domain list
+ */
 void CumbiaPool::unregisterCumbiaImpl(const std::string &domain)
 {
     if(m_map.count(domain) > 0)
@@ -55,7 +83,6 @@ Cumbia *CumbiaPool::get(const std::string &domain) const
  * @param src the name of the data source. Must begin with the <em>domain name</em>
  *        followed by <em>://</em>, for example <strong><cite>epics://</cite>foo:bar</strong>
  *
- * @see get
  */
 Cumbia *CumbiaPool::getBySrc(const std::string &src) const
 {
@@ -80,6 +107,12 @@ Cumbia *CumbiaPool::getBySrc(const std::string &src) const
     return cu;
 }
 
+/*! \brief given the source string, tries to match it with the
+ *         registered patterns in order to return the associated Cumbia implementation.
+ *
+ * @param src the source name
+ * @return a Cumbia implementation, if one was found matching src, or NULL otherwise.
+ */
 Cumbia *CumbiaPool::guessBySrc(const std::string &src) const
 {
     if(m_map.size() == 0)
@@ -100,6 +133,10 @@ Cumbia *CumbiaPool::guessBySrc(const std::string &src) const
     return NULL;
 }
 
+/*! \brief returns true if the CumbiaPool has no registered domains/Cumbia implementations
+ *
+ * @return  true if the CumbiaPool has no registered domains/Cumbia implementations, false otherwise
+ */
 bool CumbiaPool::isEmpty() const
 {
     return m_map.size() == 0;

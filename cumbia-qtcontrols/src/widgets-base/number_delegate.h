@@ -4,6 +4,7 @@
 #include <QString>
 
 
+/** @private */
 class NumberDelegate
 {
 	public:

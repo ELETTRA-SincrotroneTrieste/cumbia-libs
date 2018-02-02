@@ -12,6 +12,7 @@ QuLogEntry::QuLogEntry(const QString &ty, const QString &orig, const QString &ms
     message = msg;
 }
 
+/** @private */
 class QuLogImplPrivate
 {
   public:

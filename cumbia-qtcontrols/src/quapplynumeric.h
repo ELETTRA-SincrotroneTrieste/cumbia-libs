@@ -12,6 +12,12 @@ class CuControlsWriterFactoryI;
 
 class QuApplyNumericPrivate;
 
+/** \brief A widget to input a number and write it to a target linked to a control system
+ *         engine.
+ *
+ *
+ * \ingroup inputw
+ */
 class QuApplyNumeric : public EApplyNumeric, public CuDataListener, public CuContextI
 {
     Q_OBJECT
@@ -27,11 +33,10 @@ public:
     QString target() const;
 
 public slots:
-    virtual void execute();
 
     void setTarget(const QString& target);
 
-    void execute(double val);
+    virtual void execute(double val);
 
 private:
     QuApplyNumericPrivate *d;

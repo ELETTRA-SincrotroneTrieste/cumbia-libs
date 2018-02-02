@@ -5,6 +5,12 @@
 
 class QuPlotAxesComponentPrivate;
 
+/** \brief Plot component that manages the axes
+ *
+ * \ingroup plots
+ *
+ *
+*/
 class QuPlotAxesComponent : public QuPlotComponent
 {
 public:

@@ -7,6 +7,11 @@
 
 class QuPlotBase;
 
+/**
+ * \brief QuPlot component to zoom the plot.
+ *
+ * \ingroup plots
+ */
 class QuPlotZoomComponent : public QuPlotComponent
 {
 public:

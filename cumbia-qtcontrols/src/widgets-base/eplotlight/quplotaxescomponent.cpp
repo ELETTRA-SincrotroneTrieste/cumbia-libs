@@ -4,6 +4,7 @@
 
 #include <QMap>
 
+/** @private */
 class QuPlotAxesComponentPrivate
 {
 public:

@@ -3,11 +3,12 @@
 
 #include <QString>
 
+/*! @private */
 class StringDelegate
 {
 	public:
-		StringDelegate() {};
-		virtual ~StringDelegate() {};
+        StringDelegate() {}
+        virtual ~StringDelegate() {}
 		virtual void setValue(const QString &) = 0;
 };
 

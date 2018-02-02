@@ -15,6 +15,8 @@ class QuWatcherPrivate;
 
 /** \brief Manage readings of various type of objects in a different thread.
   *
+  * \ingroup utils
+  *
   * QuWatcher is a special class that reads a tango variable using QTangoCore.
   * Any QObject or base types (int, short, double, unsigned int, QString, bool) can be
   * attached to this reader and obtain the new data when the attribute or command is

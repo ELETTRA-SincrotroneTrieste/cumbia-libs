@@ -13,6 +13,9 @@ class EApplyNumericPrivate;
  * valueChanged(double) of the former with the slot valueModified(double) of the latter
  * 
  * it emits the signal clicked(double) when the button is clicked
+ *
+ * \ingroup corew
+ *
  */
 class EApplyNumeric : public QWidget, public FloatDelegate
 {

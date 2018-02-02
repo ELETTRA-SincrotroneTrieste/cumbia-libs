@@ -40,6 +40,7 @@ class QuPlotCurve;
 class QuWidgetUpdateStrategyI;
 class QuWidgetContextMenuStrategyI;
 
+/*! @private */
 class ShiftClickEater : public QObject
 {
     Q_OBJECT
@@ -50,7 +51,14 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event);
 };
 
+/** \defgroup plots Plots
+ * @{
+ */
+
+
 /** \brief A simple plot with zooming and scrolling capabilities
+ *
+ * \ingroup plots
  *
  * This class provides a simple plot able to zoom and scroll the curves.
  * It should be used with the EPlotCurve as curves to take advantage of

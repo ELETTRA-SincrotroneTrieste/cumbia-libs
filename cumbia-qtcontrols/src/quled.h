@@ -12,6 +12,15 @@ class CumbiaPool;
 class CuControlsFactoryPool;
 class CuContext;
 
+/*! \brief a *led* that takes a color according to a value read from a source.
+ *
+ * \ingroup outputw
+ *
+ * The class derives from QuLedBase. Several configuration options for the shape
+ * and color mode of the led can be set through QuLedBase interface.
+ *
+ * CuContext is used to communicate through a given engine with the source of data.
+ */
 class QuLed : public QuLedBase, public CuDataListener, public CuContextI
 {
     Q_OBJECT

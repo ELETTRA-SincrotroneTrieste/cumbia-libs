@@ -13,6 +13,8 @@ class ELabelPrivate;
 
 /**
  * \brief A label that can be used to display numeric, boolean or enum values
+ *
+ * \ingroup corew
  */
 class ELabel : public ESimpleLabel
 {

@@ -3,12 +3,13 @@
 
 #include "number_delegate.h"
 
+/*! @private */
 class IntDelegate : public NumberDelegate
 {
 	public:
-		IntDelegate() : NumberDelegate() {};
+        IntDelegate() : NumberDelegate() {}
 		
-		virtual ~IntDelegate() {};
+        virtual ~IntDelegate() {}
 
 		virtual void setValue(int) = 0;
 		virtual void setMinimum(int) = 0;

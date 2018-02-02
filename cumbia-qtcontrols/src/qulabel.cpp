@@ -14,6 +14,7 @@
 #include "cucontextmenu.h"
 #include "cucontext.h"
 
+/** @private */
 class QuLabelPrivate
 {
 public:

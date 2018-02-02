@@ -75,20 +75,16 @@ void QuButton::m_init(const QString& text)
  */
 void QuButton::execute()
 {
-    cuprintf("QuButton.execute\n");
     CuControlsUtils cu;
     CuVariant args = cu.getArgs(target(), this);
-    printf("QuButton.execute: got args %s type %d format %d\n", args.toString().c_str(), args.getType(),
-           args.getFormat());
     CuControlsWriterA *w = d->context->getWriter();
-    qDebug() << __FUNCTION__ << "writer " << w->target();
     if(w) {
         w->setArgs(args);
         w->execute();
     }
 }
 
-/** \brief specify the name of the target that will be executed.
+/** \brief Set the name of the target that will be executed.
  *
  * Refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */

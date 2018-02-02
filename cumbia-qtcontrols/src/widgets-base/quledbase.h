@@ -3,12 +3,14 @@
 
 #include <QWidget>
 
-class ELedPrivate;
+class QuLedBasePrivate;
 
 /**
  * \brief A color led
  *
- * ELed is a widget tailored to show true/false values.
+ * \ingroup basew
+ *
+ * QuLedBase is a widget tailored to show true/false values.
  * It has a color, a width and height that might be different from the container widget's width
  * or height, depending on the <em>scaleContents</em> property being false or true respectively.
  * Moreover, a led can be rectangular or elliptical (circular), according to the <em>rectangular</em> property.
@@ -123,7 +125,7 @@ protected:
 private:
 
 
-    ELedPrivate *d_ptr;
+    QuLedBasePrivate *d_ptr;
 };
 
 #endif

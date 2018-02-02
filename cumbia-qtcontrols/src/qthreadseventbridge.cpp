@@ -11,14 +11,16 @@
 class QThreadsEventBridgePrivate
 {
 public:
-    const CuServiceProvider *service_provider;
     CuThreadsEventBridgeListener *bridgeListener;
 };
 
-QThreadsEventBridge::QThreadsEventBridge(const CuServiceProvider *sp)
+/*! the class constructor
+ *
+ * @param sp a pointer to a CuServiceProvider
+ */
+QThreadsEventBridge::QThreadsEventBridge()
 {
     d = new QThreadsEventBridgePrivate;
-    d->service_provider = sp;
     d->bridgeListener = NULL;
 }
 
@@ -28,6 +30,19 @@ QThreadsEventBridge::~QThreadsEventBridge()
     delete d;
 }
 
+/** \brief receives a QEvent from QApplication and delivers the contents to a
+ *         registered CuThreadsEventBridgeListener.
+ *
+ * @param event a QEvent that wraps a CuEventI.
+ *
+ * If the QEvent::type is QEvent::User + 101, then QEvent is safely casted to a
+ * CuEvent_Qt object. CuEvent_Qt contains a CuEventI instance, that is delivered
+ * to a registered CuThreadsEventBridgeListener.
+ *
+ * @return true if the event is a CuEvent_Qt
+ * @return QObject::event(event) otherwise
+ *
+ */
 bool QThreadsEventBridge::event(QEvent *event)
 {
     pr_thread();

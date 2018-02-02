@@ -11,6 +11,7 @@
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
 
+/** @private */
 class QuLedPrivate
 {
 public:
@@ -41,6 +42,7 @@ QuLed::QuLed(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &f
     d->context = new CuContext(cumbia_pool, fpool);
 }
 
+/*! @private */
 void QuLed::m_init()
 {
     d = new QuLedPrivate;
@@ -50,6 +52,10 @@ void QuLed::m_init()
     setProperty("falseColor", QColor(Qt::red));
 }
 
+/*! \brief the class destructor
+ *
+ * deletes the CuContext
+ */
 QuLed::~QuLed()
 {
     delete d->context;

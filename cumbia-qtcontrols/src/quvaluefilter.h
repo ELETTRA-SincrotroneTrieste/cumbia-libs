@@ -7,7 +7,9 @@
 /** \brief Filters a value extracted from a CuData during the update method invoked
   *        when new data is available.
   *
-  * Used in conjunction with QuWatcher or QTWriter, it allows to perform some last time
+  * \ingroup utils
+  *
+  * Used in conjunction with QuWatcher or QuWriter, it allows to perform some last time
   * modifications to the value extracted from the CuData.
   * You must subclass TValueFilter and provide your implementation of one of the needed
   * methods, according to the type of data you know is contained into the CuData.

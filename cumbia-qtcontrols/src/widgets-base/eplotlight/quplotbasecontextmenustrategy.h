@@ -3,6 +3,9 @@
 
 #include <quwidgetcontextmenustrategyi.h>
 
+/**
+ * \ingroup plots
+*/
 class QuPlotBaseContextMenuStrategy : public QuWidgetContextMenuStrategyI
 {
     // QuWidgetContextMenuStrategyI interface

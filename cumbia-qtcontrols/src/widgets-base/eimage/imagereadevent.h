@@ -5,6 +5,8 @@
 #include <QString>
 #include <vector>
 
+
+/** @private */
 class ImageReadEvent : public QEvent
 {
 public:

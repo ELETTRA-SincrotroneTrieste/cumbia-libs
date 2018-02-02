@@ -14,6 +14,8 @@
 /** \brief a QString that recognizes the <em>eng</em> engineering format and formats a
  *         value according to the desired significant digits.
  *
+ * \ingroup corew
+ *
  * <h3>Usage</h3>
  * <p>
  * EngString is a QString. Its constructor accepts three parameters:

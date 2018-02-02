@@ -28,6 +28,8 @@ class ENumericPrivate;
 /**
  * \brief a widget to set a value
  *
+ * \ingroup corew
+ *
  * this widget is used to set a value, whenever the displayed 
  * value changes the signal valueChanged(double) is emitted
  */

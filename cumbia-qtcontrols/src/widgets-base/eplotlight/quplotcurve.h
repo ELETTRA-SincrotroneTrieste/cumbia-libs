@@ -29,6 +29,11 @@
 
 class EPlotCurvePrivate;
 
+/**
+ * \brief QwtPlot derived curve used in QuPlotBase
+ *
+ * \ingroup plots
+ */
 class QuPlotCurve : public QwtPlotCurve
 {
 public:

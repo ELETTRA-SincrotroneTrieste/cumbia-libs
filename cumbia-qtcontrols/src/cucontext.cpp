@@ -193,7 +193,7 @@ void CuContext::disposeWriter(const std::string &src)
     CuControlsWriterA *removed = NULL;
     foreach(CuControlsWriterA *w, d->writers)
     {
-        if(w->targets().toStdString() == src || src == std::string())
+        if(w->target().toStdString() == src || src == std::string())
         {
             removed = w;
             delete w;
@@ -403,7 +403,7 @@ CumbiaPool *CuContext::cumbiaPool() const
 CuControlsWriterA *CuContext::findWriter(const std::string &targetnam)
 {
     foreach(CuControlsWriterA* w, d->writers)
-        if(w->targets().toStdString() == targetnam)
+        if(w->target().toStdString() == targetnam)
             return w;
     return NULL;
 }

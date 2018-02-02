@@ -17,6 +17,9 @@ class QuInputOutputPrivate;
 /** \brief This element is a graphical interface to integrate a reader and a writer into
  *         one single object that saves space in the user interface.
  *
+ * \ingroup outputw
+ * \ingroup inputw
+ *
  * The source linked to this object is read and displayed on an outputWidget and can be
  * written by an inputWidget. Two contexts are available for this element, an input and
  * an output context. The first is the output widget's context, the second is the input

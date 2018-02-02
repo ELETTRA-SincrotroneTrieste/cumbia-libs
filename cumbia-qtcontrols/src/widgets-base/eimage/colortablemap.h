@@ -5,7 +5,7 @@
 #include <QRgb>
 #include <QVector>
 
-
+/*! @private */
 class ColorTableMap : public QMap<QString, QVector<QRgb> >
 {
 public:

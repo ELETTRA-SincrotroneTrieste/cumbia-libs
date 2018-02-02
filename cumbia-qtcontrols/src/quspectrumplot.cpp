@@ -18,6 +18,7 @@
 #include <quplotcurve.h>
 #include <qwt_date_scale_engine.h>
 
+/** @private */
 class QuSpectrumPlotPrivate
 {
 public:

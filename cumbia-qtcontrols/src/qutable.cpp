@@ -10,6 +10,7 @@
 #include <QVector>
 #include <QtDebug>
 
+/** @private */
 class QuTablePrivate
 {
 public:

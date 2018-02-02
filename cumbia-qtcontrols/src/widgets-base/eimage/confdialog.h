@@ -5,10 +5,12 @@
 #include <QVector>
 #include <QRgb>
 
+/*! @private */
 namespace Ui {
 class ConfDialog;
 }
 
+/*! @private */
 class ConfDialog : public QDialog
 {
     Q_OBJECT

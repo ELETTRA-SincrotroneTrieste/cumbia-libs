@@ -12,6 +12,7 @@ class CuVariant;
 
 #define TYPELEN 64
 
+/*! @private */
 class QumbiaizerPrivate
 {
     Q_DECLARE_PUBLIC(Qumbiaizer)

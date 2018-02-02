@@ -12,6 +12,12 @@
 #include "confdialog.h"
 #include "colortablemap.h"
 
+/** \brief base widget to draw an image
+ *
+ * Two dimensional data can be displayed on an image through a color table
+ *
+ * \ingroup image
+ */
 EImageWidgetBase::EImageWidgetBase(QWidget *widget, bool isOpenGL)
 {
     d = new EImageWidgetBasePrivate();

@@ -3,6 +3,14 @@
 
 #include <qwt_date_scale_draw.h>
 
+/**
+ * \brief QuPlot component to provide a date/time based scale.
+ *
+ * Derives from QwtDateScaleDraw. Date can be displayed or not
+ * according to the dateEnabled property.
+ *
+ * \ingroup plots
+ */
 class QuTimeScaleDraw : public QwtDateScaleDraw
 {
 public:

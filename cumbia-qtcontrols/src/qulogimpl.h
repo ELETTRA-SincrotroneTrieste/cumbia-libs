@@ -12,6 +12,10 @@ public:
     virtual void onDialogDeleted() = 0;
 };
 
+/*! \brief cumbia-qtcontrols error dialog
+ *
+ * \ingroup log
+ */
 class QuLogEntry
 {
 public:
@@ -20,6 +24,10 @@ public:
     QString type, origin, message;
 };
 
+/*! \brief cumbia-qtcontrols error dialog
+ *
+ * \ingroup log
+ */
 class QuErrorDialog : public QDialog
 {
 public:
@@ -39,6 +47,10 @@ private:
 
 };
 
+/*! \brief cumbia-qtcontrols CuLogImplI log implementation
+ *
+ * \ingroup log
+ */
 class QuLogImpl : public CuLogImplI, public QuErrorDialogListener
 {
 public:

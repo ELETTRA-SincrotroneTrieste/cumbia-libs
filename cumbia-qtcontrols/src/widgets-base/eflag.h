@@ -20,6 +20,9 @@ class EFlagPrivate;
  * The input value is a vector of boolean values or an integer which is interpreted as 
  * a bitmask. the function setDisplayMask allows you to decide which bits must be displayed 
  * and in which cell
+ *
+ * \ingroup corew
+ *
  */
 class EFlag : public QWidget
 {

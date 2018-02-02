@@ -4,8 +4,45 @@
 #include "cumbia-qtcontrols_global.h"
 #include <QMetaType>
 #include <cudata.h>
+/**
+ *  \defgroup outputw Display widgets
+ *  @{
+ *      \defgroup plots Plots
+ *      @{
+ *      @}
+ *
+ *      \defgroup image Image widget
+ *      @{
+ *      @}
+ *
+ * @}
+ *
+ * \defgroup inputw Input widgets
+ * @{
+ * @}
+ *
+ * \defgroup utils Utilities
+ * @{
+ * @}
+ *
+ * \defgroup plugins Plugins
+ * @{
+ * @}
+ *
+ * \defgroup log Logging
+ * @{
+ * @}
+ *
+ * \defgroup core Core classes
+ * @{
+ * @}
+ *
+ * \defgroup basew Base widgets
+ *
+ */
 
 /*! \mainpage Cumbia Qt controls module
+ *
  *
  * \section Introduction Introduction
  * This module combines cumbia to the \a Qt cross platform software framework, offering graphical control system components.

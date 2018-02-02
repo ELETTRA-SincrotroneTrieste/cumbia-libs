@@ -9,7 +9,12 @@
 class EArrowPrivate;
 
 /**
- * \brief An arrow
+ * \brief a class that can be used to draw arrows.
+ *
+ * This class has a Qt designer plugin.
+ *
+ * \ingroup corew
+ *
  */
 class EArrow : public QWidget {
     Q_OBJECT
@@ -24,7 +29,7 @@ class EArrow : public QWidget {
 
 public:
     EArrow( QWidget* );
-    ~EArrow() {};
+    ~EArrow() {}
 
     enum ArrowMode { LEFT, RIGTH, DOUBLE, NONE};
 

@@ -4,6 +4,7 @@
 class QPoint;
 #include <QMouseEvent>
 
+/*! @private */
 class ImageMouseEventInterface
 {
 public:

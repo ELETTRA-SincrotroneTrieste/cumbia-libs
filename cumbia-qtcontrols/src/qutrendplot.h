@@ -18,6 +18,8 @@ class CuContext;
 
 /** \brief Draw a line for each data source over time
  *
+ * \ingroup plots
+ *
  * QuTrendPlot is designed to accept a list of data sources.
  * Each data source is represented by a curve in the plot, which is updated according to
  * the CuData "value" and "timestamp_ms" properties.

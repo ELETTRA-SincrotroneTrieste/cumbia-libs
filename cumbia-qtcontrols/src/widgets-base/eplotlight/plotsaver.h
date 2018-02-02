@@ -6,6 +6,7 @@
 
 #include <QDialog>
 
+/*! @private */
 class OptionsDialog : public QDialog
 {
     Q_OBJECT
@@ -34,6 +35,7 @@ private:
     bool mDateTimeFormat;
 };
 
+/*! @private */
 class PlotSaver
 {
   public:

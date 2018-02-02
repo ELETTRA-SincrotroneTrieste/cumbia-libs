@@ -24,6 +24,7 @@
 
 #include <QVector>
 
+/*! @private */
 class CurveData
 {
     // A container class for growing data

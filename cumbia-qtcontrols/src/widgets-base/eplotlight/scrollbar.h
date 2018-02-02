@@ -3,6 +3,7 @@
 
 #include <qscrollbar.h>
 
+/*! @private */
 class ScrollBar: public QScrollBar
 {
     Q_OBJECT

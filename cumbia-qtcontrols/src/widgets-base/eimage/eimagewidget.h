@@ -12,6 +12,11 @@ class ImageMouseEventInterface;
 class QMenu;
 class EImageWidgetPrivate;
 
+/*! \brief A QWidget to display two dimensional arrays as an image.
+ *
+ * \ingroup image
+ *
+ */
 class EImageWidget : public QWidget , public EImageWidgetBase
 {
     Q_OBJECT

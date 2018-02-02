@@ -69,6 +69,7 @@
 #define KELETTRAALTERNATEBASE		QColor(180,205,182) 
 
 
+/*! @private */
 namespace Elettra
 {
 	/* List of accepted colors 

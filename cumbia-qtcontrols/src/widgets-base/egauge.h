@@ -20,6 +20,8 @@ class ECircularGaugePrivate;
  * \brief an abstract class used to implement widgets with a color scale
  *
  * you can configure the graphical behaviour by setting warnings, errors and colors
+ *
+ * \ingroup corew
  */
 class EAbstractGauge : public QWidget
 {

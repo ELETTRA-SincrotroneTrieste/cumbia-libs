@@ -7,20 +7,14 @@
 
 class EApplyButtonPrivate;
 
-/**
- * \brief a button to apply a setting
- *
- * this is a simple button used to apply a setting, it has to slots 
- * that allows the developer to change the color of the displayed text:
- * valueModified sets the color to red and clearModified reverts to
- * the original setting
+/** @private
  */
 class EApplyButton : public QPushButton
 {
 	Q_OBJECT
 public:
 	EApplyButton(QWidget *parent);
-	~EApplyButton(){};
+    ~EApplyButton(){}
 	
 	bool isModified() { return d_modified; }
 

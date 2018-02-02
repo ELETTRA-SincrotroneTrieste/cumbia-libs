@@ -1,7 +1,7 @@
 #include "qthreadseventbridgefactory.h"
 #include "qthreadseventbridge.h"
 
-CuThreadsEventBridge_I *QThreadsEventBridgeFactory::createEventBridge(const CuServiceProvider *sp) const
+CuThreadsEventBridge_I *QThreadsEventBridgeFactory::createEventBridge() const
 {
-    return new QThreadsEventBridge(sp);
+    return new QThreadsEventBridge();
 }

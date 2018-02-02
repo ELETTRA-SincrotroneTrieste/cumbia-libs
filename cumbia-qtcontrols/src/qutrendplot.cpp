@@ -19,6 +19,7 @@
 #include <qwt_plot_directpainter.h>
 #include <qwt_painter.h>
 
+/** @private */
 class QuTrendPlotPrivate
 {
 public:

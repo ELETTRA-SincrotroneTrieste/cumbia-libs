@@ -40,11 +40,11 @@ public:
 
     virtual ~CuTControlsWriter();
 
-    QString targets() const;
+    QString target() const;
 
-    void clearTargets();
+    void clearTarget();
 
-    void setTargets(const QString &s);
+    void setTarget(const QString &s);
 
     virtual void execute();
 

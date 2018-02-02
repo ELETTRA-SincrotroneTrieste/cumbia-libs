@@ -28,6 +28,19 @@ QuApplication::QuApplication(int & argc, char **argv) : QApplication(argc, argv)
     m_loadPlugin();
 }
 
+/** \brief calls exec on QApplication after registering with the DBus session bus
+ *         if the qumbia-dbus plugin is available.
+ *
+ * @return the result returned by QApplication::exec
+ *
+ * If the QPluginLoader can load the QuDBusPluginInterface plugin, then the
+ * application is registered with DBus.
+ * The dbusRegistered signal is emitted, then QApplication::exec is called.
+ * After QApplication::exec returns, dbusUnregistered signal is emitted,
+ * the plugin is released and the result of QApplication::exec is returned.
+ *
+ * See QApplication::exec
+ */
 int QuApplication::exec()
 {
     if(d->dbus_i)
@@ -48,28 +61,53 @@ int QuApplication::exec()
     return ret;
 }
 
+/** \brief raises the top level windows
+ *
+ * Foreach QWindow w, calls  w->raise
+ */
 void QuApplication::raise()
 {
     foreach(QWindow *w, topLevelWindows())
         w->raise();
 }
 
+/** \brief minimizes the top level windows
+ *
+ * Foreach QWindow w, calls  w->showMinimized
+ */
 void QuApplication::minimize()
 {
     foreach(QWindow *w, topLevelWindows())
         w->showMinimized();
 }
 
+/*! \brief simply calls QApplication::quit
+ *
+ */
 void QuApplication::quit()
 {
     QApplication::quit();
 }
 
+/*! \brief returns QApplication::arguments()
+ *
+ * @return QApplication::arguments()
+ */
 QStringList QuApplication::arguments() const
 {
     return QApplication::arguments();
 }
 
+
+/*! \brief returns the executable name
+ *
+ * @return the executable name obtained by QApplication::arguments().first()
+ *         from where the path is removed.
+ *
+ * \par example
+ * If the application is /usr/local/bin/qumbiaprojectwizard, exename returns
+ * *qumbiaprojectwizard*.
+ */
 QString QuApplication::exename() const
 {
     QString n = QApplication::arguments().first();
@@ -78,6 +116,11 @@ QString QuApplication::exename() const
     return n;
 }
 
+/*! returns the list of the command line options
+ *
+ * @return a QStringList taken from QApplication::arguments without the first
+ *         element.
+ */
 QStringList QuApplication::cmdOpt() const
 {
     QStringList ar = QApplication::arguments();
@@ -85,6 +128,10 @@ QStringList QuApplication::cmdOpt() const
     return ar;
 }
 
+/*! @private
+ *
+ * load the QuDBusPluginInterface using the QPluginLoader
+ */
 bool QuApplication::m_loadPlugin()
 {
     QDir pluginsDir(CUMBIA_QTCONTROLS_PLUGIN_DIR);

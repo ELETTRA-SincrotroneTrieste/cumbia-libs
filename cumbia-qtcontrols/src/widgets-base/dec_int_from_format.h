@@ -5,6 +5,8 @@
 
 /** \brief Given a format expressed by a string, this class decodes it and extracts the number of integer and decimal digits
  *
+ * \ingroup corew
+ *
  * Given a format expressed as QString in the constructor, the decode() method decodes the format and tells 
  * how many integer and decimal digits are needed.
  * In this first simple implementation, numbers of the form ddd.ddd are decoded, exponentials are not.

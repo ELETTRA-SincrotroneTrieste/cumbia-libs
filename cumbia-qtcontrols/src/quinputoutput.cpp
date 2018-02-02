@@ -4,12 +4,12 @@
 #include <cumacros.h>
 #include <cuvariant.h>
 #include <enumeric.h>
-#include <elineedit.h>
 #include <qubutton.h>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QtDebug>
 #include <QComboBox>
+#include <QLineEdit>
 #include <cucontext.h>
 
 class QuInputOutputPrivate
@@ -19,6 +19,7 @@ public:
     bool read_ok;
     QuInputOutput::WriterType w_type;
 };
+
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
  *
  *  Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
@@ -96,7 +97,7 @@ void QuInputOutput::setWriterType(QuInputOutput::WriterType t)
             setInputWidget(new QDoubleSpinBox(this));
             break;
         case LineEdit:
-            setInputWidget(new ELineEdit(this));
+            setInputWidget(new QLineEdit(this));
             break;
         case ComboBox:
             setInputWidget(new QComboBox(this));
@@ -120,7 +121,10 @@ QPushButton *QuInputOutput::getApplyButton()
 /** \brief Returns the name of the link
  *
  * @return a string with the name of the link.
+ *
  * \note This method returns the source property of the output widget
+ *
+ * See \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */
 QString QuInputOutput::source() const
 {
@@ -188,6 +192,8 @@ void QuInputOutput::setObjectName(const QString &name)
  * \note The QuInputOutput reads and writes from *the same source* specified in s.
  *
  * Any cumbia widget with the *source* property can be used as output widget.
+ *
+ * See \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  *
  */
 void QuInputOutput::setSource(const QString &s)

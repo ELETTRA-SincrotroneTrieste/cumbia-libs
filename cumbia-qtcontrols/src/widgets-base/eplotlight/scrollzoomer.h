@@ -8,6 +8,7 @@
 class ScrollData;
 class ScrollBar;
 
+/*! @private */
 class ScrollZoomer: public QwtPlotZoomer
 {
     Q_OBJECT

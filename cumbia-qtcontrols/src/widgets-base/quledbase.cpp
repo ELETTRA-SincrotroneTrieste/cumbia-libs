@@ -5,7 +5,8 @@
 #include <QtDebug>
 #include <math.h>
 
-class ELedPrivate
+/** @private */
+class QuLedBasePrivate
 {
 public:
 
@@ -18,7 +19,7 @@ public:
     double gradientStart;
     double gradientStop;
 
-    ELedPrivate()
+    QuLedBasePrivate()
     {
         width = height = 18;
         angleDeg = 0;
@@ -35,7 +36,7 @@ public:
 
 QuLedBase::QuLedBase(QWidget *parent) : QWidget(parent)
 {
-    d_ptr = new ELedPrivate();
+    d_ptr = new QuLedBasePrivate();
     d_ptr->ledColor = QColor(Qt::gray);
 }
 

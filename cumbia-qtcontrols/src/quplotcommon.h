@@ -20,6 +20,10 @@ class CuLinkStats;
 class CuControlsFactoryPool;
 class CumbiaPool;
 
+/** \brief common object owned by cumbia plots used to link and configure a plot.
+ *
+ * \ingroup plots
+ */
 class QuPlotCommon
 {
 public:

@@ -14,6 +14,8 @@ class CuContext;
 
 /** \brief A widget to organise data in a table
  *
+ * \ingroup outputw
+ *
  * A default set of options for the object is configured when QuTable is initialised.
  * It includes numRows, numColumns, displayMask, trueColours, falseColours,
  * trueStrings, falseStrings. If they are provided by the underline engine, they are

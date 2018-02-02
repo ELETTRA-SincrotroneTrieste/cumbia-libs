@@ -9,6 +9,8 @@
 class EReaderWriterPrivate;
 class QPushButton;
 
+/*! @private
+ */
 class Container : public QFrame
 {
   Q_OBJECT
@@ -22,6 +24,14 @@ protected:
     void hideEvent(QHideEvent *e);
 };
 
+/** \brief base class to display values through an *output widget* and receive
+ *         input values by means of an *input widget*.
+ *
+ * Relevant implementation: QuInputOutput
+ *
+ * \ingroup corew
+ *
+ */
 class EInputOutputWidget : public QFrame
 {
     Q_OBJECT

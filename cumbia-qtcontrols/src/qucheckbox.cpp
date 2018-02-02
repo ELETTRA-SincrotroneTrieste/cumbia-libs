@@ -15,6 +15,7 @@
 #include "culinkstats.h"
 #include "cucontextmenu.h"
 
+/// @private
 class QuCheckboxPrivate
 {
 public:
@@ -24,6 +25,10 @@ public:
     CuContext *in_ctx, *out_ctx;
 };
 
+/** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
+ *
+ *  Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ */
 QuCheckBox::QuCheckBox(QWidget *parent, Cumbia *cumbia,
                        const CuControlsReaderFactoryI &r_fac,
                        const CuControlsWriterFactoryI &w_fac)
@@ -35,6 +40,10 @@ QuCheckBox::QuCheckBox(QWidget *parent, Cumbia *cumbia,
     d->in_ctx = new CuContext(cumbia, w_fac);
 }
 
+/** \brief Constructor with the parent widget, *CumbiaPool*  and *CuControlsFactoryPool*
+ *
+ *   Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ */
 QuCheckBox::QuCheckBox(QWidget *parent, CumbiaPool *cu_poo, const CuControlsFactoryPool &f_poo)
     : QCheckBox(parent)
 {
@@ -44,6 +53,10 @@ QuCheckBox::QuCheckBox(QWidget *parent, CumbiaPool *cu_poo, const CuControlsFact
     d->in_ctx = new CuContext(cu_poo, f_poo);
 }
 
+/** \brief the class destructor
+ *
+ * Deletes the input and output contexts
+ */
 QuCheckBox::~QuCheckBox()
 {
     delete d->in_ctx;

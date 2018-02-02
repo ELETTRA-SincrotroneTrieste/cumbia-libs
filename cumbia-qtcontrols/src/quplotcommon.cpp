@@ -12,6 +12,7 @@
 
 #include <quplot_base.h>
 
+/** @private */
 class QuPlotCommonPrivate
 {
 public:

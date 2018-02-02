@@ -45,7 +45,7 @@ CuControlsWriterFactoryI *CuTWriterFactory::clone() const
 class CuTangoControlsWriterPrivate
 {
 public:
-    QString targets;
+    QString target;
     CumbiaTango *cumbia_tango;
     CuDataListener *tlistener;
     std::vector<std::string> attr_props;
@@ -71,23 +71,23 @@ void CuTControlsWriter::setOptions(const CuData &o)
     d->w_options = o;
 }
 
-QString CuTControlsWriter::targets() const
+QString CuTControlsWriter::target() const
 {
-    return d->targets;
+    return d->target;
 }
 
-void CuTControlsWriter::clearTargets()
+void CuTControlsWriter::clearTarget()
 {
-    d->cumbia_tango->unlinkListener(d->targets.toStdString(), CuTangoActionI::AttConfig, d->tlistener);
-    d->cumbia_tango->unlinkListener(d->targets.toStdString(), CuTangoActionI::Writer, d->tlistener);
-    d->targets = QString();
+    d->cumbia_tango->unlinkListener(d->target.toStdString(), CuTangoActionI::AttConfig, d->tlistener);
+    d->cumbia_tango->unlinkListener(d->target.toStdString(), CuTangoActionI::Writer, d->tlistener);
+    d->target = QString();
 }
 
 void CuTControlsWriter::execute()
 {
     CuTangoWriterFactory wtf;
     wtf.setWriteValue(getArgs());
-    d->cumbia_tango->addAction(d->targets.toStdString(), d->tlistener, wtf);
+    d->cumbia_tango->addAction(d->target.toStdString(), d->tlistener, wtf);
 }
 
 void CuTControlsWriter::sendData(const CuData & /* data */)
@@ -100,14 +100,14 @@ void CuTControlsWriter::getData(CuData & /*d_ino*/) const
     printf("CuTControlsWriter.getData: not implemented\n");
 }
 
-void CuTControlsWriter::setTargets(const QString &s)
+void CuTControlsWriter::setTarget(const QString &s)
 {
     CuTControlsUtils tcu;
     CuTangoAttConfFactory att_conf_factory;
     CuData options;
     options["fetch_props"] = d->attr_props;
     att_conf_factory.setOptions(options);
-    d->targets = tcu.replaceWildcards(s, qApp->arguments());
-    cuprintf("CuTControlsWriter::setTargets: targets is: %s\n", qstoc(d->targets));
-    d->cumbia_tango->addAction(d->targets.toStdString(), d->tlistener, att_conf_factory);
+    d->target = tcu.replaceWildcards(s, qApp->arguments());
+    cuprintf("CuTControlsWriter::setTargets: targets is: %s\n", qstoc(d->target));
+    d->cumbia_tango->addAction(d->target.toStdString(), d->tlistener, att_conf_factory);
 }

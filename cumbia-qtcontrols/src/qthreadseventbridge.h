@@ -4,15 +4,18 @@
 #include "cuthreadseventbridge_i.h"
 #include <QObject>
 
-class CuServiceProvider;
 
 class QThreadsEventBridgePrivate;
 
+/** \brief an event bridge to post a CuEventI event to a QApplication
+ *
+ * \ingroup core
+ */
 class QThreadsEventBridge : public QObject, public CuThreadsEventBridge_I
 {
     Q_OBJECT
 public:
-    QThreadsEventBridge(const CuServiceProvider *sp);
+    QThreadsEventBridge();
 
     virtual ~QThreadsEventBridge();
 

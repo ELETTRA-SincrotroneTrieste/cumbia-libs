@@ -3,6 +3,11 @@
 
 #include "eimagewidgetbase.h"
 
+/*! \brief A QGLWidget to display two dimensional arrays as an image.
+ *
+ * \ingroup image
+ *
+ */
 #if QT_VERSION >= 0x050000
 #include <QOpenGLWidget>
 class ImageGL : public QOpenGLWidget, public EImageWidgetBase

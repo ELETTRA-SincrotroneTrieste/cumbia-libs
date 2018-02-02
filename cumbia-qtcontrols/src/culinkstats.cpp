@@ -6,6 +6,14 @@ CuLinkStats::CuLinkStats(int errorHistoryBufSiz)
     m_err_history_size = errorHistoryBufSiz;
 }
 
+/** \brief Increment operation count.
+ *
+ * The first time addOperation is called, the current date time is saved.
+ * Get it with connectionDateTime.
+ *
+ * @see connectionDateTime
+ * @see opCnt
+ */
 void CuLinkStats::addOperation()
 {
     if(op_cnt == 0)
@@ -13,6 +21,10 @@ void CuLinkStats::addOperation()
     op_cnt++;
 }
 
+/*! \brief returns the number of recorded operations.
+ *
+ * @return the number of times addOperation has been called
+ */
 int CuLinkStats::opCnt() const
 {
     return op_cnt;
@@ -68,6 +80,11 @@ int CuLinkStats::errorHistorySize() const { return m_err_history_size; }
  */
 QList<QDateTime> CuLinkStats::errorHistory() const { return m_error_history; }
 
+/** \brief returns the date and time when addOperation was called the first time.
+ *
+ * @return QDateTime of the first recorded operation
+ * @see addOperation
+ */
 QDateTime CuLinkStats::connectionDateTime() const
 {
     return m_connectionDateTime;

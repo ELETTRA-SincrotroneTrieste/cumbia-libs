@@ -16,6 +16,8 @@ class CuLinkStats;
 
 /** \brief A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors.
  *
+ * \ingroup outputw
+ *
  * \li Colors and strings can be associated to boolean values.
  * \li Scalar numbers and strings can be displayed by QuLabel.
  * \li Vectors are usually displayed only partially, according to the number of maximum characters allowed by

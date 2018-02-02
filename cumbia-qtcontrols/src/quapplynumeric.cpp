@@ -11,6 +11,7 @@
 #include "cucontext.h"
 #include "qulogimpl.h"
 
+/// @private
 class QuApplyNumericPrivate
 {
 public:
@@ -42,12 +43,22 @@ QuApplyNumeric::QuApplyNumeric(QWidget *parent, CumbiaPool *cumbia_pool, const C
     d->context = new CuContext(cumbia_pool, fpool);
 }
 
+/*! \brief class destructor
+ *
+ * Deletes the context used to link the widget to the writer.
+ */
 QuApplyNumeric::~QuApplyNumeric()
 {
     delete d->context;
     delete d;
 }
 
+/*! \brief returns the target name.
+ *
+ * @return the target name, or an empty string if setTarget hasn't been called yet.
+ *
+ * Refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ */
 QString QuApplyNumeric::target() const
 {
     CuControlsWriterA *w = d->context->getWriter();
@@ -56,42 +67,33 @@ QString QuApplyNumeric::target() const
     return "";
 }
 
-void QuApplyNumeric::execute()
-{
-    cuprintf("QuApplyNumeric.execute\n");
-    CuControlsUtils cu;
-    CuVariant args = cu.getArgs(target(), this);
-    printf("QuApplyNumeric.execute: got args %s type %d format %d\n", args.toString().c_str(), args.getType(),
-           args.getFormat());
-    CuControlsWriterA *w = d->context->getWriter();
-    if(w)
-    {
-        w->setArgs(args);
-        w->execute();
-    }
-}
-
+/** \brief Set the name of the target that will be executed.
+ *
+ * Refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
+ */
 void QuApplyNumeric::setTarget(const QString &targets)
 {
-    printf("\e[1;32mQuApplyNumeric.setTargets!!!!! %s\e[0m\n", qstoc(targets));
     CuControlsWriterA* w = d->context->replace_writer(targets.toStdString(), this);
     if(w) w->setTarget(targets);
 }
 
+/*! \brief executes the target specified with setTarget, writing the value set on the widget.
+ *
+ * The value set on the widget is written on the target when the *apply* button
+ * is clicked.
+ * This virtual method can be reimplemented on a subclass.
+ */
 void QuApplyNumeric::execute(double val)
 {
-    cuprintf("QuApplyNumeric.execute\n");
     CuVariant args(val);
-    printf("QuApplyNumeric.execute: got args %s type %d format %d\n", args.toString().c_str(), args.getType(),
-           args.getFormat());
     CuControlsWriterA *w = d->context->getWriter();
-    if(w)
-    {
+    if(w) {
         w->setArgs(args);
         w->execute();
     }
 }
 
+/// @private
 void QuApplyNumeric::m_init()
 {
     printf("\e[1;32mQuApplyNumeric> initializing\e[0m\n");
@@ -101,6 +103,11 @@ void QuApplyNumeric::m_init()
     d->write_ok = false;
 }
 
+/*! \brief configures the widget as soon as it is connected and records write errors.
+ *
+ * @param da CuData containing configuration options upon link creation or
+ *        write operation results.
+ */
 void QuApplyNumeric::onUpdate(const CuData &da)
 {
     if(da["err"].toBool())
@@ -167,6 +174,10 @@ void QuApplyNumeric::onUpdate(const CuData &da)
     }
 }
 
+/*! \brief returns a pointer to the context
+ *
+ * @return a pointer to the CuContext
+ */
 CuContext *QuApplyNumeric::getContext() const
 {
     return d->context;

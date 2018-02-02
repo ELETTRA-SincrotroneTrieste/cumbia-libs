@@ -12,6 +12,7 @@ class CuData;
 class CuDataListener;
 class QStringList;
 
+/*! @private */
 class CuControlsWriterAbstractPrivate
 {
 public:
@@ -38,7 +39,7 @@ public:
 
     virtual QString target() const = 0;
 
-    virtual void clearTargets() = 0;
+    virtual void clearTarget() = 0;
 
     virtual void setTarget(const QString &s) = 0;
 

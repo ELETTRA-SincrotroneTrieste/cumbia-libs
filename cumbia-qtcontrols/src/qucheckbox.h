@@ -16,6 +16,9 @@ class CuContext;
 
 /** \brief A check box that reads, displays and writes a boolean value.
  *
+ * \ingroup inputw
+ * \ingroup outputw
+ *
  * Derives from QCheckBox, acts as a reader to display a boolean value and as
  * a writer when it is checked.
  * When checked, the current value read from the source is inverted and written on the same

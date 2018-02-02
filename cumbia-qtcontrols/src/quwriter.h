@@ -20,6 +20,8 @@ class QuWriterPrivate;
 /** \brief A class that can be used to write values from (almost) any kind of widget
   *        or object.
   *
+  * \ingroup utils
+  *
   */
 class QuWriter : public Qumbiaizer, public CuDataListener
 {
