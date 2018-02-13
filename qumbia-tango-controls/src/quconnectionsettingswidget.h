@@ -4,13 +4,16 @@
 #include <QWidget>
 #include <cudata.h>
 
-class QuPlotBase;
-
+/** \brief a QWidget that emits a settingsChanged signal when tango connection
+ *         settings are changed.
+ *
+ * Period and refresh mode can be changed.
+ */
 class QuConnectionSettingsWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit QuConnectionSettingsWidget(QuPlotBase *plot);
+    explicit QuConnectionSettingsWidget(QWidget *w);
 
     ~QuConnectionSettingsWidget();
 
@@ -21,7 +24,6 @@ public slots:
     void changeRefresh();
 
 private:
-    QuPlotBase *m_plot;
 };
 
 

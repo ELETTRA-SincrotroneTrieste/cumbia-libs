@@ -11,6 +11,8 @@ class CuControlsWriterFactoryI;
 /*! \brief this class, used in conjunction with CumbiaPool allows to connect to
  *         different control system frameworks within the same application.
  *
+ * \ingroup core
+ *
  * Reader and writer factories can be registered with registerImpl, providing a name
  * for the domain they refer to. The following code registers reader and writer
  * factories for *epics* and *tango*, making it possible to connect to sources

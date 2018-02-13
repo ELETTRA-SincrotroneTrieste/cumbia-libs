@@ -7,23 +7,47 @@
 #include <qupalette.h>
 #include <qutrendplot.h>
 
-class QuEpicsPlotUpdateStrategyPrivatevate
+/*! @private
+ */
+class QuTPlotUpdateStrategyPrivate
 {
 public:
     bool auto_configure;
 };
 
+/*! \brief The class constructor
+ *
+ * @param auto_configure true the plot uses Tango attribute properties to configure
+ *        lower and upper bounds
+ * @param auto_configure false no auto configuration is performed. Upper and lower
+ *        bounds must be set manually or the plot scales must be put in autoscale
+ *        mode
+ */
 QuTPlotUpdateStrategy::QuTPlotUpdateStrategy(bool auto_configure)
 {
-    d = new QuEpicsPlotUpdateStrategyPrivatevate;
+    d = new QuTPlotUpdateStrategyPrivate;
     d->auto_configure = auto_configure;
 }
 
+/*! \brief the class destructor
+ */
 QuTPlotUpdateStrategy::~QuTPlotUpdateStrategy()
 {
     delete d;
 }
 
+/*! \brief implementation of the QuWidgetUpdateStrategyI::update method mainly
+ *         aimed at setting up the plot default lower and upper y scale bounds
+ *
+ * @param da data from the attribute (command)
+ * @param widget the QuPlotBase that will be configured (the target of the stragegy
+ *        pattern).
+ *
+ * if the CuData bundle contains the key "type" with value "property", then the
+ * plot is configured taking minimum and maximum values from the Tango attribute
+ * properties. Otherwise, QuPlotBase::update is called.
+ *
+ */
 void QuTPlotUpdateStrategy::update(const CuData &da, QWidget *widget)
 {
     QColor background, border;
@@ -35,8 +59,8 @@ void QuTPlotUpdateStrategy::update(const CuData &da, QWidget *widget)
 
     bool read_ok = !da["err"].toBool();
 
-    if(read_ok && d->auto_configure && da.containsKey("mode")
-            && da["mode"].toString() == "ATTCONF")
+    if(read_ok && d->auto_configure && da.containsKey("type")
+            && da["type"].toString() == "property")
     {
         m_configure(da, widget);
     }
@@ -48,6 +72,8 @@ void QuTPlotUpdateStrategy::update(const CuData &da, QWidget *widget)
     // use border and background maybe ?
 }
 
+/*! @private
+ */
 void QuTPlotUpdateStrategy::m_fillFromHistory(const CuVariant &x, const CuVariant& y)
 {
     if(x.getSize() == y.getSize() &&  x.getFormat() == y.getFormat() &&
@@ -60,6 +86,8 @@ void QuTPlotUpdateStrategy::m_fillFromHistory(const CuVariant &x, const CuVarian
     }
 }
 
+/*! @private
+ */
 void QuTPlotUpdateStrategy::m_configure(const CuData &da, QWidget* widget)
 {
     CuVariant m, M;

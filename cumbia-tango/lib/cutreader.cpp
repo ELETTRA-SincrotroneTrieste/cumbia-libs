@@ -121,6 +121,8 @@ CuTangoActionI::Type CuTReader::getType() const
  * \par Valid keys
  * \li "period": integer. Change the polling period, if the refresh mode is CuTReader::PolledRefresh
  * \li "refresh_mode". A CuTReader::RefreshMode value to change the current refresh mode.
+ * \li "read" (value is irrelevant). If the read mode is CuTReader::PolledRefresh, a read will be
+ *     performed.
  *
  * @see getData
  *
@@ -169,11 +171,27 @@ void CuTReader::getData(CuData &d_inout) const
         d_inout["mode"] = refreshModeStr();
 }
 
+/*! \brief set or change the reader's refresh mode
+ *
+ * If the reading activity hasn't been started yet, the mode is saved for later.
+ * If an activity is already running and the requested mode is different, the current
+ * activity is unregistered and a new one is started.
+ *
+ * @param rm a value chosen from CuTReader::RefreshMode.
+ *
+ *
+ */
 void CuTReader::setRefreshMode(CuTReader::RefreshMode rm)
 {
     d->refresh_mode = rm;
-    if(d->current_activity && rm == CuTReader::ChangeEventRefresh &&
-            d->current_activity->getType() == CuPollingActivity::CuPollingActivityType)
+    // start a new event activity if
+    // 1. rm is an event driven mode AND
+    // 2a. running activity is a poller OR
+    // 2b. running activity refresh mode is not a CuPollingActivityType but refresh mode is different
+    //     from the desired one
+    if(d->current_activity && isEventRefresh(rm) &&
+            (d->current_activity->getType() == CuPollingActivity::CuPollingActivityType ||
+             d->current_activity->getToken()["rmode"].toString() != refreshModeStr()) )
     {
         d->cumbia_t->unregisterActivity(d->current_activity);
         m_startEventActivity();
@@ -227,17 +245,6 @@ void CuTReader::setPeriod(int millis)
     d->period = millis;
 }
 
-void CuTReader::start()
-{
-    pr_thread();
-    if(d->refresh_mode == ChangeEventRefresh)
-        m_startEventActivity();
-    else
-        m_startPollingActivity(false);
-    if(d->refresh_mode == Manual)
-        d->cumbia_t->pauseActivity(d->current_activity);
-}
-
 /*
  * main thread
  */
@@ -286,6 +293,51 @@ bool CuTReader::exiting() const
     return d->exit;
 }
 
+/*! \brief returns true if the parameter is an event driven RefreshMode, false otherwise.
+ *
+ * @param rm a value picked from CuTReader::RefreshMode enumeration
+ * @return true if rm is ChangeEventRefresh, PeriodicEventRefresh or ArchiveEventRefresh,
+ *         false otherwise
+ *
+ */
+bool CuTReader::isEventRefresh(CuTReader::RefreshMode rm) const
+{
+    return d->refresh_mode == ChangeEventRefresh || d->refresh_mode == PeriodicEventRefresh
+        || d->refresh_mode == ArchiveEventRefresh;
+}
+
+/*! \brief creates and registers a CuEventActivity or a CuPollingActivity to read from the Tango control system
+ *
+ * \note
+ * This function is internally used by the library. Clients shouldn't need to deal with it.
+ *
+ * This method
+ * \li fills in a CuData called *activity token*, that will be passed to the CuWriteActivity
+ * \li fills in a CuData called *thread token*, used to register the CuWriteActivity and make
+ *     the activity shared between writers with the same target.
+ * \li instantiates and registers (i.e. starts) either a CuEventActivity or a CuPollingActivity,
+ *     according to the RefreshMode value.
+ *
+ * \note
+ * start is usually called by CumbiaTango::addAction, which in turn is called by qumbia-tango-controls
+ * CuTControlsReader::setSource
+ *
+ * If the refresh mode is Manual, a CuPollingActivity is started and CumbiaTango::pauseActivity is
+ * called immediately. To trigger a read in Manual mode, use sendData with a CuData containing a
+ * key named "*read*". See sendData for further details.
+ *
+ */
+void CuTReader::start()
+{
+    pr_thread();
+    if(d->refresh_mode == ChangeEventRefresh)
+        m_startEventActivity();
+    else
+        m_startPollingActivity(false);
+    if(d->refresh_mode == Manual)
+        d->cumbia_t->pauseActivity(d->current_activity);
+}
+
 void CuTReader::m_startEventActivity()
 {
     CuDeviceFactoryService *df =
@@ -296,6 +348,7 @@ void CuTReader::m_startEventActivity()
     at["device"] = d->tsrc.getDeviceName();
     at["point"] = d->tsrc.getPoint();
     at["activity"] = "event";
+    at["rmode"] = refreshModeStr();
 
     CuData tt("device", d->tsrc.getDeviceName()); /* thread token */
     d->current_activity = new CuEventActivity(at, df);

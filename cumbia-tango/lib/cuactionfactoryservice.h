@@ -13,6 +13,36 @@ class CuDataListener;
 
 class CuActionFactoryServicePrivate;
 
+/*! \brief implements CuServiceI interface and provides a service to register, unregister
+ *         and find *Tango actions* (CuTReader, CuTWriter - CuTangoActionI implementations)
+ *
+ * \note This service is internally used by CumbiaTango and clients of the library should
+ *       rarely need to use it.
+ *
+ * This class is a cumbia *service* (implements getName and getType). It is registered by
+ * CumbiaTango at construction time through the cumbia service provider, namely CuServiceProvider:
+ *
+ * \code
+   getServiceProvider()->registerService(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType), new CuActionFactoryService());
+ * \endcode
+ *
+ * A reference to the service can be obtained through the Cumbia::getServiceProvider method:
+ *
+ * \code
+   CuActionFactoryService *af =
+            static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
+ * \endcode
+ *
+ * Through the service provider, the service can be unregistered with CuServiceProvider::unregisterService
+ *
+ * Once the service is registered, new CuTangoActionI (CuTReader, CuTWriter) can be added through
+ * registerAction, removed with unregisterAction and searched with find and findActive.
+ * The count method returns the number of registered actions.
+ *
+ * Tango sources (for readers) and targets (for writers) with the same name and type, share the same
+ * CuTangoActionI. See the registerAction documentation for further details.
+ *
+ */
 class CuActionFactoryService : public CuServiceI
 {
 public:
@@ -29,10 +59,6 @@ public:
     CuTangoActionI *find(const std::string &name, CuTangoActionI::Type at);
 
     size_t count() const;
-
-//    CuTangoActionI *findAction(const std::string& src, CuTangoActionI::Type at, CuDataListener *l);
-
-    std::string getLastError() const;
 
     void unregisterAction(const std::string& src, CuTangoActionI::Type at);
 

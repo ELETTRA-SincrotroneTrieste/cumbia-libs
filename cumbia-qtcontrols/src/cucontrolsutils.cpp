@@ -16,6 +16,20 @@ CuControlsUtils::CuControlsUtils()
 
 }
 
+/*! find the input argument from an object and return it in the shape of a string.
+ *
+ * @param objectName the name of the object to search for
+ * @param leaf the parent object under which the object providing input is searched for
+ *
+ * @return a string with the argument.
+ *
+ * \note
+ * The object providing input arguments must implement one of the following properties:
+ * \li text (e.g. QLabel, QLineEdit, ...)
+ * \li value (e.g. QSpinBox, QDoubleSpinBox, ENumeric)
+ * \li currentIndex (e.g. QComboBox)
+ *
+ */
 QString CuControlsUtils::findInput(const QString &objectName, const QObject *leaf) const
 {
     QString ret;
@@ -55,6 +69,18 @@ QString CuControlsUtils::findInput(const QString &objectName, const QObject *lea
     return ret;
 }
 
+/*! \brief finds the arguments in the source or target. If they are object names it finds the
+ *         objects with those names and get the input from them, otherwise they are directly
+ *         converted to CuVariant and returned.
+ *
+ * @param target the source or target string
+ * @param leaf under this object getArgs searches for a child (children) with the object
+ *        name(s) specified in the argument (s).
+ *
+ * @return a CuVariant with the detected argument(s), or an empty CuVariant.
+ *
+ * The child is searched by the findInput method.
+ */
 CuVariant CuControlsUtils::getArgs(const QString &target, const QObject *leaf) const
 {
     std::vector<std::string> argins;

@@ -10,11 +10,31 @@ QuPlotCanvasPainterComponent::QuPlotCanvasPainterComponent()
 
 }
 
+/*! \brief returns the name of the component: "canvas_painter"
+ *
+ *  @return the QString "canvas_painter"
+ */
 QString QuPlotCanvasPainterComponent::name() const
 {
     return "canvas_painter";
 }
 
+/** \brief draws the canvas of the plot, writing the name of the curves,
+ *         the zoom hint or other text on the background
+ *
+ * @param p the QPainter
+ * @param plot the QuPlotBase
+ * @param curves the list of QwtPlotCurve items
+ * @param options the options to configure the update
+ *
+ * \par options
+ * The possible options are as follows:
+ * \li show_title: boolean, true to draw the title of the plot
+ * \li show_zoom_hint: boolean, true if the text "Press shift key to zoom" has to be shown
+ * \li zoom_disabled: boolean, true if zoom is disabled
+ *
+ * The zoom hint is displayed if show_zoom_hint is true and zoom_disabled is false
+ */
 void QuPlotCanvasPainterComponent::update(QPainter *p,
                                           const QuPlotBase *plot,
                                           const QList<QwtPlotCurve *>curves,

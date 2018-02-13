@@ -11,7 +11,7 @@ class CuControlsFactoryPool;
 class QString;
 class QStringList;
 
-/** Interface for a plugin implementing reader that connects to multiple quantities.
+/** \brief Interface for a plugin implementing reader that connects to multiple quantities.
  *
  * \ingroup plugins
  *

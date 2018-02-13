@@ -687,6 +687,9 @@ void QuApplyNumeric::onUpdate(const CuData &da)
  * \endcode
  *
  */
+
+
+/*! @private */
 class CUMBIAQTCONTROLSSHARED_EXPORT CumbiaQtControls
 {
 

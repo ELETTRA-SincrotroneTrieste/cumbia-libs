@@ -10,6 +10,8 @@
 /*! \brief used in combination with CuControlsFactoryPool, the class can be used to create applications
  *         that can connect to sources or targets belonging to different control system frameworks
  *
+ * \ingroup core
+ *
  * Declare CumbiaPool in your main class so that it's visible across the whole application.
  *
  * \code

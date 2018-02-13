@@ -6,6 +6,8 @@
 
 class QuLogImplPrivate;
 
+/*! @private
+ */
 class QuErrorDialogListener
 {
 public:

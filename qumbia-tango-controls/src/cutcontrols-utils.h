@@ -3,6 +3,14 @@
 
 #include <QStringList>
 
+/*! \brief utility class offering some functionalities useful to qumbia-tango-controls
+ *         components.
+ *
+ * Currently, the following functions are offered:
+ *
+ * \li replace wildcards from sources and targets
+ *
+ */
 class CuTControlsUtils
 {
 public:

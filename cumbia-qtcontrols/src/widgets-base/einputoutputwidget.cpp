@@ -85,6 +85,7 @@ EInputOutputWidget::EInputOutputWidget(QWidget *parent) : QFrame(parent)
 /*! \brief sets the *output widget* that's used to display a value
  *
  * @param outputw an output widget, with either the *value* or *text*
+ */
 void EInputOutputWidget::setOutputWidget(QWidget *outputw)
 {
     m_init(outputw);

@@ -6,6 +6,11 @@
 class RtConfWidgetPrivate;
 class QuTRealtimePlot;
 
+/*! \brief the *real time plot* configuration widget has not yet been made compatible
+ *         with cumbia-qtcontrols plots
+ *
+ * This configuration widget cannot be currently used
+ */
 class RtConfWidget : public QWidget
 {
   Q_OBJECT

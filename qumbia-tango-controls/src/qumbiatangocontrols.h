@@ -23,6 +23,9 @@
  * \li \ref md_src_tutorial_qumbiatango_app
  *
  */
+
+/*! @private
+ */
 class QUMBIATANGOCONTROLSSHARED_EXPORT QumbiaTangoControls
 {
 

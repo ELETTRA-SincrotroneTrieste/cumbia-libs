@@ -6,6 +6,9 @@
 
 class CUData;
 
+/*! @private
+ *
+ */
 class CuEvent_Qt : public QEvent
 {
 public:

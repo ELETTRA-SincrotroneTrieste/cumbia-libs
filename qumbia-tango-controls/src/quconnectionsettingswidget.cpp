@@ -9,7 +9,7 @@
 #include <cumacros.h>
 #include <QtDebug>
 
-QuConnectionSettingsWidget::QuConnectionSettingsWidget(QuPlotBase *plot) : QWidget(plot)
+QuConnectionSettingsWidget::QuConnectionSettingsWidget(QWidget *w) : QWidget(w)
 {
     QGridLayout *lo = new QGridLayout(this);
     int layout_row = 0;
@@ -31,8 +31,6 @@ QuConnectionSettingsWidget::QuConnectionSettingsWidget(QuPlotBase *plot) : QWidg
     QPushButton *bApply = new QPushButton("Apply", this);
     connect(bApply, SIGNAL(clicked()), this, SLOT(changeRefresh()));
     lo->addWidget(bApply, layout_row, 3, 1, 1);
-
-    m_plot = plot;
 }
 
 QuConnectionSettingsWidget::~QuConnectionSettingsWidget()

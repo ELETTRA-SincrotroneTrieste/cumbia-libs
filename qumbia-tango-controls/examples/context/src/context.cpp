@@ -82,7 +82,7 @@ Context::Context(CumbiaTango *cut, QWidget *parent) :
     QComboBox *cbMode = new QComboBox(this);
     cbMode->setObjectName("cbMode");
     lo->addWidget(cbMode, 2, 4, 1, 2);
-    cbMode->insertItems(0, QStringList() << "event" << "polled" << "manual");
+    cbMode->insertItems(0, QStringList() << "event [change]" << "polled" << "manual" << "archive event" << "periodic event");
     QPushButton *pbApplyMode = new QPushButton("Set Mode", this);
     pbApplyMode->setToolTip("Apply the mode chosen on the left box.");
     connect(pbApplyMode, SIGNAL(clicked()), this, SLOT(setMode()));
@@ -254,8 +254,12 @@ void Context::onLinkStatsRequest(QWidget *w)
 CuTReader::RefreshMode Context::m_getRefreshMode()
 {
     QComboBox *c = findChild<QComboBox *>("cbMode");
-    if(c->currentText() == "event")
+    if(c->currentText() == "event [change]")
         return (CuTReader::ChangeEventRefresh);
+    else if(c->currentText() == "archive event")
+        return CuTReader::ArchiveEventRefresh;
+    else if(c->currentText() == "periodic event")
+        return CuTReader::PeriodicEventRefresh;
     else if(c->currentText() == "manual")
         return (CuTReader::Manual);
 

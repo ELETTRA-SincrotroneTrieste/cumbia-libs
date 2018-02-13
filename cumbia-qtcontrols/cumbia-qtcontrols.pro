@@ -8,8 +8,6 @@ include(cumbia-qtcontrols.pri)
 
 CONFIG += debug
 
-QT+= qml  quick
-
 # remove ourselves (defined in .pri)
 PKGCONFIG -= cumbia-qtcontrols$${QTVER_SUFFIX}
 
@@ -65,7 +63,6 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/cucontrolsfactorypool.cpp \
     src/quapplynumeric.cpp \
     src/widgets-base/einputoutputwidget.cpp \
-    src/widgets-base/qml/qmlcirculargauge.cpp \
     src/quinputoutput.cpp \
     src/qucheckbox.cpp \
     src/culinkstats.cpp \
@@ -125,7 +122,6 @@ HEADERS += cumbiaqtcontrols.h\
     src/widgets-base/eplotlight/quplotbasecontextmenustrategy.h \
     src/quapplynumeric.h \
     src/widgets-base/einputoutputwidget.h \
-    src/widgets-base/qml/qmlcirculargauge.h \
     src/quinputoutput.h \
     src/culinkstats.h \
     src/cucontextmenu.h \
@@ -147,8 +143,7 @@ HEADERS += cumbiaqtcontrols.h\
 
 
 RESOURCES += \
-    src/widgets-base/eimage/confdialog.qrc \
-    src/widgets-base/qml/qmlcontrols.qrc
+    src/widgets-base/eimage/confdialog.qrc
 
 FORMS += \
     src/widgets-base/eimage/confdialog.ui \
@@ -209,8 +204,7 @@ SOURCES += \
     src/widgets-base/esimplelabel.cpp
 
 DISTFILES += \
-    cumbia-qtcontrols.pri \
-    src/widgets-base/qml/qmlcirculargauge.qml
+    cumbia-qtcontrols.pri
 
 unix:INCLUDEPATH -= \
     $${QUMBIA_TANGO_CONTROLS_INCLUDES}

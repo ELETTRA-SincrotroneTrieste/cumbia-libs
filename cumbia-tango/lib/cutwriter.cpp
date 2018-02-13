@@ -18,6 +18,8 @@
 
 class TSource;
 
+/*! @private
+ */
 class CuTWriterPrivate
 {
 public:
@@ -46,11 +48,23 @@ CuTWriter::~CuTWriter()
     delete d;
 }
 
+/*! \brief set the value that will be written after start is called
+ *
+ * @param write_val a const reference to a CuVariant containing the value to write
+ *        when start is called
+ *
+ * @see start
+ */
 void CuTWriter::setWriteValue(const CuVariant &write_val)
 {
     d->write_val = write_val;
 }
 
+/*! this method is currently void
+ *
+ * \note
+ * onProgress is executed in the main thread
+ */
 void CuTWriter::onProgress(int step, int total, const CuData &data)
 {
     (void) step; // unused
@@ -58,6 +72,15 @@ void CuTWriter::onProgress(int step, int total, const CuData &data)
     (void) data;
 }
 
+/*! \brief calls onUpdate on all listeners or deletes itself when the *exiting* flag is set
+ *
+ * @param data CuData with the result to be delivered to every CuDataListener
+ *
+ * The method calls delete this if the *exit* flag is true, after calling CuActionFactoryService::unregisterAction
+ *
+ * \note
+ * onResult is executed in the main thread
+ */
 void CuTWriter::onResult(const CuData &data)
 {
     cuprintf("CuTWriter.onResult: data received %s\n", data.toString().c_str());
@@ -120,6 +143,22 @@ size_t CuTWriter::dataListenersCount()
     return d->listeners.size();
 }
 
+/*! \brief creates and registers a CuWriteActivity to trigger a write operation on the Tango control system
+ *
+ * \note
+ * This function is internally used by the library. Clients shouldn't need to deal with it.
+ *
+ * This method
+ * \li fills in a CuData called *activity token*, that will be passed to the CuWriteActivity
+ * \li fills in a CuData called *thread token*, used to register the CuWriteActivity and make
+ *     the activity shared between writers with the same target.
+ * \li instantiates and registers (i.e. starts) a CuWriteActivity.
+ *
+ * \note
+ * start is usually called by CumbiaTango::addAction, which in turn is called by qumbia-tango-controls
+ * CuTControlsWriter::execute.
+ *
+ */
 void CuTWriter::start()
 {
     CuDeviceFactoryService *df =

@@ -13,6 +13,8 @@ class QWidget;
 class QMouseEvent;
 class QWheelEvent;
 
+/*! @private
+ */
 class EImageWidgetBasePrivate
 {
     public:
@@ -37,6 +39,13 @@ class EImageWidgetBasePrivate
         QVector<QRgb> colorTable;
 };
 
+/*! \brief a class inherited by EImageWidget to provide common functionalities
+ *         to QWidget objects drawing an image
+ *
+ * Two dimensional data can be displayed on an image through a color table
+ *
+ * \ingroup image
+ */
 class EImageWidgetBase
 {
 public:

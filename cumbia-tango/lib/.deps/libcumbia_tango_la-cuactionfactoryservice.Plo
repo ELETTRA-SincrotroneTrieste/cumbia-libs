@@ -400,7 +400,6 @@ lib/libcumbia_tango_la-cuactionfactoryservice.lo: \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/cassert \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/cstring \
  lib/tdevice.h lib/tsource.h lib/cutangoactioni.h \
- /usr/local/include/cumbia/culog.h \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/mutex \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/chrono \
  /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/ratio \
@@ -1327,8 +1326,6 @@ lib/tdevice.h:
 lib/tsource.h:
 
 lib/cutangoactioni.h:
-
-/usr/local/include/cumbia/culog.h:
 
 /usr/lib/gcc/x86_64-pc-linux-gnu/6.4.0/include/g++-v6/mutex:
 

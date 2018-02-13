@@ -101,7 +101,9 @@ QColor EColor(const QString& colorString);
 
 QPalette EPalette(QString);
 
-/** Builds a dialog window that shows all the available colors
+/**
+ * @private
+ * Builds a dialog window that shows all the available colors
  * together with their name.
  * Note that this is not inside the Elettra namespace.
  */

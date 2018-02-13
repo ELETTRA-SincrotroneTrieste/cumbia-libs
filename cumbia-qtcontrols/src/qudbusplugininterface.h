@@ -120,7 +120,7 @@ public:
     virtual void onAppUnregistered (const QuAppInfo& ai) = 0;
 };
 
-/*! this class remotely controls an application registered with the DBus session bus
+/*! \brief this class remotely controls an application registered with the DBus session bus
  *
  * \ingroup plugins
  *

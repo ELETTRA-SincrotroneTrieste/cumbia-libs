@@ -139,6 +139,15 @@ void QuPlotBase::init()
     QwtPlot::replot(); /* do not need QuPlotBase::replot() here */
 }
 
+/*! \brief sets or replaces the update strategy (see the strategy design pattern)
+ *
+ * Set or replace the current QuWidgetUpdateStrategyI implementation.
+ *
+ * @param updateStrategy an implementation of QuWidgetUpdateStrategyI
+ *
+ * If a strategy is already in use, it is deleted and the new one is
+ * set.
+ */
 void QuPlotBase::setUpdateStrategy(QuWidgetUpdateStrategyI *updateStrategy)
 {
     if(d->updateStrategy)
@@ -146,6 +155,15 @@ void QuPlotBase::setUpdateStrategy(QuWidgetUpdateStrategyI *updateStrategy)
     d->updateStrategy = updateStrategy;
 }
 
+/*! \brief sets or replaces the context menu strategy (see the strategy design pattern)
+ *
+ * Set or replace the current QuWidgetContextMenuStrategyI implementation.
+ *
+ * @param updateStrategy an implementation of QuWidgetContextMenuStrategyI
+ *
+ * If a strategy is already in use, it is deleted and the new one is
+ * set.
+ */
 void QuPlotBase::setContextMenuStrategy(QuWidgetContextMenuStrategyI *ctx_menu_strategy)
 {
     if(d->ctxMenuStrategy)
@@ -153,11 +171,19 @@ void QuPlotBase::setContextMenuStrategy(QuWidgetContextMenuStrategyI *ctx_menu_s
     d->ctxMenuStrategy = ctx_menu_strategy;
 }
 
+/*! \brief return the QuWidgetUpdateStrategyI implementation in use.
+ *
+ * @return QuWidgetUpdateStrategyI set with setUpdateStrategy
+ */
 QuWidgetUpdateStrategyI *QuPlotBase::updateStrategy() const
 {
     return d->updateStrategy;
 }
 
+/*! \brief return the QuWidgetContextMenuStrategyI implementation in use.
+ *
+ * @return QuWidgetContextMenuStrategyI set with setContextMenuStrategy
+ */
 QuWidgetContextMenuStrategyI *QuPlotBase::contextMenuStrategy() const
 {
     return d->ctxMenuStrategy;
@@ -168,6 +194,15 @@ void QuPlotBase::update(const CuData &)
 
 }
 
+/*! configure upper and lower bounds according to data set in the input CuData
+ *
+ * @param da a CuData with suggested minimum and maximum values to automatically
+ * adjust upper and lower bounds
+ *
+ * \note
+ * CuData must contain valid std::string minimum and maximum values that can be
+ * converted to double. The required keys are "min" and "max", respectively.
+ */
 void QuPlotBase::configure(const CuData &da)
 {
     CuVariant m, M;

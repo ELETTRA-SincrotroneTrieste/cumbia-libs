@@ -8,6 +8,12 @@ class QDialog;
 class QuPlotBase;
 class CuData;
 
+/*! \brief strategy pattern. Provide a contextual menu for tango plots
+ *
+ * This class implements the QuPlotBaseContextMenuStrategy::createMenu
+ * virtual method offering a menu with an action to
+ * execute a configuration dialog to change Tango specific settings.
+ */
 class QuTPlotContextMenuStrategy : public QuPlotBaseContextMenuStrategy
 {
 public:
@@ -21,6 +27,11 @@ private:
 
 };
 
+/*! \brief an object (QObject) that applies settings to a plot
+ *
+ * A pointer to a plot is passed in the constructor and the configure method
+ * creates a dialog to change its settings.
+ */
 class QuTPlotSettings : public QObject
 {
     Q_OBJECT

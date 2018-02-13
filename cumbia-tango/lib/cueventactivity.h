@@ -43,6 +43,8 @@ protected:
 
 private:
     CuEventActivityPrivate *d;
+
+    Tango::EventType m_tevent_type_from_string(const std::string& set) const;
 };
 
 #endif // CUEVENTACTIVITY_H

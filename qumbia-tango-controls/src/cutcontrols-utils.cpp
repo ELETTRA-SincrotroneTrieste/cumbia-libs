@@ -4,6 +4,11 @@
 // (tango://){0,1}([A-Za-z_0-9\.]*[:]{1}[0-9]+[/]){0,1}[A-Za-z_0-9\.]+/[A-Za-z_0-9\.]+/[A-Za-z_0-9\\.]+
 #define DEVICE_REGEXP "(tango://){0,1}([A-Za-z_0-9\\.]*[:]{1}[0-9]+[/]){0,1}[A-Za-z_0-9\\.]+/[A-Za-z_0-9\\.]+/[A-Za-z_0-9\\\\.]+"
 
+
+/*! \brief class constructor
+ *
+ * Just instantiate the object with this empty constructor and then use its methods
+ */
 CuTControlsUtils::CuTControlsUtils()
 {
 

@@ -15,11 +15,25 @@
 #include <QtDebug>
 #include <eplot_configuration_widget.h>
 
+/*! the class constructor
+ *
+ * @param realtime true if the plot is a Tango *real time* plot
+ * @param realtime false if the plot is not a Tango *real time* plot
+ *
+ * \note real time plots may offer a special configuration section.
+ */
 QuTPlotContextMenuStrategy::QuTPlotContextMenuStrategy(bool realtime)
 {
     m_realtime = realtime;
 }
 
+/*! \brief returs a QMenu with an action that executes a configuration dialog
+ *
+ * @param w the parent widget (plot)
+ *
+ * A QMenu is created invoking the parent class' method QuPlotBaseContextMenuStrategy::createMenu
+ * The "configure" action executes QuTPlotSettings::configure
+ */
 QMenu *QuTPlotContextMenuStrategy::createMenu(QWidget *w)
 {
     QMenu *m = QuPlotBaseContextMenuStrategy::createMenu(w);
@@ -33,17 +47,44 @@ QMenu *QuTPlotContextMenuStrategy::createMenu(QWidget *w)
     return m;
 }
 
+/*! \brief creates the QuTPlotSettings (QObject)
+ *
+ * @param plot a pointer to the QuPlotBase that will be configured
+ * @param realtime true if the plot is a *real time* plot, false otherwise.
+ *        Default: false (*real time plot* configuration widget unimplemented yet)
+ *
+ * \note
+ * the *real time plot* configuration widget has not yet been made compatible
+ * with cumbia-qtcontrols plots
+ */
 QuTPlotSettings::QuTPlotSettings(QuPlotBase *plot, bool realtime) : QObject(plot)
 {
     m_plot = plot;
     m_realtime = realtime;
 }
 
+/*! \brief the class destructor
+ */
 QuTPlotSettings::~QuTPlotSettings()
 {
     pdelete("~QuTPlotSettings %p", this);
 }
 
+/*! \brief configuration slot that creates a QDialog and populates it with configuration
+ *         elements
+ *
+ * The dialog contains two tabs:
+ * \li one configures the plot aspect through EPlotConfigurationWidget
+ * \li one configures the Tango connection through either RtConfWidget or
+ *     QuConnectionSettingsWidget, according to the real time parameter being
+ *     true or false respectively.
+ *
+ * The dialog is executed at the end of the method
+ *
+ * \note
+ * the *real time plot* configuration widget has not yet been made compatible
+ * with cumbia-qtcontrols plots
+ */
 void QuTPlotSettings::configure()
 {
     QDialog d(m_plot);
@@ -72,6 +113,15 @@ void QuTPlotSettings::configure()
     d.exec();
 }
 
+/*! \brief the CuData passed as parameter is forwarded to the plot through its CuContext
+ *
+ * @param da the CuData to be forwarded to the plot in order to change its configuration
+ *
+ * \par Note
+ * The input CuData comes from a signal emitted by a QuConnectionSettingsWidget
+ * and will typically store settings to change the period and refresh mode of a
+ * Tango source.
+ */
 void QuTPlotSettings::apply(const CuData &da)
 {
     if(qobject_cast<QuTrendPlot *>(m_plot))

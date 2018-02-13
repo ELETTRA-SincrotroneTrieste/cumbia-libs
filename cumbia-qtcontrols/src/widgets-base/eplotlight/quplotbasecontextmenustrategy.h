@@ -5,6 +5,14 @@
 
 /**
  * \ingroup plots
+ *
+ * \brief a context menu strategy to create a context menu for QuPlotBase (strategy pattern)
+ *
+ * qumbia-tango-controls QuTPlotContextMenuStrategy class is an example of stragegy
+ * that inherits from QuPlotBaseContextMenuStrategy.
+ *
+ * The QuPlotBaseContextMenuStrategy default strategy exposes the functions listed in
+ * QuPlotContextMenuComponent documentation.
 */
 class QuPlotBaseContextMenuStrategy : public QuWidgetContextMenuStrategyI
 {

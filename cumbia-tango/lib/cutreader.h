@@ -75,6 +75,8 @@ public:
 
     bool exiting() const;
 
+    bool isEventRefresh(RefreshMode rm) const;
+
 private:
     CuTReaderPrivate *d;
 

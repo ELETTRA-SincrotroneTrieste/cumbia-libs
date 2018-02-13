@@ -7,10 +7,16 @@
 class QuPlotCurve;
 class QuPlotBase;
 
+/*! @private
+ *
+ */
 namespace  Ui {
 class EPlotConfigurationWidget ;
 }
 
+/*! @private
+ *
+ */
 class EPlotConfigurationWidget : public QWidget
 {
   Q_OBJECT
@@ -64,7 +70,8 @@ class EPlotConfigurationWidget : public QWidget
     void restoreYScaleDefault();
 };
 
-/** \brief the EPlotLight configuration dialog.
+/** @private
+ * the EPlotLight configuration dialog.
  *
  * The parent used in the constructor must be a pointer to 
  * an EPlotLight object.
