@@ -126,8 +126,6 @@ CuTangoActionI::Type CuTReader::getType() const
  *
  * @see getData
  *
- * \note Only CuTReader::ChangeEventRefresh and CuTReader::PolledRefresh are currently supported
- *
  */
 void CuTReader::sendData(const CuData &data)
 {
