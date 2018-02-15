@@ -53,6 +53,7 @@ CuTReader::~CuTReader()
     delete d;
 }
 
+/*! \brief
 void CuTReader::onProgress(int step, int total, const CuData &data)
 {
 
@@ -97,6 +98,13 @@ void CuTReader::onResult(const CuData &data)
     }
 }
 
+/*! \brief returns the CuData storing the token that identifies this action
+ *
+ * @return a CuData with the following key/value pairs
+ *
+ * \li "source" --> the name of the source (string)
+ * \li "type" --> a constant string: "reader"
+ */
 CuData CuTReader::getToken() const
 {
     CuData da("source", d->tsrc.getName());
@@ -104,6 +112,10 @@ CuData CuTReader::getToken() const
     return da;
 }
 
+/*! returns the *tango* source (TSource)
+ *
+ * @return a TSource object that describes the Tango source
+ */
 TSource CuTReader::getSource() const
 {
     return d->tsrc;

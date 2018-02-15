@@ -6,6 +6,7 @@
 #include <tango.h>
 #include <cumacros.h>
 
+/* @private */
 class CuPollingActivityPrivate
 {
 public:
@@ -19,6 +20,19 @@ public:
     bool exiting;
 };
 
+/*! \brief the class constructor that sets up a Tango polling activity
+ *
+ * @param token a CuData that will describe this activity
+ * @param df a pointer to a CuDeviceFactoryService that is used by init and onExit to create/obtain and
+ *        later get rid of a Tango device, respectively
+ * @param argins input arguments that can optionally be passed to Tango commands as argins
+ *
+ * \par notes
+ * \li the default polling period is 1000 milliseconds
+ * \li if the "period" key is set on the token, then it is converted to int and it will be used
+ *     to set up the polling period
+ *
+ */
 CuPollingActivity::CuPollingActivity(const CuData &token,
                                      CuDeviceFactoryService *df,
                                      const CuVariant & argins)
@@ -39,29 +53,66 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
     setInterval(period);
 }
 
+/*! \brief the class destructor
+ *
+ * deletes the internal data
+ */
 CuPollingActivity::~CuPollingActivity()
 {
     delete d;
 }
 
+/*! \brief set the input arguments if the poller is used to "read" Tango commands
+ *         and they require argins
+ *
+ * @param argins input arguments to supply to Tango commands, if the reader's source is
+ *        a command
+ *
+ */
 void CuPollingActivity::setArgins(const CuVariant &argins)
 {
     d->argins = argins;
 }
 
+/** \brief returns true if the passed token's *src* and *activity* values matche this activity token's
+ *         *src* and *activity* values.
+ *
+ * @param token a CuData containg key/value pairs of another activity's token
+ * @return true if the input token's "src" and "activity" values match this token's "src" and "activity"
+ *         values
+ *
+ * Two CuEventActivities match if the "src" and the "activity" names match.
+ * CuPollingActivity "activity" key is set to the "poller" value by CuTReader, so two activities match
+ * if they are both CuPollingActivity and share the same source name.
+ *
+ * @implements CuActivity::matches
+ */
 bool CuPollingActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
     return token["src"] == mytok["src"] && mytok["activity"] == token["activity"];
 }
 
+/*! \brief the implementation of the CuActivity::init hook
+ *
+ * This is called in the CuActivity's thread of execution.
+ *
+ * \par Notes
+ * \li in cumbia-tango, threads are grouped by device
+ * \li CuDeviceFactoryService::getDevice is called to obtain a reference to a Tango device (in the form
+ *     of TDevice)
+ * \li TDevice's user refrence count is incremented with TDevice::addRef
+ *
+ * See also CuActivity::init, execute and onExit
+ *
+ * @implements CuActivity::init
+ *
+ */
 void CuPollingActivity::init()
 {
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
-
-    omni_thread::ensure_self se;
 
     /* get a reference to TDevice */
     d->tdev = d->device_srvc->getDevice(tk["device"].toString());
@@ -70,6 +121,42 @@ void CuPollingActivity::init()
     d->tdev->addRef();
 }
 
+/*! \brief the implementation of the CuActivity::execute hook
+ *
+ * This is repeatedly called in the CuActivity's thread of execution, according to the
+ * period chosen for the reader.
+ *
+ * If the reader's source is a command, the first time execute is run CuTangoWorld::get_command_info
+ * is called, so that the data type and format of the command output argument is detected.
+ *
+ * Either command_inout (through CuTangoWorld::cmd_inout) or read_attribute (CuTangoWorld::read_att)
+ * are then invoked. They interpret the result and place it in a CuData that is finally
+ * delivered to the main thread by means of publishResult.
+ *
+ * \par note
+ * A CuPollingActivity can be started after a CuEventActivity failure to subscribe to
+ * the Tango event system. Moreover, polling is the only possible option to read commands.
+ *
+ * \par Error handling
+ * If an operation fails, the next executions are delayed: the next two attempts take place
+ * after 5 seconds and the following ones at intervals of 10 seconds until a successful read.
+ *
+ * \par contents of the CuData delivered by publishResult ("key": value)
+ * \li "device": string: the Tango device name (use CuVariant::toString to convert)
+ * \li "point": string: the Tango point (command or attribute name) (CuVariant::toString)
+ * \li "is_command": bool: true if the source is a command, false if it is an attribute (CuVariant::toBool)
+ * \li "err": bool: true if an error occurred, false otherwise
+ * \li "mode": string: the read mode: "event" or "polled" ("polled" in this case)
+ * \li "period": integer: the polling period, in milliseconds (CuVariant::toInt)
+ * \li "msg": string: a message describing the read operation and its success/failure
+ * \li refer to \ref md_lib_cudata_for_tango for a complete description of the CuData key/value
+ *     pairs that result from attribute or command read operations.
+ *
+ *
+ * See also CuActivity::execute and CuEventActivity
+ *
+ * @implements CuActivity::execute
+ */
 void CuPollingActivity::execute()
 {
     assert(d->tdev != NULL);
@@ -82,7 +169,7 @@ void CuPollingActivity::execute()
     CuTangoWorld tangoworld;
     tangoworld.fillThreadInfo(at, this); /* put thread and activity addresses as info */
     at["err"] = d->tdev->isValid();
-    at["mode"] = "POLLED";
+    at["mode"] = "polled";
     at["period"] = getTimeout();
     bool success = false;
     if(dev && !is_command)
@@ -122,6 +209,19 @@ void CuPollingActivity::execute()
     publishResult(at);
 }
 
+/*! \brief the implementation of the CuActivity::execute hook
+ *
+ * This is called in the CuActivity's thread of execution.
+ *
+ * \li client reference counter is decreased on the TDevice (TDevice::removeRef)
+ * \li CuDeviceFactoryService::removeDevice is called to remove the device from the device factory
+ *     if the reference count is zero
+ * \li the result of the operation is *published* to the main thread through publishResult
+ *
+ * See also CuActivity::onExit
+ *
+ * @implements CuActivity::onExit
+ */
 void CuPollingActivity::onExit()
 {
     assert(d->my_thread_id == pthread_self());
@@ -145,17 +245,35 @@ void CuPollingActivity::onExit()
     publishResult(at);
 }
 
+/** \brief Receive events *from the main thread to the CuActivity thread*.
+ *
+ * @param e the event. Do not delete e after use. Cumbia will delete it after this method invocation.
+ *
+ * @see CuActivity::event
+ *
+ * \note the CuActivityEvent is forwarded to CuContinuousActivity::event
+ */
 void CuPollingActivity::event(CuActivityEvent *e)
 {
     assert(d->my_thread_id == pthread_self());
     CuContinuousActivity::event(e);
 }
 
+/*! \brief returns the type of the polling activity
+ *
+ * @return the CuPollingActivityType value defined in the Type enum
+ */
 int CuPollingActivity::getType() const
 {
     return CuPollingActivityType;
 }
 
+/*! \brief returns the polling period, in milliseconds
+ *
+ * @return the polling period, in milliseconds
+ *
+ * @implements CuActivity::repeat
+ */
 int CuPollingActivity::repeat() const
 {
     assert(d->my_thread_id == pthread_self());

@@ -4,11 +4,12 @@
 #include "tdevice.h"
 #include "tsource.h"
 
-CuDeviceFactoryService::CuDeviceFactoryService()
-{
-
-}
-
+/*! \brief the class destructor
+ *
+ * the class destructor.
+ *
+ * Cumbia::finish deletes services
+ */
 CuDeviceFactoryService::~CuDeviceFactoryService()
 {
     pdelete("~CuDeviceFactoryService deleted %p", this);
@@ -60,6 +61,16 @@ TDevice *CuDeviceFactoryService::findDevice(const std::__cxx11::string &name)
     return NULL;
 }
 
+/*! \brief remove the device with the given name from the list and *delete the device*
+ *
+ * \par note
+ * The list of devices is internally stored by a map associating a device name to a TDevice.
+ * The destruction of TDevice implies the destruction of the wrapped Tango::DeviceProxy.
+ *
+ * \par thread safety
+ * The body of this method is lock guarded, so that it's safe to call removeDevice from
+ * different threads.
+ */
 void CuDeviceFactoryService::removeDevice(const std::__cxx11::string &name)
 {
     pr_thread();
@@ -75,11 +86,28 @@ void CuDeviceFactoryService::removeDevice(const std::__cxx11::string &name)
     }
 }
 
+/*! \brief returns a string constant that identifies the name of this service
+ *
+ * @return the "DeviceFactoryService" string constant
+ *
+ * @see getType
+ *
+ * Implements CuTangoActionI::getName pure virtual method
+ */
 std::__cxx11::string CuDeviceFactoryService::getName() const
 {
     return "DeviceFactoryService";
 }
 
+/*! \brief returns the service type
+ *
+ * @return the value defined in cuactionfactoryservice.h  by the *enum Type*
+ * (CuActionFactoryServiceType = CuServices::User + 2)
+ *
+ * @see Type
+ *
+ * Implements CuTangoActionI::getType pure virtual method
+ */
 CuServices::Type CuDeviceFactoryService::getType() const
 {
     return static_cast<CuServices::Type> (CuDeviceFactoryServiceType);

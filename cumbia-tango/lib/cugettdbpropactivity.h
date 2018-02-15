@@ -6,6 +6,12 @@
 
 class CuGetTDbPropActivityPrivate;
 
+/*! \brief an activity to get properties from the Tango database
+ *
+ * This activity implements CuIsolatedActivity to fetch Tango properties from the
+ * database. It's designed to be executed once (CuIsolatedActivity).
+ *
+ */
 class CuGetTDbPropActivity : public CuIsolatedActivity
 {
 public:

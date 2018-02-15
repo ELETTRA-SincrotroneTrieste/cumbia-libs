@@ -8,9 +8,32 @@ class CuData;
 class CuPollingActivityPrivate;
 class CuDeviceFactoryService;
 
+/*! \brief an activity to periodically read from Tango. Implements CuContinuousActivity
+ *
+ * Implementing CuActivity, the work is done in the background by the three methods
+ *
+ * \li init
+ * \li execute
+ * \li onExit
+ *
+ * They are called from a separate thread. In cumbia-tango, threads are grouped by device.
+ *
+ * Apart from the three execution hooks listed above, some other methods have been written
+ * to comply with the CuActivityInterface:
+ *
+ * \li getType, returning CuEventActivityType
+ * \li event, to receive CuActivityEvent events
+ * \li matches, that returns true if the input token represents an activity like this
+ * \li repeat, that indicates whether or not execute has to be called again
+ *
+ *
+ */
 class CuPollingActivity : public CuContinuousActivity
 {
 public:
+
+    /*! \brief defines the Type of the activity, returned by getType
+     */
     enum Type { CuPollingActivityType = CuActivity::User + 3 };
 
     CuPollingActivity(const CuData& token, CuDeviceFactoryService *df, const CuVariant &argins =

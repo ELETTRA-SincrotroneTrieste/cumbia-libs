@@ -1,6 +1,7 @@
 #include "cudatalistener.h"
 
-
+/*! @private
+ */
 class CuDataListenerPrivate
 {
 public:

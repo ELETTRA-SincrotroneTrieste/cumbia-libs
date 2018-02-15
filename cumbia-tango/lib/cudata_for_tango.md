@@ -1,4 +1,4 @@
-# CuData bundle description for data exchange with the Tango world.
+# CuData bundle description for data exchange with the Tango world
 
 
 ### CuData for Tango attribute configuration and command info
