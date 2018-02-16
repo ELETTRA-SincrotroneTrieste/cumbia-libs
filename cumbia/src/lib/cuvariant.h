@@ -57,7 +57,7 @@ public:
 
     CuVariant(long int li);
 
-    CuVariant(long unsigned int lui);
+    CuVariant(unsigned long int lui);
 
     CuVariant(float d);
 

@@ -32,7 +32,7 @@ CuThreadInterface *CuThreadService::getThread(const CuData& token,
         if(thread->isEquivalent(token))
             return thread;
     }
-    thread = thread_factory_impl.createThread(token, eventsBridgeFactory.createEventBridge(service_provider), service_provider);
+    thread = thread_factory_impl.createThread(token, eventsBridgeFactory.createEventBridge(), service_provider);
     mThreads.push_back(thread);
     return thread;
 }

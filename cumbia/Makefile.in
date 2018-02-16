@@ -180,7 +180,6 @@ am_libcumbia_la_OBJECTS = src/lib/libcumbia_la-cumbia.lo \
 	src/lib/libcumbia_la-cuactivity.lo \
 	src/lib/libcumbia_la-cuactivityevent.lo \
 	src/lib/threads/libcumbia_la-cutimer.lo \
-	src/lib/threads/libcumbia_la-cuthreadlistener.lo \
 	src/lib/libcumbia_la-cuvariant.lo \
 	src/lib/libcumbia_la-cuvariantprivate.lo \
 	src/lib/libcumbia_la-cudata.lo \
@@ -488,7 +487,6 @@ src/lib/cumacros.h \
 src/lib/cuactivity.cpp \
 src/lib/cuactivityevent.cpp \
 src/lib/threads/cutimer.cpp \
-src/lib/threads/cuthreadlistener.cpp \
 src/lib/cuvariant.cpp \
 src/lib/cuvariantprivate.cpp \
 src/lib/cudata.cpp \
@@ -690,9 +688,6 @@ src/lib/threads/$(DEPDIR)/$(am__dirstamp):
 src/lib/threads/libcumbia_la-cutimer.lo:  \
 	src/lib/threads/$(am__dirstamp) \
 	src/lib/threads/$(DEPDIR)/$(am__dirstamp)
-src/lib/threads/libcumbia_la-cuthreadlistener.lo:  \
-	src/lib/threads/$(am__dirstamp) \
-	src/lib/threads/$(DEPDIR)/$(am__dirstamp)
 src/lib/libcumbia_la-cuvariant.lo: src/lib/$(am__dirstamp) \
 	src/lib/$(DEPDIR)/$(am__dirstamp)
 src/lib/libcumbia_la-cuvariantprivate.lo: src/lib/$(am__dirstamp) \
@@ -776,7 +771,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadevents.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadfactory.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadfactoryimpl.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadlistener.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadseventbridge.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/lib/threads/$(DEPDIR)/libcumbia_la-cutimer.Plo@am__quote@
 
@@ -852,13 +846,6 @@ src/lib/threads/libcumbia_la-cutimer.lo: src/lib/threads/cutimer.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/lib/threads/cutimer.cpp' object='src/lib/threads/libcumbia_la-cutimer.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -c -o src/lib/threads/libcumbia_la-cutimer.lo `test -f 'src/lib/threads/cutimer.cpp' || echo '$(srcdir)/'`src/lib/threads/cutimer.cpp
-
-src/lib/threads/libcumbia_la-cuthreadlistener.lo: src/lib/threads/cuthreadlistener.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -MT src/lib/threads/libcumbia_la-cuthreadlistener.lo -MD -MP -MF src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadlistener.Tpo -c -o src/lib/threads/libcumbia_la-cuthreadlistener.lo `test -f 'src/lib/threads/cuthreadlistener.cpp' || echo '$(srcdir)/'`src/lib/threads/cuthreadlistener.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadlistener.Tpo src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadlistener.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/lib/threads/cuthreadlistener.cpp' object='src/lib/threads/libcumbia_la-cuthreadlistener.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -c -o src/lib/threads/libcumbia_la-cuthreadlistener.lo `test -f 'src/lib/threads/cuthreadlistener.cpp' || echo '$(srcdir)/'`src/lib/threads/cuthreadlistener.cpp
 
 src/lib/libcumbia_la-cuvariant.lo: src/lib/cuvariant.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -MT src/lib/libcumbia_la-cuvariant.lo -MD -MP -MF src/lib/$(DEPDIR)/libcumbia_la-cuvariant.Tpo -c -o src/lib/libcumbia_la-cuvariant.lo `test -f 'src/lib/cuvariant.cpp' || echo '$(srcdir)/'`src/lib/cuvariant.cpp
@@ -1433,7 +1420,7 @@ install-html:
 	$(MAKE) doc
 	@$(NORMAL_INSTALL)
 	$(MKDIR_P) $(DESTDIR)$(docdir)
-	$(INSTALL_DATA) $(DX_DOCDIR)/html/* $(DESTDIR)$(docdir)
+	cp -r $(DX_DOCDIR)/html/* $(DESTDIR)$(docdir)
 
 uninstall-local:
 	@$(NORMAL_UNINSTALL)

@@ -3,18 +3,8 @@
 
 #include <QWidget>
 #include <cuthreadlistener.h>
-#include <cuthreadseventbridge.h>
 
 class Cumbia;
-
-class QThreadsEventBridgeFactory : public CuThreadsEventBridgeFactory_I
-{
-public:
-
-    // CuThreadsEventBridgeFactory_I interface
-public:
-    CuThreadsEventBridge_I *createEventBridge() const;
-};
 
 class SimpleA : public QWidget, public CuThreadListener
 {
@@ -33,6 +23,7 @@ public:
 
 private:
     Cumbia *m_cumbia;
+    int m_cnt, m_thid;
 };
 
 #endif // SIMPLEA_H

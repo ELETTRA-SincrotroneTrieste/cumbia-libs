@@ -13,7 +13,7 @@ install-html:
 	$(MAKE) doc
 	@$(NORMAL_INSTALL)
 	$(MKDIR_P) $(DESTDIR)$(docdir)
-	$(INSTALL_DATA) $(DX_DOCDIR)/html/* $(DESTDIR)$(docdir)
+	cp -r $(DX_DOCDIR)/html/* $(DESTDIR)$(docdir)
 
 
 
@@ -32,7 +32,6 @@ src/lib/cumacros.h \
 src/lib/cuactivity.cpp \
 src/lib/cuactivityevent.cpp \
 src/lib/threads/cutimer.cpp \
-src/lib/threads/cuthreadlistener.cpp \
 src/lib/cuvariant.cpp \
 src/lib/cuvariantprivate.cpp \
 src/lib/cudata.cpp \

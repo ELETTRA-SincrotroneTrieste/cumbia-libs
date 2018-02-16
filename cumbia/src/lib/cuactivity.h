@@ -68,6 +68,14 @@ class CuActivityEvent;
  *
  * CuIsolatedActivity by default enables CuActivity::CuADeleteOnExit and CuActivity::CuAUnregisterAfterExec
  *
+ * If the flag CuAUnregisterAfterExec is set to false, then the activity remains *alive* after
+ * the end of execute and it is possible to exploit this to let the activity wait for further
+ * events that wake it up and trigger another execution. For example, the CuEventActivity
+ * in the *cumbia-tango* module and the CuMonitorActivity in the *cumbia-epics* module set this
+ * flag to *false* in order to wait for *events* from the Tango or Epics *control system*
+ * engines, respectively.
+ *
+ *
  * \section cont_act Continuous activities
  *
  * In a *continuous activity* the *execute* method is called periodically by a timer. To exit
@@ -78,7 +86,57 @@ class CuActivityEvent;
  * CuContinuousActivity by default enables CuActivity::CuADeleteOnExit and CuActivity::CuAUnregisterAfterExec
  * See the section \ref isol_act above for further information about the *activity flags*.
  *
+ * The period of a *continuous activity* can either be set before execution or at run time by
+ * CuContinuousActivity::setInterval. The CuContinuousActivity::getTimeout returns the value of the
+ * period. Special events can be sent from the main thread to the background thread in order to
+ * temporarily change the state of a CuContinuousActivity. A *continuous activity*
+ * \li can be paused
+ * \li resumed
+ * \li explicitly *execute*d
+ * \li allows to change its period.
+ * See CuContinuousActivity::event documentation for further details.
  *
+ * \section act_implementations Examples
+ *
+ * \subsection cumbia_tango_module Implementations in the cumbia-tango module
+ *
+ * \subsubsection cupollact CuPollingActivity
+ * The *cumbia-tango* module implements CuContinuousActivity in its CuPollingActivity class,
+ * that periodically reads Tango attributes or commands.
+ *
+ * \subsubsection cuevact CuEventActivity
+ * The *cumbia-tango* module implements CuActivity in CuEventActivity. CuEventActivity's
+ * repeat method returns 0, so that execute is called only once. CuEventActivity could
+ * have been derived from CuIsolatedActivity as well.
+ *
+ * \subsubsection cutdbpropact CuGetTDbPropActivity
+ * CuGetTDbPropActivity from the *cumbia-tango* module inherits from CuIsolatedActivity
+ * so that its *execute* method is run only once. In fact, CuGetTDbPropActivity connects
+ * to the dtabase and reads from it only one time in the *execute* method.
+ *
+ * \subsubsection observ Observations
+ * As you can see, CuActivity and its *isolated* and *continuous* flavours offer enough
+ * flexibility to the clients: CuEventActivity directly derives from CuActivity and
+ * determines its *one shot* nature through the *repeat* method. It could have
+ * subclassed CuIsolatedActivity as well. CuPollingActivity benefits from the *periodic*
+ * nature of CuContinuousActivity. Finally, CuGetTDbPropActivity is an example where only
+ * the *execute* method is really doing work. CuGetTDbPropActivity's *init* and *onExit*
+ * have empty bodies. See the cumbia-tango module for further reading.
+ *
+ * \subsubsection cua_evloop Suspend the background execution of an activity: wait for events and execute callbacks
+ *
+ * If the flag CuActivity::CuAUnregisterAfterExec is set to false, the execution of the
+ * activity is *suspended* after *execute* finishes, as in an *event loop*. The activity
+ * waits for the next event to wake it up and do some job. CuEventActivity from the
+ * cumbia-tango module and CuMonitorActivity from the cumbia-epics module benefit from this
+ * feature to listen for upcoming *events*. When an event arrives, the respective
+ * callbacks are invoked, the data is extracted from the event and the result is published
+ * on the main thread.
+ * If CuActivity::CuAUnregisterAfterExec is set to false, Cumbia::unregisterActivity may
+ * be needed to exit this activity "*loop*".
+ *
+ * \subsubsection write_simple_act Write a simple activity
+ * \li \ref md_src_tutorial_cuactivity
  */
 class CuActivity
 {

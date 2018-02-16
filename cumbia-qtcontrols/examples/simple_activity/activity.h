@@ -18,6 +18,9 @@ protected:
     void init();
     void execute();
     void onExit();
+
+private:
+    std::string write_thread_t() const;
 };
 
 #endif // ACTIVITY_H

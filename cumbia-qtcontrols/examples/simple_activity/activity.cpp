@@ -1,4 +1,5 @@
 #include "activity.h"
+#include <unistd.h>
 
 Activity::Activity(const CuData& token)
     : CuIsolatedActivity(token) {
@@ -23,7 +24,7 @@ void Activity::init()
     // pick the token to initialise the result
     CuData d = getToken();
     d["msg"] = std::string("init"); // insert the message into the result
-    d["thread"] = pthread_self(); // type pthread_t (unsigned long int)
+    d["thread"] = write_thread_t();
     publishResult(d); // post to main thread
 }
 
@@ -32,10 +33,11 @@ void Activity::execute()
     CuData d = getToken();
     for(int i = 1; i <= 3; i++) {
         d["msg"] = std::string("execute [") + std::to_string(i) + std::string("]");
-        d["thread"] = pthread_self(); // unsigned long int
+        d["thread"] = write_thread_t();
         publishProgress(i, 3, d);
+        if (i < 3) sleep(2);
     }
-    d["thread"] = pthread_self();
+    d["thread"] = write_thread_t();
     d["msg"] = std::string("execute [done]");
     publishResult(d);
 }
@@ -45,6 +47,13 @@ void Activity::onExit()
     // do exactly the same as init
     CuData d = getToken();
     d["msg"] = std::string("onExit");
-    d["thread"] = pthread_self();
+    d["thread"] = write_thread_t();
     publishResult(d);
+}
+
+std::string Activity::write_thread_t() const
+{
+    char th[32];
+    snprintf(th, 32, "0x%lx", pthread_self());
+    return std::string(th);
 }

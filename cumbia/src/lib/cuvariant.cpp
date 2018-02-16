@@ -106,7 +106,7 @@ CuVariant::CuVariant(long int li)
     from(li);
 }
 
-CuVariant::CuVariant(long unsigned int lui)
+CuVariant::CuVariant(unsigned long int lui)
 {
     d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
     init(Scalar, LongUInt);
