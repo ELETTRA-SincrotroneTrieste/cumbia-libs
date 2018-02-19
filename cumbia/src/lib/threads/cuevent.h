@@ -4,6 +4,19 @@
 #include "cudata.h"
 class CuActivity;
 
+/*! \brief interface for a generic *cumbia event* designed to be
+ *         generated in a secondary thread (CuActivity's thread - CuThread)
+ *         and delivered into the main thread through an event loop.
+ *
+ * This class is used internally.
+ *
+ * The CuEventType enum defines some default event types used internally
+ * by the library and lets the user extend the types.
+ *
+ * The pure virtual method getType must be reimplemented in subclasses to
+ * provide *rtti* for event type conversion at runtime.
+ *
+ */
 class CuEventI
 {
 public:
@@ -11,19 +24,32 @@ public:
 
     enum CuEventType { Progress = 0, Result, CuActivityExitEvent, ExitLoop, User = 100 };
 
+    /*! \brief returns the event type
+     *
+     * @return a value from the enum CuEventType or a user-defined value
+     *
+     * This method is used for event type conversion at runtime (rtti).
+     */
     virtual CuEventType getType() const = 0;
-
 };
 
-/** \brief This event is used by CuEventLoop service
+/** \brief This event is used by CuEventLoop service to exit the loop
+ *
+ * This class is used internally.
  */
 class CuExitLoopEvent : public CuEventI
 {
     // CuEventI interface
 public:
+
+    /*!
+     * \brief getType returns the exit loop event type
+     * \return CuEventI::ExitLoop
+     */
     CuEventType getType() const { return CuEventI::ExitLoop; }
 };
 
+/*! @private */
 class CuResultEventPrivate
 {
 public:
@@ -39,6 +65,14 @@ public:
     int step, total;
 };
 
+/*!
+ * \brief The CuResultEvent class stores a result that a CuActivity (sender)
+ *        wants to deliver from the background to the main thread
+ *
+ * The CuResultEvent is usually extracted in the CuThread::onEventPosted
+ * method. It is used to get the exchanged data and the pointer to the
+ * activity that sent the event
+ */
 class CuResultEvent : public CuEventI
 {
 public:

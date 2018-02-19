@@ -39,7 +39,6 @@ src/lib/cudatalistener.cpp \
 src/lib/services/cuthreadservice.cpp \
 src/lib/services/cuserviceprovider.cpp \
 src/lib/threads/cuthreadevents.cpp \
-src/lib/threads/cuthreadfactory.cpp \
 src/lib/threads/cuthreadfactoryimpl.cpp \
 src/lib/threads/cuthread.cpp \
 src/lib/threads/cueventloop.cpp \
@@ -64,7 +63,6 @@ src/lib/services/cuthreadservice.h \
 src/lib/services/cuservicei.h \
 src/lib/services/culog.cpp \
 src/lib/threads/cuthreadfactory_i.h \
-src/lib/threads/cuthreadfactory.h \
 src/lib/threads/cuthreadevents.h \
 src/lib/threads/cuthreadfactoryimpl_i.h \
 src/lib/threads/cuthreadfactoryimpl.h \
@@ -106,7 +104,6 @@ src/lib/services/cuthreadservice.h \
 src/lib/services/cuservicei.h \
 src/lib/services/culog.h \
 src/lib/threads/cuthreadfactory_i.h \
-src/lib/threads/cuthreadfactory.h \
 src/lib/threads/cuthreadevents.h \
 src/lib/threads/cuthreadfactoryimpl_i.h \
 src/lib/threads/cuthreadfactoryimpl.h \

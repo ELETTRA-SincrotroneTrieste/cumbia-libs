@@ -22,21 +22,6 @@ int CuTimeoutChangeEvent::getTimeout() const
     return m_timeout;
 }
 
-CuActivityDataEvent::CuActivityDataEvent(const CuData &data) : CuActivityEvent(), m_data(data)
-{
-
-}
-
-CuActivityEvent::Type CuActivityDataEvent::getType() const
-{
-    return CuActivityEvent::Data;
-}
-
-const CuData CuActivityDataEvent::getData() const
-{
-    return m_data;
-}
-
 CuActivityEvent::~CuActivityEvent()
 {
 
@@ -44,5 +29,5 @@ CuActivityEvent::~CuActivityEvent()
 
 CuActivityEvent::Type CuExecuteEvent::getType() const
 {
-    return CuActivityDataEvent::Execute;
+    return CuActivityEvent::Execute;
 }

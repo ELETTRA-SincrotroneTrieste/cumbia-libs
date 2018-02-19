@@ -47,17 +47,5 @@ private:
     int m_timeout;
 };
 
-class CuActivityDataEvent : public CuActivityEvent
-{
-public:
-    CuActivityDataEvent(const CuData& data);
-
-    CuActivityEvent::Type getType() const;
-
-    const CuData getData() const;
-
-private:
-    const CuData m_data;
-};
 
 #endif // CUACTIVITYEVENT_H

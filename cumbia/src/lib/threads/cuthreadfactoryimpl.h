@@ -6,14 +6,18 @@
 class CuServiceProvider;
 class CuThreadsEventBridge_I;
 
+/*! \brief implementation of CuThreadFactoryImplI used to instantiate
+ *         and return a new CuThread
+ *
+ * Factory producing CuThread threads (see createThread)
+ *
+ * @implements CuThreadFactoryImplI
+ */
 class CuThreadFactoryImpl : public CuThreadFactoryImplI
 {
-public:
-    CuThreadFactoryImpl();
-
     // CuThreadFactoryImplI interface
 public:
-    CuThreadInterface *createThread(const CuData &data,
+    CuThreadInterface *createThread(const CuData &thread_token,
                                     CuThreadsEventBridge_I *eventsBridge,
                                     const CuServiceProvider *service_provider) const;
 };

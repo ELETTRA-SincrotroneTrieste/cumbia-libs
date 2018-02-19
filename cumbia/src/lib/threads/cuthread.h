@@ -33,7 +33,6 @@ public:
     void cleanup();
     int type() const;
     void start();
-    void setCuEventLoop(CuEventLoopService *cuEventLoop);
     bool isRunning();
     void onTimeout(CuTimer *sender);
     void wait();

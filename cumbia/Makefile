@@ -187,7 +187,6 @@ am_libcumbia_la_OBJECTS = src/lib/libcumbia_la-cumbia.lo \
 	src/lib/services/libcumbia_la-cuthreadservice.lo \
 	src/lib/services/libcumbia_la-cuserviceprovider.lo \
 	src/lib/threads/libcumbia_la-cuthreadevents.lo \
-	src/lib/threads/libcumbia_la-cuthreadfactory.lo \
 	src/lib/threads/libcumbia_la-cuthreadfactoryimpl.lo \
 	src/lib/threads/libcumbia_la-cuthread.lo \
 	src/lib/threads/libcumbia_la-cueventloop.lo \
@@ -494,7 +493,6 @@ src/lib/cudatalistener.cpp \
 src/lib/services/cuthreadservice.cpp \
 src/lib/services/cuserviceprovider.cpp \
 src/lib/threads/cuthreadevents.cpp \
-src/lib/threads/cuthreadfactory.cpp \
 src/lib/threads/cuthreadfactoryimpl.cpp \
 src/lib/threads/cuthread.cpp \
 src/lib/threads/cueventloop.cpp \
@@ -519,7 +517,6 @@ src/lib/services/cuthreadservice.h \
 src/lib/services/cuservicei.h \
 src/lib/services/culog.cpp \
 src/lib/threads/cuthreadfactory_i.h \
-src/lib/threads/cuthreadfactory.h \
 src/lib/threads/cuthreadevents.h \
 src/lib/threads/cuthreadfactoryimpl_i.h \
 src/lib/threads/cuthreadfactoryimpl.h \
@@ -561,7 +558,6 @@ src/lib/services/cuthreadservice.h \
 src/lib/services/cuservicei.h \
 src/lib/services/culog.h \
 src/lib/threads/cuthreadfactory_i.h \
-src/lib/threads/cuthreadfactory.h \
 src/lib/threads/cuthreadevents.h \
 src/lib/threads/cuthreadfactoryimpl_i.h \
 src/lib/threads/cuthreadfactoryimpl.h \
@@ -711,9 +707,6 @@ src/lib/services/libcumbia_la-cuserviceprovider.lo:  \
 src/lib/threads/libcumbia_la-cuthreadevents.lo:  \
 	src/lib/threads/$(am__dirstamp) \
 	src/lib/threads/$(DEPDIR)/$(am__dirstamp)
-src/lib/threads/libcumbia_la-cuthreadfactory.lo:  \
-	src/lib/threads/$(am__dirstamp) \
-	src/lib/threads/$(DEPDIR)/$(am__dirstamp)
 src/lib/threads/libcumbia_la-cuthreadfactoryimpl.lo:  \
 	src/lib/threads/$(am__dirstamp) \
 	src/lib/threads/$(DEPDIR)/$(am__dirstamp)
@@ -769,7 +762,6 @@ include src/lib/threads/$(DEPDIR)/libcumbia_la-cuevent.Plo
 include src/lib/threads/$(DEPDIR)/libcumbia_la-cueventloop.Plo
 include src/lib/threads/$(DEPDIR)/libcumbia_la-cuthread.Plo
 include src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadevents.Plo
-include src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadfactory.Plo
 include src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadfactoryimpl.Plo
 include src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadseventbridge.Plo
 include src/lib/threads/$(DEPDIR)/libcumbia_la-cutimer.Plo
@@ -895,13 +887,6 @@ src/lib/threads/libcumbia_la-cuthreadevents.lo: src/lib/threads/cuthreadevents.c
 #	$(AM_V_CXX)source='src/lib/threads/cuthreadevents.cpp' object='src/lib/threads/libcumbia_la-cuthreadevents.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -c -o src/lib/threads/libcumbia_la-cuthreadevents.lo `test -f 'src/lib/threads/cuthreadevents.cpp' || echo '$(srcdir)/'`src/lib/threads/cuthreadevents.cpp
-
-src/lib/threads/libcumbia_la-cuthreadfactory.lo: src/lib/threads/cuthreadfactory.cpp
-	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -MT src/lib/threads/libcumbia_la-cuthreadfactory.lo -MD -MP -MF src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadfactory.Tpo -c -o src/lib/threads/libcumbia_la-cuthreadfactory.lo `test -f 'src/lib/threads/cuthreadfactory.cpp' || echo '$(srcdir)/'`src/lib/threads/cuthreadfactory.cpp
-	$(AM_V_at)$(am__mv) src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadfactory.Tpo src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadfactory.Plo
-#	$(AM_V_CXX)source='src/lib/threads/cuthreadfactory.cpp' object='src/lib/threads/libcumbia_la-cuthreadfactory.lo' libtool=yes \
-#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -c -o src/lib/threads/libcumbia_la-cuthreadfactory.lo `test -f 'src/lib/threads/cuthreadfactory.cpp' || echo '$(srcdir)/'`src/lib/threads/cuthreadfactory.cpp
 
 src/lib/threads/libcumbia_la-cuthreadfactoryimpl.lo: src/lib/threads/cuthreadfactoryimpl.cpp
 	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_la_CXXFLAGS) $(CXXFLAGS) -MT src/lib/threads/libcumbia_la-cuthreadfactoryimpl.lo -MD -MP -MF src/lib/threads/$(DEPDIR)/libcumbia_la-cuthreadfactoryimpl.Tpo -c -o src/lib/threads/libcumbia_la-cuthreadfactoryimpl.lo `test -f 'src/lib/threads/cuthreadfactoryimpl.cpp' || echo '$(srcdir)/'`src/lib/threads/cuthreadfactoryimpl.cpp

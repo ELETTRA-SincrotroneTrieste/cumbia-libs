@@ -50,6 +50,22 @@ public:
 
 };
 
+/*! \brief returns a new CuThread
+ *
+ * @param thread_token the token associated to the thread
+ * @param eventsBridge a CuThreadsEventBridge_I implementation, for example
+ *        CuThreadsEventBridge (see CuThreadsEventBridgeFactory::createEventBridge)
+ *        or QThreadsEventBridge, recommended for *Qt applications*
+ *        (see QThreadsEventBridgeFactory::createEventBridge)
+ * @param service_provider the CuServiceProvider of the application
+ *
+ * \par Thread token
+ * The thread token is used as an *id* for the thread. When Cumbia::registerActivity
+ * is called, the thread token passed as argument is compared to all tokens
+ * of all the running CuThreadInterface threads. If two tokens match, the
+ * thread with that token is reused for the new activity, otherwise a new
+ * thread is dedicated to run the new activity.
+ */
 CuThread::CuThread(const CuData &token,
                    CuThreadsEventBridge_I *teb,
                    const CuServiceProvider *serviceProvider)
@@ -163,7 +179,10 @@ void CuThread::publishResult(const CuActivity* a,  const CuData &da)
     d->eventBridge->postEvent(new CuResultEvent(a, da));
 }
 
-/* invoked in CuThread's thread, posts an event to main thread
+/*! \brief  invoked in CuThread's thread, posts an event to main thread
+ *
+ * Delivers an *exit event* to the main thread from the background, using
+ * CuThreadsEventBridge_I::postEvent with a CuActivityExitEvent
  */
 void CuThread::publishExitEvent(CuActivity *a)
 {
@@ -171,36 +190,71 @@ void CuThread::publishExitEvent(CuActivity *a)
     d->eventBridge->postEvent(new CuActivityExitEvent(a));
 }
 
+/*! \brief returns true if this thread token is equal to other_thread_token
+ *
+ * @param other_thread_token a CuData that's the token of another thread
+ *
+ * @return true if this thread was created with a token that equals
+ *         other_thread_token, false otherwise.
+ *
+ * \note
+ * The CuData::operator== is used to perform the comparison between the tokens
+ *
+ * \par Usage
+ * CuThreadService::getThread calls this method to decide wheter to reuse
+ * the current thread (if the tokens are *equivalent*) or create a new one
+ * to run a new activity (if this method returns false).
+ *
+ * When Cumbia::registerActivity is used to execute a new activity, the
+ * *thread token* passed as input argument is relevant to decide whether the
+ * new registered activity must be run in a running thread (if
+ * one is found with the same token) or in a new one (no threads found with
+ * the token given to CuActivity::registerActivity).
+ *
+ * See also getToken
+ */
 bool CuThread::isEquivalent(const CuData &other_thread_token) const
 {
     return this->d->token == other_thread_token;
 }
 
+/*! \brief returns the thread token that was specified at construction time
+ *
+ * @return the CuData specified in the class constructor at creation time
+ *
+ * @see CuThread::CuThread
+ */
 CuData CuThread::getToken() const
 {
     return d->token;
 }
 
+/*! @private
+ * does nothing
+ */
 void CuThread::cleanup()
 {
 
 }
 
+/*! \brief returns 0
+ *
+ * @return 0
+ */
 int CuThread::type() const
 {
     return 0;
 }
 
+/*! @private */
 void CuThread::start()
 {
     d->thread = new std::thread(&CuThread::run, this);
 }
 
-void CuThread::setCuEventLoop(CuEventLoopService *cuEventLoop)
-{
-
-}
-
+/*! @private
+ * Thread loop
+ */
 void CuThread::run()
 {
     pbgreen("CuThread.run 0x%lx", pthread_self());
@@ -299,11 +353,18 @@ void CuThread::run()
     pbred2("CuThread.run loop exit\n");
 }
 
+/*! \brief returns true if the thread is running
+ *
+ * @return true if the thread is running
+ */
 bool CuThread::isRunning()
 {
     return d->thread != NULL;
 }
 
+/*! @private
+ * called from CuThread::run()
+*/
 void CuThread::mActivityInit(CuActivity *a)
 {
     int repeat_timeout;
@@ -325,7 +386,7 @@ void CuThread::mActivityInit(CuActivity *a)
         unregisterActivity(a); /* will enqueue and Unregister event */
 }
 
-/*
+/*! @private
  * invoked from "main" thread, by onEventPosted
  */
 void CuThread::mOnActivityExited(CuActivity *a)
@@ -336,7 +397,7 @@ void CuThread::mOnActivityExited(CuActivity *a)
         delete a;
 }
 
-/*
+/*! @private
  * called from within CuThread run
  */
 void CuThread::mExitActivity(CuActivity *a, bool onThreadQuit)
@@ -361,6 +422,7 @@ void CuThread::mExitActivity(CuActivity *a, bool onThreadQuit)
     d->activity_set.erase(it);
 }
 
+/*! @private */
 void CuThread::mRemoveActivityTimer(CuActivity *a)
 {
     std::map<CuActivity *, CuTimer *>::iterator it = d->timerActivityMap.begin();
@@ -382,6 +444,7 @@ void CuThread::mRemoveActivityTimer(CuActivity *a)
     }
 }
 
+/*! @private */
 CuTimer *CuThread::mFindTimer(CuActivity *a) const
 {
     std::map<CuActivity *, CuTimer *>::iterator it;
@@ -391,6 +454,7 @@ CuTimer *CuThread::mFindTimer(CuActivity *a) const
     return NULL;
 }
 
+/*! @private */
 CuActivity *CuThread::mFindActivity(CuTimer *t) const
 {
     std::map<CuActivity *, CuTimer *>::iterator it;
@@ -400,6 +464,12 @@ CuActivity *CuThread::mFindActivity(CuTimer *t) const
     return NULL;
 }
 
+/*! \brief sends the event e to the activity a
+ *
+ * @param a the CuActivity that sends the event
+ * @param e the CuActivityEvent
+ *
+ */
 void CuThread::postEvent(CuActivity *a, CuActivityEvent *e)
 {
     pbblue("CuThread.postEvent: posting event to activity %p type %d. This thread 0x%lx\e[0m (should be Main's!)", a,
@@ -414,6 +484,12 @@ void CuThread::postEvent(CuActivity *a, CuActivityEvent *e)
     d->conditionvar.notify_one();
 }
 
+/*! \brief returns the period of the timer running for the given activity
+ *
+ * @param a the CuActivity which timer period you want to get
+ * @return milliseconds of the timer running for that activity or -1 if
+ *         no timer is associated to the given activity
+ */
 int CuThread::getActivityTimerPeriod(CuActivity *a) const
 {
     pbblue("CuThread.getActivityPeriod: getting period of activity %p. This thread 0x%lx\e[0m (should be Main's!)", a, pthread_self());
@@ -428,7 +504,7 @@ int CuThread::getActivityTimerPeriod(CuActivity *a) const
     return -1;
 }
 
-
+/*! @private */
 void CuThread::onTimeout(CuTimer *sender)
 {
     pbblue("CuThread.onTimeout: thread (should be Timer's!) 0x%lx", pthread_self());
@@ -445,6 +521,7 @@ void CuThread::onTimeout(CuTimer *sender)
     }
 }
 
+/*! @private */
 void CuThread::wait()
 {
     pbviolet("CuThread::wait: d->thread %p. Joining!", d->thread);
