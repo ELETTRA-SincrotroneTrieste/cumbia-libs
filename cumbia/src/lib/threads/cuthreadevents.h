@@ -8,14 +8,7 @@ class CuActivity;
 class CuActivityEvent;
 class CuTimer;
 
-/*
- * ///////////////////////////////////////
-
- * The following do not derive from QEvent
- *
- * ///////////////////////////////////////
- */
-
+/*! @private */
 class ThreadEvent
 {
   public:
@@ -31,12 +24,14 @@ class ThreadEvent
 private:
 };
 
+/*! @private */
 class ExitThreadEvent : public ThreadEvent
 {
 public:
     ThreadEvent::Type getType() const;
 };
 
+/*! @private */
 class CuPostEventToActivity : public ThreadEvent
 {
 public:
@@ -58,6 +53,7 @@ public:
     ThreadEvent::Type getType() const;
 };
 
+/*! @private */
 class RegisterActivityEvent : public ThreadEvent
 {
 public:
@@ -73,6 +69,7 @@ public:
     ThreadEvent::Type getType() const;
 };
 
+/*! @private */
 class UnRegisterActivityEvent : public ThreadEvent
 {
 public:
@@ -89,6 +86,7 @@ public:
     ThreadEvent::Type getType() const;
 };
 
+/*! @private */
 class CuTimerEvent : public ThreadEvent
 {
 public:

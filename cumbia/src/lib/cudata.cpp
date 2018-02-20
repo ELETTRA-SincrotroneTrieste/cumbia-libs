@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 
+/*! @private */
 class CuDataPrivate
 {
 public:
@@ -11,6 +12,10 @@ public:
     CuVariant emptyVariant;
 };
 
+/*! \brief the class destructor
+ *
+ * CuData class destructor
+ */
 CuData::~CuData()
 {
     if(d)

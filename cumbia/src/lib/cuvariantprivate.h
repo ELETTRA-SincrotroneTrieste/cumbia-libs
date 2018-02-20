@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 
+/*! @private */
 class CuVariantPrivate
 {
 public:

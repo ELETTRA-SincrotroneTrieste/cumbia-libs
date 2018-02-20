@@ -11,12 +11,29 @@
 #include "cuactivityevent.h"
 #include "cuactivity.h"
 
+/*! @private */
 class CumbiaPrivate
 {
 public:
     CuServiceProvider *serviceProvider;
 };
 
+/*! \brief called from the class destructor, cleans up the Cumbia object
+ *
+ * The method does the following:
+ * \li through the CuThreadService, the list of threads is obtained and for every
+ *     thread CuThreadInterface::exit and CuThread::wait are called.
+ *     <strong>The thread is finally deleted</strong>.
+ * \li for each thread, hrough the CuActivityManager, a list of activities
+ *     linked to the thread is obtained and, for each CuActivity,
+ *     CuActivityManager::removeConnection is called. This unbinds *threads from
+ *     activities* and *thread listeners* (CuThreadListener) from *activities*
+ *     (CuActivity). See CuActivityManager::removeConnection.
+ *     <strong>At last, the activity is deleted</strong>.
+ * \li each service from the list of CuServiceI fetched from CuServiceProvider
+ *     is unregistered from the service provider through CuServiceProvider::unregisterService
+ * \li the <strong>service provider is deleted</strong>.
+ */
 void Cumbia::finish()
 {
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
@@ -53,11 +70,19 @@ void Cumbia::finish()
     d = NULL; /* avoid destroying twice if cleanup is called from a subclass destructor */
 }
 
+/*! \brief returns the Cumbia::CumbiaBaseType type
+ *
+ * @return Cumbia::CumbiaBaseTyp
+ */
 int Cumbia::getType() const
 {
     return CumbiaBaseType;
 }
 
+/*! \brief the class destructor
+ *
+ * Cleanup is delegated to the Cumbia::finish method
+ */
 Cumbia::~Cumbia()
 {
     pdelete("~Cumbia %p", this);
@@ -78,6 +103,48 @@ CuServiceProvider *Cumbia::getServiceProvider() const
     return d->serviceProvider;
 }
 
+/*!
+ * \brief registers (adds) an activity to cumbia, links it to
+ *        a data listener, assigns its execution to an existing thread or
+ *        a new one according to a *thread token*
+ *
+ * \param activity the new activity to register
+ * \param dataListener an implementation of CuThreadListener that will receive
+ *        updates through the CuThreadListener::onProgress and
+ *        CuThreadListener::onResult callbacks
+ * \param thread_token a CuData used to decide whether the thread where the
+ *        CuActivity is executed is a new one or it is picked from an existing
+ *        one with the same token
+ * \param thread_factory_impl a const reference to a CuThreadFactoryImplI implementation,
+ *        such as CuThreadFactoryImpl, that creates CuThread instances.
+ * \param eventsBridgeFactoryImpl a const reference to an implementation either of
+ *        CuThreadsEventBridgeFactory_I, such as Qt's QThreadsEventBridgeFactory,
+ *        that has to be used in Qt applications (couples CuThread with Qt
+ *        event loop in QApplication), or CuThreadsEventBridgeFactory, that
+ *        instantiates CuThreadsEventBridge bridges (for other cumbia, non Qt
+ *        applications).
+ *
+ * This method exploits the CuThreadService to get a thread for the given thread_token.
+ * If the thread_token matches the token of a *running thread*, that thread is used
+ * for the activity. Otherwise, CuThreadService will return a *new thread* that
+ * is instantiated through the CuThreadFactoryImplI factory. The new thread will
+ * be bridged to the *event loop* (Qt's or cumbia CuEventLoopService) through the
+ * *threads event bridge* instantiated by the CuThreadsEventBridgeFactory_I
+ * passed to registerActivity.
+ *
+ * The CuActivityManager, another cumbia service (implements CuServiceI and is
+ * registered to the CuServiceProvider), will bind together the *thread*, the
+ * *activity* and the *CuThreadListener*, by means of CuActivityManager::addConnection.
+ *
+ * At last, the thread is started (if not reused and already running) and the new
+ * activity is registered to the thread itself (through CuThread::registerActivity).
+ * CuThread::registerActivity starts immediately the activity in the background
+ * thread.
+ *
+ * see Cumbia::unregisterActivity
+ * see CuActivity::Flags
+ *
+ */
 void Cumbia::registerActivity(CuActivity *activity,
                               CuThreadListener *dataListener,
                               const CuData& thread_token,
@@ -96,6 +163,21 @@ void Cumbia::registerActivity(CuActivity *activity,
     thread->registerActivity(activity);
 }
 
+/*! \brief unregister an activity from cumbia
+ *
+ * @param activity the CuActivity to unregister
+ *
+ * Through the activity manager service, the thread associated to the activity is
+ * fetched and CuThread::unregisterActivity is called.
+ *
+ * A CuActivity can automatically unregister after execution and even be deleted
+ * if appropriate flags are set (CuActivity::CuAUnregisterAfterExec and
+ * CuActivity::CuADeleteOnExit)
+ *
+ * See CuThread::unregisterActivity for further reading.
+ * See also the CuActivity and CuIsolatedActivity documentation.
+ *
+ */
 void Cumbia::unregisterActivity(CuActivity *activity)
 {
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
@@ -120,6 +202,15 @@ CuActivity *Cumbia::findActivity(const CuData &token) const
     return  activityManager->findMatching(token);
 }
 
+/*! \brief if a timer runs within an activity, change the timeout
+ *
+ * @param a the CuActivity which timer has to be changed
+ * @param timeout the number of milliseconds of the new timeout
+ *
+ * \par Implementation
+ * Through the activity manager service, the thread associated to the activity is
+ * fetched and to it a CuTimeoutChangeEvent is forwarded.
+ */
 void Cumbia::setActivityPeriod(CuActivity *a, int timeout)
 {
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
@@ -127,6 +218,11 @@ void Cumbia::setActivityPeriod(CuActivity *a, int timeout)
     thread->postEvent(a, new CuTimeoutChangeEvent(timeout));
 }
 
+/*! \brief if a timer runs within an activity, get the timeout
+ *
+ * @param a the CuActivity which timer timeout has to be obtained
+ * @return the number of milliseconds of the current timeout
+ */
 unsigned long Cumbia::getActivityPeriod(CuActivity *a) const
 {
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
@@ -134,6 +230,10 @@ unsigned long Cumbia::getActivityPeriod(CuActivity *a) const
     return thread->getActivityTimerPeriod(a);
 }
 
+/*! \brief if a timer runs within an activity, pause it
+ *
+ * @param a the CuActivity which timer timeout has to be paused
+ */
 void Cumbia::pauseActivity(CuActivity *a)
 {
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
@@ -141,6 +241,10 @@ void Cumbia::pauseActivity(CuActivity *a)
     thread->postEvent(a, new CuPauseEvent());
 }
 
+/*! \brief if a timer runs within an activity, resume it
+ *
+ * @param a the CuActivity which timer timeout has to be resumed
+ */
 void Cumbia::resumeActivity(CuActivity *a)
 {
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
@@ -148,6 +252,15 @@ void Cumbia::resumeActivity(CuActivity *a)
     thread->postEvent(a, new CuResumeEvent());
 }
 
+/*! \brief post an event to an activity
+ *
+ * @param a a pointer to a CuActivity where the event is dispatched
+ * @param e a generic CuActivityEvent to be delivered to the activity
+ *
+ * \par implementation
+ * Through the activity manager service, the thread associated to the activity is
+ * fetched and CuThread::postEvent is called
+ */
 void Cumbia::postEvent(CuActivity *a, CuActivityEvent *e)
 {
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));

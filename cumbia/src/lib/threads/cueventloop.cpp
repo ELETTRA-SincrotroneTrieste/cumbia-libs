@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <cumacros.h>
 
+/*! @private */
 class CuEventLoopPrivate
 {
 public:
@@ -18,19 +19,35 @@ public:
     std::thread *thread;
 };
 
+/*! The class constructor
+ *
+ * @param l a CuEventLoopListener
+ */
 CuEventLoopService::CuEventLoopService(CuEventLoopListener *l)
 {
     d = new CuEventLoopPrivate;
     d->thread = NULL;
 }
 
+/*! \brief the class destructor
+ *
+ * \par Note
+ * CuEventLoopService must not be destroyed while its thread is still running.
+ * Instead, CuEventLoopService::exit and CuEventLoopService::wait must be called.
+ */
 CuEventLoopService::~CuEventLoopService()
 {
     if(d->thread)
-        perr("~CuEventLoopService: destroyed while thread already running. Please call exit() and wait()");
+        perr("~CuEventLoopService: destroyed while thread still running. Please call exit() and wait()");
     delete d;
 }
 
+/*! \brief executes the event loop
+ *
+ * @param threaded true if the CuEventLoopService::run method has to be run in a separate
+ *        thread, false if CuEventLoopService::run has to be run in the caller's same
+ *        thread.
+ */
 void CuEventLoopService::exec(bool threaded)
 {
     if(threaded)
@@ -46,6 +63,12 @@ void CuEventLoopService::exec(bool threaded)
         run();
 }
 
+/*! \brief post an event to the internal thread event queue
+ *
+ * This class is used internally.
+ *
+ * @param e the event to be delivered
+ */
 void CuEventLoopService::postEvent(CuEventI *e)
 {
     std::unique_lock<std::mutex> lk(d->m_mutex);
@@ -53,11 +76,24 @@ void CuEventLoopService::postEvent(CuEventI *e)
     d->m_evloop_cv.notify_one();
 }
 
+/*! \brief set the CuEventLoopListener that will receive events from this service
+ *
+ * @param l a CuEventLoopListener that will receive events from the event loop
+ */
 void CuEventLoopService::setCuEventLoopListener(CuEventLoopListener *l)
 {
     d->eventLoopListener = l;
 }
 
+/*! \brief exit the event loop cleanly
+ *
+ * an appropriate event is queued to the event queue of the event loop service.
+ * As soon as it is received, the event loop exits.
+ *
+ * \par Note
+ * call CuEventLoop::wait to wait for the secondary thread (if CuEventLoopService::exec
+ * was called with a true parameter) to leave the event loop
+ */
 void CuEventLoopService::exit()
 {
     std::unique_lock<std::mutex> lk(d->m_mutex);
@@ -65,6 +101,11 @@ void CuEventLoopService::exit()
     d->m_evloop_cv.notify_one();
 }
 
+/*! \brief wait for the secondary thread  to leave the event loop
+ *
+ * Wait for the secondary thread  to leave the event loop ( if CuEventLoopService::exec
+ * was called with a true parameter)
+ */
 void CuEventLoopService::wait()
 {
     if(d->thread)
@@ -77,6 +118,11 @@ void CuEventLoopService::wait()
     }
 }
 
+/*! \brief run the event loop waiting for events on a queue
+ *
+ * Runs the event loop in the same caller's thread or in a background one,
+ * according to how CuEventLoopService::exec was called
+ */
 void CuEventLoopService::run()
 {
     pblue("CuEventLoop run: entering loop: this thread: \e[1;31m0x%lx\e[0m", pthread_self());

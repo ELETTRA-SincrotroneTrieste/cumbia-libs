@@ -38,6 +38,10 @@ void CuActivityManager::addConnection(CuThreadInterface *t, CuActivity *a, CuThr
  *
  * @param a the activity to be removed together with the thread and thread listner(s) it's linked with
  *
+ * This unbinds *threads from activities* and *thread listeners* (CuThreadListener)
+ * from *activities* (CuActivity).
+ *
+ * See CuActivityManager::removeConnection
  */
 void CuActivityManager::removeConnection(CuActivity *a)
 {
@@ -108,6 +112,14 @@ CuActivity *CuActivityManager::findMatching(const CuData &token)
     return NULL;
 }
 
+/*! \brief returns the CuThreadInterface that executes the given activity
+ *
+ * @param activity a pointer to the CuActivity you want to get the thread
+ *        it is run in
+ * @return a pointer to the thread (CuThreadInterface) where the activity is
+ *         run, or NULL if the activity is not found in the activity manager
+ *         connections map
+ */
 CuThreadInterface *CuActivityManager::getThread(CuActivity *activity)
 {
     cuprintf("CuActivityManager.getThread: activity: %p this thread 0x%lx\n", activity, pthread_self());

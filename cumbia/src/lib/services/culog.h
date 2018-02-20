@@ -8,6 +8,30 @@
 
 class CuLogImplI;
 
+/*! \brief a cumbia service providing an interface for logging facilities
+ *
+ * The class is designed to provide a logging facility with the following features:
+ * \li define three levels: Info, Warn, Error
+ * \li define a "*class*" of log: Generic, Connect, Write, Read, *user defined*
+ *
+ * Several *log implementations* (CuLogImpl) can be added to CuLog  through the
+ * CuLog::addImpl method. A pointer to a registered *log implementation* can be
+ * obtained from CuLog::getImpl specifying a name as string. CuLogImplI interface
+ * actually defines a CuLogImplI::getName method to force the specific log
+ * implementation to provide a name
+ *
+ * When a log messge is written with CuLog::write, CuLogImplI::write is called for
+ * every registered log implementation.
+ * This allows to have a *log implementation* that writes on the console, another
+ * one writing on a file and a third one inserting messages on a database.
+ *
+ * The CuLog::getName and CuLog::getType methods are implemented from the CuServiceI
+ * interface for cumbia *services* to identify the specific CuServiceI.
+ *
+ * @see CuLogImplI
+ *
+ * @implements CuServiceI
+ */
 class CuLog : public CuServiceI
 {
 public:

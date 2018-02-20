@@ -7,6 +7,7 @@
 
 #include <assert.h>
 
+/*! @private */
 class CuActivityPrivate
 {
 public:

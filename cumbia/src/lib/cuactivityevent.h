@@ -9,31 +9,64 @@
 class CuActivityEvent
 {
 public:
-    enum Type { Pause = 0, Resume, TimeoutChange, Data, Execute, User = 100, MaxUser = 2048 };
+    enum Type { Pause = 0, ///< CuPauseEvent: pause the thread's timer
+                Resume, ///< CuResumeEvent: resume a thread's paused timer
+                TimeoutChange, ///< CuTimeoutChangeEvent: change thread's timer period
+                Execute, ///< CuExecuteEvent: trigger a call to CuActivity::execute
+                User = 100, ///< starting value for user defined events
+                MaxUser = 2048 ///< maximum value for user defined events
+              };
 
-    virtual ~CuActivityEvent();
+    /*! \brief class destructor
+     *
+     * class virtual destructor
+     */
+    virtual ~CuActivityEvent() {}
 
+    /*! \brief returns the type of the event
+     *
+     * @return a value from the CuActivityEvent::Type enum, or a user defined
+     *         one
+     */
     virtual Type getType() const = 0;
 };
 
+/*! \brief event to pause an activity's timer
+ *
+ * This event can be sent to pause the thread's timer
+ */
 class CuPauseEvent : public CuActivityEvent
 {
 public:
     CuActivityEvent::Type getType() const;
 };
 
+/*! \brief event to resume an activity's timer
+ *
+ * This event resumes the activity's thread timer
+ */
 class CuResumeEvent : public CuActivityEvent
 {
 public:
     CuActivityEvent::Type getType() const;
 };
 
+/*! \brief triggers a call to CuActivity::execute
+ *
+ * This event triggers a call to CuActivity::execute in the background
+ * thread
+ *
+ */
 class CuExecuteEvent : public CuActivityEvent
 {
 public:
     CuActivityEvent::Type getType() const;
 };
 
+/*! \brief this event changes the timeout of the activity's thread timer
+ *
+ * This event contains a new timeout for the activity's thread timer
+ */
 class CuTimeoutChangeEvent : public CuActivityEvent
 {
 public:

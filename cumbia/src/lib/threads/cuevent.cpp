@@ -109,11 +109,19 @@ CuActivityExitEvent::CuActivityExitEvent(CuActivity *sender)
     m_activity = sender;
 }
 
+/*! \brief returns an exit event type
+ *
+ * @return CuEventI::CuActivityExitEvent
+ */
 CuEventI::CuEventType CuActivityExitEvent::getType() const
 {
     return CuEventI::CuActivityExitEvent;
 }
 
+/*! \brief returns a pointer to the activity that sent the exit event
+ *
+ * @return a pointer to the CuActivity that sent the exit event
+ */
 CuActivity *CuActivityExitEvent::getActivity() const
 {
     return m_activity;

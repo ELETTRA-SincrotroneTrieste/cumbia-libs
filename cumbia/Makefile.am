@@ -71,7 +71,6 @@ src/lib/cuactivityfactoryimpli.h \
 src/lib/threads/cueventloop.h \
 src/lib/services/cuactivitymanager.h \
 src/lib/threads/cuevent.h \
-src/lib/threads/mainloop_event_deliverer.h \
 src/lib/threads/cuthreadseventbridge_i.h \
 src/lib/threads/cuthreadseventbridge.h \
 src/lib/threads/cuthreadseventbridgefactory_i.h
@@ -112,7 +111,6 @@ src/lib/cuactivityfactoryimpli.h \
 src/lib/threads/cueventloop.h \
 src/lib/services/cuactivitymanager.h \
 src/lib/threads/cuevent.h \
-src/lib/threads/mainloop_event_deliverer.h \
 src/lib/threads/cuthreadseventbridge_i.h \
 src/lib/threads/cuthreadseventbridge.h \
 src/lib/threads/cuthreadseventbridgefactory_i.h

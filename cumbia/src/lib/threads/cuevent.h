@@ -69,6 +69,8 @@ public:
  * \brief The CuResultEvent class stores a result that a CuActivity (sender)
  *        wants to deliver from the background to the main thread
  *
+ * This is used internally by the library
+ *
  * The CuResultEvent is usually extracted in the CuThread::onEventPosted
  * method. It is used to get the exchanged data and the pointer to the
  * activity that sent the event
@@ -95,6 +97,14 @@ protected:
     CuResultEventPrivate *d_p;
 };
 
+/*! \brief exit event for the activity
+ *
+ * This is used internally by the library
+ *
+ * used from
+ * \li CuThread::onEventPosted
+ * \li CuThread::publishExitEvent
+ */
 class CuActivityExitEvent : public CuEventI
 {
 public:

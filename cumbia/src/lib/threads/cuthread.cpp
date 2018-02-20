@@ -24,6 +24,7 @@
 #include <assert.h>
 #include <limits>
 
+/*! @private */
 class CuThreadPrivate
 {
 public:
@@ -80,6 +81,11 @@ CuThread::CuThread(const CuData &token,
     d->eventBridge->setCuThreadsEventBridgeListener(this);
 }
 
+/*! \brief the class destructor, deletes the thread and the event bridge
+ *
+ * The CuThread destructor deletes the thread (std::thread) and the
+ * event bridge
+ */
 CuThread::~CuThread()
 {
     pdelete("~CuThread %p", this);
@@ -92,6 +98,10 @@ CuThread::~CuThread()
     delete d;
 }
 
+/*! \brief exit the thread loop
+ *
+ * an ExitThreadEvent is queued to the event queue to exit the thread
+ */
 void CuThread::exit()
 {
     if (d->thread)
@@ -105,7 +115,10 @@ void CuThread::exit()
 
 /** \brief Register a new activity on this thread.
  *
- * This is invoked from the main thread
+ * This is invoked from the main thread.
+ * As soon as registerActivity is called, a RegisterActivityEvent is added to the
+ * thread event queue and the CuActivity will be soon initialised and executed in
+ * the background. (CuActivity::init and CuActivity::execute)
  *
  * @param l a CuActivity that is the worker, whose methods are invoked in this background thread.
  */
@@ -120,6 +133,16 @@ void CuThread::registerActivity(CuActivity *l)
     d->conditionvar.notify_one();
 }
 
+/*! \brief unregister the activity passed as argument
+ *
+ * @param l the CuActivity to unregister
+ *
+ * An UnRegisterActivityEvent is queued to the thread event queue.
+ * When processed, CuActivity::doOnExit is called which in turn calls
+ * CuActivity::onExit (in the CuActivity background thread).
+ * If the flag CuActivity::CuADeleteOnExit is true, the activity is
+ * later deleted (back in the main thread)
+ */
 void CuThread::unregisterActivity(CuActivity *l)
 {
     pbblue("CuThread.unregisterActivity: \e[1;31munregister activity %p\e[0m (main or activity's) 0x%lx", l, pthread_self());
