@@ -90,6 +90,22 @@ Cumbia::~Cumbia()
         finish();
 }
 
+/*! \brief Cumbia class constructor
+ *
+ * \li instantiates a *cumbia service provider*, namely CuServiceProvider
+ * \li registers an instance of the *cumbia thread service*, CuThreadService, to
+ *     the service provider
+ * \li registers an instance of the *cumbia activity manager*, CuActivityManager, to
+ *     the service provider
+ *
+ * The cumbia *service provider* is a class member. A pointer to it can be obtained
+ * with Cumbia::getServiceProvider. The *service provider* remains the same
+ * throughout the whole application lifetime and is destroyed when the Cumbia object
+ * is destroyed (Cumbia::finish)
+ *
+ * Please refer to CuServiceProvider, CuThreadService and CuActivityManager documentation
+ * for further information.
+ */
 Cumbia::Cumbia()
 {
     d = new CumbiaPrivate();
@@ -130,7 +146,8 @@ CuServiceProvider *Cumbia::getServiceProvider() const
  * is instantiated through the CuThreadFactoryImplI factory. The new thread will
  * be bridged to the *event loop* (Qt's or cumbia CuEventLoopService) through the
  * *threads event bridge* instantiated by the CuThreadsEventBridgeFactory_I
- * passed to registerActivity.
+ * passed to registerActivity. Please refer to CuThreadService::getThread documentation
+ * for further reading.
  *
  * The CuActivityManager, another cumbia service (implements CuServiceI and is
  * registered to the CuServiceProvider), will bind together the *thread*, the

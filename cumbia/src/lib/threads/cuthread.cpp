@@ -98,7 +98,7 @@ CuThread::~CuThread()
     delete d;
 }
 
-/*! \brief exit the thread loop
+/*! \brief exit the thread loop gracefully
  *
  * an ExitThreadEvent is queued to the event queue to exit the thread
  */
@@ -155,8 +155,22 @@ void CuThread::unregisterActivity(CuActivity *l)
     d->conditionvar.notify_one();
 }
 
-/** \brief implements onEventPosted from CuThreadsEventBridgeListener interface and invokes onProgress or
+/** \brief implements onEventPosted from CuThreadsEventBridgeListener interface. Invokes onProgress or
  *         onResult on the registered CuThreadListener objects.
+ *
+ * This method gets a reference to a CuActivityManager through the *service provider*.
+ * \li if either a CuEventI::Result or CuEventI::Progress is received, then the
+ *     addressed CuActivity is extracted by the CuResultEvent and the list of
+ *     CuThreadListener objects is obtained through CuActivityManager::getThreadListeners.
+ *     At last either CuThreadListener::onProgress or CuThreadListener::onResult is called.
+ * \li if CuEventI::CuActivityExitEvent event type is received, CuThread becomes aware
+ *     that a CuActivity has finished, and deletes it if its CuActivity::CuADeleteOnExit
+ *     flag is set to true.
+ *
+ * \par note
+ * The association between *activities*, *threads* and *CuThreadListener* objects is
+ * defined by Cumbia::registerActivity. Please read Cumbia::registerActivity documentation
+ * for more details.
  *
  */
 void CuThread::onEventPosted(CuEventI *event)
@@ -186,7 +200,14 @@ void CuThread::onEventPosted(CuEventI *event)
     }
 }
 
-/* invoked in CuThread's thread, posts an event to main thread
+/*! \brief invoked in CuThread's thread, posts a *progress event* to the main thread
+ *
+ * @param activity: the addressee of the event
+ * @param step the current step of the progress
+ * @param total the total number of steps making up the whole work
+ * @param data the data to be delivered with the progress event
+ *
+ * CuResultEvent is used in conjunction with CuThreadsEventBridge_I::postEvent
  */
 void CuThread::publishProgress(const CuActivity* activity, int step, int total, const CuData &data)
 {
@@ -194,7 +215,12 @@ void CuThread::publishProgress(const CuActivity* activity, int step, int total, 
     d->eventBridge->postEvent(new CuResultEvent(activity, step, total, data));
 }
 
-/* invoked in CuThread's thread, posts an event to main thread
+/*! \brief invoked in CuThread's thread, posts a *result event* to main thread
+ *
+ * @param a: the addressee of the event
+ * @param data the data to be delivered with the result
+ *
+ * CuResultEvent is used in conjunction with CuThreadsEventBridge_I::postEvent
  */
 void CuThread::publishResult(const CuActivity* a,  const CuData &da)
 {
@@ -202,10 +228,17 @@ void CuThread::publishResult(const CuActivity* a,  const CuData &da)
     d->eventBridge->postEvent(new CuResultEvent(a, da));
 }
 
-/*! \brief  invoked in CuThread's thread, posts an event to main thread
+/*! \brief  invoked in CuThread's thread, posts an *activity exit event*
+ *          to the main thread
  *
- * Delivers an *exit event* to the main thread from the background, using
- * CuThreadsEventBridge_I::postEvent with a CuActivityExitEvent
+ * \note used internally
+ *
+ * Called from CuActivity::doOnExit (background thread), delivers an *exit
+ * event* to the main thread from the background, using
+ * CuThreadsEventBridge_I::postEvent with a CuActivityExitEvent as parameter.
+ * When the event is received and processed back in the *main thread* (in
+ * CuThread::onEventPosted) the activity is deleted if the CuActivity::CuADeleteOnExit
+ * flag is enabled.
  */
 void CuThread::publishExitEvent(CuActivity *a)
 {
@@ -269,7 +302,12 @@ int CuThread::type() const
     return 0;
 }
 
-/*! @private */
+/*! \brief internally used, allocates a new std::thread
+ *
+ * \note used internally
+ *
+ * return a new instance of std::thread
+ */
 void CuThread::start()
 {
     d->thread = new std::thread(&CuThread::run, this);
@@ -487,10 +525,24 @@ CuActivity *CuThread::mFindActivity(CuTimer *t) const
     return NULL;
 }
 
-/*! \brief sends the event e to the activity a
+/*! \brief sends the event e to the activity a from the main thread
+ *         to the background
  *
  * @param a the CuActivity that sends the event
  * @param e the CuActivityEvent
+ *
+ * \par Examples
+ * Cumbia calls CuThread::postEvent several times:
+ *
+ * \li Cumbia::setActivityPeriod sends a CuTimeoutChangeEvent event
+ * \li Cumbia::pauseActivity sends a CuPauseEvent
+ * \li Cumbia::resumeActivity sends a CuResumeEvent
+ * \li Cumbia::postEvent barely forwards a *user defined* CuActivityEvent
+ *     to the specified activity
+ *
+ * There can be situations where clients can call the above listed Cumbia methods.
+ * On the other hand, CuThread::postEvent is not normally intended for direct use
+ * by clients of this library.
  *
  */
 void CuThread::postEvent(CuActivity *a, CuActivityEvent *e)

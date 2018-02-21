@@ -69,6 +69,17 @@ void CuActivity::doExecute()
     execute();
 }
 
+/*! \brief calls the pure virtual method onExit, gets the thread it belongs
+ *         and calls CuThreadInterface::publishExitEvent
+ *
+ * \note called from the background thread.
+ * \note Used internally.
+ *
+ * \li set the state flags to CuActivity::CuAStateOnExit
+ * \li call CuActivity::onExit, implemented in subclasses
+ * \li call CuActivityManager::getThread to get the thread associated to this activity
+ * \li call CuThreadInterface::publishExitEvent on the CuActivity's thread
+ */
 void CuActivity::doOnExit()
 {
     d->stateFlags |= CuActivity::CuAStateOnExit;
@@ -78,8 +89,10 @@ void CuActivity::doOnExit()
         thread->publishExitEvent(this);
 }
 
-/* template method. Calls onExit only, without publishing exit event,
- * because the thread is leaving its loop.
+/*! \brief template method. Calls onExit only, without publishing exit event,
+ *         because the thread is leaving its loop.
+ *
+ * \note Used internally
 */
 void CuActivity::exitOnThreadQuit()
 {
@@ -87,21 +100,42 @@ void CuActivity::exitOnThreadQuit()
     onExit();
 }
 
+/*! \brief returns the activity flags
+ *
+ * @return the activity flags, a combination of values from CuActivity::Flags
+ *
+ * @see setFlags
+ *
+ */
 int CuActivity::getFlags() const
 {
     return d->flags;
 }
 
+/*! \brief returns the activity *state* flags
+ *
+ * @return the activity state flags, a combination of values defined in
+ *         CuActivity::StateFlags
+ */
 int CuActivity::getStateFlags() const
 {
     return d->stateFlags;
 }
 
+/*! \brief set the flags on the activity
+ *
+ * @param f a combination of CuActivity::Flags <strong>or</strong>ed together.
+ */
 void CuActivity::setFlags(int f)
 {
     d->flags = f;
 }
 
+/*! \brief set a specific CuActivity::Flags flag true or false
+ *
+ * @param f a flag from CuActivity::Flags
+ * @param on true or false to enable/disable a flag
+ */
 void CuActivity::setFlag(CuActivity::Flags f, bool on)
 {
     if(!on)
@@ -143,6 +177,20 @@ CuActivityManager *CuActivity::getActivityManager() const
     return d->activityManager;
 }
 
+/*! \brief return the activity token
+ *
+ * The activity token can be used to identify an activity or to gather
+ * its characteristics together in a CuData bundle.
+ * This *must not be confused with the thread token*, which is used to decide
+ * whether a new activity is started in a new thread or an existing thread
+ * with the same token is used.
+ *
+ * For that usage, see
+ * \li CuThread::isEquivalent
+ * \li \ref md_src_tutorial_cuactivity
+ * \li CuActivity introductive documentation
+ *
+ */
 CuData CuActivity::getToken() const
 {
     return d->token;

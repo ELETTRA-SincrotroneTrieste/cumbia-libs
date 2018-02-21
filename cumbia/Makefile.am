@@ -67,7 +67,6 @@ src/lib/threads/cuthreadevents.h \
 src/lib/threads/cuthreadfactoryimpl_i.h \
 src/lib/threads/cuthreadfactoryimpl.h \
 src/lib/threads/cuthread.h \
-src/lib/cuactivityfactoryimpli.h \
 src/lib/threads/cueventloop.h \
 src/lib/services/cuactivitymanager.h \
 src/lib/threads/cuevent.h \
@@ -107,7 +106,6 @@ src/lib/threads/cuthreadevents.h \
 src/lib/threads/cuthreadfactoryimpl_i.h \
 src/lib/threads/cuthreadfactoryimpl.h \
 src/lib/threads/cuthread.h \
-src/lib/cuactivityfactoryimpli.h \
 src/lib/threads/cueventloop.h \
 src/lib/services/cuactivitymanager.h \
 src/lib/threads/cuevent.h \

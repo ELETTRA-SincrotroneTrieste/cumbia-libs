@@ -2,6 +2,7 @@
 #include "cuactivityevent.h"
 #include "cumacros.h"
 
+/*! @private */
 class CuContinuousActivityPrivate
 {
 public:

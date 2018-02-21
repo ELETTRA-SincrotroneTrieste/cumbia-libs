@@ -3,6 +3,9 @@
 
 class CuTimer;
 
+/*! @private
+ *
+ */
 class CuTimerListener
 {
 public:

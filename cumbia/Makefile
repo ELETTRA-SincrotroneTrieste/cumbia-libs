@@ -516,12 +516,10 @@ src/lib/services/cuserviceprovider.h \
 src/lib/services/cuthreadservice.h \
 src/lib/services/cuservicei.h \
 src/lib/services/culog.cpp \
-src/lib/threads/cuthreadfactory_i.h \
 src/lib/threads/cuthreadevents.h \
 src/lib/threads/cuthreadfactoryimpl_i.h \
 src/lib/threads/cuthreadfactoryimpl.h \
 src/lib/threads/cuthread.h \
-src/lib/cuactivityfactoryimpli.h \
 src/lib/threads/cueventloop.h \
 src/lib/services/cuactivitymanager.h \
 src/lib/threads/cuevent.h \
@@ -556,12 +554,10 @@ src/lib/services/cuserviceprovider.h \
 src/lib/services/cuthreadservice.h \
 src/lib/services/cuservicei.h \
 src/lib/services/culog.h \
-src/lib/threads/cuthreadfactory_i.h \
 src/lib/threads/cuthreadevents.h \
 src/lib/threads/cuthreadfactoryimpl_i.h \
 src/lib/threads/cuthreadfactoryimpl.h \
 src/lib/threads/cuthread.h \
-src/lib/cuactivityfactoryimpli.h \
 src/lib/threads/cueventloop.h \
 src/lib/services/cuactivitymanager.h \
 src/lib/threads/cuevent.h \

@@ -49,6 +49,13 @@ class CuActivityEvent;
  * See the \ref cont_act section for further details about onExit invocation in *continuous
  * activities*.
  *
+ * \subsection execution_thred Thread of execution
+ * When Cumbia::registerActivity is called to run a new activity, a so called
+ * *thread token* is passed as input argument to the method.
+ * The *thread token* is compared to all other *threads running in the same cumbia*
+ * application using  CuThread::isEquivalent. If an *equivalent* thread is found,
+ * it is reused for the new activity. A new thread is started otherwise.
+ *
  * \subsection post_data Post data from the background thread to the main
  *
  * The means to deliver results from the background thread where init is executed

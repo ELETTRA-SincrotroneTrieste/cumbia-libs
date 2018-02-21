@@ -13,6 +13,19 @@ class CuEventLoopService;
 class CuServiceProvider;
 class CuActivityEvent;
 
+/*! \brief *cumbia thread* implementation
+ *
+ * CuThread offers a C++11 thread implementation that can be used with cumbia.
+ * Threads in *cumbia applications* are usually instantiated and managed by the
+ * CuThreadService *cumbia service*. Please read the introduction to CuThread's
+ * documentation to understand how *cumbia* deals with them in an application
+ * (\ref cuthread_service).
+ *
+ *
+ *
+ * @implements CuThreadInterface
+ * @implements CuTimerListener
+ */
 class CuThread : public CuThreadInterface, public CuTimerListener
 {
 public:

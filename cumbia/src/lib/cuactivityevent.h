@@ -5,6 +5,19 @@
 
 /** \brief Generic event to pass data to an activity
  *
+ * Generic activity event that is posted from the main thread to the
+ * background thread.
+ *
+ * Usages:
+ * \li Cumbia::setActivityPeriod sends a CuTimeoutChangeEvent event
+ * \li Cumbia::pauseActivity sends a CuPauseEvent
+ * \li Cumbia::resumeActivity sends a CuResumeEvent
+ * \li Cumbia::postEvent barely forwards a *user defined* CuActivityEvent
+ *     to the specified activity
+ *
+ * @see Cumbia::postEvent (can be used by a client)
+ * @see CuThread::postEvent (typically used internally by the library)
+ *
  */
 class CuActivityEvent
 {
@@ -34,6 +47,8 @@ public:
 /*! \brief event to pause an activity's timer
  *
  * This event can be sent to pause the thread's timer
+ *
+ * @implements CuActivityEvent
  */
 class CuPauseEvent : public CuActivityEvent
 {
@@ -44,6 +59,8 @@ public:
 /*! \brief event to resume an activity's timer
  *
  * This event resumes the activity's thread timer
+ *
+ * @implements CuActivityEvent
  */
 class CuResumeEvent : public CuActivityEvent
 {
@@ -56,6 +73,7 @@ public:
  * This event triggers a call to CuActivity::execute in the background
  * thread
  *
+ * @implements CuActivityEvent
  */
 class CuExecuteEvent : public CuActivityEvent
 {
@@ -66,6 +84,8 @@ public:
 /*! \brief this event changes the timeout of the activity's thread timer
  *
  * This event contains a new timeout for the activity's thread timer
+ *
+ * @implements CuActivityEvent
  */
 class CuTimeoutChangeEvent : public CuActivityEvent
 {
