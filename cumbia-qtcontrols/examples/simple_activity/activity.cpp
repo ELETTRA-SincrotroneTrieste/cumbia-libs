@@ -3,7 +3,7 @@
 
 Activity::Activity(const CuData& token)
     : CuIsolatedActivity(token) {
-
+    printf("created activity: flags %d\n", getFlags());
 }
 
 int Activity::getType() const {
@@ -49,6 +49,7 @@ void Activity::onExit()
     d["msg"] = std::string("onExit");
     d["thread"] = write_thread_t();
     publishResult(d);
+    printf("onExit activity: flags %d\n", getFlags());
 }
 
 std::string Activity::write_thread_t() const

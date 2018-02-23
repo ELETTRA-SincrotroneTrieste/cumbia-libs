@@ -133,6 +133,16 @@ CuThreadInterface *CuActivityManager::getThread(CuActivity *activity)
     return NULL;
 }
 
+CuThreadInterface *CuActivityManager::getThread(const CuThreadListener *l)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    std::multimap< CuThreadInterface *, CuActivity *>::const_iterator it;
+    std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator lit;
+
+    for(lit = mThreadListenersMultiMap.begin(); lit != mThreadListenersMultiMap.end(); ++lit)
+        ;
+}
+
 std::vector<CuThreadListener *> CuActivityManager::getThreadListeners(const CuActivity *activity)
 {
     std::lock_guard<std::mutex> lock(m_mutex);

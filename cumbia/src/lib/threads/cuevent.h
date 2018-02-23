@@ -22,7 +22,8 @@ class CuEventI
 public:
     virtual ~CuEventI() {}
 
-    enum CuEventType { Progress = 0, Result, CuActivityExitEvent, ExitLoop, User = 100 };
+    enum CuEventType { Progress = 0, Result, CuActivityExitEvent,
+                       ExitLoop, ThreadAutoDestroy, User = 100 };
 
     /*! \brief returns the event type
      *
@@ -47,6 +48,18 @@ public:
      * \return CuEventI::ExitLoop
      */
     CuEventType getType() const { return CuEventI::ExitLoop; }
+};
+
+/*! \brief at the end of the thread event loop (CuThread::run), this
+ *         event is posted. When received, the thread is auto destroyed
+ *
+ */
+class CuThreadAutoDestroyEvent : public CuEventI {
+    /*!
+     * \brief getType returns the thread auto destroy event type
+     * \return CuEventI::ThreadAutoDestroy
+     */
+    CuEventType getType() const { return CuEventI::ThreadAutoDestroy; }
 };
 
 /*! @private */
@@ -74,6 +87,8 @@ public:
  * The CuResultEvent is usually extracted in the CuThread::onEventPosted
  * method. It is used to get the exchanged data and the pointer to the
  * activity that sent the event
+ *
+ * @implements CuEventI
  */
 class CuResultEvent : public CuEventI
 {

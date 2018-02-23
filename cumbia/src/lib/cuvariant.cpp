@@ -9,6 +9,11 @@
 #include "cuvariantprivate.h"
 #include "cumacros.h"
 
+/*! \brief deletes read data
+ *
+ * According to the type, the delete operator is called for the
+ * stored value
+ */
 void CuVariant::delete_rdata()
 {
     if(d->val != NULL)
@@ -19,32 +24,36 @@ void CuVariant::delete_rdata()
          *           LongDouble, Boolean, String, EndDataTypes };
          */
         if(d->type == Double)
-            delete [] (double *) d->val;
+            delete [] static_cast<double *>(d->val);
         else if(d->type == UInt)
-            delete [] (unsigned int *) d->val;
+            delete [] static_cast<unsigned int *>(d->val);
         else if(d->type == Int)
-            delete [] (int *) d->val;
+            delete [] static_cast<int *>(d->val);
         else if(d->type == Boolean)
             delete [] static_cast<bool *>(d->val);
         else if(d->type == String)
-            delete [] (char *) d->val;
+            delete [] static_cast<char *> (d->val);
         else if(d->type == Float)
-            delete [] (float *) d->val;
+            delete [] static_cast<float *>(d->val);
         else if(d->type == LongDouble)
-            delete [] (long double *) d->val;
+            delete [] static_cast<long double *> (d->val);
         else if(d->type == LongInt)
-            delete [] (long int *) d->val;
+            delete [] static_cast<long int *> (d->val);
         else if(d->type == LongUInt)
-            delete []  (long unsigned int *) d->val;
+            delete [] static_cast<long unsigned int *> (d->val);
         else if(d->type == Short)
-            delete [] (short * ) d->val;
+            delete [] static_cast<short *> (d->val);
         else if(d->type == UShort)
-            delete [] (unsigned short *) d->val;
-        //        cuprintf("delete_rdata: XVariant %p deleted d %p d->val %p type %d\n", this, d, d->val, d->dataType);
+            delete [] static_cast<unsigned short *> (d->val);
+        //        cuprintf("delete_rdata: CuVariant %p deleted d %p d->val %p type %d\n", this, d, d->val, d->dataType);
         d->val = NULL;
     }
 }
 
+/*! \brief deletes internal data
+ *
+ * deletes internal data
+ */
 void CuVariant::cleanup()
 {
     if(d != NULL)
@@ -64,181 +73,327 @@ void CuVariant::cleanup()
     }
 }
 
+/*! \brief the class destructor
+ *
+ * calls cleanup to free all resources used by the object
+ */
 CuVariant::~CuVariant()
 {
     // pdelete("~CuVariant: cleaning up %p", this);
     cleanup();
 }
 
-
+/*! \brief builds a CuVariant holding the specified short integer
+ *
+ * @param i the value that will be stored by the object as short int
+ *
+ * Specific conversion method: CuVariant::toShortInt
+ */
 CuVariant::CuVariant(short i)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Scalar, Short);
     from(i);
 }
 
+/*! \brief builds a CuVariant holding the specified unsigned short integer
+ *
+ * @param u the value that will be stored by the object as unsigned short int
+ *
+ * Specific conversion method: CuVariant::toUShortInt
+ */
 CuVariant::CuVariant(unsigned short u)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Scalar, UShort);
     from(u);
 }
 
+/*! \brief builds a CuVariant holding the specified integer
+ *
+ * @param i the value that will be stored by the object as int
+ *
+ * Specific conversion method: CuVariant::toInt
+ */
 CuVariant::CuVariant(int i)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Scalar, Int);
     from(i);
 }
 
+/*! \brief builds a CuVariant holding the specified unsigned integer
+ *
+ * @param ui the value that will be stored by the object as unsigned int
+ *
+ * Specific conversion method: CuVariant::toUInt
+ */
 CuVariant::CuVariant(unsigned int ui)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Scalar, UInt);
     from(ui);
 }
 
+/*! \brief builds a CuVariant holding the specified long integer
+ *
+ * @param li the value that will be stored by the object as long int
+ *
+ * Specific conversion method: CuVariant::toLongInt
+ */
 CuVariant::CuVariant(long int li)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Scalar, LongInt);
     from(li);
 }
 
+/*! \brief builds a CuVariant holding the specified unsigned long integer
+ *
+ * @param lui the value that will be stored by the object as unsigned long int
+ *
+ * Specific conversion method: CuVariant::toULongInt
+ */
 CuVariant::CuVariant(unsigned long int lui)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Scalar, LongUInt);
     from(lui);
 }
 
+/*! \brief builds a CuVariant holding the specified float
+ *
+ * @param f the value that will be stored by the object as float
+ *
+ * Specific conversion method: CuVariant::toFloat
+ */
 CuVariant::CuVariant(float f)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Scalar, Float);
     from(f);
 }
 
+/*! \brief builds a CuVariant holding the specified double
+ *
+ * @param dou the value that will be stored by the object as double
+ *
+ * Specific conversion method: CuVariant::toDouble
+ */
 CuVariant::CuVariant(double dou)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Scalar, Double);
     from(dou);
 }
 
+/*! \brief builds a CuVariant holding the specified long double
+ *
+ * @param ld the value that will be stored by the object as long double
+ *
+ * Specific conversion method: CuVariant::toLongDouble
+ */
 CuVariant::CuVariant(long double ld)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Scalar, LongDouble);
     from(ld);
 }
 
+/*! \brief builds a CuVariant holding the specified boolean value
+ *
+ * @param b the value that will be stored by the object as bool
+ *
+ * Specific conversion method: CuVariant::toBool
+ */
 CuVariant::CuVariant(bool b)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Scalar, Boolean);
     from(b);
 }
 
+/*! \brief builds a CuVariant holding the specified std::string
+ *
+ * @param s the value that will be stored by the object as string
+ *
+ * Specific conversion method: CuVariant::toString
+ */
 CuVariant::CuVariant(const std::string&  s)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Scalar, String);
     from_std_string(s);
 }
 
+/*! \brief builds a CuVariant holding the specified constant char string
+ *
+ * @param s the value that will be stored by the object as string
+ *
+ * Specific conversion method: CuVariant::toString
+ */
 CuVariant::CuVariant(const char *s)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Scalar, String);
     from_std_string(std::string(s));
 }
 
+/*! \brief builds a CuVariant holding the specified vector of double
+ *
+ * @param vd the value that will be stored by the object as vector of double elements
+ *
+ * Specific conversion method: CuVariant::toDoubleVector
+ */
 CuVariant::CuVariant(const std::vector<double> &vd)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Vector, Double);
     from(vd);
 }
 
+/*! \brief builds a CuVariant holding the specified vector of long double
+ *
+ * @param vd the value that will be stored by the object as vector of long double elements
+ *
+ * Specific conversion method: CuVariant::toLongDoubleVector
+ */
 CuVariant::CuVariant(const std::vector<long double> &vd)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Vector, LongDouble);
     from(vd);
 }
 
+/*! \brief builds a CuVariant holding the specified vector of booleans
+ *
+ * @param vb the value that will be stored by the object as vector of bool elements
+ *
+ * Specific conversion method: CuVariant::toBoolVector
+ */
 CuVariant::CuVariant(const std::vector<bool> &vb)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Vector, Boolean);
     from(vb);
 }
 
+/*! \brief builds a CuVariant holding the specified vector of std::string
+ *
+ * @param vs the value that will be stored by the object as vector of string elements
+ *
+ * Specific conversion method: CuVariant::toStringVector
+ */
 CuVariant::CuVariant(const std::vector<std::string> &vs)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Vector, String);
     from(vs);
 }
 
+/*! \brief builds a CuVariant holding the specified vector of short integers
+ *
+ * @param si the value that will be stored by the object as vector of short integer elements
+ *
+ * Specific conversion method: CuVariant::toShortVector
+ */
 CuVariant::CuVariant(const std::vector<short> &si)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Vector, Short);
     from(si);
 }
 
+/*! \brief builds a CuVariant holding the specified vector of unsigned short integers
+ *
+ * @param si the value that will be stored by the object as vector of unsigned short integer elements
+ *
+ * Specific conversion method: CuVariant::toUShortVector
+ */
 CuVariant::CuVariant(const std::vector<unsigned short> &si)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Vector, UShort);
     from(si);
 }
 
+/*! \brief builds a CuVariant holding the specified vector of integers
+ *
+ * @param vi the value that will be stored by the object as vector of integer elements
+ *
+ * Specific conversion method: CuVariant::toIntVector
+ */
 CuVariant::CuVariant(const std::vector<int> &vi)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Vector, Int);
     from(vi);
 }
 
+/*! \brief builds a CuVariant holding the specified vector of unsigned integers
+ *
+ * @param vi the value that will be stored by the object as vector of unsigned integer elements
+ *
+ * Specific conversion method: CuVariant::toUIntVector
+ */
 CuVariant::CuVariant(const std::vector<unsigned int> &vi)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Vector, UInt);
     from(vi);
 }
 
+/*! \brief builds a CuVariant holding the specified vector of long integers
+ *
+ * @param li the value that will be stored by the object as vector of long integer elements
+ *
+ * Specific conversion method: CuVariant::toLongIntVector
+ */
 CuVariant::CuVariant(const std::vector<long> &li)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Vector, LongInt);
     from(li);
 }
 
+/*! \brief builds a CuVariant holding the specified vector of unsigned long integers
+ *
+ * @param li the value that will be stored by the object as vector of unsigned long integer elements
+ *
+ * Specific conversion method: CuVariant::toULongIntVector
+ */
 CuVariant::CuVariant(const std::vector<unsigned long> &lui)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Vector, LongUInt);
     from(lui);
 }
 
+/*! \brief builds a CuVariant holding the specified vector of float
+ *
+ * @param li the value that will be stored by the object as vector of float elements
+ *
+ * Specific conversion method: CuVariant::toFloatVector
+ */
 CuVariant::CuVariant(const std::vector<float> &vf)
 {
-    d = new CuVariantPrivate(); /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Vector, Float);
     from(vf);
 }
 
-/** \brief Creates an empty (invalid) XVariant
+/** \brief Creates an empty (invalid) CuVariant
  *
- * The XVariant created is invalid.
+ * The CuVariant created is not *valid* and *null*.
+ *
+ * \li CuVariant::isValid would return false
+ * \li CuVariant::isNull would return true
+ * \li CuVariant::getFormat would return CuVariant::FormatInvalid
+ * \li CuVariant::getType would return CuVariant::TypeInvalid
  */
 CuVariant::CuVariant()
 {
-    d = new CuVariantPrivate();  /* allocates XVariantDataInfo */
+    d = new CuVariantPrivate();  /* allocates CuVariantDataInfo */
     d->format = FormatInvalid;
     d->type = TypeInvalid;
 }
@@ -247,7 +402,7 @@ CuVariant::CuVariant()
  *
  * Create a new variant initialized from the values of the other parameter
  *
- * @param other the XVariant to be cloned.
+ * @param other the CuVariant to copy from.
  *
  */
 CuVariant::CuVariant(const CuVariant &other)
@@ -255,6 +410,12 @@ CuVariant::CuVariant(const CuVariant &other)
     build_from(other);
 }
 
+/*! \brief move constructor
+ *
+ * @param other the other CuVariant data is moved from
+ *
+ * C++ 11 move constructor for CuVariant
+ */
 CuVariant::CuVariant(CuVariant &&other)
 {
     /* no new d here! */
@@ -262,6 +423,10 @@ CuVariant::CuVariant(CuVariant &&other)
     other.d = NULL; /* don't delete */
 }
 
+/*!	\brief assignment operator, copies data from another CuVariant
+ *
+ * @param other CuVariant to assign from
+ */
 CuVariant & CuVariant::operator=(const CuVariant& other)
 {
     if(this != &other)
@@ -272,6 +437,10 @@ CuVariant & CuVariant::operator=(const CuVariant& other)
     return *this;
 }
 
+/*! \brief move	assignment operator, moves data from another source
+ *
+ * @param other CuVariant to move from
+ */
 CuVariant &CuVariant::operator=(CuVariant &&other)
 {
     if(this != &other)
@@ -283,6 +452,16 @@ CuVariant &CuVariant::operator=(CuVariant &&other)
     return *this;
 }
 
+/*! \brief equality relational operator. Returns true if this CuVariant equals another one
+ *
+ * @param other CuVariant to compare this to
+ * @return true this and other contain the same data type, format, have the
+ *         same isValid flag and the value is the same
+ *
+ * The method first checks if getFormat, getSize, getType, isNull, isValid
+ * return values coincide.
+ * Then *memcmp* is used to compare the value of this and the other CuVariant.
+ */
 bool CuVariant::operator ==(const CuVariant &other) const
 {
     cuprintf(">>> CuVariant::operator ==\e[1;33mWARNING WARNING WARNING --- CHECK ME --- \e[0m\n");
@@ -340,11 +519,18 @@ bool CuVariant::operator ==(const CuVariant &other) const
     return false;
 }
 
+/*! \brief returns the opposite result of the *equality* operator
+ *
+ * @return the negation of CuVariant::operator ==
+ */
 bool CuVariant::operator !=(const CuVariant &other) const
 {
     return !this->operator ==(other);
 }
 
+/*
+ * builds this variant from another one copying the contents
+ */
 void CuVariant::build_from(const CuVariant& other)
 {
     d = new CuVariantPrivate();
@@ -439,33 +625,36 @@ void CuVariant::build_from(const CuVariant& other)
     }
 }
 
-/** \brief Cuery the format of the data stored in the XVariant
+/** \brief get the format of the data stored
  *
- * @return the DataFormat (XVariant::Vector, XVariant::Scalar, XVariant::Matrix)
+ * @return the DataFormat (CuVariant::Vector, CuVariant::Scalar, CuVariant::Matrix)
+ * @see getType
  */
 CuVariant::DataFormat CuVariant::getFormat() const
 {
     return static_cast<CuVariant::DataFormat>(d->format);
 }
 
-/** \brief Returns the DataType stored by XVariant
+/** \brief Returns the DataType stored by CuVariant
  *
+ * @return one of the CuVariant::DataType enumeration values
+ * @see  getFormat
  */
 CuVariant::DataType CuVariant::getType() const
 {
     return static_cast<CuVariant::DataType>(d->type);
 }
 
-/** \brief Returns whether the data stored by XVariant is valid
+/** \brief Returns whether the data stored by CuVariant is valid
  *
- * @return true the data contained by XVariant is valid
- * @return false the data contained by XVariant is not valid (see getError)
+ * @return true the data contained by CuVariant is valid
+ * @return false the data contained by CuVariant is not valid (see getError)
  *
  * @see getError
  * @see isNull
  *
  * \note
- * isValid returns true if data is NULL. In other words, NULL values in the database
+ * isValid may return true if data is NULL. In other words, NULL values
  * are deemed valid.
  *
  */
@@ -474,14 +663,10 @@ bool CuVariant::isValid() const
     return d->mIsValid;
 }
 
-/** \brief Returns whether the the data stored by XVariant is NULL or not
+/** \brief Returns whether the the data stored by CuVariant is NULL or not
  *
- * @return true the data contained by XVariant is NULL
- * @return false the data contained by XVariant is not NULL (see isValid)
- *
- * \note
- * If isNull is true, then isValid will be true also, because a NULL XVariant represents
- * a NULL value stored into the database, which is perfectly legit.
+ * @return true the data contained by CuVariant is NULL
+ * @return false the data contained by CuVariant is not NULL (see isValid)
  *
  * @see getError
  * @see isValid
@@ -494,17 +679,28 @@ bool CuVariant::isNull() const
     return d->mIsNull;
 }
 
-/** \brief Returns the size of the data stored by the XVariant
+/** \brief Returns the size of the data stored by the CuVariant
  *
- * @return the size of the data stored by the XVariant. This method is useful to
- *         know the size of a vector of data, in case XVariant encloses spectrum
- *         Tango attributes.
+ * @return the size of the data stored by the CuVariant. This method is useful to
+ *         know the number of elements, if CuVariant holds a vector
  */
 size_t CuVariant::getSize() const
 {
     return d->mSize;
 }
 
+/*! \brief returns true if the stored data is an integer number
+ *
+ * @return true if the data type is an integer, false otherwise
+ *
+ * \note returns true if CuVariant::DataType is one of
+ * \li Short
+ * \li UShort
+ * \li Int
+ * \li UInt
+ * \li LongInt
+ * \li LongUInt
+ */
 bool CuVariant::isInteger() const
 {
     return d->type == Short || d->type == UShort
@@ -512,12 +708,28 @@ bool CuVariant::isInteger() const
             d->type == LongInt || d->type ==  LongUInt;
 }
 
+/*! \brief returns true if the stored data is a floating point number
+ *
+ * @return true if the data type is a floating point number,
+ *         false otherwise
+ *
+ * \note returns true if CuVariant::DataType is one of
+ * \li Double
+ * \li LongDouble
+ * \li Float
+ */
 bool CuVariant::isFloatingPoint() const
 {
     return d->type == Double || d->type == LongDouble
         || d->type == Float;
 }
 
+/*
+ * init CuVariant with the given data format and type
+ * - size is put to 0
+ * - isNull property is set to true
+ * - isValid property is set to true if format and data type are valid
+ */
 void CuVariant::init(DataFormat df, DataType dt)
 {
     d->mIsValid = (dt > TypeInvalid && dt < EndDataTypes) && (df > FormatInvalid && df < EndFormatTypes);
@@ -526,6 +738,7 @@ void CuVariant::init(DataFormat df, DataType dt)
     d->type = dt;
     d->mIsNull = true;
 }
+
 
 template<typename T>
 void CuVariant::from(const std::vector<T> &v)
@@ -545,6 +758,9 @@ void CuVariant::from(const std::vector<T> &v)
     }
 }
 
+/*
+ * build a CuVariant holding a vector of strings
+ */
 void CuVariant::from(const std::vector<std::string> &s)
 {
     d->val = NULL;
@@ -564,6 +780,11 @@ void CuVariant::from(const std::vector<std::string> &s)
     }
 }
 
+/*
+ * given a std::string, build a string type CuVariant
+ * - size is set to 1
+ * - isNull is set to false
+ */
 void CuVariant::from_std_string(const std::string &s)
 {
     d->mSize = 1;
@@ -575,6 +796,11 @@ void CuVariant::from_std_string(const std::string &s)
     d->val = str;
 }
 
+/*
+ * template method to initialize a CuVariant from a template type
+ * - size is set to 1
+ * - isNull is set to false
+ */
 template<typename T>
 void CuVariant::from(T value)
 {
@@ -590,19 +816,27 @@ void CuVariant::from(T value)
 
 }
 
-/** \brief The conversion method that tries to convert the stored data into a vector of double
+/** \brief convert the stored data into a vector of double
  *
- * @return a std vector of double representing the data saved into XVariant
+ * @return std::vector<double> representation of the stored data
+ *
+ * Compatible constructor: CuVariant::CuVariant(const std::vector<double> &vd)
  *
  */
 std::vector<double> CuVariant::toDoubleVector() const
 {
     double *d_val;
-    d_val = (double *) d->val;
+    d_val = static_cast<double *>(d->val);
     std::vector<double> dvalues(d_val, d_val + d->mSize);
     return dvalues;
 }
 
+/** \brief convert the stored data into a vector of long double
+ *
+ * @return std::vector<long double> representation of the stored data
+ *
+ * Compatible constructor: CuVariant::CuVariant(const std::vector<long double> &vd)
+ */
 std::vector<long double> CuVariant::toLongDoubleVector() const
 {
     long double *d_val;
@@ -611,6 +845,12 @@ std::vector<long double> CuVariant::toLongDoubleVector() const
     return ldvalues;
 }
 
+/** \brief convert the stored data into a vector of float
+ *
+ * @return std::vector<float> representation of the stored data
+ *
+ * Compatible constructor: CuVariant::CuVariant(const std::vector<float> &vf)
+ */
 std::vector<float> CuVariant::toFloatVector() const
 {
     float *fval;
@@ -619,6 +859,12 @@ std::vector<float> CuVariant::toFloatVector() const
     return fvalues;
 }
 
+/** \brief convert the stored data into a vector of integers
+ *
+ * @return std::vector<int> representation of the stored data
+ *
+ * Compatible constructor: CuVariant::CuVariant(const std::vector<int> &vi)
+ */
 std::vector<int> CuVariant::toIntVector() const
 {
     int *i_val = (int *) d->val;
@@ -626,6 +872,12 @@ std::vector<int> CuVariant::toIntVector() const
     return ivalues;
 }
 
+/** \brief convert the stored data into a vector of unsigned integers
+ *
+ * @return std::vector<unsigned int> representation of the stored data
+ *
+ * Compatible constructor: CuVariant::CuVariant(const std::vector<unsigned int> &vi)
+ */
 std::vector<unsigned int> CuVariant::toUIntVector() const
 {
     unsigned int *i_val = (unsigned int *) d->val;
@@ -633,27 +885,24 @@ std::vector<unsigned int> CuVariant::toUIntVector() const
     return uivalues;
 }
 
-/** \brief The conversion method that tries to convert the stored data into a vector of
- *         unsigned long integers
+/** \brief convert the stored data into a vector of unsigned integers
  *
- * @return a std vector of int representing the data saved into XVariant
+ * @return std::vector<unsigned int> representation of the stored data
  *
- * \note unsigned shorts and unsigned ints are mapped to unsigned long.
- *
+ * Compatible constructor: CuVariant::CuVariant(const std::vector<unsigned long> &lui)
  */
 std::vector<unsigned long int> CuVariant::toULongIntVector() const
 {
-    unsigned long int *i_val = (unsigned long int *) d->val;
+    unsigned long int *i_val = static_cast<unsigned long int *>(d->val);
     std::vector<unsigned long int> ivalues(i_val, i_val + d->mSize);
     return ivalues;
 }
 
-/** \brief The conversion method that tries to convert the stored data into a vector of
- *         unsigned long integers
+/** \brief convert the stored data into a vector of long integers
  *
- * @return a std vector of int representing the data saved into XVariant
- * \note unsigned shorts and unsigned ints are mapped to unsigned long
+ * @return std::vector<long int> representation of the stored data
  *
+ * Compatible constructor: CuVariant::CuVariant(const std::vector<long> &li)
  */
 std::vector<long int> CuVariant::toLongIntVector() const
 {
@@ -662,10 +911,11 @@ std::vector<long int> CuVariant::toLongIntVector() const
     return ivalues;
 }
 
-/** \brief The conversion method that tries to convert the stored data into a vector of booleans
+/** \brief convert the stored data into a vector of booleans
  *
- * @return a std vector of bool representing the data saved into XVariant
+ * @return std::vector<bool> representation of the stored data
  *
+ * Compatible constructor: CuVariant::CuVariant(const std::vector<bool> &vb)
  */
 std::vector<bool> CuVariant::toBoolVector() const
 {
@@ -674,6 +924,12 @@ std::vector<bool> CuVariant::toBoolVector() const
     return bvalues;
 }
 
+/** \brief convert the stored data into a vector of short integers
+ *
+ * @return std::vector<short> representation of the stored data
+ *
+ * Compatible constructor: CuVariant::CuVariant(const std::vector<short> &si)
+ */
 std::vector<short> CuVariant::toShortVector() const
 {
     short *v_s = static_cast<short *>(d->val);
@@ -681,6 +937,12 @@ std::vector<short> CuVariant::toShortVector() const
     return svals;
 }
 
+/** \brief convert the stored data into a vector of unsigned short integers
+ *
+ * @return std::vector<unsigned short> representation of the stored data
+ *
+ * Compatible constructor: CuVariant::CuVariant(const std::vector<unsigned short> &si)
+ */
 std::vector<unsigned short> CuVariant::toUShortVector() const
 {
     unsigned short *v_us = static_cast<unsigned short *>(d->val);
@@ -688,152 +950,226 @@ std::vector<unsigned short> CuVariant::toUShortVector() const
     return usvals;
 }
 
-/** \brief The conversion method that tries to convert the stored data into a double scalar
+/** \brief convert the stored data into a double scalar
  *
- * @return a double representing the data saved into XVariant
- *
- * \note If the data cannot be converted to a double scalar value, then isValid will return false.
- * On the other hand, no error message is set by this method.
- *
- *
+ * @param *ok a pointer to a bool. If not null, its value will be set to true
+ *        if the conversion is successful, false otherwise (wrong data type,
+ *        format, invalid CuVariant or NULL value)
+ * @return the double value held in this object, or *NaN* if either the data type
+ *         or format is wrong, the CuVariant is not valid or the value is NULL
  */
 double CuVariant::toDouble(bool *ok) const
 {
     double v = nan("NaN");
-    if(d->type == Double && d->format == Scalar && d->val != NULL)
+    bool can_convert = (d->type == Double && d->format == Scalar && d->val != NULL && d->mIsValid);
+    if(can_convert)
         v = *((double *)d->val);
     if(ok)
-        *ok = d->mIsValid && d->val != NULL;
+        *ok = can_convert;
     return v;
 }
 
+/** \brief convert the stored data into a long double scalar
+ *
+ * @param *ok a pointer to a bool. If not null, its value will be set to true
+ *        if the conversion is successful, false otherwise (wrong data type,
+ *        format, invalid CuVariant or NULL value)
+ * @return the long double value held in this object, or *NaN* if either the data type
+ *         or format is wrong, the CuVariant is not valid or the value is NULL
+ */
 long double CuVariant::toLongDouble(bool *ok) const
 {
-    long double v = nan("NaN");
-    if(d->type == LongDouble && d->format == Scalar && d->val != NULL)
+    long double v = nanl("NaN");
+    bool can_convert = (d->type == LongDouble && d->format == Scalar && d->val != NULL && d->mIsValid);
+    if(can_convert)
         v = *((long double *)d->val);
     if(ok)
-        *ok = d->mIsValid && d->val != NULL;
+        *ok = can_convert;
     return v;
 }
 
-/** \brief The conversion method that tries to convert the stored data into a long scalar integer
+/** \brief convert the stored data into a scalar long int
  *
- * @return an int representing the data saved into XVariant
+ * @param *ok a pointer to a bool. If not null, its value will be set to true
+ *        if the conversion is successful, false otherwise (wrong data type,
+ *        format, invalid CuVariant or NULL value)
+ * @return the long int value held in this object, or LONG_MIN if either the data type
+ *         or format is wrong, the CuVariant is not valid or the value is NULL
  *
- * \note If the data cannot be converted to a integer scalar value, then isValid will return false.
- * On the other hand, no error message is set by this method.
- *
+ * \note since it is legal to convert an int to long int, both DataType::Int
+ *       and DataType::LongInt are valid
  */
 long int CuVariant::toLongInt(bool *ok) const
 {
     long int i = LONG_MIN;
-    bool canConvert = d->type == Int || d->type == LongInt;
-    if(canConvert && d->format == Scalar && d->val != NULL)
-        i = *((long int *)d->val);
+    bool canConvert = (d->type == Int || d->type == LongInt)  && d->format == Scalar && d->val != NULL && d->mIsValid;
+    if(canConvert && d->format == Scalar && d->val != NULL && d->type == Int)
+        i = static_cast<long int> ( *(static_cast<int *>(d->val)) );
+    else if(canConvert && d->type == LongInt)
+        i = *(static_cast<long int*>(d->val));
     if(ok)
-        *ok = d->mIsValid && d->val != NULL;
+        *ok = canConvert;
     return i;
 }
 
+/** \brief convert the stored data into a scalar integer
+ *
+ * @param *ok a pointer to a bool. If not null, its value will be set to true
+ *        if the conversion is successful, false otherwise (wrong data type,
+ *        format, invalid CuVariant or NULL value)
+ * @return the int value held in this object, or INT_MIN if either the data type
+ *         or format is wrong, the CuVariant is not valid or the value is NULL
+ *
+ * \note since it is legal to convert an short int to int, both DataType::Int
+ *       and DataType::Short are valid
+ */
 int CuVariant::toInt(bool *ok) const
 {
     int i = INT_MIN;
-    if(d->type == Int && d->format == Scalar && d->val != NULL)
-        i = *((int *)d->val);
+    bool canConvert = (d->type == Int || d->type == Short)  && d->format == Scalar && d->val != NULL && d->mIsValid;
+    if(canConvert && d->type == Int)
+        i = *(static_cast<int *>(d->val) );
+    else if(canConvert && d->type == Short)
+        i = static_cast<int>( *(static_cast<short int *>(d->val)));
     if(ok)
-        *ok = d->mIsValid && d->val != NULL;
+        *ok = canConvert;
     return i;
 }
 
+/** \brief convert the stored data into a scalar unsigned integer
+ *
+ * @param *ok a pointer to a bool. If not null, its value will be set to true
+ *        if the conversion is successful, false otherwise (wrong data type,
+ *        format, invalid CuVariant or NULL value)
+ * @return the unsigned int value held in this object, or UINT_MAX if either the data type
+ *         or format is wrong, the CuVariant is not valid or the value is NULL
+ *
+ * \note since it is legal to convert an unsigned short int to an unsigned int, both DataType::UShort
+ *       and DataType::UInt are valid
+ */
 unsigned int CuVariant::toUInt(bool *ok) const
 {
-    unsigned int i = 0;
-    bool canConvert = d->type == UInt || d->type == Int;
-    if(canConvert && d->format == Scalar && d->val != NULL)
-        i = *((int *)d->val);
+   unsigned int i = UINT_MAX;
+   bool can_convert = (d->format == Scalar && d->val != NULL  && d->mIsValid && (d->type == UInt || d->type == UShort) );
+   if(can_convert && d->type == UInt)
+        i = *(static_cast<unsigned int *>(d->val) );
+   else if(can_convert && d->type == UShort)
+       i = static_cast<unsigned int>( *(static_cast<unsigned short *>(d->val)) );
     if(ok)
-        *ok = d->mIsValid && d->val != NULL;
+        *ok = can_convert;
     return i;
 }
 
+/** \brief convert the stored data into a scalar unsigned short
+ *
+ * @param *ok a pointer to a bool. If not null, its value will be set to true
+ *        if the conversion is successful, false otherwise (wrong data type,
+ *        format, invalid CuVariant or NULL value)
+ * @return the unsigned short value held in this object, or USHRT_MAX if either the data type
+ *         or format is wrong, the CuVariant is not valid or the value is NULL
+ *
+ */
 unsigned short CuVariant::toUShortInt(bool *ok) const
 {
-    unsigned short s = 0;
-    bool canConvert = d->type == UShort;
-    if(canConvert && d->format == Scalar && d->val != NULL)
+    unsigned short s = USHRT_MAX;
+    bool canConvert = d->type == UShort && d->format == Scalar && d->val != NULL && d->mIsValid;
+    if(canConvert )
         s = *(static_cast<unsigned short *>(d->val));
     if(ok)
-        *ok = d->mIsValid && d->val != NULL;
+        *ok = canConvert;
     return s;
 }
 
+/** \brief convert the stored data into a scalar signed short
+ *
+ * @param *ok a pointer to a bool. If not null, its value will be set to true
+ *        if the conversion is successful, false otherwise (wrong data type,
+ *        format, invalid CuVariant or NULL value)
+ * @return the signed short value held in this object, or SHRT_MIN if either the data type
+ *         or format is wrong, the CuVariant is not valid or the value is NULL
+ *
+ */
 short CuVariant::toShortInt(bool *ok) const
 {
-    short s = 0;
-    bool canConvert = d->type == Short;
-    if(canConvert && d->format == Scalar && d->val != NULL)
+    short s = SHRT_MIN;
+    bool canConvert = d->type == Short && d->format == Scalar && d->val != NULL && d->mIsValid;
+    if(canConvert)
         s = *(static_cast<short *>(d->val));
     if(ok)
-        *ok = d->mIsValid && d->val != NULL;
+        *ok = canConvert;
     return s;
 }
 
+/** \brief convert the stored data into a scalar floating point number
+ *
+ * @param *ok a pointer to a bool. If not null, its value will be set to true
+ *        if the conversion is successful, false otherwise (wrong data type,
+ *        format, invalid CuVariant or NULL value)
+ * @return the float value held in this object, or NaN (as returned by nanf) if either the data type
+ *         or format is wrong, the CuVariant is not valid or the value is NULL
+ *
+ */
 float CuVariant::toFloat(bool *ok) const
 {
-    float f = 0.0;
-    bool canConvert = d->type == Float;
-    if(canConvert && d->format == Scalar && d->val != NULL)
+    float f = nanf("NaN");
+    bool canConvert = d->type == Float && d->format == Scalar && d->val != NULL && d->mIsValid;
+    if(canConvert)
         f = *(static_cast<float *>(d->val));
     if(ok)
-        *ok = d->mIsValid && d->val != NULL;
+        *ok = canConvert;
     return f;
 }
 
-/** \brief The conversion method that tries to convert the stored data into a long unsigned scalar integer
+/** \brief convert the stored data into a scalar unsigned long number
  *
- * @return an int representing the data saved into XVariant
+ * @param *ok a pointer to a bool. If not null, its value will be set to true
+ *        if the conversion is successful, false otherwise (wrong data type,
+ *        format, invalid CuVariant or NULL value)
+ * @return the unsigned long value held in this object, or ULONG_MAX if either the data type
+ *         or format is wrong, the CuVariant is not valid or the value is NULL
  *
- * \note If the data cannot be converted to a integer scalar value, then isValid will return false.
- * On the other hand, no error message is set by this method.
- *
+ * \note since it is legal to convert an unsigned int to an unsigned long int, both DataType::LongUInt
+ *       and DataType::UInt are valid
  */
 unsigned long int CuVariant::toULongInt(bool *ok) const
 {
-    unsigned long int i = -1UL;
-    bool canConvert = d->type == UInt || d->type == LongUInt;
-    if(canConvert && d->format == Scalar && d->val != NULL)
-        i = *((unsigned long int *)d->val);
+    unsigned long int i = ULONG_MAX;
+    bool canConvert = (d->type == UInt || d->type == LongUInt)  && d->format == Scalar && d->val != NULL && d->mIsValid;
+    if(canConvert && d->type == UInt)
+        i = static_cast<unsigned long int> ( *(static_cast<unsigned int* >(d->val) ) );
+    else if(canConvert && d->type == LongUInt)
+        i = *(static_cast<unsigned  long int* >(d->val) );
     if(ok)
-        *ok = d->mIsValid && d->val != NULL;
+        *ok = canConvert;
     return i;
 }
 
 
-/** \brief The conversion method that tries to convert the stored data into a scalar boolean
+/** \brief convert the stored data into a scalar boolean
  *
- * @return a bool representing the data saved into XVariant
- *
- * \note If the data cannot be converted to a boolean scalar value, then isValid will return false.
- * On the other hand, no error message is set by this method.
- *
+ * @param *ok a pointer to a bool. If not null, its value will be set to true
+ *        if the conversion is successful, false otherwise (wrong data type,
+ *        format, invalid CuVariant or NULL value)
+ * @return the bool value held in this object, or ULONG_MAX if either the data type
+ *         or format is wrong, the CuVariant is not valid or the value is NULL
  */
 bool CuVariant::toBool(bool *ok) const
 {
     bool b = false;
-    if(d->type == Boolean && d->format == Scalar&& d->val != NULL)
-        b = *((bool *)d->val);
+    bool can_convert = (d->type == Boolean && d->format == Scalar && d->val != NULL && d->mIsValid);
+    if(can_convert)
+        b = *(static_cast<bool *> (d->val) );
     if(ok)
-        *ok = d->mIsValid && (d->val != NULL);
+        *ok = can_convert;
     return b;
 }
 
-/** \brief Convert the stored value to a string.
+/** \brief Convert the stored value to a string representation.
  *
- * This method converts the data stored into an XVariant into a string.
- * For instance, if the XVariant stores a scalar Double data type which value is 0.12
- * then a string containing "0.12" is returned. The  conversion specifier
- * used to convert to double or long double or float data types can be specified in double_format
+ * This method converts the data stored by CuVariant into a string.
+ * For instance, if the CuVariant stores a scalar Double data type with value 0.12,
+ * a string containing "0.12" is returned. The  conversion specifier
+ * used to convert to double or long double or float data types can be given in double_format
  * If the CuVariant stores a Vector Double data type with values [10.1, 12.6, 9.1, -5.4]
  * then the string returned will be "10.1,12.6,9.1,-5.4".
  *
@@ -892,7 +1228,7 @@ std::string CuVariant::toString(bool *ok, const char *double_format) const
 
 /** \brief The conversion method that tries to convert the stored data into a vector of strings
          *
-         * @return a std::vector of string representing the data saved into XVariant
+         * @return a std::vector of string representing the data saved into CuVariant
          *
          * \note If the data cannot be converted to a vector of strings, then isValid will return false.
          * On the other hand, no error message is set by this method.
@@ -924,7 +1260,7 @@ std::vector<std::string> CuVariant::toStringVector(bool *ok) const
          * *
          * \note Check the return value of this method: if null, no data is currently
          *       stored or you are trying to extract a type of data different from the
-         *       one memorized in XVariant.
+         *       one memorized in CuVariant.
          */
 double *CuVariant::toDoubleP() const
 {
@@ -946,7 +1282,7 @@ long double *CuVariant::toLongDoubleP() const
  *
  * \note Check the return value of this method: if null, no data is currently
  *       stored or you are trying to extract a type of data different from the
- *       one memorized in XVariant.
+ *       one memorized in CuVariant.
  *
  * \note shorts and ints are mapped to longs.
  */
@@ -965,7 +1301,7 @@ unsigned int *CuVariant::toUIntP() const
  *
  * \note Check the return value of this method: if null, no data is currently
  *       stored or you are trying to extract a type of data different from the
- *       one memorized in XVariant.
+ *       one memorized in CuVariant.
  *
  * \note shorts and ints are mapped to longs.
  */
@@ -984,7 +1320,7 @@ int *CuVariant::toIntP() const
          *
          * \note Check the return value of this method: if null, no data is currently
          *       stored or you are trying to extract a type of data different from the
-         *       one memorized in XVariant.
+         *       one memorized in CuVariant.
          *
          * \note shorts and ints are mapped to longs.
          */
@@ -1008,7 +1344,7 @@ float *CuVariant::toFloatP() const
          *
          * \note Check the return value of this method: if null, no data is currently
          *       stored or you are trying to extract a type of data different from the
-         *       one memorized in XVariant.
+         *       one memorized in CuVariant.
          *
          * \note shorts and ints are mapped to longs.
          */

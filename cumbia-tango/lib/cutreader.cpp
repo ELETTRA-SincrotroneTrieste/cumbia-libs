@@ -53,10 +53,17 @@ CuTReader::~CuTReader()
     delete d;
 }
 
-/*! \brief
+/*! \brief progress notification callback
+ *
+ * @param step the completed steps in the background
+ * @param total the total number of steps
+ * @param data CuData with data from the background activity
+ *
+ * The current implementation does nothing
+ */
 void CuTReader::onProgress(int step, int total, const CuData &data)
 {
-
+    (void) step;  (void) total;  (void) data;
 }
 
 /*

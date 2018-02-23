@@ -7,5 +7,7 @@ int main(int argc, char **argv)
     a.setApplicationName("simple_activity");
     SimpleA *w = new SimpleA(0);
     w->show();
-    return a.exec();
+    int ret = a.exec();
+    delete w;
+    return ret;
 }

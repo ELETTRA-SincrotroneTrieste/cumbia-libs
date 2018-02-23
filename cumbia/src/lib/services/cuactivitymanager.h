@@ -33,6 +33,8 @@ public:
 
     CuThreadInterface *getThread(CuActivity *activity);
 
+    CuThreadInterface* getThread(const CuThreadListener *l);
+
     bool isRegistered(const CuActivity *a);
 
     std::vector<CuActivity *> activitiesForThread(const CuThreadInterface *ti);

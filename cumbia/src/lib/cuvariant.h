@@ -12,13 +12,53 @@
 
 class CuVariantPrivate;
 
-/** \brief Historical database data container.
+/** \brief CuVariant class acts like a union for the *cumbia* data types.
  *
- * XVariant is aimed at storing data fetched from an historical database.
- * It can contain several kinds of data.
- * The creation and filling of XVariant are carried out by the Hdbextractor
- * library. The end user is normally involved in data extraction for statistics,
- * display or whatever.
+ * A CuVariant object holds a single value of a single getType type at
+ * a time. Some types are multi-valued, for example those with
+ * DataFormat::Vector format.
+ *
+ * You can find out what type the CuVariant holds, with CuVariant::getType.
+ * The types of data supported are listed in the DataType enumeration.
+ * The data formats that is possible to store are declared in the DataFormat
+ * enum.
+ *
+ * For each supported data type and format, appropriate constructors
+ * and toXXX() methods are provided to extract the stored value.
+ *
+ * \par Example
+ * \code
+ * unsigned int in = 1, out;
+ * CuVariant v(in);
+ * out = v.toUInt() + 1;
+ * \endcode
+ *
+ * CuVariant is used to store *values* associated to *keys* in CuData
+ * bundles. CuData is the object used to exchange data inside the *cumbia*
+ * library and between the library and the clients.
+ *
+ * \par Example: extracting CuVariant values from CuData bundles
+ * This example is taken from the QuLabel class in the cumbia-qtcontrols
+ * module. You will learn how to extract values from CuData and convert
+ * them to the desired type.
+ *
+ * \code
+  // QuLabel inherits from QLabel. Text is changed with *setText*
+  void QuLabel::onUpdate(const CuData &da)
+  {
+    bool read_ok = !da["err"].toBool();
+    if(da.containsKey("value")) {
+      CuVariant val = da["value"];
+      if(val.getType() == CuVariant::Boolean) {
+            txt = (val.toBool() ? "OK" : "ERROR" );
+        }
+        else {
+            txt = QString::fromStdString(da["value"].toString());
+        }
+        setText(txt);
+    }
+  }
+ * \endcode
  */
 class CuVariant
 {
@@ -28,12 +68,17 @@ public:
      * @brief The DataFormat enum lists the different data formats supported
      *        by XVariant
      *
-     * Scalar: single value
-     * Vector: an array (Tango names it spectrum) of data
-     * Matrix: a 2 dimensional matrix of data (what Tango calls Image).
+     * \li scalar: one single value
+     * \li vector: an array (Tango names it spectrum) of data
+     * \li matrix: a 2 dimensional matrix of data (what Tango calls Image).
      *
      */
-    enum DataFormat { FormatInvalid = -1, Scalar, Vector, Matrix, EndFormatTypes };
+    enum DataFormat { FormatInvalid = -1, ///< invalid format
+                      Scalar, ///< a scalar value
+                      Vector, ///< a vector, or array
+                      Matrix, ///< a two dimensional vector (matrix)
+                      EndFormatTypes = 32 ///< upper limit value for format types
+                    };
 
     /**
      * @brief The DataType enum lists the different data types that can be memorized
@@ -111,8 +156,6 @@ public:
 
     virtual ~CuVariant();
 
-    const char *getSource() const;
-
     DataFormat getFormat() const;
 
     DataType getType() const;
@@ -168,10 +211,6 @@ public:
     float toFloat(bool *ok = NULL ) const;
 
     bool toBool(bool *ok = NULL) const;
-
-    const char *getError() const;
-
-    void setError(const char *error);
 
     std::string toString(bool *ok = NULL, const char *double_format = "%f") const;
 

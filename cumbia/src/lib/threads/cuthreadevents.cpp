@@ -20,6 +20,11 @@ ThreadEvent::Type UnRegisterActivityEvent::getType() const
     return ThreadEvent::UnregisterActivity;
 }
 
+ExitThreadEvent::ExitThreadEvent(bool autodes)
+{
+    autodestroy = autodes;
+}
+
 ThreadEvent::Type ExitThreadEvent::getType() const
 {
     return ThreadExit;

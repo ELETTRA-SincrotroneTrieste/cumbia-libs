@@ -12,6 +12,8 @@ class SimpleA : public QWidget, public CuThreadListener
 public:
     explicit SimpleA(QWidget *parent = nullptr);
 
+    ~SimpleA();
+
 private slots:
     void start();
 

@@ -187,7 +187,7 @@ void Cumbia::registerActivity(CuActivity *activity,
  * Through the activity manager service, the thread associated to the activity is
  * fetched and CuThread::unregisterActivity is called.
  *
- * A CuActivity can automatically unregister after execution and even be deleted
+ * A CuActivity can automatically unregister after execution and be deleted
  * if appropriate flags are set (CuActivity::CuAUnregisterAfterExec and
  * CuActivity::CuADeleteOnExit)
  *
@@ -217,6 +217,11 @@ CuActivity *Cumbia::findActivity(const CuData &token) const
 {
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     return  activityManager->findMatching(token);
+}
+
+bool Cumbia::threadRelease(CuThreadListener *l)
+{
+
 }
 
 /*! \brief if a timer runs within an activity, change the timeout

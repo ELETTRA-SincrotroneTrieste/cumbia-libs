@@ -104,6 +104,8 @@ void CuThreadService::removeThread(CuThreadInterface *thread)
  *
  * @return a std::vector of CuThreadInterface containing the pointers to the
  *         threads currently managed by the service
+ *
+ * Called by Cumbia::finish
  */
 std::vector<CuThreadInterface *> CuThreadService::getThreads() const
 {

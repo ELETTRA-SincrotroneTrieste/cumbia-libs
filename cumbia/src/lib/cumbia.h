@@ -74,6 +74,8 @@ public:
 
     CuActivity *findActivity(const CuData& token) const;
 
+    bool threadRelease(CuThreadListener *l);
+
     void setActivityPeriod(CuActivity *a, int timeout);
 
     unsigned long getActivityPeriod(CuActivity *a) const;

@@ -14,9 +14,9 @@ public:
     CuThreadsEventBridgeListener *bridgeListener;
 };
 
-/*! the class constructor
+/*! \brief the class constructor
  *
- * @param sp a pointer to a CuServiceProvider
+ * Constructs a new instance of the object
  */
 QThreadsEventBridge::QThreadsEventBridge()
 {
@@ -24,6 +24,10 @@ QThreadsEventBridge::QThreadsEventBridge()
     d->bridgeListener = NULL;
 }
 
+/*! \brief the class destructor
+ *
+ * class destructor
+ */
 QThreadsEventBridge::~QThreadsEventBridge()
 {
     pdelete("~QThreadsEventBridge %p", this);
@@ -31,7 +35,7 @@ QThreadsEventBridge::~QThreadsEventBridge()
 }
 
 /** \brief receives a QEvent from QApplication and delivers the contents to a
- *         registered CuThreadsEventBridgeListener.
+ *         registered CuThreadsEventBridgeListener on the *main thread*.
  *
  * @param event a QEvent that wraps a CuEventI.
  *
@@ -61,11 +65,31 @@ bool QThreadsEventBridge::event(QEvent *event)
         return QObject::event(event);
 }
 
+/*! \brief set the event bridge listener on the bridge
+ *
+ * @param l a CuThreadsEventBridgeListener, such as CuThread
+ *
+ * When an event is delivered through the QApplication event loop, (QThreadsEventBridge::event)
+ * CuThreadsEventBridgeListener::onEventPosted is called on the main
+ * thread.
+ */
 void QThreadsEventBridge::setCuThreadsEventBridgeListener(CuThreadsEventBridgeListener* l)
 {
     d->bridgeListener = l;
 }
 
+/*! \brief posts an event through QApplication::postEvent, normally *from
+ *         the background thread to the foreground*
+ *
+ * @param e a CuEventI
+ *
+ * \par examples of functions calling this method from the *background
+ *      thread*:
+ * \li CuThread::publishResult
+ * \li CuThread::publishExitEvent
+ * \li CuThread::publishProgress
+ *
+ */
 void QThreadsEventBridge::postEvent(CuEventI *e)
 {
     CuEvent_Qt *qe = new CuEvent_Qt(e);

@@ -128,6 +128,12 @@ CreateDelete::CreateDelete(CumbiaPool *cumbia_pool, QWidget *parent) :
 
 CreateDelete::~CreateDelete()
 {
+    delete m_ctrl_factory_pool.getReadFactory("tango");
+    delete m_ctrl_factory_pool.getWriteFactory("tango");
+#ifdef QUMBIA_EPICS_CONTROLS
+    delete m_ctrl_factory_pool.getReadFactory("epics");
+    delete m_ctrl_factory_pool.getWriteFactory("epics");
+#endif
 
 }
 

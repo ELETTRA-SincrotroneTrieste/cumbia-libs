@@ -154,7 +154,7 @@ void QuLabel::onUpdate(const CuData &da)
         CuVariant val = da["value"];
         if(val.getType() == CuVariant::Boolean)
         {
-            txt = (val.toBool() ? property("trueString").toBool() : property("falseString").toBool());
+            txt = (val.toBool() ? property("trueString").toString() : property("falseString").toString());
             background = val.toBool() ? property("trueColor").value<QColor>() : property("falseColor").value<QColor>();
         }
         else

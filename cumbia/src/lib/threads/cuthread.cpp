@@ -104,9 +104,14 @@ CuThread::~CuThread()
  */
 void CuThread::exit()
 {
-    if (d->thread)
+    m_exit(false);
+}
+
+void CuThread::m_exit(bool auto_destroy)
+{
+    if(d->thread)
     {
-        ThreadEvent *exitEvent = new ExitThreadEvent();
+        ThreadEvent *exitEvent = new ExitThreadEvent(auto_destroy);
         std::unique_lock<std::mutex> lk(d->mutex);
         d->eventQueue.push(exitEvent);
         d->conditionvar.notify_one();
@@ -197,6 +202,14 @@ void CuThread::onEventPosted(CuEventI *event)
     {
         pbblue("CuThread.onEventPosted: thread (should be main!) 0x%lx event type %d calling mOnActivityExit\n", pthread_self(), event->getType());
         mOnActivityExited(static_cast<CuActivityExitEvent *>(event)->getActivity());
+    }
+    else if(ty == CuEventI::ThreadAutoDestroy) {
+        printf("\e[0;35mCuThread:onEventPosted: auto destroy! joining... ");
+        wait();
+        CuThreadService *ts = static_cast<CuThreadService *> (d->serviceProvider->get(CuServices::Thread));
+        ts->removeThread(this);
+        printf("\t [\e[1;32mJOINETH\e[0m]\n");
+        delete this;
     }
 }
 
@@ -319,6 +332,7 @@ void CuThread::start()
 void CuThread::run()
 {
     pbgreen("CuThread.run 0x%lx", pthread_self());
+    bool destroy = false;
     ThreadEvent *te = NULL;
     while(1)
     {
@@ -388,9 +402,10 @@ void CuThread::run()
 
             delete ae;
         }
-        else if(te->getType() == ThreadEvent::ThreadExit)
-        {
+        else if(te->getType() == ThreadEvent::ThreadExit) {
+            // ExitThreadEvent enqueued by mOnActivityExited (foreground thread)
             pbgreen("CuThread.run pthread 0x%lx: \e[1;31mThreadExit\e[0m  event", pthread_self());
+            destroy = static_cast<ExitThreadEvent *>(te)->autodestroy;
             delete te;
             break;
         }
@@ -399,8 +414,7 @@ void CuThread::run()
     }
     /* on thread exit */
     /* empty and delete queued events */
-    while(!d->eventQueue.empty())
-    {
+    while(!d->eventQueue.empty()) {
         ThreadEvent *qte = d->eventQueue.front();
         d->eventQueue.pop();
         delete qte;
@@ -408,10 +422,15 @@ void CuThread::run()
     std::unique_lock<std::mutex> lk(d->mutex);
     CuActivityManager *am = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     std::vector<CuActivity *>  myActivities = am->activitiesForThread(this);
+    pbred2("CuThread.run loop exit: auto destroy %d activities left %ld\n", destroy, myActivities.size());
     std::vector<CuActivity *>::iterator i;
     for(i = myActivities.begin(); i != myActivities.end(); ++i)
         mExitActivity(*i, true);
-    pbred2("CuThread.run loop exit\n");
+
+    // auto destroy when back in foreground thread. bridge: send event from bacgkround to fg
+    if(destroy) {
+        d->eventBridge->postEvent(new CuThreadAutoDestroyEvent());
+    }
 }
 
 /*! \brief returns true if the thread is running
@@ -453,9 +472,22 @@ void CuThread::mActivityInit(CuActivity *a)
 void CuThread::mOnActivityExited(CuActivity *a)
 {
     pr_thread();
-    static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager))->removeConnection(a);
+    CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
+    activityManager->removeConnection(a);
+    printf("\e[1;32mactivities left second activity manager \e[1;33m %ld second my map  \e[0;33m %ld <<<<<<<<<<<<\e[0m\n\n",
+           activityManager->activitiesForThread(this).size(), d->activity_set.size());
     if(a->getFlags() & CuActivity::CuADeleteOnExit)
         delete a;
+    if(activityManager->countActivitiesForThread(this) == 0) {
+        m_exit(true);
+    }
+    else { /// TEST! can remove this!!
+        printf("\n\e[1;33mmOnActivityExited\e[1;32m NO EXIT THREAD/DESTROY\e[1;35m cuz there are"
+               "%d activities\e[1;34m STILL THERE <<<<<<<<<<<<< \e[0m\n", activityManager->countActivitiesForThread(this));
+        std::vector<CuActivity *> as = activityManager->activitiesForThread(this);
+        for(size_t i = 0; i < as.size(); i++)
+            printf("- \e[1;36m%s\n", as.at(i)->getToken().toString().c_str());
+    }
 }
 
 /*! @private
@@ -525,8 +557,13 @@ CuActivity *CuThread::mFindActivity(CuTimer *t) const
     return NULL;
 }
 
-/*! \brief sends the event e to the activity a from the main thread
- *         to the background
+/*! \brief sends the event e to the activity a *from the main thread
+ *         to the background*
+ *
+ * \note
+ * This method is used to send an event *from the main thread to the
+ * background* Events from the background are posted to the *main thread*
+ * through the *thread event bridge* (CuThreadsEventBridge_I)
  *
  * @param a the CuActivity that sends the event
  * @param e the CuActivityEvent

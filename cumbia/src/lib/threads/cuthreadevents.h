@@ -28,7 +28,11 @@ private:
 class ExitThreadEvent : public ThreadEvent
 {
 public:
+    ExitThreadEvent(bool autodes = false);
+
     ThreadEvent::Type getType() const;
+
+    bool autodestroy; /// < auto destroy thread after leaving run
 };
 
 /*! @private */

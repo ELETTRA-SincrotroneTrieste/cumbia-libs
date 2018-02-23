@@ -21,5 +21,6 @@ int main(int argc, char *argv[])
 #ifdef QUMBIA_EPICS_CONTROLS
     delete cu_poo->get("epics");
 #endif
+    delete cu_poo;
     return ret;
 }

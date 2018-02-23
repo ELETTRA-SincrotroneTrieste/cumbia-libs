@@ -9,6 +9,7 @@
 #include <QHeaderView>
 #include <qthreadseventbridgefactory.h>
 #include <cuthreadfactoryimpl.h>
+#include <cuthreadservice.h>
 #include "activity.h"
 
 SimpleA::SimpleA(QWidget *parent) : QWidget(parent)
@@ -38,6 +39,11 @@ SimpleA::SimpleA(QWidget *parent) : QWidget(parent)
 
     m_cnt = m_thid = 0;
     m_cumbia = new Cumbia();
+}
+
+SimpleA::~SimpleA()
+{
+    delete m_cumbia;
 }
 
 void SimpleA::start()
@@ -73,6 +79,12 @@ void SimpleA::onResult(const CuData &data)
                         QStringList() << data["name"].toString().c_str()
             << data["msg"].toString().c_str()
             << data["thread"].toString().c_str() << main_th);
+
+    if(data["msg"].toString() == "onExit")
+    {
+        CuThreadService *ts = static_cast<CuThreadService *> (m_cumbia->getServiceProvider()->get(CuServices::Thread));
+        ts->
+    }
 }
 
 CuData SimpleA::getToken() const

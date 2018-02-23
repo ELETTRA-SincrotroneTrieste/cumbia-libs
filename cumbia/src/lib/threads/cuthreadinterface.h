@@ -45,6 +45,10 @@ class CuThreadService;
  * receive data (CuThreadListener::onProgress, CuThreadListener::onResult).
  * The list of CuThreadListener objects is obtained calling CuActivityManager::getThreadListeners
  *
+ * \par thr_disposal Thread disposal
+ * The interface does not define a specific behavior for thread disposal.
+ * CuThread implementation auto destroys itself when the last activity is unregistered.
+ *
  * @implements CuThreadsEventBridgeListener
  */
 class CuThreadInterface : public CuThreadsEventBridgeListener
@@ -90,7 +94,7 @@ public:
     /*! \brief publish an exit event from the background thread to the main thread
      *
      * The activity
-     *
+     */
     virtual void publishExitEvent(CuActivity *a)  = 0;
 
     /** \brief Used by the thread factory, this function, given an input data,
