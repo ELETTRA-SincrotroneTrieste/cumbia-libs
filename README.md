@@ -58,7 +58,7 @@ On Ubuntu these can be easily installed with the following command:
 
 > sudo apt-get install python3 ninja-build
 
-ANother way to get Meson is to pip install it for your user
+Another way to get Meson is to pip install it for your user
 
 > pip3 install --user meson
 
@@ -106,8 +106,9 @@ The last command would install the cumbia include files under
 
 */tmp/include/cumbia/*
 
-because the *meson.build* instruction: *install_headers(headers, subdir : 'cumbia')*
-installs headers under the *cumbia* child of the include directory.
+because the instruction: "*install_headers(headers, subdir : 'cumbia')*"
+specified by the developer in the *meson.build* file
+installs the header files under the *cumbia* child of the include directory.
 This observation is valid for *cumbia*, *cumbia-tango* and *cumbia-epics* modules.
 
 Normally, if you don't change the aforementioned options with *meson configure*,
@@ -164,13 +165,16 @@ To *install* the library, the documentation and the *pkg config* file, run:
 > cd ../cumbia-tango
 
 > meson builddir
+
 > cd builddir
 
 Optional:
 > meson configure
 
-Build and install
+Build library and docs:
 > ninja
+
+Install everything:
 > ninja install
 
 *Note* if you installed cumbia outside a system wide directory, you may have to
@@ -242,6 +246,7 @@ See the considerations done for the *cumbia-qtcontrols* Qwt and cumbia-qtcontrol
 and then proceed the same way to build the library and install the documentation:
 
 > qmake
+
 > make && make install
 
 ### 5. cumbia-epics.
@@ -251,15 +256,17 @@ If you rely on the Epics control system, please install this module as follows:
 > cd ../cumbia-epics
 
 > meson builddir
+
 > cd builddir
 
 Optional:
 
->meson configure
+> meson configure
 
-Build and install:
-
+Build library and docs:
 > ninja
+
+Install everything:
 > ninja install
 
 ##### Note
@@ -344,6 +351,7 @@ tell Qt to rely on pkgconfig for dependency resolution. See the comments on the 
 To build generic_client type
 
 > qmake
+
 > make
 
 Read the README.txt for details
