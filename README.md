@@ -31,7 +31,7 @@ PKG_CONFIG_PATH includes the relevant dependencies required by cumbia. For examp
 
 shows the list of the required packages to build all the modules in cumbia-libs: omniorb, tango, zeromq, epics qwt...
 
-### *meson* build system
+### The *meson* build system
 The [Meson Build System](http://mesonbuild.com) is an open source build system designed
 to be fast and user friendly. It provides multi platform support.
 The *cumbia*, *cumbia-tango* and *cumbia-epics* modules rely on *meson* for compilation and
@@ -39,12 +39,14 @@ installation. The modules involving the Qt libraries, *cumbia-qtcontrols*, *qumb
 and *qumbia-epics-controls* adopt Qt's *qmake* build system.
 Meson configuration files are named *meson.build*. One file resides inside the main project
 directory and another one, intended to build and install the documentation, is under the doc
-subdirectory. For example, for the *cumbia* library, you will find
+subdirectory. For the *cumbia* library, you will find:
 
 -  cumbia/meson.build
 -  cumbia/doc/meson.build
 
 The *meson.build* files are the sole build configuration files.
+They have been prepared by the developer but they can be edited according to your
+needs.
 
 #### Requirements
 
