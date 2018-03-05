@@ -48,7 +48,7 @@ The *meson.build* files are the sole build configuration files.
 
 #### Requirements
 
-As to the [Using Meson] (http://mesonbuild.com/Quick-guide.html) guide states,
+As the [Using Meson] (http://mesonbuild.com/Quick-guide.html) guide states,
 *meson* has two main dependencies:
 
 -  Python 3
@@ -58,7 +58,7 @@ On Ubuntu these can be easily installed with the following command:
 
 > sudo apt-get install python3 ninja-build
 
-The best way to get Meson is to pip install it for your user
+ANother way to get Meson is to pip install it for your user
 
 > pip3 install --user meson
 
@@ -68,6 +68,7 @@ For each *meson* project (*cumbia*, *cumbia-tango* and *cumbia-epics*) you need 
 a separate build directory. For example, to build *cumbia*
 
 > cd cumbia
+
 > meson builddir
 
 Meson will not allow you to build source code inside your source tree. All build
@@ -83,15 +84,15 @@ Change into the *build directory*:
 
 > cd builddir
 
-and see the configuration options:
+and optionally run:
 
 > meson configure
 
-You can switch on *debug* compilation:
+You can switch on *debug* build:
 
 > meson configure -Dbuildtype=debug
 
-or build in *release* mode:
+or *release*:
 
 > meson configure -Dbuildtype=release
 
@@ -105,11 +106,9 @@ The last command would install the cumbia include files under
 
 */tmp/include/cumbia/*
 
-because the *meson.build* set up puts headers under the *cumbia* subdirectory
-of the include directory, by means of the *install_headers(headers, subdir : 'cumbia')*
-instruction. This observation is valid for *cumbia*, *cumbia-tango* and *cumbia-epics* modules.
-See the [Using Meson](http://mesonbuild.com/Quick-guide.html) documentation for more
-details.
+because the *meson.build* instruction: *install_headers(headers, subdir : 'cumbia')*
+installs headers under the *cumbia* child of the include directory.
+This observation is valid for *cumbia*, *cumbia-tango* and *cumbia-epics* modules.
 
 Normally, if you don't change the aforementioned options with *meson configure*,
 libraries are placed under
@@ -128,6 +127,8 @@ and documentation in
 -  */usr/local/share/doc/cumbia-tango*
 -  */usr/local/share/doc/cumbia-epics*
 
+See the [Using Meson](http://mesonbuild.com/Quick-guide.html) documentation for more
+details.
 
 ### 1. Install cumbia base library
 
