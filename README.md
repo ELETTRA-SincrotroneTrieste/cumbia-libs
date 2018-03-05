@@ -60,14 +60,14 @@ On Ubuntu these can be easily installed with the following command:
 
 > sudo apt-get install python3 ninja-build
 
-Another way to get Meson is to pip install it for your user
+Another way (recommended by the guide) to get Meson is to pip install it for your user:
 
 > pip3 install --user meson
 
 #### Notes about compiling a *meson* project
 
 For each *meson* project (*cumbia*, *cumbia-tango* and *cumbia-epics*) you need to create
-a separate build directory. For example, to build *cumbia*
+a separate build directory. For example, to build *cumbia*:
 
 > cd cumbia
 
@@ -98,13 +98,13 @@ or *release*:
 
 > meson configure -Dbuildtype=release
 
-To change the default prefix (/usr/local and includedir /usr/local/include/cumbia)
+To change the default prefix (/usr/local and includedir /usr/local/include/cumbia):
 
 > meson configure -Dprefix=/tmp
 
 > meson configure -Dincludedir=/tmp/include
 
-The last command would install the cumbia include files under
+The last command would install the cumbia include files under:
 
 */tmp/include/cumbia/*
 
@@ -114,17 +114,17 @@ installs the header files under the *cumbia* child of the include directory.
 This observation is valid for *cumbia*, *cumbia-tango* and *cumbia-epics* modules.
 
 Normally, if you don't change the aforementioned options with *meson configure*,
-libraries are placed under
+libraries are placed under:
 
 -  */usr/local/lib*
 
-include files under
+include files under:
 
 -  */usr/local/include/cumbia*
 -  */usr/local/include/cumbia-tango*
 -  */usr/local/include/cumbia-epics*
 
-and documentation in
+and documentation in:
 
 -  */usr/local/share/doc/cumbia*
 -  */usr/local/share/doc/cumbia-tango*
@@ -321,15 +321,13 @@ Adjust cumbia-multiread.pro if necessary
 
 > cd ../qt-designer/
 
-Adjust qt-designer.pro if necessary
+Adjust qt-designer.pro if necessary:
 
 > qmake
 
 > make
 
 > make install
-
-
 
 
 ### 8. Build some basic applications
@@ -339,7 +337,7 @@ Adjust qt-designer.pro if necessary
 Some base tools are provided to test the cumbia-libs and perform some basic operations on the
 underlying control system (reading or writing quantities).
 
-#### 8a. generic_client: a client to read/write from/to Tango and Epics
+#### 8a. generic_client: a client to read/write from/to Tango and Epics:
 
 > cd generic_client
 
@@ -350,7 +348,7 @@ Beware that the lines
 
 tell Qt to rely on pkgconfig for dependency resolution. See the comments on the *cumbia-qtcontrols* section above.
 
-To build generic_client type
+To build generic_client type:
 
 > qmake
 
@@ -365,6 +363,8 @@ starts the generic_client and performs readings on the two Tango attributes spec
 > make install copies the generic_client binary file into INSTALL_ROOT/bin. See generic_client.pro
 
 #### 8b. qumbiaprojectwizard: create a new Qt + cumbia project with a graphical interface.
+
+Change into the project directory:
 
 > cd ../qumbiaprojectwizard
 
@@ -387,16 +387,18 @@ generated with qumbiaprojectwizard and edited with the Qt designer.
 expands .h and .cpp files in the project to make their constructors compatible with cumbia-qtcontrols classes
 constructors). This is an essential tool.
 
+Go into cuuimake's source directory:
+
 > cd ../cuuimake
 
-Edit cuuimake.pro if you need to adjust the INSTALL_ROOT and the SHAREDIR paths.
+Edit cuuimake.pro if you need to adjust the INSTALL_ROOT and the SHAREDIR paths:
 
 > qmake
 
 > make
 
 Install the cuuimake utility that must be used before building any cumbia project created with qumbiaprojectwizard and
-edited with the Qt designer.
+edited with the Qt designer:
 
 > make install
 
