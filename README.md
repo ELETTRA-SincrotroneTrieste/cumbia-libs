@@ -50,7 +50,7 @@ needs.
 
 #### Requirements
 
-As the [Using Meson] (http://mesonbuild.com/Quick-guide.html) guide states,
+As the [Using Meson](http://mesonbuild.com/Quick-guide.html) guide states,
 *meson* has two main dependencies:
 
 -  Python 3
