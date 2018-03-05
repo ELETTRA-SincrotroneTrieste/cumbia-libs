@@ -32,7 +32,7 @@ PKG_CONFIG_PATH includes the relevant dependencies required by cumbia. For examp
 shows the list of the required packages to build all the modules in cumbia-libs: omniorb, tango, zeromq, epics qwt...
 
 ### *meson* build system
-The <a http="mesonbuild.com>Meson Build System</a> is an open source build system designed
+The [Meson Build System](http://mesonbuild.com) is an open source build system designed
 to be fast and user friendly. It provides multi platform support.
 The *cumbia*, *cumbia-tango* and *cumbia-epics* modules rely on *meson* for compilation and
 installation. The modules involving the Qt libraries, *cumbia-qtcontrols*, *qumbia-tango-controls*
@@ -48,7 +48,7 @@ The *meson.build* files are the sole build configuration files.
 
 #### Requirements
 
-As to the <a href="http://mesonbuild.com/Quick-guide.html>Using Meson</a> guide states,
+As to the [Using Meson] (http://mesonbuild.com/Quick-guide.html) guide states,
 *meson* has two main dependencies:
 
 \li Python 3
@@ -108,7 +108,7 @@ The last command would install the cumbia include files under
 because the *meson.build* set up puts headers under the *cumbia* subdirectory
 of the include directory, by means of the *install_headers(headers, subdir : 'cumbia')*
 instruction. This observation is valid for *cumbia*, *cumbia-tango* and *cumbia-epics* modules.
-See the <a href="http://mesonbuild.com/Quick-guide.html>Using Meson</a> documentation for more
+See the [Using Meson](http://mesonbuild.com/Quick-guide.html) documentation for more
 details.
 
 Normally, if you don't change the aforementioned options with *meson configure*,
