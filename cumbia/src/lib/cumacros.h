@@ -131,7 +131,7 @@
         #define pbred(x, args...) do {}while(0)
         #define pbyellow(x, args...) do {   } while(0)
         #define pbblue(x, args...) do {   }while(0)
-        #define pbviolet(x, args...) do {   } }while(0)
+        #define pbviolet(x, args...) do {   } while(0)
         #define pblblue(x, args...) do { }while(0)
 
         #define pbgreen2(x, args...) do { }while(0)

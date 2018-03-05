@@ -45,7 +45,7 @@ class CuThreadService;
  * receive data (CuThreadListener::onProgress, CuThreadListener::onResult).
  * The list of CuThreadListener objects is obtained calling CuActivityManager::getThreadListeners
  *
- * \par thr_disposal Thread disposal
+ * \par Thread disposal
  * The interface does not define a specific behavior for thread disposal.
  * CuThread implementation auto destroys itself when the last activity is unregistered.
  *

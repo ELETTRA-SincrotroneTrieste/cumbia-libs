@@ -31,42 +31,152 @@ PKG_CONFIG_PATH includes the relevant dependencies required by cumbia. For examp
 
 shows the list of the required packages to build all the modules in cumbia-libs: omniorb, tango, zeromq, epics qwt...
 
+### *meson* build system
+The <a http="mesonbuild.com>Meson Build System</a> is an open source build system designed
+to be fast and user friendly. It provides multi platform support.
+The *cumbia*, *cumbia-tango* and *cumbia-epics* modules rely on *meson* for compilation and
+installation. The modules involving the Qt libraries, *cumbia-qtcontrols*, *qumbia-tango-controls*
+and *qumbia-epics-controls* adopt Qt's *qmake* build system.
+Meson configuration files are named *meson.build*. One file resides inside the main project
+directory and another one, intended to build and install the documentation, is under the doc
+subdirectory. For example, concerning the *cumbia* library, you will find
+
+\li cumbia/meson.build
+\li cumbia/doc/meson.build
+
+The *meson.build* files are the sole build configuration files.
+
+#### Requirements
+
+As to the <a href="http://mesonbuild.com/Quick-guide.html>Using Meson</a> guide states,
+*meson* has two main dependencies:
+
+\li Python 3
+\li Ninja
+
+On Ubuntu these can be easily installed with the following command:
+
+> sudo apt-get install python3 ninja-build
+
+The best way to get Meson is to pip install it for your user
+
+> pip3 install --user meson
+
+#### Notes about compiling a *meson* project
+
+For each *meson* project (*cumbia*, *cumbia-tango* and *cumbia-epics*) you need to create
+a separate build directory. For example, to build *cumbia*
+
+> cd cumbia
+> meson builddir
+
+Meson will not allow you to build source code inside your source tree. All build
+artifacts are stored in the build directory. This allows you to have multiple build
+trees with different configurations at the same time.
+This way generated files are not added into revision control by accident.
+
+
+#### Checking the *meson* project configuration
+
+After *meson buildir* is run, you can *optionally* check the configuration with *meson configure*.
+Change into the *build directory*:
+
+> cd builddir
+
+and see the configuration options:
+
+> meson configure
+
+You can switch on *debug* compilation:
+
+> meson configure -Dbuildtype=debug
+
+or build in *release* mode:
+
+> meson configure -Dbuildtype=release
+
+To change the default prefix (/usr/local and includedir /usr/local/include/cumbia)
+
+> meson configure -Dprefix=/tmp
+
+> meson configure -Dincludedir=/tmp/include
+
+The last command would install the cumbia include files under
+
+*/tmp/include/cumbia/*
+
+because the *meson.build* set up puts headers under the *cumbia* subdirectory
+of the include directory, by means of the *install_headers(headers, subdir : 'cumbia')*
+instruction. This observation is valid for *cumbia*, *cumbia-tango* and *cumbia-epics* modules.
+See the <a href="http://mesonbuild.com/Quick-guide.html>Using Meson</a> documentation for more
+details.
+
+Normally, if you don't change the aforementioned options with *meson configure*,
+libraries are placed under
+
+\li */usr/local/lib*
+
+include files under
+
+\li */usr/local/include/cumbia*
+\li */usr/local/include/cumbia-tango*
+\li */usr/local/include/cumbia-epics*
+
+and documentation in
+
+\li */usr/local/share/doc/cumbia*
+\li */usr/local/share/doc/cumbia-tango*
+\li */usr/local/share/doc/cumbia-epics*
+
+
 ### 1. Install cumbia base library
 
 > cd cumbia
 
-> ./configure --prefix=/usr/local --includedir=/usr/local/include/cumbia
+Create *build directory* and let meson populate it with the necessary set up files:
 
-> make && make install
+> meson builddir
 
-#### 1b. Install the documentation
-> make doc
+Change into the *build* directory:
 
-This generates the documentation under the doc/ subdirectory. To install it under
-/usr/local/share/doc/cumbia execute:
+> cd builddir
 
-> make install-html
+Optionally check the build configuration:
+
+> meson configure
+
+and compile the sources:
+
+> ninja
+
+To recompile after code changes, just type ninja. The build command is always the same.
+You can do arbitrary changes to source code and build system files and Meson will detect
+them.
+
+To *install* the library, the documentation and the *pkg config* file, run:
+
+> ninja install
+
 
 ### 2. Install the cumbia-tango module if you want to connect to the Tango control system
 
 > cd ../cumbia-tango
 
-> ./configure --prefix=/usr/local --includedir=/usr/local/include/cumbia-tango
+> meson builddir
+> cd builddir
 
-> make && make install
+Optional:
+> meson configure
+
+Build and install
+> ninja
+> ninja install
 
 *Note* if you installed cumbia outside a system wide directory, you may have to
 update the PKG_CONFIG_PATH environment so that it contains cumbia's lib/pkgconfig
 directory containing the *cumbia.pc* file. For example:
 
 > export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/home/giacomo/devel/usr/local/lib/pkgconfig
-
-#### 2b. Install the documentation
-> make doc
-This generates the documentation under the doc/ subdirectory. To install it under
-/usr/local/share/doc/cumbia-tango execute:
-
-> make install-html
 
 Next, install the cumbia qtcontrols module: a set of widgets to compose graphical user interfaces
 that understand cumbia.
@@ -138,10 +248,18 @@ and then proceed the same way to build the library and install the documentation
 If you rely on the Epics control system, please install this module as follows:
 
 > cd ../cumbia-epics
-> ./configure --prefix=/usr/local --includedir=/usr/local/include/cumbia-epics
-> make && make install
 
-> make doc && make install-html
+> meson builddir
+> cd builddir
+
+Optional:
+
+>meson configure
+
+Build and install:
+
+> ninja
+> ninja install
 
 ##### Note
 Check that the PKG_CONFIG_PATH contains the epics-base lib/pkgconfig directory.

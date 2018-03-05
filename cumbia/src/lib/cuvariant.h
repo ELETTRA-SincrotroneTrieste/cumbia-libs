@@ -66,12 +66,13 @@ public:
 
     /**
      * @brief The DataFormat enum lists the different data formats supported
-     *        by XVariant
+     *        by CuVariant
      *
      * \li scalar: one single value
-     * \li vector: an array (Tango names it spectrum) of data
-     * \li matrix: a 2 dimensional matrix of data (what Tango calls Image).
+     * \li vector: a data array
+     * \li matrix: a 2 dimensional matrix of data.
      *
+     * @see getFormat
      */
     enum DataFormat { FormatInvalid = -1, ///< invalid format
                       Scalar, ///< a scalar value
@@ -81,12 +82,25 @@ public:
                     };
 
     /**
-     * @brief The DataType enum lists the different data types that can be memorized
-     *        into XVariant
+     * @brief The DataType enum lists the different data types that can be held
+     *        by CuVariant
+     *
+     * @see getType
      */
-    enum DataType { TypeInvalid = -1, Short, UShort, Int, UInt,
-                    LongInt, LongUInt, Float, Double,
-                    LongDouble, Boolean, String, EndDataTypes };
+    enum DataType { TypeInvalid = -1, ///< invalid data type
+                    Short, ///< short int
+                    UShort, ///< unsigned short int
+                    Int, ///< int
+                    UInt, ///< unsigned int
+                    LongInt, ///< long int
+                    LongUInt, ///< long unsigned int
+                    Float, ///< float
+                    Double, ///< double
+                    LongDouble, ///< long double
+                    Boolean, ///< bool
+                    String, ///< std::string, const char*
+                    EndDataTypes = 64 ///< defines an upper bound of the enumeration
+                  };
 
     CuVariant(const size_t size, DataFormat df,
              DataType dt);
@@ -212,7 +226,7 @@ public:
 
     bool toBool(bool *ok = NULL) const;
 
-    std::string toString(bool *ok = NULL, const char *double_format = "%f") const;
+    std::string toString(bool *ok = NULL, const char *format = "") const;
 
     std::vector<std::string> toStringVector(bool *ok = NULL) const;
 

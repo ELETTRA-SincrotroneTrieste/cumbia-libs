@@ -16,7 +16,7 @@ class CuDataListenerPrivate;
  * updates from CuThreadListener objects when new data is available from
  * activities. It is not used by any class of the *cumbia base* library.
  *
- * \par cu_data_listener_examples Examples
+ * \par Examples
  * \li *cumbia-qtcontrols* module widgets, such as QuLabel, QuLed, QuButton implement
  * the CuDataListener interface and are notified when new data is published
  * from an activity running in the background.
@@ -26,7 +26,7 @@ class CuDataListenerPrivate;
  *     CuTReader::onResult invokes CuDataListener::onUpdate on every listener
  *     registered with CuTReader::addDataListener
  *
- * \par cu_data_listener_invalidate Invalidate data listeners
+ * \par Invalidate data listeners
  * The implementation of three methods of this abstract class allow to set and get
  * an *invalid* flag that can be used by subclasses to know wheter the listener is
  * in an invalid state, for example it's being destroyed. In that case,

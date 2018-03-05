@@ -180,7 +180,7 @@ bool CuData::containsKey(const std::string &key) const
  *
  * Use the insert operator to add a new key/value pair to the bundle
  *
- * \par cudata_example_square_brackets Example
+ * \par  Example
  * \code
     CuData at("src", source.getName()); // string
     at["device"] = source.getDeviceName(); // string

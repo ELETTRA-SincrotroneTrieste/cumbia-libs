@@ -16,7 +16,7 @@ class CuThreadsEventBridgeFactory_I;
 /*! \brief *cumbia service* that creates threads and keeps references of the threads
  *         running within the application
  *
- * \par cuthread_service The *cumbia thread service*
+ * \par The *cumbia thread service*
  *
  * The most important function in this service is CuThreadService::getThread.
  * It returns a pointer to a CuThreadInterface implementation as instantiated

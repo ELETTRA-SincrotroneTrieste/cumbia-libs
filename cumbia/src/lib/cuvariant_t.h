@@ -6,7 +6,7 @@
 #include <string> // stold
 #include <stdexcept>
 
-/** \brief convert the current CuVariant into a variable of type T, if possible.
+/** \brief convert the current *scalar* CuVariant into a variable of type T.
  *
  * @param val a reference to a variable of type T
  * @return true the conversion is successful
@@ -26,35 +26,35 @@ template<typename T> bool CuVariant::to(T &val) const
         switch(d->type)
         {
         case Short:
-            val = *(static_cast<short *>(d->val));
+            val = static_cast<T>(*(static_cast<short *>(d->val)));
             break;
         case UShort:
-            val = *(static_cast<unsigned short *>(d->val));
+            val = static_cast<T>(*(static_cast<unsigned short *>(d->val)));
             break;
         case Int:
-            val = *(static_cast<int *>(d->val));
+            val = static_cast<T>(*(static_cast<int *>(d->val)));
             break;
         case UInt:
-            val = *(static_cast<unsigned int *>(d->val));
+            val = static_cast<T>(*(static_cast<unsigned int *>(d->val)));
             break;
 
         case LongInt:
-            val = *(static_cast<long int *>(d->val));
+            val = static_cast<T>(*(static_cast<long int *>(d->val)));
             break;
         case LongUInt:
-            val = *(static_cast<unsigned long *>(d->val));
+            val = static_cast<T>(*(static_cast<unsigned long *>(d->val)));
             break;
         case Float:
-            val = *(static_cast<float *>(d->val));
+            val = static_cast<T>(*(static_cast<float *>(d->val)));
             break;
         case Double:
-            val = *(static_cast<double *>(d->val));
+            val = static_cast<T>(*(static_cast<double *>(d->val)));
             break;
         case LongDouble:
-            val = *(static_cast<long double *>(d->val));
+            val = static_cast<T>(*(static_cast<long double *>(d->val)));
             break;
         case Boolean:
-            val = *(static_cast<bool *>(d->val));
+            val = static_cast<T>(*(static_cast<bool *>(d->val)));
             break;
         case String:
             try
@@ -93,6 +93,9 @@ template<typename T> bool CuVariant::to(T &val) const
  * vector of type T passed as reference.
  *
  * @see to
+ *
+ * \note if the CuVariant::DataFormat is CuVariant::Scalar, v will contain only one
+ *       element with the scalar value
  */
 template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
 {

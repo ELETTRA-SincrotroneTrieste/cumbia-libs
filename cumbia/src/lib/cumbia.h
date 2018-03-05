@@ -52,11 +52,58 @@ class CuActivityEvent;
  * engine underneath (\a Tango, \a Epics, ...)
  *
  */
+
+/*! \brief primary cumbia class where activities are registered and unregistered.
+ *         Provides access to the cumbia *service provider*
+ *
+ * A *cumbia* application will hold a reference to this central class throughout its lifetime,
+ * to register and unregister *activities* and to register and access *services*.
+ * This is achieved creating a Cumbia instance either in the main function, passing it around to
+ * objects that need access to it, or in the application's main class (as for example in the
+ * main widget of a Qt application).
+ * *Activities* (CuActivity objects) are the main actors of a *cumbia* application. They execute
+ * work in the background, publishing the results to the foreground thread when they are ready.
+ * Activities are *registered* to and *unregistered* from *cumbia*.
+ *
+ * The *cumbia-tango* and *cumbia-epics* modules *extend* Cumbia to provide extra functionalities.
+ *
+ * \par Functions
+ * \li Cumbia::registerActivity: a new cumbia *activity*, *CuActivity* is registered and bound to a *thread
+ *     listener, CuThreadListener*
+ * \li Cumbia::unregisterActivity an activity is unregistered from *cumbia*
+ * \li if an activity is executed periodically, the period can be changed and the timer can be paused
+ *     and resumed
+ * \li Cumbia::getServiceProvider returns a pointer to the CuServiceProvider created and managed
+ *     by Cumbia itself. CuThreadService and CuActivityManager are the two *services* run
+ *     by this class.
+ *
+ * \par Example
+ * Read \ref md_src_tutorial_cuactivity for a simple example involving Cumbia and CuActivity
+ *
+ * Other examples and tutorials can be found in the cumbia-qtcontrols and qumbia-tango-controls
+ * modules that depend on *cumbia*:
+ *
+ * \li <a href="../cumbia-tango/md_lib_tutorial_activity.html">Writing an activity to read Tango
+ *      device, attribute and class properties</a>
+ * \li <a href="../qumbia-tango-controls/html/md_src_tutorial_qumbiatango_app.html">Setting up a graphical application with cumbia and tango</a>.
+ * \li <a href="../qumbia-tango-controls/html/md_src_cuuimake.html">Using <em>cuuimake</em></a>.
+ * \li <a href="../qumbia-tango-controls/html/md_src_tutorial_qumbiatango_widget.html">Writing a <em>Qt widget</em> to <em>read from Tango</em></a>.
+ *
+ * \par See also
+ * \li <a href="../cumbia-qtcontrols/html/index.html">cumbia-qtcontrols module</a>.
+ * \li <a href="../qumbia-tango-controls/html/index.html">qumbia-tango-controls module</a>.
+ * \li <a href="../cumbia-epics/index.html">qumbia-epics module</a>.
+ * \li <a href="../qumbia-epics-controls/html/index.html">qumbia-epics-controls module</a>.
+ *
+ */
 class Cumbia
 {
 
 public:
-    enum Type { CumbiaBaseType = 0, CumbiaUserType = 10 };
+    enum Type { CumbiaBaseType = 0, ///< basic Cumbia type
+                CumbiaUserType = 10,  ///< starting value for user defined Cumbia subclasses
+                CumbiaMaxUserType = 256 ///< upper bound for the Type enumeration
+              };
 
     Cumbia();
 
@@ -73,8 +120,6 @@ public:
     void unregisterActivity(CuActivity *activity);
 
     CuActivity *findActivity(const CuData& token) const;
-
-    bool threadRelease(CuThreadListener *l);
 
     void setActivityPeriod(CuActivity *a, int timeout);
 

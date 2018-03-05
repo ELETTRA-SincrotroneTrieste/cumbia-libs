@@ -33,7 +33,7 @@ class CuDataPrivate;
  * The CuData::toString method returns a std::string representation of its contents.
  * The contents of a CuData can be printed on the console by means of CuData::print
  *
- * \par cu_data_cuvariant The CuVariant variant type
+ * \par The CuVariant variant type
  * Please read the CuVariant documentation to understand the *cumbia* CuVariant type.
  */
 class CuData

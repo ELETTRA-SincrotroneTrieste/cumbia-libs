@@ -1166,19 +1166,38 @@ bool CuVariant::toBool(bool *ok) const
 
 /** \brief Convert the stored value to a string representation.
  *
- * This method converts the data stored by CuVariant into a string.
- * For instance, if the CuVariant stores a scalar Double data type with value 0.12,
- * a string containing "0.12" is returned. The  conversion specifier
- * used to convert to double or long double or float data types can be given in double_format
- * If the CuVariant stores a Vector Double data type with values [10.1, 12.6, 9.1, -5.4]
- * then the string returned will be "10.1,12.6,9.1,-5.4".
+ * This method converts the data stored by CuVariant into a string, using
+ * the *snprintf* function with the given format or a default format specifier chosen
+ * on the basis of the data type.
+ *
+ * \par Default conversion specifier
+ * \li double: "%f"
+ * \li long double: "%Lf"
+ * \li float: "%f"
+ * \li int: "%d"
+ * \li long int: "%ld"
+ * \li unsigned int: "%u"
+ * \li long unsigned int: "%lu"
+ * \li short: "%hd"
+ * \li unsigned short: "%hu"
+ *
+ * \par Examples
+ *
+ * \li if the CuVariant holds a scalar Double data type with value 0.12,
+ *     a string containing "0.12" is returned.
+ *
+ * \li if the CuVariant stores a Vector Double data type with values [10.1, 12.6, 9.1, -5.4]
+ *     then the returned string will be "10.1,12.6,9.1,-5.4".
+ *
+ * The  conversion specifier can be given through the format parameter of this method
  *
  * @param ok if not null, store in ok the result of the conversion.
+ * @param format a const char specifying the desired format to pass to *snprintf*
  *
  * @return a std::string representation of the stored values.
  *
  */
-std::string CuVariant::toString(bool *ok, const char *double_format) const
+std::string CuVariant::toString(bool *ok, const char *format) const
 {
     const size_t MAXLEN = 128;
     std::string ret;
@@ -1192,7 +1211,9 @@ std::string CuVariant::toString(bool *ok, const char *double_format) const
         if(d->type == String)
             ret += std::string(static_cast<char **>(d->val)[i]);
         else if(d->type == Double)
-            snprintf(converted, MAXLEN, double_format, static_cast<double *>(d->val)[i]);
+            snprintf(converted, MAXLEN, "%f", static_cast<double *>(d->val)[i]);
+        else if(d->type == LongDouble)
+            snprintf(converted, MAXLEN, "%Lf", static_cast<long double *>(d->val)[i]);
         else if(d->type == Int)
             snprintf(converted, MAXLEN, "%d", static_cast<int *>(d->val)[i]);
         else if(d->type == UInt)
@@ -1202,9 +1223,9 @@ std::string CuVariant::toString(bool *ok, const char *double_format) const
         else if(d->type == LongInt)
             snprintf(converted, MAXLEN, "%ld", static_cast<long int *>(d->val)[i]);
         else if(d->type == Short)
-            snprintf(converted, MAXLEN, "%d", static_cast<short int *>(d->val)[i]);
+            snprintf(converted, MAXLEN, "%hd", static_cast<short int *>(d->val)[i]);
         else if(d->type == UShort)
-            snprintf(converted, MAXLEN, "%u", static_cast<unsigned short *>(d->val)[i]);
+            snprintf(converted, MAXLEN, "%hu", static_cast<unsigned short *>(d->val)[i]);
         else if(d->type == Float)
             snprintf(converted, MAXLEN, "%f", static_cast<float *>(d->val)[i]);
         else if(d->type == Boolean)
@@ -1226,21 +1247,25 @@ std::string CuVariant::toString(bool *ok, const char *double_format) const
     return ret;
 }
 
-/** \brief The conversion method that tries to convert the stored data into a vector of strings
-         *
-         * @return a std::vector of string representing the data saved into CuVariant
-         *
-         * \note If the data cannot be converted to a vector of strings, then isValid will return false.
-         * On the other hand, no error message is set by this method.
-         *
-         */
+/** \brief convert the stored data into a vector of strings
+ *
+ * @param *ok a pointer to a bool. If not null, its value will be set to true
+ *        if the conversion is successful, false otherwise (wrong data type,
+ *        format, invalid CuVariant or NULL value)
+ *
+ * @return a std::vector of std::string representing the data saved into CuVariant
+ *
+ * \note conversion is successful if the CuVariant::DataType is CuVariant::String and the
+ * CuVariant::DataFormat is *either* CuVariant::Vector *or* CuVariant::Scalar
+ *
+ */
 std::vector<std::string> CuVariant::toStringVector(bool *ok) const
 {
+    bool can_convert = (d->type == String && (d->format == Vector || d->format == Scalar) );
     std::vector<std::string> ret;
     if(ok)
-        *ok = (d->type == String && (d->format == Vector || d->format == Scalar) );
-
-    if(d->type == String && (d->format == Vector || d->format == Scalar) )
+        *ok = can_convert;
+    if(can_convert)
     {
         char **str_array = static_cast<char **>(d->val);
         for(size_t i = 0; i < d->mSize; i++)
@@ -1251,148 +1276,218 @@ std::vector<std::string> CuVariant::toStringVector(bool *ok) const
     return ret;
 }
 
-/** \brief Returns a pointer to a double addressing the start of data.
-         *
-         * Used with getSize allows to get the stored data in a "C" style.
-         *
-         * @see getSize
-         * @see toLongIntP
-         * *
-         * \note Check the return value of this method: if null, no data is currently
-         *       stored or you are trying to extract a type of data different from the
-         *       one memorized in CuVariant.
-         */
-double *CuVariant::toDoubleP() const
-{
-    return (double *) d->val ;
-}
-
-long double *CuVariant::toLongDoubleP() const
-{
-    return static_cast<long double *>(d->val);
-}
-
-/** \brief Returns a pointer to a long unsigned int addressing the start of data.
+/** \brief Returns the pointer to the data stored as double, or NULL if no data is stored
+ *         or if the data type is wrong
  *
- * Used with getSize allows to get the stored data in a "C" style.
+ * Combined with getSize allows to get the stored data in a "C" style (as scalar, if
+ * size is 1, or array).
+ *
+ * @return pointer to the data held as double, NULL if no data is stored or the
+ *         CuVariant::DataType is not CuVariant::Double
  *
  * @see getSize
- * @see toDoubleP
- * @see toULongIntP
+ * @see getData
  *
- * \note Check the return value of this method: if null, no data is currently
- *       stored or you are trying to extract a type of data different from the
- *       one memorized in CuVariant.
+ */
+double *CuVariant::toDoubleP() const
+{
+    if(d->type == CuVariant::Double)
+        return static_cast<double *> (d->val);
+    return NULL;
+}
+
+/** \brief Returns the pointer to the data stored as long double, or NULL
+ *         if no data is stored or if the data type is wrong
  *
- * \note shorts and ints are mapped to longs.
+ * Combined with getSize allows to get the stored data in a "C" style (as scalar, if
+ * size is 1, or array)
+ *
+ * @return pointer to the data held as double, NULL if no data is stored or the
+ *         CuVariant::DataType is not CuVariant::LongDouble
+ *
+ * @see getSize
+ * @see getData
+ */
+long double *CuVariant::toLongDoubleP() const
+{
+    if(d->type == CuVariant::LongDouble)
+        return static_cast<long double *> (d->val);
+    return NULL;
+}
+
+/** \brief Returns the pointer to the data stored as unsigned int, or NULL
+ *         if no data is stored or if the data type is wrong
+ *
+ * Combined with getSize allows to get the stored data in a "C" style (as scalar, if
+ * size is 1, or array)
+ *
+ * @return pointer to the data held as double, NULL if no data is stored or the
+ *         CuVariant::DataType is not CuVariant::UInt
+ *
+ * @see getSize
+ * @see getData
  */
 unsigned int *CuVariant::toUIntP() const
 {
-    return static_cast<unsigned int *>( d->val );
+    if(d->type == CuVariant::UInt) return static_cast<unsigned int *>( d->val );
+    return NULL;
 }
 
-/** \brief Returns a pointer to a long unsigned int addressing the start of data.
+/** \brief Returns the pointer to the data stored as int, or NULL
+ *         if no data is stored or if the data type is wrong
  *
- * Used with getSize allows to get the stored data in a "C" style.
+ * Combined with getSize allows to get the stored data in a "C" style (as scalar, if
+ * size is 1, or array)
+ *
+ * @return pointer to the data held as int, NULL if no data is stored or the
+ *         CuVariant::DataType is not CuVariant::Int
  *
  * @see getSize
- * @see toDoubleP
- * @see toULongIntP
- *
- * \note Check the return value of this method: if null, no data is currently
- *       stored or you are trying to extract a type of data different from the
- *       one memorized in CuVariant.
- *
- * \note shorts and ints are mapped to longs.
+ * @see getData
  */
 int *CuVariant::toIntP() const
 {
-    return static_cast<int *>( d->val );
+    if(d->type == CuVariant::Int) return static_cast<int *>( d->val );
+    return NULL;
 }
 
-/** \brief Returns a pointer to a long unsigned int addressing the start of data.
-         *
-         * Used with getSize allows to get the stored data in a "C" style.
-         *
-         * @see getSize
-         * @see toDoubleP
-         * @see toULongIntP
-         *
-         * \note Check the return value of this method: if null, no data is currently
-         *       stored or you are trying to extract a type of data different from the
-         *       one memorized in CuVariant.
-         *
-         * \note shorts and ints are mapped to longs.
-         */
-unsigned long int *CuVariant::toULongIntP() const
-{
-    return (unsigned long int *) d->val ;
-}
-
-float *CuVariant::toFloatP() const
-{
-    return static_cast<float *>(d->val);
-}
-
-
-/** \brief Returns a pointer to an int addressing the start of data.
-         *
-         * Used with getSize allows to get the stored data in a "C" style.
-         *
-         * @see getSize
-         * @see toDoubleP
-         *
-         * \note Check the return value of this method: if null, no data is currently
-         *       stored or you are trying to extract a type of data different from the
-         *       one memorized in CuVariant.
-         *
-         * \note shorts and ints are mapped to longs.
-         */
+/** \brief Returns the pointer to the data stored as long int, or NULL
+ *         if no data is stored or if the data type is wrong
+ *
+ * Combined with getSize allows to get the stored data in a "C" style (as scalar, if
+ * size is 1, or array)
+ *
+ * @return pointer to the data held as int, NULL if no data is stored or the
+ *         CuVariant::DataType is not CuVariant::LongInt
+ *
+ * @see getSize
+ * @see getData
+ */
 long int *CuVariant::toLongIntP() const
 {
-    return (long int *) d->val ;
+    if(d->type == CuVariant::LongInt)
+        return static_cast<long int *>(d->val);
+    return NULL;
 }
 
+/** \brief Returns the pointer to the data stored as unsigned long int, or NULL
+ *         if no data is stored or if the data type is wrong
+ *
+ * Combined with getSize allows to get the stored data in a "C" style (as scalar, if
+ * size is 1, or array)
+ *
+ * @return pointer to the data held as int, NULL if no data is stored or the
+ *         CuVariant::DataType is not CuVariant::LongUInt
+ *
+ * @see getSize
+ * @see getData
+ */
+unsigned long int *CuVariant::toULongIntP() const
+{
+    if(d->type == CuVariant::LongUInt)
+        return static_cast<unsigned long int *>(d->val);
+    return NULL;
+}
+
+/** \brief Returns the pointer to the data stored as float, or NULL
+ *         if no data is stored or if the data type is wrong
+ *
+ * Combined with getSize allows to get the stored data in a "C" style (as scalar, if
+ * size is 1, or array)
+ *
+ * @return pointer to the data held as int, NULL if no data is stored or the
+ *         CuVariant::DataType is not CuVariant::Float
+ *
+ * @see getSize
+ * @see getData
+ */
+float *CuVariant::toFloatP() const
+{
+    if(d->type == CuVariant::Float)
+        return static_cast<float *>(d->val);
+    return NULL;
+}
+
+/** \brief Returns the pointer to the data stored as short int, or NULL
+ *         if no data is stored or if the data type is wrong
+ *
+ * Combined with getSize allows to get the stored data in a "C" style (as scalar, if
+ * size is 1, or array)
+ *
+ * @return pointer to the data held as int, NULL if no data is stored or the
+ *         CuVariant::DataType is not CuVariant::Short
+ *
+ * @see getSize
+ * @see getData
+ */
 short *CuVariant::toShortP() const
 {
-    return static_cast<short int *>(d->val);
+    if(d->type == CuVariant::Short)
+        return static_cast<short int *>(d->val);
+    return NULL;
 }
 
+/** \brief Returns the pointer to the data stored as unsigned short int, or NULL
+ *         if no data is stored or if the data type is wrong
+ *
+ * Combined with getSize allows to get the stored data in a "C" style (as scalar, if
+ * size is 1, or array)
+ *
+ * @return pointer to the data held as int, NULL if no data is stored or the
+ *         CuVariant::DataType is not CuVariant::UShort
+ *
+ * @see getSize
+ * @see getData
+ */
 unsigned short *CuVariant::toUShortP() const
 {
-    return static_cast<unsigned short *>(d->val);
+    if(d->type == CuVariant::UShort)
+        return static_cast<unsigned short *>(d->val);
+    return NULL;
 }
 
-/** \brief Returns a pointer to a boolean addressing the start of data.
-         *
-         * Used with getSize allows to get the stored data in a "C" style.
-         *
-         * @see getSize
-         * @see toLongIntP for notes
-         * @see toDoubleP for notes
-         *
-         */
+/** \brief Returns the pointer to the data stored as a boolean, or NULL
+ *         if no data is stored or if the data type is wrong
+ *
+ * Combined with getSize allows to get the stored data in a "C" style (as scalar, if
+ * size is 1, or array)
+ *
+ * @return pointer to the data held as int, NULL if no data is stored or the
+ *         CuVariant::DataType is not CuVariant::Bool
+ *
+ * @see getSize
+ * @see getData
+ */
 bool *CuVariant::toBoolP() const
 {
-    return (bool *) d->val ;
+    if(d->type == CuVariant::Boolean)
+        return static_cast<bool *> (d->val );
+    return NULL;
 }
 
-/** \brief Returns a char pointer addressing the start of data.
-         *
-         * Used with getSize allows to get the stored data in a "C" style.
-         *
-         * @see getSize
-         * @see toLongIntP for notes
-         * @see toDoubleP for notes
-         *
-         */
+/** \brief Returns the pointer to the data stored as a char**, or NULL
+ *         if no data is stored or if the data type is wrong
+ *
+ * Combined with getSize allows to get the stored data in a "C" style (as scalar, if
+ * size is 1, or array)
+ *
+ * @return pointer to the data held as int, NULL if no data is stored or the
+ *         CuVariant::DataType is not CuVariant::String
+ *
+ * @see getSize
+ * @see getData
+ */
 char **CuVariant::toCharP() const
 {
-    return (char **) d->val ;
+    if(d->type == CuVariant::String)
+        return (char **) d->val ;
+    return NULL;
 }
 
 /** \brief Change the storage format to Vector
  *
+ * modify the CuVariant::DataFormat to vector, so that data can
+ * be interpreted as vector
  */
 CuVariant& CuVariant::toVector()
 {
@@ -1400,15 +1495,13 @@ CuVariant& CuVariant::toVector()
     return *this;
 }
 
-/*
- * enum DataFormat { FormatInvalid = -1, Scalar, Vector, Matrix, EndFormatTypes };
-
-    enum DataType { TypeInvalid = -1, Short, UShort, Int, UInt,
-                    LongInt, LongUInt, Float, Double,
-                    LongDouble, Boolean, String, EndDataTypes };
+/*! \brief string representation of the CuVariant::DataType
+ *
+ * @param t a value from CuVariant::DataType
+ * @return a std::string representation of the input CuVariant::DataType
+ *
  */
-
-std::__cxx11::string CuVariant::dataTypeStr(int t) const
+std::string CuVariant::dataTypeStr(int t) const
 {
     const char *v[] = {
         "TypeInvalid", "Short", "UShort", "Int", "UInt",
@@ -1420,7 +1513,12 @@ std::__cxx11::string CuVariant::dataTypeStr(int t) const
     return std::string(std::to_string(t) + " OutOfRange");
 }
 
-std::__cxx11::string CuVariant::dataFormatStr(int f) const
+/*! \brief string representation of CuVariant::DataFormat
+ *
+ * @param f a value from the CuVariant::DataFormat enum
+ * @return a std::string representation of the given data format
+ */
+std::string CuVariant::dataFormatStr(int f) const
 {
     const char *v[] = {
         "FormatInvalid", "Scalar", "Vector", "Matrix", "EndFormatTypes"

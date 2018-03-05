@@ -21,7 +21,7 @@ class CuActivityEvent;
  * documentation to understand how *cumbia* deals with them in an application
  * (\ref cuthread_service).
  *
- * \par cuth_activities Registering and unregistering activities
+ * \par Registering and unregistering activities
  * One or more *activities* are registered to the thread with CuThread::registerActivity.
  * Usually, CuThread::registerActivity is not called by the clients. Clients should rely
  * on Cumbia::registerActivity instead. The same goes for CuThread::unregisterActivity
@@ -31,13 +31,13 @@ class CuActivityEvent;
  * CuThreads are used internally by the library. Clients should not directly deal with
  * them. They would rather write *activities*.
  *
- * \par cuth_publish_xxx Publishing results from the background to the foreground
+ * \par Publishing results from the background to the foreground
  * CuThread::publishProgress and CuThread::publishResult, invoked in CuThread's thread,
  * post a *progress event* and a *result event* to the main thread, respectively.
  * They are called by clients through CuActivity::publishProgress and CuActivity::publishResult,
  * normally from the *init, execute* and *onExit* hooks (see CuActivity documentation)
  *
- * \par cuth_thread_pool Thread management
+ * \par Thread management
  * The CuThread::isEquivalent method decides whether *this thread's token* is *equivalent*
  * to another *token*. If so, *Cumbia* assigns a new activity to this thread, otherwise
  * a new thread is created for the new activity (see also Cumbia::registerActivity,
@@ -48,11 +48,11 @@ class CuActivityEvent;
  * To gracefully *terminate* a CuThread, CuThread::exit must be called, followed by
  * CuThread::wait, as done inside Cumbia::finish method.
  *
- * \par cuth_disposal Thread disposal
+ * \par Thread disposal
  * When the *last activity* exits (there are no more activities registered with *this thread*),
  * the thread leaves its *run loop*, joins and *auto destroys itself*.
  *
- * \par cuth_see_also See also
+ * \par See also
  * Please read the documentation of the CuThreadInterface for more details.
  *
  *

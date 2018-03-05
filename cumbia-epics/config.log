@@ -1065,7 +1065,7 @@ lt_cv_to_host_file_cmd=func_convert_file_noop
 lt_cv_to_tool_file_cmd=func_convert_file_noop
 lt_cv_truncate_bin='/bin/dd bs=4096 count=1'
 pkg_cv_cumbia_CFLAGS=-I/usr/local/include/cumbia
-pkg_cv_cumbia_LIBS='-L/usr/local/lib -lcumbia'
+pkg_cv_cumbia_LIBS='-L/usr/local/lib64 -lcumbia'
 pkg_cv_epics_base_CFLAGS='-D_GNU_SOURCE -D_DEFAULT_SOURCE -DUSE_TYPED_RSET -D_X86_64_ -DUNIX -Dlinux -mtune=generic -m64 -I/archivi/devel/epics/base-3.16.1/include -I/archivi/devel/epics/base-3.16.1/include/os/Linux -I/archivi/devel/epics/base-3.16.1/include/compiler/gcc'
 pkg_cv_epics_base_LIBS='-L/archivi/devel/epics/base-3.16.1/lib/linux-x86_64 -rdynamic -m64'
 
@@ -1221,7 +1221,7 @@ build_cpu='x86_64'
 build_os='linux-gnu'
 build_vendor='pc'
 cumbia_CFLAGS='-I/usr/local/include/cumbia'
-cumbia_LIBS='-L/usr/local/lib -lcumbia'
+cumbia_LIBS='-L/usr/local/lib64 -lcumbia'
 datadir='${datarootdir}'
 datarootdir='${prefix}/share'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
