@@ -39,10 +39,10 @@ installation. The modules involving the Qt libraries, *cumbia-qtcontrols*, *qumb
 and *qumbia-epics-controls* adopt Qt's *qmake* build system.
 Meson configuration files are named *meson.build*. One file resides inside the main project
 directory and another one, intended to build and install the documentation, is under the doc
-subdirectory. For example, concerning the *cumbia* library, you will find
+subdirectory. For example, for the *cumbia* library, you will find
 
-\li cumbia/meson.build
-\li cumbia/doc/meson.build
+-  cumbia/meson.build
+-  cumbia/doc/meson.build
 
 The *meson.build* files are the sole build configuration files.
 
@@ -51,8 +51,8 @@ The *meson.build* files are the sole build configuration files.
 As to the [Using Meson] (http://mesonbuild.com/Quick-guide.html) guide states,
 *meson* has two main dependencies:
 
-\li Python 3
-\li Ninja
+-  Python 3
+-  Ninja
 
 On Ubuntu these can be easily installed with the following command:
 
@@ -114,19 +114,19 @@ details.
 Normally, if you don't change the aforementioned options with *meson configure*,
 libraries are placed under
 
-\li */usr/local/lib*
+-  */usr/local/lib*
 
 include files under
 
-\li */usr/local/include/cumbia*
-\li */usr/local/include/cumbia-tango*
-\li */usr/local/include/cumbia-epics*
+-  */usr/local/include/cumbia*
+-  */usr/local/include/cumbia-tango*
+-  */usr/local/include/cumbia-epics*
 
 and documentation in
 
-\li */usr/local/share/doc/cumbia*
-\li */usr/local/share/doc/cumbia-tango*
-\li */usr/local/share/doc/cumbia-epics*
+-  */usr/local/share/doc/cumbia*
+-  */usr/local/share/doc/cumbia-tango*
+-  */usr/local/share/doc/cumbia-epics*
 
 
 ### 1. Install cumbia base library
