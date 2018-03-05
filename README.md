@@ -450,7 +450,7 @@ Start the application with a Tango attribute as parameter
 
 # Contacts
 
-[Giacomo Strangolino] (mailto:giacomo.strangolino@elettra.eu)
+[Giacomo Strangolino](mailto:giacomo.strangolino@elettra.eu)
 
 
 
