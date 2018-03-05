@@ -8,10 +8,15 @@ doxyfile = configure_file(input: 'Doxyfile.in',
 
 datadir = join_paths(get_option('datadir'), 'doc', 'cumbia')
 
-html_target = custom_target('cumbia-tango-docs',
+html_target = custom_target('cumbia-docs',
                             input: doxyfile,
                             output: 'html',
                             command: [doxygen, doxyfile],
                             install: true,
                             install_dir: datadir)
+
+htmlindex = join_paths(get_option('prefix'),  datadir, 'html') + '/index.html'
+
+run_target('show-docs', command : ['xdg-open', htmlindex] )
+
 

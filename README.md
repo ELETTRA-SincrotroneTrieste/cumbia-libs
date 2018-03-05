@@ -161,6 +161,12 @@ To *install* the library, the documentation and the *pkg config* file, run:
 
 > ninja install
 
+To read the *documentation*, execute:
+
+> ninja show-docs
+
+The index.html of the *cumbia* docs should be opened in the default web browser.
+
 
 ### 2. Install the cumbia-tango module if you want to connect to the Tango control system
 
@@ -178,6 +184,12 @@ Build library and docs:
 
 Install everything:
 > ninja install
+
+To read the *documentation*, execute:
+
+> ninja show-docs
+
+The index.html of the *cumbia-tango* docs should be opened in the default web browser.
 
 *Note* if you installed cumbia outside a system wide directory, you may have to
 update the PKG_CONFIG_PATH environment so that it contains cumbia's lib/pkgconfig
@@ -270,6 +282,12 @@ Build library and docs:
 
 Install everything:
 > ninja install
+
+To read the *documentation*, execute:
+
+> ninja show-docs
+
+The index.html of the *cumbia-epics* docs should be opened in the default web browser.
 
 ##### Note
 Check that the PKG_CONFIG_PATH contains the epics-base lib/pkgconfig directory.
