@@ -44,7 +44,7 @@ void CumbiaEpics::setThreadEventsBridgeFactory( CuThreadsEventBridgeFactory_I *t
 
 CumbiaEpics::~CumbiaEpics()
 {
-    pdelete("~CumbiaEpics %p", this);
+    printf("~CumbiaEpics %p\n", this);
     /* all registered services are unregistered and deleted by cumbia destructor after threads have joined */
     if(m_threadsEventBridgeFactory)
         delete m_threadsEventBridgeFactory;

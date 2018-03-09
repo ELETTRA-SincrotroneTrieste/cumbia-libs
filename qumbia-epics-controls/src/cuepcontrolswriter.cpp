@@ -61,12 +61,12 @@ CuEpControlsWriter::~CuEpControlsWriter()
     delete d;
 }
 
-QString CuEpControlsWriter::targets() const
+QString CuEpControlsWriter::target() const
 {
     return d->targets;
 }
 
-void CuEpControlsWriter::clearTargets()
+void CuEpControlsWriter::clearTarget()
 {
     d->cumbia_epics->unlinkListener(d->targets.toStdString(), CuEpicsActionI::AttConfig, d->tlistener);
     d->cumbia_epics->unlinkListener(d->targets.toStdString(), CuEpicsActionI::Writer, d->tlistener);
@@ -102,7 +102,7 @@ void CuEpControlsWriter::getData(CuData &d_ino) const
         a->getData(d_ino);
 }
 
-void CuEpControlsWriter::setTargets(const QString &s)
+void CuEpControlsWriter::setTarget(const QString &s)
 {
     CuEpControlsUtils tcu;
     CuEpicsAttConfFactory att_conf_factory;

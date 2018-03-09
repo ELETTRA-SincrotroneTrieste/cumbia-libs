@@ -76,7 +76,7 @@ QString CuEpControlsReader::source() const
 
 void CuEpControlsReader::unsetSource()
 {
-    d->cumbia_ep->unlinkListener(d->source.toStdString(), CuEpicsActionI::AttConfig, d->tlistener);
+   // d->cumbia_ep->unlinkListener(d->source.toStdString(), CuEpicsActionI::AttConfig, d->tlistener);
     d->cumbia_ep->unlinkListener(d->source.toStdString(), CuEpicsActionI::Reader, d->tlistener);
     d->source = QString();
 }

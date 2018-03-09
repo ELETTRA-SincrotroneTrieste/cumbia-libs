@@ -11,6 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     QTVER_SUFFIX =
 }
 
+CONFIG += debug
+
 INCLUDEDIR = $${INSTALL_ROOT}/include
 
 SHAREDIR = $${INSTALL_ROOT}/share
@@ -32,9 +34,18 @@ DEFINES += INCLUDE_PATH=\"\\\"$${INCLUDEDIR}\\\"\"
 DEFINES -= QT_NO_DEBUG_OUTPUT
 
 SOURCES += main.cpp\
-        qumbiaprojectwizard.cpp
+        qumbiaprojectwizard.cpp \
+    src/qtango/qtangoimport.cpp \
+    src/qtango/main2cu.cpp \
+    src/qtango/converter.cpp \
+    src/qtango/findreplace.cpp
 
-HEADERS  += qumbiaprojectwizard.h
+HEADERS  += qumbiaprojectwizard.h \
+    src/qtango/qtangoimport.h \
+    src/qtango/main2cu.h \
+    src/qtango/converter.h \
+    src/qtango/findreplace.h \
+    src/qtango/conversionhealth.h
 
 FORMS    += qumbiaprojectwizard.ui
 
@@ -46,4 +57,5 @@ templates.files =  qumbia_project_template/*
 
 INSTALLS = target templates
 
-DISTFILES +=
+DISTFILES += \
+    qumbia_project_template/qtango.keywords

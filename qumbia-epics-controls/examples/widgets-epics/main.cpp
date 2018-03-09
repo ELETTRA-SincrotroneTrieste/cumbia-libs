@@ -8,13 +8,13 @@ int main(int argc, char *argv[])
 {
 
     QApplication a(argc, argv);
-    CumbiaEpics *cu_t = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    CumbiaEpics *cu_epics = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
 
-    CuEpWidgets *w = new CuEpWidgets(cu_t);
+    CuEpWidgets *w = new CuEpWidgets(cu_epics);
     w->show();
 
     int ret = a.exec();
     delete w;
-    delete cu_t;
+    delete cu_epics;
     return ret;
 }

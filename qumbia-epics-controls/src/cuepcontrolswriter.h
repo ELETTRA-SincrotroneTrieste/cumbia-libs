@@ -41,11 +41,11 @@ public:
 
     virtual ~CuEpControlsWriter();
 
-    QString targets() const;
+    QString target() const;
 
-    void clearTargets();
+    void clearTarget();
 
-    void setTargets(const QString &s);
+    void setTarget(const QString &s);
 
     void requestProperties(const QStringList &props);
 

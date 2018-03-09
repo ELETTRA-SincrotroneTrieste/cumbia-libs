@@ -99,9 +99,6 @@ class CuThreadsEventBridgeFactory_I;
  * \li <a href="../cumbia-epics/index.html">qumbia-epics module</a>.
  * \li <a href="../qumbia-epics-controls/html/index.html">qumbia-epics-controls module</a>.
  *
- *
- *
- *
  */
 class CumbiaTango : public Cumbia
 {

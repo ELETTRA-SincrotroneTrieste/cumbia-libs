@@ -8,6 +8,7 @@
 #include <QFileDialog>
 #include <QCheckBox>
 #include <QTreeWidgetItem>
+#include <QFileDialog>
 #include <QtDebug>
 #include <QDomDocument>
 #include <QDomNode>
@@ -15,6 +16,8 @@
 #include <QComboBox>
 #include <QProcess>
 #include <math.h>
+
+#include "src/qtango/qtangoimport.h"
 
 MyFileInfo::MyFileInfo(const QString &templateFileNam, const QString &newFileNam, const QString &subdirnam)
 {
@@ -28,6 +31,7 @@ QumbiaProjectWizard::QumbiaProjectWizard(QWidget *parent) :
     ui(new Ui::QumbiaProjectWizard)
 {
     ui->setupUi(this);
+    m_qtangoImport = NULL;
     qApp->setApplicationName("QumbiaProjectWizard");
     QTimer::singleShot(200, this, SLOT(init()));
 }
@@ -70,6 +74,8 @@ void QumbiaProjectWizard::init()
     connect(ui->pbChooseLocation, SIGNAL(clicked()), this, SLOT(selectLocation()));
     connect(ui->pbAddProperty, SIGNAL(clicked()), this, SLOT(addProperty()));
     connect(ui->pbRemoveProperty, SIGNAL(clicked()), this, SLOT(removeProperty()));
+    connect(ui->pbImport, SIGNAL(clicked()), this, SLOT(qtangoImport()));
+    connect(ui->rbImport, SIGNAL(toggled(bool)), this, SLOT(importRbToggled(bool)));
 
     connect(ui->leProjectName, SIGNAL(textChanged(QString)), this, SLOT(projectNameChanged(QString)));
     foreach(QLineEdit *le, findChildren<QLineEdit *>())
@@ -107,10 +113,19 @@ void QumbiaProjectWizard::init()
         addProperty(ti.split(";;"));
     checkValidity();
 
+    importRbToggled(false);
 }
 
 void QumbiaProjectWizard::create()
 {
+
+    if(ui->rbImport->isChecked()) {
+        if(!m_qtangoImport->convert())
+            QMessageBox::critical(this, "QTango to cumbia conversion error",
+                                  QString("Conversion error: " + m_qtangoImport->errorMessage()));
+        return;
+    }
+
     QSettings s;
 
     QString pro_file = ui->leProFile->text();
@@ -405,6 +420,40 @@ void QumbiaProjectWizard::setFactory(bool rbchecked)
         m_selectedFactory = sender()->property("factory").toString();
 }
 
+void QumbiaProjectWizard::qtangoImport()
+{
+    bool ok;
+    QSettings s;
+    QString lastProjectDirnam = s.value("LAST_PROJECT_DIRNAM", QDir::homePath()).toString();
+    QString pro_f = QFileDialog::getOpenFileName(this,
+                                 "Select a QTango project file [*.pro]",
+                                 lastProjectDirnam, "*.pro");
+    if(!pro_f.isEmpty())
+    {
+        if(m_qtangoImport)
+            delete m_qtangoImport;
+        m_qtangoImport = new QTangoImport();
+        ok = m_qtangoImport->open(pro_f);
+        if(ok) {
+            m_setAppProps(m_qtangoImport->getAppProps());
+            m_setProjectFiles(m_qtangoImport->getProjectFiles());
+            ui->leMainWidgetName->setText(m_qtangoImport->mainWidgetName());
+            ui->leProjectName->setText(m_qtangoImport->projectName());
+            ui->pbCreate->setText("Convert...");
+        }
+
+        if(m_qtangoImport->error())
+            QMessageBox::critical(this, "Error converting qtango project", "Error converting the qtango project:\n"
+                                  + m_qtangoImport->errorMessage());
+        QFileInfo fi(pro_f);
+        qDebug() << __FUNCTION__ << "dir is " << fi.absoluteDir().absolutePath();
+        s.setValue("LAST_PROJECT_DIRNAM", fi.absoluteDir().absolutePath());
+
+    }
+    qDebug() << __FUNCTION__ << "success" << ok;
+
+}
+
 void QumbiaProjectWizard::checkValidity()
 {
     bool valid = true;
@@ -475,6 +524,12 @@ void QumbiaProjectWizard::addProperties(QString &uixml)
     }
 }
 
+void QumbiaProjectWizard::importRbToggled(bool t)
+{
+    t ? ui->pbCreate->setText("Convert...") : ui->pbCreate->setText("Create");
+    ui->pbImport->setVisible(t);
+}
+
 QStringList QumbiaProjectWizard::findSupportedFactories()
 {
     QStringList factories;
@@ -487,5 +542,25 @@ QStringList QumbiaProjectWizard::findSupportedFactories()
     }
     qDebug() << __FUNCTION__ << "Factories detected " << factories;
     return factories;
+}
+
+void QumbiaProjectWizard::m_setAppProps(const QMap<QString, QString> &props)
+{
+    QList<QLineEdit *> les = findChildren<QLineEdit *>();
+    foreach(QString content, props.keys()) {
+        foreach(QLineEdit *le, les) {
+            if(le->property("content").toString() == content)
+                le->setText(props[content]);
+        }
+
+    }
+}
+
+void QumbiaProjectWizard::m_setProjectFiles(const QMap<QString, QString> &props)
+{
+    if(props.contains("hfile")) ui->leCHFile->setText(props["hfile"]);
+    if(props.contains("cppfile")) ui->leCppFile->setText(props["cppfile"]);
+    if(props.contains("uifile")) ui->leFormFile->setText(props["uifile"]);
+    if(props.contains("pro")) ui->leProFile->setText(props["pro"]);
 }
 

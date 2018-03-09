@@ -14,17 +14,32 @@
    <string>New cumbia Qt Project</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
-   <item row="0" column="2">
-    <widget class="QRadioButton" name="rbWidget">
-     <property name="text">
-      <string>W&amp;idget</string>
+   <item row="5" column="0" colspan="4">
+    <widget class="QGroupBox" name="groupBox_4">
+     <property name="title">
+      <string>App&amp;lication Name</string>
      </property>
-     <property name="checked">
+     <property name="checkable">
       <bool>true</bool>
      </property>
+     <property name="save" stdset="0">
+      <bool>true</bool>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QLineEdit" name="leApplicationName">
+        <property name="placeholder" stdset="0">
+         <string>$APPLICATION_NAME$</string>
+        </property>
+        <property name="content" stdset="0">
+         <string>appname</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
-   <item row="7" column="0" colspan="5">
+   <item row="8" column="0" colspan="6">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Launch applications after files are created</string>
@@ -92,7 +107,7 @@
      </layout>
     </widget>
    </item>
-   <item row="9" column="0" colspan="5">
+   <item row="10" column="0" colspan="6">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="spacing">
       <number>2</number>
@@ -147,38 +162,7 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="2">
-    <widget class="QRadioButton" name="rbMainWidget">
-     <property name="text">
-      <string>&amp;Main Window</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" rowspan="2" colspan="2">
-    <widget class="QLabel" name="label_6">
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Configure a new cumbia Qt project</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="3" rowspan="2">
-    <widget class="QGroupBox" name="gbSupport">
-     <property name="title">
-      <string>Support</string>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_5"/>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="4">
+   <item row="3" column="0" colspan="5">
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="0" column="0">
       <widget class="QLabel" name="label">
@@ -278,6 +262,9 @@
        <property name="checkContents" stdset="0">
         <string>not_empty</string>
        </property>
+       <property name="content" stdset="0">
+        <string>author</string>
+       </property>
       </widget>
      </item>
      <item row="3" column="1" colspan="2">
@@ -291,6 +278,9 @@
        <property name="checkContents" stdset="0">
         <string>email</string>
        </property>
+       <property name="content" stdset="0">
+        <string>mail</string>
+       </property>
       </widget>
      </item>
      <item row="4" column="1" colspan="2">
@@ -300,6 +290,9 @@
        </property>
        <property name="placeholder" stdset="0">
         <string>$AU_PHONE$</string>
+       </property>
+       <property name="content" stdset="0">
+        <string>phone</string>
        </property>
       </widget>
      </item>
@@ -311,11 +304,14 @@
        <property name="placeholder" stdset="0">
         <string>$AU_OFFICE$</string>
        </property>
+       <property name="content" stdset="0">
+        <string>author</string>
+       </property>
       </widget>
      </item>
     </layout>
    </item>
-   <item row="3" column="0" colspan="4">
+   <item row="4" column="0" colspan="5">
     <widget class="QGroupBox" name="grBoxFiles">
      <property name="title">
       <string>Files</string>
@@ -425,29 +421,7 @@
      </layout>
     </widget>
    </item>
-   <item row="4" column="0" colspan="3">
-    <widget class="QGroupBox" name="groupBox_4">
-     <property name="title">
-      <string>App&amp;lication Name</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="save" stdset="0">
-      <bool>true</bool>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
-      <item>
-       <widget class="QLineEdit" name="leApplicationName">
-        <property name="placeholder" stdset="0">
-         <string>$APPLICATION_NAME$</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="5" column="0" colspan="3">
+   <item row="6" column="0" colspan="4">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
       <string>Organization &amp;Name</string>
@@ -470,12 +444,15 @@
         <property name="placeholder" stdset="0">
          <string>$ORGANIZATION_NAME$</string>
         </property>
+        <property name="content" stdset="0">
+         <string>orgname</string>
+        </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="6" column="0" colspan="3">
+   <item row="7" column="0" colspan="4">
     <widget class="QGroupBox" name="groupBox_5">
      <property name="title">
       <string>Hardware Referent or Referents, comma separated</string>
@@ -486,12 +463,15 @@
         <property name="placeholder" stdset="0">
          <string>$HW_REFERENT$</string>
         </property>
+        <property name="content" stdset="0">
+         <string>hwReferent</string>
+        </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="4" column="3" rowspan="3">
+   <item row="5" column="4" rowspan="3">
     <layout class="QGridLayout" name="gridLayout_3">
      <item row="0" column="1">
       <widget class="QPushButton" name="pbAddProperty">
@@ -533,6 +513,64 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="0" column="0" rowspan="3" colspan="2">
+    <widget class="QLabel" name="label_6">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Configure a new cumbia Qt project</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QRadioButton" name="rbWidget">
+     <property name="text">
+      <string>W&amp;idget</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QRadioButton" name="rbMainWidget">
+     <property name="text">
+      <string>&amp;Main Window</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QRadioButton" name="rbImport">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;migrate a &lt;span style=&quot; font-weight:600;&quot;&gt;simple&lt;/span&gt; QTango project to a cumbia project&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+     <property name="text">
+      <string>Impor&amp;t...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3" rowspan="2" colspan="2">
+    <widget class="QGroupBox" name="gbSupport">
+     <property name="title">
+      <string>Support</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_5"/>
+    </widget>
+   </item>
+   <item row="2" column="3" colspan="2">
+    <widget class="QPushButton" name="pbImport">
+     <property name="text">
+      <string>Import a simple QTango project...</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

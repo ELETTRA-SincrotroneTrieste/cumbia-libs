@@ -85,7 +85,7 @@ int Cumbia::getType() const
  */
 Cumbia::~Cumbia()
 {
-    pdelete("~Cumbia %p", this);
+    printf("~Cumbia %p\n", this);
     if(d)
         finish();
 }
@@ -116,6 +116,8 @@ Cumbia::Cumbia()
 
 CuServiceProvider *Cumbia::getServiceProvider() const
 {
+    printf("Cumbia::getServiceProvider d private is %p\n", d);
+    printf("Cumbia::getServiceProvider \e[1;31mgetServiceProvider this %p that %p\e[0m\n", this, d->serviceProvider);
     return d->serviceProvider;
 }
 

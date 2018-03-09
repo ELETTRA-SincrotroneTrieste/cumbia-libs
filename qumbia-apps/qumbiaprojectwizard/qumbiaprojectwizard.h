@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+class QTangoImport;
+
 namespace Ui {
 class QumbiaProjectWizard;
 }
@@ -43,6 +45,10 @@ private slots:
 
     void setFactory(bool rbchecked);
 
+    void qtangoImport();
+
+    void importRbToggled(bool);
+
 private:
     void checkValidity();
 
@@ -52,7 +58,14 @@ private:
 
     void addProperties(QString &uixml);
 
+
     QStringList findSupportedFactories();
+
+    void m_setAppProps(const QMap<QString, QString>& props);
+
+    void m_setProjectFiles(const QMap<QString, QString>& props);
+
+    QTangoImport *m_qtangoImport;
 
 private:
     Ui::QumbiaProjectWizard *ui;

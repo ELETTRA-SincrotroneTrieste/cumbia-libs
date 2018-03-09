@@ -1,0 +1,67 @@
+## include files
+## include,include_filename.h,replacement.h,message,quality
+##
+include,elettracolors.h,,unsupported,warn
+include,TApplication,quapplication.h,TApplication is mapped into QuApplication. DBus connection is provided by the cumbia dbus plugin,ok
+include,tutil.h,,TUtil is not supported,warn
+include,com_proxy_reader.h,,QTangoComProxyReader not supported,warn
+include,com_proxy_writer.h,,QTangoComProxyWriter not supported,warn
+include,communication_handle.h,,QTangoCommunicationHandle not supported,warn
+include,spectrumwriter.h,,SpectrumWriter not supported,warn
+include,SpectrumWriter,,SpectrumWriter not supported,warn
+include,helper_application.h,,unsupported,warn
+include,TLabel,qulabel.h,TLabel is mapped to QuLabel,ok
+include,TReaderWriter,quinputoutput.h,TReaderWriter is mapped to QuInputOutput,ok
+include,TPushButton,qubutton.h,TPushButton is mapped to QuButton,ok
+include,TApplyNumeric,quapplynumeric.h,TApplyNumeric is mapped to QuApplyNumeric,ok
+include,TNumeric,,unsupported,warn
+include,TRealTimePlot,,unsupported: use QuSpectrumPlot,warn
+include,TPlotLightMarker,qutrendplot.h,TPlotLightMarker is mapped into QuTrendPlot OR QuSpectrumPlot. Please check.,warn
+include,TPlotLight,qutrendplot.h,TPlotLightMarker is mapped into QuTrendPlot OR QuSpectrumPlot. Please check.,ok
+include,QTWriter,quwriter.h,QTWriter is mapped into QuWriter,ok
+include,QTWatcher,quwatcher.h,QTWatcher is mapped into QuWatcher,ok
+include,TCircularGauge,qucirculargauge.h,TCircularGauge is mapped into QuCircularGauge,ok
+include,TLinearGauge,qulineargauge.h,TLinearGauge is mapped into QuLinearGauge,ok
+include,TLog,,TLog is unsupported. Consider using QuLog and QuLogImpl,warn
+include,TPushButton,qubutton.h,TPushButton is mapped into QuButton,ok
+include,TLineEdit,QLineEdit,TLineEdit is mapped into a simple Qt QLineEdit,ok
+include,TLogButton,,TLog button is unsupported in cumbia,warn
+include,TCheckBox,qucheckbox.h,TCheckBox is mapped into QuCheckBox,ok
+include,TComboBox,QCombobox,TComboBox is mapped into a simple Qt QCombobox,ok
+include,EPlotLight,quplot_base.h,EPlotLight is mapped into QuPlotBase. Please check,warn
+include,EPlotLightMarker,quplot_base.h,EPlotLightMarker is mapped into QuPlotBase. Please check,warn
+include,EPlotLightBase,quplot_base.h,EPlotLightBase is mapped into QuPlotBase. Please check,warn
+include,ReadersGroup,,unsupported,warn
+include,macros.h,cumacros.h,QTango macros.h is moved into cumbia cumacros.h. Some function name has changed,warn
+include,TLed,quled.h,TLed is mapped into QuLed,ok
+include,TLog,,unsupported,warn
+include,TNumeric,,TNumeric is unsupported,warn
+include,TPixmap,,TPixmap is unsupported,warn
+include,TReaderWriter,quinputoutput.h,TReaderWriter is mapped into QuInputOutput,ok
+include,tvariant.h,,QTango TVariant is unsupported. The correspondent object is QuVariant,warn
+include,TTextBrowser,,TTextBrowser has no implementation in cumbia,warn
+include,TSimpleLabel,QLabel,TSimpleLabel is mapped into a simple Qt QLabel.,ok
+include,TWidgetGroup,,TWidgetGroup is unsupported,warn
+include,TPropertyLabel,,TPropertyLabel is unsupported,warn
+include,TSplashScreen,,TSplashScreen is unsupported,warn
+include,TSpectrumButton,,TSpectrumButton is unsupported,warn
+
+## map qtango classes to cumbia-qtcontrols
+
+map,TLabel,QuLabel,qulabel.h,TLabel is mapped to QuLabel,ok
+map,TPushButton,QuButton,qubutton.h,TPushButton is mapped to QuButton,ok
+map,TLed,QuLed,quled.h,TLed is mapped to QuLed,ok
+map,TApplyNumeric,QuApplyNumeric,quapplynumeric.h,TApplyNumeric is mapped to QuApplyNumeric,ok
+map,TReaderWriter,QuInputOutput,quinputoutput.h,TReaderWriter is mapped to QuInputOutput,ok
+map,TLineEdit,QLineEdit,QLineEdit,TLineEdit is mapped into a simple Qt QLineEdit,ok
+map,TCircularGauge,QuCircularGauge,qucirculargauge.h,TCircularGauge is mapped into QuCircularGauge,ok
+map,TLinearGauge,QuLinearGauge,qulineargauge.h,TLinearGauge is mapped into QuLinearGauge,ok
+map,QTWatcher,QuWatcher,quwatcher.h,QTWatcher is mapped into QuWatcher,ok
+map,QTWriter,QuWriter,quwriter.h,QTWriter is mapped into QuWriter,ok
+map,TCheckBox,QuCheckBox,qucheckbox.h,TCheckBox is mapped into QuCheckBox,ok
+map,TApplication,QuApplication,quapplication.h,TApplication is mapped into QuApplication. DBus connection is provided by cumbia dbus plugin,ok
+map,TPlotLightMarker,QuTrendPlot,qutrendplot.h,TPlotLightMarker is mapped into QuTrendPlot OR QuSpectrumPlot. Please check.,warn
+
+replaceline,.*setPalette*,,main.cpp,EPalette is not currently available in cumbia,warn
+
+

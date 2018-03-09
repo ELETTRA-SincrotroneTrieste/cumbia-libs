@@ -10,6 +10,22 @@ class CuThreadsEventBridgeFactory_I;
 class CumbiaEpics;
 class CuData;
 
+/*! \brief an interface for an EPICS *action*, as a reader (implemented) or a writer (not yet
+ *         implemented)
+ *
+ * A CuEpicsActionI describes what readers or writers usually do. They do *actions*, and they
+ * must adhere to this interface that requires to
+ *
+ * \li add or remove data listeners, that are updated by CuThreadListener::onProgress and
+ *     CuThreadListener::onResult
+ * \li declare the type of action (Reader, Writer, ... - see the Type enum)
+ * \li provide a start and a stop method where activities are instantiated and registered with
+ *     Cumbia::registerActivity and finally unregistered with Cumbia::unregisterActivity
+ * \li provide an exiting method
+ *
+ * \par Examples
+ * CuMonitor
+ */
 class CuEpicsActionI :  public CuThreadListener
 {
 public:
