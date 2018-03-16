@@ -3,18 +3,22 @@
 
 #include <QString>
 #include <QMap>
+#include <QObject>
 #include <QFileInfoList>
 #include "findreplace.h"
+#include "pro_files_helper.h"
+#include "fileprocessor_a.h"
 
 class QDir;
 class QFile;
 
-class QTangoImport
+class QTangoImport : public QObject
 {
+    Q_OBJECT
 public:
     QTangoImport();
 
-    bool open(const QString& pro_filenam);
+    bool open(const QString& pro_filepath);
 
     QMap<QString, QString> getAppProps() const;
 
@@ -23,6 +27,8 @@ public:
     QString projectName() const;
 
     QString projectDir() const;
+
+    QString projectFilePath() const;
 
     QString mainWidgetVarName() const;
 
@@ -36,11 +42,23 @@ public:
 
     bool convert();
 
-    FindReplace conversionDefs() const;
+    bool findFilesRelPath();
+
+    bool outputFile(const QString& name, const QString& path);
+
+    QString getContents(const QString& filenam) const;
+
+    QStringList convertedFileList() const;
+
+signals:
+    void newLog(const QList<OpQuality> &log);
+
+    void conversionFinished(bool ok);
+
+    void outputFileWritten(const QString& name, const QString& relpath, bool ok);
 
 private:
-    QMap<QString, QString> m_appPropMap, m_proFiles;
-
+    QString m_get_file_contents(const QString& filepath);
     bool m_checkPro(QFile& f);
     bool m_checkCpp(const QString& f);
     bool m_checkH(const QString& h);
@@ -51,11 +69,15 @@ private:
     QString m_findFile(QDir wdir, const QString& name) const;
 
     QString m_errMsg;
-    QString m_projnam, m_mainwidgetvarnam, m_mainwidgetnam;
-    QString m_projdir;
+    QString m_projdir, m_pro_file_path;
     bool m_err;
 
-    FindReplace m_conversionDefs;
+    ProjectFilesHelper m_proFHelper;
+
+    QMap<QString, QString> m_contents;
+    QMap<QString, QString> m_outFileRelPaths;
+
+   // QList<OpQuality> m_log;
 };
 
 #endif // QTANGOIMPORT_H

@@ -128,31 +128,4 @@ bool Main2Cu::mainWidgetInHeap() const
     return m_w_inHeap;
 }
 
-bool Main2Cu::convert(const QString &mainwidget, const QString &mainwidgetvar, FindReplace& cdefs)
-{
-    bool mainwidgetFound = findMainWidget(mainwidget);
-    m_error = !mainwidgetFound || (m_mainw != mainwidgetvar);
-    if(!m_error) {
-        QString templatedir(TEMPLATES_PATH);
-        QString filenam = templatedir + "/main-tango.cpp";
-        QFile f(filenam);
-        m_error = !f.open(QIODevice::ReadOnly|QIODevice::Text);
-        if(m_error)
-            m_errMsg = "Main2Cu.convert: error opening template for main.cpp: " + filenam + ": " + f.errorString();
-        else {
-            qDebug() << __FUNCTION__ << "loading template section from " + filenam;
-            cdefs.replace(m_filenam);
-        }
-    }
-    else {
-        m_errMsg = "Main2Cu.convert: passed main widget variable name " + mainwidgetvar +
-                " differs from the one found in main.cpp: " + m_mainw + " or no main widget found";
-    }
-    return !m_error;
-}
-
-QString Main2Cu::converted()
-{
-    return m_converted;
-}
 

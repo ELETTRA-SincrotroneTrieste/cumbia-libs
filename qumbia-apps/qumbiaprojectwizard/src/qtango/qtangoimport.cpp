@@ -11,51 +11,55 @@
 #include <QtDebug>
 
 #include "findreplace.h"
-
+#include "definitions.h"
+#include "pro_files_helper.h"
+#include "cumbiacodeinjectcmd.h"
+#include "maincpppreparecmd.h"
+#include "proconvertcmd.h"
+#include "codeextractors.h"
+#include "prosectionextractor.h"
 
 QTangoImport::QTangoImport()
 {
 
 }
 
-bool QTangoImport::open(const QString &pro_filenam)
+bool QTangoImport::open(const QString &pro_filepath)
 {
     bool ok = true;
-    qDebug() << __FUNCTION__ << pro_filenam;
-    QFile f(pro_filenam);
+    qDebug() << __FUNCTION__ << pro_filepath;
+    QFile f(pro_filepath);
     QFileInfo fi(f);
     QDir wd = fi.absoluteDir();
     m_projdir = wd.absolutePath();
     QString projnam = fi.fileName();
-    m_proFiles["pro"] = projnam;
-    m_projnam = projnam.remove(".pro");
+    m_pro_file_path = pro_filepath;
+    m_proFHelper = ProjectFilesHelper(projnam.remove(".pro"));
     ok = m_checkPro(f);
     if(ok)
-        ok = m_getMainWidgetProps(wd, m_appPropMap);
+        ok = m_proFHelper.findMainWidgetProps(wd);
     if(ok)
-        ok = m_findMainProjectFiles(wd);
-    QFileInfoList fil = wd.entryInfoList(QStringList() << "*.h" << "*.cpp" << "*.ui", QDir::Files);
-    foreach(QFileInfo fi, fil) {
+        ok = m_proFHelper.findMainProjectFiles(wd);
 
-    }
-
+    if(f.isOpen())
+        f.close();
     return ok;
 
 }
 
 QMap<QString, QString> QTangoImport::getAppProps() const
 {
-    return m_appPropMap;
+    return m_proFHelper.appPropMap();
 }
 
 QMap<QString, QString> QTangoImport::getProjectFiles() const
 {
-    return m_proFiles;
+    return m_proFHelper.projectFilesMap();
 }
 
 QString QTangoImport::projectName() const
 {
-    return m_projnam;
+    return m_proFHelper.projectName();
 }
 
 QString QTangoImport::projectDir() const
@@ -63,14 +67,19 @@ QString QTangoImport::projectDir() const
     return m_projdir;
 }
 
+QString QTangoImport::projectFilePath() const
+{
+    return m_pro_file_path;
+}
+
 QString QTangoImport::mainWidgetVarName() const
 {
-    return m_mainwidgetvarnam;
+    return m_proFHelper.mainWidgetVarName();
 }
 
 QString QTangoImport::mainWidgetName() const
 {
-    return m_mainwidgetnam;
+    return m_proFHelper.mainWidgetName();
 }
 
 QString QTangoImport::errorMessage() const
@@ -83,35 +92,156 @@ bool QTangoImport::error() const
     return m_err;
 }
 
-bool QTangoImport::convert()
-{
-    m_err = !m_conversionDefs.load(QString(TEMPLATES_PATH) + "/qtango.keywords");
-    if(m_err)
-        m_errMsg = m_conversionDefs.errorMessage();
-
-    QDir wdir(m_projdir);
-
-    QString maincpp = m_findFile(wdir, "main.cpp");
-    m_err = maincpp.isEmpty();
-    if(m_err)
-        m_errMsg = "QTangoImport.convert: main.cpp not found in " + m_projdir;
-    if(!m_err && !m_mainwidgetnam.isEmpty() && !m_mainwidgetvarnam.isEmpty()) {
-        Main2Cu m2cu(maincpp);
-        m_err = !m2cu.convert(m_mainwidgetnam, m_mainwidgetvarnam, m_conversionDefs);
-        if(m_err)
-            m_errMsg = m2cu.errorMessage();
+bool QTangoImport::convert() {
+    Definitions defs;
+    m_err =  !defs.load(QString(TEMPLATES_PATH) + "/qtango.keywords");
+    if(m_err) {
+        m_errMsg = defs.errorMessage();
+        return false;
     }
 
+    QDir wdir(m_projdir);
+    QMap<QString, QString> project_files = m_proFHelper.projectFilesMap();
+    QString maincpp = "main.cpp";
+    QString mainwcpp = project_files["cppfile"];
+    QString mainwh = project_files["hfile"];
+    QString pronam = project_files["pro"] + ".pro";
+    QStringList mainfiles = QStringList() << maincpp << mainwcpp << mainwh;
+    QFileInfoList hfiles = m_proFHelper.findFiles(wdir, "*.h", "ui_.*");
+    QFileInfoList cppfiles = m_proFHelper.findFiles(wdir, "*.cpp");
+    QFileInfoList uifiles = m_proFHelper.findFiles(wdir, "*.ui");
+    QFileInfoList profiles= m_proFHelper.findFiles(wdir, "*.pro");
+    QFileInfoList allfiles(hfiles);
+    allfiles.append(cppfiles);
+    allfiles.append(uifiles);
+    allfiles.append(profiles);
+    m_err = maincpp.isEmpty() || mainwcpp.isEmpty() || mainwh.isEmpty();
+
+    bool can_proceed = !m_err && !m_proFHelper.mainWidgetName().isEmpty() && !m_proFHelper.mainWidgetVarName().isEmpty()
+            && !maincpp.isEmpty() && !mainwcpp.isEmpty() && !mainwh.isEmpty();
+
+    m_err = !can_proceed;
+    // * open must have been called and main widget definition and implementation must have been
+    //   found
+    // * apply find replace command to all h, cpp and ui files
+    if(can_proceed) {
+        foreach(QFileInfo fi, allfiles)
+        {
+            QString contents = m_get_file_contents(fi.absoluteFilePath());
+            if(m_err)
+                return false;
+
+            MacroFileCmd fcmd(contents);
+            if(fi.fileName() == pronam)
+                fcmd.registerCommand(new ProConvertCmd(fi.fileName()));
+            if(fi.fileName() == maincpp)
+                fcmd.registerCommand(new MainCppPrepareCmd(fi.fileName(), m_proFHelper.mainWidgetName()));
+            fcmd.registerCommand(new FindReplace(fi.fileName()));
+            if(mainfiles.contains(fi.fileName()))
+                fcmd.registerCommand(new CumbiaCodeInjectCmd(fi.fileName(), mainWidgetName(), mainWidgetVarName()));
+
+            m_err = !fcmd.process(defs);
+            if(m_err) {
+                m_errMsg = fcmd.errorMessage();
+                break;
+            }
+            else {
+                printf("\e[1;32m:-) \e[0m successfully processed file %s\n", fi.absoluteFilePath().toStdString().c_str());
+                printf("\e[1;32m    +\e[0m mapped file %s\e[0m\n", fi.fileName().toStdString().c_str());
+                m_contents[fi.fileName()] = fcmd.contents();
+            }
+            emit newLog(fcmd.log());
+
+        }
+        if(m_err)
+            return !m_err;
+    }
+    else
+        m_errMsg = "QTangoImport.convert: cannot proceed: some files are missing";
+
+    emit conversionFinished(!m_err);
     return !m_err;
 }
 
-FindReplace QTangoImport::conversionDefs() const
+// remove from every section SOURCES += HEADERS +=... [A-Z\s+=]*
+// ([A-Za-z0-9_\./\-]+)
+bool QTangoImport::findFilesRelPath()
 {
-    return m_conversionDefs;
+    ProSectionExtractor pe(m_pro_file_path);
+    m_err = pe.error();
+    if(m_err) {
+        m_errMsg = pe.errorMessage();
+    }
+    else {
+        QString filename, relpath;
+        QRegExp srcre("([A-Za-z0-9_\\./\\-]+)");
+        int pos;
+        QStringList files_sections = QStringList() << "SOURCES" << "HEADERS" << "FORMS";
+        foreach(QString section, files_sections) {
+            QString filelist = pe.get(section).remove(QRegExp("[A-Z\\s+=]*"));
+            qDebug() << __FUNCTION__ << "searching sources within " << filelist ;
+            // capture sources now
+            pos = 0;
+            while( (pos = srcre.indexIn(filelist, pos)) != -1) {
+                filename = srcre.cap(1).section('/', -1);
+                relpath = srcre.cap(1).section('/', 0, srcre.cap(1).count('/') - 1);
+                m_outFileRelPaths[filename] = relpath;
+                pos += srcre.matchedLength();
+                qDebug() << __FUNCTION__ << "found " << filename << relpath;
+            }
+        }
+    }
+    return !m_err;
 }
 
-bool QTangoImport::m_checkPro(QFile &f)
+/*! \brief write on path/name the contents of the file specified by name
+ *
+ * \par Warning
+ * call findFilesRelPath first
+ *
+ */
+bool QTangoImport::outputFile(const QString &name, const QString &path)
 {
+    QString relpath = m_outFileRelPaths[name];
+    m_err = !m_outFileRelPaths.contains(name);
+    if(m_err) {
+        printf("\e[1;31mQTangoImport.outputFile: relative path unavailable for %s\e[0m\n", name.toStdString().c_str());
+    }
+    else {
+        QString contents = m_contents[name];
+        m_err = contents.isEmpty();
+        if(m_err) {
+            m_errMsg = "QTangoImport.outputFile: no file with name " + name + " has been processed";
+        }
+        else {
+            QDir wdir(path);
+            if(!relpath.isEmpty() && !wdir.exists(relpath))
+                m_err = !wdir.mkpath(relpath);
+            if(!m_err) {
+                QFile f(path.endsWith("/") ? path : path + "/" + (!relpath.isEmpty() ? relpath + "/" : "") +  name);
+                m_err = !f.open(QIODevice::WriteOnly|QIODevice::Text);
+                if(!m_err) {
+                    QTextStream out(&f);
+                    out << contents;
+                    f.close();
+                }
+                else
+                    m_errMsg = "QTangoImport.outputFile: error writing " + name + ": " + f.errorString();
+            }
+            else
+                m_errMsg = "QTangoImport.outputFile: error creating directory " + relpath + " under " + path;
+        }
+    }
+    emit outputFileWritten(name, relpath, !m_err);
+    return !m_err;
+}
+
+QStringList QTangoImport::convertedFileList() const
+{
+    return m_contents.keys();
+}
+
+bool QTangoImport::m_checkPro(QFile &f) {
     m_err = true;
     if(f.open(QIODevice::ReadOnly|QIODevice::Text) ) {
         QTextStream in(&f);
@@ -128,176 +258,29 @@ bool QTangoImport::m_checkPro(QFile &f)
     return !m_err;
 }
 
-bool QTangoImport::m_checkCpp(const QString &f)
-{
+bool QTangoImport::m_checkCpp(const QString &f) {
 
 }
 
-bool QTangoImport::m_checkH(const QString &h)
-{
+bool QTangoImport::m_checkH(const QString &h) {
 
 }
 
-/*
- * <?xml version="1.0" encoding="UTF-8"?>
- *   <ui version="4.0"> <-- document.firstChildElement("ui")
- *   <class>Danfisik9000</class> <-- ui.firstChildElement("class")
- *   <widget class="QWidget" name="Danfisik9000">
- */
-bool QTangoImport::m_getMainWidgetProps(const QDir& wdir, QMap<QString, QString>& props)
+QString QTangoImport::m_get_file_contents(const QString& filepath)
 {
-    m_err = false;
-    bool mainw_found = false;
-    QString dom_err, classnam;
-    QFileInfoList uifil = m_findFiles(wdir, "*.ui");
-    QString maincpp_nam = m_findFile(wdir, "main.cpp");
-    Main2Cu m2cu;
-    if(maincpp_nam.isEmpty()) {
-        m_err = true;
-        m_errMsg = "QTangoImport.m_getMainWidgetProps: file main.cpp not found under\n" + wdir.absolutePath();
-        return false;
+    QString s;
+    QFile f(filepath);
+    m_err = !f.open(QIODevice::ReadOnly|QIODevice::Text);
+    if(!m_err) {
+        QTextStream in(&f);
+        s = in.readAll();
+        f.close();
     }
-    QFile maincpp(maincpp_nam);
-    qDebug() << __FUNCTION__ << "processing " + maincpp_nam << wdir.absolutePath() << "ui files" << uifil.size();
-    if(maincpp.exists()) {
-        for(int i = 0; i < uifil.size() && !mainw_found; i++) {
-            QFileInfo fi = uifil.at(i);
-            QDomDocument dom(fi.absoluteFilePath());
-            qDebug() << __FUNCTION__ << "opening " << fi.absoluteFilePath();
-            QFile f(fi.absoluteFilePath());
-            if(f.open(QIODevice::ReadOnly)) {
-                qDebug() << __FUNCTION__ << "processing main: " + maincpp.fileName() + " + ui: " + f.fileName();
-                if (dom.setContent(&f, &dom_err)) {
-                    QDomElement uiEl = dom.firstChildElement("ui");
-                    if(!uiEl.isNull() && uiEl.attribute("version").contains(QRegExp("4\\.[\\d]+"))) {
-                        QDomElement classEl = uiEl.firstChildElement("class");
-                        qDebug() << classEl.tagName() << "<<--- class el" << dom.documentElement().tagName() << dom.childNodes().count();
-                        if(!classEl.isNull()) {
-                            classnam = classEl.text();
-                            qDebug() << __FUNCTION__ << "detected main widget " << classnam << "in " << f.fileName();
-                            if(!classnam.isEmpty()) {
-                                m2cu.setFileName(maincpp_nam);
-                                mainw_found = m2cu.findMainWidget(classnam);
-                                m_proFiles["uifile"] = fi.fileName();
-                            }
-                        }
-                        else {
-                            m_err = true;
-                            m_errMsg = "QTangoImport.m_getMainWidgetProps: no \"class\" child element";
-                        }
-                    }
-                    else {
-                        m_err = true;
-                        m_errMsg =  "QTangoImport.m_getMainWidgetProps: no \"ui\" child element or \"ui\" \"version\" not \"4.x\"";
-                    }
-                }
-                else {
-                    m_err = true;
-                    m_errMsg = "QTangoImport.m_getMainWidgetProps: failed to parse ui xml file " + f.fileName() + ": " + dom_err;
-                }
-                f.close();
-            }
-            else {
-                m_err = true;
-                m_errMsg = "QTangoImport.m_getMainWidgetProps: failed to open file " + fi.absoluteFilePath() + " in read mode";
-            }
-        }
-    }
-    if(!m_err && mainw_found) {
-        props = m2cu.parseProps();
-        m_mainwidgetvarnam = m2cu.mainWidgetVar();
-        m_mainwidgetnam = classnam;
-    }
-    if(!m_err && !mainw_found) {
-        m_err = true;
-        m_errMsg = "QTangoImport.m_getMainWidgetProps: failed to find a main widget instantiation in main.cpp";
-    }
-    return !m_err && mainw_found;
+    else
+        m_errMsg = "QTangoImport::m_get_file_contents: error opening file " + f.fileName() + ": " + f.errorString();
+
+    return s;
 }
 
-bool QTangoImport::m_findMainProjectFiles(const QDir &wdir)
-{
-    QFileInfoList fil = m_findFiles(wdir, "*.cpp");
-    QRegExp cppre(QString("%1::%1\\s*\\(").arg(this->m_mainwidgetnam)); // find class constructor implementation in cpp
-    foreach(QFileInfo cf, fil){
-        QFile f(cf.absoluteFilePath());
-        if(f.open(QIODevice::ReadOnly|QIODevice::Text)) {
-            if(cf.fileName().contains(QRegExp("main.cpp")))
-                continue;
-            QTextStream in(&f);
-            qDebug() << __FUNCTION__ << "searching " << cppre.pattern() << " in " << f.fileName();
-            if(in.readAll().contains(cppre)) {
-                m_proFiles["cppfile"] = cf.fileName();
-                break;
-            }
-            f.close();
-        }
-        else {
-            m_err = true;
-            m_errMsg = "QTangoImport.m_findMainProjectFiles: failed to open file " + f.fileName() + ": " + f.errorString();
-        }
-    }
-    fil = m_findFiles(wdir, "*.h");
-    QRegExp hre(QString("class\\s+%1\\s*\\n*:\\s*public\\s+").arg(this->m_mainwidgetnam)); // find class constructor declaration in h
-    foreach(QFileInfo cf, fil){
-        if(cf.fileName().contains(QRegExp("ui_.*.h")))
-            continue;
-
-        QFile f(cf.absoluteFilePath());
-        if(f.open(QIODevice::ReadOnly|QIODevice::Text)) {
-            QTextStream in(&f);
-            if(in.readAll().contains(hre)) {
-                m_proFiles["hfile"] = cf.fileName();
-                break;
-            }
-            f.close();
-        }
-        else {
-            m_err = true;
-            m_errMsg = "QTangoImport.m_findMainProjectFiles: failed to open file " + f.fileName() + ": " + f.errorString();
-        }
-    }
-    if(!m_proFiles.contains("cppfile") || !m_proFiles.contains("hfile")) {
-        m_err = true;
-        m_errMsg = "QTangoImport.m_findMainProjectFiles: did not find definitions for \"" + m_mainwidgetnam + "\" in cpp/h files";
-    }
-    return !m_err;
-}
-
-QFileInfoList QTangoImport::m_findFiles(QDir wdir, const QString& filter) const
-{
-    QFileInfoList uifil = wdir.entryInfoList(QStringList() << filter, QDir::Files);
-    if(wdir.cd("src")) {
-        uifil << wdir.entryInfoList(QStringList() << filter, QDir::Files);
-        qDebug() << __FUNCTION__ << "found ui under " << wdir.absolutePath() << uifil.size();
-        wdir.cdUp();
-    }
-    if(wdir.cd("ui")) {
-        uifil << wdir.entryInfoList(QStringList() << filter, QDir::Files);
-        qDebug() << __FUNCTION__ << "found ui under " << wdir.absolutePath() << uifil.size();
-        wdir.cdUp();
-    }
-    return uifil;
-}
-
-QString QTangoImport::m_findFile(QDir wdir, const QString &name) const
-{
-    QFileInfoList uifil = wdir.entryInfoList(QStringList() << name, QDir::Files);
-
-    if(uifil.isEmpty()) {
-        QFileInfoList subdirs = wdir.entryInfoList(QDir::Dirs|QDir::NoDotAndDotDot);
-        foreach(QFileInfo subd, subdirs) {
-            wdir.cd(subd.fileName());
-            qDebug() << __FUNCTION__ << "searching " << name << " under " << wdir.absolutePath();
-            uifil = wdir.entryInfoList(QStringList() << name, QDir::Files);
-            wdir.cdUp();
-            if(!uifil.isEmpty())
-                break;
-        }
-    }
-    if(uifil.size() > 0)
-        return uifil.first().absoluteFilePath();
-    return "";
-}
 
 

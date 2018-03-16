@@ -17,7 +17,9 @@
 #include <QProcess>
 #include <math.h>
 
+#include "src/qtango/conversiondialog.h"
 #include "src/qtango/qtangoimport.h"
+#include "projectbackup.h"
 
 MyFileInfo::MyFileInfo(const QString &templateFileNam, const QString &newFileNam, const QString &subdirnam)
 {
@@ -116,28 +118,40 @@ void QumbiaProjectWizard::init()
     importRbToggled(false);
 }
 
+void QumbiaProjectWizard::convertStart()
+{
+    if(!m_qtangoImport->convert())
+        QMessageBox::critical(this, "QTango to cumbia conversion error",
+                              QString("Conversion error: " + m_qtangoImport->errorMessage()));
+}
+
 void QumbiaProjectWizard::create()
 {
+    QString location = ui->leLocation->text();
+    QString project_name = ui->leProjectName->text();
+    if(!location.endsWith("/"))
+        location += "/";
+    QString project_path = location + project_name;
 
     if(ui->rbImport->isChecked()) {
-        if(!m_qtangoImport->convert())
-            QMessageBox::critical(this, "QTango to cumbia conversion error",
-                                  QString("Conversion error: " + m_qtangoImport->errorMessage()));
+
+        ConversionDialog *cd = new ConversionDialog(this, project_path);
+        cd->setObjectName("conversionDialog");
+        connect(cd, SIGNAL(okClicked()), this, SLOT(conversionDialogOkClicked()));
+        connect(m_qtangoImport, SIGNAL(newLog(const QList<OpQuality> &)), cd, SLOT(addLogs(const QList<OpQuality>&)));
+        connect(m_qtangoImport, SIGNAL(conversionFinished(bool)), cd, SLOT(conversionFinished(bool)));
+        connect(m_qtangoImport, SIGNAL(outputFileWritten(QString,QString,bool)), cd, SLOT(outputFileWritten(QString,QString, bool)));
+        cd->show();
+        QTimer::singleShot(200, this, SLOT(convertStart()));
+
         return;
     }
-
-    QSettings s;
 
     QString pro_file = ui->leProFile->text();
     QString maincpp = ui->leMain->text();
     QString cpp = ui->leCppFile->text();
     QString h = ui->leCHFile->text();
     QString form = ui->leFormFile->text();
-    QString location = ui->leLocation->text();
-    QString project_name = ui->leProjectName->text();
-    if(!location.endsWith("/"))
-        location += "/";
-    QString project_path = location + project_name;
 
     if(maincpp.isEmpty() || cpp.isEmpty() || h.isEmpty() || form.isEmpty() || pro_file.isEmpty()
             || location.isEmpty() || project_name.isEmpty())
@@ -146,35 +160,7 @@ void QumbiaProjectWizard::create()
         return;
     }
 
-    foreach(QLineEdit *le, findChildren<QLineEdit *>())
-    {
-        if(le->property("save").isValid())
-            s.setValue(le->objectName(), le->text());
-    }
-    foreach(QRadioButton *r, findChildren<QRadioButton *>())
-    {
-        if(r->property("save").isValid())
-            s.setValue(r->objectName(), r->isChecked());
-    }
-    foreach(QCheckBox *cb, findChildren<QCheckBox *>())
-    {
-        if(cb->property("save").isValid())
-            s.setValue(cb->objectName(), cb->isChecked());
-    }
-
-    /* finally, group boxes */
-    foreach(QGroupBox *gb, findChildren<QGroupBox *>())
-    {
-        if(gb->property("save").isValid())
-            s.setValue(gb->objectName(), gb->isChecked());
-    }
-
-    QStringList treeItems;
-    foreach(QTreeWidgetItem *it, ui->twProperties->findItems("*", Qt::MatchWildcard))
-        if(it->text(0) != "-" && it->text(1) != "-")
-            treeItems << it->text(0) + ";;" + it->text(1)  + ";;" +
-                         qobject_cast<QComboBox *>(ui->twProperties->itemWidget(it, 2))->currentText();
-    s.setValue("treeItems" , treeItems);
+    m_saveUISettings();
 
     QDir newDir(project_path);
     if(newDir.exists() && !newDir.entryList().isEmpty())
@@ -426,8 +412,8 @@ void QumbiaProjectWizard::qtangoImport()
     QSettings s;
     QString lastProjectDirnam = s.value("LAST_PROJECT_DIRNAM", QDir::homePath()).toString();
     QString pro_f = QFileDialog::getOpenFileName(this,
-                                 "Select a QTango project file [*.pro]",
-                                 lastProjectDirnam, "*.pro");
+                                                 "Select a QTango project file [*.pro]",
+                                                 lastProjectDirnam, "*.pro");
     if(!pro_f.isEmpty())
     {
         if(m_qtangoImport)
@@ -530,6 +516,40 @@ void QumbiaProjectWizard::importRbToggled(bool t)
     ui->pbImport->setVisible(t);
 }
 
+// /home/giacomo/devel/fermi/panels/power_supply/danfisik9000
+void QumbiaProjectWizard::conversionDialogOkClicked()
+{
+    bool proceed = false;
+    ConversionDialog *cdlg = findChild<ConversionDialog *>();
+    QString project_path = cdlg->outputPath();
+    ProjectBackup::Result res;
+    proceed = QDir(project_path) != QDir(m_qtangoImport->projectDir());
+    if(!proceed) {
+        ProjectBackup backup(project_path);
+        res = backup.popup_message();
+        if(res == ProjectBackup::NeedsBackup)
+            proceed = backup.save("qtango_backup") == ProjectBackup::BackedUp;
+        proceed = (res != ProjectBackup::Cancel);
+    }
+    if(proceed) {
+        QList<QString> convfiles = m_qtangoImport->convertedFileList();
+        printf("\e[1;32m* \e[0mconverted files:\n");
+        bool err = !m_qtangoImport->findFilesRelPath();
+        if(!err)
+        {
+            for(int i = 0; i < convfiles.size() && !err; i++) {
+                QString f = convfiles.at(i);
+                printf("\e[1;33m- \e[0m%s\n", f.toStdString().c_str());
+                err = !m_qtangoImport->outputFile(f, project_path);
+            }
+        }
+        if(err) {
+            QMessageBox::critical(this, "Error writing output files",
+                                  "Error writing output files: " + m_qtangoImport->errorMessage());
+        }
+    }
+}
+
 QStringList QumbiaProjectWizard::findSupportedFactories()
 {
     QStringList factories;
@@ -562,5 +582,39 @@ void QumbiaProjectWizard::m_setProjectFiles(const QMap<QString, QString> &props)
     if(props.contains("cppfile")) ui->leCppFile->setText(props["cppfile"]);
     if(props.contains("uifile")) ui->leFormFile->setText(props["uifile"]);
     if(props.contains("pro")) ui->leProFile->setText(props["pro"]);
+}
+
+void QumbiaProjectWizard::m_saveUISettings()
+{
+    QSettings s;
+    foreach(QLineEdit *le, findChildren<QLineEdit *>())
+    {
+        if(le->property("save").isValid())
+            s.setValue(le->objectName(), le->text());
+    }
+    foreach(QRadioButton *r, findChildren<QRadioButton *>())
+    {
+        if(r->property("save").isValid())
+            s.setValue(r->objectName(), r->isChecked());
+    }
+    foreach(QCheckBox *cb, findChildren<QCheckBox *>())
+    {
+        if(cb->property("save").isValid())
+            s.setValue(cb->objectName(), cb->isChecked());
+    }
+
+    /* finally, group boxes */
+    foreach(QGroupBox *gb, findChildren<QGroupBox *>())
+    {
+        if(gb->property("save").isValid())
+            s.setValue(gb->objectName(), gb->isChecked());
+    }
+
+    QStringList treeItems;
+    foreach(QTreeWidgetItem *it, ui->twProperties->findItems("*", Qt::MatchWildcard))
+        if(it->text(0) != "-" && it->text(1) != "-")
+            treeItems << it->text(0) + ";;" + it->text(1)  + ";;" +
+                         qobject_cast<QComboBox *>(ui->twProperties->itemWidget(it, 2))->currentText();
+    s.setValue("treeItems" , treeItems);
 }
 

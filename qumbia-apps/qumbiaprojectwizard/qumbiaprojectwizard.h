@@ -49,6 +49,10 @@ private slots:
 
     void importRbToggled(bool);
 
+    void conversionDialogOkClicked();
+
+    void convertStart();
+
 private:
     void checkValidity();
 
@@ -64,6 +68,8 @@ private:
     void m_setAppProps(const QMap<QString, QString>& props);
 
     void m_setProjectFiles(const QMap<QString, QString>& props);
+
+    void m_saveUISettings();
 
     QTangoImport *m_qtangoImport;
 

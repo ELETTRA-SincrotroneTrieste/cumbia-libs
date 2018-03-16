@@ -5,7 +5,7 @@
 #include <QFile>
 #include <QMap>
 
-class FindReplace;
+class ConversionDefs;
 
 class Main2Cu
 {
@@ -30,16 +30,12 @@ public:
 
     bool mainWidgetInHeap() const;
 
-    bool convert(const QString& mainwidget, const QString& mainwidgetvar, FindReplace &cdefs);
-
-    QString converted();
-
 private:
     QString m_filenam;
 
     QString m_errMsg;
     bool m_error, m_w_inHeap;
-    QString m_mainw, m_converted;
+    QString m_mainw;
 };
 
 #endif // MAIN2CU_H

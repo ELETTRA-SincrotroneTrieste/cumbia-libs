@@ -4,109 +4,135 @@
 #include <QtDebug>
 
 #include "conversionhealth.h"
+#include <cumbia/cumacros.h>
 
-FindReplace::FindReplace()
+FindReplace::FindReplace(const QString &id) : FileCmd(id)
 {
 
 }
 
-bool FindReplace::load(const QString &filename)
+FindReplace::~FindReplace()
 {
-    QFile f(filename);
-    m_err = !f.open(QIODevice::ReadOnly|QIODevice::Text);
-    if(!m_err) {
-        QTextStream in(&f);
-        while(!in.atEnd()) {
-            QString line = in.readLine();
-            if(!line.contains(QRegExp("^\\s*#.*\\n")) && line.length() > 3)  {
-                QStringList parts = line.split(",");
-                if(parts.size() == 5 && parts.at(0) == "include")
-                    includes.append(Subst(parts.at(1), parts.at(2), parts.at(3), parts.at(4)));
-                else if(parts.size() == 6 && parts.at(0) == "map")
-                    classes.append(Subst(parts.at(1), parts.at(2), parts.at(3), parts.at(4), parts.at(5)));
-                else
-                    printf("\e[1;31mConversionDefs.load: ignoring line \"%s\"\e[0m\n", line.toStdString().c_str());
-            }
-        }
-        f.close();
-        return true;
-    }
-    else {
-        m_msg = "ConversionDefs.load: error opening file " + filename + " in read mode: " + f.errorString();
-    }
-    return !m_err;
+    pdelete("FindReplace %p", this);
 }
 
-QString FindReplace::replace(const QString &filename)
+QString FindReplace::process(const QString& input)
 {
+    m_err = false;
+    m_msg = "";
+    QList<Subst> includes = m_defs.getIncludeSubst();
+    QList<Subst> classes = m_defs.getClassSubst();
+    QList<ReplaceLine> rep_lines = m_defs.getReplaceLines();
     unsigned lineno = 0;
     QString out;
-    QFile f(filename);
     m_log.clear();
-    m_err = !f.open(QIODevice::ReadOnly|QIODevice::Text);
-    if(!m_err) {
-        QString l;
-        QTextStream in(&f);
-        while(!in.atEnd()) {
-            int pos = -1;
-            QString newline;
-            l = in.readLine();
-            lineno++;
-            foreach(Subst su, includes) {
-                QString oldinc = su.i_name;
+    bool is_xml = filename().endsWith(".ui") || filename().endsWith(".xml");
+    qDebug() << __FUNCTION__ << "filename is  " << filename();
+
+    foreach(QString l, input.split("\n")) {
+        int pos = -1;
+        QString newline;
+        lineno++;
+        foreach(Subst su, includes) {
+            QString oldinc = su.i_name;
+            // find and replace qtango include with cumbia include
+            QRegExp oldincre(QString("#include\\s*<(%1)>").arg(oldinc));
+            pos = oldincre.indexIn(l);
+            if(pos > -1) {
+                Quality::Level q = su.quality;
+                QString message = su.i_comment;
+                out += "// " + l + "\n"; // comment the old line
+                if(su.i_inc.length() > 0 && q != Subst::Critical) {
+                    newline = "#include <" + su.i_inc + ">";
+                    newline += m_comment_add(su.i_comment, is_xml);
+                }
+                else
+                    newline = m_comment_line("no cumbia include replacement found for " + oldincre.cap(1), is_xml);
+                // write new include or comment
+                out += newline + "\n";
+                m_log.append(OpQuality("replace include", oldincre.cap(1),
+                                       su.i_inc.length() > 0 ? su.i_inc : "// " + l, filename(), message, q, lineno));
+            }
+        }
+
+        if(newline.isEmpty()) {
+            foreach(Subst su, classes) {
+                QString oldclass = su.i_name;
                 // find and replace qtango include with cumbia include
-                QRegExp oldincre(QString("#include\\s*<(%1)>").arg(oldinc));
-                pos = oldincre.indexIn(l);
+                QRegExp oldclre(QString("(%1)\\b").arg(oldclass));
+                pos = oldclre.indexIn(l);
                 if(pos > -1) {
-                    Subst::Quality q = su.quality;
+                    Quality::Level q = su.quality;
                     QString message = su.i_comment;
-                    out += "// " + l + "\n"; // comment the old line
-                    if(su.i_inc.length() > 0 && q != Subst::Critical)
-                        newline = "#include <" + su.i_inc + "> // " + su.i_comment;
-                    else
-                        newline = "// no cumbia include replacement found for " + oldincre.cap(1);
-                    // write new include or comment
-                    out += newline + "\n";
-                    m_log.append(ReplaceQuality("include", oldincre.cap(1), su.i_inc, message, q, lineno));
+                    out += m_comment_line(l, is_xml) + "\n"; // comment the old line
+                    if(su.i_class.length() > 0 && q != Subst::Critical) {
+                        newline = l.replace(oldclre, su.i_class);
+                        newline += m_comment_add(su.i_comment, is_xml);
+                    }
+                    else // leave newline empty so that it's left unchanged. Add a comment
+                        out += m_comment_add("no cumbia class replacement found for QTango " + oldclre.cap(1), is_xml) + "\n";
+
+                    // write new line
+                    if(su.i_class.length() > 0 && q != Subst::Critical)
+                        out += newline + "\n";
+                    m_log.append(OpQuality("map class", oldclre.cap(1), su.i_class, filename(), message, q, lineno));
                 }
             }
-
-            if(newline.isEmpty()) {
-                foreach(Subst su, classes) {
-                    QString oldclass = su.i_name;
-                    // find and replace qtango include with cumbia include
-                    QRegExp oldclre(QString("(%1)\\b").arg(oldclass));
-                    pos = oldclre.indexIn(l);
+        }
+        if(newline.isEmpty()) {
+            foreach(ReplaceLine rl, rep_lines) {
+                if(filename() == rl.filename || rl.filename == "*") {
+                    QRegExp re(rl.regexp);
+                    pos = re.indexIn(l);
                     if(pos > -1) {
-                        Subst::Quality q = su.quality;
-                        QString message = su.i_comment;
-                        out += "// " + l + "\n"; // comment the old line
-                        if(su.i_class.length() > 0 && q != Subst::Critical)
-                            newline = l.replace(oldclre, su.i_class)  + " // " + su.i_comment;
+                        Quality::Level q = rl.quality;
+                        QString message = rl.comment;
+                        out += m_comment_line(l, is_xml) + "\n"; // comment the old line
+                        if(q != Subst::Critical) {
+                            newline = rl.replacement;
+                            newline += m_comment_add(rl.comment, is_xml);
+                        }
                         else // leave newline empty so that it's left unchanged. Add a comment
-                            out += "// no cumbia class replacement found for QTango " + oldclre.cap(1);
+                            out += m_comment_add("cannot replace QTango specific line: " + re.cap(1), is_xml) + "\n";
 
                         // write new line
-                        if(su.i_class.length() > 0 && q != Subst::Critical)
+                        if(q != Subst::Critical)
                             out += newline + "\n";
-                        m_log.append(ReplaceQuality("class", oldclre.cap(1), su.i_class, message, q, lineno));
+                        m_log.append(OpQuality("replace expr", l, m_comment_line(l, is_xml), filename(), message, q, lineno));
                     }
                 }
             }
-            if(newline.isEmpty())
-                out += l + "\n";
         }
-    }
-    else {
-        m_msg = "ConversionDefs.convert: error opening file " + filename + " in read mode: " + f.errorString();
-    }
-
-    QFile outf("/tmp/main_out.cpp");
-    if(outf.open(QIODevice::WriteOnly)) {
-        QTextStream outs(&outf);
-        outs << out;
-        qDebug() << __FUNCTION__ << "written output to " << outf.fileName();
-        outf.close();
+        if(newline.isEmpty())
+            out += l + "\n";
     }
     return out;
+}
+
+
+
+QString FindReplace::name() {
+    return "FindReplace";
+}
+
+// add the "after" comment inline. Return the additional comment in line.
+// Does not end the line with "\n"
+//
+QString FindReplace::m_comment_add(const QString &after, bool xml)
+{
+    QString s;
+    if(xml)
+        s += "\t<!-- " + after + " ## added by qumbiaprojectwizard -->";
+    else
+        s+= "//\t" + after + "\t//\t ## added by qumbiaprojectwizard";
+    return s;
+}
+
+// comments the entire line. No newline is added
+QString FindReplace::m_comment_line(const QString &line, bool xml)
+{
+    if(xml)
+        return "<!--  " + line + "  -->";
+    else
+        return "// " + line;
 }
