@@ -76,7 +76,8 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/quwatcher.cpp \
     src/quwriter.cpp \
     src/quvaluefilter.cpp \
-    src/widgets-base/quledbase.cpp
+    src/widgets-base/quledbase.cpp \
+    src/qucirculargauge.cpp
 
 HEADERS += cumbiaqtcontrols.h\
         cumbia-qtcontrols_global.h \
@@ -139,7 +140,8 @@ HEADERS += cumbiaqtcontrols.h\
     src/qumultireaderplugininterface.h \
     src/cucontexti.h \
     src/quled.h \
-    src/widgets-base/quledbase.h
+    src/widgets-base/quledbase.h \
+    src/qucirculargauge.h
 
 
 RESOURCES += \
