@@ -234,8 +234,8 @@ void CuPollingActivity::onExit()
     utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
     if(d->tdev)
         refcnt = d->tdev->removeRef();
-    printf("\e[1;31mCuPollingActivity::onExit(): refcnt = %d called actionRemove for device %s att %s\e[0m\n",
-           refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
+//    printf("\e[1;31mCuPollingActivity::onExit(): refcnt = %d called actionRemove for device %s att %s\e[0m\n",
+//           refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
     if(refcnt == 0)
     {
         d->device_srvc->removeDevice(at["device"].toString());

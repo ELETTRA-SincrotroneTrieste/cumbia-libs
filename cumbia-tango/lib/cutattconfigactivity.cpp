@@ -117,11 +117,11 @@ void CuTAttConfigActivity::execute()
 
 void CuTAttConfigActivity::onExit()
 {
-    printf("[0x%lx] CuTAttConfigActivity this %p onExit: enter\n", pthread_self(), this);
+//    printf("[0x%lx] CuTAttConfigActivity this %p onExit: enter\n", pthread_self(), this);
     assert(d->my_thread_id == pthread_self());
     if(d->exiting)
     {
-        printf("\e[1;31mCuTAttConfigActivity::onExit onExit already called\e[0m\n!!\n");
+//        printf("\e[1;31mCuTAttConfigActivity::onExit onExit already called\e[0m\n!!\n");
         return;
     }
     int refcnt = -1;
@@ -131,7 +131,7 @@ void CuTAttConfigActivity::onExit()
     at["err"] = d->err;
     CuTangoWorld utils;
     utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
-    printf("[0x%lx] \e[1;34mCuTAttConfigActivity::onExit this %p  DECREMENTING REF CNT ON TDevice %p\e[0m\n\n", pthread_self(), this, d->tdev);
+//    printf("[0x%lx] \e[1;34mCuTAttConfigActivity::onExit this %p  DECREMENTING REF CNT ON TDevice %p\e[0m\n\n", pthread_self(), this, d->tdev);
     if(d->tdev)
         refcnt = d->tdev->removeRef();
     if(refcnt == 0)
@@ -140,6 +140,6 @@ void CuTAttConfigActivity::onExit()
         d->tdev = NULL;
     }
     at["exit"] = true;
-    printf("[0x%lx] \e[1;34mCuTAttConfigActivity::onExit this %p  calling publish result for EXIT!\e[0m\n", pthread_self(), this);
+//    printf("[0x%lx] \e[1;34mCuTAttConfigActivity::onExit this %p  calling publish result for EXIT!\e[0m\n", pthread_self(), this);
     publishResult(at);
 }

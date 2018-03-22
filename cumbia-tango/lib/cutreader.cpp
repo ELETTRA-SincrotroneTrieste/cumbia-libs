@@ -49,7 +49,7 @@ CuTReader::CuTReader(const TSource& src,
 
 CuTReader::~CuTReader()
 {
-    printf("~CuTReader deleting %p", this);
+    pdelete("~CuTReader deleting %p", this);
     delete d;
 }
 
@@ -85,7 +85,7 @@ void CuTReader::onResult(const CuData &data)
             && d->current_activity->getType() == CuEventActivity::CuEventActivityType )
     {
         polling_fallback = true;
-        printf("starting polling activity cuz event is err %d\n", data["err"].toBool());
+        cuprintf("starting polling activity cuz event is err %d\n", data["err"].toBool());
         /* stop event activity forever */
         d->cumbia_t->unregisterActivity(d->current_activity);
         m_startPollingActivity(polling_fallback);
@@ -222,7 +222,7 @@ void CuTReader::setRefreshMode(CuTReader::RefreshMode rm)
     // if the desired mode is Manual, the current activity is a polling activity
     if(d->current_activity && rm == CuTReader::Manual && d->current_activity->getType() != CuTReader::Manual)
     {
-        printf("mode is set to MANUAL -----> pausing activity!\n");
+        cuprintf("mode is set to MANUAL -----> pausing activity!\n");
         d->cumbia_t->pauseActivity(d->current_activity);
     }
 

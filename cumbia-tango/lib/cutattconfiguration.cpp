@@ -37,7 +37,7 @@ CuTAttConfiguration::CuTAttConfiguration(const TSource& src,
 
 CuTAttConfiguration::~CuTAttConfiguration()
 {
-    printf("\e[1;31m~~~~~~~~~~~~~~~~~ DELETING CuTattCnfguration %p\n\n\e[0m\n", this);
+    pdelete("~CuTAttConfiguration: %p", this);
     delete d;
 }
 
@@ -102,8 +102,6 @@ void CuTAttConfiguration::addDataListener(CuDataListener *l)
      */
     if(!d->conf_data.isEmpty())
         l->onUpdate(d->conf_data);
-    printf("\e[1;35mCuTAttConfiguration.addDataListener: added %p to this %p thre are %d listeners\e[0m\n",
-           l, this, d->listeners.size());
 }
 
 void CuTAttConfiguration::removeDataListener(CuDataListener *l)

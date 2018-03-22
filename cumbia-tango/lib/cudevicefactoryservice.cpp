@@ -78,11 +78,8 @@ void CuDeviceFactoryService::removeDevice(const std::__cxx11::string &name)
     std::map<std::string, TDevice *>::iterator it = m_devmap.find(name);
     if(it != m_devmap.end())
     {
-        printf("CuDeviceFactoryService.removeDevice: deleting device with name \"%s\"\n", name.c_str());
         delete it->second;
-        printf("CuDeviceFactoryService.deleted erasing from map\n");
         m_devmap.erase(it);
-        printf("CuDeviceFactoryService.erased from map\n");
     }
 }
 
