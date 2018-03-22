@@ -87,6 +87,41 @@
         </params>
 
     </widget>
+    
+    <widget class="QuApplyNumeric">
+        <params factory="cumbiatango">
+            <param add="CumbiaTango *" />
+            <param add="CuTWriterFactory" />
+        </params>
+        <params factory="cumbiaepics">
+            <param add="CumbiaEpics *" />
+            <param add="CuEpWriterFactory" />
+        </params>
+        <params factory="cumbiapool">
+            <!-- parameter adding occurs in the given order -->
+            <param add="CumbiaPool *"  />
+            <param add="CuControlsFactoryPool"  />
+        </params>
+    </widget>
+    
+      
+
+    <widget class="QuCircularGauge">
+        <params factory="cumbiatango">
+            <param add="CumbiaTango *" />
+            <param add="CuTReaderFactory" />
+        </params>
+        <params factory="cumbiaepics">
+            <param add="CumbiaEpics *" />
+            <param add="CuEpReaderFactory" />
+        </params>
+        <params factory="cumbiapool">
+            <!-- parameter adding occurs in the given order -->
+            <param add="CumbiaPool *"  />
+            <param add="CuControlsFactoryPool"  />
+        </params>
+
+    </widget>
 
     <widget class="QuTable">
         <params factory="cumbiatango">
@@ -122,7 +157,7 @@
 
     </widget>
 
-    <widget class="QuSpectrumPlot">
+ <widget class="QuSpectrumPlot">
         <params factory="cumbiatango">
             <param add="CumbiaTango *" />
             <param add="CuTReaderFactory" />
@@ -138,6 +173,9 @@
         </params>
 
     </widget>
+
+
+
 
 </widgets>
 
