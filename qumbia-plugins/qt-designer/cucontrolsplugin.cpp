@@ -3,7 +3,7 @@
 /* Qu widgets includes */
 #include "qulabel.h"
 #include "quled.h"
-#include "qulineedit.h"
+// #include "qulineedit.h"
 #include "qutable.h"
 #include "qutrendplot.h"
 #include "quspectrumplot.h"
@@ -78,8 +78,8 @@ bool DropEventFilter::eventFilter(QObject *obj, QEvent *event)
 
                 PointEditor pointEditor(qobject_cast<QWidget *>(obj), point);
 
-                /* TCheckBox for convenience sets sources and targets */
-                if(obj->metaObject()->indexOfProperty("targets") > -1 &&
+                /* TCheckBox for convenience sets sources and target */
+                if(obj->metaObject()->indexOfProperty("target") > -1 &&
                         obj->inherits("TCheckBox"))
                 {
                     pointEditor.textLabel()->setText("TCheckBox: set <b>source</b> and <b>target</b> point");
@@ -90,7 +90,7 @@ bool DropEventFilter::eventFilter(QObject *obj, QEvent *event)
                     pointEditor.textLabel()->setText("Set <b>source</b> point on " + obj->objectName());
                     pointEditor.setWindowTitle(QString("%1 source editor").arg(obj->objectName()));
                 }
-                else if(obj->metaObject()->indexOfProperty("targets") > -1 && !obj->inherits("TCheckBox"))
+                else if(obj->metaObject()->indexOfProperty("target") > -1 && !obj->inherits("TCheckBox"))
                 {
                     pointEditor.textLabel()->setText("Set <b>target</b> point on " + obj->objectName());
                     pointEditor.setWindowTitle(QString("%1 target editor").arg(obj->objectName()));
@@ -103,14 +103,14 @@ bool DropEventFilter::eventFilter(QObject *obj, QEvent *event)
                     {
                         formWindow->cursor()->setProperty("source", pointEditor.point());
                     }
-                    else if(obj->metaObject()->indexOfProperty("targets") > -1)
+                    else if(obj->metaObject()->indexOfProperty("target") > -1)
                     {
-                        formWindow->cursor()->setProperty("targets", pointEditor.point());
+                        formWindow->cursor()->setProperty("target", pointEditor.point());
                     }
-                    /* TCheckBox: set targets too! */
-                    if(obj->metaObject()->indexOfProperty("targets") > -1 &&
+                    /* TCheckBox: set target too! */
+                    if(obj->metaObject()->indexOfProperty("target") > -1 &&
                             obj->inherits("TCheckBox"))
-                        formWindow->cursor()->setProperty("targets", pointEditor.point());
+                        formWindow->cursor()->setProperty("target", pointEditor.point());
                 }
 
             }
@@ -188,7 +188,7 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
 
     d_plugins.append(new QuLabelInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuLedInterface(this, cumbia_pool, m_ctrl_factory_pool));
-    d_plugins.append(new QuLineEditInterface(this, cumbia_pool, m_ctrl_factory_pool));
+ //   d_plugins.append(new QuLineEditInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuTableInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuTrendPlotInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuSpectrumPlotInterface(this, cumbia_pool, m_ctrl_factory_pool));
@@ -267,7 +267,7 @@ QList<QAction *> TaskMenuExtension::taskActions() const
     QList<QAction *> list;
     QString cname(d_widget->metaObject()->className());
     /* 1. edit connection action */
-    if (cname == "QuLabel" || cname == "QuLed" || cname == "QuLineEdit"
+    if (cname == "QuLabel" || cname == "QuLed"
         || cname == "QuButton" || cname == "QuTable" || cname == "QuTrendPlot"
             || cname == "QuSpectrumPlot" || cname == "QuApplyNumeric"
              || cname == "QuCheckBox" || cname == "QuInputOutput")
@@ -286,7 +286,7 @@ QAction *TaskMenuExtension::preferredEditAction() const
 void TaskMenuExtension::setupSourceTargetDialog(QWidget *cb_widget)
 {
     QString source = cb_widget->property("source").toString();
-    QString targets = cb_widget->property("targets").toString();
+    QString target = cb_widget->property("target").toString();
 
     QDialog *w = new QDialog();
     //	QDialog *wt = new QDialog();
@@ -308,7 +308,7 @@ void TaskMenuExtension::setupSourceTargetDialog(QWidget *cb_widget)
     /* Creating target dialog */
     wint->ui.okButton->setHidden(true);
     wint->ui.cancelButton->setHidden(true);
-    wint->ui.listWidget->addItems(targets.split(";",QString::SkipEmptyParts));
+    wint->ui.listWidget->addItems(target.split(";",QString::SkipEmptyParts));
 
     grid->setRowStretch(0, 2);
     grid->addWidget(tw, 0, 0, 1, 2);
@@ -326,17 +326,17 @@ void TaskMenuExtension::setupSourceTargetDialog(QWidget *cb_widget)
         formWindow = QDesignerFormWindowInterface::findFormWindow(d_widget);
         formWindow->cursor()->setProperty("source", wins->ui.lineEdit->text());
 
-        QString targets;
+        QString target;
 
         QList<QListWidgetItem *>itemList = wint->ui.listWidget->findItems("*", Qt::MatchWildcard);
         for(int i = 0; i < itemList.size(); i++)
         {
             QListWidgetItem *it = itemList.at(i);
-            targets.append(it->text());
+            target.append(it->text());
             if(i < itemList.size() - 1)
-                targets += ";";
+                target += ";";
         }
-        formWindow->cursor()->setProperty("targets", targets);
+        formWindow->cursor()->setProperty("target", target);
     }
     else
         qDebug() << "Caso non accettato!";
@@ -367,12 +367,12 @@ void TaskMenuExtension::editConnection()
         src = t->source();
     else if(QuButton *b = qobject_cast<QuButton *>(d_widget))
     {
-        src = b->targets();
+        src = b->target();
         edit_source = false;
     }
     else if(QuApplyNumeric *an = qobject_cast<QuApplyNumeric *>(d_widget))
     {
-        src = an->targets();
+        src = an->target();
         edit_source = false;
     }
 
@@ -400,16 +400,16 @@ void TaskMenuExtension::editConnection()
         {
             QDesignerFormWindowInterface *formWindow = 0;
             formWindow = QDesignerFormWindowInterface::findFormWindow(d_widget);
-            QString targets;
+            QString target;
             QList<QListWidgetItem *>itemList = d->ui.listWidget->findItems("*", Qt::MatchWildcard);
             for(int i = 0; i < itemList.size(); i++)
             {
                 QListWidgetItem *it = itemList.at(i);
-                targets.append(it->text());
+                target.append(it->text());
                 if(i < itemList.size() - 1)
-                    targets += ";";
+                    target += ";";
             }
-            formWindow->cursor()->setProperty("targets", targets);
+            formWindow->cursor()->setProperty("target", target);
         }
     }
 }
@@ -563,32 +563,32 @@ QWidget *QuLedInterface::createWidget(QWidget *parent)
     return led;
 }
 
-QuLineEditInterface::QuLineEditInterface(QObject *parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p)
- : CuCustomWidgetInterface(parent, cumbia_p ,ctrl_factory_p)
-{
-    d_name = "QuLineEdit";
-    d_include = "qulineedit.h";
-    d_icon = QPixmap(":pixmaps/elineedit.png");
-    d_domXml =
-            "<widget class=\"QuLineEdit\" name=\"quLineEdit\">\n"
-            " <property name=\"geometry\">\n"
-            "  <rect>\n"
-            "   <x>0</x>\n"
-            "   <y>0</y>\n"
-            "   <width>120</width>\n"
-            "   <height>40</height>\n"
-            "  </rect>\n"
-            " </property>\n"
-            "</widget>\n";
-}
+//QuLineEditInterface::QuLineEditInterface(QObject *parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p)
+// : CuCustomWidgetInterface(parent, cumbia_p ,ctrl_factory_p)
+//{
+//    d_name = "QuLineEdit";
+//    d_include = "qulineedit.h";
+//    d_icon = QPixmap(":pixmaps/elineedit.png");
+//    d_domXml =
+//            "<widget class=\"QuLineEdit\" name=\"quLineEdit\">\n"
+//            " <property name=\"geometry\">\n"
+//            "  <rect>\n"
+//            "   <x>0</x>\n"
+//            "   <y>0</y>\n"
+//            "   <width>120</width>\n"
+//            "   <height>40</height>\n"
+//            "  </rect>\n"
+//            " </property>\n"
+//            "</widget>\n";
+//}
 
-QWidget *QuLineEditInterface::createWidget(QWidget *parent)
-{
-    QuLineEdit *le = new QuLineEdit(parent);
-    DropEventFilter *dropEventFilter = new DropEventFilter(le);
-    le->installEventFilter(dropEventFilter);
-    return le;
-}
+//QWidget *QuLineEditInterface::createWidget(QWidget *parent)
+//{
+//    QuLineEdit *le = new QuLineEdit(parent);
+//    DropEventFilter *dropEventFilter = new DropEventFilter(le);
+//    le->installEventFilter(dropEventFilter);
+//    return le;
+//}
 
 QuTableInterface::QuTableInterface(QObject *parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p)
     : CuCustomWidgetInterface(parent, cumbia_p, ctrl_factory_p)

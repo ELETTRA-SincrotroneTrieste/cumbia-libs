@@ -154,15 +154,15 @@ class QuCheckBoxInterface : public CuCustomWidgetInterface
     virtual QWidget* createWidget(QWidget* parent);
 };
 
-class QuLineEditInterface : public CuCustomWidgetInterface
-{
-   Q_OBJECT
-    Q_INTERFACES(QDesignerCustomWidgetInterface)
+//class QuLineEditInterface : public CuCustomWidgetInterface
+//{
+//   Q_OBJECT
+//    Q_INTERFACES(QDesignerCustomWidgetInterface)
 
-  public:
-    QuLineEditInterface(QObject* parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p);
-    virtual QWidget* createWidget(QWidget* parent);
-};
+//  public:
+//    QuLineEditInterface(QObject* parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p);
+//    virtual QWidget* createWidget(QWidget* parent);
+//};
 
 class QuTableInterface : public CuCustomWidgetInterface
 {
