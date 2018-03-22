@@ -74,7 +74,7 @@ public:
      *
      * @see getFormat
      */
-    enum DataFormat { FormatInvalid = -1, ///< invalid format
+    enum DataFormat { FormatInvalid = 0, ///< invalid format
                       Scalar, ///< a scalar value
                       Vector, ///< a vector, or array
                       Matrix, ///< a two dimensional vector (matrix)
@@ -87,7 +87,7 @@ public:
      *
      * @see getType
      */
-    enum DataType { TypeInvalid = -1, ///< invalid data type
+    enum DataType { TypeInvalid = 0, ///< invalid data type
                     Short, ///< short int
                     UShort, ///< unsigned short int
                     Int, ///< int

@@ -1508,7 +1508,7 @@ std::string CuVariant::dataTypeStr(int t) const
         "LongInt", "LongUInt", "Float", "Double",
         "LongDouble", "Boolean", "String", "EndDataTypes"
     };
-    if(t < EndDataTypes)
+    if(t >= 0 && t < EndDataTypes)
         return std::string(v[t]);
     return std::string(std::to_string(t) + " OutOfRange");
 }

@@ -204,11 +204,11 @@ void CuThread::onEventPosted(CuEventI *event)
         mOnActivityExited(static_cast<CuActivityExitEvent *>(event)->getActivity());
     }
     else if(ty == CuEventI::ThreadAutoDestroy) {
-        printf("\e[0;35mCuThread:onEventPosted: auto destroy! joining... ");
+        cuprintf("\e[0;35mCuThread:onEventPosted: auto destroy! joining... ");
         wait();
         CuThreadService *ts = static_cast<CuThreadService *> (d->serviceProvider->get(CuServices::Thread));
         ts->removeThread(this);
-        printf("\t [\e[1;32mJOINETH\e[0m]\n");
+        cuprintf("\t [\e[1;32mjoined\e[0m]\n");
         delete this;
     }
 }
@@ -474,20 +474,20 @@ void CuThread::mOnActivityExited(CuActivity *a)
     pr_thread();
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     activityManager->removeConnection(a);
-    printf("\e[1;32mactivities left second activity manager \e[1;33m %ld second my map  \e[0;33m %ld <<<<<<<<<<<<\e[0m\n\n",
-           activityManager->activitiesForThread(this).size(), d->activity_set.size());
+//    printf("\e[1;32mactivities left second activity manager \e[1;33m %ld second my map  \e[0;33m %ld <<<<<<<<<<<<\e[0m\n\n",
+//           activityManager->activitiesForThread(this).size(), d->activity_set.size());
     if(a->getFlags() & CuActivity::CuADeleteOnExit)
         delete a;
     if(activityManager->countActivitiesForThread(this) == 0) {
         m_exit(true);
     }
-    else { /// TEST! can remove this!!
-        printf("\n\e[1;33mmOnActivityExited\e[1;32m NO EXIT THREAD/DESTROY\e[1;35m cuz there are"
-               "%d activities\e[1;34m STILL THERE <<<<<<<<<<<<< \e[0m\n", activityManager->countActivitiesForThread(this));
-        std::vector<CuActivity *> as = activityManager->activitiesForThread(this);
-        for(size_t i = 0; i < as.size(); i++)
-            printf("- \e[1;36m%s\n", as.at(i)->getToken().toString().c_str());
-    }
+//    else { /// TEST! can remove this!!
+//        printf("\n\e[1;33mmOnActivityExited\e[1;32m NO EXIT THREAD/DESTROY\e[1;35m cuz there are"
+//               "%d activities\e[1;34m STILL THERE <<<<<<<<<<<<< \e[0m\n", activityManager->countActivitiesForThread(this));
+//        std::vector<CuActivity *> as = activityManager->activitiesForThread(this);
+//        for(size_t i = 0; i < as.size(); i++)
+//            printf("- \e[1;36m%s\n", as.at(i)->getToken().toString().c_str());
+//    }
 }
 
 /*! @private
@@ -502,7 +502,7 @@ void CuThread::mExitActivity(CuActivity *a, bool onThreadQuit)
     mRemoveActivityTimer(a);
     if(a->getStateFlags() & CuActivity::CuAStateOnExit)
     {
-        printf("\e[1;35;4mwill not call exit again on activity %p\e[0m\n", a);
+        cuprintf("\e[1;35;4mwill not call exit again on activity %p\e[0m\n", a);
         return;
     }
 
