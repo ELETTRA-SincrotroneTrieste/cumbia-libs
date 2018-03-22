@@ -1,0 +1,623 @@
+{ "array" : [
+{
+ "type" : "replace include",
+"in" :  "elettracolors.h",
+"out" : "",
+"comment" : "unsupported",
+"level" : "warn"
+},
+{
+ "type" : "replace include",
+"in" :  "qtango.h",
+"out" : "",
+"comment" : "generic include file qtango.h will be removed",
+"level" : "ok"
+},
+ {
+ "type" : "replace include",
+"in" :  "TApplication",
+"out" : "quapplication.h",
+"comment" : "TApplication is mapped into QuApplication. DBus connection is provided by the cumbia dbus plugin",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "tutil.h",
+"out" : "",
+"comment" : "TUtil is not supported",
+"level" : "warn"
+},
+{
+"type" : "replace include",
+"in" :  "com_proxy_reader.h",
+"out" : "",
+"comment" : "QTangoComProxyReader not supported",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "com_proxy_writer.h",
+"out" : "",
+"comment" : "QTangoComProxyWriter not supported",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "communication_handle.h",
+"out" : "",
+"comment" : "QTangoCommunicationHandle not supported",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "spectrumwriter.h",
+"out" : "",
+"comment" : "SpectrumWriter not supported",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "SpectrumWriter",
+"out" : "",
+"comment" : "SpectrumWriter not supported",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "helper_application.h",
+"out" : "",
+"comment" : "unsupported",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "TLabel",
+"out" : "qulabel.h",
+"comment" : "TLabel is mapped to QuLabel",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "TTable",
+"out" : "qutable.h",
+"comment" : "TTable is mapped to QuTable",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "TReaderWriter",
+"out" : "quinputoutput.h",
+"comment" : "TReaderWriter is mapped to QuInputOutput",
+"level" : "ok"
+},
+{
+"type" : "replace include",
+"in" :  "TPushButton",
+"out" : "qubutton.h",
+"comment" : "TPushButton is mapped to QuButton",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "TApplyNumeric",
+"out" : "quapplynumeric.h",
+"comment" : "TApplyNumeric is mapped to quapplynumeric.h",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "EApplyNumeric",
+"out" : "eapplynumeric.h",
+"comment" : "EApplyNumeric is mapped to eapplynumeric.h",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "EApplyButton",
+"out" : "eapplybutton.h",
+"comment" : "TAppEApplyButton is mapped to eapplybutton.h",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "EFlag",
+"out" : "eflag.h",
+"comment" : "EFlag is mapped to eflag.h",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "EGauge",
+"out" : "egauge.h",
+"comment" : "EGauge include is now egauge.h",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "ELabel",
+"out" : "elabel.h",
+"comment" : "ELabel is mapped to elabel.h",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "ESimpleLabel",
+"out" : "QLabel",
+"comment" : "ESimpleLabel is mapped to QLabel. Remember to set right horizontal alignment",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "TNumeric",
+"out" : "",
+"comment" : "TNumeric has not been ported to cumbia. You can use TApplyNumeric instead",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "TPlotLightMarker",
+"out" :  ["qutrendplot.h", "quspectrumplot.h"],
+"comment" : "TPlotLightMarker is mapped into QuTrendPlot OR QuSpectrumPlot. Please check.",
+"level" : "warn"
+},
+{
+ "type" : "replace include",
+"in" :  "TPlotLight",
+"out" :  ["qutrendplot.h", "quspectrumplot.h"],
+"comment" : "TPlotLightMarker is mapped into QuTrendPlot OR QuSpectrumPlot. Please check.",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "TRealtimePlot",
+"out" :  "quspectrumplot.h",
+"comment" : "TPlotLightMarker is mapped into QuTrendPlot OR QuSpectrumPlot. Please check.",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "QTWriter",
+"out" : "quwriter.h",
+"comment" : "QTWriter is mapped into QuWriter",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "QTWatcher",
+"out" : "quwatcher.h",
+"comment" : "QTWatcher is mapped into QuWatcher",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "TCircularGauge",
+"out" : "qucirculargauge.h",
+"comment" : "TCircularGauge is mapped into QuCircularGauge",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "TLinearGauge",
+"out" : "qulineargauge.h",
+"comment" : "TLinearGauge is mapped into QuLinearGauge",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "TLog",
+"comment" : "TLog is unsupported. Consider using QuLog and QuLogImpl",
+"level" : "warn"
+},
+{
+ "type" : "replace include",
+"in" :  "TLogDialog",
+"out" : "",
+"comment" : "TLogDialog is unsupported. Consider using QuLog and QuLogImpl",
+"level" : "warn"
+},
+{
+ "type" : "replace include",
+"in" :  "TPushButton",
+"out" : "qubutton.h",
+"comment" : "TPushButton is mapped into QuButton",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "TLineEdit",
+"out" : "QLineEdit",
+"comment" : "TLineEdit is mapped into a simple Qt QLineEdit",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "TLogButton",
+"out" : "QPushButton",
+"comment" : "Remove TLogButton occurrences",
+"level" : "warn"
+},
+{
+ "type" : "replace include",
+"in" :  "TCheckBox",
+"out" : "qucheckbox.h",
+"comment" : "TCheckBox is mapped into QuCheckBox",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "TComboBox",
+"out" : "QComboBox",
+"comment" : "TComboBox is mapped into a simple Qt QCombobox",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "EPlotLight",
+"out" : "quplot_base.h",
+"comment" : "EPlotLight is mapped into QuPlotBase. Please check",
+"level" : "warn"
+},
+{
+ "type" : "replace include",
+"in" :  "EPlotLightMarker",
+"out" : "quplot_base.h",
+"comment" : "EPlotLightMarker is mapped into QuPlotBase. Please check",
+"level" : "warn"
+},
+{
+ "type" : "replace include",
+"in" :  "EPlotLightBase",
+"out" : "quplot_base.h",
+"comment" : "EPlotLightBase is mapped into QuPlotBase. Please check",
+"level" : "warn"
+},
+{
+ "type" : "replace include",
+"in" :  "ReadersGroup",
+"out" : "",
+"comment" : "unsupported",
+"level" : "warn"
+},
+{
+ "type" : "replace include",
+"in" :  "macros.h",
+"out" : "cumacros.h",
+"comment" : "QTango macros.h is moved into cumbia cumacros.h. Some function name has changed",
+"level" : "warn"
+},
+{
+ "type" : "replace include",
+"in" :  "TLed",
+"out" : "quled.h",
+"comment" : "TLed is mapped into QuLed",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "TLog",
+"out" : "",
+"comment" : "unsupported",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "TNumeric",
+"out" : "",
+"comment" : "TNumeric is unsupported",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "TPixmap class",
+"out" : "",
+"comment" : "TPixmap is unsupported",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "TReaderWriter",
+"out" : "quinputoutput.h",
+"comment" : "TReaderWriter is mapped into QuInputOutput",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "tvariant.h",
+"out" : "",
+"comment" : "QTango TVariant is unsupported. The correspondent object is QuVariant",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "TTextBrowser",
+"out" : "",
+"comment" : "TTextBrowser has no implementation in cumbia",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "TSimpleLabel",
+"out" : "QLabel",
+"comment" : "TSimpleLabel is mapped into a simple Qt QLabel.",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "TWidgetGroup",
+"out" : "",
+"comment" : "TWidgetGroup is unsupported",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "TPropertyLabel",
+"out" : "",
+"comment" : "TPropertyLabel is unsupported",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "TSplashScreen",
+"out" : "",
+"comment" : "TSplashScreen is unsupported",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "TSpectrumButton",
+"out" : "",
+"comment" : "TSpectrumButton is unsupported",
+"level" : "err"
+},
+{
+ "type" : "map class",
+"in" :  "TLabel",
+"out" : "QuLabel",
+"include" : "qulabel.h",
+"comment" : "TLabel is mapped to QuLabel",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "TPushButton",
+"out" : "QuButton",
+"include" : "qubutton.h",
+"comment" : "TPushButton is mapped to QuButton",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "TLed",
+"out" : "QuLed",
+"include" : "quled.h",
+"comment" : "TLed is mapped to QuLed",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "TTable",
+"out" : "QuTable",
+"include" : "qutable.h",
+"comment" : "TTable is mapped to QuTable",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "TApplyNumeric",
+"out" : "QuApplyNumeric",
+"include" : "quapplynumeric.h",
+"comment" : "TApplyNumeric is mapped to QuApplyNumeric",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "TReaderWriter",
+"out" : "QuInputOutput",
+"include" : "quinputoutput.h",
+"comment" : "TReaderWriter is mapped to QuInputOutput",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "TLineEdit",
+"out" : "QLineEdit",
+"include" : "QLineEdit",
+"comment" : "TLineEdit is mapped into a simple Qt QLineEdit",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "TLogButton",
+"out" : "QPushButton",
+"include" : "QPushButton",
+"comment" : "TLogButton is demoted to a simple QPushButton",
+"level" : "warn"
+},
+{
+ "type" : "map class",
+"in" :  "TCircularGauge",
+"out" : "QuCircularGauge",
+"include" : "qucirculargauge.h",
+"comment" : "TCircularGauge is mapped into QuCircularGauge",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "TLinearGauge",
+"out" : "QuLinearGauge",
+"include" : "qulineargauge.h",
+"comment" : "TLinearGauge is mapped into QuLinearGauge",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "TComboBox",
+"out" : "QComboBox",
+"include" : "QComboBox",
+"comment" : "TComboBox is mapped into QComboBox",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "QTWatcher",
+"out" : "QuWatcher",
+"include" : "quwatcher.h",
+"comment" : "QTWatcher is mapped into QuWatcher",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "QTWriter",
+"out" : "QuWriter",
+"include" : "quwriter.h",
+"comment" : "QTWriter is mapped into QuWriter",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "TCheckBox",
+"out" : "QuCheckBox",
+"include" : "qucheckbox.h",
+"comment" : "TCheckBox is mapped into QuCheckBox",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "TApplication",
+"out" : "QuApplication",
+"include" : "quapplication.h",
+"comment" : "TApplication is mapped into QuApplication. DBus connection is provided by cumbia dbus plugin",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "TPlotLightMarker",
+"out" : [ "QuTrendPlot", "QuSpectrumPlot" ],
+"include" : "qutrendplot.h",
+"comment" : "TPlotLightMarker is mapped into QuTrendPlot OR QuSpectrumPlot. Please check.",
+"level" : "warn"
+},
+{
+ "type" : "map class",
+"in" :  "TRealtimePlot",
+"out" : "QuSpectrumPlot",
+"include" : "quspectrumplot.h",
+"comment" : "TRealtimePlot is mapped into QuSpectrumPlot..",
+"level" : "warn"
+},
+{
+ "type" : "map class",
+"in" :  "TSimpleLabel",
+"out" : "QLabel",
+"include" : "QLabel",
+"comment" : "TSimpleLabel is mapped into a simple Qt QLabel.",
+"level" : "warn"
+},
+{
+ "type" : "replace line",
+"in" :  ".*setPalette*",
+"out" : "",
+"file" : "main.cpp",
+"comment" : "EPalette is not currently available in cumbia",
+"level" : "warn"
+},
+{
+ "type" : "replace line",
+"in" :  "\\s*TUtil::instance\\(\\)\\->replaceWildcards",
+"out" : "",
+"file" : "*",
+"comment" : "TUtil::replaceWildcards is not necessary in cumbia",
+"level" : "ok"
+},
+{
+ "type" : "replace line",
+"in" :  "\\s*TUtil::",
+"out" : "",
+"file" : "*",
+"comment" : "QTango TUtil:: class is not present in cumbia",
+"level" : "warn"
+},
+{
+ "type" : "replace line",
+"in" :  "\\s*TLog::",
+"out" : "",
+"file" : "*",
+"comment" : "QTango TLog:: class is not present in cumbia",
+"level" : "warn"
+},
+{
+ "type" : "replace line",
+"in" :  "\\s*TLog::",
+"out" : "",
+"file" : "*",
+"comment" : "QTango TLog:: class istargets not present in cumbia",
+"level" : "warn"
+},
+{
+ "type" : "replace expr",
+"in" :  "(\"targets\")",
+"out" : "\"target\"",
+"file" : "*",
+"comment" : "targets property is mapped into target",
+"level" : "ok"
+},
+{
+ "type" : "replace expr",
+"in" :  "(\"hideEventEnabled\")",
+"out" : "\"\"",
+"file" : "*",
+"comment" : "hideEventEnabled property does not exist in cumbia",
+"level" : "ok"
+},
+{
+ "type" : "replace expr",
+"in" :  "(\\->targets\\s*\\()",
+"out" : "->target(",
+"file" : "*",
+"comment" : "targets method is mapped into target(->)",
+"level" : "ok"
+},
+{
+ "type" : "replace expr",
+"in" :  "(\\.targets\\s*\\()",
+"out" : ".target(",
+"file" : "*",
+"comment" : "targets method is mapped into target (.)",
+"level" : "ok"
+},
+{
+ "type" : "replace expr",
+"in" :  "(\\->setTargets\\s*\\()",
+"out" : "->setTarget(",
+"file" : "*",
+"comment" : "setTargets method is mapped into setTarget (->)",
+"level" : "ok"
+},
+{
+ "type" : "replace expr",
+"in" :  "(\\.setTargets\\s*\\()",
+"out" : ".setTarget(",
+"file" : "*",
+"comment" : "setTargets method is mapped into setTarget (.)",
+"level" : "ok"
+},
+{
+ "type" : "replace expr",
+"in" : "<string>(?:\\$[0-9]+|[A-Za-z0-9_\\.]+/[A-Za-z0-9_\\.]+/[A-Za-z0-9_\\.]+)(?:\\-&gt;|/|\\->)[A-Za-z0-9_]+[\\(]{0,1}(?:&amp;)*[a-zA-Z0-9;_\\.]*[\\)]{0,1}([;]+.*)</string>",
+"in_unescaped" : "<string>(?:\$[0-9]+|[A-Za-z0-9_\.]+/[A-Za-z0-9_\.]+/[A-Za-z0-9_\.]+)(?:\-&gt;|/|\->)[A-Za-z0-9_]+[\(]{0,1}(?:&amp;)*[a-zA-Z0-9;_\.]*[\)]{0,1}([;]+.*)</string>",
+"in_example1" : "<string>$1/CurrentControl(&amp;tComboControl)</string>",
+"out" : "",
+"file" : "*",
+"comment" : "in cumbia the target is single: removing multiple targets",
+"level" : "warn"
+},
+{
+ "type" : "replace expr",
+"in" :  "\\->setTarget\\s*\\(\"[\\$A-Za-z0-9_&\\->\\(\\)]+([;]+.*)\"\\);",
+"out" : "",
+"file" : "*",
+"comment" : "in cumbia the target is single: removing multiple targets from setTargets",
+"level" : "warn"
+}
+]}
+

@@ -15,7 +15,6 @@
 
 int main(int argc, char *argv[])
 {
-    int ret;
     QuApplication qu_app( argc, argv );
     qu_app.setOrganizationName("$ORGANIZATION_NAME$");
     qu_app.setApplicationName("$APPLICATION_NAME$");
@@ -39,7 +38,7 @@ int main(int argc, char *argv[])
     XSetCommand(disp, root_win, argv, argc);
 
     // exec application loop
-    ret = qu_app.exec();
+    int ret = qu_app.exec();
     // delete resources and return
     delete w;
     delete cu_t;

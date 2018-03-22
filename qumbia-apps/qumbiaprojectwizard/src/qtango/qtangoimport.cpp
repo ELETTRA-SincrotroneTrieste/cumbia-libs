@@ -18,6 +18,10 @@
 #include "proconvertcmd.h"
 #include "codeextractors.h"
 #include "prosectionextractor.h"
+#include "mainwidgetcppconstructprocesscmd.h"
+#include "mainwidgethprocesscmd.h"
+#include "maincppexpandcmd.h"
+#include "cppinstantiationexpand.h"
 
 QTangoImport::QTangoImport()
 {
@@ -94,7 +98,7 @@ bool QTangoImport::error() const
 
 bool QTangoImport::convert() {
     Definitions defs;
-    m_err =  !defs.load(QString(TEMPLATES_PATH) + "/qtango.keywords");
+    m_err =  !defs.load(QString(TEMPLATES_PATH) + "/qtango.keywords.json");
     if(m_err) {
         m_errMsg = defs.errorMessage();
         return false;
@@ -139,7 +143,14 @@ bool QTangoImport::convert() {
             fcmd.registerCommand(new FindReplace(fi.fileName()));
             if(mainfiles.contains(fi.fileName()))
                 fcmd.registerCommand(new CumbiaCodeInjectCmd(fi.fileName(), mainWidgetName(), mainWidgetVarName()));
-
+            if(fi.fileName() == mainwcpp) {
+                fcmd.registerCommand(new MainWidgetCppConstructProcessCmd(fi.fileName(), mainWidgetName()));
+                fcmd.registerCommand(new CppInstantiationExpand(fi.fileName()));
+            }
+            if(fi.fileName() == mainwh)
+                fcmd.registerCommand(new MainWidgetHProcessCmd(fi.fileName(), mainWidgetName()));
+            if(fi.fileName() == maincpp)
+                fcmd.registerCommand(new MainCppExpandCmd(fi.fileName(), mainWidgetName()));
             m_err = !fcmd.process(defs);
             if(m_err) {
                 m_errMsg = fcmd.errorMessage();
@@ -190,6 +201,7 @@ bool QTangoImport::findFilesRelPath()
                 qDebug() << __FUNCTION__ << "found " << filename << relpath;
             }
         }
+        m_outFileRelPaths[QFileInfo(m_pro_file_path).fileName()] = "";
     }
     return !m_err;
 }
@@ -221,6 +233,7 @@ bool QTangoImport::outputFile(const QString &name, const QString &path)
                 QFile f(path.endsWith("/") ? path : path + "/" + (!relpath.isEmpty() ? relpath + "/" : "") +  name);
                 m_err = !f.open(QIODevice::WriteOnly|QIODevice::Text);
                 if(!m_err) {
+                    qDebug() << __FUNCTION__ << "WRITING " << f.fileName();
                     QTextStream out(&f);
                     out << contents;
                     f.close();

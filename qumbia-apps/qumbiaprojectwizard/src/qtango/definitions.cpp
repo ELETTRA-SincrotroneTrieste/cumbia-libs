@@ -2,6 +2,10 @@
 #include <QTextStream>
 #include <QFile>
 #include <QtDebug>
+#include <QJsonDocument>
+#include <QJsonParseError>
+#include <QJsonArray>
+#include <QJsonValue>
 
 Definitions::Definitions()
 {
@@ -10,27 +14,34 @@ Definitions::Definitions()
 
 bool Definitions::load(const QString &filename)
 {
+    // block
+    // ([A-Za-z0-9_\s]+)\n*\s*\{([A-Za-z0-9_\.,\[\]:\s/><;'+=\-'%\(\)\*\^\$~!`]+)\n*\s*\}
     QFile f(filename);
     m_err = !f.open(QIODevice::ReadOnly|QIODevice::Text);
     if(!m_err) {
-        QTextStream in(&f);
-        while(!in.atEnd()) {
-            QString line = in.readLine();
-            if(!line.contains(QRegExp("^\\s*#.*\\n")) && line.length() > 3)  {
-                QStringList parts = line.split(",");
-                if(parts.size() == 5 && parts.at(0) == "replace include")
-                    m_includes.append(Subst(parts.at(1), parts.at(2), parts.at(3), parts.at(4)));
-                else if(parts.size() == 6 && parts.at(0) == "map class")
-                    m_classes.append(Subst(parts.at(1), parts.at(2), parts.at(3), parts.at(4), parts.at(5)));
-                else if(parts.size() == 6 && parts.at(0) == "replace expr") {
-                    m_replacelines.append(ReplaceLine(parts.at(1), parts.at(2), parts.at(3), parts.at(4), parts.at(5)));
+        QByteArray content = f.readAll();
+        QJsonParseError pe;
+        QJsonDocument jd = QJsonDocument::fromJson(content, &pe);
+        m_err = (pe.error != QJsonParseError::NoError);
+        if(m_err)
+            m_msg = pe.errorString() + ": offset: " + QString::number(pe.offset);
+        else {
+            QJsonValue root = jd.object().value("array");
+            m_err = root.isUndefined() || root.isNull() || !root.isArray();
+            if(!m_err) {
+                QJsonArray array = root.toArray();
+                for(int i = 0; i < array.size(); i++) {
+                    QJsonValue jv = array.at(i);
+                    QJsonObject jo = jv.toObject();
+                    m_substs.append(Subst(jo));
                 }
-                else
-                    printf("\e[1;31mConversionDefs.load: ignoring line \"%s\"\e[0m\n", line.toStdString().c_str());
+            }
+            else {
+                m_msg = "root element \"array\" in " + f.fileName() + " does not contain an array";
             }
         }
         f.close();
-        return true;
+        return !m_err;
     }
     else {
         m_msg = "ConversionDefs.load: error opening file " + filename + " in read mode: " + f.errorString();

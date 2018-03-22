@@ -37,6 +37,8 @@ QString CodeInjector::inject(const QString &input, const QList<Section> &section
     foreach(Section se, sections) {
         pos = -1;
         int lineno = -1;
+        // replace sections wildcards
+        se.text.replace("$MAINCLASS$", m_mainwclass);
         if(se.where == Section::EndOfCppConstructor) {
             QRegExp endOfCppConstructorRe(QString("(%1::%1[a-zA-Z0-9\\s\\(\\)\\*\\:,]*\\{(?:\\{.*\\}|[^\\{])*\\})")
                                           .arg(m_mainwclass));
@@ -85,17 +87,16 @@ QString CodeInjector::inject(const QString &input, const QList<Section> &section
             }
         }
         else if(se.where == Section::Includes) {
-            qDebug() << __FUNCTION__ << "section is " << se.text;
+            // \n at the beginning avoids matching commented include directives
+            // (\n#include\s*[\"<>A-Za-z0-9_/\.]+\s*)
             qDebug() << __FUNCTION__ << "file is " << m_filename;
-            QRegExp firstIncludeRe("(#include\\s*[\"<])");
+
+            QRegExp firstIncludeRe("(\\n#include\\s*[\\\"<>A-Za-z0-9_/\\.]+\\s*)");
             pos = firstIncludeRe.indexIn(output);
             if(pos > -1) {
                 orig = firstIncludeRe.cap(1);
                 block = orig;
                 block.insert(0, se.text);
-                if(m_filename.contains("main"))
-                    qDebug() << __FUNCTION__ << "REPL:ACEING " << firstIncludeRe.cap(1)
-                         << "WITTTTTTTTTTTTT " << block;
                 output.replace(firstIncludeRe.cap(1), block);
                 lineno = input.section(firstIncludeRe, 0, 0).count("\n") + 1;
             }

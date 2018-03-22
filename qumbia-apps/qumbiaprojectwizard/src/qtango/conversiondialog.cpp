@@ -24,7 +24,7 @@ ConversionDialog::ConversionDialog(QWidget *parent, const QString& outpath) : QD
     QTreeWidget *tree = new QTreeWidget(this);
     tree->setObjectName("maintree");
     QPushButton *pbOk = new QPushButton("Convert", this);
-    pbOk->setObjectName("pbOk");
+    pbOk->setObjectName("pbConvert");
     pbOk->setDisabled(true);
     QPushButton *pbCanc = new QPushButton("Close", this);
     connect(pbOk, SIGNAL(clicked()), this, SLOT(slotOkClicked()));
@@ -67,6 +67,7 @@ ConversionDialog::ConversionDialog(QWidget *parent, const QString& outpath) : QD
     QCheckBox *problemsCb = new QCheckBox("OK, try your best, I'll correct manually later", this);
     problemsCb->setObjectName("problemsCb");
     lo->addWidget(problemsCb, 7, 4, 1, 3);
+    connect(problemsCb, SIGNAL(toggled(bool)), pbOk, SLOT(setEnabled(bool)));
 
     m_setProblemWidgetsVisible(false);
 
@@ -129,10 +130,16 @@ void ConversionDialog::addLogs(const QList<OpQuality> &log)
 
 void ConversionDialog::conversionFinished(bool ok)
 {
-    findChild<QPushButton *>("pbOk")->setEnabled(ok);
-    foreach(QTreeWidgetItem *it, findChild<QTreeWidget*>()->findItems("*", Qt::MatchWildcard))
+    findChild<QPushButton *>("pbConvert")->setEnabled(ok);
+    foreach(QTreeWidgetItem *it, findChild<QTreeWidget*>()->findItems("*", Qt::MatchWildcard)) {
         if(it->text(4) == "critical")
+        {
+            findChild<QTreeWidget*>()->scrollToItem(it);
             m_setProblemWidgetsVisible(true);
+            findChild<QPushButton *>("pbConvert")->setDisabled(true);
+            break;
+        }
+    }
 }
 
 void ConversionDialog::outputFileWritten(const QString &name, const QString &filerelpath, bool ok)

@@ -44,12 +44,15 @@ SOURCES += main.cpp\
     src/qtango/cumbiacodeinjectcmd.cpp \
     src/qtango/codeextractors.cpp \
     src/qtango/codeinjector.cpp \
-    src/qtango/maincppwidget2ptr.cpp \
     src/qtango/maincpppreparecmd.cpp \
     src/qtango/conversiondialog.cpp \
     src/qtango/proconvertcmd.cpp \
     projectbackup.cpp \
-    src/qtango/prosectionextractor.cpp
+    src/qtango/prosectionextractor.cpp \
+    src/qtango/mainwidgetcppconstructprocesscmd.cpp \
+    src/qtango/mainwidgethprocesscmd.cpp \
+    src/qtango/maincppexpandcmd.cpp \
+    src/qtango/cppinstantiationexpand.cpp
 
 HEADERS  += qumbiaprojectwizard.h \
     src/qtango/qtangoimport.h \
@@ -63,12 +66,15 @@ HEADERS  += qumbiaprojectwizard.h \
     src/qtango/cumbiacodeinjectcmd.h \
     src/qtango/codeextractors.h \
     src/qtango/codeinjector.h \
-    src/qtango/maincppwidget2ptr.h \
     src/qtango/maincpppreparecmd.h \
     src/qtango/conversiondialog.h \
     src/qtango/proconvertcmd.h \
     projectbackup.h \
-    src/qtango/prosectionextractor.h
+    src/qtango/prosectionextractor.h \
+    src/qtango/mainwidgetcppconstructprocesscmd.h \
+    src/qtango/mainwidgethprocesscmd.h \
+    src/qtango/maincppexpandcmd.h \
+    src/qtango/cppinstantiationexpand.h
 
 FORMS    += qumbiaprojectwizard.ui
 
@@ -81,4 +87,5 @@ templates.files =  qumbia_project_template/*
 INSTALLS = target templates
 
 DISTFILES += \
-    qumbia_project_template/qtango.keywords
+    qumbia_project_template/qtango.keywords.json \
+    qumbia_project_template/cppinstantiationexp.json

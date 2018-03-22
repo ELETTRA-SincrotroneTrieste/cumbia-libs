@@ -44,7 +44,7 @@ QString ProConvertCmd::process(const QString &input)
         qDebug() << __FUNCTION__ << "replacing section " << input << "\n\n\n" << pro_out << "\n\n";
         qDebug() << __FUNCTION__ << "replacing section " << r << in_pos << out_pos;
         m_err = (in_pos < 0 || out_pos < 0);
-        if(m_err) {
+        if(!m_err) {
             rep = in_re.cap(1);
             if(r == "FORMS")
                 rep = m_comment_lines(rep);
@@ -58,6 +58,7 @@ QString ProConvertCmd::process(const QString &input)
                     "\nContact the developer";
     }
 
+    qDebug() << __FUNCTION__ << "RETURNING PRO " << pro_out;
     return pro_out;
 }
 
