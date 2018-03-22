@@ -193,8 +193,6 @@ std::string CuControlsFactoryPool::guessDomainBySrc(const std::string &src) cons
         const std::vector<std::string> &patterns = it->second;
         for(size_t i = 0; i < patterns.size(); i++)
         {
-            printf("CuControlsFactoryPool: matching %s with pattern %s success %d\n", src.c_str(), patterns.at(i).c_str(),
-                   std::regex_match(src, std::regex(patterns.at(i))));
             if(std::regex_match(src, std::regex(patterns.at(i))))
                 return it->first; // get by domain name
         }

@@ -17,7 +17,6 @@ DecIntFromFormat::DecIntFromFormat(QString f)
 bool DecIntFromFormat::decode()
 {
 	int pos = - 1;
-	QStringList captures;
 // 	printf("\e[1;36mdecode() format %s\e[0m\n", qstoc(d_format));
 	if(d_format == "%d")
 	{

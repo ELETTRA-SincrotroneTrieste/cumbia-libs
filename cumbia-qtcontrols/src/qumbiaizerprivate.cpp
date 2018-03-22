@@ -78,12 +78,9 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
             else
                 perr("QTangoizerPrivate::autoConfigure: unsupported data type \"%s\"", in_type);
 
-            printf("min value set to %f %d in_type \"%s\"\n", value, ret, in_type);
             if(dataptr)
                 m_DeleteDataPtr(in_type, dataptr);
         }
-        else
-            printf("inTypeOf method returned false\n");
     }
     else if(has_min && object->metaObject()->indexOfProperty("minimum") > -1)
     {
@@ -111,8 +108,6 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
 
             if(dataptr)
                 m_DeleteDataPtr(in_type, dataptr);
-
-            printf("max value set to %f %d in_type \"%s\"\n", value, ret, in_type);
         }
     }
     else if(has_max && object->metaObject()->indexOfProperty("maximum") > -1)

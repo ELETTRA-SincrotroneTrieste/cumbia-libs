@@ -94,7 +94,6 @@ void QuWatcher::onUpdate(const CuData &data)
         configure(data); // Qumbiaizer virtual configure method
     else
     {
-        printf("updating value on watcher %s [%s]\n", qstoc(objectName()), data.toString().c_str());
         updateValue(data);
         if(singleShot())
             unsetSource();

@@ -98,7 +98,9 @@ CuContext *QuTable::getContext() const
 
 void QuTable::setSource(const QString &s)
 {
-    d->context->replace_reader(s.toStdString(), this);
+    CuControlsReaderA * r = d->context->replace_reader(s.toStdString(), this);
+    if(r)
+        r->setSource(s);
 }
 
 void QuTable::unsetSource()
@@ -108,12 +110,12 @@ void QuTable::unsetSource()
 
 void QuTable::onUpdate(const CuData& da)
 {
-    if(da["type"].toString() == "attribute_info" && d->auto_configure)
-        configure(da);
-
     QColor background, border;
     d->read_ok = !da["err"].toBool();
     setEnabled(d->read_ok);
+
+    if(d->read_ok && d->auto_configure && da["type"].toString() == "property")
+        configure(da);
 
     // update link statistics
     d->context->getLinkStats()->addOperation();
@@ -178,8 +180,8 @@ void QuTable::onUpdate(const CuData& da)
         background = d->palette[QString::fromStdString(v.toString())];
     }
 
-    foreach(ELabel *l, cells)
-        l->decorate(background, border);
+//    foreach(ELabel *l, cells)
+//        l->decorate(background, border);
 
     emit newData(da);
 }

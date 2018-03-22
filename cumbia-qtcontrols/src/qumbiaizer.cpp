@@ -368,9 +368,6 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
 
         CuVariant val;
         read ? val = v["value"] : val = v["w_value"];
-        printf("\e[1;34mval is %s\e[0m\n", val.toString().c_str());
-        if(!read)
-            printf("\e[1;31mTHE VALUE SHOULD BE SET POINT set %s [read %s]\e[0m\n", v["w_value"].toString().c_str(), v["value"].toString().c_str());
         if(type() == Qumbiaizer::Int && val.getFormat() == CuVariant::Scalar)
         {
             int intVal;

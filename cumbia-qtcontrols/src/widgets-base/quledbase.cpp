@@ -4,6 +4,7 @@
 #include <QRadialGradient>
 #include <QtDebug>
 #include <math.h>
+#include <cumacros.h>
 
 /** @private */
 class QuLedBasePrivate
@@ -124,12 +125,12 @@ void QuLedBase::setAlphaChannel(int a)
 {
     if(a < 0)
     {
-        printf("\e[1;33m*\e[0m alpha channel %d is not valid: it must be an integer between 0 and 255. Setting to 0", a);
+        perr("\e[1;33m*\e[0m alpha channel %d is not valid: it must be an integer between 0 and 255. Setting to 0", a);
         d_ptr->alphaChannel = 0;
     }
     else if(a > 255)
     {
-        printf("\e[1;33m*\e[0m alpha channel %d is not valid: it must be an integer between 0 and 255. Setting to 255", a);
+        perr("\e[1;33m*\e[0m alpha channel %d is not valid: it must be an integer between 0 and 255. Setting to 255", a);
         d_ptr->alphaChannel = 255;
     }
     d_ptr->alphaChannel = a;

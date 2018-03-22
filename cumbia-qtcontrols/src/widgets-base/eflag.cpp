@@ -273,7 +273,6 @@ QString EFlag::trueStrings()
 
 void EFlag::setFalseStrings(QString s)
 {
-    printf("\e[1;32msetFalseStrings callethhhh!!!\e[0m\n");
 	m_falseStrings = s.split(";",QString::SkipEmptyParts);
 	configureCells();
 }

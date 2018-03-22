@@ -722,7 +722,7 @@ int QuPlotBase::findClosestPoint(QPoint p, QwtPlotCurve **closestCrv)
                     curveDistancesMap.insert(c, dist);
                     curveClosestPointMap.insert(c, closestPoint);
                 }
-                printf("curve %s, dist %.2f closestPoint %d\n", qstoc(c->title().text()), dist, closestPoint);
+//                printf("curve %s, dist %.2f closestPoint %d\n", qstoc(c->title().text()), dist, closestPoint);
             }
         }
     }
@@ -731,17 +731,10 @@ int QuPlotBase::findClosestPoint(QPoint p, QwtPlotCurve **closestCrv)
     if(distances.size() > 0)
     {
         std::sort(distances.begin(), distances.end());
-        qDebug() << "distances sorted: " << distances;
         minDist = distances.first();
         closestPoint = curveClosestPointMap.value(curveDistancesMap.key(minDist));
-        qDebug() << "valori di curveClosestPointMap: " << curveClosestPointMap.values() << "closestPoint " << closestPoint;
         if(curveClosestPointMap.values().contains(closestPoint))
-        {
             *closestCrv = curveDistancesMap.key(minDist);
-            qDebug() << "closestCurve: " << *closestCrv << (*closestCrv)->title().text();
-        }
-        else
-            qDebug() << "dont contains curve";
     }
     return closestPoint;
 }
@@ -829,7 +822,7 @@ void QuPlotBase::showMarker(const QPolygon &p)
 void QuPlotBase::updateLabel(QwtPlotCurve *closestCurve, int closestPointIdx)
 {
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
-    printf("\e[1;32m updateLabel() closestPoint %d\e[0m\n", closestPointIdx);
+//    printf("\e[1;32m updateLabel() closestPoint %d\e[0m\n", closestPointIdx);
 
     if(closestCurve && closestPointIdx > -1 && marker->isVisible())
     {

@@ -107,8 +107,8 @@ CuControlsWriterA *CuContext::m_make_writer(const std::string &s, CuDataListener
     Cumbia *cumbia = NULL;
     CuControlsWriterFactoryI *w_fa;
 
-    printf("\e[1;35mCuContextl.make_writer: src %s cu_pool %p ctrl_factroypool isEmpty %d\e[0m", s.c_str(), d->ctrl_factory_pool,
-           d->ctrl_factory_pool.isEmpty());
+//    printf("\e[1;35mCuContextl.make_writer: src %s cu_pool %p ctrl_factroypool isEmpty %d\e[0m", s.c_str(), d->ctrl_factory_pool,
+//           d->ctrl_factory_pool.isEmpty());
     if(d->cu_pool && !d->ctrl_factory_pool.isEmpty()) /* pick Cumbia impl */
     {
         // pick a cumbia and reader factory implementation from the pool
@@ -128,7 +128,6 @@ CuControlsWriterA *CuContext::m_make_writer(const std::string &s, CuDataListener
         w_fa->setOptions(d->options);
     writer = w_fa->create(cumbia, datal);
 
-    printf("\e[1;35mCuContextl.make_writer: got cumbia %p and w_factory %p writer is %p\e[0m\n", cumbia, w_fa, writer);
     return writer;
 }
 
@@ -174,7 +173,6 @@ void CuContext::disposeReader(const std::string &src)
     CuControlsReaderA *removed = NULL;
     foreach(CuControlsReaderA *r, d->readers)
     {
-        printf("enter in unlink reader loop readers size %d\n", d->readers.size());
         if(r->source().toStdString() == src || src == std::string())
         {
             removed = r;
@@ -248,7 +246,6 @@ void CuContext::setOptions(const CuData &options)
  */
 void CuContext::sendData(const CuData &data)
 {
-    printf("sendData with %s\n", data.toString().c_str());
     foreach(CuControlsReaderA *r, d->readers)
         r->sendData(data);
     foreach(CuControlsWriterA *w, d->writers)

@@ -104,7 +104,7 @@ void EImageWidgetBase::mouseRelease(QMouseEvent *ev)
     if(d->mouseEventIf && !d->mP1.isNull() && r.contains(ev->pos()))
         d->mouseEventIf->imageMouseReleaseEvent(ev->pos(), ev->button());
     else
-        printf("\e[1;31m outside boundaries!@!\e[0m\n");
+        printf("\e[1;31m EImageWidgetBase::mouseRelease: outside boundaries!@!\e[0m\n");
 
     d->mP1 = QPoint();
     d->mP2 = QPoint();

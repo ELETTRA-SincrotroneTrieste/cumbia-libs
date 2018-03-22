@@ -96,7 +96,6 @@ void QuApplyNumeric::execute(double val)
 /// @private
 void QuApplyNumeric::m_init()
 {
-    printf("\e[1;32mQuApplyNumeric> initializing\e[0m\n");
     d = new QuApplyNumericPrivate;
     connect(this, SIGNAL(clicked(double)), this, SLOT(execute(double)));
     d->auto_configure = true;
@@ -143,7 +142,7 @@ void QuApplyNumeric::onUpdate(const CuData &da)
                 ok = M.to<double>(max);
             if(ok)
             {
-                configureNumber(min, min, QString::fromStdString(print_format));
+                configureNumber(min, max, QString::fromStdString(print_format));
                 /* integerDigits() and decimalDigits() from NumberDelegate */
                 setIntDigits(integerDigits());
                 setDecDigits(decimalDigits());
@@ -154,6 +153,7 @@ void QuApplyNumeric::onUpdate(const CuData &da)
             else
                 pinfo("QuApplyNumeric: maximum and minimum values not set on the tango attribute \"%s\", object \"%s\": "
                       "not setting format nor maximum/minimum", qstoc(target()), qstoc(objectName()));
+
             /* can set current values instead */
             double val;
             bool can_be_double = da["w_value"].to<double>(val);

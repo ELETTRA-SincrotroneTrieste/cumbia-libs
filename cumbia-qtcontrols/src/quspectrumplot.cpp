@@ -83,7 +83,6 @@ QString QuSpectrumPlot::source() const
 
 QStringList QuSpectrumPlot::sources() const
 {
-    printf("Askinf for sources to plot common %p size %d\n", d->plot_common, d->plot_common->sources().size());
     return d->plot_common->sources();
 }
 

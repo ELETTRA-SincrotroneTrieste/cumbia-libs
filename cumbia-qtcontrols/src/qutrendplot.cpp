@@ -242,7 +242,6 @@ void QuTrendPlot::refresh()
 
 void QuTrendPlot::requestLinkStats()
 {
-    printf("\e[1;31mEMITTING\e[0m\n\n\n\n");
     emit linkStatsRequest(this, this);
 }
 

@@ -109,21 +109,47 @@ void QuCircularGauge::contextMenuEvent(QContextMenuEvent *e)
 
 void QuCircularGauge::m_configure(const CuData& da)
 {
-    try{
-        if(da.containsKey("min"))
-            setMinValue(std::stod(da["min"].toString()));
-        if(da.containsKey("max"))
-            setMaxValue(std::stod(da["max"].toString()));
-
-        if(da.containsKey("min_alarm")) setLowError( std::stod(da["min_alarm"].toString()));
-        if(da.containsKey("max_alarm")) setHighError( std::stod(da["max_alarm"].toString()));
-        if(da.containsKey("min_warning")) setLowWarning( std::stod(da["min_warning"].toString()));
-        if(da.containsKey("max_warning")) setHighWarning(std::stod(da["max_warning"].toString()));
-
+    QMap<QString, const char*> threshs;
+    threshs["min"] = "minValue";
+    threshs["max"] = "maxValue";
+    threshs["min_warning"] = "lowWarning";
+    threshs["max_warning"] = "highWarning";
+    threshs["max_alarm"] = "highError";
+    threshs["min_alarm"] = "lowError";
+    // map keys are not ordered!
+    QStringList props = QStringList() << "min" << "max" << "max_alarm" << "min_alarm"
+                                      << "min_warning" << "max_warning";
+    foreach(QString thnam, props) {
+        const char *name = thnam.toStdString().c_str();
+        try {
+            if(da.containsKey(name)) {
+                setProperty(threshs[thnam], std::stod(da[name].toString()));
+            }
+        }
+        catch(const std::invalid_argument& ) {
+            char bound[16] = "";
+            memset(bound, 0, 16);
+            strncpy(bound, name, 3);
+            strncat(bound, "Value", 5);
+            setProperty(threshs[thnam], property(bound).toDouble());
+        }
     }
-    catch(const std::invalid_argument& ia) {
-        perr("QuCircularGauge.m_configure: error converting threshold values: %s",
-             ia.what());
+}
+
+void QuCircularGauge::m_set_value(const CuVariant &val)
+{
+    if(val.isInteger()) {
+        int i;
+        val.to<int>(i);
+        setValue(i);
+    }
+    else if(val.isFloatingPoint()) {
+        double d;
+        val.to<double>(d);
+        setValue(d);
+    }
+    else {
+        setToolTip("wrong data type " + QString::fromStdString(val.dataTypeStr(val.getType())));
     }
 }
 
@@ -135,24 +161,16 @@ void QuCircularGauge::onUpdate(const CuData &da)
         setLabel("####");
     setToolTip(da["msg"].toString().c_str());
 
+    // update link statistics
+    d->context->getLinkStats()->addOperation();
+    if(!d->read_ok)
+        d->context->getLinkStats()->addError(da["msg"].toString());
+
     if(d->read_ok && d->auto_configure && da["type"].toString() == "property") {
         m_configure(da);
     }
-    else if(d->read_ok) {
-        CuVariant val = da["value"];
-        if(val.isInteger()) {
-            int i;
-            val.to<int>(i);
-            setValue(i);
-        }
-        else if(val.isFloatingPoint()) {
-            double d;
-            val.to<double>(d);
-            setValue(d);
-        }
-        else
-            setToolTip("wrong data type " + QString::fromStdString(val.dataTypeStr(val.getType())));
-
+    if(d->read_ok && da["value"].isValid()) {
+        m_set_value(da["value"]);
     }
     emit newData(da);
 }

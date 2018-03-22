@@ -65,6 +65,8 @@ private:
 
     void m_configure(const CuData& d);
 
+    void m_set_value(const CuVariant& val);
+
     // CuDataListener interface
 public:
     void onUpdate(const CuData &d);
