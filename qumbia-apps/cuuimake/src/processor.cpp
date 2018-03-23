@@ -44,7 +44,7 @@ bool Processor::expand(const Substitutions& subs, const QMap<QString,
     QString expanded_ui_h;
     QString expanded_params;
     QString replacement;
-    QString par;
+    QString par, match_params, args;
     QString class_name;
     QString comment;
     int i;
@@ -107,7 +107,9 @@ bool Processor::expand(const Substitutions& subs, const QMap<QString,
                     {
                         comment = line + " // expanded by " + qApp->applicationName() + " v." + qApp->applicationVersion();
                         expanded_ui_h += "// " + comment + "\n";
-                        line = line.replace(list.at(1), expanded_params);
+                        match_params = "(" + list.at(1) + ")";
+                        args = "(" + expanded_params + ")";
+                        line = line.replace(match_params, args);
                         expanded_ui_h += line + "\n";
                         qDebug() << __FUNCTION__ << "BREAKING CUZ PARLIST SIZE > 0";
                         break; // go to next line
