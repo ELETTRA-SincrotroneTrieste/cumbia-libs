@@ -10,7 +10,7 @@
 class MainWidgetHProcessCmd : public FileCmd
 {
 public:
-    MainWidgetHProcessCmd(const QString &fnam, const QString &mainwnam);
+    MainWidgetHProcessCmd(const QString &fnam, const QString &mainwnam, const QString &formClassName);
 
     // FileCmd interface
 public:
@@ -19,6 +19,7 @@ public:
 
 private:
     QString m_mainwnam; // main widget class name
+    QString m_formclassnam; // Ui::FormClassName
 };
 
 #endif // MAINWIDGETHPROCESSCMD_H

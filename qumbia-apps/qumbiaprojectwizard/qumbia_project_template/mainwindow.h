@@ -16,7 +16,7 @@ public:
     ~$MAINCLASS$();
 
 private:
-    Ui::$MAINCLASS$ *ui;
+    Ui::$UIFORMCLASS$ *ui;
 };
 
 #endif // $MAINCLASS$_H

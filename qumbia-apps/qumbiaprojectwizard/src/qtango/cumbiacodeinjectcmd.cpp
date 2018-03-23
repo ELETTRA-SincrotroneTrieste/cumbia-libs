@@ -6,12 +6,16 @@
 #include <QMap>
 #include <QtDebug>
 
-CumbiaCodeInjectCmd::CumbiaCodeInjectCmd(const QString &filename, const QString &mainwidgetclass, const QString &mainwidgetvar)
+CumbiaCodeInjectCmd::CumbiaCodeInjectCmd(const QString &filename,
+                                         const QString &mainwidgetclass,
+                                         const QString &mainwidgetvar,
+                                         const QString &uiformclass)
     : FileCmd(filename)
 {
     m_err = false;
     m_mainwidgetclass = mainwidgetclass;
     m_mainwidgetvar = mainwidgetvar;
+    m_uiformclass = uiformclass;
     qDebug() << __FUNCTION__ << "  --> " << m_mainwidgetclass << m_mainwidgetvar;
 }
 
@@ -27,7 +31,7 @@ QString CumbiaCodeInjectCmd::process( const QString &input)
         if((m_err = mcppex.error()))
             m_msg = mcppex.errorMessage();
         else {
-            CodeInjector ci(fnam, m_mainwidgetclass, m_mainwidgetvar);
+            CodeInjector ci(fnam, m_mainwidgetclass, m_mainwidgetvar, m_uiformclass);
             output = ci.inject(input, main_sections);
             m_err = ci.error();
             if(m_err)
@@ -41,7 +45,7 @@ QString CumbiaCodeInjectCmd::process( const QString &input)
         if((m_err = mwce.error()))
             m_msg = mwce.errorMessage();
         else {
-            CodeInjector ci(fnam, m_mainwidgetclass, m_mainwidgetvar);
+            CodeInjector ci(fnam, m_mainwidgetclass, m_mainwidgetvar, m_uiformclass);
             output = ci.inject(input, cpp_sections);
             m_err = ci.error();
             if(m_err)
@@ -56,7 +60,7 @@ QString CumbiaCodeInjectCmd::process( const QString &input)
             m_msg = mwhe.errorMessage();
         else
         {
-            CodeInjector ci(fnam, m_mainwidgetclass, m_mainwidgetvar);
+            CodeInjector ci(fnam, m_mainwidgetclass, m_mainwidgetvar, m_uiformclass);
             output = ci.inject(input, h_sections);
             m_err = ci.error();
             if(m_err)

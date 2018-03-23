@@ -3,7 +3,7 @@
 
 $MAINCLASS$::$MAINCLASS$(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::$MAINCLASS$)
+    ui(new Ui::$UIFORMCLASS$)
 {
     ui->setupUi(this);
 }

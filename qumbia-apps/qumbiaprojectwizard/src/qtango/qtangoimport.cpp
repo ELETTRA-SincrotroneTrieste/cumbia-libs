@@ -81,9 +81,14 @@ QString QTangoImport::mainWidgetVarName() const
     return m_proFHelper.mainWidgetVarName();
 }
 
-QString QTangoImport::mainWidgetName() const
+QString QTangoImport::mainWidgetClassName() const
 {
-    return m_proFHelper.mainWidgetName();
+    return m_proFHelper.mainWidgetClassName();
+}
+
+QString QTangoImport::uiFormClassName() const
+{
+    return m_proFHelper.uiClassName();
 }
 
 QString QTangoImport::errorMessage() const
@@ -121,7 +126,7 @@ bool QTangoImport::convert() {
     allfiles.append(profiles);
     m_err = maincpp.isEmpty() || mainwcpp.isEmpty() || mainwh.isEmpty();
 
-    bool can_proceed = !m_err && !m_proFHelper.mainWidgetName().isEmpty() && !m_proFHelper.mainWidgetVarName().isEmpty()
+    bool can_proceed = !m_err && !m_proFHelper.mainWidgetClassName().isEmpty() && !m_proFHelper.mainWidgetVarName().isEmpty()
             && !maincpp.isEmpty() && !mainwcpp.isEmpty() && !mainwh.isEmpty();
 
     m_err = !can_proceed;
@@ -139,18 +144,19 @@ bool QTangoImport::convert() {
             if(fi.fileName() == pronam)
                 fcmd.registerCommand(new ProConvertCmd(fi.fileName()));
             if(fi.fileName() == maincpp)
-                fcmd.registerCommand(new MainCppPrepareCmd(fi.fileName(), m_proFHelper.mainWidgetName()));
+                fcmd.registerCommand(new MainCppPrepareCmd(fi.fileName(), m_proFHelper.mainWidgetClassName()));
             fcmd.registerCommand(new FindReplace(fi.fileName()));
             if(mainfiles.contains(fi.fileName()))
-                fcmd.registerCommand(new CumbiaCodeInjectCmd(fi.fileName(), mainWidgetName(), mainWidgetVarName()));
+                fcmd.registerCommand(new CumbiaCodeInjectCmd(fi.fileName(), mainWidgetClassName(),
+                                                             mainWidgetVarName(), uiFormClassName()));
             if(fi.fileName() == mainwcpp) {
-                fcmd.registerCommand(new MainWidgetCppConstructProcessCmd(fi.fileName(), mainWidgetName()));
+                fcmd.registerCommand(new MainWidgetCppConstructProcessCmd(fi.fileName(), mainWidgetClassName()));
                 fcmd.registerCommand(new CppInstantiationExpand(fi.fileName()));
             }
             if(fi.fileName() == mainwh)
-                fcmd.registerCommand(new MainWidgetHProcessCmd(fi.fileName(), mainWidgetName()));
+                fcmd.registerCommand(new MainWidgetHProcessCmd(fi.fileName(), mainWidgetClassName(), m_proFHelper.uiClassName()));
             if(fi.fileName() == maincpp)
-                fcmd.registerCommand(new MainCppExpandCmd(fi.fileName(), mainWidgetName()));
+                fcmd.registerCommand(new MainCppExpandCmd(fi.fileName(), mainWidgetClassName()));
             m_err = !fcmd.process(defs);
             if(m_err) {
                 m_errMsg = fcmd.errorMessage();
@@ -259,7 +265,7 @@ bool QTangoImport::m_checkPro(QFile &f) {
     if(f.open(QIODevice::ReadOnly|QIODevice::Text) ) {
         QTextStream in(&f);
         QString pro = in.readAll();
-        QRegExp qtango_inc_re("include\\(.*/qtango[3-6]/qtango.pri\\)");
+        QRegExp qtango_inc_re("include\\s*\\(.*/qtango[3-6]/qtango.pri\\)");
         m_err = !pro.contains(qtango_inc_re);
         if(m_err)
             m_errMsg = "QTangoImport.m_checkPro: file " + f.fileName() + " is not a qtango project file";

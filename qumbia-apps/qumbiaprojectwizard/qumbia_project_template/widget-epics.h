@@ -10,7 +10,7 @@
 class CumbiaTango;
 
 namespace Ui {
-class $MAINCLASS$;
+class $UIFORMCLASS$;
 }
 
 class CumbiaTango;
@@ -24,7 +24,7 @@ public:
     ~$MAINCLASS$();
 
 private:
-    Ui::$MAINCLASS$ *ui;
+    Ui::$UIFORMCLASS$ *ui;
 
     CumbiaEpics *cu_e;
     CuEpReaderFactory cu_ep_r_fac;

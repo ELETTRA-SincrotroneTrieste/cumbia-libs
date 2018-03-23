@@ -36,8 +36,18 @@ public:
         return m_errMsg;
     }
 
-    QString mainWidgetName() const {
-        return m_mainwidgetnam;
+    /** \brief returns the ClassName in namespace ui
+     *
+     * \par example
+     * The PS2605 in the Ui namespace:
+     * Ui::PS2605
+     */
+    QString uiClassName() const {
+        return m_uiclassnam;
+    }
+
+    QString mainWidgetClassName() const {
+        return m_mainwclassnam;
     }
 
     QString mainWidgetVarName() const {
@@ -53,8 +63,11 @@ private:
     QString m_errMsg;
     bool m_err;
 
-    QString m_projnam, m_mainwidgetvarnam, m_mainwidgetnam;
+    QString m_projnam, m_mainwidgetvarnam, m_uiclassnam;
+    QString m_mainwclassnam;
     QString m_projdir;
+
+    QString m_findWidgetClassName(const QString& filenam);
 };
 
 #endif // PROJECTFILESHELPER_H

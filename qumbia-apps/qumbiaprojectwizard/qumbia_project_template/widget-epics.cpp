@@ -11,7 +11,7 @@
 
 $MAINCLASS$::$MAINCLASS$(CumbiaEpics *cue, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::$MAINCLASS$)
+    ui(new Ui::$UIFORMCLASS$)
 {
     cu_e = cue;
     m_log = new CuLog(&m_log_impl);

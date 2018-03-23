@@ -8,6 +8,7 @@
 #include <cuepcontrolswriter.h>
 #include <cutcontrolsreader.h>
 #include <cutcontrolswriter.h>
+#include <cucontextactionbridge.h>
 #include <cutango-world.h>
 #include <cuepics-world.h>
 #include <cuthreadfactoryimpl.h>
@@ -17,7 +18,7 @@
 
 $MAINCLASS$::$MAINCLASS$(CumbiaPool *cumbia_pool, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::$MAINCLASS$)
+    ui(new Ui::$UIFORMCLASS$)
 {
     cu_pool = cumbia_pool;
     // setup Cumbia pool and register cumbia implementations for tango and epics

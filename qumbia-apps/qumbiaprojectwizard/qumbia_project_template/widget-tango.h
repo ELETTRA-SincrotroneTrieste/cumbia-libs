@@ -13,7 +13,7 @@ class CumbiaTango;
 // cumbia-tango
 
 namespace Ui {
-class $MAINCLASS$;
+class $UIFORMCLASS$;
 }
 
 class $MAINCLASS$ : public QWidget
@@ -25,7 +25,7 @@ public:
     ~$MAINCLASS$();
 
 private:
-    Ui::$MAINCLASS$ *ui;
+    Ui::$UIFORMCLASS$ *ui;
 
 // cumbia-tango
     CumbiaTango *cu_t;

@@ -1,10 +1,12 @@
 #include "mainwidgethprocesscmd.h"
 #include <QtDebug>
 
-MainWidgetHProcessCmd::MainWidgetHProcessCmd(const QString& fnam, const QString& mainwnam)
+MainWidgetHProcessCmd::MainWidgetHProcessCmd(const QString& fnam, const QString& mainwnam,
+                                             const QString& formClassName)
     : FileCmd(fnam)
 {
     m_mainwnam = mainwnam;
+    m_formclassnam = formClassName;
 }
 
 
@@ -17,7 +19,7 @@ QString MainWidgetHProcessCmd::process(const QString &input)
     //     Ui::Danfisik9000 *ui;
     //
     QString out = input;
-    QRegExp uidefRe(QString("\\n(\\s*Ui::%1\\s+([A-Za-z0-9_]+);)").arg(m_mainwnam));
+    QRegExp uidefRe(QString("\\n(\\s*Ui::%1\\s+([A-Za-z0-9_]+);)").arg(m_formclassnam));
     if(uidefRe.indexIn(out) > -1) {
         QString def = uidefRe.cap(1);
         QString uinam = uidefRe.cap(2);

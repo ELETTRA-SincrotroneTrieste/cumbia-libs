@@ -1,8 +1,8 @@
+#include <quapplication.h>
 #include "$HFILE$"
 #include <X11/Xlib.h>
 #include <QX11Info>
 
-#include <quapplication.h>
 
 // cumbia-tango
 #include <cumbiatango.h>

@@ -7,7 +7,8 @@
 class CodeInjector
 {
 public:
-    CodeInjector(const QString& filename, const QString& mainwidclass, const QString& mainwidvar);
+    CodeInjector(const QString& filename, const QString& mainwidclass, const QString& mainwidvar,
+                 const QString& formclassnam);
 
     /** \brief injects the code from the sections into the file specified in the class constructor
      *
@@ -33,7 +34,7 @@ public:
 protected:
     bool m_err;
     QString m_filename, m_errMsg;
-    QString m_mainwclass, m_mainwvar;
+    QString m_mainwclass, m_mainwvar, m_formclassnam;
     QList<OpQuality> m_log;
 };
 

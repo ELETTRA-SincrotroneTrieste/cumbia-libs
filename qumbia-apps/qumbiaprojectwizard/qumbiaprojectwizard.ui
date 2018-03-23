@@ -372,16 +372,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_10">
-        <property name="text">
-         <string>Main Widget Name:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="4">
        <widget class="QLineEdit" name="leFormFile">
         <property name="toolTip">
@@ -398,7 +388,37 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1" colspan="2">
+      <item row="1" column="5">
+       <widget class="QLineEdit" name="leProFile">
+        <property name="checkContents" stdset="0">
+         <string>not_empty</string>
+        </property>
+        <property name="extension" stdset="0">
+         <string>.pro</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QLineEdit" name="leUiFormClassName">
+        <property name="placeholder" stdset="0">
+         <string>$UIFORMCLASS$</string>
+        </property>
+        <property name="checkContents" stdset="0">
+         <string>not_empty</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3" colspan="2">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>Ui Form Class Name:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
        <widget class="QLineEdit" name="leMainWidgetName">
         <property name="placeholder" stdset="0">
          <string>$MAINCLASS$</string>
@@ -408,13 +428,13 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="4">
-       <widget class="QLineEdit" name="leProFile">
-        <property name="checkContents" stdset="0">
-         <string>not_empty</string>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>Main Widget Class Name:</string>
         </property>
-        <property name="extension" stdset="0">
-         <string>.pro</string>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>

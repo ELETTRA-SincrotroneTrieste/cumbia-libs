@@ -84,13 +84,13 @@ class CumbiaCodeInjectCmd : public FileCmd
 {
 
 public:
-    CumbiaCodeInjectCmd(const QString& filename, const QString& mainwidgetclass, const QString& mainwidgetvar);
+    CumbiaCodeInjectCmd(const QString& filename, const QString& mainwidgetclass, const QString& mainwidgetvar, const QString &uiformclass);
     // FileCmd interface
     virtual QString process(const QString &input);
     virtual QString name();
 
 private:
-    QString m_mainwidgetclass, m_mainwidgetvar;
+    QString m_mainwidgetclass, m_mainwidgetvar, m_uiformclass;
 
     QString m_get_file_contents(CodeExtractorA::Type t);
 

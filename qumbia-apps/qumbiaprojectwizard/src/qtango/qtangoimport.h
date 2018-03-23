@@ -32,7 +32,9 @@ public:
 
     QString mainWidgetVarName() const;
 
-    QString mainWidgetName() const;
+    QString mainWidgetClassName() const;
+
+    QString uiFormClassName() const;
 
     QString toCumbiaPro(const QString& qtango_pro) const;
 

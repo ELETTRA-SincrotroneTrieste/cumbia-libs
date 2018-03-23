@@ -37,7 +37,8 @@ QString FindReplace::process(const QString& input)
     m_log.clear();
     bool is_xml = filename().endsWith(".ui") || filename().endsWith(".xml");
 
-    foreach(QString l, input.split("\n")) {
+    foreach(const QString& l, input.split("\n")) {
+        QString oldline(l);
         int pos = -1;
         QString newline, replace;
         lineno++;
@@ -75,8 +76,8 @@ QString FindReplace::process(const QString& input)
                         newline = m_comment_line("no cumbia include replacement found for " + oldincre.cap(1), is_xml);
                     // write new include or comment
                     out += newline + "\n";
-                    m_log.append(OpQuality("replace include", oldincre.cap(1),
-                                           replace.length() > 0 ? replace : "// " + l, filename(), message, q, lineno));
+                    m_log.append(OpQuality("replace include", oldincre.cap(0),
+                                           newline, filename(), message, q, lineno));
                 }
             }
             else if(su.m_type == Subst::MapClass) {
@@ -92,7 +93,7 @@ QString FindReplace::process(const QString& input)
                     // select one
                     replace = get_option(su.m_comment, l, su.m_out_options);
                     if(replace.length() > 0 && q != Subst::Critical) {
-                        newline = l.replace(oldclre, replace);
+                        newline = oldline.replace(oldclre, replace);
                         newline += m_comment_add(su.m_comment, is_xml);
                     }
                     else // leave newline empty so that it's left unchanged. Add a comment
@@ -116,17 +117,20 @@ QString FindReplace::process(const QString& input)
                         if(q != Subst::Critical && su.m_type == Subst::ReplaceLine)
                             newline = replace;
                         else if(q != Subst::Critical && su.m_type == Subst::ReplaceExpr) {
-                            newline = l.replace(re.cap(1), replace);
+                            newline = oldline.replace(re.cap(1), replace);
                         }
                         if(q != Subst::Critical)
                             newline += m_comment_add(su.m_comment, is_xml);
 
                         // write new line
-                        if(q != Subst::Critical)
+                        if(q != Subst::Critical) {
                             out += newline + "\n";
-                        else  // leave newline empty so that it's left unchanged. Add a comment
+                            m_log.append(OpQuality(su.typeStr(), l, newline, filename(), message, q, lineno));
+                        }
+                        else { // leave newline empty so that it's left unchanged. Add a comment
                             out += m_comment_add("cannot replace QTango specific line: " + re.cap(1), is_xml) + "\n";
-                        m_log.append(OpQuality(su.typeStr(), l, m_comment_line(l, is_xml), filename(), message, q, lineno));
+                            m_log.append(OpQuality(su.typeStr(), l, newline, filename(), message, q, lineno));
+                        }
                     }
 
                 }

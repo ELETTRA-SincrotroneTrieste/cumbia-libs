@@ -8,7 +8,7 @@
 #include <cumbiaepics.h>
 
 namespace Ui {
-class $MAINCLASS$;
+class $UIFORMCLASS$;
 }
 
 class CuData;
@@ -23,7 +23,7 @@ public:
     ~$MAINCLASS$();
 
 private:
-    Ui::$MAINCLASS$ *ui;
+    Ui::$UIFORMCLASS$ *ui;
 
     CumbiaPool *cu_pool;
     QuLogImpl m_log_impl;

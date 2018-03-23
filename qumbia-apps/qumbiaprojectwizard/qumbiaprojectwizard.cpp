@@ -284,35 +284,8 @@ void QumbiaProjectWizard::create()
             }
         }
 
-        QList<QLineEdit *> lesCmd = QList<QLineEdit *>() << ui->leLaunch1 << ui->leLaunch2;
-        foreach(QLineEdit *le, lesCmd)
-        {
-            if(le->isEnabled() && !le->text().isEmpty())
-            {
-                QStringList cmdline = le->text().split(QRegExp("\\s+"), QString::SkipEmptyParts);
-                QStringList args(cmdline);
+        m_launchApps(project_path);
 
-                if(cmdline.size() > 1)
-                {
-                    args.removeFirst();
-                    for(int i = 0; i < args.size(); i++)
-                    {
-                        args[i].replace("$PRO_FILE", proi.newFileName);
-                        args[i].replace("$UI_FILE",  formi.subDirName + "/" + formi.newFileName);
-                    }
-                }
-                printf("\e[1;32m Launching le process %s\n", cmdline.join(" ").toStdString().c_str());
-                QProcess process(this);
-                int res = process.startDetached(cmdline.first(), args, project_path);
-                if(!res)
-                    QMessageBox::critical(this, "Application launch failed",
-                                          QString("Failed to launch %1:\n%2").arg(cmdline.join(" "))
-                                          .arg(process.errorString()));
-            }
-        }
-
-        printf("\e[1;32m*\n* \e[0mcopy and paste the following line to change into the project directory:\n\e[1;32m*\e[0m\n");
-        printf("\e[1;32mcd %s\e[0m\n", project_path.toStdString().c_str());
         if(ui->cbCloseAfterCreate->isChecked())
             close();
     }
@@ -423,14 +396,17 @@ void QumbiaProjectWizard::qtangoImport()
         if(ok) {
             m_setAppProps(m_qtangoImport->getAppProps());
             m_setProjectFiles(m_qtangoImport->getProjectFiles());
-            ui->leMainWidgetName->setText(m_qtangoImport->mainWidgetName());
+            ui->leMainWidgetName->setText(m_qtangoImport->mainWidgetClassName());
             ui->leProjectName->setText(m_qtangoImport->projectName());
+            ui->leUiFormClassName->setText(m_qtangoImport->uiFormClassName());
             ui->pbCreate->setText("Convert...");
         }
-
-        if(m_qtangoImport->error())
+        if(m_qtangoImport->error()) {
             QMessageBox::critical(this, "Error converting qtango project", "Error converting the qtango project:\n"
                                   + m_qtangoImport->errorMessage());
+        }
+        else {
+        }
         QFileInfo fi(pro_f);
         qDebug() << __FUNCTION__ << "dir is " << fi.absoluteDir().absolutePath();
         s.setValue("LAST_PROJECT_DIRNAM", fi.absoluteDir().absolutePath());
@@ -519,6 +495,10 @@ void QumbiaProjectWizard::importRbToggled(bool t)
 // /home/giacomo/devel/fermi/panels/power_supply/danfisik9000
 void QumbiaProjectWizard::conversionDialogOkClicked()
 {
+    ConversionDialog *cd = findChild<ConversionDialog *>();
+    // will connect if the conversion is successful
+    disconnect(cd, SIGNAL(finished(int)));
+
     bool proceed = false;
     ConversionDialog *cdlg = findChild<ConversionDialog *>();
     QString project_path = cdlg->outputPath();
@@ -547,7 +527,17 @@ void QumbiaProjectWizard::conversionDialogOkClicked()
             QMessageBox::critical(this, "Error writing output files",
                                   "Error writing output files: " + m_qtangoImport->errorMessage());
         }
+        else // conversion successful, when dialog is closed onConversionDialogFinished is invoked
+            connect(cd, SIGNAL(finished(int)), this, SLOT(onConversionDialogFinished()));
     }
+}
+
+void QumbiaProjectWizard::onConversionDialogFinished()
+{
+    ConversionDialog *cdlg = findChild<ConversionDialog *>();
+    QString project_path = cdlg->outputPath();
+    ui->leLocation->setText(project_path);
+    m_launchApps(project_path);
 }
 
 QStringList QumbiaProjectWizard::findSupportedFactories()
@@ -616,5 +606,49 @@ void QumbiaProjectWizard::m_saveUISettings()
             treeItems << it->text(0) + ";;" + it->text(1)  + ";;" +
                          qobject_cast<QComboBox *>(ui->twProperties->itemWidget(it, 2))->currentText();
     s.setValue("treeItems" , treeItems);
+}
+
+void QumbiaProjectWizard::m_launchApps(const QString& path)
+{
+    QString wtype;
+    QString project_path = path;
+    QString pro_file = ui->leProFile->text();
+
+    ui->rbWidget->isChecked() ? wtype = "widget" : wtype = "mainwindow";
+    MyFileInfo formi(wtype + ".ui", ui->leFormFile->text(), "src");
+    MyFileInfo proi("qumbiaproject-" + m_selectedFactory + ".pro", pro_file, "");
+
+    QList<QLineEdit *> lesCmd = QList<QLineEdit *>() << ui->leLaunch1 << ui->leLaunch2;
+    foreach(QLineEdit *le, lesCmd)
+    {
+        if(le->isEnabled() && !le->text().isEmpty())
+        {
+            QStringList cmdline = le->text().split(QRegExp("\\s+"), QString::SkipEmptyParts);
+            QStringList args(cmdline);
+
+            if(cmdline.size() > 1)
+            {
+                args.removeFirst();
+                for(int i = 0; i < args.size(); i++)
+                {
+                    args[i].replace("$PRO_FILE", proi.newFileName);
+                    args[i].replace("$UI_FILE",  formi.subDirName + "/" + formi.newFileName);
+                }
+            }
+            printf("\e[1;32m Launching le process %s\n", cmdline.join(" ").toStdString().c_str());
+            QProcess process(this);
+            int res = process.startDetached(cmdline.first(), args, project_path);
+            if(!res)
+                QMessageBox::critical(this, "Application launch failed",
+                                      QString("Failed to launch %1:\n%2").arg(cmdline.join(" "))
+                                      .arg(process.errorString()));
+        }
+    }
+
+    printf("\e[1;32m*\n* \e[0mcopy and paste the following line to change into the project directory:\n\e[1;32m*\e[0m\n");
+    printf("\e[1;32mcd %s\e[0m\n", project_path.toStdString().c_str());
+
+    if(ui->cbCloseAfterCreate->isChecked())
+        close();
 }
 

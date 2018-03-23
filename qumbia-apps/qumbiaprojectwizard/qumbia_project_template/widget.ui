@@ -1,6 +1,6 @@
 <ui version="4.0">
- <class>$MAINCLASS$</class>
- <widget class="QWidget" name="$MAINCLASS$" >
+ <class>$UIFORMCLASS$</class>
+ <widget class="QWidget" name="$UIFORMCLASS$" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>$MAINCLASS$</string>
+   <string>$UIFORMCLASS$</string>
   </property>
  </widget>
  <layoutDefault spacing="6" margin="11" />

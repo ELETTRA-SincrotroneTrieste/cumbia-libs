@@ -53,6 +53,8 @@ private slots:
 
     void convertStart();
 
+    void onConversionDialogFinished();
+
 private:
     void checkValidity();
 
@@ -70,6 +72,8 @@ private:
     void m_setProjectFiles(const QMap<QString, QString>& props);
 
     void m_saveUISettings();
+
+    void m_launchApps(const QString& path);
 
     QTangoImport *m_qtangoImport;
 

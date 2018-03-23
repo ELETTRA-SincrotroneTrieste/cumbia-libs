@@ -17,7 +17,7 @@
 
 $MAINCLASS$::$MAINCLASS$(CumbiaPool *cumbia_pool, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::$MAINCLASS$)
+    ui(new Ui::$UIFORMCLASS$)
 {
     cu_pool = cumbia_pool;
     // setup Cumbia pool and register cumbia implementations for tango and epics

@@ -26,10 +26,10 @@ bool ProjectFilesHelper::findMainWidgetProps(const QDir& wdir)
 {
     m_err = false;
     bool mainw_found = false;
-    QString dom_err, classnam;
+    QString dom_err;
     QFileInfoList uifil = findFiles(wdir, "*.ui");
+    QFileInfoList hfiles = findFiles(wdir, "*.h");
     QString maincpp_nam = findFile(wdir, "main.cpp");
-    Main2Cu m2cu;
     if(maincpp_nam.isEmpty()) {
         m_err = true;
         m_errMsg = "QTangoImport.m_getMainWidgetProps: file main.cpp not found under\n" + wdir.absolutePath();
@@ -37,10 +37,17 @@ bool ProjectFilesHelper::findMainWidgetProps(const QDir& wdir)
     }
     QFile maincpp(maincpp_nam);
     qDebug() << __FUNCTION__ << "processing " + maincpp_nam << wdir.absolutePath() << "ui files" << uifil.size();
-    if(maincpp.exists()) {
+    m_err = !maincpp.exists();
+    if(!m_err) {
         m_proFiles["main"] = maincpp_nam;
-        for(int i = 0; i < uifil.size() && !mainw_found; i++) {
-            QFileInfo fi = uifil.at(i);
+
+        QString classnam;
+
+        // if there is only one ui file we can extract the class name from the form
+        if(uifil.size() == 1)
+        {
+            QFileInfo fi = uifil.at(0);
+            m_proFiles["uifile"] = fi.fileName();
             QDomDocument dom(fi.absoluteFilePath());
             qDebug() << __FUNCTION__ << "opening " << fi.absoluteFilePath();
             QFile f(fi.absoluteFilePath());
@@ -52,13 +59,7 @@ bool ProjectFilesHelper::findMainWidgetProps(const QDir& wdir)
                         QDomElement classEl = uiEl.firstChildElement("class");
                         qDebug() << classEl.tagName() << "<<--- class el" << dom.documentElement().tagName() << dom.childNodes().count();
                         if(!classEl.isNull()) {
-                            classnam = classEl.text();
-                            qDebug() << __FUNCTION__ << "detected main widget " << classnam << "in " << f.fileName();
-                            if(!classnam.isEmpty()) {
-                                m2cu.setFileName(maincpp_nam);
-                                mainw_found = m2cu.findMainWidget(classnam);
-                                m_proFiles["uifile"] = fi.fileName();
-                            }
+                            m_uiclassnam = classEl.text();
                         }
                         else {
                             m_err = true;
@@ -81,23 +82,37 @@ bool ProjectFilesHelper::findMainWidgetProps(const QDir& wdir)
                 m_errMsg = "QTangoImport.m_getMainWidgetProps: failed to open file " + fi.absoluteFilePath() + " in read mode";
             }
         }
-    }
-    if(!m_err && mainw_found) {
-        m_appPropMap = m2cu.parseProps();
-        m_mainwidgetvarnam = m2cu.mainWidgetVar();
-        m_mainwidgetnam = classnam;
-    }
-    if(!m_err && !mainw_found) {
-        m_err = true;
-        m_errMsg = "QTangoImport.m_getMainWidgetProps: failed to find a main widget instantiation in main.cpp";
-    }
+
+        Main2Cu m2cu; // "main to cumbia migration helper class
+        m2cu.setFileName(maincpp_nam);
+        // for each h file, find the QWidget derived class name defined in the header file
+        // for each class name, see which one is instantiated in the main.cpp
+        for(int i = 0; i < hfiles.size() && !mainw_found; i++) {
+            QFileInfo fi = hfiles.at(i);
+            classnam = m_findWidgetClassName(fi.absoluteFilePath());
+            if(!classnam.isEmpty()) {
+                qDebug() << __FUNCTION__ << "detected widget " << classnam << "in " << fi.fileName();
+                mainw_found = m2cu.findMainWidget(classnam);
+            }
+        }
+
+        if(!m_err && mainw_found) {
+            m_appPropMap = m2cu.parseProps();
+            m_mainwidgetvarnam = m2cu.mainWidgetVar();
+            m_mainwclassnam = classnam;
+        }
+        if(!m_err && !mainw_found) {
+            m_err = true;
+            m_errMsg = "QTangoImport.m_getMainWidgetProps: failed to find a main widget instantiation in main.cpp";
+        }
+    } // closes if(maincpp exists)
     return !m_err && mainw_found;
 }
 
 bool ProjectFilesHelper::findMainProjectFiles(const QDir &wdir)
 {
     QFileInfoList fil = findFiles(wdir, "*.cpp");
-    QRegExp cppre(QString("%1::%1\\s*\\(").arg(this->m_mainwidgetnam)); // find class constructor implementation in cpp
+    QRegExp cppre(QString("%1::%1\\s*\\(").arg(this->m_mainwclassnam)); // find class constructor implementation in cpp
     foreach(QFileInfo cf, fil){
         QFile f(cf.absoluteFilePath());
         if(f.open(QIODevice::ReadOnly|QIODevice::Text)) {
@@ -119,7 +134,7 @@ bool ProjectFilesHelper::findMainProjectFiles(const QDir &wdir)
         }
     }
     fil = findFiles(wdir, "*.h");
-    QRegExp hre(QString("class\\s+%1\\s*\\n*:\\s*public\\s+").arg(this->m_mainwidgetnam)); // find class constructor declaration in h
+    QRegExp hre(QString("class\\s+%1\\s*\\n*:\\s*public\\s+").arg(this->m_mainwclassnam)); // find class constructor declaration in h
     foreach(QFileInfo cf, fil){
         if(cf.fileName().contains(QRegExp("ui_.*.h")))
             continue;
@@ -140,7 +155,7 @@ bool ProjectFilesHelper::findMainProjectFiles(const QDir &wdir)
     }
     if(!m_proFiles.contains("cppfile") || !m_proFiles.contains("hfile")) {
         m_err = true;
-        m_errMsg = "QTangoImport.m_findMainProjectFiles: did not find definitions for \"" + m_mainwidgetnam + "\" in cpp/h files";
+        m_errMsg = "QTangoImport.m_findMainProjectFiles: did not find definitions for \"" + m_mainwclassnam + "\" in cpp/h files";
     }
     return !m_err;
 }
@@ -184,4 +199,28 @@ QString ProjectFilesHelper::findFile(QDir wdir, const QString &name) const
     if(uifil.size() > 0)
         return uifil.first().absoluteFilePath();
     return "";
+}
+
+// find class name
+// \s*class ([A-Za-z0-9_]+)\s*:\s*public\s+(?:QWidget|QMainWindow)
+// example:
+// class PS2605: public QWidget {
+// will capture PS2605
+QString ProjectFilesHelper::m_findWidgetClassName(const QString &filenam)
+{
+    QString classn;
+    QFile f(filenam);
+    m_err = !f.open(QIODevice::ReadOnly|QIODevice::Text);
+    if(!m_err) {
+        QTextStream in(&f);
+        QString contents = in.readAll();
+        QRegExp classDefRe("\\s*class ([A-Za-z0-9_]+)\\s*:\\s*public\\s+(?:QWidget|QMainWindow)");
+        int pos = classDefRe.indexIn(contents);
+        if(pos > -1)
+            classn = classDefRe.cap(1);
+        f.close();
+    }
+    else
+        m_errMsg = "ProjectFilesHelper::m_findWidgetClassName: " + f.errorString();
+    return classn;
 }

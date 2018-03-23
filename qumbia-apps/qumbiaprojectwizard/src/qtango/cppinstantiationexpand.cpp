@@ -63,6 +63,7 @@ QString CppInstantiationExpand::process(const QString &input)
                     qDebug() << __FUNCTION__ << "EXPANSIONL FINDING " << s.m_in << "BAZAN ";
                     pos = inre.indexIn(out);
                     if(pos > -1) {
+                        qDebug() << __FUNCTION__ << "EXPANSION REPLACEING" << inre.cap(1) << " WIT " << s.getFirstOutOption();
                         out.replace(inre.cap(1), s.getFirstOutOption());
                         lineno = input.section(inre, 0, 0).count("\n") + 1;
                         m_log.append(OpQuality(s.typeStr(), inre.cap(1), s.getFirstOutOption(), filename(), s.m_comment,

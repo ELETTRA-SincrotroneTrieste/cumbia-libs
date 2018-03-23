@@ -370,6 +370,13 @@
 "level" : "err"
 },
 {
+ "type" : "replace include",
+"in" :  "EContextHelp",
+"out" : "",
+"comment" : "EContextHelp is not a cumbia class. Mapped to QPushButton",
+"level" : "err"
+},
+{
  "type" : "map class",
 "in" :  "TLabel",
 "out" : "QuLabel",
@@ -514,6 +521,14 @@
 "level" : "warn"
 },
 {
+ "type" : "map class",
+"in" :  "EContextHelp",
+"out" : "QPushButton",
+"include" : "QPushButton",
+"comment" : "EContextHelp is mapped into a simple Qt QPushButton.",
+"level" : "err"
+},
+{
  "type" : "replace line",
 "in" :  ".*setPalette*",
 "out" : "",
@@ -563,10 +578,18 @@
 },
 {
  "type" : "replace expr",
+"in" :  "(\"viewTrendEnabled\")",
+"out" : "\"viewTrendEnabled\"",
+"file" : "*",
+"comment" : "viewTrendEnabled property is unavailable. Remove with Qt designer",
+"level" : "err"
+},
+{
+ "type" : "replace expr",
 "in" :  "(\"hideEventEnabled\")",
 "out" : "\"\"",
 "file" : "*",
-"comment" : "hideEventEnabled property does not exist in cumbia",
+"comment" : "hideEventEnabled property does not exist in cumbia. Remove with Qt designer",
 "level" : "ok"
 },
 {
@@ -608,7 +631,7 @@
 "in_example1" : "<string>$1/CurrentControl(&amp;tComboControl)</string>",
 "out" : "",
 "file" : "*",
-"comment" : "in cumbia the target is single: removing multiple targets",
+"comment" : "in cumbia the targ:qet is single: removing multiple targets",
 "level" : "warn"
 },
 {

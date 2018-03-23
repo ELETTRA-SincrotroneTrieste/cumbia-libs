@@ -3,11 +3,12 @@
 #include <QTextStream>
 #include <QtDebug>
 
-CodeInjector::CodeInjector(const QString &filename, const QString &mainwidclass, const QString &mainwidvar) {
+CodeInjector::CodeInjector(const QString &filename, const QString &mainwidclass, const QString &mainwidvar, const QString &formclassnam) {
     m_filename = filename;
     m_err = false;
     m_mainwclass = mainwidclass;
     m_mainwvar = mainwidvar;
+    m_formclassnam = formclassnam;
 }
 
 
@@ -39,6 +40,7 @@ QString CodeInjector::inject(const QString &input, const QList<Section> &section
         int lineno = -1;
         // replace sections wildcards
         se.text.replace("$MAINCLASS$", m_mainwclass);
+        se.text.replace("$UIFORMCLASS$", m_formclassnam);
         if(se.where == Section::EndOfCppConstructor) {
             QRegExp endOfCppConstructorRe(QString("(%1::%1[a-zA-Z0-9\\s\\(\\)\\*\\:,]*\\{(?:\\{.*\\}|[^\\{])*\\})")
                                           .arg(m_mainwclass));

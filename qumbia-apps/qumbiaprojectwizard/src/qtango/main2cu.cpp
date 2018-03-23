@@ -28,6 +28,12 @@ void Main2Cu::setFileName(const QString &fname)
     m_filenam = fname;
 }
 
+/**
+ * @brief Main2Cu::findMainWidget finds classnam declaration in main.cpp
+ * @param classnam the main widget class name to find
+ * @return true if the main file was correctly opened AND the main widget
+ *         class variable names have been detected
+ */
 bool Main2Cu::findMainWidget(const QString &classnam)
 {
     QFile file(m_filenam);
@@ -43,11 +49,11 @@ bool Main2Cu::findMainWidget(const QString &classnam)
         QString maincpp = in.readAll();
         int pos = re1.indexIn(maincpp);
         if(pos > -1) {
-            m_mainw = re1.cap(1);
+            m_mainwidget_varname = re1.cap(1);
             m_w_inHeap = false;
         }
         else if((pos = re2.indexIn(maincpp)) > -1) {
-            m_mainw = re1.cap(1);
+            m_mainwidget_varname = re1.cap(1);
             m_w_inHeap = true;
         }
         qDebug() << __FUNCTION__ << "pos" << pos << " in " << maincpp;
@@ -56,7 +62,7 @@ bool Main2Cu::findMainWidget(const QString &classnam)
     else
         m_errMsg = file.errorString();
 
-    return !m_error && !m_mainw.isEmpty();
+    return !m_error && !m_mainwidget_varname.isEmpty();
 }
 
 /*
@@ -120,7 +126,7 @@ QString Main2Cu::errorMessage() const
 
 QString Main2Cu::mainWidgetVar() const
 {
-    return m_mainw;
+    return m_mainwidget_varname;
 }
 
 bool Main2Cu::mainWidgetInHeap() const

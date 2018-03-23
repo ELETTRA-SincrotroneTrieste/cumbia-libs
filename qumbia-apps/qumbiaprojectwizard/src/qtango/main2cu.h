@@ -35,7 +35,7 @@ private:
 
     QString m_errMsg;
     bool m_error, m_w_inHeap;
-    QString m_mainw;
+    QString m_mainwidget_varname;
 };
 
 #endif // MAIN2CU_H
