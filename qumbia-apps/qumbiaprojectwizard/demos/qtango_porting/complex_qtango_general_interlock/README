@@ -1,0 +1,29 @@
+===============================================================
+
+     QTango demo code for porting QTango apps to cumbia
+
+==============================================================
+
+
+This is a QTango panel source code that can be used to test
+qumbiaprojectwizard in order to migrate the project from QTango
+to cumbia.
+
+This is a "complex" QTango project, with custom classes.
+
+Follow the instructions in the cumbia tutorial:
+
+/usr/local/share/doc/qumbia-tango-controls/html/tutorial_from_qtango.html
+
+
+
+ferminterlock
+
+USAGE:
+
+ferminterlock f/interlock/plc_mod_ll f/interlock/plc_int_ll.01 f/interlock/plc_int_ll.02 srv-padres-srf:20000/srv-padres-srf/interlock/plc_int_ll.03  --sound-file-name /runtime/share/sounds/generalintlkpanel_beep.ogg
+
+Contacts:
+
+giacomo.strangolino@elettra....
+

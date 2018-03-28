@@ -1,0 +1,40 @@
+
+                          danfisik9100 project
+========================================================================
+
+Introduction
+------------
+
+Control panel for Tango device danfisik9100
+
+This is a QTango panel source code that can be used to test
+qumbiaprojectwizard in order to migrate the project from QTango
+to cumbia.
+
+This is a simple QTango project.
+
+Follow the instructions in the cumbia tutorial:
+
+/usr/local/share/doc/qumbia-tango-controls/html/tutorial_from_qtango.html
+
+
+Requirements
+------------
+Developed and tested with:
+  - tango-9.x
+  - omniorb-4.2.x
+  - qtango 6.x
+
+
+Tango devices used
+------------------
+    [srv-tango-srf:20000]
+    sfel01/power_supply/psq_sfel01.01
+
+
+Building
+--------
+    qmake && make
+    qmake && install
+
+
