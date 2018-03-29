@@ -1,0 +1,46 @@
+This is complex_qtango_demo README file.
+
+This is a demo QTango project that can be used to test the qtangoprojectwizard import
+procedure to convert an application from QTango to cumbia.
+See the tutorial page from the cumbia documentation:
+
+file:///usr/local/share/doc/qumbia-tango-controls/html/tutorial_from_qtango.html
+
+This application reads the "double_scalar" attribute from the TangoTest device
+and the State and Status commands.
+A push button can be used to switch the Tango state.
+A TApplyNumeric, a dial and a slider can be used to write the same "double_scalar" attribute on the device.
+
+
+DEPENDENCIES:
+
+Qt 	version >= 4.8
+Qwt 	version 6
+QTango  version 6
+
+Tango devices used
+------------------
+TANGO HOST:
+
+export TANGO_HOST=your-tango-host-with-tango-test:PORT
+
+./bin/complex_qtango_demo test/device/1
+
+
+DEVICES:
+
+
+
+Building
+--------
+
+qmake 
+make
+                                                                                                                                
+                                                                                                                                
+Giacomo  <giacomo.strangolino@elettra.eu>
+
+Thank you.
+
+Sincrotrone Trieste s.c.p.a - ELETTRA Laboratory - Controls Group
+
