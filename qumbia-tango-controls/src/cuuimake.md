@@ -1,4 +1,4 @@
-# cuuimake
+# cuuimake {#cuuimake}
 
 ### cumbia ui make. A tool to configure a Qt project with cumbia widgets
 

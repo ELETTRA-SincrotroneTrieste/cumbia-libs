@@ -1,4 +1,4 @@
-# Writing a simple activity 
+# Writing a simple activity {#tutorial_activity}
 
 In this tutorial, we will learn how to write an activity that executes some work in the background and 
 delivers the result to the main thread (the graphical user interface's thread).

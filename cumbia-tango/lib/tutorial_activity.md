@@ -1,4 +1,4 @@
-# Writing an activity to read Tango device, attribute and class properties
+# Writing an activity to read Tango device, attribute and class properties    {#tutorial_activity}
 
 In this tutorial, we will learn how to write an activity to read Tango
 attribute, device and class properties from the Tango database.

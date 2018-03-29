@@ -63,6 +63,12 @@ QWT_INCLUDES_USR = $${QWT_HOME_USR}/include/qwt
 
 CONFIG+=link_pkgconfig
 PKGCONFIG += tango cumbia cumbia-tango cumbia-qtcontrols$${QTVER_SUFFIX} qumbia-tango-controls$${QTVER_SUFFIX}
+PKGCONFIG += x11
+
+CONFIG += c++11
+TEMPLATE = app
+QT +=  core gui widgets
+
 
 QWT_PKGCONFIG =
 
@@ -110,8 +116,6 @@ freebsd-g++ {
     unix:LIBS -= -ldl
     QMAKE_CXXFLAGS -= -std=c++0x
 }
-
-CONFIG += c++11
 
 MOC_DIR = moc
 OBJECTS_DIR = obj

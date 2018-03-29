@@ -14,8 +14,32 @@ class CuThreadsEventBridgeFactory_I;
 /** \mainpage
  * \a cumbia-tango integrates cumbia with the Tango control system framework, providing specialised Activities to read,
  * write attributes and impart commands.
+ **
+ *  \section related_readings Related readings
  *
- * \subsubsection Implementation
+ *
+ * |Tutorials                                     | Module                                        |
+ * |-------------------------------------------------------------------|:--------------------------:|
+ * |  <a href="../../cumbia/html/tutorial_cuactivity.html">Writing a *cumbia* activity</a> | <a href="../../cumbia/html/index.html">cumbia</a> |
+ * |  <a href="../../cumbia-tango/html/tutorial_activity.html">Writing an activity</a> | <a href="../../cumbia-tango/html/index.html">this module</a> |
+ * |  <a href="../../cumbia-tango/html/cudata_for_tango.html">CuData for Tango</a> | <a href="../../cumbia-tango/html/index.html">this module</a> |
+ * |  <a href="../../qumbia-tango-controls/html/tutorial_cumbiatango_widget.html">Writing a Qt widget that integrates with cumbia</a> | <a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
+ * |  <a href="../../qumbia-tango-controls/html/cuuimake.html">Using <em>cuuimake</em> to process Qt designer UI files</a> | <a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
+ * |  <a href="../../qumbia-tango-controls/html/tutorial_qumbiatango.html">Writing a <em>Qt application</em> with cumbia and Tango</em></a>. |<a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
+ * |  <a href="../../qumbia-tango-controls/html/tutorial_from_qtango.html">Porting a <em>QTango application</em> to <em>cumbia-tango</em></a>. |<a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
+ * |  <a href="../../cumbia-qtcontrols/html/understanding_cumbia_qtcontrols_constructors.html">Understanding <em>cumbia-qtcontrols constructors, sources and targets</em></a> |<a href="../../cumbia-qtcontrols/html/index.html">cumbia-qtcontrols</a>. |
+ *
+ * <br/>
+ *
+ * |Other *cumbia* modules  |
+ * |-------------------------------------------------------------------|
+ * | <a href="../../cumbia/html/index.html">cumbia module</a>. |
+ * | <a href="../../cumbia-qtcontrols/html/index.html">cumbia-qtcontrols module</a>. |
+ * | <a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls module</a>.  |
+ * | <a href="../../cumbia-epics/html/index.html">qumbia-epics module</a>.   |
+ *
+ *
+ * \section implementation Implementation
  * The \a CumbiaTango class is an extension of the \a Cumbia base one. Its main task is managing the so called  \a actions.
  * An \a action represents a task associated to either a Tango device attribute or a command (called source).
  * Read, write, configure are the main sort of jobs an action can accomplish.
@@ -87,11 +111,11 @@ class CuThreadsEventBridgeFactory_I;
  *
  *
  * \par Tutorials
- * \li \ref md_lib_tutorial_activity
- * \li \ref md_lib_cudata_for_tango
- * \li <a href="../qumbia-tango-controls/html/md_src_tutorial_qumbiatango_app.html">Setting up a graphical application with cumbia and tango</a>.
- * \li <a href="../qumbia-tango-controls/html/md_src_cuuimake.html">Using <em>cuuimake</em></a>.
- * \li <a href="../qumbia-tango-controls/html/md_src_tutorial_qumbiatango_widget.html">Writing a <em>Qt widget</em> to <em>read from Tango</em></a>.
+ * \li <a href="tutorial_activity.html">Writing an activity</a>
+ * \li <a href="cudata_for_tango.html">CuData for Tango</a>
+ * \li <a href="../qumbia-tango-controls/html/tutorial_cumbiatango_widget.html">Writing a Qt widget that integrates with cumbia</a>
+ * \li <a href="../qumbia-tango-controls/html/cuuimake.html">Using <em>cuuimake</em></a>.
+ * \li <a href="../qumbia-tango-controls/html/tutorial_qumbiatango.html">Writing a <em>Qt application</em> with cumbia and Tango</em></a>.
  *
  * \par See also
  * \li <a href="../cumbia-qtcontrols/html/index.html">cumbia-qtcontrols module</a>.

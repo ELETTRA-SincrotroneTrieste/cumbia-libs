@@ -1,4 +1,5 @@
-# Writing a Qt widget that integrates with cumbia
+Writing a Qt widget that integrates with cumbia {#tutorial_cumbiatango_widget}
+==============================================================================
 
 In this tutorial we will learn how to adapt a Qt widget to display data from an engine like Tango or Epics.
 In other words, we will write a *cumbia-qtcontrols* widget.

@@ -103,7 +103,7 @@ bool CuUiMake::make()
             int remcnt = p.remove_UI_H(defs.srcDirsInfo());
             print(Clean, false, "removed %d ui_.*.h files\n", remcnt);
         }
-
+        return success;
     }
 
     if(success && m_options->getopt("qmake").toBool())
@@ -133,9 +133,6 @@ bool CuUiMake::make()
             print(Analysis, true, "\n");
             print(Analysis, true, "in the .cpp files.\n\n");
             print(Analysis, true, "The following information may be useful:\n");
-            QList<SearchDirInfo> dilist = searchDirInfoSet.getDirInfoList(SearchDirInfoSet::Source);
-            foreach(SearchDirInfo di, dilist)
-                printf("%s\n", qstoc(di.toString()));
 
             fflush(stderr);
             fflush(stdout);

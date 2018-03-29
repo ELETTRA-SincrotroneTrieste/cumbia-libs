@@ -54,7 +54,6 @@ bool Processor::expand(const Substitutions& subs, const QMap<QString,
         line = in.readLine();
         foreach(QString objectnam, objectExpMap.keys())
         {
-            qDebug() << __FUNCTION__ << "PRICESSING" << objectnam;
             bool isSetupUi = false;
             // match and capture "new QuLabel(parentname);" \s*=\s*new\s+QuLabel\(([A-Za-z_0-9]+)\)
             QRegExp re(QString("\\s*=\\s*new\\s+%1\\(([A-Za-z_0-9]+)\\);").arg(objectnam));
@@ -72,7 +71,6 @@ bool Processor::expand(const Substitutions& subs, const QMap<QString,
 
             if( pos > -1 && !line.contains("//") )
             {
-                qDebug() << __FUNCTION__ << "PRECEISSING" << line;
                 list = re.capturedTexts();
                 if(list.size() == 2) // full match [0] and capture [1]
                 {
@@ -111,7 +109,6 @@ bool Processor::expand(const Substitutions& subs, const QMap<QString,
                         args = "(" + expanded_params + ")";
                         line = line.replace(match_params, args);
                         expanded_ui_h += line + "\n";
-                        qDebug() << __FUNCTION__ << "BREAKING CUZ PARLIST SIZE > 0";
                         break; // go to next line
                     }
                 }
@@ -144,7 +141,6 @@ bool Processor::expand(const Substitutions& subs, const QMap<QString,
 
 QMap<QString, bool> Processor::findUI_H(const SearchDirInfoSet &dirInfoSet)
 {
-    QDir wd;
     QMap<QString, QDateTime > ui_h_fstat;
     QMap<QString, bool> fmap;
     QDateTime newest_h_cpp_ui_creat, oldest_ui_h_creat;
@@ -157,6 +153,7 @@ QMap<QString, bool> Processor::findUI_H(const SearchDirInfoSet &dirInfoSet)
     QList<SearchDirInfo> di_list = di_ui_list + di_h_cpp_list;
     foreach (SearchDirInfo di, di_list )
     {
+        QDir wd;
         QString d = di.name();
         if(d != ".")
             wd.cd(d);
@@ -166,7 +163,6 @@ QMap<QString, bool> Processor::findUI_H(const SearchDirInfoSet &dirInfoSet)
             if(!newest_h_cpp_ui_creat.isValid() || fi.created() > newest_h_cpp_ui_creat)
             {
                 newest_h_cpp_ui_creat = fi.created();
-          //      qDebug() << __FUNCTION__ << "newest file among h cpp ui is " << fi.fileName() << " date time " << newest_h_cpp_ui_creat;
             }
             if(fi.fileName().endsWith(".ui"))
                 ui_files << fi.fileName();

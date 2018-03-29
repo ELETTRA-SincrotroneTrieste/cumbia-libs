@@ -1,4 +1,4 @@
-# Setting up a graphical application with cumbia and tango.
+# Setting up a graphical application with cumbia and tango. {#tutorial_qumbiatango}
 
 This tutorial explains how to set up a cumbia graphical user interface with cumbia-qtcontrols widgets connected to the 
 tango control system.

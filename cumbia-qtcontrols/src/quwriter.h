@@ -70,11 +70,11 @@ public:
       */
     void postExecute();
 
-    QString targets() const;
+    QString target() const;
 
 public slots:
 
-    void setTargets(const QString& targets);
+    void setTarget(const QString& target);
 
     /** \brief the execute method tailored for integer values
       *

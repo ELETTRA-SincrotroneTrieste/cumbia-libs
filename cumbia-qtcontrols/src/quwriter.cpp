@@ -119,12 +119,12 @@ void QuWriter::postExecute()
 {
     if(quizer_ptr->autoDestroy)
     {
-        printf("auto destroying QuWriter for \"%s\"", qstoc(targets()));
+        printf("auto destroying QuWriter for \"%s\"", qstoc(target()));
         QTimer::singleShot(2000, this, SLOT(deleteLater()));
     }
 }
 
-void QuWriter::setTargets(const QString &targets)
+void QuWriter::setTarget(const QString &targets)
 {
     // only one writer at a time: use replace_writer from CuContext
     CuControlsWriterA* w = d->context->replace_writer(targets.toStdString(), this);
@@ -132,7 +132,7 @@ void QuWriter::setTargets(const QString &targets)
         w->setTarget(targets); // setTargets must be called on a valid writer
 }
 
-QString QuWriter::targets() const
+QString QuWriter::target() const
 {
     CuControlsWriterA *w = d->context->getWriter();
     if(w != NULL)
@@ -232,7 +232,7 @@ void QuWriter::execute(bool bo)
 void QuWriter::execute()
 {
     CuControlsUtils cu;
-    CuVariant args = cu.getArgs(targets(), this);
+    CuVariant args = cu.getArgs(target(), this);
     CuControlsWriterA *w = d->context->getWriter();
     if(!w || !d->configured)
         quizer_ptr->setExecuteOnConnection(true, args);
@@ -319,7 +319,7 @@ void QuWriter::onUpdate(const CuData &data)
         CuControlsWriterA *w = d->context->getWriter();
         if(quizer_ptr->executeOnConnection() && w)
         {
-            printf("\e[1;32mexecuting scheduled execution for \"%s\"\e[0m\n", qstoc(targets()));
+            printf("\e[1;32mexecuting scheduled execution for \"%s\"\e[0m\n", qstoc(target()));
             CuVariant arg = quizer_ptr->executeArgument();
             if(!arg.isNull())
                 w->setArgs(arg);

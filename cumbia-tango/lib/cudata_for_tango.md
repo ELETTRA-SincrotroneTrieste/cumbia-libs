@@ -1,4 +1,4 @@
-# CuData bundle description for data exchange with the Tango world
+# CuData bundle description for data exchange with the Tango world {#cudata_for_tango}
 
 
 ### CuData for Tango attribute configuration and command info
@@ -156,7 +156,7 @@ state               |long int                       |   -           |A Tango::DE
 ### CuData contents for attribute properties.
 
 The contents of CuData when used to fetch properties from the database are more dynamic and depend on the type of property fetched: attribute, class or device.
-Please refer to the  \ref md_lib_tutorial_activity for more information and for an example of application reading from the tango database.
+Please refer to the  \ref tutorial_activity for more information and for an example of application reading from the tango database.
 
 To fetch  properties from the Tango database, a list of *input CuData* must be provided.
 

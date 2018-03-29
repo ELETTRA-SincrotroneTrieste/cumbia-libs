@@ -225,6 +225,11 @@ public:
 
     QList<SearchDirInfo> getDirInfoList(Type t) const
     {
+        if(t == Ui) {
+            QList<SearchDirInfo> dis = m_map.values(t);
+            foreach(SearchDirInfo di, dis)
+                 qDebug() << __FUNCTION__ << di.name();
+        }
         return m_map.values(t);
     }
 
