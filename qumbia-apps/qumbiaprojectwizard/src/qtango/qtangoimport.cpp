@@ -195,7 +195,7 @@ bool QTangoImport::findFilesRelPath()
         int pos;
         QStringList files_sections = QStringList() << "SOURCES" << "HEADERS" << "FORMS";
         foreach(QString section, files_sections) {
-            QString filelist = pe.get(section).remove(QRegExp("[A-Z\\s+=]*"));
+            QString filelist = pe.get(section).remove(QRegExp(section + "\\s*\\+="));
             qDebug() << __FUNCTION__ << "searching sources within " << filelist ;
             // capture sources now
             pos = 0;

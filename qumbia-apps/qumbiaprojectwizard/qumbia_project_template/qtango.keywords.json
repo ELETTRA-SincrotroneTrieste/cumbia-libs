@@ -31,21 +31,28 @@
 "type" : "replace include",
 "in" :  "com_proxy_reader.h",
 "out" : "",
-"comment" : "QTangoComProxyReader not supported",
+"comment" : "QTangoComProxyReader not supported. Custom widgets must be ported manually",
 "level" : "err"
 },
 {
  "type" : "replace include",
 "in" :  "com_proxy_writer.h",
 "out" : "",
-"comment" : "QTangoComProxyWriter not supported",
+"comment" : "QTangoComProxyWriter not supported. Custom widgets must be ported manually",
 "level" : "err"
 },
 {
  "type" : "replace include",
 "in" :  "communication_handle.h",
 "out" : "",
-"comment" : "QTangoCommunicationHandle not supported",
+"comment" : "QTangoCommunicationHandle not supported. Custom widgets must be ported manually",
+"level" : "err"
+},
+{
+ "type" : "replace include",
+"in" :  "qtango_wcommon.h",
+"out" : "",
+"comment" : "QTangoWidgetCommon not supported. Custom widgets must be ported manually",
 "level" : "err"
 },
 {
@@ -205,6 +212,7 @@
 {
  "type" : "replace include",
 "in" :  "TLog",
+"out" : "",
 "comment" : "TLog is unsupported. Consider using QuLog and QuLogImpl",
 "level" : "warn"
 },

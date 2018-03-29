@@ -8,8 +8,6 @@
 #include <cutcontrolsreader.h>
 #include <cutcontrolswriter.h>
 #include <cumbiatango.h>
-
-class CumbiaTango;
 // cumbia-tango
 
 namespace Ui {

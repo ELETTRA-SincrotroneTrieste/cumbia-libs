@@ -43,10 +43,38 @@ bool ProjectFilesHelper::findMainWidgetProps(const QDir& wdir)
 
         QString classnam;
 
-        // if there is only one ui file we can extract the class name from the form
-        if(uifil.size() == 1)
+        Main2Cu m2cu; // "main to cumbia migration helper class
+        m2cu.setFileName(maincpp_nam);
+        // for each h file, find the QWidget derived class name defined in the header file
+        // for each class name, see which one is instantiated in the main.cpp
+        for(int i = 0; i < hfiles.size() && !mainw_found; i++) {
+            QFileInfo fi = hfiles.at(i);
+            classnam = m_findWidgetClassName(fi.absoluteFilePath());
+            if(!classnam.isEmpty()) {
+                qDebug() << __FUNCTION__ << "detected widget " << classnam << "in " << fi.fileName();
+                mainw_found = m2cu.findMainWidget(classnam);
+            }
+        }
+
+        if(!m_err && mainw_found) {
+            m_appPropMap = m2cu.parseProps();
+            m_mainwidgetvarnam = m2cu.mainWidgetVar();
+            m_mainwclassnam = classnam;
+        }
+        if(!m_err && !mainw_found) {
+            m_err = true;
+            m_errMsg = "QTangoImport.m_getMainWidgetProps: failed to find a main widget instantiation in main.cpp";
+        }
+
+        // if there is only one ui file we can extract the class name from the form,
+        // if there are multiple ui files extract the top level widget object name
+        // from the "class" element text and try to see if it matches the name of the
+        // main widget (m_mainwclassnam). If it matches, we can assume we've guessed
+        // the correct form class name
+        //
+        for(int i = 0; i < uifil.size(); i++)
         {
-            QFileInfo fi = uifil.at(0);
+            QFileInfo fi = uifil.at(i);
             m_proFiles["uifile"] = fi.fileName();
             QDomDocument dom(fi.absoluteFilePath());
             qDebug() << __FUNCTION__ << "opening " << fi.absoluteFilePath();
@@ -81,29 +109,8 @@ bool ProjectFilesHelper::findMainWidgetProps(const QDir& wdir)
                 m_err = true;
                 m_errMsg = "QTangoImport.m_getMainWidgetProps: failed to open file " + fi.absoluteFilePath() + " in read mode";
             }
-        }
-
-        Main2Cu m2cu; // "main to cumbia migration helper class
-        m2cu.setFileName(maincpp_nam);
-        // for each h file, find the QWidget derived class name defined in the header file
-        // for each class name, see which one is instantiated in the main.cpp
-        for(int i = 0; i < hfiles.size() && !mainw_found; i++) {
-            QFileInfo fi = hfiles.at(i);
-            classnam = m_findWidgetClassName(fi.absoluteFilePath());
-            if(!classnam.isEmpty()) {
-                qDebug() << __FUNCTION__ << "detected widget " << classnam << "in " << fi.fileName();
-                mainw_found = m2cu.findMainWidget(classnam);
-            }
-        }
-
-        if(!m_err && mainw_found) {
-            m_appPropMap = m2cu.parseProps();
-            m_mainwidgetvarnam = m2cu.mainWidgetVar();
-            m_mainwclassnam = classnam;
-        }
-        if(!m_err && !mainw_found) {
-            m_err = true;
-            m_errMsg = "QTangoImport.m_getMainWidgetProps: failed to find a main widget instantiation in main.cpp";
+            if(m_uiclassnam == m_mainwclassnam && uifil.size() > 1)
+                break;
         }
     } // closes if(maincpp exists)
     return !m_err && mainw_found;

@@ -42,10 +42,12 @@ QString FindReplace::process(const QString& input)
         int pos = -1;
         QString newline, replace;
         lineno++;
-        // skip commented lines \s*<!\-\-.*\-\->|\n\s*/\*.*\*/\s*|\s*//.*
-        QRegExp commentRe("\\s*<!\\-\\-.*\\-\\->|\\n\\s*/\\*.*\\*/\\s*|\\s*//.*");
+        // skip commented lines ^\s+<!\-\-.*\-\->|^<!\-\-.*\-\->|^\s+/\*.*\*/\s*|^/\*.*\*/\s*|^\s+//.*|^//.*
+        // "//" "/*" "<!--" first chars in line or
+        // ^[spaces only] "//" "/*" "<!--"
+        QRegExp full_line_commentRe("^\\s+<!\\-\\-.*\\-\\->|^<!\\-\\-.*\\-\\->|^\\s+/\\*.*\\*/\\s*|^/\\*.*\\*/\\s*|^\\s+//.*|^//.*");
 
-        if(commentRe.indexIn(l) >= 0)
+        if(full_line_commentRe.indexIn(l) >= 0)
             continue;
 
         foreach(Subst su, subs) {
@@ -108,6 +110,7 @@ QString FindReplace::process(const QString& input)
             else if(su.m_type == Subst::ReplaceLine || su.m_type == Subst::ReplaceExpr) {
                 if(filename() == su.m_file || su.m_file == "*") {
                     QRegExp re(su.m_in);
+                    re.setMinimal(true);
                     Quality::Level q = su.quality;
                     QString message = su.m_comment;
                     pos = re.indexIn(l);
@@ -117,6 +120,13 @@ QString FindReplace::process(const QString& input)
                         if(q != Subst::Critical && su.m_type == Subst::ReplaceLine)
                             newline = replace;
                         else if(q != Subst::Critical && su.m_type == Subst::ReplaceExpr) {
+                            if(filename().endsWith("ui"))
+                                printf("*file* %s \e[1;33min line \"%s\":\nreplacing expression\n<--\"%s\"\nwith\e[1;35m\n-->%s\e[0m\nregexp %s",
+                                       filename().toStdString().c_str(),
+                                       l.toStdString().c_str(), re.cap(1).toStdString().c_str(),
+                                       replace.toStdString().c_str(),
+                                      re.pattern().toStdString().c_str());
+
                             newline = oldline.replace(re.cap(1), replace);
                         }
                         if(q != Subst::Critical)

@@ -7,8 +7,6 @@
 #include <cuepcontrolswriter.h>
 #include <cumbiaepics.h>
 
-class CumbiaTango;
-
 namespace Ui {
 class $UIFORMCLASS$;
 }

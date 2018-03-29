@@ -28,10 +28,13 @@ HEADERS += src/$HFILE$
 # cuuimake runs uic
 # FORMS    = src/$FORMFILE$
 
-# where to find cuuimake ui_*.h files
-# since FORMS is not used
+# - ui: where to find cuuimake ui_*.h files
+#   since FORMS is not used
+# - src: where to find headers included by
+#   ui_*.h (e.g. for custom widget promoted
+#   from the Qt designer)
 #
-INCLUDEPATH += ui
+INCLUDEPATH += ui src
 
 TARGET   = bin/$PROJECT_NAME$
 

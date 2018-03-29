@@ -1,7 +1,7 @@
 { "array" : [
 {
 "type" : "expand reader instantiation",
-"expand" : [ "QuLabel", "QuLed",  "QuTrendPlot", "QuSpectrumPlot", "QuTable" ],
+"expand" : [ "QuLabel", "QuLed",  "QuTrendPlot", "QuSpectrumPlot", "QuTable", "QuWatcher" ],
 "in" :  "(=\\s*new\\s*$${expand}\\(this\\);)",
 "out" : "= new $${expand}(this, cu_t, cu_tango_r_fac);",
 "file" : "*",
@@ -10,7 +10,7 @@
 },
 {
 "type" : "expand writer instantiation",
-"expand" : [ "QuButton", "QuApplyNumeric" ],
+"expand" : [ "QuButton", "QuApplyNumeric", "QuWriter" ],
 "in" :  "(=\\s*new\\s*$${expand}\\(this\\);)",
 "out" : "= new $${expand}(this, cu_t, cu_tango_w_fac);",
 "file" : "*",

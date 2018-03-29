@@ -37,7 +37,6 @@ SOURCES += main.cpp\
         qumbiaprojectwizard.cpp \
     src/qtango/qtangoimport.cpp \
     src/qtango/main2cu.cpp \
-    src/qtango/converter.cpp \
     src/qtango/findreplace.cpp \
     src/qtango/definitions.cpp \
     src/qtango/pro_files_helper.cpp \
@@ -57,7 +56,6 @@ SOURCES += main.cpp\
 HEADERS  += qumbiaprojectwizard.h \
     src/qtango/qtangoimport.h \
     src/qtango/main2cu.h \
-    src/qtango/converter.h \
     src/qtango/findreplace.h \
     src/qtango/conversionhealth.h \
     src/qtango/fileprocessor_a.h \

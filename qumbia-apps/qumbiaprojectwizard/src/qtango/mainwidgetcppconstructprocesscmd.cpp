@@ -73,6 +73,32 @@ QString MainWidgetCppConstructProcessCmd::process(const QString &input)
             }
         }
 
+        // 3. remove ui instantiation if in this form:
+        //
+        // ComplexQTangoDemo::ComplexQTangoDemo(CumbiaTango *cut, QWidget *parent) :
+        // QWidget(parent),
+        // ui(new Ui::ComplexQTangoDemo) <----
+        // unescaped pattern: (,\n*\s*ui\(new Ui::ClassName\))
+
+        // capture Form class name from the ui = new Ui::ClassName; line
+        // unescaped: ui\s*=\s*new\s+Ui::([A-Za-z0-9_]+)
+        QString uiform_class;
+        QRegExp formClassRe("ui\\s*=\\s*new\\s+Ui::([A-Za-z0-9_]+)");
+        pos = formClassRe.indexIn(out);
+        if(pos >= -1) {
+            uiform_class = formClassRe.cap(1);
+            QRegExp badNewUi(QString("(,\\n*\\s*ui\\(new Ui::%1\\))").arg(uiform_class));
+            pos = badNewUi.indexIn(out);
+            if(pos > -1) {
+                QString capture = badNewUi.cap(1);
+                QString commented =  "\t/* " + capture.remove("\n") + "\t  // ## qumbiaprojectwizard: instantiated in constructor body */";
+                out.replace(badNewUi.cap(1), commented);
+                lineno = input.section(badNewUi, 0, 0).count("\n") + 1;
+                m_log.append(OpQuality("main widget ui var check", capture.remove("\n"), commented.remove("\n"), filename(),
+                                       "commented ui form instantiation in constructor parameter initialization",
+                                       Quality::Ok, lineno));
+            }
+        }
     }
 
 
