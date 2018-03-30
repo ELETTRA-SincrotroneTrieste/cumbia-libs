@@ -538,7 +538,7 @@
 },
 {
  "type" : "replace line",
-"in" :  ".*setPalette*",
+"in" :  "epalette|EPalette",
 "out" : "",
 "file" : "main.cpp",
 "comment" : "EPalette is not currently available in cumbia",

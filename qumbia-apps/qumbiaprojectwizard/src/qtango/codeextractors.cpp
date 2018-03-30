@@ -48,6 +48,7 @@ QList<Section> MainCppCodeExtractor::extract(Type t)
 
     QList<Section> cumbia_t_sections = ExtractorHelper().extractCumbiaTangoSections(s);
     m_err = cumbia_t_sections.size() != 1;
+    qDebug() << __FUNCTION__ << "MainCppCodeExtractor m_err" << m_err << "going to extract exec app loop sectins size" << cumbia_t_sections.size();
     if(!m_err)
     {
         cumbia_t_sections[0].where = Section::Includes;
@@ -62,8 +63,12 @@ QList<Section> MainCppCodeExtractor::extract(Type t)
         // }
         QRegExp qapp_exec_re("(// exec application loop\\n*\\s*.*)\\}");
         int pos = qapp_exec_re.indexIn(s);
-        if(pos > -1)
+
+        qDebug() << __FUNCTION__ << "MainCppCodeExtractor pos" << pos << "captureth" <<  qapp_exec_re.cap(1);
+        if(pos > -1) {
             sections.push_back(Section(ExtractorHelper().newline_wrap(qapp_exec_re.cap(1)), Section::EndOfMain));
+
+        }
     }
     else
         m_msg = "MainCppCodeExtractor.extract: missing cumbia-tango section in main.cpp template file";

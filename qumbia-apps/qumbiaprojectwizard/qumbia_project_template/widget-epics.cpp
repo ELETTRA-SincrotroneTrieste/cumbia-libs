@@ -2,12 +2,9 @@
 #include "ui_$HFILE$"
 
 #include <cumbiapool.h>
-#include <cuthreadfactoryimpl.h>
-#include <qthreadseventbridgefactory.h>
 #include <cuserviceprovider.h>
 #include <cucontextactionbridge.h>
 #include <cumacros.h>
-#include <cumbiaepics.h>
 
 $MAINCLASS$::$MAINCLASS$(CumbiaEpics *cue, QWidget *parent) :
     QWidget(parent),

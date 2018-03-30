@@ -2,13 +2,6 @@
 #include "ui_$HFILE$"
 
 // cumbia-tango
-#include <cumbiapool.h>
-#include <cumbiatango.h>
-#include <cutcontrolsreader.h>
-#include <cutcontrolswriter.h>
-#include <cutango-world.h>
-#include <cuthreadfactoryimpl.h>
-#include <qthreadseventbridgefactory.h>
 #include <cuserviceprovider.h>
 #include <cucontextactionbridge.h>
 #include <cumacros.h>

@@ -19,6 +19,7 @@ private slots:
     void execDemoDialog();
 
 private:
+    void m_setup(); // install QTWatcher and QTWriter, set source/targets on custom reader and writer
     Ui::ComplexQTangoDemo *ui;
 };
 

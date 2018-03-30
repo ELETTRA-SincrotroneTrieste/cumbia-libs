@@ -54,8 +54,9 @@ QString CodeInjector::inject(const QString &input, const QList<Section> &section
                 lineno = input.section(orig, 0, 0).count("\n") + 1;
             }
         }
+        // (int\s+main[a-zA-Z0-9\s\(\)\*,\[\]]*\{(?:\{.*\}|[^\{])*\})
         else if(se.where == Section::EndOfMain) {
-            QRegExp endOfMainRe("(int\\s+main[a-zA-Z0-9\\s\\(\\)\\*,]*\\{(?:\\{.*\\}|[^\\{])*\\})");
+            QRegExp endOfMainRe("(int\\s+main[a-zA-Z0-9\\s\\(\\)\\*,\\[\\]]*\\{(?:\\{.*\\}|[^\\{])*\\})");
             pos = endOfMainRe.indexIn(output);
             if(pos > -1) {
                 orig = endOfMainRe.cap(1);

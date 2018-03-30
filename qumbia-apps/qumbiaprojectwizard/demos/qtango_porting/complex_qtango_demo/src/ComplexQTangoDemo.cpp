@@ -10,7 +10,22 @@ ComplexQTangoDemo::ComplexQTangoDemo(QWidget *parent) :
     ui(new Ui::ComplexQTangoDemo)
 {
     ui->setupUi(this);
+    m_setup();
+}
 
+ComplexQTangoDemo::~ComplexQTangoDemo()
+{
+    delete ui;
+}
+
+void ComplexQTangoDemo::execDemoDialog()
+{
+    DemoDialog dd(this);
+    dd.exec();
+}
+
+void ComplexQTangoDemo::m_setup()
+{
     QTWriter *sliderWriter = new QTWriter(this);
     /* NOTE: sliderMoved not valueChanged! */
     sliderWriter->attach(ui->horizontalSlider, SIGNAL(sliderMoved(int)), SLOT(setValue(int)));
@@ -31,15 +46,4 @@ ComplexQTangoDemo::ComplexQTangoDemo(QWidget *parent) :
     ui->writeDial->setTargets("$1/double_scalar");
 
     connect(ui->pbMore, SIGNAL(clicked()), this, SLOT(execDemoDialog()));
-}
-
-ComplexQTangoDemo::~ComplexQTangoDemo()
-{
-    delete ui;
-}
-
-void ComplexQTangoDemo::execDemoDialog()
-{
-    DemoDialog dd(this);
-    dd.exec();
 }
