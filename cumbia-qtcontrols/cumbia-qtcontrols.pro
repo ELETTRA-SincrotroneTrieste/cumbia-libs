@@ -77,7 +77,10 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/quwriter.cpp \
     src/quvaluefilter.cpp \
     src/widgets-base/quledbase.cpp \
-    src/qucirculargauge.cpp
+    src/qucirculargauge.cpp \
+    src/quspinbox.cpp \
+    src/qudoublespinbox.cpp \
+    src/qulineedit.cpp
 
 HEADERS += cumbiaqtcontrols.h\
         cumbia-qtcontrols_global.h \
@@ -141,7 +144,10 @@ HEADERS += cumbiaqtcontrols.h\
     src/cucontexti.h \
     src/quled.h \
     src/widgets-base/quledbase.h \
-    src/qucirculargauge.h
+    src/qucirculargauge.h \
+    src/quspinbox.h \
+    src/qudoublespinbox.h \
+    src/qulineedit.h
 
 
 RESOURCES += \

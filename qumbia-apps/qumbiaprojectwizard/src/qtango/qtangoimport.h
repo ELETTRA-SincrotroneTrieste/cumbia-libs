@@ -79,6 +79,8 @@ private:
     QMap<QString, QString> m_contents;
     QMap<QString, QString> m_outFileRelPaths;
 
+
+
    // QList<OpQuality> m_log;
 };
 

@@ -9,6 +9,7 @@
 #include <QDomElement>
 #include <QDomNode>
 #include <QtDebug>
+#include <QMessageBox>
 
 #include "findreplace.h"
 #include "definitions.h"
@@ -220,6 +221,7 @@ bool QTangoImport::findFilesRelPath()
  */
 bool QTangoImport::outputFile(const QString &name, const QString &path)
 {
+    int ret = QMessageBox::Yes;
     QString relpath = m_outFileRelPaths[name];
     m_err = !m_outFileRelPaths.contains(name);
     if(m_err) {
@@ -237,15 +239,20 @@ bool QTangoImport::outputFile(const QString &name, const QString &path)
                 m_err = !wdir.mkpath(relpath);
             if(!m_err) {
                 QFile f(path.endsWith("/") ? path : path + "/" + (!relpath.isEmpty() ? relpath + "/" : "") +  name);
-                m_err = !f.open(QIODevice::WriteOnly|QIODevice::Text);
-                if(!m_err) {
-                    qDebug() << __FUNCTION__ << "WRITING " << f.fileName();
-                    QTextStream out(&f);
-                    out << contents;
-                    f.close();
+                if(f.exists())
+                    ret = QMessageBox::information(0, "File already exists", "File \"" + f.fileName() + "\" already exists\n"
+                                                                                                        "Do you want to replace it?", QMessageBox::Yes, QMessageBox::No);
+                if(ret == QMessageBox::Yes) {
+                    m_err = !f.open(QIODevice::WriteOnly|QIODevice::Text);
+                    if(!m_err) {
+                        qDebug() << __FUNCTION__ << "WRITING " << f.fileName();
+                        QTextStream out(&f);
+                        out << contents;
+                        f.close();
+                    }
+                    else
+                        m_errMsg = "QTangoImport.outputFile: error writing " + name + ": " + f.errorString();
                 }
-                else
-                    m_errMsg = "QTangoImport.outputFile: error writing " + name + ": " + f.errorString();
             }
             else
                 m_errMsg = "QTangoImport.outputFile: error creating directory " + relpath + " under " + path;

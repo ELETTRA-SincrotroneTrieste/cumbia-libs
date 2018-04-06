@@ -21,12 +21,14 @@ Options::Options(const QStringList& args)
     m_helpMap.insert("-jN", "execute make -jN after analysing and expanding ui/ui_*.h files (--make is implied)");
     m_helpMap.insert("--make", "execute make after analysing and expanding ui/ui_*.h files");
     m_helpMap.insert("--configure", "run the configuration wizard. All other options will be ignored");
-    m_helpMap.insert("--show-config", "shows the configuration according to the application settings and the command line parameters specified.\n"
+    m_helpMap.insert("--show-config", "shows the configuration according to the application settings and the command line parameters specified. "
                                       "No Analysis nor Expansion is performed.");
+    m_helpMap.insert("--clean", "execute make clean and remove ui/ui_*.h files and exit.");
+    m_helpMap.insert("--pre-clean", "like \"--clean\" but do not exit.");
     m_helpMap.insert("--debug", "additional information is printed while operations are performed");
 
     // options with --option=something
-    m_helpMap.insert("--add-params=par1,par2,...", "skip analysis and just add the specified parameters to the cumbia widgets at construction time");
+    // m_helpMap.insert("--add-params=par1,par2,...", "skip analysis and just add the specified parameters to the cumbia widgets at construction time");
 
 
     QStringList params = args;
@@ -102,7 +104,7 @@ QVariant Options::getopt(const QString &name)
 
 void Options::printHelp(const CuUiMake& cm) const
 {
-    cm.print(CuUiMake::Help, false, "%s command line options:\n", qstoc(qApp->applicationName()));
+    cm.print(CuUiMake::Help, false, "\n%s command line options:\n\n", qstoc(qApp->applicationName()));
     QStringList lines;
     QString help;
     foreach(QString k, m_helpMap.keys())
@@ -112,6 +114,14 @@ void Options::printHelp(const CuUiMake& cm) const
         foreach(QString l, lines)
             cm.print(CuUiMake::Help, false, "\e[1;33m%s\e[0m:\e[1;37;3m\t%s\e[0m\n", qstoc(k), qstoc(l));
     }
+    cm.print(CuUiMake::Help, false, "\n\e[1;37;3m");
+    cm.print(CuUiMake::Help, false, "\e[1;33m***\e[0m\tif a file with a name matching \"cuuimake[.*].conf\" is found in the\n");
+    cm.print(CuUiMake::Help, false, "\e[1;33m***\e[0m\tsame directory as cuuimake is run, then it is used to expand cumbia objects\n");
+    cm.print(CuUiMake::Help, false, "\e[1;33m***\e[0m\tthat have not been automatically detected.\n");
+    cm.print(CuUiMake::Help, false, "\e[1;33m***\e[0m\tExample of line: \"TDialWrite, cumbiatango, CumbiaTango *, CuTWriterFactory\"\n");
+    cm.print(CuUiMake::Help, false, "\e[1;33m***\e[0m\t                 \"ClassName, factory [cumbiatango,cumbiaepics,cumbiapool], first_param, second_param, ...\"\n");
+    printf("\e[0m\n");
+
 
 }
 

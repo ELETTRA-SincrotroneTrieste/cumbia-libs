@@ -36,6 +36,7 @@ class QuCheckBox : public QCheckBox, public CuDataListener, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)
+    Q_PROPERTY(QString target READ target WRITE setTarget DESIGNABLE true)
     Q_PROPERTY(bool textFromLabel READ textFromLabel WRITE setTextFromLabel DESIGNABLE true)
 public:
     QuCheckBox(QWidget *parent, Cumbia* cumbia,
@@ -47,6 +48,8 @@ public:
      virtual ~QuCheckBox();
 
      QString source() const;
+
+     QString target() const;
 
      CuContext *getContext() const;
 
@@ -62,6 +65,8 @@ public:
 public slots:
 
     void setSource(const QString& s);
+
+    void setTarget(const QString& t);
 
     void setTextFromLabel(bool tfl);
 

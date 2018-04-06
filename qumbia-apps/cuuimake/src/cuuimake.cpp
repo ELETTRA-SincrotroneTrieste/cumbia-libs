@@ -88,10 +88,13 @@ bool CuUiMake::make()
                                "with the list of the promoted widget names to expand\n");
     if(!success)
         print(Analysis, true, "error loading configuration file \"%s\": %s\n", qstoc(fname), qstoc(defs.lastError()));
-    else
+    else {
+        foreach(QString msg, defs.messages)
+            print(Analysis, false, "%s\n", qstoc(msg));
         print(Analysis, false, "default configuration loaded\n");
+    }
 
-    if(success && m_options->getopt("clean").toBool())
+    if(success && (m_options->getopt("clean").toBool() || m_options->getopt("pre-clean").toBool()) )
     {
         print(Clean, false, "cleaning and removing ui_*.h files\n");
         XMakeProcess xmake;
@@ -103,7 +106,9 @@ bool CuUiMake::make()
             int remcnt = p.remove_UI_H(defs.srcDirsInfo());
             print(Clean, false, "removed %d ui_.*.h files\n", remcnt);
         }
-        return success;
+        if(!m_options->getopt("pre-clean").toBool())
+            return success;
+        // otherwise go on
     }
 
     if(success && m_options->getopt("qmake").toBool())

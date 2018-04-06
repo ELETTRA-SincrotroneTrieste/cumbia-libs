@@ -90,8 +90,12 @@ CuContext *QuWatcher::getContext() const
 
 void QuWatcher::onUpdate(const CuData &data)
 {
-    if(data.containsKey("property"))
+    if(data["type"].toString() == "property")
+    {
+        printf("calling configure\n");
         configure(data); // Qumbiaizer virtual configure method
+        printf("configure called\n\n");
+    }
     else
     {
         updateValue(data);

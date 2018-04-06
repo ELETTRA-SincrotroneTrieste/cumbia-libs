@@ -82,17 +82,16 @@ bool Processor::expand(const Substitutions& subs, const QMap<QString,
                     // and the values are the ordered list of the class names
                     const QList<Par> & parlist = expand.params.getParList(mode);
                     // with the class names, get the substitutions in the correct order
-                    qDebug() << __FUNCTION__ << list << objectnam;
+                    qDebug() << __FUNCTION__ << "captured texts" << list << "object name: " << objectnam;
                     for(i = 0; i< parlist.size() && !m_error; i++)
                     {
                         QString pardef;
                         Par p = parlist[i];
-                        qDebug() << __FUNCTION__ << objectnam << p.toString() << isSetupUi;
+                        qDebug() << __FUNCTION__ << "object:" << objectnam << "parameter list [" << i << "]" << p.toString() << "setupUi? " << isSetupUi;
                         class_name = p.classname;
                         pardef = p.pardef;
                         par = subs.getSubstitution(class_name);
                         m_error = (par.isEmpty());
-                        qDebug() << __FUNCTION__ << class_name << "parameter def " << pardef << isSetupUi;
                         expanded_params += ", " + pardef + par;
                     }
                     if(m_error)
@@ -113,7 +112,7 @@ bool Processor::expand(const Substitutions& subs, const QMap<QString,
                     }
                 }
                 else
-                    qDebug() << __FUNCTION__ << "regexp matches " << list.size();
+                    qDebug() << __FUNCTION__ << "regexp matches " << list.size() << "(should be 2)";
             }
         }
         if(pos < 0)

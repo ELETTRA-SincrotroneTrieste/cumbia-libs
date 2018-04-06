@@ -87,7 +87,59 @@
         </params>
 
     </widget>
-    
+
+
+    <widget class="QuLineEdit">
+        <params factory="cumbiatango">
+            <param add="CumbiaTango *" />
+            <param add="CuTWriterFactory" />
+        </params>
+        <params factory="cumbiaepics">
+            <param add="CumbiaEpics *" />
+            <param add="CuEpWriterFactory" />
+        </params>
+        <params factory="cumbiapool">
+            <!-- parameter adding occurs in the given order -->
+            <param add="CumbiaPool *"  />
+            <param add="CuControlsFactoryPool"  />
+        </params>
+
+    </widget>
+
+    <widget class="QuDoubleSpinBox">
+        <params factory="cumbiatango">
+            <param add="CumbiaTango *" />
+            <param add="CuTWriterFactory" />
+        </params>
+        <params factory="cumbiaepics">
+            <param add="CumbiaEpics *" />
+            <param add="CuEpWriterFactory" />
+        </params>
+        <params factory="cumbiapool">
+            <!-- parameter adding occurs in the given order -->
+            <param add="CumbiaPool *"  />
+            <param add="CuControlsFactoryPool"  />
+        </params>
+
+    </widget>
+
+<widget class="QuSpinBox">
+    <params factory="cumbiatango">
+        <param add="CumbiaTango *" />
+        <param add="CuTWriterFactory" />
+    </params>
+    <params factory="cumbiaepics">
+        <param add="CumbiaEpics *" />
+        <param add="CuEpWriterFactory" />
+    </params>
+    <params factory="cumbiapool">
+        <!-- parameter adding occurs in the given order -->
+        <param add="CumbiaPool *"  />
+        <param add="CuControlsFactoryPool"  />
+    </params>
+
+</widget>
+
     <widget class="QuApplyNumeric">
         <params factory="cumbiatango">
             <param add="CumbiaTango *" />
@@ -103,8 +155,6 @@
             <param add="CuControlsFactoryPool"  />
         </params>
     </widget>
-    
-      
 
     <widget class="QuCircularGauge">
         <params factory="cumbiatango">
@@ -122,6 +172,26 @@
         </params>
 
     </widget>
+
+
+<widget class="QuCheckBox">
+    <params factory="cumbiatango">
+        <param add="CumbiaTango *" />
+        <param add="CuTReaderFactory" />
+        <param add="CuTWriterFactory" />
+    </params>
+    <params factory="cumbiaepics">
+        <param add="CumbiaEpics *" />
+        <param add="CuEpReaderFactory" />
+        <param add="CuEpWriterFactory" />
+    </params>
+    <params factory="cumbiapool">
+        <!-- parameter adding occurs in the given order -->
+        <param add="CumbiaPool *"  />
+        <param add="CuControlsFactoryPool"  />
+    </params>
+
+</widget>
 
     <widget class="QuTable">
         <params factory="cumbiatango">
@@ -174,8 +244,50 @@
 
     </widget>
 
+ <widget class="reader" autodetect="true"
+    regexp="(%1)\(.*(Cumbia\s*\*).*(CuControlsReaderFactoryI).*\);">
+    <params factory="cumbiatango">
+        <param add="CumbiaTango *" />
+        <param add="CuTReaderFactory" />
+    </params>
+    <params factory="cumbiaepics">
+        <param add="CumbiaEpics *" />
+        <param add="CuEpReaderFactory" />
+    </params>
+    <params factory="cumbiapool">
+        <!-- parameter adding occurs in the given order -->
+        <param add="CumbiaPool *"  />
+        <param add="CuControlsFactoryPool"  />
+    </params>
 
+ </widget>
 
+ <widget class="writer" autodetect="true"
+        regexp="(%1)\(.*(Cumbia\s*\*).*(CuControlsWriterFactoryI).*\);">
+     <params factory="cumbiatango">
+         <param add="CumbiaTango *" />
+         <param add="CuTWriterFactory" />
+     </params>
+     <params factory="cumbiaepics">
+         <param add="CumbiaEpics *" />
+         <param add="CuEpWriterFactory" />
+     </params>
+     <params factory="cumbiapool">
+         <!-- parameter adding occurs in the given order -->
+         <param add="CumbiaPool *"  />
+         <param add="CuControlsFactoryPool"  />
+     </params>
+ </widget>
+
+<widget class="pool" autodetect="true"
+   regexp="(%1)\(.*(CumbiaPool\s*\*).*(CuControlsFactoryPool).*\);">
+   <params factory="cumbiapool">
+       <!-- parameter adding occurs in the given order -->
+       <param add="CumbiaPool *"  />
+       <param add="CuControlsFactoryPool"  />
+   </params>
+
+</widget>
 
 </widgets>
 
@@ -200,6 +312,13 @@
     </method>
 
 </methods>
+
+<autodetect>
+    <params>
+        <param name="Cumbia" factory="cumbiatango"/>
+
+    </params>
+</autodetect>
 
 </cuuimake>
 

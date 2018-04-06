@@ -46,7 +46,7 @@ public:
 
     QString toString() const
     {
-        return "name: " + classname + ", type " + pardef;
+        return "Par { name: " + classname + ", parameter: \"" + pardef + "\" }";
     }
 };
 
@@ -165,6 +165,14 @@ public:
     QString object;
     Params params;
 
+    void setAutoDetectRegexp(const QString& pattern) { m_autoDetect_regexp = pattern; }
+
+    QString autoDetectRegexp() const { return m_autoDetect_regexp; }
+
+    void setAutoDetect(bool ad) { m_autoDetect = ad; }
+
+    bool autoDetect() const { return m_autoDetect; }
+
     bool fromLocalConf() const { return m_fromLocalConf; }
 
     bool isMethod() const { return m_method; }
@@ -179,6 +187,9 @@ public:
 
 private:
     bool m_fromLocalConf, m_method;
+    bool m_autoDetect;
+
+    QString m_autoDetect_regexp;
 
 };
 
@@ -239,14 +250,30 @@ private:
     QMultiMap<Type, SearchDirInfo> m_map;
 };
 
+class CustomClass
+{
+public:
+    CustomClass() {}
+
+    CustomClass(const QString& classnam, const QString& classtype) {
+        class_name = classnam;
+        class_type = classtype; // customreader, customwriter, customrw
+    }
+
+    QString class_name, class_type;
+};
+
 class Defs
 {
 public:
+
     Defs();
 
     bool loadConf(const QString& default_conf, const QString &localfname);
 
     bool load(const QString& fname);
+
+    bool guessFromSources();
 
     QString lastError() const;
 
@@ -263,7 +290,11 @@ public:
 
     SearchDirInfoSet srcDirsInfo() const;
 
+    QStringList messages;
+
 private:
+
+    QString m_loadFile(const QString& path);
 
     bool loadXmlConf(const QString& fname);
 
@@ -272,6 +303,8 @@ private:
     QMap<QString, Expand> m_objectmap;
 
     QList<Search> m_searchlist;
+
+    QList<CustomClass> m_customClasses;
 
     SearchDirInfoSet m_srcd_infoset;
 

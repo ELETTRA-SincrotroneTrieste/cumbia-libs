@@ -185,6 +185,8 @@ public:
 
     bool toolTipsDisabled() const;
 
+    const char *type_str(Type t) const;
+
 signals:
 
     /** \brief Connection ok notification.

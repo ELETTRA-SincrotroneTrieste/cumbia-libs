@@ -81,6 +81,21 @@ QString QuCheckBox::source() const
     return "";
 }
 
+/*! \brief provided for convenience/compatibility, returns source
+ *
+ * Source and target are the same for QuCheckBox
+ *
+ * @return the value returned by source
+ *
+ * @see source
+ * @see setSource
+ * @see setTarget
+ */
+QString QuCheckBox::target() const
+{
+    return source();
+}
+
 /** \brief Connect the reader and the writer to the specified source name.
  *
  * If a reader with a different source is configured, it is deleted.
@@ -102,6 +117,20 @@ void QuCheckBox::setSource(const QString &s)
     CuControlsWriterA *w = d->in_ctx->replace_writer(s.toStdString(), this);
     if(w)
         w->setTarget(s);
+}
+
+/*! \brief provided for convenience/compatibility, calls setSource
+ *
+ * Calls setSource.
+ * Source and target are the same for QuCheckBox
+ *
+ * @see setSource
+ * @see source
+ * @see target
+ */
+void QuCheckBox::setTarget(const QString &t)
+{
+    setSource(t);
 }
 
 /** \brief set the textFromLabel property to true

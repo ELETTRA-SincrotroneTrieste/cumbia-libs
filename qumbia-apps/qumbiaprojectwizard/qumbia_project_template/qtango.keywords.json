@@ -233,8 +233,8 @@
 {
  "type" : "replace include",
 "in" :  "TLineEdit",
-"out" : "QLineEdit",
-"comment" : "TLineEdit is mapped into a simple Qt QLineEdit",
+"out" : "qulineedit.h",
+"comment" : "TLineEdit is mapped into a QuLineEdit",
 "level" : "ok"
 },
 {
@@ -261,6 +261,27 @@
 {
  "type" : "replace include",
 "in" :  "EPlotLight",
+"out" : "quplot_base.h",
+"comment" : "EPlotLight is mapped into QuPlotBase. Please check",
+"level" : "warn"
+},
+{
+ "type" : "replace include",
+"in" :  "eplotlight.h",
+"out" : "quplot_base.h",
+"comment" : "EPlotLight is mapped into QuPlotBase. Please check",
+"level" : "warn"
+},
+{
+ "type" : "replace include",
+"in" :  "eplotlight_marker.h",
+"out" : "quplot_base.h",
+"comment" : "EPlotLight is mapped into QuPlotBase. Please check",
+"level" : "warn"
+},
+{
+"type" : "replace include",
+"in" :  "eplotlight_base.h",
 "out" : "quplot_base.h",
 "comment" : "EPlotLight is mapped into QuPlotBase. Please check",
 "level" : "warn"
@@ -298,6 +319,20 @@
 "in" :  "TLed",
 "out" : "quled.h",
 "comment" : "TLed is mapped into QuLed",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "TDoubleSpinBox",
+"out" : "qudoublespinbox.h",
+"comment" : "TDoubleSpinBox is mapped to qudoublespinbox.h",
+"level" : "ok"
+},
+{
+ "type" : "replace include",
+"in" :  "TSpinBox",
+"out" : "quspinbox.h",
+"comment" : "TSpinBox is mapped to quspinbox.h",
 "level" : "ok"
 },
 {
@@ -435,9 +470,9 @@
 {
  "type" : "map class",
 "in" :  "TLineEdit",
-"out" : "QLineEdit",
-"include" : "QLineEdit",
-"comment" : "TLineEdit is mapped into a simple Qt QLineEdit",
+"out" : "QuLineEdit",
+"include" : "qulineedit.h",
+"comment" : "TLineEdit is mapped into a QuLineEdit",
 "level" : "ok"
 },
 {
@@ -494,6 +529,22 @@
 "out" : "QuCheckBox",
 "include" : "qucheckbox.h",
 "comment" : "TCheckBox is mapped into QuCheckBox",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "TSpinBox",
+"out" : "QSpinBox",
+"include" : "QSpinBox",
+"comment" : "TSpinBox is mapped into QSpinBox",
+"level" : "ok"
+},
+{
+ "type" : "map class",
+"in" :  "TDoubleSpinBox",
+"out" : "QuDoubleSpinBox",
+"include" : "qudoublespinbox.h",
+"comment" : "TDoubleSpinBox is mapped into QuDoubleSpinBox",
 "level" : "ok"
 },
 {

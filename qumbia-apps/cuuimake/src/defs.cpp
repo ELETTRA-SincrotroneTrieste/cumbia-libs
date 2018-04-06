@@ -3,8 +3,10 @@
 #include <QDomElement>
 #include <QDomNodeList>
 #include <QFile>
+#include <QDir>
 #include <QtDebug>
 #include <QString>
+#include <QTextStream>
 #include "conf.h"
 
 Defs::Defs()
@@ -16,9 +18,10 @@ Defs::Defs()
 bool Defs::loadConf(const QString &default_conf, const QString& localfname)
 {
     bool success = loadXmlConf(default_conf);
+    if(success)
+        success = guessFromSources();
     if(success && !localfname.isEmpty())
         success = loadLocalConf(localfname);
-
     if(m_debug)
     {
         foreach(Search s, m_searchlist)
@@ -34,6 +37,60 @@ bool Defs::loadConf(const QString &default_conf, const QString& localfname)
 bool Defs::load(const QString &fname)
 {
 
+}
+
+bool Defs::guessFromSources()
+{
+    int pos;
+    bool ok = true;
+    int clpos;
+    Expand ex;
+    QString re_pattern, classnam;
+    CustomClass cc;
+    QStringList customC = QStringList() << "reader" << "writer" << "pool";
+    QRegExp classnam_re("class\\s+([A-Za-z0-9_]+)\\s*:\\s*public\\s+");
+    QList<SearchDirInfo> sdi = m_srcd_infoset.getDirInfoList(SearchDirInfoSet::Source);
+    foreach(SearchDirInfo s, sdi)
+    {
+        QDir wd;
+        wd.cd(s.name());
+        QFileInfoList filist = wd.entryInfoList(s.filters(), QDir::Files);
+        foreach(QFileInfo fi, filist) {
+            QString s = m_loadFile(fi.absoluteFilePath());
+            foreach(QString cust, customC) {
+                if(m_objectmap.contains(cust)) {
+                    ex = m_objectmap.value(cust);
+                    if(ex.autoDetect()) {
+                        re_pattern = ex.autoDetectRegexp();
+                        clpos = classnam_re.indexIn(s);
+                        if(clpos > -1) {
+                            classnam = classnam_re.cap(1);
+                            // regexp pattern in xml contains %1 placeholder
+                            // example: "(%1)\(.*(Cumbia\s*\*).*(CuControlsWriterFactoryI).*\);"
+                            QRegExp re(QString(re_pattern).arg(classnam));
+                            pos = re.indexIn(s);
+                            qDebug() << __FUNCTION__ << "auto detect: searching custom classes " << classnam << "in " << fi.fileName() << "pos:" << pos;
+                            if(pos > -1) {
+                                ex.object = classnam;
+                                ok = !m_objectmap.contains(classnam);
+                                if(ok)
+                                    m_objectmap[classnam] = ex;
+                                messages << "\e[1;35minfo\e[0m: detected custom class \e[1;4m" + classnam + "\e[0m in file \""
+                                            + fi.fileName() + "\": adding definitions...";
+                                // once one among reader, writer or pool has been found, go to
+                                // next file
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if(!ok)
+        m_lastError = "Defs.guessFromSources: multiple definitions for class \"" + classnam + "\"";
+    return ok;
 }
 
 QString Defs::lastError() const
@@ -105,6 +162,21 @@ QList<Search> Defs::getSearchList() const
 SearchDirInfoSet Defs::srcDirsInfo() const
 {
     return m_srcd_infoset;
+}
+
+QString Defs::m_loadFile(const QString &path)
+{
+    QString o;
+    QFile f(path);
+    if(f.open(QIODevice::Text|QIODevice::ReadOnly)) {
+        QTextStream out(&f);
+        o = out.readAll();
+        f.close();
+    }
+    else
+        printf("\e[1;31m*\e[0m error opening %s in read mode: %s\n", path.toStdString().c_str(),
+               f.errorString().toStdString().c_str());
+    return o;
 }
 
 bool Defs::loadXmlConf(const QString &fname)
@@ -215,8 +287,12 @@ bool Defs::loadXmlConf(const QString &fname)
                     m_getParams(widget, custom_pars);
                     if(m_error)
                         return false;
-                    if(custom_pars.isValid())
-                        m_objectmap[nam] = Expand(nam, custom_pars, false);
+                    if(custom_pars.isValid()) {
+                        Expand expand(nam, custom_pars, false);
+                        expand.setAutoDetect(widget.attribute("autodetect") == "true");
+                        expand.setAutoDetectRegexp(widget.attribute("regexp"));
+                        m_objectmap[nam] = expand;
+                    }
 
                     if(m_objectmap.isEmpty())
                     {
@@ -265,6 +341,7 @@ bool Defs::loadXmlConf(const QString &fname)
 
 bool Defs::loadLocalConf(const QString &fname)
 {
+    bool warn;
     QFile file(fname);
     m_error = !file.open(QIODevice::ReadOnly | QIODevice::Text);
     if(m_error) {
@@ -272,10 +349,10 @@ bool Defs::loadLocalConf(const QString &fname)
         return false;
     }
     Params pars;
-    while (!file.atEnd()) {
+    QString objectname;
+    while (!file.atEnd() && !m_error) {
         QString line = QString(file.readLine().replace("\n", ""));
         line = line.trimmed();
-        QString objectname;
         if(!line.startsWith("#"))
         {
             QStringList parts = line.split(QRegExp("\\s*,\\s*"));
@@ -292,12 +369,21 @@ bool Defs::loadLocalConf(const QString &fname)
                 if(parlist.size() > 0)
                     pars.add(facname, parlist);
             }
+            warn = m_objectmap.contains(objectname);
+            if(warn) {
+                if(m_objectmap[objectname].autoDetect())
+                    messages << "\e[1;35;4mnote\e[0m: definitions for class \"" + objectname + "\" in file \"" + fname +
+                                "\" \e[1;35;4moverwrite auto detected ones\e[0m";
+                else
+                    messages << "\e[1;35;4mnote\e[0m: definitions for class \"" + objectname + "\" \e[1;35;4mare overwritten by definitions in file \"" + fname +
+                                "\"\e[0m";
+            }
             m_objectmap[objectname] = Expand(objectname, pars, true);
         }
     }
     if(m_error) {
-        m_lastError = "Defs.loadConf: error parsing document: " + m_lastError;
-        return false;
+        m_lastError = "Defs.loadLocalConf: local definitions in file \"" +
+                fname + "\" would overwrite the configuration of \"" + objectname + "\"";
     }
-    return true;
+    return !m_error;
 }

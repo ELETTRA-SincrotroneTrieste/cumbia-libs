@@ -299,6 +299,38 @@ bool Qumbiaizer::toolTipsDisabled() const
     return quizer_ptr->toolTipsDisabled;
 }
 
+const char *Qumbiaizer::type_str(Qumbiaizer::Type t) const
+{
+    switch(t) {
+    case Invalid:
+        return "Invalid";
+    case Void:
+        return "Void";
+    case Int:
+        return "Int";
+    case Double:
+        return "Double";
+    case UInt:
+        return "UInt";
+    case Short:
+        return "Short";
+    case String:
+        return "String";
+    case Bool:
+        return "Bool";
+    case BoolVector:
+        return "BoolVector";
+    case DoubleVector:
+        return "DoubleVector";
+    case StringVector:
+        return "StringVector";
+    case IntVector:
+        return "IntVector";
+     default:
+        return "Undefined";
+    }
+}
+
 /** \brief Configures the attached object, if any.
  *
  * If setAutoconfSlot has been called for some  AutoConfType type, then the matching slots are invoked.
@@ -350,10 +382,11 @@ int Qumbiaizer::extractCode(QString& method)
 
 void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMethod, QuValueFilter::State updateState)
 {
-
     QString methName;
     QString message = QString::fromStdString(v["msg"].toString());
     bool ok = !v["err"].toBool();
+
+    printf("updataValue err flag %d msg %s\ \e[1;34m%s\e[0mn", ok, qstoc(message), v.toString().c_str());
 
     if(customMethod != NULL)
         methName = QString(customMethod);
@@ -589,7 +622,8 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
         else
         {
             ok = false;
-            message = QString(" [ invalid Type %1 (CuVariant type  %2) specified ]").arg(type()).arg(val.getType());
+            message = QString(" [ invalid Type %1 [%2] (CuVariant type  %3 [%4]) specified ]").arg(type()).arg(type_str(type())).
+                    arg(val.getType()).arg(val.dataTypeStr(val.getType()).c_str());
         }
 
         /* is it possible to set tooltip on a widget? */
@@ -599,7 +633,6 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
             perr("Qumbiaizer.updateValue: failed to invoke method \"%s\" on \"%s\": \"%s\"", qstoc(methName),
                  qstoc(object->objectName()), qstoc(message));
         else if(object && ok)
-
             printf("\e[1;32mQumbiaizer.updateValue: SUCCESSFULLY invoke method \"%s\" on \"%s\": \"%s\"\n", qstoc(methName),
                  qstoc(object->objectName()), qstoc(message));
 
