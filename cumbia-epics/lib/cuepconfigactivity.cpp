@@ -2,7 +2,7 @@
 #include <cumacros.h>
 #include "cuepics-world.h"
 
-class CuTAttConfigActivityPrivate
+class CuEpConfigActivityPrivate
 {
 public:
     CuEpCAService *ep_service;
@@ -15,7 +15,7 @@ public:
 
 CuEpConfigActivity::CuEpConfigActivity(const CuData &tok, CuEpCAService *df) : CuIsolatedActivity(tok)
 {
-    d = new CuTAttConfigActivityPrivate;
+    d = new CuEpConfigActivityPrivate;
     d->ep_service = df;
     d->err = false;
     setFlag(CuActivity::CuAUnregisterAfterExec, true);

@@ -3,7 +3,7 @@
 
 #include <cuisolatedactivity.h>
 
-class CuTAttConfigActivityPrivate;
+class CuEpConfigActivityPrivate;
 class CuEpCAService;
 
 class CuEpConfigActivity : public CuIsolatedActivity
@@ -30,7 +30,7 @@ protected:
     void onExit();
 
 private:
-    CuTAttConfigActivityPrivate *d;
+    CuEpConfigActivityPrivate *d;
 };
 
 #endif // CUATTCONFIGACTIVITY_H
