@@ -7,7 +7,7 @@
 
 #define perr(x, args...) do {  fprintf(stderr, "\e[1;31m!! \e[0;4merror\e[0m: "); printf(x, ##args); printf("\n"); }while(0)
 
-#ifdef CUMBIA_PRINTINFO
+#ifdef CUMBIA_DEBUG_OUTPUT
 
 
 #define pwarn(x, args...) do { if(getenv("CUMBIA_PRINT")) {printf("\e[0;32m[0x%lx] \e[1;33m:-o \e[0;4mwarning\e[0m: ", pthread_self()), printf(x, ##args), printf("\n"); } }while(0)

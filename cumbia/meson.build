@@ -81,7 +81,7 @@ sources = [
 
 includedirs = include_directories('src/lib', 'src/lib/threads', 'src/lib/services')
 
-cpp_arguments = '-DCUMBIA_PRINT=1'
+cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1'
 
 deps = [ dependency('threads') ]
 

@@ -19240,7 +19240,7 @@ ac_config_files="$ac_config_files Makefile"
 ac_config_files="$ac_config_files src/cumbia.pc"
 
 
-$as_echo "#define CUMBIA_PRINTINFO 1" >>confdefs.h
+$as_echo "#define CUMBIA_DEBUG_OUTPUT 1" >>confdefs.h
 
 
   ax_cxx_compile_alternatives="11 0x"    ax_cxx_compile_cxx11_required=true

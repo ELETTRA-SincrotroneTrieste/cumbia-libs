@@ -138,20 +138,26 @@ void CuThread::registerActivity(CuActivity *l)
     d->conditionvar.notify_one();
 }
 
-/*! \brief unregister the activity passed as argument
+/*! \brief unregister the activity passed as argument from this thread.
  *
- * @param l the CuActivity to unregister
+ * @param l the CuActivity to unregister from this thread.
  *
  * An UnRegisterActivityEvent is queued to the thread event queue.
  * When processed, CuActivity::doOnExit is called which in turn calls
  * CuActivity::onExit (in the CuActivity background thread).
  * If the flag CuActivity::CuADeleteOnExit is true, the activity is
  * later deleted (back in the main thread)
+ *
+ * \par Called from
+ * This method is called from the CuThread's thread *only if CuActivity::CuAUnregisterAfterExec is
+ * set on the activity*.
+ * Otherwise, activities must be unregistered through Cumbia::unregisterActivity (in that case, invocation
+ * occurs from the *main* thread).
  */
 void CuThread::unregisterActivity(CuActivity *l)
 {
     pbblue("CuThread.unregisterActivity: \e[1;31munregister activity %p\e[0m (main or activity's) 0x%lx", l, pthread_self());
-    ThreadEvent *unregisterEvent = new UnRegisterActivityEvent(l);
+    ThreadEvent *unregisterEvent = new UnRegisterActivityEvent(l); // type ThreadEvent::UnregisterActivity defined in cuthreadevents.h
     /* need to protect event queue because this method is called from the main thread while
      * the queue is dequeued in the secondary thread
      */
@@ -467,31 +473,33 @@ void CuThread::mActivityInit(CuActivity *a)
 }
 
 /*! @private
- * invoked from "main" thread, by onEventPosted
+ * invoked from "main" thread, by onEventPosted.
+ * If CuActivity::CuADeleteOnExit is set on a, a is deleted.
+ * If this thread does not manage any activity, m_exit is called.
  */
 void CuThread::mOnActivityExited(CuActivity *a)
 {
     pr_thread();
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     activityManager->removeConnection(a);
-//    printf("\e[1;32mactivities left second activity manager \e[1;33m %ld second my map  \e[0;33m %ld <<<<<<<<<<<<\e[0m\n\n",
-//           activityManager->activitiesForThread(this).size(), d->activity_set.size());
     if(a->getFlags() & CuActivity::CuADeleteOnExit)
         delete a;
     if(activityManager->countActivitiesForThread(this) == 0) {
         m_exit(true);
     }
-//    else { /// TEST! can remove this!!
-//        printf("\n\e[1;33mmOnActivityExited\e[1;32m NO EXIT THREAD/DESTROY\e[1;35m cuz there are"
-//               "%d activities\e[1;34m STILL THERE <<<<<<<<<<<<< \e[0m\n", activityManager->countActivitiesForThread(this));
-//        std::vector<CuActivity *> as = activityManager->activitiesForThread(this);
-//        for(size_t i = 0; i < as.size(); i++)
-//            printf("- \e[1;36m%s\n", as.at(i)->getToken().toString().c_str());
-//    }
 }
 
 /*! @private
- * called from within CuThread run
+ * - called from within CuThread run (upon ThreadEvent::UnregisterActivity event)
+ * - ThreadEvent::UnregisterActivity event is posted to CuThread from
+ * - CuThread's thread
+ *
+ * When mExitActivity is called, the activity is asked to exit.
+ * Whether it will be deleted or not depends on the CuActivity::CuADeleteOnExit flag on a (see
+ * mOnActivityExited).
+ *
+ * mExitActivity is called *from the CuThread's thread*
+ * The next function invoked in sequence in this class is mOnActivityExited, on the *main thread*.
  */
 void CuThread::mExitActivity(CuActivity *a, bool onThreadQuit)
 {

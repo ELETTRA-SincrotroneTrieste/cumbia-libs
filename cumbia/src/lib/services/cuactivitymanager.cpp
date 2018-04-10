@@ -79,7 +79,7 @@ void CuActivityManager::removeConnection(CuActivity *a)
  */
 void CuActivityManager::removeConnections(CuThreadInterface *t)
 {
-    pbviolet2("CuActivityManager::removeConnection: removing connections for thread %p", t);
+    pbviolet2("CuActivityManager::removeConnections: removing connections for thread %p", t);
     std::lock_guard<std::mutex> lock(m_mutex);
     std::multimap< CuThreadInterface *, CuActivity *>::iterator it;
     std::multimap<const CuActivity *, CuThreadListener *>::const_iterator lit;
@@ -204,7 +204,7 @@ int CuActivityManager::countActivitiesForThread(const CuThreadInterface *ti)
     for(it = mConnectionsMultiMap.begin(); it != mConnectionsMultiMap.end(); ++it)
         if(it->first == ti)
             count++;
-    pbviolet2("CuActivityManager::removeConnection: returning vector of activities for thread %p (there are %d)", ti, count);
+    pbviolet2("CuActivityManager::countActivitiesForThread: returning vector of activities for thread %p (there are %d)", ti, count);
     return count;
 }
 
