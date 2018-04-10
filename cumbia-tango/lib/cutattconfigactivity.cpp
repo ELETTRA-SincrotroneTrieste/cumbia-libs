@@ -70,6 +70,9 @@ void CuTAttConfigActivity::init()
     /* get a TDevice */
     d->tdev = d->device_service->getDevice(tk["device"].toString());
     d->tdev->addRef();
+    tk["msg"] = d->tdev->getMessage();
+    tk["conn"] = d->tdev->isValid();
+    tk["err"] = !d->tdev->isValid();
 }
 
 void CuTAttConfigActivity::execute()

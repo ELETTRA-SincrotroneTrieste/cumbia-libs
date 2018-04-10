@@ -16,6 +16,21 @@ class CuDataListener;
  *
  * Programmers of graphical interfaces should employ cumbia-tango-controls CuTControlsReader higher level
  * class to create and communicate with CuTReader.
+ *
+ * \par Function
+ * Instantiates and registers (i.e. starts) either a CuEventActivity or a CuPollingActivity,
+ * according to the desired RefreshMode. If the CuEventActivity fails subscribing to the Tango
+ * event system, it is replaced by CuPollingActivity (in CuTReader::onResult). In that case,
+ * no error event is delivered to CuDataListeners.
+ *
+ * \par Note
+ * CuTReader holds a pointer to the current activity (CuTReaderPrivate: current_activity).
+ * Activity and CuTReader's life are independent from each other: if the CuActivity::CuADeleteOnExit flag
+ * is active (as in CuPollingActivity), the activity is deleted by CuThread.
+ *
+ * \par Important
+ * As a consequence of the note above, activities *must not exit before CuTReader::stop is called*.
+ * The proper way to stop the activity associated to the reader is through CuTReader::stop.
  */
 class CuTReader: public CuTangoActionI /* CuTangoActionI implements CuThreadListener */
 {

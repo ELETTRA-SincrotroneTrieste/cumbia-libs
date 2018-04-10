@@ -34,8 +34,7 @@ public:
     CuTReader::RefreshMode refresh_mode;
 };
 
-CuTReader::CuTReader(const TSource& src,
-                     CumbiaTango *ct)
+CuTReader::CuTReader(const TSource& src, CumbiaTango *ct) : CuTangoActionI()
 {
     d = new CuTReaderPrivate;
     d->tsrc = src;
@@ -77,12 +76,15 @@ void CuTReader::onResult(const CuData &data)
     // iterator can be invalidated if listener's onUpdate unsets source: use a copy
     std::set<CuDataListener *> lis_copy = d->listeners;
     std::set<CuDataListener *>::iterator it;
-    for(it = lis_copy.begin(); it != lis_copy.end(); ++it)
+    bool event_subscribe_fail = !d->exit && data["activity"].toString() == "event" && data["err"].toBool()
+            && d->current_activity->getType() == CuEventActivity::CuEventActivityType ;
+
+    // if it's just subscribe_event failure, do not notify listeners
+    for(it = lis_copy.begin(); it != lis_copy.end() && !event_subscribe_fail; ++it)
     {
         (*it)->onUpdate(data);
     }
-    if(!d->exit && data["activity"].toString() == "event" && data["err"].toBool()
-            && d->current_activity->getType() == CuEventActivity::CuEventActivityType )
+    if(event_subscribe_fail)
     {
         polling_fallback = true;
         cuprintf("starting polling activity cuz event is err %d\n", data["err"].toBool());
@@ -333,7 +335,8 @@ bool CuTReader::isEventRefresh(CuTReader::RefreshMode rm) const
  * \li fills in a CuData called *thread token*, used to register the CuWriteActivity and make
  *     the activity shared between writers with the same target.
  * \li instantiates and registers (i.e. starts) either a CuEventActivity or a CuPollingActivity,
- *     according to the RefreshMode value.
+ *     according to the RefreshMode value. If the CuEventActivity fails subscribing to the Tango
+ *     event system, it is replaced by CuPollingActivity (in CuTReader::onResult)
  *
  * \note
  * start is usually called by CumbiaTango::addAction, which in turn is called by qumbia-tango-controls
@@ -393,7 +396,7 @@ void CuTReader::m_startPollingActivity(bool fallback)
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
     d->cumbia_t->registerActivity(d->current_activity, this, tt, fi, bf);
-    cuprintf("> CuTReader.m_startPollingActivity reader %p thread 0x%lx ACTIVITY %p == \e[0;32mSTARTING POLLING\e[0m\n\n", this, pthread_self(), d->current_activity);
+    printf("> CuTReader.m_startPollingActivity reader %p thread 0x%lx ACTIVITY %p == \e[0;32mSTARTING POLLING\e[0m\n\n", this, pthread_self(), d->current_activity);
 }
 
 

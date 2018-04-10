@@ -26,6 +26,20 @@ class CuDeviceFactoryService;
  * \li matches, that returns true if the input token represents an activity like this
  * \li repeat, that indicates whether or not execute has to be called again
  *
+ * \note
+ * CuPollingActivity *must stay in execution (must not exit)* until CuTReader is stopped (CuTReader::stop).
+ * For this reason, CuAUnregisterAfterExec is set to false. When the Tango device is not defined into the
+ * database (in CuPollingActivity::execute the Tango::DeviceProxy is NULL) the repeat time is set to a negative
+ * number. This suspends the continuous activity without exiting. It will be asked to exit from CuTReader::stop
+ * through Cumbia::unregisterActivity.
+ *
+ * CuADeleteOnExit is left to true in order to let the activity be deleted by CuThread after onExit.
+ *
+ * This combination of the flags guarantees the availability of the CuPollingActivity when CuTReader::stop is called
+ * (activity will be either executing the polling loop or suspended) and lets CuTReader not worry about the activity deletion.
+ *
+ * @see CuTReader
+ * @see CuTReader::stop
  *
  */
 class CuPollingActivity : public CuContinuousActivity

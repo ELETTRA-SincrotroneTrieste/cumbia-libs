@@ -18,6 +18,7 @@ TDevice::TDevice(const std::string &name)
     d = new TDevicePrivate;
     d->name = name;
     d->refCnt = 0;
+    d->dev = NULL;
     try
     {
         string dname = name;
@@ -29,7 +30,6 @@ TDevice::TDevice(const std::string &name)
     catch(Tango::DevFailed &e)
     {
         d->message = CuTangoWorld().strerror(e.errors);
-        d->dev = NULL;
     }
 }
 

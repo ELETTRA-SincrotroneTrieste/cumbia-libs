@@ -139,6 +139,7 @@ void CuEventActivity::init()
             d->tdev, d->tdev->getDevice(), d->tdev->getName().c_str(), pthread_self(), d->tdev->isValid());
     tk["conn"] = d->tdev->isValid();
     tk["msg"] = d->tdev->getMessage();
+    tk["err"] = !d->tdev->isValid();
     CuTangoWorld().fillThreadInfo(tk, this);
     //  sleep(5);
     d->tdev->addRef();

@@ -31,7 +31,9 @@ public:
  * \li the default polling period is 1000 milliseconds
  * \li if the "period" key is set on the token, then it is converted to int and it will be used
  *     to set up the polling period
- *
+ * \li CuADeleteOnExit is active.
+ * \li CuAUnregisterAfterExec is disabled because if the Tango device is not defined into the database
+ *     the poller is not started and the activity is suspended (repeat will return -1).
  */
 CuPollingActivity::CuPollingActivity(const CuData &token,
                                      CuDeviceFactoryService *df,
@@ -51,6 +53,8 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
         period = token["period"].toInt();
     d->repeat = period;
     setInterval(period);
+    //  flag CuActivity::CuADeleteOnExit is true
+    setFlag(CuActivity::CuAUnregisterAfterExec, false);
 }
 
 /*! \brief the class destructor
@@ -119,6 +123,9 @@ void CuPollingActivity::init()
     /* if polling activity is a fallback because event subscription fails, no need to add ref */
   //  if(!tk["fallback"].toBool())
     d->tdev->addRef();
+    tk["conn"] = d->tdev->isValid();
+    tk["err"] = !d->tdev->isValid();
+    tk["msg"] = d->tdev->getMessage();
 }
 
 /*! \brief the implementation of the CuActivity::execute hook
@@ -168,7 +175,6 @@ void CuPollingActivity::execute()
     Tango::DeviceProxy *dev = d->tdev->getDevice();
     CuTangoWorld tangoworld;
     tangoworld.fillThreadInfo(at, this); /* put thread and activity addresses as info */
-    at["err"] = d->tdev->isValid();
     at["mode"] = "polled";
     at["period"] = getTimeout();
     bool success = false;
@@ -188,23 +194,25 @@ void CuPollingActivity::execute()
         }
     }
 
-    at["msg"] = tangoworld.getLastMessage();
-    at["err"] = tangoworld.error();
-
     if(dev && success)
     {
         d->repeat = getTimeout();
         d->errCnt = 0;
     }
-    else if(dev)
+    else if(dev && !success)
     {
         ++(d->errCnt) > 0 && d->errCnt < 3 ? d->repeat = 5000 : d->repeat = 10000;
-        pbred("failed to read attribute for \"%s/%s\": \"%s\" ---> decreasing timeout to %d cuz errcnt is %d",
+        printf("\e[1;31mfailed to read attribute for \"%s/%s\": \"%s\" ---> decreasing timeout to %d cuz errcnt is %d\e[0m\n",
               devnam.c_str(), point.c_str(), at["msg"].toString().c_str(), d->repeat, d->errCnt);
     }
-    else
-    {
+    if(dev) {
+        at["msg"] = tangoworld.getLastMessage();
+        at["err"] = tangoworld.error();
+    }
+    else {
         at["msg"] = d->tdev->getMessage();
+        at["err"] = true;
+        d->repeat = -1;
     }
     publishResult(at);
 }
@@ -234,8 +242,8 @@ void CuPollingActivity::onExit()
     utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
     if(d->tdev)
         refcnt = d->tdev->removeRef();
-//    printf("\e[1;31mCuPollingActivity::onExit(): refcnt = %d called actionRemove for device %s att %s\e[0m\n",
-//           refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
+    cuprintf("\e[1;31mCuPollingActivity::onExit(): refcnt = %d called actionRemove for device %s att %s\e[0m\n",
+           refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
     if(refcnt == 0)
     {
         d->device_srvc->removeDevice(at["device"].toString());
