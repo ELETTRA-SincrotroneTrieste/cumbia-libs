@@ -155,6 +155,7 @@ void QuCircularGauge::m_set_value(const CuVariant &val)
 
 void QuCircularGauge::onUpdate(const CuData &da)
 {
+    printf("\e[1;33m QuCircularGauge::onUpdate da %s\e[0m\n", da.toString().c_str());
     d->read_ok = !da["err"].toBool();
     setEnabled(d->read_ok);
     if(!d->read_ok)

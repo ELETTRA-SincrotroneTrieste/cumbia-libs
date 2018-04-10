@@ -326,7 +326,7 @@ const char *Qumbiaizer::type_str(Qumbiaizer::Type t) const
         return "StringVector";
     case IntVector:
         return "IntVector";
-     default:
+    default:
         return "Undefined";
     }
 }
@@ -386,14 +386,12 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
     QString message = QString::fromStdString(v["msg"].toString());
     bool ok = !v["err"].toBool();
 
-    printf("updataValue err flag %d msg %s\ \e[1;34m%s\e[0mn", ok, qstoc(message), v.toString().c_str());
-
     if(customMethod != NULL)
         methName = QString(customMethod);
     else
         methName = methodName();
 
-    if(ok)
+    if(ok && (v.containsKey("value") || v.containsKey("w_value")))
     {
         QObject *object = NULL;
         if(!slot().isEmpty())
@@ -617,8 +615,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
             }
             else
                 message += " [cannot convert to int vector] ";
-         }
-
+        }
         else
         {
             ok = false;
@@ -634,7 +631,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                  qstoc(object->objectName()), qstoc(message));
         else if(object && ok)
             printf("\e[1;32mQumbiaizer.updateValue: SUCCESSFULLY invoke method \"%s\" on \"%s\": \"%s\"\n", qstoc(methName),
-                 qstoc(object->objectName()), qstoc(message));
+                   qstoc(object->objectName()), qstoc(message));
 
     }
     emit readOk(ok);
