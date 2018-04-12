@@ -18,13 +18,16 @@ CuUiMake::CuUiMake()
     m_options = new Options(qApp->arguments());
     m_dummy = m_options->getopt("show-config").toBool() ||
             m_options->getopt("help").toBool() ||
-            m_options->getopt("configure").toBool();
+            m_options->getopt("configure").toBool() ||
+            m_options->getopt("list-options").toBool();
 
     m_debug = m_options->getopt("debug").toBool();
     if(m_options->getopt("show-config").toBool())
         m_options->printOptions(*this);
     else if(m_options->getopt("help").toBool())
         m_options->printHelp(*this);
+    else if(m_options->getopt("list-options").toBool())
+        m_options->printOptionsList(*this);
     else if(m_options->getopt("configure").toBool())
         m_options->configure(*this);
 }

@@ -1,20 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Widget</class>
- <widget class="QWidget" name="Widget" >
-  <property name="geometry" >
+ <widget class="QWidget" name="Widget">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>676</width>
+    <height>505</height>
    </rect>
   </property>
-  <property name="windowTitle" >
-   <string>Widget</string>
+  <property name="windowTitle">
+   <string>New cumbia control object</string>
   </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Name</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2" colspan="7">
+    <widget class="QLineEdit" name="leName"/>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>header</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLineEdit" name="leH">
+     <property name="type" stdset="0">
+      <string>header</string>
+     </property>
+     <property name="ext" stdset="0">
+      <string>.h</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3" colspan="4">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>cpp</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="7" colspan="2">
+    <widget class="QLineEdit" name="leCpp">
+     <property name="type" stdset="0">
+      <string>cpp</string>
+     </property>
+     <property name="ext" stdset="0">
+      <string>.cpp</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="9">
+    <widget class="QGroupBox" name="gbType">
+     <property name="title">
+      <string>Type</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QRadioButton" name="rbReader">
+        <property name="text">
+         <string>rea&amp;der</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="type" stdset="0">
+         <string>r</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rbWriter">
+        <property name="text">
+         <string>wr&amp;iter</string>
+        </property>
+        <property name="type" stdset="0">
+         <string>w</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rbReaderWriter">
+        <property name="text">
+         <string>reader/wri&amp;ter</string>
+        </property>
+        <property name="type" stdset="0">
+         <string>rw</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>inherits from</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="3">
+    <widget class="QComboBox" name="cbParent">
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+     <item>
+      <property name="text">
+       <string>QLabel</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QWidget</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QComboBox</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QLineEdit</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QSpinBox</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QDoubleSpinBox</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QCheckBox</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QTimeEdit</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QDateEdit</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QDateTimeEdit</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QTextEdit</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QPlainTextEdit</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QTextBrowser</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QDial</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QwtPlot</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QuTrendPlot</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QuSpectrumPlot</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QSlider</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QProgressBar</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QObject</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="3" column="4" colspan="3">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>include</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>project file:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0" colspan="6">
+    <widget class="QLineEdit" name="leOutDir"/>
+   </item>
+   <item row="7" column="6" colspan="2">
+    <widget class="QPushButton" name="pbChangeOutDir">
+     <property name="text">
+      <string>Change...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="8">
+    <widget class="QPushButton" name="pbGen">
+     <property name="text">
+      <string>Generate</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="8">
+    <widget class="QLineEdit" name="leProUnder">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="7">
+    <widget class="QCheckBox" name="cbAddToPro">
+     <property name="text">
+      <string>Add to project under:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="7">
+    <widget class="QLineEdit" name="leInclude"/>
+   </item>
+   <item row="4" column="1" colspan="5">
+    <widget class="QLineEdit" name="leProFile"/>
+   </item>
+   <item row="5" column="0" colspan="9">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Brief class description</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QPlainTextEdit" name="pteBrief"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="6" column="0" colspan="9">
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>2</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Class description</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QPlainTextEdit" name="pteDesc">
+        <property name="plainText">
+         <string>Connection is initiated with setSource. When new data arrives, it is displayed and the newData convenience
+signal is emitted.
+
+getContext returns a pointer to the CuContext used as a delegate for the connection.</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
+ <layoutdefault spacing="6" margin="11"/>
  <resources/>
  <connections/>
 </ui>

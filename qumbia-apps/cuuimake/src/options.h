@@ -22,6 +22,8 @@ public:
 
     void printHelp(const CuUiMake &cm) const;
 
+    void printOptionsList(const CuUiMake& cm) const;
+
     void printOptions(const CuUiMake& cm, const QStringList &theseOptions = QStringList()) const;
 
     QString make_j() const;

@@ -6,7 +6,35 @@
 
 QT       += core gui
 
+INSTALL_ROOT = /usr/local
+
+greaterThan(QT_MAJOR_VERSION, 4) {
+    QTVER_SUFFIX = -qt$${QT_MAJOR_VERSION}
+} else {
+    QTVER_SUFFIX =
+}
+
+CONFIG += debug
+
+INCLUDEDIR = $${INSTALL_ROOT}/include
+
+SHAREDIR = $${INSTALL_ROOT}/share
+
+QT       += core gui
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+TEMPLATES_INSTALLDIR = $${SHAREDIR}/qumbiacontrolwizard
+
+
+DEFINES += TEMPLATES_PATH=\"\\\"$${TEMPLATES_INSTALLDIR}\\\"\"
+
+DEFINES += INCLUDE_PATH=\"\\\"$${INCLUDEDIR}/cumbia-qtcontrols\\\"\"
+
+DEFINES += DOC_PATH=\"\\\"$${SHAREDIR}/doc\\\"\"
+
+DEFINES -= QT_NO_DEBUG_OUTPUT
+
 
 TARGET = qumbianewcontrolwizard
 TEMPLATE = app
@@ -32,3 +60,19 @@ HEADERS += \
 
 FORMS += \
         qumbianewcontrolw.ui
+
+target.path = $${INSTALL_ROOT}/bin
+target.files = $${TARGET}
+
+templates.path = $${TEMPLATES_INSTALLDIR}
+templates.files =  qumbiacontrolwizard_template/*
+
+INSTALLS = target templates
+
+DISTFILES += \
+    qumbiacontrolwizard_template/header_r.h \
+    qumbiacontrolwizard_template/header_w.h \
+    qumbiacontrolwizard_template/header_rw.h \
+    qumbiacontrolwizard_template/cpp_r.cpp \
+    qumbiacontrolwizard_template/cpp_w.cpp \
+    qumbiacontrolwizard_template/cpp_rw.cpp

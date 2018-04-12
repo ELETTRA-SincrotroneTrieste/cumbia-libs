@@ -125,6 +125,14 @@ void Options::printHelp(const CuUiMake& cm) const
 
 }
 
+void Options::printOptionsList(const CuUiMake &) const
+{
+    foreach(QString k, m_helpMap.keys()) {
+        printf("%s ", k.toStdString().c_str());
+    }
+    printf("\n");
+}
+
 void Options::printOptions(const CuUiMake &cm, const QStringList &theseOptions) const
 {
     cm.print(CuUiMake::Conf, false, "%s options:\n", qstoc(qApp->applicationName()));
