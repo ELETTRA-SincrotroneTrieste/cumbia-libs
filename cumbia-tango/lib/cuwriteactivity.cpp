@@ -97,6 +97,8 @@ void CuWriteActivity::execute()
             d->msg = tangoworld.getLastMessage();
             d->err = tangoworld.error();
         }
+
+        printf("\e[0;33m write operation: data is : %s\e[0m\n", at.toString().c_str());
         // don't pulish result: we exit after execute. Publish there.
         // publishResult(at);
     }

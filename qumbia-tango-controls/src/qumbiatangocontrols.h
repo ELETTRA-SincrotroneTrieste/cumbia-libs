@@ -18,7 +18,8 @@
  * |  <a href="../../cumbia-tango/html/tutorial_activity.html">Writing an activity</a> | <a href="../../cumbia-tango/html/index.html">cumbia-tango</a> |
  * |  <a href="../../cumbia-tango/html/cudata_for_tango.html">CuData for Tango</a> | <a href="../../cumbia-tango/html/index.html">cumbia-tango</a> |
  * |  <a href="../../qumbia-tango-controls/html/tutorial_cumbiatango_widget.html">Writing a Qt widget that integrates with cumbia</a> | <a href="../../qumbia-tango-controls/html/index.html">this module</a>  |
- * |  <a href="../../qumbia-tango-controls/html/cuuimake.html">Using <em>cuuimake</em> to process Qt designer UI files</a> | <a href="../../qumbia-tango-controls/html/index.html">this module</a>  |
+ * |  <a href="../../qumbia-tango-controls/html/tutorial_qumbianewcontrolwizard.html"><em>qumbianewcontrolwizard</em></a>: quickly add a custom Qt widget to a cumbia project | <a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
+ * |  <a href="../../qumbia-tango-controls/html/cuuimake.html">Using <em>cuuimake</em></a> to process Qt designer UI files | <a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
  * |  <a href="../../qumbia-tango-controls/html/tutorial_qumbiatango.html">Writing a <em>Qt application</em> with cumbia and Tango</em></a>. |<a href="../../qumbia-tango-controls/html/index.html">this module</a>  |
  * |  <a href="../../qumbia-tango-controls/html/tutorial_from_qtango.html">Porting a <em>QTango application</em> to <em>cumbia-tango</em></a>. |<a href="../../qumbia-tango-controls/html/index.html">this module</a>  |
  * |  <a href="../../cumbia-qtcontrols/html/understanding_cumbia_qtcontrols_constructors.html">Understanding <em>cumbia-qtcontrols constructors, sources and targets</em></a> |<a href="../../cumbia-qtcontrols/html/index.html">cumbia-qtcontrols</a>. |

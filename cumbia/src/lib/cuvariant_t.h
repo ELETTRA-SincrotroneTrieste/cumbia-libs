@@ -19,7 +19,6 @@
  */
 template<typename T> bool CuVariant::to(T &val) const
 {
-    val = 0;
     bool valid = (d->format == Scalar);
     if(valid)
     {

@@ -71,10 +71,10 @@ QString QuApplyNumeric::target() const
  *
  * Refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */
-void QuApplyNumeric::setTarget(const QString &targets)
+void QuApplyNumeric::setTarget(const QString &target)
 {
-    CuControlsWriterA* w = d->context->replace_writer(targets.toStdString(), this);
-    if(w) w->setTarget(targets);
+    CuControlsWriterA* w = d->context->replace_writer(target.toStdString(), this);
+    if(w) w->setTarget(target);
 }
 
 /*! \brief executes the target specified with setTarget, writing the value set on the widget.

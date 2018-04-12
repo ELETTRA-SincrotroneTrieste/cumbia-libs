@@ -14,13 +14,16 @@
 #include "cucontrolsfactorypool.h"
 #include "culinkstats.h"
 #include "cucontextmenu.h"
+#include "culog.h"
+#include "qulogimpl.h"
+#include "cuserviceprovider.h"
 
 /// @private
 class QuCheckboxPrivate
 {
 public:
     bool auto_configure;
-    bool read_ok, last_val;
+    bool ok, last_val;
     bool text_from_label;
     CuContext *in_ctx, *out_ctx;
 };
@@ -68,7 +71,7 @@ void QuCheckBox::m_init()
 {
     d->in_ctx = d->out_ctx = NULL;
     d->auto_configure = true;
-    d->read_ok = false;
+    d->ok = false;
     d->text_from_label = true;
     setText("No Link");
     connect(this, SIGNAL(clicked()), this, SLOT(checkboxClicked()));
@@ -100,13 +103,13 @@ QString QuCheckBox::target() const
  *
  * If a reader with a different source is configured, it is deleted.
  * The same goes for the writer.
- * If options have been set with QuContext::setOptions, they are used to set up the reader as desired.
+ * If options have been set with CuContext::setOptions, they are used to set up the reader as desired.
  *
  * \note the reader and the writer are connected to the same source.
  *
  * Refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  *
- * @see QuContext::setOptions
+ * @see CuContext::setOptions
  * @see source
  */
 void QuCheckBox::setSource(const QString &s)
@@ -183,17 +186,16 @@ CuContext *QuCheckBox::getContext() const
 
 /** \brief Returns the reader's context
  *
- * @return a pointer to the output QuContext used to read.
+ * @return a pointer to the output CuContext used to read.
  */
 CuContext *QuCheckBox::getOutputContext() const
 {
     return d->out_ctx;
-    return NULL;
 }
 
 /** \brief Returns the writer's context
  *
- * @return a pointer to the input QuContext used to write.
+ * @return a pointer to the input CuContext used to write.
  */
 CuContext *QuCheckBox::getInputContext() const
 {
@@ -227,20 +229,32 @@ bool QuCheckBox::textFromLabel() const
  */
 void QuCheckBox::onUpdate(const CuData &da)
 {
-    d->read_ok = !da["err"].toBool();
-    if(d->read_ok && d->auto_configure && da["type"].toString() == "property" &&
+    d->ok = !da["err"].toBool();
+    bool write_op = da["activity"].toString() == "writer";
+    if(d->ok && d->auto_configure && da["type"].toString() == "property" &&
             da.containsKey("label")) {
         setProperty("label", QString::fromStdString(da["label"].toString()) );
         if(d->text_from_label)
             setText(property("label").toString());
     }
-    setEnabled(d->read_ok);
+    if(!d->ok && write_op) {
+        Cumbia* cumbia = d->in_ctx->cumbia();
+        if(!cumbia) /* pick from the CumbiaPool */
+            cumbia = d->in_ctx->cumbiaPool()->getBySrc(da["src"].toString());
+        CuLog *log;
+        if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
+        {
+            static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::Write, true);
+            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);
+        }
+    }
+    setEnabled(d->ok);
     // update link statistics
     d->out_ctx->getLinkStats()->addOperation();
     // tooltip message
     setToolTip(da["msg"].toString().c_str());
 
-    if(!d->read_ok)
+    if(!d->ok && !write_op)
         d->out_ctx->getLinkStats()->addError(da["msg"].toString());
     else if(da.containsKey("value"))
     {
