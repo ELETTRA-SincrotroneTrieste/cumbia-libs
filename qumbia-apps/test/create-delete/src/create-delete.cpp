@@ -39,6 +39,8 @@
 CreateDelete::CreateDelete(CumbiaPool *cumbia_pool, QWidget *parent) :
     QWidget(parent)
 {    
+    // valgrind test
+    // new int[4000];
     cu_pool = cumbia_pool;
     // setup Cumbia pool and register cumbia implementations for tango and epics
     CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
