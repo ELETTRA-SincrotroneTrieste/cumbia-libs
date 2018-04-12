@@ -1,0 +1,43 @@
+_cumbia() 
+{
+    local cur prev prevprev opts base
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+	prevprev="${COMP_WORDS[COMP_CWORD-2]}"
+
+    #
+    #  The basic options we'll complete.
+    #
+    opts="new ui client"
+
+
+    #
+    #  Complete the arguments to some of the basic commands.
+    #
+    case "${prev}" in
+        new)
+            local running=$(for x in project control; do echo ${x} ; done )
+            COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            return 0
+            ;;
+        ui)
+            local names=$(for x in make pippolone; do echo ${x} ; done )
+            COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
+            return 0
+            ;;
+		make)
+			local names=$(for x in `cuuimake --list-options`; do echo ${x} ; done )
+            COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
+            return 0
+			;;
+        *)
+        ;;
+    esac
+
+
+
+   COMPREPLY=($(compgen -W "${opts}" -- ${cur}))  
+   return 0
+}
+complete -F _cumbia cumbia

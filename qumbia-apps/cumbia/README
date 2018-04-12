@@ -1,0 +1,8 @@
+A cumbia command that offers shortcuts to execute the utility applications:
+
++-------------- shortcut -----------------+------------------- command -----------------+
+|           cumbia new project            |-------------- qumbiaprojectwizard ----------|
+|           cumbia new control		  |-------------- qumbianewcontrolwizard--------|
+|	    cumbia ui make	          |-------------- cuuimake ---------------------|
+|	    cumbia client		  |-------------- cumbia_client ----------------|
++-----------------------------------------+---------------------------------------------+
