@@ -6,19 +6,19 @@
 #include <cucontrolsfactorypool.h>
 
 namespace Ui {
-class GenericClient;
+class CumbiaClient;
 }
 
 class CuData;
 class CumbiaPool;
 
-class GenericClient : public QWidget
+class CumbiaClient : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit GenericClient(CumbiaPool *cupool, QWidget *parent = 0);
-    ~GenericClient();
+    explicit CumbiaClient(CumbiaPool *cupool, QWidget *parent = 0);
+    ~CumbiaClient();
 
 private slots:
     void configure(const CuData& d);
@@ -32,7 +32,7 @@ private slots:
     void switchSources();
 
 private:
-    Ui::GenericClient *ui;
+    Ui::CumbiaClient *ui;
 
     CumbiaPool *cu_pool;
     QuLogImpl m_log_impl;

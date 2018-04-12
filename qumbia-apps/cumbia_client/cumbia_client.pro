@@ -14,7 +14,7 @@ CONFIG += debug
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = generic_client
+TARGET = cumbia_client
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -31,14 +31,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 DEFINES -= QT_NO_DEBUG_OUTPUT
 
 SOURCES += main.cpp \
-    generic_client.cpp \
+    cumbia_client.cpp \
     src/element.cpp
 
 HEADERS  += \
-    generic_client.h \
+    cumbia_client.h \
     src/element.h
 
-FORMS    += generic_client.ui
+FORMS    += cumbia_client.ui
 
 inst.files = $${TARGET}
 inst.path = $${INSTALL_ROOT}/bin
