@@ -32,11 +32,11 @@ DEFINES -= QT_NO_DEBUG_OUTPUT
 
 SOURCES += main.cpp \
     cumbia_client.cpp \
-    src/element.cpp
+    element.cpp
 
 HEADERS  += \
     cumbia_client.h \
-    src/element.h
+    element.h
 
 FORMS    += cumbia_client.ui
 
