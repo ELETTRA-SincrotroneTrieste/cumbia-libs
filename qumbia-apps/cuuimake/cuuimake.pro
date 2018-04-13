@@ -7,6 +7,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 
 SHAREDIR = $${INSTALL_ROOT}/share/cuuimake
+DOCDIR = $${INSTALL_ROOT}/share/doc/cuuimake
 
 QT -= gui
 
@@ -34,10 +35,22 @@ CUUIMAKE_VERSION = 0.1
 
 DEFINES += CUUIMAKE_VERSION_STR=\"\\\"$${CUUIMAKE_VERSION}\"\\\"
 
+DEFINES += CUUIMAKE_DOCDIR=\"\\\"$${DOCDIR}\"\\\"
+
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+
+HEADERS += \
+    src/defs.h \
+    src/cuuimake.h \
+    src/conf.h \
+    src/parser.h \
+    src/processor.h \
+    src/uicproc.h \
+    src/options.h \
+    src/xmakeprocess.h
 
 SOURCES += src/main.cpp \
     src/defs.cpp \
@@ -59,14 +72,12 @@ target.path = $${INSTALL_ROOT}/bin
 conf.path = $${INSTALL_ROOT}/share/cuuimake
 conf.files = cuuimake-cumbia-qtcontrols.xml
 
-INSTALLS += target conf
+doc.commands = \
+doxygen \
+Doxyfile;
 
-HEADERS += \
-    src/defs.h \
-    src/cuuimake.h \
-    src/conf.h \
-    src/parser.h \
-    src/processor.h \
-    src/uicproc.h \
-    src/options.h \
-    src/xmakeprocess.h
+doc.files = doc/*
+doc.path = $${DOCDIR}
+
+INSTALLS += target conf doc
+

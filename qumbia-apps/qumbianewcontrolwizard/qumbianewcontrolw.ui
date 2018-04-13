@@ -191,6 +191,26 @@
      </item>
      <item>
       <property name="text">
+       <string>QTreeView</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QTableView</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QTreeWidget</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>QTableWidget</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>QDial</string>
       </property>
      </item>

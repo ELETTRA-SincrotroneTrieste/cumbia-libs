@@ -324,7 +324,7 @@ The *cuuimake* utility *runs uic* on the project <em>.ui</em> files. This means 
 *cumbia* project. That's because *cumbia cuuimake* creates the <em>ui_*.h</em> files so that the *cumbia-qtcontrols* class constructors are
 expanded to match the expected parameters.
 
-You may want to read the [ Understanding the cumbia-qtcontrols widgets constructors, sources and targets] (../../cumbia-qtcontrols/html/understanding_cumbia_qtcontrols_constructors.html) documentation and the [ cuuimake manual ] (cuuimake.html) for further details.
+You may want to read the [ Understanding the cumbia-qtcontrols widgets constructors, sources and targets] (../../cumbia-qtcontrols/html/understanding_cumbia_qtcontrols_constructors.html) documentation and the <a href="../../cuuimake/html/md_src_cuuimake.html">Using <em>cuuimake manual</em></a> for further details.
 
 \code
 

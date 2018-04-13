@@ -306,7 +306,7 @@ Mycumbiatangoapp::Mycumbiatangoapp(CumbiaTango *cut, QWidget *parent) :
 ### See also
 
 \li <a href="../html/md_src_tutorial_qumbiatango_app.html">Setting up a graphical application with cumbia and tango</a>.
-\li <a href="../html/md_src_cuuimake.html">Using <em>cuuimake</em></a>.
+\li <a href="../../cuuimake/html/md_src_cuuimake.html">Using <em>cuuimake</em></a>.
 
 \li <a href="../../cumbia-qtcontrols/html/index.html">cumbia-qtcontrols module</a>.
 \li <a href="../html/index.html">qumbia-tango-controls module</a>.

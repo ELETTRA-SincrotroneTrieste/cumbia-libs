@@ -23,7 +23,8 @@ Options::Options(const QStringList& args)
     m_helpMap.insert("--configure", "run the configuration wizard. All other options will be ignored");
     m_helpMap.insert("--show-config", "shows the configuration according to the application settings and the command line parameters specified. "
                                       "No Analysis nor Expansion is performed.");
-    m_helpMap.insert("--clean", "execute make clean and remove ui/ui_*.h files and exit.");
+    m_helpMap.insert("--refresh", "remove ui_*.h files to refresh them before bulding the project again.");
+    m_helpMap.insert("--clean", "execute make clean and remove ui_*.h files and exit.");
     m_helpMap.insert("--pre-clean", "like \"--clean\" but do not exit.");
     m_helpMap.insert("--debug", "additional information is printed while operations are performed");
 
@@ -174,7 +175,7 @@ void Options::printOptions(const CuUiMake &cm, const QStringList &theseOptions) 
 
 bool Options::configure(const CuUiMake &cm)
 {
-    QStringList configurableOptions = QStringList() << "--qmake" << "--make";
+    QStringList configurableOptions = QStringList() << "--qmake" << "--make" << "--pre-clean" << "--refresh";
     unsigned char c;
 
     struct termios old_tio, new_tio;

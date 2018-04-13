@@ -421,7 +421,7 @@ edited with the Qt designer:
 > make install
 
 Extensive information about cuuimake can be found in the qumbia-tango-controls documentation installed according to the
-instructions given in the fourth paragraph. (qumbia-tango-controls/html/md_src_cuuimake.html)
+instructions given in the fourth paragraph. (cuuimake/html/md_src_cuuimake.html)
 
 ### 9. Test applications.
 

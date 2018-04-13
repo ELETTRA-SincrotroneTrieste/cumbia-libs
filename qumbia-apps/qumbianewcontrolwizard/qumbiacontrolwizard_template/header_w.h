@@ -71,6 +71,8 @@ public slots:
 
     void write(const QString& s);
 
+    void write(bool b);
+
     void write(const QStringList& sl);
 
     void write();

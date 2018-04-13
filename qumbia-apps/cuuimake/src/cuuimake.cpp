@@ -71,6 +71,8 @@ void CuUiMake::print(CuUiMake::Step step, bool err, const char *fmt, ...) const
         fprintf(fd, "[\e[1;36mcuuimake\e[0m:%s    make\e[0m] ", color);
     else if(step == Clean)
         fprintf(fd, "[\e[1;36mcuuimake\e[0m:%s   clean\e[0m] ", color);
+    else if(step == Doc)
+        fprintf(fd, "[\e[1;36mcuuimake\e[0m:%s     doc\e[0m] ", color);
 
     vfprintf(fd, fmt, s);
 
@@ -80,15 +82,18 @@ void CuUiMake::print(CuUiMake::Step step, bool err, const char *fmt, ...) const
 bool CuUiMake::make()
 {
     // load configuration files
+    int removed_ui_cnt = -1;
     Defs defs;
     defs.setDebug(m_debug);
     QString fname (SHAREDIR + QString("/cuuimake-cumbia-qtcontrols.xml"));
 
     QString localfname = m_findLocalConfFile();
     bool success = defs.loadConf(fname, localfname);
-    if(localfname.isEmpty())
-        print(Analysis, false, "\e[1;35minfo\e[0m: you can add a text file named cuuimake[.*].conf "
-                               "with the list of the promoted widget names to expand\n");
+    print(Doc, false, "file://%s/%s\n", CUUIMAKE_DOCDIR, "html/cuuimake.html");
+    if(localfname.isEmpty()) {
+        print(Analysis, false, "\e[1;35minfo\e[0m: if any promoted widget is not automatically detected you can add a text file named \n");
+        print(Analysis, false, "\e[1;35minfo\e[0m: cuuimake[.*].conf with the list of the \e[0;4mpromoted widget\e[0m names to expand\n");
+    }
     if(!success)
         print(Analysis, true, "error loading configuration file \"%s\": %s\n", qstoc(fname), qstoc(defs.lastError()));
     else {
@@ -97,18 +102,21 @@ bool CuUiMake::make()
         print(Analysis, false, "default configuration loaded\n");
     }
 
-    if(success && (m_options->getopt("clean").toBool() || m_options->getopt("pre-clean").toBool()) )
+    bool pre_clean = m_options->getopt("pre-clean").toBool();
+    bool clean = m_options->getopt("clean").toBool();
+    bool refresh = m_options->getopt("refresh").toBool();
+    if(success && (clean || pre_clean || refresh) ) {
+        Processor p;
+        removed_ui_cnt = p.remove_UI_H(defs.srcDirsInfo());
+        print(Clean, false, "removed %d ui_.*.h files\n", removed_ui_cnt);
+    }
+    if(success && (clean || pre_clean) )
     {
         print(Clean, false, "cleaning and removing ui_*.h files\n");
         XMakeProcess xmake;
         success = xmake.clean();
         if(!success)
             print(Clean, true, "failed to execute clean: %s\n", qstoc(xmake.lastError()));
-        else {
-            Processor p;
-            int remcnt = p.remove_UI_H(defs.srcDirsInfo());
-            print(Clean, false, "removed %d ui_.*.h files\n", remcnt);
-        }
         if(!m_options->getopt("pre-clean").toBool())
             return success;
         // otherwise go on

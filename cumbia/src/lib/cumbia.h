@@ -31,7 +31,7 @@ class CuActivityEvent;
  * |  <a href="../../cumbia-tango/html/cudata_for_tango.html">CuData for Tango</a> | <a href="../../cumbia-tango/html/index.html">cumbia-tango</a> |
  * |  <a href="../../qumbia-tango-controls/html/tutorial_cumbiatango_widget.html">Writing a Qt widget that integrates with cumbia</a> | <a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
  * |  <a href="../../qumbia-tango-controls/html/tutorial_qumbianewcontrolwizard.html"><em>qumbianewcontrolwizard</em></a>: quickly add a custom Qt widget to a cumbia project | <a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
- * |  <a href="../../qumbia-tango-controls/html/cuuimake.html">Using <em>cuuimake</em></a> to process Qt designer UI files | <a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
+ * |  <a href="../../cuuimake/html/cuuimake.html">Using <em>cuuimake</em></a> to process Qt designer UI files | <a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
  * |  <a href="../../qumbia-tango-controls/html/tutorial_qumbiatango.html">Writing a <em>Qt application</em> with cumbia and Tango</em></a>. |<a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
  * |  <a href="../../qumbia-tango-controls/html/tutorial_from_qtango.html">Porting a <em>QTango application</em> to <em>cumbia-tango</em></a>. |<a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
  * |  <a href="../../cumbia-qtcontrols/html/understanding_cumbia_qtcontrols_constructors.html">Understanding <em>cumbia-qtcontrols constructors, sources and targets</em></a> |<a href="../../cumbia-qtcontrols/html/index.html">cumbia-qtcontrols</a>. |
@@ -111,15 +111,15 @@ class CuActivityEvent;
  *
  * \li <a href="../cumbia-tango/md_lib_tutorial_activity.html">Writing an activity to read Tango
  *      device, attribute and class properties</a>
- * \li <a href="../qumbia-tango-controls/html/md_src_tutorial_qumbiatango_app.html">Setting up a graphical application with cumbia and tango</a>.
- * \li <a href="../qumbia-tango-controls/html/md_src_cuuimake.html">Using <em>cuuimake</em></a>.
- * \li <a href="../qumbia-tango-controls/html/md_src_tutorial_qumbiatango_widget.html">Writing a <em>Qt widget</em> to <em>read from Tango</em></a>.
+ * \li <a href="../../qumbia-tango-controls/html/md_src_tutorial_qumbiatango_app.html">Setting up a graphical application with cumbia and tango</a>.
+ * \li <a href="../../cuuimake/html/cuuimake.html">Using <em>cuuimake</em></a>.
+ * \li <a href="../../qumbia-tango-controls/html/md_src_tutorial_qumbiatango_widget.html">Writing a <em>Qt widget</em> to <em>read from Tango</em></a>.
  *
  * \par See also
- * \li <a href="../cumbia-qtcontrols/html/index.html">cumbia-qtcontrols module</a>.
- * \li <a href="../qumbia-tango-controls/html/index.html">qumbia-tango-controls module</a>.
- * \li <a href="../cumbia-epics/index.html">qumbia-epics module</a>.
- * \li <a href="../qumbia-epics-controls/html/index.html">qumbia-epics-controls module</a>.
+ * \li <a href="../../cumbia-qtcontrols/html/index.html">cumbia-qtcontrols module</a>.
+ * \li <a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls module</a>.
+ * \li <a href="../../cumbia-epics/index.html">qumbia-epics module</a>.
+ * \li <a href="../../qumbia-epics-controls/html/index.html">qumbia-epics-controls module</a>.
  *
  */
 class Cumbia

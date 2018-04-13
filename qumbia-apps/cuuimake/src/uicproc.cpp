@@ -43,7 +43,10 @@ QString UicProc::getUicCmd(const QString &ui_h_fname, const SearchDirInfoSet &di
     {
         m_lastError = "UicProc.getUicCmd: error opening Makefile in read mode: be sure to run qmake before " +
                 qApp->applicationName() + " and to execute "  + qApp->applicationName() + " from the "
-                "directory where .pro and Makefile files are: " + mkf.errorString();
+                "directory where .pro and Makefile files are. You can pass the \"--qmake\" option on the command line "
+                "or configure cuuimake to automatically execute \"qmake\" before everything else "
+                "(execute cuuimake --configure to set up the application). "
+                "The error is: \""+ mkf.errorString() + "\"";
         return cmd; // empty
     }
     QString binpath;
