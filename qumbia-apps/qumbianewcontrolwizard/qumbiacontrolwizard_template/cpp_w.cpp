@@ -55,7 +55,19 @@ void $MAINCLASS$::m_init()
     d->context = NULL;
     d->auto_configure = true;
     d->ok = false;
+}
 
+$MAINCLASS$::~$MAINCLASS$()
+{
+    pdelete("~$MAINCLASS$ %p", this);
+    delete d->context;
+    delete d;
+}
+
+// call this method at the end of m_configure so as to be sure that no write is
+// triggered after the m_configure sets the current write value on the object
+//
+void $MAINCLASS$::m_create_connections() {
     // enable one of these connections or write a custom one to trigger a write operation
     //
     // ---------------------------------------------------------------------------------------------------
@@ -68,13 +80,6 @@ void $MAINCLASS$::m_init()
 //    connect(this, SIGNAL(apply()), this, SLOT(write()));
     //
     // ---------------------------------------------------------------------------------------------------
-}
-
-$MAINCLASS$::~$MAINCLASS$()
-{
-    pdelete("~$MAINCLASS$ %p", this);
-    delete d->context;
-    delete d;
 }
 
 QString $MAINCLASS$::target() const {
@@ -171,7 +176,7 @@ void $MAINCLASS$::m_configure(const CuData& da)
     // comment if not needed
     std::string smin = m.toString();
     std::string smax = M.toString();
-    printf("MyLineEdit.m_configure: minimum and maximum as strings: m: %s M:%s\n", smin.c_str(), smax.c_str());
+    printf("$MAINCLASS$.m_configure: minimum and maximum as strings: m: %s M:%s\n", smin.c_str(), smax.c_str());
     // ---------------------------------
 
 
@@ -200,6 +205,10 @@ void $MAINCLASS$::m_configure(const CuData& da)
     if(d->ok && da.containsKey("w_value")) {
         m_set_write_value(da["w_value"]);
     }
+    // m_set_write_value could trigger a value changed signal.
+    // it is important to setup signal/slot connections after
+    // the write value has been set on the widget
+    m_create_connections();
 }
 
 
@@ -207,7 +216,7 @@ void $MAINCLASS$::onUpdate(const CuData &da)
 {
     d->ok = !da["err"].toBool();
     if(!d->ok) {
-        perr("QuApplyNumeric [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
+        perr("$MAINCLASS$ [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
              da["src"].toString().c_str(), da["msg"].toString().c_str(),
                 da["data_format_str"].toString().c_str(), da["writable"].toInt());
 
@@ -342,22 +351,20 @@ void $MAINCLASS$::m_set_write_value(const CuVariant& val) {
 int $MAINCLASS$::m_try_write_property(const QString& propnam, const CuVariant &val)
 {
     bool success = false;
-    int idx;
+    int idx = -1;
     idx = metaObject()->indexOfProperty(propnam.toStdString().c_str());
+    QVariant::Type t = metaObject()->property(idx).type();
     if(idx > -1) {
-        switch(metaObject()->property(idx).type()) {
-        case QVariant::Double:
-            success = setProperty(propnam.toStdString().c_str(), val.toDouble());
-            break;
-        case QVariant::Int:
-            success = setProperty(propnam.toStdString().c_str(), val.toInt());
-            break;
-        case QVariant::String:
+        if(t == QVariant::Double) {
+            double d;
+            success = val.to<double>(d) && setProperty(propnam.toStdString().c_str(), d);
+        }
+        else if (t == QVariant::Int) {
+            int i;
+            success = val.to<int>(i) && setProperty(propnam.toStdString().c_str(), i);
+        }
+        else if (t == QVariant::String) {
             success = setProperty(propnam.toStdString().c_str(), QString::fromStdString(val.toString()));
-            break;
-        default:
-            idx = -1;
-            break;
         }
     }
     if(!success)

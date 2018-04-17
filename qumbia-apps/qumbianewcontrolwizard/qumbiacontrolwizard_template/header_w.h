@@ -98,6 +98,8 @@ private:
 
     void m_set_write_value(const CuVariant& val);
 
+    void m_create_connections();
+
     // utility function that tries to write the property with the given name on this object
     // returns the index of the written property if the operation is successful, -1 otherwise
     // or if the property does not exist

@@ -20,12 +20,18 @@ INCLUDEDIR = $${INSTALL_ROOT}/include
 
 SHAREDIR = $${INSTALL_ROOT}/share
 
+DOCDIR = $${INSTALL_ROOT}/share/doc/qumbiacontrolwizard
+
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TEMPLATES_INSTALLDIR = $${SHAREDIR}/qumbiacontrolwizard
 
+QUMBIANEWCONTROLSWIZARD_VERSION_HEX = 0x010000
+QUMBIANEWCONTROLSWIZARD_VERSION = 1.0.0
+
+DEFINES += QUMBIANEWCONTROLSWIZARD_VERSION_STR=\"\\\"$${QUMBIANEWCONTROLSWIZARD_VERSION}\"\\\"
 
 DEFINES += TEMPLATES_PATH=\"\\\"$${TEMPLATES_INSTALLDIR}\\\"\"
 
@@ -52,14 +58,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        main.cpp \
-        qumbianewcontrolw.cpp
+        src/main.cpp \
+        src/qumbianewcontrolw.cpp
 
 HEADERS += \
-        qumbianewcontrolw.h
+        src/qumbianewcontrolw.h
 
 FORMS += \
-        qumbianewcontrolw.ui
+        src/qumbianewcontrolw.ui
 
 target.path = $${INSTALL_ROOT}/bin
 target.files = $${TARGET}
@@ -67,7 +73,14 @@ target.files = $${TARGET}
 templates.path = $${TEMPLATES_INSTALLDIR}
 templates.files =  qumbiacontrolwizard_template/*
 
-INSTALLS = target templates
+doc.commands = \
+doxygen \
+Doxyfile;
+
+doc.files = doc/*
+doc.path = $${DOCDIR}
+
+INSTALLS = target templates doc
 
 DISTFILES += \
     qumbiacontrolwizard_template/header_r.h \

@@ -60,20 +60,6 @@ void $MAINCLASS$::m_init()
     d->out_ctx = d->in_ctx = NULL;
     d->auto_configure = true;
     d->ok = false;
-
-    // enable one of these connections or write a custom one to trigger a write operation
-    //
-    // ---------------------------------------------------------------------------------------------------
-    //
-//    connect(this, SIGNAL(valueChanged(int)), this, SLOT(write(int)));
-//    connect(this, SIGNAL(valueChanged(double)), this, SLOT(write(double)));
-//    connect(this, SIGNAL(textChanged(const QString&)), this, SLOT(write(const QString& )));
-//    connect(this, SIGNAL(listChanged(const QStringList&)), this, SLOT(write(const QStringList&)));
-//    connect(this, SIGNAL(toggled(bool)), this, SLOT(write(bool)));
-//    connect(this, SIGNAL(clicked()), this, SLOT(write()));
-//    connect(this, SIGNAL(apply()), this, SLOT(write()));
-    //
-    // ---------------------------------------------------------------------------------------------------
 }
 
 $MAINCLASS$::~$MAINCLASS$()
@@ -82,6 +68,24 @@ $MAINCLASS$::~$MAINCLASS$()
     delete d->out_ctx;
     delete d->in_ctx;
     delete d;
+}
+
+// call this method at the end of m_configure so as to be sure that no write is
+// triggered after the m_configure sets the current write value on the object
+//
+void $MAINCLASS$::m_create_connections() {
+    // enable one of these connections or write a custom one to trigger a write operation
+    //
+    // ---------------------------------------------------------------------------------------------------
+    //
+//    connect(this, SIGNAL(valueChanged(int)), this, SLOT(write(int)));
+//    connect(this, SIGNAL(valueChanged(double)), this, SLOT(write(double)));
+//    connect(this, SIGNAL(textChanged(const QString&)), this, SLOT(write(const QString& )));
+//    connect(this, SIGNAL(listChanged(const QStringList&)), this, SLOT(write(const QStringList&)));
+//    connect(this, SIGNAL(clicked()), this, SLOT(write()));
+//    connect(this, SIGNAL(apply()), this, SLOT(write()));
+    //
+    // ---------------------------------------------------------------------------------------------------
 }
 
 QString $MAINCLASS$::source() const {
@@ -227,6 +231,10 @@ void $MAINCLASS$::m_configure(const CuData& da)
     if(d->ok && da.containsKey("w_value")) {
         printf("$MAINCLASS$.m_configure: set point value for %s is %s\n", da["src"].toString().c_str(), da["w_value"].toString().c_str());
     }
+
+    // if this method is also used to initialise a write value (also called "set point")
+    // setup signal/slot connections right here at the end of the function body
+    m_create_connections();
 }
 
 
