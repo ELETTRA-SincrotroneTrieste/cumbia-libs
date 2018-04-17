@@ -16,6 +16,8 @@ CONFIG += debug
 INCLUDEDIR = $${INSTALL_ROOT}/include
 
 SHAREDIR = $${INSTALL_ROOT}/share
+DOCDIR = $${SHAREDIR}/doc/qumbiaprojectwizard
+DEFINES += DOC_PATH=\"\\\"$${DOCDIR}\\\"\"
 
 QT       += core gui xml
 
@@ -82,7 +84,14 @@ target.files = $${TARGET}
 templates.path = $${TEMPLATES_INSTALLDIR}
 templates.files =  qumbia_project_template/*
 
-INSTALLS = target templates
+doc.commands = \
+doxygen \
+Doxyfile;
+
+doc.files = doc/*
+doc.path = $${DOCDIR}
+
+INSTALLS = target templates doc
 
 DISTFILES += \
     qumbia_project_template/qtango.keywords.json \

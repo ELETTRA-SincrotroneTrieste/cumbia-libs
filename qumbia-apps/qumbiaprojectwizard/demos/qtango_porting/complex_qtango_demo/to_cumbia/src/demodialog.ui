@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>DemoDialog</class>
+ <widget class="QDialog" name="DemoDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>529</width>
+    <height>436</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="0">
+<!--      <widget class="TSimpleLabel" name="tSimpleLabel_2">  -->
+    <widget class="QLabel" name="tSimpleLabel_2">	<!-- TSimpleLabel is mapped into a simple Qt QLabel. ## added by qumbiaprojectwizard -->
+     <property name="text">
+      <string>double_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+<!--      <widget class="TSimpleLabel" name="tSimpleLabel_3">  -->
+    <widget class="QLabel" name="tSimpleLabel_3">	<!-- TSimpleLabel is mapped into a simple Qt QLabel. ## added by qumbiaprojectwizard -->
+     <property name="text">
+      <string>string_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="4">
+<!--      <widget class="TPushButton" name="tPushButton_2">  -->
+    <widget class="QuButton" name="tPushButton_2">	<!-- TPushButton is mapped to QuButton ## added by qumbiaprojectwizard -->
+<!--       <property name="targets">  -->
+     <property name="target">	<!-- targets property is mapped into target ## added by qumbiaprojectwizard -->
+<!--        <string>$1/string_scalar(&amp;tle);;</string>  -->
+      <string>$1/string_scalar(&amp;tle)</string>	<!-- in cumbia the targ:qet is single: removing multiple targets ## added by qumbiaprojectwizard -->
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="5">
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>DEMO DIALOG WITH QTango READERS/WRITERS</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="5">
+<!--      <widget class="TPlotLightMarker" name="tPlotLightMarker">  -->
+    <widget class="QuTrendPlot" name="tPlotLightMarker">	<!-- TPlotLightMarker is mapped into QuTrendPlot OR QuSpectrumPlot. Please check. ## added by qumbiaprojectwizard -->
+     <property name="source" stdset="0">
+      <string>$1/double_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="2">
+<!--      <widget class="TLabel" name="tLabel_2">  -->
+    <widget class="QuLabel" name="tLabel_2">	<!-- TLabel is mapped to QuLabel ## added by qumbiaprojectwizard -->
+     <property name="source">
+      <string>$1/string_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
+<!--      <widget class="TPushButton" name="tPushButton">  -->
+    <widget class="QuButton" name="tPushButton">	<!-- TPushButton is mapped to QuButton ## added by qumbiaprojectwizard -->
+<!--       <property name="targets">  -->
+     <property name="target">	<!-- targets property is mapped into target ## added by qumbiaprojectwizard -->
+<!--        <string>$1/double_scalar(&amp;tdsb);;</string>  -->
+      <string>$1/double_scalar(&amp;tdsb)</string>	<!-- in cumbia the targ:qet is single: removing multiple targets ## added by qumbiaprojectwizard -->
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+<!--      <widget class="TLineEdit" name="tle">  -->
+    <widget class="QuLineEdit" name="tle">	<!-- TLineEdit is mapped into a QuLineEdit ## added by qumbiaprojectwizard -->
+<!--       <property name="targets">  -->
+     <property name="target">	<!-- targets property is mapped into target ## added by qumbiaprojectwizard -->
+<!--        <string>$1/string_scalar;;</string>  -->
+      <string>$1/string_scalar</string>	<!-- in cumbia the targ:qet is single: removing multiple targets ## added by qumbiaprojectwizard -->
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+<!--      <widget class="TDoubleSpinBox" name="tdsb">  -->
+    <widget class="QuDoubleSpinBox" name="tdsb">	<!-- TDoubleSpinBox is mapped into QuDoubleSpinBox ## added by qumbiaprojectwizard -->
+<!--       <property name="targets">  -->
+     <property name="target">	<!-- targets property is mapped into target ## added by qumbiaprojectwizard -->
+<!--        <string>$1/double_scalar;;</string>  -->
+      <string>$1/double_scalar</string>	<!-- in cumbia the targ:qet is single: removing multiple targets ## added by qumbiaprojectwizard -->
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="2">
+<!--      <widget class="TLabel" name="tLabel">  -->
+    <widget class="QuLabel" name="tLabel">	<!-- TLabel is mapped to QuLabel ## added by qumbiaprojectwizard -->
+     <property name="source">
+      <string>$1/double_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="4">
+<!--      <widget class="TLed" name="tLed">  -->
+    <widget class="QuLed" name="tLed">	<!-- TLed is mapped to QuLed ## added by qumbiaprojectwizard -->
+     <property name="source">
+      <string>$1/boolean_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="2">
+<!--      <widget class="TSimpleLabel" name="tSimpleLabel">  -->
+    <widget class="QLabel" name="tSimpleLabel">	<!-- TSimpleLabel is mapped into a simple Qt QLabel. ## added by qumbiaprojectwizard -->
+     <property name="text">
+      <string>boolean_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+<!--      <widget class="TCheckBox" name="tCheckBox">  -->
+    <widget class="QuCheckBox" name="tCheckBox">	<!-- TCheckBox is mapped into QuCheckBox ## added by qumbiaprojectwizard -->
+     <property name="source">
+      <string>$1/boolean_scalar</string>
+     </property>
+<!--       <property name="targets">  -->
+     <property name="target">	<!-- targets property is mapped into target ## added by qumbiaprojectwizard -->
+<!--        <string>$1/boolean_scalar;</string>  -->
+      <string>$1/boolean_scalar</string>	<!-- in cumbia the targ:qet is single: removing multiple targets ## added by qumbiaprojectwizard -->
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+<!--     <class>TSimpleLabel</class>  -->
+   <class>QLabel</class>	<!-- TSimpleLabel is mapped into a simple Qt QLabel. ## added by qumbiaprojectwizard -->
+   <extends>QLabel</extends>
+<!--     <header>TSimpleLabel</header>  -->
+<header>QLabel</header>	<!-- TSimpleLabel is mapped into a simple Qt QLabel. ## added by qumbiaprojectwizard -->
+  </customwidget>
+  <customwidget>
+<!--     <class>TLabel</class>  -->
+   <class>QuLabel</class>	<!-- TLabel is mapped to QuLabel ## added by qumbiaprojectwizard -->
+   <extends>ELabel</extends>
+<!--     <header>TLabel</header>  -->
+<header>qulabel.h</header>	<!-- TLabel is mapped to QuLabel ## added by qumbiaprojectwizard -->
+  </customwidget>
+  <customwidget>
+<!--     <class>TLed</class>  -->
+   <class>QuLed</class>	<!-- TLed is mapped to QuLed ## added by qumbiaprojectwizard -->
+   <extends>ELed</extends>
+<!--     <header>TLed</header>  -->
+<header>quled.h</header>	<!-- TLed is mapped into QuLed ## added by qumbiaprojectwizard -->
+  </customwidget>
+  <customwidget>
+<!--     <class>TLineEdit</class>  -->
+   <class>QuLineEdit</class>	<!-- TLineEdit is mapped into a QuLineEdit ## added by qumbiaprojectwizard -->
+   <extends>QLineEdit</extends>
+<!--     <header>TLineEdit</header>  -->
+<header>qulineedit.h</header>	<!-- TLineEdit is mapped into a QuLineEdit ## added by qumbiaprojectwizard -->
+  </customwidget>
+  <customwidget>
+<!--     <class>TDoubleSpinBox</class>  -->
+   <class>QuDoubleSpinBox</class>	<!-- TDoubleSpinBox is mapped into QuDoubleSpinBox ## added by qumbiaprojectwizard -->
+   <extends>QDoubleSpinBox</extends>
+<!--     <header>TDoubleSpinBox</header>  -->
+<header>qudoublespinbox.h</header>	<!-- TDoubleSpinBox is mapped to qudoublespinbox.h ## added by qumbiaprojectwizard -->
+  </customwidget>
+  <customwidget>
+<!--     <class>TPushButton</class>  -->
+   <class>QuButton</class>	<!-- TPushButton is mapped to QuButton ## added by qumbiaprojectwizard -->
+   <extends>QPushButton</extends>
+<!--     <header>TPushButton</header>  -->
+<header>qubutton.h</header>	<!-- TPushButton is mapped to QuButton ## added by qumbiaprojectwizard -->
+  </customwidget>
+  <customwidget>
+<!--     <class>TCheckBox</class>  -->
+   <class>QuCheckBox</class>	<!-- TCheckBox is mapped into QuCheckBox ## added by qumbiaprojectwizard -->
+   <extends>QCheckBox</extends>
+<!--     <header>TCheckBox</header>  -->
+<header>qucheckbox.h</header>	<!-- TCheckBox is mapped into QuCheckBox ## added by qumbiaprojectwizard -->
+  </customwidget>
+  <customwidget>
+<!--     <class>TPlotLightMarker</class>  -->
+   <class>QuTrendPlot</class>	<!-- TPlotLightMarker is mapped into QuTrendPlot OR QuSpectrumPlot. Please check. ## added by qumbiaprojectwizard -->
+   <extends>EPlotLightMarker</extends>
+<!--     <header>TPlotLightMarker</header>  -->
+<header>qutrendplot.h</header>	<!-- TPlotLightMarker is mapped into QuTrendPlot OR QuSpectrumPlot. Please check. ## added by qumbiaprojectwizard -->
+  </customwidget>
+  <customwidget>
+   <class>ELabel</class>
+   <extends>QLabel</extends>
+   <header>elabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ELed</class>
+   <extends>QWidget</extends>
+   <header>eled.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EPlotLight</class>
+   <extends>QFrame</extends>
+<!--     <header>eplotlight.h</header>  -->
+<header>quplot_base.h</header>	<!-- EPlotLight is mapped into QuPlotBase. Please check ## added by qumbiaprojectwizard -->
+  </customwidget>
+  <customwidget>
+   <class>EPlotLightMarker</class>
+   <extends>EPlotLight</extends>
+<!--     <header>eplotlight_marker.h</header>  -->
+<header>quplot_base.h</header>	<!-- EPlotLight is mapped into QuPlotBase. Please check ## added by qumbiaprojectwizard -->
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
+
