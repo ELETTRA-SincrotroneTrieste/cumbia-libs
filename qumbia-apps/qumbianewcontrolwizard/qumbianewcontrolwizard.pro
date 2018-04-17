@@ -18,9 +18,11 @@ CONFIG += debug
 
 INCLUDEDIR = $${INSTALL_ROOT}/include
 
-SHAREDIR = $${INSTALL_ROOT}/share
 
-DOCDIR = $${INSTALL_ROOT}/share/doc/qumbiacontrolwizard
+SHAREDIR = $${INSTALL_ROOT}/share
+DOCDIR = $${SHAREDIR}/doc/qumbianewcontrolwizard
+DEFINES += DOC_PATH=\"\\\"$${DOCDIR}\\\"\"
+
 
 QT       += core gui
 
@@ -37,7 +39,6 @@ DEFINES += TEMPLATES_PATH=\"\\\"$${TEMPLATES_INSTALLDIR}\\\"\"
 
 DEFINES += INCLUDE_PATH=\"\\\"$${INCLUDEDIR}/cumbia-qtcontrols\\\"\"
 
-DEFINES += DOC_PATH=\"\\\"$${SHAREDIR}/doc\\\"\"
 
 DEFINES -= QT_NO_DEBUG_OUTPUT
 
