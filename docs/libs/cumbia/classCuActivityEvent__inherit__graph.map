@@ -1,0 +1,6 @@
+<map id="CuActivityEvent" name="CuActivityEvent">
+<area shape="rect" id="node2" href="$classCuExecuteEvent.html" title="triggers a call to CuActivity::execute " alt="" coords="5,80,127,107"/>
+<area shape="rect" id="node3" href="$classCuPauseEvent.html" title="event to pause an activity&#39;s timer " alt="" coords="151,80,261,107"/>
+<area shape="rect" id="node4" href="$classCuResumeEvent.html" title="event to resume an activity&#39;s timer " alt="" coords="286,80,409,107"/>
+<area shape="rect" id="node5" href="$classCuTimeoutChangeEvent.html" title="this event changes the timeout of the activity&#39;s thread timer " alt="" coords="433,80,598,107"/>
+</map>
