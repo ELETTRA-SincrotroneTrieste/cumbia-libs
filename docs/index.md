@@ -1,1 +1,1 @@
-<a href="cumbia/doc/html/index.html">cumbia</a>
+<a href="cumbia/index.html">cumbia</a>
