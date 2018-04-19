@@ -3,6 +3,36 @@ Quickly add a Qt widget to your cumbia project {#tutorial_qumbianewcontrolwizard
 
 In this exercise we will learn how to add to a cumbia project a custom widget to display or write data.
 
+#### Requirements
+
+The following components must be installed:
+
+\li cumbia
+\li cumbia-tango
+\li cumbia-qtcontrols
+\li qumbia-tango-controls
+\li qumbia-plugins/qt-designer
+\li qumbia-apps/cuuimake, the tool to process ui, pro, h and cpp files and
+\li qumbia-apps/qumbiaprojectwizard, the tool to create a new cumbia project
+
+#### Install qumbiaprojectwizard
+
+Change directory into *qumbia-apps/qumbianewcontrolwizard* and execute
+
+\code
+qmake
+make -j5
+sudo make install
+\endcode
+
+To build all the *qumbia-apps* utilities, the same code can be run from the *qumbia-apps* parent directory.
+
+#### Command line
+
+\code
+cumbia new project
+\endcode
+
 ## Use *cumbia new project* to create a new cumbia project
 
 Create a new project referring to \ref tutorial_qumbiatango 

@@ -5,6 +5,28 @@
 #include <qulogimpl.h>
 #include <cucontrolsfactorypool.h>
 
+/*! \mainpage
+ *
+ * *cumbia_client* is a generic *engine-independent* client to read/write from Tango, Epics, ... control systems
+ *
+ * At the moment of writing this document, the available environments are
+ *
+ * - <a href="http://www.tango-controls.org">Tango</a>
+ * - <a href="https://epics.anl.gov/">Epics</a>
+ *
+ * The two engines are implemented in the cumbia-tango and cumbia-epics modules.
+ *
+ * \par Example usage
+ *
+ * \code
+ * cumbia client test/device/1/double_scalar   test/device/2/long_scalar  giacomo:ai1
+ * \endcode
+ *
+ * where cumbia client is a shortcut for cumbia_client.
+ * Two *tango attributes* and one *epics analog variable* follow.
+ *
+ */
+
 namespace Ui {
 class CumbiaClient;
 }

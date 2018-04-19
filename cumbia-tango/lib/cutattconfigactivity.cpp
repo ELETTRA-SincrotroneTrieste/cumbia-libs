@@ -73,6 +73,7 @@ void CuTAttConfigActivity::init()
     tk["msg"] = d->tdev->getMessage();
     tk["conn"] = d->tdev->isValid();
     tk["err"] = !d->tdev->isValid();
+    tk.putTimestamp();
 }
 
 void CuTAttConfigActivity::execute()

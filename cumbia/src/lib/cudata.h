@@ -79,6 +79,8 @@ public:
 
     std::string toString() const;
 
+    void putTimestamp();
+
 private:
     CuDataPrivate *d;
 

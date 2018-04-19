@@ -25,7 +25,8 @@ TDevice::TDevice(const std::string &name)
         d->dev = new Tango::DeviceProxy(dname);
         time_t tp;
         time(&tp);
-        d->message = "connect: " + std::string(ctime(&tp));
+        d->message = "connect: device defined in Tango db: " + std::string(ctime(&tp));
+        d->message.pop_back();
     }
     catch(Tango::DevFailed &e)
     {

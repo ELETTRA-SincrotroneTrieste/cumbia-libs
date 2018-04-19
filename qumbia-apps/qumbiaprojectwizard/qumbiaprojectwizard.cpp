@@ -115,7 +115,12 @@ void QumbiaProjectWizard::init()
         addProperty(ti.split(";;"));
     checkValidity();
 
-    importRbToggled(false);
+    if(qApp->arguments().contains("--from-qtango")) {
+        ui->rbImport->setChecked(true);
+        qtangoImport();
+    }
+    else
+        importRbToggled(false);
 }
 
 void QumbiaProjectWizard::convertStart()

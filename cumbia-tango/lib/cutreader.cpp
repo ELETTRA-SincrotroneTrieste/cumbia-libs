@@ -73,18 +73,18 @@ void CuTReader::onProgress(int step, int total, const CuData &data)
 void CuTReader::onResult(const CuData &data)
 {
     bool polling_fallback = false;
+    bool err = data["err"].toBool();
     // iterator can be invalidated if listener's onUpdate unsets source: use a copy
     std::set<CuDataListener *> lis_copy = d->listeners;
     std::set<CuDataListener *>::iterator it;
-    bool event_subscribe_fail = !d->exit && data["activity"].toString() == "event" && data["err"].toBool()
-            && d->current_activity->getType() == CuEventActivity::CuEventActivityType ;
-
+    bool event_subscribe_fail = err && !d->exit && data["event"].toString() == "subscribe";
     // if it's just subscribe_event failure, do not notify listeners
-    for(it = lis_copy.begin(); it != lis_copy.end() && !event_subscribe_fail; ++it)
+    for(it = lis_copy.begin();
+        it != lis_copy.end() && !event_subscribe_fail;   ++it)
     {
         (*it)->onUpdate(data);
     }
-    if(event_subscribe_fail)
+    if(err && !d->exit && d->current_activity->getType() == CuEventActivity::CuEventActivityType)
     {
         polling_fallback = true;
         cuprintf("starting polling activity cuz event is err %d\n", data["err"].toBool());

@@ -59,6 +59,14 @@ void CuTangoWorld::fillThreadInfo(CuData &dat, const CuActivity* a)
     dat["worker_activity"] = std::string(info);
 }
 
+/*! \brief extracts data from Tango::DeviceData and puts it into the CuData bundle
+ *
+ * \par Note
+ * "timestamp_ms" and "timestamp_us" *are not set* by extractData. It must be set
+ * manually by the caller. There is no date/time information in Tango::DeviceData.
+ *
+ *
+ */
 void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
 {
     d->error = false;
@@ -66,11 +74,6 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
     int t = (Tango::CmdArgType) data->get_type();
     da["data_format_str"] = cmdArgTypeToDataFormat(static_cast<Tango::CmdArgType>(t));
     da["data_type"] = t;
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-
-    da["timestamp_ms"] = tv.tv_sec * 1000 + tv.tv_usec / 1000;
-    da["timestamp_us"] = static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6;
 
     if (data->is_empty())
     {
@@ -220,22 +223,15 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
     d->message = "";
     cuprintf("CuTangoUtils.extractData format is %d type %d\n", p_da->get_data_format(), p_da->get_type());
     Tango::TimeVal tv = p_da->get_date();
+    struct timeval tiv;
     const Tango::AttrQuality quality = p_da->get_quality();
     const Tango::AttrDataFormat f = p_da->get_data_format();
     const bool w = (p_da->get_nb_written() > 0);
-    struct timeval tiv;
     tiv.tv_sec = tv.tv_sec;
     tiv.tv_usec = tv.tv_usec;
-    char *datetime = ctime(&(tiv.tv_sec)); /* returns NULL on failure */
-    char dt[64];
-    memset(dt, 0, sizeof(char) * 64);
-    if(datetime != NULL && strlen(datetime) > 0)
-        strncpy(dt, datetime, 63);
-    else
-        strncpy(dt, "-", 1);
-    d->message = dat["mode"].toString() + ": " + std::string(dt);
-    dat["timestamp_ms"] = tiv.tv_sec * 1000 + tiv.tv_usec / 1000;
-    dat["timestamp_us"] = static_cast<double>(tiv.tv_sec) + static_cast<double>(tiv.tv_usec) * 1e-6;
+    d->message = dat["mode"].toString() + ": " + dateTimeToStr(&(tiv.tv_sec));
+    putDateTime(tv, dat);
+
     dat["quality"] = quality;
     dat["quality_color"] = d->t_world_conf.qualityColor(static_cast<Tango::AttrQuality> (quality));
     dat["data_format_str"] = formatToStr(f);
@@ -574,6 +570,7 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
     {
         d->error = true;
         d->message = strerror(e);
+        res.putTimestamp();
         cuprintf("\e[1;31;31mCuTangoWorld.read_att: attribute ERRROR %s : %s\e[0m\n", attribute.c_str(),
                  d->message.c_str());
     }
@@ -611,6 +608,8 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
         d->error = true;
         d->message = strerror(e);
     }
+    // extractData does not set date/time information on data
+    data.putTimestamp();
     data["err"] = d->error;
     data["msg"] = d->message;
     data["success_color"] = d->t_world_conf.successColor(!d->error);
@@ -874,12 +873,10 @@ bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res,
         d->message = strerror(e);
     }
 
+    res.putTimestamp();
     res["err"] = d->error;
     if(!d->error) {
-        time_t tp;
-        time(&tp);
-        d->message = std::string("CuTangoWorld.get_properties successfully completed on ") +  std::string(ctime(&tp));
-        d->message.pop_back(); // remove last newline
+        d->message = std::string("CuTangoWorld.get_properties successfully completed on " +  dateTimeToStr(NULL));
     }
     res["msg"] = d->message;
 
@@ -1534,3 +1531,36 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &aname,
 
     return da;
 }
+
+void CuTangoWorld::putDateTime(const Tango::TimeVal &ttv, CuData &data)
+{
+    struct timeval tv;
+    tv.tv_sec = ttv.tv_sec;    // _must_ copy from Tango::TimeVal to struct timeval!
+    tv.tv_usec = ttv.tv_usec;
+    data["timestamp_ms"] = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+    data["timestamp_us"] = static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6;
+}
+
+/** \brief if the time_t parameter is not null, use it to format the date/time into a std:string,
+ *         otherwise get system time and use the current date/time
+ *
+ * @param tp if not null, it is used to provide a string representation of the local time, otherwise
+ *        get the system date and time
+ *
+ * @return a string with the date and time. strftime with "%c" format is used. From *man strftime*:
+ *         %c     The preferred date and time representation for the current locale
+ *
+ */
+std::string CuTangoWorld::dateTimeToStr(time_t *tp) const
+{
+    char t[128];
+    struct tm* tmp;
+    if(!tp)
+        *tp = time(NULL);
+    tmp = localtime(tp);
+    if(tmp != NULL)
+        strftime(t, sizeof(t), "%c", tmp);
+    return std::string(t);
+}
+
+

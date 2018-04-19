@@ -25,12 +25,12 @@
 #include <QTimer>
 
 #ifdef QUMBIA_EPICS_CONTROLS
-    #include <cumbiaepics.h>
-    #include <cuepcontrolsreader.h>
-    #include <cuepcontrolswriter.h>
-    #include <cuepics-world.h>
-    #include <cuepreadoptions.h>
-    #include <queplotupdatestrategy.h>
+#include <cumbiaepics.h>
+#include <cuepcontrolsreader.h>
+#include <cuepcontrolswriter.h>
+#include <cuepics-world.h>
+#include <cuepreadoptions.h>
+#include <queplotupdatestrategy.h>
 #endif
 
 #include <cuthreadfactoryimpl.h>
@@ -66,7 +66,7 @@ CumbiaClient::CumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
     cu_pool->setSrcPatterns("tango", tw.srcPatterns());
 
-   // m_log = new CuLog(&m_log_impl);
+    // m_log = new CuLog(&m_log_impl);
     cuta->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
 
     ui->setupUi(this);
@@ -78,9 +78,7 @@ CumbiaClient::CumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     {
         for(int i = 1; i < qApp->arguments().count(); i++)
         {
-            if(i > 1 && i < qApp->arguments().count() - 1)
-                ui->leSrcs->setText(ui->leSrcs->text() + " ");
-            ui->leSrcs->setText(ui->leSrcs->text() + qApp->arguments().at(i));
+            ui->leSrcs->setText(ui->leSrcs->text() + " " + qApp->arguments().at(i));
         }
         sourcesChanged();
     }
@@ -117,20 +115,20 @@ void CumbiaClient::configure(const CuData &d)
     std::string format = d["data_format_str"].toString();
 
     QGridLayout *lo = qobject_cast<QGridLayout *>(ui->widget->layout());
-//    foreach(QuLabel *l, findChildren<QuLabel *>())
-//       delete l;
+    //    foreach(QuLabel *l, findChildren<QuLabel *>())
+    //       delete l;
 
 
-//    for(int i = 0; i < 10; i++)
-//    {
-//        QuLabel *l = new QuLabel(this, cu_pool, m_ctrl_factory_pool);
-//        l->setSource(d["src"].toString().c_str());
-//        lo->addWidget(l, ++layout_row, 0, 1, m_layoutColumnCount);
-//    }
+    //    for(int i = 0; i < 10; i++)
+    //    {
+    //        QuLabel *l = new QuLabel(this, cu_pool, m_ctrl_factory_pool);
+    //        l->setSource(d["src"].toString().c_str());
+    //        lo->addWidget(l, ++layout_row, 0, 1, m_layoutColumnCount);
+    //    }
 
-//       foreach(QuLabel *l, findChildren<QuLabel *>())
-//         delete l;
-//    return;
+    //       foreach(QuLabel *l, findChildren<QuLabel *>())
+    //         delete l;
+    //    return;
 
     //    for(int i = 0; i < srcs.size() && d["writable"].toInt() == Tango::READ_WRITE; i++)
     //    {
@@ -194,8 +192,8 @@ void CumbiaClient::configure(const CuData &d)
         //splot->setContextMenuStrategy(ctx_menu_strat);
         splot->addSource(d["src"].toString().c_str());
     }
-//    foreach(QuLabel *l, findChildren<QuLabel *>())
-//       delete l;
+    //    foreach(QuLabel *l, findChildren<QuLabel *>())
+    //       delete l;
 
     CuContextActionBridge *cab = findChild<CuContextActionBridge *>();
     if(cab) delete cab;

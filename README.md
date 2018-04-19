@@ -13,10 +13,6 @@ to the Tango control system. The integration is possible both on the client and 
 TANGO device using Cumbia to do work in background has already been developed, as well as simple Qt graphical
 clients relying on the framework. An Epics module has been added to the cumbia-libs set.
 
-## Documentation
-- [cumbia-qtcontrols](cumbia-qtcontrols/doc/index.html)
-
-
 ## Download and installation
 
 

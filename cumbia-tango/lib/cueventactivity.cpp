@@ -140,6 +140,7 @@ void CuEventActivity::init()
     tk["conn"] = d->tdev->isValid();
     tk["msg"] = d->tdev->getMessage();
     tk["err"] = !d->tdev->isValid();
+    tk.putTimestamp();
     CuTangoWorld().fillThreadInfo(tk, this);
     //  sleep(5);
     d->tdev->addRef();
@@ -178,31 +179,37 @@ Tango::EventType CuEventActivity::m_tevent_type_from_string(const std::string& s
  *
  * See also CuActivity::execute
  *
+ * \par note
+ * In the CuEventActivity::push_event callback, CuData "event" value is copied from
+ * Tango::EventData::event. Here data["event"] is set to "subscribe" to identify the
+ * *subscribe_event* phase (CuTReader looks for this not to issue an error if subscription fails).
+ *
+ *
  */
 void CuEventActivity::execute()
 {
     assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
     CuData at = getToken(); /* activity token */
-    std::string devnam = at["device"].toString();
     std::string att = at["point"].toString();
     const std::string ref_mode_str = at["rmode"].toString();
     Tango::DeviceProxy *dev = d->tdev->getDevice();
     at["err"] = !d->tdev->isValid();
+    at["mode"] = "event";
+    at["event"] = "subscribe";
+    at.putTimestamp();
     if(dev)
     {
         try
         {
             d->event_id = dev->subscribe_event(att, m_tevent_type_from_string(ref_mode_str), this);
             at["msg"] = "subscribe to: " + ref_mode_str;
-            pbgreen("subscribed %s/%s to change events err flag is %d" , devnam.c_str(), att.c_str(), at["err"].toBool());
         }
         catch(Tango::DevFailed &e)
         {
             d->event_id = -1;
             at["err"] = true;
             at["msg"] = CuTangoWorld().strerror(e);
-            pbyellow("failed to subscribe events for \"%s/%s\": \"%s\" ----> SHOULD UNREGISTER... soon!", devnam.c_str(), att.c_str(), at["msg"].toString().c_str());
             publishResult(at);
         }
     }
@@ -230,10 +237,8 @@ void CuEventActivity::onExit()
 {
     assert(d->my_thread_id == pthread_self());
     CuData at = getToken(); /* activity token */
-    std::string devnam = at["device"].toString();
-    std::string att = at["point"].toString();
     int refcnt;
-    cuprintf(">>>>>>>>>>>> CuEventActivity.onExit: device %p event id %d\e[0m\n", d->tdev->getDevice(), d->event_id);
+    at.putTimestamp();
     if(d->tdev->getDevice() && d->event_id != -1)
     {
         at["value"] = "-";
@@ -248,12 +253,9 @@ void CuEventActivity::onExit()
             at["msg"] = CuTangoWorld().strerror(e);
             at["err"]  = true;
         }
-
-
     }
     refcnt = d->tdev->removeRef();
-    cuprintf("\e[1;31mCuEventActivity::onExit(): refcnt = %d called actionRemove for device %s att %s\e[0m\n",
-           refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
+
     if(refcnt == 0)
         d->device_srvc->removeDevice(at["device"].toString());
     CuTangoWorld().fillThreadInfo(at, this); /* put thread and activity addresses as info */
@@ -294,7 +296,6 @@ void CuEventActivity::push_event(Tango::EventData *e)
     utils.fillThreadInfo(d, this); /* put thread and activity addresses as info */
     d["mode"] = "event";
     d["event"] = e->event;
-    d["rmode"] = d["rmode"];
     Tango::DeviceAttribute *da = e->attr_value;
     if(!e->err)
     {
@@ -304,6 +305,7 @@ void CuEventActivity::push_event(Tango::EventData *e)
     }
     else
     {
+        d.putTimestamp();
         d["err"] = true;
         d["msg"] = utils.strerror(e->errors);
     }

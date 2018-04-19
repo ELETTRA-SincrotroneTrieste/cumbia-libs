@@ -15,6 +15,24 @@ The following components must be installed:
 \li qumbia-apps/cuuimake, the tool to process ui, pro, h and cpp files and
 \li qumbia-apps/qumbiaprojectwizard, the tool to create a new cumbia project
 
+#### Install qumbiaprojectwizard
+
+Change directory into *qumbia-apps/qumbiaprojectwizard* and execute
+
+\code
+qmake
+make -j5
+sudo make install
+\endcode
+
+To build all the *qumbia-apps* utilities, the same code can be run from the *qumbia-apps* parent directory.
+
+#### Command line
+
+\code
+cumbia new project 
+\endcode
+
 ### Create a new qumbia tango application
 
 Start the qumbiaprojectwizard application.

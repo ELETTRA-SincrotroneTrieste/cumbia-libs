@@ -3,6 +3,36 @@ Porting a QTango application to cumbia-tango {#tutorial_from_qtango}
 
 In this tutorial we will learn how to port a QTango application to cumbia.
 
+#### Requirements
+
+The following components must be installed:
+
+\li cumbia
+\li cumbia-tango
+\li cumbia-qtcontrols
+\li qumbia-tango-controls
+\li qumbia-plugins/qt-designer
+\li qumbia-apps/cuuimake, the tool to process ui, pro, h and cpp files and
+\li qumbia-apps/qumbiaprojectwizard, the tool to create a new cumbia project
+
+#### Install qumbiaprojectwizard
+
+Change directory into *qumbia-apps/qumbiaprojectwizard* and execute
+
+\code
+qmake
+make -j5
+sudo make install
+\endcode
+
+To build all the *qumbia-apps* utilities, the same code can be run from the *qumbia-apps* parent directory.
+
+#### Command line
+
+\code
+cumbia import
+\endcode
+
 ## Demo code used in the examples in this page
 
 A couple of QTango applications are shipped within the qumbia-apps/qumbiaprojectwizard utility source code:

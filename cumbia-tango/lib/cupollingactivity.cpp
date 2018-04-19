@@ -126,6 +126,7 @@ void CuPollingActivity::init()
     tk["conn"] = d->tdev->isValid();
     tk["err"] = !d->tdev->isValid();
     tk["msg"] = d->tdev->getMessage();
+    tk.putTimestamp();
 }
 
 /*! \brief the implementation of the CuActivity::execute hook

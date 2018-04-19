@@ -11,9 +11,9 @@ The following components must be installed:
 \li cumbia-tango
 \li cumbia-qtcontrols
 \li qumbia-tango-controls
-\li qumbia-plugins/qt-designer, including
-\li qumbia-plugins/qt-designer/cuuimake, the tool to process ui, pro, h and cpp files and
-\li qumbia-plugins/qt-designer/qumbiaprojectwizard, the tool to create a new cumbia project
+\li qumbia-plugins/qt-designer
+\li qumbia-apps/cuuimake, the tool to process ui, pro, h and cpp files and
+\li qumbia-apps/qumbiaprojectwizard, the tool to create a new cumbia project
 
 ### Create a new qumbia tango application
 

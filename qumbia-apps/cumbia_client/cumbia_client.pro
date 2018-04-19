@@ -30,6 +30,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 DEFINES -= QT_NO_DEBUG_OUTPUT
 
+
+SHAREDIR = $${INSTALL_ROOT}/share
+DOCDIR = $${SHAREDIR}/doc/cumbia_client
+DEFINES += DOC_PATH=\"\\\"$${DOCDIR}\\\"\"
+
+
+CUMBIA_CLIENT_VERSION_HEX = 0x010000
+CUMBIA_CLIENT_VERSION = 1.0.0
+
+DEFINES += CUMBIA_CLIENT_VERSION_STR=\"\\\"$${CUMBIA_CLIENT_VERSION}\"\\\"
+
+
 SOURCES += main.cpp \
     cumbia_client.cpp \
     element.cpp
@@ -40,8 +52,15 @@ HEADERS  += \
 
 FORMS    += cumbia_client.ui
 
+doc.commands = \
+doxygen \
+Doxyfile;
+
+doc.files = doc/*
+doc.path = $${DOCDIR}
+
 inst.files = $${TARGET}
 inst.path = $${INSTALL_ROOT}/bin
 
-INSTALLS += inst
+INSTALLS += inst doc
 

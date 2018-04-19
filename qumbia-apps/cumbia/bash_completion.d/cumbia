@@ -9,7 +9,7 @@ _cumbia()
     #
     #  The basic options we'll complete.
     #
-    opts="new ui client"
+    opts="new ui client import"
 
 
     #
@@ -22,12 +22,17 @@ _cumbia()
             return 0
             ;;
         ui)
-            local names=$(for x in make pippolone; do echo ${x} ; done )
+            local names=$(for x in make; do echo ${x} ; done )
             COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
             return 0
             ;;
 		make)
 			local names=$(for x in `cuuimake --list-options`; do echo ${x} ; done )
+            COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
+            return 0
+			;;
+		import)
+			local names=$(for x in `ls  -1 *.pro`; do echo ${x} ; done )
             COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
             return 0
 			;;

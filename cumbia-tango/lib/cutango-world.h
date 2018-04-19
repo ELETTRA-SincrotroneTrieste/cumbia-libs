@@ -75,6 +75,10 @@ public:
 
     Tango::Database *getTangoDb(const string &dbhost) const;
 
+    void putDateTime(const Tango::TimeVal& ttv, CuData& data);
+
+    std::string dateTimeToStr(time_t *tp) const;
+
 private:
 
     CuTangoWorldPrivate *d;

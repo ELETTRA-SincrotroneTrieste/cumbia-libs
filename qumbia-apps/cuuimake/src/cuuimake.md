@@ -7,7 +7,7 @@
 ### Installation
 
 \li git clone https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs.git
-\li cd cqumbia-apps/cuuimake/
+\li cd cumbia-apps/cuuimake/
 \li qmake
 \li make
 \li make install
@@ -20,6 +20,16 @@ This file contains
 \li file name filters to find C++ sources (default: *.cpp, *.h, *.ui, ui_*.h)
 \li the name of the available factories (for cumbiapool, cumbiatango and cumbiaepics) and the associated 
 \li the name of the classes that must be configured with cumbia. Constructor invocation must be extended with additional parameters.
+
+### cuuimake command shortcut
+
+If the cumbia utilities have been installed from the top level directory *qumbia-apps*, then *cuuimake* can also be executed with the 
+following *shortcut*
+
+\code
+cumbia ui make [arguments]
+\endcode
+
 
 ### cuuimake stages
 

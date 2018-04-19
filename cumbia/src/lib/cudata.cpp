@@ -1,6 +1,7 @@
 #include "cudata.h"
 #include "cumacros.h"
 #include <string>
+#include <sys/time.h>
 #include <map>
 
 /*! @private */
@@ -293,6 +294,22 @@ std::string CuData::toString() const
     r.replace(r.length() - 2, 2, "");
     r += " } (size: " + std::to_string(size()) + " isEmpty: " + std::to_string(isEmpty()) + ")";
     return r;
+}
+
+/*! \brief put date and time information into this object
+ *
+ * writes the following keys into this object, taking the system clock time from the
+ * gettimeofday call.
+ *
+ * \li "timestamp_ms" timestamp in milliseconds, convert with CuVariant::toLongInt
+ * \li "timestamp_us" timestamp in microseconds, convert with CuVariant::toLongInt
+ */
+void CuData::putTimestamp()
+{
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    add("timestamp_ms",  tv.tv_sec * 1000 + tv.tv_usec / 1000);
+    add("timestamp_us", static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6);
 }
 
 void CuData::mCopyData(const CuData& other)
