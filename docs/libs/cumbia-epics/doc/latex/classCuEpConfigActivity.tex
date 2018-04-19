@@ -1,0 +1,158 @@
+\section{Cu\+Ep\+Config\+Activity Class Reference}
+\label{classCuEpConfigActivity}\index{Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}}
+
+
+{\ttfamily \#include $<$cuepconfigactivity.\+h$>$}
+
+
+
+Inheritance diagram for Cu\+Ep\+Config\+Activity\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=183pt]{classCuEpConfigActivity__inherit__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \textbf{ Type} \{ \textbf{ Cu\+Att\+Config\+Activity\+Type} = Cu\+Activity\+:\+:User + 5
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Cu\+Ep\+Config\+Activity} (const Cu\+Data \&tok, \textbf{ Cu\+Ep\+C\+A\+Service} $\ast$df)
+\item 
+void \textbf{ set\+Desired\+Attribute\+Properties} (const std\+::vector$<$ std\+::string $>$ \&props)
+\item 
+virtual \textbf{ $\sim$\+Cu\+Ep\+Config\+Activity} ()
+\item 
+int \textbf{ get\+Type} () const
+\item 
+void \textbf{ event} (Cu\+Activity\+Event $\ast$e)
+\item 
+bool \textbf{ matches} (const Cu\+Data \&token) const
+\item 
+int \textbf{ repeat} () const
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ init} ()
+\item 
+void \textbf{ execute} ()
+\item 
+void \textbf{ on\+Exit} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Enumeration Documentation}
+\mbox{\label{classCuEpConfigActivity_ad97b7e37d22827c7f502c536d0a7839b}} 
+\index{Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}!Type@{Type}}
+\index{Type@{Type}!Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}}
+\subsubsection{Type}
+{\footnotesize\ttfamily enum \textbf{ Cu\+Ep\+Config\+Activity\+::\+Type}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Cu\+Att\+Config\+Activity\+Type@{Cu\+Att\+Config\+Activity\+Type}!Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}}\index{Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}!Cu\+Att\+Config\+Activity\+Type@{Cu\+Att\+Config\+Activity\+Type}}}\mbox{\label{classCuEpConfigActivity_ad97b7e37d22827c7f502c536d0a7839ba43fc0fe99f1fcfe4bf31e8f05acfce04}} 
+Cu\+Att\+Config\+Activity\+Type&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classCuEpConfigActivity_a246067a4a8d5ea1a71e34c76fe149f6b}} 
+\index{Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}!Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}}
+\index{Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}!Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}}
+\subsubsection{Cu\+Ep\+Config\+Activity()}
+{\footnotesize\ttfamily Cu\+Ep\+Config\+Activity\+::\+Cu\+Ep\+Config\+Activity (\begin{DoxyParamCaption}\item[{const Cu\+Data \&}]{tok,  }\item[{\textbf{ Cu\+Ep\+C\+A\+Service} $\ast$}]{df }\end{DoxyParamCaption})}
+
+
+
+References Cu\+Ep\+Config\+Activity\+Private\+::ep\+\_\+service, Cu\+Ep\+Config\+Activity\+Private\+::err, Cu\+Ep\+Config\+Activity\+Private\+::exiting, and Cu\+Ep\+Config\+Activity\+Private\+::other\+\_\+thread\+\_\+id.
+
+\mbox{\label{classCuEpConfigActivity_ae9597a3d808a75787032e3281eb9a726}} 
+\index{Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}!````~Cu\+Ep\+Config\+Activity@{$\sim$\+Cu\+Ep\+Config\+Activity}}
+\index{````~Cu\+Ep\+Config\+Activity@{$\sim$\+Cu\+Ep\+Config\+Activity}!Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}}
+\subsubsection{$\sim$\+Cu\+Ep\+Config\+Activity()}
+{\footnotesize\ttfamily Cu\+Ep\+Config\+Activity\+::$\sim$\+Cu\+Ep\+Config\+Activity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classCuEpConfigActivity_af9199f7b7db2d37c23a513176bae0421}} 
+\index{Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}!event@{event}}
+\index{event@{event}!Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}}
+\subsubsection{event()}
+{\footnotesize\ttfamily void Cu\+Ep\+Config\+Activity\+::event (\begin{DoxyParamCaption}\item[{Cu\+Activity\+Event $\ast$}]{e }\end{DoxyParamCaption})}
+
+\mbox{\label{classCuEpConfigActivity_a708ea3f341b7fc34110015fedbfdab59}} 
+\index{Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}!execute@{execute}}
+\index{execute@{execute}!Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}}
+\subsubsection{execute()}
+{\footnotesize\ttfamily void Cu\+Ep\+Config\+Activity\+::execute (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+References Cu\+Ep\+Config\+Activity\+Private\+::err, Cu\+Epics\+World\+::fill\+Thread\+Info(), Cu\+Ep\+Config\+Activity\+Private\+::msg, and Cu\+Ep\+Config\+Activity\+Private\+::my\+\_\+thread\+\_\+id.
+
+\mbox{\label{classCuEpConfigActivity_ae92b93cb2a17303daf9eb7d4702c43b8}} 
+\index{Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}!get\+Type@{get\+Type}}
+\index{get\+Type@{get\+Type}!Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}}
+\subsubsection{get\+Type()}
+{\footnotesize\ttfamily int Cu\+Ep\+Config\+Activity\+::get\+Type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+References Cu\+Att\+Config\+Activity\+Type.
+
+\mbox{\label{classCuEpConfigActivity_a2ce6d85ed44cb4bafaca0ea1341a50a8}} 
+\index{Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}!init@{init}}
+\index{init@{init}!Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}}
+\subsubsection{init()}
+{\footnotesize\ttfamily void Cu\+Ep\+Config\+Activity\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+References Cu\+Ep\+Config\+Activity\+Private\+::my\+\_\+thread\+\_\+id, and Cu\+Ep\+Config\+Activity\+Private\+::other\+\_\+thread\+\_\+id.
+
+\mbox{\label{classCuEpConfigActivity_aeba28440d3334d01a17c2968f1dd8271}} 
+\index{Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}!matches@{matches}}
+\index{matches@{matches}!Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}}
+\subsubsection{matches()}
+{\footnotesize\ttfamily bool Cu\+Ep\+Config\+Activity\+::matches (\begin{DoxyParamCaption}\item[{const Cu\+Data \&}]{token }\end{DoxyParamCaption}) const}
+
+\mbox{\label{classCuEpConfigActivity_af9037bd055fdb74ee7ab29e37306b814}} 
+\index{Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}!on\+Exit@{on\+Exit}}
+\index{on\+Exit@{on\+Exit}!Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}}
+\subsubsection{on\+Exit()}
+{\footnotesize\ttfamily void Cu\+Ep\+Config\+Activity\+::on\+Exit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+References Cu\+Ep\+Config\+Activity\+Private\+::err, Cu\+Ep\+Config\+Activity\+Private\+::exiting, Cu\+Epics\+World\+::fill\+Thread\+Info(), Cu\+Ep\+Config\+Activity\+Private\+::msg, and Cu\+Ep\+Config\+Activity\+Private\+::my\+\_\+thread\+\_\+id.
+
+\mbox{\label{classCuEpConfigActivity_afca293c4f124ca27f464f210b11b8ed4}} 
+\index{Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}!repeat@{repeat}}
+\index{repeat@{repeat}!Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}}
+\subsubsection{repeat()}
+{\footnotesize\ttfamily int Cu\+Ep\+Config\+Activity\+::repeat (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\mbox{\label{classCuEpConfigActivity_aba4a5e72e609367f58b975a5df9f91c2}} 
+\index{Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}!set\+Desired\+Attribute\+Properties@{set\+Desired\+Attribute\+Properties}}
+\index{set\+Desired\+Attribute\+Properties@{set\+Desired\+Attribute\+Properties}!Cu\+Ep\+Config\+Activity@{Cu\+Ep\+Config\+Activity}}
+\subsubsection{set\+Desired\+Attribute\+Properties()}
+{\footnotesize\ttfamily void Cu\+Ep\+Config\+Activity\+::set\+Desired\+Attribute\+Properties (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{props }\end{DoxyParamCaption})}
+
+
+
+References Cu\+Ep\+Config\+Activity\+Private\+::props.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\textbf{ cuepconfigactivity.\+h}\item 
+\textbf{ cuepconfigactivity.\+cpp}\end{DoxyCompactItemize}

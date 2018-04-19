@@ -1,0 +1,239 @@
+\section{Cu\+Put Class Reference}
+\label{classCuPut}\index{Cu\+Put@{Cu\+Put}}
+
+
+{\ttfamily \#include $<$cuput.\+h$>$}
+
+
+
+Inheritance diagram for Cu\+Put\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=174pt]{classCuPut__inherit__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Cu\+Put} (const \textbf{ Ep\+Source} \&src, \textbf{ Cumbia\+Epics} $\ast$ct)
+\item 
+virtual \textbf{ $\sim$\+Cu\+Put} ()
+\item 
+void \textbf{ set\+Write\+Value} (const Cu\+Variant \&wval)
+\item 
+void \textbf{ on\+Progress} (int step, int total, const Cu\+Data \&data)
+\item 
+void \textbf{ on\+Result} (const Cu\+Data \&data)
+\item 
+Cu\+Data \textbf{ get\+Token} () const
+\item 
+\textbf{ Ep\+Source} \textbf{ get\+Source} () const
+\item 
+\textbf{ Type} \textbf{ get\+Type} () const
+\item 
+void \textbf{ add\+Data\+Listener} (Cu\+Data\+Listener $\ast$l)
+\item 
+void \textbf{ remove\+Data\+Listener} (Cu\+Data\+Listener $\ast$l)
+\item 
+size\+\_\+t \textbf{ data\+Listeners\+Count} ()
+\item 
+void \textbf{ start} ()
+\item 
+void \textbf{ stop} ()
+\item 
+void \textbf{ send\+Data} (const Cu\+Data \&data)
+\item 
+void \textbf{ get\+Data} (Cu\+Data \&d\+\_\+inout) const
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classCuPut_a5aca2baf30558b8a30a5ba19d99207d3}} 
+\index{Cu\+Put@{Cu\+Put}!Cu\+Put@{Cu\+Put}}
+\index{Cu\+Put@{Cu\+Put}!Cu\+Put@{Cu\+Put}}
+\subsubsection{Cu\+Put()}
+{\footnotesize\ttfamily Cu\+Put\+::\+Cu\+Put (\begin{DoxyParamCaption}\item[{const \textbf{ Ep\+Source} \&}]{src,  }\item[{\textbf{ Cumbia\+Epics} $\ast$}]{ct }\end{DoxyParamCaption})}
+
+
+
+References Cu\+T\+Writer\+Private\+::cumbia\+\_\+t, Cu\+T\+Writer\+Private\+::exit, Cu\+T\+Writer\+Private\+::li, Cu\+T\+Writer\+Private\+::log, and Cu\+T\+Writer\+Private\+::tsrc.
+
+\mbox{\label{classCuPut_a62203bda48a30fa4a8a966a4d039ba7b}} 
+\index{Cu\+Put@{Cu\+Put}!````~Cu\+Put@{$\sim$\+Cu\+Put}}
+\index{````~Cu\+Put@{$\sim$\+Cu\+Put}!Cu\+Put@{Cu\+Put}}
+\subsubsection{$\sim$\+Cu\+Put()}
+{\footnotesize\ttfamily Cu\+Put\+::$\sim$\+Cu\+Put (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classCuPut_a304735be4bbef6c03d30862dd69e9213}} 
+\index{Cu\+Put@{Cu\+Put}!add\+Data\+Listener@{add\+Data\+Listener}}
+\index{add\+Data\+Listener@{add\+Data\+Listener}!Cu\+Put@{Cu\+Put}}
+\subsubsection{add\+Data\+Listener()}
+{\footnotesize\ttfamily void Cu\+Put\+::add\+Data\+Listener (\begin{DoxyParamCaption}\item[{Cu\+Data\+Listener $\ast$}]{l }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \textbf{ Cu\+Epics\+ActionI} \doxyref{}{p.}{classCuEpicsActionI_a8e6c0261f02cb237d612e097fee6dc4a}.
+
+
+
+References Cu\+T\+Writer\+Private\+::listeners.
+
+\mbox{\label{classCuPut_ac342b254939cd2fc532210fd1ec55c1e}} 
+\index{Cu\+Put@{Cu\+Put}!data\+Listeners\+Count@{data\+Listeners\+Count}}
+\index{data\+Listeners\+Count@{data\+Listeners\+Count}!Cu\+Put@{Cu\+Put}}
+\subsubsection{data\+Listeners\+Count()}
+{\footnotesize\ttfamily size\+\_\+t Cu\+Put\+::data\+Listeners\+Count (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \textbf{ Cu\+Epics\+ActionI} \doxyref{}{p.}{classCuEpicsActionI_af7b509410aaee059c3105dfb10b33ee7}.
+
+
+
+References Cu\+T\+Writer\+Private\+::listeners.
+
+\mbox{\label{classCuPut_a12b24fa9a83564254812fb29c169dfd9}} 
+\index{Cu\+Put@{Cu\+Put}!get\+Data@{get\+Data}}
+\index{get\+Data@{get\+Data}!Cu\+Put@{Cu\+Put}}
+\subsubsection{get\+Data()}
+{\footnotesize\ttfamily void Cu\+Put\+::get\+Data (\begin{DoxyParamCaption}\item[{Cu\+Data \&}]{d\+\_\+inout }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \textbf{ Cu\+Epics\+ActionI} \doxyref{}{p.}{classCuEpicsActionI_a063d9436f8a6b84a22a384d06c3996bd}.
+
+\mbox{\label{classCuPut_a7ede2832b45255e30fae59388f0873b4}} 
+\index{Cu\+Put@{Cu\+Put}!get\+Source@{get\+Source}}
+\index{get\+Source@{get\+Source}!Cu\+Put@{Cu\+Put}}
+\subsubsection{get\+Source()}
+{\footnotesize\ttfamily \textbf{ Ep\+Source} Cu\+Put\+::get\+Source (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \textbf{ Cu\+Epics\+ActionI} \doxyref{}{p.}{classCuEpicsActionI_a2c97ba6d9bbd9e98fec51aa92d2becb6}.
+
+
+
+References Cu\+T\+Writer\+Private\+::tsrc.
+
+\mbox{\label{classCuPut_adccfd3ab18137c016c71a45bab87e64a}} 
+\index{Cu\+Put@{Cu\+Put}!get\+Token@{get\+Token}}
+\index{get\+Token@{get\+Token}!Cu\+Put@{Cu\+Put}}
+\subsubsection{get\+Token()}
+{\footnotesize\ttfamily Cu\+Data Cu\+Put\+::get\+Token (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+References Ep\+Source\+::get\+Name(), and Cu\+T\+Writer\+Private\+::tsrc.
+
+\mbox{\label{classCuPut_aace1d281b4a27ee445aa023ce0d12483}} 
+\index{Cu\+Put@{Cu\+Put}!get\+Type@{get\+Type}}
+\index{get\+Type@{get\+Type}!Cu\+Put@{Cu\+Put}}
+\subsubsection{get\+Type()}
+{\footnotesize\ttfamily \textbf{ Cu\+Epics\+Action\+I\+::\+Type} Cu\+Put\+::get\+Type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \textbf{ Cu\+Epics\+ActionI} \doxyref{}{p.}{classCuEpicsActionI_a7386456fda8f1fe44dac1960842b96a6}.
+
+
+
+References Cu\+Epics\+Action\+I\+::\+Writer.
+
+
+
+Referenced by on\+Result().
+
+\mbox{\label{classCuPut_a5343b02bdd1ae0c9c2983315a04f918d}} 
+\index{Cu\+Put@{Cu\+Put}!on\+Progress@{on\+Progress}}
+\index{on\+Progress@{on\+Progress}!Cu\+Put@{Cu\+Put}}
+\subsubsection{on\+Progress()}
+{\footnotesize\ttfamily void Cu\+Put\+::on\+Progress (\begin{DoxyParamCaption}\item[{int}]{step,  }\item[{int}]{total,  }\item[{const Cu\+Data \&}]{data }\end{DoxyParamCaption})}
+
+\mbox{\label{classCuPut_a850f308ddd6a5cd7778360a402830d51}} 
+\index{Cu\+Put@{Cu\+Put}!on\+Result@{on\+Result}}
+\index{on\+Result@{on\+Result}!Cu\+Put@{Cu\+Put}}
+\subsubsection{on\+Result()}
+{\footnotesize\ttfamily void Cu\+Put\+::on\+Result (\begin{DoxyParamCaption}\item[{const Cu\+Data \&}]{data }\end{DoxyParamCaption})}
+
+
+
+References Cu\+Action\+Factory\+Service\+::\+Cu\+Action\+Factory\+Service\+Type, Cu\+T\+Writer\+Private\+::cumbia\+\_\+t, Ep\+Source\+::get\+Name(), get\+Type(), Cu\+T\+Writer\+Private\+::listeners, Cu\+T\+Writer\+Private\+::tsrc, and Cu\+Action\+Factory\+Service\+::unregister\+Action().
+
+\mbox{\label{classCuPut_aea881574b86c093293ea4b16749aa187}} 
+\index{Cu\+Put@{Cu\+Put}!remove\+Data\+Listener@{remove\+Data\+Listener}}
+\index{remove\+Data\+Listener@{remove\+Data\+Listener}!Cu\+Put@{Cu\+Put}}
+\subsubsection{remove\+Data\+Listener()}
+{\footnotesize\ttfamily void Cu\+Put\+::remove\+Data\+Listener (\begin{DoxyParamCaption}\item[{Cu\+Data\+Listener $\ast$}]{l }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \textbf{ Cu\+Epics\+ActionI} \doxyref{}{p.}{classCuEpicsActionI_a5f5c5045ae8f93ed95794538c495dfdf}.
+
+
+
+References Cu\+T\+Writer\+Private\+::listeners, and stop().
+
+\mbox{\label{classCuPut_aa157f27047f346c478acb8f7bd64f818}} 
+\index{Cu\+Put@{Cu\+Put}!send\+Data@{send\+Data}}
+\index{send\+Data@{send\+Data}!Cu\+Put@{Cu\+Put}}
+\subsubsection{send\+Data()}
+{\footnotesize\ttfamily void Cu\+Put\+::send\+Data (\begin{DoxyParamCaption}\item[{const Cu\+Data \&}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \textbf{ Cu\+Epics\+ActionI} \doxyref{}{p.}{classCuEpicsActionI_acced5eb52ec2b30b2f21ca30b043d683}.
+
+\mbox{\label{classCuPut_a5bfe678826233c3ce42a4dee5d5da478}} 
+\index{Cu\+Put@{Cu\+Put}!set\+Write\+Value@{set\+Write\+Value}}
+\index{set\+Write\+Value@{set\+Write\+Value}!Cu\+Put@{Cu\+Put}}
+\subsubsection{set\+Write\+Value()}
+{\footnotesize\ttfamily void Cu\+Put\+::set\+Write\+Value (\begin{DoxyParamCaption}\item[{const Cu\+Variant \&}]{wval }\end{DoxyParamCaption})}
+
+
+
+References Cu\+T\+Writer\+Private\+::write\+\_\+val.
+
+
+
+Referenced by Cu\+Epics\+Writer\+Factory\+::create().
+
+\mbox{\label{classCuPut_a6f22cba2a2d20376c912d017eeb09236}} 
+\index{Cu\+Put@{Cu\+Put}!start@{start}}
+\index{start@{start}!Cu\+Put@{Cu\+Put}}
+\subsubsection{start()}
+{\footnotesize\ttfamily void Cu\+Put\+::start (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \textbf{ Cu\+Epics\+ActionI} \doxyref{}{p.}{classCuEpicsActionI_aa6b252261a7763d5e4266b9a68042cac}.
+
+
+
+References Cu\+T\+Writer\+Private\+::activity, Cu\+Ep\+C\+A\+Service\+::\+Cu\+Epics\+Channel\+Access\+Service\+Type, Cu\+T\+Writer\+Private\+::cumbia\+\_\+t, Ep\+Source\+::get\+I\+O\+C(), Ep\+Source\+::get\+Name(), Ep\+Source\+::get\+P\+V(), Cumbia\+Epics\+::get\+Thread\+Events\+Bridge\+Factory(), Cumbia\+Epics\+::get\+Thread\+Factory\+Impl(), Ep\+Source\+::get\+Type(), Ep\+Source\+::\+PV, Cu\+T\+Writer\+Private\+::tsrc, and Cu\+T\+Writer\+Private\+::write\+\_\+val.
+
+\mbox{\label{classCuPut_a04c85dea0e8c18f0ba4ee6b572848b8a}} 
+\index{Cu\+Put@{Cu\+Put}!stop@{stop}}
+\index{stop@{stop}!Cu\+Put@{Cu\+Put}}
+\subsubsection{stop()}
+{\footnotesize\ttfamily void Cu\+Put\+::stop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \textbf{ Cu\+Epics\+ActionI} \doxyref{}{p.}{classCuEpicsActionI_adf2f365700c5cc859929db4495216323}.
+
+
+
+Referenced by remove\+Data\+Listener().
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\textbf{ cuput.\+h}\item 
+\textbf{ cuput.\+cpp}\end{DoxyCompactItemize}

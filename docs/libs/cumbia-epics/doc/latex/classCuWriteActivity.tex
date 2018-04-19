@@ -1,0 +1,105 @@
+\section{Cu\+Write\+Activity Class Reference}
+\label{classCuWriteActivity}\index{Cu\+Write\+Activity@{Cu\+Write\+Activity}}
+
+
+{\ttfamily \#include $<$cuputactivity.\+h$>$}
+
+
+
+Inheritance diagram for Cu\+Write\+Activity\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=177pt]{classCuWriteActivity__inherit__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Cu\+Write\+Activity} (const Cu\+Data \&token, \textbf{ Cu\+Ep\+C\+A\+Service} $\ast$df)
+\item 
+virtual \textbf{ $\sim$\+Cu\+Write\+Activity} ()
+\item 
+void \textbf{ event} (Cu\+Activity\+Event $\ast$e)
+\item 
+bool \textbf{ matches} (const Cu\+Data \&token) const
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \textbf{ init} ()
+\item 
+void \textbf{ execute} ()
+\item 
+void \textbf{ on\+Exit} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classCuWriteActivity_a0278f6c87765540946d578b9f9bd7d63}} 
+\index{Cu\+Write\+Activity@{Cu\+Write\+Activity}!Cu\+Write\+Activity@{Cu\+Write\+Activity}}
+\index{Cu\+Write\+Activity@{Cu\+Write\+Activity}!Cu\+Write\+Activity@{Cu\+Write\+Activity}}
+\subsubsection{Cu\+Write\+Activity()}
+{\footnotesize\ttfamily Cu\+Write\+Activity\+::\+Cu\+Write\+Activity (\begin{DoxyParamCaption}\item[{const Cu\+Data \&}]{token,  }\item[{\textbf{ Cu\+Ep\+C\+A\+Service} $\ast$}]{df }\end{DoxyParamCaption})}
+
+
+
+References Cu\+Write\+Activity\+Private\+::epics\+\_\+service, Cu\+Write\+Activity\+Private\+::err, and Cu\+Write\+Activity\+Private\+::other\+\_\+thread\+\_\+id.
+
+\mbox{\label{classCuWriteActivity_aef98deab4678b6d13b0597067427954f}} 
+\index{Cu\+Write\+Activity@{Cu\+Write\+Activity}!````~Cu\+Write\+Activity@{$\sim$\+Cu\+Write\+Activity}}
+\index{````~Cu\+Write\+Activity@{$\sim$\+Cu\+Write\+Activity}!Cu\+Write\+Activity@{Cu\+Write\+Activity}}
+\subsubsection{$\sim$\+Cu\+Write\+Activity()}
+{\footnotesize\ttfamily Cu\+Write\+Activity\+::$\sim$\+Cu\+Write\+Activity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classCuWriteActivity_a7096f057f66631ea030f42fe9e817b6c}} 
+\index{Cu\+Write\+Activity@{Cu\+Write\+Activity}!event@{event}}
+\index{event@{event}!Cu\+Write\+Activity@{Cu\+Write\+Activity}}
+\subsubsection{event()}
+{\footnotesize\ttfamily void Cu\+Write\+Activity\+::event (\begin{DoxyParamCaption}\item[{Cu\+Activity\+Event $\ast$}]{e }\end{DoxyParamCaption})}
+
+\mbox{\label{classCuWriteActivity_a6d8a87364002b18f420c9302c20d4a96}} 
+\index{Cu\+Write\+Activity@{Cu\+Write\+Activity}!execute@{execute}}
+\index{execute@{execute}!Cu\+Write\+Activity@{Cu\+Write\+Activity}}
+\subsubsection{execute()}
+{\footnotesize\ttfamily void Cu\+Write\+Activity\+::execute (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+References Cu\+Write\+Activity\+Private\+::err, Cu\+Write\+Activity\+Private\+::msg, and Cu\+Write\+Activity\+Private\+::my\+\_\+thread\+\_\+id.
+
+\mbox{\label{classCuWriteActivity_a0a0cde69cbe5f3e6dc1d633bf62fd204}} 
+\index{Cu\+Write\+Activity@{Cu\+Write\+Activity}!init@{init}}
+\index{init@{init}!Cu\+Write\+Activity@{Cu\+Write\+Activity}}
+\subsubsection{init()}
+{\footnotesize\ttfamily void Cu\+Write\+Activity\+::init (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+References Cu\+Write\+Activity\+Private\+::my\+\_\+thread\+\_\+id, and Cu\+Write\+Activity\+Private\+::other\+\_\+thread\+\_\+id.
+
+\mbox{\label{classCuWriteActivity_a6887775a9b2490d65541e67f9ac25e2b}} 
+\index{Cu\+Write\+Activity@{Cu\+Write\+Activity}!matches@{matches}}
+\index{matches@{matches}!Cu\+Write\+Activity@{Cu\+Write\+Activity}}
+\subsubsection{matches()}
+{\footnotesize\ttfamily bool Cu\+Write\+Activity\+::matches (\begin{DoxyParamCaption}\item[{const Cu\+Data \&}]{token }\end{DoxyParamCaption}) const}
+
+\mbox{\label{classCuWriteActivity_a3266335817f6907435a8e9b3e54c36f6}} 
+\index{Cu\+Write\+Activity@{Cu\+Write\+Activity}!on\+Exit@{on\+Exit}}
+\index{on\+Exit@{on\+Exit}!Cu\+Write\+Activity@{Cu\+Write\+Activity}}
+\subsubsection{on\+Exit()}
+{\footnotesize\ttfamily void Cu\+Write\+Activity\+::on\+Exit (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+References Cu\+Write\+Activity\+Private\+::err, Cu\+Epics\+World\+::fill\+Thread\+Info(), Cu\+Write\+Activity\+Private\+::msg, and Cu\+Write\+Activity\+Private\+::my\+\_\+thread\+\_\+id.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\textbf{ cuputactivity.\+h}\item 
+\textbf{ cuputactivity.\+cpp}\end{DoxyCompactItemize}

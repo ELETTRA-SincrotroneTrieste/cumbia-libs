@@ -1,0 +1,76 @@
+\section{Cu\+Epics\+Action\+FactoryI Class Reference}
+\label{classCuEpicsActionFactoryI}\index{Cu\+Epics\+Action\+FactoryI@{Cu\+Epics\+Action\+FactoryI}}
+
+
+{\ttfamily \#include $<$cuepactionfactoryi.\+h$>$}
+
+
+
+Inheritance diagram for Cu\+Epics\+Action\+FactoryI\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classCuEpicsActionFactoryI__inherit__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Cu\+Epics\+Action\+FactoryI} ()
+\item 
+virtual \textbf{ Cu\+Epics\+ActionI} $\ast$ \textbf{ create} (const std\+::string \&source, \textbf{ Cumbia\+Epics} $\ast$ct) const =0
+\item 
+virtual \textbf{ Cu\+Epics\+Action\+I\+::\+Type} \textbf{ get\+Type} () const =0
+\begin{DoxyCompactList}\small\item\em Return the type of action that the factory creates. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classCuEpicsActionFactoryI_ae143654e9253d45fedddb91691f547b2}} 
+\index{Cu\+Epics\+Action\+FactoryI@{Cu\+Epics\+Action\+FactoryI}!Cu\+Epics\+Action\+FactoryI@{Cu\+Epics\+Action\+FactoryI}}
+\index{Cu\+Epics\+Action\+FactoryI@{Cu\+Epics\+Action\+FactoryI}!Cu\+Epics\+Action\+FactoryI@{Cu\+Epics\+Action\+FactoryI}}
+\subsubsection{Cu\+Epics\+Action\+Factory\+I()}
+{\footnotesize\ttfamily Cu\+Epics\+Action\+Factory\+I\+::\+Cu\+Epics\+Action\+FactoryI (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classCuEpicsActionFactoryI_a37e60f748fad19a87626578f8badccf9}} 
+\index{Cu\+Epics\+Action\+FactoryI@{Cu\+Epics\+Action\+FactoryI}!create@{create}}
+\index{create@{create}!Cu\+Epics\+Action\+FactoryI@{Cu\+Epics\+Action\+FactoryI}}
+\subsubsection{create()}
+{\footnotesize\ttfamily virtual \textbf{ Cu\+Epics\+ActionI}$\ast$ Cu\+Epics\+Action\+Factory\+I\+::create (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{source,  }\item[{\textbf{ Cumbia\+Epics} $\ast$}]{ct }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Implemented in \textbf{ Cu\+Epics\+Att\+Conf\+Factory} \doxyref{}{p.}{classCuEpicsAttConfFactory_ab44c19d1a61e57eb6044b46d616a3870}, \textbf{ Cu\+Epics\+Writer\+Factory} \doxyref{}{p.}{classCuEpicsWriterFactory_a5244cc75c1b4c4363506811c138d4411}, and \textbf{ Cu\+Epics\+Reader\+Factory} \doxyref{}{p.}{classCuEpicsReaderFactory_a935c44529bf2a9fd125093e95a1a476e}.
+
+
+
+Referenced by Cu\+Action\+Factory\+Service\+::register\+Action().
+
+\mbox{\label{classCuEpicsActionFactoryI_a8fe66bee4e67d957765071ef9d70815f}} 
+\index{Cu\+Epics\+Action\+FactoryI@{Cu\+Epics\+Action\+FactoryI}!get\+Type@{get\+Type}}
+\index{get\+Type@{get\+Type}!Cu\+Epics\+Action\+FactoryI@{Cu\+Epics\+Action\+FactoryI}}
+\subsubsection{get\+Type()}
+{\footnotesize\ttfamily virtual \textbf{ Cu\+Epics\+Action\+I\+::\+Type} Cu\+Epics\+Action\+Factory\+I\+::get\+Type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Return the type of action that the factory creates. 
+
+\begin{DoxyReturn}{Returns}
+the type of action that the factory creates 
+\end{DoxyReturn}
+
+
+Implemented in \textbf{ Cu\+Epics\+Att\+Conf\+Factory} \doxyref{}{p.}{classCuEpicsAttConfFactory_a5c7919a94d1f3d7362de21610ff9b480}, \textbf{ Cu\+Epics\+Writer\+Factory} \doxyref{}{p.}{classCuEpicsWriterFactory_a1c07cf03b37a3648240c5bddae90b669}, and \textbf{ Cu\+Epics\+Reader\+Factory} \doxyref{}{p.}{classCuEpicsReaderFactory_a2fae8622fb4054cfa0a829c341252e68}.
+
+
+
+Referenced by Cumbia\+Epics\+::add\+Action(), and Cu\+Action\+Factory\+Service\+::register\+Action().
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\textbf{ cuepactionfactoryi.\+h}\end{DoxyCompactItemize}

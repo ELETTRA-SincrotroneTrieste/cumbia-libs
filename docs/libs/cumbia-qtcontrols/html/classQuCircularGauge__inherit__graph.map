@@ -1,0 +1,5 @@
+<map id="QuCircularGauge" name="QuCircularGauge">
+<area shape="rect" id="node2" href="$classECircularGauge.html" title="a tachometer like widget " alt="" coords="7,155,122,181"/>
+<area shape="rect" id="node3" href="$classEAbstractGauge.html" title="an abstract class used to implement widgets with a color scale " alt="" coords="5,80,124,107"/>
+<area shape="rect" id="node6" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management..." alt="" coords="284,155,373,181"/>
+</map>

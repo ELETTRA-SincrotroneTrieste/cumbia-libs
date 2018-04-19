@@ -1,0 +1,185 @@
+\section{Cu\+Epics\+World\+Config Class Reference}
+\label{classCuEpicsWorldConfig}\index{Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}}
+
+
+A class containing some configurations useful to several other objects.  
+
+
+
+
+{\ttfamily \#include $<$cuepics-\/world-\/config.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Cu\+Epics\+World\+Config} ()
+\item 
+virtual \textbf{ $\sim$\+Cu\+Epics\+World\+Config} ()
+\item 
+const std\+::string \textbf{ quality\+Color} (int q) const
+\item 
+void \textbf{ set\+Quality\+Color} (int, const std\+::string \&)
+\item 
+int \textbf{ quality\+Color\+Count} () const
+\item 
+std\+::string \textbf{ success\+Color} (bool success) const
+\item 
+void \textbf{ set\+Success\+Color} (bool success, const std\+::string \&colorname)
+\item 
+void \textbf{ set\+Quality\+String} (int, std\+::string)
+\item 
+std\+::string \textbf{ quality\+String} (int q) const
+\item 
+std\+::map$<$ int, std\+::string $>$ \textbf{ quality\+Strings} ()
+\item 
+std\+::map$<$ int, std\+::string $>$ \textbf{ quality\+Color\+Names} ()
+\item 
+void \textbf{ set\+Override\+Values\+Attribute\+Property\+Name} (const std\+::string \&name)
+\begin{DoxyCompactList}\small\item\em set the attribute property name for the Q\+Epics\+Auto\+Configuration \char`\"{}values\char`\"{} retrieval \end{DoxyCompactList}\item 
+std\+::string \textbf{ values\+Attribute\+Property\+Name} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A class containing some configurations useful to several other objects. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classCuEpicsWorldConfig_abf49532d05fceb6a071dcfd81065a3b4}} 
+\index{Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}!Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}}
+\index{Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}!Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}}
+\subsubsection{Cu\+Epics\+World\+Config()}
+{\footnotesize\ttfamily Cu\+Epics\+World\+Config\+::\+Cu\+Epics\+World\+Config (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References Cu\+Epics\+World\+Config\+Private\+::success\+Colors, and Cu\+Epics\+World\+Config\+Private\+::value\+Attr\+Prop\+Name.
+
+\mbox{\label{classCuEpicsWorldConfig_ad0dc7ec16ef0f9183cafe09a20870147}} 
+\index{Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}!````~Cu\+Epics\+World\+Config@{$\sim$\+Cu\+Epics\+World\+Config}}
+\index{````~Cu\+Epics\+World\+Config@{$\sim$\+Cu\+Epics\+World\+Config}!Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}}
+\subsubsection{$\sim$\+Cu\+Epics\+World\+Config()}
+{\footnotesize\ttfamily Cu\+Epics\+World\+Config\+::$\sim$\+Cu\+Epics\+World\+Config (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classCuEpicsWorldConfig_a7241b21109d73cbe5757359c84b35657}} 
+\index{Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}!quality\+Color@{quality\+Color}}
+\index{quality\+Color@{quality\+Color}!Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}}
+\subsubsection{quality\+Color()}
+{\footnotesize\ttfamily const std\+::string Cu\+Epics\+World\+Config\+::quality\+Color (\begin{DoxyParamCaption}\item[{int}]{q }\end{DoxyParamCaption}) const}
+
+
+
+References Cu\+Epics\+World\+Config\+Private\+::quality\+Colors.
+
+\mbox{\label{classCuEpicsWorldConfig_a10bead8731bb4ec1fff322922699ddf0}} 
+\index{Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}!quality\+Color\+Count@{quality\+Color\+Count}}
+\index{quality\+Color\+Count@{quality\+Color\+Count}!Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}}
+\subsubsection{quality\+Color\+Count()}
+{\footnotesize\ttfamily int Cu\+Epics\+World\+Config\+::quality\+Color\+Count (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+References Cu\+Epics\+World\+Config\+Private\+::quality\+Colors.
+
+\mbox{\label{classCuEpicsWorldConfig_a27eb5ad034e1bc4f82fe722ae32c3005}} 
+\index{Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}!quality\+Color\+Names@{quality\+Color\+Names}}
+\index{quality\+Color\+Names@{quality\+Color\+Names}!Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}}
+\subsubsection{quality\+Color\+Names()}
+{\footnotesize\ttfamily std\+::map$<$ int, std\+::string $>$ Cu\+Epics\+World\+Config\+::quality\+Color\+Names (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References Cu\+Epics\+World\+Config\+Private\+::quality\+Colors.
+
+\mbox{\label{classCuEpicsWorldConfig_abe2beb55c16abf12f7b010702576979b}} 
+\index{Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}!quality\+String@{quality\+String}}
+\index{quality\+String@{quality\+String}!Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}}
+\subsubsection{quality\+String()}
+{\footnotesize\ttfamily std\+::string Cu\+Epics\+World\+Config\+::quality\+String (\begin{DoxyParamCaption}\item[{int}]{q }\end{DoxyParamCaption}) const}
+
+
+
+References Cu\+Epics\+World\+Config\+Private\+::quality\+Strings.
+
+\mbox{\label{classCuEpicsWorldConfig_a1661e7600ea2a3382a7b8a419c084906}} 
+\index{Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}!quality\+Strings@{quality\+Strings}}
+\index{quality\+Strings@{quality\+Strings}!Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}}
+\subsubsection{quality\+Strings()}
+{\footnotesize\ttfamily std\+::map$<$ int, std\+::string $>$ Cu\+Epics\+World\+Config\+::quality\+Strings (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References Cu\+Epics\+World\+Config\+Private\+::quality\+Strings.
+
+\mbox{\label{classCuEpicsWorldConfig_aa50bf286bebfd5367d5eabe3e1d3e3fe}} 
+\index{Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}!set\+Override\+Values\+Attribute\+Property\+Name@{set\+Override\+Values\+Attribute\+Property\+Name}}
+\index{set\+Override\+Values\+Attribute\+Property\+Name@{set\+Override\+Values\+Attribute\+Property\+Name}!Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}}
+\subsubsection{set\+Override\+Values\+Attribute\+Property\+Name()}
+{\footnotesize\ttfamily void Cu\+Epics\+World\+Config\+::set\+Override\+Values\+Attribute\+Property\+Name (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name }\end{DoxyParamCaption})}
+
+
+
+set the attribute property name for the Q\+Epics\+Auto\+Configuration \char`\"{}values\char`\"{} retrieval 
+
+This is a {\bfseries work around} to let Q\+Epics\+Auto\+Configuration provide the string list associated to the attribute property {\itshape values}, even if the attribute property hasn\textquotesingle{}t got the {\itshape standard name {\itshape values}}. 
+
+References Cu\+Epics\+World\+Config\+Private\+::value\+Attr\+Prop\+Name.
+
+\mbox{\label{classCuEpicsWorldConfig_a968e62eb41e16fb46bf53938ee6716f4}} 
+\index{Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}!set\+Quality\+Color@{set\+Quality\+Color}}
+\index{set\+Quality\+Color@{set\+Quality\+Color}!Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}}
+\subsubsection{set\+Quality\+Color()}
+{\footnotesize\ttfamily void Cu\+Epics\+World\+Config\+::set\+Quality\+Color (\begin{DoxyParamCaption}\item[{int}]{q,  }\item[{const std\+::string \&}]{c }\end{DoxyParamCaption})}
+
+
+
+References Cu\+Epics\+World\+Config\+Private\+::quality\+Colors.
+
+\mbox{\label{classCuEpicsWorldConfig_a3b7520bba46486d562d6d2660d4c22fe}} 
+\index{Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}!set\+Quality\+String@{set\+Quality\+String}}
+\index{set\+Quality\+String@{set\+Quality\+String}!Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}}
+\subsubsection{set\+Quality\+String()}
+{\footnotesize\ttfamily void Cu\+Epics\+World\+Config\+::set\+Quality\+String (\begin{DoxyParamCaption}\item[{int}]{q,  }\item[{std\+::string}]{s }\end{DoxyParamCaption})}
+
+
+
+References Cu\+Epics\+World\+Config\+Private\+::quality\+Strings.
+
+\mbox{\label{classCuEpicsWorldConfig_a35813a91365d8094c7508340a821289c}} 
+\index{Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}!set\+Success\+Color@{set\+Success\+Color}}
+\index{set\+Success\+Color@{set\+Success\+Color}!Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}}
+\subsubsection{set\+Success\+Color()}
+{\footnotesize\ttfamily void Cu\+Epics\+World\+Config\+::set\+Success\+Color (\begin{DoxyParamCaption}\item[{bool}]{success,  }\item[{const std\+::string \&}]{colorname }\end{DoxyParamCaption})}
+
+
+
+References Cu\+Epics\+World\+Config\+Private\+::success\+Colors.
+
+\mbox{\label{classCuEpicsWorldConfig_a510fee27abe8142522b347a54e270577}} 
+\index{Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}!success\+Color@{success\+Color}}
+\index{success\+Color@{success\+Color}!Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}}
+\subsubsection{success\+Color()}
+{\footnotesize\ttfamily std\+::string Cu\+Epics\+World\+Config\+::success\+Color (\begin{DoxyParamCaption}\item[{bool}]{success }\end{DoxyParamCaption}) const}
+
+
+
+References Cu\+Epics\+World\+Config\+Private\+::success\+Colors.
+
+\mbox{\label{classCuEpicsWorldConfig_a3ff739254a3d7ca6c24e931aa3ef80b5}} 
+\index{Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}!values\+Attribute\+Property\+Name@{values\+Attribute\+Property\+Name}}
+\index{values\+Attribute\+Property\+Name@{values\+Attribute\+Property\+Name}!Cu\+Epics\+World\+Config@{Cu\+Epics\+World\+Config}}
+\subsubsection{values\+Attribute\+Property\+Name()}
+{\footnotesize\ttfamily std\+::string Cu\+Epics\+World\+Config\+::values\+Attribute\+Property\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References Cu\+Epics\+World\+Config\+Private\+::value\+Attr\+Prop\+Name.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\textbf{ cuepics-\/world-\/config.\+h}\item 
+\textbf{ cuepics-\/world-\/config.\+cpp}\end{DoxyCompactItemize}

@@ -1,0 +1,178 @@
+\section{Cu\+Epics\+World Class Reference}
+\label{classCuEpicsWorld}\index{Cu\+Epics\+World@{Cu\+Epics\+World}}
+
+
+{\ttfamily \#include $<$cuepics-\/world.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\textbf{ Cu\+Epics\+World} ()
+\item 
+virtual \textbf{ $\sim$\+Cu\+Epics\+World} ()
+\item 
+std\+::string \textbf{ get\+Last\+Message} () const
+\item 
+void \textbf{ fill\+Thread\+Info} (Cu\+Data \&d, const Cu\+Activity $\ast$a)
+\item 
+bool \textbf{ error} () const
+\item 
+bool \textbf{ source\+\_\+valid} (const std\+::string \&s) const
+\item 
+void \textbf{ extract\+Data} (const \textbf{ Cu\+PV} $\ast$\+\_\+pv, Cu\+Data \&da) const
+\item 
+std\+::string \textbf{ extract\+Exception} (struct exception\+\_\+handler\+\_\+args excargs, Cu\+Data \&d) const
+\begin{DoxyCompactList}\small\item\em fills the input Cu\+Data with exception information. \end{DoxyCompactList}\item 
+{\footnotesize template$<$class T $>$ }\\void \textbf{ put\+Timestamp} (void $\ast$ep\+\_\+data, Cu\+Data \&d) const
+\item 
+{\footnotesize template$<$class T $>$ }\\void \textbf{ put\+Ctrl\+Data} (void $\ast$ep\+\_\+data, Cu\+Data \&d) const
+\item 
+void \textbf{ set\+Src\+Patterns} (const std\+::vector$<$ std\+::string $>$ \&p)
+\item 
+std\+::vector$<$ std\+::string $>$ \textbf{ src\+Patterns} () const
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\label{classCuEpicsWorld_ab42c206f9bad4e5491052ddeda4ac773}} 
+\index{Cu\+Epics\+World@{Cu\+Epics\+World}!Cu\+Epics\+World@{Cu\+Epics\+World}}
+\index{Cu\+Epics\+World@{Cu\+Epics\+World}!Cu\+Epics\+World@{Cu\+Epics\+World}}
+\subsubsection{Cu\+Epics\+World()}
+{\footnotesize\ttfamily Cu\+Epics\+World\+::\+Cu\+Epics\+World (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+References Cu\+Epics\+World\+Private\+::src\+\_\+patterns.
+
+\mbox{\label{classCuEpicsWorld_a48e6dc05f7b79752047a3cf20ea4b61b}} 
+\index{Cu\+Epics\+World@{Cu\+Epics\+World}!````~Cu\+Epics\+World@{$\sim$\+Cu\+Epics\+World}}
+\index{````~Cu\+Epics\+World@{$\sim$\+Cu\+Epics\+World}!Cu\+Epics\+World@{Cu\+Epics\+World}}
+\subsubsection{$\sim$\+Cu\+Epics\+World()}
+{\footnotesize\ttfamily Cu\+Epics\+World\+::$\sim$\+Cu\+Epics\+World (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\label{classCuEpicsWorld_a01c2f45af889d0bf2f2a1f0dae877624}} 
+\index{Cu\+Epics\+World@{Cu\+Epics\+World}!error@{error}}
+\index{error@{error}!Cu\+Epics\+World@{Cu\+Epics\+World}}
+\subsubsection{error()}
+{\footnotesize\ttfamily bool Cu\+Epics\+World\+::error (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+References Cu\+Epics\+World\+Private\+::error.
+
+
+
+Referenced by Cu\+Monitor\+Activity\+::event\+\_\+handler().
+
+\mbox{\label{classCuEpicsWorld_ada0feac3aef6923b41d9913664d96e88}} 
+\index{Cu\+Epics\+World@{Cu\+Epics\+World}!extract\+Data@{extract\+Data}}
+\index{extract\+Data@{extract\+Data}!Cu\+Epics\+World@{Cu\+Epics\+World}}
+\subsubsection{extract\+Data()}
+{\footnotesize\ttfamily void Cu\+Epics\+World\+::extract\+Data (\begin{DoxyParamCaption}\item[{const \textbf{ Cu\+PV} $\ast$}]{\+\_\+pv,  }\item[{Cu\+Data \&}]{da }\end{DoxyParamCaption}) const}
+
+
+
+References Cu\+P\+V\+::dbr\+Type, Cu\+Epics\+World\+Private\+::error, Cu\+Epics\+World\+Private\+::message, Cu\+P\+V\+::n\+Elems, and Cu\+P\+V\+::value.
+
+
+
+Referenced by Cu\+Monitor\+Activity\+::event\+\_\+handler().
+
+\mbox{\label{classCuEpicsWorld_aebd4c38ec2d510f69de4708fb0a7638c}} 
+\index{Cu\+Epics\+World@{Cu\+Epics\+World}!extract\+Exception@{extract\+Exception}}
+\index{extract\+Exception@{extract\+Exception}!Cu\+Epics\+World@{Cu\+Epics\+World}}
+\subsubsection{extract\+Exception()}
+{\footnotesize\ttfamily std\+::string Cu\+Epics\+World\+::extract\+Exception (\begin{DoxyParamCaption}\item[{struct exception\+\_\+handler\+\_\+args}]{excargs,  }\item[{Cu\+Data \&}]{da }\end{DoxyParamCaption}) const}
+
+
+
+fills the input Cu\+Data with exception information. 
+
+\begin{DoxyReturn}{Returns}
+a string representation of the available error information 
+\end{DoxyReturn}
+
+
+Referenced by Cu\+Monitor\+Activity\+::exception\+\_\+handler().
+
+\mbox{\label{classCuEpicsWorld_a6316206157828d6bbecd2a22c5e32b12}} 
+\index{Cu\+Epics\+World@{Cu\+Epics\+World}!fill\+Thread\+Info@{fill\+Thread\+Info}}
+\index{fill\+Thread\+Info@{fill\+Thread\+Info}!Cu\+Epics\+World@{Cu\+Epics\+World}}
+\subsubsection{fill\+Thread\+Info()}
+{\footnotesize\ttfamily void Cu\+Epics\+World\+::fill\+Thread\+Info (\begin{DoxyParamCaption}\item[{Cu\+Data \&}]{d,  }\item[{const Cu\+Activity $\ast$}]{a }\end{DoxyParamCaption})}
+
+
+
+Referenced by Cu\+Monitor\+Activity\+::event\+\_\+handler(), Cu\+Ep\+Config\+Activity\+::execute(), Cu\+Write\+Activity\+::on\+Exit(), Cu\+Ep\+Config\+Activity\+::on\+Exit(), and Cu\+Monitor\+Activity\+::on\+Exit().
+
+\mbox{\label{classCuEpicsWorld_a0f5eb329733ebae6077a440c7610d98d}} 
+\index{Cu\+Epics\+World@{Cu\+Epics\+World}!get\+Last\+Message@{get\+Last\+Message}}
+\index{get\+Last\+Message@{get\+Last\+Message}!Cu\+Epics\+World@{Cu\+Epics\+World}}
+\subsubsection{get\+Last\+Message()}
+{\footnotesize\ttfamily std\+::string Cu\+Epics\+World\+::get\+Last\+Message (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+References Cu\+Epics\+World\+Private\+::message.
+
+
+
+Referenced by Cu\+Monitor\+Activity\+::event\+\_\+handler().
+
+\mbox{\label{classCuEpicsWorld_ab9e49deeb1b16c19b750e8352b9434ca}} 
+\index{Cu\+Epics\+World@{Cu\+Epics\+World}!put\+Ctrl\+Data@{put\+Ctrl\+Data}}
+\index{put\+Ctrl\+Data@{put\+Ctrl\+Data}!Cu\+Epics\+World@{Cu\+Epics\+World}}
+\subsubsection{put\+Ctrl\+Data()}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void Cu\+Epics\+World\+::put\+Ctrl\+Data (\begin{DoxyParamCaption}\item[{void $\ast$}]{ep\+\_\+data,  }\item[{Cu\+Data \&}]{d }\end{DoxyParamCaption}) const}
+
+\mbox{\label{classCuEpicsWorld_a02a981b4a4b8729d98b047b3d1a5662a}} 
+\index{Cu\+Epics\+World@{Cu\+Epics\+World}!put\+Timestamp@{put\+Timestamp}}
+\index{put\+Timestamp@{put\+Timestamp}!Cu\+Epics\+World@{Cu\+Epics\+World}}
+\subsubsection{put\+Timestamp()}
+{\footnotesize\ttfamily template$<$class T $>$ \\
+void Cu\+Epics\+World\+::put\+Timestamp (\begin{DoxyParamCaption}\item[{void $\ast$}]{ep\+\_\+data,  }\item[{Cu\+Data \&}]{d }\end{DoxyParamCaption}) const}
+
+
+
+References T\+I\+M\+E\+T\+E\+X\+T\+L\+EN.
+
+\mbox{\label{classCuEpicsWorld_aeb1f075f1deaffc53098ab74b2f14c14}} 
+\index{Cu\+Epics\+World@{Cu\+Epics\+World}!set\+Src\+Patterns@{set\+Src\+Patterns}}
+\index{set\+Src\+Patterns@{set\+Src\+Patterns}!Cu\+Epics\+World@{Cu\+Epics\+World}}
+\subsubsection{set\+Src\+Patterns()}
+{\footnotesize\ttfamily void Cu\+Epics\+World\+::set\+Src\+Patterns (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ std\+::string $>$ \&}]{p }\end{DoxyParamCaption})}
+
+
+
+References Cu\+Epics\+World\+Private\+::src\+\_\+patterns.
+
+\mbox{\label{classCuEpicsWorld_af94537fdd5cbbd6bed7cfd2fd35777db}} 
+\index{Cu\+Epics\+World@{Cu\+Epics\+World}!source\+\_\+valid@{source\+\_\+valid}}
+\index{source\+\_\+valid@{source\+\_\+valid}!Cu\+Epics\+World@{Cu\+Epics\+World}}
+\subsubsection{source\+\_\+valid()}
+{\footnotesize\ttfamily bool Cu\+Epics\+World\+::source\+\_\+valid (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{s }\end{DoxyParamCaption}) const}
+
+
+
+Referenced by Cumbia\+Epics\+::add\+Action().
+
+\mbox{\label{classCuEpicsWorld_ab520509e400ee75726e2b8a7eac58752}} 
+\index{Cu\+Epics\+World@{Cu\+Epics\+World}!src\+Patterns@{src\+Patterns}}
+\index{src\+Patterns@{src\+Patterns}!Cu\+Epics\+World@{Cu\+Epics\+World}}
+\subsubsection{src\+Patterns()}
+{\footnotesize\ttfamily std\+::vector$<$ std\+::string $>$ Cu\+Epics\+World\+::src\+Patterns (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+References Cu\+Epics\+World\+Private\+::src\+\_\+patterns.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\textbf{ cuepics-\/world.\+h}\item 
+\textbf{ cuepics-\/world.\+cpp}\end{DoxyCompactItemize}

@@ -1,0 +1,101 @@
+{\itshape cumbia-\/epics} is the cumbia module for the {\tt Experimental Physics and Industrial Control System} (E\+P\+I\+CS) control system.\section{Related readings}\label{index_related_readings}
+\subsection{Tutorials}\label{index_tutorials}
+\tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Tutorials  }&\textbf{ Module   }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Tutorials  }&\textbf{ Module   }\\\cline{1-2}
+\endhead
+{\tt Writing a {\itshape cumbia} activity}  &{\tt cumbia}   \\\cline{1-2}
+{\tt Writing an activity}  &{\tt cumbia-\/tango}   \\\cline{1-2}
+{\tt Cu\+Data for Tango}  &{\tt cumbia-\/tango}   \\\cline{1-2}
+{\tt Writing a Qt widget that integrates with cumbia}  &{\tt qumbia-\/tango-\/controls}   \\\cline{1-2}
+{\tt Using {\itshape cumbia ui make}} to process Qt designer UI files  &{\tt qumbia-\/apps/cuuimake}   \\\cline{1-2}
+{\tt Writing a {\itshape Qt application} with cumbia and Tango}.  &{\tt qumbia-\/apps/qumbiaprojectwizard}   \\\cline{1-2}
+{\tt Porting a {\itshape Q\+Tango application} to {\itshape cumbia-\/tango}}.  &{\tt qumbia-\/apps/qumbiaprojectwizard}   \\\cline{1-2}
+{\tt {\itshape cumbia new control}}\+: quickly add a custom Qt widget to a cumbia project  &{\tt qumbia-\/apps/qumbianewcontrolwizard}   \\\cline{1-2}
+{\tt Understanding {\itshape cumbia-\/qtcontrols constructors, sources and targets}}  &{\tt cumbia-\/qtcontrols}.   \\\cline{1-2}
+\end{longtabu}
+\subsection{Modules}\label{index_cumodules}
+\tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{1}{|X[-1]}|}
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Other {\itshape cumbia} modules   }\\\cline{1-1}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Other {\itshape cumbia} modules   }\\\cline{1-1}
+\endhead
+{\tt cumbia module}.   \\\cline{1-1}
+{\tt cumbia-\/tango module}.   \\\cline{1-1}
+{\tt cumbia-\/qtcontrols module}.   \\\cline{1-1}
+{\tt cumbia-\/qtcontrols module}.   \\\cline{1-1}
+{\tt qumbia-\/epics module}.   \\\cline{1-1}
+{\tt qumbia-\/epics-\/controls module}.   \\\cline{1-1}
+\end{longtabu}
+\subsection{apps}\label{index_cu_apps}
+These applications (and their documentation, that has already been mentioned in the {\itshape Tutorials} table above) must be installed from the {\itshape qumbia-\/apps} sub-\/directory of the {\itshape cumbia-\/libs} distribution. To install them, {\itshape cd} into that folder and execute\+:
+
+
+\begin{DoxyCode}
+qmake
+make
+sudo make install
+\end{DoxyCode}
+
+
+Along the applications executables and documentation, two bash scripts will be installed\+:
+
+
+\begin{DoxyItemize}
+\item /etc/bash\+\_\+completion.d/cumbia
+\item /etc/bash/bashrc.d/cumbia.\+sh
+\end{DoxyItemize}
+
+They define shortcuts for the common operations provided by the {\itshape qumbia-\/apps} applications as follows\+:
+
+\tabulinesep=1mm
+\begin{longtabu} spread 0pt [c]{*{3}{|X[-1]}|}
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Applications (command line)  }&\textbf{ description  }&\textbf{ app   }\\\cline{1-3}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\rowcolor{\tableheadbgcolor}\textbf{ Applications (command line)  }&\textbf{ description  }&\textbf{ app   }\\\cline{1-3}
+\endhead
+{\itshape cumbia new project}  &create a new cumbia project  &{\tt qumbia-\/apps/qumbiaprojectwizard}   \\\cline{1-3}
+{\itshape cumbia import}  &migrate a Q\+Tango project into cumbia  &{\tt qumbia-\/apps/qumbiaprojectwizard}   \\\cline{1-3}
+{\itshape cumbia new control}  &write a {\itshape cumbia control} reader or writer  &{\tt qumbia-\/apps/qumbianewcontrolwizard}   \\\cline{1-3}
+{\itshape cumbia ui make}  &run {\itshape cuuimake} to generate {\itshape qt+cumbia} ui\+\_\+$\ast$.h files  &{\tt qumbia-\/apps/cuuimake}   \\\cline{1-3}
+{\itshape cumbia client}  &run a generic cumbia client  &{\tt qumbia-\/apps/cumbia\+\_\+client}   \\\cline{1-3}
+\end{longtabu}
+
+
+{\itshape bash auto completion} will help you use these shortcuts\+: try
+
+
+\begin{DoxyCode}
+cumbia <TAB>
+\end{DoxyCode}
+
+
+or
+
+
+\begin{DoxyCode}
+cumbia new <TAB>
+\end{DoxyCode}
+
+
+At the moment {\bfseries only a monitor (reader) has been implemented}.
+
+\begin{DoxyParagraph}{Example}
+In the qumbia-\/epics-\/controls module, under the {\itshape examples} directory, you will find an example of \doxyref{Cumbia\+Epics}{p.}{classCumbiaEpics} usage. It is completely equivalent to the {\itshape cumbia/tango} counterpart.
+\end{DoxyParagraph}
+See {\tt qumbia-\/epics-\/controls} documentation. 

@@ -1,0 +1,169 @@
+\section{Cu\+PV Struct Reference}
+\label{structCuPV}\index{Cu\+PV@{Cu\+PV}}
+
+
+{\ttfamily \#include $<$cuepics-\/world.\+h$>$}
+
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+char \textbf{ name} [256]
+\item 
+chid \textbf{ ch\+\_\+id}
+\item 
+long \textbf{ dbf\+Type}
+\item 
+long \textbf{ dbr\+Type}
+\item 
+unsigned long \textbf{ n\+Elems}
+\item 
+unsigned long \textbf{ req\+Elems}
+\item 
+int \textbf{ status}
+\item 
+int \textbf{ ctrl\+\_\+status}
+\item 
+void $\ast$ \textbf{ value}
+\item 
+epics\+Time\+Stamp \textbf{ ts\+PreviousC}
+\item 
+epics\+Time\+Stamp \textbf{ ts\+PreviousS}
+\item 
+char \textbf{ first\+Stamp\+Printed}
+\item 
+char \textbf{ once\+Connected}
+\item 
+\textbf{ Cu\+Monitor\+Activity} $\ast$ \textbf{ monitor\+\_\+activity}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Data Documentation}
+\mbox{\label{structCuPV_a441cee12096b965d93ab99989a96b828}} 
+\index{Cu\+PV@{Cu\+PV}!ch\+\_\+id@{ch\+\_\+id}}
+\index{ch\+\_\+id@{ch\+\_\+id}!Cu\+PV@{Cu\+PV}}
+\subsubsection{ch\+\_\+id}
+{\footnotesize\ttfamily chid Cu\+P\+V\+::ch\+\_\+id}
+
+
+
+Referenced by Cu\+Monitor\+Activity\+::connection\+\_\+handler().
+
+\mbox{\label{structCuPV_a16089d9a89698ae1c5df1c3466d23697}} 
+\index{Cu\+PV@{Cu\+PV}!ctrl\+\_\+status@{ctrl\+\_\+status}}
+\index{ctrl\+\_\+status@{ctrl\+\_\+status}!Cu\+PV@{Cu\+PV}}
+\subsubsection{ctrl\+\_\+status}
+{\footnotesize\ttfamily int Cu\+P\+V\+::ctrl\+\_\+status}
+
+\mbox{\label{structCuPV_a38a61276adfeb7c8a75fbaa158d01e41}} 
+\index{Cu\+PV@{Cu\+PV}!dbf\+Type@{dbf\+Type}}
+\index{dbf\+Type@{dbf\+Type}!Cu\+PV@{Cu\+PV}}
+\subsubsection{dbf\+Type}
+{\footnotesize\ttfamily long Cu\+P\+V\+::dbf\+Type}
+
+
+
+Referenced by Cu\+Monitor\+Activity\+::connection\+\_\+handler().
+
+\mbox{\label{structCuPV_ade6e854708ebd90cf92291dd0373d91e}} 
+\index{Cu\+PV@{Cu\+PV}!dbr\+Type@{dbr\+Type}}
+\index{dbr\+Type@{dbr\+Type}!Cu\+PV@{Cu\+PV}}
+\subsubsection{dbr\+Type}
+{\footnotesize\ttfamily long Cu\+P\+V\+::dbr\+Type}
+
+
+
+Referenced by Cu\+Monitor\+Activity\+::connection\+\_\+handler(), Cu\+Monitor\+Activity\+::event\+\_\+handler(), and Cu\+Epics\+World\+::extract\+Data().
+
+\mbox{\label{structCuPV_a02e74701fb0ada1ca89c13d3da8a1ba8}} 
+\index{Cu\+PV@{Cu\+PV}!first\+Stamp\+Printed@{first\+Stamp\+Printed}}
+\index{first\+Stamp\+Printed@{first\+Stamp\+Printed}!Cu\+PV@{Cu\+PV}}
+\subsubsection{first\+Stamp\+Printed}
+{\footnotesize\ttfamily char Cu\+P\+V\+::first\+Stamp\+Printed}
+
+\mbox{\label{structCuPV_a6bcc932414c433de20a121791b6e91ca}} 
+\index{Cu\+PV@{Cu\+PV}!monitor\+\_\+activity@{monitor\+\_\+activity}}
+\index{monitor\+\_\+activity@{monitor\+\_\+activity}!Cu\+PV@{Cu\+PV}}
+\subsubsection{monitor\+\_\+activity}
+{\footnotesize\ttfamily \textbf{ Cu\+Monitor\+Activity}$\ast$ Cu\+P\+V\+::monitor\+\_\+activity}
+
+
+
+Referenced by Cu\+Monitor\+Activity\+::connection\+\_\+handler\+\_\+cb(), Cu\+Monitor\+Activity\+::event\+\_\+handler\+\_\+cb(), and Cu\+Monitor\+Activity\+::init().
+
+\mbox{\label{structCuPV_a5b4a94b9875c2f467391f3724c5dbb56}} 
+\index{Cu\+PV@{Cu\+PV}!name@{name}}
+\index{name@{name}!Cu\+PV@{Cu\+PV}}
+\subsubsection{name}
+{\footnotesize\ttfamily char Cu\+P\+V\+::name[256]}
+
+
+
+Referenced by Cu\+Monitor\+Activity\+::event\+\_\+handler().
+
+\mbox{\label{structCuPV_aebb9cceb11972728961d7e6a1fc34e18}} 
+\index{Cu\+PV@{Cu\+PV}!n\+Elems@{n\+Elems}}
+\index{n\+Elems@{n\+Elems}!Cu\+PV@{Cu\+PV}}
+\subsubsection{n\+Elems}
+{\footnotesize\ttfamily unsigned long Cu\+P\+V\+::n\+Elems}
+
+
+
+Referenced by Cu\+Monitor\+Activity\+::connection\+\_\+handler(), Cu\+Monitor\+Activity\+::event\+\_\+handler(), and Cu\+Epics\+World\+::extract\+Data().
+
+\mbox{\label{structCuPV_a4a80a458b21ec2fcbdaa3bb2172593bc}} 
+\index{Cu\+PV@{Cu\+PV}!once\+Connected@{once\+Connected}}
+\index{once\+Connected@{once\+Connected}!Cu\+PV@{Cu\+PV}}
+\subsubsection{once\+Connected}
+{\footnotesize\ttfamily char Cu\+P\+V\+::once\+Connected}
+
+
+
+Referenced by Cu\+Monitor\+Activity\+::connection\+\_\+handler(), and Cu\+Monitor\+Activity\+::init().
+
+\mbox{\label{structCuPV_ad339a8ea01e2f53eb6951a5481ce7868}} 
+\index{Cu\+PV@{Cu\+PV}!req\+Elems@{req\+Elems}}
+\index{req\+Elems@{req\+Elems}!Cu\+PV@{Cu\+PV}}
+\subsubsection{req\+Elems}
+{\footnotesize\ttfamily unsigned long Cu\+P\+V\+::req\+Elems}
+
+
+
+Referenced by Cu\+Monitor\+Activity\+::connection\+\_\+handler().
+
+\mbox{\label{structCuPV_ad55a0bec6ad609731afa94a77c5d5dde}} 
+\index{Cu\+PV@{Cu\+PV}!status@{status}}
+\index{status@{status}!Cu\+PV@{Cu\+PV}}
+\subsubsection{status}
+{\footnotesize\ttfamily int Cu\+P\+V\+::status}
+
+
+
+Referenced by Cu\+Monitor\+Activity\+::connection\+\_\+handler(), create\+\_\+pvs(), and Cu\+Monitor\+Activity\+::event\+\_\+handler().
+
+\mbox{\label{structCuPV_a181d02d13acf6b3cbc8165eea36b1d6f}} 
+\index{Cu\+PV@{Cu\+PV}!ts\+PreviousC@{ts\+PreviousC}}
+\index{ts\+PreviousC@{ts\+PreviousC}!Cu\+PV@{Cu\+PV}}
+\subsubsection{ts\+PreviousC}
+{\footnotesize\ttfamily epics\+Time\+Stamp Cu\+P\+V\+::ts\+PreviousC}
+
+\mbox{\label{structCuPV_a08a6b2e29f73e654d5108891e13225f8}} 
+\index{Cu\+PV@{Cu\+PV}!ts\+PreviousS@{ts\+PreviousS}}
+\index{ts\+PreviousS@{ts\+PreviousS}!Cu\+PV@{Cu\+PV}}
+\subsubsection{ts\+PreviousS}
+{\footnotesize\ttfamily epics\+Time\+Stamp Cu\+P\+V\+::ts\+PreviousS}
+
+\mbox{\label{structCuPV_a6892830a1d61dcdab3c10d792a49cf6b}} 
+\index{Cu\+PV@{Cu\+PV}!value@{value}}
+\index{value@{value}!Cu\+PV@{Cu\+PV}}
+\subsubsection{value}
+{\footnotesize\ttfamily void$\ast$ Cu\+P\+V\+::value}
+
+
+
+Referenced by Cu\+Monitor\+Activity\+::event\+\_\+handler(), and Cu\+Epics\+World\+::extract\+Data().
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\textbf{ cuepics-\/world.\+h}\end{DoxyCompactItemize}
