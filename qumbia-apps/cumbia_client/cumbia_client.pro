@@ -58,6 +58,7 @@ Doxyfile;
 
 doc.files = doc/*
 doc.path = $${DOCDIR}
+QMAKE_EXTRA_TARGETS += doc
 
 inst.files = $${TARGET}
 inst.path = $${INSTALL_ROOT}/bin

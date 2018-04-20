@@ -1,4 +1,0 @@
-<map id="EPlotLightBase" name="EPlotLightBase">
-<area shape="rect" id="node3" href="$classEPlotLight.html" title="a plot derived from EPlotLightBase that provides easy curve management. " alt="" coords="25,155,108,181"/>
-<area shape="rect" id="node4" href="$classEPlotLightMarker.html" title="This class provides a plot based on the efficient EPlotLight, to which it adds markers on the canvas..." alt="" coords="5,229,128,256"/>
-</map>

@@ -1,1 +1,1 @@
-<a href="libs/cumbia/html/index.html">cumbia documentation</a>
+<a href="html/cumbia/html/index.html">cumbia documentation</a>

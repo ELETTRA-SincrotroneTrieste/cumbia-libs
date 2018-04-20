@@ -60,6 +60,7 @@ unix {
     Doxyfile;
     doc.files = doc/*
     doc.path = $${QUMBIA_EPICS_CONTROLS_DOCDIR}
+    QMAKE_EXTRA_TARGETS += doc
 
     inc.files = $${HEADERS}
 

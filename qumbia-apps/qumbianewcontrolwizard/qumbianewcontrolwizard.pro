@@ -21,6 +21,7 @@ INCLUDEDIR = $${INSTALL_ROOT}/include
 
 SHAREDIR = $${INSTALL_ROOT}/share
 DOCDIR = $${SHAREDIR}/doc/qumbianewcontrolwizard
+
 DEFINES += DOC_PATH=\"\\\"$${DOCDIR}\\\"\"
 
 
@@ -80,6 +81,7 @@ Doxyfile;
 
 doc.files = doc/*
 doc.path = $${DOCDIR}
+QMAKE_EXTRA_TARGETS += doc
 
 INSTALLS = target templates doc
 

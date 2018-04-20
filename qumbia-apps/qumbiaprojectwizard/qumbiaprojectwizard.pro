@@ -90,6 +90,7 @@ Doxyfile;
 
 doc.files = doc/*
 doc.path = $${DOCDIR}
+QMAKE_EXTRA_TARGETS += doc
 
 INSTALLS = target templates doc
 

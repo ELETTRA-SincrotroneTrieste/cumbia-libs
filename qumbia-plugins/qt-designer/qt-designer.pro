@@ -50,7 +50,7 @@ RESOURCES += cutangoqtcontrolsplugin.qrc
 
 TEMPLATE = lib
 
-TARGET = designer/$${QUMBIA_TANGO_CONTROLS_LIB}-plugin
+TARGET = designer/cumbia-qtcontrols-plugin
 
 CONFIG	+= qt thread warn_on
 

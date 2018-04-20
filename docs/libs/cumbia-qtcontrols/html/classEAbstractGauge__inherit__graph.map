@@ -1,5 +1,0 @@
-<map id="EAbstractGauge" name="EAbstractGauge">
-<area shape="rect" id="node3" href="$classECircularGauge.html" title="a tachometer like widget " alt="" coords="9,155,124,181"/>
-<area shape="rect" id="node5" href="$classELinearGauge.html" title="a thermometer like widget " alt="" coords="148,155,252,181"/>
-<area shape="rect" id="node4" href="$classQuCircularGauge.html" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors..." alt="" coords="5,229,128,256"/>
-</map>
