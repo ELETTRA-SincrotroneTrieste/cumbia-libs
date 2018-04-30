@@ -44,7 +44,7 @@ $(function() {
 <div class="title">cuuimake </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h3>cumbia ui make. A tool to configure a Qt project with cumbia widgets</h3>
+<div class="textblock"><h3>cumbia ui make. A tool to configure and build a Qt project with cumbia widgets</h3>
 <p><b>cuuimake</b> is a command line tool that can be found and built under the qumbia-apps/cuuimake/ folder.</p>
 <h3>Installation</h3>
 <ul>
@@ -138,12 +138,13 @@ Qt designer: promoting a widget</div></div>
 <li>configuring <em>cuuimake</em> with <em>cuuimake &ndash;configure</em> and answering <em>y</em> to the "make" question </li>
 <li>running <em>cuuimake -jN</em>, where N is the <em>make -j</em> option for pipelined compilation.</li>
 </ul>
-<h4>cleaning ui_.*.h files</h4>
-<p><em>cuuimake &ndash;clean</em> runs <em>make clean</em> and removes all ui_.*.h files under the <em>ui</em> directory. (defined in the <em>cuuimake-cumbia-qtcontrols.xml</em> global configuration file under *&lt;srcdirs&gt;&lt;uihdir&gt;*, "ui" by default). This is useful if you want the ui_.*.h files produced by Qt <em>uic</em> to be regenerated and re-expanded. For example, if you modify the <b>cuuimake.*.conf</b> file, you need to run <em>cuuimake &ndash;clean</em> to have the ui_.*.h files refreshed. </p>
+<h4>Cleaning ui_.*.h files</h4>
+<p><em>cuuimake &ndash;clean</em> runs <em>make clean</em> and removes all ui_.*.h files under the <em>ui</em> directory. (defined in the <em>cuuimake-cumbia-qtcontrols.xml</em> global configuration file under *&lt;srcdirs&gt;&lt;uihdir&gt;*, "ui" by default). This is useful if you want the ui_.*.h files produced by Qt <em>uic</em> to be regenerated and re-expanded. For example, if you modify the <b>cuuimake.*.conf</b> file, you need to run <em>cuuimake &ndash;clean</em> to have the ui_.*.h files refreshed.</p>
+<p>To remove the &lt;cite&gt;ui_*.h&lt;/cite&gt; files and proceed with the following stages, run <em>cuuimake</em> with the <em>&ndash;pre-clean</em> option instead. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 30 2018 14:06:40 for cuuimake by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Apr 30 2018 16:21:07 for cuuimake by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>
