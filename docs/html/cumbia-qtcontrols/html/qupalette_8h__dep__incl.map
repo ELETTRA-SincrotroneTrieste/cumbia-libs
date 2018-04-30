@@ -1,0 +1,12 @@
+<map id="qupalette.h" name="qupalette.h">
+<area shape="rect" id="node2" href="$qubutton_8cpp.html" title="qubutton.cpp" alt="" coords="5,80,103,107"/>
+<area shape="rect" id="node3" href="$src_2qucirculargauge_8cpp.html" title="qucirculargauge.cpp" alt="" coords="127,80,266,107"/>
+<area shape="rect" id="node4" href="$qulabel_8cpp.html" title="qulabel.cpp" alt="" coords="290,80,378,107"/>
+<area shape="rect" id="node5" href="$quled_8cpp.html" title="quled.cpp" alt="" coords="403,80,481,107"/>
+<area shape="rect" id="node6" href="$qupalette_8cpp.html" title="qupalette.cpp" alt="" coords="505,80,605,107"/>
+<area shape="rect" id="node7" href="$quspectrumplot_8cpp.html" title="quspectrumplot.cpp" alt="" coords="629,80,765,107"/>
+<area shape="rect" id="node8" href="$qutable_8cpp.html" title="qutable.cpp" alt="" coords="789,80,879,107"/>
+<area shape="rect" id="node9" href="$qutrendplot_8cpp.html" title="qutrendplot.cpp" alt="" coords="903,80,1013,107"/>
+<area shape="rect" id="node10" href="$quwatcher_8cpp.html" title="quwatcher.cpp" alt="" coords="1038,80,1145,107"/>
+<area shape="rect" id="node11" href="$quplot__base_8cpp.html" title="quplot_base.cpp" alt="" coords="1169,80,1286,107"/>
+</map>
