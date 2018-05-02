@@ -30,6 +30,32 @@ PKG_CONFIG_PATH includes the relevant dependencies required by cumbia. For examp
 
 shows the list of the required packages to build all the modules in cumbia-libs: omniorb, tango, zeromq, epics qwt...
 
+### Quick installation using the *cubuild.sh* bash script
+
+The cubuild.sh bash scripts installs the cumbia base libraries and apps, including support for either Tango or Epics, or both, if specified
+
+#### Dependency checklist for an installation with Tango modules
+
+- qt 5 (with devel packages)
+- meson build system
+- tango 9
+- qwt libraries
+
+Once all dependencies are installed on your system, the build process can be automated by executing
+
+> scripts/cubuild.sh install tango 
+
+from the *cumbia-libs* directory resulting from the *git clone ...* command above.
+
+The command above builds the cumbia base modules, cumbia-tango, qumbia-tango-controls, qumbia-apps and qumbia-plugins
+
+Type 
+
+> scripts/cubuild.sh --help for more options
+
+If the *quick installation using the cubuild.sh bash script doesn't work for you, please go on reading and proceed 
+with the installation manually as described in the following paragraphs.
+
 ### The *meson* build system
 The [Meson Build System](http://mesonbuild.com) is an open source build system designed
 to be fast and user friendly. It provides multi platform support.
