@@ -53,8 +53,7 @@ Type
 
 > scripts/cubuild.sh --help for more options
 
-If the *quick installation using the cubuild.sh bash script* doesn't work for you, please go on reading and proceed 
-with the installation manually as described in the following paragraphs.
+If the *quick installation using the cubuild.sh bash script* doesn't work for you, please follow the *step by step installation* procedure.
 
 
 ## Step by step installation
