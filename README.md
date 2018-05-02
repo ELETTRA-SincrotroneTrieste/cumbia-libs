@@ -47,7 +47,7 @@ Once all dependencies are installed on your system, the build process can be aut
 
 from the *cumbia-libs* directory resulting from the *git clone ...* command above.
 
-The command above builds the cumbia base modules, cumbia-tango, qumbia-tango-controls, qumbia-apps and qumbia-plugins
+The command in the example builds and installs the cumbia base modules, cumbia-tango, qumbia-tango-controls, qumbia-apps and qumbia-plugins
 
 Type 
 
@@ -55,6 +55,9 @@ Type
 
 If the *quick installation using the cubuild.sh bash script doesn't work for you, please go on reading and proceed 
 with the installation manually as described in the following paragraphs.
+
+
+## Step by step installation
 
 ### The *meson* build system
 The [Meson Build System](http://mesonbuild.com) is an open source build system designed
