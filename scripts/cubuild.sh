@@ -223,7 +223,7 @@ echo -n -e "\nDo you want to continue? [y|n] [y] "
 
 read cont
 
-if [ "$cont" != "y" ]  && [ "$cont" != "yes" ] && [ "$reply" != "" ]; then
+if [ "$cont" != "y" ]  && [ "$cont" != "yes" ] && [ "$cont" != "" ]; then
 	echo -e "\n  You may execute $0 --help"
 	echo -e "  Please refer to https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs README.md for installation instructions"
 	echo -e "  Documentation: https://elettra-sincrotronetrieste.github.io/cumbia-libs/"
