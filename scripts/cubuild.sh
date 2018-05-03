@@ -299,7 +299,7 @@ if [[ $upgrade -eq 1 ]]; then
 		exit 1
 	fi
 	
-	if [ "$choice" -ge "1" ] && [ "$choice" -le "$endopt" ]; then
+	if [ "$choice" -ge "1" ] && [ "$choice" -le "$idx" ]; then
 		array_index=$((choice - 1))
 		checkout_tag=${taglist[$array_index]}
 		echo  -e "\e[1;34m\n*\n* UPGRADE checking out version $checkout_tag ...\n*\e[0m"
@@ -314,7 +314,7 @@ if [[ $upgrade -eq 1 ]]; then
 		 	exit 1
 		fi
 	else
-		echo -e "\n \e[1;31merror\e[0m: choice \"$choice\" is outside the interval [1, $endopt]\n"
+		echo -e "\n \e[1;31merror\e[0m: choice \"$choice\" is outside the interval [1, $idx]\n"
 		exit 1
 	fi
 	 
