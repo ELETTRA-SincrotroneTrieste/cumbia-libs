@@ -1,0 +1,22 @@
+{\itshape cumbia\+\_\+client} is a generic {\itshape engine-\/independent} client to read/write from Tango, Epics, ... control systems
+
+At the moment of writing this document, the available environments are
+
+
+\begin{DoxyItemize}
+\item {\tt Tango}
+\item {\tt Epics}
+\end{DoxyItemize}
+
+The two engines are implemented in the cumbia-\/tango and cumbia-\/epics modules.
+
+\begin{DoxyParagraph}{Example usage}
+
+\end{DoxyParagraph}
+
+\begin{DoxyCode}
+cumbia client test/device/1/double\_scalar   test/device/2/long\_scalar  giacomo:ai1
+\end{DoxyCode}
+
+
+where cumbia client is a shortcut for cumbia\+\_\+client. Two {\itshape tango attributes} and one {\itshape epics analog variable} follow. 

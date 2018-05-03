@@ -21,7 +21,13 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 #
 #
 # Here qumbia-qtcontrols will be installed
+# INSTALL_ROOT can be specified from the command line running qmake "INSTALL_ROOT=/my/install/path"
+#
+
+isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT = /usr/local
+}
+
 #
 #
 # Here qumbia-tango-controls include files will be installed

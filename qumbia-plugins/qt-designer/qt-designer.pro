@@ -1,8 +1,15 @@
 include(../../qumbia-tango-controls/qumbia-tango-controls.pri)
 include(../../qumbia-epics-controls/qumbia-epics-controls.pri)
 
+# The application will be installed under INSTALL_ROOT (i.e. prefix)
+#
+# To set the prefix at build time, call 
+# qmake   "INSTALL_ROOT=/my/custom/path"
+#
+isEmpty(INSTALL_ROOT) {
+    INSTALL_ROOT = /usr/local
+}
 
-INSTALL_ROOT = /usr/local
 
 DESIGNER_PLUGIN_DIR=$${INSTALL_ROOT}/lib/plugins/designer
 

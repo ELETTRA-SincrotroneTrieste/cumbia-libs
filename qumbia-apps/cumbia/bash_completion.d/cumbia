@@ -9,7 +9,7 @@ _cumbia()
     #
     #  The basic options we'll complete.
     #
-    opts="new ui client import"
+    opts="new ui client import upgrade"
 
 
     #

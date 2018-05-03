@@ -20,7 +20,11 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 #
 #
 # Here qumbia-epics-controls will be installed
+
+isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT = /usr/local
+}
+
 #
 #
 # Here qumbia-epics-controls include files will be installed
@@ -142,7 +146,7 @@ QMAKE_CLEAN = moc \
     *.tag
 
 
-packagesExist(qumbia-epics-controls$${QTVER_SUFFIX}) {
+packagesExist(qumbia-epics-controls$${QTVER_SUFFIX} epics-base-linux-x86_64 cumbia-epics  ) {
 
 DEFINES += CUMBIA_PRINTINFO
 

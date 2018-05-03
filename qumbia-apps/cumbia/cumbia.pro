@@ -3,7 +3,15 @@
 # Project created by QtCreator 2016-08-17T14:42:39
 #
 #-------------------------------------------------
-INSTALL_ROOT = /usr/local
+# The application will be installed under INSTALL_ROOT (i.e. prefix)
+#
+# To set the prefix at build time, call 
+# qmake   "INSTALL_ROOT=/my/custom/path"
+#
+isEmpty(INSTALL_ROOT) {
+    INSTALL_ROOT = /usr/local
+}
+
 
 TARGET = bin/dummy
 

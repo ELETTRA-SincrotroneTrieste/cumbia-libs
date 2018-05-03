@@ -14,7 +14,7 @@ CONFIG += debug
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = cumbia_client
+TARGET = qumbia-client
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -32,7 +32,7 @@ DEFINES -= QT_NO_DEBUG_OUTPUT
 
 
 SHAREDIR = $${INSTALL_ROOT}/share
-DOCDIR = $${SHAREDIR}/doc/cumbia_client
+DOCDIR = $${SHAREDIR}/doc/qumbia-client
 DEFINES += DOC_PATH=\"\\\"$${DOCDIR}\\\"\"
 
 
@@ -43,14 +43,14 @@ DEFINES += CUMBIA_CLIENT_VERSION_STR=\"\\\"$${CUMBIA_CLIENT_VERSION}\"\\\"
 
 
 SOURCES += main.cpp \
-    cumbia_client.cpp \
+    qumbia-client.cpp \
     element.cpp
 
 HEADERS  += \
-    cumbia_client.h \
+    qumbia-client.h \
     element.h
 
-FORMS    += cumbia_client.ui
+FORMS    += qumbia-client.ui
 
 doc.commands = \
 doxygen \

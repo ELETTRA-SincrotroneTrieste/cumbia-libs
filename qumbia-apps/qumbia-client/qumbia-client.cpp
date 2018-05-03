@@ -1,5 +1,5 @@
-#include "cumbia_client.h"
-#include "ui_cumbia_client.h"
+#include "qumbia-client.h"
+#include "ui_qumbia-client.h"
 #include <cumbiapool.h>
 #include <cumbiatango.h>
 #include <cutcontrolsreader.h>
@@ -36,9 +36,9 @@
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
 
-CumbiaClient::CumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
+QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::CumbiaClient),
+    ui(new Ui::QumbiaClient),
     m_layoutColumnCount(10)
 {
     // for valgrind test
@@ -94,12 +94,12 @@ CumbiaClient::CumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     new CuContextActionBridge(this, cumbia_pool, m_ctrl_factory_pool);
 }
 
-CumbiaClient::~CumbiaClient()
+QumbiaClient::~QumbiaClient()
 {
     delete ui;
 }
 
-void CumbiaClient::configure(const CuData &d)
+void QumbiaClient::configure(const CuData &d)
 {
     if(d.containsKey("data_format_str"))
         sender()->disconnect(this, SLOT(configure(CuData)));
@@ -200,7 +200,7 @@ void CumbiaClient::configure(const CuData &d)
     cab = new CuContextActionBridge(this, cu_pool, m_ctrl_factory_pool);
 }
 
-void CumbiaClient::changeRefresh()
+void QumbiaClient::changeRefresh()
 {
     int period = ui->sbPeriod->value();
     int refmode = ui->cbRefMode->currentIndex();
@@ -215,7 +215,7 @@ void CumbiaClient::changeRefresh()
         sp->getContext()->sendData(options);
 }
 
-void CumbiaClient::sourcesChanged()
+void QumbiaClient::sourcesChanged()
 {
     /* clear widgets */
     QGridLayout *lo = NULL;
@@ -307,7 +307,7 @@ void CumbiaClient::sourcesChanged()
     m_oldSrcs = srcs;
 }
 
-void CumbiaClient::unsetSources()
+void QumbiaClient::unsetSources()
 {
     foreach(QuTrendPlot *plot, ui->widget->findChildren<QuTrendPlot *>())
         plot->unsetSources();
@@ -318,7 +318,7 @@ void CumbiaClient::unsetSources()
     m_oldSrcs.clear();
 }
 
-void CumbiaClient::switchSources()
+void QumbiaClient::switchSources()
 {
     m_switchCnt++;
     QString src = QString("test/device/%1/double_spectrum_ro").arg(m_switchCnt % 2 + 1);

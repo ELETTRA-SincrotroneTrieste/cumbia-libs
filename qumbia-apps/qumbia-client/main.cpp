@@ -1,4 +1,4 @@
-#include "cumbia_client.h"
+#include "qumbia-client.h"
 #include <quapplication.h>
 #include <cumbiapool.h>
 #include <cuthreadfactoryimpl.h>
@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 
     QuApplication a(argc, argv);
     CumbiaPool *cu_p = new CumbiaPool();
-    CumbiaClient *w = new CumbiaClient(cu_p, NULL);
+    QumbiaClient *w = new QumbiaClient(cu_p, NULL);
     w->show();
 
     int ret = a.exec();

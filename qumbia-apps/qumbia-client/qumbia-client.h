@@ -28,19 +28,19 @@
  */
 
 namespace Ui {
-class CumbiaClient;
+class QumbiaClient;
 }
 
 class CuData;
 class CumbiaPool;
 
-class CumbiaClient : public QWidget
+class QumbiaClient : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit CumbiaClient(CumbiaPool *cupool, QWidget *parent = 0);
-    ~CumbiaClient();
+    explicit QumbiaClient(CumbiaPool *cupool, QWidget *parent = 0);
+    ~QumbiaClient();
 
 private slots:
     void configure(const CuData& d);
@@ -54,7 +54,7 @@ private slots:
     void switchSources();
 
 private:
-    Ui::CumbiaClient *ui;
+    Ui::QumbiaClient *ui;
 
     CumbiaPool *cu_pool;
     QuLogImpl m_log_impl;

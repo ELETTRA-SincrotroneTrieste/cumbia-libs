@@ -98,30 +98,30 @@ keywords and variable names to the source files. While the user interface file (
 As shown in the picture below, with Qt designer you can promote a base widget to a custom widget. If the promoted element is a cumbia widget, *cuuimake* must expand its 
 constructor as well.
 
-\image html promote.png "Qt designer: promoting a widget"
-\image latex promote.eps "Qt designer: promoting a widget"
+\image html promote1.png "Qt designer: promoting a widget"
+\image latex promote1.eps "Qt designer: promoting a widget"
 
-The promoted class name is QuInputOutput, which is part of the library but at the moment of writing this document is not a plugin yet.
+The promoted class name is MyAttributeHistoryTree, which is not part of the library, is defined in the myattributehistory.h header and implemented in the
+myattributehistory.cpp file.
+If a promoted widget is detected by *cuuimake* in the *ui* file, its definition is searched among the files in the project. If the definition is found and
+recognised as a *cumbia* object, *cuuimake* is able to perform the necessary constructor expansion.
 
-The *ui* file has changed, so we need to run cuuimake once again. If we *make* the project, it wil complain with a message like this:
+If *cuuimake* is unable  to automatically expand the custom class, a build error will occur.
+To explicitly tell *cuuimake* that a widget needs to be expanded, you must  create a file *cuuimake-historytree.conf*. 
 
-\image html promote-error.png "make: error with promoted widgets"
-\image latex promote-error.eps "make: error with promoted widgets"
-
-That's because the Qt *designer* only generates code where constructors take only a parent QWidget argument. We need to tell *cuuimake* to *expand* the *QuInputOutput* custom
-widget. To accomplish this, create a file *cuuimake-quio.conf*. <strong>cuuimake will use all files with a name matching the pattern "cuuimake[.*].conf to apply additional 
+<strong>cuuimake will use all files with a name matching the pattern "cuuimake[.*].conf to apply additional 
 expansion to the classes therein listed</strong>.
 
-Edit the *cuuimake-quio.conf* text file and add the following line:
+Edit the *cuuimake-historytree.conf* text file and add the following line:
 
 \code
-QuInputOutput,cumbiatango,CumbiaTango *,CuTReaderFactory,CuTWriterFactory
+MyAttributeHistoryTree,cumbiatango,CumbiaTango *,CuTReaderFactory
 \endcode
 
 Comment lines are allowed and start with a '#'. Comma separated fields:
 
- -# class name, \QuInputOutput
- -# "*engine*", or "*factory*" one of: *cumbiatango*, *cumbiaepics*, *cumbiapool*
+ -# class name, MyAttributeHistoryTree
+ -# "engine", or "factory" one of: *cumbiatango*, *cumbiaepics*, *cumbiapool*
  -# list of <strong>qualified</strong> parameter type names that have to be inserted into the cumbia-qtcontrols object constructor
  (*<strong>qualified</strong> class names*, as defined in the main class header file, if the project has been generated with *qumbiaappwizard*)
  
@@ -139,25 +139,25 @@ and the custom widget has constructors defined as follows:
 
 \code
 
-    QuInputOutput(QWidget *_parent,  Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac, const CuControlsWriterFactoryI &w_fac);
-    QuInputOutput(QWidget *parent, CumbiaPool* cu_poo, const CuControlsFactoryPool& f_poo);
+    MyAttributeHistoryTree(QWidget *_parent,  Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
+    MyAttributeHistoryTree(QWidget *parent, CumbiaPool* cu_poo, const CuControlsFactoryPool& f_poo);
 
 \endcode
 
-the *Qt designer* would instantiate QuInputOutput like this:
+the *Qt designer* would instantiate MyAttributeHistoryTree like this:
 
 \code
-    widget = new QuInputOutput(Mycumbiatangoapp);
+    widget = new MyAttributeHistoryTree(Mycumbiatangoapp);
 \endcode
 
 within the *src/ui_mycumbiatangoapp.h* file, which would result in an error.
 
-The line in the file *cuuimake-quio.conf*, placed at the top level project directory, alongside the .pro file, tells the *cuuimake* to *expand* the QuInputOutput constructor
+The line in the file *cuuimake-historytree.conf*, placed at the top level project directory, alongside the .pro file, tells the *cuuimake* to *expand* the MyAttributeHistoryTree constructor
 inserting the *cu_t, cu_tango_r_fac and cu_tango_w_fac parameters after *Mycumbiatangoapp* (the parent widget):
 
 \code
-//         widget = new QuInputOutput(Mycumbiatangoapp); // expanded by cuuimake v.0.1
-widget = new QuInputOutput(Mycumbiatangoapp, cu_t, cu_tango_r_fac, cu_tango_w_fac);
+//         widget = new MyAttributeHistoryTree(Mycumbiatangoapp); // expanded by cuuimake v.0.1
+widget = new MyAttributeHistoryTree(Mycumbiatangoapp, cu_t, cu_tango_r_fac);
 \endcode
 
 If *qumbiaappwizard* is used to create an *epics* project, the main class header file contain something like this:
@@ -171,10 +171,10 @@ private:
     CuEpWriterFactory cu_ep_w_fac;
 \endcode
 
-and if we promoted a QWidget to a *QuInputOutput*, the lines of the needed *cuuimake-quio.conf* file would have to be like this:
+and if we promoted a QWidget to a *MyAttributeHistoryTree*, the lines of the needed *cuuimake-historytree.conf* file would have to be like this:
 
 \code
-QuInputOutput,cumbiaepics,CumbiaEpics *,CuEpReaderFactory,CuEpWriterFactory
+MyAttributeHistoryTree,cumbiaepics,CumbiaEpics *,CuEpReaderFactory
 \endcode
 
 #### cuuimake and make 
@@ -186,10 +186,12 @@ It is possible to run *cuuimake* immediately followed by *make* choosing one of 
 \li running *cuuimake -jN*, where N is the *make -j* option for pipelined compilation.
 
 
-#### cleaning ui_.*.h files
+#### Cleaning ui_.*.h files
 
 *cuuimake --clean*  runs *make clean* and removes all ui_.*.h files under the *ui* directory. (defined in the *cuuimake-cumbia-qtcontrols.xml* global configuration file 
 under *<srcdirs><uihdir>*, "ui" by default). This is useful if you want the ui_.*.h files produced by Qt *uic* to be regenerated and re-expanded.
 For example, if you modify the <strong>cuuimake.*.conf</strong> file, you need to run *cuuimake --clean* to have the ui_.*.h files refreshed.
+
+To remove the <cite>ui_*.h</cite> files and proceed with the following stages, run *cuuimake* with the *--pre-clean* option instead.
 
 

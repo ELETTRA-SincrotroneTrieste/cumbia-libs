@@ -1,4 +1,11 @@
-INSTALL_ROOT = /usr/local
+# The application will be installed under INSTALL_ROOT (i.e. prefix)
+#
+# To set the prefix at build time, call 
+# qmake   "INSTALL_ROOT=/my/custom/path"
+#
+isEmpty(INSTALL_ROOT) {
+    INSTALL_ROOT = /usr/local
+}
 
 greaterThan(QT_MAJOR_VERSION, 4) {
     QTVER_SUFFIX = -qt$${QT_MAJOR_VERSION}
@@ -6,8 +13,9 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     QTVER_SUFFIX =
 }
 
-SHAREDIR = $${INSTALL_ROOT}/share/cuuimake
-DOCDIR = $${INSTALL_ROOT}/share/doc/cuuimake
+
+SHAREDIR = $${INSTALL_ROOT}/share
+DOCDIR = $${SHAREDIR}/doc/cuuimake
 
 QT -= gui
 
