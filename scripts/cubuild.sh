@@ -280,9 +280,11 @@ if [[ $upgrade -eq 1 ]]; then
 		((idx++))
 		taglist+=($tag)
 	done
+
+	taglist+=(origin/master)
+	echo -e " $idx. ${taglist[$((idx-1))]}"
 	
-	endopt=$((idx - 1))
-	echo -e "\nChoose a version [1, ..., $endopt]"
+	echo -e "\nChoose a version [1, ..., $idx]"
 
 	read choice
 
@@ -293,7 +295,7 @@ if [[ $upgrade -eq 1 ]]; then
 
 	re='^[0-9]+$'
 	if ! [[ $choice =~ $re ]] ; then
-		echo -e "\n \e[1;31merror\e[0m: choice \"$choice\" must be an integer from 1 to $endopt\n"
+		echo -e "\n \e[1;31merror\e[0m: choice \"$choice\" must be an integer from 1 to $idx\n"
 		exit 1
 	fi
 	
