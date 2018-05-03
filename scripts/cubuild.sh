@@ -19,10 +19,10 @@ env_update=0
 epics=0
 tango=0
 pull=0
-upgrade=0
+srcupdate=0
 
 
-conf_f=$HOME/.config/cumbia/upgrade.conf
+conf_f=$HOME/.config/cumbia/srcupdate.conf
 
 operations=()
 
@@ -41,15 +41,14 @@ then
 	echo -e " install - execute make install from every project folder\n"
 	echo -e " tango - add cumbia-tango and qumbia-tango-controls modules"
 	echo -e " epics - add cumbia-epics and qumbia-epics-controls modules"
-	echo -e " upgrade - upgrade cumbia. Please note:"
+	echo -e " srcupdate - update cumbia sources. Please note:"
 	echo -e "           * this script must have been executed at least once before"
 	echo -e "           * cumbia sources still reside in the same directory as before"
-    echo -e "           * cumbia sources used for upgrades are not intended to be modified and synchronized with git"
+    echo -e "           * cumbia sources used for updates are not intended to be modified and synchronized with git"
 	echo ""
 	echo -e "\e[1;32mEXAMPLES\e[0m\n1. $0 pull clean install tango - git pull sources, execute make clean, build and install cumbia, cumbia-qtcontrols, apps, plugins and the tango modules"
 	echo -e "2. $0 docs push-documentation tango epics - regenerate the projects' documentation and update it on the \"github.io\" pages (including tango and epics modules)"
-	echo -e "3. $0 upgrade - upgrade the cumbia installation. If not specified otherwise, modules are enabled according to the last configuration"
-	echo -e "   For instance, the example 2. implies that tango and epics support have been enabled. The example 3. upgrades cumbia including again the support for both modules" 
+	echo -e "3. $0 srcupdate - update the cumbia sources, picking a version from the available git tags and exit"
 	echo ""
 
 	exit 0
@@ -106,37 +105,18 @@ then
 	operations+=(clean)
 fi
 
-if [[ $@ == **upgrade** ]]
+if [[ $@ == **srcupdate** ]]
 then
-	upgrade=1
-	operations+=(upgrade)
+	srcupdate=1
+	operations+=(srcupdate)
 fi
 
 ## check options compatibility
 ##
-if [[  $upgrade -eq 1  && ( $pull -eq 1 ||  $push_docs -eq 1 ||  $push-documentation -eq 1 ) ]]; then
-	echo -e " \e[1;31merror\e[0m: \"upgrade\" is not compatible with any of \"pull\", \"push_docs\", \"cleandocs\", \"push-documentation\" options\n"
+if [ $srcupdate -eq 1 ]  && [ "$#" -ne 1 ] ; then
+	echo -e " \e[1;31merror\e[0m: \"srcupdate\" is not compatible with any other option\n"
 	exit 1
 fi
-
-if [[ $upgrade -eq 1 ]]
-then
-	if [ ! -r "$conf_f" ]; then
-		echo -e "\n \e[1;31merror\e[0m: you can only upgrade an already installed cumbia version"
-		echo -e " \e[1;31merror\e[0m: file \"$conf_f\" not found\n"
-		exit 1
-	else
-		. "$conf_f"
-		
-		DIR="${BASH_SOURCE%/*}"
-		clean=1
-		meson=1
-		build=1
-		docs=1
-		make_install=1
-	fi
-fi
-
 
 if [[ $@ == **tango** ]]
 then
@@ -181,34 +161,40 @@ for x in "${operations[@]}"; do
 done
 
 echo ""
-echo -e "The \e[1;32;4moperations\e[0m listed above will be applied to the following \e[1;32;4mMODULES\e[0m:\n"
 
-for x in "${meson_p[@]}" ; do
-	echo -e " * ${x} [c++, meson build system]"
-done
+if [[ $srcupdate -eq 0 ]]; then 
 
-for x in "${qmake_p[@]}" ; do
-	echo -e " * ${x} [qt,  qmake build system]"
-done
+	## START PRINT OPERATIONS MENU
+	echo -e "The \e[1;32;4moperations\e[0m listed above will be applied to the following \e[1;32;4mMODULES\e[0m:\n"
 
-for x in "${qmake_subdir_p[@]}"; do
-	echo ""
-	for sd in `ls -1 -d $DIR/../${x}/*/`; do
-		echo -e " * ${sd} [qt,  qmake build system]"
+	for x in "${meson_p[@]}" ; do
+		echo -e " * ${x} [c++, meson build system]"
 	done
-done	
 
-if [ $tango -eq 0 ] && [ $epics -eq 0 ]; then
-	echo -e " -"
-	echo -e " \e[1;33minfo\e[0m"
-	echo -e " \e[1;33m*\e[0m neither \e[1;31;4mtango\e[0m nor \e[1;31;4mepics\e[0m modules will be included in the \e[1;32;4mOPERATIONS\e[0m below"
-	echo -e " \e[1;33m*\e[0m add \"tango\" and/or \"epics\" to enable cumbia-tango, qumbia-tango-controls"
-	echo -e " \e[1;33m*\e[0m and cumbia-epics, qumbia-epics-controls respectively.\n"
-elif  [ $tango -eq 0 ]; then
-	echo -e "\n \e[1;33m*\e[0m \e[1;35;4mtango\e[0m module is disabled"
-elif  [ $epics -eq 0 ]; then
-	echo -e "\n \e[1;33m*\e[0m \e[1;35;4mepics\e[0m module is disabled"
-fi
+	for x in "${qmake_p[@]}" ; do
+		echo -e " * ${x} [qt,  qmake build system]"
+	done
+
+	for x in "${qmake_subdir_p[@]}"; do
+		echo ""
+		for sd in `ls -1 -d $DIR/../${x}/*/`; do
+			echo -e " * ${sd} [qt,  qmake build system]"
+		done
+	done	
+
+	if [ $tango -eq 0 ] && [ $epics -eq 0 ]; then
+		echo -e " -"
+		echo -e " \e[1;33minfo\e[0m"
+		echo -e " \e[1;33m*\e[0m neither \e[1;31;4mtango\e[0m nor \e[1;31;4mepics\e[0m modules will be included in the \e[1;32;4mOPERATIONS\e[0m below"
+		echo -e " \e[1;33m*\e[0m add \"tango\" and/or \"epics\" to enable cumbia-tango, qumbia-tango-controls"
+		echo -e " \e[1;33m*\e[0m and cumbia-epics, qumbia-epics-controls respectively.\n"
+	elif  [ $tango -eq 0 ]; then
+		echo -e "\n \e[1;33m*\e[0m \e[1;35;4mtango\e[0m module is disabled"
+	elif  [ $epics -eq 0 ]; then
+		echo -e "\n \e[1;33m*\e[0m \e[1;35;4mepics\e[0m module is disabled"
+	fi
+
+fi ## END PRINT OPERATIONS MENU
 
 echo -e "\n-----------------------------------------------------------------------"
 
@@ -231,41 +217,23 @@ if [ "$cont" != "y" ]  && [ "$cont" != "yes" ] && [ "$cont" != "" ]; then
 	exit 1
 fi
 
-##                            
-## save configuration in $HOME/.config/cumbia/upgrade.conf
-##
-
-if [ ! -d $HOME/.config/cumbia ]; then
-	mkdir -p $HOME/.config/cumbia
-fi
-
-# empty the file
-> "$conf_f"
-
-if [ $tango -eq 1 ]; then
-	echo -e "\n# tango enabled" >> $conf_f
-	echo "tango=1" >> $conf_f
-fi
-
-if [ $epics -eq 1 ]; then
-	echo -e "\n# epics enabled" >> $conf_f
-	echo "epics=1" >> $conf_f
-fi
-
-echo -e "\n# directory with the cumbia sources " >> $conf_f
-echo "topdir=$topdir" >> $conf_f
-
-##
-## end save configuration in $HOME/.config/cumbia/upgrade.conf
-##
-
-
 if [ $pull -eq 1 ]; then
     echo -e "\e[1;32mupdating sources [git pull]...\e[0m"
 	git pull
 fi
 
-if [[ $upgrade -eq 1 ]]; then
+if [[ $srcupdate -eq 1 ]]; then
+
+	if [ ! -r "$conf_f" ]; then
+		echo -e "\n \e[1;31merror\e[0m: you can only srcupdate an already installed cumbia version"
+		echo -e " \e[1;31merror\e[0m: file \"$conf_f\" not found\n"
+		exit 1
+	else
+		. "$conf_f"
+		
+		DIR="${BASH_SOURCE%/*}"
+	fi
+
 	wdir=$PWD
 	cd $topdir
 	# sync tags
@@ -303,7 +271,7 @@ if [[ $upgrade -eq 1 ]]; then
 		array_index=$((choice - 1))
 		checkout_tag=${taglist[$array_index]}
 		echo  -e "\e[1;34m\n*\n* UPGRADE checking out version $checkout_tag ...\n*\e[0m"
-		echo -e " \e[1;33mwarning\e[0m: the upgrade procedure is intended to be run in a \e[1;37;4mread only\e[0m source tree, where these rules apply:"
+		echo -e " \e[1;33mwarning\e[0m: the srcupdate procedure is intended to be run in a \e[1;37;4mread only\e[0m source tree, where these rules apply:"
 		echo -e "          1. you can switch to, build and install different cumbia releases at any time"
 		echo -e "          2. you \e[0;35mshould not\e[0m modify and commit changes from here (\e[0;35m$topdir\e[0m)"
 		echo ""
@@ -313,8 +281,10 @@ if [[ $upgrade -eq 1 ]]; then
 		if [ "$reply" != "y" ]  && [ "$reply" != "yes" ] && [ "$reply" != "" ]; then
 		 	exit 1
 		fi
+
+	#	git checkout $checkout_tag
+
 		
-		git checkout $checkout_tag
 
 	else
 		echo -e "\n \e[1;31merror\e[0m: choice \"$choice\" is outside the interval [1, $idx]\n"
@@ -324,7 +294,46 @@ if [[ $upgrade -eq 1 ]]; then
 
 	# restore previous directory
 	cd $wdir
+
+	##
+	## exit successfully after git checkout of the desired version
+		
+	exit 0
+
+
+fi # [[ $srcupdate -eq 1 ]]
+
+
+##                            
+## save configuration in $HOME/.config/cumbia/srcupdate.conf
+##
+
+if [ ! -d $HOME/.config/cumbia ]; then
+	mkdir -p $HOME/.config/cumbia
 fi
+
+# empty the file
+> "$conf_f"
+
+if [ $tango -eq 1 ]; then
+	echo -e "\n# tango enabled" >> $conf_f
+	echo "tango=1" >> $conf_f
+fi
+
+if [ $epics -eq 1 ]; then
+	echo -e "\n# epics enabled" >> $conf_f
+	echo "epics=1" >> $conf_f
+fi
+
+echo -e "\n# directory with the cumbia sources " >> $conf_f
+echo "topdir=$topdir" >> $conf_f
+
+##
+## end save configuration in $HOME/.config/cumbia/srcupdate.conf
+##
+
+
+
 
 if [ $cleandocs -eq 1 ]; then
 	docshtmldir=$topdir/$DIR/../docs/html
