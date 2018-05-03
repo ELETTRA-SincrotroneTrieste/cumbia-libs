@@ -313,6 +313,9 @@ if [[ $upgrade -eq 1 ]]; then
 		if [ "$reply" != "y" ]  && [ "$reply" != "yes" ] && [ "$reply" != "" ]; then
 		 	exit 1
 		fi
+		
+		git checkout $checkout_tag
+
 	else
 		echo -e "\n \e[1;31merror\e[0m: choice \"$choice\" is outside the interval [1, $idx]\n"
 		exit 1
