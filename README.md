@@ -48,7 +48,14 @@ The cubuild.sh bash scripts installs the cumbia base libraries and apps, includi
 - tango 9
 - qwt libraries
 
-Once all dependencies are installed on your system, the build process can be automated by executing
+Once all dependencies are installed on your system, check the file *scripts/config.sh*, where: 
+
+- PKG_CONFIG_PATH can be set if necessary uncommenting (and customising) the *pkg_config_path* variable in section I
+  (if you prepared an *ubuntu* environment as described in <a href="README.UBUNTU.md">README.UBUNTU.md</a> file
+  this is not necessary)
+- installation prefix can be changed (section II) if you don't want to install under the default location */usr/local/*
+
+The build process can be automated by executing
 
 > scripts/cubuild.sh install tango 
 
