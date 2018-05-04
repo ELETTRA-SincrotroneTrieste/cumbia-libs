@@ -35,7 +35,7 @@ shows the list of the required packages to build all the modules in cumbia-libs:
 
 ### Prepare an ubuntu system for cumbia installation
 
-If you are interested in using ubuntu, please refer to the instructions in *cumbia-libs/README.UBUNTU.md*. (<a href="README.UBUNTU.md>here</a>)
+If you are interested in using ubuntu, please refer to the instructions in *cumbia-libs/README.UBUNTU.md*. (<a href="README.UBUNTU.md">here</a>)
 
 ### Quick installation using the *cubuild.sh* bash script
 
