@@ -33,9 +33,13 @@ PKG_CONFIG_PATH includes the relevant dependencies required by cumbia. For examp
 
 shows the list of the required packages to build all the modules in cumbia-libs: omniorb, tango, zeromq, epics qwt...
 
+### Prepare an ubuntu system for cumbia installation
+
+If you are interested in using ubuntu, please refer to the instructions in *cumbia-libs/README.UBUNTU.md*. (<a href="README.UBUNTU.md>here</a>)
+
 ### Quick installation using the *cubuild.sh* bash script
 
-The cubuild.sh bash scripts installs the cumbia base libraries and apps, including support for either Tango or Epics, or both, if specified
+The cubuild.sh bash scripts installs the cumbia base libraries and apps, including support for either Tango or Epics, or both, if specified.
 
 #### Dependency checklist for an installation with Tango modules
 
@@ -56,7 +60,7 @@ Type
 
 > scripts/cubuild.sh --help for more options
 
-If the *quick installation using the cubuild.sh bash script* doesn't work for you, please read the *step by step installation* procedure to 
+If the *quick installation using the cubuild.sh bash script* fails, please read the *step by step installation* procedure to 
 point out the possible causes.
 
 ### Upgrading *cumbia*
@@ -67,20 +71,22 @@ If *cumbia* has been installed with the *cubuild.sh* bash script, upgrading is a
 
 on a terminal.
 
+#### Note
+
 If you followed the instructions above, you should have a copy of the *cumbia-libs* sources under *$HOME/Downloads* and executed
 *scripts/cubuild.sh* from within *$HOME/Downloads/cumbia-libs*.
 
 The following observations must be taken into account to let *cumbia upgrade* work properly:
 
-- keep the copy of the sources in *$HOME/Downloads/cumbia-libs* to perform periodical upgrades only, not for developing;
+- keep the copy of the sources in *$HOME/Downloads/cumbia-libs* to perform periodical upgrades only, not for developing (aka *read-only* copy)
 - do not move away that directory.
 
-If you move away the folder, *cumbia upgrade* will not work and you will have to git clone *cumbia-libs* and 
+If you remove the folder, *cumbia upgrade* will not work and you will have to git clone *cumbia-libs* and 
 manually execute
 
 > scripts/cubuild.sh update && scripts/cubuild.sh tango install
 
-again.
+once again.
 
 ## Step by step installation
 
