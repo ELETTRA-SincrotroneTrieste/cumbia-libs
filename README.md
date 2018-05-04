@@ -18,6 +18,7 @@ clients relying on the framework. An Epics module has been added to the cumbia-l
 
 ### Download the cumbia-libs set of modules
 
+> cd $HOME/Downloads
 > git clone https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs.git
 
 ### Check pkgconfig and dependencies
@@ -53,8 +54,31 @@ Type
 
 > scripts/cubuild.sh --help for more options
 
-If the *quick installation using the cubuild.sh bash script* doesn't work for you, please follow the *step by step installation* procedure.
+If the *quick installation using the cubuild.sh bash script* doesn't work for you, please read the *step by step installation* procedure to 
+point out the possible causes.
 
+### Upgrading *cumbia*
+
+If *cumbia* has been installed with the *cubuild.sh* bash script, upgrading is as easy as typing
+
+> cumbia upgrade
+
+on a terminal.
+
+If you followed the instructions above, you should have a copy of the *cumbia-libs* sources under *$HOME/Downloads* and executed
+*scripts/cubuild.sh* from within *$HOME/Downloads/cumbia-libs*.
+
+The following observations must be taken into account to let *cumbia upgrade* work properly:
+
+- keep the copy of the sources in *$HOME/Downloads/cumbia-libs* to perform periodical upgrades only, not for developing;
+- do not move away that directory.
+
+If you move away the folder, *cumbia upgrade* will not work and you will have to git clone *cumbia-libs* and 
+manually execute
+
+> scripts/cubuild.sh update && scripts/cubuild.sh tango install
+
+again.
 
 ## Step by step installation
 
