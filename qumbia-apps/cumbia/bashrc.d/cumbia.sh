@@ -31,7 +31,7 @@ print_menu() {
 
 cumbia() {
 
-	conf_f=$HOME/.config/cumbia/upgrade.conf
+	conf_f=$HOME/.config/cumbia/srcupdate.conf
 	
 	if [ $# -lt 1 ]; then
 		print_menu
@@ -50,13 +50,14 @@ cumbia() {
 		if [ ! -r "$conf_f" ]; then
 			echo -e "\n \e[1;31merror\e[0m: you can only upgrade an already installed cumbia version"
 			echo -e " \e[1;31merror\e[0m: file \"$conf_f\" not found\n"
-			exit 1
+			echo -e "        You can cd into the cumbia-libs source directory and execute"
+			echo -e "        \e[1;36mscripts/cubuild.sh srcupdate && scripts/cubuild.sh docs install\e[0m from there."
 		else
 			# the configuration file defines topdir with the path to the cumbia sources
 			# execute the path/to/cumbia-libs/scripts/cubuild.sh   upgrade
 			# 
 			. "$conf_f"   # read $topdir
-			$topdir/scripts/cubuild.sh upgrade
+			$topdir/scripts/cubuild.sh srcupdate && $topdir/scripts/cubuild.sh docs install
 		fi
 	else
 		print_menu

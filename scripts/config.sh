@@ -38,7 +38,7 @@ pkg_config_path=/usr/local/lib/pkgconfig:/usr/local/tango-9.2.5a/lib/pkgconfig:/
 ## This will set INSTALL_ROOT variable in Qt qmake projects and -Dprefix=$prefix in meson projects
 ##
 
-prefix=/usr/local
+prefix=/tmp/usr/local
 
 ## =======================================================================================================
 #

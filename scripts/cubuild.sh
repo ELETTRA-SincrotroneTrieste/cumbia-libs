@@ -20,18 +20,19 @@ epics=0
 tango=0
 pull=0
 srcupdate=0
+sudocmd=sudo
 
 
-conf_f=$HOME/.config/cumbia/srcupdate.conf
+srcupdate_conf_f=$HOME/.config/cumbia/srcupdate.conf
 
 operations=()
 
 if [[ $@ == **help** ]]
 then
 	echo -e "\n\e[1;32mOPTIONS\e[0m\n"
-	echo -e " [no arguments] - execute make within cumbia, cumbia-qtcontrols, qumbia-apps, qumbia-plugins."
+	echo -e " [no arguments] - build cumbia, cumbia-qtcontrols, qumbia-apps, qumbia-plugins."
 	echo -e "                  No engine specific projects will be built (cumbia-tango, cumbia-epics, qumbia-tango-controls)" 
-	echo -e "                  To build tango modules, add the \"tango\" argument, to build the epics modules, add \"epics\""
+	echo -e "                  To build tango modules, add the \"tango\" argument, to build the epics modules, add \"epics\" (example 3.)"
 	echo -e " pull - update sources from git"
 	echo -e " env-update - execute the \"source\" bash command to update the environment as to the most recently installed scripts"
 	echo -e " push-documentation - execute git commit and git push on the \"docs\" directory so that the \"github.io\" pages are updated"
@@ -39,24 +40,31 @@ then
 	echo -e " cleandocs - remove locally generated documentation"
 	echo -e " clean - execute make clean in every project folder"
 	echo -e " install - execute make install from every project folder\n"
+	echo -e " no-sudo - do not use \"sudo\" when calling make install\""
 	echo -e " tango - add cumbia-tango and qumbia-tango-controls modules"
 	echo -e " epics - add cumbia-epics and qumbia-epics-controls modules"
-	echo -e " srcupdate - update cumbia sources. Please note:"
-	echo -e "           * this script must have been executed at least once before"
-	echo -e "           * cumbia sources still reside in the same directory as before"
-    echo -e "           * cumbia sources used for updates are not intended to be modified and synchronized with git"
+	echo -e " srcupdate - update cumbia sources choosing from the available tags in git (or origin/master). Please note that"
+    echo -e "             the copy of the sources managed with srcupdates is not intended to be modified and committed to git."
+    echo -e "             This option is normally used by the \e[0;4mcumbia upgrade\e[0m command."
 	echo ""
 	echo -e "\e[1;32mEXAMPLES\e[0m\n1. $0 pull clean install tango - git pull sources, execute make clean, build and install cumbia, cumbia-qtcontrols, apps, plugins and the tango modules"
 	echo -e "2. $0 docs push-documentation tango epics - regenerate the projects' documentation and update it on the \"github.io\" pages (including tango and epics modules)"
-	echo -e "3. $0 srcupdate - update the cumbia sources, picking a version from the available git tags and exit"
+	echo -e "3. $0 tango - build cumbia, cumbia-tango, cumbia-qtcontrols, qumbia-tango-controls, qumbia-apps and qumbia-plugins"
 	echo ""
 
 	exit 0
 fi
 
+if [ ! -r $DIR/config.sh ]; then
+	echo " \e[1;31merror\e[0m file $DIR/config.sh is missing"
+	exit 1
+fi
+
 echo -e "\n \e[1;33minfo\e[0m: reading configuration from \"$DIR/config.sh\""
 . "$DIR/projects.sh"
 . "$DIR/config.sh"
+
+echo -e " \e[1;33minfo\e[0m: installation prefix is \"$prefix\""
 
 if [[ $@ == **pull** ]]
 then
@@ -68,6 +76,11 @@ if [[ $@ == **push-documentation** ]]
 then
     push_docs=1
 	operations+=(push-documentation)
+fi
+
+if [[ $@ == **no-sudo** ]]
+then
+    $sudocmd=
 fi
 
 if [[ $@ == **env-update** ]]
@@ -150,6 +163,11 @@ fi
 
 ## Print prompt
 ##
+echo -e " \e[1;33minfo\e[0m"
+echo -e "  You may execute $0 --help for the list of available options"
+echo -e "  Please refer to https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs README.md for installation instructions"
+echo -e "  Documentation: https://elettra-sincrotronetrieste.github.io/cumbia-libs/"
+
 echo -e "\n-----------------------------------------------------------------------"
 
 echo ""
@@ -198,16 +216,10 @@ fi ## END PRINT OPERATIONS MENU
 
 echo -e "\n-----------------------------------------------------------------------"
 
-
-echo " -"
-echo -e " \e[1;33minfo\e[0m"
-echo -e "  You may execute $0 --help for the list of available options"
-echo -e "  Please refer to https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs README.md for installation instructions"
-echo -e "  Documentation: https://elettra-sincrotronetrieste.github.io/cumbia-libs/"
 echo ""
 echo -n -e "\nDo you want to continue? [y|n] [y] "
 
-read cont
+read  -s -n 1  cont
 
 if [ "$cont" != "y" ]  && [ "$cont" != "yes" ] && [ "$cont" != "" ]; then
 	echo -e "\n  You may execute $0 --help"
@@ -215,6 +227,16 @@ if [ "$cont" != "y" ]  && [ "$cont" != "yes" ] && [ "$cont" != "" ]; then
 	echo -e "  Documentation: https://elettra-sincrotronetrieste.github.io/cumbia-libs/"
 	
 	exit 1
+fi
+
+## inform the user that after the installation "cumbia upgrade" can be used to upgrade cumbia
+#
+if [ ! -r $srcupdate_conf_f ] && [ $make_install -eq 1 ]; then
+	echo -e "\n\n \e[1;32;4mREMEMBER\e[0m:\n after the first installation, you can run \e[1;32mcumbia upgrade\e[0m to update cumbia \e[0;4mas long as\e[0m:"
+	echo -e "  - this source tree is not removed from this directory (\"$topdir\")"
+	echo -e "  - this source tree is not intended for development, i.e. will not be modified and committed to git"
+	echo -e -n "\n Press any key to continue "
+	read -s -n 1 akey
 fi
 
 if [ $pull -eq 1 ]; then
@@ -226,9 +248,11 @@ if [[ $srcupdate -eq 1 ]]; then
 	wdir=$PWD
 	cd $topdir
 	# sync tags
-	echo 
-	git fetch --tags
+	
 	echo -e "\e[1;34m\n*\n* UPGRADE fetching available tags...\n*\e[0m"	
+
+	git fetch --tags
+
 	tags=`git tag --list`
 	declare -a taglist
 	idx=1
@@ -241,9 +265,12 @@ if [[ $srcupdate -eq 1 ]]; then
 	taglist+=(origin/master)
 	echo -e " $idx. ${taglist[$((idx-1))]}"
 	
+	echo -e -n "\ncurrent version: "
+	git describe
+
 	echo -e "\nChoose a version [1, ..., $idx]"
 
-	read choice
+	read  -s -n 1 choice
 
 	## is choice an integer number??
 	## The following solution can also be used in basic shells such as Bourne without the need for regular expressions.
@@ -265,7 +292,7 @@ if [[ $srcupdate -eq 1 ]]; then
 		echo -e "          2. you \e[0;35mshould not\e[0m modify and commit changes from here (\e[0;35m$topdir\e[0m)"
 		echo ""
 		echo -e -n " \e[1;32m*\e[0m Do you want to update the sources to version \e[1;32m$checkout_tag\e[0m [y|n]? [y]: "
-		read reply
+		read  -s -n 1 reply
 		
 		if [ "$reply" != "y" ]  && [ "$reply" != "yes" ] && [ "$reply" != "" ]; then
 		 	exit 1
@@ -302,26 +329,44 @@ if [ ! -d $HOME/.config/cumbia ]; then
 fi
 
 # empty the file
-> "$conf_f"
+> "$srcupdate_conf_f"
 
 if [ $tango -eq 1 ]; then
-	echo -e "\n# tango enabled" >> $conf_f
-	echo "tango=1" >> $conf_f
+	echo -e "\n# tango enabled" >> $srcupdate_conf_f
+	echo "tango=1" >> $srcupdate_conf_f
 fi
 
 if [ $epics -eq 1 ]; then
-	echo -e "\n# epics enabled" >> $conf_f
-	echo "epics=1" >> $conf_f
+	echo -e "\n# epics enabled" >> $srcupdate_conf_f
+	echo "epics=1" >> $srcupdate_conf_f
 fi
 
-echo -e "\n# directory with the cumbia sources " >> $conf_f
-echo "topdir=$topdir" >> $conf_f
+echo -e "\n# directory with the cumbia sources " >> $srcupdate_conf_f
+echo "topdir=$topdir" >> $srcupdate_conf_f
 
 ##
 ## end save configuration in $HOME/.config/cumbia/srcupdate.conf
 ##
 
-
+if [ $make_install -eq 1 ] && [ ! -r $prefix ]; then
+	echo -e "\n The installation directory \"$prefix\" does not exist. "
+	echo -n  -e " Do you want to create it (the operation may require administrative privileges - sudo) [y|n]?  [y] "
+	read  -s -n 1 createdir
+	if [ "$createdir" != "y" ]  && [ "$reply" != "createdir" ] && [ "$createdir" != "" ]; then
+		 	exit 1
+	fi
+	mkdir -p $prefix
+	if [ "$?" -ne 0 ]; then
+		if  [[ ! -z  $sudocmd  ]]; then
+			echo -e " The \e[1;32msudo\e[0m password is required to create the directory \"$prefix\""
+		fi
+		$sudocmd mkdir -p $prefix
+		if [ "$?" -ne 0 ]; then
+			echo -e " \e[1;31merror\e[0m: failed to create installation directory \"$prefix\""
+			exit 1
+		fi
+	fi
+fi
 
 
 if [ $cleandocs -eq 1 ]; then
@@ -346,6 +391,7 @@ for x in "${meson_p[@]}" ; do
 	fi
 
 	cd builddir
+	meson configure -Dprefix=$prefix
 
 	#
 	## clean ###
@@ -408,7 +454,14 @@ for x in "${meson_p[@]}" ; do
 # install?
 	if [ $make_install -eq 1 ]; then
 		echo -e "\e[0;32m\n*\n* INSTALL project ${x}...\n*\e[0m"
-		ninja install
+		if [ -w $prefix ]; then
+			ninja install
+		else
+			if [ ! -z $sudocmd ]; then
+				echo  -e "\e[1;32msudo\e[0m password required:"
+			fi
+			$sudocmd ninja install
+		fi
 	fi
 
 	## Back to topdir!
@@ -426,7 +479,7 @@ for x in "${qmake_p[@]}"; do
     #	
 	if [ $clean -eq 1 ]; then
 		echo -e "\e[1;33m\n*\n* CLEAN project ${x}...\n*\e[0m"
-		qmake && make distclean
+		qmake "INSTALL_ROOT=$prefix" && make distclean
 
 		# clean failed?
 		if [ $? -ne 0 ]; then
@@ -439,7 +492,7 @@ for x in "${qmake_p[@]}"; do
 	#
 	if [ $build -eq 1 ]; then
 		echo -e "\e[1;32m\n*\n* BUILD project ${x}...\n*\e[0m"
-		qmake && make -j9
+		qmake "INSTALL_ROOT=$prefix" && make -j9
 		if [ $? -ne 0 ]; then
 			exit 1
 		fi
@@ -454,7 +507,7 @@ for x in "${qmake_p[@]}"; do
 		if [ -d doc ]; then
 			rm -rf doc
 		fi
-		qmake && make doc
+		qmake "INSTALL_ROOT=$prefix" && make doc
 		if [ $? -ne 0 ]; then
 			echo -e "\e[1;36m\n*\n* BUILD DOCS project ${x} has no \"doc\" target...\n*\e[0m\n"
 		fi
@@ -482,7 +535,10 @@ for x in "${qmake_p[@]}"; do
 # install?
 	if [ $make_install -eq 1 ]; then
 		echo -e "\e[0;32m\n*\n* INSTALL project ${x}...\n*\e[0m"
-		make install
+		if [ ! -z $sudocmd ]; then
+			echo -e  "\e[1;32msudo\e[0m authentication required:"
+		fi
+		$sudocmd make install
 	fi
 	cd $topdir
 
@@ -511,7 +567,7 @@ for x in "${qmake_subdir_p[@]}"; do
 			#	
 			if [ $clean -eq 1 ]; then
 				echo -e "\e[1;33m\n*\n* CLEAN project ${sd}...\n*\e[0m"
-				qmake && make distclean
+				qmake "INSTALL_ROOT=$prefix" && make distclean
 
 				# clean failed?
 				if [ $? -ne 0 ]; then
@@ -524,7 +580,7 @@ for x in "${qmake_subdir_p[@]}"; do
 			#
 			if [ $build -eq 1 ]; then
 				echo -e "\e[1;32m\n*\n* BUILD project ${sd}...\n*\e[0m"
-				qmake && make -j9
+				qmake "INSTALL_ROOT=$prefix" && make -j9
 				if [ $? -ne 0 ]; then
 					exit 1
 				fi
@@ -540,7 +596,7 @@ for x in "${qmake_subdir_p[@]}"; do
 				fi
 			
 
-				qmake && make doc
+				qmake "INSTALL_ROOT=$prefix" && make doc
 				if [ $? -ne 0 ]; then
 					echo -e "\e[1;36m\n*\n* BUILD DOCS project ${sd} has no \"doc\" target...\n*\e[0m\n"
 				else
@@ -571,7 +627,10 @@ for x in "${qmake_subdir_p[@]}"; do
 			# install?
 			if [ $make_install -eq 1 ]; then
 				echo -e "\e[0;32m\n*\n* INSTALL project ${sd}...\n*\e[0m"
-				qmake && make install
+				if [ ! -z $sudocmd ]; then
+					echo -e  "\e[1;32msudo\e[0m authentication required:"
+				fi
+				qmake "INSTALL_ROOT=$prefix" && $sudocmd make install
 				if [ $? -ne 0 ]; then
 					exit 1
 				fi
@@ -615,8 +674,8 @@ if [ $env_update -eq 1 ]; then
 fi
 
 if [ $make_install -eq 1 ]; then
-	echo -e "\e[0;32m\n*\n* INSTALL \e[1;32myou may need to execute\n*\n* \e[1;36msource  /etc/bash_completion.d/cumbia\e[1;32m  and\n* \e[1;36msource  /etc/bash/bashrc.d/cumbia.sh\e[1;32m \n*"
-	echo -e "* to enable shortcuts for cumbia apps. Then type \n*\n* \e[1;36mcumbia\e[1;32m\n*\n* to list available options\n*\e[0m"
+	echo -e "\e[0;32m\n*\n* INSTALL \e[1;32myou may need to execute\n*\n  \e[1;36msource  /etc/bash_completion.d/cumbia\e[1;32m && \e[1;36msource  /etc/bash/bashrc.d/cumbia.sh\e[1;32m \n*"
+	echo -e "* to enable shortcuts for cumbia apps. Then type \n*\n  \e[1;36mcumbia\e[1;32m\n*\n* to list available options\n*\e[0m"
 fi
 
 
