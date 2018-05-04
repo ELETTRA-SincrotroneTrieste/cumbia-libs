@@ -85,7 +85,7 @@ bool CuUiMake::make()
     int removed_ui_cnt = -1;
     Defs defs;
     defs.setDebug(m_debug);
-    QString fname (SHAREDIR + QString("/cuuimake-cumbia-qtcontrols.xml"));
+    QString fname (CONFDIR + QString("/cuuimake-cumbia-qtcontrols.xml"));
 
     QString localfname = m_findLocalConfFile();
     bool success = defs.loadConf(fname, localfname);
