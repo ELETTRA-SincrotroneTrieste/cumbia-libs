@@ -43,17 +43,26 @@ The cubuild.sh bash scripts installs the cumbia base libraries and apps, includi
 
 #### Dependency checklist for an installation with Tango modules
 
-- qt 5 (with devel packages)
-- meson build system
+This section can be skipped if you have installed an *ubuntu* system following the instructions in <a href="README.UBUNTU.md">README.UBUNTU.md</a>.
+
+Necessary dependencies
+
+- git
+- meson build system + ninja
 - tango 9
+- qt 5 (with devel packages + designer)
 - qwt libraries
+- doxygen
+- graphviz
 
 Once all dependencies are installed on your system, check the file *scripts/config.sh*, where: 
 
-- PKG_CONFIG_PATH can be set if necessary uncommenting (and customising) the *pkg_config_path* variable in section I
+- PKG_CONFIG_PATH can be set if necessary, uncommenting (and customising) the *pkg_config_path* variable in section I
   (if you prepared an *ubuntu* environment as described in <a href="README.UBUNTU.md">README.UBUNTU.md</a> file
   this is not necessary)
 - installation prefix can be changed (section II) if you don't want to install under the default location */usr/local/*
+
+#### Install *cumbia* through *scripts/cubuild.sh*
 
 The build process can be automated by executing
 
