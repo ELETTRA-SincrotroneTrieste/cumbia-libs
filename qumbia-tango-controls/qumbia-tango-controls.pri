@@ -150,7 +150,12 @@ unix:LIBS +=  \
     -l$${QUMBIA_TANGO_CONTROLS_LIB}
 
 # need to adjust qwt path
-!packagesExist($${QWT_PKGCONFIG}){
+isEmpty($${QWT_PKGCONFIG}){
+    message("no Qwt pkg-config file found")
+    message("adding $${QWT_INCLUDES} and $${QWT_INCLUDES_USR} to include path")
+    message("adding  -L$${QWT_HOME_USR}/lib -l$${QWT_LIB}$${QTVER_SUFFIX} to libs")
+    message("this should work for ubuntu installations")
+
     unix:INCLUDEPATH += $${QWT_INCLUDES} $${QWT_INCLUDES_USR}
     unix:LIBS += -L$${QWT_HOME_USR}/lib -l$${QWT_LIB}$${QTVER_SUFFIX}
 }
