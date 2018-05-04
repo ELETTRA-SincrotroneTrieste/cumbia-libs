@@ -163,7 +163,7 @@ fi
 
 ## Print prompt
 ##
-echo -e " \e[1;33minfo\e[0m"
+echo -e " \e[1;33minfo\e[0m:"
 echo -e "  You may execute $0 --help for the list of available options"
 echo -e "  Please refer to https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs README.md for installation instructions"
 echo -e "  Documentation: https://elettra-sincrotronetrieste.github.io/cumbia-libs/"
@@ -212,12 +212,16 @@ if [[ $srcupdate -eq 0 ]]; then
 		echo -e "\n \e[1;33m*\e[0m \e[1;35;4mepics\e[0m module is disabled"
 	fi
 
+	if [ $make_install -eq 1 ]; then 
+		echo -e " -"
+		echo -e " \e[1;32minstall\e[0m: cumbia will be installed in \"$prefix\""	
+	fi
 fi ## END PRINT OPERATIONS MENU
 
-echo -e "\n-----------------------------------------------------------------------"
+echo -e "-----------------------------------------------------------------------"
 
 echo ""
-echo -n -e "\nDo you want to continue? [y|n] [y] "
+echo -n -e "Do you want to continue? [y|n] [y] "
 
 read  -s -n 1  cont
 
@@ -265,21 +269,22 @@ if [[ $srcupdate -eq 1 ]]; then
 	taglist+=(origin/master)
 	echo -e " $idx. ${taglist[$((idx-1))]}"
 	
-	echo -e -n "\ncurrent version: "
-	git describe
+	echo -e -n "\ncurrent version: \e[1;32m"
 
-	echo -e "\nChoose a version [1, ..., $idx]"
+	# With --abbrev set to 0, the command can be used to find the closest tagname without any suffix,
+	# Otherwise, it suffixes the tag name with the number of additional commits on top of the tagged 
+    # object and the abbreviated object name of the most recent commit.
+	#
+	git describe --abbrev=0
+	
+	echo -e "\e[0m"
+	echo -e "\nChoose a version [1, ..., $idx] or press any other key to exit"
 
 	read  -s -n 1 choice
 
 	## is choice an integer number??
-	## The following solution can also be used in basic shells such as Bourne without the need for regular expressions.
-	## Basically any numeric value evaluation operations non-numbers will result in an error which will be implicitly considered as false in shell:
-	
-
 	re='^[0-9]+$'
 	if ! [[ $choice =~ $re ]] ; then
-		echo -e "\n \e[1;31merror\e[0m: choice \"$choice\" must be an integer from 1 to $idx\n"
 		exit 1
 	fi
 	

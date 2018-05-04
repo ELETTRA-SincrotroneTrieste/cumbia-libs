@@ -117,7 +117,7 @@ As the [Using Meson](http://mesonbuild.com/Quick-guide.html) guide states,
 
 On Ubuntu these can be easily installed with the following command:
 
-> sudo apt-get install python3 ninja-build
+> sudo apt-get install python3 ninja-build meson
 
 Another way (recommended by the guide) to get Meson is to pip install it for your user:
 
