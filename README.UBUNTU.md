@@ -23,10 +23,12 @@ The command installs tango version 9.2.5a and the *TangoTest* server (*/usr/lib/
 
 Install the qt5 libraries for graphical applications, the *qt designer* and the *qt creator* ide
 
-> sudo apt-get install qt5-default qtcreator
+> sudo apt-get install qt5-default qtcreator libqt5x11extras5-dev qttools5-dev 
 
 Qt version *5.9.5* and *qtcreator* version *4.5.2* will be installed.
 
+- libqt5x11extras5-dev provides the QT module *x11extras*, needed by the qumbia-plugins/qt-designer
+- qttools5-dev provides the QT module *designer*, needed by the qumbia-plugins/qt-designer
 
 ### Qwt libraries: widgets for technical applications
 

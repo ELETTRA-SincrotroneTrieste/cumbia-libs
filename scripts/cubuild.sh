@@ -1,13 +1,5 @@
 #!/bin/bash
 
-DIR="${BASH_SOURCE%/*}"
-if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
-
-# change into cumbia source top level folder
-cd $DIR/..
-
-topdir=$PWD
-
 build=0
 docs=0
 make_install=0
@@ -22,10 +14,33 @@ pull=0
 srcupdate=0
 sudocmd=sudo
 
+## declare operations array
+declare -a operations
 
+# this file contains some variables defined in previous executions
+# of this script. For example, this is used to remember if the user
+# enabled tango or epics modules.
+# The file is also used by the "cumbia upgrade" bash function (/etc/bash/bashrc.d/cumbia.sh)
+# to find the location of the cumbia sources used for upgrades.
+#
 srcupdate_conf_f=$HOME/.config/cumbia/srcupdate.conf
 
-operations=()
+# if this script has been already executed, the file will help us remember if 
+# the tango and epics modules were enabled
+#
+if [ -r $srcupdate_conf_f ]; then
+	. $srcupdate_conf_f
+fi
+
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+
+# change into cumbia source top level folder
+cd $DIR/..
+
+topdir=$PWD
+
+
 
 if [[ $@ == **help** ]]
 then
@@ -41,8 +56,10 @@ then
 	echo -e " clean - execute make clean in every project folder"
 	echo -e " install - execute make install from every project folder\n"
 	echo -e " no-sudo - do not use \"sudo\" when calling make install\""
-	echo -e " tango - add cumbia-tango and qumbia-tango-controls modules"
-	echo -e " epics - add cumbia-epics and qumbia-epics-controls modules"
+	echo -e " tango - include cumbia-tango and qumbia-tango-controls modules in the specified operations"
+	echo -e " epics - include cumbia-epics and qumbia-epics-controls modules in the specified operations"
+	echo -e " no-tango - exclude cumbia-tango and qumbia-tango-controls modules from the specified operations"
+	echo -e " no-epics - remove cumbia-epics and qumbia-epics-controls modules from the specified operations"
 	echo -e " srcupdate - update cumbia sources choosing from the available tags in git (or origin/master). Please note that"
     echo -e "             the copy of the sources managed with srcupdates is not intended to be modified and committed to git."
     echo -e "             This option is normally used by the \e[0;4mcumbia upgrade\e[0m command."
@@ -131,14 +148,20 @@ if [ $srcupdate -eq 1 ]  && [ "$#" -ne 1 ] ; then
 	exit 1
 fi
 
-if [[ $@ == **tango** ]]
-then
+if [[ $@ == **tango** ]]; then
 	tango=1
 fi
 
-if [[ $@ == **epics** ]]
-then
+if [[ $@ == **epics** ]]; then
 	epics=1
+fi
+
+if [[ $@ == **no-tango** ]]; then
+	tango=0
+fi
+
+if [[ $@ == **no-epics** ]]; then
+	epics=0
 fi
 
 if  [ "$#" == 0 ]; then
@@ -338,16 +361,16 @@ fi
 
 if [ $tango -eq 1 ]; then
 	echo -e "\n# tango enabled" >> $srcupdate_conf_f
-	echo "tango=1" >> $srcupdate_conf_f
+	echo "tango=$tango" >> $srcupdate_conf_f
 fi
 
 if [ $epics -eq 1 ]; then
 	echo -e "\n# epics enabled" >> $srcupdate_conf_f
-	echo "epics=1" >> $srcupdate_conf_f
+	echo "epics=$epics" >> $srcupdate_conf_f
 fi
 
 echo -e "\n# directory with the cumbia sources " >> $srcupdate_conf_f
-echo "topdir=$topdir" >> $srcupdate_conf_f
+echo "srcdir=$topdir" >> $srcupdate_conf_f
 
 ##
 ## end save configuration in $HOME/.config/cumbia/srcupdate.conf

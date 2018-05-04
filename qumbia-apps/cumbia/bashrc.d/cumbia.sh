@@ -56,8 +56,8 @@ cumbia() {
 			# the configuration file defines topdir with the path to the cumbia sources
 			# execute the path/to/cumbia-libs/scripts/cubuild.sh   upgrade
 			# 
-			. "$conf_f"   # read $topdir
-			$topdir/scripts/cubuild.sh srcupdate && $topdir/scripts/cubuild.sh docs install
+			. "$conf_f"   # read $srcdir
+			$srcdir/scripts/cubuild.sh srcupdate && $srcdir/scripts/cubuild.sh docs install
 		fi
 	else
 		print_menu
