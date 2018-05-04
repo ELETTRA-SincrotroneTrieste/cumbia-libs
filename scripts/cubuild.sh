@@ -359,15 +359,15 @@ fi
 # empty the file
 > "$srcupdate_conf_f"
 
-if [ $tango -eq 1 ]; then
-	echo -e "\n# tango enabled" >> $srcupdate_conf_f
-	echo "tango=$tango" >> $srcupdate_conf_f
-fi
 
-if [ $epics -eq 1 ]; then
-	echo -e "\n# epics enabled" >> $srcupdate_conf_f
-	echo "epics=$epics" >> $srcupdate_conf_f
-fi
+echo -e "\n# tango enabled" >> $srcupdate_conf_f
+echo "tango=$tango" >> $srcupdate_conf_f
+
+
+
+echo -e "\n# epics enabled" >> $srcupdate_conf_f
+echo "epics=$epics" >> $srcupdate_conf_f
+
 
 echo -e "\n# directory with the cumbia sources " >> $srcupdate_conf_f
 echo "srcdir=$topdir" >> $srcupdate_conf_f
