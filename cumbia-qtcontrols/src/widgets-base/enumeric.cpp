@@ -1,5 +1,4 @@
 #include "enumeric.h"
-#include "econstants.h"
 #include "leftclick_with_modifiers_eater.h"
 #include <cumacros.h>
 
@@ -15,6 +14,9 @@
 #include <QTimer>
 #include <QtDebug>
 #include <QApplication>
+
+#define MARGIN 0.1
+#define MIN_MARGIN 1
 
 ENumeric::ENumeric(QWidget *parent, int id, int dd) : QFrame(parent), FloatDelegate()
 {
