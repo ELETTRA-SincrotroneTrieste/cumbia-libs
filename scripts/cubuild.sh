@@ -223,17 +223,6 @@ if [ $pull -eq 1 ]; then
 fi
 
 if [[ $srcupdate -eq 1 ]]; then
-
-	if [ ! -r "$conf_f" ]; then
-		echo -e "\n \e[1;31merror\e[0m: you can only srcupdate an already installed cumbia version"
-		echo -e " \e[1;31merror\e[0m: file \"$conf_f\" not found\n"
-		exit 1
-	else
-		. "$conf_f"
-		
-		DIR="${BASH_SOURCE%/*}"
-	fi
-
 	wdir=$PWD
 	cd $topdir
 	# sync tags
@@ -275,14 +264,14 @@ if [[ $srcupdate -eq 1 ]]; then
 		echo -e "          1. you can switch to, build and install different cumbia releases at any time"
 		echo -e "          2. you \e[0;35mshould not\e[0m modify and commit changes from here (\e[0;35m$topdir\e[0m)"
 		echo ""
-		echo -e -n " \e[1;32m*\e[0m Do you want to build and install version \e[1;32m$checkout_tag\e[0m [y|n]? [y]: "
+		echo -e -n " \e[1;32m*\e[0m Do you want to update the sources to version \e[1;32m$checkout_tag\e[0m [y|n]? [y]: "
 		read reply
 		
 		if [ "$reply" != "y" ]  && [ "$reply" != "yes" ] && [ "$reply" != "" ]; then
 		 	exit 1
 		fi
 
-	#	git checkout $checkout_tag
+		git checkout $checkout_tag
 
 		
 
