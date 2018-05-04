@@ -19,6 +19,7 @@ clients relying on the framework. An Epics module has been added to the cumbia-l
 ### Download the cumbia-libs set of modules
 
 > cd $HOME/Downloads
+
 > git clone https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs.git
 
 ### Check pkgconfig and dependencies
@@ -27,6 +28,7 @@ Most of the software relies on *pkgconfig* for its configuration. Please be sure
 PKG_CONFIG_PATH includes the relevant dependencies required by cumbia. For example:
 
 > echo $PKG_CONFIG_PATH
+
 > /usr/local/lib/pkgconfig:/usr/local/tango-9.2.5a/lib/pkgconfig:/usr/local/omniorb-4.2.1/lib/pkgconfig:/usr/local/zeromq-4.0.7/lib/pkgconfig:/home/giacomo/devel/epics/base-3.16.1/lib/pkgconfig:/usr/local/qwt-6.1.3/lib/pkgconfig
 
 shows the list of the required packages to build all the modules in cumbia-libs: omniorb, tango, zeromq, epics qwt...
