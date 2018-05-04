@@ -1,6 +1,8 @@
 #include "eapplybutton.h"
 #include "leftclick_with_modifiers_eater.h"
 
+#define MIN_BUTTON_SIZE 54
+
 EApplyButton::EApplyButton(QWidget *parent) : QPushButton(parent)
 {
 	this->setFocusPolicy(Qt::StrongFocus);

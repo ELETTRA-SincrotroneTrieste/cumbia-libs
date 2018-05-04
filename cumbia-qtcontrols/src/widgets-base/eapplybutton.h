@@ -1,8 +1,6 @@
 #ifndef EAPPLYBUTTON_H
 #define EAPPLYBUTTON_H
 
-#include "econstants.h"
-
 #include <QPushButton>
 
 class EApplyButtonPrivate;
