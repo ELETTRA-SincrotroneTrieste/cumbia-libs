@@ -23,7 +23,7 @@
 ## 
 ## example:
 #
-pkg_config_path=/usr/local/lib/pkgconfig:/usr/local/tango-9.2.5a/lib/pkgconfig:/usr/local/omniorb-4.2.1/lib/pkgconfig:/usr/local/zeromq-4.0.7/lib/pkgconfig:/usr/local/epics/base-3.16.1/lib/pkgconfig:/usr/local/qwt-6.1.3/lib/pkgconfig 
+# pkg_config_path=/usr/local/lib/pkgconfig:/usr/local/tango-9.2.5a/lib/pkgconfig:/usr/local/omniorb-4.2.1/lib/pkgconfig:/usr/local/zeromq-4.0.7/lib/pkgconfig:/usr/local/epics/base-3.16.1/lib/pkgconfig:/usr/local/qwt-6.1.3/lib/pkgconfig 
 
 
 ## =======================================================================================================
@@ -38,7 +38,7 @@ pkg_config_path=/usr/local/lib/pkgconfig:/usr/local/tango-9.2.5a/lib/pkgconfig:/
 ## This will set INSTALL_ROOT variable in Qt qmake projects and -Dprefix=$prefix in meson projects
 ##
 
-prefix=/tmp/usr/local
+prefix=/usr/local
 
 ## =======================================================================================================
 #
@@ -48,7 +48,7 @@ prefix=/tmp/usr/local
 
 if [ -n "$PKG_CONFIG_PATH" ];  then
 	echo -e "\n \e[1;33minfo\e[0m: \e[1;37;4mpkgconfig paths\e[0m from shell environment (PKG_CONFIG_PATH is defined):\e[0m"
-else
+elif [ ! -z $pkg_config_path ]; then
 	export PKG_CONFIG_PATH=$pkg_config_path
 	echo -e "\n \e[1;33minfo\e[0m: \e[1;37;4mpkgconfig paths\e[0m from \e[1;37;4mscripts/config.sh\e[0m file:\e[0m"
 fi
