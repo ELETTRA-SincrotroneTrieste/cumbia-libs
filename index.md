@@ -59,11 +59,11 @@ They define shortcuts for the common operations provided by the *qumbia-apps* ap
 *bash auto completion* will help you use these shortcuts: try
 
 
-> cumbia <TAB>
+> cumbia [+TAB]
  
 or
 
-> cumbia new <TAB>
+> cumbia new [+TAB]
 
 
 #### Want to *TangoTest* ?
