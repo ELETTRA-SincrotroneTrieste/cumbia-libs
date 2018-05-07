@@ -13,6 +13,12 @@ to the Tango control system. The integration is possible both on the client and 
 TANGO device using Cumbia to do work in background has already been developed, as well as simple Qt graphical
 clients relying on the framework. An Epics module has been added to the cumbia-libs set.
 
+## Library documentation
+
+*cumbia* documentation is hosted on *github pages*.
+
+Visit the dedicated <a href="https://elettra-sincrotronetrieste.github.io/cumbia-libs/">github.io</a> pages.
+
 ## Download and installation
 
 
