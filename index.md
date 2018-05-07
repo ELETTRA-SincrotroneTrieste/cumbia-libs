@@ -53,7 +53,7 @@ To do this, *cd* into that folder and execute:
 > sudo make install
 
  
-Along the applications executables and documentation, two bash scripts will be installed:
+Along with the application executables and documentation, two bash scripts will be installed:
  
 - /usr/local/bin/cumbia  (or whatever/install/prefix/bin/cumbia)
 - /usr/share/bash-completion/completions/cumbia  (or wherever points the output of `pkg-config --variable=completionsdir bash-completion` )
