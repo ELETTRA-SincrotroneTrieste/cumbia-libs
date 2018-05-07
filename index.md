@@ -28,3 +28,44 @@
 
  
 Start reading the <a href="html/cumbia/html/index.html">cumbia base library documentation</a>.
+
+### Apps
+ 
+These applications (and their documentation, that has already been mentioned in the *Tutorials* table above)
+must be installed from the *qumbia-apps* sub-directory of the *cumbia-libs* distribution.
+To install them, *cd* into that folder and execute:
+ 
+\code
+qmake
+make
+sudo make install
+\endcode
+ 
+Along the applications executables and documentation, two bash scripts will be installed:
+ 
+- /etc/bash_completion.d/cumbia
+- /etc/bash/bashrc.d/cumbia.sh
+
+They define shortcuts for the common operations provided by the *qumbia-apps* applications as follows:
+ 
+ 
+|Applications (command line)   | description                                 | app
+|------------------------------|--------------------------------------------|:---------------:|
+| *cumbia new project*          | create a new cumbia project               |<a href="../../qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
+| *cumbia import*               | migrate a QTango project into cumbia      |<a href="../../qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
+| *cumbia new control*          | write a *cumbia control* reader or writer | <a href="../../qumbianewcontrolwizard/html/index.html">qumbia-apps/qumbianewcontrolwizard</a>  |
+| *cumbia ui make*              | run *cuuimake* to generate *qt+cumbia* ui_*.h files | <a href="../../cuuimake/html/index.html">qumbia-apps/cuuimake</a>  |
+| *cumbia client*               | run a generic cumbia client | <a href="../../cumbia_client/html/index.html">qumbia-apps/cumbia_client</a>  |
+ 
+*bash auto completion* will help you use these shortcuts: try
+
+\code
+cumbia <TAB>
+\endcode
+ 
+or
+ 
+\code
+cumbia new <TAB>
+\endcode
+
