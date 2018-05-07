@@ -25,6 +25,7 @@ var NAVTREE =
 [
   [ "cumbia", "index.html", [
     [ "Related readings", "index.html#related_readings", [
+      [ ".io", "index.html#github", null ],
       [ "Tutorials", "index.html#tutorials", null ],
       [ "Modules", "index.html#cumodules", null ],
       [ "apps", "index.html#cu_apps", null ]
