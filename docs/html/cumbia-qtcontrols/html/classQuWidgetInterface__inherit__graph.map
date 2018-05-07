@@ -1,5 +1,0 @@
-<map id="QuWidgetInterface" name="QuWidgetInterface">
-<area shape="rect" id="node2" href="$classQuPlotBase.html" title="A simple plot with zooming and scrolling capabilities. " alt="" coords="84,80,176,107"/>
-<area shape="rect" id="node3" href="$classQuSpectrumPlot.html" title="Draw a line for each data source over time. " alt="" coords="5,155,124,181"/>
-<area shape="rect" id="node4" href="$classQuTrendPlot.html" title="Draw a line for each data source over time. " alt="" coords="148,155,243,181"/>
-</map>

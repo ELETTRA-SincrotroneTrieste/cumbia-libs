@@ -7,7 +7,6 @@ clean=0
 cleandocs=0
 push_docs=0
 meson=0
-env_update=0
 epics=0
 tango=0
 pull=0
@@ -20,7 +19,7 @@ declare -a operations
 # this file contains some variables defined in previous executions
 # of this script. For example, this is used to remember if the user
 # enabled tango or epics modules.
-# The file is also used by the "cumbia upgrade" bash function (/etc/bash/bashrc.d/cumbia.sh)
+# The file is also used by the "cumbia upgrade" bash function (/etc/profile/cumbia.sh)
 # to find the location of the cumbia sources used for upgrades.
 #
 srcupdate_conf_f=$HOME/.config/cumbia/srcupdate.conf
@@ -98,12 +97,6 @@ fi
 if [[ $@ == **no-sudo** ]]
 then
     $sudocmd=
-fi
-
-if [[ $@ == **env-update** ]]
-then
-    env_update=1
-	operations+=(env-update)
 fi
 
 if [[ $@ == **install** ]]
@@ -694,15 +687,8 @@ if [ $push_docs -eq 1 ]; then
 	cd $topdir
 fi
 
-if [ $env_update -eq 1 ]; then
-	echo -e "\e[1;32m\n*\n* ENV updating environment for the current shell\n*\e[0m"
-	.  /etc/bash_completion.d/cumbia
-	.  /etc/bash/bashrc.d/cumbia.sh
-	export -f cumbia
-fi
-
 if [ $make_install -eq 1 ]; then
-	echo -e "\e[0;32m\n*\n* INSTALL \e[1;32myou may need to execute\n*\n  \e[1;36msource  /etc/bash_completion.d/cumbia\e[1;32m && \e[1;36msource  /etc/bash/bashrc.d/cumbia.sh\e[1;32m \n*"
+	echo -e "\e[0;32m\n*\n* INSTALL \e[1;32myou may need to execute\n*\n  \e[1;36msource  /etc/profile\e[1;32m \n*"
 	echo -e "* to enable shortcuts for cumbia apps. Then type \n*\n  \e[1;36mcumbia\e[1;32m\n*\n* to list available options\n*\e[0m"
 fi
 

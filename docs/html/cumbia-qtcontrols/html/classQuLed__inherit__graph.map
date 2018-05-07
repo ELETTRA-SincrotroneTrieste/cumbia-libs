@@ -1,4 +1,0 @@
-<map id="QuLed" name="QuLed">
-<area shape="rect" id="node2" href="$classQuLedBase.html" title="A color led. " alt="" coords="5,80,96,107"/>
-<area shape="rect" id="node5" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management..." alt="" coords="258,80,347,107"/>
-</map>

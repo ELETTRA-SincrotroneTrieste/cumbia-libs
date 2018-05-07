@@ -23,21 +23,27 @@ INCLUDEDIR = $${INSTALL_ROOT}/include
 
 SHAREDIR = $${INSTALL_ROOT}/share
 
+BASH_COMPLETION_DIR=$$system(pkg-config --variable=completionsdir bash-completion)
+
 #target.path = $${INSTALL_ROOT}/bin
 #target.files = $${TARGET}
 
 #templates.path = $${TEMPLATES_INSTALLDIR}
 #templates.files =  qumbia_project_template/*
 
-completion.path = /usr/share/bash-completion/completions
+completion.path = $${BASH_COMPLETION_DIR}
 completion.files = bash_completion.d/cumbia
 
-bashrc.path = /etc/profile.d
-bashrc.files = bashrc.d/cumbia.sh
+script.path = $${INSTALL_ROOT}/bin
+script.files = cumbia
 
-INSTALLS = completion bashrc
+
+message("bash completion dir $${BASH_COMPLETION_DIR} dafulllla")
+
+
+INSTALLS = completion script
 
 DISTFILES += \
 	bash_completion.d/cumbia
-        bashrc.d/cumbia.sh
+        cumbia
 
