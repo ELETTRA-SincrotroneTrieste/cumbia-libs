@@ -1,0 +1,5 @@
+<map id="CuTangoActionI" name="CuTangoActionI">
+<area shape="rect" id="node3" href="$classCuTAttConfiguration.html" title="CuTAttConfiguration" alt="" coords="5,155,147,181"/>
+<area shape="rect" id="node4" href="$classCuTReader.html" title="Low level class to read tango attributes and commands with output arguments. " alt="" coords="171,155,261,181"/>
+<area shape="rect" id="node5" href="$classCuTWriter.html" title="CuTWriter" alt="" coords="285,155,368,181"/>
+</map>
