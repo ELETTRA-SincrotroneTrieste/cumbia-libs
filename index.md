@@ -38,10 +38,11 @@ Copies of *README.md* and *README.UBUNTU.md* are available in the top level dire
 
 
 ### Apps
- 
-These applications (and their documentation, that has already been mentioned in the *Tutorials* table above)
-must be installed from the *qumbia-apps* sub-directory of the *cumbia-libs* distribution.
-To install them, *cd* into that folder and execute:
+
+If you followed the *scripts/cubuild.sh* install method, *cumbia apps* should be ready to use.
+
+Otherwise, they have to be installed from the *qumbia-apps* sub-directory of the *cumbia-libs* distribution.
+To do this, *cd* into that folder and execute:
  
 \code
 qmake
@@ -51,10 +52,10 @@ sudo make install
  
 Along the applications executables and documentation, two bash scripts will be installed:
  
-- /etc/bash_completion.d/cumbia
-- /etc/bash/bashrc.d/cumbia.sh
+- /usr/local/bin/cumbia  (or whatever/install/prefix/bin/cumbia)
+- /usr/share/bash-completion/completions/cumbia  (or wherever points the output of `pkg-config --variable=completionsdir bash-completion` )
 
-They define shortcuts for the common operations provided by the *qumbia-apps* applications as follows:
+They define shortcuts for the common operations provided by the *cumbia applications* as follows:
  
  
 |Applications (command line)   | description                                 | app
@@ -67,7 +68,7 @@ They define shortcuts for the common operations provided by the *qumbia-apps* ap
 | *cumbia upgrade*              | upgrade to a newer version of cumbia"|  - |
 
 
-*bash auto completion* will help you use these shortcuts: try
+*bash auto completion* will help you find out these shortcuts: try
 
 
 > cumbia [+TAB]
@@ -75,6 +76,12 @@ They define shortcuts for the common operations provided by the *qumbia-apps* ap
 or
 
 > cumbia new [+TAB]
+
+After the installation, it may be necessary to type
+
+> source /etc/profile
+
+from the current shell or log out and log in again.
 
 
 #### Want to *TangoTest* ?
