@@ -54,6 +54,8 @@ They define shortcuts for the common operations provided by the *qumbia-apps* ap
 | *cumbia ui make*              | run *cuuimake* to generate *qt+cumbia* ui_*.h files | <a href="html/cuuimake/html/index.html">qumbia-apps/cuuimake</a>  |
 | *cumbia client*               | run a generic cumbia client | <a href="html/cumbia_client/html/index.html">qumbia-apps/cumbia_client</a>  |
 | *cumbia upgrade*              | upgrade to a newer version of cumbia"|  - |
+
+
 *bash auto completion* will help you use these shortcuts: try
 
 
@@ -64,7 +66,16 @@ or
 > cumbia new <TAB>
 
 
+#### Want to *TangoTest* ?
+
+If the *TangoTest* device is running, you can immediately try the generic *cumbia client*:
+
+> cumbia client test/device/1/double_scalar test/device/1/long_scalar
+
+
+### Are you ready?
  
-Start reading the <a href="html/cumbia/html/index.html">cumbia base library documentation</a>.
+Start reading the <a href="html/cumbia/html/index.html">cumbia base library documentation</a> or  
+<a href=https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/qumbiaprojectwizard/html/index.html>write a new cumbia application</a>.
 
 
