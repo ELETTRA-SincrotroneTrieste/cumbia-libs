@@ -39,7 +39,8 @@ Copies of *README.md* and *README.UBUNTU.md* are available in the top level dire
 
 ### Apps
 
-If you followed the *scripts/cubuild.sh* install method, *cumbia apps* should be ready to use.
+*cumbia* provides some applications as part of the software distribution.
+If you followed the *scripts/cubuild.sh* install method, they should be ready to use.
 
 Otherwise, they have to be installed from the *qumbia-apps* sub-directory of the *cumbia-libs* distribution.
 To do this, *cd* into that folder and execute:
