@@ -44,11 +44,13 @@ If you followed the *scripts/cubuild.sh* install method, *cumbia apps* should be
 Otherwise, they have to be installed from the *qumbia-apps* sub-directory of the *cumbia-libs* distribution.
 To do this, *cd* into that folder and execute:
  
-\code
-qmake
-make
-sudo make install
-\endcode
+
+> qmake
+
+> make
+
+> sudo make install
+
  
 Along the applications executables and documentation, two bash scripts will be installed:
  
