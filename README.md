@@ -24,7 +24,7 @@ Tag if you wish...
 
 > git push
 
-The up to date documentation should be available at
+The  updated documentation should be then available at
 
 
 https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/cumbia/html/index.html
