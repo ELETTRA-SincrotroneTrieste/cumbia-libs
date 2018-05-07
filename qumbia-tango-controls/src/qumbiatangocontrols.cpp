@@ -1,3 +1,0 @@
-#include "qumbiatangocontrols.h"
-
-

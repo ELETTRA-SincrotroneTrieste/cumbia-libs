@@ -1,5 +1,0 @@
-cumbia-tango-controls
-
-This module provides some utilities to make cumbia-qtcontrols and cumbia-tango work together
-The library contains interfaces and utilities to make cumbia-qtcontrols aware of cumbia-tango
-module.

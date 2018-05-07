@@ -1,6 +1,0 @@
-<map id="CuEventI" name="CuEventI">
-<area shape="rect" id="node2" href="$classCuActivityExitEvent.html" title="exit event for the activity " alt="" coords="5,80,145,107"/>
-<area shape="rect" id="node3" href="$classCuExitLoopEvent.html" title="This event is used by CuEventLoop service to exit the loop. " alt="" coords="169,80,293,107"/>
-<area shape="rect" id="node4" href="$classCuResultEvent.html" title="The CuResultEvent class stores a result that a CuActivity (sender) wants to deliver from the backgrou..." alt="" coords="317,80,428,107"/>
-<area shape="rect" id="node5" href="$classCuThreadAutoDestroyEvent.html" title="at the end of the thread event loop (CuThread::run), this event is posted. When received, the thread is auto destroyed " alt="" coords="453,80,639,107"/>
-</map>

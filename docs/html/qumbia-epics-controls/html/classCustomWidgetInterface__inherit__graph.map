@@ -1,7 +1,0 @@
-<map id="CustomWidgetInterface" name="CustomWidgetInterface">
-<area shape="rect" id="node4" href="$classQuButtonInterface.html" title="QuButtonInterface" alt="" coords="489,5,617,32"/>
-<area shape="rect" id="node5" href="$classQuLabelInterface.html" title="QuLabelInterface" alt="" coords="492,56,613,83"/>
-<area shape="rect" id="node6" href="$classQuLedInterface.html" title="QuLedInterface" alt="" coords="497,107,608,133"/>
-<area shape="rect" id="node7" href="$classQuLineEditInterface.html" title="QuLineEditInterface" alt="" coords="484,157,621,184"/>
-<area shape="rect" id="node8" href="$classQuTableInterface.html" title="QuTableInterface" alt="" coords="491,208,614,235"/>
-</map>
