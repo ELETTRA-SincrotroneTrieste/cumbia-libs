@@ -1,5 +1,16 @@
 # cumbia library documentation
 
+### Installation
+
+To download and install *cumbia*, refer to the instructions in the <a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs">cumbia-libs</a> *README.md*
+file.
+
+Instructions to prepare an *ubuntu-desktop* for *cumbia*, can be found in the *README.UBUNTU.md* file under 
+<a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs">cumbia-libs</a>.
+
+Copies of *README.md* and *README.UBUNTU.md* are available in the top level directory of the *cumbia-libs* sources.
+
+
 ### Tutorials
 
  |Tutorials                                     | Module               |
