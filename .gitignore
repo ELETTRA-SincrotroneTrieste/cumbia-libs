@@ -1,4 +1,10 @@
-bin/*
-obj/*
+bin/
+obj/
 *.so.*
-moc/*
+*.so
+doc/
+moc/
+moc_*
+*.o
+*.pro.user
+ui_*.h
