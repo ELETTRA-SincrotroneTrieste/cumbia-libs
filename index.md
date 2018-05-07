@@ -53,18 +53,15 @@ They define shortcuts for the common operations provided by the *qumbia-apps* ap
 | *cumbia new control*          | write a *cumbia control* reader or writer | <a href="html/qumbianewcontrolwizard/html/index.html">qumbia-apps/qumbianewcontrolwizard</a>  |
 | *cumbia ui make*              | run *cuuimake* to generate *qt+cumbia* ui_*.h files | <a href="html/cuuimake/html/index.html">qumbia-apps/cuuimake</a>  |
 | *cumbia client*               | run a generic cumbia client | <a href="html/cumbia_client/html/index.html">qumbia-apps/cumbia_client</a>  |
- 
+| *cumbia upgrade*              | upgrade to a newer version of cumbia"|  - |
 *bash auto completion* will help you use these shortcuts: try
 
-\code
-cumbia <TAB>
-\endcode
+
+> cumbia <TAB>
  
 or
- 
-\code
-cumbia new <TAB>
-\endcode
+
+> cumbia new <TAB>
 
 
  
