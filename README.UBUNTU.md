@@ -48,6 +48,10 @@ About *ubuntu Qwt* installation:
 
 *cumbia* relies on *pkg-config* to find dependencies. Nevertheless *Qwt* installation on ubuntu should be detected.
 
+### cumbia libraries
+
+Download *cumbia* libraries into a directory 
+
 
 
 

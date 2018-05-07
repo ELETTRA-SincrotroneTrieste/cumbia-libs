@@ -69,6 +69,9 @@
  *
  *  \section related_readings Related readings
  *
+ * \subsection github.io
+ * <a href="https://elettra-sincrotronetrieste.github.io/cumbia-libs/index.html">cumbia-libs</a> on github.io
+ *
  * \subsection tutorials Tutorials
  *
  * |Tutorials                                     | Module               |
