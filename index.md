@@ -8,7 +8,7 @@ file.
 Instructions to prepare an *ubuntu-desktop* for *cumbia*, can be found in the *README.UBUNTU.md* file under 
 <a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs">cumbia-libs</a>.
 
-Copies of *README.md* and *README.UBUNTU.md* are available in the top level directory of the *cumbia-libs* sources.
+Copies of *README.md* and *README.UBUNTU.md* are available under the top level folder of the *cumbia-libs* source distribution.
 
 
 ### Tutorials
