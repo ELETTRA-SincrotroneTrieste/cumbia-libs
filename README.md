@@ -1,6 +1,8 @@
 # cumbia-libs documentation branch for github pages
 
-This branch hosts the documentation for the cumbia-libs project.
+### The gh-pages branch
+
+This branch (*gh-pages*) hosts the documentation for the cumbia-libs project.
 
 To regenerate the documentation after the library has been modified (and then publish it on https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/cumbia/html/index.html), go into the cumbia-libs sources and execute the script
 
@@ -12,9 +14,22 @@ Copy the contents of the *docs* directory into this directory, commit and push t
 
 > cd path/to/src/cumbia-libs
 
-> ./scripts/cubuild.sh  docs
+> ./scripts/cubuild.sh [tango] [epics] docs
 
-> cp -a docs/* /path/to/cumbia-libs-gh-pages
+The *tango* and *epics* options enable doc generation for the cumbia-tango/qumbia-tango-controls and cumbia-epics/qumbia-epics-controls respectively.
+
+> cp -a docs/html /path/to/cumbia-libs-gh-pages
+
+
+#### Check out the *gh-pages* branch
+
+If there is no copy of the *gh-pages* branch check it out executing:
+
+> cd /path/to/
+
+> git clone  https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs.git -b gh-pages cumbia-libs-gh-pages
+
+#### Commit changes to gh-pages branch
 
 > cd /path/to/cumbia-libs-gh-pages
 
