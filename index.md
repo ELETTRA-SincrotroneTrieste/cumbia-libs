@@ -26,9 +26,6 @@
  | <a href="html/qumbia-epics-controls/html/index.html">qumbia-epics-controls</a>.  |
 
 
- 
-Start reading the <a href="html/cumbia/html/index.html">cumbia base library documentation</a>.
-
 ### Apps
  
 These applications (and their documentation, that has already been mentioned in the *Tutorials* table above)
@@ -51,11 +48,11 @@ They define shortcuts for the common operations provided by the *qumbia-apps* ap
  
 |Applications (command line)   | description                                 | app
 |------------------------------|--------------------------------------------|:---------------:|
-| *cumbia new project*          | create a new cumbia project               |<a href="../../qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
-| *cumbia import*               | migrate a QTango project into cumbia      |<a href="../../qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
-| *cumbia new control*          | write a *cumbia control* reader or writer | <a href="../../qumbianewcontrolwizard/html/index.html">qumbia-apps/qumbianewcontrolwizard</a>  |
-| *cumbia ui make*              | run *cuuimake* to generate *qt+cumbia* ui_*.h files | <a href="../../cuuimake/html/index.html">qumbia-apps/cuuimake</a>  |
-| *cumbia client*               | run a generic cumbia client | <a href="../../cumbia_client/html/index.html">qumbia-apps/cumbia_client</a>  |
+| *cumbia new project*          | create a new cumbia project               |<a href="html/qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
+| *cumbia import*               | migrate a QTango project into cumbia      |<a href="html/qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
+| *cumbia new control*          | write a *cumbia control* reader or writer | <a href="html/qumbianewcontrolwizard/html/index.html">qumbia-apps/qumbianewcontrolwizard</a>  |
+| *cumbia ui make*              | run *cuuimake* to generate *qt+cumbia* ui_*.h files | <a href="html/cuuimake/html/index.html">qumbia-apps/cuuimake</a>  |
+| *cumbia client*               | run a generic cumbia client | <a href="html/cumbia_client/html/index.html">qumbia-apps/cumbia_client</a>  |
  
 *bash auto completion* will help you use these shortcuts: try
 
@@ -68,4 +65,9 @@ or
 \code
 cumbia new <TAB>
 \endcode
+
+
+ 
+Start reading the <a href="html/cumbia/html/index.html">cumbia base library documentation</a>.
+
 
