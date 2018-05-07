@@ -97,6 +97,6 @@ If the *TangoTest* device is running, you can immediately try the generic *cumbi
 ### Are you ready?
  
 Start reading the <a href="html/cumbia/html/index.html">cumbia base library documentation</a> or  
-<a href=https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/qumbiaprojectwizard/html/index.html">writing a new cumbia application</a>.
+<a href="https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/qumbiaprojectwizard/html/index.html">writing a new cumbia application</a>.
 
 
