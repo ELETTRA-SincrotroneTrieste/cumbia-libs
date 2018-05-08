@@ -688,8 +688,22 @@ if [ $push_docs -eq 1 ]; then
 fi
 
 if [ $make_install -eq 1 ]; then
+	echo -e "\e[0;32m\n*\n* INSTALL executing \e[1;32mldconfig\e[0m"
+	if [ ! -z $sudocmd ]; then
+		echo -e  "\e[1;32msudo\e[0m authentication required:"
+	fi
+
+	$sudocmd ldconfig
+
 	echo -e "\e[0;32m\n*\n* INSTALL \e[1;32myou may need to execute\n*\n  \e[1;36msource  /etc/profile\e[1;32m \n*"
 	echo -e "* to enable shortcuts for cumbia apps. Then type \n*\n  \e[1;36mcumbia\e[1;32m\n*\n* to list available options\n*\e[0m"
+
+	if [ $tango -eq 1 ]; then
+		echo -e "\e[0;32m\n*\n* INSTALL \e[0m to get started, type"
+		echo -e "  export TANGO_HOST=tango-db-host:PORT" 
+		echo -e "  cumbia client sys/tg_test/1/double_scalar sys/tg_test/1/long_scalar"
+		echo -e "\e[0;32m\n*\n*\e[0m\n"
+	fi
 fi
 
 
