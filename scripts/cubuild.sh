@@ -727,10 +727,10 @@ if [ $make_install -eq 1 ]; then
 
 	
 	if [ $tango -eq 1 ]; then
-		echo -e "\e[0;32m\n*\n* INSTALL \e[0m to get started, after making sure a TangoTest device instance is running on a given *tango-db-host* *Tango* database, type"
+		echo -e "\e[0;32m*\n* INSTALL \e[0m to get started, after making sure a TangoTest device instance is running on a given tango-db-host, type"
 		echo -e "  export TANGO_HOST=tango-db-host:PORT" 
 		echo -e "  cumbia client sys/tg_test/1/double_scalar sys/tg_test/1/long_scalar"
-		echo -e "\e[0;32m\n*\n*\e[0m"
+		echo -e "\e[0;32m*\n*\e[0m"
 	fi
 
 	echo -e "\e[0;32m*\n* INSTALL \e[1;32myou may need to execute\n*\n  \e[1;36msource  /etc/profile\e[1;32m \n*"
