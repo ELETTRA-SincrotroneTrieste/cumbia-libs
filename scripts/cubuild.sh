@@ -726,15 +726,22 @@ if [ $make_install -eq 1 ]; then
 	echo -e "\e[0;32m*\n* INSTALL cumbia installation is now complete\e[0m"
 
 	
+	
+
+	echo -e "\e[1;32m*\e[0;32m\n* INSTALL \e[1;32myou may need to execute\n*\n  \e[1;36msource  /etc/profile\e[1;32m \n*"
+	echo -e "* to enable shortcuts for cumbia apps. Then type \n*\n  \e[1;36mcumbia\e[1;32m\n*\n* to list available options\n*\e[0m"
+	
 	if [ $tango -eq 1 ]; then
-		echo -e "\e[0;32m*\n* INSTALL \e[0m to get started, after making sure a TangoTest device instance is running on a given tango-db-host, type"
+		echo -e "\e[1;32m*\n*\e[0m For example, after making sure a TangoTest device instance is running on a given tango-db-host, type"
 		echo -e "  export TANGO_HOST=tango-db-host:PORT" 
+		echo -e "\e[1;32m*\e[0m and then"
 		echo -e "  cumbia client sys/tg_test/1/double_scalar sys/tg_test/1/long_scalar"
-		echo -e "\e[0;32m*\n*\e[0m"
+		echo -e "\e[1;32m*\n*\e[0m"
 	fi
 
-	echo -e "\e[0;32m*\n* INSTALL \e[1;32myou may need to execute\n*\n  \e[1;36msource  /etc/profile\e[1;32m \n*"
-	echo -e "* to enable shortcuts for cumbia apps. Then type \n*\n  \e[1;36mcumbia\e[1;32m\n*\n* to list available options\n*\e[0m"
+	echo -e "\e[1;32m*\n* \e[1;34;4mDOCUMENTATION\e[0m: https://elettra-sincrotronetrieste.github.io/cumbia-libs/"
+	echo -e "\e[1;32m*\n*\e[0m"
+	
 
 fi
 
