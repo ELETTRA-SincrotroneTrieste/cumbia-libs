@@ -42,6 +42,9 @@ shows the list of the required packages to build all the modules in cumbia-libs:
 ### Prepare an ubuntu system for cumbia installation
 
 If you are interested in using ubuntu, please refer to the instructions in <a href="README.UBUNTU.md">README.UBUNTU.md</a> file.
+The time required to set up a *cumbia*-ready *ubuntu desktop* is about five to eight minutes and the procedure in the README.UBUNTU.md file
+requires the installation of official *ubuntu packages* only (by means of *apt-get install* or *Ubuntu Software*).
+
 
 ### Quick installation using the *cubuild.sh* bash script
 
@@ -81,6 +84,14 @@ The command in the example builds and installs the cumbia base modules, cumbia-t
 Type 
 
 > scripts/cubuild.sh --help for more options
+
+You will be asked some questions during the install process. Read them carefully before answering yes [y] or no [n].
+In particular, at the end of the installation, *cubuild.sh* will try to detect if the chosen *prefix* *lib* directory (default: */usr/local/lib*)
+is already included in the *ldconfig* search paths. If not, you have two possibilities:
+
+- [y] "yes" answer: add a file cumbia.conf under */etc/ld.so.conf.d/*
+- [n] "no", the default: deal with it manually later (either dealing with ldconfig configuration files or exporting a proper LD_LIBRARY_PATH)
+
 
 If the *quick installation using the cubuild.sh bash script* fails, please read the *step by step installation* procedure to 
 point out the possible causes.

@@ -68,7 +68,9 @@ Change into the *cumbia-libs* directory and execute:
 
 This will build and install the *cumbia* base libraries, the *Tango* modules (*cumbia-tango* and *qumbia-tango-controls*) and some 
 utilities ("<em>cumbia apps</em>").
-Refer to <a href="README.md#install-cumbia-through-scriptscubuildsh">README.md</a> for the installation details.
+
+Please read <a href="README.md#install-cumbia-through-scriptscubuildsh">Install cumbia through scripts/cubuild.sh</a> 
+in <a href="README.md">README.md/a> for more details.
 
 
 

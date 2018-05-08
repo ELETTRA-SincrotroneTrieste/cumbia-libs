@@ -689,9 +689,18 @@ fi
 
 if [ $make_install -eq 1 ]; then
 
-	if [[ -z `$sudocmd ldconfig -v 2>/dev/null | grep ':$' |sed -e 's/://' | grep "^$prefix$"` ]]; then
-		echo -e "\e[0;33m\n*\n* INSTALL WARNING \e[0mit is possible that \e[0;4m$prefix\e[0m is not in the ld.so.conf path: please check.\e[0m"
-		echo -e "\e[0;33m*\n* INSTALL WARNING \e[0mDo you want to add $prefix to ld.so.conf path by adding a file \e[0m"
+	libprefix=$prefix/lib	
+
+	if [[ -z `$sudocmd ldconfig -v 2>/dev/null | grep ':$' |sed -e 's/://' | grep "^$libprefix$"` ]]; then
+		echo -e "\e[0;33m\n*\n* INSTALL \e[1;33mWARNING \e[0mit is possible that \e[0;4m$libprefix\e[0m is not among the ld.so.conf paths: please check.\e[0m"
+
+		# remove trailing "/" from $prefix, if present
+		prefix_cl=${prefix%/}
+		if [[ "$prefix_cl" == "/usr/local" ]] || [[ "$prefix_cl" == "/usr" ]] ; then
+			echo -e "\e[0;33m*\n* INSTALL \e[1;33mWARNING \e[0m check if under $prefix (your prefix) there are symbolic links between *lib* and *lib64*, e.g."
+			echo -e "\e[0;33m*\e[0m                  $prefix/lib --> $prefix/lib64"
+		fi           
+		echo -e "\e[0;33m*\n* INSTALL \e[1;33mWARNING \e[0mDo you want to add $libprefix to ld.so.conf paths by adding a file \e[0m"
 		echo -e "\e[0;33m                  \e[0;4mcumbia.conf\e[0m under "/etc/ld.so.conf.d/"  [y|n] ? [n] \e[0m"
 		read  -s -n 1 addconf
 		if [ "$addconf" == "y" ]; then
@@ -700,18 +709,18 @@ if [ $make_install -eq 1 ]; then
 				fi
 
 				echo -e "\e[0;32m*\n* INSTALL adding\e[1;32m"
-		 		echo $prefix | $sudocmd tee /etc/ld.so.conf.d/cumbia.conf
+		 		echo $libprefix | $sudocmd tee /etc/ld.so.conf.d/cumbia.conf
 				echo -e "\e[0;32m*\n* to \e[1;32mldconfig\e[0;32m path"
 				echo -e "\e[0;32m*\n* INSTALL executing \e[1;32mldconfig\e[0m\n"
 				$sudocmd ldconfig 
 				echo -e "\e[0;32m*\n* "
 		else
-			echo -e "\e[0;33m\n* INSTALL WARNING \e[0mcheck if \"$prefix\" is in ld.so.conf path. If not, add it manually or type: "
-			echo -e "  export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$prefix"
+			echo -e "\e[0;33m*\n* INSTALL \e[1;33mWARNING \e[0mcheck if \"$libprefix\" is in ld.so.conf path. If not, add it manually or type: "
+			echo -e "  export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$libprefix"
 			echo -e "\e[0;33m*\n"
 		fi	
 	else
-		echo -e "\e[0;32m\n*\n* INSTALL \e[1;32m$prefix\e[0m has been found in ldconfig paths."
+		echo -e "\e[0;32m\n*\n* INSTALL \e[1;32m$libprefix\e[0m has been found in ldconfig paths."
 	fi
 
 	echo -e "\e[0;32m*\n* INSTALL cumbia installation is now complete\e[0m"
