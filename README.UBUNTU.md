@@ -60,7 +60,7 @@ About *ubuntu Qwt* installation:
 
 ### cumbia libraries
 
-Download *cumbia* libraries into a directory (e.g. ~/Downloads):
+Download *cumbia* sources to a place (e.g. ~/Downloads) where they will be preserved for future upgrades (no development in there!):
 
 > git clone  https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs.git
 
