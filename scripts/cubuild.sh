@@ -688,12 +688,33 @@ if [ $push_docs -eq 1 ]; then
 fi
 
 if [ $make_install -eq 1 ]; then
-	echo -e "\e[0;32m\n*\n* INSTALL executing \e[1;32mldconfig\e[0m"
-	if [ ! -z $sudocmd ]; then
-		echo -e  "\e[1;32msudo\e[0m authentication required:"
+
+	if [[ -z `$sudocmd ldconfig -v 2>/dev/null | grep ':$' |sed -e 's/://' | grep "^$prefix$"` ]]; then
+		echo -e "\e[0;33m\n*\n* INSTALL WARNING \e[0mit is possible that \e[0;4m$prefix\e[0m is not in the ld.so.conf path: please check.\e[0m"
+		echo -e "\e[0;33m*\n* INSTALL WARNING \e[0mDo you want to add $prefix to ld.so.conf path by adding a file \e[0m"
+		echo -e "\e[0;33m                  \e[0;4mcumbia.conf\e[0m under "/etc/ld.so.conf.d/"  [y|n] ? [n] \e[0m"
+		read  -s -n 1 addconf
+		if [ "$addconf" == "y" ]; then
+				if [ ! -z $sudocmd ]; then
+					echo -e  "\e[1;32msudo\e[0m authentication required:"
+				fi
+
+				echo -e "\e[0;32m*\n* INSTALL adding\e[1;32m"
+		 		echo $prefix | $sudocmd tee /etc/ld.so.conf.d/cumbia.conf
+				echo -e "\e[0;32m*\n* to \e[1;32mldconfig\e[0;32m path"
+				echo -e "\e[0;32m*\n* INSTALL executing \e[1;32mldconfig\e[0m\n"
+				$sudocmd ldconfig 
+				echo -e "\e[0;32m*\n* "
+		else
+			echo -e "\e[0;33m\n* INSTALL WARNING \e[0mcheck if \"$prefix\" is in ld.so.conf path. If not, add it manually or type: "
+			echo -e "  export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$prefix"
+			echo -e "\e[0;33m*\n"
+		fi	
+	else
+		echo -e "\e[0;32m\n*\n* INSTALL \e[1;32m$prefix\e[0m has been found in ldconfig paths."
 	fi
 
-	$sudocmd ldconfig
+	echo -e "\e[0;32m*\n* INSTALL cumbia installation is now complete\e[0m"
 
 	echo -e "\e[0;32m\n*\n* INSTALL \e[1;32myou may need to execute\n*\n  \e[1;36msource  /etc/profile\e[1;32m \n*"
 	echo -e "* to enable shortcuts for cumbia apps. Then type \n*\n  \e[1;36mcumbia\e[1;32m\n*\n* to list available options\n*\e[0m"
