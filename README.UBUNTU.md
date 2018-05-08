@@ -2,8 +2,13 @@
 
 In this document we will describe the necessary steps to set up *cumbia* in a freshly installed *ubuntu 18.04* desktop edition.
 
+We downloaded and installed an *ubuntu desktop 18.04* from the iso image found at:
+
+https://www.ubuntu.com/download/desktop/contribute?version=18.04&architecture=amd64
+
 #### Note
-The *ubuntu minimal* option was chosen during the installation procedure.
+The *Normal installation* default option has been chosen during the installation procedure
+(under the step *Updates and other software* / *What apps would you like to install to start with?* )
 
 ## Dependencies
 
@@ -18,6 +23,9 @@ The following command installs the GNU compiler, GNU make, meson...
 > sudo apt-get install libtango-dev libtango-tools tango-test
 
 The command installs tango version 9.2.5a and the *TangoTest* server (*/usr/lib/tango/TangoTest*)
+
+#### Setting TANGO_HOST
+During the installation, you will be prompted to set the *TANGO_HOST* *address:port* where the *Tango* database is running.
 
 ### Qt 5 libraries
 
@@ -50,7 +58,18 @@ About *ubuntu Qwt* installation:
 
 ### cumbia libraries
 
-Download *cumbia* libraries into a directory 
+Download *cumbia* libraries into a directory (e.g. ~/Downloads):
+
+> git clone  https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs.git
+
+Change into the *cumbia-libs* directory and execute:
+
+> ./scripts/cubuild.sh  tango install 
+
+This will build and install the *cumbia* base libraries, the *Tango* modules (*cumbia-tango* and *qumbia-tango-controls*) and some 
+utilities ("<em>cumbia apps</em>").
+
+
 
 
 

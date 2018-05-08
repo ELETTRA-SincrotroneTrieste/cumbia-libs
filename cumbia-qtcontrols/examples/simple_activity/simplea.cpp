@@ -10,6 +10,7 @@
 #include <qthreadseventbridgefactory.h>
 #include <cuthreadfactoryimpl.h>
 #include <cuthreadservice.h>
+#include <cuserviceprovider.h>
 #include "activity.h"
 
 SimpleA::SimpleA(QWidget *parent) : QWidget(parent)
@@ -83,7 +84,6 @@ void SimpleA::onResult(const CuData &data)
     if(data["msg"].toString() == "onExit")
     {
         CuThreadService *ts = static_cast<CuThreadService *> (m_cumbia->getServiceProvider()->get(CuServices::Thread));
-        ts->
     }
 }
 
