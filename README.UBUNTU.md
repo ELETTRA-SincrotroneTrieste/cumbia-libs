@@ -25,7 +25,8 @@ The following command installs the GNU compiler, GNU make, meson...
 The command installs tango version 9.2.5a and the *TangoTest* server (*/usr/lib/tango/TangoTest*)
 
 #### Setting TANGO_HOST
-During the installation, you will be prompted to set the *TANGO_HOST* *address:port* where the *Tango* database is running.
+During the installation, the *Configuring tango-common* dialog will ask you to specify the name of the host where the *TANGO* database server is running.
+Type the *hostname:port* couple and continue.
 
 ### Qt 5 libraries
 
@@ -56,6 +57,7 @@ About *ubuntu Qwt* installation:
 
 *cumbia* relies on *pkg-config* to find dependencies. Nevertheless *Qwt* installation on ubuntu should be detected.
 
+
 ### cumbia libraries
 
 Download *cumbia* libraries into a directory (e.g. ~/Downloads):
@@ -70,7 +72,7 @@ This will build and install the *cumbia* base libraries, the *Tango* modules (*c
 utilities ("<em>cumbia apps</em>").
 
 Please read <a href="README.md#install-cumbia-through-scriptscubuildsh">Install cumbia through scripts/cubuild.sh</a> 
-in <a href="README.md">README.md/a> for more details.
+in <a href="README.md">README.md</a> for more details.
 
 
 

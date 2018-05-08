@@ -39,7 +39,7 @@ PKG_CONFIG_PATH includes the relevant dependencies required by cumbia. For examp
 
 shows the list of the required packages to build all the modules in cumbia-libs: omniorb, tango, zeromq, epics qwt...
 
-### Prepare an ubuntu system for cumbia installation
+### Prepare an ubuntu system for cumbia installation (time: 5 - 8 minutes)
 
 If you are interested in using ubuntu, please refer to the instructions in <a href="README.UBUNTU.md">README.UBUNTU.md</a> file.
 The time required to set up a *cumbia*-ready *ubuntu desktop* is about five to eight minutes and the procedure in the README.UBUNTU.md file
