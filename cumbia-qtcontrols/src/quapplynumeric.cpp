@@ -9,6 +9,7 @@
 #include "cucontrolsutils.h"
 #include "cumbiapool.h"
 #include "cucontext.h"
+#include "culinkstats.h"
 #include "qulogimpl.h"
 
 /// @private
@@ -109,7 +110,10 @@ void QuApplyNumeric::m_init()
  */
 void QuApplyNumeric::onUpdate(const CuData &da)
 {
-    if(da["err"].toBool())
+    d->write_ok = !da["err"].toBool();
+    // update link statistics
+    d->context->getLinkStats()->addOperation();
+    if(!d->write_ok)
     {
         perr("QuApplyNumeric [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
              da["src"].toString().c_str(), da["msg"].toString().c_str(),
@@ -124,6 +128,7 @@ void QuApplyNumeric::onUpdate(const CuData &da)
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::Write, true);
             log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);
         }
+        d->context->getLinkStats()->addError(da["msg"].toString());
     }
     else if(d->auto_configure && da["type"].toString() == "property")
     {

@@ -6,39 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>544</width>
-    <height>300</height>
+    <width>911</width>
+    <height>498</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>QumbiaClient</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="2">
-    <widget class="QComboBox" name="cbRefMode">
-     <item>
-      <property name="text">
-       <string>PolledRefresh</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>ChangeEventRefresh</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Period</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
+   <item row="4" column="2">
     <widget class="QSpinBox" name="sbPeriod">
      <property name="minimum">
       <number>10</number>
@@ -54,34 +30,45 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="2">
-    <widget class="QPushButton" name="pbSetSources">
-     <property name="text">
-      <string>Set sources</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="3">
+   <item row="5" column="4">
     <widget class="QPushButton" name="pbUnsetSrc">
      <property name="text">
       <string>Unset Sources</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="QLineEdit" name="leSrcs"/>
-   </item>
-   <item row="2" column="3">
-    <widget class="QPushButton" name="pbApplyRefresh">
+   <item row="4" column="1">
+    <widget class="QLabel" name="label">
      <property name="text">
-      <string>Apply</string>
+      <string>Period</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="4">
-    <widget class="QWidget" name="widget" native="true"/>
+   <item row="5" column="3">
+    <widget class="QPushButton" name="pbSetSources">
+     <property name="text">
+      <string>Set sources</string>
+     </property>
+    </widget>
    </item>
-   <item row="0" column="0" colspan="4">
+   <item row="4" column="3">
+    <widget class="QComboBox" name="cbRefMode">
+     <item>
+      <property name="text">
+       <string>PolledRefresh</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>ChangeEventRefresh</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="4">
     <widget class="QLabel" name="labelTitle">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -100,6 +87,61 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="4">
+    <widget class="QPushButton" name="pbApplyRefresh">
+     <property name="text">
+      <string>Apply</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QPushButton" name="pbWrite">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>120</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Write</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="3">
+    <widget class="QLineEdit" name="leSrcs"/>
+   </item>
+   <item row="2" column="0" colspan="5">
+    <widget class="QGroupBox" name="gbWriters">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="title">
+      <string>Write</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="5">
+    <widget class="QWidget" name="widget" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>2</verstretch>
+      </sizepolicy>
      </property>
     </widget>
    </item>

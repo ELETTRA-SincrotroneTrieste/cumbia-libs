@@ -4,15 +4,15 @@
 #include <cuisolatedactivity.h>
 
 class CuEpCAService;
-class CuWriteActivityPrivate;
+class CuPutActivityPrivate;
 
-class CuWriteActivity : public CuIsolatedActivity
+class CuPutActivity : public CuIsolatedActivity
 {
 public:
-    CuWriteActivity(const CuData &token,
+    CuPutActivity(const CuData &token,
                     CuEpCAService *df);
 
-    virtual ~CuWriteActivity();
+    virtual ~CuPutActivity();
 
     // CuActivity interface
 public:
@@ -25,7 +25,7 @@ protected:
     void onExit();
 
 private:
-    CuWriteActivityPrivate *d;
+    CuPutActivityPrivate *d;
 };
 
 #endif // CUWRITEACTIVITY_H

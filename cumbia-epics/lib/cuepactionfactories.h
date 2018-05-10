@@ -36,6 +36,8 @@ class CuEpicsWriterFactory : public CuEpicsActionFactoryI
 public:
     CuEpicsWriterFactory();
 
+    virtual ~CuEpicsWriterFactory() {}
+
     void setWriteValue(const CuVariant &write_val);
 
     // CuEpicsActionFactoryI interface
@@ -54,6 +56,8 @@ class CuEpicsAttConfFactory : public CuEpicsActionFactoryI
 {
 public:
     CuEpicsAttConfFactory();
+
+    virtual ~CuEpicsAttConfFactory() {}
 
     void fetchAttributeHistory(bool fetch);
 

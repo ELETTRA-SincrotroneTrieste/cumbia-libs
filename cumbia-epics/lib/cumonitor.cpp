@@ -60,7 +60,7 @@ void CuMonitor::onProgress(int step, int total, const CuData &data)
  */
 void CuMonitor::onResult(const CuData &data)
 {
-    cuprintf("CuMonitor.onResult: data received %s THREAD 0x%lx\n", data.toString().c_str(), pthread_self());
+    printf("CuMonitor.onResult: data received %s THREAD 0x%lx\n", data.toString().c_str(), pthread_self());
     std::list<CuDataListener *>::iterator it;
     for(it = d->listeners.begin(); it != d->listeners.end(); ++it)
         (*it)->onUpdate(data);

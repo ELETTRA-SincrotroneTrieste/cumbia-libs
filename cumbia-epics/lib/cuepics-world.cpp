@@ -397,6 +397,8 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
     else
         da["data_format_str"] = "invalid";
 
+    da["writable"] = static_cast<int>(ca_write_access(pv->ch_id));
+
     /* event type can be property (ctrl) or value update */
     if(dbr_type_is_CTRL(pv->dbrType))
     {

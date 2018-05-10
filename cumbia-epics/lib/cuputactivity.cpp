@@ -4,7 +4,7 @@
 #include "cuepcaservice.h"
 #include <cumacros.h>
 
-class CuWriteActivityPrivate
+class CuPutActivityPrivate
 {
 public:
     CuEpCAService *epics_service;
@@ -14,11 +14,11 @@ public:
     CuData point_info; /* attribute or command info */
 };
 
-CuWriteActivity::CuWriteActivity(const CuData &token,
+CuPutActivity::CuPutActivity(const CuData &token,
                                  CuEpCAService *df)
     : CuIsolatedActivity(token)
 {
-    d = new CuWriteActivityPrivate;
+    d = new CuPutActivityPrivate;
     d->epics_service = df;
     d->err = false;
     setFlag(CuActivity::CuAUnregisterAfterExec, true);
@@ -26,24 +26,24 @@ CuWriteActivity::CuWriteActivity(const CuData &token,
     d->other_thread_id = pthread_self();
 }
 
-CuWriteActivity::~CuWriteActivity()
+CuPutActivity::~CuPutActivity()
 {
     pdelete("~CuWriteActivity %p", this);
     delete d;
 }
 
-void CuWriteActivity::event(CuActivityEvent *e)
+void CuPutActivity::event(CuActivityEvent *e)
 {
 
 }
 
-bool CuWriteActivity::matches(const CuData &token) const
+bool CuPutActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
     return token["src"] == mytok["src"] && mytok["activity"] == token["activity"];
 }
 
-void CuWriteActivity::init()
+void CuPutActivity::init()
 {
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
@@ -51,19 +51,21 @@ void CuWriteActivity::init()
 
 }
 
-void CuWriteActivity::execute()
+void CuPutActivity::execute()
 {
     assert(d->my_thread_id == pthread_self());
     CuData at = getToken(); /* activity token */
 
     /* get configuration and then write */
+    printf("\e[1;32mCuPutActivity execute enter...[%s]\e[0m\n", at.toString().c_str());
 
+    printf("\e[1;36mwould write %s into %s\e[0m\n", at["write_value"].toString().c_str(), at["src"].toString().c_str());
 
     d->msg = "...";
     d->err = false;
 }
 
-void CuWriteActivity::onExit()
+void CuPutActivity::onExit()
 {
     assert(d->my_thread_id == pthread_self());
     int refcnt = -1;

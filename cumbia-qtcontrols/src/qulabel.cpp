@@ -133,12 +133,11 @@ void QuLabel::onUpdate(const CuData &da)
     QString txt;
     QColor background, border;
     d->read_ok = !da["err"].toBool();
-    setEnabled(d->read_ok);
 
     // update link statistics
-    d->context->getLinkStats()->addOperation();
-    if(!d->read_ok)
-        d->context->getLinkStats()->addError(da["msg"].toString());
+        d->context->getLinkStats()->addOperation();
+        if(!d->read_ok)
+            d->context->getLinkStats()->addError(da["msg"].toString());
 
     if(da.containsKey("quality_color"))
         background = d->palette[QString::fromStdString(da["quality_color"].toString())];

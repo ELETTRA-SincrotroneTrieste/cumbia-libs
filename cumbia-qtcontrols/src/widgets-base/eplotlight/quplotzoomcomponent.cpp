@@ -79,7 +79,7 @@ void QuPlotZoomComponent::attachToPlot(QuPlotBase *plot)
 
 void QuPlotZoomComponent::connectToPlot(QuPlotBase *plot)
 {
-    QObject::connect(m_zoomer, SIGNAL(zoomHint()), plot, SLOT(displayZoomHint()));
-    QObject::connect(m_zoomer, SIGNAL(removeZoomHint()), plot, SLOT(eraseZoomHint()));
+//    QObject::connect(m_zoomer, SIGNAL(zoomHint()), plot, SLOT(displayZoomHint()));
+//    QObject::connect(m_zoomer, SIGNAL(removeZoomHint()), plot, SLOT(eraseZoomHint()));
     QObject::connect(m_zoomer, SIGNAL(zoomed(const QRectF&) ), plot, SLOT(plotZoomed(const QRectF&) ) );
 }

@@ -17,12 +17,12 @@
 
 class EpSource;
 
-class CuTWriterPrivate
+class CuEpWriterPrivate
 {
 public:
     std::list<CuDataListener *> listeners;
     EpSource tsrc;
-    CumbiaEpics *cumbia_t;
+    CumbiaEpics *cumbia_ep;
     CuActivity *activity;
     bool exit;
     CuConLogImpl li;
@@ -33,9 +33,9 @@ public:
 CuPut::CuPut(const EpSource& src,
                      CumbiaEpics *ct)
 {
-    d = new CuTWriterPrivate();
+    d = new CuEpWriterPrivate();
     d->tsrc = src;
-    d->cumbia_t = ct;
+    d->cumbia_ep = ct;
     d->exit = false;
     d->log = CuLog(&d->li);
 }
@@ -66,7 +66,7 @@ void CuPut::onResult(const CuData &data)
 
     if(data["exit"].toBool())
     {
-        CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
+        CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_ep->getServiceProvider()
                                                                             ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
         af->unregisterAction(d->tsrc.getName(), getType());
         d->listeners.clear();
@@ -113,7 +113,7 @@ size_t CuPut::dataListenersCount()
 void CuPut::start()
 {
     CuEpCAService *df =
-            static_cast<CuEpCAService *>(d->cumbia_t->getServiceProvider()->
+            static_cast<CuEpCAService *>(d->cumbia_ep->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType)));
     CuData at("src", d->tsrc.getName()); /* activity token */
     at["ioc"] = d->tsrc.getIOC();
@@ -122,10 +122,10 @@ void CuPut::start()
     at["write_value"] = d->write_val;
     at["pv"] = (d->tsrc.getType() == EpSource::PV);
     CuData tt("ioc", d->tsrc.getIOC()); /* thread token */
-    d->activity = new CuWriteActivity(at, df);
-    const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
-    const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
-    d->cumbia_t->registerActivity(d->activity, this, tt, fi, bf);
+    d->activity = new CuPutActivity(at, df);
+    const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_ep->getThreadEventsBridgeFactory());
+    const CuThreadFactoryImplI &fi = *(d->cumbia_ep->getThreadFactoryImpl());
+    d->cumbia_ep->registerActivity(d->activity, this, tt, fi, bf);
     cuprintf("> CuTWriter.start writer %p thread 0x%lx ACTIVITY %p\n", this, pthread_self(), d->activity);
 }
 

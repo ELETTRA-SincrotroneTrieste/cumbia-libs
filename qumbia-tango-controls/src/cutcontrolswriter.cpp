@@ -207,6 +207,5 @@ void CuTControlsWriter::setTarget(const QString &s)
     options["fetch_props"] = d->attr_props;
     att_conf_factory.setOptions(options);
     d->target = tcu.replaceWildcards(s, qApp->arguments());
-    cuprintf("CuTControlsWriter::setTargets: targets is: %s\n", qstoc(d->target));
     d->cumbia_tango->addAction(d->target.toStdString(), d->tlistener, att_conf_factory);
 }

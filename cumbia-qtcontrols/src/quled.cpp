@@ -85,7 +85,6 @@ void QuLed::onUpdate(const CuData &da)
 {
     QColor background, border;
     d->read_ok = !da["err"].toBool();
-    setEnabled(d->read_ok);
 
     // update link statistics
     d->context->getLinkStats()->addOperation();

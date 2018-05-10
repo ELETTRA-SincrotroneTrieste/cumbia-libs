@@ -3,7 +3,7 @@
 
 #include <cuepactioni.h>
 
-class CuTWriterPrivate;
+class CuEpWriterPrivate;
 
 class CuPut : public CuEpicsActionI
 {
@@ -32,7 +32,7 @@ public:
     void sendData(const CuData &data);
     void getData(CuData &d_inout) const;
 private:
-    CuTWriterPrivate *d;
+    CuEpWriterPrivate *d;
 };
 
 #endif // CUTWRITER_H

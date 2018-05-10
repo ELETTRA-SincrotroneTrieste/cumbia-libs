@@ -44,11 +44,11 @@ DEFINES += CUMBIA_CLIENT_VERSION_STR=\"\\\"$${CUMBIA_CLIENT_VERSION}\"\\\"
 
 SOURCES += main.cpp \
     qumbia-client.cpp \
-    element.cpp
+    writer.cpp
 
 HEADERS  += \
     qumbia-client.h \
-    element.h
+    writer.h
 
 FORMS    += qumbia-client.ui
 

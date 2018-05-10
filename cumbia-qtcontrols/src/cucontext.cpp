@@ -107,8 +107,6 @@ CuControlsWriterA *CuContext::m_make_writer(const std::string &s, CuDataListener
     Cumbia *cumbia = NULL;
     CuControlsWriterFactoryI *w_fa;
 
-//    printf("\e[1;35mCuContextl.make_writer: src %s cu_pool %p ctrl_factroypool isEmpty %d\e[0m", s.c_str(), d->ctrl_factory_pool,
-//           d->ctrl_factory_pool.isEmpty());
     if(d->cu_pool && !d->ctrl_factory_pool.isEmpty()) /* pick Cumbia impl */
     {
         // pick a cumbia and reader factory implementation from the pool

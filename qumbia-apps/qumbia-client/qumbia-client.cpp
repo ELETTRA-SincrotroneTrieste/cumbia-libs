@@ -1,5 +1,6 @@
 #include "qumbia-client.h"
 #include "ui_qumbia-client.h"
+#include "writer.h"
 #include <cumbiapool.h>
 #include <cumbiatango.h>
 #include <cutcontrolsreader.h>
@@ -17,6 +18,7 @@
 #include <qulogimpl.h>
 #include <QtDebug>
 #include <QMessageBox>
+#include <QScrollArea>
 #include <QSpinBox>
 #include <QComboBox>
 #include <cutango-world.h>
@@ -91,6 +93,17 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     // t->start();
 
 
+    QVBoxLayout *wblo = new QVBoxLayout(ui->gbWriters);
+    QScrollArea *scrollA = new QScrollArea(0);
+    QWidget *writersContentW = new QWidget(this);
+    QVBoxLayout *writersLo = new QVBoxLayout(writersContentW);
+    scrollA->setWidget(writersContentW);
+    scrollA->setWidgetResizable(true);
+    wblo->addWidget(scrollA);
+
+    connect(ui->pbWrite, SIGNAL(toggled(bool)), ui->gbWriters, SLOT(setVisible(bool)));
+    ui->gbWriters->setVisible(false);
+
     new CuContextActionBridge(this, cumbia_pool, m_ctrl_factory_pool);
 }
 
@@ -106,94 +119,49 @@ void QumbiaClient::configure(const CuData &d)
 
     qDebug() << __FUNCTION__ << "labels" << findChildren<QuLabel *>();
 
-
-
-    printf("+++++++++++---------------- configure %s ----------------+++++++++++++++++\n", d.toString().c_str());
-
     const int plotRowCnt = 5;
     int layout_row = 2;
     std::string format = d["data_format_str"].toString();
 
     QGridLayout *lo = qobject_cast<QGridLayout *>(ui->widget->layout());
-    //    foreach(QuLabel *l, findChildren<QuLabel *>())
-    //       delete l;
-
-
-    //    for(int i = 0; i < 10; i++)
-    //    {
-    //        QuLabel *l = new QuLabel(this, cu_pool, m_ctrl_factory_pool);
-    //        l->setSource(d["src"].toString().c_str());
-    //        lo->addWidget(l, ++layout_row, 0, 1, m_layoutColumnCount);
-    //    }
-
-    //       foreach(QuLabel *l, findChildren<QuLabel *>())
-    //         delete l;
-    //    return;
-
-    //    for(int i = 0; i < srcs.size() && d["writable"].toInt() == Tango::READ_WRITE; i++)
-    //    {
-    //        QuButton *b = new QuButton(this, cu_ep, CuTWriterFactory());
-    //        b->setText("Write");
-    //        QString target = srcs.at(i) + "(";
-    //        if(format == 1) /* Tango::SPECTRUM */
-    //        {
-    //            /* put m_layoutColumnCount - 1 line edits */
-    //            for(int j = 0; j < m_layoutColumnCount - 1; j++)
-    //            {
-    //                QuLineEdit *le = new QuLineEdit(this);
-    //                le->setObjectName(QString("leInputArgs_%1").arg(j + (i * m_layoutColumnCount)));
-    //                lo->addWidget(le, layout_row, j, 1, 1);
-    //                target += "&" + le->objectName() + ",";
-    //            }
-    //            lo->addWidget(b, layout_row, m_layoutColumnCount -1, 1, 1);
-    //        }
-    //        else
-    //        {
-    //            QuLineEdit *le = new QuLineEdit(this);
-    //            le->setObjectName("leInputArgs");
-    //            lo->addWidget(le, layout_row, 0, 1, m_layoutColumnCount - 1);
-    //            target += "&" + le->objectName();
-    //            lo->addWidget(b, layout_row, m_layoutColumnCount - 1, 1, 1);
-    //        }
-    //        target += ")";
-    //        //    b->setTargets(target);
-    //        b->setToolTip(b->targets());
-    //        layout_row++;
-    //    }
-
+    int data_dim = 1;
     if(format == "scalar")
     {
         QuTrendPlot *plot = findChild<QuTrendPlot *>();
-        if(plot)
-            ; //lo->removeWidget(plot);
-        else
+        if(!plot)
         {
             plot = new QuTrendPlot(this, cu_pool, m_ctrl_factory_pool);
             if(findChild<QuSpectrumPlot *>()) /* there's a spectrum plot already */
                 layout_row += plotRowCnt;
             lo->addWidget(plot, layout_row, 0, plotRowCnt, m_layoutColumnCount);
         }
-        //  plot->setContextMenuStrategy(ctx_menu_strat);
         printf("addSource to plto scalar\n");
         plot->addSource(d["src"].toString().c_str());
     }
     else if(format == "vector")
     {
         QuSpectrumPlot *splot = findChild<QuSpectrumPlot *>();
-        if(splot)
-            ; //lo->removeWidget(splot);
-        else
+        if(!splot)
         {
             splot = new QuSpectrumPlot(this, cu_pool, m_ctrl_factory_pool);
             if(findChild<QuTrendPlot *>()) /* there's already a trend plot */
                 layout_row += plotRowCnt;
             lo->addWidget(splot, layout_row, 0, plotRowCnt, m_layoutColumnCount);
         }
-        //splot->setContextMenuStrategy(ctx_menu_strat);
         splot->addSource(d["src"].toString().c_str());
+        data_dim = d["max_dim_x"].toInt();
     }
-    //    foreach(QuLabel *l, findChildren<QuLabel *>())
-    //       delete l;
+
+    printf("\n\e[1;35mCONFIGURE %s writebla %d\e[0m\n", d.toString().c_str(), d["writable"].toInt());
+
+    if(d["writable"].toInt() > 0)
+    {
+        QWidget *wi = ui->gbWriters->findChild<QScrollArea *>()->widget();
+        printf("\e[1;32mcreating writer for %s\e[0m\n",  d["src"].toString().c_str());
+        ui->pbWrite->setChecked(true);
+        Writer *w = new Writer(wi, cu_pool, m_ctrl_factory_pool, data_dim, QString::fromStdString(d["src"].toString()));
+        qobject_cast<QVBoxLayout *>(wi->layout())->addWidget(w);
+    }
 
     CuContextActionBridge *cab = findChild<CuContextActionBridge *>();
     if(cab) delete cab;
@@ -224,11 +192,14 @@ void QumbiaClient::sourcesChanged()
     else
         lo = qobject_cast<QGridLayout *>(ui->widget->layout());
 
-    //  unsetSources();
-
     QStringList srcs = ui->leSrcs->text().split(QRegExp("\\s+"), QString::SkipEmptyParts);
     const int srcCnt = srcs.size();
     const int colSpan = m_layoutColumnCount / srcCnt;
+
+    if(m_oldSrcs.size() == 0) {
+        foreach(QuLabel *l, ui->widget->findChildren<QuLabel *>())
+            delete l;
+    }
 
     QStringList newSrcs;
     foreach(QString s, srcs)
@@ -261,9 +232,7 @@ void QumbiaClient::sourcesChanged()
     QuSpectrumPlot *sp_plot = ui->widget->findChild<QuSpectrumPlot *>();
     if(sp_plot)
     {
-        printf("spectrum plot found!\n");
         QStringList psrcs = sp_plot->sources();
-        printf("spectrum plot got sources %d!\n", psrcs.size());
         foreach(QString s, remSrcs)
         {
             printf("see if has src %s\n", qstoc(s));

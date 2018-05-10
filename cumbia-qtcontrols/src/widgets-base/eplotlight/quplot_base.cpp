@@ -477,8 +477,9 @@ void QuPlotBase::appendData(const QString& curveName, double *x, double *y, int 
     curve->appendData(x, y, size);
     curve->updateRawData();
 
-    if(d->refresh_timeo <= 0)
+    if(d->refresh_timeo <= 0) {
         refresh();
+    }
 }
 
 void QuPlotBase::setData(const QString& curveName, const QVector< double > &xData, const QVector< double > &yData)

@@ -23,10 +23,10 @@ QuPlotAxesComponent::QuPlotAxesComponent(QuPlotBase *plot)
     d->autoscale_map[QwtPlot::yLeft] = true;
     d->autoscale_map[QwtPlot::yRight] = true;
 
-    d->margin[QwtPlot::xBottom] = 0.05;
-    d->margin[QwtPlot::xTop] = 0.05;
-    d->margin[QwtPlot::yLeft] = 0.05;
-    d->margin[QwtPlot::yRight] = 0.05;
+    d->margin[QwtPlot::xBottom] = 0.01;
+    d->margin[QwtPlot::xTop] = 0.01;
+    d->margin[QwtPlot::yLeft] = 0.01;
+    d->margin[QwtPlot::yRight] = 0.01;
 
     d->ub_extra[QwtPlot::xBottom] = 0.0;
     d->ub_extra[QwtPlot::xTop] = 0.0;

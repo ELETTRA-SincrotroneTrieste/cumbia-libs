@@ -148,9 +148,16 @@ int CuInfoDialog::exec(QWidget *sender, CuContextI *sender_cwi)
     {
         QGroupBox *gb = new QGroupBox(r->source(), monitorF);
         gb->setObjectName(r->source() + "_monitor");
-        new QGridLayout(gb);
+        QGridLayout* gblo = new QGridLayout(gb);
         molo->addWidget(gb, monrow, 0, 1, d->layout_col_cnt);
         monrow++;
+
+        // place a label saying "wait for next refresh"
+        QLabel *label = new QLabel(gb);
+        label->setObjectName("l_waitupdate");
+        label->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+        label->setText("waiting for next update...");
+        gblo->addWidget(label, 0, 0, 1, 1);
     }
 
     // live stuff
@@ -203,7 +210,7 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
 {
     double x;
     int row = 0;
-    int locolmax = 6; // layout in 6 columns
+    int locolmax = 7; // layout in 7 columns
     int col = 0;
     CuLinkStats *lis = m_ctxwi->getContext()->getLinkStats();
     findChild<QLineEdit *>("leopcnt")->setText(QString::number(lis->opCnt()));
@@ -218,25 +225,40 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
     d["timestamp_ms"].to<double>(x);
     if(container)
     {
+        QLabel* update_wait_l = container->findChild<QLabel *>("l_waitupdate");
+        if(update_wait_l)
+            delete update_wait_l;
+        QHBoxLayout *vbloread = container->findChild<QHBoxLayout *>("vbloread");
+        QGridLayout *gridlodetails = container->findChild<QGridLayout *>("vblodetails");
+        if(!vbloread) {
+            vbloread = new QHBoxLayout(container);
+            vbloread->setObjectName("vbloread");
+            glo->addLayout(vbloread, 0, 0, 1, 5);
+        }
+        if(!gridlodetails) {
+            gridlodetails = new QGridLayout(container);
+            gridlodetails->setObjectName("vblodetails");
+            glo->addLayout(gridlodetails, 1, 0, 1, 5);
+        }
         QLineEdit *lexv = container->findChild<QLineEdit *>("lexv");
         if(!lexv)
         {
             lexv = new QLineEdit(container); // timestamp
             lexv->setObjectName("lexv");
-            glo->addWidget(lexv, row, 0, 1, 2); // 2 columns!
+            vbloread->addWidget(lexv, 2);
         }
         QLabel *lv = container->findChild<QLabel *>("lv");
         if(!lv) {
             lv = new QLabel("value", container); // monitored value
             lv->setObjectName("lv");
             lv->setAlignment(Qt::AlignRight);
-            glo->addWidget(lv, row, 2, 1, 1);
+            vbloread->addWidget(lv, 1);
         }
         QLineEdit *lev = container->findChild<QLineEdit *>("lev");
         if(!lev) {
             lev = new QLineEdit(container);
             lev->setObjectName("lev");
-            glo->addWidget(lev, row, 3, 1, 1);
+            vbloread->addWidget(lev, 1);
         }
 
         QLabel *lwv = container->findChild<QLabel *>("lwv");
@@ -244,13 +266,13 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
             lwv = new QLabel("write value", container); // monitored value
             lwv->setObjectName("lwv");
             lwv->setAlignment(Qt::AlignRight);
-            glo->addWidget(lwv, row, 4, 1, 1);
+            vbloread->addWidget(lwv, 1);
         }
         QLineEdit *lewv = container->findChild<QLineEdit *>("lewv");
         if(!lewv) {
             lewv = new QLineEdit(container);
             lewv->setObjectName("lewv");
-            glo->addWidget(lewv, row, 5, 1, 1);
+            vbloread->addWidget(lewv, 1);
         }
 
         QString datetime = QDateTime::fromMSecsSinceEpoch(x).toString();
@@ -261,19 +283,17 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
         if(d.containsKey("w_value"))
             container->findChild<QLineEdit *>("lewv")->setText(d["w_value"].toString().c_str());
 
-        row++;
         col = 0;
-
         QMap<QString, QString> map;
         map["activity"] = "Activity: ";
         map["data_format_str"] = "Format: ";
-        map["msg"] = "Message: ";
         map["mode"] = "Mode";
         map["period"] = "Period";
 
+        row = 0;
         foreach(QString k, map.keys())
         {
-            if(!d.containsKey(qstoc(k)))
+            if(!d.containsKey(k.toStdString()))
                 continue;
             if(col % locolmax == 0)
                 col = 0;
@@ -284,14 +304,15 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
             {
                 l = new QLabel(map[k], container);
                 l->setObjectName("l_" + k);
-                glo->addWidget(l, row, col, 1, 1);
+                l->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
+                gridlodetails->addWidget(l, row, col, 1, 1);
             }
             col++;
             QLineEdit *le = container->findChild<QLineEdit *>("le_" + k);
             if(!le) {
                 le = new QLineEdit(container);
                 le->setObjectName("le");
-                glo->addWidget(le, row, col, 1, 1);
+                gridlodetails->addWidget(le, row, col, 1, 1);
             }
             col++;
             le->setText(d[k.toStdString()].toString().c_str());
@@ -302,32 +323,27 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
         }
 
         // message needs more space
-
-        row++;
-        col = 0;
-
-        QLabel *l = container->findChild<QLabel *>("l_msg");
-        if(!l)
-        {
-            l = new QLabel("Message", container);
-            l->setObjectName("l_msg");
-            QFont f = l->font();
-            f.setBold(true);
-            l->setAlignment(Qt::AlignHCenter);
-            l->setFont(f);
-            glo->addWidget(l, row, col, 1, locolmax);
-        }
-
         row++;
         col = 0;
         if(d.containsKey("msg"))
         {
+            QLabel *l = container->findChild<QLabel *>("l_msg");
+            if(!l)
+            {
+                l = new QLabel("Message", container);
+                l->setObjectName("l_msg");
+                QFont f = l->font();
+                f.setBold(true);
+                l->setAlignment(Qt::AlignHCenter);
+                l->setFont(f);
+                gridlodetails->addWidget(l, row, 0, 1, 1);
+            }
             QLineEdit *te = container->findChild<QLineEdit *>("le_msg");
             if(!te)
             {
                 te = new QLineEdit(container);
                 te->setObjectName("le_msg");
-                glo->addWidget(te, row, 0, 1, locolmax);
+                gridlodetails->addWidget(te, row, 1, 1, locolmax - 1);
             }
             te->setText(QString::fromStdString(d["msg"].toString()));
             te->setToolTip(src + ": " + te->text());

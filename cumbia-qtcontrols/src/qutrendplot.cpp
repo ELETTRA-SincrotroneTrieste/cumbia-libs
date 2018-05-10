@@ -66,8 +66,8 @@ void QuTrendPlot::m_init()
     d->auto_configure = true;
     d->read_ok = false;
     setTimeScaleDrawEnabled(true);
-    setUpperBoundExtra(QwtPlot::xBottom, 0.8);
-    setUpperBoundExtra(QwtPlot::xTop, 0.2);
+    setUpperBoundExtra(QwtPlot::xBottom, 0.1);
+    setUpperBoundExtra(QwtPlot::xTop, 0.1);
     d->directPainter = new QwtPlotDirectPainter( this );
     setContextMenuStrategy(new QuPlotBaseContextMenuStrategy());
     if ( QwtPainter::isX11GraphicsSystem() )
@@ -160,10 +160,9 @@ void QuTrendPlot::update(const CuData &da)
         if(!crv)
             addCurve(src, crv = new QuPlotCurve(src));
 
-        d->read_ok &= (da.value().getFormat() == CuVariant::Scalar);
+        const CuVariant &v = da["value"];
+        d->read_ok &= (v.getFormat() == CuVariant::Scalar);
         d->read_ok ? crv->setState(QuPlotCurve::Normal) : crv->setState(QuPlotCurve::Invalid);
-
-        setEnabled(d->read_ok);
 
         if(d->read_ok && da.containsKey("value"))
         {
@@ -173,7 +172,7 @@ void QuTrendPlot::update(const CuData &da)
             else
                 x = crv->size() > 0 ? crv->x(crv->size() - 1) + 1 : 0;
 
-            da["value"].to(y);
+            v.to(y);
             appendData(src, x, y);
         }
     }
@@ -220,18 +219,16 @@ void QuTrendPlot::setShowDateOnTimeAxis(bool en)
  */
 void QuTrendPlot::refresh()
 {
-    bool fullReplot = updateMarker();
+    bool fullReplot = (updateMarker() || curves().size() > 1);
     fullReplot |= updateScales();
     if(fullReplot)
     {
-        //printf("\e[1;32;2mQuTrendPlot: need full REPLOT\e[0m\n");
         QwtPlot::replot();
     }
     else
     {
         foreach(QwtPlotCurve *c, this->curves())
         {
-            //printf("\e[1;34;2mQuTrendPlot.replot() replotting only incremental\e[0m\n");
             QwtSeriesData<QPointF> *data = c->data();
             if(data->size() > 1)
                 d->directPainter->drawSeries(c, data->size() - 2, data->size() -1);

@@ -186,8 +186,6 @@ void QuSpectrumPlot::update(const CuData &da)
         d->read_ok &= (v.isValid() && v.getFormat() == CuVariant::Vector);
         d->read_ok ? crv->setState(QuPlotCurve::Normal) : crv->setState(QuPlotCurve::Invalid);
 
-        setEnabled(d->read_ok);
-
         if(d->read_ok)
         {
             if(da.containsKey("timestamp_ms") && crv)
