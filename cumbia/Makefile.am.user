@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.4.1, 2018-03-06T10:01:17. -->
+<!-- Written by QtCreator 4.5.2, 2018-05-11T11:45:14. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -159,8 +159,10 @@
     <value type="bool" key="Analyzer.Valgrind.TrackOrigins">true</value>
     <value type="QString" key="Analyzer.Valgrind.ValgrindExecutable">valgrind</value>
     <valuelist type="QVariantList" key="Analyzer.Valgrind.VisibleErrorKinds">
-     <value type="int">0</value>
-     <value type="int">1</value>
+     <value type="int">11</value>
+     <value type="int">14</value>
+     <value type="int">12</value>
+     <value type="int">13</value>
      <value type="int">2</value>
      <value type="int">3</value>
      <value type="int">4</value>
@@ -170,10 +172,8 @@
      <value type="int">8</value>
      <value type="int">9</value>
      <value type="int">10</value>
-     <value type="int">11</value>
-     <value type="int">12</value>
-     <value type="int">13</value>
-     <value type="int">14</value>
+     <value type="int">0</value>
+     <value type="int">1</value>
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>

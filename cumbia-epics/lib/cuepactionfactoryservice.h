@@ -22,7 +22,7 @@ public:
 
     virtual ~CuActionFactoryService();
 
-    CuEpicsActionI* registerAction(const std::string& src, const CuEpicsActionFactoryI& f, CumbiaEpics *ct);
+    CuEpicsActionI* registerAction(const std::string& src, const CuEpicsActionFactoryI& f, CumbiaEpics *ce);
 
     CuEpicsActionI *findAction(const std::string &name, CuEpicsActionI::Type at);
 

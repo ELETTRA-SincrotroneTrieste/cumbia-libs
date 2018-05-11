@@ -1,6 +1,7 @@
 #include "cuput.h"
 #include "cumbiaepics.h"
 #include "cuputactivity.h"
+#include "cuepics-world.h"
 #include "cuepactionfactoryservice.h"
 #include "cuepcaservice.h"
 
@@ -21,7 +22,7 @@ class CuEpWriterPrivate
 {
 public:
     std::list<CuDataListener *> listeners;
-    EpSource tsrc;
+    EpSource ep_src;
     CumbiaEpics *cumbia_ep;
     CuActivity *activity;
     bool exit;
@@ -34,7 +35,7 @@ CuPut::CuPut(const EpSource& src,
                      CumbiaEpics *ct)
 {
     d = new CuEpWriterPrivate();
-    d->tsrc = src;
+    d->ep_src = src;
     d->cumbia_ep = ct;
     d->exit = false;
     d->log = CuLog(&d->li);
@@ -59,7 +60,7 @@ void CuPut::onProgress(int step, int total, const CuData &data)
 
 void CuPut::onResult(const CuData &data)
 {
-    cuprintf("CuTWriter.onResult: data received %s\n", data.toString().c_str());
+    cuprintf("CuPut.onResult: data received %s\n", data.toString().c_str());
     std::list<CuDataListener *>::iterator it;
     for(it = d->listeners.begin(); it != d->listeners.end(); ++it)
         (*it)->onUpdate(data);
@@ -68,7 +69,7 @@ void CuPut::onResult(const CuData &data)
     {
         CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_ep->getServiceProvider()
                                                                             ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
-        af->unregisterAction(d->tsrc.getName(), getType());
+        af->unregisterAction(d->ep_src.getName(), getType());
         d->listeners.clear();
         delete this;
     }
@@ -76,14 +77,14 @@ void CuPut::onResult(const CuData &data)
 
 CuData CuPut::getToken() const
 {
-    CuData da("source", d->tsrc.getName());
+    CuData da("source", d->ep_src.getName());
     da["type"] = std::string("writer");
     return da;
 }
 
 EpSource CuPut::getSource() const
 {
-    return d->tsrc;
+    return d->ep_src;
 }
 
 CuEpicsActionI::Type CuPut::getType() const
@@ -115,18 +116,17 @@ void CuPut::start()
     CuEpCAService *df =
             static_cast<CuEpCAService *>(d->cumbia_ep->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType)));
-    CuData at("src", d->tsrc.getName()); /* activity token */
-    at["ioc"] = d->tsrc.getIOC();
-    at["pv"] = d->tsrc.getPV();
+    CuData at("src", d->ep_src.getName()); /* activity token */
+    at["ioc"] = d->ep_src.getIOC();
+    at["pv"] = d->ep_src.getPV();
     at["activity"] = "writer";
     at["write_value"] = d->write_val;
-    at["pv"] = (d->tsrc.getType() == EpSource::PV);
-    CuData tt("ioc", d->tsrc.getIOC()); /* thread token */
+    CuData tt("ioc", d->ep_src.getIOC()); /* thread token */
     d->activity = new CuPutActivity(at, df);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_ep->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_ep->getThreadFactoryImpl());
     d->cumbia_ep->registerActivity(d->activity, this, tt, fi, bf);
-    cuprintf("> CuTWriter.start writer %p thread 0x%lx ACTIVITY %p\n", this, pthread_self(), d->activity);
+    cuprintf("> CuPut.start writer %p thread 0x%lx ACTIVITY %p\n", this, pthread_self(), d->activity);
 }
 
 void CuPut::stop()

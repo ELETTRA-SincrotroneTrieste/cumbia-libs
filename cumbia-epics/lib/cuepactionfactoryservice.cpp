@@ -41,7 +41,7 @@ CuActionFactoryService::~CuActionFactoryService()
  */
 CuEpicsActionI* CuActionFactoryService::registerAction(const std::string& src,
                                                        const CuEpicsActionFactoryI& f,
-                                                       CumbiaEpics* ct)
+                                                       CumbiaEpics* ce)
 {
     CuEpicsActionI* action = NULL;
     std::lock_guard<std::mutex> lock(d->mutex);
@@ -52,7 +52,7 @@ CuEpicsActionI* CuActionFactoryService::registerAction(const std::string& src,
 
     if(it == d->actions.end())
     {
-        action = f.create(src, ct);
+        action = f.create(src, ce);
         d->actions.push_back(action);
     }
     return action;

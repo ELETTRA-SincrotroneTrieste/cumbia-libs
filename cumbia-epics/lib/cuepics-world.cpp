@@ -284,6 +284,7 @@ int create_pvs (CuPV* pvs, int nPvs, caCh *pCB)
                                     &pvs[n],
                                     caPriority,
                                     &pvs[n].ch_id);
+        printf("\e[1;33mcreate_pvs called now created pv %ld with channel id %ld\e[0m\n", n, pvs[n].ch_id);
         if (result != ECA_NORMAL) {
             fprintf(stderr, "CA error %s occurred while trying "
                             "to create channel '%s'.\n", ca_message(result), pvs[n].name);

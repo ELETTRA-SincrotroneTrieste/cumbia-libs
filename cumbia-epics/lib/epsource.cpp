@@ -32,13 +32,10 @@ string EpSource::getIOC() const
 
 string EpSource::getPV() const
 {
-    string p;
-    size_t pos = m_s.find(":");
+    size_t pos = m_s.find("(");
     if(pos == string::npos)
-        perr("EPsource.getPV: error: missing \":\" separator");
-    else
-        p = m_s.substr(pos + 1, m_s.find('(') - pos - 1); /* exclude args */
-    return p;
+        return m_s;
+    return m_s.substr(0, pos); /* exclude args */
 }
 
 string EpSource::getField() const

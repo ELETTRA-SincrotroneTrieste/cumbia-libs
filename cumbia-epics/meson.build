@@ -58,7 +58,7 @@ sources = [
 
 includedirs = include_directories('lib')
 
-cpp_arguments = '-DCUMBIA_PRINT=1'
+cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1'
 
 deps = [dependency('epics-base-linux-x86_64'), dependency('epics-base'), dependency('cumbia')]
 

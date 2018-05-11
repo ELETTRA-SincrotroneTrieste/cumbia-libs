@@ -2,6 +2,7 @@
 #define CUWRITEACTIVITY_H
 
 #include <cuisolatedactivity.h>
+#include <cadef.h>
 
 class CuEpCAService;
 class CuPutActivityPrivate;
@@ -13,6 +14,12 @@ public:
                     CuEpCAService *df);
 
     virtual ~CuPutActivity();
+
+    static void exception_handler_cb ( struct exception_handler_args excargs );
+
+
+    void exception_handler ( struct exception_handler_args excargs );
+
 
     // CuActivity interface
 public:
@@ -26,6 +33,7 @@ protected:
 
 private:
     CuPutActivityPrivate *d;
+    void m_setTokenError(const char *msg, CuData &d);
 };
 
 #endif // CUWRITEACTIVITY_H
