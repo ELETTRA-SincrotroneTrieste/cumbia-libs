@@ -64,14 +64,14 @@ void CumbiaTango::addAction(const std::__cxx11::string &source, CuDataListener *
                 static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
 
         CuTangoActionI *a = af->findActive(source, f.getType());
-        if(!a)
-        {
+        if(!a) {
             a = af->registerAction(source, f, this);
             a->start();
         }
-        else
-            pinfo("CumbiaTango.addAction: action %p already found for source \"%s\" and type %d thread 0x%lx\n",
-                  a, source.c_str(), f.getType(), pthread_self());
+        else {
+            cuprintf("CumbiaTango.addAction: action %p already found for source \"%s\" and type %d thread 0x%lx TYPE %d\n",
+                  a, source.c_str(), f.getType(), pthread_self(), f.getType());
+        }
         a->addDataListener(l);
     }
     else

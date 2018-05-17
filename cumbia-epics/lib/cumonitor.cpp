@@ -30,6 +30,7 @@ public:
 
     int period;
     CuMonitor::RefreshMode refresh_mode;
+    CuData property_d, value_d;
 };
 
 CuMonitor::CuMonitor(const EpSource& src, CumbiaEpics *ct) : CuEpicsActionI()
@@ -60,7 +61,6 @@ void CuMonitor::onProgress(int step, int total, const CuData &data)
  */
 void CuMonitor::onResult(const CuData &data)
 {
-    printf("CuMonitor.onResult: data received %s THREAD 0x%lx\n", data.toString().c_str(), pthread_self());
     std::list<CuDataListener *>::iterator it;
     for(it = d->listeners.begin(); it != d->listeners.end(); ++it)
         (*it)->onUpdate(data);
@@ -72,8 +72,8 @@ void CuMonitor::onResult(const CuData &data)
      */
     if(d->exit && data["exit"].toBool() && data["activity"] == d->current_activity->getToken()["activity"])
     {
-        CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_e->getServiceProvider()
-                                                                            ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
+        CuEpicsActionFactoryService * af = static_cast<CuEpicsActionFactoryService *>(d->cumbia_e->getServiceProvider()
+                                                                            ->get(static_cast<CuServices::Type>(CuEpicsActionFactoryService::CuActionFactoryServiceType)));
         af->unregisterAction(d->tsrc.getName(), getType());
         d->listeners.clear();
         delete this;
@@ -118,6 +118,10 @@ void CuMonitor::getData(CuData &d_inout) const
         d_inout["period"] = d->period;
     if(d_inout.containsKey("refresh_mode"))
         d_inout["refresh_mode"] = d->refresh_mode;
+    if(d_inout["cache"].toString() == std::string("property"))
+        d_inout = d->property_d;
+    else if(d_inout["cache"].toString() == std::string("value"))
+        d_inout = d->value_d;
 }
 
 void CuMonitor::setRefreshMode(CuMonitor::RefreshMode rm)
@@ -189,7 +193,6 @@ void CuMonitor::m_startMonitorActivity()
             static_cast<CuEpCAService *>(d->cumbia_e->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType)));
     CuData at("src", d->tsrc.getName()); /* activity token */
-    at["ioc"] = d->tsrc.getIOC();
     at["pv"] = d->tsrc.getPV();
     at["activity"] = "monitor";
     at["is_pv"] = (d->tsrc.getType() == EpSource::PV);
@@ -204,3 +207,9 @@ void CuMonitor::m_startMonitorActivity()
              this, pthread_self(), d->current_activity, d->current_activity->getFlags());
 }
 
+
+
+bool CuMonitor::exiting() const
+{
+    return d->exit;
+}

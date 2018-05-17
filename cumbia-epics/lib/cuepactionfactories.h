@@ -52,20 +52,18 @@ private:
     CuVariant m_write_val;
 };
 
-class CuEpicsAttConfFactory : public CuEpicsActionFactoryI
+class CuEpicsPropertyFactory : public CuEpicsActionFactoryI
 {
 public:
-    CuEpicsAttConfFactory();
+    CuEpicsPropertyFactory();
 
-    virtual ~CuEpicsAttConfFactory() {}
+    virtual ~CuEpicsPropertyFactory() {}
 
-    void fetchAttributeHistory(bool fetch);
-
-    void setDesiredAttributeProperties(const std::vector<std::string> props);
+    void setDesiredPVProperties(const std::vector<std::string> props);
 
     // CuEpicsActionFactoryI interface
 public:
-    CuEpicsActionI *create(const std::string &s, CumbiaEpics *ct) const;
+    CuEpicsActionI *create(const std::string &s, CumbiaEpics *ce) const;
 
     CuEpicsActionI::Type getType() const;
 

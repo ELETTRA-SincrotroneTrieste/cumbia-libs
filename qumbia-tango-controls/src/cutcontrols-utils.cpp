@@ -31,7 +31,6 @@ QString CuTControlsUtils::replaceWildcards(const QString &s, const QStringList &
     QStringList devs;
     for (int i = 1; i < args.size(); i++)
     {
-        cuprintf("See ifArgument %s matches regexp\n", qstoc(args[i]));
        if(QRegExp(DEVICE_REGEXP).exactMatch(args[i]))
        {
             devs << (args[i]);
@@ -40,6 +39,5 @@ QString CuTControlsUtils::replaceWildcards(const QString &s, const QStringList &
     if (!s.isEmpty() && (s.contains("$")))
         for (int i = devs.size() - 1; i >= 0; i--)
             ret.replace(QString("$%1").arg(i+1), devs[i]);
-    cuprintf("CuTControlsUtils::replaceWildcards: %s --> %s\n", qstoc(s), qstoc(ret));
     return ret;
 }

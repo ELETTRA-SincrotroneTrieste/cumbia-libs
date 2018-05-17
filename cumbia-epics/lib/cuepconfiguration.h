@@ -3,7 +3,7 @@
 
 #include <cuepactioni.h>
 
-class CuTAttConfigurationPrivate;
+class CuEpConfigurationPrivate;
 
 class CuEpConfiguration : public CuEpicsActionI
 {
@@ -14,7 +14,7 @@ public:
 
     virtual ~CuEpConfiguration();
 
-    void setDesiredAttributeProperties(const std::vector<std::string> props);
+    void setDesiredPVProperties(const std::vector<std::string> props);
 
     // CuThreadListener interface
 public:
@@ -33,9 +33,9 @@ public:
     size_t dataListenersCount();
     void start();
     void stop();
-
+    bool exiting() const;
 private:
-    CuTAttConfigurationPrivate *d;
+    CuEpConfigurationPrivate *d;
 };
 
 #endif // CUTATTCONFIGURATION_H

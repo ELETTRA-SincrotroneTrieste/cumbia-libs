@@ -103,11 +103,19 @@ void CuEpControlsReader::getData(CuData &d_ino) const
 void CuEpControlsReader::setSource(const QString &s)
 {
     CuEpControlsUtils tcu;
- //   CuEpicsAttConfFactory acf;
+    CuEpicsPropertyFactory acf;
     CuEpicsReaderFactory readf;
     readf.setOptions(d->read_options);
-  //  acf.setDesiredAttributeProperties(d->attr_props);
+  //  acf.setDesiredPVProperties(d->attr_props);
     d->source = tcu.replaceWildcards(s, qApp->arguments());
- //   d->cumbia_ep->addAction(d->source.toStdString(), d->tlistener, acf);
-    d->cumbia_ep->addAction(d->source.toStdString(), d->tlistener, readf);
+    bool found = d->cumbia_ep->addAction(d->source.toStdString(), d->tlistener, readf);
+    if(found) {
+        printf("\e[0;32m*\n* a n action has already been found for source %s and type %d, we must \e[1;36;4mCAGET\e[0m\n",
+               qstoc(s), readf.getType());
+        d->cumbia_ep->addAction(d->source.toStdString(), d->tlistener, acf);
+    }
+    else {
+        printf("\e[1;32m*\n* a nEW action has  been FRESHLY CREATED for source %s and type %d\e[0m\n",
+               qstoc(s), readf.getType());
+    }
 }

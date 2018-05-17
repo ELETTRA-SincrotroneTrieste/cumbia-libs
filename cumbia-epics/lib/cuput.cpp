@@ -25,10 +25,11 @@ public:
     EpSource ep_src;
     CumbiaEpics *cumbia_ep;
     CuActivity *activity;
-    bool exit;
+    bool exiting;
     CuConLogImpl li;
     CuLog log;
     CuVariant write_val;
+    CuData property_d, value_d;
 };
 
 CuPut::CuPut(const EpSource& src,
@@ -37,7 +38,7 @@ CuPut::CuPut(const EpSource& src,
     d = new CuEpWriterPrivate();
     d->ep_src = src;
     d->cumbia_ep = ct;
-    d->exit = false;
+    d->exiting = false;
     d->log = CuLog(&d->li);
 }
 
@@ -60,15 +61,16 @@ void CuPut::onProgress(int step, int total, const CuData &data)
 
 void CuPut::onResult(const CuData &data)
 {
-    cuprintf("CuPut.onResult: data received %s\n", data.toString().c_str());
+    d->exiting = data["exit"].toBool();
     std::list<CuDataListener *>::iterator it;
     for(it = d->listeners.begin(); it != d->listeners.end(); ++it)
         (*it)->onUpdate(data);
 
-    if(data["exit"].toBool())
+
+    if(d->exiting)
     {
-        CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_ep->getServiceProvider()
-                                                                            ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
+        CuEpicsActionFactoryService * af = static_cast<CuEpicsActionFactoryService *>(d->cumbia_ep->getServiceProvider()
+                                                                            ->get(static_cast<CuServices::Type>(CuEpicsActionFactoryService::CuActionFactoryServiceType)));
         af->unregisterAction(d->ep_src.getName(), getType());
         d->listeners.clear();
         delete this;
@@ -117,11 +119,10 @@ void CuPut::start()
             static_cast<CuEpCAService *>(d->cumbia_ep->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType)));
     CuData at("src", d->ep_src.getName()); /* activity token */
-    at["ioc"] = d->ep_src.getIOC();
     at["pv"] = d->ep_src.getPV();
     at["activity"] = "writer";
     at["write_value"] = d->write_val;
-    CuData tt("ioc", d->ep_src.getIOC()); /* thread token */
+    CuData tt("pv", d->ep_src.getPV()); /* thread token */
     d->activity = new CuPutActivity(at, df);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_ep->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_ep->getThreadFactoryImpl());
@@ -131,7 +132,7 @@ void CuPut::start()
 
 void CuPut::stop()
 {
-
+    d->exiting = true;
 }
 
 void CuPut::sendData(const CuData& )
@@ -141,6 +142,10 @@ void CuPut::sendData(const CuData& )
 
 void CuPut::getData(CuData &d_inout) const
 {
-
+   d_inout = CuData();
 }
 
+bool CuPut::exiting() const
+{
+    return d->exiting;
+}

@@ -11,22 +11,22 @@ class CuEpicsActionFactoryI;
 class CumbiaEpics;
 class CuDataListener;
 
-class CuActionFactoryServicePrivate;
+class CuEpicsActionFactoryServicePrivate;
 
-class CuActionFactoryService : public CuServiceI
+class CuEpicsActionFactoryService : public CuServiceI
 {
 public:
     enum Type { CuActionFactoryServiceType = CuServices::User + 21 };
 
-    CuActionFactoryService();
+    CuEpicsActionFactoryService();
 
-    virtual ~CuActionFactoryService();
+    virtual ~CuEpicsActionFactoryService();
 
     CuEpicsActionI* registerAction(const std::string& src, const CuEpicsActionFactoryI& f, CumbiaEpics *ce);
 
-    CuEpicsActionI *findAction(const std::string &name, CuEpicsActionI::Type at);
+    CuEpicsActionI *find(const std::string &name, CuEpicsActionI::Type at);
 
-    CuEpicsActionI *findAction(const std::string& src, CuEpicsActionI::Type at, CuDataListener *l);
+    CuEpicsActionI *findActive(const std::string &src, CuEpicsActionI::Type at);
 
     std::string getLastError() const;
 
@@ -41,7 +41,7 @@ public:
     CuServices::Type getType() const;
 
 private:
-    CuActionFactoryServicePrivate *d;
+    CuEpicsActionFactoryServicePrivate *d;
 };
 
 #endif // DEVICEFACTORYSERVICE_H

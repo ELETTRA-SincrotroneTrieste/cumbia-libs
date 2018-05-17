@@ -91,14 +91,12 @@ void CuPutActivity::execute()
             wval.dataFormatStr(wval.getFormat()).c_str(), wval.dataTypeStr(wval.getType()).c_str());
 
     CuPV* pvs;
-    void *pbuf;
-    char *cbuf;
     EpicsStr *sbuf;
     chtype dbrType = DBR_STRING;
-    int count;
+    size_t count;
     int nPvs = 1;
     double caTimeout = d->default_timeout; // Wait time, specifies CA timeout, default is  d->default_timeout
-    epicsEventId epId = epicsEventCreate(epicsEventEmpty);  /* Create empty EPICS event (semaphore) */
+ //   epicsEventId epId = epicsEventCreate(epicsEventEmpty);  /* Create empty EPICS event (semaphore) */
 
     if(at.containsKey("ca_timeout") && at["ca_timeout"].toDouble() >= 0)
         caTimeout = at["ca_timeout"].toDouble();
@@ -122,10 +120,7 @@ void CuPutActivity::execute()
         else {
             memset(pvs[0].name, 0, 256);
             strncpy(pvs[0].name, at["pv"].toString().c_str(), 255);
-            printf("\e[1;33mCHANNEL ID %ld\e[0m\n", pvs[0].ch_id);
-            result =  connect_pvs(pvs, nPvs);
-            printf("\e[1;33mCHANNEL ID AFTER CONNECT %ld dbrType %ld dbfType %ld\e[0m\n", pvs[0].ch_id,
-                    pvs[0].dbrType, pvs[0].dbfType);
+            result =  CuEpicsWorld().connect_pvs(pvs, nPvs);
             if (result) {
                 snprintf(msg, 256, "CuPutActivity.execute: connect_pvs failed for \"%s\"", pvs[0].name);
                 m_setTokenError(msg, at);
@@ -151,14 +146,10 @@ void CuPutActivity::execute()
                            strncpy(sbuf[i], vi.c_str(), sizeof(EpicsStr));
                         }
                     }
-                    for( size_t i = 0; i < count; i++) {
-                        printf("will write %s [%d] sbuf %p\n", sbuf[i], i, sbuf);
-                    }
+
 
                     // we are already running in a separate thread. use ca_array_put, not ca_array_put_callback
                     result = ca_array_put(dbrType, count, pvs[0].ch_id, sbuf);
-                    printf("\e[1;32mresult of ca_put dbrType %d count %d ch_id %ld sbuf %p\e[0m\n",
-                           dbrType, count,pvs[0].ch_id, sbuf);
 
                     if (result == ECA_TIMEOUT) {
                         snprintf(msg, 256, "CuPutActivity.execute: operation on %s [value: %s] unsuccessful: data was not written",

@@ -32,7 +32,7 @@ public:
 
     virtual ~CuEpicsActionI() {}
 
-    enum Type { Reader = 0, Writer, MultiReader, MultiWriter, AttConfig };
+    enum Type { Reader = 0, Writer, MultiReader, MultiWriter, PropConfig };
 
     virtual EpSource getSource() const  = 0;
 
@@ -52,6 +52,7 @@ public:
 
     virtual void getData(CuData& d_inout) const = 0;
 
+    virtual bool exiting() const = 0;
 };
 
 #endif // CUEPICSACTIONI_H

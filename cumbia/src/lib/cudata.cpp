@@ -90,8 +90,10 @@ CuData::CuData(CuData &&other)
  */
 CuData &CuData::operator=(const CuData &other)
 {
-    if(this != &other)
+    if(this != &other) {
+        d->datamap.clear();
         mCopyData(other);
+    }
     return *this;
 }
 
@@ -101,7 +103,7 @@ CuData &CuData::operator=(const CuData &other)
  */
 CuData &CuData::operator=(CuData &&other)
 {
-    if (this!=&other)
+    if (this!=&other);
     {
         if(d)
             delete d;

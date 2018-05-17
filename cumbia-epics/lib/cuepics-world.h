@@ -55,8 +55,15 @@
 class CuMonitorActivity;
 
 /* Structure representing one PV (= channel) */
-typedef struct
+class CuPV
 {
+public:
+    CuPV(const char *name);
+
+    ~CuPV();
+
+    void realloc_value();
+
     char name[256];
     chid  ch_id;
     long  dbfType;
@@ -70,23 +77,23 @@ typedef struct
     char firstStampPrinted;
     char onceConnected;
     CuMonitorActivity *monitor_activity;
-} CuPV;
+};
 
 
-extern int tsSrcServer;     /* Timestamp source flag (-t option) */
-extern int tsSrcClient;     /* Timestamp source flag (-t option) */
-extern int enumAsNr;        /* Used for -n option (get DBF_ENUM as number) */
-extern int charArrAsStr;    /* used for -S option - treat char array as (long) string */
-extern double caTimeout;    /* Wait time default (see -w option) */
-extern char dblFormatStr[]; /* Format string to print doubles (see -e -f option) */
-extern char fieldSeparator; /* Output field separator */
-extern capri caPriority;    /* CA priority */
+//extern int tsSrcServer;     /* Timestamp source flag (-t option) */
+//extern int tsSrcClient;     /* Timestamp source flag (-t option) */
+//extern int enumAsNr;        /* Used for -n option (get DBF_ENUM as number) */
+//extern int charArrAsStr;    /* used for -S option - treat char array as (long) string */
+//extern double caTimeout;    /* Wait time default (see -w option) */
+//extern char dblFormatStr[]; /* Format string to print doubles (see -e -f option) */
+//extern char fieldSeparator; /* Output field separator */
+//extern capri caPriority;    /* CA priority */
 
-extern char *val2str (const void *v, unsigned type, int index);
-extern char *dbr2str (const void *value, unsigned type);
-extern void print_time_val_sts (CuPV *CuPV, unsigned long reqElems);
-extern int  create_pvs (CuPV *pvs, int nPvs, caCh *pCB );
-extern int  connect_pvs (CuPV *pvs, int nPvs );
+//extern char *val2str (const void *v, unsigned type, int index);
+//extern char *dbr2str (const void *value, unsigned type);
+//extern void print_time_val_sts (CuPV *CuPV, unsigned long reqElems);
+//extern
+//extern
 
 
 
@@ -96,15 +103,14 @@ class CuActivity;
 class CuEpicsWorld
 {
 public:
+
+    enum CaGetMode { DbrCtrl, DbrTime };
+
     CuEpicsWorld();
 
     virtual ~CuEpicsWorld();
 
-    std::string getLastMessage() const;
-
     void fillThreadInfo(CuData &d, const CuActivity *a);
-
-    bool error() const;
 
     bool source_valid(const std::string &s) const;
 
@@ -116,11 +122,21 @@ public:
 
     template <class T> void putCtrlData(void* ep_data, CuData& d) const;
 
+    void caget(const std::string &src, CuData& prop_res, CuData &value_res, double timeout = DEFAULT_CA_TIMEOUT);
+
     void setSrcPatterns(const std::vector<std::string> &p);
 
     std::vector<std::string> srcPatterns() const;
 
+    int  create_pvs (CuPV *pvs, int nPvs, caCh *pCB );
+
+    int  connect_pvs (CuPV *pvs, int nPvs );
+
 private:
+
+    bool m_ep_caget(CuPV *pv, CuData& res, CaGetMode cagetMode, double timeout);
+
+    std::string m_get_timestamp();
 
     CuEpicsWorldPrivate *d;
 

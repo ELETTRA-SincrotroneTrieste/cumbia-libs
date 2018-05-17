@@ -16,9 +16,7 @@ public:
     EpSource(const std::string s);
     EpSource(const EpSource& other);
 
-    string getIOC() const;
     string getPV() const;
-    string getField() const;
     string getName() const;
 
     std::vector<string> getArgs() const;

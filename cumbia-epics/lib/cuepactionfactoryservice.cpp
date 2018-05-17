@@ -10,7 +10,7 @@
 #include <mutex>
 #include <cumacros.h>
 
-class CuActionFactoryServicePrivate
+class CuEpicsActionFactoryServicePrivate
 {
 public:
     std::list<CuEpicsActionI * > actions;
@@ -20,14 +20,14 @@ public:
     CuLogImplI *logImpl;
 };
 
-CuActionFactoryService::CuActionFactoryService()
+CuEpicsActionFactoryService::CuEpicsActionFactoryService()
 {
-    d = new CuActionFactoryServicePrivate;
+    d = new CuEpicsActionFactoryServicePrivate;
     d->logImpl = new CuConLogImpl;
     d->log = new CuLog(d->logImpl);
 }
 
-CuActionFactoryService::~CuActionFactoryService()
+CuEpicsActionFactoryService::~CuEpicsActionFactoryService()
 {
     pdelete("~CuActionFactoryService %p", this);
     delete d->logImpl;
@@ -39,7 +39,7 @@ CuActionFactoryService::~CuActionFactoryService()
  * same source, different CuEpicsActionI type: two distinct actions.
  * Share actions of the same type among same sources.
  */
-CuEpicsActionI* CuActionFactoryService::registerAction(const std::string& src,
+CuEpicsActionI* CuEpicsActionFactoryService::registerAction(const std::string& src,
                                                        const CuEpicsActionFactoryI& f,
                                                        CumbiaEpics* ce)
 {
@@ -58,7 +58,7 @@ CuEpicsActionI* CuActionFactoryService::registerAction(const std::string& src,
     return action;
 }
 
-CuEpicsActionI *CuActionFactoryService::findAction(const string &src, CuEpicsActionI::Type at)
+CuEpicsActionI *CuEpicsActionFactoryService::find(const string &src, CuEpicsActionI::Type at)
 {
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuEpicsActionI *>::iterator it;
@@ -68,12 +68,22 @@ CuEpicsActionI *CuActionFactoryService::findAction(const string &src, CuEpicsAct
     return NULL;
 }
 
-string CuActionFactoryService::getLastError() const
+CuEpicsActionI *CuEpicsActionFactoryService::findActive(const string &src, CuEpicsActionI::Type at)
+{
+    std::lock_guard<std::mutex> lock(d->mutex);
+    std::list<CuEpicsActionI *>::iterator it;
+    for(it = d->actions.begin(); it != d->actions.end(); ++it)
+        if((*it)->getType() == at && (*it)->getSource().getName() == src && !(*it)->exiting())
+            return (*it);
+    return NULL;
+}
+
+string CuEpicsActionFactoryService::getLastError() const
 {
     return d->lastError;
 }
 
-void CuActionFactoryService::unregisterAction(const string &src, CuEpicsActionI::Type at)
+void CuEpicsActionFactoryService::unregisterAction(const string &src, CuEpicsActionI::Type at)
 {
     cuprintf("\e[1;31mCuActionFactoryService::unregisterAction for src %s and type %d\e[0m\n",
            src.c_str(), at);
@@ -85,7 +95,7 @@ void CuActionFactoryService::unregisterAction(const string &src, CuEpicsActionI:
             it = d->actions.erase(it);
 }
 
-void CuActionFactoryService::deleteActions()
+void CuEpicsActionFactoryService::deleteActions()
 {
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuEpicsActionI *>::iterator it = d->actions.begin();
@@ -98,22 +108,13 @@ void CuActionFactoryService::deleteActions()
     }
 }
 
-CuEpicsActionI *CuActionFactoryService::findAction(const std::string& src, CuEpicsActionI::Type at, CuDataListener *l)
-{
-    std::lock_guard<std::mutex> lock(d->mutex);
-    std::list<CuEpicsActionI *>::iterator it;
-    for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == at && (*it)->getSource().getName() == src)
-            return (*it);
-    return NULL;
-}
 
-std::string CuActionFactoryService::getName() const
+std::string CuEpicsActionFactoryService::getName() const
 {
     return std::string("DeviceFactory");
 }
 
-CuServices::Type CuActionFactoryService::getType() const
+CuServices::Type CuEpicsActionFactoryService::getType() const
 {
     return static_cast<CuServices::Type >(CuActionFactoryServiceType);
 }

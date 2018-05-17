@@ -254,88 +254,6 @@ char *dbr2str (const void *value, unsigned type)
     return str;
 }
 
-/*+**************************************************************************
- *
- * Function:	create_pvs
- *
- * Description:	Creates an arbitrary number of PVs
- *
- * Arg(s) In:	pvs   -  Pointer to an array of pv structures
- *              nPvs  -  Number of elements in the pvs array
- *              pCB   -  Connection state change callback
- *
- * Arg(s) Out:	none
- *
- * Return(s):	Error code:
- *                  0  -  All PVs created
- *                  1  -  Some PV(s) not created
- *
- **************************************************************************-*/
-
-int create_pvs (CuPV* pvs, int nPvs, caCh *pCB)
-{
-    int n;
-    int result;
-    int returncode = 0;
-    /* Issue channel connections */
-    for (n = 0; n < nPvs; n++) {
-        result = ca_create_channel (pvs[n].name,
-                                    pCB,
-                                    &pvs[n],
-                                    caPriority,
-                                    &pvs[n].ch_id);
-        printf("\e[1;33mcreate_pvs called now created pv %ld with channel id %ld\e[0m\n", n, pvs[n].ch_id);
-        if (result != ECA_NORMAL) {
-            fprintf(stderr, "CA error %s occurred while trying "
-                            "to create channel '%s'.\n", ca_message(result), pvs[n].name);
-            pvs[n].status = result;
-            returncode = 1;
-        }
-    }
-
-    return returncode;
-}
-
-
-/*+**************************************************************************
- *
- * Function:	connect_pvs
- *
- * Description:	Connects an arbitrary number of PVs
- *
- * Arg(s) In:	pvs   -  Pointer to an array of pv structures
- *              nPvs  -  Number of elements in the pvs array
- *
- * Arg(s) Out:	none
- *
- * Return(s):	Error code:
- *                  0  -  All PVs connected
- *                  1  -  Some PV(s) not connected
- *
- **************************************************************************-*/
-
-int connect_pvs (CuPV* pvs, int nPvs)
-{
-    int returncode = create_pvs ( pvs, nPvs, 0);
-    if ( returncode == 0 ) {
-        /* Wait for channels to connect */
-        int result = ca_pend_io (caTimeout);
-        if (result == ECA_TIMEOUT)
-        {
-            if (nPvs > 1)
-            {
-                fprintf(stderr, "Channel connect timed out: some PV(s) not found.\n");
-            } else {
-                fprintf(stderr, "Channel connect timed out: '%s' not found.\n",
-                        pvs[0].name);
-            }
-            returncode = 1;
-        }
-    }
-    return returncode;
-}
-
-
 class CuEpicsWorldPrivate
 {
 public:
@@ -356,11 +274,6 @@ CuEpicsWorld::~CuEpicsWorld()
     delete d;
 }
 
-std::string CuEpicsWorld::getLastMessage() const
-{
-    return d->message;
-}
-
 void CuEpicsWorld::fillThreadInfo(CuData &dat, const CuActivity* a)
 {
     char info[32];
@@ -368,11 +281,6 @@ void CuEpicsWorld::fillThreadInfo(CuData &dat, const CuActivity* a)
     dat["worker_thread"] = std::string(info);
     sprintf(info, "%p", a);
     dat["worker_activity"] = std::string(info);
-}
-
-bool CuEpicsWorld::error() const
-{
-    return d->error;
 }
 
 bool CuEpicsWorld::source_valid(const std::string &s) const
@@ -383,10 +291,9 @@ bool CuEpicsWorld::source_valid(const std::string &s) const
 void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
 {
     size_t i;
+    std::string msg;
+    bool error = false;
     void *val_ptr = dbr_value_ptr(pv->value, pv->dbrType);
-
-    d->error = false;
-    d->message = "";
 
     da["data_type"] = pv->dbrType;
     da["data_type_str"] = dbr_type_to_text(pv->dbrType);
@@ -400,10 +307,11 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
 
     da["writable"] = static_cast<int>(ca_write_access(pv->ch_id));
 
-    /* event type can be property (ctrl) or value update */
+    /* event type can be   (ctrl) or value update */
     if(dbr_type_is_CTRL(pv->dbrType))
     {
         da["type"] = "property";
+        da["dim_x"] = static_cast<long int>(pv->nElems);
         /* metadata */
         switch (pv->dbrType)
         {
@@ -427,8 +335,8 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
             break;
         case DBR_CTRL_STRING:
         default:
-            da["msg"] = "CuEpicsWorld.extractData: unsupported DBR_CTRL type " + std::to_string(pv->dbrType);
-            da["err"] = true;
+            msg = "CuEpicsWorld.extractData: unsupported DBR_CTRL type " + std::to_string(pv->dbrType);
+            error = true;
         }
     }
     else
@@ -468,8 +376,8 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
                 putTimestamp<dbr_time_double>( pv->value, da);
                 break;
             default:
-                d->error = true;
-                d->message = "CuEpicsWorld.extractData: cannot convert type %d" + std::to_string(pv->dbrType);
+                error = true;
+                msg = "CuEpicsWorld.extractData: cannot convert type %d" + std::to_string(pv->dbrType);
                 break;
             }
         }
@@ -540,15 +448,17 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
             }
             else
             {
-                d->error = true;
-                d->message = "CuEpicsWorld.extractData: cannot convert type %d" + std::to_string(pv->dbrType);
+                error = true;
+                msg = "CuEpicsWorld.extractData: cannot convert type %d" + std::to_string(pv->dbrType);
             }
         }
     }
 
-    if(!d->error)
-        d->message = da["src"].toString() + " [" + da["timestamp_str"].toString() + "] STAT: " + da["status"].toString()
+    if(!error)
+        msg = da["src"].toString() + " [" + da["timestamp_str"].toString() + "] STAT: " + da["status"].toString()
                 + " SEV: " + da["severity"].toString();
+    da["err"] = error;
+    da["msg"] = msg;
 }
 
 /** \brief fills the input CuData with exception information.
@@ -582,6 +492,115 @@ std::string CuEpicsWorld::extractException(exception_handler_args excargs, CuDat
     return s;
 }
 
+bool CuEpicsWorld::m_ep_caget(CuPV *pv, CuData &res, CaGetMode cagetMode, double timeout)
+{
+    bool success = true;
+    int result;
+    char msg[256];
+    pv->dbfType = ca_field_type(pv->ch_id);
+    pv->nElems = ca_element_count(pv->ch_id);
+
+    if (dbr_type_is_ENUM(pv->dbrType) && cagetMode == DbrTime)
+        pv->dbrType = DBR_TIME_STRING;
+    else if(cagetMode == DbrTime)
+        pv->dbrType = dbf_type_to_DBR_TIME(pv->dbfType);
+    else if(cagetMode == DbrCtrl)
+        pv->dbrType = dbf_type_to_DBR_CTRL(pv->dbfType);
+
+    // when pv->dbrType is determined, allocate space for pv->value
+    pv->realloc_value();
+
+    if(!pv->value) {
+        success = false;
+        snprintf(msg, 256, "CuEpicsWorld.m_ep_caget error allocating %d bytes for \"%s\" value",
+                 dbr_size_n(pv->dbrType, pv->nElems), pv->name);
+        res["msg"] = std::string(msg);
+    }
+    else { // memory alloc ok for value
+
+        if(ca_state(pv->ch_id) == cs_conn) {
+            pv->onceConnected = 1;
+            result = ca_array_get(pv->dbrType, pv->nElems, pv->ch_id, pv->value);
+            pv->status = result;
+        }
+        else {
+            pv->status = ECA_DISCONN;
+            success = false;
+        }
+        result = ca_pend_io(timeout);
+        if(result == ECA_TIMEOUT) {
+            success = false;
+            snprintf(msg, 256, "CuEpicsWorld.m_ep_caget timeout (>%f seconds) while reading \"%s\"",
+                     timeout, pv->name);
+            res["msg"] = std::string(msg);
+        }
+
+    }
+    res["err"] = !success;
+    if(success) {
+        time_t now;
+        time(&now);
+        snprintf(msg, 256, " successfully read \"%s\"", pv->name);
+        res["msg"] = m_get_timestamp() + std::string(msg);
+    }
+    return true;
+}
+
+std::string CuEpicsWorld::m_get_timestamp()
+{
+    char outstr[200];
+    time_t t;
+    struct tm *tmp;
+    t = time(NULL);
+    tmp = localtime(&t);
+    if (tmp == NULL)
+        return std::string("localtime error");
+
+   strftime(outstr, sizeof(outstr), "%Y-%m-%d %H:%M:%S", tmp);
+   return std::string(outstr);
+}
+
+void CuEpicsWorld::caget(const std::string& src, CuData &prop_res, CuData& value_res, double timeout)
+{
+    bool err = false;
+    char msg[256] = "";
+    int result = ca_context_create(ca_disable_preemptive_callback);
+
+    if(result != ECA_NORMAL) {
+        snprintf(msg, 256, "CuEpicsWorld.caget: CA error %s occurred while trying to start channel access for \"%s\"",
+                 ca_message(result), src.c_str());
+    }
+    else {
+        CuPV pv(src.c_str());
+        result = connect_pvs(&pv, 1);
+
+        if(result != 0) { // error
+            snprintf(msg, 256, "CuEpicsWorld.caget error connecting \"%s\"", src.c_str());
+        }
+        else  {  // connected
+            // 1. get property (dbr ctrl)
+            bool success = m_ep_caget(&pv, prop_res, DbrCtrl, timeout);
+            if(success) {
+                extractData(&pv, prop_res);
+                success = m_ep_caget(&pv, value_res,  DbrTime, timeout); // to get timestamp
+                if(success) {
+                    extractData(&pv, value_res);
+                    if(ca_write_access(pv.ch_id)) {
+                        prop_res["w_value"] = value_res["value"];
+                    }
+                }
+            }
+        }
+        ca_context_destroy();
+        // pv is destroyed when out of scope and value is freed by CuPV's destructor
+    }
+    err = strlen(msg) > 0;
+    if(err) {
+        prop_res["err"] = value_res["err"] = err;
+        prop_res["msg"] = value_res["msg"] = std::string(msg);
+    } // otherwise leave "err" and "msg" as compiled by extractData
+}
+
 void CuEpicsWorld::setSrcPatterns(const std::vector<std::string> &p)
 {
     d->src_patterns = p;
@@ -591,6 +610,7 @@ std::vector<std::string> CuEpicsWorld::srcPatterns() const
 {
     return d->src_patterns;
 }
+
 
 template<class T>
 void CuEpicsWorld::putTimestamp(void* ep_data, CuData &dt) const
@@ -623,7 +643,7 @@ void CuEpicsWorld::putTimestamp(void* ep_data, CuData &dt) const
 template<class T>
 void CuEpicsWorld::putCtrlData(void *ep_data, CuData &dt) const
 {
-    dt["units"] = static_cast<T *>(ep_data)->units;
+    dt["units"] = std::string(static_cast<T *>(ep_data)->units);
     dt["max"] = static_cast<T *>(ep_data)->upper_disp_limit;
     dt["min"] = static_cast<T *>(ep_data)->lower_disp_limit;
     dt["upper_alarm_limit"] = static_cast<T *>(ep_data)->upper_alarm_limit;
@@ -632,5 +652,113 @@ void CuEpicsWorld::putCtrlData(void *ep_data, CuData &dt) const
     dt["lower_alarm_limit"] = static_cast<T *>(ep_data)->lower_alarm_limit;
     dt["upper_ctrl_limit"] = static_cast<T *>(ep_data)->upper_ctrl_limit;
     dt["lower_ctrl_limit"] = static_cast<T *>(ep_data)->lower_ctrl_limit;
-    dt["value"] = static_cast<T *>(ep_data)->value;
+}
+
+/*+**************************************************************************
+ *
+ * Function:	connect_pvs
+ *
+ * Description:	Connects an arbitrary number of PVs
+ *
+ * Arg(s) In:	pvs   -  Pointer to an array of pv structures
+ *              nPvs  -  Number of elements in the pvs array
+ *
+ * Arg(s) Out:	none
+ *
+ * Return(s):	Error code:
+ *                  0  -  All PVs connected
+ *                  1  -  Some PV(s) not connected
+ *
+ **************************************************************************-*/
+
+
+int CuEpicsWorld::connect_pvs (CuPV* pvs, int nPvs)
+{
+    int returncode = create_pvs ( pvs, nPvs, 0);
+    if ( returncode == 0 ) {
+        /* Wait for channels to connect */
+        int result = ca_pend_io (caTimeout);
+        if (result == ECA_TIMEOUT)
+        {
+            if (nPvs > 1)
+            {
+                fprintf(stderr, "Channel connect timed out: some PV(s) not found.\n");
+            } else {
+                fprintf(stderr, "Channel connect timed out: '%s' not found.\n",
+                        pvs[0].name);
+            }
+            returncode = 1;
+        }
+    }
+    return returncode;
+}
+
+
+/*+**************************************************************************
+ *
+ * Function:	create_pvs
+ *
+ * Description:	Creates an arbitrary number of PVs
+ *
+ * Arg(s) In:	pvs   -  Pointer to an array of pv structures
+ *              nPvs  -  Number of elements in the pvs array
+ *              pCB   -  Connection state change callback
+ *
+ * Arg(s) Out:	none
+ *
+ * Return(s):	Error code:
+ *                  0  -  All PVs created
+ *                  1  -  Some PV(s) not created
+ *
+ **************************************************************************-*/
+
+int CuEpicsWorld::create_pvs (CuPV* pvs, int nPvs, caCh *pCB)
+{
+    int n;
+    int result;
+    int returncode = 0;
+    /* Issue channel connections */
+    for (n = 0; n < nPvs; n++) {
+        result = ca_create_channel (pvs[n].name,
+                                    pCB,
+                                    &pvs[n],
+                                    caPriority,
+                                    &pvs[n].ch_id);
+        if (result != ECA_NORMAL) {
+            fprintf(stderr, "CA error %s occurred while trying "
+                            "to create channel '%s'.\n", ca_message(result), pvs[n].name);
+            pvs[n].status = result;
+            returncode = 1;
+        }
+    }
+
+    return returncode;
+}
+
+
+CuPV::CuPV(const char *nam)
+{
+    strncpy(name, nam, 256);
+    ch_id = NULL;
+    dbfType = dbrType = -1;
+    nElems = 0;       // True length of data in value
+    reqElems = 0;     // Requested length of data
+    value = NULL;
+    status = ctrl_status = -1;
+    onceConnected = 0;
+    monitor_activity = NULL;
+}
+
+CuPV::~CuPV()
+{
+    pdelete("CuPV %p", this);
+    if(value)
+        free(value);
+}
+
+void CuPV::realloc_value()
+{
+    if(value)
+        free(value);
+    value = calloc(1, dbr_size_n(dbrType, nElems));
 }

@@ -57,30 +57,25 @@ CuEpicsActionI::Type CuEpicsWriterFactory::getType() const
     return CuEpicsActionI::Writer;
 }
 
-CuEpicsAttConfFactory::CuEpicsAttConfFactory()
+CuEpicsPropertyFactory::CuEpicsPropertyFactory()
 {
     m_fetchAttHistory = false;
 }
 
-void CuEpicsAttConfFactory::fetchAttributeHistory(bool fetch)
-{
-    m_fetchAttHistory = fetch;
-}
-
-void CuEpicsAttConfFactory::setDesiredAttributeProperties(const std::vector<std::__cxx11::string> props)
+void CuEpicsPropertyFactory::setDesiredPVProperties(const std::vector<std::__cxx11::string> props)
 {
     m_props = props;
 }
 
-CuEpicsActionI *CuEpicsAttConfFactory::create(const std::string &s, CumbiaEpics *ct) const
+CuEpicsActionI *CuEpicsPropertyFactory::create(const std::string &s, CumbiaEpics *ce) const
 {
-    CuEpConfiguration *w = new CuEpConfiguration(s, ct);
-    w->setDesiredAttributeProperties(this->m_props);
+    CuEpConfiguration *w = new CuEpConfiguration(s, ce);
+    w->setDesiredPVProperties(this->m_props);
     return w;
 }
 
-CuEpicsActionI::Type CuEpicsAttConfFactory::getType() const
+CuEpicsActionI::Type CuEpicsPropertyFactory::getType() const
 {
-    return CuEpicsActionI::AttConfig;
+    return CuEpicsActionI::PropConfig;
 }
 

@@ -29,7 +29,7 @@ public:
     bool exit;
     CuConLogImpl li;
     CuLog log;
-
+    CuData property_d, value_d;
     int period;
     CuTReader::RefreshMode refresh_mode;
 };
@@ -78,6 +78,7 @@ void CuTReader::onResult(const CuData &data)
     std::set<CuDataListener *> lis_copy = d->listeners;
     std::set<CuDataListener *>::iterator it;
     bool event_subscribe_fail = err && !d->exit && data["event"].toString() == "subscribe";
+
     // if it's just subscribe_event failure, do not notify listeners
     for(it = lis_copy.begin();
         it != lis_copy.end() && !event_subscribe_fail;   ++it)
@@ -398,5 +399,4 @@ void CuTReader::m_startPollingActivity(bool fallback)
     d->cumbia_t->registerActivity(d->current_activity, this, tt, fi, bf);
     printf("> CuTReader.m_startPollingActivity reader %p thread 0x%lx ACTIVITY %p == \e[0;32mSTARTING POLLING\e[0m\n\n", this, pthread_self(), d->current_activity);
 }
-
 

@@ -128,6 +128,12 @@ void QuButton::onUpdate(const CuData &data)
             log->write(QString("QuButton [" + objectName() + "]").toStdString(), data["msg"].toString(), CuLog::Error, CuLog::Write);
         }
     }
+    else if(data["type"].toString() == std::string("property")) {
+        printf("QuButton.onUpdate type property. Try to initialize objects\n");
+        CuVariant val = data["w_value"];
+        CuControlsUtils cu;
+        cu.initObjects(target(), this, val);
+    }
 }
 
 /** \brief Returns a pointer to the CuContext in use.

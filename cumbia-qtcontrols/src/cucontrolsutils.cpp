@@ -5,7 +5,7 @@
 #include <QWidget>
 #include <QtDebug>
 #include <QApplication>
-
+#include <QMetaProperty>
 #include <string>
 #include <cumacros.h>
 
@@ -117,3 +117,121 @@ CuVariant CuControlsUtils::getArgs(const QString &target, const QObject *leaf) c
 
     return CuVariant();
 }
+
+QObject *CuControlsUtils::findObject(const QString &objectName, const QObject *leaf) const
+{
+    QObject *parent = leaf->parent();
+    QObject *o = NULL;
+    while(parent && !o)
+    {
+        qDebug() << __FUNCTION__ << "parent " << parent << " o " << o;
+        if(parent->objectName() == objectName)
+            o = parent;
+        else
+        {
+            o = parent->findChild<QObject *>(objectName);
+            qDebug() << "findind child " << objectName << " under " << parent << "AMONGST" << " FOUND " << o;
+            foreach(QObject *c, parent->findChildren<QObject *>())
+                qDebug() << "---" << c << c->objectName();
+        }
+
+        parent = parent->parent();
+    }
+    if(!o) /* last resort: search among all qApplication objects */
+    {
+        pwarn("CuControlsUtils.findInputProvider: object \"%s\" not found amongst ancestors:\n"
+              "  looking for a child under the qApp active window.\n"
+              "  Please reorganise QObjects hierarchy for better performance.", qstoc(objectName));
+        o = qApp->activeWindow()->findChild<QObject*>(objectName);
+    }
+
+    return o;
+}
+
+QList<QObject *> CuControlsUtils::findObjects(const QString& target, const QObject *leaf)
+{
+    QList<QObject *> objects;
+    QString oName;
+    cuprintf("\e[1;34mgetArgs finding args in %s\e[0m\n\n", qstoc(target));
+    QRegExp re("\\((.*)\\)");
+    int pos = re.indexIn(target);
+    if(pos < 0)
+        return objects;
+    QString argums = re.cap(1);
+    QStringList args = argums.split(",", QString::SkipEmptyParts);
+    foreach(QString a, args)
+    {
+        if(a.startsWith("&"))
+        {
+            oName = a.remove(0, 1);
+            QObject* o = findObject(oName, leaf);
+            if(o)
+                objects << o;
+        }
+    }
+    return objects;
+}
+
+bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, const CuVariant &val)
+{
+    bool ret, has_target;
+    int idx, match = 0;
+    int siz = static_cast<int>(val.getSize());
+    CuControlsUtils cu;
+    QVariant::Type vtype;
+    std::string value_as_str;
+    std::vector<std::string> values_str;
+    QList<QObject *> inputobjs = cu.findObjects(target, leaf);
+    printf("found %d objects associated to target %s object %s VAL %s\n",
+           inputobjs.size(), qstoc(target), qstoc(leaf->objectName()), val.toString().c_str());
+    CuVariant::DataFormat fmt = val.getFormat();
+    if(fmt == CuVariant::Scalar)
+        value_as_str = val.toString(&ret);
+    else
+        values_str = val.toStringVector(&ret);
+
+    printf("objects found %d val size %d ret %d\n", inputobjs.size(), siz, ret);
+    for(int i = 0; i < inputobjs.size() && i < siz && ret; i++) {
+        QObject *o = inputobjs[i];
+        has_target = o->metaObject()->indexOfProperty("target") >= 0 && !o->property("target").toString().isEmpty();
+        printf("CuControlsUtils.initObjects: object %s class %s has targets %d index %d prop %s\e[0m\n", qstoc(o->objectName()), o->metaObject()->className(),
+               has_target,o->metaObject()->indexOfProperty("target"), qstoc(o->property("target").toString()) );
+        if(!has_target) {  // initialise
+            {
+                printf("\e[1;32mCuControlsUtils.initObjects: object %s class %s has NO targets\e[0m\n", qstoc(o->objectName()), o->metaObject()->className() );
+                ret = false;
+                std::string vs;
+                fmt == CuVariant::Scalar ? vs = value_as_str : vs = values_str[i];
+                if(o->metaObject()->indexOfProperty("text") > -1)
+                    ret = o->setProperty("text", QString::fromStdString(vs));
+                else if((idx = o->metaObject()->indexOfProperty("value") ) > -1) {
+                    try {
+                        vtype = o->metaObject()->property(idx).type();
+                        if(vtype == QVariant::Double)
+                            ret =o->setProperty("value", std::stod(vs));
+                        else if(vtype == QVariant::Int)
+                            ret =o->setProperty("value", std::stoi(vs));
+                        else if(vtype == QVariant::UInt)
+                            ret =o->setProperty("value", static_cast<unsigned int>(std::stoul(vs)));
+                        else if(vtype == QVariant::Bool)
+                            ret =o->setProperty("value", vs != "0" && strcasecmp(vs.c_str(), "false") != 0);
+                    }
+                    catch(const std::invalid_argument &ia) {
+                        perr("CuControlsUtils.initObjects: could not convert \"%s\" to a number", vs.c_str());
+                    }
+                }
+                else if(o->metaObject()->indexOfProperty("currentText") > -1)
+                    ret = o->setProperty("currentText", QString::fromStdString(val.toString()));
+                else if(o->metaObject()->indexOfProperty("checked") > -1)
+                    ret = o->setProperty("value", vs != "0" && strcasecmp(vs.c_str(), "false") != 0);
+
+                if(!ret)
+                    perr("CuControlsUtils.initObjects: failed to set value \"%s\" on object \"%s\"", vs.c_str(), qstoc(o->objectName()));
+                else
+                    match++;
+            }
+        }
+    }
+    return inputobjs.size() == match;
+}
+

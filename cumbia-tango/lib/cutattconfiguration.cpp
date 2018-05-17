@@ -57,13 +57,15 @@ void CuTAttConfiguration::onResult(const CuData &data)
 {
     d->conf_data = data;
     d->exit = data["exit"].toBool();
+
     if(!d->exit)
     {
         // iterator can be invalidated if listener's onUpdate wants to unset source
         std::list <CuDataListener *> listeners = d->listeners;
         std::list<CuDataListener *>::iterator it;
-        for(it = listeners.begin(); it != listeners.end(); ++it)
+        for(it = listeners.begin(); it != listeners.end(); ++it) {
             (*it)->onUpdate(data);        
+        }
     }
     else
     {

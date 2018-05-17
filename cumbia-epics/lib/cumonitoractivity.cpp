@@ -60,13 +60,10 @@ bool CuMonitorActivity::matches(const CuData &token) const
 
 void CuMonitorActivity::init()
 {
-    int caTimeout = DEFAULT_CA_TIMEOUT;
-    int reqElems = 1;
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
-    int nPvs = 1;
-    CuPV* pv;                    /* PV structure */
+    CuEpicsWorld epw;
     int result = ca_context_create(ca_enable_preemptive_callback);
 
     /* install my exception event handler */
@@ -82,25 +79,19 @@ void CuMonitorActivity::init()
     else
     {
         /* Allocate PV structure */
-        pv = (CuPV *) malloc (sizeof(CuPV));
-        if (!pv) {
-            m_setTokenError("Memory allocation for channel structures failed.", tk);
-        }
-        else {
-            /* Connect channels */
-            memset(pv[0].name, 0, 256);
-            strncpy(pv[0].name, tk["src"].toString().c_str(), 255);
-            pv[0].onceConnected = 0;
-            pv[0].monitor_activity = this;
+        CuPV *pv = new CuPV(tk["src"].toString().c_str());
 
-            /* Create CA connections */
-            int returncode = create_pvs(pv, nPvs, connection_handler_cb);
-            if ( returncode )
-                m_setTokenError(("Error creating pv " + tk["src"].toString()).c_str(), tk);
-        }
+        /* Connect channels */
+        pv->monitor_activity = this;
+
+        /* Create CA connections */
+        int returncode = epw.create_pvs(pv, 1, connection_handler_cb);
+        if ( returncode )
+            m_setTokenError(("Error creating pv " + tk["src"].toString()).c_str(), tk);
+
     }
     publishResult(tk);
-   d->repeat = -1;
+    d->repeat = -1;
 }
 
 void CuMonitorActivity::execute()
@@ -112,7 +103,6 @@ void CuMonitorActivity::onExit()
 {
     assert(d->my_thread_id == pthread_self());
     d->exiting = true;
-    int refcnt = -1;
     CuData at = getToken(); /* activity token */
     at["msg"] = "EXITED";
     at["mode"] = "POLLED";
@@ -146,14 +136,14 @@ void CuMonitorActivity::m_setTokenError(const char *msg, CuData &d)
 
 void CuMonitorActivity::event_handler_cb (evargs args)
 {
-    CuPV *ppv = ( CuPV * ) ca_puser ( args.chid );
+    CuPV *ppv = static_cast<CuPV*>(ca_puser(args.chid));
     CuMonitorActivity* cu_mona = ppv->monitor_activity;
     cu_mona->event_handler(args);
 }
 
 void CuMonitorActivity::connection_handler_cb ( struct connection_handler_args args )
 {
-    CuPV *ppv = ( CuPV * ) ca_puser ( args.chid );
+    CuPV *ppv = static_cast<CuPV*>(ca_puser(args.chid));
     CuMonitorActivity* cu_mona = ppv->monitor_activity;
     cu_mona->connection_handler(args);
 }
@@ -180,9 +170,6 @@ void CuMonitorActivity::event_handler(evargs args)
         _pv->value = (void *) args.dbr;    /* casting away const */
 
         utils.extractData(_pv, d);
-
-        d["msg"] = utils.getLastMessage();
-        d["err"] = utils.error();
         _pv->value = NULL;
     }
     else
@@ -201,6 +188,7 @@ void CuMonitorActivity::connection_handler(connection_handler_args args)
 
     unsigned long eventMask = DBE_VALUE | DBE_ALARM;
     int floatAsString = 0;
+    int enumAsNr = 0;
     CuPV *ppv = ( CuPV * ) ca_puser ( args.chid );
 
     if ( args.op == CA_OP_CONN_UP ) {
@@ -225,7 +213,7 @@ void CuMonitorActivity::connection_handler(connection_handler_args args)
             }
             /* Set request count */
             ppv->nElems   = ca_element_count(ppv->ch_id);
-            ppv->reqElems = 1;
+            ppv->reqElems = ppv->nElems;
 
             /* Issue CA request */
             /* ---------------- */
@@ -238,10 +226,10 @@ void CuMonitorActivity::connection_handler(connection_handler_args args)
 
             /* subscribe to property change */
             ppv->ctrl_status = ca_create_subscription(dbf_type_to_DBR_CTRL(ppv->dbfType),
-                                                 ppv->reqElems, ppv->ch_id,
-                                                 DBE_PROPERTY,
-                                                 CuMonitorActivity::event_handler_cb,
-                                                 (void*)ppv, NULL);
+                                                      ppv->reqElems, ppv->ch_id,
+                                                      DBE_PROPERTY,
+                                                      CuMonitorActivity::event_handler_cb,
+                                                      (void*)ppv, NULL);
         }
     }
     else if ( args.op == CA_OP_CONN_DOWN ) {

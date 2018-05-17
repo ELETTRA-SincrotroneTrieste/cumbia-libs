@@ -152,8 +152,6 @@ void CuActivity::setFlag(CuActivity::Flags f, bool on)
  */
 void CuActivity::publishResult(const CuData &data)
 {
-    cuprintf("\e[1;33mcalling publishResult on thread from activity %p from this thread 0x%lx data %s\e[0m\n",
-             this, pthread_self(), data.toString().c_str());
     CuThreadInterface *thread = d->activityManager->getThread(this);
     if(thread) /* may be removed while activity is in execute() */
         thread->publishResult(this, data);

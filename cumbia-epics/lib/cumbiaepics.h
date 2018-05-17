@@ -134,7 +134,7 @@ public:
 
     ~CumbiaEpics();
 
-    void addAction(const std::string& source, CuDataListener *l, const CuEpicsActionFactoryI &f);
+    bool addAction(const std::string& source, CuDataListener *l, const CuEpicsActionFactoryI &f);
 
     void unlinkListener(const std::string& source, CuEpicsActionI::Type t, CuDataListener *l);
 

@@ -238,6 +238,8 @@ void CuTControlsReader::setSource(const QString &s)
     acf.setOptions(d->ta_options);
     readf.setOptions(d->ta_options);
     d->source = tcu.replaceWildcards(s, qApp->arguments());
+    printf("cutcontrls readedd CuTangoAttConfFactory  add action %s listener %p\n", qstoc(d->source), d->tlistener);
     d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, acf);
+    printf("cutcontrls readedd CuTangoReaderFactory add action %s listener %p\n", qstoc(d->source), d->tlistener);
     d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, readf);
 }

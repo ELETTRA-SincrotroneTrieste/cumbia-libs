@@ -145,17 +145,24 @@ bool QuPlotAxesComponent::applyScaleFromCurveBounds(QuPlotBase *plot, int axisId
 
 bool QuPlotAxesComponent::setBoundsFromCurves(const QuPlotBase *plot, int axisId)
 {
-    double min = 0, max = 0;
+    double min = 0, max = 0, crvmin, crvmax;
     QList<QwtPlotCurve *> crvs = plot->curves();
     foreach(QwtPlotCurve *c, crvs)
     {
         if(c->dataSize() < 1 || !c->isVisible()) /* it is not possible  to adjust scales if the curves haven't enough data yet. */
             continue;
-
-        if(c->minXValue() < min || min == max)
-            min = (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop) ? c->minXValue() : c->minYValue();
-        if(c->maxXValue() > max || min == max)
-            max = (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop) ? c->maxXValue() : c->maxYValue();
+        (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop) ? crvmin = c->minXValue() : crvmin = c->minYValue();
+        (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop) ? crvmax = c->maxXValue() : crvmax = c->maxYValue();
+        if(min == max) {
+            min = crvmin;
+            max = crvmax;
+        }
+        else {
+            if(crvmin < min)
+                min = crvmin;
+            if(crvmax > max)
+                max = crvmax;
+        }
     }
     if(min <= max) /* values must be well ordered */
     {

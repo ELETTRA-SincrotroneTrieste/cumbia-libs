@@ -519,6 +519,10 @@ void CuTangoWorld::fillFromAttributeConfig(const Tango::AttributeInfoEx &ai, CuD
 
     dat["periodic_period"] = ei.per_event.period;
 
+    // dim_x property contains the actual number of x elements
+    long int dimx = dat["value"].getSize(); // if !contains value, empty variant, 0 dimx
+    if(dimx > 0)
+        dat["dim_x"] = dimx;
 }
 
 void CuTangoWorld::fillFromCommandInfo(const Tango::CommandInfo &ci, CuData &d)

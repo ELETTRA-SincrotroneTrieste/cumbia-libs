@@ -575,6 +575,14 @@ void CuVariant::build_from(const CuVariant& other)
             vi[i] = other.toLongIntP()[i];
         d->val = vi;
     }
+    else if(d->type == CuVariant::LongUInt)
+    {
+         unsigned long int *uli =  new  unsigned long int[d->mSize];
+
+        for(size_t i = 0; i < d->mSize; i++)
+            uli[i] = other.toULongIntP()[i];
+        d->val = uli;
+    }
     else if(d->type == CuVariant::Boolean)
     {
         bool *vb = new bool[d->mSize];
@@ -1261,18 +1269,65 @@ std::string CuVariant::toString(bool *ok, const char *format) const
  */
 std::vector<std::string> CuVariant::toStringVector(bool *ok) const
 {
-    bool can_convert = (d->type == String && (d->format == Vector || d->format == Scalar) );
+    bool success = true;
+    bool native_type = (d->type == String && (d->format == Vector || d->format == Scalar) );
     std::vector<std::string> ret;
-    if(ok)
-        *ok = can_convert;
-    if(can_convert)
+    if(native_type)
     {
         char **str_array = static_cast<char **>(d->val);
         for(size_t i = 0; i < d->mSize; i++)
             ret.push_back(std::string(str_array[i]));
     }
+    else if(d->format == Vector || d->format == Scalar) {
+        const size_t MAXLEN = 128;
+        char converted[MAXLEN + 1];
+
+        for(size_t i = 0; i < d->mSize && success; i++) // while success is true
+        {
+            memset(converted, 0, sizeof(char) * (MAXLEN + 1));  // clear string
+
+            if(d->type == String) // directly push back the native data
+                ret.push_back(std::string(static_cast<char **>(d->val)[i]));
+            else if(d->type == Double)
+                snprintf(converted, MAXLEN, "%f", static_cast<double *>(d->val)[i]);
+            else if(d->type == LongDouble)
+                snprintf(converted, MAXLEN, "%Lf", static_cast<long double *>(d->val)[i]);
+            else if(d->type == Int)
+                snprintf(converted, MAXLEN, "%d", static_cast<int *>(d->val)[i]);
+            else if(d->type == UInt)
+                snprintf(converted, MAXLEN, "%u", static_cast<unsigned int *>(d->val)[i]);
+            else if(d->type == LongUInt)
+                snprintf(converted, MAXLEN, "%lu", static_cast<long unsigned int *>(d->val)[i]);
+            else if(d->type == LongInt)
+                snprintf(converted, MAXLEN, "%ld", static_cast<long int *>(d->val)[i]);
+            else if(d->type == Short)
+                snprintf(converted, MAXLEN, "%hd", static_cast<short int *>(d->val)[i]);
+            else if(d->type == UShort)
+                snprintf(converted, MAXLEN, "%hu", static_cast<unsigned short *>(d->val)[i]);
+            else if(d->type == Float)
+                snprintf(converted, MAXLEN, "%f", static_cast<float *>(d->val)[i]);
+            else if(d->type == Boolean)
+                static_cast<bool *>(d->val)[i] ? sprintf(converted, "true") : sprintf(converted, "false");
+            else
+            {
+                success = false;
+                perr("CuVariant.toStringVector: error converting data to string vector: format is %s type is %s",
+                     dataFormatStr(d->format).c_str(), dataTypeStr(d->type).c_str());
+            }
+            if(success && strlen(converted) > 0)
+                ret.push_back(std::string(converted));
+        }
+    }
     else
-        perr("CuVariant::toStringVector: cannot convert type %d format %d to string vector", d->type, d->format);
+        success = false;
+
+    if(ok) {
+        *ok = success;
+    }
+    if(!success) {
+        perr("CuVariant::toStringVector: cannot convert type %s format %s to string vector",
+             dataFormatStr(d->format).c_str(), dataTypeStr(d->type).c_str());
+    }
     return ret;
 }
 

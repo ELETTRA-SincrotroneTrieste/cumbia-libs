@@ -68,7 +68,7 @@ QString CuEpControlsWriter::target() const
 
 void CuEpControlsWriter::clearTarget()
 {
-    d->cumbia_epics->unlinkListener(d->targets.toStdString(), CuEpicsActionI::AttConfig, d->tlistener);
+    d->cumbia_epics->unlinkListener(d->targets.toStdString(), CuEpicsActionI::PropConfig, d->tlistener);
     d->cumbia_epics->unlinkListener(d->targets.toStdString(), CuEpicsActionI::Writer, d->tlistener);
     d->targets = QString();
 }
@@ -105,8 +105,8 @@ void CuEpControlsWriter::getData(CuData &d_ino) const
 void CuEpControlsWriter::setTarget(const QString &s)
 {
     CuEpControlsUtils tcu;
-    CuEpicsAttConfFactory att_conf_factory;
-    att_conf_factory.setDesiredAttributeProperties(d->attr_props);
+    CuEpicsPropertyFactory att_conf_factory;
+    att_conf_factory.setDesiredPVProperties(d->attr_props);
     d->targets = tcu.replaceWildcards(s, qApp->arguments());
     cuprintf("CuEpControlsWriter::setTargets: targets is: %s\n", qstoc(d->targets));
     d->cumbia_epics->addAction(d->targets.toStdString(), d->tlistener, att_conf_factory);

@@ -114,58 +114,58 @@ QumbiaClient::~QumbiaClient()
 
 void QumbiaClient::configure(const CuData &d)
 {
-    if(d.containsKey("data_format_str"))
+    if(d["type"].toString() == "property") {
         sender()->disconnect(this, SLOT(configure(CuData)));
+        const int plotRowCnt = 5;
+        int layout_row = 2;
+        std::string format = d["data_format_str"].toString();
 
-    qDebug() << __FUNCTION__ << "labels" << findChildren<QuLabel *>();
-
-    const int plotRowCnt = 5;
-    int layout_row = 2;
-    std::string format = d["data_format_str"].toString();
-
-    QGridLayout *lo = qobject_cast<QGridLayout *>(ui->widget->layout());
-    int data_dim = 1;
-    if(format == "scalar")
-    {
-        QuTrendPlot *plot = findChild<QuTrendPlot *>();
-        if(!plot)
+        QGridLayout *lo = qobject_cast<QGridLayout *>(ui->widget->layout());
+        int data_dim = 1;
+        if(format == "scalar")
         {
-            plot = new QuTrendPlot(this, cu_pool, m_ctrl_factory_pool);
-            if(findChild<QuSpectrumPlot *>()) /* there's a spectrum plot already */
-                layout_row += plotRowCnt;
-            lo->addWidget(plot, layout_row, 0, plotRowCnt, m_layoutColumnCount);
+            QuTrendPlot *plot = findChild<QuTrendPlot *>();
+            if(!plot)
+            {
+                plot = new QuTrendPlot(this, cu_pool, m_ctrl_factory_pool);
+                if(findChild<QuSpectrumPlot *>()) /* there's a spectrum plot already */
+                    layout_row += plotRowCnt;
+                lo->addWidget(plot, layout_row, 0, plotRowCnt, m_layoutColumnCount);
+            }
+            plot->addSource(d["src"].toString().c_str());
         }
-        printf("addSource to plto scalar\n");
-        plot->addSource(d["src"].toString().c_str());
-    }
-    else if(format == "vector")
-    {
-        QuSpectrumPlot *splot = findChild<QuSpectrumPlot *>();
-        if(!splot)
+        else if(format == "vector")
         {
-            splot = new QuSpectrumPlot(this, cu_pool, m_ctrl_factory_pool);
-            if(findChild<QuTrendPlot *>()) /* there's already a trend plot */
-                layout_row += plotRowCnt;
-            lo->addWidget(splot, layout_row, 0, plotRowCnt, m_layoutColumnCount);
+            QuSpectrumPlot *splot = findChild<QuSpectrumPlot *>();
+            if(!splot)
+            {
+                splot = new QuSpectrumPlot(this, cu_pool, m_ctrl_factory_pool);
+                if(findChild<QuTrendPlot *>()) /* there's already a trend plot */
+                    layout_row += plotRowCnt;
+                lo->addWidget(splot, layout_row, 0, plotRowCnt, m_layoutColumnCount);
+            }
+            splot->addSource(d["src"].toString().c_str());
+
+            data_dim = d["dim_x"].toLongInt();
+            if(data_dim <= 0)
+                data_dim = d["value"].getSize();
+            if(data_dim <= 0 && d.containsKey("max_dim_x"))
+                data_dim = d["max_dim_x"].toULongInt();
         }
-        splot->addSource(d["src"].toString().c_str());
-        data_dim = d["max_dim_x"].toInt();
+
+        if(d["writable"].toInt() > 0)
+        {
+            QWidget *wi = ui->gbWriters->findChild<QScrollArea *>()->widget();
+            printf("\e[1;32mcreating writer for %s\e[0m\n",  d["src"].toString().c_str());
+            ui->pbWrite->setChecked(true);
+            Writer *w = new Writer(wi, cu_pool, m_ctrl_factory_pool, data_dim, QString::fromStdString(d["src"].toString()));
+            qobject_cast<QVBoxLayout *>(wi->layout())->addWidget(w);
+        }
+
+        CuContextActionBridge *cab = findChild<CuContextActionBridge *>();
+        if(cab) delete cab;
+        cab = new CuContextActionBridge(this, cu_pool, m_ctrl_factory_pool);
     }
-
-    printf("\n\e[1;35mCONFIGURE %s writebla %d\e[0m\n", d.toString().c_str(), d["writable"].toInt());
-
-    if(d["writable"].toInt() > 0)
-    {
-        QWidget *wi = ui->gbWriters->findChild<QScrollArea *>()->widget();
-        printf("\e[1;32mcreating writer for %s\e[0m\n",  d["src"].toString().c_str());
-        ui->pbWrite->setChecked(true);
-        Writer *w = new Writer(wi, cu_pool, m_ctrl_factory_pool, data_dim, QString::fromStdString(d["src"].toString()));
-        qobject_cast<QVBoxLayout *>(wi->layout())->addWidget(w);
-    }
-
-    CuContextActionBridge *cab = findChild<CuContextActionBridge *>();
-    if(cab) delete cab;
-    cab = new CuContextActionBridge(this, cu_pool, m_ctrl_factory_pool);
 }
 
 void QumbiaClient::changeRefresh()

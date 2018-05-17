@@ -53,6 +53,8 @@ public:
 
     size_t dataListenersCount();
 
+    virtual bool exiting() const;
+
 private:
     CuMonitorPrivate *d;
 

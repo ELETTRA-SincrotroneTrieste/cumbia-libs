@@ -195,6 +195,7 @@ void CuTWriter::sendData(const CuData& )
 
 void CuTWriter::getData(CuData &d_inout) const
 {
-
+    d_inout = CuData();
 }
+
 

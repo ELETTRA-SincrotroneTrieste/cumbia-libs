@@ -57,7 +57,7 @@ int CuEpConfigActivity::repeat() const
 
 void CuEpConfigActivity::init()
 {
-    cuprintf("CuTAttConfigActivity::init: enter\n");
+    cuprintf("CuEpConfigActivity::init: enter\n");
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
@@ -66,38 +66,33 @@ void CuEpConfigActivity::init()
 
 void CuEpConfigActivity::execute()
 {
-    cuprintf("CuTAttConfigActivity::execute: enter\n");
+    cuprintf("CuEpConfigActivity::execute: enter\n");
     assert(d->my_thread_id == pthread_self());
-    CuData at = getToken(); /* activity token */
-    d->err = false /* .. fill correctly */;
-    std::string point = at["point"].toString();
-    bool is_pv = at["is_pv"].toBool();
-    at["properties"] = std::vector<std::string>();
-    at["mode"] = "ATTCONF";
+    CuData ctrl_data = getToken(); /* activity token */
+    ctrl_data["properties"] = std::vector<std::string>();
+    ctrl_data["mode"] = "caget";
+    CuData value_data(ctrl_data);
 
-    if(!d->err && is_pv)
-    {
-        cuprintf("CuEpConfigActivity::execute: GETTING  token %s\n", at.toString().c_str());
-        CuEpicsWorld utils;
-        utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
+    cuprintf("CuEpConfigActivity::execute: GETTING  token %s\n", ctrl_data.toString().c_str());
+    CuEpicsWorld utils;
+    utils.fillThreadInfo(ctrl_data, this); /* put thread and activity addresses as info */
 
+    utils.caget(ctrl_data["pv"].toString(), ctrl_data, value_data);
 
-        at["data"] = true;
-        at["msg"] = utils.getLastMessage();
-        at["err"] = utils.error();
-        d->err = utils.error();
-        d->msg = utils.getLastMessage();
-        publishResult(at);
-    }
+    printf("\e[0;33mCuEpConfigActivity.execute: \n%s:\n got \e[0m%s \n", ctrl_data["pv"].toString().c_str(), ctrl_data.toString().c_str());
+    publishResult(ctrl_data);
+    printf("publishResult called with %s\n", ctrl_data.toString().c_str());
+    publishResult(value_data);
+    printf("publishResult called with %s\n", value_data.toString().c_str());
 }
 
 void CuEpConfigActivity::onExit()
 {
-    cuprintf("CuTAttConfigActivity::onExit: enter\n");
+    cuprintf("CuEpConfigActivity::onExit: enter\n");
     assert(d->my_thread_id == pthread_self());
     if(d->exiting)
     {
-        printf("\e[1;31mCuTAttConfigActivity::onExit onExit already called\e[0m\n!!\n");
+        printf("\e[1;31mCuEpConfigActivity::onExit onExit already called\e[0m\n!!\n");
         return;
     }
     int refcnt = -1;
@@ -111,7 +106,7 @@ void CuEpConfigActivity::onExit()
 
     if(refcnt == 0)
     {
-      //  d->device_service->removeDevice(at["device"].toString());
+        //  d->device_service->removeDevice(at["device"].toString());
     }
     at["exit"] = true;
     publishResult(at);

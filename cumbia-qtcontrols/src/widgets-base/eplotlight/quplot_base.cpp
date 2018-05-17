@@ -210,26 +210,33 @@ void QuPlotBase::configure(const CuData &da)
     M = da["max"];  // max value
     bool okl, oku;  // toDouble ok for lower and upper bound
     double lb, ub;  // double for lower and upper bound
+    double current_def_lb, current_def_ub;
     QString min = QString::fromStdString(m.toString()); // min is of type string
     QString max = QString::fromStdString(M.toString()); // max is of type string
     lb = min.toDouble(&okl);  // string to double, see if ok
     ub = max.toDouble(&oku);  // string to double, see if ok
 
-    if(okl && oku)
+    if(okl && oku && lb != ub)
     {
         // get current default lower and upper bounds
-        double current_def_lb = defaultLowerBound(QwtPlot::yLeft);
-        double current_def_ub = defaultUpperBound(QwtPlot::yLeft);
+        current_def_lb = defaultLowerBound(QwtPlot::yLeft);
+        current_def_ub = defaultUpperBound(QwtPlot::yLeft);
         // if the minimum saved into lb is smaller than the current lower bound
         if(current_def_lb > lb)
             current_def_lb = lb;
         if(current_def_ub < ub)
             current_def_ub = ub;
-        cuprintf("\e[1;35mbounds from auto %f %f\n\e[0m\n", current_def_lb, current_def_ub);
-        setDefaultBounds(current_def_lb, current_def_ub, QwtPlot::yLeft);
     }
+    else {
+        QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
+        // initialised (to 0 and 1000) in QuPlotAxesComponent's constructor
+        current_def_lb = axes_c->lowerBoundFromCurves(QwtPlot::yLeft);
+        current_def_ub  = axes_c->upperBoundFromCurves(QwtPlot::yLeft);
+    }
+    setDefaultBounds(current_def_lb, current_def_ub, QwtPlot::yLeft);
+    // if configuration happens after data, need replot
+    replot();
 }
-
 
 /**
  * @brief QuPlotBase::contextMenuEvent executes a contextual menu when the plot is right clicked.
@@ -305,12 +312,17 @@ bool QuPlotBase::updateScales()
         {
             old_lb = axes_c->lowerBoundFromCurves(axisId);
             old_ub = axes_c->upperBoundFromCurves(axisId);
+            if(axisId == QwtPlot::yLeft)
+                printf("\e[1;32maxis autoscale for axis %d old low %f old up %f\e[0m\n", axisId, old_lb, old_ub);
             axes_c->setBoundsFromCurves(this, axisId);
             if(!zoomer->inZoom())
                 boundsChanged |= axes_c->applyScaleFromCurveBounds(this, axisId); // no updates until replot
             else if(zoomer->inZoom())
                 zoomer->changeRect(axisId, axes_c->lowerBoundFromCurves(axisId) - old_lb,
                                  axes_c->upperBoundFromCurves(axisId) - old_ub);
+            if(axisId == QwtPlot::yLeft)
+                printf("\e[1;32mbounds changed %d -  - - new lb %f new ub %f\e[0m\n", boundsChanged, axes_c->lowerBoundFromCurves(axisId)
+                   , axes_c->upperBoundFromCurves(axisId));
         }
     }
     return boundsChanged;
@@ -453,6 +465,7 @@ void QuPlotBase::restoreDefaultBounds(QwtPlot::Axis axisId)
 {
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
     axes_c->restoreDefaultBounds(this, axisId);
+    replot();
 }
 
 void QuPlotBase::setAxisScaleDefaultEnabled(bool en, QwtPlot::Axis axisId)
@@ -529,7 +542,7 @@ void QuPlotBase::setXAxisAutoscaleEnabled(bool autoscale)
     axes_c->setAutoscale(QwtPlot::xBottom, autoscale);
     if(!autoscale)
         axes_c->setBounds(this, QwtPlot::xBottom, axisScaleDiv(QwtPlot::xBottom).lowerBound(), axisScaleDiv(QwtPlot::xBottom).upperBound());
-    refresh();
+    replot();
 }
 
 void QuPlotBase::setYAxisAutoscaleEnabled(bool autoscale)
@@ -538,7 +551,7 @@ void QuPlotBase::setYAxisAutoscaleEnabled(bool autoscale)
     axes_c->setAutoscale(QwtPlot::yLeft, autoscale);
     if(!autoscale)
         axes_c->setBounds(this, QwtPlot::yLeft, axisScaleDiv(QwtPlot::yLeft).lowerBound(), axisScaleDiv(QwtPlot::yLeft).upperBound());
-    refresh();
+    replot();
 }
 
 double QuPlotBase::yUpperBound()
@@ -588,7 +601,7 @@ void QuPlotBase::setXLowerBound(double l)
 {
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
     axes_c->setManualBounds(this, QwtPlot::xBottom, l, axisScaleDiv(QwtPlot::xBottom).upperBound());
-    refresh();
+    replot();
 }
 
 /*
@@ -598,7 +611,7 @@ void QuPlotBase::setXUpperBound(double u)
 {
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
     axes_c->setManualBounds(this, QwtPlot::xBottom, axisScaleDiv(QwtPlot::xBottom).lowerBound(), u);
-    refresh();
+    replot();
 }
 
 void QuPlotBase::setXAutoscaleMargin(double adj)

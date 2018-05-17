@@ -2,6 +2,7 @@
 #define CUCONTROLSUTILS_H
 
 #include <cuvariant.h>
+#include <QList>
 
 class QString;
 class QObject;
@@ -21,7 +22,13 @@ public:
 
     QString findInput(const QString& objectName, const QObject* leaf) const;
 
+    QObject *findObject(const QString& objectName, const QObject* leaf) const;
+
     CuVariant getArgs(const QString& target, const QObject *leaf) const;
+
+    QList<QObject *> findObjects(const QString &target, const QObject *leaf);
+
+    bool initObjects(const QString& target, const QObject* leaf, const CuVariant& val);
 };
 
 #endif // CUCONTROLSUTILS_H

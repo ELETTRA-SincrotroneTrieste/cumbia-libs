@@ -19,32 +19,12 @@ EpSource::EpSource(const EpSource &other)
     this->m_s = other.m_s;
 }
 
-string EpSource::getIOC() const
-{
-    string ioc;
-    size_t pos = m_s.find(":");
-    if(pos == string::npos)
-        perr("EPsource.getIOC: error: missing \":\" separator");
-    else
-        ioc = m_s.substr(0, pos);
-    return ioc;
-}
-
 string EpSource::getPV() const
 {
     size_t pos = m_s.find("(");
     if(pos == string::npos)
         return m_s;
     return m_s.substr(0, pos); /* exclude args */
-}
-
-string EpSource::getField() const
-{
-    string p;
-    size_t pos = m_s.rfind(".");
-    if(pos != string::npos)
-        p = m_s.substr(pos + 1, m_s.find('(') - pos - 1); /* exclude args */
-    return p;
 }
 
 std::vector<string> EpSource::getArgs() const
@@ -101,8 +81,8 @@ std::string EpSource::toString() const
     char repr[512];
     char type[8];
     getType() == PV ? snprintf(type, 8, "pv") :  snprintf(type, 8, "field");
-    snprintf(repr, 512, "TSource [%p] [name:\"%s\"] [device:\"%s\"] [point:\"%s\"] [type:%s] [args:\"%s\"]",
-             this, m_s.c_str(), getIOC().c_str(), getPV().c_str(), type, getArgsString().c_str());
+    snprintf(repr, 512, "TSource [%p] [name:\"%s\"] [pv:\"%s\"] [type:%s] [args:\"%s\"]",
+             this, m_s.c_str(), getPV().c_str(), type, getArgsString().c_str());
     return std::string(repr);
 }
 

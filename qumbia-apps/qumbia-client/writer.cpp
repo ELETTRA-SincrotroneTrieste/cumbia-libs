@@ -39,7 +39,7 @@ Writer::Writer(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool 
     if(dim > maxeditable) {
         QLabel *labe = new QLabel(QString("Number of editable elements has been reduced to %1 (dim x is %2)")
                                   .arg(maxeditable).arg(dim), this);
-        contents_grid_lo->addWidget(labe, contents_grid_lo->rowCount() -1, 0, 1, contents_grid_lo->columnCount());
+        contents_grid_lo->addWidget(labe, contents_grid_lo->rowCount() , 0, 1, contents_grid_lo->columnCount());
     }
 
     target += ")";

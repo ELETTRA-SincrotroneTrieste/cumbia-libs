@@ -31,8 +31,12 @@ public:
 
     void sendData(const CuData &data);
     void getData(CuData &d_inout) const;
+
+    virtual bool exiting() const;
+
 private:
     CuEpWriterPrivate *d;
+
 };
 
 #endif // CUTWRITER_H

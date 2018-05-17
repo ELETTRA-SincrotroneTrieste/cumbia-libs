@@ -28,7 +28,7 @@ CumbiaEpics::CumbiaEpics(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_
 
 void CumbiaEpics::m_init()
 {
-    getServiceProvider()->registerService(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType), new CuActionFactoryService());
+    getServiceProvider()->registerService(static_cast<CuServices::Type> (CuEpicsActionFactoryService::CuActionFactoryServiceType), new CuEpicsActionFactoryService());
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType), new CuEpCAService());
 }
 
@@ -50,48 +50,58 @@ CumbiaEpics::~CumbiaEpics()
         delete m_threadsEventBridgeFactory;
     if(m_threadFactoryImplI)
         delete m_threadFactoryImplI;
-    CuActionFactoryService *af =
-            static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
+    CuEpicsActionFactoryService *af =
+            static_cast<CuEpicsActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuEpicsActionFactoryService::CuActionFactoryServiceType)));
     af->deleteActions();
 }
 
-void CumbiaEpics::addAction(const std::__cxx11::string &source, CuDataListener *l, const CuEpicsActionFactoryI& f)
+/*! \brief Creates and registers a new action if an active one with the given source and type is not found
+ *
+ * @return true an active action with the given source and type has been found and will be used
+ * @return false a new action for the given source and type has been created and registered
+ */
+bool CumbiaEpics::addAction(const std::__cxx11::string &source, CuDataListener *l, const CuEpicsActionFactoryI& f)
 {
+    bool found;
     CuEpicsWorld w;
     if(w.source_valid(source))
     {
-        CuActionFactoryService *af =
-                static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
+        CuEpicsActionFactoryService *af =
+                static_cast<CuEpicsActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuEpicsActionFactoryService::CuActionFactoryServiceType)));
 
-        CuEpicsActionI *a = af->findAction(source, f.getType());
+        CuEpicsActionI *a = af->findActive(source, f.getType());
+        found = (a != NULL);
         if(!a)
         {
             a = af->registerAction(source, f, this);
             a->start();
         }
-        else
-            printf("CumbiaEpics.addAction: action already found for source \"%s\" and type %d",
+        else {
+            printf("CumbiaEpics.addAction: action already found for source \"%s\" and type %d\n",
                   source.c_str(), f.getType());
+        }
         a->addDataListener(l);
     }
     else
         perr("CumbiaEpics.addAction: source \"%s\" is not valid, ignoring", source.c_str());
+
+    return found;
 }
 
 void CumbiaEpics::unlinkListener(const string &source, CuEpicsActionI::Type t, CuDataListener *l)
 {
-    CuActionFactoryService *af =
-            static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
-    CuEpicsActionI* a = af->findAction(source, t);
+    CuEpicsActionFactoryService *af =
+            static_cast<CuEpicsActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuEpicsActionFactoryService::CuActionFactoryServiceType)));
+    CuEpicsActionI* a = af->find(source, t);
     if(a)
         a->removeDataListener(l); /* when no more listeners, a stops itself */
 }
 
 CuEpicsActionI *CumbiaEpics::findAction(const std::string &source, CuEpicsActionI::Type t) const
 {
-    CuActionFactoryService *af =
-            static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
-    CuEpicsActionI* a = af->findAction(source, t);
+    CuEpicsActionFactoryService *af =
+            static_cast<CuEpicsActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuEpicsActionFactoryService::CuActionFactoryServiceType)));
+    CuEpicsActionI* a = af->find(source, t);
     return a;
 }
 
