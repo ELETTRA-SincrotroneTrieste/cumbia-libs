@@ -25,6 +25,7 @@ QuApplication::QuApplication(int & argc, char **argv) : QApplication(argc, argv)
 {
     d = new QuApplicationPrivate;
     d->dbus_i = NULL;
+    d->cumbia_dbus_plugin = "QuDBusPluginInterface";
     m_loadPlugin();
 }
 
@@ -49,7 +50,7 @@ int QuApplication::exec()
         emit dbusRegistered(exename(), cmdOpt(), d->dbus_i->getServiceName(this));
     }
     else
-        perr("QuApplication.exec: plugin %s is not loaded", qstoc(d->cumbia_dbus_plugin));
+        perr("QuApplication.exec: plugin \"%s\" is not loaded", qstoc(d->cumbia_dbus_plugin));
 
     int ret = QApplication::exec();
     if(d->dbus_i)
@@ -134,13 +135,17 @@ QStringList QuApplication::cmdOpt() const
  */
 bool QuApplication::m_loadPlugin()
 {
+    bool found = false;
+    QuDBusPluginInterface *dpi = NULL;
     QDir pluginsDir(CUMBIA_QTCONTROLS_PLUGIN_DIR);
     pluginsDir.cd("plugins");
-    foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
+    QStringList entryList = pluginsDir.entryList(QDir::Files);
+    for(int i = 0; i < entryList.size() && !found; i++) {
+        QString fileName = entryList[i];
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
         QObject *plugin = pluginLoader.instance();
         if (plugin) {
-            QuDBusPluginInterface *dpi = qobject_cast<QuDBusPluginInterface *>(plugin);
+            dpi = qobject_cast<QuDBusPluginInterface *>(plugin);
             if(dpi)
                 d->dbus_i = dpi->getAppIface();
             if (d->dbus_i)
@@ -149,6 +154,10 @@ bool QuApplication::m_loadPlugin()
         else
             perr("QuApplication.m_loadPlugin: error loading plugin: %s", qstoc(pluginLoader.errorString()));
     }
+    if(!dpi)
+        perr("QuApplication.m_loadPlugin: error loading plugin interface \"QuDBusPluginInterface\"");
+    if(!d->dbus_i)
+        perr("QuApplication.m_loadPlugin: error getting QuAppDBusInterface");
 
     return false;
 }

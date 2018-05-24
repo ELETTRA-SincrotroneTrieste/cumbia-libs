@@ -6,7 +6,7 @@
 #include <culog.h>
 #include <cuactivity.h>
 #include <list>
-#include <cumbiatango.h>.h>
+#include <cumbiatango.h>
 #include <cuthreadfactoryimpl_i.h>
 #include <cuthreadseventbridgefactory_i.h>
 

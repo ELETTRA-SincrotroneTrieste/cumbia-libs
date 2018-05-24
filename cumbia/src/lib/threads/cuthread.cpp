@@ -51,7 +51,7 @@ public:
 
 };
 
-/*! \brief returns a new CuThread
+/*! \brief builds a new CuThread
  *
  * @param thread_token the token associated to the thread
  * @param eventsBridge a CuThreadsEventBridge_I implementation, for example
@@ -508,19 +508,18 @@ void CuThread::mExitActivity(CuActivity *a, bool onThreadQuit)
         return;
 
     mRemoveActivityTimer(a);
-    if(a->getStateFlags() & CuActivity::CuAStateOnExit)
-    {
-        cuprintf("\e[1;35;4mwill not call exit again on activity %p\e[0m\n", a);
-        return;
+    if(!(a->getStateFlags() & CuActivity::CuAStateOnExit)) {
+        // if the activity is not already doing exit
+        if(onThreadQuit)
+            a->exitOnThreadQuit(); // will not call thread->publishExitEvent
+        else
+            a->doOnExit();
+
+        d->activity_set.erase(it);
     }
-
-    // if the activity is not already doing exit
-    if(onThreadQuit)
-        a->exitOnThreadQuit(); // will not call thread->publishExitEvent
     else
-        a->doOnExit();
+        perr("CuThread.mExitActivity: called twice on %p", a);
 
-    d->activity_set.erase(it);
 }
 
 /*! @private */
@@ -529,12 +528,9 @@ void CuThread::mRemoveActivityTimer(CuActivity *a)
     std::map<CuActivity *, CuTimer *>::iterator it = d->timerActivityMap.begin();
     pbgreen("CuThread.mRemoveActivityTimer pthread 0x%lx Searching timer in map sized %lu for activity %p (type %d) \e[0m\e[1;36mAND UNREGISTERING/DELETING ACTIVITY\e[0m", pthread_self(),
             d->timerActivityMap.size(), a, a->getType());
-    while(it != d->timerActivityMap.end())
-    {
-        if(it->first == a)
-        {
-            if(it->second != NULL)
-            {
+    while(it != d->timerActivityMap.end()) {
+        if(it->first == a)  {
+            if(it->second != NULL) {
                 it->second->stop();
                 delete it->second;
             }

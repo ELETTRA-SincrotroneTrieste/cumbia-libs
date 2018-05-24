@@ -58,14 +58,15 @@ CuEpicsActionI* CuEpicsActionFactoryService::registerAction(const std::string& s
     return action;
 }
 
-CuEpicsActionI *CuEpicsActionFactoryService::find(const string &src, CuEpicsActionI::Type at)
+std::vector<CuEpicsActionI *> CuEpicsActionFactoryService::find(const string &src, CuEpicsActionI::Type at)
 {
+    std::vector<CuEpicsActionI *> actions;
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuEpicsActionI *>::iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
         if((*it)->getType() == at && (*it)->getSource().getName() == src)
-            return (*it);
-    return NULL;
+            actions.push_back (*it);
+    return actions;
 }
 
 CuEpicsActionI *CuEpicsActionFactoryService::findActive(const string &src, CuEpicsActionI::Type at)
@@ -89,10 +90,13 @@ void CuEpicsActionFactoryService::unregisterAction(const string &src, CuEpicsAct
            src.c_str(), at);
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuEpicsActionI *>::iterator it;
-    for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == at &&
-                (*it)->getSource().getName() == src)
+    it = d->actions.begin();
+    while( it != d->actions.end()) {
+        if((*it)->getType() == at && (*it)->getSource().getName() == src)
             it = d->actions.erase(it);
+        else
+            it++;
+    }
 }
 
 void CuEpicsActionFactoryService::deleteActions()

@@ -141,7 +141,6 @@ void QuTrendPlot::onUpdate(const CuData &da)
 
 void QuTrendPlot::update(const CuData &da)
 {
-    printf("\e[1;31mQuTrendPlot.update this %p data %s\e[0m\n", this, da.toString().c_str());
     d->read_ok = !da["err"].toBool();
     QString src = QString::fromStdString(da["src"].toString());
 
@@ -175,6 +174,11 @@ void QuTrendPlot::update(const CuData &da)
 
             v.to(y);
             appendData(src, x, y);
+        }
+        else {
+            // appendData triggers a replot when necessary. If !d->read_ok, then there's at least
+            // one curve with an Invalid state. A replot is necessary in this case
+            replot();
         }
     }
     setToolTip(QString("\"%1\": %2").arg(src).arg(QString::fromStdString(da["msg"].toString())));
@@ -220,12 +224,6 @@ void QuTrendPlot::setShowDateOnTimeAxis(bool en)
  */
 void QuTrendPlot::refresh()
 {
-    printf("\e[1;33m*\n*\n* QuTrendPlot:refresh data siz %d\e[0m\n*\n*", curves().size());
-    foreach(QwtPlotCurve *c, this->curves())
-    {
-        QwtSeriesData<QPointF> *data = c->data();
-        printf("\e[1;33m* QuTrendPlot.refresh curve %s data siz %ld\e[0m\n", qstoc(c->title().text()), data->size() );
-    }
     bool fullReplot = (updateMarker() || curves().size() > 1);
     fullReplot |= updateScales();
     if(fullReplot)
@@ -237,7 +235,6 @@ void QuTrendPlot::refresh()
         foreach(QwtPlotCurve *c, this->curves())
         {
             QwtSeriesData<QPointF> *data = c->data();
-            printf("\e[1;33m* QuTrendPlot.refresh curve %s data siz %ld\e[0m\n", qstoc(c->title().text()), data->size() );
             if(data->size() > 1)
                 d->directPainter->drawSeries(c, data->size() - 2, data->size() -1);
         }

@@ -83,17 +83,19 @@ void CuActivityManager::removeConnections(CuThreadInterface *t)
     std::lock_guard<std::mutex> lock(m_mutex);
     std::multimap< CuThreadInterface *, CuActivity *>::iterator it;
     std::multimap<const CuActivity *, CuThreadListener *>::const_iterator lit;
-    for(it = mConnectionsMultiMap.begin(); it != mConnectionsMultiMap.end(); ++it)
-    {
-        if(it->first == t)
-        {
+    it = mConnectionsMultiMap.begin();
+    while(it != mConnectionsMultiMap.end())  {
+        if(it->first == t) {
             CuActivity *a = it->second;
-            for(lit = mThreadListenersMultiMap.begin(); lit != mThreadListenersMultiMap.end(); ++lit)
+            lit = mThreadListenersMultiMap.begin();
+            while(lit != mThreadListenersMultiMap.end())
             {
                 if(lit->first == a)
-                    mThreadListenersMultiMap.erase(lit);
+                    lit = mThreadListenersMultiMap.erase(lit);
+                else
+                    lit++;
             }
-            mConnectionsMultiMap.erase(it);
+            it = mConnectionsMultiMap.erase(it);
         }
     }
 }

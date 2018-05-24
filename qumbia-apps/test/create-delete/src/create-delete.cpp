@@ -161,13 +161,15 @@ void CreateDelete::addReader()
         QSpinBox *sbsu = findChild<QSpinBox *>("sbSetUnsetCnt");
         for(int i = 1; i < sbsu->value(); i++)
         {
-            printf("\e[1;35m***\e[0m testing setSource / unsetSource n.%d\n", i);
+            printf("\e[1;35m***\e[0m testing setSource / unsetSource n.%d label \e[1;33m%p (as data listener %p)\e[0m\n", i, label,
+                   static_cast<CuDataListener *>(label));
             label->setSource(s);
             label->unsetSource();
             label->unsetSource();
             label->unsetSource();
+            label->unsetSource();
         }
-
+        printf("\e[1;33m- setSource on label %p\e[0m\n", label);
         label->setSource(s);
         QPushButton *pb  = new QPushButton("Disconnect", gb);
         pb->setObjectName("pb_" + QString::number(rows));

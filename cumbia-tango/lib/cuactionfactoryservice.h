@@ -56,7 +56,7 @@ public:
 
     CuTangoActionI *findActive(const std::string &name, CuTangoActionI::Type at);
 
-    CuTangoActionI *find(const std::string &name, CuTangoActionI::Type at);
+    std::vector<CuTangoActionI *> find(const std::string &name, CuTangoActionI::Type at);
 
     size_t count() const;
 

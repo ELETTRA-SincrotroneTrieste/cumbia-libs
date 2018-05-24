@@ -40,7 +40,7 @@ CuTReader::CuTReader(const TSource& src, CumbiaTango *ct) : CuTangoActionI()
     d->tsrc = src;
     d->cumbia_t = ct;
     d->current_activity = NULL;
-    d->exit = false;
+    d->exit = false;  // set to true by stop
     d->log = CuLog(&d->li);
     d->period = 1000;
     d->refresh_mode = ChangeEventRefresh;
@@ -69,6 +69,16 @@ void CuTReader::onProgress(int step, int total, const CuData &data)
  * \brief delivers to the main thread the result of a task executed in background.
  *
  * See  \ref md_lib_cudata_for_tango
+ *
+ * The d->exit flag is true only if the CuTReader::stop has been called. (data listener destroyed
+ * or reader disconnected ("unset source") )
+ * Only in this case CuTReader auto deletes itself when data["exit"] is true.
+ * data["exit"] true is not enough to dispose CuTReader because CuTReader handles two types of
+ * activities (polling and event).
+ *
+ * If the error flag is set by the CuEventActivity because subscribe_event failed, the poller is started
+ * and the error *is not* notified to the listener(s)
+ *
  */
 void CuTReader::onResult(const CuData &data)
 {
@@ -80,9 +90,7 @@ void CuTReader::onResult(const CuData &data)
     bool event_subscribe_fail = err && !d->exit && data["event"].toString() == "subscribe";
 
     // if it's just subscribe_event failure, do not notify listeners
-    for(it = lis_copy.begin();
-        it != lis_copy.end() && !event_subscribe_fail;   ++it)
-    {
+    for(it = lis_copy.begin(); it != lis_copy.end() && !event_subscribe_fail;   ++it) {
         (*it)->onUpdate(data);
     }
     if(err && !d->exit && d->current_activity->getType() == CuEventActivity::CuEventActivityType)
@@ -94,9 +102,11 @@ void CuTReader::onResult(const CuData &data)
         m_startPollingActivity(polling_fallback);
     }
 
-    /* remove last listener and delete this only if this result with the "exit" flag belongs to the current
-     * activity, to avoid that old results, queued and delivered late, delete this before the current activity
-     * posts its "exit" result
+    /* remove last listener and delete this
+     * - if this result with the "exit" flag belongs to the current
+     *   activity, to avoid that old results, queued and delivered late, delete this before the current activity
+     *   posts its "exit" result
+     * - if d->exit is set to true (CuTReader has been stop()ped )
      */
     if(d->exit && data["exit"].toBool() && data["activity"] == d->current_activity->getToken()["activity"])
     {
@@ -397,6 +407,6 @@ void CuTReader::m_startPollingActivity(bool fallback)
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
     d->cumbia_t->registerActivity(d->current_activity, this, tt, fi, bf);
-    printf("> CuTReader.m_startPollingActivity reader %p thread 0x%lx ACTIVITY %p == \e[0;32mSTARTING POLLING\e[0m\n\n", this, pthread_self(), d->current_activity);
+    cuprintf("> CuTReader.m_startPollingActivity reader %p thread 0x%lx ACTIVITY %p == \e[0;32mSTARTING POLLING\e[0m\n\n", this, pthread_self(), d->current_activity);
 }
 

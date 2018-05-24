@@ -115,6 +115,8 @@ protected:
 private:
     void init();
 
+    void m_setSymbol(size_t dataSiz);
+
     EPlotCurvePrivate *d;
 };
 

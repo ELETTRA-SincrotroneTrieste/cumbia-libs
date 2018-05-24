@@ -115,6 +115,7 @@ QumbiaClient::~QumbiaClient()
 void QumbiaClient::configure(const CuData &d)
 {
     if(d["type"].toString() == "property") {
+     //   printf("\e[1;33mQumbiaClient.configure data arrived is %s\e[0m\n", d.toString().c_str());
         sender()->disconnect(this, SLOT(configure(CuData)));
         const int plotRowCnt = 5;
         int layout_row = 2;

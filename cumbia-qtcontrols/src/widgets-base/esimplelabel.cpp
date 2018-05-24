@@ -50,8 +50,8 @@ void ESimpleLabel::decorate(const QColor & background, const QColor &border)
     else
         bor = QColor(Qt::lightGray);
 
-    borStyle = QString("border-width: 0.02em; "
-                       "border-style: solid; border-radius: 6px; "
+    borStyle = QString("border-width: 0.1em; "
+                       "border-style: solid; border-radius: 2px; "
                        "border-color: rgb(%1,%2,%3); ")
             .arg(bor.red()).arg(bor.green()).arg(bor.blue());
 

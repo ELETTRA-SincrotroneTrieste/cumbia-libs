@@ -92,16 +92,16 @@ void CumbiaEpics::unlinkListener(const string &source, CuEpicsActionI::Type t, C
 {
     CuEpicsActionFactoryService *af =
             static_cast<CuEpicsActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuEpicsActionFactoryService::CuActionFactoryServiceType)));
-    CuEpicsActionI* a = af->find(source, t);
-    if(a)
-        a->removeDataListener(l); /* when no more listeners, a stops itself */
+    std::vector<CuEpicsActionI *> actions = af->find(source, t);
+    for(size_t i = 0; i < actions.size(); i++)
+        actions[i]->removeDataListener(l); /* when no more listeners, a stops itself */
 }
 
 CuEpicsActionI *CumbiaEpics::findAction(const std::string &source, CuEpicsActionI::Type t) const
 {
     CuEpicsActionFactoryService *af =
             static_cast<CuEpicsActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuEpicsActionFactoryService::CuActionFactoryServiceType)));
-    CuEpicsActionI* a = af->find(source, t);
+    CuEpicsActionI* a = af->findActive(source, t);
     return a;
 }
 

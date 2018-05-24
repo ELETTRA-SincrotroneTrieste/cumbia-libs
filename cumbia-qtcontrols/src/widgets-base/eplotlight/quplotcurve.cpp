@@ -9,6 +9,7 @@
 #include <elettracolors.h>
 #include <qwt_plot_canvas.h>
 #include <QPolygon>
+#include <qwt_symbol.h>
 
 #define MAX_STATE_SYMBOLS 6
 #define STATE_SYMBOL_SIZE 14
@@ -20,6 +21,10 @@ public:
     int bufSize; /* no more needed: managed by EPlotLight */
     CurveData *data;
     QuPlotCurve::State state;
+    int max_data_size_for_symbol;
+    // keep a boolean to test if symbol is enabled instead of making a call to
+    // QwtPlotCurve::symbol
+    bool symbol;
 };
 
 QuPlotCurve::QuPlotCurve() :  QwtPlotCurve()
@@ -44,6 +49,28 @@ void QuPlotCurve::init()
     d->data = new CurveData();
     d->bufSize = -1;
     d->state = Normal;
+    d->symbol = false;
+    d->max_data_size_for_symbol = 5;
+}
+
+void QuPlotCurve::m_setSymbol(size_t dataSiz)
+{
+    QwtSymbol *sym = NULL;
+    if(dataSiz <= d->max_data_size_for_symbol) {
+        if(!d->symbol) {
+            QPen pe(pen());
+            pe.setWidthF(1.45);
+            sym = new QwtSymbol(QwtSymbol::XCross);
+            sym->setPen(pe);
+            sym->setSize(10);
+            setSymbol(sym);
+            d->symbol = true;
+        }
+    }
+    else  if(d->symbol) {
+        setSymbol(NULL);
+        d->symbol = false;
+    }
 }
 
 QuPlotCurve::~QuPlotCurve()
@@ -55,6 +82,7 @@ QuPlotCurve::~QuPlotCurve()
 
 void QuPlotCurve::setData(const QVector< double > &xData, const QVector< double > &yData)
 {
+    m_setSymbol(xData.size());
     d->data->set(xData, yData);
     QwtPlotCurve::setSamples(xData, yData);
 }
@@ -62,13 +90,14 @@ void QuPlotCurve::setData(const QVector< double > &xData, const QVector< double 
 void QuPlotCurve::appendData(double *x, double *y, int count)
 {
     /* add count elements */
+    m_setSymbol(data()->size());
     d->data->append(x, y, count);
 }
 
 void QuPlotCurve::popFront()
 {
     if(d->data->count() > 0)
-    d->data->removeFirstElements(1);
+        d->data->removeFirstElements(1);
 }
 
 void QuPlotCurve::updateRawData()
@@ -101,10 +130,10 @@ void QuPlotCurve::setState(QuPlotCurve::State s) { d->state = s; }
   * according to the value of from and to, eventually all the labels in case of from == 0 and to == -1.
   */
 void QuPlotCurve::drawCurve(QPainter *p, int style,
-                           const QwtScaleMap &xMap,
-                           const QwtScaleMap &yMap,
-                           const QRectF &canvasRect,
-                           int from, int to) const
+                            const QwtScaleMap &xMap,
+                            const QwtScaleMap &yMap,
+                            const QRectF &canvasRect,
+                            int from, int to) const
 {
     double y = 0.0, x = 0.0;
     if(d->state == Invalid)
@@ -148,7 +177,7 @@ void QuPlotCurve::drawCurve(QPainter *p, int style,
             QRect rect(xMap.transform(x), yMap.transform(y) - STATE_SYMBOL_SIZE / 2,
                        STATE_SYMBOL_SIZE, STATE_SYMBOL_SIZE);
             QPolygon poly(QVector<QPoint>() << rect.bottomLeft() << QPoint(rect.left() + rect.width()/2, rect.top())
-                            << rect.bottomRight());
+                          << rect.bottomRight());
             p->setPen(Qt::black);
             QwtPainter::drawText(p, rect, Qt::AlignHCenter|Qt::AlignCenter, "!");
             errPen.setColor(KRED);
@@ -158,7 +187,7 @@ void QuPlotCurve::drawCurve(QPainter *p, int style,
         }
         p->restore();
     }
-    //printf("\e[1;35;2mdrawing curve %s from %d to %d\e[0m\n", qstoc(title().text()), from, to);
+
     QwtPlotCurve::drawCurve(p, style, xMap, yMap, canvasRect, from, to);
 }
 

@@ -15,18 +15,21 @@ public:
     pthread_t my_thread_id, other_thread_id;
     std::vector<string> props;
     bool exiting;
+    int repeat, try_cnt;
 };
 
-CuTAttConfigActivity::CuTAttConfigActivity(const CuData &tok, CuDeviceFactoryService *df) : CuIsolatedActivity(tok)
+CuTAttConfigActivity::CuTAttConfigActivity(const CuData &tok, CuDeviceFactoryService *df) : CuActivity(tok)
 {
     d = new CuTAttConfigActivityPrivate;
     d->device_service = df;
     d->tdev = NULL;
     d->err = false;
-    setFlag(CuActivity::CuAUnregisterAfterExec, true);
-    setFlag(CuActivity::CuADeleteOnExit, true);
     d->other_thread_id = pthread_self();
     d->exiting = false;
+    d->repeat = -1;
+    d->try_cnt = 0;
+    setFlag(CuActivity::CuAUnregisterAfterExec, true);
+    setFlag(CuActivity::CuADeleteOnExit, true);
 }
 
 void CuTAttConfigActivity::setDesiredAttributeProperties(const std::vector<string> &props)
@@ -63,7 +66,6 @@ int CuTAttConfigActivity::repeat() const
 
 void CuTAttConfigActivity::init()
 {
-    cuprintf("CuTAttConfigActivity::init: enter\n");
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
@@ -78,7 +80,6 @@ void CuTAttConfigActivity::init()
 
 void CuTAttConfigActivity::execute()
 {
-    cuprintf("CuTAttConfigActivity::execute: enter\n");
     assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
     CuData at = getToken(); /* activity token */
@@ -88,11 +89,11 @@ void CuTAttConfigActivity::execute()
     at["properties"] = std::vector<std::string>();
     at["type"] = "property";
 
+    d->try_cnt++;
     bool success = false;
 
     if(d->tdev->isValid())
     {
-        cuprintf("CuTAttConfigActivity::execute: GETTING get_att_config token %s\n", at.toString().c_str());
         Tango::DeviceProxy *dev = d->tdev->getDevice();
         CuTangoWorld utils;
         utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
@@ -115,35 +116,35 @@ void CuTAttConfigActivity::execute()
         at["err"] = utils.error();
         d->err = utils.error();
         d->msg = utils.getLastMessage();
+
+        // retry?
+        d->err ?  d->repeat = 2000 * d->try_cnt : d->repeat = -1;
         publishResult(at);
     }
 }
 
 void CuTAttConfigActivity::onExit()
 {
-//    printf("[0x%lx] CuTAttConfigActivity this %p onExit: enter\n", pthread_self(), this);
     assert(d->my_thread_id == pthread_self());
-    if(d->exiting)
+    if(!d->exiting)
     {
-//        printf("\e[1;31mCuTAttConfigActivity::onExit onExit already called\e[0m\n!!\n");
-        return;
+        int refcnt = -1;
+        CuData at = getToken(); /* activity token */
+        at["msg"] = d->msg;
+        at["type"] = "property";
+        at["err"] = d->err;
+        CuTangoWorld utils;
+        utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
+        if(d->tdev)
+            refcnt = d->tdev->removeRef();
+        if(refcnt == 0)
+        {
+            d->device_service->removeDevice(at["device"].toString());
+            d->tdev = NULL;
+        }
+        at["exit"] = true;
+        publishResult(at);
     }
-    int refcnt = -1;
-    CuData at = getToken(); /* activity token */
-    at["msg"] = d->msg;
-    at["type"] = "property";
-    at["err"] = d->err;
-    CuTangoWorld utils;
-    utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
-//    printf("[0x%lx] \e[1;34mCuTAttConfigActivity::onExit this %p  DECREMENTING REF CNT ON TDevice %p\e[0m\n\n", pthread_self(), this, d->tdev);
-    if(d->tdev)
-        refcnt = d->tdev->removeRef();
-    if(refcnt == 0)
-    {
-        d->device_service->removeDevice(at["device"].toString());
-        d->tdev = NULL;
-    }
-    at["exit"] = true;
-//    printf("[0x%lx] \e[1;34mCuTAttConfigActivity::onExit this %p  calling publish result for EXIT!\e[0m\n", pthread_self(), this);
-    publishResult(at);
+    else
+        perr("CuTAttConfigActivity.onExit already called for %p", this);
 }

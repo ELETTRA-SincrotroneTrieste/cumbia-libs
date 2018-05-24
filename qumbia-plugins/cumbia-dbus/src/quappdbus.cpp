@@ -74,17 +74,17 @@ QString QuAppDBus::getServiceName(QuApplication* app) const
         appname = appname.split("/", QString::SkipEmptyParts).last();
 
     if(gethostname(hostname, HOST_NAME_MAX))
-        perr("QuAppDBus.m_makeServiceName: hostname unavailable");
+        perr("QuAppDBus.getServiceName: hostname unavailable");
 
     display = getenv("DISPLAY");
     if(!display)
-        printf("QuAppDBus.m_makeServiceName: DISPLAY env variable unavailable");
+        printf("QuAppDBus.getServiceName: DISPLAY env variable unavailable");
     else
         qsdisplay = QString(display).remove(QRegExp("\\.\\d*")).remove(":");
     dbus_servicenam = "eu.elettra." + QString(hostname) + ".display" + qsdisplay  +
              ".quapplication.pid" + QString::number(getpid()) + "."  + appname ;
 
-    printf("QuAppDBus.m_makeServiceName: service name \"%s\"\n", qstoc(dbus_servicenam));
+    cuprintf("QuAppDBus.getServiceName: service name \"%s\"\n", qstoc(dbus_servicenam));
     return dbus_servicenam;
 }
 

@@ -24,7 +24,7 @@ public:
 
     CuEpicsActionI* registerAction(const std::string& src, const CuEpicsActionFactoryI& f, CumbiaEpics *ce);
 
-    CuEpicsActionI *find(const std::string &name, CuEpicsActionI::Type at);
+    std::vector<CuEpicsActionI *> find(const std::string &name, CuEpicsActionI::Type at);
 
     CuEpicsActionI *findActive(const std::string &src, CuEpicsActionI::Type at);
 

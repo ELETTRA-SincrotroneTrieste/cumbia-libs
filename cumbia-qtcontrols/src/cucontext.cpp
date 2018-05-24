@@ -133,6 +133,7 @@ CuControlsReaderA *CuContext::replace_reader(const std::string &s, CuDataListene
 {
     disposeReader(std::string()); // all
     CuControlsReaderA *reader = m_make_reader(s, datal);
+    printf("CuContext.replace_reader: making new reader with data listener %p reader is %p\n", datal, reader);
     if(reader)
         d->readers.append(reader);
     return reader;

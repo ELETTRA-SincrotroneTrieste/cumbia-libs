@@ -78,7 +78,7 @@ void CumbiaTango::addAction(const std::__cxx11::string &source, CuDataListener *
         perr("CumbiaTango.addAction: source \"%s\" is not valid, ignoring", source.c_str());
 }
 
-/** \brief Removes a listener from the action identified by the given source name and type
+/** \brief Removes a listener from the action(s) with the given source name and type
  *
  * @param source the source of the action
  * @param t the CuTangoActionI::Type type (Reader, Writer, MultiReader, MultiWriter, AttConfig...)
@@ -92,6 +92,9 @@ void CumbiaTango::addAction(const std::__cxx11::string &source, CuDataListener *
  * \note This call does not necessarily remove the CuActionI from cumbia. A CuActionI is removed when
  *       there are no linked CuDataListener anymore.
  *
+ * \note There may be multiple actions with the given source and type. CuTangoActionI::removeDataListener(l)
+ *       is called for each of them. Please see CuActionFactoryService::find for more details
+ *
  * @see CuTangoActionI::Type
  * @see CuDataListener
  * @see CuTReader::removeDataListener
@@ -103,9 +106,9 @@ void CumbiaTango::unlinkListener(const string &source, CuTangoActionI::Type t, C
 {
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
-    CuTangoActionI* a = af->find(source, t);
-    if(a)
-        a->removeDataListener(l); /* when no more listeners, a stops itself */
+    std::vector<CuTangoActionI *> actions = af->find(source, t);
+    for(size_t i = 0; i < actions.size(); i++)
+        actions[i]->removeDataListener(l); /* when no more listeners, a stops itself */
 }
 
 CuTangoActionI *CumbiaTango::findAction(const std::string &source, CuTangoActionI::Type t) const

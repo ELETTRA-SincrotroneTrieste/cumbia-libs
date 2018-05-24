@@ -52,8 +52,9 @@ CuTangoActionI* CuActionFactoryService::registerAction(const std::string& src,
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuTangoActionI *>::iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src && !(*it)->exiting())
+        if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src && !(*it)->exiting()) {
             break;
+        }
 
     if(it == d->actions.end())
     {
@@ -98,18 +99,25 @@ CuTangoActionI *CuActionFactoryService::findActive(const string &src, CuTangoAct
  *
  * @param src the complete source (target) name (no wildcard)
  * @param at the action type (Reader, Writer, AttConfig, ...)
- * @return the action with the given src and type.
+ * @return a list of actions with the given src and type.
  *
+ * \par Note
+ * Multiple actions can be found with the given src and type. This is likely to happen when
+ * a new action is registered, stopped and registered again with the same src in a short time.
+ * In this case, we end up with a not active action and an active one with the same src.
+ *
+ * \par Note
  * To find active actions (whose stop method hasn't been called yet), use findActive
  */
-CuTangoActionI *CuActionFactoryService::find(const string &src, CuTangoActionI::Type at)
+std::vector<CuTangoActionI *> CuActionFactoryService::find(const string &src, CuTangoActionI::Type at)
 {
     std::lock_guard<std::mutex> lock(d->mutex);
+    std::vector <CuTangoActionI *> actions;
     std::list<CuTangoActionI *>::iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
         if((*it)->getType() == at && (*it)->getSource().getName() == src)
-            return (*it);
-    return NULL;
+            actions.push_back(*it);
+    return actions;
 }
 
 /*! \brief return the number of registered actions
@@ -145,9 +153,15 @@ void CuActionFactoryService::unregisterAction(const string &src, CuTangoActionI:
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuTangoActionI *>::iterator it;
     size_t siz = d->actions.size();
-    for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == at && (*it)->getSource().getName() == src && (*it)->exiting())
+
+    it = d->actions.begin();
+    while( it != d->actions.end())  {
+        if((*it)->getType() == at && (*it)->getSource().getName() == src && (*it)->exiting()) {
             it = d->actions.erase(it);
+        }
+        else
+            ++it;
+    }
     if(d->actions.size() == siz) // nothing removed
         perr("CuActionFactoryService::unregisterAction: no actions unregistered");
 }

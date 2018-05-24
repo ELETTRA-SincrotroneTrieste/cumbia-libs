@@ -1,7 +1,7 @@
 #ifndef CUTATTCONFIGURATION_H
 #define CUTATTCONFIGURATION_H
 
-#include <cutangoactioni.h>
+#include "cutangoactioni.h"
 
 class CuTAttConfigurationPrivate;
 

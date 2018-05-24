@@ -80,7 +80,7 @@ void QuPlotCanvasPainterComponent::update(QPainter *p,
     }
     /* no curves or curves without data? Inform the user */
     foreach(QwtPlotCurve * c, curves)
-        if(c->dataSize() > 1)
+        if(c->dataSize() > 0)
             return;
     QString txt;
     curves.size() ? txt = "Waiting for data..." : txt = "No data";

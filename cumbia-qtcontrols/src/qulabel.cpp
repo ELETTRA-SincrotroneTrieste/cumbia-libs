@@ -141,8 +141,7 @@ void QuLabel::onUpdate(const CuData &da)
 
     if(da.containsKey("quality_color"))
         background = d->palette[QString::fromStdString(da["quality_color"].toString())];
-    if(da.containsKey("success_color"))
-        border = d->palette[QString::fromStdString(da["success_color"].toString())];
+    d->read_ok ? border = d->palette["dark_green"] : border = d->palette["dark_red"];
 
     setToolTip(da["msg"].toString().c_str());
 

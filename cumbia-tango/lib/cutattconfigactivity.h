@@ -6,7 +6,7 @@
 class CuTAttConfigActivityPrivate;
 class CuDeviceFactoryService;
 
-class CuTAttConfigActivity : public CuIsolatedActivity
+class CuTAttConfigActivity : public CuActivity
 {
 public:
     enum Type { CuAttConfigActivityType = CuActivity::User + 5 };
