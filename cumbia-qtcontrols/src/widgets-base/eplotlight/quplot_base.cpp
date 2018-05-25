@@ -206,6 +206,7 @@ void QuPlotBase::update(const CuData &)
 void QuPlotBase::configure(const CuData &da)
 {
     CuVariant m, M;
+    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
     m = da["min"];  // min value
     M = da["max"];  // max value
     bool okl, oku;  // toDouble ok for lower and upper bound
@@ -228,12 +229,17 @@ void QuPlotBase::configure(const CuData &da)
             current_def_ub = ub;
     }
     else {
-        QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
+
         // initialised (to 0 and 1000) in QuPlotAxesComponent's constructor
         current_def_lb = axes_c->lowerBoundFromCurves(QwtPlot::yLeft);
         current_def_ub  = axes_c->upperBoundFromCurves(QwtPlot::yLeft);
     }
     setDefaultBounds(current_def_lb, current_def_ub, QwtPlot::yLeft);
+    if(!axes_c->autoscale(QwtPlot::yLeft)) {
+        setAxisScale(QwtPlot::yLeft, lb, ub);
+    }
+
+    printf("quplotbase autoscale y %d\n", axes_c->autoscale(QwtPlot::yLeft));
     // if configuration happens after data, need replot
     replot();
 }
@@ -312,17 +318,17 @@ bool QuPlotBase::updateScales()
         {
             old_lb = axes_c->lowerBoundFromCurves(axisId);
             old_ub = axes_c->upperBoundFromCurves(axisId);
-            if(axisId == QwtPlot::yLeft)
-                printf("\e[1;32maxis autoscale for axis %d old low %f old up %f\e[0m\n", axisId, old_lb, old_ub);
+            //            if(axisId == QwtPlot::yLeft)
+            //                printf("\e[1;32maxis autoscale for axis %d old low %f old up %f\e[0m\n", axisId, old_lb, old_ub);
             axes_c->setBoundsFromCurves(this, axisId);
             if(!zoomer->inZoom())
                 boundsChanged |= axes_c->applyScaleFromCurveBounds(this, axisId); // no updates until replot
             else if(zoomer->inZoom())
                 zoomer->changeRect(axisId, axes_c->lowerBoundFromCurves(axisId) - old_lb,
-                                 axes_c->upperBoundFromCurves(axisId) - old_ub);
-            if(axisId == QwtPlot::yLeft)
-                printf("\e[1;32mbounds changed %d -  - - new lb %f new ub %f\e[0m\n", boundsChanged, axes_c->lowerBoundFromCurves(axisId)
-                   , axes_c->upperBoundFromCurves(axisId));
+                                   axes_c->upperBoundFromCurves(axisId) - old_ub);
+            //            if(axisId == QwtPlot::yLeft)
+            //                printf("\e[1;32mbounds changed %d -  - - new lb %f new ub %f\e[0m\n", boundsChanged, axes_c->lowerBoundFromCurves(axisId)
+            //                   , axes_c->upperBoundFromCurves(axisId));
         }
     }
     return boundsChanged;
@@ -461,6 +467,9 @@ void QuPlotBase::setDefaultBounds(double lb, double ub, QwtPlot::Axis axisId)
     axes_c->setDefaultBounds(this, axisId, lb, ub);
 }
 
+/*! \brief restores the bounds set with setDefaultBounds
+ *
+ */
 void QuPlotBase::restoreDefaultBounds(QwtPlot::Axis axisId)
 {
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
@@ -736,7 +745,7 @@ int QuPlotBase::findClosestPoint(QPoint p, QwtPlotCurve **closestCrv)
                     curveDistancesMap.insert(c, dist);
                     curveClosestPointMap.insert(c, closestPoint);
                 }
-//                printf("curve %s, dist %.2f closestPoint %d\n", qstoc(c->title().text()), dist, closestPoint);
+                //                printf("curve %s, dist %.2f closestPoint %d\n", qstoc(c->title().text()), dist, closestPoint);
             }
         }
     }
@@ -836,7 +845,7 @@ void QuPlotBase::showMarker(const QPolygon &p)
 void QuPlotBase::updateLabel(QwtPlotCurve *closestCurve, int closestPointIdx)
 {
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
-//    printf("\e[1;32m updateLabel() closestPoint %d\e[0m\n", closestPointIdx);
+    //    printf("\e[1;32m updateLabel() closestPoint %d\e[0m\n", closestPointIdx);
 
     if(closestCurve && closestPointIdx > -1 && marker->isVisible())
     {

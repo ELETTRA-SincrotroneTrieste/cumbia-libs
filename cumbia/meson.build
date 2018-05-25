@@ -83,6 +83,8 @@ includedirs = include_directories('src/lib', 'src/lib/threads', 'src/lib/service
 
 cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1'
 
+# cpp_arguments = []
+
 deps = [ dependency('threads') ]
 
 cumbialib = shared_library('cumbia', sources,

@@ -545,6 +545,7 @@ void CuTangoWorld::fillFromCommandInfo(const Tango::CommandInfo &ci, CuData &d)
     case Tango::CONST_DEV_STRING: case Tango::DEV_UCHAR: case Tango::DEV_LONG64: case Tango::DEV_ULONG64:
     case Tango::DEV_INT:
         d["data_format"] = Tango::SCALAR;
+        d["data_format_str"] = formatToStr(Tango::SCALAR); /* as string */
         break;
     case Tango::DEVVAR_STATEARRAY:
     case Tango::DEVVAR_LONG64ARRAY: case Tango::DEVVAR_ULONG64ARRAY:
@@ -555,8 +556,11 @@ void CuTangoWorld::fillFromCommandInfo(const Tango::CommandInfo &ci, CuData &d)
     case Tango::DEVVAR_STRINGARRAY: case Tango::DEVVAR_LONGSTRINGARRAY:
     case Tango::DEVVAR_DOUBLESTRINGARRAY:
         d["data_format"] = Tango::SPECTRUM;
+        d["data_format_str"] = formatToStr(Tango::SPECTRUM); /* as string */
+        break;
     default:
         d["data_format"] = Tango::FMT_UNKNOWN;
+        d["data_format_str"] = formatToStr(Tango::FMT_UNKNOWN); /* as string */
     };
 }
 
@@ -616,7 +620,7 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
     data.putTimestamp();
     data["err"] = d->error;
     data["msg"] = d->message;
-    data["success_color"] = d->t_world_conf.successColor(!d->error);
+  //  data["success_color"] = d->t_world_conf.successColor(!d->error);
     return !d->error;
 }
 
@@ -971,8 +975,6 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const CuVariant &arg,
     d->message = "";
     long in_type = info["in_type"].toLongInt();
     Tango::DeviceData dd;
-    cuprintf("\e[1;35mtoDeviceData... enter arg is %s arg format %d type %d CmdInfo in_type %ld...\n",
-             arg.toString().c_str(), arg.getFormat(), arg.getType(), in_type);
     if((arg.isNull() || arg.getFormat() < 0) && in_type == static_cast<Tango::CmdArgType>(Tango::DEV_VOID))
     {
         type_match = true;
@@ -1059,6 +1061,7 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const CuVariant &arg,
         /* no match between CommandInfo argin type and CuVariant type: try to get CuVariant
          * data as string and convert it according to CommandInfo type
          */
+        printf("\e[1;34mtoDeviceData as string\e[0m\n");
         return toDeviceData(arg.toStringVector(), info);
     }
     return dd;

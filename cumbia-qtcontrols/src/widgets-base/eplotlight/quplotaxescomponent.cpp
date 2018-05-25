@@ -20,8 +20,8 @@ QuPlotAxesComponent::QuPlotAxesComponent(QuPlotBase *plot)
     d = new QuPlotAxesComponentPrivate;
     d->autoscale_map[QwtPlot::xBottom] = true;
     d->autoscale_map[QwtPlot::xTop] = true;
-    d->autoscale_map[QwtPlot::yLeft] = true;
-    d->autoscale_map[QwtPlot::yRight] = true;
+    d->autoscale_map[QwtPlot::yLeft] = false;
+    d->autoscale_map[QwtPlot::yRight] = false;
 
     d->margin[QwtPlot::xBottom] = 0.01;
     d->margin[QwtPlot::xTop] = 0.01;
@@ -92,8 +92,6 @@ void QuPlotAxesComponent::setDefaultBounds(QuPlotBase *plot, int axisId, double 
 {
     d->default_bounds[axisId].first = lb;
     d->default_bounds[axisId].second = ub;
-    d->autoscale_map[axisId] = false;
-    plot->setAxisScale(axisId, lb, ub);
 }
 
 void QuPlotAxesComponent::restoreDefaultBounds(QuPlotBase *plot, int axisId)

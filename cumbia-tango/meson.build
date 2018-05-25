@@ -67,6 +67,7 @@ sources = [
 includedirs = include_directories('lib')
 
 cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1'
+# cpp_arguments = []
 
 deps = [ dependency('cumbia'), dependency('tango') ]
 

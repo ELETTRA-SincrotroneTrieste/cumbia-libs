@@ -142,6 +142,7 @@ int CuInfoDialog::exec(QWidget *sender, CuContextI *sender_cwi)
     QFrame *monitorF = new QFrame(this);
     monitorF->setObjectName("monitorF");
     QGridLayout *molo = new QGridLayout(monitorF);
+    molo->setObjectName(monitorF->objectName() + "_layout");
     QList<CuControlsReaderA *> readers = sender_cwi->getContext()->readers();
     // create a set of GroupBoxes that will contain monitor widgets
     foreach(CuControlsReaderA *r, readers)
@@ -149,6 +150,7 @@ int CuInfoDialog::exec(QWidget *sender, CuContextI *sender_cwi)
         QGroupBox *gb = new QGroupBox(r->source(), monitorF);
         gb->setObjectName(r->source() + "_monitor");
         QGridLayout* gblo = new QGridLayout(gb);
+        gblo->setObjectName(gb->objectName() + "_gridLayout");
         molo->addWidget(gb, monrow, 0, 1, d->layout_col_cnt);
         monrow++;
 
@@ -229,15 +231,13 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
         if(update_wait_l)
             delete update_wait_l;
         QHBoxLayout *vbloread = container->findChild<QHBoxLayout *>("vbloread");
-        QGridLayout *gridlodetails = container->findChild<QGridLayout *>("vblodetails");
+        QGridLayout *gridlodetails = container->findChild<QGridLayout *>("gridlodetails");
         if(!vbloread) {
-            vbloread = new QHBoxLayout(container);
-            vbloread->setObjectName("vbloread");
+            vbloread = new QHBoxLayout(0);
             glo->addLayout(vbloread, 0, 0, 1, 5);
         }
         if(!gridlodetails) {
-            gridlodetails = new QGridLayout(container);
-            gridlodetails->setObjectName("vblodetails");
+            gridlodetails = new QGridLayout(0);
             glo->addLayout(gridlodetails, 1, 0, 1, 5);
         }
         QLineEdit *lexv = container->findChild<QLineEdit *>("lexv");

@@ -23,14 +23,15 @@ class CuContext;
  * QuTrendPlot is designed to accept a list of data sources.
  * Each data source is represented by a curve in the plot, which is updated according to
  * the CuData "value" and "timestamp_ms" properties.
- * If CuData "err" boolean is true or the "value" data format is not a scalar, the plot
- * is disabled.
+ * If CuData "err" flag is true, the associated curve will be decorated accordingly.
  *
  * \par Plot update strategies.
  * Any implementation-specific data update is delegated to an update <b>strategy</b>
  * through setUpdateStrategy. If no update strategy is set, then the update method is called
  * from within onUpdate and the base operations aforementioned are performed.
  * <em>Strategies</em> must implement QuWidgetUpdateStrategyI interface.
+ *
+ * @see QuPlotBase
  */
 class QuTrendPlot : public QuPlotBase, public CuDataListener, public CuContextI
 {

@@ -167,8 +167,8 @@ void CuPollingActivity::init()
  */
 void CuPollingActivity::execute()
 {
-    assert(d->tdev != NULL);
-    assert(d->my_thread_id == pthread_self());
+//    assert(d->tdev != NULL);
+//    assert(d->my_thread_id == pthread_self());
     CuData at = getToken(); /* activity token */
     std::string devnam = at["device"].toString();
     std::string point = at["point"].toString();
@@ -185,8 +185,10 @@ void CuPollingActivity::execute()
     }
     else if(dev) /* command */
     {
-        if(d->point_info.isEmpty())
+        if(d->point_info.isEmpty()) {
+            printf("\e[1;33mget_command_info\e[0m\n");
             success = tangoworld.get_command_info(d->tdev->getDevice(), at["point"].toString(), d->point_info);
+        }
         if(d->point_info.isEmpty())
             d->errCnt++;
         else

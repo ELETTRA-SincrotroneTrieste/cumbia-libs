@@ -186,7 +186,7 @@ void CuThread::unregisterActivity(CuActivity *l)
  */
 void CuThread::onEventPosted(CuEventI *event)
 {
-    pbblue("CuThread.onEventPosted: thread (should be main!) 0x%lx event type %d\n", pthread_self(), event->getType());
+//    pbblue("CuThread.onEventPosted: thread (should be main!) 0x%lx event type %d\n", pthread_self(), event->getType());
     CuActivityManager *activity_manager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     const CuEventI::CuEventType ty = event->getType();
     if(ty == CuEventI::Result || ty == CuEventI::Progress)
@@ -230,7 +230,7 @@ void CuThread::onEventPosted(CuEventI *event)
  */
 void CuThread::publishProgress(const CuActivity* activity, int step, int total, const CuData &data)
 {
-    pbblue("CuThread.publishProgress: thread (should be CuThread's!) 0x%lx", pthread_self());
+//    pbblue("CuThread.publishProgress: thread (should be CuThread's!) 0x%lx", pthread_self());
     d->eventBridge->postEvent(new CuResultEvent(activity, step, total, data));
 }
 
@@ -243,7 +243,7 @@ void CuThread::publishProgress(const CuActivity* activity, int step, int total, 
  */
 void CuThread::publishResult(const CuActivity* a,  const CuData &da)
 {
-    pbblue("CuThread.publishResult: thread (should be CuThread's!) 0x%lx data \e[0m%s", pthread_self(), da.toString().c_str());
+//    pbblue("CuThread.publishResult: thread (should be CuThread's!) 0x%lx data \e[0m%s", pthread_self(), da.toString().c_str());
     d->eventBridge->postEvent(new CuResultEvent(a, da));
 }
 
@@ -337,7 +337,6 @@ void CuThread::start()
  */
 void CuThread::run()
 {
-    pbgreen("CuThread.run 0x%lx", pthread_self());
     bool destroy = false;
     ThreadEvent *te = NULL;
     while(1)
@@ -345,11 +344,9 @@ void CuThread::run()
         te = NULL;
         {
             std::unique_lock<std::mutex> lk(d->mutex);
-            cuprintf("\e[1;33mCuThread.run: EVENT QUEUE SIZE %lu this thread  0x%lx this %p\e[0m\n", d->eventQueue.size(), pthread_self(), this);
             std::queue<ThreadEvent *> qcopy = d->eventQueue;
             for(size_t i = 0; i < d->eventQueue.size(); i++)
             {
-                cuprintf("%ld - %d activity\n", i+1, qcopy.front()->getType());
                 qcopy.pop();
             }
             while(d->eventQueue.empty())
@@ -357,7 +354,6 @@ void CuThread::run()
 
             if(d->eventQueue.empty())
             {
-                cuprintf("\e[1;33m**** QUEUE IS ZERO! Continueinggggg\e[0m\n");
                 continue;
             }
             te = d->eventQueue.front();
@@ -410,7 +406,6 @@ void CuThread::run()
         }
         else if(te->getType() == ThreadEvent::ThreadExit) {
             // ExitThreadEvent enqueued by mOnActivityExited (foreground thread)
-            pbgreen("CuThread.run pthread 0x%lx: \e[1;31mThreadExit\e[0m  event", pthread_self());
             destroy = static_cast<ExitThreadEvent *>(te)->autodestroy;
             delete te;
             break;

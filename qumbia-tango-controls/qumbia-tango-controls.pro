@@ -5,7 +5,7 @@ QT       += widgets
 # CONFIG += c++11 in .pri
 
 # Debug or release?
-CONFIG += debug
+CONFIG += release
 
 PKGCONFIG -= qumbia-tango-controls$${QTVER_SUFFIX}
 

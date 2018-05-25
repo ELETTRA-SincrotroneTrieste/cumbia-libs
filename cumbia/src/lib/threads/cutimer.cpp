@@ -159,20 +159,19 @@ void CuTimer::stop()
  */
 void CuTimer::run()
 {
-    pbblue("CuTimer:run");
     std::unique_lock<std::mutex> lock(m_mutex);
     unsigned long timeout = m_timeout;
     while (!m_quit)
     {
         std::chrono::milliseconds ms{timeout};
         std::cv_status status = m_terminate.wait_for(lock, ms);
-        cuprintf("CuTimer.run pause is %d status is %d timeout %d\n", m_pause, (int) status, m_timeout);
+//        cuprintf("CuTimer.run pause is %d status is %d timeout %d\n", m_pause, (int) status, m_timeout);
         //        if(status == std::cv_status::no_timeout)
         m_pause ?  timeout = ULONG_MAX : timeout = m_timeout;
         if(status == std::cv_status::timeout && m_listener)
         {
-            pbblue("CuTimer:run: this: %p triggering timeout in pthread 0x%lx (CuTimer's) m_listener %p m_exit %d CURRENT TIMEOUT is %lu m_pause %d", this,
-                   pthread_self(), m_listener, m_quit, timeout, m_pause);
+//            pbblue("CuTimer:run: this: %p triggering timeout in pthread 0x%lx (CuTimer's) m_listener %p m_exit %d CURRENT TIMEOUT is %lu m_pause %d", this,
+//                   pthread_self(), m_listener, m_quit, timeout, m_pause);
             if(m_listener && !m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
             {
                 m_listener->onTimeout(this);
@@ -182,6 +181,6 @@ void CuTimer::run()
         if(m_singleShot && (status == std::cv_status::timeout) & !m_pause)
             m_quit = true;
     }
-    pbblue("CuTimer:run: exiting!");
+//    pbblue("CuTimer:run: exiting!");
 }
 

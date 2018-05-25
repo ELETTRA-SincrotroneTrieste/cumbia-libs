@@ -163,6 +163,8 @@ void QuSpectrumPlot::onUpdate(const CuData &da)
 
 void QuSpectrumPlot::update(const CuData &da)
 {
+    return;
+
     d->read_ok = !da["err"].toBool();
     const CuVariant &v = da["value"];
     QString src = QString::fromStdString(da["src"].toString());
@@ -173,33 +175,37 @@ void QuSpectrumPlot::update(const CuData &da)
     if(!d->read_ok)
         link_s->addError(da["msg"].toString());
 
+
+    // configure triggers replot at the end but should not be too expensive
+    // to do it once here at configuration time and once more from appendData
     if(d->read_ok && d->auto_configure && da["type"].toString() == "property")
-    {
         configure(da);
-    }
-    else
+
+
+    QuPlotCurve *crv = curve(src);
+    if(!crv)
+        addCurve(src, crv = new QuPlotCurve(src));
+    d->read_ok ? crv->setState(QuPlotCurve::Normal) : crv->setState(QuPlotCurve::Invalid);
+
+    if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Vector)
     {
-        QuPlotCurve *crv = curve(src);
-        if(!crv)
-            addCurve(src, crv = new QuPlotCurve(src));
-
-        d->read_ok &= (v.isValid() && v.getFormat() == CuVariant::Vector);
-        d->read_ok ? crv->setState(QuPlotCurve::Normal) : crv->setState(QuPlotCurve::Invalid);
-
-        if(d->read_ok)
+        if(da.containsKey("timestamp_ms") && crv)
         {
-            if(da.containsKey("timestamp_ms") && crv)
-            {
 
-            }
-            std::vector<double> out;
-            v.toVector<double>(out);
-            QVector<double> y = QVector<double>::fromStdVector(out);
-            if(y.size() != d->x_data.size())
-                d->fill_x_data(y.size());
-            setData(src, d->x_data, y);
         }
+        std::vector<double> out;
+        v.toVector<double>(out);
+        QVector<double> y = QVector<double>::fromStdVector(out);
+        if(y.size() != d->x_data.size())
+            d->fill_x_data(y.size());
+        setData(src, d->x_data, y);
     }
+    else {
+        // appendData triggers a replot when necessary. If !d->read_ok, then there's at least
+        // one curve with an Invalid state. A replot is necessary in this case
+        replot();
+    }
+
     setToolTip(da["msg"].toString().c_str());
 }
 

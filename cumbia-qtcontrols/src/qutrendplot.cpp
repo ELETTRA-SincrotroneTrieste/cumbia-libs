@@ -150,36 +150,35 @@ void QuTrendPlot::update(const CuData &da)
     if(!d->read_ok)
         link_s->addError(da["msg"].toString());
 
-    if(/*!src.isEmpty() && */d->read_ok && d->auto_configure && da["type"].toString() == "property")
-    {
+    // configure triggers replot at the end but should not be too expensive
+    // to do it once here at configuration time and once more from appendData
+    if(d->read_ok && d->auto_configure && da["type"].toString() == "property")
         configure(da);
-    }
-    else/* if(!src.isEmpty())*/
+
+
+    QuPlotCurve *crv = curve(src);
+    if(!crv)
+        addCurve(src, crv = new QuPlotCurve(src));
+
+    // set the curve state
+    d->read_ok ? crv->setState(QuPlotCurve::Normal) : crv->setState(QuPlotCurve::Invalid);
+
+    const CuVariant &v = da["value"];
+    if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Scalar)
     {
-        QuPlotCurve *crv = curve(src);
-        if(!crv)
-            addCurve(src, crv = new QuPlotCurve(src));
+        double x, y;
+        if(da.containsKey("timestamp_ms") && crv)
+            x = static_cast<qint64>(da["timestamp_ms"].toLongInt());
+        else
+            x = crv->size() > 0 ? crv->x(crv->size() - 1) + 1 : 0;
 
-        const CuVariant &v = da["value"];
-        d->read_ok &= (v.getFormat() == CuVariant::Scalar);
-        d->read_ok ? crv->setState(QuPlotCurve::Normal) : crv->setState(QuPlotCurve::Invalid);
-
-        if(d->read_ok && da.containsKey("value"))
-        {
-            double x, y;
-            if(da.containsKey("timestamp_ms") && crv)
-                x = static_cast<qint64>(da["timestamp_ms"].toLongInt());
-            else
-                x = crv->size() > 0 ? crv->x(crv->size() - 1) + 1 : 0;
-
-            v.to(y);
-            appendData(src, x, y);
-        }
-        else {
-            // appendData triggers a replot when necessary. If !d->read_ok, then there's at least
-            // one curve with an Invalid state. A replot is necessary in this case
-            replot();
-        }
+        v.to(y);
+        appendData(src, x, y);
+    }
+    else {
+        // appendData triggers a replot when necessary. If !d->read_ok, then there's at least
+        // one curve with an Invalid state. A replot is necessary in this case
+        replot();
     }
     setToolTip(QString("\"%1\": %2").arg(src).arg(QString::fromStdString(da["msg"].toString())));
 }

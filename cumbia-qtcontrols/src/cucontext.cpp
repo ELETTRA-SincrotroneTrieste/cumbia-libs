@@ -133,7 +133,6 @@ CuControlsReaderA *CuContext::replace_reader(const std::string &s, CuDataListene
 {
     disposeReader(std::string()); // all
     CuControlsReaderA *reader = m_make_reader(s, datal);
-    printf("CuContext.replace_reader: making new reader with data listener %p reader is %p\n", datal, reader);
     if(reader)
         d->readers.append(reader);
     return reader;
@@ -182,7 +181,6 @@ void CuContext::disposeReader(const std::string &src)
         d->readers.clear();
     else if(removed)
         d->readers.removeAll(removed);
-    qDebug() << __FUNCTION__ << "src was" << src.c_str() << " readers " << d->readers.size() << "remvoed" << removed;
 }
 
 void CuContext::disposeWriter(const std::string &src)
@@ -200,7 +198,6 @@ void CuContext::disposeWriter(const std::string &src)
         d->writers.clear();
     else if(removed)
         d->writers.removeAll(removed);
-    qDebug() << __FUNCTION__ << "target was" << src.c_str() << " writers " << d->writers.size() << "remvoed" << removed;
 }
 
 /** Set the options bundle on the context.
