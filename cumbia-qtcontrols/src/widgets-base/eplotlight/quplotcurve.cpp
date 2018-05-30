@@ -138,6 +138,7 @@ void QuPlotCurve::drawCurve(QPainter *p, int style,
     double y = 0.0, x = 0.0;
     if(d->state == Invalid)
     {
+        printf("drawCurve: invalid state drawing\n");
         /* always (re)draw all the markers, because the number of them is limited to
          * MAX_STATE_SYMBOLS.
          */
@@ -188,6 +189,7 @@ void QuPlotCurve::drawCurve(QPainter *p, int style,
         p->restore();
     }
 
+//    printf("\e[1;33mNOTE\e[0m: calling drawCurve %s from %d to %d!\n", qstoc(title().text()), from, to);
     QwtPlotCurve::drawCurve(p, style, xMap, yMap, canvasRect, from, to);
 }
 

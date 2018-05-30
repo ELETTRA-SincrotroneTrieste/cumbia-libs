@@ -101,6 +101,11 @@ void QuPlotBase::init()
     d->displayZoomHint = false;
     d->curvesStyle = Lines;
     setFrameStyle(QFrame::NoFrame);
+
+    plotLayout()->setAlignCanvasToScales(true);
+    plotLayout()->setCanvasMargin(0, QwtPlot::yLeft);
+    plotLayout()->setCanvasMargin(0, QwtPlot::yRight);
+
     /* white background */
     setCanvasBackground(Qt::white);
     /* disable qwt auto replot */
@@ -109,9 +114,13 @@ void QuPlotBase::init()
     QwtPlotGrid* plotgrid = new QwtPlotGrid;
     plotgrid->setPen(QPen(QColor(230,230,248)));
     plotgrid->attach(this);
+    plotgrid->enableX(true);
+    plotgrid->enableY(true);
 
-    setStyleSheet("QuPlotBase { background:white; border:2px solid LightGrey; "
-                  "padding:2px; border-radius:4px} QwtPlotCanvas {border:1px solid LightGray;}");
+
+    setAxisLabelAlignment(QwtPlot::xBottom, Qt::AlignLeft | Qt::AlignBottom);
+
+    //   setStyleSheet("QuPlotBase { background:white; }");
 
     QuPlotZoomComponent *zoom_c = new QuPlotZoomComponent(this);
     zoom_c->attachToPlot(this);
@@ -238,8 +247,6 @@ void QuPlotBase::configure(const CuData &da)
     if(!axes_c->autoscale(QwtPlot::yLeft)) {
         setAxisScale(QwtPlot::yLeft, lb, ub);
     }
-
-    printf("quplotbase autoscale y %d\n", axes_c->autoscale(QwtPlot::yLeft));
     // if configuration happens after data, need replot
     replot();
 }
@@ -293,7 +300,9 @@ bool QuPlotBase::inZoom() const
 bool QuPlotBase::updateMarker()
 {
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
-    return marker->update(this);
+    if(marker->isVisible()) {
+        return marker->update(this);
+    }
 }
 
 /** \brief Updates the axes bounds for which autoscale is enabled.
@@ -311,25 +320,43 @@ bool QuPlotBase::updateScales()
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
 
     double old_lb, old_ub;
-    QList<int> axisIds = QList<int>() << QwtPlot::xBottom << QwtPlot::yLeft;
-    foreach(int axisId, axisIds)
-    {
-        if(axes_c->autoscale(axisId))
-        {
-            old_lb = axes_c->lowerBoundFromCurves(axisId);
-            old_ub = axes_c->upperBoundFromCurves(axisId);
-            //            if(axisId == QwtPlot::yLeft)
-            //                printf("\e[1;32maxis autoscale for axis %d old low %f old up %f\e[0m\n", axisId, old_lb, old_ub);
-            axes_c->setBoundsFromCurves(this, axisId);
-            if(!zoomer->inZoom())
-                boundsChanged |= axes_c->applyScaleFromCurveBounds(this, axisId); // no updates until replot
-            else if(zoomer->inZoom())
-                zoomer->changeRect(axisId, axes_c->lowerBoundFromCurves(axisId) - old_lb,
-                                   axes_c->upperBoundFromCurves(axisId) - old_ub);
-            //            if(axisId == QwtPlot::yLeft)
-            //                printf("\e[1;32mbounds changed %d -  - - new lb %f new ub %f\e[0m\n", boundsChanged, axes_c->lowerBoundFromCurves(axisId)
-            //                   , axes_c->upperBoundFromCurves(axisId));
+    double xm, xM, ym, yM;
+    bool need_xbounds = false, need_ybounds = false;
+    QList<int> autoScaleAxisIds; // will contain only axes that need autoscaling
+    QList<int> axisIds = QList<int>()<< QwtPlot::yLeft << QwtPlot::yRight << QwtPlot::xBottom << QwtPlot::xTop; // 0, 1, 2, 3
+    foreach(int axisId, axisIds) {
+        if(axisEnabled(axisId) && (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop)
+                && axes_c->autoscale(axisId)) {
+            autoScaleAxisIds << axisId;
+            need_xbounds = true;
         }
+        else if(axisEnabled(axisId) && (axisId == QwtPlot::yLeft || axisId == QwtPlot::yRight)
+                && axes_c->autoscale(axisId)) {
+            autoScaleAxisIds << axisId;
+            need_ybounds = true;
+        }
+    }
+    if(need_xbounds || need_ybounds) // get the bounds for the needed axes
+        axes_c->getBoundsFromCurves(this, &xm, &xM, &ym, &yM, need_xbounds, need_ybounds);
+
+    foreach(int axisId, autoScaleAxisIds) {
+        old_lb = axes_c->lowerBoundFromCurves(axisId);
+        old_ub = axes_c->upperBoundFromCurves(axisId);
+        //            if(axisId == QwtPlot::yLeft)
+        //                printf("\e[1;32maxis autoscale for axis %d old low %f old up %f\e[0m\n", axisId, old_lb, old_ub);
+        if(need_xbounds && (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop))
+            axes_c->setBoundsFromCurves(xm, xM, axisId);
+        else if(need_ybounds && (axisId == QwtPlot::yRight || axisId == QwtPlot::yLeft))
+            axes_c->setBoundsFromCurves(ym, yM, axisId);
+
+        if(!zoomer->inZoom())
+            boundsChanged |= axes_c->applyScaleFromCurveBounds(this, axisId); // no updates until replot
+        else if(zoomer->inZoom())
+            zoomer->changeRect(axisId, axes_c->lowerBoundFromCurves(axisId) - old_lb,
+                               axes_c->upperBoundFromCurves(axisId) - old_ub);
+        //            if(axisId == QwtPlot::yLeft)
+        //                printf("\e[1;32mbounds changed %d -  - - new lb %f new ub %f\e[0m\n", boundsChanged, axes_c->lowerBoundFromCurves(axisId)
+        //                   , axes_c->upperBoundFromCurves(axisId));
     }
     return boundsChanged;
 }
@@ -411,8 +438,8 @@ void QuPlotBase::addCurve(const QString& title, QuPlotCurve *curve)
     QString color_nam = colors.at(d->curvesMap.size() % colors.size());
     QColor curveColor = palette.value(color_nam);
     QPen curvePen(curveColor);
-    curvePen.setWidth(0);
-    curve->setStyle(QwtPlotCurve::Lines);
+    //  curvePen.setWidth(0);
+    //  curve->setStyle(QwtPlotCurve::Lines);
     curve->setPen(curvePen);
     d->curvesMap.insert(title, curve);
     curve->attach(this);
@@ -493,8 +520,9 @@ void QuPlotBase::appendData(const QString& curveName, double *x, double *y, int 
     if(!curve)
         return;
     int bufSiz = dataBufferSize();
-    while(bufSiz > 0 && curve->count() > bufSiz)
+    while(bufSiz > 0 && curve->count() > bufSiz) {
         curve->popFront();
+    }
 
     curve->appendData(x, y, size);
     curve->updateRawData();
@@ -510,8 +538,9 @@ void QuPlotBase::setData(const QString& curveName, const QVector< double > &xDat
     if(!curve)
         return;
     curve->setData(xData, yData);
-    if(d->refresh_timeo <= 0)
+    if(d->refresh_timeo <= 0) {
         refresh();
+    }
 }
 
 void QuPlotBase::setCurveStyle(const QString &name, QwtPlotCurve::CurveStyle style)
@@ -629,6 +658,9 @@ void QuPlotBase::setXAutoscaleMargin(double adj)
     axes_c->setAutoscaleMargin(QwtPlot::xBottom, adj);
 }
 
+/*! \brief add some extra upper bound to the specified axis to optimize replot operations when the
+ *         refresh rate is fast.
+ */
 void QuPlotBase::setUpperBoundExtra(int axisId, double e)
 {
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
@@ -845,7 +877,6 @@ void QuPlotBase::showMarker(const QPolygon &p)
 void QuPlotBase::updateLabel(QwtPlotCurve *closestCurve, int closestPointIdx)
 {
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
-    //    printf("\e[1;32m updateLabel() closestPoint %d\e[0m\n", closestPointIdx);
 
     if(closestCurve && closestPointIdx > -1 && marker->isVisible())
     {

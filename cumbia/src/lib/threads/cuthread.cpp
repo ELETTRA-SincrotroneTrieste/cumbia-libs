@@ -583,8 +583,8 @@ CuActivity *CuThread::mFindActivity(CuTimer *t) const
  */
 void CuThread::postEvent(CuActivity *a, CuActivityEvent *e)
 {
-    pbblue("CuThread.postEvent: posting event to activity %p type %d. This thread 0x%lx\e[0m (should be Main's!)", a,
-           e->getType(), pthread_self());
+//    pbblue("CuThread.postEvent: posting event to activity %p type %d. This thread 0x%lx\e[0m (should be Main's!)", a,
+//           e->getType(), pthread_self());
 
     ThreadEvent *event = new CuPostEventToActivity(a, e);
     /* need to protect event queue because this method is called from the main thread while
@@ -618,7 +618,7 @@ int CuThread::getActivityTimerPeriod(CuActivity *a) const
 /*! @private */
 void CuThread::onTimeout(CuTimer *sender)
 {
-    pbblue("CuThread.onTimeout: thread (should be Timer's!) 0x%lx", pthread_self());
+//    pbblue("CuThread.onTimeout: thread (should be Timer's!) 0x%lx", pthread_self());
     std::map<CuActivity *, CuTimer *>::iterator it;
     for(it = d->timerActivityMap.begin(); it != d->timerActivityMap.end(); ++it)
     {

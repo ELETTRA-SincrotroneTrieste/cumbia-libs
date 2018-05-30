@@ -1,6 +1,6 @@
 #include "cutango-world.h"
 #include "cutango-world-config.h"
-
+#include <unordered_map>
 #include <cumacros.h>
 #include <regex>
 
@@ -221,7 +221,6 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
 {
     d->error = false;
     d->message = "";
-    cuprintf("CuTangoUtils.extractData format is %d type %d\n", p_da->get_data_format(), p_da->get_type());
     Tango::TimeVal tv = p_da->get_date();
     struct timeval tiv;
     const Tango::AttrQuality quality = p_da->get_quality();
@@ -609,7 +608,7 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
             dout = dev->command_inout(cmdnam, din);
         }
         if(point_info["out_type"].toLongInt() != Tango::DEV_VOID)
-            extractData(&dout, data);
+           extractData(&dout, data);
     }
     catch(Tango::DevFailed &e)
     {
@@ -788,7 +787,7 @@ bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res,
 {
     // maps tango host name to device attribute props, device props, class attribute props
     // and class props
-    std::map<std::string, std::list<CuData> > daprops, dprops, cprops;
+    std::unordered_map<std::string, std::list<CuData> > daprops, dprops, cprops;
     std::vector<std::string> names;
     d->error = false;
 
@@ -813,7 +812,7 @@ bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res,
     try {
         // 1. device attribute properties
         // scan the per-device map
-        for(std::map<std::string, std::list< CuData> >::const_iterator it = daprops.begin(); it != daprops.end(); ++it)
+        for(std::unordered_map<std::string, std::list< CuData> >::const_iterator it = daprops.begin(); it != daprops.end(); ++it)
         {
             Tango::DbData db_data;
             std::vector<std::string> req_a, req_p; // requested attributes, requested properties
@@ -841,7 +840,7 @@ bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res,
         }
         // 2. device properties
         // scan the per-device map
-        for(std::map<std::string, std::list< CuData> >::const_iterator it = dprops.begin(); it != dprops.end(); ++it)
+        for(std::unordered_map<std::string, std::list< CuData> >::const_iterator it = dprops.begin(); it != dprops.end(); ++it)
         {
             Tango::DbData db_data;
             for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit)
@@ -858,7 +857,7 @@ bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res,
         }
         // 3. class properties
         // scan the per-class map
-        for(std::map<std::string, std::list< CuData> >::const_iterator it = cprops.begin(); it != cprops.end(); ++it)
+        for(std::unordered_map<std::string, std::list< CuData> >::const_iterator it = cprops.begin(); it != cprops.end(); ++it)
         {
             Tango::DbData db_data;
             for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit)
@@ -1061,7 +1060,6 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const CuVariant &arg,
         /* no match between CommandInfo argin type and CuVariant type: try to get CuVariant
          * data as string and convert it according to CommandInfo type
          */
-        printf("\e[1;34mtoDeviceData as string\e[0m\n");
         return toDeviceData(arg.toStringVector(), info);
     }
     return dd;

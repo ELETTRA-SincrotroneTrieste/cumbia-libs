@@ -2,13 +2,13 @@
 #include "cumacros.h"
 #include <string>
 #include <sys/time.h>
-#include <map>
+#include <unordered_map>
 
 /*! @private */
 class CuDataPrivate
 {
 public:
-    std::map<std::string, CuVariant> datamap;
+    std::unordered_map<std::string, CuVariant> datamap;
 
     CuVariant emptyVariant;
 };
@@ -103,7 +103,7 @@ CuData &CuData::operator=(const CuData &other)
  */
 CuData &CuData::operator=(CuData &&other)
 {
-    if (this!=&other);
+    if (this!=&other)
     {
         if(d)
             delete d;
@@ -206,7 +206,6 @@ CuVariant &CuData::operator [](const std::string &key)
  */
 const CuVariant &CuData::operator [](const std::string &key) const
 {
-    d->emptyVariant = CuVariant();
     if(d->datamap.count(key) > 0)
         return d->datamap[key];
     return d->emptyVariant;
@@ -225,7 +224,7 @@ bool CuData::operator ==(const CuData &other) const
 {
     if(other.d->datamap.size() != d->datamap.size())
         return false;
-    std::map<std::string, CuVariant>::const_iterator i;
+    std::unordered_map<std::string, CuVariant>::const_iterator i;
     for(i = d->datamap.begin(); i != d->datamap.end(); ++i)
     {
         if(!other.containsKey(i->first))
@@ -288,7 +287,7 @@ void CuData::print() const
 std::string CuData::toString() const
 {
     std::string r = "CuData { ";
-    std::map<std::string, CuVariant>::const_iterator i;
+    std::unordered_map<std::string, CuVariant>::const_iterator i;
     for(i = d->datamap.begin(); i != d->datamap.end(); ++i)
     {
         r += "[\"" + i->first + "\" -> " + i->second.toString() + "], ";
@@ -316,7 +315,7 @@ void CuData::putTimestamp()
 
 void CuData::mCopyData(const CuData& other)
 {
-    std::map<std::string, CuVariant>::const_iterator it;
+    std::unordered_map<std::string, CuVariant>::const_iterator it;
     for (it = other.d->datamap.begin(); it != other.d->datamap.end(); ++it)
         d->datamap[it->first] = other.d->datamap[it->first];
 }

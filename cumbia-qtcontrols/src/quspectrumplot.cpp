@@ -163,7 +163,7 @@ void QuSpectrumPlot::onUpdate(const CuData &da)
 
 void QuSpectrumPlot::update(const CuData &da)
 {
-    return;
+//    return;
 
     d->read_ok = !da["err"].toBool();
     const CuVariant &v = da["value"];
@@ -178,26 +178,24 @@ void QuSpectrumPlot::update(const CuData &da)
 
     // configure triggers replot at the end but should not be too expensive
     // to do it once here at configuration time and once more from appendData
-    if(d->read_ok && d->auto_configure && da["type"].toString() == "property")
+    if(d->read_ok && d->auto_configure && da["type"].toString() == "property") {
         configure(da);
-
+    }
 
     QuPlotCurve *crv = curve(src);
-    if(!crv)
+    if(!crv) {
         addCurve(src, crv = new QuPlotCurve(src));
+    }
     d->read_ok ? crv->setState(QuPlotCurve::Normal) : crv->setState(QuPlotCurve::Invalid);
 
     if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Vector)
     {
-        if(da.containsKey("timestamp_ms") && crv)
-        {
-
-        }
         std::vector<double> out;
         v.toVector<double>(out);
         QVector<double> y = QVector<double>::fromStdVector(out);
-        if(y.size() != d->x_data.size())
+        if(y.size() != d->x_data.size()) {
             d->fill_x_data(y.size());
+        }
         setData(src, d->x_data, y);
     }
     else {

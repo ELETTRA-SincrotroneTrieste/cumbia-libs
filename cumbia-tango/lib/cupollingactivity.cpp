@@ -175,7 +175,7 @@ void CuPollingActivity::execute()
     bool is_command = at["is_command"].toBool();
     Tango::DeviceProxy *dev = d->tdev->getDevice();
     CuTangoWorld tangoworld;
-    tangoworld.fillThreadInfo(at, this); /* put thread and activity addresses as info */
+//    tangoworld.fillThreadInfo(at, this); /* put thread and activity addresses as info */
     at["mode"] = "polled";
     at["period"] = getTimeout();
     bool success = false;
@@ -217,7 +217,7 @@ void CuPollingActivity::execute()
         at["err"] = true;
         d->repeat = -1;
     }
-    publishResult(at);
+   publishResult(at);
 }
 
 /*! \brief the implementation of the CuActivity::execute hook
@@ -241,8 +241,8 @@ void CuPollingActivity::onExit()
     CuData at = getToken(); /* activity token */
     at["msg"] = "EXITED";
     at["mode"] = "POLLED";
-    CuTangoWorld utils;
-    utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
+//    CuTangoWorld utils;
+//    utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
     if(d->tdev)
         refcnt = d->tdev->removeRef();
     cuprintf("\e[1;31mCuPollingActivity::onExit(): refcnt = %d called actionRemove for device %s att %s\e[0m\n",

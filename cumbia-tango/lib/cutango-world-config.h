@@ -4,7 +4,7 @@
 #include <tango.h>
 #include <string>
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 
 class CuTangoWorldConfigPrivate;
@@ -44,11 +44,11 @@ public:
     void setQualityString(Tango::AttrQuality, std::string);
     std::string qualityString(Tango::AttrQuality) const;
 
-    std::map<Tango::DevState, std::string> stateStrings();
-    std::map<Tango::DevState, std::string>  stateColorNames();
+    std::unordered_map<Tango::DevState, std::string> stateStrings();
+    std::unordered_map<Tango::DevState, std::string>  stateColorNames();
 
-    std::map<Tango::AttrQuality, std::string> qualityStrings();
-    std::map<Tango::AttrQuality, std::string> qualityColorNames();
+    std::unordered_map<Tango::AttrQuality, std::string> qualityStrings();
+    std::unordered_map<Tango::AttrQuality, std::string> qualityColorNames();
 
 
 

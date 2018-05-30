@@ -34,7 +34,14 @@ public:
 
     bool applyScaleFromCurveBounds(QuPlotBase *plot, int axisId);
 
-    bool setBoundsFromCurves(const QuPlotBase *plot, int axisId);
+    bool setBoundsFromCurves(double min, double max, int axisId);
+
+    bool getBoundsFromCurves(const QuPlotBase *plot,
+                             double* xmin,
+                             double *xmax,
+                             double *ymin,
+                             double *ymax,
+                             bool calc_x, bool calc_y) const;
 
     bool autoscale(int axisId) const;
 

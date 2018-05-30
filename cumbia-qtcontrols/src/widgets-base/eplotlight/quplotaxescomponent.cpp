@@ -42,10 +42,12 @@ QuPlotAxesComponent::QuPlotAxesComponent(QuPlotBase *plot)
     d->bounds_from_curves[QwtPlot::yRight].first = 0.0;
     d->bounds_from_curves[QwtPlot::yRight].second = 1000.0;
 
-    /* axis autoscaling */
-    plot->setAxisAutoScale(QwtPlot::yLeft);
-    /* NOTE: disable QwtPlot x axis autoscale */
-    plot->setAxisScale(QwtPlot::xBottom, 0, 1000);
+    /* NOTE: disable QwtPlot axis autoscale */
+    plot->setAxisScale(QwtPlot::yLeft, d->bounds_from_curves[QwtPlot::yLeft].first, d->bounds_from_curves[QwtPlot::yLeft].second);
+    plot->setAxisScale(QwtPlot::yRight, d->bounds_from_curves[QwtPlot::yRight].first, d->bounds_from_curves[QwtPlot::yRight].second);
+    plot->setAxisScale(QwtPlot::xBottom, d->bounds_from_curves[QwtPlot::xBottom].first, d->bounds_from_curves[QwtPlot::xBottom].second);
+    plot->setAxisScale(QwtPlot::xTop, d->bounds_from_curves[QwtPlot::xTop].first, d->bounds_from_curves[QwtPlot::xTop].second);
+
     plot->setAxisLabelAlignment(QwtPlot::xBottom, Qt::AlignLeft | Qt::AlignBottom);
 }
 
@@ -141,33 +143,62 @@ bool QuPlotAxesComponent::applyScaleFromCurveBounds(QuPlotBase *plot, int axisId
     return false;
 }
 
-bool QuPlotAxesComponent::setBoundsFromCurves(const QuPlotBase *plot, int axisId)
+bool QuPlotAxesComponent::setBoundsFromCurves(double min, double max, int axisId)
 {
-    double min = 0, max = 0, crvmin, crvmax;
-    QList<QwtPlotCurve *> crvs = plot->curves();
-    foreach(QwtPlotCurve *c, crvs)
-    {
-        if(c->dataSize() < 1 || !c->isVisible()) /* it is not possible  to adjust scales if the curves haven't enough data yet. */
-            continue;
-        (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop) ? crvmin = c->minXValue() : crvmin = c->minYValue();
-        (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop) ? crvmax = c->maxXValue() : crvmax = c->maxYValue();
-        if(min == max) {
-            min = crvmin;
-            max = crvmax;
-        }
-        else {
-            if(crvmin < min)
-                min = crvmin;
-            if(crvmax > max)
-                max = crvmax;
-        }
-    }
     if(min <= max) /* values must be well ordered */
     {
         d->bounds_from_curves[axisId].first  = min;
         d->bounds_from_curves[axisId].second = max;
     }
     return min < max;
+}
+
+bool QuPlotAxesComponent::getBoundsFromCurves(const QuPlotBase *plot,
+                                              double *xmin, double *xmax,
+                                              double *ymin, double *ymax,
+                                              bool calc_x, bool calc_y) const
+{
+    *xmin = *xmax = *ymin = *ymax = 0;
+    double crvmin, crvmax;
+    QList<QwtPlotCurve *> crvs = plot->curves();
+    foreach(QwtPlotCurve *c, crvs)
+    {
+        if(c->dataSize() < 1 || !c->isVisible()) /* it is not possible  to adjust scales if the curves haven't enough data yet. */
+            continue;
+        if(calc_x) {
+            crvmin = c->minXValue();
+            crvmax = c->maxXValue();
+            if(*xmin == *xmax) {
+                *xmin = crvmin;
+                *xmax = crvmax;
+            }
+            else {
+                if(crvmin < *xmin)
+                    *xmin = crvmin;
+                if(crvmax > *xmax)
+                    *xmax = crvmax;
+            }
+        }
+
+        if(calc_y) {
+            crvmin = c->minYValue();
+            crvmax = c->maxYValue();
+            if(*ymin == *ymax) {
+                *ymin = crvmin;
+                *ymax = crvmax;
+            }
+            else {
+                if(crvmin < *ymin)
+                    *ymin = crvmin;
+                if(crvmax > *ymax)
+                    *ymax = crvmax;
+            }
+        }
+
+//        printf("QuPlotAxesComponent.getBoundsFromCurves \e[1;32m min max for curve %s calc_x %d calc_y %d mx=%f Mx=%f"
+//               " my=%f My=%f\e[0m\n", qstoc(c->title().text()), calc_x, calc_y, *xmin, *xmax, *ymin, *ymax);
+    }
+    return *xmin <= *xmax && *ymin <= *ymax;
 }
 
 bool QuPlotAxesComponent::autoscale(int axisId) const

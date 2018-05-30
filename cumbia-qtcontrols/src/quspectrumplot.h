@@ -70,6 +70,7 @@ public slots:
     void setPeriod(int p);
 
     void requestLinkStats();
+
 signals:
     void newData(const CuData&);
 
