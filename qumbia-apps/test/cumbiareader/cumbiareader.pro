@@ -44,12 +44,4 @@ TARGET   = bin/cumbiareader
 
 # unix:INCLUDEPATH +=  . ../../src
 
-message("")
-message("NOTE")
-message("You need to run cuuimake in order to build the project")
-message("")
-message("        cuuimake --show-config to see cuuimake configuration options")
-message("        cuuimake --configure to configure cuuimake")
-message("        cuuimake -jN to execute cuuimake and then make -jN")
-message("        cuuimake --make to run cuuimake and then make")
-message("")
+

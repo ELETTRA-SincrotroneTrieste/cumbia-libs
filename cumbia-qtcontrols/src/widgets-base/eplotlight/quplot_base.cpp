@@ -660,6 +660,9 @@ void QuPlotBase::setXAutoscaleMargin(double adj)
 
 /*! \brief add some extra upper bound to the specified axis to optimize replot operations when the
  *         refresh rate is fast.
+ *
+ * @param axisId the axis id, one of QwtPlot::xBottom, QwtPlot::xTop, QwtPlot::yLeft, QwtPlot::yRight
+ * @param e the extra bound to add to the scale, percentage expressed from 0 to 1
  */
 void QuPlotBase::setUpperBoundExtra(int axisId, double e)
 {
