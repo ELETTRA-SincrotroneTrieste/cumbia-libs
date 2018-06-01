@@ -14,6 +14,20 @@ CuResultEvent::CuResultEvent(const CuActivity* sender, const CuData &data, CuEve
     d_p->activity = sender;
 }
 
+
+/*!
+ * \brief CuResultEvent::CuResultEvent the class constructor
+ * \param sender the CuActivity that originates the event
+ * \param data_list a vector of data to be delivered
+ * \param t the type of event
+ */
+CuResultEvent::CuResultEvent(const CuActivity* sender, const std::vector<CuData> &data_list, CuEventType t)
+{
+    d_p = new CuResultEventPrivate(data_list);
+    d_p->type = t;
+    d_p->activity = sender;
+}
+
 /*!
  * \brief CuResultEvent::CuResultEvent class constructor with progress information
  * \param sender the CuActivity that originated the event (sender)
@@ -95,6 +109,16 @@ const CuData CuResultEvent::getData() const
 const CuActivity *CuResultEvent::getActivity() const
 {
     return d_p->activity;
+}
+
+bool CuResultEvent::isList() const
+{
+    return d_p->is_list;
+}
+
+std::vector<CuData> CuResultEvent::getDataList() const
+{
+    return d_p->data_list;
 }
 
 /*! \brief an exit event for the sender activity

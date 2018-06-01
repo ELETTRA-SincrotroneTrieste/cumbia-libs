@@ -74,6 +74,14 @@ void CuTAttConfiguration::onResult(const CuData &data)
     }
 }
 
+/*! \brief unused. Complies with CuThreadListener interface
+ *
+ */
+void CuTAttConfiguration::onResult(const std::vector<CuData> &datalist)
+{
+    (void) datalist;
+}
+
 CuData CuTAttConfiguration::getToken() const
 {
     CuData da("source", d->tsrc.getName());

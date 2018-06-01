@@ -99,6 +99,7 @@ public:
                     LongDouble, ///< long double
                     Boolean, ///< bool
                     String, ///< std::string, const char*
+                    VoidPtr, ///< generic void*
                     EndDataTypes = 64 ///< defines an upper bound of the enumeration
                   };
 
@@ -129,6 +130,8 @@ public:
     CuVariant(const std::string &s);
 
     CuVariant(const char *s);
+
+    CuVariant(void *ptr);
 
 
     /* vector */
@@ -179,6 +182,8 @@ public:
     bool isInteger() const;
 
     bool isFloatingPoint() const;
+
+    bool isVoidPtr() const;
 
     std::vector<double> toDoubleVector() const;
 
@@ -251,6 +256,8 @@ public:
     bool *toBoolP() const;
 
     char **toCharP() const;
+
+    void *toVoidP() const;
 
     template<typename T> bool to(T &val) const;
 

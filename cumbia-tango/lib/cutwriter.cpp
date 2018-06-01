@@ -72,6 +72,15 @@ void CuTWriter::onProgress(int step, int total, const CuData &data)
     (void) data;
 }
 
+/*! \brief unused. To comply with interface
+ *
+ * @see onResult(const CuData &data)
+ */
+void CuTWriter::onResult(const std::vector<CuData> &datalist)
+{
+    (void) datalist;
+}
+
 /*! \brief calls onUpdate on all listeners or deletes itself when the *exiting* flag is set
  *
  * @param data CuData with the result to be delivered to every CuDataListener
@@ -197,5 +206,4 @@ void CuTWriter::getData(CuData &d_inout) const
 {
     d_inout = CuData();
 }
-
 

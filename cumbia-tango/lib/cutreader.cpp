@@ -3,6 +3,7 @@
 #include "tdevice.h"
 #include "cudevicefactoryservice.h"
 #include "cuactionfactoryservice.h"
+#include "cupollingservice.h"
 
 #include <cudatalistener.h>
 #include <cuserviceprovider.h>
@@ -12,10 +13,13 @@
 #include <cuthreadseventbridgefactory_i.h>
 #include <cuactivitymanager.h>
 #include "cueventactivity.h"
-#include "cupollingactivity.h"
+#include "cupoller.h"
 #include <culog.h>
 
 #include <tango.h>
+
+/// to remove
+#include <cupollingactivity.h>
 
 class TSource;
 
@@ -26,12 +30,14 @@ public:
     TSource tsrc;
     CumbiaTango *cumbia_t;
     CuActivity *current_activity;
+    CuPoller *poller;
     bool exit;
     CuConLogImpl li;
     CuLog log;
     CuData property_d, value_d;
     int period;
     CuTReader::RefreshMode refresh_mode;
+    bool polling_fallback;
 };
 
 CuTReader::CuTReader(const TSource& src, CumbiaTango *ct) : CuTangoActionI()
@@ -40,10 +46,12 @@ CuTReader::CuTReader(const TSource& src, CumbiaTango *ct) : CuTangoActionI()
     d->tsrc = src;
     d->cumbia_t = ct;
     d->current_activity = NULL;
+    d->poller = NULL;
     d->exit = false;  // set to true by stop
     d->log = CuLog(&d->li);
     d->period = 1000;
     d->refresh_mode = ChangeEventRefresh;
+    d->polling_fallback = false;
 }
 
 CuTReader::~CuTReader()
@@ -63,6 +71,11 @@ CuTReader::~CuTReader()
 void CuTReader::onProgress(int step, int total, const CuData &data)
 {
     (void) step;  (void) total;  (void) data;
+}
+
+void CuTReader::onResult(const std::vector<CuData> &datalist)
+{
+    (void) datalist;
 }
 
 /*
@@ -93,13 +106,16 @@ void CuTReader::onResult(const CuData &data)
     for(it = lis_copy.begin(); it != lis_copy.end() && !event_subscribe_fail;   ++it) {
         (*it)->onUpdate(data);
     }
+    if(err && !d->exit && d->poller) {
+
+    }
     if(err && !d->exit && d->current_activity->getType() == CuEventActivity::CuEventActivityType)
     {
         polling_fallback = true;
         cuprintf("starting polling activity cuz event is err %d\n", data["err"].toBool());
         /* stop event activity forever */
         d->cumbia_t->unregisterActivity(d->current_activity);
-        m_startPollingActivity(polling_fallback);
+        m_registerToPoller();
     }
 
     /* remove last listener and delete this
@@ -230,7 +246,8 @@ void CuTReader::setRefreshMode(CuTReader::RefreshMode rm)
             && (rm == CuTReader::PolledRefresh || rm == CuTReader::Manual))
     {
         d->cumbia_t->unregisterActivity(d->current_activity);
-        m_startPollingActivity(false);
+        d->polling_fallback = false;
+        m_registerToPoller();
     }
     // if the desired mode is Manual, the current activity is a polling activity
     if(d->current_activity && rm == CuTReader::Manual && d->current_activity->getType() != CuTReader::Manual)
@@ -363,8 +380,10 @@ void CuTReader::start()
     pr_thread();
     if(d->refresh_mode == ChangeEventRefresh)
         m_startEventActivity();
-    else
-        m_startPollingActivity(false);
+    else {
+        d->polling_fallback = false;
+        m_registerToPoller();
+    }
     if(d->refresh_mode == Manual)
         d->cumbia_t->pauseActivity(d->current_activity);
 }
@@ -389,24 +408,12 @@ void CuTReader::m_startEventActivity()
     cuprintf("> CuTReader.m_startEventActivity reader %p thread 0x%lx ACTIVITY %p\n", this, pthread_self(), d->current_activity);
 }
 
-void CuTReader::m_startPollingActivity(bool fallback)
+void CuTReader::m_registerToPoller()
 {
-    CuDeviceFactoryService *df =
-            static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
-                                                  get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
-    CuData at("src", d->tsrc.getName()); /* activity token */
-    at["device"] = d->tsrc.getDeviceName();
-    at["point"] = d->tsrc.getPoint();
-    at["activity"] = "poller";
-    at["fallback"] = fallback;
-    at["is_command"] = (d->tsrc.getType() == TSource::Cmd);
-    at["period"] = d->period;
-
-    CuData tt("device", d->tsrc.getDeviceName()); /* thread token */
-    d->current_activity = new CuPollingActivity(at, df, d->tsrc.getArgs());
-    const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
-    const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
-    d->cumbia_t->registerActivity(d->current_activity, this, tt, fi, bf);
+    CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
+                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
+    CuPoller *poller = polling_service->getPoller(d->cumbia_t, d->period);
+    poller->registerAction(d->tsrc, this);
     cuprintf("> CuTReader.m_startPollingActivity reader %p thread 0x%lx ACTIVITY %p == \e[0;32mSTARTING POLLING\e[0m\n\n", this, pthread_self(), d->current_activity);
 }
 

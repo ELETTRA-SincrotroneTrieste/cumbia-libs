@@ -106,7 +106,7 @@ CuActivity *CuActivityManager::findMatching(const CuData &token)
     std::multimap< CuThreadInterface *, CuActivity *>::const_iterator it;
     for(it = mConnectionsMultiMap.begin(); it != mConnectionsMultiMap.end(); ++it)
     {
-        cuprintf("\e[1;35mfindMatching: visiting  %p %s compared to %s\e[0m\n",
+        pviolettmp("CuActivityManager.findMatching: visiting  %p %s compared to %s\n",
                  it->second, it->second->getToken().toString().c_str(), token.toString().c_str());
         if(it->second->matches(token))
             return it->second;

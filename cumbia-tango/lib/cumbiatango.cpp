@@ -8,6 +8,7 @@
 #include "cuactionfactoryservice.h"
 #include "cudevicefactoryservice.h"
 #include "cutangoactionfactoryi.h"
+#include "cupollingservice.h"
 #include "cutango-world.h"
 #include "cutreader.h"
 
@@ -40,6 +41,7 @@ void CumbiaTango::m_init()
 {
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType), new CuActionFactoryService());
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType), new CuDeviceFactoryService());
+    getServiceProvider()->registerService(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType), new CuPollingService());
 }
 
 CumbiaTango::~CumbiaTango()

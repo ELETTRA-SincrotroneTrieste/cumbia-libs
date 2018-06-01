@@ -235,241 +235,247 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
     dat["quality_color"] = d->t_world_conf.qualityColor(static_cast<Tango::AttrQuality> (quality));
     dat["data_format_str"] = formatToStr(f);
 
-    if(quality == Tango::ATTR_INVALID)
-    {
-        d->message = "CuTangoWorld.extractData: attribute quality invalid";
-        d->error = true;
-    }
-    else if(p_da->is_empty())
-    {
-        d->message = "CuTangoWorld.extractData: attribute " + p_da->get_name() + " is empty";
-        d->error = true;
-    }
-    else if(f == Tango::IMAGE)
-    {
-        d->message = "CuTangoWorld.extractData: attribute " + p_da->get_name() + ": image format is unsupported";
-        d->error = true;
-    }
-    else if(p_da->get_type() == Tango::DEV_DOUBLE)
-    {
-        std::vector<double> v;
-        p_da->extract_read(v);
-        if(f == Tango::SCALAR)
-            dat["value"] = v.at(0);
-        else
-            dat["value"] = v;
-        if(w)
+    try{
+        if(quality == Tango::ATTR_INVALID)
         {
-            p_da->extract_set(v);
-            if(f == Tango::SCALAR)
-                dat["w_value"] = v.at(0);
-            else
-                dat["w_value"] = v;
+            d->message = "CuTangoWorld.extractData: attribute quality invalid";
+            d->error = true;
         }
-    }
-    else if(p_da->get_type() == Tango::DEV_LONG)
-    {
-        std::vector<Tango::DevLong> v;
-        p_da->extract_read(v);
-        if(f == Tango::SCALAR && v.size())
-            dat["value"] = static_cast<long int>(v.at(0));
-        else
-            dat["value"] = v;
-        if(w)
+        else if(p_da->is_empty())
         {
-            p_da->extract_set(v);
-            if(f == Tango::SCALAR)
-                dat["w_value"] = v.at(0);
-            else
-                dat["w_value"] = v;
+            d->message = "CuTangoWorld.extractData: attribute " + p_da->get_name() + " is empty";
+            d->error = true;
         }
-    }
-    else if(p_da->get_type() == Tango::DEV_LONG64)
-    {
-        std::vector<Tango::DevLong64> v;
-        p_da->extract_read(v);
-
-        if(f == Tango::SCALAR)
-            dat["value"] = static_cast<long int>(v.at(0));
-        else
-            dat["value"] = v;
-        if(w)
+        else if(f == Tango::IMAGE)
         {
-            p_da->extract_set(v);
-            if(f == Tango::SCALAR)
-                dat["w_value"] = v.at(0);
-            else
-                dat["w_value"] = v;
+            d->message = "CuTangoWorld.extractData: attribute " + p_da->get_name() + ": image format is unsupported";
+            d->error = true;
         }
-    }
-    else if(p_da->get_type() == Tango::DEV_STATE)
-    {
-        CuTangoWorldConfig wc;
-        if(f == Tango::SCALAR)
+        else if(p_da->get_type() == Tango::DEV_DOUBLE)
         {
-            Tango::DevState state;
-            *p_da >> state;
-            dat["value"] = wc.stateString(state);
-            dat["state"] = static_cast<long int>(state);
-            dat["state_color"] = wc.stateColorName(state);
-        }
-        else
-        {
-            std::vector<Tango::DevState> v;
-            std::vector<std::string> temp;
-            std::vector<std::string> state_colors;
-            std::vector<long int>tempi;
+            std::vector<double> v;
             p_da->extract_read(v);
-            for(size_t i = 0; i < v.size(); i++)
+            if(f == Tango::SCALAR)
+                dat["value"] = v.at(0);
+            else
+                dat["value"] = v;
+            if(w)
             {
-                temp.push_back(wc.stateString(v.at(i)));
-                tempi.push_back(v[i]);
-                state_colors.push_back(wc.stateColorName(v.at(i)));
+                p_da->extract_set(v);
+                if(f == Tango::SCALAR)
+                    dat["w_value"] = v.at(0);
+                else
+                    dat["w_value"] = v;
             }
-            dat["value"] = temp;
-            dat["state"] = tempi;
-            dat["state_color"] = state_colors;
         }
-        if(w)
+        else if(p_da->get_type() == Tango::DEV_LONG)
         {
+            std::vector<Tango::DevLong> v;
+            p_da->extract_read(v);
+            if(f == Tango::SCALAR && v.size())
+                dat["value"] = static_cast<long int>(v.at(0));
+            else
+                dat["value"] = v;
+            if(w)
+            {
+                p_da->extract_set(v);
+                if(f == Tango::SCALAR)
+                    dat["w_value"] = v.at(0);
+                else
+                    dat["w_value"] = v;
+            }
+        }
+        else if(p_da->get_type() == Tango::DEV_LONG64)
+        {
+            std::vector<Tango::DevLong64> v;
+            p_da->extract_read(v);
+
+            if(f == Tango::SCALAR)
+                dat["value"] = static_cast<long int>(v.at(0));
+            else
+                dat["value"] = v;
+            if(w)
+            {
+                p_da->extract_set(v);
+                if(f == Tango::SCALAR)
+                    dat["w_value"] = v.at(0);
+                else
+                    dat["w_value"] = v;
+            }
+        }
+        else if(p_da->get_type() == Tango::DEV_STATE)
+        {
+            CuTangoWorldConfig wc;
             if(f == Tango::SCALAR)
             {
                 Tango::DevState state;
                 *p_da >> state;
-                dat["w_value"] = wc.stateString(state);
+                dat["value"] = wc.stateString(state);
+                dat["state"] = static_cast<long int>(state);
                 dat["state_color"] = wc.stateColorName(state);
-                dat["w_state"] = static_cast<long int>(state);
             }
             else
             {
                 std::vector<Tango::DevState> v;
-                std::vector<long int>tempi;
                 std::vector<std::string> temp;
                 std::vector<std::string> state_colors;
-                p_da->extract_set(v);
+                std::vector<long int>tempi;
+                p_da->extract_read(v);
                 for(size_t i = 0; i < v.size(); i++)
                 {
                     temp.push_back(wc.stateString(v.at(i)));
-                    tempi.push_back(static_cast<long int>(v.at(i)));
+                    tempi.push_back(v[i]);
                     state_colors.push_back(wc.stateColorName(v.at(i)));
                 }
-                dat["w_value"] = temp;
-                dat["w_state"] = temp;
+                dat["value"] = temp;
+                dat["state"] = tempi;
                 dat["state_color"] = state_colors;
             }
+            if(w)
+            {
+                if(f == Tango::SCALAR)
+                {
+                    Tango::DevState state;
+                    *p_da >> state;
+                    dat["w_value"] = wc.stateString(state);
+                    dat["state_color"] = wc.stateColorName(state);
+                    dat["w_state"] = static_cast<long int>(state);
+                }
+                else
+                {
+                    std::vector<Tango::DevState> v;
+                    std::vector<long int>tempi;
+                    std::vector<std::string> temp;
+                    std::vector<std::string> state_colors;
+                    p_da->extract_set(v);
+                    for(size_t i = 0; i < v.size(); i++)
+                    {
+                        temp.push_back(wc.stateString(v.at(i)));
+                        tempi.push_back(static_cast<long int>(v.at(i)));
+                        state_colors.push_back(wc.stateColorName(v.at(i)));
+                    }
+                    dat["w_value"] = temp;
+                    dat["w_state"] = temp;
+                    dat["state_color"] = state_colors;
+                }
+            }
         }
-    }
-    else if(p_da->get_type() == Tango::DEV_ULONG || p_da->get_type() == Tango::DEV_ULONG64)
-    {
-        std::vector<unsigned long int> v;
-        p_da->extract_read(v);
-        if(f == Tango::SCALAR)
-            dat["value"] = v.at(0);
-        else
-            dat["value"] = v;
-        if(w)
+        else if(p_da->get_type() == Tango::DEV_ULONG || p_da->get_type() == Tango::DEV_ULONG64)
         {
-            p_da->extract_set(v);
+            std::vector<unsigned long int> v;
+            p_da->extract_read(v);
             if(f == Tango::SCALAR)
-                dat["w_value"] = v.at(0);
+                dat["value"] = v.at(0);
             else
-                dat["w_value"] = v;
+                dat["value"] = v;
+            if(w)
+            {
+                p_da->extract_set(v);
+                if(f == Tango::SCALAR)
+                    dat["w_value"] = v.at(0);
+                else
+                    dat["w_value"] = v;
+            }
         }
-    }
-    else if(p_da->get_type() == Tango::DEV_SHORT || p_da->get_type() == 100) /* 100! bug */
-    {
-        std::vector<short> v;
-        p_da->extract_read(v);
-        if(f == Tango::SCALAR)
-            dat["value"] = v.at(0);
-        else
-            dat["value"] = v;
-        if(w)
+        else if(p_da->get_type() == Tango::DEV_SHORT || p_da->get_type() == 100) /* 100! bug */
         {
-            p_da->extract_set(v);
+            std::vector<short> v;
+            p_da->extract_read(v);
             if(f == Tango::SCALAR)
-                dat["w_value"] = v.at(0);
+                dat["value"] = v.at(0);
             else
-                dat["w_value"] = v;
+                dat["value"] = v;
+            if(w)
+            {
+                p_da->extract_set(v);
+                if(f == Tango::SCALAR)
+                    dat["w_value"] = v.at(0);
+                else
+                    dat["w_value"] = v;
+            }
         }
-    }
-    else if(p_da->get_type() == Tango::DEV_USHORT)
-    {
-        std::vector<unsigned short> v;
-        p_da->extract_read(v);
-        if(f == Tango::SCALAR)
-            dat["value"] = v.at(0);
-        else
-            dat["value"] = v;
-        if(w)
+        else if(p_da->get_type() == Tango::DEV_USHORT)
         {
-            p_da->extract_set(v);
+            std::vector<unsigned short> v;
+            p_da->extract_read(v);
             if(f == Tango::SCALAR)
-                dat["w_value"] = v.at(0);
+                dat["value"] = v.at(0);
             else
-                dat["w_value"] = v;
+                dat["value"] = v;
+            if(w)
+            {
+                p_da->extract_set(v);
+                if(f == Tango::SCALAR)
+                    dat["w_value"] = v.at(0);
+                else
+                    dat["w_value"] = v;
+            }
         }
-    }
-    else if(p_da->get_type() == Tango::DEV_INT)
-    {
-        std::vector<int>  v;
-        p_da->extract_read(v);
-        if(f == Tango::SCALAR)
-            dat["value"] = v.at(0);
-        else
-            dat["value"] = v;
-        if(w)
+        else if(p_da->get_type() == Tango::DEV_INT)
         {
-            p_da->extract_set(v);
+            std::vector<int>  v;
+            p_da->extract_read(v);
             if(f == Tango::SCALAR)
-                dat["w_value"] = v.at(0);
+                dat["value"] = v.at(0);
             else
-                dat["w_value"] = v;
+                dat["value"] = v;
+            if(w)
+            {
+                p_da->extract_set(v);
+                if(f == Tango::SCALAR)
+                    dat["w_value"] = v.at(0);
+                else
+                    dat["w_value"] = v;
+            }
         }
-    }
-    else if(p_da->get_type() == Tango::DEV_BOOLEAN)
-    {
-        std::vector<bool> v;
-        p_da->extract_read(v);
-        if(f == Tango::SCALAR)
+        else if(p_da->get_type() == Tango::DEV_BOOLEAN)
         {
-            bool b = v.at(0);
-            dat["value"] = b;
-        }
-        else
-            dat["value"] = v;
-        if(w)
-        {
-            p_da->extract_set(v);
+            std::vector<bool> v;
+            p_da->extract_read(v);
             if(f == Tango::SCALAR)
             {
-                bool bset = v.at(0);
-                dat["w_value"] = bset;
+                bool b = v.at(0);
+                dat["value"] = b;
             }
             else
-                dat["w_value"] = v;
+                dat["value"] = v;
+            if(w)
+            {
+                p_da->extract_set(v);
+                if(f == Tango::SCALAR)
+                {
+                    bool bset = v.at(0);
+                    dat["w_value"] = bset;
+                }
+                else
+                    dat["w_value"] = v;
+            }
         }
-    }
-    else if(p_da->get_type() == Tango::DEV_STRING)
-    {
-        std::vector<std::string> v;
-        p_da->extract_read(v);
-        if(f == Tango::SCALAR)
-            dat["value"] = v.at(0);
-        else
-            dat["value"] = v;
-        if(w)
+        else if(p_da->get_type() == Tango::DEV_STRING)
         {
-            p_da->extract_set(v);
+            std::vector<std::string> v;
+            p_da->extract_read(v);
             if(f == Tango::SCALAR)
-                dat["w_value"] = v.at(0);
+                dat["value"] = v.at(0);
             else
-                dat["w_value"] = v;
+                dat["value"] = v;
+            if(w)
+            {
+                p_da->extract_set(v);
+                if(f == Tango::SCALAR)
+                    dat["w_value"] = v.at(0);
+                else
+                    dat["w_value"] = v;
+            }
+        }
+        else
+        {
+            d->message = "CuTangoWorld.extractData: unsupported data type " + std::to_string(p_da->get_type());
+            d->error = true;
         }
     }
-    else
-    {
-        d->message = "CuTangoWorld.extractData: unsupported data type " + std::to_string(p_da->get_type());
+    catch(const Tango::DevFailed &e) { // read_attributes sets exception
+        d->message = strerror(e);
         d->error = true;
     }
 }
@@ -587,11 +593,42 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
     return !d->error;
 }
 
+bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev, std::vector<CuData>& att_datalist, std::vector<CuData> &reslist)
+{
+    d->error = false;
+    d->message = "";
+    Tango::DeviceAttribute *p_da;
+    std::vector<Tango::DeviceAttribute> *devattr = NULL;
+    std::vector<std::string> attrs;
+    for(size_t i = 0; i < att_datalist.size(); i++) // fill the list of attributes as string vector
+        attrs.push_back(att_datalist[i]["point"].toString());
+    try
+    {
+        devattr = dev->read_attributes(attrs);
+        for(size_t i = 0; i < devattr->size(); i++) {
+            CuData& dataref = att_datalist[i];
+            p_da = &(*devattr)[i];
+            p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
+            extractData(p_da, dataref);
+            dataref["err"] = d->error;
+            dataref["msg"] = d->message;
+            dataref["success_color"] = d->t_world_conf.successColor(!d->error);
+            reslist.push_back(dataref);
+        }
+    }
+    catch(Tango::DevFailed &e)
+    {
+        d->error = true;
+        d->message = strerror(e);
+    }
+    return !d->error;
+}
+
 
 bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
                              const std::string& cmd,
-                             const CuVariant& argins,
-                             const CuData &point_info,
+                             Tango::DeviceData& din,
+                             bool has_argout,
                              CuData& data)
 {
     d->error = false;
@@ -599,27 +636,29 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
     try
     {
         std::string cmdnam(cmd);
-        Tango::DeviceData din = toDeviceData(argins, point_info);
         Tango::DeviceData dout;
-        if(argins.isNull()) {
+        if(din.is_empty()) {
             dout = dev->command_inout(cmdnam);
         }
         else  {
+            printf("command inout with din emtpy? %d\n", din.is_empty());
             dout = dev->command_inout(cmdnam, din);
         }
-        if(point_info["out_type"].toLongInt() != Tango::DEV_VOID)
-           extractData(&dout, data);
+        // if(point_info["out_type"].toLongInt() != Tango::DEV_VOID)
+        if(has_argout)
+            extractData(&dout, data);
     }
     catch(Tango::DevFailed &e)
     {
         d->error = true;
         d->message = strerror(e);
+        printf("ERROR DEV FAILED cmdinout\n");
     }
     // extractData does not set date/time information on data
     data.putTimestamp();
     data["err"] = d->error;
     data["msg"] = d->message;
-  //  data["success_color"] = d->t_world_conf.successColor(!d->error);
+    //  data["success_color"] = d->t_world_conf.successColor(!d->error);
     return !d->error;
 }
 

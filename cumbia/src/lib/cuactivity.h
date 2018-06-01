@@ -199,6 +199,8 @@ public:
 
     void publishExitResult(const CuData* data);
 
+    void publishResult(const std::vector<CuData> &datalist);
+
     CuActivityManager *getActivityManager() const;
 
     CuData getToken() const;

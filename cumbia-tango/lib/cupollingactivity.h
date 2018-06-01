@@ -2,12 +2,45 @@
 #define CUPOLLINGACTIVITY_H
 
 #include <cucontinuousactivity.h>
+#include <cuactivityevent.h>
 #include <list>
+#include <tsource.h>
 
 class CuData;
 class CuPollingActivityPrivate;
 class CuDeviceFactoryService;
+class CuTangoActionI;
+class CmdData;
+class ActionData; // defined in cupollingactivity.cpp
 
+class CuAddPollActionEvent : public CuActivityEvent
+{
+public:
+    enum MyType { AddPollAction = CuActivityEvent::User + 9 };
+
+    CuAddPollActionEvent(const TSource &t, CuTangoActionI * a);
+
+    TSource tsource;
+    CuTangoActionI *action;
+
+    // CuActivityEvent interface
+public:
+    virtual Type getType() const;
+};
+
+class CuRemovePollActionEvent : public CuActivityEvent
+{
+public:
+    enum MyType { RemovePollAction = CuActivityEvent::User + 10 };
+
+    CuRemovePollActionEvent(const TSource &t);
+
+    TSource tsource;
+
+    // CuActivityEvent interface
+public:
+    virtual Type getType() const;
+};
 /*! \brief an activity to periodically read from Tango. Implements CuContinuousActivity
  *
  * Implementing CuActivity, the work is done in the background by the three methods
@@ -57,6 +90,10 @@ public:
 
     void setArgins(const CuVariant &argins);
 
+    size_t actionsCount() const;
+
+    size_t srcCount() const;
+
     // CuActivity interface
 public:
     bool matches(const CuData &token) const;
@@ -68,6 +105,10 @@ protected:
 
 private:
     CuPollingActivityPrivate *d;
+
+    void m_registerAction(const TSource &ts, CuTangoActionI *a);
+
+    void m_unregisterAction(const TSource &ts);
 
     // CuActivity interface
 public:

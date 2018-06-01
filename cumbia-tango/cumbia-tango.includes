@@ -1,5 +1,7 @@
 device
 examples/server
 lib
-/usr/local/include/cumbia
+../cumbia/src/lib
+../cumbia/src/lib/threads
+../cumbia/src/lib/services
 /usr/local/tango-9.2.5a/include/tango

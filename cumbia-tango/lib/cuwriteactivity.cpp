@@ -76,7 +76,9 @@ void CuWriteActivity::execute()
                 success = tangoworld.get_command_info(d->tdev->getDevice(), at["point"].toString(), d->point_info);
             if(success)
             {
-                success = tangoworld.cmd_inout(dev, at["point"].toString(), at["write_value"], d->point_info, at);
+                Tango::DeviceData din = tangoworld.toDeviceData(at["write_value"], d->point_info);
+                bool has_argout = d->point_info["out_type"].toLongInt() != Tango::DEV_VOID;
+                success = tangoworld.cmd_inout(dev, at["point"].toString(), din, has_argout, at);
             }
         }
         else if(dev && !at["cmd"].toBool()) /* attribute */

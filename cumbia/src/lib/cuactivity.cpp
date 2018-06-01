@@ -157,6 +157,13 @@ void CuActivity::publishResult(const CuData &data)
         thread->publishResult(this, data);
 }
 
+void CuActivity::publishResult(const std::vector<CuData> &datalist)
+{
+    CuThreadInterface *thread = d->activityManager->getThread(this);
+    if(thread) /* may be removed while activity is in execute() */
+        thread->publishResult(this, datalist);
+}
+
 /** \brief Publish a progress from the activity thread (whence the method is called) to the
  *         main thread.
  *

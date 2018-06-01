@@ -39,11 +39,13 @@ public:
 
     bool cmd_inout(Tango::DeviceProxy *dev,
               const std::string& cmd,
-              const CuVariant& argins,
-              const CuData &point_info,
+              Tango::DeviceData &din,
+              bool has_argout,
               CuData& data);
 
     bool read_att(Tango::DeviceProxy *dev, const string &attribute, CuData &res);
+
+    bool read_atts(Tango::DeviceProxy *dev, std::vector<CuData> &att_datalist, std::vector<CuData> &reslist);
 
     bool write_att(Tango::DeviceProxy *dev,
                    const string &attnam,

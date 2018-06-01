@@ -8,6 +8,7 @@ class CuData;
 class CuThreadService;
 
 #include "cuthreadseventbridge_i.h"
+#include <vector>
 
 /*! \brief interface to write thread implementations that can be used with the *cumbia*
  *         library
@@ -90,6 +91,16 @@ public:
      * See CuThread::publishProgress for details
      */
     virtual void publishResult(const CuActivity* activity,  const CuData& d) = 0;
+
+
+    /*! \brief post a *result* event from the background thread to the main thread
+     *
+     * This lets you send events to the main thread that account for a
+     * list of results computed in the background
+     *
+     * See CuThread::publishProgress for details
+     */
+    virtual void publishResult(const CuActivity *activity, const std::vector<CuData> &data_list) = 0;
 
     /*! \brief publish an exit event from the background thread to the main thread
      *
