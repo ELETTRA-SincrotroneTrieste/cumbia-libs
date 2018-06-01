@@ -113,7 +113,8 @@ void CuTReader::onResult(const CuData &data)
     {
         polling_fallback = true;
         cuprintf("starting polling activity cuz event is err %d\n", data["err"].toBool());
-        /* stop event activity forever */
+        // stop event activity forever. it will auto delete
+        // so d->current_activity must be set to NULL here, not to access it again
         d->cumbia_t->unregisterActivity(d->current_activity);
         m_registerToPoller();
     }
