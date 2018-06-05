@@ -123,7 +123,7 @@ public:
     const CuData getData() const;
     const CuActivity *getActivity() const;
     bool isList() const;
-    std::vector<CuData> getDataList() const;
+    const std::vector<CuData> &getDataList() const;
 
 protected:
     CuResultEventPrivate *d_p;

@@ -176,7 +176,11 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
         {
             vector<Tango::DevLong> temp;
             *data >> temp;
-            da["value"] = temp;
+            std::vector<long int> li;
+            li.reserve(temp.size());
+            for(size_t i = 0; i < temp.size(); i++)
+                li.push_back(static_cast<long int>(temp[i]));
+            da["value"] = li;
             break;
         }
         case Tango::DEVVAR_ULONGARRAY:
@@ -593,7 +597,10 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
     return !d->error;
 }
 
-bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev, std::vector<CuData>& att_datalist, std::vector<CuData> &reslist)
+bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
+                             std::vector<CuData>& att_datalist,
+                             std::vector<CuData> &reslist,
+                             int results_offset)
 {
     d->error = false;
     d->message = "";
@@ -606,14 +613,14 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev, std::vector<CuData>& att_d
     {
         devattr = dev->read_attributes(attrs);
         for(size_t i = 0; i < devattr->size(); i++) {
-            CuData& dataref = att_datalist[i];
+            reslist[results_offset] = att_datalist[i];
             p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
-            extractData(p_da, dataref);
-            dataref["err"] = d->error;
-            dataref["msg"] = d->message;
-            dataref["success_color"] = d->t_world_conf.successColor(!d->error);
-            reslist.push_back(dataref);
+            extractData(p_da, reslist[results_offset]);
+            reslist[results_offset]["err"] = d->error;
+            reslist[results_offset]["msg"] = d->message;
+            reslist[results_offset]["success_color"] = d->t_world_conf.successColor(!d->error);
+            results_offset++;
         }
     }
     catch(Tango::DevFailed &e)

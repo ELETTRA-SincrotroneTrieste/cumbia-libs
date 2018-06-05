@@ -116,7 +116,7 @@ bool CuResultEvent::isList() const
     return d_p->is_list;
 }
 
-std::vector<CuData> CuResultEvent::getDataList() const
+const std::vector<CuData> &CuResultEvent::getDataList() const
 {
     return d_p->data_list;
 }
