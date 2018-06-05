@@ -43,6 +43,10 @@ public:
               bool has_argout,
               CuData& data);
 
+    bool cmd_inout(Tango::DeviceProxy *dev,
+              const std::string& cmd,
+              CuData& data);
+
     bool read_att(Tango::DeviceProxy *dev, const string &attribute, CuData &res);
 
     bool read_atts(Tango::DeviceProxy *dev, std::vector<CuData> &att_datalist, std::vector<CuData> &reslist);

@@ -624,6 +624,16 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev, std::vector<CuData>& att_d
     return !d->error;
 }
 
+// cmd_inout version 2: from the data argument, guess input DeviceData
+// data must contain the output from a previous call to get_command_info
+bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
+                             const std::string& cmd,
+                             CuData& data)
+{
+    bool has_argout = data["out_type"].toLongInt() != Tango::DEV_VOID;
+    Tango::DeviceData din = toDeviceData(data["argins"], data);
+    return cmd_inout(dev, cmd, din, has_argout, data);
+}
 
 bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
                              const std::string& cmd,
@@ -641,7 +651,6 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
             dout = dev->command_inout(cmdnam);
         }
         else  {
-            printf("command inout with din emtpy? %d\n", din.is_empty());
             dout = dev->command_inout(cmdnam, din);
         }
         // if(point_info["out_type"].toLongInt() != Tango::DEV_VOID)

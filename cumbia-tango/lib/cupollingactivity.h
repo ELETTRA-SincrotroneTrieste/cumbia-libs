@@ -4,12 +4,12 @@
 #include <cucontinuousactivity.h>
 #include <cuactivityevent.h>
 #include <list>
+#include <cutangoactioni.h>
 #include <tsource.h>
 
 class CuData;
 class CuPollingActivityPrivate;
 class CuDeviceFactoryService;
-class CuTangoActionI;
 class CmdData;
 class ActionData; // defined in cupollingactivity.cpp
 
@@ -83,8 +83,7 @@ public:
      */
     enum Type { CuPollingActivityType = CuActivity::User + 3 };
 
-    CuPollingActivity(const CuData& token, CuDeviceFactoryService *df, const CuVariant &argins =
-            std::vector<std::string>());
+    CuPollingActivity(const CuData& token, CuDeviceFactoryService *df);
 
     ~CuPollingActivity();
 

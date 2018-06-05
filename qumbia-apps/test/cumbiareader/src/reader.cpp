@@ -46,6 +46,7 @@ QString Reader::source() const
 
 void Reader::setPeriod(int ms)
 {
+    printf("calling sendData to context %p\n", m_context);
     m_context->sendData(CuData("period", ms));
 }
 

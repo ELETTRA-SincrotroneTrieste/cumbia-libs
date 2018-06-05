@@ -16,6 +16,8 @@ public:
         action = a_ptr;
     }
 
+    ActionData() { action = NULL; }
+
     TSource tsrc;
     CuTangoActionI *action;
 };
@@ -76,6 +78,11 @@ public:
     // cache for tango command_inout argins
     // multimap because argins may differ
     std::map<const std::string, CmdData> din_cache;
+
+    ActionData cmd_data[32];
+    ActionData att_data[32];
+    CmdData cmd_data_cache[32];
+    int cmd_data_idx, att_data_idx;
     CmdData emptyCmdData;
 };
 
@@ -95,8 +102,7 @@ public:
  *     the poller is not started and the activity is suspended (repeat will return -1).
  */
 CuPollingActivity::CuPollingActivity(const CuData &token,
-                                     CuDeviceFactoryService *df,
-                                     const CuVariant & argins)
+                                     CuDeviceFactoryService *df)
     : CuContinuousActivity(token)
 {
     d = new CuPollingActivityPrivate;
@@ -104,8 +110,8 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
     d->repeat = 1000;
     d->errCnt = 0;
     d->other_thread_id = pthread_self();
-    d->argins = argins;
     d->exiting = false;
+    d->cmd_data_idx = d->att_data_idx = 0;
 
     int period = 1000;
     if(token.containsKey("period"))
@@ -270,33 +276,36 @@ void CuPollingActivity::execute()
         res["point"] = point;
         res["device"] = tsrc.getDeviceName();
         res["action_ptr"] = CuVariant(action_ptr);
-        pgreen2tmp("CuPollingActivity.execute: executing for \"%s\" period %d recipient %p source get name %s\n",
-                   res["device"].toString().c_str(), getTimeout(), action_ptr, tsrc.getName().c_str());
+//        pgreen2tmp("CuPollingActivity.execute: executing for \"%s\" period %d recipient %p source get name %s\n",
+//                   res["device"].toString().c_str(), getTimeout(), action_ptr, tsrc.getName().c_str());
         bool is_command = tsrc.getType() == TSource::Cmd;
-        CmdData cmd_data = d->din_cache[srcnam];
+  //      CmdData cmd_data = d->din_cache[srcnam];
+        CmdData cmd_data;
         CmdData newCmdData;
         if(dev && is_command && cmd_data.is_empty) {
             cmd_success = tangoworld.get_command_info(d->tdev->getDevice(), point, res);
+//            printf("1. got command_info cmd_success %d\n", cmd_success);
             if(cmd_success) {
                 newCmdData = CmdData(res, tangoworld.toDeviceData(argins, res), argins);
-                d->din_cache.insert(std::pair<const std::string, CmdData>(srcnam, newCmdData));
+             //   d->din_cache.insert(std::pair<const std::string, CmdData>(srcnam, newCmdData));
             }
         }
         if(dev && is_command && cmd_success) {  // do not try command_inout if no success so far
             // there is no multi-command_inout version
-            CmdData& cmdd = d->emptyCmdData;
-            if(cmd_data.is_empty) // was found in cache
-                cmdd = newCmdData;
-            else
-                cmdd = cmd_data;
-            bool has_argout = cmdd.cmdinfo["out_type"].toLongInt() != Tango::DEV_VOID;
+//            CmdData& cmdd = d->emptyCmdData;
+//            if(cmd_data.is_empty) // was found in cache
+//                cmdd = newCmdData;
+//            else
+//                cmdd = cmd_data;
+            bool has_argout = newCmdData.cmdinfo["out_type"].toLongInt() != Tango::DEV_VOID;
             res["err"] = !cmd_success;
             if(!cmd_success) {
                 res["msg"] = std::string("CuPollingActivity.execute: get_command_info failed for \"") + tsrc.getName() + std::string("\"");
                 d->errCnt++;
             }
             else {
-                cmd_success = tangoworld.cmd_inout(dev, point, cmdd.din, has_argout, res);
+//                printf("2. calling cmd_inout input res %s\n", res.toString().c_str());
+                cmd_success = tangoworld.cmd_inout(dev, point, newCmdData.din, has_argout, res);
             }
         }
         else if(!is_command) { // fill the list of attributes for read_attributes
@@ -309,14 +318,14 @@ void CuPollingActivity::execute()
 
         /// temporary prints
         ///
-        printf("- point \"%s\" is command %d argins size %d ", point.c_str(), is_command, argins.size());
-        if(argins.size() > 0) {
-            pgreen2tmp(": { ");
-            for(size_t i = 0; i < argins.size(); i++)
-                pgreen2tmp("%s, ", argins[i].c_str());
-            pgreen2tmp(" }");
-        }
-        printf("\n");
+//        printf("- point \"%s\" is command %d argins size %d ", point.c_str(), is_command, argins.size());
+//        if(argins.size() > 0) {
+//            printf(": { ");
+//            for(size_t i = 0; i < argins.size(); i++)
+//                printf("%s, ", argins[i].c_str());
+//            printf(" }");
+//        }
+//        printf("\n");
         ///
         /// end of temporary prints
 
@@ -370,6 +379,7 @@ void CuPollingActivity::execute()
     //        d->repeat = -1;
     //    }
     publishResult(results);
+    printf("\e[1;33mexecute exit after publish results with %d results\e[0m\n", results.size());
 }
 
 /*! \brief the implementation of the CuActivity::execute hook
@@ -411,12 +421,17 @@ void CuPollingActivity::onExit()
 void CuPollingActivity::m_registerAction(const TSource& ts, CuTangoActionI *a)
 {
     ActionData adata(ts, a);
+//    if(ts.getType() == TSource::Cmd)
+//        d->cmd_data[d->cmd_data_idx++] = adata;
+//    else
+//        d->att_data[d->att_data_idx++] = adata;
     d->actions_map.insert(std::pair<const std::string, const ActionData>(ts.getPoint(), adata)); // multimap
     pgreentmp(" + CuPollingActivity.event: added %s to poller\n", ts.toString().c_str());
 }
 
 void CuPollingActivity::m_unregisterAction(const TSource &ts)
 {
+
     std::multimap< const std::string, const ActionData>::iterator it = d->actions_map.begin();
     while(it != d->actions_map.end()) {
         if(it->first == ts.getPoint() && it->second.tsrc == ts) {

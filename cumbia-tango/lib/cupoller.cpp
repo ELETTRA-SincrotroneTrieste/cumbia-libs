@@ -55,7 +55,7 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a)
     CuActivity *activity = am->findMatching(at); // polling activities compare device period and "activity"
     if(!activity) {
         CuData tt("device", tsrc.getDeviceName()); /* thread token */
-        activity = new CuPollingActivity(at, df, tsrc.getArgs());
+        activity = new CuPollingActivity(at, df);
         const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
         const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
         d->cumbia_t->registerActivity(activity, this, tt, fi, bf);
@@ -71,6 +71,8 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a)
     // post insert to activity's thread. TSource is all what polling activity needs. don't pass pointers
     // to something that can be destroyed while activity is running in the background
     d->cumbia_t->postEvent(activity, new CuAddPollActionEvent(a->getSource(), a));
+//    if(d->actions_map.size() == 1)
+//        d->cumbia_t->resumeActivity(activity);
 }
 
 void CuPoller::unregisterAction(CuTangoActionI *a)
@@ -92,6 +94,8 @@ void CuPoller::unregisterAction(CuTangoActionI *a)
     CuActivity *activity = am->findMatching(at); // polling activities compare device period and "activity"
     // post remove to activity's thread
     d->cumbia_t->postEvent(activity, new CuRemovePollActionEvent(a->getSource()));
+    if(d->actions_map.size() == 0)
+        d->cumbia_t->pauseActivity(activity);
 }
 
 void CuPoller::onProgress(int step, int total, const CuData &data)

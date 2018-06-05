@@ -101,6 +101,10 @@ private:
 
     void m_registerToPoller();
 
+    void m_unregisterFromPoller();
+
+    void m_unregisterEventActivity();
+
 };
 
 
