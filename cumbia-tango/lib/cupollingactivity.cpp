@@ -259,6 +259,7 @@ void CuPollingActivity::execute()
     Tango::DeviceProxy *dev = d->tdev->getDevice();
     results.resize(d->actions_map.size());
     size_t i = 0;
+    size_t att_offset = 0;
     std::multimap<const std::string, const ActionData>::iterator it;
     for(it = d->actions_map.begin(); it != d->actions_map.end(); ++it) {
         results[i] = getToken();
@@ -304,6 +305,7 @@ void CuPollingActivity::execute()
                 //                printf("2. calling cmd_inout input res %s\n", res.toString().c_str());
                 cmd_success = tangoworld.cmd_inout(dev, point, cmdd.din, has_argout, results[i]);
             }
+            att_offset++;
         }
         else if(!is_command) { // fill the list of attributes for read_attributes {
             attdatalist.push_back(results[i]);
@@ -328,7 +330,7 @@ void CuPollingActivity::execute()
 
     // attributes now
     if(dev && attdatalist.size() > 0) {
-        bool success = tangoworld.read_atts(d->tdev->getDevice(), attdatalist, results, i);
+        bool success = tangoworld.read_atts(d->tdev->getDevice(), attdatalist, results, att_offset);
 
     }
     publishResult(results);
