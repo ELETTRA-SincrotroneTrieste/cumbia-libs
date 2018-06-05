@@ -83,7 +83,7 @@ int CuResultEvent::getTotal() const
  *
  * @return CuData bundle carrying the event data
  */
-const CuData CuResultEvent::getData() const
+const CuData &CuResultEvent::getData() const
 {
     return d_p->data;
 }

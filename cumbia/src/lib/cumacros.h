@@ -20,7 +20,7 @@
 // coloured versions of printf intended to be used temporarily in code
 
 #define pgreentmp(x, args...) do {  { printf("\e[0;32m[0x%lx] \e[0;32m[0x%lx] \e[1;32m", pthread_self(), pthread_self()), printf(x, ##args), printf("\e[0m\n"); } }while(0)
-#define predtmp(x, args...) do {  { printf("\e[0;32m[0x%lx] \e[1;32m", pthread_self()), printf(x, ##args), printf("\e[0m\n"); } }while(0)
+#define predtmp(x, args...) do {  { printf("\e[0;32m[0x%lx] \e[1;31m", pthread_self()), printf(x, ##args), printf("\e[0m\n"); } }while(0)
 #define pyellowtmp(x, args...) do {  { printf("\e[0;32m[0x%lx] \e[1;33m", pthread_self()), printf(x, ##args), printf("\e[0m\n"); } }while(0)
 #define pbluetmp(x, args...) do {  { printf("\e[0;32m[0x%lx] \e[1;34m", pthread_self()), printf(x, ##args), printf("\e[0m\n"); } }while(0)
 #define pviolettmp(x, args...) do {  { printf("\e[0;32m[0x%lx] \e[1;35m", pthread_self()), printf(x, ##args), printf("\e[0m\n"); } }while(0)

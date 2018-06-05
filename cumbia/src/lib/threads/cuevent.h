@@ -105,7 +105,7 @@ public:
     CuEventType getType() const;
     int getStep() const;
     int getTotal() const;
-    const CuData getData() const;
+    const CuData& getData() const;
     const CuActivity *getActivity() const;
 
 protected:

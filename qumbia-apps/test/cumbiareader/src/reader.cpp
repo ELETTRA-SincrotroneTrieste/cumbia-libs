@@ -37,7 +37,6 @@ void Reader::onUpdate(const CuData &data)
         else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::Short)
             emit newShortVector(src, ts, QVector<short>::fromStdVector(v.toShortVector()));
         else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::LongInt) {
-            printf("%s\n", v.toString().c_str());
             emit newLongVector(src, ts, QVector<long>::fromStdVector(v.toLongIntVector()));
         }
         else

@@ -70,7 +70,6 @@ CuData::CuData(const std::string& key, const CuVariant &v)
 CuData::CuData(const CuData &other)
 {
     d = new CuDataPrivate();
-    predtmp("+ CuData(const CuData& other) copying data");
     mCopyData(other);
 }
 
@@ -94,7 +93,6 @@ CuData &CuData::operator=(const CuData &other)
 {
     if(this != &other) {
         d->datamap.clear();
-        predtmp("+ CuData operator= copying data");
         mCopyData(other);
     }
     return *this;
@@ -318,7 +316,6 @@ void CuData::putTimestamp()
 
 void CuData::mCopyData(const CuData& other)
 {
-    predtmp("CuData mCopyData [%s]", other.toString().c_str());
     std::map<std::string, CuVariant>::const_iterator it;
     for (it = other.d->datamap.begin(); it != other.d->datamap.end(); ++it)
         d->datamap[it->first] = other.d->datamap[it->first];
