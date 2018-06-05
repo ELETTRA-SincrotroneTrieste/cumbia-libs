@@ -3,12 +3,13 @@
 #include <string>
 #include <sys/time.h>
 #include <unordered_map>
+#include <map>
 
 /*! @private */
 class CuDataPrivate
 {
 public:
-    std::unordered_map<std::string, CuVariant> datamap;
+    std::map<std::string, CuVariant> datamap;
 
     CuVariant emptyVariant;
 };
@@ -69,6 +70,7 @@ CuData::CuData(const std::string& key, const CuVariant &v)
 CuData::CuData(const CuData &other)
 {
     d = new CuDataPrivate();
+    predtmp("+ CuData(const CuData& other) copying data");
     mCopyData(other);
 }
 
@@ -92,6 +94,7 @@ CuData &CuData::operator=(const CuData &other)
 {
     if(this != &other) {
         d->datamap.clear();
+        predtmp("+ CuData operator= copying data");
         mCopyData(other);
     }
     return *this;
@@ -224,7 +227,7 @@ bool CuData::operator ==(const CuData &other) const
 {
     if(other.d->datamap.size() != d->datamap.size())
         return false;
-    std::unordered_map<std::string, CuVariant>::const_iterator i;
+    std::map<std::string, CuVariant>::const_iterator i;
     for(i = d->datamap.begin(); i != d->datamap.end(); ++i)
     {
         if(!other.containsKey(i->first))
@@ -287,7 +290,7 @@ void CuData::print() const
 std::string CuData::toString() const
 {
     std::string r = "CuData { ";
-    std::unordered_map<std::string, CuVariant>::const_iterator i;
+    std::map<std::string, CuVariant>::const_iterator i;
     for(i = d->datamap.begin(); i != d->datamap.end(); ++i)
     {
         r += "[\"" + i->first + "\" -> " + i->second.toString() + "], ";
@@ -315,7 +318,8 @@ void CuData::putTimestamp()
 
 void CuData::mCopyData(const CuData& other)
 {
-    std::unordered_map<std::string, CuVariant>::const_iterator it;
+    predtmp("CuData mCopyData [%s]", other.toString().c_str());
+    std::map<std::string, CuVariant>::const_iterator it;
     for (it = other.d->datamap.begin(); it != other.d->datamap.end(); ++it)
         d->datamap[it->first] = other.d->datamap[it->first];
 }

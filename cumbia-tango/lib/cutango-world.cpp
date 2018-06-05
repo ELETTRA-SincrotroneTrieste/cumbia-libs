@@ -120,14 +120,15 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
         }
         case Tango::DEV_LONG:
         {
-            Tango::DevLong temp;
+            printf("extractData DEV_LONG\n");
+            long int temp;
             *data >> temp;
             da["value"] = (long) temp;
             break;
         }
         case Tango::DEV_ULONG:
         {
-            Tango::DevULong temp;
+            unsigned long temp;
             *data >> temp;
             da["value"] = (unsigned long) temp;
             break;
@@ -141,7 +142,7 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
         }
         case Tango::DEV_DOUBLE:
         {
-            Tango::DevDouble temp;
+            double temp;
             *data >> temp;
             da["value"] = temp;
             break;
@@ -175,20 +176,23 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
         case Tango::DEVVAR_LONGARRAY:
         {
             vector<Tango::DevLong> temp;
+            vector<long int> li; // !! Tango DevLong
             *data >> temp;
-            da["value"] = temp;
+            for(size_t i = 0; i < temp.size(); i++)
+                li.push_back(static_cast<long int>(temp[i]));
+            da["value"] = li;
             break;
         }
         case Tango::DEVVAR_ULONGARRAY:
         {
-            vector<Tango::DevULong> temp;
+            vector<unsigned long> temp;
             *data >> temp;
             da["value"] = temp;
             break;
         }
         case Tango::DEVVAR_FLOATARRAY:
         {
-            vector<Tango::DevFloat> temp;
+            vector<float> temp;
             *data >> temp;
             da["value"] = temp;
             break;

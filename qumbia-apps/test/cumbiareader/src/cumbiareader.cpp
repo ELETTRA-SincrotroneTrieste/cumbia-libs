@@ -81,6 +81,12 @@ Cumbiareader::Cumbiareader(CumbiaPool *cumbia_pool, QWidget *parent) :
                     SLOT(onNewShort(QString,double,short)));
             connect(r, SIGNAL(newShortVector(QString,double,QVector<short>)), this,
                     SLOT(onNewShortVector(QString,double,QVector<short>)));
+
+            connect(r, SIGNAL(newLong(QString,double,long)), this,
+                    SLOT(onNewLong(QString,double,long)));
+            connect(r, SIGNAL(newLongVector(QString,double,QVector<long>)), this,
+                    SLOT(onNewLongVector(QString,double,QVector<long>)));
+
             connect(r, SIGNAL(newError(QString,double,QString)), this, SLOT(onError(QString,double,QString)));
             r->setSource(a);
             r->setPeriod(interval);
@@ -118,6 +124,21 @@ void Cumbiareader::onNewDoubleVector(const QString &src, double ts, const QVecto
 void Cumbiareader::onNewShort(const QString &src, double ts, short val)
 {
     printf("%s: [%s] [\e[1;34mshort\e[0m] \e[1;32m%d\e[0m\n", qstoc(src), qstoc(makeTimestamp(ts)), val);
+}
+
+void Cumbiareader::onNewLong(const QString &src, double ts, long val)
+{
+    printf("%s: [%s] [\e[1;34mshort\e[0m] \e[1;32m%ld\e[0m\n", qstoc(src), qstoc(makeTimestamp(ts)), val);
+}
+
+void Cumbiareader::onNewLongVector(const QString &src, double ts, const QVector<long> &v)
+{
+    printf("%s: [%s] [\e[1;35mlong\e[0m,%d] { \e[0;32m", qstoc(src), qstoc(makeTimestamp(ts)), v.size());
+    for(int i = 0; i < v.size() -1 && (m_truncate < 0 || i < m_truncate - 1); i++)
+        printf("%ld,", v[i]);
+    if(m_truncate > -1 && m_truncate < v.size())
+        printf(" ..., ");
+    printf("%ld \e[0m}\n", v[v.size() - 1]);
 }
 
 void Cumbiareader::onNewShortVector(const QString &src, double ts, const QVector<short> &v)

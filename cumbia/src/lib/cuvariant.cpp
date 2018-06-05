@@ -349,7 +349,7 @@ CuVariant::CuVariant(const std::vector<unsigned int> &vi)
  *
  * Specific conversion method: CuVariant::toLongIntVector
  */
-CuVariant::CuVariant(const std::vector<long> &li)
+CuVariant::CuVariant(const std::vector<long int> &li)
 {
     d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Vector, LongInt);

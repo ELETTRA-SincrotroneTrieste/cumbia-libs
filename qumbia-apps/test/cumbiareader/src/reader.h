@@ -33,7 +33,13 @@ signals:
 
     void newShortVector(const QString& src, double timestamp_us, const QVector<short>& v);
 
+    void newLongVector(const QString& src, double timestamp_us, const QVector<long>& v);
+
+    void newLong(const QString& src, double timestamp_us, long val);
+
     void newError(const QString& src, double timestamp_us, const QString& msg);
+
+
 
 public slots:
     void setSource(const QString& s);

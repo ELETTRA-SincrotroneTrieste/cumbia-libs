@@ -30,10 +30,19 @@ void Reader::onUpdate(const CuData &data)
             emit newDouble(src, ts, v.toDouble());
         if(v.getFormat() == CuVariant::Scalar && v.getType() == CuVariant::Short)
             emit newShort(src, ts, v.toShortInt());
+        if(v.getFormat() == CuVariant::Scalar && v.getType() == CuVariant::LongInt)
+            emit newLong(src, ts, v.toLongInt());
         else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::Double)
             emit newDoubleVector(src, ts, QVector<double>::fromStdVector(v.toDoubleVector()));
         else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::Short)
             emit newShortVector(src, ts, QVector<short>::fromStdVector(v.toShortVector()));
+        else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::LongInt) {
+            printf("%s\n", v.toString().c_str());
+            emit newLongVector(src, ts, QVector<long>::fromStdVector(v.toLongIntVector()));
+        }
+        else
+            perr("Reader.onUpdate: unsupported data type %s and format %s",
+                 v.dataTypeStr(v.getType()).c_str(), v.dataFormatStr(v.getFormat()).c_str());
     }
 }
 

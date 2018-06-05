@@ -23,7 +23,9 @@ public slots:
     void onNewDouble(const QString &src, double ts, double val);
     void onNewDoubleVector(const QString &src, double ts, const QVector<double> &v);
     void onNewShort(const QString &src, double ts, short val);
+    void onNewLong(const QString &src, double ts, long val);
     void onNewShortVector(const QString &src, double ts, const QVector<short> &v);
+    void onNewLongVector(const QString &src, double ts, const QVector<long> &v);
 
     void onError(const QString& src, double ts, const QString& msg);
 
