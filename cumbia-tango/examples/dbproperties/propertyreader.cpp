@@ -31,14 +31,14 @@ void PropertyReader::get(const char *id, const std::vector<std::string> &props)
         if(cnt == 2 && cpos < std::string::npos)
         {
             CuData devpd("device", props[i].substr(0, cpos));
-            devpd["name"] = props[i].substr(cpos + 1, std::string::npos);
+            devpd[CuDType::Name] = props[i].substr(cpos + 1, std::string::npos);
             in_data.push_back(devpd);
         }
         else if(cnt == 3) {
             CuData devpd("device", props[i].substr(0, props[i].rfind('/')));
             if(cpos < std::string::npos) {
                 devpd["attribute"] = props[i].substr(props[i].rfind('/') + 1, cpos - props[i].rfind('/') -1);
-                devpd["name"] = props[i].substr(cpos + 1, std::string::npos);
+                devpd[CuDType::Name] = props[i].substr(cpos + 1, std::string::npos);
             }
             else
                 devpd["attribute"] = props[i].substr(props[i].rfind('/') + 1, cpos); // cpos == npos
@@ -47,7 +47,7 @@ void PropertyReader::get(const char *id, const std::vector<std::string> &props)
         }
         else if(cnt == 0 && cpos < std::string::npos) { // class
             CuData cld("class", props[i].substr(0, cpos));
-            cld["name"] = props[i].substr(cpos + 1);
+            cld[CuDType::Name] = props[i].substr(cpos + 1);
             in_data.push_back(cld);
         }
     }
@@ -68,8 +68,8 @@ void PropertyReader::exit()
 void PropertyReader::onUpdate(const CuData &data)
 {
     pr_thread();
-    if(data["err"].toBool())
-        printf("\n\e[1;31m** \e[0m error fetching properties: \e[1;31m%s\e[0m\n", data["msg"].toString().c_str());
+    if(data[CuDType::Err].toBool())
+        printf("\n\e[1;31m** \e[0m error fetching properties: \e[1;31m%s\e[0m\n", data[CuDType::Message].toString().c_str());
     else
         printf("\n\e[1;32m** %45s     VALUES\e[0m\n", "PROPERTIES");
     std::vector<std::string> plist = data["list"].toStringVector();

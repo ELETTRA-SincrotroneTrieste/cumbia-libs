@@ -310,9 +310,9 @@ void QuWriter::onUpdate(const CuData &data)
 {
     printf("\e[1;33mQuWriter.onUpdate ENTER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\e[0m\n\n\n");
     d->configured = true;
-    quizer_ptr->error = data["err"].toBool();
-    quizer_ptr->message = QString::fromStdString(data["msg"].toString());
-    if(data["type"].toString() == "property" && d->auto_configure)
+    quizer_ptr->error = data[CuDType::Err].toBool();
+    quizer_ptr->message = QString::fromStdString(data[CuDType::Message].toString());
+    if(data[CuDType::Type].toString() == "property" && d->auto_configure)
     {
         printf("QuWriter.onUpdate: \e[1;32mproperty: configuring\e[0m\n");
         Qumbiaizer::configure(data);

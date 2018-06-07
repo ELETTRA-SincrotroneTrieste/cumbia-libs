@@ -25,6 +25,8 @@ public:
 
     void onResult(const CuData &data);
 
+    void onResult(const std::vector<CuData> &datalist);
+
     CuData getToken() const;
 
     EpSource getSource() const;
@@ -61,6 +63,7 @@ private:
     void m_startEventActivity();
 
     void m_startMonitorActivity();
+
 };
 
 

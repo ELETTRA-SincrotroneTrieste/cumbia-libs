@@ -1,5 +1,6 @@
 #include "cuinfodialog.h"
 #include <cudata.h>
+#include <cudatatypes_ex.h>
 #include <QMetaObject>
 #include <QMetaMethod>
 #include <QGroupBox>
@@ -221,10 +222,10 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
     HealthWidget *healthw  = findChild<HealthWidget *>();
     healthw->setData(lis->errorCnt(), lis->opCnt());
 
-    QString src = QString(d["src"].toString().c_str());
+    QString src = QString(d[CuDType::Src].toString().c_str());
     QGroupBox *container = findChild<QGroupBox *>(src + "_monitor");
     QGridLayout *glo = qobject_cast<QGridLayout *>(container->layout());
-    d["timestamp_ms"].to<double>(x);
+    d[CuDType::Time_ms].to<double>(x);
     if(container)
     {
         QLabel* update_wait_l = container->findChild<QLabel *>("l_waitupdate");
@@ -276,24 +277,24 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
         }
 
         QString datetime = QDateTime::fromMSecsSinceEpoch(x).toString();
-        container->findChild<QLineEdit *>("lev")->setText(d["value"].toString().c_str());
+        container->findChild<QLineEdit *>("lev")->setText(d[CuDType::Value].toString().c_str());
         container->findChild<QLineEdit *>("lexv")->setText(datetime);
-        container->findChild<QLineEdit *>("lewv")->setEnabled(d.containsKey("w_value"));
-        container->findChild<QLabel *>("lwv")->setEnabled(d.containsKey("w_value"));
-        if(d.containsKey("w_value"))
-            container->findChild<QLineEdit *>("lewv")->setText(d["w_value"].toString().c_str());
+        container->findChild<QLineEdit *>("lewv")->setEnabled(d.containsKey(CuXDType::WriteValue));
+        container->findChild<QLabel *>("lwv")->setEnabled(d.containsKey(CuXDType::WriteValue));
+        if(d.containsKey(CuXDType::WriteValue))
+            container->findChild<QLineEdit *>("lewv")->setText(d[CuXDType::WriteValue].toString().c_str());
 
         col = 0;
-        QMap<QString, QString> map;
-        map["activity"] = "Activity: ";
-        map["data_format_str"] = "Format: ";
-        map["mode"] = "Mode";
-        map["period"] = "Period";
+        QMap<int, QString> map;
+        map[CuDType::Activity] = "Activity: ";
+        map[CuXDType::DataFormatStr] = "Format: ";
+        map[CuDType::Mode] = "Mode";
+        map[CuXDType::Period] = "Period";
 
         row = 0;
-        foreach(QString k, map.keys())
+        foreach(int k, map.keys())
         {
-            if(!d.containsKey(k.toStdString()))
+            if(!d.containsKey(k))
                 continue;
             if(col % locolmax == 0)
                 col = 0;
@@ -315,7 +316,7 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
                 gridlodetails->addWidget(le, row, col, 1, 1);
             }
             col++;
-            le->setText(d[k.toStdString()].toString().c_str());
+            le->setText(d[k].toString().c_str());
         }
 
         foreach (QLineEdit *le, container->findChildren<QLineEdit*>()) {
@@ -325,7 +326,7 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
         // message needs more space
         row++;
         col = 0;
-        if(d.containsKey("msg"))
+        if(d.containsKey(CuDType::Message))
         {
             QLabel *l = container->findChild<QLabel *>("l_msg");
             if(!l)
@@ -345,7 +346,7 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
                 te->setObjectName("le_msg");
                 gridlodetails->addWidget(te, row, 1, 1, locolmax - 1);
             }
-            te->setText(QString::fromStdString(d["msg"].toString()));
+            te->setText(QString::fromStdString(d[CuDType::Message].toString()));
             te->setToolTip(src + ": " + te->text());
         }
 
@@ -370,11 +371,11 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
 
 void CuInfoDialog::newLiveData(const CuData &data)
 {
-    if(data.containsKey("data_format_str"))
+    if(data.containsKey(CuXDType::DataFormatStr))
         sender()->disconnect(this, SLOT(newLiveData(const CuData&)));
 
-    QString src = QString::fromStdString(data["src"].toString());
-    std::string format = data["data_format_str"].toString();
+    QString src = QString::fromStdString(data[CuDType::Src].toString());
+    std::string format = data[CuXDType::DataFormatStr].toString();
     QWidget *plotw = NULL;
     QVBoxLayout *livelo = qobject_cast<QVBoxLayout *>(findChild<QGroupBox *>(src + "_live")->layout());
     if(format == "scalar")

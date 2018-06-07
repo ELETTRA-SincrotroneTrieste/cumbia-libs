@@ -1,6 +1,7 @@
 #include "qutplotupdatestrategy.h"
 #include <QColor>
 #include <cudata.h>
+#include <cudatatypes_ex.h>
 #include <cumacros.h>
 #include <cuvariant.h>
 #include <QWidget>
@@ -52,15 +53,15 @@ void QuTPlotUpdateStrategy::update(const CuData &da, QWidget *widget)
 {
     QColor background, border;
     QuPalette palette;
-    if(da.containsKey("quality_color"))
-        background = palette[QString::fromStdString(da["quality_color"].toString())];
-    if(da.containsKey("success_color"))
-        border = palette[QString::fromStdString(da["success_color"].toString())];
+    if(da.containsKey(CuXDType::QualityColor))
+        background = palette[QString::fromStdString(da[CuXDType::QualityColor].toString())];
+    if(da.containsKey(CuXDType::SuccessColor))
+        border = palette[QString::fromStdString(da[CuXDType::SuccessColor].toString())];
 
-    bool read_ok = !da["err"].toBool();
+    bool read_ok = !da[CuDType::Err].toBool();
 
-    if(read_ok && d->auto_configure && da.containsKey("type")
-            && da["type"].toString() == "property")
+    if(read_ok && d->auto_configure && da.containsKey(CuDType::Type)
+            && da[CuDType::Type].toString() == "property")
     {
         m_configure(da, widget);
     }
@@ -91,8 +92,8 @@ void QuTPlotUpdateStrategy::m_fillFromHistory(const CuVariant &x, const CuVarian
 void QuTPlotUpdateStrategy::m_configure(const CuData &da, QWidget* widget)
 {
     CuVariant m, M;
-    m = da["min_value"];
-    M = da["max_value"];
+    m = da[CuXDType::Min];
+    M = da[CuXDType::Max];
     bool okl, oku;
     double lb, ub;
     QString min = QString::fromStdString(m.toString());
@@ -113,7 +114,8 @@ void QuTPlotUpdateStrategy::m_configure(const CuData &da, QWidget* widget)
         plot->setDefaultBounds(current_def_lb, current_def_ub, QwtPlot::yLeft);
     }
 
+    printf("\e[1;31m!!!!!!!!!!!!!!!!!!!!! QuTPlotUpdateStrategy::m_configure need UNCOMMENTING!!!\e[0m\n\n\n");
     /* data could possibly contain a piece of the value's history */
-    if(da.containsKey("history_y") && da.containsKey("history_x"))
-        m_fillFromHistory(da["history_x"], da["history_y"]);
+//    if(da.containsKey("history_y") && da.containsKey("history_x"))
+//        m_fillFromHistory(da["history_x"], da["history_y"]);
 }

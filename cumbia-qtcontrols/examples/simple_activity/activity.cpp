@@ -23,8 +23,8 @@ void Activity::init()
     // result: a CuData.
     // pick the token to initialise the result
     CuData d = getToken();
-    d["msg"] = std::string("init"); // insert the message into the result
-    d["thread"] = write_thread_t();
+    d[CuDType::Message] = std::string("init"); // insert the message into the result
+    d[CuDType::Thread] = write_thread_t();
     publishResult(d); // post to main thread
 }
 
@@ -32,13 +32,13 @@ void Activity::execute()
 {
     CuData d = getToken();
     for(int i = 1; i <= 3; i++) {
-        d["msg"] = std::string("execute [") + std::to_string(i) + std::string("]");
-        d["thread"] = write_thread_t();
+        d[CuDType::Message] = std::string("execute [") + std::to_string(i) + std::string("]");
+        d[CuDType::Thread] = write_thread_t();
         publishProgress(i, 3, d);
         if (i < 3) sleep(2);
     }
-    d["thread"] = write_thread_t();
-    d["msg"] = std::string("execute [done]");
+    d[CuDType::Thread] = write_thread_t();
+    d[CuDType::Message] = std::string("execute [done]");
     publishResult(d);
 }
 
@@ -46,8 +46,8 @@ void Activity::onExit()
 {
     // do exactly the same as init
     CuData d = getToken();
-    d["msg"] = std::string("onExit");
-    d["thread"] = write_thread_t();
+    d[CuDType::Message] = std::string("onExit");
+    d[CuDType::Thread] = write_thread_t();
     publishResult(d);
     printf("onExit activity: flags %d\n", getFlags());
 }

@@ -3,6 +3,7 @@
 
 #include <cumacros.h>
 #include <cudata.h>
+#include <cudatatypes_ex.h>
 #include <elettracolors.h>
 #include <qwt_plot_grid.h>
 #include <qwt_legend.h>
@@ -216,8 +217,8 @@ void QuPlotBase::configure(const CuData &da)
 {
     CuVariant m, M;
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    m = da["min"];  // min value
-    M = da["max"];  // max value
+    m = da[CuXDType::Min];  // min value
+    M = da[CuXDType::Max];  // max value
     bool okl, oku;  // toDouble ok for lower and upper bound
     double lb, ub;  // double for lower and upper bound
     double current_def_lb, current_def_ub;
@@ -388,12 +389,13 @@ void QuPlotBase::drawCanvas(QPainter *p)
 {
     QwtPlot::drawCanvas(p);
 
+    printf("\e[1;31m !!!!!!!!!!!!!!!! RE ENABLE string props in QuPlotBase::drawCanvas\e[0m\n");
     CuData options;
     QuPlotCanvasPainterComponent *painter_c =
             static_cast<QuPlotCanvasPainterComponent *>(d->components_map.value("canvas_painter"));
-    options["show_title"] = titleOnCanvasEnabled();
-    options["show_zoom_hint"] = d->displayZoomHint;
-    options["zoom_disabled"] = zoomDisabled();
+//    options["show_title"] = titleOnCanvasEnabled();
+//    options["show_zoom_hint"] = d->displayZoomHint;
+//    options["zoom_disabled"] = zoomDisabled();
     painter_c->update(p, this,  curves(), options);
 }
 

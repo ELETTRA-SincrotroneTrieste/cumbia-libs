@@ -3,7 +3,7 @@
 #include <cudata.h>
 #include <cumbia.h>
 #include <cuserviceprovider.h>
-
+#include <cudatatypes_ex.h>
 #include "cucontrolswriter_abs.h"
 #include "cucontrolsfactories_i.h"
 #include "cucontrolsutils.h"
@@ -116,21 +116,21 @@ QString QuButton::target() const
  */
 void QuButton::onUpdate(const CuData &data)
 {
-    if(data["err"].toBool())
+    if(data[CuDType::Err].toBool())
     {
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->context->cumbiaPool()->getBySrc(data["src"].toString());
+            cumbia = d->context->cumbiaPool()->getBySrc(data[CuDType::Src].toString());
         CuLog *log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log));
         if(log)
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::Write, true);
-            log->write(QString("QuButton [" + objectName() + "]").toStdString(), data["msg"].toString(), CuLog::Error, CuLog::Write);
+            log->write(QString("QuButton [" + objectName() + "]").toStdString(), data[CuDType::Message].toString(), CuLog::Error, CuLog::Write);
         }
     }
-    else if(data["type"].toString() == std::string("property")) {
+    else if(data[CuDType::Type].toString() == std::string("property")) {
         printf("QuButton.onUpdate type property. Try to initialize objects\n");
-        CuVariant val = data["w_value"];
+        CuVariant val = data[CuXDType::WriteValue];
         CuControlsUtils cu;
         cu.initObjects(target(), this, val);
     }

@@ -7,6 +7,7 @@
 #include <QGridLayout>
 #include <quplot_base.h>
 #include <cumacros.h>
+#include <cudatatypes_ex.h>
 #include <QtDebug>
 
 QuConnectionSettingsWidget::QuConnectionSettingsWidget(QWidget *w) : QWidget(w)
@@ -44,7 +45,7 @@ void QuConnectionSettingsWidget::changeRefresh()
     int period = findChild<QSpinBox *>("sbPeriod")->value();
     int refmode = findChild<QComboBox *>("cbRefreshMode")->currentIndex();
     CuData options;
-    options["period"] = period;
-    options["refresh_mode"] = refmode;
+    options[CuXDType::Period] = period;
+    options[CuXDType::RefreshMode] = refmode;
     emit settingsChanged(options);
 }

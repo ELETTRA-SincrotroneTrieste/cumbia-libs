@@ -2,6 +2,7 @@
 #include "quplotcommon.h"
 #include <cumacros.h>
 #include <cudata.h>
+#include <cudatatypes_ex.h>
 #include <QtDebug>
 #include <QDateTime>
 
@@ -125,7 +126,7 @@ void QuSpectrumPlot::unsetSource(const QString& src)
  */
 void QuSpectrumPlot::setPeriod(int p)
 {
-    d->plot_common->getContext()->sendData(CuData("period", p));
+    d->plot_common->getContext()->sendData(CuData(CuXDType::Period, p));
 }
 
 /** \brief Get the refresh period of the sources issuing a getData on the first reader in the list.
@@ -140,9 +141,9 @@ void QuSpectrumPlot::setPeriod(int p)
  */
 int QuSpectrumPlot::period() const
 {
-    CuData d_inout("period", -1);
+    CuData d_inout(CuXDType::Period, -1);
     d->plot_common->getContext()->getData(d_inout);
-    return d_inout["period"].toInt();
+    return d_inout[CuXDType::Period].toInt();
 }
 
 void QuSpectrumPlot::setOptions(const CuData &options)
@@ -165,20 +166,20 @@ void QuSpectrumPlot::update(const CuData &da)
 {
 //    return;
 
-    d->read_ok = !da["err"].toBool();
-    const CuVariant &v = da["value"];
-    QString src = QString::fromStdString(da["src"].toString());
+    d->read_ok = !da[CuDType::Err].toBool();
+    const CuVariant &v = da[CuDType::Value];
+    QString src = QString::fromStdString(da[CuDType::Src].toString());
 
     // update link statistics
     CuLinkStats *link_s = d->plot_common->getContext()->getLinkStats();
     link_s->addOperation();
     if(!d->read_ok)
-        link_s->addError(da["msg"].toString());
+        link_s->addError(da[CuDType::Message].toString());
 
 
     // configure triggers replot at the end but should not be too expensive
     // to do it once here at configuration time and once more from appendData
-    if(d->read_ok && d->auto_configure && da["type"].toString() == "property") {
+    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {
         configure(da);
     }
 
@@ -204,7 +205,7 @@ void QuSpectrumPlot::update(const CuData &da)
         replot();
     }
 
-    setToolTip(da["msg"].toString().c_str());
+    setToolTip(da[CuDType::Message].toString().c_str());
 }
 
 void QuSpectrumPlot::requestLinkStats()

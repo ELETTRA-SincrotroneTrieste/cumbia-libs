@@ -1,15 +1,42 @@
 #include "cudata.h"
 #include "cumacros.h"
+#include "cudatatypes_ex.h"
 #include <string>
 #include <sys/time.h>
 #include <unordered_map>
 #include <map>
+#include <set>
+
 
 /*! @private */
 class CuDataPrivate
 {
 public:
-    std::map<std::string, CuVariant> datamap;
+    CuDataPrivate() {
+        datamap = NULL;
+        data2 = NULL;
+        data2siz = 0;
+    }
+
+    ~CuDataPrivate() {
+        if(datamap)
+            delete datamap;
+        if(data2)
+            delete [] data2;
+    }
+
+    CuVariant data[CuDType::MaxDataKey];
+
+    // extra container
+    CuVariant *data2;
+    size_t data2siz;
+
+    // string key version
+    std::map<const std::string, CuVariant> *datamap;
+
+    // set is an ordered container that records the keys
+    // that have been inserted into CuData
+    std::set<size_t> idx_set;
 
     CuVariant emptyVariant;
 };
@@ -33,20 +60,6 @@ CuData::CuData()
     d = new CuDataPrivate();
 }
 
-/*! \brief constructor of a CuData initialised with one value (key: emtpy string)
- *
- * @param v a CuVariant used to initialise a key/value pair where the key
- *        is an empty string.
- *
- * The parameter-less of CuData::value can be used to get the value associated
- * to an empty key
- */
-CuData::CuData(const CuVariant &v)
-{
-    d = new CuDataPrivate();
-    d->datamap[""] = v;
-}
-
 /*! \brief constructor initialising a CuData with one key-value pair
  *
  * @param key a string used as a key
@@ -54,10 +67,14 @@ CuData::CuData(const CuVariant &v)
  *
  * The new CuData will be initialised with a key/v pair
  */
-CuData::CuData(const std::string& key, const CuVariant &v)
+CuData::CuData(const size_t key, const CuVariant &v)
 {
     d = new CuDataPrivate();
-    d->datamap[key] = v;
+    if(key < CuDType::MaxDataKey)
+        d->data[key] = v;
+    else
+        m_insertDataExtra(key, v);
+    d->idx_set.insert(key);
 }
 
 /*! \brief the copy constructor
@@ -92,7 +109,8 @@ CuData::CuData(CuData &&other)
 CuData &CuData::operator=(const CuData &other)
 {
     if(this != &other) {
-        d->datamap.clear();
+        if(d->datamap)
+            d->datamap->clear();
         mCopyData(other);
     }
     return *this;
@@ -120,26 +138,11 @@ CuData &CuData::operator=(CuData &&other)
  *
  * @see isEmpty
  */
-size_t CuData::size() const
+size_t CuData::stringmapsize() const
 {
-    return d->datamap.size();
-}
-
-/*! \brief return the value associated to the empty key
- *
- * @return the value associated to an empty key, if there's one empty key
- *         with a value (for example, created with the CuData::CuData(const CuVariant &v) )
- *         constructor, or an *empty* CuVariant
- *
- * If there's no value associated to an *empty key* (i.e. an *emtpy string*, ""), an
- * *invalid and null* CuVariant is returned. See CuVariant::isValid and CuVariant::isNull
- */
-CuVariant CuData::value() const
-{
-    /* search the empty key */
-    if(d->datamap.count("") > 0)
-        return d->datamap.at("");
-    return CuVariant();
+    if(!d->datamap)
+        return 0;
+    return d->datamap->size();
 }
 
 /*! \brief return a copy of the value associated with the given *key*,
@@ -149,12 +152,22 @@ CuVariant CuData::value() const
  *         or an *invalid and null* CuVariant. See CuVariant::isValid and
  *         CuVariant::isNull
  *
- * See also CuData::operator [](const std::string &key) const
+ * See also CuData::d->datamap-> [](const std::string &key) const
  */
 CuVariant CuData::value(const std::string & key) const
 {
-    if(d->datamap.count(key) > 0)
-        return d->datamap[key];
+    if(d->datamap && d->datamap->count(key) > 0)
+        return d->datamap->operator[](key);
+    return CuVariant();
+}
+
+CuVariant CuData::value(const size_t key) const
+{
+    if(key < CuDType::MaxDataKey)
+        return d->data[key];
+    else if(d->data2 && key - CuDType::MaxDataKey < d->data2siz)
+        return d->data2[key - CuDType::MaxDataKey];
+    perr("CuData.value(key): key %ld both exceeds %d and %ld", key, CuDType::MaxDataKey, CuDType::MaxDataKey + d->data2siz);
     return CuVariant();
 }
 
@@ -167,7 +180,18 @@ CuVariant CuData::value(const std::string & key) const
  */
 void CuData::add(const std::string & key, const CuVariant &value)
 {
-    d->datamap[key] = value;
+    if(!d->datamap)
+        d->datamap = new std::map<const std::string, CuVariant>();
+    d->datamap->operator [](key) = value;
+}
+
+void CuData::add(const size_t key, const CuVariant &value)
+{
+    if(key < CuDType::MaxDataKey)
+        d->data[key] = value;
+    else
+        m_insertDataExtra(key, value);
+    d->idx_set.insert(key);
 }
 
 /*! \brief returns true if the bundle contains the given key
@@ -175,9 +199,14 @@ void CuData::add(const std::string & key, const CuVariant &value)
  * @param key the key to be searched, std::string
  * @return true if the bundle contains the given key, false otherwise
  */
-bool CuData::containsKey(const std::string &key) const
+bool CuData::containsStrKey(const std::string &key) const
 {
-    return d->datamap.count(key) > 0;
+    return d->datamap != NULL && d->datamap->count(key) > 0;
+}
+
+bool CuData::containsKey(const size_t key) const
+{
+    return d->idx_set.find(key) != d->idx_set.end();
 }
 
 /*! \brief array subscript write operator; pushes a new key-value pair into the bundle
@@ -187,15 +216,33 @@ bool CuData::containsKey(const std::string &key) const
  * \par  Example
  * \code
     CuData at("src", source.getName()); // string
-    at["device"] = source.getDeviceName(); // string
-    at["activity"] = "event"; // string
-    at["period"] = source.period(); // integer
-    at["err"] = false; // bool
+    at[CuXDType::Device] = source.getDeviceName(); // string
+    at[CuDType::Activity] = "event"; // string
+    at[CuDType::Period] = source.period(); // integer
+    at[CuDType::Err] = false; // bool
  * \endcode
  */
 CuVariant &CuData::operator [](const std::string &key)
 {
-    return d->datamap[key];
+    if(!d->datamap)
+        d->datamap = new std::map<const std::string, CuVariant>();
+    return d->datamap->operator [](key);
+}
+
+
+CuVariant &CuData::operator [](const size_t key)
+{
+    d->idx_set.insert(key);
+    if(key < CuDType::MaxDataKey)
+        return d->data[key];
+    else {
+        size_t idx_offset = key - CuDType::MaxDataKey;
+        if(idx_offset >= d->data2siz) {
+            pgreentmp("CuData.operator [] (insert): key %ld both exceeds %d and %ld. reallocating", key, CuDType::MaxDataKey, CuDType::MaxDataKey + d->data2siz);
+            m_reallocData2(idx_offset);
+        }
+        return d->data2[idx_offset];
+    }
 }
 
 /*! \brief array subscript read operator: get a reference to a value given the key
@@ -207,10 +254,21 @@ CuVariant &CuData::operator [](const std::string &key)
  */
 const CuVariant &CuData::operator [](const std::string &key) const
 {
-    if(d->datamap.count(key) > 0)
-        return d->datamap[key];
+    if(d->datamap && d->datamap->count(key) > 0)
+        return d->datamap->operator [](key);
     return d->emptyVariant;
 }
+
+const CuVariant &CuData::operator [](const size_t key) const
+{
+    if(key < CuDType::MaxDataKey)
+        return d->data[key];
+    else if(d->data2 && key - CuDType::MaxDataKey < d->data2siz) {
+        return d->data2[key - CuDType::MaxDataKey];
+    }
+    return d->emptyVariant;
+}
+
 
 /*! \brief *equality* relational operator. Returns true if *this* CuData
  *         equals another
@@ -223,16 +281,34 @@ const CuVariant &CuData::operator [](const std::string &key) const
  */
 bool CuData::operator ==(const CuData &other) const
 {
-    if(other.d->datamap.size() != d->datamap.size())
+    if( (d->datamap == NULL && other.d->datamap != NULL )
+            || (d->datamap != NULL && other.d->datamap == NULL) )
         return false;
-    std::map<std::string, CuVariant>::const_iterator i;
-    for(i = d->datamap.begin(); i != d->datamap.end(); ++i)
-    {
-        if(!other.containsKey(i->first))
-            return false;
-        if(other[i->first] != i->second)
+
+    if(other.d->datamap && d->datamap && other.d->datamap->size() != d->datamap->size())
+        return false;
+
+    if(other.d->datamap && d->datamap) {
+        std::map<std::string, CuVariant>::const_iterator i;
+        for(i = d->datamap->begin(); i != d->datamap->end(); ++i)
+        {
+            if(!other.containsStrKey(i->first))
+                return false;
+            if(other[i->first] != i->second)
+                return false;
+        }
+    }
+    if(d->idx_set.size() != other.d->idx_set.size() || d->idx_set != other.d->idx_set)
+        return false;
+    if(d->data2siz != other.d->data2siz)
+        return false;
+
+    std::set<size_t>::const_iterator si;
+    for(si = d->idx_set.begin(); si != d->idx_set.end(); ++si) {
+        if(this->operator [](*si) != other.operator [](*si))
             return false;
     }
+
     return true;
 }
 
@@ -257,7 +333,7 @@ bool CuData::operator !=(const CuData &other) const
  */
 bool CuData::isEmpty() const
 {
-    return d->datamap.size() == 0;
+    return d->idx_set.size() > 0 || (d->datamap && d->datamap->size() > 0);
 }
 
 /*! \brief prints the representation of the object provided by toString
@@ -287,14 +363,30 @@ void CuData::print() const
  */
 std::string CuData::toString() const
 {
-    std::string r = "CuData { ";
+    CuXDTypeUtils dt;
+    std::string r = "CuData  ";
     std::map<std::string, CuVariant>::const_iterator i;
-    for(i = d->datamap.begin(); i != d->datamap.end(); ++i)
-    {
-        r += "[\"" + i->first + "\" -> " + i->second.toString() + "], ";
+    if(d->datamap) {
+        if(d->datamap->size() > 0)
+            r += "*string-keys* { ";
+        for(i = d->datamap->begin(); i != d->datamap->end(); ++i)
+        {
+            r += "[\"" + i->first + "\" -> \"" + i->second.toString() + "\"], ";
+        }
+        r.replace(r.length() - 2, 2, "");
+        r += " } (str map size: "  + std::to_string(stringmapsize()) + ") ";
+    }
+
+    std::set<size_t>::const_iterator si;
+    r += ("*int-keys* { ");
+    for(si = d->idx_set.begin(); si != d->idx_set.end(); ++si) {
+        r += "[" + dt.keyName(static_cast<CuDType::Key>(*si)) + ": \"" + operator [](*si).toString() + "\"], ";
     }
     r.replace(r.length() - 2, 2, "");
-    r += " } (size: " + std::to_string(size()) + " isEmpty: " + std::to_string(isEmpty()) + ")";
+
+    r += " } (int key count: " + std::to_string(d->idx_set.size()) + " isEmpty: " + std::to_string(isEmpty()) +
+             " total size: " + std::to_string(d->idx_set.size() + stringmapsize()) + ")";
+
     return r;
 }
 
@@ -310,14 +402,63 @@ void CuData::putTimestamp()
 {
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    add("timestamp_ms",  tv.tv_sec * 1000 + tv.tv_usec / 1000);
-    add("timestamp_us", static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6);
+    add(CuDType::Time_ms,  tv.tv_sec * 1000 + tv.tv_usec / 1000);
+    add(CuDType::Time_us, static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6);
 }
 
 void CuData::mCopyData(const CuData& other)
 {
     std::map<std::string, CuVariant>::const_iterator it;
-    for (it = other.d->datamap.begin(); it != other.d->datamap.end(); ++it)
-        d->datamap[it->first] = other.d->datamap[it->first];
+    if(d->datamap)
+        d->datamap->clear();
+    if(other.d->datamap) {
+        for (it = other.d->datamap->begin(); it != other.d->datamap->end(); ++it)
+            add(it->first, it->second);
+    }
+    for(std::set<size_t>::const_iterator it = other.d->idx_set.begin(); it != other.d->idx_set.end(); ++it) {
+        add(*it, other.operator [](*it));
+    }
 }
+
+// insert data into d->data2 if the index is beyond CuDType::MaxDataKey
+// (re)alloc d->data2 if necessary
+//
+void CuData::m_insertDataExtra(int index, const CuVariant &v)
+{
+    int i_off = index - CuDType::MaxDataKey;
+    if(i_off < 0)
+        return;
+    m_reallocData2(i_off);
+    pgreen2tmp("CuData::m_insertDataExtra:  finally inserting %s index %d", v.toString().c_str(), index);
+    d->data2[i_off] = v;
+}
+
+// reallocs d->data2 so that its new size (d->data2siz) is greater than or equal to index
+// copies old data into d->data2
+//
+void CuData::m_reallocData2(int index) {
+    if(index < 0)
+        return;
+
+    size_t oldsiz = d->data2siz;
+    while(d->data2siz <= static_cast<size_t>(index)) {
+        d->data2siz += DATA2CHUNK;
+        pgreen2tmp("CuData::m_insertDataExtra: data2 will increase to %ld", d->data2siz);
+    }
+    if(d->data2siz != oldsiz) {
+        pgreen2tmp("CuData::m_insertDataExtra: resizing new data2 container to %ld and copying old data (size %ld)",
+                   d->data2siz, oldsiz);
+        CuVariant *new_data = new CuVariant[d->data2siz];
+        // copy old data. If data2 is NULL, then oldsiz is 0
+        for(size_t i = 0; i < oldsiz; i++)
+            new_data[i] = d->data2[i];
+
+        if(d->data2) {
+            printf("\e[1;31mdeleting old d->data2\e[0m\n");
+            delete [] d->data2;
+        }
+        d->data2 = new_data;
+    }
+}
+
 

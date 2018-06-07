@@ -2,6 +2,7 @@
 #include "cutcontrols-utils.h"
 
 #include <cumbiatango.h>
+#include <cudatatypes_ex.h>
 #include <cudatalistener.h>
 #include <cutangoactionfactories.h>
 #include <QCoreApplication>
@@ -204,7 +205,7 @@ void CuTControlsWriter::setTarget(const QString &s)
     CuTControlsUtils tcu;
     CuTangoAttConfFactory att_conf_factory;
     CuData options;
-    options["fetch_props"] = d->attr_props;
+    options[CuXDType::FetchProperties] = d->attr_props;
     att_conf_factory.setOptions(options);
     d->target = tcu.replaceWildcards(s, qApp->arguments());
     d->cumbia_tango->addAction(d->target.toStdString(), d->tlistener, att_conf_factory);

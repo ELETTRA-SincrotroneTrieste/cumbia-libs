@@ -567,39 +567,31 @@ void CuVariant::build_from(const CuVariant& other)
     if(d->type == CuVariant::Double)
     {
         double *vd = new double[d->mSize];
-        for(size_t i = 0; i < d->mSize; i++)
-            vd[i] =  other.toDoubleP()[i];
+        memcpy(vd, other.toDoubleP(), sizeof(double) * d->mSize);
         d->val = vd;
     }
     else if(d->type == CuVariant::Int)
     {
         int *vi =  new int[d->mSize];
-
-        for(size_t i = 0; i < d->mSize; i++)
-            vi[i] = other.toIntP()[i];
+        memcpy(vi, other.toIntP(), sizeof(int) * d->mSize);
         d->val = vi;
     }
     else if(d->type == CuVariant::UInt)
     {
-        unsigned int *vi =  new unsigned int[d->mSize];
-
-        for(size_t i = 0; i < d->mSize; i++)
-            vi[i] = other.toUIntP()[i];
-        d->val = vi;
+        unsigned int *vui =  new unsigned int[d->mSize];
+        memcpy(vui, other.toUIntP(), sizeof(unsigned int) * d->mSize);
+        d->val = vui;
     }
     else if(d->type == CuVariant::LongInt)
     {
         long int *vi =  new long int[d->mSize];
-
-        for(size_t i = 0; i < d->mSize; i++)
-            vi[i] = other.toLongIntP()[i];
+        memcpy(vi, other.toLongIntP(), sizeof(long int) * d->mSize);
         d->val = vi;
     }
     else if(d->type == CuVariant::LongUInt)
     {
         unsigned long int *uli =  new unsigned long int[d->mSize];
-        for(size_t i = 0; i < d->mSize; i++)
-            uli[i] = other.toULongIntP()[i];
+        memcpy(uli, other.toULongIntP(), sizeof(long int) * d->mSize);
         d->val = uli;
     }
     else if(d->type == CuVariant::VoidPtr) {
@@ -615,22 +607,19 @@ void CuVariant::build_from(const CuVariant& other)
     else if(d->type == CuVariant::Short)
     {
         short *vs = new short[d->mSize];
-        for(size_t i = 0; i < d->mSize; i++)
-            vs[i] = other.toShortP()[i];
+        memcpy(vs, other.toShortP(), sizeof(short) * d->mSize);
         d->val = vs;
     }
     else if(d->type == CuVariant::UShort)
     {
         unsigned short *vus = new unsigned short[d->mSize];
-        for(size_t i = 0; i < d->mSize; i++)
-            vus[i] = other.toUShortP()[i];
+        memcpy(vus, other.toUShortP(), sizeof(unsigned short) * d->mSize);
         d->val = vus;
     }
     else if(d->type == CuVariant::Float)
     {
         float *vf = new float[d->mSize];
-        for(size_t i = 0; i < d->mSize; i++)
-            vf[i] = other.toFloatP()[i];
+        memcpy(vf, other.toFloatP(), sizeof(float) * d->mSize);
         d->val = vf;
     }
     else if(d->type == CuVariant::String)

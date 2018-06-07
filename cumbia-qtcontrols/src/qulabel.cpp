@@ -6,6 +6,7 @@
 #include <QContextMenuEvent>
 #include <QPainter>
 #include <QPaintEvent>
+#include <cudatatypes_ex.h>
 
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
@@ -132,24 +133,24 @@ void QuLabel::onUpdate(const CuData &da)
 {
     QString txt;
     QColor background, border;
-    d->read_ok = !da["err"].toBool();
+    d->read_ok = !da[CuDType::Err].toBool();
 
     // update link statistics
         d->context->getLinkStats()->addOperation();
         if(!d->read_ok)
-            d->context->getLinkStats()->addError(da["msg"].toString());
+            d->context->getLinkStats()->addError(da[CuDType::Message].toString());
 
-    if(da.containsKey("quality_color"))
-        background = d->palette[QString::fromStdString(da["quality_color"].toString())];
+    if(da.containsKey(CuXDType::QualityColor))
+        background = d->palette[QString::fromStdString(da[CuXDType::QualityColor].toString())];
     d->read_ok ? border = d->palette["dark_green"] : border = d->palette["dark_red"];
 
-    setToolTip(da["msg"].toString().c_str());
+    setToolTip(da[CuDType::Message].toString().c_str());
 
-    if(da["err"].toBool() )
+    if(da[CuDType::Err].toBool() )
         setText("####");
-    else if(da.containsKey("value"))
+    else if(da.containsKey(CuDType::Value))
     {
-        CuVariant val = da["value"];
+        CuVariant val = da[CuDType::Value];
         if(val.getType() == CuVariant::Boolean)
         {
             txt = (val.toBool() ? property("trueString").toString() : property("falseString").toString());
@@ -157,7 +158,7 @@ void QuLabel::onUpdate(const CuData &da)
         }
         else
         {
-            txt = QString::fromStdString(da["value"].toString());
+            txt = QString::fromStdString(da[CuDType::Value].toString());
             if(d->max_len > -1 && txt.length() > d->max_len)
             {
                 setToolTip(toolTip() + "\n\n" + txt);
@@ -167,9 +168,9 @@ void QuLabel::onUpdate(const CuData &da)
         setText(txt);
     }
 
-    if(da.containsKey("state_color"))
+    if(da.containsKey(CuXDType::StateColor))
     {
-        CuVariant v = da["state_color"];
+        CuVariant v = da[CuXDType::StateColor];
         QuPalette p;
         background = p[QString::fromStdString(v.toString())];
     }

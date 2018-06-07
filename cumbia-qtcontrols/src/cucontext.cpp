@@ -5,6 +5,7 @@
 #include <cucontrolswriter_abs.h>
 #include <cucontrolsfactorypool.h>
 #include <cudata.h>
+#include <cudatatypes_ex.h>
 #include <cumbiapool.h>
 #include "culinkstats.h"
 
@@ -264,9 +265,9 @@ void CuContext::sendData(const QList<CuData> &data)
     CuControlsWriterA *w;
     foreach(CuData d, data)
     {
-        if(d.containsKey("src") && (r = findReader(d["src"].toString())))
+        if(d.containsKey(CuDType::Src) && (r = findReader(d[CuDType::Src].toString())))
             r->sendData(d);
-        if(d.containsKey("src") && (w = findWriter(d["src"].toString())))
+        if(d.containsKey(CuDType::Src) && (w = findWriter(d[CuDType::Src].toString())))
             w->sendData(d);
     }
 }
@@ -310,15 +311,15 @@ void CuContext::getData(CuData &d_inout)
  *
  * \code
  * CuData p1, p2;
- * p1["src"]  = "current:a";
- * p1["period"] = -1; // will be set by getData
- * p2["src"] = "current:b";
- * p2["period"] = -1;
+ * p1[CuDType::Src]  = "current:a";
+ * p1[CuXDType::Period] = -1; // will be set by getData
+ * p2[CuDType::Src] = "current:b";
+ * p2[CuXDType::Period] = -1;
  * QList<CuData> in_dlist = QList<CuData>() << p1 << p2;
  * // suppose we have a QuTrendPlot named myTrendPlot...
  * myTrendPlot->getContext()->getData(in_dlist);
  *
- * printf("Period a: %d[ms] period b: %d[ms]\n", p1["period"].toInt(), p2["period"].toInt() );
+ * printf("Period a: %d[ms] period b: %d[ms]\n", p1[CuXDType::Period].toInt(), p2[CuXDType::Period].toInt() );
  *
  * \endcode
  *
@@ -330,9 +331,9 @@ void CuContext::getData(QList<CuData> &in_datalist)
     for(int i = 0; i < in_datalist.size(); i++)
     {
         CuData &d = in_datalist[i];
-        if(d.containsKey("src") && (r = findReader(d["src"].toString())))
+        if(d.containsKey(CuDType::Src) && (r = findReader(d[CuDType::Src].toString())))
             r->getData(d);
-        if(d.containsKey("src") && (w = findWriter(d["src"].toString())))
+        if(d.containsKey(CuDType::Src) && (w = findWriter(d[CuDType::Src].toString())))
             w->getData(d);
     }
 }

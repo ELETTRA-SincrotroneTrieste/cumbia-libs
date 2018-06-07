@@ -143,6 +143,7 @@ CuThreadInterface *CuActivityManager::getThread(const CuThreadListener *l)
 
     for(lit = mThreadListenersMultiMap.begin(); lit != mThreadListenersMultiMap.end(); ++lit)
         ;
+    return NULL;
 }
 
 std::vector<CuThreadListener *> CuActivityManager::getThreadListeners(const CuActivity *activity)

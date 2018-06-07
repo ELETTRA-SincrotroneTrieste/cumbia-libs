@@ -2,6 +2,7 @@
 #include <cumacros.h>
 #include <cudata.h>
 #include <cumbia.h>
+#include <cudatatypes_ex.h>
 #include <cuserviceprovider.h>
 
 #include "cucontrolswriter_abs.h"
@@ -110,36 +111,36 @@ void QuApplyNumeric::m_init()
  */
 void QuApplyNumeric::onUpdate(const CuData &da)
 {
-    d->write_ok = !da["err"].toBool();
+    d->write_ok = !da[CuDType::Err].toBool();
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->write_ok)
     {
         perr("QuApplyNumeric [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
-             da["src"].toString().c_str(), da["msg"].toString().c_str(),
-                da["data_format_str"].toString().c_str(), da["writable"].toInt());
+             da[CuDType::Src].toString().c_str(), da[CuDType::Message].toString().c_str(),
+                da[CuXDType::DataFormatStr].toString().c_str(), da[CuXDType::Writable].toInt());
 
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->context->cumbiaPool()->getBySrc(da["src"].toString());
+            cumbia = d->context->cumbiaPool()->getBySrc(da[CuDType::Src].toString());
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::Write, true);
-            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);
+            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da[CuDType::Message].toString(), CuLog::Error, CuLog::Write);
         }
-        d->context->getLinkStats()->addError(da["msg"].toString());
+        d->context->getLinkStats()->addError(da[CuDType::Message].toString());
     }
-    else if(d->auto_configure && da["type"].toString() == "property")
+    else if(d->auto_configure && da[CuDType::Type].toString() == "property")
     {
         QString desc = "";
-        if(da["data_format_str"] == "scalar" && da["writable"].toInt() > 0)
+        if(da[CuXDType::DataFormatStr] == "scalar" && da[CuXDType::Writable].toInt() > 0)
         {
             /* first apply format, if - correctly - specified */
             CuVariant m, M;
-            m = da["min"];
-            M = da["max"];
-            std::string print_format = da["format"].toString();
+            m = da[CuXDType::Min];
+            M = da[CuXDType::Max];
+            std::string print_format = da[CuXDType::DisplayFormat].toString();
             double min, max;
             bool ok;
             ok = m.to<double>(min);
@@ -161,20 +162,20 @@ void QuApplyNumeric::onUpdate(const CuData &da)
 
             /* can set current values instead */
             double val;
-            bool can_be_double = da["w_value"].to<double>(val);
+            bool can_be_double = da[CuXDType::WriteValue].to<double>(val);
             if (can_be_double)
             {
                 setValue(val);
                 clearModified();
             }
-            if(!da["description"].isNull()) {
-                desc.prepend(QString::fromStdString(da["description"].toString()));
+            if(!da[CuXDType::Description].isNull()) {
+                desc.prepend(QString::fromStdString(da[CuXDType::Description].toString()));
             }
             setWhatsThis(desc);
         }
         else
             perr("QuApplyNumeric [%s]: invalid data format \"%s\" or read only source (writable: %d)", qstoc(objectName()),
-                 da["data_format_str"].toString().c_str(), da["writable"].toInt());
+                 da[CuXDType::DataFormatStr].toString().c_str(), da[CuXDType::Writable].toInt());
 
     }
 }

@@ -1,6 +1,7 @@
 #include "reader.h"
 #include <cucontrolsreader_abs.h>
 #include <cumbiapool.h>
+#include <cudatatypes_ex.h>
 #include <cucontrolsfactorypool.h>
 #include <cucontext.h>
 #include <cudata.h>
@@ -19,12 +20,12 @@ Reader::~Reader()
 void Reader::onUpdate(const CuData &data)
 {
 
-    const CuVariant&  v = data["value"];
-    double ts = data["timestamp_us"].toDouble();
+    const CuVariant&  v = data[CuDType::Value];
+    double ts = data[CuDType::Time_us].toDouble();
 //    printf("%s\n", data.toString().c_str());
-    QString src = QString::fromStdString(data["src"].toString());
-    if(data["err"].toBool())
-        emit newError(src, ts, QString::fromStdString(data["msg"].toString()));
+    QString src = QString::fromStdString(data[CuDType::Src].toString());
+    if(data[CuDType::Err].toBool())
+        emit newError(src, ts, QString::fromStdString(data[CuDType::Message].toString()));
     else {
         if(v.getFormat() == CuVariant::Scalar && v.getType() == CuVariant::Double)
             emit newDouble(src, ts, v.toDouble());
@@ -54,7 +55,7 @@ QString Reader::source() const
 
 void Reader::setPeriod(int ms)
 {
-    m_context->sendData(CuData("period", ms));
+    m_context->sendData(CuData(CuXDType::Period, ms));
 }
 
 void Reader::setSource(const QString &s)

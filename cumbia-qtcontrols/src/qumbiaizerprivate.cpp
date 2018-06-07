@@ -1,6 +1,8 @@
 #include "qumbiaizerprivate.h"
 #include <QMetaMethod>
 #include <cumacros.h>
+#include <cudata.h>
+#include <cudatatypes_ex.h>
 
 #define TYPELEN 64
 
@@ -48,7 +50,7 @@ bool QumbiaizerPrivate::inTypeOfMethod(const QString &method, QObject *obj, char
 
 bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
 {
-    if(da["type"].toString() != "property")
+    if(da[CuDType::Type].toString() != "property")
         return false;
 
     Q_Q(Qumbiaizer);
@@ -58,13 +60,13 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
     void *dataptr;
     QString u, methodName;
     /* minimum */
-    bool has_min = da.containsKey("min");
-    bool has_max = da.containsKey("max");
+    bool has_min = da.containsKey(CuXDType::Min);
+    bool has_max = da.containsKey(CuXDType::Max);
     double v;
     double min, max;
     if(has_min && autoConfSlotsHash.contains(q->Min))
     {
-        da["min"].to<double>(min); // cuvariant_t.h
+        da[CuXDType::Min].to<double>(min); // cuvariant_t.h
         methodName = autoConfSlotsHash.value(q->Min);
         extractCode(methodName);
         if(inTypeOfMethod(methodName, object, in_type))
@@ -84,7 +86,7 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
     }
     else if(has_min && object->metaObject()->indexOfProperty("minimum") > -1)
     {
-        da["min"].to<double>(min);
+        da[CuXDType::Min].to<double>(min);
         object->setProperty("minimum", min);
     }
 
@@ -92,7 +94,7 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
     /* maximum */
     if(has_max && autoConfSlotsHash.contains(q->Max))
     {
-        da["max"].to<double>(max); // cuvariant_t.h converts to long double
+        da[CuXDType::Max].to<double>(max); // cuvariant_t.h converts to long double
         methodName = autoConfSlotsHash.value(q->Max);
         extractCode(methodName);
         if(inTypeOfMethod(methodName, object, in_type))
@@ -112,14 +114,14 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
     }
     else if(has_max && object->metaObject()->indexOfProperty("maximum") > -1)
     {
-        da["max"].to<double>(min);
+        da[CuXDType::Max].to<double>(min);
         object->setProperty("maximum", min);
     }
 
     /* min warning */
-    if(da.containsKey("min_warning") && autoConfSlotsHash.contains(q->MinWarn))
+    if(da.containsKey(CuXDType::LowerWarningLimit) && autoConfSlotsHash.contains(q->MinWarn))
     {
-        da["min_warning"].to<double>(v);
+        da[CuXDType::LowerWarningLimit].to<double>(v);
         methodName = autoConfSlotsHash.value(q->MinWarn);
         extractCode(methodName);
         if(inTypeOfMethod(methodName, object, in_type))
@@ -136,9 +138,9 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
         }
     }
     /* max warning */
-    if(da.containsKey("max_warning")  && autoConfSlotsHash.contains(q->MaxWarn))
+    if(da.containsKey(CuXDType::UpperWarningLimit)  && autoConfSlotsHash.contains(q->MaxWarn))
     {
-        da["max_warning"].to<double>(v);
+        da[CuXDType::UpperWarningLimit].to<double>(v);
         methodName = autoConfSlotsHash.value(q->MaxWarn);
         extractCode(methodName);
         if(inTypeOfMethod(methodName, object, in_type))
@@ -155,9 +157,9 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
         }
     }
     /* min alarm */
-    if(da.containsKey("min_alarm") && autoConfSlotsHash.contains(q->MinErr))
+    if(da.containsKey(CuXDType::LowerAlarmLimit) && autoConfSlotsHash.contains(q->MinErr))
     {
-        da["min_alarm"].to<double>(v);
+        da[CuXDType::LowerAlarmLimit].to<double>(v);
         methodName = autoConfSlotsHash.value(q->MinErr);
         extractCode(methodName);
         if(inTypeOfMethod(methodName, object, in_type))
@@ -174,9 +176,9 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
         }
     }
     /* max alarm */
-    if(da.containsKey("max_alarm")  && autoConfSlotsHash.contains(q->MaxErr))
+    if(da.containsKey(CuXDType::UpperAlarmLimit)  && autoConfSlotsHash.contains(q->MaxErr))
     {
-        da["max_alarm"].to<double>(v);
+        da[CuXDType::UpperAlarmLimit].to<double>(v);
         methodName = autoConfSlotsHash.value(q->MaxErr);
         extractCode(methodName);
         if(inTypeOfMethod(methodName, object, in_type))
@@ -193,46 +195,46 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
                 m_DeleteDataPtr(in_type, dataptr);
         }
     }
-    if(da.containsKey("standard_unit") && autoConfSlotsHash.contains(q->StdUnit))
+    if(da.containsKey(CuXDType::StandardUnit) && autoConfSlotsHash.contains(q->StdUnit))
     {
         methodName = autoConfSlotsHash.value(q->StdUnit);
         extractCode(methodName);
         if(inTypeOfMethod(methodName, object, in_type))
         {
-            u = QString::fromStdString(da["standard_unit"].toString());
+            u = QString::fromStdString(da[CuXDType::StandardUnit].toString());
             ret &= QMetaObject::invokeMethod(object, qstoc(autoConfSlotsHash.value(q->StdUnit)), connType,
                                              QGenericArgument(in_type, &u));
         }
     }
-    if(da.containsKey("unit") && autoConfSlotsHash.contains(q->Unit))
+    if(da.containsKey(CuXDType::Unit) && autoConfSlotsHash.contains(q->Unit))
     {
         methodName = autoConfSlotsHash.value(q->Unit);
         extractCode(methodName);
         if(inTypeOfMethod(methodName, object, in_type))
         {
-            u = QString::fromStdString(da["unit"].toString());
+            u = QString::fromStdString(da[CuXDType::Unit].toString());
             ret &= QMetaObject::invokeMethod(object, qstoc(autoConfSlotsHash.value(q->Unit)), connType,
                                              QGenericArgument(in_type, &u));
         }
     }
-    if(da.containsKey("display_unit")   && autoConfSlotsHash.contains(q->DisplayUnit))
+    if(da.containsKey(CuXDType::DisplayUnit)   && autoConfSlotsHash.contains(q->DisplayUnit))
     {
         methodName = autoConfSlotsHash.value(q->DisplayUnit);
         extractCode(methodName);
         if(inTypeOfMethod(methodName, object, in_type))
         {
-            u = QString::fromStdString(da["display_unit"].toString());
+            u = QString::fromStdString(da[CuXDType::DisplayUnit].toString());
             ret &= QMetaObject::invokeMethod(object, qstoc(autoConfSlotsHash.value(q->DisplayUnit)), connType,
                                              QGenericArgument(in_type, &u));
         }
     }
-    if(da.containsKey("label") &&autoConfSlotsHash.contains(q->Label))
+    if(da.containsKey(CuXDType::Label) &&autoConfSlotsHash.contains(q->Label))
     {
         methodName = autoConfSlotsHash.value(q->Label);
         extractCode(methodName);
         if(inTypeOfMethod(methodName, object, in_type))
         {
-            u = QString::fromStdString(da["label"].toString());
+            u = QString::fromStdString(da[CuXDType::Label].toString());
             ret &= QMetaObject::invokeMethod(object, qstoc(autoConfSlotsHash.value(q->Label)), connType,
                                              QGenericArgument(in_type, &u));
         }

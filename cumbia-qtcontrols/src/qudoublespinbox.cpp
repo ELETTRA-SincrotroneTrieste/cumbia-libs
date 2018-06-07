@@ -3,6 +3,7 @@
 #include <cudata.h>
 #include <cumbia.h>
 #include <cuserviceprovider.h>
+#include <cudatatypes_ex.h>
 
 #include "cucontrolswriter_abs.h"
 #include "cucontrolsfactories_i.h"
@@ -47,31 +48,31 @@ CuContext *QuDoubleSpinBox::getContext() const
 
 void QuDoubleSpinBox::onUpdate(const CuData &da)
 {
-    if(da["err"].toBool())
+    if(da[CuDType::Err].toBool())
     {
         perr("QuDoubleSpinBox [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
-             da["src"].toString().c_str(), da["msg"].toString().c_str(),
-                da["data_format_str"].toString().c_str(), da["writable"].toInt());
+             da[CuDType::Src].toString().c_str(), da[CuDType::Message].toString().c_str(),
+                da[CuXDType::DataFormatStr].toString().c_str(), da[CuXDType::Writable].toInt());
 
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->context->cumbiaPool()->getBySrc(da["src"].toString());
+            cumbia = d->context->cumbiaPool()->getBySrc(da[CuDType::Src].toString());
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::Write, true);
-            log->write(QString("QuDoubleSpinBox [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);
+            log->write(QString("QuDoubleSpinBox [" + objectName() + "]").toStdString(), da[CuDType::Message].toString(), CuLog::Error, CuLog::Write);
         }
     }
-    else if(d->auto_configure && da["type"].toString() == "property")
+    else if(d->auto_configure && da[CuDType::Type].toString() == "property")
     {
         QString desc = "";
-        if(da["data_format_str"] == "scalar" && da["writable"].toInt() > 0)
+        if(da[CuXDType::DataFormatStr] == "scalar" && da[CuXDType::Writable].toInt() > 0)
         {
             /* first apply format, if - correctly - specified */
             CuVariant m, M;
-            m = da["min"];
-            M = da["max"];
+            m = da[CuXDType::Min];
+            M = da[CuXDType::Max];
             double min, max;
             bool ok;
             ok = m.to<double>(min);
@@ -87,17 +88,17 @@ void QuDoubleSpinBox::onUpdate(const CuData &da)
 
             /* can set current values instead */
             double val;
-            bool can_be_double = da["w_value"].to<double>(val);
+            bool can_be_double = da[CuXDType::WriteValue].to<double>(val);
             if (can_be_double)
                 setValue(val);
-            if(!da["description"].isNull()) {
-                desc.prepend(QString::fromStdString(da["description"].toString()));
+            if(!da[CuXDType::Description].isNull()) {
+                desc.prepend(QString::fromStdString(da[CuXDType::Description].toString()));
             }
             setWhatsThis(desc);
         }
         else
             perr("QuDoubleSpinBox [%s]: invalid data format \"%s\" or read only source (writable: %d)", qstoc(objectName()),
-                 da["data_format_str"].toString().c_str(), da["writable"].toInt());
+                 da[CuXDType::DataFormatStr].toString().c_str(), da[CuXDType::Writable].toInt());
 
     }
 }

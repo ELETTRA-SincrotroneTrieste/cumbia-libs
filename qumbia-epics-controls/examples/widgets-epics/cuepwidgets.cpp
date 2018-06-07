@@ -69,17 +69,17 @@ CuEpWidgets::~CuEpWidgets()
 void CuEpWidgets::configure(const CuData &d)
 {
     printf("\e[1;32mCuEpWidgets::configure enter %s\e[0m\n", d.toString().c_str());
-    if(d["type"].toString() != "connection")
+    if(d[CuDType::Type].toString() != "connection")
         return;
 
     const int plotRowCnt = 5;
     int layout_row = 2;
-    int format = d["data_format"].toInt();
+    int format = d[CuXDType::DataFormat].toInt();
 
     QGridLayout *lo = qobject_cast<QGridLayout *>(ui->widget->layout());
     QStringList srcs = ui->leSrcs->text().split(",", QString::SkipEmptyParts);
     QuEpicsPlotUpdateStrategy *plot_upd_strategy = new QuEpicsPlotUpdateStrategy(true);
-//    for(int i = 0; i < srcs.size() && d["writable"].toInt() == Tango::READ_WRITE; i++)
+//    for(int i = 0; i < srcs.size() && d[CuXDType::Writable].toInt() == Tango::READ_WRITE; i++)
 //    {
 //        QuButton *b = new QuButton(this, cu_ep, CuTWriterFactory());
 //        b->setText("Write");
@@ -133,8 +133,8 @@ void CuEpWidgets::changeRefresh()
     int period = ui->sbPeriod->value();
     int refmode = ui->cbRefMode->currentIndex();
     CuData options;
-    options["period"] = period;
-    options["refresh_mode"] = refmode;
+    options[CuXDType::Period] = period;
+    options[CuXDType::RefreshMode] = refmode;
    // QuTrendPlot *tp = findChild<QuTrendPlot *>();
    // if(tp)
     //    tp->sendData(options);

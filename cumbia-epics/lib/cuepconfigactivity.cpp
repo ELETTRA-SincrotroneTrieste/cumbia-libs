@@ -1,5 +1,6 @@
 #include "cuepconfigactivity.h"
 #include <cumacros.h>
+#include <cudatatypes_ex.h>
 #include "cuepics-world.h"
 
 class CuEpConfigActivityPrivate
@@ -47,7 +48,7 @@ void CuEpConfigActivity::event(CuActivityEvent *e)
 bool CuEpConfigActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
-    return token["src"] == mytok["src"] && mytok["activity"] == token["activity"];
+    return token[CuDType::Src] == mytok[CuDType::Src] && mytok[CuDType::Activity] == token[CuDType::Activity];
 }
 
 int CuEpConfigActivity::repeat() const
@@ -69,17 +70,17 @@ void CuEpConfigActivity::execute()
     cuprintf("CuEpConfigActivity::execute: enter\n");
     assert(d->my_thread_id == pthread_self());
     CuData ctrl_data = getToken(); /* activity token */
-    ctrl_data["properties"] = std::vector<std::string>();
-    ctrl_data["mode"] = "caget";
+    ctrl_data[CuXDType::Properties] = std::vector<std::string>();
+    ctrl_data[CuDType::Mode] = "caget";
     CuData value_data(ctrl_data);
 
     cuprintf("CuEpConfigActivity::execute: GETTING  token %s\n", ctrl_data.toString().c_str());
     CuEpicsWorld utils;
     utils.fillThreadInfo(ctrl_data, this); /* put thread and activity addresses as info */
 
-    utils.caget(ctrl_data["pv"].toString(), ctrl_data, value_data);
+    utils.caget(ctrl_data[CuXDType::Pv].toString(), ctrl_data, value_data);
 
-    printf("\e[0;33mCuEpConfigActivity.execute: \n%s:\n got \e[0m%s \n", ctrl_data["pv"].toString().c_str(), ctrl_data.toString().c_str());
+    printf("\e[0;33mCuEpConfigActivity.execute: \n%s:\n got \e[0m%s \n", ctrl_data[CuXDType::Pv.toString().c_str(), ctrl_data.toString().c_str());
     publishResult(ctrl_data);
     printf("publishResult called with %s\n", ctrl_data.toString().c_str());
     publishResult(value_data);
@@ -97,17 +98,17 @@ void CuEpConfigActivity::onExit()
     }
     int refcnt = -1;
     CuData at = getToken(); /* activity token */
-    at["msg"] = d->msg;
-    at["mode"] = "ATTCONF";
-    at["err"] = d->err;
+    at[CuDType::Message] = d->msg;
+    at[CuDType::Mode] = "ATTCONF";
+    at[CuDType::Err] = d->err;
     CuEpicsWorld utils;
     utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
     /* remove ref */
 
     if(refcnt == 0)
     {
-        //  d->device_service->removeDevice(at["device"].toString());
+        //  d->device_service->removeDevice(at[CuXDType::Device].toString());
     }
-    at["exit"] = true;
+    at[CuDType::Exit] = true;
     publishResult(at);
 }

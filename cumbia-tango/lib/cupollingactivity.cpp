@@ -4,6 +4,7 @@
 #include "tsource.h"
 #include "cutango-world.h"
 #include "cutangoactioni.h"
+#include <cudatatypes_ex.h>
 #include <tango.h>
 #include <cumacros.h>
 #include <vector>
@@ -116,8 +117,8 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
     d->exiting = false;
 
     int period = 1000;
-    if(token.containsKey("period"))
-        period = token["period"].toInt();
+    if(token.containsKey(CuXDType::Period))
+        period = token[CuXDType::Period].toInt();
     d->repeat = period;
     setInterval(period);
     //  flag CuActivity::CuADeleteOnExit is true
@@ -173,8 +174,8 @@ size_t CuPollingActivity::srcCount() const
 bool CuPollingActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
-    return token["device"] == mytok["device"] && mytok["activity"] == token["activity"]
-            && token["period"] == mytok["period"];
+    return token[CuXDType::Device] == mytok[CuXDType::Device] && mytok[CuDType::Activity] == token[CuDType::Activity]
+            && token[CuXDType::Period] == mytok[CuXDType::Period];
 }
 
 /*! \brief the implementation of the CuActivity::init hook
@@ -199,13 +200,13 @@ void CuPollingActivity::init()
     CuData tk = getToken();
 
     /* get a reference to TDevice */
-    d->tdev = d->device_srvc->getDevice(tk["device"].toString());
+    d->tdev = d->device_srvc->getDevice(tk[CuXDType::Device].toString());
     /* if polling activity is a fallback because event subscription fails, no need to add ref */
     //  if(!tk["fallback"].toBool())
     d->tdev->addRef();
-    tk["conn"] = d->tdev->isValid();
-    tk["err"] = !d->tdev->isValid();
-    tk["msg"] = d->tdev->getMessage();
+    tk[CuXDType::Connected] = d->tdev->isValid();
+    tk[CuDType::Err] = !d->tdev->isValid();
+    tk[CuDType::Message] = d->tdev->getMessage();
     tk.putTimestamp();
     pgreentmp("CuPollingActivity.init complete");
 }
@@ -263,20 +264,20 @@ void CuPollingActivity::execute()
     std::multimap<const std::string, const ActionData>::iterator it;
     for(it = d->actions_map.begin(); it != d->actions_map.end(); ++it) {
         results[i] = getToken();
-        results[i]["mode"] = "polled";
-        results[i]["period"] = getTimeout();
+        results[i][CuDType::Mode] = "polled";
+        results[i][CuXDType::Period] = getTimeout();
         const ActionData &action_data = it->second;
         const TSource& tsrc = action_data.tsrc;
         const std::string srcnam = tsrc.getName();
         std::string point = tsrc.getPoint();
         std::vector<std::string> argins = tsrc.getArgs();
         void *action_ptr = action_data.action;
-        results[i]["src"] = tsrc.getName();
-        results[i]["point"] = point;
-        results[i]["device"] = tsrc.getDeviceName();
-        results[i]["action_ptr"] = CuVariant(action_ptr);
+        results[i][CuDType::Src] = tsrc.getName();
+        results[i][CuXDType::Point] = point;
+        results[i][CuXDType::Device] = tsrc.getDeviceName();
+        results[i][CuXDType::Ptr] = CuVariant(action_ptr);
         //        pgreen2tmp("CuPollingActivity.execute: executing for \"%s\" period %d recipient %p source get name %s\n",
-        //                   res["device"].toString().c_str(), getTimeout(), action_ptr, tsrc.getName().c_str());
+        //                   res[CuXDType::Device].toString().c_str(), getTimeout(), action_ptr, tsrc.getName().c_str());
         bool is_command = tsrc.getType() == TSource::Cmd;
         CmdData& cmd_data = d->din_cache[srcnam];
         CmdData newCmdData;
@@ -295,10 +296,10 @@ void CuPollingActivity::execute()
         if(dev && is_command && cmd_success) {  // do not try command_inout if no success so far
             // there is no multi-command_inout version
             CmdData& cmdd = d->din_cache[srcnam];
-            bool has_argout = cmdd.getCmdInfoRef()["out_type"].toLongInt() != Tango::DEV_VOID;
-            results[i]["err"] = !cmd_success;
+            bool has_argout = cmdd.getCmdInfoRef()[CuXDType::OutType].toLongInt() != Tango::DEV_VOID;
+            results[i][CuDType::Err] = !cmd_success;
             if(!cmd_success) {
-                results[i]["msg"] = std::string("CuPollingActivity.execute: get_command_info failed for \"") + tsrc.getName() + std::string("\"");
+                results[i][CuDType::Message] = std::string("CuPollingActivity.execute: get_command_info failed for \"") + tsrc.getName() + std::string("\"");
                 d->errCnt++;
             }
             else {
@@ -355,20 +356,20 @@ void CuPollingActivity::onExit()
     d->exiting = true;
     int refcnt = -1;
     CuData at = getToken(); /* activity token */
-    at["msg"] = "EXITED";
-    at["mode"] = "POLLED";
+    at[CuDType::Message] = "EXITED";
+    at[CuDType::Mode] = "POLLED";
     //    CuTangoWorld utils;
     //    utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
     if(d->tdev)
         refcnt = d->tdev->removeRef();
     cuprintf("\e[1;31mCuPollingActivity::onExit(): refcnt = %d called actionRemove for device %s att %s\e[0m\n",
-             refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
+             refcnt, at[CuXDType::Device].toString().c_str(), at[CuDType::Src].toString().c_str());
     if(refcnt == 0)
     {
-        d->device_srvc->removeDevice(at["device"].toString());
+        d->device_srvc->removeDevice(at[CuXDType::Device].toString());
         d->tdev = NULL;
     }
-    at["exit"] = true;
+    at[CuDType::Exit] = true;
     publishResult(at);
 }
 

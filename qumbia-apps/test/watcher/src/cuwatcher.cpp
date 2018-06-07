@@ -175,12 +175,12 @@ void Watcher::displayInternalVariables()
 
 void Watcher::updateShortSetPoint(const CuData &d)
 {
-    ui.l1Set->setDisabled(d["err"].toBool());
+    ui.l1Set->setDisabled(d[CuDType::Err].toBool());
     if(ui.l1Set->isEnabled() && d.containsKey("w_value"))
-        ui.l1Set->setText(d["w_value"].toString().c_str());
+        ui.l1Set->setText(d[CuXDType::WriteValue].toString().c_str());
     else
         ui.l1Set->setText("####");
-    ui.l1Set->setToolTip(d["msg"].toString().c_str());
+    ui.l1Set->setToolTip(d[CuDType::Message].toString().c_str());
 }
 
 void Watcher::dialConfigured(const CuData &cd)
@@ -188,10 +188,10 @@ void Watcher::dialConfigured(const CuData &cd)
     if(cd.containsKey("min") && cd.containsKey("max"))
     {
         double m, M, v = 0.0;
-        cd["min"].to<double>(m);
-        cd["max"].to<double>(M);
+        cd[CuXDType::Min].to<double>(m);
+        cd[CuXDType::Max].to<double>(M);
         if(cd.containsKey("w_value"))
-            cd["w_value"].to<double>(v);
+            cd[CuXDType::WriteValue].to<double>(v);
         ui.dial->setMinimum(m);
         ui.dial->setMaximum(M);
      //   ui.dial->setValue(v);

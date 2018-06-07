@@ -3,9 +3,6 @@
 
 class CuData;
 class CuTangoActionI;
-
-#include <stdio.h>
-
 class CuDataListenerPrivate;
 
 /*! \brief abstract class defined for client libraries and applications to

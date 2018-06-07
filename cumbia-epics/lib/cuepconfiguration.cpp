@@ -55,7 +55,7 @@ void CuEpConfiguration::onProgress(int step, int total, const CuData &data)
 void CuEpConfiguration::onResult(const CuData &data)
 {
     d->conf_data = data;
-    d->exit = data["exit"].toBool();
+    d->exit = data[CuDType::Exit].toBool();
     if(!d->exit)
     {
         std::list<CuDataListener *>::iterator it;
@@ -78,7 +78,7 @@ void CuEpConfiguration::onResult(const CuData &data)
 CuData CuEpConfiguration::getToken() const
 {
     CuData da("source", d->tsrc.getName());
-    da["type"] = std::string("attconfig");
+    da[CuDType::Type] = std::string("attconfig");
     return da;
 }
 
@@ -132,8 +132,8 @@ void CuEpConfiguration::start()
             static_cast<CuEpCAService *>(d->cumbia_epics->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType)));
     CuData at("src", d->tsrc.getName()); /* activity token */
-    at["pv"] = d->tsrc.getPV();
-    at["activity"] = "attconfig";
+    at[CuXDType::Pv = d->tsrc.getPV();
+    at[CuDType::Activity] = "attconfig";
     at["is_pv"] = d->tsrc.getType() == EpSource::PV;
 
     CuData tt("pv", d->tsrc.getPV()); /* thread token */

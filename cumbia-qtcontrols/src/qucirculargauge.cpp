@@ -3,6 +3,7 @@
 #include <cumacros.h>
 #include <cumbiapool.h>
 #include <cudata.h>
+#include <cudatatypes_ex.h>
 #include <QContextMenuEvent>
 #include <QPainter>
 #include <QPaintEvent>
@@ -109,21 +110,21 @@ void QuCircularGauge::contextMenuEvent(QContextMenuEvent *e)
 
 void QuCircularGauge::m_configure(const CuData& da)
 {
-    QMap<QString, const char*> threshs;
-    threshs["min"] = "minValue";
-    threshs["max"] = "maxValue";
-    threshs["min_warning"] = "lowWarning";
-    threshs["max_warning"] = "highWarning";
-    threshs["max_alarm"] = "highError";
-    threshs["min_alarm"] = "lowError";
+    QMap<int, const char*> threshs;
+    threshs[CuXDType::Min] = "minValue";
+    threshs[CuXDType::Max] = "maxValue";
+    threshs[CuXDType::LowerWarningLimit] = "lowWarning";
+    threshs[CuXDType::UpperWarningLimit] = "highWarning";
+    threshs[CuXDType::UpperAlarmLimit] = "highError";
+    threshs[CuXDType::LowerAlarmLimit] = "lowError";
     // map keys are not ordered!
-    QStringList props = QStringList() << "min" << "max" << "max_alarm" << "min_alarm"
-                                      << "min_warning" << "max_warning";
-    foreach(QString thnam, props) {
-        const char *name = thnam.toStdString().c_str();
+    QList<int> props = QList<int>() << CuXDType::Min << CuXDType::Max << CuXDType::UpperAlarmLimit << CuXDType::LowerAlarmLimit
+                                      << CuXDType::LowerWarningLimit << CuXDType::UpperWarningLimit;
+    foreach(int thidx, props) {
+        const char *name = threshs[thidx];
         try {
-            if(da.containsKey(name)) {
-                setProperty(threshs[thnam], std::stod(da[name].toString()));
+            if(da.containsKey(thidx)) {
+                setProperty(threshs[thidx], std::stod(da[thidx].toString()));
             }
         }
         catch(const std::invalid_argument& ) {
@@ -131,7 +132,7 @@ void QuCircularGauge::m_configure(const CuData& da)
             memset(bound, 0, 16);
             strncpy(bound, name, 3);
             strncat(bound, "Value", 5);
-            setProperty(threshs[thnam], property(bound).toDouble());
+            setProperty(threshs[thidx], property(bound).toDouble());
         }
     }
 }
@@ -156,21 +157,21 @@ void QuCircularGauge::m_set_value(const CuVariant &val)
 void QuCircularGauge::onUpdate(const CuData &da)
 {
     printf("\e[1;33m QuCircularGauge::onUpdate da %s\e[0m\n", da.toString().c_str());
-    d->read_ok = !da["err"].toBool();
+    d->read_ok = !da[CuDType::Err].toBool();
     if(!d->read_ok)
         setLabel("####");
-    setToolTip(da["msg"].toString().c_str());
+    setToolTip(da[CuDType::Message].toString().c_str());
 
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
-        d->context->getLinkStats()->addError(da["msg"].toString());
+        d->context->getLinkStats()->addError(da[CuDType::Message].toString());
 
-    if(d->read_ok && d->auto_configure && da["type"].toString() == "property") {
+    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {
         m_configure(da);
     }
-    if(d->read_ok && da["value"].isValid()) {
-        m_set_value(da["value"]);
+    if(d->read_ok && da[CuDType::Value].isValid()) {
+        m_set_value(da[CuDType::Value]);
     }
     emit newData(da);
 }

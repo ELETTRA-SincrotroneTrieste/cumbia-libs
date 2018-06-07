@@ -3,6 +3,7 @@
 #include <cumacros.h>
 #include "qumbiaizerprivate.h"
 #include <cudata.h>
+#include <cudatatypes_ex.h>
 #include <QWidget> /* to set tooltips on attached object, if it inherits QWidget */
 
 Qumbiaizer::Qumbiaizer(QObject *parent) : QObject(parent)
@@ -383,22 +384,22 @@ int Qumbiaizer::extractCode(QString& method)
 void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMethod, QuValueFilter::State updateState)
 {
     QString methName;
-    QString message = QString::fromStdString(v["msg"].toString());
-    bool ok = !v["err"].toBool();
+    QString message = QString::fromStdString(v[CuDType::Message].toString());
+    bool ok = !v[CuDType::Err].toBool();
 
     if(customMethod != NULL)
         methName = QString(customMethod);
     else
         methName = methodName();
 
-    if(ok && (v.containsKey("value") || v.containsKey("w_value")))
+    if(ok && (v.containsKey(CuDType::Value) || v.containsKey(CuXDType::WriteValue)))
     {
         QObject *object = NULL;
         if(!slot().isEmpty())
             object = static_cast<QObject *>(data()); /* QObject and slot were provided */
 
         CuVariant val;
-        read ? val = v["value"] : val = v["w_value"];
+        read ? val = v[CuDType::Value] : val = v[CuXDType::WriteValue];
         if(type() == Qumbiaizer::Int && val.getFormat() == CuVariant::Scalar)
         {
             int intVal;

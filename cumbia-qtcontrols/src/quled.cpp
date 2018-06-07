@@ -3,6 +3,7 @@
 #include "cucontrolsreader_abs.h"
 #include <cumacros.h>
 #include <cudata.h>
+#include <cudatatypes_ex.h>
 #include <QPainter>
 #include <QPaintEvent>
 
@@ -84,30 +85,30 @@ void QuLed::unsetSource()
 void QuLed::onUpdate(const CuData &da)
 {
     QColor background, border;
-    d->read_ok = !da["err"].toBool();
+    d->read_ok = !da[CuDType::Err].toBool();
 
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
-        d->context->getLinkStats()->addError(da["msg"].toString());
+        d->context->getLinkStats()->addError(da[CuDType::Message].toString());
 
-    if(da.containsKey("quality_color"))
-        background = d->palette[QString::fromStdString(da["quality_color"].toString())];
-    if(da.containsKey("success_color"))
-        border = d->palette[QString::fromStdString(da["success_color"].toString())];
+    if(da.containsKey(CuXDType::QualityColor))
+        background = d->palette[QString::fromStdString(da[CuXDType::QualityColor].toString())];
+    if(da.containsKey(CuXDType::SuccessColor))
+        border = d->palette[QString::fromStdString(da[CuXDType::SuccessColor].toString())];
 
-    setToolTip(da["msg"].toString().c_str());
+    setToolTip(da[CuDType::Message].toString().c_str());
 
-    setDisabled(da["err"].toBool() );
-    if(d->read_ok && da.containsKey("state_color"))
+    setDisabled(da[CuDType::Err].toBool() );
+    if(d->read_ok && da.containsKey(CuXDType::StateColor))
     {
-        CuVariant v = da["state_color"];
+        CuVariant v = da[CuXDType::StateColor];
         QuPalette p;
         setColor(p[QString::fromStdString(v.toString())]);
     }
-    else if(d->read_ok && da.containsKey("value"))
+    else if(d->read_ok && da.containsKey(CuDType::Value))
     {
-        CuVariant v = da["value"];
+        CuVariant v = da[CuDType::Value];
         switch (v.getType()) {
             case CuVariant::Boolean:
                 setColor(v.toBool() ? property("trueColor").value<QColor>()
@@ -120,8 +121,8 @@ void QuLed::onUpdate(const CuData &da)
     else if(!d->read_ok)
         setColor(QColor(Qt::gray));
 
-    if(da.containsKey("success_color"))
-        setBorderColor(d->palette[QString::fromStdString(da["success_color"].toString())]);
+    if(da.containsKey(CuXDType::SuccessColor))
+        setBorderColor(d->palette[QString::fromStdString(da[CuXDType::SuccessColor].toString())]);
 
     emit newData(da);
 }

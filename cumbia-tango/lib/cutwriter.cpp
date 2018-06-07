@@ -5,6 +5,7 @@
 #include "cudevicefactoryservice.h"
 #include "cuactionfactoryservice.h"
 
+#include <cudatatypes_ex.h>
 #include <cudatalistener.h>
 #include <cuserviceprovider.h>
 #include <cumacros.h>
@@ -93,7 +94,7 @@ void CuTWriter::onResult(const std::vector<CuData> &datalist)
 void CuTWriter::onResult(const CuData &data)
 {
     cuprintf("CuTWriter.onResult: data received %s\n", data.toString().c_str());
-    d->exit = data["exit"].toBool();
+    d->exit = data[CuDType::Exit].toBool();
     // iterator can be invalidated if listener's onUpdate unsets source: use a copy
     std::list<CuDataListener *> lis_copy = d->listeners;
     std::list<CuDataListener *>::iterator it;
@@ -112,8 +113,8 @@ void CuTWriter::onResult(const CuData &data)
 
 CuData CuTWriter::getToken() const
 {
-    CuData da("source", d->tsrc.getName());
-    da["type"] = std::string("writer");
+    CuData da(CuXDType::Src, d->tsrc.getName());
+    da[CuDType::Type] = std::string("writer");
     return da;
 }
 
@@ -173,13 +174,13 @@ void CuTWriter::start()
     CuDeviceFactoryService *df =
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
-    CuData at("src", d->tsrc.getName()); /* activity token */
-    at["device"] = d->tsrc.getDeviceName();
-    at["point"] = d->tsrc.getPoint();
-    at["activity"] = "writer";
-    at["write_value"] = d->write_val;
-    at["cmd"] = (d->tsrc.getType() == TSource::Cmd);
-    CuData tt("device", d->tsrc.getDeviceName()); /* thread token */
+    CuData at(CuXDType::Src, d->tsrc.getName()); /* activity token */
+    at[CuXDType::Device] = d->tsrc.getDeviceName();
+    at[CuXDType::Point] = d->tsrc.getPoint();
+    at[CuDType::Activity] = "writer";
+    at[CuXDType::InputValue] = d->write_val;
+    at[CuXDType::IsCommand] = (d->tsrc.getType() == TSource::Cmd);
+    CuData tt(CuXDType::Device, d->tsrc.getDeviceName()); /* thread token */
     d->activity = new CuWriteActivity(at, df);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());

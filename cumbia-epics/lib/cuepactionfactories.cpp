@@ -5,11 +5,12 @@
 #include <cumacros.h>
 #include <cadef.h>
 #include <cudata.h>
+#include <cudatatypes_ex.h>
 
 CuEpicsReaderFactory::CuEpicsReaderFactory()
 {
-    options["period"] = 1000;
-    options["refresh_mode"] = CuMonitor::MonitorRefresh;
+    options[CuXDType::Period] = 1000;
+    options[CuXDType::RefreshMode] = CuMonitor::MonitorRefresh;
 }
 
 void CuEpicsReaderFactory::setOptions(const CuData &o)
@@ -25,8 +26,8 @@ CuEpicsReaderFactory::~CuEpicsReaderFactory()
 CuEpicsActionI *CuEpicsReaderFactory::create(const std::string &s, CumbiaEpics *ct) const
 {
     CuMonitor* monitor = new CuMonitor(s, ct);
-    monitor->setPeriod(options["period"].toInt());
-    monitor->setRefreshMode(static_cast<CuMonitor::RefreshMode>(options["refresh_mode"].toInt()));
+    monitor->setPeriod(options[CuXDType::Period].toInt());
+    monitor->setRefreshMode(static_cast<CuMonitor::RefreshMode>(options[CuXDType::RefreshMode].toInt()));
     return monitor;
 }
 

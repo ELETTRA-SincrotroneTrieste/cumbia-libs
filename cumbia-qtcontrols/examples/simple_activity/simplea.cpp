@@ -67,9 +67,9 @@ void SimpleA::onProgress(int step, int /* total */, const CuData &data)
     main_th.sprintf("0x%lx", pthread_self());
     findChild<QProgressBar *>()->setValue(step);
     new QTreeWidgetItem(findChild<QTreeWidget *>(), QStringList()
-                        << data["name"].toString().c_str()
-            << data["msg"].toString().c_str()
-            << data["thread"].toString().c_str() << main_th);
+                        << data[CuDType::Name].toString().c_str()
+            << data[CuDType::Message].toString().c_str()
+            << data[CuDType::Thread].toString().c_str() << main_th);
 }
 
 void SimpleA::onResult(const CuData &data)
@@ -77,11 +77,11 @@ void SimpleA::onResult(const CuData &data)
     QString main_th;
     main_th.sprintf("0x%lx", pthread_self());
     new QTreeWidgetItem(findChild<QTreeWidget *>(),
-                        QStringList() << data["name"].toString().c_str()
-            << data["msg"].toString().c_str()
-            << data["thread"].toString().c_str() << main_th);
+                        QStringList() << data[CuDType::Name].toString().c_str()
+            << data[CuDType::Message].toString().c_str()
+            << data[CuDType::Thread].toString().c_str() << main_th);
 
-    if(data["msg"].toString() == "onExit")
+    if(data[CuDType::Message].toString() == "onExit")
     {
         CuThreadService *ts = static_cast<CuThreadService *> (m_cumbia->getServiceProvider()->get(CuServices::Thread));
     }

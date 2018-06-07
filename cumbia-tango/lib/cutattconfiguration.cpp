@@ -3,7 +3,7 @@
 #include <cumacros.h>
 #include <cuserviceprovider.h>
 #include <cuactivity.h>
-#include <cudatalistener.h>
+#include <cudatatypes_ex.h>
 #include "cumbiatango.h"
 #include "tsource.h"
 #include "cudevicefactoryservice.h"
@@ -56,7 +56,7 @@ void CuTAttConfiguration::onProgress(int step, int total, const CuData &data)
 void CuTAttConfiguration::onResult(const CuData &data)
 {
     d->conf_data = data;
-    if(data["exit"].toBool()) // ! important: evaluate data["exit"] before deleting this
+    if(data[CuDType::Exit].toBool()) // ! important: evaluate data[CuDType::Exit] before deleting this
     {
         d->exiting = true; // for action factory to unregisterAction, exiting must return true
         CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
@@ -84,8 +84,8 @@ void CuTAttConfiguration::onResult(const std::vector<CuData> &datalist)
 
 CuData CuTAttConfiguration::getToken() const
 {
-    CuData da("source", d->tsrc.getName());
-    da["type"] = std::string("attconfig");
+    CuData da(CuDType::Src, d->tsrc.getName());
+    da[CuDType::Type] = std::string("attconfig");
     return da;
 }
 
@@ -141,14 +141,14 @@ void CuTAttConfiguration::start()
     CuDeviceFactoryService *df =
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
-    CuData at("src", d->tsrc.getName()); /* activity token */
-    at["device"] = d->tsrc.getDeviceName();
-    at["point"] = d->tsrc.getPoint();
-    at["argins"] = d->tsrc.getArgs();
-    at["activity"] = "attconfig";
-    at["is_command"] = d->tsrc.getType() == TSource::Cmd;
+    CuData at(CuDType::Src, d->tsrc.getName()); /* activity token */
+    at[CuXDType::Device] = d->tsrc.getDeviceName();
+    at[CuXDType::Point] = d->tsrc.getPoint();
+    at[CuXDType::Args] = d->tsrc.getArgs();
+    at[CuDType::Activity] = "attconfig";
+    at[CuXDType::IsCommand] = d->tsrc.getType() == TSource::Cmd;
 
-    CuData tt("device", d->tsrc.getDeviceName()); /* thread token */
+    CuData tt(CuXDType::Device, d->tsrc.getDeviceName()); /* thread token */
     d->activity = new CuTAttConfigActivity(at, df);
     static_cast<CuTAttConfigActivity *>(d->activity)->setDesiredAttributeProperties(d->desired_props);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());

@@ -1,4 +1,5 @@
 #include "cupoller.h"
+#include <cudatatypes_ex.h>
 #include <map>
 #include <cutangoactioni.h>
 #include <cupollingactivity.h>
@@ -27,9 +28,8 @@ CuPoller::CuPoller(CumbiaTango *cu_t, int period)
     d = new CuPollerPrivate;
     d->period = period;
     d->cumbia_t = cu_t;
-    d->token = CuData("period", period);
-    d->token["class"] = "CuPoller";
-    d->token["activity_count"] = 0;
+    d->token[CuXDType::Period] = period;
+    d->token[CuDType::Class] = "CuPoller";
 }
 
 int CuPoller::period() const
@@ -48,23 +48,25 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a)
     CuDeviceFactoryService *df =
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
-    CuData at("device", tsrc.getDeviceName()); /* activity token */
-    at["activity"] = "poller";
-    at["period"] = d->period;
+    CuData at;
+    at[CuXDType::Device] = tsrc.getDeviceName(); /* activity token */
+    at[CuDType::Activity] = "poller";
+    at[CuXDType::Period] = d->period;
 
     CuActivity *activity = am->findMatching(at); // polling activities compare device period and "activity"
     if(!activity) {
-        CuData tt("device", tsrc.getDeviceName()); /* thread token */
+        CuData tt;
+        tt[CuXDType::Device] = tsrc.getDeviceName(); /* thread token */
         activity = new CuPollingActivity(at, df);
         const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
         const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
         d->cumbia_t->registerActivity(activity, this, tt, fi, bf);
         pgreentmp("(+) CuTReader.m_startPollingActivity: created a new polling activity for device \"%s\" period %d\n",
-                  at["device"].toString().c_str(), at["period"].toInt());
+                  at[CuXDType::Device].toString().c_str(), at[CuXDType::Period].toInt());
     }
     else {
         pgreentmp("(i) CuTReader.m_startPollingActivity: found a running polling activity for device \"%s\" period %d\n",
-                  at["device"].toString().c_str(), at["period"].toInt());
+                  at[CuXDType::Device].toString().c_str(), at[CuXDType::Period].toInt());
 
     }
 
@@ -85,9 +87,10 @@ void CuPoller::unregisterAction(CuTangoActionI *a)
     }
 
     TSource tsrc = a->getSource();
-    CuData at("device", tsrc.getDeviceName()); /* activity token */
-    at["activity"] = "poller";
-    at["period"] = d->period;
+    CuData at;
+    at[CuXDType::Device] = tsrc.getDeviceName(); /* activity token */
+    at[CuDType::Activity] = "poller";
+    at[CuXDType::Period] = d->period;
 
     CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
                                                              get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
@@ -112,9 +115,9 @@ void CuPoller::onResult(const std::vector<CuData> &datalist)
     //
 //    pgreentmp("CuPoller.onResult: got list of data size %ld", datalist.size());
     for(size_t i = 0; i < datalist.size(); i++) {
-        CuTangoActionI *receiver = static_cast<CuTangoActionI *>(datalist[i]["action_ptr"].toVoidP());
+        CuTangoActionI *receiver = static_cast<CuTangoActionI *>(datalist[i][CuDType::Ptr].toVoidP());
         // receiver information arrives from another thread. receiver may have been destroyed meanwhile
-        const std::string& src = datalist[i]["src"].toString();
+        const std::string& src = datalist[i][CuDType::Src].toString();
         if(d->actions_map.find(receiver) != d->actions_map.end()) {
 //            pgreentmp("CuPoller.onResult: [%s] delivering result to \e[1;36m%p\e[0m", src.c_str(), receiver);
             receiver->onResult(datalist[i]);

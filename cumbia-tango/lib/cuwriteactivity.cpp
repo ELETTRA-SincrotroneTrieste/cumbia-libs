@@ -3,7 +3,7 @@
 #include "tdevice.h"
 #include "cutangoactioni.h"
 #include "cutango-world.h"
-
+#include <cudatatypes_ex.h>
 #include <cumacros.h>
 
 class CuWriteActivityPrivate
@@ -44,7 +44,7 @@ void CuWriteActivity::event(CuActivityEvent *e)
 bool CuWriteActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
-    return token["src"] == mytok["src"] && mytok["activity"] == token["activity"];
+    return token[CuDType::Src] == mytok[CuDType::Src] && mytok[CuDType::Activity] == token[CuDType::Activity];
 }
 
 void CuWriteActivity::init()
@@ -53,7 +53,7 @@ void CuWriteActivity::init()
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
     /* get a TDevice */
-    d->tdev = d->device_service->getDevice(tk["device"].toString());
+    d->tdev = d->device_service->getDevice(tk[CuXDType::Device].toString());
     d->tdev->addRef();
 }
 
@@ -70,24 +70,24 @@ void CuWriteActivity::execute()
         CuTangoWorld tangoworld;
         bool success;
         tangoworld.fillThreadInfo(at, this); /* put thread and activity addresses as info */
-        if(dev && at["cmd"].toBool())
+        if(dev && at[CuXDType::IsCommand].toBool())
         {
             if(d->point_info.isEmpty())
-                success = tangoworld.get_command_info(d->tdev->getDevice(), at["point"].toString(), d->point_info);
+                success = tangoworld.get_command_info(d->tdev->getDevice(), at[CuXDType::Point].toString(), d->point_info);
             if(success)
             {
-                Tango::DeviceData din = tangoworld.toDeviceData(at["write_value"], d->point_info);
-                bool has_argout = d->point_info["out_type"].toLongInt() != Tango::DEV_VOID;
-                success = tangoworld.cmd_inout(dev, at["point"].toString(), din, has_argout, at);
+                Tango::DeviceData din = tangoworld.toDeviceData(at[CuXDType::InputValue], d->point_info);
+                bool has_argout = d->point_info[CuXDType::OutType].toLongInt() != Tango::DEV_VOID;
+                success = tangoworld.cmd_inout(dev, at[CuXDType::Point].toString(), din, has_argout, at);
             }
         }
-        else if(dev && !at["cmd"].toBool()) /* attribute */
+        else if(dev && !at[CuXDType::IsCommand].toBool()) /* attribute */
         {
             bool skip_read_attribute = true;
             if(d->point_info.isEmpty())
-                success = tangoworld.get_att_config(d->tdev->getDevice(), at["point"].toString(), d->point_info, skip_read_attribute);
+                success = tangoworld.get_att_config(d->tdev->getDevice(), at[CuXDType::Point].toString(), d->point_info, skip_read_attribute);
             if(success)
-                success = tangoworld.write_att(dev, at["point"].toString(), at["write_value"], d->point_info, at);
+                success = tangoworld.write_att(dev, at[CuXDType::Point].toString(), at[CuXDType::InputValue], d->point_info, at);
         }
         else
         {
@@ -111,20 +111,20 @@ void CuWriteActivity::onExit()
     assert(d->my_thread_id == pthread_self());
     int refcnt = -1;
     CuData at = getToken(); /* activity token */
-    at["msg"] = d->msg;
-    at["mode"] = "WRITE";
-    at["err"] = d->err;
+    at[CuDType::Message] = d->msg;
+    at[CuDType::Mode] = "WRITE";
+    at[CuDType::Err] = d->err;
     CuTangoWorld utils;
     utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
     if(d->tdev)
         refcnt = d->tdev->removeRef();
     cuprintf("\e[1;31mrefcnt = %d called actionRemove for device %s att %s\e[0m\n",
-           refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
+           refcnt, at[CuXDType::Device].toString().c_str(), at[CuDType::Src].toString().c_str());
     if(refcnt == 0)
     {
-        d->device_service->removeDevice(at["device"].toString());
+        d->device_service->removeDevice(at[CuXDType::Device].toString());
         d->tdev = NULL;
     }
-    at["exit"] = true;
+    at[CuDType::Exit] = true;
     publishResult(at);
 }

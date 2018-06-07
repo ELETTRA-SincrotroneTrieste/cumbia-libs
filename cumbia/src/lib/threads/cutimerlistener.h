@@ -9,6 +9,9 @@ class CuTimer;
 class CuTimerListener
 {
 public:
+
+    virtual ~CuTimerListener() {}
+
     virtual void onTimeout(CuTimer*) = 0;
 };
 

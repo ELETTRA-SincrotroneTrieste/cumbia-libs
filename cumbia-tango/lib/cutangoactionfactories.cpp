@@ -2,8 +2,10 @@
 #include "cutreader.h"
 #include "cutwriter.h"
 #include "cutattconfiguration.h"
+#include "cutangoopt_builder.h"
 #include <cumacros.h>
 #include <tango.h>
+#include <cudatatypes_ex.h>
 
 CuTangoReaderFactory::CuTangoReaderFactory()
 {
@@ -55,10 +57,10 @@ CuTangoReaderFactory::~CuTangoReaderFactory()
 CuTangoActionI *CuTangoReaderFactory::create(const std::string &s, CumbiaTango *ct) const
 {
     CuTReader* reader = new CuTReader(s, ct);
-    if(options.containsKey("period") && options["period"].toInt() > 0)
-        reader->setPeriod(options["period"].toInt());
-    if(options.containsKey("refresh_mode"))
-        reader->setRefreshMode(static_cast<CuTReader::RefreshMode>(options["refresh_mode"].toInt()));
+    if(options.containsKey(CuXDType::Period) && options[CuXDType::Period].toInt() > 0)
+        reader->setPeriod(options[CuXDType::Period].toInt());
+    if(options.containsKey(CuXDType::RefreshMode))
+        reader->setRefreshMode(static_cast<CuTReader::RefreshMode>(options[CuXDType::RefreshMode].toInt()));
     return reader;
 }
 
@@ -117,8 +119,8 @@ void CuTangoAttConfFactory::setOptions(const CuData &o)
 CuTangoActionI *CuTangoAttConfFactory::create(const std::string &s, CumbiaTango *ct) const
 {
     CuTAttConfiguration *w = new CuTAttConfiguration(s, ct);
-    if(options.containsKey("fetch_props"))
-        w->setDesiredAttributeProperties(options["fetch_props"].toStringVector());
+    if(options.containsKey(CuXDType::FetchProperties))
+        w->setDesiredAttributeProperties(options[CuXDType::FetchProperties].toStringVector());
     return w;
 }
 

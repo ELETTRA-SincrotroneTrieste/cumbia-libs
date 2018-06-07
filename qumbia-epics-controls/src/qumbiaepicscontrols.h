@@ -205,15 +205,15 @@ The data that we need in this example is as follows:
    // CuDataListener interface
 public:
    void onUpdate(const CuData &data) {
-       bool read_ok = !data["err"].toBool();
+       bool read_ok = !data[CuDType::Err].toBool();
        setEnabled(read_ok);
        // tooltip with message from Tango
-       setToolTip(data["msg"].toString().c_str());
+       setToolTip(data[CuDType::Message].toString().c_str());
 
        if(!read_ok)
            setText("####");
        else if(data.containsKey("value"))  {
-           CuVariant val = data["value"];
+           CuVariant val = data[CuDType::Value];
            QString txt = QString::fromStdString(val.toString());
            setText(txt);
        }

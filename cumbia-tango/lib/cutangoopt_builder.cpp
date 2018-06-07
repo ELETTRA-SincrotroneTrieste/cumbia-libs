@@ -1,20 +1,21 @@
 #include "cutangoopt_builder.h"
 #include <cuvariant.h>
+#include <cudatatypes_ex.h>
 
 CuTangoOptBuilder::CuTangoOptBuilder()
 {
-    m_options.add("refresh_mode", CuTReader::ChangeEventRefresh);
-    m_options.add("fetch_history", false);
-    m_options.add("period", 1000);
-    m_options.add("fetch_props", std::vector<std::string>());
+    m_options.add(CuXDType::RefreshMode, CuTReader::ChangeEventRefresh);
+    m_options.add(CuXDType::FetchHistory, false);
+    m_options.add(CuXDType::Period, 1000);
+    m_options.add(CuXDType::FetchProperties, std::vector<std::string>());
 }
 
 CuTangoOptBuilder::CuTangoOptBuilder(int per, CuTReader::RefreshMode mod)
 {
-    m_options.add("period",  per);
-    m_options.add("refresh_mode" , mod);
-    m_options.add("fetch_history", false);
-    m_options.add("fetch_props", std::vector<std::string>());
+    m_options.add(CuXDType::Period,  per);
+    m_options.add(CuXDType::RefreshMode , mod);
+    m_options.add(CuXDType::FetchHistory, false);
+    m_options.add(CuXDType::FetchProperties, std::vector<std::string>());
 }
 
 CuTangoOptBuilder::CuTangoOptBuilder(const CuData &d)
@@ -29,33 +30,33 @@ CuTangoOptBuilder::CuTangoOptBuilder(const CuTangoOptBuilder &other)
 
 CuTangoOptBuilder &CuTangoOptBuilder::setFetchAttProps(const std::vector<string> &props)
 {
-    m_options.add("fetch_props", props);
+    m_options.add(CuXDType::FetchProperties, props);
     return *this;
 }
 
 CuTangoOptBuilder & CuTangoOptBuilder::addFetchAttProp(const string &s)
 {
-    std::vector<std::string> prps = m_options.value("fetch_props").toStringVector();
+    std::vector<std::string> prps = m_options.value(CuXDType::FetchProperties).toStringVector();
     prps.push_back(s);
-    m_options.add("fetch_props", prps);
+    m_options.add(CuXDType::FetchProperties, prps);
     return *this;
 }
 
 CuTangoOptBuilder & CuTangoOptBuilder::setFetchAttHistory(bool fetch)
 {
-    m_options.add("fetch_history", fetch);
+    m_options.add(CuXDType::FetchHistory, fetch);
     return *this;
 }
 
 CuTangoOptBuilder & CuTangoOptBuilder::setPeriod(int millis)
 {
-    m_options.add("period", millis);
+    m_options.add(CuXDType::Period, millis);
     return *this;
 }
 
 CuTangoOptBuilder & CuTangoOptBuilder::setRefreshMode(CuTReader::RefreshMode mode)
 {
-    m_options.add("refresh_mode", mode);
+    m_options.add(CuXDType::RefreshMode, mode);
     return *this;
 }
 
@@ -66,17 +67,17 @@ bool CuTangoOptBuilder::operator ==(const CuTangoOptBuilder &other) const
 
 int CuTangoOptBuilder::period() const
 {
-    return m_options.value("period").toInt();
+    return m_options.value(CuXDType::Period).toInt();
 }
 
 CuTReader::RefreshMode CuTangoOptBuilder::mode() const
 {
-    return static_cast<CuTReader::RefreshMode>(m_options.value("refresh_mode").toInt());
+    return static_cast<CuTReader::RefreshMode>(m_options.value(CuXDType::RefreshMode).toInt());
 }
 
 std::vector<string> CuTangoOptBuilder::fetchProps() const
 {
-    return m_options.value("fetch_props").toStringVector();
+    return m_options.value(CuXDType::FetchProperties).toStringVector();
 }
 
 CuData CuTangoOptBuilder::options() const

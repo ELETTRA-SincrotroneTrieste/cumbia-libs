@@ -49,11 +49,11 @@ void CuPutActivity::exception_handler_cb(exception_handler_args excargs)
 void CuPutActivity::exception_handler(exception_handler_args excargs)
 {
     CuData d = getToken();
-    d["type"] = "exception";
-    d["err"] = true;
+    d[CuDType::Type] = "exception";
+    d[CuDType::Err] = true;
     CuEpicsWorld ew;
     std::string msg = ew.extractException(excargs, d);
-    d["msg"] = "error: \"" + d["pv"].toString() + "\":\n" + msg;
+    d[CuDType::Message] = "error: \"" + d[CuXDType::Pv.toString() + "\":\n" + msg;
     ca_signal(excargs.stat, msg.c_str());
     publishResult(d);
 }
@@ -66,7 +66,7 @@ void CuPutActivity::event(CuActivityEvent *e)
 bool CuPutActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
-    return token["src"] == mytok["src"] && mytok["activity"] == token["activity"];
+    return token[CuDType::Src] == mytok[CuDType::Src] && mytok[CuDType::Activity] == token[CuDType::Activity];
 }
 
 void CuPutActivity::init()
@@ -83,11 +83,11 @@ void CuPutActivity::execute()
     char msg[256];
     assert(d->my_thread_id == pthread_self());
     CuData at = getToken(); /* activity token */
-    CuVariant wval = at["write_value"];
+    CuVariant wval = at[CuXDType::InputValue];
     /* get configuration and then write */
     printf("\e[1;32mCuPutActivity execute enter...[%s]\e[0m\n", at.toString().c_str());
 
-    printf("\e[1;36mwould write %s into %s [%s|%s]\e[0m\n", at["write_value"].toString().c_str(), at["src"].toString().c_str(),
+    printf("\e[1;36mwould write %s into %s [%s|%s]\e[0m\n", at[CuXDType::InputValue].toString().c_str(), at[CuDType::Src].toString().c_str(),
             wval.dataFormatStr(wval.getFormat()).c_str(), wval.dataTypeStr(wval.getType()).c_str());
 
     CuPV* pvs;
@@ -119,7 +119,7 @@ void CuPutActivity::execute()
         }
         else {
             memset(pvs[0].name, 0, 256);
-            strncpy(pvs[0].name, at["pv"].toString().c_str(), 255);
+            strncpy(pvs[0].name, at[CuXDType::Pv.toString().c_str(), 255);
             result =  CuEpicsWorld().connect_pvs(pvs, nPvs);
             if (result) {
                 snprintf(msg, 256, "CuPutActivity.execute: connect_pvs failed for \"%s\"", pvs[0].name);
@@ -153,13 +153,13 @@ void CuPutActivity::execute()
 
                     if (result == ECA_TIMEOUT) {
                         snprintf(msg, 256, "CuPutActivity.execute: operation on %s [value: %s] unsuccessful: data was not written",
-                                 at["pv"].toString().c_str(), at["write_value"].toString().c_str());
+                                 at[CuXDType::Pv.toString().c_str(), at[CuXDType::InputValue].toString().c_str());
                         m_setTokenError(msg, at);
                      }
                     result = ca_pend_io(caTimeout);
                     if (result == ECA_TIMEOUT) {
                         snprintf(msg, 256, "CuPutActivity.execute: operation on %s [value: %s] timed out: data was not written",
-                                 at["pv"].toString().c_str(), at["write_value"].toString().c_str());
+                                 at[CuXDType::Pv.toString().c_str(), at[CuXDType::InputValue].toString().c_str());
                         m_setTokenError(msg, at);
                      }
 
@@ -180,26 +180,26 @@ void CuPutActivity::onExit()
     assert(d->my_thread_id == pthread_self());
     int refcnt = -1;
     CuData at = getToken(); /* activity token */
-    at["msg"] = d->msg;
-    at["mode"] = "WRITE";
-    at["err"] = d->err;
+    at[CuDType::Message] = d->msg;
+    at[CuDType::Mode] = "WRITE";
+    at[CuDType::Err] = d->err;
     CuEpicsWorld utils;
     utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
     /* remove reference to this activity ? */
 
     cuprintf("\e[1;31mrefcnt = %d called actionRemove for device %s att %s\e[0m\n",
-             refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
+             refcnt, at[CuXDType::Device].toString().c_str(), at[CuDType::Src].toString().c_str());
     if(refcnt == 0)
     {
         // d->epics_service->remove...
     }
-    at["exit"] = true;
+    at[CuDType::Exit] = true;
     publishResult(at);
 }
 
 void CuPutActivity::m_setTokenError(const char *msg, CuData &dat)
 {
-    dat["msg"] = std::string(msg);
-    dat["err"] = true;
+    dat[CuDType::Message] = std::string(msg);
+    dat[CuDType::Err] = true;
     d->err = true;
 }

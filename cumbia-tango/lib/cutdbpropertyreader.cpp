@@ -88,16 +88,16 @@ CuTDbPropertyReader::~CuTDbPropertyReader()
  * std::list<CuData> in_data;
  * // device property
  * CuData devpd("device", "test/device/1");
- * devpd["name"] = "description";
+ * devpd[CuDType::Name] = "description";
  * in_data.push_back(devpd);
  * // attribute property values from the "double_scalar" attribute
  * CuData apd("device", "test/device/2");
  * apd["attribute"] = "double_scalar";
- * apd["name"] = "values";
+ * apd[CuDType::Name] = "values";
  * in_data.push_back(apd);
  * // class property
  * CuData cld("class", "TangoTest");
- * cld["name"] = "ProjectTitle";
+ * cld[CuDType::Name] = "ProjectTitle";
  * in_data.push_back(cld);
  *
  * // m_ct is a reference to a CumbiaTango object properly instantiated before.
@@ -111,7 +111,8 @@ CuTDbPropertyReader::~CuTDbPropertyReader()
  */
 void CuTDbPropertyReader::get(const std::list<CuData> &in_data)
 {
-    CuData thread_tok("id", d->id);
+    CuData thread_tok;
+    thread_tok[CuDType::Id] = d->id;
     d->activity = new CuGetTDbPropActivity(in_data);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
@@ -141,6 +142,8 @@ void CuTDbPropertyReader::onResult(const CuData &data)
 
 CuData CuTDbPropertyReader::getToken() const
 {
-    return CuData("id", d->id);
+    CuData da;
+    da[CuDType::Id] = d->id;
+    return da;
 }
 

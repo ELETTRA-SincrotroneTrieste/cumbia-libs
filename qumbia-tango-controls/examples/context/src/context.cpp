@@ -208,13 +208,13 @@ void Context::runModified()
 void Context::onNewData(const CuData &d)
 {
     QLineEdit *le = findChild<QLineEdit *>("leRefreshInfo");
-    if(d["mode"].isValid())
+    if(d[CuDType::Mode].isValid())
     {
-        le->setText(QString::fromStdString(d["mode"].toString()));
+        le->setText(QString::fromStdString(d[CuDType::Mode].toString()));
         findChild<QSpinBox *>()->setEnabled(le->text().compare("EVENT", Qt::CaseInsensitive) != 0);
     }
-    if(d["period"].isValid())
-        le->setText(le->text() + ": " + QString::fromStdString(d["period"].toString()) + "ms");
+    if(d[CuXDType::Period].isValid())
+        le->setText(le->text() + ": " + QString::fromStdString(d[CuXDType::Period].toString()) + "ms");
 }
 
 void Context::getData()

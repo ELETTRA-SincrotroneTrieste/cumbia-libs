@@ -72,8 +72,8 @@ void QuMultiReader::insertSource(const QString &src, int i)
     CuData options;
     if(d->sequential)
     {
-        options["period"] = d->period;
-        options["refresh_mode"] = d->manual_mode_code;
+        options[CuXDType::Period] = d->period;
+        options[CuXDType::RefreshMode] = d->manual_mode_code;
         d->context->setOptions(options);
     }
     CuControlsReaderA* r = d->context->add_reader(src.toStdString(), this);
@@ -146,7 +146,7 @@ void QuMultiReader::m_startTimer()
 
 void QuMultiReader::onUpdate(const CuData &data)
 {
-    QString from = QString::fromStdString( data["src"].toString());
+    QString from = QString::fromStdString( data[CuDType::Src].toString());
     int pos = d->srcs.indexOf(from);
     printf("got data from %s [%d/%d]...\n", qstoc(from), pos, d->srcs.size());
     emit onNewData(data);

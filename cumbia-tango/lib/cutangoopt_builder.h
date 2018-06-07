@@ -1,6 +1,7 @@
 #ifndef CUTANGOREADOPTIONS_H
 #define CUTANGOREADOPTIONS_H
 
+#include <cudatatypes_ex.h>
 #include <cutreader.h>
 #include <vector>
 #include <string>
@@ -14,6 +15,7 @@
 class CuTangoOptBuilder
 {
 public:
+
     CuTangoOptBuilder();
 
     CuTangoOptBuilder(int per, CuTReader::RefreshMode mod);

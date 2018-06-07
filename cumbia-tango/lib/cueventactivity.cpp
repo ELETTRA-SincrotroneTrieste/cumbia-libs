@@ -3,6 +3,7 @@
 #include "cutango-world.h"
 #include "cudevicefactoryservice.h"
 #include <cumacros.h>
+#include <cudatatypes_ex.h>
 #include <tango.h>
 
 /*! @private */
@@ -94,7 +95,7 @@ void CuEventActivity::event(CuActivityEvent *e)
 bool CuEventActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
-    return token["src"] == mytok["src"] && mytok["activity"] == token["activity"];
+    return token[CuDType::Src] == mytok[CuDType::Src] && mytok[CuDType::Activity] == token[CuDType::Activity];
 }
 
 /*! \brief returns 0. CuEventActivity's execute is called only once.
@@ -134,12 +135,12 @@ void CuEventActivity::init()
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
     /* get a reference to a TDevice, new or existing one */
-    d->tdev = d->device_srvc->getDevice(tk["device"].toString());
+    d->tdev = d->device_srvc->getDevice(tk[CuXDType::Device].toString());
     pbgreen("CuEventActivity.init: got TDevice %p DeviceProxy %p name %s from THIS THREAD 0x%lx is valid: %d",
             d->tdev, d->tdev->getDevice(), d->tdev->getName().c_str(), pthread_self(), d->tdev->isValid());
-    tk["conn"] = d->tdev->isValid();
-    tk["msg"] = d->tdev->getMessage();
-    tk["err"] = !d->tdev->isValid();
+    tk[CuXDType::Connected] = d->tdev->isValid();
+    tk[CuDType::Message] = d->tdev->getMessage();
+    tk[CuDType::Err] = !d->tdev->isValid();
     tk.putTimestamp();
     CuTangoWorld().fillThreadInfo(tk, this);
     //  sleep(5);
@@ -162,7 +163,7 @@ Tango::EventType CuEventActivity::m_tevent_type_from_string(const std::string& s
  *
  * \par Notes
  * \li subscribe_event for the attribute to read is called on the TangoDevice and the desired
- *     event subscription type is requested according to the "rmode" (refresh mode) value in
+ *     event subscription type is requested according to the CuXDType::RefreshModeStr (refresh mode) value in
  *     the activity token obtained by getToken
  *
  * If subscribe_event is successful, the client will start receiving events through the
@@ -191,31 +192,31 @@ void CuEventActivity::execute()
     assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
     CuData at = getToken(); /* activity token */
-    std::string att = at["point"].toString();
-    const std::string ref_mode_str = at["rmode"].toString();
+    std::string att = at[CuXDType::Point].toString();
+    const std::string ref_mode_str = at[CuXDType::RefreshModeStr].toString();
     Tango::DeviceProxy *dev = d->tdev->getDevice();
-    at["err"] = !d->tdev->isValid();
-    at["mode"] = "event";
-    at["event"] = "subscribe";
+    at[CuDType::Err] = !d->tdev->isValid();
+    at[CuDType::Mode] = "event";
+    at[CuXDType::Status] = "subscribe";
     at.putTimestamp();
     if(dev)
     {
         try
         {
             d->event_id = dev->subscribe_event(att, m_tevent_type_from_string(ref_mode_str), this);
-            at["msg"] = "subscribe to: " + ref_mode_str;
+            at[CuDType::Message] = "subscribe to: " + ref_mode_str;
         }
         catch(Tango::DevFailed &e)
         {
             d->event_id = -1;
-            at["err"] = true;
-            at["msg"] = CuTangoWorld().strerror(e);
+            at[CuDType::Err] = true;
+            at[CuDType::Message] = CuTangoWorld().strerror(e);
             publishResult(at);
         }
     }
     else
     {
-        at["msg"] = d->tdev->getMessage();
+        at[CuDType::Message] = d->tdev->getMessage();
     }
     /* do not publish result if subscription is successful because push_event with the first result is invoked immediately */
 }
@@ -241,25 +242,25 @@ void CuEventActivity::onExit()
     at.putTimestamp();
     if(d->tdev->getDevice() && d->event_id != -1)
     {
-        at["value"] = "-";
+        at[CuDType::Value] = "-";
         try{
             d->tdev->getDevice()->unsubscribe_event(d->event_id);
             pbgreen("ReadActivity.onExit: unsubscribed! OK!");
-            at["msg"] = "successfully unsubscribed events";
-            at["err"]  = false;
+            at[CuDType::Message] = "successfully unsubscribed events";
+            at[CuDType::Err]  = false;
         }
         catch(Tango::DevFailed &e)
         {
-            at["msg"] = CuTangoWorld().strerror(e);
-            at["err"]  = true;
+            at[CuDType::Message] = CuTangoWorld().strerror(e);
+            at[CuDType::Err]  = true;
         }
     }
     refcnt = d->tdev->removeRef();
 
     if(refcnt == 0)
-        d->device_srvc->removeDevice(at["device"].toString());
+        d->device_srvc->removeDevice(at[CuXDType::Device].toString());
     CuTangoWorld().fillThreadInfo(at, this); /* put thread and activity addresses as info */
-    at["exit"] = true;
+    at[CuDType::Exit] = true;
     publishResult(at);
 
     // delete omni_thread::ensure_self
@@ -281,7 +282,7 @@ void CuEventActivity::onExit()
  * \li "is_command": bool: true if the source is a command, false if it is an attribute (CuVariant::toBool)
  * \li "err": bool: true if an error occurred, false otherwise
  * \li "mode": string: the read mode: "event" or "polled" ("event" in this case)
- * \li "rmode": string: the type of event refresh mode as produced by CuTReader::refreshModeStr
+ * \li CuXDType::RefreshModeStr: string: the type of event refresh mode as produced by CuTReader::refreshModeStr
  * \li "msg": string: a message describing the read operation/data extraction and its success/failure
  * \li "event": string: a copy of the value of Tango::EventData::event string
  *      (documented as *the event name* in lib/cpp/client/event.h)
@@ -294,20 +295,20 @@ void CuEventActivity::push_event(Tango::EventData *e)
     CuTangoWorld utils;
     pbyellow2("ReadActivity.push_event: in thread: 0x%lx attribute %s activity %p", pthread_self(), e->attr_name.c_str(), this);
     utils.fillThreadInfo(d, this); /* put thread and activity addresses as info */
-    d["mode"] = "event";
-    d["event"] = e->event;
+    d[CuDType::Mode] = "event";
+    d[CuXDType::EventMsg] = e->event;
     Tango::DeviceAttribute *da = e->attr_value;
     if(!e->err)
     {
         utils.extractData(da, d);
-        d["msg"] = utils.getLastMessage();
-        d["err"] = utils.error();
+        d[CuDType::Message] = utils.getLastMessage();
+        d[CuDType::Err] = utils.error();
     }
     else
     {
         d.putTimestamp();
-        d["err"] = true;
-        d["msg"] = utils.strerror(e->errors);
+        d[CuDType::Err] = true;
+        d[CuDType::Message] = utils.strerror(e->errors);
     }
     publishResult(d);
 }

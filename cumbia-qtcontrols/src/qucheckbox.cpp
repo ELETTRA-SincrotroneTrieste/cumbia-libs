@@ -2,6 +2,7 @@
 
 #include <QCheckBox>
 #include <cudata.h>
+#include <cudatatypes_ex.h>
 #include <cumacros.h>
 #include <cumbiapool.h>
 #include <cuvariant.h>
@@ -229,36 +230,36 @@ bool QuCheckBox::textFromLabel() const
  */
 void QuCheckBox::onUpdate(const CuData &da)
 {
-    d->ok = !da["err"].toBool();
-    bool write_op = da["activity"].toString() == "writer";
-    if(d->ok && d->auto_configure && da["type"].toString() == "property" &&
-            da.containsKey("label")) {
-        setProperty("label", QString::fromStdString(da["label"].toString()) );
+    d->ok = !da[CuDType::Err].toBool();
+    bool write_op = da[CuDType::Activity].toString() == "writer";
+    if(d->ok && d->auto_configure && da[CuDType::Type].toString() == "property" &&
+            da.containsKey(CuXDType::Label)) {
+        setProperty("label", QString::fromStdString(da[CuXDType::Label].toString()) );
         if(d->text_from_label)
             setText(property("label").toString());
     }
     if(!d->ok && write_op) {
         Cumbia* cumbia = d->in_ctx->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->in_ctx->cumbiaPool()->getBySrc(da["src"].toString());
+            cumbia = d->in_ctx->cumbiaPool()->getBySrc(da[CuDType::Src].toString());
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::Write, true);
-            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);
+            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da[CuDType::Message].toString(), CuLog::Error, CuLog::Write);
         }
     }
     setEnabled(d->ok);
     // update link statistics
     d->out_ctx->getLinkStats()->addOperation();
     // tooltip message
-    setToolTip(da["msg"].toString().c_str());
+    setToolTip(da[CuDType::Message].toString().c_str());
 
     if(!d->ok && !write_op)
-        d->out_ctx->getLinkStats()->addError(da["msg"].toString());
-    else if(da.containsKey("value"))
+        d->out_ctx->getLinkStats()->addError(da[CuDType::Message].toString());
+    else if(da.containsKey(CuDType::Value))
     {
-        CuVariant val = da["value"];
+        CuVariant val = da[CuDType::Value];
         if(val.getType() == CuVariant::Boolean) {
             d->last_val = val.toBool();
             d->last_val ? setChecked(Qt::Checked) : setChecked(Qt::Unchecked);

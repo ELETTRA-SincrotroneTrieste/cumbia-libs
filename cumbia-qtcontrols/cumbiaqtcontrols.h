@@ -440,30 +440,30 @@ protected slots:
         QString txt;
         QColor background, border;
         // check the "err" value on the CuData for errors
-        d->read_ok = !da["err"].toBool();
+        d->read_ok = !da[CuDType::Err].toBool();
         setEnabled(d->read_ok); // disable widget if there's a read error
 
         // update link statistics: increment operation counter on the context's link statistics
         d->context->getLinkStats()->addOperation();
         if(!d->read_ok) // add the error on the context's link statistics
-            d->context->getLinkStats()->addError(da["msg"].toString());
+            d->context->getLinkStats()->addError(da[CuDType::Message].toString());
 
         // cumbia-tango implementation provides quality_color and success_color codes.
         // we can use them to decorate the label accordingly.
-        if(da.containsKey("quality_color"))
-            background = d->palette[QString::fromStdString(da["quality_color"].toString())];
+        if(da.containsKey(CuXDType::QualityColor))
+            background = d->palette[QString::fromStdString(da[CuXDType::QualityColor].toString())];
         if(da.containsKey("success_color"))
-            border = d->palette[QString::fromStdString(da["success_color"].toString())];
+            border = d->palette[QString::fromStdString(da[CuXDType::SuccessColor].toString())];
 
         // as we used to do with QTango widgets, set a tooltip with the reader's message.
-        setToolTip(da["msg"].toString().c_str());
+        setToolTip(da[CuDType::Message].toString().c_str());
 
         // display '#'s a la QTango in case of error
-        if(da["err"].toBool() )
+        if(da[CuDType::Err].toBool() )
             setText("####");
         else if(da.containsKey("value")) // read ok
         {
-            CuVariant val = da["value"];
+            CuVariant val = da[CuDType::Value];
             // if the type of data is boolean, QuLabel, as QTango TLabel, can be configured to display
             // a special color for the true and false values.
             if(val.getType() == CuVariant::Boolean)
@@ -474,7 +474,7 @@ protected slots:
             else // convert everything to string.
             {
                 // CuVariant toString returns a std::string
-                txt = QString::fromStdString(da["value"].toString());
+                txt = QString::fromStdString(da[CuDType::Value].toString());
             }
             setText(txt);
         }
@@ -697,7 +697,7 @@ private:
 
 void QuApplyNumeric::onUpdate(const CuData &da)
 {
-    if(da["err"].toBool())
+    if(da[CuDType::Err].toBool())
     {
 
         Cumbia* cumbia = d->context->cumbia();
@@ -707,19 +707,19 @@ void QuApplyNumeric::onUpdate(const CuData &da)
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log)) )
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::Write, true);
-            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);
+            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da[CuDType::Message].toString(), CuLog::Error, CuLog::Write);
         }
     }
     else if(d->auto_configure && da["type"].toString() == "property")
     {
         QString desc = "";
-        if(da["data_format_str"] == "scalar" && da["writable"].toInt() > 0)
+        if(da[CuXDType::DataFormatStr] == "scalar" && da[CuXDType::Writable].toInt() > 0)
         {
 
             CuVariant m, M;
-            m = da["min"];
-            M = da["max"];
-            std::string print_format = da["format"].toString();
+            m = da[CuXDType::Min];
+            M = da[CuXDType::Max];
+            std::string print_format = da[CuXDType::DisplayFormat].toString();
             double min, max;
             bool ok;
             ok = m.to<double>(min);
@@ -738,20 +738,20 @@ void QuApplyNumeric::onUpdate(const CuData &da)
                 pinfo("QuApplyNumeric: maximum and minimum values not set on the tango attribute \"%s\", object \"%s\": "
                       "not setting format nor maximum/minimum", qstoc(targets()), qstoc(objectName()));
             double val;
-            bool can_be_double = da["w_value"].to<double>(val);
+            bool can_be_double = da[CuXDType::WriteValue].to<double>(val);
             if (can_be_double)
             {
                 setValue(val);
                 clearModified();
             }
-            if(!da["description"].isNull()) {
-                desc.prepend(QString::fromStdString(da["description"].toString()));
+            if(!da[CuXDType::Description].isNull()) {
+                desc.prepend(QString::fromStdString(da[CuXDType::Description].toString()));
             }
             setWhatsThis(desc);
         }
         else
             perr("QuApplyNumeric [%s]: invalid data format \"%s\" or read only source (writable: %d)", qstoc(objectName()),
-                 da["data_format_str"].toString().c_str(), da["writable"].toInt());
+                 da[CuXDType::DataFormatStr].toString().c_str(), da[CuXDType::Writable].toInt());
 
     }
 }

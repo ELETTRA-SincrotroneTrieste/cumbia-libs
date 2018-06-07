@@ -7,6 +7,7 @@
 
 #include <cudatalistener.h>
 #include <cuserviceprovider.h>
+#include <cudatatypes_ex.h>
 #include <cumacros.h>
 #include <set>
 #include <cuthreadfactoryimpl_i.h>
@@ -86,8 +87,8 @@ void CuTReader::onResult(const std::vector<CuData> &datalist)
  *
  * The d->exit flag is true only if the CuTReader::stop has been called. (data listener destroyed
  * or reader disconnected ("unset source") )
- * Only in this case CuTReader auto deletes itself when data["exit"] is true.
- * data["exit"] true is not enough to dispose CuTReader because CuTReader handles two types of
+ * Only in this case CuTReader auto deletes itself when data[CuDType::Exit] is true.
+ * data[CuDType::Exit] true is not enough to dispose CuTReader because CuTReader handles two types of
  * activities (polling and event).
  *
  * If the error flag is set by the CuEventActivity because subscribe_event failed, the poller is started
@@ -97,15 +98,15 @@ void CuTReader::onResult(const std::vector<CuData> &datalist)
 void CuTReader::onResult(const CuData &data)
 {
     bool polling_fallback = false;
-    bool err = data["err"].toBool();
-    bool a_exit = data["exit"].toBool(); // activity exit flag
+    bool err = data[CuDType::Err].toBool();
+    bool a_exit = data[CuDType::Exit].toBool(); // activity exit flag
     // iterator can be invalidated if listener's onUpdate unsets source: use a copy
     std::set<CuDataListener *> lis_copy = d->listeners;
     std::set<CuDataListener *>::iterator it;
-    bool event_subscribe_fail = err && !d->exit && data["event"].toString() == "subscribe";
+    bool event_subscribe_fail = err && !d->exit && data[CuXDType::Status].toString() == "subscribe";
 
     if(a_exit) // remove from list of started activities
-        d->activities.remove(data["ptr"].toVoidP()); // when list is null, can delete this
+        d->activities.remove(data[CuDType::Ptr].toVoidP()); // when list is null, can delete this
 
     // if it's just subscribe_event failure, do not notify listeners
     for(it = lis_copy.begin(); it != lis_copy.end() && !event_subscribe_fail;   ++it) {
@@ -115,7 +116,7 @@ void CuTReader::onResult(const CuData &data)
     if(err && !d->exit)
     {
         polling_fallback = true;
-        cuprintf("starting polling activity cuz event is err %d\n", data["err"].toBool());
+        cuprintf("starting polling activity cuz event is err %d\n", data[CuDType::Err].toBool());
         // stop event activity. it will auto delete.
         // m_unregisterEventActivity will set d->event_activity to NULL
         if(d->event_activity)
@@ -146,8 +147,8 @@ void CuTReader::onResult(const CuData &data)
  */
 CuData CuTReader::getToken() const
 {
-    CuData da("source", d->tsrc.getName());
-    da["type"] = std::string("reader");
+    CuData da(CuDType::Src, d->tsrc.getName());
+    da[CuDType::Type] = std::string("reader");
     return da;
 }
 
@@ -181,12 +182,12 @@ CuTangoActionI::Type CuTReader::getType() const
 void CuTReader::sendData(const CuData &data)
 {
     printf("\e[1;35msendData sending %s\e[0m\n", data.toString().c_str());
-    if(data.containsKey("refresh_mode"))
-        d->refresh_mode = static_cast<CuTReader::RefreshMode>(data["refresh_mode"].toInt());
-    if(data.containsKey("period"))
-        d->period = data["period"].toInt();
+    if(data.containsStrKey("refresh_mode"))
+        d->refresh_mode = static_cast<CuTReader::RefreshMode>(data[CuXDType::RefreshMode].toInt());
+    if(data.containsStrKey("period"))
+        d->period = data[CuXDType::Period].toInt();
 
-    if(d->event_activity && data.containsKey("refresh_mode"))
+    if(d->event_activity && data.containsStrKey("refresh_mode"))
         setRefreshMode(d->refresh_mode);
     if(d->poller && d->period != d->poller->period()) {
         printf("\e[1;33mchanging polling period to new one %d\n", d->period);
@@ -217,12 +218,12 @@ void CuTReader::sendData(const CuData &data)
  */
 void CuTReader::getData(CuData &d_inout) const
 {
-    if(d_inout.containsKey("period"))
-        d_inout["period"] = d->period;
-    if(d_inout.containsKey("refresh_mode"))
-        d_inout["refresh_mode"] = d->refresh_mode;
-    if(d_inout.containsKey("mode"))
-        d_inout["mode"] = refreshModeStr();
+    if(d_inout.containsKey(CuXDType::Period))
+        d_inout[CuXDType::Period] = d->period;
+    if(d_inout.containsKey(CuXDType::RefreshMode))
+        d_inout[CuXDType::RefreshMode] = d->refresh_mode;
+    if(d_inout.containsKey(CuXDType::RefreshModeStr))
+        d_inout[CuXDType::RefreshModeStr] = refreshModeStr();
 }
 
 /*! \brief set or change the reader's refresh mode
@@ -248,7 +249,7 @@ void CuTReader::setRefreshMode(CuTReader::RefreshMode rm)
         m_unregisterFromPoller();
         m_startEventActivity();
     }
-    else if(d->event_activity &&  d->event_activity->getToken()["rmode"].toString() != refreshModeStr()) {
+    else if(d->event_activity &&  d->event_activity->getToken()[CuXDType::RefreshModeStr].toString() != refreshModeStr()) {
         // already have one but want different event mode
         m_unregisterEventActivity();
         m_startEventActivity();
@@ -308,7 +309,8 @@ void CuTReader::setPeriod(int millis)
 void CuTReader::stop()
 {
     if(d->exit)
-        d->log.write("CuTReader.stop", CuLog::Error, CuLog::Read, "stop called twice for reader %s", this->getToken()["source"].toString().c_str());
+        d->log.write("CuTReader.stop", CuLog::Error, CuLog::Read, "stop called twice for reader %s",
+                     this->getToken()[CuDType::Src].toString().c_str());
     else
     {
         d->exit = true;
@@ -405,13 +407,13 @@ void CuTReader::m_startEventActivity()
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
 
-    CuData at("src", d->tsrc.getName()); /* activity token */
-    at["device"] = d->tsrc.getDeviceName();
-    at["point"] = d->tsrc.getPoint();
-    at["activity"] = "event";
-    at["rmode"] = refreshModeStr();
+    CuData at(CuDType::Src, d->tsrc.getName()); /* activity token */
+    at[CuXDType::Device] = d->tsrc.getDeviceName();
+    at[CuXDType::Point] = d->tsrc.getPoint();
+    at[CuDType::Activity] = "event";
+    at[CuXDType::RefreshModeStr] = refreshModeStr();
 
-    CuData tt("device", d->tsrc.getDeviceName()); /* thread token */
+    CuData tt(CuXDType::Device, d->tsrc.getDeviceName()); /* thread token */
     d->event_activity = new CuEventActivity(at, df);
     d->activities.push_back(d->event_activity);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());

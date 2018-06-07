@@ -46,14 +46,14 @@ class CuVariantPrivate;
   // QuLabel inherits from QLabel. Text is changed with *setText*
   void QuLabel::onUpdate(const CuData &da)
   {
-    bool read_ok = !da["err"].toBool();
+    bool read_ok = !da[CuDType::Err].toBool();
     if(da.containsKey("value")) {
-      CuVariant val = da["value"];
+      CuVariant val = da[CuDType::Value];
       if(val.getType() == CuVariant::Boolean) {
             txt = (val.toBool() ? "OK" : "ERROR" );
         }
         else {
-            txt = QString::fromStdString(da["value"].toString());
+            txt = QString::fromStdString(da[CuDType::Value].toString());
         }
         setText(txt);
     }

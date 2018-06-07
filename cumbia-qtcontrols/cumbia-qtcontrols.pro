@@ -29,6 +29,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+message("!!!!!!!!!!!!!! Qutable disabled !!!!!!!!!!!!!!!!!!!!")
+
 SOURCES += cumbiaqtcontrols.cpp \
     src/qubutton.cpp \
     src/qulabel.cpp \
@@ -41,7 +43,7 @@ SOURCES += cumbiaqtcontrols.cpp \
 #    src/cucharts/quspectrumplot.cpp \
 #    src/cucharts/quchartconfdialog.cpp \
     src/quled.cpp \
-    src/qutable.cpp \
+  #  src/qutable.cpp \
     src/widgets-base/eplotlight/scrollbar.cpp \
     src/widgets-base/number_delegate.cpp \
     src/widgets-base/eng_notation.cpp \
@@ -97,7 +99,7 @@ HEADERS += cumbiaqtcontrols.h\
 #    src/cucharts/quplotcommon.h \
 #    src/cucharts/quspectrumplot.h \
 #    src/cucharts/quchartconfdialog.h \
-    src/qutable.h \
+  #  src/qutable.h \
     src/qutrendplot.h \
     src/widgets-base/eplotlight/scrollbar.h \
     src/widgets-base/string_delegate.h \

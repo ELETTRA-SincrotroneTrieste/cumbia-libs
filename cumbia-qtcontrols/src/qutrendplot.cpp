@@ -2,6 +2,7 @@
 #include "quplotcommon.h"
 #include <cumacros.h>
 #include <cudata.h>
+#include <cudatatypes_ex.h>
 #include <QtDebug>
 #include <QDateTime>
 
@@ -121,7 +122,7 @@ void QuTrendPlot::unsetSource(const QString &s)
 
 void QuTrendPlot::setPeriod(int p)
 {
-    d->plot_common->getContext()->sendData(CuData("period", p));
+    d->plot_common->getContext()->sendData(CuData(CuXDType::Period, p));
 }
 
 void QuTrendPlot::unsetSources()
@@ -141,18 +142,18 @@ void QuTrendPlot::onUpdate(const CuData &da)
 
 void QuTrendPlot::update(const CuData &da)
 {
-    d->read_ok = !da["err"].toBool();
-    QString src = QString::fromStdString(da["src"].toString());
+    d->read_ok = !da[CuDType::Err].toBool();
+    QString src = QString::fromStdString(da[CuDType::Src].toString());
 
     // update link statistics
     CuLinkStats *link_s = d->plot_common->getContext()->getLinkStats();
     link_s->addOperation();
     if(!d->read_ok)
-        link_s->addError(da["msg"].toString());
+        link_s->addError(da[CuDType::Message].toString());
 
     // configure triggers replot at the end but should not be too expensive
     // to do it once here at configuration time and once more from appendData
-    if(d->read_ok && d->auto_configure && da["type"].toString() == "property")
+    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property")
         configure(da);
 
 
@@ -163,12 +164,12 @@ void QuTrendPlot::update(const CuData &da)
     // set the curve state
     d->read_ok ? crv->setState(QuPlotCurve::Normal) : crv->setState(QuPlotCurve::Invalid);
 
-    const CuVariant &v = da["value"];
+    const CuVariant &v = da[CuDType::Value];
     if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Scalar)
     {
         double x, y;
-        if(da.containsKey("timestamp_ms") && crv)
-            x = static_cast<qint64>(da["timestamp_ms"].toLongInt());
+        if(da.containsKey(CuXDType::Time_ms) && crv)
+            x = static_cast<qint64>(da[CuDType::Time_ms].toLongInt());
         else
             x = crv->size() > 0 ? crv->x(crv->size() - 1) + 1 : 0;
 
@@ -180,7 +181,7 @@ void QuTrendPlot::update(const CuData &da)
         // one curve with an Invalid state. A replot is necessary in this case
         replot();
     }
-    setToolTip(QString("\"%1\": %2").arg(src).arg(QString::fromStdString(da["msg"].toString())));
+    setToolTip(QString("\"%1\": %2").arg(src).arg(QString::fromStdString(da[CuDType::Message].toString())));
 }
 
 void QuTrendPlot::setTimeScaleDrawEnabled(bool enable)
@@ -253,9 +254,9 @@ bool QuTrendPlot::showDateOnTimeAxis() const
 
 int QuTrendPlot::period() const
 {
-    CuData d_inout("period", -1);
+    CuData d_inout(CuXDType::Period, -1);
     d->plot_common->getContext()->getData(d_inout);
-    return d_inout["period"].toInt();
+    return d_inout[CuXDType::Period].toInt();
 }
 
 CuContext *QuTrendPlot::getContext() const

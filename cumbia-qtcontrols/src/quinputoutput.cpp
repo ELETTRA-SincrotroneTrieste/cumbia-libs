@@ -1,6 +1,7 @@
 #include "quinputoutput.h"
 #include <qulabel.h>
 #include <cudata.h>
+#include <cudatatypes_ex.h>
 #include <cumacros.h>
 #include <cuvariant.h>
 #include <enumeric.h>
@@ -36,7 +37,7 @@ QuInputOutput::QuInputOutput(QWidget *parent, Cumbia* cumbia,
     CuData options;
     std::vector<std::string> props;
     props.push_back("values");
-    options["fetch_props"] = props;
+    options[CuXDType::FetchProperties] = props;
     rf->setOptions(options);
     QuLabel *label = new QuLabel(this, cumbia, *rf);
     setOutputWidget(label);
@@ -228,7 +229,7 @@ void QuInputOutput::unsetSource()
 /// @private
 void QuInputOutput::onNewData(const CuData &da)
 {
-    if(!da["err"].toBool() && da["type"].toString() == "property")
+    if(!da[CuDType::Err].toBool() && da[CuDType::Type].toString() == "property")
     {
         m_configure(da);
         disconnect(sender(), SIGNAL(newData(const CuData&)));
@@ -238,85 +239,86 @@ void QuInputOutput::onNewData(const CuData &da)
 /// @private
 void QuInputOutput::m_configure(const CuData &da)
 {
-    std::string target = da["src"].toString();
-    if(da["data_format_str"].toString() == "scalar" && da["writable"].toInt() > 0)
-    {
-        CuVariant v = da["value"];
-        if(d->w_type == None && da["values"].isValid())
-            setWriterType(ComboBox);
-        else if(d->w_type == None && (v.isFloatingPoint()  || v.isInteger()) )
-            setWriterType(Numeric);
-        else if(d->w_type == None && v.getType() == CuVariant::String)
-            setWriterType(LineEdit);
+    printf("\e[1;31m!!!!!!!!!!!!!!!!!!!!! QuInputOutput.m_configure is dsiabeleeeeeeeeeeeeeddddddddddd\e[0m\n\n\n");
+//    std::string target = da[CuDType::Src].toString();
+//    if(da[CuXDType::DataFormatStr].toString() == "scalar" && da[CuXDType::Writable].toInt() > 0)
+//    {
+//        CuVariant v = da[CuDType::Value];
+//        if(d->w_type == None && da["values"].isValid())
+//            setWriterType(ComboBox);
+//        else if(d->w_type == None && (v.isFloatingPoint()  || v.isInteger()) )
+//            setWriterType(Numeric);
+//        else if(d->w_type == None && v.getType() == CuVariant::String)
+//            setWriterType(LineEdit);
 
-        if(d->w_type == ComboBox && da["values"].isValid())
-        {
-            QComboBox *c = static_cast<QComboBox* >(inputWidget());
-            c->clear();
-            c->setCurrentText(QString::fromStdString(v.toString()));
-            if(da["values"].isValid())
-            {
-                std::vector<std::string> values = da["values"].toStringVector();
-                for(size_t i = 0; i < values.size(); i++)
-                    c->insertItem(i, QString::fromStdString(values[i]));
-                if(v.isInteger())
-                    c->setCurrentIndex(QString::fromStdString(v.toString()).toInt());
-            }
-        }
-        else if(d->w_type == LineEdit)
-        {
-            static_cast<QLineEdit *>(inputWidget())->setText(QString::fromStdString(v.toString()));
-        }
-        else
-        {
-            QString desc;
-            // get minimum and maximum from properties, if possible
-            CuVariant m, M;
-            m = da["min"];
-            M = da["max"];
-            std::string print_format = da["format"].toString();
-            double min, max;
-            bool ok;
-            ok = m.to<double>(min);
-            if(ok)
-                ok = M.to<double>(max);
-            QWidget *in = inputWidget();
-            if(ok && d->w_type == Numeric)
-            {
-                ENumeric * en = static_cast<ENumeric *>(in);
-                en->configureNumber(min, min, QString::fromStdString(print_format));
-                /* integerDigits() and decimalDigits() from NumberDelegate */
-                en->setIntDigits(en->integerDigits());
-                en->setDecDigits(en->decimalDigits());
-            }
+//        if(d->w_type == ComboBox && da["values"].isValid())
+//        {
+//            QComboBox *c = static_cast<QComboBox* >(inputWidget());
+//            c->clear();
+//            c->setCurrentText(QString::fromStdString(v.toString()));
+//            if(da["values"].isValid())
+//            {
+//                std::vector<std::string> values = da["values"].toStringVector();
+//                for(size_t i = 0; i < values.size(); i++)
+//                    c->insertItem(i, QString::fromStdString(values[i]));
+//                if(v.isInteger())
+//                    c->setCurrentIndex(QString::fromStdString(v.toString()).toInt());
+//            }
+//        }
+//        else if(d->w_type == LineEdit)
+//        {
+//            static_cast<QLineEdit *>(inputWidget())->setText(QString::fromStdString(v.toString()));
+//        }
+//        else
+//        {
+//            QString desc;
+//            // get minimum and maximum from properties, if possible
+//            CuVariant m, M;
+//            m = da[CuXDType::Min];
+//            M = da[CuXDType::Max];
+//            std::string print_format = da[CuXDType::DisplayFormat].toString();
+//            double min, max;
+//            bool ok;
+//            ok = m.to<double>(min);
+//            if(ok)
+//                ok = M.to<double>(max);
+//            QWidget *in = inputWidget();
+//            if(ok && d->w_type == Numeric)
+//            {
+//                ENumeric * en = static_cast<ENumeric *>(in);
+//                en->configureNumber(min, min, QString::fromStdString(print_format));
+//                /* integerDigits() and decimalDigits() from NumberDelegate */
+//                en->setIntDigits(en->integerDigits());
+//                en->setDecDigits(en->decimalDigits());
+//            }
 
-            // the following applies to ENumeric or spin boxes
-            if(ok)
-            {
-                in->setProperty("maximum", max);
-                in->setProperty("miniumum", min);
-                desc = "\n(min: "+ QString("%1").arg(min) + " max: "+ QString("%1").arg(max) + ")";
-            }
-            else
-                pinfo("QuInputOutput: maximum and minimum values not set on the target \"%s\", object \"%s\": "
-                      "not setting format nor maximum/minimum", target.c_str(), qstoc(objectName()));
-            /* can set current values instead */
-            double val;
-            bool can_be_double = da["w_value"].to<double>(val);
-            if (can_be_double)
-                in->setProperty("value", val);
-            if(!da["description"].isNull()) {
-                desc.prepend(QString::fromStdString(da["description"].toString()));
-            }
-            in->setWhatsThis(desc);
-        }
-    }
-    else
-        perr("QuInputOutput [%s]: invalid data format \"%s\" or read only source \"%s\" (writable: %d)", qstoc(objectName()),
-            da["data_format_str"].toString().c_str(), target.c_str(), da["writable"].toInt());
+//            // the following applies to ENumeric or spin boxes
+//            if(ok)
+//            {
+//                in->setProperty("maximum", max);
+//                in->setProperty("miniumum", min);
+//                desc = "\n(min: "+ QString("%1").arg(min) + " max: "+ QString("%1").arg(max) + ")";
+//            }
+//            else
+//                pinfo("QuInputOutput: maximum and minimum values not set on the target \"%s\", object \"%s\": "
+//                      "not setting format nor maximum/minimum", target.c_str(), qstoc(objectName()));
+//            /* can set current values instead */
+//            double val;
+//            bool can_be_double = da[CuXDType::WriteValue].to<double>(val);
+//            if (can_be_double)
+//                in->setProperty("value", val);
+//            if(!da[CuXDType::Description].isNull()) {
+//                desc.prepend(QString::fromStdString(da[CuXDType::Description].toString()));
+//            }
+//            in->setWhatsThis(desc);
+//        }
+//    }
+//    else
+//        perr("QuInputOutput [%s]: invalid data format \"%s\" or read only source \"%s\" (writable: %d)", qstoc(objectName()),
+//            da[CuXDType::DataFormatStr].toString().c_str(), target.c_str(), da[CuXDType::Writable].toInt());
 
-    if(inputWidget())
-        inputWidget()->setObjectName("inputWidget");
+//    if(inputWidget())
+//        inputWidget()->setObjectName("inputWidget");
 
-    qDebug() << __FUNCTION__ << findChild<QWidget *>("inputWidget");
+//    qDebug() << __FUNCTION__ << findChild<QWidget *>("inputWidget");
 }

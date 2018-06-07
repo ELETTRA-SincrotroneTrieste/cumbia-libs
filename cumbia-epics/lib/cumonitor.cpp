@@ -56,6 +56,11 @@ void CuMonitor::onProgress(int step, int total, const CuData &data)
 
 }
 
+virtual void onResult(const std::vector<CuData> &)
+{
+
+}
+
 /*
  * this is invoked in main thread
  */
@@ -70,7 +75,7 @@ void CuMonitor::onResult(const CuData &data)
      * activity, to avoid that old results, queued and delivered late, delete this before the current activity
      * posts its "exit" result
      */
-    if(d->exit && data["exit"].toBool() && data["activity"] == d->current_activity->getToken()["activity"])
+    if(d->exit && data[CuDType::Exit].toBool() && data[CuDType::Activity] == d->current_activity->getToken()[CuDType::Activity])
     {
         CuEpicsActionFactoryService * af = static_cast<CuEpicsActionFactoryService *>(d->cumbia_e->getServiceProvider()
                                                                             ->get(static_cast<CuServices::Type>(CuEpicsActionFactoryService::CuActionFactoryServiceType)));
@@ -82,8 +87,8 @@ void CuMonitor::onResult(const CuData &data)
 
 CuData CuMonitor::getToken() const
 {
-    CuData da("source", d->tsrc.getName());
-    da["type"] = std::string("reader");
+    CuData da(CuDType::Src, d->tsrc.getName());
+    da[CuDType::Type] = std::string("reader");
     return da;
 }
 
@@ -100,9 +105,9 @@ CuEpicsActionI::Type CuMonitor::getType() const
 void CuMonitor::sendData(const CuData &data)
 {
     if(data.containsKey("refresh_mode"))
-        d->refresh_mode = static_cast<CuMonitor::RefreshMode>(data["refresh_mode"].toInt());
+        d->refresh_mode = static_cast<CuMonitor::RefreshMode>(data[CuXDType::RefreshMode].toInt());
     if(data.containsKey("period"))
-        d->period = data["period"].toInt();
+        d->period = data[CuXDType::Period].toInt();
 
     if(d->current_activity && data.containsKey("refresh_mode"))
         setRefreshMode(d->refresh_mode);
@@ -115,9 +120,9 @@ void CuMonitor::sendData(const CuData &data)
 void CuMonitor::getData(CuData &d_inout) const
 {
     if(d_inout.containsKey("period"))
-        d_inout["period"] = d->period;
+        d_inout[CuXDType::Period] = d->period;
     if(d_inout.containsKey("refresh_mode"))
-        d_inout["refresh_mode"] = d->refresh_mode;
+        d_inout[CuXDType::RefreshMode] = d->refresh_mode;
     if(d_inout["cache"].toString() == std::string("property"))
         d_inout = d->property_d;
     else if(d_inout["cache"].toString() == std::string("value"))
@@ -193,10 +198,10 @@ void CuMonitor::m_startMonitorActivity()
             static_cast<CuEpCAService *>(d->cumbia_e->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType)));
     CuData at("src", d->tsrc.getName()); /* activity token */
-    at["pv"] = d->tsrc.getPV();
-    at["activity"] = "monitor";
+    at[CuXDType::Pv = d->tsrc.getPV();
+    at[CuDType::Activity] = "monitor";
     at["is_pv"] = (d->tsrc.getType() == EpSource::PV);
-    at["period"] = d->period;
+    at[CuXDType::Period] = d->period;
 
     CuData tt("activity_thread", "epics_monitor"); /* thread token */
     d->current_activity = new CuMonitorActivity(at, df, d->tsrc.getArgs());
@@ -212,4 +217,9 @@ void CuMonitor::m_startMonitorActivity()
 bool CuMonitor::exiting() const
 {
     return d->exit;
+}
+
+
+void CuMonitor::onResult(const std::vector<CuData> &datalist)
+{
 }

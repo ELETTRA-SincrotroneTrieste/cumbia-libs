@@ -3,6 +3,7 @@
 #include "cucontrolsreader_abs.h"
 #include <cumacros.h>
 #include <cudata.h>
+#include <cudatatypes_ex.h>
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
 #include "cucontext.h"
@@ -81,7 +82,7 @@ void QuTable::m_initCtx()
     d->desired_att_props.push_back("trueColours");
     d->desired_att_props.push_back("falseColours");
     d->desired_att_props.push_back("falseStrings");
-    d->context->setOptions(CuData("fetch_props", d->desired_att_props));
+    d->context->setOptions(CuData(CuXDType::FetchProperties, d->desired_att_props));
 }
 
 QString QuTable::source() const
@@ -111,32 +112,32 @@ void QuTable::unsetSource()
 void QuTable::onUpdate(const CuData& da)
 {
     QColor background, border;
-    d->read_ok = !da["err"].toBool();
+    d->read_ok = !da[CuDType::Err].toBool();
     setEnabled(d->read_ok);
 
-    if(d->read_ok && d->auto_configure && da["type"].toString() == "property")
+    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property")
         configure(da);
 
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
-        d->context->getLinkStats()->addError(da["msg"].toString());
+        d->context->getLinkStats()->addError(da[CuDType::Message].toString());
 
-    if(da.containsKey("quality_color"))
-        background = d->palette[QString::fromStdString(da["quality_color"].toString())];
-    if(da.containsKey("success_color"))
-        border = d->palette[QString::fromStdString(da["success_color"].toString())];
+    if(da.containsKey(CuXDType::QualityColor))
+        background = d->palette[QString::fromStdString(da[CuXDType::QualityColor].toString())];
+    if(da.containsKey(CuXDType::SuccessColor))
+        border = d->palette[QString::fromStdString(da[CuXDType::SuccessColor].toString())];
 
-    setToolTip(da["msg"].toString().c_str());
+    setToolTip(da[CuDType::Message].toString().c_str());
 
-    if(da["err"].toBool() )
+    if(da[CuDType::Err].toBool() )
     {
         foreach(ELabel *l, cells)
             l->setText("####");
     }
-    else if(da.containsKey("value"))
+    else if(da.containsKey(CuDType::Value))
     {
-        CuVariant val = da["value"];
+        CuVariant val = da[CuDType::Value];
         cuprintf("QuTable value is %s type %d\n\n", val.toString().c_str(), val.getType());
         if(val.getType() == CuVariant::UInt && val.getFormat() == CuVariant::Scalar)
             EFlag::setValue(QVariant(val.toUInt()));
@@ -174,9 +175,9 @@ void QuTable::onUpdate(const CuData& da)
         }
     }
 
-    if(da.containsKey("state_color"))
+    if(da.containsKey(CuXDType::StateColor))
     {
-        CuVariant v = da["state_color"];
+        CuVariant v = da[CuXDType::StateColor];
         background = d->palette[QString::fromStdString(v.toString())];
     }
 
@@ -190,30 +191,30 @@ void QuTable::configure (const CuData& da)
 {
     cuprintf("\e[1;34mQuTable:configure: got configuration data as follows:\n\n%s\n\n", da.toString().c_str());
 
-    if(da.containsKey("description"))
-        setWhatsThis(da["description"].toString().c_str());
+    if(da.containsKey(CuXDType::Description))
+        setWhatsThis(da[CuXDType::Description].toString().c_str());
 
     try
     {
-        if(da.containsKey("numRows"))
+        if(da.containsStrKey("numRows"))
         {
             int numRows = std::stoi(da["numRows"].toString());
             if(numRows > 0)
                 EFlag::setNumRows(numRows);
         }
-        if(da.containsKey("numColumns"))
+        if(da.containsStrKey("numColumns"))
         {
             int numColumns = std::stoi(da["numColumns"].toString());
             if(numColumns > 0)
                 EFlag::setNumColumns(numColumns);
         }
-        if(da.containsKey("displayMask"))
+        if(da.containsStrKey("displayMask"))
         {
             /* EFlag display mask requires comma separated values */
             QString dmask = QString::fromStdString(da["displayMask"].toString());
             EFlag::setDisplayMask(dmask); /* display mask comma separated */
         }
-        if(da.containsKey("trueStrings") && da.containsKey("falseStrings"))
+        if(da.containsStrKey("trueStrings") && da.containsStrKey("falseStrings"))
         {
             QString ts = QString::fromStdString(da["trueStrings"].toString());
             QString fs = QString::fromStdString(da["falseStrings"].toString());
@@ -228,7 +229,7 @@ void QuTable::configure (const CuData& da)
                      qstoc(objectName()), qstoc(source()), ts.count(","), fs.count(",") );
             }
         }
-        if(da.containsKey("trueColours") && da.containsKey("falseColours"))
+        if(da.containsStrKey("trueColours") && da.containsStrKey("falseColours"))
         {
             QString tc = QString::fromStdString(da["trueColours"].toString());
             QString fc = QString::fromStdString(da["falseColours"].toString());

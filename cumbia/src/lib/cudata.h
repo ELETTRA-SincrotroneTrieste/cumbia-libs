@@ -5,6 +5,85 @@
 
 #include <cuvariant.h>
 
+#define DATA2CHUNK 32
+
+class CuDType {
+public:
+
+    enum Key { Activity = 1,
+               Id, ///< id
+               Thread,  ///< thread
+               Class,  ///< class
+               Value, ///<
+               Src,  ///<
+               Name, ///< some name
+               Err,  ///<
+               Time,  ///< timestamp
+               Time_ms,   ///< timestamp millis
+               Time_ns,  ///< timestamp nanoseconds
+               Time_us,  ///< timestamp microsecs
+               Timestamp_Str, ///< timestamp as string
+               Message, ///< a message
+               Mode,  ///< a mode
+               Type,  ///< some type
+               Exit,  ///< exit flag
+               Ptr,  ///< pointer to something (void* is supported by CuVariant)
+               MaxBaseDataKey = 24,
+               MaxDataKey = 64 };
+};
+
+class CuDTypeUtils
+{
+public:
+
+    virtual ~CuDTypeUtils() {}
+
+    virtual std::string keyName(int k) const {
+        switch(k){
+        case CuDType::Activity:
+            return "Activity";
+        case CuDType::Id:
+            return "Id";
+        case CuDType::Thread:
+            return "Thread";
+        case CuDType::Class:
+            return "Class";
+        case CuDType::Value:
+            return std::string("Value");
+        case CuDType::Src:
+            return std::string("Src");
+        case CuDType::Err:
+            return std::string("Err");
+        case CuDType::Ptr:
+            return std::string("Ptr");
+        case CuDType::Time:
+            return std::string("Time");
+        case CuDType::Time_ms:
+            return std::string("Time_ms");
+        case CuDType::Time_us:
+            return std::string("Time_us");
+        case CuDType::Time_ns:
+            return std::string("Time_ns");
+
+        case CuDType::Message:
+            return std::string("Message");
+        case CuDType::Mode:
+            return std::string("Mode");
+        case CuDType::Type:
+            return std::string("Type");
+        case CuDType::Exit:
+            return std::string("Exit");
+
+        case CuDType::MaxBaseDataKey:
+            return std::string("MaxBaseDataKey");
+        case CuDType::MaxDataKey:
+            return std::string("MaxDataKey");
+        default:
+            return std::string("Unknown_key ") + std::to_string(k);
+        }
+    }
+};
+
 class CuDataPrivate;
 
 /*! \brief container for data exchange for the *cumbia library* and its clients
@@ -43,9 +122,7 @@ public:
 
     CuData();
 
-    CuData(const CuVariant &v);
-
-    CuData(const std::string& key, const CuVariant &v);
+    CuData(const size_t key, const CuVariant &v);
 
     CuData(const CuData &other);
 
@@ -55,19 +132,27 @@ public:
 
     virtual CuData &operator =(CuData &&other);
 
-    size_t size() const;
-
-    CuVariant value() const;
+    size_t stringmapsize() const;
 
     CuVariant value(const std::string &key) const;
 
+    CuVariant value(const size_t key) const;
+
     void add(const std::string& key, const CuVariant &value);
 
-    bool containsKey(const std::string & key) const;
+    void add(const size_t key, const CuVariant &value);
+
+    bool containsStrKey(const std::string & key) const;
+
+    bool containsKey(const size_t key) const;
 
     CuVariant& operator [] (const std::string& key);
 
+    CuVariant& operator [] (const size_t key);
+
     const CuVariant& operator [] (const std::string& key) const;
+
+    const CuVariant& operator [] (const size_t key) const;
 
     virtual bool operator ==(const CuData &other) const;
 
@@ -85,6 +170,9 @@ private:
     CuDataPrivate *d;
 
     void mCopyData(const CuData &other);
+
+    void m_insertDataExtra(int index, const CuVariant& v);
+    void m_reallocData2(int index);
 };
 
 #endif // CUDATA_H

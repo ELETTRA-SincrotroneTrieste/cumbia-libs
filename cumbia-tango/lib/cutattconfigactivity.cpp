@@ -1,6 +1,7 @@
 #include "cutattconfigactivity.h"
 #include <tango.h>
 #include <cumacros.h>
+#include <cudatatypes_ex.h>
 #include "cudevicefactoryservice.h"
 #include "tdevice.h"
 #include "cutango-world.h"
@@ -56,7 +57,7 @@ void CuTAttConfigActivity::event(CuActivityEvent *e)
 bool CuTAttConfigActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
-    return token["src"] == mytok["src"] && mytok["activity"] == token["activity"];
+    return token[CuDType::Src] == mytok[CuDType::Src] && mytok[CuDType::Activity] == token[CuDType::Activity];
 }
 
 int CuTAttConfigActivity::repeat() const
@@ -70,11 +71,11 @@ void CuTAttConfigActivity::init()
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
     /* get a TDevice */
-    d->tdev = d->device_service->getDevice(tk["device"].toString());
+    d->tdev = d->device_service->getDevice(tk[CuXDType::Device].toString());
     d->tdev->addRef();
-    tk["msg"] = d->tdev->getMessage();
-    tk["conn"] = d->tdev->isValid();
-    tk["err"] = !d->tdev->isValid();
+    tk[CuDType::Message] = d->tdev->getMessage();
+    tk[CuXDType::Connected] = d->tdev->isValid();
+    tk[CuDType::Err] = !d->tdev->isValid();
     tk.putTimestamp();
 }
 
@@ -84,10 +85,10 @@ void CuTAttConfigActivity::execute()
     assert(d->my_thread_id == pthread_self());
     CuData at = getToken(); /* activity token */
     d->err = !d->tdev->isValid();
-    std::string point = at["point"].toString();
-    bool cmd = at["is_command"].toBool();
-    at["properties"] = std::vector<std::string>();
-    at["type"] = "property";
+    std::string point = at[CuXDType::Point].toString();
+    bool cmd = at[CuXDType::IsCommand].toBool();
+    at[CuXDType::Properties] = std::vector<std::string>();
+    at[CuDType::Type] = "property";
 
     d->try_cnt++;
     bool success = false;
@@ -114,9 +115,8 @@ void CuTAttConfigActivity::execute()
         if(d->props.size() > 0 && success && dev)
             success = utils.get_att_props(dev, point, at, d->props);
 
-        at["data"] = true;
-        at["msg"] = utils.getLastMessage();
-        at["err"] = utils.error();
+        at[CuDType::Message] = utils.getLastMessage();
+        at[CuDType::Err] = utils.error();
         d->err = utils.error();
         d->msg = utils.getLastMessage();
 
@@ -133,19 +133,19 @@ void CuTAttConfigActivity::onExit()
     {
         int refcnt = -1;
         CuData at = getToken(); /* activity token */
-        at["msg"] = d->msg;
-        at["type"] = "property";
-        at["err"] = d->err;
+        at[CuDType::Message] = d->msg;
+        at[CuDType::Type] = "property";
+        at[CuDType::Err] = d->err;
         CuTangoWorld utils;
         utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
         if(d->tdev)
             refcnt = d->tdev->removeRef();
         if(refcnt == 0)
         {
-            d->device_service->removeDevice(at["device"].toString());
+            d->device_service->removeDevice(at[CuXDType::Device].toString());
             d->tdev = NULL;
         }
-        at["exit"] = true;
+        at[CuDType::Exit] = true;
         publishResult(at);
     }
     else
