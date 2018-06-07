@@ -6,6 +6,7 @@
 #include <cudatalistener.h>
 #include <cuserviceprovider.h>
 #include <cumacros.h>
+#include <cudatatypes_ex.h>
 #include <list>
 #include <cuthreadfactoryimpl_i.h>
 #include <cuthreadseventbridgefactory_i.h>
@@ -56,7 +57,7 @@ void CuMonitor::onProgress(int step, int total, const CuData &data)
 
 }
 
-virtual void onResult(const std::vector<CuData> &)
+void CuMonitor::onResult(const std::vector<CuData> &)
 {
 
 }
@@ -104,12 +105,12 @@ CuEpicsActionI::Type CuMonitor::getType() const
 
 void CuMonitor::sendData(const CuData &data)
 {
-    if(data.containsKey("refresh_mode"))
+    if(data.containsKey(CuXDType::RefreshMode))
         d->refresh_mode = static_cast<CuMonitor::RefreshMode>(data[CuXDType::RefreshMode].toInt());
-    if(data.containsKey("period"))
+    if(data.containsKey(CuXDType::Period))
         d->period = data[CuXDType::Period].toInt();
 
-    if(d->current_activity && data.containsKey("refresh_mode"))
+    if(d->current_activity && data.containsKey(CuXDType::RefreshMode))
         setRefreshMode(d->refresh_mode);
     if(d->current_activity && d->current_activity->getType() == CuMonitorActivity::CuMonitorActivityType)
         static_cast<CuMonitorActivity *>(d->current_activity)->setInterval(d->period);
@@ -119,9 +120,9 @@ void CuMonitor::sendData(const CuData &data)
 
 void CuMonitor::getData(CuData &d_inout) const
 {
-    if(d_inout.containsKey("period"))
+    if(d_inout.containsKey(CuXDType::Period))
         d_inout[CuXDType::Period] = d->period;
-    if(d_inout.containsKey("refresh_mode"))
+    if(d_inout.containsKey(CuXDType::RefreshMode))
         d_inout[CuXDType::RefreshMode] = d->refresh_mode;
     if(d_inout["cache"].toString() == std::string("property"))
         d_inout = d->property_d;
@@ -197,10 +198,9 @@ void CuMonitor::m_startMonitorActivity()
     CuEpCAService *df =
             static_cast<CuEpCAService *>(d->cumbia_e->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType)));
-    CuData at("src", d->tsrc.getName()); /* activity token */
-    at[CuXDType::Pv = d->tsrc.getPV();
+    CuData at(CuDType::Src, d->tsrc.getName()); /* activity token */
+    at[CuXDType::Pv] = d->tsrc.getPV();
     at[CuDType::Activity] = "monitor";
-    at["is_pv"] = (d->tsrc.getType() == EpSource::PV);
     at[CuXDType::Period] = d->period;
 
     CuData tt("activity_thread", "epics_monitor"); /* thread token */
@@ -217,9 +217,4 @@ void CuMonitor::m_startMonitorActivity()
 bool CuMonitor::exiting() const
 {
     return d->exit;
-}
-
-
-void CuMonitor::onResult(const std::vector<CuData> &datalist)
-{
 }

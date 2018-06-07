@@ -5,6 +5,7 @@
 #include <cadef.h>
 #include <cumacros.h>
 #include <cudata.h>
+#include <cudatatypes_ex.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -53,7 +54,7 @@ void CuPutActivity::exception_handler(exception_handler_args excargs)
     d[CuDType::Err] = true;
     CuEpicsWorld ew;
     std::string msg = ew.extractException(excargs, d);
-    d[CuDType::Message] = "error: \"" + d[CuXDType::Pv.toString() + "\":\n" + msg;
+    d[CuDType::Message] = "error: \"" + d[CuXDType::Pv].toString() + "\":\n" + msg;
     ca_signal(excargs.stat, msg.c_str());
     publishResult(d);
 }
@@ -119,7 +120,7 @@ void CuPutActivity::execute()
         }
         else {
             memset(pvs[0].name, 0, 256);
-            strncpy(pvs[0].name, at[CuXDType::Pv.toString().c_str(), 255);
+            strncpy(pvs[0].name, at[CuXDType::Pv].toString().c_str(), 255);
             result =  CuEpicsWorld().connect_pvs(pvs, nPvs);
             if (result) {
                 snprintf(msg, 256, "CuPutActivity.execute: connect_pvs failed for \"%s\"", pvs[0].name);
@@ -153,13 +154,13 @@ void CuPutActivity::execute()
 
                     if (result == ECA_TIMEOUT) {
                         snprintf(msg, 256, "CuPutActivity.execute: operation on %s [value: %s] unsuccessful: data was not written",
-                                 at[CuXDType::Pv.toString().c_str(), at[CuXDType::InputValue].toString().c_str());
+                                 at[CuXDType::Pv].toString().c_str(), at[CuXDType::InputValue].toString().c_str());
                         m_setTokenError(msg, at);
                      }
                     result = ca_pend_io(caTimeout);
                     if (result == ECA_TIMEOUT) {
                         snprintf(msg, 256, "CuPutActivity.execute: operation on %s [value: %s] timed out: data was not written",
-                                 at[CuXDType::Pv.toString().c_str(), at[CuXDType::InputValue].toString().c_str());
+                                 at[CuXDType::Pv].toString().c_str(), at[CuXDType::InputValue].toString().c_str());
                         m_setTokenError(msg, at);
                      }
 

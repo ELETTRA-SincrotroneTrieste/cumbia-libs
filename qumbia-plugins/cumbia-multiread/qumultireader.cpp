@@ -118,7 +118,7 @@ void QuMultiReader::setPeriod(int ms)
     d->period = ms;
     if(!d->sequential)
     {
-        CuData per("period", d->period);
+        CuData per(CuXDType::Period, d->period);
         foreach(CuControlsReaderA *r, d->context->readers())
             r->sendData(per);
     }

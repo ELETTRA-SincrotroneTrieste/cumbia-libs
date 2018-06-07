@@ -36,7 +36,7 @@ CuTReaderFactory::~CuTReaderFactory()
  *
  * @param o a CuData compiled with the following options:
  * \li "period" an integer, in milliseconds, for the polling period. Converted with: CuVariant::toInt
- * \li "refresh_mode": an integer defining the Tango refresh mode. Converted with: CuVariant::toInt
+ * \li CuXDType::RefreshMode: an integer defining the Tango refresh mode. Converted with: CuVariant::toInt
  *
  * \par note
  * Please use the CuTangoOptBuilder class rather than filling in the options manually.

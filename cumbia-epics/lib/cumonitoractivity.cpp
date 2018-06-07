@@ -3,6 +3,7 @@
 #include "epsource.h"
 #include "cuepics-world.h"
 #include <cadef.h>
+#include <cudatatypes_ex.h>
 #include <cumacros.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,7 +37,7 @@ CuMonitorActivity::CuMonitorActivity(const CuData &token,
     d->exiting = false;
 
     int period = 1000;
-    if(token.containsKey("period"))
+    if(token.containsKey(CuXDType::Period))
         period = token[CuXDType::Period].toInt();
     d->repeat = period;
     setInterval(period);

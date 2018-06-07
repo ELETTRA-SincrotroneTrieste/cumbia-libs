@@ -80,7 +80,7 @@ void CuEpConfigActivity::execute()
 
     utils.caget(ctrl_data[CuXDType::Pv].toString(), ctrl_data, value_data);
 
-    printf("\e[0;33mCuEpConfigActivity.execute: \n%s:\n got \e[0m%s \n", ctrl_data[CuXDType::Pv.toString().c_str(), ctrl_data.toString().c_str());
+    printf("\e[0;33mCuEpConfigActivity.execute: \n%s:\n got \e[0m%s \n", ctrl_data[CuXDType::Pv].toString().c_str(), ctrl_data.toString().c_str());
     publishResult(ctrl_data);
     printf("publishResult called with %s\n", ctrl_data.toString().c_str());
     publishResult(value_data);

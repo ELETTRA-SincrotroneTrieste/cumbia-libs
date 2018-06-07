@@ -1,6 +1,7 @@
 #include "cuepconfiguration.h"
 #include <culog.h>
 #include <cumbiaepics.h>
+#include <cudatatypes_ex.h>
 #include <cumacros.h>
 #include <cuserviceprovider.h>
 #include "epsource.h"
@@ -52,6 +53,11 @@ void CuEpConfiguration::onProgress(int step, int total, const CuData &data)
     (void) data;
 }
 
+void CuEpConfiguration::onResult(const std::vector<CuData> &)
+{
+
+}
+
 void CuEpConfiguration::onResult(const CuData &data)
 {
     d->conf_data = data;
@@ -77,7 +83,7 @@ void CuEpConfiguration::onResult(const CuData &data)
 
 CuData CuEpConfiguration::getToken() const
 {
-    CuData da("source", d->tsrc.getName());
+    CuData da(CuDType::Src, d->tsrc.getName());
     da[CuDType::Type] = std::string("attconfig");
     return da;
 }
@@ -131,12 +137,11 @@ void CuEpConfiguration::start()
     CuEpCAService *df =
             static_cast<CuEpCAService *>(d->cumbia_epics->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType)));
-    CuData at("src", d->tsrc.getName()); /* activity token */
-    at[CuXDType::Pv = d->tsrc.getPV();
+    CuData at(CuDType::Src, d->tsrc.getName()); /* activity token */
+    at[CuXDType::Pv] = d->tsrc.getPV();
     at[CuDType::Activity] = "attconfig";
-    at["is_pv"] = d->tsrc.getType() == EpSource::PV;
 
-    CuData tt("pv", d->tsrc.getPV()); /* thread token */
+    CuData tt(CuXDType::Pv, d->tsrc.getPV()); /* thread token */
     d->activity = new CuEpConfigActivity(at, df);
     static_cast<CuEpConfigActivity *>(d->activity)->setDesiredAttributeProperties(d->desired_props);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_epics->getThreadEventsBridgeFactory());
@@ -154,3 +159,4 @@ bool CuEpConfiguration::exiting() const
 {
     return d->exit;
 }
+
