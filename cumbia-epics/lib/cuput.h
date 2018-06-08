@@ -37,6 +37,10 @@ public:
 private:
     CuEpWriterPrivate *d;
 
+
+    // CuThreadListener interface
+public:
+    virtual void onResult(const std::vector<CuData> &datalist);
 };
 
 #endif // CUTWRITER_H

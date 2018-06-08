@@ -213,3 +213,8 @@ bool CuMonitor::exiting() const
 {
     return d->exit;
 }
+
+
+void CuMonitor::onResult(const std::vector<CuData> &datalist)
+{
+}

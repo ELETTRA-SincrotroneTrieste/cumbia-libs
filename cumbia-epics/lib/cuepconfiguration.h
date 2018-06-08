@@ -36,6 +36,10 @@ public:
     bool exiting() const;
 private:
     CuEpConfigurationPrivate *d;
+
+    // CuThreadListener interface
+public:
+    virtual void onResult(const std::vector<CuData> &datalist);
 };
 
 #endif // CUTATTCONFIGURATION_H
