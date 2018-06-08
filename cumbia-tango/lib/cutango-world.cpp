@@ -622,6 +622,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
             reslist[results_offset]["success_color"] = d->t_world_conf.successColor(!d->error);
             results_offset++;
         }
+	delete devattr;
     }
     catch(Tango::DevFailed &e)
     {
