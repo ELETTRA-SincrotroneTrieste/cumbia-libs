@@ -126,8 +126,11 @@ void QuMultiReader::setPeriod(int ms)
 
 void QuMultiReader::startRead()
 {
-    if(d->srcs.size() > 0)
-        d->readersMap[d->srcs.first()]->sendData(CuData("read", ""));
+    if(d->srcs.size() > 0) {
+        CuData r;
+        r["read"] = "";
+        d->readersMap[d->srcs.first()]->sendData(r);
+    }
 
     if(d->srcs.size() > 0)
         printf("QuMultiReader.startRead: started cycle with read command for %s...\n", qstoc(d->srcs.first()));
@@ -155,7 +158,9 @@ void QuMultiReader::onUpdate(const CuData &data)
         d->databuf.append(data);
 
     if(d->sequential && ++pos < d->srcs.size()) {
-        d->readersMap[d->srcs[pos]]->sendData(CuData("read", ""));
+        CuData r;
+        r["read"] = "";
+        d->readersMap[d->srcs[pos]]->sendData(r);
     }
     else if(d->sequential) {
         // one read cycle is over: emit signal

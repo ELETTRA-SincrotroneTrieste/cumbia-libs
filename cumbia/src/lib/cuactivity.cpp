@@ -197,7 +197,7 @@ CuActivityManager *CuActivity::getActivityManager() const
  * \li CuActivity introductive documentation
  *
  */
-CuData CuActivity::getToken() const
+const CuData &CuActivity::getToken() const
 {
     return d->token;
 }

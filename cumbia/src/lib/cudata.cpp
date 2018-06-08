@@ -411,7 +411,7 @@ void CuData::putTimestamp()
 
 void CuData::mCopyData(const CuData& other)
 {
-    pyellowtmp("mCopyData: %s", other.toString().c_str());
+//    pyellowtmp("mCopyData: %s", other.toString().c_str());
     std::map<std::string, CuVariant>::const_iterator it;
     if(d->datamap)
         d->datamap->clear();

@@ -203,7 +203,7 @@ public:
 
     CuActivityManager *getActivityManager() const;
 
-    CuData getToken() const;
+    const CuData& getToken() const;
 
     /* template method: sets state and calls init */
     void doInit();

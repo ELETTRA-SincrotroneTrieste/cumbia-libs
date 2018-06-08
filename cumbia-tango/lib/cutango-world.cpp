@@ -614,7 +614,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
     {
         devattr = dev->read_attributes(attrs);
         for(size_t i = 0; i < devattr->size(); i++) {
-            reslist[results_offset] = att_datalist[i];
+            reslist[results_offset] = std::move(att_datalist[i]);
             p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
             extractData(p_da, reslist[results_offset]);
