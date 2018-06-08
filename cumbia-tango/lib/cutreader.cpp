@@ -182,12 +182,12 @@ CuTangoActionI::Type CuTReader::getType() const
 void CuTReader::sendData(const CuData &data)
 {
     printf("\e[1;35msendData sending %s\e[0m\n", data.toString().c_str());
-    if(data.containsStrKey(CuXDType::RefreshMode))
+    if(data.containsKey(CuXDType::RefreshMode))
         d->refresh_mode = static_cast<CuTReader::RefreshMode>(data[CuXDType::RefreshMode].toInt());
-    if(data.containsStrKey("period"))
+    if(data.containsKey(CuXDType::Period))
         d->period = data[CuXDType::Period].toInt();
 
-    if(d->event_activity && data.containsStrKey(CuXDType::RefreshMode))
+    if(d->event_activity && data.containsKey(CuXDType::RefreshMode))
         setRefreshMode(d->refresh_mode);
     if(d->poller && d->period != d->poller->period()) {
         printf("\e[1;33mchanging polling period to new one %d\n", d->period);

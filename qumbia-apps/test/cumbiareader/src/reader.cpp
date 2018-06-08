@@ -19,10 +19,9 @@ Reader::~Reader()
 
 void Reader::onUpdate(const CuData &data)
 {
-
+//    printf("Reader.onUpdate %s\n", data.toString().c_str());
     const CuVariant&  v = data[CuDType::Value];
     double ts = data[CuDType::Time_us].toDouble();
-//    printf("%s\n", data.toString().c_str());
     QString src = QString::fromStdString(data[CuDType::Src].toString());
     if(data[CuDType::Err].toBool())
         emit newError(src, ts, QString::fromStdString(data[CuDType::Message].toString()));

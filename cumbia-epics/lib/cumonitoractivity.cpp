@@ -160,7 +160,7 @@ void CuMonitorActivity::event_handler(evargs args)
     CuPV* _pv = (CuPV *) args.usr;
     CuData d = getToken();
     CuEpicsWorld utils;
-    cuprintf("CuMonitorActivity.event_handler: in thread: 0x%lx pv %s activity %p\n", pthread_self(), _pv->name);
+    cuprintf("CuMonitorActivity.event_handler: in thread: 0x%lx pv %s activity %p\n", pthread_self(), _pv->name, this);
     utils.fillThreadInfo(d, this); /* put thread and activity info */
 
     _pv->status = args.status;

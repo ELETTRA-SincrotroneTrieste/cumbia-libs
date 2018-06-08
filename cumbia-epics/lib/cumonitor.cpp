@@ -163,7 +163,8 @@ void CuMonitor::start()
 void CuMonitor::stop()
 {
     if(d->exit)
-        d->log.write("CuMonitor.stop", CuLog::Error, CuLog::Read, "stop called twice for reader %s", this->getToken()["source"].toString().c_str());
+        d->log.write("CuMonitor.stop", CuLog::Error, CuLog::Read, "stop called twice for reader %s",
+                     this->getToken()[CuDType::Src].toString().c_str());
     else
     { 
         d->exit = true;
@@ -203,7 +204,7 @@ void CuMonitor::m_startMonitorActivity()
     at[CuDType::Activity] = "monitor";
     at[CuXDType::Period] = d->period;
 
-    CuData tt("activity_thread", "epics_monitor"); /* thread token */
+    CuData tt(CuDType::Thread, "epics_monitor"); /* thread token */
     d->current_activity = new CuMonitorActivity(at, df, d->tsrc.getArgs());
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_e->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_e->getThreadFactoryImpl());

@@ -99,8 +99,8 @@ void CuPutActivity::execute()
     double caTimeout = d->default_timeout; // Wait time, specifies CA timeout, default is  d->default_timeout
  //   epicsEventId epId = epicsEventCreate(epicsEventEmpty);  /* Create empty EPICS event (semaphore) */
 
-    if(at.containsKey("ca_timeout") && at["ca_timeout"].toDouble() >= 0)
-        caTimeout = at["ca_timeout"].toDouble();
+    if(at.containsKey(CuXDType::Timeout) && at[CuXDType::Timeout].toDouble() >= 0)
+        caTimeout = at[CuXDType::Timeout].toDouble();
 
     // CA result
     int result  = ca_context_create(ca_enable_preemptive_callback);

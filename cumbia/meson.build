@@ -19,6 +19,7 @@ configure_file(output : 'config.h',
 
 headers = [
 'src/lib/cumbia.h',
+'src/lib/cudatatypes.h',
 'src/lib/cudatatypes_ex.h',
 'src/lib/cumacros.h',
 'src/lib/cucontinuousactivity.h',

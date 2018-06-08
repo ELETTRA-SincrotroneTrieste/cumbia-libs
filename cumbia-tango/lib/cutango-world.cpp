@@ -53,14 +53,11 @@ std::string CuTangoWorld::strerror(const Tango::DevErrorList &errors)
 
 void CuTangoWorld::fillThreadInfo(CuData &dat, const CuActivity* a)
 {
-    perr("CuTangoWorld.fillThreadInfo -- method is empty!");
-    (void) dat;
-    (void ) a;
-//    char info[32];
-//    sprintf(info, "0x%lx", pthread_self());
-//    dat["worker_thread"] = std::string(info);
-//    sprintf(info, "%p", a);
-//    dat["worker_activity"] = std::string(info);
+    char info[32];
+    sprintf(info, "0x%lx", pthread_self());
+    dat["worker_thread"] = std::string(info);
+    sprintf(info, "%p", a);
+    dat["worker_activity"] = std::string(info);
 }
 
 /*! \brief extracts data from Tango::DeviceData and puts it into the CuData bundle
@@ -854,12 +851,12 @@ bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res,
     {
         const CuData& in = *it;
 
-        if(in.containsStrKey("device") && in.containsStrKey("attribute"))
-            daprops[in["device"].toString()].push_back(in);
-        else if(in.containsStrKey("device") && !in.containsStrKey("attribute")) // device property
-            dprops[in["device"].toString()].push_back(in);
-        else if(in.containsStrKey("class")) // class property
-            cprops[in["class"].toString()].push_back(in);
+        if(in.containsKey(CuXDType::Device) && in.containsKey(CuXDType::Point))
+            daprops[in[CuXDType::Device].toString()].push_back(in);
+        else if(in.containsKey(CuXDType::Device) && !in.containsKey(CuXDType::Point)) // device property
+            dprops[in[CuXDType::Device].toString()].push_back(in);
+        else if(in.containsKey(CuXDType::Class)) // class property
+            cprops[in[CuXDType::Class].toString()].push_back(in);
     }
     Tango::Database *db = getTangoDb(dbhost);
     d->error = false;
@@ -875,11 +872,11 @@ bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res,
             Tango::DbData db_data;
             std::vector<std::string> req_a, req_p; // requested attributes, requested properties
             for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit) {
-                const std::string &attname = (*dit)["attribute"].toString();
+                const std::string &attname = (*dit)[CuXDType::Point].toString();
                 if(find(req_a.begin(), req_a.end(), attname) == req_a.end()) {
                     db_data.push_back(Tango::DbDatum(attname.c_str()));
                     req_a.push_back(attname);
-                    if((*dit).containsStrKey("name"))
+                    if((*dit).containsKey(CuDType::Name))
                         req_p.push_back((*dit)[CuDType::Name].toString());
                 }
             }
@@ -930,7 +927,7 @@ bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res,
                 }
             }
         }
-        res["list"] = names;
+        res[CuDType::Value] = names;
     }
     catch(Tango::DevFailed& e)
     {

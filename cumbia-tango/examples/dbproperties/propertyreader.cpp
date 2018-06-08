@@ -30,23 +30,23 @@ void PropertyReader::get(const char *id, const std::vector<std::string> &props)
         size_t cpos = props[i].find(':');
         if(cnt == 2 && cpos < std::string::npos)
         {
-            CuData devpd("device", props[i].substr(0, cpos));
+            CuData devpd(CuXDType::Device, props[i].substr(0, cpos));
             devpd[CuDType::Name] = props[i].substr(cpos + 1, std::string::npos);
             in_data.push_back(devpd);
         }
         else if(cnt == 3) {
-            CuData devpd("device", props[i].substr(0, props[i].rfind('/')));
+            CuData devpd(CuXDType::Device, props[i].substr(0, props[i].rfind('/')));
             if(cpos < std::string::npos) {
-                devpd["attribute"] = props[i].substr(props[i].rfind('/') + 1, cpos - props[i].rfind('/') -1);
+                devpd[CuXDType::Point] = props[i].substr(props[i].rfind('/') + 1, cpos - props[i].rfind('/') -1);
                 devpd[CuDType::Name] = props[i].substr(cpos + 1, std::string::npos);
             }
             else
-                devpd["attribute"] = props[i].substr(props[i].rfind('/') + 1, cpos); // cpos == npos
+                devpd[CuXDType::Point] = props[i].substr(props[i].rfind('/') + 1, cpos); // cpos == npos
 
             in_data.push_back(devpd);
         }
         else if(cnt == 0 && cpos < std::string::npos) { // class
-            CuData cld("class", props[i].substr(0, cpos));
+            CuData cld(CuDType::Class, props[i].substr(0, cpos));
             cld[CuDType::Name] = props[i].substr(cpos + 1);
             in_data.push_back(cld);
         }
@@ -69,10 +69,10 @@ void PropertyReader::onUpdate(const CuData &data)
 {
     pr_thread();
     if(data[CuDType::Err].toBool())
-        printf("\n\e[1;31m** \e[0m error fetching properties: \e[1;31m%s\e[0m\n", data[CuDType::Message].toString().c_str());
+        perr("PropertyReader.onUpdate: error fetching properties: %s", data[CuDType::Message].toString().c_str());
     else
         printf("\n\e[1;32m** %45s     VALUES\e[0m\n", "PROPERTIES");
-    std::vector<std::string> plist = data["list"].toStringVector();
+    std::vector<std::string> plist = data[CuDType::Value].toStringVector();
     for(size_t i = 0; i < plist.size(); i++)
         printf("\e[1;32m--\e[0m %55s \e[1;33m--> \e[0m%s\n", plist[i].c_str(), data[plist[i]].toString().c_str());
     exit();

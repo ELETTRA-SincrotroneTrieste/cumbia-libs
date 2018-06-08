@@ -1,6 +1,5 @@
 #include "cudata.h"
 #include "cumacros.h"
-#include "cudatatypes_ex.h"
 #include <string>
 #include <sys/time.h>
 #include <unordered_map>
@@ -378,9 +377,13 @@ std::string CuData::toString() const
     }
 
     std::set<size_t>::const_iterator si;
-    r += ("*int-keys* { ");
+    std::map<std::string, std::string> valmap; // want a lexicographically ordered print of key name/values
     for(si = d->idx_set.begin(); si != d->idx_set.end(); ++si) {
-        r += "[" + dt.keyName(static_cast<CuDType::Key>(*si)) + ": \"" + operator [](*si).toString() + "\"], ";
+        valmap[dt.keyName(static_cast<CuDType::Key>(*si))] = operator [](*si).toString();
+    }
+    r += ("*int-keys* { ");
+    for(std::map<std::string, std::string>::const_iterator it = valmap.begin(); it != valmap.end(); ++it) {
+        r += "[" + it->first + ": \"" + it->second + "\"], ";
     }
     r.replace(r.length() - 2, 2, "");
 
@@ -408,6 +411,7 @@ void CuData::putTimestamp()
 
 void CuData::mCopyData(const CuData& other)
 {
+    pyellowtmp("mCopyData: %s", other.toString().c_str());
     std::map<std::string, CuVariant>::const_iterator it;
     if(d->datamap)
         d->datamap->clear();

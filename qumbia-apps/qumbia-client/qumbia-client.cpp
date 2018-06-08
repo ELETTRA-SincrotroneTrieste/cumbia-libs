@@ -150,7 +150,7 @@ void QumbiaClient::configure(const CuData &d)
             data_dim = d[CuXDType::DimX].toLongInt();
             if(data_dim <= 0)
                 data_dim = d[CuDType::Value].getSize();
-            if(data_dim <= 0 && d.containsKey("max_dim_x"))
+            if(data_dim <= 0 && d.containsKey(CuXDType::MaxDimX))
                 data_dim = d[CuXDType::MaxDimX].toULongInt();
         }
 

@@ -456,8 +456,8 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
     }
 
     if(!error)
-        msg = da[CuDType::Src].toString() + " [" + da["timestamp_str"].toString() + "] STAT: " + da[CuXDType::Status].toString()
-                + " SEV: " + da["severity"].toString();
+        msg = da[CuDType::Src].toString() + " [" + da[CuDType::Timestamp_Str].toString() + "] STAT: " + da[CuXDType::Status].toString()
+                + " SEV: " + da[CuXDType::Status].toString();
     da[CuDType::Err] = error;
     da[CuDType::Message] = msg;
 }
@@ -475,21 +475,12 @@ std::string CuEpicsWorld::extractException(exception_handler_args excargs, CuDat
 
     da[CuXDType::Status] = std::to_string(excargs.stat);
     s += "\nstatus:\t\t" + da[CuXDType::Status].toString();
-
-    da["op"] = excargs.op;
     s += "\noperation:\t\t" + std::to_string(excargs.op);
 
     if(excargs.pFile)
-    {
-        da["file"] = std::string(excargs.pFile);
-        da["file_lineno"] = excargs.lineNo;
-        s += "\nfile:\t\t\"" + da["file"].toString() + "\" @line " + std::to_string(excargs.lineNo);
-    }
+        s += "\nfile:\t\t\"" + std::string(excargs.pFile) + "\" @line " + std::to_string(excargs.lineNo);
     if(excargs.ctx)
-    {
-        da[CuXDType::Context] = std::string(excargs.ctx);
-        s += "\ncontext:\t\t" + da[CuXDType::Context].toString();
-    }
+        s += "\ncontext:\t\t" + std::string(excargs.ctx);
     return s;
 }
 
@@ -623,9 +614,9 @@ void CuEpicsWorld::putTimestamp(void* ep_data, CuData &dt) const
     epicsTimeToTimeval(&tv, &ts);
     tsms = tv.tv_sec * 1000.0 + ts.nsec / 1e6;
     dt[CuDType::Time_ms] = tsms;
-    dt[CuXDType::Timestamp_ns] = static_cast<double>(tv.tv_sec) +  static_cast<double>(ts.nsec) * 1e-9;
+    dt[CuDType::Time_ns] = static_cast<double>(tv.tv_sec) +  static_cast<double>(ts.nsec) * 1e-9;
     epicsTimeToStrftime(timeText, TIMETEXTLEN, "%Y-%m-%d %H:%M:%S", &ts);
-    dt["timestamp_str"] = timeText;
+    dt[CuDType::Timestamp_Str] = timeText;
 
     int stat = (static_cast<T *>(ep_data)->status);
     if((stat) >= 0 && (stat) <= (signed)lastEpicsAlarmCond)
@@ -635,9 +626,9 @@ void CuEpicsWorld::putTimestamp(void* ep_data, CuData &dt) const
 
     int sev = (static_cast<T *>(ep_data)->severity);
     if((sev) >= 0 && (sev) <= (signed)lastEpicsAlarmSev)
-        dt["severity"] = std::string(epicsAlarmSeverityStrings[sev]);
+        dt[CuXDType::Status] = std::string(epicsAlarmSeverityStrings[sev]);
     else
-        dt["severity"] = "?";
+        dt[CuXDType::Status] = "?";
 
 }
 
@@ -648,8 +639,8 @@ void CuEpicsWorld::putCtrlData(void *ep_data, CuData &dt) const
     dt[CuXDType::Max] = static_cast<T *>(ep_data)->upper_disp_limit;
     dt[CuXDType::Min] = static_cast<T *>(ep_data)->lower_disp_limit;
     dt[CuXDType::UpperAlarmLimit] = static_cast<T *>(ep_data)->upper_alarm_limit;
-    dt[CuXDType::UppeWarningLimit] = static_cast<T *>(ep_data)->upper_warning_limit;
-    dt[CuXDType::UpperWarningLimit] = static_cast<T *>(ep_data)->lower_warning_limit;
+    dt[CuXDType::UpperWarningLimit] = static_cast<T *>(ep_data)->upper_warning_limit;
+    dt[CuXDType::LowerWarningLimit] = static_cast<T *>(ep_data)->lower_warning_limit;
     dt[CuXDType::LowerAlarmLimit] = static_cast<T *>(ep_data)->lower_alarm_limit;
     dt[CuXDType::UpperCtrlLimit] = static_cast<T *>(ep_data)->upper_ctrl_limit;
     dt[CuXDType::LowerCtrlLimit] = static_cast<T *>(ep_data)->lower_ctrl_limit;

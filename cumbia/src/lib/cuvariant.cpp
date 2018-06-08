@@ -253,6 +253,9 @@ CuVariant::CuVariant(void *ptr)
 {
     d = new CuVariantPrivate();
     init(Scalar, VoidPtr);
+    d->mIsNull = false;
+    d->mIsNull = true;
+    d->mSize = 1;
     d->val = ptr;
 }
 
@@ -1257,6 +1260,8 @@ std::string CuVariant::toString(bool *ok, const char *format) const
             snprintf(converted, MAXLEN, "%f", static_cast<float *>(d->val)[i]);
         else if(d->type == Boolean)
             static_cast<bool *>(d->val)[i] ? sprintf(converted, "true") : sprintf(converted, "false");
+        else if(d->type == VoidPtr)
+            snprintf(converted, MAXLEN, "%p", d->val);
         else
         {
             success = false;

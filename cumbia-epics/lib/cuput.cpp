@@ -7,6 +7,7 @@
 
 #include <cudatalistener.h>
 #include <cuserviceprovider.h>
+#include <cudatatypes_ex.h>
 #include <cumacros.h>
 #include <list>
 #include <cuthreadfactoryimpl_i.h>
@@ -79,7 +80,7 @@ void CuPut::onResult(const CuData &data)
 
 CuData CuPut::getToken() const
 {
-    CuData da("source", d->ep_src.getName());
+    CuData da(CuDType::Src, d->ep_src.getName());
     da[CuDType::Type] = std::string("writer");
     return da;
 }
@@ -118,11 +119,11 @@ void CuPut::start()
     CuEpCAService *df =
             static_cast<CuEpCAService *>(d->cumbia_ep->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType)));
-    CuData at("src", d->ep_src.getName()); /* activity token */
-    at[CuXDType::Pv = d->ep_src.getPV();
+    CuData at(CuDType::Src, d->ep_src.getName()); /* activity token */
+    at[CuXDType::Pv] = d->ep_src.getPV();
     at[CuDType::Activity] = "writer";
     at[CuXDType::InputValue] = d->write_val;
-    CuData tt("pv", d->ep_src.getPV()); /* thread token */
+    CuData tt(CuXDType::Pv, d->ep_src.getPV()); /* thread token */
     d->activity = new CuPutActivity(at, df);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_ep->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_ep->getThreadFactoryImpl());
