@@ -1,0 +1,4 @@
+#ifndef CUDATATYPES_H
+#define CUDATATYPES_H
+
+#endif // CUDATATYPES_H
