@@ -252,7 +252,7 @@ void CuPollingActivity::execute()
     //    assert(d->tdev != NULL);
     //    assert(d->my_thread_id == pthread_self());
 
-
+    pbgreentmp("CuPollingActivity.execute: cupoller+nomap+dataptr");
     bool cmd_success = true;
     CuTangoWorld tangoworld;
     std::vector<CuData> *results = new std::vector<CuData>();
@@ -272,25 +272,25 @@ void CuPollingActivity::execute()
         std::vector<std::string> argins = tsrc.getArgs();
         bool is_command = tsrc.getType() == TSource::Cmd;
         void *action_ptr = action_data.action;
-        if(is_command) { // write into results[i]
-            results[i] = getToken();
-            results[i][CuDType::Mode] = "polled";
-            results[i][CuXDType::Period] = getTimeout();
-            results[i][CuDType::Src] = tsrc.getName();
-            results[i][CuXDType::Point] = point;
-            results[i][CuXDType::Device] = tsrc.getDeviceName();
-            results[i][CuXDType::Ptr] = CuVariant(action_ptr);
+        if(is_command) { // write into (*results)[i]
+            (*results)[i] = getToken();
+            (*results)[i][CuDType::Mode] = "polled";
+            (*results)[i][CuXDType::Period] = getTimeout();
+            (*results)[i][CuDType::Src] = tsrc.getName();
+            (*results)[i][CuXDType::Point] = point;
+            (*results)[i][CuXDType::Device] = tsrc.getDeviceName();
+            (*results)[i][CuXDType::Ptr] = CuVariant(action_ptr);
             //        pgreen2tmp("CuPollingActivity.execute: executing for \"%s\" period %d recipient %p source get name %s\n",
             //                   res[CuXDType::Device].toString().c_str(), getTimeout(), action_ptr, tsrc.getName().c_str());
             CmdData& cmd_data = d->din_cache[srcnam];
             if(dev && cmd_data.is_empty) {
                 //            printf("- get_command info....\n");
-                cmd_success = tangoworld.get_command_info(d->tdev->getDevice(), point, results[i]);
+                cmd_success = tangoworld.get_command_info(d->tdev->getDevice(), point, (*results)[i]);
                 //            printf("- got_command info....\n");
                 //            printf("1. got command_info cmd_success %d\n", cmd_success);
                 if(cmd_success) {
                     //                printf("- allocating CmdData and inserting into cache....\n");
-                    d->din_cache[srcnam] = CmdData(results[i], tangoworld.toDeviceData(argins, results[i]), argins);
+                    d->din_cache[srcnam] = CmdData((*results)[i], tangoworld.toDeviceData(argins, (*results)[i]), argins);
                     //                printf("- done allocating  and inserted cmddata is it there ? empty %d\n", d->din_cache[srcnam].is_empty);
 
                 }
@@ -299,14 +299,14 @@ void CuPollingActivity::execute()
                 // there is no multi-command_inout version
                 CmdData& cmdd = d->din_cache[srcnam];
                 bool has_argout = cmdd.getCmdInfoRef()[CuXDType::OutType].toLongInt() != Tango::DEV_VOID;
-                results[i][CuDType::Err] = !cmd_success;
+                (*results)[i][CuDType::Err] = !cmd_success;
                 if(!cmd_success) {
-                    results[i][CuDType::Message] = std::string("CuPollingActivity.execute: get_command_info failed for \"") + tsrc.getName() + std::string("\"");
+                    (*results)[i][CuDType::Message] = std::string("CuPollingActivity.execute: get_command_info failed for \"") + tsrc.getName() + std::string("\"");
                     d->errCnt++;
                 }
                 else {
                     //                printf("2. calling cmd_inout input res %s\n", res.toString().c_str());
-                    cmd_success = tangoworld.cmd_inout(dev, point, cmdd.din, has_argout, results[i]);
+                    cmd_success = tangoworld.cmd_inout(dev, point, cmdd.din, has_argout, (*results)[i]);
                 }
                 att_offset++;
             }

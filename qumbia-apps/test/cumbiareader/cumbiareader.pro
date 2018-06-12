@@ -38,7 +38,7 @@ HEADERS += src/cumbiareader.h \
 #
 INCLUDEPATH += ui src
 
-TARGET   = bin/cumbiareader
+TARGET   = bin/cmbr_nomap_dataptr
 
 # unix:LIBS += -L. -lmylib
 

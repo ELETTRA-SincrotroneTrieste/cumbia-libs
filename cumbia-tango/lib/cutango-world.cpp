@@ -600,7 +600,7 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
 
 bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                              std::vector<CuData>& att_datalist,
-                             std::vector<CuData> &reslist,
+                             std::vector<CuData> *reslist,
                              int results_offset)
 {
     d->error = false;
@@ -609,7 +609,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
     std::vector<Tango::DeviceAttribute> *devattr = NULL;
     std::vector<std::string> attrs;
     for(size_t i = 0; i < att_datalist.size(); i++) // fill the list of attributes as string vector
-        attrs.push_back(att_datalist[i]["point"].toString());
+        attrs.push_back(att_datalist[i][CuXDType::Point].toString());
     try
     {
         devattr = dev->read_attributes(attrs);
@@ -618,9 +618,9 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
             p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
             extractData(p_da, (*reslist)[results_offset]);
-            (*reslist)[results_offset]["err"] = d->error;
-            (*reslist)[results_offset]["msg"] = d->message;
-            (*reslist)[results_offset]["success_color"] = d->t_world_conf.successColor(!d->error);
+            (*reslist)[results_offset][CuDType::Err] = d->error;
+            (*reslist)[results_offset][CuDType::Message] = d->message;
+            (*reslist)[results_offset][CuXDType::SuccessColor] = d->t_world_conf.successColor(!d->error);
             results_offset++;
         }
         delete devattr;
