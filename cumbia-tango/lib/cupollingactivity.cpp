@@ -251,7 +251,7 @@ void CuPollingActivity::execute()
     //    assert(d->tdev != NULL);
     //    assert(d->my_thread_id == pthread_self());
 
-
+    printf("CuPollingActivity.execute: multiatt_polling_activities+nodataptr\n");
     bool cmd_success = true;
     CuTangoWorld tangoworld;
     std::vector<CuData> results;
