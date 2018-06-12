@@ -17,6 +17,7 @@
 #include <reader.h>
 #include <QCoreApplication>
 #include <QDateTime>
+#include <QTimer>
 
 Cumbiareader::Cumbiareader(CumbiaPool *cumbia_pool, QWidget *parent) :
     QObject(parent)
@@ -62,6 +63,17 @@ Cumbiareader::Cumbiareader(CumbiaPool *cumbia_pool, QWidget *parent) :
                 m_truncate = t.toInt();
             else
                 m_truncate = 12;
+        }
+        else if(a.startsWith("-n=")) {
+            QString n(a);
+            n.remove("-n=");
+            if(n.toInt(&ok) > 0 && ok) {
+                QTimer *t = new QTimer(this);
+                t->setInterval(n.toInt());
+                connect(t, SIGNAL(timeout()), qApp, SLOT(quit()));
+                t->start();
+            }
+
         }
         else
             srcs.append(a);

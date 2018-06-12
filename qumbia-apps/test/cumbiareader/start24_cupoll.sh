@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LD_LIBRARY_PATH=/usr/local/cumbia-cupoller:$LD_LIBRARY_PATH /usr/local/bin/cumbiareader-cupoller "inj/diagnostics/rtbpm_inj.01/VaPickup" \
+LD_LIBRARY_PATH=/usr/local/cumbia-cupoller-bigcopy:$LD_LIBRARY_PATH /usr/local/bin/cumbiareader-cupoller-bigcopy "inj/diagnostics/rtbpm_inj.01/VaPickup" \
 "inj/diagnostics/rtbpm_inj.01/VbPickup" \
 "inj/diagnostics/rtbpm_inj.01->GetHorPos(0,1000)" \
 "inj/diagnostics/rtbpm_inj.01->GetVerPos(0,1000)" \
