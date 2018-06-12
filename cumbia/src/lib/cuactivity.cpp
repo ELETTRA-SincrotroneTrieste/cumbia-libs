@@ -158,7 +158,7 @@ void CuActivity::publishResult(const CuData &data)
         thread->publishResult(this, data);
 }
 
-void CuActivity::publishResult(const std::vector<CuData> &datalist)
+void CuActivity::publishResult(const std::vector<CuData> *datalist)
 {
     CuThreadInterface *thread = d->activityManager->getThread(this);
     if(thread) /* may be removed while activity is in execute() */

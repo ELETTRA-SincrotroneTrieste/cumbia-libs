@@ -68,24 +68,16 @@ class CuThreadAutoDestroyEvent : public CuEventI {
 class CuResultEventPrivate
 {
 public:
-    CuResultEventPrivate(const CuData &d) : data(d)
-    {
-        is_list = false;
-        step = total = 0;
-        type = CuEventI::Result;
-    }
+    CuResultEventPrivate(const CuData &d);
 
-    CuResultEventPrivate(const std::vector<CuData> &dli) : data_list(dli)
-    {
-        step = total = 0;
-        type = CuEventI::Result;
-        is_list = true;
-    }
+    CuResultEventPrivate(const std::vector<CuData> *dli);
+
+    ~CuResultEventPrivate();
 
     CuEventI::CuEventType type;
     const CuData data;
     const CuActivity *activity;
-    const std::vector<CuData> data_list;
+    const std::vector<CuData>* data_list;
     int step, total;
     bool is_list;
 };
@@ -107,7 +99,7 @@ class CuResultEvent : public CuEventI
 public:
     CuResultEvent(const CuActivity* sender, const CuData &data, CuEventType t = Result);
 
-    CuResultEvent(const CuActivity* sender, const std::vector<CuData> &data_list, CuEventType t = Result);
+    CuResultEvent(const CuActivity* sender, const std::vector<CuData> *data_list, CuEventType t = Result);
 
     CuResultEvent(const CuActivity* sender, int step, int total, const CuData &data);
 
@@ -123,7 +115,7 @@ public:
     const CuData getData() const;
     const CuActivity *getActivity() const;
     bool isList() const;
-    const std::vector<CuData> &getDataList() const;
+    const std::vector<CuData> *getDataList() const;
 
 protected:
     CuResultEventPrivate *d_p;

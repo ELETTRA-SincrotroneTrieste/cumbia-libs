@@ -252,14 +252,13 @@ void CuPollingActivity::execute()
     //    assert(d->tdev != NULL);
     //    assert(d->my_thread_id == pthread_self());
 
-    printf("cupollingactivity.execute in\n");
 
     bool cmd_success = true;
     CuTangoWorld tangoworld;
-    std::vector<CuData> results;
+    std::vector<CuData> *results = new std::vector<CuData>();
     std::vector<CuData> attdatalist;
     Tango::DeviceProxy *dev = d->tdev->getDevice();
-    results.resize(d->actions_map.size());
+    results->resize(d->actions_map.size());
     attdatalist.resize(d->actions_map.size());
     size_t i = 0;
     size_t att_idx = 0;
