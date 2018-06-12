@@ -251,7 +251,7 @@ void CuPollingActivity::execute()
     //    assert(d->tdev != NULL);
     //    assert(d->my_thread_id == pthread_self());
 
-
+    printf("\e[1;36mCuPollingActivity.execute: cupoller+dataptr");
     bool cmd_success = true;
     CuTangoWorld tangoworld;
     std::vector<CuData> *results = new std::vector<CuData>();
