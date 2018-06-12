@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LD_LIBRARY_PATH=/usr/local/cupoller+nomap+dataptr ./bin/cmbr_nomap_dataptr  "inj/diagnostics/rtbpm_inj.01/VaPickup" \
+LD_LIBRARY_PATH=/usr/local/cupoller+nomap+dataptr:$LD_LIBRARY_PATH ./bin/cmbr_nomap_dataptr  "inj/diagnostics/rtbpm_inj.01/VaPickup" \
 "inj/diagnostics/rtbpm_inj.01/VbPickup" \
 "inj/diagnostics/rtbpm_inj.01->GetHorPos(0,1000)" \
 "inj/diagnostics/rtbpm_inj.01->GetVerPos(0,1000)" \
