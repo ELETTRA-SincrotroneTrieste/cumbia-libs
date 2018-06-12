@@ -316,6 +316,7 @@ void CuData::putTimestamp()
 
 void CuData::mCopyData(const CuData& other)
 {
+//    printf("\e[1;33mCopyData %s\e[0m\n", other.toString().c_str());
     std::map<std::string, CuVariant>::const_iterator it;
     for (it = other.d->datamap.begin(); it != other.d->datamap.end(); ++it)
         d->datamap[it->first] = other.d->datamap[it->first];

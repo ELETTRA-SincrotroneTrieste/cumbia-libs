@@ -199,8 +199,10 @@ void CuThread::onEventPosted(CuEventI *event)
             CuThreadListener *tl = threadListeners.at(i);
             if(re->getType() == CuEventI::Progress)
                 tl->onProgress(re->getStep(), re->getTotal(), re->getData());
-            else if(re->isList())
-                tl->onResult(re->getDataList());
+            else if(re->isList()) {
+                const std::vector<CuData> &vd_ref = *re->getDataList();
+                tl->onResult(vd_ref);
+            }
             else
                 tl->onResult(re->getData());
         }
@@ -249,7 +251,7 @@ void CuThread::publishResult(const CuActivity* a,  const CuData &da)
     d->eventBridge->postEvent(new CuResultEvent(a, da));
 }
 
-void CuThread::publishResult(const CuActivity *a, const std::vector<CuData> &dalist)
+void CuThread::publishResult(const CuActivity *a, const std::vector<CuData> *dalist)
 {
     d->eventBridge->postEvent(new CuResultEvent(a, dalist));
 }

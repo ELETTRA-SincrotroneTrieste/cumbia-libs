@@ -599,7 +599,7 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
 
 bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                              std::vector<CuData>& att_datalist,
-                             std::vector<CuData> &reslist,
+                             std::vector<CuData> *reslist,
                              int results_offset)
 {
     d->error = false;
@@ -613,15 +613,16 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
     {
         devattr = dev->read_attributes(attrs);
         for(size_t i = 0; i < devattr->size(); i++) {
-            reslist[results_offset] = att_datalist[i];
+            (*reslist)[results_offset] = std::move(att_datalist[i]);
             p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
-            extractData(p_da, reslist[results_offset]);
-            reslist[results_offset]["err"] = d->error;
-            reslist[results_offset]["msg"] = d->message;
-            reslist[results_offset]["success_color"] = d->t_world_conf.successColor(!d->error);
+            extractData(p_da, (*reslist)[results_offset]);
+            (*reslist)[results_offset]["err"] = d->error;
+            (*reslist)[results_offset]["msg"] = d->message;
+            (*reslist)[results_offset]["success_color"] = d->t_world_conf.successColor(!d->error);
             results_offset++;
         }
+        delete devattr;
     }
     catch(Tango::DevFailed &e)
     {
