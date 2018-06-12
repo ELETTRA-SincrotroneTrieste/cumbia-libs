@@ -1,5 +1,3 @@
-device
-examples/server
 lib
 ../cumbia/src/lib
 ../cumbia/src/lib/threads
