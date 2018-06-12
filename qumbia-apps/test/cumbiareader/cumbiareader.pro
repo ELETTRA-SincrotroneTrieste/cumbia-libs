@@ -38,7 +38,7 @@ HEADERS += src/cumbiareader.h \
 #
 INCLUDEPATH += ui src
 
-TARGET   = bin/cumbiareader
+TARGET   = bin/cumr_mul_noptr
 
 # unix:LIBS += -L. -lmylib
 
