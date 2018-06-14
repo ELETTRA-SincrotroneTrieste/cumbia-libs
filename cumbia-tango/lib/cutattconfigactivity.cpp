@@ -100,6 +100,9 @@ void CuTAttConfigActivity::execute()
         if(dev && cmd)
         {
             success = utils.get_command_info(dev, point, at);
+            if(success) {
+                success = utils.cmd_inout(dev, point, at);
+            }
         }
         else if(dev)
         {

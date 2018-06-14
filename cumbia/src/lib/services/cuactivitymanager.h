@@ -29,11 +29,13 @@ public:
 
     void removeConnections(CuThreadInterface *t);
 
+    void removeConnection(CuThreadListener *l);
+
     CuActivity *findMatching(const CuData &token) ;
 
-    CuThreadInterface *getThread(CuActivity *activity);
+    CuThreadInterface *getThread(CuActivity *activity) ;
 
-    CuThreadInterface* getThread(const CuThreadListener *l);
+    CuThreadInterface* getThread(const CuThreadListener *l) ;
 
     bool isRegistered(const CuActivity *a);
 

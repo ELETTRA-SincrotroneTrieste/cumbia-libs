@@ -5,6 +5,7 @@
 #include <cutcontrolsreader.h>
 #include <cutcontrolswriter.h>
 #include <cumacros.h>
+#include <cucontext.h>
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
 #include <qulabel.h>
@@ -108,14 +109,26 @@ CreateDelete::CreateDelete(CumbiaPool *cumbia_pool, QWidget *parent) :
         gloc->addWidget(sbdelcnt, 1, 1, 1, 1);
         QPushButton *pbmultidel = new QPushButton("Delete Multiple", this);
         connect(pbmultidel, SIGNAL(clicked()), this, SLOT(deleteMulti()));
-        gloc->addWidget(pbmultidel,1, 2, 1, 1);
+        gloc->addWidget(pbmultidel,1, 2, 1, 3);
 
+        auto_delete_create_within_millis = -1;
         foreach(QString a, qApp->arguments())
         {
             if(a.contains("--set-unset-cnt="))
                 sbsu->setValue(a.remove("--set-unset-cnt=").toInt());
             else if(a.contains("--set-nreaders="))
                 sb->setValue(a.remove("--set-nreaders=").toInt());
+            else if(a.contains("--set-stress-create-delete="))
+            {
+                for(int i = 0; i < a.remove("--set-stress-create-delete=").toInt(); i++)
+                {
+                    addReaders();
+                    deleteMulti();
+                }
+            }
+            else if(a.contains("--set-auto-delete-create=")) {
+                auto_delete_create_within_millis = a.remove("--set-auto-delete-create=").toInt();
+            }
         }
         addReaders();
     }
@@ -126,6 +139,15 @@ CreateDelete::CreateDelete(CumbiaPool *cumbia_pool, QWidget *parent) :
         vlo->addWidget(label);
     }
     resize(QSize(300, 200));
+
+    if(auto_delete_create_within_millis > 0) {
+        QTimer *t = new QTimer(this);
+        t->setObjectName("deleteTimer");
+        t->setSingleShot(true);
+        t->setInterval(get_random_timeout());
+        connect(t, SIGNAL(timeout()), this, SLOT(deleteMulti()));
+        t->start();
+    }
 }
 
 CreateDelete::~CreateDelete()
@@ -145,6 +167,14 @@ void CreateDelete::addReaders()
     int count = findChild<QSpinBox*>("sbCreateCnt")->value();
     for(int i = 0; i < count; i++)
         addReader();
+
+    if(auto_delete_create_within_millis > 0) {
+        QTimer *deleteT = findChild<QTimer *>("deleteTimer");
+        if(deleteT) {
+            deleteT->setInterval(get_random_timeout());
+            deleteT->start();
+        }
+    }
 }
 
 void CreateDelete::addReader()
@@ -156,31 +186,46 @@ void CreateDelete::addReader()
         QGridLayout *glo = qobject_cast<QGridLayout *>(gb->layout());
         int rows = gb->findChildren<QuLabel *>().size();
         QuLabel *label = new QuLabel(gb, cu_pool, m_ctrl_factory_pool);
+        label->getContext()->setOptions(CuData("period", 100));
         label->setObjectName("label_" + QString::number(rows));
         glo->addWidget(label, rows, 0, 1, 2);
         QSpinBox *sbsu = findChild<QSpinBox *>("sbSetUnsetCnt");
         for(int i = 1; i < sbsu->value(); i++)
         {
-            printf("\e[1;35m***\e[0m testing setSource / unsetSource n.%d label \e[1;33m%p (as data listener %p)\e[0m\n", i, label,
-                   static_cast<CuDataListener *>(label));
+//            printf("\e[1;35m***\e[0m testing setSource / unsetSource n.%d label \e[1;33m%p (as data listener %p)\e[0m\n", i, label,
+//                   static_cast<CuDataListener *>(label));
             label->setSource(s);
             label->unsetSource();
             label->unsetSource();
             label->unsetSource();
             label->unsetSource();
         }
-        printf("\e[1;33m- setSource on label %p\e[0m\n", label);
         label->setSource(s);
         QPushButton *pb  = new QPushButton("Disconnect", gb);
         pb->setObjectName("pb_" + QString::number(rows));
         pb->setToolTip("Disconnect " + label->objectName());
         connect(pb, SIGNAL(clicked()), this, SLOT(disconnectSrc()));
         glo->addWidget(pb, rows, 3, 1, 1);
+
         QPushButton *pbd  = new QPushButton("Delete", gb);
         pbd->setToolTip("Delete " + label->objectName());
         pbd->setObjectName("pbdel_" + QString::number(rows));
         glo->addWidget(pbd, rows, 4, 1, 1);
         connect(pbd, SIGNAL(clicked()), this, SLOT(deleteReader()));
+
+        QSpinBox *sbperiod = new QSpinBox(this);
+        sbperiod->setMinimum(5);
+        sbperiod->setMaximum(10000);
+        sbperiod->setValue(1000);
+        sbperiod->setSingleStep(100);
+        sbperiod->setObjectName("sbperiod_" + QString::number(rows));
+        glo->addWidget(sbperiod, rows, 5, 1, 1);
+
+        QPushButton *pbperiod  = new QPushButton("Period", gb);
+        pbperiod->setToolTip("Change polling period for " + label->objectName());
+        pbperiod->setObjectName("pbperiod_" + QString::number(rows));
+        glo->addWidget(pbperiod, rows, 6, 1, 1);
+        connect(pbperiod, SIGNAL(clicked()), this, SLOT(setPeriod()));
 
         foreach(QWidget *w, gb->findChildren<QWidget*>())
             w->setProperty("arg", QString::number(i));
@@ -224,11 +269,37 @@ void CreateDelete::deleteMulti()
                 delete l;
                 delete gb->findChild<QPushButton *>("pbdel_" + id);
                 delete gb->findChild<QPushButton *>("pb_" + id);
+                delete gb->findChild<QSpinBox *>("sbperiod_" + id);
+                delete gb->findChild<QPushButton *>("pbperiod_" + id);
             }
             r++;
         }
 
     }
+    if(auto_delete_create_within_millis > 0) {
+        QTimer *recreateT = findChild<QTimer *>("recreateTimer");
+        if(!recreateT) {
+            recreateT = new QTimer(this);
+            recreateT->setSingleShot(true);
+            recreateT->setObjectName("recreateTimer");
+            connect(recreateT, SIGNAL(timeout()), this, SLOT(addReaders()));
+        }
+        else {
+            recreateT->setInterval(get_random_timeout());
+        }
+        recreateT->start();
+    }
+}
+
+void CreateDelete::setPeriod()
+{
+    QString arg = sender()->property("arg").toString();
+    QGroupBox *gb = findChild<QGroupBox *>("gbreaders_" + arg);
+    QString id = sender()->objectName().remove("pbperiod_");
+    QSpinBox *sb = gb->findChild<QSpinBox *>("sbperiod_" + id);
+    QuLabel *l = gb->findChild<QuLabel *>("label_" + id);
+    qDebug()  << __FUNCTION__ << "changing period of " + l->source() + " to " + QString::number(sb->value()) + "ms";
+    l->getContext()->sendData(CuData("period", sb->value()));
 }
 
 void CreateDelete::deleteReader(const QString& row, const QString& gb_arg)
@@ -238,6 +309,8 @@ void CreateDelete::deleteReader(const QString& row, const QString& gb_arg)
     QuLabel *l = gb->findChild<QuLabel *>("label_" + row);
     delete gb->findChild<QPushButton *>("pb_" + row);
     delete gb->findChild<QPushButton *>("pbdel_" + row);
+    delete gb->findChild<QSpinBox *>("sbperiod_" + row);
+    delete gb->findChild<QPushButton *>("pbperiod_" + row);
     delete l;
 }
 
@@ -248,4 +321,12 @@ QStringList CreateDelete::getDevList() const
         if(!qApp->arguments().at(i).startsWith("--set"))
             dl << qApp->arguments().at(i);
     return dl;
+}
+
+int CreateDelete::get_random_timeout() const
+{
+    time_t tp;
+    time(&tp);
+    srand(tp);
+    return rand() % 500;
 }

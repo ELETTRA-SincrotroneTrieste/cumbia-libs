@@ -73,6 +73,8 @@ public:
     void unregisterActivity(CuActivity *l);
     void publishProgress(const CuActivity *activity, int step, int total, const CuData &data);
     void publishResult(const CuActivity *activity, const CuData &data);
+    void publishResult(const CuActivity *activity, const std::vector<CuData> *data_list);
+
     void publishExitEvent(CuActivity *a);
     bool isEquivalent(const CuData &other_thread_token) const;
     CuData getToken() const;

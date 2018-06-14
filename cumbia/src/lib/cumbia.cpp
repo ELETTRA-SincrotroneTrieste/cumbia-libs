@@ -200,8 +200,9 @@ void Cumbia::unregisterActivity(CuActivity *activity)
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     CuThreadInterface *thread = static_cast<CuThreadInterface *>(activityManager->getThread(activity));
     /* CuActivityManager.removeConnection is invoked by the thread in order to ensure all scheduled events are processed */
-    if(thread)
+    if(thread) {
         thread->unregisterActivity(activity);
+    }
 }
 
 /** \brief Finds an activity with the given token.

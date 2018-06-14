@@ -94,7 +94,7 @@ else:packagesExist(Qt5Qwt6){
     warning("Qwt: QWT_CONFIG     += QwtPkgConfig in qwtconfig.pri qwt project configuration file")
 }
 
-DEFINES += CUMBIA_PRINTINFO
+DEFINES += CUMBIA_DEBUG_OUTPUT
 
 VERSION_HEX = 0x000001
 VERSION = 0.0.1

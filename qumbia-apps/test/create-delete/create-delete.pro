@@ -6,7 +6,7 @@ TEMPLATE = app
 
 QT += core gui widgets
 
-#CONFIG += debug
+CONFIG += debug
 
 DEFINES -= QT_NO_DEBUG_OUTPUT
 

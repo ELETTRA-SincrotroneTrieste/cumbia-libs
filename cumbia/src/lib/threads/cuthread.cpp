@@ -88,7 +88,7 @@ CuThread::CuThread(const CuData &token,
  */
 CuThread::~CuThread()
 {
-    pdelete("~CuThread %p", this);
+    predtmp("~CuThread %p", this);
     if(d->thread)
     {
         perr("CuThread: thread destroyed while still running!\e[0m\n");
@@ -186,7 +186,7 @@ void CuThread::unregisterActivity(CuActivity *l)
  */
 void CuThread::onEventPosted(CuEventI *event)
 {
-//    pbblue("CuThread.onEventPosted: thread (should be main!) 0x%lx event type %d\n", pthread_self(), event->getType());
+    //    pbblue("CuThread.onEventPosted: thread (should be main!) 0x%lx event type %d\n", pthread_self(), event->getType());
     CuActivityManager *activity_manager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     const CuEventI::CuEventType ty = event->getType();
     if(ty == CuEventI::Result || ty == CuEventI::Progress)
@@ -197,13 +197,20 @@ void CuThread::onEventPosted(CuEventI *event)
         for(size_t i = 0; i < threadListeners.size(); i++)
         {
             CuThreadListener *tl = threadListeners.at(i);
-            const CuData& data = re->getData();
             if(re->getType() == CuEventI::Progress)
-                tl->onProgress(re->getStep(), re->getTotal(), data);
-            else
-                tl->onResult(data);
+                tl->onProgress(re->getStep(), re->getTotal(), re->getData());
+            else if(re->isList()) {
+                const std::vector<CuData> &vd_ref = *re->getDataList();
+//                printf("\e[1;33mCuThread %p onEventPosted (cudata list version): post to CuThreadListener %p\e[0m\n", this,  tl);
+                tl->onResult(vd_ref);
+            }
+            else {
+//                printf("\e[1;33mCuThread %p onEventPosted (single data version): post to CuThreadListener %p data %s\e[0m\n", this,  tl, re->getData().toString().c_str());
+                tl->onResult(re->getData());
+            }
         }
     }
+
     else if(ty == CuEventI::CuActivityExitEvent)
     {
         pbblue("CuThread.onEventPosted: thread (should be main!) 0x%lx event type %d calling mOnActivityExit\n", pthread_self(), event->getType());
@@ -230,7 +237,7 @@ void CuThread::onEventPosted(CuEventI *event)
  */
 void CuThread::publishProgress(const CuActivity* activity, int step, int total, const CuData &data)
 {
-//    pbblue("CuThread.publishProgress: thread (should be CuThread's!) 0x%lx", pthread_self());
+    //    pbblue("CuThread.publishProgress: thread (should be CuThread's!) 0x%lx", pthread_self());
     d->eventBridge->postEvent(new CuResultEvent(activity, step, total, data));
 }
 
@@ -243,8 +250,13 @@ void CuThread::publishProgress(const CuActivity* activity, int step, int total, 
  */
 void CuThread::publishResult(const CuActivity* a,  const CuData &da)
 {
-//    pbblue("CuThread.publishResult: thread (should be CuThread's!) 0x%lx data \e[0m%s", pthread_self(), da.toString().c_str());
+    //    pbblue("CuThread.publishResult: thread (should be CuThread's!) 0x%lx data \e[0m%s", pthread_self(), da.toString().c_str());
     d->eventBridge->postEvent(new CuResultEvent(a, da));
+}
+
+void CuThread::publishResult(const CuActivity *a, const std::vector<CuData> *dalist)
+{
+    d->eventBridge->postEvent(new CuResultEvent(a, dalist));
 }
 
 /*! \brief  invoked in CuThread's thread, posts an *activity exit event*
@@ -400,8 +412,9 @@ void CuThread::run()
                 t->resume();
             else if(t && ae->getType() == CuActivityEvent::TimeoutChange)
                 t->setTimeout(static_cast<CuTimeoutChangeEvent *>(ae)->getTimeout());
-            a->event(ae);
-
+            // prevent event delivery to an already deleted action
+            if(d->activity_set.find(a) != d->activity_set.end())
+                a->event(ae);
             delete ae;
         }
         else if(te->getType() == ThreadEvent::ThreadExit) {
@@ -427,7 +440,10 @@ void CuThread::run()
     std::vector<CuActivity *>::iterator i;
     for(i = myActivities.begin(); i != myActivities.end(); ++i)
         mExitActivity(*i, true);
-
+    printf("CuThread.run loop exit removing connections for this thread %p\n", this);
+    am->removeConnections(this);
+    CuThreadService *ts = static_cast<CuThreadService *> (d->serviceProvider->get(CuServices::Thread));
+    ts->removeThread(this);
     // auto destroy when back in foreground thread. bridge: send event from bacgkround to fg
     if(destroy) {
         d->eventBridge->postEvent(new CuThreadAutoDestroyEvent());
@@ -583,8 +599,8 @@ CuActivity *CuThread::mFindActivity(CuTimer *t) const
  */
 void CuThread::postEvent(CuActivity *a, CuActivityEvent *e)
 {
-//    pbblue("CuThread.postEvent: posting event to activity %p type %d. This thread 0x%lx\e[0m (should be Main's!)", a,
-//           e->getType(), pthread_self());
+    //    pbblue("CuThread.postEvent: posting event to activity %p type %d. This thread 0x%lx\e[0m (should be Main's!)", a,
+    //           e->getType(), pthread_self());
 
     ThreadEvent *event = new CuPostEventToActivity(a, e);
     /* need to protect event queue because this method is called from the main thread while
@@ -618,7 +634,7 @@ int CuThread::getActivityTimerPeriod(CuActivity *a) const
 /*! @private */
 void CuThread::onTimeout(CuTimer *sender)
 {
-//    pbblue("CuThread.onTimeout: thread (should be Timer's!) 0x%lx", pthread_self());
+    //    pbblue("CuThread.onTimeout: thread (should be Timer's!) 0x%lx", pthread_self());
     std::map<CuActivity *, CuTimer *>::iterator it;
     for(it = d->timerActivityMap.begin(); it != d->timerActivityMap.end(); ++it)
     {

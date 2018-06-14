@@ -149,3 +149,8 @@ bool CuPut::exiting() const
 {
     return d->exiting;
 }
+
+
+void CuPut::onResult(const std::vector<CuData> &datalist)
+{
+}

@@ -24,6 +24,7 @@ CuDataListener::CuDataListener() {
 bool CuDataListener::invalidate()
 {
     d->invalid = true;
+    return d->invalid;
 }
 
 /*! \brief  set the data listener to *valid*

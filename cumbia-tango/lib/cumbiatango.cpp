@@ -8,6 +8,7 @@
 #include "cuactionfactoryservice.h"
 #include "cudevicefactoryservice.h"
 #include "cutangoactionfactoryi.h"
+#include "cupollingservice.h"
 #include "cutango-world.h"
 #include "cutreader.h"
 
@@ -40,6 +41,7 @@ void CumbiaTango::m_init()
 {
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType), new CuActionFactoryService());
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType), new CuDeviceFactoryService());
+    getServiceProvider()->registerService(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType), new CuPollingService());
 }
 
 CumbiaTango::~CumbiaTango()
@@ -107,8 +109,9 @@ void CumbiaTango::unlinkListener(const string &source, CuTangoActionI::Type t, C
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
     std::vector<CuTangoActionI *> actions = af->find(source, t);
-    for(size_t i = 0; i < actions.size(); i++)
+    for(size_t i = 0; i < actions.size(); i++) {
         actions[i]->removeDataListener(l); /* when no more listeners, a stops itself */
+    }
 }
 
 CuTangoActionI *CumbiaTango::findAction(const std::string &source, CuTangoActionI::Type t) const

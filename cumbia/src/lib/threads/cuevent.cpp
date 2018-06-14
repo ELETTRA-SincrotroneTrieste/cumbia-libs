@@ -1,5 +1,27 @@
 #include "cuevent.h"
 
+CuResultEventPrivate::CuResultEventPrivate(const CuData &d) : data(d), data_list(NULL)
+{
+    is_list = false;
+    step = total = 0;
+    type = CuEventI::Result;
+}
+
+CuResultEventPrivate::CuResultEventPrivate(const std::vector<CuData> *dli) : data_list(dli)
+{
+    step = total = 0;
+    type = CuEventI::Result;
+    is_list = true;
+}
+
+CuResultEventPrivate::~CuResultEventPrivate()
+{
+    if(data_list) {
+//        printf("\e[1;31mdeleting data_list size %ld\e[0m\n", data_list->size());
+        delete data_list;
+    }
+}
+
 
 /*!
  * \brief CuResultEvent::CuResultEvent the class constructor
@@ -10,6 +32,20 @@
 CuResultEvent::CuResultEvent(const CuActivity* sender, const CuData &data, CuEventI::CuEventType t)
 {
     d_p = new CuResultEventPrivate(data);
+    d_p->type = t;
+    d_p->activity = sender;
+}
+
+
+/*!
+ * \brief CuResultEvent::CuResultEvent the class constructor
+ * \param sender the CuActivity that originates the event
+ * \param data_list a vector of data to be delivered
+ * \param t the type of event
+ */
+CuResultEvent::CuResultEvent(const CuActivity* sender, const std::vector<CuData> *data_list, CuEventType t)
+{
+    d_p = new CuResultEventPrivate(data_list);
     d_p->type = t;
     d_p->activity = sender;
 }
@@ -95,6 +131,16 @@ const CuData &CuResultEvent::getData() const
 const CuActivity *CuResultEvent::getActivity() const
 {
     return d_p->activity;
+}
+
+bool CuResultEvent::isList() const
+{
+    return d_p->is_list;
+}
+
+const std::vector<CuData> *CuResultEvent::getDataList() const
+{
+    return d_p->data_list;
 }
 
 /*! \brief an exit event for the sender activity

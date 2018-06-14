@@ -12,7 +12,8 @@
 /*! \brief deletes read data
  *
  * According to the type, the delete operator is called for the
- * stored value
+ * stored value.
+ *
  */
 void CuVariant::delete_rdata()
 {
@@ -237,6 +238,25 @@ CuVariant::CuVariant(const char *s)
     d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Scalar, String);
     from_std_string(std::string(s));
+}
+
+/*! \brief builds a CuVariant storing the void * pointer passed as argument
+ *
+ * @param ptr a generic void * pointer.
+ *
+ * Specific conversion method: CuVariant::toVoidPtr
+ *
+ * \par Note
+ * ptr is not deleted when CuVariant is deleted.
+ */
+CuVariant::CuVariant(void *ptr)
+{
+    d = new CuVariantPrivate();
+    init(Scalar, VoidPtr);
+    d->mSize = 1;
+    d->mIsNull = false;
+    d->mIsValid = true;
+    d->val = ptr;
 }
 
 /*! \brief builds a CuVariant holding the specified vector of double
@@ -477,7 +497,7 @@ bool CuVariant::operator ==(const CuVariant &other) const
     /*
     * enum DataType { TypeInvalid = -1, Short, UShort, Int, UInt,
                     LongInt, LongUInt, Double,
-                    LongDouble, Boolean, String, EndDataTypes };
+                    LongDouble, Boolean, String, VoidPtr, EndDataTypes };
     */
     switch (d->type) {
     case Short:
@@ -513,6 +533,9 @@ bool CuVariant::operator ==(const CuVariant &other) const
             cuprintf(">>> CuVariant::operator ==\e[1;31mWARNING WARNING WARNING   RETURNING FALSE\e[0m\n");
         }
         return false;
+    case VoidPtr:
+        return d->val == other.d->val;
+        break;
     default:
         break;
     }
@@ -577,11 +600,13 @@ void CuVariant::build_from(const CuVariant& other)
     }
     else if(d->type == CuVariant::LongUInt)
     {
-         unsigned long int *uli =  new  unsigned long int[d->mSize];
-
+        unsigned long int *uli =  new unsigned long int[d->mSize];
         for(size_t i = 0; i < d->mSize; i++)
             uli[i] = other.toULongIntP()[i];
         d->val = uli;
+    }
+    else if(d->type == CuVariant::VoidPtr) {
+        d->val = other.d->val;
     }
     else if(d->type == CuVariant::Boolean)
     {
@@ -729,7 +754,15 @@ bool CuVariant::isInteger() const
 bool CuVariant::isFloatingPoint() const
 {
     return d->type == Double || d->type == LongDouble
-        || d->type == Float;
+            || d->type == Float;
+}
+
+/*! \brief returns true if the data stored is a void * pointer
+ *
+ */
+bool CuVariant::isVoidPtr() const
+{
+    return d->type == VoidPtr;
 }
 
 /*
@@ -1238,6 +1271,8 @@ std::string CuVariant::toString(bool *ok, const char *format) const
             snprintf(converted, MAXLEN, "%f", static_cast<float *>(d->val)[i]);
         else if(d->type == Boolean)
             static_cast<bool *>(d->val)[i] ? sprintf(converted, "true") : sprintf(converted, "false");
+        else if(d->type == VoidPtr)
+            snprintf(converted, MAXLEN, "%p", d->val);
         else
         {
             success = false;
@@ -1539,6 +1574,14 @@ char **CuVariant::toCharP() const
     return NULL;
 }
 
+void *CuVariant::toVoidP() const
+{
+    if(d->type == CuVariant::VoidPtr) {
+        return d->val;
+    }
+    return NULL;
+}
+
 /** \brief Change the storage format to Vector
  *
  * modify the CuVariant::DataFormat to vector, so that data can
@@ -1561,7 +1604,7 @@ std::string CuVariant::dataTypeStr(int t) const
     const char *v[] = {
         "TypeInvalid", "Short", "UShort", "Int", "UInt",
         "LongInt", "LongUInt", "Float", "Double",
-        "LongDouble", "Boolean", "String", "EndDataTypes"
+        "LongDouble", "Boolean", "String", "VoidPtr", "EndDataTypes"
     };
     if(t >= 0 && t < EndDataTypes)
         return std::string(v[t]);

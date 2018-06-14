@@ -20,7 +20,7 @@ public:
     CuActivityManager *activityManager;
     bool dispose;
     bool onExit;
-    const CuData token;
+    CuData token;
     int flags, stateFlags;
 };
 
@@ -29,11 +29,13 @@ CuActivity::CuActivity(CuActivityManager *activityManager, const CuData &token)
     d = new CuActivityPrivate(token);
     d->activityManager = activityManager;
     d->flags = d->stateFlags = 0;
+    d->token["ptr"] = CuVariant(static_cast<void *>(this));
 }
 
 CuActivity::CuActivity(const CuData &token)
 {
     d = new CuActivityPrivate(token);
+    d->token["ptr"] = CuVariant(static_cast<void *>(this));
 }
 
 void CuActivity::dispose(bool disposable)
@@ -155,6 +157,13 @@ void CuActivity::publishResult(const CuData &data)
     CuThreadInterface *thread = d->activityManager->getThread(this);
     if(thread) /* may be removed while activity is in execute() */
         thread->publishResult(this, data);
+}
+
+void CuActivity::publishResult(const std::vector<CuData> *datalist)
+{
+    CuThreadInterface *thread = d->activityManager->getThread(this);
+    if(thread) /* may be removed while activity is in execute() */
+        thread->publishResult(this, datalist);
 }
 
 /** \brief Publish a progress from the activity thread (whence the method is called) to the

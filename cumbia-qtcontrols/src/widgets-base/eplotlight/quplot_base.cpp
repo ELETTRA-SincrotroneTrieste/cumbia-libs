@@ -245,7 +245,7 @@ void QuPlotBase::configure(const CuData &da)
     }
     setDefaultBounds(current_def_lb, current_def_ub, QwtPlot::yLeft);
     if(!axes_c->autoscale(QwtPlot::yLeft)) {
-        setAxisScale(QwtPlot::yLeft, lb, ub);
+        setAxisScale(QwtPlot::yLeft, current_def_lb, current_def_ub);
     }
     // if configuration happens after data, need replot
     replot();
@@ -660,6 +660,9 @@ void QuPlotBase::setXAutoscaleMargin(double adj)
 
 /*! \brief add some extra upper bound to the specified axis to optimize replot operations when the
  *         refresh rate is fast.
+ *
+ * @param axisId the axis id, one of QwtPlot::xBottom, QwtPlot::xTop, QwtPlot::yLeft, QwtPlot::yRight
+ * @param e the extra bound to add to the scale, percentage expressed from 0 to 1
  */
 void QuPlotBase::setUpperBoundExtra(int axisId, double e)
 {

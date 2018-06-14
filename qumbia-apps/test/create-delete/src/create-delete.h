@@ -28,6 +28,8 @@ private slots:
 
     void deleteMulti();
 
+    void setPeriod();
+
 private:
 
     void deleteReader(const QString& row, const QString &gb_arg);
@@ -38,6 +40,10 @@ private:
     QuLogImpl m_log_impl;
     CuLog *m_log;
     CuControlsFactoryPool m_ctrl_factory_pool;
+
+    int get_random_timeout() const;
+
+    int auto_delete_create_within_millis;
 
 };
 

@@ -20,6 +20,8 @@ class CuEventLoopListener
 {
 public:
 
+    virtual ~CuEventLoopListener() {}
+
     /*! \brief callback invoked when an event is delivered from the
      *         event loop service
      *

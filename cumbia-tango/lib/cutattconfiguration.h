@@ -20,6 +20,8 @@ public:
 public:
     void onProgress(int, int, const CuData &);
     void onResult(const CuData &data);
+    void onResult(const std::vector<CuData> &datalist);
+
     CuData getToken() const;
 
     // CuTangoActionI interface

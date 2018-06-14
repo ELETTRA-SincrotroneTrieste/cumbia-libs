@@ -74,6 +74,14 @@ void CuTAttConfiguration::onResult(const CuData &data)
     }
 }
 
+/*! \brief unused. Complies with CuThreadListener interface
+ *
+ */
+void CuTAttConfiguration::onResult(const std::vector<CuData> &datalist)
+{
+    (void) datalist;
+}
+
 CuData CuTAttConfiguration::getToken() const
 {
     CuData da("source", d->tsrc.getName());
@@ -136,6 +144,7 @@ void CuTAttConfiguration::start()
     CuData at("src", d->tsrc.getName()); /* activity token */
     at["device"] = d->tsrc.getDeviceName();
     at["point"] = d->tsrc.getPoint();
+    at["argins"] = d->tsrc.getArgs();
     at["activity"] = "attconfig";
     at["is_command"] = d->tsrc.getType() == TSource::Cmd;
 

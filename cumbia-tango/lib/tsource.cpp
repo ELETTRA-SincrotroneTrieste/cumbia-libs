@@ -58,7 +58,8 @@ std::vector<string> TSource::getArgs() const
     std::sregex_token_iterator iter(a.begin(), a.end(), re, -1);
     std::sregex_token_iterator end;
     for ( ; iter != end; ++iter)
-        ret.push_back((*iter));
+        if((*iter).length() > 0)
+            ret.push_back((*iter));
     return ret;
 }
 

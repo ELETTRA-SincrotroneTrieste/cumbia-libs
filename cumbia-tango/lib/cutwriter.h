@@ -2,6 +2,7 @@
 #define CUTWRITER_H
 
 #include <cutangoactioni.h>
+#include <vector>
 
 class CuTWriterPrivate;
 
@@ -17,6 +18,7 @@ public:
 public:
     void onProgress(int step, int total, const CuData &data);
     void onResult(const CuData &data);
+    void onResult(const std::vector<CuData> &datalist);
     CuData getToken() const;
 
     // CuTangoActionI interface
@@ -34,6 +36,7 @@ public:
     void getData(CuData &d_inout) const;
 private:
     CuTWriterPrivate *d;
+
 };
 
 #endif // CUTWRITER_H

@@ -61,6 +61,10 @@ private:
     void m_startEventActivity();
 
     void m_startMonitorActivity();
+
+    // CuThreadListener interface
+public:
+    virtual void onResult(const std::vector<CuData> &datalist);
 };
 
 

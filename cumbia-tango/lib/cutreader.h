@@ -58,6 +58,8 @@ public:
 
     void onResult(const CuData &data);
 
+    void onResult(const std::vector<CuData> &datalist);
+
     CuData getToken() const;
 
     TSource getSource() const;
@@ -97,7 +99,11 @@ private:
 
     void m_startEventActivity();
 
-    void m_startPollingActivity(bool fallback);
+    void m_registerToPoller();
+
+    void m_unregisterFromPoller();
+
+    void m_unregisterEventActivity();
 
 };
 

@@ -16,6 +16,8 @@ class CuEventI;
 class CuThreadsEventBridgeListener
 {
 public:
+    virtual ~CuThreadsEventBridgeListener() {}
+
     /*! \brief callback on the *main thread* containing an event proceeding from
      *         the *background* thread
      *
