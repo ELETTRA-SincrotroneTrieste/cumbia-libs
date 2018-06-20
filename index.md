@@ -1,5 +1,17 @@
 # cumbia library documentation
 
+### Write your own activities
+Concentrate on the task you want to run in the background and use *cumbia* base library to write custom *activities* that will be executed on a separate
+thread. You will receive the progress updates and the results when they are ready. Nevermind thread synchronization issues.
+
+### Connect with the Tango and Epics (and more...) control system software
+Write graphical user interface components and applications communicating with the Tango and Epics control systems. More control system engines can be
+added in the future and plugged into existing cumbia installations and applications.
+
+### Plugins
+*cumbia* libraries provide a set of fundamental capabilities that can be summarized in the concepts above. A set of plugins extends those functions
+and new ones can be added. The core framework remains small and easy to maintain, while the power grows distributed.
+
 ### Installation
 
 To download and install *cumbia*, refer to the instructions in the <a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs">cumbia-libs</a> *README.md*
