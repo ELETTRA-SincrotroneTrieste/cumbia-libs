@@ -106,10 +106,6 @@ If the *TangoTest* device is running, you can immediately try the generic *cumbi
 > cumbia client test/device/1/double_scalar test/device/1/long_scalar
 
 
-### Are you ready?
- 
-Start reading the <a href="html/cumbia/html/index.html">cumbia base library documentation</a> or <a href="https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/qumbiaprojectwizard/html/index.html">writing a new cumbia application</a>.
-
 
 ### Performance
 
@@ -123,4 +119,8 @@ control system and print them on the console), one relying on *qtango* (blue), t
 
 
 
+
+### Are you ready?
+ 
+Start reading the <a href="html/cumbia/html/index.html">cumbia base library documentation</a> or <a href="https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/qumbiaprojectwizard/html/index.html">writing a new cumbia application</a>.
 
