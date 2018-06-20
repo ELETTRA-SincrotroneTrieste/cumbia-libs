@@ -111,3 +111,13 @@ If the *TangoTest* device is running, you can immediately try the generic *cumbi
 Start reading the <a href="html/cumbia/html/index.html">cumbia base library documentation</a> or <a href="https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/qumbiaprojectwizard/html/index.html">writing a new cumbia application</a>.
 
 
+### Performance
+
+*cumbia* can be seen both as an extension and an evolution of the well known and long standing  *qtango* framework. Additionally, it offers a relevant 
+improvement in performance.
+
+![cumbia and qtango performances compared](readers_performance.png)
+
+
+
+
