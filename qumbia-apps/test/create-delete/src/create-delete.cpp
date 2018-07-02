@@ -285,8 +285,8 @@ void CreateDelete::deleteMulti()
             connect(recreateT, SIGNAL(timeout()), this, SLOT(addReaders()));
         }
         else {
-            recreateT->setInterval(get_random_timeout());
         }
+        recreateT->setInterval(get_random_timeout());
         recreateT->start();
     }
 }
@@ -328,5 +328,5 @@ int CreateDelete::get_random_timeout() const
     time_t tp;
     time(&tp);
     srand(tp);
-    return rand() % 500;
+    return rand() % auto_delete_create_within_millis;
 }

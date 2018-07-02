@@ -118,6 +118,12 @@ void CuThread::m_exit(bool auto_destroy)
     }
 }
 
+void CuThread::m_unregisterFromService()
+{
+    CuThreadService *ts = static_cast<CuThreadService *> (d->serviceProvider->get(CuServices::Thread));
+    ts->removeThread(this);
+}
+
 /** \brief Register a new activity on this thread.
  *
  * This is invoked from the main thread.
@@ -219,8 +225,7 @@ void CuThread::onEventPosted(CuEventI *event)
     else if(ty == CuEventI::ThreadAutoDestroy) {
         cuprintf("\e[0;35mCuThread:onEventPosted: auto destroy! joining... ");
         wait();
-        CuThreadService *ts = static_cast<CuThreadService *> (d->serviceProvider->get(CuServices::Thread));
-        ts->removeThread(this);
+        m_unregisterFromService();
         cuprintf("\t [\e[1;32mjoined\e[0m]\n");
         delete this;
     }
@@ -361,13 +366,16 @@ void CuThread::run()
             {
                 qcopy.pop();
             }
-            while(d->eventQueue.empty())
+            int i = 0;
+            while(d->eventQueue.empty()) {
                 d->conditionvar.wait(lk);
+            }
 
             if(d->eventQueue.empty())
             {
                 continue;
             }
+            printf("CuThread.run size of event queue (%d) \n", d->eventQueue.size());
             te = d->eventQueue.front();
             d->eventQueue.pop();
         }
@@ -385,6 +393,7 @@ void CuThread::run()
         }
         else if(te->getType() == ThreadEvent::TimerExpired)
         {
+            printf("\e[0;33mCuTimer run: timer event this %p\e[0m\n", this);
             CuTimerEvent *tev = static_cast<CuTimerEvent *>(te);
             CuTimer *timer = tev->getTimer();
             if(mFindActivity(timer) != NULL)
@@ -442,8 +451,7 @@ void CuThread::run()
         mExitActivity(*i, true);
     printf("CuThread.run loop exit removing connections for this thread %p\n", this);
     am->removeConnections(this);
-    CuThreadService *ts = static_cast<CuThreadService *> (d->serviceProvider->get(CuServices::Thread));
-    ts->removeThread(this);
+    m_unregisterFromService();
     // auto destroy when back in foreground thread. bridge: send event from bacgkround to fg
     if(destroy) {
         d->eventBridge->postEvent(new CuThreadAutoDestroyEvent());
@@ -475,6 +483,7 @@ void CuThread::mActivityInit(CuActivity *a)
     if(repeat_timeout > 0)
     {
         timer = new CuTimer(this);
+        timer->setSingleShot(true);
         timer->start(repeat_timeout);
         std::pair<CuActivity *, CuTimer *> p(a, timer);
         d->timerActivityMap.insert(p);

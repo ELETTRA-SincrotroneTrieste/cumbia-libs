@@ -30,7 +30,7 @@ CuTimer::CuTimer(CuTimerListener *l)
  */
 CuTimer::~CuTimer()
 {
-    pdelete("CuTimer %p", this);
+    predtmp("CuTimer %p", this);
     if(!m_quit)
         stop();
 }
@@ -44,7 +44,7 @@ void CuTimer::setTimeout(int millis)
     std::unique_lock<std::mutex> lock(m_mutex);
     pbblue("CuTimer.setTimeout %d", millis);
     m_timeout = millis;
-    m_terminate.notify_one();
+    m_wait.notify_one();
 }
 
 /*!
@@ -86,7 +86,7 @@ void CuTimer::pause()
     std::unique_lock<std::mutex> lock(m_mutex);
     pbblue("CuTimer.pause");
     m_pause = true;
-    m_terminate.notify_one();
+    m_wait.notify_one();
 }
 
 /*! \brief the timer is resumed if paused, started if not running
@@ -100,7 +100,7 @@ void CuTimer::resume()
     pbblue("CuTimer.resume");
     m_pause = false;
     if(!m_quit) /* thread still running */
-        m_terminate.notify_one();
+        m_wait.notify_one();
     else  /* thread loop is over */
         start(m_timeout);
 }
@@ -114,13 +114,19 @@ void CuTimer::resume()
  */
 void CuTimer::start(int millis)
 {
+    pgreentmp("CuTimer.start millis %d current m_thread %p", millis, m_thread);
     m_quit = m_pause = false;
-    if(m_thread)
-        m_thread->join();
-    if(m_thread)
-        delete m_thread;
     m_timeout = millis;
-    m_thread = new std::thread(&CuTimer::run, this);
+    if(!m_thread) { // first time start is called or after stop
+        m_thread = new std::thread(&CuTimer::run, this);
+        printf("\e[1;31m  OMG starting a new thread! %p\e[0m\n", m_thread);
+
+    }
+    else {
+        pgreentmp("CuTimer.start: GOOD timer  alive notifying !!!... --->");
+        m_wait.notify_one();
+    }
+
 }
 
 /*! \brief stops the timer, if active
@@ -131,15 +137,19 @@ void CuTimer::stop()
 {
     if(m_exited)
         return; /* already quit */
-    pbblue("CuTimer.stop!!!! for this %p before lock", this);
+    pgreentmp("CuTimer.stop!!!! for this %p before lock", this);
     {
-        auto locked = std::unique_lock<std::mutex>(m_mutex);
+     //   auto locked = std::unique_lock<std::mutex>(m_mutex);
+        pgreentmp("after lock");
         m_quit = true;
         m_listener = NULL;
     }
-    m_terminate.notify_one();
+    pgreentmp("CuTimer.stop calling m_wait.notify_one...");
+    m_wait.notify_one();
+    pgreentmp("CuTimer.stop called m_wait.notify_one...");
     if(m_thread->joinable())
     {
+        printf("joining!\n");
         m_thread->join();
         pbblue("CuTimer.stop: JOINETH!");
     }
@@ -159,28 +169,29 @@ void CuTimer::stop()
  */
 void CuTimer::run()
 {
+    pgreentmp("CuTimer.run this is %p", this);
     std::unique_lock<std::mutex> lock(m_mutex);
     unsigned long timeout = m_timeout;
     while (!m_quit)
     {
         std::chrono::milliseconds ms{timeout};
-        std::cv_status status = m_terminate.wait_for(lock, ms);
-//        cuprintf("CuTimer.run pause is %d status is %d timeout %d\n", m_pause, (int) status, m_timeout);
+        m_wait.wait_for(lock, ms);
+        //        cuprintf("CuTimer.run pause is %d status is %d timeout %d\n", m_pause, (int) status, m_timeout);
         //        if(status == std::cv_status::no_timeout)
         m_pause ?  timeout = ULONG_MAX : timeout = m_timeout;
-        if(status == std::cv_status::timeout && m_listener)
+
+        //            pbblue("CuTimer:run: this: %p triggering timeout in pthread 0x%lx (CuTimer's) m_listener %p m_exit %d CURRENT TIMEOUT is %lu m_pause %d", this,
+        //                   pthread_self(), m_listener, m_quit, timeout, m_pause);
+        if(m_listener && !m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
         {
-//            pbblue("CuTimer:run: this: %p triggering timeout in pthread 0x%lx (CuTimer's) m_listener %p m_exit %d CURRENT TIMEOUT is %lu m_pause %d", this,
-//                   pthread_self(), m_listener, m_quit, timeout, m_pause);
-            if(m_listener && !m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
-            {
-                m_listener->onTimeout(this);
-            }
+            printf("\e[1;33mcalling onTimeout on listener %p\e[0m\n", m_listener);
+            m_listener->onTimeout(this);
         }
-        /* check status: don't exit for a timeout change! Don't exit if we are in pause either */
-        if(m_singleShot && (status == std::cv_status::timeout) & !m_pause)
-            m_quit = true;
+
+        pgreentmp("waiting on timer run lock");
+        if(!m_quit)
+            m_wait.wait(lock);
     }
-//    pbblue("CuTimer:run: exiting!");
+    pbluetmp("CuTimer:run: exiting!");
 }
 

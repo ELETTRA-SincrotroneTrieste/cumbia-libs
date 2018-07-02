@@ -99,6 +99,7 @@ private:
     void mExitActivity(CuActivity *a, bool onThreadQuit);
     void mRemoveActivityTimer(CuActivity *a);
     void m_exit(bool auto_destroy);
+    void m_unregisterFromService();
     CuTimer *mFindTimer(CuActivity *a) const;
     CuActivity *mFindActivity(CuTimer *t) const;
 

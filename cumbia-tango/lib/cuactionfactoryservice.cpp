@@ -50,7 +50,7 @@ CuTangoActionI* CuActionFactoryService::registerAction(const std::string& src,
 {
     CuTangoActionI* action = NULL;
     std::lock_guard<std::mutex> lock(d->mutex);
-    std::list<CuTangoActionI *>::iterator it;
+    std::list<CuTangoActionI *>::const_iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
         if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src && !(*it)->exiting()) {
             break;
@@ -88,7 +88,7 @@ CuTangoActionI* CuActionFactoryService::registerAction(const std::string& src,
 CuTangoActionI *CuActionFactoryService::findActive(const string &src, CuTangoActionI::Type at)
 {
     std::lock_guard<std::mutex> lock(d->mutex);
-    std::list<CuTangoActionI *>::iterator it;
+    std::list<CuTangoActionI *>::const_iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
         if((*it)->getType() == at && (*it)->getSource().getName() == src && !(*it)->exiting())
             return (*it);
@@ -113,7 +113,7 @@ std::vector<CuTangoActionI *> CuActionFactoryService::find(const string &src, Cu
 {
     std::lock_guard<std::mutex> lock(d->mutex);
     std::vector <CuTangoActionI *> actions;
-    std::list<CuTangoActionI *>::iterator it;
+    std::list<CuTangoActionI *>::const_iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
         if((*it)->getType() == at && (*it)->getSource().getName() == src)
             actions.push_back(*it);

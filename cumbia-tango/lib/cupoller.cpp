@@ -104,11 +104,8 @@ void CuPoller::unregisterAction(CuTangoActionI *a)
     if(activity) {
         d->cumbia_t->postEvent(activity, new CuRemovePollActionEvent(a->getSource()));
     }
-//    if(d->actions_map.size() == 0)
-    //        d->cumbia_t->pauseActivity(activity);
     a->onResult(CuData("exit", true));
     if(d->actions_map.size() == 0) {
-        printf("\e[1;33mPER GRAZIA, SALVIAMOCI!!!!!!!!!!!!!!! removeConnection %p\e[0m\n", this);
         am->removeConnection(this);
     }
 }
@@ -132,7 +129,7 @@ void CuPoller::onResult(const std::vector<CuData> &datalist)
 {
     // for each CuData, get the point and find the associated CuTangoActionI's, if still there's one or more
     //
-    //    pgreentmp("CuPoller.onResult: got list of data size %ld", datalist.size());
+       pgreentmp("CuPoller.onResult: got list of data size %ld", datalist.size());
     for(size_t i = 0; i < datalist.size(); i++) {
         CuTangoActionI *receiver = static_cast<CuTangoActionI *>(datalist[i]["action_ptr"].toVoidP());
         // receiver information arrives from another thread. receiver may have been destroyed meanwhile

@@ -61,7 +61,7 @@ private:
 
     std::thread *m_thread;
     std::mutex m_mutex;
-    std::condition_variable m_terminate;
+    std::condition_variable m_wait;
 };
 
 #endif // CUTIMER_H

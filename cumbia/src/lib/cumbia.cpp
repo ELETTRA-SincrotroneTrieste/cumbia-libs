@@ -38,10 +38,11 @@ void Cumbia::finish()
 {
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     CuThreadService *ts = static_cast<CuThreadService *> (d->serviceProvider->get(CuServices::Thread));
-    const std::vector<CuThreadInterface *> threads = ts->getThreads();
-    for(size_t i = 0; i < threads.size(); i++)
+    const std::list<CuThreadInterface *> threads = ts->getThreads();
+    std::list<CuThreadInterface *>::const_iterator it;
+    for(it = threads.begin(); it != threads.end(); ++it)
     {
-        CuThreadInterface *ti = threads[i];
+        CuThreadInterface *ti = *it;
         /* when thread leaves its loop, invokes onExit on all activities, ensuring onExit is called in
          * the still running thread.
          */

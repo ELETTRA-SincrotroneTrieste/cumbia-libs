@@ -612,9 +612,18 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         attrs.push_back(att_datalist[i]["point"].toString());
     try
     {
+        // read_attributes
+        // case 1. test/device/1 is running
+        //         reading test/device/1/double_scalar and test/device/1/throw_exception
+        //         returns two results, one is valid the other is invalid, as expected
+        // case 2. device is down/goes down while reading
+        //         we enter the catch clause, where the results have to be manually populated
+        //         with data reporting the error.
+        //         In that case, the poller must be slowed down
         devattr = dev->read_attributes(attrs);
         for(size_t i = 0; i < devattr->size(); i++) {
             (*reslist)[results_offset] = std::move(att_datalist[i]);
+            printf("reslist partial %s\n", (*reslist)[results_offset].toString().c_str());
             p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
             extractData(p_da, (*reslist)[results_offset]);
@@ -629,6 +638,14 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
     {
         d->error = true;
         d->message = strerror(e);
+        printf("\e[1;31mDevFailed in read_attributes: %s devattr %p\n\e[0m", d->message.c_str(), devattr);
+        for(size_t i = 0; i < attrs.size(); i++) {
+            (*reslist)[results_offset] = std::move(att_datalist[i]);
+            (*reslist)[results_offset]["err"] = d->error;
+            (*reslist)[results_offset]["msg"] = d->message;
+            (*reslist)[results_offset]["success_color"] = d->t_world_conf.successColor(!d->error);
+            results_offset++;
+        }
     }
     return !d->error;
 }

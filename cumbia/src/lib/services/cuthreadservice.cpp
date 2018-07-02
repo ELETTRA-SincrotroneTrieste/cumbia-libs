@@ -55,13 +55,14 @@ CuThreadInterface *CuThreadService::getThread(const CuData& token,
                                               const CuThreadFactoryImplI &thread_factory_impl)
 {
     CuThreadInterface *thread;
-    for(size_t i = 0; i < mThreads.size(); i++)
+    std::list<CuThreadInterface *>::const_iterator it;
+    for(it = mThreads.begin(); it != mThreads.end(); ++it)
     {
-        thread = mThreads[i];
-        if(thread->isEquivalent(token))
-            return thread;
+        if((*it)->isEquivalent(token))
+            return (*it);
     }
     thread = thread_factory_impl.createThread(token, eventsBridgeFactory.createEventBridge(), service_provider);
+    std::lock_guard<std::mutex> lock(m_mutex);
     mThreads.push_back(thread);
     return thread;
 }
@@ -95,7 +96,9 @@ int CuThreadService::count() const
  */
 void CuThreadService::removeThread(CuThreadInterface *thread)
 {
-    std::vector<CuThreadInterface *>::iterator it = std::find(mThreads.begin(), mThreads.end(), thread);
+    // this method is accessed from the run method of different threads
+    std::lock_guard<std::mutex> lock(m_mutex);
+    std::list<CuThreadInterface *>::iterator it = std::find(mThreads.begin(), mThreads.end(), thread);
     if(it != mThreads.end())
         mThreads.erase(it);
 }
@@ -107,7 +110,7 @@ void CuThreadService::removeThread(CuThreadInterface *thread)
  *
  * Called by Cumbia::finish
  */
-std::vector<CuThreadInterface *> CuThreadService::getThreads() const
+std::list<CuThreadInterface *> CuThreadService::getThreads() const
 {
     return mThreads;
 }

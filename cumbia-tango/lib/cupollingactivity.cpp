@@ -77,6 +77,7 @@ public:
     CuDeviceFactoryService *device_srvc;
     TDevice *tdev;
     int repeat, errCnt;
+    int exec_cnt;
     std::string message;
     pthread_t my_thread_id, other_thread_id;
     CuVariant argins;
@@ -114,6 +115,7 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
     d->errCnt = 0;
     d->other_thread_id = pthread_self();
     d->exiting = false;
+    d->exec_cnt = 0;
 
     int period = 1000;
     if(token.containsKey("period"))
@@ -251,7 +253,18 @@ void CuPollingActivity::execute()
     //    assert(d->tdev != NULL);
     //    assert(d->my_thread_id == pthread_self());
 
-    pbluetmp("CuPollingActivity %p execute: period %d actions count %ld", this, getTimeout(), d->actions_map.size() );
+    pbluetmp("CuPollingActivity %p execute: period %d actions count %ld exec cnt %d",
+             this, getTimeout(), d->actions_map.size(), ++d->exec_cnt );
+//    printf("sleeping ... 4"); fflush(stdout);
+//    sleep(1);
+//    printf("... 3"); fflush(stdout);
+//    sleep(1);
+//    printf("... 2"); fflush(stdout);
+//    sleep(1);
+//    printf(" ... 1"); fflush(stdout);
+//    sleep(1);
+//    printf("\e[1;32m done\e[0m\n");
+//    return;
     bool cmd_success = true;
     CuTangoWorld tangoworld;
     std::vector<CuData> *results = new std::vector<CuData>();
@@ -304,8 +317,8 @@ void CuPollingActivity::execute()
                     d->errCnt++;
                 }
                 else {
-                    //                printf("2. calling cmd_inout input res %s\n", res.toString().c_str());
                     cmd_success = tangoworld.cmd_inout(dev, point, cmdd.din, has_argout, (*results)[i]);
+                    printf("-- called cmd_inout success: %d %s\n", cmd_success, (*results)[i].toString().c_str());
                 }
             }
             att_offset++;
@@ -343,6 +356,8 @@ void CuPollingActivity::execute()
     if(dev && attdatalist.size() > 0) {
         attdatalist.resize(att_idx);
         bool success = tangoworld.read_atts(d->tdev->getDevice(), attdatalist, results, att_offset);
+        for(int i = 0; i < results->size(); i++)
+            printf("-- called read_atts success: %d %s\n", success, (*results)[i].toString().c_str());
 
     }
     publishResult(results);
@@ -456,8 +471,8 @@ int CuPollingActivity::getType() const
 int CuPollingActivity::repeat() const
 {
     assert(d->my_thread_id == pthread_self());
-    if(d->exiting)
-        return -1;
-    return d->repeat;
+    int ret;
+    d->exiting ? ret = -1 : ret = d->repeat;
+    return ret;
 }
 

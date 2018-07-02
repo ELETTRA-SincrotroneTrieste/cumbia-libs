@@ -1,0 +1,32 @@
+MetaInfo {
+    Type {
+        name: "eu.elettra.cumbiaqmlcontrols.MyRectangle"
+        icon: "images/circulargauge-icon16.png"
+
+        ItemLibraryEntry {
+            name: "Cumbia Red Rectangle"
+            category: "Cumbia Qml Controls"
+            libraryIcon: "images/circulargauge-icon.png"
+            version: "1.0"
+            requiredImport: "eu.elettra.cumbiaqmlcontrols"
+
+            Property {
+                name: "width"
+                value: 800
+            }
+        }
+    }
+
+    Type {
+        name: "eu.elettra.cumbiaqmlcontrols.CumbiaCircularGauge"
+        icon: "images/circulargauge-icon16.png"
+
+        ItemLibraryEntry {
+            name: "Circular Gauge"
+            category: "Cumbia Qml Controls"
+            libraryIcon: "images/circulargauge-icon.png"
+            version: "1.0"
+            requiredImport: "eu.elettra.cumbiaqmlcontrols"
+        }
+    }
+}

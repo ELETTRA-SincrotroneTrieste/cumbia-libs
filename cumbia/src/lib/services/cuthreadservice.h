@@ -3,7 +3,8 @@
 
 #include <cuservices.h>
 #include <cuservicei.h>
-#include <vector>
+#include <list>
+#include <mutex>
 
 class CuThreadFactoryImplI;
 class CuThreadInterface;
@@ -59,7 +60,7 @@ public:
 
     void removeThread(CuThreadInterface *thread);
 
-    std::vector<CuThreadInterface *> getThreads() const;
+    std::list<CuThreadInterface *> getThreads() const;
 
     // CuServiceI interface
 public:
@@ -67,7 +68,8 @@ public:
     CuServices::Type getType() const;
 
 private:
-    std::vector<CuThreadInterface *> mThreads;
+    std::list<CuThreadInterface *> mThreads;
+    std::mutex m_mutex;
 };
 
 #endif // THREADSERVICE_H
