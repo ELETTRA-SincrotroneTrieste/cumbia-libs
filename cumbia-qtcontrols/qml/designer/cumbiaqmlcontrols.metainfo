@@ -1,19 +1,14 @@
 MetaInfo {
     Type {
-        name: "eu.elettra.cumbiaqmlcontrols.MyRectangle"
+        name: "eu.elettra.cumbiaqmlcontrols.CumbiaLabel"
         icon: "images/circulargauge-icon16.png"
 
         ItemLibraryEntry {
-            name: "Cumbia Red Rectangle"
+            name: "Cumbia Read Label"
             category: "Cumbia Qml Controls"
             libraryIcon: "images/circulargauge-icon.png"
             version: "1.0"
             requiredImport: "eu.elettra.cumbiaqmlcontrols"
-
-            Property {
-                name: "width"
-                value: 800
-            }
         }
     }
 

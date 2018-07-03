@@ -12,13 +12,13 @@ CircularGauge {
         id: backend
         source: ""
         Component.onCompleted: {
-            init(cumbia_poof)
+            init(cumbia_poo_o)
         }
     }
 
     id: circularGauge
-    x: 67
-    y: 42
+    x: 0
+    y: 0
 
     maximumValue: backend.max
     minimumValue: backend.min
@@ -32,8 +32,6 @@ CircularGauge {
             else if(backend.max_warning !== backend.min_warning &&
                     (val >= backend.max_warning || val <= backend.min_warning) )
                 color = "orange"
-
-            console.debug("color: ", color)
             return color
         }
 

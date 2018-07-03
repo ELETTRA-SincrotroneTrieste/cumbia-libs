@@ -1,30 +1,22 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <QQuickView>
 #include <QQmlContext>
 
 #include <cucontrolsfactorypool.h>
-#include "mycumbiapoolfactory.h"
-#include <cutreader.h>
-#include <cutwriter.h>
+#include <cumbiapool_o.h>
 #include <cumbiapool.h>
 #include <cumbiatango.h>
 #include <cutango-world.h>
 #include <cumbiaepics.h>
 #include <cuepics-world.h>
 #include <cuepcontrolsreader.h>
-#include <cuepcontrolswriter.h>
-#include <cutcontrolsreader.h>
+#include <cuepcontrolswriter.h>  // for CuTWriterFactory
+#include <cutcontrolsreader.h>  // for CuTReaderFactory
 #include <cutcontrolswriter.h>
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
 
 #include <QtDebug>
-
-CumbiaPoolFactory::CumbiaPoolFactory(QObject *parent) : QObject(parent)
-{
-    m_cu_pool = NULL;
-}
 
 int main(int argc, char *argv[])
 {
@@ -51,15 +43,16 @@ int main(int argc, char *argv[])
     m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
     cu_pool->setSrcPatterns("tango", tw.srcPatterns());
 
-    CumbiaPoolFactory pf;
-    pf.init(cu_pool, m_ctrl_factory_pool);
+    CumbiaPool_O cupo_qobj;
+    cupo_qobj.init(cu_pool, m_ctrl_factory_pool);
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty("cumbia_poof", &pf);
+    printf("setting context property %p cumbia pool %p\n", &cupo_qobj, cupo_qobj.getPool());
+    engine.rootContext()->setContextProperty("cumbia_poo_o", &cupo_qobj);
 
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 

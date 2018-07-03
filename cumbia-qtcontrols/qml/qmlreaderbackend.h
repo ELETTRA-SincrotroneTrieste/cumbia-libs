@@ -12,7 +12,7 @@ class CuVariant;
 class CuControlsFactoryPool;
 class CuControlsReaderFactoryI;
 class QmlReaderBackendPrivate;
-class CumbiaPoolFactory;
+class CumbiaPool_O;
 
 class QmlReaderBackend : public  QObject, public CuDataListener, public CuContextI
 {
@@ -25,11 +25,23 @@ class QmlReaderBackend : public  QObject, public CuDataListener, public CuContex
     Q_PROPERTY(QVariant min_alarm READ min_alarm NOTIFY min_alarmChanged)
     Q_PROPERTY(QVariant max_alarm READ max_alarm NOTIFY max_alarmChanged)
     Q_PROPERTY(QString source READ source WRITE setSource NOTIFY sourceChanged)
+    Q_PROPERTY(QString label READ label NOTIFY labelChanged)
+    Q_PROPERTY(QString stateColor READ stateColor NOTIFY stateColorChanged)
+    Q_PROPERTY(QString qualityColor READ qualityColor NOTIFY qualityColorChanged)
 
 public:
+
+    enum DataType { Int, Double, String, Boolean };
+
+    enum DataFormat { Scalar, Vector };
+
     QmlReaderBackend(QObject *parent = nullptr);
 
-    Q_INVOKABLE void init(CumbiaPoolFactory *poof);
+    Q_INVOKABLE void init(CumbiaPool_O *poo_o);
+
+    Q_INVOKABLE void setConversionMode(DataType dt, DataFormat fmt);
+
+    Q_INVOKABLE QString getQualityColor(double val);
 
     virtual ~QmlReaderBackend();
 
@@ -51,6 +63,12 @@ public:
 
     QVariant max_alarm() const;
 
+    QString label() const;
+
+    QString stateColor() const;
+
+    QString qualityColor() const;
+
     // CuDataListener interface
     void onUpdate(const CuData &d);
 
@@ -70,6 +88,11 @@ signals:
     void max_warningChanged(QVariant max);
     void min_alarmChanged(QVariant max);
     void max_alarmChanged(QVariant max);
+
+    void labelChanged(const QString& label);
+
+    void stateColorChanged(const QString& color);
+    void qualityColorChanged(const QString& color);
 
 private:
 

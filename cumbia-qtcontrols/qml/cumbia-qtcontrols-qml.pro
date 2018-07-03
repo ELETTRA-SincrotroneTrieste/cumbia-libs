@@ -3,7 +3,11 @@
 # Project created by QtCreator 2018-06-26T14:23:57
 #
 #-------------------------------------------------
-include(cumbia-qtcontrols-qml.pri)
+include (../cumbia-qtcontrols.pri)
+
+#
+# The name of the library
+    cumbia_qtcontrols_qml_LIB=cumbia-qtcontrols-qml$${QTVER_SUFFIX}plugin
 
 CUMBIA_QTCONTROLS_QML_DOCDIR = $${CUMBIA_QTCONTROLS_DOCDIR}/qml
 
@@ -46,7 +50,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-    cumbiapoolfactory.cpp \
     cumbiainitoptions.cpp \
     qmlreaderbackend.cpp \
     cumbiaqmlcontrolsplugin.cpp
@@ -54,7 +57,6 @@ SOURCES += \
 HEADERS += \
         qml_global.h \
     cumbiainitoptions.h \
-    cumbiapoolfactory.h \
     qmlreaderbackend.h \
     cumbiaqmlcontrolsplugin.h
 
@@ -63,11 +65,13 @@ DISTFILES += \
     qmldir \
     import/MyRectangle.qml \
     plugins.qmltypes \
-    import/CumbiaCircularGauge.qml
+    import/CumbiaCircularGauge.qml \
+    import/CumbiaLabel.qml
 
 designer.files =  \
     designer/cumbiaqmlcontrols.metainfo \
-    designer/CumbiaCircularGaugeSpecifics.qml
+    designer/CumbiaCircularGaugeSpecifics.qml \
+    designer/CumbiaLabelSpecifics.qml
 
 designer_imgs.files =  \
     designer/images/circulargauge-icon.png \
