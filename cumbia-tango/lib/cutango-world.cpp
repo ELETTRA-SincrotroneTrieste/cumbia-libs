@@ -433,6 +433,23 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     dat["w_value"] = v;
             }
         }
+        else if(p_da->get_type() == Tango::DEV_FLOAT)
+        {
+            std::vector<float>  v;
+            p_da->extract_read(v);
+            if(f == Tango::SCALAR)
+                dat["value"] = v.at(0);
+            else
+                dat["value"] = v;
+            if(w)
+            {
+                p_da->extract_set(v);
+                if(f == Tango::SCALAR)
+                    dat["w_value"] = v.at(0);
+                else
+                    dat["w_value"] = v;
+            }
+        }
         else if(p_da->get_type() == Tango::DEV_BOOLEAN)
         {
             std::vector<bool> v;

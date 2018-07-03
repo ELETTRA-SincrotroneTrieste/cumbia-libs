@@ -23,6 +23,8 @@ public:
 
     void unregisterAction(CuTangoActionI *a);
 
+    bool actionRegistered(const CuTangoActionI *a) const;
+
     size_t count() const;
 
     // CuThreadListener interface

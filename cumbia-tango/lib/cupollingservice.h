@@ -25,6 +25,8 @@ public:
 
     void unregisterAction(int period, CuTangoActionI *action);
 
+    bool actionRegistered(CuTangoActionI *ac, int period);
+
     // CuServiceI interface
 public:
     virtual std::string getName() const;

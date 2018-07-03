@@ -375,7 +375,6 @@ void CuThread::run()
             {
                 continue;
             }
-            printf("CuThread.run size of event queue (%d) \n", d->eventQueue.size());
             te = d->eventQueue.front();
             d->eventQueue.pop();
         }
@@ -393,7 +392,6 @@ void CuThread::run()
         }
         else if(te->getType() == ThreadEvent::TimerExpired)
         {
-            printf("\e[0;33mCuTimer run: timer event this %p\e[0m\n", this);
             CuTimerEvent *tev = static_cast<CuTimerEvent *>(te);
             CuTimer *timer = tev->getTimer();
             if(mFindActivity(timer) != NULL)
@@ -449,7 +447,6 @@ void CuThread::run()
     std::vector<CuActivity *>::iterator i;
     for(i = myActivities.begin(); i != myActivities.end(); ++i)
         mExitActivity(*i, true);
-    printf("CuThread.run loop exit removing connections for this thread %p\n", this);
     am->removeConnections(this);
     m_unregisterFromService();
     // auto destroy when back in foreground thread. bridge: send event from bacgkround to fg

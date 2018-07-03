@@ -250,21 +250,8 @@ void CuPollingActivity::init()
  */
 void CuPollingActivity::execute()
 {
-    //    assert(d->tdev != NULL);
-    //    assert(d->my_thread_id == pthread_self());
-
-    pbluetmp("CuPollingActivity %p execute: period %d actions count %ld exec cnt %d",
-             this, getTimeout(), d->actions_map.size(), ++d->exec_cnt );
-//    printf("sleeping ... 4"); fflush(stdout);
-//    sleep(1);
-//    printf("... 3"); fflush(stdout);
-//    sleep(1);
-//    printf("... 2"); fflush(stdout);
-//    sleep(1);
-//    printf(" ... 1"); fflush(stdout);
-//    sleep(1);
-//    printf("\e[1;32m done\e[0m\n");
-//    return;
+    assert(d->tdev != NULL);
+    assert(d->my_thread_id == pthread_self());
     bool cmd_success = true;
     CuTangoWorld tangoworld;
     std::vector<CuData> *results = new std::vector<CuData>();
@@ -318,7 +305,6 @@ void CuPollingActivity::execute()
                 }
                 else {
                     cmd_success = tangoworld.cmd_inout(dev, point, cmdd.din, has_argout, (*results)[i]);
-                    printf("-- called cmd_inout success: %d %s\n", cmd_success, (*results)[i].toString().c_str());
                 }
             }
             att_offset++;
@@ -336,29 +322,12 @@ void CuPollingActivity::execute()
         }
         i++;
 
-
-        /// temporary prints
-        ///
-        //        printf("- point \"%s\" is command %d argins size %d ", point.c_str(), is_command, argins.size());
-        //        if(argins.size() > 0) {
-        //            printf(": { ");
-        //            for(size_t i = 0; i < argins.size(); i++)
-        //                printf("%s, ", argins[i].c_str());
-        //            printf(" }");
-        //        }
-        //        printf("\n");
-        ///
-        /// end of temporary prints
-
     } // for(it = d->actions_map.begin()
 
     // attributes now
     if(dev && attdatalist.size() > 0) {
         attdatalist.resize(att_idx);
-        bool success = tangoworld.read_atts(d->tdev->getDevice(), attdatalist, results, att_offset);
-        for(int i = 0; i < results->size(); i++)
-            printf("-- called read_atts success: %d %s\n", success, (*results)[i].toString().c_str());
-
+        tangoworld.read_atts(d->tdev->getDevice(), attdatalist, results, att_offset);
     }
     publishResult(results);
 }

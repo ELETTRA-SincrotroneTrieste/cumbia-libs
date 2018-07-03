@@ -114,16 +114,14 @@ void CuTimer::resume()
  */
 void CuTimer::start(int millis)
 {
-    pgreentmp("CuTimer.start millis %d current m_thread %p", millis, m_thread);
+//    pgreentmp("CuTimer.start millis %d current m_thread %p", millis, m_thread);
     m_quit = m_pause = false;
     m_timeout = millis;
     if(!m_thread) { // first time start is called or after stop
         m_thread = new std::thread(&CuTimer::run, this);
-        printf("\e[1;31m  OMG starting a new thread! %p\e[0m\n", m_thread);
-
     }
     else {
-        pgreentmp("CuTimer.start: GOOD timer  alive notifying !!!... --->");
+//        pgreentmp("CuTimer.start: GOOD timer  alive notifying !!!... --->");
         m_wait.notify_one();
     }
 
@@ -184,14 +182,11 @@ void CuTimer::run()
         //                   pthread_self(), m_listener, m_quit, timeout, m_pause);
         if(m_listener && !m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
         {
-            printf("\e[1;33mcalling onTimeout on listener %p\e[0m\n", m_listener);
             m_listener->onTimeout(this);
         }
 
-        pgreentmp("waiting on timer run lock");
         if(!m_quit)
             m_wait.wait(lock);
     }
-    pbluetmp("CuTimer:run: exiting!");
 }
 

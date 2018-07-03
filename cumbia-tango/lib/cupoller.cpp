@@ -110,6 +110,11 @@ void CuPoller::unregisterAction(CuTangoActionI *a)
     }
 }
 
+bool CuPoller::actionRegistered(const CuTangoActionI *a) const
+{
+    return d->actions_map.find(a) != d->actions_map.end();
+}
+
 size_t CuPoller::count() const
 {
     return d->actions_map.size();
@@ -129,7 +134,6 @@ void CuPoller::onResult(const std::vector<CuData> &datalist)
 {
     // for each CuData, get the point and find the associated CuTangoActionI's, if still there's one or more
     //
-       pgreentmp("CuPoller.onResult: got list of data size %ld", datalist.size());
     for(size_t i = 0; i < datalist.size(); i++) {
         CuTangoActionI *receiver = static_cast<CuTangoActionI *>(datalist[i]["action_ptr"].toVoidP());
         // receiver information arrives from another thread. receiver may have been destroyed meanwhile

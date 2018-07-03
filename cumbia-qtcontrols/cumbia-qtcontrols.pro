@@ -80,7 +80,8 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/qucirculargauge.cpp \
     src/quspinbox.cpp \
     src/qudoublespinbox.cpp \
-    src/qulineedit.cpp
+    src/qulineedit.cpp \
+    src/cumbiapool_o.cpp
 
 HEADERS += cumbiaqtcontrols.h\
         cumbia-qtcontrols_global.h \
@@ -147,7 +148,8 @@ HEADERS += cumbiaqtcontrols.h\
     src/qucirculargauge.h \
     src/quspinbox.h \
     src/qudoublespinbox.h \
-    src/qulineedit.h
+    src/qulineedit.h \
+    src/cumbiapool_o.h
 
 
 RESOURCES += \

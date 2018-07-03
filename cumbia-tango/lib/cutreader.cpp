@@ -118,7 +118,10 @@ void CuTReader::onResult(const CuData &data)
         // m_unregisterEventActivity will set d->event_activity to NULL
         if(d->event_activity)
             m_unregisterEventActivity();
-        m_registerToPoller();
+        CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
+                                                                            get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
+        if(!polling_service->actionRegistered(this, d->period) )
+            m_registerToPoller();
     }
 
     /* remove last listener and delete this

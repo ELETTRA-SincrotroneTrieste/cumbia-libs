@@ -54,6 +54,15 @@ void CuPollingService::unregisterAction(int period, CuTangoActionI *action)
     }
 }
 
+bool CuPollingService::actionRegistered(CuTangoActionI *ac, int period)
+{
+    if(d->pollers_map.find(period) != d->pollers_map.end()) {
+        CuPoller* poller = d->pollers_map[period];
+        return poller->actionRegistered(ac);
+    }
+    return false;
+}
+
 
 std::string CuPollingService::getName() const
 {
