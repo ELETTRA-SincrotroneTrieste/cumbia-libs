@@ -136,6 +136,7 @@ CuVariant::CuVariant(unsigned int ui)
     from(ui);
 }
 
+
 /*! \brief builds a CuVariant holding the specified long integer
  *
  * @param li the value that will be stored by the object as long int
@@ -147,6 +148,19 @@ CuVariant::CuVariant(long int li)
     d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Scalar, LongInt);
     from(li);
+}
+
+/*! \brief builds a CuVariant holding the specified long long integer
+ *
+ * @param lli the value that will be stored by the object as long long int
+ *
+ * Specific conversion method: CuVariant::toLongLongInt
+ */
+CuVariant::CuVariant(long long lli)
+{
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
+    init(Scalar, LongLongInt);
+    from(lli);
 }
 
 /*! \brief builds a CuVariant holding the specified unsigned long integer
@@ -1053,6 +1067,21 @@ long int CuVariant::toLongInt(bool *ok) const
     return i;
 }
 
+long long CuVariant::toLongLongInt(bool *ok) const
+{
+    long long int i = LONG_LONG_MIN;
+    bool canConvert = (d->type == Int || d->type == LongInt)  && d->format == Scalar && d->val != NULL && d->mIsValid;
+    if(canConvert && d->format == Scalar && d->val != NULL && d->type == Int)
+        i = static_cast<long long int> ( *(static_cast<int *>(d->val)) );
+    else if(canConvert && d->type == LongInt)
+        i = static_cast<long long int> (*(static_cast<long int*>(d->val)));
+    else if(canConvert && d->type == LongLongInt)
+        return *(static_cast<long long int*>(d->val));
+    if(ok)
+        *ok = canConvert;
+    return i;
+}
+
 /** \brief convert the stored data into a scalar integer
  *
  * @param *ok a pointer to a bool. If not null, its value will be set to true
@@ -1457,6 +1486,13 @@ long int *CuVariant::toLongIntP() const
 {
     if(d->type == CuVariant::LongInt)
         return static_cast<long int *>(d->val);
+    return NULL;
+}
+
+long long int *CuVariant::toLongLongIntP() const
+{
+    if(d->type == CuVariant::LongLongInt)
+        return static_cast<long long int *>(d->val);
     return NULL;
 }
 

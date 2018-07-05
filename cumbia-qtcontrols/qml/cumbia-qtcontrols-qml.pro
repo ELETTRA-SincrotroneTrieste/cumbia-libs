@@ -30,7 +30,7 @@ uri = eu.elettra.cumbiaqmlcontrols
 
 CONFIG += debug
 
-QT +=  qml quick
+QT +=  qml quick charts
 QT       -= gui
 
 DEFINES += QML_LIBRARY
@@ -52,21 +52,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     cumbiainitoptions.cpp \
     qmlreaderbackend.cpp \
-    cumbiaqmlcontrolsplugin.cpp
+    cumbiaqmlcontrolsplugin.cpp \
+    qmlchartbackend.cpp
 
 HEADERS += \
         qml_global.h \
     cumbiainitoptions.h \
     qmlreaderbackend.h \
-    cumbiaqmlcontrolsplugin.h
+    cumbiaqmlcontrolsplugin.h \
+    qmlchartbackend.h
 
 DISTFILES += \
     cumbia-qtcontrols-qml.pri \
     qmldir \
-    import/MyRectangle.qml \
     plugins.qmltypes \
     import/CumbiaCircularGauge.qml \
-    import/CumbiaLabel.qml
+    import/CumbiaLabel.qml \
+    import/CumbiaTrendPlot.qml
 
 designer.files =  \
     designer/cumbiaqmlcontrols.metainfo \

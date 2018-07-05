@@ -54,6 +54,8 @@ QColor QuPlotCommon::pick_color(int i)
 QStringList QuPlotCommon::sources() const
 {
     QStringList l;
+    if(!d->context)
+        return l;
     foreach(CuControlsReaderA *r, d->context->readers())
         l.append(r->source());
     return l;

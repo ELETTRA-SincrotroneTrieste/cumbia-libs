@@ -93,6 +93,7 @@ public:
                     Int, ///< int
                     UInt, ///< unsigned int
                     LongInt, ///< long int
+                    LongLongInt, ///< long long int
                     LongUInt, ///< long unsigned int
                     Float, ///< float
                     Double, ///< double
@@ -116,6 +117,8 @@ public:
     CuVariant(unsigned int ui);
 
     CuVariant(long int li);
+
+    CuVariant(long long int li);
 
     CuVariant(unsigned long int lui);
 
@@ -219,6 +222,8 @@ public:
 
     long int toLongInt( bool *ok = NULL) const;
 
+    long long int toLongLongInt(bool *ok = NULL) const;
+
     int toInt( bool *ok = NULL) const;
 
     unsigned int toUInt( bool *ok = NULL) const;
@@ -240,6 +245,8 @@ public:
     long double *toLongDoubleP() const;
 
     long int *toLongIntP() const;
+
+    long long int* toLongLongIntP() const;
 
     int *toIntP() const;
 
