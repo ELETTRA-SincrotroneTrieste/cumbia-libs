@@ -80,16 +80,16 @@ public slots:
 signals:
     void newData(const CuData&);
 
-    void valueChanged(QVariant d);
-    void sourceChanged(const QString& s);
-    void minChanged(QVariant min);
-    void maxChanged(QVariant max);
-    void min_warningChanged(QVariant max);
-    void max_warningChanged(QVariant max);
-    void min_alarmChanged(QVariant max);
-    void max_alarmChanged(QVariant max);
+    void valueChanged();
+    void sourceChanged();
+    void minChanged();
+    void maxChanged();
+    void min_warningChanged();
+    void max_warningChanged();
+    void min_alarmChanged();
+    void max_alarmChanged();
 
-    void labelChanged(const QString& label);
+    void labelChanged();
 
     void stateColorChanged(const QString& color);
     void qualityColorChanged(const QString& color);

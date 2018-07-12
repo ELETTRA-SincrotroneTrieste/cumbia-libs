@@ -64,7 +64,8 @@ QString QmlReaderBackend::getQualityColor(double val)
 QmlReaderBackend::~QmlReaderBackend()
 {
     pdelete("~QmlReaderBackend %p", this);
-    delete d->context;
+    if(d->context)
+        delete d->context;
     delete d;
 }
 
@@ -96,39 +97,39 @@ void QmlReaderBackend::m_configure(const CuData &da)
             v = QVariant(std::stod(da["min"].toString()));
         if(d->min != v) {
             d->min = v;
-            emit minChanged(v);
+            emit minChanged();
         }
         if(da.containsKey("max"))
             v = QVariant(std::stod(da["max"].toString()));
         if(d->max != v) {
             d->max = v;
-            emit maxChanged(v);
+            emit maxChanged();
         }
 
         if(da.containsKey("min_warning"))
             v = QVariant(std::stod(da["min_warning"].toString()));
         if(d->min_warning != v) {
             d->min_warning = v;
-            emit min_warningChanged(v);
+            emit min_warningChanged();
         }
         if(da.containsKey("max_warning"))
             v = QVariant(std::stod(da["max_warning"].toString()));
         if(d->max_warning != v) {
             d->max_warning = v;
-            emit max_warningChanged(v);
+            emit max_warningChanged();
         }
 
         if(da.containsKey("min_alarm"))
             v = QVariant(std::stod(da["min_alarm"].toString()));
         if(d->min_alarm != v) {
             d->min_alarm = v;
-            emit min_alarmChanged(v);
+            emit min_alarmChanged();
         }
         if(da.containsKey("max_alarm"))
             v = QVariant(std::stod(da["max_alarm"].toString()));
         if(d->max_alarm != v) {
             d->max_alarm = v;
-            emit max_alarmChanged(v);
+            emit max_alarmChanged();
         }
 
         QString label;
@@ -136,7 +137,7 @@ void QmlReaderBackend::m_configure(const CuData &da)
             label = QString::fromStdString(da["label"].toString());
         if(label != d->label) {
             d->label = label;
-            emit labelChanged(label);
+            emit labelChanged();
         }
     }
     catch(const std::invalid_argument& ia) {
@@ -210,7 +211,7 @@ QString QmlReaderBackend::qualityColor() const
 void QmlReaderBackend::onUpdate(const CuData &da)
 {
 
-    printf("\e[1;32mdata %s\e[0m\n", da.toString().c_str());
+//    printf("\e[1;32mdata %s\e[0m\n", da.toString().c_str());
 
     d->read_ok = !da["err"].toBool();
 
@@ -259,7 +260,7 @@ void QmlReaderBackend::setSource(const QString &s)
     }
     if(d->source != s) {
         d->source = s;
-        emit sourceChanged(s);
+        emit sourceChanged();
     }
 }
 
@@ -286,6 +287,6 @@ void QmlReaderBackend::m_set_value(const CuVariant &val)
     }
     if(v != d->value) {
         d->value = v;
-        emit valueChanged(v);
+        emit valueChanged();
     }
 }

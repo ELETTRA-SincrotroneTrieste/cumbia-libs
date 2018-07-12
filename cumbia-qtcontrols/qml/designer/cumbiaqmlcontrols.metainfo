@@ -1,12 +1,12 @@
 MetaInfo {
     Type {
         name: "eu.elettra.cumbiaqmlcontrols.CumbiaLabel"
-        icon: "images/circulargauge-icon16.png"
+        icon: "images/label-icon16.png"
 
         ItemLibraryEntry {
             name: "Cumbia Read Label"
             category: "Cumbia Qml Controls"
-            libraryIcon: "images/circulargauge-icon.png"
+            libraryIcon: "images/label-icon.png"
             version: "1.0"
             requiredImport: "eu.elettra.cumbiaqmlcontrols"
         }
@@ -24,4 +24,44 @@ MetaInfo {
             requiredImport: "eu.elettra.cumbiaqmlcontrols"
         }
     }
+
+    Type {
+        name: "eu.elettra.cumbiaqmlcontrols.CumbiaTrendChart"
+        icon: "images/lineseries-chart-icon16.png"
+
+        ItemLibraryEntry {
+            name: "Trend Chart"
+            category: "Cumbia Qml Controls"
+            libraryIcon: "images/lineseries-chart-icon.png"
+            version: "1.0"
+            requiredImport: "eu.elettra.cumbiaqmlcontrols"
+        }
+    }
+
+    Type {
+        name: "eu.elettra.cumbiaqmlcontrols.CumbiaSpectrumChart"
+        icon: "images/lineseries-chart-icon16.png"
+
+        ItemLibraryEntry {
+            name: "Spectrum Chart"
+            category: "Cumbia Qml Controls"
+            libraryIcon: "images/lineseries-chart-icon.png"
+            version: "1.0"
+            requiredImport: "eu.elettra.cumbiaqmlcontrols"
+        }
+    }
+
+    Type {
+        name: "eu.elettra.cumbiaqmlcontrols.CumbiaDial"
+        icon: "images/dial-icon16.png"
+
+        ItemLibraryEntry {
+            name: "Dial"
+            category: "Cumbia Qml Controls"
+            libraryIcon: "images/dial-icon.png"
+            version: "1.0"
+            requiredImport: "eu.elettra.cumbiaqmlcontrols"
+       }
+    }
+
 }

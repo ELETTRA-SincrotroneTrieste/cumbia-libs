@@ -69,14 +69,13 @@ Window {
         property alias yMax: axisY1.max
         property alias yMin: axisY1.min
 
-        property AbstractAxis axisX: null
-        property bool isTrend: false
+        property alias sources: c_backend.sources
+
 
         QmlChartBackend {
             id: c_backend
-            property var srcs: ["$1/double_scalar", "$2/double_scalar"]
 
-            sources:  srcs
+            sources:  "$1/double_scalar;$2/double_scalar"
 
             Component.onCompleted: {
                 console.log("QmlChartBackend", "init")
@@ -86,7 +85,6 @@ Window {
             onDataChanged: trendChartView.refresh(src, x, y)
         }
 
-        property alias sources: c_backend.sources;
         x: 0
         y: 171
         width: 1024
@@ -124,13 +122,13 @@ Window {
         }
 
 
-                DateTimeAxis {
-                    id: axisX
-                    min: c_backend.t1
-                    max: c_backend.t2
-                    labelsAngle: 65
-                    format: "hh:mm:ss"
-                }
+        DateTimeAxis {
+            id: axisX
+            min: c_backend.t1
+            max: c_backend.t2
+            labelsAngle: 65
+            format: "hh:mm:ss"
+        }
 
         //    LineSeries {
         //        id: lineSeries1
@@ -169,6 +167,10 @@ Window {
             }
         }
 
+        function getSeries(src) {
+            return trendChartView.series(src)
+        }
+
 
         //![3]
 
@@ -178,9 +180,6 @@ Window {
             else
                 trendChartView.animationOptions = ChartView.NoAnimation;
         }
-
-
-
     }
 
 
@@ -201,15 +200,11 @@ Window {
         property alias yMax: axisY1.max
         property alias yMin: axisY1.min
 
-        property AbstractAxis axisX: null
-        property bool isTrend: false
+        property  alias sources: sp_c_backend.sources
 
         QmlChartBackend {
             id: sp_c_backend
-            property var srcs: ["$1/double_spectrum_ro", "$2/double_spectrum_ro"]
-
-            sources:  srcs
-
+            sources: "$1/double_spectrum_ro;$2/double_spectrum_ro"
             Component.onCompleted: {
                 console.log("QmlChartBackend", "init")
                 init(cumbia_poo_o)
@@ -218,8 +213,6 @@ Window {
             onDataChanged: spectrumChartView.refresh(src, x, y)
             onSpectrumPointsChanged: spectrumChartView.refreshSpectrum(src)
         }
-
-        property alias sources: sp_c_backend.sources;
 
         animationOptions: ChartView.NoAnimation
         theme: ChartView.ChartThemeLight

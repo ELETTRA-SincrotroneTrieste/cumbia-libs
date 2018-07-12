@@ -1,2 +1,3 @@
 module eu.elettra.cumbiaqmlcontrols
 plugin cumbia-qtcontrols-qml-qt5plugin
+CmdLineUtils 1.0 CmdLineUtils.js

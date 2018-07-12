@@ -53,14 +53,16 @@ SOURCES += \
     cumbiainitoptions.cpp \
     qmlreaderbackend.cpp \
     cumbiaqmlcontrolsplugin.cpp \
-    qmlchartbackend.cpp
+    qmlchartbackend.cpp \
+    qmlwriterbackend.cpp
 
 HEADERS += \
         qml_global.h \
     cumbiainitoptions.h \
     qmlreaderbackend.h \
     cumbiaqmlcontrolsplugin.h \
-    qmlchartbackend.h
+    qmlchartbackend.h \
+    qmlwriterbackend.h
 
 DISTFILES += \
     cumbia-qtcontrols-qml.pri \
@@ -68,17 +70,33 @@ DISTFILES += \
     plugins.qmltypes \
     import/CumbiaCircularGauge.qml \
     import/CumbiaLabel.qml \
-    import/CumbiaTrendPlot.qml
+    import/CumbiaTrendChart.qml \
+    import/CumbiaSpectrumChart.qml \
+    jslib/CmdLineUtils.js \
+    README.txt \
+    import/CumbiaTumbler.qml \
+    import/CumbiaDial.qml
 
 designer.files =  \
     designer/cumbiaqmlcontrols.metainfo \
     designer/CumbiaCircularGaugeSpecifics.qml \
-    designer/CumbiaLabelSpecifics.qml
+    designer/CumbiaLabelSpecifics.qml \
+    designer/CumbiaTrendChartSpecifics.qml \
+    designer/CumbiaSpectrumChartSpecifics.qml \
+    designer/CumbiaDialSpecifics.qml \
+    designer/CumbiaTumblerSpecifics.qml
 
 designer_imgs.files =  \
     designer/images/circulargauge-icon.png \
-    designer/images/circulargauge-icon16.png
-
+    designer/images/circulargauge-icon16.png \
+    designer/images/lineseries-chart-icon.png \
+    designer/images/lineseries-chart-icon16.png \
+    designer/images/label-icon.png \
+    designer/images/label-icon16.png \
+    designer/images/dial-icon.png \
+    designer/images/dial-icon16.png \
+    designer/images/tumbler-icon.png \
+    designer/images/tumbler-icon16.png
 
 !equals(_PRO_FILE_PWD_, $$OUT_PWD) {
     copy_qmldir.target = $$OUT_PWD/qmldir
