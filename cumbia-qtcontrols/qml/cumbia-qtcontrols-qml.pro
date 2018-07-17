@@ -74,8 +74,10 @@ DISTFILES += \
     import/CumbiaSpectrumChart.qml \
     jslib/CmdLineUtils.js \
     README.txt \
-    import/CumbiaTumbler.qml \
-    import/CumbiaDial.qml
+    import/CumbiaDial.qml \
+    import/CuButton.qml \
+    import/CuTumbler.qml \
+    import/CuWButton.qml
 
 designer.files =  \
     designer/cumbiaqmlcontrols.metainfo \
@@ -84,7 +86,7 @@ designer.files =  \
     designer/CumbiaTrendChartSpecifics.qml \
     designer/CumbiaSpectrumChartSpecifics.qml \
     designer/CumbiaDialSpecifics.qml \
-    designer/CumbiaTumblerSpecifics.qml
+    designer/CuTumblerSpecifics.qml
 
 designer_imgs.files =  \
     designer/images/circulargauge-icon.png \
@@ -96,7 +98,9 @@ designer_imgs.files =  \
     designer/images/dial-icon.png \
     designer/images/dial-icon16.png \
     designer/images/tumbler-icon.png \
-    designer/images/tumbler-icon16.png
+    designer/images/tumbler-icon16.png \
+    designer/images/button-icon16.png \
+    designer/images/button-icon.png
 
 !equals(_PRO_FILE_PWD_, $$OUT_PWD) {
     copy_qmldir.target = $$OUT_PWD/qmldir

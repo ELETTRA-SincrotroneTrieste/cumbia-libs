@@ -17,6 +17,9 @@ void CumbiaQmlControlsPlugin::registerTypes(const char *uri)
 
     // writers
     qmlRegisterType(QUrl(prefix + "/CumbiaDial.qml"), uri, 1, 0, "CumbiaDial");
+    qmlRegisterType(QUrl(prefix + "/CuButton.qml"), uri, 1, 0, "CuButton");
+    qmlRegisterType(QUrl(prefix + "/CuWButton.qml"), uri, 1, 0, "CuWButton");
+    qmlRegisterType(QUrl(prefix + "/CuTumbler.qml"), uri, 1, 0, "CuTumbler");
 
     qmlRegisterType<CumbiaPool_O>(uri, 1, 0, "CumbiaPool_O");
     qmlRegisterType<QmlReaderBackend>(uri, 1, 0, "QmlReaderBackend");

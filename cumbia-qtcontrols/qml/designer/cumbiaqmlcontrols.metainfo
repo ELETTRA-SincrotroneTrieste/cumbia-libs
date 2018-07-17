@@ -64,4 +64,44 @@ MetaInfo {
        }
     }
 
+
+    Type {
+        name: "eu.elettra.cumbiaqmlcontrols.CuTumbler"
+        icon: "images/tumbler-icon16.png"
+
+        ItemLibraryEntry {
+            name: "Tumbler"
+            category: "Cumbia Qml Controls"
+            libraryIcon: "images/tumbler-icon.png"
+            version: "1.0"
+            requiredImport: "eu.elettra.cumbiaqmlcontrols"
+       }
+    }
+
+    Type {
+        name: "eu.elettra.cumbiaqmlcontrols.CuButton"
+        icon: "images/button-icon16.png"
+
+        ItemLibraryEntry {
+            name: "Simple styled Button"
+            category: "Cumbia Qml Controls"
+            libraryIcon: "images/button-icon.png"
+            version: "1.0"
+            requiredImport: "eu.elettra.cumbiaqmlcontrols"
+       }
+    }
+
+    Type {
+        name: "eu.elettra.cumbiaqmlcontrols.CuWButton"
+        icon: "images/button-icon16.png"
+
+        ItemLibraryEntry {
+            name: "Command Button"
+            category: "Cumbia Qml Controls"
+            libraryIcon: "images/button-icon.png"
+            version: "1.0"
+            requiredImport: "eu.elettra.cumbiaqmlcontrols"
+       }
+}
+
 }

@@ -144,6 +144,7 @@ void QmlWriterBackend::m_configure(const CuData& da)
     QString description, unit, label;
     QVariant v;
 
+    printf("QmlWriterBackend.m_configure: da: %s\n", da.toString().c_str());
     // unit, label, description
     unit = QString::fromStdString(da["display_unit"].toString());
     label = QString::fromStdString(da["label"].toString());
@@ -190,6 +191,7 @@ void QmlWriterBackend::m_configure(const CuData& da)
                 var.to<double>(dval);
                 if(dval != d->value) {
                     d->value = dval;
+                    printf("emitting value changed value is %f\n", dval);
                     emit valueChanged();
                 }
             }
@@ -224,7 +226,7 @@ void QmlWriterBackend::onUpdate(const CuData &da)
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::Write, true);
-            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);
+            log->write(QString("QmlWriterBackend [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);
         }
     }
     else if(d->auto_configure && da["type"].toString() == "property") {
@@ -244,8 +246,30 @@ void QmlWriterBackend::onUpdate(const CuData &da)
  * @param i the value to be written on the target
  */
 void QmlWriterBackend::write(QVariant ival) {
-    printf("\e[1;33mQmlWriteBackend.write: to double only!\e[0m\n");
-    m_write(CuVariant(ival.toDouble()));
+    printf("\e[1;33mQmlWriteBackend.write: to scalar only (%f, type %s, isvalid %d is null %d)!\e[0m\n",
+           ival.toDouble(), ival.typeName(), ival.isValid(), ival.isNull());
+    if(ival.isValid() && ival.type() == QVariant::Double)
+        m_write(CuVariant(ival.toDouble()));
+    else if(ival.isValid() && ival.type() == QVariant::UInt)
+        m_write(CuVariant(ival.toUInt()));
+    else if(ival.isValid() && ival.type() == QVariant::ULongLong)
+        m_write(CuVariant(ival.toULongLong()));
+    else if(ival.isValid() && ival.type() == QVariant::Int)
+        m_write(CuVariant(ival.toInt()));
+    else if(ival.isValid() && ival.type() == QVariant::LongLong) {
+        unsigned long long int ulli = static_cast<unsigned long long>(ival.toULongLong());
+        m_write(CuVariant(ulli));
+    }
+    else if(ival.isValid() && ival.type() == QVariant::String)
+        m_write(CuVariant(ival.toString().toStdString()));
+    else if(ival.isValid() && ival.type() == QVariant::StringList) {
+
+    }
+    else if(!ival.isValid() || ival.isNull()) {
+        printf("m_write with empty CuVariant\n");
+        m_write(CuVariant());
+    }
+
 }
 
 // perform the write operation on the target

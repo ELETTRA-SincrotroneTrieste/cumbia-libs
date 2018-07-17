@@ -42,6 +42,10 @@ void CuVariant::delete_rdata()
             delete [] static_cast<long int *> (d->val);
         else if(d->type == LongUInt)
             delete [] static_cast<long unsigned int *> (d->val);
+        else if(d->type == LongLongInt)
+            delete [] static_cast<long long int *> (d->val);
+        else if(d->type == LongLongUInt)
+            delete [] static_cast<unsigned long long int *> (d->val);
         else if(d->type == Short)
             delete [] static_cast<short *> (d->val);
         else if(d->type == UShort)
@@ -174,6 +178,13 @@ CuVariant::CuVariant(unsigned long int lui)
     d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Scalar, LongUInt);
     from(lui);
+}
+
+CuVariant::CuVariant(unsigned long long ului)
+{
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
+    init(Scalar, LongLongUInt);
+    from(ului);
 }
 
 /*! \brief builds a CuVariant holding the specified float
@@ -1130,6 +1141,26 @@ unsigned int CuVariant::toUInt(bool *ok) const
         *ok = can_convert;
     return i;
 }
+
+unsigned long long int CuVariant::toULongLongInt(bool *ok) const
+{
+   unsigned long long int i = ULONG_LONG_MAX;
+   bool can_convert = (d->format == Scalar && d->val != NULL  && d->mIsValid &&
+           (d->type == UInt || d->type == UShort || d->type == LongLongUInt || d->type == LongUInt) );
+   if(can_convert && d->type == UInt)
+        i = *(static_cast<unsigned int *>(d->val) );
+   else if(can_convert && d->type == UShort)
+       i = static_cast<unsigned long long int>( *(static_cast<unsigned short *>(d->val)) );
+   else if(can_convert && d->type == LongUInt)
+       i = static_cast<unsigned long long int>( *(static_cast<unsigned long *>(d->val)) );
+   else if(can_convert && d->type == LongLongUInt)
+       i = *(static_cast<unsigned long long *>(d->val));
+    if(ok)
+        *ok = can_convert;
+    return i;
+}
+
+
 
 /** \brief convert the stored data into a scalar unsigned short
  *

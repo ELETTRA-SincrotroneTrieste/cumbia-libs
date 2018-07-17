@@ -50,4 +50,75 @@ Column {
         anchors.right: parent.right
         caption: qsTr("Tumbler")
     }
+
+    Section {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        caption: qsTr("Cumbia Tumbler")
+
+        SectionLayout {
+            rows: 6
+            Label {
+                text: qsTr("target")
+                tooltip: qsTr("The target of the writer, e.g. $1/voltage")
+                Layout.fillWidth: true
+            }
+
+            SecondColumnLayout {
+                LineEdit {
+                    id: targetLineEdit;
+                    backendValue: backendValues.target
+                    Layout.fillWidth: true
+                }
+            }
+
+            Label {
+                text: qsTr("Button text")
+                tooltip: qsTr("The text displayed in the button")
+                Layout.fillWidth: true
+            }
+
+            SecondColumnLayout {
+                LineEdit {
+                    id: buttonText;
+                    backendValue: backendValues.applyButtonText
+                    Layout.fillWidth: true
+                }
+            }
+
+            Label {
+                text: qsTr("Minimum Value")
+                tooltip: qsTr("Minimum Value")
+            }
+            SecondColumnLayout {
+                SpinBox {
+                    backendValue: backendValues.minimumValue
+                    minimumValue: -10000000000
+                    maximumValue: backendValues.maximumValue.value
+                    stepSize: 1
+                    decimals: 2
+                }
+                ExpandingSpacer {
+                }
+            }
+
+            Label {
+                text: qsTr("Maximum Value")
+                tooltip: qsTr("Maximum Value")
+            }
+            SecondColumnLayout {
+                SpinBox {
+                    backendValue: backendValues.maximumValue
+                    minimumValue: backendValues.minimumValue.value
+                    maximumValue: 10000000000
+                    stepSize: 1
+                    decimals: 2
+                }
+                ExpandingSpacer {
+                }
+            }
+
+        } // end SectionLayout
+
+    } // end CumbiaTumbler section
 }

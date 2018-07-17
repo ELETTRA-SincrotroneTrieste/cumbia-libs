@@ -95,6 +95,7 @@ public:
                     LongInt, ///< long int
                     LongLongInt, ///< long long int
                     LongUInt, ///< long unsigned int
+                    LongLongUInt, ///< unsigned long long
                     Float, ///< float
                     Double, ///< double
                     LongDouble, ///< long double
@@ -121,6 +122,8 @@ public:
     CuVariant(long long int li);
 
     CuVariant(unsigned long int lui);
+
+    CuVariant(unsigned long long int ului);
 
     CuVariant(float d);
 
@@ -219,6 +222,8 @@ public:
     bool isWNull() const;
 
     unsigned long int toULongInt(bool *ok = NULL) const;
+
+    unsigned long long toULongLongInt(bool *ok) const;
 
     long int toLongInt( bool *ok = NULL) const;
 
