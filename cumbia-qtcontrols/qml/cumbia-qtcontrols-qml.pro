@@ -125,15 +125,16 @@ unix {
 }
 
 
-#unix {
+unix {
 
-#    doc.commands = \
-#    doxygen \
-#    Doxyfile;
+    doc.commands = \
+    doxygen \
+    Doxyfile;
 
-#    doc.files = doc/*
-#    doc.path = $${CUMBIA_QTCONTROLS_QML_DOCDIR}
-#    QMAKE_EXTRA_TARGETS += doc
+    doc.files = doc/*
+    doc.path = $${CUMBIA_QTCONTROLS_QML_DOCDIR}
+    QMAKE_EXTRA_TARGETS += doc
+}
 
 #    inc.files = $${HEADERS}
 #    inc.path = $${CUMBIA_QTCONTROLS_INCLUDES}/qml
