@@ -9,6 +9,7 @@ push_docs=0
 meson=0
 epics=0
 tango=0
+qml=1
 pull=0
 srcupdate=0
 sudocmd=sudo
@@ -57,6 +58,7 @@ then
 	echo -e " no-sudo - do not use \"sudo\" when calling make install\""
 	echo -e " tango - include cumbia-tango and qumbia-tango-controls modules in the specified operations"
 	echo -e " epics - include cumbia-epics and qumbia-epics-controls modules in the specified operations"
+        echo -e " qml - build cumbia-qtcontrols QML module (default: enabled)"
 	echo -e " no-tango - exclude cumbia-tango and qumbia-tango-controls modules from the specified operations"
 	echo -e " no-epics - remove cumbia-epics and qumbia-epics-controls modules from the specified operations"
 	echo -e " srcupdate - update cumbia sources choosing from the available tags in git (or origin/master). Please note that"
@@ -157,6 +159,14 @@ if [[ $@ == **no-epics** ]]; then
 	epics=0
 fi
 
+if [[ $@ == **qml** ]]; then
+        qml=1
+fi
+
+if [[ $@ == **no-qml** ]]; then
+        qml=0
+fi
+
 if  [ "$#" == 0 ]; then
 	build=1
 	meson=1
@@ -170,6 +180,11 @@ fi
 if [[ $epics -eq 1 ]]; then
 	meson_p+=(cumbia-epics)
 	qmake_p+=(qumbia-epics-controls)
+fi
+
+
+if [[ $qml -eq 1 ]]; then
+        qmake_p+=(cumbia-qtcontrols/qml)
 fi
 
 if [ ${#operations[@]} -eq 0 ]; then
