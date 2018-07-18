@@ -1,5 +1,8 @@
 include(/usr/local/include/qumbia-tango-controls/qumbia-tango-controls.pri)
-include(/usr/local/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+
+exists(/usr/local/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
+    include(/usr/local/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+}
 
 QT += quick
 CONFIG += c++11 debug

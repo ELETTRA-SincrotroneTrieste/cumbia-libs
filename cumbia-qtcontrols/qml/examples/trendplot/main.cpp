@@ -11,10 +11,14 @@
 #include <cumbiapool.h>
 #include <cumbiatango.h>
 #include <cutango-world.h>
+
+#ifdef QUMBIA_EPICS_CONTROLS
 #include <cumbiaepics.h>
 #include <cuepics-world.h>
 #include <cuepcontrolsreader.h>
 #include <cuepcontrolswriter.h>
+#endif
+
 #include <cutcontrolsreader.h>
 #include <cutcontrolswriter.h>
 #include <cuthreadfactoryimpl.h>
