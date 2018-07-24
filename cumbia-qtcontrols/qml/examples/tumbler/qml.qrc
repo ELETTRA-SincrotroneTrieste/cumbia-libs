@@ -1,9 +1,5 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>main_copy.qml</file>
-        <file>testposition.qml</file>
-        <file>MyTumbler.qml</file>
-        <file>MyButton.qml</file>
     </qresource>
 </RCC>

@@ -212,7 +212,7 @@ Window {
                 if(val < 0)
                     val = -val
                 var integer_part = Math.floor(val)
-                var decimal_part = val - integer_part
+                var decimal_part = Math.floor(val - integer_part)
                 var dec_part_as_int = decimal_part * Math.pow(10, decDigits)
 
                 var i
@@ -227,7 +227,7 @@ Window {
                 mo[i + 1] = "."
 
                 for(i = 0; i < decDigits; i++) {
-                    div = Math.pow(10, intDigits - i - 1)
+                    div = Math.pow(10, decDigits - i - 1)
                     digit = Math.floor(dec_part_as_int / div)
                     dec_part_as_int -= digit * div
 
@@ -413,7 +413,7 @@ Window {
             }
 
             applybutton = Qt.createQmlObject("import QtQuick 2.9;
-        import QtQuick.Controls 2.4; MyButton {  }", row_layout);
+        import QtQuick.Controls 2.4; Button {  }", row_layout);
             applybutton.Layout.margins = 6
             applybutton.onClicked.connect(apply)
 

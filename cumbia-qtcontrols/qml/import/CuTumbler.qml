@@ -18,6 +18,8 @@ Rectangle {
     property var nmodel: []  // mirrors the value displayed by the CuTumbler
     property var columns: [] // tumblers
 
+    property bool disableValueChanged: false
+
     property string applyButtonText: "APPLY"
 
     property Button applybutton: null
@@ -42,11 +44,13 @@ Rectangle {
     }
 
     onValueChanged: {
-        console.log("--- onValueChanged")
-        var amodel = getNumberModel(value)
-        updateTumblerModels(amodel) // disconnects and reconnects tumbler signal
-        setTumblerValue(amodel) // disconnects and reconnects tumbler signal
-        nmodel = amodel
+        if(!disableValueChanged) {
+            console.log("--- onValueChanged: ", value)
+            var amodel = getNumberModel(value)
+            updateTumblerModels(amodel) // disconnects and reconnects tumbler signal
+            setTumblerValue(amodel) // disconnects and reconnects tumbler signal
+            nmodel = amodel
+        }
     }
 
     onMaximumValueChanged: {
@@ -101,22 +105,34 @@ Rectangle {
 
         var prevDigitIdx = getIndexLeft(index)
         var tcol
+        var newval = null
         if(prevDigitIdx > 0) {
             if(from == 9 && to == 0) {
-//                    console.log("onColumnChanged: INCREMENTING idx" , prevDigitIdx, " col", index, " from ", from, " to", to)
-                incrementTumbler(prevDigitIdx)
+                //                    console.log("onColumnChanged: INCREMENTING idx" , prevDigitIdx, " col", index, " from ", from, " to", to)
+                //incrementTumbler(prevDigitIdx)
+                console.log("9 --> 0 new value would be", value + Math.pow(10, columnExp(index)))
+                newval = value + Math.pow(10, columnExp(index))
             }
-//                else if(fromidx === 0 && toidx === tcol.model.length - 1) {
+            //                else if(fromidx === 0 && toidx === tcol.model.length - 1) {
             else if (from === 0 && to === 9) {
-//                    console.log("onColumnChanged: DECREMENTING idx", prevDigitIdx, " col", index, " from ", from, " to", to, "from idx", fromidx, "to idx ", toidx)
-                decrementTumbler(prevDigitIdx)
+                //                    console.log("onColumnChanged: DECREMENTING idx", prevDigitIdx, " col", index, " from ", from, " to", to, "from idx", fromidx, "to idx ", toidx)
+                //decrementTumbler(prevDigitIdx)
+                console.log("0 --> 9 new value would be", value - Math.pow(10, columnExp(index)))
+                newval = value - Math.pow(10, columnExp(index))
             }
         }
         else
             console.log("index left of ", index, "is", prevDigitIdx)
 
-        nmodel = getModel()
+        if(newval == null)
+            nmodel = getModel()
+        else
+            nmodel = getNumberModel(newval)
+        disableValueChanged = true;
+        console.log("calling toValue from model ", nmodel)
         value = toValue(nmodel)
+        setTumblerValue(nmodel)
+        disableValueChanged = false;
     }
 
     function incrementTumbler(column) {
@@ -150,6 +166,20 @@ Rectangle {
                         tc.model[tc.currentIndex], "to idx", idx, " value ", tc.model[idx])
             tc.currentIndex = idx
         }
+        else
+            console.log("decrementing tumbler: IDX IS -1!, model", model, "looking for prev val", prev_val)
+        console.log("tc.currentIndex", tc.currentIndex, "model", tc.model)
+    }
+
+    function columnExp(column) {
+        if(column <= intDigits)
+            return intDigits - column
+        else if(column === intDigits + 1) { // point!
+            console.log("columnExp: error: column ", column, " is not valid")
+            return pow(10, -1000000);
+        }
+        else
+            return -(column - (intDigits + 2) + 1)
     }
 
     function getIndexLeft(index) {
@@ -199,8 +229,10 @@ Rectangle {
     function setTumblerValue(amodel) {
         var tc // tumbler column
         disconnectTumbler()
+        console.log("setTumblerValue from model", amodel)
         for(var i = 0; i < columns.length; i++) {
             tc = columns[i]
+            console.log("setting gurrent index from amodel[", i, "] which is value", amodel[i], "and index",  tc.model.indexOf(amodel[i]))
             tc.currentIndex=tc.model.indexOf(amodel[i])
         }
         connectTumbler()
@@ -221,7 +253,9 @@ Rectangle {
                 val = -val
             var integer_part = Math.floor(val)
             var decimal_part = val - integer_part
-            var dec_part_as_int = decimal_part * Math.pow(10, decDigits)
+            var dec_part_as_int = Math.floor(decimal_part * Math.pow(10, decDigits))
+
+            console.log("decimal part", decimal_part, "as int", dec_part_as_int)
 
             var i
             var digit
@@ -235,7 +269,7 @@ Rectangle {
             mo[i + 1] = "."
 
             for(i = 0; i < decDigits; i++) {
-                div = Math.pow(10, intDigits - i - 1)
+                div = Math.pow(10, decDigits - i - 1)
                 digit = Math.floor(dec_part_as_int / div)
                 dec_part_as_int -= digit * div
 
@@ -250,6 +284,7 @@ Rectangle {
 
     function updateTumblerModels(from_model) {
 
+        console.log("updateTumblerModels IN from ", from_model)
         disconnectTumbler()
 
         var i, j
@@ -273,6 +308,7 @@ Rectangle {
                 }
                 if(tumc.model.length !== ith_model.length) // very basic comparison
                 {
+                    console.log("changing model of column ", i , "from", tumc.model, " to", ith_model)
                     tumc.model = ith_model
                     if(tumc.model[tumc.currentIndex] !== digit) {
                         if(tumc.model.indexOf(digit) > -1)
@@ -283,7 +319,7 @@ Rectangle {
                 }
             }
         }
-
+        console.log("updateTumblerModels OUT")
         connectTumbler()
     }
 
@@ -315,15 +351,17 @@ Rectangle {
         // decimal part
         var dexp = -1;
         for(i = intDigits + 2; i < amodel.length; i++) {
-            val += amodel[i] * Math.pow(10, --dexp)
+            val += amodel[i] * Math.pow(10, dexp--)
         }
         if(amodel[0] === "-")
             val = -val
 
+        console.log("toValue from model", amodel, " we got ", val)
         return val
     }
 
     function adjustToBounds(amodel) {
+        console.log("calling toValue from adjustToBounds")
         var val_from_model = toValue(amodel)
         if(val_from_model > maximumValue) {
             return getNumberModel(maximumValue)
@@ -331,7 +369,7 @@ Rectangle {
         else if(val_from_model < minimumValue) {
             return getNumberModel(minimumValue)
         }
-         return amodel
+        return amodel
     }
 
     /*! \brief returns the model represented by the tumbler value
