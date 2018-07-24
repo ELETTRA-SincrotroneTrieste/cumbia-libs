@@ -319,6 +319,13 @@ Module {
         Property { name: "_default"; type: "QQuickItem"; isPointer: true }
     }
     Component {
+        prototype: "QQuickAction"
+        name: "QtQuick.Controls/Action 2.3"
+        exports: ["QtQuick.Controls/Action 2.3"]
+        exportMetaObjectRevisions: [3]
+        isComposite: true
+    }
+    Component {
         prototype: "QObject"
         name: "org.kde.kirigami/Action 2.0"
         exports: ["org.kde.kirigami/Action 2.0"]
@@ -351,13 +358,6 @@ Module {
             type: "QVariant"
             Parameter { name: "source"; type: "QVariant" }
         }
-    }
-    Component {
-        prototype: "QQuickAction"
-        name: "QtQuick.Controls/Action 2.3"
-        exports: ["QtQuick.Controls/Action 2.3"]
-        exportMetaObjectRevisions: [3]
-        isComposite: true
     }
     Component {
         prototype: "QQuickActionGroup"
@@ -418,14 +418,6 @@ Module {
     }
     Component {
         prototype: "QQuickApplicationWindow"
-        name: "QtQuick.Controls/ApplicationWindow 2.0"
-        exports: ["QtQuick.Controls/ApplicationWindow 2.0"]
-        exportMetaObjectRevisions: [0]
-        isComposite: true
-        defaultProperty: "contentData"
-    }
-    Component {
-        prototype: "QQuickApplicationWindow"
         name: "org.kde.kirigami/ApplicationWindow 2.0"
         exports: ["org.kde.kirigami/ApplicationWindow 2.0"]
         exportMetaObjectRevisions: [0]
@@ -448,6 +440,14 @@ Module {
         }
         Method { name: "hidePassiveNotification"; type: "QVariant" }
         Method { name: "applicationWindow"; type: "QVariant" }
+    }
+    Component {
+        prototype: "QQuickApplicationWindow"
+        name: "QtQuick.Controls/ApplicationWindow 2.0"
+        exports: ["QtQuick.Controls/ApplicationWindow 2.0"]
+        exportMetaObjectRevisions: [0]
+        isComposite: true
+        defaultProperty: "contentData"
     }
     Component {
         prototype: "QQuickItemDelegate"
@@ -531,7 +531,7 @@ Module {
         isComposite: true
         defaultProperty: "data"
         Property { name: "actions"; type: "QObject"; isList: true; isReadonly: true }
-        Property { name: "banner"; type: "BannerGroup_QMLTYPE_73"; isReadonly: true; isPointer: true }
+        Property { name: "banner"; type: "BannerGroup_QMLTYPE_69"; isReadonly: true; isPointer: true }
         Property { name: "header"; type: "QQuickItem"; isPointer: true }
         Property { name: "headerOrientation"; type: "int" }
         Property { name: "footer"; type: "QQuickItem"; isPointer: true }
@@ -585,17 +585,6 @@ Module {
     }
     Component {
         prototype: "QQuickRectangle"
-        name: "QtQuick.Controls.Fusion.impl/CheckIndicator 2.3"
-        exports: ["QtQuick.Controls.Fusion.impl/CheckIndicator 2.3"]
-        exportMetaObjectRevisions: [3]
-        isComposite: true
-        defaultProperty: "data"
-        Property { name: "control"; type: "QQuickItem"; isPointer: true }
-        Property { name: "pressedColor"; type: "QColor"; isReadonly: true }
-        Property { name: "checkMarkColor"; type: "QColor"; isReadonly: true }
-    }
-    Component {
-        prototype: "QQuickRectangle"
         name: "QtQuick.Controls.Material.impl/CheckIndicator 2.0"
         exports: ["QtQuick.Controls.Material.impl/CheckIndicator 2.0"]
         exportMetaObjectRevisions: [0]
@@ -615,6 +604,17 @@ Module {
         Property { name: "partiallyChecked"; type: "bool"; isReadonly: true }
     }
     Component {
+        prototype: "QQuickRectangle"
+        name: "QtQuick.Controls.Fusion.impl/CheckIndicator 2.3"
+        exports: ["QtQuick.Controls.Fusion.impl/CheckIndicator 2.3"]
+        exportMetaObjectRevisions: [3]
+        isComposite: true
+        defaultProperty: "data"
+        Property { name: "control"; type: "QQuickItem"; isPointer: true }
+        Property { name: "pressedColor"; type: "QColor"; isReadonly: true }
+        Property { name: "checkMarkColor"; type: "QColor"; isReadonly: true }
+    }
+    Component {
         prototype: "QQuickFocusScope"
         name: "QtQuick.Extras.Private/CircularButton 1.0"
         exports: ["QtQuick.Extras.Private/CircularButton 1.0"]
@@ -622,7 +622,7 @@ Module {
         isComposite: true
         defaultProperty: "data"
         Property { name: "isDefault"; type: "bool" }
-        Property { name: "menu"; type: "Menu_QMLTYPE_124"; isPointer: true }
+        Property { name: "menu"; type: "Menu_QMLTYPE_120"; isPointer: true }
         Property { name: "checkable"; type: "bool" }
         Property { name: "checked"; type: "bool" }
         Property { name: "exclusiveGroup"; type: "QQuickExclusiveGroup1"; isPointer: true }
@@ -811,6 +811,7 @@ Module {
         Property { name: "maximumValue"; type: "double" }
         Property { name: "nmodel"; type: "QVariant" }
         Property { name: "columns"; type: "QVariant" }
+        Property { name: "disableValueChanged"; type: "bool" }
         Property { name: "applyButtonText"; type: "string" }
         Property { name: "applybutton"; type: "QQuickButton"; isPointer: true }
         Property { name: "target"; type: "string" }
@@ -827,6 +828,11 @@ Module {
         }
         Method {
             name: "decrementTumbler"
+            type: "QVariant"
+            Parameter { name: "column"; type: "QVariant" }
+        }
+        Method {
+            name: "columnExp"
             type: "QVariant"
             Parameter { name: "column"; type: "QVariant" }
         }
@@ -894,6 +900,7 @@ Module {
         defaultProperty: "data"
         Property { name: "value"; type: "QVariant" }
         Property { name: "target"; type: "string" }
+        Property { name: "writer"; type: "QmlWriterBackend"; isReadonly: true; isPointer: true }
     }
     Component {
         prototype: "QQuickFocusScope"
@@ -1038,7 +1045,7 @@ Module {
         Property { name: "progress"; type: "double"; isReadonly: true }
         Signal { name: "activated" }
         Property { name: "isDefault"; type: "bool" }
-        Property { name: "menu"; type: "Menu_QMLTYPE_124"; isPointer: true }
+        Property { name: "menu"; type: "Menu_QMLTYPE_120"; isPointer: true }
         Property { name: "checkable"; type: "bool" }
         Property { name: "checked"; type: "bool" }
         Property { name: "exclusiveGroup"; type: "QQuickExclusiveGroup1"; isPointer: true }
@@ -1082,9 +1089,9 @@ Module {
     }
     Component {
         prototype: "QQuickFocusScope"
-        name: "QtQuick.Extras/Dial 1.1"
-        exports: ["QtQuick.Extras/Dial 1.1"]
-        exportMetaObjectRevisions: [1]
+        name: "QtQuick.Extras/Dial 1.0"
+        exports: ["QtQuick.Extras/Dial 1.0"]
+        exportMetaObjectRevisions: [0]
         isComposite: true
         defaultProperty: "data"
         Property { name: "__wrap"; type: "bool" }
@@ -1104,9 +1111,9 @@ Module {
     }
     Component {
         prototype: "QQuickFocusScope"
-        name: "QtQuick.Extras/Dial 1.0"
-        exports: ["QtQuick.Extras/Dial 1.0"]
-        exportMetaObjectRevisions: [0]
+        name: "QtQuick.Extras/Dial 1.1"
+        exports: ["QtQuick.Extras/Dial 1.1"]
+        exportMetaObjectRevisions: [1]
         isComposite: true
         defaultProperty: "data"
         Property { name: "__wrap"; type: "bool" }
@@ -1302,16 +1309,16 @@ Module {
     }
     Component {
         prototype: "QQuickLabel"
-        name: "QtQuick.Controls/Label 2.0"
-        exports: ["QtQuick.Controls/Label 2.0"]
+        name: "org.kde.kirigami/Label 2.0"
+        exports: ["org.kde.kirigami/Label 2.0"]
         exportMetaObjectRevisions: [0]
         isComposite: true
         defaultProperty: "data"
     }
     Component {
         prototype: "QQuickLabel"
-        name: "org.kde.kirigami/Label 2.0"
-        exports: ["org.kde.kirigami/Label 2.0"]
+        name: "QtQuick.Controls/Label 2.0"
+        exports: ["QtQuick.Controls/Label 2.0"]
         exportMetaObjectRevisions: [0]
         isComposite: true
         defaultProperty: "data"
@@ -1413,14 +1420,6 @@ Module {
     }
     Component {
         prototype: "QQuickPage"
-        name: "QtQuick.Controls/Page 2.0"
-        exports: ["QtQuick.Controls/Page 2.0"]
-        exportMetaObjectRevisions: [0]
-        isComposite: true
-        defaultProperty: "contentData"
-    }
-    Component {
-        prototype: "QQuickPage"
         name: "org.kde.kirigami/Page 2.0"
         exports: ["org.kde.kirigami/Page 2.0"]
         exportMetaObjectRevisions: [0]
@@ -1434,7 +1433,7 @@ Module {
         Property { name: "rightAction"; type: "QObject"; isPointer: true }
         Property {
             name: "actions"
-            type: "PageActionPropertyGroup_QMLTYPE_40"
+            type: "PageActionPropertyGroup_QMLTYPE_41"
             isReadonly: true
             isPointer: true
         }
@@ -1442,6 +1441,14 @@ Module {
             name: "backRequested"
             Parameter { name: "event"; type: "QVariant" }
         }
+    }
+    Component {
+        prototype: "QQuickPage"
+        name: "QtQuick.Controls/Page 2.0"
+        exports: ["QtQuick.Controls/Page 2.0"]
+        exportMetaObjectRevisions: [0]
+        isComposite: true
+        defaultProperty: "contentData"
     }
     Component {
         prototype: "QQuickPageIndicator"
@@ -1600,15 +1607,6 @@ Module {
     }
     Component {
         prototype: "QQuickRectangle"
-        name: "QtQuick.Controls.Material.impl/RadioIndicator 2.0"
-        exports: ["QtQuick.Controls.Material.impl/RadioIndicator 2.0"]
-        exportMetaObjectRevisions: [0]
-        isComposite: true
-        defaultProperty: "data"
-        Property { name: "control"; type: "QQuickItem"; isPointer: true }
-    }
-    Component {
-        prototype: "QQuickRectangle"
         name: "QtQuick.Controls.Fusion.impl/RadioIndicator 2.3"
         exports: ["QtQuick.Controls.Fusion.impl/RadioIndicator 2.3"]
         exportMetaObjectRevisions: [3]
@@ -1617,6 +1615,15 @@ Module {
         Property { name: "control"; type: "QQuickItem"; isPointer: true }
         Property { name: "pressedColor"; type: "QColor"; isReadonly: true }
         Property { name: "checkMarkColor"; type: "QColor"; isReadonly: true }
+    }
+    Component {
+        prototype: "QQuickRectangle"
+        name: "QtQuick.Controls.Material.impl/RadioIndicator 2.0"
+        exports: ["QtQuick.Controls.Material.impl/RadioIndicator 2.0"]
+        exportMetaObjectRevisions: [0]
+        isComposite: true
+        defaultProperty: "data"
+        Property { name: "control"; type: "QQuickItem"; isPointer: true }
     }
     Component {
         prototype: "QQuickRangeSlider"
@@ -1692,7 +1699,7 @@ Module {
         Property { name: "rightAction"; type: "QObject"; isPointer: true }
         Property {
             name: "actions"
-            type: "PageActionPropertyGroup_QMLTYPE_40"
+            type: "PageActionPropertyGroup_QMLTYPE_41"
             isReadonly: true
             isPointer: true
         }
@@ -1855,17 +1862,6 @@ Module {
         defaultProperty: "data"
     }
     Component {
-        prototype: "QQuickRectangle"
-        name: "QtQuick.Controls.Fusion.impl/SwitchIndicator 2.3"
-        exports: ["QtQuick.Controls.Fusion.impl/SwitchIndicator 2.3"]
-        exportMetaObjectRevisions: [3]
-        isComposite: true
-        defaultProperty: "data"
-        Property { name: "control"; type: "QQuickItem"; isPointer: true }
-        Property { name: "pressedColor"; type: "QColor"; isReadonly: true }
-        Property { name: "checkMarkColor"; type: "QColor"; isReadonly: true }
-    }
-    Component {
         prototype: "QQuickItem"
         name: "QtQuick.Controls.Material.impl/SwitchIndicator 2.0"
         exports: ["QtQuick.Controls.Material.impl/SwitchIndicator 2.0"]
@@ -1883,6 +1879,17 @@ Module {
         isComposite: true
         defaultProperty: "data"
         Property { name: "control"; type: "QQuickItem"; isPointer: true }
+    }
+    Component {
+        prototype: "QQuickRectangle"
+        name: "QtQuick.Controls.Fusion.impl/SwitchIndicator 2.3"
+        exports: ["QtQuick.Controls.Fusion.impl/SwitchIndicator 2.3"]
+        exportMetaObjectRevisions: [3]
+        isComposite: true
+        defaultProperty: "data"
+        Property { name: "control"; type: "QQuickItem"; isPointer: true }
+        Property { name: "pressedColor"; type: "QColor"; isReadonly: true }
+        Property { name: "checkMarkColor"; type: "QColor"; isReadonly: true }
     }
     Component {
         prototype: "QQuickTabBar"
@@ -1984,7 +1991,7 @@ Module {
         isComposite: true
         defaultProperty: "data"
         Property { name: "isDefault"; type: "bool" }
-        Property { name: "menu"; type: "Menu_QMLTYPE_124"; isPointer: true }
+        Property { name: "menu"; type: "Menu_QMLTYPE_120"; isPointer: true }
         Property { name: "checkable"; type: "bool" }
         Property { name: "checked"; type: "bool" }
         Property { name: "exclusiveGroup"; type: "QQuickExclusiveGroup1"; isPointer: true }
@@ -2062,14 +2069,6 @@ Module {
         defaultProperty: "contentData"
     }
     Component {
-        prototype: "QQuickTumbler"
-        name: "QtQuick.Controls/Tumbler 2.0"
-        exports: ["QtQuick.Controls/Tumbler 2.0"]
-        exportMetaObjectRevisions: [0]
-        isComposite: true
-        defaultProperty: "data"
-    }
-    Component {
         prototype: "QQuickFocusScope"
         name: "QtQuick.Extras/Tumbler 1.2"
         exports: ["QtQuick.Extras/Tumbler 1.2"]
@@ -2129,6 +2128,14 @@ Module {
         Property { name: "__panel"; type: "QQuickItem"; isPointer: true }
         Property { name: "styleHints"; type: "QVariant" }
         Property { name: "__styleData"; type: "QObject"; isPointer: true }
+    }
+    Component {
+        prototype: "QQuickTumbler"
+        name: "QtQuick.Controls/Tumbler 2.0"
+        exports: ["QtQuick.Controls/Tumbler 2.0"]
+        exportMetaObjectRevisions: [0]
+        isComposite: true
+        defaultProperty: "data"
     }
     Component {
         prototype: "QObject"
