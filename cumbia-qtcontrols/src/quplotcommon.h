@@ -9,7 +9,6 @@
 class QMouseEvent;
 class CuControlsReaderA;
 class CuControlsReaderFactoryI;
-class QuPlotBase;
 class CuDataListener;
 class Cumbia;
 class QuPlotCommonPrivate;
@@ -39,13 +38,13 @@ public:
 
     void addSource(const QString& s, CuDataListener *dl);
 
-    void unsetSource(const QString& src, QuPlotBase *plot);
+    void unsetSource(const QString& src);
 
     //void addSource(const QString& src)
 
     QStringList sources() const;
 
-    void unsetSources(QuPlotBase *plot);
+    void unsetSources();
 
     void configure(const QString& curveName, const QPointF &pxy);
 

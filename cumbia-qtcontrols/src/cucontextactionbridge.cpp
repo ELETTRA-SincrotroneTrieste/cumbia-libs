@@ -1,6 +1,10 @@
 #include "cucontextactionbridge.h"
 #include "cucontexti.h"
+
+#ifdef CUMBIAQTCONTROLS_HAS_QWT
 #include "cuinfodialog.h"
+#endif
+
 #include <QWidget>
 #include <QPoint>
 #include <cumacros.h>
@@ -103,6 +107,8 @@ void CuContextActionBridge::connectObject(QObject *o)
 /// @private // no doxygen
 void CuContextActionBridge::onLinkStatsRequest(QWidget *sender, CuContextI *w)
 {
+#ifdef CUMBIAQTCONTROLS_HAS_QWT
+
     if(d->cumbia)
     {
         CuInfoDialog dlg(0, d->cumbia, d->rfac);
@@ -113,6 +119,8 @@ void CuContextActionBridge::onLinkStatsRequest(QWidget *sender, CuContextI *w)
         CuInfoDialog dlg(0, d->cupool, d->fpool);
         dlg.exec(sender, w);
     }
+#else
+#endif
 }
 
 /// @private // no doxygen

@@ -40,6 +40,9 @@ QmlReaderBackend::QmlReaderBackend(QObject *parent) : QObject(parent)
 void QmlReaderBackend::init(CumbiaPool_O *poo_o)
 {
     d->context = new CuContext(poo_o->getPool(), poo_o->getFactory());
+    qDebug() << __FUNCTION__ << "CONTEXT" << d->context << "pool" << poo_o->getPool() <<
+                " factory is empty ?" << poo_o->getFactory().isEmpty() << "src " << d->source;
+
     if(!d->source.isEmpty())
         setSource(d->source);
 }
@@ -94,39 +97,39 @@ void QmlReaderBackend::m_configure(const CuData &da)
     QVariant v;
     try {
         if(da.containsKey("min"))
-            v = QVariant(std::stod(da["min"].toString()));
+            v = QVariant(strtod(da["min"].toString().c_str(), NULL));
         if(d->min != v) {
             d->min = v;
             emit minChanged();
         }
         if(da.containsKey("max"))
-            v = QVariant(std::stod(da["max"].toString()));
+            v = QVariant(strtod(da["max"].toString().c_str(), NULL));
         if(d->max != v) {
             d->max = v;
             emit maxChanged();
         }
 
         if(da.containsKey("min_warning"))
-            v = QVariant(std::stod(da["min_warning"].toString()));
+            v = QVariant(strtod(da["min_warning"].toString().c_str(), NULL));
         if(d->min_warning != v) {
             d->min_warning = v;
             emit min_warningChanged();
         }
         if(da.containsKey("max_warning"))
-            v = QVariant(std::stod(da["max_warning"].toString()));
+            v = QVariant(strtod(da["max_warning"].toString().c_str(), NULL));
         if(d->max_warning != v) {
             d->max_warning = v;
             emit max_warningChanged();
         }
 
         if(da.containsKey("min_alarm"))
-            v = QVariant(std::stod(da["min_alarm"].toString()));
+            v = QVariant(strtod(da["min_alarm"].toString().c_str(), NULL));
         if(d->min_alarm != v) {
             d->min_alarm = v;
             emit min_alarmChanged();
         }
         if(da.containsKey("max_alarm"))
-            v = QVariant(std::stod(da["max_alarm"].toString()));
+            v = QVariant(strtod(da["max_alarm"].toString().c_str(), NULL));
         if(d->max_alarm != v) {
             d->max_alarm = v;
             emit max_alarmChanged();
@@ -252,9 +255,12 @@ void QmlReaderBackend::onUpdate(const CuData &da)
 
 void QmlReaderBackend::setSource(const QString &s)
 {
+    printf("QmlReaderBackend.setSource: %s d->context %p \n", qstoc(s), d->context);
     if(d->context) {
         CuControlsReaderA * r = d->context->replace_reader(s.toStdString(), this);
+        printf("QmlReaderBackend.setSource r %p s %s r->source %s\n", r, qstoc(s), qstoc(r->source()));
         if(r && s != r->source()) {
+            printf("QmlReaderBackend.setSource setting source on CuControlsReaderA %p\n", r);
             r->setSource(s);
         }
     }

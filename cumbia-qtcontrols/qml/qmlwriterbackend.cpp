@@ -165,13 +165,13 @@ void QmlWriterBackend::m_configure(const CuData& da)
     // min, max
     try {
         if(da.containsKey("min"))
-            v = QVariant(std::stod(da["min"].toString()));
+            v = QVariant(strtod(da["min"].toString().c_str(), NULL));
         if(d->min != v) {
             d->min = v;
             emit minChanged();
         }
         if(da.containsKey("max"))
-            v = QVariant(std::stod(da["max"].toString()));
+            v = QVariant(strtod(da["max"].toString().c_str(), NULL));
         if(d->max != v) {
             d->max = v;
             emit maxChanged();

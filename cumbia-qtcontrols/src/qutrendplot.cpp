@@ -116,7 +116,8 @@ void QuTrendPlot::addSource(const QString &s)
 
 void QuTrendPlot::unsetSource(const QString &s)
 {
-    d->plot_common->unsetSource(s, this);
+    d->plot_common->unsetSource(s);
+    removeCurve(s);
 }
 
 void QuTrendPlot::setPeriod(int p)
@@ -126,7 +127,9 @@ void QuTrendPlot::setPeriod(int p)
 
 void QuTrendPlot::unsetSources()
 {
-    d->plot_common->unsetSources(this); // this: plot common will remove curves
+    foreach(CuControlsReaderA *r, getContext()->readers())
+        removeCurve(r->source());
+    d->plot_common->unsetSources();
 }
 
 void QuTrendPlot::onUpdate(const CuData &da)

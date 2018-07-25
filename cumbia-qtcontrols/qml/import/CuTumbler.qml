@@ -47,7 +47,7 @@ Rectangle {
         if(!disableValueChanged) {
             console.log("--- onValueChanged: ", value)
             var amodel = getNumberModel(value)
-            updateTumblerModels(amodel) // disconnects and reconnects tumbler signal
+//            updateTumblerModels(amodel) // disconnects and reconnects tumbler signal
             setTumblerValue(amodel) // disconnects and reconnects tumbler signal
             nmodel = amodel
         }
@@ -101,7 +101,7 @@ Rectangle {
             nmodel = adjustToBounds(nmodel)
         }
 
-        updateTumblerModels(nmodel)
+//        updateTumblerModels(nmodel)
 
         var prevDigitIdx = getIndexLeft(index)
         var tcol
@@ -128,47 +128,13 @@ Rectangle {
             nmodel = getModel()
         else
             nmodel = getNumberModel(newval)
+
+        updateTumblerModels(nmodel)
         disableValueChanged = true;
         console.log("calling toValue from model ", nmodel)
         value = toValue(nmodel)
         setTumblerValue(nmodel)
         disableValueChanged = false;
-    }
-
-    function incrementTumbler(column) {
-        var tc = columns[column]
-        var val = tc.model[tc.currentIndex]
-        var next_val
-        if(val === 9)
-            next_val = 0
-        else
-            next_val = val + 1
-        var idx = tc.model.indexOf(next_val)
-        if(idx > -1) {
-            console.log("incrementing tumbler", column, "from idx", tc.currentIndex,
-                        tc.model[tc.currentIndex], "to idx", idx, " value ", tc.model[idx])
-            tc.currentIndex = idx
-        }
-    }
-
-    function decrementTumbler(column) {
-        var tc = columns[column]
-        var val = tc.model[tc.currentIndex]
-
-        var prev_val
-        if(val === 0)
-            prev_val = 9
-        else
-            prev_val = val - 1
-        var idx = tc.model.indexOf(prev_val)
-        if(idx > -1) {
-            console.log("decrementing tumbler", column, "from idx", tc.currentIndex,
-                        tc.model[tc.currentIndex], "to idx", idx, " value ", tc.model[idx])
-            tc.currentIndex = idx
-        }
-        else
-            console.log("decrementing tumbler: IDX IS -1!, model", model, "looking for prev val", prev_val)
-        console.log("tc.currentIndex", tc.currentIndex, "model", tc.model)
     }
 
     function columnExp(column) {
@@ -234,6 +200,8 @@ Rectangle {
             tc = columns[i]
             console.log("setting gurrent index from amodel[", i, "] which is value", amodel[i], "and index",  tc.model.indexOf(amodel[i]))
             tc.currentIndex=tc.model.indexOf(amodel[i])
+            console.log("tc.current dafuq index ", tc.currentIndex, "of column (tumbler)", i, "model", tc.model, "shows??",
+                       tc.model[tc.currentIndex] , "currentItem", tc.currentItem.text)
         }
         connectTumbler()
     }
@@ -253,7 +221,7 @@ Rectangle {
                 val = -val
             var integer_part = Math.floor(val)
             var decimal_part = val - integer_part
-            var dec_part_as_int = Math.floor(decimal_part * Math.pow(10, decDigits))
+            var dec_part_as_int = Math.round(decimal_part * Math.pow(10, decDigits))
 
             console.log("decimal part", decimal_part, "as int", dec_part_as_int)
 

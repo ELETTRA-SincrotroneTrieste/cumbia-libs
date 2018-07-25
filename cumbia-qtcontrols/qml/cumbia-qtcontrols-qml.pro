@@ -48,21 +48,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+DEFINES += CUMBIAQTCONTROLS_QML_HAS_CHARTS=1
 
 SOURCES += \
     cumbiainitoptions.cpp \
     qmlreaderbackend.cpp \
     cumbiaqmlcontrolsplugin.cpp \
-    qmlchartbackend.cpp \
-    qmlwriterbackend.cpp
+    qmlwriterbackend.cpp \
+    qmlchartbackend.cpp
 
 HEADERS += \
         qml_global.h \
     cumbiainitoptions.h \
     qmlreaderbackend.h \
     cumbiaqmlcontrolsplugin.h \
-    qmlchartbackend.h \
-    qmlwriterbackend.h
+    qmlwriterbackend.h \
+    qmlchartbackend.h
 
 DISTFILES += \
     cumbia-qtcontrols-qml.pri \
@@ -70,14 +71,14 @@ DISTFILES += \
     plugins.qmltypes \
     import/CumbiaCircularGauge.qml \
     import/CumbiaLabel.qml \
-    import/CumbiaTrendChart.qml \
-    import/CumbiaSpectrumChart.qml \
     jslib/CmdLineUtils.js \
     README.txt \
     import/CumbiaDial.qml \
     import/CuButton.qml \
     import/CuTumbler.qml \
-    import/CuWButton.qml
+    import/CuWButton.qml \
+    import/CumbiaTrendChart.qml \
+    import/CumbiaSpectrumChart.qml
 
 designer.files =  \
     designer/cumbiaqmlcontrols.metainfo \

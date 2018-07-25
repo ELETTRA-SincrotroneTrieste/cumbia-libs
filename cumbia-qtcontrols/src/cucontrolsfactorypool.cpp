@@ -206,6 +206,6 @@ std::string CuControlsFactoryPool::guessDomainBySrc(const std::string &src) cons
  */
 bool CuControlsFactoryPool::isEmpty() const
 {
-    return m_rmap.size() == 0 || m_wmap.size() == 0;
+    return m_rmap.size() == 0 && m_wmap.size() == 0;
 }
 

@@ -10,8 +10,6 @@
 #include "cucontext.h"
 #include <cumbia.h>
 
-#include <quplot_base.h>
-
 /** @private */
 class QuPlotCommonPrivate
 {
@@ -61,18 +59,14 @@ QStringList QuPlotCommon::sources() const
     return l;
 }
 
-void QuPlotCommon::unsetSources(QuPlotBase *plot)
+void QuPlotCommon::unsetSources()
 {
-    foreach(CuControlsReaderA *r, d->context->readers())
-        plot->removeCurve(r->source());
-
     d->context->disposeReader();
 }
 
-void QuPlotCommon::unsetSource(const QString &src, QuPlotBase *plot)
+void QuPlotCommon::unsetSource(const QString &src)
 {
     d->context->disposeReader(src.toStdString());
-    plot->removeCurve(src);
 }
 
 /* Add a list of sources to the plot

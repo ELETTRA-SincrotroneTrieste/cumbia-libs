@@ -1,6 +1,7 @@
 #include "cudata.h"
 #include "cumacros.h"
 #include <string>
+#include <string.h>
 #include <sys/time.h>
 #include <unordered_map>
 #include <map>
@@ -289,12 +290,15 @@ std::string CuData::toString() const
 {
     std::string r = "CuData { ";
     std::map<std::string, CuVariant>::const_iterator i;
+    char siz[16], empty[16];
+    snprintf(siz, 16, "%ld", size());
+    snprintf(empty, 16, "%d", isEmpty());
     for(i = d->datamap.begin(); i != d->datamap.end(); ++i)
     {
         r += "[\"" + i->first + "\" -> " + i->second.toString() + "], ";
     }
     r.replace(r.length() - 2, 2, "");
-    r += " } (size: " + std::to_string(size()) + " isEmpty: " + std::to_string(isEmpty()) + ")";
+    r += " } (size: " + std::string(siz) + " isEmpty: " + std::string(empty) + ")";
     return r;
 }
 

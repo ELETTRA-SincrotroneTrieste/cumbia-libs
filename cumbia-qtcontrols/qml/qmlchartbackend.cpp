@@ -57,6 +57,11 @@ QmlChartBackend::QmlChartBackend(QObject *parent) : QObject(parent)
     d->bufsiz = -1;
 }
 
+QmlChartBackend::~QmlChartBackend()
+{
+
+}
+
 void QmlChartBackend::init(CumbiaPool_O *poo_o)
 {
     d->plot_common = new QuPlotCommon(poo_o->getPool(), poo_o->getFactory());
@@ -88,7 +93,7 @@ void QmlChartBackend::m_configure(const CuData &da)
     double min = 0.0,  max = 0.0;
     try {
         if(da.containsKey("min")) {
-            v = QVariant(std::stod(da["min"].toString()));
+            v = QVariant(strtod(da["min"].toString().c_str(), NULL));
             min = v.toDouble();
             if(!d->configure_cnt || min < d->ym) {
                 d->ym = min;
@@ -96,7 +101,7 @@ void QmlChartBackend::m_configure(const CuData &da)
             }
         }
         if(da.containsKey("max")) {
-            v = QVariant(std::stod(da["max"].toString()));
+            v = QVariant(strtod(da["max"].toString().c_str(), NULL));
             max = v.toDouble();
             if(!d->configure_cnt || max > d->yM) {
                 d->yM = max;

@@ -123,7 +123,7 @@ void QuCircularGauge::m_configure(const CuData& da)
         const char *name = thnam.toStdString().c_str();
         try {
             if(da.containsKey(name)) {
-                setProperty(threshs[thnam], std::stod(da[name].toString()));
+                setProperty(threshs[thnam], strtod(da[name].toString().c_str(), NULL));
             }
         }
         catch(const std::invalid_argument& ) {

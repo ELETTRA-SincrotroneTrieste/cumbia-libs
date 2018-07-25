@@ -4,7 +4,12 @@
 #
 #-------------------------------------------------
 
-QT       += widgets opengl printsupport
+QT       += widgets opengl
+
+
+!android-g++ {
+    QT += printsupport
+}
 
 greaterThan(QT_MAJOR_VERSION, 4) {
     QTVER_SUFFIX = -qt$${QT_MAJOR_VERSION}
@@ -80,24 +85,30 @@ QWT_INCLUDES_USR = $${QWT_HOME_USR}/include/qwt
 #
 # (or wherever cumbia lib is installed) before running qmake
 #
-CONFIG += link_pkgconfig
-PKGCONFIG += cumbia cumbia-qtcontrols$${QTVER_SUFFIX}
 
-packagesExist(qwt){
-    PKGCONFIG += qwt
-    QWT_PKGCONFIG = qwt
-    message("Qwt: using pkg-config to configure qwt includes and libraries")
+unix:!android-g++ {
+    CONFIG += link_pkgconfig
+    PKGCONFIG += cumbia cumbia-qtcontrols$${QTVER_SUFFIX}
+
+    packagesExist(qwt){
+        PKGCONFIG += qwt
+        QWT_PKGCONFIG = qwt
+        message("Qwt: using pkg-config to configure qwt includes and libraries")
+    }
+    else:packagesExist(Qt5Qwt6){
+        PKGCONFIG += Qt5Qwt6
+        QWT_PKGCONFIG = Qt5Qwt6
+        message("Qwt: using pkg-config to configure qwt includes and libraries (Qt5Qwt6)")
+    } else {
+        warning("Qwt: no pkg-config file found")
+        warning("Qwt: export PKG_CONFIG_PATH=/usr/path/to/qwt/lib/pkgconfig if you want to enable pkg-config for qwt")
+        warning("Qwt: if you build and install qwt from sources, be sure to uncomment/enable ")
+        warning("Qwt: QWT_CONFIG     += QwtPkgConfig in qwtconfig.pri qwt project configuration file")
+    }
 }
-else:packagesExist(Qt5Qwt6){
-    PKGCONFIG += Qt5Qwt6
-    QWT_PKGCONFIG = Qt5Qwt6
-    message("Qwt: using pkg-config to configure qwt includes and libraries (Qt5Qwt6)")
-} else {
-    warning("Qwt: no pkg-config file found")
-    warning("Qwt: export PKG_CONFIG_PATH=/usr/path/to/qwt/lib/pkgconfig if you want to enable pkg-config for qwt")
-    warning("Qwt: if you build and install qwt from sources, be sure to uncomment/enable ")
-    warning("Qwt: QWT_CONFIG     += QwtPkgConfig in qwtconfig.pri qwt project configuration file")
-}
+
+
+
 
 #
 # + ----------------------------------------------------------------- +
@@ -151,19 +162,34 @@ doc.commands = doxygen \
 
 unix:INCLUDEPATH += \
     $${CUMBIA_QTCONTROLS_INCLUDES} \
-    $${QWT_INCLUDES} \
+
+
+unix {
+    INCLUDEPATH += $${QWT_INCLUDES} \
     $${QWT_INCLUDES_USR}
+}
 
 unix:LIBS +=  \
     -L$${CUMBIA_QTCONTROLS_LIBDIR} -l$${cumbia_qtcontrols_LIB}
 
 # need to adjust qwt path
-isEmpty(QWT_PKGCONFIG){
-    message("no Qwt pkg-config file found")
-    message("adding $${QWT_INCLUDES} and $${QWT_INCLUDES_USR} to include path")
-    message("adding  -L$${QWT_HOME_USR}/lib -l$${QWT_LIB}$${QTVER_SUFFIX} to libs")
-    message("this should work for ubuntu installations")
 
-    unix:INCLUDEPATH += $${QWT_INCLUDES} $${QWT_INCLUDES_USR}
-    unix:LIBS += -L$${QWT_HOME_USR}/lib -l$${QWT_LIB}$${QTVER_SUFFIX}
+unix: android-g++ {
+    unix:INCLUDEPATH += /usr/local/include/cumbia
+    unix:LIBS += -L/libs/armeabi-v7a/ -lcumbia
+}
+
+
+unix: !android-g++ {
+
+    isEmpty(QWT_PKGCONFIG) {
+        message("no Qwt pkg-config file found")
+        message("adding $${QWT_INCLUDES} and $${QWT_INCLUDES_USR} to include path")
+        message("adding  -L$${QWT_HOME_USR}/lib -l$${QWT_LIB}$${QTVER_SUFFIX} to libs")
+        message("this should work for ubuntu installations")
+
+        unix:INCLUDEPATH += $${QWT_INCLUDES} $${QWT_INCLUDES_USR} /usr/local/include/cumbia /usr/local/qwt-6.1.3/include
+        unix:LIBS += -L$${QWT_HOME_USR}/lib -L/usr/local/lib -L/usr/local/qwt-6.1.3/lib -lcumbia
+    }
+
 }

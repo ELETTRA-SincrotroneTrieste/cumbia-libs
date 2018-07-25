@@ -106,12 +106,15 @@ void QuSpectrumPlot::addSource(const QString &s)
 
 void QuSpectrumPlot::unsetSources()
 {
-    d->plot_common->unsetSources(this);
+    foreach(CuControlsReaderA *r, getContext()->readers())
+        removeCurve(r->source());
+    d->plot_common->unsetSources();
 }
 
 void QuSpectrumPlot::unsetSource(const QString& src)
 {
-    d->plot_common->unsetSource(src, this);
+    d->plot_common->unsetSource(src);
+    removeCurve(src);
 }
 
 /** \brief Changes the refresh period on the plot, issuing a setData on every reader

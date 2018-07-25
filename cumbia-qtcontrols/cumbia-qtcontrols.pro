@@ -6,6 +6,8 @@
 
 include(cumbia-qtcontrols.pri)
 
+
+
 CONFIG += debug
 
 # remove ourselves (defined in .pri)
@@ -35,31 +37,19 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/qupalette.cpp \
     src/cucontrolsutils.cpp \
     src/qulogimpl.cpp \
-    src/qutrendplot.cpp \
 #    src/cucharts/callout.cpp \
 #    src/cucharts/quplotcommon.cpp \
 #    src/cucharts/quspectrumplot.cpp \
 #    src/cucharts/quchartconfdialog.cpp \
     src/quled.cpp \
     src/qutable.cpp \
-    src/widgets-base/eplotlight/scrollbar.cpp \
+    src/quplotcommon.cpp \
     src/widgets-base/number_delegate.cpp \
     src/widgets-base/eng_notation.cpp \
     src/widgets-base/leftclick_with_modifiers_eater.cpp \
     src/qthreadseventbridge.cpp \
     src/qthreadseventbridgefactory.cpp \
     src/cuevent_qt.cpp \
-    src/quplotcommon.cpp \
-    src/widgets-base/eplotlight/quplot_base.cpp \
-    src/widgets-base/eplotlight/quplotzoomcomponent.cpp \
-    src/widgets-base/eplotlight/quplotmarkercomponent.cpp \
-    src/widgets-base/eplotlight/quplotcanvaspaintercomponent.cpp \
-    src/widgets-base/eplotlight/quplotaxescomponent.cpp \
-    src/widgets-base/eplotlight/quplotcontextmenucomponent.cpp \
-    src/widgets-base/eplotlight/qutimescaledraw.cpp \
-    src/widgets-base/eplotlight/quplotcurve.cpp \
-    src/quspectrumplot.cpp \
-    src/widgets-base/eplotlight/quplotbasecontextmenustrategy.cpp \
     src/cucontrolsfactorypool.cpp \
     src/quapplynumeric.cpp \
     src/widgets-base/einputoutputwidget.cpp \
@@ -68,7 +58,6 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/culinkstats.cpp \
     src/cucontextmenu.cpp \
     src/cucontextactionbridge.cpp \
-    src/cuinfodialog.cpp \
     src/cucontext.cpp \
     src/quapplication.cpp \
     src/qumbiaizer.cpp \
@@ -99,8 +88,6 @@ HEADERS += cumbiaqtcontrols.h\
 #    src/cucharts/quspectrumplot.h \
 #    src/cucharts/quchartconfdialog.h \
     src/qutable.h \
-    src/qutrendplot.h \
-    src/widgets-base/eplotlight/scrollbar.h \
     src/widgets-base/string_delegate.h \
     src/widgets-base/number_delegate.h \
     src/widgets-base/int_delegate.h \
@@ -113,25 +100,13 @@ HEADERS += cumbiaqtcontrols.h\
     src/quplotcommon.h \
     src/quwidgetupdatestrategy_i.h \
     src/widgets-base/quwidgetinterface.h \
-    src/widgets-base/eplotlight/quplot_base.h \
-    src/widgets-base/eplotlight/quplotcomponent.h \
-    src/widgets-base/eplotlight/quplotzoomcomponent.h \
-    src/widgets-base/eplotlight/quplotmarkercomponent.h \
-    src/widgets-base/eplotlight/quplotcanvaspaintercomponent.h \
-    src/widgets-base/eplotlight/quplotaxescomponent.h \
-    src/widgets-base/eplotlight/quplotcontextmenucomponent.h \
-    src/widgets-base/eplotlight/qutimescaledraw.h \
-    src/widgets-base/eplotlight/quplotcurve.h \
-    src/quspectrumplot.h \
     src/quwidgetcontextmenustrategyi.h \
-    src/widgets-base/eplotlight/quplotbasecontextmenustrategy.h \
     src/quapplynumeric.h \
     src/widgets-base/einputoutputwidget.h \
     src/quinputoutput.h \
     src/culinkstats.h \
     src/cucontextmenu.h \
     src/cucontextactionbridge.h \
-    src/cuinfodialog.h \
     src/cucontext.h \
     src/quapplication.h \
     src/qudbusplugininterface.h \
@@ -149,17 +124,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/quspinbox.h \
     src/qudoublespinbox.h \
     src/qulineedit.h \
-    src/cumbiapool_o.h
-
-
-RESOURCES += \
-    src/widgets-base/eimage/confdialog.qrc
-
-FORMS += \
-    src/widgets-base/eimage/confdialog.ui \
-    src/widgets-base/eplotlight/configuration.ui 
-
-HEADERS += \
+    src/cumbiapool_o.h\
     src/widgets-base/eimage/colortablemap.h \
     src/widgets-base/eimage/confdialog.h \
     src/widgets-base/eimage/eimagegl.h \
@@ -167,13 +132,6 @@ HEADERS += \
     src/widgets-base/eimage/eimagewidget.h \
     src/widgets-base/eimage/eimagewidgetbase.h \
     src/widgets-base/eimage/imagereadevent.h \
-    src/widgets-base/eplotlight/ecurvedata.h \
-    src/widgets-base/eplotlight/eplot_configuration_widget.h \
- #   src/widgets-base/eplotlight/eplotlight.h \
- #   src/widgets-base/eplotlight/eplotlight_base.h \
- #   src/widgets-base/eplotlight/eplotlight_marker.h \
-    src/widgets-base/eplotlight/plotsaver.h \
-    src/widgets-base/eplotlight/scrollzoomer.h \
     src/widgets-base/eplotlight/snapshot.h \
     src/widgets-base/dec_int_from_format.h \
     src/widgets-base/eapplybutton.h \
@@ -186,6 +144,63 @@ HEADERS += \
     src/widgets-base/enumeric.h \
     src/widgets-base/esimplelabel.h
 
+unix:!android-g++ {
+
+    DEFINES += CUMBIAQTCONTROLS_HAS_QWT=1
+    HEADERS += \
+    src/widgets-base/eplotlight/quplot_base.h \
+    src/widgets-base/eplotlight/quplotcomponent.h \
+    src/widgets-base/eplotlight/quplotzoomcomponent.h \
+    src/widgets-base/eplotlight/quplotmarkercomponent.h \
+    src/widgets-base/eplotlight/quplotcanvaspaintercomponent.h \
+    src/widgets-base/eplotlight/quplotaxescomponent.h \
+    src/widgets-base/eplotlight/quplotcontextmenucomponent.h \
+    src/widgets-base/eplotlight/qutimescaledraw.h \
+    src/widgets-base/eplotlight/quplotcurve.h \
+    src/widgets-base/eplotlight/quplotbasecontextmenustrategy.h \
+    src/widgets-base/eplotlight/scrollbar.h \
+    src/quspectrumplot.h \
+    src/qutrendplot.h \
+    src/widgets-base/eplotlight/ecurvedata.h \
+    src/widgets-base/eplotlight/eplot_configuration_widget.h \
+    src/widgets-base/eplotlight/plotsaver.h \
+    src/widgets-base/eplotlight/scrollzoomer.h \
+    src/cuinfodialog.h
+
+    SOURCES +=  \
+    src/widgets-base/eplotlight/quplot_base.cpp \
+    src/widgets-base/eplotlight/quplotzoomcomponent.cpp \
+    src/widgets-base/eplotlight/quplotmarkercomponent.cpp \
+    src/widgets-base/eplotlight/quplotcanvaspaintercomponent.cpp \
+    src/widgets-base/eplotlight/quplotaxescomponent.cpp \
+    src/widgets-base/eplotlight/quplotcontextmenucomponent.cpp \
+    src/widgets-base/eplotlight/qutimescaledraw.cpp \
+    src/widgets-base/eplotlight/quplotcurve.cpp \
+    src/quspectrumplot.cpp \
+    src/qutrendplot.cpp \
+    src/cuinfodialog.cpp \
+    src/widgets-base/eplotlight/quplotbasecontextmenustrategy.cpp \
+    src/widgets-base/eplotlight/scrollbar.cpp \
+    src/widgets-base/eplotlight/ecurvedata.cpp \
+    src/widgets-base/eplotlight/eplot_configuration_widget.cpp \
+    src/widgets-base/eplotlight/plotsaver.cpp \
+    src/widgets-base/eplotlight/scrollzoomer.cpp \
+    src/widgets-base/eplotlight/snapshot.cpp
+
+}
+
+android-g++ {
+    LIBS -= -lpthread
+}
+
+RESOURCES += \
+    src/widgets-base/eimage/confdialog.qrc
+
+FORMS += \
+    src/widgets-base/eimage/confdialog.ui \
+    src/widgets-base/eplotlight/configuration.ui 
+
+
 SOURCES += \
     src/widgets-base/eimage/colortablemap.cpp \
     src/widgets-base/eimage/confdialog.cpp \
@@ -194,14 +209,6 @@ SOURCES += \
     src/widgets-base/eimage/eimagewidget.cpp \
     src/widgets-base/eimage/eimagewidgetbase.cpp \
     src/widgets-base/eimage/imagereadevent.cpp \
-    src/widgets-base/eplotlight/ecurvedata.cpp \
-    src/widgets-base/eplotlight/eplot_configuration_widget.cpp \
-#    src/widgets-base/eplotlight/eplotlight.cpp \
-#    src/widgets-base/eplotlight/eplotlight_base.cpp \
-#    src/widgets-base/eplotlight/eplotlight_marker.cpp \
-    src/widgets-base/eplotlight/plotsaver.cpp \
-    src/widgets-base/eplotlight/scrollzoomer.cpp \
-    src/widgets-base/eplotlight/snapshot.cpp \
     src/widgets-base/dec_int_from_format.cpp \
     src/widgets-base/eapplybutton.cpp \
     src/widgets-base/eapplynumeric.cpp \
@@ -225,7 +232,7 @@ unix:INCLUDEPATH += src \
     src/widgets-base/eimage
 
 unix:LIBS -= \
-    -l$${cumbia_qtcontrols_LIB}
+    -l$${cumbia_qtcontrols_LIB} -lpthread
 
 unix {
 
@@ -244,7 +251,11 @@ unix {
     other_inst.path = $${CUMBIA_QTCONTROLS_INCLUDES}
 
     target.path = $${CUMBIA_QTCONTROLS_LIBDIR}
-    INSTALLS += target doc inc other_inst
+    INSTALLS += target inc other_inst
+
+    !android-g++ {
+        INSTALLS += doc
+    }
 
 # generate pkg config file
     CONFIG += create_pc create_prl no_install_prl

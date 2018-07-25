@@ -1676,7 +1676,7 @@ std::string CuVariant::dataTypeStr(int t) const
     };
     if(t >= 0 && t < EndDataTypes)
         return std::string(v[t]);
-    return std::string(std::to_string(t) + " OutOfRange");
+    return std::string(" OutOfRange");
 }
 
 /*! \brief string representation of CuVariant::DataFormat
@@ -1691,6 +1691,6 @@ std::string CuVariant::dataFormatStr(int f) const
     };
     if(f < EndFormatTypes)
         return std::string(v[f]);
-    return std::string(std::to_string(f) + " OutOfRange");
+    return std::string( " OutOfRange");
 }
 

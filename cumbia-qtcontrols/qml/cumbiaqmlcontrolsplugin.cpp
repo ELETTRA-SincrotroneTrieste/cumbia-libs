@@ -12,8 +12,6 @@ void CumbiaQmlControlsPlugin::registerTypes(const char *uri)
     const QString prefix = baseUrl().toString();
     qmlRegisterType(QUrl(prefix + "/CumbiaCircularGauge.qml"), uri, 1, 0, "CumbiaCircularGauge");
     qmlRegisterType(QUrl(prefix + "/CumbiaLabel.qml"), uri, 1, 0, "CumbiaLabel");
-    qmlRegisterType(QUrl(prefix + "/CumbiaTrendChart.qml"), uri, 1, 0, "CumbiaTrendChart");
-    qmlRegisterType(QUrl(prefix + "/CumbiaSpectrumChart.qml"), uri, 1, 0, "CumbiaSpectrumChart");
 
     // writers
     qmlRegisterType(QUrl(prefix + "/CumbiaDial.qml"), uri, 1, 0, "CumbiaDial");
@@ -24,5 +22,10 @@ void CumbiaQmlControlsPlugin::registerTypes(const char *uri)
     qmlRegisterType<CumbiaPool_O>(uri, 1, 0, "CumbiaPool_O");
     qmlRegisterType<QmlReaderBackend>(uri, 1, 0, "QmlReaderBackend");
     qmlRegisterType<QmlWriterBackend>(uri, 1, 0, "QmlWriterBackend");
+
+#ifdef CUMBIAQTCONTROLS_QML_HAS_CHARTS
     qmlRegisterType<QmlChartBackend>(uri, 1, 0, "QmlChartBackend");
+    qmlRegisterType(QUrl(prefix + "/CumbiaTrendChart.qml"), uri, 1, 0, "CumbiaTrendChart");
+    qmlRegisterType(QUrl(prefix + "/CumbiaSpectrumChart.qml"), uri, 1, 0, "CumbiaSpectrumChart");
+#endif
 }

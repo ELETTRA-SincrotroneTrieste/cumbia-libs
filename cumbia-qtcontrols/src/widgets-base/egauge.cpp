@@ -265,11 +265,11 @@ void EAbstractGauge::configure()
 	for (int i = 0; i < m_numMajorTicks; i++)
 	{
 		double representedValue = val;
-#ifdef __FreeBSD__
-		d_logarithmicScale ? representedValue  = pow(val, 10) : representedValue  = val;
-#else
-                d_logarithmicScale ? representedValue  = exp10(val) : representedValue  = val;
-#endif
+//#ifdef __FreeBSD__
+//		d_logarithmicScale ? representedValue  = pow(val, 10) : representedValue  = val;
+//#else
+                d_logarithmicScale ? representedValue  = pow(val, 10) : representedValue  = val;
+//#endif
         EngString engString(QString().sprintf(qstoc(m_valueFormat), representedValue), m_valueFormat, representedValue);
 // 		QString s = QString::number(representedValue);
 		if ((longestLabelIndex == -1) || engString.length() > labels[longestLabelIndex].length())

@@ -197,13 +197,13 @@ void QuTable::configure (const CuData& da)
     {
         if(da.containsKey("numRows"))
         {
-            int numRows = std::stoi(da["numRows"].toString());
+            int numRows = strtoll(da["numRows"].toString().c_str(), NULL, 10);
             if(numRows > 0)
                 EFlag::setNumRows(numRows);
         }
         if(da.containsKey("numColumns"))
         {
-            int numColumns = std::stoi(da["numColumns"].toString());
+            int numColumns = strtoll(da["numColumns"].toString().c_str(), NULL, 10);
             if(numColumns > 0)
                 EFlag::setNumColumns(numColumns);
         }

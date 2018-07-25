@@ -12,6 +12,7 @@ CircularGauge {
         id: backend
         source: ""
         Component.onCompleted: {
+            console.log("CircularGauge.QmlReaderBackend: calling init")
             init(cumbia_poo_o)
         }
     }

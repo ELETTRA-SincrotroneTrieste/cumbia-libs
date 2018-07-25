@@ -5,6 +5,7 @@
 #include <cuvariant.h>
 #include <string> // stold
 #include <stdexcept>
+#include <stdlib.h>
 
 /** \brief convert the current *scalar* CuVariant into a variable of type T.
  *
@@ -59,7 +60,7 @@ template<typename T> bool CuVariant::to(T &val) const
             try
             {
                 // try converting to long double
-                val = std::stold(this->toString());
+                val = strtold(this->toString().c_str(), NULL);
         }
 
             catch(const std::invalid_argument& ) {
@@ -161,7 +162,7 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
                 try
                 {
                     // try converting to long double
-                    ld = std::stold(sv[i]);
+                    ld = strtold(sv[i].c_str(), NULL);
                     v.push_back(static_cast<T>(ld));
                 }
                 catch(const std::invalid_argument& ) {
@@ -202,7 +203,7 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
             try
             {
                 // try converting to long double
-                long double ld = std::stold(toString());
+                long double ld = strtold(toString().c_str(), NULL);
                 v.push_back(static_cast<T>(ld));
             }
             catch(const std::invalid_argument &) {

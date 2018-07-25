@@ -30,6 +30,8 @@ class QmlChartBackend : public QObject, public CuDataListener, public CuContextI
 public:
     explicit QmlChartBackend(QObject *parent = nullptr);
 
+    virtual ~QmlChartBackend();
+
     Q_INVOKABLE void init(CumbiaPool_O *poo_o);
 
     QString sources() const;

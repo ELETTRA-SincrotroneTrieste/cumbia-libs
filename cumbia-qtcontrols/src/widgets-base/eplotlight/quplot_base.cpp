@@ -29,9 +29,9 @@
 #include "quwidgetcontextmenustrategyi.h"
 #include "quwidgetupdatestrategy_i.h"
 
-#ifndef __FreeBSD__
-#include <values.h>
-#endif
+//#ifndef __FreeBSD__
+//#include <values.h>
+//#endif
 
 using namespace std; /* std::isnan issue across different compilers/compiling standards */
 

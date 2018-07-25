@@ -101,7 +101,13 @@ SHAREDIR = $${INSTALL_ROOT}/share
 doc.commands = doxygen \
     Doxyfile;
 
-unix {
+unix:android-g++ {
+    unix:INCLUDEPATH += /usr/local/include/cumbia
+    unix:LIBS +=  -L/libs/armeabi-v7a/ -lcumbia
+    unix:LIBS += -lcumbia-websocket
+}
+
+unix:!android-g++ {
 
     isEmpty(QWT_PKGCONFIG){
         message("no Qwt pkg-config file found")
@@ -110,7 +116,7 @@ unix {
         message("this should work for ubuntu installations")
 
         unix:INCLUDEPATH += /usr/local/include/cumbia
-        unix:LIBS += -L/usr/local/lib -lcumbia -L/libs/armeabi-v7a/
+        unix:LIBS += -L/usr/local/lib -lcumbia
     }
 
     LIBS += -lcumbia-websocket

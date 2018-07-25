@@ -208,11 +208,11 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
                     try {
                         vtype = o->metaObject()->property(idx).type();
                         if(vtype == QVariant::Double)
-                            ret =o->setProperty("value", std::stod(vs));
+                            ret =o->setProperty("value", strtod(vs.c_str(), NULL));
                         else if(vtype == QVariant::Int)
-                            ret =o->setProperty("value", std::stoi(vs));
+                            ret =o->setProperty("value", strtoll(vs.c_str(), NULL, 10));
                         else if(vtype == QVariant::UInt)
-                            ret =o->setProperty("value", static_cast<unsigned int>(std::stoul(vs)));
+                            ret =o->setProperty("value", static_cast<unsigned int>(strtoul(vs.c_str(), NULL, 10)));
                         else if(vtype == QVariant::Bool)
                             ret =o->setProperty("value", vs != "0" && strcasecmp(vs.c_str(), "false") != 0);
                     }
