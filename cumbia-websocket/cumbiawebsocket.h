@@ -28,6 +28,8 @@ public:
     virtual int getType() const;
 
     void addAction(const std::string &source, CuDataListener *l, const CuWSActionFactoryI &f);
+    void unlinkListener(const string &source, CuWSActionI::Type t, CuDataListener *l);
+    CuWSActionI *findAction(const std::string &source, CuWSActionI::Type t) const;
 private:
 
     void m_init();

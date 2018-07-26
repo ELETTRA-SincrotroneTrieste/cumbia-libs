@@ -40,6 +40,10 @@ public:
 
     void unsetSource() ;
 
+    void setOptions(const CuData& o);
+
+    CuData getOptions() const;
+
 private:
     CuWSReaderPrivate *d;
 

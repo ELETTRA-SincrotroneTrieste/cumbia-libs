@@ -60,7 +60,6 @@ QString QmlReaderBackend::getQualityColor(double val)
         color = "red";
     else if(d->max_warning != d->min_warning.toDouble() && (val >= d->max_warning.toDouble() || val <= d->min_warning.toDouble()) )
         color = "orange";
-    printf("QmlReaderBackend.getQualityColor: returning %s for %f\n", qstoc(color), val);
     return color;
 }
 
@@ -255,12 +254,9 @@ void QmlReaderBackend::onUpdate(const CuData &da)
 
 void QmlReaderBackend::setSource(const QString &s)
 {
-    printf("QmlReaderBackend.setSource: %s d->context %p \n", qstoc(s), d->context);
     if(d->context) {
         CuControlsReaderA * r = d->context->replace_reader(s.toStdString(), this);
-        printf("QmlReaderBackend.setSource r %p s %s r->source %s\n", r, qstoc(s), qstoc(r->source()));
         if(r && s != r->source()) {
-            printf("QmlReaderBackend.setSource setting source on CuControlsReaderA %p\n", r);
             r->setSource(s);
         }
     }

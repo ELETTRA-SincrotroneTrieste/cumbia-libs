@@ -4,8 +4,10 @@
 #include <cumacros.h>
 #include <vector>
 #include <map>
+#include <iostream>
 #include <QtAlgorithms>
-
+#include <QtDebug>
+#include <QThread> // for current thread
 
 /* @private */
 class CuRandomGenActivityPrivate
@@ -43,7 +45,7 @@ CuRandomGenActivity::CuRandomGenActivity(const CuData &token)
     d->exiting = false;
     d->exec_cnt = 0;
 
-    int period = 10;
+    int period = 5;
     if(token.containsKey("period"))
         period = token["period"].toInt();
     d->repeat = period;
@@ -58,6 +60,7 @@ CuRandomGenActivity::CuRandomGenActivity(const CuData &token)
  */
 CuRandomGenActivity::~CuRandomGenActivity()
 {
+    qDebug() << __FUNCTION__ << "deleted CuRandomGenActivity" << this;
     delete d;
 }
 
@@ -114,7 +117,11 @@ void CuRandomGenActivity::init()
 void CuRandomGenActivity::execute()
 {
     assert(d->my_thread_id == pthread_self());
+    d->exec_cnt++;
+    int qdebug_rate = 10000 / d->repeat;
     CuData res = getToken();
+    if(d->exec_cnt % qdebug_rate == 0)
+        qDebug() << "CuRandomGenActivity::execute" <<this<< d->exec_cnt << res["src"].toString().c_str() << "thread" << pthread_self() << QThread::currentThread();
     time_t tp;
     time(&tp);
     qsrand(tp);
@@ -122,7 +129,7 @@ void CuRandomGenActivity::execute()
             res["src"].toString().find("vector") != std::string::npos) {
         std::vector<double> vd;
 
-        for(int i = 0; i < 100; i++) {
+        for(int i = 0; i < 1000; i++) {
             time(&tp);
             qsrand(tp);
             vd.push_back(rand() % 100);
@@ -134,7 +141,7 @@ void CuRandomGenActivity::execute()
 
     res.putTimestamp(); // timestamp_ms and timestamp_us
 
-    printf("CuRandomGenActivity.execute: period %d *** data %s\n", getTimeout(), res.toString().c_str());
+//    printf("CuRandomGenActivity.execute: period %d *** data %s\n", getTimeout(), res.toString().c_str());
     publishResult(res);
 
 }
@@ -160,6 +167,7 @@ void CuRandomGenActivity::onExit()
     d->exiting = true;
     int refcnt = -1;
     CuData at = getToken(); /* activity token */
+    qDebug() << __FUNCTION__ << "exiting for source after "  << d->exec_cnt << "executions" << at["src"].toString().c_str();
     at["msg"] = "EXITED";
     at["mode"] = "RANDOM";
 

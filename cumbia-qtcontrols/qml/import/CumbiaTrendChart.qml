@@ -28,6 +28,8 @@ ChartView {
     property alias axisY2: axisY2
     property alias axisX: axisX
 
+    property alias backend: c_backend
+
     animationOptions: ChartView.NoAnimation
     theme: ChartView.ChartThemeLight
     title: "Trend Chart"
@@ -106,6 +108,7 @@ ChartView {
         trendChartView.removeAllSeries();
         for(var i = 0; i < srcs.length; i++) {
             var series1 = trendChartView.createSeries(ChartView.SeriesTypeLine, srcs[i], axisX, axisY1);
+            series1.width = 0
             series1.useOpenGL = trendChartView.openGL
         }
     }

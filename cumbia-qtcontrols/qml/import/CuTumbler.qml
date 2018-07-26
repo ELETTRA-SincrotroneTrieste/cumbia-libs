@@ -24,6 +24,8 @@ Rectangle {
 
     property Button applybutton: null
 
+    property  alias backend: w_backend
+
     signal columnChanged(int index, int from, int to);
 
     anchors.right: parent.right

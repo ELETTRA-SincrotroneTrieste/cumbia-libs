@@ -14,7 +14,7 @@ Rectangle {
     property alias styleColor: text1.styleColor
     property alias textColor: text1.color
     property alias textFormat: text1.textFormat
-
+    property alias backend: backend
 
     QmlReaderBackend {
         id: backend

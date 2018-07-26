@@ -14,6 +14,8 @@
 #include "cuwsactionreader.h"
 #include <cumacros.h>
 
+#include <QtDebug>
+
 
 class CuWSActionReaderPrivate
 {
@@ -223,6 +225,7 @@ CuWSActionReader::RefreshMode CuWSActionReader::refreshMode() const
 
 void CuWSActionReader::setPeriod(int millis)
 {
+    qDebug() << __FUNCTION__ << "set period" << millis;
     d->period = millis;
 }
 
@@ -297,6 +300,7 @@ void CuWSActionReader::m_startRandomGenActivity()
     at["point"] = d->tsrc.getPoint();
     at["activity"] = "event";
     at["rmode"] = refreshModeStr();
+    at["period"] = d->period;
 
     CuData tt("device", d->tsrc.getDeviceName()); /* thread token */
     d->randomgen_a = new CuRandomGenActivity(at);

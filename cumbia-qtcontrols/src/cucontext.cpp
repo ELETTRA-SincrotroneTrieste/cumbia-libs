@@ -97,8 +97,11 @@ CuControlsReaderA *CuContext::m_make_reader(const std::string &s, CuDataListener
 
     if(!cumbia || !r_fa)
         return NULL;
-    if(!d->options.isEmpty()) // otherwise use options from r_factory
+    qDebug() << __FUNCTION__ << "options currently set are " << d->options.toString().c_str();
+    if(!d->options.isEmpty()) { // otherwise use options from r_factory
         r_fa->setOptions(d->options);
+        qDebug() << __FUNCTION__ << "setting options on factory " << d->options.toString().c_str();
+    }
 
     return r_fa->create(cumbia, datal);
 }
@@ -170,12 +173,14 @@ CuControlsWriterA *CuContext::add_writer(const std::string &s, CuDataListener *d
 
 void CuContext::disposeReader(const std::string &src)
 {
+    printf("CuContext.disposeReader: %s\n" , src.c_str());
     CuControlsReaderA *removed = NULL;
     foreach(CuControlsReaderA *r, d->readers)
     {
         if(r->source().toStdString() == src || src == std::string())
         {
             removed = r;
+            printf("CuContext.disposeReader: deleting %p for %s\n" , r, src.c_str());
             delete r;
         }
     }
@@ -213,6 +218,7 @@ void CuContext::disposeWriter(const std::string &src)
  */
 void CuContext::setOptions(const CuData &options)
 {
+    qDebug() << __FUNCTION__ << "------------------------------------ >> setOptions << ----------" << options.toString().c_str();
     d->options = options;
 }
 

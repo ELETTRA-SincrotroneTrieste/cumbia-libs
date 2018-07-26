@@ -8,6 +8,7 @@
 #include <QMap>
 #include <QtCharts/QXYSeries>
 #include <QtDebug>
+#include <QThread> // for current thread
 
 class QmlChartBackendPrivate
 {
@@ -18,6 +19,8 @@ public:
     bool x_autoscale, y_autoscale;
     unsigned char configure_cnt;
     int bufsiz;
+    unsigned long refresh_cnt;
+    int period;
     QStringList sources;
 
     // the following stores spectrum data. It is updated on the C++ side
@@ -55,6 +58,8 @@ QmlChartBackend::QmlChartBackend(QObject *parent) : QObject(parent)
     d->configure_cnt = 0;
     d->is_scalar_trend = false;
     d->bufsiz = -1;
+    d->refresh_cnt = 0;
+    d->period = 1000;
 }
 
 QmlChartBackend::~QmlChartBackend()
@@ -64,10 +69,11 @@ QmlChartBackend::~QmlChartBackend()
 
 void QmlChartBackend::init(CumbiaPool_O *poo_o)
 {
+    qDebug() << __FUNCTION__ << "INIT DAFUQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ";
     d->plot_common = new QuPlotCommon(poo_o->getPool(), poo_o->getFactory());
-    if(!d->sources.isEmpty()) {
-        m_setSources(d->sources);
-    }
+    //    if(!d->sources.isEmpty()) {
+    //        m_setSources(d->sources);
+    //    }
 }
 
 CuContext *QmlChartBackend::getContext() const
@@ -124,6 +130,8 @@ void QmlChartBackend::m_setSources(const QStringList &l)
     d->sources = l;
     if(d->plot_common) {
         unsetSources();
+        CuData periodConf("period", d->period);
+        d->plot_common->getContext()->setOptions(periodConf);
         d->plot_common->setSources(l, this);
     }
     if(d->plot_common) {
@@ -225,7 +233,10 @@ void QmlChartBackend::onUpdate(const CuData &da)
 
         emit newSpectrum(src);
     }
-
+    d->refresh_cnt++;
+//    int qdebug_rate = 1000 / d->period;
+//    if(d->refresh_cnt % qdebug_rate == 0)
+//        qDebug() << "QmlChartBackend" <<this<< d->refresh_cnt << da["src"].toString().c_str() << "thread"  << QThread::currentThread();
 }
 
 void QmlChartBackend::m_update_curve_y_bounds(const QString& src, const QVector<QPointF> &pts) {
@@ -305,7 +316,7 @@ bool QmlChartBackend::m_find_absolute_bounds_and_notify()
 void QmlChartBackend::setSources(const QString &sl)
 {
     QStringList l = sl.split(";", QString::SkipEmptyParts);
-    m_setSources(l);
+    d->sources = l;
 }
 
 void QmlChartBackend::replaceData(QtCharts::QAbstractSeries *series)
@@ -382,6 +393,11 @@ bool QmlChartBackend::yAutoscale() const
     return d->y_autoscale;
 }
 
+int QmlChartBackend::period() const
+{
+    return d->period;
+}
+
 int QmlChartBackend::bufsiz() const
 {
     return d->bufsiz;
@@ -399,6 +415,19 @@ QDateTime QmlChartBackend::t2() const
     if(!d->t2.isValid())
         return QDateTime::currentDateTime().addSecs(5);
     return d->t2;
+}
+
+void QmlChartBackend::suspend()
+{
+    qDebug() << __FUNCTION__ << "SUSPENDING!!!";
+    QStringList srcs = d->sources;
+    unsetSources();
+    d->sources = srcs; // preserve sources for resume
+}
+
+void QmlChartBackend::start() {
+    qDebug() << __FUNCTION__ << "STARTINNG!!!";
+    m_setSources(d->sources);
 }
 
 void QmlChartBackend::unsetSources()
@@ -478,5 +507,13 @@ void QmlChartBackend::setBufsiz(int b)
     if(b != d->bufsiz) {
         d->bufsiz = b;
         emit bufsizChanged();
+    }
+}
+
+void QmlChartBackend::setPeriod(int millis)
+{
+    if(d->period != millis) {
+        d->period = millis;
+        emit periodChanged();
     }
 }

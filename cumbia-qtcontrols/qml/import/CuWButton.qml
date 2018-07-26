@@ -10,6 +10,8 @@ CuButton {
 
     property var value: null
 
+    property  alias backend: w_backend
+
 
     QmlWriterBackend {
         id: w_backend

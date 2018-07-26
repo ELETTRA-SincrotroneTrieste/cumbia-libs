@@ -12,7 +12,8 @@
 #include <QtDebug>
 
 class CuWSReaderFactoryPrivate {
-    public:
+public:
+    CuData options;
 
 };
 
@@ -29,17 +30,20 @@ CuWSReaderFactory::~CuWSReaderFactory()
 CuControlsReaderA *CuWSReaderFactory::create(Cumbia *c, CuDataListener *l) const
 {
     CuWSReader *r = new CuWSReader(c, l);
+    r->setOptions(d->options);
     return r;
 }
 
 CuControlsReaderFactoryI *CuWSReaderFactory::clone() const
 {
     CuWSReaderFactory *f = new CuWSReaderFactory();
+    f->setOptions(d->options);
     return f;
 }
 
 void CuWSReaderFactory::setOptions(const CuData &options)
 {
+    d->options = options;
 }
 
 /*! @private
@@ -65,7 +69,7 @@ CuWSReader::CuWSReader(Cumbia *cumbia_ws, CuDataListener *tl)
 
 CuWSReader::~CuWSReader()
 {
-    pdelete("~CuWSReader %p", this);
+    qDebug() << __FUNCTION__ << "deleting myself " <<this << source();
     d->tlistener->invalidate();
     unsetSource();
     delete d;
@@ -75,6 +79,7 @@ void CuWSReader::setSource(const QString &s)
 {
     d->source = s;
     CuWSActionReaderFactory wsrf;
+    wsrf.setOptions(d->options);
     printf("CuWSReader.setSource: %s\n", qstoc(s));
     qDebug() << __FUNCTION__ << "source" << s;
     d->cumbia_ws->addAction(s.toStdString(), d->tlistener, wsrf);
@@ -87,14 +92,30 @@ QString CuWSReader::source() const
 
 void CuWSReader::unsetSource()
 {
+    d->cumbia_ws->unlinkListener(d->source.toStdString(), CuWSActionI::Reader, d->tlistener);
     d->source = QString();
 }
 
-
-void CuWSReader::sendData(const CuData &d)
+void CuWSReader::setOptions(const CuData &o)
 {
+    d->options = o;
+}
+
+CuData CuWSReader::getOptions() const
+{
+    return d->options;
+}
+
+void CuWSReader::sendData(const CuData &da)
+{
+    CuWSActionI *a = d->cumbia_ws->findAction(d->source.toStdString(), CuWSActionI::Reader);
+    if(a)
+        a->sendData(da);
 }
 
 void CuWSReader::getData(CuData &d_ino) const
 {
+    CuWSActionI *a = d->cumbia_ws->findAction(d->source.toStdString(), CuWSActionI::Reader);
+    if(a)
+        a->getData(d_ino);
 }

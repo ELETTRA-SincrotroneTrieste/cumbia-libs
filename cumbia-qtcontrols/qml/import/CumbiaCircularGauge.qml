@@ -7,6 +7,7 @@ import eu.elettra.cumbiaqmlcontrols 1.0
 CircularGauge {
 
     property alias source: backend.source
+    property alias backend: backend
 
     QmlReaderBackend {
         id: backend

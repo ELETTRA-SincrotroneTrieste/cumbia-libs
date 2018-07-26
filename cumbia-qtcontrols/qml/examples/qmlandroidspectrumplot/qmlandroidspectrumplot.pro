@@ -39,11 +39,10 @@ LIBS += -L/libs/armeabi-v7a
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \
-        $$PWD/../../../../../../../../../../../libs/armeabi-v7a/libcumbia-websocket.so \
-        $$PWD/../../../../../../../../../../../libs/armeabi-v7a/libcumbia-qtcontrols-qt5.so \
+        $$PWD/../../../../../../../../../../../libs/armeabi-v7a/libcumbia.so \
         $$PWD/../../../../../../../../../../../libs/armeabi-v7a/libcumbia-qtcontrols-qml-qt5plugin.so \
-        $$PWD/../../../../../../../../../../../libs/armeabi-v7a/libcumbia.so
-
+        $$PWD/../../../../../../../../../../../libs/armeabi-v7a/libcumbia-qtcontrols-qt5.so \
+        $$PWD/../../../../../../../../../../../libs/armeabi-v7a/libcumbia-websocket.so
 }
 
 LIBS -= -lqwt -lpthread

@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 
     CumbiaPool_O cumbia_fac_qobj;
 
-    qDebug() << "CONCHA DE LA LORAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+    qDebug() << "CONCHA DE LA LORAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA DE LA PUTA Q L REMIL PARIO";
     qDebug() << "init on cumbia factory object!\n";
     cumbia_fac_qobj.init(cu_pool, m_ctrl_factory_pool);
 
@@ -76,5 +76,7 @@ int main(int argc, char *argv[])
 //    if (rootObjects().isEmpty())
 //        return -1;
 
-    return app.exec();
+    int ret = app.exec();
+    qDebug() << __FUNCTION__ << "app exited code" << ret;
+    return ret;
 }

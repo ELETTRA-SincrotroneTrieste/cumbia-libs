@@ -59,6 +59,24 @@ void CumbiaWebSocket::addAction(const std::string &source, CuDataListener *l, co
         perr("CumbiaWebSocket.addAction: source \"%s\" is not valid, ignoring", source.c_str());
 }
 
+void CumbiaWebSocket::unlinkListener(const string &source, CuWSActionI::Type t, CuDataListener *l)
+{
+    CuWSActionFactoryService *af =
+            static_cast<CuWSActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuWSActionFactoryService::CuWSActionFactoryServiceType)));
+    std::vector<CuWSActionI *> actions = af->find(source, t);
+    for(size_t i = 0; i < actions.size(); i++) {
+        actions[i]->removeDataListener(l); /* when no more listeners, a stops itself */
+    }
+}
+
+CuWSActionI *CumbiaWebSocket::findAction(const std::string &source, CuWSActionI::Type t) const
+{
+    CuWSActionFactoryService *af =
+            static_cast<CuWSActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuWSActionFactoryService::CuWSActionFactoryServiceType)));
+    CuWSActionI* a = af->findActive(source, t);
+    return a;
+}
+
 CuThreadFactoryImplI *CumbiaWebSocket::getThreadFactoryImpl() const
 {
      return m_threadFactoryImplI;

@@ -18,6 +18,7 @@ ChartView {
     property bool openGLSupported: true
     property alias yMax: spaxisY1.max
     property alias yMin: spaxisY1.min
+    property alias backend: sp_c_backend
 
     animationOptions: ChartView.NoAnimation
     theme: ChartView.ChartThemeLight
@@ -93,6 +94,7 @@ ChartView {
         spectrumChartView.removeAllSeries();
         for(var i = 0; i < srcs.length; i++) {
             var series1 = spectrumChartView.createSeries(ChartView.SeriesTypeLine, srcs[i], spaxisX, spaxisY1);
+            series1.width = 0
             series1.useOpenGL = spectrumChartView.openGL
         }
     }

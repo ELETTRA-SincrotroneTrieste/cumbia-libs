@@ -15,6 +15,7 @@ class QmlChartBackend : public QObject, public CuDataListener, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString sources READ sources WRITE setSources NOTIFY sourcesChanged)
+    Q_PROPERTY(int period READ period WRITE setPeriod NOTIFY periodChanged)
     Q_PROPERTY(bool readOk READ readOk NOTIFY readOkChanged)
     Q_PROPERTY(bool xAutoscale READ xAutoscale WRITE setXAutoscale NOTIFY xAutoscaleChanged)
     Q_PROPERTY(bool yAutoscale READ yAutoscale WRITE setYAutoscale NOTIFY yAutoscaleChanged)
@@ -34,6 +35,10 @@ public:
 
     Q_INVOKABLE void init(CumbiaPool_O *poo_o);
 
+    Q_INVOKABLE void suspend();
+
+    Q_INVOKABLE void start();
+
     QString sources() const;
 
     bool readOk() const;
@@ -47,6 +52,8 @@ public:
     bool scalarTrend() const;
     bool xAutoscale() const;
     bool yAutoscale() const;
+
+    int period() const;
 
     int bufsiz() const;
 
@@ -75,6 +82,7 @@ signals:
     void newPoint(const QString& src);
     void newSpectrum(const QString& src);
 
+    void periodChanged();
 
     void t1Changed();
     void t2Changed();
@@ -97,6 +105,8 @@ public slots:
     void setYAutoscale(bool a);
 
     void setBufsiz(int b);
+
+    void setPeriod(int millis);
 
 private:
     QmlChartBackendPrivate *d;
