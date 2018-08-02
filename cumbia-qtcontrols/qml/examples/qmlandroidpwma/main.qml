@@ -6,7 +6,7 @@ import eu.elettra.cumbiaqmlcontrols 1.0
 SwipeView {
     id:swipeView
 
-    currentIndex: 0
+    currentIndex: 1
     anchors.fill: parent
 
     Page1 {}

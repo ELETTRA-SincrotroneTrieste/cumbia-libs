@@ -40,11 +40,11 @@ LIBS += -L/libs/armeabi-v7a
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \
         /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-qtcontrols/qml/examples/qmlandroidpwma/../../../../../../../../../../../libs/armeabi-v7a/libcumbia.so \
-        /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-qtcontrols/qml/examples/qmlandroidpwma/../../../../../../../../../../../libs/armeabi-v7a/libcumbia-qtcontrols-qml-qt5plugin.so \
         /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-qtcontrols/qml/examples/qmlandroidpwma/../../../../../../../../../../../libs/armeabi-v7a/libcumbia-qtcontrols-qt5.so \
         /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-qtcontrols/qml/examples/qmlandroidpwma/../../../../cumbia-websocket/android/openssl-lib/libcrypto.so \
         /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-qtcontrols/qml/examples/qmlandroidpwma/../../../../cumbia-websocket/android/openssl-lib/libssl.so \
-        $$PWD/../../../../../../../../../../../libs/armeabi-v7a/libcumbia-websocket-qt5.so
+        /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-qtcontrols/qml/examples/qmlandroidpwma/../../../../../../../../../../../libs/armeabi-v7a/libcumbia-websocket-qt5.so \
+        $$PWD/../../../../../../../../../../../usr/local/qt-5.11.1/5.11.1/android_armv7/qml/eu/elettra/cumbiaqmlcontrols/libcumbia-qtcontrols-qml-qt5plugin.so
 }
 
 LIBS -= -lqwt -lpthread

@@ -152,7 +152,6 @@ void QmlChartBackend::m_setSources(const QStringList &l)
 
 void QmlChartBackend::onUpdate(const CuData &da)
 {
-    printf("\e[0;32mQmlChartBackend.onUpdate DATA %s\e[0m\n", da.toString().c_str());
     bool readOk = !da["err"].toBool();
     if(readOk != d->read_ok) {
         d->read_ok = readOk;
@@ -178,7 +177,7 @@ void QmlChartBackend::onUpdate(const CuData &da)
         qreal x, y;
         bool time_scale = da.containsKey("timestamp_ms");
         if(time_scale) {
-            x = static_cast<qint64>(da["timestamp_ms"].toLongInt());
+            x = static_cast<long long int>(da["timestamp_ms"].toLongLongInt());
             d->xM = x;
             if(d->x_autoscale && !d->t1.isValid()) {
                 d->t1 = QDateTime::fromMSecsSinceEpoch(x);
@@ -197,7 +196,7 @@ void QmlChartBackend::onUpdate(const CuData &da)
             x = qvd.size();
         }
 
-        v.to(y);
+         v.to(y);
 
         qvd.append(QPointF(x, y));
 

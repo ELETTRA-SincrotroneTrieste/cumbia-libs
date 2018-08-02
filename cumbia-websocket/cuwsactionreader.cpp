@@ -226,8 +226,7 @@ void CuWSActionReader::decodeMessage(const QJsonDocument &json)
             double ts_us = strtod(data_o["timestamp"].toString().toStdString().c_str(), &endptr);
 
             res["timestamp_us"] = ts_us;
-            res["timestamp_ms"] = static_cast<long int>(floor(ts_us) * 1000 + (ts_us - floor(ts_us)) * 10e6 / 1000);
-
+            res["timestamp_ms"] = static_cast<long long int>(floor(ts_us) * 1000 + (ts_us - floor(ts_us)) * 10e6 / 1000);
             res["err"] = data_o["error"].toString().size() > 0;
             if(res["err"].toBool())
                 res["msg"] = data_o["error"].toString().toStdString();

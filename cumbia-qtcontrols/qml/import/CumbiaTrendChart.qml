@@ -116,7 +116,7 @@ ChartView {
             console.log("set sources with", srcs, "index Of in ", sourceslist, "is ", sourceslist.indexOf(srcs[i]))
             if(sourceslist.indexOf(srcs[i]) < 0) {
                 var series1 = trendChartView.createSeries(ChartView.SeriesTypeLine, srcs[i], axisX, axisY1);
-                series1.width = 0
+                series1.width = 2
                 series1.useOpenGL = trendChartView.openGL
                 sourceslist.push(srcs[i])
             }

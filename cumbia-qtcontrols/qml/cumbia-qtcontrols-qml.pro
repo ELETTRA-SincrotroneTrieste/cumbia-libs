@@ -112,7 +112,7 @@ designer_imgs.files =  \
 }
 
 qmldir.files = qmldir
-unix {
+unix:!android-g++ {
     installPath = $$[QT_INSTALL_QML]/$$replace(uri, \\., /)
 
     qmldir.path = $$installPath
@@ -139,6 +139,15 @@ android-g++ {
     message($${TARGET}.so)
     message($$installPath)
     INSTALLS += pluginso
+    qmldir.path = $$installPath
+    target.path = $$installPath
+
+    designer.path = $$installPath/designer
+    designer_imgs.path = $$installPath/designer/images
+    other_files.path =  $$installPath
+    other_files.files = $${DISTFILES}
+
+    INSTALLS += target qmldir other_files designer designer_imgs
 }
 
 unix {
