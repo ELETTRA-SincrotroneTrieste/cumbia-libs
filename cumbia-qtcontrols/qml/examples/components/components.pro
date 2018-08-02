@@ -4,6 +4,8 @@ exists(/usr/local/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
     include(/usr/local/include/qumbia-epics-controls/qumbia-epics-controls.pri)
 }
 
+CONFIG += debug
+
 QT += quick
 CONFIG += c++11
 
