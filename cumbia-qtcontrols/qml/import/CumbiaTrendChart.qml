@@ -19,7 +19,7 @@ ChartView {
     property alias dateTimeXAxisFormat: axisX.format
 
     property bool openGL: false    // can be enabled if qt version > 5.12
-    property bool openGLSupported: true
+    property bool openGLSupported: false  // can be enabled if qt version > 5.12
 
     property alias yMax: axisY1.max
     property alias yMin: axisY1.min
@@ -29,6 +29,12 @@ ChartView {
     property alias axisX: axisX
 
     property alias backend: c_backend
+
+    // stores the current sources so that multiple calls to setSources
+    // do not remove/readd already existing sources
+    // if the application is suspended, and resumed repeatedly, this would
+    // be an annoyance
+    property var sourceslist: []
 
     animationOptions: ChartView.NoAnimation
     theme: ChartView.ChartThemeLight
@@ -40,7 +46,7 @@ ChartView {
         sources: ""
 
         Component.onCompleted: {
-            console.log("CumbiaTrendChart", "init")
+            console.log("CumbiaTrendChart", "init with opengl false")
             init(cumbia_poo_o)
         }
 
@@ -105,11 +111,15 @@ ChartView {
     }
 
     function setSources(srcs) {
-        trendChartView.removeAllSeries();
+    //    trendChartView.removeAllSeries();
         for(var i = 0; i < srcs.length; i++) {
-            var series1 = trendChartView.createSeries(ChartView.SeriesTypeLine, srcs[i], axisX, axisY1);
-            series1.width = 0
-            series1.useOpenGL = trendChartView.openGL
+            console.log("set sources with", srcs, "index Of in ", sourceslist, "is ", sourceslist.indexOf(srcs[i]))
+            if(sourceslist.indexOf(srcs[i]) < 0) {
+                var series1 = trendChartView.createSeries(ChartView.SeriesTypeLine, srcs[i], axisX, axisY1);
+                series1.width = 0
+                series1.useOpenGL = trendChartView.openGL
+                sourceslist.push(srcs[i])
+            }
         }
     }
 

@@ -173,20 +173,26 @@ void CuTimer::run()
     while (!m_quit)
     {
         std::chrono::milliseconds ms{timeout};
-        m_wait.wait_for(lock, ms);
+        std::cv_status status = m_wait.wait_for(lock, ms);
         //        cuprintf("CuTimer.run pause is %d status is %d timeout %d\n", m_pause, (int) status, m_timeout);
         //        if(status == std::cv_status::no_timeout)
         m_pause ?  timeout = ULONG_MAX : timeout = m_timeout;
 
         //            pbblue("CuTimer:run: this: %p triggering timeout in pthread 0x%lx (CuTimer's) m_listener %p m_exit %d CURRENT TIMEOUT is %lu m_pause %d", this,
         //                   pthread_self(), m_listener, m_quit, timeout, m_pause);
-        if(m_listener && !m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
+        if(status == std::cv_status::timeout && m_listener && !m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
         {
             m_listener->onTimeout(this);
         }
 
-        if(!m_quit)
-            m_wait.wait(lock);
+    //    uncommenting this synchronizes the timer with the operation done
+    //    in the CuThread (CuActivity)
+    //    but it seems it doesn't work fine in android
+    //    Please see note in CuThread::run under the
+    //    ThreadEvent::TimerExpired branch (A)
+
+    //    if(!m_quit)
+    //        m_wait.wait(lock);
     }
 }
 

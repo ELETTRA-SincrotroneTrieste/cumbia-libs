@@ -43,6 +43,10 @@ public:
 
     Q_INVOKABLE QString getQualityColor(double val);
 
+    Q_INVOKABLE void suspend();
+
+    Q_INVOKABLE void start();
+
     virtual ~QmlReaderBackend();
 
     QString source() const;
@@ -101,6 +105,8 @@ private:
     void m_configure(const CuData& da);
 
     void m_set_value(const CuVariant &val);
+
+    void m_setSource(const QString& source);
 
     QmlReaderBackendPrivate *d;
 };

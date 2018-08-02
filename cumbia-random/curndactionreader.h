@@ -10,7 +10,7 @@
 class CuRNDActionReaderPrivate;
 class CuActivityManager;
 class CuDataListener;
-class CumbiaWebSocket;
+class CumbiaRandom;
 
 
 
@@ -53,7 +53,7 @@ public:
      */
     enum RefreshMode { RandomGenerator = 0 };
 
-    CuRNDActionReader(const RNDSource& src, CumbiaWebSocket *ct);
+    CuRNDActionReader(const RNDSource& src, CumbiaRandom *ct);
 
     ~CuRNDActionReader();
 

@@ -6,7 +6,7 @@
 #include <vector>
 
 class CuRNDActionFactoryI;
-class CumbiaWebSocket;
+class CumbiaRandom;
 class CuDataListener;
 
 class CuRNDActionFactoryServicePrivate;
@@ -14,7 +14,7 @@ class CuRNDActionFactoryServicePrivate;
 /*! \brief implements CuServiceI interface and provides a service to register, unregister
  *         and find *Websocket actions*
  *
- * \note This service is internally used by CumbiaWebSocket and clients of the library should
+ * \note This service is internally used by CumbiaRandom and clients of the library should
  *       rarely need to use it.
  *
  * This class is a cumbia *service* (implements getName and getType). It is registered by
@@ -50,7 +50,7 @@ public:
 
     virtual ~CuRNDActionFactoryService();
 
-    CuRNDActionI* registerAction(const std::string& src, const CuRNDActionFactoryI& f, CumbiaWebSocket *ct);
+    CuRNDActionI* registerAction(const std::string& src, const CuRNDActionFactoryI& f, CumbiaRandom *ct);
 
     CuRNDActionI *findActive(const std::string &name, CuRNDActionI::Type at);
 

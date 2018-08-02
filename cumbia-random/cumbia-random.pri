@@ -51,21 +51,14 @@ isEmpty(INSTALL_ROOT) {
     CONFIG += link_pkgconfig
     PKGCONFIG += cumbia
     PKGCONFIG += cumbia-qtcontrols$${QTVER_SUFFIX}
+    PKGCONFIG += cumbia-random$${QTVER_SUFFIX}
 
-    packagesExist(qwt){
-        PKGCONFIG += qwt
-        QWT_PKGCONFIG = qwt
-        message("Qwt: using pkg-config to configure qwt includes and libraries")
-    }
-    else:packagesExist(Qt5Qwt6){
-        PKGCONFIG += Qt5Qwt6
-        QWT_PKGCONFIG = Qt5Qwt6
-        message("Qwt: using pkg-config to configure qwt includes and libraries (Qt5Qwt6)")
+    packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
+        message("Qwt: using pkg-config to configure cumbia cumbia-qtcontrols$${QTVER_SUFFIX} includes and libraries")
     } else {
-        warning("Qwt: no pkg-config file found")
-        warning("Qwt: export PKG_CONFIG_PATH=/usr/path/to/qwt/lib/pkgconfig if you want to enable pkg-config for qwt")
-        warning("Qwt: if you build and install qwt from sources, be sure to uncomment/enable ")
-        warning("Qwt: QWT_CONFIG     += QwtPkgConfig in qwtconfig.pri qwt project configuration file")
+        packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}):packagesExist(cumbia-random$${QTVER_SUFFIX}) {
+            message("Qwt: using pkg-config to configure cumbia cumbia-qtcontrols$${QTVER_SUFFIX} includes and libraries")
+        }
     }
 }
 
@@ -102,24 +95,21 @@ doc.commands = doxygen \
     Doxyfile;
 
 unix:android-g++ {
-    unix:INCLUDEPATH += /usr/local/include/cumbia
+    unix:INCLUDEPATH += /usr/local/include/cumbia /usr/local/include/cumbia/cumbia-random
     unix:LIBS +=  -L/libs/armeabi-v7a/ -lcumbia
-    unix:LIBS += -lcumbia-random
+    unix:LIBS += -lcumbia-random$${QTVER_SUFFIX}
 }
 
 unix:!android-g++ {
-
-    isEmpty(QWT_PKGCONFIG){
-        message("no Qwt pkg-config file found")
-        message("adding $${QWT_INCLUDES} and $${QWT_INCLUDES_USR} to include path")
-        message("adding  -L$${QWT_HOME_USR}/lib -l$${QWT_LIB}$${QTVER_SUFFIX} to libs")
-        message("this should work for ubuntu installations")
-
-        unix:INCLUDEPATH += /usr/local/include/cumbia
+    packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
+    } else {
+        message("no cumbia/cumbia-qtcontrols/cumbia-random pkg-config files found")
+        unix:INCLUDEPATH += /usr/local/include/cumbia /usr/local/include/cumbia/cumbia-random
         unix:LIBS += -L/usr/local/lib -lcumbia
+        LIBS += -lcumbia-random$${QTVER_SUFFIX}
     }
 
-    LIBS += -lcumbia-random
+
 
 }
 

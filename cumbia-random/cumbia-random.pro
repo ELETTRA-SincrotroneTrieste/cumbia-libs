@@ -10,7 +10,7 @@ QT       -= gui
 
 CONFIG += debug
 
-TARGET = cumbia-random
+TARGET = cumbia-random$${QTVER_SUFFIX}
 TEMPLATE = lib
 
 DEFINES += CUMBIARANDOM_LIBRARY
@@ -55,6 +55,11 @@ HEADERS += \
 DISTFILES += \
     cumbia-random.pri
 
+
+!android-g++ {
+    PKGCONFIG -= cumbia-random$${QTVER_SUFFIX}
+}
+
 unix {
 
     doc.commands = \
@@ -90,4 +95,6 @@ unix {
     QMAKE_PKGCONFIG_DESTDIR = pkgconfig
 }
 
-LIBS -= -lcumbia-random
+unix:INCLUDEPATH -= /usr/local/include/cumbia/cumbia-random
+
+LIBS -= -lcumbia-random$${QTVER_SUFFIX}

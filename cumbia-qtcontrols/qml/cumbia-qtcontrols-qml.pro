@@ -63,7 +63,7 @@ HEADERS += \
     qmlreaderbackend.h \
     cumbiaqmlcontrolsplugin.h \
     qmlwriterbackend.h \
-    qmlchartbackend.h
+    qmlchartbackend.h 
 
 DISTFILES += \
     cumbia-qtcontrols-qml.pri \

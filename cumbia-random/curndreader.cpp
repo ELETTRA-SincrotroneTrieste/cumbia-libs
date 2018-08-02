@@ -52,7 +52,7 @@ class CuRNDReaderPrivate
 {
 public:
     QString source;
-    CumbiaWebSocket *cumbia_rnd;
+    CumbiaRandom *cumbia_rnd;
     CuDataListener *tlistener;
     CuData options;
 };
@@ -61,9 +61,9 @@ CuRNDReader::CuRNDReader(Cumbia *cumbia_rnd, CuDataListener *tl)
     : CuControlsReaderA(cumbia_rnd, tl)
 {
     printf("CuRNDReader constructor!!!!!!!!!!\n");
-    assert(cumbia_rnd->getType() == CumbiaWebSocket::CumbiaRNDType);
+    assert(cumbia_rnd->getType() == CumbiaRandom::CumbiaRNDType);
     d = new CuRNDReaderPrivate;
-    d->cumbia_rnd = static_cast<CumbiaWebSocket *>(cumbia_rnd);
+    d->cumbia_rnd = static_cast<CumbiaRandom *>(cumbia_rnd);
     d->tlistener = tl;
 }
 

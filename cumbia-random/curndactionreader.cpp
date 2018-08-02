@@ -22,7 +22,7 @@ class CuRNDActionReaderPrivate
 public:
     std::set<CuDataListener *> listeners;
     RNDSource tsrc;
-    CumbiaWebSocket *cumbia_rnd;
+    CumbiaRandom *cumbia_rnd;
     bool exit;
     CuRandomGenActivity *randomgen_a;
     CuData property_d, value_d;
@@ -30,7 +30,7 @@ public:
     CuRNDActionReader::RefreshMode refresh_mode;
 };
 
-CuRNDActionReader::CuRNDActionReader(const RNDSource& src, CumbiaWebSocket *ct) : CuRNDActionI()
+CuRNDActionReader::CuRNDActionReader(const RNDSource& src, CumbiaRandom *ct) : CuRNDActionI()
 {
     d = new CuRNDActionReaderPrivate;
     d->tsrc = src;

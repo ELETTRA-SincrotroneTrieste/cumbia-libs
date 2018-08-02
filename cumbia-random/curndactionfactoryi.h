@@ -1,7 +1,7 @@
 #ifndef CURNDACTIONFACTORYI_H
 #define CURNDACTIONFACTORYI_H
 
-class CumbiaWebSocket;
+class CumbiaRandom;
 
 #include <string>
 #include <curndactioni.h>
@@ -26,9 +26,9 @@ public:
      * instance.
      *
      * @param source a string identifying a source to connect to
-     * @param ct a pointer to a CumbiaWebSocket instance
+     * @param ct a pointer to a CumbiaRandom instance
      */
-    virtual CuRNDActionI *create(const std::string& source, CumbiaWebSocket *ct) const = 0;
+    virtual CuRNDActionI *create(const std::string& source, CumbiaRandom *ct) const = 0;
 
     /** \brief Return the type of action that the factory creates
      *

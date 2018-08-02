@@ -24,10 +24,10 @@ CuRNDActionReaderFactory::~CuRNDActionReaderFactory()
 /** \brief creates and returns a CuRNDActionReader, (that implements the CuRNDActionI interface)
  *
  * @param s a string with the name of the source
- * @param ct a pointer to CumbiaWebSocket
+ * @param ct a pointer to CumbiaRandom
  * @return a CuRNDActionReader, that implements the CuRNDActionI interface
  *
- * The source and the CumbiaWebSocket reference are passed to the CuRNDActionReader
+ * The source and the CumbiaRandom reference are passed to the CuRNDActionReader
  * If options have been set, normally through CuRNDActionReaderFactory::create,
  * they are used to configure the CuRNDActionReader.
  *
@@ -41,7 +41,7 @@ CuRNDActionReaderFactory::~CuRNDActionReaderFactory()
  *
  * @see CuTangoOptBuilder
  */
-CuRNDActionI *CuRNDActionReaderFactory::create(const std::string &s, CumbiaWebSocket *c_rnd) const
+CuRNDActionI *CuRNDActionReaderFactory::create(const std::string &s, CumbiaRandom *c_rnd) const
 {
     CuRNDActionReader* reader = new CuRNDActionReader(s, c_rnd);
     if(options.containsKey("period") && options["period"].toInt() > 0)

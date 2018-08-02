@@ -64,7 +64,10 @@ QmlChartBackend::QmlChartBackend(QObject *parent) : QObject(parent)
 
 QmlChartBackend::~QmlChartBackend()
 {
-
+    pdelete("~QmlChartBackend %p", this);
+    if(d->plot_common)
+        delete d->plot_common; // deletes its context
+    delete d;
 }
 
 void QmlChartBackend::init(CumbiaPool_O *poo_o)
@@ -83,6 +86,7 @@ CuContext *QmlChartBackend::getContext() const
 
 void QmlChartBackend::m_configure(const CuData &da)
 {
+    printf("QmlChartBackend::m_configure configuring QmlChart with %s\n", da.toString().c_str());
     QString src = QString::fromStdString(da["src"].toString());
     d->data[src] = QVector<QPointF>();
 
@@ -96,28 +100,35 @@ void QmlChartBackend::m_configure(const CuData &da)
     emit scalarTrendChanged(d->is_scalar_trend);
 
     QVariant v;
+    char* endptr;
     double min = 0.0,  max = 0.0;
     try {
         if(da.containsKey("min")) {
-            v = QVariant(strtod(da["min"].toString().c_str(), NULL));
+            printf("1: %s->%f\n", da["min"].toString().c_str(), strtod(da["min"].toString().c_str(),  &endptr));
+            v = QVariant(strtod(da["min"].toString().c_str(), &endptr));
             min = v.toDouble();
             if(!d->configure_cnt || min < d->ym) {
+                printf("2\n");
                 d->ym = min;
                 emit yMinChanged();
             }
         }
         if(da.containsKey("max")) {
-            v = QVariant(strtod(da["max"].toString().c_str(), NULL));
+            printf("3: %s->%f\n", da["min"].toString().c_str(), strtod(da["max"].toString().c_str(),  &endptr));
+            v = QVariant(strtod(da["max"].toString().c_str(),  &endptr));
             max = v.toDouble();
             if(!d->configure_cnt || max > d->yM) {
                 d->yM = max;
                 emit yMaxChanged();
+                printf("4\n");
             }
         }
     }
     catch (const std::invalid_argument& ia) {
         perr("QmlChartBackend.m_configure: double conversion failed: %s", ia.what());
     }
+
+    printf("QmlChartBackend min %f max %f\n", min, max);
     if(min != max) {
         d->autoconfigured_curves << src;
         d->configure_cnt++;
@@ -141,6 +152,7 @@ void QmlChartBackend::m_setSources(const QStringList &l)
 
 void QmlChartBackend::onUpdate(const CuData &da)
 {
+    printf("\e[0;32mQmlChartBackend.onUpdate DATA %s\e[0m\n", da.toString().c_str());
     bool readOk = !da["err"].toBool();
     if(readOk != d->read_ok) {
         d->read_ok = readOk;
@@ -240,7 +252,7 @@ void QmlChartBackend::onUpdate(const CuData &da)
 }
 
 void QmlChartBackend::m_update_curve_y_bounds(const QString& src, const QVector<QPointF> &pts) {
-    printf("\e[1;32mrecalc y bounds needed for %s...\n", qstoc(src));
+//    printf("\e[1;32mrecalc y bounds needed for %s...\n", qstoc(src));
     // calculate minimum and maximum amongst yv values
     // and update d->minmax_map for that src
     for(int i = 0; i < pts.size(); i++) {
@@ -259,7 +271,7 @@ void QmlChartBackend::m_update_curve_y_bounds(const QString& src, const QVector<
         }
     }
 
-    printf("... done recalc\e[0m\n");
+//    printf("... done recalc\e[0m\n");
 }
 
 // see if y is smaller than minimum for curve src or greater than maximum.

@@ -401,7 +401,9 @@ void CuThread::run()
                 if(repeat_ms > 0)
                 {
                     tev->activity->doExecute();
-                    timer->start(repeat_ms);
+
+                    // see note in CuTimer::run (A)
+                    // timer->start(repeat_ms);
                 }
                 else if(repeat_ms < 0 && tev->activity->getFlags() & CuActivity::CuAUnregisterAfterExec)
                     unregisterActivity(tev->activity);

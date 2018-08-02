@@ -11,15 +11,15 @@ class CuThreadFactoryImplI;
 class CuThreadsEventBridgeFactory_I;
 class CuDataListener;
 
-class CUMBIARANDOMSHARED_EXPORT CumbiaWebSocket : public Cumbia
+class CUMBIARANDOMSHARED_EXPORT CumbiaRandom : public Cumbia
 {
 
 public:
     enum Type { CumbiaRNDType = Cumbia::CumbiaUserType + 12 };
 
-    CumbiaWebSocket(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb);
+    CumbiaRandom(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb);
 
-    ~CumbiaWebSocket();
+    ~CumbiaRandom();
 
     CuThreadFactoryImplI* getThreadFactoryImpl() const;
 

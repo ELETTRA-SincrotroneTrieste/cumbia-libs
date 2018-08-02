@@ -20,6 +20,12 @@ ChartView {
     property alias yMin: spaxisY1.min
     property alias backend: sp_c_backend
 
+    // stores the current sources so that multiple calls to setSources
+    // do not remove/readd already existing sources
+    // if the application is suspended, and resumed repeatedly, this would
+    // be an annoyance
+    property var sourceslist: []
+
     animationOptions: ChartView.NoAnimation
     theme: ChartView.ChartThemeLight
     title: "Spectrum Chart"
@@ -91,11 +97,16 @@ ChartView {
     }
 
     function setSources(srcs) {
-        spectrumChartView.removeAllSeries();
+//        spectrumChartView.removeAllSeries();
+
         for(var i = 0; i < srcs.length; i++) {
-            var series1 = spectrumChartView.createSeries(ChartView.SeriesTypeLine, srcs[i], spaxisX, spaxisY1);
-            series1.width = 0
-            series1.useOpenGL = spectrumChartView.openGL
+            console.log("set sources with", srcs, "index Of in ", sourceslist, "is ", sourceslist.indexOf(srcs[i]))
+            if(sourceslist.indexOf(srcs[i]) < 0) {
+                var series1 = spectrumChartView.createSeries(ChartView.SeriesTypeLine, srcs[i], spaxisX, spaxisY1);
+                series1.width = 0
+                series1.useOpenGL = spectrumChartView.openGL
+                sourceslist.push(srcs[i])
+            }
         }
     }
 

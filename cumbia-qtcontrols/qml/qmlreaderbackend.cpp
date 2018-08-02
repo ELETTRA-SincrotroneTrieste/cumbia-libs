@@ -252,23 +252,41 @@ void QmlReaderBackend::onUpdate(const CuData &da)
     emit newData(da);
 }
 
+void QmlReaderBackend::suspend()
+{
+    if(d->context)
+        d->context->disposeReader();
+}
+
+void QmlReaderBackend::start()
+{
+    if(!d->source.isEmpty())
+        m_setSource(d->source);
+}
+
 void QmlReaderBackend::setSource(const QString &s)
 {
-    if(d->context) {
-        CuControlsReaderA * r = d->context->replace_reader(s.toStdString(), this);
-        if(r && s != r->source()) {
-            r->setSource(s);
-        }
-    }
     if(d->source != s) {
         d->source = s;
         emit sourceChanged();
     }
 }
 
+void QmlReaderBackend::m_setSource(const QString &source)
+{
+    if(d->context) {
+        CuControlsReaderA * r = d->context->replace_reader(source.toStdString(), this);
+        if(r && source != r->source()) {
+            r->setSource(source);
+        }
+    }
+}
+
 void QmlReaderBackend::unsetSource()
 {
-    d->context->disposeReader();
+    if(d->context)
+        d->context->disposeReader();
+    d->source = QString();
 }
 
 void QmlReaderBackend::m_set_value(const CuVariant &val)
@@ -287,8 +305,9 @@ void QmlReaderBackend::m_set_value(const CuVariant &val)
     else {
         v = QString::fromStdString(val.toString());
     }
-    if(v != d->value) {
+     if(v != d->value) {
         d->value = v;
         emit valueChanged();
     }
 }
+

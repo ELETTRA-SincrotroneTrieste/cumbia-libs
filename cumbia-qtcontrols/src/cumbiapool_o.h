@@ -92,6 +92,8 @@ public:
 
     CuControlsFactoryPool getFactory() const;
 
+public slots:
+
 private:
     CumbiaPool *m_cu_pool;
 

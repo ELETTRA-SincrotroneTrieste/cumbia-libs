@@ -70,7 +70,8 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/quspinbox.cpp \
     src/qudoublespinbox.cpp \
     src/qulineedit.cpp \
-    src/cumbiapool_o.cpp
+    src/cumbiapool_o.cpp \
+    src/cuappstatemanager.cpp
 
 HEADERS += cumbiaqtcontrols.h\
         cumbia-qtcontrols_global.h \
@@ -142,7 +143,8 @@ HEADERS += cumbiaqtcontrols.h\
     src/widgets-base/elabel.h \
     src/widgets-base/elettracolors.h \
     src/widgets-base/enumeric.h \
-    src/widgets-base/esimplelabel.h
+    src/widgets-base/esimplelabel.h \
+    src/cuappstatemanager.h
 
 unix:!android-g++ {
 

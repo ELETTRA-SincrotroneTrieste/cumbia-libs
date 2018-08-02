@@ -42,7 +42,7 @@ CuRNDActionFactoryService::~CuRNDActionFactoryService()
  */
 CuRNDActionI *CuRNDActionFactoryService::registerAction(const std::string& src,
                                                        const CuRNDActionFactoryI &f,
-                                                       CumbiaWebSocket* ct)
+                                                       CumbiaRandom* ct)
 {
     CuRNDActionI* action = NULL;
     std::lock_guard<std::mutex> lock(d->mutex);

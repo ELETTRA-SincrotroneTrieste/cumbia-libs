@@ -15,7 +15,7 @@ public:
 
     // CuTangoActionFactoryI interface
 public:
-    CuRNDActionI *create(const std::string &s, CumbiaWebSocket *c_rnd) const;
+    CuRNDActionI *create(const std::string &s, CumbiaRandom *c_rnd) const;
 
     CuRNDActionI::Type getType() const;
 

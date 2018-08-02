@@ -93,17 +93,17 @@ unix:!android-g++ {
     packagesExist(qwt){
         PKGCONFIG += qwt
         QWT_PKGCONFIG = qwt
-        message("Qwt: using pkg-config to configure qwt includes and libraries")
+        message("cumbia-qtcontrols.pri: using pkg-config to configure qwt includes and libraries")
     }
     else:packagesExist(Qt5Qwt6){
         PKGCONFIG += Qt5Qwt6
         QWT_PKGCONFIG = Qt5Qwt6
-        message("Qwt: using pkg-config to configure qwt includes and libraries (Qt5Qwt6)")
+        message("cumbia-qtcontrols.pri: using pkg-config to configure qwt includes and libraries (Qt5Qwt6)")
     } else {
-        warning("Qwt: no pkg-config file found")
-        warning("Qwt: export PKG_CONFIG_PATH=/usr/path/to/qwt/lib/pkgconfig if you want to enable pkg-config for qwt")
-        warning("Qwt: if you build and install qwt from sources, be sure to uncomment/enable ")
-        warning("Qwt: QWT_CONFIG     += QwtPkgConfig in qwtconfig.pri qwt project configuration file")
+        warning("cumbia-qtcontrols.pri: no pkg-config file found")
+        warning("cumbia-qtcontrols.pri: export PKG_CONFIG_PATH=/usr/path/to/qwt/lib/pkgconfig if you want to enable pkg-config for qwt")
+        warning("cumbia-qtcontrols.pri: if you build and install qwt from sources, be sure to uncomment/enable ")
+        warning("cumbia-qtcontrols.pri: QWT_CONFIG     += QwtPkgConfig in qwtconfig.pri qwt project configuration file")
     }
 }
 
@@ -114,7 +114,7 @@ unix:!android-g++ {
 # + ----------------------------------------------------------------- +
 #
 
-DEFINES += CUMBIA_PRINTINFO
+DEFINES += CUMBIA_DEBUG_OUTPUT=1
 
 VERSION_HEX = 0x000001
 VERSION = 0.0.1

@@ -173,14 +173,12 @@ CuControlsWriterA *CuContext::add_writer(const std::string &s, CuDataListener *d
 
 void CuContext::disposeReader(const std::string &src)
 {
-    printf("CuContext.disposeReader: %s\n" , src.c_str());
     CuControlsReaderA *removed = NULL;
     foreach(CuControlsReaderA *r, d->readers)
     {
         if(r->source().toStdString() == src || src == std::string())
         {
             removed = r;
-            printf("CuContext.disposeReader: deleting %p for %s\n" , r, src.c_str());
             delete r;
         }
     }
