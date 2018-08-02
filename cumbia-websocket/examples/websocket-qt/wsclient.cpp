@@ -14,10 +14,8 @@ WsClient::WsClient(const QUrl &wsurl, const QStringList &src_urls, QObject *pare
     m_url(wsurl)
 {
     connect(&m_webSocket, &QWebSocket::connected, this, &WsClient::onConnected);
-    connect(&m_webSocket, &QWebSocket::disconnected, this, &WsClient::closed);
+    connect(&m_webSocket, SIGNAL(disconnected()), this, SLOT(onSocketDisconnected()));
     connect(&m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onSocketError(QAbstractSocket::SocketError)));
-
-    qDebug() << "WebSocket server:" << m_url;
 
     // For your "Content-Length" header
     m_webSocket.open(m_url);
@@ -29,13 +27,13 @@ WsClient::WsClient(const QUrl &wsurl, const QStringList &src_urls, QObject *pare
 
 WsClient::~WsClient()
 {
-    printf("\e[1;31m~\e[0mWsClient\n");
+    printf("\e[1;31m ~ \e[0mWsClient\n");
     QNetworkAccessManager *nam = new QNetworkAccessManager(this);
     connect(nam, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
     foreach(QUrl url, m_src_urls) {
         QNetworkRequest request(url);
     //    request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
-        printf("\e[0;35m- - \e[0munsubscribing \"%s\"...\n", url.toString().toStdString().c_str());
+        printf("\e[1;35m- - \e[0munsubscribing \"%s\"...\n", url.toString().toStdString().c_str());
         nam->sendCustomRequest(request, QByteArray("UNSUBSCRIBE"));
     }
     m_webSocket.close();
@@ -43,7 +41,7 @@ WsClient::~WsClient()
 
 void WsClient::onConnected()
 {
-    printf("\e[0;32m -*- websocket connected to \"%s\"\e[0m\n", m_url.toString().toStdString().c_str());
+    printf("\n\e[0;32m -*- websocket connected to \"%s\"\e[0m\n\n", m_url.toString().toStdString().c_str());
     connect(&m_webSocket, &QWebSocket::textMessageReceived,
             this, &WsClient::onTextMessageReceived);
 
@@ -73,7 +71,7 @@ void WsClient::onSocketError(QAbstractSocket::SocketError e)
 
 void WsClient::onSocketDisconnected()
 {
-    printf("\e[0;32m -/- websocket disconnected from \"%s\"\e[0m\n", m_url.toString().toStdString().c_str());
+    printf("\n\e[0;32m -/- websocket disconnected from \"%s\"\e[0m\n\n", m_url.toString().toStdString().c_str());
 }
 
 void WsClient::replyFinished(QNetworkReply *reply)
