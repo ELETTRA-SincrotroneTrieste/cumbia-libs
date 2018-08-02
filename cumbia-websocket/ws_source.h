@@ -13,12 +13,14 @@ public:
     enum Type { Cmd = 0, Attr };
 
     WSSource();
-    WSSource(const std::string s);
+    WSSource(const std::string& src);
     WSSource(const WSSource& other);
 
     string getDeviceName() const;
     string getPoint() const;
     string getName() const;
+    string getUrl() const;
+    string getProtocol() const;
 
     std::vector<string> getArgs() const;
 

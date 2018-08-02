@@ -1,6 +1,8 @@
 #include "cuwsactionreader.h"
 #include "cumbiawebsocket.h"
 #include "cuwsactionfactoryservice.h"
+#include "protocol/protocolhelper_i.h"
+#include "protocolhelpers.h"
 
 #include <cudatalistener.h>
 #include <cuserviceprovider.h>
@@ -10,11 +12,71 @@
 #include <cuthreadseventbridgefactory_i.h>
 #include <cuactivitymanager.h>
 #include <curandomgenactivity.h>
+#include <math.h>
 
 #include "cuwsactionreader.h"
 #include <cumacros.h>
-
+#include <QNetworkReply>
+#include <QNetworkAccessManager>
 #include <QtDebug>
+#include <QString>
+
+// json
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonParseError>
+
+WSSourceConfiguration::WSSourceConfiguration()
+{
+    m_keys   << "min_value" << "max_value" << "data_type" << "display_unit" << "format" << "data_format";
+}
+
+void WSSourceConfiguration::add(const QString &key, const QString &value)
+{
+    m_map.insert(key, value);
+}
+
+bool WSSourceConfiguration::isComplete() const
+{
+    foreach(QString key, m_keys) {
+        if(!m_map.contains(key))
+            return false;
+    }
+    return true;
+}
+
+CuData WSSourceConfiguration::toCuData() const
+{
+    CuData res;
+    res["min"] = m_map["min_value"].toStdString();
+    res["max"] = m_map["max_value"].toStdString();
+    res["display_unit"] = m_map["display_unit"].toStdString();
+    res["format"] = m_map["format"].toStdString();
+    res["data_type"] = m_map["data_type"].toInt();
+    res["data_format"] = m_map["data_format"].toInt();
+    return res;
+}
+
+QStringList WSSourceConfiguration::keys() const
+{
+    return m_keys;
+}
+
+void WSSourceConfiguration::setError(const QString &message)
+{
+    m_errorMsg = message;
+}
+
+bool WSSourceConfiguration::error() const
+{
+    return !m_errorMsg.isEmpty();
+}
+
+QString WSSourceConfiguration::errorMessage() const
+{
+    return m_errorMsg;
+}
 
 
 class CuWSActionReaderPrivate
@@ -24,10 +86,11 @@ public:
     WSSource tsrc;
     CumbiaWebSocket *cumbia_ws;
     bool exit;
-    CuRandomGenActivity *randomgen_a;
     CuData property_d, value_d;
-    int period;
-    CuWSActionReader::RefreshMode refresh_mode;
+    QNetworkAccessManager *networkAccessManager;
+    WSSourceConfiguration source_configuration;
+    ProtocolHelpers *proto_helpers;
+    ProtocolHelper_I *proto_helper_i;
 };
 
 CuWSActionReader::CuWSActionReader(const WSSource& src, CumbiaWebSocket *ct) : CuWSActionI()
@@ -36,79 +99,21 @@ CuWSActionReader::CuWSActionReader(const WSSource& src, CumbiaWebSocket *ct) : C
     d->tsrc = src;
     d->cumbia_ws = ct;
     d->exit = false;  // set to true by stop
-    d->period = 1000;
-    d->refresh_mode = RandomGenerator;
+    d->networkAccessManager = NULL;
+    std::string proto = src.getProtocol(); // tango:// ?
+    printf("\e[1;36mFOUND PROTOCOL \"%s\"\e[0m\n", proto.c_str());
+    d->proto_helpers = new ProtocolHelpers();
+    d->proto_helper_i = d->proto_helpers->get(QString::fromStdString(proto));
 }
 
 CuWSActionReader::~CuWSActionReader()
 {
     pdelete("~CuWSActionReader %p", this);
+    if(d->networkAccessManager)
+        delete d->networkAccessManager;
+    if(d->proto_helpers)
+        delete d->proto_helpers; // deletes its ProtocolHelper_I's
     delete d;
-}
-
-/*! \brief progress notification callback
- *
- * @param step the completed steps in the background
- * @param total the total number of steps
- * @param data CuData with data from the background activity
- *
- * The current implementation does nothing
- */
-void CuWSActionReader::onProgress(int step, int total, const CuData &data)
-{
-    (void) step;  (void) total;  (void) data;
-}
-
-void CuWSActionReader::onResult(const std::vector<CuData> &datalist)
-{
-    (void) datalist;
-}
-
-/*
- * \brief delivers to the main thread the result of a task executed in background.
- *
- * See  \ref md_lib_cudata_for_tango
- *
- * The d->exit flag is true only if the CuWSActionReader::stop has been called. (data listener destroyed
- * or reader disconnected ("unset source") )
- * Only in this case CuWSActionReader auto deletes itself when data["exit"] is true.
- * data["exit"] true is not enough to dispose CuWSActionReader because CuWSActionReader handles two types of
- * activities (polling and event).
- *
- * If the error flag is set by the CuEventActivity because subscribe_event failed, the poller is started
- * and the error *is not* notified to the listener(s)
- *
- */
-void CuWSActionReader::onResult(const CuData &data)
-{
-    bool err = data["err"].toBool();
-    bool a_exit = data["exit"].toBool(); // activity exit flag
-    // iterator can be invalidated if listener's onUpdate unsets source: use a copy
-    std::set<CuDataListener *> lis_copy = d->listeners;
-    std::set<CuDataListener *>::iterator it;
-    bool event_subscribe_fail = err && !d->exit && data["event"].toString() == "subscribe";
-
-    // if it's just subscribe_event failure, do not notify listeners
-    for(it = lis_copy.begin(); it != lis_copy.end() && !event_subscribe_fail;   ++it) {
-        (*it)->onUpdate(data);
-    }
-
-    if(err && !d->exit)
-    {
-
-    }
-
-    /* remove last listener and delete this
-     * - if d->exit is set to true (CuWSActionReader has been stop()ped )
-     */
-    if(d->exit && a_exit)
-    {
-        CuWSActionFactoryService * af = static_cast<CuWSActionFactoryService *>(d->cumbia_ws->getServiceProvider()
-                                                                            ->get(static_cast<CuServices::Type>(CuWSActionFactoryService::CuWSActionFactoryServiceType)));
-        af->unregisterAction(d->tsrc.getName(), getType());
-        d->listeners.clear();
-        delete this;
-    }
 }
 
 /*! \brief returns the CuData storing the token that identifies this action
@@ -120,7 +125,7 @@ void CuWSActionReader::onResult(const CuData &data)
  */
 CuData CuWSActionReader::getToken() const
 {
-    CuData da("source", d->tsrc.getName());
+    CuData da("src", d->tsrc.getName());
     da["type"] = std::string("reader");
     return da;
 }
@@ -137,111 +142,6 @@ WSSource CuWSActionReader::getSource() const
 CuWSActionI::Type CuWSActionReader::getType() const
 {
     return CuWSActionI::Reader;
-}
-
-/** \brief Send data with parameters to configure the reader.
- *
- * @param data a CuData bundle with the settings to apply to the reader.
- *
- * \par Valid keys
- * \li "period": integer. Change the polling period, if the refresh mode is CuWSActionReader::PolledRefresh
- * \li "refresh_mode". A CuWSActionReader::RefreshMode value to change the current refresh mode.
- * \li "read" (value is irrelevant). If the read mode is CuWSActionReader::PolledRefresh, a read will be
- *     performed.
- *
- * @see getData
- *
- */
-void CuWSActionReader::sendData(const CuData &data)
-{
-    printf("\e[1;35msendData sending %s\e[0m\n", data.toString().c_str());
-
-    if(data.containsKey("refresh_mode"))
-        d->refresh_mode = static_cast<CuWSActionReader::RefreshMode>(data["refresh_mode"].toInt());
-    if(data.containsKey("period")) {
-        int period2 = data["period"].toInt();
-
-    }
-}
-
-/** \brief Get parameters from the reader.
- *
- * @param d_inout a reference to a CuData bundle containing the parameter names
- *        as keys. getData will associate the values to the keys.
- *        Unrecognized keys are ignored.
- *
- * \par Valid keys
- * \li "period": returns an int with the polling period
- * \li "refresh_mode": returns a CuWSActionReader::RefreshMode that can be converted to int
- * \li "mode": returns a string representation of the CuWSActionReader::RefreshMode
- *
- * @see sendData
- */
-void CuWSActionReader::getData(CuData &d_inout) const
-{
-    if(d_inout.containsKey("period"))
-        d_inout["period"] = d->period;
-    if(d_inout.containsKey("refresh_mode"))
-        d_inout["refresh_mode"] = d->refresh_mode;
-    if(d_inout.containsKey("mode"))
-        d_inout["mode"] = refreshModeStr();
-}
-
-/*! \brief set or change the reader's refresh mode
- *
- * If the reading activity hasn't been started yet, the mode is saved for later.
- * If an activity is already running and the requested mode is different, the current
- * activity is unregistered and a new one is started.
- *
- * @param rm a value chosen from CuWSActionReader::RefreshMode.
- *
- *
- */
-void CuWSActionReader::setRefreshMode(CuWSActionReader::RefreshMode rm)
-{
-    d->refresh_mode = rm;
-}
-
-string CuWSActionReader::refreshModeStr() const
-{
-    switch(d->refresh_mode)
-    {
-    case CuWSActionReader::RandomGenerator:
-        return "RandomGenerator";
-    default:
-        return "InvalidRefreshMode";
-    }
-}
-
-int CuWSActionReader::period() const
-{
-    return d->period;
-}
-
-CuWSActionReader::RefreshMode CuWSActionReader::refreshMode() const
-{
-    return d->refresh_mode;
-}
-
-void CuWSActionReader::setPeriod(int millis)
-{
-    qDebug() << __FUNCTION__ << "set period" << millis;
-    d->period = millis;
-}
-
-/*
- * main thread
- */
-void CuWSActionReader::stop()
-{
-//    if(d->exit)
-//        d->log.write("CuWSActionReader.stop", CuLog::Error, CuLog::Read, "stop called twice for reader %s", this->getToken()["source"].toString().c_str());
-//    else
-    if(!d->exit)
-    {
-        d->exit = true;
-        m_stopRandomGenActivity();
-    }
 }
 
 void CuWSActionReader::addDataListener(CuDataListener *l)
@@ -271,48 +171,159 @@ size_t CuWSActionReader::dataListenersCount()
     return d->listeners.size();
 }
 
+void CuWSActionReader::decodeMessage(const QJsonDocument &json)
+{
+    CuData res = getToken();
+    if(json.isNull()) {
+        res["err"] = true;
+        res["msg"] = "CuWSActionReader.decodeMessage: invalid json document";
+    }
+    else {
+        QJsonObject data_o = json["data"].toObject();
+        if(!data_o.isEmpty()) {
+            QJsonValue value = data_o["value"];
+            if(!value.isNull() && value.isArray()) {
+                res["data_format_str"] = std::string("vector");
+                QJsonArray jarr = value.toArray();
+                // decide type
+                if(jarr.size() > 0 && jarr.at(0).isDouble()) {
+                    std::vector<double> vd;
+                    for(int i = 0; i < jarr.size(); i++) {
+                        QJsonValue ithval = jarr.at(i);
+                        vd.push_back(ithval.toDouble());
+                    }
+                    res["value"] = vd;
+                }
+                else if(jarr.size() > 0 && jarr.at(0).isBool()) {
+                    std::vector<bool> vb;
+                    for(int i = 0; i < jarr.size(); i++) {
+                        QJsonValue ithval = jarr.at(i);
+                        vb.push_back(ithval.toBool());
+                    }
+                    res["value"] = vb;
+                }
+                else if(jarr.size() > 0 && jarr.at(0).isString()) {
+                    std::vector<std::string> vs;
+                    for(int i = 0; i < jarr.size(); i++) {
+                        QJsonValue ithval = jarr.at(i);
+                        vs.push_back(ithval.toString().toStdString());
+                    }
+                    res["value"] = vs;
+                }
+            }
+            else if(!value.isNull()){ // scalar
+                res["data_format_str"] = std::string("scalar");
+                if(value.isBool())
+                    res["value"] = value.toBool();
+                else if(value.isDouble())
+                    res["value"] = value.toDouble();
+                else if(value.isString())
+                    res["value"] = value.toString().toStdString();
+            }
+
+            // timestamp
+            char *endptr;
+            double ts_us = strtod(data_o["timestamp"].toString().toStdString().c_str(), &endptr);
+
+            res["timestamp_us"] = ts_us;
+            res["timestamp_ms"] = static_cast<long int>(floor(ts_us) * 1000 + (ts_us - floor(ts_us)) * 10e6 / 1000);
+
+            res["err"] = data_o["error"].toString().size() > 0;
+            if(res["err"].toBool())
+                res["msg"] = data_o["error"].toString().toStdString();
+            else
+                res["msg"] = "read ok";
+        }
+
+
+    }
+    for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it)
+        (*it)->onUpdate(res);
+}
+
+
 bool CuWSActionReader::exiting() const
 {
     return d->exit;
 }
 
-/*! \brief returns true if the parameter is an event driven RefreshMode, false otherwise.
- *
- * @param rm a value picked from CuWSActionReader::RefreshMode enumeration
- * @return true if rm is ChangeEventRefresh, PeriodicEventRefresh or ArchiveEventRefresh,
- *         false otherwise
- *
- */
-bool CuWSActionReader::isEventRefresh(CuWSActionReader::RefreshMode rm) const
+void CuWSActionReader::onNetworkReplyFinished(QNetworkReply *reply)
 {
-    return false;
+    qDebug () << __FUNCTION__ << "the request was" << reply->request().url().toString();
+    QByteArray data = reply->readAll();
+    QString requrl = reply->request().url().toString();
+    if(requrl == d->cumbia_ws->httpUrl() + QString::fromStdString(d->tsrc.getName())) {
+        // we got the first reading of the source
+        QJsonParseError jpe;
+        QJsonDocument jd = QJsonDocument::fromJson(data, &jpe);
+        if(!jd.isNull())
+            decodeMessage(jd);
+    }
+    else {
+        QString key = requrl.section('/', -1);
+        d->source_configuration.add(key, QString(data).remove("\""));
+        if(reply->error() != QNetworkReply::NoError)
+            d->source_configuration.setError(reply->errorString());
+
+        if(d->source_configuration.isComplete()) {
+            CuData conf = d->source_configuration.toCuData();
+            conf["src"] = d->tsrc.getName();
+            conf["err"] = false; //d->source_configuration.error();
+            if(d->proto_helper_i)
+                conf["data_format_str"] = d->proto_helper_i->dataFormatToStr(conf["data_format"].toInt());
+            conf["msg"] = d->source_configuration.errorMessage().toStdString();
+            conf["type"] = "property";
+
+            printf("\e[1;32mCuWSActionReader: configuration is complete: notifying with %s!\e[0m\n", conf.toString().c_str());
+            for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it) {
+                printf("listener %p\n", *it);
+                (*it)->onUpdate(conf);
+            }
+        }
+    }
 }
 
 void CuWSActionReader::start()
 {
-     m_startRandomGenActivity();
+    QString url_s = QString::fromStdString(d->tsrc.getName());
+    d->networkAccessManager = new QNetworkAccessManager(this);
+
+    // 1. get configuration parameters for the source
+    //
+    // for now, we must fetch each property with a separate get
+    WSSourceConfiguration soco;
+    QStringList keys = soco.keys();
+    QNetworkRequest config_r;
+    foreach(QString key, keys) {
+        config_r.setUrl(QUrl(d->cumbia_ws->httpUrl() + url_s + "/" + key));
+        d->networkAccessManager->get(config_r);
+    }
+
+    // 2. subscribe to events
+    QNetworkRequest subscribe_request(d->cumbia_ws->httpUrl() + url_s);
+//    subscribe_request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+    pgreen2tmp("CuWSActionReader::start: subscribing to \"%s\"", qstoc(subscribe_request.url().toString()));
+    d->networkAccessManager->sendCustomRequest(subscribe_request, QByteArray("SUBSCRIBE"));
+    connect(d->networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onNetworkReplyFinished(QNetworkReply*)));
 }
 
-void CuWSActionReader::m_startRandomGenActivity()
+void CuWSActionReader::stop()
 {
-    CuData at("src", d->tsrc.getName()); /* activity token */
-    at["device"] = d->tsrc.getDeviceName();
-    at["point"] = d->tsrc.getPoint();
-    at["activity"] = "event";
-    at["rmode"] = refreshModeStr();
-    at["period"] = d->period;
+    if(!d->exit)
+        d->exit = true;
 
-    CuData tt("device", d->tsrc.getDeviceName()); /* thread token */
-    d->randomgen_a = new CuRandomGenActivity(at);
-    const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_ws->getThreadEventsBridgeFactory());
-    const CuThreadFactoryImplI &fi = *(d->cumbia_ws->getThreadFactoryImpl());
-    d->cumbia_ws->registerActivity(d->randomgen_a, this, tt, fi, bf);
-    cuprintf("> CuWSActionReader.m_startEventActivity reader %p thread 0x%lx ACTIVITY %p\n", this, pthread_self(), d->randomgen_a);
-}
+    CuData tok = getToken();
+    QString url_s = QString::fromStdString(tok["src"].toString());
+    // unsubscribe
+    if(d->networkAccessManager) {
+        QNetworkRequest unsubscribe_request;
+        unsubscribe_request.setUrl(QUrl(d->cumbia_ws->httpUrl() + url_s));
+//        unsubscribe_request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+        pviolet2tmp("CuWSActionReader::stop: unsubscribing from \"%s\"", qstoc(unsubscribe_request.url().toString()));
+        d->networkAccessManager->sendCustomRequest(unsubscribe_request, QByteArray("UNSUBSCRIBE"));
 
-void CuWSActionReader::m_stopRandomGenActivity()
-{
-    d->cumbia_ws->unregisterActivity(d->randomgen_a);
-    d->randomgen_a = NULL; // not safe to dereference henceforth
+        delete d->networkAccessManager;
+        d->networkAccessManager = NULL;
+    }
 }
 

@@ -7,33 +7,71 @@
 #include <cuwsactionfactoryservice.h>
 #include <cuwsactionfactoryi.h>
 #include <QtDebug>
+#include <QtWebSockets/QWebSocket>
 
 #include <cuthreadfactoryimpl.h>
 #include <cuthreadseventbridgefactory_i.h>
 
-CumbiaWebSocket::CumbiaWebSocket(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb)
+#include <QJsonParseError>
+#include <QJsonDocument>
+#include <QJsonValue>
+#include <QJsonObject>
+#include "cuwsclient.h"
+
+class CumbiaWebSocketPrivate {
+public:
+    CuThreadsEventBridgeFactory_I *m_threadsEventBridgeFactory;
+    CuThreadFactoryImplI *m_threadFactoryImplI;
+    CuWSClient *cu_wscli;
+    QString http_url, ws_url;
+};
+
+CumbiaWebSocket::CumbiaWebSocket(const QString &websocket_url,
+                                 const QString &http_url,
+                                 CuThreadFactoryImplI *tfi,
+                                 CuThreadsEventBridgeFactory_I *teb)
 {
     qDebug() << "CumbiaWebSocket constructor...\n";
-    m_threadsEventBridgeFactory = teb;
-    m_threadFactoryImplI = tfi;
+    d = new CumbiaWebSocketPrivate;
+    d->m_threadsEventBridgeFactory = teb;
+    d->m_threadFactoryImplI = tfi;
+    d->http_url = http_url;
+    d->ws_url = websocket_url;
+
+    // CuWSClient waits for messages on the websocket and invokes onUpdate on this
+    // upon new data
+    d->cu_wscli = new CuWSClient(QUrl(websocket_url), this, NULL);
+
     m_init();
+
+
+    // PER ORA!
+    printf("\e[1;31m PER ORA APRO QUI SOCKET!!!\e[0m\n");
+    d->cu_wscli->open();
 }
 
 CumbiaWebSocket::~CumbiaWebSocket()
 {
-    pdelete("~CumbiaWebSocket %p", this);
+    printf("~CumbiaWebSocket %p\n", this);
     /* all registered services are unregistered and deleted by cumbia destructor after threads have joined */
-    if(m_threadsEventBridgeFactory)
-        delete m_threadsEventBridgeFactory;
-    if(m_threadFactoryImplI)
-        delete m_threadFactoryImplI;
+    if(d->m_threadsEventBridgeFactory)
+        delete d->m_threadsEventBridgeFactory;
+    if(d->m_threadFactoryImplI)
+        delete d->m_threadFactoryImplI;
+    if(d->cu_wscli)
+        delete d->cu_wscli;
+    delete d;
 }
 
 void CumbiaWebSocket::m_init()
 {
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuWSActionFactoryService::CuWSActionFactoryServiceType),
                                           new CuWSActionFactoryService());
-
+    // make sure urls end with '/'
+    if(!d->http_url.endsWith('/'))
+        d->http_url += '/';
+    if(!d->ws_url.endsWith('/'))
+        d->ws_url += "/";
 }
 
 void CumbiaWebSocket::addAction(const std::string &source, CuDataListener *l, const CuWSActionFactoryI &f)
@@ -51,7 +89,7 @@ void CumbiaWebSocket::addAction(const std::string &source, CuDataListener *l, co
         }
         else {
             cuprintf("CumbiaWebSocket.addAction: action %p already found for source \"%s\" and type %d thread 0x%lx TYPE %d\n",
-                  a, source.c_str(), f.getType(), pthread_self(), f.getType());
+                     a, source.c_str(), f.getType(), pthread_self(), f.getType());
         }
         a->addDataListener(l);
     }
@@ -79,15 +117,49 @@ CuWSActionI *CumbiaWebSocket::findAction(const std::string &source, CuWSActionI:
 
 CuThreadFactoryImplI *CumbiaWebSocket::getThreadFactoryImpl() const
 {
-     return m_threadFactoryImplI;
+    return d->m_threadFactoryImplI;
 }
 
 CuThreadsEventBridgeFactory_I *CumbiaWebSocket::getThreadEventsBridgeFactory() const
 {
-    return m_threadsEventBridgeFactory;
+    return d->m_threadsEventBridgeFactory;
 }
 
-int CumbiaWebSocket::getType() const
-{
+QString CumbiaWebSocket::httpUrl() const {
+     return d->http_url;
+}
+
+QString CumbiaWebSocket::websocketUrl() const {
+    return d->ws_url;
+}
+
+int CumbiaWebSocket::getType() const {
     return CumbiaWSType;
+}
+
+CuWSClient *CumbiaWebSocket::websocketClient() const
+{
+    return d->cu_wscli;
+}
+
+/*! \brief Callback invoked by CuWSClient when a new message is received from the websocket
+ *
+ * The received message is used to build a JSon document in order to extract the source.
+ * The decoding of the message is taken over by the CuWSActionI with the given source
+ *
+ * @see CuWSClient::onMessageReceived
+ */
+void CumbiaWebSocket::onUpdate(const QString &message)
+{
+    // 1. extract src
+    QJsonParseError jpe;
+    QJsonDocument jsd = QJsonDocument::fromJson(message.toUtf8(), &jpe);
+    std::string src = jsd["event"].toString().toStdString();
+
+    // 2. find action: data from websocket is always related to readers
+    CuWSActionI *action = findAction(src, CuWSActionI::Reader);
+    if(action) {
+        // 3. let the action decode the content (according to data format, type, and so on) and notify the listeners
+        action->decodeMessage(jsd);
+    }
 }

@@ -8,7 +8,7 @@ WSSource::WSSource()
 
 }
 
-WSSource::WSSource(const string s)
+WSSource::WSSource(const string& s)
 {
     m_s = s;
 }
@@ -75,6 +75,31 @@ std::string WSSource::getArgsString() const
 string WSSource::getName() const
 {
     return m_s;
+}
+
+/*! \brief matches last protocol found in the source name, matching the pattern
+ *         <strong>protocol://</strong>
+ *
+ * \par example
+ * In the source "https://pwma-dev.elettra.eu:10443/v1/cs/tango://ken.elettra.trieste.it:20000/test/device/1/double_scalar"
+ * "tango://" is found
+ */
+string WSSource::getProtocol() const
+{
+    std::regex base_regex("([a-zA-Z0-9_]+)://");
+    string source = "https://pwma-dev.elettra.eu:10443/v1/cs/tango://ken.elettra.trieste.it:20000/test/device/1/double_scalar";
+    // default constructor = end-of-sequence:
+    std::vector<std::string> matches;
+    std::regex_token_iterator<std::string::iterator> rend;
+    // parameter 1: match 1st submatch (in parentheses)
+    std::regex_token_iterator<std::string::iterator> a ( source.begin(), source.end(), base_regex, 1 );
+    while (a!=rend) {
+        matches.push_back(*a);
+        a++;
+    }
+    if(matches.size() > 0)
+        return matches.at(matches.size() - 1);
+    return "";
 }
 
 WSSource::Type WSSource::getType() const

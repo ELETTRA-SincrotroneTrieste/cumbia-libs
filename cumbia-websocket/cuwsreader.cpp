@@ -106,16 +106,13 @@ CuData CuWSReader::getOptions() const
     return d->options;
 }
 
-void CuWSReader::sendData(const CuData &da)
+void CuWSReader::sendData(const CuData &d)
 {
-    CuWSActionI *a = d->cumbia_ws->findAction(d->source.toStdString(), CuWSActionI::Reader);
-    if(a)
-        a->sendData(da);
+
 }
 
 void CuWSReader::getData(CuData &d_ino) const
 {
-    CuWSActionI *a = d->cumbia_ws->findAction(d->source.toStdString(), CuWSActionI::Reader);
-    if(a)
-        a->getData(d_ino);
+
 }
+

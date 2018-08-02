@@ -44,6 +44,7 @@ public:
 
     CuData getOptions() const;
 
+
 private:
     CuWSReaderPrivate *d;
 

@@ -120,6 +120,7 @@ void CuRandomGenActivity::execute()
     d->exec_cnt++;
     int qdebug_rate = 10000 / d->repeat;
     CuData res = getToken();
+    res["err"] = false;
     if(d->exec_cnt % qdebug_rate == 0)
         qDebug() << "CuRandomGenActivity::execute" <<this<< d->exec_cnt << res["src"].toString().c_str() << "thread" << pthread_self() << QThread::currentThread();
     time_t tp;
@@ -137,7 +138,10 @@ void CuRandomGenActivity::execute()
         res["value"] = vd;
     }
     else
+    {
         res["value"] = qrand() % 100;
+        printf("scalar value generated randomly : %s\n", res.toString().c_str());
+    }
 
     res.putTimestamp(); // timestamp_ms and timestamp_us
 

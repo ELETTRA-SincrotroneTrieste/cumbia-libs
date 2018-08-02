@@ -8,12 +8,17 @@ include(cumbia-websocket.pri)
 
 QT       -= gui
 
+QT += websockets
+
 CONFIG += debug
 
-TARGET = cumbia-websocket
+PKGCONFIG -= cumbia-websocket$${QTVER_SUFFIX}
+
+TARGET = cumbia-websocket$${QTVER_SUFFIX}
 TEMPLATE = lib
 
 DEFINES += CUMBIAWEBSOCKET_LIBRARY
+DEFINES += CUMBIA_DEBUG_OUTPUT=1
 
 DEFINES -= QT_NO_DEBUG_OUTPUT
 
@@ -22,6 +27,7 @@ DEFINES -= QT_NO_DEBUG_OUTPUT
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
+
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -33,11 +39,13 @@ SOURCES += \
     cuwsreader.cpp \
     cumbiawsworld.cpp \
     cuwsactionfactoryservice.cpp \
-    cuwsactioni.cpp \
     cuwsactionreader.cpp \
     ws_source.cpp \
     curandomgenactivity.cpp \
-    cuwsactionfactories.cpp
+    cuwsactionfactories.cpp \
+    cuwsclient.cpp \
+    protocol/tango/tangohelper.cpp \
+    protocol/tango/protocolhelpers.cpp
 
 HEADERS += \
         cumbiawebsocket.h \
@@ -50,10 +58,17 @@ HEADERS += \
     cuwsactionreader.h \
     ws_source.h \
     curandomgenactivity.h \
-    cuwsactionfactories.h
+    cuwsactionfactories.h \
+    cuwsclient.h \
+    protocol/protocolhelper_i.h \
+    protocol/tango/tangohelper.h \
+    protocol/tango/protocolhelpers.h
+
+INCLUDEPATH += protocol protocol/tango
 
 DISTFILES += \
-    cumbia-websocket.pri
+    cumbia-websocket.pri \
+    android/README.openssl.txt
 
 unix {
 
@@ -90,4 +105,4 @@ unix {
     QMAKE_PKGCONFIG_DESTDIR = pkgconfig
 }
 
-LIBS -= -lcumbia-websocket
+LIBS -= -lcumbia-websocket$${QTVER_SUFFIX}
