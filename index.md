@@ -140,8 +140,8 @@ improvement in performance.
 
 ![cumbia and qtango performances compared](readers_performance.png)
 
-The screenshot above shows a relevant gap in *CPU* usage by two equivalent applications (they read the same *attributes/commands* from the *Tango*
-control system and print them on the console), one relying on *qtango* (blue), the other on *cumbia* (green).
+<center><small><strong>Figure 2.</strong> The graph shows a relevant gap in *CPU* usage by two equivalent applications (they read the same *attributes/commands* from the *Tango*
+control system and print them on the console), one relying on *qtango* (blue), the other on *cumbia* (green).</small></center>
 
 
 
