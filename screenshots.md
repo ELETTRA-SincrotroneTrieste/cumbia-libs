@@ -12,7 +12,7 @@ within the <a href="https://gitlab.com/PWMA/">PWMA project</a>.
 <strong>Figure 2.</strong> Three *Tango scalar attributes* are read through the very same *websocket* interface
 
 
-![cumbia reads Tango scalar from an Android device](android-qml-elements.jpg)
+![cumbia reads Tango scalar on QML widgets from an Android device](android-qml-elements.jpg)
 
 <strong>Figure 3.</strong> *Tango scalar attributes* are displayed by some <em>cumbia QML graphical elements</em> on a mobile device
 
@@ -21,3 +21,8 @@ See also <a href="https://gitlab.com/PWMA/">the PWMA project</a>
 
 
 
+
+![cumbia reads Tango scalar on QML widgets - desktop](qml-application-desktop.png)
+
+<strong>Figure 4.</strong> A *QML* application with some *cumbia QML* components reads from the *Tango* control system using the 
+*qumbia-tango-controls* module.
