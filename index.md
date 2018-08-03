@@ -8,13 +8,13 @@ thread. You will receive the progress updates and the results when they are read
 Write graphical user interface components and applications communicating with the Tango and Epics control systems. More control system engines can be
 added in the future and plugged into existing cumbia installations and applications.
 
-### Keywords
+### Keywords and technology
 - C++-11
 - <a href="https://www.qt.io/">Qt</a>
 - <a href="https://doc.qt.io/qt-5.11/qtwidgets-index.html">Qt widgets</a>
 - <a href="https://doc.qt.io/qt-5.11/qtqml-index.html">Qt QML</a>
 - <a href="http://www.tango-controls.org/">Tango</a>
-- <a href="https://epics.anl.gov/>EPICS</a>
+- <a href="https://epics.anl.gov/">EPICS</a>
 - <a href="https://www.android.com/">Android</a>
 - <a href="https://en.wikipedia.org/wiki/Linux">Linux</a>
 
@@ -31,7 +31,7 @@ porting an application from one platform to another is just a matter of a few cl
 and new ones can be added. The core framework remains small and easy to maintain, while the power grows distributed.
 
 ### Screenshots
-<a href="screenshots.html">Here</a> you can see some screenshots of applications written with *cumbia*.
+<a href="screenshots.md">Here</a> you can see some screenshots of applications written with *cumbia*.
 
 ### Installation
 
