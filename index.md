@@ -27,8 +27,8 @@ porting an application from one platform to another is just a matter of a few cl
 
 ![cumbia reads Tango from an Android device](android-plot1.jpg)
 
-<small>Figure 1. A cumbia application running on an Android device reads from the <a href="http://www.tango-controls.org/">Tango</a> control system through a 
-*websocket* connection to the *canoned* server provided within the <a href="https://gitlab.com/PWMA">PWMA</a> project (GPL3 LICENSE).</small>
+<center><small>Figure 1. A cumbia application running on an Android device reads from the <a href="http://www.tango-controls.org/">Tango</a> control system through a 
+*websocket* connection to the *canoned* server provided within the <a href="https://gitlab.com/PWMA">PWMA</a> project (GPL3 LICENSE).</small></center>
 
 ### Plugins
 *cumbia* libraries provide a set of fundamental capabilities that can be summarized in the concepts above. A set of plugins extends those functions
