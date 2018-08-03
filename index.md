@@ -8,6 +8,17 @@ thread. You will receive the progress updates and the results when they are read
 Write graphical user interface components and applications communicating with the Tango and Epics control systems. More control system engines can be
 added in the future and plugged into existing cumbia installations and applications.
 
+### Keywords
+- C++-11
+- <a href="https://www.qt.io/">Qt</a>
+- <a href="https://doc.qt.io/qt-5.11/qtwidgets-index.html">Qt widgets</a>
+- <a href="https://doc.qt.io/qt-5.11/qtqml-index.html">Qt QML</a>
+- <a href="http://www.tango-controls.org/">Tango</a>
+- <a href="https://epics.anl.gov/>EPICS</a>
+- <a href="https://www.android.com/">Android</a>
+- <a href="https://en.wikipedia.org/wiki/Linux">Linux</a>
+
+
 ### Everywhere
 cumbia is written in C++ and uses the Qt libraries to develop graphical user interfaces. This means *cumbia applications* work on *desktop computers* as well as
 on *Android* devices. In principle, cumbia is available *wherever C++ and Qt are supported*. *Android* and *Linux* platforms have been successfully tested and
@@ -18,6 +29,9 @@ porting an application from one platform to another is just a matter of a few cl
 ### Plugins
 *cumbia* libraries provide a set of fundamental capabilities that can be summarized in the concepts above. A set of plugins extends those functions
 and new ones can be added. The core framework remains small and easy to maintain, while the power grows distributed.
+
+### Screenshots
+<a href="screenshots.html">Here</a> you can see some screenshots of applications written with *cumbia*.
 
 ### Installation
 
