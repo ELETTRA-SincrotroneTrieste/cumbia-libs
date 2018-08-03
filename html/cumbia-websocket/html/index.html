@@ -99,7 +99,8 @@ Page3.qml</h3>
 <li>libcumbia-qtcontrols-qml-qt5plugin.so</li>
 </ul>
 <p>and the <em>ssl</em> libraries that must have been compiled for android as described in the file <em>cumbia-websocket/android/README.openssl.txt</em></p>
-<p>The three pages in the resulting application look like this:</p>
+<p>The inclusion of the <em>so</em> libraries above listed is reflected by a section like this in the <em>myqmlproject.pro</em> project file:</p>
+<div class="fragment"><div class="line">contains(ANDROID_TARGET_ARCH,armeabi-v7a) {</div><div class="line">    ANDROID_EXTRA_LIBS = \</div><div class="line">        /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-qtcontrols/qml/examples/qmlandroidpwma/../../../../../../../../../../../libs/armeabi-v7a/libcumbia.so \</div><div class="line">        /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-qtcontrols/qml/examples/qmlandroidpwma/../../../../../../../../../../../libs/armeabi-v7a/libcumbia-qtcontrols-qt5.so \</div><div class="line">        /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-qtcontrols/qml/examples/qmlandroidpwma/../../../../cumbia-websocket/android/openssl-lib/libcrypto.so \</div><div class="line">        /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-qtcontrols/qml/examples/qmlandroidpwma/../../../../cumbia-websocket/android/openssl-lib/libssl.so \</div><div class="line">        /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-qtcontrols/qml/examples/qmlandroidpwma/../../../../../../../../../../../libs/armeabi-v7a/libcumbia-websocket-qt5.so \</div><div class="line">        $$PWD/../../../../../../../../../../../usr/local/qt-5.11.1/5.11.1/android_armv7/qml/eu/elettra/cumbiaqmlcontrols/libcumbia-qtcontrols-qml-qt5plugin.so</div><div class="line">}</div></div><!-- fragment --><p>The three pages in the resulting application look like this:</p>
 <div class="image">
 <img src="spectrum_android.jpg" alt="spectrum_android.jpg"/>
 <div class="caption">
@@ -115,7 +116,7 @@ Page3.qml</h3>
   </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Aug 3 2018 16:23:14 for cumbia-websocket by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 3 2018 16:26:48 for cumbia-websocket by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>
