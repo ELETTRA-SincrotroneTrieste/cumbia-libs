@@ -114,14 +114,12 @@ void CuTimer::resume()
  */
 void CuTimer::start(int millis)
 {
-//    pgreentmp("CuTimer.start millis %d current m_thread %p", millis, m_thread);
     m_quit = m_pause = false;
     m_timeout = millis;
     if(!m_thread) { // first time start is called or after stop
         m_thread = new std::thread(&CuTimer::run, this);
     }
     else {
-//        pgreentmp("CuTimer.start: GOOD timer  alive notifying !!!... --->");
         m_wait.notify_one();
     }
 
@@ -149,7 +147,7 @@ void CuTimer::stop()
     {
         printf("joining!\n");
         m_thread->join();
-        pbblue("CuTimer.stop: JOINETH!");
+        pbblue("CuTimer.stop: joined!");
     }
     else
         pbblue("CuTimer.stop: NOT JOINABLE!!!");
@@ -167,13 +165,15 @@ void CuTimer::stop()
  */
 void CuTimer::run()
 {
-    pgreentmp("CuTimer.run this is %p", this);
     std::unique_lock<std::mutex> lock(m_mutex);
     unsigned long timeout = m_timeout;
     while (!m_quit)
     {
         std::chrono::milliseconds ms{timeout};
+//        qDebug() << __FUNCTION__ << "1 . this timer" << this << "listener " << m_listener << "waiting for unlock";
         std::cv_status status = m_wait.wait_for(lock, ms);
+    //    std::this_thread::sleep_for(ms);
+
         //        cuprintf("CuTimer.run pause is %d status is %d timeout %d\n", m_pause, (int) status, m_timeout);
         //        if(status == std::cv_status::no_timeout)
         m_pause ?  timeout = ULONG_MAX : timeout = m_timeout;
@@ -185,14 +185,9 @@ void CuTimer::run()
             m_listener->onTimeout(this);
         }
 
-    //    uncommenting this synchronizes the timer with the operation done
-    //    in the CuThread (CuActivity)
-    //    but it seems it doesn't work fine in android
-    //    Please see note in CuThread::run under the
-    //    ThreadEvent::TimerExpired branch (A)
-
-    //    if(!m_quit)
-    //        m_wait.wait(lock);
+//        if(!m_quit) {
+//            m_wait.wait(lock);
+//        }
     }
 }
 

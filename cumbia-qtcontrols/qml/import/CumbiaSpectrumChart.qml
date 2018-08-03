@@ -100,7 +100,6 @@ ChartView {
 //        spectrumChartView.removeAllSeries();
 
         for(var i = 0; i < srcs.length; i++) {
-            console.log("set sources with", srcs, "index Of in ", sourceslist, "is ", sourceslist.indexOf(srcs[i]))
             if(sourceslist.indexOf(srcs[i]) < 0) {
                 var series1 = spectrumChartView.createSeries(ChartView.SeriesTypeLine, srcs[i], spaxisX, spaxisY1);
                 series1.width = 0

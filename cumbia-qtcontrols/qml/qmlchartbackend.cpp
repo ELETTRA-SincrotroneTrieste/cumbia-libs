@@ -72,7 +72,6 @@ QmlChartBackend::~QmlChartBackend()
 
 void QmlChartBackend::init(CumbiaPool_O *poo_o)
 {
-    qDebug() << __FUNCTION__ << "INIT DAFUQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ";
     d->plot_common = new QuPlotCommon(poo_o->getPool(), poo_o->getFactory());
     //    if(!d->sources.isEmpty()) {
     //        m_setSources(d->sources);
@@ -278,7 +277,6 @@ void QmlChartBackend::m_update_curve_y_bounds(const QString& src, const QVector<
 //
 void QmlChartBackend::m_update_curve_y_bounds(const QString &src, const double &y)
 {
-    printf("\e[1;33mrecalc y bounds needed for %s (append mod)...\n", qstoc(src));
     if(!d->minmax_map.contains(src)){
         d->minmax_map[src] =  QPointF(y, y);
     }

@@ -358,6 +358,7 @@ void CuThread::run()
     ThreadEvent *te = NULL;
     while(1)
     {
+
         te = NULL;
         {
             std::unique_lock<std::mutex> lk(d->mutex);
@@ -366,11 +367,9 @@ void CuThread::run()
             {
                 qcopy.pop();
             }
-            int i = 0;
             while(d->eventQueue.empty()) {
                 d->conditionvar.wait(lk);
             }
-
             if(d->eventQueue.empty())
             {
                 continue;
@@ -401,9 +400,7 @@ void CuThread::run()
                 if(repeat_ms > 0)
                 {
                     tev->activity->doExecute();
-
-                    // see note in CuTimer::run (A)
-                    // timer->start(repeat_ms);
+                  //  timer->start(repeat_ms);
                 }
                 else if(repeat_ms < 0 && tev->activity->getFlags() & CuActivity::CuAUnregisterAfterExec)
                     unregisterActivity(tev->activity);

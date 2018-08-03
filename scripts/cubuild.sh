@@ -5,11 +5,11 @@ docs=0
 make_install=0
 clean=0
 cleandocs=0
-push_docs=0
 meson=0
 epics=0
 tango=0
 qml=1
+websocket=0
 pull=0
 srcupdate=0
 sudocmd=sudo
@@ -50,7 +50,6 @@ then
 	echo -e "                  To build tango modules, add the \"tango\" argument, to build the epics modules, add \"epics\" (example 3.)"
 	echo -e " pull - update sources from git"
 	echo -e " env-update - execute the \"source\" bash command to update the environment as to the most recently installed scripts"
-	echo -e " push-documentation - execute git commit and git push on the \"docs\" directory so that the \"github.io\" pages are updated"
 	echo -e " docs - regenerate documentation"
 	echo -e " cleandocs - remove locally generated documentation"
 	echo -e " clean - execute make clean in every project folder"
@@ -58,6 +57,7 @@ then
 	echo -e " no-sudo - do not use \"sudo\" when calling make install\""
 	echo -e " tango - include cumbia-tango and qumbia-tango-controls modules in the specified operations"
 	echo -e " epics - include cumbia-epics and qumbia-epics-controls modules in the specified operations"
+        echo -e " websocket - include cumbia-websocket module in the specified operations"
         echo -e " qml - build cumbia-qtcontrols QML module (default: enabled)"
 	echo -e " no-tango - exclude cumbia-tango and qumbia-tango-controls modules from the specified operations"
 	echo -e " no-epics - remove cumbia-epics and qumbia-epics-controls modules from the specified operations"
@@ -88,12 +88,6 @@ if [[ $@ == **pull** ]]
 then
 	pull=1
 	operations+=(pull)
-fi
-
-if [[ $@ == **push-documentation** ]]
-then
-    push_docs=1
-	operations+=(push-documentation)
 fi
 
 if [[ $@ == **no-sudo** ]]
@@ -167,6 +161,17 @@ if [[ $@ == **no-qml** ]]; then
         qml=0
 fi
 
+
+if [[ $@ == **websocket** ]]; then
+        websocket=1
+fi
+
+if [[ $@ == **no-websocket** ]]; then
+        websocket=0
+fi
+
+
+
 if  [ "$#" == 0 ]; then
 	build=1
 	meson=1
@@ -182,6 +187,9 @@ if [[ $epics -eq 1 ]]; then
 	qmake_p+=(qumbia-epics-controls)
 fi
 
+if [[ $websocket -eq 1 ]]; then
+        qmake_p+=(cumbia-websocket)
+fi
 
 if [[ $qml -eq 1 ]]; then
         qmake_p+=(cumbia-qtcontrols/qml)
@@ -680,27 +688,6 @@ for x in "${qmake_subdir_p[@]}"; do
 	cd ..
 
 done
-
-
-if [ $push_docs -eq 1 ]; then
-
-	cd $topdir/$DIR/../docs/html
-	if [[ ! -z $2 ]]; then
-		message=$2
-	else
-		
-		message="Regenerated docs on `date`"
-		echo -e "\e[0;36m\n*\n* PUSH DOCS: committed with automatic message \"$message\". Use an additional parameter for a custom message\n  for example \"added new documentation and fixed some links\".\n"
-	fi
-	
-	echo -e "\e[0;36m\n*\n* PUSH DOCS under `pwd` to git with commit message \"$message\"...\n*\e[0m\n"
-
-	git commit . -m "$message"
-	
-	git push
-
-	cd $topdir
-fi
 
 if [ $make_install -eq 1 ]; then
 

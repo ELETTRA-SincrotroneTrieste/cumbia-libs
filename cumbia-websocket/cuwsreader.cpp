@@ -106,13 +106,13 @@ CuData CuWSReader::getOptions() const
     return d->options;
 }
 
-void CuWSReader::sendData(const CuData &d)
+void CuWSReader::sendData(const CuData &)
 {
 
 }
 
 void CuWSReader::getData(CuData &d_ino) const
 {
-
+    Q_UNUSED(d_ino);
 }
 

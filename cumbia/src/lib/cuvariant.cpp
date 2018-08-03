@@ -1082,7 +1082,7 @@ long int CuVariant::toLongInt(bool *ok) const
 long long CuVariant::toLongLongInt(bool *ok) const
 {
     long long int i = LONG_LONG_MIN;
-    bool canConvert = (d->type == Int || d->type == LongInt)  && d->format == Scalar && d->val != NULL && d->mIsValid;
+    bool canConvert = (d->type == Int || d->type == LongInt || d->type == LongLongInt)  && d->format == Scalar && d->val != NULL && d->mIsValid;
     if(canConvert && d->format == Scalar && d->val != NULL && d->type == Int)
         i = static_cast<long long int> ( *(static_cast<int *>(d->val)) );
     else if(canConvert && d->type == LongInt)
@@ -1691,6 +1691,6 @@ std::string CuVariant::dataFormatStr(int f) const
     };
     if(f < EndFormatTypes)
         return std::string(v[f]);
-    return std::string( " OutOfRange");
+    return std::string(" OutOfRange");
 }
 

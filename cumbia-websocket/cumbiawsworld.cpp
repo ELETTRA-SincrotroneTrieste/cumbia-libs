@@ -15,7 +15,7 @@ std::vector<std::string> CumbiaWSWorld::srcPatterns() const
     return m_src_patterns;
 }
 
-bool CumbiaWSWorld::source_valid(const std::string &s)
+bool CumbiaWSWorld::source_valid(const std::string &)
 {
     return true;
 }

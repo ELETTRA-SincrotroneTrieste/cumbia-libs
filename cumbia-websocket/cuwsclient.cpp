@@ -69,13 +69,12 @@ void CuWSClient::onMessageReceived(const QString &message)
 {
     // listener is CumbiaWebSocket
     //
-    qDebug() << __FUNCTION__ << "-----> " << message;
     m_listener->onUpdate(message);
 }
 
 void CuWSClient::onSocketError(QAbstractSocket::SocketError se)
 {
-    perr("CuWSClient.onSocketError: %s", qstoc(m_webSocket.errorString()));
+    perr("CuWSClient.onSocketError: %s [err: %d]", qstoc(m_webSocket.errorString()), se);
 }
 
 

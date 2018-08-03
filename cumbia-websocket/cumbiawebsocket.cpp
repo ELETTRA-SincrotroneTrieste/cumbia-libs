@@ -31,7 +31,6 @@ CumbiaWebSocket::CumbiaWebSocket(const QString &websocket_url,
                                  CuThreadFactoryImplI *tfi,
                                  CuThreadsEventBridgeFactory_I *teb)
 {
-    qDebug() << "CumbiaWebSocket constructor...\n";
     d = new CumbiaWebSocketPrivate;
     d->m_threadsEventBridgeFactory = teb;
     d->m_threadFactoryImplI = tfi;
@@ -43,16 +42,11 @@ CumbiaWebSocket::CumbiaWebSocket(const QString &websocket_url,
     d->cu_wscli = new CuWSClient(QUrl(websocket_url), this, NULL);
 
     m_init();
-
-
-    // PER ORA!
-    printf("\e[1;31m PER ORA APRO QUI SOCKET!!!\e[0m\n");
-    d->cu_wscli->open();
 }
 
 CumbiaWebSocket::~CumbiaWebSocket()
 {
-    printf("~CumbiaWebSocket %p\n", this);
+    pdelete("~CumbiaWebSocket %p", this);
     /* all registered services are unregistered and deleted by cumbia destructor after threads have joined */
     if(d->m_threadsEventBridgeFactory)
         delete d->m_threadsEventBridgeFactory;

@@ -1,25 +1,38 @@
 import QtQuick 2.0
 import eu.elettra.cumbiaqmlcontrols 1.0
+import QtQuick.Controls 2.4
+import QtQuick.Layouts 1.11
 
-
-
-Item {
+ScrollView {
     id: secondPage
+    width:300
+    height:300
+    clip: true
 
-    Grid {
+    ColumnLayout {
         id: grid
-        columns: 4
+        spacing: 6
 
         Text {
             id: text1
             text: qsTr("long_scalar")
             font.pixelSize: 12
+            width:parent.width
+            Layout.margins: 10
         }
 
         CumbiaLabel {
             id: cumbiaReadLabel
             styleColor: "#0d99f2"
             source:"tango://ken.elettra.trieste.it:20000/test/device/1/long_scalar"
+            Layout.fillWidth: true
+            Layout.margins: 10
+        }
+        CumbiaCircularGauge {
+            id:longCircularGauge
+            source:"tango://ken.elettra.trieste.it:20000/test/device/1/long_scalar"
+            Layout.fillWidth: true
+            Layout.margins: 10
         }
 
 
@@ -27,32 +40,22 @@ Item {
             id: text2
             text: qsTr("double_scalar")
             font.pixelSize: 12
+            Layout.fillWidth: true
+            Layout.margins: 10
         }
         CumbiaLabel {
             id: cumbiaReadLabel1
             styleColor: "#0d99f2"
             source: "tango://ken.elettra.trieste.it:20000/test/device/1/double_scalar"
+            Layout.fillWidth: true
+            Layout.margins: 10
         }
 
-
-        Text {
-            id: text3
-            text: qsTr("long_scalar")
-            font.pixelSize: 12
-        }
-        CumbiaCircularGauge {
-            id:longCircularGauge
-            source:"tango://ken.elettra.trieste.it:20000/test/device/1/long_scalar"
-        }
-
-        Text {
-            id: text4
-            text: qsTr("double_scalar")
-            font.pixelSize: 12
-        }
         CumbiaCircularGauge {
             id:doubleCircularGauge
             source: "tango://ken.elettra.trieste.it:20000/test/device/1/double_scalar"
+            Layout.fillWidth: true
+            Layout.margins: 10
         }
 
     }

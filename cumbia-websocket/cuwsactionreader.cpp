@@ -11,7 +11,6 @@
 #include <cuthreadfactoryimpl_i.h>
 #include <cuthreadseventbridgefactory_i.h>
 #include <cuactivitymanager.h>
-#include <curandomgenactivity.h>
 #include <math.h>
 
 #include "cuwsactionreader.h"
@@ -248,7 +247,6 @@ bool CuWSActionReader::exiting() const
 
 void CuWSActionReader::onNetworkReplyFinished(QNetworkReply *reply)
 {
-    qDebug () << __FUNCTION__ << "the request was" << reply->request().url().toString();
     QByteArray data = reply->readAll();
     QString requrl = reply->request().url().toString();
     if(requrl == d->cumbia_ws->httpUrl() + QString::fromStdString(d->tsrc.getName())) {
@@ -273,9 +271,7 @@ void CuWSActionReader::onNetworkReplyFinished(QNetworkReply *reply)
             conf["msg"] = d->source_configuration.errorMessage().toStdString();
             conf["type"] = "property";
 
-            printf("\e[1;32mCuWSActionReader: configuration is complete: notifying with %s!\e[0m\n", conf.toString().c_str());
             for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it) {
-                printf("listener %p\n", *it);
                 (*it)->onUpdate(conf);
             }
         }

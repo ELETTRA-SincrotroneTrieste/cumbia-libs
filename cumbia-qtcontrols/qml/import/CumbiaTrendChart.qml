@@ -113,10 +113,9 @@ ChartView {
     function setSources(srcs) {
     //    trendChartView.removeAllSeries();
         for(var i = 0; i < srcs.length; i++) {
-            console.log("set sources with", srcs, "index Of in ", sourceslist, "is ", sourceslist.indexOf(srcs[i]))
             if(sourceslist.indexOf(srcs[i]) < 0) {
                 var series1 = trendChartView.createSeries(ChartView.SeriesTypeLine, srcs[i], axisX, axisY1);
-                series1.width = 2
+                series1.width = 1
                 series1.useOpenGL = trendChartView.openGL
                 sourceslist.push(srcs[i])
             }
@@ -127,7 +126,6 @@ ChartView {
         var seri = trendChartView.series(src)
         if(seri !== null) {
             c_backend.appendPoint(seri)
-            console.log("append, verify y bounds", axisY1.min, axisY1.max)
         }
     }
 

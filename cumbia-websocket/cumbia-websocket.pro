@@ -41,7 +41,6 @@ SOURCES += \
     cuwsactionfactoryservice.cpp \
     cuwsactionreader.cpp \
     ws_source.cpp \
-    curandomgenactivity.cpp \
     cuwsactionfactories.cpp \
     cuwsclient.cpp \
     protocol/tango/tangohelper.cpp \
@@ -57,7 +56,6 @@ HEADERS += \
     cuwsactionfactoryi.h \
     cuwsactionreader.h \
     ws_source.h \
-    curandomgenactivity.h \
     cuwsactionfactories.h \
     cuwsclient.h \
     protocol/protocolhelper_i.h \
