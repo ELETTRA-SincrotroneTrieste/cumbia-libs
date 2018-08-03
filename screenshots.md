@@ -19,7 +19,7 @@ within the <a href="https://gitlab.com/PWMA/">PWMA project</a>.
 See also <a href="https://gitlab.com/PWMA/">the PWMA project</a>
 
 
-
+### 2. A desktop application using some Qt QML components reads Tango test 
 
 
 ![cumbia reads Tango scalar on QML widgets - desktop](qml-application-desktop.png)
@@ -28,9 +28,10 @@ See also <a href="https://gitlab.com/PWMA/">the PWMA project</a>
 *qumbia-tango-controls* module.
 
 
+### 3. A desktop application using classical Qt widgets components reads Tango and Epics
 
 
 ![cumbia reads Tango and Epics quantities on classical Qt widgets - desktop](cumbia-client-tango+epics.png)
 
-<strong>Figure 4.</strong> A *Qt widgets* application (*cumbia client*) reads from the *Tango* and *Epics* control systems at the same time using the 
+<strong>Figure 5.</strong> A *Qt widgets* application (*cumbia client*) reads from the *Tango* and *Epics* control systems at the same time using the 
 *qumbia-tango-controls* and *qumbia-epics-controls*  modules.
