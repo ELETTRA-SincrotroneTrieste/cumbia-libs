@@ -35,7 +35,7 @@ porting an application from one platform to another is just a matter of a few cl
 and new ones can be added. The core framework remains small and easy to maintain, while the power grows distributed.
 
 ### Screenshots
-<a href="screenshots.md">Here</a> you can see some screenshots of applications written with *cumbia*.
+<a href="screenshots.html">Here</a> you can see some screenshots of applications written with *cumbia*.
 
 ### Installation
 
