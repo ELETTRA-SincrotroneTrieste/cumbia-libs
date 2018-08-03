@@ -13,6 +13,7 @@ added in the future and plugged into existing cumbia installations and applicati
 - <a href="https://www.qt.io/">Qt</a>
 - <a href="https://doc.qt.io/qt-5.11/qtwidgets-index.html">Qt widgets</a>
 - <a href="https://doc.qt.io/qt-5.11/qtqml-index.html">Qt QML</a>
+- <a href="https://www1.qt.io/qt-quick/>Qt Quick</a>
 - <a href="http://www.tango-controls.org/">Tango</a>
 - <a href="https://epics.anl.gov/">EPICS</a>
 - <a href="https://www.android.com/">Android</a>
