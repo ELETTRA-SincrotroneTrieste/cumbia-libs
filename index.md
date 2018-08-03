@@ -54,7 +54,7 @@ The library sources include copies of the *README.md* and *README.UBUNTU.md* fil
  | <a href="html/qumbia-tango-controls/html/index.html">cumbia-qtcontrols</a>.  |
  | <a href="html/cumbia-epics/html/index.html">qumbia-epics</a>.   |
  | <a href="html/qumbia-epics-controls/html/index.html">qumbia-epics-controls</a>.  |
- | <a href="html/cumbia-websocket/html/index.html"cumbia-websocket</a>.  |
+ | <a href="html/cumbia-websocket/html/index.html"cumbia-websocket">cumbia-websocket</a>.  |
 
 
 ### Apps
