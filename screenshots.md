@@ -26,3 +26,11 @@ See also <a href="https://gitlab.com/PWMA/">the PWMA project</a>
 
 <strong>Figure 4.</strong> A *QML* application with some *cumbia QML* components reads from the *Tango* control system using the 
 *qumbia-tango-controls* module.
+
+
+
+
+![cumbia reads Tango and Epics quantities on classical Qt widgets - desktop](qml-application-desktop.png)
+
+<strong>Figure 4.</strong> A *Qt widgets* application (*cumbia client*) reads from the *Tango* and *Epics* control systems at the same time using the 
+*qumbia-tango-controls* and *qumbia-epics-controls*  modules.
