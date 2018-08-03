@@ -8,7 +8,7 @@ thread. You will receive the progress updates and the results when they are read
 Write graphical user interface components and applications communicating with the Tango and Epics control systems. More control system engines can be
 added in the future and plugged into existing cumbia installations and applications.
 
-### Keywords and technology
+### Keywords and technologies
 - C++-11
 - <a href="https://www.qt.io/">Qt</a>
 - <a href="https://doc.qt.io/qt-5.11/qtwidgets-index.html">Qt widgets</a>
