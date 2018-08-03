@@ -13,6 +13,7 @@ cumbia is written in C++ and uses the Qt libraries to develop graphical user int
 on *Android* devices. In principle, cumbia is available *wherever C++ and Qt are supported*. *Android* and *Linux* platforms have been successfully tested and
 porting an application from one platform to another is just a matter of a few clicks with the *Qt creator* IDE.
 
+![cumbia reads Tango from an Android device](android-plot1.jpg)
 
 ### Plugins
 *cumbia* libraries provide a set of fundamental capabilities that can be summarized in the concepts above. A set of plugins extends those functions
