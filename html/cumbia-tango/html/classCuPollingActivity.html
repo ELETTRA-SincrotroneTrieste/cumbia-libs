@@ -71,17 +71,21 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a749fd146e2e87a87e3a5589a0940d098"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingActivity.html#a749fd146e2e87a87e3a5589a0940d098">CuPollingActivity</a> (const CuData &amp;token, <a class="el" href="classCuDeviceFactoryService.html">CuDeviceFactoryService</a> *df, const CuVariant &amp;argins=std::vector&lt; std::string &gt;())</td></tr>
-<tr class="memdesc:a749fd146e2e87a87e3a5589a0940d098"><td class="mdescLeft">&#160;</td><td class="mdescRight">the class constructor that sets up a <a class="el" href="namespaceTango.html">Tango</a> polling activity  <a href="#a749fd146e2e87a87e3a5589a0940d098">More...</a><br /></td></tr>
-<tr class="separator:a749fd146e2e87a87e3a5589a0940d098"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83a6299419cb6bd41c094567521a30d4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingActivity.html#a83a6299419cb6bd41c094567521a30d4">CuPollingActivity</a> (const CuData &amp;token, <a class="el" href="classCuDeviceFactoryService.html">CuDeviceFactoryService</a> *df)</td></tr>
+<tr class="memdesc:a83a6299419cb6bd41c094567521a30d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">the class constructor that sets up a <a class="el" href="namespaceTango.html">Tango</a> polling activity  <a href="#a83a6299419cb6bd41c094567521a30d4">More...</a><br /></td></tr>
+<tr class="separator:a83a6299419cb6bd41c094567521a30d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a170acd1bb34d5c5994592db4569c2ab8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingActivity.html#a170acd1bb34d5c5994592db4569c2ab8">~CuPollingActivity</a> ()</td></tr>
 <tr class="memdesc:a170acd1bb34d5c5994592db4569c2ab8"><td class="mdescLeft">&#160;</td><td class="mdescRight">the class destructor  <a href="#a170acd1bb34d5c5994592db4569c2ab8">More...</a><br /></td></tr>
 <tr class="separator:a170acd1bb34d5c5994592db4569c2ab8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ec08940859c6fe699385cd22cb7f1f4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingActivity.html#a2ec08940859c6fe699385cd22cb7f1f4">setArgins</a> (const CuVariant &amp;argins)</td></tr>
 <tr class="memdesc:a2ec08940859c6fe699385cd22cb7f1f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the input arguments if the poller is used to "read" <a class="el" href="namespaceTango.html">Tango</a> commands and they require argins  <a href="#a2ec08940859c6fe699385cd22cb7f1f4">More...</a><br /></td></tr>
 <tr class="separator:a2ec08940859c6fe699385cd22cb7f1f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82106502c2647e7e90b28ca0003fe2c4"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingActivity.html#a82106502c2647e7e90b28ca0003fe2c4">actionsCount</a> () const</td></tr>
+<tr class="separator:a82106502c2647e7e90b28ca0003fe2c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3c22b171d67001e7564796dbf6cd1e5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingActivity.html#ab3c22b171d67001e7564796dbf6cd1e5">srcCount</a> () const</td></tr>
+<tr class="separator:ab3c22b171d67001e7564796dbf6cd1e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45e50ac3fb2f00fa7b70958b78712328"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingActivity.html#a45e50ac3fb2f00fa7b70958b78712328">matches</a> (const CuData &amp;token) const</td></tr>
-<tr class="memdesc:a45e50ac3fb2f00fa7b70958b78712328"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns true if the passed token's <em>src</em> and <em>activity</em> values matche this activity token's <em>src</em> and <em>activity</em> values.  <a href="#a45e50ac3fb2f00fa7b70958b78712328">More...</a><br /></td></tr>
+<tr class="memdesc:a45e50ac3fb2f00fa7b70958b78712328"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns true if the passed token's <em>device</em> <em>activity</em> and <em>period</em> values matche this activity token's <em>device</em> and <em>activity</em> and <em>period</em> values.  <a href="#a45e50ac3fb2f00fa7b70958b78712328">More...</a><br /></td></tr>
 <tr class="separator:a45e50ac3fb2f00fa7b70958b78712328"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aefe3b2406114a72d51891ee153b9edf8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingActivity.html#aefe3b2406114a72d51891ee153b9edf8">event</a> (CuActivityEvent *e)</td></tr>
 <tr class="memdesc:aefe3b2406114a72d51891ee153b9edf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Receive events <em>from the main thread to the CuActivity thread</em>.  <a href="#aefe3b2406114a72d51891ee153b9edf8">More...</a><br /></td></tr>
@@ -148,8 +152,8 @@ Protected Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a749fd146e2e87a87e3a5589a0940d098"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a749fd146e2e87a87e3a5589a0940d098">&#9670;&nbsp;</a></span>CuPollingActivity()</h2>
+<a id="a83a6299419cb6bd41c094567521a30d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83a6299419cb6bd41c094567521a30d4">&#9670;&nbsp;</a></span>CuPollingActivity()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -164,13 +168,7 @@ Protected Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classCuDeviceFactoryService.html">CuDeviceFactoryService</a> *&#160;</td>
-          <td class="paramname"><em>df</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const CuVariant &amp;&#160;</td>
-          <td class="paramname"><em>argins</em> = <code>std::vector&lt;std::string&gt;()</code>&#160;</td>
+          <td class="paramname"><em>df</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -220,6 +218,23 @@ Protected Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a82106502c2647e7e90b28ca0003fe2c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82106502c2647e7e90b28ca0003fe2c4">&#9670;&nbsp;</a></span>actionsCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t CuPollingActivity::actionsCount </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aefe3b2406114a72d51891ee153b9edf8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aefe3b2406114a72d51891ee153b9edf8">&#9670;&nbsp;</a></span>event()</h2>
 
@@ -245,6 +260,8 @@ Protected Member Functions</h2></td></tr>
 </dl>
 <dl class="section see"><dt>See also</dt><dd>CuActivity::event</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>the CuActivityEvent is forwarded to CuContinuousActivity::event </dd></dl>
+
+<p class="reference">References <a class="el" href="classCuAddPollActionEvent.html#a424f4b10545167198789e36b7e8b9c15ac119130fb6ec20e39f7831a0c2cbac1c">CuAddPollActionEvent::AddPollAction</a>, and <a class="el" href="classCuRemovePollActionEvent.html#a84dff33ca9db152422e68c3123ead3abaaa252240b3a40cbf48f4628ed0e9d32a">CuRemovePollActionEvent::RemovePollAction</a>.</p>
 
 </div>
 </div>
@@ -274,7 +291,7 @@ Protected Member Functions</h2></td></tr>
 <p>the implementation of the CuActivity::execute hook </p>
 <p>This is repeatedly called in the CuActivity's thread of execution, according to the period chosen for the reader.</p>
 <p>If the reader's source is a command, the first time execute is run <a class="el" href="classCuTangoWorld.html#aece852a275014b068a51b14b24e4d3b5" title="Get Tango CommandInfo data and save it into a CuData. ">CuTangoWorld::get_command_info</a> is called, so that the data type and format of the command output argument is detected.</p>
-<p>Either command_inout (through <a class="el" href="classCuTangoWorld.html#aaa239293cff283cd3d31a6bfcf296ae9">CuTangoWorld::cmd_inout</a>) or read_attribute (<a class="el" href="classCuTangoWorld.html#acb78e59113e9f005681c74729a6ccf88">CuTangoWorld::read_att</a>) are then invoked. They interpret the result and place it in a CuData that is finally delivered to the main thread by means of publishResult.</p>
+<p>Either command_inout (through <a class="el" href="classCuTangoWorld.html#adae04c7b4d86e21857440ac868bc66b7">CuTangoWorld::cmd_inout</a>) or read_attribute (<a class="el" href="classCuTangoWorld.html#acb78e59113e9f005681c74729a6ccf88">CuTangoWorld::read_att</a>) are then invoked. They interpret the result and place it in a CuData that is finally delivered to the main thread by means of publishResult.</p>
 <dl class="section user"><dt>note</dt><dd>A <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity ">CuPollingActivity</a> can be started after a <a class="el" href="classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int...">CuEventActivity</a> failure to subscribe to the <a class="el" href="namespaceTango.html">Tango</a> event system. Moreover, polling is the only possible option to read commands.</dd></dl>
 <dl class="section user"><dt>Error handling</dt><dd>If an operation fails, the next executions are delayed: the next two attempts take place after 5 seconds and the following ones at intervals of 10 seconds until a successful read.</dd></dl>
 <dl class="section user"><dt>contents of the CuData delivered by publishResult ("key": value)</dt><dd><ul>
@@ -289,7 +306,7 @@ Protected Member Functions</h2></td></tr>
 </ul>
 See also CuActivity::execute and <a class="el" href="classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int...">CuEventActivity</a> </dd></dl>
 
-<p class="reference">References <a class="el" href="classCuTangoWorld.html#aaa239293cff283cd3d31a6bfcf296ae9">CuTangoWorld::cmd_inout()</a>, <a class="el" href="classCuTangoWorld.html#a1dd84e95bd0da0e2b07684868f0805f9">CuTangoWorld::fillThreadInfo()</a>, <a class="el" href="classCuTangoWorld.html#aece852a275014b068a51b14b24e4d3b5">CuTangoWorld::get_command_info()</a>, and <a class="el" href="classCuTangoWorld.html#acb78e59113e9f005681c74729a6ccf88">CuTangoWorld::read_att()</a>.</p>
+<p class="reference">References <a class="el" href="classActionData.html#a067b981107644240ea695ef8ba897d9f">ActionData::action</a>, <a class="el" href="classTSource.html#ab5fbb8717108ab3b13720384711610cba12d7f1efb56860c03f84ee190e87c9c8">TSource::Cmd</a>, <a class="el" href="classCuTangoWorld.html#adae04c7b4d86e21857440ac868bc66b7">CuTangoWorld::cmd_inout()</a>, <a class="el" href="classCmdData.html#a9d7ebeaf25a97c37117f547dee756adf">CmdData::din</a>, <a class="el" href="classCuTangoWorld.html#aece852a275014b068a51b14b24e4d3b5">CuTangoWorld::get_command_info()</a>, <a class="el" href="classTSource.html#afd4803cecb4d47a52e8addd6df583fba">TSource::getArgs()</a>, <a class="el" href="classCmdData.html#a762253efc8cf0b12d2b2554e789a9749">CmdData::getCmdInfoRef()</a>, <a class="el" href="classTSource.html#a7978372c10e561d5c00a8d2bcbdbb7d5">TSource::getDeviceName()</a>, <a class="el" href="classTSource.html#a20f3ea627e2c57d01f01d04faac37246">TSource::getName()</a>, <a class="el" href="classTSource.html#a16f812f7f294d97ff7f0ae0a2e041c65">TSource::getPoint()</a>, <a class="el" href="classTSource.html#a6c6b3903dadd74565765925619f2d840">TSource::getType()</a>, <a class="el" href="classCmdData.html#ab6b9cbcd73fdcb8214addaa5bd6ce123">CmdData::is_empty</a>, <a class="el" href="classCuTangoWorld.html#a12045f4cd938da22c8d9e10e3749434e">CuTangoWorld::read_atts()</a>, <a class="el" href="classCuTangoWorld.html#aea9fabea889dbbe51a7920df6ce3de26">CuTangoWorld::toDeviceData()</a>, and <a class="el" href="classActionData.html#a2bdc21b93ec4a34f575e818fa04913c9">ActionData::tsrc</a>.</p>
 
 </div>
 </div>
@@ -365,15 +382,15 @@ See also CuActivity::init, execute and onExit </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p>returns true if the passed token's <em>src</em> and <em>activity</em> values matche this activity token's <em>src</em> and <em>activity</em> values. </p>
+<p>returns true if the passed token's <em>device</em> <em>activity</em> and <em>period</em> values matche this activity token's <em>device</em> and <em>activity</em> and <em>period</em> values. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">token</td><td>a CuData containg key/value pairs of another activity's token </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>true if the input token's "src" and "activity" values match this token's "src" and "activity" values</dd></dl>
-<p>Two CuEventActivities match if the "src" and the "activity" names match. <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity ">CuPollingActivity</a> "activity" key is set to the "poller" value by <a class="el" href="classCuTReader.html" title="Low level class to read tango attributes and commands with output arguments. ">CuTReader</a>, so two activities match if they are both <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity ">CuPollingActivity</a> and share the same source name. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if the input token's "period" <em>device</em> and <em>activity</em> values match this token's "period" <em>device</em> and <em>activity</em> values</dd></dl>
+<p>Two <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity ">CuPollingActivity</a> match if they refer to the same device and have the same period. </p>
 
 </div>
 </div>
@@ -408,8 +425,6 @@ See also CuActivity::init, execute and onExit </dd></dl>
 <li>the result of the operation is <em>published</em> to the main thread through publishResult</li>
 </ul>
 <p>See also CuActivity::onExit </p>
-
-<p class="reference">References <a class="el" href="classCuTangoWorld.html#a1dd84e95bd0da0e2b07684868f0805f9">CuTangoWorld::fillThreadInfo()</a>.</p>
 
 </div>
 </div>
@@ -459,6 +474,23 @@ See also CuActivity::init, execute and onExit </dd></dl>
 
 </div>
 </div>
+<a id="ab3c22b171d67001e7564796dbf6cd1e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3c22b171d67001e7564796dbf6cd1e5">&#9670;&nbsp;</a></span>srcCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t CuPollingActivity::srcCount </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="cupollingactivity_8h_source.html">cupollingactivity.h</a></li>
 <li><a class="el" href="cupollingactivity_8cpp.html">cupollingactivity.cpp</a></li>
@@ -466,7 +498,7 @@ See also CuActivity::init, execute and onExit </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 7 2018 14:18:23 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 3 2018 13:46:25 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

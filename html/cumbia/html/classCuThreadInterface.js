@@ -11,6 +11,7 @@ var classCuThreadInterface =
     [ "publishExitEvent", "classCuThreadInterface.html#acdbe2ad03436c2f283f9ce2502dc74fe", null ],
     [ "publishProgress", "classCuThreadInterface.html#a23db4800456733404bcf27255a8e435c", null ],
     [ "publishResult", "classCuThreadInterface.html#aadbb7855f5572d516a373640d0751940", null ],
+    [ "publishResult", "classCuThreadInterface.html#a9b3a0ca756329f84b728a4e92c36fcf9", null ],
     [ "registerActivity", "classCuThreadInterface.html#acf6b342faaebcb54a67bebc3ef2e98ec", null ],
     [ "start", "classCuThreadInterface.html#acdb649780463740ae020a6d94d6debe9", null ],
     [ "type", "classCuThreadInterface.html#aae520d5364a5101e7afae2334927fea1", null ],

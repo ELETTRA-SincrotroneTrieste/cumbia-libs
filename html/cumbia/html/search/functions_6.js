@@ -8,10 +8,12 @@ var searchData=
   ['isequivalent',['isEquivalent',['../classCuThread.html#ad0b8cdef8f5a753a2498eb78da85a8ff',1,'CuThread::isEquivalent()'],['../classCuThreadInterface.html#a0ffd4942bc561256375c427e35373315',1,'CuThreadInterface::isEquivalent()']]],
   ['isfloatingpoint',['isFloatingPoint',['../classCuVariant.html#ae2b18e3b52d9095e98c267ed19b1c271',1,'CuVariant']]],
   ['isinteger',['isInteger',['../classCuVariant.html#a7c1b79d7a550cee3089e42f98c793124',1,'CuVariant']]],
+  ['islist',['isList',['../classCuResultEvent.html#a1303981b1461fbea6df73ce8a7f310d6',1,'CuResultEvent']]],
   ['isnull',['isNull',['../classCuVariant.html#af76f726f6bfaaea3e814e6bcae9f5ace',1,'CuVariant']]],
   ['isregistered',['isRegistered',['../classCuActivityManager.html#a3eaed8060f39886cfc463df73f25da17',1,'CuActivityManager']]],
   ['isrunning',['isRunning',['../classCuThread.html#ab4a5191a25eff888ccce7d85acd67121',1,'CuThread::isRunning()'],['../classCuThreadInterface.html#a5fda5347ecd0605146d788077186363e',1,'CuThreadInterface::isRunning()']]],
   ['issingleshot',['isSingleShot',['../classCuTimer.html#a47e8cddea7aa9aa3da504d7fb5d697f6',1,'CuTimer']]],
   ['isvalid',['isValid',['../classCuVariant.html#a2dbc2270a491340624e2b069085f2b26',1,'CuVariant']]],
+  ['isvoidptr',['isVoidPtr',['../classCuVariant.html#a389cd3b4985660d47b75b2e15340f35e',1,'CuVariant']]],
   ['iswnull',['isWNull',['../classCuVariant.html#a03e17821ed3e668674f50c5caadbd7ce',1,'CuVariant']]]
 ];

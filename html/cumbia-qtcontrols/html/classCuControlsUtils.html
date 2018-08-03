@@ -59,9 +59,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af278318370994b5fed60dd98d49640ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5fd75956743c2d19eb56fbebb107685"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuControlsUtils.html#aa5fd75956743c2d19eb56fbebb107685">findInput</a> (const QString &amp;objectName, const QObject *leaf) const</td></tr>
 <tr class="separator:aa5fd75956743c2d19eb56fbebb107685"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab84521a84f3a92c35c0d486cdf40d5e"><td class="memItemLeft" align="right" valign="top">QObject *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuControlsUtils.html#aab84521a84f3a92c35c0d486cdf40d5e">findObject</a> (const QString &amp;objectName, const QObject *leaf) const</td></tr>
+<tr class="separator:aab84521a84f3a92c35c0d486cdf40d5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8fb03a70a26bdadd6d5316d50f889dc"><td class="memItemLeft" align="right" valign="top">CuVariant&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuControlsUtils.html#af8fb03a70a26bdadd6d5316d50f889dc">getArgs</a> (const QString &amp;target, const QObject *leaf) const</td></tr>
 <tr class="memdesc:af8fb03a70a26bdadd6d5316d50f889dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">finds the arguments in the source or target. If they are object names it finds the objects with those names and get the input from them, otherwise they are directly converted to CuVariant and returned.  <a href="#af8fb03a70a26bdadd6d5316d50f889dc">More...</a><br /></td></tr>
 <tr class="separator:af8fb03a70a26bdadd6d5316d50f889dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af639583aa02277cca2b0fc8e65a6c1bf"><td class="memItemLeft" align="right" valign="top">QList&lt; QObject * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuControlsUtils.html#af639583aa02277cca2b0fc8e65a6c1bf">findObjects</a> (const QString &amp;target, const QObject *leaf)</td></tr>
+<tr class="separator:af639583aa02277cca2b0fc8e65a6c1bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad13cf4e753db15b0c4c0197e7d35fb42"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuControlsUtils.html#ad13cf4e753db15b0c4c0197e7d35fb42">initObjects</a> (const QString &amp;target, const QObject *leaf, const CuVariant &amp;val)</td></tr>
+<tr class="separator:ad13cf4e753db15b0c4c0197e7d35fb42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>utility class to find input arguments from objects with text or value properties </p>
@@ -130,6 +136,68 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aab84521a84f3a92c35c0d486cdf40d5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab84521a84f3a92c35c0d486cdf40d5e">&#9670;&nbsp;</a></span>findObject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QObject * CuControlsUtils::findObject </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>objectName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QObject *&#160;</td>
+          <td class="paramname"><em>leaf</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classCuControlsUtils.html#af639583aa02277cca2b0fc8e65a6c1bf">findObjects()</a>.</p>
+
+</div>
+</div>
+<a id="af639583aa02277cca2b0fc8e65a6c1bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af639583aa02277cca2b0fc8e65a6c1bf">&#9670;&nbsp;</a></span>findObjects()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QList&lt; QObject * &gt; CuControlsUtils::findObjects </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QObject *&#160;</td>
+          <td class="paramname"><em>leaf</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuControlsUtils.html#aab84521a84f3a92c35c0d486cdf40d5e">findObject()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classCuControlsUtils.html#ad13cf4e753db15b0c4c0197e7d35fb42">initObjects()</a>.</p>
+
+</div>
+</div>
 <a id="af8fb03a70a26bdadd6d5316d50f889dc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af8fb03a70a26bdadd6d5316d50f889dc">&#9670;&nbsp;</a></span>getArgs()</h2>
 
@@ -173,6 +241,44 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ad13cf4e753db15b0c4c0197e7d35fb42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad13cf4e753db15b0c4c0197e7d35fb42">&#9670;&nbsp;</a></span>initObjects()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CuControlsUtils::initObjects </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>target</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QObject *&#160;</td>
+          <td class="paramname"><em>leaf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const CuVariant &amp;&#160;</td>
+          <td class="paramname"><em>val</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuControlsUtils.html#af639583aa02277cca2b0fc8e65a6c1bf">findObjects()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classQuButton.html#a3f1b91b188ed61cbace1694c1846d9da">QuButton::onUpdate()</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="cucontrolsutils_8h_source.html">cucontrolsutils.h</a></li>
 <li><a class="el" href="cucontrolsutils_8cpp.html">cucontrolsutils.cpp</a></li>
@@ -180,7 +286,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 7 2018 14:18:28 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 3 2018 13:46:30 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

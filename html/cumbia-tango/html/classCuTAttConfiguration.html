@@ -70,6 +70,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0fc95382a79a863917eabc3cdff0750a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a127046e0e9363e08fdce53f5c612cc95"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTAttConfiguration.html#a127046e0e9363e08fdce53f5c612cc95">onResult</a> (const CuData &amp;data)</td></tr>
 <tr class="separator:a127046e0e9363e08fdce53f5c612cc95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5d2e02eea860900c9f748e400fa3504"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTAttConfiguration.html#ab5d2e02eea860900c9f748e400fa3504">onResult</a> (const std::vector&lt; CuData &gt; &amp;datalist)</td></tr>
+<tr class="memdesc:ab5d2e02eea860900c9f748e400fa3504"><td class="mdescLeft">&#160;</td><td class="mdescRight">unused. Complies with CuThreadListener interface  <a href="#ab5d2e02eea860900c9f748e400fa3504">More...</a><br /></td></tr>
+<tr class="separator:ab5d2e02eea860900c9f748e400fa3504"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e4bbd6e75ce03ee40c9766e93fff3c3"><td class="memItemLeft" align="right" valign="top">CuData&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTAttConfiguration.html#a6e4bbd6e75ce03ee40c9766e93fff3c3">getToken</a> () const</td></tr>
 <tr class="separator:a6e4bbd6e75ce03ee40c9766e93fff3c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc59f2b24b43624245fe0ca71183750a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classTSource.html">TSource</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTAttConfiguration.html#adc59f2b24b43624245fe0ca71183750a">getSource</a> () const</td></tr>
@@ -97,10 +100,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a15c29a093483906517892847cf9122d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">the method where activities are created and registered  <a href="#a15c29a093483906517892847cf9122d9">More...</a><br /></td></tr>
 <tr class="separator:a15c29a093483906517892847cf9122d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2859b9bd321bedafc785838f4cc057b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTAttConfiguration.html#a2859b9bd321bedafc785838f4cc057b5">stop</a> ()</td></tr>
-<tr class="memdesc:a2859b9bd321bedafc785838f4cc057b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">the method where activities are unregistered from Cumbia  <a href="#a2859b9bd321bedafc785838f4cc057b5">More...</a><br /></td></tr>
+<tr class="memdesc:a2859b9bd321bedafc785838f4cc057b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">calls unregisterActivity on Cumbia in order to enter the exit state  <a href="#a2859b9bd321bedafc785838f4cc057b5">More...</a><br /></td></tr>
 <tr class="separator:a2859b9bd321bedafc785838f4cc057b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaec1309402d67de15f5b3e4b0603025c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTAttConfiguration.html#aaec1309402d67de15f5b3e4b0603025c">exiting</a> () const</td></tr>
-<tr class="memdesc:aaec1309402d67de15f5b3e4b0603025c"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns true if the action has been stopped and it's exiting  <a href="#aaec1309402d67de15f5b3e4b0603025c">More...</a><br /></td></tr>
+<tr class="memdesc:aaec1309402d67de15f5b3e4b0603025c"><td class="mdescLeft">&#160;</td><td class="mdescRight">CuActionFactory relies on this returning true to unregister the action.  <a href="#aaec1309402d67de15f5b3e4b0603025c">More...</a><br /></td></tr>
 <tr class="separator:aaec1309402d67de15f5b3e4b0603025c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classCuTangoActionI"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classCuTangoActionI')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classCuTangoActionI.html">CuTangoActionI</a></td></tr>
 <tr class="memitem:a7d5610e53b102d9cadc2d3b6a90e0481 inherit pub_methods_classCuTangoActionI"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoActionI.html#a7d5610e53b102d9cadc2d3b6a90e0481">~CuTangoActionI</a> ()</td></tr>
@@ -266,9 +269,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>returns true if the action has been stopped and it's exiting </p>
-<dl class="section return"><dt>Returns</dt><dd>true if the action is exiting (normally, stop has been called), false otherwise</dd></dl>
-<p>Used by <a class="el" href="classCuActionFactoryService.html#a9d5825629c4a5868469a14267d9af8ac" title="Unregister the action with the given source and type if the action&#39;s exiting() method returns true...">CuActionFactoryService::unregisterAction</a> to check whether the action is still running before unregistering. </p>
+<p>CuActionFactory relies on this returning true to unregister the action. </p>
 
 <p>Implements <a class="el" href="classCuTangoActionI.html#ad9d24cf91256fd45a2925f70de04bb02">CuTangoActionI</a>.</p>
 
@@ -427,7 +428,7 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a id="a127046e0e9363e08fdce53f5c612cc95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a127046e0e9363e08fdce53f5c612cc95">&#9670;&nbsp;</a></span>onResult()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a127046e0e9363e08fdce53f5c612cc95">&#9670;&nbsp;</a></span>onResult() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -443,6 +444,26 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="classCuActionFactoryService.html#ad2bb6770622dc3dc24a5846f818e8bdcafb23f61f823444e6df483206eb9b7e11">CuActionFactoryService::CuActionFactoryServiceType</a>, <a class="el" href="classCuTAttConfiguration.html#a383089a4526df7be37ba8cd714474177">getType()</a>, and <a class="el" href="classCuActionFactoryService.html#a9d5825629c4a5868469a14267d9af8ac">CuActionFactoryService::unregisterAction()</a>.</p>
+
+</div>
+</div>
+<a id="ab5d2e02eea860900c9f748e400fa3504"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5d2e02eea860900c9f748e400fa3504">&#9670;&nbsp;</a></span>onResult() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuTAttConfiguration::onResult </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; CuData &gt; &amp;&#160;</td>
+          <td class="paramname"><em>datalist</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>unused. Complies with CuThreadListener interface </p>
 
 </div>
 </div>
@@ -602,13 +623,11 @@ See also Cumbia::registerActivity </dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>the method where activities are unregistered from Cumbia </p>
-<p>This is the place where activities are unregistered from Cumbia by the Cumbia::unregisterActivity method</p>
-<dl class="section user"><dt>Examples</dt><dd><ul>
-<li><a class="el" href="classCuTReader.html#ae4731c847e160a5203d24fb9b6fe8ae5" title="the method where activities are unregistered from Cumbia ">CuTReader::stop</a> </li>
-<li><a class="el" href="classCuTWriter.html#ad2a58ee36294ef83e28fe62d7d40fcf9" title="the method where activities are unregistered from Cumbia ">CuTWriter::stop</a></li>
+<p>calls unregisterActivity on Cumbia in order to enter the exit state </p>
+<ul>
+<li>sets the exiting flag to true</li>
+<li>calls Cumbia::unregisterActivity </li>
 </ul>
-See also Cumbia::unregisterActivity </dd></dl>
 
 <p>Implements <a class="el" href="classCuTangoActionI.html#a14b2cc629be45c649df62e030a196476">CuTangoActionI</a>.</p>
 
@@ -623,7 +642,7 @@ See also Cumbia::unregisterActivity </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 7 2018 14:18:24 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 3 2018 13:46:25 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

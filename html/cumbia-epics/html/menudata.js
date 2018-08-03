@@ -97,10 +97,10 @@ var menudata={children:[
 {text:"f",url:"globals.html#index_f"},
 {text:"p",url:"globals.html#index_p"},
 {text:"s",url:"globals.html#index_s"},
-{text:"t",url:"globals.html#index_t"},
-{text:"v",url:"globals.html#index_v"}]},
+{text:"t",url:"globals.html#index_t"}]},
 {text:"Functions",url:"globals_func.html"},
 {text:"Variables",url:"globals_vars.html"},
+{text:"Typedefs",url:"globals_type.html"},
 {text:"Macros",url:"globals_defs.html",children:[
 {text:"a",url:"globals_defs.html#index_a"},
 {text:"d",url:"globals_defs.html#index_d"},

@@ -137,10 +137,6 @@ Macros</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:a703b41b0f7b2221eff13d827ae0ab9b3"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cuepics-world_8cpp.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str</a> (const void *value, unsigned type)</td></tr>
 <tr class="separator:a703b41b0f7b2221eff13d827ae0ab9b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e2d4c91a34468490cbfccf013e05ea5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cuepics-world_8cpp.html#a0e2d4c91a34468490cbfccf013e05ea5">create_pvs</a> (<a class="el" href="structCuPV.html">CuPV</a> *pvs, int nPvs, caCh *pCB)</td></tr>
-<tr class="separator:a0e2d4c91a34468490cbfccf013e05ea5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b5b6025321a6802e5c0e16fc5f7ce9a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="cuepics-world_8cpp.html#a9b5b6025321a6802e5c0e16fc5f7ce9a">connect_pvs</a> (<a class="el" href="structCuPV.html">CuPV</a> *pvs, int nPvs)</td></tr>
-<tr class="separator:a9b5b6025321a6802e5c0e16fc5f7ce9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -338,7 +334,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">50                        <span class="comment">/* timestamp */</span>                         \</div><div class="line">    + 2 * 30                    <span class="comment">/* status / Severity */</span>                 \</div><div class="line">    + 2 * 30                    <span class="comment">/* acks / ackt */</span>                       \</div><div class="line">    + 20 + MAX_UNITS_SIZE       <span class="comment">/* units */</span>                             \</div><div class="line">    + 30                        <span class="comment">/* precision */</span>                         \</div><div class="line">    + 6 * 45                    <span class="comment">/* graphic limits */</span>                    \</div><div class="line">    + 2 * 45                    <span class="comment">/* control limits */</span>                    \</div><div class="line">    + 30 + (MAX_ENUM_STATES * (20 + MAX_ENUM_STRING_SIZE)) <span class="comment">/* enums */</span>  \</div><div class="line">    + 50                        <span class="comment">/* just to be sure */</span></div></div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="cuepics-world_8h.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="cuepics-world_8cpp.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
 
 </div>
 </div>
@@ -488,7 +484,7 @@ Variables</h2></td></tr>
 <div class="ttc" id="cuepics-world_8cpp_html_ae756576a66c8eee0f3af4872ef835f78"><div class="ttname"><a href="cuepics-world_8cpp.html#ae756576a66c8eee0f3af4872ef835f78">ARGS_GR</a></div><div class="ttdeci">#define ARGS_GR(T, F)</div><div class="ttdef"><b>Definition:</b> cuepics-world.cpp:114</div></div>
 <div class="ttc" id="cuepics-world_8cpp_html_a34ec6d92f385861e90c6e975d846c0f7"><div class="ttname"><a href="cuepics-world_8cpp.html#a34ec6d92f385861e90c6e975d846c0f7">ARGS_STS</a></div><div class="ttdeci">#define ARGS_STS(T)</div><div class="ttdef"><b>Definition:</b> cuepics-world.cpp:78</div></div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="cuepics-world_8h.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="cuepics-world_8cpp.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
 
 </div>
 </div>
@@ -534,7 +530,7 @@ Variables</h2></td></tr>
 <div class="ttc" id="cuepics-world_8cpp_html_ae756576a66c8eee0f3af4872ef835f78"><div class="ttname"><a href="cuepics-world_8cpp.html#ae756576a66c8eee0f3af4872ef835f78">ARGS_GR</a></div><div class="ttdeci">#define ARGS_GR(T, F)</div><div class="ttdef"><b>Definition:</b> cuepics-world.cpp:114</div></div>
 <div class="ttc" id="cuepics-world_8cpp_html_a34ec6d92f385861e90c6e975d846c0f7"><div class="ttname"><a href="cuepics-world_8cpp.html#a34ec6d92f385861e90c6e975d846c0f7">ARGS_STS</a></div><div class="ttdeci">#define ARGS_STS(T)</div><div class="ttdef"><b>Definition:</b> cuepics-world.cpp:78</div></div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="cuepics-world_8h.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="cuepics-world_8cpp.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
 
 </div>
 </div>
@@ -576,7 +572,7 @@ Variables</h2></td></tr>
 <div class="ttc" id="cuepics-world_8cpp_html_ae756576a66c8eee0f3af4872ef835f78"><div class="ttname"><a href="cuepics-world_8cpp.html#ae756576a66c8eee0f3af4872ef835f78">ARGS_GR</a></div><div class="ttdeci">#define ARGS_GR(T, F)</div><div class="ttdef"><b>Definition:</b> cuepics-world.cpp:114</div></div>
 <div class="ttc" id="cuepics-world_8cpp_html_a34ec6d92f385861e90c6e975d846c0f7"><div class="ttname"><a href="cuepics-world_8cpp.html#a34ec6d92f385861e90c6e975d846c0f7">ARGS_STS</a></div><div class="ttdeci">#define ARGS_STS(T)</div><div class="ttdef"><b>Definition:</b> cuepics-world.cpp:78</div></div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="cuepics-world_8h.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="cuepics-world_8cpp.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
 
 </div>
 </div>
@@ -620,7 +616,7 @@ Variables</h2></td></tr>
 <div class="ttc" id="cuepics-world_8cpp_html_ae756576a66c8eee0f3af4872ef835f78"><div class="ttname"><a href="cuepics-world_8cpp.html#ae756576a66c8eee0f3af4872ef835f78">ARGS_GR</a></div><div class="ttdeci">#define ARGS_GR(T, F)</div><div class="ttdef"><b>Definition:</b> cuepics-world.cpp:114</div></div>
 <div class="ttc" id="cuepics-world_8cpp_html_a34ec6d92f385861e90c6e975d846c0f7"><div class="ttname"><a href="cuepics-world_8cpp.html#a34ec6d92f385861e90c6e975d846c0f7">ARGS_STS</a></div><div class="ttdeci">#define ARGS_STS(T)</div><div class="ttdef"><b>Definition:</b> cuepics-world.cpp:78</div></div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="cuepics-world_8h.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="cuepics-world_8cpp.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
 
 </div>
 </div>
@@ -642,7 +638,7 @@ Variables</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line">sprintf(str,                                \</div><div class="line">    <a class="code" href="cuepics-world_8cpp.html#a47d7a4b59d8262932b8361c24094af19">FMT_STS</a>,                            \</div><div class="line">    <a class="code" href="cuepics-world_8cpp.html#a34ec6d92f385861e90c6e975d846c0f7">ARGS_STS</a>(T))</div><div class="ttc" id="cuepics-world_8cpp_html_a47d7a4b59d8262932b8361c24094af19"><div class="ttname"><a href="cuepics-world_8cpp.html#a47d7a4b59d8262932b8361c24094af19">FMT_STS</a></div><div class="ttdeci">#define FMT_STS</div><div class="ttdef"><b>Definition:</b> cuepics-world.cpp:74</div></div>
 <div class="ttc" id="cuepics-world_8cpp_html_a34ec6d92f385861e90c6e975d846c0f7"><div class="ttname"><a href="cuepics-world_8cpp.html#a34ec6d92f385861e90c6e975d846c0f7">ARGS_STS</a></div><div class="ttdeci">#define ARGS_STS(T)</div><div class="ttdef"><b>Definition:</b> cuepics-world.cpp:78</div></div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="cuepics-world_8h.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="cuepics-world_8cpp.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
 
 </div>
 </div>
@@ -666,7 +662,7 @@ Variables</h2></td></tr>
 <div class="ttc" id="cuepics-world_8cpp_html_ad3dc9bbb6870d02f047d3b9c9330d497"><div class="ttname"><a href="cuepics-world_8cpp.html#ad3dc9bbb6870d02f047d3b9c9330d497">ARGS_ACK</a></div><div class="ttdeci">#define ARGS_ACK(T)</div><div class="ttdef"><b>Definition:</b> cuepics-world.cpp:90</div></div>
 <div class="ttc" id="cuepics-world_8cpp_html_a0c3cc335f840727d94aca2b2e71902a2"><div class="ttname"><a href="cuepics-world_8cpp.html#a0c3cc335f840727d94aca2b2e71902a2">ARGS_STS_UNSIGNED</a></div><div class="ttdeci">#define ARGS_STS_UNSIGNED(T)</div><div class="ttdef"><b>Definition:</b> cuepics-world.cpp:82</div></div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="cuepics-world_8h.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="cuepics-world_8cpp.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
 
 </div>
 </div>
@@ -692,7 +688,7 @@ Variables</h2></td></tr>
 <div class="ttc" id="cuepics-world_8cpp_html_a6c3ba388a488ad2cf5c9fecad527de66"><div class="ttname"><a href="cuepics-world_8cpp.html#a6c3ba388a488ad2cf5c9fecad527de66">FMT_TIME</a></div><div class="ttdeci">#define FMT_TIME</div><div class="ttdef"><b>Definition:</b> cuepics-world.cpp:68</div></div>
 <div class="ttc" id="cuepics-world_8cpp_html_a34ec6d92f385861e90c6e975d846c0f7"><div class="ttname"><a href="cuepics-world_8cpp.html#a34ec6d92f385861e90c6e975d846c0f7">ARGS_STS</a></div><div class="ttdeci">#define ARGS_STS(T)</div><div class="ttdef"><b>Definition:</b> cuepics-world.cpp:78</div></div>
 </div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="cuepics-world_8h.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="cuepics-world_8cpp.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
 
 </div>
 </div>
@@ -712,7 +708,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">n = ((<span class="keyword">struct </span>T *)value)-&gt;no_str;                    \</div><div class="line">    PRN_DBR_STS(T);                                     \</div><div class="line">    sprintf(str+strlen(str),                            \</div><div class="line">    <span class="stringliteral">&quot;\n    Enums:            (%2d)&quot;</span>, n);    \</div><div class="line">    for (i=0; i&lt;n; i++)                                 \</div><div class="line">    sprintf(str+strlen(str),                        \</div><div class="line">    <span class="stringliteral">&quot;\n                      [%2d] %s&quot;</span>, i,  \</div><div class="line">    ((<span class="keyword">struct</span> T *)value)-&gt;strs[i]);</div></div><!-- fragment -->
-<p class="reference">Referenced by <a class="el" href="cuepics-world_8h.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="cuepics-world_8cpp.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>.</p>
 
 </div>
 </div>
@@ -728,79 +724,11 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="cuepics-world_8h.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>, and <a class="el" href="classCuEpicsWorld.html#a02a981b4a4b8729d98b047b3d1a5662a">CuEpicsWorld::putTimestamp()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="cuepics-world_8cpp.html#a703b41b0f7b2221eff13d827ae0ab9b3">dbr2str()</a>, and <a class="el" href="classCuEpicsWorld.html#a02a981b4a4b8729d98b047b3d1a5662a">CuEpicsWorld::putTimestamp()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a9b5b6025321a6802e5c0e16fc5f7ce9a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b5b6025321a6802e5c0e16fc5f7ce9a">&#9670;&nbsp;</a></span>connect_pvs()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int connect_pvs </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structCuPV.html">CuPV</a> *&#160;</td>
-          <td class="paramname"><em>pvs</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>nPvs</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="cuepics-world_8cpp.html#a849d8602b082fe2275cc6c6c7ad40a36">caTimeout</a>, and <a class="el" href="cuepics-world_8cpp.html#a0e2d4c91a34468490cbfccf013e05ea5">create_pvs()</a>.</p>
-
-</div>
-</div>
-<a id="a0e2d4c91a34468490cbfccf013e05ea5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0e2d4c91a34468490cbfccf013e05ea5">&#9670;&nbsp;</a></span>create_pvs()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int create_pvs </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structCuPV.html">CuPV</a> *&#160;</td>
-          <td class="paramname"><em>pvs</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>nPvs</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">caCh *&#160;</td>
-          <td class="paramname"><em>pCB</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="cuepics-world_8cpp.html#acd49e1150b00929469c7ee6045c317bf">caPriority</a>, and <a class="el" href="structCuPV.html#ad55a0bec6ad609731afa94a77c5d5dde">CuPV::status</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="cuepics-world_8h.html#a9b5b6025321a6802e5c0e16fc5f7ce9a">connect_pvs()</a>, and <a class="el" href="classCuMonitorActivity.html#ace0cee769df1f3beda7b21b51e51aa2e">CuMonitorActivity::init()</a>.</p>
-
-</div>
-</div>
 <a id="a703b41b0f7b2221eff13d827ae0ab9b3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a703b41b0f7b2221eff13d827ae0ab9b3">&#9670;&nbsp;</a></span>dbr2str()</h2>
 
@@ -844,7 +772,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="cuepics-world_8h.html#a0e2d4c91a34468490cbfccf013e05ea5">create_pvs()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuEpicsWorld.html#a900208155347a13fdcee87a429a89063">CuEpicsWorld::create_pvs()</a>.</p>
 
 </div>
 </div>
@@ -860,7 +788,7 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="cuepics-world_8h.html#a9b5b6025321a6802e5c0e16fc5f7ce9a">connect_pvs()</a>, and <a class="el" href="classCuMonitorActivity.html#ace0cee769df1f3beda7b21b51e51aa2e">CuMonitorActivity::init()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuEpicsWorld.html#a36ca5139cbc38bc470ebc4ef6cbc5bab">CuEpicsWorld::connect_pvs()</a>, and <a class="el" href="classCuPutActivity.html#adec6155ad49bd70cd25459a978ee1d29">CuPutActivity::execute()</a>.</p>
 
 </div>
 </div>
@@ -939,7 +867,7 @@ Variables</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 7 2018 14:18:25 for cumbia-epics by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 3 2018 13:46:27 for cumbia-epics by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

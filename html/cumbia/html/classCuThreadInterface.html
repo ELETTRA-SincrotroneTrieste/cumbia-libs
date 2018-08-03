@@ -126,6 +126,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aadbb7855f5572d516a373640d0751940"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuThreadInterface.html#aadbb7855f5572d516a373640d0751940">publishResult</a> (const <a class="el" href="classCuActivity.html">CuActivity</a> *activity, const <a class="el" href="classCuData.html">CuData</a> &amp;d)=0</td></tr>
 <tr class="memdesc:aadbb7855f5572d516a373640d0751940"><td class="mdescLeft">&#160;</td><td class="mdescRight">post a <em>result</em> event from the background thread to the main thread  <a href="#aadbb7855f5572d516a373640d0751940">More...</a><br /></td></tr>
 <tr class="separator:aadbb7855f5572d516a373640d0751940"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b3a0ca756329f84b728a4e92c36fcf9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuThreadInterface.html#a9b3a0ca756329f84b728a4e92c36fcf9">publishResult</a> (const <a class="el" href="classCuActivity.html">CuActivity</a> *activity, const std::vector&lt; <a class="el" href="classCuData.html">CuData</a> &gt; *data_list)=0</td></tr>
+<tr class="memdesc:a9b3a0ca756329f84b728a4e92c36fcf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">post a <em>result</em> event from the background thread to the main thread  <a href="#a9b3a0ca756329f84b728a4e92c36fcf9">More...</a><br /></td></tr>
+<tr class="separator:a9b3a0ca756329f84b728a4e92c36fcf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acdbe2ad03436c2f283f9ce2502dc74fe"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuThreadInterface.html#acdbe2ad03436c2f283f9ce2502dc74fe">publishExitEvent</a> (<a class="el" href="classCuActivity.html">CuActivity</a> *a)=0</td></tr>
 <tr class="memdesc:acdbe2ad03436c2f283f9ce2502dc74fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">publish an exit event from the background thread to the main thread  <a href="#acdbe2ad03436c2f283f9ce2502dc74fe">More...</a><br /></td></tr>
 <tr class="separator:acdbe2ad03436c2f283f9ce2502dc74fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,6 +162,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9e6184b2e12bfbdc00ffb3d514cb5204"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuThreadInterface.html#a9e6184b2e12bfbdc00ffb3d514cb5204">onEventPosted</a> (<a class="el" href="classCuEventI.html">CuEventI</a> *event)=0</td></tr>
 <tr class="memdesc:a9e6184b2e12bfbdc00ffb3d514cb5204"><td class="mdescLeft">&#160;</td><td class="mdescRight">onEventPosted from <a class="el" href="classCuThreadsEventBridgeListener.html" title="defines a method that must be written by the interface implementations in order to deal with events s...">CuThreadsEventBridgeListener</a> interface.  <a href="#a9e6184b2e12bfbdc00ffb3d514cb5204">More...</a><br /></td></tr>
 <tr class="separator:a9e6184b2e12bfbdc00ffb3d514cb5204"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classCuThreadsEventBridgeListener"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classCuThreadsEventBridgeListener')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classCuThreadsEventBridgeListener.html">CuThreadsEventBridgeListener</a></td></tr>
+<tr class="memitem:abbde336d2de99ed2c0de1fb42e725f3e inherit pub_methods_classCuThreadsEventBridgeListener"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuThreadsEventBridgeListener.html#abbde336d2de99ed2c0de1fb42e725f3e">~CuThreadsEventBridgeListener</a> ()</td></tr>
+<tr class="separator:abbde336d2de99ed2c0de1fb42e725f3e inherit pub_methods_classCuThreadsEventBridgeListener"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>interface to write thread implementations that can be used with the <em>cumbia</em> library </p>
@@ -345,8 +351,6 @@ false this thread is not ecuivalent to another thread dealing with other_thread_
 <p><a class="el" href="classCuThreadService.html" title="cumbia service that creates threads and keeps references of the threads running within the applicatio...">CuThreadService</a> uses this method to decide whether to instantiate a new thread or return an existing one if the existing one can be reused according to other_thread_token. For example, a string representing a network URL can be a key to determine if the same thread can be reused for the same connection. </p>
 
 <p>Implemented in <a class="el" href="classCuThread.html#ad0b8cdef8f5a753a2498eb78da85a8ff">CuThread</a>.</p>
-
-<p class="reference">Referenced by <a class="el" href="classCuThreadService.html#a65c4093b94830629ee9b45b1f06c2506">CuThreadService::getThread()</a>.</p>
 
 </div>
 </div>
@@ -547,7 +551,7 @@ false this thread is not ecuivalent to another thread dealing with other_thread_
 </div>
 </div>
 <a id="aadbb7855f5572d516a373640d0751940"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aadbb7855f5572d516a373640d0751940">&#9670;&nbsp;</a></span>publishResult()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aadbb7855f5572d516a373640d0751940">&#9670;&nbsp;</a></span>publishResult() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -585,6 +589,50 @@ false this thread is not ecuivalent to another thread dealing with other_thread_
 <p>See <a class="el" href="classCuThread.html#ae34293a265323a4e89cbdbf03ab7c8e7" title="invoked in CuThread&#39;s thread, posts a progress event to the main thread ">CuThread::publishProgress</a> for details </p>
 
 <p>Implemented in <a class="el" href="classCuThread.html#ac13bc0502ddbcc3097d967b3cdc47b45">CuThread</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classCuActivity.html#aeccbb8c64988497bed4f292a28f1b20e">CuActivity::publishResult()</a>.</p>
+
+</div>
+</div>
+<a id="a9b3a0ca756329f84b728a4e92c36fcf9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b3a0ca756329f84b728a4e92c36fcf9">&#9670;&nbsp;</a></span>publishResult() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CuThreadInterface::publishResult </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classCuActivity.html">CuActivity</a> *&#160;</td>
+          <td class="paramname"><em>activity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="classCuData.html">CuData</a> &gt; *&#160;</td>
+          <td class="paramname"><em>data_list</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>post a <em>result</em> event from the background thread to the main thread </p>
+<p>This lets you send events to the main thread that account for a list of results computed in the background</p>
+<p>See <a class="el" href="classCuThread.html#ae34293a265323a4e89cbdbf03ab7c8e7" title="invoked in CuThread&#39;s thread, posts a progress event to the main thread ">CuThread::publishProgress</a> for details </p>
+
+<p>Implemented in <a class="el" href="classCuThread.html#ac16dcb10ee043023a50f77e411848b99">CuThread</a>.</p>
 
 </div>
 </div>
@@ -757,7 +805,7 @@ false this thread is not ecuivalent to another thread dealing with other_thread_
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuThreadInterface.html">CuThreadInterface</a></li>
-    <li class="footer">Generated on Mon May 7 2018 14:18:21 for cumbia by
+    <li class="footer">Generated on Fri Aug 3 2018 13:46:23 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

@@ -14,6 +14,7 @@ var classCuThread =
     [ "publishExitEvent", "classCuThread.html#a7f6f979bdf67a2ccc47e8e11ca7c1a72", null ],
     [ "publishProgress", "classCuThread.html#ae34293a265323a4e89cbdbf03ab7c8e7", null ],
     [ "publishResult", "classCuThread.html#ac13bc0502ddbcc3097d967b3cdc47b45", null ],
+    [ "publishResult", "classCuThread.html#ac16dcb10ee043023a50f77e411848b99", null ],
     [ "registerActivity", "classCuThread.html#a02c30fbca8a06d2eea0ed3cfe20a992d", null ],
     [ "run", "classCuThread.html#a04430b04bde54f9575ad5f6e56172a23", null ],
     [ "start", "classCuThread.html#a0aad3da3a03fe51ad001fa82495d1f0a", null ],

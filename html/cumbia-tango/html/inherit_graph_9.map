@@ -1,3 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuTangoWorldConfig.html" title="A class containing some configurations useful to several other objects. " alt="" coords="5,5,152,32"/>
+<area shape="rect" id="node1" href="$classCuTangoActionFactoryI.html" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="5,56,165,83"/>
+<area shape="rect" id="node2" href="$classCuTangoAttConfFactory.html" title="CuTangoAttConfFactory" alt="" coords="213,5,377,32"/>
+<area shape="rect" id="node3" href="$classCuTangoReaderFactory.html" title="CuTangoReaderFactory" alt="" coords="215,56,376,83"/>
+<area shape="rect" id="node4" href="$classCuTangoWriterFactory.html" title="CuTangoWriterFactory" alt="" coords="218,107,373,133"/>
 </map>

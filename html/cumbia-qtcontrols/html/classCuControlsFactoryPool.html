@@ -99,7 +99,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>this class, used in conjunction with CumbiaPool allows to connect to different control system frameworks within the same application. </p>
 <p>Reader and writer factories can be registered with registerImpl, providing a name for the domain they refer to. The following code registers reader and writer factories for <em>epics</em> and <em>tango</em>, making it possible to connect to sources belonging to these two different systems within the same application:</p>
-<div class="fragment"><div class="line">ctrl_factory_pool.registerImpl(<span class="stringliteral">&quot;tango&quot;</span>, <a class="codeRef" doxygen="/archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-tango-controls/doc/qumbia-tango-controls.tag:../../qumbia-tango-controls/html/" href="../../qumbia-tango-controls/html/classCuTWriterFactory.html">CuTWriterFactory</a>());</div><div class="line">ctrl_factory_pool.registerImpl(<span class="stringliteral">&quot;tango&quot;</span>, <a class="codeRef" doxygen="/archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-tango-controls/doc/qumbia-tango-controls.tag:../../qumbia-tango-controls/html/" href="../../qumbia-tango-controls/html/classCuTReaderFactory.html">CuTReaderFactory</a>());</div><div class="line">m_ctrl_factory_pool.registerImpl(<span class="stringliteral">&quot;epics&quot;</span>, <a class="codeRef" doxygen="/archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-epics-controls/doc/qumbia-epics-controls.tag:../../qumbia-epics-controls/html/" href="../../qumbia-epics-controls/html/classCuEpReaderFactory.html">CuEpReaderFactory</a>());</div><div class="line">m_ctrl_factory_pool.registerImpl(<span class="stringliteral">&quot;epics&quot;</span>, <a class="codeRef" doxygen="/archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-epics-controls/doc/qumbia-epics-controls.tag:../../qumbia-epics-controls/html/" href="../../qumbia-epics-controls/html/classCuEpWriterFactory.html">CuEpWriterFactory</a>());</div></div><!-- fragment --><p>The setSrcPatterns method can be used to insert rules so that <a class="el" href="classCuControlsFactoryPool.html" title="this class, used in conjunction with CumbiaPool allows to connect to different control system framewo...">CuControlsFactoryPool</a> can distribute sources among the registered engine implementations according to their syntax pattern:</p>
+<div class="fragment"><div class="line">ctrl_factory_pool.registerImpl(<span class="stringliteral">&quot;tango&quot;</span>, <a class="codeRef" doxygen="/archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-tango-controls/doc/qumbia-tango-controls.tag:../../qumbia-tango-controls/html/" href="../../qumbia-tango-controls/html/classCuTWriterFactory.html">CuTWriterFactory</a>());</div><div class="line">ctrl_factory_pool.registerImpl(<span class="stringliteral">&quot;tango&quot;</span>, <a class="codeRef" doxygen="/archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-tango-controls/doc/qumbia-tango-controls.tag:../../qumbia-tango-controls/html/" href="../../qumbia-tango-controls/html/classCuTReaderFactory.html">CuTReaderFactory</a>());</div><div class="line">m_ctrl_factory_pool.<a class="code" href="classCuControlsFactoryPool.html#a9c7dbaa9be372435e8199e330a4c5172">registerImpl</a>(<span class="stringliteral">&quot;epics&quot;</span>, <a class="codeRef" doxygen="/archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-epics-controls/doc/qumbia-epics-controls.tag:../../qumbia-epics-controls/html/" href="../../qumbia-epics-controls/html/classCuEpReaderFactory.html">CuEpReaderFactory</a>());</div><div class="line">m_ctrl_factory_pool.<a class="code" href="classCuControlsFactoryPool.html#a9c7dbaa9be372435e8199e330a4c5172">registerImpl</a>(<span class="stringliteral">&quot;epics&quot;</span>, <a class="codeRef" doxygen="/archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-epics-controls/doc/qumbia-epics-controls.tag:../../qumbia-epics-controls/html/" href="../../qumbia-epics-controls/html/classCuEpWriterFactory.html">CuEpWriterFactory</a>());</div></div><!-- fragment --><p>The setSrcPatterns method can be used to insert rules so that <a class="el" href="classCuControlsFactoryPool.html" title="this class, used in conjunction with CumbiaPool allows to connect to different control system framewo...">CuControlsFactoryPool</a> can distribute sources among the registered engine implementations according to their syntax pattern:</p>
 <div class="fragment"><div class="line">std::vector&lt;std::string&gt; epics_patterns, tango_patterns;</div><div class="line">epics_patterns.push_back(<span class="stringliteral">&quot;.+:.+&quot;</span>); <span class="comment">// e.g. control:ai1 (epics PV)</span></div><div class="line">tango_patterns.push_back(<span class="stringliteral">&quot;.+/.+&quot;</span>); <span class="comment">// e.g. test/device/1/double_scalar</span></div><div class="line">tango_patterns.push_back(<span class="stringliteral">&quot;.+-&gt;.+&quot;</span>); <span class="comment">// e.g. test/device/1-&gt;DevLong</span></div><div class="line"><span class="comment">// associate a domain (&quot;tango&quot; or &quot;epics&quot;) to a specific pattern.</span></div><div class="line">ctrl_factory_pool.setSrcPatterns(<span class="stringliteral">&quot;epics&quot;</span>, epics_patterns);</div><div class="line">ctrl_factory_pool.setSrcPatterns(<span class="stringliteral">&quot;tango&quot;</span>, tango_patterns);</div></div><!-- fragment --> </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="aa7e9c60683af470002328d4a132a2c5d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa7e9c60683af470002328d4a132a2c5d">&#9670;&nbsp;</a></span>Type</h2>
@@ -333,6 +333,8 @@ Public Member Functions</h2></td></tr>
 <p>returns true if both the reader factory map and the writer factory map are empty. </p>
 <dl class="section return"><dt>Returns</dt><dd>true if both the reader factory map and the writer factory map are empty, false otherwise. </dd></dl>
 
+<p class="reference">Referenced by <a class="el" href="classQmlReaderBackend.html#a0a5339966d94f5eab0808ee4c876e7e3">QmlReaderBackend::init()</a>.</p>
+
 </div>
 </div>
 <a id="a9c7dbaa9be372435e8199e330a4c5172"></a>
@@ -371,6 +373,8 @@ Public Member Functions</h2></td></tr>
 </dl>
 
 <p class="reference">References <a class="el" href="classCuControlsReaderFactoryI.html#a51a60e1aaae5d0e6056ecf4795325049">CuControlsReaderFactoryI::clone()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="examples_2button_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div>
@@ -448,6 +452,8 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
+<p class="reference">Referenced by <a class="el" href="examples_2button_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
@@ -457,7 +463,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 7 2018 14:18:28 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 3 2018 13:46:30 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

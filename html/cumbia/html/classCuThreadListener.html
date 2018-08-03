@@ -110,6 +110,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8195c9a446ac1dabb4cea737de770c4c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuThreadListener.html#a8195c9a446ac1dabb4cea737de770c4c">onResult</a> (const <a class="el" href="classCuData.html">CuData</a> &amp;data)=0</td></tr>
 <tr class="memdesc:a8195c9a446ac1dabb4cea737de770c4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">onResult delivers to the listener's thread the results of the work performed by the <em>activity</em>'s background thread  <a href="#a8195c9a446ac1dabb4cea737de770c4c">More...</a><br /></td></tr>
 <tr class="separator:a8195c9a446ac1dabb4cea737de770c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cfbec87672a39b62093b6ae283f7d40"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuThreadListener.html#a9cfbec87672a39b62093b6ae283f7d40">onResult</a> (const std::vector&lt; <a class="el" href="classCuData.html">CuData</a> &gt; &amp;datalist)=0</td></tr>
+<tr class="memdesc:a9cfbec87672a39b62093b6ae283f7d40"><td class="mdescLeft">&#160;</td><td class="mdescRight">onResult delivers to the listener's thread the results of the work performed by the <em>activity</em>'s background thread  <a href="#a9cfbec87672a39b62093b6ae283f7d40">More...</a><br /></td></tr>
+<tr class="separator:a9cfbec87672a39b62093b6ae283f7d40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a825fb8fc7ffcdfe3b0dae1048419ac"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classCuData.html">CuData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuThreadListener.html#a5a825fb8fc7ffcdfe3b0dae1048419ac">getToken</a> () const =0</td></tr>
 <tr class="memdesc:a5a825fb8fc7ffcdfe3b0dae1048419ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">getToken returns a token characterizing the listener  <a href="#a5a825fb8fc7ffcdfe3b0dae1048419ac">More...</a><br /></td></tr>
 <tr class="separator:a5a825fb8fc7ffcdfe3b0dae1048419ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -235,7 +238,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a8195c9a446ac1dabb4cea737de770c4c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8195c9a446ac1dabb4cea737de770c4c">&#9670;&nbsp;</a></span>onResult()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8195c9a446ac1dabb4cea737de770c4c">&#9670;&nbsp;</a></span>onResult() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -270,6 +273,40 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a9cfbec87672a39b62093b6ae283f7d40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9cfbec87672a39b62093b6ae283f7d40">&#9670;&nbsp;</a></span>onResult() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CuThreadListener::onResult </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="classCuData.html">CuData</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>datalist</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>onResult delivers to the listener's thread the results of the work performed by the <em>activity</em>'s background thread </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">datalist</td><td>a std::vector of <a class="el" href="classCuData.html" title="container for data exchange for the cumbia library and its clients ">CuData</a> bundle storing a list of results computed in the background <em>activity</em> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="cuthreadlistener_8h_source.html">cuthreadlistener.h</a></li>
 </ul>
@@ -279,7 +316,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuThreadListener.html">CuThreadListener</a></li>
-    <li class="footer">Generated on Mon May 7 2018 14:18:21 for cumbia by
+    <li class="footer">Generated on Fri Aug 3 2018 13:46:23 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

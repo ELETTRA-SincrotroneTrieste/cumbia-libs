@@ -79,10 +79,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6a23104054dea94ec87910927fbedfcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad499cd4937cd783098a3edd8e1017d13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoWorld.html#ad499cd4937cd783098a3edd8e1017d13">fillFromCommandInfo</a> (const Tango::CommandInfo &amp;cu, CuData &amp;d)</td></tr>
 <tr class="separator:ad499cd4937cd783098a3edd8e1017d13"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa239293cff283cd3d31a6bfcf296ae9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoWorld.html#aaa239293cff283cd3d31a6bfcf296ae9">cmd_inout</a> (Tango::DeviceProxy *dev, const std::string &amp;cmd, const CuVariant &amp;argins, const CuData &amp;point_info, CuData &amp;data)</td></tr>
-<tr class="separator:aaa239293cff283cd3d31a6bfcf296ae9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adae04c7b4d86e21857440ac868bc66b7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoWorld.html#adae04c7b4d86e21857440ac868bc66b7">cmd_inout</a> (Tango::DeviceProxy *dev, const std::string &amp;cmd, Tango::DeviceData &amp;din, bool has_argout, CuData &amp;data)</td></tr>
+<tr class="separator:adae04c7b4d86e21857440ac868bc66b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2d6476252e1cf3bdf02f1a6da483ce1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoWorld.html#aa2d6476252e1cf3bdf02f1a6da483ce1">cmd_inout</a> (Tango::DeviceProxy *dev, const std::string &amp;cmd, CuData &amp;data)</td></tr>
+<tr class="separator:aa2d6476252e1cf3bdf02f1a6da483ce1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb78e59113e9f005681c74729a6ccf88"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoWorld.html#acb78e59113e9f005681c74729a6ccf88">read_att</a> (Tango::DeviceProxy *dev, const string &amp;attribute, CuData &amp;res)</td></tr>
 <tr class="separator:acb78e59113e9f005681c74729a6ccf88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12045f4cd938da22c8d9e10e3749434e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoWorld.html#a12045f4cd938da22c8d9e10e3749434e">read_atts</a> (Tango::DeviceProxy *dev, std::vector&lt; CuData &gt; &amp;att_datalist, std::vector&lt; CuData &gt; *reslist, int results_offset)</td></tr>
+<tr class="separator:a12045f4cd938da22c8d9e10e3749434e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4659595a2486384cb1e35d5ce965af74"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoWorld.html#a4659595a2486384cb1e35d5ce965af74">write_att</a> (Tango::DeviceProxy *dev, const string &amp;attnam, const CuVariant &amp;argins, const CuData &amp;point_info, CuData &amp;data)</td></tr>
 <tr class="separator:a4659595a2486384cb1e35d5ce965af74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf8f8b06c1449ced156c40451022a42e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoWorld.html#abf8f8b06c1449ced156c40451022a42e">get_att_config</a> (Tango::DeviceProxy *dev, const string &amp;attribute, CuData &amp;res, bool skip_read_att=false)</td></tr>
@@ -163,8 +167,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aaa239293cff283cd3d31a6bfcf296ae9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa239293cff283cd3d31a6bfcf296ae9">&#9670;&nbsp;</a></span>cmd_inout()</h2>
+<a id="adae04c7b4d86e21857440ac868bc66b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adae04c7b4d86e21857440ac868bc66b7">&#9670;&nbsp;</a></span>cmd_inout() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -184,14 +188,14 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const CuVariant &amp;&#160;</td>
-          <td class="paramname"><em>argins</em>, </td>
+          <td class="paramtype">Tango::DeviceData &amp;&#160;</td>
+          <td class="paramname"><em>din</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const CuData &amp;&#160;</td>
-          <td class="paramname"><em>point_info</em>, </td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>has_argout</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -207,9 +211,45 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classCuTangoWorld.html#a7bcdb5010031633aa4a702e134665181">extractData()</a>, <a class="el" href="classCuTangoWorld.html#a26e156a6270b77593eec59508575eb9f">strerror()</a>, and <a class="el" href="classCuTangoWorld.html#aea9fabea889dbbe51a7920df6ce3de26">toDeviceData()</a>.</p>
+<p class="reference">References <a class="el" href="classCuTangoWorld.html#a7bcdb5010031633aa4a702e134665181">extractData()</a>, and <a class="el" href="classCuTangoWorld.html#a26e156a6270b77593eec59508575eb9f">strerror()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCuWriteActivity.html#a6d8a87364002b18f420c9302c20d4a96">CuWriteActivity::execute()</a>, and <a class="el" href="classCuPollingActivity.html#a0e1e22284c511e8a1626d5ccbd910436">CuPollingActivity::execute()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuTangoWorld.html#aa2d6476252e1cf3bdf02f1a6da483ce1">cmd_inout()</a>, <a class="el" href="classCuWriteActivity.html#a6d8a87364002b18f420c9302c20d4a96">CuWriteActivity::execute()</a>, <a class="el" href="classCuTAttConfigActivity.html#a01dba4396141da10db6472773ea17799">CuTAttConfigActivity::execute()</a>, and <a class="el" href="classCuPollingActivity.html#a0e1e22284c511e8a1626d5ccbd910436">CuPollingActivity::execute()</a>.</p>
+
+</div>
+</div>
+<a id="aa2d6476252e1cf3bdf02f1a6da483ce1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2d6476252e1cf3bdf02f1a6da483ce1">&#9670;&nbsp;</a></span>cmd_inout() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CuTangoWorld::cmd_inout </td>
+          <td>(</td>
+          <td class="paramtype">Tango::DeviceProxy *&#160;</td>
+          <td class="paramname"><em>dev</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>cmd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">CuData &amp;&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuTangoWorld.html#adae04c7b4d86e21857440ac868bc66b7">cmd_inout()</a>, and <a class="el" href="classCuTangoWorld.html#aea9fabea889dbbe51a7920df6ce3de26">toDeviceData()</a>.</p>
 
 </div>
 </div>
@@ -311,9 +351,9 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classCuTangoWorld.html#a30a3a7ec3d8090b59494108efa8e668e">dateTimeToStr()</a>, <a class="el" href="classCuTangoWorld.html#a45dd615c8664a83aeb717f28dffcc77c">formatToStr()</a>, <a class="el" href="classCuTangoWorld.html#a07499878728493c44dd5ec8f24c205e1">putDateTime()</a>, <a class="el" href="classCuTangoWorldConfig.html#a9f010db50e5bdc9e3a8b1744dac9564e">CuTangoWorldConfig::stateColorName()</a>, and <a class="el" href="classCuTangoWorldConfig.html#ac003c4231bc42682d158051ac61f6555">CuTangoWorldConfig::stateString()</a>.</p>
+<p class="reference">References <a class="el" href="classCuTangoWorld.html#a30a3a7ec3d8090b59494108efa8e668e">dateTimeToStr()</a>, <a class="el" href="classCuTangoWorld.html#a45dd615c8664a83aeb717f28dffcc77c">formatToStr()</a>, <a class="el" href="classCuTangoWorld.html#a07499878728493c44dd5ec8f24c205e1">putDateTime()</a>, <a class="el" href="classCuTangoWorldConfig.html#a9f010db50e5bdc9e3a8b1744dac9564e">CuTangoWorldConfig::stateColorName()</a>, <a class="el" href="classCuTangoWorldConfig.html#ac003c4231bc42682d158051ac61f6555">CuTangoWorldConfig::stateString()</a>, and <a class="el" href="classCuTangoWorld.html#a26e156a6270b77593eec59508575eb9f">strerror()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCuTangoWorld.html#aaa239293cff283cd3d31a6bfcf296ae9">cmd_inout()</a>, <a class="el" href="classCuEventActivity.html#a53084b7cc8f9366d09d84e7f55f20dc6">CuEventActivity::push_event()</a>, and <a class="el" href="classCuTangoWorld.html#acb78e59113e9f005681c74729a6ccf88">read_att()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuTangoWorld.html#adae04c7b4d86e21857440ac868bc66b7">cmd_inout()</a>, <a class="el" href="classCuEventActivity.html#a53084b7cc8f9366d09d84e7f55f20dc6">CuEventActivity::push_event()</a>, <a class="el" href="classCuTangoWorld.html#acb78e59113e9f005681c74729a6ccf88">read_att()</a>, and <a class="el" href="classCuTangoWorld.html#a12045f4cd938da22c8d9e10e3749434e">read_atts()</a>.</p>
 
 </div>
 </div>
@@ -408,6 +448,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p class="reference">References <a class="el" href="classCuTangoWorld.html#a45dd615c8664a83aeb717f28dffcc77c">formatToStr()</a>.</p>
+
 <p class="reference">Referenced by <a class="el" href="classCuTangoWorld.html#aece852a275014b068a51b14b24e4d3b5">get_command_info()</a>.</p>
 
 </div>
@@ -438,7 +480,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classCuWriteActivity.html#a6d8a87364002b18f420c9302c20d4a96">CuWriteActivity::execute()</a>, <a class="el" href="classCuTAttConfigActivity.html#a01dba4396141da10db6472773ea17799">CuTAttConfigActivity::execute()</a>, <a class="el" href="classCuPollingActivity.html#a0e1e22284c511e8a1626d5ccbd910436">CuPollingActivity::execute()</a>, <a class="el" href="classCuEventActivity.html#a8fe09cefefbe4446cf7a0cb0cdec386e">CuEventActivity::init()</a>, <a class="el" href="classCuWriteActivity.html#a3266335817f6907435a8e9b3e54c36f6">CuWriteActivity::onExit()</a>, <a class="el" href="classCuTAttConfigActivity.html#a41f9af53b25763a1b13e1ae48b6d228d">CuTAttConfigActivity::onExit()</a>, <a class="el" href="classCuPollingActivity.html#a73fe770126fcc0d8cec27e0a895886ff">CuPollingActivity::onExit()</a>, <a class="el" href="classCuEventActivity.html#a85edf01781777eb1dee022bdc2c8d162">CuEventActivity::onExit()</a>, and <a class="el" href="classCuEventActivity.html#a53084b7cc8f9366d09d84e7f55f20dc6">CuEventActivity::push_event()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuWriteActivity.html#a6d8a87364002b18f420c9302c20d4a96">CuWriteActivity::execute()</a>, <a class="el" href="classCuTAttConfigActivity.html#a01dba4396141da10db6472773ea17799">CuTAttConfigActivity::execute()</a>, <a class="el" href="classCuEventActivity.html#a8fe09cefefbe4446cf7a0cb0cdec386e">CuEventActivity::init()</a>, <a class="el" href="classCuWriteActivity.html#a3266335817f6907435a8e9b3e54c36f6">CuWriteActivity::onExit()</a>, <a class="el" href="classCuTAttConfigActivity.html#a41f9af53b25763a1b13e1ae48b6d228d">CuTAttConfigActivity::onExit()</a>, <a class="el" href="classCuEventActivity.html#a85edf01781777eb1dee022bdc2c8d162">CuEventActivity::onExit()</a>, and <a class="el" href="classCuEventActivity.html#a53084b7cc8f9366d09d84e7f55f20dc6">CuEventActivity::push_event()</a>.</p>
 
 </div>
 </div>
@@ -461,7 +503,7 @@ Public Member Functions</h2></td></tr>
 <p>returns a string representation of the attribute data format to be used in the CuData "data_format_str" property. </p>
 <p>Valid return values are scalar, vector and matrix </p>
 
-<p class="reference">Referenced by <a class="el" href="classCuTangoWorld.html#a7bcdb5010031633aa4a702e134665181">extractData()</a>, and <a class="el" href="classCuTangoWorld.html#a6a23104054dea94ec87910927fbedfcf">fillFromAttributeConfig()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuTangoWorld.html#a7bcdb5010031633aa4a702e134665181">extractData()</a>, <a class="el" href="classCuTangoWorld.html#a6a23104054dea94ec87910927fbedfcf">fillFromAttributeConfig()</a>, and <a class="el" href="classCuTangoWorld.html#ad499cd4937cd783098a3edd8e1017d13">fillFromCommandInfo()</a>.</p>
 
 </div>
 </div>
@@ -759,7 +801,51 @@ Public Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classCuTangoWorld.html#a7bcdb5010031633aa4a702e134665181">extractData()</a>, and <a class="el" href="classCuTangoWorld.html#a26e156a6270b77593eec59508575eb9f">strerror()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCuPollingActivity.html#a0e1e22284c511e8a1626d5ccbd910436">CuPollingActivity::execute()</a>, and <a class="el" href="classCuTangoWorld.html#abf8f8b06c1449ced156c40451022a42e">get_att_config()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuTangoWorld.html#abf8f8b06c1449ced156c40451022a42e">get_att_config()</a>.</p>
+
+</div>
+</div>
+<a id="a12045f4cd938da22c8d9e10e3749434e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12045f4cd938da22c8d9e10e3749434e">&#9670;&nbsp;</a></span>read_atts()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CuTangoWorld::read_atts </td>
+          <td>(</td>
+          <td class="paramtype">Tango::DeviceProxy *&#160;</td>
+          <td class="paramname"><em>dev</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; CuData &gt; &amp;&#160;</td>
+          <td class="paramname"><em>att_datalist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; CuData &gt; *&#160;</td>
+          <td class="paramname"><em>reslist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>results_offset</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuTangoWorld.html#a7bcdb5010031633aa4a702e134665181">extractData()</a>, and <a class="el" href="classCuTangoWorld.html#a26e156a6270b77593eec59508575eb9f">strerror()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classCuPollingActivity.html#a0e1e22284c511e8a1626d5ccbd910436">CuPollingActivity::execute()</a>.</p>
 
 </div>
 </div>
@@ -834,7 +920,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classCuTangoWorld.html#aaa239293cff283cd3d31a6bfcf296ae9">cmd_inout()</a>, <a class="el" href="classCuEventActivity.html#a8ac712e113c8eed3bbf7db935eada457">CuEventActivity::execute()</a>, <a class="el" href="classCuTangoWorld.html#a0b3e061e475f61182acdc2bb5eec5268">extractData()</a>, <a class="el" href="classCuTangoWorld.html#abf8f8b06c1449ced156c40451022a42e">get_att_config()</a>, <a class="el" href="classCuTangoWorld.html#a69708ea17be1eb89517978aee76a3e2b">get_att_props()</a>, <a class="el" href="classCuTangoWorld.html#aece852a275014b068a51b14b24e4d3b5">get_command_info()</a>, <a class="el" href="classCuTangoWorld.html#a84ca1b7884c2b76a863fe2c6c18b2f60">get_properties()</a>, <a class="el" href="classCuEventActivity.html#a85edf01781777eb1dee022bdc2c8d162">CuEventActivity::onExit()</a>, <a class="el" href="classCuEventActivity.html#a53084b7cc8f9366d09d84e7f55f20dc6">CuEventActivity::push_event()</a>, <a class="el" href="classCuTangoWorld.html#acb78e59113e9f005681c74729a6ccf88">read_att()</a>, <a class="el" href="classTDevice.html#a4865bf23f890c7a0e8f7b4b69b12f868">TDevice::TDevice()</a>, and <a class="el" href="classCuTangoWorld.html#a4659595a2486384cb1e35d5ce965af74">write_att()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuTangoWorld.html#adae04c7b4d86e21857440ac868bc66b7">cmd_inout()</a>, <a class="el" href="classCuEventActivity.html#a8ac712e113c8eed3bbf7db935eada457">CuEventActivity::execute()</a>, <a class="el" href="classCuTangoWorld.html#a0b3e061e475f61182acdc2bb5eec5268">extractData()</a>, <a class="el" href="classCuTangoWorld.html#abf8f8b06c1449ced156c40451022a42e">get_att_config()</a>, <a class="el" href="classCuTangoWorld.html#a69708ea17be1eb89517978aee76a3e2b">get_att_props()</a>, <a class="el" href="classCuTangoWorld.html#aece852a275014b068a51b14b24e4d3b5">get_command_info()</a>, <a class="el" href="classCuTangoWorld.html#a84ca1b7884c2b76a863fe2c6c18b2f60">get_properties()</a>, <a class="el" href="classCuEventActivity.html#a85edf01781777eb1dee022bdc2c8d162">CuEventActivity::onExit()</a>, <a class="el" href="classCuEventActivity.html#a53084b7cc8f9366d09d84e7f55f20dc6">CuEventActivity::push_event()</a>, <a class="el" href="classCuTangoWorld.html#acb78e59113e9f005681c74729a6ccf88">read_att()</a>, <a class="el" href="classCuTangoWorld.html#a12045f4cd938da22c8d9e10e3749434e">read_atts()</a>, <a class="el" href="classTDevice.html#a4865bf23f890c7a0e8f7b4b69b12f868">TDevice::TDevice()</a>, and <a class="el" href="classCuTangoWorld.html#a4659595a2486384cb1e35d5ce965af74">write_att()</a>.</p>
 
 </div>
 </div>
@@ -952,7 +1038,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classCuTangoWorld.html#aaa239293cff283cd3d31a6bfcf296ae9">cmd_inout()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuTangoWorld.html#aa2d6476252e1cf3bdf02f1a6da483ce1">cmd_inout()</a>, <a class="el" href="classCuWriteActivity.html#a6d8a87364002b18f420c9302c20d4a96">CuWriteActivity::execute()</a>, and <a class="el" href="classCuPollingActivity.html#a0e1e22284c511e8a1626d5ccbd910436">CuPollingActivity::execute()</a>.</p>
 
 </div>
 </div>
@@ -1041,7 +1127,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 7 2018 14:18:23 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 3 2018 13:46:25 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

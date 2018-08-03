@@ -123,6 +123,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9d0308c1f2114c564143394aac5570e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivityManager.html#a9d0308c1f2114c564143394aac5570e7">removeConnections</a> (<a class="el" href="classCuThreadInterface.html">CuThreadInterface</a> *t)</td></tr>
 <tr class="memdesc:a9d0308c1f2114c564143394aac5570e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes all links involving the <a class="el" href="classCuThreadInterface.html" title="interface to write thread implementations that can be used with the cumbia library ...">CuThreadInterface</a> passed as input.  <a href="#a9d0308c1f2114c564143394aac5570e7">More...</a><br /></td></tr>
 <tr class="separator:a9d0308c1f2114c564143394aac5570e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad46e762d26ce5d9ecdcf7d7a95522cdd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivityManager.html#ad46e762d26ce5d9ecdcf7d7a95522cdd">removeConnection</a> (<a class="el" href="classCuThreadListener.html">CuThreadListener</a> *l)</td></tr>
+<tr class="separator:ad46e762d26ce5d9ecdcf7d7a95522cdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4757b96f93a5255d309c013a0cb9ffb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuActivity.html">CuActivity</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivityManager.html#aa4757b96f93a5255d309c013a0cb9ffb">findMatching</a> (const <a class="el" href="classCuData.html">CuData</a> &amp;token)</td></tr>
 <tr class="separator:aa4757b96f93a5255d309c013a0cb9ffb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4bd6c93ba03ef9b825c662e6cc0eb09f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuThreadInterface.html">CuThreadInterface</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivityManager.html#a4bd6c93ba03ef9b825c662e6cc0eb09f">getThread</a> (<a class="el" href="classCuActivity.html">CuActivity</a> *activity)</td></tr>
@@ -334,8 +336,6 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="cumacros_8h.html#ada414d70bad931bb2fea6abc8acaefbc">cuprintf</a>, and <a class="el" href="classCuData.html#ae04664b2bc005e88fdf0ebcd832cda5d">CuData::toString()</a>.</p>
-
 <p class="reference">Referenced by <a class="el" href="classCumbia.html#aed99fc05b24dea876541216408eb4f42">Cumbia::findActivity()</a>.</p>
 
 </div>
@@ -395,8 +395,6 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a pointer to the thread (<a class="el" href="classCuThreadInterface.html" title="interface to write thread implementations that can be used with the cumbia library ...">CuThreadInterface</a>) where the activity is run, or NULL if the activity is not found in the activity manager connections map </dd></dl>
 
-<p class="reference">References <a class="el" href="cumacros_8h.html#ada414d70bad931bb2fea6abc8acaefbc">cuprintf</a>.</p>
-
 <p class="reference">Referenced by <a class="el" href="classCumbia.html#a783d8ef496e96945f300c66311dca6ff">Cumbia::getActivityPeriod()</a>, <a class="el" href="classCumbia.html#ad8751aff10e046203495bd4990358fea">Cumbia::pauseActivity()</a>, <a class="el" href="classCumbia.html#aa165b8ccd53aa26dba6ec1e769f5e4a6">Cumbia::postEvent()</a>, <a class="el" href="classCumbia.html#acace44228226547dce18b4f12a246b58">Cumbia::resumeActivity()</a>, <a class="el" href="classCumbia.html#aeb73555c75846bd6e948fceb9cf5053d">Cumbia::setActivityPeriod()</a>, and <a class="el" href="classCumbia.html#ae72c237833f06276a2ba62f5598197f5">Cumbia::unregisterActivity()</a>.</p>
 
 </div>
@@ -434,6 +432,8 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classCuThread.html#a579d926d0aa2cdb82fde4bd7c6e58997">CuThread::onEventPosted()</a>.</p>
 
 </div>
 </div>
@@ -490,7 +490,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a12eb21616708bdf5ef9b1768cab1f27f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a12eb21616708bdf5ef9b1768cab1f27f">&#9670;&nbsp;</a></span>removeConnection()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a12eb21616708bdf5ef9b1768cab1f27f">&#9670;&nbsp;</a></span>removeConnection() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -515,9 +515,25 @@ Public Member Functions</h2></td></tr>
 <p>This unbinds <em>threads from activities</em> and <em>thread listeners</em> (<a class="el" href="classCuThreadListener.html" title="interface for a listener that is notified when progress is done in the background and data is ready ...">CuThreadListener</a>) from <em>activities</em> (<a class="el" href="classCuActivity.html" title="a class with hook functions where work can be done in a separate thread and wherefrom results are pub...">CuActivity</a>).</p>
 <p>See <a class="el" href="classCuActivityManager.html#a12eb21616708bdf5ef9b1768cab1f27f" title="Removes all links where a is involved. ">CuActivityManager::removeConnection</a> </p>
 
-<p class="reference">References <a class="el" href="cumacros_8h.html#acfab0901833e70730957144c86bed632">pbviolet2</a>.</p>
-
 <p class="reference">Referenced by <a class="el" href="classCumbia.html#a17c9894c182fe02d4667aff851824f81">Cumbia::finish()</a>.</p>
+
+</div>
+</div>
+<a id="ad46e762d26ce5d9ecdcf7d7a95522cdd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad46e762d26ce5d9ecdcf7d7a95522cdd">&#9670;&nbsp;</a></span>removeConnection() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuActivityManager::removeConnection </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classCuThreadListener.html">CuThreadListener</a> *&#160;</td>
+          <td class="paramname"><em>l</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -553,6 +569,8 @@ Public Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="cumacros_8h.html#acfab0901833e70730957144c86bed632">pbviolet2</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="classCuThread.html#a04430b04bde54f9575ad5f6e56172a23">CuThread::run()</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
@@ -565,7 +583,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuActivityManager.html">CuActivityManager</a></li>
-    <li class="footer">Generated on Mon May 7 2018 14:18:21 for cumbia by
+    <li class="footer">Generated on Fri Aug 3 2018 13:46:23 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

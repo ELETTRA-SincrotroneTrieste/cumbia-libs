@@ -174,6 +174,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad556ecea30a5ff82e364f4d1a824b069"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb5d28f9e4141fafa088c739734e2e45"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivity.html#aeb5d28f9e4141fafa088c739734e2e45">publishExitResult</a> (const <a class="el" href="classCuData.html">CuData</a> *data)</td></tr>
 <tr class="separator:aeb5d28f9e4141fafa088c739734e2e45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a596aaa0a63161b559b15c454fa800ddb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivity.html#a596aaa0a63161b559b15c454fa800ddb">publishResult</a> (const std::vector&lt; <a class="el" href="classCuData.html">CuData</a> &gt; *datalist)</td></tr>
+<tr class="separator:a596aaa0a63161b559b15c454fa800ddb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c6eb2f9902d6b8ba43474a243720e8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuActivityManager.html">CuActivityManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivity.html#a0c6eb2f9902d6b8ba43474a243720e8f">getActivityManager</a> () const</td></tr>
 <tr class="separator:a0c6eb2f9902d6b8ba43474a243720e8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae05621fc262128f5e373d32d9a6d3baa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuData.html">CuData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivity.html#ae05621fc262128f5e373d32d9a6d3baa">getToken</a> () const</td></tr>
@@ -867,7 +869,7 @@ Used internally.</dd></dl>
 </div>
 </div>
 <a id="aeccbb8c64988497bed4f292a28f1b20e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeccbb8c64988497bed4f292a28f1b20e">&#9670;&nbsp;</a></span>publishResult()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aeccbb8c64988497bed4f292a28f1b20e">&#9670;&nbsp;</a></span>publishResult() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -888,7 +890,27 @@ Used internally.</dd></dl>
 <li>If still there, ask it to post an event on the main thread with the data. </li>
 </ol>
 
-<p class="reference">References <a class="el" href="cumacros_8h.html#ada414d70bad931bb2fea6abc8acaefbc">cuprintf</a>, and <a class="el" href="classCuData.html#ae04664b2bc005e88fdf0ebcd832cda5d">CuData::toString()</a>.</p>
+<p class="reference">References <a class="el" href="classCuThreadInterface.html#aadbb7855f5572d516a373640d0751940">CuThreadInterface::publishResult()</a>.</p>
+
+</div>
+</div>
+<a id="a596aaa0a63161b559b15c454fa800ddb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a596aaa0a63161b559b15c454fa800ddb">&#9670;&nbsp;</a></span>publishResult() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuActivity::publishResult </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; <a class="el" href="classCuData.html">CuData</a> &gt; *&#160;</td>
+          <td class="paramname"><em>datalist</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuThreadInterface.html#aadbb7855f5572d516a373640d0751940">CuThreadInterface::publishResult()</a>.</p>
 
 </div>
 </div>
@@ -1017,7 +1039,7 @@ Used internally.</dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuActivity.html">CuActivity</a></li>
-    <li class="footer">Generated on Mon May 7 2018 14:18:21 for cumbia by
+    <li class="footer">Generated on Fri Aug 3 2018 13:46:23 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

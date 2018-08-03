@@ -1,11 +1,11 @@
 <map id="qumbiaprojectwizard.cpp" name="qumbiaprojectwizard.cpp">
-<area shape="rect" id="node2" href="$qumbiaprojectwizard_8h.html" title="qumbiaprojectwizard.h" alt="" coords="586,80,738,107"/>
-<area shape="rect" id="node4" href="$ui__qumbiaprojectwizard_8h.html" title="ui_qumbiaprojectwizard.h" alt="" coords="1373,80,1543,107"/>
-<area shape="rect" id="node34" href="$conversiondialog_8h.html" title="src/qtango/conversiondialog.h" alt="" coords="2791,155,2986,181"/>
-<area shape="rect" id="node42" href="$qtangoimport_8h.html" title="src/qtango/qtangoimport.h" alt="" coords="3243,80,3417,107"/>
-<area shape="rect" id="node48" href="$projectbackup_8h.html" title="projectbackup.h" alt="" coords="3630,304,3745,331"/>
-<area shape="rect" id="node36" href="$fileprocessor__a_8h.html" title="fileprocessor_a.h" alt="" coords="3036,229,3157,256"/>
-<area shape="rect" id="node39" href="$definitions_8h.html" title="definitions.h" alt="" coords="3069,304,3161,331"/>
-<area shape="rect" id="node46" href="$findreplace_8h.html" title="findreplace.h" alt="" coords="3013,155,3109,181"/>
-<area shape="rect" id="node47" href="$pro__files__helper_8h.html" title="pro_files_helper.h" alt="" coords="3329,155,3453,181"/>
+<area shape="rect" id="node2" href="$qumbiaprojectwizard_8h.html" title="qumbiaprojectwizard.h" alt="" coords="486,80,638,107"/>
+<area shape="rect" id="node4" href="$ui__qumbiaprojectwizard_8h.html" title="ui_qumbiaprojectwizard.h" alt="" coords="1097,80,1267,107"/>
+<area shape="rect" id="node32" href="$conversiondialog_8h.html" title="src/qtango/conversiondialog.h" alt="" coords="2501,155,2695,181"/>
+<area shape="rect" id="node40" href="$qtangoimport_8h.html" title="src/qtango/qtangoimport.h" alt="" coords="2955,80,3129,107"/>
+<area shape="rect" id="node46" href="$projectbackup_8h.html" title="projectbackup.h" alt="" coords="3355,304,3470,331"/>
+<area shape="rect" id="node34" href="$fileprocessor__a_8h.html" title="fileprocessor_a.h" alt="" coords="2753,229,2875,256"/>
+<area shape="rect" id="node37" href="$definitions_8h.html" title="definitions.h" alt="" coords="2787,304,2879,331"/>
+<area shape="rect" id="node44" href="$findreplace_8h.html" title="findreplace.h" alt="" coords="2737,155,2833,181"/>
+<area shape="rect" id="node45" href="$pro__files__helper_8h.html" title="pro_files_helper.h" alt="" coords="3105,155,3229,181"/>
 </map>

@@ -99,6 +99,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a310f5d5014c1f7517210af4c436818e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66c0cdbba00a83b339c07770c4626295"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#a66c0cdbba00a83b339c07770c4626295">onResult</a> (const CuData &amp;data)</td></tr>
 <tr class="separator:a66c0cdbba00a83b339c07770c4626295"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadac5b2926d109c95316c532321a004d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#aadac5b2926d109c95316c532321a004d">onResult</a> (const std::vector&lt; CuData &gt; &amp;datalist)</td></tr>
+<tr class="separator:aadac5b2926d109c95316c532321a004d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac028bcf1c27c3c7d4c2847bfa409c10f"><td class="memItemLeft" align="right" valign="top">CuData&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#ac028bcf1c27c3c7d4c2847bfa409c10f">getToken</a> () const</td></tr>
 <tr class="memdesc:ac028bcf1c27c3c7d4c2847bfa409c10f"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the CuData storing the token that identifies this action  <a href="#ac028bcf1c27c3c7d4c2847bfa409c10f">More...</a><br /></td></tr>
 <tr class="separator:ac028bcf1c27c3c7d4c2847bfa409c10f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -425,8 +427,6 @@ Public Member Functions</h2></td></tr>
 <li>"type" &ndash;&gt; a constant string: "reader" </li>
 </ul>
 
-<p class="reference">Referenced by <a class="el" href="classCuTReader.html#ae4731c847e160a5203d24fb9b6fe8ae5">stop()</a>.</p>
-
 </div>
 </div>
 <a id="abab56f2fa5c3711ceec6d52907875b37"></a>
@@ -540,7 +540,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a66c0cdbba00a83b339c07770c4626295"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a66c0cdbba00a83b339c07770c4626295">&#9670;&nbsp;</a></span>onResult()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a66c0cdbba00a83b339c07770c4626295">&#9670;&nbsp;</a></span>onResult() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -555,7 +555,25 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classCuActionFactoryService.html#ad2bb6770622dc3dc24a5846f818e8bdcafb23f61f823444e6df483206eb9b7e11">CuActionFactoryService::CuActionFactoryServiceType</a>, <a class="el" href="classCuEventActivity.html#a1dc111181e0c5b18e7d7053c97c6dffaaf9260cb4ab297d365436067a921f0692">CuEventActivity::CuEventActivityType</a>, <a class="el" href="classCuTReader.html#abab56f2fa5c3711ceec6d52907875b37">getType()</a>, and <a class="el" href="classCuActionFactoryService.html#a9d5825629c4a5868469a14267d9af8ac">CuActionFactoryService::unregisterAction()</a>.</p>
+<p class="reference">References <a class="el" href="classCuPollingService.html#ac9e338ca5b1b36884ff1656b616dd57a">CuPollingService::actionRegistered()</a>, <a class="el" href="classCuActionFactoryService.html#ad2bb6770622dc3dc24a5846f818e8bdcafb23f61f823444e6df483206eb9b7e11">CuActionFactoryService::CuActionFactoryServiceType</a>, <a class="el" href="classCuPollingService.html#a6f3a3c6af39fbe1c15c6805dfbadde01a0fbe229fee084efbb94bf9641d57332b">CuPollingService::CuPollingServiceType</a>, <a class="el" href="classCuTReader.html#abab56f2fa5c3711ceec6d52907875b37">getType()</a>, and <a class="el" href="classCuActionFactoryService.html#a9d5825629c4a5868469a14267d9af8ac">CuActionFactoryService::unregisterAction()</a>.</p>
+
+</div>
+</div>
+<a id="aadac5b2926d109c95316c532321a004d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aadac5b2926d109c95316c532321a004d">&#9670;&nbsp;</a></span>onResult() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuTReader::onResult </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; CuData &gt; &amp;&#160;</td>
+          <td class="paramname"><em>datalist</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -693,7 +711,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classCuTangoActionI.html#a086b8d5ad807f931e1a48583ce3aba5f">CuTangoActionI</a>.</p>
 
-<p class="reference">References <a class="el" href="classCuPollingActivity.html#a00c85b4b2fa32a723b8812d5f872a6d6a0986c7e1af20e80e899b746f61e8ff9f">CuPollingActivity::CuPollingActivityType</a>, and <a class="el" href="classCuTReader.html#a9b9a3f08371d35a5c86e85e57d57ea10">setRefreshMode()</a>.</p>
+<p class="reference">References <a class="el" href="classCuPollingService.html#a6f3a3c6af39fbe1c15c6805dfbadde01a0fbe229fee084efbb94bf9641d57332b">CuPollingService::CuPollingServiceType</a>, <a class="el" href="classCuPollingService.html#aa9e209dbe73297e2df06a80413c9cf46">CuPollingService::getPoller()</a>, <a class="el" href="classCuPoller.html#a60c531b29906eba959c1ba3c8a6c0d6c">CuPoller::period()</a>, and <a class="el" href="classCuTReader.html#a9b9a3f08371d35a5c86e85e57d57ea10">setRefreshMode()</a>.</p>
 
 </div>
 </div>
@@ -742,7 +760,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classCuEventActivity.html#a1dc111181e0c5b18e7d7053c97c6dffaaf9260cb4ab297d365436067a921f0692">CuEventActivity::CuEventActivityType</a>, <a class="el" href="classCuPollingActivity.html#a00c85b4b2fa32a723b8812d5f872a6d6a0986c7e1af20e80e899b746f61e8ff9f">CuPollingActivity::CuPollingActivityType</a>, <a class="el" href="classCuTReader.html#afa9248f271e4945ea53f508d32ce4fc5">isEventRefresh()</a>, <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848ac4f8eb91cf33f91e054dc525f073d246">Manual</a>, <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848aa0beab070134a15c077018c55b55786b">PolledRefresh</a>, and <a class="el" href="classCuTReader.html#aa1c2c0d8e8be6c4562f3336e0fc86d4d">refreshModeStr()</a>.</p>
+<p class="reference">References <a class="el" href="classCuTReader.html#afa9248f271e4945ea53f508d32ce4fc5">isEventRefresh()</a>, <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848ac4f8eb91cf33f91e054dc525f073d246">Manual</a>, <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848aa0beab070134a15c077018c55b55786b">PolledRefresh</a>, and <a class="el" href="classCuTReader.html#aa1c2c0d8e8be6c4562f3336e0fc86d4d">refreshModeStr()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classCuTangoReaderFactory.html#ae660a4479b4d039a58f825ea41c69c34">CuTangoReaderFactory::create()</a>, and <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822">sendData()</a>.</p>
 
@@ -820,8 +838,6 @@ See also Cumbia::unregisterActivity </dd></dl>
 
 <p>Implements <a class="el" href="classCuTangoActionI.html#a14b2cc629be45c649df62e030a196476">CuTangoActionI</a>.</p>
 
-<p class="reference">References <a class="el" href="classCuEventActivity.html#a1dc111181e0c5b18e7d7053c97c6dffaaf9260cb4ab297d365436067a921f0692">CuEventActivity::CuEventActivityType</a>, <a class="el" href="classCuPollingActivity.html#a00c85b4b2fa32a723b8812d5f872a6d6a0986c7e1af20e80e899b746f61e8ff9f">CuPollingActivity::CuPollingActivityType</a>, and <a class="el" href="classCuTReader.html#ac028bcf1c27c3c7d4c2847bfa409c10f">getToken()</a>.</p>
-
 <p class="reference">Referenced by <a class="el" href="classCuTReader.html#a439883dad7d9b6cfb0a2c0085dc93e87">removeDataListener()</a>.</p>
 
 </div>
@@ -833,7 +849,7 @@ See also Cumbia::unregisterActivity </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 7 2018 14:18:24 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 3 2018 13:46:26 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

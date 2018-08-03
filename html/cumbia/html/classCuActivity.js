@@ -38,6 +38,7 @@ var classCuActivity =
     [ "publishExitResult", "classCuActivity.html#aeb5d28f9e4141fafa088c739734e2e45", null ],
     [ "publishProgress", "classCuActivity.html#ad556ecea30a5ff82e364f4d1a824b069", null ],
     [ "publishResult", "classCuActivity.html#aeccbb8c64988497bed4f292a28f1b20e", null ],
+    [ "publishResult", "classCuActivity.html#a596aaa0a63161b559b15c454fa800ddb", null ],
     [ "repeat", "classCuActivity.html#a9108d99d0eaebb2251230656ee68bee2", null ],
     [ "setActivityManager", "classCuActivity.html#a8b1a222feac7c2b75ccacb1bbc7da511", null ],
     [ "setFlag", "classCuActivity.html#afd96d5ed45042a3fa82e3f83a7a1e307", null ],

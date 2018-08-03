@@ -1,5 +1,6 @@
 <map id="quplotcommon.h" name="quplotcommon.h">
-<area shape="rect" id="node2" href="$quplotcommon_8cpp.html" title="quplotcommon.cpp" alt="" coords="5,80,137,107"/>
-<area shape="rect" id="node3" href="$quspectrumplot_8cpp.html" title="quspectrumplot.cpp" alt="" coords="162,80,298,107"/>
-<area shape="rect" id="node4" href="$qutrendplot_8cpp.html" title="qutrendplot.cpp" alt="" coords="323,80,433,107"/>
+<area shape="rect" id="node2" href="$qmlchartbackend_8cpp.html" title="qmlchartbackend.cpp" alt="" coords="5,80,152,107"/>
+<area shape="rect" id="node3" href="$quplotcommon_8cpp.html" title="quplotcommon.cpp" alt="" coords="177,80,309,107"/>
+<area shape="rect" id="node4" href="$quspectrumplot_8cpp.html" title="quspectrumplot.cpp" alt="" coords="333,80,469,107"/>
+<area shape="rect" id="node5" href="$qutrendplot_8cpp.html" title="qutrendplot.cpp" alt="" coords="494,80,605,107"/>
 </map>

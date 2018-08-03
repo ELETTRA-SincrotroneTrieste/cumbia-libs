@@ -86,8 +86,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5f8d0bb2402cc72ecbf72d530f19b4d4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuPlotAxesComponent.html#a5f8d0bb2402cc72ecbf72d530f19b4d4">applyScaleFromCurveBounds</a> (<a class="el" href="classQuPlotBase.html">QuPlotBase</a> *plot, int axisId)</td></tr>
 <tr class="memdesc:a5f8d0bb2402cc72ecbf72d530f19b4d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calls setAxisScale on the plot.  <a href="#a5f8d0bb2402cc72ecbf72d530f19b4d4">More...</a><br /></td></tr>
 <tr class="separator:a5f8d0bb2402cc72ecbf72d530f19b4d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13a9cf79a08d338e4b23057258549b15"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuPlotAxesComponent.html#a13a9cf79a08d338e4b23057258549b15">setBoundsFromCurves</a> (const <a class="el" href="classQuPlotBase.html">QuPlotBase</a> *plot, int axisId)</td></tr>
-<tr class="separator:a13a9cf79a08d338e4b23057258549b15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa91878e447315914dd1700c1784c806a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuPlotAxesComponent.html#aa91878e447315914dd1700c1784c806a">setBoundsFromCurves</a> (double min, double max, int axisId)</td></tr>
+<tr class="separator:aa91878e447315914dd1700c1784c806a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15bbb998674e86803e5523637af8783e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuPlotAxesComponent.html#a15bbb998674e86803e5523637af8783e">getBoundsFromCurves</a> (const <a class="el" href="classQuPlotBase.html">QuPlotBase</a> *plot, double *xmin, double *xmax, double *ymin, double *ymax, bool calc_x, bool calc_y) const</td></tr>
+<tr class="separator:a15bbb998674e86803e5523637af8783e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54f9c6ac9075f27ec60692a814a36f76"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuPlotAxesComponent.html#a54f9c6ac9075f27ec60692a814a36f76">autoscale</a> (int axisId) const</td></tr>
 <tr class="separator:a54f9c6ac9075f27ec60692a814a36f76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a41027d331c742db881c1bd6f9044c05d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuPlotAxesComponent.html#a41027d331c742db881c1bd6f9044c05d">setAutoscale</a> (int axisId, bool a)</td></tr>
@@ -231,7 +233,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="group__plots.html#gad4fc0a39cd663982dfbc9c84bc11afa4">QuPlotBase::updateScales()</a>, <a class="el" href="group__plots.html#ga138daf9f4d37d1ac22fd1032270a168a">QuPlotBase::xAxisAutoscaleEnabled()</a>, and <a class="el" href="group__plots.html#ga3a4d38bea5ee2f2f2047e9e4b7dff317">QuPlotBase::yAxisAutoscaleEnabled()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="group__plots.html#gabca7f84313c188c9b8988fb1af475476">QuPlotBase::configure()</a>, <a class="el" href="group__plots.html#gad4fc0a39cd663982dfbc9c84bc11afa4">QuPlotBase::updateScales()</a>, <a class="el" href="group__plots.html#ga138daf9f4d37d1ac22fd1032270a168a">QuPlotBase::xAxisAutoscaleEnabled()</a>, and <a class="el" href="group__plots.html#ga3a4d38bea5ee2f2f2047e9e4b7dff317">QuPlotBase::yAxisAutoscaleEnabled()</a>.</p>
 
 </div>
 </div>
@@ -324,6 +326,68 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a15bbb998674e86803e5523637af8783e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15bbb998674e86803e5523637af8783e">&#9670;&nbsp;</a></span>getBoundsFromCurves()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool QuPlotAxesComponent::getBoundsFromCurves </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classQuPlotBase.html">QuPlotBase</a> *&#160;</td>
+          <td class="paramname"><em>plot</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>xmin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>xmax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>ymin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double *&#160;</td>
+          <td class="paramname"><em>ymax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>calc_x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>calc_y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="group__plots.html#gae1917bfc0cc9404fd9a982c2b0dec6bf">QuPlotBase::curves()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="group__plots.html#gad4fc0a39cd663982dfbc9c84bc11afa4">QuPlotBase::updateScales()</a>.</p>
+
+</div>
+</div>
 <a id="a68f367afca0012c72d4bd2e254b00fa9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a68f367afca0012c72d4bd2e254b00fa9">&#9670;&nbsp;</a></span>lowerBoundFromCurves()</h2>
 
@@ -340,7 +404,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="group__plots.html#gad4fc0a39cd663982dfbc9c84bc11afa4">QuPlotBase::updateScales()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="group__plots.html#gabca7f84313c188c9b8988fb1af475476">QuPlotBase::configure()</a>, and <a class="el" href="group__plots.html#gad4fc0a39cd663982dfbc9c84bc11afa4">QuPlotBase::updateScales()</a>.</p>
 
 </div>
 </div>
@@ -505,8 +569,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a13a9cf79a08d338e4b23057258549b15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13a9cf79a08d338e4b23057258549b15">&#9670;&nbsp;</a></span>setBoundsFromCurves()</h2>
+<a id="aa91878e447315914dd1700c1784c806a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa91878e447315914dd1700c1784c806a">&#9670;&nbsp;</a></span>setBoundsFromCurves()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -514,8 +578,14 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool QuPlotAxesComponent::setBoundsFromCurves </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classQuPlotBase.html">QuPlotBase</a> *&#160;</td>
-          <td class="paramname"><em>plot</em>, </td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>min</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>max</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -530,8 +600,6 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="reference">References <a class="el" href="group__plots.html#gae1917bfc0cc9404fd9a982c2b0dec6bf">QuPlotBase::curves()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="group__plots.html#gad4fc0a39cd663982dfbc9c84bc11afa4">QuPlotBase::updateScales()</a>.</p>
 
@@ -687,7 +755,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="group__plots.html#gad4fc0a39cd663982dfbc9c84bc11afa4">QuPlotBase::updateScales()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="group__plots.html#gabca7f84313c188c9b8988fb1af475476">QuPlotBase::configure()</a>, and <a class="el" href="group__plots.html#gad4fc0a39cd663982dfbc9c84bc11afa4">QuPlotBase::updateScales()</a>.</p>
 
 </div>
 </div>
@@ -698,7 +766,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 7 2018 14:18:28 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 3 2018 13:46:30 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

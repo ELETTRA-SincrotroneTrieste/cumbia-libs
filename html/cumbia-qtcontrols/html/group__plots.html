@@ -253,6 +253,7 @@ Public Slots</h2></td></tr>
 <tr class="memitem:ga54f537ced45da050a496a32d72f69a7c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__plots.html#ga54f537ced45da050a496a32d72f69a7c">QuPlotBase::setXAutoscaleMargin</a> (double d)</td></tr>
 <tr class="separator:ga54f537ced45da050a496a32d72f69a7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2175c2b05b02f530d53f0c7d918f139b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__plots.html#ga2175c2b05b02f530d53f0c7d918f139b">QuPlotBase::setUpperBoundExtra</a> (int axisId, double e)</td></tr>
+<tr class="memdesc:ga2175c2b05b02f530d53f0c7d918f139b"><td class="mdescLeft">&#160;</td><td class="mdescRight">add some extra upper bound to the specified axis to optimize replot operations when the refresh rate is fast.  <a href="#ga2175c2b05b02f530d53f0c7d918f139b">More...</a><br /></td></tr>
 <tr class="separator:ga2175c2b05b02f530d53f0c7d918f139b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9188a98c5eee7cbdd2be3f7807efc7fd"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__plots.html#ga9188a98c5eee7cbdd2be3f7807efc7fd">QuPlotBase::upperBoundExtra</a> (int axisId) const</td></tr>
 <tr class="separator:ga9188a98c5eee7cbdd2be3f7807efc7fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -281,6 +282,7 @@ Public Slots</h2></td></tr>
 <tr class="memitem:ga80998815762416ca6f47409f934c1cb0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__plots.html#ga80998815762416ca6f47409f934c1cb0">QuPlotBase::setDefaultBounds</a> (double lb, double ub, Axis axisId=QwtPlot::yLeft)</td></tr>
 <tr class="separator:ga80998815762416ca6f47409f934c1cb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1873f2979897c9c97a1ba238b36450d3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__plots.html#ga1873f2979897c9c97a1ba238b36450d3">QuPlotBase::restoreDefaultBounds</a> (Axis axisId=QwtPlot::yLeft)</td></tr>
+<tr class="memdesc:ga1873f2979897c9c97a1ba238b36450d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">restores the bounds set with setDefaultBounds  <a href="#ga1873f2979897c9c97a1ba238b36450d3">More...</a><br /></td></tr>
 <tr class="separator:ga1873f2979897c9c97a1ba238b36450d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad3501a8a4b050be6f2b75a1cda6318f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__plots.html#gad3501a8a4b050be6f2b75a1cda6318f9">QuPlotBase::setAxisScaleDefaultEnabled</a> (bool en, Axis axisId=QwtPlot::yLeft)</td></tr>
 <tr class="separator:gad3501a8a4b050be6f2b75a1cda6318f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -481,7 +483,7 @@ Properties</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>CuData must contain valid std::string minimum and maximum values that can be converted to double. The required keys are "min" and "max", respectively. </dd></dl>
 
-<p class="reference">References <a class="el" href="group__plots.html#ga49a40e2a575f73abba616782c7c4e2a7">QuPlotBase::defaultLowerBound()</a>, <a class="el" href="group__plots.html#ga6b2ee2961ac403ae2202c7e90aeccadd">QuPlotBase::defaultUpperBound()</a>, and <a class="el" href="group__plots.html#ga80998815762416ca6f47409f934c1cb0">QuPlotBase::setDefaultBounds()</a>.</p>
+<p class="reference">References <a class="el" href="classQuPlotAxesComponent.html#a54f9c6ac9075f27ec60692a814a36f76">QuPlotAxesComponent::autoscale()</a>, <a class="el" href="group__plots.html#ga49a40e2a575f73abba616782c7c4e2a7">QuPlotBase::defaultLowerBound()</a>, <a class="el" href="group__plots.html#ga6b2ee2961ac403ae2202c7e90aeccadd">QuPlotBase::defaultUpperBound()</a>, <a class="el" href="classQuPlotAxesComponent.html#a68f367afca0012c72d4bd2e254b00fa9">QuPlotAxesComponent::lowerBoundFromCurves()</a>, <a class="el" href="group__plots.html#ga80998815762416ca6f47409f934c1cb0">QuPlotBase::setDefaultBounds()</a>, and <a class="el" href="classQuPlotAxesComponent.html#a546a0cd09c147da41155e0398653763d">QuPlotAxesComponent::upperBoundFromCurves()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classQuSpectrumPlot.html#ad63abb97d5e44796dc81bf3326d3047c">QuSpectrumPlot::update()</a>, and <a class="el" href="classQuTrendPlot.html#a2051f21339a2d5f07ff1467dfd4f1d44">QuTrendPlot::update()</a>.</p>
 
@@ -603,7 +605,7 @@ The ownership of the context menu strategy is taken by <a class="el" href="class
 
 <p class="reference">References <a class="el" href="quplotcurve_8h.html#aff5f2888fb0db89b00519bdcf54fedf8">RTTI_CURVE_OFFSET</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="group__plots.html#ga141623f72ef45a4320c6e14838f459c3">QuPlotBase::drawCanvas()</a>, <a class="el" href="classQuPlotMarkerComponent.html#ad7a8123bd524604bc0a5c6eb7b7c07fb">QuPlotMarkerComponent::intersectingCurves()</a>, <a class="el" href="classQuTrendPlot.html#a44a8b56d851123a6980f7bfdff05a52c">QuTrendPlot::refresh()</a>, <a class="el" href="classQuPlotContextMenuComponent.html#acb350090ca355ce33b81850671a13cfe">QuPlotContextMenuComponent::saveData()</a>, <a class="el" href="classQuPlotAxesComponent.html#a13a9cf79a08d338e4b23057258549b15">QuPlotAxesComponent::setBoundsFromCurves()</a>, and <a class="el" href="classQuPlotMarkerComponent.html#a6937ec94fad1f56d747cea02a7c6091f">QuPlotMarkerComponent::update()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="group__plots.html#ga141623f72ef45a4320c6e14838f459c3">QuPlotBase::drawCanvas()</a>, <a class="el" href="classQuPlotAxesComponent.html#a15bbb998674e86803e5523637af8783e">QuPlotAxesComponent::getBoundsFromCurves()</a>, <a class="el" href="classQuPlotMarkerComponent.html#ad7a8123bd524604bc0a5c6eb7b7c07fb">QuPlotMarkerComponent::intersectingCurves()</a>, <a class="el" href="classQuTrendPlot.html#a44a8b56d851123a6980f7bfdff05a52c">QuTrendPlot::refresh()</a>, <a class="el" href="classQuPlotContextMenuComponent.html#acb350090ca355ce33b81850671a13cfe">QuPlotContextMenuComponent::saveData()</a>, and <a class="el" href="classQuPlotMarkerComponent.html#a6937ec94fad1f56d747cea02a7c6091f">QuPlotMarkerComponent::update()</a>.</p>
 
 </div>
 </div>
@@ -1052,7 +1054,7 @@ The ownership of the context menu strategy is taken by <a class="el" href="class
 
 <p class="reference">References <a class="el" href="group__plots.html#ga88592b9930973449fa86e77580e0ebd4">QuPlotBase::curve()</a>, and <a class="el" href="group__plots.html#ga8e97e938b30776452e21e50f97e8862b">QuPlotBase::curveRemoved()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classQuPlotCommon.html#a94e024b3a88e36bbccc267bd059b78aa">QuPlotCommon::unsetSource()</a>, and <a class="el" href="classQuPlotCommon.html#a54e2f75eaaef8867313761c83faff0a1">QuPlotCommon::unsetSources()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classQuSpectrumPlot.html#a7a9d4511f43f1d40df354e1d9fa13a01">QuSpectrumPlot::unsetSource()</a>, <a class="el" href="classQuTrendPlot.html#a9eba8a5f5ef86c85439d04e331d9bc83">QuTrendPlot::unsetSource()</a>, <a class="el" href="classQuSpectrumPlot.html#a40e0c10f7c6846e430b85c63a17d8d26">QuSpectrumPlot::unsetSources()</a>, and <a class="el" href="classQuTrendPlot.html#a2b1a2431f1d8e46d604f8da56db4cf77">QuTrendPlot::unsetSources()</a>.</p>
 
 </div>
 </div>
@@ -1332,7 +1334,7 @@ The ownership of the context menu strategy is taken by <a class="el" href="class
 <dd>
 <a class="el" href="group__plots.html#gad4fc0a39cd663982dfbc9c84bc11afa4" title="Updates the axes bounds for which autoscale is enabled. ">updateScales</a> </dd></dl>
 
-<p class="reference">References <a class="el" href="classQuPlotMarkerComponent.html#a6937ec94fad1f56d747cea02a7c6091f">QuPlotMarkerComponent::update()</a>.</p>
+<p class="reference">References <a class="el" href="classQuPlotMarkerComponent.html#ab645f4891a8b7a0255801c5f200dd438">QuPlotMarkerComponent::isVisible()</a>, and <a class="el" href="classQuPlotMarkerComponent.html#a6937ec94fad1f56d747cea02a7c6091f">QuPlotMarkerComponent::update()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classQuTrendPlot.html#a44a8b56d851123a6980f7bfdff05a52c">QuTrendPlot::refresh()</a>, and <a class="el" href="group__plots.html#ga0861686751313923893b543e33f347ca">QuPlotBase::refresh()</a>.</p>
 
@@ -1366,7 +1368,7 @@ The ownership of the context menu strategy is taken by <a class="el" href="class
 <dl class="section return"><dt>Returns</dt><dd>true if the one or more axes bounds have changed, false otherwise.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="group__plots.html#ga0861686751313923893b543e33f347ca" title="Calls updateMarkers, updateScales and replot, resetting the zoom base in the end. ...">refresh</a> </dd></dl>
 
-<p class="reference">References <a class="el" href="classQuPlotAxesComponent.html#a5f8d0bb2402cc72ecbf72d530f19b4d4">QuPlotAxesComponent::applyScaleFromCurveBounds()</a>, <a class="el" href="classQuPlotAxesComponent.html#a54f9c6ac9075f27ec60692a814a36f76">QuPlotAxesComponent::autoscale()</a>, <a class="el" href="classQuPlotZoomComponent.html#aab5b8e28a69c34daa342a5d077bb3b49">QuPlotZoomComponent::changeRect()</a>, <a class="el" href="classQuPlotZoomComponent.html#afbc940a7dd995e3b877584d41a62262d">QuPlotZoomComponent::inZoom()</a>, <a class="el" href="classQuPlotAxesComponent.html#a68f367afca0012c72d4bd2e254b00fa9">QuPlotAxesComponent::lowerBoundFromCurves()</a>, <a class="el" href="classQuPlotAxesComponent.html#a13a9cf79a08d338e4b23057258549b15">QuPlotAxesComponent::setBoundsFromCurves()</a>, and <a class="el" href="classQuPlotAxesComponent.html#a546a0cd09c147da41155e0398653763d">QuPlotAxesComponent::upperBoundFromCurves()</a>.</p>
+<p class="reference">References <a class="el" href="classQuPlotAxesComponent.html#a5f8d0bb2402cc72ecbf72d530f19b4d4">QuPlotAxesComponent::applyScaleFromCurveBounds()</a>, <a class="el" href="classQuPlotAxesComponent.html#a54f9c6ac9075f27ec60692a814a36f76">QuPlotAxesComponent::autoscale()</a>, <a class="el" href="classQuPlotZoomComponent.html#aab5b8e28a69c34daa342a5d077bb3b49">QuPlotZoomComponent::changeRect()</a>, <a class="el" href="classQuPlotAxesComponent.html#a15bbb998674e86803e5523637af8783e">QuPlotAxesComponent::getBoundsFromCurves()</a>, <a class="el" href="classQuPlotZoomComponent.html#afbc940a7dd995e3b877584d41a62262d">QuPlotZoomComponent::inZoom()</a>, <a class="el" href="classQuPlotAxesComponent.html#a68f367afca0012c72d4bd2e254b00fa9">QuPlotAxesComponent::lowerBoundFromCurves()</a>, <a class="el" href="classQuPlotAxesComponent.html#aa91878e447315914dd1700c1784c806a">QuPlotAxesComponent::setBoundsFromCurves()</a>, and <a class="el" href="classQuPlotAxesComponent.html#a546a0cd09c147da41155e0398653763d">QuPlotAxesComponent::upperBoundFromCurves()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classQuTrendPlot.html#a44a8b56d851123a6980f7bfdff05a52c">QuTrendPlot::refresh()</a>, and <a class="el" href="group__plots.html#ga0861686751313923893b543e33f347ca">QuPlotBase::refresh()</a>.</p>
 
@@ -1805,7 +1807,7 @@ updateMarkers </dd>
 
 <p class="reference">References <a class="el" href="group__plots.html#ga565dac970ea9a20645339a010bacc204">QuPlotBase::resetZoom()</a>, <a class="el" href="group__plots.html#ga843c2897f8dd2b2fd6f8ebdf8d653549">QuPlotBase::updateMarker()</a>, and <a class="el" href="group__plots.html#gad4fc0a39cd663982dfbc9c84bc11afa4">QuPlotBase::updateScales()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="group__plots.html#ga0b03d053b6b4c46ef9707dd501d5458f">QuPlotBase::appendData()</a>, <a class="el" href="group__plots.html#ga061cfb7d7fa039105e563a4ab13eb4d0">QuPlotBase::setData()</a>, <a class="el" href="group__plots.html#gae8ddc2c85ce759cb09b05ebb9bee6f0a">QuPlotBase::setRefreshTimeout()</a>, <a class="el" href="group__plots.html#gac76d4622856dc5aa1d68844d6e8f46b7">QuPlotBase::setXAxisAutoscaleEnabled()</a>, <a class="el" href="group__plots.html#gad21d40a0ba473aea962c5ae953e3c80c">QuPlotBase::setXLowerBound()</a>, <a class="el" href="group__plots.html#gaebcbafca03fce94a91033cd19aec7e51">QuPlotBase::setXUpperBound()</a>, <a class="el" href="group__plots.html#ga4b824271e61bb9b4aa53e269b549e379">QuPlotBase::setYAxisAutoscaleEnabled()</a>, <a class="el" href="group__plots.html#ga3de4f60bbdf305a18ecce7434539a96a">QuPlotBase::setYLowerBound()</a>, and <a class="el" href="group__plots.html#ga68c8acca76754730d4432d1d0dbcf8d0">QuPlotBase::setYUpperBound()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="group__plots.html#ga0b03d053b6b4c46ef9707dd501d5458f">QuPlotBase::appendData()</a>, <a class="el" href="group__plots.html#ga061cfb7d7fa039105e563a4ab13eb4d0">QuPlotBase::setData()</a>, <a class="el" href="group__plots.html#gae8ddc2c85ce759cb09b05ebb9bee6f0a">QuPlotBase::setRefreshTimeout()</a>, <a class="el" href="group__plots.html#ga3de4f60bbdf305a18ecce7434539a96a">QuPlotBase::setYLowerBound()</a>, and <a class="el" href="group__plots.html#ga68c8acca76754730d4432d1d0dbcf8d0">QuPlotBase::setYUpperBound()</a>.</p>
 
 </div>
 </div>
@@ -1832,6 +1834,8 @@ updateMarkers </dd>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>restores the bounds set with setDefaultBounds </p>
 
 <p class="reference">References <a class="el" href="classQuPlotAxesComponent.html#abc23fb2c356dec1b9722ad28e1ae7a9a">QuPlotAxesComponent::restoreDefaultBounds()</a>.</p>
 
@@ -2123,6 +2127,15 @@ updateMarkers </dd>
 </table>
 </div><div class="memdoc">
 
+<p>add some extra upper bound to the specified axis to optimize replot operations when the refresh rate is fast. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">axisId</td><td>the axis id, one of QwtPlot::xBottom, QwtPlot::xTop, QwtPlot::yLeft, QwtPlot::yRight </td></tr>
+    <tr><td class="paramname">e</td><td>the extra bound to add to the scale, percentage expressed from 0 to 1 </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p class="reference">References <a class="el" href="classQuPlotAxesComponent.html#aca7305a44bf9c258f67e8b3ea249e223">QuPlotAxesComponent::setUpperBoundExtra()</a>.</p>
 
 </div>
@@ -2179,7 +2192,7 @@ updateMarkers </dd>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="group__plots.html#ga0861686751313923893b543e33f347ca">QuPlotBase::refresh()</a>, <a class="el" href="classQuPlotAxesComponent.html#a41027d331c742db881c1bd6f9044c05d">QuPlotAxesComponent::setAutoscale()</a>, and <a class="el" href="classQuPlotAxesComponent.html#a964da957ffe0aa546c842feaf54281fc">QuPlotAxesComponent::setBounds()</a>.</p>
+<p class="reference">References <a class="el" href="classQuPlotAxesComponent.html#a41027d331c742db881c1bd6f9044c05d">QuPlotAxesComponent::setAutoscale()</a>, and <a class="el" href="classQuPlotAxesComponent.html#a964da957ffe0aa546c842feaf54281fc">QuPlotAxesComponent::setBounds()</a>.</p>
 
 </div>
 </div>
@@ -2207,7 +2220,7 @@ updateMarkers </dd>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="group__plots.html#ga0861686751313923893b543e33f347ca">QuPlotBase::refresh()</a>, and <a class="el" href="classQuPlotAxesComponent.html#a819479c489c118e32abdd23921e7b908">QuPlotAxesComponent::setManualBounds()</a>.</p>
+<p class="reference">References <a class="el" href="classQuPlotAxesComponent.html#a819479c489c118e32abdd23921e7b908">QuPlotAxesComponent::setManualBounds()</a>.</p>
 
 </div>
 </div>
@@ -2235,7 +2248,7 @@ updateMarkers </dd>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="group__plots.html#ga0861686751313923893b543e33f347ca">QuPlotBase::refresh()</a>, and <a class="el" href="classQuPlotAxesComponent.html#a819479c489c118e32abdd23921e7b908">QuPlotAxesComponent::setManualBounds()</a>.</p>
+<p class="reference">References <a class="el" href="classQuPlotAxesComponent.html#a819479c489c118e32abdd23921e7b908">QuPlotAxesComponent::setManualBounds()</a>.</p>
 
 </div>
 </div>
@@ -2291,7 +2304,7 @@ updateMarkers </dd>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="group__plots.html#ga0861686751313923893b543e33f347ca">QuPlotBase::refresh()</a>, <a class="el" href="classQuPlotAxesComponent.html#a41027d331c742db881c1bd6f9044c05d">QuPlotAxesComponent::setAutoscale()</a>, and <a class="el" href="classQuPlotAxesComponent.html#a964da957ffe0aa546c842feaf54281fc">QuPlotAxesComponent::setBounds()</a>.</p>
+<p class="reference">References <a class="el" href="classQuPlotAxesComponent.html#a41027d331c742db881c1bd6f9044c05d">QuPlotAxesComponent::setAutoscale()</a>, and <a class="el" href="classQuPlotAxesComponent.html#a964da957ffe0aa546c842feaf54281fc">QuPlotAxesComponent::setBounds()</a>.</p>
 
 </div>
 </div>
@@ -2982,7 +2995,7 @@ updateMarkers </dd>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 7 2018 14:18:28 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 3 2018 13:46:30 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

@@ -14,5 +14,6 @@ var classCuActivityManager =
     [ "getType", "classCuActivityManager.html#a891225c6ee81470070b12603cfdcdfc8", null ],
     [ "isRegistered", "classCuActivityManager.html#a3eaed8060f39886cfc463df73f25da17", null ],
     [ "removeConnection", "classCuActivityManager.html#a12eb21616708bdf5ef9b1768cab1f27f", null ],
+    [ "removeConnection", "classCuActivityManager.html#ad46e762d26ce5d9ecdcf7d7a95522cdd", null ],
     [ "removeConnections", "classCuActivityManager.html#a9d0308c1f2114c564143394aac5570e7", null ]
 ];

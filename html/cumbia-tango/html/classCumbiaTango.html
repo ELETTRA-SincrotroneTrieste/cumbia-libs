@@ -74,7 +74,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a76e8f317b5855f86d2d46957a19d899e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbiaTango.html#a76e8f317b5855f86d2d46957a19d899e">addAction</a> (const std::string &amp;source, CuDataListener *l, const <a class="el" href="classCuTangoActionFactoryI.html">CuTangoActionFactoryI</a> &amp;f)</td></tr>
 <tr class="separator:a76e8f317b5855f86d2d46957a19d899e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b5ceb9f3ba037fe5b00c5e5fdca3edf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbiaTango.html#a7b5ceb9f3ba037fe5b00c5e5fdca3edf">unlinkListener</a> (const std::string &amp;source, <a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92">CuTangoActionI::Type</a> t, CuDataListener *l)</td></tr>
-<tr class="memdesc:a7b5ceb9f3ba037fe5b00c5e5fdca3edf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a listener from the action identified by the given source name and type.  <a href="#a7b5ceb9f3ba037fe5b00c5e5fdca3edf">More...</a><br /></td></tr>
+<tr class="memdesc:a7b5ceb9f3ba037fe5b00c5e5fdca3edf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a listener from the action(s) with the given source name and type.  <a href="#a7b5ceb9f3ba037fe5b00c5e5fdca3edf">More...</a><br /></td></tr>
 <tr class="separator:a7b5ceb9f3ba037fe5b00c5e5fdca3edf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad077f1b9cdc5dfc2482c3616ef776c53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbiaTango.html#ad077f1b9cdc5dfc2482c3616ef776c53">findAction</a> (const std::string &amp;source, <a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92">CuTangoActionI::Type</a> t) const</td></tr>
 <tr class="separator:ad077f1b9cdc5dfc2482c3616ef776c53"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -322,7 +322,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Removes a listener from the action identified by the given source name and type. </p>
+<p>Removes a listener from the action(s) with the given source name and type. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">source</td><td>the source of the action </td></tr>
@@ -335,7 +335,9 @@ Public Member Functions</h2></td></tr>
 <dd>
 Examples of <a class="el" href="classCuTangoActionI.html" title="an interface for a Tango action, typically a reader or a writer are implementors ">CuTangoActionI</a> are <a class="el" href="classCuTReader.html" title="Low level class to read tango attributes and commands with output arguments. ">CuTReader</a> <a class="el" href="classCuTWriter.html">CuTWriter</a> and <a class="el" href="classCuTAttConfiguration.html">CuTAttConfiguration</a></dd>
 <dd>
-This call does not necessarily remove the CuActionI from cumbia. A CuActionI is removed when there are no linked CuDataListener anymore.</dd></dl>
+This call does not necessarily remove the CuActionI from cumbia. A CuActionI is removed when there are no linked CuDataListener anymore.</dd>
+<dd>
+There may be multiple actions with the given source and type. CuTangoActionI::removeDataListener(l) is called for each of them. Please see <a class="el" href="classCuActionFactoryService.html#a970e9c7f35f2196222947f206aba1b5e" title="find an action given its source and type ">CuActionFactoryService::find</a> for more details</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92" title="list of types of actions ">CuTangoActionI::Type</a> </dd>
 <dd>
 CuDataListener </dd>
@@ -346,7 +348,7 @@ CuDataListener </dd>
 <dd>
 <a class="el" href="classCuTangoActionI.html#a70ada28cceae397251f1523b3912f385" title="remove a CuDataListener from the list of listeners of data updates ">CuTangoActionI::removeDataListener</a> </dd></dl>
 
-<p class="reference">References <a class="el" href="classCuActionFactoryService.html#ad2bb6770622dc3dc24a5846f818e8bdcafb23f61f823444e6df483206eb9b7e11">CuActionFactoryService::CuActionFactoryServiceType</a>, <a class="el" href="classCuActionFactoryService.html#a3cdcbae52cec7f011a6052bc5e499474">CuActionFactoryService::find()</a>, and <a class="el" href="classCuTangoActionI.html#a70ada28cceae397251f1523b3912f385">CuTangoActionI::removeDataListener()</a>.</p>
+<p class="reference">References <a class="el" href="classCuActionFactoryService.html#ad2bb6770622dc3dc24a5846f818e8bdcafb23f61f823444e6df483206eb9b7e11">CuActionFactoryService::CuActionFactoryServiceType</a>, and <a class="el" href="classCuActionFactoryService.html#a970e9c7f35f2196222947f206aba1b5e">CuActionFactoryService::find()</a>.</p>
 
 </div>
 </div>
@@ -357,7 +359,7 @@ CuDataListener </dd>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon May 7 2018 14:18:23 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 3 2018 13:46:25 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

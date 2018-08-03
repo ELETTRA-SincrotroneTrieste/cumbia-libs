@@ -21,6 +21,8 @@ var searchData=
   ['tolongint',['toLongInt',['../classCuVariant.html#ab6715cbfd0c81839f0c23a1f8edeb910',1,'CuVariant']]],
   ['tolongintp',['toLongIntP',['../classCuVariant.html#abe4f0c22073db9115c2cc662e46a8494',1,'CuVariant']]],
   ['tolongintvector',['toLongIntVector',['../classCuVariant.html#a1877686cd8bdb87128613e728463d13b',1,'CuVariant']]],
+  ['tolonglongint',['toLongLongInt',['../classCuVariant.html#a6b769c8898b7393c604705943efc3332',1,'CuVariant']]],
+  ['tolonglongintp',['toLongLongIntP',['../classCuVariant.html#ac6feb79d2b147fa834ece1dbd858f1eb',1,'CuVariant']]],
   ['toshortint',['toShortInt',['../classCuVariant.html#aad79d04f9214177c18f17bb3661ca4bb',1,'CuVariant']]],
   ['toshortp',['toShortP',['../classCuVariant.html#a24a8c46907ab78415fcc33a75e25d4a3',1,'CuVariant']]],
   ['toshortvector',['toShortVector',['../classCuVariant.html#a88837c985a666e94fcb4e8fc73986280',1,'CuVariant']]],
@@ -32,9 +34,11 @@ var searchData=
   ['toulongint',['toULongInt',['../classCuVariant.html#a3e75675adfaef824a5658a23e7561d1b',1,'CuVariant']]],
   ['toulongintp',['toULongIntP',['../classCuVariant.html#ad37fa74eb687de30366daf60113488e0',1,'CuVariant']]],
   ['toulongintvector',['toULongIntVector',['../classCuVariant.html#a9a0823341d9e8a2e184e555eb023edd1',1,'CuVariant']]],
+  ['toulonglongint',['toULongLongInt',['../classCuVariant.html#a3beb0d4d70a1daa9d1c7e906c058dd8d',1,'CuVariant']]],
   ['toushortint',['toUShortInt',['../classCuVariant.html#a404319ffe34f4297eb09328dc13c38ce',1,'CuVariant']]],
   ['toushortp',['toUShortP',['../classCuVariant.html#a52cf386da92eb6fe669cdb0e5b94215d',1,'CuVariant']]],
   ['toushortvector',['toUShortVector',['../classCuVariant.html#a05852724325b86d59debf28d97387ce0',1,'CuVariant']]],
   ['tovector',['toVector',['../classCuVariant.html#ae776f45b5c040992ec153e28c42fb3f5',1,'CuVariant::toVector(std::vector&lt; T &gt; &amp;v) const'],['../classCuVariant.html#a3450c6f6b842a4ac8adffd4d5f534da5',1,'CuVariant::toVector()']]],
+  ['tovoidp',['toVoidP',['../classCuVariant.html#a6b1f3e78894429efd9182fb25e0034e7',1,'CuVariant']]],
   ['type',['type',['../classCuThread.html#a2a5c85c2573534a39273890056ad9ff8',1,'CuThread::type()'],['../classCuThreadInterface.html#aae520d5364a5101e7afae2334927fea1',1,'CuThreadInterface::type()']]]
 ];
