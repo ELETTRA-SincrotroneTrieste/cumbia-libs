@@ -72,7 +72,7 @@ PKGCONFIG += tango cumbia
 PKGCONFIG += x11
 
 packagesExist(cumbia-tango) {
-    PKGCONFIG ++ cumbia-tango
+    PKGCONFIG += cumbia-tango
 }
 
 packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
