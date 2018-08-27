@@ -40,7 +40,8 @@ cd $DIR/..
 
 topdir=$PWD
 
-
+PKG_CONFIG_PATH=cumbia/builddir/meson-private:cumbia-tango/builddir/meson-private:cumbia-qtcontrols/builddir/meson-private:cumbia-tango-controls/builddir/meson-private:cumbia-epics/builddir/meson-private
+export PKG_CONFIG_PATH
 
 if [[ $@ == **help** ]]
 then
