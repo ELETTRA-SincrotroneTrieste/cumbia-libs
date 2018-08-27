@@ -43,6 +43,8 @@ topdir=$PWD
 PKG_CONFIG_PATH=$topdir/cumbia/builddir/meson-private:$topdir/cumbia-tango/builddir/meson-private:$topdir/cumbia-qtcontrols/builddir/meson-private:$topdir/cumbia-tango-controls/builddir/meson-private:$topdir/cumbia-epics/builddir/meson-private
 export PKG_CONFIG_PATH
 
+echo "PKG_CONFIG_PATH is $PKG_CONFIG_PATH"
+
 if [[ $@ == **help** ]]
 then
 	echo -e "\n\e[1;32mOPTIONS\e[0m\n"
