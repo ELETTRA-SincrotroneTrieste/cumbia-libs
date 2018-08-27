@@ -68,8 +68,20 @@ QWT_HOME_USR = /usr
 QWT_INCLUDES_USR = $${QWT_HOME_USR}/include/qwt
 
 CONFIG+=link_pkgconfig
-PKGCONFIG += tango cumbia cumbia-tango cumbia-qtcontrols$${QTVER_SUFFIX} qumbia-tango-controls$${QTVER_SUFFIX}
+PKGCONFIG += tango cumbia
 PKGCONFIG += x11
+
+packagesExist(cumbia-tango) {
+    PKGCONFIG ++ cumbia-tango
+}
+
+packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
+ PKGCONFIG += cumbia-qtcontrols$${QTVER_SUFFIX}
+}
+
+packagesExist(qumbia-tango-controls$${QTVER_SUFFIX}) {
+ PKGCONFIG += qumbia-tango-controls$${QTVER_SUFFIX}
+}
 
 CONFIG += c++11
 TEMPLATE = app
