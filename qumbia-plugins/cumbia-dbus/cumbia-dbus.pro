@@ -2,7 +2,7 @@
 # $Name $
 
 
-include(/usr/local/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
+include(../../cumbia-qtcontrols/cumbia-qtcontrols.pri)
 
 TEMPLATE = lib
 CONFIG += plugin

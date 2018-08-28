@@ -6,7 +6,7 @@
 
 
 
-include(/usr/local/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
+include(../../cumbia-qtcontrols/cumbia-qtcontrols.pri)
 
 QT       += core gui
 
