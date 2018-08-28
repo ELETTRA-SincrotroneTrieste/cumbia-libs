@@ -68,8 +68,12 @@ QWT_HOME_USR = /usr
 QWT_INCLUDES_USR = $${QWT_HOME_USR}/include/qwt
 
 CONFIG+=link_pkgconfig
-PKGCONFIG += tango cumbia
+PKGCONFIG += tango
 PKGCONFIG += x11
+
+packagesExist(cumbia) {
+    PKGCONFIG += cumbia
+}
 
 packagesExist(cumbia-tango) {
     PKGCONFIG += cumbia-tango
