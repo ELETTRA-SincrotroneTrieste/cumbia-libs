@@ -12,6 +12,9 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT = /usr/local
 }
 
+# avoid stripping executable files (cumbia bash script)
+QMAKE_STRIP = echo
+
 
 TARGET = bin/dummy
 
