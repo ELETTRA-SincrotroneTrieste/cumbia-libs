@@ -3,6 +3,10 @@ include(../../qumbia-epics-controls/qumbia-epics-controls.pri)
 
 # The application will be installed under INSTALL_ROOT (i.e. prefix)
 #
+# WARNING: INSTALL_ROOT is defined both by qumbia-epics-controls.pri and qumbia-tango-controls.pri
+# The first definition in qumbia-tango-controls.pri is used.
+#
+#
 # To set the prefix at build time, call 
 # qmake   "INSTALL_ROOT=/my/custom/path"
 #
