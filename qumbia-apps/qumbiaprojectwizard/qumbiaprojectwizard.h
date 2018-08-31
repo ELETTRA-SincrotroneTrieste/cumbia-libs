@@ -77,9 +77,13 @@ namespace Ui {
 class QumbiaProjectWizard;
 }
 
+class QRadioButton;
+
 class MyFileInfo
 {
 public:
+    MyFileInfo() {}
+
     MyFileInfo(const QString &templateFileNam, const QString& newFileNam, const QString& subdirnam);
 
     QString templateFileName, newFileName, subDirName;
@@ -123,6 +127,8 @@ private slots:
 
     void onConversionDialogFinished();
 
+    void qmlToggled(bool t);
+
 private:
     void checkValidity();
 
@@ -149,6 +155,8 @@ private:
     Ui::QumbiaProjectWizard *ui;
 
     QString m_selectedFactory;
+
+    QRadioButton* m_rbFactorySaveChecked;
 };
 
 #endif // QTANGOPROJECTWIZARD_H

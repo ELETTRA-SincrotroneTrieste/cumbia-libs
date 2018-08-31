@@ -107,3 +107,10 @@ INSTALLS = target templates doc
 DISTFILES += \
     qumbia_project_template/qtango.keywords.json \
     qumbia_project_template/cppinstantiationexp.json
+
+SUBDIRS += \
+    qumbia_project_template/qumbiaproject-websocket.pro \
+    qumbia_project_template/qumbiaprojectqml-tango-epics.pro
+
+RESOURCES += \
+    qumbia_project_template/qml.qrc

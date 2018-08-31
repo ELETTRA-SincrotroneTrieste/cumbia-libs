@@ -34,6 +34,7 @@ QumbiaProjectWizard::QumbiaProjectWizard(QWidget *parent) :
 {
     ui->setupUi(this);
     m_qtangoImport = NULL;
+    m_rbFactorySaveChecked = NULL;
     qApp->setApplicationName("QumbiaProjectWizard");
     QTimer::singleShot(200, this, SLOT(init()));
 }
@@ -78,6 +79,10 @@ void QumbiaProjectWizard::init()
     connect(ui->pbRemoveProperty, SIGNAL(clicked()), this, SLOT(removeProperty()));
     connect(ui->pbImport, SIGNAL(clicked()), this, SLOT(qtangoImport()));
     connect(ui->rbImport, SIGNAL(toggled(bool)), this, SLOT(importRbToggled(bool)));
+    connect(ui->rbQml, SIGNAL(toggled(bool)), this, SLOT(qmlToggled(bool)));
+
+    // default: widget: hide qml related elements in the gui
+    qmlToggled(false);
 
     connect(ui->leProjectName, SIGNAL(textChanged(QString)), this, SLOT(projectNameChanged(QString)));
     foreach(QLineEdit *le, findChildren<QLineEdit *>())
@@ -156,12 +161,14 @@ void QumbiaProjectWizard::create()
     QString maincpp = ui->leMain->text();
     QString cpp = ui->leCppFile->text();
     QString h = ui->leCHFile->text();
-    QString form = ui->leFormFile->text();
+    QString form;
+
+    ui->rbQml->isChecked() ? form = ui->leMainQml->text() : form = ui->leFormFile->text();
 
     if(maincpp.isEmpty() || cpp.isEmpty() || h.isEmpty() || form.isEmpty() || pro_file.isEmpty()
             || location.isEmpty() || project_name.isEmpty())
     {
-        printf("\e[1;31m* \e[0mSome compulsory fields are empty!\n");
+        QMessageBox::critical(this, "Fields empty", "Some mandatory fields have been left empty");
         return;
     }
 
@@ -183,21 +190,35 @@ void QumbiaProjectWizard::create()
         QString wtype, subdirname, outdirname, outfilename;
         QDir subdir;
         bool subdirOk = true;
+        if(ui->rbWidget->isChecked())
+            wtype = "widget";
+        else if(ui->rbQml->isChecked())
+            wtype = "qml";
         ui->rbWidget->isChecked() ? wtype = "widget" : wtype = "mainwindow";
         QString template_path = TEMPLATES_PATH;
         if(!template_path.endsWith('/'))
             template_path += '/';
 
         QList<MyFileInfo> filesInfo;
+
+        MyFileInfo readmei("README", "README", "");
+        MyFileInfo changelogi("CHANGELOG", "CHANGELOG", "");
         MyFileInfo proi("qumbiaproject-" + m_selectedFactory + ".pro", pro_file, "");
         MyFileInfo maini("main-" + m_selectedFactory + ".cpp", maincpp, "src");
         MyFileInfo cppi(wtype + "-" + m_selectedFactory + ".cpp", cpp, "src");
         MyFileInfo hi (wtype + "-" + m_selectedFactory +  ".h", h, "src");
-        MyFileInfo formi(wtype + ".ui", form, "src");
-        MyFileInfo readmei("README", "README", "");
-        MyFileInfo changelogi("CHANGELOG", "CHANGELOG", "");
+        MyFileInfo formi = MyFileInfo(wtype + ".ui", form, "src");
+        if(ui->rbQml->isChecked()) {
+            formi.templateFileName = "main.qml";
+            maini.templateFileName = "mainqml-" + m_selectedFactory + ".cpp";
+            MyFileInfo qrcfi("qml.qrc", "qml.qrc", "src");
+            filesInfo << proi << maini << formi << qrcfi << readmei << changelogi;
+        }
+        else {
+            filesInfo << proi << maini << cppi << hi << formi << readmei << changelogi;
+        }
 
-        filesInfo << proi << maini << cppi << hi << formi << readmei << changelogi;
+
 
         newDir.setPath(project_path);
 
@@ -545,6 +566,46 @@ void QumbiaProjectWizard::onConversionDialogFinished()
     m_launchApps(project_path);
 }
 
+void QumbiaProjectWizard::qmlToggled(bool t)
+{
+    foreach(QWidget *w, ui->grBoxFiles->findChildren<QWidget *>())
+        w->setVisible(!t);
+
+    ui->cbLaunch2->setVisible(!t);
+    ui->leLaunch2->setVisible(!t);
+    ui->leMainQml->setVisible(t);
+    ui->twProperties->setVisible(!t);
+    ui->pbRemoveProperty->setVisible(!t);
+    ui->pbAddProperty->setVisible(!t);
+
+    if(t) { // save checked factory rb
+        foreach(QRadioButton *rb, ui->gbSupport->findChildren<QRadioButton *>()) {
+            if(rb->isChecked())
+                m_rbFactorySaveChecked = rb;
+        }
+    }
+    else if(m_rbFactorySaveChecked != NULL) {
+        m_rbFactorySaveChecked->setChecked(true);
+    }
+
+    foreach(QRadioButton *rb, ui->gbSupport->findChildren<QRadioButton *>()) {
+        rb->setVisible((!ui->rbQml->isChecked() && rb->text() != "websocket") || (rb->text() == "tango-epics" )
+                       || (ui->rbQml->isChecked() && rb->text() == "websocket"));
+    }
+    QRadioButton *rbte = ui->gbSupport->findChild<QRadioButton *>("rb-tango-epics");
+    QRadioButton *rbws = ui->gbSupport->findChild<QRadioButton *>("rb-websocket");
+    if(!rbte->isChecked() && ui->rbQml->isChecked() && rbws)
+        rbws->setChecked(true);
+
+
+
+    if(t) { // show main.cpp, main.qml
+        ui->leProFile->setVisible(true);
+        ui->leMain->setVisible(true);
+        ui->leMainQml->setVisible(true);
+    }
+}
+
 QStringList QumbiaProjectWizard::findSupportedFactories()
 {
     QStringList factories;
@@ -552,7 +613,7 @@ QStringList QumbiaProjectWizard::findSupportedFactories()
     QStringList files = d.entryList(QStringList() << "*.pro", QDir::Files);
     foreach(QString f, files)
     {
-        if(f.contains("-"))
+        if(f.contains("-") && !f.contains("qml"))
             factories << f.remove("qumbiaproject-").remove(".pro");
     }
     qDebug() << __FUNCTION__ << "Factories detected " << factories;
