@@ -129,7 +129,7 @@ unix:!android-g++ {
 }
 
 ###
-android-g++ {
+unix:android-g++ {
     installPath = $$[QT_INSTALL_QML]/$$replace(uri, \\., /)
     pluginso.path = $$installPath
     pluginso.files = target

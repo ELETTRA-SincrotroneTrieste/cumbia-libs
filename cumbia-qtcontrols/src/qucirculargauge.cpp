@@ -28,7 +28,7 @@ public:
  *  Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */
 QuCircularGauge::QuCircularGauge(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_factory) :
-    ECircularGauge(w), CuDataListener()
+    QuCircularGaugeBase(w), CuDataListener()
 {
     m_init();
     d->context = new CuContext(cumbia, r_factory);
@@ -39,7 +39,7 @@ QuCircularGauge::QuCircularGauge(QWidget *w, Cumbia *cumbia, const CuControlsRea
  *   Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */
 QuCircularGauge::QuCircularGauge(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) :
-    ECircularGauge(w), CuDataListener()
+    QuCircularGaugeBase(w), CuDataListener()
 {
     m_init();
     d->context = new CuContext(cumbia_pool, fpool);
@@ -130,7 +130,7 @@ void QuCircularGauge::m_configure(const CuData& da)
             char bound[16] = "";
             memset(bound, 0, 16);
             strncpy(bound, name, 3);
-            strncat(bound, "Value", 5);
+            strncat(bound, "Value", 6);
             setProperty(threshs[thnam], property(bound).toDouble());
         }
     }
@@ -155,7 +155,7 @@ void QuCircularGauge::m_set_value(const CuVariant &val)
 
 void QuCircularGauge::onUpdate(const CuData &da)
 {
-    printf("\e[1;33m QuCircularGauge::onUpdate da %s\e[0m\n", da.toString().c_str());
+//    printf("\e[1;33m QuCircularGauge::onUpdate da %s\e[0m\n", da.toString().c_str());
     d->read_ok = !da["err"].toBool();
     if(!d->read_ok)
         setLabel("####");

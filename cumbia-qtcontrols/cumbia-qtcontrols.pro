@@ -71,7 +71,10 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/qudoublespinbox.cpp \
     src/qulineedit.cpp \
     src/cumbiapool_o.cpp \
-    src/cuappstatemanager.cpp
+    src/cuappstatemanager.cpp \
+    src/qulineargauge.cpp \
+    src/widgets-base/qucirculargaugebase.cpp \
+    src/widgets-base/qugaugeconfig.cpp
 
 HEADERS += cumbiaqtcontrols.h\
         cumbia-qtcontrols_global.h \
@@ -144,7 +147,11 @@ HEADERS += cumbiaqtcontrols.h\
     src/widgets-base/elettracolors.h \
     src/widgets-base/enumeric.h \
     src/widgets-base/esimplelabel.h \
-    src/cuappstatemanager.h
+    src/cuappstatemanager.h \
+    src/qulineargauge.h \
+    src/widgets-base/qucirculargaugebase.h \
+    src/widgets-base/qucirculargaugebase.h \
+    src/widgets-base/qugaugeconfig.h
 
 unix:!android-g++ {
 
@@ -255,9 +262,13 @@ unix {
     target.path = $${CUMBIA_QTCONTROLS_LIBDIR}
     INSTALLS += target inc other_inst
 
-    !android-g++ {
-        INSTALLS += doc
-    }
+message("=====================================")
+message("DOC INSTALL SKIPPED!!!!!!!!!!!!!!!!")
+message("=====================================")
+
+#    !android-g++ {
+#        INSTALLS += doc
+#    }
 
 # generate pkg config file
     CONFIG += create_pc create_prl no_install_prl

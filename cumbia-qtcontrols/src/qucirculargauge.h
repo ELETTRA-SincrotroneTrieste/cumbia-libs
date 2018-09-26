@@ -1,7 +1,7 @@
 #ifndef QUCIRCULARGAUGE_H
-#define QuCircularGauge_H
+#define QUCIRCULARGAUGE_H
 
-#include <egauge.h>
+#include <qucirculargaugebase.h>
 #include <cudatalistener.h>
 #include <cucontexti.h>
 #include <cudata.h>
@@ -29,7 +29,7 @@ class CuLinkStats;
  * getContext returns a pointer to the CuContext used as a delegate for the connection.
  *
  */
-class QuCircularGauge : public ECircularGauge, public CuDataListener, public CuContextI
+class QuCircularGauge : public QuCircularGaugeBase, public CuDataListener, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)
