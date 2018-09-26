@@ -80,6 +80,10 @@ void QumbiaProjectWizard::init()
     connect(ui->pbImport, SIGNAL(clicked()), this, SLOT(qtangoImport()));
     connect(ui->rbImport, SIGNAL(toggled(bool)), this, SLOT(importRbToggled(bool)));
     connect(ui->rbQml, SIGNAL(toggled(bool)), this, SLOT(qmlToggled(bool)));
+    connect(ui->pbAddAndroidLib, SIGNAL(clicked()), this, SLOT(addAndroidLib()));
+    connect(ui->pbRemoveAndroidLib, SIGNAL(clicked()), this, SLOT(removeAndroidLib()));
+
+
 
     // default: widget: hide qml related elements in the gui
     qmlToggled(false);
@@ -126,6 +130,10 @@ void QumbiaProjectWizard::init()
     }
     else
         importRbToggled(false);
+
+    // android libs
+    initAndroidLibs();
+    ui->gbAndroidLibs->setChecked(s.value("ANDROID_LIBS_ENABLED", false).toBool());
 }
 
 void QumbiaProjectWizard::convertStart()
@@ -256,10 +264,17 @@ void QumbiaProjectWizard::create()
                 f.close(); /* done with the file */
 
                 /* replace unmatched place holders with "-" */
-                contents.replace(QRegExp("\\$[A-Za-z_0-9]*\\$"), "-");
+                //     contents.replace(QRegExp("\\$[A-Za-z_0-9]*\\$"), "-");
 
                 if(fname.endsWith(".ui"))
                     addProperties(contents);
+                if(fname.endsWith(".pro")) {
+                    QRegExp re("contains\\(ANDROID_TARGET_ARCH,armeabi-v7a\\)\\s*\\{.*\\}");
+                    if(contents.contains(re)) {
+                        contents.replace(re, QString("contains(ANDROID_TARGET_ARCH,armeabi-v7a)"
+                            " {\n\tANDROID_EXTRA_LIBS = \\\n%1}").arg(m_formatAndroidLibs()));
+                    }
+                }
 
                 subdirname = fi.subDirName;
                 outdirname = newDir.absolutePath() + "/" + subdirname;
@@ -272,10 +287,9 @@ void QumbiaProjectWizard::create()
                     subdir = QDir(newDir.absolutePath() + "/" + subdirname);
                 if(!subdir.exists())
                     subdirOk = newDir.mkdir(subdirname);
-                if(!subdirOk)
-                {
+                if(!subdirOk) {
                     QMessageBox::critical(this, "Error creating directory", "Error creating subdirectory \'" + subdirname + "\"\n"
-                                                                                                                            "under \"" + newDir.path() + "\"");
+                           "under \"" + newDir.path() + "\"");
                 }
                 else
                 {
@@ -577,6 +591,7 @@ void QumbiaProjectWizard::qmlToggled(bool t)
     ui->twProperties->setVisible(!t);
     ui->pbRemoveProperty->setVisible(!t);
     ui->pbAddProperty->setVisible(!t);
+    ui->gbAndroidLibs->setVisible(t);
 
     if(t) { // save checked factory rb
         foreach(QRadioButton *rb, ui->gbSupport->findChildren<QRadioButton *>()) {
@@ -604,6 +619,51 @@ void QumbiaProjectWizard::qmlToggled(bool t)
         ui->leMain->setVisible(true);
         ui->leMainQml->setVisible(true);
     }
+}
+
+void QumbiaProjectWizard::addAndroidLib()
+{
+    QSettings s;
+    QString dire = s.value("LAST_ANDROID_LIB_SEARCH_DIR", QDir::homePath()).toString();
+    QFileDialog fd;
+    QStringList libs = fd.getOpenFileNames(this, "Select a library file", dire, "Library files (*.so)");
+    foreach(QString lib, libs) {
+        QFileInfo fi(lib);
+        if(fi.exists()) {
+            QString path = fi.absolutePath();
+            s.setValue("LAST_ANDROID_LIB_SEARCH_DIR", path);
+            new QTreeWidgetItem(ui->twAndroidLibs, QStringList() << lib);
+        }
+
+    }
+}
+
+void QumbiaProjectWizard::removeAndroidLib()
+{
+    QList<QTreeWidgetItem *>selectedItems = ui->twAndroidLibs->selectedItems();
+    foreach(QTreeWidgetItem *it, selectedItems)
+        delete it;
+}
+
+void QumbiaProjectWizard::initAndroidLibs()
+{
+    QSettings s;
+    QStringList al = s.value("ANDROID_LIBS", QStringList()).toStringList();
+    foreach (QString s, al) {
+        new QTreeWidgetItem(ui->twAndroidLibs, QStringList() << s);
+    }
+}
+
+QString QumbiaProjectWizard::m_formatAndroidLibs() const {
+    QString s;
+    int cnt = ui->twAndroidLibs->topLevelItemCount();
+    for(int i = 0; i < cnt; i++) {
+        s += "\t" + ui->twAndroidLibs->topLevelItem(i)->text(0);
+        if(i < cnt - 1)
+            s += " \\";
+        s += "\n";
+    }
+    return s;
 }
 
 QStringList QumbiaProjectWizard::findSupportedFactories()
@@ -672,6 +732,13 @@ void QumbiaProjectWizard::m_saveUISettings()
             treeItems << it->text(0) + ";;" + it->text(1)  + ";;" +
                          qobject_cast<QComboBox *>(ui->twProperties->itemWidget(it, 2))->currentText();
     s.setValue("treeItems" , treeItems);
+
+    QStringList androidLibs;
+    QList<QTreeWidgetItem *>selectedItems = ui->twAndroidLibs->selectedItems();
+    for(int i = 0; i < ui->twAndroidLibs->topLevelItemCount(); i++)
+        androidLibs << ui->twAndroidLibs->topLevelItem(i)->text(0);
+    s.setValue("ANDROID_LIBS", androidLibs);
+    s.setValue("ANDROID_LIBS_ENABLED", ui->gbAndroidLibs->isChecked());
 }
 
 void QumbiaProjectWizard::m_launchApps(const QString& path)

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>720</width>
-    <height>806</height>
+    <height>869</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@
      </property>
     </widget>
    </item>
-   <item row="12" column="0" colspan="5">
+   <item row="13" column="0" colspan="5">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
       <string>Organization &amp;Name</string>
@@ -67,7 +67,7 @@
      </layout>
     </widget>
    </item>
-   <item row="14" column="0" colspan="7">
+   <item row="15" column="0" colspan="7">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Launch applications after files are created</string>
@@ -135,7 +135,7 @@
      </layout>
     </widget>
    </item>
-   <item row="16" column="0" colspan="7">
+   <item row="17" column="0" colspan="7">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="spacing">
       <number>2</number>
@@ -339,7 +339,15 @@
      </layout>
     </widget>
    </item>
-   <item row="11" column="0" colspan="5">
+   <item row="1" column="1" colspan="6">
+    <widget class="QGroupBox" name="gbSupport">
+     <property name="title">
+      <string>Support</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_5"/>
+    </widget>
+   </item>
+   <item row="12" column="0" colspan="5">
     <widget class="QGroupBox" name="groupBox_4">
      <property name="title">
       <string>App&amp;lication Name</string>
@@ -364,7 +372,7 @@
      </layout>
     </widget>
    </item>
-   <item row="11" column="5" rowspan="3" colspan="2">
+   <item row="12" column="5" rowspan="3" colspan="2">
     <layout class="QGridLayout" name="gridLayout_3">
      <item row="0" column="1">
       <widget class="QPushButton" name="pbAddProperty">
@@ -406,6 +414,42 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string>Type of project</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <item>
+       <widget class="QRadioButton" name="rbWidget">
+        <property name="text">
+         <string>W&amp;idget</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rbQml">
+        <property name="text">
+         <string>&amp;QtQuick/QML</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="rbImport">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;migrate a &lt;span style=&quot; font-weight:600;&quot;&gt;simple&lt;/span&gt; QTango project to a cumbia project&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>Impor&amp;t...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item row="9" column="0" colspan="7">
     <layout class="QGridLayout" name="gridLayout_2">
@@ -556,7 +600,14 @@
      </item>
     </layout>
    </item>
-   <item row="13" column="0" colspan="5">
+   <item row="2" column="6">
+    <widget class="QPushButton" name="pbImport">
+     <property name="text">
+      <string>Import a simple QTango project...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="0" colspan="5">
     <widget class="QGroupBox" name="groupBox_5">
      <property name="title">
       <string>Hardware Referent or Referents, comma separated</string>
@@ -575,55 +626,45 @@
      </layout>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QGroupBox" name="groupBox_3">
+   <item row="11" column="0" colspan="7">
+    <widget class="QGroupBox" name="gbAndroidLibs">
      <property name="title">
-      <string>Type of project</string>
+      <string>An&amp;droid Additional Libraries</string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_6">
-      <item>
-       <widget class="QRadioButton" name="rbWidget">
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_6">
+      <item row="0" column="1">
+       <widget class="QPushButton" name="pbAddAndroidLib">
         <property name="text">
-         <string>W&amp;idget</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
+         <string>Add</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QRadioButton" name="rbQml">
+      <item row="1" column="1">
+       <widget class="QPushButton" name="pbRemoveAndroidLib">
         <property name="text">
-         <string>&amp;QtQuick/QML</string>
+         <string>PushButton</string>
         </property>
        </widget>
       </item>
-      <item>
-       <widget class="QRadioButton" name="rbImport">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;migrate a &lt;span style=&quot; font-weight:600;&quot;&gt;simple&lt;/span&gt; QTango project to a cumbia project&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>Impor&amp;t...</string>
-        </property>
+      <item row="0" column="0" rowspan="2">
+       <widget class="QTreeWidget" name="twAndroidLibs">
+        <attribute name="headerVisible">
+         <bool>false</bool>
+        </attribute>
+        <column>
+         <property name="text">
+          <string notr="true">1</string>
+         </property>
+        </column>
        </widget>
       </item>
      </layout>
-    </widget>
-   </item>
-   <item row="1" column="1" colspan="6">
-    <widget class="QGroupBox" name="gbSupport">
-     <property name="title">
-      <string>Support</string>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_5"/>
-    </widget>
-   </item>
-   <item row="2" column="6">
-    <widget class="QPushButton" name="pbImport">
-     <property name="text">
-      <string>Import a simple QTango project...</string>
-     </property>
     </widget>
    </item>
   </layout>

@@ -144,6 +144,26 @@ class QuLedInterface : public CuCustomWidgetInterface
     virtual QWidget* createWidget(QWidget* parent);
 };
 
+class QuLinearGaugeInterface : public CuCustomWidgetInterface
+{
+   Q_OBJECT
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
+
+  public:
+    QuLinearGaugeInterface(QObject* parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p);
+    virtual QWidget* createWidget(QWidget* parent);
+};
+
+class QuCircularGaugeInterface : public CuCustomWidgetInterface
+{
+   Q_OBJECT
+    Q_INTERFACES(QDesignerCustomWidgetInterface)
+
+  public:
+    QuCircularGaugeInterface(QObject* parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p);
+    virtual QWidget* createWidget(QWidget* parent);
+};
+
 class QuCheckBoxInterface : public CuCustomWidgetInterface
 {
    Q_OBJECT

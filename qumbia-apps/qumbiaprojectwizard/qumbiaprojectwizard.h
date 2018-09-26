@@ -129,6 +129,12 @@ private slots:
 
     void qmlToggled(bool t);
 
+    void addAndroidLib();
+
+    void removeAndroidLib();
+
+    void initAndroidLibs();
+
 private:
     void checkValidity();
 
@@ -157,6 +163,8 @@ private:
     QString m_selectedFactory;
 
     QRadioButton* m_rbFactorySaveChecked;
+
+    QString m_formatAndroidLibs() const;
 };
 
 #endif // QTANGOPROJECTWIZARD_H

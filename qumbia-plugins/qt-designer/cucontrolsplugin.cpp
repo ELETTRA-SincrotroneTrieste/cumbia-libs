@@ -3,6 +3,8 @@
 /* Qu widgets includes */
 #include "qulabel.h"
 #include "quled.h"
+#include "qulineargauge.h"
+#include "qucirculargauge.h"
 // #include "qulineedit.h"
 #include "qutable.h"
 #include "qutrendplot.h"
@@ -189,6 +191,8 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
 
     d_plugins.append(new QuLabelInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuLedInterface(this, cumbia_pool, m_ctrl_factory_pool));
+    d_plugins.append(new QuCircularGaugeInterface(this, cumbia_pool, m_ctrl_factory_pool));
+    d_plugins.append(new QuLinearGaugeInterface(this, cumbia_pool, m_ctrl_factory_pool));
  //   d_plugins.append(new QuLineEditInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuTableInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuTrendPlotInterface(this, cumbia_pool, m_ctrl_factory_pool));
@@ -245,6 +249,7 @@ QObject *TaskMenuFactory::createExtension(QObject *object, const QString &iid, Q
         return 0;
 
     if (qobject_cast<QuLabel*>(object) || qobject_cast<QuLed *>(object)
+            || qobject_cast<QuLinearGauge *>(object) || qobject_cast<QuCircularGauge *>(object)
             || qobject_cast<QuButton *>(object) || qobject_cast<QuApplyNumeric *>(object) || qobject_cast<QuTable *>(object)
              || qobject_cast<QuTrendPlot *>(object)|| qobject_cast<QuSpectrumPlot *>(object)
             || qobject_cast<QuCheckBox *>(object)|| qobject_cast<QuInputOutput *>(object) )
@@ -271,7 +276,8 @@ QList<QAction *> TaskMenuExtension::taskActions() const
     if (cname == "QuLabel" || cname == "QuLed"
         || cname == "QuButton" || cname == "QuTable" || cname == "QuTrendPlot"
             || cname == "QuSpectrumPlot" || cname == "QuApplyNumeric"
-             || cname == "QuCheckBox" || cname == "QuInputOutput")
+             || cname == "QuCheckBox" || cname == "QuInputOutput" || cname == "QuLinearGauge"
+            || cname == "QuCircularGauge")
         list.append(d_editConnectionAction);
     /* 2. edit action */
     if ((cname == "QuLabel") || (cname == "QuLed") || cname == "QuTable")
@@ -356,6 +362,10 @@ void TaskMenuExtension::editConnection()
         src = qtl->source();
     else if (QuLed *qled = qobject_cast<QuLed*>(d_widget))
         src = qled->source();
+    else if (QuCircularGauge *qcig = qobject_cast<QuCircularGauge*>(d_widget))
+        src = qcig->source();
+    else if (QuLinearGauge *qlig = qobject_cast<QuLinearGauge*>(d_widget))
+        src = qlig->source();
     else if(QuTable *t = qobject_cast<QuTable *>(d_widget))
         src = t->source();
     else if(QuTrendPlot *t = qobject_cast<QuTrendPlot *>(d_widget))
@@ -562,6 +572,60 @@ QWidget *QuLedInterface::createWidget(QWidget *parent)
     DropEventFilter *dropEventFilter = new DropEventFilter(led);
     led->installEventFilter(dropEventFilter);
     return led;
+}
+
+QuLinearGaugeInterface::QuLinearGaugeInterface(QObject *parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p)
+    : CuCustomWidgetInterface(parent, cumbia_p ,ctrl_factory_p)
+{
+    d_name = "QuLinearGauge";
+    d_include = "qulineargauge.h";
+    d_icon = QPixmap(":pixmaps/elineargauge.png");
+    d_domXml =
+            "<widget class=\"QuLinearGauge\" name=\"quLinearGauge\">\n"
+            " <property name=\"geometry\">\n"
+            "  <rect>\n"
+            "   <x>0</x>\n"
+            "   <y>0</y>\n"
+            "   <width>140</width>\n"
+            "   <height>40</height>\n"
+            "  </rect>\n"
+            " </property>\n"
+            "</widget>\n";
+}
+
+QWidget *QuLinearGaugeInterface::createWidget(QWidget *parent)
+{
+    QuLinearGauge *lgauge = new QuLinearGauge(parent, cumbia_pool, ctrl_factory_pool);
+    DropEventFilter *dropEventFilter = new DropEventFilter(lgauge);
+    lgauge->installEventFilter(dropEventFilter);
+    return lgauge;
+}
+
+QuCircularGaugeInterface::QuCircularGaugeInterface(QObject *parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p)
+    : CuCustomWidgetInterface(parent, cumbia_p ,ctrl_factory_p)
+{
+    d_name = "QuCircularGauge";
+    d_include = "qucirculargauge.h";
+    d_icon = QPixmap(":pixmaps/elineargauge.png");
+    d_domXml =
+            "<widget class=\"QuCircularGauge\" name=\"quCircularGauge\">\n"
+            " <property name=\"geometry\">\n"
+            "  <rect>\n"
+            "   <x>0</x>\n"
+            "   <y>0</y>\n"
+            "   <width>220</width>\n"
+            "   <height>220</height>\n"
+            "  </rect>\n"
+            " </property>\n"
+            "</widget>\n";
+}
+
+QWidget *QuCircularGaugeInterface::createWidget(QWidget *parent)
+{
+    QuCircularGauge *cgauge = new QuCircularGauge(parent, cumbia_pool, ctrl_factory_pool);
+    DropEventFilter *dropEventFilter = new DropEventFilter(cgauge);
+    cgauge->installEventFilter(dropEventFilter);
+    return cgauge;
 }
 
 //QuLineEditInterface::QuLineEditInterface(QObject *parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p)
