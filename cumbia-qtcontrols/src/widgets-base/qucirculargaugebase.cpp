@@ -33,8 +33,9 @@ public:
 
 class QuCircularGaugeBasePrivate {
 public:
-    QString label;
-
+    QString label;   // text property. If empty, value is displayed
+    QString label_p; // text currently displayed (label property or current value)
+    QString labelValueFormat; // if label displays value, use this format
     int startAngle, spanAngle;
     QSize minSizeHint, sizeHint;
     QuCircularGaugeBase::Quads quad;
@@ -44,7 +45,7 @@ public:
     QPropertyAnimation *propertyAnimation;
     QDateTime lastValueDateTime;
     QuCircularGaugeBase::LabelPosition labelPosition;
-    double labelDistFromCenter;
+    double labelDistFromCenter, labelFontScale;
 };
 
 QuCircularGaugeBase::QuCircularGaugeBase(QWidget *parent) : QWidget(parent)
@@ -57,6 +58,8 @@ QuCircularGaugeBase::QuCircularGaugeBase(QWidget *parent) : QWidget(parent)
     d->propertyAnimation = NULL;
     d->labelPosition = NoLabel;
     d->labelDistFromCenter = 0.25;
+    d->labelValueFormat = "%.2f";
+    d->labelFontScale = 0.9;
     m_anglesUpdate();
 }
 
@@ -75,75 +78,239 @@ double QuCircularGaugeBase::value() const
     return g_config->value;
 }
 
+/*! \brief returns the value during the animation
+ *
+ * To get the actual value, please refer to the QuCircularGaugeBase::value method
+ */
 double QuCircularGaugeBase::value_anim() const
 {
     return g_config->value_anim;
 }
 
+/*! \brief returns the maximum value represented by this gauge
+ *
+ * @return the maximum value of this gauge's scale
+ */
 double QuCircularGaugeBase::maxValue() const
 {
     return g_config->max;
 }
 
+/*! \brief returns the minimum value represented by this gauge
+ *
+ * @return the minimum value of this gauge's scale
+ */
 double QuCircularGaugeBase::minValue() const
 {
     return g_config->min;
 }
 
+/*! \brief returns the span of the angle of the circular gauge, in degrees
+ *
+ * @return the span angle in degrees.
+ *
+ * \par Note
+ * According to Qt documentation, negative values draw the arc clockwise
+ *
+ * @see angleStart
+ * @see setAngleSpan
+ */
 int QuCircularGaugeBase::angleSpan() const
 {
     return d->spanAngle;
 }
 
+/*! \brief returns the angle from which the gauge arc starts
+ *
+ * @return the angle, in degrees, where the gauge arc starts
+ *
+ * @see angleSpan
+ * @see setAngleStart
+ */
 int QuCircularGaugeBase::angleStart() const
 {
     return d->startAngle;
 }
 
+/*! \brief returns the number of *major* ticks drawn in the arc
+ *
+ * @return the number of *major ticks* drawn
+ *
+ * @see minorTicksCount
+ */
 int QuCircularGaugeBase::ticksCount() const
 {
     return g_config->ticksCount;
 }
 
+/*! \brief returns the number of *minor* ticks drawn between each couple of major ticks
+ * @return the number of minor ticks between two subsequent major ticks
+ *
+ * @see ticksCount
+ * @see setMinorTicksCount
+ */
+int QuCircularGaugeBase::minorTicksCount() const
+{
+    return g_config->minorTicksCount;
+}
+
+/*! \brief returns the tick length
+ *
+ * The value, expressed within the interval [0.0, 1.0] is intended as fraction
+ * of the lenght of the gauge arc's radius.
+ *
+ * \par Default value
+ * The default value is 0.08. The major tick length is thus equal to 2% of the radius by default.
+ */
 double QuCircularGaugeBase::tickLen() const
 {
     return g_config->tickLen;
 }
 
+/*! \brief returns the *pen width* used to draw the gauge arc
+ *
+ * @return the pen width, in pixels, floating point, used to draw the arc
+ *
+ * \par Notes
+ * \li If the drawTickCore1 property is enabled, a tick is drawn inside the arc and its length
+ * is equal to gaugeWidth.
+ * \li If the drawTickCore2 property is enabled a tick is drawn from the arc bottom side and it
+ * will be gaugeWidth pixels long
+ *
+ * @see drawTickCore1
+ * @see drawTickCore2
+ * @see drawColoredTicks
+ *
+ */
 double QuCircularGaugeBase::gaugeWidth() const
 {
     return g_config->gaugeWidth;
 }
 
+/*! \brief If greater than zero, a circle is drawn on the pivot of the needle
+ *
+ * This number, a floating point in the interval [0.0, 1.0], represents the fraction of the
+ * length of the radius used to draw a circle on the pivot of the needle.
+ *
+ * The exact formula used to calculate the pivot circle radius is as follows:
+ *
+ * \code
+ * qMin(paintArea().width(), paintArea().height())/2.0 * d->pivotRadius
+ * \endcode
+ *
+ * @see getPivotRadius
+ */
 double QuCircularGaugeBase::pivotCircleRadius() const
 {
     return d->pivotRadius;
 }
 
+/*! \brief returns true if a background is drawn, false otherwise
+ *
+ * @return true the gauge draws a background with a radial gradient between the
+ *         color associated the current value (see inErrorRange, inWarningRange,
+ *         inNormalRange) and the color chosen with setBackgroundColor.
+ *
+ * Three warning levels can be displayed by the gauge arc:
+ * \li normal
+ * \li warning
+ * \li alarm (error)
+ *
+ * Setting the drawBackgroundEnabled property to true enhances the detection of the current
+ * value quality.
+ *
+ * @see backgroundColor
+ *
+ */
 bool QuCircularGaugeBase::drawBackgroundEnabled() const {
     return g_config->drawBackground;
 }
 
+/*! \brief either draw or not the labels with the values associated to each major tick
+ *
+ * @return true the value of each major tick is drawn
+ *         false no values are drawn on the gauge
+ *
+ * \note if you want the current value to be displayed on a separate bigger label somewhere
+ *       in the widget area, use the labelPosition property and set it to a value different
+ *       from QuCircularBase::NoLabel. At the same time, the label property must be set to
+ *       an empty string.
+ *
+ * @see label
+ * @see setLabelPosition
+ * @see setLabel
+ */
 bool QuCircularGaugeBase::drawText() const
 {
     return g_config->drawText;
 }
 
+/*! \brief draw a tick inside the gauge arc
+ *
+ * @return true a tick is drawn within the gauge arc. Its width is equal to the gaugeWidth
+ *          property (in pixels)
+ *
+ * @see drawTickCore2
+ * @see drawColoredTicks
+ */
 bool QuCircularGaugeBase::drawTickCore1() const
 {
     return g_config->drawTickCore1;
 }
 
+/*! \brief draw a tick from the inner border of the gauge arc
+ *
+ * @return true a tick is drawn from the inner border of the gauge arc. Its width is equal to the gaugeWidth
+ *          property (in pixels)
+ *
+ * @see drawTickCore1
+ * @see drawColoredTicks
+ */
 bool QuCircularGaugeBase::drawTickCore2() const
 {
     return g_config->drawTickCore2;
 }
 
-bool QuCircularGaugeBase::animationEnabled() const
+/*! \brief draw colored ticks
+ *
+ * This property can also be enabled in association with drawTickCore1 or drawTickCore2 if the effect
+ * is welcome.
+ *
+ * If enabled, the colored ticks length is equal to *radius multiplied by (1.0 - tickLen)*.
+ */
+bool QuCircularGaugeBase::drawColoredTicks() const
 {
-    return g_config->animationEnabled;
+    return g_config->drawColoredTicks;
 }
 
+/*! \brief if true, an animation is used to draw the transition between two subsequent setValue calls
+ *
+ * @return true the needle is animated when moving from its current position to the new position
+ *         specified with setValue
+ *         false the needle abruptly moves to the new value
+ *
+ * \par Special note
+ * The maximum duration of the animation is determined by the value, in milliseconds, of the maxAnimationDuration property.
+ * If two setValue calls take place within a shorter interval, that interval is used to animate the transition instead.
+ *
+ * @see maxAnimationDuration
+ *
+ */
+bool QuCircularGaugeBase::animationEnabled() const
+{
+    return d->quads;
+}
+
+/*! \brief The maximum duration of an animation between two setValue calls
+ *
+ * @return the value, in milliseconds, of the  maximum duration of an animation between two setValue calls
+ *
+ * \par note
+ * If two setValue calls take place within a shorter interval, that interval is used to animate the transition instead.
+ *
+ * @see animationEnabled
+ *
+ */
 qint64 QuCircularGaugeBase::maxAnimationDuration() const
 {
     return g_config->maximumAnimDuration;
@@ -157,6 +324,19 @@ QuCircularGaugeBase::LabelPosition QuCircularGaugeBase::labelPosition() const
 double QuCircularGaugeBase::labelDistFromCenter() const
 {
     return d->labelDistFromCenter;
+}
+
+/*! \brief scales the label font respect to the font size of the text on the gauge
+ *
+ * @return the label font scale value, between 0 and 2.
+ *
+ * The font size of the text on the gauge is scaled by this factor.
+ *
+ * \note The default value is 0.9
+ */
+double QuCircularGaugeBase::labelFontScale() const
+{
+    return d->labelFontScale;
 }
 
 void QuCircularGaugeBase::setLowWarning(double w) {
@@ -311,6 +491,12 @@ void QuCircularGaugeBase::setDrawTickCore2(bool t)
     update();
 }
 
+void QuCircularGaugeBase::setDrawColoredTicks(bool dr)
+{
+    g_config->drawColoredTicks = dr;
+    update();
+}
+
 void QuCircularGaugeBase::setDrawText(bool dt)
 {
     g_config->drawText = dt;
@@ -345,6 +531,36 @@ void QuCircularGaugeBase::setLabelDistFromCenter(double radius_percent)
         perr("QuCircularGaugeBase::setLabelDistFromCenter: value must be 0 <= value <= 1.0");
 }
 
+void QuCircularGaugeBase::setLabelValueFormat(const QString &f)
+{
+    d->labelValueFormat = f;
+    update();
+}
+
+void QuCircularGaugeBase::setUnit(const QString &u)
+{
+    g_config->unit = u;
+    update();
+}
+
+/*! \brief changes the label font size respect to the size of the text on the gauge
+ *
+ * @param factor the label font scale value, > 0 and  <= 2.
+ *
+ * The font size of the text on the gauge is scaled by this factor.
+ *
+ * \note The default value is 0.9
+ */
+void QuCircularGaugeBase::setLabelFontScale(double factor)
+{
+    if(factor > 0 && factor <= 2.0) {
+        d->labelFontScale = factor;
+        update();
+    }
+    else
+        perr("QuCircularGaugeBase::setLabelFontScale: factor must be  0 < factor <= 2.0");
+}
+
 void QuCircularGaugeBase::setHighError(double e) {
     g_config->high_e = e;
     update();
@@ -368,6 +584,16 @@ QString QuCircularGaugeBase::label() const
 QString QuCircularGaugeBase::format() const
 {
     return g_config->format;
+}
+
+QString QuCircularGaugeBase::labelValueFormat() const
+{
+    return d->labelValueFormat;
+}
+
+QString QuCircularGaugeBase::unit() const
+{
+    return g_config->unit;
 }
 
 /*! \brief maps a value to a point close to the arc of the gauge
@@ -434,10 +660,10 @@ double QuCircularGaugeBase::labelFontSize()
     return d->cache.labelPointSize;
 }
 
-QString QuCircularGaugeBase::formatLabel(double value) const
+QString QuCircularGaugeBase::formatLabel(double value, const char* format) const
 {
     char clab[32];
-    snprintf(clab, 32, g_config->format.toStdString().c_str(), value);
+    snprintf(clab, 32, format, value);
     return QString(clab);
 }
 
@@ -453,11 +679,9 @@ void QuCircularGaugeBase::setValue(double v)
     QDateTime now = QDateTime::currentDateTime();
     if(g_config->animationEnabled) {
         if(d->propertyAnimation && d->propertyAnimation->state() == QPropertyAnimation::Running) {
-            printf("\e[1;35mstopping previous animation before starting a new one\e[0m\n");
             d->propertyAnimation->stop();
         }
         else if(!d->propertyAnimation) {
-            printf("\e[1;32mCREATING A NEW Anim!!\e[0m\n");
             d->propertyAnimation = new QPropertyAnimation(this, "value_anim");
         }
 
@@ -466,14 +690,11 @@ void QuCircularGaugeBase::setValue(double v)
         else
             d->propertyAnimation->setDuration(g_config->maximumAnimDuration);
 
-        printf("\e[1;33mduration of animation is %ldms (delta time updates was %ld)\e[0m\n", d->propertyAnimation->duration(), d->lastValueDateTime.msecsTo(now));
-
         v > g_config->value_anim ? d->propertyAnimation->setEasingCurve(QEasingCurve(QEasingCurve::Linear)) :
                                    d->propertyAnimation->setEasingCurve(QEasingCurve(QEasingCurve::InQuad));
 
         d->propertyAnimation->setStartValue(g_config->value_anim);
         d->propertyAnimation->setEndValue(v);
-        printf("\e[1;32mstarting a new animation from %f to %f\e[0m\n", g_config->value_anim, v);
         d->propertyAnimation->start();
     }
     else
@@ -545,6 +766,12 @@ void QuCircularGaugeBase::setTicksCount(int t)
 {
     g_config->ticksCount = t;
     regenerateCache();
+    update();
+}
+
+void QuCircularGaugeBase::setMinorTicksCount(int t)
+{
+    g_config->minorTicksCount = t;
     update();
 }
 
@@ -633,7 +860,7 @@ void QuCircularGaugeBase::updateLabelsCache()
     int step = qRound((g_config->max - g_config->min) / (g_config->ticksCount - 1));
     double val = g_config->min;
     while(val <= g_config->max) {
-        QString lab = formatLabel(val);
+        QString lab = formatLabel(val, g_config->format.toStdString().c_str());
         if(lab.length() > d->cache.longestLabel.length())
             d->cache.longestLabel = lab;
         // fill labels cache
@@ -946,45 +1173,57 @@ void QuCircularGaugeBase::drawTicks(const QRectF &r, QPainter &p)
     pen.setCapStyle(Qt::FlatCap);
     pen.setWidthF(3.0);
     double radius = r.width() / 2.0;
-    QPointF topL = r.topLeft();int step = qRound((g_config->max - g_config->min) / (g_config->ticksCount - 1));
+    QPointF topL = r.topLeft();
+    double step = (g_config->max - g_config->min) / (double) ( (g_config->minorTicksCount + 1) * (g_config->ticksCount -1) ) ;
     double val = g_config->min;
-    double a = d->startAngle * M_PI / 180.0;
-    double arc = (double) d->spanAngle / (double) (g_config->ticksCount - 1) * M_PI / 180.0;
+    double tickLen;
+    double angle = d->startAngle * M_PI / 180.0;
+    const double arc = (double) d->spanAngle / (double) (g_config->ticksCount - 1) * M_PI / 180.0;
     for(int i = 0; i < ticksCount(); i++) {
-        QPointF p0 = QPointF(topL.x() + r.width() / 2.0 + radius * cos(a), topL.y() + r.height() / 2.0 + radius * sin(a));
-        QPointF p1 = QPointF(topL.x() + r.width() / 2.0 + radius * (1.0 - g_config->tickLen) * cos(a),
-                             topL.y() + r.height() / 2.0 + radius * (1.0 - g_config->tickLen) * sin(a));
-        if(inWarningRange(val))
-            pen.setColor(g_config->warningColor);
-        else if(inErrorRange(val))
-            pen.setColor(g_config->errorColor);
-        else
-            pen.setColor(g_config->normalColor);
+        double a = angle;
+        for(int j = 0; (i < g_config->ticksCount -1 && j < g_config->minorTicksCount + 1) || j < 1; j++) {
+            j == 0 ? tickLen = g_config->tickLen : tickLen = g_config->tickLen/2.0;
 
-        p.setPen(pen);
-        p.drawLine(p0, p1);
-        if(g_config->drawTickCore1 || g_config->drawTickCore2) {
-            QPointF p2;
-            QPen corePen(g_config->tickCoreColor);
-            corePen.setWidthF(pen.widthF()/2.0);
-            corePen.setCapStyle(Qt::FlatCap);
-            p.setPen(corePen);
-            if(g_config->drawTickCore1 && g_config->drawTickCore2) {
+            QPointF p0 = QPointF(topL.x() + r.width() / 2.0 + radius * cos(a), topL.y() + r.height() / 2.0 + radius * sin(a));
+            QPointF p1 = QPointF(topL.x() + r.width() / 2.0 + radius * (1.0 - tickLen) * cos(a),
+                                 topL.y() + r.height() / 2.0 + radius * (1.0 - tickLen) * sin(a));
+
+            if(g_config->drawColoredTicks) {
+                if(inWarningRange(val))
+                    pen.setColor(g_config->warningColor);
+                else if(inErrorRange(val))
+                    pen.setColor(g_config->errorColor);
+                else
+                    pen.setColor(g_config->normalColor);
+
+                p.setPen(pen);
                 p.drawLine(p0, p1);
             }
-            else if(g_config->drawTickCore1 && !g_config->drawTickCore2) {
-                p1 = QPointF(topL.x() + r.width() / 2.0 + (radius - g_config->gaugeWidth)  * cos(a),
-                             topL.y() + r.height() / 2.0 + (radius - g_config->gaugeWidth) * sin(a));
-                p.drawLine(p0, p1);
+            if(g_config->drawTickCore1 || g_config->drawTickCore2) {
+                QPen corePen(g_config->tickCoreColor);
+                corePen.setWidthF(pen.widthF()/2.0);
+                corePen.setCapStyle(Qt::FlatCap);
+                p.setPen(corePen);
+                if(g_config->drawTickCore1 && g_config->drawTickCore2) {
+                    p.drawLine(p0, p1);
+                }
+                else if(g_config->drawTickCore1 && !g_config->drawTickCore2) {
+                    p1 = QPointF(topL.x() + r.width() / 2.0 + (radius - g_config->gaugeWidth)  * cos(a),
+                                 topL.y() + r.height() / 2.0 + (radius - g_config->gaugeWidth) * sin(a));
+                    p.drawLine(p0, p1);
+                }
+                else if(!g_config->drawTickCore1 && g_config->drawTickCore2) {
+                    p0 = QPointF(topL.x() + r.width() / 2.0 + (radius - g_config->gaugeWidth)  * cos(a),
+                                 topL.y() + r.height() / 2.0 + (radius - g_config->gaugeWidth) * sin(a));
+                    p.drawLine(p0, p1);
+                }
             }
-            else if(!g_config->drawTickCore1 && g_config->drawTickCore2) {
-                p0 = QPointF(topL.x() + r.width() / 2.0 + (radius - g_config->gaugeWidth)  * cos(a),
-                             topL.y() + r.height() / 2.0 + (radius - g_config->gaugeWidth) * sin(a));
-                p.drawLine(p0, p1);
-            }
+
+            a += arc / static_cast<double> (g_config->minorTicksCount + 1);
+            val += step;
         }
-        a += arc;
-        val += step;
+        angle += arc;
+        //  val += step;
     }
 }
 
@@ -1010,45 +1249,46 @@ void QuCircularGaugeBase::drawBackground(const QRectF &rect, QPainter &p)
 
 void QuCircularGaugeBase::drawLabel(const QRectF &rect, QPainter& p)
 {
-    if(d->label.length() > 0 ) {
-        QPen pen(Qt::black);
-        p.setPen(pen);
-        QFont f = p.font();
-        f.setPointSizeF(d->cache.labelPointSize);
-        p.setFont(f);
-        QFontMetrics fm(f);
-        int w = fm.width(d->label);
-        int h = fm.height();
-        int radius = rect.width() / 2.0;
-        double aw, ah; // available width, available height
-        double cx = rect.center().x();
-        double cy = rect.center().y();
-        QRectF textR;
-        if(d->labelPosition == North) {
-            textR = QRectF(cx - w/2.0, cy - radius * d->labelDistFromCenter - h, w, h);
-        }
-        else if(d->labelPosition == South) {
-            textR = QRectF(cx - w/2.0, cy + radius * d->labelDistFromCenter, w, h);
-        }
-        else if(d->labelPosition == East) {
-            textR = QRectF(cx + radius * d->labelDistFromCenter, cy - h/2.0, w, h);
-        }
-        else if(d->labelPosition == West)
-            textR = QRectF(cx - radius * d->labelDistFromCenter - w, cy - h/2.0, w, h);
-        else {
-            double angle, w_off = 0, h_off = 0;
-            if(d->labelPosition == NorthEast) { angle = M_PI / 4.0; h_off = -h; }
-            else if(d->labelPosition == SouthEast) { angle = -M_PI/4.0; }
-            else if(d->labelPosition == NorthWest) { angle = 3/4.0 * M_PI; h_off = -h; w_off = -w; }
-            else if(d->labelPosition == SouthWest) { angle = -3/4.0 * M_PI; w_off = -w; }
-            textR = QRectF(cx + radius * d->labelDistFromCenter * cos(angle) + w_off, cy - radius * d->labelDistFromCenter * sin(angle) + h_off, w, h);
-        }
-//        else if(d->labelPosition == SouthWest || d->labelPosition == SouthEast)
-
-        p.drawText(textR, Qt::AlignHCenter|Qt::AlignVCenter, d->label);
+    QPen pen(Qt::black);
+    p.setPen(pen);
+    QFont f = p.font();
+    f.setPointSizeF(d->cache.labelPointSize * d->labelFontScale);
+    p.setFont(f);
+    QFontMetrics fm(f);
+    QString txt;
+    if(d->label.isEmpty()) {
+        txt = formatLabel(g_config->value, d->labelValueFormat.toStdString().c_str());
+        if(!g_config->unit.isEmpty())
+            txt += " [" + g_config->unit + "]";
     }
+    else txt = d->label;
 
-
+    int w = fm.width(txt);
+    int h = fm.height();
+    int radius = rect.width() / 2.0;
+    double cx = rect.center().x();
+    double cy = rect.center().y();
+    QRectF textR;
+    if(d->labelPosition == North) {
+        textR = QRectF(cx - w/2.0, cy - radius * d->labelDistFromCenter - h, w, h);
+    }
+    else if(d->labelPosition == South) {
+        textR = QRectF(cx - w/2.0, cy + radius * d->labelDistFromCenter, w, h);
+    }
+    else if(d->labelPosition == East) {
+        textR = QRectF(cx + radius * d->labelDistFromCenter, cy - h/2.0, w, h);
+    }
+    else if(d->labelPosition == West)
+        textR = QRectF(cx - radius * d->labelDistFromCenter - w, cy - h/2.0, w, h);
+    else {
+        double angle, w_off = 0, h_off = 0;
+        if(d->labelPosition == NorthEast) { angle = M_PI / 4.0; h_off = -h; }
+        else if(d->labelPosition == SouthEast) { angle = -M_PI/4.0; }
+        else if(d->labelPosition == NorthWest) { angle = 3/4.0 * M_PI; h_off = -h; w_off = -w; }
+        else if(d->labelPosition == SouthWest) { angle = -3/4.0 * M_PI; w_off = -w; }
+        textR = QRectF(cx + radius * d->labelDistFromCenter * cos(angle) + w_off, cy - radius * d->labelDistFromCenter * sin(angle) + h_off, w, h);
+    }
+    p.drawText(textR, Qt::AlignHCenter|Qt::AlignVCenter, txt);
 }
 
 void QuCircularGaugeBase::resizeEvent(QResizeEvent *re)

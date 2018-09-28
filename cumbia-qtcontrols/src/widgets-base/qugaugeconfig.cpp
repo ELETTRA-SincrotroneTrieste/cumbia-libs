@@ -16,14 +16,17 @@ QuGaugeConfig::QuGaugeConfig()
     low_w = high_w = low_e = high_e = 0.0;
 
     ticksCount = 10;
+    minorTicksCount = 5;
     tickLen = 0.08; // percentage of radius
     gaugeWidth = 6;
 
     format = "%.0f";
 
-    drawBackground = false;
+    // drawing options
+    drawBackground = true;
     drawTickCore1 = true;
-    drawTickCore2 = false;
+    drawTickCore2 = true;
+    drawColoredTicks = false;
 
     warningColor = QColor(Qt::yellow);
     errorColor = QColor(Qt::red);

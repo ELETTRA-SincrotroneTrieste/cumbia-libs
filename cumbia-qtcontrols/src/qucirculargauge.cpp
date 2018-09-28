@@ -134,6 +134,8 @@ void QuCircularGauge::m_configure(const CuData& da)
             setProperty(threshs[thnam], property(bound).toDouble());
         }
     }
+    if(da["display_unit"].toString().length() > 0)
+        setUnit(QString::fromStdString(da["display_unit"].toString()));
 }
 
 void QuCircularGauge::m_set_value(const CuVariant &val)

@@ -26,15 +26,15 @@ class QuCircularGaugeBase : public QWidget
     Q_PROPERTY(int angleStart READ angleStart WRITE setAngleStart DESIGNABLE true)
     Q_PROPERTY(int angleSpan READ angleSpan WRITE setAngleSpan DESIGNABLE true)
     Q_PROPERTY(int ticksCount READ ticksCount WRITE setTicksCount DESIGNABLE true)
+    Q_PROPERTY(int minorTicksCount READ minorTicksCount WRITE setMinorTicksCount DESIGNABLE true)
     Q_PROPERTY(double  tickLen READ tickLen WRITE setTickLen DESIGNABLE true)
     Q_PROPERTY(double  pivotCircleRadius READ pivotCircleRadius WRITE setPivotCircleRadius DESIGNABLE true)
     Q_PROPERTY(double  gaugeWidth READ gaugeWidth WRITE setGaugeWidth DESIGNABLE true)
     Q_PROPERTY(bool drawBackground READ drawBackgroundEnabled WRITE setDrawBackgroundEnabled DESIGNABLE true)
     Q_PROPERTY(bool drawTickCore1 READ drawTickCore1 WRITE setDrawTickCore1 DESIGNABLE true)
     Q_PROPERTY(bool drawTickCore2 READ drawTickCore2 WRITE setDrawTickCore2 DESIGNABLE true)
-    Q_PROPERTY(QString label READ label WRITE setLabel )
+    Q_PROPERTY(bool drawColoredTicks READ drawColoredTicks WRITE setDrawColoredTicks DESIGNABLE true)
     Q_PROPERTY(QString format READ format WRITE setFormat DESIGNABLE true)
-
 
     Q_PROPERTY(QColor textColor READ textColor WRITE setTextColor DESIGNABLE true)
     Q_PROPERTY(QColor warningColor READ warningColor WRITE setWarningColor DESIGNABLE true)
@@ -46,9 +46,12 @@ class QuCircularGaugeBase : public QWidget
     Q_PROPERTY(QColor needleColor READ needleColor WRITE setNeedleColor DESIGNABLE true)
     Q_PROPERTY(int backgroundColorAlpha READ backgroundColorAlpha WRITE setBackgroundColorAlpha DESIGNABLE true)
 
-
+    Q_PROPERTY(QString label READ label WRITE setLabel )
     Q_PROPERTY(LabelPosition labelPosition READ labelPosition WRITE setLabelPosition DESIGNABLE true)
     Q_PROPERTY(double labelDistFromCenter READ labelDistFromCenter WRITE setLabelDistFromCenter DESIGNABLE true)
+    Q_PROPERTY(QString labelValueFormat READ labelValueFormat WRITE setLabelValueFormat )
+    Q_PROPERTY(QString unit READ unit WRITE setUnit DESIGNABLE true)
+    Q_PROPERTY(double labelFontScale READ labelFontScale WRITE setLabelFontScale DESIGNABLE true)
 
 public:
     enum Quads { q1, q2, q3, q4,
@@ -71,6 +74,7 @@ public:
     int angleSpan() const;
     int angleStart() const;
     int ticksCount() const;
+    int minorTicksCount() const;
     double tickLen() const;
     double gaugeWidth() const;
     double pivotCircleRadius() const;
@@ -78,16 +82,17 @@ public:
     bool drawText() const;
     bool drawTickCore1() const;
     bool drawTickCore2() const;
+    bool drawColoredTicks() const;
     bool animationEnabled() const;
     qint64 maxAnimationDuration() const;
     LabelPosition labelPosition() const;
     double labelDistFromCenter() const;
+    double labelFontScale() const;
 
     double lowWarning();
-
     double highWarning();
-
     double lowError();
+    double highError();
 
     QColor textColor() const;
     QColor warningColor() const;
@@ -99,12 +104,13 @@ public:
     double backgroundGradientSpread() const;
     int backgroundColorAlpha() const;
 
-    double highError();
 
     double getPivotRadius();
 
     QString label() const;
     QString format() const;
+    QString labelValueFormat() const;
+    QString unit() const;
 
     QPointF mapTo(double val, int *angleSpan, double radius = -1.0, const QRectF &paint_area = QRectF());
 
@@ -112,7 +118,7 @@ public:
 
     double labelFontSize();
 
-    virtual QString formatLabel(double val) const;
+    virtual QString formatLabel(double val, const char *format) const;
 
     QString label(int i) const;
 
@@ -139,6 +145,7 @@ public slots:
     void setMaxValue(double max);
     void setLabel(const QString& l);
     void setTicksCount(int t);
+    void setMinorTicksCount(int t);
     void setTickLen(double tl);
     void setGaugeWidth(double w);
     void setPivotCircleRadius(double percent);
@@ -158,11 +165,15 @@ public slots:
     void setBackgroundColorAlpha(int a);
     void setDrawTickCore1(bool t);
     void setDrawTickCore2(bool t);
+    void setDrawColoredTicks(bool dr);
     void setDrawText(bool dt);
     void setAnimationEnabled(bool ae);
     void setMaxAnimationDuration(qint64 millis);
     void setLabelPosition(LabelPosition p);
     void setLabelDistFromCenter(double radius_percent);
+    void setLabelValueFormat(const QString& f);
+    void setUnit(const QString& u);
+    void setLabelFontScale(double factor);
 
     QString setFormat(const QString& f);
 

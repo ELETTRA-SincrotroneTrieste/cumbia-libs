@@ -11,16 +11,17 @@ public:
 
     double value, min, max, low_w, high_w, low_e, high_e;
     double value_anim; // value used for animation
-    int ticksCount;
+    int ticksCount, minorTicksCount;
     double tickLen;
     double backgroundGradientSpread, gaugeWidth;
     int backgroundColorAlpha;
-    bool drawBackground, drawTickCore1, drawTickCore2;
+    bool drawBackground, drawTickCore1, drawTickCore2, drawColoredTicks;
     bool animationEnabled;
     bool drawText;
     qint64 maximumAnimDuration;
 
     QString format;
+    QString unit;
 
     QStringList labelsCache;
     QColor errorColor, warningColor, normalColor, backgroundColor;
