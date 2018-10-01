@@ -298,7 +298,7 @@ bool QuCircularGaugeBase::drawColoredTicks() const
  */
 bool QuCircularGaugeBase::animationEnabled() const
 {
-    return d->quads;
+    return g_config->animationEnabled;
 }
 
 /*! \brief The maximum duration of an animation between two setValue calls
@@ -850,7 +850,6 @@ QList<int> QuCircularGaugeBase::updateLabelsDistrib() const
 
         a += arc;
     }
-    qDebug() << __FUNCTION__ << "labels distribution" << ld;
     return ld;
 }
 
@@ -901,7 +900,6 @@ void QuCircularGaugeBase::updateLabelsFontSize() {
             f.setPointSizeF(f.pointSizeF() - 0.5);
             w = QFontMetrics(f).width(d->cache.longestLabel);
         }
-        qDebug() << __FUNCTION__ << "point size" << f.pointSizeF() << "paint area" << rw << "w " << w;
     }
     d->cache.labelPointSize = f.pointSizeF();
     fm = QFontMetrics(f);
@@ -978,7 +976,6 @@ double QuCircularGaugeBase::m_getMarginH(double radius) {
     QFontMetrics fme(fo);
     double margin_h = static_cast<double>(fme.height());
     margin_h = qMax(margin_h, radius * d->pivotRadius);
-    printf("get_marginH radius is %f margin from font h %d margin h %f\n", radius, fme.height(), margin_h);
     return margin_h;
 }
 
@@ -1139,17 +1136,6 @@ void QuCircularGaugeBase::drawGauge(const QRectF &rect, int startAngle, int span
     pen.setColor(g_config->normalColor);
     p.setPen(pen);
     p.drawArc(ra, -(qMax(aspan, bspan)) * 16,  -16 * (qMin(cspan, dspan) - qMax(aspan, bspan)));
-
-    pen.setColor(QColor(Qt::darkGreen));
-    p.setPen(pen);
-    /* From qpainter doc
-     * Draws the arc defined by the given rectangle, startAngle and spanAngle.
-     * The startAngle and spanAngle must be specified in 1/16th of a degree, i.e.
-     * a full circle equals 5760 (16 * 360). Positive values for the
-     * angles mean counter-clockwise while negative values mean the clockwise direction.
-     * Zero degrees is at the 3 o'clock position.
-     */
-    // p.drawArc(ra, -startAngle * 16, -span * 16); // starts from 3 o'clock, while our startAngle
 }
 
 void QuCircularGaugeBase::drawPivot(const QRectF &rect, QPainter &p)
@@ -1485,7 +1471,7 @@ void QuCircularGaugeBase::updatePaintArea()
         area = QRectF(0, -r + r*qMax(-d->sin_a0, -d->sin_a1) + margin_h, 2 * r, 2 * r); // sin_a0<0 sin_a1<0
     }
 
-    qDebug() << __FUNCTION__  << "r:" << r_a  << area << "quadrant" << d->quad << "margins: w" << margin_w << "h" << margin_h;
+//    qDebug() << __FUNCTION__  << "r:" << r_a  << area << "quadrant" << d->quad << "margins: w" << margin_w << "h" << margin_h;
 
     d->cache.paintArea = QRectF(area.topLeft(), QSize(area.width() * 0.95, area.height() * 0.95));
     d->cache.paintArea = area;

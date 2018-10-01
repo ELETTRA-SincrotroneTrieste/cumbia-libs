@@ -606,7 +606,7 @@ QuCircularGaugeInterface::QuCircularGaugeInterface(QObject *parent, CumbiaPool *
 {
     d_name = "QuCircularGauge";
     d_include = "qucirculargauge.h";
-    d_icon = QPixmap(":pixmaps/elineargauge.png");
+    d_icon = QPixmap(":pixmaps/qucirculargauge.png");
     d_domXml =
             "<widget class=\"QuCircularGauge\" name=\"quCircularGauge\">\n"
             " <property name=\"geometry\">\n"
