@@ -40,7 +40,6 @@ public:
     QSize minSizeHint, sizeHint;
     QuCircularGaugeBase::Quads quad;
     double sin_a0, sin_a1, cos_a0, cos_a1;
-    double pivotRadius;
     QuGaugeCache cache;
     QPropertyAnimation *propertyAnimation;
     QDateTime lastValueDateTime;
@@ -54,7 +53,7 @@ QuCircularGaugeBase::QuCircularGaugeBase(QWidget *parent) : QWidget(parent)
     d = new QuCircularGaugeBasePrivate;
     d->startAngle = 120; // from 3 o' clock
     d->spanAngle = 300;
-    d->pivotRadius = 0.0; // do not draw pivot
+    g_config->pivotRadius = 0.0; // do not draw pivot
     d->propertyAnimation = NULL;
     d->labelPosition = NoLabel;
     d->labelDistFromCenter = 0.25;
@@ -195,14 +194,14 @@ double QuCircularGaugeBase::gaugeWidth() const
  * The exact formula used to calculate the pivot circle radius is as follows:
  *
  * \code
- * qMin(paintArea().width(), paintArea().height())/2.0 * d->pivotRadius
+ * qMin(paintArea().width(), paintArea().height())/2.0 * g_config->pivotRadius
  * \endcode
  *
  * @see getPivotRadius
  */
 double QuCircularGaugeBase::pivotCircleRadius() const
 {
-    return d->pivotRadius;
+    return g_config->pivotRadius;
 }
 
 /*! \brief returns true if a background is drawn, false otherwise
@@ -572,8 +571,8 @@ double QuCircularGaugeBase::highError() {
 
 double QuCircularGaugeBase::getPivotRadius()
 {
-    if(d->pivotRadius <= 1)
-        return qMin(paintArea().width(), paintArea().height())/2.0 * d->pivotRadius;
+    if(g_config->pivotRadius <= 1)
+        return qMin(paintArea().width(), paintArea().height())/2.0 * g_config->pivotRadius;
 }
 
 QString QuCircularGaugeBase::label() const
@@ -796,7 +795,7 @@ void QuCircularGaugeBase::setGaugeWidth(double w)
 void QuCircularGaugeBase::setPivotCircleRadius(double percent)
 {
     if(percent >= 0 && percent  <= 1.0) {
-        d->pivotRadius = percent;
+        g_config->pivotRadius = percent;
         updatePaintArea();
         regenerateCache();
         update();
@@ -966,7 +965,7 @@ double QuCircularGaugeBase::m_getMarginW(double radius)
     fo.setPointSizeF(d->cache.labelPointSize);
     QFontMetrics fme(fo);
     double margin_w = fme.width(d->cache.longestLabel) / 2;
-    margin_w = qMax(margin_w, radius * d->pivotRadius);
+    margin_w = qMax(margin_w, radius * g_config->pivotRadius);
     return margin_w;
 }
 
@@ -975,7 +974,7 @@ double QuCircularGaugeBase::m_getMarginH(double radius) {
     fo.setPointSizeF(d->cache.labelPointSize);
     QFontMetrics fme(fo);
     double margin_h = static_cast<double>(fme.height());
-    margin_h = qMax(margin_h, radius * d->pivotRadius);
+    margin_h = qMax(margin_h, radius * g_config->pivotRadius);
     return margin_h;
 }
 
@@ -1082,7 +1081,7 @@ void QuCircularGaugeBase::drawNeedle(const QPointF &end, int angle, const QRectF
     int centerAngle = 20;
     int radius = rect.width() / 2.0;
     int smallSide;
-    if(d->pivotRadius > 0)
+    if(g_config->pivotRadius > 0)
         smallSide = getPivotRadius();
     else
         smallSide = radius * 0.08;
@@ -1140,7 +1139,7 @@ void QuCircularGaugeBase::drawGauge(const QRectF &rect, int startAngle, int span
 
 void QuCircularGaugeBase::drawPivot(const QRectF &rect, QPainter &p)
 {
-    if(d->pivotRadius > 0) {
+    if(g_config->pivotRadius > 0) {
         QPointF c = rect.center();
         double piv_rad = getPivotRadius();
         QRadialGradient rg(c, piv_rad);

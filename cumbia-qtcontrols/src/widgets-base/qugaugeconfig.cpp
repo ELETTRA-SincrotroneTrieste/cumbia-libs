@@ -17,7 +17,8 @@ QuGaugeConfig::QuGaugeConfig()
 
     ticksCount = 10;
     minorTicksCount = 5;
-    tickLen = 0.08; // percentage of radius
+    tickLen = 0.08; // percentage of radius respect to min(width, height) (0.08 = 8% )
+    arrowSize = 1.0; // percentage of tickLen (1.0 = 100%)
     gaugeWidth = 6;
 
     format = "%.0f";
@@ -34,7 +35,11 @@ QuGaugeConfig::QuGaugeConfig()
     backgroundColor = QColor(Qt::white);
     backgroundGradientSpread = 0.9;
     backgroundColorAlpha = 100;
-    needleColor = QColor(Qt::red);
-    tickCoreColor = QColor(Qt::gray);
+    tickCoreColor = QColor(Qt::black);
     textColor = QColor(Qt::black);
+
+    needleColor = QColor(Qt::black);
+    arrowColor = QColor(Qt::white);
+    arrowColor.setAlphaF(0.8);
+    arrowPenWidth = 1.2f;
 }

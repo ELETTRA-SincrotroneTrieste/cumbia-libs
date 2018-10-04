@@ -3,6 +3,7 @@
 
 #include <QStringList>
 #include <QColor>
+#include <QPen>
 
 class QuGaugeConfig
 {
@@ -14,6 +15,7 @@ public:
     int ticksCount, minorTicksCount;
     double tickLen;
     double backgroundGradientSpread, gaugeWidth;
+    double pivotRadius;
     int backgroundColorAlpha;
     bool drawBackground, drawTickCore1, drawTickCore2, drawColoredTicks;
     bool animationEnabled;
@@ -27,6 +29,10 @@ public:
     QColor errorColor, warningColor, normalColor, backgroundColor;
     QColor needleColor, tickCoreColor;
     QColor textColor;
+
+    QColor arrowColor; // linear gauge only
+    double arrowSize; // linear gauge only
+    double arrowPenWidth; // linear gauge only
 };
 
 #endif // QUGAUGECONFIG_H
