@@ -622,7 +622,8 @@ QPointF QuCircularGaugeBase::mapTo(double val, int *angle, double radius, const 
 
     if(g_config->max >= g_config->min && val <= g_config->max && val >= g_config->min) {
         double a = d->startAngle;
-        double arc = qRound(a + d->spanAngle * (val - g_config->min) / (g_config->max - g_config->min)) % 360;
+        // allow arc > 360, do not apply modulus 360 to it
+        double arc = qRound(a + d->spanAngle * (val - g_config->min) / (g_config->max - g_config->min));
         if(angle)
             *angle = static_cast<int>(arc);
         arc = arc * M_PI / 180.0;

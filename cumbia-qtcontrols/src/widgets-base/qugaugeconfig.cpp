@@ -2,6 +2,7 @@
 
 QuGaugeConfig::QuGaugeConfig()
 {
+    minFontSize = 8;
     min = -1000;
     max = 1000;
     value = 0;
@@ -29,7 +30,7 @@ QuGaugeConfig::QuGaugeConfig()
     drawTickCore2 = true;
     drawColoredTicks = false;
 
-    warningColor = QColor(Qt::yellow);
+    warningColor = QColor("orange"); // http://www.december.com/html/spec/colorsvg.html
     errorColor = QColor(Qt::red);
     normalColor = QColor(Qt::green);
     backgroundColor = QColor(Qt::white);
@@ -42,4 +43,11 @@ QuGaugeConfig::QuGaugeConfig()
     arrowColor = QColor(Qt::white);
     arrowColor.setAlphaF(0.8);
     arrowPenWidth = 1.2f;
+    thermo_width = 0.2; // percentage of widget height
+
+    // Scalable Vector Graphics Color Names
+    // http://www.december.com/html/spec/colorsvg.html
+    thermoColor1 = QColor("dodgerblue");
+    thermoColor2 = QColor("deepskyblue");
+    thermoPenColor = QColor(Qt::white);
 }

@@ -17,6 +17,7 @@ public:
     double backgroundGradientSpread, gaugeWidth;
     double pivotRadius;
     int backgroundColorAlpha;
+    float minFontSize;
     bool drawBackground, drawTickCore1, drawTickCore2, drawColoredTicks;
     bool animationEnabled;
     bool drawText;
@@ -33,6 +34,8 @@ public:
     QColor arrowColor; // linear gauge only
     double arrowSize; // linear gauge only
     double arrowPenWidth; // linear gauge only
+    double thermo_width; // linear gauge, thermo indicator only
+    QColor thermoColor1, thermoColor2, thermoPenColor;
 };
 
 #endif // QUGAUGECONFIG_H
