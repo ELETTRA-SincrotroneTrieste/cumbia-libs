@@ -145,12 +145,12 @@ QString CuTControlsReader::source() const
  * This must be called from the main thread.
  *
  * \par Developer note
- *      Calls CumbiaTango::unlinkListener for  CuTangoActionI::AttConfig and CuTangoActionI::Reader action types
+ *      Calls CumbiaTango::unlinkListener for  CuTangoActionI::ReaderConfig and CuTangoActionI::Reader action types
  *      in a row.
  */
 void CuTControlsReader::unsetSource()
 {
-    d->cumbia_tango->unlinkListener(d->source.toStdString(), CuTangoActionI::AttConfig, d->tlistener);
+    d->cumbia_tango->unlinkListener(d->source.toStdString(), CuTangoActionI::ReaderConfig, d->tlistener);
     d->cumbia_tango->unlinkListener(d->source.toStdString(), CuTangoActionI::Reader, d->tlistener);
     d->source = QString();
 }
@@ -233,7 +233,7 @@ void CuTControlsReader::getData(CuData &d_ino) const
 void CuTControlsReader::setSource(const QString &s)
 {
     CuTControlsUtils tcu;
-    CuTangoAttConfFactory acf;
+    CuTReaderConfFactory acf;
     CuTangoReaderFactory readf;
     acf.setOptions(d->ta_options);
     readf.setOptions(d->ta_options);

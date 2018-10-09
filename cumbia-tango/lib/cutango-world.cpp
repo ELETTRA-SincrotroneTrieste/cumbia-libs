@@ -697,6 +697,7 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
             dout = dev->command_inout(cmdnam, din);
         }
         // if(point_info["out_type"].toLongInt() != Tango::DEV_VOID)
+        printf("%s has argout? %d\n", cmd.c_str(), has_argout);
         if(has_argout)
             extractData(&dout, data);
     }
@@ -704,7 +705,7 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
     {
         d->error = true;
         d->message = strerror(e);
-        printf("ERROR DEV FAILED cmdinout\n");
+        printf("ERROR DEV FAILED cmdinout for %s [%s]\n", cmd.c_str(), d->message.c_str());
     }
     // extractData does not set date/time information on data
     data.putTimestamp();

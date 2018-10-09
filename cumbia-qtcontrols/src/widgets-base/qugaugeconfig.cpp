@@ -40,7 +40,7 @@ QuGaugeConfig::QuGaugeConfig()
     textColor = QColor(Qt::black);
 
     needleColor = QColor(Qt::black);
-    arrowColor = QColor(Qt::white);
+    arrowColor = needleGuideColor = QColor(Qt::white);
     arrowColor.setAlphaF(0.8);
     arrowPenWidth = 1.2f;
     thermo_width = 0.2; // percentage of widget height

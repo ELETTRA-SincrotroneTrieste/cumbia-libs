@@ -37,7 +37,7 @@ public:
      *
      * the implementors must return one of these values in getType
      */
-    enum Type { Reader = 0, Writer, AttConfig, DbReadProp, DbWriteProp };
+    enum Type { Reader = 0, Writer, ReaderConfig, WriterConfig, DbReadProp, DbWriteProp };
 
     /*! \brief return a TSource object that stores information about the Tango source
      *

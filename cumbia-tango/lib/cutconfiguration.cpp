@@ -1,4 +1,4 @@
-#include "cutattconfiguration.h"
+#include "cutconfiguration.h"
 #include <culog.h>
 #include <cumacros.h>
 #include <cuserviceprovider.h>
@@ -7,15 +7,19 @@
 #include "cumbiatango.h"
 #include "tsource.h"
 #include "cudevicefactoryservice.h"
-#include "cutattconfigactivity.h"
+#include "cutconfigactivity.h"
 #include "cuactionfactoryservice.h"
 #include "cudatalistener.h"
 
 class CuTAttConfigurationPrivate
 {
 public:
+    CuTAttConfigurationPrivate(const TSource& t_src, CuTangoActionI::Type t) :
+        tsrc(t_src), type(t) {
+    }
+
     std::list<CuDataListener *> listeners;
-    TSource tsrc;
+    const TSource tsrc;
     CumbiaTango *cumbia_t;
     CuActivity *activity;
     bool exiting; // set to true by stop()
@@ -24,36 +28,37 @@ public:
     CuVariant write_val;
     std::vector<std::string> desired_props;
     CuData conf_data; // save locally
+    const CuTangoActionI::Type type;
 };
 
-CuTAttConfiguration::CuTAttConfiguration(const TSource& src,
-                                         CumbiaTango *ct)
+CuTConfiguration::CuTConfiguration(const TSource& src,
+                                   CumbiaTango *ct,
+                                   CuTangoActionI::Type t)
 {
-    d = new CuTAttConfigurationPrivate;
+    d = new CuTAttConfigurationPrivate(src, t); // src, t are const
     d->cumbia_t = ct;
-    d->tsrc = src;
     d->exiting = false;
 }
 
-CuTAttConfiguration::~CuTAttConfiguration()
+CuTConfiguration::~CuTConfiguration()
 {
     pdelete("~CuTAttConfiguration: %p", this);
     delete d;
 }
 
-void CuTAttConfiguration::setDesiredAttributeProperties(const std::vector<string> props)
+void CuTConfiguration::setDesiredAttributeProperties(const std::vector<string> props)
 {
     d->desired_props = props;
 }
 
-void CuTAttConfiguration::onProgress(int step, int total, const CuData &data)
+void CuTConfiguration::onProgress(int step, int total, const CuData &data)
 {
     (void) step; // unused
     (void) total;
     (void) data;
 }
 
-void CuTAttConfiguration::onResult(const CuData &data)
+void CuTConfiguration::onResult(const CuData &data)
 {
     d->conf_data = data;
     if(data["exit"].toBool()) // ! important: evaluate data["exit"] before deleting this
@@ -77,29 +82,29 @@ void CuTAttConfiguration::onResult(const CuData &data)
 /*! \brief unused. Complies with CuThreadListener interface
  *
  */
-void CuTAttConfiguration::onResult(const std::vector<CuData> &datalist)
+void CuTConfiguration::onResult(const std::vector<CuData> &datalist)
 {
     (void) datalist;
 }
 
-CuData CuTAttConfiguration::getToken() const
+CuData CuTConfiguration::getToken() const
 {
     CuData da("source", d->tsrc.getName());
     da["type"] = std::string("attconfig");
     return da;
 }
 
-TSource CuTAttConfiguration::getSource() const
+TSource CuTConfiguration::getSource() const
 {
     return d->tsrc;
 }
 
-CuTangoActionI::Type CuTAttConfiguration::getType() const
+CuTangoActionI::Type CuTConfiguration::getType() const
 {
-    return CuTangoActionI::AttConfig;
+    return d->type;
 }
 
-void CuTAttConfiguration::addDataListener(CuDataListener *l)
+void CuTConfiguration::addDataListener(CuDataListener *l)
 {
     std::list<CuDataListener *>::iterator it = d->listeners.begin();
     d->listeners.insert(it, l);
@@ -112,7 +117,7 @@ void CuTAttConfiguration::addDataListener(CuDataListener *l)
     }
 }
 
-void CuTAttConfiguration::removeDataListener(CuDataListener *l)
+void CuTConfiguration::removeDataListener(CuDataListener *l)
 {
     if(l->invalid()) {
         d->listeners.remove(l);
@@ -125,18 +130,18 @@ void CuTAttConfiguration::removeDataListener(CuDataListener *l)
         d->listeners.remove(l);
 }
 
-void CuTAttConfiguration::sendData(const CuData &) {
+void CuTConfiguration::sendData(const CuData &) {
 }
 
-void CuTAttConfiguration::getData(CuData &d_inout) const {
+void CuTConfiguration::getData(CuData &d_inout) const {
 
 }
 
-size_t CuTAttConfiguration::dataListenersCount() {
+size_t CuTConfiguration::dataListenersCount() {
     return d->listeners.size();
 }
 
-void CuTAttConfiguration::start()
+void CuTConfiguration::start()
 {
     CuDeviceFactoryService *df =
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
@@ -149,8 +154,11 @@ void CuTAttConfiguration::start()
     at["is_command"] = d->tsrc.getType() == TSource::Cmd;
 
     CuData tt("device", d->tsrc.getDeviceName()); /* thread token */
-    d->activity = new CuTAttConfigActivity(at, df);
-    static_cast<CuTAttConfigActivity *>(d->activity)->setDesiredAttributeProperties(d->desired_props);
+    CuTConfigActivity::Type t;
+    d->type == CuTangoActionI::ReaderConfig ? t = CuTConfigActivity::CuReaderConfigActivityType :
+            t = CuTConfigActivity::CuWriterConfigActivityType;
+    d->activity = new CuTConfigActivity(at, df, t);
+    static_cast<CuTConfigActivity *>(d->activity)->setDesiredAttributeProperties(d->desired_props);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
     d->cumbia_t->registerActivity(d->activity, this, tt, fi, bf);
@@ -162,7 +170,7 @@ void CuTAttConfiguration::start()
  * - sets the exiting flag to true
  * - calls Cumbia::unregisterActivity
  */
-void CuTAttConfiguration::stop()
+void CuTConfiguration::stop()
 {
     cuprintf("\e[1;35mCuTattConfigureation.stop called this %p activity %p d->exiting %d\e[0m\n", this, d->activity, d->exiting);
     if(!d->exiting) {
@@ -173,7 +181,7 @@ void CuTAttConfiguration::stop()
 
 /*! \brief CuActionFactory relies on this returning true to unregister the action
  */
-bool CuTAttConfiguration::exiting() const
+bool CuTConfiguration::exiting() const
 {
     return d->exiting;
 }

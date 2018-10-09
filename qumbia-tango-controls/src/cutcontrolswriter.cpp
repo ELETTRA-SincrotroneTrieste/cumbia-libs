@@ -141,7 +141,7 @@ QString CuTControlsWriter::target() const
  */
 void CuTControlsWriter::clearTarget()
 {
-    d->cumbia_tango->unlinkListener(d->target.toStdString(), CuTangoActionI::AttConfig, d->tlistener);
+    d->cumbia_tango->unlinkListener(d->target.toStdString(), CuTangoActionI::WriterConfig, d->tlistener);
     d->cumbia_tango->unlinkListener(d->target.toStdString(), CuTangoActionI::Writer, d->tlistener);
     d->target = QString();
 }
@@ -202,10 +202,10 @@ void CuTControlsWriter::getData(CuData & /*d_ino*/) const
 void CuTControlsWriter::setTarget(const QString &s)
 {
     CuTControlsUtils tcu;
-    CuTangoAttConfFactory att_conf_factory;
+    CuTWriterConfFactory w_conf_factory;
     CuData options;
     options["fetch_props"] = d->attr_props;
-    att_conf_factory.setOptions(options);
+    w_conf_factory.setOptions(options);
     d->target = tcu.replaceWildcards(s, qApp->arguments());
-    d->cumbia_tango->addAction(d->target.toStdString(), d->tlistener, att_conf_factory);
+    d->cumbia_tango->addAction(d->target.toStdString(), d->tlistener, w_conf_factory);
 }

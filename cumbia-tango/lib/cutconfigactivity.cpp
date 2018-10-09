@@ -1,4 +1,4 @@
-#include "cutattconfigactivity.h"
+#include "cutconfigactivity.h"
 #include <tango.h>
 #include <cumacros.h>
 #include "cudevicefactoryservice.h"
@@ -16,12 +16,14 @@ public:
     std::vector<string> props;
     bool exiting;
     int repeat, try_cnt;
+    CuTConfigActivity::Type type;
 };
 
-CuTAttConfigActivity::CuTAttConfigActivity(const CuData &tok, CuDeviceFactoryService *df) : CuActivity(tok)
+CuTConfigActivity::CuTConfigActivity(const CuData &tok, CuDeviceFactoryService *df, Type t) : CuActivity(tok)
 {
     d = new CuTAttConfigActivityPrivate;
     d->device_service = df;
+    d->type = t;
     d->tdev = NULL;
     d->err = false;
     d->other_thread_id = pthread_self();
@@ -32,39 +34,39 @@ CuTAttConfigActivity::CuTAttConfigActivity(const CuData &tok, CuDeviceFactorySer
     setFlag(CuActivity::CuADeleteOnExit, true);
 }
 
-void CuTAttConfigActivity::setDesiredAttributeProperties(const std::vector<string> &props)
+void CuTConfigActivity::setDesiredAttributeProperties(const std::vector<string> &props)
 {
     d->props = props;
 }
 
-CuTAttConfigActivity::~CuTAttConfigActivity()
+CuTConfigActivity::~CuTConfigActivity()
 {
     pdelete("CuTAttConfigActivity %p", this);
     delete d;
 }
 
-int CuTAttConfigActivity::getType() const
+int CuTConfigActivity::getType() const
 {
-    return CuAttConfigActivityType;
+    return d->type;
 }
 
-void CuTAttConfigActivity::event(CuActivityEvent *e)
+void CuTConfigActivity::event(CuActivityEvent *e)
 {
     (void )e;
 }
 
-bool CuTAttConfigActivity::matches(const CuData &token) const
+bool CuTConfigActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
     return token["src"] == mytok["src"] && mytok["activity"] == token["activity"];
 }
 
-int CuTAttConfigActivity::repeat() const
+int CuTConfigActivity::repeat() const
 {
     return -1;
 }
 
-void CuTAttConfigActivity::init()
+void CuTConfigActivity::init()
 {
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
@@ -78,7 +80,7 @@ void CuTAttConfigActivity::init()
     tk.putTimestamp();
 }
 
-void CuTAttConfigActivity::execute()
+void CuTConfigActivity::execute()
 {
     assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
@@ -100,8 +102,12 @@ void CuTAttConfigActivity::execute()
         if(dev && cmd)
         {
             success = utils.get_command_info(dev, point, at);
-            if(success) {
-                success = utils.cmd_inout(dev, point, at);
+            if(success && d->type == CuReaderConfigActivityType) {
+                printf("\e[1;32mCALLING cmd_inout from CuTAttConfigActivity [%s]!!!!\e[0m\n", point.c_str());
+                // success = utils.cmd_inout(dev, point, at);
+            }
+            else if(success && d->type == CuWriterConfigActivityType) {
+                printf("\e[1;35mNOT CALLING cmd_inout cuz writer!!!! %s\e[0m\n", point.c_str());
             }
         }
         else if(dev)
@@ -126,7 +132,7 @@ void CuTAttConfigActivity::execute()
     }
 }
 
-void CuTAttConfigActivity::onExit()
+void CuTConfigActivity::onExit()
 {
     assert(d->my_thread_id == pthread_self());
     if(!d->exiting)

@@ -54,24 +54,42 @@ private:
     CuData options;
 };
 
-class CuTangoAttConfFactory : public CuTangoActionFactoryI
+class CuTConfFactoryBase : public CuTangoActionFactoryI
 {
 public:
-    CuTangoAttConfFactory();
 
-    virtual ~CuTangoAttConfFactory();
+    virtual ~CuTConfFactoryBase();
 
     void setOptions(const CuData &o);
+
+    CuData options() const;
+
+private:
+    std::vector<std::string> m_props;
+    CuData m_options;
+};
+
+class CuTReaderConfFactory : public CuTConfFactoryBase
+{
+public:
 
     // CuTangoActionFactoryI interface
 public:
     CuTangoActionI *create(const std::string &s, CumbiaTango *ct) const;
 
     CuTangoActionI::Type getType() const;
-
-private:
-    std::vector<std::string> m_props;
-    CuData options;
 };
+
+class CuTWriterConfFactory : public CuTConfFactoryBase
+{
+public:
+
+    // CuTangoActionFactoryI interface
+public:
+    CuTangoActionI *create(const std::string &s, CumbiaTango *ct) const;
+
+    CuTangoActionI::Type getType() const;
+};
+
 
 #endif // CUTANGOACTIONFACTORIES_H

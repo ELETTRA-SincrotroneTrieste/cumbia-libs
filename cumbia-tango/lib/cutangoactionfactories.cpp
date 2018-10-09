@@ -1,7 +1,7 @@
 #include "cutangoactionfactories.h"
 #include "cutreader.h"
 #include "cutwriter.h"
-#include "cutattconfiguration.h"
+#include "cutconfiguration.h"
 #include <cumacros.h>
 #include <tango.h>
 
@@ -99,31 +99,48 @@ CuTangoActionI::Type CuTangoWriterFactory::getType() const
     return CuTangoActionI::Writer;
 }
 
-CuTangoAttConfFactory::CuTangoAttConfFactory()
-{
+// Configuration base class
+//
+CuTConfFactoryBase::~CuTConfFactoryBase() {
 
 }
 
-CuTangoAttConfFactory::~CuTangoAttConfFactory()
+void CuTConfFactoryBase::setOptions(const CuData &o)
 {
-
+    m_options = o;
 }
 
-void CuTangoAttConfFactory::setOptions(const CuData &o)
+CuData CuTConfFactoryBase::options() const
 {
-    options = o;
+    return m_options;
 }
 
-CuTangoActionI *CuTangoAttConfFactory::create(const std::string &s, CumbiaTango *ct) const
+// Configuration: Reader
+CuTangoActionI *CuTReaderConfFactory::create(const std::string &s, CumbiaTango *ct) const
 {
-    CuTAttConfiguration *w = new CuTAttConfiguration(s, ct);
-    if(options.containsKey("fetch_props"))
-        w->setDesiredAttributeProperties(options["fetch_props"].toStringVector());
+    CuTConfiguration *w = new CuTConfiguration(s, ct, CuTangoActionI::ReaderConfig);
+    const CuData& op = options();
+    if(op.containsKey("fetch_props"))
+        w->setDesiredAttributeProperties(op["fetch_props"].toStringVector());
     return w;
 }
 
-CuTangoActionI::Type CuTangoAttConfFactory::getType() const
+CuTangoActionI::Type CuTReaderConfFactory::getType() const
 {
-    return CuTangoActionI::AttConfig;
+    return CuTangoActionI::ReaderConfig;
 }
 
+// Configuration: Writer
+CuTangoActionI *CuTWriterConfFactory::create(const string &s, CumbiaTango *ct) const
+{
+    CuTConfiguration *w = new CuTConfiguration(s, ct, CuTangoActionI::WriterConfig);
+    const CuData& op = options();
+    if(op.containsKey("fetch_props"))
+        w->setDesiredAttributeProperties(op["fetch_props"].toStringVector());
+    return w;
+}
+
+CuTangoActionI::Type CuTWriterConfFactory::getType() const
+{
+    return CuTangoActionI::WriterConfig;
+}

@@ -6,16 +6,16 @@
 class CuTAttConfigActivityPrivate;
 class CuDeviceFactoryService;
 
-class CuTAttConfigActivity : public CuActivity
+class CuTConfigActivity : public CuActivity
 {
 public:
-    enum Type { CuAttConfigActivityType = CuActivity::User + 5 };
+    enum Type { CuReaderConfigActivityType = CuActivity::User + 5,  CuWriterConfigActivityType };
 
-    CuTAttConfigActivity(const CuData& tok, CuDeviceFactoryService *df);
+    CuTConfigActivity(const CuData& tok, CuDeviceFactoryService *df, Type t);
 
     void setDesiredAttributeProperties(const std::vector<std::string> &props);
 
-    virtual ~CuTAttConfigActivity();
+    virtual ~CuTConfigActivity();
 
     // CuActivity interface
 public:

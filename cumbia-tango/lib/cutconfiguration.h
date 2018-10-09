@@ -5,14 +5,15 @@
 
 class CuTAttConfigurationPrivate;
 
-class CuTAttConfiguration : public CuTangoActionI
+class CuTConfiguration : public CuTangoActionI
 {
 public:
 
-    CuTAttConfiguration(const TSource& src,
-                        CumbiaTango *ct);
+    CuTConfiguration(const TSource& src,
+                        CumbiaTango *ct,
+                     CuTangoActionI::Type t);
 
-    virtual ~CuTAttConfiguration();
+    virtual ~CuTConfiguration();
 
     void setDesiredAttributeProperties(const std::vector<std::string> props);
 
