@@ -41,6 +41,15 @@ public:
 
     void setWriteValue(const CuVariant &write_val);
 
+    /*! \brief stores the result of get_attribute_config or get_command_info
+     *
+     * This methods allows to save configuration data obtained from the Tango database once
+     * at setup time.
+     *
+     * @param CuData data decoded from either get_attribute_config or get_command_info calls
+     */
+    void setConfiguration(const CuData& configuration);
+
     // CuTangoActionFactoryI interface
 public:
     CuTangoActionI *create(const std::string &s, CumbiaTango *ct) const;
@@ -51,7 +60,7 @@ public:
 
 private:
     CuVariant m_write_val;
-    CuData options;
+    CuData options, m_configuration;
 };
 
 class CuTConfFactoryBase : public CuTangoActionFactoryI

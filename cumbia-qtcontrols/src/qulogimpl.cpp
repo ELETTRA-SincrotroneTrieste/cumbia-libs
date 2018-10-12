@@ -71,7 +71,8 @@ void QuErrorDialog::add(const QuLogEntry &l)
 
     par->setExpanded(true);
     QString shortMsg = l.message;
-    shortMsg.truncate(50);
+    shortMsg.replace("\n", "/");
+    shortMsg.truncate(200);
     QTreeWidgetItem *i = new QTreeWidgetItem(par, QStringList() << l.type << shortMsg );
     i->setToolTip(1, l.message);
     if(l.type == "ERR")

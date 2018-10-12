@@ -38,6 +38,11 @@ public slots:
 
     virtual void execute(double val);
 
+    void onAnimationValueChanged(const QVariant &v);
+
+protected:
+    void paintEvent(QPaintEvent *pe);
+
 private:
     QuApplyNumericPrivate *d;
 

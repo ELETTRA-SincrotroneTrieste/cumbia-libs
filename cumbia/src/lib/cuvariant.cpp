@@ -1421,8 +1421,8 @@ std::vector<std::string> CuVariant::toStringVector(bool *ok) const
         *ok = success;
     }
     if(!success) {
-        perr("CuVariant::toStringVector: cannot convert type %s format %s to string vector",
-             dataFormatStr(d->format).c_str(), dataTypeStr(d->type).c_str());
+        perr("CuVariant::toStringVector: cannot convert type %s format %s to string vector [%s]",
+             dataFormatStr(d->format).c_str(), dataTypeStr(d->type).c_str(), toString().c_str());
     }
     return ret;
 }

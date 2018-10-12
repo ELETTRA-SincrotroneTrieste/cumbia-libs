@@ -158,6 +158,7 @@ void CuTControlsWriter::execute()
 {
     CuTangoWriterFactory wtf;
     wtf.setWriteValue(getArgs());
+    wtf.setConfiguration(getConfiguration());
     d->cumbia_tango->addAction(d->target.toStdString(), d->tlistener, wtf);
 }
 

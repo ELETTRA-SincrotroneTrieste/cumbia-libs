@@ -11,7 +11,10 @@
 #include "cucontext.h"
 #include "qupalette.h"
 #include "qulogimpl.h"
+#include "quanimation.h"
 #include <QtDebug>
+#include <QPaintEvent>
+#include <QPainter>
 
 /// @private
 class QuButtonPrivate
@@ -22,6 +25,8 @@ public:
     bool write_ok;
     QuPalette palette;
     CuLog *log;
+    float anim_draw_penwidthF;
+    QuAnimation animation;
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsWriterFactoryI interface.
@@ -64,9 +69,11 @@ void QuButton::m_init(const QString& text)
     connect(this, SIGNAL(clicked()), this, SLOT(execute()));
     d->auto_configure = true;
     d->write_ok = false;
+    d->anim_draw_penwidthF = 2.0;
     setText(text);
+    d->animation.installOn(this);
+    d->animation.setType(QuAnimation::RayOfLight);
 }
-
 
 /*! \brief executes the target specified with setTarget
  *
@@ -75,6 +82,8 @@ void QuButton::m_init(const QString& text)
  */
 void QuButton::execute()
 {
+    d->animation.setPenColor(QColor(Qt::gray));
+    d->animation.loop(QuAnimation::RayOfLight);
     CuControlsUtils cu;
     CuVariant args = cu.getArgs(target(), this);
     CuControlsWriterA *w = d->context->getWriter();
@@ -92,6 +101,20 @@ void QuButton::setTarget(const QString &targets)
 {
     CuControlsWriterA * w = d->context->replace_writer(targets.toStdString(), this);
     if(w) w->setTarget(targets);
+}
+
+void QuButton::onAnimationValueChanged(const QVariant &v)
+{
+    // optimize animation paint area with the clipped rect provided by QuAnimation::clippedRect
+    update();
+}
+
+void QuButton::paintEvent(QPaintEvent *pe)
+{
+    QPushButton::paintEvent(pe);
+    if(d->animation.currentValue() != 0.0) {
+        d->animation.draw(this, pe->rect());
+    }
 }
 
 /** \brief get the name of the target
@@ -116,7 +139,12 @@ QString QuButton::target() const
  */
 void QuButton::onUpdate(const CuData &data)
 {
-    if(data["err"].toBool())
+    bool is_config = data["type"].toString() == std::string("property");
+    if(!data["is_result"].toBool() && !is_config)
+        return;
+
+    d->write_ok = !data["err"].toBool();
+    if(!d->write_ok)
     {
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
@@ -128,12 +156,19 @@ void QuButton::onUpdate(const CuData &data)
             log->write(QString("QuButton [" + objectName() + "]").toStdString(), data["msg"].toString(), CuLog::Error, CuLog::Write);
         }
     }
-    else if(data["type"].toString() == std::string("property")) {
-        printf("QuButton.onUpdate type property. Try to initialize objects\n");
+    else if(is_config) {
         CuVariant val = data["w_value"];
-        CuControlsUtils cu;
-        cu.initObjects(target(), this, val);
+        if(val.isValid()) {
+            CuControlsUtils cu;
+            cu.initObjects(target(), this, val);
+        }
+        CuControlsWriterA *w = d->context->getWriter();
+        if(w)
+            w->saveConfiguration(data);
     }
+    d->write_ok ? d->animation.setPenColor(QColor(Qt::green)) : d->animation.setPenColor(QColor(Qt::red));
+    d->write_ok ? d->animation.setDuration(1500) : d->animation.setDuration(3000);
+    d->animation.start();
 }
 
 /** \brief Returns a pointer to the CuContext in use.

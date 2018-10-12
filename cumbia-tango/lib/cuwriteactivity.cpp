@@ -18,11 +18,13 @@ public:
 };
 
 CuWriteActivity::CuWriteActivity(const CuData &token,
-                                 CuDeviceFactoryService *df)
+                                 CuDeviceFactoryService *df,
+                                 const CuData& db_config)
     : CuIsolatedActivity(token)
 {
     d = new CuWriteActivityPrivate;
     d->device_service = df;
+    d->point_info = db_config;
     d->tdev = NULL;
     d->err = false;
     setFlag(CuActivity::CuAUnregisterAfterExec, true);
@@ -68,12 +70,17 @@ void CuWriteActivity::execute()
     {
         Tango::DeviceProxy *dev = d->tdev->getDevice();
         CuTangoWorld tangoworld;
-        bool success;
+        bool success = !d->point_info.isEmpty();
         tangoworld.fillThreadInfo(at, this); /* put thread and activity addresses as info */
         if(dev && at["cmd"].toBool())
         {
-            if(d->point_info.isEmpty())
+            if(d->point_info.isEmpty()) {
                 success = tangoworld.get_command_info(d->tdev->getDevice(), at["point"].toString(), d->point_info);
+                printf("\e[1;35m :-/ point info not found for COMMAND %s\e[0m\n", at["src"].toString().c_str());
+            }
+            else
+                printf("\e[1;32mCuWriteActivity::execute VERY GOOD! using saved point info for COMMAND %s {%s}!\e[0m\n",
+                   at["src"].toString().c_str(), d->point_info.toString().c_str());
             if(success)
             {
                 Tango::DeviceData din = tangoworld.toDeviceData(at["write_value"], d->point_info);
@@ -84,8 +91,14 @@ void CuWriteActivity::execute()
         else if(dev && !at["cmd"].toBool()) /* attribute */
         {
             bool skip_read_attribute = true;
-            if(d->point_info.isEmpty())
+            if(d->point_info.isEmpty()) {
                 success = tangoworld.get_att_config(d->tdev->getDevice(), at["point"].toString(), d->point_info, skip_read_attribute);
+                printf("\e[1;35m :-/ point info not found for ATTRIBUTE %s\e[0m\n", at["src"].toString().c_str());
+            }
+            else
+                printf("\e[1;32mCuWriteActivity::execute VERY GOOD! using saved point info for ATTRIBUTE %s {%s}!\e[0m\n",
+                   at["src"].toString().c_str(), d->point_info.toString().c_str());
+
             if(success)
                 success = tangoworld.write_att(dev, at["point"].toString(), at["write_value"], d->point_info, at);
         }
@@ -100,10 +113,13 @@ void CuWriteActivity::execute()
             d->err = tangoworld.error();
         }
 
-        printf("\e[0;33m write operation: data is : %s\e[0m\n", at.toString().c_str());
-        // don't pulish result: we exit after execute. Publish there.
-        // publishResult(at);
     }
+    // is_result flag is checked within the listener's onUpdate
+    at["err"] = d->err;
+    at["msg"] = d->msg;
+    at["mode"] = "WRITE";
+    at["is_result"] = true;
+    publishResult(at);
 }
 
 void CuWriteActivity::onExit()

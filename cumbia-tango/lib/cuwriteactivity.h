@@ -10,7 +10,8 @@ class CuWriteActivity : public CuIsolatedActivity
 {
 public:
     CuWriteActivity(const CuData &token,
-                    CuDeviceFactoryService *df);
+                    CuDeviceFactoryService *df,
+                    const CuData &db_config);
 
     virtual ~CuWriteActivity();
 

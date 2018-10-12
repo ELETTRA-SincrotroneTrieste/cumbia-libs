@@ -75,7 +75,8 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/qulineargauge.cpp \
     src/widgets-base/qucirculargaugebase.cpp \
     src/widgets-base/qugaugeconfig.cpp \
-    src/widgets-base/qulineargaugebase.cpp
+    src/widgets-base/qulineargaugebase.cpp \
+    src/quanimation.cpp
 
 HEADERS += cumbiaqtcontrols.h\
         cumbia-qtcontrols_global.h \
@@ -153,7 +154,8 @@ HEADERS += cumbiaqtcontrols.h\
     src/widgets-base/qucirculargaugebase.h \
     src/widgets-base/qucirculargaugebase.h \
     src/widgets-base/qugaugeconfig.h \
-    src/widgets-base/qulineargaugebase.h
+    src/widgets-base/qulineargaugebase.h \
+    src/quanimation.h
 
 unix:!android-g++ {
 

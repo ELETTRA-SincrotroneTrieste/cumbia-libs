@@ -5,10 +5,10 @@
 #include <vector>
 #include <assert.h>
 #include <cuvariant.h>
+#include <cudata.h>
 
 class QString;
 class Cumbia;
-class CuData;
 class CuDataListener;
 class QStringList;
 
@@ -19,6 +19,7 @@ public:
     Cumbia* cumbia;
     CuDataListener *listener;
     CuVariant argins;
+    CuData configuration;
 };
 
 /*! \brief abstract class defining an interface for cumbia-qtcontrols writers
@@ -134,6 +135,22 @@ public:
      * @return the CuDataListener that receives new data updates.
      */
     CuDataListener *getDataListener() const { return d->listener; }
+
+    /*! \brief returns the CuData previously saved with saveConfiguration
+     *
+     * Writers will typically load configuration from a database at creation time and store it
+     * across following execute calls.
+     *
+     * @see saveConfiguration
+     */
+    CuData getConfiguration() const { return d->configuration; }
+
+    /*! \brief when writer configuration is fetched (e.g. from a database), it can be saved
+     *         in order to avoid database calls during the execution
+     *
+     * @param da configuration data
+     */
+    void saveConfiguration(const CuData& da) { d->configuration = da; }
 
 private:
     CuControlsWriterAbstractPrivate *d;

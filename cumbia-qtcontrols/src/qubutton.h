@@ -41,11 +41,16 @@ public slots:
 
     void setTarget(const QString& target);
 
+protected:
+    void paintEvent(QPaintEvent *pe);
 
 private:
     QuButtonPrivate *d;
 
     void m_init(const QString& text);
+
+private slots:
+    void onAnimationValueChanged(const QVariant& v);
 
     // CuTangoListener interface
 public:

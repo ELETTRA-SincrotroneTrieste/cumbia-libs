@@ -165,6 +165,8 @@ public:
     QSize sizeHint() const;
 
     QSize minimumSizeHint() const;
+
+    QWidget *getButton() const { return button; }
 	
 protected:
 

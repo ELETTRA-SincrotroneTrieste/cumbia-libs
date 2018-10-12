@@ -43,6 +43,20 @@ public:
         return din;
     }
 
+    /*! \brief returns true if this CuData input argument list is empty
+     *
+     * @return true if CmdData was build with empty args, false otherwise.
+     *
+     * This can be considered equivalent to testing Tango::DeviceData::is_empty()
+     *
+     * \note Tango::DeviceData::is_empty throws an exception unless
+     *       Tango::DeviceData::reset_exceptions(DeviceData::isempty_flag) is called
+     *       on the DeviceData itself
+     */
+    bool hasInputArgs() const {
+        return argins.size() == 0;
+    }
+
     CuData cmdinfo;
     Tango::DeviceData din;
     bool is_empty;
@@ -283,15 +297,9 @@ void CuPollingActivity::execute()
             //                   res["device"].toString().c_str(), getTimeout(), action_ptr, tsrc.getName().c_str());
             CmdData& cmd_data = d->din_cache[srcnam];
             if(dev && cmd_data.is_empty) {
-                //            printf("- get_command info....\n");
-                cmd_success = tangoworld.get_command_info(d->tdev->getDevice(), point, (*results)[i]);
-                //            printf("- got_command info....\n");
-                //            printf("1. got command_info cmd_success %d\n", cmd_success);
+                cmd_success = tangoworld.get_command_info(dev, point, (*results)[i]);
                 if(cmd_success) {
-                    //                printf("- allocating CmdData and inserting into cache....\n");
                     d->din_cache[srcnam] = CmdData((*results)[i], tangoworld.toDeviceData(argins, (*results)[i]), argins);
-                    //                printf("- done allocating  and inserted cmddata is it there ? empty %d\n", d->din_cache[srcnam].is_empty);
-
                 }
             }
             if(dev && cmd_success) {  // do not try command_inout if no success so far
@@ -377,10 +385,10 @@ void CuPollingActivity::m_registerAction(const TSource& ts, CuTangoActionI *a)
     //        d->cmd_data[d->cmd_data_idx++] = adata;
     //    else
     //        d->att_data[d->att_data_idx++] = adata;
-    if(d->actions_map.find(ts.getPoint()) != d->actions_map.end())
+    if(d->actions_map.find(ts.getName()) != d->actions_map.end())
         perr("CuPollingActivity %p m_registerAction: source \"%s\" period %d already registered", this, ts.getName().c_str(), getTimeout());
     else {
-        d->actions_map.insert(std::pair<const std::string, const ActionData>(ts.getPoint(), adata)); // multimap
+        d->actions_map.insert(std::pair<const std::string, const ActionData>(ts.getName(), adata)); // multimap
         pgreentmp(" + CuPollingActivity %p event: added %s to poller\n", this, ts.toString().c_str());
     }
 }
@@ -390,7 +398,7 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts)
 
     std::multimap< const std::string, const ActionData>::iterator it = d->actions_map.begin();
     while(it != d->actions_map.end()) {
-        if(it->first == ts.getPoint() && it->second.tsrc == ts) {
+        if(it->first == ts.getName() && it->second.tsrc == ts) {
             it = d->actions_map.erase(it);
             predtmp(" - CuPollingActivity %p event: removed %s from poller\n",this,  ts.toString().c_str());
         }

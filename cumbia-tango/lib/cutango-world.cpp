@@ -120,17 +120,28 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
         }
         case Tango::DEV_LONG:
         {
-            printf("extractData DEV_LONG\n");
-            long int temp;
+            Tango::DevLong temp;
             *data >> temp;
             da["value"] = (long) temp;
             break;
         }
+        case Tango::DEV_LONG64: {
+            long int temp;
+            *data >> temp;
+            da["value"] = temp;
+            break;
+        }
         case Tango::DEV_ULONG:
         {
-            unsigned long temp;
+            Tango::DevULong temp;
             *data >> temp;
-            da["value"] = (unsigned long) temp;
+            da["value"] = static_cast<unsigned long> (temp);
+            break;
+        }
+        case Tango::DEV_ULONG64: {
+            long unsigned int temp;
+            *data >> temp;
+            da["value"] = temp;
             break;
         }
         case Tango::DEV_FLOAT:
@@ -640,7 +651,6 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         devattr = dev->read_attributes(attrs);
         for(size_t i = 0; i < devattr->size(); i++) {
             (*reslist)[results_offset] = std::move(att_datalist[i]);
-            printf("reslist partial %s\n", (*reslist)[results_offset].toString().c_str());
             p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
             extractData(p_da, (*reslist)[results_offset]);
@@ -655,7 +665,6 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
     {
         d->error = true;
         d->message = strerror(e);
-        printf("\e[1;31mDevFailed in read_attributes: %s devattr %p\n\e[0m", d->message.c_str(), devattr);
         for(size_t i = 0; i < attrs.size(); i++) {
             (*reslist)[results_offset] = std::move(att_datalist[i]);
             (*reslist)[results_offset]["err"] = d->error;
@@ -690,6 +699,8 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
     {
         std::string cmdnam(cmd);
         Tango::DeviceData dout;
+        // prevent DeviceData::is_empty from throwing exception!
+        din.reset_exceptions(Tango::DeviceData::isempty_flag);
         if(din.is_empty()) {
             dout = dev->command_inout(cmdnam);
         }
@@ -697,7 +708,6 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
             dout = dev->command_inout(cmdnam, din);
         }
         // if(point_info["out_type"].toLongInt() != Tango::DEV_VOID)
-        printf("%s has argout? %d\n", cmd.c_str(), has_argout);
         if(has_argout)
             extractData(&dout, data);
     }
@@ -705,7 +715,6 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
     {
         d->error = true;
         d->message = strerror(e);
-        printf("ERROR DEV FAILED cmdinout for %s [%s]\n", cmd.c_str(), d->message.c_str());
     }
     // extractData does not set date/time information on data
     data.putTimestamp();
@@ -727,12 +736,14 @@ bool CuTangoWorld::write_att(Tango::DeviceProxy *dev,
         Tango::DeviceAttribute da = toDeviceAttribute(attnam, argins, point_info);
         if(!d->error)
         {
+            printf("wriging \e[1;31mattribute %s\e[0m...\n\n", attnam.c_str());
             dev->write_attribute(da);
             d->message = "successfully written \"" + attnam + "\" on dev \"" + data["device"].toString() + "\"";
         }
     }
     catch(Tango::DevFailed &e)
     {
+        printf("caught exception while wriging attribute %s...\n", attnam.c_str());
         d->error = true;
         d->message = strerror(e);
     }
@@ -780,13 +791,16 @@ bool CuTangoWorld::get_att_config(Tango::DeviceProxy *dev, const string &attribu
     {
         try
         {
+            printf("before get_attribute_config for %s...\n", attribute.c_str());
             aiex = dev->get_attribute_config(attribute);
             fillFromAttributeConfig(aiex, dres);
+            printf("after get_attribute_config for %s...\n", attribute.c_str());
             d->message = "successfully got configuration for " + dres["src"].toString();
             return true;
         }
         catch(Tango::DevFailed &e)
         {
+            printf("failed get_attribute_config for %s\n", attribute.c_str());
             d->error = true;
             d->message = strerror(e);
         }
@@ -984,8 +998,8 @@ bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res,
 
 bool CuTangoWorld::source_valid(const string &src)
 {
-    //  (tango://){0,1}([A-Za-z_0-9\.]*[:]{1}[0-9]+[/]){0,1}(([A-Za-z_0-9\.]+/[A-Za-z_0-9\.]+/[A-Za-z_0-9\.]+([/]{1,1}|[->]{2,2})[A-Za-z_0-9\.]+)([\(]{1}[&A-Za-z_0-9\\.,]+[\)]){0,1})    const char* SOURCE_REGEXP = "(tango://){0,1}"
-    std::regex re = std::regex("(tango://){0,1}([A-Za-z_0-9\\.]*[:]{1}[0-9]+[/]){0,1}(([A-Za-z_0-9\\.]+/[A-Za-z_0-9\\.]+/[A-Za-z_0-9\\.]+([/]{1,1}|[->]{2,2})[A-Za-z_0-9\\.]+)([\\(]{1}[&A-Za-z_0-9\\\\.,]+[\\)]){0,1})");
+    //  (tango://){0,1}([A-Za-z_0-9\.]*[:]{1}[0-9]+[/]){0,1}(([A-Za-z_0-9\.]+/[A-Za-z_0-9\.]+/[A-Za-z_0-9\.]+([/]{1,1}|[->]{2,2})[A-Za-z_0-9\.]+)([\(]{1}[&A-Za-z_0-9\-\\.,]+[\)]){0,1})    const char* SOURCE_REGEXP = "(tango://){0,1}"
+    std::regex re = std::regex("(tango://){0,1}([A-Za-z_0-9\\.]*[:]{1}[0-9]+[/]){0,1}(([A-Za-z_0-9\\.]+/[A-Za-z_0-9\\.]+/[A-Za-z_0-9\\.]+([/]{1,1}|[->]{2,2})[A-Za-z_0-9\\.]+)([\\(]{1}[&A-Za-z_0-9\\-\\\\.,]+[\\)]){0,1})");
     std::smatch m;
     return std::regex_match(src, m, re);
 }
@@ -1164,8 +1178,9 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const std::vector<std::string> &arg
     d->message = "";
     long in_type = cmdinfo["in_type"].toLongInt();
     Tango::DeviceData dd;
-    if(argins.size() == 0)
+    if(argins.size() == 0) {
         return dd;
+    }
 
     std::string v = argins[0];
     try
@@ -1282,15 +1297,15 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const std::vector<std::string> &arg
     catch(const std::invalid_argument& ia)
     {
         d->error = true;
-        d->message = "CuTangoWorld.toDeviceData: cannot convert argins to type " +
+        d->message = "CuTangoWorld.toDeviceData: cannot convert argins \"" + v + "\" to type " +
                 std::to_string(in_type) + ": invalid argument: " + ia.what();
         perr("%s", d->message.c_str());
     }
     catch(const std::out_of_range& ore)
     {
         d->error = true;
-        d->message = "CuTangoWorld.toDeviceData: cannot convert argins to type " +
-                std::to_string(in_type) + ": invalid argument: " + ore.what();
+        d->message = "CuTangoWorld.toDeviceData: cannot convert argins \"" + v + "\" to type " +
+                 std::to_string(in_type) + ": invalid argument: " + ore.what();
         perr("%s", d->message.c_str());
     }
     return dd;

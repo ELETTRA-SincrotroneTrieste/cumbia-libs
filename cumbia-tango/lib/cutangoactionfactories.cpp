@@ -87,9 +87,15 @@ void CuTangoWriterFactory::setWriteValue(const CuVariant &write_val)
     m_write_val = write_val;
 }
 
+void CuTangoWriterFactory::setConfiguration(const CuData &configuration)
+{
+    m_configuration = configuration;
+}
+
 CuTangoActionI *CuTangoWriterFactory::create(const std::string &s, CumbiaTango *ct) const
 {
     CuTWriter *w = new CuTWriter(s, ct);
+    w->setConfiguration(m_configuration);
     w->setWriteValue(m_write_val);
     return w;
 }

@@ -13,6 +13,7 @@ public:
     virtual ~CuTWriter();
 
     void setWriteValue(const CuVariant& wval);
+    void setConfiguration(const CuData &dbc);
 
     // CuThreadListener interface
 public:
