@@ -50,8 +50,8 @@ void QuAnimation::loop(Type t)
  */
 void QuAnimation::start()
 {
-    printf("\e[0;36mstart animation: status %d loopCnt %d/%d value %f\e[0m\n",
-           d->qv_anim.state(), d->qv_anim.loopCount(), d->qv_anim.currentLoop(), currentValue());
+    printf("\e[0;36mstart animation: status %d current loop %d/%d value %f\e[0m\n",
+           d->qv_anim.state(),d->qv_anim.currentLoop(), d->qv_anim.loopCount(),  currentValue());
     if(d->qv_anim.state() != QAbstractAnimation::Stopped && d->qv_anim.loopCount() > 0) {
         printf("\e[1;36mSTOPPING ANIMATION cause its loop cnt is %d\e[0m\n", d->qv_anim.loopCount());
         d->qv_anim.stop();
