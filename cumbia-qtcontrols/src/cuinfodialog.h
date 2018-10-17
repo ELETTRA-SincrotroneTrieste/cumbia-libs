@@ -66,7 +66,7 @@ public:
     virtual ~CuInfoDialog();
 
 public slots:
-    int exec(QWidget *sender, CuContextI *sender_cwi);
+    void exec(QWidget *sender, CuContextI *sender_cwi);
 
 private slots:
     void onMonitorUpdate(const CuData& d);
@@ -82,6 +82,7 @@ private:
     void m_makeLive(QFrame *liveF,  CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
 
     CuInfoDialogPrivate* d;
+    QString m_makeHtml(const CuData &da, const QString &heading);
 };
 
 #endif // CUINFODIALOG_H

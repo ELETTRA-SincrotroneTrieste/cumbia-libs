@@ -111,13 +111,15 @@ void CuContextActionBridge::onLinkStatsRequest(QWidget *sender, CuContextI *w)
 
     if(d->cumbia)
     {
-        CuInfoDialog dlg(0, d->cumbia, d->rfac);
-        dlg.exec(sender, w);
+        // WA_DeleteOnClose attribute is set
+        CuInfoDialog* dlg = new CuInfoDialog(0, d->cumbia, d->rfac);
+        dlg->exec(sender, w);
     }
     else if(d->cupool)
     {
-        CuInfoDialog dlg(0, d->cupool, d->fpool);
-        dlg.exec(sender, w);
+        // WA_DeleteOnClose attribute is set
+        CuInfoDialog* dlg = new CuInfoDialog(0, d->cupool, d->fpool);
+        dlg->exec(sender, w);
     }
 #else
 #endif

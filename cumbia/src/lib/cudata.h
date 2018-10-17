@@ -81,6 +81,8 @@ public:
 
     void putTimestamp();
 
+    std::vector<std::string> keys() const;
+
 private:
     CuDataPrivate *d;
 

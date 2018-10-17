@@ -169,10 +169,11 @@ void CuTimer::run()
     unsigned long timeout = m_timeout;
     while (!m_quit)
     {
+        timeout = m_timeout;
         std::chrono::milliseconds ms{timeout};
-//        qDebug() << __FUNCTION__ << "1 . this timer" << this << "listener " << m_listener << "waiting for unlock";
+//        printf("CuTimer::run: waiting for millis %ld\e[0m\n", timeout);
         std::cv_status status = m_wait.wait_for(lock, ms);
-    //    std::this_thread::sleep_for(ms);
+
 
         //        cuprintf("CuTimer.run pause is %d status is %d timeout %d\n", m_pause, (int) status, m_timeout);
         //        if(status == std::cv_status::no_timeout)
@@ -182,12 +183,15 @@ void CuTimer::run()
         //                   pthread_self(), m_listener, m_quit, timeout, m_pause);
         if(status == std::cv_status::timeout && m_listener && !m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
         {
+//            printf("\e[1;32m CuTimer::run. cv_status is timeout, !m_quit and !m_pause: calling onTimeout!\e[0m\n");
             m_listener->onTimeout(this);
         }
 
-//        if(!m_quit) {
-//            m_wait.wait(lock);
-//        }
+        if(!m_quit) {
+//            printf("\e[1;31mCuTimer::run waiting for lock now....\n");
+            m_wait.wait(lock);
+//            printf("\e[1;32m    done waited!\e[0m\n");
+        }
     }
 }
 

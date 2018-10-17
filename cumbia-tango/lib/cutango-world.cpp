@@ -226,7 +226,12 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
             d->error = true;
             d->message = "CuTangoWorld::extractData: type " + std::to_string(t) + " not supported";
             break;
-        }
+        } // end switch(t)
+
+        time_t tp;
+        time(&tp);
+        d->message = da["mode"].toString() + ": " + dateTimeToStr(&tp) + "[" + da["data_format_str"].toString() + "]";
+
     } catch (Tango::DevFailed &e) {
         d->error = true;
         d->message = strerror(e);
@@ -244,6 +249,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
     const bool w = (p_da->get_nb_written() > 0);
     tiv.tv_sec = tv.tv_sec;
     tiv.tv_usec = tv.tv_usec;
+    // set the message field: mode and timestamp, e.g.: "polled: mar 16 jun 2018..."
     d->message = dat["mode"].toString() + ": " + dateTimeToStr(&(tiv.tv_sec));
     putDateTime(tv, dat);
 

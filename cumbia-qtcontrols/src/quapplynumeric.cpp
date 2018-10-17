@@ -93,7 +93,7 @@ void QuApplyNumeric::setTarget(const QString &target)
 void QuApplyNumeric::execute(double val)
 {
     d->animation.setPenColor(QColor(Qt::gray));
-    d->animation.loop(QuAnimation::ElasticBottomLine);
+    d->animation.loop(QuAnimation::ElasticBottomLine, 1000);
     CuVariant args(val);
     CuControlsWriterA *w = d->context->getWriter();
     if(w) {
@@ -109,7 +109,6 @@ void QuApplyNumeric::m_init()
     connect(this, SIGNAL(clicked(double)), this, SLOT(execute(double)));
     d->auto_configure = true;
     d->write_ok = false;
-    d->animation.installOn(this);
 }
 
 /*! \brief configures the widget as soon as it is connected and records write errors.
@@ -188,6 +187,7 @@ void QuApplyNumeric::onUpdate(const CuData &da)
             CuControlsWriterA *w = d->context->getWriter();
             if(w)
                 w->saveConfiguration(da);
+            d->animation.installOn(this);
         }
         else
             perr("QuApplyNumeric [%s]: invalid data format \"%s\" or read only source (writable: %d)", qstoc(objectName()),
@@ -213,12 +213,9 @@ CuContext *QuApplyNumeric::getContext() const
 void QuApplyNumeric::onAnimationValueChanged(const QVariant &)
 {
     // optimize animation paint area with the clipped rect provided by QuAnimation::clippedRect
-    //update(d->animation.clippedRect(this->getButton()->geometry()));
     QRect br = getButton()->geometry();
     QRect updateRect(br.left() - 2, br.bottom() + 2, br.width() + 2, 4);
     update(updateRect);
-    printf("\e[1;33mQuApplyNumeric.onAnimationValueChanged: loop %d/%d value %f\e[0m\n",
-           d->animation.qAnimation().currentLoop(), d->animation.qAnimation().loopCount(), d->animation.currentValue());
 }
 
 void QuApplyNumeric::paintEvent(QPaintEvent *pe)

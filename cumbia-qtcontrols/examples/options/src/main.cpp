@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     /* register to window manager */
     Display *disp = QX11Info::display();
     Window root_win = (Window) w->winId();
-    XSetCommand(disp, root_win, argv, argc);
+//    XSetCommand(disp, root_win, argv, argc);
 
     ret = a.exec();
     delete w;

@@ -49,11 +49,13 @@ public slots:
     void unsetSource();
 
 signals:
+    void linkStatsRequest(QWidget *myself, CuContextI *myself_as_cwi);
     void newData(const CuData&da);
 
 protected:
-
     void configure(const CuData &da);
+    void contextMenuEvent(QContextMenuEvent *e);
+
 private:
 
     void m_init();

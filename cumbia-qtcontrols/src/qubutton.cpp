@@ -12,6 +12,8 @@
 #include "qupalette.h"
 #include "qulogimpl.h"
 #include "quanimation.h"
+#include "cucontextmenu.h"
+#include "culinkstats.h"
 #include <QtDebug>
 #include <QPaintEvent>
 #include <QPainter>
@@ -71,7 +73,6 @@ void QuButton::m_init(const QString& text)
     d->write_ok = false;
     d->anim_draw_penwidthF = 2.0;
     setText(text);
-    d->animation.installOn(this);
     d->animation.setType(QuAnimation::RayOfLight);
 }
 
@@ -103,10 +104,10 @@ void QuButton::setTarget(const QString &targets)
     if(w) w->setTarget(targets);
 }
 
-void QuButton::onAnimationValueChanged(const QVariant &v)
+void QuButton::onAnimationValueChanged(const QVariant &)
 {
     // optimize animation paint area with the clipped rect provided by QuAnimation::clippedRect
-    update();
+    update(d->animation.clippedRect(rect()));
 }
 
 void QuButton::paintEvent(QPaintEvent *pe)
@@ -144,6 +145,11 @@ void QuButton::onUpdate(const CuData &data)
         return;
 
     d->write_ok = !data["err"].toBool();
+    // update link statistics
+    d->context->getLinkStats()->addOperation();
+    if(!d->write_ok)
+        d->context->getLinkStats()->addError(data["msg"].toString());
+
     if(!d->write_ok)
     {
         Cumbia* cumbia = d->context->cumbia();
@@ -165,10 +171,12 @@ void QuButton::onUpdate(const CuData &data)
         CuControlsWriterA *w = d->context->getWriter();
         if(w)
             w->saveConfiguration(data);
+        d->animation.installOn(this);
     }
     d->write_ok ? d->animation.setPenColor(QColor(Qt::green)) : d->animation.setPenColor(QColor(Qt::red));
     d->write_ok ? d->animation.setDuration(1500) : d->animation.setDuration(3000);
     d->animation.start();
+    emit newData(data);
 }
 
 /** \brief Returns a pointer to the CuContext in use.
@@ -178,4 +186,12 @@ void QuButton::onUpdate(const CuData &data)
 CuContext *QuButton::getContext() const
 {
     return d->context;
+}
+
+void QuButton::contextMenuEvent(QContextMenuEvent *e)
+{
+    CuContextMenu* m = new CuContextMenu(this, this);
+    connect(m, SIGNAL(linkStatsTriggered(QWidget*, CuContextI *)),
+            this, SIGNAL(linkStatsRequest(QWidget*, CuContextI *)));
+    m->popup(e->globalPos());
 }

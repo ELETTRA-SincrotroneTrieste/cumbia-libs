@@ -7,6 +7,7 @@
 #include "cucontrolsfactories_i.h"
 #include "cucontext.h"
 #include "culinkstats.h"
+#include "cucontextmenu.h"
 #include <QVector>
 #include <QtDebug>
 
@@ -281,6 +282,12 @@ void QuTable::configure (const CuData& da)
     }
 }
 
-
+void QuTable::contextMenuEvent(QContextMenuEvent *e)
+{
+    CuContextMenu* m = new CuContextMenu(this, this);
+    connect(m, SIGNAL(linkStatsTriggered(QWidget*, CuContextI *)),
+            this, SIGNAL(linkStatsRequest(QWidget*, CuContextI *)));
+    m->popup(e->globalPos());
+}
 
 

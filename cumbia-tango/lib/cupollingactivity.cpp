@@ -90,7 +90,8 @@ class CuPollingActivityPrivate
 public:
     CuDeviceFactoryService *device_srvc;
     TDevice *tdev;
-    int repeat, errCnt;
+    int repeat, period;
+    int errCnt; // consecutive error counter
     int exec_cnt;
     std::string message;
     pthread_t my_thread_id, other_thread_id;
@@ -102,6 +103,8 @@ public:
     // multimap because argins may differ
     std::map<const std::string, CmdData> din_cache;
     CmdData emptyCmdData;
+    // maps consecutive error count to slowed down polling duration in millis
+    std::map<int, int> slowDownRate;
 };
 
 /*! \brief the class constructor that sets up a Tango polling activity
@@ -125,7 +128,6 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
 {
     d = new CuPollingActivityPrivate;
     d->device_srvc = df;
-    d->repeat = 1000;
     d->errCnt = 0;
     d->other_thread_id = pthread_self();
     d->exiting = false;
@@ -134,10 +136,14 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
     int period = 1000;
     if(token.containsKey("period"))
         period = token["period"].toInt();
-    d->repeat = period;
+    d->repeat = d->period = period;
     setInterval(period);
     //  flag CuActivity::CuADeleteOnExit is true
     setFlag(CuActivity::CuAUnregisterAfterExec, true);
+    // initialize period slow down policy in case of read errors
+    d->slowDownRate[1] = 3000;
+    d->slowDownRate[2] = 5000;
+    d->slowDownRate[4] = 10000;
 }
 
 /*! \brief the class destructor
@@ -173,6 +179,61 @@ size_t CuPollingActivity::actionsCount() const
 size_t CuPollingActivity::srcCount() const
 {
     return d->actions_map.size();
+}
+
+/*! \brief set a custom *slow down rate* to decrease polling period after consecutive
+ *         read failures.
+ *
+ * The default slow down rate policy decreases the read timer to:
+ *
+ * \li three seconds after one error
+ * \li five seconds after two consecutive errors
+ * \li ten seconds after four consecutive errors
+ *
+ * The default polling period is restored after a successful reading
+ *
+ * @param a map defining how to decrease the polling period after read failures
+ *
+ * \par Example
+ * A map defined like this:
+ *
+ * \code
+ * std::map<int, int> sd_map;
+ * sd_map[1] = 2000;
+ * sd_map[2] = 5000;
+ * sd_map[4] = 10000;
+ * activity->setSlowDownRate(sd_map);
+ * \endcode
+ *
+ * behaves as described in the list above if we deal with a default polling period of one second.
+ *
+ * @see slowDownRate
+ */
+void CuPollingActivity::setSlowDownRate(const std::map<int, int> &sr_millis)
+{
+    d->slowDownRate = sr_millis;
+}
+
+/*! \brief returns the currently employed slow down rate policy in case of read errors
+ *
+ * Refer to setSlowDownRate for further details
+ */
+const std::map<int, int> &CuPollingActivity::slowDownRate() const {
+    return d->slowDownRate;
+}
+
+void CuPollingActivity::decreasePolling() {
+    if(d->errCnt > 0) {
+        for(std::map<int,int>::const_reverse_iterator it = d->slowDownRate.rbegin(); it != d->slowDownRate.rend(); ++it) {
+            if(d->errCnt >= it->first) {
+                d->repeat = it->second;
+                break;
+            }
+        }
+    }
+    else
+        d->repeat = d->period;
+    cuprintf("\e[0;33mCuPollingActivity::decreasePolling: period is %d d->repeat has been set to %d\e[0m\n", d->period, d->repeat);
 }
 
 /** \brief returns true if the passed token's *device* *activity* and *period* values matche this activity token's
@@ -266,7 +327,7 @@ void CuPollingActivity::execute()
 {
     assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
-    bool cmd_success = true;
+    bool success = true;
     CuTangoWorld tangoworld;
     std::vector<CuData> *results = new std::vector<CuData>();
     std::vector<CuData> attdatalist;
@@ -297,22 +358,22 @@ void CuPollingActivity::execute()
             //                   res["device"].toString().c_str(), getTimeout(), action_ptr, tsrc.getName().c_str());
             CmdData& cmd_data = d->din_cache[srcnam];
             if(dev && cmd_data.is_empty) {
-                cmd_success = tangoworld.get_command_info(dev, point, (*results)[i]);
-                if(cmd_success) {
+                success = tangoworld.get_command_info(dev, point, (*results)[i]);
+                if(success) {
                     d->din_cache[srcnam] = CmdData((*results)[i], tangoworld.toDeviceData(argins, (*results)[i]), argins);
                 }
             }
-            if(dev && cmd_success) {  // do not try command_inout if no success so far
+            if(dev && success) {  // do not try command_inout if no success so far
                 // there is no multi-command_inout version
                 CmdData& cmdd = d->din_cache[srcnam];
                 bool has_argout = cmdd.getCmdInfoRef()["out_type"].toLongInt() != Tango::DEV_VOID;
-                (*results)[i]["err"] = !cmd_success;
-                if(!cmd_success) {
+                (*results)[i]["err"] = !success;
+                if(!success) {
                     (*results)[i]["msg"] = std::string("CuPollingActivity.execute: get_command_info failed for \"") + tsrc.getName() + std::string("\"");
                     d->errCnt++;
                 }
                 else {
-                    cmd_success = tangoworld.cmd_inout(dev, point, cmdd.din, has_argout, (*results)[i]);
+                    tangoworld.cmd_inout(dev, point, cmdd.din, has_argout, (*results)[i]);
                 }
             }
             att_offset++;
@@ -333,10 +394,21 @@ void CuPollingActivity::execute()
     } // for(it = d->actions_map.begin()
 
     // attributes now
-    if(dev && attdatalist.size() > 0) {
+    if(dev && att_idx > 0) {
         attdatalist.resize(att_idx);
-        tangoworld.read_atts(d->tdev->getDevice(), attdatalist, results, att_offset);
+        success = tangoworld.read_atts(d->tdev->getDevice(), attdatalist, results, att_offset);
+        if(!success) {
+            d->errCnt++;
+            printf("\e[1;31mfailed reading the %d attributes...\e[0m\n", attdatalist.size());
+        }
     }
+    if(success && d->repeat != d->period)
+        d->repeat = d->period;
+    else if(success)
+        d->errCnt = 0; // reset consecutive error count
+    else
+        decreasePolling();
+
     publishResult(results);
 }
 

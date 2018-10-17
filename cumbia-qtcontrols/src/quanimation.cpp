@@ -1,4 +1,5 @@
 #include "quanimation.h"
+#include <cumacros.h>
 #include <QPainter>
 #include <QWidget>
 #include <QtDebug>
@@ -10,9 +11,27 @@ public:
     QVariantAnimation qv_anim;
     double penWidthF;
     double rayLen;
+    bool installed;
     QColor penColor;
 };
 
+/*! \brief the class constructor
+ *
+ * @param t the type of animation, to be chosen amongst QuAnimation::Type
+ *
+ * The default animation type is QuAnimation::ShrinkingBottomLine
+ *
+ * \par Default values
+ * \li The duration of the underlying QVariantAnimation is set to 1000 milliseconds
+ * \li The start and end values of the  underlying QVariantAnimation  are set to 100.0 and 0.0 respectively.
+ *     They cannot be directly changed
+ * \li the pen color used to draw lines is set to Qt::gray
+ * \li The default animation type is QuAnimation::ShrinkingBottomLine
+ * \li The ray length for the type QuAnimation::RayOfLight is set to 0.5, meaning half of the widget height
+ *
+ * A QuAnimation must be first installed (see installOn) on a QWidget in order to be started/stopped/looped.
+ *
+ */
 QuAnimation::QuAnimation(Type t)
 {
     d = new QuAnimationPrivate;
@@ -23,10 +42,17 @@ QuAnimation::QuAnimation(Type t)
     d->rayLen = 0.5;
     d->type = t;
     d->penColor = QColor(Qt::gray);
+    d->installed = false;
 }
 
+/*! \brief install the animation on the given widget
+ *
+ * The widget to animate must be installed before the animation can be used. Before the widget is
+ * installed, start will not work and currentValue will return 0.0
+ */
 void QuAnimation::installOn(QWidget *w)
 {
+    d->installed = true;
     QObject::connect(&d->qv_anim, SIGNAL(valueChanged(QVariant)), w, SLOT(onAnimationValueChanged(QVariant)));
 }
 
@@ -35,12 +61,22 @@ QuAnimation::~QuAnimation()
     delete d;
 }
 
-void QuAnimation::loop(Type t)
+/*! \brief loops the animation with the given type and duration
+ *
+ * @param t the QuAnimation::Type
+ * @param duration, the duration of the animation, in milliseconds
+ *
+ * If duration is 0 or negative, the duration previously set on the animation is left
+ * untouched
+ */
+void QuAnimation::loop(Type t, int duration)
 {
     d->type = t;
     if(d->qv_anim.state() != QAbstractAnimation::Stopped)
         d->qv_anim.stop();
     d->qv_anim.setLoopCount(-1);
+    if(duration > 0)
+        d->qv_anim.setDuration(duration);
     d->qv_anim.start();
 }
 
@@ -50,26 +86,14 @@ void QuAnimation::loop(Type t)
  */
 void QuAnimation::start()
 {
-    printf("\e[0;36mstart animation: status %d current loop %d/%d value %f\e[0m\n",
-           d->qv_anim.state(),d->qv_anim.currentLoop(), d->qv_anim.loopCount(),  currentValue());
-    if(d->qv_anim.state() != QAbstractAnimation::Stopped && d->qv_anim.loopCount() > 0) {
-        printf("\e[1;36mSTOPPING ANIMATION cause its loop cnt is %d\e[0m\n", d->qv_anim.loopCount());
-        d->qv_anim.stop();
-    }
-    else if(d->qv_anim.state() == QAbstractAnimation::Running && d->qv_anim.loopCount() < 0) {
-        if(currentValue() < (d->qv_anim.startValue().toDouble() - d->qv_anim.endValue().toDouble())/2.0) {
-
-            d->qv_anim.setLoopCount(2);
-            printf("\e[0;36m -i- case 1 setted loop count to %d (cur val %f)\e[0m\n", d->qv_anim.currentLoop(),
-                   currentValue());
-        }
-        else {
-            d->qv_anim.setLoopCount(1);
-            printf("\e[0;36m -ii- case 2 setted loop count to %d (cur val %f)\e[0m\n", d->qv_anim.loopCount(),
-                   currentValue());
-        }
-    }
+    if(!d->installed)
+        perr("QuAnimation::start: animation not installed");
     else {
+        if(d->qv_anim.state() != QAbstractAnimation::Stopped ) {
+            d->qv_anim.stop();
+            if(d->qv_anim.loopCount() < 0)
+                d->qv_anim.setLoopCount(1);
+        }
         d->qv_anim.start();
     }
 }
@@ -81,11 +105,22 @@ void QuAnimation::stop()
     d->qv_anim.stop();
 }
 
+/* \brief returns the color of the pen used to draw lines
+ *
+ * @return the QColor used to draw the lines
+ *
+ * \par Default color
+ * The default color is Qt::gray
+ */
 QColor QuAnimation::penColor() const
 {
     return d->penColor;
 }
 
+/*! \brief sets the color of the pen used to draw lines
+ *
+ * @see penColor
+ */
 void QuAnimation::setPenColor(const QColor &c)
 {
     d->penColor = c;
@@ -93,12 +128,20 @@ void QuAnimation::setPenColor(const QColor &c)
 
 /*! \brief returns the width of the pen used to draw the lines
  *
+ * @see penColor
+ *
+ * \par Default value
+ * The default value is 2.0
  */
 double QuAnimation::penWidthF() const
 {
     return d->penWidthF;
 }
 
+/*! \brief change the pen width used to draw the lines
+ *
+ * @param w the pen width as a floating point
+ */
 void QuAnimation::setPenWidthF(double w) {
     d->penWidthF = w;
 }
@@ -115,6 +158,10 @@ QuAnimation::Type QuAnimation::type() const
     return d->type;
 }
 
+/*! \brief change the animation type
+ *
+ * @param t a new type of animation among QuAnimation::Type
+ */
 void QuAnimation::setType(QuAnimation::Type t)
 {
     d->type = t;
@@ -138,6 +185,16 @@ void QuAnimation::setRayOfLightLen(double percentOfHei)
     d->rayLen = percentOfHei;
 }
 
+/*! \brief returns the length of the ray of light (for type uAnimation::RayOfLight)
+ *
+ * The actual length of the ray is the product of the widget height and this value
+ *
+ * @return a factor that, multiplied by the widget height, gives the length of the
+ * animation ray segment in pixels.
+ *
+ * \par Default value
+ * The default value is the height divided by two. (Factor of 0.5)
+ */
 double QuAnimation::rayOfLightLen() const
 {
     return d->rayLen;
@@ -163,9 +220,14 @@ void QuAnimation::setDuration(int ms) {
 /*! \brief returns the current value, as double
  *
  * @return shortcut for \codeline QVariantAnimation::currentValue().toDouble()
+ *
+ * \note
+ * If the animation has not been installed, 0.0 is returned
  */
 double QuAnimation::currentValue() const
 {
+    if(!d->installed)
+        return 0.0;
     return d->qv_anim.currentValue().toDouble();
 }
 
@@ -201,10 +263,10 @@ QVariantAnimation &QuAnimation::qAnimation() const
  */
 QRect QuAnimation::clippedRect(const QRect &widgetRect) const
 {
-    if(d->type == ShrinkingBottomLine) {
+    if(d->type == ShrinkingBottomLine || d->type == ExpandingBottomLine) {
         double h;
         d->penWidthF > 0 ? h = 2*d->penWidthF : h = 2;
-        return QRect(widgetRect.left(),  widgetRect.bottom() - h, widgetRect.right(), h);
+        return QRect(widgetRect.left(),  widgetRect.bottom() - h, widgetRect.width(), h);
     }
     return widgetRect;
 }

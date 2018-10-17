@@ -6,6 +6,7 @@
 #include <list>
 #include <cutangoactioni.h>
 #include <tsource.h>
+#include <map>
 
 class CuData;
 class CuPollingActivityPrivate;
@@ -92,6 +93,12 @@ public:
     size_t actionsCount() const;
 
     size_t srcCount() const;
+
+    void setSlowDownRate(const std::map<int, int> &sr_millis);
+
+    const std::map<int, int> &slowDownRate() const;
+
+    void decreasePolling();
 
     // CuActivity interface
 public:

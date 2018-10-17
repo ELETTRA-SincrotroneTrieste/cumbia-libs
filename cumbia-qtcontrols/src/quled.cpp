@@ -10,6 +10,7 @@
 #include "culinkstats.h"
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
+#include "cucontextmenu.h"
 
 /** @private */
 class QuLedPrivate
@@ -129,4 +130,12 @@ void QuLed::onUpdate(const CuData &da)
 CuContext *QuLed::getContext() const
 {
     return d->context;
+}
+
+void QuLed::contextMenuEvent(QContextMenuEvent *e)
+{
+    CuContextMenu* m = new CuContextMenu(this, this);
+    connect(m, SIGNAL(linkStatsTriggered(QWidget*, CuContextI *)),
+            this, SIGNAL(linkStatsRequest(QWidget*, CuContextI *)));
+    m->popup(e->globalPos());
 }

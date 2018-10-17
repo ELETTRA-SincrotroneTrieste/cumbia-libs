@@ -318,6 +318,14 @@ void CuData::putTimestamp()
     add("timestamp_us", static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6);
 }
 
+std::vector<std::string> CuData::keys() const
+{
+    std::vector<std::string> ks;
+    for(std::map<std::string, CuVariant>::const_iterator it = d->datamap.begin(); it != d->datamap.end(); ++it)
+        ks.push_back(it->first);
+    return ks;
+}
+
 void CuData::mCopyData(const CuData& other)
 {
 //    printf("\e[1;33mCopyData %s\e[0m\n", other.toString().c_str());

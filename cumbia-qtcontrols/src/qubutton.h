@@ -29,36 +29,39 @@ class QuButton : public QPushButton, public CuDataListener, public CuContextI
     Q_PROPERTY(QString target READ target WRITE setTarget DESIGNABLE true)
 public:
     QuButton(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac, const QString& text = "Apply");
-
     QuButton(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool, const QString& text = "Apply");
 
     virtual ~QuButton();
 
     QString target() const;
 
+    // CuTangoListener interface
+    void onUpdate(const CuData &d);
+
+    // CuContextI interface
+    CuContext *getContext() const;
+
 public slots:
     virtual void execute();
 
     void setTarget(const QString& target);
 
+signals:
+    void linkStatsRequest(QWidget *myself, CuContextI *myself_as_cwi);
+    void newData(const CuData& da);
+
 protected:
     void paintEvent(QPaintEvent *pe);
 
+    void contextMenuEvent(QContextMenuEvent *e);
+
 private:
     QuButtonPrivate *d;
-
     void m_init(const QString& text);
 
 private slots:
     void onAnimationValueChanged(const QVariant& v);
 
-    // CuTangoListener interface
-public:
-    void onUpdate(const CuData &d);
-
-    // CuContextI interface
-public:
-    CuContext *getContext() const;
 };
 
 #endif // QUPUSHBUTTON_H

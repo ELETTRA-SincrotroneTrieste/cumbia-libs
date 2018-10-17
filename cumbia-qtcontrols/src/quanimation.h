@@ -81,7 +81,7 @@ public:
 
     virtual ~QuAnimation();
 
-    void loop(Type t);
+    void loop(Type t, int duration = -1);
 
     void start();
 
