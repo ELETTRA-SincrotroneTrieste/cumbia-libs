@@ -103,11 +103,7 @@ void CuTConfigActivity::execute()
         {
             success = utils.get_command_info(dev, point, at);
             if(success && d->type == CuReaderConfigActivityType) {
-                printf("\e[1;32mCALLING cmd_inout from CuTAttConfigActivity [%s]!!!!\e[0m\n", point.c_str());
                 success = utils.cmd_inout(dev, point, at);
-            }
-            else if(success && d->type == CuWriterConfigActivityType) {
-                printf("\e[1;35mNOT CALLING cmd_inout cuz writer!!!! %s\e[0m\n", point.c_str());
             }
         }
         else if(dev)

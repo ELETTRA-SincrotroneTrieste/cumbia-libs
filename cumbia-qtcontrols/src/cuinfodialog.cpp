@@ -68,7 +68,6 @@ CuInfoDialog::~CuInfoDialog()
 {
     // do not delete d->rfac because the reference has been
     // copied, not cloned
-    printf("~deleted CuInfoDialog\n");
     delete d;
 }
 

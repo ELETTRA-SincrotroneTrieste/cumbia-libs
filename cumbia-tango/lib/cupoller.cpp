@@ -35,7 +35,7 @@ CuPoller::CuPoller(CumbiaTango *cu_t, int period)
 
 CuPoller::~CuPoller()
 {
-    predtmp("~CuPoller %p as CuThreadListener %p", this, static_cast<CuThreadListener *>(this));
+    pdelete("~CuPoller %p", this);
 }
 
 int CuPoller::period() const
@@ -47,7 +47,7 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a)
 {
     // insert in this thread
     d->actions_map.insert(std::pair<const CuTangoActionI*, const TSource>(a, tsrc));
-    pgreentmp(" + CuPoller.registerAction: added %s - %p to poller\n", tsrc.getName().c_str(), a);
+    pgreen(" + CuPoller.registerAction: added %s - %p to poller\n", tsrc.getName().c_str(), a);
 
     CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
                                                              get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
@@ -65,11 +65,11 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a)
         const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
         const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
         d->cumbia_t->registerActivity(activity, this, tt, fi, bf);
-        pgreentmp("(+) CuPoller.m_startPollingActivity: created a new polling activity for device \"%s\" period %d\n",
+        pgreen("(+) CuPoller.m_startPollingActivity: created a new polling activity for device \"%s\" period %d\n",
                   at["device"].toString().c_str(), at["period"].toInt());
     }
     else {
-        pgreentmp("(i) CuPoller.m_startPollingActivity: found a running polling activity [%p] DISPOSABLE %d for device \"%s\" period %d\n",
+        pgreen("(i) CuPoller.m_startPollingActivity: found a running polling activity [%p] DISPOSABLE %d for device \"%s\" period %d\n",
                   activity, activity->isDisposable(), at["device"].toString().c_str(), at["period"].toInt());
         if(d->actions_map.size() == 1)
             d->cumbia_t->resumeActivity(activity);
@@ -86,8 +86,8 @@ void CuPoller::unregisterAction(CuTangoActionI *a)
 {
     // remove in this thread
     if(d->actions_map.find(a) != d->actions_map.end()) {
-        predtmp(" - CuPoller.unregisterAction: removed %s - %p from poller with period %d\n",
-                a->getSource().getName().c_str(), a->getSource(), d->period);
+        pgreen(" - CuPoller.unregisterAction: removed %s - %p from poller with period %d\n",
+                a->getSource().getName().c_str(), a, d->period);
         d->actions_map.erase(a);
     }
 
@@ -99,7 +99,6 @@ void CuPoller::unregisterAction(CuTangoActionI *a)
     CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
                                                              get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
     CuActivity *activity = am->findMatching(at); // polling activities compare device period and "activity"
-    printf("posting to activity %p\n", activity);
     // post remove to activity's thread
     if(activity) {
         d->cumbia_t->postEvent(activity, new CuRemovePollActionEvent(a->getSource()));
@@ -126,8 +125,8 @@ void CuPoller::onProgress(int step, int total, const CuData &data)
 
 void CuPoller::onResult(const CuData &data)
 {
-    pyellow2tmp("CuPoller.onResult data %s EXIT FLAG %d", data.toString().c_str(), data["exit"].toBool());
-    pyellow2tmp("actions size now: %ld", d->actions_map.size());
+    pyellow2("CuPoller.onResult data %s EXIT FLAG %d", data.toString().c_str(), data["exit"].toBool());
+    pyellow2("actions size now: %ld", d->actions_map.size());
 }
 
 void CuPoller::onResult(const std::vector<CuData> &datalist)
@@ -143,7 +142,8 @@ void CuPoller::onResult(const std::vector<CuData> &datalist)
             receiver->onResult(datalist[i]);
         }
         else {
-            predtmp("CuPoller.onResult: [%s] action \e[1;36m%p\e[1;31m has been removed!",  src.c_str(), receiver);
+            pred("CuPoller.onResult: [%s] action \e[1;36m%p\e[1;31m has been removed! [%s]",
+                    src.c_str(), receiver, datalist[i].toString().c_str());
         }
 
     }

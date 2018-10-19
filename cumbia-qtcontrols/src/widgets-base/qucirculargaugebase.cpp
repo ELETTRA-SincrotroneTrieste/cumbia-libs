@@ -9,6 +9,10 @@
 
 class QuGaugeCache {
 public:
+    QuGaugeCache() {
+        invalidate();
+    }
+
     QList<int> labelsDistrib;
     QString longestLabel;
     QStringList labels;
@@ -20,8 +24,7 @@ public:
     void invalidate(){
         labelsDistrib.clear();
         longestLabel = QString();
-        paintArea = QRectF();
-        oldRect = QRectF();
+        paintArea = oldRect = QRectF();
         labelPointSize = 10;
         labelSize = QSize();
     }
@@ -45,11 +48,12 @@ public:
     QDateTime lastValueDateTime;
     QuCircularGaugeBase::LabelPosition labelPosition;
     double labelDistFromCenter, labelFontScale;
+    bool readError;
 };
 
 QuCircularGaugeBase::QuCircularGaugeBase(QWidget *parent) : QWidget(parent)
 {
-    g_config = new QuGaugeConfig;
+    g_config = new QuGaugeConfig();
     d = new QuCircularGaugeBasePrivate;
     d->startAngle = 120; // from 3 o' clock
     d->spanAngle = 300;
@@ -59,6 +63,7 @@ QuCircularGaugeBase::QuCircularGaugeBase(QWidget *parent) : QWidget(parent)
     d->labelDistFromCenter = 0.25;
     d->labelValueFormat = "%.2f";
     d->labelFontScale = 0.9;
+    d->readError = false;
     m_anglesUpdate();
 }
 
@@ -300,6 +305,11 @@ bool QuCircularGaugeBase::animationEnabled() const
     return g_config->animationEnabled;
 }
 
+bool QuCircularGaugeBase::readError() const
+{
+    return d->readError;
+}
+
 /*! \brief The maximum duration of an animation between two setValue calls
  *
  * @return the value, in milliseconds, of the  maximum duration of an animation between two setValue calls
@@ -380,6 +390,11 @@ QColor QuCircularGaugeBase::normalColor() const
     return g_config->normalColor;
 }
 
+QColor QuCircularGaugeBase::readErrorColor() const
+{
+    return g_config->readErrorColor;
+}
+
 QColor QuCircularGaugeBase::backgroundColor() const
 {
     return g_config->backgroundColor;
@@ -431,6 +446,12 @@ void QuCircularGaugeBase::setWarningColor(const QColor &wc)
 void QuCircularGaugeBase::setNormalColor(const QColor &nc)
 {
     g_config->normalColor = nc;
+    update();
+}
+
+void QuCircularGaugeBase::setReadErrorColor(const QColor &rec)
+{
+    g_config->readErrorColor = rec;
     update();
 }
 
@@ -571,8 +592,7 @@ double QuCircularGaugeBase::highError() {
 
 double QuCircularGaugeBase::getPivotRadius()
 {
-    if(g_config->pivotRadius <= 1)
-        return qMin(paintArea().width(), paintArea().height())/2.0 * g_config->pivotRadius;
+    return qMin(paintArea().width(), paintArea().height())/2.0 * g_config->pivotRadius;
 }
 
 QString QuCircularGaugeBase::label() const
@@ -611,7 +631,6 @@ QString QuCircularGaugeBase::unit() const
 QPointF QuCircularGaugeBase::mapTo(double val, int *angle, double radius, const QRectF& paint_area)
 {
     QPointF p;
-    QPoint topL;
     if(angle)
         *angle = -1;
     QRectF paintA(paint_area);
@@ -620,23 +639,35 @@ QPointF QuCircularGaugeBase::mapTo(double val, int *angle, double radius, const 
     if(radius <= 0)
         radius = paintA.width() / 2;
 
-    if(g_config->max >= g_config->min && val <= g_config->max && val >= g_config->min) {
+    double range = g_config->max - g_config->min;
+    double fullscale_factor = 0.0;
+    if(g_config->max >= g_config->min) {
+        if(val < g_config->min) {
+            val = g_config->min;
+            fullscale_factor = -0.01;
+        }
+        else if(val > g_config->max) {
+            val = g_config->max;
+            fullscale_factor = 0.01;
+        }
+
         double a = d->startAngle;
         // allow arc > 360, do not apply modulus 360 to it
-        double arc = qRound(a + d->spanAngle * (val - g_config->min) / (g_config->max - g_config->min));
+        double arc = qRound(a + d->spanAngle * (val - g_config->min) / range);
+        arc = arc * (1 + fullscale_factor);
         if(angle)
             *angle = static_cast<int>(arc);
         arc = arc * M_PI / 180.0;
         p = QPointF(paintA.x() + paintA.width() / 2.0 + radius * (1.0 - g_config->tickLen * 1.2) * cos(arc),
                     paintA.y() + paintA.height() / 2.0 + radius * (1.0 - g_config->tickLen * 1.2) * sin(arc));
+
     }
     return p;
 }
 
-QRectF QuCircularGaugeBase::labelRect(int tick, double radius)
+QRectF QuCircularGaugeBase::textRect(int tick, double radius)
 {
     int idx = 0;
-    double w, h;
     int step = qRound((g_config->max - g_config->min) / (g_config->ticksCount - 1));
     double val = g_config->min;
     while(val <= g_config->max) {
@@ -660,10 +691,10 @@ double QuCircularGaugeBase::labelFontSize()
     return d->cache.labelPointSize;
 }
 
-QString QuCircularGaugeBase::formatLabel(double value, const char* format) const
+QString QuCircularGaugeBase::formatLabel(double value, const QString& format) const
 {
     char clab[32];
-    snprintf(clab, 32, format, value);
+    snprintf(clab, 32, format.toStdString().c_str(), value);
     return QString(clab);
 }
 
@@ -703,6 +734,12 @@ void QuCircularGaugeBase::setValue(double v)
     g_config->value = v;
     d->lastValueDateTime = now;
 
+}
+
+void QuCircularGaugeBase::setReadError(bool err)
+{
+    d->readError = err;
+    update();
 }
 
 void QuCircularGaugeBase::setValue_anim(double v)
@@ -810,7 +847,7 @@ void QuCircularGaugeBase::setDrawBackgroundEnabled(bool en)
     g_config->drawBackground = en;
 }
 
-QString QuCircularGaugeBase::setFormat(const QString &f)
+void QuCircularGaugeBase::setFormat(const QString &f)
 {
     g_config->format = f;
     regenerateCache();
@@ -855,12 +892,13 @@ QList<int> QuCircularGaugeBase::updateLabelsDistrib() const
 
 void QuCircularGaugeBase::updateLabelsCache()
 {
+    QFontMetrics fm(font());
     d->cache.labels.clear();
     int step = qRound((g_config->max - g_config->min) / (g_config->ticksCount - 1));
     double val = g_config->min;
     while(val <= g_config->max) {
-        QString lab = formatLabel(val, g_config->format.toStdString().c_str());
-        if(lab.length() > d->cache.longestLabel.length())
+        QString lab = formatLabel(val, g_config->format);
+        if(fm.width(lab) > fm.width(d->cache.longestLabel))
             d->cache.longestLabel = lab;
         // fill labels cache
         d->cache.labels << lab;
@@ -880,7 +918,6 @@ void QuCircularGaugeBase::regenerateCache()
 void QuCircularGaugeBase::updateLabelsFontSize() {
     QFont f = font();
     QFontMetrics fm(f);
-    double h = fm.height();
     double w = fm.width(d->cache.longestLabel), rw;
     QList<int> ld = d->cache.labelsDistrib;
 
@@ -888,9 +925,6 @@ void QuCircularGaugeBase::updateLabelsFontSize() {
         QRectF p_a = paintArea();
         double maxlw_upper = qMax(ld[1], ld[2]);
         double maxlw_lower = qMax(ld[0], ld[3]);
-        double maxlh_left = qMax(ld[0], ld[1]);
-        double maxlh_right = qMax(ld[2], ld[3]);
-        h = qMin(height(), qRound(p_a.height())) / 2 / qMax(maxlh_left, maxlh_right);
         rw = qMin(qRound(p_a.height()), qRound(p_a.width())) / 2 / qMax(maxlw_lower, maxlw_upper);
         while( w < rw && f.pointSizeF() > 4) {
             f.setPointSizeF(f.pointSizeF() + 0.5);
@@ -901,6 +935,7 @@ void QuCircularGaugeBase::updateLabelsFontSize() {
             w = QFontMetrics(f).width(d->cache.longestLabel);
         }
     }
+
     d->cache.labelPointSize = f.pointSizeF();
     fm = QFontMetrics(f);
     d->cache.labelSize = QSize(fm.width(d->cache.longestLabel), fm.height());
@@ -920,8 +955,8 @@ void QuCircularGaugeBase::m_anglesUpdate()
     d->cos_a0 = cos(a0);
     d->cos_a1 = cos(a1);
 
-    printf("m_anglesUpdate a0 = %d a1 = %d \e[1;34msin a0 %f cos a0 %f \e[1;33m sin a1 %f cos a1 %f\e[0m\n",
-           d->startAngle, d->startAngle + d->spanAngle, d->sin_a0, d->cos_a0, d->sin_a1, d->cos_a1);
+    cuprintf("m_anglesUpdate a0 = %d a1 = %d \e[1;34msin a0 %f cos a0 %f \e[1;33m sin a1 %f cos a1 %f\e[0m\n",
+             d->startAngle, d->startAngle + d->spanAngle, d->sin_a0, d->cos_a0, d->sin_a1, d->cos_a1);
 
     if(d->sin_a0 < 0 && d->cos_a0 >= 0 && d->sin_a1 <= 0 && d->cos_a1 >= 0)
         d->quad = q1;
@@ -1054,12 +1089,13 @@ void QuCircularGaugeBase::paintEvent(QPaintEvent *pe)
 
 void QuCircularGaugeBase::drawText(const QRectF &rect, int idx, QPainter &p)
 {
+    Q_UNUSED(rect)
     QPen pen(g_config->textColor);
     p.setPen(pen);
     QFont f = p.font();
     f.setPointSizeF(labelFontSize());
     p.setFont(f);
-    QRectF trect = labelRect(idx, paintArea().width()/2.0 * 0.9);
+    QRectF trect = textRect(idx, paintArea().width()/2.0 * (1-g_config->tickLen) * 0.9);
     QString txt = label(idx);
     p.drawText(trect, Qt::AlignHCenter|Qt::AlignVCenter, txt);
     //    p.drawRect(trect);
@@ -1110,30 +1146,31 @@ void QuCircularGaugeBase::drawGauge(const QRectF &rect, int startAngle, int span
     pen.setWidthF(g_config->gaugeWidth);
     pen.setCapStyle(Qt::FlatCap);
     double dx = pen.widthF() / 2.0;
-    double ea = startAngle, wa = ea;
     QRectF ra = rect.adjusted(dx, dx, -dx, -dx);
     int aspan = startAngle, bspan = startAngle, cspan = startAngle + span, dspan = startAngle + span;
     bool error_ok = g_config->low_e < g_config->high_e && g_config->low_e >= g_config->min && g_config->high_e <= g_config->max;
-    if(error_ok) {
-        // draw err color from min to low err to low warn
-        mapTo(g_config->low_e, &aspan);
-        mapTo(g_config->high_e, &dspan);
-        pen.setColor(g_config->errorColor);
-        p.setPen(pen);
-        p.drawArc(ra, -startAngle * 16, -(aspan-startAngle) * 16); // starts from 3 o'clock, while our startAngle
-        p.drawArc(ra, -dspan * 16, -16 * (startAngle + span - dspan));
+    if(d->readError)
+        pen.setColor(g_config->readErrorColor);
+    else {
+        if(error_ok) {
+            // draw err color from min to low err to low warn
+            mapTo(g_config->low_e, &aspan);
+            mapTo(g_config->high_e, &dspan);
+            pen.setColor(g_config->errorColor);
+            p.drawArc(ra, -startAngle * 16, -(aspan-startAngle) * 16); // starts from 3 o'clock, while our startAngle
+            p.drawArc(ra, -dspan * 16, -16 * (startAngle + span - dspan));
+        }
+        bool warning_ok = g_config->low_w < g_config->high_w && g_config->low_w >= g_config->min && g_config->high_w <= g_config->max;
+        if( (warning_ok && error_ok && g_config->low_w > g_config->low_e && g_config->high_w < g_config->high_e) ||
+                (warning_ok && !error_ok) ) {
+            pen.setColor(g_config->warningColor);
+            mapTo(g_config->low_w, &bspan);
+            mapTo(g_config->high_w, &cspan);
+            p.drawArc(ra, -aspan * 16, -16 * (bspan - aspan));
+            p.drawArc(ra, -cspan * 16, -16 * (dspan - cspan)); // starts from 3 o'clock, while our startAngle
+        }
+        pen.setColor(g_config->normalColor);
     }
-    bool warning_ok = g_config->low_w < g_config->high_w && g_config->low_w >= g_config->min && g_config->high_w <= g_config->max;
-    if( (warning_ok && error_ok && g_config->low_w > g_config->low_e && g_config->high_w < g_config->high_e) ||
-            (warning_ok && !error_ok) ) {
-        pen.setColor(g_config->warningColor);
-        p.setPen(pen);
-        mapTo(g_config->low_w, &bspan);
-        mapTo(g_config->high_w, &cspan);
-        p.drawArc(ra, -aspan * 16, -16 * (bspan - aspan));
-        p.drawArc(ra, -cspan * 16, -16 * (dspan - cspan)); // starts from 3 o'clock, while our startAngle
-    }
-    pen.setColor(g_config->normalColor);
     p.setPen(pen);
     p.drawArc(ra, -(qMax(aspan, bspan)) * 16,  -16 * (qMin(cspan, dspan) - qMax(aspan, bspan)));
 }
@@ -1221,7 +1258,8 @@ void QuCircularGaugeBase::drawBackground(const QRectF &rect, QPainter &p)
     QColor c0 = g_config->backgroundColor;
     // use current value instead of the value dedicated to the animation
     // so that the background immediately reflects the value range
-    QColor c1 = valueColor(g_config->value);
+    QColor c1;
+    d->readError ? c1 = g_config->readErrorColor : c1 = valueColor(g_config->value);
     c0.setAlpha(g_config->backgroundColorAlpha);
     c1.setAlpha(g_config->backgroundColorAlpha);
     QRectF cr(c.x() - rad, c.y() - rad, 2*rad, 2*rad);
@@ -1243,11 +1281,11 @@ void QuCircularGaugeBase::drawLabel(const QRectF &rect, QPainter& p)
     QFontMetrics fm(f);
     QString txt;
     if(d->label.isEmpty()) {
-        txt = formatLabel(g_config->value, d->labelValueFormat.toStdString().c_str());
+        txt = formatLabel(g_config->value, d->labelValueFormat);
         if(!g_config->unit.isEmpty())
-            txt += " [" + g_config->unit + "]";
+            txt.append(QString(" [%1]").arg(g_config->unit));
     }
-    else txt = d->label;
+        else txt = d->label;
 
     int w = fm.width(txt);
     int h = fm.height();
@@ -1277,11 +1315,18 @@ void QuCircularGaugeBase::drawLabel(const QRectF &rect, QPainter& p)
     p.drawText(textR, Qt::AlignHCenter|Qt::AlignVCenter, txt);
 }
 
+void QuCircularGaugeBase::changeEvent(QEvent *e)
+{
+    if(e->type() == QEvent::FontChange)
+        regenerateCache();
+    QWidget::changeEvent(e);
+}
+
 void QuCircularGaugeBase::resizeEvent(QResizeEvent *re)
 {
     QWidget::resizeEvent(re);
-    updateLabelsFontSize();
-    updatePaintArea();
+    updatePaintArea();   // first. does not need to know font size
+    updateLabelsFontSize(); // second. needs to know updated paint area
 }
 
 QSize QuCircularGaugeBase::sizeHint() const
@@ -1294,12 +1339,19 @@ QSize QuCircularGaugeBase::minimumSizeHint() const
     QFontMetrics fm(font());
     int labwid = fm.width(d->cache.longestLabel);
     int labhei = fm.height();
-    const double wfactor = 8;
+    const double wfactor = 1.4;
     const double hfactor = 9.5;
+    double w0, h0;
     double a0 = -d->startAngle * M_PI / 180.0;
     double a1 = -(d->startAngle + d->spanAngle) * M_PI / 180.0;
-    double w0 = labwid * wfactor;
-    double h0 = labhei * hfactor;
+    if(d->cache.labelsDistrib.size() == 4) {
+        w0 = labwid * (d->cache.labelsDistrib[1] + d->cache.labelsDistrib[2]);
+        h0 = labhei * (d->cache.labelsDistrib[0] + d->cache.labelsDistrib[3]);
+    }
+    else {
+        w0 = labwid * 5;
+        h0 = labhei * 5;
+    }
     double h = qMax(h0, h0 + h0 * 0.85 * qMax(fabs(sin(a0)), fabs(sin(a1))));
     //    printf("a0 %f a1 %f --> %d %d\n", -d->startAngle, -(d->startAngle + d->spanAngle),
     //           qRound(-d->startAngle) % 360, qRound(-(d->startAngle + d->spanAngle)) % 360);
@@ -1336,15 +1388,6 @@ void QuCircularGaugeBase::updatePaintArea()
         margin_h = m_getMarginH(height()/2.0);
         margin_w = m_getMarginW(wr.width()/2.0);
     }
-    // estimate if we really need margins
-    // take as approximation w/2 or h/2
-    //    double p = qMin(wr.width(), wr.height())/2.0;
-    //    if(qMax(fabs(p * d->cos_a0), fabs(p * d->cos_a1)) > margin_w)
-    //       margin_w = 0;
-    //    if(qMax(fabs(p * d->sin_a0), fabs(p * d->sin_a1)) > margin_h)
-    //       margin_h = 0;
-
-
 
     if(d->spanAngle >= 270) {
         if(wr.width() > wr.height())
@@ -1354,7 +1397,7 @@ void QuCircularGaugeBase::updatePaintArea()
     }
     else if(d->quad == q1 || d->quad == q2 || d->quad == q3 || d->quad == q4) {
         // needed height
-        double dim, m, a;
+        double dim, m;
         double modmaxcos = qMax(fabs(d->cos_a0), fabs(d->cos_a1));
         double modmaxsin = qMax(fabs(d->sin_a0), fabs(d->sin_a1));
         m = qMax(modmaxcos, modmaxsin);
@@ -1471,7 +1514,7 @@ void QuCircularGaugeBase::updatePaintArea()
         area = QRectF(0, -r + r*qMax(-d->sin_a0, -d->sin_a1) + margin_h, 2 * r, 2 * r); // sin_a0<0 sin_a1<0
     }
 
-//    qDebug() << __FUNCTION__  << "r:" << r_a  << area << "quadrant" << d->quad << "margins: w" << margin_w << "h" << margin_h;
+    //    qDebug() << __FUNCTION__  << "r:" << r_a  << area << "quadrant" << d->quad << "margins: w" << margin_w << "h" << margin_h;
 
     d->cache.paintArea = QRectF(area.topLeft(), QSize(area.width() * 0.95, area.height() * 0.95));
     d->cache.paintArea = area;

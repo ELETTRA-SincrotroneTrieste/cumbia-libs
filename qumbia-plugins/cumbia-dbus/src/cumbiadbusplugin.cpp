@@ -13,7 +13,6 @@
 
 CumbiaDBusPlugin::CumbiaDBusPlugin(QObject *parent) : QObject(parent)
 {
-    qDebug() << __FUNCTION__ << "constructor: parent" << parent;
 }
 
 QuAppDBusInterface *CumbiaDBusPlugin::getAppIface() const

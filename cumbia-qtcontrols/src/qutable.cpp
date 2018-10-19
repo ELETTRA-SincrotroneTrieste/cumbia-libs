@@ -59,13 +59,6 @@ void QuTable::m_init()
 
     QColor background = d->palette["white"];
     QColor border = d->palette["gray"];
-
-    /* some free properties */
-    setProperty("trueString", "TRUE");
-    setProperty("falseString", "FALSE");
-    setProperty("trueColor", QColor(Qt::green));
-    setProperty("falseColor", QColor(Qt::red));
-
     foreach(ELabel *l, cells)
     {
         l->setValue(QString("No Link"));
@@ -154,6 +147,7 @@ void QuTable::onUpdate(const CuData& da)
             QList<QVariant> l;
             for (it = bv.begin(); it < bv.end(); it++)
                 l << QVariant(*it);
+            qDebug() << __FUNCTION__ << "Setting value " << l << "to eflag";
             EFlag::setValue(QVariant(l));
         }
         else if(val.getType() == CuVariant::String && val.getFormat() == CuVariant::Vector)
@@ -189,8 +183,6 @@ void QuTable::onUpdate(const CuData& da)
 
 void QuTable::configure (const CuData& da)
 {
-    cuprintf("\e[1;34mQuTable:configure: got configuration data as follows:\n\n%s\n\n", da.toString().c_str());
-
     if(da.containsKey("description"))
         setWhatsThis(da["description"].toString().c_str());
 

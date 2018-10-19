@@ -10,13 +10,14 @@ QuGaugeConfig::QuGaugeConfig()
     animationEnabled = true;
     drawText = true;
     maximumAnimDuration = 1800; // millis
+    unit = "";
 
     // if low_w == high_w low warning is disabled
     // the same goes for low/high error
     //
     low_w = high_w = low_e = high_e = 0.0;
 
-    ticksCount = 10;
+    ticksCount = 11;
     minorTicksCount = 5;
     tickLen = 0.08; // percentage of radius respect to min(width, height) (0.08 = 8% )
     arrowSize = 1.0; // percentage of tickLen (1.0 = 100%)
@@ -33,6 +34,7 @@ QuGaugeConfig::QuGaugeConfig()
     warningColor = QColor("orange"); // http://www.december.com/html/spec/colorsvg.html
     errorColor = QColor(Qt::red);
     normalColor = QColor(Qt::green);
+    readErrorColor = QColor(Qt::darkGray);
     backgroundColor = QColor(Qt::white);
     backgroundGradientSpread = 0.9;
     backgroundColorAlpha = 100;

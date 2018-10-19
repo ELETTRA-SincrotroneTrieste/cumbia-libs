@@ -263,6 +263,7 @@ void EFlag::setTrueStrings(QString s)
 { 
 	//m_trueStrings = s.split(";",QString::SkipEmptyParts);
 	m_trueStrings = s.split(";");
+    qDebug() << __FUNCTION__ << "EFLAG" << m_trueStrings;
 	configureCells();
 }
 

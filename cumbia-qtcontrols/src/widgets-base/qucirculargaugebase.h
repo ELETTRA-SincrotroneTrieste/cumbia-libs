@@ -41,6 +41,7 @@ class QuCircularGaugeBase : public QWidget
     Q_PROPERTY(QColor tickCoreColor READ tickCoreColor WRITE setTickCoreColor DESIGNABLE true)
     Q_PROPERTY(QColor errorColor READ errorColor WRITE setErrorColor DESIGNABLE true)
     Q_PROPERTY(QColor normalColor READ normalColor WRITE setNormalColor DESIGNABLE true)
+    Q_PROPERTY(QColor readErrorColor READ readErrorColor WRITE setReadErrorColor DESIGNABLE true)
     Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor DESIGNABLE true)
     Q_PROPERTY(double backgroundGradientSpread READ backgroundGradientSpread WRITE setBackgroundGradientSpread DESIGNABLE true)
     Q_PROPERTY(QColor needleColor READ needleColor WRITE setNeedleColor DESIGNABLE true)
@@ -84,6 +85,7 @@ public:
     bool drawTickCore2() const;
     bool drawColoredTicks() const;
     bool animationEnabled() const;
+    bool readError() const;
     qint64 maxAnimationDuration() const;
     LabelPosition labelPosition() const;
     double labelDistFromCenter() const;
@@ -98,6 +100,7 @@ public:
     QColor warningColor() const;
     QColor errorColor() const;
     QColor normalColor() const;
+    QColor readErrorColor() const;
     QColor backgroundColor() const;
     QColor needleColor() const;
     QColor tickCoreColor() const;
@@ -114,11 +117,11 @@ public:
 
     QPointF mapTo(double val, int *angleSpan, double radius = -1.0, const QRectF &paint_area = QRectF());
 
-    QRectF labelRect(int tick, double radius);
+    QRectF textRect(int tick, double radius);
 
     double labelFontSize();
 
-    virtual QString formatLabel(double val, const char *format) const;
+    virtual QString formatLabel(double val, const QString &format) const;
 
     QString label(int i) const;
 
@@ -138,6 +141,7 @@ signals:
 
 public slots:
     void setValue(double v);
+    void setReadError(bool err);
     void setValue_anim(double v);
     void setAngleStart(int as);
     void setAngleSpan(int a);
@@ -158,6 +162,7 @@ public slots:
     void setErrorColor(const QColor& ec);
     void setWarningColor(const QColor& wc);
     void setNormalColor(const QColor& nc);
+    void setReadErrorColor(const QColor& rec);
     void setBackgroundColor(const QColor &bc);
     void setNeedleColor(const QColor& c);
     void setTickCoreColor(const QColor& c);
@@ -175,7 +180,7 @@ public slots:
     void setUnit(const QString& u);
     void setLabelFontScale(double factor);
 
-    QString setFormat(const QString& f);
+    void setFormat(const QString& f);
 
     QList<int> updateLabelsDistrib() const;
 
@@ -203,6 +208,8 @@ protected:
     virtual void drawBackground(const QRectF &rect, QPainter& p);
 
     virtual void drawLabel(const QRectF& rect, QPainter &p);
+
+    void changeEvent(QEvent *e);
 
     void resizeEvent(QResizeEvent *re);
 

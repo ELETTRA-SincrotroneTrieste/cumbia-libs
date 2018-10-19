@@ -254,6 +254,11 @@ void CuEventActivity::onExit()
             at["err"]  = true;
         }
     }
+    else if(!d->tdev->getDevice()) {
+        at["err"] = true;
+        at["msg"] = d->tdev->getMessage();
+        at["name"] = d->tdev->getName();
+    }
     refcnt = d->tdev->removeRef();
 
     if(refcnt == 0)

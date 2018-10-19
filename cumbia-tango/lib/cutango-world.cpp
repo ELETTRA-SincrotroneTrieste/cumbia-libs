@@ -742,14 +742,12 @@ bool CuTangoWorld::write_att(Tango::DeviceProxy *dev,
         Tango::DeviceAttribute da = toDeviceAttribute(attnam, argins, point_info);
         if(!d->error)
         {
-            printf("wriging \e[1;31mattribute %s\e[0m...\n\n", attnam.c_str());
             dev->write_attribute(da);
             d->message = "successfully written \"" + attnam + "\" on dev \"" + data["device"].toString() + "\"";
         }
     }
     catch(Tango::DevFailed &e)
     {
-        printf("caught exception while wriging attribute %s...\n", attnam.c_str());
         d->error = true;
         d->message = strerror(e);
     }
@@ -797,16 +795,13 @@ bool CuTangoWorld::get_att_config(Tango::DeviceProxy *dev, const string &attribu
     {
         try
         {
-            printf("before get_attribute_config for %s...\n", attribute.c_str());
             aiex = dev->get_attribute_config(attribute);
             fillFromAttributeConfig(aiex, dres);
-            printf("after get_attribute_config for %s...\n", attribute.c_str());
             d->message = "successfully got configuration for " + dres["src"].toString();
             return true;
         }
         catch(Tango::DevFailed &e)
         {
-            printf("failed get_attribute_config for %s\n", attribute.c_str());
             d->error = true;
             d->message = strerror(e);
         }
@@ -829,7 +824,6 @@ bool CuTangoWorld::get_att_props(Tango::DeviceProxy *dev,
     {
         std::vector<std::string> res;
         std::string prop = props.at(j);
-        cuprintf("seeking prop %s\n", prop.c_str());
         try
         {
             std::string device_name = dev->name();
@@ -845,8 +839,6 @@ bool CuTangoWorld::get_att_props(Tango::DeviceProxy *dev,
                 for(int k = 0; k < nb_prop; k++)
                 {
                     std::string &prop_name = db_data[i].name;
-                    cuprintf("attributeName %s prop_name %s property %s\n", attribute_name.c_str(),
-                             prop_name.c_str(), prop.c_str());
                     if(strcasecmp(attribute_name.c_str(), attname.c_str()) == 0 &&
                             strcasecmp(prop_name.c_str(), prop.c_str()) == 0 && !db_data[i].is_empty())
                     {
@@ -855,12 +847,15 @@ bool CuTangoWorld::get_att_props(Tango::DeviceProxy *dev,
                     i++;
                 }
             }
-            for(size_t i = 0; i < vs.size(); i++)
-                res.push_back(vs[i]);
-            dres[prop] = res;
-            std::vector<std::string> pp = dres["properties"].toStringVector();
-            pp.push_back(prop);
-            dres["properties"] = pp;
+
+            if(vs.size() > 0) {
+                for(size_t i = 0; i < vs.size(); i++)
+                    res.push_back(vs[i]);
+                dres[prop] = res;
+                std::vector<std::string> pp = dres["properties"].toStringVector();
+                pp.push_back(prop);
+                dres["properties"] = pp;
+            }
         }
         catch (Tango::DevFailed &e)
         {
@@ -1311,7 +1306,7 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const std::vector<std::string> &arg
     {
         d->error = true;
         d->message = "CuTangoWorld.toDeviceData: cannot convert argins \"" + v + "\" to type " +
-                 std::to_string(in_type) + ": invalid argument: " + ore.what();
+                std::to_string(in_type) + ": invalid argument: " + ore.what();
         perr("%s", d->message.c_str());
     }
     return dd;

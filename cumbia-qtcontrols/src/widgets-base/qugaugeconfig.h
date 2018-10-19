@@ -27,7 +27,7 @@ public:
     QString unit;
 
     QStringList labelsCache;
-    QColor errorColor, warningColor, normalColor, backgroundColor;
+    QColor errorColor, warningColor, normalColor, backgroundColor, readErrorColor;
     QColor needleColor, tickCoreColor;
     QColor needleGuideColor; // linear gauge, needle indicator only
     QColor textColor;
