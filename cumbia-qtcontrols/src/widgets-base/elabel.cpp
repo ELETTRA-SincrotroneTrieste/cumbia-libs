@@ -156,7 +156,7 @@ void ELabel::display()
                 setText(d_ptr->falseString);
             }
         }
-        decorate(background, QColor());
+        setDecoration(background, QColor());
     }
     //else if (d_ptr->val.type() == QVariant::UInt)
     else if (d_ptr->val.canConvert(QVariant::UInt) && (v_colors.size()) && (!d_ptr->val.toString().contains("###")))
@@ -171,7 +171,7 @@ void ELabel::display()
             if(background !=  v_colors[index])
             {
                 background == v_colors[index];
-                decorate(background, QColor());
+                setDecoration(background, QColor());
             }
             setText(v_strings[index]);
         }
@@ -180,7 +180,7 @@ void ELabel::display()
             if(background !=  QColor(Qt::white))
             {
                 background = QColor(Qt::white);
-                decorate(background, QColor());
+                setDecoration(background, QColor());
             }
             setText(QString("No match for value %1!").arg(d_ptr->val.toUInt() ) );
         }
@@ -193,7 +193,7 @@ void ELabel::display()
             if(background !=   QColor(Qt::white))
             {
                 background = QColor(Qt::white);
-                decorate(background, QColor());
+                setDecoration(background, QColor());
             }
         }
         setText(d_ptr->val.toString());

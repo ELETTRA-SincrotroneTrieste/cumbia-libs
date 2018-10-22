@@ -128,7 +128,6 @@ void CuContextActionBridge::onLinkStatsRequest(QWidget *sender, CuContextI *w)
 /// @private // no doxygen
 void CuContextActionBridge::m_connect()
 {
-    bool res;
     foreach(QWidget *w, qobject_cast<QWidget *>(parent())->findChildren<QWidget *>())
     {
         const QMetaObject *mo = w->metaObject();
@@ -136,7 +135,7 @@ void CuContextActionBridge::m_connect()
   //      qDebug() << __FUNCTION__ << mo->className() << " has linkStatsRequest signal: " << hasSignal;
         if(hasSignal)
         {
-            res = connect(w, SIGNAL(linkStatsRequest(QWidget*, CuContextI *)),
+            connect(w, SIGNAL(linkStatsRequest(QWidget*, CuContextI *)),
                           this, SLOT(onLinkStatsRequest(QWidget*, CuContextI *)));
         }
     }

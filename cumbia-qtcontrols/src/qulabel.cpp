@@ -61,7 +61,7 @@ void QuLabel::m_init()
     setProperty("falseColor", QColor(Qt::red));
     QColor background = d->palette["white"];
     QColor border = d->palette["gray"];
-    decorate(background, border);
+    setDecoration(background, border);
 }
 
 QuLabel::~QuLabel()
@@ -173,6 +173,6 @@ void QuLabel::onUpdate(const CuData &da)
         QuPalette p;
         background = p[QString::fromStdString(v.toString())];
     }
-    decorate(background, border);
+    setDecoration(background, border);
     emit newData(da);
 }

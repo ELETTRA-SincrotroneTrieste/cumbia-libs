@@ -22,6 +22,7 @@ QuGaugeConfig::QuGaugeConfig()
     tickLen = 0.08; // percentage of radius respect to min(width, height) (0.08 = 8% )
     arrowSize = 1.0; // percentage of tickLen (1.0 = 100%)
     gaugeWidth = 6;
+    pivotRadius = 0.08;
 
     format = "%.0f";
 
@@ -41,7 +42,7 @@ QuGaugeConfig::QuGaugeConfig()
     tickCoreColor = QColor(Qt::black);
     textColor = QColor(Qt::black);
 
-    needleColor = QColor(Qt::black);
+    needleColor = QColor(Qt::red);
     arrowColor = needleGuideColor = QColor(Qt::white);
     arrowColor.setAlphaF(0.8);
     arrowPenWidth = 1.2f;

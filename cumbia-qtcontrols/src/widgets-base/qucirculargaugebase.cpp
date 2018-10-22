@@ -57,7 +57,7 @@ QuCircularGaugeBase::QuCircularGaugeBase(QWidget *parent) : QWidget(parent)
     d = new QuCircularGaugeBasePrivate;
     d->startAngle = 120; // from 3 o' clock
     d->spanAngle = 300;
-    g_config->pivotRadius = 0.0; // do not draw pivot
+    g_config->pivotRadius = 0.08; // 8% of the radius
     d->propertyAnimation = NULL;
     d->labelPosition = NoLabel;
     d->labelDistFromCenter = 0.25;
@@ -196,7 +196,7 @@ double QuCircularGaugeBase::gaugeWidth() const
  * This number, a floating point in the interval [0.0, 1.0], represents the fraction of the
  * length of the radius used to draw a circle on the pivot of the needle.
  *
- * The exact formula used to calculate the pivot circle radius is as follows:
+ * The formula used to calculate the pivot circle radius is:
  *
  * \code
  * qMin(paintArea().width(), paintArea().height())/2.0 * g_config->pivotRadius

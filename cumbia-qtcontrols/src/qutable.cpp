@@ -62,7 +62,7 @@ void QuTable::m_init()
     foreach(ELabel *l, cells)
     {
         l->setValue(QString("No Link"));
-        l->decorate(background, border);
+        l->setDecoration(background, border);
     }
 }
 
@@ -131,7 +131,6 @@ void QuTable::onUpdate(const CuData& da)
     else if(da.containsKey("value"))
     {
         CuVariant val = da["value"];
-        cuprintf("QuTable value is %s type %d\n\n", val.toString().c_str(), val.getType());
         if(val.getType() == CuVariant::UInt && val.getFormat() == CuVariant::Scalar)
             EFlag::setValue(QVariant(val.toUInt()));
         else if(val.getType() == CuVariant::UShort && val.getFormat() == CuVariant::Scalar)
@@ -147,7 +146,6 @@ void QuTable::onUpdate(const CuData& da)
             QList<QVariant> l;
             for (it = bv.begin(); it < bv.end(); it++)
                 l << QVariant(*it);
-            qDebug() << __FUNCTION__ << "Setting value " << l << "to eflag";
             EFlag::setValue(QVariant(l));
         }
         else if(val.getType() == CuVariant::String && val.getFormat() == CuVariant::Vector)
@@ -175,8 +173,8 @@ void QuTable::onUpdate(const CuData& da)
         background = d->palette[QString::fromStdString(v.toString())];
     }
 
-//    foreach(ELabel *l, cells)
-//        l->decorate(background, border);
+    foreach(ELabel *l, cells)
+        l->setDecoration(background, border);
 
     emit newData(da);
 }
