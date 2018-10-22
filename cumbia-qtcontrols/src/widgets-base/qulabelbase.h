@@ -1,30 +1,30 @@
-#ifndef ESIMPLELABEL_H
-#define ESIMPLELABEL_H
+#ifndef QULABELBASE_H
+#define QULABELBASE_H
 
 #include <QLabel>
 #include <QStyleOptionFrame>
 #include <QStyle>
 #include <QtDebug>
 
-class ESimpleLabelPrivate;
+class QuLabelBasePrivate;
 
 /** \brief A QLabel that in addition decorates its border and background.
  *
  * \ingroup basew
  *
  */
-class ESimpleLabel : public QLabel
+class QuLabelBase : public QLabel
 {
   
   Q_OBJECT
     Q_PROPERTY(double borderWidth READ borderWidth WRITE setBorderWidth DESIGNABLE true)
   public:
 
-	ESimpleLabel(QWidget *parent);
+    QuLabelBase(QWidget *parent);
 	
-	ESimpleLabel(const QString& text, QWidget *parent);
+    QuLabelBase(const QString& text, QWidget *parent);
 
-    virtual ~ESimpleLabel();
+    virtual ~QuLabelBase();
 
     void setDecoration(const QColor &background, const QColor &border);
 
@@ -39,7 +39,7 @@ protected:
     void paintEvent(QPaintEvent *pe);
 
 private:
-    ESimpleLabelPrivate *d_ptr;
+    QuLabelBasePrivate *d_ptr;
 	
 };
 

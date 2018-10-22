@@ -30,7 +30,7 @@ public:
  *  Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */
 QuLabel::QuLabel(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_factory) :
-    ESimpleLabel(w), CuDataListener()
+    QuLabelBase(w), CuDataListener()
 {
     m_init();
     d->context = new CuContext(cumbia, r_factory);
@@ -41,7 +41,7 @@ QuLabel::QuLabel(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_f
  *   Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */
 QuLabel::QuLabel(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) :
-    ESimpleLabel(w), CuDataListener()
+    QuLabelBase(w), CuDataListener()
 {
     m_init();
     d->context = new CuContext(cumbia_pool, fpool);

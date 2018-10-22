@@ -1,38 +1,45 @@
-#include "esimplelabel.h"
+#include "qulabelbase.h"
 #include <cumacros.h>
 #include <QPainter>
 #include <QPen>
 #include <QtDebug>
 
-class ESimpleLabelPrivate
+class QuLabelBasePrivate
 {
 public:
     QColor borderColor, backgroundColor;
     double borderWidth;
 };
 
-ESimpleLabel::ESimpleLabel(QWidget *parent) : QLabel(parent)
+QuLabelBase::QuLabelBase(QWidget *parent) : QLabel(parent)
 {
-    d_ptr = new ESimpleLabelPrivate;
+    d_ptr = new QuLabelBasePrivate;
     d_ptr->borderWidth = 1.0;
     setAlignment(Qt::AlignCenter);
     setAutoFillBackground(true);
 }
 
-ESimpleLabel::ESimpleLabel(const QString& text, QWidget *parent) : QLabel(text, parent)
+QuLabelBase::QuLabelBase(const QString& text, QWidget *parent) : QLabel(text, parent)
 {
-    d_ptr = new ESimpleLabelPrivate;
+    d_ptr = new QuLabelBasePrivate;
     d_ptr->borderWidth = 1.0;
     setAlignment(Qt::AlignCenter);
     setAutoFillBackground(true);
 }
 
-ESimpleLabel::~ESimpleLabel()
+QuLabelBase::~QuLabelBase()
 {
     delete d_ptr;
 }
 
-void ESimpleLabel::setDecoration(const QColor & background, const QColor &border)
+/*! \brief changes the colors for the decoration of the label
+ *
+ * @param background sets the background color
+ * @param border sets the border color
+ *
+ * @see borderWidth
+ */
+void QuLabelBase::setDecoration(const QColor & background, const QColor &border)
 {
     if(background.isValid() && d_ptr->backgroundColor != background) {
         d_ptr->backgroundColor = background;
@@ -43,19 +50,42 @@ void ESimpleLabel::setDecoration(const QColor & background, const QColor &border
     d_ptr->borderColor = border;
 }
 
-double ESimpleLabel::borderWidth() const
+/*! \brief returns the width, in pixels, of the colored border that is
+ *         drawn around the label
+ *
+ * Please read setBorderWidth documentation for further details
+ */
+double QuLabelBase::borderWidth() const
 {
     return d_ptr->borderWidth;
 }
 
-void ESimpleLabel::setBorderWidth(double w)
+/*! \brief sets the width of the border drawn with the chosen color
+ *
+ * @param w the desired width of the border
+ *
+ * The border color is chosen with setDecoration
+ *
+ * Additional
+ * \li one pixel gray outer border
+ * \li two one-pixel borders around the colored border
+ * are drawn
+ *
+ * @see setDecoration
+ */
+void QuLabelBase::setBorderWidth(double w)
 {
     d_ptr->borderWidth = w;
     update();
     updateGeometry();
 }
 
-QSize ESimpleLabel::minimumSizeHint() const
+/*! \brief reimplements QLabel::minimumSizeHint to ensure there is enough space to draw
+ *         the decorations on the border
+ *
+ * @return the minimum size hint for the label
+ */
+QSize QuLabelBase::minimumSizeHint() const
 {
     QSize s = QLabel::minimumSizeHint();
     s.rwidth() += 8 + d_ptr->borderWidth * 2; // (1 outer gray + 1 white + borderWidth + 1 white + 1 margin) * 2
@@ -65,18 +95,17 @@ QSize ESimpleLabel::minimumSizeHint() const
 
 /*! \brief Reimplements QLabel::paintEvent
  *
- * Draws a border on the widget:
- * \li one pixel gray border
+ * Draws a decoration on the widget:
+ * \li one pixel gray outer border
  * \li one pixel white border
  * \li borderWidth pixel with the color chosen for the border with the setDecoration method
- * \li one pixel white border
+ * \li one pixel inner white border
  *
  * \note the background color, set with the setDecoration method, is applied through the
  *      QLabel palette for the background role
  */
-void ESimpleLabel::paintEvent(QPaintEvent *pe)
+void QuLabelBase::paintEvent(QPaintEvent *pe)
 {
-    qDebug () << __FUNCTION__ << text();
     QLabel::paintEvent(pe);
     double pwidth = d_ptr->borderWidth;
     const QRectF &r = rect().adjusted(0, 0, -1, -1);

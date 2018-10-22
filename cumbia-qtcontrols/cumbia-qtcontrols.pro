@@ -76,7 +76,8 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/widgets-base/qucirculargaugebase.cpp \
     src/widgets-base/qugaugeconfig.cpp \
     src/widgets-base/qulineargaugebase.cpp \
-    src/quanimation.cpp
+    src/quanimation.cpp \
+    src/widgets-base/qulabelbase.cpp
 
 HEADERS += cumbiaqtcontrols.h\
         cumbia-qtcontrols_global.h \
@@ -148,14 +149,14 @@ HEADERS += cumbiaqtcontrols.h\
     src/widgets-base/elabel.h \
     src/widgets-base/elettracolors.h \
     src/widgets-base/enumeric.h \
-    src/widgets-base/esimplelabel.h \
     src/cuappstatemanager.h \
     src/qulineargauge.h \
     src/widgets-base/qucirculargaugebase.h \
     src/widgets-base/qucirculargaugebase.h \
     src/widgets-base/qugaugeconfig.h \
     src/widgets-base/qulineargaugebase.h \
-    src/quanimation.h
+    src/quanimation.h \
+    src/widgets-base/qulabelbase.h
 
 unix:!android-g++ {
 
@@ -230,8 +231,7 @@ SOURCES += \
     src/widgets-base/egauge.cpp \
     src/widgets-base/elabel.cpp \
     src/widgets-base/elettracolors.cpp \
-    src/widgets-base/enumeric.cpp \
-    src/widgets-base/esimplelabel.cpp
+    src/widgets-base/enumeric.cpp
 
 DISTFILES += \
     cumbia-qtcontrols.pri

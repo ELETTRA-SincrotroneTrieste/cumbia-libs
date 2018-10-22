@@ -29,7 +29,7 @@ class CuLinkStats;
  * getContext returns a pointer to the CuContext used as a delegate for the connection.
  *
  */
-class QuLabel : public ESimpleLabel, public CuDataListener, public CuContextI
+class QuLabel : public QuLabelBase, public CuDataListener, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)

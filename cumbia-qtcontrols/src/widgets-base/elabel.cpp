@@ -12,7 +12,7 @@ public:
     QVariant val;
 };
 
-ELabel::ELabel(QWidget *parent) : ESimpleLabel(parent)
+ELabel::ELabel(QWidget *parent) : QuLabelBase(parent)
 {
 
     //	setFrameShape(QFrame::WinPanel);

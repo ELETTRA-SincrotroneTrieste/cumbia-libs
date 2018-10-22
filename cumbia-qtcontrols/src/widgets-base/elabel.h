@@ -7,7 +7,7 @@
 #include <QColor>
 #include <QtDebug>
 #include "elettracolors.h"
-#include "esimplelabel.h"
+#include "qulabelbase.h"
 
 class ELabelPrivate;
 
@@ -16,7 +16,7 @@ class ELabelPrivate;
  *
  * \ingroup corew
  */
-class ELabel : public ESimpleLabel
+class ELabel : public QuLabelBase
 {
 Q_OBJECT
 Q_PROPERTY(QColor trueColor    READ trueColor   WRITE setTrueColor   DESIGNABLE false)
