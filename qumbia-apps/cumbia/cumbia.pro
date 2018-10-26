@@ -41,7 +41,7 @@ script.path = $${INSTALL_ROOT}/bin
 script.files = cumbia
 
 
-message("bash completion dir $${BASH_COMPLETION_DIR} dafulllla")
+message("bash completion dir $${BASH_COMPLETION_DIR}")
 
 
 INSTALLS = completion script

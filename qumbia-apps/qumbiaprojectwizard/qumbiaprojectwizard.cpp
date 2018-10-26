@@ -37,11 +37,21 @@ QumbiaProjectWizard::QumbiaProjectWizard(QWidget *parent) :
     m_rbFactorySaveChecked = NULL;
     qApp->setApplicationName("QumbiaProjectWizard");
     QTimer::singleShot(200, this, SLOT(init()));
+    m_usage();
 }
 
 QumbiaProjectWizard::~QumbiaProjectWizard()
 {
     delete ui;
+}
+
+void QumbiaProjectWizard::m_usage() {
+    printf("\n================================================================================================\n"
+           "OPTIONS\n"
+           "\e[0;32m--from-qtango\e[0m start the application in the \"import project from qtango\" mode\n"
+           "\e[0;32m--from-qtango --in-current-wdir\e[0m search for \e[1;36m.pro\e[0m files and output in the current directory\n"
+           "\e[0;32m--from-qtango --fast\e[0m (implies --in-current-wdir) same as previous option, minimise user interaction (only confirm operation)"
+           "================================================================================================\n\n");
 }
 
 void QumbiaProjectWizard::init()
@@ -125,8 +135,11 @@ void QumbiaProjectWizard::init()
     checkValidity();
 
     if(qApp->arguments().contains("--from-qtango")) {
+        bool fast = qApp->arguments().contains("--in-current-wdir") || qApp->arguments().contains("--fast");
         ui->rbImport->setChecked(true);
-        qtangoImport();
+        bool success = qtangoImport(qApp->arguments().contains("--in-current-wdir") || fast);
+        if(success && fast)
+            create();
     }
     else
         importRbToggled(false);
@@ -152,8 +165,9 @@ void QumbiaProjectWizard::create()
     QString project_path = location + project_name;
 
     if(ui->rbImport->isChecked()) {
-
-        ConversionDialog *cd = new ConversionDialog(this, project_path);
+        project_path = ui->leLocation->text();
+        bool overwrite = qApp->arguments().contains("--in-current-wdir") || qApp->arguments().contains("--fast");
+        ConversionDialog *cd = new ConversionDialog(this, project_path, overwrite);
         cd->setObjectName("conversionDialog");
         connect(cd, SIGNAL(okClicked()), this, SLOT(conversionDialogOkClicked()));
         connect(m_qtangoImport, SIGNAL(newLog(const QList<OpQuality> &)), cd, SLOT(addLogs(const QList<OpQuality>&)));
@@ -241,7 +255,6 @@ void QumbiaProjectWizard::create()
 
             {
                 contents = QString(f.readAll());
-
                 contents.replace("$INCLUDE_DIR$", INCLUDE_PATH);
 
                 foreach(QLineEdit *le, findChildren<QLineEdit *>())
@@ -274,6 +287,13 @@ void QumbiaProjectWizard::create()
                         contents.replace(re, QString("contains(ANDROID_TARGET_ARCH,armeabi-v7a)"
                             " {\n\tANDROID_EXTRA_LIBS = \\\n%1}").arg(m_formatAndroidLibs()));
                     }
+                    // $UI_FORMFILE_H$ in the section HEADERS += adds the ui_*.h file
+                    // to the HEADERS in oreder to ensure that a changed ui file is rebuilt after
+                    // modification
+                    QString form_base(form);
+                    if(form_base.endsWith(".ui"))
+                        form_base.remove(".ui");
+                    contents.replace("$UI_FORMFILE_H$", "ui_" + form_base + ".h");
                 }
 
                 subdirname = fi.subDirName;
@@ -293,10 +313,6 @@ void QumbiaProjectWizard::create()
                 }
                 else
                 {
-                    printf("* \e[1;36mwill output on file \"%s\"\e[0m\n", outfilename.toStdString().c_str());
-
-                    printf("================================================\n\e[0;37m%s\e[0m\n\n", contents.toStdString().c_str());
-
                     QFile out(outfilename, this);
                     if(!out.open(QIODevice::WriteOnly|QIODevice::Text))
                     {
@@ -311,7 +327,6 @@ void QumbiaProjectWizard::create()
                         fo << contents;
                         f.close();
                     }
-
                 }
             }
             else
@@ -419,14 +434,28 @@ void QumbiaProjectWizard::setFactory(bool rbchecked)
         m_selectedFactory = sender()->property("factory").toString();
 }
 
-void QumbiaProjectWizard::qtangoImport()
+/*! \brief set up tango import view.
+ *
+ * @param from_cwd true conversion output will be produced in the same directory as the qtango project
+ */
+bool QumbiaProjectWizard::qtangoImport(bool from_cwd)
 {
     bool ok;
     QSettings s;
-    QString lastProjectDirnam = s.value("LAST_PROJECT_DIRNAM", QDir::homePath()).toString();
-    QString pro_f = QFileDialog::getOpenFileName(this,
+    QString pro_f;
+    QFileInfoList pro_list = QDir::current().entryInfoList(QStringList() << "*.pro", QDir::Files);
+    if(pro_list.size() == 1 && from_cwd) {
+        pro_f = pro_list.first().fileName();
+        ui->leLocation->setText(QDir::currentPath());
+    }
+    else {
+        QString lastProjectDirnam = s.value("LAST_PROJECT_DIRNAM", QDir::homePath()).toString();
+        pro_f = QFileDialog::getOpenFileName(this,
                                                  "Select a QTango project file [*.pro]",
                                                  lastProjectDirnam, "*.pro");
+        QFileInfo fii(pro_f);
+        ui->leLocation->setText(fii.absolutePath());
+    }
     if(!pro_f.isEmpty())
     {
         if(m_qtangoImport)
@@ -448,12 +477,10 @@ void QumbiaProjectWizard::qtangoImport()
         else {
         }
         QFileInfo fi(pro_f);
-        qDebug() << __FUNCTION__ << "dir is " << fi.absoluteDir().absolutePath();
         s.setValue("LAST_PROJECT_DIRNAM", fi.absoluteDir().absolutePath());
 
     }
-    qDebug() << __FUNCTION__ << "success" << ok;
-
+    return ok;
 }
 
 void QumbiaProjectWizard::checkValidity()
@@ -529,10 +556,10 @@ void QumbiaProjectWizard::addProperties(QString &uixml)
 void QumbiaProjectWizard::importRbToggled(bool t)
 {
     t ? ui->pbCreate->setText("Convert...") : ui->pbCreate->setText("Create");
+    ui->leLocation->setEnabled(!t);
     ui->pbImport->setVisible(t);
 }
 
-// /home/giacomo/devel/fermi/panels/power_supply/danfisik9000
 void QumbiaProjectWizard::conversionDialogOkClicked()
 {
     ConversionDialog *cd = findChild<ConversionDialog *>();
@@ -553,13 +580,11 @@ void QumbiaProjectWizard::conversionDialogOkClicked()
     }
     if(proceed) {
         QList<QString> convfiles = m_qtangoImport->convertedFileList();
-        printf("\e[1;32m* \e[0mconverted files:\n");
         bool err = !m_qtangoImport->findFilesRelPath();
         if(!err)
         {
             for(int i = 0; i < convfiles.size() && !err; i++) {
                 QString f = convfiles.at(i);
-                printf("\e[1;33m- \e[0m%s\n", f.toStdString().c_str());
                 err = !m_qtangoImport->outputFile(f, project_path);
             }
         }
@@ -768,7 +793,6 @@ void QumbiaProjectWizard::m_launchApps(const QString& path)
                     args[i].replace("$UI_FILE",  formi.subDirName + "/" + formi.newFileName);
                 }
             }
-            printf("\e[1;32m Launching le process %s\n", cmdline.join(" ").toStdString().c_str());
             QProcess process(this);
             int res = process.startDetached(cmdline.first(), args, project_path);
             if(!res)

@@ -137,7 +137,7 @@ void QuCircularGauge::m_configure(const CuData& da)
     if(da["display_unit"].toString().length() > 0)
         setUnit(QString::fromStdString(da["display_unit"].toString()));
     if(da["format"].toString().length() > 0)
-        setFormat(QString::fromStdString(da["format"].toString()));
+        setFormatProperty(QString::fromStdString(da["format"].toString()));
 }
 
 void QuCircularGauge::m_set_value(const CuVariant &val)

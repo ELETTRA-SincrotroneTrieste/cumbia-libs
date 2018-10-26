@@ -6,7 +6,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QPixmap>
-#include <esimplelabel.h>
+#include <QLabel>
 #include <QResizeEvent>
 #include <QMouseEvent>
 #include <QButtonGroup>

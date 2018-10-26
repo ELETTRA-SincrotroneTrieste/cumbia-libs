@@ -46,8 +46,10 @@ QString ProConvertCmd::process(const QString &input)
         m_err = (in_pos < 0 || out_pos < 0);
         if(!m_err) {
             rep = in_re.cap(1);
-            if(r == "FORMS")
+            if(r == "FORMS") {
                 rep = m_comment_lines(rep);
+                m_add_ui_h_to_headers(rep, pro_out);
+            }
             pro_out.replace(template_re.cap(1), rep);
             m_log.append(OpQuality("pro file", r, r == "FORMS" ? "# " + r : r, filename(), "replaced", Quality::Ok, lineno));
         }
@@ -91,6 +93,31 @@ QString ProConvertCmd::m_comment_lines(const QString &s)
         out += "#\t" + l + "\n";
     }
     return out;
+}
+
+void ProConvertCmd::m_add_ui_h_to_headers(const QString& forms_block, QString& pro) {
+    QRegExp re("#\\s*FORMS\\s*=\\s*(.*.ui)\\s+");
+    QString headers =  "HEADERS += \\\n";
+    QStringList ui_forms;
+    int pos = 0;
+    while(( pos = re.indexIn(forms_block, pos)) != -1) {
+        ui_forms << re.cap(1);
+        pos += re.matchedLength();
+    }
+    QString uih;
+    for(int i = 0; i < ui_forms.size(); i++) {
+        uih = ui_forms.at(i).trimmed();
+        uih.remove("src/");
+        headers += "\tui_" + uih.replace(".ui", ".h");
+        if(i < ui_forms.size() - 1)
+            headers + " \\\n";
+    }
+
+    // find the HEADERS += \... $UI_FORMFILE_H$ section and replace it with real headers
+    //
+    re.setPattern("HEADERS\\s*\\+=\\s*\\\\\\s*.*\\$UI_FORMFILE_H\\$");
+    pro.replace(re, headers);
+    qDebug() << __FUNCTION__ << "inserting at pos " << pos << "BLOCK " << headers;
 }
 
 QString ProConvertCmd::m_remove_comments(const QString &s)

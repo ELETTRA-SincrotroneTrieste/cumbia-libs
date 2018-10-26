@@ -233,7 +233,8 @@ void CuPollingActivity::decreasePolling() {
     }
     else
         d->repeat = d->period;
-    printf("\e[0;33mCuPollingActivity::decreasePolling: period is %d d->repeat has been set to %d\e[0m\n", d->period, d->repeat);
+    printf("\e[0;33mCuPollingActivity::decreasePolling: \"%s\": error count is %d period is %d d->repeat has been set to %d\e[0m\n",
+           getToken().toString().c_str(), d->errCnt, d->period, d->repeat);
 }
 
 /** \brief returns true if the passed token's *device* *activity* and *period* values matche this activity token's

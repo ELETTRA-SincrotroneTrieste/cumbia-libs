@@ -9,7 +9,7 @@ class ConversionDialog : public QDialog
 {
     Q_OBJECT
 public:
-    ConversionDialog(QWidget* parent, const QString &outpath);
+    ConversionDialog(QWidget* parent, const QString &outpath, bool overwrite = false);
 
     ~ConversionDialog();
 

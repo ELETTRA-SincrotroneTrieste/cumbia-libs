@@ -31,6 +31,8 @@ public:
 
     void connectObject(QObject *w);
 
+
+
 private slots:
     void onLinkStatsRequest(QWidget *sender, CuContextI *);
 

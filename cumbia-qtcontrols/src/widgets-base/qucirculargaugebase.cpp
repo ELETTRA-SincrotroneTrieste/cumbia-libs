@@ -605,6 +605,17 @@ QString QuCircularGaugeBase::format() const
     return g_config->format;
 }
 
+bool QuCircularGaugeBase::formatFromPropertyEnabled() const
+{
+    return g_config->format_from_property;
+}
+
+QString QuCircularGaugeBase::getAppliedFormat() const {
+    if(g_config->format_from_property)
+        return g_config->format_prop;
+    return g_config->format;
+}
+
 QString QuCircularGaugeBase::labelValueFormat() const
 {
     return d->labelValueFormat;
@@ -847,9 +858,54 @@ void QuCircularGaugeBase::setDrawBackgroundEnabled(bool en)
     g_config->drawBackground = en;
 }
 
+/*! \brief sets the format to be used on the text along the gauge if the property
+ *         formatFromProperty enabled is false
+ *
+ * @param f the format used if formatFromProperty is false
+ *
+ * If formatFromProperty is true, the format is applied according to the value of the "format" key
+ * in the *configuration* CuData for the given source.
+ *
+ * \par note
+ * This method is called by QuCircularGauge when a CuData has the value "property" associated to the key "type"
+ * (configuration (or property) data).
+ *
+ * @see setFormatFromPropertyEnabled
+ */
 void QuCircularGaugeBase::setFormat(const QString &f)
 {
     g_config->format = f;
+    regenerateCache();
+    update();
+}
+
+/*! \brief enables or disables applying format from the *configuration* CuData
+ *
+ * @param ffp true the format of the text along the gauge is taken by the source properties.
+ * @param ffp false the format of the text along the gauge is taken by the format property
+ *
+ * @see format
+ * @see formatFromPropertyEnabled
+ */
+void QuCircularGaugeBase::setFormatFromPropertyEnabled(bool ffp)
+{
+    g_config->format_from_property = ffp;
+    regenerateCache();
+    update();
+}
+
+/*! \brief sets the format of the text along the gauge to be used when formatFromPropertyEnabled is true
+ *
+ * @param fp the format to be applied to the numbers along the gauge when formatFromPropertyEnabled is true
+ *
+ * \par note
+ * This method is called by QuCircularGauge when a CuData which key "type" has the "property" value.
+ *
+ * @see setFormatFromPropertyEnabled
+ */
+void QuCircularGaugeBase::setFormatProperty(const QString &fp)
+{
+    g_config->format_prop = fp;
     regenerateCache();
     update();
 }
@@ -897,7 +953,7 @@ void QuCircularGaugeBase::updateLabelsCache()
     int step = qRound((g_config->max - g_config->min) / (g_config->ticksCount - 1));
     double val = g_config->min;
     while(val <= g_config->max) {
-        QString lab = formatLabel(val, g_config->format);
+        QString lab = formatLabel(val, getAppliedFormat());
         if(fm.width(lab) > fm.width(d->cache.longestLabel))
             d->cache.longestLabel = lab;
         // fill labels cache
@@ -1340,7 +1396,6 @@ QSize QuCircularGaugeBase::minimumSizeHint() const
     int labwid = fm.width(d->cache.longestLabel);
     int labhei = fm.height();
     const double wfactor = 1.4;
-    const double hfactor = 9.5;
     double w0, h0;
     double a0 = -d->startAngle * M_PI / 180.0;
     double a1 = -(d->startAngle + d->spanAngle) * M_PI / 180.0;

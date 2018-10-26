@@ -27,6 +27,11 @@ HEADERS += src/$HFILE$
 
 # cuuimake runs uic
 # FORMS    = src/$FORMFILE$
+# but we need to include ui_xxxx.h file amongst the headers
+# in order to be recompiled when it changes
+#
+HEADERS += \
+    ui/$UI_FORMFILE_H$
 
 # - ui: where to find cuuimake ui_*.h files
 #   since FORMS is not used

@@ -6,6 +6,7 @@ class CumbiaPool;
 class CuControlsReaderFactoryI;
 class CuControlsWriterFactoryI;
 class CuControlsReaderA;
+class CuControlsPropertyReaderA;
 class CuControlsWriterA;
 class CuDataListener;
 class CuLinkStats;
@@ -53,6 +54,8 @@ public:
     CuControlsReaderA *add_reader(const std::string &s, CuDataListener* datal);
 
     CuControlsWriterA *add_writer(const std::string &s, CuDataListener *datal);
+
+    CuControlsPropertyReaderA* get_property_reader(const std::string& s, CuDataListener *datal);
 
     void disposeReader(const std::string &src = std::string());
 

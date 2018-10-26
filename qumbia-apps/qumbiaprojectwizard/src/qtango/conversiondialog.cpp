@@ -15,7 +15,7 @@
 #include "definitions.h"
 #include "fileprocessor_a.h"
 
-ConversionDialog::ConversionDialog(QWidget *parent, const QString& outpath) : QDialog(parent)
+ConversionDialog::ConversionDialog(QWidget *parent, const QString& outpath, bool overwrite) : QDialog(parent)
 {
     setAttribute(Qt::WA_DeleteOnClose, true);
     QVBoxLayout *vblo = new QVBoxLayout(this);
@@ -50,7 +50,7 @@ ConversionDialog::ConversionDialog(QWidget *parent, const QString& outpath) : QD
     lo->addWidget(label, 6, 1, 1, 1);
 
     QLineEdit *outpathLe = new QLineEdit(this);
-    outpathLe->setText(outpath + "/to_cumbia");
+    overwrite ? outpathLe->setText(outpath) :  outpathLe->setText(outpath + "/to_cumbia");
     outpathLe->setObjectName("outpathLe");
     lo->addWidget(outpathLe, 6, 2, 1, 4);
 

@@ -32,7 +32,7 @@ _cumbia()
             return 0
 			;;
 		import)
-			local names=$(for x in `ls  -1 *.pro`; do echo ${x} ; done )
+			local names=$(for x in fast `ls  -1 *.pro`; do echo ${x} ; done )
             COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
             return 0
 			;;

@@ -23,7 +23,8 @@ public:
     bool drawText;
     qint64 maximumAnimDuration;
 
-    QString format;
+    QString format, format_prop;
+    bool format_from_property;
     QString unit;
 
     QStringList labelsCache;

@@ -66,6 +66,11 @@
  * \a Cumbia and data listener instances. Object composition to accomplish the set up of a \a Tango (\a Epics) reader (writer)
  * will be discussed in the \a cumbia-tango-controls documentation.
  *
+ * \subsection context_menu Widget context menu, properties and *helper application* support
+ *
+ * *cumbia-qtcontrols* widgets provide a contextual menu offering the following actions:
+ * \li *link statistics*: an information dialog with details of the source and its health;
+ * \li *helper application*: available if a *free property* named *helperApplication* is set on the widget.
  *
  *  \section related_readings Related readings
  *
@@ -758,6 +763,8 @@ void QuApplyNumeric::onUpdate(const CuData &da)
 
 
  * \endcode
+ *
+ *
  *
  */
 

@@ -2,7 +2,6 @@
 #include <cumacros.h>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include <esimplelabel.h>
 
 EApplyNumeric::EApplyNumeric(QWidget *parent, int i, int d, Qt::Orientation pos) : QWidget(parent), FloatDelegate()
 {

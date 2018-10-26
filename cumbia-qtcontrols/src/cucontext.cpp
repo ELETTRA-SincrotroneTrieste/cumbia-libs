@@ -166,6 +166,11 @@ CuControlsWriterA *CuContext::add_writer(const std::string &s, CuDataListener *d
     return w;
 }
 
+CuControlsPropertyReaderA *CuContext::get_property_reader(const std::string &s, CuDataListener *datal)
+{
+
+}
+
 void CuContext::disposeReader(const std::string &src)
 {
     CuControlsReaderA *removed = NULL;

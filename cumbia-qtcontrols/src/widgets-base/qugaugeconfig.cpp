@@ -25,6 +25,8 @@ QuGaugeConfig::QuGaugeConfig()
     pivotRadius = 0.08;
 
     format = "%.0f";
+    format_prop = format;
+    format_from_property = false;
 
     // drawing options
     drawBackground = true;

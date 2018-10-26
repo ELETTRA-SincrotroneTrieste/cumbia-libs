@@ -1,7 +1,6 @@
 #ifndef QUTRENDPLOT_H
 #define QUTRENDPLOT_H
 
-#include <esimplelabel.h>
 #include <cudatalistener.h>
 #include "quwidgetinterface.h"
 #include "quplot_base.h"

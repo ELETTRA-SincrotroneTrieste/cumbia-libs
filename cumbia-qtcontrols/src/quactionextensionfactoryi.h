@@ -1,0 +1,8 @@
+#ifndef QUACTIONEXTENSIONFACTORYI_H
+#define QUACTIONEXTENSIONFACTORYI_H
+
+class QuActionExtensionI;
+class CuContext;
+class QString;
+
+#endif // CUACTIONEXTENSIONFACTORYI_H

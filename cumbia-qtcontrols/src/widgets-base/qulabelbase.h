@@ -7,6 +7,7 @@
 #include <QtDebug>
 
 class QuLabelBasePrivate;
+class CuVariant;
 
 /** \brief A QLabel that in addition decorates its border and background.
  *
@@ -26,14 +27,29 @@ class QuLabelBase : public QLabel
 
     virtual ~QuLabelBase();
 
+    void setBackground(const QColor& background);
+
+    void setBorderColor(const QColor& border);
+
     void setDecoration(const QColor &background, const QColor &border);
 
     double borderWidth() const;
 
+    void setEnumDisplay(int val, const QString& text, const QColor& c);
+
+    void setFormat(const QString& fmt);
+
+    int maximumLength() const;
+
+
 public slots:
     void setBorderWidth(double w);
 
+    void setValue(const CuVariant& d, bool *background_modified = NULL);
+
     QSize minimumSizeHint() const;
+
+    void setMaximumLength(int len);
 
 protected:
     void paintEvent(QPaintEvent *pe);

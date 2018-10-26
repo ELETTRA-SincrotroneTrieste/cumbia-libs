@@ -1,7 +1,7 @@
 #ifndef QULABEL_H
 #define QULABEL_H
 
-#include <esimplelabel.h>
+#include <qulabelbase.h>
 #include <cudatalistener.h>
 #include <cucontexti.h>
 #include <cudata.h>
@@ -42,17 +42,12 @@ public:
     virtual ~QuLabel();
 
     QString source() const;
-
-    int maximumLength() const;
-
     CuContext *getContext() const;
 
 public slots:
     void setSource(const QString& s);
 
     void unsetSource();
-
-    void setMaximumLength(int len);
 
 signals:
     void newData(const CuData&);

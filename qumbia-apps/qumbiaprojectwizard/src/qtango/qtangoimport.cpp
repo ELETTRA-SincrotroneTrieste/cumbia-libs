@@ -164,8 +164,8 @@ bool QTangoImport::convert() {
                 break;
             }
             else {
-                printf("\e[1;32m:-) \e[0m successfully processed file %s\n", fi.absoluteFilePath().toStdString().c_str());
-                printf("\e[1;32m    +\e[0m mapped file %s\e[0m\n", fi.fileName().toStdString().c_str());
+//                printf("\e[1;32m:-) \e[0m successfully processed file %s\n", fi.absoluteFilePath().toStdString().c_str());
+//                printf("\e[1;32m    +\e[0m mapped file %s\e[0m\n", fi.fileName().toStdString().c_str());
                 m_contents[fi.fileName()] = fcmd.contents();
             }
             emit newLog(fcmd.log());
@@ -225,7 +225,7 @@ bool QTangoImport::outputFile(const QString &name, const QString &path)
     QString relpath = m_outFileRelPaths[name];
     m_err = !m_outFileRelPaths.contains(name);
     if(m_err) {
-        printf("\e[1;31mQTangoImport.outputFile: relative path unavailable for %s\e[0m\n", name.toStdString().c_str());
+        m_errMsg = "QTangoImport.outputFile: relative path unavailable for " + name;
     }
     else {
         QString contents = m_contents[name];

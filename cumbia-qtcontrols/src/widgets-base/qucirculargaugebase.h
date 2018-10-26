@@ -35,6 +35,7 @@ class QuCircularGaugeBase : public QWidget
     Q_PROPERTY(bool drawTickCore2 READ drawTickCore2 WRITE setDrawTickCore2 DESIGNABLE true)
     Q_PROPERTY(bool drawColoredTicks READ drawColoredTicks WRITE setDrawColoredTicks DESIGNABLE true)
     Q_PROPERTY(QString format READ format WRITE setFormat DESIGNABLE true)
+    Q_PROPERTY(bool formatFromPropertyEnabled READ formatFromPropertyEnabled WRITE setFormatFromPropertyEnabled DESIGNABLE true)
 
     Q_PROPERTY(QColor textColor READ textColor WRITE setTextColor DESIGNABLE true)
     Q_PROPERTY(QColor warningColor READ warningColor WRITE setWarningColor DESIGNABLE true)
@@ -112,6 +113,8 @@ public:
 
     QString label() const;
     QString format() const;
+    bool formatFromPropertyEnabled() const;
+    QString getAppliedFormat() const;
     QString labelValueFormat() const;
     QString unit() const;
 
@@ -181,6 +184,8 @@ public slots:
     void setLabelFontScale(double factor);
 
     void setFormat(const QString& f);
+    void setFormatFromPropertyEnabled(bool ffp);
+    void setFormatProperty(const QString& fp);
 
     QList<int> updateLabelsDistrib() const;
 

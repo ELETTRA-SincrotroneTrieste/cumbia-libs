@@ -3,6 +3,8 @@
 
 #include <QMenu>
 class CuContextI;
+class QuActionExtensionPluginInterface;
+class CuData;
 
 /** \brief A QObject filter that installs a minimal context menu with an action
  *         to trigger a link statistics request.
@@ -16,6 +18,8 @@ public:
 
 private slots:
     void onInfoActionTriggered();
+    void onHelperAActionTriggered();
+    void onDataReady(const CuData& da);
 
 signals:
     /**
@@ -35,6 +39,7 @@ public slots:
 
 private:
     CuContextI *m_parent_as_cwi;
+    QuActionExtensionPluginInterface *m_action_extensions;
 };
 
 #endif // INFOCONTEXTMENUFILTER_H

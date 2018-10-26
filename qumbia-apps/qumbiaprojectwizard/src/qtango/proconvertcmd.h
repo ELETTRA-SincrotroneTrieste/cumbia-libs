@@ -16,6 +16,7 @@ private:
     QString m_get_file_contents(const QString &fnam);
     QString m_comment_lines(const QString& s);
     QString m_remove_comments(const QString& s);
+    void m_add_ui_h_to_headers(const QString &forms_block, QString &pro);
 };
 
 #endif // PROCONVERTCMD_H

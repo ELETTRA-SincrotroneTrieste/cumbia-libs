@@ -121,11 +121,11 @@ QString FindReplace::process(const QString& input)
                             newline = replace;
                         else if(q != Subst::Critical && su.m_type == Subst::ReplaceExpr) {
                             if(filename().endsWith("ui"))
-                                printf("*file* %s \e[1;33min line \"%s\":\nreplacing expression\n<--\"%s\"\nwith\e[1;35m\n-->%s\e[0m\nregexp %s",
-                                       filename().toStdString().c_str(),
-                                       l.toStdString().c_str(), re.cap(1).toStdString().c_str(),
-                                       replace.toStdString().c_str(),
-                                      re.pattern().toStdString().c_str());
+//                                printf("*file* %s \e[1;33min line \"%s\":\nreplacing expression\n<--\"%s\"\nwith\e[1;35m\n-->%s\e[0m\nregexp %s",
+//                                       filename().toStdString().c_str(),
+//                                       l.toStdString().c_str(), re.cap(1).toStdString().c_str(),
+//                                       replace.toStdString().c_str(),
+//                                      re.pattern().toStdString().c_str());
 
                             newline = oldline.replace(re.cap(1), replace);
                         }

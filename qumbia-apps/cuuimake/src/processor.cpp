@@ -19,11 +19,6 @@ bool Processor::expand(const Substitutions& subs, const QMap<QString,
 {
     QString mode = subs.selectedMode();
     QDir wd;
-    bool ok = true;
-
-
-    bool file_exists = wd.exists(ui_h_fname);
-
     QString filename = m_getUiHFileName(ui_h_fname, dirInfoSet);
     if(filename.isEmpty()) // m_getUiHFileName sets m_lastError
         return false;
@@ -140,9 +135,8 @@ bool Processor::expand(const Substitutions& subs, const QMap<QString,
 
 QMap<QString, bool> Processor::findUI_H(const SearchDirInfoSet &dirInfoSet)
 {
-    QMap<QString, QDateTime > ui_h_fstat;
     QMap<QString, bool> fmap;
-    QDateTime newest_h_cpp_ui_creat, oldest_ui_h_creat;
+    QDateTime newest_h_cpp_ui_modified, oldest_ui_h_modified;
     QStringList ui_files, ui_h_files;
     // 1. find *.ui files, *.cpp and *.h files. Also .h and .cpp files must be taken
     //    into account because the CumbiaPool, CumbiaTango, CuControlsFactoryPool variable
@@ -159,10 +153,11 @@ QMap<QString, bool> Processor::findUI_H(const SearchDirInfoSet &dirInfoSet)
         QFileInfoList finfol = wd.entryInfoList(di.filters(), QDir::Files);
         foreach(QFileInfo fi, finfol)
         {
-            if(!newest_h_cpp_ui_creat.isValid() || fi.created() > newest_h_cpp_ui_creat)
+            if(!newest_h_cpp_ui_modified.isValid() || fi.lastModified() > newest_h_cpp_ui_modified)
             {
-                newest_h_cpp_ui_creat = fi.created();
+                newest_h_cpp_ui_modified = fi.lastModified();
             }
+            qDebug() << __FUNCTION__ << "newest_h_cpp_ui_creat" << newest_h_cpp_ui_modified;
             if(fi.fileName().endsWith(".ui"))
                 ui_files << fi.fileName();
         }
@@ -180,10 +175,10 @@ QMap<QString, bool> Processor::findUI_H(const SearchDirInfoSet &dirInfoSet)
             if(fi.fileName().contains(QRegExp("ui_[A-Za-z_0-9]+\\.h")))
             {
                 ui_h_files << fi.fileName();
-                if(!oldest_ui_h_creat.isValid() || fi.created() < oldest_ui_h_creat)
+                if(!oldest_ui_h_modified.isValid() || fi.lastModified() < oldest_ui_h_modified)
                 {
-                    oldest_ui_h_creat = fi.created();
-                //    qDebug() << __FUNCTION__ << "oldst file ui_*h is " << fi.fileName() << " date time " << oldest_ui_h_creat;
+                    oldest_ui_h_modified = fi.lastModified();
+                    qDebug() << __FUNCTION__ << "oldst file ui_*h is " << fi.fileName() << " date time " << oldest_ui_h_modified;
                 }
             }
         }
@@ -196,11 +191,12 @@ QMap<QString, bool> Processor::findUI_H(const SearchDirInfoSet &dirInfoSet)
         // if the newest h, ui or cpp file is more recent than the oldest ui_*.h file, then mark
         // the ui_*.h file for expansion. newest_h_cpp_ui_creat.isValid() is to guarantee that at
         // least one cpp, h or ui file has been found.
-        if(oldest_ui_h_creat < newest_h_cpp_ui_creat || !ui_h_files.contains(ui_h))
-            fmap.insert(ui_h, newest_h_cpp_ui_creat.isValid()); // need to process
+        if(oldest_ui_h_modified < newest_h_cpp_ui_modified || !ui_h_files.contains(ui_h))
+            fmap.insert(ui_h, newest_h_cpp_ui_modified.isValid()); // need to process
         else
             fmap.insert(ui_h, false); // no need to process
     }
+    qDebug() << __FUNCTION__ << "FMAP " << fmap;
     return fmap;
 }
 

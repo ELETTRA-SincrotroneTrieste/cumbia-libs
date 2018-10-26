@@ -1,8 +1,9 @@
-#ifndef CUCONTROLSWRITERFACTORYI_H
-#define CUCONTROLSWRITERFACTORYI_H
+#ifndef CUCONTROLSFACTORIES_H
+#define CUCONTROLSFACTORIES_H
 
 class CuControlsWriterA;
 class CuControlsReaderA;
+class CuControlsPropertyReaderA;
 class Cumbia;
 class CuDataListener;
 class CuData;
@@ -93,5 +94,4 @@ public:
     virtual void setOptions(const CuData& options) = 0;
 };
 
-
-#endif // CUCONTROLSWRITERFACTORYI_H
+#endif // CUCONTROLSFACTORIES_H

@@ -117,7 +117,7 @@ private slots:
 
     void setFactory(bool rbchecked);
 
-    void qtangoImport();
+    bool qtangoImport(bool overwrite = false);
 
     void importRbToggled(bool);
 
@@ -165,6 +165,8 @@ private:
     QRadioButton* m_rbFactorySaveChecked;
 
     QString m_formatAndroidLibs() const;
+
+    void m_usage();
 };
 
 #endif // QTANGOPROJECTWIZARD_H

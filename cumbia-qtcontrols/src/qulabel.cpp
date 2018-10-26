@@ -78,11 +78,6 @@ QString QuLabel::source() const
     return "";
 }
 
-int QuLabel::maximumLength() const
-{
-    return d->max_len;
-}
-
 /** \brief returns the pointer to the CuContext
  *
  * CuContext sets up the connection and is used as a mediator to send and get data
@@ -115,21 +110,20 @@ void QuLabel::unsetSource()
     d->context->disposeReader();
 }
 
-void QuLabel::setMaximumLength(int len)
-{
-    d->max_len = len;
-}
-
 void QuLabel::contextMenuEvent(QContextMenuEvent *e)
 {
-    CuContextMenu* m = new CuContextMenu(this, this);
-    connect(m, SIGNAL(linkStatsTriggered(QWidget*, CuContextI *)),
+    CuContextMenu* m = findChild<CuContextMenu *>();
+    if(!m) {
+        m = new CuContextMenu(this, this);
+        connect(m, SIGNAL(linkStatsTriggered(QWidget*, CuContextI *)),
             this, SIGNAL(linkStatsRequest(QWidget*, CuContextI *)));
+    }
     m->popup(e->globalPos());
 }
 
 void QuLabel::onUpdate(const CuData &da)
 {
+    bool background_modified;
     QString txt;
     QColor background, border;
     d->read_ok = !da["err"].toBool();
@@ -139,8 +133,6 @@ void QuLabel::onUpdate(const CuData &da)
     if(!d->read_ok)
         d->context->getLinkStats()->addError(da["msg"].toString());
 
-    if(da.containsKey("quality_color"))
-        background = d->palette[QString::fromStdString(da["quality_color"].toString())];
     d->read_ok ? border = d->palette["dark_green"] : border = d->palette["dark_red"];
 
     setToolTip(da["msg"].toString().c_str());
@@ -150,29 +142,24 @@ void QuLabel::onUpdate(const CuData &da)
     else if(da.containsKey("value"))
     {
         CuVariant val = da["value"];
-        if(val.getType() == CuVariant::Boolean)
-        {
-            txt = (val.toBool() ? property("trueString").toString() : property("falseString").toString());
-            background = val.toBool() ? property("trueColor").value<QColor>() : property("falseColor").value<QColor>();
-        }
-        else
-        {
-            txt = QString::fromStdString(da["value"].toString());
-            if(d->max_len > -1 && txt.length() > d->max_len)
-            {
-                setToolTip(toolTip() + "\n\n" + txt);
-                txt.truncate(d->max_len);
-            }
-        }
-        setText(txt);
+        QuLabelBase::setValue(val, &background_modified);
     }
 
-    if(da.containsKey("state_color"))
-    {
+    if(da.containsKey("state_color")) {
         CuVariant v = da["state_color"];
         QuPalette p;
         background = p[QString::fromStdString(v.toString())];
+        if(background.isValid())
+            setBackground(background);
     }
-    setDecoration(background, border);
+    else if(!background_modified) {
+        // background has not already been set by QuLabelBase::setValue (this happens if either a
+        // boolean display or enum display have been configured)
+        // if so, use the "quality_color" as a background
+        if(da.containsKey("quality_color"))
+            background = d->palette[QString::fromStdString(da["quality_color"].toString())];
+         setBackground(background); // checks if background is valid
+    }
+
     emit newData(da);
 }

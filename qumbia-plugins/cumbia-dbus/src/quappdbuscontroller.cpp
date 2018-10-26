@@ -181,14 +181,19 @@ QDBusConnectionInterface *QuAppDBusController::m_getDbusConnectionInterface()
 
     QDBusConnection connection = QDBusConnection::sessionBus();
 
-    if(!connection.registerService(SERVICE_NAME))
+    if(connection.isConnected()) {
+        printf("\e[1;32mAlredy connected!!!! %s\e[0m\n", qstoc(connection.baseService()));
+    }
+    else if(!connection.registerService(SERVICE_NAME)) {
         perr("QuAppDBusController: failed to register service \"%s\": %s: %s", SERVICE_NAME, qstoc(connection.lastError().name()), qstoc(connection.lastError().message()));
-
+    }
     else if(!connection.registerObject("/QuAppDBusController", this))
         perr("QuAppDBusController: failed to register object with path \"%s\" %s: %s:", SERVICE_NAME, qstoc(connection.lastError().name()), qstoc(connection.lastError().message()));
 
-    if(connection.isConnected())
+    if(connection.isConnected()) {
+        printf("\e[1;32mreturning interface! %s\e[0m\n", qstoc(connection.interface()->path()));
         d->dbus_if = connection.interface();
+    }
 
     return d->dbus_if;
 }
