@@ -31,36 +31,28 @@
 #include <cucontrolsfactorypool.h>
 #include <cucontrolsreader_abs.h>
 #include <cucontrolswriter_abs.h>
+#include <cucontext.h>
 
 
 class CuInfoDialogPrivate
 {
 public:
+    CuInfoDialogPrivate(const CuContext *const_ctx) : ctx(const_ctx) {}
+
     Cumbia *cumbia;
     CumbiaPool *cu_pool;
+    const CuContext *ctx;
     CuControlsFactoryPool f_pool;
     const CuControlsReaderFactoryI *r_fac;
     int layout_col_cnt;
 };
 
-CuInfoDialog::CuInfoDialog(QWidget *parent, Cumbia *cumbia, const CuControlsReaderFactoryI *r_fac)
+CuInfoDialog::CuInfoDialog(QWidget *parent, const CuContext *ctx)
     : QDialog(parent)
 {
-    d = new CuInfoDialogPrivate;
-    d->cumbia = cumbia;
-    d->r_fac = r_fac; // pointer copied. object not cloned
+    d = new CuInfoDialogPrivate(ctx);
+    d->r_fac = NULL; // pointer copied. object not cloned
     d->cu_pool = NULL;
-    setAttribute(Qt::WA_DeleteOnClose, true);
-}
-
-CuInfoDialog::CuInfoDialog(QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
-    : QDialog(parent)
-{
-    d = new CuInfoDialogPrivate;
-    d->cumbia = NULL;
-    d->r_fac = NULL;
-    d->cu_pool = cumbia_pool;
-    d->f_pool = fpool;
     setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
@@ -71,14 +63,12 @@ CuInfoDialog::~CuInfoDialog()
     delete d;
 }
 
-void CuInfoDialog::exec(QWidget *sender, CuContextI *sender_cwi)
+void CuInfoDialog::exec(const CuData& in)
 {
     d->layout_col_cnt = 8;
     resize(700, 720);
     int row = 0;
-    m_ctxwi = sender_cwi;
-    m_senderw = sender;
-
+    QObject *sender = static_cast<QObject *>(in["sender"].toVoidP());
     QFont f = font();
     f.setBold(true);
     f.setPointSize(f.pointSize() + 1);
@@ -89,7 +79,7 @@ void CuInfoDialog::exec(QWidget *sender, CuContextI *sender_cwi)
     if(src.isEmpty())
         src = sender->property("target").toString();
     setWindowTitle(src + " stats");
-    CuLinkStats *lis = sender_cwi->getContext()->getLinkStats();
+    CuLinkStats *lis = d->ctx->getLinkStats();
 
     QGridLayout *lo = new QGridLayout(this);
     // use QLabel instead of group box title to use bold font
@@ -150,8 +140,8 @@ void CuInfoDialog::exec(QWidget *sender, CuContextI *sender_cwi)
     monitorF->setObjectName("monitorF");
     QGridLayout *molo = new QGridLayout(monitorF);
     molo->setObjectName(monitorF->objectName() + "_layout");
-    QList<CuControlsReaderA *> readers = sender_cwi->getContext()->readers();
-    QList<CuControlsWriterA *> writers = sender_cwi->getContext()->writers();
+    QList<CuControlsReaderA *> readers = d->ctx->readers();
+    QList<CuControlsWriterA *> writers = d->ctx->writers();
     foreach (CuControlsWriterA* w, writers) {
         QGroupBox *gb = new QGroupBox("", monitorF);
         gb->setObjectName(w->target() + "_write_monitor");
@@ -238,10 +228,10 @@ void CuInfoDialog::exec(QWidget *sender, CuContextI *sender_cwi)
             gb->setObjectName(r->source() + "_live");
             QVBoxLayout * gblilo = new QVBoxLayout(gb);
             QuLabel *llive = NULL;
-            if(d->cumbia)
-                llive = new QuLabel(liveF, d->cumbia, *d->r_fac);
-            else if(d->cu_pool)
-                llive = new QuLabel(liveF, d->cu_pool, d->f_pool);
+            if(d->ctx->cumbia() && d->ctx->getReaderFactoryI())
+                llive = new QuLabel(liveF, d->ctx->cumbia(), *d->ctx->getReaderFactoryI());
+            else if(d->ctx->cumbiaPool())
+                llive = new QuLabel(liveF, d->ctx->cumbiaPool(), d->ctx->getControlsFactoryPool());
             if(llive)
             {
                 connect(llive, SIGNAL(newData(CuData)), this, SLOT(newLiveData(CuData)));
@@ -268,26 +258,22 @@ void CuInfoDialog::exec(QWidget *sender, CuContextI *sender_cwi)
     show();
 }
 
-void CuInfoDialog::onMonitorUpdate(const CuData &d)
+void CuInfoDialog::onMonitorUpdate(const CuData &da)
 {
     double x;
-    int row = 0;
-    int locolmax = 7; // layout in 7 columns
-    int col = 0;
-    CuLinkStats *lis = m_ctxwi->getContext()->getLinkStats();
+    CuLinkStats *lis = d->ctx->getLinkStats();
     findChild<QLineEdit *>("leopcnt")->setText(QString::number(lis->opCnt()));
     findChild<QLineEdit *>("leerrcnt")->setText(QString::number(lis->errorCnt()));
     findChild<QLineEdit *>("te_lasterr")->setText(lis->last_error_msg.c_str());
     HealthWidget *healthw  = findChild<HealthWidget *>();
     healthw->setData(lis->errorCnt(), lis->opCnt());
 
-    QString src = QString(d["src"].toString().c_str());
+    QString src = QString(da["src"].toString().c_str());
     QGroupBox *container = findChild<QGroupBox *>(src + "_monitor");
     if(!container) // try if it is write
         container = findChild<QGroupBox *>(src + "_write_monitor");
     QVBoxLayout *glo = qobject_cast<QVBoxLayout *>(container->layout());
-    row = glo->count();
-    d["timestamp_ms"].to<double>(x);
+    da["timestamp_ms"].to<double>(x);
     if(container)
     {
         QLabel* update_wait_l = container->findChild<QLabel *>("l_waitupdate");
@@ -302,7 +288,7 @@ void CuInfoDialog::onMonitorUpdate(const CuData &d)
             glo->addWidget(te);
         }
         int scrollbarPos = te->verticalScrollBar()->value();
-        te->setHtml(m_makeHtml(d, "DATA"));
+        te->setHtml(m_makeHtml(da, "DATA"));
         te->verticalScrollBar()->setValue(scrollbarPos);
     }
 }
@@ -403,6 +389,11 @@ div { width=80%; } \
      std::string format = data["data_format_str"].toString();
      QWidget *plotw = NULL;
      QVBoxLayout *livelo = qobject_cast<QVBoxLayout *>(findChild<QGroupBox *>(src + "_live")->layout());
+     Cumbia *cumbia = d->ctx->cumbia();
+     CuControlsReaderFactoryI *rfac = d->ctx->getReaderFactoryI();
+     CumbiaPool *cu_pool = d->ctx->cumbiaPool();
+     CuControlsFactoryPool fpool = d->ctx->getControlsFactoryPool();
+
      if(format == "scalar")
      {
          QuTrendPlot *trplot = findChild<QuTrendPlot *>("trplot_" + src);
@@ -410,10 +401,10 @@ div { width=80%; } \
          {
              // add the trend plot.
              // if the data is vector, the trend plot will be replaced by a spectrum plot
-             if(d->cumbia)
-                 trplot = new QuTrendPlot(findChild<QFrame *>("liveF"), d->cumbia, *d->r_fac);
-             else if(d->cu_pool)
-                 trplot = new QuTrendPlot(findChild<QFrame *>("liveF"), d->cu_pool, d->f_pool);
+             if(cumbia && rfac)
+                 trplot = new QuTrendPlot(findChild<QFrame *>("liveF"), cumbia, *rfac);
+             else if(cu_pool)
+                 trplot = new QuTrendPlot(findChild<QFrame *>("liveF"), cu_pool, fpool);
              if(trplot)
                  plotw = trplot;
          }
@@ -423,10 +414,10 @@ div { width=80%; } \
          QuSpectrumPlot *splot = findChild<QuSpectrumPlot *>("trplot_" + src);
          if(!splot)
          {
-             if(d->cumbia)
-                 splot = new QuSpectrumPlot(findChild<QFrame *>("liveF"), d->cumbia, *d->r_fac);
+             if(cumbia)
+                 splot = new QuSpectrumPlot(findChild<QFrame *>("liveF"), cumbia, *rfac);
              else if(d->cu_pool)
-                 splot = new QuSpectrumPlot(findChild<QFrame *>("liveF"),  d->cu_pool, d->f_pool);
+                 splot = new QuSpectrumPlot(findChild<QFrame *>("liveF"),  cu_pool, fpool);
              if(splot)
                  plotw = splot;
          }

@@ -1,10 +1,11 @@
+include(../qumbia-plugins.pri)
 include(../../qumbia-tango-controls/qumbia-tango-controls.pri)
 include(../../qumbia-epics-controls/qumbia-epics-controls.pri)
 
 # The application will be installed under INSTALL_ROOT (i.e. prefix)
 #
-# WARNING: INSTALL_ROOT is defined both by qumbia-epics-controls.pri and qumbia-tango-controls.pri
-# The first definition in qumbia-tango-controls.pri is used.
+# WARNING: INSTALL_ROOT is defined by qumbia-plugins.pri, qumbia-epics-controls.pri and qumbia-tango-controls.pri
+# The first definition in qumbia-plugins.pri is used.
 #
 #
 # To set the prefix at build time, call 
@@ -14,8 +15,7 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT = /usr/local
 }
 
-
-DESIGNER_PLUGIN_DIR=$${INSTALL_ROOT}/lib/plugins/designer
+DESIGNER_PLUGIN_DIR=$${PLUGIN_LIB_DIR}/designer
 
 greaterThan(QT_MAJOR_VERSION, 4) {
     QT += widgets x11extras printsupport
@@ -25,7 +25,9 @@ greaterThan(QT_MAJOR_VERSION, 4) {
     CONFIG += designer
 }
 
-CONFIG += debug
+TEMPLATE = lib
+TARGET = designer/cumbia-qtcontrols-pool-plugin
+CONFIG	+= qt thread warn_on debug
 
 lessThan(QT_MAJOR_VERSION, 5) {
 	CONFIG += designer
@@ -59,14 +61,6 @@ HEADERS	+= \
 
 RESOURCES += cutangoqtcontrolsplugin.qrc
 
-TEMPLATE = lib
-
-TARGET = designer/cumbia-qtcontrols-plugin
-
-CONFIG	+= qt thread warn_on
-
-# Debug or release?
-CONFIG += debug
 
 unix:LIBS += -L.. 
 

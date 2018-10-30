@@ -1,17 +1,24 @@
 #include "gettdbpropertyextension.h"
 #include <cucontext.h>
 #include <cumacros.h>
+#include <cumbia.h>
+#include <cumbiatango.h>
+#include <cumbiapool.h>
+#include <cutdbpropertyreader.h>
 
 class GetTDbPropertyExtensionPrivate {
 public:
-    CuContext *context;
+    GetTDbPropertyExtensionPrivate(const CuContext *cctx) : context(cctx) {}
+    bool err;
+    std::string msg;
+    const CuContext *context;
 };
 
-GetTDbPropertyExtension::GetTDbPropertyExtension(CuContext *ctx, QObject *parent)
- : QObject(parent)
+GetTDbPropertyExtension::GetTDbPropertyExtension(const CuContext *ctx, QObject *parent)
+    : QObject(parent)
 {
-    d = new GetTDbPropertyExtensionPrivate;
-    d->context = ctx;
+    d = new GetTDbPropertyExtensionPrivate(ctx);
+    d->err = false;
 }
 
 GetTDbPropertyExtension::~GetTDbPropertyExtension()
@@ -28,12 +35,32 @@ QString GetTDbPropertyExtension::getName() const
 
 CuData GetTDbPropertyExtension::execute(const CuData &in)
 {
-    CuData out(in);
-    out["out"] = "is out!";
-    printf("GetTDbPropertyExtension::execute: \e[0;32min: %s --> out: \e[1;32m%s\e[0m\n",
-           in.toString().c_str(), out.toString().c_str());
+    CuData da;
+    std::vector<CuData> in_list, out_list;
+    in_list.push_back(in);
+    out_list = execute(in_list);
+    if(out_list.size() > 0)
+        da = out_list[0];
+    return da;
+}
 
-    emit onDataReady(out);
+std::vector<CuData> GetTDbPropertyExtension::execute(const std::vector<CuData> &in_list)
+{
+    std::vector<CuData> out;
+    out.push_back(CuData("msg", "property fetch in progress..."));
+    CumbiaTango *cu_t = NULL;
+    CumbiaPool *cu_poo = NULL;
+    Cumbia *cu = d->context->cumbia();
+    if(!cu && (cu_poo = d->context->cumbiaPool())) {
+        cu = cu_poo->get("tango");
+    }
+    if(cu && cu->getType() == CumbiaTango::CumbiaTangoType)
+        cu_t = static_cast<CumbiaTango *>(cu);
+    if(cu_t && in_list.size() > 0) {
+        CuTDbPropertyReader *tp_reader = new CuTDbPropertyReader("GetTDbPropertyExtension.execute", cu_t);
+        tp_reader->addListener(this);
+        tp_reader->get(in_list);
+    }
     return out;
 }
 
@@ -42,4 +69,20 @@ QObject *GetTDbPropertyExtension::get_qobject()
     return this;
 }
 
+const CuContext *GetTDbPropertyExtension::getContext() const
+{
+    return d->context;
+}
 
+void GetTDbPropertyExtension::onUpdate(const CuData &data)
+{
+    emit onDataReady(data);
+}
+
+std::string GetTDbPropertyExtension::message() const {
+    return d->msg;
+}
+
+bool GetTDbPropertyExtension::error() const {
+    return d->err;
+}

@@ -2,7 +2,7 @@
 #define GETTDBPROPACTIVITY_H
 
 #include <cuisolatedactivity.h>
-#include <list>
+#include <vector>
 
 class CuGetTDbPropActivityPrivate;
 
@@ -15,7 +15,7 @@ class CuGetTDbPropActivityPrivate;
 class CuGetTDbPropActivity : public CuIsolatedActivity
 {
 public:
-    CuGetTDbPropActivity(const std::list<CuData> &in_data);
+    CuGetTDbPropActivity(const std::vector<CuData> &in_data);
 
     virtual ~CuGetTDbPropActivity();
 

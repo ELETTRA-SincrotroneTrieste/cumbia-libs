@@ -3,17 +3,18 @@
 
 #include <QObject>
 #include <quaction-extension-plugininterface.h>
+#include <cudatalistener.h>
 
 class CuContext;
 
 class GetTDbPropertyExtensionPrivate;
 
-class GetTDbPropertyExtension : public QObject, public QuActionExtensionI
+class GetTDbPropertyExtension : public QObject, public QuActionExtensionI, public CuDataListener
 {
     Q_OBJECT
 public:
 
-    GetTDbPropertyExtension(CuContext *ctx, QObject* parent = NULL);
+    GetTDbPropertyExtension(const CuContext *ctx, QObject* parent = NULL);
 
     virtual ~GetTDbPropertyExtension();
 
@@ -22,14 +23,22 @@ public:
     QString getName() const;
 
     CuData execute(const CuData &in);
+    std::vector<CuData> execute(const std::vector<CuData>& in_list);
 
     QObject* get_qobject();
+    virtual const CuContext *getContext() const;
+    std::string message() const;
+    bool error() const;
 
 signals:
     void onDataReady(const CuData& da);
 
 private:
     GetTDbPropertyExtensionPrivate *d;
+
+    // CuDataListener interface
+public:
+    virtual void onUpdate(const CuData &data);
 };
 
 #endif // GETTDBPROPERTYEXTENSION_H

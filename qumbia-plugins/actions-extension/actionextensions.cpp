@@ -11,6 +11,7 @@ class ActionExtensionPrivate {
 };
 
 ActionExtensions::ActionExtensions(QObject *parent) :
+    QObject(parent),
     QuActionExtensionPluginInterface()
 {
     d = new ActionExtensionPrivate;

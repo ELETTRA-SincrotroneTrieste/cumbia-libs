@@ -63,7 +63,7 @@ public:
 
     bool get_att_props(Tango::DeviceProxy *dev, const string &attribute, CuData& res, const std::vector<std::string> props);
 
-    bool get_properties(const std::list<CuData> &in_list, CuData& res, const string &dbhost = "");
+    bool get_properties(const std::vector<CuData> &in_list, CuData& res, const string &dbhost = "");
 
     bool source_valid(const std::string& src);
 

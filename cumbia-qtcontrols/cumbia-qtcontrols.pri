@@ -35,20 +35,20 @@ isEmpty(INSTALL_ROOT) {
 
 #
 #
-# Here qumbia-tango-controls include files will be installed
+# Here qumbia-qtcontrols include files will be installed
     CUMBIA_QTCONTROLS_INCLUDES=$${INSTALL_ROOT}/include/cumbia-qtcontrols
 #
 #
-# Here qumbia-tango-controls share files will be installed
+# Here qumbia-qtcontrols share files will be installed
 #
     CUMBIA_QTCONTROLS_SHARE=$${INSTALL_ROOT}/share/cumbia-qtcontrols
 #
 #
-# Here qumbia-tango-controls libraries will be installed
+# Here qumbia-qtcontrols libraries will be installed
     CUMBIA_QTCONTROLS_LIBDIR=$${INSTALL_ROOT}/lib
 #
 #
-# Here qumbia-tango-controls documentation will be installed
+# Here qumbia-qtcontrols documentation will be installed
     CUMBIA_QTCONTROLS_DOCDIR=$${INSTALL_ROOT}/share/doc/cumbia-qtcontrols
 #
 # The name of the library
@@ -121,11 +121,10 @@ VERSION = 0.0.1
 
 # cumbia-qtcontrols plugin directory. Does not include "plugins"
 # application will cd into "plugins" under CU_QTC_PLUGINDIR
-CU_QTC_PLUGINDIR = $${CUMBIA_QTCONTROLS_LIBDIR}/cumbia-qtcontrols
+CU_QTC_PLUGINDIR = $${INSTALL_ROOT}/lib/qumbia-plugins
 
 DEFINES += CUMBIA_QTCONTROLS_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
-    CUMBIA_QTCONTROLS_VERSION=$${VERSION_HEX} \
-    CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${CU_QTC_PLUGINDIR}\\\"\" \
+    CUMBIA_QTCONTROLS_VERSION=$${VERSION_HEX}
 
 QMAKE_CXXFLAGS += -std=c++11 -Wall
 

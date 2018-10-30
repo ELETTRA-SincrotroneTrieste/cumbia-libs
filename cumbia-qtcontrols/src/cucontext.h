@@ -81,6 +81,12 @@ public:
 
     CuControlsWriterA *findWriter(const std::string& targetnam);
 
+    CuControlsReaderFactoryI *getReaderFactoryI() const;
+
+    CuControlsWriterFactoryI *getWriterFactoryI() const;
+
+    CuControlsFactoryPool getControlsFactoryPool() const;
+
     CuLinkStats *getLinkStats() const;
 
     QList<CuControlsReaderA*> readers() const;

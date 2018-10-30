@@ -138,7 +138,6 @@ bool QuApplication::m_loadPlugin()
     bool found = false;
     QuDBusPluginInterface *dpi = NULL;
     QDir pluginsDir(CUMBIA_QTCONTROLS_PLUGIN_DIR);
-    pluginsDir.cd("plugins");
     QStringList entryList = pluginsDir.entryList(QDir::Files);
     for(int i = 0; i < entryList.size() && !found; i++) {
         QString fileName = entryList[i];

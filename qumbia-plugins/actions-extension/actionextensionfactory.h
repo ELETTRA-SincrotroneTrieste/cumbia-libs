@@ -3,7 +3,7 @@
 
 #include <quaction-extension-plugininterface.h>
 
-class CuContextI;
+class CuContext;
 class QString;
 
 class ActionExtensionFactory : public QuActionExtensionFactoryI
@@ -13,7 +13,7 @@ public:
 
     // QuActionExtensionFactoryI interface
 public:
-    QuActionExtensionI *create(const QString &name, CuContextI *ctx);
+    QuActionExtensionI *create(const QString &name, const CuContext *ctx);
 };
 
 #endif // ACTIONEXTENSIONFACTORY_H

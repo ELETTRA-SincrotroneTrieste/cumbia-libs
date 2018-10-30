@@ -1,4 +1,4 @@
-#include "cuapplicationlauncher.h"
+#include "cuapplicationlauncherextension.h"
 #include <QDir>
 #include <QPluginLoader>
 #include <QProcess>
@@ -10,29 +10,38 @@ public:
     QString program;
     QStringList args;
     QuAppDBusControllerInterface *qudbusctrl_i;
+    const CuContext*  ctx;
+    std::string msg;
+    bool err;
 };
 
-CuApplicationLauncher::CuApplicationLauncher(const QStringList &args)
+CuApplicationLauncherExtension::CuApplicationLauncherExtension(const CuContext *ctx)
 {
     d = new CuApplicationLauncherPrivate;
-    QStringList ar(args);
-    if(args.size() > 0) {
-        d->program  = ar.takeFirst();
-        d->args = ar;
-    }
     d->qudbusctrl_i = NULL;
+    d->ctx = ctx;
+    d->err = false;
 }
 
-void CuApplicationLauncher::start()
+CuApplicationLauncherExtension::~CuApplicationLauncherExtension()
 {
-    m_loadCumbiaPlugin();
+    if(d->qudbusctrl_i) {
+        printf("~CuApplicationLauncherExtension: deleting QuDBusPluginInterface %p\n", d->qudbusctrl_i);
+        delete d->qudbusctrl_i;
+    }
+    delete d;
+}
+
+void CuApplicationLauncherExtension::start()
+{
+    if(!d->qudbusctrl_i)
+        m_loadCumbiaPlugin();
+
     if(d->qudbusctrl_i)
     {
         QStringList full_args = QStringList() << d->program;
         full_args += d->args;
-        printf("calling findApps!\n");
         QList<QuAppInfo> ail = d->qudbusctrl_i->findApps(full_args);
-        printf("found apps %d\n", ail.size());
         if(ail.size() > 0) {
             printf("found %d applications matching %s\n", ail.size(), qstoc(full_args.join(" ")));
             d->qudbusctrl_i->raise(ail.first());
@@ -46,9 +55,9 @@ void CuApplicationLauncher::start()
     }
 }
 
-void CuApplicationLauncher::m_loadCumbiaPlugin() {
+void CuApplicationLauncherExtension::m_loadCumbiaPlugin() {
 
-    QDir pluginsDir(CUMBIA_QTCONTROLS_PLUGIN_DIR);
+    QDir pluginsDir(QUMBIA_PLUGIN_DIR);
     pluginsDir.cd("plugins");
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
@@ -63,4 +72,44 @@ void CuApplicationLauncher::m_loadCumbiaPlugin() {
     }
     if(d->qudbusctrl_i)
         printf("\e[1;32m* \e[0msuccessfully loaded the \e[1;32;4mcumbia dbus\e[0m plugin\n");
+}
+
+
+QString CuApplicationLauncherExtension::getName() const {
+    return "CuApplicationLauncherExtension";
+}
+
+CuData CuApplicationLauncherExtension::execute(const CuData &in)
+{
+    QString cmd = QString::fromStdString(in["command"].toString());
+    QStringList ar = cmd.split(QRegExp("\\s+"));
+    if(ar.size() > 0) {
+        d->program  = ar.takeFirst();
+        d->args = ar;
+    }
+    start();
+    return CuData();
+}
+
+QObject *CuApplicationLauncherExtension::get_qobject() {
+    return NULL;
+}
+
+const CuContext *CuApplicationLauncherExtension::getContext() const {
+    return d->ctx;
+}
+
+
+std::vector<CuData> CuApplicationLauncherExtension::execute(const std::vector<CuData>& )
+{
+    return std::vector<CuData>();
+}
+
+
+std::string CuApplicationLauncherExtension::message() const {
+    return d->msg;
+}
+
+bool CuApplicationLauncherExtension::error() const {
+    return d->err;
 }

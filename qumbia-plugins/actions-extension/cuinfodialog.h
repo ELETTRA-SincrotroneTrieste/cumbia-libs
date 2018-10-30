@@ -11,6 +11,7 @@ class CumbiaPool;
 class CuControlsReaderFactoryI;
 class CuControlsFactoryPool;
 class QFrame;
+class CuContext;
 
 class CuInfoDialogPrivate;
 
@@ -59,17 +60,15 @@ class CuInfoDialog : public QDialog
 {
     Q_OBJECT
 public:
-    CuInfoDialog(QWidget *parent, Cumbia* cumbia, const CuControlsReaderFactoryI *r_fac);
-
-    CuInfoDialog(QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    CuInfoDialog(QWidget *parent, const CuContext *ctx);
 
     virtual ~CuInfoDialog();
 
 public slots:
-    void exec(QWidget *sender, CuContextI *sender_cwi);
+    void exec(const CuData& in);
 
 private slots:
-    void onMonitorUpdate(const CuData& d);
+    void onMonitorUpdate(const CuData& da);
     void newLiveData(const CuData &d);
 
 private:

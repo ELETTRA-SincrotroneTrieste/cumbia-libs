@@ -5,7 +5,6 @@
 #include <cuserviceprovider.h>
 #include <culog.h>
 #include <cuactivity.h>
-#include <list>
 #include <cumbiatango.h>
 #include <cuthreadfactoryimpl_i.h>
 #include <cuthreadseventbridgefactory_i.h>
@@ -109,7 +108,7 @@ CuTDbPropertyReader::~CuTDbPropertyReader()
  *
  * @see addListener
  */
-void CuTDbPropertyReader::get(const std::list<CuData> &in_data)
+void CuTDbPropertyReader::get(const std::vector<CuData> &in_data)
 {
     CuData thread_tok("id", d->id);
     d->activity = new CuGetTDbPropActivity(in_data);
@@ -142,5 +141,10 @@ void CuTDbPropertyReader::onResult(const CuData &data)
 CuData CuTDbPropertyReader::getToken() const
 {
     return CuData("id", d->id);
+}
+
+void CuTDbPropertyReader::onResult(const std::vector<CuData> &datalist)
+{
+    (void) datalist;
 }
 

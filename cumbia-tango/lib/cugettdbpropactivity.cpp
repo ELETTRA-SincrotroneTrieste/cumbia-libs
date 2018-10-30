@@ -5,7 +5,7 @@
 class CuGetTDbPropActivityPrivate
 {
 public:
-    std::list<CuData> in_data;
+    std::vector<CuData> in_data;
 };
 
 /*! \brief the class constructor, that accepts a list of CuData defining the properties
@@ -19,7 +19,7 @@ public:
  * and CuActivity::CuADeleteOnExit to automatically get rid of the activity once its task
  * is accomplished.
  */
-CuGetTDbPropActivity::CuGetTDbPropActivity(const std::list<CuData> &in_data)
+CuGetTDbPropActivity::CuGetTDbPropActivity(const std::vector<CuData> &in_data)
 {
     d = new CuGetTDbPropActivityPrivate;
     d->in_data = in_data;

@@ -890,7 +890,7 @@ Tango::Database *CuTangoWorld::getTangoDb(const std::string& dbhost) const
  * \li class properties: res["classname/property_name"] = property as std vector of strings
  *
  */
-bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res, const std::string& dbhost)
+bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &res, const std::string& dbhost)
 {
     // maps tango host name to device attribute props, device props, class attribute props
     // and class props
@@ -899,7 +899,7 @@ bool CuTangoWorld::get_properties(const std::list<CuData> &in_list, CuData &res,
     d->error = false;
 
     // divide in_list by type and by device name
-    for(std::list<CuData>::const_iterator it = in_list.begin(); it != in_list.end(); ++it)
+    for(std::vector<CuData>::const_iterator it = in_list.begin(); it != in_list.end(); ++it)
     {
         const CuData& in = *it;
 
@@ -1668,9 +1668,9 @@ std::string CuTangoWorld::dateTimeToStr(time_t *tp) const
 {
     char t[128];
     struct tm* tmp;
-    if(!tp)
-        *tp = time(NULL);
-    tmp = localtime(tp);
+    time_t tit;
+    tp != NULL ? tit = *tp : tit  = time(NULL);
+    tmp = localtime(&tit);
     if(tmp != NULL)
         strftime(t, sizeof(t), "%c", tmp);
     return std::string(t);

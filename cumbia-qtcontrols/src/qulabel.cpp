@@ -113,11 +113,8 @@ void QuLabel::unsetSource()
 void QuLabel::contextMenuEvent(QContextMenuEvent *e)
 {
     CuContextMenu* m = findChild<CuContextMenu *>();
-    if(!m) {
-        m = new CuContextMenu(this, this);
-        connect(m, SIGNAL(linkStatsTriggered(QWidget*, CuContextI *)),
-            this, SIGNAL(linkStatsRequest(QWidget*, CuContextI *)));
-    }
+    if(!m)
+        m = new CuContextMenu(this, d->context);
     m->popup(e->globalPos());
 }
 

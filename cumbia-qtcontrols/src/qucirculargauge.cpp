@@ -101,9 +101,9 @@ void QuCircularGauge::unsetSource()
 
 void QuCircularGauge::contextMenuEvent(QContextMenuEvent *e)
 {
-    CuContextMenu* m = new CuContextMenu(this, this);
-    connect(m, SIGNAL(linkStatsTriggered(QWidget*, CuContextI *)),
-            this, SIGNAL(linkStatsRequest(QWidget*, CuContextI *)));
+    CuContextMenu* m = findChild<CuContextMenu *>();
+    if(!m)
+        m = new CuContextMenu(this, d->context);
     m->popup(e->globalPos());
 }
 

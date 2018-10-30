@@ -2,12 +2,12 @@
 #include <cuapplicationlauncher.h>
 #include <cumacros.h>
 #include "quaction-extension-plugininterface.h"
-#include "cucontrolsfactories_i.h"
+#include "cucontextmenuactionsplugin_i.h"
 #include <QAction>
 #include <QtDebug>
-#include <QProcess>
 #include <QDir>
 #include <QPluginLoader>
+#include <QMessageBox>
 
 /** \brief Creates a QMenu with a minimal set of actions.
  *
@@ -27,55 +27,47 @@
  * by the receiver to get the CuContext reference to access the cumbia-qtcontrols widget
  * context.
  */
-CuContextMenu::CuContextMenu(QWidget *parent, CuContextI *parent_as_cwi) : QMenu(parent)
+CuContextMenu::CuContextMenu(QWidget *parent, const CuContext *ctx) :
+    QMenu(parent), m_ctx(ctx)
 {
-    QAction *info = new QAction("Link stats...", this);
-    connect(info, SIGNAL(triggered(bool)), this, SLOT(onInfoActionTriggered()));
-    addAction(info);
-    m_parent_as_cwi = parent_as_cwi;
-
-    printf("loading plugin...\n");
+    unsigned loaded_p_cnt = 0;
+    QList<QAction *> actions;
     QDir pluginsDir(CUMBIA_QTCONTROLS_PLUGIN_DIR);
-    pluginsDir.cd("plugins");
-    QString fileName = "libactions-extension-plugin.so";
-    QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
-    QObject *plugin = pluginLoader.instance();
-    if (plugin) {
-        m_action_extensions = qobject_cast<QuActionExtensionPluginInterface *>(plugin);
-        if(m_action_extensions) {
-            printf("loaded plugin \e[1;32m\"%s\"\e[0m\n", qstoc(fileName));
-            QuActionExtensionFactoryI *ae_fac = m_action_extensions->getExtensionFactory();
-            QuActionExtensionI* tango_db_ex = ae_fac->create("GetTDbPropertyExtension", parent_as_cwi);
-            m_action_extensions->registerExtension("GetTDbPropertyExtension", tango_db_ex);
-            QAction *a = new QAction("Helper Application", this);
-            connect(a, SIGNAL(triggered(bool)), this, SLOT(onHelperAActionTriggered()));
-            addAction(a);
-        }
+    QStringList entryList = pluginsDir.entryList(QDir::Files);
+    for(int i = 0; i < entryList.size(); i++) {
+        QString fileName = entryList[i];
+        CuContextMenuActionsPlugin_I *w_std_menu_actions_plugin = NULL;
+        if(fileName.contains("context-menu-actions")) {
+
+            QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
+            QObject *plugin = pluginLoader.instance();
+            if (plugin){
+                loaded_p_cnt++;
+                w_std_menu_actions_plugin = qobject_cast<CuContextMenuActionsPlugin_I *> (plugin);
+                if(w_std_menu_actions_plugin) {
+                    w_std_menu_actions_plugin->setup(parent, ctx);
+                    actions.append(w_std_menu_actions_plugin->getActions());
+                }
+            }
+            if(!plugin || !w_std_menu_actions_plugin){
+                perr("CuContextMenu::CuContextMenu: failed to load plugin \"%s\" under \"%s\"",
+                     qstoc(fileName), CUMBIA_QTCONTROLS_PLUGIN_DIR);
+            }
+        } // if ends with context-menu-actions
+    } // for entryList
+    foreach(QAction *a, actions) {
+        addAction(a);
     }
-    else
-        perr("CuContextMenu::CuContextMenu: failed to load plugin \"%s\" under \"%s\"",
-             qstoc(fileName), CUMBIA_QTCONTROLS_PLUGIN_DIR);
-}
 
-void CuContextMenu::onInfoActionTriggered()
-{
-    emit linkStatsTriggered(parentWidget(), m_parent_as_cwi);
-}
-
-void CuContextMenu::onHelperAActionTriggered()
-{
-    if(m_action_extensions) {
-        QuActionExtensionI* tango_db_ex = m_action_extensions->getExtension("GetTDbPropertyExtension");
-        CuData in("type", "get_property");
-        connect(tango_db_ex->get_qobject(), SIGNAL(onDataReady(const CuData&)), this, SLOT(onDataReady(const CuData&)));
-        tango_db_ex->execute(in);
-//        QStringList args = cmd.split(QRegExp("\\s+"));
-//        CuApplicationLauncher launcher(args);
-//        launcher.start();
+    if(loaded_p_cnt == 0) {
+        addAction("No menu actions plugins found", this, SLOT(popup_noplugin_msg()));
     }
 }
 
-void CuContextMenu::onDataReady(const CuData &da)
+void CuContextMenu::popup_noplugin_msg()
 {
-    printf("CuContextMenu::onDataReady(): \e[1;32mout is \"%s\"\e[0m\n", da.toString().c_str());
+    QMessageBox::information(this, "No plugins found for the context menu",
+                             QString("No plugins providing context menu actions have been found under"
+                                     "\"%1\"\n" ).arg(CUMBIA_QTCONTROLS_PLUGIN_DIR));
 }
+

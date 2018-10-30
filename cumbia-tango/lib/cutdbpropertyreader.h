@@ -2,7 +2,7 @@
 #define CUTDBPROPERTYREADER_H
 
 #include <cuthreadlistener.h>
-#include <list>
+#include <vector>
 
 class CuTDbPropertyReaderPrivate;
 class CumbiaTango;
@@ -25,7 +25,7 @@ public:
 
     virtual ~CuTDbPropertyReader();
 
-    void get(const std::list<CuData>& in_data);
+    void get(const std::vector<CuData>& in_data);
 
     void addListener(CuDataListener *l);
 
@@ -38,6 +38,10 @@ public:
 
 private:
     CuTDbPropertyReaderPrivate *d;
+
+    // CuThreadListener interface
+public:
+    void onResult(const std::vector<CuData> &datalist);
 };
 
 #endif // CUTDBPROPERTYREADER_H

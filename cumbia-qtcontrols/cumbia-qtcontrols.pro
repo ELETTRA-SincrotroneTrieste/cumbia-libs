@@ -6,8 +6,6 @@
 
 include(cumbia-qtcontrols.pri)
 
-
-
 CONFIG += debug
 
 # remove ourselves (defined in .pri)
@@ -16,7 +14,8 @@ PKGCONFIG -= cumbia-qtcontrols$${QTVER_SUFFIX}
 TARGET = $${cumbia_qtcontrols_LIB}
 TEMPLATE = lib
 
-DEFINES += CUMBIAQTCONTROLS_LIBRARY
+DEFINES += CUMBIAQTCONTROLS_LIBRARY \
+    CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${CU_QTC_PLUGINDIR}\\\"\" \
 
 DEFINES -= QT_NO_DEBUG_OUTPUT
 
@@ -77,8 +76,7 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/widgets-base/qugaugeconfig.cpp \
     src/widgets-base/qulineargaugebase.cpp \
     src/quanimation.cpp \
-    src/widgets-base/qulabelbase.cpp \
-    src/cuapplicationlauncher.cpp
+    src/widgets-base/qulabelbase.cpp
 
 HEADERS += cumbiaqtcontrols.h\
         cumbia-qtcontrols_global.h \
@@ -153,14 +151,13 @@ HEADERS += cumbiaqtcontrols.h\
     src/cuappstatemanager.h \
     src/qulineargauge.h \
     src/widgets-base/qucirculargaugebase.h \
-    src/widgets-base/qucirculargaugebase.h \
     src/widgets-base/qugaugeconfig.h \
     src/widgets-base/qulineargaugebase.h \
     src/quanimation.h \
     src/widgets-base/qulabelbase.h \
-    src/cuapplicationlauncher.h \
     src/quaction-extension-plugininterface.h \
-    src/quactionextensionfactoryi.h
+    src/quactionextensionfactoryi.h \
+    src/cucontextmenuactionsplugin_i.h
 
 unix:!android-g++ {
 
@@ -182,8 +179,7 @@ unix:!android-g++ {
     src/widgets-base/eplotlight/ecurvedata.h \
     src/widgets-base/eplotlight/eplot_configuration_widget.h \
     src/widgets-base/eplotlight/plotsaver.h \
-    src/widgets-base/eplotlight/scrollzoomer.h \
-    src/cuinfodialog.h
+    src/widgets-base/eplotlight/scrollzoomer.h
 
     SOURCES +=  \
     src/widgets-base/eplotlight/quplot_base.cpp \
@@ -196,7 +192,6 @@ unix:!android-g++ {
     src/widgets-base/eplotlight/quplotcurve.cpp \
     src/quspectrumplot.cpp \
     src/qutrendplot.cpp \
-    src/cuinfodialog.cpp \
     src/widgets-base/eplotlight/quplotbasecontextmenustrategy.cpp \
     src/widgets-base/eplotlight/scrollbar.cpp \
     src/widgets-base/eplotlight/ecurvedata.cpp \

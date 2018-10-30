@@ -407,3 +407,36 @@ CuControlsWriterA *CuContext::findWriter(const std::string &targetnam)
     return NULL;
 }
 
+/*! \brief returns a pointer to the CuControlsReaderFactoryI or NULL if the context is not a reader
+ *         context
+ *
+ * @return a pointer to CuControlsReaderFactoryI * if the context refers to a reader, NULL otherwise
+ *
+ */
+CuControlsReaderFactoryI *CuContext::getReaderFactoryI() const
+{
+    return d->r_factory;
+}
+
+/*! \brief returns a pointer to the CuControlsWriterFactoryI or NULL if the context is not a writer
+ *         context
+ *
+ * @return a pointer to CuControlsWriterFactoryI * if the context refers to a writer, NULL otherwise
+ *
+ */
+CuControlsWriterFactoryI *CuContext::getWriterFactoryI() const
+{
+    return d->w_factory;
+}
+
+/*! \brief returns a copy of the CuControlsFactoryPool, which will be valid if the context
+ *         is configured with a CumbiaPool object.
+ *
+ * @return a copy of the CuControlsFactoryPool used by the pool to create readers or writers, if
+ *         the CuContext is configured with the CumbiaPool/CuControlsFactoryPool pair.
+ */
+CuControlsFactoryPool CuContext::getControlsFactoryPool() const
+{
+    return d->ctrl_factory_pool;
+}
+
