@@ -1,15 +1,14 @@
 <map id="quplot_base.h" name="quplot_base.h">
-<area shape="rect" id="node2" href="$quspectrumplot_8h.html" title="quspectrumplot.h" alt="" coords="95,87,217,114"/>
-<area shape="rect" id="node5" href="$qutrendplot_8h.html" title="qutrendplot.h" alt="" coords="242,87,339,114"/>
-<area shape="rect" id="node7" href="$eplot__configuration__widget_8cpp.html" title="eplot_configuration\l_widget.cpp" alt="" coords="364,80,495,121"/>
-<area shape="rect" id="node8" href="$quplot__base_8cpp.html" title="quplot_base.cpp" alt="" coords="519,87,636,114"/>
-<area shape="rect" id="node9" href="$quplotaxescomponent_8cpp.html" title="quplotaxescomponent.cpp" alt="" coords="661,87,835,114"/>
-<area shape="rect" id="node10" href="$quplotbasecontextmenustrategy_8cpp.html" title="quplotbasecontextmenustrategy.cpp" alt="" coords="860,87,1092,114"/>
-<area shape="rect" id="node11" href="$quplotcanvaspaintercomponent_8cpp.html" title="quplotcanvaspaintercomponent.cpp" alt="" coords="1116,87,1343,114"/>
-<area shape="rect" id="node12" href="$quplotcontextmenucomponent_8cpp.html" title="quplotcontextmenucomponent.cpp" alt="" coords="1367,87,1588,114"/>
-<area shape="rect" id="node13" href="$quplotmarkercomponent_8cpp.html" title="quplotmarkercomponent.cpp" alt="" coords="1612,87,1799,114"/>
-<area shape="rect" id="node14" href="$quplotzoomcomponent_8cpp.html" title="quplotzoomcomponent.cpp" alt="" coords="1823,87,2001,114"/>
-<area shape="rect" id="node3" href="$cuinfodialog_8cpp.html" title="cuinfodialog.cpp" alt="" coords="166,169,282,196"/>
-<area shape="rect" id="node4" href="$quspectrumplot_8cpp.html" title="quspectrumplot.cpp" alt="" coords="5,169,141,196"/>
-<area shape="rect" id="node6" href="$qutrendplot_8cpp.html" title="qutrendplot.cpp" alt="" coords="306,169,417,196"/>
+<area shape="rect" id="node2" href="$quspectrumplot_8h.html" title="quspectrumplot.h" alt="" coords="19,87,141,114"/>
+<area shape="rect" id="node4" href="$qutrendplot_8h.html" title="qutrendplot.h" alt="" coords="169,87,266,114"/>
+<area shape="rect" id="node6" href="$eplot__configuration__widget_8cpp.html" title="eplot_configuration\l_widget.cpp" alt="" coords="291,80,421,121"/>
+<area shape="rect" id="node7" href="$quplot__base_8cpp.html" title="quplot_base.cpp" alt="" coords="445,87,563,114"/>
+<area shape="rect" id="node8" href="$quplotaxescomponent_8cpp.html" title="quplotaxescomponent.cpp" alt="" coords="587,87,762,114"/>
+<area shape="rect" id="node9" href="$quplotbasecontextmenustrategy_8cpp.html" title="quplotbasecontextmenustrategy.cpp" alt="" coords="787,87,1019,114"/>
+<area shape="rect" id="node10" href="$quplotcanvaspaintercomponent_8cpp.html" title="quplotcanvaspaintercomponent.cpp" alt="" coords="1043,87,1269,114"/>
+<area shape="rect" id="node11" href="$quplotcontextmenucomponent_8cpp.html" title="quplotcontextmenucomponent.cpp" alt="" coords="1293,87,1515,114"/>
+<area shape="rect" id="node12" href="$quplotmarkercomponent_8cpp.html" title="quplotmarkercomponent.cpp" alt="" coords="1539,87,1725,114"/>
+<area shape="rect" id="node13" href="$quplotzoomcomponent_8cpp.html" title="quplotzoomcomponent.cpp" alt="" coords="1749,87,1928,114"/>
+<area shape="rect" id="node3" href="$quspectrumplot_8cpp.html" title="quspectrumplot.cpp" alt="" coords="5,169,141,196"/>
+<area shape="rect" id="node5" href="$qutrendplot_8cpp.html" title="qutrendplot.cpp" alt="" coords="166,169,277,196"/>
 </map>

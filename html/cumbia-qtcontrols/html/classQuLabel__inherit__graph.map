@@ -1,4 +1,4 @@
 <map id="QuLabel" name="QuLabel">
-<area shape="rect" id="node2" href="$classESimpleLabel.html" title="A QLabel that in addition decorates its border and background. " alt="" coords="5,80,108,107"/>
-<area shape="rect" id="node5" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management..." alt="" coords="269,80,359,107"/>
+<area shape="rect" id="node2" href="$classQuLabelBase.html" title="A QLabel that in addition decorates its border and background. " alt="" coords="5,80,105,107"/>
+<area shape="rect" id="node5" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management..." alt="" coords="267,80,356,107"/>
 </map>

@@ -84,6 +84,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a82106502c2647e7e90b28ca0003fe2c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3c22b171d67001e7564796dbf6cd1e5"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingActivity.html#ab3c22b171d67001e7564796dbf6cd1e5">srcCount</a> () const</td></tr>
 <tr class="separator:ab3c22b171d67001e7564796dbf6cd1e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61c40b48ebc3faf34ba6c474b952478f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingActivity.html#a61c40b48ebc3faf34ba6c474b952478f">setSlowDownRate</a> (const std::map&lt; int, int &gt; &amp;sr_millis)</td></tr>
+<tr class="memdesc:a61c40b48ebc3faf34ba6c474b952478f"><td class="mdescLeft">&#160;</td><td class="mdescRight">set a custom <em>slow down rate</em> to decrease polling period after consecutive read failures.  <a href="#a61c40b48ebc3faf34ba6c474b952478f">More...</a><br /></td></tr>
+<tr class="separator:a61c40b48ebc3faf34ba6c474b952478f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfc78dbdd9a0565cb94a9879d5227593"><td class="memItemLeft" align="right" valign="top">const std::map&lt; int, int &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingActivity.html#adfc78dbdd9a0565cb94a9879d5227593">slowDownRate</a> () const</td></tr>
+<tr class="memdesc:adfc78dbdd9a0565cb94a9879d5227593"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the currently employed slow down rate policy in case of read errors  <a href="#adfc78dbdd9a0565cb94a9879d5227593">More...</a><br /></td></tr>
+<tr class="separator:adfc78dbdd9a0565cb94a9879d5227593"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade39c78181fe750682c92c0383f46d52"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingActivity.html#ade39c78181fe750682c92c0383f46d52">decreasePolling</a> ()</td></tr>
+<tr class="separator:ade39c78181fe750682c92c0383f46d52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45e50ac3fb2f00fa7b70958b78712328"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingActivity.html#a45e50ac3fb2f00fa7b70958b78712328">matches</a> (const CuData &amp;token) const</td></tr>
 <tr class="memdesc:a45e50ac3fb2f00fa7b70958b78712328"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns true if the passed token's <em>device</em> <em>activity</em> and <em>period</em> values matche this activity token's <em>device</em> and <em>activity</em> and <em>period</em> values.  <a href="#a45e50ac3fb2f00fa7b70958b78712328">More...</a><br /></td></tr>
 <tr class="separator:a45e50ac3fb2f00fa7b70958b78712328"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -235,6 +243,25 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ade39c78181fe750682c92c0383f46d52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade39c78181fe750682c92c0383f46d52">&#9670;&nbsp;</a></span>decreasePolling()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuPollingActivity::decreasePolling </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classCuPollingActivity.html#a0e1e22284c511e8a1626d5ccbd910436">execute()</a>.</p>
+
+</div>
+</div>
 <a id="aefe3b2406114a72d51891ee153b9edf8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aefe3b2406114a72d51891ee153b9edf8">&#9670;&nbsp;</a></span>event()</h2>
 
@@ -306,7 +333,7 @@ Protected Member Functions</h2></td></tr>
 </ul>
 See also CuActivity::execute and <a class="el" href="classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int...">CuEventActivity</a> </dd></dl>
 
-<p class="reference">References <a class="el" href="classActionData.html#a067b981107644240ea695ef8ba897d9f">ActionData::action</a>, <a class="el" href="classTSource.html#ab5fbb8717108ab3b13720384711610cba12d7f1efb56860c03f84ee190e87c9c8">TSource::Cmd</a>, <a class="el" href="classCuTangoWorld.html#adae04c7b4d86e21857440ac868bc66b7">CuTangoWorld::cmd_inout()</a>, <a class="el" href="classCmdData.html#a9d7ebeaf25a97c37117f547dee756adf">CmdData::din</a>, <a class="el" href="classCuTangoWorld.html#aece852a275014b068a51b14b24e4d3b5">CuTangoWorld::get_command_info()</a>, <a class="el" href="classTSource.html#afd4803cecb4d47a52e8addd6df583fba">TSource::getArgs()</a>, <a class="el" href="classCmdData.html#a762253efc8cf0b12d2b2554e789a9749">CmdData::getCmdInfoRef()</a>, <a class="el" href="classTSource.html#a7978372c10e561d5c00a8d2bcbdbb7d5">TSource::getDeviceName()</a>, <a class="el" href="classTSource.html#a20f3ea627e2c57d01f01d04faac37246">TSource::getName()</a>, <a class="el" href="classTSource.html#a16f812f7f294d97ff7f0ae0a2e041c65">TSource::getPoint()</a>, <a class="el" href="classTSource.html#a6c6b3903dadd74565765925619f2d840">TSource::getType()</a>, <a class="el" href="classCmdData.html#ab6b9cbcd73fdcb8214addaa5bd6ce123">CmdData::is_empty</a>, <a class="el" href="classCuTangoWorld.html#a12045f4cd938da22c8d9e10e3749434e">CuTangoWorld::read_atts()</a>, <a class="el" href="classCuTangoWorld.html#aea9fabea889dbbe51a7920df6ce3de26">CuTangoWorld::toDeviceData()</a>, and <a class="el" href="classActionData.html#a2bdc21b93ec4a34f575e818fa04913c9">ActionData::tsrc</a>.</p>
+<p class="reference">References <a class="el" href="classActionData.html#a067b981107644240ea695ef8ba897d9f">ActionData::action</a>, <a class="el" href="classTSource.html#ab5fbb8717108ab3b13720384711610cba12d7f1efb56860c03f84ee190e87c9c8">TSource::Cmd</a>, <a class="el" href="classCuTangoWorld.html#adae04c7b4d86e21857440ac868bc66b7">CuTangoWorld::cmd_inout()</a>, <a class="el" href="classCuPollingActivity.html#ade39c78181fe750682c92c0383f46d52">decreasePolling()</a>, <a class="el" href="classCmdData.html#a9d7ebeaf25a97c37117f547dee756adf">CmdData::din</a>, <a class="el" href="classCuTangoWorld.html#aece852a275014b068a51b14b24e4d3b5">CuTangoWorld::get_command_info()</a>, <a class="el" href="classTSource.html#afd4803cecb4d47a52e8addd6df583fba">TSource::getArgs()</a>, <a class="el" href="classCmdData.html#a762253efc8cf0b12d2b2554e789a9749">CmdData::getCmdInfoRef()</a>, <a class="el" href="classTSource.html#a7978372c10e561d5c00a8d2bcbdbb7d5">TSource::getDeviceName()</a>, <a class="el" href="classTSource.html#a20f3ea627e2c57d01f01d04faac37246">TSource::getName()</a>, <a class="el" href="classTSource.html#a16f812f7f294d97ff7f0ae0a2e041c65">TSource::getPoint()</a>, <a class="el" href="classTSource.html#a6c6b3903dadd74565765925619f2d840">TSource::getType()</a>, <a class="el" href="classCmdData.html#ab6b9cbcd73fdcb8214addaa5bd6ce123">CmdData::is_empty</a>, <a class="el" href="classCuTangoWorld.html#a12045f4cd938da22c8d9e10e3749434e">CuTangoWorld::read_atts()</a>, <a class="el" href="classCuTangoWorld.html#aea9fabea889dbbe51a7920df6ce3de26">CuTangoWorld::toDeviceData()</a>, and <a class="el" href="classActionData.html#a2bdc21b93ec4a34f575e818fa04913c9">ActionData::tsrc</a>.</p>
 
 </div>
 </div>
@@ -474,6 +501,62 @@ See also CuActivity::init, execute and onExit </dd></dl>
 
 </div>
 </div>
+<a id="a61c40b48ebc3faf34ba6c474b952478f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61c40b48ebc3faf34ba6c474b952478f">&#9670;&nbsp;</a></span>setSlowDownRate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuPollingActivity::setSlowDownRate </td>
+          <td>(</td>
+          <td class="paramtype">const std::map&lt; int, int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>sr_millis</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>set a custom <em>slow down rate</em> to decrease polling period after consecutive read failures. </p>
+<p>The default slow down rate policy decreases the read timer to:</p>
+<ul>
+<li>three seconds after one error </li>
+<li>five seconds after two consecutive errors </li>
+<li>ten seconds after four consecutive errors</li>
+</ul>
+<p>The default polling period is restored after a successful reading</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>map defining how to decrease the polling period after read failures</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Example</dt><dd>A map defined like this:</dd></dl>
+<div class="fragment"><div class="line">std::map&lt;int, int&gt; sd_map;</div><div class="line">sd_map[1] = 2000;</div><div class="line">sd_map[2] = 5000;</div><div class="line">sd_map[4] = 10000;</div><div class="line">activity-&gt;setSlowDownRate(sd_map);</div></div><!-- fragment --><p>behaves as described in the list above if we deal with a default polling period of one second.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuPollingActivity.html#adfc78dbdd9a0565cb94a9879d5227593" title="returns the currently employed slow down rate policy in case of read errors ">slowDownRate</a> </dd></dl>
+
+</div>
+</div>
+<a id="adfc78dbdd9a0565cb94a9879d5227593"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adfc78dbdd9a0565cb94a9879d5227593">&#9670;&nbsp;</a></span>slowDownRate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::map&lt; int, int &gt; &amp; CuPollingActivity::slowDownRate </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>returns the currently employed slow down rate policy in case of read errors </p>
+<p>Refer to setSlowDownRate for further details </p>
+
+</div>
+</div>
 <a id="ab3c22b171d67001e7564796dbf6cd1e5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab3c22b171d67001e7564796dbf6cd1e5">&#9670;&nbsp;</a></span>srcCount()</h2>
 
@@ -498,7 +581,7 @@ See also CuActivity::init, execute and onExit </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Aug 3 2018 16:28:08 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Oct 31 2018 16:05:57 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

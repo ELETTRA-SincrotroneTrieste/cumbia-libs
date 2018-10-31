@@ -43,6 +43,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-slots">Public Slots</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#properties">Properties</a> &#124;
 <a href="classQuApplyNumeric-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -72,6 +73,8 @@ Public Slots</h2></td></tr>
 <tr class="memitem:a3168577ba37902073045506a72383a3c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuApplyNumeric.html#a3168577ba37902073045506a72383a3c">execute</a> (double val)</td></tr>
 <tr class="memdesc:a3168577ba37902073045506a72383a3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">executes the target specified with setTarget, writing the value set on the widget.  <a href="#a3168577ba37902073045506a72383a3c">More...</a><br /></td></tr>
 <tr class="separator:a3168577ba37902073045506a72383a3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94de69577440583d47c88389d8509c99"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuApplyNumeric.html#a94de69577440583d47c88389d8509c99">onAnimationValueChanged</a> (const QVariant &amp;v)</td></tr>
+<tr class="separator:a94de69577440583d47c88389d8509c99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_slots_classEApplyNumeric"><td colspan="2" onclick="javascript:toggleInherit('pub_slots_classEApplyNumeric')"><img src="closed.png" alt="-"/>&#160;Public Slots inherited from <a class="el" href="classEApplyNumeric.html">EApplyNumeric</a></td></tr>
 <tr class="memitem:af24f91021231efada2af216c633b230f inherit pub_slots_classEApplyNumeric"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEApplyNumeric.html#af24f91021231efada2af216c633b230f">applyValue</a> ()</td></tr>
 <tr class="separator:af24f91021231efada2af216c633b230f inherit pub_slots_classEApplyNumeric"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -155,9 +158,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af40c32c88e3242d0a026f4433b51d66e inherit pub_methods_classEApplyNumeric"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7027d360b2025b5de229a362273acb63 inherit pub_methods_classEApplyNumeric"><td class="memItemLeft" align="right" valign="top">QSize&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEApplyNumeric.html#a7027d360b2025b5de229a362273acb63">minimumSizeHint</a> () const</td></tr>
 <tr class="separator:a7027d360b2025b5de229a362273acb63 inherit pub_methods_classEApplyNumeric"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9da3b137e639b2ba7d450820e6180a7 inherit pub_methods_classEApplyNumeric"><td class="memItemLeft" align="right" valign="top">QWidget *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEApplyNumeric.html#ad9da3b137e639b2ba7d450820e6180a7">getButton</a> () const</td></tr>
+<tr class="separator:ad9da3b137e639b2ba7d450820e6180a7 inherit pub_methods_classEApplyNumeric"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classCuContextI"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classCuContextI')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classCuContextI.html">CuContextI</a></td></tr>
 <tr class="memitem:a0c13f762f59ca85ae54d54f4d05a2b90 inherit pub_methods_classCuContextI"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuContextI.html#a0c13f762f59ca85ae54d54f4d05a2b90">~CuContextI</a> ()</td></tr>
 <tr class="separator:a0c13f762f59ca85ae54d54f4d05a2b90 inherit pub_methods_classCuContextI"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a59e6eda6dd4fde0680ad03d9de321cf8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuApplyNumeric.html#a59e6eda6dd4fde0680ad03d9de321cf8">paintEvent</a> (QPaintEvent *pe)</td></tr>
+<tr class="separator:a59e6eda6dd4fde0680ad03d9de321cf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
@@ -326,7 +336,7 @@ Additional Inherited Members</h2></td></tr>
 <p>executes the target specified with setTarget, writing the value set on the widget. </p>
 <p>The value set on the widget is written on the target when the <em>apply</em> button is clicked. This virtual method can be reimplemented on a subclass. </p>
 
-<p class="reference">References <a class="el" href="classCuControlsWriterA.html#a914191143383818379c509e80b1912ea">CuControlsWriterA::execute()</a>, and <a class="el" href="classCuControlsWriterA.html#a2485ce84fe04db02feb23117428e8048">CuControlsWriterA::setArgs()</a>.</p>
+<p class="reference">References <a class="el" href="classQuAnimation.html#aa54b05e84d3da7eec3143e3071545421a8b475389304359b56d5d349c1262ea69">QuAnimation::ElasticBottomLine</a>, <a class="el" href="classCuControlsWriterA.html#a914191143383818379c509e80b1912ea">CuControlsWriterA::execute()</a>, <a class="el" href="namespaceElettra.html#a0c7441666bd21a4b0adfb2250b1fc6e6ab256749915042e8d9efc53fcfcff0995">Elettra::gray</a>, and <a class="el" href="classCuControlsWriterA.html#a2485ce84fe04db02feb23117428e8048">CuControlsWriterA::setArgs()</a>.</p>
 
 </div>
 </div>
@@ -360,6 +370,34 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a94de69577440583d47c88389d8509c99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94de69577440583d47c88389d8509c99">&#9670;&nbsp;</a></span>onAnimationValueChanged</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void QuApplyNumeric::onAnimationValueChanged </td>
+          <td>(</td>
+          <td class="paramtype">const QVariant &amp;&#160;</td>
+          <td class="paramname"><em>v</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classEApplyNumeric.html#ad9da3b137e639b2ba7d450820e6180a7">EApplyNumeric::getButton()</a>.</p>
+
+</div>
+</div>
 <a id="a89b0b60955cae209e361fd21d6351b5e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a89b0b60955cae209e361fd21d6351b5e">&#9670;&nbsp;</a></span>onUpdate()</h2>
 
@@ -384,7 +422,35 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classEApplyNumeric.html#a5f9e5437bd0627a91f43f03699ca807c">EApplyNumeric::clearModified()</a>, <a class="el" href="classEApplyNumeric.html#a79726dd6c3646b3abdc5a9e9e455f085">EApplyNumeric::decimalDigits</a>, <a class="el" href="classEApplyNumeric.html#a059ca12eb7df0c94c756f0a779d10ecb">EApplyNumeric::integerDigits</a>, <a class="el" href="classEApplyNumeric.html#ae8796441613e6d2550562966b43b98bb">EApplyNumeric::setDecDigits()</a>, <a class="el" href="classEApplyNumeric.html#a8cb864b264cd7d685e3dc7d776028b0f">EApplyNumeric::setIntDigits()</a>, <a class="el" href="classEApplyNumeric.html#a438cad8e42fc581953517eec6e972c53">EApplyNumeric::setMaximum()</a>, <a class="el" href="classEApplyNumeric.html#a0fd4445efab4d2f6a46d7aa9192ec7b9">EApplyNumeric::setMinimum()</a>, <a class="el" href="classEApplyNumeric.html#a4591dcec1b250a5fdaeef8c7d2d0cd00">EApplyNumeric::setValue()</a>, <a class="el" href="classQuApplyNumeric.html#ae0099bfc9ef3789b8cf53c08f83fe1fa">target()</a>, and <a class="el" href="classQuLogImpl.html#a79631d0a7bd6badebfacb56ef79bfd63">QuLogImpl::write()</a>.</p>
+<p class="reference">References <a class="el" href="classEApplyNumeric.html#a5f9e5437bd0627a91f43f03699ca807c">EApplyNumeric::clearModified()</a>, <a class="el" href="classEApplyNumeric.html#a79726dd6c3646b3abdc5a9e9e455f085">EApplyNumeric::decimalDigits</a>, <a class="el" href="namespaceElettra.html#a0c7441666bd21a4b0adfb2250b1fc6e6a08ffec676591677ef02e5d73674844d6">Elettra::green</a>, <a class="el" href="classEApplyNumeric.html#a059ca12eb7df0c94c756f0a779d10ecb">EApplyNumeric::integerDigits</a>, <a class="el" href="namespaceElettra.html#a0c7441666bd21a4b0adfb2250b1fc6e6a8c738aab4ea96a77791eb501fa5057ca">Elettra::red</a>, <a class="el" href="classCuControlsWriterA.html#a0121ccaa13564b36ea317d5256803b1e">CuControlsWriterA::saveConfiguration()</a>, <a class="el" href="classEApplyNumeric.html#ae8796441613e6d2550562966b43b98bb">EApplyNumeric::setDecDigits()</a>, <a class="el" href="classEApplyNumeric.html#a8cb864b264cd7d685e3dc7d776028b0f">EApplyNumeric::setIntDigits()</a>, <a class="el" href="classEApplyNumeric.html#a438cad8e42fc581953517eec6e972c53">EApplyNumeric::setMaximum()</a>, <a class="el" href="classEApplyNumeric.html#a0fd4445efab4d2f6a46d7aa9192ec7b9">EApplyNumeric::setMinimum()</a>, <a class="el" href="classEApplyNumeric.html#a4591dcec1b250a5fdaeef8c7d2d0cd00">EApplyNumeric::setValue()</a>, <a class="el" href="classQuAnimation.html#aa54b05e84d3da7eec3143e3071545421aa4f2cb79162d9a7dc339d62a69b407be">QuAnimation::ShrinkingBottomLine</a>, <a class="el" href="classQuApplyNumeric.html#ae0099bfc9ef3789b8cf53c08f83fe1fa">target()</a>, and <a class="el" href="classQuLogImpl.html#a79631d0a7bd6badebfacb56ef79bfd63">QuLogImpl::write()</a>.</p>
+
+</div>
+</div>
+<a id="a59e6eda6dd4fde0680ad03d9de321cf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59e6eda6dd4fde0680ad03d9de321cf8">&#9670;&nbsp;</a></span>paintEvent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void QuApplyNumeric::paintEvent </td>
+          <td>(</td>
+          <td class="paramtype">QPaintEvent *&#160;</td>
+          <td class="paramname"><em>pe</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classEApplyNumeric.html#ad9da3b137e639b2ba7d450820e6180a7">EApplyNumeric::getButton()</a>.</p>
 
 </div>
 </div>
@@ -472,7 +538,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Aug 3 2018 16:28:12 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Oct 31 2018 16:06:02 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

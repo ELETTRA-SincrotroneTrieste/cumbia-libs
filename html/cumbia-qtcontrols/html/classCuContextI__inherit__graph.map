@@ -10,10 +10,11 @@
 <area shape="rect" id="node10" href="$classQuInputOutput.html" title="This element is a graphical interface to integrate a reader and a writer into one single object that ..." alt="" coords="159,411,265,437"/>
 <area shape="rect" id="node11" href="$classQuLabel.html" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors..." alt="" coords="177,461,247,488"/>
 <area shape="rect" id="node12" href="$classQuLed.html" title="a led that takes a color according to a value read from a source. " alt="" coords="182,512,242,539"/>
-<area shape="rect" id="node13" href="$classQuLineEdit.html" title="QuLineEdit" alt="" coords="169,563,255,589"/>
-<area shape="rect" id="node14" href="$classQuSpectrumPlot.html" title="Draw a line for each data source over time. " alt="" coords="153,613,271,640"/>
-<area shape="rect" id="node15" href="$classQuSpinBox.html" title="QuSpinBox" alt="" coords="168,664,256,691"/>
-<area shape="rect" id="node16" href="$classQuTable.html" title="A widget to organise data in a table. " alt="" coords="177,715,247,741"/>
-<area shape="rect" id="node17" href="$classQuTrendPlot.html" title="Draw a line for each data source over time. " alt="" coords="165,765,259,792"/>
-<area shape="rect" id="node18" href="$classQuWatcher.html" title="Manage readings of various type of objects in a different thread. " alt="" coords="168,816,256,843"/>
+<area shape="rect" id="node13" href="$classQuLinearGauge.html" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors..." alt="" coords="156,563,268,589"/>
+<area shape="rect" id="node14" href="$classQuLineEdit.html" title="QuLineEdit" alt="" coords="169,613,255,640"/>
+<area shape="rect" id="node15" href="$classQuSpectrumPlot.html" title="Draw a line for each data source over time. " alt="" coords="153,664,271,691"/>
+<area shape="rect" id="node16" href="$classQuSpinBox.html" title="QuSpinBox" alt="" coords="168,715,256,741"/>
+<area shape="rect" id="node17" href="$classQuTable.html" title="A widget to organise data in a table. " alt="" coords="177,765,247,792"/>
+<area shape="rect" id="node18" href="$classQuTrendPlot.html" title="Draw a line for each data source over time. " alt="" coords="165,816,259,843"/>
+<area shape="rect" id="node19" href="$classQuWatcher.html" title="Manage readings of various type of objects in a different thread. " alt="" coords="168,867,256,893"/>
 </map>

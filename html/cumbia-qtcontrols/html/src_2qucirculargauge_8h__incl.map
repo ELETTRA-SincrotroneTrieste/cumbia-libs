@@ -1,4 +1,5 @@
 <map id="qucirculargauge.h" name="qucirculargauge.h">
-<area shape="rect" id="node2" href="$egauge_8h.html" title="egauge.h" alt="" coords="45,80,119,107"/>
-<area shape="rect" id="node6" href="$cucontexti_8h.html" title="cucontexti.h" alt="" coords="282,80,375,107"/>
+<area shape="rect" id="node2" href="$qucirculargaugebase_8h.html" title="qucirculargaugebase.h" alt="" coords="26,80,178,107"/>
+<area shape="rect" id="node9" href="$cucontexti_8h.html" title="cucontexti.h" alt="" coords="341,80,434,107"/>
+<area shape="rect" id="node4" href="$qugaugeconfig_8h.html" title="qugaugeconfig.h" alt="" coords="103,155,221,181"/>
 </map>

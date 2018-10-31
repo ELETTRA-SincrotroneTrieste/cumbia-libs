@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['value',['value',['../classCuData.html#adfac36fe3d94c5302b086081e31e114d',1,'CuData::value() const'],['../classCuData.html#aa092884877bd0b6f3f4b93c1d331f96c',1,'CuData::value(const std::string &amp;key) const']]]
+  ['unregisteractivity',['unregisterActivity',['../classCumbia.html#ae72c237833f06276a2ba62f5598197f5',1,'Cumbia::unregisterActivity()'],['../classCuThread.html#a8080e3bb71c1d61b11bf78f06868ea06',1,'CuThread::unregisterActivity()'],['../classCuThreadInterface.html#ad6838e2e06a949bdcca0b222eaea8859',1,'CuThreadInterface::unregisterActivity()']]],
+  ['unregistercumbiaimpl',['unregisterCumbiaImpl',['../classCumbiaPool.html#a70bcf0b0012699195e6dd5964750383b',1,'CumbiaPool']]],
+  ['unregisteronexit',['unregisterOnExit',['../classCuIsolatedActivity.html#a08b974e27363cdae18427ddd88b77c22',1,'CuIsolatedActivity']]],
+  ['unregisterservice',['unregisterService',['../classCuServiceProvider.html#a4f8d6f70b3bef2edc45ac14a5965fb6a',1,'CuServiceProvider']]]
 ];

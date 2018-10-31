@@ -59,6 +59,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a762253efc8cf0b12d2b2554e789a9749"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9995099ad2c7f0a8e4aa80f03271740"><td class="memItemLeft" align="right" valign="top">Tango::DeviceData &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCmdData.html#ab9995099ad2c7f0a8e4aa80f03271740">getDeviceDataRef</a> ()</td></tr>
 <tr class="separator:ab9995099ad2c7f0a8e4aa80f03271740"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17158abc174cf2506edf893925981d69"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCmdData.html#a17158abc174cf2506edf893925981d69">hasInputArgs</a> () const</td></tr>
+<tr class="memdesc:a17158abc174cf2506edf893925981d69"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns true if this CuData input argument list is empty  <a href="#a17158abc174cf2506edf893925981d69">More...</a><br /></td></tr>
+<tr class="separator:a17158abc174cf2506edf893925981d69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -200,6 +203,38 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a17158abc174cf2506edf893925981d69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17158abc174cf2506edf893925981d69">&#9670;&nbsp;</a></span>hasInputArgs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CmdData::hasInputArgs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>returns true if this CuData input argument list is empty </p>
+<dl class="section return"><dt>Returns</dt><dd>true if <a class="el" href="classCmdData.html">CmdData</a> was build with empty args, false otherwise.</dd></dl>
+<p>This can be considered equivalent to testing Tango::DeviceData::is_empty()</p>
+<dl class="section note"><dt>Note</dt><dd>Tango::DeviceData::is_empty throws an exception unless Tango::DeviceData::reset_exceptions(DeviceData::isempty_flag) is called on the DeviceData itself </dd></dl>
+
+<p class="reference">References <a class="el" href="classCmdData.html#a88ff37ea65c5403ed3a2d7ddc6a8fc03">argins</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a88ff37ea65c5403ed3a2d7ddc6a8fc03"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a88ff37ea65c5403ed3a2d7ddc6a8fc03">&#9670;&nbsp;</a></span>argins</h2>
@@ -213,7 +248,7 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classCmdData.html#a42c0a6052a449d1da70ebe2278705815">CmdData()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCmdData.html#a42c0a6052a449d1da70ebe2278705815">CmdData()</a>, and <a class="el" href="classCmdData.html#a17158abc174cf2506edf893925981d69">hasInputArgs()</a>.</p>
 
 </div>
 </div>
@@ -271,7 +306,7 @@ Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Aug 3 2018 16:28:08 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Oct 31 2018 16:05:57 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

@@ -67,6 +67,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adbff8d2f6b4623e49e820e0c0ad93bdc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTWriter.html#adbff8d2f6b4623e49e820e0c0ad93bdc">setWriteValue</a> (const CuVariant &amp;wval)</td></tr>
 <tr class="memdesc:adbff8d2f6b4623e49e820e0c0ad93bdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the value that will be written after start is called  <a href="#adbff8d2f6b4623e49e820e0c0ad93bdc">More...</a><br /></td></tr>
 <tr class="separator:adbff8d2f6b4623e49e820e0c0ad93bdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15317bef7764fc9bcff18f8b44c00882"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTWriter.html#a15317bef7764fc9bcff18f8b44c00882">setConfiguration</a> (const CuData &amp;dbc)</td></tr>
+<tr class="separator:a15317bef7764fc9bcff18f8b44c00882"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a1c11a3fecfd9603013ca1bb5905d20"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTWriter.html#a5a1c11a3fecfd9603013ca1bb5905d20">onProgress</a> (int step, int total, const CuData &amp;data)</td></tr>
 <tr class="separator:a5a1c11a3fecfd9603013ca1bb5905d20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b0f9298abf715f95591abc5011e9842"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTWriter.html#a5b0f9298abf715f95591abc5011e9842">onResult</a> (const CuData &amp;data)</td></tr>
@@ -118,10 +120,11 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:ade015baf4bca143a9bafcce41aa2dd92 inherit pub_types_classCuTangoActionI"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92">Type</a> { <br />
 &#160;&#160;<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92ad217b5458be69582f9d98863f43d41db">Reader</a> = 0, 
 <a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a6495f1b3ab137e0542cab88c964415e5">Writer</a>, 
-<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92aac443e025f717ae2881ae88dbb7f29bb">AttConfig</a>, 
-<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a3df66f83f17416350e8af1e388a5f4ad">DbReadProp</a>, 
+<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a6caccb8082e4cdc6fb68a67c0e1df6c3">ReaderConfig</a>, 
+<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92aea7de597735cbb4df75f5a10280bbeb6">WriterConfig</a>, 
 <br />
-&#160;&#160;<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a36dd4bb9bc0d1827f602817d50668c1a">DbWriteProp</a>
+&#160;&#160;<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a3df66f83f17416350e8af1e388a5f4ad">DbReadProp</a>, 
+<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a36dd4bb9bc0d1827f602817d50668c1a">DbWriteProp</a>
 <br />
  }</td></tr>
 <tr class="memdesc:ade015baf4bca143a9bafcce41aa2dd92"><td class="mdescLeft">&#160;</td><td class="mdescRight">list of types of actions  <a href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92">More...</a><br /></td></tr>
@@ -560,6 +563,26 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a15317bef7764fc9bcff18f8b44c00882"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15317bef7764fc9bcff18f8b44c00882">&#9670;&nbsp;</a></span>setConfiguration()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuTWriter::setConfiguration </td>
+          <td>(</td>
+          <td class="paramtype">const CuData &amp;&#160;</td>
+          <td class="paramname"><em>dbc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classCuTangoWriterFactory.html#ac83d4bb9507484c025fd07d5e71ddc74">CuTangoWriterFactory::create()</a>.</p>
+
+</div>
+</div>
 <a id="adbff8d2f6b4623e49e820e0c0ad93bdc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adbff8d2f6b4623e49e820e0c0ad93bdc">&#9670;&nbsp;</a></span>setWriteValue()</h2>
 
@@ -671,7 +694,7 @@ See also Cumbia::unregisterActivity </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Aug 3 2018 16:28:08 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Oct 31 2018 16:05:57 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

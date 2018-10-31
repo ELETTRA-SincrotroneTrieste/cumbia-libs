@@ -1,9 +1,9 @@
 <map id="cutangoactionfactories.cpp" name="cutangoactionfactories.cpp">
-<area shape="rect" id="node2" href="$cutangoactionfactories_8h.html" title="cutangoactionfactories.h" alt="" coords="353,80,517,107"/>
+<area shape="rect" id="node2" href="$cutangoactionfactories_8h.html" title="cutangoactionfactories.h" alt="" coords="341,80,505,107"/>
 <area shape="rect" id="node10" href="$cutreader_8h.html" title="cutreader.h" alt="" coords="89,155,175,181"/>
-<area shape="rect" id="node11" href="$cutwriter_8h.html" title="cutwriter.h" alt="" coords="144,80,227,107"/>
-<area shape="rect" id="node13" href="$cutattconfiguration_8h.html" title="cutattconfiguration.h" alt="" coords="251,155,391,181"/>
-<area shape="rect" id="node3" href="$cutangoactionfactoryi_8h.html" title="cutangoactionfactoryi.h" alt="" coords="467,155,624,181"/>
-<area shape="rect" id="node5" href="$cutangoactioni_8h.html" title="cutangoactioni.h" alt="" coords="267,229,384,256"/>
-<area shape="rect" id="node6" href="$tsource_8h.html" title="tsource.h" alt="" coords="459,304,535,331"/>
+<area shape="rect" id="node11" href="$cutwriter_8h.html" title="cutwriter.h" alt="" coords="132,80,215,107"/>
+<area shape="rect" id="node13" href="$cutconfiguration_8h.html" title="cutconfiguration.h" alt="" coords="251,155,376,181"/>
+<area shape="rect" id="node3" href="$cutangoactionfactoryi_8h.html" title="cutangoactionfactoryi.h" alt="" coords="451,155,608,181"/>
+<area shape="rect" id="node5" href="$cutangoactioni_8h.html" title="cutangoactioni.h" alt="" coords="263,229,380,256"/>
+<area shape="rect" id="node6" href="$tsource_8h.html" title="tsource.h" alt="" coords="455,304,531,331"/>
 </map>

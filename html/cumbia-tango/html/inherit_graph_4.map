@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node2" href="$classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int..." alt="" coords="151,5,268,32"/>
-<area shape="rect" id="node4" href="$classCuTAttConfigActivity.html" title="CuTAttConfigActivity" alt="" coords="136,56,283,83"/>
+<area shape="rect" id="node2" href="$classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int..." alt="" coords="142,5,259,32"/>
+<area shape="rect" id="node4" href="$classCuTConfigActivity.html" title="CuTConfigActivity" alt="" coords="136,56,265,83"/>
 </map>

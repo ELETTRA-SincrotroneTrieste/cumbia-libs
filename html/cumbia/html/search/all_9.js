@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['matches',['matches',['../classCuActivity.html#a02cf68bd6c041c41355ca8a4ee8c86f9',1,'CuActivity']]],
-  ['matrix',['Matrix',['../classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e',1,'CuVariant']]],
-  ['maxuser',['MaxUser',['../classCuActivityEvent.html#a3727016a1c613763a0936d426d80301aa36acc626ec3d6b87e6022658c123d1fb',1,'CuActivityEvent']]],
-  ['maxuserflags',['MaxUserFlags',['../classCuActivity.html#a23c71d30d18fdf76bf7b3b0ce148013da0139759378eabd86d914827123218a48',1,'CuActivity']]]
+  ['level',['Level',['../classCuLog.html#acd2350b2a3cfcd601126df046ed5c723',1,'CuLog']]],
+  ['log',['Log',['../classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bafe0f9b13689ac2ce980076b364b04b1e',1,'CuServices']]],
+  ['longdouble',['LongDouble',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca945573e6f9761cd309c931a2989a9b7a',1,'CuVariant']]],
+  ['longint',['LongInt',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca8daeeeaf8cc61c7fe17394ecbb75b80b',1,'CuVariant']]],
+  ['longlongint',['LongLongInt',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caaa959e554a99169e7eec0b45bacc18b1',1,'CuVariant']]],
+  ['longlonguint',['LongLongUInt',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cadacad3f32c618ddba203623ac899795d',1,'CuVariant']]],
+  ['longuint',['LongUInt',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca7df23990fcabbf137adc2a193e92f596',1,'CuVariant']]]
 ];

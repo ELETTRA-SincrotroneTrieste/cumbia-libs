@@ -41,7 +41,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#signals">Signals</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classCuContextMenu-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -49,7 +48,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>A QObject filter that installs a minimal context menu with an action to trigger a link statistics request.  
+<p>A QObject filter that installs a context menu with actions defined by external plugins.  
  <a href="classCuContextMenu.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="cucontextmenu_8h_source.html">cucontextmenu.h</a>&gt;</code></p>
@@ -61,23 +60,21 @@ Inheritance diagram for CuContextMenu:</div>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="signals"></a>
-Signals</h2></td></tr>
-<tr class="memitem:a79b4325b6d5d38449da5e7099cabfddb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuContextMenu.html#a79b4325b6d5d38449da5e7099cabfddb">linkStatsTriggered</a> (QWidget *sender, <a class="el" href="classCuContextI.html">CuContextI</a> *sender_cwi)</td></tr>
-<tr class="memdesc:a79b4325b6d5d38449da5e7099cabfddb"><td class="mdescLeft">&#160;</td><td class="mdescRight">This signal is emitted when the used activates the <em>Link statistics</em> action provided by the menu.  <a href="#a79b4325b6d5d38449da5e7099cabfddb">More...</a><br /></td></tr>
-<tr class="separator:a79b4325b6d5d38449da5e7099cabfddb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a10e143b0d055f81fb3849e4e516d8732"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuContextMenu.html#a10e143b0d055f81fb3849e4e516d8732">CuContextMenu</a> (QWidget *parent, <a class="el" href="classCuContextI.html">CuContextI</a> *parent_as_cwi)</td></tr>
-<tr class="memdesc:a10e143b0d055f81fb3849e4e516d8732"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a QMenu with a minimal set of actions.  <a href="#a10e143b0d055f81fb3849e4e516d8732">More...</a><br /></td></tr>
-<tr class="separator:a10e143b0d055f81fb3849e4e516d8732"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac487be4e3a456c3fe750333f90e21834"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuContextMenu.html#ac487be4e3a456c3fe750333f90e21834">CuContextMenu</a> (QWidget *parent, const <a class="el" href="classCuContext.html">CuContext</a> *ctx)</td></tr>
+<tr class="memdesc:ac487be4e3a456c3fe750333f90e21834"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a QMenu with a set of actions loaded from qumbia-plugins (<em>libwidgets-std-context-menu-actions.so</em>) and additional user actions defined in custom plugins.  <a href="#ac487be4e3a456c3fe750333f90e21834">More...</a><br /></td></tr>
+<tr class="separator:ac487be4e3a456c3fe750333f90e21834"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2602ed194f20950a9cd3956e657b3f10"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuContextMenu.html#a2602ed194f20950a9cd3956e657b3f10">~CuContextMenu</a> ()</td></tr>
+<tr class="separator:a2602ed194f20950a9cd3956e657b3f10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A QObject filter that installs a minimal context menu with an action to trigger a link statistics request. </p>
+<div class="textblock"><p>A QObject filter that installs a context menu with actions defined by external plugins. </p>
+<p>A default implementation is provided by the qumbia-plugins/widgets-std-context-menu-actions plugin</p>
+<p>See the <a class="el" href="classCuContextMenu.html" title="A QObject filter that installs a context menu with actions defined by external plugins. ">CuContextMenu</a> constructor documentation for further details. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a10e143b0d055f81fb3849e4e516d8732"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a10e143b0d055f81fb3849e4e516d8732">&#9670;&nbsp;</a></span>CuContextMenu()</h2>
+<a id="ac487be4e3a456c3fe750333f90e21834"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac487be4e3a456c3fe750333f90e21834">&#9670;&nbsp;</a></span>CuContextMenu()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -94,8 +91,8 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCuContextI.html">CuContextI</a> *&#160;</td>
-          <td class="paramname"><em>parent_as_cwi</em>&#160;</td>
+          <td class="paramtype">const <a class="el" href="classCuContext.html">CuContext</a> *&#160;</td>
+          <td class="paramname"><em>ctx</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -110,66 +107,44 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Creates a QMenu with a minimal set of actions. </p>
-<p>The following actions are created by the CuContextMenuConstructor:</p>
+<p>Creates a QMenu with a set of actions loaded from qumbia-plugins (<em>libwidgets-std-context-menu-actions.so</em>) and additional user actions defined in custom plugins. </p>
+<p>Plese refer to the WidgetStdContextMenuActions class defined in qumbia-plugins/widgets-std-context-menu-actions plugin for further details.</p>
+<p>The mentioned plugin loads some predefined actions, amongst which:</p>
 <ul>
-<li>A Link statistics action, to request information about the underlying link.</li>
+<li>A Link statistics action, to request information about the underlying link. </li>
+<li>A helper application action, if the parent stores a valid <em>helperApplication</em> property</li>
 </ul>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">parent</td><td>the parent widget of this menu. </td></tr>
-    <tr><td class="paramname">parent_as_cwi</td><td>the same object as parent must be passed. It must implement <a class="el" href="classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management...">CuContextI</a> interface.</td></tr>
+    <tr><td class="paramname">ctx</td><td>a <em>const</em> pointer to a <a class="el" href="classCuContext.html" title="CuLinkControl stores a small set of objects to help create readers and writers. ">CuContext</a> (the widget's <a class="el" href="classCuContext.html" title="CuLinkControl stores a small set of objects to help create readers and writers. ">CuContext</a>)</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section user"><dt>Note.</dt><dd>Since it is not possible to cast <a class="el" href="classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management...">CuContextI</a> to QWidget and vice versa, it is necessary to store the parent reference both as QWidget and <a class="el" href="classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management...">CuContextI</a>. The linkStatsTriggered signal will contain the <a class="el" href="classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management...">CuContextI</a> pointer that will be used by the receiver to get the <a class="el" href="classCuContext.html" title="CuLinkControl stores a small set of objects to help create readers and writers. ">CuContext</a> reference to access the cumbia-qtcontrols widget context. </dd></dl>
+<dl class="section user"><dt>Custom actions</dt><dd>Custom actions can be provided by one or more additional plugins provided that: <ul>
+<li>they reside in a folder listed in the <em>CUMBIA_PLUGIN_PATH</em> environment variable (colon separated) </li>
+<li>the name of the &lt;cite&gt;.so&lt;/cite&gt; plugin library ends with &lt;cite&gt;context-menu-actions.so&lt;/cite&gt;. The list of actions is populated starting with those provided by custom plugins within the <em>CUMBIA_PLUGIN_PATH</em> and finally with the ones provided by <em>libwidgets-std-context-menu-actions.so</em>. </li>
+</ul>
+</dd></dl>
+
+<p class="reference">References <a class="el" href="classCuContextMenuActionsPlugin__I.html#af0a37899ccce39100ace524c0d61c79f">CuContextMenuActionsPlugin_I::getActions()</a>, <a class="el" href="classCuPluginLoader.html#a2b40d4455059ddc5096137715f169c0d">CuPluginLoader::getPluginAbsoluteFilePaths()</a>, and <a class="el" href="classCuContextMenuActionsPlugin__I.html#aa9688b47ad6e1f5ee8b5d58a268b1d22">CuContextMenuActionsPlugin_I::setup()</a>.</p>
 
 </div>
 </div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a79b4325b6d5d38449da5e7099cabfddb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79b4325b6d5d38449da5e7099cabfddb">&#9670;&nbsp;</a></span>linkStatsTriggered</h2>
+<a id="a2602ed194f20950a9cd3956e657b3f10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2602ed194f20950a9cd3956e657b3f10">&#9670;&nbsp;</a></span>~CuContextMenu()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void CuContextMenu::linkStatsTriggered </td>
+          <td class="memname">CuContextMenu::~CuContextMenu </td>
           <td>(</td>
-          <td class="paramtype">QWidget *&#160;</td>
-          <td class="paramname"><em>sender</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCuContextI.html">CuContextI</a> *&#160;</td>
-          <td class="paramname"><em>sender_cwi</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
-
-<p>This signal is emitted when the used activates the <em>Link statistics</em> action provided by the menu. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">sender</td><td>the object that sent the request, as a QWidget </td></tr>
-    <tr><td class="paramname">sender_cwi</td><td>the object that sent the request, as a CuContextWidgetI (provides access to the widget context</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuContextMenu.html" title="A QObject filter that installs a minimal context menu with an action to trigger a link statistics req...">CuContextMenu</a> </dd></dl>
 
 </div>
 </div>
@@ -180,7 +155,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Aug 3 2018 16:28:12 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Oct 31 2018 16:06:02 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

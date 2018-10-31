@@ -134,7 +134,7 @@ Tango attributes and commands with output arguments.</h3>
 <li>tango/device/devname-&gt;command_name reads a command </li>
 <li>tango/device/devname-&gt;command_name(10,100) reads the output of a command accepting two numbers in input</li>
 </ul>
-<p>The refresh mode is normally automatically chosen by cumbia-tango. If possible, events are used. If not, the second choice is polling. <a class="el" href="classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int...">CuEventActivity</a> and <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity ">CuPollingActivity</a> are the two cumbia <em>activities</em> involved respectively. Before starting either activity, <a class="el" href="classCuTAttConfigActivity.html">CuTAttConfigActivity</a> is used to get either the attribute properties or the command information. In any of the methods involving data exchange, CuData is used to hand results to the CuDataListener implementations installed on the reader.</p>
+<p>The refresh mode is normally automatically chosen by cumbia-tango. If possible, events are used. If not, the second choice is polling. <a class="el" href="classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int...">CuEventActivity</a> and <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity ">CuPollingActivity</a> are the two cumbia <em>activities</em> involved respectively. Before starting either activity, CuTAttConfigActivity is used to get either the attribute properties or the command information. In any of the methods involving data exchange, CuData is used to hand results to the CuDataListener implementations installed on the reader.</p>
 <p>The <em>refresh mode</em> as well as the polling period (if pertinent) can be changed at runtime.</p>
 <h3><a class="anchor" id="read_dbprop"></a>
 Tango database properties.</h3>
@@ -167,7 +167,7 @@ cumbiatango in graphical applications</h1>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Aug 3 2018 16:28:08 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Oct 31 2018 16:05:57 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

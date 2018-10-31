@@ -68,6 +68,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad7aa7647fbf9e0885135af6d0c8f69a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab68415f0415d426144deef03a1783888"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoWriterFactory.html#ab68415f0415d426144deef03a1783888">setWriteValue</a> (const CuVariant &amp;write_val)</td></tr>
 <tr class="separator:ab68415f0415d426144deef03a1783888"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab20d04ef5f26591c5ec2907454b2624d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoWriterFactory.html#ab20d04ef5f26591c5ec2907454b2624d">setConfiguration</a> (const CuData &amp;configuration)</td></tr>
+<tr class="memdesc:ab20d04ef5f26591c5ec2907454b2624d"><td class="mdescLeft">&#160;</td><td class="mdescRight">stores the result of get_attribute_config or get_command_info  <a href="#ab20d04ef5f26591c5ec2907454b2624d">More...</a><br /></td></tr>
+<tr class="separator:ab20d04ef5f26591c5ec2907454b2624d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac83d4bb9507484c025fd07d5e71ddc74"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoWriterFactory.html#ac83d4bb9507484c025fd07d5e71ddc74">create</a> (const std::string &amp;s, <a class="el" href="classCumbiaTango.html">CumbiaTango</a> *ct) const</td></tr>
 <tr class="separator:ac83d4bb9507484c025fd07d5e71ddc74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a45f76536a71c0e4053736f45b4853c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92">CuTangoActionI::Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoWriterFactory.html#a8a45f76536a71c0e4053736f45b4853c">getType</a> () const</td></tr>
@@ -167,7 +170,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classCuTangoActionFactoryI.html#a6c134305d8a4e2a651c55af359b6b464">CuTangoActionFactoryI</a>.</p>
 
-<p class="reference">References <a class="el" href="classCuTWriter.html#adbff8d2f6b4623e49e820e0c0ad93bdc">CuTWriter::setWriteValue()</a>.</p>
+<p class="reference">References <a class="el" href="classCuTWriter.html#a15317bef7764fc9bcff18f8b44c00882">CuTWriter::setConfiguration()</a>, and <a class="el" href="classCuTWriter.html#adbff8d2f6b4623e49e820e0c0ad93bdc">CuTWriter::setWriteValue()</a>.</p>
 
 </div>
 </div>
@@ -220,6 +223,33 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ab20d04ef5f26591c5ec2907454b2624d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab20d04ef5f26591c5ec2907454b2624d">&#9670;&nbsp;</a></span>setConfiguration()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuTangoWriterFactory::setConfiguration </td>
+          <td>(</td>
+          <td class="paramtype">const CuData &amp;&#160;</td>
+          <td class="paramname"><em>configuration</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>stores the result of get_attribute_config or get_command_info </p>
+<p>This methods allows to save configuration data obtained from the <a class="el" href="namespaceTango.html">Tango</a> database once at setup time.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">CuData</td><td>data decoded from either get_attribute_config or get_command_info calls </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ad7aa7647fbf9e0885135af6d0c8f69a2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad7aa7647fbf9e0885135af6d0c8f69a2">&#9670;&nbsp;</a></span>setOptions()</h2>
 
@@ -263,7 +293,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Aug 3 2018 16:28:08 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Oct 31 2018 16:05:57 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

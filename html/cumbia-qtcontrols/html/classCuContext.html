@@ -73,6 +73,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac4329284e985c6c80f730e410b11d5b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a648fd61c54a9f0fa7afa13065883c521"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuControlsWriterA.html">CuControlsWriterA</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuContext.html#a648fd61c54a9f0fa7afa13065883c521">add_writer</a> (const std::string &amp;s, CuDataListener *datal)</td></tr>
 <tr class="separator:a648fd61c54a9f0fa7afa13065883c521"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59f0bc2110b99fe82539d316c97cbfa4"><td class="memItemLeft" align="right" valign="top">CuControlsPropertyReaderA *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuContext.html#a59f0bc2110b99fe82539d316c97cbfa4">get_property_reader</a> (const std::string &amp;s, CuDataListener *datal)</td></tr>
+<tr class="separator:a59f0bc2110b99fe82539d316c97cbfa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a502ef8c10e2bf4cc9db96c957780527a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuContext.html#a502ef8c10e2bf4cc9db96c957780527a">disposeReader</a> (const std::string &amp;src=std::string())</td></tr>
 <tr class="separator:a502ef8c10e2bf4cc9db96c957780527a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec99e17a6fe61d7d8176e3759614bca3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuContext.html#aec99e17a6fe61d7d8176e3759614bca3">disposeWriter</a> (const std::string &amp;src=std::string())</td></tr>
@@ -101,6 +103,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a511daba930a828f3d84ccfa55c8c777f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a873c5d4653d4422c168d1a6699e275c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuControlsWriterA.html">CuControlsWriterA</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuContext.html#a873c5d4653d4422c168d1a6699e275c7">findWriter</a> (const std::string &amp;targetnam)</td></tr>
 <tr class="separator:a873c5d4653d4422c168d1a6699e275c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa320ddac8ca8a42a96247d06c2c25d3d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuControlsReaderFactoryI.html">CuControlsReaderFactoryI</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuContext.html#aa320ddac8ca8a42a96247d06c2c25d3d">getReaderFactoryI</a> () const</td></tr>
+<tr class="memdesc:aa320ddac8ca8a42a96247d06c2c25d3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns a pointer to the <a class="el" href="classCuControlsReaderFactoryI.html" title="cumbia-qtcontrols reader factory. Creates an instance of a CuControlsReaderA implementation. ">CuControlsReaderFactoryI</a> or NULL if the context is not a reader context  <a href="#aa320ddac8ca8a42a96247d06c2c25d3d">More...</a><br /></td></tr>
+<tr class="separator:aa320ddac8ca8a42a96247d06c2c25d3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53b8730d63af4537a2195148efe5df51"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuControlsWriterFactoryI.html">CuControlsWriterFactoryI</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuContext.html#a53b8730d63af4537a2195148efe5df51">getWriterFactoryI</a> () const</td></tr>
+<tr class="memdesc:a53b8730d63af4537a2195148efe5df51"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns a pointer to the <a class="el" href="classCuControlsWriterFactoryI.html" title="cumbia-qtcontrols writer factory. Creates an instance of a CuControlWriterA implementation. ">CuControlsWriterFactoryI</a> or NULL if the context is not a writer context  <a href="#a53b8730d63af4537a2195148efe5df51">More...</a><br /></td></tr>
+<tr class="separator:a53b8730d63af4537a2195148efe5df51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4061a8158eb779cc052f46bf0d38472d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuControlsFactoryPool.html">CuControlsFactoryPool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuContext.html#a4061a8158eb779cc052f46bf0d38472d">getControlsFactoryPool</a> () const</td></tr>
+<tr class="memdesc:a4061a8158eb779cc052f46bf0d38472d"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns a copy of the <a class="el" href="classCuControlsFactoryPool.html" title="this class, used in conjunction with CumbiaPool allows to connect to different control system framewo...">CuControlsFactoryPool</a>, which will be valid if the context is configured with a CumbiaPool object.  <a href="#a4061a8158eb779cc052f46bf0d38472d">More...</a><br /></td></tr>
+<tr class="separator:a4061a8158eb779cc052f46bf0d38472d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a474a8b48e4a0bc9528bdfb57ee8aaa79"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuLinkStats.html">CuLinkStats</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuContext.html#a474a8b48e4a0bc9528bdfb57ee8aaa79">getLinkStats</a> () const</td></tr>
 <tr class="separator:a474a8b48e4a0bc9528bdfb57ee8aaa79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3eac900114c3e308cb9a874e7c500668"><td class="memItemLeft" align="right" valign="top">QList&lt; <a class="el" href="classCuControlsReaderA.html">CuControlsReaderA</a> * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuContext.html#a3eac900114c3e308cb9a874e7c500668">readers</a> () const</td></tr>
@@ -419,6 +430,54 @@ When make_reader is called, either the specific Cumbia and reader factory are us
 
 </div>
 </div>
+<a id="a59f0bc2110b99fe82539d316c97cbfa4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59f0bc2110b99fe82539d316c97cbfa4">&#9670;&nbsp;</a></span>get_property_reader()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuControlsPropertyReaderA * CuContext::get_property_reader </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">CuDataListener *&#160;</td>
+          <td class="paramname"><em>datal</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4061a8158eb779cc052f46bf0d38472d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4061a8158eb779cc052f46bf0d38472d">&#9670;&nbsp;</a></span>getControlsFactoryPool()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classCuControlsFactoryPool.html">CuControlsFactoryPool</a> CuContext::getControlsFactoryPool </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>returns a copy of the <a class="el" href="classCuControlsFactoryPool.html" title="this class, used in conjunction with CumbiaPool allows to connect to different control system framewo...">CuControlsFactoryPool</a>, which will be valid if the context is configured with a CumbiaPool object. </p>
+<dl class="section return"><dt>Returns</dt><dd>a copy of the <a class="el" href="classCuControlsFactoryPool.html" title="this class, used in conjunction with CumbiaPool allows to connect to different control system framewo...">CuControlsFactoryPool</a> used by the pool to create readers or writers, if the <a class="el" href="classCuContext.html" title="CuLinkControl stores a small set of objects to help create readers and writers. ">CuContext</a> is configured with the CumbiaPool/CuControlsFactoryPool pair. </dd></dl>
+
+</div>
+</div>
 <a id="a17f79f2dd93bf9fe84877aea2964958a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a17f79f2dd93bf9fe84877aea2964958a">&#9670;&nbsp;</a></span>getData() <span class="overload">[1/2]</span></h2>
 
@@ -499,8 +558,6 @@ If the context contains more readers (writers), use the <a class="el" href="clas
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classCuInfoDialog.html#aa12c181846cde6e241697a018d536995">CuInfoDialog::exec()</a>.</p>
-
 </div>
 </div>
 <a id="ad10f88ddd1470f374eeea255771eaca9"></a>
@@ -520,6 +577,26 @@ If the context contains more readers (writers), use the <a class="el" href="clas
 
 </div>
 </div>
+<a id="aa320ddac8ca8a42a96247d06c2c25d3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa320ddac8ca8a42a96247d06c2c25d3d">&#9670;&nbsp;</a></span>getReaderFactoryI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classCuControlsReaderFactoryI.html">CuControlsReaderFactoryI</a> * CuContext::getReaderFactoryI </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>returns a pointer to the <a class="el" href="classCuControlsReaderFactoryI.html" title="cumbia-qtcontrols reader factory. Creates an instance of a CuControlsReaderA implementation. ">CuControlsReaderFactoryI</a> or NULL if the context is not a reader context </p>
+<dl class="section return"><dt>Returns</dt><dd>a pointer to <a class="el" href="classCuControlsReaderFactoryI.html" title="cumbia-qtcontrols reader factory. Creates an instance of a CuControlsReaderA implementation. ">CuControlsReaderFactoryI</a> * if the context refers to a reader, NULL otherwise </dd></dl>
+
+</div>
+</div>
 <a id="a8b9b32154be993eda56855424139ef9f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8b9b32154be993eda56855424139ef9f">&#9670;&nbsp;</a></span>getWriter()</h2>
 
@@ -534,6 +611,26 @@ If the context contains more readers (writers), use the <a class="el" href="clas
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a53b8730d63af4537a2195148efe5df51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53b8730d63af4537a2195148efe5df51">&#9670;&nbsp;</a></span>getWriterFactoryI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classCuControlsWriterFactoryI.html">CuControlsWriterFactoryI</a> * CuContext::getWriterFactoryI </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>returns a pointer to the <a class="el" href="classCuControlsWriterFactoryI.html" title="cumbia-qtcontrols writer factory. Creates an instance of a CuControlWriterA implementation. ">CuControlsWriterFactoryI</a> or NULL if the context is not a writer context </p>
+<dl class="section return"><dt>Returns</dt><dd>a pointer to <a class="el" href="classCuControlsWriterFactoryI.html" title="cumbia-qtcontrols writer factory. Creates an instance of a CuControlWriterA implementation. ">CuControlsWriterFactoryI</a> * if the context refers to a writer, NULL otherwise </dd></dl>
 
 </div>
 </div>
@@ -590,8 +687,6 @@ If the context contains more readers (writers), use the <a class="el" href="clas
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="reference">Referenced by <a class="el" href="classCuInfoDialog.html#aa12c181846cde6e241697a018d536995">CuInfoDialog::exec()</a>.</p>
 
 </div>
 </div>
@@ -768,7 +863,7 @@ See the specific link implementation (e.g. CuTReader/CuTWriter for Tango and CuE
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Aug 3 2018 16:28:12 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Oct 31 2018 16:06:02 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>
