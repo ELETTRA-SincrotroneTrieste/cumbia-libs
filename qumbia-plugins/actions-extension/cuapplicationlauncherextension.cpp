@@ -25,10 +25,7 @@ CuApplicationLauncherExtension::CuApplicationLauncherExtension(const CuContext *
 
 CuApplicationLauncherExtension::~CuApplicationLauncherExtension()
 {
-    if(d->qudbusctrl_i) {
-        printf("~CuApplicationLauncherExtension: deleting QuDBusPluginInterface %p\n", d->qudbusctrl_i);
-        delete d->qudbusctrl_i;
-    }
+    // do not delete plugin instances
     delete d;
 }
 

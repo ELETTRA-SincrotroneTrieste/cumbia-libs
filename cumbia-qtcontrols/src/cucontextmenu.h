@@ -3,11 +3,15 @@
 
 #include <QMenu>
 class CuContext;
-class CuContextMenuActionsPlugin_I;
 class CuData;
 
-/** \brief A QObject filter that installs a minimal context menu with an action
- *         to trigger a link statistics request.
+/** \brief A QObject filter that installs a context menu with actions defined by
+ *         *external plugins*
+ *
+ * A default implementation is provided by the
+ * qumbia-plugins/widgets-std-context-menu-actions plugin
+ *
+ * See the CuContextMenu constructor documentation for further details.
  *
  */
 class CuContextMenu : public QMenu
@@ -16,11 +20,12 @@ class CuContextMenu : public QMenu
 public:
     explicit CuContextMenu(QWidget *parent, const CuContext *ctx);
 
+    ~CuContextMenu();
+
 private slots:
     void popup_noplugin_msg();
 
 private:
-    CuContextMenuActionsPlugin_I *m_ctx_menu_actions;
     const CuContext *m_ctx;
 };
 

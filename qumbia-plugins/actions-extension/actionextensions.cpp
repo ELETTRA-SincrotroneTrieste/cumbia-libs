@@ -22,11 +22,26 @@ ActionExtensions::~ActionExtensions()
 {
     if(d->ae_factory)
         delete d->ae_factory;
+    foreach(QuActionExtensionI *ex, d->extensions.values()) {
+        delete ex;
+    }
     delete d;
 }
 
+/*! \brief register a new extension into the ActionExtensions manger. Ownership is handed over to
+ *         ActionExtensions.
+ *
+ * @param name the name associated to the QuActionExtensionI to register
+ * @param ae an instance of QuActionExtensionI
+ *
+ * \note if another extension is registered with the same name, the older extension is deleted
+ * \note All registered extensions are deleted upon ActionExtensions destruction
+ *
+ */
 void ActionExtensions::registerExtension(const QString &name, QuActionExtensionI *ae)
 {
+    if(d->extensions.contains(name))
+        delete d->extensions[name];
     d->extensions[name] = ae;
 }
 

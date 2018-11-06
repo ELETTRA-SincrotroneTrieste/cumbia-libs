@@ -7,6 +7,8 @@
 
 #include <cudata.h>
 #include <cumacros.h>
+
+#include <cupluginloader.h>
 #include <QDir>
 #include <QPluginLoader>
 #include <QProcessEnvironment>
@@ -16,7 +18,6 @@
 
 class WidgetStdContextMenuActionsPrivate {
 public:
-
     QuActionExtensionPluginInterface *m_action_extensions;
     QList<QAction *>m_actions;
     QWidget *m_widget;
@@ -35,19 +36,22 @@ WidgetStdContextMenuActions::WidgetStdContextMenuActions(QObject *parent) :
     d->m_err = false;
 }
 
+WidgetStdContextMenuActions::~WidgetStdContextMenuActions()
+{
+    printf("\e[1;31m~WidgetStdContextMenuActions\e[0m\n");
+    delete d;
+}
+
 void WidgetStdContextMenuActions::setup(QWidget *widget, const CuContext *ctx)
 {
     const char* extensions_plugin_name = "libactions-extension-plugin.so";
     d->m_ctx = ctx;
     d->m_widget = widget;
 
-    QProcessEnvironment pe = QProcessEnvironment::systemEnvironment();
-    QString custom_plugin_dir = pe.value("CUMBIA_PLUGIN_PATH", "");
-    QStringList plugin_dirs = custom_plugin_dir.split(":", QString::SkipEmptyParts);
-    plugin_dirs.append(QUMBIA_PLUGIN_DIR);
-    foreach(QString plugindir, plugin_dirs) {
-        QDir pluginsDir(plugindir);
-        QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(extensions_plugin_name));
+    CuPluginLoader pl;
+    QString pluginFilePath = pl.getPluginAbsoluteFilePath(QUMBIA_PLUGIN_DIR, extensions_plugin_name);
+    if(!pluginFilePath.isEmpty()) {
+        QPluginLoader pluginLoader(pluginFilePath);
         QObject *plugin = pluginLoader.instance();
         if(plugin) {
             d->m_action_extensions = qobject_cast<QuActionExtensionPluginInterface *>(plugin);
@@ -71,7 +75,6 @@ void WidgetStdContextMenuActions::setup(QWidget *widget, const CuContext *ctx)
                     connect(a, SIGNAL(triggered(bool)), this, SLOT(onHelperAActionTriggered()));
                     d->m_actions << a;
                 }
-                break; // finish searching for extensions
             }
         }
     }

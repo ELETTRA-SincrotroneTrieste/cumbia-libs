@@ -119,8 +119,11 @@ DEFINES += CUMBIA_DEBUG_OUTPUT=1
 VERSION_HEX = 0x000001
 VERSION = 0.0.1
 
-# cumbia-qtcontrols plugin directory. Does not include "plugins"
-# application will cd into "plugins" under CU_QTC_PLUGINDIR
+# cumbia plugin directory.
+# it should be the same as that defined by
+# QUMBIA_PLUGINS_LIBDIR in qumbia-plugins.pri within the qumbia-plugins
+# module
+#
 CU_QTC_PLUGINDIR = $${INSTALL_ROOT}/lib/qumbia-plugins
 
 DEFINES += CUMBIA_QTCONTROLS_VERSION_STR=\"\\\"$${VERSION}\\\"\" \

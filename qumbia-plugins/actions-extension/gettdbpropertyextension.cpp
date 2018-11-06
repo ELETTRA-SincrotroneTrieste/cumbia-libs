@@ -23,6 +23,7 @@ GetTDbPropertyExtension::GetTDbPropertyExtension(const CuContext *ctx, QObject *
 
 GetTDbPropertyExtension::~GetTDbPropertyExtension()
 {
+    printf("deleting GetTDbPropertyExtension %p\n", this);
     // do not delete context, it's just a reference to an object
     // managed by someone else
     delete d;

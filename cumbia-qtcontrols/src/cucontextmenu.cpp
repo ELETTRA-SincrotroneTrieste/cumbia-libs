@@ -3,58 +3,59 @@
 #include <cumacros.h>
 #include "quaction-extension-plugininterface.h"
 #include "cucontextmenuactionsplugin_i.h"
+#include "cupluginloader.h"
 #include <QAction>
 #include <QtDebug>
 #include <QDir>
 #include <QPluginLoader>
 #include <QMessageBox>
 
-/** \brief Creates a QMenu with a minimal set of actions.
+/** \brief Creates a QMenu with a set of actions loaded from qumbia-plugins (*libwidgets-std-context-menu-actions.so*)
+ *         and additional user actions defined in custom plugins.
  *
- * The following actions are created by the CuContextMenuConstructor:
+ * Plese refer to the WidgetStdContextMenuActions class defined in qumbia-plugins/widgets-std-context-menu-actions plugin
+ * for further details.
+ *
+ * The mentioned plugin loads some predefined actions, amongst which:
  *
  * \li A Link statistics action, to request information about the underlying link.
  * \li A helper application action, if the parent stores a valid *helperApplication* property
  *
  * @param parent: the parent widget of this menu.
- * @param parent_as_cwi: the same object as parent must be passed. It must implement CuContextI
- *        interface.
+ * @param ctx: a *const* pointer to a CuContext (the widget's CuContext)
  *
- * \par Note.
- * Since it is not possible to cast CuContextI to QWidget and vice versa, it is necessary
- * to store the parent reference both as QWidget and CuContextI.
- * The linkStatsTriggered signal will contain the CuContextI pointer that will be used
- * by the receiver to get the CuContext reference to access the cumbia-qtcontrols widget
- * context.
+ * \par Custom actions
+ * Custom actions can be provided by one or more additional plugins provided that:
+ * \li they reside in a folder listed in the *CUMBIA_PLUGIN_PATH* environment variable (colon separated)
+ * \li the name of the <cite>.so</cite> plugin library ends with <cite>context-menu-actions.so</cite>.
+ * The list of actions is populated starting with those provided by custom plugins within the *CUMBIA_PLUGIN_PATH*
+ * and finally with the ones provided by *libwidgets-std-context-menu-actions.so*.
+ *
  */
 CuContextMenu::CuContextMenu(QWidget *parent, const CuContext *ctx) :
     QMenu(parent), m_ctx(ctx)
 {
     unsigned loaded_p_cnt = 0;
     QList<QAction *> actions;
-    QDir pluginsDir(CUMBIA_QTCONTROLS_PLUGIN_DIR);
-    QStringList entryList = pluginsDir.entryList(QDir::Files);
-    for(int i = 0; i < entryList.size(); i++) {
-        QString fileName = entryList[i];
+    CuPluginLoader cupl;
+    QStringList pluginPaths = cupl.getPluginAbsoluteFilePaths(CUMBIA_QTCONTROLS_PLUGIN_DIR, QRegExp(".*context-menu-actions\\.so"));
+    for(int i = 0; i < pluginPaths.size(); i++) {
         CuContextMenuActionsPlugin_I *w_std_menu_actions_plugin = NULL;
-        if(fileName.contains("context-menu-actions")) {
-
-            QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
-            QObject *plugin = pluginLoader.instance();
-            if (plugin){
-                loaded_p_cnt++;
-                w_std_menu_actions_plugin = qobject_cast<CuContextMenuActionsPlugin_I *> (plugin);
-                if(w_std_menu_actions_plugin) {
-                    w_std_menu_actions_plugin->setup(parent, ctx);
-                    actions.append(w_std_menu_actions_plugin->getActions());
-                }
+        QPluginLoader pluginLoader(pluginPaths[i]);
+        QObject *plugin = pluginLoader.instance();
+        if (plugin){
+            loaded_p_cnt++;
+            w_std_menu_actions_plugin = qobject_cast<CuContextMenuActionsPlugin_I *> (plugin);
+            if(w_std_menu_actions_plugin) {
+                w_std_menu_actions_plugin->setup(parent, ctx);
+                actions.append(w_std_menu_actions_plugin->getActions());
             }
-            if(!plugin || !w_std_menu_actions_plugin){
-                perr("CuContextMenu::CuContextMenu: failed to load plugin \"%s\" under \"%s\"",
-                     qstoc(fileName), CUMBIA_QTCONTROLS_PLUGIN_DIR);
-            }
-        } // if ends with context-menu-actions
-    } // for entryList
+        }
+        if(!plugin || !w_std_menu_actions_plugin){
+            perr("CuContextMenu::CuContextMenu: failed to load plugin \"%s\" under \"%s\"",
+                 qstoc(pluginPaths[i]), CUMBIA_QTCONTROLS_PLUGIN_DIR);
+        }
+    } // for pluginPaths
     foreach(QAction *a, actions) {
         addAction(a);
     }
@@ -62,6 +63,11 @@ CuContextMenu::CuContextMenu(QWidget *parent, const CuContext *ctx) :
     if(loaded_p_cnt == 0) {
         addAction("No menu actions plugins found", this, SLOT(popup_noplugin_msg()));
     }
+}
+
+CuContextMenu::~CuContextMenu()
+{
+
 }
 
 void CuContextMenu::popup_noplugin_msg()

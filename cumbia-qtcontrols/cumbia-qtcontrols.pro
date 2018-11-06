@@ -14,6 +14,10 @@ PKGCONFIG -= cumbia-qtcontrols$${QTVER_SUFFIX}
 TARGET = $${cumbia_qtcontrols_LIB}
 TEMPLATE = lib
 
+# CUMBIA_QTCONTROLS_PLUGIN_DIR should be the same as
+# QUMBIA_PLUGIN_DIR defined in qumbia-plugins.pri within the qumbia-plugins module
+# The definition of CU_QTC_PLUGINDIR is in cumbia-qtcontrols.pri
+#
 DEFINES += CUMBIAQTCONTROLS_LIBRARY \
     CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${CU_QTC_PLUGINDIR}\\\"\" \
 
@@ -76,7 +80,8 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/widgets-base/qugaugeconfig.cpp \
     src/widgets-base/qulineargaugebase.cpp \
     src/quanimation.cpp \
-    src/widgets-base/qulabelbase.cpp
+    src/widgets-base/qulabelbase.cpp \
+    src/cupluginloader.cpp
 
 HEADERS += cumbiaqtcontrols.h\
         cumbia-qtcontrols_global.h \
@@ -157,7 +162,8 @@ HEADERS += cumbiaqtcontrols.h\
     src/widgets-base/qulabelbase.h \
     src/quaction-extension-plugininterface.h \
     src/quactionextensionfactoryi.h \
-    src/cucontextmenuactionsplugin_i.h
+    src/cucontextmenuactionsplugin_i.h \
+    src/cupluginloader.h
 
 unix:!android-g++ {
 
@@ -265,13 +271,13 @@ unix {
     target.path = $${CUMBIA_QTCONTROLS_LIBDIR}
     INSTALLS += target inc other_inst
 
-message("=====================================")
-message("DOC INSTALL SKIPPED!!!!!!!!!!!!!!!!")
-message("=====================================")
+#message("=====================================")
+#message("DOC INSTALL SKIPPED!!!!!!!!!!!!!!!!")
+#message("=====================================")
 
-#    !android-g++ {
-#        INSTALLS += doc
-#    }
+    !android-g++ {
+        INSTALLS += doc
+    }
 
 # generate pkg config file
     CONFIG += create_pc create_prl no_install_prl
