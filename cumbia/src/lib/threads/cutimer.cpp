@@ -30,7 +30,7 @@ CuTimer::CuTimer(CuTimerListener *l)
  */
 CuTimer::~CuTimer()
 {
-    predtmp("CuTimer %p", this);
+    pdelete("CuTimer %p", this);
     if(!m_quit)
         stop();
 }
@@ -133,19 +133,18 @@ void CuTimer::stop()
 {
     if(m_exited)
         return; /* already quit */
-    pgreentmp("CuTimer.stop!!!! for this %p before lock", this);
+    pgreen("CuTimer.stop!!!! for this %p before lock", this);
     {
      //   auto locked = std::unique_lock<std::mutex>(m_mutex);
-        pgreentmp("after lock");
+        pgreen("after lock");
         m_quit = true;
         m_listener = NULL;
     }
-    pgreentmp("CuTimer.stop calling m_wait.notify_one...");
+    pgreen("CuTimer.stop calling m_wait.notify_one...");
     m_wait.notify_one();
-    pgreentmp("CuTimer.stop called m_wait.notify_one...");
+    pgreen("CuTimer.stop called m_wait.notify_one...");
     if(m_thread->joinable())
     {
-        printf("joining!\n");
         m_thread->join();
         pbblue("CuTimer.stop: joined!");
     }

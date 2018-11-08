@@ -36,6 +36,8 @@ public:
 
 private:
     CuPollerPrivate *d;
+
+    void m_do_unregisterAction(CuTangoActionI *a);
 };
 
 #endif // CUPOLLER_H

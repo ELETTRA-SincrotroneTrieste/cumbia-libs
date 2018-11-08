@@ -109,11 +109,9 @@ void CuTReader::onResult(const CuData &data)
     for(it = lis_copy.begin(); it != lis_copy.end() && !event_subscribe_fail;   ++it) {
         (*it)->onUpdate(data);
     }
-
     if(err && !d->exit)
     {
         polling_fallback = true;
-        cuprintf("starting polling activity cuz event is err %d\n", data["err"].toBool());
         // stop event activity. it will auto delete.
         // m_unregisterEventActivity will set d->event_activity to NULL
         if(d->event_activity)
@@ -181,8 +179,6 @@ CuTangoActionI::Type CuTReader::getType() const
  */
 void CuTReader::sendData(const CuData &data)
 {
-    printf("\e[1;35msendData sending %s\e[0m\n", data.toString().c_str());
-
     if(data.containsKey("refresh_mode"))
         d->refresh_mode = static_cast<CuTReader::RefreshMode>(data["refresh_mode"].toInt());
     if(data.containsKey("period")) {

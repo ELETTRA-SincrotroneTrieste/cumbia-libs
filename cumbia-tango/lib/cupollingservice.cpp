@@ -49,7 +49,7 @@ void CuPollingService::unregisterAction(int period, CuTangoActionI *action)
             delete poller;
         }
         else {
-            printf("\e[1;32mnot deleting poller %p cuz has actions %d\e[0m\n", poller, poller->count());
+           // printf("\e[1;32mnot deleting poller %p cuz has actions %d\e[0m\n", poller, poller->count());
         }
     }
 }

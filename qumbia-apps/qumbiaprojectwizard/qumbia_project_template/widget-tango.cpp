@@ -3,7 +3,6 @@
 
 // cumbia-tango
 #include <cuserviceprovider.h>
-#include <cucontextactionbridge.h>
 #include <cumacros.h>
 // cumbia-tango
 
@@ -18,11 +17,6 @@ $MAINCLASS$::$MAINCLASS$(CumbiaTango *cut, QWidget *parent) :
     ui = new Ui::$UIFORMCLASS$;
     ui->setupUi(this, cu_t, cu_tango_r_fac, cu_tango_w_fac);
     // cumbia-tango
-
-    // after all cumbia widgets have been instantiated
-    // if you add widgets later, you can use the connectObject(QObject *w)
-    // method from CuContextActionBridge.
-    new CuContextActionBridge(this, cu_t, cu_tango_r_fac);
 }
 
 $MAINCLASS$::~$MAINCLASS$()

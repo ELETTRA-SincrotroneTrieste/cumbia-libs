@@ -88,7 +88,6 @@ CuThread::CuThread(const CuData &token,
  */
 CuThread::~CuThread()
 {
-    predtmp("~CuThread %p", this);
     if(d->thread)
     {
         perr("CuThread: thread destroyed while still running!\e[0m\n");

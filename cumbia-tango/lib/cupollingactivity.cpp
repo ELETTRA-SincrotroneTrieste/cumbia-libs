@@ -484,8 +484,9 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts)
     std::multimap< const std::string, const ActionData>::iterator it = d->actions_map.begin();
     while(it != d->actions_map.end()) {
         if(it->first == ts.getName() && it->second.tsrc == ts) {
+            it->second.action->onResult(CuData("exit", true));
             it = d->actions_map.erase(it);
-            predtmp(" - CuPollingActivity %p event: removed %s from poller\n",this,  ts.toString().c_str());
+            pred(" - CuPollingActivity %p event: removed %s from poller\n",this,  ts.toString().c_str());
         }
         else
             ++it;

@@ -3,7 +3,6 @@
 
 #include <cumbiapool.h>
 #include <cuserviceprovider.h>
-#include <cucontextactionbridge.h>
 #include <cumacros.h>
 
 $MAINCLASS$::$MAINCLASS$(CumbiaEpics *cue, QWidget *parent) :
@@ -16,10 +15,6 @@ $MAINCLASS$::$MAINCLASS$(CumbiaEpics *cue, QWidget *parent) :
 
     ui->setupUi(this, cu_e, cu_ep_r_fac, cu_ep_w_fac);
 
-    // after all cumbia widgets have been instantiated
-    // if you add widgets later, you can use the connectObject(QObject *w)
-    // method from CuContextActionBridge.
-    new CuContextActionBridge(this, cu_e, cu_ep_r_fac);
 }
 
 $MAINCLASS$::~$MAINCLASS$()

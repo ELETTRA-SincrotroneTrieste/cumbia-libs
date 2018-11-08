@@ -618,8 +618,6 @@ The main widget constructor implementation does the following:
 - sets up the logging facility
 - instantiates the Ui form and calls *setupUI* with the additional parameters that the form will forward to the cumbia-qtcontrols
   objects constructors
-- instantiates the *CuContextActionBridge* to give *cumbia-qtcontrols* children the capability to provide a right click
-  contextual menu
 
 The following code shows the modified main widget constructor in the ComplexQTangoDemo.cpp file.
 The necessary include files are also listed.
@@ -629,7 +627,6 @@ The necessary include files are also listed.
 #include "ComplexQTangoDemo.h"
 
 #include <cuserviceprovider.h> // cumbia-tango includes start 
-#include <cucontextactionbridge.h>
 #include <cumacros.h> // cumbia-tango includes end 
 
 #include "ui_ComplexQTangoDemo.h"
@@ -646,23 +643,11 @@ ComplexQTangoDemo::ComplexQTangoDemo(CumbiaTango *cut, QWidget *parent) :
     ui->setupUi(this, cu_t, cu_tango_r_fac, cu_tango_w_fac);  // cumbia-tango section ends
     
     m_setup();
-    new CuContextActionBridge(this, cu_t, cu_tango_r_fac);
 
 }
 \endcode
 
 Please note that the <em>ui_ComplexQTangoDemo.h</em> file, expanded by *cuuimake*, resides under the *ui* subfolder of the project.
-
-Remember that the line
-
-\code
-
-    new CuContextActionBridge(this, cu_t, cu_tango_r_fac);
-    
-\endcode
-
-must be at the end of the method. In this way, all the *cumbia-qtcontrols* widgets instantiated above it
-can offer a contextual menu. See the CuContextActionBridge documentation for further details.
 
 The line
 

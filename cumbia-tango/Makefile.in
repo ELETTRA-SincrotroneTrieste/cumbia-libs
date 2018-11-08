@@ -186,9 +186,9 @@ am_libcumbia_tango_la_OBJECTS = lib/libcumbia_tango_la-cumbiatango.lo \
 	lib/libcumbia_tango_la-cupollingactivity.lo \
 	lib/libcumbia_tango_la-cuwriteactivity.lo \
 	lib/libcumbia_tango_la-cutwriter.lo \
-	lib/libcumbia_tango_la-cutattconfiguration.lo \
+	lib/libcumbia_tango_la-cutconfiguration.lo \
 	lib/libcumbia_tango_la-cutangoopt_builder.lo \
-	lib/libcumbia_tango_la-cutattconfigactivity.lo \
+	lib/libcumbia_tango_la-cutconfigactivity.lo \
 	lib/libcumbia_tango_la-cutdbpropertyreader.lo \
 	lib/libcumbia_tango_la-cugettdbpropactivity.lo
 libcumbia_tango_la_OBJECTS = $(am_libcumbia_tango_la_OBJECTS)
@@ -479,9 +479,9 @@ lib/cutangoactioni.cpp \
 lib/cupollingactivity.cpp \
 lib/cuwriteactivity.cpp \
 lib/cutwriter.cpp \
-lib/cutattconfiguration.cpp \
+lib/cutconfiguration.cpp \
 lib/cutangoopt_builder.cpp \
-lib/cutattconfigactivity.cpp \
+lib/cutconfigactivity.cpp \
 lib/cutdbpropertyreader.cpp \
 lib/cugettdbpropactivity.cpp
 
@@ -505,9 +505,9 @@ lib/cueventactivity.h \
 lib/cupollingactivity.h \
 lib/cuwriteactivity.h \
 lib/cutwriter.h \
-lib/cutattconfiguration.h \
+lib/cutconfiguration.h \
 lib/cutangoopt_builder.h \
-lib/cutattconfigactivity.h \
+lib/cutconfigactivity.h \
 lib/cutdbpropertyreader.h \
 lib/cugettdbpropactivity.h
 
@@ -631,11 +631,11 @@ lib/libcumbia_tango_la-cuwriteactivity.lo: lib/$(am__dirstamp) \
 	lib/$(DEPDIR)/$(am__dirstamp)
 lib/libcumbia_tango_la-cutwriter.lo: lib/$(am__dirstamp) \
 	lib/$(DEPDIR)/$(am__dirstamp)
-lib/libcumbia_tango_la-cutattconfiguration.lo: lib/$(am__dirstamp) \
+lib/libcumbia_tango_la-cutconfiguration.lo: lib/$(am__dirstamp) \
 	lib/$(DEPDIR)/$(am__dirstamp)
 lib/libcumbia_tango_la-cutangoopt_builder.lo: lib/$(am__dirstamp) \
 	lib/$(DEPDIR)/$(am__dirstamp)
-lib/libcumbia_tango_la-cutattconfigactivity.lo: lib/$(am__dirstamp) \
+lib/libcumbia_tango_la-cutconfigactivity.lo: lib/$(am__dirstamp) \
 	lib/$(DEPDIR)/$(am__dirstamp)
 lib/libcumbia_tango_la-cutdbpropertyreader.lo: lib/$(am__dirstamp) \
 	lib/$(DEPDIR)/$(am__dirstamp)
@@ -664,8 +664,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@lib/$(DEPDIR)/libcumbia_tango_la-cutangoactionfactories.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@lib/$(DEPDIR)/libcumbia_tango_la-cutangoactioni.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@lib/$(DEPDIR)/libcumbia_tango_la-cutangoopt_builder.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@lib/$(DEPDIR)/libcumbia_tango_la-cutattconfigactivity.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@lib/$(DEPDIR)/libcumbia_tango_la-cutattconfiguration.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@lib/$(DEPDIR)/libcumbia_tango_la-cutconfigactivity.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@lib/$(DEPDIR)/libcumbia_tango_la-cutconfiguration.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@lib/$(DEPDIR)/libcumbia_tango_la-cutdbpropertyreader.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@lib/$(DEPDIR)/libcumbia_tango_la-cutreader.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@lib/$(DEPDIR)/libcumbia_tango_la-cutwriter.Plo@am__quote@
@@ -795,12 +795,12 @@ lib/libcumbia_tango_la-cutwriter.lo: lib/cutwriter.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_tango_la_CXXFLAGS) $(CXXFLAGS) -c -o lib/libcumbia_tango_la-cutwriter.lo `test -f 'lib/cutwriter.cpp' || echo '$(srcdir)/'`lib/cutwriter.cpp
 
-lib/libcumbia_tango_la-cutattconfiguration.lo: lib/cutattconfiguration.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_tango_la_CXXFLAGS) $(CXXFLAGS) -MT lib/libcumbia_tango_la-cutattconfiguration.lo -MD -MP -MF lib/$(DEPDIR)/libcumbia_tango_la-cutattconfiguration.Tpo -c -o lib/libcumbia_tango_la-cutattconfiguration.lo `test -f 'lib/cutattconfiguration.cpp' || echo '$(srcdir)/'`lib/cutattconfiguration.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) lib/$(DEPDIR)/libcumbia_tango_la-cutattconfiguration.Tpo lib/$(DEPDIR)/libcumbia_tango_la-cutattconfiguration.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='lib/cutattconfiguration.cpp' object='lib/libcumbia_tango_la-cutattconfiguration.lo' libtool=yes @AMDEPBACKSLASH@
+lib/libcumbia_tango_la-cutconfiguration.lo: lib/cutconfiguration.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_tango_la_CXXFLAGS) $(CXXFLAGS) -MT lib/libcumbia_tango_la-cutconfiguration.lo -MD -MP -MF lib/$(DEPDIR)/libcumbia_tango_la-cutconfiguration.Tpo -c -o lib/libcumbia_tango_la-cutconfiguration.lo `test -f 'lib/cutconfiguration.cpp' || echo '$(srcdir)/'`lib/cutconfiguration.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) lib/$(DEPDIR)/libcumbia_tango_la-cutconfiguration.Tpo lib/$(DEPDIR)/libcumbia_tango_la-cutconfiguration.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='lib/cutconfiguration.cpp' object='lib/libcumbia_tango_la-cutconfiguration.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_tango_la_CXXFLAGS) $(CXXFLAGS) -c -o lib/libcumbia_tango_la-cutattconfiguration.lo `test -f 'lib/cutattconfiguration.cpp' || echo '$(srcdir)/'`lib/cutattconfiguration.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_tango_la_CXXFLAGS) $(CXXFLAGS) -c -o lib/libcumbia_tango_la-cutconfiguration.lo `test -f 'lib/cutconfiguration.cpp' || echo '$(srcdir)/'`lib/cutconfiguration.cpp
 
 lib/libcumbia_tango_la-cutangoopt_builder.lo: lib/cutangoopt_builder.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_tango_la_CXXFLAGS) $(CXXFLAGS) -MT lib/libcumbia_tango_la-cutangoopt_builder.lo -MD -MP -MF lib/$(DEPDIR)/libcumbia_tango_la-cutangoopt_builder.Tpo -c -o lib/libcumbia_tango_la-cutangoopt_builder.lo `test -f 'lib/cutangoopt_builder.cpp' || echo '$(srcdir)/'`lib/cutangoopt_builder.cpp
@@ -809,12 +809,12 @@ lib/libcumbia_tango_la-cutangoopt_builder.lo: lib/cutangoopt_builder.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_tango_la_CXXFLAGS) $(CXXFLAGS) -c -o lib/libcumbia_tango_la-cutangoopt_builder.lo `test -f 'lib/cutangoopt_builder.cpp' || echo '$(srcdir)/'`lib/cutangoopt_builder.cpp
 
-lib/libcumbia_tango_la-cutattconfigactivity.lo: lib/cutattconfigactivity.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_tango_la_CXXFLAGS) $(CXXFLAGS) -MT lib/libcumbia_tango_la-cutattconfigactivity.lo -MD -MP -MF lib/$(DEPDIR)/libcumbia_tango_la-cutattconfigactivity.Tpo -c -o lib/libcumbia_tango_la-cutattconfigactivity.lo `test -f 'lib/cutattconfigactivity.cpp' || echo '$(srcdir)/'`lib/cutattconfigactivity.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) lib/$(DEPDIR)/libcumbia_tango_la-cutattconfigactivity.Tpo lib/$(DEPDIR)/libcumbia_tango_la-cutattconfigactivity.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='lib/cutattconfigactivity.cpp' object='lib/libcumbia_tango_la-cutattconfigactivity.lo' libtool=yes @AMDEPBACKSLASH@
+lib/libcumbia_tango_la-cutconfigactivity.lo: lib/cutconfigactivity.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_tango_la_CXXFLAGS) $(CXXFLAGS) -MT lib/libcumbia_tango_la-cutconfigactivity.lo -MD -MP -MF lib/$(DEPDIR)/libcumbia_tango_la-cutconfigactivity.Tpo -c -o lib/libcumbia_tango_la-cutconfigactivity.lo `test -f 'lib/cutconfigactivity.cpp' || echo '$(srcdir)/'`lib/cutconfigactivity.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) lib/$(DEPDIR)/libcumbia_tango_la-cutconfigactivity.Tpo lib/$(DEPDIR)/libcumbia_tango_la-cutconfigactivity.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='lib/cutconfigactivity.cpp' object='lib/libcumbia_tango_la-cutconfigactivity.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_tango_la_CXXFLAGS) $(CXXFLAGS) -c -o lib/libcumbia_tango_la-cutattconfigactivity.lo `test -f 'lib/cutattconfigactivity.cpp' || echo '$(srcdir)/'`lib/cutattconfigactivity.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_tango_la_CXXFLAGS) $(CXXFLAGS) -c -o lib/libcumbia_tango_la-cutconfigactivity.lo `test -f 'lib/cutconfigactivity.cpp' || echo '$(srcdir)/'`lib/cutconfigactivity.cpp
 
 lib/libcumbia_tango_la-cutdbpropertyreader.lo: lib/cutdbpropertyreader.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcumbia_tango_la_CXXFLAGS) $(CXXFLAGS) -MT lib/libcumbia_tango_la-cutdbpropertyreader.lo -MD -MP -MF lib/$(DEPDIR)/libcumbia_tango_la-cutdbpropertyreader.Tpo -c -o lib/libcumbia_tango_la-cutdbpropertyreader.lo `test -f 'lib/cutdbpropertyreader.cpp' || echo '$(srcdir)/'`lib/cutdbpropertyreader.cpp

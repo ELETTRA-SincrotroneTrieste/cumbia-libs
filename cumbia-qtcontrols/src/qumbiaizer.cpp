@@ -118,8 +118,6 @@ void Qumbiaizer::attach(QObject *refreshee,  const char *slot,
         /* save in method name only the name, without the parameter list */
         quizer_ptr->methodName = method.remove(QRegExp("\\(.*\\)"));
         quizer_ptr->connType = connType;
-        printf("\e[1;32mattach() detected type %d on %s / %s (%s)\e[0m\n", quizer_ptr->type,
-               qstoc(refreshee->objectName()), qstoc(method), in_type);
         if(!setPtSlot.isEmpty())
         {
             quizer_ptr->setPointSlot = setPtSlot;
@@ -357,8 +355,6 @@ void Qumbiaizer::configure(const CuData &data)
 
     if(object && !quizer_ptr->setPointMethodName.isEmpty())
     {
-        printf("\e[1;33m Qumbiaizer::configure setting current value on auto conf for obj %s method %s\e[0m\n",
-               qstoc(object->objectName()), qstoc(quizer_ptr->setPointMethodName));
         /* invoke updateValue with a false parameter to extract the set point from the
          * current value.
          */
@@ -629,14 +625,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
         if(object && !ok)
             perr("Qumbiaizer.updateValue: failed to invoke method \"%s\" on \"%s\": \"%s\"", qstoc(methName),
                  qstoc(object->objectName()), qstoc(message));
-        else if(object && ok)
-            printf("\e[1;32mQumbiaizer.updateValue: SUCCESSFULLY invoke method \"%s\" on \"%s\": \"%s\"\n", qstoc(methName),
-                   qstoc(object->objectName()), qstoc(message));
-
     }
-    emit readOk(ok);
-    emit refreshMessage(message);
-    emit newData(v);
 }
 
 

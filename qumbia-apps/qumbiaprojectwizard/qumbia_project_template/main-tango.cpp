@@ -1,14 +1,15 @@
 #include <quapplication.h>
 #include "$HFILE$"
-#include <X11/Xlib.h>
-#include <QX11Info>
-
 
 // cumbia-tango
 #include <cumbiatango.h>
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
 // cumbia-tango
+
+#include <X11/Xlib.h>
+#include <QX11Info>
+
 
 #define CVSVERSION "$Name:  $"
 

@@ -1,7 +1,7 @@
-prefix=/usr/local
+prefix=/tmp/cumbia-tango
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
-includedir=/usr/local/include/cumbia-tango
+includedir=${prefix}/include
 
 Name: cumbia-tango
 Description: a library using cumbia to exchange data with the Tango control system

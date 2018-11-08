@@ -112,19 +112,6 @@ QList<Section> MainWidgetCppCodeExtractor::extract(Type t)
         cu_t_secs[0].where = Section::Includes;
         cu_t_secs[1].where = Section::StartOfCppConstructor;
         sections.append(cu_t_secs);
-        // extraction 2
-        // regexp (\s*new\s+CuContextActionBridge[A-Za-z0-9_,\s\)\(]*;\n)
-        // in template the line is:
-        // new CuContextActionBridge(this, cu_t, cu_tango_r_fac);
-        int pos;
-        QRegExp re2("(\\s*new\\s+CuContextActionBridge[A-Za-z0-9_,\\s\\)\\(]*;\\n)");
-        pos = re2.indexIn(s);
-        m_err = pos < 0;
-        if(!m_err) {
-            sections << Section(re2.cap(1), Section::EndOfCppConstructor);
-        }
-        else
-            m_msg = "MainWidgetCppCodeExtractor::extract: CuContextActionBridge line not found in template file";
     }
     return sections;
 }

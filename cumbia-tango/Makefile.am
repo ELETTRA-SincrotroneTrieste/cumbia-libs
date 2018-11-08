@@ -40,9 +40,9 @@ lib/cutangoactioni.cpp \
 lib/cupollingactivity.cpp \
 lib/cuwriteactivity.cpp \
 lib/cutwriter.cpp \
-lib/cutattconfiguration.cpp \
+lib/cutconfiguration.cpp \
 lib/cutangoopt_builder.cpp \
-lib/cutattconfigactivity.cpp \
+lib/cutconfigactivity.cpp \
 lib/cutdbpropertyreader.cpp \
 lib/cugettdbpropactivity.cpp
 
@@ -66,9 +66,9 @@ lib/cueventactivity.h \
 lib/cupollingactivity.h \
 lib/cuwriteactivity.h \
 lib/cutwriter.h \
-lib/cutattconfiguration.h \
+lib/cutconfiguration.h \
 lib/cutangoopt_builder.h \
-lib/cutattconfigactivity.h \
+lib/cutconfigactivity.h \
 lib/cutdbpropertyreader.h \
 lib/cugettdbpropactivity.h
 

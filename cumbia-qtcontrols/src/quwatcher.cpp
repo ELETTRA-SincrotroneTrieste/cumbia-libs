@@ -37,7 +37,7 @@ QuWatcher::QuWatcher(QObject *parent, CumbiaPool *cumbia_pool, const CuControlsF
 
 QuWatcher::~QuWatcher()
 {
-    pdelete("QuWatcher %p", this);
+    pdelete("QuWatcher %p\n", this);
     delete d->context;
     delete d;
 }
@@ -81,6 +81,8 @@ void QuWatcher::setSource(const QString &s)
 void QuWatcher::unsetSource()
 {
     d->context->disposeReader();
+    if(autoDestroy())
+        deleteLater();
 }
 
 CuContext *QuWatcher::getContext() const
@@ -90,21 +92,21 @@ CuContext *QuWatcher::getContext() const
 
 void QuWatcher::onUpdate(const CuData &data)
 {
-    if(data["type"].toString() == "property")
-    {
-        printf("calling configure\n");
+    bool ok = !data["err"].toBool();
+    std::string msg = data["msg"].toString();
+    !ok ? d->context->getLinkStats()->addError(msg) : d->context->getLinkStats()->addOperation();
+
+    if(data["type"].toString() == "property") {
         configure(data); // Qumbiaizer virtual configure method
-        printf("configure called\n\n");
     }
-    else
-    {
+    else if(data.containsKey("value")) {
         updateValue(data);
-        if(singleShot())
+        if(singleShot()) {
             unsetSource();
-        if(this->autoDestroy())
-        {
-            pinfo("auto destroying QuWatcher for \"%s\"", qstoc(source()));
-            QTimer::singleShot(2000, this, SLOT(deleteLater()));
         }
     }
+
+    emit readOk(ok);
+    emit refreshMessage(QString::fromStdString(msg));
+    emit newData(data);
 }

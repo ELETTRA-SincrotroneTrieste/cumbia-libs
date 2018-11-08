@@ -8,7 +8,6 @@
 #include <cuepcontrolswriter.h>
 #include <cutcontrolsreader.h>
 #include <cutcontrolswriter.h>
-#include <cucontextactionbridge.h>
 #include <cutango-world.h>
 #include <cuepics-world.h>
 #include <cuthreadfactoryimpl.h>
@@ -43,12 +42,6 @@ $MAINCLASS$::$MAINCLASS$(CumbiaPool *cumbia_pool, QWidget *parent) :
     cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
 
     ui->setupUi(this, cu_pool, m_ctrl_factory_pool);
-
-
-    // after all cumbia widgets have been instantiated
-    // if you add widgets later, you can use the connectObject(QObject *w)
-    // method from CuContextActionBridge.
-    new CuContextActionBridge(this, cumbia_pool, m_ctrl_factory_pool);
 }
 
 $MAINCLASS$::~$MAINCLASS$()

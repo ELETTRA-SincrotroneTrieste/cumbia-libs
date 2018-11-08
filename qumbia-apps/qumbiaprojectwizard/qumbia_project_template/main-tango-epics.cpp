@@ -1,11 +1,12 @@
 #include <quapplication.h>
 #include "$HFILE$"
-#include <X11/Xlib.h>
-#include <QX11Info>
 
 #include <cumbiapool.h>
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
+
+#include <X11/Xlib.h>
+#include <QX11Info>
 
 #define CVSVERSION "$Name:  $"
 
