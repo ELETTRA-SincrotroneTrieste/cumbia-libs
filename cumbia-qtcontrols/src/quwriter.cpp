@@ -124,12 +124,12 @@ void QuWriter::postExecute()
     }
 }
 
-void QuWriter::setTarget(const QString &targets)
+void QuWriter::setTarget(const QString &target)
 {
     // only one writer at a time: use replace_writer from CuContext
-    CuControlsWriterA* w = d->context->replace_writer(targets.toStdString(), this);
+    CuControlsWriterA* w = d->context->replace_writer(target.toStdString(), this);
     if(w)
-        w->setTarget(targets); // setTargets must be called on a valid writer
+        w->setTarget(target); // setTargets must be called on a valid writer
 }
 
 QString QuWriter::target() const
@@ -234,6 +234,8 @@ void QuWriter::execute()
     CuControlsUtils cu;
     CuVariant args = cu.getArgs(target(), this);
     CuControlsWriterA *w = d->context->getWriter();
+    printf("QuWriter.execute... %s CuControlsWriterA %p args %s\n", qstoc(target()),
+           w, args.toString().c_str());
     if(!w || !d->configured)
         quizer_ptr->setExecuteOnConnection(true, args);
     else

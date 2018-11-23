@@ -98,6 +98,7 @@ void QuWatcher::onUpdate(const CuData &data)
 
     if(data["type"].toString() == "property") {
         configure(data); // Qumbiaizer virtual configure method
+        emit connectionOk(ok);
     }
     else if(data.containsKey("value")) {
         updateValue(data);

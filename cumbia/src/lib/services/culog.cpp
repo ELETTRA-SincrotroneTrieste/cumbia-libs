@@ -53,7 +53,7 @@ void CuLog::addImpl(CuLogImplI *impl)
  * @param name a string with the *log implementation*'s name to remove from the service
  *
  * A *log implementation* can be removed at runtime in order to disable logging.
- * A
+ */
 void CuLog::removeImpl(const std::string &name)
 {
     CuLogImplI *li = getImpl(name);

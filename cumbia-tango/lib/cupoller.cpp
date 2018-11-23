@@ -61,18 +61,18 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a)
     at["activity"] = "poller";
     at["period"] = d->period;
 
-    CuActivity *activity = am->findMatching(at); // polling activities compare device period and "activity"
+    CuActivity *activity = am->findActiveMatching(at); // polling activities compare device period and "activity"
     if(!activity) {
         CuData tt("device", tsrc.getDeviceName()); /* thread token */
         activity = new CuPollingActivity(at, df);
         const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
         const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
         d->cumbia_t->registerActivity(activity, this, tt, fi, bf);
-        pgreen("(+) CuPoller.m_startPollingActivity: created a new polling activity for device \"%s\" period %d\n",
+        pgreen("(+) CuPoller.registerAction: created a new polling activity for device \"%s\" period %d\n",
                   at["device"].toString().c_str(), at["period"].toInt());
     }
     else {
-        pgreen("(i) CuPoller.m_startPollingActivity: found a running polling activity [%p] DISPOSABLE %d for device \"%s\" period %d\n",
+        pviolet2("(i) CuPoller.registerAction: found a running polling activity [%p] DISPOSABLE %d for device \"%s\" period %d\n",
                   activity, activity->isDisposable(), at["device"].toString().c_str(), at["period"].toInt());
         if(d->actions_map.size() == 1)
             d->cumbia_t->resumeActivity(activity);
@@ -174,7 +174,7 @@ void CuPoller::m_do_unregisterAction(CuTangoActionI *a)
 
         CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
                                                                  get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
-        CuActivity *activity = am->findMatching(at); // polling activities compare device period and "activity"
+        CuActivity *activity = am->findActiveMatching(at); // polling activities compare device period and "activity"
         // post remove to activity's thread
         if(activity) {
             d->cumbia_t->postEvent(activity, new CuRemovePollActionEvent(a->getSource()));

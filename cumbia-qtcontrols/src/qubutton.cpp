@@ -98,10 +98,10 @@ void QuButton::execute()
  *
  * Refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */
-void QuButton::setTarget(const QString &targets)
+void QuButton::setTarget(const QString &target)
 {
-    CuControlsWriterA * w = d->context->replace_writer(targets.toStdString(), this);
-    if(w) w->setTarget(targets);
+    CuControlsWriterA * w = d->context->replace_writer(target.toStdString(), this);
+    if(w) w->setTarget(target);
 }
 
 void QuButton::onAnimationValueChanged(const QVariant &)

@@ -44,12 +44,8 @@ void CuPollingService::unregisterAction(int period, CuTangoActionI *action)
         CuPoller* poller = d->pollers_map[period];
         poller->unregisterAction(action);
         if(poller->count() == 0) {
-            printf("\e[1;31mdeleting poller %p cuz has actions %d\e[0m\n", poller, poller->count());
             d->pollers_map.erase(period);
             delete poller;
-        }
-        else {
-           // printf("\e[1;32mnot deleting poller %p cuz has actions %d\e[0m\n", poller, poller->count());
         }
     }
 }

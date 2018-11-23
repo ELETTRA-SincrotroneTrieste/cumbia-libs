@@ -97,7 +97,6 @@ public:
     pthread_t my_thread_id, other_thread_id;
     CuVariant argins;
     CuData point_info;
-    bool exiting;
     std::multimap<const std::string, const ActionData > actions_map;
     // cache for tango command_inout argins
     // multimap because argins may differ
@@ -130,7 +129,6 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
     d->device_srvc = df;
     d->errCnt = 0;
     d->other_thread_id = pthread_self();
-    d->exiting = false;
     d->exec_cnt = 0;
 
     int period = 1000;
@@ -441,7 +439,7 @@ void CuPollingActivity::execute()
 void CuPollingActivity::onExit()
 {
     assert(d->my_thread_id == pthread_self());
-    d->exiting = true;
+    dispose();
     int refcnt = -1;
     CuData at = getToken(); /* activity token */
     at["msg"] = "EXITED";
@@ -450,8 +448,8 @@ void CuPollingActivity::onExit()
     //    utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
     if(d->tdev)
         refcnt = d->tdev->removeRef();
-    cuprintf("\e[1;31mCuPollingActivity::onExit(): refcnt = %d called actionRemove for device %s att %s\e[0m\n",
-             refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
+//   printf("\e[1;31mCuPollingActivity::onExit(): %p refcnt = %d device %s att %s\e[0m\n",
+//            this, refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
     if(refcnt == 0)
     {
         d->device_srvc->removeDevice(at["device"].toString());
@@ -474,7 +472,7 @@ void CuPollingActivity::m_registerAction(const TSource& ts, CuTangoActionI *a)
         perr("CuPollingActivity %p m_registerAction: source \"%s\" period %d already registered", this, ts.getName().c_str(), getTimeout());
     else {
         d->actions_map.insert(std::pair<const std::string, const ActionData>(ts.getName(), adata)); // multimap
-        pgreentmp(" + CuPollingActivity %p event: added %s to poller\n", this, ts.toString().c_str());
+        pgreen(" + CuPollingActivity %p event: added %s to poller\n", this, ts.toString().c_str());
     }
 }
 
@@ -484,15 +482,15 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts)
     std::multimap< const std::string, const ActionData>::iterator it = d->actions_map.begin();
     while(it != d->actions_map.end()) {
         if(it->first == ts.getName() && it->second.tsrc == ts) {
-            it->second.action->onResult(CuData("exit", true));
             it = d->actions_map.erase(it);
             pred(" - CuPollingActivity %p event: removed %s from poller\n",this,  ts.toString().c_str());
         }
         else
             ++it;
     }
-    if(d->actions_map.size() == 0)
-        d->exiting = true;
+    if(d->actions_map.size() == 0) {
+        dispose(); // do not use this activity since now
+    }
 }
 
 /** \brief Receive events *from the main thread to the CuActivity thread*.
@@ -535,7 +533,7 @@ int CuPollingActivity::repeat() const
 {
     assert(d->my_thread_id == pthread_self());
     int ret;
-    d->exiting ? ret = -1 : ret = d->repeat;
+    isDisposable() ? ret = -1 : ret = d->repeat;
     return ret;
 }
 

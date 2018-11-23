@@ -1,5 +1,5 @@
-#ifndef QTVALUEFILTER_H
-#define QTVALUEFILTER_H
+#ifndef QUVALUEFILTER_H
+#define QUVALUEFILTER_H
 
 #include <cudata.h>
 #include <QVector>

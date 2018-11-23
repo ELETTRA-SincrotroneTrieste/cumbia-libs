@@ -22,18 +22,18 @@
 
 QuPalette::QuPalette()
 {
-    insert("blue", QColor(90, 121, 198));
-    insert("gray", QColor(199,197,194));
-    insert("red", QColor(255, 75, 76));
-    insert("dark_red", QColor(235, 55, 56));
-    insert("green", QColor(90, 240, 77));
-    insert("dark_green", QColor(50, 200, 47));
-    insert("dark_gray", QColor(145,145,145));
-    insert("light_gray", QColor(231, 182, 226));
-    insert("yellow", QColor(244, 245, 153));
-    insert("orange", QColor(238, 181, 104));
-    insert("violet", QColor(200, 148, 208));
-    insert("pink", QColor(231, 182, 226));
-    insert("black", QColor(Qt::black));
-    insert("white", QColor(Qt::white));
+    insert(QString("blue"), QColor(90, 121, 198));
+    insert(QString("gray"), QColor(199,197,194));
+    insert(QString("red"), QColor(255, 75, 76));
+    insert(QString("dark_red"), QColor(235, 55, 56));
+    insert(QString("green"), QColor(90, 240, 77));
+    insert(QString("dark_green"), QColor(50, 200, 47));
+    insert(QString("dark_gray"), QColor(145,145,145));
+    insert(QString("light_gray"), QColor(231, 182, 226));
+    insert(QString("yellow"), QColor(244, 245, 153));
+    insert(QString("orange"), QColor(238, 181, 104));
+    insert(QString("violet"), QColor(200, 148, 208));
+    insert(QString("pink"), QColor(231, 182, 226));
+    insert(QString("black"), QColor(Qt::black));
+    insert(QString("white"), QColor(Qt::white));
 }

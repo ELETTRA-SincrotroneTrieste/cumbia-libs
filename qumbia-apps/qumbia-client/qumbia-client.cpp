@@ -23,7 +23,6 @@
 #include <QComboBox>
 #include <cutango-world.h>
 #include <cucontext.h>
-#include <cucontextactionbridge.h>
 #include <QTimer>
 
 #ifdef QUMBIA_EPICS_CONTROLS
@@ -103,8 +102,6 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
 
     connect(ui->pbWrite, SIGNAL(toggled(bool)), ui->gbWriters, SLOT(setVisible(bool)));
     ui->gbWriters->setVisible(false);
-
-    new CuContextActionBridge(this, cumbia_pool, m_ctrl_factory_pool);
 }
 
 QumbiaClient::~QumbiaClient()
@@ -162,10 +159,6 @@ void QumbiaClient::configure(const CuData &d)
             Writer *w = new Writer(wi, cu_pool, m_ctrl_factory_pool, data_dim, QString::fromStdString(d["src"].toString()));
             qobject_cast<QVBoxLayout *>(wi->layout())->addWidget(w);
         }
-
-        CuContextActionBridge *cab = findChild<CuContextActionBridge *>();
-        if(cab) delete cab;
-        cab = new CuContextActionBridge(this, cu_pool, m_ctrl_factory_pool);
     }
 }
 

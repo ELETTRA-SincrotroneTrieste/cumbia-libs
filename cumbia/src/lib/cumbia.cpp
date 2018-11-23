@@ -210,7 +210,7 @@ void Cumbia::unregisterActivity(CuActivity *activity)
  *
  * @token CuData used to find an activity with the token
  *
- * @return a CuActivity whose token matches token
+ * @return a *non disposable* CuActivity whose token matches token
  *
  * \par Note
  * This is a convenience shortcut to CuActivityManager::findMatching
@@ -218,7 +218,7 @@ void Cumbia::unregisterActivity(CuActivity *activity)
 CuActivity *Cumbia::findActivity(const CuData &token) const
 {
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
-    return  activityManager->findMatching(token);
+    return  activityManager->findActiveMatching(token);
 }
 
 /*! \brief if a timer runs within an activity, change the timeout

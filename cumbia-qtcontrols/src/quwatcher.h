@@ -118,6 +118,8 @@ public:
 public slots:
 
     void setSource(const QString &s);
+    void unsetSource();
+
 private:
     QuWatcherPrivate *d;
 
@@ -130,7 +132,6 @@ public:
 public:
     void onUpdate(const CuData &data);
     QString source() const;
-    void unsetSource();
 };
 
 #endif // READER_H

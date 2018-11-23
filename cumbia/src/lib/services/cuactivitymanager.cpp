@@ -115,15 +115,25 @@ void CuActivityManager::removeConnection(CuThreadListener *l)
     }
 }
 
-CuActivity *CuActivityManager::findMatching(const CuData &token)
+/*! \brief finds an activity matching the given token
+ *
+ * @return an activity matching the given token or NULL if either no activity matches the token
+ *         or the found activity is disposable (it cannot be reused)
+ *
+ * \note If an activity matches the given token but is marked as disposable, NULL is returned.
+ *
+ * \par Disposable activities
+ * Cumbia::unregisterActivity marks an activity disposable when it must be considered useless because
+ * on its way to destruction.
+ */
+CuActivity *CuActivityManager::findActiveMatching(const CuData &token)
 {
     // std::lock_guard<std::mutex> lock(m_mutex);
     std::multimap< CuThreadInterface *, CuActivity *>::const_iterator it;
     for(it = mConnectionsMultiMap.begin(); it != mConnectionsMultiMap.end(); ++it)
     {
-//        pviolettmp("CuActivityManager.findMatching: visiting  %p %s compared to %s\n",
-//                 it->second, it->second->getToken().toString().c_str(), token.toString().c_str());
-        if(it->second->matches(token))
+        const CuActivity *a = it->second;
+        if(a->matches(token) && !a->isDisposable())
             return it->second;
     }
     return NULL;
@@ -148,16 +158,6 @@ CuThreadInterface *CuActivityManager::getThread(CuActivity *activity)
             return it->first;
     }
     return NULL;
-}
-
-CuThreadInterface *CuActivityManager::getThread(const CuThreadListener *l)
-{
-    // std::lock_guard<std::mutex> lock(m_mutex);
-    std::multimap< CuThreadInterface *, CuActivity *>::const_iterator it;
-    std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator lit;
-
-    for(lit = mThreadListenersMultiMap.begin(); lit != mThreadListenersMultiMap.end(); ++lit)
-        ;
 }
 
 std::vector<CuThreadListener *> CuActivityManager::getThreadListeners(const CuActivity *activity)

@@ -26,6 +26,7 @@ class QuWriterPrivate;
 class QuWriter : public Qumbiaizer, public CuDataListener
 {
     Q_OBJECT
+    Q_PROPERTY(QString target READ target WRITE setTarget)
 
 public:
     /** \brief the class constructor

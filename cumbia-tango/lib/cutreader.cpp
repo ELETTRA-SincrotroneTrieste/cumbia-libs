@@ -118,8 +118,9 @@ void CuTReader::onResult(const CuData &data)
             m_unregisterEventActivity();
         CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                             get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
-        if(!polling_service->actionRegistered(this, d->period) )
+        if(!polling_service->actionRegistered(this, d->period) ) {
             m_registerToPoller();
+        }
     }
 
     /* remove last listener and delete this
@@ -428,7 +429,7 @@ void CuTReader::m_registerToPoller()
     CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
     polling_service->registerAction(d->cumbia_t, d->tsrc, d->period, this);
-    cuprintf("> CuTReader.m_startPollingActivity reader %p thread 0x%lx ACTIVITY %p == \e[0;32mSTARTING POLLING\e[0m\n\n", this, pthread_self(), d->event_activity);
+
 }
 
 void CuTReader::m_unregisterFromPoller()
