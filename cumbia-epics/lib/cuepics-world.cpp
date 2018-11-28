@@ -628,13 +628,15 @@ void CuEpicsWorld::putTimestamp(void* ep_data, CuData &dt) const
 
     int stat = (static_cast<T *>(ep_data)->status);
     if((stat) >= 0 && (stat) <= (signed)lastEpicsAlarmCond)
-        dt["status"] = std::string(epicsAlarmConditionStrings[stat]);
+        //dt["status"] = std::string(epicsAlarmConditionStrings[stat])
+        dt["status"] = stat;
     else
         dt["status"] = "?";
 
     int sev = (static_cast<T *>(ep_data)->severity);
     if((sev) >= 0 && (sev) <= (signed)lastEpicsAlarmSev)
-        dt["severity"] = std::string(epicsAlarmSeverityStrings[sev]);
+        //dt["severity"] = std::string(epicsAlarmSeverityStrings[sev]);
+        dt["severity"] = sev;
     else
         dt["severity"] = "?";
 
