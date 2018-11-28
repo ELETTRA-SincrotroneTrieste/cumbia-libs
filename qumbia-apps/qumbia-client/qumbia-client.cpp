@@ -31,7 +31,6 @@
 #include <cuepcontrolswriter.h>
 #include <cuepics-world.h>
 #include <cuepreadoptions.h>
-#include <queplotupdatestrategy.h>
 #endif
 
 #include <cuthreadfactoryimpl.h>
