@@ -1,5 +1,4 @@
 #include "cucontextmenu.h"
-#include <cuapplicationlauncher.h>
 #include <cumacros.h>
 #include "quaction-extension-plugininterface.h"
 #include "cucontextmenuactionsplugin_i.h"
