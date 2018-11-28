@@ -176,8 +176,7 @@ unix:INCLUDEPATH += \
 
 unix:LIBS +=  \
     -L$${QUMBIA_EPICS_CONTROLS_LIBDIR} \
-    -l$${QUMBIA_EPICS_CONTROLS_LIB} \
-    -lca
+    -l$${QUMBIA_EPICS_CONTROLS_LIB}
 
 
 # need to adjust qwt path

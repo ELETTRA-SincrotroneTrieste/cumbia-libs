@@ -60,7 +60,7 @@ includedirs = include_directories('lib')
 
 cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1'
 
-deps = [dependency('epics-base-linux-x86_64'), dependency('epics-base'), dependency('cumbia')]
+deps = [dependency('epics-base-linux-x86_64'), dependency('cumbia')]
 
 ## Y are they missing in pkgconfig file?
 linker_args = [ '-lca',  '-ldbCore', '-lCom' ]
@@ -70,8 +70,8 @@ cumbiaepicslib = shared_library('cumbia-epics', sources,
         version : meson.project_version(),
         include_directories : includedirs,
         cpp_args : cpp_arguments,
-        dependencies : deps ,
-        link_args : linker_args,
+        dependencies : deps,
+#        link_args : linker_args,
         install : true)
 
 ### ====================================== pkg config   ============================
