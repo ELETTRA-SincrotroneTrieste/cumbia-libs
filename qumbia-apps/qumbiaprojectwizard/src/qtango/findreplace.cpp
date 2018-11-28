@@ -13,8 +13,6 @@
 #include <QTextEdit>
 
 #include "conversionhealth.h"
-#include <cumbia/cumacros.h>
-
 
 
 FindReplace::FindReplace(const QString &id) : FileCmd(id)
@@ -24,7 +22,6 @@ FindReplace::FindReplace(const QString &id) : FileCmd(id)
 
 FindReplace::~FindReplace()
 {
-    pdelete("FindReplace %p", this);
 }
 
 QString FindReplace::process(const QString& input)
