@@ -190,69 +190,69 @@ capri caPriority = DEFAULT_CA_PRIORITY;  /* CA Priority */
     + 30 + (MAX_ENUM_STATES * (20 + MAX_ENUM_STRING_SIZE)) /* enums */  \
     + 50                        /* just to be sure */
 
-char *dbr2str (const void *value, unsigned type)
-{
-    static char str[DBR_PRINT_BUFFER_SIZE];
-    char timeText[TIMETEXTLEN];
-    int n, i;
+//char *dbr2str (const void *value, unsigned type)
+//{
+//    static char str[DBR_PRINT_BUFFER_SIZE];
+//    char timeText[TIMETEXTLEN];
+//    int n, i;
 
-    switch (type) {
-    case DBR_STRING:   /* no additional information for basic data types */
-    case DBR_INT:
-    case DBR_FLOAT:
-    case DBR_ENUM:
-    case DBR_CHAR:
-    case DBR_LONG:
-    case DBR_DOUBLE: break;
+//    switch (type) {
+//    case DBR_STRING:   /* no additional information for basic data types */
+//    case DBR_INT:
+//    case DBR_FLOAT:
+//    case DBR_ENUM:
+//    case DBR_CHAR:
+//    case DBR_LONG:
+//    case DBR_DOUBLE: break;
 
-    case DBR_CTRL_STRING:       /* see db_access.h: not implemented */
-    case DBR_GR_STRING:         /* see db_access.h: not implemented */
-    case DBR_STS_STRING:  PRN_DBR_STS(dbr_sts_string); break;
-    case DBR_STS_SHORT:   PRN_DBR_STS(dbr_sts_short); break;
-    case DBR_STS_FLOAT:   PRN_DBR_STS(dbr_sts_float); break;
-    case DBR_STS_ENUM:    PRN_DBR_STS(dbr_sts_enum); break;
-    case DBR_STS_CHAR:    PRN_DBR_STS(dbr_sts_char); break;
-    case DBR_STS_LONG:    PRN_DBR_STS(dbr_sts_long); break;
-    case DBR_STS_DOUBLE:  PRN_DBR_STS(dbr_sts_double); break;
+//    case DBR_CTRL_STRING:       /* see db_access.h: not implemented */
+//    case DBR_GR_STRING:         /* see db_access.h: not implemented */
+//    case DBR_STS_STRING:  PRN_DBR_STS(dbr_sts_string); break;
+//    case DBR_STS_SHORT:   PRN_DBR_STS(dbr_sts_short); break;
+//    case DBR_STS_FLOAT:   PRN_DBR_STS(dbr_sts_float); break;
+//    case DBR_STS_ENUM:    PRN_DBR_STS(dbr_sts_enum); break;
+//    case DBR_STS_CHAR:    PRN_DBR_STS(dbr_sts_char); break;
+//    case DBR_STS_LONG:    PRN_DBR_STS(dbr_sts_long); break;
+//    case DBR_STS_DOUBLE:  PRN_DBR_STS(dbr_sts_double); break;
 
-    case DBR_TIME_STRING: PRN_DBR_TIME(dbr_time_string); break;
-    case DBR_TIME_SHORT:  PRN_DBR_TIME(dbr_time_short); break;
-    case DBR_TIME_FLOAT:  PRN_DBR_TIME(dbr_time_float); break;
-    case DBR_TIME_ENUM:   PRN_DBR_TIME(dbr_time_enum); break;
-    case DBR_TIME_CHAR:   PRN_DBR_TIME(dbr_time_char); break;
-    case DBR_TIME_LONG:   PRN_DBR_TIME(dbr_time_long); break;
-    case DBR_TIME_DOUBLE: PRN_DBR_TIME(dbr_time_double); break;
+//    case DBR_TIME_STRING: PRN_DBR_TIME(dbr_time_string); break;
+//    case DBR_TIME_SHORT:  PRN_DBR_TIME(dbr_time_short); break;
+//    case DBR_TIME_FLOAT:  PRN_DBR_TIME(dbr_time_float); break;
+//    case DBR_TIME_ENUM:   PRN_DBR_TIME(dbr_time_enum); break;
+//    case DBR_TIME_CHAR:   PRN_DBR_TIME(dbr_time_char); break;
+//    case DBR_TIME_LONG:   PRN_DBR_TIME(dbr_time_long); break;
+//    case DBR_TIME_DOUBLE: PRN_DBR_TIME(dbr_time_double); break;
 
-    case DBR_GR_CHAR:
-        PRN_DBR_GR(dbr_gr_char, char, %8d); break;
-    case DBR_GR_INT:
-        PRN_DBR_GR(dbr_gr_int,  int,  %8d); break;
-    case DBR_GR_LONG:
-        PRN_DBR_GR(dbr_gr_long, long int, %8ld); break;
-    case DBR_GR_FLOAT:
-        PRN_DBR_GR_PREC(dbr_gr_float,  float, %g); break;
-    case DBR_GR_DOUBLE:
-        PRN_DBR_GR_PREC(dbr_gr_double, double, %g); break;
-    case DBR_GR_ENUM:
-        PRN_DBR_X_ENUM(dbr_gr_enum); break;
-    case DBR_CTRL_CHAR:
-        PRN_DBR_CTRL(dbr_ctrl_char,   char,     %8d); break;
-    case DBR_CTRL_INT:
-        PRN_DBR_CTRL(dbr_ctrl_int,    int,      %8d); break;
-    case DBR_CTRL_LONG:
-        PRN_DBR_CTRL(dbr_ctrl_long,   long int, %8ld); break;
-    case DBR_CTRL_FLOAT:
-        PRN_DBR_CTRL_PREC(dbr_ctrl_float,  float,  %g); break;
-    case DBR_CTRL_DOUBLE:
-        PRN_DBR_CTRL_PREC(dbr_ctrl_double, double, %g); break;
-    case DBR_CTRL_ENUM:
-        PRN_DBR_X_ENUM(dbr_ctrl_enum); break;
-    case DBR_STSACK_STRING:
-        PRN_DBR_STSACK(dbr_stsack_string); break;
-    default : strcpy (str, "can't print data type");
-    }
-    return str;
-}
+//    case DBR_GR_CHAR:
+//        PRN_DBR_GR(dbr_gr_char, char, %8d); break;
+//    case DBR_GR_INT:
+//        PRN_DBR_GR(dbr_gr_int,  int,  %8d); break;
+//    case DBR_GR_LONG:
+//        PRN_DBR_GR(dbr_gr_long, long int, %8ld); break;
+//    case DBR_GR_FLOAT:
+//        PRN_DBR_GR_PREC(dbr_gr_float,  float, %g); break;
+//    case DBR_GR_DOUBLE:
+//        PRN_DBR_GR_PREC(dbr_gr_double, double, %g); break;
+//    case DBR_GR_ENUM:
+//        PRN_DBR_X_ENUM(dbr_gr_enum); break;
+//    case DBR_CTRL_CHAR:
+//        PRN_DBR_CTRL(dbr_ctrl_char,   char,     %8d); break;
+//    case DBR_CTRL_INT:
+//        PRN_DBR_CTRL(dbr_ctrl_int,    int,      %8d); break;
+//    case DBR_CTRL_LONG:
+//        PRN_DBR_CTRL(dbr_ctrl_long,   long int, %8ld); break;
+//    case DBR_CTRL_FLOAT:
+//        PRN_DBR_CTRL_PREC(dbr_ctrl_float,  float,  %g); break;
+//    case DBR_CTRL_DOUBLE:
+//        PRN_DBR_CTRL_PREC(dbr_ctrl_double, double, %g); break;
+//    case DBR_CTRL_ENUM:
+//        PRN_DBR_X_ENUM(dbr_ctrl_enum); break;
+//    case DBR_STSACK_STRING:
+//        PRN_DBR_STSACK(dbr_stsack_string); break;
+//    default : strcpy (str, "can't print data type");
+//    }
+//    return str;
+//}
 
 class CuEpicsWorldPrivate
 {
