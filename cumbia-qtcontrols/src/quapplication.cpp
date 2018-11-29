@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QPluginLoader>
 
+#include <cupluginloader.h>
 #include <cumacros.h>
 #include <QtDebug>
 #include <QWidget>
@@ -135,28 +136,29 @@ QStringList QuApplication::cmdOpt() const
  */
 bool QuApplication::m_loadPlugin()
 {
-    bool found = false;
     QuDBusPluginInterface *dpi = NULL;
-    QDir pluginsDir(CUMBIA_QTCONTROLS_PLUGIN_DIR);
-    QStringList entryList = pluginsDir.entryList(QDir::Files);
-    for(int i = 0; i < entryList.size() && !found; i++) {
-        QString fileName = entryList[i];
-        QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
-        QObject *plugin = pluginLoader.instance();
-        if (plugin) {
-            dpi = qobject_cast<QuDBusPluginInterface *>(plugin);
-            if(dpi)
-                d->dbus_i = dpi->getAppIface();
-            if (d->dbus_i)
-                return true;
-        }
-        else
-            perr("QuApplication.m_loadPlugin: error loading plugin: %s", qstoc(pluginLoader.errorString()));
+    const char* plugin_name = "libcumbia-dbus-plugin.so";
+    QString filePath = CuPluginLoader().getPluginAbsoluteFilePath(CUMBIA_QTCONTROLS_PLUGIN_DIR, plugin_name);
+    QPluginLoader pluginLoader(filePath);
+    QObject *plugin = pluginLoader.instance();
+    if (plugin) {
+        dpi = qobject_cast<QuDBusPluginInterface *>(plugin);
+        if(dpi)
+            d->dbus_i = dpi->getAppIface();
+        if (d->dbus_i)
+            return true;
     }
+    else
+        perr("QuApplication.m_loadPlugin: error loading plugin \"%s\": %s",
+             plugin_name, qstoc(pluginLoader.errorString()));
+
     if(!dpi)
         perr("QuApplication.m_loadPlugin: error loading plugin interface \"QuDBusPluginInterface\"");
     if(!d->dbus_i)
         perr("QuApplication.m_loadPlugin: error getting QuAppDBusInterface");
+    if(!plugin || !dpi || !d->dbus_i)
+        perr("QuApplication.m_loadPlugin: file \"%s\" is searched under %s and the \"CUMBIA_PLUGIN_PATH\" environment variable",
+             plugin_name, CUMBIA_QTCONTROLS_PLUGIN_DIR);
 
     return false;
 }

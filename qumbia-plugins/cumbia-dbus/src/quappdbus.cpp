@@ -13,7 +13,6 @@
 
 QuAppDBus::QuAppDBus(QObject *parent) : QObject(parent)
 {
-    qDebug() << __FUNCTION__ << "constructor: parent" << parent;
 }
 
 /** \brief Register a QuApplication on the DBus service.
