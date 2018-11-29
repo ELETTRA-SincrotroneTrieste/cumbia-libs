@@ -1,4 +1,4 @@
-include(/usr/local/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
+include(/usr/local/cumbia-libs/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 
 DEFINES -= QT_NO_DEBUG_OUTPUT
 

@@ -95,6 +95,6 @@ unix {
     QMAKE_PKGCONFIG_DESTDIR = pkgconfig
 }
 
-unix:INCLUDEPATH -= /usr/local/include/cumbia/cumbia-random
+unix:INCLUDEPATH -= /usr/local/cumbia-libs/include/cumbia/cumbia-random
 
 LIBS -= -lcumbia-random$${QTVER_SUFFIX}

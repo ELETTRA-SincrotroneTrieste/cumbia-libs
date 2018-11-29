@@ -12,9 +12,9 @@ CONFIG += debug
 SOURCES += main.cpp \
     propertyreader.cpp
 
-INCLUDEPATH += /usr/local/include/cumbia /usr/local/include/cumbia-tango
+INCLUDEPATH += /usr/local/cumbia-libs/include/cumbia /usr/local/cumbia-libs/include/cumbia-tango
 
-LIBS += -L/usr/local/lib -lcumbia-tango -lcumbia
+LIBS += -L/usr/local/cumbia-libs/lib -lcumbia-tango -lcumbia
 
 HEADERS += \
     propertyreader.h

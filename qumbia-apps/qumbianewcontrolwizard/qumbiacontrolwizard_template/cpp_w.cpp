@@ -195,7 +195,7 @@ void $MAINCLASS$::m_configure(const CuData& da)
 
     //
     // refer to documentation in
-    // file:///usr/local/share/doc/cumbia-tango/html/cudata_for_tango.html
+    // file:///usr/local/cumbia-libs/share/doc/cumbia-tango/html/cudata_for_tango.html
     // for a detailed CuData bundle description for data exchange with the Tango world.
     //
 

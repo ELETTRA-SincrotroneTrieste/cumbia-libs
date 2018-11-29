@@ -30,7 +30,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 #
 
 isEmpty(INSTALL_ROOT) {
-    INSTALL_ROOT = /usr/local
+    INSTALL_ROOT = /usr/local/cumbia-libs
 }
 
 #
@@ -81,7 +81,7 @@ QWT_INCLUDES_USR = $${QWT_HOME_USR}/include/qwt
 #
 # if needed, please
 #
-# export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+# export PKG_CONFIG_PATH=/usr/local/cumbia-libs/lib/pkgconfig
 #
 # (or wherever cumbia lib is installed) before running qmake
 #
@@ -177,7 +177,7 @@ unix:LIBS +=  \
 # need to adjust qwt path
 
 unix: android-g++ {
-    unix:INCLUDEPATH += /usr/local/include/cumbia
+    unix:INCLUDEPATH += /usr/local/cumbia-libs/include/cumbia
     unix:LIBS += -L/libs/armeabi-v7a/ -lcumbia
 }
 
@@ -190,8 +190,8 @@ unix: !android-g++ {
         message("adding  -L$${QWT_HOME_USR}/lib -l$${QWT_LIB}$${QTVER_SUFFIX} to libs")
         message("this should work for ubuntu installations")
 
-        unix:INCLUDEPATH += $${QWT_INCLUDES} $${QWT_INCLUDES_USR} /usr/local/include/cumbia /usr/local/qwt-6.1.3/include
-        unix:LIBS += -L$${QWT_HOME_USR}/lib -L/usr/local/lib -L/usr/local/qwt-6.1.3/lib -lcumbia
+        unix:INCLUDEPATH += $${QWT_INCLUDES} $${QWT_INCLUDES_USR} /usr/local/cumbia-libs/include/cumbia /usr/local/qwt-6.1.3/include
+        unix:LIBS += -L$${QWT_HOME_USR}/lib -L/usr/local/cumbia-libs/lib -L/usr/local/qwt-6.1.3/lib -lcumbia
     }
 
 }

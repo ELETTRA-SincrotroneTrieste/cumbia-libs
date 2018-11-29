@@ -4,7 +4,7 @@
 # qmake   "INSTALL_ROOT=/my/custom/path"
 #
 isEmpty(INSTALL_ROOT) {
-    INSTALL_ROOT = /usr/local
+    INSTALL_ROOT = /usr/local/cumbia-libs
 }
 
 greaterThan(QT_MAJOR_VERSION, 4) {

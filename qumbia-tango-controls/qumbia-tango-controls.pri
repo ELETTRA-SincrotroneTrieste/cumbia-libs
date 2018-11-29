@@ -24,7 +24,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 #
 
 isEmpty(INSTALL_ROOT) {
-    INSTALL_ROOT = /usr/local
+    INSTALL_ROOT = /usr/local/cumbia-libs
 }
 
 #

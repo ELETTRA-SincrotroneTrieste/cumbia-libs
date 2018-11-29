@@ -1,5 +1,5 @@
-include(/usr/local/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
-include(/usr/local/include/cumbia-websocket/cumbia-websocket.pri)
+include(/usr/local/cumbia-libs/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
+include(/usr/local/cumbia-libs/include/cumbia-websocket/cumbia-websocket.pri)
 
 QT += quick
 CONFIG += c++11
@@ -32,7 +32,7 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-INCLUDEPATH += /usr/local/include/cumbia-websocket
+INCLUDEPATH += /usr/local/cumbia-libs/include/cumbia-websocket
 
 LIBS += -L/libs/armeabi-v7a
 

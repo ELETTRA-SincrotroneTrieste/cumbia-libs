@@ -12,7 +12,7 @@ include(../../qumbia-epics-controls/qumbia-epics-controls.pri)
 # qmake   "INSTALL_ROOT=/my/custom/path"
 #
 isEmpty(INSTALL_ROOT) {
-    INSTALL_ROOT = /usr/local
+    INSTALL_ROOT = /usr/local/cumbia-libs
 }
 
 DESIGNER_PLUGIN_DIR=$${PLUGIN_LIB_DIR}/designer
