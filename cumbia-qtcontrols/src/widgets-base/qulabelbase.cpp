@@ -24,7 +24,7 @@ QuLabelBase::QuLabelBase(QWidget *parent) : QLabel(parent)
     d_ptr->borderWidth = 1.0;
     d_ptr->format = "%.2f";
     d_ptr->max_len = -1;
-    d_ptr->margin = 4;
+    d_ptr->margin = 6;
     setAlignment(Qt::AlignCenter);
     setAutoFillBackground(true);
 }
