@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 
-greaterThan(QT_MAJOR_VERSION, 4) {
+lessThan(QT_MAJOR_VERSION, 5) {
     QTVER_SUFFIX = -qt$${QT_MAJOR_VERSION}
 } else {
     QTVER_SUFFIX =

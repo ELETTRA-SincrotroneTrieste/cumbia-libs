@@ -41,13 +41,17 @@ class QuLabelBase : public QLabel
 
     int maximumLength() const;
 
+    QSize minimumSizeHint() const override;
+
+    QSize sizeHint() const override;
+
+    int heightForWidth(int w ) const override;
 
 public slots:
     void setBorderWidth(double w);
 
     void setValue(const CuVariant& d, bool *background_modified = NULL);
 
-    QSize minimumSizeHint() const;
 
     void setMaximumLength(int len);
 

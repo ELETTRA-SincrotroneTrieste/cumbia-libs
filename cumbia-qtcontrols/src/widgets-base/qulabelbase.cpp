@@ -11,10 +11,11 @@ class QuLabelBasePrivate
 {
 public:
     QColor borderColor, backgroundColor;
-    double borderWidth;
+    float borderWidth;
     QMap<long int, QPair<QString, QColor> >enum_d;
     QString format;
     int max_len;
+    int margin;
 };
 
 QuLabelBase::QuLabelBase(QWidget *parent) : QLabel(parent)
@@ -23,6 +24,7 @@ QuLabelBase::QuLabelBase(QWidget *parent) : QLabel(parent)
     d_ptr->borderWidth = 1.0;
     d_ptr->format = "%.2f";
     d_ptr->max_len = -1;
+    d_ptr->margin = 2;
     setAlignment(Qt::AlignCenter);
     setAutoFillBackground(true);
 }
@@ -220,11 +222,25 @@ void QuLabelBase::setFormat(const QString &fmt)
 QSize QuLabelBase::minimumSizeHint() const
 {
     QSize s = QLabel::minimumSizeHint();
-    qDebug() << __FUNCTION__ << "from size" << s;
-    s.rwidth() += 8 + d_ptr->borderWidth * 2; // (1 outer gray + 1 white + borderWidth + 1 white + 1 margin) * 2
-    s.rheight() += 8 + d_ptr->borderWidth * 2;
-    qDebug() << __FUNCTION__ << "to size " << s;
+    float extra = d_ptr->margin  + d_ptr->borderWidth * 2;
+    s = QSize(s.width() + extra, s.height() + extra);
     return s;
+}
+
+QSize QuLabelBase::sizeHint() const
+{
+    QSize s = QLabel::sizeHint();
+    float extra = d_ptr->margin  + d_ptr->borderWidth * 2;
+    s=  QSize(s.width() + extra, s.height() + extra);
+    return s;
+}
+
+int QuLabelBase::heightForWidth(int w) const
+{
+    float extra = d_ptr->margin  + d_ptr->borderWidth * 2;
+    int h = QLabel::heightForWidth(w + extra);
+    h += extra;
+    return h;
 }
 
 /*! \brief Reimplements QLabel::paintEvent

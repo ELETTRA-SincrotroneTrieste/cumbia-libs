@@ -11,7 +11,7 @@ QT       += widgets opengl
     QT += printsupport
 }
 
-greaterThan(QT_MAJOR_VERSION, 4) {
+lessThan(QT_MAJOR_VERSION, 5) {
     QTVER_SUFFIX = -qt$${QT_MAJOR_VERSION}
 } else {
     QTVER_SUFFIX =
@@ -116,8 +116,8 @@ unix:!android-g++ {
 
 DEFINES += CUMBIA_DEBUG_OUTPUT=1
 
-VERSION_HEX = 0x000001
-VERSION = 0.0.1
+VERSION_HEX = 0x000100
+VERSION = 0.1.0
 
 # cumbia plugin directory.
 # it should be the same as that defined by
