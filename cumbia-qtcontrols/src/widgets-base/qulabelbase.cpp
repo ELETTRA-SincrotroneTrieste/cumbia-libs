@@ -239,7 +239,9 @@ int QuLabelBase::heightForWidth(int w) const
 {
     float extra = d_ptr->margin  + d_ptr->borderWidth * 2;
     int h = QLabel::heightForWidth(w + extra);
+    qDebug() << __FUNCTION__ << "label h " << h;
     h += extra;
+    qDebug() << __FUNCTION__ << "after h is " << h;
     return h;
 }
 
