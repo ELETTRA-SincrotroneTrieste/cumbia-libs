@@ -679,7 +679,7 @@ QPointF QuCircularGaugeBase::mapTo(double val, int *angle, double radius, const 
 QRectF QuCircularGaugeBase::textRect(int tick, double radius)
 {
     int idx = 0;
-    int step = qRound((g_config->max - g_config->min) / (g_config->ticksCount - 1));
+    double step = (g_config->max - g_config->min) / (g_config->ticksCount - 1);
     double val = g_config->min;
     while(val <= g_config->max) {
         if(idx == tick) {
@@ -1466,7 +1466,7 @@ void QuCircularGaugeBase::updatePaintArea()
             r_a = (wr.width() - margin_w) / modmaxcos;
         }
         if(d->quad == q1) {
-            printf("Q1\n");
+//            printf("Q1\n");
             r_a = (wr.height() - margin_h) / -d->sin_a0;
             if(r_a * d->cos_a1 > wr.width() - margin_w)
                 r_a = (wr.width() - margin_w) / d->cos_a1;

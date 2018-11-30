@@ -528,7 +528,7 @@ void CuTangoWorld::fillFromAttributeConfig(const Tango::AttributeInfoEx &ai, CuD
     dat["data_format_str"] = formatToStr(ai.data_format); /* as string */
     dat["data_type"] = ai.data_type;
     dat["description"] = ai.description;
-    dat["display_unit"] = ai.display_unit;
+    ai.display_unit != std::string("No display unit") ? dat["display_unit"] = ai.display_unit : dat["display_unit"] = "";
     dat["format"] = ai.format;
     dat["label"] = ai.label;
     dat["max_alarm"] = ai.max_alarm;
