@@ -933,7 +933,7 @@ QList<int> QuCircularGaugeBase::updateLabelsDistrib() const
         if(!d->cache.isValid()) {
             if(p.x() <= center_draw.x() && p.y() > center_draw.y())
                 ld[0]++;
-            else if(p.x() <= center_draw.x() && p.y() <= center_draw.y())
+            else  if(p.x() <= center_draw.x() && p.y() <= center_draw.y())
                 ld[1]++;
             else if(p.x() > center_draw.x() && p.y() <= center_draw.y())
                 ld[2]++;
