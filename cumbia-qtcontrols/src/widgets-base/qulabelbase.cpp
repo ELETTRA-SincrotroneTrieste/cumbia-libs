@@ -220,8 +220,10 @@ void QuLabelBase::setFormat(const QString &fmt)
 QSize QuLabelBase::minimumSizeHint() const
 {
     QSize s = QLabel::minimumSizeHint();
+    qDebug() << __FUNCTION__ << "from size" << s;
     s.rwidth() += 8 + d_ptr->borderWidth * 2; // (1 outer gray + 1 white + borderWidth + 1 white + 1 margin) * 2
     s.rheight() += 8 + d_ptr->borderWidth * 2;
+    qDebug() << __FUNCTION__ << "to size " << s;
     return s;
 }
 
