@@ -237,7 +237,7 @@ QSize QuLabelBase::sizeHint() const
     return s;
 }
 
-int QuLabelBase::heightForWidth(int w) const override
+int QuLabelBase::heightForWidth(int w) const
 {
     float extra = d_ptr->margin  + d_ptr->borderWidth * 2;
     int h = QLabel::heightForWidth(w + extra);
