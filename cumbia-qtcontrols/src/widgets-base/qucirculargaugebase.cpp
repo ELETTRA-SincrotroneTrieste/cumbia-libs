@@ -950,7 +950,7 @@ void QuCircularGaugeBase::updateLabelsCache()
 {
     QFontMetrics fm(font());
     d->cache.labels.clear();
-    int step = qRound((g_config->max - g_config->min) / (g_config->ticksCount - 1));
+    double step = (g_config->max - g_config->min) / (g_config->ticksCount - 1);
     double val = g_config->min;
     while(val <= g_config->max) {
         QString lab = formatLabel(val, getAppliedFormat());
