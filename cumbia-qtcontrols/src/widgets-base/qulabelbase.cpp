@@ -224,6 +224,7 @@ QSize QuLabelBase::minimumSizeHint() const
     QSize s = QLabel::minimumSizeHint();
     float extra = d_ptr->margin  + d_ptr->borderWidth * 2;
     s = QSize(s.width() + extra, s.height() + extra);
+    qDebug() << __FUNCTION__ << s;
     return s;
 }
 
@@ -232,10 +233,11 @@ QSize QuLabelBase::sizeHint() const
     QSize s = QLabel::sizeHint();
     float extra = d_ptr->margin  + d_ptr->borderWidth * 2;
     s=  QSize(s.width() + extra, s.height() + extra);
+    qDebug() << __FUNCTION__ << s;
     return s;
 }
 
-int QuLabelBase::heightForWidth(int w) const
+int QuLabelBase::heightForWidth(int w) const override
 {
     float extra = d_ptr->margin  + d_ptr->borderWidth * 2;
     int h = QLabel::heightForWidth(w + extra);
@@ -243,6 +245,11 @@ int QuLabelBase::heightForWidth(int w) const
     h += extra;
     qDebug() << __FUNCTION__ << "after h is " << h;
     return h;
+}
+
+bool QuLabelBase::hasHeightForWidth() const
+{
+    return QLabel::hasHeightForWidth();
 }
 
 /*! \brief Reimplements QLabel::paintEvent

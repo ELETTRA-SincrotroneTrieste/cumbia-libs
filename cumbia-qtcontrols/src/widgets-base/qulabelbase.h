@@ -47,6 +47,8 @@ class QuLabelBase : public QLabel
 
     int heightForWidth(int w ) const override;
 
+    bool hasHeightForWidth() const override;
+
 public slots:
     void setBorderWidth(double w);
 
