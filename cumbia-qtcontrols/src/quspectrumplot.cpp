@@ -128,6 +128,7 @@ void QuSpectrumPlot::unsetSource(const QString& src)
  */
 void QuSpectrumPlot::setPeriod(int p)
 {
+    d->plot_common->getContext()->setOptions(CuData("period", p));
     d->plot_common->getContext()->sendData(CuData("period", p));
 }
 
@@ -143,9 +144,10 @@ void QuSpectrumPlot::setPeriod(int p)
  */
 int QuSpectrumPlot::period() const
 {
-    CuData d_inout("period", -1);
-    d->plot_common->getContext()->getData(d_inout);
-    return d_inout["period"].toInt();
+    const CuData& options = d->plot_common->getContext()->options();
+    if(options.containsKey("period"))
+        return options["period"].toInt();
+    return 1000;
 }
 
 void QuSpectrumPlot::setOptions(const CuData &options)
@@ -166,8 +168,6 @@ void QuSpectrumPlot::onUpdate(const CuData &da)
 
 void QuSpectrumPlot::update(const CuData &da)
 {
-//    return;
-
     d->read_ok = !da["err"].toBool();
     const CuVariant &v = da["value"];
     QString src = QString::fromStdString(da["src"].toString());

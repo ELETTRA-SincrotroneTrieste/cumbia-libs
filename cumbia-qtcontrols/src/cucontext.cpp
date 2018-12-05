@@ -216,7 +216,6 @@ void CuContext::disposeWriter(const std::string &src)
  */
 void CuContext::setOptions(const CuData &options)
 {
-    qDebug() << __FUNCTION__ << "------------------------------------ >> setOptions << ----------" << options.toString().c_str();
     d->options = options;
 }
 
