@@ -122,6 +122,7 @@ void QuTrendPlot::unsetSource(const QString &s)
 
 void QuTrendPlot::setPeriod(int p)
 {
+    d->plot_common->getContext()->setOptions(CuData("period", p));
     d->plot_common->getContext()->sendData(CuData("period", p));
 }
 
@@ -256,9 +257,10 @@ bool QuTrendPlot::showDateOnTimeAxis() const
 
 int QuTrendPlot::period() const
 {
-    CuData d_inout("period", -1);
-    d->plot_common->getContext()->getData(d_inout);
-    return d_inout["period"].toInt();
+    const CuData& options = d->plot_common->getContext()->options();
+    if(options.containsKey("period"))
+        return options["period"].toInt();
+    return 1000;
 }
 
 CuContext *QuTrendPlot::getContext() const
