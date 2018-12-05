@@ -33,6 +33,7 @@ class QuLabel : public QuLabelBase, public CuDataListener, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)
+    Q_PROPERTY(bool displayUnitEnabled READ displayUnitEnabled WRITE setDisplayUnitEnabled DESIGNABLE true)
 
 public:
     QuLabel(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
@@ -44,10 +45,15 @@ public:
     QString source() const;
     CuContext *getContext() const;
 
+    bool displayUnitEnabled() const;
+    QString displayUnit() const;
+
 public slots:
     void setSource(const QString& s);
 
     void unsetSource();
+
+    void setDisplayUnitEnabled(bool en);
 
 signals:
     void newData(const CuData&);
@@ -61,6 +67,8 @@ private:
     QuLabelPrivate *d;
 
     void m_init();
+
+    void m_configure(const CuData& da);
 
     // CuDataListener interface
 public:

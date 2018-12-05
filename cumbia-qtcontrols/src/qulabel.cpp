@@ -20,6 +20,8 @@ class QuLabelPrivate
 public:
     bool auto_configure;
     bool read_ok;
+    bool display_u_enabled;
+    QString display_u;
     QuPalette palette;
     int max_len;
     CuContext *context;
@@ -53,6 +55,7 @@ void QuLabel::m_init()
     d->context = NULL;
     d->auto_configure = true;
     d->read_ok = false;
+    d->display_u_enabled = true;
     d->max_len = -1;
     setWordWrap(true);
     setProperty("trueString", "TRUE");
@@ -62,6 +65,11 @@ void QuLabel::m_init()
     QColor background = d->palette["white"];
     QColor border = d->palette["gray"];
     setDecoration(background, border);
+}
+
+void QuLabel::m_configure(const CuData &da)
+{
+    d->display_u = QString::fromStdString(da["display_unit"].toString());
 }
 
 QuLabel::~QuLabel()
@@ -90,6 +98,34 @@ CuContext *QuLabel::getContext() const
     return d->context;
 }
 
+/*! \brief returns true if the display unit is shown beside the value, false otherwise
+ *
+ * @return true the display unit is shown
+ * @return false only the value is shown
+ *
+ * \par note The source must provide a non empty "display_unit" property
+ *
+ * @see setDisplayUnitEnabled
+ */
+bool QuLabel::displayUnitEnabled() const
+{
+    return d->display_u_enabled;
+}
+
+/*! \brief returns the display unit read by the configuration properties at
+ *         initialization time.
+ *
+ * @returns a string containing the display unit read from the initial configuration, if available
+ *          from the source.
+ *
+ * @see displayUnitEnabled
+ *
+ */
+QString QuLabel::displayUnit() const
+{
+    return d->display_u;
+}
+
 /** \brief Connect the reader to the specified source.
  *
  * If a reader with a different source is configured, it is deleted.
@@ -108,6 +144,15 @@ void QuLabel::setSource(const QString &s)
 void QuLabel::unsetSource()
 {
     d->context->disposeReader();
+}
+
+/*! \brief enable or disable the display unit visualization.
+ *
+ * See displayUnitEnabled documantation for further details.
+ */
+void QuLabel::setDisplayUnitEnabled(bool en)
+{
+    d->display_u_enabled = en;
 }
 
 void QuLabel::contextMenuEvent(QContextMenuEvent *e)
@@ -134,12 +179,19 @@ void QuLabel::onUpdate(const CuData &da)
 
     setToolTip(da["msg"].toString().c_str());
 
-    if(da["err"].toBool() )
+    if(!d->read_ok)
         setText("####");
-    else if(da.containsKey("value"))
-    {
-        CuVariant val = da["value"];
-        QuLabelBase::setValue(val, &background_modified);
+    else {
+        if(d->read_ok && d->auto_configure && da["type"].toString() == "property") {
+            m_configure(da);
+        }
+        if(da.containsKey("value"))
+        {
+            CuVariant val = da["value"];
+            QuLabelBase::setValue(val, &background_modified);
+            if(d->display_u_enabled && !d->display_u.isEmpty())
+                setText(text() + " [" + d->display_u + "]");
+        }
     }
 
     if(da.containsKey("state_color")) {
@@ -155,7 +207,7 @@ void QuLabel::onUpdate(const CuData &da)
         // if so, use the "quality_color" as a background
         if(da.containsKey("quality_color"))
             background = d->palette[QString::fromStdString(da["quality_color"].toString())];
-         setBackground(background); // checks if background is valid
+        setBackground(background); // checks if background is valid
     }
 
     emit newData(da);
