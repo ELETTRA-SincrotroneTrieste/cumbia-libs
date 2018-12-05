@@ -255,6 +255,25 @@ bool QuTrendPlot::showDateOnTimeAxis() const
     return d->timeScaleDraw != NULL && d->timeScaleDraw->dateEnabled();
 }
 
+/*! \brief returns the refresh period in milliseconds.
+ *
+ * @return the refresh period, in milliseconds.
+ *
+ * \par Note
+ * The value is taken from the CuContext::options "period" key.
+ *
+ * \par Get period: method II
+ * An alternative way to get the actual period used by the poller is the following
+ *
+ * \code
+ * CuData d_inout("period", -1);
+   int period = d->plot_common->getContext()->getData(d_inout);
+ * \endcode
+ *
+ * This second method requires an initialized CuContext link (i.e. after
+ * setSource).
+ *
+ */
 int QuTrendPlot::period() const
 {
     const CuData& options = d->plot_common->getContext()->options();
