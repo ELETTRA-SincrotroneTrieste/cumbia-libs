@@ -17,7 +17,7 @@ var searchData=
   ['getsize',['getSize',['../classCuVariant.html#a2725b9d94c9d41486a83d1212f5ab62e',1,'CuVariant']]],
   ['getstateflags',['getStateFlags',['../classCuActivity.html#afa5f25530fa7b1c7399386cf3b8c3a32',1,'CuActivity']]],
   ['getstep',['getStep',['../classCuResultEvent.html#a24dbf10f667351c3d1bf98edee2e253e',1,'CuResultEvent']]],
-  ['getthread',['getThread',['../classCuActivityManager.html#a4bd6c93ba03ef9b825c662e6cc0eb09f',1,'CuActivityManager::getThread(CuActivity *activity)'],['../classCuActivityManager.html#a744a88b4d81a0ba6d6044c9c0e6b7d07',1,'CuActivityManager::getThread(const CuThreadListener *l)'],['../classCuThreadService.html#a65c4093b94830629ee9b45b1f06c2506',1,'CuThreadService::getThread()']]],
+  ['getthread',['getThread',['../classCuActivityManager.html#a4bd6c93ba03ef9b825c662e6cc0eb09f',1,'CuActivityManager::getThread()'],['../classCuThreadService.html#a65c4093b94830629ee9b45b1f06c2506',1,'CuThreadService::getThread()']]],
   ['getthreadlisteners',['getThreadListeners',['../classCuActivityManager.html#aee357c63269667322776b0f4ee42cc2a',1,'CuActivityManager']]],
   ['getthreads',['getThreads',['../classCuThreadService.html#a7612344fc2efd6a1e54b00be2d4793c7',1,'CuThreadService']]],
   ['gettimeout',['getTimeout',['../classCuTimeoutChangeEvent.html#ae1e6d7e429d6f5dfee7eb91423091853',1,'CuTimeoutChangeEvent::getTimeout()'],['../classCuContinuousActivity.html#a68266039a5995856566a6b53c084e03e',1,'CuContinuousActivity::getTimeout()']]],

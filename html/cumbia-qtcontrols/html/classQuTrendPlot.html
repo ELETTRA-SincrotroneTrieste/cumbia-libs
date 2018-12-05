@@ -289,6 +289,7 @@ Properties</h2></td></tr>
 <tr class="memitem:a4c795dfa32febd5a9eaceea12fe51b99"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuTrendPlot.html#a4c795dfa32febd5a9eaceea12fe51b99">sources</a></td></tr>
 <tr class="separator:a4c795dfa32febd5a9eaceea12fe51b99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec6fc26bb7f13b138f487c9e0e15d570"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuTrendPlot.html#aec6fc26bb7f13b138f487c9e0e15d570">period</a></td></tr>
+<tr class="memdesc:aec6fc26bb7f13b138f487c9e0e15d570"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the refresh period in milliseconds.  <a href="#aec6fc26bb7f13b138f487c9e0e15d570">More...</a><br /></td></tr>
 <tr class="separator:aec6fc26bb7f13b138f487c9e0e15d570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa88fd852aae440e46d3dc68133257d87"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuTrendPlot.html#aa88fd852aae440e46d3dc68133257d87">timeScaleDrawEnabled</a></td></tr>
 <tr class="separator:aa88fd852aae440e46d3dc68133257d87"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1026,6 +1027,12 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>returns the refresh period in milliseconds. </p>
+<dl class="section return"><dt>Returns</dt><dd>the refresh period, in milliseconds.</dd></dl>
+<dl class="section user"><dt>Note</dt><dd>The value is taken from the <a class="el" href="classCuContext.html#acccea2906f516bed8b27352adfdf969a" title="Get the options currently set on the context. ">CuContext::options</a> "period" key.</dd></dl>
+<dl class="section user"><dt>Get period: method II</dt><dd>An alternative way to get the actual period used by the poller is the following</dd></dl>
+<div class="fragment"><div class="line">CuData d_inout(<span class="stringliteral">&quot;period&quot;</span>, -1);</div><div class="line"><span class="keywordtype">int</span> <a class="code" href="classQuTrendPlot.html#a3e27ca6e594d7292a6f9a176aa316d82">period</a> = d-&gt;plot_common-&gt;getContext()-&gt;getData(d_inout);</div></div><!-- fragment --><p>This second method requires an initialized <a class="el" href="classCuContext.html" title="CuLinkControl stores a small set of objects to help create readers and writers. ">CuContext</a> link (i.e. after setSource). </p>
+
 </div>
 </div>
 <a id="ad458c2d4828557a5cc1888f13ff2b77c"></a>
@@ -1123,7 +1130,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 31 2018 16:06:03 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Dec 5 2018 13:56:35 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

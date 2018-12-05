@@ -142,9 +142,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a2b1b54fa9fc154b161f9970f5f365990"><td class="mdescLeft">&#160;</td><td class="mdescRight">register a new <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> implementation into the logging service  <a href="#a2b1b54fa9fc154b161f9970f5f365990">More...</a><br /></td></tr>
 <tr class="separator:a2b1b54fa9fc154b161f9970f5f365990"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ac887418ae3eeb10e79b088abf753c5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuLog.html#a9ac887418ae3eeb10e79b088abf753c5">removeImpl</a> (const std::string &amp;name)</td></tr>
+<tr class="memdesc:a9ac887418ae3eeb10e79b088abf753c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">remove the log implementation with the given name from the logging service  <a href="#a9ac887418ae3eeb10e79b088abf753c5">More...</a><br /></td></tr>
 <tr class="separator:a9ac887418ae3eeb10e79b088abf753c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0eebb179599cf922e8842783260a262f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f">write</a> (const std::string &amp;origin, const std::string &amp;msg, <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">Level</a> l=<a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a526fcad181e90aef701bf3f9efec4a40">Error</a>, <a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447">Class</a> c=<a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447a5747575687d2c764d962fac4b708777c">Generic</a>)</td></tr>
-<tr class="memdesc:a0eebb179599cf922e8842783260a262f"><td class="mdescLeft">&#160;</td><td class="mdescRight">remove the log implementation with the given name from the logging service  <a href="#a0eebb179599cf922e8842783260a262f">More...</a><br /></td></tr>
+<tr class="memdesc:a0eebb179599cf922e8842783260a262f"><td class="mdescLeft">&#160;</td><td class="mdescRight">writes a log message on every <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> registered with addImpl  <a href="#a0eebb179599cf922e8842783260a262f">More...</a><br /></td></tr>
 <tr class="separator:a0eebb179599cf922e8842783260a262f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a59f98ed686a5bdd9b010499cf9f59441"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuLog.html#a59f98ed686a5bdd9b010499cf9f59441">write</a> (const std::string &amp;origin, <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">Level</a> l, <a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447">Class</a> c, const char *fmt,...)</td></tr>
 <tr class="memdesc:a59f98ed686a5bdd9b010499cf9f59441"><td class="mdescLeft">&#160;</td><td class="mdescRight">writes a log message on every <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> registered with addImpl (with printf format)  <a href="#a59f98ed686a5bdd9b010499cf9f59441">More...</a><br /></td></tr>
@@ -169,7 +170,7 @@ Public Member Functions</h2></td></tr>
 <li>define a "*class*" of log: Generic, Connect, Write, Read, <em>user defined</em></li>
 </ul>
 <p>Several <em>log implementations</em> (CuLogImpl) can be added to <a class="el" href="classCuLog.html" title="a cumbia service providing an interface for logging facilities ">CuLog</a> through the <a class="el" href="classCuLog.html#a2b1b54fa9fc154b161f9970f5f365990" title="register a new CuLogImplI implementation into the logging service ">CuLog::addImpl</a> method. A pointer to a registered <em>log implementation</em> can be obtained from <a class="el" href="classCuLog.html#a28044bf591ce1789a835515c8f51bc52" title="returns the CuLogImplI implementation with the given name ">CuLog::getImpl</a> specifying a name as string. <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> interface actually defines a <a class="el" href="classCuLogImplI.html#a57963d62e932ae4eacf7632db07bd0df">CuLogImplI::getName</a> method to force the specific log implementation to provide a name</p>
-<p>When a log message is written with <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="remove the log implementation with the given name from the logging service ">CuLog::write</a>, <a class="el" href="classCuLogImplI.html#a786babd38463c9f05d18c0496455e35e">CuLogImplI::write</a> is called for every registered log implementation. This allows to have a <em>log implementation</em> that writes on the console, another one writing on a file and a third one inserting messages on a database.</p>
+<p>When a log message is written with <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="writes a log message on every CuLogImplI registered with addImpl ">CuLog::write</a>, <a class="el" href="classCuLogImplI.html#a786babd38463c9f05d18c0496455e35e">CuLogImplI::write</a> is called for every registered log implementation. This allows to have a <em>log implementation</em> that writes on the console, another one writing on a file and a third one inserting messages on a database.</p>
 <p>The <a class="el" href="classCuLog.html#a28fe578cbb25a07828bd8857871c5e58" title="returns the name of the cumbia service ">CuLog::getName</a> and <a class="el" href="classCuLog.html#aae292bec2e3caa526a8e982703050b58" title="returns the type of the cumbia service ">CuLog::getType</a> methods are implemented from the <a class="el" href="classCuServiceI.html" title="interface to write cumbia services that can be registered and fetched through the cumbia service prov...">CuServiceI</a> interface for cumbia <em>services</em> to identify the specific <a class="el" href="classCuServiceI.html" title="interface to write cumbia services that can be registered and fetched through the cumbia service prov...">CuServiceI</a>.</p>
 <p>This service can enable, disable, change the logging method at runtime. This can be useful for test purposes. <a class="el" href="classCuNullLogImpl.html" title="null log implementation ">CuNullLogImpl</a> is a <em>null</em> implementation of <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> which <em>write</em> methods are empty. <a class="el" href="classCuConLogImpl.html" title="console log implementation ">CuConLogImpl</a> is a <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> that prints messages on the console.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> </dd></dl>
@@ -316,7 +317,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>When <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="remove the log implementation with the given name from the logging service ">CuLog::write</a> is invoked, the call is forwarded to every registered implementation of <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> </p>
+<p>When <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="writes a log message on every CuLogImplI registered with addImpl ">CuLog::write</a> is invoked, the call is forwarded to every registered implementation of <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> </p>
 
 </div>
 </div>
@@ -345,6 +346,8 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> implementation with the given name or null if no <em>log implementation</em> bearing that name was registered.</dd></dl>
 <p>Every <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> subclass must implement a <a class="el" href="classCuLogImplI.html#a57963d62e932ae4eacf7632db07bd0df">CuLogImplI::getName</a> method returning an identifying name for the class. </p>
+
+<p class="reference">Referenced by <a class="el" href="classCuLog.html#a9ac887418ae3eeb10e79b088abf753c5">removeImpl()</a>.</p>
 
 </div>
 </div>
@@ -416,6 +419,8 @@ Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classCuServiceI.html#a186c5bb0678fd7aeee96237686428850">CuServiceI</a>.</p>
 
+<p class="reference">References <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bafe0f9b13689ac2ce980076b364b04b1e">CuServices::Log</a>.</p>
+
 </div>
 </div>
 <a id="a9ac887418ae3eeb10e79b088abf753c5"></a>
@@ -433,6 +438,17 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>remove the log implementation with the given name from the logging service </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>a string with the <em>log implementation</em>'s name to remove from the service</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>A <em>log implementation</em> can be removed at runtime in order to disable logging. </p>
+
+<p class="reference">References <a class="el" href="classCuLog.html#a28044bf591ce1789a835515c8f51bc52">getImpl()</a>.</p>
 
 </div>
 </div>
@@ -474,15 +490,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>remove the log implementation with the given name from the logging service </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name</td><td>a string with the <em>log implementation</em>'s name to remove from the service</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>A <em>log implementation</em> can be removed at runtime in order to disable logging. A void <a class="el" href="classCuLog.html#a9ac887418ae3eeb10e79b088abf753c5">CuLog::removeImpl(const std::string &amp;name)</a> { <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> *li = getImpl(name); if(li) mLogImpls.remove(li); }</p>
-<p>/*!writes a log message on every <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> registered with addImpl</p>
+<p>writes a log message on every <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> registered with addImpl </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">origin</td><td>the source of the message </td></tr>
@@ -565,7 +573,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuLog.html">CuLog</a></li>
-    <li class="footer">Generated on Wed Oct 31 2018 16:05:54 for cumbia by
+    <li class="footer">Generated on Wed Dec 5 2018 13:56:26 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

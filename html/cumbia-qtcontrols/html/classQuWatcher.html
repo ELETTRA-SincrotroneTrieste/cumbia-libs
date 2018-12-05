@@ -69,6 +69,9 @@ Public Slots</h2></td></tr>
 <tr class="memitem:aadde2240bb53893d35c557a9e5922f55"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuWatcher.html#aadde2240bb53893d35c557a9e5922f55">setSource</a> (const QString &amp;s)</td></tr>
 <tr class="memdesc:aadde2240bb53893d35c557a9e5922f55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connect the reader to the specified source.  <a href="#aadde2240bb53893d35c557a9e5922f55">More...</a><br /></td></tr>
 <tr class="separator:aadde2240bb53893d35c557a9e5922f55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa5f684897f022384e5bccc33ff3f21b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuWatcher.html#afa5f684897f022384e5bccc33ff3f21b">unsetSource</a> ()</td></tr>
+<tr class="memdesc:afa5f684897f022384e5bccc33ff3f21b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop the watcher.  <a href="#afa5f684897f022384e5bccc33ff3f21b">More...</a><br /></td></tr>
+<tr class="separator:afa5f684897f022384e5bccc33ff3f21b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -86,9 +89,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af3ff0cc012b1240ec58ce280cbadede8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a998eaf41733cc8a65d2de3d6e57b7a53"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuWatcher.html#a998eaf41733cc8a65d2de3d6e57b7a53">source</a> () const</td></tr>
 <tr class="separator:a998eaf41733cc8a65d2de3d6e57b7a53"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa5f684897f022384e5bccc33ff3f21b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuWatcher.html#afa5f684897f022384e5bccc33ff3f21b">unsetSource</a> ()</td></tr>
-<tr class="memdesc:afa5f684897f022384e5bccc33ff3f21b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop the watcher.  <a href="#afa5f684897f022384e5bccc33ff3f21b">More...</a><br /></td></tr>
-<tr class="separator:afa5f684897f022384e5bccc33ff3f21b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classQumbiaizer"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classQumbiaizer')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classQumbiaizer.html">Qumbiaizer</a></td></tr>
 <tr class="memitem:a1e7843dc49c4665d6b0f016501839560 inherit pub_methods_classQumbiaizer"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#a1e7843dc49c4665d6b0f016501839560">Qumbiaizer</a> (QObject *parent)</td></tr>
 <tr class="separator:a1e7843dc49c4665d6b0f016501839560 inherit pub_methods_classQumbiaizer"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -450,7 +450,7 @@ QTangoizer::singleShot</dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classQumbiaizer.html#af3a2987009525d92f357dd813811d263">Qumbiaizer::autoDestroy()</a>, <a class="el" href="classQumbiaizer.html#af4560a4f3f9e9b2f51c5d8980fe6c202">Qumbiaizer::configure()</a>, <a class="el" href="classQumbiaizer.html#a87b11b3f87928dcc0b66985bc19ecc12">Qumbiaizer::data()</a>, <a class="el" href="classQumbiaizer.html#aa3c753a9298e3b214ba964c38e2e1f1b">Qumbiaizer::singleShot()</a>, <a class="el" href="classQuWatcher.html#a998eaf41733cc8a65d2de3d6e57b7a53">source()</a>, <a class="el" href="classQuWatcher.html#afa5f684897f022384e5bccc33ff3f21b">unsetSource()</a>, and <a class="el" href="classQumbiaizer.html#aabbc07697467eed7d208993fe019edb2">Qumbiaizer::updateValue()</a>.</p>
+<p class="reference">References <a class="el" href="classQumbiaizer.html#af4560a4f3f9e9b2f51c5d8980fe6c202">Qumbiaizer::configure()</a>, <a class="el" href="classQumbiaizer.html#ae7e270e5979a222ab2e2bc51fe2523d9">Qumbiaizer::connectionOk()</a>, <a class="el" href="classQumbiaizer.html#a87b11b3f87928dcc0b66985bc19ecc12">Qumbiaizer::data()</a>, <a class="el" href="classQumbiaizer.html#abf10e77511f0813d07c29db3a487cb3c">Qumbiaizer::newData()</a>, <a class="el" href="classQumbiaizer.html#addb24d404da12bca0f06843dcc7b3733">Qumbiaizer::readOk()</a>, <a class="el" href="classQumbiaizer.html#a0bab6ff4b949d0fce6782c5b794f2399">Qumbiaizer::refreshMessage()</a>, <a class="el" href="classQumbiaizer.html#aa3c753a9298e3b214ba964c38e2e1f1b">Qumbiaizer::singleShot()</a>, <a class="el" href="classQuWatcher.html#afa5f684897f022384e5bccc33ff3f21b">unsetSource()</a>, and <a class="el" href="classQumbiaizer.html#aabbc07697467eed7d208993fe019edb2">Qumbiaizer::updateValue()</a>.</p>
 
 </div>
 </div>
@@ -503,15 +503,16 @@ QTangoizer::singleShot</dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classQuWatcher.html#af3ff0cc012b1240ec58ce280cbadede8">onUpdate()</a>.</p>
-
 </div>
 </div>
 <a id="afa5f684897f022384e5bccc33ff3f21b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa5f684897f022384e5bccc33ff3f21b">&#9670;&nbsp;</a></span>unsetSource()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afa5f684897f022384e5bccc33ff3f21b">&#9670;&nbsp;</a></span>unsetSource</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void QuWatcher::unsetSource </td>
@@ -520,11 +521,18 @@ QTangoizer::singleShot</dd></dl>
           <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Stop the watcher. </p>
 <p>Disposes the reader.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classQuWatcher.html#aadde2240bb53893d35c557a9e5922f55" title="Connect the reader to the specified source. ">setSource</a> </dd></dl>
+
+<p class="reference">References <a class="el" href="classQumbiaizer.html#af3a2987009525d92f357dd813811d263">Qumbiaizer::autoDestroy()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classQuWatcher.html#af3ff0cc012b1240ec58ce280cbadede8">onUpdate()</a>.</p>
 
@@ -566,7 +574,7 @@ QTangoizer::singleShot</dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 31 2018 16:06:03 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Dec 5 2018 13:56:35 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>

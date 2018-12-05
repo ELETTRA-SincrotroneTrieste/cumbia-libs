@@ -124,8 +124,8 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>interface for a concrete log implementation </p>
 <p>This interface defines two write methods to write a message on a logging system (console, file, database, null...) and a getName method that compels every subclass to provide a unique name</p>
-<p>The calls to <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="remove the log implementation with the given name from the logging service ">CuLog::write</a> are forwarded to every registered <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> implementation</p>
-<p>See the <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="remove the log implementation with the given name from the logging service ">CuLog::write</a> documentation for details and <a class="el" href="classCuConLogImpl.html#afe79be7ca96d36eb913e25bef0ff6a5f" title="writes a message on the console. ">CuConLogImpl::write</a> for an example from an implementor. </p>
+<p>The calls to <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="writes a log message on every CuLogImplI registered with addImpl ">CuLog::write</a> are forwarded to every registered <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation ">CuLogImplI</a> implementation</p>
+<p>See the <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="writes a log message on every CuLogImplI registered with addImpl ">CuLog::write</a> documentation for details and <a class="el" href="classCuConLogImpl.html#afe79be7ca96d36eb913e25bef0ff6a5f" title="writes a message on the console. ">CuConLogImpl::write</a> for an example from an implementor. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aacb269d96033944bdd31741a7b02abda"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aacb269d96033944bdd31741a7b02abda">&#9670;&nbsp;</a></span>~CuLogImplI()</h2>
@@ -298,7 +298,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuLogImplI.html">CuLogImplI</a></li>
-    <li class="footer">Generated on Wed Oct 31 2018 16:05:54 for cumbia by
+    <li class="footer">Generated on Wed Dec 5 2018 13:56:26 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

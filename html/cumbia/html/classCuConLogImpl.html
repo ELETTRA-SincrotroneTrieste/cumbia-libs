@@ -127,7 +127,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>console log implementation </p>
 <p>This <em>logging method</em> prints messages on the console</p>
-<p>See the <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="remove the log implementation with the given name from the logging service ">CuLog::write</a> documentation for a description of the <em>write</em> methods </p>
+<p>See the <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="writes a log message on every CuLogImplI registered with addImpl ">CuLog::write</a> documentation for a description of the <em>write</em> methods </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="abe865fe6a294d58b98f39b3d016bfcaf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abe865fe6a294d58b98f39b3d016bfcaf">&#9670;&nbsp;</a></span>getName()</h2>
@@ -207,9 +207,11 @@ Public Member Functions</h2></td></tr>
 
 <p>writes a message on the console. </p>
 <p>Writes on stderr if the <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">CuLog::Level</a> is different from <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a7ea6527d5f5e914bbd5100b11dd09ba5">CuLog::Info</a> and <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723ade058190fd462aef8d79dcc1fe37d0c6">CuLog::Warn</a>, on stdout otherwise</p>
-<p>See <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="remove the log implementation with the given name from the logging service ">CuLog::write(const std::string &amp; origin, const std::string &amp; msg, CuLog::Level l, CuLog::Class c)</a> for the input parameters description </p>
+<p>See <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="writes a log message on every CuLogImplI registered with addImpl ">CuLog::write(const std::string &amp; origin, const std::string &amp; msg, CuLog::Level l, CuLog::Class c)</a> for the input parameters description </p>
 
 <p>Implements <a class="el" href="classCuLogImplI.html#a786babd38463c9f05d18c0496455e35e">CuLogImplI</a>.</p>
+
+<p class="reference">References <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a7ea6527d5f5e914bbd5100b11dd09ba5">CuLog::Info</a>, and <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723ade058190fd462aef8d79dcc1fe37d0c6">CuLog::Warn</a>.</p>
 
 </div>
 </div>
@@ -267,9 +269,11 @@ Public Member Functions</h2></td></tr>
 
 <p>writes a message on the console. </p>
 <p>Writes on stderr if the <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">CuLog::Level</a> is different from <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a7ea6527d5f5e914bbd5100b11dd09ba5">CuLog::Info</a> and <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723ade058190fd462aef8d79dcc1fe37d0c6">CuLog::Warn</a>, on stdout otherwise</p>
-<p>See <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="remove the log implementation with the given name from the logging service ">CuLog::write</a>(const std::string&amp; origin, <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">CuLog::Level</a> l, <a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447">CuLog::Class</a> c, const char *fmt, ...) for the input parameters description </p>
+<p>See <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="writes a log message on every CuLogImplI registered with addImpl ">CuLog::write</a>(const std::string&amp; origin, <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">CuLog::Level</a> l, <a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447">CuLog::Class</a> c, const char *fmt, ...) for the input parameters description </p>
 
 <p>Implements <a class="el" href="classCuLogImplI.html#a966a16ee0530cf001b33bbbec8a685f0">CuLogImplI</a>.</p>
+
+<p class="reference">References <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a7ea6527d5f5e914bbd5100b11dd09ba5">CuLog::Info</a>, and <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723ade058190fd462aef8d79dcc1fe37d0c6">CuLog::Warn</a>.</p>
 
 </div>
 </div>
@@ -283,7 +287,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuConLogImpl.html">CuConLogImpl</a></li>
-    <li class="footer">Generated on Wed Oct 31 2018 16:05:54 for cumbia by
+    <li class="footer">Generated on Wed Dec 5 2018 13:56:26 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>

@@ -1,6 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"classCuThreadInterface.html#a82ee56387582c1f915a7b76f7a6ea0f7":[3,0,29,0],
 "classCuThreadInterface.html#a9b3a0ca756329f84b728a4e92c36fcf9":[3,0,29,11],
 "classCuThreadInterface.html#a9e6184b2e12bfbdc00ffb3d514cb5204":[3,0,29,6],
 "classCuThreadInterface.html#aadbb7855f5572d516a373640d0751940":[3,0,29,10],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "cumacros_8h.html#a42474a472e018bc72e5704297eca2aa4":[4,0,20,39],
 "cumacros_8h.html#a43a779792098e584ed96f4a41e2799de":[4,0,20,50],
 "cumacros_8h.html#a454d14038742738279a69d17cede1ee2":[4,0,20,25],
-"cumacros_8h.html#a49fcf8a64bea43bc160722321432499d":[4,0,20,19]
+"cumacros_8h.html#a49fcf8a64bea43bc160722321432499d":[4,0,20,19],
+"cumacros_8h.html#a4ca6c0bb6b9742059e7c873263a1daaa":[4,0,20,60]
 };

@@ -68,6 +68,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aed29c4677568724b15eebee1eb733b55"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPoller.html#aed29c4677568724b15eebee1eb733b55">registerAction</a> (const <a class="el" href="classTSource.html">TSource</a> &amp;tsrc, <a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *a)</td></tr>
 <tr class="separator:aed29c4677568724b15eebee1eb733b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b9608ce50d7e0afa1640dbcebeb0a8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPoller.html#a3b9608ce50d7e0afa1640dbcebeb0a8f">unregisterAction</a> (<a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *a)</td></tr>
+<tr class="memdesc:a3b9608ce50d7e0afa1640dbcebeb0a8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">unregister an action from the poller.  <a href="#a3b9608ce50d7e0afa1640dbcebeb0a8f">More...</a><br /></td></tr>
 <tr class="separator:a3b9608ce50d7e0afa1640dbcebeb0a8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5281dd21fb6498e9b018772afd5d3b1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPoller.html#af5281dd21fb6498e9b018772afd5d3b1">actionRegistered</a> (const <a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *a) const</td></tr>
 <tr class="separator:af5281dd21fb6498e9b018772afd5d3b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -364,7 +365,18 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classTSource.html#a7978372c10e561d5c00a8d2bcbdbb7d5">TSource::getDeviceName()</a>, <a class="el" href="classTSource.html#a20f3ea627e2c57d01f01d04faac37246">TSource::getName()</a>, and <a class="el" href="classCuTangoActionI.html#af7b69aff3c5d964471c43789f5ca233b">CuTangoActionI::getSource()</a>.</p>
+<p>unregister an action from the poller. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>the action to unregister</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>A <a class="el" href="classCuTangoActionI.html" title="an interface for a Tango action, typically a reader or a writer are implementors ">CuTangoActionI</a> can invoke unregisterAction from within CuTangoActionI::onResult. In this case, the operation is delayed after <a class="el" href="classCuPoller.html#ad0f788348f0c189494676ae6e7e3e0be">CuPoller::onResult</a> has finished delivering results. If the method is called when <a class="el" href="classCuPoller.html">CuPoller</a> is not inside <a class="el" href="classCuPoller.html#ad0f788348f0c189494676ae6e7e3e0be">CuPoller::onResult</a>, the action is unregistered immediately.</p>
+<ul>
+<li>a <a class="el" href="classCuRemovePollActionEvent.html">CuRemovePollActionEvent</a> is posted to the <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity ">CuPollingActivity</a> managing the <a class="el" href="classCuTangoActionI.html" title="an interface for a Tango action, typically a reader or a writer are implementors ">CuTangoActionI</a> device with the <a class="el" href="classCuPoller.html#a60c531b29906eba959c1ba3c8a6c0d6c">CuPoller::period</a> interval </li>
+<li>a dummy CuData with the "exit" flag is delivered through CuTangoActionI::onResult. This is why unregister operations must be enqueued and performed outside result delivery taking place in <a class="el" href="classCuPoller.html#ad0f788348f0c189494676ae6e7e3e0be">CuPoller::onResult</a> </li>
+</ul>
 
 <p class="reference">Referenced by <a class="el" href="classCuPollingService.html#a296d52306e2cd545de58f5a2a4c43195">CuPollingService::unregisterAction()</a>.</p>
 
@@ -377,7 +389,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Oct 31 2018 16:05:57 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Dec 5 2018 13:56:29 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>
