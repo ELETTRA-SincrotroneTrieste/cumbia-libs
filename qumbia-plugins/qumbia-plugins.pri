@@ -72,3 +72,6 @@ inc.path = $${INC_DIR}
 INSTALLS += target \
     inc \
     doc
+
+DISTFILES += \
+    $$PWD/qumbia-plugins.md

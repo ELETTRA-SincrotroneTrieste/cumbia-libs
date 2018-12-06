@@ -1,10 +1,10 @@
 #ifndef QULABEL_H
 #define QULABEL_H
 
-#include <qulabelbase.h>
 #include <cudatalistener.h>
 #include <cucontexti.h>
 #include <cudata.h>
+#include "qulabelbase.h"
 
 class QuLabelPrivate;
 class Cumbia;
