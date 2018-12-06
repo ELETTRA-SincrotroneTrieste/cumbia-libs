@@ -242,7 +242,7 @@ DISTFILES += \
     cumbia-qtcontrols.pri
 
 unix:INCLUDEPATH -= \
-    $${QUMBIA_TANGO_CONTROLS_INCLUDES}
+    $${CUMBIA_QTCONTROLS_INCLUDES}
 
 unix:INCLUDEPATH += src \
     src/widgets-base \
