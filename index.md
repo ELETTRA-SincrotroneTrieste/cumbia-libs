@@ -61,6 +61,8 @@ The library sources include copies of the *README.md* and *README.UBUNTU.md* fil
  |  <a href="html/qumbiaprojectwizard/html/tutorial_from_qtango.html">Porting a <em>QTango application</em> to <em>cumbia-tango</em></a>. |<a href="html/qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
  |  <a href="html/qumbianewcontrolwizard/html/tutorial_qumbianewcontrolwizard.html"><em>cumbia new control</em></a>: quickly add a custom Qt widget to a cumbia project | <a href="html/qumbianewcontrolwizard/html/index.html">qumbia-apps/qumbianewcontrolwizard</a>  |
  |  <a href="html/cumbia-qtcontrols/html/understanding_cumbia_qtcontrols_constructors.html">Understanding <em>cumbia-qtcontrols constructors, sources and targets</em></a> |<a href="html/cumbia-qtcontrols/html/index.html">cumbia-qtcontrols</a>. |
+ |  <a href="html/qumbia-tango-controls/html/tutorial_faq.html">Frequently Asked Questions (Tango)</a> | <a href="html/qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
+
 
 ### Modules
 
@@ -69,11 +71,11 @@ The library sources include copies of the *README.md* and *README.UBUNTU.md* fil
  | <a href="html/cumbia/html/index.html">cumbia base</a>. |
  | <a href="html/cumbia-tango/html/index.html">cumbia-tango</a>. |
  | <a href="html/cumbia-qtcontrols/html/index.html">cumbia-qtcontrols</a>.  |
- | <a href="html/qumbia-tango-controls/html/index.html">cumbia-qtcontrols</a>.  |
+ | <a href="html/qumbia-tango-controls/html/index.html">cumbia-tango-controls</a>.  |
  | <a href="html/cumbia-epics/html/index.html">qumbia-epics</a>.   |
  | <a href="html/qumbia-epics-controls/html/index.html">qumbia-epics-controls</a>.  |
  | <a href="html/cumbia-websocket/html/index.html">cumbia-websocket</a>.  |
-
+ | <a href="html/cumbia-qtcontrols/html/qumbia_plugins.html">qumbia-plugins module</a>.  |
 
 ### Apps
 
