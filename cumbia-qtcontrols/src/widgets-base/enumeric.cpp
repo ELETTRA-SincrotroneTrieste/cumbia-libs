@@ -213,7 +213,7 @@ void ENumeric::setDecDigits(int d)
     digits = intDig + decDig;
     /* when changing decimal digits, minimum and maximum need to be recalculated, to avoid
 	 * round issues. So, recalculating maximum and minimum is required  to obtain precision
-	 */
+     */
     setMinimum(d_minAsDouble);
     setMaximum(d_maxAsDouble);
     init();

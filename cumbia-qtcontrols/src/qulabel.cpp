@@ -178,6 +178,7 @@ void QuLabel::onUpdate(const CuData &da)
     d->read_ok ? border = d->palette["dark_green"] : border = d->palette["dark_red"];
 
     setToolTip(da["msg"].toString().c_str());
+    setBorderColor(border);
 
     if(!d->read_ok)
         setText("####");

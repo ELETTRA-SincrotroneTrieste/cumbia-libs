@@ -3,7 +3,6 @@
 
 #include "cumbia-qtcontrols_global.h"
 #include <QMetaType>
-#include <cudata.h>
 /**
  *  \defgroup outputw Display widgets
  *  @{
@@ -98,9 +97,10 @@
  * | <a href="../../cumbia/html/index.html">cumbia module</a>. |
  * | <a href="../../cumbia-tango/html/index.html">cumbia-tango module</a>. |
  * | <a href="../../cumbia-qtcontrols/html/index.html">cumbia-qtcontrols module</a>.  |
- * | <a href="../../qumbia-tango-controls/html/index.html">cumbia-qtcontrols module</a>.  |
+ * | <a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls module</a>.  |
  * | <a href="../../cumbia-epics/html/index.html">qumbia-epics module</a>.   |
  * | <a href="../../qumbia-epics-controls/html/index.html">qumbia-epics-controls module</a>.  |
+ * | <a href="../../qumbia-plugins/html/index.html">qumbia-plugins module</a>.  |
  *
  *
  * \subsection cu_apps apps

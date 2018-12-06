@@ -14,6 +14,7 @@
      * \li  ("dark_red", QColor(235, 55, 56));
      * \li  ("green", QColor(90, 240, 77));
      * \li  ("dark_green", QColor(70, 220, 57));
+     * \li  ("light_green", QColor(145,255,132));
      * \li  ("dark_gray", QColor(145,145,145));
      * \li  ("light_gray", QColor(231, 182, 226));
      * \li  ("yellow", QColor(244, 245, 153));

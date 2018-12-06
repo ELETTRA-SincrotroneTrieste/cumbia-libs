@@ -10,12 +10,13 @@
 class QuLabelBasePrivate
 {
 public:
-    QColor borderColor, backgroundColor;
+    QColor result_border_color, backgroundColor;
     float borderWidth;
     QMap<long int, QPair<QString, QColor> >enum_d;
     QString format;
     int max_len;
     int margin;
+    bool draw_internal_border;
 };
 
 QuLabelBase::QuLabelBase(QWidget *parent) : QLabel(parent)
@@ -25,6 +26,7 @@ QuLabelBase::QuLabelBase(QWidget *parent) : QLabel(parent)
     d_ptr->format = "%.2f";
     d_ptr->max_len = -1;
     d_ptr->margin = 6;
+    d_ptr->draw_internal_border = true;
     setAlignment(Qt::AlignCenter);
     setAutoFillBackground(true);
 }
@@ -33,7 +35,7 @@ QuLabelBase::QuLabelBase(const QString& text, QWidget *parent) : QLabel(text, pa
 {
     d_ptr = new QuLabelBasePrivate;
     d_ptr->borderWidth = 1.0;
-    setAlignment(Qt::AlignCenter);
+    setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     setAutoFillBackground(true);
 }
 
@@ -98,8 +100,8 @@ void QuLabelBase::setBackground(const QColor &background)
  * nothing is done.
  */
 void QuLabelBase::setBorderColor(const QColor &border) {
-    if(border.isValid() && d_ptr->borderColor != border) {
-        d_ptr->borderColor = border;
+    if(border.isValid() && d_ptr->result_border_color != border) {
+        d_ptr->result_border_color = border;
     }
 }
 
@@ -110,11 +112,12 @@ void QuLabelBase::setBorderColor(const QColor &border) {
  *
  * @see borderWidth
  * @see setBackground
+ * @see setDrawInternalBorder
  */
 void QuLabelBase::setDecoration(const QColor & background, const QColor &border)
 {
     setBackground(background);
-    d_ptr->borderColor = border;
+    d_ptr->result_border_color = border;
 }
 
 /*! \brief returns the width, in pixels, of the colored border that is
@@ -127,16 +130,15 @@ double QuLabelBase::borderWidth() const
     return d_ptr->borderWidth;
 }
 
-/*! \brief sets the width of the border drawn with the chosen color
+/*! \brief sets the width of the border(s) drawn with the chosen color
  *
  * @param w the desired width of the border
  *
- * The border color is chosen with setDecoration
+ * By default, two borders are drawn:
+ * \li a light gray external border;
+ * \li an green interior border if the read is successful, a red one otherwise
  *
- * Additional
- * \li one pixel gray outer border
- * \li two one-pixel borders around the colored border
- * are drawn
+ * The interior border drawing can be turned off with setDrawInternalBorder
  *
  * @see setDecoration
  */
@@ -145,6 +147,10 @@ void QuLabelBase::setBorderWidth(double w)
     d_ptr->borderWidth = w;
     update();
     updateGeometry();
+}
+
+void QuLabelBase::setDrawInternalBorder(bool draw) {
+    d_ptr->draw_internal_border = draw;
 }
 
 /*! \brief set the value to display on the label. Optionally check if the background
@@ -248,6 +254,23 @@ bool QuLabelBase::hasHeightForWidth() const
     return QLabel::hasHeightForWidth();
 }
 
+/*! \brief if enabled, an external and an internal border are drawn
+ *
+ * @return true two borders are drawn
+ * @return false only the external border is drawn
+ *
+ * \par Note
+ * If the drawInternalBorder property is false, the external border
+ * color will represent the result of the reading (green: successful,
+ * red: unsuccessful)
+ *
+ * @see setDrawInternalBorder
+ */
+bool QuLabelBase::drawInternalBorder() const
+{
+    return d_ptr->draw_internal_border;
+}
+
 /*! \brief Reimplements QLabel::paintEvent
  *
  * Draws a decoration on the widget:
@@ -262,23 +285,35 @@ bool QuLabelBase::hasHeightForWidth() const
 void QuLabelBase::paintEvent(QPaintEvent *pe)
 {
     QLabel::paintEvent(pe);
+
     double pwidth = d_ptr->borderWidth;
     const QRectF &r = rect().adjusted(0, 0, -1, -1);
+
     QColor bor;
+    d_ptr->result_border_color.isValid() ? bor = d_ptr->result_border_color : bor = QColor(Qt::lightGray);
+
     QPainter p(this);
     QPen pen(bor);
     pen.setJoinStyle(Qt::MiterJoin);
-    pen.setColor(QColor(Qt::gray));
-    p.setPen(pen);
-    p.drawRect(r);
-    pen.setColor(Qt::white);
-    pen.setWidthF(pwidth + 2);
-    p.setPen(pen);
-    p.drawRect(r.adjusted(1.0 + pen.widthF()/2.0, 1.0+pen.widthF()/2, -pen.widthF()/2.0, -pen.widthF()/2.0));
-    d_ptr->borderColor.isValid() ? bor = d_ptr->borderColor : bor = QColor(Qt::lightGray);
-    pen.setColor(bor);
-    pen.setWidthF(pwidth);
-    p.setPen(pen);
-    p.drawRect(r.adjusted(2 + pwidth/2.0, 2 + pwidth/2.0, -1-pwidth/2.0, -1-pwidth/2.0));
+
+    const QRectF intBorderR = r.adjusted(2 + pwidth/2.0, 2 + pwidth/2.0, -1-pwidth/2.0, -1-pwidth/2.0);
+
+    if(d_ptr->draw_internal_border) {
+        pen.setColor(QColor(Qt::lightGray));
+        p.setPen(pen);
+        p.drawRect(r);
+        pen.setColor(Qt::white);
+        pen.setWidthF(pwidth + 2);
+        p.setPen(pen);
+        p.drawRect(r.adjusted(1.0 + pen.widthF()/2.0, 1.0+pen.widthF()/2, -pen.widthF()/2.0, -pen.widthF()/2.0));  // draw result border (internal)
+        pen.setColor(bor);
+        pen.setWidthF(pwidth);
+        p.setPen(pen);
+        p.drawRect(intBorderR); // draw gray border (external)
+    }
+    else { // draw only result border color, external
+        p.setPen(pen);
+        p.drawRect(r.adjusted(1.0 + pen.widthF()/2.0, 1.0+pen.widthF()/2, -pen.widthF()/2.0, -pen.widthF()/2.0));
+    }
 }
 

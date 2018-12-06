@@ -19,6 +19,7 @@ class QuLabelBase : public QLabel
   
   Q_OBJECT
     Q_PROPERTY(double borderWidth READ borderWidth WRITE setBorderWidth DESIGNABLE true)
+    Q_PROPERTY(bool drawInternalBorder READ drawInternalBorder WRITE setDrawInternalBorder DESIGNABLE true)
   public:
 
     QuLabelBase(QWidget *parent);
@@ -49,8 +50,12 @@ class QuLabelBase : public QLabel
 
     bool hasHeightForWidth() const override;
 
+    bool drawInternalBorder() const;
+
 public slots:
     void setBorderWidth(double w);
+
+    void setDrawInternalBorder(bool draw);
 
     void setValue(const CuVariant& d, bool *background_modified = NULL);
 

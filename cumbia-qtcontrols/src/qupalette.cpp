@@ -28,6 +28,7 @@ QuPalette::QuPalette()
     insert(QString("dark_red"), QColor(235, 55, 56));
     insert(QString("green"), QColor(90, 240, 77));
     insert(QString("dark_green"), QColor(50, 200, 47));
+    insert(QString("light_green"), QColor(195,255,182));
     insert(QString("dark_gray"), QColor(145,145,145));
     insert(QString("light_gray"), QColor(231, 182, 226));
     insert(QString("yellow"), QColor(244, 245, 153));

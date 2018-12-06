@@ -39,6 +39,7 @@ QuInputOutput::QuInputOutput(QWidget *parent, Cumbia* cumbia,
     options["fetch_props"] = props;
     rf->setOptions(options);
     QuLabel *label = new QuLabel(this, cumbia, *rf);
+    label->setDrawInternalBorder(false);
     setOutputWidget(label);
     connect(label, SIGNAL(newData(const CuData&)), this, SLOT(onNewData(const CuData&)));
     // Apply button
@@ -56,6 +57,7 @@ QuInputOutput::QuInputOutput(QWidget *parent, CumbiaPool *cu_poo, const CuContro
     d = new QuInputOutputPrivate;
     d->w_type = None;
     QuLabel *label = new QuLabel(this, cu_poo, f_poo);
+    label->setDrawInternalBorder(false);
     setOutputWidget(label);
     connect(label, SIGNAL(newData(const CuData&)), this, SLOT(onNewData(const CuData&)));
     // Apply button
@@ -283,15 +285,17 @@ void QuInputOutput::m_configure(const CuData &da)
             QWidget *in = inputWidget();
             if(ok && d->w_type == Numeric)
             {
-                ENumeric * en = static_cast<ENumeric *>(in);
-                en->configureNumber(min, min, QString::fromStdString(print_format));
+                ENumeric * en = qobject_cast<ENumeric *>(in);
+                en->configureNumber(min, max, QString::fromStdString(print_format));
                 /* integerDigits() and decimalDigits() from NumberDelegate */
                 en->setIntDigits(en->integerDigits());
                 en->setDecDigits(en->decimalDigits());
+                en->setMinimum(min);
+                en->setMaximum(max);
             }
 
             // the following applies to ENumeric or spin boxes
-            if(ok)
+            else if(ok)
             {
                 in->setProperty("maximum", max);
                 in->setProperty("miniumum", min);
