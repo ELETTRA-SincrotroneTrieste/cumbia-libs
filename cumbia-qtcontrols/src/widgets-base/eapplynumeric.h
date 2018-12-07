@@ -32,7 +32,7 @@ Q_PROPERTY(QFont numericFont READ numericFont WRITE setNumericFont)
 Q_PROPERTY(bool applyButtonActive READ applyButtonActive WRITE setApplyButtonActive)
 
 public:
-	EApplyNumeric(QWidget *parent, int i = 2, int d = 1, Qt::Orientation pos = Qt::Horizontal);
+    EApplyNumeric(QWidget *parent, int i = 3, int d = 1, Qt::Orientation pos = Qt::Horizontal);
     ~EApplyNumeric(){}
 	
 	/** \brief returns the behaviour of the Apply button after a change in the value of the numeric widget

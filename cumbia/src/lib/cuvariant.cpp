@@ -1671,7 +1671,7 @@ std::string CuVariant::dataTypeStr(int t) const
 {
     const char *v[] = {
         "TypeInvalid", "Short", "UShort", "Int", "UInt",
-        "LongInt", "LongUInt", "Float", "Double",
+        "LongInt", "LongLongInt", "LongUInt", "LongLongUInt", "Float", "Double",
         "LongDouble", "Boolean", "String", "VoidPtr", "EndDataTypes"
     };
     if(t >= 0 && t < EndDataTypes)

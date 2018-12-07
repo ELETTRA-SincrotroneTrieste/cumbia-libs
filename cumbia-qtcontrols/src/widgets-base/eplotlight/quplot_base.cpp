@@ -244,7 +244,8 @@ void QuPlotBase::configure(const CuData &da)
         current_def_ub  = axes_c->upperBoundFromCurves(QwtPlot::yLeft);
     }
     setDefaultBounds(current_def_lb, current_def_ub, QwtPlot::yLeft);
-    if(!axes_c->autoscale(QwtPlot::yLeft)) {
+    if(!axes_c->scaleMode(QwtPlot::yLeft) == QuPlotAxesComponent::SemiAutoScale) {
+        printf("\e[1;33msetting default bounds lower %f upper %f \e[0m\n", current_def_lb, current_def_ub);
         setAxisScale(QwtPlot::yLeft, current_def_lb, current_def_ub);
     }
     // if configuration happens after data, need replot
@@ -496,6 +497,12 @@ void QuPlotBase::setDefaultBounds(double lb, double ub, QwtPlot::Axis axisId)
 
 /*! \brief restores the bounds set with setDefaultBounds
  *
+ * \par Note
+ * The QuPlotAxesComponent::ScaleMode flag is set to SemiAutomatic if en is true
+ *
+ * While scale mode is *semi automatic*, the axis can be (re)configured
+ * by subclasses, for example with bounds associated to a source obtained from a file
+ * or database
  */
 void QuPlotBase::restoreDefaultBounds(QwtPlot::Axis axisId)
 {
@@ -504,13 +511,23 @@ void QuPlotBase::restoreDefaultBounds(QwtPlot::Axis axisId)
     replot();
 }
 
+/*! \brief Restores the bounds of axisId to their default values if en is true, does nothing if en is false
+ *
+ * \par Note
+ * The QuPlotAxesComponent::ScaleMode flag is set to SemiAutomatic if en is true
+ *
+ * @param en true the default bounds of the axisId are reset to their default values
+ * @param en false the function does nothing
+ * @param axisId the id of the axis which boundaries are to be restored
+ *
+ */
 void QuPlotBase::setAxisScaleDefaultEnabled(bool en, QwtPlot::Axis axisId)
 {
     if(en)
     {
         QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
         axes_c->setAutoscale(axisId, false);
-        restoreDefaultBounds();
+        restoreDefaultBounds(); // QuPlotAxesComponent::ScaleMode is set to SemiAutomatic
     }
 }
 

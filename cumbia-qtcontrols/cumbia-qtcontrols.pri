@@ -155,12 +155,7 @@ QMAKE_CLEAN = moc \
     Makefile \
     *.tag
 
-QMAKE_EXTRA_TARGETS += docs
-
 SHAREDIR = $${INSTALL_ROOT}/share
-
-doc.commands = doxygen \
-    Doxyfile;
 
 unix:INCLUDEPATH += \
     $${CUMBIA_QTCONTROLS_INCLUDES} \

@@ -55,7 +55,8 @@ HEADERS += src/qumbiatangocontrols.h\
 
 DISTFILES += \
     qumbia-tango-controls.pri \
-    README
+    README \
+    src/tutorial_faq.md
 
 unix {
     doc.commands = doxytag \

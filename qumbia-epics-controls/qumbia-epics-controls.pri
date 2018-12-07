@@ -164,12 +164,7 @@ DEFINES += QUMBIA_EPICS_CONTROLS_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
     VER_MIN=$${VER_MIN} \
     VER_FIX=$${VER_FIX}
 
-QMAKE_EXTRA_TARGETS += docs
-
 SHAREDIR = $${INSTALL_ROOT}/share
-
-doc.commands = doxygen \
-    Doxyfile;
 
 unix:INCLUDEPATH += \
     $${QUMBIA_EPICS_CONTROLS_INCLUDES}

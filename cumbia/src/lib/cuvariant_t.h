@@ -60,8 +60,12 @@ template<typename T> bool CuVariant::to(T &val) const
             try
             {
                 // try converting to long double
-                val = strtold(this->toString().c_str(), NULL);
-        }
+                errno = 0; /* To distinguish success/failure after call */
+                char *endptr;
+                const char *str = toString().c_str();
+                val = strtold(str, &endptr);
+                valid = (endptr != str && errno == 0);
+            }
 
             catch(const std::invalid_argument& ) {
                 perr("CuVariant.toVector: string \"%s\" to number conversion failed: invalid argument", toString().c_str());

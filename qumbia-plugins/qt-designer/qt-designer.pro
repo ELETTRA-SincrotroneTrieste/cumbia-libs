@@ -73,3 +73,5 @@ target.path = $${DESIGNER_PLUGIN_DIR}
 INSTALLS += target
 
 
+# qumbia-plugins.pri defines default INSTALLS for target inc and doc
+# doc commands, target.path and inc.path are defined there as well.

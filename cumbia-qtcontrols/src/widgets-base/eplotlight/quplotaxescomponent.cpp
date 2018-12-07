@@ -8,7 +8,7 @@
 class QuPlotAxesComponentPrivate
 {
 public:
-    QMap<int, bool> autoscale_map;
+    QMap<int, QuPlotAxesComponent::ScaleMode> scale_mode_map;
     QMap<int, double> margin;
     QMap<int, double> ub_extra;
     QMap<int, QPair<double, double > > default_bounds;
@@ -18,10 +18,10 @@ public:
 QuPlotAxesComponent::QuPlotAxesComponent(QuPlotBase *plot)
 {
     d = new QuPlotAxesComponentPrivate;
-    d->autoscale_map[QwtPlot::xBottom] = true;
-    d->autoscale_map[QwtPlot::xTop] = true;
-    d->autoscale_map[QwtPlot::yLeft] = false;
-    d->autoscale_map[QwtPlot::yRight] = false;
+    d->scale_mode_map[QwtPlot::xBottom] = AutoScale;
+    d->scale_mode_map[QwtPlot::xTop] = AutoScale;
+    d->scale_mode_map[QwtPlot::yLeft] = SemiAutoScale;
+    d->scale_mode_map[QwtPlot::yRight] = SemiAutoScale;
 
     d->margin[QwtPlot::xBottom] = 0.01;
     d->margin[QwtPlot::xTop] = 0.01;
@@ -78,7 +78,7 @@ void QuPlotAxesComponent::setBounds(QuPlotBase *plot, int axisId, double lb, dou
 
 void QuPlotAxesComponent::setManualBounds(QuPlotBase *plot, int axisId, double lb, double ub)
 {
-    d->autoscale_map[axisId] = false;
+    d->scale_mode_map[axisId] = Manual;
     plot->setAxisScale(axisId, lb, ub);
 }
 
@@ -98,7 +98,7 @@ void QuPlotAxesComponent::setDefaultBounds(QuPlotBase *plot, int axisId, double 
 
 void QuPlotAxesComponent::restoreDefaultBounds(QuPlotBase *plot, int axisId)
 {
-    d->autoscale_map[axisId] = false;
+    d->scale_mode_map[axisId] = SemiAutoScale;
     plot->setAxisScale(axisId, d->default_bounds[axisId].first, d->default_bounds[axisId].second);
 }
 
@@ -203,12 +203,17 @@ bool QuPlotAxesComponent::getBoundsFromCurves(const QuPlotBase *plot,
 
 bool QuPlotAxesComponent::autoscale(int axisId) const
 {
-    return d->autoscale_map[axisId];
+    return d->scale_mode_map[axisId] == AutoScale;
+}
+
+QuPlotAxesComponent::ScaleMode QuPlotAxesComponent::scaleMode(int axisId) const
+{
+    return d->scale_mode_map[axisId];
 }
 
 void QuPlotAxesComponent::setAutoscale(int axisId, bool a)
 {
-    d->autoscale_map[axisId] = a;
+    d->scale_mode_map[axisId] = AutoScale;
 }
 
 double QuPlotAxesComponent::autoscaleMargin(int axisId) const

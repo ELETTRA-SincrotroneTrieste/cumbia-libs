@@ -62,6 +62,8 @@ doc.commands = \
 doc.files = doc/*
 doc.path = $${DOC_DIR}
 
+QMAKE_EXTRA_TARGETS += doc
+
 # lib
 
 target.path = $${PLUGIN_LIB_DIR}

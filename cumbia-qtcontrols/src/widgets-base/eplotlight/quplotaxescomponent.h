@@ -14,6 +14,8 @@ class QuPlotAxesComponentPrivate;
 class QuPlotAxesComponent : public QuPlotComponent
 {
 public:
+    enum ScaleMode { AutoScale = 0x0, SemiAutoScale = 0x01, Manual = 0x02 };
+
     QuPlotAxesComponent(QuPlotBase *plot);
 
     ~QuPlotAxesComponent();
@@ -44,6 +46,8 @@ public:
                              bool calc_x, bool calc_y) const;
 
     bool autoscale(int axisId) const;
+
+    ScaleMode scaleMode(int axisId) const;
 
     void setAutoscale(int axisId, bool a);
 

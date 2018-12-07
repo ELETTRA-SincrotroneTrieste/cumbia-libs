@@ -31,8 +31,10 @@ SOURCES += \
 
 inc.files += $${HEADERS} cumbiadbus_interface.h
 
+DISTFILES += \
+    quapplication.xml
+
+
 # qumbia-plugins.pri defines default INSTALLS for target inc and doc
 # doc commands, target.path and inc.path are defined there as well.
 
-DISTFILES += \
-    quapplication.xml

@@ -48,7 +48,7 @@ public:
      * @param intDigits number of integer digits
      * @param decDigits number of decimal digits
      */
-    ENumeric(QWidget *parent, int intDigits = 2, int decDigits = 1);
+    ENumeric(QWidget *parent, int intDigits = 3, int decDigits = 1);
     ~ENumeric(){}
     
     /**
