@@ -45,9 +45,10 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><h2>*Q.*</h2>
-<p>What is the structure used to exchange data by cumbia library like?</p>
+<p>What is the default structure used to exchange data by cumbia library? How do I use it?</p>
 <h2>*A.*</h2>
-<h2>*Q.*</h2>
+<p>It is a class named CuData. It is a bundle pairing <em>keys</em> to <em>values</em>. <em>keys</em> are strings, while values are CuVariant objects. CuVariant is a container that can store different data types and provides convenient functions to extract data into basic types, such as double, int, unsigned, vector&lt;double&gt;, vector&lt;string&gt; and so on.</p>
+<p>Example usage </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> f(<span class="keyword">const</span> CuData&amp; data) {</div><div class="line">    <span class="keywordtype">double</span> d;</div><div class="line">    CuVariant v = data[<span class="stringliteral">&quot;value&quot;</span>];</div><div class="line">    d = v.toDouble();</div><div class="line">}</div></div><!-- fragment --><h2>*Q.*</h2>
 <p>What is the quickest way to read a Tango attribute in a cumbia application whilst:</p><ul>
 <li>blocking for the result</li>
 <li>storing the result in a cumbia data structure that can be reused throughout the library</li>
@@ -57,7 +58,7 @@ $(function() {
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Dec 6 2018 17:48:53 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Dec 7 2018 16:49:38 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>
