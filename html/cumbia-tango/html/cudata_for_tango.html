@@ -185,9 +185,9 @@ $(function() {
 <tr class="markdownTableBody" class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">timestamp_us  </td><td class="markdownTableBodyNone">double  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">timestamp in a double: seconds.microseconds: static_cast&lt;double&gt;(tiv.tv_sec) + static_cast&lt;double&gt;(tiv.tv_usec) * 1e-6  </td><td class="markdownTableBodyNone">convert with toDouble   </td></tr>
 <tr class="markdownTableBody" class="markdownTableRowEven">
-<td class="markdownTableBodyNone">quality  </td><td class="markdownTableBodyNone">const Tango::AttrQuality  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone"><a class="el" href="namespaceTango.html">Tango</a> attribute quality { ATTR_VALID, ATTR_INVALID, ATTR_ALARM, ATTR_CHANGING, ATTR_WARNING }  </td><td class="markdownTableBodyNone">from server/idl/tango.h   </td></tr>
+<td class="markdownTableBodyNone">quality  </td><td class="markdownTableBodyNone">const Tango::AttrQuality  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone"><a class="el" href="namespaceTango.html">Tango</a> attribute quality { ATTR_VALID, ATTR_INVALID, ATTR_ALARM, ATTR_CHANGING, ATTR_WARNING }  </td><td class="markdownTableBodyNone">from server/idl/tango.h. Convert with toInt   </td></tr>
 <tr class="markdownTableBody" class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">quality_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string with the name of the color provided the class <a class="el" href="classCuTangoWorldConfig.html" title="A class containing some configurations useful to several other objects. ">CuTangoWorldConfig</a>  </td><td class="markdownTableBodyNone">can be used to decorate widgets   </td></tr>
+<td class="markdownTableBodyNone">quality_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string with the name of the color provided the class <a class="el" href="classCuTangoWorldConfig.html" title="A class containing some configurations useful to several other objects. ">CuTangoWorldConfig</a>  </td><td class="markdownTableBodyNone">can be used to decorate widgets. Use in combination with QuPalette. Convert with toString   </td></tr>
 <tr class="markdownTableBody" class="markdownTableRowEven">
 <td class="markdownTableBodyNone">data_format_str  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">Data format as string ("scalar", "vector", matrix", "data format unknown") &lt;/td&gt;
     &lt;td class="markdownTableBodyNone"&gt; consistent naming across tango and epics   </td></tr>
@@ -296,7 +296,7 @@ $(function() {
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 10 2018 15:24:36 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 10 2018 16:05:44 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>
