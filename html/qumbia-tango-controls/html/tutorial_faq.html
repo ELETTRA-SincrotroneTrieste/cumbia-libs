@@ -59,18 +59,24 @@ $(function() {
 <p>Cool. Now, what's the quickest procedure to display a Tango <em>state</em> and possibly get the associated color?</p>
 <h2>*A.*</h2>
 <p>Almost same code as above. Extract color from the "state_color", state string from the "state_string".</p>
-<div class="fragment"><div class="line">success = tw.read_att(td.getDevice(), argv[2], res);  <span class="comment">// read attribute, store result in res, return success</span></div><div class="line"><span class="keywordflow">if</span>(success) {</div><div class="line">    QuPalette palette;  <span class="comment">// default color palette: maps color string to QColor</span></div><div class="line">    QColor color = palette[QString::fromStdString(res[<span class="stringliteral">&quot;state_color&quot;</span>].toString())];</div><div class="line">    Tango::DevState state = <span class="keyword">static_cast&lt;</span>Tango::DevState<span class="keyword">&gt;</span>(res[<span class="stringliteral">&quot;state&quot;</span>].toLongInt());</div><div class="line">    qDebug() &lt;&lt; __FUNCTION__ &lt;&lt; <span class="stringliteral">&quot;state color&quot;</span> &lt;&lt; color &lt;&lt; <span class="stringliteral">&quot;state: &quot;</span> &lt;&lt; res[<span class="stringliteral">&quot;value&quot;</span>].toString().c_str()</div><div class="line">             &lt;&lt; <span class="stringliteral">&quot;as DevState: &quot;</span> &lt;&lt; state;</div></div><!-- fragment --> <h2>*Q.*</h2>
+<div class="fragment"><div class="line">success = tw.read_att(td.getDevice(), argv[2], res);  <span class="comment">// read attribute, store result in res, return success</span></div><div class="line"><span class="keywordflow">if</span>(success) {</div><div class="line">    QuPalette palette;  <span class="comment">// default color palette: maps color string to QColor</span></div><div class="line">    QColor color = palette[QString::fromStdString(res[<span class="stringliteral">&quot;state_color&quot;</span>].toString())];</div><div class="line">    Tango::DevState state = <span class="keyword">static_cast&lt;</span>Tango::DevState<span class="keyword">&gt;</span>(res[<span class="stringliteral">&quot;state&quot;</span>].toLongInt());</div><div class="line">    qDebug() &lt;&lt; __FUNCTION__ &lt;&lt; <span class="stringliteral">&quot;state color&quot;</span> &lt;&lt; color &lt;&lt; <span class="stringliteral">&quot;state: &quot;</span> &lt;&lt; res[<span class="stringliteral">&quot;value&quot;</span>].toString().c_str()</div><div class="line">             &lt;&lt; <span class="stringliteral">&quot;as DevState: &quot;</span> &lt;&lt; state;</div><div class="line">}</div></div><!-- fragment --> <h2>*Q.*</h2>
 <p>How did you know that the <em>res</em> CuData contained those very keys such as "value", "state_color", "timestamp_ms", and so on.. ?</p>
 <h2>*A.*</h2>
 <p>There are two ways of knowing what CuData contains. The first is the most universal one, the second is handy when dealing with Tango specific data.</p>
 <ul>
 <li>simply print the output of CuData::toString() to have a representation of the internal data</li>
-<li>visit the &lt;a href="../../html/cudata_for_tango.html&gt;CuData bundle description for data exchange with the Tango world documentation page. </li>
+<li>visit the &lt;a href="../../html/cudata_for_tango.html&gt;CuData bundle description for data exchange with the Tango world documentation page.</li>
 </ul>
+<p>The example</p>
+<div class="fragment"><div class="line">success = tw.read_att(td.getDevice(), argv[2], res);</div><div class="line"><span class="keywordflow">if</span>(success) {</div><div class="line">    std::cout &lt;&lt; res.toString() &lt;&lt; std::endl;</div></div><!-- fragment --><p> produces an output like this:</p>
+<p>&lt;cite&gt;</p>
+<p>giacomo /tmp/doctest $ ./bin/doctest test/device/1 double_scalar</p>
+<p>CuData { ["data_format_str" -&gt; scalar], ["err" -&gt; false], ["mode" -&gt; ], ["msg" -&gt; : Mon Dec 10 15:13:15 2018], ["quality" -&gt; 0], ["quality_color" -&gt; white], ["success_color" -&gt; dark_green], ["timestamp_ms" -&gt; 1544451195642], ["timestamp_us" -&gt; 1544451195.642567], ["value" -&gt; 0.342020], ["w_value" -&gt; 1.000000] } (size: 11 isEmpty: 0) </p>
+<p>&lt;/cite&gt; </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 10 2018 15:08:51 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 10 2018 15:15:35 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>
