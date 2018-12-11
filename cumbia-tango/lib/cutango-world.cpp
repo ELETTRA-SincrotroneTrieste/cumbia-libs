@@ -221,6 +221,7 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
             std::vector<std::string> temp;
             *data >> temp;
             da["value"] = temp;
+            break;
         }
         default:
             d->error = true;
@@ -1383,7 +1384,6 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &name,
         else if(t == CuVariant::String && tango_type == Tango::DEV_STRING)
         {
             std::string s = arg.toString(&ok);
-            cout <<  "String and DEV_STRING ok is " << ok << endl;
             if(ok)
                 da = Tango::DeviceAttribute(attname, s);
         }
