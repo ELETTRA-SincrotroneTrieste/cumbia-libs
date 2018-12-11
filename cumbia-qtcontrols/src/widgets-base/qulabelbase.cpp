@@ -23,7 +23,7 @@ QuLabelBase::QuLabelBase(QWidget *parent) : QLabel(parent)
 {
     d_ptr = new QuLabelBasePrivate;
     d_ptr->borderWidth = 1.0;
-    d_ptr->format = "%.2f";
+    d_ptr->format = "";
     d_ptr->max_len = -1;
     d_ptr->margin = 6;
     d_ptr->draw_internal_border = true;
@@ -165,6 +165,13 @@ void QuLabelBase::setDrawInternalBorder(bool draw) {
  * \li the type of data is boolean and the "trueColor" and "falseColor" *properties* are set to a valid QColor *or*
  * \li setEnumDisplay was used to associate integer values to a strings and a colors
  *
+ * \par Number formatting
+ * If QuLabel::format is not empty, it is used to format the number.
+ * The format is forwarded to CuVariant::toString. If the latter method is called with an empty format,
+ * a default format is used within snprintf according to the data type in use.
+ *
+ * See CuVariant::toString for further details.
+ *
  */
 void QuLabelBase::setValue(const CuVariant& v, bool *background_modified)
 {
@@ -269,6 +276,21 @@ bool QuLabelBase::hasHeightForWidth() const
 bool QuLabelBase::drawInternalBorder() const
 {
     return d_ptr->draw_internal_border;
+}
+
+/*! \brief returns the format used to represent a number, or an empty string if
+ *         no format is specified
+ *
+ * @return the format to use for number representation
+ *
+ * @see setFormat
+ *
+ * \par Note
+ * QuLabelBase::setValue forwards the format to CuVariant::toString conversion method.
+ */
+QString QuLabelBase::format() const
+{
+    return d_ptr->format;
 }
 
 /*! \brief Reimplements QLabel::paintEvent

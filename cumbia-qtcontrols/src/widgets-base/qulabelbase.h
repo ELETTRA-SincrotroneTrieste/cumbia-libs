@@ -20,6 +20,8 @@ class QuLabelBase : public QLabel
   Q_OBJECT
     Q_PROPERTY(double borderWidth READ borderWidth WRITE setBorderWidth DESIGNABLE true)
     Q_PROPERTY(bool drawInternalBorder READ drawInternalBorder WRITE setDrawInternalBorder DESIGNABLE true)
+    Q_PROPERTY(QString format READ format WRITE setFormat  DESIGNABLE true)
+
   public:
 
     QuLabelBase(QWidget *parent);
@@ -38,8 +40,6 @@ class QuLabelBase : public QLabel
 
     void setEnumDisplay(int val, const QString& text, const QColor& c);
 
-    void setFormat(const QString& fmt);
-
     int maximumLength() const;
 
     QSize minimumSizeHint() const override;
@@ -52,12 +52,16 @@ class QuLabelBase : public QLabel
 
     bool drawInternalBorder() const;
 
+    QString format() const;
+
 public slots:
     void setBorderWidth(double w);
 
     void setDrawInternalBorder(bool draw);
 
     void setValue(const CuVariant& d, bool *background_modified = NULL);
+
+    void setFormat(const QString& fmt);
 
 
     void setMaximumLength(int len);

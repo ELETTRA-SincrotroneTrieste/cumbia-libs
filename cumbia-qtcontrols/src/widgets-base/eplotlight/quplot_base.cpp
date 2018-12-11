@@ -245,7 +245,6 @@ void QuPlotBase::configure(const CuData &da)
     }
     setDefaultBounds(current_def_lb, current_def_ub, QwtPlot::yLeft);
     if(!axes_c->scaleMode(QwtPlot::yLeft) == QuPlotAxesComponent::SemiAutoScale) {
-        printf("\e[1;33msetting default bounds lower %f upper %f \e[0m\n", current_def_lb, current_def_ub);
         setAxisScale(QwtPlot::yLeft, current_def_lb, current_def_ub);
     }
     // if configuration happens after data, need replot

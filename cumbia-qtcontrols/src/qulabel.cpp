@@ -70,6 +70,9 @@ void QuLabel::m_init()
 void QuLabel::m_configure(const CuData &da)
 {
     d->display_u = QString::fromStdString(da["display_unit"].toString());
+    QString fmt = QString::fromStdString(da["format"].toString());
+    if(format().isEmpty() && !fmt.isEmpty())
+        setFormat(fmt);
 }
 
 QuLabel::~QuLabel()
