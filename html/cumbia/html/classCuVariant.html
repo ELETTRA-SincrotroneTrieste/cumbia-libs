@@ -2415,7 +2415,9 @@ getData </dd></dl>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>a std::string representation of the stored values. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>a std::string representation of the stored values.</dd></dl>
+<dl class="section user"><dt>Note is format is empty, a default conversion takes place according to the type of data, e.g.</dt><dd>"%f" for double and float, "%Lf" for long double, "%d" for int, "%lu" for long unsigned int, "%ld" for long int, "%hd" for short int, "%hu" for unsigned short.</dd></dl>
+<dl class="section user"><dt>Boolean data types</dt><dd>boolean values are mapped to either "true" or "false" string. </dd></dl>
 
 <p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caba717c3f69170621a9e0d216e6c30987">Boolean</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca470556b945ded3c51dacebfb9316996f">Double</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca3e2c8d74e493e6c8caa60b563d1e93c1">Float</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cac7444c6f5d4524d704e38427c40a662a">Int</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca945573e6f9761cd309c931a2989a9b7a">LongDouble</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca8daeeeaf8cc61c7fe17394ecbb75b80b">LongInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca7df23990fcabbf137adc2a193e92f596">LongUInt</a>, <a class="el" href="cumacros_8h.html#ace3ed8e68957fe0cd2c27043cc5137db">perr</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caada2d4d65b9a01bf828b550ef983194b">Short</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2">String</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca07b0dcd0377c638765c48b1d4fec7b46">UInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca1e8a69d26b59520fb5a809306428978a">UShort</a>, and <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caae540f48cd6737596cb4874e4324b942">VoidPtr</a>.</p>
 
@@ -2805,7 +2807,7 @@ false the conversion was not possible</dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuVariant.html">CuVariant</a></li>
-    <li class="footer">Generated on Tue Dec 11 2018 10:51:12 for cumbia by
+    <li class="footer">Generated on Tue Dec 11 2018 14:49:05 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.14 </li>
   </ul>
