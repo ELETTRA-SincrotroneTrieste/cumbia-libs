@@ -66,7 +66,7 @@ $(function() {
 <p>There are two ways of knowing what CuData contains. The first is the most universal one, the second is handy when dealing with Tango specific data.</p>
 <ul>
 <li>simply print the output of CuData::toString() to have a representation of the internal data</li>
-<li>visit the <a href="../../html/cudata_for_tango.html">CuData bundle description for data exchange with the Tango world</a> documentation page.</li>
+<li>visit the <a href="../../cumbia-tango/html/cudata_for_tango.html">CuData bundle description for data exchange with the Tango world</a> documentation page.</li>
 </ul>
 <p>The example</p>
 <div class="fragment"><div class="line">success = tw.read_att(td.getDevice(), argv[2], res);</div><div class="line"><span class="keywordflow">if</span>(success) {</div><div class="line">    std::cout &lt;&lt; res.toString() &lt;&lt; std::endl;</div></div><!-- fragment --><p>executed on TangoTest device/double_scalar attribute, produces an output like this:</p>
@@ -110,11 +110,15 @@ $(function() {
 <h3>In QTango there used to be a widget ready to read and display a value. In cumbia there is not. How do I quickly adapt an existing Qt widget?</h3>
 <h2>*A.*</h2>
 <h4>1. The longest <em>reusable</em> way</h4>
+<p>Extend the Qt widget apt to display the desired data and implement CuDataListener interface. See <a href="../../qumbianewcontrolwizard/html/tutorial_qumbianewcontrolwizard.html">Quickly add a Qt widget to your cumbia project</a> documentation. Within the <em>onUpdate(const CuData&amp; data)</em> method you will receive two kinds of updates:</p><ul>
+<li>if data["type"].toString() == "property" it's a <em>configuration</em> update (from the Tango database)</li>
+<li>if data.containsKey("value") you can extract the new value from <em>data</em>.</li>
+</ul>
 <h4>2. The quickest way (what you asked, indeed)</h4>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Dec 10 2018 17:07:06 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 11 2018 10:45:56 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.14
 </small></address>
