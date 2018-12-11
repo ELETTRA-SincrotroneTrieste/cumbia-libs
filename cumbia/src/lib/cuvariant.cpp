@@ -1298,6 +1298,13 @@ bool CuVariant::toBool(bool *ok) const
  *
  * @return a std::string representation of the stored values.
  *
+ * \par Note is format is empty, a default conversion takes place according to the type of data, e.g.
+ *      "%f" for double and float, "%Lf" for long double, "%d" for int, "%lu" for long unsigned int,
+ *      "%ld" for long int, "%hd" for short int, "%hu" for unsigned short.
+ *
+ * \par Boolean data types
+ * boolean values are mapped to either "true" or "false" string.
+ *
  */
 std::string CuVariant::toString(bool *ok, const char *format) const
 {
@@ -1313,23 +1320,23 @@ std::string CuVariant::toString(bool *ok, const char *format) const
         if(d->type == String)
             ret += std::string(static_cast<char **>(d->val)[i]);
         else if(d->type == Double)
-            snprintf(converted, MAXLEN, "%f", static_cast<double *>(d->val)[i]);
+            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%f", static_cast<double *>(d->val)[i]);
         else if(d->type == LongDouble)
-            snprintf(converted, MAXLEN, "%Lf", static_cast<long double *>(d->val)[i]);
+            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%Lf", static_cast<long double *>(d->val)[i]);
         else if(d->type == Int)
-            snprintf(converted, MAXLEN, "%d", static_cast<int *>(d->val)[i]);
+            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%d", static_cast<int *>(d->val)[i]);
         else if(d->type == UInt)
-            snprintf(converted, MAXLEN, "%u", static_cast<unsigned int *>(d->val)[i]);
+            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%u", static_cast<unsigned int *>(d->val)[i]);
         else if(d->type == LongUInt)
-            snprintf(converted, MAXLEN, "%lu", static_cast<long unsigned int *>(d->val)[i]);
+            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%lu", static_cast<long unsigned int *>(d->val)[i]);
         else if(d->type == LongInt)
-            snprintf(converted, MAXLEN, "%ld", static_cast<long int *>(d->val)[i]);
+            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%ld", static_cast<long int *>(d->val)[i]);
         else if(d->type == Short)
-            snprintf(converted, MAXLEN, "%hd", static_cast<short int *>(d->val)[i]);
+            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%hd", static_cast<short int *>(d->val)[i]);
         else if(d->type == UShort)
-            snprintf(converted, MAXLEN, "%hu", static_cast<unsigned short *>(d->val)[i]);
+            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%hu", static_cast<unsigned short *>(d->val)[i]);
         else if(d->type == Float)
-            snprintf(converted, MAXLEN, "%f", static_cast<float *>(d->val)[i]);
+            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%f", static_cast<float *>(d->val)[i]);
         else if(d->type == Boolean)
             static_cast<bool *>(d->val)[i] ? sprintf(converted, "true") : sprintf(converted, "false");
         else if(d->type == VoidPtr)
