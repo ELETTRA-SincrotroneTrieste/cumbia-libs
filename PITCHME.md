@@ -27,9 +27,8 @@ giacomo.strangolino@elettra.eu
 
 ## What is cumbia?
 
-@snap[north span-90]
 @box[bg-orange text-white rounded demo-box-pad](Cumbia is a dance-oriented music genre popular throughout Latin America. It began as a courtship dance practiced among the African population on the Caribbean coasts of Colombia. It later mixed with Amerindian and European instruments, steps and musical characteristics. Cumbia has grown to be one of the most widespread and unifying musical genres to emerge from Latin America.)
-@snapend
+
 
 @snap[south]
  @img[shadow](assets/img/modules.png)
