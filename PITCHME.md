@@ -64,7 +64,7 @@ giacomo.strangolino@elettra.eu
 
 
 @snap[ span-60]
-![PIC](assets/img/android-plot1.png)
+![img](assets/img/android-plot1.png)
 @snapend
 
 @snap[south span-40]
