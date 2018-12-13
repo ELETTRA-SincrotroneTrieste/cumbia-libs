@@ -1,4 +1,12 @@
-# Let's Get Started
+### Elettra - Sincrotrone Trieste
+
+# Cumbia
+
+#### A new multi threaded framework to develop [Tango] applications
+
+### Giacomo Strangolino
+
+#### giacomo.strangolino@elettra.eu
 
 ---
 
