@@ -12,7 +12,7 @@ giacomo.strangolino@elettra.eu
 
 ## Why replace QTango?
 
-@ul size[0.5em]
+## @ul
 - It has grown older...
 - Lots of features not required daily
 - Some useful features not easy to implement (e.g. multiple serialized readings)
