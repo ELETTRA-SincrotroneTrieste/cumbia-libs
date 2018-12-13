@@ -12,12 +12,14 @@ giacomo.strangolino@elettra.eu
 
 ## Why replace QTango?
 
+@size[1em](
 - It has grown older...
 - Lots of features not required daily
 - Some useful features not easy to implement (e.g. multiple serialized readings)
 - Tightly bound to Tango
 - Has been stable for years, but the architecture is somehow complicated
 - Code is not modular nor reusable enough
+)
 
 ![](assets/img/presentation.png)
 
