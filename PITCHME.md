@@ -8,7 +8,7 @@
 
 giacomo.strangolino@elettra.eu
 
----?color=#F6D365
+---?color=#FFFFEE
 
 ## Why replace QTango?
 
