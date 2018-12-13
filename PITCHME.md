@@ -11,6 +11,8 @@ giacomo.strangolino@elettra.eu
 ---
 @title[Why replace QTango]
 
+## Why replace QTango
+
 @ul
 - It has grown older...
 - Lots of features not required daily
@@ -20,10 +22,10 @@ giacomo.strangolino@elettra.eu
 - Code is not modular nor reusable enough
 @ulend
 
-![](assets/img/presentation.png)
-
 ---
 @title[Cumbia]
+
+## What is cumbia?
 
 @snap[north span-90]
 @box[bg-orange text-white rounded demo-box-pad](Cumbia is a dance-oriented music genre popular throughout Latin America. It began as a courtship dance practiced among the African population on the Caribbean coasts of Colombia. It later mixed with Amerindian and European instruments, steps and musical characteristics. Cumbia has grown to be one of the most widespread and unifying musical genres to emerge from Latin America.)
@@ -36,6 +38,8 @@ giacomo.strangolino@elettra.eu
 
 ---
 @title[Keywords and technologies]
+
+## Keywords and technologies (I)
 
 @snap [east span-40]
 @ul
@@ -54,6 +58,8 @@ giacomo.strangolino@elettra.eu
 
 ---
 @title[Keywords and technologies ii]
+
+## Keywords and technologies (II)
 
 @box[north span-90](cumbia is written in C++ and uses the Qt libraries to develop graphical user interfaces. This means cumbia applications work on desktop computers as well as on Android devices)
 
