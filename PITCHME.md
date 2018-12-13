@@ -12,7 +12,7 @@ giacomo.strangolino@elettra.eu
 
 ## Why replace QTango?
 
-@size[1em](
+@size[0.5em](
 - It has grown older...
 - Lots of features not required daily
 - Some useful features not easy to implement (e.g. multiple serialized readings)
