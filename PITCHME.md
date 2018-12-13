@@ -8,9 +8,8 @@
 
 giacomo.strangolino@elettra.eu
 
----?color=#FFFFEE
-
-## Why replace QTango?
+---
+@title[Why replace QTango]
 
 ## @ul
 - It has grown older...
@@ -24,10 +23,12 @@ giacomo.strangolino@elettra.eu
 ![](assets/img/presentation.png)
 
 ---
-@title[Customize Slide Layout]
+@title[Cumbia]
 
-@snap[west span-50]
-## Customize Slide Content Layout
+@snap[west span-80]
+Cumbia is a dance-oriented music genre popular throughout Latin America.
+It began as a courtship dance practiced among the African population on the Caribbean coasts of Colombia. It later mixed with Amerindian and European instruments, steps and musical characteristics.
+Cumbia has grown to be one of the most widespread and unifying musical genres to emerge from Latin America.
 @snapend
 
 @snap[east span-50]
