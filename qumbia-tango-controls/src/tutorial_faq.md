@@ -1,9 +1,9 @@
 # Frequently Asked Questions (Tango) {#tutorial_faq}
 
-## *Q.*
+## Q.
 ### What is the default structure used to exchange data by cumbia library? How do I use it?
 
-## *A.*
+## A.
 
 It is a class named CuData. It is a bundle pairing *keys* to *values*.
 *keys* are strings, while values are CuVariant objects. CuVariant is a container that
@@ -19,13 +19,13 @@ void f(const CuData& data) {
 }
 ```
 
-## *Q.*
+## Q.
 ### What is the quickest way to read a Tango attribute in a cumbia application:
  - blocking for the result
  - storing the result in a cumbia data structure that can be reused throughout the library
  - extracting the result/errors
 
-## *A.*
+## A.
 
 ```cpp
 #include <cutango-world.h>
@@ -56,10 +56,10 @@ int main(int argc, char *argv[])
 }
 ```
 
-## *Q.*
+## Q.
 ### Cool. Now, what's the quickest procedure to display a Tango *state* and possibly get the associated color?
 
-## *A.*
+## A.
 
 Almost same code as above. Extract color from the "state_color", state string from the "state_string".
 
@@ -73,11 +73,11 @@ Almost same code as above. Extract color from the "state_color", state string fr
                      << "as DevState: " << state;
         }
 ```
-## *Q.*
+## Q.
 
 ### How did you know that the *res* CuData contained those very keys such as "value", "state_color", "timestamp_ms", and so on.. ?
 
-## *A.*
+## A.
 There are two ways of knowing what CuData contains. The first is the most universal one, the second is handy when dealing with
 Tango specific data.
 
@@ -112,11 +112,11 @@ from which you can infer that a code like the following can work:
 
 ```
 
-## *Q.*
+## Q.
 
 ### I want a quick way to perform a command inout on a device now, thanks.
 
-## *A.*
+## A.
 Two possible scenarios are possible, dude:
 
 #### 1. You know in advance the output data type and you can provide the input value by code. A full working example follows:
@@ -198,11 +198,11 @@ This example is much more flexible:
 |CuData { ["argins" -> foo bar], ["cmd_name" -> DevString], ["data_format" -> 0], ["data_format_str" -> scalar], ["data_type" -> 8], ["display_level" -> 0], ["err" -> false], ["in_type" -> 8], ["in_type_desc" -> -], ["mode" -> ], ["msg" -> : Mon Dec 10 16:13:35 2018[scalar]], ["out_type" -> 8], ["out_type_desc" -> -], ["timestamp_ms" -> 1544454815747], ["timestamp_us" -> 1544454815.747049], ["type" -> property], ["value" -> foo bar] } (size: 17 isEmpty: 0)|
 
 
-## *Q.*
+## Q.
 
 ### In QTango there used to be a widget ready to read and display a value. In cumbia there is not. How do I quickly adapt an existing Qt widget?
 
-## *A.*
+## A.
 
 #### 1. The longest *reusable* way
 Extend the Qt widget apt to display the desired data and implement CuDataListener interface.
@@ -264,5 +264,32 @@ void mywidget::onNewReport(const CuData &da)
 
 ```
 
+## Q.
 
+### I either used QuWatcher or implemented CuDataListener on my custom graphical object. How do I configure it through
+    the Tango database properties (setting maximum and minimum values, display unit and data format)?
+
+## A.
+Just look for the CuData with the *type* key set to the *property* string. That's the bundle containing the Tango database
+configuration.
+
+```cpp
+void MyCustomWidget::onUpdate(const CuData &da)
+{
+    bool is_config = da["type"].toString() == std::string("property");
+    if(is_config) {
+        CuVariant m = da["min"], M = da["max"];
+        std::string print_format = da["format"].toString();
+        double min, max;
+        bool ok;
+        ok = m.to<double>(min);     // try to convert min
+        if(ok)                      // try to convert max if min succeeded
+            ok = M.to<double>(max);
+
+        if(ok) {  // very good: Range properly configured in Tango database
+            setMinimum(min);  // set minimum value on MyCustomWidget
+            setMaximum(max);  // set maximum value on MyCustomWidget
+        }
+
+```
 
