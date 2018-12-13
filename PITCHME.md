@@ -62,7 +62,7 @@ giacomo.strangolino@elettra.eu
 
 @box[bg-orange text-white rounded demo-box-pad](cumbia is written in C++ and uses the Qt libraries to develop graphical user interfaces. This means cumbia applications work on desktop computers as well as on Android devices)
 
-@snap [south span-70 fragment]
+@snap[south-east span-70 fragment]
 ![PIC](assets/img/android-plot1.png)
 @snapend
 
