@@ -11,7 +11,7 @@ giacomo.strangolino@elettra.eu
 ---
 @title[Why replace QTango]
 
-## @ul
+@ul
 - It has grown older...
 - Lots of features not required daily
 - Some useful features not easy to implement (e.g. multiple serialized readings)
@@ -38,7 +38,7 @@ giacomo.strangolino@elettra.eu
 @title[Keywords and technologies]
 
 @snap [east span-40]
-## @ul
+@ul
 - C++ 11
 - Qt
 - Qt widgets
