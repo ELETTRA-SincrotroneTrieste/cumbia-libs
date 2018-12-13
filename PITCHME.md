@@ -32,9 +32,6 @@ It began as a courtship dance practiced among the African population on the Cari
 Cumbia has grown to be one of the most widespread and unifying musical genres to emerge from Latin America.)
 @snapend
 
-@snap[east span-50]
-![](assets/img/presentation.png)
-@snapend
 
 ---?color=#E58537
 @title[Add A Little Imagination]
