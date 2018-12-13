@@ -52,7 +52,7 @@ giacomo.strangolino@elettra.eu
 @ulend
 @snapend
 
-@snap [west span-40]
+@snap [west span-60]
 cumbia is written in C++ and uses the Qt libraries to develop graphical user interfaces. This means cumbia applications work on desktop computers as well as on Android devices
 @snapend
 
