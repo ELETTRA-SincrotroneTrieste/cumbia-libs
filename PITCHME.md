@@ -66,7 +66,7 @@ giacomo.strangolino@elettra.eu
 ![PIC](assets/img/android-plot1.png)
 @snapend
 
-@snap[south-east]
+@snap[south-east span-30]
 A spectrum plot on Android
 @snapend
 
