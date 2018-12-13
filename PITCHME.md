@@ -10,7 +10,14 @@ giacomo.strangolino@elettra.eu
 
 ---
 
-## Add Some Slide Candy
+## Why replace QTango?
+
+- It has grown older...
+- Lots of features not required daily
+- Some useful features not easy to implement (e.g. multiple serialized readings)
+- Tightly bound to Tango
+- Has been stable for years, but the architecture is somehow complicated
+- Code is not modular nor reusable enough
 
 ![](assets/img/presentation.png)
 
