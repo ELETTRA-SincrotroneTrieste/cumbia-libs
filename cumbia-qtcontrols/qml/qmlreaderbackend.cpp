@@ -43,8 +43,10 @@ void QmlReaderBackend::init(CumbiaPool_O *poo_o)
     qDebug() << __FUNCTION__ << "CONTEXT" << d->context << "pool" << poo_o->getPool() <<
                 " factory is empty ?" << poo_o->getFactory().isEmpty() << "src " << d->source;
 
-    if(!d->source.isEmpty())
+    if(!d->source.isEmpty()) {
         setSource(d->source);
+        m_setSource(d->source);
+    }
 }
 
 void QmlReaderBackend::setConversionMode(QmlReaderBackend::DataType dt, QmlReaderBackend::DataFormat fmt)

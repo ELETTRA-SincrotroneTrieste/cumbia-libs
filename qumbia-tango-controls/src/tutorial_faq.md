@@ -1,5 +1,33 @@
 # Frequently Asked Questions (Tango) {#tutorial_faq}
 
+
+## Q.
+
+### Is there a way to quickly set up a new cumbia project?
+
+## A.
+Yes, just execute
+
+*cumbia new project*
+
+from the command line. You will
+
+## Q.
+
+### Is there a way to migrate a QTango project into a cumbia one?
+
+## A.
+Yes, execute
+
+*cumbia import fast*
+
+from the command line to *attempt* the migration. Follow the instructions and carefully
+read the messages from the ongoing process. A little manual intervention is normally needed.
+It works for simple QTango projects (e.g. custom QTangoComProxyReader/QTangoComProxyWriter
+derived classes are not supported)
+
+
+
 ## Q.
 ### What is the default structure used to exchange data by cumbia library? How do I use it?
 
@@ -292,4 +320,5 @@ void MyCustomWidget::onUpdate(const CuData &da)
         }
 
 ```
+
 

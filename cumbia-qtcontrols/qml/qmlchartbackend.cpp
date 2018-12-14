@@ -73,9 +73,9 @@ QmlChartBackend::~QmlChartBackend()
 void QmlChartBackend::init(CumbiaPool_O *poo_o)
 {
     d->plot_common = new QuPlotCommon(poo_o->getPool(), poo_o->getFactory());
-    //    if(!d->sources.isEmpty()) {
-    //        m_setSources(d->sources);
-    //    }
+        if(!d->sources.isEmpty()) {
+            m_setSources(d->sources);
+        }
 }
 
 CuContext *QmlChartBackend::getContext() const
