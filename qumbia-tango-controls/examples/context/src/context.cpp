@@ -19,7 +19,6 @@
 #include <quapplication.h>
 #include <QMessageBox>
 #include <QPushButton>
-#include <cucontextactionbridge.h>
 #include <cudata.h>
 #include <cutangoopt_builder.h>
 
@@ -120,7 +119,7 @@ Context::Context(CumbiaTango *cut, QWidget *parent) :
     QComboBox *cbSendData = new QComboBox(this);
     cbSendData->setObjectName("cbSend");
     cbSendData->setEditable(true);
-    cbSendData->insertItems(0, QStringList() << "read:,");
+    cbSendData->insertItems(0, QStringList() << "period:1200");
     cbSendData->setToolTip("sendData will be invoked on the context");
     lo->addWidget(cbSendData, 5, 2, 1, 2 );
     QLineEdit *le_in_send = new QLineEdit(this);
@@ -129,8 +128,8 @@ Context::Context(CumbiaTango *cut, QWidget *parent) :
     le_in_send->setText(cbSendData->currentText());
     le_in_send->setToolTip("Input arguments to build data to send through the link\n"
                            "Syntax:\n" "key1:value1 key2:value2 key3:value3\n"
-                           "For example, to trigger a read event in manual mode, write\n"
-                           "\"read,:\", because the read command requires an empty parameter");
+                           "For example, to change the period in polling mode, type\n"
+                           "\"period:1200\"");
     lo->addWidget(le_in_send, 5, 4, 1, 2);
     connect(cbSendData, SIGNAL(currentTextChanged(QString)), le_in_send, SLOT(setText(QString)));
     QPushButton *pbSendData = new QPushButton("Send Data", this);
@@ -141,10 +140,6 @@ Context::Context(CumbiaTango *cut, QWidget *parent) :
     sbper->setMaximum(10000);
     sbper->setSuffix("ms");
     sbper->setValue(1000);
-
-
-    new CuContextActionBridge(this, cu_t, cu_tango_r_fac);
-
 }
 
 Context::~Context()
@@ -199,8 +194,9 @@ void Context::runModified()
     tob.setPeriod(sbper->value());
     tob.setRefreshMode(m_getRefreshMode());
     qio->getOutputContext()->setOptions(tob.options());
-    if(b->text() == "Start")
+    if(b->text() == "Start") {
         qio->setSource(findChild<QLineEdit *>("leSrc")->text());
+    }
     else if(b->text() == "Stop")
         qio->unsetSource();
 }
