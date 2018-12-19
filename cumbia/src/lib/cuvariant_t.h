@@ -63,7 +63,7 @@ template<typename T> bool CuVariant::to(T &val) const
                 errno = 0; /* To distinguish success/failure after call */
                 char *endptr;
                 const char *str = toString().c_str();
-                val = strtold(str, &endptr);
+                val = static_cast<T>(strtold(str, &endptr));
                 valid = (endptr != str && errno == 0);
             }
 
