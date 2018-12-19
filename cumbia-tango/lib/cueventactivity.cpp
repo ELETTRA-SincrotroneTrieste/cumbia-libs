@@ -244,7 +244,7 @@ void CuEventActivity::onExit()
         at["value"] = "-";
         try{
             d->tdev->getDevice()->unsubscribe_event(d->event_id);
-            pbgreen("ReadActivity.onExit: unsubscribed! OK!");
+            pbgreen("CuEventActivity.onExit: unsubscribed id %d! OK!", d->event_id);
             at["msg"] = "successfully unsubscribed events";
             at["err"]  = false;
         }
@@ -297,7 +297,7 @@ void CuEventActivity::push_event(Tango::EventData *e)
 {
     CuData d = getToken();
     CuTangoWorld utils;
-    pbyellow2("ReadActivity.push_event: in thread: 0x%lx attribute %s activity %p", pthread_self(), e->attr_name.c_str(), this);
+    pbyellow2("CuEventActivity.push_event: in thread: 0x%lx attribute %s activity %p event_id %d", pthread_self(), e->attr_name.c_str(), this, this->d->event_id);
     utils.fillThreadInfo(d, this); /* put thread and activity addresses as info */
     d["mode"] = "event";
     d["event"] = e->event;
