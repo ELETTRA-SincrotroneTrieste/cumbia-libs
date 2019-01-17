@@ -79,6 +79,8 @@ The build process can be automated by executing
 
 from the *cumbia-libs* directory resulting from the *git clone ...* command above.
 
+- To change the installation prefix edit scripts/config.sh and change *prefix=/usr/local/cumbia-libs* (the default)
+
 The command in the example builds and installs the cumbia base modules, cumbia-tango, qumbia-tango-controls, qumbia-apps and qumbia-plugins
 
 Type 
