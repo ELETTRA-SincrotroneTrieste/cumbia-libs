@@ -41,8 +41,12 @@ cd $DIR/..
 topdir=$PWD
 
 tmp_installdir=$PWD/tmp-install-dir
-echo -e "Temporary build directory: \"$tmp_installdir\""
+if [ -d $tmp_installdir ]; then
+        echo -e "Removing temporary build directory: \"$tmp_installdir\""
+        rm -rf $tmp_installdir
+fi
 
+save_pkg_config_path=$PKG_CONFIG_PATH
 PKG_CONFIG_PATH=$tmp_installdir/lib/pkgconfig:$PKG_CONFIG_PATH
 export PKG_CONFIG_PATH
 
@@ -443,6 +447,9 @@ for x in "${meson_p[@]}" ; do
 	cd $DIR/../${x}
 
 	if [ $meson -eq 1 ]; then
+                if [ -d builddir ]; then
+                    rm -rf builddir
+                fi
 		meson builddir
 	fi
 
@@ -471,10 +478,9 @@ for x in "${meson_p[@]}" ; do
                 ## pkgconfig files will be generated accordingly and will be found under tmp_installdir/lib/pkgconfig
                 ## So, build and install in tmp_installdir
 
-                echo -e "\e[1;32mcalling meson configure  -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja\e[0m\n"
-                meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
-                meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
-                ninja install
+               meson configure -Dbuildtype=$build_type && ninja
+               meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir && ninja install
+            #    ninja install
 		if [ $? -ne 0 ]; then
 			exit 1
 		fi
@@ -784,4 +790,7 @@ if [ $make_install -eq 1 ]; then
 
 fi
 
-
+#
+## restore original PKG_CONFIG_PATH
+#
+export PKG_CONFIG_PATH=$save_pkg_config_path
