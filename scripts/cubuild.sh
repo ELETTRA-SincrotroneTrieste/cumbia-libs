@@ -101,6 +101,12 @@ then
     $sudocmd=
 fi
 
+if [[ $@ == **build** ]]
+then
+        build=1
+        meson=1
+fi
+
 if [[ $@ == **install** ]]
 then
     make_install=1
@@ -465,7 +471,7 @@ for x in "${meson_p[@]}" ; do
                 ## pkgconfig files will be generated accordingly and will be found under tmp_installdir/lib/pkgconfig
                 ## So, build and install in tmp_installdir
 
-                meson configure -Dprefix=$tmp_installdir -Dlibdir=$libdir -Dbuildtype=$build_type
+                meson configure -Dprefix=$tmp_installdir -Dlibdir=$libdir -Dbuildtype=$build_type && ninja
                 echo -e "INSTALLING Into Temporary build directory: \"$tmp_installdir\""
                 ninja install
 		if [ $? -ne 0 ]; then
