@@ -1,3 +1,4 @@
+../cumbia/src/lib
+../cumbia/src/lib/threads
+../cumbia/src/lib/services
 lib
-/home/giacomo/devel/epics/base-3.16.1/include/
-/usr/local/cumbia-libs/include/cumbia

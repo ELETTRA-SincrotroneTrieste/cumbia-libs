@@ -1,5 +1,5 @@
 lib
 ../cumbia/src/lib
-../cumbia/src/lib/threads
 ../cumbia/src/lib/services
-/usr/local/tango-9.2.5a/include/tango
+../cumbia/src/lib/threads
+/usr/local/tango-9.3.2/include/tango

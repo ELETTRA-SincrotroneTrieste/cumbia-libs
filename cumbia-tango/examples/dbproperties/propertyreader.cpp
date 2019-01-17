@@ -13,9 +13,10 @@
 PropertyReader::PropertyReader()
 {
     m_ct = new CumbiaTango(new CuThreadFactoryImpl(), new CuThreadsEventBridgeFactory());
-    m_ct->getServiceProvider()->registerService(CuServices::EventLoop, new CuEventLoopService());
+    CuServiceProvider *sp = m_ct->getServiceProvider();
+    sp->registerService(CuServices::EventLoop, new CuEventLoopService());
     /* start the event loop in a separate thread (true param), where data from activities will be posted */
-    static_cast<CuEventLoopService*>(m_ct->getServiceProvider()->get(CuServices::EventLoop))->exec(true);
+    static_cast<CuEventLoopService*>(sp->get(CuServices::EventLoop))->exec(true);
 }
 
 // test/device/1:description device property: two '/' and ':'
@@ -24,7 +25,7 @@ PropertyReader::PropertyReader()
 void PropertyReader::get(const char *id, const std::vector<std::string> &props)
 {
     /* start the event loop in a separate thread, where data from activities will be posted */
-    std::list<CuData> in_data;
+    std::vector<CuData> in_data;
     for(size_t i = 0; i < props.size(); i++) {
         size_t cnt = count(props[i].begin(), props[i].end(), '/');
         size_t cpos = props[i].find(':');
@@ -69,7 +70,7 @@ void PropertyReader::onUpdate(const CuData &data)
 {
     pr_thread();
     if(data["err"].toBool())
-        printf("\n\e[1;31m** \e[0m error fetching properties: \e[1;31m%s\e[0m\n", data["msg"].toString().c_str());
+        printf("\n\033[1;31m** \033[0m error fetching properties: \033[1;31m%s\033[0m\n", data["msg"].toString().c_str());
     else
         printf("\n\e[1;32m** %45s     VALUES\e[0m\n", "PROPERTIES");
     std::vector<std::string> plist = data["list"].toStringVector();

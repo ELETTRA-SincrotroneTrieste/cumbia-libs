@@ -31,7 +31,7 @@ public:
      * instance of a new CuThreadsEventBridge. See also CuThreadsEventBridge::CuThreadsEventBridge
      * to understand why CuServiceProvider is needed as input argument to the method.
      */
-    virtual CuThreadsEventBridge_I *createEventBridge(const CuServiceProvider *sp = NULL) const = 0;
+    virtual CuThreadsEventBridge_I *createEventBridge(const CuServiceProvider *sp) const = 0;
 };
 
 #endif // CUTHREADSEVENTBRIDGEFACTORY_I_H

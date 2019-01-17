@@ -104,8 +104,14 @@ Window {
         x: 11
         y: 18
         width: 614
-        height: 551
+        height: 273
         sources: "$1/double_scalar;$1/long_scalar"
+
+        CumbiaCircularGauge {
+            id: circularGauge
+            x: 0
+            y: 298
+        }
     }
 
     Text {
@@ -162,6 +168,14 @@ Window {
                 break
             }
         }
+    }
+
+    CumbiaDial {
+        id: dial
+        x: 320
+        y: 306
+        width: 159
+        height: 151
     }
 
 }

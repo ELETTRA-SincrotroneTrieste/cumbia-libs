@@ -61,7 +61,7 @@ CuThreadInterface *CuThreadService::getThread(const CuData& token,
         if((*it)->isEquivalent(token))
             return (*it);
     }
-    thread = thread_factory_impl.createThread(token, eventsBridgeFactory.createEventBridge(), service_provider);
+    thread = thread_factory_impl.createThread(token, eventsBridgeFactory.createEventBridge(service_provider), service_provider);
     std::lock_guard<std::mutex> lock(m_mutex);
     mThreads.push_back(thread);
     return thread;

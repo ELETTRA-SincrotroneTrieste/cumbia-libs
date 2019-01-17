@@ -457,7 +457,6 @@ void CuTReader::m_unregisterFromPoller()
 
 void CuTReader::m_unregisterEventActivity()
 {
-    printf("\e[1;31mcalled m_unregisterActivity\e[0m\n");
     d->cumbia_t->unregisterActivity(d->event_activity);
     d->event_activity = NULL; // not safe to dereference henceforth
     // but leave the activity in the list of activities!

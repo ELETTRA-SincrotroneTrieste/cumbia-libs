@@ -38,11 +38,24 @@
 ## This will set INSTALL_ROOT variable in Qt qmake projects and -Dprefix=$prefix in meson projects
 ##
 
-prefix=/usr/local
+prefix=/usr/local/cumbia-libs
 
-## =======================================================================================================
 #
 #
+## This is passed to meson configure -Dlibdir=
+## lib or lib64 (meson's default)
+libdir=lib
+
+#
+#  ============ meson buildtype =========================================================================
+#
+## This is passed to meson configure -Dbuildtype=
+## Possible choices are: "plain", "debug", "debugoptimized", "release", "minsize", "custom".
+#
+build_type=release
+#
+#
+#  =======================================================================================================
 #
 #
 

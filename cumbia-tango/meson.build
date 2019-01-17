@@ -73,7 +73,7 @@ includedirs = include_directories('lib')
 cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1'
 # cpp_arguments = []
 
-deps = [ dependency('cumbia'), dependency('tango') ]
+deps = [ dependency('cumbia'), dependency('tango', method: 'pkg-config') ]
 
 cumbiatangolib = shared_library('cumbia-tango', sources,
         soversion : '0',

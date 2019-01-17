@@ -40,7 +40,9 @@ cd $DIR/..
 
 topdir=$PWD
 
-PKG_CONFIG_PATH=$topdir/cumbia/builddir/meson-private:$topdir/cumbia-tango/builddir/meson-private:$topdir/cumbia-qtcontrols/builddir/meson-private:$topdir/cumbia-tango-controls/builddir/meson-private:$topdir/cumbia-epics/builddir/meson-private:$PKG_CONFIG_PATH
+tmp_installdir=$PWD/tmp-install-dir
+
+PKG_CONFIG_PATH=$tmp_installdir/lib/pkgconfig:$PKG_CONFIG_PATH
 export PKG_CONFIG_PATH
 
 echo "PKG_CONFIG_PATH is $PKG_CONFIG_PATH"
@@ -437,8 +439,7 @@ for x in "${meson_p[@]}" ; do
 		meson builddir
 	fi
 
-	cd builddir
-	meson configure -Dprefix=$prefix
+        cd builddir
 
 	#
 	## clean ###
@@ -454,11 +455,15 @@ for x in "${meson_p[@]}" ; do
 	fi
 
 	#
-	## build ###
+        ## build
 	#
 	if [ $build -eq 1 ]; then
 		echo -e "\e[1;32m\n*\n* BUILD project ${x}...\n*\e[0m"
-		ninja 
+
+                ## when building need to install in tmp_installdir
+                ## pkgconfig files will be generated accordingly and will be found under tmp_installdir/lib/pkgconfig
+                ## So, build and install in tmp_installdir
+                meson configure -Dprefix=$tmp_installdir -Dlibdir=$libdir -Dbuildtype=$build_type && ninja install
 		if [ $? -ne 0 ]; then
 			exit 1
 		fi
@@ -502,6 +507,8 @@ for x in "${meson_p[@]}" ; do
 	if [ $make_install -eq 1 ]; then
 		echo -e "\e[0;32m\n*\n* INSTALL project ${x}...\n*\e[0m"
 		if [ -w $prefix ]; then
+                        ## now use definitive install prefix
+                        meson configure -Dprefix=$prefix
 			ninja install
 		else
 			if [ ! -z $sudocmd ]; then
@@ -513,8 +520,6 @@ for x in "${meson_p[@]}" ; do
 
 	## Back to topdir!
 	cd $topdir
-
-
 done
 
 
@@ -526,7 +531,7 @@ for x in "${qmake_p[@]}"; do
     #	
 	if [ $clean -eq 1 ]; then
 		echo -e "\e[1;33m\n*\n* CLEAN project ${x}...\n*\e[0m"
-		qmake "INSTALL_ROOT=$prefix" && make distclean
+                qmake "INSTALL_ROOT=$tmp_installdir" && make distclean
 
 		# clean failed?
 		if [ $? -ne 0 ]; then
@@ -539,7 +544,10 @@ for x in "${qmake_p[@]}"; do
 	#
 	if [ $build -eq 1 ]; then
 		echo -e "\e[1;32m\n*\n* BUILD project ${x}...\n*\e[0m"
-		qmake "INSTALL_ROOT=$prefix" && make -j9
+                ##
+                ## build and install under tmp_installdir
+                ##
+                qmake "INSTALL_ROOT=$tmp_installdir" && make -j9 && make install
 		if [ $? -ne 0 ]; then
 			exit 1
 		fi
@@ -554,7 +562,7 @@ for x in "${qmake_p[@]}"; do
 		if [ -d doc ]; then
 			rm -rf doc
 		fi
-		qmake "INSTALL_ROOT=$prefix" && make doc
+                qmake "INSTALL_ROOT=$tmp_installdir" && make doc
 		if [ $? -ne 0 ]; then
 			echo -e "\e[1;36m\n*\n* BUILD DOCS project ${x} has no \"doc\" target...\n*\e[0m\n"
 		fi
@@ -585,6 +593,10 @@ for x in "${qmake_p[@]}"; do
 		if [ ! -z $sudocmd ]; then
 			echo -e  "\e[1;32msudo\e[0m authentication required:"
 		fi
+                #
+                ## regenerate Makefile with definitive install prefix
+                #
+                qmake "INSTALL_ROOT=$prefix"
 		$sudocmd make install
 	fi
 	cd $topdir
@@ -614,7 +626,7 @@ for x in "${qmake_subdir_p[@]}"; do
 			#	
 			if [ $clean -eq 1 ]; then
 				echo -e "\e[1;33m\n*\n* CLEAN project ${sd}...\n*\e[0m"
-				qmake "INSTALL_ROOT=$prefix" && make distclean
+                                qmake "INSTALL_ROOT=$tmp_installdir" && make distclean
 
 				# clean failed?
 				if [ $? -ne 0 ]; then
@@ -627,7 +639,7 @@ for x in "${qmake_subdir_p[@]}"; do
 			#
 			if [ $build -eq 1 ]; then
 				echo -e "\e[1;32m\n*\n* BUILD project ${sd}...\n*\e[0m"
-				qmake "INSTALL_ROOT=$prefix" && make -j9
+                                qmake "INSTALL_ROOT=$tmp_installdir" && make -j9 && make install
 				if [ $? -ne 0 ]; then
 					exit 1
 				fi
@@ -643,7 +655,7 @@ for x in "${qmake_subdir_p[@]}"; do
 				fi
 			
 
-				qmake "INSTALL_ROOT=$prefix" && make doc
+                                qmake "INSTALL_ROOT=$tmp_installdir" && make doc
 				if [ $? -ne 0 ]; then
 					echo -e "\e[1;36m\n*\n* BUILD DOCS project ${sd} has no \"doc\" target...\n*\e[0m\n"
 				else
@@ -677,7 +689,8 @@ for x in "${qmake_subdir_p[@]}"; do
 				if [ ! -z $sudocmd ]; then
 					echo -e  "\e[1;32msudo\e[0m authentication required:"
 				fi
-				qmake "INSTALL_ROOT=$prefix" && $sudocmd make install
+
+                                qmake "INSTALL_ROOT=$prefix" && $sudocmd make install
 				if [ $? -ne 0 ]; then
 					exit 1
 				fi

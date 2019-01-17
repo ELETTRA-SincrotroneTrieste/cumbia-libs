@@ -60,10 +60,15 @@ includedirs = include_directories('lib')
 
 cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1'
 
-deps = [dependency('epics-base-linux-x86_64'), dependency('cumbia')]
+deps = [dependency('epics-base'), dependency('cumbia')]
 
 ## Y are they missing in pkgconfig file?
-linker_args = [ '-lca',  '-ldbCore', '-lCom' ]
+## PKG_CONFIG does not set -L either!
+
+epics_base = '/home/giacomo/devel/base-7.0.2'
+epics_libdir = epics_base + '/lib/linux-x86_64'
+
+linker_args = [  '-lca',  '-ldbCore', '-lCom', '-L' + epics_libdir  ]
 
 cumbiaepicslib = shared_library('cumbia-epics', sources,
         soversion : '0',
@@ -71,7 +76,7 @@ cumbiaepicslib = shared_library('cumbia-epics', sources,
         include_directories : includedirs,
         cpp_args : cpp_arguments,
         dependencies : deps,
-#        link_args : linker_args,
+        link_args : linker_args,
         install : true)
 
 ### ====================================== pkg config   ============================
