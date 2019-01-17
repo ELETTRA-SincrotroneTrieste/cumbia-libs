@@ -88,7 +88,7 @@ echo -e "\n \e[1;33minfo\e[0m: reading configuration from \"$DIR/config.sh\""
 . "$DIR/projects.sh"
 . "$DIR/config.sh"
 
-echo -e " \e[1;33minfo\e[0m: installation prefix is \"$prefix\""
+echo -e " \e[1;33minfo\e[0m: installation prefix is \"$install_prefix\""
 
 if [[ $@ == **pull** ]]
 then
@@ -265,7 +265,7 @@ if [[ $srcupdate -eq 0 ]]; then
 
 	if [ $make_install -eq 1 ]; then 
 		echo -e " -"
-		echo -e " \e[1;32minstall\e[0m: cumbia will be installed in \"$prefix\""	
+                echo -e " \e[1;32minstall\e[0m: cumbia will be installed in \"$install_prefix\""
 	fi
 fi ## END PRINT OPERATIONS MENU
 
@@ -404,21 +404,21 @@ echo "srcdir=$topdir" >> $srcupdate_conf_f
 ## end save configuration in $HOME/.config/cumbia/srcupdate.conf
 ##
 
-if [ $make_install -eq 1 ] && [ ! -r $prefix ]; then
-	echo -e "\n The installation directory \"$prefix\" does not exist. "
+if [ $make_install -eq 1 ] && [ ! -r $install_prefix ]; then
+        echo -e "\n The installation directory \"$install_prefix\" does not exist. "
 	echo -n  -e " Do you want to create it (the operation may require administrative privileges - sudo) [y|n]?  [y] "
 	read  -s -n 1 createdir
 	if [ "$createdir" != "y" ]  && [ "$reply" != "createdir" ] && [ "$createdir" != "" ]; then
 		 	exit 1
 	fi
-	mkdir -p $prefix
+        mkdir -p $install_prefix
 	if [ "$?" -ne 0 ]; then
 		if  [[ ! -z  $sudocmd  ]]; then
-			echo -e " The \e[1;32msudo\e[0m password is required to create the directory \"$prefix\""
+                        echo -e " The \e[1;32msudo\e[0m password is required to create the directory \"$install_prefix\""
 		fi
-		$sudocmd mkdir -p $prefix
+                $sudocmd mkdir -p $install_prefix
 		if [ "$?" -ne 0 ]; then
-			echo -e " \e[1;31merror\e[0m: failed to create installation directory \"$prefix\""
+                        echo -e " \e[1;31merror\e[0m: failed to create installation directory \"$install_prefix\""
 			exit 1
 		fi
 	fi
@@ -471,8 +471,9 @@ for x in "${meson_p[@]}" ; do
                 ## pkgconfig files will be generated accordingly and will be found under tmp_installdir/lib/pkgconfig
                 ## So, build and install in tmp_installdir
 
-                meson configure -Dprefix=$tmp_installdir -Dlibdir=$libdir -Dbuildtype=$build_type && ninja
-                echo -e "INSTALLING Into Temporary build directory: \"$tmp_installdir\""
+                echo -e "\e[1;32mcalling meson configure  -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja\e[0m\n"
+                meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
+                meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
                 ninja install
 		if [ $? -ne 0 ]; then
 			exit 1
@@ -515,10 +516,10 @@ for x in "${meson_p[@]}" ; do
 
 # install?
 	if [ $make_install -eq 1 ]; then
+                ## now use definitive install prefix
+                meson configure -Dprefix=$install_prefix
 		echo -e "\e[0;32m\n*\n* INSTALL project ${x}...\n*\e[0m"
-		if [ -w $prefix ]; then
-                        ## now use definitive install prefix
-                        meson configure -Dprefix=$prefix
+                if [ -w $install_prefix ]; then
 			ninja install
 		else
 			if [ ! -z $sudocmd ]; then
@@ -600,14 +601,19 @@ for x in "${qmake_p[@]}"; do
 # install?
 	if [ $make_install -eq 1 ]; then
 		echo -e "\e[0;32m\n*\n* INSTALL project ${x}...\n*\e[0m"
-		if [ ! -z $sudocmd ]; then
-			echo -e  "\e[1;32msudo\e[0m authentication required:"
-		fi
                 #
                 ## regenerate Makefile with definitive install prefix
                 #
-                qmake "INSTALL_ROOT=$prefix"
-		$sudocmd make install
+                qmake "INSTALL_ROOT=$install_prefix"
+
+                if [ -w $install_prefix ]; then
+                    make install
+                else
+                    if [ ! -z $sudocmd ]; then
+                        echo  -e "\e[1;32msudo\e[0m password required:"
+                    fi
+                    $sudocmd make install
+                fi
 	fi
 	cd $topdir
 
@@ -695,15 +701,20 @@ for x in "${qmake_subdir_p[@]}"; do
 
 			# install?
 			if [ $make_install -eq 1 ]; then
-				echo -e "\e[0;32m\n*\n* INSTALL project ${sd}...\n*\e[0m"
-				if [ ! -z $sudocmd ]; then
-					echo -e  "\e[1;32msudo\e[0m authentication required:"
-				fi
+                                echo -e "\e[0;32m\n*\n* INSTALL project ${sd}...\n*\e[0m"
+                                qmake "INSTALL_ROOT=$install_prefix"
 
-                                qmake "INSTALL_ROOT=$prefix" && $sudocmd make install
 				if [ $? -ne 0 ]; then
 					exit 1
-				fi
+                                fi
+                                if [ -w $install_prefix ]; then
+                                    make install
+                                else
+                                    if [ ! -z $sudocmd ]; then
+                                        echo  -e "\e[1;32msudo\e[0m password required:"
+                                    fi
+                                    $sudocmd make install
+                                fi
 			fi
 		
 		fi ## .pro file exists
@@ -717,16 +728,16 @@ done
 
 if [ $make_install -eq 1 ]; then
 
-	libprefix=$prefix/lib	
+        libprefix=$install_prefix/lib
 
 	if [[ -z `$sudocmd ldconfig -v 2>/dev/null | grep ':$' |sed -e 's/://' | grep "^$libprefix$"` ]]; then
 		echo -e "\e[0;33m\n*\n* INSTALL \e[1;33mWARNING \e[0mit is possible that \e[0;4m$libprefix\e[0m is not among the ld.so.conf paths: please check.\e[0m"
 
-		# remove trailing "/" from $prefix, if present
-		prefix_cl=${prefix%/}
+                # remove trailing "/" from $install_prefix, if present
+                prefix_cl=${install_prefix%/}
 		if [[ "$prefix_cl" == "/usr/local" ]] || [[ "$prefix_cl" == "/usr" ]] ; then
-			echo -e "\e[0;33m*\n* INSTALL \e[1;33mWARNING \e[0m check if under $prefix (your prefix) there are symbolic links between *lib* and *lib64*, e.g."
-			echo -e "\e[0;33m*\e[0m                  $prefix/lib --> $prefix/lib64"
+                        echo -e "\e[0;33m*\n* INSTALL \e[1;33mWARNING \e[0m check if under $install_prefix (your prefix) there are symbolic links between *lib* and *lib64*, e.g."
+                        echo -e "\e[0;33m*\e[0m                  $install_prefix/lib --> $install_prefix/lib64"
 		fi           
 		echo -e "\e[0;33m*\n* INSTALL \e[1;33mWARNING \e[0mDo you want to add $libprefix to ld.so.conf paths by adding a file \e[0m"
 		echo -e "\e[0;33m                  \e[0;4mcumbia.conf\e[0m under "/etc/ld.so.conf.d/"  [y|n] ? [n] \e[0m"
