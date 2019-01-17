@@ -41,6 +41,7 @@ cd $DIR/..
 topdir=$PWD
 
 tmp_installdir=$PWD/tmp-install-dir
+echo -e "Temporary build directory: \"$tmp_installdir\""
 
 PKG_CONFIG_PATH=$tmp_installdir/lib/pkgconfig:$PKG_CONFIG_PATH
 export PKG_CONFIG_PATH
@@ -463,7 +464,10 @@ for x in "${meson_p[@]}" ; do
                 ## when building need to install in tmp_installdir
                 ## pkgconfig files will be generated accordingly and will be found under tmp_installdir/lib/pkgconfig
                 ## So, build and install in tmp_installdir
-                meson configure -Dprefix=$tmp_installdir -Dlibdir=$libdir -Dbuildtype=$build_type && ninja install
+
+                meson configure -Dprefix=$tmp_installdir -Dlibdir=$libdir -Dbuildtype=$build_type
+                echo -e "INSTALLING Into Temporary build directory: \"$tmp_installdir\""
+                ninja install
 		if [ $? -ne 0 ]; then
 			exit 1
 		fi
