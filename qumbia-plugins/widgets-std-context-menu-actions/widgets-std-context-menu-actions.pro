@@ -8,6 +8,8 @@ include(../../qumbia-tango-controls/qumbia-tango-controls.pri)
 
 QT       += core gui
 
+CONFIG += silent
+
 TARGET = widgets-std-context-menu-actions
 TEMPLATE = lib
 CONFIG += plugin

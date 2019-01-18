@@ -24,6 +24,9 @@ TARGET = $${cumbia_qtcontrols_qml_LIB}
 TEMPLATE = lib
 CONFIG += qt plugin
 
+#silent compiler
+CONFIG += silent
+
 TARGET = $$qtLibraryTarget($$TARGET)
 
 uri = eu.elettra.cumbiaqmlcontrols

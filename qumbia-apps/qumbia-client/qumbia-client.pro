@@ -24,6 +24,9 @@ QT       += core gui
 
 CONFIG += debug
 
+# silent compilation
+CONFIG += silent
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

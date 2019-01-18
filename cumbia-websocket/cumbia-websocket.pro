@@ -12,6 +12,8 @@ QT += websockets
 
 CONFIG += debug
 
+CONFIG += silent
+
 PKGCONFIG -= cumbia-websocket$${QTVER_SUFFIX}
 
 TARGET = cumbia-websocket$${QTVER_SUFFIX}

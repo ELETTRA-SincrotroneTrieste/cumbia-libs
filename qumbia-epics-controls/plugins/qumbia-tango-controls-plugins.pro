@@ -49,6 +49,9 @@ CONFIG	+= qt thread warn_on
 # Debug or release?
 CONFIG += debug
 
+# silent?
+CONFIG += silent
+
 unix:LIBS += -L.. -l$${QUMBIA_TANGO_CONTROLS_LIB}
 
 # the same goes for INCLUDEPATH

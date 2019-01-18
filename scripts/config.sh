@@ -52,6 +52,9 @@ lib_dir=lib
 ## This is passed to meson configure -Dbuildtype=
 ## Possible choices are: "plain", "debug", "debugoptimized", "release", "minsize", "custom".
 #
+## ** Note: for Qt qmake projects, it is necessary to edit each .pro file and set CONFIG += debug|release
+#
+#
 build_type=release
 #
 #

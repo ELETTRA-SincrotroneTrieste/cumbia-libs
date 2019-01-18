@@ -10,6 +10,8 @@ QT       -= gui
 
 CONFIG += debug
 
+CONFIG += silent
+
 TARGET = cumbia-random$${QTVER_SUFFIX}
 TEMPLATE = lib
 

@@ -24,6 +24,8 @@ lessThan(QT_MAJOR_VERSION, 5) {
 
 CONFIG += debug
 
+CONFIG += silent
+
 INCLUDEDIR = $${INSTALL_ROOT}/include
 
 

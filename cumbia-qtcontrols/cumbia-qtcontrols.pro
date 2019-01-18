@@ -8,6 +8,8 @@ include(cumbia-qtcontrols.pri)
 
 CONFIG += release
 
+CONFIG += silent
+
 # remove ourselves (defined in .pri)
 PKGCONFIG -= cumbia-qtcontrols$${QTVER_SUFFIX}
 

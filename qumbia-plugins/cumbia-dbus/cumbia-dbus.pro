@@ -7,6 +7,8 @@ include(../../cumbia-qtcontrols/cumbia-qtcontrols.pri)
 TEMPLATE = lib
 CONFIG += plugin
 
+CONFIG += silent
+
 QT += dbus xml
 
 INCLUDEPATH = src $${INCLUDEPATH}

@@ -29,6 +29,8 @@ TEMPLATE = lib
 TARGET = designer/cumbia-qtcontrols-pool-plugin
 CONFIG	+= qt thread warn_on debug
 
+CONFIG += silent
+
 lessThan(QT_MAJOR_VERSION, 5) {
 	CONFIG += designer
 }

@@ -7,6 +7,9 @@ QT       += widgets
 # Debug or release?
 CONFIG += debug
 
+# silent compiler
+CONFIG += silent
+
 PKGCONFIG -= qumbia-epics-controls$${QTVER_SUFFIX}
 
 # defined in qumbia-epics-controls.pri

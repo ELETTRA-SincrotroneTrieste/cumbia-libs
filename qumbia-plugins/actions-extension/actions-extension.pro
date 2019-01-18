@@ -13,6 +13,8 @@ TARGET = actions-extension-plugin
 TEMPLATE = lib
 CONFIG += plugin debug
 
+CONFIG += silent
+
 SOURCES += \
     actionextensions.cpp \
     gettdbpropertyextension.cpp \
