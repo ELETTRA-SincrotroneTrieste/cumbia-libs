@@ -478,8 +478,8 @@ for x in "${meson_p[@]}" ; do
                 ## pkgconfig files will be generated accordingly and will be found under tmp_installdir/lib/pkgconfig
                 ## So, build and install in tmp_installdir
 
-               meson configure -Dbuildtype=$build_type && ninja
-               meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir && ninja install
+               meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
+               meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
             #    ninja install
 		if [ $? -ne 0 ]; then
 			exit 1
