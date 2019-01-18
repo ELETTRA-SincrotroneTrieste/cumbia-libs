@@ -39,6 +39,10 @@ Qt version *5.9.5* and *qtcreator* version *4.5.2* will be installed.
 - libqt5x11extras5-dev provides the QT module *x11extras*, needed by the qumbia-plugins/qt-designer
 - qttools5-dev provides the QT module *designer*, needed by the qumbia-plugins/qt-designer
 
+In order to build the qml module, the following installation is necessary
+
+> sudo apt-get install qml-module-qtcharts qml-module-qtquick-controls2 qml-module-qtquick-dialogs qml-module-qtquick-extras qml-module-qtquick-scene2d qml-module-qtquick-scene3d qml-module-qtquick-templates2  qtdeclarative5-dev libqt5charts5-dev qtcharts5-examples qtcharts5-doc-html 
+
 ### Qwt libraries: widgets for technical applications
 
 The Qwt libraries are used by *cumbia-qtcontrols* to provide *plot* widgets. Version 6 for *qt5* must be installed:
