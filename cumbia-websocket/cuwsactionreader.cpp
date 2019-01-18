@@ -1,7 +1,7 @@
 #include "cuwsactionreader.h"
 #include "cumbiawebsocket.h"
 #include "cuwsactionfactoryservice.h"
-#include "protocol/protocolhelper_i.h"
+#include "protocolhelper_i.h"
 #include "protocolhelpers.h"
 
 #include <cudatalistener.h>
