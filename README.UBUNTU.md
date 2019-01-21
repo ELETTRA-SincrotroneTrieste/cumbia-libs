@@ -2,9 +2,9 @@
 
 In this document we will describe the necessary steps to set up *cumbia* in a freshly installed *ubuntu 18.04* desktop edition.
 
-We downloaded and installed an *ubuntu desktop 18.04* from the iso image found at:
+We downloaded and installed an *ubuntu desktop 18.10* from the iso image found at:
 
-https://www.ubuntu.com/download/desktop/contribute?version=18.04&architecture=amd64
+http://releases.ubuntu.com/18.10/ubuntu-18.10-desktop-amd64.iso
 
 #### Note
 The *Normal installation* default option has been chosen during the installation procedure

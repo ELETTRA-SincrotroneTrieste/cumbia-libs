@@ -180,13 +180,20 @@ unix: android-g++ {
 unix: !android-g++ {
 
     isEmpty(QWT_PKGCONFIG) {
+
+        lessThan(QT_MAJOR_VERSION, 5) {
+            QWT_QTVER_SUFFIX =
+        } else {
+            QWT_QTVER_SUFFIX = -qt$${QT_MAJOR_VERSION}
+        }
+
         message("no Qwt pkg-config file found")
         message("adding $${QWT_INCLUDES} and $${QWT_INCLUDES_USR} to include path")
-        message("adding  -L$${QWT_HOME_USR}/lib -l$${QWT_LIB}$${QTVER_SUFFIX} to libs")
+        message("adding  -L$${QWT_HOME_USR}/lib -l$${QWT_LIB}$${QWT_QTVER_SUFFIX} to libs")
         message("this should work for ubuntu installations")
 
         unix:INCLUDEPATH += $${QWT_INCLUDES} $${QWT_INCLUDES_USR} /usr/local/cumbia-libs/include/cumbia /usr/local/qwt-6.1.3/include
-        unix:LIBS += -L$${QWT_HOME_USR}/lib -L/usr/local/cumbia-libs/lib -L/usr/local/qwt-6.1.3/lib -lcumbia
+        unix:LIBS += -L$${QWT_HOME_USR}/lib -L/usr/local/cumbia-libs/lib -L/usr/local/qwt-6.1.3/lib -lcumbia -l$${QWT_LIB}$${QWT_QTVER_SUFFIX}
     }
 
 }
