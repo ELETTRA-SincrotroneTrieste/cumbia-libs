@@ -40,11 +40,10 @@ cd $DIR/..
 
 topdir=$PWD
 
+## temporary local installation directory (to make pkg-config work)
+## rm -rf $tmp_installdir takes place after clean
+##
 tmp_installdir=$PWD/tmp-install-dir
-if [ -d $tmp_installdir ]; then
-        echo -e "Removing temporary build directory: \"$tmp_installdir\""
-        rm -rf $tmp_installdir
-fi
 
 save_pkg_config_path=$PKG_CONFIG_PATH
 PKG_CONFIG_PATH=$tmp_installdir/lib/pkgconfig:$PKG_CONFIG_PATH
@@ -128,14 +127,14 @@ fi
 
 if [[ $@ == **cleandocs** ]]
 then
-	meson=1
+        meson=1
     cleandocs=1
 	operations+=(cleandocs)
 fi
 
 if [[ $@ == **clean** ]]
 then
-	meson=1
+        meson=1
     clean=1
 	operations+=(clean)
 fi
@@ -454,10 +453,9 @@ if [ $clean -eq 1 ]; then
             echo -e "\e[0;33m\n*\n* CLEAN project ${x}: removing \"builddir\"...\n*\e[0m"
             rm -rf builddir
         fi
-        # clean failed?
-        if [ $? -ne 0 ]; then
-                exit 1
-        fi
+        ## Back to topdir!
+        cd $topdir
+    done
 
 # b. qmake
     for x in "${qmake_p[@]}"; do
@@ -465,8 +463,12 @@ if [ $clean -eq 1 ]; then
         echo -e "\e[1;33m\n*\n* CLEAN project ${x}...\n*\e[0m"
         qmake "INSTALL_ROOT=$tmp_installdir" && make distclean
 
+        ## Back to topdir!
+        cd $topdir
+    done
+
 # c. qmake sub projects
-for x in "${qmake_subdir_p[@]}"; do
+    for x in "${qmake_subdir_p[@]}"; do
         cd $DIR/../${x}
         for sd in `ls -1 -d */`; do
                 cd ${sd}
@@ -482,8 +484,25 @@ for x in "${qmake_subdir_p[@]}"; do
                         qmake "INSTALL_ROOT=$tmp_installdir" && make distclean
 
                 fi # -f $pro_file
+                cd ..
+        done
+        cd ..
+    done
 
 fi  # clean -eq 1
+
+#
+# remove tmp_installdir to clean previous build local installation
+#
+if [ -d $tmp_installdir ]; then
+        echo -e "Removing temporary build directory: \"$tmp_installdir\""
+        rm -rf $tmp_installdir
+fi
+
+if [[ $build -eq 0 ]]; then
+    echo -e "\e[1;33m\n*\n* build \e[0m is disabled \n\e[1;33m*\e[0m"
+    exit 0
+fi
 
 ### END CLEAN SECTION ################
 
@@ -499,11 +518,6 @@ for x in "${meson_p[@]}" ; do
 
         cd builddir
 
-	#
-	## clean ###
-    #	
-
-	#
         ## build
 	#
 	if [ $build -eq 1 ]; then
