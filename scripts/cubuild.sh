@@ -802,6 +802,39 @@ if [ $make_install -eq 1 ]; then
 		echo -e "\e[0;32m\n*\n* INSTALL \e[1;32m$libprefix\e[0m has been found in ldconfig paths."
 	fi
 
+        binpath=/usr/local/cumbia-libs/bin
+        binpath=$install_prefix/bin
+        cumbia_bin_sh_path=/etc/profile.d/cumbia-bin-path.sh
+        if [[ -z `echo $PATH |grep $binpath` ]]; then
+               echo -e "\e[0;33m\n*\n* INSTALL \e[1;33mWARNING \e[0mit looks like \"$binpath\" is not in \e[0;33mPATH\e[0m:"
+               echo -e "\e[0;33m*\e[0m                  \e[0;34m[\e[0m$PATH\e[0;34m]\e[0m\n"
+               echo -e "\e[0;33m*\n* INSTALL \e[1;33mWARNING \e[0mDo you want to add \"\e[0;32m$binpath\e[0m\" to the system"
+               echo -e "\e[0;33m*\e[0;33m*\e[0m                  PATH through a new file named \"cumbia-bin-path.sh\" under "
+               echo -e "\e[0;33m*\e[0;33m*\e[0m                  \e[0;34m/etc/profile.d\e[0m [y|n] ?"
+
+               read  -s -n 1 addbinpath
+               if [ "$addbinpath" == "y" ]; then
+                      if [ ! -z $sudocmd ]; then
+                          echo -e  "\e[1;32msudo\e[0m authentication required:"
+                       fi
+
+                    if [ ! -d /etc/profile.d ]; then
+                        $sudocmd mkdir -p /etc/profile.d
+                    fi
+                    # remove if file exists
+                    if [ -f $cumbia_bin_sh_path ]; then
+                        $sudocmd rm -f $cumbia_bin_sh_path
+                    fi
+                    # (re)create file
+                    echo "export PATH=$PATH:$binpath" | $sudocmd tee $cumbia_bin_sh_path
+                    $sudocmd chmod +x $cumbia_bin_sh_path
+               else
+                    echo -e "\e[0;33m*\n* INSTALL consider adding \"$binpath\" to the \"PATH\" variable in your profile"
+               fi
+        else
+             echo -e "\e[0;32m\n*\n* INSTALL \e[1;32m$binpath\e[0m has been found in PATH."
+        fi # binpath in $PATH
+
 	echo -e "\e[0;32m*\n* INSTALL cumbia installation is now complete\e[0m"
 
 	
