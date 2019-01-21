@@ -495,7 +495,7 @@ fi  # clean -eq 1
 # remove tmp_installdir to clean previous build local installation
 #
 if [ -d $tmp_installdir ]; then
-        echo -e "Removing temporary build directory: \"$tmp_installdir\""
+        echo -e "\nRemoving temporary build directory: \"$tmp_installdir\""
         rm -rf $tmp_installdir
 fi
 
@@ -600,10 +600,21 @@ for x in "${qmake_p[@]}"; do
                 ##
                 ## build and install under tmp_installdir
                 ##
-                qmake "INSTALL_ROOT=$tmp_installdir" && make -j9 && make install
+                qmake "INSTALL_ROOT=$tmp_installdir" && make -j9
 		if [ $? -ne 0 ]; then
 			exit 1
 		fi
+
+                # no pkg config file to install for cumbia-qtcontrols/qml
+                # moreover, it would install resources under /usr/lib64/qt5/qml/
+                # which is not writable, and this stage is "build" only
+                if [ "${qmake_p[@]}" != "cumbia-qtcontrols/qml" ]; then
+                    make install
+                    if [ $? -ne 0 ]; then
+                            exit 1
+                    fi
+                fi
+
 	fi
 
 
