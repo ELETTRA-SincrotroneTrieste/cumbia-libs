@@ -442,22 +442,53 @@ if [ $cleandocs -eq 1 ]; then
 	exit 0
 fi
 
+### CLEAN SECTION ###########
+
+if [ $clean -eq 1 ]; then
+
+# a. meson
+    for x in "${meson_p[@]}" ; do
+        cd $DIR/../${x}
+        echo -e "\e[1;33m\n*\n* CLEAN project ${x}...\n*\e[0m"
+        if [ -d builddir ]; then
+            echo -e "\e[0;33m\n*\n* CLEAN project ${x}: removing \"builddir\"...\n*\e[0m"
+            rm -rf builddir
+        fi
+        # clean failed?
+        if [ $? -ne 0 ]; then
+                exit 1
+        fi
+
+# b. qmake
+    for x in "${qmake_p[@]}"; do
+        cd $DIR/../${x}
+        echo -e "\e[1;33m\n*\n* CLEAN project ${x}...\n*\e[0m"
+        qmake "INSTALL_ROOT=$tmp_installdir" && make distclean
+
+# c. qmake sub projects
+for x in "${qmake_subdir_p[@]}"; do
+        cd $DIR/../${x}
+        for sd in `ls -1 -d */`; do
+                cd ${sd}
+                thisdir=${sd}
+                if [[ $thisdir == */ ]]; then
+                        pro_file="${thisdir::-1}.pro"
+                else
+                        pro_file="${thisdir}.pro"
+                fi
+                # a .pro file exists
+                if [ -f $pro_file ]; then
+                        echo -e "\e[1;33m\n*\n* CLEAN project ${sd}...\n*\e[0m"
+                        qmake "INSTALL_ROOT=$tmp_installdir" && make distclean
+
+                fi # -f $pro_file
+
+fi  # clean -eq 1
+
+### END CLEAN SECTION ################
 
 for x in "${meson_p[@]}" ; do
-	cd $DIR/../${x}
-
-        if [ $clean -eq 1 ]; then
-                echo -e "\e[1;33m\n*\n* CLEAN project ${x}...\n*\e[0m"
-                if [ -d builddir ]; then
-                    echo -e "\e[0;33m\n*\n* CLEAN project ${x}: removing \"builddir\"...\n*\e[0m"
-                    rm -rf builddir
-                fi
-
-                # clean failed?
-                if [ $? -ne 0 ]; then
-                        exit 1
-                fi
-        fi
+	cd $DIR/../${x}    
 
 	if [ $meson -eq 1 ]; then
                 if [ -d builddir ]; then
@@ -548,19 +579,6 @@ for x in "${qmake_p[@]}"; do
 	cd $DIR/../${x}
 
 	#
-	## clean ###
-    #	
-	if [ $clean -eq 1 ]; then
-		echo -e "\e[1;33m\n*\n* CLEAN project ${x}...\n*\e[0m"
-                qmake "INSTALL_ROOT=$tmp_installdir" && make distclean
-
-		# clean failed?
-		if [ $? -ne 0 ]; then
-			exit 1
-		fi
-	fi
-
-	#
 	## build ###
 	#
 	if [ $build -eq 1 ]; then
@@ -646,19 +664,6 @@ for x in "${qmake_subdir_p[@]}"; do
 		fi
 
 		if [ -f $pro_file ]; then
-
-			#
-			## clean ###
-			#	
-			if [ $clean -eq 1 ]; then
-				echo -e "\e[1;33m\n*\n* CLEAN project ${sd}...\n*\e[0m"
-                                qmake "INSTALL_ROOT=$tmp_installdir" && make distclean
-
-				# clean failed?
-				if [ $? -ne 0 ]; then
-					exit 1
-				fi
-			fi
 
 			#
 			## build ###
