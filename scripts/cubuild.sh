@@ -446,6 +446,19 @@ fi
 for x in "${meson_p[@]}" ; do
 	cd $DIR/../${x}
 
+        if [ $clean -eq 1 ]; then
+                echo -e "\e[1;33m\n*\n* CLEAN project ${x}...\n*\e[0m"
+                if [ -d builddir ]; then
+                    echo -e "\e[0;33m\n*\n* CLEAN project ${x}: removing \"builddir\"...\n*\e[0m"
+                    rm -rf builddir
+                fi
+
+                # clean failed?
+                if [ $? -ne 0 ]; then
+                        exit 1
+                fi
+        fi
+
 	if [ $meson -eq 1 ]; then
                 if [ -d builddir ]; then
                     rm -rf builddir
@@ -458,15 +471,6 @@ for x in "${meson_p[@]}" ; do
 	#
 	## clean ###
     #	
-	if [ $clean -eq 1 ]; then
-		echo -e "\e[1;33m\n*\n* CLEAN project ${x}...\n*\e[0m"
-		ninja clean
-
-		# clean failed?
-		if [ $? -ne 0 ]; then
-			exit 1
-		fi
-	fi
 
 	#
         ## build
