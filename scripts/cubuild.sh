@@ -608,7 +608,7 @@ for x in "${qmake_p[@]}"; do
                 # no pkg config file to install for cumbia-qtcontrols/qml
                 # moreover, it would install resources under /usr/lib64/qt5/qml/
                 # which is not writable, and this stage is "build" only
-                if [ "${qmake_p[@]}" != "cumbia-qtcontrols/qml" ]; then
+                if [ "$x" != "cumbia-qtcontrols/qml" ]; then
                     make install
                     if [ $? -ne 0 ]; then
                             exit 1
