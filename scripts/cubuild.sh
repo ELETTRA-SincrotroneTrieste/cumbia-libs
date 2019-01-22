@@ -320,7 +320,7 @@ if [[ $srcupdate -eq 1 ]]; then
 		taglist+=($tag)
 	done
 
-	taglist+=(origin/master)
+        taglist+=(master)
 	echo -e " $idx. ${taglist[$((idx-1))]}"
 	
 	echo -e -n "\ncurrent version: \e[1;32m"
