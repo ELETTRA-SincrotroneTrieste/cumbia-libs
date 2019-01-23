@@ -1,4 +1,7 @@
 <map id="QuTable" name="QuTable">
-<area shape="rect" id="node2" href="$classEFlag.html" title="A widget composed by a matrix of ELabel. " alt="" coords="14,80,70,107"/>
-<area shape="rect" id="node5" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management..." alt="" coords="232,80,321,107"/>
+<area shape="rect" id="node1" title="A widget to organise data in a table." alt="" coords="114,155,185,181"/>
+<area shape="rect" id="node2" href="$classEFlag.html" title="A widget composed by a matrix of ELabel." alt="" coords="13,80,69,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,5,77,32"/>
+<area shape="rect" id="node4" title=" " alt="" coords="94,80,205,107"/>
+<area shape="rect" id="node5" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="229,80,315,107"/>
 </map>

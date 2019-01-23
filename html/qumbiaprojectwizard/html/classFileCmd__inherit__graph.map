@@ -1,10 +1,11 @@
 <map id="FileCmd" name="FileCmd">
-<area shape="rect" id="node2" href="$classCppInstantiationExpand.html" title="CppInstantiationExpand" alt="" coords="167,5,329,32"/>
-<area shape="rect" id="node3" href="$classCumbiaCodeInjectCmd.html" title="CumbiaCodeInjectCmd" alt="" coords="169,56,327,83"/>
-<area shape="rect" id="node4" href="$classFindReplace.html" title="FindReplace" alt="" coords="201,107,295,133"/>
-<area shape="rect" id="node5" href="$classMainCppExpandCmd.html" title="MainCppExpandCmd" alt="" coords="175,157,321,184"/>
-<area shape="rect" id="node6" href="$classMainCppPrepareCmd.html" title="MainCppPrepareCmd" alt="" coords="175,208,321,235"/>
-<area shape="rect" id="node7" href="$classMainWidgetCppConstructProcessCmd.html" title="MainWidgetCppConstructProcessCmd" alt="" coords="124,259,372,285"/>
-<area shape="rect" id="node8" href="$classMainWidgetHProcessCmd.html" title="If mainwidget.h class declaration contains a Ui::MainwidgetName ui, check that it is a pointer type..." alt="" coords="159,309,337,336"/>
-<area shape="rect" id="node9" href="$classProConvertCmd.html" title="ProConvertCmd" alt="" coords="190,360,306,387"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,183,76,209"/>
+<area shape="rect" id="node2" href="$classCppInstantiationExpand.html" title=" " alt="" coords="166,5,326,32"/>
+<area shape="rect" id="node3" href="$classCumbiaCodeInjectCmd.html" title=" " alt="" coords="169,56,323,83"/>
+<area shape="rect" id="node4" href="$classFindReplace.html" title=" " alt="" coords="199,107,293,133"/>
+<area shape="rect" id="node5" href="$classMainCppExpandCmd.html" title=" " alt="" coords="174,157,318,184"/>
+<area shape="rect" id="node6" href="$classMainCppPrepareCmd.html" title=" " alt="" coords="173,208,319,235"/>
+<area shape="rect" id="node7" href="$classMainWidgetCppConstructProcessCmd.html" title=" " alt="" coords="124,259,368,285"/>
+<area shape="rect" id="node8" href="$classMainWidgetHProcessCmd.html" title="If mainwidget.h class declaration contains a Ui::MainwidgetName ui, check that it is a pointer type...." alt="" coords="159,309,333,336"/>
+<area shape="rect" id="node9" href="$classProConvertCmd.html" title=" " alt="" coords="189,360,303,387"/>
 </map>

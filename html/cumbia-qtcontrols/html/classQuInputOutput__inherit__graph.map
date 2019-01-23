@@ -1,4 +1,6 @@
 <map id="QuInputOutput" name="QuInputOutput">
-<area shape="rect" id="node2" href="$classEInputOutputWidget.html" title="base class to display values through an output widget and receive input values by means of an input w..." alt="" coords="5,80,145,107"/>
-<area shape="rect" id="node4" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management..." alt="" coords="169,80,259,107"/>
+<area shape="rect" id="node1" title="This element is a graphical interface to integrate a reader and a writer into one single object that ..." alt="" coords="89,155,196,181"/>
+<area shape="rect" id="node2" href="$classEInputOutputWidget.html" title="base class to display values through an output widget and receive input values by means of an input w..." alt="" coords="5,80,144,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="40,5,109,32"/>
+<area shape="rect" id="node4" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="169,80,255,107"/>
 </map>

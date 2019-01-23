@@ -1,6 +1,11 @@
 <map id="cutangoactionfactories.h" name="cutangoactionfactories.h">
-<area shape="rect" id="node2" href="$cutangoactionfactoryi_8h.html" title="cutangoactionfactoryi.h" alt="" coords="5,80,163,107"/>
-<area shape="rect" id="node4" href="$cutangoactioni_8h.html" title="cutangoactioni.h" alt="" coords="197,155,315,181"/>
-<area shape="rect" id="node9" href="$cutreader_8h.html" title="cutreader.h" alt="" coords="187,80,274,107"/>
-<area shape="rect" id="node5" href="$tsource_8h.html" title="tsource.h" alt="" coords="297,229,373,256"/>
+<area shape="rect" id="node1" title=" " alt="" coords="189,5,353,32"/>
+<area shape="rect" id="node2" href="$cutangoactionfactoryi_8h.html" title=" " alt="" coords="5,80,163,107"/>
+<area shape="rect" id="node4" href="$cutangoactioni_8h.html" title=" " alt="" coords="197,155,315,181"/>
+<area shape="rect" id="node7" title=" " alt="" coords="366,304,453,331"/>
+<area shape="rect" id="node9" href="$cutreader_8h.html" title=" " alt="" coords="187,80,274,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="82,304,137,331"/>
+<area shape="rect" id="node5" href="$tsource_8h.html" title=" " alt="" coords="295,229,371,256"/>
+<area shape="rect" id="node8" title=" " alt="" coords="147,229,271,256"/>
+<area shape="rect" id="node6" title=" " alt="" coords="303,304,342,331"/>
 </map>

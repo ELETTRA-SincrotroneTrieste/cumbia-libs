@@ -1,9 +1,10 @@
 <map id="cuepics&#45;world.h" name="cuepics&#45;world.h">
-<area shape="rect" id="node2" href="$cuepactionfactoryservice_8cpp.html" title="cuepactionfactoryservice.cpp" alt="" coords="5,80,197,107"/>
-<area shape="rect" id="node3" href="$cuepconfigactivity_8cpp.html" title="cuepconfigactivity.cpp" alt="" coords="221,80,373,107"/>
-<area shape="rect" id="node4" href="$cuepics-world_8cpp.html" title="cuepics&#45;world.cpp" alt="" coords="398,80,525,107"/>
-<area shape="rect" id="node5" href="$cumbiaepics_8cpp.html" title="cumbiaepics.cpp" alt="" coords="549,80,669,107"/>
-<area shape="rect" id="node6" href="$cumonitoractivity_8cpp.html" title="cumonitoractivity.cpp" alt="" coords="693,80,840,107"/>
-<area shape="rect" id="node7" href="$cuput_8cpp.html" title="cuput.cpp" alt="" coords="865,80,943,107"/>
-<area shape="rect" id="node8" href="$cuputactivity_8cpp.html" title="cuputactivity.cpp" alt="" coords="967,80,1089,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="552,5,664,32"/>
+<area shape="rect" id="node2" href="$cuepactionfactoryservice_8cpp.html" title=" " alt="" coords="5,80,197,107"/>
+<area shape="rect" id="node3" href="$cuepconfigactivity_8cpp.html" title=" " alt="" coords="222,80,373,107"/>
+<area shape="rect" id="node4" href="$cuepics-world_8cpp.html" title=" " alt="" coords="397,80,523,107"/>
+<area shape="rect" id="node5" href="$cumbiaepics_8cpp.html" title=" " alt="" coords="548,80,668,107"/>
+<area shape="rect" id="node6" href="$cumonitoractivity_8cpp.html" title=" " alt="" coords="693,80,838,107"/>
+<area shape="rect" id="node7" href="$cuput_8cpp.html" title=" " alt="" coords="862,80,941,107"/>
+<area shape="rect" id="node8" href="$cuputactivity_8cpp.html" title=" " alt="" coords="965,80,1085,107"/>
 </map>

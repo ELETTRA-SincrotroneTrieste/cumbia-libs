@@ -6,7 +6,7 @@ var searchData=
   ['containskey',['containsKey',['../classCuData.html#a89a88dac87b7b5c3a4de7aaf5e562409',1,'CuData']]],
   ['count',['count',['../classCuThreadService.html#a1d54941d0c3253f2342c4dd08183fb06',1,'CuThreadService']]],
   ['countactivitiesforthread',['countActivitiesForThread',['../classCuActivityManager.html#a8403096bb2db1b16c14c61a8ec883a16',1,'CuActivityManager']]],
-  ['createeventbridge',['createEventBridge',['../classCuThreadsEventBridgeFactory.html#a5129d37dcf8c2f39e3edee5e326132e6',1,'CuThreadsEventBridgeFactory::createEventBridge()'],['../classCuThreadsEventBridgeFactory__I.html#acd0deb6fccb35e7d46648538047f7274',1,'CuThreadsEventBridgeFactory_I::createEventBridge()']]],
+  ['createeventbridge',['createEventBridge',['../classCuThreadsEventBridgeFactory.html#a5129d37dcf8c2f39e3edee5e326132e6',1,'CuThreadsEventBridgeFactory::createEventBridge()'],['../classCuThreadsEventBridgeFactory__I.html#a264f12bdbfdf933e0e03fd2401316306',1,'CuThreadsEventBridgeFactory_I::createEventBridge()']]],
   ['createthread',['createThread',['../classCuThreadFactoryImpl.html#af7db2ee10efd408205da28a40f675595',1,'CuThreadFactoryImpl::createThread()'],['../classCuThreadFactoryImplI.html#a73f3168a4e8a899592a17f549f4bf5ed',1,'CuThreadFactoryImplI::createThread()']]],
   ['cuactivity',['CuActivity',['../classCuActivity.html#aa0c6b53cec358bb07981ec9276267e2f',1,'CuActivity::CuActivity(CuActivityManager *activityManager, const CuData &amp;token=CuData())'],['../classCuActivity.html#aa7466db7596098eaf1bf2b9542ff1f7f',1,'CuActivity::CuActivity(const CuData &amp;token=CuData())']]],
   ['cuactivityexitevent',['CuActivityExitEvent',['../classCuActivityExitEvent.html#af53181ed31382906917e14bbaebc5360',1,'CuActivityExitEvent']]],

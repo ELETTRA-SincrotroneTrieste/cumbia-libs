@@ -1,6 +1,12 @@
 <map id="codeextractors.cpp" name="codeextractors.cpp">
-<area shape="rect" id="node2" href="$codeextractors_8h.html" title="codeextractors.h" alt="" coords="159,80,278,107"/>
-<area shape="rect" id="node3" href="$cumbiacodeinjectcmd_8h.html" title="cumbiacodeinjectcmd.h" alt="" coords="139,155,298,181"/>
-<area shape="rect" id="node4" href="$fileprocessor__a_8h.html" title="fileprocessor_a.h" alt="" coords="158,229,279,256"/>
-<area shape="rect" id="node7" href="$definitions_8h.html" title="definitions.h" alt="" coords="173,304,265,331"/>
+<area shape="rect" id="node1" title=" " alt="" coords="212,5,345,32"/>
+<area shape="rect" id="node2" href="$codeextractors_8h.html" title=" " alt="" coords="159,80,278,107"/>
+<area shape="rect" id="node10" title=" " alt="" coords="302,80,375,107"/>
+<area shape="rect" id="node3" href="$cumbiacodeinjectcmd_8h.html" title=" " alt="" coords="139,155,298,181"/>
+<area shape="rect" id="node4" href="$fileprocessor__a_8h.html" title=" " alt="" coords="158,229,279,256"/>
+<area shape="rect" id="node5" title=" " alt="" coords="5,379,72,405"/>
+<area shape="rect" id="node6" title=" " alt="" coords="333,379,387,405"/>
+<area shape="rect" id="node7" href="$definitions_8h.html" title=" " alt="" coords="173,304,265,331"/>
+<area shape="rect" id="node8" title=" " alt="" coords="96,379,195,405"/>
+<area shape="rect" id="node9" title=" " alt="" coords="219,379,309,405"/>
 </map>

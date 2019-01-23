@@ -1,3 +1,4 @@
 <map id="QuPlotMarkerComponent" name="QuPlotMarkerComponent">
-<area shape="rect" id="node2" href="$classQuPlotComponent.html" title="Interface defining a plot component. Operations can be delegated to plot components. " alt="" coords="25,5,155,32"/>
+<area shape="rect" id="node1" title="QuPlot component to draw markers on the canvas." alt="" coords="5,80,173,107"/>
+<area shape="rect" id="node2" href="$classQuPlotComponent.html" title="Interface defining a plot component. Operations can be delegated to plot components." alt="" coords="25,5,153,32"/>
 </map>

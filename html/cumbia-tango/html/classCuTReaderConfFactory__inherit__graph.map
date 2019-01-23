@@ -1,4 +1,5 @@
 <map id="CuTReaderConfFactory" name="CuTReaderConfFactory">
-<area shape="rect" id="node2" href="$classCuTConfFactoryBase.html" title="CuTConfFactoryBase" alt="" coords="11,80,161,107"/>
-<area shape="rect" id="node3" href="$classCuTangoActionFactoryI.html" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="6,5,166,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,155,164,181"/>
+<area shape="rect" id="node2" href="$classCuTConfFactoryBase.html" title=" " alt="" coords="11,80,158,107"/>
+<area shape="rect" id="node3" href="$classCuTangoActionFactoryI.html" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="5,5,164,32"/>
 </map>

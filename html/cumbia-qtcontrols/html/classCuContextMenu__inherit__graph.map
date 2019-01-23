@@ -1,2 +1,4 @@
 <map id="CuContextMenu" name="CuContextMenu">
+<area shape="rect" id="node1" title="A QObject filter that installs a context menu with actions defined by external plugins" alt="" coords="5,80,120,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="31,5,95,32"/>
 </map>

@@ -1,3 +1,4 @@
 <map id="CuContinuousActivity" name="CuContinuousActivity">
-<area shape="rect" id="node2" href="$classCuActivity.html" title="a class with hook functions where work can be done in a separate thread and wherefrom results are pub..." alt="" coords="39,5,121,32"/>
+<area shape="rect" id="node1" title="an implementation of CuActivity that calls CuActivity::execute repeatedly at a certain interval of ti..." alt="" coords="5,80,152,107"/>
+<area shape="rect" id="node2" href="$classCuActivity.html" title="a class with hook functions where work can be done in a separate thread and wherefrom results are pub..." alt="" coords="37,5,120,32"/>
 </map>
