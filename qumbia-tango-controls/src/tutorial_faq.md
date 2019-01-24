@@ -294,8 +294,7 @@ void mywidget::onNewReport(const CuData &da)
 
 ## Q.
 
-### I either used QuWatcher or implemented CuDataListener on my custom graphical object. How do I configure it through
-    the Tango database properties (setting maximum and minimum values, display unit and data format)?
+### I either used QuWatcher or implemented CuDataListener on my custom graphical object. How do I configure it through the Tango database properties (setting maximum and minimum values, display unit and data format)?
 
 ## A.
 Just look for the CuData with the *type* key set to the *property* string. That's the bundle containing the Tango database
@@ -321,4 +320,89 @@ void MyCustomWidget::onUpdate(const CuData &da)
 
 ```
 
+## Q.
 
+### How do I get a Tango device property?
+
+## A.
+
+#### 1. The quick way (in current thread)
+
+Build a list of CuData containing the desired property names and types,
+as shown in the code below. Then use the CuTangoWorld utility class to
+get the properties and finally extract them from the results.
+
+```cpp
+CuTangoWorld tw;
+CuData res;
+std::vector<CuData> in_data;
+// 1. build input data with the desired property names
+// device property
+CuData devpd("device", "test/device/1");
+devpd["name"] = "description";
+in_data.push_back(devpd);
+// attribute property values from the "double_scalar" attribute
+CuData apd("device", "test/device/2");
+apd["attribute"] = "double_scalar";
+apd["name"] = "values";
+in_data.push_back(apd);
+// class property
+CuData cld("class", "TangoTest");
+cld["name"] = "ProjectTitle";
+in_data.push_back(cld);
+// 2. get the properties
+tw.get_properties(in_data, res);
+// 3. extract  and print results
+if(data["err"].toBool())
+    printf("error fetching properties: %s\n", data["msg"].toString().c_str());
+else {
+        printf(PROPERTY|\t\t\t-->|VALUES");
+        std::vector<std::string> plist = data["list"].toStringVector();
+        for(size_t i = 0; i < plist.size(); i++)
+            printf("%s-->%s\n", plist[i].c_str(), data[plist[i]].toString().c_str());
+    }
+```
+
+#### 2. The *activity* approach (in secondary thread)
+
+- Define a class inheriting from CuDataListener and implement the onUpdate(const CuData&) virtual method
+  where results will be delivered. The construction of the input data list is the same as in the example (1).
+  The extraction of the results is identical too.
+
+#### The header file
+```cpp
+class PropertyReader : public CuDataListener
+{
+     // ...
+public:
+    // CuDataListener interface
+    void onUpdate(const CuData &data);
+
+private:
+    CumbiaTango* m_ct;
+```
+
+#### The implementation file
+We use the CuTDbPropertyReader class to fetch the properties and receive the data when ready.
+
+```cpp
+void PropertyReader::get(...) {
+    // CuTDbPropertyReader needs a const char* as id as first parameter and a
+    // pointer to CumbiaTango as second parameter
+    CuTDbPropertyReader *pr = new CuTDbPropertyReader("myPropertyReader", m_ct);
+    pr->addListener(this);  // we implement CuDataListener
+    pr->get(in_data);       // request properties
+}
+
+void PropertyReader::onUpdate(const CuData &data)
+{
+    // see the point (3) of the *quick way* example above to extract  and print results
+}
+```
+
+
+
+#### Example code
+You can find a working command line example under
+
+- *cumbia-libs/cumbia-tango/examples/dbproperties*

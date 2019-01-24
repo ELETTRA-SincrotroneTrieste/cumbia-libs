@@ -499,7 +499,7 @@ if [ -d $tmp_installdir ]; then
         rm -rf $tmp_installdir
 fi
 
-if [[ $build -eq 0 ]]; then
+if [[ $build -eq 0 ]] && [[ $docs -eq 0 ]]; then
     echo -e "\e[1;33m\n*\n* build \e[0m is disabled \n\e[1;33m*\e[0m"
     exit 0
 fi
