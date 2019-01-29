@@ -44,24 +44,40 @@ $(function() {
 <div class="title">Frequently Asked Questions (Tango) </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h2>Q.</h2>
-<h3>Is there a way to quickly set up a new cumbia project?</h3>
+<div class="textblock"><h3>Table of contents</h3>
+<ul>
+<li><a href="#newproj">Is there a way to quickly set up a new cumbia project?</a></li>
+<li><a href="#migrate">Is there a way to migrate a QTango project into a cumbia one?</a></li>
+<li><a href="#cudata">What is the default structure used to exchange data by cumbia library? How do I use it?</a></li>
+<li><a href="#readatt">What is the quickest way to read a Tango attribute in a cumbia application</a></li>
+<li><a href="#state">What's the quickest procedure to display a Tango <em>state</em> and possibly get the associated color?</a></li>
+<li><a href="#cudata_keys">How did you know that the <em>res</em> CuData contained those very keys such as "value", "state_color", "timestamp_ms", and so on.. ?</a></li>
+<li><a href="#commands">A quick way to perform a command inout on a device</a></li>
+<li><a href="#cumbiawidget">In QTango there used to be a widget ready to read and display a value. In cumbia there is not. How do I quickly adapt an existing Qt widget?</a></li>
+<li><a href="#configure">I either used QuWatcher or implemented CuDataListener on my custom graphical object. How do I configure it through the Tango database properties (setting maximum and minimum values, display unit and data format)?</a></li>
+<li><a href="#tangoprops">How do I get a Tango device property?</a></li>
+<li><a href="#except">How to format a message from a Tango <em>Exception</em>?</a></li>
+<li>[](#)</li>
+<li>[](#)</li>
+</ul>
+<h2>Q.</h2>
+<p><a class="anchor" id="newproj"></a> </p><h3>Is there a way to quickly set up a new cumbia project?</h3>
 <h2>A.</h2>
 <p>Yes, just execute</p>
 <p><em>cumbia new project</em></p>
 <p>from the command line. You will</p>
 <h2>Q.</h2>
-<h3>Is there a way to migrate a QTango project into a cumbia one?</h3>
+<p><a class="anchor" id="migrate"></a> </p><h3>Is there a way to migrate a QTango project into a cumbia one?</h3>
 <h2>A.</h2>
 <p>Yes, execute</p>
 <p><em>cumbia import fast</em></p>
 <p>from the command line to <em>attempt</em> the migration. Follow the instructions and carefully read the messages from the ongoing process. A little manual intervention is normally needed. It works for simple QTango projects (e.g. custom QTangoComProxyReader/QTangoComProxyWriter derived classes are not supported)</p>
 <h2>Q.</h2>
-<h3>What is the default structure used to exchange data by cumbia library? How do I use it?</h3>
+<p><a class="anchor" id="cudata"></a> </p><h3>What is the default structure used to exchange data by cumbia library? How do I use it?</h3>
 <h2>A.</h2>
 <p>It is a class named CuData. It is a bundle pairing <em>keys</em> to <em>values</em>. <em>keys</em> are strings, while values are CuVariant objects. CuVariant is a container that can store different data types and provides convenient functions to extract data into basic types, such as double, int, unsigned, vector&lt;double&gt;, vector&lt;string&gt; and so on.</p>
 <p>Example usage </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> f(<span class="keyword">const</span> CuData&amp; data) {</div><div class="line">    <span class="keywordtype">double</span> d;</div><div class="line">    CuVariant v = data[<span class="stringliteral">&quot;value&quot;</span>];</div><div class="line">    d = v.toDouble();</div><div class="line">}</div></div><!-- fragment --><h2>Q.</h2>
-<h3>What is the quickest way to read a Tango attribute in a cumbia application:</h3>
+<p><a class="anchor" id="readatt"></a> </p><h3>What is the quickest way to read a Tango attribute in a cumbia application:</h3>
 <ul>
 <li>blocking for the result</li>
 <li>storing the result in a cumbia data structure that can be reused throughout the library</li>
@@ -69,11 +85,11 @@ $(function() {
 </ul>
 <h2>A.</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cutango-world.h&gt;</span></div><div class="line"><span class="preprocessor">#include &lt;tdevice.h&gt;</span></div><div class="line"><span class="preprocessor">#include &lt;QDateTime&gt;</span></div><div class="line"></div><div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div><div class="line">{</div><div class="line">    <span class="keywordflow">if</span>(argc &lt; 3) {</div><div class="line">        printf(<span class="stringliteral">&quot;usage: %s tango/test/device  attribute_name\n\n&quot;</span>, argv[0]);</div><div class="line">        exit(EXIT_SUCCESS);</div><div class="line">    }</div><div class="line">    CuTangoWorld tw; <span class="comment">// Tango utilities to read/write attributes and command inout</span></div><div class="line">    CuData res; <span class="comment">// stores the result</span></div><div class="line">    TDevice td(argv[1]); <span class="comment">// wraps DeviceProxy creation and device connection errors</span></div><div class="line">    <span class="keywordtype">bool</span> success = td.isValid();  <span class="comment">// device defined in Tango database</span></div><div class="line">    <span class="keywordflow">if</span>(!success)</div><div class="line">        printf(<span class="stringliteral">&quot;failed to connect to device: %s: %s\n&quot;</span>, argv[1], td.getMessage().c_str());</div><div class="line">    <span class="keywordflow">else</span> {</div><div class="line">        success = tw.read_att(td.getDevice(), argv[2], res);  <span class="comment">// read attribute, store result in res, return success</span></div><div class="line">        <span class="keywordflow">if</span>(success) {</div><div class="line">            <span class="keywordtype">double</span> d = res[<span class="stringliteral">&quot;value&quot;</span>].toDouble(); <span class="comment">// extract to double (I know beforehand I am reading a double data type)</span></div><div class="line">            printf(<span class="stringliteral">&quot;value: %f [%s]\n&quot;</span>, d, qstoc(QDateTime::fromMSecsSinceEpoch(res[<span class="stringliteral">&quot;timestamp_ms&quot;</span>].toLongInt()).toString()));</div><div class="line">        }</div><div class="line">        <span class="keywordflow">else</span> <span class="comment">// error reading or extracting data from the attribute</span></div><div class="line">            printf(<span class="stringliteral">&quot;failed: \&quot;%s\&quot;\n&quot;</span>, res.toString().c_str());</div><div class="line">    }</div><div class="line">}</div></div><!-- fragment --><h2>Q.</h2>
-<h3>Cool. Now, what's the quickest procedure to display a Tango <em>state</em> and possibly get the associated color?</h3>
+<p><a class="anchor" id="state"></a> </p><h3>Cool. Now, what's the quickest procedure to display a Tango <em>state</em> and possibly get the associated color?</h3>
 <h2>A.</h2>
 <p>Almost same code as above. Extract color from the "state_color", state string from the "state_string".</p>
 <div class="fragment"><div class="line">success = tw.read_att(td.getDevice(), argv[2], res);  <span class="comment">// read attribute, store result in res, return success</span></div><div class="line"><span class="keywordflow">if</span>(success) {</div><div class="line">    QuPalette palette;  <span class="comment">// default color palette: maps color string to QColor</span></div><div class="line">    QColor color = palette[QString::fromStdString(res[<span class="stringliteral">&quot;state_color&quot;</span>].toString())];</div><div class="line">    Tango::DevState state = static_cast&lt;Tango::DevState&gt;(res[<span class="stringliteral">&quot;state&quot;</span>].toLongInt());</div><div class="line">    qDebug() &lt;&lt; __FUNCTION__ &lt;&lt; <span class="stringliteral">&quot;state color&quot;</span> &lt;&lt; color &lt;&lt; <span class="stringliteral">&quot;state: &quot;</span> &lt;&lt; res[<span class="stringliteral">&quot;value&quot;</span>].toString().c_str()</div><div class="line">             &lt;&lt; <span class="stringliteral">&quot;as DevState: &quot;</span> &lt;&lt; state;</div><div class="line">}</div></div><!-- fragment --> <h2>Q.</h2>
-<h3>How did you know that the <em>res</em> CuData contained those very keys such as "value", "state_color", "timestamp_ms", and so on.. ?</h3>
+<p><a class="anchor" id="cudata_keys"></a> </p><h3>How did you know that the <em>res</em> CuData contained those very keys such as "value", "state_color", "timestamp_ms", and so on.. ?</h3>
 <h2>A.</h2>
 <p>There are two ways of knowing what CuData contains. The first is the most universal one, the second is handy when dealing with Tango specific data.</p>
 <ul>
@@ -90,7 +106,7 @@ $(function() {
 </table>
 <p>from which you can infer that a code like the following can work:</p>
 <div class="fragment"><div class="line">success = tw.read_att(td.getDevice(), argv[2], res);</div><div class="line"><span class="keywordtype">bool</span> error = res[<span class="stringliteral">&quot;err&quot;</span>].toBool();</div><div class="line"><span class="keywordflow">if</span>(!error) {</div><div class="line">    <span class="keywordtype">double</span> read_val = res[<span class="stringliteral">&quot;value&quot;</span>].toDouble();</div><div class="line">    <span class="keywordtype">double</span> write_val = res[<span class="stringliteral">&quot;w_value&quot;</span>].toDouble(); <span class="comment">// if Tango attribute is read/write</span></div><div class="line">    std::string message = res[<span class="stringliteral">&quot;msg&quot;</span>].toString();</div><div class="line">}</div></div><!-- fragment --><h2>Q.</h2>
-<h3>I want a quick way to perform a command inout on a device now, thanks.</h3>
+<p><a class="anchor" id="commands"></a> </p><h3>I want a quick way to perform a command inout on a device now, thanks.</h3>
 <h2>A.</h2>
 <p>Two possible scenarios are possible, dude:</p>
 <h4>1. You know in advance the output data type and you can provide the input value by code. A full working example follows:</h4>
@@ -119,7 +135,7 @@ $(function() {
 <td class="markdownTableBodyNone">CuData { ["argins" -&gt; foo bar], ["cmd_name" -&gt; DevString], ["data_format" -&gt; 0], ["data_format_str" -&gt; scalar], ["data_type" -&gt; 8], ["display_level" -&gt; 0], ["err" -&gt; false], ["in_type" -&gt; 8], ["in_type_desc" -&gt; -], ["mode" -&gt; ], ["msg" -&gt; : Mon Dec 10 16:13:35 2018[scalar]], ["out_type" -&gt; 8], ["out_type_desc" -&gt; -], ["timestamp_ms" -&gt; 1544454815747], ["timestamp_us" -&gt; 1544454815.747049], ["type" -&gt; property], ["value" -&gt; foo bar] } (size: 17 isEmpty: 0)   </td></tr>
 </table>
 <h2>Q.</h2>
-<h3>In QTango there used to be a widget ready to read and display a value. In cumbia there is not. How do I quickly adapt an existing Qt widget?</h3>
+<p><a class="anchor" id="cumbiawidget"></a> </p><h3>In QTango there used to be a widget ready to read and display a value. In cumbia there is not. How do I quickly adapt an existing Qt widget?</h3>
 <h2>A.</h2>
 <h4>1. The longest <em>reusable</em> way</h4>
 <p>Extend the Qt widget apt to display the desired data and implement CuDataListener interface. See <a href="../../qumbianewcontrolwizard/html/tutorial_qumbianewcontrolwizard.html">Quickly add a Qt widget to your cumbia project</a> documentation. Within the <em>onUpdate(const CuData&amp; data)</em> method you will receive two kinds of updates:</p><ul>
@@ -133,12 +149,11 @@ $(function() {
 <p>Edit the main widget <em>cpp</em> file, add the needed include file and modify the class constructor</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;quwatcher.h&gt;</span></div><div class="line"></div><div class="line">mywidget::mywidget(CumbiaTango *cut, QWidget *parent) : QWidget(parent)</div><div class="line">{</div><div class="line">    <span class="comment">// ...</span></div><div class="line">    ui-&gt;setupUi(<span class="keyword">this</span>, cu_t, cu_tango_r_fac, cu_tango_w_fac);</div><div class="line">    <span class="comment">// ...</span></div><div class="line"></div><div class="line">    QuWatcher *quW = <span class="keyword">new</span> QuWatcher(<span class="keyword">this</span>, cut, cu_tango_r_fac);</div><div class="line">    connect(quW, SIGNAL(newData(<span class="keyword">const</span> CuData&amp;)), <span class="keyword">this</span>, SLOT(onNewReport(<span class="keyword">const</span> CuData&amp;)));</div><div class="line">    quW-&gt;setSource(<span class="stringliteral">&quot;$1-&gt;GetReport&quot;</span>);</div><div class="line">}</div></div><!-- fragment --><p>A <em>Qt SLOT onNewReport()</em> must be introduced to update the text (heaeder file declaration omitted):</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> mywidget::onNewReport(<span class="keyword">const</span> CuData &amp;da)</div><div class="line">{</div><div class="line">    QString html;</div><div class="line">    ui-&gt;textEdit-&gt;setDisabled(da[<span class="stringliteral">&quot;err&quot;</span>].toBool());</div><div class="line">    ui-&gt;textEdit-&gt;setToolTip(QString::fromStdString(da[<span class="stringliteral">&quot;msg&quot;</span>].toString()));</div><div class="line">    <span class="keywordflow">if</span>(ui-&gt;textEdit-&gt;isEnabled()) {                                  <span class="comment">// read successful</span></div><div class="line">        std::vector&lt;std::string&gt; vs = da[<span class="stringliteral">&quot;value&quot;</span>].toStringVector();  <span class="comment">// DevVarStringArray to vector&lt;string&gt;</span></div><div class="line">        <span class="keywordflow">foreach</span>(<span class="keyword">const</span> std::string &amp;s, vs) {</div><div class="line">            html += <span class="stringliteral">&quot;&lt;li&gt;&quot;</span> + QString::fromStdString(s) + <span class="stringliteral">&quot;&lt;/li&gt;\n&quot;</span>;  <span class="comment">// add list element</span></div><div class="line">        }</div><div class="line">        ui-&gt;textEdit-&gt;setHtml(<span class="stringliteral">&quot;&lt;ul&gt;&quot;</span> + html + <span class="stringliteral">&quot;&lt;/ul&gt;&quot;</span>);    <span class="comment">// wrap &lt;li&gt; into an unordered list (bullet list)</span></div><div class="line">    }</div><div class="line">    <span class="keywordflow">else</span> {     <span class="comment">// read failed</span></div><div class="line">        ui-&gt;textEdit-&gt;setHtml(ui-&gt;textEdit-&gt;toolTip());</div><div class="line">    }</div><div class="line">}</div></div><!-- fragment --><h2>Q.</h2>
-<h3>I either used QuWatcher or implemented CuDataListener on my custom graphical object. How do I configure it through</h3>
-<p>the Tango database properties (setting maximum and minimum values, display unit and data format)?</p>
+<p><a class="anchor" id="configure"></a> </p><h3>I either used QuWatcher or implemented CuDataListener on my custom graphical object. How do I configure it through the Tango database properties (setting maximum and minimum values, display unit and data format)?</h3>
 <h2>A.</h2>
 <p>Just look for the CuData with the <em>type</em> key set to the <em>property</em> string. That's the bundle containing the Tango database configuration.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> MyCustomWidget::onUpdate(<span class="keyword">const</span> CuData &amp;da)</div><div class="line">{</div><div class="line">    <span class="keywordtype">bool</span> is_config = da[<span class="stringliteral">&quot;type&quot;</span>].toString() == std::string(<span class="stringliteral">&quot;property&quot;</span>);</div><div class="line">    <span class="keywordflow">if</span>(is_config) {</div><div class="line">        CuVariant m = da[<span class="stringliteral">&quot;min&quot;</span>], M = da[<span class="stringliteral">&quot;max&quot;</span>];</div><div class="line">        std::string print_format = da[<span class="stringliteral">&quot;format&quot;</span>].toString();</div><div class="line">        <span class="keywordtype">double</span> min, max;</div><div class="line">        <span class="keywordtype">bool</span> ok;</div><div class="line">        ok = m.to&lt;<span class="keywordtype">double</span>&gt;(min);     <span class="comment">// try to convert min</span></div><div class="line">        <span class="keywordflow">if</span>(ok)                      <span class="comment">// try to convert max if min succeeded</span></div><div class="line">            ok = M.to&lt;<span class="keywordtype">double</span>&gt;(max);</div><div class="line"></div><div class="line">        <span class="keywordflow">if</span>(ok) {  <span class="comment">// very good: Range properly configured in Tango database</span></div><div class="line">            setMinimum(min);  <span class="comment">// set minimum value on MyCustomWidget</span></div><div class="line">            setMaximum(max);  <span class="comment">// set maximum value on MyCustomWidget</span></div><div class="line">        }</div></div><!-- fragment --><h2>Q.</h2>
-<h3>How do I get a Tango device property?</h3>
+<p><a class="anchor" id="tangoprops"></a> </p><h3>How do I get a Tango device property?</h3>
 <h2>A.</h2>
 <h4>1. The quick way (in current thread)</h4>
 <p>Build a list of CuData containing the desired property names and types, as shown in the code below. Then use the CuTangoWorld utility class to get the properties and finally extract them from the results.</p>
@@ -146,18 +161,21 @@ $(function() {
 <ul>
 <li>Define a class inheriting from CuDataListener and implement the onUpdate(const CuData&amp;) virtual method where results will be delivered. The construction of the input data list is the same as in the example (1). The extraction of the results is identical too.</li>
 </ul>
-<p>##### The header file </p><div class="fragment"><div class="line"><span class="keyword">class </span>PropertyReader : <span class="keyword">public</span> CuDataListener</div><div class="line">{</div><div class="line">     <span class="comment">// ...</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">// CuDataListener interface</span></div><div class="line">    <span class="keywordtype">void</span> onUpdate(<span class="keyword">const</span> CuData &amp;data);</div><div class="line"></div><div class="line"><span class="keyword">private</span>:</div><div class="line">    CumbiaTango* m_ct;</div></div><!-- fragment --><h5>The implementation file</h5>
+<p>#### The header file </p><div class="fragment"><div class="line"><span class="keyword">class </span>PropertyReader : <span class="keyword">public</span> CuDataListener</div><div class="line">{</div><div class="line">     <span class="comment">// ...</span></div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="comment">// CuDataListener interface</span></div><div class="line">    <span class="keywordtype">void</span> onUpdate(<span class="keyword">const</span> CuData &amp;data);</div><div class="line"></div><div class="line"><span class="keyword">private</span>:</div><div class="line">    CumbiaTango* m_ct;</div></div><!-- fragment --><h4>The implementation file</h4>
 <p>We use the CuTDbPropertyReader class to fetch the properties and receive the data when ready.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> PropertyReader::get(...) {</div><div class="line">    <span class="comment">// CuTDbPropertyReader needs a const char* as id as first parameter and a</span></div><div class="line">    <span class="comment">// pointer to CumbiaTango as second parameter</span></div><div class="line">    CuTDbPropertyReader *pr = <span class="keyword">new</span> CuTDbPropertyReader(<span class="stringliteral">&quot;myPropertyReader&quot;</span>, m_ct);</div><div class="line">    pr-&gt;addListener(<span class="keyword">this</span>);  <span class="comment">// we implement CuDataListener</span></div><div class="line">    pr-&gt;get(in_data);       <span class="comment">// request properties</span></div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> PropertyReader::onUpdate(<span class="keyword">const</span> CuData &amp;data)</div><div class="line">{</div><div class="line">    <span class="comment">// see the point (3) of the *quick way* example above to extract  and print results</span></div><div class="line">}</div></div><!-- fragment --><h4>Example code</h4>
 <p>You can find a working command line example under</p>
 <ul>
-<li><em>cumbia-libs/cumbia-tango/examples/dbproperties</em> </li>
+<li><em>cumbia-libs/cumbia-tango/examples/dbproperties</em></li>
 </ul>
-</div></div><!-- PageDoc -->
+<h2>Q.</h2>
+<p><a class="anchor" id="except"></a> </p><h3>How to format a message from a Tango <em>Exception</em>?</h3>
+<h2>A.</h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#include&lt;cutango-world.h&gt;</span></div><div class="line"><span class="keywordflow">try</span> {</div><div class="line">    <span class="comment">// ...</span></div><div class="line">}</div><div class="line"><span class="keywordflow">catch</span>(Tango::DevFailed &amp;e)</div><div class="line">{</div><div class="line">    CuTangoWorld tw;</div><div class="line">    std::string serr = tw.strerror(e);</div><div class="line">}</div></div><!-- fragment --> </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 23 2019 12:21:44 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jan 29 2019 11:40:09 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
