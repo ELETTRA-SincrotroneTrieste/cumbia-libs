@@ -57,7 +57,7 @@ $(function() {
 <li><a href="#configure">I either used QuWatcher or implemented CuDataListener on my custom graphical object. How do I configure it through the Tango database properties (setting maximum and minimum values, display unit and data format)?</a></li>
 <li><a href="#tangoprops">How do I get a Tango device property?</a></li>
 <li><a href="#except">How to format a message from a Tango <em>Exception</em>?</a></li>
-<li>[](#)</li>
+<li><a href="#multiengine">How to support multiple engines (e.g. Tango and Epics) in the same application</a></li>
 <li>[](#)</li>
 </ul>
 <h2>Q.</h2>
@@ -171,11 +171,15 @@ $(function() {
 <h2>Q.</h2>
 <p><a class="anchor" id="except"></a> </p><h3>How to format a message from a Tango <em>Exception</em>?</h3>
 <h2>A.</h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#include&lt;cutango-world.h&gt;</span></div><div class="line"><span class="keywordflow">try</span> {</div><div class="line">    <span class="comment">// ...</span></div><div class="line">}</div><div class="line"><span class="keywordflow">catch</span>(Tango::DevFailed &amp;e)</div><div class="line">{</div><div class="line">    CuTangoWorld tw;</div><div class="line">    std::string serr = tw.strerror(e);</div><div class="line">}</div></div><!-- fragment --> </div></div><!-- PageDoc -->
+<div class="fragment"><div class="line"><span class="preprocessor">#include&lt;cutango-world.h&gt;</span></div><div class="line"><span class="keywordflow">try</span> {</div><div class="line">    <span class="comment">// ...</span></div><div class="line">}</div><div class="line"><span class="keywordflow">catch</span>(Tango::DevFailed &amp;e)</div><div class="line">{</div><div class="line">    CuTangoWorld tw;</div><div class="line">    std::string serr = tw.strerror(e);</div><div class="line">}</div></div><!-- fragment --><h2>Q.</h2>
+<p><a class="anchor" id="multiengine"></a> </p><h3>How to support multiple engines (e.g. Tango and Epics) in the same application?</h3>
+<h2>A.</h2>
+<p>The application will make use of the <a href="../../cumbia/html/classCumbiaPool.html">CumbiaPool</a> class, in combination with CuControlsFactoryPool. </p>
+</div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 29 2019 11:40:09 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jan 29 2019 11:53:57 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
