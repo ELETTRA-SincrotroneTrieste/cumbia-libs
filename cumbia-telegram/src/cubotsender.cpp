@@ -20,10 +20,12 @@ CuBotSender::CuBotSender(QObject *parent) : QObject(parent)
     d->netreq.setRawHeader("User-Agent", "cumbia-telegram-bot 1.0");
 }
 
-void CuBotSender::sendMessage(int chat_id, const QString &msg)
+void CuBotSender::sendMessage(int chat_id, const QString &msg, bool silent)
 {
     QString u = "https://api.telegram.org/bot635922604:AAEgG6db_3kkzYZqh-LBxi-ubvl5UIEW7gE/sendMessage?parse_mode=HTML&chat_id=";
     u += QString::number(chat_id) + "&text=" + msg;
+    if(silent)
+        u += QString("&disable_notification=true");
     d->netreq.setUrl(QUrl(u));
     QNetworkReply *reply = d->manager->get(d->netreq);
     connect(reply, SIGNAL(readyRead()), this, SLOT(onReply()));
@@ -40,6 +42,6 @@ void CuBotSender::onNetworkError(QNetworkReply::NetworkError nerr)
 void CuBotSender::onReply()
 {
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-    printf("CuBotSender.onReply: got %s\n", qstoc(QString(reply->readAll())));
+    printf("CuBotSender.onReply: \e[1;32mgot %s\e[0m going to delete reply later\n", qstoc(QString(reply->readAll())));
     reply->deleteLater();
 }

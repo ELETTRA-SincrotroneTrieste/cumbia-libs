@@ -70,8 +70,6 @@ QString CppInstantiationExpand::process(const QString &input)
                                                Quality::Ok, lineno));
                     }
                 }
-
-
             }
         }
     }

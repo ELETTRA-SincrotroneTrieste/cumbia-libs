@@ -3,7 +3,7 @@ include(/usr/local/cumbia-libs/include/qumbia-epics-controls/qumbia-epics-contro
 
 QT -= gui
 
-QT += network sql
+QT += network sql script
 
 QT -= QT_NO_DEBUG_OUTPUT
 
@@ -51,7 +51,11 @@ SOURCES += \
 	src/botreader.cpp \
     src/cubotsender.cpp \
     src/cumbiasupervisor.cpp \
-    src/msgformatter.cpp
+    src/msgformatter.cpp \
+    src/botmonitor.cpp \
+    src/formulahelper.cpp \
+    src/historyentry.cpp \
+    src/botconfig.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -67,4 +71,8 @@ HEADERS += \
 	src/botreader.h \
     src/cubotsender.h \
     src/cumbiasupervisor.h \
-    src/msgformatter.h
+    src/msgformatter.h \
+    src/botmonitor.h \
+    src/formulahelper.h \
+    src/historyentry.h \
+    src/botconfig.h

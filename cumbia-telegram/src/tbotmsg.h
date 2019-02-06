@@ -17,6 +17,12 @@ public:
 
     void print() const;
 
+    void setHost(const QString& h);
+
+    QString host() const;
+
+    bool hasHost() const;
+
 
     QString chat_first_name;
     int chat_id;
@@ -33,6 +39,9 @@ public:
     QString text;
 
     int update_id;
+
+private:
+    QString m_host;
 };
 
 #endif // MSGPRINT_H

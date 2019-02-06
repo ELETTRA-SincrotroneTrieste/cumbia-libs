@@ -49,3 +49,18 @@ void TBotMsg::print() const
            update_id, qstoc(dt.toString()), qstoc(username), qstoc(first_name),
            qstoc(text), message_id);
 }
+
+void TBotMsg::setHost(const QString &h)
+{
+    m_host = h;
+}
+
+QString TBotMsg::host() const
+{
+    return m_host;
+}
+
+bool TBotMsg::hasHost() const
+{
+    return !m_host.isEmpty();
+}

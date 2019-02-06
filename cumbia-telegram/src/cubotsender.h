@@ -16,7 +16,13 @@ public:
 signals:
 
 public slots:
-    void sendMessage(int chat_id, const QString& msg);
+    /**
+     * @brief sendMessage
+     * @param chat_id
+     * @param msg
+     * @param silent if true, sends the message silently. Users will receive a notification with no sound.
+     */
+    void sendMessage(int chat_id, const QString& msg, bool silent = false);
 
 private slots:
     void onNetworkError(QNetworkReply::NetworkError e);

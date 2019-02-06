@@ -634,7 +634,7 @@ void QumbiaProjectWizard::qmlToggled(bool t)
     }
     QRadioButton *rbte = ui->gbSupport->findChild<QRadioButton *>("rb-tango-epics");
     QRadioButton *rbws = ui->gbSupport->findChild<QRadioButton *>("rb-websocket");
-    if(!rbte->isChecked() && ui->rbQml->isChecked() && rbws)
+    if(rbte && !rbte->isChecked() && ui->rbQml->isChecked() && rbws)
         rbws->setChecked(true);
 
 

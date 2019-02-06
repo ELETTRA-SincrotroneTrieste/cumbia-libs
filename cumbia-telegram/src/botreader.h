@@ -31,7 +31,18 @@ class BotReader : public QObject, public CuDataListener, public CuContextI
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)
 
 public:
-    BotReader(int chat_id, QObject *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+
+    // message delivered silently or not
+    enum Priority { Normal, Low };
+
+    BotReader(int user_id,
+              int chat_id, QObject *w,
+              CumbiaPool *cumbia_pool,
+              const CuControlsFactoryPool &fpool,
+              const QString& formula,
+              Priority pri = Normal,
+              const QString& host = QString(),
+              bool monitor = false);
 
     virtual ~BotReader();
 
@@ -43,11 +54,21 @@ public:
      */
     QString source() const;
 
+    QString formula() const;
+
+    QString host() const;
+
     /** \brief returns a pointer to the CuContext used as a delegate for the connection.
      *
      * @return CuContext
      */
     CuContext *getContext() const;
+
+    int userId() const;
+
+    Priority priority() const;
+
+    void setPriority(Priority pri);
 
 public slots:
 
@@ -63,9 +84,14 @@ public slots:
      */
     void unsetSource();
 
+    void setFormula(const QString& formula);
+
 signals:
     void newData(int chat_id, const CuData&);
+    void startSuccess(int user_id, int chat_it, const QString& src, const QString& formula);
     void onProperties(int chat_id, const CuData&);
+    void formulaChanged(int chat_id, const QString& src, const QString& oldf, const QString& new_f);
+    void priorityChanged(int chat_id, const QString& src, BotReader::Priority oldpri, BotReader::Priority newpri);
 
 protected:
 
@@ -76,6 +102,8 @@ private:
     void m_init();
 
     void m_configure(const CuData& d);
+
+    bool m_publishResult(const CuData& da);
 
     // CuDataListener interface
 public:

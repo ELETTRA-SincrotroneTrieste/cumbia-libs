@@ -75,7 +75,6 @@ void QuPlotCommon::unsetSource(const QString &src)
 void QuPlotCommon::setSources(const QStringList &l,
                               CuDataListener *data_listener)
 {
-
     QStringList srcs = sources();
     foreach(QString s, l)
     {

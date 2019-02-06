@@ -1,8 +1,25 @@
 # Frequently Asked Questions (Tango) {#tutorial_faq}
 
 
+
+### Table of contents
+- [Is there a way to quickly set up a new cumbia project?](#newproj)
+- [Is there a way to migrate a QTango project into a cumbia one?](#migrate)
+- [What is the default structure used to exchange data by cumbia library? How do I use it?](#cudata)
+- [What is the quickest way to read a Tango attribute in a cumbia application](#readatt)
+- [What's the quickest procedure to display a Tango *state* and possibly get the associated color?](#state)
+- [How did you know that the *res* CuData contained those very keys such as "value", "state_color", "timestamp_ms", and so on.. ?](#cudata_keys)
+- [A quick way to perform a command inout on a device](#commands)
+- [In QTango there used to be a widget ready to read and display a value. In cumbia there is not. How do I quickly adapt an existing Qt widget?](#cumbiawidget)
+- [I either used QuWatcher or implemented CuDataListener on my custom graphical object. How do I configure it through the Tango database properties (setting maximum and minimum values, display unit and data format)?](#configure)
+- [How do I get a Tango device property?](#tangoprops)
+- [How to format a message from a Tango *Exception*?](#except)
+- [How to support multiple engines (e.g. Tango and Epics) in the same application](#multiengine)
+- [](#)
+
 ## Q.
 
+<a name="newproj"/>
 ### Is there a way to quickly set up a new cumbia project?
 
 ## A.
@@ -14,6 +31,7 @@ from the command line. You will
 
 ## Q.
 
+<a name="migrate"/>
 ### Is there a way to migrate a QTango project into a cumbia one?
 
 ## A.
@@ -29,6 +47,7 @@ derived classes are not supported)
 
 
 ## Q.
+<a name="cudata"/>
 ### What is the default structure used to exchange data by cumbia library? How do I use it?
 
 ## A.
@@ -48,6 +67,7 @@ void f(const CuData& data) {
 ```
 
 ## Q.
+<a name="readatt"/>
 ### What is the quickest way to read a Tango attribute in a cumbia application:
  - blocking for the result
  - storing the result in a cumbia data structure that can be reused throughout the library
@@ -85,6 +105,7 @@ int main(int argc, char *argv[])
 ```
 
 ## Q.
+<a name="state"/>
 ### Cool. Now, what's the quickest procedure to display a Tango *state* and possibly get the associated color?
 
 ## A.
@@ -103,6 +124,7 @@ Almost same code as above. Extract color from the "state_color", state string fr
 ```
 ## Q.
 
+<a name="cudata_keys"/>
 ### How did you know that the *res* CuData contained those very keys such as "value", "state_color", "timestamp_ms", and so on.. ?
 
 ## A.
@@ -142,6 +164,7 @@ from which you can infer that a code like the following can work:
 
 ## Q.
 
+<a name="commands"/>
 ### I want a quick way to perform a command inout on a device now, thanks.
 
 ## A.
@@ -228,6 +251,7 @@ This example is much more flexible:
 
 ## Q.
 
+<a name="cumbiawidget" />
 ### In QTango there used to be a widget ready to read and display a value. In cumbia there is not. How do I quickly adapt an existing Qt widget?
 
 ## A.
@@ -294,6 +318,7 @@ void mywidget::onNewReport(const CuData &da)
 
 ## Q.
 
+<a name="configure" />
 ### I either used QuWatcher or implemented CuDataListener on my custom graphical object. How do I configure it through the Tango database properties (setting maximum and minimum values, display unit and data format)?
 
 ## A.
@@ -322,6 +347,7 @@ void MyCustomWidget::onUpdate(const CuData &da)
 
 ## Q.
 
+<a name="tangoprops" />
 ### How do I get a Tango device property?
 
 ## A.
@@ -400,9 +426,88 @@ void PropertyReader::onUpdate(const CuData &data)
 }
 ```
 
-
-
 #### Example code
 You can find a working command line example under
 
 - *cumbia-libs/cumbia-tango/examples/dbproperties*
+
+
+
+## Q.
+
+<a name="except" />
+### How to format a message from a Tango *Exception*?
+
+## A.
+
+```cpp
+#include<cutango-world.h>
+try {
+    // ...
+}
+catch(Tango::DevFailed &e)
+{
+    CuTangoWorld tw;
+    std::string serr = tw.strerror(e);
+}
+
+```
+
+## Q.
+<a name="multiengine" />
+### How to support multiple engines (e.g. Tango and Epics) in the same application?
+
+## A.
+
+The application will make use of the [CumbiaPool](../../cumbia/html/classCumbiaPool.html) class, in combination with CuControlsFactoryPool.
+Refer to the [CumbiaPool](../../cumbia/html/classCumbiaPool.html) documentation, that provides an example.
+If the *cumbia pool* is configured with appropriate *source patterns*, the application should recognise the engine each source belongs to.
+For example, if the *patterns* for a Tango source are *".+/.+"* and *".+->.+"* (as *regular expressions*) and the *patterns* for an
+EPICS source include *".+:.+"*, then a source like *sys/tg_test/1/double_scalar* will be interpreted as a Tango source, while
+*motor:ai1* will be linked to the EPICS engine. The [CuTangoWorld](../../cumbia-tango/html/classCuTangoWorld.html) and
+[CuEpicsWorld](../../cumbia-epics/html/classCuEpicsWorld.html) provide lists of *default source patterns*.
+Please note that the "epics" and "tango" strings passed to registerCumbiaImpl, registerImpl and setSrcPatterns must match
+for each engine respectively. Those names link together the associated engines.
+
+The *cumbia new project* tool will let you automatically create a skeleton project able to manage multiple engines.
+
+A cumbia application with multiple engine support will generally contain the following initialization code:
+
+```cpp
+
+QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
+    QWidget(parent),
+    // ...
+{
+    // ...
+
+    // setup Cumbia pool and register cumbia implementations for tango and epics
+#ifdef QUMBIA_EPICS_CONTROLS
+    CumbiaEpics* cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    cu_pool->registerCumbiaImpl("epics", cuep);
+    // m_ctrl_factory_pool  is in this example a private member of type CuControlsFactoryPool
+    m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());   // register EPICS reader implementation
+    m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());   // register EPICS writer implementation
+
+    CuEpicsWorld ew;  // EPICS cumbia helper class
+    m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
+    cumbia_pool->setSrcPatterns("epics", ew.srcPatterns());
+#endif
+
+#ifdef QUMBIA_TANGO_CONTROLS
+    CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    cumbia_pool->registerCumbiaImpl("tango", cuta);
+    m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());  // register Tango writer implementation
+    m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());  // register Tango reader implementation
+
+    CuTangoWorld tw;   // Tango cumbia helper class
+    m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
+    cu_pool->setSrcPatterns("tango", tw.srcPatterns());
+#endif
+
+    // ...
+}
+```
+
+
+

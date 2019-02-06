@@ -38,6 +38,10 @@ CuTReaderFactory::~CuTReaderFactory()
  * \li "period" an integer, in milliseconds, for the polling period. Converted with: CuVariant::toInt
  * \li "refresh_mode": an integer defining the Tango refresh mode. Converted with: CuVariant::toInt
  *
+ * \par Important note
+ * The options are reset (to an empty CuData) by CuTReaderFactory::create after  CuTControlsReader
+ * creation and initialization.
+ *
  * \par note
  * Please use the CuTangoOptBuilder class rather than filling in the options manually.
  *
@@ -69,11 +73,17 @@ CuData CuTReaderFactory::getOptions() const
  * @param l a pointer to an object implementing the CuDataListener interface
  *
  * @return a CuTControlsReader, an implementation of CuControlsReaderA abstract class
+ *
+ * \par Important note
+ * The options are reset (to an empty CuData) by CuTReaderFactory::create after  CuTControlsReader
+ * creation and initialization. This avoids applying the same options to subsequent create calls
+ * on the same factory
  */
 CuControlsReaderA *CuTReaderFactory::create(Cumbia *c, CuDataListener *l) const
 {
     CuTControlsReader *r = new CuTControlsReader(c, l);
     r->setOptions(d->r_options);
+    d->r_options = CuData(); // reset options
     return r;
 }
 
@@ -233,11 +243,19 @@ void CuTControlsReader::getData(CuData &d_ino) const
 void CuTControlsReader::setSource(const QString &s)
 {
     CuTControlsUtils tcu;
-    CuTReaderConfFactory acf;
     CuTangoReaderFactory readf;
-    acf.setOptions(d->ta_options);
     readf.setOptions(d->ta_options);
     d->source = tcu.replaceWildcards(s, qApp->arguments());
-    d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, acf);
+    printf("active options for controls reader %p: %s: %s\n", this, qstoc(s), d->ta_options.toString().c_str());
+    if(!d->ta_options["no-properties"].toBool()) {
+        printf("\e[1;32m* fetch properties enabled!\e[0m\n");
+        CuTReaderConfFactory acf;
+        acf.setOptions(d->ta_options);
+        d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, acf);
+    }
+    else {
+        printf("\e[1;31m* fetch properties disabled for %s\e[0m\n", qstoc(d->source));
+    }
+
     d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, readf);
 }

@@ -10,11 +10,15 @@ class TBotMsgDecoder
 public:
 
 
-    enum Type { Invalid = 0, Start, Stop, Host, Read, Monitor, Properties, History, Last, CmdLink, MaxType = 32 };
+    enum Type { Invalid, Start, Stop, Host, QueryHost,
+                Read, Monitor, Alert, StopMonitor, Properties,
+                ReadHistory, MonitorHistory, AlertHistory,
+                Last, CmdLink, MaxType = 32 };
 
-    const char types[MaxType][32] = { "Invalid", "Start", "Stop", "Host", "Read",
-                                      "Monitor", "Properties", "History", "Last", "CmdLink",
-                                      "MaxType"};
+    const char types[MaxType][32] = { "Invalid", "Start", "Stop", "Host", "QueryHost",
+                                      "Read", "Monitor", "Alert", "StopMonitor", "Properties",
+                                      "ReadHistory", "MonitorHistory", "AlertHistory",
+                                      "Last", "CmdLink", "MaxType"};
 
     TBotMsgDecoder();
 
@@ -28,20 +32,36 @@ public:
 
     QString text() const;
 
+    QString formula() const;
+
     Type decode(const TBotMsg &msg);
 
     int cmdLinkIdx() const;
 
+    bool error() const;
+
+    QString message() const;
+
 private:
+
+    Type m_decodeSrcCmd(const QString& text);
+
+    Type m_StrToCmdType(const QString& cmd);
+
+    QString m_findSource(const QString& text);
+
+    QString m_getFormula(const QString& f);
+
     Type m_type;
 
     QString m_host;
-
     QString m_source;
-
+    QString m_formula;
     QString m_text;
 
     int m_cmdLinkIdx;
+
+    QString m_msg;
 };
 
 #endif // TBOTMSGDECODER_H

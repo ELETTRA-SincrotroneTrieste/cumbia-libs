@@ -59,7 +59,7 @@ ConversionDialog::ConversionDialog(QWidget *parent, const QString& outpath, bool
     connect(pbOutPath, SIGNAL(clicked()), this, SLOT(changeOutPath()));
     lo->addWidget(pbOutPath, 6, 6, 1, 1);
 
-    QLabel *problemsLabel = new QLabel("Conversion cannot be performed safely this time");
+    QLabel *problemsLabel = new QLabel("Conversion cannot be performed safely this time", this);
     problemsLabel->setObjectName("problemsLabel");
     problemsLabel->setAlignment(Qt::AlignHCenter|Qt::AlignRight);
     lo->addWidget(problemsLabel, 7, 0, 1, 4);
@@ -169,4 +169,5 @@ bool ConversionDialog::m_setProblemWidgetsVisible(bool v)
 {
     foreach(QWidget* w, findChildren<QWidget*>(QRegExp("problems.*")))
         w->setVisible(v);
+    return true;
 }
