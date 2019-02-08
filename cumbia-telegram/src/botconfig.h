@@ -3,12 +3,23 @@
 
 class BotConfigPrivate;
 
+#include <QMap>
+#include <QVariant>
+
+class BotDb;
+
 class BotConfig
 {
 public:
-    BotConfig();
+    BotConfig(BotDb *db);
 
     int ttl() const;
+
+    int getHistoryDepth() const;
+
+    bool isValid() const;
+
+    QString error() const;
 
 private:
     BotConfigPrivate *d;

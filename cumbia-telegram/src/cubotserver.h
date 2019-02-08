@@ -18,6 +18,8 @@ public:
 
     virtual ~CuBotServer();
 
+    bool isRunning() const;
+
 signals:
 
 private slots:
@@ -27,13 +29,15 @@ private slots:
 
     void onNewMonitorData(int chat_id, const CuData& da);
 
-    void onSrcMonitorStopped(int chat_id, const QString& src, const QString& message);
+    void onSrcMonitorStopped(int user_id, int chat_id, const QString& src, const QString& host, const QString& message);
 
-    void onSrcMonitorStarted(int user_id, int chat_id, const QString& src, const QString &formula);
+    void onSrcMonitorStarted(int user_id, int chat_id, const QString& src, const QString &host, const QString &formula);
 
-    void onSrcMonitorAlarm(int chat_id, const CuData& da);
+    void onSrcMonitorFormulaChanged(int user_id, int chat_id, const QString &src,
+                                    const QString &host, const QString &old, const QString &new_f);
 
-    void onSrcMonitorFormulaChanged(int user_id, int chat_id, const QString &src, const QString &old, const QString &new_f);
+    void onSrcMonitorTypeChanged(int user_id, int chat_id, const QString& src,
+                                 const QString& host, const QString& old_type, const QString& new_type);
 
 public slots:
     void start();
@@ -47,8 +51,12 @@ private:
 
     void m_setupMonitor();
 
-    QList<HistoryEntry> m_prepareHistory(const QList<HistoryEntry>& in, TBotMsgDecoder::Type t);
+    bool m_saveProcs();
 
+    bool m_restoreProcs();
+
+    QList<HistoryEntry> m_prepareHistory(int uid, TBotMsgDecoder::Type t);
+    void m_removeExpiredProcs(QList<HistoryEntry> &in);
 };
 
 #endif // CUBOTSERVER_H

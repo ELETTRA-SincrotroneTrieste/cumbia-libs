@@ -22,12 +22,18 @@ QString MsgFormatter::lastOperation(const QDateTime &dt, const QString &name) co
     return msg;
 }
 
-QString MsgFormatter::history(const QList<HistoryEntry> &hel) const
+QString MsgFormatter::history(const QList<HistoryEntry> &hel, int ttl, const QString& type) const
 {
     QString msg;
     if(hel.size() == 0)
-        msg = "history empty!";
+        msg = type + " list is empty";
     else {
+        // heading
+        msg += "<b>" + type.toUpper();
+        if(type != "bookmarks")
+            msg += " HISTORY";
+        msg += "</b>\n\n";
+
         for(int i = 0; i < hel.size(); i++) {
             const HistoryEntry &e = hel[i];
             QString f = e.formula;
@@ -38,9 +44,15 @@ QString MsgFormatter::history(const QList<HistoryEntry> &hel) const
             // 2. if monitor or alert, print stop date and make link to restart if
             //    no more active
             if(e.type == "monitor" || e.type == "alert") {
-                QDateTime stop = e.datetime.addSecs(BotConfig().ttl());
+                QDateTime stop = e.datetime.addSecs(ttl);
                 e.is_active ? msg += "<b>active</b> until " : msg += "inactive since ";
-                msg += "<i>" + stop.toString("yyyy.MM.dd hh.mm.ss") + "</i>\n";
+                msg += "<i>" + stop.toString("yyyy.MM.dd hh.mm.ss") + "</i>";
+
+                // stop active monitor by link command
+                if(e.is_active && e.index > -1)
+                    msg += QString(" stop[/X%1]").arg(e.index);
+
+                msg += "\n";
                 if(!e.is_active) {
                     msg += QString("/%1%2 (<i>restart %1").arg(e.type).arg(e.index);
                     e.hasHost() ? msg += "[" + e.host + "]</i>)" : msg += "</i>)";
@@ -76,7 +88,17 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
     // start with timestamp, always
     ok ? msg = "" : msg = "👎";
     msg +=  "<i>" +ts + "</i>";
-    !host.isEmpty() ? msg+= " [<i>" + host + "</i>]\n" : msg += "\n";
+
+    !host.isEmpty() ? msg+= " [<i>" + host + "</i>]" : msg += "";
+
+    int idx = d["index"].toInt();
+
+    //  /Xn command used to stop monitor
+    if(idx > -1)
+        msg += QString("   /X%1").arg(idx);
+
+    msg += "\n"; // new line
+
     // source: always
     msg += "<i>" + m_src + "</i>: ";
 
@@ -162,6 +184,13 @@ QString MsgFormatter::formulaChanged(const QString &src, const QString &old, con
     return s;
 }
 
+QString MsgFormatter::monitorTypeChanged(const QString &src, const QString &old_t, const QString &new_t)
+{
+    QString s;
+    s = "type <i>" + old_t + "</i> changed into <b>" + new_t + "</b> for source <i>" + src + "</i>";
+    return s;
+}
+
 QString MsgFormatter::hostChanged(const QString &host, bool success) const
 {
     QString s = "<i>" + QDateTime::currentDateTime().toString("yyyy.MM.dd hh.mm.ss") + "</i>\n";
@@ -180,5 +209,18 @@ QString MsgFormatter::host(const QString &host) const
     s = "host is set to <b>" + host + "</b>:\n";
     s += "It can be changed with:\n"
          "<i>host tango-host:PORT_NUMBER</i>";
+    return s;
+}
+
+QString MsgFormatter::bookmarkAdded(const HistoryEntry &b) const
+{
+    QString s;
+    if(b.isValid()) {
+        s += "successfully added bookmark:\n";
+        s += QString("<i>%1 %2</i>\ntype: <i>%3</i>  [host: <i>%4</i>]").arg(b.name).arg(b.formula).arg(b.type).arg(b.host);
+    }
+    else {
+        s = "could not add the requested bookmark";
+    }
     return s;
 }

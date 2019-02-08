@@ -39,6 +39,7 @@ public:
               int chat_id, QObject *w,
               CumbiaPool *cumbia_pool,
               const CuControlsFactoryPool &fpool,
+              int ttl,
               const QString& formula,
               Priority pri = Normal,
               const QString& host = QString(),
@@ -58,6 +59,12 @@ public:
 
     QString host() const;
 
+    QDateTime startedOn() const;
+
+    void setStartedOn(const QDateTime &dt);
+
+    bool hasStartDateTime() const;
+
     /** \brief returns a pointer to the CuContext used as a delegate for the connection.
      *
      * @return CuContext
@@ -66,9 +73,15 @@ public:
 
     int userId() const;
 
+    int chatId() const;
+
     Priority priority() const;
 
     void setPriority(Priority pri);
+
+    int index() const;
+
+    void setIndex(int idx);
 
 public slots:
 
@@ -88,6 +101,7 @@ public slots:
 
 signals:
     void newData(int chat_id, const CuData&);
+    void lastUpdate(int chat_id, const CuData&);
     void startSuccess(int user_id, int chat_it, const QString& src, const QString& formula);
     void onProperties(int chat_id, const CuData&);
     void formulaChanged(int chat_id, const QString& src, const QString& oldf, const QString& new_f);
@@ -104,6 +118,8 @@ private:
     void m_configure(const CuData& d);
 
     bool m_publishResult(const CuData& da);
+
+    void m_check_or_setStartedNow();
 
     // CuDataListener interface
 public:

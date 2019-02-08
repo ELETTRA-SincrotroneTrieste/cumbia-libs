@@ -1,4 +1,5 @@
 #include "tbotmsg.h"
+#include "historyentry.h"
 #include <QJsonValue>
 #include <cumacros.h>
 #include <QDateTime>
@@ -17,6 +18,22 @@ TBotMsg::TBotMsg(const QJsonValue &v)
     decode(v);
 }
 
+TBotMsg::TBotMsg(const HistoryEntry &he)
+{
+    chat_id = he.chat_id;
+    user_id = he.user_id;
+    m_host = he.host;
+    // msg_recv_datetime left invalid
+    start_dt = he.datetime;
+    text = he.toCommand();
+    // unavailable from HistoryEntry
+    is_bot = false;
+    update_id = -1;
+    message_id = -1;
+    from_history = true;
+    from_real_msg = false;
+}
+
 void TBotMsg::decode(const QJsonValue &m)
 {
     QJsonValue msg = m["message"];
@@ -27,7 +44,8 @@ void TBotMsg::decode(const QJsonValue &m)
     chat_username = chat["username"].toString();
     chat_lang = chat["language_code"].toString();
 
-    dt = QDateTime::fromTime_t(msg["date"].toInt());
+    // start_dt is left invalid
+    msg_recv_datetime = QDateTime::fromTime_t(msg["date"].toInt());
 
     QJsonValue from = msg["from"];
     first_name = chat["first_name"].toString();
@@ -40,14 +58,17 @@ void TBotMsg::decode(const QJsonValue &m)
     text  = msg["text"].toString();
 
     update_id = m["update_id"].toInt();
+
+    from_history = false;
+    from_real_msg = true;
 }
 
 void TBotMsg::print() const
 {
-    printf("\e[1;32m--> \e[0;32m%d\e[0m:\t[%s]\tfrom:\e[1;32m%s\e[0m [\e[1;34m%s\e[0m]: \e[1;37;4mMSG\e[0m\t"
-           "\e[0;32m[\e[0m\"%s\"\e[0;32m]\e[0m\t[msg.id: %d]\n",
-           update_id, qstoc(dt.toString()), qstoc(username), qstoc(first_name),
-           qstoc(text), message_id);
+    printf("\e[1;32m--> \e[0;32m%d\e[0m:\t[received: %s]\tfrom:\e[1;32m%s\e[0m [\e[1;34m%s\e[0m]: \e[1;37;4mMSG\e[0m\t"
+           "\e[0;32m[\e[0m\"%s\"\e[0;32m]\e[0m\t[msg.id: %d] from_history %d from_real_msg %d\n",
+           update_id, qstoc(msg_recv_datetime.toString()), qstoc(username), qstoc(first_name),
+           qstoc(text), message_id, from_history, from_real_msg);
 }
 
 void TBotMsg::setHost(const QString &h)

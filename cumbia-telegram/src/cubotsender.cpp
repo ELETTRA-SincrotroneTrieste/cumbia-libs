@@ -42,6 +42,6 @@ void CuBotSender::onNetworkError(QNetworkReply::NetworkError nerr)
 void CuBotSender::onReply()
 {
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-    printf("CuBotSender.onReply: \e[1;32mgot %s\e[0m going to delete reply later\n", qstoc(QString(reply->readAll())));
+//    printf("CuBotSender.onReply: \e[1;32mgot %s\e[0m going to delete reply later\n", qstoc(QString(reply->readAll())));
     reply->deleteLater();
 }

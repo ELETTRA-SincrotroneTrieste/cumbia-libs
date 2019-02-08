@@ -12,6 +12,7 @@ HistoryEntry::HistoryEntry(int idx, int u_id, const QDateTime &ts,
     formula = f;
     host = _host;
     is_active = false;
+    chat_id = -1;
 }
 
 HistoryEntry::HistoryEntry(int u_id, const QString &nam, const QString &typ,
@@ -24,6 +25,7 @@ HistoryEntry::HistoryEntry(int u_id, const QString &nam, const QString &typ,
     host = _host;
     is_active = false;
     datetime = QDateTime::currentDateTime();
+    chat_id = -1;
 }
 
 HistoryEntry::HistoryEntry()
@@ -36,6 +38,25 @@ HistoryEntry::HistoryEntry()
 bool HistoryEntry::isValid() const
 {
     return user_id > -1 || datetime.isValid() || !name.isEmpty();
+}
+
+bool HistoryEntry::hasChatId() const {
+    return chat_id > -1;
+}
+
+// user_id,chat_id,name,type,formula,host,start_dt
+void HistoryEntry::fromDbProc(int u_id, int chatid, const QString& nam, const QString& typ,
+                              const QString& formul, const QString& hos,
+                              const QDateTime& dt)
+{
+    user_id = u_id;
+    chat_id = chatid;
+    name = nam;
+    type = typ;
+    formula = formul;
+    host = hos;
+    datetime = dt;
+    index = -1;
 }
 
 QString HistoryEntry::toCommand() const

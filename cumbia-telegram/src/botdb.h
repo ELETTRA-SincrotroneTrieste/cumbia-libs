@@ -6,6 +6,7 @@
 #include <QMap>
 
 #include "historyentry.h"
+#include "botconfig.h"
 
 class BotDb
 {
@@ -20,17 +21,27 @@ public:
 
     bool removeUser(int uid);
 
-    bool insertOperation(const HistoryEntry &in);
+    bool addToHistory(const HistoryEntry &in);
+
+    bool saveProc(const HistoryEntry &he);
+
+    bool clearProcTable();
+
+    bool unregisterProc(const HistoryEntry &he);
+
+    QList<HistoryEntry> loadProcs();
 
     HistoryEntry lastOperation(int uid);
 
-    QList<HistoryEntry> history(int uid);
+    HistoryEntry bookmarkLast(int uid);
+
+    QList<HistoryEntry> history(int uid, const QString &type);
+
+//    QList<HistoryEntry> bookmarks(int uid);
 
     HistoryEntry commandFromIndex(int uid, const QString &type, int index);
 
     bool monitorStopped(int chat_id, const QString& src);
-
-    bool readUpdate(int chat_id, const QString& src, const QString& value, const QString &quality);
 
     bool error() const;
 
@@ -46,17 +57,16 @@ public:
 
     QString getSelectedHost(int chat_id);
 
+    bool getConfig(QMap<QString, QVariant>& datamap, QMap<QString, QString> &descmap);
+
 private:
     QSqlDatabase m_db;
     bool m_err;
     QString m_msg;
-    QMap<int, QList<HistoryEntry> > m_history;
 
     void createDb(const QString &tablename) ;
 
     void m_printTable(const QString &table);
-
-    bool m_createHistory(int user_id);
 
 };
 

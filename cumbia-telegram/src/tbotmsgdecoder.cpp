@@ -2,6 +2,7 @@
 #include "tbotmsg.h"
 
 #include <QString>
+#include <QtDebug>
 #include <QRegularExpression>
 #include <cutango-world.h>
 
@@ -58,6 +59,8 @@ TBotMsgDecoder::Type TBotMsgDecoder::decode(const TBotMsg &msg)
         m_type = AlertHistory;
     else if(m_text == "stop") m_type = StopMonitor; // will stop all monitors for the chat
     else if(m_text == "host" || m_text == "/host") m_type = QueryHost;
+    else if(m_text == "bookmarks" || m_text == "/bookmarks") m_type = Bookmarks;
+    else if(m_text == "bookmark" || m_text == "/bookmark") m_type = AddBookmark;
     else {
         // host
         // a. host srv-tango-srf:20000
@@ -76,20 +79,35 @@ TBotMsgDecoder::Type TBotMsgDecoder::decode(const TBotMsg &msg)
             if(match.hasMatch()) {
                 m_cmdLinkIdx = match.captured(1).toInt();
             }
-            else  { // try "/c1, /c2, ...
-                re.setPattern("/c(\\d{1,2})\\b");
+            else  { // try "/X1, /X2, shortcuts to stop monitor...
+                re.setPattern("/X(\\d{1,2})\\b");
                 match = re.match(m_text);
-                if(match.hasMatch())
+                if(match.hasMatch()) {
                     m_cmdLinkIdx = match.captured(1).toInt();
-            } // try /c1, /c2 ...
+                    m_type = StopMonitor;
+                }
+                else {
+                    /////
+                    /// siam rimasti qui
+                    /// /
+                    re.setPattern("/X[mra]{1,1}B(\\d{1,2})\\b");
+                    match = re.match(m_text);
+                    if(match.hasMatch()) {
+                        m_cmdLinkIdx = match.captured(1).toInt();
+                        m_type = DelBookmark;
+                    }
+                }
+            }
 
-            // the message received is not a link to a previous command
+            // the message received
+            // 1. is not a link to a previous command
+            // 2. is not a /Xn command to StopMonitor by index
             // try to detect a tango attribute then
 
-            if(m_cmdLinkIdx > 0) {
+            if(m_cmdLinkIdx > 0 && m_type == Invalid) {
                 m_type = CmdLink;
             }
-            else {
+            else if(m_type == Invalid) {
                 // invoke m_decodeSrcCmd helper function with the trimmed text
                 m_type = m_decodeSrcCmd(m_text.trimmed());
             } //  m_cmdLinkIdx < 0
@@ -202,4 +220,18 @@ bool TBotMsgDecoder::error() const
 QString TBotMsgDecoder::message() const
 {
     return m_msg;
+}
+
+QString TBotMsgDecoder::toHistoryTableType(TBotMsgDecoder::Type t) const
+{
+    QString type;
+    if(t == TBotMsgDecoder::MonitorHistory)
+        type = "monitor";
+    else if(t == TBotMsgDecoder::AlertHistory)
+        type = "alert";
+    else if(t == TBotMsgDecoder::ReadHistory)
+        type = "read";
+    else if(t == TBotMsgDecoder::Bookmarks)
+        type = "bookmarks";
+    return type;
 }

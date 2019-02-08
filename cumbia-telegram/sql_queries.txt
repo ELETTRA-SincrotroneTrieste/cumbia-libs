@@ -20,12 +20,14 @@ INSERT OR REPLACE INTO operations (user_id, name, timestamp) values ((SELECT use
 																	datetime() )
 
 
-
-CREATE TABLE operations (user_id INTEGER NOT NULL, 
-						 timestamp DATETIME NOT NULL, 
-						 name TEXT NOT NULL,
-						type TEXT NOT NULL,
-						 UNIQUE (user_id, name,type) ON CONFLICT REPLACE)
+CREATE TABLE history (user_id INTEGER NOT NULL,
+                            timestamp DATETIME NOT NULL, 
+                            name TEXT NOT NULL,
+                            type TEXT NOT NULL,
+                            formula TEXT NOT NULL,
+                            host TEXT DEFAULT NULL,
+                            bookmark_idx INTEGER NOT NULL,
+                            UNIQUE (user_id, name, type, formula,bookmark_idx) ON CONFLICT REPLACE, PRIMARY KEY(user_id,type,bookmark_idx))
 
 
 insert into operations values (1, datetime(), 'att1', 'monitor')
@@ -44,15 +46,6 @@ insert or replace into hosts (user_id, host) VALUES(1, 'len')
 
 
 
-read_history TABLE
-
-CREATE TABLE read_history (chat_id INTEGER NOT NULL, 
-                            timestamp DATETIME NOT NULL, 
-                            src TEXT NOT NULL,
-                            value TEXT,
-                            quality INTEGER NOT NULL,
-                            UNIQUE (chat_id, src) ON CONFLICT REPLACE)
-
 # simulate subsequent updates
 INSERT INTO read_history VALUES(100, datetime(), 'a/b/c/d', '10.0', 0)
 INSERT INTO read_history VALUES(100, datetime(), 'a/b/c/d', '10.2', 0)
@@ -60,6 +53,15 @@ INSERT INTO read_history VALUES(100, datetime(), 'a/b/c/d', '100.2',  1)
 INSERT INTO read_history VALUES(100, datetime(),'a/b/c/d', '110.2',  1)
 INSERT INTO read_history VALUES(100, datetime(), 'a/b/c/d', '250.2', 2)
 INSERT INTO read_history VALUES(100, datetime(), 'a/b/c/d', '260.2',  2)
+
+
+procs table saves active monitors/aletrs in order to be restored if the server goes down and up again later.
+Must contain all the fields necessary to restart a monitor / alert exactly as it was before:
+- user and chat id
+- date time started
+- command (monitor|alert|...) plus source plus formula
+- host
+
 
 
 

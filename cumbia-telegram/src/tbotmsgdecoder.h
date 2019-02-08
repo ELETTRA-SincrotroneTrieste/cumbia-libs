@@ -13,11 +13,13 @@ public:
     enum Type { Invalid, Start, Stop, Host, QueryHost,
                 Read, Monitor, Alert, StopMonitor, Properties,
                 ReadHistory, MonitorHistory, AlertHistory,
+                Bookmarks, AddBookmark, DelBookmark,
                 Last, CmdLink, MaxType = 32 };
 
     const char types[MaxType][32] = { "Invalid", "Start", "Stop", "Host", "QueryHost",
                                       "Read", "Monitor", "Alert", "StopMonitor", "Properties",
                                       "ReadHistory", "MonitorHistory", "AlertHistory",
+                                      "Bookmarks", "AddBookmark", "DelBookmark",
                                       "Last", "CmdLink", "MaxType"};
 
     TBotMsgDecoder();
@@ -41,6 +43,8 @@ public:
     bool error() const;
 
     QString message() const;
+
+    QString toHistoryTableType( Type t) const;
 
 private:
 

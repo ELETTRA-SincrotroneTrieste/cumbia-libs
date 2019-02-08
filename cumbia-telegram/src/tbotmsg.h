@@ -2,6 +2,7 @@
 #define TBOTMSGDATA_H
 
 class QJsonValue;
+class HistoryEntry;
 
 #include <QString>
 #include <QDateTime>
@@ -12,6 +13,8 @@ public:
     TBotMsg();
 
     TBotMsg(const QJsonValue& v);
+
+    TBotMsg(const HistoryEntry &he);
 
     void decode(const QJsonValue& m);
 
@@ -29,7 +32,8 @@ public:
     QString chat_username;
     QString chat_lang;
 
-    QDateTime dt;
+    QDateTime msg_recv_datetime;
+    QDateTime start_dt;
 
     QString first_name, last_name;
     int user_id;
@@ -39,6 +43,9 @@ public:
     QString text;
 
     int update_id;
+
+    bool from_history;
+    bool from_real_msg;
 
 private:
     QString m_host;

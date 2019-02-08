@@ -7,6 +7,7 @@
 #include <QContextMenuEvent>
 #include <QMetaProperty>
 #include <QScriptEngine>
+#include <QtDebug>
 
 #include "cucontrolsfactories_i.h"
 #include "cucontrolsfactorypool.h"
@@ -27,8 +28,11 @@ public:
     CuContext *context;
     CuData properties;
     int user_id, chat_id;
+    int ttl;
     unsigned long refresh_cnt;
     BotReader::Priority priority;
+    QDateTime startDateTime;
+    int index; // to find the reader by index (shortcuts)
 };
 
 /** \brief Constructor with the parent widget, *CumbiaPool*  and *CuControlsFactoryPool*
@@ -40,6 +44,7 @@ BotReader::BotReader(int user_id,
                      QObject *w,
                      CumbiaPool *cumbia_pool,
                      const CuControlsFactoryPool &fpool,
+                     int ttl,
                      const QString &formula,
                      Priority pri,
                      const QString &host,
@@ -50,10 +55,12 @@ BotReader::BotReader(int user_id,
     d->context = new CuContext(cumbia_pool, fpool);
     d->chat_id = chat_id;
     d->user_id = user_id;
+    d->ttl = ttl;
     d->priority = pri;
     d->monitor = monitor;
     d->formula = formula;
     d->refresh_cnt = 0;
+    d->index = -1;
     const char* env_tg_host = NULL;
     if(host.isEmpty() && (env_tg_host = secure_getenv("TANGO_HOST")) != nullptr) {
         printf("\e[0;33mAUTO DETECTED TANGO HSOT %s\e[0m\n", env_tg_host);
@@ -73,7 +80,7 @@ void BotReader::m_init()
 
 BotReader::~BotReader()
 {
-    predtmp("\e[1;31m~BotReader %p", this);
+    printf("\e[1;31m~BotReader %p\e[0m\n", this);
     delete d->context;
     delete d;
 }
@@ -98,6 +105,26 @@ QString BotReader::host() const
     return d->host;
 }
 
+QDateTime BotReader::startedOn() const
+{
+    return d->startDateTime;
+}
+
+void BotReader::setStartedOn(const QDateTime &dt)
+{
+    if(d->startDateTime.isValid()) {
+        perr("BotReader.setStartedOn: cannot set start date time more than once");
+    }
+    else {
+        d->startDateTime = dt;
+    }
+}
+
+bool BotReader::hasStartDateTime() const
+{
+    return d->startDateTime.isValid();
+}
+
 /** \brief returns the pointer to the CuContext
  *
  * CuContext sets up the connection and is used as a mediator to send and get data
@@ -115,9 +142,34 @@ int BotReader::userId() const
     return d->user_id;
 }
 
+int BotReader::chatId() const
+{
+    return d->chat_id;
+}
+
 BotReader::Priority BotReader::priority() const
 {
     return d->priority;
+}
+
+/**
+ * @brief BotMonitor::index useful to find a Reader by its unique index
+ *
+ * The purpose of an index is to create a "/shortcut" to easily find a
+ * reader by its unique id.
+ *
+ * The id is unique for every reader *per user_id*
+ *
+ * @return the BotReader index
+ */
+int BotReader::index() const
+{
+    return d->index;
+}
+
+void BotReader::setIndex(int idx)
+{
+    d->index = idx;
 }
 
 void BotReader::setPriority(BotReader::Priority pri)
@@ -192,11 +244,22 @@ void BotReader::m_configure(const CuData& da)
     d->properties = da;
 }
 
+/**
+ * @brief BotReader::onUpdate manages new data from the engine
+ *
+ * If it is the first call and there is no error condition, startSuccess is emitted.
+ * startSuccess signal will contain the user and chat ids,
+ * the source name (host name excluded) and the formula.
+ *
+ * @param da
+ */
 void BotReader::onUpdate(const CuData &da)
 {
     d->read_ok = !da["err"].toBool();
-    if(d->read_ok && d->refresh_cnt == 0)
+    if(d->read_ok && d->refresh_cnt == 0) {
+        m_check_or_setStartedNow(); // read method comments
         emit startSuccess(d->user_id, d->chat_id, source(), d->formula);
+    }
 
     // configure object if the type of received data is "property"
     if(d->read_ok && d->auto_configure && da["type"].toString() == "property") {
@@ -204,6 +267,7 @@ void BotReader::onUpdate(const CuData &da)
     }
     // in case of error: quit
     // in case we got a value: quit
+    // if monitor, m_publishResult is always called
     if(!d->read_ok || da.containsKey("value") || d->monitor) {
         // evaluate formula, if present, and emit newData
         bool success = m_publishResult(da);
@@ -212,6 +276,8 @@ void BotReader::onUpdate(const CuData &da)
         }
     }
     d->refresh_cnt++;
+    if(!d->startDateTime.isValid() || d->startDateTime.secsTo(QDateTime::currentDateTime()) >= d->ttl)
+        emit lastUpdate(d->chat_id, da);
 }
 
 bool BotReader::m_publishResult(const CuData &da)
@@ -219,6 +285,7 @@ bool BotReader::m_publishResult(const CuData &da)
     CuData data(da);
     bool success = !da["err"].toBool();
     data["silent"] = (d->priority == Low);
+    data["index"] = d->index;
     // is there a formula to be evaluated?
     if(!d->formula.isEmpty() && da["data_format_str"].toString() == "scalar") {
         CuVariant v = da["value"];
@@ -231,7 +298,7 @@ bool BotReader::m_publishResult(const CuData &da)
             if(fhelp.requiresLeftOperand())
                 formula = QString::number(dval) + " " + formula;
 
-            printf("\e[0;36mBotReader.onUpdate: evaluating \"%s\"\e[0m\n", qstoc(formula));
+            //printf("\e[0;36mBotReader.onUpdate: evaluating \"%s\"\e[0m\n", qstoc(formula));
             QScriptEngine eng;
             QScriptValue sv = eng.evaluate(formula);
             data["formula"] = formula.toStdString();
@@ -265,4 +332,10 @@ bool BotReader::m_publishResult(const CuData &da)
         emit newData(d->chat_id, data);
     }
     return success;
+}
+
+void BotReader::m_check_or_setStartedNow()
+{
+    if(!d->startDateTime.isValid()) // check if not already set
+        d->startDateTime = QDateTime::currentDateTime();
 }
