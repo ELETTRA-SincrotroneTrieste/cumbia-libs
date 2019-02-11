@@ -35,6 +35,8 @@ public:
 
     HistoryEntry bookmarkLast(int uid);
 
+    bool removeBookmark(int uid, int index);
+
     QList<HistoryEntry> history(int uid, const QString &type);
 
 //    QList<HistoryEntry> bookmarks(int uid);
@@ -67,6 +69,8 @@ private:
     void createDb(const QString &tablename) ;
 
     void m_printTable(const QString &table);
+
+    int m_findFirstAvailableIdx(const QList<int> &in_idxs);
 
 };
 

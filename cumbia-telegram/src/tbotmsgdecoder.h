@@ -14,13 +14,13 @@ public:
                 Read, Monitor, Alert, StopMonitor, Properties,
                 ReadHistory, MonitorHistory, AlertHistory,
                 Bookmarks, AddBookmark, DelBookmark,
-                Last, CmdLink, MaxType = 32 };
+                Last, CmdLink, Search, MaxType = 32 };
 
     const char types[MaxType][32] = { "Invalid", "Start", "Stop", "Host", "QueryHost",
                                       "Read", "Monitor", "Alert", "StopMonitor", "Properties",
                                       "ReadHistory", "MonitorHistory", "AlertHistory",
                                       "Bookmarks", "AddBookmark", "DelBookmark",
-                                      "Last", "CmdLink", "MaxType"};
+                                      "Last", "CmdLink", "Search", "MaxType"};
 
     TBotMsgDecoder();
 

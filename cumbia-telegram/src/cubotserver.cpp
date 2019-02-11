@@ -167,6 +167,16 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
         HistoryEntry he = d->bot_db->bookmarkLast(m.user_id);
         d->bot_sender->sendMessage(m.chat_id, MsgFormatter().bookmarkAdded(he));
     }
+    else if(t == TBotMsgDecoder::DelBookmark) {
+        int cmd_idx = msg_dec.cmdLinkIdx();
+        if(cmd_idx > 0 && (success = d->bot_db->removeBookmark(m.user_id, cmd_idx))) {
+                d->bot_sender->sendMessage(m.chat_id, MsgFormatter().bookmarkRemoved(success));
+        }
+    }
+    else if(t == TBotMsgDecoder::Search) {
+        printf("\e[0;32msearching \"%s\"\e[0m\n", qstoc(msg_dec.source()));
+
+    }
     else if(t == TBotMsgDecoder::CmdLink) {
         int cmd_idx = msg_dec.cmdLinkIdx();
         if(cmd_idx > -1) {

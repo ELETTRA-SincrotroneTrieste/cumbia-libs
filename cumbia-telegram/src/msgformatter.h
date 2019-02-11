@@ -37,6 +37,7 @@ public:
     QString host(const QString& host) const;
 
     QString bookmarkAdded(const HistoryEntry& b) const;
+    QString bookmarkRemoved(bool ok) const;
 
 
 private:

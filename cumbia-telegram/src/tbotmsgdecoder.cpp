@@ -87,10 +87,7 @@ TBotMsgDecoder::Type TBotMsgDecoder::decode(const TBotMsg &msg)
                     m_type = StopMonitor;
                 }
                 else {
-                    /////
-                    /// siam rimasti qui
-                    /// /
-                    re.setPattern("/X[mra]{1,1}B(\\d{1,2})\\b");
+                    re.setPattern("/XB(\\d{1,2})\\b");
                     match = re.match(m_text);
                     if(match.hasMatch()) {
                         m_cmdLinkIdx = match.captured(1).toInt();
@@ -111,6 +108,16 @@ TBotMsgDecoder::Type TBotMsgDecoder::decode(const TBotMsg &msg)
                 // invoke m_decodeSrcCmd helper function with the trimmed text
                 m_type = m_decodeSrcCmd(m_text.trimmed());
             } //  m_cmdLinkIdx < 0
+        }
+        // try search match now
+        if(m_type == Invalid) { // still invalid
+            const char *tg_section_match = "[A-Za-z0-9_\\.\\*]";
+            re.setPattern(QString("search\\s+(%1*/%1*/%1)").arg(tg_section_match));
+            match = re.match(m_text);
+            if(match.hasMatch()) {
+                m_type = Search;
+                m_source = match.captured(1);
+            }
         }
     }
 

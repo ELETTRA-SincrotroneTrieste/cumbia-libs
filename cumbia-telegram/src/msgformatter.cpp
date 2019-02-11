@@ -39,7 +39,10 @@ QString MsgFormatter::history(const QList<HistoryEntry> &hel, int ttl, const QSt
             QString f = e.formula;
             // 1. type + source [+formula if not empty]
             msg +=  "<b>"+ e.type + "</b>: <i>" + e.name;
-            f.isEmpty() ? msg += "</i>\n" : msg += " " + f.replace(QRegExp("\\s*<\\s+"), " LT ") + "</i>\n";
+            f.isEmpty() ? msg += "</i>" : msg += " " + f.replace(QRegExp("\\s*<\\s+"), " LT ") + "</i>";
+
+            // if bookmark add remove link
+            type == "bookmarks" ? msg += QString("   /XB%1\n").arg(e.index) : msg += "\n";
 
             // 2. if monitor or alert, print stop date and make link to restart if
             //    no more active
@@ -216,11 +219,18 @@ QString MsgFormatter::bookmarkAdded(const HistoryEntry &b) const
 {
     QString s;
     if(b.isValid()) {
-        s += "successfully added bookmark:\n";
+        s += "👍   successfully added bookmark:\n";
         s += QString("<i>%1 %2</i>\ntype: <i>%3</i>  [host: <i>%4</i>]").arg(b.name).arg(b.formula).arg(b.type).arg(b.host);
     }
     else {
-        s = "could not add the requested bookmark";
+        s = "👎   could not add the requested bookmark";
     }
+    return s;
+}
+
+QString MsgFormatter::bookmarkRemoved(bool ok) const
+{
+    QString s;
+    ok ? s =  "👍   successfully removed bookmark" : s = "👎   failed to remove bookmark";
     return s;
 }
