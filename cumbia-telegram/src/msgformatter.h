@@ -39,6 +39,12 @@ public:
     QString bookmarkAdded(const HistoryEntry& b) const;
     QString bookmarkRemoved(bool ok) const;
 
+    QString tg_devSearchList(const QStringList& devs) const;
+    QString tg_attSearchList(const QString &devname, const QStringList& devs) const;
+
+    QString errorVolatileSequence(const QStringList &seq) const;
+    QString volatileOpExpired(const QString &opnam, const QString &text) const;
+
 
 private:
     QString m_quality, m_value, m_src;

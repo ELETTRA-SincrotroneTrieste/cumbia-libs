@@ -39,6 +39,12 @@ private slots:
     void onSrcMonitorTypeChanged(int user_id, int chat_id, const QString& src,
                                  const QString& host, const QString& old_type, const QString& new_type);
 
+    void onTgDevListSearchReady(int chat_id , const QStringList& devs);
+
+    void onTgAttListSearchReady(int chat_id, const QString& devname, const QStringList& atts);
+
+    void onVolatileOperationExpired(int chat_id, const QString& opnam, const QString& text);
+
 public slots:
     void start();
     void stop();
@@ -57,6 +63,7 @@ private:
 
     QList<HistoryEntry> m_prepareHistory(int uid, TBotMsgDecoder::Type t);
     void m_removeExpiredProcs(QList<HistoryEntry> &in);
+
 };
 
 #endif // CUBOTSERVER_H

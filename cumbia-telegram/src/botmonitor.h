@@ -32,7 +32,6 @@ public:
     QList<BotReader *>  readers() const;
 
 signals:
-    void alarm(int chat_id, const CuData& data);
 
     void stopped(int user_id, int chat_id, const QString& src, const QString& host, const QString& message);
 
@@ -66,7 +65,7 @@ private slots:
 
     void m_onFormulaChanged(int chat_id, const QString& src, const QString& old, const QString& new_f);
 
-    void m_onPriorityChanged(int user_id, int chat_id, const QString& src,
+    void m_onPriorityChanged(int chat_id, const QString& src,
                                 BotReader::Priority oldpri, BotReader::Priority newpri);
 
     void m_onLastUpdate(int chat_id, const CuData& dat);

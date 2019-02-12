@@ -6,6 +6,8 @@
 #include <QIODevice>
 #include <cumacros.h>
 
+#define TELEGRAM_MAX_MSGLEN 4096
+
 class CuBotSenderPrivate {
 public:
     QNetworkAccessManager *manager;
@@ -23,7 +25,8 @@ CuBotSender::CuBotSender(QObject *parent) : QObject(parent)
 void CuBotSender::sendMessage(int chat_id, const QString &msg, bool silent)
 {
     QString u = "https://api.telegram.org/bot635922604:AAEgG6db_3kkzYZqh-LBxi-ubvl5UIEW7gE/sendMessage?parse_mode=HTML&chat_id=";
-    u += QString::number(chat_id) + "&text=" + msg;
+    u += QString::number(chat_id) + "&text=";
+    msg.length() > TELEGRAM_MAX_MSGLEN ?  u += m_truncateMsg(msg) : u += msg;
     if(silent)
         u += QString("&disable_notification=true");
     d->netreq.setUrl(QUrl(u));
@@ -44,4 +47,14 @@ void CuBotSender::onReply()
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
 //    printf("CuBotSender.onReply: \e[1;32mgot %s\e[0m going to delete reply later\n", qstoc(QString(reply->readAll())));
     reply->deleteLater();
+}
+
+QString CuBotSender::m_truncateMsg(const QString &in)
+{
+    QString trunc = in;
+    QString suffix = " ... \n\n(<b>msg too long</b>)";
+    trunc.truncate(TELEGRAM_MAX_MSGLEN - suffix.length());
+    // remove all html tags
+    trunc.remove("<b>").remove("</b>").remove("<i>").remove("</i>");
+    return trunc + suffix;
 }

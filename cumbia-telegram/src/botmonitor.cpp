@@ -190,9 +190,10 @@ void BotMonitor::m_onFormulaChanged(int chat_id, const QString &src, const QStri
     emit onFormulaChanged(reader->userId(), chat_id, src, reader->host(), old, new_f);
 }
 
-void BotMonitor::m_onPriorityChanged(int user_id, int chat_id, const QString &src, BotReader::Priority oldpri, BotReader::Priority newpri)
+void BotMonitor::m_onPriorityChanged(int chat_id, const QString &src, BotReader::Priority oldpri, BotReader::Priority newpri)
 {
     BotReader *reader = qobject_cast<BotReader *>(sender());
+    int user_id = reader->userId();
     QString oldtype, newtype;
     oldpri == BotReader::Low ? oldtype = "monitor" : oldtype = "alert";
     newpri == BotReader::Low ? newtype = "monitor" : newtype = "alert";

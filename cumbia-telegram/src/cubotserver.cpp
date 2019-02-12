@@ -8,6 +8,9 @@
 #include "msgformatter.h"
 #include "botmonitor.h"
 #include "botconfig.h"
+#include "volatileoperations.h"
+#include "botsearchtangodev.h"
+#include "botsearchtangoatt.h"
 
 #include <cumacros.h>
 #include <QtDebug>
@@ -39,6 +42,7 @@ public:
     BotMonitor *bot_mon;
     CumbiaSupervisor cu_supervisor;
     BotConfig *botconf;
+    VolatileOperations *volatile_ops;
 };
 
 CuBotServer::CuBotServer(QObject *parent) : QObject(parent)
@@ -49,6 +53,7 @@ CuBotServer::CuBotServer(QObject *parent) : QObject(parent)
     d->bot_mon = nullptr;
     d->botconf = nullptr;
     d->bot_db = nullptr;
+    d->volatile_ops = nullptr;
 }
 
 CuBotServer::~CuBotServer()
@@ -170,12 +175,60 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
     else if(t == TBotMsgDecoder::DelBookmark) {
         int cmd_idx = msg_dec.cmdLinkIdx();
         if(cmd_idx > 0 && (success = d->bot_db->removeBookmark(m.user_id, cmd_idx))) {
-                d->bot_sender->sendMessage(m.chat_id, MsgFormatter().bookmarkRemoved(success));
+            d->bot_sender->sendMessage(m.chat_id, MsgFormatter().bookmarkRemoved(success));
         }
     }
     else if(t == TBotMsgDecoder::Search) {
-        printf("\e[0;32msearching \"%s\"\e[0m\n", qstoc(msg_dec.source()));
+        BotSearchTangoDev *devSearch = new BotSearchTangoDev(this, m.chat_id);
+        connect(devSearch, SIGNAL(devListReady(int, QStringList)), this, SLOT(onTgDevListSearchReady(int, QStringList)));
+        connect(devSearch, SIGNAL(volatileOperationExpired(int,QString,QString)),
+                this, SLOT(onVolatileOperationExpired(int,QString,QString)));
+        devSearch->find(msg_dec.source());
+        d->volatile_ops->addOperation(m.chat_id, devSearch);
+    }
+    else if(t == TBotMsgDecoder::AttSearch) {
+        int idx = msg_dec.cmdLinkIdx();
+        QString devname;
+        if(idx < 0) { // attlist  tango/dev/name
+            devname = msg_dec.source(); // will contain tango device name
+        }
+        else {
+            BotSearchTangoDev *sd = static_cast<BotSearchTangoDev *>(d->volatile_ops->get(m.chat_id, BotSearchTangoDev::DevSearch));
+            if(sd) {
+                devname = sd->getDevByIdx(idx);
+            }
+        }
+        if(!devname.isEmpty()) {
+            BotSearchTangoAtt *sta = new BotSearchTangoAtt(this, m.chat_id);
+            connect(sta, SIGNAL(attListReady(int, QString, QStringList)),
+                    this, SLOT(onTgAttListSearchReady(int, QString, QStringList)));
+            connect(sta, SIGNAL(volatileOperationExpired(int, QString,QString)),
+                    this, SLOT(onVolatileOperationExpired(int, QString,QString)));
+            sta->find(devname);
+            d->volatile_ops->addOperation(m.chat_id, sta);
+        }
+        else {
+            QStringList sequence = QStringList() << "search PATTERN" << QString("/attlist%1" ).arg(idx);
+            d->bot_sender->sendMessage(m.chat_id,
+                                       MsgFormatter().errorVolatileSequence(sequence));
+        }
+    }
 
+    else if(t == TBotMsgDecoder::ReadFromAttList) {
+        int idx = msg_dec.cmdLinkIdx();
+        QString src;
+        BotSearchTangoAtt* sta = static_cast<BotSearchTangoAtt *>(d->volatile_ops->get(m.chat_id, BotSearchTangoAtt::AttSearch));
+        if(!sta) {
+            QStringList sequence = QStringList() << "search PATTERN" << "/attlist{IDX}"
+                                                 << QString("/a%1_read" ).arg(idx);
+            d->bot_sender->sendMessage(m.chat_id,
+                                       MsgFormatter().errorVolatileSequence(sequence));
+        }
+        else if(idx > 0 && (src = sta->getSourceByIdx(idx) ) != QString()) {
+            TBotMsg mc = m; // copy m into mc
+            mc.text = src;
+            onMessageReceived(mc);
+        }
     }
     else if(t == TBotMsgDecoder::CmdLink) {
         int cmd_idx = msg_dec.cmdLinkIdx();
@@ -197,6 +250,8 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
             }
         }
     }
+
+    d->volatile_ops->consume(m.chat_id, msg_dec.type());
 }
 
 void CuBotServer::onNewData(int chat_id, const CuData &data)
@@ -268,6 +323,8 @@ void CuBotServer::start()
         if(!d->bot_sender) {
             d->bot_sender = new CuBotSender(this);
         }
+        if(!d->volatile_ops)
+            d->volatile_ops = new VolatileOperations();
 
         m_restoreProcs();
     }
@@ -295,6 +352,10 @@ void CuBotServer::stop()
         }
         d->bot_db = nullptr;
         d->cu_supervisor.dispose();
+
+        if(d->volatile_ops)
+            delete d->volatile_ops;
+
     }
 }
 
@@ -316,6 +377,22 @@ void CuBotServer::onSrcMonitorTypeChanged(int user_id, int chat_id, const QStrin
     d->bot_db->addToHistory(he);
 }
 
+void CuBotServer::onTgDevListSearchReady(int chat_id, const QStringList &devs)
+{
+    qDebug() << __PRETTY_FUNCTION__ << chat_id << devs;
+    d->bot_sender->sendMessage(chat_id, MsgFormatter().tg_devSearchList(devs));
+}
+
+void CuBotServer::onTgAttListSearchReady(int chat_id, const QString& devname, const QStringList &atts)
+{
+    d->bot_sender->sendMessage(chat_id, MsgFormatter().tg_attSearchList(devname, atts));
+}
+
+void CuBotServer::onVolatileOperationExpired(int chat_id, const QString &opnam, const QString &text)
+{
+    d->bot_sender->sendMessage(chat_id, MsgFormatter().volatileOpExpired(opnam, text));
+}
+
 void CuBotServer::m_setupMonitor()
 {
     if(!d->bot_mon) {
@@ -324,10 +401,9 @@ void CuBotServer::m_setupMonitor()
         connect(d->bot_mon, SIGNAL(stopped(int, int, QString, QString, QString)),
                 this, SLOT(onSrcMonitorStopped(int, int, QString, QString, QString)));
         connect(d->bot_mon, SIGNAL(started(int,int, QString,QString,QString)), this, SLOT(onSrcMonitorStarted(int,int, QString,QString,QString)));
-        connect(d->bot_mon, SIGNAL(alarm(int, const CuData&)), this, SLOT(onSrcMonitorAlarm(int, const CuData&)));
         connect(d->bot_mon, SIGNAL(onFormulaChanged(int, int, QString,QString,QString,QString)),
                 this, SLOT(onSrcMonitorFormulaChanged(int, int, QString,QString,QString,QString)));
-        connect(d->bot_mon, SIGNAL(onSrcMonitorTypeChanged(int,int, QString,QString,QString,QString)),
+        connect(d->bot_mon, SIGNAL(onMonitorTypeChanged(int,int, QString,QString,QString,QString)),
                 this, SLOT(onSrcMonitorTypeChanged(int,int, QString,QString,QString,QString)));
     }
 }
@@ -355,7 +431,7 @@ bool CuBotServer::m_restoreProcs()
         perr("CuBotServer:m_restoreProcs: database error: \"%s\"", qstoc(d->bot_db->message()));
     for(int i =0; i < hes.size() && !d->bot_db->error(); i++) {
         const HistoryEntry& he = hes[i];
-//        printf("restoring proc %s type %s host %s formula %s chat id %d\n", qstoc(he.name), qstoc(he.type), qstoc(he.host), qstoc(he.formula), he.chat_id);
+        //        printf("restoring proc %s type %s host %s formula %s chat id %d\n", qstoc(he.name), qstoc(he.type), qstoc(he.host), qstoc(he.formula), he.chat_id);
         onMessageReceived(TBotMsg(he));
     }
     if(success)

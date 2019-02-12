@@ -30,6 +30,8 @@ private slots:
 
 private:
     CuBotSenderPrivate *d;
+
+    QString m_truncateMsg(const QString &in);
 };
 
 #endif // CUBOTSENDER_H

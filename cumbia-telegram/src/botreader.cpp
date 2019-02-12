@@ -15,6 +15,7 @@
 #include "cucontextmenu.h"
 #include "cucontext.h"
 #include "formulahelper.h"
+#include "botreadquality.h"
 
 /** @private */
 class BotReaderPrivate
@@ -33,6 +34,7 @@ public:
     BotReader::Priority priority;
     QDateTime startDateTime;
     int index; // to find the reader by index (shortcuts)
+    BotReadQuality quality; // constructor sets internal quality to Undefined
 };
 
 /** \brief Constructor with the parent widget, *CumbiaPool*  and *CuControlsFactoryPool*
@@ -286,6 +288,7 @@ bool BotReader::m_publishResult(const CuData &da)
     bool success = !da["err"].toBool();
     data["silent"] = (d->priority == Low);
     data["index"] = d->index;
+    int quality;
     // is there a formula to be evaluated?
     if(!d->formula.isEmpty() && da["data_format_str"].toString() == "scalar") {
         CuVariant v = da["value"];

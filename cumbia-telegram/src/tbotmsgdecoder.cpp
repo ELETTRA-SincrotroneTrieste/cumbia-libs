@@ -95,6 +95,24 @@ TBotMsgDecoder::Type TBotMsgDecoder::decode(const TBotMsg &msg)
                     }
                 }
             }
+            if(m_type == Invalid) {
+                // search for /attlistX commands
+                re.setPattern("/attlist(\\d{1,2})\\b");
+                match = re.match(m_text);
+                if(match.hasMatch()) {
+                    m_cmdLinkIdx = match.captured(1).toInt();
+                    m_type = AttSearch;
+                }
+            }
+            if(m_type == Invalid) {
+                // search for /aXX_read, from attribute list (/attlistXX)
+                re.setPattern("/a(\\d{1,2})_read\\b");
+                match = re.match(m_text);
+                if(match.hasMatch()) {
+                    m_cmdLinkIdx = match.captured(1).toInt();
+                    m_type = ReadFromAttList;
+                }
+            }
 
             // the message received
             // 1. is not a link to a previous command
@@ -147,7 +165,9 @@ TBotMsgDecoder::Type TBotMsgDecoder::m_decodeSrcCmd(const QString &txt)
         if(m_source.isEmpty()) {
             // first parameter is a command?
             m_type = m_StrToCmdType(first);
-            if(m_type != Invalid) { // yes it is
+            if(m_type == AttSearch)
+                m_source = m_findDevice(cmd_parts.at(1));
+            else if(m_type != Invalid) { // yes it is
                 m_source = m_findSource(cmd_parts.at(1)); // find source in second param
                 formula_start_idx = 2;
             }
@@ -173,8 +193,10 @@ TBotMsgDecoder::Type TBotMsgDecoder::m_StrToCmdType(const QString &cmd)
         return  Monitor;
     else if(cmd == "alert")
         return Alert;
-    if(cmd == "stop")
+    else if(cmd == "stop")
         return StopMonitor;
+    else if(cmd == "attlist")
+        return AttSearch;
     m_msg = "TBotMsgDecoder: invalid command \"" + cmd + "\"";
     return Invalid;
 }
@@ -189,20 +211,39 @@ QString TBotMsgDecoder::m_findSource(const QString &text)
     const QString tango_attr_src_pattern = QString("%1/%1/%1/%1").arg(tname_pattern);
     // allow multiple pattern search in the future (commands?)
     QStringList patterns = QStringList() << tango_attr_src_pattern;
+    return m_findByPatterns(text, patterns);
+}
 
+QString TBotMsgDecoder::m_findDevice(const QString &text)
+{
+    m_msg.clear();
+    QString src;
+    // admitted chars for Tango names
+    const char* tname_pattern = "[A-Za-z0-9_\\-\\.]+";
+    // tango attribute pattern: join tname_pattern with three '/'
+    const QString tango_attr_src_pattern = QString("%1/%1/%1").arg(tname_pattern);
+    // allow multiple pattern search in the future (commands?)
+    QStringList patterns = QStringList() << tango_attr_src_pattern;
+    return m_findByPatterns(text, patterns);
+}
+
+QString TBotMsgDecoder::m_findByPatterns(const QString &text, const QStringList &patterns)
+{
+    m_msg.clear();
+    QString out;
     QRegularExpression re;
     QRegularExpressionMatch match;
-    for(int i = 0; i < patterns.size() && src.isEmpty(); i++) {
+    for(int i = 0; i < patterns.size() && out.isEmpty(); i++) {
         QString s = patterns[i];
         re.setPattern(s);
         match = re.match(text);
         if(match.hasMatch()) {
-            src = match.captured(0);
+            out = match.captured(0);
         }
     } // for
-    if(src.isEmpty())
+    if(out.isEmpty())
         m_msg = "TBotMsgDecoder: \"" + text + "\" is not a valid source";
-    return src;
+    return out;
 }
 
 QString TBotMsgDecoder::m_getFormula(const QString &f)

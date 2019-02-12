@@ -38,7 +38,8 @@ QString MsgFormatter::history(const QList<HistoryEntry> &hel, int ttl, const QSt
             const HistoryEntry &e = hel[i];
             QString f = e.formula;
             // 1. type + source [+formula if not empty]
-            msg +=  "<b>"+ e.type + "</b>: <i>" + e.name;
+            msg += QString::number(i+1) + ". "; // numbered list
+            msg += "<i>" + e.name;
             f.isEmpty() ? msg += "</i>" : msg += " " + f.replace(QRegExp("\\s*<\\s+"), " LT ") + "</i>";
 
             // if bookmark add remove link
@@ -67,7 +68,7 @@ QString MsgFormatter::history(const QList<HistoryEntry> &hel, int ttl, const QSt
                 if(!e.host.isEmpty())
                     msg += " (" + e.host + ")";
             }
-            msg+="\n\n";
+            msg+="\n";
         }
     }
     printf("\e[1;34m%s\e[0m\n", qstoc(msg));
@@ -232,5 +233,54 @@ QString MsgFormatter::bookmarkRemoved(bool ok) const
 {
     QString s;
     ok ? s =  "👍   successfully removed bookmark" : s = "👎   failed to remove bookmark";
+    return s;
+}
+
+QString MsgFormatter::tg_devSearchList(const QStringList &devs) const
+{
+    QString s;
+    if(devs.isEmpty())
+        s = "😞   No device found matching the given pattern";
+    else {
+        s = QString("<b>%1 DEVICES</b>\n\n").arg(devs.size());
+        for(int i = 0; i < devs.size(); i++) {
+            s += QString("%1: <i>" + devs[i] + "</i>   [/attlist%1]\n").arg(i+1);
+        }
+    }
+    return s;
+}
+
+QString MsgFormatter::tg_attSearchList(const QString& devname, const QStringList &atts) const
+{
+    QString s;
+    if(atts.isEmpty())
+        s = "😞   No attributes found within the device <i>" + devname + "</i>\n";
+    else {
+        s = QString("<b>%1 ATTRIBUTES</b> from <i>%2</i>\n\n").arg(atts.size()).arg(devname);
+        for(int i = 0; i < atts.size(); i++) {
+            s += QString("%1: <i>" + atts[i] + "</i>   [/a%1_read]\n").arg(i+1);
+        }
+    }
+    return s;
+}
+
+QString MsgFormatter::errorVolatileSequence(const QStringList &seq) const
+{
+    QString s = "😞   The commands <i> ";
+    for(int i = 0; i < seq.size() -1; i++) {
+        s += seq[i] + ", ";
+    }
+    if(seq.size() > 0)
+        s += seq.last();
+
+    s +=  " </i>\nmust be executed in sequence";
+    return s;
+}
+
+QString MsgFormatter::volatileOpExpired(const QString &opnam, const QString &text) const
+{
+    QString s;
+    s += QString("⌛️   info: data for the operation \"%1\" has been cleared\n"
+                 "Please execute <i>%2</i> again if needed").arg(opnam).arg(text);
     return s;
 }

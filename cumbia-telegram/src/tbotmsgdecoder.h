@@ -14,13 +14,15 @@ public:
                 Read, Monitor, Alert, StopMonitor, Properties,
                 ReadHistory, MonitorHistory, AlertHistory,
                 Bookmarks, AddBookmark, DelBookmark,
-                Last, CmdLink, Search, MaxType = 32 };
+                Last, CmdLink, Search, AttSearch, ReadFromAttList,
+                MaxType = 32 };
 
     const char types[MaxType][32] = { "Invalid", "Start", "Stop", "Host", "QueryHost",
                                       "Read", "Monitor", "Alert", "StopMonitor", "Properties",
                                       "ReadHistory", "MonitorHistory", "AlertHistory",
                                       "Bookmarks", "AddBookmark", "DelBookmark",
-                                      "Last", "CmdLink", "Search", "MaxType"};
+                                      "Last", "CmdLink", "Search", "AttSearch", "ReadFromAttList",
+                                      "MaxType" };
 
     TBotMsgDecoder();
 
@@ -53,6 +55,10 @@ private:
     Type m_StrToCmdType(const QString& cmd);
 
     QString m_findSource(const QString& text);
+
+    QString m_findDevice(const QString &text);
+
+    QString m_findByPatterns(const QString& text, const QStringList &patterns);
 
     QString m_getFormula(const QString& f);
 

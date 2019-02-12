@@ -55,7 +55,12 @@ SOURCES += \
     src/botmonitor.cpp \
     src/formulahelper.cpp \
     src/historyentry.cpp \
-    src/botconfig.cpp
+    src/botconfig.cpp \
+    src/volatileoperation.cpp \
+    src/botsearchtangodev.cpp \
+    src/volatileoperations.cpp \
+    src/botsearchtangoatt.cpp \
+    src/botreadquality.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -75,4 +80,9 @@ HEADERS += \
     src/botmonitor.h \
     src/formulahelper.h \
     src/historyentry.h \
-    src/botconfig.h
+    src/botconfig.h \
+    src/volatileoperation.h \
+    src/botsearchtangodev.h \
+    src/volatileoperations.h \
+    src/botsearchtangoatt.h \
+    src/botreadquality.h
