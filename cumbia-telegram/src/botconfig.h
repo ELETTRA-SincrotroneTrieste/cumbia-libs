@@ -17,6 +17,12 @@ public:
 
     int getHistoryDepth() const;
 
+    int getDefaultAuth(const QString& operation) const;
+
+    int getBotListenerMsgPollMillis() const;
+
+    int getBotListenerOldMsgDiscardSecs() const;
+
     bool isValid() const;
 
     QString error() const;

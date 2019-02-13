@@ -21,8 +21,7 @@ void BotReadQuality::fromTango(bool err, int tango_quality)
     if(err)
         m_q = ReadError;
     else {
-        Tango::AttrQuality q = static_cast<Tango::AttrQuality>(tango_quality);
-        switch(q) {
+        switch(tango_quality) {
         case Tango::ATTR_ALARM:
             m_q = Alarm;
             break;
@@ -37,6 +36,9 @@ void BotReadQuality::fromTango(bool err, int tango_quality)
             break;
         case Tango::ATTR_CHANGING:
             m_q = Changing;
+            break;
+        default:
+            m_q = Undefined;
             break;
         }
     }

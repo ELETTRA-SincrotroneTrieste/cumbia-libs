@@ -50,7 +50,8 @@ public slots:
 
     bool stopByIdx(int chat_id, int index);
 
-    bool startRequest(int user_id, int chat_id, const QString& src,
+    bool startRequest(int user_id, int chat_id, int uid_monitor_limit,
+                      const QString& src,
                       const QString& formula, BotReader::Priority priority,
                       const QString& host = QString(),
                       const QDateTime& startedOn = QDateTime());

@@ -34,7 +34,8 @@ public:
     BotReader::Priority priority;
     QDateTime startDateTime;
     int index; // to find the reader by index (shortcuts)
-    BotReadQuality quality; // constructor sets internal quality to Undefined
+    BotReadQuality old_quality; // constructor sets internal quality to Undefined
+    CuVariant old_value;
 };
 
 /** \brief Constructor with the parent widget, *CumbiaPool*  and *CuControlsFactoryPool*
@@ -270,7 +271,7 @@ void BotReader::onUpdate(const CuData &da)
     // in case of error: quit
     // in case we got a value: quit
     // if monitor, m_publishResult is always called
-    if(!d->read_ok || da.containsKey("value") || d->monitor) {
+    if(da.containsKey("value") || !d->read_ok ) {
         // evaluate formula, if present, and emit newData
         bool success = m_publishResult(da);
         if(!d->monitor || !success) {
@@ -286,12 +287,18 @@ bool BotReader::m_publishResult(const CuData &da)
 {
     CuData data(da);
     bool success = !da["err"].toBool();
+    bool value_changed;
+    bool is_alert = (d->priority == BotReader::Normal);
     data["silent"] = (d->priority == Low);
     data["index"] = d->index;
-    int quality;
+    BotReadQuality rq;
+    // this method is called when data has value key: suppose it has quality too
+    int tg_quality = da["quality"].toInt();
+    // extract value
+    CuVariant v = da["value"];
+    value_changed = (v != d->old_value || rq != d->old_quality);
     // is there a formula to be evaluated?
-    if(!d->formula.isEmpty() && da["data_format_str"].toString() == "scalar") {
-        CuVariant v = da["value"];
+    if(value_changed && !d->formula.isEmpty() && da["data_format_str"].toString() == "scalar") {
         double dval; // try to convert value to double in order to apply the formula
         bool ok = v.to<double>(dval);
         if(ok) {
@@ -301,7 +308,6 @@ bool BotReader::m_publishResult(const CuData &da)
             if(fhelp.requiresLeftOperand())
                 formula = QString::number(dval) + " " + formula;
 
-            //printf("\e[0;36mBotReader.onUpdate: evaluating \"%s\"\e[0m\n", qstoc(formula));
             QScriptEngine eng;
             QScriptValue sv = eng.evaluate(formula);
             data["formula"] = formula.toStdString();
@@ -313,26 +319,48 @@ bool BotReader::m_publishResult(const CuData &da)
             }
             else { // formula evaluation successful
                 bool is_bool = sv.isBool();
+                bool notify = true;
                 if(is_bool)
                     sv.toBool() ? data["evaluation"] = std::string("yes") : data["evaluation"] = std::string("no");
                 else if(sv.isNumber())
                     data["evaluation"] = sv.toString().toStdString();
                 if(!d->monitor) // reply to enquiry in every case
                     emit newData(d->chat_id, data);
-                else if(is_bool && sv.toBool()) // formula evaluates to boolean and it is true
-                    emit newData(d->chat_id, data);
-                else if(!is_bool) {
-                    // formula result is the result of a calculation, and does not evaluate to bool
+                else if(is_bool && sv.toBool()) { // formula evaluates to boolean and it is true
                     // (for instance, test/device/1/double_scalar > 250 evaluates to bool)
-                    // so publish the result
-                    emit newData(d->chat_id, data);
+                    // monitor type: "monitor" or "alert"
+                    // "alert": notify on quality change only
+                    // "monitor": notify (silently, with low pri) always
+                    rq.fromEval(!success, sv.toBool());
+                    notify = (d->priority == BotReader::Normal && d->old_quality != rq)
+                            || d->priority == BotReader::Low;
+                    if(notify)
+                        emit newData(d->chat_id, data);
+                }
+                else if(!is_bool) {
+                    // formula result is the result of a calculation, does not evaluate to bool
+                    // so publish the result if either
+                    // - "monitor" priority Low (silent message)
+                    // or
+                    // - "alert" priority Normal (message + notification): only on quality changed
+                    //
+                    rq.fromTango(!success, tg_quality);
+                    notify = !is_alert || (is_alert && d->old_quality != rq);
+                    if(notify)
+                        emit newData(d->chat_id, data);
                 }
             } // end formula evaluation successful
         }
     }
-    else // no formula
-    {
-        emit newData(d->chat_id, data);
+    else if(value_changed) { // no formula
+        rq.fromTango(!success, tg_quality);
+        bool notify = !is_alert || (is_alert && d->old_quality != rq);
+        if(notify)
+            emit newData(d->chat_id, data);
+    }
+    if(value_changed) {
+        d->old_value = v;
+        d->old_quality = rq;
     }
     return success;
 }

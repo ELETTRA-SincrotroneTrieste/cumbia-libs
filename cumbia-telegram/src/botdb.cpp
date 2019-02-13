@@ -49,7 +49,7 @@ BotDb::BotDb()
     qDebug() << __PRETTY_FUNCTION__ << "database open" << m_db.isOpen() << "tables" << m_db.tables();
 
     QStringList tables = QStringList() << "users" << "history" << "hosts" << "host_selection"
-                                       << "proc" << "config" << "bookmarks";
+                                       << "proc" << "config" << "bookmarks" << "auth" << "auth_limits";
 
     foreach(QString t, tables) {
         if(!m_db.tables().contains(t))
@@ -497,17 +497,19 @@ bool BotDb::userExists(int uid)
     return !m_err && q.next();
 }
 
-bool BotDb::setHost(int user_id, int chat_id, const QString& host) {
+bool BotDb::setHost(int user_id, int chat_id, const QString& host, QString &new_host_description) {
     if(!m_db.isOpen())
         return false;
     m_msg.clear();
 
     QSqlQuery q(m_db);
-    m_err = !q.exec(QString("SELECT id FROM hosts WHERE name='%1'").arg(host));
+    m_err = !q.exec(QString("SELECT id,description FROM hosts WHERE name='%1'").arg(host));
     if(!m_err) {
         int host_id = -1;
-        if(q.next())
+        if(q.next()) {
             host_id = q.value(0).toInt();
+            new_host_description = q.value(1).toString();
+        }
         // is user allowed to set host  database
         bool allowed = user_id > 0;
         if(host_id > 0 && allowed) {
@@ -577,6 +579,56 @@ bool BotDb::getConfig(QMap<QString, QVariant> &datamap, QMap<QString, QString> &
     return !m_err;
 }
 
+/**
+ * @brief BotDb::isAuthorized returns an integer indicating if the operation is allowed or not
+ * @param uid the user id
+ * @param operation the name of the operation: must match one of the fields of the auth_limits table
+ * @return -1 the user is not authorized (user still not in auth table - waiting for authorization)
+ * @return 0  user is authorized and the value associated to the operation must be taken from the global
+ *            configuration because there is no specific authorization for this operation and uid
+ * @return >0 the value stored into the auth_limits table for the given uid and operation
+ */
+int BotDb::isAuthorized(int uid, const QString& operation) {
+
+    // operations contains the list of auth_limits columns
+    const QStringList operations = QStringList() << "host" << "monitors" << "attsearch";
+    if(!m_db.isOpen())
+        return -1;
+    m_msg.clear();
+    QSqlQuery q(m_db);
+    m_err = !q.exec(QString("SELECT * FROM auth WHERE user_id=%1").arg(uid));
+    if(m_err)
+        m_msg = "BotDb.isAuthorized: error in query " + q.lastError().text();
+    else {
+        if(!q.next())
+            return -1;
+        else {
+            bool authorized = q.value(1).toInt() > 0;
+            if(!authorized)
+                return -1;
+
+            if(!operations.contains(operation)) {
+                printf("BotDb.isAuthorized: \e[1;33;4mWARNING\e[0m operation \e[1;33m%s\e[0m is not in \"auth_limits\" table\n",
+                       qstoc(operation));
+                return 0;
+            }
+
+            m_err = !q.exec(QString("SELECT %1 FROM auth_limits WHERE user_id=%2").arg(operation).arg(uid));
+            if(m_err)
+                    m_msg = "BotDb.isAuthorized: error in query " + q.lastError().text();
+            else {
+                if(!q.next()) { // pick defaults from config
+                    return 0;
+                }
+                else {
+                    return q.value(0).toInt();
+                }
+            }
+        }
+    }
+    return -1;
+}
+
 void BotDb::createDb(const QString& tablename)
 {
     if(m_db.isOpen()) {
@@ -624,6 +676,18 @@ void BotDb::createDb(const QString& tablename)
             m_err = !q.exec("CREATE TABLE bookmarks (history_rowid INTEGER NOT NULL,"
                             " timestamp DATETIME NOT NULL,"
                             " UNIQUE(history_rowid) ON CONFLICT REPLACE)");
+        }
+        else if(tablename == "auth") {
+            m_err = !q.exec("CREATE TABLE auth (user_id INTEGER  PRIMARY KEY NOT NULL,"
+                            " authorized INTEGER NOT NULL, "
+                            " timestamp DATETIME NOT NULL )");
+        }
+        else if(tablename == "auth_limits") {
+            m_err = !q.exec("CREATE TABLE auth_limits (user_id INTEGER PRIMARY KEY NOT NULL,"
+                            " monitors INTEGER NOT NULL DEFAULT 3, "
+                            " host INTEGER NOT NULL DEFAULT 1, "
+                            " dbsearch INTEGER NOT NULL DEFAULT 1, "
+                            " timestamp DATETIME NOT NULL )");
         }
 
         if(m_err)

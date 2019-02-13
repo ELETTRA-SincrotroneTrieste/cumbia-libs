@@ -13,7 +13,7 @@ class CuBotListener : public QObject
     Q_OBJECT
 public:
 
-    explicit CuBotListener(QObject *parent);
+    explicit CuBotListener(QObject *parent, int msg_poll_t, int msg_discard_old_t);
 
     ~CuBotListener();
 

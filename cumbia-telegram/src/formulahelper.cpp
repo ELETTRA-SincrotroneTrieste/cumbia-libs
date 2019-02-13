@@ -57,5 +57,5 @@ QString FormulaHelper::escape(const QString &formula) const
 {
     QString s(formula);
     // "< something" or " < something", but not "<something" which could be a tag
-    return s.replace(QRegExp("\\s*<\\s+"), " <b>LT</b> ");
+    return s.replace(QRegExp("\\s*<\\s+"), " less than ");
 }

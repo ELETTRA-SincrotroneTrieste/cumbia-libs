@@ -23,15 +23,18 @@ public:
     bool stop;
     long int last_id;
     QTimer *timer;
+    int msg_poll_ms, old_msg_discard_secs;
 };
 
-CuBotListener::CuBotListener(QObject *parent) : QObject (parent)
+CuBotListener::CuBotListener(QObject *parent, int msg_poll_t, int msg_discard_old_t) : QObject (parent)
 {
     d = new CuBotListenerPrivate;
     d->manager = nullptr;
     d->last_id = -1;
     d->timer = nullptr;
     d->stop = false;
+    d->msg_poll_ms = msg_poll_t;
+    d->old_msg_discard_secs = msg_discard_old_t;
 }
 
 CuBotListener::~CuBotListener()
@@ -47,7 +50,7 @@ void CuBotListener::start()
         d->netreq.setRawHeader("User-Agent", "cumbia-telegram-bot 1.0");
         d->timer = new QTimer(this);
         connect(d->timer, SIGNAL(timeout()), this, SLOT(getUpdates()));
-        d->timer->setInterval(1000);
+        d->timer->setInterval(d->msg_poll_ms);
         d->timer->setSingleShot(true);
         d->timer->start();
     }
@@ -75,6 +78,7 @@ void CuBotListener::onReply()
 {
     bool decode_err = false;
     QString message;
+    QDateTime now = QDateTime::currentDateTime();
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
     const QByteArray ba = reply->readAll();
     QString resp = QString(ba);
@@ -98,7 +102,12 @@ void CuBotListener::onReply()
                     if(!decode_err) {
                         d->last_id = j_update_id.toInt();
                     }
-                    emit onNewMessage(tmsg);
+                    if(tmsg.msg_recv_datetime.secsTo(now) < d->old_msg_discard_secs)
+                        emit onNewMessage(tmsg);
+                    else {
+                        printf("discarding old message from %s dating %s\n", qstoc(tmsg.username),
+                               qstoc(tmsg.msg_recv_datetime.toString()));
+                    }
                 } // for
             }
 
@@ -117,8 +126,8 @@ void CuBotListener::onNetworkError(QNetworkReply::NetworkError e)
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
     perr("CuBotListener.onNetworkError: %s [%d]", reply->errorString().toStdString().c_str(), e);
     reply->deleteLater();
-    if(!d->stop)
-        d->timer->start(5000);
+    if(!d->stop && !d->timer->isActive())
+        d->timer->start(1000);
 }
 
 void CuBotListener::onSSLErrors(const QList<QSslError> &errors)
@@ -128,7 +137,7 @@ void CuBotListener::onSSLErrors(const QList<QSslError> &errors)
         perr("CuBotListener.onSSLErrors: %s", e.errorString().toStdString().c_str());
     }
     qobject_cast<QNetworkReply *>(sender())->deleteLater();
-    if(!d->stop)
-        d->timer->start(5000);
+    if(!d->stop && !d->timer->isActive())
+        d->timer->start(1000);
 }
 

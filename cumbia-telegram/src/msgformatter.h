@@ -30,9 +30,11 @@ public:
 
     QString formulaChanged(const QString &src, const QString &old, const QString &new_f);
     QString monitorTypeChanged(const QString &src, const QString &old_t, const QString &new_t);
+    QString srcMonitorStartError(const QString &src, const QString &message) const;
+    QString monitorUntil(const QString& src, const QDateTime& until) const;
 
 
-    QString hostChanged(const QString& host, bool success) const;
+    QString hostChanged(const QString& host, bool success, const QString& description) const;
 
     QString host(const QString& host) const;
 
@@ -45,9 +47,13 @@ public:
     QString errorVolatileSequence(const QStringList &seq) const;
     QString volatileOpExpired(const QString &opnam, const QString &text) const;
 
+    QString unauthorized(const QString& username, const char* op_type, const QString& reason) const;
+
 
 private:
     QString m_quality, m_value, m_src;
+
+    QString m_timeRepr(const QDateTime& dt) const;
 };
 
 #endif // MSGFORMATTER_H

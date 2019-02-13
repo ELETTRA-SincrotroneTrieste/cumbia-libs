@@ -55,11 +55,13 @@ public:
 
     bool userExists(int uid);
 
-    bool setHost(int user_id, int chat_id, const QString &host);
+    bool setHost(int user_id, int chat_id, const QString &host, QString& new_host_description);
 
     QString getSelectedHost(int chat_id);
 
     bool getConfig(QMap<QString, QVariant>& datamap, QMap<QString, QString> &descmap);
+
+    int isAuthorized(int uid, const QString &operation);
 
 private:
     QSqlDatabase m_db;

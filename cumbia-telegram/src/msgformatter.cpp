@@ -17,7 +17,7 @@ QString MsgFormatter::lastOperation(const QDateTime &dt, const QString &name) co
 {
     if(name.isEmpty())
         return "You haven't performed any operation yet!";
-    QString msg = "<i>" + dt.toString() + "</i>\n";
+    QString msg = "<i>" + m_timeRepr(dt) + "</i>\n";
     msg += "operation: <b>" + name + "</b>";
     return msg;
 }
@@ -50,7 +50,7 @@ QString MsgFormatter::history(const QList<HistoryEntry> &hel, int ttl, const QSt
             if(e.type == "monitor" || e.type == "alert") {
                 QDateTime stop = e.datetime.addSecs(ttl);
                 e.is_active ? msg += "<b>active</b> until " : msg += "inactive since ";
-                msg += "<i>" + stop.toString("yyyy.MM.dd hh.mm.ss") + "</i>";
+                msg += "<i>" + m_timeRepr(stop) + "</i>";
 
                 // stop active monitor by link command
                 if(e.is_active && e.index > -1)
@@ -63,7 +63,7 @@ QString MsgFormatter::history(const QList<HistoryEntry> &hel, int ttl, const QSt
                 }
             }
             else { // one shot read: print date and time
-                msg += "<i>" + e.datetime.toString("yyyy.MM.dd hh.mm.ss") + "</i>\n";
+                msg += "<i>" +  m_timeRepr(e.datetime) + "</i>\n";
                 msg += "/read" + QString::number(e.index);
                 if(!e.host.isEmpty())
                     msg += " (" + e.host + ")";
@@ -86,12 +86,12 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
         m_src.replace(0, m_src.indexOf('/', 0) + 1, "");
 
     long int li = d["timestamp_ms"].toLongInt();
-    QString ts = QDateTime::fromMSecsSinceEpoch(li).toString("yyyy.MM.dd hh:mm:ss");
+    QDateTime datet = QDateTime::fromMSecsSinceEpoch(li);
     bool ok = !d["err"].toBool();
 
     // start with timestamp, always
     ok ? msg = "" : msg = "👎";
-    msg +=  "<i>" +ts + "</i>";
+    msg +=  "<i>" + m_timeRepr(datet) + "</i>";
 
     !host.isEmpty() ? msg+= " [<i>" + host + "</i>]" : msg += "";
 
@@ -180,11 +180,14 @@ QString MsgFormatter::formulaChanged(const QString &src, const QString &old, con
     FormulaHelper fh;
     QString s;
     if(!old.isEmpty() && new_f.isEmpty())
-        s = "formula <b>" + src + " " + fh.escape(old) + "</i> has been removed";
+        s = "formula <i>" + src + " " + fh.escape(old) + "</i> has been <b>removed</b>";
     else if(old.isEmpty() && new_f.size() > 0)
         s = "formula <b>" + src + " " + fh.escape(new_f)  + "</b> has been introduced";
     else
         s = "formula <i>" + src + " " + fh.escape(old) + "</i>\nchanged into\n<b>" + src + " " + fh.escape(new_f) + "</b>";
+
+    printf("\e[1;33mformulaChanged: %s\e[0m\n", qstoc(s));
+
     return s;
 }
 
@@ -195,11 +198,23 @@ QString MsgFormatter::monitorTypeChanged(const QString &src, const QString &old_
     return s;
 }
 
-QString MsgFormatter::hostChanged(const QString &host, bool success) const
+QString MsgFormatter::srcMonitorStartError(const QString &src, const QString &message) const
 {
-    QString s = "<i>" + QDateTime::currentDateTime().toString("yyyy.MM.dd hh.mm.ss") + "</i>\n";
+    QString s = QString("👎   failed to start monitor for <i>%1</i>:\n"
+                        "<b>%2</b>").arg(src).arg(message);
+    return s;
+}
+
+QString MsgFormatter::monitorUntil(const QString &src, const QDateTime &until) const
+{
+    return QString("🕐   started monitoring <i>%1</i> until <i>%2</i>").arg(src).arg(m_timeRepr(until));
+}
+
+QString MsgFormatter::hostChanged(const QString &host, bool success, const QString &description) const
+{
+    QString s = "<i>" + m_timeRepr(QDateTime::currentDateTime()) + "</i>\n";
     if(success) {
-        s += "successfully set host to <b>" + host + "</b>";
+        s += QString("successfully set host to <b>%1</b>:\n<i>%2</i>").arg(host).arg(description);
     }
     else {
         s += "👎   failed to set host to <b>" + host + "</b>";
@@ -283,4 +298,31 @@ QString MsgFormatter::volatileOpExpired(const QString &opnam, const QString &tex
     s += QString("⌛️   info: data for the operation \"%1\" has been cleared\n"
                  "Please execute <i>%2</i> again if needed").arg(opnam).arg(text);
     return s;
+}
+
+QString MsgFormatter::unauthorized(const QString &username, const char *op_type, const QString &reason) const
+{
+    QString s = QString("❌   user <i>%1</i> (%2) <b>unauthorized</b>:\n<i>%3</i>")
+            .arg(username).arg(op_type).arg(reason);
+
+    return s;
+}
+
+QString MsgFormatter::m_timeRepr(const QDateTime &dt) const
+{
+    QString tr; // time repr
+    QTime midnight = QTime(0, 0);
+    QDateTime today_midnite = QDateTime::currentDateTime();
+    today_midnite.setTime(midnight);
+    QDateTime yesterday_midnite = today_midnite.addDays(-1);
+    QString date, time = dt.time().toString("hh:mm:ss");
+
+    if(dt >= today_midnite)
+        date = "today";
+    else if(dt >= yesterday_midnite)
+        date = "yesterday";
+    else
+        date = dt.date().toString("yyyy.MM.dd");
+    tr = date + " " + time;
+    return tr;
 }

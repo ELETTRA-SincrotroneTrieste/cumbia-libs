@@ -62,7 +62,7 @@ BotReader *BotMonitor::findReaderByUid(int user_id, const QString &src, const QS
 {
     for(QMap<int, BotReader *>::iterator it = d->readersMap.begin(); it != d->readersMap.end(); ++it) {
         if(it.key() == user_id && it.value()->source() == src && it.value()->host() == host) {
-                return *it;
+            return *it;
         }
     }
     return nullptr;
@@ -112,7 +112,7 @@ bool BotMonitor::stopByIdx(int chat_id, int index)
 }
 
 bool BotMonitor::startRequest(int user_id,
-                              int chat_id,
+                              int chat_id, int uid_monitor_limit,
                               const QString &src,
                               const QString& formula,
                               BotReader::Priority priority,
@@ -123,21 +123,27 @@ bool BotMonitor::startRequest(int user_id,
     d->err = false;
     BotReader *reader = findReader(chat_id, src, host);
     if(!reader) {
-        bool monitor = true;
-        BotReader *reader = new BotReader(user_id, chat_id, this,
-                                          d->cu_pool, d->ctrl_factory_pool,
-                                          d->ttl, formula, priority, host, monitor);
-        connect(reader, SIGNAL(newData(int, const CuData&)), this, SLOT(m_onNewData(int, const CuData&)));
-        connect(reader, SIGNAL(formulaChanged(int, QString,QString, QString)),
-                this, SLOT(m_onFormulaChanged(int, QString,QString, QString)));
-        connect(reader, SIGNAL(priorityChanged(int, const QString&, BotReader::Priority , BotReader::Priority)),
-                this, SLOT(m_onPriorityChanged(int, const QString&, BotReader::Priority , BotReader::Priority)));
-        connect(reader, SIGNAL(startSuccess(int, int, QString, QString)),
-                this, SLOT(readerStartSuccess(int, int, QString, QString)));
-        connect(reader, SIGNAL(lastUpdate(int, const CuData&)), this, SLOT(m_onLastUpdate(int, const CuData&)));
-        reader->setSource(src);
-        reader->setStartedOn(started_on);
-        reader->setIndex(m_findIndexForNewReader(chat_id));
+        int uid_readers_cnt = d->readersMap.values(chat_id).size();
+        if(uid_readers_cnt < uid_monitor_limit) {
+            bool monitor = true;
+            BotReader *reader = new BotReader(user_id, chat_id, this,
+                                              d->cu_pool, d->ctrl_factory_pool,
+                                              d->ttl, formula, priority, host, monitor);
+            connect(reader, SIGNAL(newData(int, const CuData&)), this, SLOT(m_onNewData(int, const CuData&)));
+            connect(reader, SIGNAL(formulaChanged(int, QString,QString, QString)),
+                    this, SLOT(m_onFormulaChanged(int, QString,QString, QString)));
+            connect(reader, SIGNAL(priorityChanged(int, const QString&, BotReader::Priority , BotReader::Priority)),
+                    this, SLOT(m_onPriorityChanged(int, const QString&, BotReader::Priority , BotReader::Priority)));
+            connect(reader, SIGNAL(startSuccess(int, int, QString, QString)),
+                    this, SLOT(readerStartSuccess(int, int, QString, QString)));
+            connect(reader, SIGNAL(lastUpdate(int, const CuData&)), this, SLOT(m_onLastUpdate(int, const CuData&)));
+            reader->setSource(src);
+            reader->setStartedOn(started_on);
+            reader->setIndex(m_findIndexForNewReader(chat_id));
+        }
+        else {
+            emit startError(chat_id, src, QString("limit of %1 monitors already reached").arg(uid_monitor_limit));
+        }
 
         // will be inserted in map upon successful "property" delivery
     }

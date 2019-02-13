@@ -25,6 +25,16 @@ BotConfig::BotConfig(BotDb *db)
     // database will remain with their defaults
     d->map["ttl"] = 24 * 3600;
     d->map["history_depth"] = 8;
+
+    QStringList default_operations_auth = QStringList() << "monitor" << "reads" << "host" << "dbsearch";
+    d->map["default_monitors_auth"] = 10;
+    d->map["default_reads_auth"] = 1;
+    d->map["default_host_auth"] = 1;
+    d->map["default_dbsearch_auth"] = 1;
+
+    d->map["botlistener_msg_poll_ms"] = 1000;
+    d->map["botlistener_discard_msg_older_than_secs"] = 30;
+
     d->valid = db->getConfig(d->map, d->descmap);
     if(!d->valid) {
         d->error = "BotConfig: database reported an error: " + db->message();
@@ -40,6 +50,25 @@ int BotConfig::ttl() const
 int BotConfig::getHistoryDepth() const
 {
     return d->map["history_depth"].toInt();
+}
+
+int BotConfig::getDefaultAuth(const QString &operation) const
+{
+    QString key = QString("default_%1_auth").arg(operation);
+    if(d->map.contains(key))
+        return d->map[key].toInt();
+    perr("BotConfig.getDefaultAuth: operation \"%s\" is not valid", qstoc(operation));
+    return -1;
+}
+
+int BotConfig::getBotListenerMsgPollMillis() const
+{
+    return d->map["botlistener_msg_poll_ms"].toInt();
+}
+
+int BotConfig::getBotListenerOldMsgDiscardSecs() const
+{
+    return d->map["botlistener_discard_msg_older_than_secs"].toInt();
 }
 
 bool BotConfig::isValid() const

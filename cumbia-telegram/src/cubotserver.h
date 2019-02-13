@@ -33,6 +33,8 @@ private slots:
 
     void onSrcMonitorStarted(int user_id, int chat_id, const QString& src, const QString &host, const QString &formula);
 
+    void onSrcMonitorStartError(int chat_id, const QString& src, const QString& message);
+
     void onSrcMonitorFormulaChanged(int user_id, int chat_id, const QString &src,
                                     const QString &host, const QString &old, const QString &new_f);
 
@@ -44,6 +46,7 @@ private slots:
     void onTgAttListSearchReady(int chat_id, const QString& devname, const QStringList& atts);
 
     void onVolatileOperationExpired(int chat_id, const QString& opnam, const QString& text);
+
 
 public slots:
     void start();

@@ -60,7 +60,8 @@ SOURCES += \
     src/botsearchtangodev.cpp \
     src/volatileoperations.cpp \
     src/botsearchtangoatt.cpp \
-    src/botreadquality.cpp
+    src/botreadquality.cpp \
+    src/auth.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -85,4 +86,5 @@ HEADERS += \
     src/botsearchtangodev.h \
     src/volatileoperations.h \
     src/botsearchtangoatt.h \
-    src/botreadquality.h
+    src/botreadquality.h \
+    src/auth.h
