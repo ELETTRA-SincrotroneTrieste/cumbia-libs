@@ -596,13 +596,14 @@ int BotDb::isAuthorized(int uid, const QString& operation) {
         return -1;
     m_msg.clear();
     QSqlQuery q(m_db);
-    m_err = !q.exec(QString("SELECT * FROM auth WHERE user_id=%1").arg(uid));
+    m_err = !q.exec(QString("SELECT user_id,authorized FROM auth WHERE user_id=%1").arg(uid));
     if(m_err)
         m_msg = "BotDb.isAuthorized: error in query " + q.lastError().text();
     else {
         if(!q.next())
             return -1;
         else {
+            qDebug() << __PRETTY_FUNCTION__ << "authorized?? " << q.value(0).toInt() << q.value(1).toInt();
             bool authorized = q.value(1).toInt() > 0;
             if(!authorized)
                 return -1;

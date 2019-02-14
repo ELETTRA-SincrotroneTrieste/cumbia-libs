@@ -42,8 +42,7 @@ bool Auth::isAuthorized(int uid, TBotMsgDecoder::Type t)
     case TBotMsgDecoder::ReadFromAttList:
         operation = "dbsearch"; // search Tango database
         break;
-    default: // allowed
-        m_limit = 1;
+    default:
         break;
     }
     if(m_limit < 0) {
@@ -58,9 +57,8 @@ bool Auth::isAuthorized(int uid, TBotMsgDecoder::Type t)
                 m_reason = "Default configuration for the operation \"" + operation + "\" not found";
 
         }
-        else {
-            TBotMsgDecoder msgdec;
-            m_reason = "Authorization for type \"" + QString(msgdec.types[t]) + "\" not handled";
+        else { // operation empty: special auth not required
+            m_limit = 1;
         }
     }
     return  m_limit > 0;

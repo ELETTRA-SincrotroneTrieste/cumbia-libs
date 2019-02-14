@@ -11,6 +11,7 @@
 #include "volatileoperations.h"
 #include "botsearchtangodev.h"
 #include "botsearchtangoatt.h"
+#include "botlocalserver.h"
 #include "auth.h"
 
 #include <cumacros.h>
@@ -45,6 +46,7 @@ public:
     BotConfig *botconf;
     VolatileOperations *volatile_ops;
     Auth* auth;
+    BotLocalServer *control_server;
 };
 
 CuBotServer::CuBotServer(QObject *parent) : QObject(parent)
@@ -57,6 +59,7 @@ CuBotServer::CuBotServer(QObject *parent) : QObject(parent)
     d->bot_db = nullptr;
     d->volatile_ops = nullptr;
     d->auth = nullptr;
+    d->control_server = nullptr;
 }
 
 CuBotServer::~CuBotServer()
@@ -348,6 +351,7 @@ void CuBotServer::start()
         if(!d->auth)
             d->auth = new Auth(d->bot_db, d->botconf);
 
+        d->control_server = new BotLocalServer(this);
         m_restoreProcs();
     }
 }
@@ -383,7 +387,8 @@ void CuBotServer::stop()
             delete d->auth;
             d->auth = nullptr;
         }
-
+        if(d->control_server)
+            delete d->control_server;
 
     }
 }
