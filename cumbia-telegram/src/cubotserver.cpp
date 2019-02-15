@@ -11,7 +11,7 @@
 #include "volatileoperations.h"
 #include "botsearchtangodev.h"
 #include "botsearchtangoatt.h"
-#include "botlocalserver.h"
+#include "botcontrolserver.h"
 #include "auth.h"
 
 #include <cumacros.h>
@@ -46,7 +46,7 @@ public:
     BotConfig *botconf;
     VolatileOperations *volatile_ops;
     Auth* auth;
-    BotLocalServer *control_server;
+    BotControlServer *control_server;
 };
 
 CuBotServer::CuBotServer(QObject *parent) : QObject(parent)
@@ -86,6 +86,9 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
         success = d->bot_db->addUser(uid, m.username, m.first_name, m.last_name);
         if(!success)
             perr("CuBotServer.onMessageReceived: error adding user with id %d: %s", uid, qstoc(d->bot_db->message()));
+    }
+    else if(!d->bot_db->userInPrivateChat(uid, m.chat_id)) {
+        success = d->bot_db->addUserInPrivateChat(uid, m.chat_id);
     }
 
     TBotMsgDecoder msg_dec(m);
@@ -351,7 +354,9 @@ void CuBotServer::start()
         if(!d->auth)
             d->auth = new Auth(d->bot_db, d->botconf);
 
-        d->control_server = new BotLocalServer(this);
+        d->control_server = new BotControlServer(this);
+        connect(d->control_server, SIGNAL(newMessage(int, int, ControlMsg::Type, QString)),
+                this, SLOT(onNewControlServerData(int, int, ControlMsg::Type, QString)));
         m_restoreProcs();
     }
 }
@@ -425,6 +430,17 @@ void CuBotServer::onTgAttListSearchReady(int chat_id, const QString& devname, co
 void CuBotServer::onVolatileOperationExpired(int chat_id, const QString &opnam, const QString &text)
 {
     d->bot_sender->sendMessage(chat_id, MsgFormatter().volatileOpExpired(opnam, text));
+}
+
+void CuBotServer::onNewControlServerData(int uid, int chat_id, ControlMsg::Type t, const QString &msg)
+{
+    qDebug() << __PRETTY_FUNCTION__ << uid << chat_id << t << msg;
+    if(chat_id > -1 && d->bot_sender) {
+        d->bot_sender->sendMessage(chat_id, MsgFormatter().fromControlData(t, msg));
+    }
+    else if(uid > -1 && chat_id < 0) {
+        // QList<int> chat_ids = d->bot_db->chatsForUser(uid);
+    }
 }
 
 void CuBotServer::m_setupMonitor()

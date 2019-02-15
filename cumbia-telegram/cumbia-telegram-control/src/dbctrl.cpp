@@ -71,8 +71,8 @@ bool DbCtrl::getUserInfo(QList<QMap<QString, QString> > &in_map)
     QList<int> auth_list;
     m_err = !q.exec(QString("SELECT id,uname,first_name,last_name,join_date,authorized FROM users,"
                             "auth WHERE user_id=id ORDER BY authorized ASC"));
+    QMap<QString, QString> map;
     while(!m_err && q.next()) {
-        QMap<QString, QString> map;
         QSqlRecord r = q.record();
         for(int i = 0; i < r.count(); i++)
             map[r.fieldName(i)] = r.value(r.fieldName(i)).toString();
@@ -81,6 +81,21 @@ bool DbCtrl::getUserInfo(QList<QMap<QString, QString> > &in_map)
     }
     if(m_err)
         m_msg = q.lastQuery() + ":" + q.lastError().text();
+    else {
+        m_err = !q.exec("SELECT DISTINCT id,uname,first_name,last_name,"
+                                " join_date FROM users,auth WHERE id NOT in"
+                                 " (SELECT user_id FROM auth)");
+        while(!m_err && q.next()) {
+            QSqlRecord r = q.record();
+            for(int i = 0; i < r.count(); i++)
+                map[r.fieldName(i)] = r.value(r.fieldName(i)).toString();
+            map["authorized"] = "-1";
+            in_map << map;
+            auth_list << r.value("id").toInt();
+        }
+        if(m_err)
+            m_msg = q.lastQuery() + ":" + q.lastError().text();
+    }
     return !m_err;
 }
 

@@ -6,6 +6,7 @@ class CuData;
 
 #include <QString>
 #include "historyentry.h"
+#include "../cumbia-telegram-defs.h"
 
 class MsgFormatter
 {
@@ -48,6 +49,8 @@ public:
     QString volatileOpExpired(const QString &opnam, const QString &text) const;
 
     QString unauthorized(const QString& username, const char* op_type, const QString& reason) const;
+
+    QString fromControlData(const ControlMsg::Type t, const QString& msg) const;
 
 
 private:

@@ -6,6 +6,8 @@
 #include <tbotmsgdecoder.h>
 #include <botdb.h>
 
+#include "../cumbia-telegram-defs.h" // for ControlMsg::Type
+
 class CuBotServerPrivate;
 class QJsonValue;
 class CuData;
@@ -46,6 +48,10 @@ private slots:
     void onTgAttListSearchReady(int chat_id, const QString& devname, const QStringList& atts);
 
     void onVolatileOperationExpired(int chat_id, const QString& opnam, const QString& text);
+
+
+    // control server data
+    void onNewControlServerData(int uid, int chat_id, ControlMsg::Type t, const QString& msg);
 
 
 public slots:

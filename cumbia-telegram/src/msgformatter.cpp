@@ -308,6 +308,18 @@ QString MsgFormatter::unauthorized(const QString &username, const char *op_type,
     return s;
 }
 
+QString MsgFormatter::fromControlData(const ControlMsg::Type t, const QString &msg) const
+{
+    QString s;
+    if(t == ControlMsg::Authorized) {
+        s = "<i>congratulations</i>: you have been <b>authorized</b> to access the cumbia-telegram bot";
+    }
+    else if(t == ControlMsg::AuthRevoked) {
+        s = "❌   your authorization to interact with the cumbia-telegram bot has been <b>revoked</b>";
+    }
+    return s;
+}
+
 QString MsgFormatter::m_timeRepr(const QDateTime &dt) const
 {
     QString tr; // time repr

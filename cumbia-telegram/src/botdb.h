@@ -63,6 +63,9 @@ public:
 
     int isAuthorized(int uid, const QString &operation);
 
+    bool userInPrivateChat(int uid, int chat_id);
+    bool addUserInPrivateChat(int uid, int chat_id);
+
 private:
     QSqlDatabase m_db;
     bool m_err;
@@ -73,6 +76,10 @@ private:
     void m_printTable(const QString &table);
 
     int m_findFirstAvailableIdx(const QList<int> &in_idxs);
+
+    bool m_initUserChatsMap();
+
+    QMultiMap<int, int> m_user_chatsMap;
 
 };
 

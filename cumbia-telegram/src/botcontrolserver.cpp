@@ -1,11 +1,11 @@
-#include "botlocalserver.h"
+#include "botcontrolserver.h"
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <cumacros.h>
 #include <QByteArray>
 #include <QtDebug>
-
-#include "../cumbia-telegram-defs.h" // LOCALSERVER_NAME
+#include <QJsonDocument>
+#include <QJsonObject>
 
 class BotLocalServerPrivate
 {
@@ -15,7 +15,7 @@ public:
 
 };
 
-BotLocalServer::BotLocalServer(QObject *parent) : QObject (parent)
+BotControlServer::BotControlServer(QObject *parent) : QObject (parent)
 {
     d = new BotLocalServerPrivate();
     QLocalServer *server = new QLocalServer(this);
@@ -35,7 +35,7 @@ BotLocalServer::BotLocalServer(QObject *parent) : QObject (parent)
     }
 }
 
-BotLocalServer::~BotLocalServer()
+BotControlServer::~BotControlServer()
 {
     QLocalServer *server = findChild<QLocalServer *>();
     if(server && server->isListening())
@@ -43,17 +43,17 @@ BotLocalServer::~BotLocalServer()
     delete d;
 }
 
-bool BotLocalServer::error() const
+bool BotControlServer::error() const
 {
     return d->error;
 }
 
-QString BotLocalServer::message() const
+QString BotControlServer::message() const
 {
     return d->msg;
 }
 
-void BotLocalServer::onNewConnection()
+void BotControlServer::onNewConnection()
 {
     QLocalServer *server = findChild<QLocalServer *>();
     if(server && server->isListening()) {
@@ -62,9 +62,18 @@ void BotLocalServer::onNewConnection()
     }
 }
 
-void BotLocalServer::onNewData()
+void BotControlServer::onNewData()
 {
     QLocalSocket *so = qobject_cast<QLocalSocket *>(sender());
     QByteArray ba = so->readAll();
-    qDebug() << __PRETTY_FUNCTION__ << "read" << ba;
+    QJsonDocument jd;
+    jd = QJsonDocument::fromJson(ba);
+    if(!jd.isEmpty()) {
+        int uid = jd["uid"].toInt(-1);
+        int chat_id = jd["chat_id"].toInt(-1);
+        QString msg = jd["msg"].toString("");
+        // ControlMsg::Type -1 is undefined
+        ControlMsg::Type t = static_cast<ControlMsg::Type>(jd["ctrl_type"].toInt(-1));
+        emit newMessage(uid, chat_id, t, msg);
+    }
 }

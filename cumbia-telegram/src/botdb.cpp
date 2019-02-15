@@ -49,7 +49,8 @@ BotDb::BotDb()
     qDebug() << __PRETTY_FUNCTION__ << "database open" << m_db.isOpen() << "tables" << m_db.tables();
 
     QStringList tables = QStringList() << "users" << "history" << "hosts" << "host_selection"
-                                       << "proc" << "config" << "bookmarks" << "auth" << "auth_limits";
+                                       << "proc" << "config" << "bookmarks" << "auth" << "auth_limits"
+                                       << "chats";
 
     foreach(QString t, tables) {
         if(!m_db.tables().contains(t))
@@ -58,6 +59,8 @@ BotDb::BotDb()
             perr("BotDb: failed to create table: %s: %s", qstoc(t), qstoc(m_msg));
     }
 
+    m_initUserChatsMap();
+    qDebug() << __PRETTY_FUNCTION__ << m_user_chatsMap;
 }
 
 BotDb::~BotDb()
@@ -630,6 +633,16 @@ int BotDb::isAuthorized(int uid, const QString& operation) {
     return -1;
 }
 
+bool BotDb::userInPrivateChat(int uid, int chat_id)
+{
+
+}
+
+bool BotDb::addUserInPrivateChat(int uid, int chat_id)
+{
+
+}
+
 void BotDb::createDb(const QString& tablename)
 {
     if(m_db.isOpen()) {
@@ -690,6 +703,11 @@ void BotDb::createDb(const QString& tablename)
                             " dbsearch INTEGER NOT NULL DEFAULT 1, "
                             " timestamp DATETIME NOT NULL )");
         }
+        else if(tablename == "private_chats") {
+            m_err = !q.exec("CREATE TABLE private_chats (user_id INTEGER NOT NULL,"
+                            " chat_id INTEGER NOT NULL, "
+                            " PRIMARY KEY(user_id,chat_id) )");
+        }
 
         if(m_err)
             m_msg = q.lastError().text();
@@ -733,4 +751,20 @@ int BotDb::m_findFirstAvailableIdx(const QList<int>& in_idxs)
     if(a_idx < 0)
         a_idx = i;
     return a_idx;
+}
+
+bool BotDb::m_initUserChatsMap()
+{
+    m_msg.clear();
+    if(!m_db.isOpen())
+        return false;
+    else {
+        QSqlQuery q(m_db);
+        m_err = !q.exec("SELECT user_id,chat_id FROM private_chats");
+        while(!m_err && q.next())
+            m_user_chatsMap.insert(q.value(0).toInt(), q.value(1).toInt());
+        if(m_err)
+            m_msg = "BotDb.m_initUserChatsMap: query  " + q.lastQuery() + "error: " + q.lastError().text();
+    }
+    return !m_err;
 }

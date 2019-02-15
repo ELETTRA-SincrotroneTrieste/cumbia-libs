@@ -62,7 +62,7 @@ SOURCES += \
     src/botsearchtangoatt.cpp \
     src/botreadquality.cpp \
     src/auth.cpp \
-    src/botlocalserver.cpp
+    src/botcontrolserver.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -89,5 +89,5 @@ HEADERS += \
     src/botsearchtangoatt.h \
     src/botreadquality.h \
     src/auth.h \
-    src/botlocalserver.h \
-    cumbia-telegram-defs.h
+    cumbia-telegram-defs.h \
+    src/botcontrolserver.h

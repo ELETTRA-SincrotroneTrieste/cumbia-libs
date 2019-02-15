@@ -1,9 +1,12 @@
-#include "cutelegramctrl.h"
+﻿#include "cutelegramctrl.h"
+#include "../cumbia-telegram-defs.h"
 #include "dbctrl.h"
 #include <QLocalSocket>
 #include <QMap>
 #include <QList>
 #include <QtDebug>
+#include <QJsonObject>
+#include <QJsonDocument>
 
 class CuTelegramCtrlPrivate {
 public:
@@ -93,9 +96,18 @@ void CuTelegramCtrl::authorize(int uid, bool authorize)
     print_success(success);
     if(!success)
         print_error("DbCtrl", d->db->message());
-    else if(d->db->hasMessage())
+    else if(d->db->hasMessage()) {
         printf("\e[1;32m-->\e[0m %s\n", d->db->message().toUtf8().data());
-    send("auth_changed");
+        print(QString("notifying the change to user id %1 ").arg(uid));
+        QString mess;
+        QJsonObject json;
+        json["uid"] = uid;
+        authorize ? json["ctrl_type"] = ControlMsg::Authorized
+                : json["ctrl_type"] = ControlMsg::AuthRevoked;
+
+        success = send(QString(QJsonDocument(json).toJson()));
+        print_success(success);
+    }
 }
 
 bool CuTelegramCtrl::send(const QString &s)

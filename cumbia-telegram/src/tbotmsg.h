@@ -47,6 +47,8 @@ public:
     bool from_history;
     bool from_real_msg;
 
+    bool from_private_chat;
+
 private:
     QString m_host;
 };

@@ -11,6 +11,7 @@ TBotMsg::TBotMsg()
     is_bot = false;
     update_id = -1;
     message_id = -1;
+    from_private_chat = true;
 }
 
 TBotMsg::TBotMsg(const QJsonValue &v)
@@ -43,6 +44,7 @@ void TBotMsg::decode(const QJsonValue &m)
     chat_id = chat["id"].toInt();
     chat_username = chat["username"].toString();
     chat_lang = chat["language_code"].toString();
+    from_private_chat = chat["type"].toString() == "private";
 
     // start_dt is left invalid
     msg_recv_datetime = QDateTime::fromTime_t(msg["date"].toInt());
