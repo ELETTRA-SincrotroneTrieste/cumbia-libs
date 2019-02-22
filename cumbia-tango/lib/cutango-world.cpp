@@ -17,8 +17,8 @@ public:
 CuTangoWorld::CuTangoWorld()
 {
     d = new CuTangoWorldPrivate();
-    d->src_patterns.push_back(".+/.+");
-    d->src_patterns.push_back(".+->.+");
+    d->src_patterns.push_back("[A-Za-z0-9_\\.]+/.+");
+    d->src_patterns.push_back("[A-Za-z0-9_\\.]+->.+");
 }
 
 CuTangoWorld::~CuTangoWorld()

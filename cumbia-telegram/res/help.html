@@ -1,0 +1,84 @@
+<b>cumbia telegram bot</b>
+
+<i>Read, monitor </i> and receive <i>alerts</i> from the <i>Tango</i> and <i>Epics</i>
+control systems using <i>Telegram</i>.
+
+<b>Read</b>
+
+Send the name of the source you want to read, followed by an optional formula:
+  <i>test/device/1/double_scalar</i>
+  <i>test/device/2/long_scalar > 100</i>
+
+<b>Monitor</b>
+
+Monitor a source. If no formula is specified, a <i>silent</i> notification is sent when the value changes.
+A <i>silent</i> notification is sent when the formula evaluation result is true otherwise.
+
+  <i>monitor test/device/1/long_scalar</i>
+  <i>monitor test/device/1/double_scalar > 200.0</i>
+
+<b>Alerts</b>
+
+Receive a notification when a source changes its quality or the evaluation of a formula changes.
+Unlike <i>monitors</i>, <i>alerts are not silent</i> but notifications occur only upon source <i>quality</i> or <i>formula truth value</i> changes.
+
+  <i>alert test/device/1/long_scalar</i>
+  <i>alert test/device/1/double_scalar > 200.0</i>
+
+In the first case, you will be notified when long_scalar quality changes from <i>normal</i> to <i>warning</i> to <i>alarm</i> and viceversa.
+In the second, one alert is sent when the value becomes <i>greater than 200.0</i> and <i>another</i> when it <i>goes back below the threshold</i>.
+
+What is the <i>difference</i> between an <i>alert</i> and a <i>monitor</i> configured with the <i>same formula</i>?
+
+- a monitor sends a lower priority notification (requires a <i>silent</i> message)
+- a monitor sends a message when the <i>formula evaluates to true</i>, an alert whenever a <i>formula evaluation changes</i>.
+
+What is the <i>difference</i> between an <i>alert</i> and a <i>monitor</i> when <i>no formula</i> is provided?
+An <i>alert</i> is issued each time the <i>quality</i> of the reading changes, a monitor sends a (silent) message
+on every variation of the value.
+
+<b>Stop monitors</b>
+
+The command <i>stop source_name</i> halts the monitor of <i>source_name</i>.
+The <i>stop</i> instruction <i>alone</i> halts <i>all</i> the running monitors.
+Monitors can be interrupted from any message of theirs or through the lists provided either by /monitors or /alerts.
+
+<b>Further notes on monitors and alerts</b>
+
+Subsequent <i>monitor</i> or <i>alert</i> commands with the <i>same source</i> can only alter a running monitor by changing its type (<i>alert</i> or <i>monitor</i>) or formula. It is not possible to run multiple monitors connected to the same source.
+
+<b>History</b>
+
+Some special commands display or run over again operations successfully accomplished in the past:
+
+- /last execute again last successful operation
+
+  An additional message with the operation name and its last execution time will precede the result.
+
+- /reads displays <i>read</i> history and offers short links to repeat the action
+
+- /monitors displays active and expired <i>monitors</i>. The latter can be <i>restarted</i>, the former <i>stopped</i>.
+
+- /alerts displays active and expired <i>alerts</i>. The latter can be <i>restarted</i>, the former <i>stopped</i>.
+
+Older entries are deleted. The history size for each section is decided by the administrator.
+
+<b>Bookmarks</b>
+
+You can set a <i>bookmark</i> to the <i>last successful operation</i> through the /bookmark command. A confirmation message follows.
+
+Likewise, /bookmarks issues the list of bookmarks, from which entries can be deleted or executed.
+
+<b>Tango database search</b>
+
+The <i>search</i> command allows to query the <i>Tango database</i> and look for a device matching a given <i>pattern</i>. This is described in the /help_search documentation.
+
+<b>The host instruction</b>
+
+<i>Tango host</i> can be altered with this directive. Refer to the /help_host dedicated page.
+
+<b>Contacts and links</b>
+
+- <i>mail</i> giacomo.strangolino@elettra.eu
+- <i>cumbia</i> documentation  https://elettra-sincrotronetrieste.github.io/cumbia-libs/
+- <i>cumbia download</i> https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs

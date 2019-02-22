@@ -1,4 +1,4 @@
-#include <QCoreApplication>
+#include <QApplication>
 #include "cubotserver.h"
 #include <QtDebug>
 #include <QTimer>
@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     signal(SIGINT, int_handler);
     signal(SIGUSR1, int_handler);
     signal(SIGUSR2, int_handler);
-    QCoreApplication *a = new QCoreApplication(argc, argv);
+    QApplication *a = new QApplication(argc, argv);
 
     CuBotServer botServer;
     botServer.start();

@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/help">
+        <file>res/help.html</file>
+        <file>res/help_search.html</file>
+        <file>res/help_alerts.html</file>
+        <file>res/help_monitor.html</file>
+        <file>res/help_host.html</file>
+    </qresource>
+</RCC>

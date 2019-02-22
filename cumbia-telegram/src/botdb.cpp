@@ -50,7 +50,7 @@ BotDb::BotDb()
 
     QStringList tables = QStringList() << "users" << "history" << "hosts" << "host_selection"
                                        << "proc" << "config" << "bookmarks" << "auth" << "auth_limits"
-                                       << "chats";
+                                       << "private_chats";
 
     foreach(QString t, tables) {
         if(!m_db.tables().contains(t))
@@ -327,6 +327,20 @@ QList<HistoryEntry> BotDb::history(int user_id, const QString& type) {
         perr("BotDb.history: database error: %s", qstoc(m_msg));
     }
     return hel;
+}
+
+QMap<int, QString> BotDb::usersById()
+{
+    QMap<int, QString> umap;
+    if(!m_db.isOpen())
+        return umap;
+    m_err = false;
+    m_msg.clear();
+    QSqlQuery q(m_db);
+    m_err = !q.exec("SELECT id,uname FROM users");
+    while(!m_err && q.next())
+        umap[q.value(0).toInt()] = q.value(1).toString();
+    return umap;
 }
 
 //QList<HistoryEntry> BotDb::bookmarks(int uid)
@@ -635,12 +649,47 @@ int BotDb::isAuthorized(int uid, const QString& operation) {
 
 bool BotDb::userInPrivateChat(int uid, int chat_id)
 {
-
+    if(!m_db.isOpen())
+        return -1;
+    m_msg.clear();
+    QSqlQuery q(m_db);
+    m_err = !q.exec(QString("SELECT user_id FROM private_chats WHERE user_id=%1"
+                            " AND chat_id=%2").arg(uid).arg(chat_id));
+    if(!m_err) {
+        return q.next();
+    }
+    else {
+        m_setErrorMessage("BotDb.userInPrivateChat", q);
+    }
+    return false;
 }
 
 bool BotDb::addUserInPrivateChat(int uid, int chat_id)
 {
+    if(!m_db.isOpen())
+        return -1;
+    m_msg.clear();
+    QSqlQuery q(m_db);
+    m_err = !q.exec(QString("INSERT INTO private_chats VALUES(%1,%2)").
+                    arg(uid).arg(chat_id));
+    if(m_err)
+        m_setErrorMessage("BotDb.addUserInPrivateChat", q);
+    return !m_err;
+}
 
+QList<int> BotDb::chatsForUser(int uid)
+{
+    QList<int> ch_ids;
+    m_msg.clear();
+    if(m_db.isOpen()) {
+        QSqlQuery q(m_db);
+        m_err = !q.exec(QString("SELECT chat_id FROM private_chats WHERE user_id=%1").arg(uid));
+        while(!m_err && q.next())
+            ch_ids << q.value(0).toInt();
+        if(m_err)
+            m_setErrorMessage("BotDb.chatsForUser", q);
+    }
+    return ch_ids;
 }
 
 void BotDb::createDb(const QString& tablename)
@@ -767,4 +816,9 @@ bool BotDb::m_initUserChatsMap()
             m_msg = "BotDb.m_initUserChatsMap: query  " + q.lastQuery() + "error: " + q.lastError().text();
     }
     return !m_err;
+}
+
+void BotDb::m_setErrorMessage(const QString &origin, const QSqlQuery &q)
+{
+    m_msg = origin + ": " + q.lastQuery() + ": " + q.lastError().text();
 }

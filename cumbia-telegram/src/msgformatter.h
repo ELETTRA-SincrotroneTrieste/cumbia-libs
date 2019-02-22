@@ -3,9 +3,11 @@
 
 class QDateTime;
 class CuData;
+class CuVariant;
 
 #include <QString>
 #include "historyentry.h"
+#include "tbotmsgdecoder.h" // for Type
 #include "../cumbia-telegram-defs.h"
 
 class MsgFormatter
@@ -52,11 +54,14 @@ public:
 
     QString fromControlData(const ControlMsg::Type t, const QString& msg) const;
 
+    QString help(TBotMsgDecoder::Type t) const;
 
 private:
     QString m_quality, m_value, m_src;
 
     QString m_timeRepr(const QDateTime& dt) const;
+
+    QString m_getVectorInfo(const CuVariant& v);
 };
 
 #endif // MSGFORMATTER_H

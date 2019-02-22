@@ -27,6 +27,8 @@ public:
 
     QString error() const;
 
+    QString getString(const QString& key) const;
+
 private:
     BotConfigPrivate *d;
 };

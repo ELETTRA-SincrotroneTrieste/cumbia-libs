@@ -3,10 +3,15 @@
 #include "botconfig.h"
 #include <QDateTime>
 #include <cudata.h>
+#include <QFile>        // for help*.html in res/ resources
+#include <QTextStream>  // for help*.html
 #include <QtDebug>
 
 #include <cutango-world.h>
 #include <cutango-world-config.h>
+#include <algorithm>
+
+#define MAXVALUELEN 45
 
 MsgFormatter::MsgFormatter()
 {
@@ -78,6 +83,7 @@ QString MsgFormatter::history(const QList<HistoryEntry> &hel, int ttl, const QSt
 QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
 {
     QString msg, eval_value;
+    QString vector_info;
     m_src = QString::fromStdString(d["src"].toString());
     QString host;
     if(m_src.count('/') > 3)
@@ -85,26 +91,25 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
     if(f <= Short && m_src.count('/') > 3) // remove host:PORT/ so that src is not too long
         m_src.replace(0, m_src.indexOf('/', 0) + 1, "");
 
+    QString point, device;
+    if(m_src.count('/') > 1) {
+        point = m_src.section('/', -1);
+        device = m_src.section('/', 0, 2);
+    }
+
     long int li = d["timestamp_ms"].toLongInt();
     QDateTime datet = QDateTime::fromMSecsSinceEpoch(li);
     bool ok = !d["err"].toBool();
 
-    // start with timestamp, always
+    // start with value, so that it is available in notification
+    // preview
     ok ? msg = "" : msg = "👎";
-    msg +=  "<i>" + m_timeRepr(datet) + "</i>";
-
-    !host.isEmpty() ? msg+= " [<i>" + host + "</i>]" : msg += "";
-
-    int idx = d["index"].toInt();
-
-    //  /Xn command used to stop monitor
-    if(idx > -1)
-        msg += QString("   /X%1").arg(idx);
-
-    msg += "\n"; // new line
 
     // source: always
-    msg += "<i>" + m_src + "</i>: ";
+    if(point.length() > 0 && device.length() > 0 && ok)
+        msg += "<b>" + point + "</b>: ";
+    else
+        msg += "<i>" + m_src + "</i>: ";
 
     if(!ok) {
         msg += "\n";
@@ -116,8 +121,22 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
             QString formula = QString::fromStdString(d["formula"].toString());
             msg += FormulaHelper().escape(formula) + ": ";
         }
-        if(d.containsKey("value"))
-            eval_value = m_value = QString::fromStdString(d["value"].toString());
+        if(d.containsKey("value")) {
+            bool ok;
+            const CuVariant &va = d["value"];
+            std::string print_format, value_str;
+            d.containsKey("print_format") ? value_str = va.toString(&ok, d["print_format"].toString().c_str()) :
+                value_str = va.toString();
+            QString v_str = QString::fromStdString(value_str);
+            if(v_str.length() > MAXVALUELEN - 3) {
+                v_str.truncate(MAXVALUELEN-3);
+                v_str += "...";
+            }
+            eval_value = m_value = v_str;
+            if(va.getSize() > 1) {
+                vector_info = m_getVectorInfo(va);
+            }
+        }
 
         if(d.containsKey("evaluation"))
             eval_value = QString::fromStdString(d["evaluation"].toString());
@@ -127,8 +146,18 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
         msg += "<b>" + eval_value + "</b>";
 
         // measurement unit if available
-        if(d.containsKey("display_unit"))
-            msg += " [" + QString::fromStdString(d["display_unit"].toString()) +  "]\n";
+        QString du = QString::fromStdString(d["display_unit"].toString());
+        if(!du.isEmpty())
+            msg += " [" + QString::fromStdString(d["display_unit"].toString()) +  "]";
+
+        if(point.length() > 0 && device.length() > 0)
+            msg += "   <i>" + device + "</i>";
+
+        // if vector, provide some info about len, min and max
+        // and then a link to plot it!
+        if(!vector_info.isEmpty()) {
+            msg += "\n" + vector_info + " /plot";
+        }
 
         int quality = d["quality"].toInt();
         if(quality != 0) {
@@ -150,6 +179,22 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
             msg += "\nmode:        <i>" + QString::fromStdString(d["mode"].toString()) + "</i>\n";
         }
     }
+
+    if(!msg.endsWith("\n"))
+        msg += "\n"; // new line
+
+    // date time
+    msg +=  "<i>" + m_timeRepr(datet) + "</i>";
+
+    !host.isEmpty() ? msg+= " [<i>" + host + "</i>]" : msg += "";
+
+    int idx = d["index"].toInt();
+
+    //  /Xn command used to stop monitor
+    if(idx > -1)
+        msg += QString("   /X%1").arg(idx);
+
+
     return msg;
 }
 
@@ -312,13 +357,53 @@ QString MsgFormatter::fromControlData(const ControlMsg::Type t, const QString &m
 {
     QString s;
     if(t == ControlMsg::Authorized) {
-        s = "<i>congratulations</i>: you have been <b>authorized</b> to access the cumbia-telegram bot";
+        s = "🎉   <b>congratulations</b>: you have been <b>authorized</b> to access the cumbia-telegram bot";
     }
     else if(t == ControlMsg::AuthRevoked) {
         s = "❌   your authorization to interact with the cumbia-telegram bot has been <b>revoked</b>";
     }
     return s;
 }
+
+QString MsgFormatter::help(TBotMsgDecoder::Type t) const {
+    QString h;
+    QString f = ":/help/res/";
+    switch(t) {
+    case TBotMsgDecoder::Help:
+        f += "help.html";
+        break;
+    case TBotMsgDecoder::HelpMonitor:
+        f += "help_monitor.html";
+        break;
+    case TBotMsgDecoder::HelpAlerts:
+        f += "help_alerts.html";
+        break;
+    case TBotMsgDecoder::HelpSearch:
+        f += "help_search.html";
+        break;
+    case TBotMsgDecoder::HelpHost:
+        f += "help_host.html";
+        break;
+    default:
+        break;
+    }
+    if(!f.isEmpty()) {
+        QFile hf(f);
+        if(hf.open(QIODevice::ReadOnly)) {
+            QTextStream in(&hf);
+            h = "📚   " + in.readAll();
+            hf.close();
+        }
+        else {
+            perr("MsgFormatter.help: failed to open file \"%s\" in read only mode: %s",
+                 qstoc(f), qstoc(hf.errorString()));
+            h += "😞   error getting help: internal error";
+        }
+    }
+
+    return h;
+}
+
 
 QString MsgFormatter::m_timeRepr(const QDateTime &dt) const
 {
@@ -337,4 +422,15 @@ QString MsgFormatter::m_timeRepr(const QDateTime &dt) const
         date = dt.date().toString("yyyy.MM.dd");
     tr = date + " " + time;
     return tr;
+}
+
+QString MsgFormatter::m_getVectorInfo(const CuVariant &v)
+{
+    QString s;
+    std::vector<double> vd;
+    v.toVector<double>(vd);
+    auto minmax = std::minmax_element(vd.begin(),vd.end());
+    s += QString("vector size: <b>%1</b> min: <b>%2</b> max: <b>%3</b>").arg(vd.size())
+            .arg(*minmax.first).arg(*minmax.second);
+    return s;
 }

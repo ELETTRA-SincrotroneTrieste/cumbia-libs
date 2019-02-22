@@ -187,7 +187,7 @@ void BotMonitor::m_onNewData(int chat_id, const CuData &da)
     }
     // emit new data if it has a value
     else if(da.containsKey("value"))
-        emit newData(chat_id, da);
+        emit newMonitorData(chat_id, da);
 }
 
 void BotMonitor::m_onFormulaChanged(int chat_id, const QString &src, const QString &old, const QString &new_f)

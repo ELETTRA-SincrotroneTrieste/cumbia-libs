@@ -1,4 +1,5 @@
 #include "botcontrolserver.h"
+#include <QCoreApplication>
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <cumacros.h>
@@ -7,7 +8,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-class BotLocalServerPrivate
+class BotControlServerPrivate
 {
 public:
     bool error;
@@ -17,21 +18,21 @@ public:
 
 BotControlServer::BotControlServer(QObject *parent) : QObject (parent)
 {
-    d = new BotLocalServerPrivate();
+    d = new BotControlServerPrivate();
     QLocalServer *server = new QLocalServer(this);
     connect(server, SIGNAL(newConnection()), this, SLOT(onNewConnection()));
     d->error = !server->listen(LOCALSERVER_NAME);
     if(d->error) {
         d->msg = server->errorString();
-        perr("BotLocalServer: error opening local socket: %s", qstoc(d->msg));
+        perr("BotControlServer: error opening local socket: %s", qstoc(d->msg));
 
         if(server->serverError() == QAbstractSocket::AddressInUseError) {
-            perr("BotLocalServer: AddressInUseError: please remove the file \"\e[1;31m%s\e[0m\""
-                 "\nand restart the application", qstoc(server->serverName()));
+            perr("BotControlServer: AddressInUseError: please remove the file \"\e[1;31m%s\e[0m\""
+                 "\nand restart the application", LOCALSERVER_NAME);
         }
     }
     else {
-        printf("BotLocalServer: listening on \e[0;32m%s\e[0m\n", qstoc(server->serverName()));
+        printf("BotControlServer: listening on \e[0;32m%s\e[0m\n", qstoc(server->serverName()));
     }
 }
 
@@ -53,6 +54,19 @@ QString BotControlServer::message() const
     return d->msg;
 }
 
+bool BotControlServer::sendControlMessage(QLocalSocket *so, const QString &msg)
+{
+    QJsonObject jo;
+    m_fillSenderData(jo); // app name, pid, cmd line
+    jo["msg"] = msg;
+    jo["ctrl_type"] = static_cast<int>(ControlMsg::Statistics);
+    d->error = !so->write(QJsonDocument(jo).toJson());
+    if(d->error) {
+        d->msg = "BotControlServer.sendControlMessage: error sending stats: " + so->errorString();
+    }
+    return !d->error;
+}
+
 void BotControlServer::onNewConnection()
 {
     QLocalServer *server = findChild<QLocalServer *>();
@@ -69,11 +83,35 @@ void BotControlServer::onNewData()
     QJsonDocument jd;
     jd = QJsonDocument::fromJson(ba);
     if(!jd.isEmpty()) {
+        ControlMsg::Type t = static_cast<ControlMsg::Type>(jd["ctrl_type"].toInt(-1));
         int uid = jd["uid"].toInt(-1);
         int chat_id = jd["chat_id"].toInt(-1);
         QString msg = jd["msg"].toString("");
         // ControlMsg::Type -1 is undefined
-        ControlMsg::Type t = static_cast<ControlMsg::Type>(jd["ctrl_type"].toInt(-1));
-        emit newMessage(uid, chat_id, t, msg);
+        emit newMessage(uid, chat_id, t, msg, so);
+        bool reply = jd["reply"].toBool(false);
+        if(reply) {
+            m_sendReply(so, uid, chat_id, t, msg);
+        }
     }
+}
+
+void BotControlServer::m_sendReply(QLocalSocket *so, int uid, int chat_id,
+                                   ControlMsg::Type t, const QString &msg_received)
+{
+    Q_UNUSED(uid);
+    Q_UNUSED(chat_id);
+    Q_UNUSED(t);
+    Q_UNUSED(msg_received);
+    if(so->isOpen() && so->isValid()) {
+        // send a reply according to type, ...
+
+    }
+}
+
+void BotControlServer::m_fillSenderData(QJsonObject &jo)
+{
+    jo["sender"] = qApp->applicationName();
+    jo["sender_cmd_line"] = qApp->arguments().first();
+    jo["sender_pid"] = qApp->applicationPid();
 }

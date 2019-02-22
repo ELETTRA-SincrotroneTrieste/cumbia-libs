@@ -39,6 +39,8 @@ public:
 
     QList<HistoryEntry> history(int uid, const QString &type);
 
+    QMap<int, QString> usersById();
+
 //    QList<HistoryEntry> bookmarks(int uid);
 
     HistoryEntry commandFromIndex(int uid, const QString &type, int index);
@@ -65,6 +67,7 @@ public:
 
     bool userInPrivateChat(int uid, int chat_id);
     bool addUserInPrivateChat(int uid, int chat_id);
+    QList<int> chatsForUser(int uid);
 
 private:
     QSqlDatabase m_db;
@@ -78,6 +81,8 @@ private:
     int m_findFirstAvailableIdx(const QList<int> &in_idxs);
 
     bool m_initUserChatsMap();
+
+    void m_setErrorMessage(const QString& origin, const QSqlQuery& q);
 
     QMultiMap<int, int> m_user_chatsMap;
 

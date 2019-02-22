@@ -5,7 +5,8 @@
 
 #include "../cumbia-telegram-defs.h" // LOCALSERVER_NAME
 
-class BotLocalServerPrivate;
+class BotControlServerPrivate;
+class QLocalSocket;
 
 class BotControlServer : public QObject
 {
@@ -19,15 +20,21 @@ public:
 
     QString message() const;
 
+    bool sendControlMessage(QLocalSocket *so, const QString& msg);
+
 signals:
-    void newMessage(int uid, int chat_id, ControlMsg::Type t, const QString& msg);
+    void newMessage(int uid, int chat_id, ControlMsg::Type t, const QString& msg, QLocalSocket *so);
 
 private slots:
     void onNewConnection();
     void onNewData();
 
 private:
-    BotLocalServerPrivate *d;
+    BotControlServerPrivate *d;
+
+    void m_sendReply(QLocalSocket *so, int uid, int chat_id, ControlMsg::Type t, const QString& msg_received);
+
+    void m_fillSenderData(QJsonObject &jo);
 };
 
-#endif // BOTLOCALSERVER_H
+#endif // BotControlServer_H

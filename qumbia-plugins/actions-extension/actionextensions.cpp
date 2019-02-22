@@ -64,5 +64,5 @@ QuActionExtensionFactoryI *ActionExtensions::getExtensionFactory()
 
 
 #if QT_VERSION < 0x050000
-Q_EXPORT_PLUGIN2(actions-extension, ActionExtension)
+Q_EXPORT_PLUGIN2(actions-extension, ActionExtensions)
 #endif // QT_VERSION < 0x050000

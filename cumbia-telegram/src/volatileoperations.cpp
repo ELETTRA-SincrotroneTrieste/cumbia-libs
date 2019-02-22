@@ -21,25 +21,44 @@ void VolatileOperations::addOperation(int chat_id, VolatileOperation *op)
 {
     if(m_op_map.size() == 0)
         findChild<QTimer *>()->start();
+    m_op_map.insertMulti(chat_id, op);
+}
 
-    m_op_map.insert(chat_id, op);
+/**
+ * @brief VolatileOperations::replaceOperation replaces operations with the same type as op with
+ *        op
+ * @param chat_id the chat id where the VolatileOperation has to be replaced
+ * @param op the new operation. op type is used to find other operations with the same type
+ */
+void VolatileOperations::replaceOperation(int chat_id, VolatileOperation *op)
+{
+    QMutableMapIterator<int, VolatileOperation*> i(m_op_map);
+    while(i.hasNext()) {
+        i.next();
+        if(i.key() == chat_id) {
+            VolatileOperation *vop = i.value();
+            if(vop->type() == op->type()) {
+                i.remove();
+                delete vop;
+            }
+        }
+    }
+    addOperation(chat_id, op);
 }
 
 void VolatileOperations::consume(int chat_id, TBotMsgDecoder::Type t)
 {
-    qDebug() << __PRETTY_FUNCTION__ << m_op_map;
-    QList<VolatileOperation *> voplist = m_op_map.values(chat_id);
-    QList<VolatileOperation *> to_remove; // operations slated for removal: avoid QMutableIterator
-    foreach(VolatileOperation *vop, voplist) {
-        vop->consume(t);
-        if(vop->lifeCount() < 0) {
-            to_remove << vop;
+    QMutableMapIterator<int, VolatileOperation*> i(m_op_map);
+    while(i.hasNext()) {
+        i.next();
+        if(i.key() == chat_id) {
+            VolatileOperation *vop = i.value();
+            vop->consume(t);
+            if(vop->lifeCount() < 0) {
+                i.remove();
+                delete vop;
+            }
         }
-    }
-    // remove
-    foreach(VolatileOperation *vo, to_remove) {
-        m_op_map.remove(chat_id, vo);
-        delete vo;
     }
 
     if(m_op_map.size() == 0)
@@ -48,36 +67,30 @@ void VolatileOperations::consume(int chat_id, TBotMsgDecoder::Type t)
 
 VolatileOperation *VolatileOperations::get(int chat_id, int type) const
 {
-    qDebug() << __PRETTY_FUNCTION__ << m_op_map;
     QList<VolatileOperation *> voplist = m_op_map.values(chat_id);
     foreach(VolatileOperation *vop, voplist) {
-        qDebug() << __PRETTY_FUNCTION__ << chat_id << "type" << type << "vop type" << vop->type();
         if(vop->type() == type)
             return vop;
     }
-    if(!m_op_map.contains(type))
-        qDebug() << __PRETTY_FUNCTION__ << "no operations with type " << type;
+    if(!m_op_map.contains(type)) {
+    }
+
     return nullptr;
 }
 
 void VolatileOperations::cleanOld()
 {
-    qDebug() << __PRETTY_FUNCTION__ << "timeout: cleanOld invoketh";
-    foreach(int key, m_op_map.keys()) {
-        QList<VolatileOperation *> voplist = m_op_map.values(key);
-        QList<VolatileOperation *> to_remove;
-        QDateTime now = QDateTime::currentDateTime();
-        foreach(VolatileOperation *vo, voplist) {
-            if(vo->creationTime().secsTo(now) > vo->ttl())
-                to_remove << vo;
-        }
-        foreach(VolatileOperation *rvo,  to_remove) {
-            rvo->signalTtlExpired();
-            m_op_map.remove(key, rvo);
-            delete rvo;
+    QMutableMapIterator<int, VolatileOperation*> i(m_op_map);
+    QDateTime now = QDateTime::currentDateTime();
+    while(i.hasNext()) {
+        i.next();
+        VolatileOperation *vop = i.value();
+        if(vop->creationTime().secsTo(now) > vop->ttl()) {
+            vop->signalTtlExpired();
+            i.remove();
+            delete vop;
         }
     }
-
     if(m_op_map.size() == 0)
         findChild<QTimer *>()->stop();
 }

@@ -15,6 +15,9 @@ public:
                 ReadHistory, MonitorHistory, AlertHistory,
                 Bookmarks, AddBookmark, DelBookmark,
                 Last, CmdLink, Search, AttSearch, ReadFromAttList,
+                Plot,
+                // please include HelpXXX entries within Help and HelpSearch
+                Help, HelpMonitor, HelpAlerts, HelpHost, HelpSearch,
                 MaxType = 32 };
 
     const char types[MaxType][32] = { "Invalid", "Start", "Stop", "Host", "QueryHost",
@@ -22,6 +25,8 @@ public:
                                       "ReadHistory", "MonitorHistory", "AlertHistory",
                                       "Bookmarks", "AddBookmark", "DelBookmark",
                                       "Last", "CmdLink", "Search", "AttSearch", "ReadFromAttList",
+                                      "Plot",
+                                      "Help", "HelpMonitor", "HelpAlerts", "HelpHost", "HelpSearch",
                                       "MaxType" };
 
     TBotMsgDecoder();

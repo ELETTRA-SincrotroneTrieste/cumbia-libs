@@ -11,6 +11,7 @@
 class CuBotServerPrivate;
 class QJsonValue;
 class CuData;
+class QLocalSocket;
 
 class CuBotServer : public QObject
 {
@@ -27,7 +28,7 @@ signals:
 private slots:
     void onMessageReceived(const TBotMsg &m);
 
-    void onNewData(int chat_id, const CuData& d);
+    void onReaderUpdate(int chat_id, const CuData& d);
 
     void onNewMonitorData(int chat_id, const CuData& da);
 
@@ -51,7 +52,7 @@ private slots:
 
 
     // control server data
-    void onNewControlServerData(int uid, int chat_id, ControlMsg::Type t, const QString& msg);
+    void onNewControlServerData(int uid, int chat_id, ControlMsg::Type t, const QString& msg, QLocalSocket *so);
 
 
 public slots:
@@ -72,6 +73,8 @@ private:
 
     QList<HistoryEntry> m_prepareHistory(int uid, TBotMsgDecoder::Type t);
     void m_removeExpiredProcs(QList<HistoryEntry> &in);
+
+    bool m_isBigSizeVector(const CuData &da) const;
 
 };
 

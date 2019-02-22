@@ -1,0 +1,14 @@
+<b>Tango database search</b>
+
+The *search* command can be used to find a <i>Tango device</i> matching the given pattern.
+An example follows, please use /help_search for further details:
+
+  <i>search */device/* </i>
+
+The instruction above will search the <i>Tango database</i> to find all devices which names match the given expression.
+A list of device names, or a <i>no device found</i> message will follow.
+For each device in the list, a <i>command</i> like <i>/attlistN</i>, where N is a number, allows quick
+access to the record of all the device <i>attributes</i>, whence a <i>read</i> can be triggered with a tap.
+
+NOTE
+<i>search</i> and <i>attlistN</i> are <i>volatile</i> requests: they are forgotten by the bot after a short time or as soon as an unrelated command is issued. You will be informed by a message if this happens and the <i>search</i> command must be imparted over again.

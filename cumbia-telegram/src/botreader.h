@@ -49,6 +49,8 @@ public:
 
     void setPropertyEnabled(bool get_props);
 
+    void setPropertiesOnly(bool props_only);
+
     /** \brief returns the source of the reader
      *
      * @return a QString with the name of the source
@@ -60,6 +62,8 @@ public:
     QString host() const;
 
     QDateTime startedOn() const;
+
+    int ttl() const;
 
     void setStartedOn(const QDateTime &dt);
 
@@ -83,6 +87,19 @@ public:
 
     void setIndex(int idx);
 
+    int refreshCount() const;
+
+    int notifyCount() const;
+
+    QString refreshMode() const;
+
+    QString print_format() const;
+    double max() const;
+    double min() const;
+    QString description() const;
+    QString label() const;
+
+
 public slots:
 
     /** \brief set the source and start reading
@@ -103,7 +120,6 @@ signals:
     void newData(int chat_id, const CuData&);
     void lastUpdate(int chat_id, const CuData&);
     void startSuccess(int user_id, int chat_it, const QString& src, const QString& formula);
-    void onProperties(int chat_id, const CuData&);
     void formulaChanged(int chat_id, const QString& src, const QString& oldf, const QString& new_f);
     void priorityChanged(int chat_id, const QString& src, BotReader::Priority oldpri, BotReader::Priority newpri);
 

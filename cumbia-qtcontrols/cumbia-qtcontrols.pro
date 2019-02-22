@@ -16,12 +16,7 @@ PKGCONFIG -= cumbia-qtcontrols$${QTVER_SUFFIX}
 TARGET = $${cumbia_qtcontrols_LIB}
 TEMPLATE = lib
 
-# CUMBIA_QTCONTROLS_PLUGIN_DIR should be the same as
-# QUMBIA_PLUGIN_DIR defined in qumbia-plugins.pri within the qumbia-plugins module
-# The definition of CU_QTC_PLUGINDIR is in cumbia-qtcontrols.pri
-#
-DEFINES += CUMBIAQTCONTROLS_LIBRARY \
-    CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${CU_QTC_PLUGINDIR}\\\"\" \
+DEFINES += CUMBIAQTCONTROLS_LIBRARY
 
 DEFINES += QT_NO_DEBUG_OUTPUT
 
@@ -165,7 +160,8 @@ HEADERS += cumbiaqtcontrols.h\
     src/quaction-extension-plugininterface.h \
     src/quactionextensionfactoryi.h \
     src/cucontextmenuactionsplugin_i.h \
-    src/cupluginloader.h
+    src/cupluginloader.h \
+    src/cuformulaplugininterface.h
 
 unix:!android-g++ {
 

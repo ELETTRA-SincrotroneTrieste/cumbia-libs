@@ -57,10 +57,16 @@ TBotMsgDecoder::Type TBotMsgDecoder::decode(const TBotMsg &msg)
         m_type = MonitorHistory;
     else if(m_text == "/alerts" || m_text == "alerts")
         m_type = AlertHistory;
+    else if(m_text == "plot" || m_text == "/plot") m_type = Plot;
     else if(m_text == "stop") m_type = StopMonitor; // will stop all monitors for the chat
     else if(m_text == "host" || m_text == "/host") m_type = QueryHost;
     else if(m_text == "bookmarks" || m_text == "/bookmarks") m_type = Bookmarks;
     else if(m_text == "bookmark" || m_text == "/bookmark") m_type = AddBookmark;
+    else if(m_text == "/help" || m_text == "help") m_type = Help;
+    else if(m_text == "/help_alerts" || m_text == "help_alerts") m_type = HelpAlerts;
+    else if(m_text == "/help_monitor" || m_text == "help_monitor") m_type = HelpMonitor;
+    else if(m_text == "/help_search" || m_text == "help_search") m_type = HelpSearch;
+    else if(m_text == "/help_host" || m_text == "help_host") m_type = HelpHost;
     else {
         // host
         // a. host srv-tango-srf:20000

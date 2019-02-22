@@ -24,6 +24,8 @@ public slots:
      */
     void sendMessage(int chat_id, const QString& msg, bool silent = false);
 
+    void sendPic(int chat_id, const QByteArray& imgBytes, bool silent = false);
+
 private slots:
     void onNetworkError(QNetworkReply::NetworkError e);
     void onReply();

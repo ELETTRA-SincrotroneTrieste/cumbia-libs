@@ -39,7 +39,7 @@ signals:
 
     void startError(int chat_id, const QString& src, const QString& message);
 
-    void newData(int chat_id, const CuData& data);
+    void newMonitorData(int chat_id, const CuData& data);
 
     void onFormulaChanged(int user_id, int chat_id, const QString& src, const QString& host, const QString& old, const QString& new_f);
     void onMonitorTypeChanged(int user_id, int chat_id, const QString& src, const QString& host, const QString& old_t, const QString& new_t);

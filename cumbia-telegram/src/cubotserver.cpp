@@ -13,6 +13,8 @@
 #include "botsearchtangoatt.h"
 #include "botcontrolserver.h"
 #include "auth.h"
+#include "botstats.h"
+#include "botplotgenerator.h"
 
 #include <cumacros.h>
 #include <QtDebug>
@@ -47,6 +49,7 @@ public:
     VolatileOperations *volatile_ops;
     Auth* auth;
     BotControlServer *control_server;
+    BotStats *stats;
 };
 
 CuBotServer::CuBotServer(QObject *parent) : QObject(parent)
@@ -60,6 +63,7 @@ CuBotServer::CuBotServer(QObject *parent) : QObject(parent)
     d->volatile_ops = nullptr;
     d->auth = nullptr;
     d->control_server = nullptr;
+    d->stats = nullptr;
 }
 
 CuBotServer::~CuBotServer()
@@ -87,7 +91,7 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
         if(!success)
             perr("CuBotServer.onMessageReceived: error adding user with id %d: %s", uid, qstoc(d->bot_db->message()));
     }
-    else if(!d->bot_db->userInPrivateChat(uid, m.chat_id)) {
+    if(success && !d->bot_db->userInPrivateChat(uid, m.chat_id)) {
         success = d->bot_db->addUserInPrivateChat(uid, m.chat_id);
     }
 
@@ -125,10 +129,8 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
             HistoryEntry he = d->bot_db->lastOperation(m.user_id);
             if(he.isValid()) {
                 TBotMsg lm = m;
-                lm.text = he.name;
                 lm.setHost(he.host);
-                if(he.hasFormula())
-                    lm.text += " " + he.formula;
+                lm.text = he.toCommand();
                 d->bot_sender->sendMessage(m.chat_id, MsgFormatter().lastOperation(he.datetime, lm.text));
                 //
                 // call ourselves with the updated copy of the received message
@@ -143,8 +145,8 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
             BotReader *r = new BotReader(m.user_id, m.chat_id, this, d->cu_supervisor.cu_pool,
                                          d->cu_supervisor.ctrl_factory_pool, d->botconf->ttl(),
                                          msg_dec.formula(), BotReader::Normal, host);
-            connect(r, SIGNAL(newData(int, const CuData&)), this, SLOT(onNewData(int, const CuData& )));
-            r->setPropertyEnabled(false);
+            connect(r, SIGNAL(newData(int, const CuData&)), this, SLOT(onReaderUpdate(int, const CuData& )));
+            r->setPropertiesOnly(true); // only configure! no reads!
             r->setSource(src); // insert in  history db only upon successful connection
         }
         else if(t == TBotMsgDecoder::Monitor || t == TBotMsgDecoder::Alert) {
@@ -269,15 +271,30 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
                 }
             }
         }
+        else if(t >= TBotMsgDecoder::Help && t <= TBotMsgDecoder::HelpSearch) {
+            d->bot_sender->sendMessage(m.chat_id,
+                                       MsgFormatter().help(t));
+        }
+        else if(t == TBotMsgDecoder::Plot) {
+            BotPlotGenerator *plotgen =  static_cast<BotPlotGenerator *> (d->volatile_ops->get(m.chat_id, BotPlotGenerator::PlotGen));
+            if(plotgen) {
+                d->bot_sender->sendPic(m.chat_id, plotgen->generate());
+            }
+        }
 
         d->volatile_ops->consume(m.chat_id, msg_dec.type());
     } // else user is authorized
 }
 
-void CuBotServer::onNewData(int chat_id, const CuData &data)
+void CuBotServer::onReaderUpdate(int chat_id, const CuData &data)
 {
     MsgFormatter mf;
     d->bot_sender->sendMessage(chat_id, mf.fromData(data));
+    if(m_isBigSizeVector(data)) {
+        BotPlotGenerator *plotgen = new BotPlotGenerator(chat_id, data);
+        d->volatile_ops->replaceOperation(chat_id, plotgen);
+    }
+    d->stats->addRead(chat_id, data); // data is passed for error stats
     BotReader *reader = qobject_cast<BotReader *>(sender());
     HistoryEntry he(reader->userId(), reader->source(), "read", reader->formula(), reader->host());
     d->bot_db->addToHistory(he);
@@ -296,6 +313,10 @@ void CuBotServer::onNewMonitorData(int chat_id, const CuData &da)
 {
     MsgFormatter mf;
     d->bot_sender->sendMessage(chat_id, mf.fromData(da), da["silent"].toBool());
+    if(m_isBigSizeVector(da)) {
+        d->volatile_ops->replaceOperation(chat_id, new BotPlotGenerator(chat_id, da));
+    }
+    d->stats->addRead(chat_id, da); // da is passed for error stats
 }
 
 void CuBotServer::onSrcMonitorStopped(int user_id, int chat_id, const QString &src,
@@ -355,9 +376,14 @@ void CuBotServer::start()
             d->auth = new Auth(d->bot_db, d->botconf);
 
         d->control_server = new BotControlServer(this);
-        connect(d->control_server, SIGNAL(newMessage(int, int, ControlMsg::Type, QString)),
-                this, SLOT(onNewControlServerData(int, int, ControlMsg::Type, QString)));
+        connect(d->control_server, SIGNAL(newMessage(int, int, ControlMsg::Type, QString, QLocalSocket*)),
+                this, SLOT(onNewControlServerData(int, int, ControlMsg::Type, QString, QLocalSocket*)));
+
+        if(!d->stats)
+            d->stats = new BotStats(this);
+
         m_restoreProcs();
+
     }
 }
 
@@ -395,6 +421,10 @@ void CuBotServer::stop()
         if(d->control_server)
             delete d->control_server;
 
+        if(d->stats) {
+            delete d->stats;
+            d->stats = nullptr;
+        }
     }
 }
 
@@ -420,11 +450,13 @@ void CuBotServer::onTgDevListSearchReady(int chat_id, const QStringList &devs)
 {
     qDebug() << __PRETTY_FUNCTION__ << chat_id << devs;
     d->bot_sender->sendMessage(chat_id, MsgFormatter().tg_devSearchList(devs));
+    d->stats->addRead(chat_id, CuData("err", false)); // CuData is passed for error stats
 }
 
 void CuBotServer::onTgAttListSearchReady(int chat_id, const QString& devname, const QStringList &atts)
 {
     d->bot_sender->sendMessage(chat_id, MsgFormatter().tg_attSearchList(devname, atts));
+    d->stats->addRead(chat_id, CuData("err", false)); // CuData is passed for error stats
 }
 
 void CuBotServer::onVolatileOperationExpired(int chat_id, const QString &opnam, const QString &text)
@@ -432,14 +464,20 @@ void CuBotServer::onVolatileOperationExpired(int chat_id, const QString &opnam, 
     d->bot_sender->sendMessage(chat_id, MsgFormatter().volatileOpExpired(opnam, text));
 }
 
-void CuBotServer::onNewControlServerData(int uid, int chat_id, ControlMsg::Type t, const QString &msg)
+void CuBotServer::onNewControlServerData(int uid, int chat_id, ControlMsg::Type t, const QString &msg, QLocalSocket *so)
 {
     qDebug() << __PRETTY_FUNCTION__ << uid << chat_id << t << msg;
-    if(chat_id > -1 && d->bot_sender) {
+    if(t == ControlMsg::Statistics) {
+        QString stats = BotStatsFormatter().toJson(d->stats, d->bot_db, d->bot_mon);
+        d->control_server->sendControlMessage(so, stats);
+    }
+    else if(chat_id > -1 && d->bot_sender) {
         d->bot_sender->sendMessage(chat_id, MsgFormatter().fromControlData(t, msg));
     }
     else if(uid > -1 && chat_id < 0) {
-        // QList<int> chat_ids = d->bot_db->chatsForUser(uid);
+        foreach(int chat_id, d->bot_db->chatsForUser(uid)) {
+            d->bot_sender->sendMessage(chat_id, MsgFormatter().fromControlData(t, msg));
+        }
     }
 }
 
@@ -447,7 +485,8 @@ void CuBotServer::m_setupMonitor()
 {
     if(!d->bot_mon) {
         d->bot_mon = new BotMonitor(this, d->cu_supervisor.cu_pool, d->cu_supervisor.ctrl_factory_pool, d->botconf->ttl());
-        connect(d->bot_mon, SIGNAL(newData(int, const CuData&)), this, SLOT(onNewMonitorData(int, const CuData&)));
+        connect(d->bot_mon, SIGNAL(newMonitorData(int, const CuData&)),
+                this, SLOT(onNewMonitorData(int, const CuData&)));
         connect(d->bot_mon, SIGNAL(stopped(int, int, QString, QString, QString)),
                 this, SLOT(onSrcMonitorStopped(int, int, QString, QString, QString)));
         connect(d->bot_mon, SIGNAL(started(int,int, QString,QString,QString)), this, SLOT(onSrcMonitorStarted(int,int, QString,QString,QString)));
@@ -529,4 +568,14 @@ void CuBotServer::m_removeExpiredProcs(QList<HistoryEntry> &in)
         else
             ++it;
     }
+}
+
+bool CuBotServer::m_isBigSizeVector(const CuData &da) const
+{
+    if(da.containsKey("value") && da.containsKey("data_format_str")
+            && da["data_format_str"].toString() == std::string("vector")) {
+        const CuVariant& val = da["value"];
+        return val.getSize() > 5;
+    }
+    return false;
 }

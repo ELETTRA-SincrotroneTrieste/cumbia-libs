@@ -35,6 +35,9 @@ BotConfig::BotConfig(BotDb *db)
     d->map["botlistener_msg_poll_ms"] = 1000;
     d->map["botlistener_discard_msg_older_than_secs"] = 30;
 
+    // temporary dir for images (Plot)
+    d->map["img_out_tmpdir"] = "/tmp/cumbia-telegram/botplot/";
+
     d->valid = db->getConfig(d->map, d->descmap);
     if(!d->valid) {
         d->error = "BotConfig: database reported an error: " + db->message();
@@ -79,4 +82,9 @@ bool BotConfig::isValid() const
 QString BotConfig::error() const
 {
     return d->error;
+}
+
+QString BotConfig::getString(const QString &key) const
+{
+    return  d->map[key].toString();
 }

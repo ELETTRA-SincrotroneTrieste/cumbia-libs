@@ -22,18 +22,19 @@ int main(int argc, char *argv[])
     QCommandLineOption remUser(QStringList() << "r" << "revoke", "revoke authorization for the given user_id", "UID");
     QCommandLineOption dbfile(QStringList() << "f" << "dbfile", "SQLite database file used by the cumbia-telegram bot daemon",
                               "/tmp/botdb.dat");
+    QCommandLineOption stats(QStringList() << "s" << "stats", "Display server load statistics");
 
     parser.addOption(remUser);
     parser.addOption(users);
     parser.addOption(dbfile);
     parser.addOption(addUser);
+    parser.addOption(stats);
 
     parser.addPositionalArgument("user_id", "the user id");
 
     parser.process(a);
 
     const QStringList args = parser.positionalArguments();
-    qDebug() << __PRETTY_FUNCTION__ << "args " << args;
 
     CuTelegramCtrl tc;
     QString dbf = parser.value(dbfile);
@@ -59,6 +60,12 @@ int main(int argc, char *argv[])
 
         if(parser.isSet(users)) {
             tc.printUsers();
+        }
+        if(parser.isSet(stats))
+            ok = tc.requestStats();
+
+        if(!ok) {
+            tc.print_error();
         }
     }
     else {

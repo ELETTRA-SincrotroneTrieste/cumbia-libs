@@ -11,14 +11,25 @@ VolatileOperation::~VolatileOperation()
 
 }
 
+/**
+ * @brief VolatileOperation::lifeCount number of lives remaining for the volatile operation
+ * @return an integer representing the life count of the operation
+ *
+ * When lifeCount returns less than zero, operation will be removed and destroyed
+ * by VolatileOperations
+ */
 int VolatileOperation::lifeCount() const
 {
     return d_life_cnt;
 }
 
+/**
+ * @brief VolatileOperation::ttl time to live of a volatile operation.
+ *        Default 10 minutes
+ * @return 600 seconds;
+ */
 int VolatileOperation::ttl() const {
-    printf("\e[1;35mreturning ttl of 19 for fuckin example!\e[0m\n");
-    return 19;
+    return 60 * 10;
 }
 
 QDateTime VolatileOperation::creationTime()

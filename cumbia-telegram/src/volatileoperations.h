@@ -31,6 +31,8 @@ public:
 
     void addOperation(int chat_id, VolatileOperation *op);
 
+    void replaceOperation(int chat_id, VolatileOperation* op);
+
     void consume(int chat_id, TBotMsgDecoder::Type t);
 
     VolatileOperation *get(int chat_id, int type) const;

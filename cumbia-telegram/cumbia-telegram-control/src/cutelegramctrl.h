@@ -25,21 +25,32 @@ public:
 
     void print_error(const QString& origin, const QString& msg);
 
+    void print_error();
+
     void print(const QString& s);
 
     void print_success(bool ok);
 
     void authorize(int uid, bool authorize);
 
+    void printStats(const QString& s) const;
+
+    bool requestStats();
+
+    void onNewData(const QByteArray& ba);
+
 public slots:
-    bool send(const QString& s);
+    bool send(const QString& s, bool wait_for_reply);
 
 signals:
 
 private slots:
-    void onNewData();
 
     void onLocalSocketError(QLocalSocket::LocalSocketError e);
+
+    void m_printReply(const QString& r);
+
+    QString m_senderHeader(const QJsonObject &o);
 
 private:
     CuTelegramCtrlPrivate *d;

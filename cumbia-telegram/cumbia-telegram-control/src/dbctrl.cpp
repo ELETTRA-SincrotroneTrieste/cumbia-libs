@@ -42,10 +42,11 @@ bool DbCtrl::setAuthorized(int uid, bool auth)
     else {
         int au;
         auth ? au = 1 : au = 0;
-        m_err = !q.exec(QString("UPDATE auth SET authorized=%1 WHERE user_id=%2").arg(au).arg(uid));
+
+        m_err = !q.exec(QString("INSERT OR REPLACE INTO auth VALUES(%1,%2,datetime())").arg(uid).arg(au));
         if(!m_err) {
             m_err = !q.exec(QString("SELECT id,uname,first_name,last_name,join_date,authorized FROM users,"
-                           "auth WHERE id=%1 AND user_id=id").arg(uid));
+                                    "auth WHERE id=%1 AND user_id=id").arg(uid));
             if(!m_err && q.next()) {
                 QSqlRecord r = q.record();
                 m_msg = QString("user \"%1\" name \"%2\" last name \"%3\" join date %4 AUTHORIZED: %5")
@@ -82,20 +83,22 @@ bool DbCtrl::getUserInfo(QList<QMap<QString, QString> > &in_map)
     if(m_err)
         m_msg = q.lastQuery() + ":" + q.lastError().text();
     else {
-        m_err = !q.exec("SELECT DISTINCT id,uname,first_name,last_name,"
-                                " join_date FROM users,auth WHERE id NOT in"
-                                 " (SELECT user_id FROM auth)");
+        m_err = !q.exec("SELECT id,uname,first_name,last_name,join_date FROM users");
         while(!m_err && q.next()) {
-            QSqlRecord r = q.record();
-            for(int i = 0; i < r.count(); i++)
-                map[r.fieldName(i)] = r.value(r.fieldName(i)).toString();
-            map["authorized"] = "-1";
-            in_map << map;
-            auth_list << r.value("id").toInt();
+            int userid = q.value(0).toInt();
+            if(!auth_list.contains(userid)) {
+                QSqlRecord r = q.record();
+                for(int i = 0; i < r.count(); i++) {
+                    map[r.fieldName(i)] = r.value(r.fieldName(i)).toString();
+                }
+                map["authorized"] = "-1";
+                in_map << map;
+            }
         }
-        if(m_err)
-            m_msg = q.lastQuery() + ":" + q.lastError().text();
     }
+    if(m_err)
+        m_msg = q.lastQuery() + ":" + q.lastError().text();
+
     return !m_err;
 }
 

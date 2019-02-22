@@ -1,7 +1,9 @@
 include(/usr/local/cumbia-libs/include/qumbia-tango-controls/qumbia-tango-controls.pri)
 include(/usr/local/cumbia-libs/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+include(/usr/local/cumbia-libs/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 
-QT -= gui
+# for qwt!
+QT += gui
 
 QT += network sql script
 
@@ -62,7 +64,10 @@ SOURCES += \
     src/botsearchtangoatt.cpp \
     src/botreadquality.cpp \
     src/auth.cpp \
-    src/botcontrolserver.cpp
+    src/botcontrolserver.cpp \
+    src/botstats.cpp \
+    src/botplot.cpp \
+    src/botplotgenerator.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -90,4 +95,17 @@ HEADERS += \
     src/botreadquality.h \
     src/auth.h \
     cumbia-telegram-defs.h \
-    src/botcontrolserver.h
+    src/botcontrolserver.h \
+    src/botstats.h \
+    src/botplot.h \
+    src/botplotgenerator.h
+
+RESOURCES += \
+    cumbia-telegram.qrc
+
+DISTFILES += \
+    res/help.html \
+    res/help_monitor.html \
+    res/help_alerts.html \
+    res/help_search.html \
+    res/help_host.html

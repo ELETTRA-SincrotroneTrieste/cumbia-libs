@@ -21,16 +21,18 @@
 class BotReaderPrivate
 {
 public:
-    bool auto_configure;
+    bool auto_configure, props_only;
     bool read_ok;
     bool monitor;
     QString host, source;
     QString formula;
+    QString ref_mode;
+    QString desc, label, unit, print_format;
+    double max,min;
     CuContext *context;
-    CuData properties;
     int user_id, chat_id;
     int ttl;
-    unsigned long refresh_cnt;
+    int refresh_cnt, notify_cnt;
     BotReader::Priority priority;
     QDateTime startDateTime;
     int index; // to find the reader by index (shortcuts)
@@ -62,11 +64,9 @@ BotReader::BotReader(int user_id,
     d->priority = pri;
     d->monitor = monitor;
     d->formula = formula;
-    d->refresh_cnt = 0;
     d->index = -1;
     const char* env_tg_host = NULL;
     if(host.isEmpty() && (env_tg_host = secure_getenv("TANGO_HOST")) != nullptr) {
-        printf("\e[0;33mAUTO DETECTED TANGO HSOT %s\e[0m\n", env_tg_host);
         d->host = QString(env_tg_host);
     }
     else
@@ -78,7 +78,10 @@ void BotReader::m_init()
     d = new BotReaderPrivate;
     d->context = NULL;
     d->auto_configure = true;
+    d->props_only = false;
     d->read_ok = false;
+    d->refresh_cnt = d->notify_cnt = 0;
+    d->max = d->min = 0.0;
 }
 
 BotReader::~BotReader()
@@ -91,6 +94,11 @@ BotReader::~BotReader()
 void BotReader::setPropertyEnabled(bool get_props)
 {
     d->auto_configure = get_props;
+}
+
+void BotReader::setPropertiesOnly(bool props_only)
+{
+    d->props_only = props_only;
 }
 
 QString BotReader::source() const
@@ -111,6 +119,11 @@ QString BotReader::host() const
 QDateTime BotReader::startedOn() const
 {
     return d->startDateTime;
+}
+
+int BotReader::ttl() const
+{
+    return d->ttl;
 }
 
 void BotReader::setStartedOn(const QDateTime &dt)
@@ -175,6 +188,41 @@ void BotReader::setIndex(int idx)
     d->index = idx;
 }
 
+int BotReader::refreshCount() const
+{
+    return  static_cast<int>(d->refresh_cnt);
+}
+
+int BotReader::notifyCount() const
+{
+    return d->notify_cnt;
+}
+
+QString BotReader::refreshMode() const
+{
+    return d->ref_mode;
+}
+
+QString BotReader::print_format() const
+{
+    return d->print_format;
+}
+
+double BotReader::min() const
+{
+    return  d->min;
+}
+
+QString BotReader::description() const
+{
+    return d->desc;
+}
+
+QString BotReader::label() const
+{
+    return d->label;
+}
+
 void BotReader::setPriority(BotReader::Priority pri)
 {
     if(pri != d->priority) {
@@ -197,6 +245,8 @@ void BotReader::setSource(const QString &s)
     CuData options;
     if(!d->auto_configure)
         options["no-properties"] = true;
+    if(d->props_only)
+        options["properties-only"] = true;
     if(d->monitor)
         options["period"] = 15000;
     if(!options.isEmpty())
@@ -233,18 +283,12 @@ void BotReader::setFormula(const QString &formula)
 
 void BotReader::m_configure(const CuData& da)
 {
-    QString description, unit, label;
-    CuVariant m, M;
-
-    m = da["min"];  // min value
-    M = da["max"];  // max value
-
-    unit = QString::fromStdString(da["display_unit"].toString());
-    label = QString::fromStdString(da["label"].toString());
-
-    emit onProperties(d->chat_id, da);
-    // save properties
-    d->properties = da;
+    d->unit = QString::fromStdString(da["display_unit"].toString());
+    d->label = QString::fromStdString(da["label"].toString());
+    d->desc = QString::fromStdString(da["description"].toString());
+    d->min = da["min"].toDouble();
+    d->max = da["max"].toDouble();
+    d->print_format = QString::fromStdString(da["format"].toString());
 }
 
 /**
@@ -281,6 +325,8 @@ void BotReader::onUpdate(const CuData &da)
     d->refresh_cnt++;
     if(!d->startDateTime.isValid() || d->startDateTime.secsTo(QDateTime::currentDateTime()) >= d->ttl)
         emit lastUpdate(d->chat_id, da);
+    if(da.containsKey("mode"))
+        d->ref_mode = QString::fromStdString(da["mode"].toString());
 }
 
 bool BotReader::m_publishResult(const CuData &da)
@@ -288,9 +334,12 @@ bool BotReader::m_publishResult(const CuData &da)
     CuData data(da);
     bool success = !da["err"].toBool();
     bool value_changed;
+    bool notify = false;
     bool is_alert = (d->priority == BotReader::Normal);
     data["silent"] = (d->priority == Low);
     data["index"] = d->index;
+    data["print_format"] = d->print_format.toStdString();
+    data["display_unit"] = d->unit.toStdString();
     BotReadQuality rq;
     // this method is called when data has value key: suppose it has quality too
     int tg_quality = da["quality"].toInt();
@@ -298,10 +347,11 @@ bool BotReader::m_publishResult(const CuData &da)
     CuVariant v = da["value"];
     value_changed = (v != d->old_value || rq != d->old_quality);
     // is there a formula to be evaluated?
-    if(value_changed && !d->formula.isEmpty() && da["data_format_str"].toString() == "scalar") {
+    if(value_changed && !d->formula.isEmpty()) {
+        bool ok;
         double dval; // try to convert value to double in order to apply the formula
-        bool ok = v.to<double>(dval);
-        if(ok) {
+        if(da["data_format_str"].toString() == "scalar" && (ok = v.to<double>(dval)))
+        {
             QString formula(d->formula);
             FormulaHelper fhelp(formula);
             formula = fhelp.replaceWildcards(dval);
@@ -315,17 +365,20 @@ bool BotReader::m_publishResult(const CuData &da)
             if(!success) {
                 data["err"] = true;
                 data["msg"] = QString("BotReader: formula \"" + formula + "\" evaluation error: " + sv.toString()).toStdString();
+                notify = true;
                 emit newData(d->chat_id, data);
             }
             else { // formula evaluation successful
                 bool is_bool = sv.isBool();
-                bool notify = true;
+                //
+                // set notify to true now by default
+                notify = true;
                 if(is_bool)
                     sv.toBool() ? data["evaluation"] = std::string("yes") : data["evaluation"] = std::string("no");
                 else if(sv.isNumber())
                     data["evaluation"] = sv.toString().toStdString();
                 if(!d->monitor) // reply to enquiry in every case
-                    emit newData(d->chat_id, data);
+                    emit newData(d->chat_id, data); // notify is already true
                 else if(is_bool && sv.toBool()) { // formula evaluates to boolean and it is true
                     // (for instance, test/device/1/double_scalar > 250 evaluates to bool)
                     // monitor type: "monitor" or "alert"
@@ -354,13 +407,17 @@ bool BotReader::m_publishResult(const CuData &da)
     }
     else if(value_changed) { // no formula
         rq.fromTango(!success, tg_quality);
-        bool notify = !is_alert || (is_alert && d->old_quality != rq);
-        if(notify)
+        notify = !is_alert || (is_alert && d->old_quality != rq);
+        if(notify) {
             emit newData(d->chat_id, data);
+        }
     }
     if(value_changed) {
         d->old_value = v;
         d->old_quality = rq;
+    }
+    if(notify) {
+        d->notify_cnt++;
     }
     return success;
 }
