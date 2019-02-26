@@ -33,6 +33,8 @@ public:
 
     std::string source(size_t i) const;
 
+    void updateSource(size_t i, const std::string& s);
+
     long indexOf(const std::string& src) const;
 
     QString expression() const;

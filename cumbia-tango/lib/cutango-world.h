@@ -3,6 +3,7 @@
 
 #include <string>
 #include <cudata.h>
+#include <cudataquality.h>
 #include <tango.h>
 
 class CuTangoWorldPrivate;
@@ -84,6 +85,8 @@ public:
     void putDateTime(const Tango::TimeVal& ttv, CuData& data);
 
     std::string dateTimeToStr(time_t *tp) const;
+
+    CuDataQuality toCuQuality(Tango::AttrQuality q) const;
 
 private:
 

@@ -6,6 +6,7 @@
 #include <cucontrolsreader_abs.h>
 #include <cucontrolsfactories_i.h>
 #include <cudata.h>
+#include <cudataquality.h>
 
 class CuFormulaReaderFactoryPrivate;
 class CumbiaPool;
@@ -46,6 +47,12 @@ public:
     bool error() const;
 
     QString message() const;
+
+    CuDataQuality combinedQuality() const;
+
+    std::string combinedMessage() const;
+
+    std::vector<bool> errors() const;
 
     // CuControlsReaderA interface
 public:

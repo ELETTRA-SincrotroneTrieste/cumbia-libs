@@ -244,22 +244,14 @@ void CuTControlsReader::setSource(const QString &s)
 {
     CuTControlsUtils tcu;
     d->source = tcu.replaceWildcards(s, qApp->arguments());
-    printf("active options for controls reader %p: %s: %s\n", this, qstoc(s), d->ta_options.toString().c_str());
     if(!d->ta_options["no-properties"].toBool()) {
-        printf("\e[1;32m* fetch properties enabled!\e[0m\n");
         CuTReaderConfFactory acf;
         acf.setOptions(d->ta_options);
         d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, acf);
-    }
-    else {
-        printf("\e[1;31m* fetch properties disabled for %s\e[0m\n", qstoc(d->source));
     }
     if(!d->ta_options["properties-only"].toBool()) {
         CuTangoReaderFactory readf;
         readf.setOptions(d->ta_options);
         d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, readf);
-    }
-    else {
-        printf("\e[1;31m* properties-only specified for %s: NOT STARTING READER\e[0m\n", qstoc(d->source));
     }
 }

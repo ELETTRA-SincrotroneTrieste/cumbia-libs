@@ -2,7 +2,7 @@
 #include <cumacros.h>
 
 // (tango://){0,1}([A-Za-z_0-9\.]*[:]{1}[0-9]+[/]){0,1}[A-Za-z_0-9\.]+/[A-Za-z_0-9\.]+/[A-Za-z_0-9\\.]+
-#define DEVICE_REGEXP "(tango://){0,1}([A-Za-z_0-9\\.]*[:]{1}[0-9]+[/]){0,1}[A-Za-z_0-9\\.]+/[A-Za-z_0-9\\.]+/[A-Za-z_0-9\\\\.]+"
+#define DEVICE_REGEXP "(epics://){0,1}([A-Za-z_0-9\\.]*[:]{1}[0-9]+[/]){0,1}[A-Za-z_0-9\\.]+/[A-Za-z_0-9\\.]+/[A-Za-z_0-9\\\\.]+"
 
 CuEpControlsUtils::CuEpControlsUtils()
 {

@@ -17,8 +17,8 @@ public:
 CuTangoWorld::CuTangoWorld()
 {
     d = new CuTangoWorldPrivate();
-    d->src_patterns.push_back("[A-Za-z0-9_\\.]+/.+");
-    d->src_patterns.push_back("[A-Za-z0-9_\\.]+->.+");
+    d->src_patterns.push_back("[A-Za-z0-9_\\.\\$]+/.+");
+    d->src_patterns.push_back("[A-Za-z0-9_\\.\\$]+->.+");
 }
 
 CuTangoWorld::~CuTangoWorld()
@@ -254,8 +254,10 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
     d->message = dat["mode"].toString() + ": " + dateTimeToStr(&(tiv.tv_sec));
     putDateTime(tv, dat);
 
-    dat["quality"] = quality;
-    dat["quality_color"] = d->t_world_conf.qualityColor(static_cast<Tango::AttrQuality> (quality));
+    CuDataQuality cuq = toCuQuality(quality);
+    dat["quality"] = cuq.toInt();
+    dat["quality_color"] = cuq.color();
+    dat["quality_string"] = cuq.name();
     dat["data_format_str"] = formatToStr(f);
 
     try{
@@ -1674,6 +1676,32 @@ std::string CuTangoWorld::dateTimeToStr(time_t *tp) const
     if(tmp != NULL)
         strftime(t, sizeof(t), "%c", tmp);
     return std::string(t);
+}
+
+//   enum AttrQuality { ATTR_VALID, ATTR_INVALID, ATTR_ALARM,
+//   ATTR_CHANGING, ATTR_WARNING /*, __max_AttrQuality=0xffffffff */ };
+/**
+ * @brief CuTangoWorld::toCuQuality
+ * @param q the input Tango::AttrQuality enum value
+ * @return The *engine independent* data quality
+ *
+ * @see CuDataQuality
+ */
+CuDataQuality CuTangoWorld::toCuQuality(Tango::AttrQuality q) const
+{
+    switch(q) {
+    case Tango::ATTR_VALID:
+        return CuDataQuality(CuDataQuality::Valid);
+    case Tango::ATTR_ALARM:
+        return CuDataQuality(CuDataQuality::Alarm);
+    case Tango::ATTR_CHANGING:
+        return CuDataQuality(CuDataQuality::Changing);
+    case Tango::ATTR_WARNING:
+        return CuDataQuality(CuDataQuality::Warning);
+    case Tango::ATTR_INVALID:
+    default:
+        return CuDataQuality(CuDataQuality::Invalid);
+    }
 }
 
 

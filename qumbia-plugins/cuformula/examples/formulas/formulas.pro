@@ -11,7 +11,7 @@ QT +=  core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets x11extras
 
-CONFIG +=
+CONFIG += debug
 
 CONFIG+=link_pkgconfig
 PKGCONFIG += x11

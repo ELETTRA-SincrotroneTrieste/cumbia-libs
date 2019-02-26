@@ -26,10 +26,10 @@ bool CuFormulaParser::parse(const QString &expr)
 {
     d->expression = expr;
 
-    // regexp \{([\$A-Za-z0-9/,\._\-\:\s]+)\}\s*\((.*)\)
+    // regexp ^\{([\$A-Za-z0-9/,\._\-\:\s&\(\)>]+)\}\s*\((.*)\)$
     // example formula:
-    // {test/device/1/double_scalar test/device/1/long_scalar}  ( (@1+@2) * (@3 -sqrt(@4)))
-    QRegularExpression re("\\{([\\$A-Za-z0-9/,\\._\\-\\:\\s]+)\\}\\s*\\((.*)\\)");
+    // {test/device/1/double_scalar test/device/1->DevDouble(10.1)}  ( (@0+@1) * (@1 -sqrt(@0)))
+    QRegularExpression re("^\\{([\\$A-Za-z0-9/,\\._\\-\\:\\s&\\(\\)>]+)\\}\\s*\\((.*)\\)$");
     QString e(d->expression);
     e.remove("formula://");
     QRegularExpressionMatch match = re.match(e);
@@ -70,10 +70,34 @@ std::string CuFormulaParser::source(size_t i) const
     return std::string();
 }
 
+/**
+ * @brief CuFormulaParser::updateSource updates the source at position i with the new
+ *        source name s
+ * @param i the index of the source to be updated
+ * @param s the new name
+ *
+ * This can be used to update sources after wildcards ("$1, $2) have been replaced by
+ * engine specific readers.
+ *
+ * \par Example
+ * CuFormulaReader calls updateSource after QuWatcher::setSource so that CuFormulaParser
+ * contains the complete source name, after wildcards have been replaced by QuWatcher.
+ *
+ * @see CuFormulaReader::setSource
+ *
+ */
+void CuFormulaParser::updateSource(size_t i, const std::string &s)
+{
+    printf("\e[1;35mupdateSource replacing source at idx %zu setting to %s srcs size %zu\e[0m\n",
+           i, s.c_str(), d->srcs.size());
+    if(i < d->srcs.size())
+        d->srcs[i] = s;
+}
+
 long int CuFormulaParser::indexOf(const std::string &src) const
 {
     long int pos = std::find(d->srcs.begin(), d->srcs.end(), src) - d->srcs.begin();
-    if(pos > static_cast<long>(d->srcs.size()))
+    if(pos >= static_cast<long>(d->srcs.size()))
         return -1;
     return pos;
 }

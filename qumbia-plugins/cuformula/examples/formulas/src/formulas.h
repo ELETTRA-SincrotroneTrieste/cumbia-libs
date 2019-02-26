@@ -22,6 +22,9 @@ public:
     explicit Formulas(CumbiaPool *cu_p, QWidget *parent = 0);
     ~Formulas();
 
+private slots:
+    void onNewDouble(double dou);
+
 private:
     Ui::Testtest *ui;
 

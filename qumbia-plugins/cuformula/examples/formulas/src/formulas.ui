@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="source">
-    <string>formula://{test/device/1/double_scalar,test/device/2/double_scalar}(@0 + @1)</string>
+    <string>formula://{$1/double_scalar,$2/double_scalar}(@0 + @1)</string>
    </property>
   </widget>
   <widget class="QuLabel" name="quLabel_2">

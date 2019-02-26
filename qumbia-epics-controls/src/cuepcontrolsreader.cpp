@@ -114,8 +114,4 @@ void CuEpControlsReader::setSource(const QString &s)
                qstoc(s), readf.getType());
         d->cumbia_ep->addAction(d->source.toStdString(), d->tlistener, acf);
     }
-    else {
-        printf("\e[1;32m*\n* a nEW action has  been FRESHLY CREATED for source %s and type %d\e[0m\n",
-               qstoc(s), readf.getType());
-    }
 }
