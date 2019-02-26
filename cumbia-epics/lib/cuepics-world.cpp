@@ -1,10 +1,11 @@
 #include "cuepics-world.h"
 #include "cuepics-world-config.h"
-
+#include <cudataquality.h>
 #include <cumacros.h>
 #include <regex>
 #include <vector>
 #include <string>
+#include <regex>
 
 
 /*************************************************************************\
@@ -285,7 +286,7 @@ void CuEpicsWorld::fillThreadInfo(CuData &dat, const CuActivity* a)
 
 bool CuEpicsWorld::source_valid(const std::string &s) const
 {
-    return s.find(":") != std::string::npos;
+     return std::regex_match(s, std::regex("[A-Za-z0-9_\\./\\:]+"));
 }
 
 void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
@@ -456,7 +457,7 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
 
     if(!error)
         msg = da["src"].toString() + " [" + da["timestamp_str"].toString() + "] STAT: " + da["status"].toString()
-                + " SEV: " + da["severity"].toString();
+                + " SEV: " + da["severity"].toString() + " QUALITY: " + da["quality_string"].toString();
     da["err"] = error;
     da["msg"] = msg;
 }
@@ -544,6 +545,30 @@ bool CuEpicsWorld::m_ep_caget(CuPV *pv, CuData &res, CaGetMode cagetMode, double
         res["msg"] = m_get_timestamp() + std::string(msg);
     }
     return true;
+}
+
+// map from epics include/alarm.h
+// typedef enum {
+// epicsSevNone = NO_ALARM,
+// epicsSevMinor,
+// epicsSevMajor,
+// epicsSevInvalid,
+// ALARM_NSEV
+// } epicsAlarmSeverity;
+CuDataQuality CuEpicsWorld::m_setQuality(int sev, const CuData &dat) const
+{
+    CuDataQuality q;;
+    // invalid quality if error
+    if(dat["err"].toBool())
+        return CuDataQuality(CuDataQuality::Invalid);
+
+    if(sev == epicsSevMinor) {
+        q.set(CuDataQuality::Warning);
+    }
+    else if(sev == epicsSevMajor)
+        q.set(CuDataQuality::Alarm);
+
+    return q;
 }
 
 std::string CuEpicsWorld::m_get_timestamp()
@@ -634,12 +659,20 @@ void CuEpicsWorld::putTimestamp(void* ep_data, CuData &dt) const
         dt["status"] = "?";
 
     int sev = (static_cast<T *>(ep_data)->severity);
-    if((sev) >= 0 && (sev) <= (signed)lastEpicsAlarmSev)
+
+    // set an engine independent "quality" value, depending on severity
+    // and on the "err" value in dt
+    CuDataQuality dq = m_setQuality(sev, dt);
+    dt["quality"] = dq.toInt();
+    dt["quality_color"] = dq.color();
+    dt["quality_string"] = dq.name();
+
+    if((sev) >= 0 && (sev) <= (signed)lastEpicsAlarmSev) {
         //dt["severity"] = std::string(epicsAlarmSeverityStrings[sev]);
         dt["severity"] = sev;
+    }
     else
         dt["severity"] = "?";
-
 }
 
 template<class T>

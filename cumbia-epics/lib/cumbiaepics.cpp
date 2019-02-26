@@ -62,7 +62,7 @@ CumbiaEpics::~CumbiaEpics()
  */
 bool CumbiaEpics::addAction(const std::__cxx11::string &source, CuDataListener *l, const CuEpicsActionFactoryI& f)
 {
-    bool found;
+    bool found = false;
     CuEpicsWorld w;
     if(w.source_valid(source))
     {

@@ -46,11 +46,12 @@ CuEpicsActionI* CuEpicsActionFactoryService::registerAction(const std::string& s
     CuEpicsActionI* action = NULL;
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuEpicsActionI *>::iterator it;
-    for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src)
-            break;
+    for(it = d->actions.begin(); it != d->actions.end() && action == nullptr; ++it) {
+        if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src && !(*it)->exiting())
+            action = (*it);
+    }
 
-    if(it == d->actions.end())
+    if(!action)
     {
         action = f.create(src, ce);
         d->actions.push_back(action);
@@ -73,9 +74,11 @@ CuEpicsActionI *CuEpicsActionFactoryService::findActive(const string &src, CuEpi
 {
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuEpicsActionI *>::iterator it;
-    for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == at && (*it)->getSource().getName() == src && !(*it)->exiting())
+    for(it = d->actions.begin(); it != d->actions.end(); ++it) {
+        if((*it)->getType() == at && (*it)->getSource().getName() == src && !(*it)->exiting()) {
             return (*it);
+        }
+    }
     return NULL;
 }
 

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <cudata.h>
+#include <cudataquality.h>
 #include <cadef.h>
 
 /*************************************************************************\
@@ -135,6 +136,8 @@ public:
 private:
 
     bool m_ep_caget(CuPV *pv, CuData& res, CaGetMode cagetMode, double timeout);
+
+    CuDataQuality m_setQuality(int sev, const CuData& dat) const;
 
     std::string m_get_timestamp();
 
