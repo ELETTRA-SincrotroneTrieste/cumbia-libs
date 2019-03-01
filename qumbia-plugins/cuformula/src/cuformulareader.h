@@ -7,6 +7,7 @@
 #include <cucontrolsfactories_i.h>
 #include <cudata.h>
 #include <cudataquality.h>
+#include <QScriptValue>
 
 class CuFormulaReaderFactoryPrivate;
 class CumbiaPool;
@@ -71,6 +72,15 @@ private:
     bool m_allValuesValid() const;
 
     void m_disposeWatchers();
+
+    QScriptValue m_getScalarVal(const CuVariant& v);
+    QScriptValue m_getVectorVal(const CuVariant& v);
+
+    CuVariant m_fromScriptValue(const QScriptValue &v);
+
+    CuVariant::DataType m_getScriptValueType(const QScriptValue& v) const;
+
+    void m_notifyFormulaError();
 };
 
 #endif // CUFORMULASREADER_H

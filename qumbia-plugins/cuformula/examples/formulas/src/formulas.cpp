@@ -69,11 +69,6 @@ Formulas::Formulas(CumbiaPool *cumbia_pool, QWidget *parent) :
         perr("failed to load plugin loader under path %s: %s", qstoc(plupath), qstoc(pluginLoader.errorString()));
     }
     ui->setupUi(this, cu_pool, m_ctrl_factory_pool);
-
-    QuWatcher* watcher = new QuWatcher(this,cu_pool, m_ctrl_factory_pool);
-    watcher->setSource("$1/double_scalar");
-    watcher->attach(this, SLOT(onNewDouble(double)));
-
 }
 
 Formulas::~Formulas()
@@ -81,7 +76,3 @@ Formulas::~Formulas()
     delete ui;
 }
 
-void Formulas::onNewDouble(double dou)
-{
-    printf("onNewDouble %f\n", dou);
-}

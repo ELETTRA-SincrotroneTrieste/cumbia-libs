@@ -1,5 +1,6 @@
 #include "cuformulaplugin.h"
 #include "cuformula.h"
+#include "cuformulaparser.h"
 #include <cucontrolsfactorypool.h>
 #include <cumbiapool.h>
 #include <QMap>
@@ -57,6 +58,16 @@ std::vector<std::string> CuFormulaPlugin::srcPatterns() const
     std::vector<std::string> patts;
     patts.push_back("formula://");
     return patts;
+}
+
+bool CuFormulaPlugin::formulaIsNormalized(const QString &formula) const
+{
+    return CuFormulaParser().isNormalized(formula);
+}
+
+QString CuFormulaPlugin::normalizedFormulaPattern() const
+{
+    return CuFormulaParser().normalizedFormulaPattern();
 }
 
 

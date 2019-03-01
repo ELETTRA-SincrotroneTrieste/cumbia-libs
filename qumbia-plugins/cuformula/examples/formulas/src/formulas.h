@@ -23,7 +23,6 @@ public:
     ~Formulas();
 
 private slots:
-    void onNewDouble(double dou);
 
 private:
     Ui::Testtest *ui;

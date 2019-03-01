@@ -9,12 +9,21 @@ public:
     QString message;
     QString expression, formula;
     QString compiled_formula;
+    QString normalized_pattern;
 };
 
 CuFormulaParser::CuFormulaParser()
 {
     d = new CuFormulaParserPrivate;
     d->error = false;
+
+    // regexp ^\{([\$A-Za-z0-9/,\._\-\:\s&\(\)>]+)\}\s*(function)?\s*\(([a-z,\s]+)\)\s*(.*)$
+    // example formula:
+    // {test/device/1/double_scalar test/device/1->DevDouble(10.1)} (a,b ){ return a +b; }
+    // example 2
+    // {test/device/1/double_scalar test/device/1->DevDouble(10.1)}  ( function(a, b) { return (a -sqrt(b)); })
+    d->normalized_pattern = "^\\{([\\$A-Za-z0-9/,\\._\\-\\:\\s&\\(\\)>]+)\\}\\s*"
+                            "(function)?\\s*\\(([a-z,\\s]+)\\)\\s*(.*)$";
 }
 
 CuFormulaParser::~CuFormulaParser()
@@ -25,24 +34,45 @@ CuFormulaParser::~CuFormulaParser()
 bool CuFormulaParser::parse(const QString &expr)
 {
     d->expression = expr;
+    d->message = QString();
 
-    // regexp ^\{([\$A-Za-z0-9/,\._\-\:\s&\(\)>]+)\}\s*\((.*)\)$
-    // example formula:
-    // {test/device/1/double_scalar test/device/1->DevDouble(10.1)}  ( (@0+@1) * (@1 -sqrt(@0)))
-    QRegularExpression re("^\\{([\\$A-Za-z0-9/,\\._\\-\\:\\s&\\(\\)>]+)\\}\\s*\\((.*)\\)$");
+    QRegularExpression re(d->normalized_pattern);
     QString e(d->expression);
     e.remove("formula://");
     QRegularExpressionMatch match = re.match(e);
     d->error = !match.hasMatch() || match.captured().size() < 3;
     if(!d->error) {
+        // four captures
+        // 1 sources, comma or space or space + comma separated
+        // 2 "function" word (optional, may be empty )
+        // 3 parameter list, without parentheses, e.g. a, b are captured from (a,b)
+        // 4 function body, including { }
+        //
+        // 1
         QString sources = match.captured(1);
+        // 2
+        QString function_word = match.captured(2);
+        if(function_word.isEmpty())
+            function_word = "function";
         QStringList slist;
         // split sources by space or comma
-        sources.contains(" ") ?  slist = sources.split(" ", QString::SkipEmptyParts)
-            : slist = sources.split(QRegExp("[\\s*,\\s*]"), QString::SkipEmptyParts);
+        sources.contains(QRegExp("[\\s*,\\s*]")) ?  slist = sources.split(QRegExp("[\\s*,\\s*]"), QString::SkipEmptyParts) :
+                slist = sources.split(" ", QString::SkipEmptyParts);
         foreach(QString s, slist)
                 d->srcs.push_back(s.toStdString());
-        d->formula = match.captured(2);
+        // 3
+        QString params = match.captured(3);
+        QStringList paramList = params.split(QRegExp("[,\\s*]"));
+        d->error = (paramList.size() != static_cast<int>(d->srcs.size()));
+        if(d->error)
+            d->message = QString("CuFormulaParser.parse: parameter list count \"(%1)\" does not match sources count (%2)")
+                    .arg(params).arg(d->srcs.size());
+        else {
+            // 4
+            QString functionBody = match.captured(4);
+            d->formula = QString("(function(%1) %2)").arg(params).arg(functionBody);
+            printf("\e[1;32mcorrectly detected formyula %s\e[0m\n", qstoc(d->formula));
+        }
     }
     else {
         d->message = QString("CuFormulaParser.parse: expression \"%1\" has no sources or formula\n"
@@ -123,12 +153,13 @@ CuFormulaParser::State CuFormulaParser::compile(const std::vector<CuVariant> &va
     QString  placeholder;
     d->message.clear();
     d->compiled_formula = d->formula;
+    char c = 'a';
     for(size_t i = 0; i < values.size(); i++) {
         if(values[i].isNull()) {
-            st = ReadingsIncomplete;
+            return  ReadingsIncomplete;
         }
         else if(values[i].getSize() > 1) {
-            st = ValueNotScalar;
+            return  ValueNotScalar;
         }
         else {
             bool ok;
@@ -145,10 +176,13 @@ CuFormulaParser::State CuFormulaParser::compile(const std::vector<CuVariant> &va
     QRegularExpressionMatch match = re.match(d->compiled_formula);
     if(match.hasMatch()) {
         d->message = QString("CuFormulaParser.compile: bad placeholder(s) in formula \"%1\":"
-                             "(%2): values size is %3")
+                             "(%2): values size is %3: formula: \"%4\" expression: \"%5\""
+                             " partially compiled formula: \"%6\"")
                 .arg(match.captured(0))
                 .arg(match.captured(1))
-                .arg(values.size());
+                .arg(values.size()).arg(d->formula).arg(d->expression)
+                .arg(d->compiled_formula);
+        perr("CuFormulaParser.compile: CompileError: %s", qstoc(d->message));
         st = CompileError;
     }
 
@@ -162,3 +196,21 @@ QString CuFormulaParser::message() const
 {
     return d->message;
 }
+
+bool CuFormulaParser::error() const
+{
+    return d->error;
+}
+
+QString CuFormulaParser::normalizedFormulaPattern() const
+{
+    return  d->normalized_pattern;
+}
+
+bool CuFormulaParser::isNormalized(const QString &expr) const
+{
+    QRegularExpression re(d->normalized_pattern);
+    QRegularExpressionMatch match = re.match(expr);
+    return match.hasMatch();
+}
+

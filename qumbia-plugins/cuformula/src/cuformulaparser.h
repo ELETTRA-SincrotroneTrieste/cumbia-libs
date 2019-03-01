@@ -13,7 +13,7 @@ class CuFormulaParserPrivate;
 class CuFormulaParser
 {
 public:
-    enum State { ReadingsIncomplete = 0, CompileOk, CompileError, ValueNotScalar,
+    enum State { Undefined = 0, ReadingsIncomplete, CompileOk, CompileError, ValueNotScalar,
                  ToDoubleConversionFailed, MaxState = 16 };
 
     const char states[MaxState][32] = {
@@ -46,6 +46,12 @@ public:
     State compile(const std::vector<CuVariant> &values) const;
 
     QString message() const;
+
+    bool error() const;
+
+    QString normalizedFormulaPattern() const;
+
+    bool isNormalized(const QString& expr) const;
 
 private:
     CuFormulaParserPrivate *d;
