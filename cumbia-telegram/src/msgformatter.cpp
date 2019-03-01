@@ -3,12 +3,10 @@
 #include "botconfig.h"
 #include <QDateTime>
 #include <cudata.h>
+#include <cudataquality.h>
 #include <QFile>        // for help*.html in res/ resources
 #include <QTextStream>  // for help*.html
 #include <QtDebug>
-
-#include <cutango-world.h>
-#include <cutango-world-config.h>
 #include <algorithm>
 
 #define MAXVALUELEN 45
@@ -23,7 +21,7 @@ QString MsgFormatter::lastOperation(const QDateTime &dt, const QString &name) co
     if(name.isEmpty())
         return "You haven't performed any operation yet!";
     QString msg = "<i>" + m_timeRepr(dt) + "</i>\n";
-    msg += "operation: <b>" + name + "</b>";
+    msg += "operation: <b>" + FormulaHelper().escape(name) + "</b>";
     return msg;
 }
 
@@ -41,11 +39,11 @@ QString MsgFormatter::history(const QList<HistoryEntry> &hel, int ttl, const QSt
 
         for(int i = 0; i < hel.size(); i++) {
             const HistoryEntry &e = hel[i];
-            QString f = e.formula;
             // 1. type + source [+formula if not empty]
             msg += QString::number(i+1) + ". "; // numbered list
-            msg += "<i>" + e.name;
-            f.isEmpty() ? msg += "</i>" : msg += " " + f.replace(QRegExp("\\s*<\\s+"), " LT ") + "</i>";
+            QString cmd = e.command;
+            cmd.replace(QRegExp("\\s*<\\s+"), " LT ");
+            msg += "<i>" + cmd + "</i>";
 
             // if bookmark add remove link
             type == "bookmarks" ? msg += QString("   /XB%1\n").arg(e.index) : msg += "\n";
@@ -84,32 +82,42 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
 {
     QString msg, eval_value;
     QString vector_info;
-    m_src = QString::fromStdString(d["src"].toString());
-    QString host;
-    if(m_src.count('/') > 3)
-        host = m_src.section('/', 0, 0);
-    if(f <= Short && m_src.count('/') > 3) // remove host:PORT/ so that src is not too long
-        m_src.replace(0, m_src.indexOf('/', 0) + 1, "");
 
-    QString point, device;
-    if(m_src.count('/') > 1) {
-        point = m_src.section('/', -1);
-        device = m_src.section('/', 0, 2);
-    }
+//    printf("\e[1;35mDATA %s\e[0m\n", d.toString().c_str());
 
     long int li = d["timestamp_ms"].toLongInt();
     QDateTime datet = QDateTime::fromMSecsSinceEpoch(li);
     bool ok = !d["err"].toBool();
+    ok ? msg = "" : msg = "👎";
+
+    QStringList pointSet, deviceSet, hostSet;
+
+    if(d.containsKey("srcs")) {
+        QString point, device, host;
+        m_src = QString::fromStdString(d["srcs"].toString());
+        QStringList srcs = m_src.split(",", QString::SkipEmptyParts);
+        for(int i = 0; i < srcs.size(); i++) {
+            m_cleanSource(srcs[i], point, device, host, f);
+            if(!pointSet.contains(point)) pointSet << point;
+            if(!deviceSet.contains(device)) deviceSet << device;
+            if(!hostSet.contains(host)) hostSet << host;
+        }
+    }
+    else {
+        QString point, device, host;
+        m_src = QString::fromStdString(d["src"].toString());
+        m_cleanSource(m_src, point, device, host, f);
+    }
+    QString cmd = QString::fromStdString(d["command"].toString());
+
+    if(!cmd.isEmpty())
+        msg += "<i>" + FormulaHelper().escape(cmd) + "</i>:\n";
 
     // start with value, so that it is available in notification
     // preview
-    ok ? msg = "" : msg = "👎";
 
     // source: always
-    if(point.length() > 0 && device.length() > 0 && ok)
-        msg += "<b>" + point + "</b>: ";
-    else
-        msg += "<i>" + m_src + "</i>: ";
+
 
     if(!ok) {
         msg += "\n";
@@ -117,15 +125,13 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
     }
     else { // ok
 
-        if(d.containsKey("formula")) {
-            QString formula = QString::fromStdString(d["formula"].toString());
-            msg += FormulaHelper().escape(formula) + ": ";
-        }
+
         if(d.containsKey("value")) {
             bool ok;
             const CuVariant &va = d["value"];
             std::string print_format, value_str;
-            d.containsKey("print_format") ? value_str = va.toString(&ok, d["print_format"].toString().c_str()) :
+
+            d.containsKey("print_format") && !d.containsKey("values") ? value_str = va.toString(&ok, d["print_format"].toString().c_str()) :
                 value_str = va.toString();
             QString v_str = QString::fromStdString(value_str);
             if(v_str.length() > MAXVALUELEN - 3) {
@@ -133,6 +139,7 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
                 v_str += "...";
             }
             eval_value = m_value = v_str;
+
             if(va.getSize() > 1) {
                 vector_info = m_getVectorInfo(va);
             }
@@ -150,8 +157,9 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
         if(!du.isEmpty())
             msg += " [" + QString::fromStdString(d["display_unit"].toString()) +  "]";
 
-        if(point.length() > 0 && device.length() > 0)
-            msg += "   <i>" + device + "</i>";
+        // command includes device name
+//        if(point.length() > 0 && device.length() > 0)
+//            msg += "   <i>" + device + "</i>";
 
         // if vector, provide some info about len, min and max
         // and then a link to plot it!
@@ -159,19 +167,25 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
             msg += "\n" + vector_info + " /plot";
         }
 
-        int quality = d["quality"].toInt();
-        if(quality != 0) {
+
+        // comand printed on top
+//        if(d.containsKey("command")) {
+//            QString formula = QString::fromStdString(d["command"].toString());
+//            msg += FormulaHelper().escape(formula);
+//        }
+
+        CuDataQuality quality(d["quality"].toInt());
+        CuDataQuality::Type qt = quality.type();
+        if(qt != CuDataQuality::Valid) {
             msg += "\n";
-            CuTangoWorldConfig twc;
-            m_quality = QString::fromStdString(twc.qualityString(static_cast<Tango::AttrQuality>(quality)));
-            if(m_quality.compare("ATTR_WARNING", Qt::CaseInsensitive) == 0)
-                msg += "😮   <i>warning</i>\n";
-            else if(m_quality.compare("ATTR_ALARM", Qt::CaseInsensitive) == 0)
-                msg += "😱   <i>alarm</i>\n";
-            else if(m_quality.compare("ATTR_INVALID", Qt::CaseInsensitive) == 0)
-                msg += "👎   <i>invalid</i>\n";
-            else
-                msg += "quality: <i>" + m_quality + "</i>\n";
+            m_quality = QString::fromStdString(quality.name());
+            if(qt == CuDataQuality::Warning)
+                msg += "😮   ";
+            else if(qt == CuDataQuality::Alarm)
+                msg += "😱   ";
+            else if(qt == CuDataQuality::Invalid)
+                msg += "👎   ";
+             msg += "<i>" + m_quality + "</i>\n";
         }
 
         if(f > Short) {
@@ -186,6 +200,7 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
     // date time
     msg +=  "<i>" + m_timeRepr(datet) + "</i>";
 
+    QString host = hostSet.join(", ");
     !host.isEmpty() ? msg+= " [<i>" + host + "</i>]" : msg += "";
 
     int idx = d["index"].toInt();
@@ -281,7 +296,7 @@ QString MsgFormatter::bookmarkAdded(const HistoryEntry &b) const
     QString s;
     if(b.isValid()) {
         s += "👍   successfully added bookmark:\n";
-        s += QString("<i>%1 %2</i>\ntype: <i>%3</i>  [host: <i>%4</i>]").arg(b.name).arg(b.formula).arg(b.type).arg(b.host);
+        s += QString("<i>%1</i>\ntype: <i>%2</i>  [host: <i>%3</i>]").arg(b.command).arg(b.type).arg(b.host);
     }
     else {
         s = "👎   could not add the requested bookmark";
@@ -433,4 +448,18 @@ QString MsgFormatter::m_getVectorInfo(const CuVariant &v)
     s += QString("vector size: <b>%1</b> min: <b>%2</b> max: <b>%3</b>").arg(vd.size())
             .arg(*minmax.first).arg(*minmax.second);
     return s;
+}
+
+void MsgFormatter::m_cleanSource(const QString &src, QString& point, QString& device,QString&  host, MsgFormatter::FormatOption f) const
+{
+    QString  s(src);
+    if(s.count('/') > 3)
+        host = s.section('/', 0, 0);
+    if(f <= Short && s.count('/') > 3) // remove host:PORT/ so that src is not too long
+        s.replace(0, s.indexOf('/', 0) + 1, "");
+
+    if(s.count('/') > 1) {
+        point = s.section('/', -1);
+        device = s.section('/', 0, 2);
+    }
 }

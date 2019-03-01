@@ -25,7 +25,7 @@ public:
 
     QString message() const;
 
-    BotReader*  findReader(int chat_id, const QString& src, const QString& host) const;
+    BotReader*  findReader(int chat_id, const QString& expression, const QString& host) const;
 
     BotReader*  findReaderByUid(int user_id, const QString& src, const QString& host) const;
 
@@ -46,13 +46,13 @@ signals:
 
 public slots:
 
-    bool stop(int chat_id, const QString &src);
+    bool stopAll(int chat_id, const QStringList &srcs);
 
     bool stopByIdx(int chat_id, int index);
 
     bool startRequest(int user_id, int chat_id, int uid_monitor_limit,
                       const QString& src,
-                      const QString& formula, BotReader::Priority priority,
+                      const QString& cmd, BotReader::Priority priority,
                       const QString& host = QString(),
                       const QDateTime& startedOn = QDateTime());
 
@@ -64,7 +64,7 @@ private:
 private slots:
     void m_onNewData(int, const CuData&);
 
-    void m_onFormulaChanged(int chat_id, const QString& src, const QString& old, const QString& new_f);
+    void m_onFormulaChanged(int user_id, int chat_id, const QString &src, const QString &old, const QString &new_f, const QString& host);
 
     void m_onPriorityChanged(int chat_id, const QString& src,
                                 BotReader::Priority oldpri, BotReader::Priority newpri);

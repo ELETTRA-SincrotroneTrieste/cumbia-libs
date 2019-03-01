@@ -1,5 +1,6 @@
 #include "tbotmsgdecoder.h"
 #include "tbotmsg.h"
+#include "cuformulaparsehelper.h"
 
 #include <QString>
 #include <QtDebug>
@@ -12,9 +13,10 @@ TBotMsgDecoder::TBotMsgDecoder()
     m_cmdLinkIdx = -1;
 }
 
-TBotMsgDecoder::TBotMsgDecoder(const TBotMsg& msg)
+TBotMsgDecoder::TBotMsgDecoder(const TBotMsg& msg, const QString &normalizedFormulaPattern)
 {
-    m_type = decode(msg);
+    m_normalizedFormulaPattern = normalizedFormulaPattern; // first
+    m_type = decode(msg);                                  // after!
 }
 
 TBotMsgDecoder::Type TBotMsgDecoder::type() const
@@ -37,16 +39,19 @@ QString TBotMsgDecoder::text() const
     return m_text;
 }
 
-QString TBotMsgDecoder::formula() const
-{
-    return m_formula;
-}
-
+//
+//  Decode incoming messages
+//
+//  start decoding from easiest cases and let the most challenging ones be the last
+//
 TBotMsgDecoder::Type TBotMsgDecoder::decode(const TBotMsg &msg)
 {
     m_cmdLinkIdx = -1;
     m_type = Invalid;
     m_text = msg.text;
+    //
+    // (1) easiest
+    //
     if(m_text == "/start") m_type = Start;
     else if(m_text == "/stop") m_type = Stop;
     else if(m_text == "/last" || m_text == "last")
@@ -68,6 +73,10 @@ TBotMsgDecoder::Type TBotMsgDecoder::decode(const TBotMsg &msg)
     else if(m_text == "/help_search" || m_text == "help_search") m_type = HelpSearch;
     else if(m_text == "/help_host" || m_text == "help_host") m_type = HelpHost;
     else {
+        //
+        // (2) easy
+        //
+        //
         // host
         // a. host srv-tango-srf:20000
         // b. host = srv-tango-srf:20000
@@ -119,29 +128,40 @@ TBotMsgDecoder::Type TBotMsgDecoder::decode(const TBotMsg &msg)
                     m_type = ReadFromAttList;
                 }
             }
+            // try search match now
+            if(m_type == Invalid) { // still invalid
+                const char *tg_section_match = "[A-Za-z0-9_\\.\\*]";
+                re.setPattern(QString("search\\s+(%1*/%1*/%1)").arg(tg_section_match));
+                match = re.match(m_text);
+                if(match.hasMatch()) {
+                    m_type = Search;
+                    m_source = match.captured(1);
+                }
+            }
+
+            //
+            // Difficult cases last
+            //
 
             // the message received
             // 1. is not a link to a previous command
             // 2. is not a /Xn command to StopMonitor by index
+            // 3. is not a searc some/pattern/*
+            // 4. is not a ReadFromAttList
+            // 5. ...
             // try to detect a tango attribute then
 
             if(m_cmdLinkIdx > 0 && m_type == Invalid) {
                 m_type = CmdLink;
             }
             else if(m_type == Invalid) {
+                //
+                // (3) most difficult
+                //
+                //
                 // invoke m_decodeSrcCmd helper function with the trimmed text
                 m_type = m_decodeSrcCmd(m_text.trimmed());
             } //  m_cmdLinkIdx < 0
-        }
-        // try search match now
-        if(m_type == Invalid) { // still invalid
-            const char *tg_section_match = "[A-Za-z0-9_\\.\\*]";
-            re.setPattern(QString("search\\s+(%1*/%1*/%1)").arg(tg_section_match));
-            match = re.match(m_text);
-            if(match.hasMatch()) {
-                m_type = Search;
-                m_source = match.captured(1);
-            }
         }
     }
 
@@ -154,56 +174,55 @@ TBotMsgDecoder::Type TBotMsgDecoder::m_decodeSrcCmd(const QString &txt)
     QStringList cmd_parts = txt.split(QRegExp("\\s+"), QString::SkipEmptyParts);
     QRegularExpression re;
     QRegularExpressionMatch match;
-    // 1. text only contains a tango source
-    if(cmd_parts.size() == 1) {
-        // must find a tango attribute pattern.
-        // single Read
-        m_source = m_findSource(txt);
-        if(!m_source.isEmpty())
+    m_type = m_StrToCmdType(txt);
+    if(m_type == Invalid) {
+        if(m_tryDecodeFormula(txt))
             m_type = Read;
     }
-    else if(cmd_parts.size() > 1) {
-        // monitor|stop or some other action on tango source
-        // or single read + formula
-        int formula_start_idx = 1;
-        const QString &first = cmd_parts.first();
-        m_source = m_findSource(first); // first param is source?
-        if(m_source.isEmpty()) {
-            // first parameter is a command?
-            m_type = m_StrToCmdType(first);
-            if(m_type == AttSearch)
-                m_source = m_findDevice(cmd_parts.at(1));
-            else if(m_type != Invalid) { // yes it is
-                m_source = m_findSource(cmd_parts.at(1)); // find source in second param
-                formula_start_idx = 2;
+    else {
+        // first string must be a valid command on a source (or formula)
+        // such as monitor or alert
+        if(m_type == AttSearch)
+            m_source = m_findDevice(cmd_parts.at(1));
+        else if(m_type != Invalid) { // monitor|stop or some other action on tango source
+            QString restOfLine;
+            for(int i = 1; i < cmd_parts.size(); i++) {
+                i < cmd_parts.size() - 1 ? restOfLine += cmd_parts[i] + " " : restOfLine += cmd_parts[i];
             }
+            m_tryDecodeFormula(restOfLine); // find source in second param
         }
         else {
-            // first parameter is source: Read
-            m_type = Read;
-        }
-        if(m_type != Invalid) {
-            QString f; // join what remains of txt after [cmd and] source
-            for(int i = formula_start_idx; i < cmd_parts.size(); i++)
-                f += cmd_parts[i] + " ";
-            m_formula = m_getFormula(f.trimmed());
+            m_msg = "TBotMsgDecoder::m_decodeSrcCmd: unable to parse \"%1\"" + txt;
         }
     }
+    qDebug() << __PRETTY_FUNCTION__ << "returning type " << m_type << "source" << m_source;
     return m_type;
+}
+
+bool TBotMsgDecoder::m_tryDecodeFormula(const QString &text)
+{
+    bool is_formula = true;
+    // text does not start with either monitor or alarm
+    m_source = QString();
+
+    CuFormulaParseHelper ph;
+    !ph.isNormalizedForm(text, m_normalizedFormulaPattern) ? m_source = ph.toNormalizedForm(text) : m_source = text;
+    return is_formula;
 }
 
 TBotMsgDecoder::Type TBotMsgDecoder::m_StrToCmdType(const QString &cmd)
 {
     m_msg.clear();
-    if(cmd == "monitor" || cmd == "mon")
+    if(cmd.startsWith("monitor ") || cmd.startsWith("mon "))
         return  Monitor;
-    else if(cmd == "alert")
+    else if(cmd.startsWith("alert "))
         return Alert;
-    else if(cmd == "stop")
+    else if(cmd.startsWith("stop"))
         return StopMonitor;
-    else if(cmd == "attlist")
+    else if(cmd.startsWith("search"))
+        return Search;
+    else if(cmd.startsWith("attlist "))
         return AttSearch;
-    m_msg = "TBotMsgDecoder: invalid command \"" + cmd + "\"";
     return Invalid;
 }
 
@@ -214,7 +233,7 @@ QString TBotMsgDecoder::m_findSource(const QString &text)
     // admitted chars for Tango names
     const char* tname_pattern = "[A-Za-z0-9_\\-\\.]+";
     // tango attribute pattern: join tname_pattern with three '/'
-    const QString tango_attr_src_pattern = QString("%1/%1/%1/%1").arg(tname_pattern);
+    const QString tango_attr_src_pattern = QString("^%1/%1/%1/%1$").arg(tname_pattern);
     // allow multiple pattern search in the future (commands?)
     QStringList patterns = QStringList() << tango_attr_src_pattern;
     return m_findByPatterns(text, patterns);
@@ -258,6 +277,23 @@ QString TBotMsgDecoder::m_getFormula(const QString &f)
     // do some validation checks in the future?
     validated_formula = f;
     return validated_formula;
+}
+
+/**
+ * @brief TBotMsgDecoder::getArgs returns the list of arguments after the first detected word
+ *
+ * This is used to detect arguments following a command, for example after "stop".
+ *
+ * @return a QStringList with the arguments following the first
+ *
+ * \par example
+ * Running m_getArgs on  "stop double_scalar long_scalar" would return QStringList("double_scalar", "long_scalar")
+ */
+QStringList TBotMsgDecoder::getArgs() const
+{
+    QStringList a(m_text.split(QRegExp("\\s+")));
+    a.removeAt(0);
+    return a;
 }
 
 

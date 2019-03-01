@@ -62,6 +62,8 @@ private:
     QString m_timeRepr(const QDateTime& dt) const;
 
     QString m_getVectorInfo(const CuVariant& v);
+
+    void m_cleanSource(const QString& s, QString &point, QString &device, QString& host, MsgFormatter::FormatOption f) const;
 };
 
 #endif // MSGFORMATTER_H

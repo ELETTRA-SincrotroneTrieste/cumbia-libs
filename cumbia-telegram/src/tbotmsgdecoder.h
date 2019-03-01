@@ -31,7 +31,7 @@ public:
 
     TBotMsgDecoder();
 
-    TBotMsgDecoder(const TBotMsg &msg);
+    TBotMsgDecoder(const TBotMsg &msg, const QString& normalizedFormulaPattern);
 
     Type type() const;
 
@@ -40,8 +40,6 @@ public:
     QString source() const;
 
     QString text() const;
-
-    QString formula() const;
 
     Type decode(const TBotMsg &msg);
 
@@ -53,7 +51,11 @@ public:
 
     QString toHistoryTableType( Type t) const;
 
+    QStringList getArgs() const;
+
 private:
+
+    bool m_tryDecodeFormula(const QString& text);
 
     Type m_decodeSrcCmd(const QString& text);
 
@@ -71,12 +73,13 @@ private:
 
     QString m_host;
     QString m_source;
-    QString m_formula;
     QString m_text;
 
     int m_cmdLinkIdx;
 
     QString m_msg;
+
+    QString m_normalizedFormulaPattern;
 };
 
 #endif // TBOTMSGDECODER_H

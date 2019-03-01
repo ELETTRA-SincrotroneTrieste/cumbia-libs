@@ -1320,7 +1320,7 @@ std::string CuVariant::toString(bool *ok, const char *format) const
         if(d->type == String)
             ret += std::string(static_cast<char **>(d->val)[i]);
         else if(d->type == Double)
-            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%f", static_cast<double *>(d->val)[i]);
+            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%g", static_cast<double *>(d->val)[i]);
         else if(d->type == LongDouble)
             snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%Lf", static_cast<long double *>(d->val)[i]);
         else if(d->type == Int)
@@ -1336,7 +1336,7 @@ std::string CuVariant::toString(bool *ok, const char *format) const
         else if(d->type == UShort)
             snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%hu", static_cast<unsigned short *>(d->val)[i]);
         else if(d->type == Float)
-            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%f", static_cast<float *>(d->val)[i]);
+            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%g", static_cast<float *>(d->val)[i]);
         else if(d->type == Boolean)
             static_cast<bool *>(d->val)[i] ? sprintf(converted, "true") : sprintf(converted, "false");
         else if(d->type == VoidPtr)

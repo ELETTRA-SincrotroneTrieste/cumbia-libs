@@ -67,7 +67,8 @@ SOURCES += \
     src/botcontrolserver.cpp \
     src/botstats.cpp \
     src/botplot.cpp \
-    src/botplotgenerator.cpp
+    src/botplotgenerator.cpp \
+    src/cuformulaparsehelper.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -98,7 +99,8 @@ HEADERS += \
     src/botcontrolserver.h \
     src/botstats.h \
     src/botplot.h \
-    src/botplotgenerator.h
+    src/botplotgenerator.h \
+    src/cuformulaparsehelper.h
 
 RESOURCES += \
     cumbia-telegram.qrc

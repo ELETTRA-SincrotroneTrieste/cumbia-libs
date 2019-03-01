@@ -43,6 +43,10 @@ public:
 
     CuDataQuality& operator = (const CuDataQuality& other);
 
+    bool operator==(const CuDataQuality& other) const;
+
+    bool operator !=(const CuDataQuality& other) const;
+
     std::string name() const;
 
     std::string color() const;

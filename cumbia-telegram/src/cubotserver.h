@@ -38,7 +38,7 @@ private slots:
 
     void onSrcMonitorStartError(int chat_id, const QString& src, const QString& message);
 
-    void onSrcMonitorFormulaChanged(int user_id, int chat_id, const QString &src,
+    void onSrcMonitorFormulaChanged(int user_id, int chat_id, const QString &new_s,
                                     const QString &host, const QString &old, const QString &new_f);
 
     void onSrcMonitorTypeChanged(int user_id, int chat_id, const QString& src,

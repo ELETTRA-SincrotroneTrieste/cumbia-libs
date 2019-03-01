@@ -20,6 +20,7 @@ BotPlotGenerator::~BotPlotGenerator()
 QByteArray BotPlotGenerator::generate() const
 {
     QByteArray ba = BotPlot().drawPlot(m_source, m_data);
+    printf("generate %s\n", ba.data());
     return ba;
 }
 

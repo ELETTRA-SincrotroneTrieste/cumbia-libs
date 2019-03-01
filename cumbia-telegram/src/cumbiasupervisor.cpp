@@ -15,6 +15,10 @@
 #include <cuepreadoptions.h>
 #endif
 
+#include <cupluginloader.h>
+#include <cuformulaplugininterface.h>
+#include <QPluginLoader>
+
 #include <QStringList>
 
 CumbiaSupervisor::CumbiaSupervisor()
@@ -65,6 +69,29 @@ void CumbiaSupervisor::setup()
         cu_pool->setSrcPatterns("epics", ep_patterns);
 #endif
 
+        // formulas
+
+        CuPluginLoader plulo;
+        QString plupath = plulo.getPluginAbsoluteFilePath(CUMBIA_QTCONTROLS_PLUGIN_DIR, "cuformula-plugin.so");
+        QPluginLoader pluginLoader(plupath);
+        QObject *plugin = pluginLoader.instance();
+        if (plugin){
+            m_formulaPlu = qobject_cast<CuFormulaPluginI *>(plugin);
+            if(!m_formulaPlu)
+                perr("Failed to load formula plugin");
+            else {
+                printf("\e[1;32m* \e[0mformula plugin loaded: setting up pools...\n");
+                CuControlsReaderFactoryI *formula_rf = m_formulaPlu->getFormulaReaderFactory(cu_pool, ctrl_factory_pool);
+                cu_pool->registerCumbiaImpl("formula", m_formulaPlu->getCumbia());
+                ctrl_factory_pool.registerImpl("formula", *formula_rf);
+                ctrl_factory_pool.setSrcPatterns("formula", m_formulaPlu->srcPatterns());
+                cu_pool->setSrcPatterns("formula", m_formulaPlu->srcPatterns());
+            }
+        }
+        else {
+            perr("failed to load plugin loader under path %s: %s", qstoc(plupath), qstoc(pluginLoader.errorString()));
+        }
+
     }
 }
 
@@ -79,5 +106,10 @@ void CumbiaSupervisor::dispose()
     }
     delete cu_pool;
     cu_pool = nullptr;
+}
+
+CuFormulaPluginI *CumbiaSupervisor::formulaPlugin() const
+{
+    return  m_formulaPlu;
 }
 

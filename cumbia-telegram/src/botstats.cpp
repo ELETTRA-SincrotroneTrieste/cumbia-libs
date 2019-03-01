@@ -136,7 +136,7 @@ QByteArray BotStatsFormatter::toJson(BotStats *stats, BotDb *db, const BotMonito
             mon_mode.append(r->refreshMode());
             mon_refcnt.append(r->refreshCount());
             mon_notifcnt.append(r->notifyCount());
-            mon_formulas.append(r->formula());
+            mon_formulas.append(r->command());
         }
         if(readers.size() > 0) {
             jo["mon_srcs"] = mon_srcs;

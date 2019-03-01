@@ -88,6 +88,16 @@ CuDataQuality &CuDataQuality::operator =(const CuDataQuality &other)
    return *this;
 }
 
+bool CuDataQuality::operator==(const CuDataQuality &other) const
+{
+    return  m_type == other.m_type;
+}
+
+bool CuDataQuality::operator !=(const CuDataQuality &other) const
+{
+    return  m_type != other.m_type;
+}
+
 std::string CuDataQuality::name() const
 {
     if(m_type & Invalid)

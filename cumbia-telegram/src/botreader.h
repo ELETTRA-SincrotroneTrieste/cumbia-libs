@@ -40,7 +40,7 @@ public:
               CumbiaPool *cumbia_pool,
               const CuControlsFactoryPool &fpool,
               int ttl,
-              const QString& formula,
+              const QString& command, // command that originated the reader
               Priority pri = Normal,
               const QString& host = QString(),
               bool monitor = false);
@@ -51,13 +51,34 @@ public:
 
     void setPropertiesOnly(bool props_only);
 
+    QStringList sources() const;
+
     /** \brief returns the source of the reader
      *
      * @return a QString with the name of the source
      */
     QString source() const;
 
-    QString formula() const;
+    bool hasSource(const QString& src) const;
+
+    bool sourceMatch(const QString& pattern) const;
+
+    bool sameSourcesAs(const QSet<QString> &srcset) const;
+
+    bool hasNoFormula() const;
+
+    /**
+     * @brief command the command that originated the reader
+     *
+     * @return the text of the command that originated the reader
+     */
+    QString command() const;
+
+    /**
+     * @brief setCommand change the command string
+     * @param cmd
+     */
+    void setCommand(const QString& cmd);
 
     QString host() const;
 
@@ -100,6 +121,7 @@ public:
     QString label() const;
 
 
+
 public slots:
 
     /** \brief set the source and start reading
@@ -114,12 +136,12 @@ public slots:
      */
     void unsetSource();
 
-    void setFormula(const QString& formula);
+    void setFormula(const QString& command);
 
 signals:
     void newData(int chat_id, const CuData&);
     void lastUpdate(int chat_id, const CuData&);
-    void startSuccess(int user_id, int chat_it, const QString& src, const QString& formula);
+    void startSuccess(int user_id, int chat_it, const QString& src, const QString& command);
     void formulaChanged(int chat_id, const QString& src, const QString& oldf, const QString& new_f);
     void priorityChanged(int chat_id, const QString& src, BotReader::Priority oldpri, BotReader::Priority newpri);
 
