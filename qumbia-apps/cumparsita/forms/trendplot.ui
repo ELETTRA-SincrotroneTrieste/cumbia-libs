@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>340</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QuLabel" name="quLabel">
+     <property name="source">
+      <string>$2/double_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QuTrendPlot" name="quTrendPlot">
+     <property name="source">
+      <string>formula://{$1/double_scalar,$2/double_scalar}     function(a,b) {
+return a+b}</string>
+     </property>
+     <property name="sources">
+      <stringlist>
+       <string>formula://{$1/double_scalar,$2/double_scalar}     function(a,b) {
+return a+b}</string>
+      </stringlist>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QuLabel</class>
+   <extends>QLabel</extends>
+   <header>qulabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QuTrendPlot</class>
+   <extends>QFrame</extends>
+   <header>qutrendplot.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

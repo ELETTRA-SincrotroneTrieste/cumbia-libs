@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>879</width>
+    <height>632</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QuLabel" name="quLabel">
+     <property name="source">
+      <string>test/device/1/double_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QuSpectrumPlot" name="quSpectrumPlot">
+     <property name="sources">
+      <stringlist>
+       <string>formula://{test/device/1/double_spectrum_ro,test/device/2/double_spectrum_ro}    function (a, b) {
+ var c = [];
+ for(i = 0; i &lt; a.length; i++)
+    c[i] = a[i] + b[i];
+
+ return c;
+}</string>
+       <string>test/device/2/double_spectrum_ro</string>
+       <string>test/device/1/double_spectrum_ro</string>
+      </stringlist>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QuLabel</class>
+   <extends>QLabel</extends>
+   <header>qulabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QuSpectrumPlot</class>
+   <extends>QFrame</extends>
+   <header>quspectrumplot.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
