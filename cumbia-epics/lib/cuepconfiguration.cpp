@@ -26,7 +26,7 @@ public:
 };
 
 CuEpConfiguration::CuEpConfiguration(const EpSource &src,
-                                         CumbiaEpics *ct)
+                                     CumbiaEpics *ct)
 {
     d = new CuEpConfigurationPrivate;
     d->cumbia_epics = ct;
@@ -68,7 +68,7 @@ void CuEpConfiguration::onResult(const CuData &data)
     else
     {
         CuEpicsActionFactoryService * af = static_cast<CuEpicsActionFactoryService *>(d->cumbia_epics->getServiceProvider()
-                                                                            ->get(static_cast<CuServices::Type>(CuEpicsActionFactoryService::CuActionFactoryServiceType)));
+                                                                                      ->get(static_cast<CuServices::Type>(CuEpicsActionFactoryService::CuActionFactoryServiceType)));
         af->unregisterAction(d->tsrc.getName(), getType());
         d->listeners.clear();
         delete this;
@@ -98,10 +98,12 @@ void CuEpConfiguration::addDataListener(CuDataListener *l)
     std::list<CuDataListener *>::iterator it = d->listeners.begin();
     d->listeners.insert(it, l);
     /* if a new listener is added after onResult, call onUpdate.
-     * This happens when multiple items connect to the same source
+     * This happens when multiple items connect to the same source.
+     * Post the result, so that it's delivered later.
      */
-    if(!d->conf_data.isEmpty())
-        l->onUpdate(d->conf_data);
+    if(!d->conf_data.isEmpty()) {
+        d->activity->publishResult(d->conf_data);
+    }
 }
 
 void CuEpConfiguration::removeDataListener(CuDataListener *l)
@@ -130,7 +132,7 @@ void CuEpConfiguration::start()
 {
     CuEpCAService *df =
             static_cast<CuEpCAService *>(d->cumbia_epics->getServiceProvider()->
-                                                  get(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType)));
+                                         get(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType)));
     CuData at("src", d->tsrc.getName()); /* activity token */
     at["pv"] = d->tsrc.getPV();
     at["activity"] = "attconfig";

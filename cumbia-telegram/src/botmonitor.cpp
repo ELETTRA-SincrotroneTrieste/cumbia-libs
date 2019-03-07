@@ -64,7 +64,8 @@ BotReader *BotMonitor::findReader(int chat_id, const QString &expression, const 
 BotReader *BotMonitor::findReaderByUid(int user_id, const QString &expression, const QString& host) const
 {
     CuFormulaParseHelper ph;
-    QSet<QString> srcs = ph.sources(expression).toSet(); // extract sources from expression
+    QString expr = ph.toNormalizedForm(expression);
+    QSet<QString> srcs = ph.sources(expr).toSet(); // extract sources from expression
     for(QMap<int, BotReader *>::iterator it = d->readersMap.begin(); it != d->readersMap.end(); ++it) {
         if(it.key() == user_id && it.value()->sameSourcesAs(srcs) && it.value()->host() == host) {
             return *it;
@@ -110,17 +111,23 @@ bool BotMonitor::stopAll(int chat_id, const QStringList &srcs)
 
 bool BotMonitor::stopByIdx(int chat_id, int index)
 {
-    QStringList srcs;
-    QList<BotReader *> readers = d->readersMap.values(chat_id);
-    for(int i = 0; i < readers.size() && srcs.isEmpty(); i++) {
-        BotReader *r = readers[i];
-        if(r->index() == index)
-            srcs << r->source();
+    bool found = false;
+    QMutableMapIterator<int, BotReader *> it(d->readersMap);
+    while(it.hasNext() && !found) {
+        it.next();
+        if(it.key() == chat_id) {
+            BotReader *r = it.value();
+            if(r->index() == index) {
+                emit stopped(r->userId(), chat_id, r->source(), r->host(), "user request");
+                r->deleteLater();
+                it.remove();
+                found = true;
+            }
+        }
     }
-    if(!srcs.isEmpty())
-        return stopAll(chat_id, srcs);
-    d->msg = "BotMonitor.stopByIdx: no reader found with index " + QString::number(index);
-    return false;
+    if(!found)
+        d->msg = "BotMonitor.stopByIdx: no reader found with index " + QString::number(index);
+    return found;
 }
 
 bool BotMonitor::startRequest(int user_id,
@@ -132,14 +139,14 @@ bool BotMonitor::startRequest(int user_id,
                               const QString &host,
                               const QDateTime& started_on)
 {
-    qDebug() << __PRETTY_FUNCTION__ << "startRequest with host " << host;
+    qDebug() << __PRETTY_FUNCTION__ << "startRequest with host " << host << "SOURCE " << src;
     d->err = false;
     BotReader *reader = findReader(chat_id, src, host);
     d->err = (reader && src == reader->source() && priority == reader->priority() );
     if(d->err){
-            d->msg = "BotMonitor.startRequest: chat_id " + QString::number(chat_id) + " is already monitoring \"" + cmd;
-            !reader->command().isEmpty() ? (d->msg += " " + reader->command() + "\"") : (d->msg += "\"");
-            perr("%s", qstoc(d->msg));
+        d->msg = "BotMonitor.startRequest: chat_id " + QString::number(chat_id) + " is already monitoring \"" + cmd;
+        !reader->command().isEmpty() ? (d->msg += " " + reader->command() + "\"") : (d->msg += "\"");
+        perr("%s", qstoc(d->msg));
     }
     else if( reader && src == reader->source() ) { // same source but priority changed
         reader->setPriority(priority);

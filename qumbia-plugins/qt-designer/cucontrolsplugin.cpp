@@ -16,6 +16,9 @@
 #include "quapplynumeric.h"
 #include "qucheckbox.h"
 #include "quinputoutput.h"
+#include "cupluginloader.h"
+#include <QPluginLoader>
+#include <cuformulaplugininterface.h>
 
 #ifdef QUMBIA_EPICS_CONTROLS
     #include <cuepics-world.h>
@@ -47,6 +50,8 @@
 #include <QExtensionManager>
 #include <QMimeData>
 #include <QAction>
+
+#include <QThread>
 
 #define SOURCE_REGEXP "(([A-Za-z_0-9\\.]*[:]{1}[0-9]+[/])?(([A-Za-z_0-9\\.]+/[A-Za-z_0-9\\.]+/[A-Za-z_0-9\\.]+([/]{1,1}|[->]{2,2})[A-Za-z_0-9\\.]+)|(\\$[1-9]*([/]{1,1}|[->]{2})[A-Za-z_0-9\\.]+)){1}([\\(]{1}[&A-Za-z_0-9\\.,]+[\\)]{1})?[;]?){1,}"
 
@@ -139,7 +144,7 @@ CuCustomWidgetInterface::CuCustomWidgetInterface(QObject *parent,
 
 CuCustomWidgetInterface::~CuCustomWidgetInterface()
 {
-
+    printf("\e[1;31m~CuCustomWidgetInterface()\e[0m\n");
 }
 
 void CuCustomWidgetInterface::initialize(QDesignerFormEditorInterface *formEditor)
@@ -156,6 +161,7 @@ void CuCustomWidgetInterface::initialize(QDesignerFormEditorInterface *formEdito
 
 CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *parent): QObject(parent)
 {
+    qDebug() << __PRETTY_FUNCTION__ << "PARENT IS " << parent;
     printf("\e[1;32mo\e[0m CuCustomWidgetCollectionInterface %p\n", this);
     cumbia_pool = new CumbiaPool();
     printf("\e[1;32m+-o\e[0m cumbia_pool %p created\n", cumbia_pool);
@@ -189,6 +195,27 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
     CuServiceProvider* cutangosp = cuta->getServiceProvider();
     cutangosp->registerService(CuServices::Log, new CuLog(new QuLogImpl()));
 
+    CuPluginLoader plulo;
+    QString plupath = plulo.getPluginAbsoluteFilePath(CUMBIA_QTCONTROLS_PLUGIN_DIR, "cuformula-plugin.so");
+    QPluginLoader pluginLoader(plupath);
+    QObject *plugin = pluginLoader.instance();
+    if (plugin){
+        CuFormulaPluginI *fplu = qobject_cast<CuFormulaPluginI *>(plugin);
+        if(!fplu)
+            perr("Failed to load formula plugin");
+        else {
+            CuControlsReaderFactoryI *formula_rf = fplu->getFormulaReaderFactory(cumbia_pool, m_ctrl_factory_pool);
+            cumbia_pool->registerCumbiaImpl("formula", fplu->getCumbia());
+            printf("\e[1;32msetting up pools for formula CUMBIA %p...\e[0m\n", fplu->getCumbia());
+            m_ctrl_factory_pool.registerImpl("formula", *formula_rf);
+            m_ctrl_factory_pool.setSrcPatterns("formula", fplu->srcPatterns());
+            cumbia_pool->setSrcPatterns("formula", fplu->srcPatterns());
+        }
+    }
+    else {
+        perr("failed to load plugin loader under path %s: %s", qstoc(plupath), qstoc(pluginLoader.errorString()));
+    }
+
     d_plugins.append(new QuLabelInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuLedInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuCircularGaugeInterface(this, cumbia_pool, m_ctrl_factory_pool));
@@ -201,17 +228,23 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
     d_plugins.append(new QuApplyNumericInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuCheckBoxInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuInputOutputInterface(this, cumbia_pool, m_ctrl_factory_pool));
+
+    qDebug() << __PRETTY_FUNCTION__ << "this" << this << "thread" << QThread::currentThread();
 }
 
 CuCustomWidgetCollectionInterface::~CuCustomWidgetCollectionInterface()
 {
     printf("\e[1;31mo\e[0m ~CuCustomWidgetCollectionInterface %p\n", this);
+    qDebug() << __PRETTY_FUNCTION__ << "this" << this << "thread" << QThread::currentThread();
+
     Cumbia* c = cumbia_pool->get("tango");
     if(c)
     {
         printf("\e[1;31m+--o\e[0m ~cumbia_tango %p\n", c);
-        cumbia_pool->unregisterCumbiaImpl("tango");
-        delete c;
+      //  cumbia_pool->unregisterCumbiaImpl("tango");
+        printf("unregistered cumbia-tango. deleting\n");
+       delete c;
+        printf("deleted cumbia tango\n");
     }
 
 #ifdef CUMBIA_EPICS
@@ -223,6 +256,9 @@ CuCustomWidgetCollectionInterface::~CuCustomWidgetCollectionInterface()
         delete c;
     }
 #endif
+
+    // plugins are destroyed
+    // cumbia-formula is destroyed by the cuformula plugin destructor
 
     if(cumbia_pool)
     {
@@ -294,6 +330,8 @@ void TaskMenuExtension::setupSourceTargetDialog(QWidget *cb_widget)
 {
     QString source = cb_widget->property("source").toString();
     QString target = cb_widget->property("target").toString();
+    bool multi_source = (cb_widget->metaObject()->indexOfProperty("sources") > -1);
+    QStringList sources = cb_widget->property("sources").toStringList();
 
     QDialog *w = new QDialog();
     //	QDialog *wt = new QDialog();
@@ -310,7 +348,12 @@ void TaskMenuExtension::setupSourceTargetDialog(QWidget *cb_widget)
     /* Creating source dialog */
     wins->ui.okButton->setHidden(true);
     wins->ui.cancelButton->setHidden(true);
-    wins->ui.lineEdit->setText(source);
+    if(!multi_source) {
+        wins->setSource(source);
+    }
+    else {
+        wins->setSources(sources);
+    }
 
     /* Creating target dialog */
     wint->ui.okButton->setHidden(true);
@@ -331,7 +374,11 @@ void TaskMenuExtension::setupSourceTargetDialog(QWidget *cb_widget)
     {
         QDesignerFormWindowInterface *formWindow = 0;
         formWindow = QDesignerFormWindowInterface::findFormWindow(d_widget);
-        formWindow->cursor()->setProperty("source", wins->ui.lineEdit->text());
+
+        if(wins->isMultiSource())
+            formWindow->cursor()->setProperty("sources", wins->sources());
+        else
+            formWindow->cursor()->setProperty("source", wins->source());
 
         QString target;
 
@@ -356,7 +403,10 @@ void TaskMenuExtension::setupSourceTargetDialog(QWidget *cb_widget)
 void TaskMenuExtension::editConnection()
 {
     QString src;
+    QStringList srcs;
     bool edit_source = true;
+    bool multi_source = qobject_cast<QuTrendPlot *>(d_widget) || qobject_cast<QuSpectrumPlot *>(d_widget);
+    printf("\e[1;33m\n\n EDIT CONNECTION FUCKIN IN multi_source %d\e[0m\n", multi_source);
     /* beware: TLabel after TReaderWriter because TReaderWriter IS a TLabel! */
     if (QuLabel *qtl = qobject_cast<QuLabel*>(d_widget))
         src = qtl->source();
@@ -369,9 +419,9 @@ void TaskMenuExtension::editConnection()
     else if(QuTable *t = qobject_cast<QuTable *>(d_widget))
         src = t->source();
     else if(QuTrendPlot *t = qobject_cast<QuTrendPlot *>(d_widget))
-        src = t->source();
+        srcs = t->sources();
     else if(QuSpectrumPlot *t = qobject_cast<QuSpectrumPlot *>(d_widget))
-        src = t->source();
+        srcs = t->sources();
     else if(QuCheckBox *t = qobject_cast<QuCheckBox *>(d_widget))
         src = t->source();
     else if(QuInputOutput *t = qobject_cast<QuInputOutput *>(d_widget))
@@ -395,12 +445,23 @@ void TaskMenuExtension::editConnection()
         if (editSourceDialog == 0)
             editSourceDialog = new EditSourceDialog();
 
-        editSourceDialog->ui.lineEdit->setText(src);
+        if(multi_source)
+            editSourceDialog->setSources(srcs);
+        else
+            editSourceDialog->setSource(src);
         if (editSourceDialog->exec() == QDialog::Accepted)
         {
             QDesignerFormWindowInterface *formWindow = 0;
             formWindow = QDesignerFormWindowInterface::findFormWindow(d_widget);
-            formWindow->cursor()->setProperty("source", editSourceDialog->ui.lineEdit->text());
+            if(editSourceDialog->isMultiSource()) {
+                printf("\e[1;35mCuControlsPlugin: sources multiple %s\e[0m\n", editSourceDialog->sources().join(" -- ").toStdString().c_str());
+                formWindow->cursor()->setProperty("sources", editSourceDialog->sources());
+            }
+            else {
+                printf("\e[0;35mCuControlsPlugin: source %s IS NOT MULTI\e[0m\n", editSourceDialog->source().toStdString().c_str());
+
+                formWindow->cursor()->setProperty("source", editSourceDialog->source());
+            }
         }
     }
     else

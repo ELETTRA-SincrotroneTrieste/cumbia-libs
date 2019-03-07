@@ -432,8 +432,8 @@ void QuPlotBase::addCurve(const QString& title, QuPlotCurve *curve)
     if(d->curvesMap.contains(title))
         delete curve;
     QuPalette palette;
-    QStringList colors = QStringList() << "dark_green" << "blue" << "yellow" << "violet"
-                                       << "red" << "black" << "light_gray" << "green" << "gray"
+    QStringList colors = QStringList() << "dark_green" << "blue" << "violet"
+                                       << "red" << "black" << "light_gray" << "yellow" <<  "green" << "gray"
                                        << "orange" << "pink" << "dark_red";
     QString color_nam = colors.at(d->curvesMap.size() % colors.size());
     QColor curveColor = palette.value(color_nam);

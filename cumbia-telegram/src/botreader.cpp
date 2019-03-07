@@ -6,11 +6,13 @@
 #include <cudataquality.h>
 #include <cuformulaparsehelper.h>
 #include <tsource.h>
+#include <cuformulaparsehelper.h>
 #include <QContextMenuEvent>
 #include <QMetaProperty>
 #include <QScriptEngine>
 #include <QRegularExpression>
 #include <QtDebug>
+
 
 #include "cucontrolsfactories_i.h"
 #include "cucontrolsfactorypool.h"
@@ -86,7 +88,7 @@ void BotReader::m_init()
     d->read_ok = false;
     d->refresh_cnt = d->notify_cnt = 0;
     d->max = d->min = 0.0;
-    d->old_quality = CuDataQuality::Undefined;
+    d->old_quality = CuDataQuality(CuDataQuality::Undefined);
     d->formula_is_identity = false;
 }
 
@@ -324,14 +326,14 @@ void BotReader::setSource(const QString &s)
     if(!options.isEmpty())
         d->context->setOptions(options);
 
-    QString src(s);
+    CuFormulaParseHelper ph;
+    QString src = ph.injectHost(d->host, s);
     CuControlsReaderA * r = d->context->replace_reader(src.toStdString(), this);
     if(r)
         r->setSource(src);
 
     // no host in source()
     d->source = s;
-    CuFormulaParseHelper ph;
     d->formula_is_identity = ph.identityFunction(d->source);
     printf("\e[1;34mBotReader.setSource: src %s IS IDENTITY %d\n", qstoc(d->source), d->formula_is_identity);
 }
@@ -406,14 +408,19 @@ bool BotReader::m_publishResult(const CuData &da)
 {
     CuData data(da);
     bool success = !da["err"].toBool();
-    bool value_changed;
+    // true if value changes
+    bool value_change;
+     // true if new quality is invalid while old was not or vice versa
+    bool quality_invalid_change; // evaluates only the Invalid flag
+    bool quality_change; // true if quality changes
     bool notify = false;
-    bool is_alert = (d->priority == BotReader::Normal);
+    bool is_alert = (d->priority == BotReader::High);
     data["silent"] = (d->priority == Low);
     data["index"] = d->index;
     data["print_format"] = d->print_format.toStdString();
     data["display_unit"] = d->unit.toStdString();
     data["command"] = d->command.toStdString();
+    data["msg"] = FormulaHelper().escape(QString::fromStdString(da["msg"].toString())).toStdString();
     CuDataQuality read_quality(da["quality"].toInt());
     if(!success) {
         read_quality.set(CuDataQuality::Invalid);
@@ -421,26 +428,33 @@ bool BotReader::m_publishResult(const CuData &da)
 
     // extract value
     CuVariant v = da["value"];
-    value_changed = (v != d->old_value || read_quality != d->old_quality);
+    value_change = (v != d->old_value);
+    quality_invalid_change = (read_quality.toInt() & CuDataQuality::Invalid )
+            != (d->old_quality.toInt() & CuDataQuality::Invalid);
+    quality_change = read_quality != d->old_quality;
 
     printf("\e[1;33mBotReader value cahnged %d cuz old value %s new %s old q %d new q %d\e[0m\n",
-           value_changed, v.toString().c_str(), d->old_value.toString().c_str(),
+           value_change, v.toString().c_str(), d->old_value.toString().c_str(),
            d->old_quality.toInt(), read_quality.toInt());
 
-    if(value_changed && !d->formula_is_identity) {
-        // data contains the result of a formula
+    if(!d->formula_is_identity) { // dealing with formula
+        // data contains the result of a formula true / false or the result of a formula as some value
         bool is_bool = v.getType() == CuVariant::Boolean && v.getFormat() == CuVariant::Scalar;
+        //
+        // set notify true by default when there is a change and we're dealing with formulas
         notify = true;
         if(is_bool)
             v.toBool() ? data["evaluation"] = std::string("yes") : data["evaluation"] = std::string("no");
-        if(d->monitor && is_bool && v.toBool()) { // formula evaluates to boolean and it is true
-            // (for instance, test/device/1/double_scalar > 250 evaluates to bool)
+        if(d->monitor && is_bool) { // formula evaluates to boolean
+            // (e.g. test/device/1/double_scalar > 250 evaluates to bool)
             // monitor type: "monitor" or "alert"
-            // "alert": notify on quality change only
-            // "monitor": notify (silently, with low pri) always
-            read_quality.set(CuDataQuality::Alarm);
-            notify =  (d->priority == BotReader::Normal && d->old_quality != read_quality)
-                    || d->priority == BotReader::Low;
+            // "alert": notify on when value goes from false to true only
+            // "monitor": notify (silently, with low pri) always when value changes
+            notify = quality_invalid_change // 1. always notify if quality turns to invalid or goes back to valid
+                    // 2 alert: notify if formula evaluates to true (v.toBool) and before was false (value_change)
+                    || (d->priority == BotReader::High && value_change && v.toBool())
+                    // 3. monitor: notify if value changed
+                    || (d->priority == BotReader::Low && value_change);
         }
         else if(d->monitor && !is_bool) {
             // formula result is the result of a calculation, does not evaluate to bool
@@ -452,16 +466,17 @@ bool BotReader::m_publishResult(const CuData &da)
             notify = !is_alert || (is_alert && d->old_quality != read_quality);
         }
     }
-    else if(value_changed) { // no formula
+    else if(value_change) { // no formula
+        //
+        // simple monitors notify on every value change
+        // alerts notify only on quality change
         notify = !is_alert || (is_alert && d->old_quality != read_quality);
     }
 
-    if(value_changed) {
+    if(value_change)
         d->old_value = v;
-        printf("\e[0;33mducling old q %d new %d\e[0m\n", d->old_quality.toInt(), read_quality.toInt());
+    if(quality_change)
         d->old_quality = read_quality;
-        printf("\e[0;33mAFTER EQUALLING old q %d new %d\e[0m\n", d->old_quality.toInt(), read_quality.toInt());
-    }
 
     if(notify) {
         emit newData(d->chat_id, data);

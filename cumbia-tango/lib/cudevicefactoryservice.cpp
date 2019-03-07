@@ -61,6 +61,8 @@ TDevice *CuDeviceFactoryService::findDevice(const std::__cxx11::string &name)
     return NULL;
 }
 
+#include <tango.h>
+
 /*! \brief remove the device with the given name from the list and *delete the device*
  *
  * \par note

@@ -38,26 +38,33 @@ QString CuFormulaParseHelper::toNormalizedForm(const QString &f) const
             srcs << src;
     }
 
-    QString function_decl;
-    QString function_body(f);
+    if(srcs.size() > 0) {
 
-    QString params;
-    norm = "formula://{" + srcs.join(",") + "}";
-    // now build function arguments
-    char c = 'a', maxc = 'Z';
-    for(char i = 0; i < srcs.size() && i < maxc ; i++) {
-        c = c + static_cast<char>(i);
-        i < srcs.size() - 1 ? params += QString("%1,").arg(c) : params += QString("%1").arg(c);
-        function_body.replace(srcs[i], QString(c));
+        QString function_decl;
+        QString function_body(f);
+
+        QString params;
+        norm = "formula://{" + srcs.join(",") + "}";
+        // now build function arguments
+        char c = 'a', maxc = 'Z';
+        for(char i = 0; i < srcs.size() && i < maxc ; i++) {
+            c = c + static_cast<char>(i);
+            i < srcs.size() - 1 ? params += QString("%1,").arg(c) : params += QString("%1").arg(c);
+            function_body.replace(srcs[i], QString(c));
+        }
+        function_decl = QString("function (%1)").arg(params);
+        function_body = QString( "{"
+                                 "return %1"
+                                 "}").arg(function_body);
+
+        norm += function_decl + function_body;
+        qDebug() << __PRETTY_FUNCTION__ << "pattern" << pattern <<  "matched sources " << srcs;
+        qDebug() << __PRETTY_FUNCTION__ <<  "normalized to"     << norm;
     }
-    function_decl = QString("function (%1)").arg(params);
-    function_body = QString( "{"
-                    "return %1"
-                    "}").arg(function_body);
-
-    norm += function_decl + function_body;
-    qDebug() << __PRETTY_FUNCTION__ << "pattern" << pattern <<  "matched sources " << srcs;
-    qDebug() << __PRETTY_FUNCTION__ <<  "normalized to"     << norm;
+    else {
+        if(!norm.startsWith("formula://"))
+            norm = "formula://" + norm;
+    }
 
     return norm;
 }

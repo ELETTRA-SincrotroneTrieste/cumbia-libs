@@ -23,7 +23,7 @@ CuFormulaPlugin::CuFormulaPlugin(QObject *parent) :
 
 CuFormulaPlugin::~CuFormulaPlugin()
 {
-    pdelete("~CuFormulaPlugin %p", this);
+    pdelete("~CuFormulaPlugin %p deleting cumbia %p", this, d->cu_f);
     delete d->cu_f;
     delete d;
 }

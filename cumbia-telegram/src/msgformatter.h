@@ -35,6 +35,7 @@ public:
     QString monitorTypeChanged(const QString &src, const QString &old_t, const QString &new_t);
     QString srcMonitorStartError(const QString &src, const QString &message) const;
     QString monitorUntil(const QString& src, const QDateTime& until) const;
+    QString monitorStopped(const QString& cmd, const QString& msg) const;
 
 
     QString hostChanged(const QString& host, bool success, const QString& description) const;

@@ -326,9 +326,6 @@ void CuTReader::setPeriod(int millis)
  */
 void CuTReader::stop()
 {
-    //    if(d->exit)
-    //        d->log.write("CuTReader.stop", CuLog::Error, CuLog::Read, "stop called twice for reader %s", this->getToken()["source"].toString().c_str());
-    //    else
     if(!d->exit)
     {
         d->exit = true;

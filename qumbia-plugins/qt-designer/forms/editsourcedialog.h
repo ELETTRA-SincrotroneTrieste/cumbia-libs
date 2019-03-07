@@ -30,14 +30,39 @@ class EditSourceDialog: public QDialog
 {
     Q_OBJECT
 public:
-    EditSourceDialog(QWidget * = NULL);
+    EditSourceDialog(QWidget * = nullptr);
     virtual ~EditSourceDialog();
 
     Ui::EditSourceDialog ui;
 
+    QString source() const;
+
+    void setSource(const QString& s);
+
+    void setSources(const QStringList& srcs);
+
+    void accept();
+
+    bool checkSource();
+
+    QString message();
+
+    QStringList sources() const;
+
+    void setMultiSource(bool multisource);
+
+    bool isMultiSource() const;
+
 protected slots:
+    void addSrcTab();
+
+    void removeSrcTab();
 
 protected:
+
+private:
+    QString m_message;
+    bool m_multiSource;
 };
 
 #endif // LISTWIDGETEDITOR_H

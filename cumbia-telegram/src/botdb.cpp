@@ -326,9 +326,9 @@ QList<HistoryEntry> BotDb::history(int user_id, const QString& type) {
     */
     while(!m_err && q.next()) {
         QSqlRecord r = q.record();
-        HistoryEntry he(q.value(6).toInt(),
+        HistoryEntry he(r.value("h_idx").toInt(),
                         r.value("user_id").toInt(),
-                        q.value(1).toDateTime(),
+                        r.value("timestamp").toDateTime(),
                         r.value("command").toString(),
                         r.value("type").toString(),
                         r.value("host").toString());

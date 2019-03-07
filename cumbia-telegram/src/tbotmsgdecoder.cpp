@@ -190,12 +190,18 @@ TBotMsgDecoder::Type TBotMsgDecoder::m_decodeSrcCmd(const QString &txt)
                 i < cmd_parts.size() - 1 ? restOfLine += cmd_parts[i] + " " : restOfLine += cmd_parts[i];
             }
             m_tryDecodeFormula(restOfLine); // find source in second param
+            if((m_type == Monitor || m_type == Alert ) && m_detectedSources.size() == 0) {
+                // no monitor without real sources
+                m_type = Invalid;
+                m_msg = "TBotMsgDecoder: cannot monitor (alert) without valid sources";
+                perr("%s", qstoc(m_msg));
+            }
         }
         else {
             m_msg = "TBotMsgDecoder::m_decodeSrcCmd: unable to parse \"%1\"" + txt;
         }
     }
-    qDebug() << __PRETTY_FUNCTION__ << "returning type " << m_type << "source" << m_source;
+
     return m_type;
 }
 
@@ -207,6 +213,7 @@ bool TBotMsgDecoder::m_tryDecodeFormula(const QString &text)
 
     CuFormulaParseHelper ph;
     !ph.isNormalizedForm(text, m_normalizedFormulaPattern) ? m_source = ph.toNormalizedForm(text) : m_source = text;
+    m_detectedSources = ph.sources(m_source);
     return is_formula;
 }
 
@@ -294,6 +301,11 @@ QStringList TBotMsgDecoder::getArgs() const
     QStringList a(m_text.split(QRegExp("\\s+")));
     a.removeAt(0);
     return a;
+}
+
+QStringList TBotMsgDecoder::detectedSources() const
+{
+    return m_detectedSources;
 }
 
 

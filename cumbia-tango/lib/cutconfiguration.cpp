@@ -3,6 +3,7 @@
 #include <cumacros.h>
 #include <cuserviceprovider.h>
 #include <cuactivity.h>
+#include <cuevent.h>
 #include <cudatalistener.h>
 #include "cumbiatango.h"
 #include "tsource.h"
@@ -10,6 +11,7 @@
 #include "cutconfigactivity.h"
 #include "cuactionfactoryservice.h"
 #include "cudatalistener.h"
+
 
 class CuTAttConfigurationPrivate
 {
@@ -111,9 +113,10 @@ void CuTConfiguration::addDataListener(CuDataListener *l)
     l->setValid();
     /* if a new listener is added after onResult, call onUpdate.
      * This happens when multiple items connect to the same source
+     * Post the result, so that it is delivered later.
      */
     if(!d->conf_data.isEmpty()) {
-        l->onUpdate(d->conf_data);
+        d->activity->publishResult(d->conf_data);
     }
 }
 

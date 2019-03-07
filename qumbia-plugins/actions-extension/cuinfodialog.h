@@ -64,6 +64,10 @@ public:
 
     virtual ~CuInfoDialog();
 
+    QStringList extractSources(const QString& expression, QString& formula);
+
+    QString extractSource(const QString& expression, QString &formula);
+
 public slots:
     void exec(const CuData& in);
 

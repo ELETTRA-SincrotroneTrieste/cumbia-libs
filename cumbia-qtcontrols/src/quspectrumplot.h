@@ -34,7 +34,8 @@ class CuControlsReaderFactoryI;
 class QuSpectrumPlot : public QuPlotBase, public CuDataListener, public CuContextI
 {
     Q_OBJECT
-    Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)
+    Q_PROPERTY(QStringList sources READ sources WRITE setSources DESIGNABLE false)
+    Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE false)
     Q_PROPERTY(int period READ period WRITE setPeriod DESIGNABLE true)
 
 public:

@@ -42,7 +42,7 @@ QString MsgFormatter::history(const QList<HistoryEntry> &hel, int ttl, const QSt
             // 1. type + source [+formula if not empty]
             msg += QString::number(i+1) + ". "; // numbered list
             QString cmd = e.command;
-            cmd.replace(QRegExp("\\s*<\\s+"), " LT ");
+            cmd = FormulaHelper().escape(cmd);
             msg += "<i>" + cmd + "</i>";
 
             // if bookmark add remove link
@@ -71,10 +71,10 @@ QString MsgFormatter::history(const QList<HistoryEntry> &hel, int ttl, const QSt
                 if(!e.host.isEmpty())
                     msg += " (" + e.host + ")";
             }
-            msg+="\n";
+            msg+="\n\n";
         }
     }
-    printf("\e[1;34m%s\e[0m\n", qstoc(msg));
+//    printf("\e[1;34m%s\e[0m\n", qstoc(msg));
     return msg;
 }
 
@@ -121,7 +121,7 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
 
     if(!ok) {
         msg += "\n";
-        msg += "😔  <i>" + QString::fromStdString(d["msg"].toString()) + "</i>";
+        msg += "😔  <i>" + QString::fromStdString(d["msg"].toString()) + "</i>\n";
     }
     else { // ok
 
@@ -149,7 +149,6 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
             eval_value = QString::fromStdString(d["evaluation"].toString());
 
         // value
-        eval_value.length() < 10 ? msg += " " : msg += "\n";
         msg += "<b>" + eval_value + "</b>";
 
         // measurement unit if available
@@ -157,27 +156,18 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
         if(!du.isEmpty())
             msg += " [" + QString::fromStdString(d["display_unit"].toString()) +  "]";
 
-        // command includes device name
-//        if(point.length() > 0 && device.length() > 0)
-//            msg += "   <i>" + device + "</i>";
+        eval_value.length() < 10 ? msg += "   " : msg += "\n";
 
         // if vector, provide some info about len, min and max
         // and then a link to plot it!
         if(!vector_info.isEmpty()) {
-            msg += "\n" + vector_info + " /plot";
+            msg += "\n" + vector_info + " /plot\n";
         }
-
-
-        // comand printed on top
-//        if(d.containsKey("command")) {
-//            QString formula = QString::fromStdString(d["command"].toString());
-//            msg += FormulaHelper().escape(formula);
-//        }
 
         CuDataQuality quality(d["quality"].toInt());
         CuDataQuality::Type qt = quality.type();
         if(qt != CuDataQuality::Valid) {
-            msg += "\n";
+            msg += "   ";
             m_quality = QString::fromStdString(quality.name());
             if(qt == CuDataQuality::Warning)
                 msg += "😮   ";
@@ -185,7 +175,7 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
                 msg += "😱   ";
             else if(qt == CuDataQuality::Invalid)
                 msg += "👎   ";
-             msg += "<i>" + m_quality + "</i>\n";
+            msg += "<i>" + m_quality + "</i>\n";
         }
 
         if(f > Short) {
@@ -194,8 +184,8 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
         }
     }
 
-    if(!msg.endsWith("\n"))
-        msg += "\n"; // new line
+//    if(!msg.endsWith("\n"))
+//        msg += "\n"; // new line
 
     // date time
     msg +=  "<i>" + m_timeRepr(datet) + "</i>";
@@ -216,7 +206,8 @@ QString MsgFormatter::fromData(const CuData &d, MsgFormatter::FormatOption f)
 QString MsgFormatter::error(const QString &origin, const QString &message)
 {
     QString msg;
-    msg += "👎   " + origin + ": <i>" + message + "</i>";
+    FormulaHelper fh;
+    msg += "👎   " + fh.escape(origin) + ": <i>" + fh.escape(message) + "</i>";
     return msg;
 }
 
@@ -240,13 +231,11 @@ QString MsgFormatter::formulaChanged(const QString &src, const QString &old, con
     FormulaHelper fh;
     QString s;
     if(!old.isEmpty() && new_f.isEmpty())
-        s = "formula <i>" + src + " " + fh.escape(old) + "</i> has been <b>removed</b>";
+        s = "formula <i>" + fh.escape(old) + "</i> has been <b>removed</b>";
     else if(old.isEmpty() && new_f.size() > 0)
-        s = "formula <b>" + src + " " + fh.escape(new_f)  + "</b> has been introduced";
+        s = "formula <b>" + fh.escape(new_f)  + "</b> has been introduced";
     else
-        s = "formula <i>" + src + " " + fh.escape(old) + "</i>\nchanged into\n<b>" + src + " " + fh.escape(new_f) + "</b>";
-
-    printf("\e[1;33mformulaChanged: %s\e[0m\n", qstoc(s));
+        s = "formula <i>" + fh.escape(old) + "</i>\nchanged into\n<b>" + fh.escape(new_f) + "</b>";
 
     return s;
 }
@@ -261,13 +250,21 @@ QString MsgFormatter::monitorTypeChanged(const QString &src, const QString &old_
 QString MsgFormatter::srcMonitorStartError(const QString &src, const QString &message) const
 {
     QString s = QString("👎   failed to start monitor for <i>%1</i>:\n"
-                        "<b>%2</b>").arg(src).arg(message);
+                        "<b>%2</b>").arg(FormulaHelper().escape(src)).arg(message);
     return s;
 }
 
 QString MsgFormatter::monitorUntil(const QString &src, const QDateTime &until) const
 {
-    return QString("🕐   started monitoring <i>%1</i> until <i>%2</i>").arg(src).arg(m_timeRepr(until));
+    QString m = FormulaHelper().escape(src);
+    return QString("🕐   started monitoring <i>%1</i> until <i>%2</i>").arg(m).arg(m_timeRepr(until));
+}
+
+QString MsgFormatter::monitorStopped(const QString &cmd, const QString &msg) const
+{
+    FormulaHelper fh;
+    QString m = fh.escape(cmd);
+    return "stopped monitoring <i>" + m + "</i>: <i>" + fh.escape(msg) + "</i>";
 }
 
 QString MsgFormatter::hostChanged(const QString &host, bool success, const QString &description) const

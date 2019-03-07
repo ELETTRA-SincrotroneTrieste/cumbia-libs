@@ -3,7 +3,7 @@
 
 class TBotMsg;
 
-#include <QString>
+#include <QStringList>
 
 class TBotMsgDecoder
 {
@@ -53,6 +53,8 @@ public:
 
     QStringList getArgs() const;
 
+    QStringList detectedSources() const;
+
 private:
 
     bool m_tryDecodeFormula(const QString& text);
@@ -80,6 +82,8 @@ private:
     QString m_msg;
 
     QString m_normalizedFormulaPattern;
+
+    QStringList m_detectedSources;
 };
 
 #endif // TBOTMSGDECODER_H

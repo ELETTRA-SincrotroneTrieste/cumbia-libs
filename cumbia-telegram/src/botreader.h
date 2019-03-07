@@ -33,7 +33,7 @@ class BotReader : public QObject, public CuDataListener, public CuContextI
 public:
 
     // message delivered silently or not
-    enum Priority { Normal, Low };
+    enum Priority { High, Low };
 
     BotReader(int user_id,
               int chat_id, QObject *w,
@@ -41,7 +41,7 @@ public:
               const CuControlsFactoryPool &fpool,
               int ttl,
               const QString& command, // command that originated the reader
-              Priority pri = Normal,
+              Priority pri = High,
               const QString& host = QString(),
               bool monitor = false);
 
@@ -119,8 +119,6 @@ public:
     double min() const;
     QString description() const;
     QString label() const;
-
-
 
 public slots:
 

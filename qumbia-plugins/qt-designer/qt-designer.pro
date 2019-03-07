@@ -2,6 +2,8 @@ include(../qumbia-plugins.pri)
 include(../../qumbia-tango-controls/qumbia-tango-controls.pri)
 include(../../qumbia-epics-controls/qumbia-epics-controls.pri)
 
+QT += qml
+
 # The application will be installed under INSTALL_ROOT (i.e. prefix)
 #
 # WARNING: INSTALL_ROOT is defined by qumbia-plugins.pri, qumbia-epics-controls.pri and qumbia-tango-controls.pri
@@ -15,7 +17,11 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT = /usr/local/cumbia-libs
 }
 
+DEFINES -= QT_NO_DEBUG_OUTPUT
+
 DESIGNER_PLUGIN_DIR=$${PLUGIN_LIB_DIR}/designer
+
+DEFINES += CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${PLUGIN_LIB_DIR}\\\"\"
 
 greaterThan(QT_MAJOR_VERSION, 4) {
     QT += widgets x11extras printsupport
@@ -29,7 +35,7 @@ TEMPLATE = lib
 TARGET = designer/cumbia-qtcontrols-pool-plugin
 CONFIG	+= qt thread warn_on debug
 
-CONFIG += silent
+CONFIG +=
 
 lessThan(QT_MAJOR_VERSION, 5) {
 	CONFIG += designer
@@ -38,6 +44,7 @@ lessThan(QT_MAJOR_VERSION, 5) {
 FORMS += \
     forms/editsourcetargetdialog.ui \
     forms/editsourcedialog.ui \
+    forms/editsourcewidget.ui \
     forms/ttablebooleditor.ui \
     forms/tlabelbooleditor.ui \
     forms/estringlisteditor.ui \
@@ -50,7 +57,8 @@ SOURCES	+= \
     forms/tlabelbooleditor.cpp \
     forms/estringlisteditor.cpp \
     pointeditor.cpp \
-    cucontrolsplugin.cpp
+    cucontrolsplugin.cpp \
+    forms/editsourcewidget.cpp
 
 HEADERS	+= \
     forms/edittargetdialog.h \
@@ -59,7 +67,8 @@ HEADERS	+= \
     forms/tlabelbooleditor.h \
     forms/estringlisteditor.h \
     pointeditor.h \
-    cucontrolsplugin.h
+    cucontrolsplugin.h \
+    forms/editsourcewidget.h
 
 RESOURCES += cutangoqtcontrolsplugin.qrc
 

@@ -18,11 +18,12 @@ TDevice::TDevice(const std::string &name)
     d = new TDevicePrivate;
     d->name = name;
     d->refCnt = 0;
-    d->dev = NULL;
+    d->dev = nullptr;
     try
     {
         string dname = name;
         d->dev = new Tango::DeviceProxy(dname);
+        printf("\e[0;32mTDevice::TDevice this %p created new device proxy %p name %s\e[0m\n", this, d->dev, dname.c_str());
         time_t tp;
         time(&tp);
         d->message = "connect: device defined in Tango db: " + std::string(ctime(&tp));
@@ -38,8 +39,10 @@ TDevice::~TDevice()
 {
     pdelete("~TDevice %p: deleting device %p \"%s\" in this thread 0x%lx\n", this, d->dev, d->name.c_str(),
             pthread_self());
-    if(d->dev)
+    if(d->dev) {
         delete d->dev;
+        d->dev = nullptr;
+    }
     delete d;
 }
 

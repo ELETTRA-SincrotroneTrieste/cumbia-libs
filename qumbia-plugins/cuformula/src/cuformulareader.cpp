@@ -1,6 +1,7 @@
 #include "cuformulareader.h"
 #include "cuformula.h"
 #include "cuformulaparser.h"
+#include "simpleformulaeval.h"
 
 #include <cucontrolsfactorypool.h>
 #include <cumbiapool.h>
@@ -12,7 +13,7 @@
 #include <QScriptEngine>
 #include <QtDebug>
 #include <QDateTime>
-
+#include <QRegularExpression>
 
 class CuFormulaReaderFactoryPrivate {
 public:
@@ -20,7 +21,6 @@ public:
     CumbiaPool *cu_poo;
     CuControlsFactoryPool fpool;
 };
-
 
 CuFormulaReaderFactory::CuFormulaReaderFactory(CumbiaPool *cu_poo, const CuControlsFactoryPool &fpool)
 {
@@ -116,29 +116,45 @@ void CuFormulaReader::setSource(const QString &s)
     d->errors.clear();
     d->messages.clear();
     d->formula_parser.parse(s);
+    printf("CuFormulaReader::setSource IN\n");
+    qDebug() << __PRETTY_FUNCTION__ << "detected sources count" << d->formula_parser.sourcesCount()
+             << "from " << s;
+
     if(d->formula_parser.error())
         m_notifyFormulaError();
-    else {
+    else if(d->formula_parser.sourcesCount() > 0) {
         m_disposeWatchers();
-//        qDebug() << __PRETTY_FUNCTION__ << "detected sources count" << d->formula_parser.sourcesCount();
         size_t i = 0;
         for(i = 0; i < d->formula_parser.sourcesCount(); i++) {
             const std::string &src = d->formula_parser.source(i);
             QuWatcher *watcher = new QuWatcher(this, d->cu_poo, d->fpoo);
+            printf("CuFormulaReader::setSource 8\n");
             connect(watcher, SIGNAL(newData(const CuData&)), this, SLOT(onNewData(const CuData&)));
+            printf("CuFormulaReader::setSource 10\n");
             watcher->setSource(QString::fromStdString(src));
+            printf("CuFormulaReader::setSource 20\n");
             // update the i-th source with the free from wildcard source name
             d->formula_parser.updateSource(i, watcher->source().toStdString());
+            printf("funcking pushing back an empty CuVariant in d->values for %s this %p\n", src.c_str(), this);
             d->values.push_back(CuVariant());
             d->qualities.push_back(CuDataQuality(CuDataQuality::Undefined));
             d->errors.push_back(true);
             d->messages.push_back("waiting for " + src);
+            printf("CuFormulaReader::setSource 100\n");
         }
     }
+    else {
+        SimpleFormulaEval *sfe = new SimpleFormulaEval(this, d->formula_parser.formula());
+        connect(sfe, SIGNAL(onCalcReady(const CuData&)), this, SLOT(onNewData(const CuData&)));
+        sfe->start();
+    }
+    m_srcReplaceWildcards();
+    printf("CuFormulaReader::setSource OUT\n");
 }
 
 QString CuFormulaReader::source() const
 {
+    printf("CuFormulaReader returning source %s\n", qstoc(d->source));
     return d->source;
 }
 
@@ -156,36 +172,47 @@ void CuFormulaReader::getData(CuData &d_ino) const
 
 void CuFormulaReader::onNewData(const CuData &da)
 {
+    printf("1\n");
     d->error = false;
     d->message.clear();
     std::string src = da["src"].toString();
     bool err = da["err"].toBool();
     bool all_read_once = false;
-    CuData dat;
-
-    dat["timestamp_ms"] = da["timestamp_ms"];
-    dat["timestamp_us"] = da["timestamp_us"];
-    //    printf("\e[0;33m%s\e[0m\n", da.toString().c_str());
-    dat["srcs"] = d->formula_parser.sources();
-    dat["src"] = da["src"];
-    dat["formula"] = d->formula_parser.formula().toStdString();
-
-    if(src.size() == 0) {
+    printf("2\n");
+    if(src.size() == 0) { // will not call onUpdate on listener
         d->error = true;
         d->message = "CuFormulaReader.onNewData: input data without \"src\" key";
     }
-    else {
+    else if(d->formula_parser.sourcesCount() > 0) {
+        CuData dat;
+
+        printf("3\n");
+        dat["timestamp_ms"] = da["timestamp_ms"];
+        dat["timestamp_us"] = da["timestamp_us"];
+        dat["srcs"] = d->formula_parser.sources();
+        dat["formula"] = d->formula_parser.formula().toStdString();
+        printf("4\n");
         std::string msg = da["msg"].toString();
         long idx = d->formula_parser.indexOf(src);
+        printf("5\n");
         if(idx < 0) {
             err = true;
             msg = "CuFormulaReader::onNewData: no source \"" + src + "\" is found";
         }
-        if(!err && idx > -1 && da.containsKey("value")) {
+        else if(idx > -1 && err) {
+            d->errors[static_cast<size_t>(idx)] = err;
+            d->messages[static_cast<size_t>(idx)] = msg;
+        }
+        else if(!err && da.containsKey("value")) {
+
+            printf("5b\n");
             size_t index = static_cast<size_t>(idx);
             if(!err) {
+                printf("5b1: values size %d idx %d this %p\n", d->values.size(), index, this);
                 d->values[index] = da["value"];
+                printf("5c\n");
                 all_read_once = m_allValuesValid();
+                printf("5d\n");
                 // CuFormulaParser::ReadingsIncomplete
                 if(!all_read_once) {
                     // this is not an error!
@@ -198,11 +225,16 @@ void CuFormulaReader::onNewData(const CuData &da)
                 }
                 else {
                     QScriptValue result;
-                    QScriptValue sval = d->scriptEngine.evaluate(d->formula_parser.formula());
+                    printf("6\n");
+                    QString formula = d->formula_parser.preparedFormula();
+                    printf("7\n");
+                    printf("preparing to evaluate formula pretty %s\e[0m\n", qstoc(formula));
+                    QScriptValue sval = d->scriptEngine.evaluate(formula);
+                    printf("8\n");
                     err = !sval.isFunction();
                     if(err) {
                         msg = QString("CuFormulaReader.onNewData: formula \"%1\" is not a function")
-                                .arg(d->formula_parser.formula()).toStdString();
+                                .arg(formula).toStdString();
                     }
                     else {
                         QScriptValueList valuelist;
@@ -227,10 +259,11 @@ void CuFormulaReader::onNewData(const CuData &da)
                         }
                     }
 
+                    printf("13\n");
                     err = !result.isValid() && !result.isError();
 
                     if(!err) {
-                        CuVariant resvar = m_fromScriptValue(result);
+                        CuVariant resvar = fromScriptValue(result);
                         err = !resvar.isValid();
                         if(!err) {
                             dat["value"] = resvar;
@@ -241,17 +274,16 @@ void CuFormulaReader::onNewData(const CuData &da)
                             msg = d->message.toStdString(); // set by m_fromScriptValue
 
 
-                        printf("\e[1;32m1. \e[0mCuFormulaReader.onNewData: evaluating \e[1;36m%s makes %s\e[0m\n\n",
-                               qstoc(d->formula_parser.formula()), resvar.toString().c_str());
+//                        printf("\e[1;32m1. \e[0mCuFormulaReader.onNewData: evaluating \e[1;36m%s makes %s\e[0m\n\n",
+//                               qstoc(d->formula_parser.formula()), resvar.toString().c_str());
                     }
                     else {
                         msg = "failed to call function " + d->formula_parser.formula().toStdString();
                     }
                 } // all read once
-            }
+            } // if ! err
             else {
                 d->values[index] = CuVariant(); // invalidate
-                msg = "CuFormulaReader: " + src + " is not a scalar";
                 dat["err"] = true;
             }
             d->errors[index] = err;
@@ -269,23 +301,21 @@ void CuFormulaReader::onNewData(const CuData &da)
         dat["quality_color"] = cuq.color();
         dat["quality_string"] = cuq.name();
         dat["msg"] = combinedMessage();
+        dat["src"] = combinedSources();
         dat["err"] = err;
 
-//        // test
-//        std::vector<double> vals;
-//        foreach(const CuVariant &va, d->values)
-//            vals.push_back(va.toDouble());
-//        dat["values"] = vals;
+        // notify with onUpdate if
+        // - error condition (we provide combined quality and combined message)
+        // - all sources have been read at least once (d->values is complete)
+        //   (we can compute formula only if we have all readings, unless formula
+        //   is wrong)
+        //
+        if(all_read_once || err) {
+            d->listener->onUpdate(dat);
+        }
     }
-    // notify with onUpdate if
-    // - error condition (we provide combined quality and combined message)
-    // - all sources have been read at least once (d->values is complete)
-    //   (we can compute formula only if we have all readings, unless formula
-    //   is wrong)
-    //
-    if(all_read_once || err) {
-//        printf("ERROR %d\n\e[1;32mReading complete %s\e[0m\n", err, dat.toString().c_str());
-        d->listener->onUpdate(dat);
+    else  { // no sources, maybe simple formula, like "3 + 2"
+        d->listener->onUpdate(da);
     }
 }
 
@@ -309,6 +339,17 @@ std::string CuFormulaReader::combinedMessage() const
                 + " quality " + d->qualities[i].name() + "\n";
     }
     return msg;
+}
+
+std::string CuFormulaReader::combinedSources() const
+{
+    std::string s;
+    const std::vector<std::string> & srcs = d->formula_parser.sources();
+    size_t src_cnt = d->formula_parser.sourcesCount();
+    for(size_t i = 0; i < src_cnt; i++) {
+        i < src_cnt - 1 ? s += srcs[i] + "," : s += srcs[i];
+    }
+    return s;
 }
 
 std::vector<bool> CuFormulaReader::errors() const
@@ -369,7 +410,7 @@ QScriptValue CuFormulaReader::m_getVectorVal(const CuVariant &v)
     return arrayv;
 }
 
-CuVariant CuFormulaReader::m_fromScriptValue(const QScriptValue &v)
+CuVariant CuFormulaReader::fromScriptValue(const QScriptValue &v)
 {
     d->error = false;
     if(v.isArray()) {
@@ -381,7 +422,7 @@ CuVariant CuFormulaReader::m_fromScriptValue(const QScriptValue &v)
         for(quint32 i = 0; i < len && !d->error; i++) {
             QScriptValue ith_v = v.property(i);
             if(i == 0) // determine data type from first item
-                dt = m_getScriptValueType(ith_v);
+                dt = getScriptValueType(ith_v);
 
             switch (dt) {
             case CuVariant::Boolean:
@@ -412,14 +453,14 @@ CuVariant CuFormulaReader::m_fromScriptValue(const QScriptValue &v)
         else if(v.isString())
             return CuVariant(v.toString().toStdString());
         else if(v.isNumber())
-            return CuVariant(v.toNumber());
+            return CuVariant(static_cast<double>(v.toNumber()));
     }
     d->error = true;
     d->message = "CuFormulaReader::m_fromScriptValue: data conversion error from " + v.toString();
     return CuVariant();
 }
 
-CuVariant::DataType CuFormulaReader::m_getScriptValueType(const QScriptValue &v) const
+CuVariant::DataType CuFormulaReader::getScriptValueType(const QScriptValue &v) const
 {
     CuVariant::DataType dt = CuVariant::TypeInvalid;
     if(v.isBool())
@@ -441,4 +482,19 @@ void CuFormulaReader::m_notifyFormulaError()
     da["src"] = d->source.toStdString();
     da["timestamp_ms"] = QDateTime::currentMSecsSinceEpoch();
     d->listener->onUpdate(da);
+}
+
+void CuFormulaReader::m_srcReplaceWildcards()
+{
+    size_t cnt = d->formula_parser.sourcesCount();
+    std::string srcs;
+    for(size_t i = 0; i < cnt; i++) {
+        i < cnt - 1 ? srcs += d->formula_parser.source(i) + "," : srcs += d->formula_parser.source(i);
+    }
+    QRegularExpression re("formula://\\{(.+)\\}(\\s*function.*)", QRegularExpression::DotMatchesEverythingOption);
+    QRegularExpressionMatch match = re.match(d->source);
+    if(match.hasMatch() && match.capturedTexts().size() == 3) {
+        d->source = QString("formula://{%1} %2").arg(QString::fromStdString(srcs))
+                                                     .arg(match.captured(2));
+    }
 }

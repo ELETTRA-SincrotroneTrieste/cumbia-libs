@@ -22,13 +22,15 @@ SOURCES += \
     src/cuformulareader.cpp \
     src/cuformulaplugin.cpp \
     src/cuformula.cpp \
-    src/cuformulaparser.cpp
+    src/cuformulaparser.cpp \
+    src/simpleformulaeval.cpp
 
 HEADERS += \
     src/cuformulareader.h \
     src/cuformulaplugin.h \
     src/cuformula.h \
-    src/cuformulaparser.h
+    src/cuformulaparser.h \
+    src/simpleformulaeval.h
 DISTFILES += \ 
     cuformulasplugin.json
 

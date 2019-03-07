@@ -24,7 +24,7 @@ BotConfig::BotConfig(BotDb *db)
     // getConfig does not clear d->map, so that keys that are not configured into the
     // database will remain with their defaults
     d->map["ttl"] = 24 * 3600;
-    d->map["history_depth"] = 8;
+    d->map["history_depth"] = 12;
 
     QStringList default_operations_auth = QStringList() << "monitor" << "reads" << "host" << "dbsearch";
     d->map["default_monitors_auth"] = 10;

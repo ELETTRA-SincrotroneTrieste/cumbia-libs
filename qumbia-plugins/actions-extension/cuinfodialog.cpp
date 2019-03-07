@@ -63,8 +63,67 @@ CuInfoDialog::~CuInfoDialog()
     delete d;
 }
 
+/**
+ * @brief CuInfoDialog::extractSources if source represents a formula, this method extracts the
+ *        source names only, comma separated if more than one. The result must be formatted in a
+ *        way that is compatible with the "src" CuData value that will be provided by the formula
+ *        reader, for example: *test/device/1/double_scalar,test/device/2/double_scalar*
+ * @param expression the source expression as returned by the *source* property of the reader
+ * @param formula will contain the formula, if any
+ * @return a list of strings with the sources detected in expr.
+ *
+ * Please read the *cuformula* plugin documentation for further details.
+ * If expression is a formula, the list of sources involved are detected within the first
+ * *{}* parenthesis group.
+ *
+ * \par Example
+ * If expression is "{$1/double_scalar,$2/double_scalar}  function(a,b) {  return a-b;}"
+ * the method will return a QStringList ("$1/double_scalar","$2/double_scalar") and formula
+ * will contain "function(a,b) {  return a-b;}"
+ */
+QStringList CuInfoDialog::extractSources(const QString &expression, QString& formula)
+{
+    QStringList srcs;
+    // must deal with formulas
+    QRegularExpression re("formula://\\{(.+)\\}(\\s*function.*)");
+    QRegularExpressionMatch match = re.match(expression);
+    if(match.hasMatch() && match.capturedTexts().size() == 3) {
+        QString srclist = match.captured(1);
+        srclist.remove(" ");
+        srcs = match.captured(1).split(",", QString::SkipEmptyParts);
+        formula = match.captured(2);
+    }
+    else { // no formula, hopefully it's a valid source
+        srcs << expression;
+    }
+    return srcs;
+}
+
+/**
+ * @brief CuInfoDialog::extractSource provides the list of strings returned by extractSources joined by commas.
+ * @param expression the expression obtained by the reader's source property (may be a simple source or a complex
+ *        formula expression)
+ * @param formula will contain the formula, if any
+ * @return a comma separated list of strings that are the names of the sources detected within {}
+ *
+ * Please read the *cuformula* plugin documentation for further details.
+ *
+ * If expression is a formula, the list of sources involved are detected within the first
+ * *{}* parenthesis group.
+ *
+ * \par Example
+ * If expression is "{$1/double_scalar,$2/double_scalar}  function(a,b) {  return a-b;}"
+ * the method will return a QString "$1/double_scalar,$2/double_scalar" and formula
+ * will contain "function(a,b) {  return a-b;}"
+ */
+QString CuInfoDialog::extractSource(const QString &expression, QString &formula)
+{
+    return extractSources(expression, formula).join(",");
+}
+
 void CuInfoDialog::exec(const CuData& in)
 {
+    printf("\e[1;32mCuInfoDialog.exec with data \e[0;33m%s\e[0m\n", in.toString().c_str());
     d->layout_col_cnt = 8;
     resize(700, 720);
     int row = 0;
@@ -75,9 +134,10 @@ void CuInfoDialog::exec(const CuData& in)
     // update with live data
     connect(sender, SIGNAL(newData(const CuData&)), this, SLOT(onMonitorUpdate(const CuData&)));
 
-    QString src = sender->property("source").toString();
+    QString formula, src = sender->property("source").toString();
     if(src.isEmpty())
         src = sender->property("target").toString();
+    src = extractSource(src, formula);
     setWindowTitle(src + " stats");
     CuLinkStats *lis = d->ctx->getLinkStats();
 
@@ -140,7 +200,7 @@ void CuInfoDialog::exec(const CuData& in)
     monitorF->setObjectName("monitorF");
     QGridLayout *molo = new QGridLayout(monitorF);
     molo->setObjectName(monitorF->objectName() + "_layout");
-    QList<CuControlsReaderA *> readers = d->ctx->readers();
+
     QList<CuControlsWriterA *> writers = d->ctx->writers();
     foreach (CuControlsWriterA* w, writers) {
         QGroupBox *gb = new QGroupBox("", monitorF);
@@ -174,11 +234,16 @@ void CuInfoDialog::exec(const CuData& in)
         }
     }
 
+    QList<CuControlsReaderA *> readers = d->ctx->readers();
+
+    printf("\e[1;33mREADERS ARE in number %ld\e[0m\n", readers.size());
     // create a set of GroupBoxes that will contain monitor widgets
     foreach(CuControlsReaderA *r, readers)
     {
+        QString formula, src;
+        src = extractSource(r->source(), formula);
         QGroupBox *gb = new QGroupBox("", monitorF);
-        gb->setObjectName(r->source() + "_monitor");
+        gb->setObjectName(src + "_monitor");
         QVBoxLayout* gblo = new QVBoxLayout(gb);
         gblo->setObjectName(gb->objectName() + "_gridLayout");
         molo->addWidget(gb, monrow, 0, 1, d->layout_col_cnt);
@@ -222,10 +287,12 @@ void CuInfoDialog::exec(const CuData& in)
         QGridLayout *lilo = new QGridLayout(liveF);
         foreach(CuControlsReaderA *r, readers)
         {
-            QGroupBox *gb = new QGroupBox(r->source(), liveF);
+            QString formula, src = extractSource(r->source(), formula);
+            QGroupBox *gb = new QGroupBox(src, liveF);
             gb->setFont(f);
             lilo->addWidget(gb, row, 0, 1, d->layout_col_cnt);
-            gb->setObjectName(r->source() + "_live");
+            gb->setObjectName(src + "_live");
+            printf("\e[1;32mcreating fuckin groubleox with name %s\e[0m", qstoc(gb->objectName()));
             QVBoxLayout * gblilo = new QVBoxLayout(gb);
             QuLabel *llive = NULL;
             if(d->ctx->cumbia() && d->ctx->getReaderFactoryI())
@@ -235,6 +302,7 @@ void CuInfoDialog::exec(const CuData& in)
             if(llive)
             {
                 connect(llive, SIGNAL(newData(CuData)), this, SLOT(newLiveData(CuData)));
+                printf("\e[1;31mSETTING SOURCE %s ON LIVE READER\e[0m\n", qstoc(r->source()));
                 llive->setSource(r->source());
                 llive->setMaximumLength(80);
                 gblilo->addWidget(llive);
@@ -272,24 +340,30 @@ void CuInfoDialog::onMonitorUpdate(const CuData &da)
     QGroupBox *container = findChild<QGroupBox *>(src + "_monitor");
     if(!container) // try if it is write
         container = findChild<QGroupBox *>(src + "_write_monitor");
-    QVBoxLayout *glo = qobject_cast<QVBoxLayout *>(container->layout());
-    da["timestamp_ms"].to<double>(x);
-    if(container)
-    {
-        QLabel* update_wait_l = container->findChild<QLabel *>("l_waitupdate");
-        if(update_wait_l)
-            delete update_wait_l;
+    if(container) {
+        QVBoxLayout *glo = qobject_cast<QVBoxLayout *>(container->layout());
+        da["timestamp_ms"].to<double>(x);
+        if(container)
+        {
+            QLabel* update_wait_l = container->findChild<QLabel *>("l_waitupdate");
+            if(update_wait_l)
+                delete update_wait_l;
 
-        QTextBrowser *te = container->findChild<QTextBrowser *>("tb_monitor_update");
-        if(!te) {
-            te = new QTextBrowser(container);
-            te->setReadOnly(true);
-            te->setObjectName("tb_monitor_update");
-            glo->addWidget(te);
+            QTextBrowser *te = container->findChild<QTextBrowser *>("tb_monitor_update");
+            if(!te) {
+                te = new QTextBrowser(container);
+                te->setReadOnly(true);
+                te->setObjectName("tb_monitor_update");
+                glo->addWidget(te);
+            }
+            int scrollbarPos = te->verticalScrollBar()->value();
+            te->setHtml(m_makeHtml(da, "DATA"));
+            te->verticalScrollBar()->setValue(scrollbarPos);
         }
-        int scrollbarPos = te->verticalScrollBar()->value();
-        te->setHtml(m_makeHtml(da, "DATA"));
-        te->verticalScrollBar()->setValue(scrollbarPos);
+    }
+    else {
+        perr("CuInfoDialog::onMonitorUpdate: either expected container %s_monitor or %s_write_monitor not found",
+             qstoc(src),qstoc(src));
     }
 }
 
@@ -302,8 +376,8 @@ QString CuInfoDialog::m_makeHtml(const CuData& da, const QString& heading) {
     html += "<head>\n";
     html += "<style>\n";
     html += QString("table, th, td {  \
-            border-style: groove; \
-    border-color: DodgerBlue; \
+                    border-style: groove; \
+            border-color: DodgerBlue; \
     border-width: 1px; \
     border-collapse: collapse; \
 margin:0.3em; \
@@ -325,120 +399,145 @@ td { \
 } \
 div { width=80%; } \
 \n");
-     html += "</style>\n";
-     html += "</head>\n";
-     html += "<body>\n";
-     html += "<h4 align=\"center\">" + heading + "</h4>\n";
-     html += "<div id=\"tablesdiv\">\n";
+ html += "</style>\n";
+ html += "</head>\n";
+ html += "<body>\n";
+ html += "<h4 align=\"center\">" + heading + "</h4>\n";
+ html += "<div id=\"tablesdiv\">\n";
 
 
-     QString values_s;
-     QStringList valueKeys = QStringList() << "value" << "w_value" << "write_value";
-     foreach(QString vk, valueKeys) {
-         if(da.containsKey(vk.toStdString()))
-             values_s += "<tr><td>" + vk + "</td><td>" +
-                     QString::fromStdString(da[vk.toStdString()].toString()) + "</td></tr>";
-     }
+ QString values_s;
+ QStringList valueKeys = QStringList() << "value" << "w_value" << "write_value";
+ foreach(QString vk, valueKeys) {
+     if(da.containsKey(vk.toStdString()))
+         values_s += "<tr><td>" + vk + "</td><td>" +
+                 QString::fromStdString(da[vk.toStdString()].toString()) + "</td></tr>";
+ }
 
-     if(x > 0 || values_s.length() > 0) { // valid date and time or at least one of valueKeys found
+ if(x > 0 || values_s.length() > 0) { // valid date and time or at least one of valueKeys found
 
-         html += "<table>\n<tr><th colspan=\"2\"><cite>value</cite></th></tr>";
-         if(x > 0)
-             html += "<tr><td>date/time</td><td>" + datetime + "</td></tr>";
-         html += values_s;
-         html += "</table>\n\n\n";
-     }
+     html += "<table>\n<tr><th colspan=\"2\"><cite>value</cite></th></tr>";
+     if(x > 0)
+         html += "<tr><td>date/time</td><td>" + datetime + "</td></tr>";
+     html += values_s;
+     html += "</table>\n\n\n";
+ }
 
 
-     QStringList priorityKeys = QStringList() << "src" << "device" << "point" <<
-                                                 "mode" << "err" << "msg" << "period" <<
-                                                 "data_format_str";
+ QStringList priorityKeys = QStringList() << "src" << "device" << "point" <<
+                                             "mode" << "err" << "msg" << "period" <<
+                                             "data_format_str";
 
-     // 1. information table
-     html += "<table>\n<tr><th colspan=\"2\"><cite>information</cite></th></tr>";
-     foreach(QString pk, priorityKeys) {
-         if(da.containsKey(pk.toStdString()))
-             html += "<tr><td>" + pk + "</td><td>" +
-                     QString::fromStdString(da[pk.toStdString()].toString()) + "</td></tr>";
-     }
-     html += "</table>\n\n";
+ // 1. information table
+ html += "<table>\n<tr><th colspan=\"2\"><cite>information</cite></th></tr>";
+ foreach(QString pk, priorityKeys) {
+     if(da.containsKey(pk.toStdString()))
+         html += "<tr><td>" + pk + "</td><td>" +
+                 QString::fromStdString(da[pk.toStdString()].toString()) + "</td></tr>";
+ }
+ html += "</table>\n\n";
 
-     // 2. advanced table
-     const std::vector<std::string> &dkeys = da.keys();
-     html += "<table>\n<tr><th colspan=\"2\"><cite>advanced</cite></th></tr>";
-     for(size_t i = 0; i < dkeys.size(); i++) {
-         const std::string& s = dkeys[i];
-         if(!priorityKeys.contains(QString::fromStdString(s)))
-             html += "<tr><td>" + QString::fromStdString(s) + "</td><td>" +
-                     QString::fromStdString(da[dkeys[i]].toString()) + "</td></tr>";
-     }
-     html += "</table>\n\n";
-     html += "</div> <!-- tablesdiv -->\n\n";
-     html += "</body>\n</html>\n";
+ // 2. advanced table
+ const std::vector<std::string> &dkeys = da.keys();
+ html += "<table>\n<tr><th colspan=\"2\"><cite>advanced</cite></th></tr>";
+ for(size_t i = 0; i < dkeys.size(); i++) {
+     const std::string& s = dkeys[i];
+     if(!priorityKeys.contains(QString::fromStdString(s)))
+         html += "<tr><td>" + QString::fromStdString(s) + "</td><td>" +
+                 QString::fromStdString(da[dkeys[i]].toString()) + "</td></tr>";
+ }
+ html += "</table>\n\n";
+ html += "</div> <!-- tablesdiv -->\n\n";
+ html += "</body>\n</html>\n";
 
-     //    printf("OUT\n\n%s\n", qstoc(html.remove("\n")));
-     return html;
+ //    printf("OUT\n\n%s\n", qstoc(html.remove("\n")));
+ return html;
  }
 
  void CuInfoDialog::newLiveData(const CuData &data)
  {
+     printf("\e[1;33mCuInfoDialog:newLive data %s\e[0m\n", data.toString().c_str());
      if(data.containsKey("data_format_str"))
          sender()->disconnect(this, SLOT(newLiveData(const CuData&)));
 
      QString src = QString::fromStdString(data["src"].toString());
      std::string format = data["data_format_str"].toString();
      QWidget *plotw = NULL;
-     QVBoxLayout *livelo = qobject_cast<QVBoxLayout *>(findChild<QGroupBox *>(src + "_live")->layout());
-     Cumbia *cumbia = d->ctx->cumbia();
-     CuControlsReaderFactoryI *rfac = d->ctx->getReaderFactoryI();
-     CumbiaPool *cu_pool = d->ctx->cumbiaPool();
-     CuControlsFactoryPool fpool = d->ctx->getControlsFactoryPool();
+     printf("\e[1;31mCuInfoDialog:newLiveData: fuckin gb is %p src (%s)\e[0m\n", findChild<QGroupBox *>(src + "_live"), qstoc(src));
+     QGroupBox *liveGb = findChild<QGroupBox *>(src + "_live");
+     if(liveGb) {
+         QVBoxLayout *livelo = qobject_cast<QVBoxLayout *>(liveGb->layout());
+         Cumbia *cumbia = d->ctx->cumbia();
+         CuControlsReaderFactoryI *rfac = d->ctx->getReaderFactoryI();
+         CumbiaPool *cu_pool = d->ctx->cumbiaPool();
+         CuControlsFactoryPool fpool = d->ctx->getControlsFactoryPool();
 
-     if(format == "scalar")
-     {
-         QuTrendPlot *trplot = findChild<QuTrendPlot *>("trplot_" + src);
-         if(!trplot)
+         if(format == "scalar")
          {
-             // add the trend plot.
-             // if the data is vector, the trend plot will be replaced by a spectrum plot
-             if(cumbia && rfac)
-                 trplot = new QuTrendPlot(findChild<QFrame *>("liveF"), cumbia, *rfac);
-             else if(cu_pool)
-                 trplot = new QuTrendPlot(findChild<QFrame *>("liveF"), cu_pool, fpool);
-             if(trplot)
-                 plotw = trplot;
+             QuTrendPlot *trplot = findChild<QuTrendPlot *>("trplot_" + src);
+             if(!trplot)
+             {
+                 // add the trend plot.
+                 // if the data is vector, the trend plot will be replaced by a spectrum plot
+                 if(cumbia && rfac)
+                     trplot = new QuTrendPlot(findChild<QFrame *>("liveF"), cumbia, *rfac);
+                 else if(cu_pool)
+                     trplot = new QuTrendPlot(findChild<QFrame *>("liveF"), cu_pool, fpool);
+                 if(trplot)
+                     plotw = trplot;
+             }
          }
-     }
-     else if(format == "vector")
-     {
-         QuSpectrumPlot *splot = findChild<QuSpectrumPlot *>("trplot_" + src);
-         if(!splot)
+         else if(format == "vector")
          {
-             if(cumbia)
-                 splot = new QuSpectrumPlot(findChild<QFrame *>("liveF"), cumbia, *rfac);
-             else if(d->cu_pool)
-                 splot = new QuSpectrumPlot(findChild<QFrame *>("liveF"),  cu_pool, fpool);
-             if(splot)
-                 plotw = splot;
+             QuSpectrumPlot *splot = findChild<QuSpectrumPlot *>("trplot_" + src);
+             if(!splot)
+             {
+                 if(cumbia)
+                     splot = new QuSpectrumPlot(findChild<QFrame *>("liveF"), cumbia, *rfac);
+                 else if(d->cu_pool)
+                     splot = new QuSpectrumPlot(findChild<QFrame *>("liveF"),  cu_pool, fpool);
+                 if(splot)
+                     plotw = splot;
+             }
          }
-     }
-     if(plotw)
-     {
-         plotw->setObjectName("trplot_" + src);
-         plotw->setProperty("source", src);
-         livelo->addWidget(plotw);
-     }
+         if(plotw)
+         {
+             plotw->setObjectName("trplot_" + src);
+             QStringList srcs;
+             if(data.containsKey("formula") && data.containsKey("srcs")) {
+                 std::string formula_src;
+                 std::string srclist;
+                 std::vector<std::string> vsrcs = data["srcs"].toStringVector();
+                 for(size_t i = 0; i < vsrcs.size(); i++) {
+                    i < vsrcs.size() - 1 ? srclist += vsrcs[i] + "," : srclist += vsrcs[i];
+                    srcs << QString::fromStdString(vsrcs[i]);
+                 }
+                 formula_src = "formula://{" + srclist + "}" + data["formula"].toString();
+                 srcs << QString::fromStdString(formula_src);
+             }
+             else {
+                 srcs << src;
+             }
 
-     if(data["type"].toString() == "property") {
-         QString html = m_makeHtml(data, "properties of \"" + src + "\"");
-         QTextBrowser *tbp = findChild<QFrame *>("liveF")->findChild<QTextBrowser *>("tb_live_properties");
-         if(!tbp) {
-             tbp = new QTextBrowser(findChild<QFrame *>("liveF"));
-             tbp->setReadOnly(true);
-             tbp->setObjectName("tb_live_properties");
-             livelo->addWidget(tbp);
+             qDebug() << __PRETTY_FUNCTION__ << "setting sources srcs " << srcs;
+             plotw->setProperty("sources", srcs);
+             livelo->addWidget(plotw);
          }
-         tbp->setHtml(html);
+
+         if(data["type"].toString() == "property") {
+             QString html = m_makeHtml(data, "properties of \"" + src + "\"");
+             QTextBrowser *tbp = findChild<QFrame *>("liveF")->findChild<QTextBrowser *>("tb_live_properties");
+             if(!tbp) {
+                 tbp = new QTextBrowser(findChild<QFrame *>("liveF"));
+                 tbp->setReadOnly(true);
+                 tbp->setObjectName("tb_live_properties");
+                 livelo->addWidget(tbp);
+             }
+             tbp->setHtml(html);
+         }
+     }
+     else {
+         perr("CuInfoDialog::newLiveData: expected container %s_live not found", qstoc(src));
      }
  }
 

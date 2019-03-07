@@ -10,6 +10,8 @@ public:
 
     CumbiaFormula();
 
+    virtual ~CumbiaFormula();
+
     // Cumbia interface
 public:
     int getType() const;

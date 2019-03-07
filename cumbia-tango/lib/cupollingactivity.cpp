@@ -330,6 +330,7 @@ void CuPollingActivity::execute()
     std::vector<CuData> attdatalist;
     Tango::DeviceProxy *dev = d->tdev->getDevice();
     bool success = (dev != NULL);
+    TSource tsrc;
     size_t i = 0;
     size_t att_idx = 0;
     size_t att_offset = 0;
@@ -339,7 +340,7 @@ void CuPollingActivity::execute()
         std::multimap<const std::string, const ActionData>::iterator it;
         for(it = d->actions_map.begin(); it != d->actions_map.end(); ++it) {
             const ActionData &action_data = it->second;
-            const TSource& tsrc = action_data.tsrc;
+            tsrc = action_data.tsrc;
             const std::string srcnam = tsrc.getName();
             std::string point = tsrc.getPoint();
             std::vector<std::string> argins = tsrc.getArgs();
@@ -403,21 +404,30 @@ void CuPollingActivity::execute()
         }
     }
     else {
-        // dev is null (device not defined in database)
-        CuData dev_err("msg", d->tdev->getMessage());
-        dev_err["err"] = true;
-        dev_err["name"] = d->tdev->getName();
-        results->push_back(dev_err);
+
     }
 
     if(success && d->repeat != d->period)
         d->repeat = d->period;
     else if(success)
         d->errCnt = 0; // reset consecutive error count
-    else if(dev)
+    else if(dev) {
+        printf("\e[1;31mdecreasing polling dev is not null success %d\e[0m\n", success);
         decreasePolling();
+    }
     else { // device not defined into database
         d->repeat = -1;
+    }
+    if(!success) {
+        // dev is null or some other error (device not defined in database)
+        CuData dev_err;
+        !dev ? dev_err["msg"] =  d->tdev->getMessage() :
+                dev_err["msg"] = "CuPollingActivity: failed to read \"" + tsrc.getName() + "\"";
+        dev_err["err"] = true;
+        dev_err["name"] = d->tdev->getName();
+        dev_err["src"] = tsrc.getName();
+        dev_err.putTimestamp();
+        results->push_back(dev_err);
     }
 
     publishResult(results);
