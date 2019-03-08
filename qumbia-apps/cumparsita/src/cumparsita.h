@@ -17,6 +17,9 @@ class Cumparsita : public QWidget
 
 public:
     explicit Cumparsita(QWidget *parent = nullptr);
+
+    QObject *get_cumbia_customWidgetCollectionInterface() const;
+
     ~Cumparsita();
 
 private:

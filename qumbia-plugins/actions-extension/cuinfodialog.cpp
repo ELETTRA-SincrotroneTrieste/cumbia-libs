@@ -32,7 +32,9 @@
 #include <cucontrolsreader_abs.h>
 #include <cucontrolswriter_abs.h>
 #include <cucontext.h>
-
+#include <cuformulaplugininterface.h>
+#include <cupluginloader.h>
+#include <QPluginLoader>
 
 class CuInfoDialogPrivate
 {
@@ -84,16 +86,33 @@ CuInfoDialog::~CuInfoDialog()
 QStringList CuInfoDialog::extractSources(const QString &expression, QString& formula)
 {
     QStringList srcs;
-    // must deal with formulas
-    QRegularExpression re("formula://\\{(.+)\\}(\\s*function.*)");
-    QRegularExpressionMatch match = re.match(expression);
-    if(match.hasMatch() && match.capturedTexts().size() == 3) {
-        QString srclist = match.captured(1);
-        srclist.remove(" ");
-        srcs = match.captured(1).split(",", QString::SkipEmptyParts);
-        formula = match.captured(2);
+    CuPluginLoader plulo;
+    QString plupath = plulo.getPluginAbsoluteFilePath(CUMBIA_QTCONTROLS_PLUGIN_DIR, "cuformula-plugin.so");
+    QPluginLoader pluginLoader(plupath);
+    QObject *plugin = pluginLoader.instance();
+    bool error = !plugin;
+    if (plugin){
+        CuFormulaPluginI *fplu = qobject_cast<CuFormulaPluginI *>(plugin);
+        if(!fplu) {
+            perr("Failed to load formula plugin");
+            error = true;
+        }
+        else {
+            CuFormulaParserI *fparser = fplu->getFormulaParserInstance();
+            fparser->parse(expression);
+            error = fparser->error();
+            if(!error) {
+                if(!fparser->name().isEmpty())
+                    srcs << fparser->name();
+                else {
+                    std::vector<std::string> vsrcs = fparser->sources();
+                    foreach(std::string s, vsrcs)
+                        srcs << QString::fromStdString(s);
+                }
+            }
+        }
     }
-    else { // no formula, hopefully it's a valid source
+    if(error) { // no formula or failed to load plugin, hopefully it's a valid source
         srcs << expression;
     }
     return srcs;
@@ -509,8 +528,8 @@ div { width=80%; } \
                  std::string srclist;
                  std::vector<std::string> vsrcs = data["srcs"].toStringVector();
                  for(size_t i = 0; i < vsrcs.size(); i++) {
-                    i < vsrcs.size() - 1 ? srclist += vsrcs[i] + "," : srclist += vsrcs[i];
-                    srcs << QString::fromStdString(vsrcs[i]);
+                     i < vsrcs.size() - 1 ? srclist += vsrcs[i] + "," : srclist += vsrcs[i];
+                     srcs << QString::fromStdString(vsrcs[i]);
                  }
                  formula_src = "formula://{" + srclist + "}" + data["formula"].toString();
                  srcs << QString::fromStdString(formula_src);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Waves</class>
+ <widget class="QWidget" name="Waves">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,13 +11,18 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Waves - sum and difference</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <widget class="QuSpectrumPlot" name="quSpectrumPlot">
-     <property name="source">
-      <string>$1/double_spectrum_ro;$2/double_spectrum_ro</string>
+     <property name="sources">
+      <stringlist>
+       <string>formula://[sum]{$1/wave,$2/wave} function(a,b) {    var c = [];    for(var i = 0; i &lt; a.length &amp;&amp; i &lt; b.length; i++) {        c.push(a[i] + b[i]);    }    return c;}</string>
+       <string>$1/wave</string>
+       <string>$2/wave</string>
+       <string>formula://[diff]{$1/wave,$2/wave} function(a,b) {    var c = [];    for(var i = 0; i &lt; a.length &amp;&amp; i &lt; b.length; i++) {        c.push(a[i] - b[i]);    }    return c;}</string>
+      </stringlist>
      </property>
     </widget>
    </item>

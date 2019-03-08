@@ -1,5 +1,6 @@
 #include <quapplication.h>
 #include "cumparsita.h"
+#include <QtDebug>
 
 #include <X11/Xlib.h>
 #include <QX11Info>
@@ -10,10 +11,8 @@
 
 int main(int argc, char *argv[])
 {
-    printf("\e[1;33mmain Cuparsita entering....\e[0m\n\n");
     int ret;
     QuApplication *qu_app = new QuApplication( argc, argv );
-    printf("\e[1;33mmain Cuparsita 1....\e[0m\n\n");
     qu_app->setOrganizationName("elettra");
     qu_app->setApplicationName("cumparsita");
     QString version(CVSVERSION);
@@ -30,9 +29,14 @@ int main(int argc, char *argv[])
     }
     else {
 
-        printf("\e[1;33mmain Cuparsita 4....\e[0m\n\n");
         Cumparsita *w = new Cumparsita(nullptr);
-        printf("\e[1;33mmain Cuparsita 5....\e[0m\n\n");
+        //
+        // get reference to cumbia designer plugin to invoke cumbia_tango_free at the proper
+        // moment (before the application destroys CuCustomWidgetCollectionInterface causing a
+        // crash in Tango while deleting device proxy )
+        // https://github.com/tango-controls/cppTango/issues/540
+        //
+        QObject *cumbia_custom_widgets_collection = w->get_cumbia_customWidgetCollectionInterface();
         w->show();
 
         /* register to window manager */
@@ -41,16 +45,11 @@ int main(int argc, char *argv[])
         XSetCommand(disp, root_win, argv, argc);
 
         ret = qu_app->exec();
-
-        printf("RETURNING FROM qu_app->exec(): deleting Cumparsita\n");
-
         delete w;
-
-        printf("cumparsita deleted\n");
-
-        printf("deleting qu_app\n");
         delete qu_app;
-        printf("deleteth qu_app\n");
+
+        if(cumbia_custom_widgets_collection)
+            QMetaObject::invokeMethod(cumbia_custom_widgets_collection, "cumbia_tango_free");
     }
     return ret;
 }

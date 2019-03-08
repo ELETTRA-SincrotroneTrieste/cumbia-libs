@@ -1,5 +1,6 @@
 #include "cumuiloader.h"
 #include <QtDebug>
+#include <QPluginLoader>
 
 CumUiLoader::CumUiLoader(QObject *parent) : QUiLoader (parent)
 {

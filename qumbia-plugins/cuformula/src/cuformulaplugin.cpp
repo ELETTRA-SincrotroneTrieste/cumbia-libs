@@ -60,14 +60,16 @@ std::vector<std::string> CuFormulaPlugin::srcPatterns() const
     return patts;
 }
 
-bool CuFormulaPlugin::formulaIsNormalized(const QString &formula) const
+/**
+ * @brief CuFormulaPlugin::getFormulaParserInstance returns a new instance of CuFormulaParser
+ * @return a new CuFormulaParser
+ *
+ * \par Note
+ * The caller acquires the ownership of the new object.
+ */
+CuFormulaParserI *CuFormulaPlugin::getFormulaParserInstance() const
 {
-    return CuFormulaParser().isNormalized(formula);
-}
-
-QString CuFormulaPlugin::normalizedFormulaPattern() const
-{
-    return CuFormulaParser().normalizedFormulaPattern();
+    return new CuFormulaParser();
 }
 
 

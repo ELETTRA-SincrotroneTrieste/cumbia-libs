@@ -30,9 +30,7 @@
       </sizepolicy>
      </property>
      <property name="source">
-      <string>formula://{$1/double_scalar,$2/double_scalar} function(a,b) {
-  return a+b;
-}</string>
+      <string>formula://[sum]{$1/double_scalar,$2/double_scalar} function(a,b) {  return a+b;}</string>
      </property>
     </widget>
    </item>
@@ -89,9 +87,7 @@
    <item row="1" column="6">
     <widget class="QuLabel" name="quLabel_4">
      <property name="source">
-      <string>formula://{$1/double_scalar,$2/double_scalar}  function(a,b) {
-  return a-b;
-}</string>
+      <string>formula://[diff]{$1/double_scalar,$2/double_scalar} function(a,b) {  return a-b;}</string>
      </property>
     </widget>
    </item>

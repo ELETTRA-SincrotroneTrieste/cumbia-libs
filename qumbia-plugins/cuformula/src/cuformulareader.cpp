@@ -116,7 +116,6 @@ void CuFormulaReader::setSource(const QString &s)
     d->errors.clear();
     d->messages.clear();
     d->formula_parser.parse(s);
-    printf("CuFormulaReader::setSource IN\n");
     qDebug() << __PRETTY_FUNCTION__ << "detected sources count" << d->formula_parser.sourcesCount()
              << "from " << s;
 
@@ -128,19 +127,14 @@ void CuFormulaReader::setSource(const QString &s)
         for(i = 0; i < d->formula_parser.sourcesCount(); i++) {
             const std::string &src = d->formula_parser.source(i);
             QuWatcher *watcher = new QuWatcher(this, d->cu_poo, d->fpoo);
-            printf("CuFormulaReader::setSource 8\n");
             connect(watcher, SIGNAL(newData(const CuData&)), this, SLOT(onNewData(const CuData&)));
-            printf("CuFormulaReader::setSource 10\n");
             watcher->setSource(QString::fromStdString(src));
-            printf("CuFormulaReader::setSource 20\n");
             // update the i-th source with the free from wildcard source name
             d->formula_parser.updateSource(i, watcher->source().toStdString());
-            printf("funcking pushing back an empty CuVariant in d->values for %s this %p\n", src.c_str(), this);
             d->values.push_back(CuVariant());
             d->qualities.push_back(CuDataQuality(CuDataQuality::Undefined));
             d->errors.push_back(true);
             d->messages.push_back("waiting for " + src);
-            printf("CuFormulaReader::setSource 100\n");
         }
     }
     else {
@@ -149,12 +143,10 @@ void CuFormulaReader::setSource(const QString &s)
         sfe->start();
     }
     m_srcReplaceWildcards();
-    printf("CuFormulaReader::setSource OUT\n");
 }
 
 QString CuFormulaReader::source() const
 {
-    printf("CuFormulaReader returning source %s\n", qstoc(d->source));
     return d->source;
 }
 
@@ -172,13 +164,11 @@ void CuFormulaReader::getData(CuData &d_ino) const
 
 void CuFormulaReader::onNewData(const CuData &da)
 {
-    printf("1\n");
     d->error = false;
     d->message.clear();
     std::string src = da["src"].toString();
     bool err = da["err"].toBool();
     bool all_read_once = false;
-    printf("2\n");
     if(src.size() == 0) { // will not call onUpdate on listener
         d->error = true;
         d->message = "CuFormulaReader.onNewData: input data without \"src\" key";
@@ -186,15 +176,13 @@ void CuFormulaReader::onNewData(const CuData &da)
     else if(d->formula_parser.sourcesCount() > 0) {
         CuData dat;
 
-        printf("3\n");
         dat["timestamp_ms"] = da["timestamp_ms"];
         dat["timestamp_us"] = da["timestamp_us"];
         dat["srcs"] = d->formula_parser.sources();
+
         dat["formula"] = d->formula_parser.formula().toStdString();
-        printf("4\n");
         std::string msg = da["msg"].toString();
         long idx = d->formula_parser.indexOf(src);
-        printf("5\n");
         if(idx < 0) {
             err = true;
             msg = "CuFormulaReader::onNewData: no source \"" + src + "\" is found";
@@ -205,14 +193,10 @@ void CuFormulaReader::onNewData(const CuData &da)
         }
         else if(!err && da.containsKey("value")) {
 
-            printf("5b\n");
             size_t index = static_cast<size_t>(idx);
             if(!err) {
-                printf("5b1: values size %d idx %d this %p\n", d->values.size(), index, this);
                 d->values[index] = da["value"];
-                printf("5c\n");
                 all_read_once = m_allValuesValid();
-                printf("5d\n");
                 // CuFormulaParser::ReadingsIncomplete
                 if(!all_read_once) {
                     // this is not an error!
@@ -225,12 +209,9 @@ void CuFormulaReader::onNewData(const CuData &da)
                 }
                 else {
                     QScriptValue result;
-                    printf("6\n");
                     QString formula = d->formula_parser.preparedFormula();
-                    printf("7\n");
                     printf("preparing to evaluate formula pretty %s\e[0m\n", qstoc(formula));
                     QScriptValue sval = d->scriptEngine.evaluate(formula);
-                    printf("8\n");
                     err = !sval.isFunction();
                     if(err) {
                         msg = QString("CuFormulaReader.onNewData: formula \"%1\" is not a function")
@@ -259,7 +240,6 @@ void CuFormulaReader::onNewData(const CuData &da)
                         }
                     }
 
-                    printf("13\n");
                     err = !result.isValid() && !result.isError();
 
                     if(!err) {
@@ -301,7 +281,9 @@ void CuFormulaReader::onNewData(const CuData &da)
         dat["quality_color"] = cuq.color();
         dat["quality_string"] = cuq.name();
         dat["msg"] = combinedMessage();
-        dat["src"] = combinedSources();
+        // if formula has a name, put it in src
+        !d->formula_parser.name().isEmpty() ? dat["src"] = d->formula_parser.name().toStdString() :
+            dat["src"] = combinedSources();
         dat["err"] = err;
 
         // notify with onUpdate if
@@ -491,10 +473,10 @@ void CuFormulaReader::m_srcReplaceWildcards()
     for(size_t i = 0; i < cnt; i++) {
         i < cnt - 1 ? srcs += d->formula_parser.source(i) + "," : srcs += d->formula_parser.source(i);
     }
-    QRegularExpression re("formula://\\{(.+)\\}(\\s*function.*)", QRegularExpression::DotMatchesEverythingOption);
+    QString pattern = QString("formula://%1").arg(FORMULA_RE);
+    QRegularExpression re(pattern, QRegularExpression::DotMatchesEverythingOption);
     QRegularExpressionMatch match = re.match(d->source);
-    if(match.hasMatch() && match.capturedTexts().size() == 3) {
-        d->source = QString("formula://{%1} %2").arg(QString::fromStdString(srcs))
-                                                     .arg(match.captured(2));
+    if(match.hasMatch() && match.capturedTexts().size() == FORMULA_RE_CAPTURES_CNT) {
+        d->source.replace(match.captured(2), QString::fromStdString(srcs));
     }
 }

@@ -144,7 +144,7 @@ CuCustomWidgetInterface::CuCustomWidgetInterface(QObject *parent,
 
 CuCustomWidgetInterface::~CuCustomWidgetInterface()
 {
-    printf("\e[1;31m~CuCustomWidgetInterface()\e[0m\n");
+
 }
 
 void CuCustomWidgetInterface::initialize(QDesignerFormEditorInterface *formEditor)
@@ -161,14 +161,13 @@ void CuCustomWidgetInterface::initialize(QDesignerFormEditorInterface *formEdito
 
 CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *parent): QObject(parent)
 {
-    qDebug() << __PRETTY_FUNCTION__ << "PARENT IS " << parent;
-    printf("\e[1;32mo\e[0m CuCustomWidgetCollectionInterface %p\n", this);
+    printf("\e[1;32mo \e[0m CuCustomWidgetCollectionInterface %p\n", this);
     cumbia_pool = new CumbiaPool();
-    printf("\e[1;32m+-o\e[0m cumbia_pool %p created\n", cumbia_pool);
+    printf("\e[1;32m+ \e[0m cumbia_pool %p created\n", cumbia_pool);
 
 #ifdef QUMBIA_EPICS_CONTROLS
     CumbiaEpics* cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    printf("\e[1;32m+-o\e[0m cumbia_epics %p created\n", cuep);
+    printf("\e[1;32m+ \e[0m cumbia_epics %p created\n", cuep);
     cumbia_pool->registerCumbiaImpl("epics", cuep);
     m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
     m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
@@ -180,7 +179,7 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
 #endif
 
     CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    printf("\e[1;32m+-o\e[0m cumbia_tango %p created\n", cuta);
+    printf("\e[1;32m+ \e[0m cumbia_tango %p created\n", cuta);
 
     cumbia_pool->registerCumbiaImpl("tango", cuta);
     m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
@@ -228,30 +227,49 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
     d_plugins.append(new QuApplyNumericInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuCheckBoxInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuInputOutputInterface(this, cumbia_pool, m_ctrl_factory_pool));
-
-    qDebug() << __PRETTY_FUNCTION__ << "this" << this << "thread" << QThread::currentThread();
 }
 
 CuCustomWidgetCollectionInterface::~CuCustomWidgetCollectionInterface()
 {
     printf("\e[1;31mo\e[0m ~CuCustomWidgetCollectionInterface %p\n", this);
-    qDebug() << __PRETTY_FUNCTION__ << "this" << this << "thread" << QThread::currentThread();
+    printf("\e[1;31m-\e[0m  not releasing cumbia tango resources:\n");
+    printf("\e[1;31m-\e[0m  https://github.com/tango-controls/cppTango/issues/540 \n");
+    cumbia_free();
+}
 
+QList<QDesignerCustomWidgetInterface*> CuCustomWidgetCollectionInterface::customWidgets(void) const
+{
+    return d_plugins;
+}
+
+/**
+ * @brief CuCustomWidgetCollectionInterface::cumbia_tango_free free cumbia tango resources
+ *
+ * \par Note
+ * This is a slot that can be invoked to free Tango resources *before* the class destruction time.
+ * If we delete Tango device proxies in the CuCustomWidgetCollectionInterface class destructor we
+ * may run into a crash ( https://github.com/tango-controls/cppTango/issues/540 )
+ *
+ * For example, the *cumparsita* application, uses QMetaObject::invokeMethod to call this method
+ * *before* ~CuCustomWidgetCollectionInterface is invoked.
+ *
+ */
+void CuCustomWidgetCollectionInterface::cumbia_tango_free()
+{
     Cumbia* c = cumbia_pool->get("tango");
-    if(c)
-    {
-        printf("\e[1;31m+--o\e[0m ~cumbia_tango %p\n", c);
-      //  cumbia_pool->unregisterCumbiaImpl("tango");
-        printf("unregistered cumbia-tango. deleting\n");
-       delete c;
-        printf("deleted cumbia tango\n");
+    if(c) {
+        printf("\e[1;31m-\e[0m ~cumbia_tango %p\n", c);
+        delete c;
     }
+}
 
+void CuCustomWidgetCollectionInterface::cumbia_free()
+{
 #ifdef CUMBIA_EPICS
-    c = cumbia_pool->get("epics");
+    Cumbia* c = cumbia_pool->get("epics");
     if(c)
     {
-        printf("\e[1;31m+--o\e[0m ~cumbia_epics %p\n", c);
+        printf("\e[1;31m-\e[0m ~cumbia_epics %p\n", c);
         cumbia_pool->unregisterCumbiaImpl("epics");
         delete c;
     }
@@ -259,18 +277,11 @@ CuCustomWidgetCollectionInterface::~CuCustomWidgetCollectionInterface()
 
     // plugins are destroyed
     // cumbia-formula is destroyed by the cuformula plugin destructor
-
     if(cumbia_pool)
     {
-        printf("\e[1;31m+--o\e[0m ~cumbia_pool %p\n", cumbia_pool);
+        printf("\e[1;31m-\e[0m ~cumbia_pool %p\n", cumbia_pool);
         delete cumbia_pool;
     }
-
-}
-
-QList<QDesignerCustomWidgetInterface*> CuCustomWidgetCollectionInterface::customWidgets(void) const
-{
-    return d_plugins;
 }
 
 /* TaskMenuFactory */
@@ -406,7 +417,6 @@ void TaskMenuExtension::editConnection()
     QStringList srcs;
     bool edit_source = true;
     bool multi_source = qobject_cast<QuTrendPlot *>(d_widget) || qobject_cast<QuSpectrumPlot *>(d_widget);
-    printf("\e[1;33m\n\n EDIT CONNECTION FUCKIN IN multi_source %d\e[0m\n", multi_source);
     /* beware: TLabel after TReaderWriter because TReaderWriter IS a TLabel! */
     if (QuLabel *qtl = qobject_cast<QuLabel*>(d_widget))
         src = qtl->source();
@@ -848,6 +858,5 @@ QWidget *QuInputOutputInterface::createWidget(QWidget *parent)
     QuInputOutput *qio = new QuInputOutput(parent, cumbia_pool, ctrl_factory_pool);
     DropEventFilter *dropEventFilter = new DropEventFilter(qio);
     qio->installEventFilter(dropEventFilter);
-    printf("returning qui\n");
     return qio;
 }

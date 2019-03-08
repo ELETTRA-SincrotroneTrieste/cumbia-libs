@@ -5,6 +5,8 @@
 
 #include "ui_editsourcewidget.h"
 
+class CuFormulaParserI;
+
 class EditSourceWidget : public QWidget
 {
     Q_OBJECT
@@ -28,6 +30,7 @@ protected slots:
 
 private:
     int m_index;
+    CuFormulaParserI *m_formulaParserI;
 
     Ui::EditSourceWidget ui;
 };

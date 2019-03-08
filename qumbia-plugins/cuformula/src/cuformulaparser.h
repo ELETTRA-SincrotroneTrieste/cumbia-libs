@@ -6,24 +6,12 @@
 #include <QString>
 #include <vector>
 #include <cuvariant.h>
-
-//                                       FORMULA REGULAR EXPRESSION PATTERN
-
-// regexp ^\{([\$A-Za-z0-9/,\._\-\:\s&\(\)>]+)\}[\s\n]*(function)?[\s\n]*\({0,1}([a-z,\s]+)\)[\s\n]*(.*)$
-// example formula:
-// {test/device/1/double_scalar test/device/1->DevDouble(10.1)} (a,b ){ return a +b; }
-// example 2
-// {test/device/1/double_scalar test/device/1->DevDouble(10.1)}  ( function(a, b) { return (a -sqrt(b)); })
-#define FORMULA_RE "^\\{([\\$A-Za-z0-9/,\\._\\-\\:\\s&\\(\\)>]+)\\}[\\s\\n]*(function)?" \
-                    "[\\s\\n]*\\({0,1}([a-z,\\s]+)\\)[\\s\\n]*(.*)$"
-
-//                                             ------------------------
-//
+#include <cuformulaplugininterface.h> // formula regexp patterns
 
 class CuFormulaParserPrivate;
 
 
-class CuFormulaParser
+class CuFormulaParser : public CuFormulaParserI
 {
 public:
     enum State { Undefined = 0, ReadingsIncomplete, CompileOk, CompileError, ValueNotScalar,
@@ -44,6 +32,8 @@ public:
 
     std::vector<std::string> sources() const;
 
+    std::string joinedSources() const;
+
     std::string source(size_t i) const;
 
     void updateSource(size_t i, const std::string& s);
@@ -57,6 +47,8 @@ public:
     QString preparedFormula() const;
 
     QString message() const;
+
+    QString name() const;
 
     bool error() const;
 

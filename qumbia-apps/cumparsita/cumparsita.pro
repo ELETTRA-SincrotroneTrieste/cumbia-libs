@@ -52,3 +52,7 @@ TARGET   = bin/cumparsita
 
 # unix:INCLUDEPATH +=  . ../../src
 
+DISTFILES += \
+    jscripts/spectrum_sum.js \
+    jscripts/spectrum_diff.js
+

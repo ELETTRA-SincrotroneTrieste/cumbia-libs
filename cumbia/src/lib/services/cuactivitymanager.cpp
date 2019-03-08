@@ -45,7 +45,7 @@ void CuActivityManager::addConnection(CuThreadInterface *t, CuActivity *a, CuThr
  */
 void CuActivityManager::removeConnection(CuActivity *a)
 {
-    pviolettmp("CuActivityManager::removeConnection: removing connections for activity %p", a);
+    pviolet("CuActivityManager::removeConnection: removing connections for activity %p", a);
     // std::lock_guard<std::mutex> lock(m_mutex);
     std::multimap< CuThreadInterface *, CuActivity *>::iterator it = mConnectionsMultiMap.begin();
     while(it != mConnectionsMultiMap.end())

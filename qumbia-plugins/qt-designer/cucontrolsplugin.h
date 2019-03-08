@@ -78,6 +78,9 @@ private:
     bool d_isInitialized;
 };
 
+
+#include <tango.h>
+
 class CuCustomWidgetCollectionInterface:
         public QObject,
         public QDesignerCustomWidgetCollectionInterface
@@ -97,11 +100,19 @@ public:
 
     virtual QList<QDesignerCustomWidgetInterface*> customWidgets() const;
 
+public slots:
+    void cumbia_tango_free();
+
+    void cumbia_free();
+
+
 private:
     QList<QDesignerCustomWidgetInterface*> d_plugins;
 
     CumbiaPool *cumbia_pool;
     CuControlsFactoryPool m_ctrl_factory_pool;
+
+    Tango::DeviceProxy *dev;
 };
 
 class QuLabelInterface : public CuCustomWidgetInterface

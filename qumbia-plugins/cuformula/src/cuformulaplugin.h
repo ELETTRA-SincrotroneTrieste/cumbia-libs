@@ -41,8 +41,7 @@ public:
     std::string message() const;
     bool error() const;
     std::vector<std::string> srcPatterns() const;
-    bool formulaIsNormalized(const QString& formula) const;
-    QString normalizedFormulaPattern() const;
+    CuFormulaParserI *getFormulaParserInstance() const;
 };
 
 #endif // CUFORMULASPLUGIN_H

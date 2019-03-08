@@ -23,8 +23,9 @@
 #include <QVBoxLayout>
 #include <QApplication>
 #include <QtDebug>
+#include <QtUiPlugin/QDesignerCustomWidgetCollectionInterface>
+#include <QDir>
 
-#include "cumuiloader.h"
 
 Cumparsita::Cumparsita(QWidget *parent) :
     QWidget(parent)
@@ -45,6 +46,25 @@ Cumparsita::Cumparsita(QWidget *parent) :
         QMessageBox::critical(this, "Error opening file", "Error opening file " + ui_file + " in read mode:\n" +
                               file.errorString());
     }
+}
+
+QObject *Cumparsita::get_cumbia_customWidgetCollectionInterface() const
+{
+    QObject *object = nullptr;
+    QStringList pluginPaths = findChild<QUiLoader *>()->pluginPaths();
+    for(int i = 0; i < pluginPaths.size(); i++) {
+        QString path = pluginPaths[i];
+        QDir dir(path);
+        QStringList files = dir.entryList(QStringList () << "*.so", QDir::Files|QDir::Executable);
+        foreach(QString file, files) {
+            QPluginLoader loader(path + "/" + file);
+            object = (loader.instance());
+            QString nsig = object->metaObject()->normalizedSignature("cumbia_free()");
+            if(object && object->metaObject()->indexOfSlot(qstoc(nsig)) > -1)
+                return object;
+        }
+    }
+    return nullptr;
 }
 
 Cumparsita::~Cumparsita()

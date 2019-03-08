@@ -7,10 +7,31 @@
 #include <QJSEngine>
 #include <QtDebug>
 #include <cumacros.h>
+#include <cuformulaplugininterface.h> // for FORMULA_RE regexp pattern
+#include <cupluginloader.h>
+#include <QPluginLoader>
 
 EditSourceWidget::EditSourceWidget(int index, QWidget *parent) : QWidget(parent)
 {
     ui.setupUi(this);
+    m_formulaParserI = nullptr;
+    CuPluginLoader plulo;
+    QString plupath = plulo.getPluginAbsoluteFilePath(CUMBIA_QTCONTROLS_PLUGIN_DIR, "cuformula-plugin.so");
+    QPluginLoader pluginLoader(plupath);
+    QObject *plugin = pluginLoader.instance();
+    if (plugin){
+        CuFormulaPluginI *fplu = qobject_cast<CuFormulaPluginI *>(plugin);
+        if(!fplu) {
+            ui.gbFormula->setTitle("Formula plugin is not available");
+            ui.gbFormula->setToolTip(pluginLoader.errorString());
+            ui.labelPluginErr->setText(ui.gbFormula->toolTip());
+        }
+        else {
+            m_formulaParserI = fplu->getFormulaParserInstance();
+            ui.labelPluginErr->setVisible(false);
+        }
+    }
+
     m_index = index;
     connect(ui.pbFromJs, SIGNAL(clicked()), this, SLOT(loadFromJs()));
     ui.leScriptPath->setVisible(false);
@@ -36,7 +57,7 @@ QString EditSourceWidget::source() const
                 perr("%s", qstoc(message));
             }
             else
-                s = "formula://" + ui.lineEdit->text() + " " + formula;
+                s = QString("formula://[%1]%2 %3").arg(ui.leAlias->text()).arg(ui.lineEdit->text()).arg(formula);
         }
     }
     else {
@@ -48,28 +69,21 @@ QString EditSourceWidget::source() const
 
 void EditSourceWidget::setSource(const QString &s)
 {
-    QRegularExpression re("formula://(\\{.+\\})(\\s*function.*)",
-                          QRegularExpression::DotMatchesEverythingOption); // capture newlines
-    QRegularExpressionMatch match = re.match(s);
-    if(match.hasMatch() && match.capturedTexts().size() == 3) {
-        ui.lineEdit->setText(match.captured(1));
-        ui.teJsCode->setPlainText(match.captured(2));
-        ui.gbFormula->setChecked(true);
-    }
-    else {
-        re.setPattern("formula://(\\{.+\\})");
-        match = re.match(s);
-        if(match.hasMatch() && match.captured().size() == 1) {
-            ui.lineEdit->setText(match.captured(1));
+    if(m_formulaParserI) {
+        m_formulaParserI->parse(s);
+        if(!m_formulaParserI->error()) {
+            QString srcs = QString::fromStdString(m_formulaParserI->joinedSources());
+            ui.leAlias->setText(m_formulaParserI->name());
+            ui.lineEdit->setText(QString("{%1}").arg(srcs));
+            ui.teJsCode->setPlainText(m_formulaParserI->formula());
             ui.gbFormula->setChecked(true);
         }
-        else {
-            ui.lineEdit->setText(s);
-            ui.gbFormula->setChecked(false);
-        }
+    }
+    if(ui.lineEdit->text().isEmpty()) {
+        ui.lineEdit->setText(s);
+        ui.gbFormula->setChecked(false);
     }
 }
-
 
 bool EditSourceWidget::checkSource()
 {
@@ -110,7 +124,7 @@ void EditSourceWidget::expressionValid()
     QJSEngine engine;
     QJSValue v = engine.evaluate("(" + e + ")");
     (!v.isCallable() || v.isError()) && !e.isEmpty() ? ui.teJsCode->setStyleSheet("border: 0.1em solid red;") :
-                      ui.teJsCode->setStyleSheet("border: 0.07em solid green;");
+                                                       ui.teJsCode->setStyleSheet("border: 0.07em solid green;");
 }
 
 void EditSourceWidget::loadFromJs()
