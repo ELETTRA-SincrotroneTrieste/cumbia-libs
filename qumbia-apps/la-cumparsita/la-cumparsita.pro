@@ -24,11 +24,9 @@ OBJECTS_DIR = obj
 
 
 SOURCES += src/main.cpp \
-                src/cumparsita.cpp \
-    src/cumuiloader.cpp
+                src/cumparsita.cpp
 
-HEADERS += src/cumparsita.h \
-    src/cumuiloader.h
+HEADERS += src/cumparsita.h
 
 # cuuimake runs uic
 # FORMS    = src/cumparsita.ui
