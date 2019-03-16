@@ -1,19 +1,8 @@
 #include "cumparsita.h"
-#include <cumbiapool.h>
-#include <cumbiaepics.h>
-#include <cumbiatango.h>
-#include <cuepcontrolsreader.h>
-#include <cuepcontrolswriter.h>
-#include <cutcontrolsreader.h>
-#include <cutcontrolswriter.h>
-#include <cutango-world.h>
-#include <cuepics-world.h>
-#include <cuthreadfactoryimpl.h>
 #include <cuserviceprovider.h>
 #include <qthreadseventbridgefactory.h>
 #include <cumacros.h>
 
-#include <cumbiapool.h>
 #include <cuformulaplugininterface.h>
 #include <cupluginloader.h>
 #include <QPluginLoader>
