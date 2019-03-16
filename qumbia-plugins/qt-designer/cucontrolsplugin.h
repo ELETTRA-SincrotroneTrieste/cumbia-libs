@@ -94,7 +94,7 @@ class CuCustomWidgetCollectionInterface:
     Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)
 
 public:
-    CuCustomWidgetCollectionInterface(QObject *parent = NULL);
+    CuCustomWidgetCollectionInterface(QObject *parent = nullptr);
 
     ~CuCustomWidgetCollectionInterface();
 
@@ -111,8 +111,6 @@ private:
 
     CumbiaPool *cumbia_pool;
     CuControlsFactoryPool m_ctrl_factory_pool;
-
-    Tango::DeviceProxy *dev;
 };
 
 class QuLabelInterface : public CuCustomWidgetInterface

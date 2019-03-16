@@ -203,12 +203,7 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
         if(!fplu)
             perr("Failed to load formula plugin");
         else {
-            CuControlsReaderFactoryI *formula_rf = fplu->getFormulaReaderFactory(cumbia_pool, m_ctrl_factory_pool);
-            cumbia_pool->registerCumbiaImpl("formula", fplu->getCumbia());
-            printf("\e[1;32msetting up pools for formula CUMBIA %p...\e[0m\n", fplu->getCumbia());
-            m_ctrl_factory_pool.registerImpl("formula", *formula_rf);
-            m_ctrl_factory_pool.setSrcPatterns("formula", fplu->srcPatterns());
-            cumbia_pool->setSrcPatterns("formula", fplu->srcPatterns());
+            fplu->initialize(cumbia_pool, m_ctrl_factory_pool);
         }
     }
     else {

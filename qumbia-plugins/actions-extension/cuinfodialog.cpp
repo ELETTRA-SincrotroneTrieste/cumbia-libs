@@ -254,8 +254,6 @@ void CuInfoDialog::exec(const CuData& in)
     }
 
     QList<CuControlsReaderA *> readers = d->ctx->readers();
-
-    printf("\e[1;33mREADERS ARE in number %ld\e[0m\n", readers.size());
     // create a set of GroupBoxes that will contain monitor widgets
     foreach(CuControlsReaderA *r, readers)
     {
@@ -482,7 +480,6 @@ div { width=80%; } \
      QString src = QString::fromStdString(data["src"].toString());
      std::string format = data["data_format_str"].toString();
      QWidget *plotw = NULL;
-     printf("\e[1;31mCuInfoDialog:newLiveData: fuckin gb is %p src (%s)\e[0m\n", findChild<QGroupBox *>(src + "_live"), qstoc(src));
      QGroupBox *liveGb = findChild<QGroupBox *>(src + "_live");
      if(liveGb) {
          QVBoxLayout *livelo = qobject_cast<QVBoxLayout *>(liveGb->layout());
@@ -527,11 +524,15 @@ div { width=80%; } \
                  std::string formula_src;
                  std::string srclist;
                  std::vector<std::string> vsrcs = data["srcs"].toStringVector();
+                 std::string fname = data["src"].toString(); // formula name [in square brackets]
                  for(size_t i = 0; i < vsrcs.size(); i++) {
                      i < vsrcs.size() - 1 ? srclist += vsrcs[i] + "," : srclist += vsrcs[i];
                      srcs << QString::fromStdString(vsrcs[i]);
                  }
-                 formula_src = "formula://{" + srclist + "}" + data["formula"].toString();
+                 formula_src = "formula://";
+                 if(fname.length() > 0)
+                     formula_src += "[" + fname + "]";
+                 formula_src += "{" + srclist + "}" + data["formula"].toString();
                  srcs << QString::fromStdString(formula_src);
              }
              else {
