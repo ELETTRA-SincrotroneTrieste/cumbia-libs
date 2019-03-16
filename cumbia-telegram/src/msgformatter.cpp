@@ -57,7 +57,7 @@ QString MsgFormatter::history(const QList<HistoryEntry> &hel, int ttl, const QSt
 
                 // stop active monitor by link command
                 if(e.is_active && e.index > -1)
-                    msg += QString(" stop[/X%1]").arg(e.index);
+                    msg += QString(" stop [/X%1]").arg(e.index);
 
                 msg += "\n";
                 if(!e.is_active) {
@@ -377,6 +377,58 @@ QString MsgFormatter::fromControlData(const ControlMsg::Type t, const QString &m
     return s;
 }
 
+QString MsgFormatter::aliasInsert(bool success, const QStringList& alias_parts, const QString &additional_message) const {
+    QString s;
+    success = success & alias_parts.size() > 2;
+    QString desc, name, replaces;
+    FormulaHelper fh;
+    alias_parts.size() > 2 ? desc = fh.escape(alias_parts[2]) : desc = "";
+    if(alias_parts.size() > 0)
+        name = fh.escape(alias_parts[0]);
+    if(success) {
+        replaces = fh.escape(alias_parts[1]);
+        s += "👍   successfully added alias:\n";
+        s += QString("<b>%1</b> replaces: <i>%2</i>").arg(name).arg(replaces);
+        if(!desc.isEmpty()) {
+            s += "\n<i>" + desc + "</i>";
+        }
+    }
+    else if(alias_parts.size() > 0) {
+        s = "👎   failed to insert alias <b>" + name + "</b>";
+    }
+    if(!additional_message.isEmpty())
+        s += "\n[<i>" + fh.escape(additional_message) + "</i>]";
+
+    return s;
+}
+
+QString MsgFormatter::aliasList(const QString& name, const QList<AliasEntry> &alist) const
+{
+    FormulaHelper fh;
+    QString s;
+    if(alist.isEmpty())  {
+        name.isEmpty()? s += "no alias defined" : s += "no alias defined for <i>" + name + "</i>.";
+    }
+    else {
+        if(name.isEmpty()) s = "<b>alias list</b>\n";
+    }
+    int i = 1;
+    foreach(AliasEntry a, alist) {
+        s += QString("%1. <i>%2 --> %3</i>").arg(i).arg(fh.escape(a.name)).arg(fh.escape(a.replaces));
+        for(int i = 0; i < a.in_history_idxs.size(); i++) {
+            s += QString(" [/A%1] [%2]").arg(a.in_history_idxs[i]).arg(a.in_history_hosts[i]);
+        }
+        a.description.isEmpty() ? s += "\n" : s += "   (" + fh.escape(a.description) + ")\n";
+    }
+    return s;
+}
+
+QString MsgFormatter::botShutdown()
+{
+    return "😴   bot has gone to <i>sleep</i>\n"
+           "Monitors and alerts will be suspended";
+}
+
 QString MsgFormatter::help(TBotMsgDecoder::Type t) const {
     QString h;
     QString f = ":/help/res/";
@@ -415,6 +467,7 @@ QString MsgFormatter::help(TBotMsgDecoder::Type t) const {
 
     return h;
 }
+
 
 
 QString MsgFormatter::m_timeRepr(const QDateTime &dt) const

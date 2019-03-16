@@ -18,7 +18,7 @@ bool CuFormulaParseHelper::isNormalizedForm(const QString &f, const QString& nor
     QString e(f);
     e.remove("formula://");
     QRegularExpressionMatch match = re.match(e);
-    printf("\e[1;35mIsNormalied form %d pattern is \"%s\" %s\e[0m\n", match.hasMatch() , qstoc(norm_pattern),
+    printf("\e[1;35mIsNormalised form %d pattern is \"%s\" %s\e[0m\n", match.hasMatch() , qstoc(norm_pattern),
            qstoc(f));
     return match.hasMatch();
 }
@@ -73,7 +73,6 @@ QString CuFormulaParseHelper::injectHost(const QString &host, const QString &src
 {
     QString s(src);
     if(!host.isEmpty()) {
-
         QString src_section;
         // (\{.+\}).+
         // example {test/device/1/double_scalar} function (a){return 2 + a}
@@ -114,7 +113,6 @@ QStringList CuFormulaParseHelper::sources(const QString &srcformula) const
     QStringList srcs;
     while(i.hasNext()) {
         QRegularExpressionMatch match = i.next();
-        qDebug() << __PRETTY_FUNCTION__ << "match captures " << match.capturedTexts();
         QString src = match.captured(1);
         if(!srcs.contains(src))
             srcs << src;

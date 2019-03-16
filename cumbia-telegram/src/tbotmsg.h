@@ -26,6 +26,10 @@ public:
 
     bool hasHost() const;
 
+    QString text() const;
+
+    void setText(const QString& t);
+
 
     QString chat_first_name;
     int chat_id;
@@ -40,7 +44,6 @@ public:
     QString username ,lang, from, is_bot;
 
     int message_id;
-    QString text;
 
     int update_id;
 
@@ -51,6 +54,7 @@ public:
 
 private:
     QString m_host;
+    QString m_text;
 };
 
 #endif // MSGPRINT_H

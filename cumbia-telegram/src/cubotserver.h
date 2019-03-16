@@ -5,6 +5,7 @@
 #include <tbotmsg.h>
 #include <tbotmsgdecoder.h>
 #include <botdb.h>
+#include <botreader.h> // for BotReader::RefreshMode
 
 #include "../cumbia-telegram-defs.h" // for ControlMsg::Type
 
@@ -17,7 +18,7 @@ class CuBotServer : public QObject
 {
     Q_OBJECT
 public:
-    explicit CuBotServer(QObject *parent = nullptr);
+    explicit CuBotServer(QObject *parent, const QString &bot_key, const QString& sqlite_db_filenam);
 
     virtual ~CuBotServer();
 
@@ -26,7 +27,7 @@ public:
 signals:
 
 private slots:
-    void onMessageReceived(const TBotMsg &m);
+    void onMessageReceived(TBotMsg &m);
 
     void onReaderUpdate(int chat_id, const CuData& d);
 
@@ -54,6 +55,8 @@ private slots:
     // control server data
     void onNewControlServerData(int uid, int chat_id, ControlMsg::Type t, const QString& msg, QLocalSocket *so);
 
+    void m_onReaderRefreshModeChanged(int user_id, int chat_id, const QString& src, const QString& host, BotReader::RefreshMode rm);
+
 
 public slots:
     void start();
@@ -71,10 +74,14 @@ private:
 
     bool m_restoreProcs();
 
+    bool m_broadcastShutdown();
+
     QList<HistoryEntry> m_prepareHistory(int uid, TBotMsgDecoder::Type t);
     void m_removeExpiredProcs(QList<HistoryEntry> &in);
 
     bool m_isBigSizeVector(const CuData &da) const;
+
+    QString m_getHost(int chat_id, const QString& src = QString());
 
 };
 

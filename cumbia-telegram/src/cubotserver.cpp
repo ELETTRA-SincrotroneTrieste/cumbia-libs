@@ -16,6 +16,8 @@
 #include "botstats.h"
 #include "botplotgenerator.h"
 #include "cuformulaparsehelper.h"
+#include "aliasproc.h"
+#include "monitorhelper.h"
 
 #include <cumacros.h>
 #include <QtDebug>
@@ -52,9 +54,10 @@ public:
     Auth* auth;
     BotControlServer *control_server;
     BotStats *stats;
+    QString bot_token, db_filenam;
 };
 
-CuBotServer::CuBotServer(QObject *parent) : QObject(parent)
+CuBotServer::CuBotServer(QObject *parent, const QString& bot_token, const QString &sqlite_db_filenam) : QObject(parent)
 {
     d = new CuBotServerPrivate;
     d->bot_listener = nullptr;
@@ -66,6 +69,8 @@ CuBotServer::CuBotServer(QObject *parent) : QObject(parent)
     d->auth = nullptr;
     d->control_server = nullptr;
     d->stats = nullptr;
+    d->bot_token = bot_token;
+    d->db_filenam = sqlite_db_filenam;
 }
 
 CuBotServer::~CuBotServer()
@@ -81,7 +86,7 @@ bool CuBotServer::isRunning() const
     return d->bot_db != nullptr;
 }
 
-void CuBotServer::onMessageReceived(const TBotMsg &m)
+void CuBotServer::onMessageReceived(TBotMsg &m)
 {
     bool success = true;
     m.print();
@@ -97,7 +102,12 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
         success = d->bot_db->addUserInPrivateChat(uid, m.chat_id);
     }
 
-    TBotMsgDecoder msg_dec(m, d->cu_supervisor.formulaPlugin()->normalizedFormulaPattern());
+    // Find and replace aliases before processing
+    AliasProc aproc;
+    m.setText(aproc.findAndReplace(m.text(), d->bot_db->getAlias(m.user_id, "")));
+    //
+
+    TBotMsgDecoder msg_dec(m, d->cu_supervisor.formulaPlugin()->getFormulaParserInstance()->normalizedFormulaPattern());
     //    printf("type of message is %s [%d]\n", msg_dec.types[msg_dec.type()], msg_dec.type());
     TBotMsgDecoder::Type t = msg_dec.type();
     if(!d->auth->isAuthorized(m.user_id, t)) {
@@ -114,16 +124,14 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
             QString new_host_description;
             success = d->bot_db->setHost(m.user_id, m.chat_id, host, new_host_description);
             if(success)
-                success = d->bot_db->addToHistory(HistoryEntry(m.user_id, m.text, "host", "")); // "host" is type
+                success = d->bot_db->addToHistory(HistoryEntry(m.user_id, m.text(), "host", "")); // "host" is type
 
             d->bot_sender->sendMessage(m.chat_id, MsgFormatter().hostChanged(host, success, new_host_description), true); // silent
             if(!success)
                 perr("CuBotServer::onMessageReceived: database error: %s", qstoc(d->bot_db->message()));
         }
         else if(t == TBotMsgDecoder::QueryHost) {
-            QString host = d->bot_db->getSelectedHost(m.chat_id);
-            if(host.isEmpty())
-                host = QString(secure_getenv("TANGO_HOST"));
+            QString host = m_getHost(m.chat_id);
             d->bot_sender->sendMessage(m.chat_id, MsgFormatter().host(host));
         }
         else if(t == TBotMsgDecoder::Last) {
@@ -132,8 +140,8 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
             if(he.isValid()) {
                 TBotMsg lm = m;
                 lm.setHost(he.host);
-                lm.text = he.toCommand();
-                d->bot_sender->sendMessage(m.chat_id, MsgFormatter().lastOperation(he.datetime, lm.text));
+                lm.setText(he.toCommand());
+                d->bot_sender->sendMessage(m.chat_id, MsgFormatter().lastOperation(he.datetime, lm.text()));
                 //
                 // call ourselves with the updated copy of the received message
                 //
@@ -143,12 +151,12 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
         else if(t == TBotMsgDecoder::Read) {
             QString src = msg_dec.source();
             QString host; // if m.hasHost then m comes from a fake message created ad hoc by Last: use this host
-            m.hasHost() ? host = m.host() : host = d->bot_db->getSelectedHost(m.chat_id); // may be empty. If so, TANGO_HOST will be used
+            m.hasHost() ? host = m.host() : host = m_getHost(m.chat_id); // may be empty. If so, TANGO_HOST will be used
             // inject host into src using CuFormulaParserHelper
             //    src = CuFormulaParseHelper().injectHost(host, src);
             BotReader *r = new BotReader(m.user_id, m.chat_id, this, d->cu_supervisor.cu_pool,
                                          d->cu_supervisor.ctrl_factory_pool, d->botconf->ttl(),
-                                         msg_dec.text(), BotReader::High, host);
+                                         d->botconf->poll_period(), msg_dec.text(), BotReader::High, host);
             connect(r, SIGNAL(newData(int, const CuData&)), this, SLOT(onReaderUpdate(int, const CuData& )));
             r->setPropertiesOnly(true); // only configure! no reads!
             r->setSource(src); // insert in  history db only upon successful connection
@@ -158,7 +166,7 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
             if(!d->bot_mon)
                 m_setupMonitor(); // insert in history db only upon successful connection
             QString host; // if m.hasHost use it, it comes from a fake history message created ad hoc by History
-            m.hasHost() ? host = m.host() : host = d->bot_db->getSelectedHost(m.chat_id); // may be empty. If so, TANGO_HOST will be used
+            m.hasHost() ? host = m.host() : host = m_getHost(m.chat_id); // may be empty. If so, TANGO_HOST will be used
             // src = CuFormulaParseHelper().injectHost(host, src);
             // m.start_dt will be invalid if m is decoded by a real message
             // m.start_dt is forced to a given date and time when m is a fake msg built
@@ -254,7 +262,7 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
             }
             else if(idx > 0 && (src = sta->getSourceByIdx(idx) ) != QString()) {
                 TBotMsg mc = m; // copy m into mc
-                mc.text = src;
+                mc.setText(src);
                 onMessageReceived(mc);
             }
         }
@@ -263,7 +271,7 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
             if(cmd_idx > -1) {
                 QDateTime dt;
                 QString operation;
-                HistoryEntry he = d->bot_db->commandFromIndex(m.user_id, m.text, cmd_idx);
+                HistoryEntry he = d->bot_db->commandFromIndex(m.user_id, m.text(), cmd_idx);
                 if(he.isValid()) {
                     operation = he.toCommand();
                     // 1. remind the user what was the command linked to /commandN
@@ -272,7 +280,7 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
                     // call ourselves with the updated copy of the received message
                     //
                     TBotMsg lnkm = m;
-                    lnkm.text = operation;
+                    lnkm.setText(operation);
                     lnkm.setHost(he.host);
                     onMessageReceived(lnkm);
                 }
@@ -292,7 +300,21 @@ void CuBotServer::onMessageReceived(const TBotMsg &m)
                 d->bot_sender->sendPic(m.chat_id, plotgen->generate());
             }
         }
-        else if(t == TBotMsgDecoder::Invalid) {
+        else if(t == TBotMsgDecoder::SetAlias) {
+            success = d->bot_db->insertAlias(m.user_id, msg_dec.getAliasSections(), d->botconf->getInt("max_alias_cnt"));
+            d->bot_sender->sendMessage(m.chat_id, MsgFormatter().aliasInsert(success, msg_dec.getAliasSections(),
+                                                                             d->bot_db->message()));
+        }
+        else if(t == TBotMsgDecoder::ShowAlias) {
+            QString aname;
+            msg_dec.getAliasSections().size() > 0 ? aname = msg_dec.getAliasSections().first() : aname = "";
+            QList<AliasEntry> alist = d->bot_db->getAlias(m.user_id, aname);
+            d->bot_sender->sendMessage(m.chat_id, MsgFormatter().aliasList(aname, alist));
+        }
+        else if(t == TBotMsgDecoder::ShowAlias) {
+
+        }
+        else if(t == TBotMsgDecoder::Invalid || t == TBotMsgDecoder::Error) {
             d->bot_sender->sendMessage(m.chat_id, MsgFormatter().error("TBotMsgDecoder", msg_dec.message()));
         }
 
@@ -340,6 +362,9 @@ void CuBotServer::onSrcMonitorStopped(int user_id, int chat_id, const QString &s
                                       const QString &host, const QString &message)
 {
     const bool silent = true;
+    MonitorHelper mh;
+    mh.adjustPollers(d->bot_mon, d->botconf->poll_period(), d->botconf->max_avg_poll_period());
+
     BotReader *r = d->bot_mon->findReader(chat_id, src, host);
     d->bot_sender->sendMessage(chat_id,  MsgFormatter().monitorStopped(r->command(), message), silent);
     // update database, remove rows for chat_id and src
@@ -349,6 +374,12 @@ void CuBotServer::onSrcMonitorStopped(int user_id, int chat_id, const QString &s
 void CuBotServer::onSrcMonitorStarted(int user_id, int chat_id, const QString &src,
                                       const QString& host, const QString& formula)
 {
+    // when a new reader starts monitoring, the polling period of all readers must be adjusted
+    // not to overload the poll operation. This is done every time the refresh mode of a reader
+    // changes (signalled by BotMonitor::readerRefreshModeChanged to this slot m_onReaderRefreshModeChanged)
+    // and every time a monitor is stopped (CuBotServer::onSrcMonitorStopped)
+    // We can't do this here because at this stage we do not have the information about the mode yet.
+    // See CuBotServer::m_onReaderRefreshModeChanged
     const QDateTime until = QDateTime::currentDateTime().addSecs(d->botconf->ttl());
     BotReader *r = d->bot_mon->findReader(chat_id, src, host);
     BotReader::Priority pri = r->priority();
@@ -370,21 +401,21 @@ void CuBotServer::start()
         perr("CuBotServer.start: already started\n");
     else {
         d->cu_supervisor.setup();
-        d->bot_db = new BotDb();
+        d->bot_db = new BotDb(d->db_filenam);
         d->botconf = new BotConfig(d->bot_db);
         if(d->bot_db->error())
             perr("CuBotServer.start: error opening QSQLITE telegram bot db: %s", qstoc(d->bot_db->message()));
 
         if(!d->bot_listener) {
-            d->bot_listener = new CuBotListener(this,
+            d->bot_listener = new CuBotListener(this, d->bot_token,
                                                 d->botconf->getBotListenerMsgPollMillis(),
                                                 d->botconf->getBotListenerOldMsgDiscardSecs());
-            connect(d->bot_listener, SIGNAL(onNewMessage(const TBotMsg &)),
-                    this, SLOT(onMessageReceived(const TBotMsg&)));
+            connect(d->bot_listener, SIGNAL(onNewMessage(TBotMsg &)),
+                    this, SLOT(onMessageReceived(TBotMsg&)));
             d->bot_listener->start();
         }
         if(!d->bot_sender) {
-            d->bot_sender = new CuBotSender(this);
+            d->bot_sender = new CuBotSender(this, d->bot_token);
         }
         if(!d->volatile_ops)
             d->volatile_ops = new VolatileOperations();
@@ -409,13 +440,17 @@ void CuBotServer::stop()
     if(!d->bot_db)
         perr("CuBotServer.stop: already stopped\n");
     else {
+
+        m_saveProcs();
+
+        // broadcast a message to users with active monitors
+        m_broadcastShutdown();
+
         if(d->bot_listener) {
             d->bot_listener->stop();
             delete d->bot_listener;
             d->bot_listener = nullptr;
         }
-
-        m_saveProcs();
 
         if(d->bot_db) {
             delete d->bot_db;
@@ -499,10 +534,20 @@ void CuBotServer::onNewControlServerData(int uid, int chat_id, ControlMsg::Type 
     }
 }
 
+void CuBotServer::m_onReaderRefreshModeChanged(int user_id, int chat_id,
+                                               const QString &src, const QString &host,
+                                               BotReader::RefreshMode rm)
+{
+    Q_UNUSED(user_id); Q_UNUSED(chat_id); Q_UNUSED(src); Q_UNUSED(host);
+    if(rm == BotReader::Polled || rm == BotReader::Event)
+        MonitorHelper().adjustPollers(d->bot_mon, d->botconf->poll_period(), d->botconf->max_avg_poll_period());
+}
+
 void CuBotServer::m_setupMonitor()
 {
     if(!d->bot_mon) {
-        d->bot_mon = new BotMonitor(this, d->cu_supervisor.cu_pool, d->cu_supervisor.ctrl_factory_pool, d->botconf->ttl());
+        d->bot_mon = new BotMonitor(this, d->cu_supervisor.cu_pool, d->cu_supervisor.ctrl_factory_pool,
+                                    d->botconf->ttl(), d->botconf->poll_period());
         connect(d->bot_mon, SIGNAL(newMonitorData(int, const CuData&)),
                 this, SLOT(onNewMonitorData(int, const CuData&)));
         connect(d->bot_mon, SIGNAL(stopped(int, int, QString, QString, QString)),
@@ -514,6 +559,8 @@ void CuBotServer::m_setupMonitor()
                 this, SLOT(onSrcMonitorTypeChanged(int,int, QString,QString,QString,QString)));
         connect(d->bot_mon, SIGNAL(startError(int, const QString&, const QString&)), this,
                 SLOT(onSrcMonitorStartError(int, const QString&, const QString&)));
+        connect(d->bot_mon, SIGNAL(readerRefreshModeChanged(int, int, const QString &, const QString &,BotReader::RefreshMode )),
+                this, SLOT(m_onReaderRefreshModeChanged(int, int , const QString&, const QString&, BotReader::RefreshMode)));
     }
 }
 
@@ -542,11 +589,20 @@ bool CuBotServer::m_restoreProcs()
     for(int i =0; i < hes.size() && !d->bot_db->error(); i++) {
         const HistoryEntry& he = hes[i];
         //        printf("restoring proc %s type %s host %s formula %s chat id %d\n", qstoc(he.name), qstoc(he.type), qstoc(he.host), qstoc(he.formula), he.chat_id);
-        onMessageReceived(TBotMsg(he));
+        TBotMsg msg(he);
+        onMessageReceived(msg);
     }
     if(success)
         d->bot_db->clearProcTable();
     return success;
+}
+
+bool CuBotServer::m_broadcastShutdown()
+{
+    QList<int> chat_ids = d->bot_db->getChatsWithActiveMonitors();
+    foreach(int id, chat_ids) // last param true: wait for reply
+        d->bot_sender->sendMessage(id, MsgFormatter().botShutdown(), false, true);
+    return true;
 }
 
 /**
@@ -600,4 +656,20 @@ bool CuBotServer::m_isBigSizeVector(const CuData &da) const
         return val.getSize() > 5;
     }
     return false;
+}
+
+QString CuBotServer::m_getHost(int chat_id, const QString &src)
+{
+    QString host;
+    bool needs_host = true;
+    if(!src.isEmpty()) {
+        std::string domain = d->cu_supervisor.ctrl_factory_pool.guessDomainBySrc(src.toStdString());
+        needs_host = (domain == "tango");
+    }
+    if(needs_host) {
+        host = d->bot_db->getSelectedHost(chat_id);
+        if(host.isEmpty())
+            host = QString(secure_getenv("TANGO_HOST"));
+    }
+    return host;
 }

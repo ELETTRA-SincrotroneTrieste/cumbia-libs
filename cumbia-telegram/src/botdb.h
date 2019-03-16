@@ -6,12 +6,13 @@
 #include <QMap>
 
 #include "historyentry.h"
+#include "aliasentry.h"
 #include "botconfig.h"
 
 class BotDb
 {
 public:
-    BotDb();
+    BotDb(const QString &db_file);
 
     ~BotDb();
 
@@ -68,6 +69,13 @@ public:
     bool userInPrivateChat(int uid, int chat_id);
     bool addUserInPrivateChat(int uid, int chat_id);
     QList<int> chatsForUser(int uid);
+
+    bool insertAlias(int user_id, const QStringList& parts, int max_alias_cnt);
+
+    QList<AliasEntry> getAlias(int user_id, const QString& name);
+
+    QList<int> getChatsWithActiveMonitors();
+
 
 private:
     QSqlDatabase m_db;

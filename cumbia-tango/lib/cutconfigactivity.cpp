@@ -74,7 +74,7 @@ void CuTConfigActivity::init()
     /* get a TDevice */
     d->tdev = d->device_service->getDevice(tk["device"].toString());
     d->tdev->addRef();
-    tk["msg"] = d->tdev->getMessage();
+    tk["msg"] =  "CuTConfigActivity.init: " + d->tdev->getMessage();
     tk["conn"] = d->tdev->isValid();
     tk["err"] = !d->tdev->isValid();
     tk.putTimestamp();
@@ -117,15 +117,20 @@ void CuTConfigActivity::execute()
             success = utils.get_att_props(dev, point, at, d->props);
 
         at["data"] = true;
-        at["msg"] = utils.getLastMessage();
+        at["msg"] = "CuTConfigActivity.execute: " + utils.getLastMessage();
         at["err"] = utils.error();
         d->err = utils.error();
         d->msg = utils.getLastMessage();
 
         // retry?
         d->err ?  d->repeat = 2000 * d->try_cnt : d->repeat = -1;
-        publishResult(at);
     }
+    else {
+        at["msg"] = "CuTConfigActivity.execute: " + d->tdev->getMessage();
+        at["err"] = true;
+        at.putTimestamp();
+    }
+    publishResult(at);
 }
 
 void CuTConfigActivity::onExit()
@@ -135,7 +140,7 @@ void CuTConfigActivity::onExit()
     {
         int refcnt = -1;
         CuData at = getToken(); /* activity token */
-        at["msg"] = d->msg;
+        at["msg"] = "CuTConfigActivity.onExit: " + d->msg;
         at["type"] = "property";
         at["err"] = d->err;
         CuTangoWorld utils;

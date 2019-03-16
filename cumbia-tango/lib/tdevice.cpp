@@ -39,7 +39,6 @@ TDevice::~TDevice()
     pdelete("~TDevice %p: deleting device %p \"%s\" in this thread 0x%lx\n", this, d->dev, d->name.c_str(),
             pthread_self());
     if(d->dev) {
-        printf("\e[1;31mdeleting tango device proxy %s %p\e[0m\n", d->dev->name().c_str(), d->dev);
         delete d->dev;
         d->dev = nullptr;
     }

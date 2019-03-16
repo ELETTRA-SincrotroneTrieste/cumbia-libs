@@ -39,10 +39,10 @@
  * Records the currently selected host for each registered user
  *
  */
-BotDb::BotDb()
+BotDb::BotDb(const QString& db_file)
 {
     m_db = QSqlDatabase::addDatabase("QSQLITE");
-    m_db.setDatabaseName("/tmp/tbotdb.dat");
+    m_db.setDatabaseName(db_file);
     m_err = !m_db.open("tbotdb", "tbotdb");
     if(m_err)
         m_msg = m_db.lastError().text();
@@ -50,7 +50,7 @@ BotDb::BotDb()
 
     QStringList tables = QStringList() << "users" << "history" << "hosts" << "host_selection"
                                        << "proc" << "config" << "bookmarks" << "auth" << "auth_limits"
-                                       << "private_chats";
+                                       << "private_chats" << "alias";
 
     foreach(QString t, tables) {
         if(!m_db.tables().contains(t))
@@ -204,7 +204,6 @@ bool BotDb::addToHistory(const HistoryEntry &in)
     int history_len = 8; // pick from db!
     QList<int> h_idxs;
 
-    qDebug() << __PRETTY_FUNCTION__ << "enter";
     QSqlQuery q(m_db);
     // first try to see if there is a matching row into the database for the new entry
     // if yes, only the timestamp field needs update
@@ -221,8 +220,8 @@ bool BotDb::addToHistory(const HistoryEntry &in)
     if(update_timestamp_only) {
         int b_idx = q.value(1).toInt(); // PRIMARY KEY(user_id,type,h_idx)
         m_err = !q.exec(QString("UPDATE history SET timestamp=datetime() "
-                               "where user_id=%1 AND type='%2' AND h_idx=%3;")
-                       .arg(uid).arg(type).arg(b_idx));
+                                "where user_id=%1 AND type='%2' AND h_idx=%3;")
+                        .arg(uid).arg(type).arg(b_idx));
     }
 
     if(!m_err && !update_timestamp_only) {
@@ -249,9 +248,6 @@ bool BotDb::addToHistory(const HistoryEntry &in)
                 int history_rowid = q.value(2).toInt();
                 h_idxs  << q.value(1).toInt();
 
-                qDebug() << __PRETTY_FUNCTION__ << "uid" << uid << "op" << cmd << "datetime " << i <<
-                            q.value(0).toDateTime().toString(Qt::ISODate);
-
                 bool is_bookmark = bookmarks_idxs.contains(history_rowid);
 
                 if(!is_bookmark)
@@ -271,8 +267,6 @@ bool BotDb::addToHistory(const HistoryEntry &in)
                     }
                 }
             }
-            printf("\e[1;33mhistory table before insert:\e[0m\n");
-            m_printTable("history");
 
             // calculate first per history index available
             int h_idx = m_findFirstAvailableIdx(h_idxs);
@@ -282,10 +276,6 @@ bool BotDb::addToHistory(const HistoryEntry &in)
             if(m_err)
                 m_msg =  "BotDb.addToHistory: " + q.lastError().text();
 
-            printf("\e[1;35mhistory table after insert query (%s):\e[0m\n", qstoc(q.lastQuery()));
-            m_printTable("history");
-
-            qDebug() << __PRETTY_FUNCTION__ << "executed" << q.lastQuery() << "success " << !m_err << "msg" << m_msg;
         }
     }
 
@@ -643,7 +633,7 @@ int BotDb::isAuthorized(int uid, const QString& operation) {
 
             m_err = !q.exec(QString("SELECT %1 FROM auth_limits WHERE user_id=%2").arg(operation).arg(uid));
             if(m_err)
-                    m_msg = "BotDb.isAuthorized: error in query " + q.lastError().text();
+                m_msg = "BotDb.isAuthorized: error in query " + q.lastError().text();
             else {
                 if(!q.next()) { // pick defaults from config
                     return 0;
@@ -677,7 +667,7 @@ bool BotDb::userInPrivateChat(int uid, int chat_id)
 bool BotDb::addUserInPrivateChat(int uid, int chat_id)
 {
     if(!m_db.isOpen())
-        return -1;
+        return false;
     m_msg.clear();
     QSqlQuery q(m_db);
     m_err = !q.exec(QString("INSERT INTO private_chats VALUES(%1,%2)").
@@ -700,6 +690,120 @@ QList<int> BotDb::chatsForUser(int uid)
             m_setErrorMessage("BotDb.chatsForUser", q);
     }
     return ch_ids;
+}
+
+
+bool BotDb::insertAlias(int user_id, const QStringList &parts, int max_alias_cnt)
+{
+    if(!m_db.isOpen())
+        return -1;
+    m_msg.clear();
+    QSqlQuery q(m_db);
+    m_err = parts.size() < 3;
+    QString alias = parts[0];
+    QString replaces = parts[1];
+    QString desc;
+    parts.size() >= 3 ? desc = parts[2] : desc = "";
+
+    m_err = !q.exec(QString("SELECT _rowid_,replaces FROM alias WHERE user_id=%1 AND name='%2'").
+                    arg(user_id).arg(alias));
+    if(m_err)
+        m_setErrorMessage("BotDb.insertAlias", q);
+    else {
+        if(q.next()) {
+            QString old_replaces = q.value(1).toString();
+            m_err = !q.exec(QString("UPDATE alias SET timestamp=datetime(), replaces='%1', description='%2'"
+                                    " WHERE _rowid_=%3").arg(replaces).arg(desc).arg(q.value(0).toInt()));
+            m_msg = QString("%1 alias has been updated from %2")
+                    .arg(alias).arg(old_replaces);
+        }
+        else {
+            m_err = !q.exec(QString("SELECT _rowid_,timestamp,name FROM alias WHERE user_id=%1 ORDER BY timestamp DESC")
+                            .arg(user_id));
+
+            // remove older entries according to the maximum number of allowed alias entries
+            int count = 0;
+            while(q.next() && !m_err) {
+                count++;
+                if(count > max_alias_cnt) {
+                    int rid = q.value(0).toInt();
+                    QSqlQuery delq;
+                    m_err = !delq.exec(QString("DELETE FROM alias WHERE _rowid_=%1").arg(rid));
+                    m_msg += QString("removed old alias \"%1\" from %2 (max allowed aliases: %3)\n")
+                            .arg(q.value(2).toString()).arg(q.value(1).toDateTime().toString("yyyy.MM.dd hh.mm.ss"))
+                            .arg(max_alias_cnt);
+                }
+            }
+            if(!m_err) {
+
+                m_err = !q.exec(QString("INSERT INTO alias VALUES(%1, '%2', '%3', '%4', datetime())")
+                                .arg(user_id).arg(alias).arg(replaces).arg(desc));
+                printf("executed query %s\n", qstoc(q.lastQuery()));
+            }
+        }
+    }
+
+
+    if(m_err) {
+        m_setErrorMessage("BotDb.insertAlias", q);
+        perr("%s", qstoc(m_msg));
+    }
+    return !m_err;
+}
+
+/**
+ * @brief BotDb::getAlias returns the list of aliases for the given user id and optional alias name
+ * @param user_id the user id
+ * @param name the name of the alias you want to find
+ * @return a list of AliasEntry ordered by the alias name length from longer to shorter
+ *
+ * \par Note
+ * The list is ordered from longer to shorter alias name so that accessing the list
+ * will return longer alias names first
+ *
+ */
+QList<AliasEntry> BotDb::getAlias(int user_id, const QString &name)
+{
+    QList<AliasEntry> ae;
+    if(!m_db.isOpen())
+        return ae;
+    m_msg.clear();
+    QSqlQuery q(m_db);
+    QString query = QString("SELECT name,replaces,description FROM alias WHERE user_id=%1 "
+                            "ORDER BY LENGTH(name) DESC").arg(user_id);
+    if(!name.isEmpty())
+        query += QString(" AND name='%1'").arg(name);
+    m_err = !q.exec(query);
+    while(!m_err && q.next()) {
+        AliasEntry e(q.value(0).toString(), q.value(1).toString(), q.value(2).toString());
+        QSqlQuery q2(m_db);
+        m_err = !q2.exec(QString("SELECT host,h_idx FROM history WHERE user_id=%1 AND command='%2'")
+                      .arg(user_id).arg(e.replaces));
+        while(!m_err && q2.next()) {
+            e.in_history = true;
+            e.in_history_hosts << q2.value(0).toString();
+            e.in_history_idxs << q2.value(1).toInt();
+        }
+        ae<< e;
+    }
+    if(m_err)
+        m_setErrorMessage("BotDb.getAlias", q);
+    return ae;
+}
+
+QList<int> BotDb::getChatsWithActiveMonitors()
+{
+    QList <int>ids;
+    if(m_db.isOpen()) {
+        m_msg.clear();
+        QSqlQuery q(m_db);
+        m_err = !q.exec("SELECT DISTINCT chat_id FROM proc");
+        while(q.next()) {
+            ids << q.value(0).toInt();
+            printf("BotDb::getChatsWithActiveMonitors: active is %d\n", ids.last());
+        }
+    }
+    return ids;
 }
 
 void BotDb::createDb(const QString& tablename)
@@ -766,6 +870,12 @@ void BotDb::createDb(const QString& tablename)
                             " chat_id INTEGER NOT NULL, "
                             " PRIMARY KEY(user_id,chat_id) )");
         }
+        else if(tablename == "private_chats") {
+            m_err = !q.exec("create table alias (user_id INTEGER NOT NULL, name TEXT NOT NULL, "
+                            "replaces TEXT NOT NULL, description TEXT DEFAULT '', "
+                            "timestamp DATETIME NOT NULL, PRIMARY KEY(user_id,name) )");
+        }
+
 
         if(m_err)
             m_msg = q.lastError().text();

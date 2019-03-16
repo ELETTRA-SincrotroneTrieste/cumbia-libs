@@ -24,6 +24,8 @@ BotConfig::BotConfig(BotDb *db)
     // getConfig does not clear d->map, so that keys that are not configured into the
     // database will remain with their defaults
     d->map["ttl"] = 24 * 3600;
+    d->map["poll_period"] = 15000;
+    d->map["max_avg_poll_period"] = 1000;
     d->map["history_depth"] = 12;
 
     QStringList default_operations_auth = QStringList() << "monitor" << "reads" << "host" << "dbsearch";
@@ -34,6 +36,8 @@ BotConfig::BotConfig(BotDb *db)
 
     d->map["botlistener_msg_poll_ms"] = 1000;
     d->map["botlistener_discard_msg_older_than_secs"] = 30;
+
+    d->map["max_alias_cnt"] = 12;
 
     // temporary dir for images (Plot)
     d->map["img_out_tmpdir"] = "/tmp/cumbia-telegram/botplot/";
@@ -48,6 +52,16 @@ BotConfig::BotConfig(BotDb *db)
 int BotConfig::ttl() const
 {
     return d->map["ttl"].toInt();
+}
+
+int BotConfig::poll_period() const
+{
+    return d->map["poll_period"].toInt();
+}
+
+int BotConfig::max_avg_poll_period() const
+{
+    return d->map["max_avg_poll_period"].toInt();
 }
 
 int BotConfig::getHistoryDepth() const
@@ -87,4 +101,9 @@ QString BotConfig::error() const
 QString BotConfig::getString(const QString &key) const
 {
     return  d->map[key].toString();
+}
+
+int BotConfig::getInt(const QString &key) const
+{
+    return  d->map[key].toInt();
 }

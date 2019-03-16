@@ -24,9 +24,10 @@ public:
     long int last_id;
     QTimer *timer;
     int msg_poll_ms, old_msg_discard_secs;
+    QString bot_key;
 };
 
-CuBotListener::CuBotListener(QObject *parent, int msg_poll_t, int msg_discard_old_t) : QObject (parent)
+CuBotListener::CuBotListener(QObject *parent, const QString& bot_tok, int msg_poll_t, int msg_discard_old_t) : QObject (parent)
 {
     d = new CuBotListenerPrivate;
     d->manager = nullptr;
@@ -35,6 +36,7 @@ CuBotListener::CuBotListener(QObject *parent, int msg_poll_t, int msg_discard_ol
     d->stop = false;
     d->msg_poll_ms = msg_poll_t;
     d->old_msg_discard_secs = msg_discard_old_t;
+    d->bot_key = bot_tok;
 }
 
 CuBotListener::~CuBotListener()
@@ -65,7 +67,8 @@ void CuBotListener::stop()
 
 void CuBotListener::getUpdates()
 {
-    QString u = "https://api.telegram.org/bot635922604:AAEgG6db_3kkzYZqh-LBxi-ubvl5UIEW7gE/getUpdates?offset=";
+    QString u = QString("https://api.telegram.org/%1/getUpdates?offset=")
+            .arg(d->bot_key);
     u += QString::number(++d->last_id);
     d->netreq.setUrl(QUrl(u));
 //    qDebug() << __FUNCTION__ << "getting" << u;

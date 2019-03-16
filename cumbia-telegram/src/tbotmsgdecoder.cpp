@@ -48,7 +48,7 @@ TBotMsgDecoder::Type TBotMsgDecoder::decode(const TBotMsg &msg)
 {
     m_cmdLinkIdx = -1;
     m_type = Invalid;
-    m_text = msg.text;
+    m_text = msg.text();
     //
     // (1) easiest
     //
@@ -72,6 +72,7 @@ TBotMsgDecoder::Type TBotMsgDecoder::decode(const TBotMsg &msg)
     else if(m_text == "/help_monitor" || m_text == "help_monitor") m_type = HelpMonitor;
     else if(m_text == "/help_search" || m_text == "help_search") m_type = HelpSearch;
     else if(m_text == "/help_host" || m_text == "help_host") m_type = HelpHost;
+    else if(m_text == "/alias" || m_text == "alias") m_type = ShowAlias;
     else {
         //
         // (2) easy
@@ -108,6 +109,24 @@ TBotMsgDecoder::Type TBotMsgDecoder::decode(const TBotMsg &msg)
                         m_cmdLinkIdx = match.captured(1).toInt();
                         m_type = DelBookmark;
                     }
+                    else // delete alias
+                    {
+                        re.setPattern("/XA(\\d{1,2})\\b");
+                        match = re.match(m_text);
+                        if(match.hasMatch()) {
+                            m_cmdLinkIdx = match.captured(1).toInt();
+                            m_type = DelAlias;
+                        }
+                    }
+                }
+            }
+            if(m_type == Invalid) {
+                // alias shortcuts to execute a command in history
+                re.setPattern("/A(\\d{1,2})\\b");
+                match = re.match(m_text);
+                if(match.hasMatch()) {
+                    m_cmdLinkIdx = match.captured(1).toInt();
+                    m_type = ExecAlias;
                 }
             }
             if(m_type == Invalid) {
@@ -136,6 +155,32 @@ TBotMsgDecoder::Type TBotMsgDecoder::decode(const TBotMsg &msg)
                 if(match.hasMatch()) {
                     m_type = Search;
                     m_source = match.captured(1);
+                }
+            }
+            if(m_type == Invalid) {
+                // ^alias\s+([A-Za-z0-9_]+)\s+(\S+)\s*(.*)
+                const char *alias_match = "^alias\\s+([A-Za-z0-9_]+)\\s+(\\S+)\\s*(.*)"; // escaped
+                re.setPattern(alias_match);
+                match = re.match(m_text);
+                if(match.hasMatch()) {
+                    m_type = SetAlias;
+                    // caller will use getArgs to get the captures
+                    for(int i = 1; i < match.capturedTexts().size(); i++)
+                        m_aliasSections << match.captured(i);
+                }
+                else {
+                    // alias something: provide info about the replacement
+                    // ^alias\s+([A-Za-z0-9_]+)
+                    re.setPattern("^alias\\s+([A-Za-z0-9_]+)");
+                    match = re.match(m_text);
+                    if(match.hasMatch()) {
+                        m_aliasSections << match.captured(1);
+                        m_type = ShowAlias;
+                    }
+                    else if(m_text.startsWith("alias")) {
+                        m_type = Error;
+                        m_msg = "error: alias  name  something/to/replace  [some description] (/help)";
+                    }
                 }
             }
 
@@ -306,6 +351,11 @@ QStringList TBotMsgDecoder::getArgs() const
 QStringList TBotMsgDecoder::detectedSources() const
 {
     return m_detectedSources;
+}
+
+QStringList TBotMsgDecoder::getAliasSections() const
+{
+    return m_aliasSections;
 }
 
 

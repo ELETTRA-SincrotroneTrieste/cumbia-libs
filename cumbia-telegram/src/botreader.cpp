@@ -31,12 +31,12 @@ public:
     bool monitor;
     QString host, source;
     QString command;
-    QString ref_mode;
+    BotReader::RefreshMode refresh_mode;
     QString desc, label, unit, print_format;
     double max,min;
     CuContext *context;
     int user_id, chat_id;
-    int ttl;
+    int ttl, poll_period;
     int refresh_cnt, notify_cnt;
     BotReader::Priority priority;
     QDateTime startDateTime;
@@ -55,7 +55,7 @@ BotReader::BotReader(int user_id,
                      QObject *w,
                      CumbiaPool *cumbia_pool,
                      const CuControlsFactoryPool &fpool,
-                     int ttl,
+                     int ttl, int poll_period,
                      const QString &cmd,
                      Priority pri,
                      const QString &host,
@@ -71,6 +71,8 @@ BotReader::BotReader(int user_id,
     d->monitor = monitor;
     d->command = cmd;
     d->index = -1;
+    d->poll_period = poll_period;
+    d->refresh_mode = RefreshModeUndefined;
     const char* env_tg_host = nullptr;
     if(host.isEmpty() && (env_tg_host = secure_getenv("TANGO_HOST")) != nullptr) {
         d->host = QString(env_tg_host);
@@ -272,9 +274,25 @@ int BotReader::notifyCount() const
     return d->notify_cnt;
 }
 
-QString BotReader::refreshMode() const
+BotReader::RefreshMode BotReader::refreshMode() const
 {
-    return d->ref_mode;
+    return d->refresh_mode;
+}
+
+void BotReader::setPeriod(int period) const
+{
+    CuData p("period", period);
+    p["src"] = d->source.toStdString();
+    d->context->sendData(p);
+}
+
+int BotReader::period() const
+{
+    int p;
+    CuData o;
+    d->context->getData(o);
+    o.containsKey("period") ? p = o["period"].toInt() : p = -1;
+    return p;
 }
 
 QString BotReader::print_format() const
@@ -322,20 +340,20 @@ void BotReader::setSource(const QString &s)
     if(d->props_only)
         options["properties-only"] = true;
     if(d->monitor)
-        options["period"] = 15000;
+        options["period"] = d->poll_period;
     if(!options.isEmpty())
         d->context->setOptions(options);
 
     CuFormulaParseHelper ph;
     QString src = ph.injectHost(d->host, s);
     CuControlsReaderA * r = d->context->replace_reader(src.toStdString(), this);
-    if(r)
+    d->read_ok = (r != nullptr);
+    if(r) {
         r->setSource(src);
-
-    // no host in source()
-    d->source = s;
-    d->formula_is_identity = ph.identityFunction(d->source);
-    printf("\e[1;34mBotReader.setSource: src %s IS IDENTITY %d\n", qstoc(d->source), d->formula_is_identity);
+        // no host in source()
+        d->source = s;
+        d->formula_is_identity = ph.identityFunction(d->source);
+    }
 }
 
 void BotReader::unsetSource()
@@ -352,7 +370,7 @@ void BotReader::setFormula(const QString &formula)
     if(formula != d->command) {
         const QString old_f = d->command;
         d->command = formula;
-        emit formulaChanged(d->chat_id, source(), old_f, formula);
+        emit formulaChanged(d->user_id, d->chat_id, source(), old_f, formula, d->host);
     }
 }
 
@@ -377,6 +395,7 @@ void BotReader::m_configure(const CuData& da)
  */
 void BotReader::onUpdate(const CuData &da)
 {
+//    printf("\e[1;33mBotReader.onUpdate: data %s\e[0m\n", da.toString().c_str());
     d->read_ok = !da["err"].toBool();
     if(d->read_ok && d->refresh_cnt == 0) {
         m_check_or_setStartedNow(); // read method comments
@@ -386,6 +405,10 @@ void BotReader::onUpdate(const CuData &da)
     // configure object if the type of received data is "property"
     if(d->read_ok && d->auto_configure && da["type"].toString() == "property") {
         m_configure(da);
+    }
+    if(da["mode"].toString().size() > 0 && da.containsKey("value")) {
+        // at regime, after "property" data check and notify refresh mode
+        m_checkRefreshModeAndNotify(da["mode"].toString());
     }
     // in case of error: quit
     // in case we got a value: quit
@@ -400,8 +423,6 @@ void BotReader::onUpdate(const CuData &da)
     d->refresh_cnt++;
     if(!d->startDateTime.isValid() || d->startDateTime.secsTo(QDateTime::currentDateTime()) >= d->ttl)
         emit lastUpdate(d->chat_id, da);
-    if(da.containsKey("mode"))
-        d->ref_mode = QString::fromStdString(da["mode"].toString());
 }
 
 bool BotReader::m_publishResult(const CuData &da)
@@ -433,9 +454,9 @@ bool BotReader::m_publishResult(const CuData &da)
             != (d->old_quality.toInt() & CuDataQuality::Invalid);
     quality_change = read_quality != d->old_quality;
 
-    printf("\e[1;33mBotReader value cahnged %d cuz old value %s new %s old q %d new q %d\e[0m\n",
-           value_change, v.toString().c_str(), d->old_value.toString().c_str(),
-           d->old_quality.toInt(), read_quality.toInt());
+//    printf("\e[1;33mBotReader \"%s\" value changed %d cuz old value %s new %s old q %d new q %d\e[0m\n",
+//           da["src"].toString().c_str(), value_change, v.toString().c_str(), d->old_value.toString().c_str(),
+//           d->old_quality.toInt(), read_quality.toInt());
 
     if(!d->formula_is_identity) { // dealing with formula
         // data contains the result of a formula true / false or the result of a formula as some value
@@ -489,4 +510,15 @@ void BotReader::m_check_or_setStartedNow()
 {
     if(!d->startDateTime.isValid()) // check if not already set
         d->startDateTime = QDateTime::currentDateTime();
+}
+
+void BotReader::m_checkRefreshModeAndNotify(const string &refMode)
+{
+    RefreshMode old_mode = d->refresh_mode;
+    if(refMode == "event") d->refresh_mode = Event;
+    else if(refMode == "polled") d->refresh_mode = Polled;
+    else d->refresh_mode = RefreshModeUndefined;
+    if(old_mode != d->refresh_mode) {
+        emit modeChanged(d->refresh_mode);
+    }
 }

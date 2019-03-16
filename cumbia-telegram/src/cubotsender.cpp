@@ -11,27 +11,30 @@
 #include <QFileInfo>
 #include <QMimeDatabase>
 #include <cumacros.h>
+#include <unistd.h>
+#include <QEventLoop>
 
 #define TELEGRAM_MAX_MSGLEN 4096
 
 class CuBotSenderPrivate {
 public:
+    QString key;
     QNetworkAccessManager *manager;
     QNetworkRequest netreq;
 };
 
-CuBotSender::CuBotSender(QObject *parent) : QObject(parent)
+CuBotSender::CuBotSender(QObject *parent, const QString& bot_tok) : QObject(parent)
 {
     d = new CuBotSenderPrivate;
     d->manager = new QNetworkAccessManager(this);
     d->netreq.setSslConfiguration(QSslConfiguration::defaultConfiguration());
     d->netreq.setRawHeader("User-Agent", "cumbia-telegram-bot 1.0");
+    d->key = bot_tok;
 }
 
-void CuBotSender::sendMessage(int chat_id, const QString &msg, bool silent)
+void CuBotSender::sendMessage(int chat_id, const QString &msg, bool silent, bool wait_for_reply)
 {
-    QString u = "https://api.telegram.org/bot635922604:AAEgG6db_3kkzYZqh-LBxi-ubvl5UIEW7gE/"
-                "sendMessage";
+    QString u = QString("https://api.telegram.org/%1/sendMessage").arg(d->key);
     QUrlQuery params;
     params.addQueryItem("chat_id", QString::number(chat_id));
     params.addQueryItem("parse_mode", "HTML");
@@ -53,8 +56,15 @@ void CuBotSender::sendMessage(int chat_id, const QString &msg, bool silent)
     d->netreq.setUrl(url);
 
     QNetworkReply *reply = d->manager->get(d->netreq);
-    connect(reply, SIGNAL(readyRead()), this, SLOT(onReply()));
-    connect(reply, SIGNAL(error(QNetworkReply::NetworkError )), this, SLOT(onNetworkError(QNetworkReply::NetworkError)));
+    if(wait_for_reply) {
+        QEventLoop loop;
+        QObject::connect(reply, SIGNAL(readyRead()), &loop, SLOT(quit()));
+        reply->deleteLater();
+    }
+    else {
+        connect(reply, SIGNAL(readyRead()), this, SLOT(onReply()));
+        connect(reply, SIGNAL(error(QNetworkReply::NetworkError )), this, SLOT(onNetworkError(QNetworkReply::NetworkError)));
+    }
 }
 
 void CuBotSender::sendPic(int chat_id, const QByteArray &imgBytes, bool silent)

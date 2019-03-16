@@ -35,11 +35,14 @@ public:
     // message delivered silently or not
     enum Priority { High, Low };
 
+    enum RefreshMode { RefreshModeUndefined, Event, Polled };
+
     BotReader(int user_id,
               int chat_id, QObject *w,
               CumbiaPool *cumbia_pool,
               const CuControlsFactoryPool &fpool,
               int ttl,
+              int poll_period,
               const QString& command, // command that originated the reader
               Priority pri = High,
               const QString& host = QString(),
@@ -112,7 +115,11 @@ public:
 
     int notifyCount() const;
 
-    QString refreshMode() const;
+    void setPeriod(int period) const;
+
+    int period() const;
+
+    RefreshMode refreshMode() const;
 
     QString print_format() const;
     double max() const;
@@ -140,8 +147,9 @@ signals:
     void newData(int chat_id, const CuData&);
     void lastUpdate(int chat_id, const CuData&);
     void startSuccess(int user_id, int chat_it, const QString& src, const QString& command);
-    void formulaChanged(int chat_id, const QString& src, const QString& oldf, const QString& new_f);
+    void formulaChanged(int user_id, int chat_id, const QString& src, const QString& oldf, const QString& new_f, const QString& host);
     void priorityChanged(int chat_id, const QString& src, BotReader::Priority oldpri, BotReader::Priority newpri);
+    void modeChanged(BotReader::RefreshMode rm);
 
 protected:
 
@@ -156,6 +164,8 @@ private:
     bool m_publishResult(const CuData& da);
 
     void m_check_or_setStartedNow();
+
+    void m_checkRefreshModeAndNotify(const std::string& refMode);
 
     // CuDataListener interface
 public:

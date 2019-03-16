@@ -11,7 +11,7 @@ class CuBotSender : public QObject
 {
     Q_OBJECT
 public:
-    explicit CuBotSender(QObject *parent = nullptr);
+    explicit CuBotSender(QObject *parent, const QString &bot_tok);
 
 signals:
 
@@ -22,7 +22,7 @@ public slots:
      * @param msg
      * @param silent if true, sends the message silently. Users will receive a notification with no sound.
      */
-    void sendMessage(int chat_id, const QString& msg, bool silent = false);
+    void sendMessage(int chat_id, const QString& msg, bool silent = false, bool wait_for_reply = false);
 
     void sendPic(int chat_id, const QByteArray& imgBytes, bool silent = false);
 

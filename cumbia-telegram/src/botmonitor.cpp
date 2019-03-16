@@ -1,6 +1,6 @@
 #include "botmonitor.h"
 #include "botconfig.h"
-
+#include "monitorhelper.h"
 #include <QString>
 #include <QMap>
 #include <QDateTime>
@@ -19,7 +19,7 @@ public:
     QString msg;
     CumbiaPool *cu_pool;
     CuControlsFactoryPool ctrl_factory_pool;
-    int ttl;
+    int ttl, poll_period, max_avg_poll_period;
 };
 
 BotMonitor::~BotMonitor()
@@ -30,13 +30,15 @@ BotMonitor::~BotMonitor()
 BotMonitor::BotMonitor(QObject *parent,
                        CumbiaPool *cu_pool,
                        const CuControlsFactoryPool &fpool,
-                       int time_to_live) : QObject(parent)
+                       int time_to_live, int poll_period) : QObject(parent)
 {
     d = new BotMonitorPrivate;
     d->err = false;
     d->ctrl_factory_pool = fpool;
     d->cu_pool = cu_pool;
     d->ttl = time_to_live;
+    d->poll_period = poll_period;
+    d->max_avg_poll_period = 1000;
 }
 
 bool BotMonitor::error() const
@@ -54,6 +56,8 @@ BotReader *BotMonitor::findReader(int chat_id, const QString &expression, const 
     CuFormulaParseHelper ph;
     QSet<QString> srcs = ph.sources(expression).toSet(); // extract sources from expression
     for(QMap<int, BotReader *>::iterator it = d->readersMap.begin(); it != d->readersMap.end(); ++it) {
+        qDebug() << __PRETTY_FUNCTION__ << "find srcs" << srcs << "reader srcs" << it.value()->sources() <<
+                    "find host" << host << " reader host " << it.value()->host();
         if(it.key() == chat_id && it.value()->sameSourcesAs(srcs) && it.value()->host() == host)
             return *it;
     }
@@ -77,6 +81,16 @@ BotReader *BotMonitor::findReaderByUid(int user_id, const QString &expression, c
 QList<BotReader *> BotMonitor::readers() const
 {
     return d->readersMap.values();
+}
+
+void BotMonitor::setMaxAveragePollingPeriod(int millis)
+{
+    d->max_avg_poll_period = millis;
+}
+
+int BotMonitor::maxAveragePollingPeriod() const
+{
+    return d->max_avg_poll_period;
 }
 
 bool BotMonitor::stopAll(int chat_id, const QStringList &srcs)
@@ -164,15 +178,16 @@ bool BotMonitor::startRequest(int user_id,
             bool monitor = true;
             BotReader *reader = new BotReader(user_id, chat_id, this,
                                               d->cu_pool, d->ctrl_factory_pool,
-                                              d->ttl, cmd, priority, host, monitor);
+                                              d->ttl, d->poll_period, cmd, priority, host, monitor);
             connect(reader, SIGNAL(newData(int, const CuData&)), this, SLOT(m_onNewData(int, const CuData&)));
-            connect(reader, SIGNAL(formulaChanged(int, QString,QString, QString)),
-                    this, SLOT(m_onFormulaChanged(int, QString,QString, QString)));
+            connect(reader, SIGNAL(formulaChanged(int, int, QString,QString, QString,QString)),
+                    this, SLOT(m_onFormulaChanged(int, int, QString,QString, QString,QString)));
             connect(reader, SIGNAL(priorityChanged(int, const QString&, BotReader::Priority , BotReader::Priority)),
                     this, SLOT(m_onPriorityChanged(int, const QString&, BotReader::Priority , BotReader::Priority)));
             connect(reader, SIGNAL(startSuccess(int, int, QString, QString)),
                     this, SLOT(readerStartSuccess(int, int, QString, QString)));
             connect(reader, SIGNAL(lastUpdate(int, const CuData&)), this, SLOT(m_onLastUpdate(int, const CuData&)));
+            connect(reader, SIGNAL(modeChanged(BotReader::RefreshMode)), this, SLOT(m_onReaderModeChanged(BotReader::RefreshMode)));
             reader->setSource(src);
             reader->setStartedOn(started_on);
             reader->setIndex(m_findIndexForNewReader(chat_id));
@@ -249,4 +264,10 @@ int BotMonitor::m_findIndexForNewReader(int chat_id)
         if(!indexes.contains(i)) // found a "hole"
             return i;
     return i;
+}
+
+void BotMonitor::m_onReaderModeChanged(BotReader::RefreshMode rm)
+{
+    BotReader *r = qobject_cast<BotReader *>(sender());
+    emit readerRefreshModeChanged(r->userId(), r->chatId(), r->source(), r->host(), rm);
 }

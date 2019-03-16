@@ -15,6 +15,10 @@ public:
 
     int ttl() const;
 
+    int poll_period() const;
+
+    int max_avg_poll_period() const;
+
     int getHistoryDepth() const;
 
     int getDefaultAuth(const QString& operation) const;
@@ -28,6 +32,8 @@ public:
     QString error() const;
 
     QString getString(const QString& key) const;
+
+    int getInt(const QString &key) const;
 
 private:
     BotConfigPrivate *d;

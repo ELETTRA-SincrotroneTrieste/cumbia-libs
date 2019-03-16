@@ -68,7 +68,10 @@ SOURCES += \
     src/botstats.cpp \
     src/botplot.cpp \
     src/botplotgenerator.cpp \
-    src/cuformulaparsehelper.cpp
+    src/cuformulaparsehelper.cpp \
+    src/aliasentry.cpp \
+    src/aliasproc.cpp \
+    src/monitorhelper.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -100,7 +103,10 @@ HEADERS += \
     src/botstats.h \
     src/botplot.h \
     src/botplotgenerator.h \
-    src/cuformulaparsehelper.h
+    src/cuformulaparsehelper.h \
+    src/aliasentry.h \
+    src/aliasproc.h \
+    src/monitorhelper.h
 
 RESOURCES += \
     cumbia-telegram.qrc
@@ -110,4 +116,5 @@ DISTFILES += \
     res/help_monitor.html \
     res/help_alerts.html \
     res/help_search.html \
-    res/help_host.html
+    res/help_host.html \
+    CumbiaBot_elettra_token.txt

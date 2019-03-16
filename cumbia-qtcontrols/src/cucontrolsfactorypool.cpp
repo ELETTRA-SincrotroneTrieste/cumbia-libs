@@ -135,10 +135,8 @@ CuControlsReaderFactoryI *CuControlsFactoryPool::getRFactoryBySrc(const std::str
     if(domain.length())
         return getReadFactory(domain);
 
-    perr("CuControlsFactoryPool.getRFactoryBySrc: could not guess domain from \"%s\":\n"
-         "this may have unwanted side effects: returning factory for \"%s\"\n", src.c_str(),
-         m_rmap.begin()->first.c_str());
-    return m_rmap.begin()->second; // return the default cumbia impl (the first registered)
+    perr("CuControlsFactoryPool.getRFactoryBySrc: could not guess domain from \"%s\"" , src.c_str());
+    return nullptr;
 }
 
 /** \brief uses the registered patterns to match the given source and return a CuControlsWriterFactoryI

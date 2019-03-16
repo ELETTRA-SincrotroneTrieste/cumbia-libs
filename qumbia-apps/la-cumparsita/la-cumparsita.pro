@@ -44,7 +44,7 @@ HEADERS += src/cumparsita.h
 #
 INCLUDEPATH += src
 
-TARGET   = bin/cumparsita
+TARGET   = bin/la-cumparsita
 
 # unix:LIBS += -L. -lmylib
 

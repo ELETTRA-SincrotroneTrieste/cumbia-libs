@@ -98,12 +98,8 @@ Cumbia *CumbiaPool::getBySrc(const std::string &src) const
         cu = guessBySrc(src);
 
     if(!cu)
-    {
-        perr("CumbiaPool.getBySrc: could not guess domain from \"%s\":\n"
-             "          a \e[1;31;4mcrash may be on the way\e[0m: returning factory for \"%s\"\n", src.c_str(),
-             m_map.begin()->first.c_str());
-        return m_map.begin()->second; // return the default cumbia impl (the first registered)
-    }
+        perr("CumbiaPool.getBySrc: could not guess domain from \"%s\"", src.c_str());
+
     return cu;
 }
 

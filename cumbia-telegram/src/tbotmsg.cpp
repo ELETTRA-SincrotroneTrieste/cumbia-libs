@@ -26,7 +26,7 @@ TBotMsg::TBotMsg(const HistoryEntry &he)
     m_host = he.host;
     // msg_recv_datetime left invalid
     start_dt = he.datetime;
-    text = he.toCommand();
+    m_text = he.toCommand();
     // unavailable from HistoryEntry
     is_bot = false;
     update_id = -1;
@@ -57,7 +57,7 @@ void TBotMsg::decode(const QJsonValue &m)
     is_bot = from["is_bot"].toString();
 
     message_id = msg["message_id"].toInt();
-    text  = msg["text"].toString();
+    m_text  = msg["text"].toString();
 
     update_id = m["update_id"].toInt();
 
@@ -70,7 +70,7 @@ void TBotMsg::print() const
     printf("\e[1;32m--> \e[0;32m%d\e[0m:\t[received: %s]\tfrom:\e[1;32m%s\e[0m [\e[1;34m%s\e[0m]: \e[1;37;4mMSG\e[0m\t"
            "\e[0;32m[\e[0m\"%s\"\e[0;32m]\e[0m\t[msg.id: %d] from_history %d from_real_msg %d\n",
            update_id, qstoc(msg_recv_datetime.toString()), qstoc(username), qstoc(first_name),
-           qstoc(text), message_id, from_history, from_real_msg);
+           qstoc(m_text), message_id, from_history, from_real_msg);
 }
 
 void TBotMsg::setHost(const QString &h)
@@ -86,4 +86,22 @@ QString TBotMsg::host() const
 bool TBotMsg::hasHost() const
 {
     return !m_host.isEmpty();
+}
+
+/**
+ * @brief TBotMsg::text returns the text of the message
+ * @return
+ */
+QString TBotMsg::text() const
+{
+    return m_text;
+}
+
+/**
+ * @brief TBotMsg::setText can be used to alter the text of the message after alias replacement
+ * @param t the new text
+ */
+void TBotMsg::setText(const QString &t)
+{
+    m_text = t;
 }

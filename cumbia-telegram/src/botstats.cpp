@@ -133,7 +133,8 @@ QByteArray BotStatsFormatter::toJson(BotStats *stats, BotDb *db, const BotMonito
             mon_ttl.append(r->ttl());
             mon_started.append(r->startedOn().toString("yyyy.MM.dd hh.mm.ss"));
             r->priority() == BotReader::Low ? mon_types.append("monitor") : mon_types.append("alert");
-            mon_mode.append(r->refreshMode());
+            // next is true if event refreshed
+            mon_mode.append(r->refreshMode() == BotReader::Event);
             mon_refcnt.append(r->refreshCount());
             mon_notifcnt.append(r->notifyCount());
             mon_formulas.append(r->command());

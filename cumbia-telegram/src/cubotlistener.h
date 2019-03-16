@@ -13,7 +13,7 @@ class CuBotListener : public QObject
     Q_OBJECT
 public:
 
-    explicit CuBotListener(QObject *parent, int msg_poll_t, int msg_discard_old_t);
+    explicit CuBotListener(QObject *parent, const QString &bot_tok, int msg_poll_t, int msg_discard_old_t);
 
     ~CuBotListener();
 
@@ -22,7 +22,7 @@ public slots:
     void stop();
 
 signals:
-    void onNewMessage(const TBotMsg &msg);
+    void onNewMessage(TBotMsg &msg);
 
     void onError(const QString& src, const QString& message);
 

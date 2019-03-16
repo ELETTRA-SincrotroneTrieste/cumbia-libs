@@ -7,6 +7,7 @@ class CuVariant;
 
 #include <QString>
 #include "historyentry.h"
+#include "aliasentry.h"
 #include "tbotmsgdecoder.h" // for Type
 #include "../cumbia-telegram-defs.h"
 
@@ -56,6 +57,12 @@ public:
     QString fromControlData(const ControlMsg::Type t, const QString& msg) const;
 
     QString help(TBotMsgDecoder::Type t) const;
+
+    QString aliasInsert(bool success, const QStringList &alias_parts, const QString& additional_message) const;
+
+    QString aliasList(const QString &name, const QList<AliasEntry>& alist) const;
+
+    QString botShutdown();
 
 private:
     QString m_quality, m_value, m_src;

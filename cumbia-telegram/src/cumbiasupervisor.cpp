@@ -80,12 +80,9 @@ void CumbiaSupervisor::setup()
             if(!m_formulaPlu)
                 perr("Failed to load formula plugin");
             else {
-                printf("\e[1;32m* \e[0mformula plugin loaded: setting up pools...\n");
-                CuControlsReaderFactoryI *formula_rf = m_formulaPlu->getFormulaReaderFactory(cu_pool, ctrl_factory_pool);
-                cu_pool->registerCumbiaImpl("formula", m_formulaPlu->getCumbia());
-                ctrl_factory_pool.registerImpl("formula", *formula_rf);
-                ctrl_factory_pool.setSrcPatterns("formula", m_formulaPlu->srcPatterns());
-                cu_pool->setSrcPatterns("formula", m_formulaPlu->srcPatterns());
+                printf("\e[1;32m* \e[0minitializing formula plugin...");
+                m_formulaPlu->initialize(cu_pool, this->ctrl_factory_pool);
+                printf("\t[\e[1;32mdone\e[0m]\n");
             }
         }
         else {

@@ -19,7 +19,8 @@ public:
 
     ~BotMonitor();
 
-    explicit BotMonitor(QObject *parent, CumbiaPool *cu_pool, const CuControlsFactoryPool &fpool, int time_to_live);
+    explicit BotMonitor(QObject *parent, CumbiaPool *cu_pool, const CuControlsFactoryPool &fpool,
+                        int time_to_live, int poll_period);
 
     bool error() const;
 
@@ -30,6 +31,10 @@ public:
     BotReader*  findReaderByUid(int user_id, const QString& src, const QString& host) const;
 
     QList<BotReader *>  readers() const;
+
+    void setMaxAveragePollingPeriod(int millis);
+
+    int maxAveragePollingPeriod() const;
 
 signals:
 
@@ -43,6 +48,8 @@ signals:
 
     void onFormulaChanged(int user_id, int chat_id, const QString& src, const QString& host, const QString& old, const QString& new_f);
     void onMonitorTypeChanged(int user_id, int chat_id, const QString& src, const QString& host, const QString& old_t, const QString& new_t);
+
+    void readerRefreshModeChanged(int user_id, int chat_id, const QString &src, const QString &host,  BotReader::RefreshMode);
 
 public slots:
 
@@ -72,6 +79,8 @@ private slots:
     void m_onLastUpdate(int chat_id, const CuData& dat);
 
     int m_findIndexForNewReader(int chat_id);
+
+    void m_onReaderModeChanged(BotReader::RefreshMode rm);
 };
 
 #endif // BOTMONITOR_H
