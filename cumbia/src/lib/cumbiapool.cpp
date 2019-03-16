@@ -73,8 +73,6 @@ Cumbia *CumbiaPool::get(const std::string &domain) const
         return it->second;
 
     perr("CumbiaPool.get: no cumbia implementation registered with domain \"%s\": too bad", domain.c_str());
-    if(m_map.size() > 0)
-        return m_map.begin()->second;
     return NULL;
 }
 
