@@ -1,6 +1,7 @@
 #include <quapplication.h>
 #include "calculator.h"
 
+#include <cumacros.h>
 #include <cumbiapool.h>
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
@@ -41,8 +42,12 @@ int main(int argc, char *argv[])
             ret = qu_app.exec();
 
         delete calc;
-        delete cu_p->get("tango");
-        delete cu_p->get("epics");
+	Cumbia *c;
+        c = cu_p->get("tango");
+	if(c) delete c;
+        c = cu_p->get("epics");
+	printf("got epics %p\n", c);
+	if(c) delete c;
     }
     return 0;
 }

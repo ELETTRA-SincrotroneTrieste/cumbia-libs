@@ -1,14 +1,16 @@
 #include "calculator.h"
 
 #include <cumbiapool.h>
-#include <cumbiaepics.h>
 #include <cumbiatango.h>
+#ifdef QUMBIA_EPICS_CONTROLS
 #include <cuepcontrolsreader.h>
+#include <cumbiaepics.h>
+#include <cuepics-world.h>
 #include <cuepcontrolswriter.h>
+#endif
 #include <cutcontrolsreader.h>
 #include <cutcontrolswriter.h>
 #include <cutango-world.h>
-#include <cuepics-world.h>
 #include <cuthreadfactoryimpl.h>
 #include <cuserviceprovider.h>
 #include <qthreadseventbridgefactory.h>
@@ -26,25 +28,27 @@ Calculator::Calculator(CumbiaPool *cumbia_pool, QObject *parent, bool verbose) :
 {
     cu_pool = cumbia_pool;
     // setup Cumbia pool and register cumbia implementations for tango and epics
+#ifdef QUMBIA_EPICS_CONTROLS
     CumbiaEpics* cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    cu_pool->registerCumbiaImpl("tango", cuta);
     cu_pool->registerCumbiaImpl("epics", cuep);
-    m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
-    m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
     m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
-    m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
-
-    CuTangoWorld tw;
-    m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
-    cu_pool->setSrcPatterns("tango", tw.srcPatterns());
     CuEpicsWorld ew;
     m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
     cu_pool->setSrcPatterns("epics", ew.srcPatterns());
 
+    cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+
+#endif
+    CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    cu_pool->registerCumbiaImpl("tango", cuta);
+    m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
+    m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
+
+    CuTangoWorld tw;
+    m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
+    cu_pool->setSrcPatterns("tango", tw.srcPatterns());
     // log
     cuta->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
-    cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
 
     // formula
 

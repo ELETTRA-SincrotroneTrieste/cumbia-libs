@@ -3,8 +3,6 @@
 
 #include <qulogimpl.h>
 #include <cucontrolsfactorypool.h>
-#include <cumbiatango.h>
-#include <cumbiaepics.h>
 #include <cudatalistener.h>
 
 class CuData;
