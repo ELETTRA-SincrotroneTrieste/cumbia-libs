@@ -44,7 +44,7 @@ bool CuFormulaParser::parse(const QString &expr)
     e.remove("\n");
     QRegularExpressionMatch match = re.match(e);
     mat = match.hasMatch() && match.capturedTexts().size() > 4;
-    printf("\e[1;25mDETECTED CAPTURES %d from expression \"%s\"\e[0m\n\n\n", match.capturedTexts().size(), qstoc(e));
+  //  printf("\e[1;25mDETECTED CAPTURES %d from expression \"%s\"\e[0m\n\n\n", match.capturedTexts().size(), qstoc(e));
     if(mat) {
         int i = 0;
         // four captures
@@ -84,12 +84,13 @@ bool CuFormulaParser::parse(const QString &expr)
         }
     }
     else {
+        d->formula = e;
         d->error = true;
         d->message = QString("CuFormulaParser.parse: expression \"%1\" did not match regexp \"%2\"")
                 .arg(expr).arg(re.pattern());
     }
 
-    if(!d->error)
+//    if(!d->error)
         d->prepared_formula = m_makePreparedFormula();
 
     return !d->error;

@@ -7,11 +7,23 @@
 #include <cudata.h>
 #include <cudataquality.h>
 #include <QScriptValue>
+#include <QEvent>
 #include <QThread>
 
 class CuFormulaReaderFactoryPrivate;
 class CumbiaPool;
 class CuControlsFactoryPool;
+
+class SetSrcFailedEvent : public QEvent {
+public:
+    enum EventType { SetSrcFailedType = QEvent::User + 205 } ;
+
+    SetSrcFailedEvent(const QString &src, const QString& msg);
+
+    ~SetSrcFailedEvent();
+
+    QString source, message;
+};
 
 class CuFormulaReaderFactory : public CuControlsReaderFactoryI
 {
@@ -43,6 +55,8 @@ class CuFormulaReader : public QObject, public CuControlsReaderA
 public:
     CuFormulaReader(Cumbia *c, CuDataListener *l, CumbiaPool *cu_poo, const CuControlsFactoryPool &fpool);
 
+    enum RefreshMode { RefreshModeUndefined = 0x1,  Event = 0x2, Polled = 0x4, OneShot = 0x8 };
+
     ~CuFormulaReader();
 
     bool error() const;
@@ -55,6 +69,8 @@ public:
 
     std::string combinedSources() const;
 
+    std::string combinedModes() const;
+
     std::vector<bool> errors() const;
 
     CuVariant fromScriptValue(const QScriptValue &v);
@@ -66,9 +82,13 @@ public:
     void unsetSource();
     void sendData(const CuData &d);
     void getData(CuData &d_ino) const;
+    void setOptions(const CuData& opt);
 
 public slots:
     void onNewData(const CuData & da);
+
+protected:
+    bool event(QEvent *e);
 
 private:
     CuFormulaReaderPrivate *d;
@@ -85,6 +105,10 @@ private:
     void m_notifyFormulaError();
 
     void m_srcReplaceWildcards();
+
+    QString m_makeSetSrcError();
+
+    RefreshMode m_getRefreshMode(const std::string& mode) const;
 };
 
 #endif // CUFORMULASREADER_H

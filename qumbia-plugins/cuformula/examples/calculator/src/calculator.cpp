@@ -58,11 +58,7 @@ Calculator::Calculator(CumbiaPool *cumbia_pool, QObject *parent, bool verbose) :
             perr("Failed to load formula plugin");
         else {
             printf("\e[1;32msetting up pools for formula...\e[0m\n");
-            CuControlsReaderFactoryI *formula_rf = fplu->getFormulaReaderFactory(cu_pool, m_ctrl_factory_pool);
-            cu_pool->registerCumbiaImpl("formula", fplu->getCumbia());
-            m_ctrl_factory_pool.registerImpl("formula", *formula_rf);
-            m_ctrl_factory_pool.setSrcPatterns("formula", fplu->srcPatterns());
-            cu_pool->setSrcPatterns("formula", fplu->srcPatterns());
+            fplu->initialize(cu_pool, m_ctrl_factory_pool);
         }
     }
     else {

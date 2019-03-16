@@ -9,11 +9,13 @@
 #include <quwatcher.h>
 #include <cumacros.h>
 #include <limits.h>
+#include <cucontext.h>
 #include <QVector>
 #include <QScriptEngine>
 #include <QtDebug>
 #include <QDateTime>
 #include <QRegularExpression>
+#include <QCoreApplication>
 
 class CuFormulaReaderFactoryPrivate {
 public:
@@ -22,6 +24,11 @@ public:
     CuControlsFactoryPool fpool;
 };
 
+/**
+ * @brief CuFormulaReaderFactory::CuFormulaReaderFactory class constructor
+ * @param cu_poo a pointer to a valid CumbiaPool
+ * @param fpool a const reference to CuControlsFactoryPool
+ */
 CuFormulaReaderFactory::CuFormulaReaderFactory(CumbiaPool *cu_poo, const CuControlsFactoryPool &fpool)
 {
     d = new CuFormulaReaderFactoryPrivate;
@@ -34,11 +41,32 @@ CuFormulaReaderFactory::~CuFormulaReaderFactory()
     delete d;
 }
 
+/** \brief  create a new CuFormulaReader and forward options set on the factory by the
+ * CuFormulaReaderFactory client
+ *
+ * @param c a reference to a Cumbia implementation
+ * @param l a CuDataListener
+ *
+ * @return a new CuFormulaReader
+ *
+ * \par Options
+ * Options set on the CuControlsReaderFactoryI by the client are forwarded to the formula
+ * reader. CuFormulaReader employs QuWatcher to perform readings and options will be then
+ * sent to the watchers.
+ */
 CuControlsReaderA *CuFormulaReaderFactory::create(Cumbia *c, CuDataListener *l) const
 {
-    return new CuFormulaReader(c, l, d->cu_poo, d->fpool);
+    CuFormulaReader *r = new CuFormulaReader(c, l, d->cu_poo, d->fpool);
+    r->setOptions(this->getOptions());
+    return r;
 }
 
+/**
+ * @brief CuFormulaReaderFactory::setOptions set options to be sent to the readers (QuWatcher)
+ * @param o CuData with key/value pairs
+ *
+ * Options will be forwarded to the readers (CuFormulaReader employs QuWatcher)
+ */
 void CuFormulaReaderFactory::setOptions(const CuData &o)
 {
     d->options = o;
@@ -71,10 +99,39 @@ public:
     std::vector<CuVariant> values;
     std::vector<CuDataQuality> qualities;
     std::vector<bool> errors;
+    std::vector<CuFormulaReader::RefreshMode> modes; // true: event false: polled
     std::vector<std::string> messages;
     QScriptEngine scriptEngine;
+    CuData options;
 };
 
+/**
+ * @brief SetSrcFailedEvent::SetSrcFailedEvent QEvent that is posted when a setSource on a QuWatcher fails
+ * @param src the source name
+ * @param msg the message
+ */
+SetSrcFailedEvent::SetSrcFailedEvent(const QString &src, const QString &msg) :
+    QEvent(static_cast<QEvent::Type>(SetSrcFailedType))
+{
+    source = src;
+    message = msg;
+}
+
+SetSrcFailedEvent::~SetSrcFailedEvent()
+{
+    printf("\e[1;31mDELETING ~SetSrcFailedEvent!!\e[0m\n");
+}
+
+/**
+ * @brief CuFormulaReader::CuFormulaReader class constructor.
+ * @param c pointer to Cumbia (valid)
+ * @param l CuDataListener that will receive updates
+ * @param cu_poo pointer to CumbiaPool (valid)
+ * @param fpool  a const reference to CuControlsFactoryPool
+ *
+ * The class is normally instantiated by CuFormulaReaderFactory
+ *
+ */
 CuFormulaReader::CuFormulaReader(Cumbia *c, CuDataListener *l,
                                  CumbiaPool *cu_poo, const CuControlsFactoryPool &fpool)
     : CuControlsReaderA (c, l)
@@ -116,25 +173,34 @@ void CuFormulaReader::setSource(const QString &s)
     d->errors.clear();
     d->messages.clear();
     d->formula_parser.parse(s);
-    qDebug() << __PRETTY_FUNCTION__ << "detected sources count" << d->formula_parser.sourcesCount()
-             << "from " << s;
 
-    if(d->formula_parser.error())
+    /*if(d->formula_parser.error())
         m_notifyFormulaError();
-    else if(d->formula_parser.sourcesCount() > 0) {
+    else */
+    if(!d->formula_parser.error() && d->formula_parser.sourcesCount() > 0) {
         m_disposeWatchers();
         size_t i = 0;
         for(i = 0; i < d->formula_parser.sourcesCount(); i++) {
             const std::string &src = d->formula_parser.source(i);
             QuWatcher *watcher = new QuWatcher(this, d->cu_poo, d->fpoo);
+            watcher->getContext()->setOptions(d->options);
             connect(watcher, SIGNAL(newData(const CuData&)), this, SLOT(onNewData(const CuData&)));
             watcher->setSource(QString::fromStdString(src));
-            // update the i-th source with the free from wildcard source name
-            d->formula_parser.updateSource(i, watcher->source().toStdString());
+            printf("\e[1;32msetSource %s on watcher %d\e[0m\n", src.c_str(), i+1);
             d->values.push_back(CuVariant());
             d->qualities.push_back(CuDataQuality(CuDataQuality::Undefined));
             d->errors.push_back(true);
+            d->modes.push_back(RefreshModeUndefined); // polled modes by default
             d->messages.push_back("waiting for " + src);
+
+            if(!watcher->source().isEmpty()) {
+                // update the i-th source with the free from wildcard source name
+                d->formula_parser.updateSource(i, watcher->source().toStdString());
+            } // otherwise something went wrong in watcher->setSource (could not guess by src)
+            else {
+                QCoreApplication::postEvent(this, new SetSrcFailedEvent(QString::fromStdString(src),
+                                                                        m_makeSetSrcError()));
+            }
         }
     }
     else {
@@ -156,10 +222,24 @@ void CuFormulaReader::unsetSource()
 
 void CuFormulaReader::sendData(const CuData &d)
 {
+    // send received data to every single watcher
+    foreach(QuWatcher *w, findChildren<QuWatcher *>())
+        w->getContext()->sendData(d);
 }
 
 void CuFormulaReader::getData(CuData &d_ino) const
 {
+}
+
+/**
+ * @brief CuFormulaReader::setOptions set options on the formula reader
+ * @param opt CuData key/value bundle.
+ *
+ * Options are sent to QuWatcher instances within setSource
+ */
+void CuFormulaReader::setOptions(const CuData &opt)
+{
+    d->options = opt;
 }
 
 void CuFormulaReader::onNewData(const CuData &da)
@@ -192,9 +272,11 @@ void CuFormulaReader::onNewData(const CuData &da)
             d->messages[static_cast<size_t>(idx)] = msg;
         }
         else if(!err && da.containsKey("value")) {
-
             size_t index = static_cast<size_t>(idx);
             if(!err) {
+                // refresh mode
+                d->modes[index] = m_getRefreshMode(da["mode"].toString());
+
                 d->values[index] = da["value"];
                 all_read_once = m_allValuesValid();
                 // CuFormulaParser::ReadingsIncomplete
@@ -210,7 +292,7 @@ void CuFormulaReader::onNewData(const CuData &da)
                 else {
                     QScriptValue result;
                     QString formula = d->formula_parser.preparedFormula();
-                    printf("preparing to evaluate formula pretty %s\e[0m\n", qstoc(formula));
+                  //  printf("preparing to evaluate formula pretty %s\e[0m\n", qstoc(formula));
                     QScriptValue sval = d->scriptEngine.evaluate(formula);
                     err = !sval.isFunction();
                     if(err) {
@@ -254,8 +336,8 @@ void CuFormulaReader::onNewData(const CuData &da)
                             msg = d->message.toStdString(); // set by m_fromScriptValue
 
 
-//                        printf("\e[1;32m1. \e[0mCuFormulaReader.onNewData: evaluating \e[1;36m%s makes %s\e[0m\n\n",
-//                               qstoc(d->formula_parser.formula()), resvar.toString().c_str());
+                        //                        printf("\e[1;32m1. \e[0mCuFormulaReader.onNewData: evaluating \e[1;36m%s makes %s\e[0m\n\n",
+                        //                               qstoc(d->formula_parser.formula()), resvar.toString().c_str());
                     }
                     else {
                         msg = "failed to call function " + d->formula_parser.formula().toStdString();
@@ -281,9 +363,11 @@ void CuFormulaReader::onNewData(const CuData &da)
         dat["quality_color"] = cuq.color();
         dat["quality_string"] = cuq.name();
         dat["msg"] = combinedMessage();
+        dat["mode"] = combinedModes();
+
         // if formula has a name, put it in src
         !d->formula_parser.name().isEmpty() ? dat["src"] = d->formula_parser.name().toStdString() :
-            dat["src"] = combinedSources();
+                dat["src"] = combinedSources();
         dat["err"] = err;
 
         // notify with onUpdate if
@@ -299,6 +383,20 @@ void CuFormulaReader::onNewData(const CuData &da)
     else  { // no sources, maybe simple formula, like "3 + 2"
         d->listener->onUpdate(da);
     }
+}
+
+bool CuFormulaReader::event(QEvent *e)
+{
+    if(e->type() == static_cast<int>(SetSrcFailedEvent::SetSrcFailedType)) {
+        SetSrcFailedEvent *srcfe = static_cast<SetSrcFailedEvent *>(e);
+        // build a CuData with an error
+        CuData err("err", true);
+        err["src"] = srcfe->source.toStdString();
+        err["msg"] = srcfe->message.toStdString();
+        onNewData(err);
+        e->setAccepted(true);
+    }
+    return QObject::event(e);
 }
 
 CuDataQuality CuFormulaReader::combinedQuality() const
@@ -332,6 +430,19 @@ std::string CuFormulaReader::combinedSources() const
         i < src_cnt - 1 ? s += srcs[i] + "," : s += srcs[i];
     }
     return s;
+}
+
+std::string CuFormulaReader::combinedModes() const
+{
+    int combinedMode = 0;
+    for(size_t i = 0; i < d->modes.size(); i++)
+        combinedMode |= d->modes[i];
+
+    if(combinedMode & RefreshModeUndefined)
+        return "undefined";
+    else if(combinedMode & Polled)
+        return "polled";
+    return "event";
 }
 
 std::vector<bool> CuFormulaReader::errors() const
@@ -480,3 +591,24 @@ void CuFormulaReader::m_srcReplaceWildcards()
         d->source.replace(match.captured(2), QString::fromStdString(srcs));
     }
 }
+
+QString CuFormulaReader::m_makeSetSrcError()
+{
+    QString msg = "CuFormulaReader: failed to set source.\n"
+                  "cumbia could not detect a valid domain for the given source.\n"
+                  "Make sure that \"-\" symbols are "
+                  "surrounded by spaces if they are minus operators.";
+    return msg;
+}
+
+CuFormulaReader::RefreshMode CuFormulaReader::m_getRefreshMode(const std::string &mode) const
+{
+    if(mode == "event")
+        return CuFormulaReader::Event;
+    if(mode == "polled")
+        return CuFormulaReader::Polled;
+    if(mode == "oneshot")
+        return CuFormulaReader::OneShot;
+    return CuFormulaReader::RefreshModeUndefined;
+}
+

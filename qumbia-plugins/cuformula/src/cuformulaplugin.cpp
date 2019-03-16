@@ -9,8 +9,10 @@
 class CuFormulasPluginPrivate {
   public:
     CumbiaFormula *cu_f;
+    CuFormulaReaderFactory* reader_f;
     std::string msg;
     bool err;
+    std::vector<std::string> patterns;
 };
 
 CuFormulaPlugin::CuFormulaPlugin(QObject *parent) :
@@ -19,12 +21,16 @@ CuFormulaPlugin::CuFormulaPlugin(QObject *parent) :
     d = new CuFormulasPluginPrivate;
     d->cu_f = new CumbiaFormula();
     d->err = false;
+    d->patterns.push_back("formula://");
+    d->reader_f = nullptr;
 }
 
 CuFormulaPlugin::~CuFormulaPlugin()
 {
     pdelete("~CuFormulaPlugin %p deleting cumbia %p", this, d->cu_f);
     delete d->cu_f;
+    if(d->reader_f)
+        delete d->reader_f;
     delete d;
 }
 
@@ -38,9 +44,18 @@ Cumbia *CuFormulaPlugin::getCumbia() const
     return d->cu_f;
 }
 
-CuControlsReaderFactoryI *CuFormulaPlugin::getFormulaReaderFactory(CumbiaPool *cu_poo, const CuControlsFactoryPool &fpool) const
+void CuFormulaPlugin::initialize(CumbiaPool *cu_poo, CuControlsFactoryPool &fpool)
 {
-    return new CuFormulaReaderFactory(cu_poo, fpool);
+    d->reader_f = new CuFormulaReaderFactory(cu_poo, fpool);
+    cu_poo->registerCumbiaImpl("formula", d->cu_f);
+    fpool.registerImpl("formula", *d->reader_f);
+    fpool.setSrcPatterns("formula", d->patterns);
+    cu_poo->setSrcPatterns("formula", d->patterns);
+}
+
+CuControlsReaderFactoryI *CuFormulaPlugin::getFormulaReaderFactory() const
+{
+    return d->reader_f;
 }
 
 std::string CuFormulaPlugin::message() const
@@ -53,11 +68,30 @@ bool CuFormulaPlugin::error() const
     return d->err;
 }
 
+/**
+ * @brief CuFormulaPlugin::srcPatterns return the list of regular expression patterns defining a
+ *        CuFormulaPlugin *source* pattern.
+ *
+ * @return the list of patterns
+ *
+ * \par Default pattern
+ * The default pattern for a CuFormulaPlugin *source* is *formula:// *
+ */
 std::vector<std::string> CuFormulaPlugin::srcPatterns() const
 {
-    std::vector<std::string> patts;
-    patts.push_back("formula://");
-    return patts;
+    return d->patterns;
+}
+
+/**
+ * @brief CuFormulaPlugin::addSrcPattern add a regular expression pattern to the list of patterns
+ * @param pattern a new pattern to be added to the source patterns for the formula plugin
+ *
+ * \par Note
+ * The default pattern is *formula:// *
+ */
+void CuFormulaPlugin::addSrcPattern(const std::string &pattern)
+{
+    d->patterns.push_back(pattern);
 }
 
 /**

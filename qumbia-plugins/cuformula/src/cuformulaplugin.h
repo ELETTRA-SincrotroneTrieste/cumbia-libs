@@ -37,10 +37,12 @@ public:
 public:
     QString getName() const;
     Cumbia *getCumbia() const;
-    CuControlsReaderFactoryI* getFormulaReaderFactory(CumbiaPool *cu_poo, const CuControlsFactoryPool &fpool) const;
+    void initialize(CumbiaPool *cu_poo, CuControlsFactoryPool &fpool);
+    CuControlsReaderFactoryI* getFormulaReaderFactory() const;
     std::string message() const;
     bool error() const;
     std::vector<std::string> srcPatterns() const;
+    void addSrcPattern(const std::string& pattern);
     CuFormulaParserI *getFormulaParserInstance() const;
 };
 
