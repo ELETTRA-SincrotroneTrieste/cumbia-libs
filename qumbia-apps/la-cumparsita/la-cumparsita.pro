@@ -6,6 +6,7 @@ TEMPLATE = app
 
 QT +=  core gui uitools
 
+DOCDIR = $${INSTALL_ROOT}/share/doc/la-cumparsita
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets x11extras
 
@@ -54,3 +55,15 @@ DISTFILES += \
     jscripts/spectrum_sum.js \
     jscripts/spectrum_diff.js
 
+target.path = $${INSTALL_ROOT}/bin
+
+doc.commands = \
+doxygen \
+Doxyfile;
+
+doc.files = doc/*
+doc.path = $${DOCDIR}
+
+QMAKE_EXTRA_TARGETS += doc
+
+INSTALLS += target doc
