@@ -58,22 +58,29 @@ sources = [
 
 includedirs = include_directories('lib')
 
+
 cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1'
 
-deps = [dependency('epics-base'), dependency('cumbia')]
+# deps = [dependency('epics-base'), dependency('cumbia')]
+
+deps = [dependency('cumbia')]
+
 
 ## Y are they missing in pkgconfig file?
 ## PKG_CONFIG does not set -L either!
 
-epics_base = '/home/giacomo/devel/base-7.0.2'
+epics_base = '/usr/local/epics/base'
 epics_libdir = epics_base + '/lib/linux-x86_64'
+
+epics_includes = include_directories(epics_base + '/include')
+epics_linux_includes = include_directories(epics_base + '/include/os/Linux')
 
 linker_args = [  '-lca',  '-ldbCore', '-lCom', '-L' + epics_libdir  ]
 
 cumbiaepicslib = shared_library('cumbia-epics', sources,
         soversion : '0',
         version : meson.project_version(),
-        include_directories : includedirs,
+        include_directories : [includedirs, epics_includes, epics_linux_includes],
         cpp_args : cpp_arguments,
         dependencies : deps,
         link_args : linker_args,
