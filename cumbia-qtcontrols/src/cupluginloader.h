@@ -33,6 +33,7 @@ public:
 
     QString getPluginAbsoluteFilePath(const QString &default_plugin_path, const QString &name);
     QString getPluginPath() const;
+    QString getDefaultPluginPath() const;
 };
 
 #endif // CUPLUGINLOADER_H
