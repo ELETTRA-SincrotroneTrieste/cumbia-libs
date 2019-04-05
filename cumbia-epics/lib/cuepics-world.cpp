@@ -585,12 +585,12 @@ std::string CuEpicsWorld::m_get_timestamp()
    return std::string(outstr);
 }
 
-void CuEpicsWorld::caget(const std::string& src, CuData &prop_res, CuData& value_res, double timeout)
+void CuEpicsWorld::caget(const std::string& src, CuData &prop_res,  double timeout)
 {
     bool err = false;
     char msg[256] = "";
     int result = ca_context_create(ca_disable_preemptive_callback);
-
+    CuData value_res(prop_res); // copy token information
     if(result != ECA_NORMAL) {
         snprintf(msg, 256, "CuEpicsWorld.caget: CA error %s occurred while trying to start channel access for \"%s\"",
                  ca_message(result), src.c_str());
@@ -604,14 +604,14 @@ void CuEpicsWorld::caget(const std::string& src, CuData &prop_res, CuData& value
         }
         else  {  // connected
             // 1. get property (dbr ctrl)
-            bool success = m_ep_caget(&pv, prop_res, DbrCtrl, timeout);
+            bool success = m_ep_caget(&pv, prop_res,  DbrTime, timeout); // to get timestamp
             if(success) {
                 extractData(&pv, prop_res);
-                success = m_ep_caget(&pv, value_res,  DbrTime, timeout); // to get timestamp
+                success = m_ep_caget(&pv, prop_res, DbrCtrl, timeout);
                 if(success) {
-                    extractData(&pv, value_res);
+                    extractData(&pv, prop_res);
                     if(ca_write_access(pv.ch_id)) {
-                        prop_res["w_value"] = value_res["value"];
+                        prop_res["w_value"] = prop_res["value"];
                     }
                 }
             }
@@ -678,7 +678,7 @@ void CuEpicsWorld::putTimestamp(void* ep_data, CuData &dt) const
 template<class T>
 void CuEpicsWorld::putCtrlData(void *ep_data, CuData &dt) const
 {
-    dt["units"] = std::string(static_cast<T *>(ep_data)->units);
+    dt["display_unit"] = std::string(static_cast<T *>(ep_data)->units);
     dt["max"] = static_cast<T *>(ep_data)->upper_disp_limit;
     dt["min"] = static_cast<T *>(ep_data)->lower_disp_limit;
     dt["upper_alarm_limit"] = static_cast<T *>(ep_data)->upper_alarm_limit;

@@ -147,7 +147,6 @@ void CuMonitor::setPeriod(int millis)
 void CuMonitor::start()
 {
     pr_thread();
-    printf("\e[2;33mCumonitor.start()m_startMonitorActivity \e[0m\n ");
     m_startMonitorActivity();
 }
 

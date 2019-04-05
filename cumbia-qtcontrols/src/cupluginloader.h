@@ -32,6 +32,7 @@ public:
     QStringList getPluginAbsoluteFilePaths(const QString &default_plugin_path, const QRegExp& match= QRegExp(".*"));
 
     QString getPluginAbsoluteFilePath(const QString &default_plugin_path, const QString &name);
+    QString getPluginPath() const;
 };
 
 #endif // CUPLUGINLOADER_H

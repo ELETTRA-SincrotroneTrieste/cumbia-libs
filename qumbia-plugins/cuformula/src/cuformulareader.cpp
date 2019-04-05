@@ -101,6 +101,8 @@ public:
     std::vector<bool> errors;
     std::vector<CuFormulaReader::RefreshMode> modes; // true: event false: polled
     std::vector<std::string> messages;
+    std::string display_unit;
+    bool single_display_unit;
     QScriptEngine scriptEngine;
     CuData options;
 };
@@ -142,6 +144,7 @@ CuFormulaReader::CuFormulaReader(Cumbia *c, CuDataListener *l,
     d->cu_poo = cu_poo;
     d->fpoo = fpool;
     d->error = false;
+    d->single_display_unit = true;
 }
 
 CuFormulaReader::~CuFormulaReader()
@@ -244,6 +247,7 @@ void CuFormulaReader::setOptions(const CuData &opt)
 
 void CuFormulaReader::onNewData(const CuData &da)
 {
+//    printf("\e[0;34mCuFromulaRader onNewData: data %s\e[0m\n", da.toString().c_str());
     d->error = false;
     d->message.clear();
     std::string src = da["src"].toString();
@@ -276,8 +280,13 @@ void CuFormulaReader::onNewData(const CuData &da)
             if(!err) {
                 // refresh mode
                 d->modes[index] = m_getRefreshMode(da["mode"].toString());
-
                 d->values[index] = da["value"];
+                // display unit is stored if homogeneous (or there is a single source)
+                if(da.containsKey("display_unit"))
+                    m_checkDisplayUnit(da["display_unit"]);
+                if(d->display_unit.length() > 0)
+                    dat["display_unit"] = d->display_unit;
+
                 all_read_once = m_allValuesValid();
                 // CuFormulaParser::ReadingsIncomplete
                 if(!all_read_once) {
@@ -599,6 +608,23 @@ QString CuFormulaReader::m_makeSetSrcError()
                   "Make sure that \"-\" symbols are "
                   "surrounded by spaces if they are minus operators.";
     return msg;
+}
+
+// if d->display_unit is empty, set it to the value of the display unit
+// if d->display_unit is not empty, reset it to empty if duv is different
+// (in case of multiple sources with different display units)
+bool CuFormulaReader::m_checkDisplayUnit(const CuVariant &duv)
+{
+    std::string du;
+    if(duv.isValid())
+        du = duv.toString();
+    if(du.length() > 0 && d->display_unit.length() == 0 && d->single_display_unit)
+        d->display_unit = du;
+    else if(d->display_unit != du) {
+        d->single_display_unit = false;
+        d->display_unit.clear();
+    }
+    return d->single_display_unit;
 }
 
 CuFormulaReader::RefreshMode CuFormulaReader::m_getRefreshMode(const std::string &mode) const

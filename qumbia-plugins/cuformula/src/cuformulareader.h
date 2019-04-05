@@ -108,6 +108,8 @@ private:
 
     QString m_makeSetSrcError();
 
+    bool m_checkDisplayUnit(const CuVariant& duv);
+
     RefreshMode m_getRefreshMode(const std::string& mode) const;
 };
 

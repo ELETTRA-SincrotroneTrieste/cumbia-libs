@@ -186,6 +186,7 @@ void CuMonitorActivity::connection_handler(connection_handler_args args)
     CuData d = getToken();
     d["type"] = "connection";
 
+    printf("CuMonitorActivity -- connection_handler\n");
     unsigned long eventMask = DBE_VALUE | DBE_ALARM;
     int floatAsString = 0;
     int enumAsNr = 0;

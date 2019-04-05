@@ -33,6 +33,14 @@ QString CuPluginLoader::getPluginAbsoluteFilePath(const QString& default_plugin_
     return QString();
 }
 
+/**
+ * @brief CuPluginLoader::getPluginPath returns the plugin path from the CUMBIA_PLUGIN_PATH environment variable
+ * @return the plugin path set with the environment variable CUMBIA_PLUGIN_PATH or an empty string if the
+ * variable is unset
+ */
+QString CuPluginLoader::getPluginPath() const {
+    return QString(getenv("CUMBIA_PLUGIN_PATH"));
+}
 
 /*! \brief get a list of the absolute file paths of the plugins which name matches the regular expression *match*.
  *

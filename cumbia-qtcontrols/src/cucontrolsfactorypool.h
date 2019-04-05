@@ -67,6 +67,10 @@ public:
 
     bool isEmpty() const;
 
+    std::vector<std::string> getSrcPatternDomains() const;
+
+    std::vector<std::string>  getSrcPatterns(const std::string& domain) const;
+
 private:
     std::map<std::string, CuControlsReaderFactoryI *> m_rmap;
 

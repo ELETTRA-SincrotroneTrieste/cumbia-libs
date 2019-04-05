@@ -141,7 +141,7 @@ std::string CuFormulaParser::source(size_t i) const
  */
 void CuFormulaParser::updateSource(size_t i, const std::string &s)
 {
-    printf("\e[1;35mupdateSource replacing source at idx %zu setting to %s srcs size %zu\e[0m\n",
+    printf("\e[1;35mCuFormulaParser:updateSource replacing source at idx %zu setting to %s srcs size %zu\e[0m\n",
            i, s.c_str(), d->srcs.size());
     if(i < d->srcs.size())
         d->srcs[i] = s;

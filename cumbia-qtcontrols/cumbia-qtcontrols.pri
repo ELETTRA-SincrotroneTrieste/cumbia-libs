@@ -116,7 +116,7 @@ unix:!android-g++ {
 
 DEFINES += CUMBIA_DEBUG_OUTPUT=1
 
-VERSION_HEX = 0x000100
+VERSION_HEX = 0x01000
 VERSION = 0.1.0
 
 # cumbia plugin directory.

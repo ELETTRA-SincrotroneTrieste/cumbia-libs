@@ -123,7 +123,7 @@ public:
 
     template <class T> void putCtrlData(void* ep_data, CuData& d) const;
 
-    void caget(const std::string &src, CuData& prop_res, CuData &value_res, double timeout = DEFAULT_CA_TIMEOUT);
+    void caget(const std::string &src, CuData& prop_res, double timeout = DEFAULT_CA_TIMEOUT);
 
     void setSrcPatterns(const std::vector<std::string> &p);
 

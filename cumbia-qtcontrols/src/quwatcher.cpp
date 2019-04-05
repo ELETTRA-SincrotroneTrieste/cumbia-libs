@@ -53,7 +53,6 @@ QuWatcher::~QuWatcher()
 QString QuWatcher::source() const
 {
     if(CuControlsReaderA* r = d->context->getReader()) {
-        printf("QuWatcher:source returning source reader %p \n ", r);
         return r->source();
     }
     return "";

@@ -101,7 +101,7 @@ void CuTReader::onResult(const CuData &data)
     std::set<CuDataListener *> lis_copy = d->listeners;
     std::set<CuDataListener *>::iterator it;
     bool event_subscribe_fail = err && !d->exit && data["event"].toString() == "subscribe";
-
+    const std::string& mode = data["mode"].toString();
     if(a_exit) // remove from list of started activities
         d->activities.remove(data["ptr"].toVoidP()); // when list is null, can delete this
 
@@ -195,7 +195,7 @@ void CuTReader::sendData(const CuData &data)
         // otherwise, just update d->refresh_mode and wait for start
         setRefreshMode(static_cast<CuTReader::RefreshMode>(rm));
     }
-    else if(period > 0) {
+    else if(period > 0 && d->refresh_mode == CuTReader::PolledRefresh) {
         // - refresh mode has not changed.
         // - period has changed; update poller, if this action has a poller
         //
@@ -431,6 +431,7 @@ void CuTReader::m_startEventActivity()
     CuData tt("device", d->tsrc.getDeviceName()); /* thread token */
     d->event_activity = new CuEventActivity(at, df);
     d->activities.push_back(d->event_activity);
+    d->refresh_mode = ChangeEventRefresh; // update refresh mode
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
     d->cumbia_t->registerActivity(d->event_activity, this, tt, fi, bf);
@@ -442,7 +443,7 @@ void CuTReader::m_registerToPoller()
     CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
     polling_service->registerAction(d->cumbia_t, d->tsrc, d->period, this);
-
+    d->refresh_mode = PolledRefresh; // update refresh mode
 }
 
 void CuTReader::m_unregisterFromPoller()

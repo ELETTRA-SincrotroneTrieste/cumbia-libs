@@ -71,19 +71,12 @@ void CuEpConfigActivity::execute()
     CuData ctrl_data = getToken(); /* activity token */
     ctrl_data["properties"] = std::vector<std::string>();
     ctrl_data["mode"] = "caget";
-    CuData value_data(ctrl_data);
-
-    cuprintf("CuEpConfigActivity::execute: GETTING  token %s\n", ctrl_data.toString().c_str());
     CuEpicsWorld utils;
     utils.fillThreadInfo(ctrl_data, this); /* put thread and activity addresses as info */
-
-    utils.caget(ctrl_data["pv"].toString(), ctrl_data, value_data);
-
-    printf("\e[0;33mCuEpConfigActivity.execute: \n%s:\n got \e[0m%s \n", ctrl_data["pv"].toString().c_str(), ctrl_data.toString().c_str());
+    // utils.caget will call caget two times: one with DbrTime and the other with DbrCtrl
+    // the result will be merged into the ctrl_data passed as reference
+    utils.caget(ctrl_data["pv"].toString(), ctrl_data);
     publishResult(ctrl_data);
-    printf("publishResult called with %s\n", ctrl_data.toString().c_str());
-    publishResult(value_data);
-    printf("publishResult called with %s\n", value_data.toString().c_str());
 }
 
 void CuEpConfigActivity::onExit()

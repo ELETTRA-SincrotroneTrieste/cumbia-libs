@@ -102,16 +102,24 @@ void CuEpControlsReader::getData(CuData &d_ino) const
 
 void CuEpControlsReader::setSource(const QString &s)
 {
+    printf("CuEpControlsReader.setSource: current options %s for source %s\e[0m\n", d->read_options.toString().c_str(),
+           qstoc(s));
+    // if needs_caget is true, a caget is called a CuEpicsPropertyFactory is used to perform an explicit read
+    // for configuration purposes
+    // needs_caget will be false if d->cumbia_ep->addAction with CuEpicsReaderFactory returns false
+    // (= no action with the same source already monitored)
+    bool needs_caget = true;
     CuEpControlsUtils tcu;
     CuEpicsPropertyFactory acf;
-    CuEpicsReaderFactory readf;
-    readf.setOptions(d->read_options);
-  //  acf.setDesiredPVProperties(d->attr_props);
     d->source = tcu.replaceWildcards(s, qApp->arguments());
-    bool found = d->cumbia_ep->addAction(d->source.toStdString(), d->tlistener, readf);
-    if(found) {
-        printf("\e[0;32m*\n* a n action has already been found for source %s and type %d, we must \e[1;36;4mCAGET\e[0m\n",
-               qstoc(s), readf.getType());
+    if(!d->read_options["properties-only"].toBool()) {
+        CuEpicsReaderFactory readf;
+        readf.setOptions(d->read_options);
+        needs_caget = d->cumbia_ep->addAction(d->source.toStdString(), d->tlistener, readf);
+    }
+    if(needs_caget) {
+        printf("\e[0;32m*\n* either an action has already been found for source %s or a *configuration only* option is requested\e[0m\n",
+               qstoc(s));
         d->cumbia_ep->addAction(d->source.toStdString(), d->tlistener, acf);
     }
 }

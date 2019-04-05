@@ -207,3 +207,25 @@ bool CuControlsFactoryPool::isEmpty() const
     return m_rmap.size() == 0 && m_wmap.size() == 0;
 }
 
+std::vector<std::string> CuControlsFactoryPool::getSrcPatternDomains() const
+{
+    std::vector<std::string> domains;
+    std::map<std::string, std::vector<std::string> >::const_iterator it;
+    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it)
+        domains.push_back(it->first);
+    return domains;
+}
+
+std::vector<std::string> CuControlsFactoryPool::getSrcPatterns(const std::string &domain) const
+{
+    std::vector<std::string> patterns;
+    std::map<std::string, std::vector<std::string> >::const_iterator it;
+    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it) {
+        if(it->first == domain) {
+            for(size_t i = 0; i < it->second.size(); i++)
+                patterns.push_back(it->second[i]);
+        }
+    }
+    return patterns;
+}
+

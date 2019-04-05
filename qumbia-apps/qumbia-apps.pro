@@ -4,4 +4,5 @@ SUBDIRS=qumbiaprojectwizard \
 	qumbianewcontrolwizard \
 	cuuimake \
 	qumbia-client \
-	cumbia
+        cumbia \
+        la-cumparsita
