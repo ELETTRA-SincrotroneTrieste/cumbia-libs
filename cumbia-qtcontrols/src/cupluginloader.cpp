@@ -52,7 +52,8 @@ QString CuPluginLoader::getPluginPath() const {
  *
  * @param default_plugin_path the default cumbia plugin installation directory (e.g. CUMBIA_QTCONTROLS_PLUGIN_DIR
  *        for cumbia-qtcontrols projects or QUMBIA_PLUGIN_DIR for plugins that include qumbia-plugins.pri from
- *        the qumbia-plugins moudule)
+ *        the qumbia-plugins moudule).
+ *        If *empty*, the default plugin path is set to CUMBIA_QTCONTROLS_PLUGIN_DIR, defined in cumbia-qtcontrols.pri
  *
  * @param match a regular expression to match the desired plugin name. For example the ".*context-menu-actions\.so"
  *        can be used to find all the plugins extending the contextual menu of a cumbia-qtcontrols widget.
@@ -70,9 +71,10 @@ QStringList CuPluginLoader::getPluginAbsoluteFilePaths(const QString& default_pl
     QString custom_plugin_dir = pe.value("CUMBIA_PLUGIN_PATH", "");
     QStringList plugin_dirs = custom_plugin_dir.split(":", QString::SkipEmptyParts);
     QStringList plugin_names; // do not return duplicate plugins (with the same file name)
-    if(default_plupa.isEmpty())
+    if(default_plupa.isEmpty()) {
         default_plupa = QString(CUMBIA_QTCONTROLS_PLUGIN_DIR);
-    plugin_dirs.append(default_plugin_path); // last
+    }
+    plugin_dirs.append(default_plupa); // last
     foreach(QString plugindir, plugin_dirs) {
         QDir pluginsDir(plugindir);
         QStringList entryList = pluginsDir.entryList(QDir::Files);
