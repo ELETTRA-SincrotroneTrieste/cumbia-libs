@@ -32,7 +32,7 @@ Type the *hostname:port* couple and continue.
 
 Install the qt5 libraries for graphical applications, the *qt designer* and the *qt creator* ide
 
-> sudo apt-get install qt5-default qtcreator libqt5x11extras5-dev qttools5-dev 
+> sudo apt-get install qt5-default qtcreator libqt5x11extras5-dev qttools5-dev qtscript5-dev
 
 Qt version *5.9.5* and *qtcreator* version *4.5.2* will be installed.
 
