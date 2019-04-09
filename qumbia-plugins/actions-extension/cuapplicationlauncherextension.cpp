@@ -44,10 +44,7 @@ void CuApplicationLauncherExtension::start()
             d->qudbusctrl_i->raise(ail.first());
         }
         else {
-            QProcess p;
-            p.setProgram(d->program);
-            p.setArguments(d->args);
-            p.startDetached();
+            QProcess::startDetached(d->program, d->args);
         }
     }
 }
