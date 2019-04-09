@@ -78,7 +78,6 @@ QStringList CuPluginLoader::getPluginAbsoluteFilePaths(const QString& default_pl
     QStringList plugin_names; // do not return duplicate plugins (with the same file name)
     if(default_plupa.isEmpty()) {
         default_plupa = QString(CUMBIA_QTCONTROLS_PLUGIN_DIR);
-        printf("CuPluginLoader::getPluginAbsoluteFilePaths: plu path was empty: set to %s\n", default_plupa.toStdString().c_str());
     }
     plugin_dirs.append(default_plupa); // last
     foreach(QString plugindir, plugin_dirs) {

@@ -373,6 +373,8 @@ void CuFormulaReader::onNewData(const CuData &da)
         dat["quality_string"] = cuq.name();
         dat["msg"] = combinedMessage();
         dat["mode"] = combinedModes();
+        if(d->values.size() == 1) // single source
+            dat["raw_value"] = da["value"];
 
         // if formula has a name, put it in src
         !d->formula_parser.name().isEmpty() ? dat["src"] = d->formula_parser.name().toStdString() :

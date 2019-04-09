@@ -286,7 +286,7 @@ void CuEpicsWorld::fillThreadInfo(CuData &dat, const CuActivity* a)
 
 bool CuEpicsWorld::source_valid(const std::string &s) const
 {
-     return std::regex_match(s, std::regex("[A-Za-z0-9_\\./\\:]+"));
+     return std::regex_match(s, std::regex("[A-Za-z0-9_\\./\\:\\-\\+]+"));
 }
 
 void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
