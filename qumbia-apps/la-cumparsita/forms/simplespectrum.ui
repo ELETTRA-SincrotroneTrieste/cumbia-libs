@@ -16,9 +16,12 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QuSpectrumPlot" name="quSpectrumPlot">
+     <property name="yAxisAutoscale" stdset="0">
+      <bool>true</bool>
+     </property>
      <property name="sources">
       <stringlist>
-       <string>$1/double_spectrum_ro</string>
+       <string>T-TMBF:Y:ADC:MMS:DELTA</string>
       </stringlist>
      </property>
     </widget>

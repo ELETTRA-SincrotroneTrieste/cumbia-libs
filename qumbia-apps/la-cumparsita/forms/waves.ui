@@ -6,26 +6,113 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>611</width>
+    <height>523</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Waves - sum and difference</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
-   <item>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0" rowspan="5" colspan="3">
     <widget class="QuSpectrumPlot" name="quSpectrumPlot">
      <property name="yAxisAutoscale" stdset="0">
       <bool>true</bool>
      </property>
      <property name="sources">
       <stringlist>
-       <string>formula://[sum]{$1/wave,$2/wave} function(a,b) {    var c = [];    for(var i = 0; i &lt; a.length &amp;&amp; i &lt; b.length; i++) {        c.push(a[i] + b[i]);    }    return c;}</string>
-       <string>$1/wave</string>
        <string>$2/wave</string>
+       <string>$1/wave</string>
+       <string>formula://[somma]{$1/wave,$2/wave} function(a,b) {    var c = [];    for(var i = 0; i &lt; a.length &amp;&amp; i &lt; b.length; i++) {        c.push(a[i] + b[i]);    }    return c;}</string>
        <string>formula://[diff]{$1/wave,$2/wave} function(a,b) {    var c = [];    for(var i = 0; i &lt; a.length &amp;&amp; i &lt; b.length; i++) {        c.push(a[i] - b[i]);    }    return c;}</string>
       </stringlist>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3" colspan="2">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Avg #1</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3" colspan="2">
+    <widget class="QuLabel" name="lmin">
+     <property name="source">
+      <string>formula://[]{$1/wave} function (a) {
+    var sum = 0;
+    for(var i = 0; i &lt; a.length; i++) {
+        sum += a[i];
+    }
+    return sum / a.length;
+}
+
+</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3" colspan="2">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Avg #2</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3" colspan="2">
+    <widget class="QuLabel" name="lavg_2">
+     <property name="source">
+      <string>formula://[]{$2/wave} function (a) {
+    var sum = 0;
+    for(var i = 0; i &lt; a.length; i++) {
+        sum += a[i];
+    }
+    return sum / a.length;
+}
+
+</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="4">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>364</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="5" column="0">
+    <widget class="QuLabel" name="quLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="source">
+      <string>$1/double_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLineEdit" name="le1">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2" colspan="2">
+    <widget class="QuButton" name="quButton">
+     <property name="target">
+      <string>$1/double_scalar(&amp;le1)</string>
      </property>
     </widget>
    </item>
@@ -33,9 +120,19 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>QuLabel</class>
+   <extends>QLabel</extends>
+   <header>qulabel.h</header>
+  </customwidget>
+  <customwidget>
    <class>QuSpectrumPlot</class>
    <extends>QFrame</extends>
    <header>quspectrumplot.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QuButton</class>
+   <extends>QPushButton</extends>
+   <header>qubutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

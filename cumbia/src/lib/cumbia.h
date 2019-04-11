@@ -55,6 +55,15 @@ class CuActivityEvent;
  * | <a href="../../cumbia-qtcontrols/html/qumbia_plugins.html">qumbia-plugins module</a>.  |
  *
  *
+ * \subsection cuplugins Plugins
+ *
+ * |*cumbia* plugins  |
+ * |-------------------------------------------------------------------|
+ * | <a href="../../cuformula/html/index.html">formula plugin</a>. |
+ * | <a href="../../cumbia-dbus/html/index.html">dbus plugin</a>. |
+ * | <a href="../../cumbia-multiread/html/index.html">multi reader plugin</a>. |
+ * | <a href="../../widgets-std-context-menu-actions/html/index.html">context menu actions plugin</a>. |
+ *
  * \subsection cu_apps apps
  *
  * These applications (and their documentation, that has already been mentioned in the *Tutorials* table above)
@@ -81,7 +90,9 @@ class CuActivityEvent;
  * | *cumbia import*               | migrate a QTango project into cumbia      |<a href="../../qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
  * | *cumbia new control*          | write a *cumbia control* reader or writer | <a href="../../qumbianewcontrolwizard/html/index.html">qumbia-apps/qumbianewcontrolwizard</a>  |
  * | *cumbia ui make*              | run *cuuimake* to generate *qt+cumbia* ui_*.h files | <a href="../../cuuimake/html/index.html">qumbia-apps/cuuimake</a>  |
- * | *cumbia client*               | run a generic cumbia client | <a href="../../cumbia_client/html/index.html">qumbia-apps/cumbia_client</a>  |
+ * | *cumbia client*               | run a generic cumbia client | <a href="../../qumbia-client/html/index.html">qumbia-apps/cumbia_client</a>  | * | *cumbia client*               | run a generic cumbia client | <a href="../../cumbia_client/html/index.html">qumbia-apps/cumbia_client</a>  |
+ * | *la-cumparsita*               | interpret a Qt designer *ui file* on the fly | <a href="../../la-cumparsita/html/index.html">qumbia-apps/cumbia_client</a>  |
+
  *
  * *bash auto completion* will help you use these shortcuts: try
  *

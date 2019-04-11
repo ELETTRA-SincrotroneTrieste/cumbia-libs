@@ -53,7 +53,8 @@ TARGET   = bin/la-cumparsita
 
 DISTFILES += \
     jscripts/spectrum_sum.js \
-    jscripts/spectrum_diff.js
+    jscripts/spectrum_diff.js \
+    jscripts/spectrum_avg.js
 
 target.path = $${INSTALL_ROOT}/bin
 
