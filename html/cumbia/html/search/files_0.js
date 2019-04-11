@@ -12,6 +12,8 @@ var searchData=
   ['cudata_2eh',['cudata.h',['../cudata_8h.html',1,'']]],
   ['cudatalistener_2ecpp',['cudatalistener.cpp',['../cudatalistener_8cpp.html',1,'']]],
   ['cudatalistener_2eh',['cudatalistener.h',['../cudatalistener_8h.html',1,'']]],
+  ['cudataquality_2ecpp',['cudataquality.cpp',['../cudataquality_8cpp.html',1,'']]],
+  ['cudataquality_2eh',['cudataquality.h',['../cudataquality_8h.html',1,'']]],
   ['cuevent_2ecpp',['cuevent.cpp',['../cuevent_8cpp.html',1,'']]],
   ['cuevent_2eh',['cuevent.h',['../cuevent_8h.html',1,'']]],
   ['cueventloop_2ecpp',['cueventloop.cpp',['../cueventloop_8cpp.html',1,'']]],

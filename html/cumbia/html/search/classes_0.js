@@ -8,6 +8,7 @@ var searchData=
   ['cucontinuousactivity',['CuContinuousActivity',['../classCuContinuousActivity.html',1,'']]],
   ['cudata',['CuData',['../classCuData.html',1,'']]],
   ['cudatalistener',['CuDataListener',['../classCuDataListener.html',1,'']]],
+  ['cudataquality',['CuDataQuality',['../classCuDataQuality.html',1,'']]],
   ['cueventi',['CuEventI',['../classCuEventI.html',1,'']]],
   ['cueventlooplistener',['CuEventLoopListener',['../classCuEventLoopListener.html',1,'']]],
   ['cueventloopservice',['CuEventLoopService',['../classCuEventLoopService.html',1,'']]],

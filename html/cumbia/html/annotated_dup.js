@@ -8,6 +8,7 @@ var annotated_dup =
     [ "CuContinuousActivity", "classCuContinuousActivity.html", "classCuContinuousActivity" ],
     [ "CuData", "classCuData.html", "classCuData" ],
     [ "CuDataListener", "classCuDataListener.html", "classCuDataListener" ],
+    [ "CuDataQuality", "classCuDataQuality.html", "classCuDataQuality" ],
     [ "CuEventI", "classCuEventI.html", "classCuEventI" ],
     [ "CuEventLoopListener", "classCuEventLoopListener.html", "classCuEventLoopListener" ],
     [ "CuEventLoopService", "classCuEventLoopService.html", "classCuEventLoopService" ],

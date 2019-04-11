@@ -190,6 +190,16 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>a <a class="el" href="classCuTControlsReader.html" title="implements CuControlsReaderA abstract class and provides an interface to connect a Tango reader to a ...">CuTControlsReader</a>, an implementation of CuControlsReaderA abstract class</dd></dl>
+<dl class="section user"><dt>Important note</dt><dd>The options are reset (to an empty CuData) by <a class="el" href="classCuTReaderFactory.html#aea8b659485bfcea9b6bc34ef11d356cc" title="creates and returns a new CuTControlsReader, configured with the given Cumbia and CuDataListener.">CuTReaderFactory::create</a> after <a class="el" href="classCuTControlsReader.html" title="implements CuControlsReaderA abstract class and provides an interface to connect a Tango reader to a ...">CuTControlsReader</a> creation and initialization. This avoids applying the same options to subsequent create calls on the same factory</dd></dl>
+<p>Call setOptions before create to configure the reader.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">c</td><td>a pointer to the Cumbia object </td></tr>
+    <tr><td class="paramname">l</td><td>a pointer to an object implementing the CuDataListener interface</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Returns</dt><dd>a <a class="el" href="classCuTControlsReader.html" title="implements CuControlsReaderA abstract class and provides an interface to connect a Tango reader to a ...">CuTControlsReader</a>, an implementation of CuControlsReaderA abstract class </dd></dl>
 
 <p class="reference">References <a class="el" href="classCuTControlsReader.html#aa2245b1d686fdf558a4b8643fd586b6f">CuTControlsReader::setOptions()</a>.</p>
@@ -242,6 +252,21 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section user"><dt>Important note</dt><dd>The options are reset (to an empty CuData) by <a class="el" href="classCuTReaderFactory.html#aea8b659485bfcea9b6bc34ef11d356cc" title="creates and returns a new CuTControlsReader, configured with the given Cumbia and CuDataListener.">CuTReaderFactory::create</a> after <a class="el" href="classCuTControlsReader.html" title="implements CuControlsReaderA abstract class and provides an interface to connect a Tango reader to a ...">CuTControlsReader</a> creation and initialization.</dd></dl>
+<dl class="section user"><dt>note</dt><dd>Please use the CuTangoOptBuilder class rather than filling in the options manually.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>this method must be called before create in order to transfer the options to the Tango <a class="el" href="classCuTControlsReader.html" title="implements CuControlsReaderA abstract class and provides an interface to connect a Tango reader to a ...">CuTControlsReader</a>.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd>CuTangoOptBuilder</dd></dl>
+<p>call this before create to configure the reader</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">o</td><td>a CuData compiled with the following options: <ul>
+<li>"period" an integer, in milliseconds, for the polling period. Converted with: CuVariant::toInt </li>
+<li>"refresh_mode": an integer defining the Tango refresh mode. Converted with: CuVariant::toInt</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section user"><dt>note</dt><dd>Please use the CuTangoOptBuilder class rather than filling in the options manually.</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>this method must be called before create in order to transfer the options to the Tango <a class="el" href="classCuTControlsReader.html" title="implements CuControlsReaderA abstract class and provides an interface to connect a Tango reader to a ...">CuTControlsReader</a>.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd>CuTangoOptBuilder </dd></dl>
@@ -256,7 +281,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 29 2019 12:10:47 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 11 2019 09:55:36 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

@@ -28,6 +28,10 @@ var files_dup =
     [ "cudatalistener.h", "cudatalistener_8h.html", [
       [ "CuDataListener", "classCuDataListener.html", "classCuDataListener" ]
     ] ],
+    [ "cudataquality.cpp", "cudataquality_8cpp.html", null ],
+    [ "cudataquality.h", "cudataquality_8h.html", [
+      [ "CuDataQuality", "classCuDataQuality.html", "classCuDataQuality" ]
+    ] ],
     [ "cuevent.cpp", "cuevent_8cpp.html", null ],
     [ "cuevent.h", "cuevent_8h.html", [
       [ "CuEventI", "classCuEventI.html", "classCuEventI" ],

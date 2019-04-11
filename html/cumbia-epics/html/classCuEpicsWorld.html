@@ -79,8 +79,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab9e49deeb1b16c19b750e8352b9434ca"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:ab9e49deeb1b16c19b750e8352b9434ca"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classCuEpicsWorld.html#ab9e49deeb1b16c19b750e8352b9434ca">putCtrlData</a> (void *ep_data, CuData &amp;d) const</td></tr>
 <tr class="separator:ab9e49deeb1b16c19b750e8352b9434ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3641fe4ba3bb1cb545cf3a07f8f48c4e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuEpicsWorld.html#a3641fe4ba3bb1cb545cf3a07f8f48c4e">caget</a> (const std::string &amp;src, CuData &amp;prop_res, CuData &amp;value_res, double timeout=<a class="el" href="cuepics-world_8h.html#af16d153c96320f645bb69bff1c124458">DEFAULT_CA_TIMEOUT</a>)</td></tr>
-<tr class="separator:a3641fe4ba3bb1cb545cf3a07f8f48c4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c89409a99786811a7c17d36e9ce9a87"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuEpicsWorld.html#a3c89409a99786811a7c17d36e9ce9a87">caget</a> (const std::string &amp;src, CuData &amp;prop_res, double timeout=<a class="el" href="cuepics-world_8h.html#af16d153c96320f645bb69bff1c124458">DEFAULT_CA_TIMEOUT</a>)</td></tr>
+<tr class="separator:a3c89409a99786811a7c17d36e9ce9a87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb1f075f1deaffc53098ab74b2f14c14"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuEpicsWorld.html#aeb1f075f1deaffc53098ab74b2f14c14">setSrcPatterns</a> (const std::vector&lt; std::string &gt; &amp;p)</td></tr>
 <tr class="separator:aeb1f075f1deaffc53098ab74b2f14c14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab520509e400ee75726e2b8a7eac58752"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuEpicsWorld.html#ab520509e400ee75726e2b8a7eac58752">srcPatterns</a> () const</td></tr>
@@ -155,8 +155,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a3641fe4ba3bb1cb545cf3a07f8f48c4e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3641fe4ba3bb1cb545cf3a07f8f48c4e">&#9670;&nbsp;</a></span>caget()</h2>
+<a id="a3c89409a99786811a7c17d36e9ce9a87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c89409a99786811a7c17d36e9ce9a87">&#9670;&nbsp;</a></span>caget()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -176,12 +176,6 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CuData &amp;&#160;</td>
-          <td class="paramname"><em>value_res</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">double&#160;</td>
           <td class="paramname"><em>timeout</em> = <code><a class="el" href="cuepics-world_8h.html#af16d153c96320f645bb69bff1c124458">DEFAULT_CA_TIMEOUT</a></code>&#160;</td>
         </tr>
@@ -194,6 +188,8 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">References <a class="el" href="classCuPV.html#a441cee12096b965d93ab99989a96b828">CuPV::ch_id</a>, <a class="el" href="classCuEpicsWorld.html#a36ca5139cbc38bc470ebc4ef6cbc5bab">connect_pvs()</a>, <a class="el" href="classCuEpicsWorld.html#ad2202f98da6b578b3a24dde03aa22a01ac6bf61ee36f847dc3a8dc4c83853bb74">DbrCtrl</a>, <a class="el" href="classCuEpicsWorld.html#ad2202f98da6b578b3a24dde03aa22a01aa96d38edfa93f4922c68dbdae286fb0b">DbrTime</a>, and <a class="el" href="classCuEpicsWorld.html#ada0feac3aef6923b41d9913664d96e88">extractData()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classCuEpConfigActivity.html#a708ea3f341b7fc34110015fedbfdab59">CuEpConfigActivity::execute()</a>.</p>
 
 </div>
 </div>
@@ -225,7 +221,7 @@ Public Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="cuepics-world_8cpp.html#a849d8602b082fe2275cc6c6c7ad40a36">caTimeout</a>, and <a class="el" href="classCuEpicsWorld.html#a900208155347a13fdcee87a429a89063">create_pvs()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCuEpicsWorld.html#a3641fe4ba3bb1cb545cf3a07f8f48c4e">caget()</a>, and <a class="el" href="classCuPutActivity.html#adec6155ad49bd70cd25459a978ee1d29">CuPutActivity::execute()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuEpicsWorld.html#a3c89409a99786811a7c17d36e9ce9a87">caget()</a>, and <a class="el" href="classCuPutActivity.html#adec6155ad49bd70cd25459a978ee1d29">CuPutActivity::execute()</a>.</p>
 
 </div>
 </div>
@@ -295,7 +291,7 @@ Public Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classCuPV.html#a441cee12096b965d93ab99989a96b828">CuPV::ch_id</a>, <a class="el" href="classCuPV.html#ade6e854708ebd90cf92291dd0373d91e">CuPV::dbrType</a>, <a class="el" href="classCuPV.html#aebb9cceb11972728961d7e6a1fc34e18">CuPV::nElems</a>, and <a class="el" href="classCuPV.html#a6892830a1d61dcdab3c10d792a49cf6b">CuPV::value</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCuEpicsWorld.html#a3641fe4ba3bb1cb545cf3a07f8f48c4e">caget()</a>, and <a class="el" href="classCuMonitorActivity.html#a3c754227c64d922e1f3b0e0a9287c1f4">CuMonitorActivity::event_handler()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuEpicsWorld.html#a3c89409a99786811a7c17d36e9ce9a87">caget()</a>, and <a class="el" href="classCuMonitorActivity.html#a3c754227c64d922e1f3b0e0a9287c1f4">CuMonitorActivity::event_handler()</a>.</p>
 
 </div>
 </div>
@@ -490,7 +486,7 @@ template&lt;class T &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 29 2019 12:10:38 for cumbia-epics by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 11 2019 09:55:25 for cumbia-epics by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

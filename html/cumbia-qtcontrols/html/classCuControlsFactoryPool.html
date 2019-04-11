@@ -95,6 +95,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a44ee1497ede82182404e08c213de636d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuControlsFactoryPool.html#a44ee1497ede82182404e08c213de636d">isEmpty</a> () const</td></tr>
 <tr class="memdesc:a44ee1497ede82182404e08c213de636d"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns true if both the reader factory map and the writer factory map are empty.  <a href="#a44ee1497ede82182404e08c213de636d">More...</a><br /></td></tr>
 <tr class="separator:a44ee1497ede82182404e08c213de636d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9988554b9f6592bfa25aaf84720b720a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuControlsFactoryPool.html#a9988554b9f6592bfa25aaf84720b720a">getSrcPatternDomains</a> () const</td></tr>
+<tr class="separator:a9988554b9f6592bfa25aaf84720b720a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c7f186a9b78d6aef4dd074b00425b30"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuControlsFactoryPool.html#a3c7f186a9b78d6aef4dd074b00425b30">getSrcPatterns</a> (const std::string &amp;domain) const</td></tr>
+<tr class="separator:a3c7f186a9b78d6aef4dd074b00425b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>this class, used in conjunction with CumbiaPool allows to connect to different control system frameworks within the same application. </p>
@@ -223,6 +227,41 @@ Public Member Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>If no match is found, a random <a class="el" href="classCuControlsReaderFactoryI.html" title="cumbia-qtcontrols reader factory. Creates an instance of a CuControlsReaderA implementation.">CuControlsReaderFactoryI</a> implementation may be returned (the first stored in the std::map). </dd></dl>
 
 <p class="reference">References <a class="el" href="classCuControlsFactoryPool.html#a52237d2f92bb082d888abece4df2ffdb">getReadFactory()</a>, and <a class="el" href="classCuControlsFactoryPool.html#a6d69e1619048e38ed3a79fc27fb71d70">guessDomainBySrc()</a>.</p>
+
+</div>
+</div>
+<a id="a9988554b9f6592bfa25aaf84720b720a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9988554b9f6592bfa25aaf84720b720a">&#9670;&nbsp;</a></span>getSrcPatternDomains()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::string &gt; CuControlsFactoryPool::getSrcPatternDomains </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3c7f186a9b78d6aef4dd074b00425b30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c7f186a9b78d6aef4dd074b00425b30">&#9670;&nbsp;</a></span>getSrcPatterns()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; std::string &gt; CuControlsFactoryPool::getSrcPatterns </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>domain</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -463,7 +502,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 29 2019 12:10:42 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 11 2019 09:55:30 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

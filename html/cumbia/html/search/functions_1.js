@@ -2,6 +2,7 @@ var searchData=
 [
   ['cleanup',['cleanup',['../classCuThread.html#a8c3f4a8c690cd063ff0fa50ac1238e2b',1,'CuThread::cleanup()'],['../classCuThreadInterface.html#aeff2f7469d90d37ba25ab5ee54ea178b',1,'CuThreadInterface::cleanup()']]],
   ['clearsrcpatterns',['clearSrcPatterns',['../classCumbiaPool.html#a8f67e35f57af1c63b9fb3c0777c7ce84',1,'CumbiaPool']]],
+  ['color',['color',['../classCuDataQuality.html#ac6c0654b1e3720c0c272e982a9fb46fe',1,'CuDataQuality']]],
   ['connectionexists',['connectionExists',['../classCuActivityManager.html#a2e88050a39a888a05f87d204dee8167a',1,'CuActivityManager']]],
   ['containskey',['containsKey',['../classCuData.html#a89a88dac87b7b5c3a4de7aaf5e562409',1,'CuData']]],
   ['count',['count',['../classCuThreadService.html#a1d54941d0c3253f2342c4dd08183fb06',1,'CuThreadService']]],
@@ -14,6 +15,7 @@ var searchData=
   ['cucontinuousactivity',['CuContinuousActivity',['../classCuContinuousActivity.html#a1ce7fc0152e15cb917c8775d0d6098e0',1,'CuContinuousActivity']]],
   ['cudata',['CuData',['../classCuData.html#a636fd4a6d64563228a08d8368ce0fde8',1,'CuData::CuData()'],['../classCuData.html#af5fe84a0aa1ca31652cef2d596f759f1',1,'CuData::CuData(const CuVariant &amp;v)'],['../classCuData.html#aa1d4c80e9f5ee8a83831b62ecf16e445',1,'CuData::CuData(const std::string &amp;key, const CuVariant &amp;v)'],['../classCuData.html#ab32aa3edff6a10f64626b4b4f1973751',1,'CuData::CuData(const CuData &amp;other)'],['../classCuData.html#a6548401b6feddc7b3361ebccecbd61d8',1,'CuData::CuData(CuData &amp;&amp;other)']]],
   ['cudatalistener',['CuDataListener',['../classCuDataListener.html#adca50a3cc9b652b7d45c72624e317e90',1,'CuDataListener']]],
+  ['cudataquality',['CuDataQuality',['../classCuDataQuality.html#a9257dd65772c95d4377ad7194d6f953a',1,'CuDataQuality::CuDataQuality()'],['../classCuDataQuality.html#aec0fdf6bd79f30360230bed3d5a79353',1,'CuDataQuality::CuDataQuality(Type t)'],['../classCuDataQuality.html#afed8e24d24bc0e29d7c863c82e4ca3ef',1,'CuDataQuality::CuDataQuality(int t)']]],
   ['cueventloopservice',['CuEventLoopService',['../classCuEventLoopService.html#ac693f83edd7327225d66248a03d02b12',1,'CuEventLoopService']]],
   ['cuisolatedactivity',['CuIsolatedActivity',['../classCuIsolatedActivity.html#adf912e98048533e137e21cc7dc0d2f3e',1,'CuIsolatedActivity']]],
   ['culog',['CuLog',['../classCuLog.html#af7dcda1c4a28a97002ebd951df47b189',1,'CuLog::CuLog(CuLogImplI *log_impl)'],['../classCuLog.html#a7b8a6c18b85dc8fe46ca67cb00a526d8',1,'CuLog::CuLog()']]],

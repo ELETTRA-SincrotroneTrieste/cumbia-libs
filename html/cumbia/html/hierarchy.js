@@ -16,6 +16,7 @@ var hierarchy =
     ] ],
     [ "CuData", "classCuData.html", null ],
     [ "CuDataListener", "classCuDataListener.html", null ],
+    [ "CuDataQuality", "classCuDataQuality.html", null ],
     [ "CuEventI", "classCuEventI.html", [
       [ "CuActivityExitEvent", "classCuActivityExitEvent.html", null ],
       [ "CuExitLoopEvent", "classCuExitLoopEvent.html", null ],

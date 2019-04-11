@@ -28,6 +28,7 @@ var NAVTREE =
       [ ".io", "index.html#github", null ],
       [ "Tutorials", "index.html#tutorials", null ],
       [ "Modules", "index.html#cumodules", null ],
+      [ "Plugins", "index.html#cuplugins", null ],
       [ "apps", "index.html#cu_apps", null ]
     ] ],
     [ "Cumbia", "index.html#cumbia_mainpar", null ],
@@ -56,8 +57,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classCuThreadInterface.html#a9b3a0ca756329f84b728a4e92c36fcf9",
-"cumacros_8h.html#a4de959ed5df669e28b9cfe562e7027ed"
+"classCuThread.html#a7f6f979bdf67a2ccc47e8e11ca7c1a72",
+"cuisolatedactivity_8h.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

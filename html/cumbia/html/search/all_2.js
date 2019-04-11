@@ -1,8 +1,10 @@
 var searchData=
 [
+  ['changing',['Changing',['../classCuDataQuality.html#a6a78fa28ebb7b9ac9c8450bf836615a7a7af0f83603ed80a03e670dab8debadaf',1,'CuDataQuality']]],
   ['class',['Class',['../classCuLog.html#aa25342f943a18ae41499e1bd38b1e447',1,'CuLog']]],
   ['cleanup',['cleanup',['../classCuThread.html#a8c3f4a8c690cd063ff0fa50ac1238e2b',1,'CuThread::cleanup()'],['../classCuThreadInterface.html#aeff2f7469d90d37ba25ab5ee54ea178b',1,'CuThreadInterface::cleanup()']]],
   ['clearsrcpatterns',['clearSrcPatterns',['../classCumbiaPool.html#a8f67e35f57af1c63b9fb3c0777c7ce84',1,'CumbiaPool']]],
+  ['color',['color',['../classCuDataQuality.html#ac6c0654b1e3720c0c272e982a9fb46fe',1,'CuDataQuality']]],
   ['connect',['Connect',['../classCuLog.html#aa25342f943a18ae41499e1bd38b1e447aa5266e14318638a6f8a37d72dd1f0a90',1,'CuLog']]],
   ['connectionexists',['connectionExists',['../classCuActivityManager.html#a2e88050a39a888a05f87d204dee8167a',1,'CuActivityManager']]],
   ['containskey',['containsKey',['../classCuData.html#a89a88dac87b7b5c3a4de7aaf5e562409',1,'CuData']]],
@@ -37,6 +39,9 @@ var searchData=
   ['cudatalistener',['CuDataListener',['../classCuDataListener.html',1,'CuDataListener'],['../classCuDataListener.html#adca50a3cc9b652b7d45c72624e317e90',1,'CuDataListener::CuDataListener()']]],
   ['cudatalistener_2ecpp',['cudatalistener.cpp',['../cudatalistener_8cpp.html',1,'']]],
   ['cudatalistener_2eh',['cudatalistener.h',['../cudatalistener_8h.html',1,'']]],
+  ['cudataquality',['CuDataQuality',['../classCuDataQuality.html',1,'CuDataQuality'],['../classCuDataQuality.html#a9257dd65772c95d4377ad7194d6f953a',1,'CuDataQuality::CuDataQuality()'],['../classCuDataQuality.html#aec0fdf6bd79f30360230bed3d5a79353',1,'CuDataQuality::CuDataQuality(Type t)'],['../classCuDataQuality.html#afed8e24d24bc0e29d7c863c82e4ca3ef',1,'CuDataQuality::CuDataQuality(int t)']]],
+  ['cudataquality_2ecpp',['cudataquality.cpp',['../cudataquality_8cpp.html',1,'']]],
+  ['cudataquality_2eh',['cudataquality.h',['../cudataquality_8h.html',1,'']]],
   ['cuevent_2ecpp',['cuevent.cpp',['../cuevent_8cpp.html',1,'']]],
   ['cuevent_2eh',['cuevent.h',['../cuevent_8h.html',1,'']]],
   ['cueventi',['CuEventI',['../classCuEventI.html',1,'']]],

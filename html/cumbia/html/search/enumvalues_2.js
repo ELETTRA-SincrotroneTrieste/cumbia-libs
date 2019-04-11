@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['changing',['Changing',['../classCuDataQuality.html#a6a78fa28ebb7b9ac9c8450bf836615a7a7af0f83603ed80a03e670dab8debadaf',1,'CuDataQuality']]],
   ['connect',['Connect',['../classCuLog.html#aa25342f943a18ae41499e1bd38b1e447aa5266e14318638a6f8a37d72dd1f0a90',1,'CuLog']]],
   ['continuous',['Continuous',['../classCuActivity.html#a8d1ec3c656fa9d8b8b320741b2182514aff94cbe125e124bc561aa9a3db4ab5a6',1,'CuActivity']]],
   ['cuactivityexitevent',['CuActivityExitEvent',['../classCuEventI.html#ab4bba34f5f3639c29e9529f4617d0e51adbf07fb868ac1b7543b3a75949f8a74c',1,'CuEventI']]],

@@ -122,6 +122,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a30a3a7ec3d8090b59494108efa8e668e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoWorld.html#a30a3a7ec3d8090b59494108efa8e668e">dateTimeToStr</a> (time_t *tp) const</td></tr>
 <tr class="memdesc:a30a3a7ec3d8090b59494108efa8e668e"><td class="mdescLeft">&#160;</td><td class="mdescRight">if the time_t parameter is not null, use it to format the date/time into a std:string, otherwise get system time and use the current date/time  <a href="#a30a3a7ec3d8090b59494108efa8e668e">More...</a><br /></td></tr>
 <tr class="separator:a30a3a7ec3d8090b59494108efa8e668e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee68a3d94be6458ac53affb6bacbf4b7"><td class="memItemLeft" align="right" valign="top">CuDataQuality&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoWorld.html#aee68a3d94be6458ac53affb6bacbf4b7">toCuQuality</a> (Tango::AttrQuality q) const</td></tr>
+<tr class="memdesc:aee68a3d94be6458ac53affb6bacbf4b7"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCuTangoWorld.html#aee68a3d94be6458ac53affb6bacbf4b7" title="CuTangoWorld::toCuQuality.">CuTangoWorld::toCuQuality</a>.  <a href="#aee68a3d94be6458ac53affb6bacbf4b7">More...</a><br /></td></tr>
+<tr class="separator:aee68a3d94be6458ac53affb6bacbf4b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a35547ec89ebb462da12fc1c9f753a036"></a>
@@ -351,7 +354,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classCuTangoWorld.html#a30a3a7ec3d8090b59494108efa8e668e">dateTimeToStr()</a>, <a class="el" href="classCuTangoWorld.html#a45dd615c8664a83aeb717f28dffcc77c">formatToStr()</a>, <a class="el" href="classCuTangoWorld.html#a07499878728493c44dd5ec8f24c205e1">putDateTime()</a>, <a class="el" href="classCuTangoWorldConfig.html#a9f010db50e5bdc9e3a8b1744dac9564e">CuTangoWorldConfig::stateColorName()</a>, <a class="el" href="classCuTangoWorldConfig.html#ac003c4231bc42682d158051ac61f6555">CuTangoWorldConfig::stateString()</a>, and <a class="el" href="classCuTangoWorld.html#a26e156a6270b77593eec59508575eb9f">strerror()</a>.</p>
+<p class="reference">References <a class="el" href="classCuTangoWorld.html#a30a3a7ec3d8090b59494108efa8e668e">dateTimeToStr()</a>, <a class="el" href="classCuTangoWorld.html#a45dd615c8664a83aeb717f28dffcc77c">formatToStr()</a>, <a class="el" href="classCuTangoWorld.html#a07499878728493c44dd5ec8f24c205e1">putDateTime()</a>, <a class="el" href="classCuTangoWorldConfig.html#a9f010db50e5bdc9e3a8b1744dac9564e">CuTangoWorldConfig::stateColorName()</a>, <a class="el" href="classCuTangoWorldConfig.html#ac003c4231bc42682d158051ac61f6555">CuTangoWorldConfig::stateString()</a>, <a class="el" href="classCuTangoWorld.html#a26e156a6270b77593eec59508575eb9f">strerror()</a>, and <a class="el" href="classCuTangoWorld.html#aee68a3d94be6458ac53affb6bacbf4b7">toCuQuality()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classCuTangoWorld.html#adae04c7b4d86e21857440ac868bc66b7">cmd_inout()</a>, <a class="el" href="classCuEventActivity.html#a53084b7cc8f9366d09d84e7f55f20dc6">CuEventActivity::push_event()</a>, <a class="el" href="classCuTangoWorld.html#acb78e59113e9f005681c74729a6ccf88">read_att()</a>, and <a class="el" href="classCuTangoWorld.html#a12045f4cd938da22c8d9e10e3749434e">read_atts()</a>.</p>
 
@@ -942,6 +945,36 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aee68a3d94be6458ac53affb6bacbf4b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee68a3d94be6458ac53affb6bacbf4b7">&#9670;&nbsp;</a></span>toCuQuality()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuDataQuality CuTangoWorld::toCuQuality </td>
+          <td>(</td>
+          <td class="paramtype">Tango::AttrQuality&#160;</td>
+          <td class="paramname"><em>q</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classCuTangoWorld.html#aee68a3d94be6458ac53affb6bacbf4b7" title="CuTangoWorld::toCuQuality.">CuTangoWorld::toCuQuality</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">q</td><td>the input Tango::AttrQuality enum value </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The <em>engine independent</em> data quality</dd></dl>
+<dl class="section see"><dt>See also</dt><dd>CuDataQuality </dd></dl>
+
+<p class="reference">Referenced by <a class="el" href="classCuTangoWorld.html#a7bcdb5010031633aa4a702e134665181">extractData()</a>.</p>
+
+</div>
+</div>
 <a id="ae9e0902fd9b34890caa05afc30b516e7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae9e0902fd9b34890caa05afc30b516e7">&#9670;&nbsp;</a></span>toDeviceAttribute() <span class="overload">[1/2]</span></h2>
 
@@ -1127,7 +1160,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 29 2019 12:10:36 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 11 2019 09:55:22 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

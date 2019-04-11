@@ -63,6 +63,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a77d4fffd35e24b3e97375d04a7269cc4"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPluginLoader.html#a77d4fffd35e24b3e97375d04a7269cc4">getPluginAbsoluteFilePath</a> (const QString &amp;default_plugin_path, const QString &amp;name)</td></tr>
 <tr class="memdesc:a77d4fffd35e24b3e97375d04a7269cc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the absolute file path of the plugin with name <em>name</em>.  <a href="#a77d4fffd35e24b3e97375d04a7269cc4">More...</a><br /></td></tr>
 <tr class="separator:a77d4fffd35e24b3e97375d04a7269cc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af27df342b633ebeee31befe192cd1c11"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPluginLoader.html#af27df342b633ebeee31befe192cd1c11">getPluginPath</a> () const</td></tr>
+<tr class="memdesc:af27df342b633ebeee31befe192cd1c11"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCuPluginLoader.html#af27df342b633ebeee31befe192cd1c11" title="CuPluginLoader::getPluginPath returns the plugin path from the CUMBIA_PLUGIN_PATH environment variabl...">CuPluginLoader::getPluginPath</a> returns the plugin path from the CUMBIA_PLUGIN_PATH environment variable.  <a href="#af27df342b633ebeee31befe192cd1c11">More...</a><br /></td></tr>
+<tr class="separator:af27df342b633ebeee31befe192cd1c11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e175093df6b29f4e45acd9bee056ba0"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPluginLoader.html#a4e175093df6b29f4e45acd9bee056ba0">getDefaultPluginPath</a> () const</td></tr>
+<tr class="separator:a4e175093df6b29f4e45acd9bee056ba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Helper class that loads Qt plugins searching in the default cumbia plugin path and in directories listed in a proper environment variable. </p>
@@ -98,6 +103,23 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a4e175093df6b29f4e45acd9bee056ba0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e175093df6b29f4e45acd9bee056ba0">&#9670;&nbsp;</a></span>getDefaultPluginPath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString CuPluginLoader::getDefaultPluginPath </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a77d4fffd35e24b3e97375d04a7269cc4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a77d4fffd35e24b3e97375d04a7269cc4">&#9670;&nbsp;</a></span>getPluginAbsoluteFilePath()</h2>
 
@@ -170,7 +192,7 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>a list of the absolute file paths of the plugins matching the given <em>match</em>, or an empty list if no plugin file name matches the given pattern</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">default_plugin_path</td><td>the default cumbia plugin installation directory (e.g. CUMBIA_QTCONTROLS_PLUGIN_DIR for cumbia-qtcontrols projects or QUMBIA_PLUGIN_DIR for plugins that include qumbia-plugins.pri from the qumbia-plugins moudule)</td></tr>
+    <tr><td class="paramname">default_plugin_path</td><td>the default cumbia plugin installation directory (e.g. CUMBIA_QTCONTROLS_PLUGIN_DIR for cumbia-qtcontrols projects or QUMBIA_PLUGIN_DIR for plugins that include qumbia-plugins.pri from the qumbia-plugins moudule). If <em>empty</em>, the default plugin path is set to CUMBIA_QTCONTROLS_PLUGIN_DIR, defined in cumbia-qtcontrols.pri</td></tr>
     <tr><td class="paramname">match</td><td>a regular expression to match the desired plugin name. For example the ".*context-menu-actions\.so" can be used to find all the plugins extending the contextual menu of a cumbia-qtcontrols widget.</td></tr>
   </table>
   </dd>
@@ -182,6 +204,26 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="af27df342b633ebeee31befe192cd1c11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af27df342b633ebeee31befe192cd1c11">&#9670;&nbsp;</a></span>getPluginPath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString CuPluginLoader::getPluginPath </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classCuPluginLoader.html#af27df342b633ebeee31befe192cd1c11" title="CuPluginLoader::getPluginPath returns the plugin path from the CUMBIA_PLUGIN_PATH environment variabl...">CuPluginLoader::getPluginPath</a> returns the plugin path from the CUMBIA_PLUGIN_PATH environment variable. </p>
+<dl class="section return"><dt>Returns</dt><dd>the plugin path set with the environment variable CUMBIA_PLUGIN_PATH or an empty string if the variable is unset </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="cupluginloader_8h_source.html">cupluginloader.h</a></li>
 <li><a class="el" href="cupluginloader_8cpp.html">cupluginloader.cpp</a></li>
@@ -189,7 +231,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 29 2019 12:10:42 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Apr 11 2019 09:55:30 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

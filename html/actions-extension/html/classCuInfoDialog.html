@@ -70,6 +70,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a33a9a15505f80e177656778f4b7be982"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e6b9b289a08a366cb896f0754679c75"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuInfoDialog.html#a1e6b9b289a08a366cb896f0754679c75">~CuInfoDialog</a> ()</td></tr>
 <tr class="separator:a1e6b9b289a08a366cb896f0754679c75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a120073d7375e6dc9f58632fe9970cdb5"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuInfoDialog.html#a120073d7375e6dc9f58632fe9970cdb5">extractSources</a> (const QString &amp;expression, QString &amp;formula)</td></tr>
+<tr class="memdesc:a120073d7375e6dc9f58632fe9970cdb5"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCuInfoDialog.html#a120073d7375e6dc9f58632fe9970cdb5" title="CuInfoDialog::extractSources if source represents a formula, this method extracts the source names on...">CuInfoDialog::extractSources</a> if source represents a formula, this method extracts the source names only, comma separated if more than one. The result must be formatted in a way that is compatible with the "src" CuData value that will be provided by the formula reader, for example: <em>test/device/1/double_scalar,test/device/2/double_scalar</em>  <a href="#a120073d7375e6dc9f58632fe9970cdb5">More...</a><br /></td></tr>
+<tr class="separator:a120073d7375e6dc9f58632fe9970cdb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87092f21449187bb6f335af21f111650"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuInfoDialog.html#a87092f21449187bb6f335af21f111650">extractSource</a> (const QString &amp;expression, QString &amp;formula)</td></tr>
+<tr class="memdesc:a87092f21449187bb6f335af21f111650"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCuInfoDialog.html#a87092f21449187bb6f335af21f111650" title="CuInfoDialog::extractSource provides the list of strings returned by extractSources joined by commas.">CuInfoDialog::extractSource</a> provides the list of strings returned by extractSources joined by commas.  <a href="#a87092f21449187bb6f335af21f111650">More...</a><br /></td></tr>
+<tr class="separator:a87092f21449187bb6f335af21f111650"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This dialog window is shown when a cumbia-qtcontrols widget is clicked with the right button and the <em>Link stats</em> action is triggered.</p>
@@ -170,9 +176,92 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classCuInfoDialogPrivate.html#ad20eebcdaa672b38282af113a7978599">CuInfoDialogPrivate::ctx</a>, and <a class="el" href="classCuInfoDialogPrivate.html#ae65078bdb67bfc6937cf896eab8d6a40">CuInfoDialogPrivate::layout_col_cnt</a>.</p>
+<p class="reference">References <a class="el" href="classCuInfoDialogPrivate.html#ad20eebcdaa672b38282af113a7978599">CuInfoDialogPrivate::ctx</a>, <a class="el" href="classCuInfoDialog.html#a87092f21449187bb6f335af21f111650">extractSource()</a>, and <a class="el" href="classCuInfoDialogPrivate.html#ae65078bdb67bfc6937cf896eab8d6a40">CuInfoDialogPrivate::layout_col_cnt</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classInfoDialogExtension.html#a42365b123ca2383fa0a42927f0a0ca63">InfoDialogExtension::execute()</a>.</p>
+
+</div>
+</div>
+<a id="a87092f21449187bb6f335af21f111650"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87092f21449187bb6f335af21f111650">&#9670;&nbsp;</a></span>extractSource()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString CuInfoDialog::extractSource </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>expression</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QString &amp;&#160;</td>
+          <td class="paramname"><em>formula</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">expression</td><td>the expression obtained by the reader's source property (may be a simple source or a complex formula expression) </td></tr>
+    <tr><td class="paramname">formula</td><td>will contain the formula, if any </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a comma separated list of strings that are the names of the sources detected within {}</dd></dl>
+<p>Please read the <em>cuformula</em> plugin documentation for further details.</p>
+<p>If expression is a formula, the list of sources involved are detected within the first *{}* parenthesis group.</p>
+<dl class="section user"><dt>Example</dt><dd>If expression is "{$1/double_scalar,$2/double_scalar}  function(a,b) {  return a-b;}" the method will return a QString "$1/double_scalar,$2/double_scalar" and formula will contain "function(a,b) {  return a-b;}" </dd></dl>
+
+<p class="reference">References <a class="el" href="classCuInfoDialog.html#a120073d7375e6dc9f58632fe9970cdb5">extractSources()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classCuInfoDialog.html#a6bef5ae89b472793e81b959a9b521021">exec()</a>.</p>
+
+</div>
+</div>
+<a id="a120073d7375e6dc9f58632fe9970cdb5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a120073d7375e6dc9f58632fe9970cdb5">&#9670;&nbsp;</a></span>extractSources()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QStringList CuInfoDialog::extractSources </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>expression</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">QString &amp;&#160;</td>
+          <td class="paramname"><em>formula</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">expression</td><td>the source expression as returned by the <em>source</em> property of the reader </td></tr>
+    <tr><td class="paramname">formula</td><td>will contain the formula, if any </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a list of strings with the sources detected in expr.</dd></dl>
+<p>Please read the <em>cuformula</em> plugin documentation for further details. If expression is a formula, the list of sources involved are detected within the first *{}* parenthesis group.</p>
+<dl class="section user"><dt>Example</dt><dd>If expression is "{$1/double_scalar,$2/double_scalar}  function(a,b) {  return a-b;}" the method will return a QStringList ("$1/double_scalar","$2/double_scalar") and formula will contain "function(a,b) {  return a-b;}" </dd></dl>
+
+<p class="reference">Referenced by <a class="el" href="classCuInfoDialog.html#a87092f21449187bb6f335af21f111650">extractSource()</a>.</p>
 
 </div>
 </div>
