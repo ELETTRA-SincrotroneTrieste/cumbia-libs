@@ -8,6 +8,15 @@ thread. You will receive the progress updates and the results when they are read
 Write graphical user interface components and applications communicating with the Tango and Epics control systems. More control system engines can be
 added in the future and plugged into existing cumbia installations and applications.
 
+### Combine results into formulas and functions
+Mixing the  Qt *javascript* integration and the *cumbia formula plugin*, read results from Tango and Epics
+can be introduced into functions. The results can be displayed into any *cumbia-qtcontrols* widget.
+Refer to the <a href="html/cuformula/html/index.html">formula plugin</a> section for details.
+
+### Realize Qt applications without writing any code
+*la-cumparsita* is an application that interprets *Qt designer UI files* on the fly and performs as a
+full C++ Qt application in style and behavior.
+
 ### Keywords and technologies
 - C++-11
 - <a href="https://www.qt.io/">Qt</a>
@@ -122,6 +131,7 @@ They define shortcuts for the common operations provided by the *cumbia applicat
 | *cumbia ui make*              | run *cuuimake* to generate *qt+cumbia* ui_*.h files | <a href="html/cuuimake/html/index.html">qumbia-apps/cuuimake</a>  |
 | *cumbia client*               | run a generic cumbia client | <a href="html/cumbia_client/html/index.html">qumbia-apps/cumbia_client</a>  |
 | *cumbia upgrade*              | upgrade to a newer version of cumbia|  - |
+| *la-cumparsita*               | on the fly applications from a *Qt designer UI file* | <a href="html/la-cumparsita/html/index.html">qumbia-apps/la-cumparsita/a>  |
 
 
 *bash auto completion* will help you find out these shortcuts: try
