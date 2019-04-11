@@ -15,7 +15,8 @@ Refer to the <a href="html/cuformula/html/index.html">formula plugin</a> section
 
 ### Realize Qt applications without writing any code
 *la-cumparsita* is an application that interprets *Qt designer UI files* on the fly and performs as a
-full C++ Qt application in style and behavior.
+full C++ Qt application in style and behavior. For the most demanding users, *la-cumparsita* allows
+*javascript* integration to display function results as described earlier in this page.
 
 ### Keywords and technologies
 - C++-11
