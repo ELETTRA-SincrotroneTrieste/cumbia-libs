@@ -77,6 +77,19 @@ The library sources include copies of the *README.md* and *README.UBUNTU.md* fil
  | <a href="html/cumbia-websocket/html/index.html">cumbia-websocket</a>.  |
  | <a href="html/cumbia-qtcontrols/html/qumbia_plugins.html">qumbia-plugins module</a>.  |
 
+
+
+ 
+### Plugins
+ 
+ |*cumbia* plugins  |
+ |-------------------------------------------------------------------|
+ | <a href="../../cuformula/html/index.html">formula plugin</a>. |
+ | <a href="../../cumbia-dbus/html/index.html">dbus plugin</a>. |
+ | <a href="../../cumbia-multiread/html/index.html">multi reader plugin</a>. |
+ | <a href="../../widgets-std-context-menu-actions/html/index.html">context menu actions plugin</a>. |
+ 
+
 ### Apps
 
 *cumbia* provides some applications as part of the software distribution.
