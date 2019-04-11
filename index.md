@@ -84,10 +84,10 @@ The library sources include copies of the *README.md* and *README.UBUNTU.md* fil
  
  |*cumbia* plugins  |
  |-------------------------------------------------------------------|
- | <a href="../../cuformula/html/index.html">formula plugin</a>. |
- | <a href="../../cumbia-dbus/html/index.html">dbus plugin</a>. |
- | <a href="../../cumbia-multiread/html/index.html">multi reader plugin</a>. |
- | <a href="../../widgets-std-context-menu-actions/html/index.html">context menu actions plugin</a>. |
+ | <a href="html/cuformula/html/index.html">formula plugin</a>. |
+ | <a href="html/cumbia-dbus/html/index.html">dbus plugin</a>. |
+ | <a href="html/cumbia-multiread/html/index.html">multi reader plugin</a>. |
+ | <a href="html/widgets-std-context-menu-actions/html/index.html">context menu actions plugin</a>. |
  
 
 ### Apps
