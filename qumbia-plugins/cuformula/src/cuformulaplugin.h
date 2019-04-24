@@ -94,8 +94,8 @@ class CuFormulasPluginPrivate;
  * \li  $2/wave
  *
  * will replace the *a,b* input parameters in the *Javascript function*.
- * A third vector, named *c* in the function is returned and used to provide data for the *Source 4*,
- * with the *diff* alias (visible in Figure 1).
+ * A third vector, named *c* in the function, is returned and used to provide data for the *Source 4*,
+ * that's been given the *diff* alias (as in Figure 1).
  *
  * @brief The CuFormulaPlugin class
  */
