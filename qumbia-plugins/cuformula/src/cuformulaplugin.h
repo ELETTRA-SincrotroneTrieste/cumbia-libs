@@ -63,9 +63,37 @@ class CuFormulasPluginPrivate;
  * the two *wave* attributes.
  * On the right, two *QuLabel* show the average value of the waves for each of the two sources.
  *
- * \image html cumparsita.png "la-cumparsita shows a sum and a difference curve. Average labels on the right"
- * \image latex cumparsita.eps "cuuimake"
+ * \image html cumparsita.png "Figure 1. la-cumparsita shows a sum and a difference curve. Average labels on the right"
+ * \image latex cumparsita.eps "Figure 1. la-cumparsita shows a sum and a difference curve. Average labels on the right"
  *
+ *
+ * \par 3. Formulas in the *Qt Designer*
+ * As every other source, a *formula* can be set directly from the Qt designer form editor.
+ * Right click on any *cumbia-qtcontrols* widget and select the *Edit connection...* action.
+ * In the popup dialog, check the *Formula* box and write the *JavaScript* function in the
+ * text area below. The function can be also loaded from a file: click on the *From js script...*
+ * button and choose the input file. The contents of the file are copied into the text area and
+ * when the "OK" button is clicked they become the *source* of the control widget.
+ * If one provides a *Source alias* in the dedicated text field, it may be used as an *alias*
+ * for the formula, for example as a title of a plot curve (see figure above).
+ * The input parameters to the function, if provided, are replaced by the sources listed in
+ * curly braces in the top text line edit (see figure below).
+ *
+ * \par Note
+ * The contents of the *javascript file* are *copied* into the *ui* file, so that the *js* file
+ * does not need to be part of the project. On the other hand, changing the *js* file alone is not
+ * enough to apply the changes back in the *source*: the file must be reloaded through the Qt
+ * designer *Edit connection...* dialog.
+ *
+ * \image html edit-source-formula.png "Figure 2. Edit source dialog with a javascript function"
+ * \image latex edit-source-formula.png.eps "Figure 2. Edit source dialog with a javascript function"
+ *
+ * In the example above, the readings from the two sources
+ * \li  $1/wave   and
+ * \li  $2/wave
+ * will replace the *a,b* input parameters in the *Javascript function*.
+ * A third vector, named *c* in the function is returned and used to provide data for the *Source 4*,
+ * with the *diff* alias (visible in Figure 1).
  *
  * @brief The CuFormulaPlugin class
  */
