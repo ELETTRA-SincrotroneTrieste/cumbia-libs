@@ -58,9 +58,17 @@ Usage</h1>
 <div class="image">
 <img src="cumparsita.png" alt="cumparsita.png"/>
 <div class="caption">
-la-cumparsita shows a sum and a difference curve. Average labels on the right</div></div>
-<dl class="section user"><dt>3. Formulas in the Qt Designer</dt><dd>As every other source, a <em>formula</em> can be set directly from the Qt designer form editor. Right click on any <em>cumbia-qtcontrols</em> widget and select the <em>Edit connection...</em> action. In the popup dialog, check the <em>Formula</em> box and write the <em>JavaScript</em> function in the text area below. The function can be also loaded from a file: click on the <em>From js script...</em> button and choose the input file. The contents of the file are copied into the text area and when the "OK" button is clicked they become the <em>source</em> of the control widget.</dd></dl>
-<dl class="section user"><dt>Note</dt><dd>The contents of the <em>javascript file</em> are <em>copied</em> into the <em>ui</em> file, so that the <em>js</em> file does not need to be part of the project. On the other hand, changing the <em>js</em> file alone is not enough to apply the changes back in the <em>source</em>: the file must be reloaded through the Qt designer <em>Edit connection...</em> dialog. </dd></dl>
+Figure 1. la-cumparsita shows a sum and a difference curve. Average labels on the right</div></div>
+<dl class="section user"><dt>3. Formulas in the Qt Designer</dt><dd>As every other source, a <em>formula</em> can be set directly from the Qt designer form editor. Right click on any <em>cumbia-qtcontrols</em> widget and select the <em>Edit connection...</em> action. In the popup dialog, check the <em>Formula</em> box and write the <em>JavaScript</em> function in the text area below. The function can be also loaded from a file: click on the <em>From js script...</em> button and choose the input file. The contents of the file are copied into the text area and when the "OK" button is clicked they become the <em>source</em> of the control widget. If one provides a <em>Source alias</em> in the dedicated text field, it may be used as an <em>alias</em> for the formula, for example as a title of a plot curve (see figure above). The input parameters to the function, if provided, are replaced by the sources listed in curly braces in the top text line edit (see figure below).</dd></dl>
+<dl class="section user"><dt>Note</dt><dd>The contents of the <em>javascript file</em> are <em>copied</em> into the <em>ui</em> file, so that the <em>js</em> file does not need to be part of the project. On the other hand, changing the <em>js</em> file alone is not enough to apply the changes back in the <em>source</em>: the file must be reloaded through the Qt designer <em>Edit connection...</em> dialog.</dd></dl>
+<div class="image">
+<img src="edit-source-formula.png" alt="edit-source-formula.png"/>
+<div class="caption">
+Figure 2. Edit source dialog with a javascript function</div></div>
+<p> In the example above, the readings from the two sources </p><ul>
+<li>$1/wave and </li>
+<li>$2/wave will replace the <em>a,b</em> input parameters in the <em>Javascript function</em>. A third vector, named <em>c</em> in the function is returned and used to provide data for the <em>Source 4</em>, with the <em>diff</em> alias (visible in Figure 1). </li>
+</ul>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
