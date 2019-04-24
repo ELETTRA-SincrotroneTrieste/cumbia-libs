@@ -89,8 +89,10 @@ class CuFormulasPluginPrivate;
  * \image latex edit-source-formula.png.eps "Figure 2. Edit source dialog with a javascript function"
  *
  * In the example above, the readings from the two sources
+ *
  * \li  $1/wave   and
  * \li  $2/wave
+ *
  * will replace the *a,b* input parameters in the *Javascript function*.
  * A third vector, named *c* in the function is returned and used to provide data for the *Source 4*,
  * with the *diff* alias (visible in Figure 1).
