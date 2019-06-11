@@ -28,7 +28,7 @@ CuDeviceFactoryService::~CuDeviceFactoryService()
  * @see TDevice::isValid
  * @see TDevice::getError
  */
-TDevice *CuDeviceFactoryService::getDevice(const std::__cxx11::string &name)
+TDevice *CuDeviceFactoryService::getDevice(const std::string &name)
 {
     pr_thread();
     TDevice *td = NULL;
@@ -52,7 +52,7 @@ TDevice *CuDeviceFactoryService::getDevice(const std::__cxx11::string &name)
  *
  * @see getDevice
  */
-TDevice *CuDeviceFactoryService::findDevice(const std::__cxx11::string &name)
+TDevice *CuDeviceFactoryService::findDevice(const std::string &name)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
     std::map<std::string, TDevice *>::iterator it = m_devmap.find(name);
@@ -73,7 +73,7 @@ TDevice *CuDeviceFactoryService::findDevice(const std::__cxx11::string &name)
  * The body of this method is lock guarded, so that it's safe to call removeDevice from
  * different threads.
  */
-void CuDeviceFactoryService::removeDevice(const std::__cxx11::string &name)
+void CuDeviceFactoryService::removeDevice(const std::string &name)
 {
     pr_thread();
     std::lock_guard<std::mutex> lock(m_mutex);
@@ -93,7 +93,7 @@ void CuDeviceFactoryService::removeDevice(const std::__cxx11::string &name)
  *
  * Implements CuTangoActionI::getName pure virtual method
  */
-std::__cxx11::string CuDeviceFactoryService::getName() const
+std::string CuDeviceFactoryService::getName() const
 {
     return "DeviceFactoryService";
 }

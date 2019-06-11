@@ -18,8 +18,8 @@ configure_file(output : 'config.h',
 
 
 headers = [
-'src/lib/cumbia.h',
-'src/lib/cumacros.h',
+	'src/lib/cumbia.h',
+	'src/lib/cumacros.h',
 'src/lib/cucontinuousactivity.h',
 'src/lib/cuisolatedactivity.h',
 'src/lib/cuactivity.h',
@@ -90,7 +90,6 @@ cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1'
 deps = [ dependency('threads') ]
 
 cumbialib = shared_library('cumbia', sources,
-        soversion : '0',
         version : meson.project_version(),
         include_directories : includedirs,
         cpp_args : cpp_arguments,

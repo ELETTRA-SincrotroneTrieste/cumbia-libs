@@ -57,7 +57,7 @@ CumbiaTango::~CumbiaTango()
     af->cleanup();
 }
 
-void CumbiaTango::addAction(const std::__cxx11::string &source, CuDataListener *l, const CuTangoActionFactoryI& f)
+void CumbiaTango::addAction(const std::string &source, CuDataListener *l, const CuTangoActionFactoryI& f)
 {
     CuTangoWorld w;
     if(w.source_valid(source))

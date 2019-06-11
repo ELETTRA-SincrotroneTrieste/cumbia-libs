@@ -36,6 +36,12 @@ CuTWriterFactory::~CuTWriterFactory()
  *
  * @param o a CuData bundle of key/value pairs
  *
+ * \par Key/value pairs
+ * \li *no-properties* [bool, default: false]. If true, skip attribute configuration in setTarget.
+ * \li *fetch_props* [std::vector<std::string>, default: empty] list of attribute properties to
+ *     fetch from the database during configuration. The *no-properties* key must be left to false
+ *     (default).
+ *
  * @see create
  */
 void CuTWriterFactory::setOptions(const CuData &o)
@@ -47,6 +53,7 @@ void CuTWriterFactory::setOptions(const CuData &o)
  *         Cumbia and CuDataListener.
  *
  * Call setOptions before create to configure the writer.
+ * See setOptions for a list of predefined keys.
  *
  * @param c a pointer to the CumbiaTango object
  * @param l a pointer to an object implementing the CuDataListener interface
@@ -79,7 +86,6 @@ public:
     QString target;
     CumbiaTango *cumbia_tango;
     CuDataListener *tlistener;
-    std::vector<std::string> attr_props;
     CuData w_options;
 };
 
@@ -203,10 +209,10 @@ void CuTControlsWriter::getData(CuData & /*d_ino*/) const
 void CuTControlsWriter::setTarget(const QString &s)
 {
     CuTControlsUtils tcu;
-    CuTWriterConfFactory w_conf_factory;
-    CuData options;
-    options["fetch_props"] = d->attr_props;
-    w_conf_factory.setOptions(options);
     d->target = tcu.replaceWildcards(s, qApp->arguments());
-    d->cumbia_tango->addAction(d->target.toStdString(), d->tlistener, w_conf_factory);
+    if(!d->w_options["no-properties"].toBool()) {
+        CuTWriterConfFactory w_conf_factory;
+        w_conf_factory.setOptions(d->w_options);
+        d->cumbia_tango->addAction(d->target.toStdString(), d->tlistener, w_conf_factory);
+    }
 }

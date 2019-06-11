@@ -209,7 +209,12 @@ void CuContext::disposeWriter(const std::string &src)
  *
  * @param options a CuData bundle with key/value pairs of options.
  *
- * Saves the options locally.
+ * Saves the options locally. Options are used to configure the readers and writers
+ * instantiated by CuContext.
+ *
+ * \par Note
+ * You may want to call setOptions before replace_reader or replace_writer, so that they affect
+ * the link configuration. The CuContext introductory documentation lists the known options.
  *
  * @see sendData
  * @see options
@@ -227,7 +232,7 @@ void CuContext::setOptions(const CuData &options)
  * CuData options bundle is also saved locally and can be fetched with the QuContext::options method.
  *
  * \par Note
- * Call setOptions on QuContext <em>before</em> setSource/setTargets on the qumbia-qtcontrols object to set up
+ * Call setOptions on CuContext <em>before</em> setSource/setTargets on the qumbia-qtcontrols object to set up
  * the link with the desired options. Please remind that the options that can be applied are
  * CuControlsReaderA/CuControlsWriterA (named <em>link implementation</em> hereafter) implementation dependent.
  * (For example, read mode - polling or event driven - polling period and so on).

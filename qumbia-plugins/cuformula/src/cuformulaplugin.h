@@ -44,6 +44,7 @@ class CuFormulasPluginPrivate;
  *
  *
  * \par 2. *formula* source syntax
+ *
  * As suggested by the discusssion above, in order to be interpreted by the plugin a *source* must
  * start with the "formula://" pattern.
  * The complete source expression will then contain the list of control system source names within
@@ -68,6 +69,7 @@ class CuFormulasPluginPrivate;
  *
  *
  * \par 3. Formulas in the *Qt Designer*
+ *
  * As every other source, a *formula* can be set directly from the Qt designer form editor.
  * Right click on any *cumbia-qtcontrols* widget and select the *Edit connection...* action.
  * In the popup dialog, check the *Formula* box and write the *JavaScript* function in the

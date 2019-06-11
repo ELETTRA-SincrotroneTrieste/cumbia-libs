@@ -48,7 +48,7 @@ public:
 
     // CuServiceI interface
 public:
-    std::__cxx11::string getName() const;
+    std::string getName() const;
     CuServices::Type getType() const;
 
 private:

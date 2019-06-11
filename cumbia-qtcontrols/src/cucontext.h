@@ -33,6 +33,15 @@ class CuContextPrivate;
  * If CuData is passed to make_reader (or make_writer), it is used to configure
  * the options of the underlying engine. CuData key/value set is specific to the engine used.
  *
+ * \par Options
+ * The setOptions method can be used to configure *how* the readers and writers created by CuContext
+ * are set up. setOptions accepts a CuData bundle with settings organised in key/value pairs.
+ *
+ * \par Relevant key/value pairs
+ * \li *no-properties* [bool, default: false]. If true, skip attribute configuration.
+ * \li *fetch_props* [std::vector<std::string>, default: empty] list of attribute properties to
+ *     fetch from the database during configuration. The *no-properties* key must be left to false
+ *     (default).
  */
 class CuContext
 {

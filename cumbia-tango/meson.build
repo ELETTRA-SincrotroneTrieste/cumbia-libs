@@ -76,7 +76,6 @@ cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1'
 deps = [ dependency('cumbia'), dependency('tango', method: 'pkg-config') ]
 
 cumbiatangolib = shared_library('cumbia-tango', sources,
-        soversion : '0',
         version : meson.project_version(),
         include_directories : includedirs,
         cpp_args : cpp_arguments,
