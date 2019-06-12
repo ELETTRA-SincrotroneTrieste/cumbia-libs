@@ -62,7 +62,7 @@ CuEpicsPropertyFactory::CuEpicsPropertyFactory()
     m_fetchAttHistory = false;
 }
 
-void CuEpicsPropertyFactory::setDesiredPVProperties(const std::vector<std::__cxx11::string> props)
+void CuEpicsPropertyFactory::setDesiredPVProperties(const std::vector<std::::string> props)
 {
     m_props = props;
 }
