@@ -23,7 +23,7 @@ public:
 
     // CuServiceI interface
 public:
-    std::::string getName() const;
+    std::string getName() const;
     CuServices::Type getType() const;
 
 private:

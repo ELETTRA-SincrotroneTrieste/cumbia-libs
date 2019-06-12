@@ -112,10 +112,12 @@ fi
 
 if [[ $@ == **install** ]]
 then
+    if  [ ! -r $tmp_installdir ];  then
+        build=1
+        meson=1
+    fi
     make_install=1
-	build=1
-	meson=1
-	operations+=(install)
+    operations+=(install)
 fi
 
 if [[ $@ == **docs** ]]
@@ -407,27 +409,6 @@ echo "srcdir=$topdir" >> $srcupdate_conf_f
 ## end save configuration in $HOME/.config/cumbia/srcupdate.conf
 ##
 
-if [ $make_install -eq 1 ] && [ ! -r $install_prefix ]; then
-        echo -e "\n The installation directory \"$install_prefix\" does not exist. "
-	echo -n  -e " Do you want to create it (the operation may require administrative privileges - sudo) [y|n]?  [y] "
-	read  -s -n 1 createdir
-	if [ "$createdir" != "y" ]  && [ "$reply" != "createdir" ] && [ "$createdir" != "" ]; then
-		 	exit 1
-	fi
-        mkdir -p $install_prefix
-	if [ "$?" -ne 0 ]; then
-		if  [[ ! -z  $sudocmd  ]]; then
-                        echo -e " The \e[1;32msudo\e[0m password is required to create the directory \"$install_prefix\""
-		fi
-                $sudocmd mkdir -p $install_prefix
-		if [ "$?" -ne 0 ]; then
-                        echo -e " \e[1;31merror\e[0m: failed to create installation directory \"$install_prefix\""
-			exit 1
-		fi
-	fi
-fi
-
-
 if [ $cleandocs -eq 1 ]; then
 	docshtmldir=$topdir/$DIR/../docs/html
 	if [ -d $docshtmldir ]; then
@@ -494,13 +475,13 @@ fi  # clean -eq 1
 #
 # remove tmp_installdir to clean previous build local installation
 #
-if [ -d $tmp_installdir ]; then
+if  [ $make_install -eq 0 ] && [  -d $tmp_installdir ]; then
         echo -e "\nRemoving temporary build directory: \"$tmp_installdir\""
         rm -rf $tmp_installdir
 fi
 
-if [[ $build -eq 0 ]] && [[ $docs -eq 0 ]]; then
-    echo -e "\e[1;33m\n*\n* build \e[0m is disabled \n\e[1;33m*\e[0m"
+if  [[ $make_install -eq 0 ]] &&  [[ $build -eq 0 ]] && [[ $docs -eq 0 ]]; then
+    echo -e "\e[1;33m\n*\n* build, install, docs \e[0m are disabled \n\e[1;33m*\e[0m"
     exit 0
 fi
 
@@ -570,19 +551,19 @@ for x in "${meson_p[@]}" ; do
 
 
 # install?
-	if [ $make_install -eq 1 ]; then
-                ## now use definitive install prefix
-                meson configure -Dprefix=$install_prefix
-		echo -e "\e[0;32m\n*\n* INSTALL project ${x}...\n*\e[0m"
-                if [ -w $install_prefix ]; then
-			ninja install
-		else
-			if [ ! -z $sudocmd ]; then
-				echo  -e "\e[1;32msudo\e[0m password required:"
-			fi
-			$sudocmd ninja install
-		fi
-	fi
+#	if [ $make_install -eq 1 ]; then
+#                ## now use definitive install prefix
+#                meson configure -Dprefix=$install_prefix
+#		echo -e "\e[0;32m\n*\n* INSTALL project ${x}...\n*\e[0m"
+#                if [ -w $install_prefix ]; then
+#			ninja install
+#		else
+#			if [ ! -z $sudocmd ]; then
+#				echo  -e "\e[1;32msudo\e[0m password required:"
+#			fi
+#			$sudocmd ninja install
+#		fi
+#	fi
 
 	## Back to topdir!
 	cd $topdir
@@ -652,22 +633,22 @@ for x in "${qmake_p[@]}"; do
 
 
 # install?
-	if [ $make_install -eq 1 ]; then
-		echo -e "\e[0;32m\n*\n* INSTALL project ${x}...\n*\e[0m"
-                #
-                ## regenerate Makefile with definitive install prefix
-                #
-                qmake "INSTALL_ROOT=$install_prefix"
+#	if [ $make_install -eq 1 ]; then
+#		echo -e "\e[0;32m\n*\n* INSTALL project ${x}...\n*\e[0m"
+#                #
+#                ## regenerate Makefile with definitive install prefix
+#                #
+#                qmake "INSTALL_ROOT=$install_prefix"
 
-                if [ -w $install_prefix ]; then
-                    make install
-                else
-                    if [ ! -z $sudocmd ]; then
-                        echo  -e "\e[1;32msudo\e[0m password required:"
-                    fi
-                    $sudocmd make install
-                fi
-	fi
+#                if [ -w $install_prefix ]; then
+#                    make install
+#                else
+#                    if [ ! -z $sudocmd ]; then
+#                        echo  -e "\e[1;32msudo\e[0m password required:"
+#                    fi
+#                    $sudocmd make install
+#                fi
+#	fi
 	cd $topdir
 
 
@@ -739,23 +720,23 @@ for x in "${qmake_subdir_p[@]}"; do
 			
 			fi # docs -eq 1
 
-			# install?
-			if [ $make_install -eq 1 ]; then
-                                echo -e "\e[0;32m\n*\n* INSTALL project ${sd}...\n*\e[0m"
-                                qmake "INSTALL_ROOT=$install_prefix"
+#			# install?
+#			if [ $make_install -eq 1 ]; then
+#                                echo -e "\e[0;32m\n*\n* INSTALL project ${sd}...\n*\e[0m"
+#                                qmake "INSTALL_ROOT=$install_prefix"
 
-				if [ $? -ne 0 ]; then
-					exit 1
-                                fi
-                                if [ -w $install_prefix ]; then
-                                    make install
-                                else
-                                    if [ ! -z $sudocmd ]; then
-                                        echo  -e "\e[1;32msudo\e[0m password required:"
-                                    fi
-                                    $sudocmd make install
-                                fi
-			fi
+#				if [ $? -ne 0 ]; then
+#					exit 1
+#                                fi
+#                                if [ -w $install_prefix ]; then
+#                                    make install
+#                                else
+#                                    if [ ! -z $sudocmd ]; then
+#                                        echo  -e "\e[1;32msudo\e[0m password required:"
+#                                    fi
+#                                    $sudocmd make install
+#                                fi
+#			fi
 		
 		fi ## .pro file exists
 		
@@ -766,7 +747,37 @@ for x in "${qmake_subdir_p[@]}"; do
 
 done
 
-if [ $make_install -eq 1 ]; then
+# INSTALL  SECTION
+#
+#
+#
+if [ $make_install -eq 1 ] && [ ! -r $install_prefix ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_installdir)" ]; then
+        echo -e "\n The installation directory \"$install_prefix\" does not exist. "
+        echo -n  -e " Do you want to create it (the operation may require administrative privileges - sudo) [y|n]?  [y] "
+        read  -s -n 1 createdir
+        if [ "$createdir" != "y" ]  && [ "$reply" != "createdir" ] && [ "$createdir" != "" ]; then
+                        exit 1
+        fi
+        mkdir -p $install_prefix
+        if [ "$?" -ne 0 ]; then
+                if  [[ ! -z  $sudocmd  ]]; then
+                        echo -e " The \e[1;32msudo\e[0m password is required to create the directory \"$install_prefix\""
+                fi
+                $sudocmd mkdir -p $install_prefix
+                if [ "$?" -ne 0 ]; then
+                        echo -e " \e[1;31merror\e[0m: failed to create installation directory \"$install_prefix\""
+                        exit 1
+                fi
+                $sudocmd cp -a $tmp_installdir/* $install_prefix/
+                if [ "$?" -ne 0 ]; then
+                        echo -e " \e[1;31merror\e[0m: failed to install into directory \"$install_prefix\""
+                        exit 1
+                else
+                    echo -e " \e[1;32msuccess\e[0m: cumbia installed under \"$install_prefix\""
+                fi
+        fi
+
+
 
         libprefix=$install_prefix/lib
 
@@ -854,6 +865,8 @@ if [ $make_install -eq 1 ]; then
 	echo -e "\e[1;32m*\n* \e[1;34;4mDOCUMENTATION\e[0m: https://elettra-sincrotronetrieste.github.io/cumbia-libs/"
 	echo -e "\e[1;32m*\n*\e[0m"
 	
+elif  [ ! -r $tmp_installdir ];  then
+    echo -e "\e[1;31merror\e[0m: temporary install directory not found. Try executing once again"
 
 fi
 

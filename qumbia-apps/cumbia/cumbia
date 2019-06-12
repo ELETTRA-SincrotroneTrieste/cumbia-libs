@@ -61,7 +61,7 @@ elif [ $# -gt 0 ] && [ $1 == "upgrade" ]; then
                 # execute the path/to/cumbia-libs/scripts/cubuild.sh   upgrade
                 #
                 . "$conf_f"   # read $srcdir
-                $srcdir/scripts/cubuild.sh srcupdate && $srcdir/scripts/cubuild.sh clean docs install
+                $srcdir/scripts/cubuild.sh srcupdate && $srcdir/scripts/cubuild.sh clean docs build && $srcdir/scripts/cubuild.sh install
         fi
 else
         print_menu

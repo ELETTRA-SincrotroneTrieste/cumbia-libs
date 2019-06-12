@@ -24,7 +24,7 @@ string CuEpCAService::getStatus() const
     return std::string(ca_message(m_result));
 }
 
-std::::string CuEpCAService::getName() const
+std::string CuEpCAService::getName() const
 {
     return "EpicsChannelAccessService";
 }

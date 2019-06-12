@@ -60,7 +60,7 @@ CumbiaEpics::~CumbiaEpics()
  * @return true an active action with the given source and type has been found and will be used
  * @return false a new action for the given source and type has been created and registered
  */
-bool CumbiaEpics::addAction(const std::::string &source, CuDataListener *l, const CuEpicsActionFactoryI& f)
+bool CumbiaEpics::addAction(const std::string &source, CuDataListener *l, const CuEpicsActionFactoryI& f)
 {
     bool found = false;
     CuEpicsWorld w;
