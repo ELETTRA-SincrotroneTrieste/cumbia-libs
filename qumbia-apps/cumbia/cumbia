@@ -70,9 +70,10 @@ elif [ $# -gt 0 ] && [ $1 == "upgrade" ]; then
                     echo -e "\e[1;32m\n*\e[0m [y: yes|n: no|s: yes with \e[0;36msudo\e[0m] [y] ? "
                     read  -s -n 1 cuinstall
                     sudocmd=
-                    if  [ "$cuinstall" == "s" ] ; then
+                    if  [ "$cuinstall" == "s" ]; then
                         sudocmd=sudo
                         cuinstall="y"
+                    fi
                     if [ "$cuinstall" != "y" ]  && [ "$cuinstall" != "" ]; then
                         echo -e "\e[1;35m\n*\e[0m installation cancelled\n\n"
                         echo -e "\e[1;35m*\e[0m You can perform the installation later executing \e[0;46;3m $srcdir/scripts/cubuild.sh install \e[0m\n\n"
