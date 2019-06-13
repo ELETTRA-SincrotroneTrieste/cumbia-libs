@@ -340,9 +340,9 @@ if [[ $srcupdate -eq 1 ]]; then
 
 	# With --abbrev set to 0, the command can be used to find the closest tagname without any suffix,
 	# Otherwise, it suffixes the tag name with the number of additional commits on top of the tagged 
-    # object and the abbreviated object name of the most recent commit.
+        # object and the abbreviated object name of the most recent commit.
 	#
-	git describe --abbrev=0
+        git describe --tags --abbrev=0
 	
 	echo -e "\e[0m"
 	echo -e "\nChoose a version [1, ..., $idx] or press any other key to exit"
