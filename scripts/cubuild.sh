@@ -753,9 +753,7 @@ if [ $make_install -eq 1 ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_install
             else
                 install_ok=1
             fi # [ "$?" -ne 0 ]
-        else
-            install_ok=1
-        fi # [ "$?" -ne 0 ]
+        fi # [ -w $install_prefix ]
 
         if [ $install_ok -eq 1 ]; then
             echo -e "\t[\e[1;32msuccess\e[0m]\n"
