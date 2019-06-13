@@ -717,9 +717,9 @@ if [ $make_install -eq 1 ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_install
             fi
 
             # 1. try as normal user
-            mkdir -p $install_prefix
-            # 2. no permissions? --> sudo
-            if [ "$?" -ne 0 ]; then
+            if [ -w $install_prefix ] ; then
+                mkdir -p $install_prefix
+            else # 2. no permissions? --> sudo
                 if  [[ ! -z  $sudocmd  ]]; then
                         echo -e " The \e[1;32msudo\e[0m password is required to create the directory \"$install_prefix\""
                 fi
@@ -740,10 +740,9 @@ if [ $make_install -eq 1 ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_install
 
         # 1. try install as normal user
         install_ok=0
-        cp -a $tmp_installdir/* $install_prefix/
-
-        # 2. no permissions? --> install with sudo
-        if [ "$?" -ne 0 ]; then
+        if [ -w $install_prefix ] ; then
+            cp -a $tmp_installdir/* $install_prefix/
+        else # 2. no permissions? --> install with sudo
             if  [[ ! -z  $sudocmd  ]]; then
                     echo -e " The \e[1;32msudo\e[0m password is required to install the library under \"$install_prefix\""
             fi

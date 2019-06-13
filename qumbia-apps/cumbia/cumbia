@@ -61,7 +61,29 @@ elif [ $# -gt 0 ] && [ $1 == "upgrade" ]; then
                 # execute the path/to/cumbia-libs/scripts/cubuild.sh   upgrade
                 #
                 . "$conf_f"   # read $srcdir
-                $srcdir/scripts/cubuild.sh srcupdate && $srcdir/scripts/cubuild.sh clean docs build && $srcdir/scripts/cubuild.sh install
+                $srcdir/scripts/cubuild.sh srcupdate && $srcdir/scripts/cubuild.sh clean docs build
+                if [ "$?" -ne 0 ]; then
+                    echo -e "\e[1;31m\n*\n* cumbia upgrade error\e[0m: failed to perform library upgrade \e[0;31m:(\n*\e[0m\n";
+                else
+                    echo -e "\e[1;32m\n*\e[0m library has been built successfully"
+                    echo -e "\e[1;32m\n*\e[0m do you want to install the new version? (You need write permissions on the destination)"
+                    echo -e "\e[1;32m\n*\e[0m [y: yes|n: no|s: yes with \e[0;36msudo\e[0m] [y] ? "
+                    read  -s -n 1 cuinstall
+                    sudocmd=
+                    if  [ "$cuinstall" == "s" ] ; then
+                        sudocmd=sudo
+                        cuinstall="y"
+                    if [ "$cuinstall" != "y" ]  && [ "$cuinstall" != "" ]; then
+                        echo -e "\e[1;35m\n*\e[0m installation cancelled\n\n"
+                        echo -e "\e[1;35m*\e[0m You can perform the installation later executing \e[0;46;3m $srcdir/scripts/cubuild.sh install \e[0m\n\n"
+                        exit 0
+                    else
+                        $srcdir/scripts/cubuild.sh install
+                    fi
+
+                fi
+
+                $srcdir/scripts/cubuild.sh install
         fi
 else
         print_menu
