@@ -67,7 +67,7 @@ elif [ $# -gt 0 ] && [ $1 == "upgrade" ]; then
                 else
                     echo -e "\e[1;32m\n*\e[0m library has been built successfully"
                     echo -e "\e[1;32m\n*\e[0m do you want to install the new version? (You need write permissions on the destination)"
-                    echo -e "\e[1;32m\n*\e[0m [y: yes|n: no|s: yes with \e[0;36msudo\e[0m] [y] ? "
+                    echo -e "\e[1;32m\n*\e[0m [\e[1;32my\e[0m: yes|\e[1;35mn\e[0m: no|\e[1;32ms\e[0m: yes with \e[0;36msudo\e[0m] [y] ? "
                     read  -s -n 1 cuinstall
                     sudocmd=
                     if  [ "$cuinstall" == "s" ]; then
@@ -79,12 +79,10 @@ elif [ $# -gt 0 ] && [ $1 == "upgrade" ]; then
                         echo -e "\e[1;35m*\e[0m You can perform the installation later executing \e[0;46;3m $srcdir/scripts/cubuild.sh install \e[0m\n\n"
                         exit 0
                     else
-                        $srcdir/scripts/cubuild.sh install
+                        $sudocmd $srcdir/scripts/cubuild.sh install
                     fi
 
                 fi
-
-                $srcdir/scripts/cubuild.sh install
         fi
 else
         print_menu
