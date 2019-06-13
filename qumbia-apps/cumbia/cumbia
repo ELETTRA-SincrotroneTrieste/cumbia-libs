@@ -67,7 +67,7 @@ elif [ $# -gt 0 ] && [ $1 == "upgrade" ]; then
                 else
                     echo -e "\e[1;32m\n*\e[0m library has been built successfully"
                     echo -e "\e[1;32m\n*\e[0m do you want to install the new version? (You need write permissions on the destination)"
-                    echo -e "\e[1;32m\n*\e[0m [\e[1;32my\e[0m: yes|\e[1;35mn\e[0m: no|\e[1;32ms\e[0m: yes with \e[0;36msudo\e[0m] [y] ? "
+                    echo -e "\e[1;32m\n*\e[0m [\e[1;32my\e[0m: yes | \e[1;35mn\e[0m: no | \e[1;32ms\e[0m: yes with \e[0;36msudo\e[0m] [y] ? "
                     read  -s -n 1 cuinstall
                     sudocmd=
                     if  [ "$cuinstall" == "s" ]; then
@@ -80,6 +80,9 @@ elif [ $# -gt 0 ] && [ $1 == "upgrade" ]; then
                         exit 0
                     else
                         $sudocmd $srcdir/scripts/cubuild.sh install
+                        if [ "$?" -ne 0 ]; then
+                            echo -e "\e[1;31m\n*\n* cumbia upgrade error\e[0m: failed to install library into destination\n\e[1;31m*\e[0m\n\n"
+                        fi
                     fi
 
                 fi
