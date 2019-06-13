@@ -40,6 +40,9 @@ cd $DIR/..
 
 topdir=$PWD
 
+# temporary dir where one file for each module stores build date and time
+tmp_build_d=$PWD/tmp-build-dir
+
 ## temporary local installation directory (to make pkg-config work)
 ## rm -rf $tmp_installdir takes place after clean
 ##
@@ -58,7 +61,6 @@ then
 	echo -e "                  No engine specific projects will be built (cumbia-tango, cumbia-epics, qumbia-tango-controls)" 
 	echo -e "                  To build tango modules, add the \"tango\" argument, to build the epics modules, add \"epics\" (example 3.)"
 	echo -e " pull - update sources from git"
-	echo -e " env-update - execute the \"source\" bash command to update the environment as to the most recently installed scripts"
 	echo -e " docs - regenerate documentation"
 	echo -e " cleandocs - remove locally generated documentation"
 	echo -e " clean - execute make clean in every project folder"
@@ -71,8 +73,8 @@ then
 	echo -e " no-tango - exclude cumbia-tango and qumbia-tango-controls modules from the specified operations"
 	echo -e " no-epics - remove cumbia-epics and qumbia-epics-controls modules from the specified operations"
 	echo -e " srcupdate - update cumbia sources choosing from the available tags in git (or origin/master). Please note that"
-    echo -e "             the copy of the sources managed with srcupdates is not intended to be modified and committed to git."
-    echo -e "             This option is normally used by the \e[0;4mcumbia upgrade\e[0m command."
+        echo -e "             the copy of the sources managed with srcupdates is not intended to be modified and committed to git."
+        echo -e "             This option is normally used by the \e[0;4mcumbia upgrade\e[0m command."
 	echo ""
 	echo -e "\e[1;32mEXAMPLES\e[0m\n1. $0 pull clean install tango - git pull sources, execute make clean, build and install cumbia, cumbia-qtcontrols, apps, plugins and the tango modules"
 	echo -e "2. $0 docs push-documentation tango epics - regenerate the projects' documentation and update it on the \"github.io\" pages (including tango and epics modules)"
@@ -110,15 +112,6 @@ then
         meson=1
 fi
 
-if [[ $@ == **install** ]]
-then
-    if  [ ! -r $tmp_installdir ];  then
-        build=1
-        meson=1
-    fi
-    make_install=1
-    operations+=(install)
-fi
 
 if [[ $@ == **docs** ]]
 then
@@ -130,14 +123,14 @@ fi
 if [[ $@ == **cleandocs** ]]
 then
         meson=1
-    cleandocs=1
+        cleandocs=1
 	operations+=(cleandocs)
 fi
 
 if [[ $@ == **clean** ]]
 then
         meson=1
-    clean=1
+        clean=1
 	operations+=(clean)
 fi
 
@@ -145,6 +138,18 @@ if [[ $@ == **srcupdate** ]]
 then
 	srcupdate=1
 	operations+=(srcupdate)
+fi
+
+
+if [[ $@ == **install** ]]
+then
+    if  [[ ! -r $tmp_installdir ]] || [[ $clean -eq 1 ]] ;  then
+        build=1
+        meson=1
+        operations+=(build)
+    fi
+    make_install=1
+    operations+=(install)
 fi
 
 ## check options compatibility
@@ -236,7 +241,13 @@ done
 
 echo ""
 
-if [[ $srcupdate -eq 0 ]]; then 
+if [[ $make_install -eq 1 ]] && [[ $build -eq 0 ]]; then
+    echo -e "Will \e[1;32;4minstall\e[0m the following modules:\n"
+    for f in `ls tmp-build-dir`; do
+        echo -e  "\e[0;32m$f\e[0m - built on `cat tmp-build-dir/$f`"
+    done
+
+elif [[ $srcupdate -eq 0 ]]; then
 
 	## START PRINT OPERATIONS MENU
 	echo -e "The \e[1;32;4moperations\e[0m listed above will be applied to the following \e[1;32;4mMODULES\e[0m:\n"
@@ -361,14 +372,11 @@ if [[ $srcupdate -eq 1 ]]; then
 
 		git checkout $checkout_tag
 
-		
-
 	else
 		echo -e "\n \e[1;31merror\e[0m: choice \"$choice\" is outside the interval [1, $idx]\n"
 		exit 1
 	fi
 	 
-
 	# restore previous directory
 	cd $wdir
 
@@ -379,7 +387,6 @@ if [[ $srcupdate -eq 1 ]]; then
 
 
 fi # [[ $srcupdate -eq 1 ]]
-
 
 ##                            
 ## save configuration in $HOME/.config/cumbia/srcupdate.conf
@@ -392,22 +399,15 @@ fi
 # empty the file
 > "$srcupdate_conf_f"
 
-
 echo -e "\n# tango enabled" >> $srcupdate_conf_f
 echo "tango=$tango" >> $srcupdate_conf_f
-
-
-
 echo -e "\n# epics enabled" >> $srcupdate_conf_f
 echo "epics=$epics" >> $srcupdate_conf_f
-
-
 echo -e "\n# directory with the cumbia sources " >> $srcupdate_conf_f
 echo "srcdir=$topdir" >> $srcupdate_conf_f
-
-##
+#
 ## end save configuration in $HOME/.config/cumbia/srcupdate.conf
-##
+#
 
 if [ $cleandocs -eq 1 ]; then
 	docshtmldir=$topdir/$DIR/../docs/html
@@ -423,8 +423,10 @@ if [ $cleandocs -eq 1 ]; then
 fi
 
 ### CLEAN SECTION ###########
-
+#
 if [ $clean -eq 1 ]; then
+
+    rm $tmp_build_d/*
 
 # a. meson
     for x in "${meson_p[@]}" ; do
@@ -478,14 +480,21 @@ fi  # clean -eq 1
 if  [ $make_install -eq 0 ] && [  -d $tmp_installdir ]; then
         echo -e "\nRemoving temporary build directory: \"$tmp_installdir\""
         rm -rf $tmp_installdir
+        if [  -d $tmp_installdir ]; then
+            rm -f $tmp_build_d/*
+        fi
 fi
 
 if  [[ $make_install -eq 0 ]] &&  [[ $build -eq 0 ]] && [[ $docs -eq 0 ]]; then
     echo -e "\e[1;33m\n*\n* build, install, docs \e[0m are disabled \n\e[1;33m*\e[0m"
     exit 0
 fi
-
+#
 ### END CLEAN SECTION ################
+
+if [ ! -d $tmp_build_d ]; then
+    mkdir $tmp_build_d
+fi
 
 for x in "${meson_p[@]}" ; do
 	cd $DIR/../${x}    
@@ -510,15 +519,17 @@ for x in "${meson_p[@]}" ; do
 
                meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
                meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
+
             #    ninja install
 		if [ $? -ne 0 ]; then
 			exit 1
+                else
+                    date > $tmp_build_d/${x}
 		fi
 	fi
 
-
 	#
-	## docs ###
+        ## docs
 	#
 	if [ $docs -eq 1 ]; then
 		echo -e "\e[1;36m\n*\n* BUILD DOCS project ${x}...\n*\e[0m"
@@ -549,26 +560,9 @@ for x in "${meson_p[@]}" ; do
 		fi
 	fi
 
-
-# install?
-#	if [ $make_install -eq 1 ]; then
-#                ## now use definitive install prefix
-#                meson configure -Dprefix=$install_prefix
-#		echo -e "\e[0;32m\n*\n* INSTALL project ${x}...\n*\e[0m"
-#                if [ -w $install_prefix ]; then
-#			ninja install
-#		else
-#			if [ ! -z $sudocmd ]; then
-#				echo  -e "\e[1;32msudo\e[0m password required:"
-#			fi
-#			$sudocmd ninja install
-#		fi
-#	fi
-
-	## Back to topdir!
+        # Back to topdir!
 	cd $topdir
 done
-
 
 for x in "${qmake_p[@]}"; do
 	cd $DIR/../${x}
@@ -593,6 +587,8 @@ for x in "${qmake_p[@]}"; do
                     make install
                     if [ $? -ne 0 ]; then
                             exit 1
+                    else
+                            date > $tmp_build_d/${x}
                     fi
                 fi
 
@@ -631,26 +627,7 @@ for x in "${qmake_p[@]}"; do
 		fi
 	fi
 
-
-# install?
-#	if [ $make_install -eq 1 ]; then
-#		echo -e "\e[0;32m\n*\n* INSTALL project ${x}...\n*\e[0m"
-#                #
-#                ## regenerate Makefile with definitive install prefix
-#                #
-#                qmake "INSTALL_ROOT=$install_prefix"
-
-#                if [ -w $install_prefix ]; then
-#                    make install
-#                else
-#                    if [ ! -z $sudocmd ]; then
-#                        echo  -e "\e[1;32msudo\e[0m password required:"
-#                    fi
-#                    $sudocmd make install
-#                fi
-#	fi
-	cd $topdir
-
+        cd $topdir
 
 done
 
@@ -665,33 +642,33 @@ for x in "${qmake_subdir_p[@]}"; do
 		thisdir=${sd}
 		if [[ $thisdir == */ ]]; then
 			pro_file="${thisdir::-1}.pro"	
+                        dire_nam="${thisdir::-1}"
 		else
-			pro_file="${thisdir}.pro"	
+                        pro_file="${thisdir}.pro"
+                        dire_nam="${thisdir}"
 		fi
 
 		if [ -f $pro_file ]; then
-
 			#
-			## build ###
+                        ## build
 			#
 			if [ $build -eq 1 ]; then
 				echo -e "\e[1;32m\n*\n* BUILD project ${sd}...\n*\e[0m"
                                 qmake "INSTALL_ROOT=$tmp_installdir" && make -j3 && make install
 				if [ $? -ne 0 ]; then
-					exit 1
+                                        exit 1
+                                else
+                                        date > "$tmp_build_d/${x}-->${dire_nam}"
 				fi
 			fi
 
-			if [ $docs -eq 1 ]; then
-
-	
+			if [ $docs -eq 1 ]; then	
 				echo -e "\e[1;36m\n*\n* BUILD DOCS project ${sd}...\n*\e[0m"
 				
 				if [ -d doc ]; then
 					rm -rf doc
 				fi
 			
-
                                 qmake "INSTALL_ROOT=$tmp_installdir" && make doc
 				if [ $? -ne 0 ]; then
 					echo -e "\e[1;36m\n*\n* BUILD DOCS project ${sd} has no \"doc\" target...\n*\e[0m\n"
@@ -699,7 +676,6 @@ for x in "${qmake_subdir_p[@]}"; do
 					docsdir=$topdir/$DIR/../docs/html/${sd}
 					docshtmldir=$docsdir/html
 					echo -e "\e[1;36m\n*\n* COPY DOCS project ${sd} into \"$docsdir\" ...\n*\e[0m"
-
 	
 					if [ ! -d $docsdir ]; then
 						mkdir -p $docsdir
@@ -716,50 +692,34 @@ for x in "${qmake_subdir_p[@]}"; do
 						exit 1
 					fi # -x $docsdir
 
-				fi # qmake and make successful
-			
-			fi # docs -eq 1
-
-#			# install?
-#			if [ $make_install -eq 1 ]; then
-#                                echo -e "\e[0;32m\n*\n* INSTALL project ${sd}...\n*\e[0m"
-#                                qmake "INSTALL_ROOT=$install_prefix"
-
-#				if [ $? -ne 0 ]; then
-#					exit 1
-#                                fi
-#                                if [ -w $install_prefix ]; then
-#                                    make install
-#                                else
-#                                    if [ ! -z $sudocmd ]; then
-#                                        echo  -e "\e[1;32msudo\e[0m password required:"
-#                                    fi
-#                                    $sudocmd make install
-#                                fi
-#			fi
-		
+				fi # qmake and make successful			
+			fi # docs -eq 1		
 		fi ## .pro file exists
 		
 		cd ..
 	done # for
-
 	cd ..
-
 done
 
 # INSTALL  SECTION
 #
 #
 #
-if [ $make_install -eq 1 ] && [ ! -r $install_prefix ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_installdir)" ]; then
-        echo -e "\n The installation directory \"$install_prefix\" does not exist. "
-        echo -n  -e " Do you want to create it (the operation may require administrative privileges - sudo) [y|n]?  [y] "
-        read  -s -n 1 createdir
-        if [ "$createdir" != "y" ]  && [ "$reply" != "createdir" ] && [ "$createdir" != "" ]; then
+if [ $make_install -eq 1 ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_installdir)" ]; then
+
+        # A) Create install dir
+        if [ ! -r $install_prefix ]; then
+            echo -e "\n The installation directory \"$install_prefix\" does not exist. "
+            echo -n  -e " Do you want to create it (the operation may require administrative privileges - sudo) [y|n]?  [y] "
+            read  -s -n 1 createdir
+            if [ "$createdir" != "y" ]  && [ "$reply" != "createdir" ] && [ "$createdir" != "" ]; then
                         exit 1
-        fi
-        mkdir -p $install_prefix
-        if [ "$?" -ne 0 ]; then
+            fi
+
+            # 1. try as normal user
+            mkdir -p $install_prefix
+            # 2. no permissions? --> sudo
+            if [ "$?" -ne 0 ]; then
                 if  [[ ! -z  $sudocmd  ]]; then
                         echo -e " The \e[1;32msudo\e[0m password is required to create the directory \"$install_prefix\""
                 fi
@@ -768,20 +728,48 @@ if [ $make_install -eq 1 ] && [ ! -r $install_prefix ] && [ -r $tmp_installdir ]
                         echo -e " \e[1;31merror\e[0m: failed to create installation directory \"$install_prefix\""
                         exit 1
                 fi
-                $sudocmd cp -a $tmp_installdir/* $install_prefix/
-                if [ "$?" -ne 0 ]; then
-                        echo -e " \e[1;31merror\e[0m: failed to install into directory \"$install_prefix\""
-                        exit 1
-                else
-                    echo -e " \e[1;32msuccess\e[0m: cumbia installed under \"$install_prefix\""
-                fi
-        fi
+            fi # [ "$?" -ne 0 ]
 
+         else
+            echo -e "\ndestination directory \"\e[1;32;4m$install_prefix\e[0m\" already exists\t[\e[1;32mOK\e[0m]"
+         fi
 
+        # B) Copy files
+
+        echo -e -n "\n... \e[0;32mcopying\e[0m files into destination folder \"\e[1;32;4m$install_prefix\e[0m\"..."
+
+        # 1. try install as normal user
+        install_ok=0
+        cp -a $tmp_installdir/* $install_prefix/
+
+        # 2. no permissions? --> install with sudo
+        if [ "$?" -ne 0 ]; then
+            if  [[ ! -z  $sudocmd  ]]; then
+                    echo -e " The \e[1;32msudo\e[0m password is required to install the library under \"$install_prefix\""
+            fi
+            $sudocmd cp -a $tmp_installdir/* $install_prefix/
+            if [ "$?" -ne 0 ]; then
+                    echo -e "\t[\e[1;31merror\e[0m]\nfailed to install into directory \"$install_prefix\""
+                    exit 1
+            else
+                install_ok=1
+            fi # [ "$?" -ne 0 ]
+        else
+            install_ok=1
+        fi # [ "$?" -ne 0 ]
+
+        if [ $install_ok -eq 1 ]; then
+            echo -e "\t[\e[1;32msuccess\e[0m]\n"
+            echo -e "The following modules have been installed:"
+
+            for f in `ls tmp-build-dir`; do
+                echo -e  "\e[1;32;4m$f\e[0m - built on `cat tmp-build-dir/$f`"
+            done
+        fi # install_ok
 
         libprefix=$install_prefix/lib
 
-	if [[ -z `$sudocmd ldconfig -v 2>/dev/null | grep ':$' |sed -e 's/://' | grep "^$libprefix$"` ]]; then
+        if [[ -z `ldconfig -v 2>/dev/null | grep ':$' |sed -e 's/://' | grep "^$libprefix$"` ]]; then
 		echo -e "\e[0;33m\n*\n* INSTALL \e[1;33mWARNING \e[0mit is possible that \e[0;4m$libprefix\e[0m is not among the ld.so.conf paths: please check.\e[0m"
 
                 # remove trailing "/" from $install_prefix, if present
@@ -809,7 +797,7 @@ if [ $make_install -eq 1 ] && [ ! -r $install_prefix ] && [ -r $tmp_installdir ]
 			echo -e "  export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:$libprefix"
 			echo -e "\e[0;33m*\n"
 		fi	
-	else
+        else
 		echo -e "\e[0;32m\n*\n* INSTALL \e[1;32m$libprefix\e[0m has been found in ldconfig paths."
 	fi
 
@@ -848,9 +836,6 @@ if [ $make_install -eq 1 ] && [ ! -r $install_prefix ] && [ -r $tmp_installdir ]
 
 	echo -e "\e[0;32m*\n* INSTALL cumbia installation is now complete\e[0m"
 
-	
-	
-
 	echo -e "\e[1;32m*\e[0;32m\n* INSTALL \e[1;32myou may need to execute\n*\n  \e[1;36msource  /etc/profile\e[1;32m \n*"
 	echo -e "* to enable shortcuts for cumbia apps. Then type \n*\n  \e[1;36mcumbia\e[1;32m\n*\n* to list available options\n*\e[0m"
 	
@@ -865,7 +850,7 @@ if [ $make_install -eq 1 ] && [ ! -r $install_prefix ] && [ -r $tmp_installdir ]
 	echo -e "\e[1;32m*\n* \e[1;34;4mDOCUMENTATION\e[0m: https://elettra-sincrotronetrieste.github.io/cumbia-libs/"
 	echo -e "\e[1;32m*\n*\e[0m"
 	
-elif  [ ! -r $tmp_installdir ];  then
+elif  [ ! -r $tmp_installdir ] && [ $make_install -eq 1 ];  then
     echo -e "\e[1;31merror\e[0m: temporary install directory not found. Try executing once again"
 
 fi
