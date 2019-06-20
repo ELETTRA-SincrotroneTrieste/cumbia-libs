@@ -6,6 +6,27 @@
 include(../qumbia-plugins.pri)
 include(../../qumbia-tango-controls/qumbia-tango-controls.pri)
 
+
+
+# INSTALL_ROOT is used to install the target
+# prefix is used within DEFINES +=
+#
+# cumbia installation script uses a temporary INSTALL_ROOT during build
+# and then files are copied into the destination prefix. That's where
+# configuration files must be found by the application when the script
+# installs everything at destination
+#
+isEmpty(prefix) {
+    prefix = $${INSTALL_ROOT}
+}
+
+DEFINES_QUMBIA_PLUGINS_LIBDIR = $${prefix}/lib/qumbia-plugins
+
+# added by cumbia-qtcontrols.pri, not included by this file
+#
+DEFINES += \
+    CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${DEFINES_QUMBIA_PLUGINS_LIBDIR}\\\"\" \
+
 QT       += core gui
 
 CONFIG += silent

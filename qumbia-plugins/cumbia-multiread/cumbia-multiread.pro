@@ -3,8 +3,8 @@
 # Project created by QtCreator 2017-12-27T15:40:52
 #
 #-------------------------------------------------
-include(../qumbia-plugins.pri)
 include(../../cumbia-qtcontrols/cumbia-qtcontrols.pri)
+include(../qumbia-plugins.pri)
 
 TARGET = cumbia-multiread-plugin
 TEMPLATE = lib

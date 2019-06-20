@@ -15,6 +15,19 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT = /usr/local/cumbia-libs
 }
 
+# INSTALL_ROOT is used to install the target
+# prefix is used within DEFINES +=
+#
+# cumbia installation script uses a temporary INSTALL_ROOT during build
+# and then files are copied into the destination prefix. That's where
+# configuration files must be found by the application when the script
+# installs everything at destination
+#
+isEmpty(prefix) {
+    prefix = $${INSTALL_ROOT}
+}
+
+message(qumbianewcontrolwizard: prefix is $${prefix})
 
 lessThan(QT_MAJOR_VERSION, 5) {
     QTVER_SUFFIX = -qt$${QT_MAJOR_VERSION}
@@ -26,33 +39,32 @@ CONFIG += debug
 
 CONFIG += silent
 
-INCLUDEDIR = $${INSTALL_ROOT}/include
+# define templates destination install dir
+SHAREDIR=$${INSTALL_ROOT}/share
+TEMPLATES_INSTALLDIR=$${SHAREDIR}/qumbiacontrolwizard
 
+#
+# use prefix for DEFINES
+#
+DEFINES_INCLUDEDIR = $${prefix}/include
+DEFINES_SHAREDIR = $${prefix}/share
+DEFINES_DOCDIR = $${DEFINES_SHAREDIR}/doc/qumbianewcontrolwizard
+DEFINES_TEMPLATES_INSTALLDIR = $${DEFINES_SHAREDIR}/qumbiacontrolwizard
 
-SHAREDIR = $${INSTALL_ROOT}/share
-DOCDIR = $${SHAREDIR}/doc/qumbianewcontrolwizard
+DEFINES += TEMPLATES_PATH=\"\\\"$${DEFINES_TEMPLATES_INSTALLDIR}\\\"\"
+DEFINES += INCLUDE_PATH=\"\\\"$${DEFINES_INCLUDEDIR}/cumbia-qtcontrols\\\"\"
+DEFINES += DOC_PATH=\"\\\"$${DEFINES_DOCDIR}\\\"\"
 
-DEFINES += DOC_PATH=\"\\\"$${DOCDIR}\\\"\"
-
+# version
+QUMBIANEWCONTROLSWIZARD_VERSION_HEX = 0x010000
+QUMBIANEWCONTROLSWIZARD_VERSION = 1.0.0
+DEFINES += QUMBIANEWCONTROLSWIZARD_VERSION_STR=\"\\\"$${QUMBIANEWCONTROLSWIZARD_VERSION}\"\\\"
 
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TEMPLATES_INSTALLDIR = $${SHAREDIR}/qumbiacontrolwizard
-
-QUMBIANEWCONTROLSWIZARD_VERSION_HEX = 0x010000
-QUMBIANEWCONTROLSWIZARD_VERSION = 1.0.0
-
-DEFINES += QUMBIANEWCONTROLSWIZARD_VERSION_STR=\"\\\"$${QUMBIANEWCONTROLSWIZARD_VERSION}\"\\\"
-
-DEFINES += TEMPLATES_PATH=\"\\\"$${TEMPLATES_INSTALLDIR}\\\"\"
-
-DEFINES += INCLUDE_PATH=\"\\\"$${INCLUDEDIR}/cumbia-qtcontrols\\\"\"
-
-
 DEFINES -= QT_NO_DEBUG_OUTPUT
-
 
 TARGET = qumbianewcontrolwizard
 TEMPLATE = app

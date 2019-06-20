@@ -14,6 +14,19 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT = /usr/local/cumbia-libs
 }
 
+# INSTALL_ROOT is used to install the target
+# prefix is used within DEFINES +=
+#
+# cumbia installation script uses a temporary INSTALL_ROOT during build
+# and then files are copied into the destination prefix. That's where
+# configuration files must be found by the application when the script
+# installs everything at destination
+#
+isEmpty(prefix) {
+    prefix = $${INSTALL_ROOT}
+}
+
+message(qumbiaproject wizard: prefix is $${prefix})
 
 lessThan(QT_MAJOR_VERSION, 5) {
     QTVER_SUFFIX = -qt$${QT_MAJOR_VERSION}
@@ -23,11 +36,23 @@ lessThan(QT_MAJOR_VERSION, 5) {
 
 CONFIG += debug
 
-INCLUDEDIR = $${INSTALL_ROOT}/include
+# define templates destination install dir
+# using INSTALL_ROOT
+SHAREDIR=$${INSTALL_ROOT}/share
+DOCDIR=$${SHAREDIR}/doc/qumbiaprojectwizard
+TEMPLATES_INSTALLDIR=$${SHAREDIR}/qumbiacontrolwizard
 
-SHAREDIR = $${INSTALL_ROOT}/share
-DOCDIR = $${SHAREDIR}/doc/qumbiaprojectwizard
-DEFINES += DOC_PATH=\"\\\"$${DOCDIR}\\\"\"
+# DEFINES += use prefix
+DEFINES_INCLUDEDIR = $${prefix}/include
+DEFINES_SHAREDIR = $${prefix}/share
+DEFINES_DOCDIR = $${DEFINES_SHAREDIR}/doc/qumbiaprojectwizard
+DEFINES_TEMPLATES_INSTALLDIR = $${DEFINES_SHAREDIR}/qumbiaprojectwizard
+
+DEFINES += DOC_PATH=\"\\\"$${DEFINES_DOCDIR}\\\"\"
+DEFINES += TEMPLATES_PATH=\"\\\"$${DEFINES_TEMPLATES_INSTALLDIR}\\\"\"
+DEFINES += INCLUDE_PATH=\"\\\"$${DEFINES_INCLUDEDIR}\\\"\"
+
+DEFINES -= QT_NO_DEBUG_OUTPUT
 
 QT       += core gui xml
 
@@ -36,14 +61,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = qumbiaprojectwizard
 
 TEMPLATE = app
-
-TEMPLATES_INSTALLDIR = $${SHAREDIR}/qumbiaprojectwizard
-
-DEFINES += TEMPLATES_PATH=\"\\\"$${TEMPLATES_INSTALLDIR}\\\"\"
-
-DEFINES += INCLUDE_PATH=\"\\\"$${INCLUDEDIR}\\\"\"
-
-DEFINES -= QT_NO_DEBUG_OUTPUT
 
 SOURCES += main.cpp\
         qumbiaprojectwizard.cpp \

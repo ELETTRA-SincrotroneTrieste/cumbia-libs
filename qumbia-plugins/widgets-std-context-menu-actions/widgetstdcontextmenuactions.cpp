@@ -49,7 +49,7 @@ void WidgetStdContextMenuActions::setup(QWidget *widget, const CuContext *ctx)
     d->m_widget = widget;
 
     CuPluginLoader pl;
-    QString pluginFilePath = pl.getPluginAbsoluteFilePath(QUMBIA_PLUGIN_DIR, extensions_plugin_name);
+    QString pluginFilePath = pl.getPluginAbsoluteFilePath(CUMBIA_QTCONTROLS_PLUGIN_DIR, extensions_plugin_name);
     if(!pluginFilePath.isEmpty()) {
         QPluginLoader pluginLoader(pluginFilePath);
         QObject *plugin = pluginLoader.instance();

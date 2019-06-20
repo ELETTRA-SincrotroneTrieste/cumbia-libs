@@ -17,11 +17,12 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT = /usr/local/cumbia-libs
 }
 
-DEFINES -= QT_NO_DEBUG_OUTPUT
 
-DESIGNER_PLUGIN_DIR=$${PLUGIN_LIB_DIR}/designer
+DEFINES += QT_NO_DEBUG_OUTPUT
 
-DEFINES += CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${PLUGIN_LIB_DIR}\\\"\"
+DESIGNER_PLUGIN_INSTALL_DIR=$${PLUGIN_LIB_DIR}/designer
+
+DEFINES += CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${prefix}/lib/qumbia-plugins\\\"\"
 
 greaterThan(QT_MAJOR_VERSION, 4) {
     QT += widgets x11extras printsupport
@@ -79,8 +80,7 @@ unix:LIBS += -L..
 INCLUDEPATH -= $${INC_DIR}
 INCLUDEPATH += ../src . ./forms
 
-target.path = $${DESIGNER_PLUGIN_DIR}
-
+target.path = $${DESIGNER_PLUGIN_INSTALL_DIR}
 INSTALLS += target
 
 

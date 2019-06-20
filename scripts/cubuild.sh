@@ -444,7 +444,7 @@ if [ $clean -eq 1 ]; then
     for x in "${qmake_p[@]}"; do
         cd $DIR/../${x}
         echo -e "\e[1;33m\n*\n* CLEAN project ${x}...\n*\e[0m"
-        qmake "INSTALL_ROOT=$tmp_installdir" && make distclean
+        qmake "INSTALL_ROOT=$tmp_installdir" "prefix=$install_prefix"  && make distclean
 
         ## Back to topdir!
         cd $topdir
@@ -464,7 +464,7 @@ if [ $clean -eq 1 ]; then
                 # a .pro file exists
                 if [ -f $pro_file ]; then
                         echo -e "\e[1;33m\n*\n* CLEAN project ${sd}...\n*\e[0m"
-                        qmake "INSTALL_ROOT=$tmp_installdir" && make distclean
+                        qmake "INSTALL_ROOT=$tmp_installdir" "prefix=$install_prefix"  && make distclean
 
                 fi # -f $pro_file
                 cd ..
@@ -575,7 +575,7 @@ for x in "${qmake_p[@]}"; do
                 ##
                 ## build and install under tmp_installdir
                 ##
-                qmake "INSTALL_ROOT=$tmp_installdir" && make -j3
+                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j3
 		if [ $? -ne 0 ]; then
 			exit 1
 		fi
@@ -603,7 +603,7 @@ for x in "${qmake_p[@]}"; do
 		if [ -d doc ]; then
 			rm -rf doc
 		fi
-                qmake "INSTALL_ROOT=$tmp_installdir" && make doc
+                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make doc
 		if [ $? -ne 0 ]; then
 			echo -e "\e[1;36m\n*\n* BUILD DOCS project ${x} has no \"doc\" target...\n*\e[0m\n"
 		fi
@@ -654,7 +654,7 @@ for x in "${qmake_subdir_p[@]}"; do
 			#
 			if [ $build -eq 1 ]; then
 				echo -e "\e[1;32m\n*\n* BUILD project ${sd}...\n*\e[0m"
-                                qmake "INSTALL_ROOT=$tmp_installdir" && make -j3 && make install
+                                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j3 && make install
 				if [ $? -ne 0 ]; then
                                         exit 1
                                 else
@@ -669,7 +669,7 @@ for x in "${qmake_subdir_p[@]}"; do
 					rm -rf doc
 				fi
 			
-                                qmake "INSTALL_ROOT=$tmp_installdir" && make doc
+                                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make doc
 				if [ $? -ne 0 ]; then
 					echo -e "\e[1;36m\n*\n* BUILD DOCS project ${sd} has no \"doc\" target...\n*\e[0m\n"
 				else
@@ -706,6 +706,25 @@ done
 #
 #
 if [ $make_install -eq 1 ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_installdir)" ]; then
+
+        # Replace any occurrence of $tmp_installdir in any file (e.g. pkgconfig files)
+        #
+        #
+        echo -e -n "\n\n\e[1;32m* \e[0mreplacing temporary install dir references in \e[1;2mpkgconfig files\e[0m with \"\e[1;2m$install_prefix\e[0m\"..."
+        find $tmp_installdir -type f -name "*.pc" -exec  sed -i 's#'"$tmp_installdir"'#'"$install_prefix"'#g' {} +
+        echo -e "\t[\e[1;32mdone\e[0m]\n"
+
+        echo -e "\e[1;35mchecking\e[0m for temporary install dir references in files under \e[1;2m$tmp_installdir\e[0m:"
+        echo -e "[ \e[1;37;3mgrep -rI  "$tmp_installdir"  $tmp_installdir/* \e[0m]"
+        echo -e "\e[0;33m+----------------------------------------------------------------------------------------+\e[0m"
+        echo -e "\e[1;31m"
+
+        # grep -rI r: recursive I ignore binary files
+        #
+        grep -rI "$tmp_installdir" $tmp_installdir/*
+        #
+        echo -e "\e[0;33m+----------------------------------------------------------------------------------------+\e[0m"
+        echo -e "\e[0m [\e[1;35mcheck \e[0;32mdone\e[0m] (^^ make sure there are no red lines within the dashed line block above ^^)"
 
         # A) Create install dir
         if [ ! -r $install_prefix ]; then

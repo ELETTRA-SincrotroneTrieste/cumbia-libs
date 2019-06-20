@@ -13,9 +13,31 @@ lessThan(QT_MAJOR_VERSION, 5) {
     QTVER_SUFFIX =
 }
 
+# INSTALL_ROOT is used to install the target
+# prefix is used within DEFINES +=
+#
+# cumbia installation script uses a temporary INSTALL_ROOT during build
+# and then files are copied into the destination prefix. That's where
+# configuration files must be found by the application when the script
+# installs everything at destination
+#
+isEmpty(prefix) {
+    prefix = $${INSTALL_ROOT}
+}
 
-SHAREDIR = $${INSTALL_ROOT}/share
-DOCDIR = $${SHAREDIR}/doc/cuuimake
+DEFINES_SHAREDIR = $${prefix}/share
+DEFINES_DOCDIR = $${prefix}/doc/cuuimake
+#
+# where config files are found by the application at runtime: use prefix
+#
+DEFINES += CONFDIR=\"\\\"$${DEFINES_SHAREDIR}/cuuimake\"\\\"
+DEFINES += CUUIMAKE_DOCDIR=\"\\\"$${DEFINES_DOCDIR}\"\\\"
+
+# version
+CUUIMAKE_VERSION_HEX = 0x010000
+CUUIMAKE_VERSION = 1.0.0
+DEFINES += CUUIMAKE_VERSION_STR=\"\\\"$${CUUIMAKE_VERSION}\"\\\"
+
 
 QT -= gui
 
@@ -37,15 +59,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 DEFINES += QT_NO_DEBUG_OUTPUT
 
-# where config files are searched
-DEFINES += CONFDIR=\"\\\"$${SHAREDIR}/cuuimake\"\\\"
 
-CUUIMAKE_VERSION_HEX = 0x0001
-CUUIMAKE_VERSION = 0.1
-
-DEFINES += CUUIMAKE_VERSION_STR=\"\\\"$${CUUIMAKE_VERSION}\"\\\"
-
-DEFINES += CUUIMAKE_DOCDIR=\"\\\"$${DOCDIR}\"\\\"
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.

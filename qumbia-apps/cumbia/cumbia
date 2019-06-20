@@ -75,7 +75,7 @@ elif [ $# -gt 0 ] && [ $1 == "upgrade" ]; then
                         cuinstall="y"
                     fi
                     if [ "$cuinstall" != "y" ]  && [ "$cuinstall" != "" ]; then
-                        echo -e "\e[1;35m\n*\e[0m installation cancelled\n\n"
+                        echo -e "\e[1;35m\n*\e[0m installation cancelled\n"
                         echo -e "\e[1;35m*\e[0m You can perform the installation later executing \e[0;46;3m $srcdir/scripts/cubuild.sh install \e[0m\n\n"
                         exit 0
                     else

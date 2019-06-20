@@ -51,7 +51,7 @@ void CuApplicationLauncherExtension::start()
 
 void CuApplicationLauncherExtension::m_loadCumbiaPlugin() {
 
-    QDir pluginsDir(QUMBIA_PLUGIN_DIR);
+    QDir pluginsDir(CUMBIA_QTCONTROLS_PLUGIN_DIR);
     pluginsDir.cd("plugins");
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));

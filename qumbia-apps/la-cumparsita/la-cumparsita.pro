@@ -1,6 +1,6 @@
 include (../../qumbia-epics-controls/qumbia-epics-controls.pri)
 include (../../qumbia-tango-controls/qumbia-tango-controls.pri)
-include (../../local/cumbia-libs/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
+include (../../cumbia-qtcontrols/cumbia-qtcontrols.pri)
 
 TEMPLATE = app
 
@@ -10,19 +10,29 @@ DOCDIR = $${INSTALL_ROOT}/share/doc/la-cumparsita
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets x11extras
 
-CONFIG +=
+
+# INSTALL_ROOT is used to install the target
+# prefix is used within DEFINES +=
+#
+# cumbia installation script uses a temporary INSTALL_ROOT during build
+# and then files are copied into the destination prefix. That's where
+# configuration files must be found by the application when the script
+# installs everything at destination
+#
+isEmpty(prefix) {
+    prefix = $${INSTALL_ROOT}
+}
+
+DEFINES += CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${prefix}/lib/qumbia-plugins\\\"\"
+# qt debug output
+DEFINES += QT_NO_DEBUG_OUTPUT
 
 CONFIG+=link_pkgconfig
 PKGCONFIG += x11
 
-DEFINES -= QT_NO_DEBUG_OUTPUT
-
-DEFINES += CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${INSTALL_ROOT}/lib/qumbia-plugins\\\"\"
-
 OBJECTS_DIR = obj
 
 # RESOURCES +=
-
 
 SOURCES += src/main.cpp \
                 src/cumparsita.cpp
