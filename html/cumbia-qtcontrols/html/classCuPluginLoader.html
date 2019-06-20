@@ -75,14 +75,6 @@ Public Member Functions</h2></td></tr>
 <ul>
 <li>CUMBIA_QTCONTROLS_PLUGIN_DIR</li>
 </ul>
-<p>The <em>qumbia-plugins</em> module defines and passes to the compiler with the -D option:</p>
-<ul>
-<li>QUMBIA_PLUGIN_DIR</li>
-</ul>
-<p>The two definitions should point to the same location, which is by default:</p>
-<ul>
-<li>$${INSTALL_ROOT}/lib/qumbia-plugins</li>
-</ul>
 <p>Plugins are searched also in one of the <em>colon separated list</em> of directories exported through the <em>CUMBIA_PLUGIN_PATH</em> environment variable. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a65df724942b3334aa83988ff0d80ee89"></a>
@@ -150,12 +142,12 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>the absolute file path of the plugin with the given name, an empty string otherwise</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">default_plugin_path</td><td>the default cumbia plugin installation directory (e.g. CUMBIA_QTCONTROLS_PLUGIN_DIR for cumbia-qtcontrols projects or QUMBIA_PLUGIN_DIR for plugins that include qumbia-plugins.pri from the qumbia-plugins moudule)</td></tr>
+    <tr><td class="paramname">default_plugin_path</td><td>the default cumbia plugin installation directory (CUMBIA_QTCONTROLS_PLUGIN_DIR)</td></tr>
     <tr><td class="paramname">name</td><td>the exact name of the desired plugin, for example "libactions-extension-plugin.so" or "libcumbia-dbus-plugin.so"</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>Plugin search gives priority to folders listed in the <b>CUMBIA_PLUGIN_PATH</b> environment variable. <em>default_plugin_path</em> folder is searched last.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Plugin search gives priority to folders listed in the <b>CUMBIA_QTCONTROLS_PLUGIN_DIR</b> environment variable. <em>default_plugin_path</em> folder is searched last.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuPluginLoader.html#a2b40d4455059ddc5096137715f169c0d" title="get a list of the absolute file paths of the plugins which name matches the regular expression match.">getPluginAbsoluteFilePaths</a> </dd></dl>
 
 <p class="reference">References <a class="el" href="classCuPluginLoader.html#a2b40d4455059ddc5096137715f169c0d">getPluginAbsoluteFilePaths()</a>.</p>
@@ -192,7 +184,7 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>a list of the absolute file paths of the plugins matching the given <em>match</em>, or an empty list if no plugin file name matches the given pattern</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">default_plugin_path</td><td>the default cumbia plugin installation directory (e.g. CUMBIA_QTCONTROLS_PLUGIN_DIR for cumbia-qtcontrols projects or QUMBIA_PLUGIN_DIR for plugins that include qumbia-plugins.pri from the qumbia-plugins moudule). If <em>empty</em>, the default plugin path is set to CUMBIA_QTCONTROLS_PLUGIN_DIR, defined in cumbia-qtcontrols.pri</td></tr>
+    <tr><td class="paramname">default_plugin_path</td><td>the default cumbia plugin installation directory (e.g. CUMBIA_QTCONTROLS_PLUGIN_DIR). If <em>empty</em>, the default plugin path is set to CUMBIA_QTCONTROLS_PLUGIN_DIR, defined in cumbia-qtcontrols.pri</td></tr>
     <tr><td class="paramname">match</td><td>a regular expression to match the desired plugin name. For example the ".*context-menu-actions\.so" can be used to find all the plugins extending the contextual menu of a cumbia-qtcontrols widget.</td></tr>
   </table>
   </dd>
@@ -231,7 +223,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 24 2019 16:29:41 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 20 2019 15:13:58 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

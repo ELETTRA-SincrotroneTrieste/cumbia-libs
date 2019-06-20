@@ -180,7 +180,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>creates and returns a new <a class="el" href="classCuTControlsWriter.html" title="implements CuControlsWriterA abstract class and provides an interface to connect a Tango writer to a ...">CuTControlsWriter</a>, configured with the given Cumbia and CuDataListener. </p>
-<p>Call setOptions before create to configure the writer.</p>
+<p>Call setOptions before create to configure the writer. See setOptions for a list of predefined keys.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">c</td><td>a pointer to the CumbiaTango object </td></tr>
@@ -217,6 +217,11 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section user"><dt>Key/value pairs</dt><dd><ul>
+<li><em>no-properties</em> [bool, default: false]. If true, skip attribute configuration in setTarget. </li>
+<li><em>fetch_props</em> [std::vector&lt;std::string&gt;, default: empty] list of attribute properties to fetch from the database during configuration. The <em>no-properties</em> key must be left to false (default).</li>
+</ul>
+</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuTWriterFactory.html#a07c4670801801e1aa605e1fde00113ab" title="creates and returns a new CuTControlsWriter, configured with the given Cumbia and CuDataListener.">create</a> </dd></dl>
 
 </div>
@@ -228,7 +233,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 24 2019 16:29:48 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 20 2019 15:14:05 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

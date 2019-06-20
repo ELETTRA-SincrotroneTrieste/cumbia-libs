@@ -130,7 +130,13 @@ Public Member Functions</h2></td></tr>
 <li>passing specific Cumbia and reader (writer) factory instances; </li>
 <li>passing CumbiaPool and <a class="el" href="classCuControlsFactoryPool.html" title="this class, used in conjunction with CumbiaPool allows to connect to different control system framewo...">CuControlsFactoryPool</a> objects.</li>
 </ul>
-When make_reader is called, either the specific Cumbia and reader factory are used to create a reader or implementations of Cumbia and reader factory are picked from the pools provided. If CuData is passed to make_reader (or make_writer), it is used to configure the options of the underlying engine. CuData key/value set is specific to the engine used. </dd></dl>
+When make_reader is called, either the specific Cumbia and reader factory are used to create a reader or implementations of Cumbia and reader factory are picked from the pools provided. If CuData is passed to make_reader (or make_writer), it is used to configure the options of the underlying engine. CuData key/value set is specific to the engine used.</dd></dl>
+<dl class="section user"><dt>Options</dt><dd>The setOptions method can be used to configure <em>how</em> the readers and writers created by <a class="el" href="classCuContext.html" title="CuLinkControl stores a small set of objects to help create readers and writers.">CuContext</a> are set up. setOptions accepts a CuData bundle with settings organised in key/value pairs.</dd></dl>
+<dl class="section user"><dt>Relevant key/value pairs</dt><dd><ul>
+<li><em>no-properties</em> [bool, default: false]. If true, skip attribute configuration. </li>
+<li><em>fetch_props</em> [std::vector&lt;std::string&gt;, default: empty] list of attribute properties to fetch from the database during configuration. The <em>no-properties</em> key must be left to false (default). </li>
+</ul>
+</dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ab2eb338ff3eefd68532b6e206874fa30"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab2eb338ff3eefd68532b6e206874fa30">&#9670;&nbsp;</a></span>CuContext() <span class="overload">[1/3]</span></h2>
@@ -768,7 +774,7 @@ If the context contains more readers (writers), use the <a class="el" href="clas
 
 <p>Send options bundle to the link, if active, and save them locally. </p>
 <p>If the link (reader or writer) is active (either setSource or setTarget has been called) the options are sent to either <a class="el" href="classCuControlsReaderA.html" title="abstract class defining an interface for cumbia-qtcontrols readers">CuControlsReaderA</a> or <a class="el" href="classCuControlsWriterA.html" title="abstract class defining an interface for cumbia-qtcontrols writers">CuControlsWriterA</a> (hereafter named "&lt;em&gt;link&lt;/em&gt;") through <a class="el" href="classCuControlsReaderA.html#a6a617af07bd90210ea9ad0032a2384b8" title="send data to the reader">CuControlsReaderA::sendData</a> or <a class="el" href="classCuControlsWriterA.html#a1720dd7c5bed2ad0731946e148749841" title="send data to the writer">CuControlsWriterA::sendData</a> CuData options bundle is also saved locally and can be fetched with the QuContext::options method.</p>
-<dl class="section user"><dt>Note</dt><dd>Call setOptions on QuContext <em>before</em> setSource/setTargets on the qumbia-qtcontrols object to set up the link with the desired options. Please remind that the options that can be applied are CuControlsReaderA/CuControlsWriterA (named <em>link implementation</em> hereafter) implementation dependent. (For example, read mode - polling or event driven - polling period and so on).</dd></dl>
+<dl class="section user"><dt>Note</dt><dd>Call setOptions on <a class="el" href="classCuContext.html" title="CuLinkControl stores a small set of objects to help create readers and writers.">CuContext</a> <em>before</em> setSource/setTargets on the qumbia-qtcontrols object to set up the link with the desired options. Please remind that the options that can be applied are CuControlsReaderA/CuControlsWriterA (named <em>link implementation</em> hereafter) implementation dependent. (For example, read mode - polling or event driven - polling period and so on).</dd></dl>
 <dl class="section user"><dt>Observations</dt><dd><ul>
 <li>options bundle contents apply to the link implementation. </li>
 <li>depending on the link implementation, it may be necessary to call setSource or setTargets (for example, Tango attribute properties are fetched only at setup, so options concerning initial configuration require setSource after setOptions). See the <em>qumbia-tango-controls</em> <b>qucontext</b> example.</li>
@@ -830,7 +836,8 @@ See the specific link implementation (e.g. CuTReader/CuTWriter for Tango and CuE
   </table>
   </dd>
 </dl>
-<p>Saves the options locally.</p>
+<p>Saves the options locally. Options are used to configure the readers and writers instantiated by <a class="el" href="classCuContext.html" title="CuLinkControl stores a small set of objects to help create readers and writers.">CuContext</a>.</p>
+<dl class="section user"><dt>Note</dt><dd>You may want to call setOptions before replace_reader or replace_writer, so that they affect the link configuration. The <a class="el" href="classCuContext.html" title="CuLinkControl stores a small set of objects to help create readers and writers.">CuContext</a> introductory documentation lists the known options.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuContext.html#a8039dd5b6d02db93cba065068ddafaae" title="Send options bundle to the link, if active, and save them locally.">sendData</a> </dd>
 <dd>
 <a class="el" href="classCuContext.html#acccea2906f516bed8b27352adfdf969a" title="Get the options currently set on the context.">options</a> </dd></dl>
@@ -863,7 +870,7 @@ See the specific link implementation (e.g. CuTReader/CuTWriter for Tango and CuE
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Apr 24 2019 16:29:41 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jun 20 2019 15:13:58 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
