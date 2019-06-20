@@ -33,6 +33,18 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT = /usr/local/cumbia-libs
 }
 
+# INSTALL_ROOT is used to install the target
+# prefix is used within DEFINES +=
+#
+# cumbia installation script uses a temporary INSTALL_ROOT during build
+# and then files are copied into the destination prefix. That's where
+# configuration files must be found by the application when the script
+# installs everything at destination
+#
+isEmpty(prefix) {
+    prefix = $${INSTALL_ROOT}
+}
+
 #
 #
 # Here qumbia-qtcontrols include files will be installed
@@ -107,9 +119,6 @@ unix:!android-g++ {
     }
 }
 
-
-
-
 #
 # + ----------------------------------------------------------------- +
 #
@@ -124,8 +133,8 @@ VERSION = 1.0.0
 # QUMBIA_PLUGINS_LIBDIR in qumbia-plugins.pri within the qumbia-plugins
 # module
 #
-CU_QTC_PLUGINDIR = $${INSTALL_ROOT}/lib/qumbia-plugins
-DEFINES += CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${CU_QTC_PLUGINDIR}\\\"\"
+DEFINES_CUMBIA_QTCONTROLS_PLUGIN_DIR = $${prefix}/lib/qumbia-plugins
+DEFINES += CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${DEFINES_CUMBIA_QTCONTROLS_PLUGIN_DIR}\\\"\"
 
 DEFINES += CUMBIA_QTCONTROLS_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
     CUMBIA_QTCONTROLS_VERSION=$${VERSION_HEX}

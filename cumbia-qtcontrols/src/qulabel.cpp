@@ -168,7 +168,7 @@ void QuLabel::contextMenuEvent(QContextMenuEvent *e)
 
 void QuLabel::onUpdate(const CuData &da)
 {
-    bool background_modified;
+    bool background_modified = false;
     QString txt;
     QColor background, border;
     d->read_ok = !da["err"].toBool();

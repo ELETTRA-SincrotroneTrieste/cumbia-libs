@@ -12,13 +12,6 @@
  *
  * \li CUMBIA_QTCONTROLS_PLUGIN_DIR
  *
- * The *qumbia-plugins* module defines and passes to the compiler with the -D option:
- *
- * \li QUMBIA_PLUGIN_DIR
- *
- * The two definitions should point to the same location, which is by default:
- *
- * \li $${INSTALL_ROOT}/lib/qumbia-plugins
  *
  * Plugins are searched also in one of the *colon separated list* of directories exported through the
  * *CUMBIA_PLUGIN_PATH* environment variable.

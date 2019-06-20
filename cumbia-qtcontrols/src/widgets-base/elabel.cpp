@@ -136,10 +136,11 @@ bool ELabel::enumDisplayConfigured()
 
 void ELabel::display()
 {
-    QColor background;
+     QColor background;
     if (d_ptr->val.type() == QVariant::Bool)
     {
-        qDebug() << __FUNCTION__ << "ELabel boolean " << d_ptr->val.toBool() << d_ptr->trueString << d_ptr->falseString;
+        qDebug() << __FUNCTION__ << "ELabel boolean " << d_ptr->val.toBool() <<"("
+                 << d_ptr->trueColor << ")" << d_ptr->trueString << d_ptr->falseString <<"(" << d_ptr->falseColor << ")" ;
         if (d_ptr->val.toBool())
         {
             if (background != d_ptr->trueColor || text() != d_ptr->trueString)

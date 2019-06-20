@@ -117,6 +117,7 @@ void EFlag::arrangeCells()
 		for (int j = 0; j < numColumns; j++)
 		{
 			ELabel* temp = new ELabel(this);
+            temp->setObjectName(QString("l_%1").arg(1 + j + i * numRows));
 			grid->addWidget(temp, i, j);
 // 			grid->setMargin(3);
 // 			grid->setSpacing(1);

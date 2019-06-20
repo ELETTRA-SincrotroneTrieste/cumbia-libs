@@ -83,10 +83,11 @@ void QuLabelBase::setMaximumLength(int len)
  */
 void QuLabelBase::setBackground(const QColor &background)
 {
-    if(background.isValid() && d_ptr->backgroundColor != background) {
-        d_ptr->backgroundColor = background;
+    d_ptr->backgroundColor = background;
+    if(background.isValid()) {
         QPalette p = palette();
         p.setColor(QPalette::Background, background);
+        qDebug() << "QuLabelBase::setBackground " <<this << objectName()  << text()  << " with color " << background;
         setPalette(p);
     }
 }
@@ -116,8 +117,14 @@ void QuLabelBase::setBorderColor(const QColor &border) {
  */
 void QuLabelBase::setDecoration(const QColor & background, const QColor &border)
 {
-    setBackground(background);
-    d_ptr->result_border_color = border;
+    const bool bg_update = background.isValid() && d_ptr->backgroundColor != background;
+    const bool border_update = d_ptr->result_border_color != border;
+    if(border_update)
+        d_ptr->result_border_color = border;
+    if(bg_update)
+        setBackground(background); // calls setPalette: no need for update
+   else if(border_update)
+        update();
 }
 
 /*! \brief returns the width, in pixels, of the colored border that is
@@ -327,7 +334,8 @@ void QuLabelBase::paintEvent(QPaintEvent *pe)
         pen.setColor(Qt::white);
         pen.setWidthF(pwidth + 2);
         p.setPen(pen);
-        p.drawRect(r.adjusted(1.0 + pen.widthF()/2.0, 1.0+pen.widthF()/2, -pen.widthF()/2.0, -pen.widthF()/2.0));  // draw result border (internal)
+        // draw result border (internal)
+        p.drawRect(r.adjusted(1.0 + pen.widthF()/2.0, 1.0+pen.widthF()/2, -pen.widthF()/2.0, -pen.widthF()/2.0));
         pen.setColor(bor);
         pen.setWidthF(pwidth);
         p.setPen(pen);

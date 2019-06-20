@@ -12,14 +12,12 @@ CuPluginLoader::CuPluginLoader()
  *
  * @return the absolute file path of the plugin with the given name, an empty string otherwise
  *
- * @param default_plugin_path the default cumbia plugin installation directory (e.g. CUMBIA_QTCONTROLS_PLUGIN_DIR
- *        for cumbia-qtcontrols projects or QUMBIA_PLUGIN_DIR for plugins that include qumbia-plugins.pri from
- *        the qumbia-plugins moudule)
+ * @param default_plugin_path the default cumbia plugin installation directory (CUMBIA_QTCONTROLS_PLUGIN_DIR)
  *
  * @param name the exact name of the desired plugin, for example "libactions-extension-plugin.so" or
  *        "libcumbia-dbus-plugin.so"
  *
- * \note Plugin search gives priority to folders listed in the  <strong>CUMBIA_PLUGIN_PATH</strong> environment
+ * \note Plugin search gives priority to folders listed in the  <strong>CUMBIA_QTCONTROLS_PLUGIN_DIR</strong> environment
  *       variable. *default_plugin_path* folder is searched last.
  *
  * @see getPluginAbsoluteFilePaths
@@ -55,9 +53,7 @@ QString CuPluginLoader::getDefaultPluginPath() const
  * @return a list of the absolute file paths of the plugins matching the given *match*, or an empty list if no plugin
  *         file name matches the given pattern
  *
- * @param default_plugin_path the default cumbia plugin installation directory (e.g. CUMBIA_QTCONTROLS_PLUGIN_DIR
- *        for cumbia-qtcontrols projects or QUMBIA_PLUGIN_DIR for plugins that include qumbia-plugins.pri from
- *        the qumbia-plugins moudule).
+ * @param default_plugin_path the default cumbia plugin installation directory (e.g. CUMBIA_QTCONTROLS_PLUGIN_DIR).
  *        If *empty*, the default plugin path is set to CUMBIA_QTCONTROLS_PLUGIN_DIR, defined in cumbia-qtcontrols.pri
  *
  * @param match a regular expression to match the desired plugin name. For example the ".*context-menu-actions\.so"
