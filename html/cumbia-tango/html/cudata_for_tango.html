@@ -128,7 +128,7 @@ $(function() {
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">unit  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone"><a class="el" href="namespaceTango.html">Tango</a> "unit" from AttributeInfo  </td><td class="markdownTableBodyNone">-   </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">success_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string with the name of the color provided the class <a class="el" href="classCuTangoWorldConfig.html" title="A class containing some configurations useful to several other objects.">CuTangoWorldConfig</a> associated to an error/success  </td><td class="markdownTableBodyNone">Can be used to decorate widgets   </td></tr>
+<td class="markdownTableBodyNone">success_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string with the name of the color provided the class <a class="el" href="classCuTangoWorldConfig.html" title="A class used to store configuration for Tango states color and name, Tango AttrQuality color and name...">CuTangoWorldConfig</a> associated to an error/success  </td><td class="markdownTableBodyNone">Can be used to decorate widgets   </td></tr>
 </table>
 <h4>The CuData received upon <em>command info</em> configuration type will contain the following keys:</h4>
 <table class="markdownTable">
@@ -161,7 +161,7 @@ $(function() {
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">data_format  </td><td class="markdownTableBodyNone">Tango::AttrDataFormat (enum)  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">Provided for consistency with <em>attribute configuration</em> CuData, determined from CommandInfo out_type  </td><td class="markdownTableBodyNone">see CuData "data_format" from attribute configuration above   </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">success_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string with the name of the color provided the class <a class="el" href="classCuTangoWorldConfig.html" title="A class containing some configurations useful to several other objects.">CuTangoWorldConfig</a> associated to an error/success  </td><td class="markdownTableBodyNone">Can be used to decorate widgets   </td></tr>
+<td class="markdownTableBodyNone">success_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string with the name of the color provided the class <a class="el" href="classCuTangoWorldConfig.html" title="A class used to store configuration for Tango states color and name, Tango AttrQuality color and name...">CuTangoWorldConfig</a> associated to an error/success  </td><td class="markdownTableBodyNone">Can be used to decorate widgets   </td></tr>
 </table>
 <h3>Example</h3>
 <p>In this example, we discuss how a plot is configured using the CuData with "type" set to "property".</p>
@@ -179,7 +179,7 @@ $(function() {
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">err  </td><td class="markdownTableBodyNone">bool  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">true if an error occurred, false otherwise  </td><td class="markdownTableBodyNone">See the <em>msg</em> key abovekey always present in CuData   </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">success_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string with the name of the color provided the class <a class="el" href="classCuTangoWorldConfig.html" title="A class containing some configurations useful to several other objects.">CuTangoWorldConfig</a> associated to an error/success  </td><td class="markdownTableBodyNone">Can be used to decorate widgets   </td></tr>
+<td class="markdownTableBodyNone">success_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string with the name of the color provided the class <a class="el" href="classCuTangoWorldConfig.html" title="A class used to store configuration for Tango states color and name, Tango AttrQuality color and name...">CuTangoWorldConfig</a> associated to an error/success  </td><td class="markdownTableBodyNone">Can be used to decorate widgets   </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">timestamp_ms  </td><td class="markdownTableBodyNone">time_t + suseconds_t  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">Timestamp as integer: a struct timeval is used to store the timestamp. Formula: tiv.tv_sec * 1000 + tiv.tv_usec / 1000;  </td><td class="markdownTableBodyNone">can convert with toLongInt()   </td></tr>
 <tr class="markdownTableRowOdd">
@@ -187,7 +187,7 @@ $(function() {
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">quality  </td><td class="markdownTableBodyNone">const Tango::AttrQuality  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone"><a class="el" href="namespaceTango.html">Tango</a> attribute quality { ATTR_VALID, ATTR_INVALID, ATTR_ALARM, ATTR_CHANGING, ATTR_WARNING }  </td><td class="markdownTableBodyNone">from server/idl/tango.h. Convert with toInt   </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">quality_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string with the name of the color provided the class <a class="el" href="classCuTangoWorldConfig.html" title="A class containing some configurations useful to several other objects.">CuTangoWorldConfig</a>  </td><td class="markdownTableBodyNone">can be used to decorate widgets. Use in combination with QuPalette. Convert with toString   </td></tr>
+<td class="markdownTableBodyNone">quality_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string with the name of the color provided the class <a class="el" href="classCuTangoWorldConfig.html" title="A class used to store configuration for Tango states color and name, Tango AttrQuality color and name...">CuTangoWorldConfig</a>  </td><td class="markdownTableBodyNone">can be used to decorate widgets. Use in combination with QuPalette. Convert with toString   </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">data_format_str  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">Data format as string ("scalar", "vector", matrix", "data format unknown") &lt;/td&gt;
     &lt;td class="markdownTableBodyNone"&gt; consistent naming across tango and epics   </td></tr>
@@ -198,7 +198,7 @@ $(function() {
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">w_value  </td><td class="markdownTableBodyNone">CuVariant  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">The attribute write value. Available if the attribute is read/write, key missing otherwise.  </td><td class="markdownTableBodyNone"><a class="el" href="namespaceTango.html">Tango</a> write value in read/write attributes   </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">state_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string describing a color for a Tango::DEV_STATE, configuration possible through <a class="el" href="classCuTangoWorldConfig.html" title="A class containing some configurations useful to several other objects.">CuTangoWorldConfig</a>.  </td><td class="markdownTableBodyNone">Can be used to decorate a widget. Available only if attribute.get_type() == Tango::DEV_STATE   </td></tr>
+<td class="markdownTableBodyNone">state_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string describing a color for a Tango::DEV_STATE, configuration possible through <a class="el" href="classCuTangoWorldConfig.html" title="A class used to store configuration for Tango states color and name, Tango AttrQuality color and name...">CuTangoWorldConfig</a>.  </td><td class="markdownTableBodyNone">Can be used to decorate a widget. Available only if attribute.get_type() == Tango::DEV_STATE   </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">state  </td><td class="markdownTableBodyNone">long int  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A Tango::DEV_STATE casted to long int. Available for Tango::DEV_STATE attributes  </td><td class="markdownTableBodyNone">Available only if attribute.get_type() == Tango::DEV_STATE   </td></tr>
 </table>
@@ -216,7 +216,7 @@ $(function() {
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">err  </td><td class="markdownTableBodyNone">bool  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">true if an error occurred, false otherwise  </td><td class="markdownTableBodyNone">See the <em>msg</em> key abovekey always present in CuData   </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">success_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string with the name of the color provided the class <a class="el" href="classCuTangoWorldConfig.html" title="A class containing some configurations useful to several other objects.">CuTangoWorldConfig</a> associated to an error/success  </td><td class="markdownTableBodyNone">Can be used to decorate widgets   </td></tr>
+<td class="markdownTableBodyNone">success_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string with the name of the color provided the class <a class="el" href="classCuTangoWorldConfig.html" title="A class used to store configuration for Tango states color and name, Tango AttrQuality color and name...">CuTangoWorldConfig</a> associated to an error/success  </td><td class="markdownTableBodyNone">Can be used to decorate widgets   </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">timestamp_ms  </td><td class="markdownTableBodyNone">time_t + suseconds_t  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">Timestamp as integer: a struct timeval is used to store the timestamp. Formula: tiv.tv_sec * 1000 + tiv.tv_usec / 1000;  </td><td class="markdownTableBodyNone">can convert with toLongInt()   </td></tr>
 <tr class="markdownTableRowOdd">
@@ -231,7 +231,7 @@ $(function() {
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">value  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">For Tango::DEV_STATE attribute types, the state is mapped into its string representation.  </td><td class="markdownTableBodyNone">Convenience conversion applied only for DEV_STATE attribute data type.   </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">state_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string describing a color for a Tango::DEV_STATE, configuration possible through <a class="el" href="classCuTangoWorldConfig.html" title="A class containing some configurations useful to several other objects.">CuTangoWorldConfig</a>.  </td><td class="markdownTableBodyNone">Can be used to decorate a widget. Available only if attribute.get_type() == Tango::DEV_STATE   </td></tr>
+<td class="markdownTableBodyNone">state_color  </td><td class="markdownTableBodyNone">string  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A string describing a color for a Tango::DEV_STATE, configuration possible through <a class="el" href="classCuTangoWorldConfig.html" title="A class used to store configuration for Tango states color and name, Tango AttrQuality color and name...">CuTangoWorldConfig</a>.  </td><td class="markdownTableBodyNone">Can be used to decorate a widget. Available only if attribute.get_type() == Tango::DEV_STATE   </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">state  </td><td class="markdownTableBodyNone">long int  </td><td class="markdownTableBodyNone">-  </td><td class="markdownTableBodyNone">A Tango::DEV_STATE casted to long int. Available for Tango::DEV_STATE attributes  </td><td class="markdownTableBodyNone">Available only if attribute.get_type() == Tango::DEV_STATE   </td></tr>
 </table>
@@ -297,7 +297,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 21 2019 10:39:45 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 21 2019 15:42:58 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

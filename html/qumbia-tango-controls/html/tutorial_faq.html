@@ -89,8 +89,13 @@ $(function() {
 <h2>Q.</h2>
 <p><a class="anchor" id="migrate_config_state_color"></a> </p><h3>How to migrate QTango <em>Config::instance()-&gt;setStateColor</em> (and <em>setStateString</em>) to cumbia?</h3>
 <h2>A.</h2>
-<p>Open the <em>ui</em> file with the Qt designer and save it again, overwriting it. Then try rebuilding.</p>
-<h2>Q.</h2>
+<p>There is no such singleton thing as QTango <em>Config::instance</em> in cumbia. Moreover, QuLabel, QuLed and other display widgets part of <em>cumbia-qtcontrols</em> must be unaware of the kind of engine in use. QuLed and QuLabel access the <em>state_color</em> key in the CuVariant data, if present. It is a simple string describing the color to use, such as "red", "green", "white"... That color description is used to fetch the actual QColor from the internal <em>QuPalette</em> used by suitable display widgets. What you can do is alter the QuPalette so that a different QColor is picked for a given color name. That operation is no more a global configuration; it must be applied to the individual widgets.</p>
+<p>### Old code </p><div class="fragment"><div class="line">Config::instance()-&gt;setStateColor(Tango::OPEN, EColor(Elettra::green));</div><div class="line">Config::instance()-&gt;setStateColor(Tango::CLOSE, EColor(Elettra::darkYellow));</div></div><!-- fragment --><p>These changes used to affect <em>all widgets representing a state</em> in the application.</p>
+<h3>New code</h3>
+<p>Open the <em>ui</em> file and find the widget used to display the state. Suppose it is a QuLabel with name <em>tState</em>. From the CuTangoWorldConfig documentation, one can see the following association between states and color:</p>
+<p>[Tango::CLOSE] = "white1"; [Tango::OPEN] = "white2";</p>
+<p>We have to replace the white colors with the desired ones. Open the <em>cpp</em> file and change the QuPalette of the QuLabel:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;qupalette.h&gt;</span></div><div class="line">QuPalette pa = ui-&gt;tState-&gt;quPalette();</div><div class="line">pa[<span class="stringliteral">&quot;white1&quot;</span>] = QColor(Qt::darkYellow);</div><div class="line">pa[<span class="stringliteral">&quot;white2&quot;</span>] = QColor(Qt::green);</div><div class="line">ui-&gt;tState-&gt;setQuPalette(pa);</div></div><!-- fragment --><h2>Q.</h2>
 <p><a class="anchor" id="multiengine"></a> </p><h3>How to support multiple engines (e.g. Tango and Epics) in the same application?</h3>
 <h2>A.</h2>
 <p>The application will make use of the <a href="../../cumbia/html/classCumbiaPool.html">CumbiaPool</a> class, in combination with CuControlsFactoryPool. Refer to the <a href="../../cumbia/html/classCumbiaPool.html">CumbiaPool</a> documentation, that provides an example. If the <em>cumbia pool</em> is configured with appropriate <em>source patterns</em>, the application should recognise the engine each source belongs to. For example, if the <em>patterns</em> for a Tango source are *".+/.+"* and *".+-&gt;.+"* (as <em>regular expressions</em>) and the <em>patterns</em> for an EPICS source include *".+:.+"*, then a source like <em>sys/tg_test/1/double_scalar</em> will be interpreted as a Tango source, while <em>motor:ai1</em> will be linked to the EPICS engine. The <a href="../../cumbia-tango/html/classCuTangoWorld.html">CuTangoWorld</a> and <a href="../../cumbia-epics/html/classCuEpicsWorld.html">CuEpicsWorld</a> provide lists of <em>default source patterns</em>. Please note that the "epics" and "tango" strings passed to registerCumbiaImpl, registerImpl and setSrcPatterns must match for each engine respectively. Those names link together the associated engines.</p>
@@ -100,7 +105,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 21 2019 10:39:56 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 21 2019 15:43:09 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

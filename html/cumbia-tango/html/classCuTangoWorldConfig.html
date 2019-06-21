@@ -48,7 +48,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>A class containing some configurations useful to several other objects.  
+<p>A class used to store configuration for <a class="el" href="namespaceTango.html">Tango</a> states color and name, <a class="el" href="namespaceTango.html">Tango</a> AttrQuality color and name and a color to associate to a successful operation.  
  <a href="classCuTangoWorldConfig.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="cutango-world-config_8h_source.html">cutango-world-config.h</a>&gt;</code></p>
@@ -100,7 +100,17 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9326b7c13fcecbdaa8d16af2527a389f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A class containing some configurations useful to several other objects. </p>
+<div class="textblock"><p>A class used to store configuration for <a class="el" href="namespaceTango.html">Tango</a> states color and name, <a class="el" href="namespaceTango.html">Tango</a> AttrQuality color and name and a color to associate to a successful operation. </p>
+<h1><a class="anchor" id="Default"></a>
+values</h1>
+<dl class="section user"><dt>State names association table</dt><dd>[Tango::ON] = "ON"; [Tango::OFF] = "OFF"; [Tango::CLOSE] = "CLOSED"; [Tango::OPEN] = "OPENED"; [Tango::INSERT] = "INSERT"; [Tango::EXTRACT] = "EXTRACT"; [Tango::MOVING] = "MOVING"; [Tango::STANDBY] = "STANDBY"; [Tango::FAULT] = "FAULT"; [Tango::INIT] = "INIT"; [Tango::RUNNING] = "RUNNING"; [Tango::ALARM] = "ALARM"; [Tango::DISABLE] = "DISABLE"; [Tango::UNKNOWN] = "UNKNOWN";</dd></dl>
+<dl class="section user"><dt>State color association table</dt><dd></dd></dl>
+<p>Several white versions are defined in order to easily map the color name to a different QColor in graphical applications.</p>
+<p>[Tango::ON] = "green"; [Tango::OFF] = "white"; [Tango::CLOSE] = "white1"; [Tango::OPEN] = "white2"; [Tango::INSERT] = "white3"; [Tango::EXTRACT] = "white4"; [Tango::MOVING] = "blue"; [Tango::STANDBY] = "yellow"; [Tango::FAULT] = "red"; [Tango::INIT] = "blue"; [Tango::RUNNING] = "green"; [Tango::ALARM] = "orange"; [Tango::DISABLE] = "gray"; [Tango::UNKNOWN] = "darkGray";</p>
+<dl class="section user"><dt>Quality names</dt><dd></dd></dl>
+<p>[Tango::ATTR_VALID] = "ATTR_VALID"; [Tango::ATTR_INVALID] = "ATTR_INVALID"; [Tango::ATTR_ALARM] = "ATTR_ALARM"; [Tango::ATTR_CHANGING] = "ATTR_CHANGING"; [Tango::ATTR_WARNING] = "ATTR_WARNING";</p>
+<dl class="section user"><dt>Quality colors</dt><dd></dd></dl>
+<p>[Tango::ATTR_VALID] = "white"; [Tango::ATTR_INVALID] = "gray"; [Tango::ATTR_ALARM] = "red"; [Tango::ATTR_CHANGING] = "blue"; [Tango::ATTR_WARNING] = "orange"; </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a001437e1e4abe2da0872a74f26b8d3e2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a001437e1e4abe2da0872a74f26b8d3e2">&#9670;&nbsp;</a></span>CuTangoWorldConfig()</h2>
@@ -544,7 +554,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 21 2019 10:39:45 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 21 2019 15:42:58 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
