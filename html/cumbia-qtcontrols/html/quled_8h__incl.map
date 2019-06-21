@@ -1,7 +1,11 @@
 <map id="quled.h" name="quled.h">
-<area shape="rect" id="node1" title=" " alt="" coords="146,5,210,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="210,5,274,32"/>
 <area shape="rect" id="node2" href="$quledbase_8h.html" title=" " alt="" coords="5,80,97,107"/>
 <area shape="rect" id="node4" title=" " alt="" coords="121,80,235,107"/>
 <area shape="rect" id="node5" href="$cucontexti_8h.html" title=" " alt="" coords="259,80,353,107"/>
+<area shape="rect" id="node6" href="$qupalette_8h.html" title=" " alt="" coords="377,80,464,107"/>
 <area shape="rect" id="node3" title=" " alt="" coords="15,155,87,181"/>
+<area shape="rect" id="node7" title=" " alt="" coords="305,155,363,181"/>
+<area shape="rect" id="node8" title=" " alt="" coords="387,155,454,181"/>
+<area shape="rect" id="node9" title=" " alt="" coords="479,155,541,181"/>
 </map>

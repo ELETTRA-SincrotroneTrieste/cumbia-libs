@@ -121,6 +121,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a36696cd3e4ef5e5755b754d7776ec2ec"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuLabel.html#a36696cd3e4ef5e5755b754d7776ec2ec">displayUnit</a> () const</td></tr>
 <tr class="memdesc:a36696cd3e4ef5e5755b754d7776ec2ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the display unit read by the configuration properties at initialization time.  <a href="#a36696cd3e4ef5e5755b754d7776ec2ec">More...</a><br /></td></tr>
 <tr class="separator:a36696cd3e4ef5e5755b754d7776ec2ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d6185b52b33096766cc3881c4fefd05"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classQuPalette.html">QuPalette</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuLabel.html#a7d6185b52b33096766cc3881c4fefd05">quPalette</a> () const</td></tr>
+<tr class="memdesc:a7d6185b52b33096766cc3881c4fefd05"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the <a class="el" href="classQuPalette.html" title="a map associating a color name to a QColor">QuPalette</a> currently used  <a href="#a7d6185b52b33096766cc3881c4fefd05">More...</a><br /></td></tr>
+<tr class="separator:a7d6185b52b33096766cc3881c4fefd05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fa5ae954d49bb4bacc7c28d21efb724"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuLabel.html#a8fa5ae954d49bb4bacc7c28d21efb724">setQuPalette</a> (const <a class="el" href="classQuPalette.html">QuPalette</a> &amp;colors)</td></tr>
+<tr class="memdesc:a8fa5ae954d49bb4bacc7c28d21efb724"><td class="mdescLeft">&#160;</td><td class="mdescRight">set a custom <a class="el" href="classQuPalette.html" title="a map associating a color name to a QColor">QuPalette</a> to change the string/color association  <a href="#a8fa5ae954d49bb4bacc7c28d21efb724">More...</a><br /></td></tr>
+<tr class="separator:a8fa5ae954d49bb4bacc7c28d21efb724"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4d740169e8b996ce3fcf4176114eb12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuLabel.html#ac4d740169e8b996ce3fcf4176114eb12">onUpdate</a> (const CuData &amp;d)</td></tr>
 <tr class="separator:ac4d740169e8b996ce3fcf4176114eb12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classQuLabelBase"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classQuLabelBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classQuLabelBase.html">QuLabelBase</a></td></tr>
@@ -481,6 +487,27 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="a7d6185b52b33096766cc3881c4fefd05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d6185b52b33096766cc3881c4fefd05">&#9670;&nbsp;</a></span>quPalette()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classQuPalette.html">QuPalette</a> QuLabel::quPalette </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>returns the <a class="el" href="classQuPalette.html" title="a map associating a color name to a QColor">QuPalette</a> currently used </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classQuPalette.html" title="a map associating a color name to a QColor">QuPalette</a> in use </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classQuLabel.html#a8fa5ae954d49bb4bacc7c28d21efb724" title="set a custom QuPalette to change the string/color association">setQuPalette</a> </dd></dl>
+
+</div>
+</div>
 <a id="ad61ab363d5a65cfeea194e9b69aa527a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad61ab363d5a65cfeea194e9b69aa527a">&#9670;&nbsp;</a></span>setDisplayUnitEnabled</h2>
 
@@ -507,6 +534,35 @@ Properties</h2></td></tr>
 
 <p>enable or disable the display unit visualization. </p>
 <p>See displayUnitEnabled documantation for further details. </p>
+
+</div>
+</div>
+<a id="a8fa5ae954d49bb4bacc7c28d21efb724"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8fa5ae954d49bb4bacc7c28d21efb724">&#9670;&nbsp;</a></span>setQuPalette()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void QuLabel::setQuPalette </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classQuPalette.html">QuPalette</a> &amp;&#160;</td>
+          <td class="paramname"><em>colors</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>set a custom <a class="el" href="classQuPalette.html" title="a map associating a color name to a QColor">QuPalette</a> to change the string/color association </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">colors</td><td>a new <a class="el" href="classQuPalette.html" title="a map associating a color name to a QColor">QuPalette</a> that replaces the current one</td></tr>
+  </table>
+  </dd>
+</dl>
+<p><a class="el" href="classQuPalette.html" title="a map associating a color name to a QColor">QuPalette</a> maps color names to QColor colors. You can use this method as a trick to change the color for a state represented by the label. For example, if normally an <em>OK</em> state is associated to "green", you can set a custom palette so that the "green" color string is mapped into white color. In the following example, white color is used with the <em>green</em> key:</p>
+<div class="fragment"><div class="line"><a class="code" href="classQuPalette.html">QuPalette</a> myPalette = stateWidget-&gt;quPalette();</div><div class="line">myPalette[<span class="stringliteral">&quot;green&quot;</span>] = QColor(<a class="code" href="namespaceElettra.html#a0c7441666bd21a4b0adfb2250b1fc6e6af0a829fbb657c822eab8bfb6f12c92c7">Qt::white</a>);</div><div class="line">stateWidget-&gt;setQuPalette(myPalette);</div></div><!-- fragment --><p>Altering the <a class="el" href="classQuPalette.html" title="a map associating a color name to a QColor">QuPalette</a> of a <a class="el" href="classQuLabel.html" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors.">QuLabel</a> (or a <a class="el" href="classQuLed.html" title="a led that takes a color according to a value read from a source.">QuLed</a>) is useful when a given state is associated to a predefined color (e.g. ON:green, OFF:white, ALARM:yellow, FAULT:red) and you want different combinations.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classQuLabel.html#a7d6185b52b33096766cc3881c4fefd05" title="returns the QuPalette currently used">quPalette</a> </dd></dl>
 
 </div>
 </div>
@@ -645,7 +701,7 @@ false only the value is shown</dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jun 20 2019 15:13:58 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 21 2019 10:39:51 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
