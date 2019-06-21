@@ -385,12 +385,28 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 }
             }
         }
-        else if(p_da->get_type() == Tango::DEV_ULONG || p_da->get_type() == Tango::DEV_ULONG64)
+        else if(p_da->get_type() == Tango::DEV_ULONG)
         {
-            std::vector<unsigned long int> v;
+            std::vector<Tango::DevULong> v;
             p_da->extract_read(v);
             if(f == Tango::SCALAR)
-                dat["value"] = v.at(0);
+                dat["value"] = static_cast<unsigned long>(v.at(0));
+            else
+                dat["value"] = v;
+            if(w)
+            {
+                p_da->extract_set(v);
+                if(f == Tango::SCALAR)
+                    dat["w_value"] = v.at(0);
+                else
+                    dat["w_value"] = v;
+            }
+        }
+        else if(p_da->get_type() == Tango::DEV_ULONG64) {
+            std::vector<Tango::DevULong64> v;
+            p_da->extract_read(v);
+            if(f == Tango::SCALAR)
+                dat["value"] = static_cast<unsigned long>(v.at(0));
             else
                 dat["value"] = v;
             if(w)

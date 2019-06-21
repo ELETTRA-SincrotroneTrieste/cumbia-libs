@@ -3,3 +3,4 @@ lib
 ../cumbia/src/lib/services
 ../cumbia/src/lib/threads
 /usr/local/tango-9.3.2/include/tango
+/usr/local/omniorb-4.2.3/include/omniORB4

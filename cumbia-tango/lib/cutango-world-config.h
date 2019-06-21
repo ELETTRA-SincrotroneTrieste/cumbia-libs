@@ -9,8 +9,65 @@
 
 class CuTangoWorldConfigPrivate;
 
-/** \brief A class containing some configurations useful to
- *  several other objects.
+/** \brief A class used to store configuration for Tango states color and name,
+ *         Tango AttrQuality color and name and a color to associate to a successful
+ *         operation.
+ *
+ * \section Default values
+ *
+ * \par State names association table
+ *  [Tango::ON] =     "ON";
+    [Tango::OFF] =    "OFF";
+    [Tango::CLOSE] =  "CLOSED";
+    [Tango::OPEN] =   "OPENED";
+    [Tango::INSERT]     = "INSERT";
+    [Tango::EXTRACT]    = "EXTRACT";
+    [Tango::MOVING]     = "MOVING";
+    [Tango::STANDBY]    = "STANDBY";
+    [Tango::FAULT]      = "FAULT";
+    [Tango::INIT]       = "INIT";
+    [Tango::RUNNING]    = "RUNNING";
+    [Tango::ALARM]      = "ALARM";
+    [Tango::DISABLE]    = "DISABLE";
+    [Tango::UNKNOWN]    = "UNKNOWN";
+
+ * \par State color association table
+ *
+ * Several white versions are defined in order to easily map the color name
+ * to a different QColor in graphical applications.
+ *
+ *
+    [Tango::ON]          = "green";
+    [Tango::OFF]         = "white";
+    [Tango::CLOSE]       = "white1";
+    [Tango::OPEN]        = "white2";
+    [Tango::INSERT]      = "white3";
+    [Tango::EXTRACT]     = "white4";
+    [Tango::MOVING]      = "blue";
+    [Tango::STANDBY]     = "yellow";
+    [Tango::FAULT]       = "red";
+    [Tango::INIT]        = "blue";
+    [Tango::RUNNING]     = "green";
+    [Tango::ALARM]       = "orange";
+    [Tango::DISABLE]     = "gray";
+    [Tango::UNKNOWN]     = "darkGray";
+ *
+ * \par Quality names
+ *
+    [Tango::ATTR_VALID] = "ATTR_VALID";
+    [Tango::ATTR_INVALID] = "ATTR_INVALID";
+    [Tango::ATTR_ALARM] = "ATTR_ALARM";
+    [Tango::ATTR_CHANGING] = "ATTR_CHANGING";
+    [Tango::ATTR_WARNING] = "ATTR_WARNING";
+ *
+ * \par Quality colors
+ *
+    [Tango::ATTR_VALID] = "white";
+    [Tango::ATTR_INVALID] = "gray";
+    [Tango::ATTR_ALARM] = "red";
+    [Tango::ATTR_CHANGING] = "blue";
+    [Tango::ATTR_WARNING] = "orange";
+ *
  */
 class CuTangoWorldConfig
 {

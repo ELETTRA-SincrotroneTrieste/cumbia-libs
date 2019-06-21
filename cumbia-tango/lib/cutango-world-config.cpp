@@ -50,10 +50,10 @@ void CuTangoWorldConfig::initStateColorsAndStrings()
 
     d->stateColors[Tango::ON]          = "green";
     d->stateColors[Tango::OFF]         = "white";
-    d->stateColors[Tango::CLOSE]       = "white";
-    d->stateColors[Tango::OPEN]        = "white";
-    d->stateColors[Tango::INSERT]      = "white";
-    d->stateColors[Tango::EXTRACT]     = "white";
+    d->stateColors[Tango::CLOSE]       = "white1";
+    d->stateColors[Tango::OPEN]        = "white2";
+    d->stateColors[Tango::INSERT]      = "white3";
+    d->stateColors[Tango::EXTRACT]     = "white4";
     d->stateColors[Tango::MOVING]      = "blue";
     d->stateColors[Tango::STANDBY]     = "yellow";
     d->stateColors[Tango::FAULT]       = "red";
