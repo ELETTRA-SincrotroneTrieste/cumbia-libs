@@ -19,7 +19,7 @@ class Qumbiaizer : public QObject
 public:
     /* Compatible parent object types supported */
     enum Type { Invalid = -1, Void, Int, Double, UInt, Short, String, Bool,
-            BoolVector, DoubleVector, StringVector, IntVector };
+                BoolVector, DoubleVector, StringVector, IntVector };
 
     /** \brief Supported auto configuration parameters with which you can invoke slots on the
   * attached refreshee
@@ -189,90 +189,191 @@ public:
 
 signals:
 
-    /** \brief Connection ok notification.
-  *
-  * Mapped from QTangoCommunicationHandle::connectionOk
-  *
-  * @see QTangoCommunicationHandle::connectionOk
-  */
-    void connectionOk(bool);
-
- /** \brief auto configuration signal.
-  *
-  * Mapped from QTangoCommunicationHandle::attributeAutoConfigured.
-  *
-  * @see QTangoCommunicationHandle::attributeAutoConfigured
-  *
-  * QTangoizer class can perform some simple auto configuration (see setAutoConfSlot method)
-  * when the associated widgets have suitable slots to set minimum, maximum, text values.
-  * In every case, this signal is <strong>emitted before any auto configuration is done</strong>
-  * by QTangoizer derived classes.
-  * This allows you to set minimum and maximum values (for example) without worrying to initialize
-  * the first value read by yourself. Actually, if the setPointSlot parameter of the
-  * void attach(QObject *refreshee, const char *slot, const char* setPointSlot = NULL, Qt::ConnectionType connType = Qt::AutoConnection);
-  * method is not NULL, the first value read is set by means of that slot.
-  */
-  void configured(const CuData &);
-
-    /** \brief this signal is emitted after the source or target configuration and reveals a connection failure
- *
- * After the handle configures via setSource(), emits a signal to reveal a connection failure
- * Mapped from QTangoCommunicationHandle::connectionFailed()
- */
-    void connectionFailed();
+    /** \brief auto configuration signal.
+      *
+      *
+      * QTangoizer class can perform some simple auto configuration (see setAutoConfSlot method)
+      * when the associated widgets have suitable slots to set minimum, maximum, text values.
+      * In every case, this signal is <strong>emitted before any auto configuration is done</strong>
+      * by QTangoizer derived classes.
+      * This allows you to set minimum and maximum values (for example) without worrying to initialize
+      * the first value read by yourself. Actually, if the setPointSlot parameter of the
+      * void attach(QObject *refreshee, const char *slot, const char* setPointSlot = NULL, Qt::ConnectionType connType = Qt::AutoConnection);
+      * method is not NULL, the first value read is set by means of that slot.
+      */
+    void configured(const CuData &);
 
     /** \brief a signal that contains the error message related to setSource - or setTargets - failures.
- *
- * Connect this signal to any slot accepting a QString as input parameter if you want to know the error message
- * related to the setSource() or setTargets() failure.
- * Mapped from QTangoCommunicationHandle::connectionErrorMessage()
- * @param msg the error message
- */
+     *
+     * Connect this signal to any slot accepting a QString as input parameter if you want to know the error message
+     * related to the setSource() or setTargets() failure.
+     * Mapped from QTangoCommunicationHandle::connectionErrorMessage()
+     * @param msg the error message
+     */
     void connectionErrorMessage(const QString& msg);
 
-    /** \brief Emitted by the refresh method. The message is taken from the TVariant
-  *
-  * @param message the error message, i.e. the tango exception, or the
-  *        read information (last read timestamp) if read was successful.
-  */
+   /** \brief Emitted by the refresh method. The message is taken from the TVariant
+    *
+    * @param message either the error message or other piece of information from the source (e.g. timestamp)
+    * @see readOk
+    */
     void refreshMessage(const QString& message);
 
-    /** \brief this signal is emitted by the refresh() method and the success
-  * parameter indicates whether the tango read was successful or not.
-  *
-  * @param success true if read was successful, false otherwise
-  *
-  * @see readFailed
-  */
+    /** \brief this signal is emitted by the QuWatcher::onUpdate method and the success
+    * parameter indicates whether the reading is successful or not.
+    *
+    * @param success true if read was successful, false otherwise
+    *
+    * \par Note
+    * success contains the value of \code !data["err"].toBool() \endcode
+    *
+    */
     void readOk(bool success);
 
-    void newData(short );
+    /*! \brief newData for short data types
+     *
+     * @param s value as short
+     *
+     * \par Note 1
+     * The source must provide this precise data type
+     *
+     * \par Note 2
+     * The method extracts data["value"] and converts it to short
+     */
+    void newData(short s);
 
-    void newData(int);
+    /*! \brief newData for int data types
+     *
+     * @param i value as int
+     *
+     * \par Note 1
+     * The source must provide this precise data type
+     *
+     * \par Note 2
+     * The method extracts data["value"] and converts it to int
+     */
+    void newData(int i);
 
-    void newData(double);
+    /*! \brief newData for double data types
+     *
+     * @param d value as double
+     *
+     * \par Note 1
+     * The source must provide this precise data type
+     *
+     * \par Note 2
+     * The method extracts data["value"] and converts it to double
+     */
+    void newData(double d);
 
-    void newData(const QString&);
+    /*! \brief newData for string data types
+     *
+     * @param s value as QString
+     *
+     * \par Note 1
+     * The source must provide this precise data type
+     *
+     * \par Note 2
+     * The method extracts data["value"] and converts it to string
+     */
+    void newData(const QString& s);
 
     void newData();
 
-    void newData(unsigned int);
+    /*! \brief newData for unsigned int data types
+     *
+     * @param ui  value as unsigned
+     *
+     * \par Note 1
+     * The source must provide this precise data type
+     *
+     * \par Note 2
+     * The method extracts data["value"] and converts it to unsigned int
+     */
+    void newData(unsigned int ui);
 
-    void newData(unsigned short);
+    /*! \brief newData for unsigned short data types
+     *
+     * @param us value as unsigned short
+     *
+     * \par Note 1
+     * The source must provide this precise data type
+     *
+     * \par Note 2
+     * The method extracts data["value"] and converts it to unsigned short
+     */
+    void newData(unsigned short us);
 
-    void newData(bool);
+    /*! \brief newData for unsigned bool data types
+     *
+     * @param b value as bool
+     *
+     * \par Note 1
+     * The source must provide this precise data type
+     *
+     * \par Note 2
+     * The method extracts data["value"] and converts it to bool
+     */
+    void newData(bool b);
 
+    /*! \brief newData for vector of double data types
+     *
+     * @param dv value as QVector<double> (const reference)
+     *
+     * \par Note 1
+     * The source must provide this precise data type
+     *
+     * \par Note 2
+     * The method extracts data["value"] and converts it to a vector of double
+     */
     void newData(const QVector<double> &);
 
-    void newData(const QVector<int> &);
+    /*! \brief newData for vector of int data types
+     *
+     * @param vi value as QVector<int> (const reference)
+     *
+     * \par Note 1
+     * The source must provide this precise data type
+     *
+     * \par Note 2
+     * The method extracts data["value"] and converts it to a vector of int
+     */
+    void newData(const QVector<int> &vi);
 
-    void newData(const QVector<bool> &);
+    /*! \brief newData for vector of boolean
+     *
+     * @param bv value as QVector<bool> (const reference)
+     *
+     * \par Note 1
+     * The source must provide this precise data type
+     *
+     * \par Note 2
+     * The method extracts data["value"] and converts it to a vector of bool
+     */
+    void newData(const QVector<bool> & bv);
 
-    void newData(const QStringList &);
+    /*! \brief newData for string list
+     *
+     * @param slv value as QStringList (const reference)
+     *
+     * \par Note 1
+     * The source must provide this precise data type
+     *
+     * \par Note 2
+     * The method extracts data["value"] and converts it to a list of strings
+     */
+    void newData(const QStringList & slv);
 
-    void newData(const CuData& );
-
-public slots:
+    /*! \brief newData signal passing the whole data bundle
+     *
+     * @param data value as full CuData bundle
+     *
+     * \par Note
+     * This signal is always emitted after the *type specific* version of the method.
+     * It can be used in particular cases where the whole information from CuData is required
+     * (name of the source, data type, timestamp, message, and so on..)
+     */
+    void newData(const CuData& data);
 
 protected:
     QumbiaizerPrivate * quizer_ptr;

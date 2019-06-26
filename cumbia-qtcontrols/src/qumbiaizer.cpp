@@ -413,7 +413,8 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                 else
                     *static_cast<int *>(data()) = intVal;
                 /* emit even if invokeMethod fails */
-                emit newData(intVal);
+                if(read)
+                    emit newData(intVal);
             }
         }
         else if(type() == Qumbiaizer::Short && val.getFormat() == CuVariant::Scalar)
@@ -434,7 +435,8 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                 else
                     *static_cast<int *>(data()) = shval;
                 /* emit even if invokeMethod fails */
-                emit newData(shval);
+                if(read)
+                   emit newData(shval);
             }
             else
                 message += " [cannot convert to short int] ";
@@ -456,8 +458,9 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                                 + "\". ]";
                 }
                 else
-                    *static_cast<int *>(data()) = uintVal;
-                emit newData(uintVal);
+                    *static_cast<unsigned int *>(data()) = uintVal;
+                if(read)
+                    emit newData(uintVal);
             }
             else
                 message += " [cannot convert to unsigned int] ";
@@ -480,7 +483,8 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                 }
                 else
                     *static_cast<double *>(data()) = doubleVal;
-                emit newData(doubleVal);
+                if(read)
+                    emit newData(doubleVal);
             }
             else
                 message += " [cannot convert to double] ";
@@ -503,8 +507,8 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                 }
                 else
                     *static_cast<QString *>(data()) = str;
-
-                emit newData(str);
+                if(read)
+                    emit newData(str);
             }
             else
                 message += " [cannot convert to qt string] ";
@@ -527,7 +531,8 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                 }
                 else
                     *static_cast<bool *>(data()) = abool;
-                emit newData(abool);
+                if(read)
+                    emit newData(abool);
             }
             else
                 message += " [cannot convert to boolean] ";
@@ -549,7 +554,8 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
             }
             else
                 *static_cast<QVector<bool> *>(data()) = boolvect;
-            emit newData(boolvect);
+            if(read)
+                emit newData(boolvect);
         }
 
         else if(type() == Qumbiaizer::DoubleVector && val.getFormat() == CuVariant::Vector)
@@ -568,7 +574,8 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
             }
             else
                 *static_cast<QVector<double> *>(data()) = dblvect;
-            emit newData(dblvect);
+            if(read)
+                emit newData(dblvect);
         }
 
         else if(type() == Qumbiaizer::IntVector && val.getFormat() == CuVariant::Vector)
@@ -587,7 +594,8 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
             }
             else
                 *static_cast<QVector<int> *>(data()) = intvect;
-            emit newData(intvect);
+            if(read)
+                emit newData(intvect);
         }
         else if(type() == Qumbiaizer::StringVector && val.getType() == CuVariant::String && val.getFormat() == CuVariant::Vector)
         {
@@ -607,7 +615,8 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                 }
                 else
                     *static_cast<QStringList *>(data()) = strvect;
-                emit newData(strvect);
+                if(read)
+                    emit newData(strvect);
             }
             else
                 message += " [cannot convert to int vector] ";
@@ -625,7 +634,10 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
         if(object && !ok)
             perr("Qumbiaizer.updateValue: failed to invoke method \"%s\" on \"%s\": \"%s\"", qstoc(methName),
                  qstoc(object->objectName()), qstoc(message));
-    }
+
+        if(read)
+            emit newData(v);
+    } // if(ok && (v.containsKey("value") || v.containsKey("w_value")))
 }
 
 

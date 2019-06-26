@@ -99,16 +99,15 @@ void QuWatcher::onUpdate(const CuData &data)
 
     if(data["type"].toString() == "property") {
         configure(data); // Qumbiaizer virtual configure method
-        emit connectionOk(ok);
     }
-    else if(data.containsKey("value")) {
+    if(data.containsKey("value")) {
         updateValue(data);
         if(singleShot()) {
             unsetSource();
         }
     }
-
+    // newData flavored signals and newData(const CuData&) generic signal
+    // are emitted from Qumbiaizer::updateValue
     emit readOk(ok);
     emit refreshMessage(QString::fromStdString(msg));
-    emit newData(data);
 }

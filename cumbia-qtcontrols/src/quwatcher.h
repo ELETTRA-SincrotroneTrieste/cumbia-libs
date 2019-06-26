@@ -87,14 +87,26 @@ class QuWatcherPrivate;
   * \endlist
   * \endchapter
 
-  * <h3>News in release 4.3.0</h3>
-  * <p> Since QTango release 4.3.0, it is possible to setAutoDestroy to true to have your reader automatically
-  * destroyed after first read takes place. <strong>Beware that the object will be destroyed even if
-  * the execution fails</strong>.
-  * <br/> Secondly, you can call setSingleShot to have your reader perform only one reading from the
-  * configured source.
+  * <h3>Auto destruction</h3>
+  * <p>
+  * It is possible to setAutoDestroy to true to have your reader destroyed after the first reading.
+  * <strong>Note that the object will be destroyed even if the execution fails</strong>.
+  * </p>
+  *
+  * <h3>Single shot readings</h3>
+  * <p>You can call setSingleShot to let your reader perform only one reading from the
+  * source.
   *
   * </p>
+  *
+  * \chapter New data signals
+  * A variety of type specific signals are emitted after the value is successfully extracted from a reading.
+  * A *newData* signal containing the full CuData bundle is emitted as well.
+  *
+  * Please note that *only data["value"]* is extracted, converted to the given type and sent through the *newData* signal.
+  * Control system engines supporting *set point (or write) values* will provide *data["w_value"]* when available.
+  * It is handled by QuWatcher for simple *auto configuration* tasks as aforementioned but the extracted value is not
+  * propagated through *newData*.
   *
   *
   */
