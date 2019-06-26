@@ -1311,7 +1311,7 @@ std::string CuVariant::toString(bool *ok, const char *format) const
     const size_t MAXLEN = 128;
     std::string ret;
     char converted[MAXLEN + 1];
-    bool success = true;
+    bool success = d->mSize > 0;
     memset(converted, 0, sizeof(char) * (MAXLEN + 1));
     for(size_t i = 0; i < d->mSize && success; i++)
     {
