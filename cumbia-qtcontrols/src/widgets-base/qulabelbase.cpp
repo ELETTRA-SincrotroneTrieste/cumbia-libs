@@ -87,7 +87,6 @@ void QuLabelBase::setBackground(const QColor &background)
     if(background.isValid()) {
         QPalette p = palette();
         p.setColor(QPalette::Background, background);
-        qDebug() << "QuLabelBase::setBackground " <<this << objectName()  << text()  << " with color " << background;
         setPalette(p);
     }
 }

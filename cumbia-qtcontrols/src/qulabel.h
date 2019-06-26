@@ -4,6 +4,7 @@
 #include <cudatalistener.h>
 #include <cucontexti.h>
 #include <cudata.h>
+#include <qupalette.h>
 #include "qulabelbase.h"
 
 class QuLabelPrivate;
@@ -47,6 +48,9 @@ public:
 
     bool displayUnitEnabled() const;
     QString displayUnit() const;
+
+    QuPalette quPalette() const;
+    void setQuPalette(const QuPalette &colors);
 
 public slots:
     void setSource(const QString& s);

@@ -127,7 +127,6 @@ void QuTable::onUpdate(const CuData& da)
     }
     else if(da.containsKey("value"))
     {
-        printf("QuTable: trueColors %s falseCOlors %s\n", qstoc(trueColors()), qstoc(falseColors()));
         CuVariant val = da["value"];
         if(val.getType() == CuVariant::UInt && val.getFormat() == CuVariant::Scalar)
             EFlag::setValue(QVariant(val.toUInt()));
@@ -143,7 +142,6 @@ void QuTable::onUpdate(const CuData& da)
             QList<QVariant> l;
             for (it = bv.begin(); it < bv.end(); it++)
                 l << QVariant(*it);
-            printf("QuTable calling EFlag.setValue with booleans\n");
             EFlag::setValue(QVariant(l));
         }
         else if(val.getType() == CuVariant::String && val.getFormat() == CuVariant::Vector) {
@@ -162,7 +160,6 @@ void QuTable::onUpdate(const CuData& da)
             setToolTip(QString("Wrong data type %1 format %2").arg(val.getType()).arg(val.getFormat()));
         }
     }
-
     if(da.containsKey("state_color")) {
         CuVariant v = da["state_color"];
         background = d->palette[QString::fromStdString(v.toString())];

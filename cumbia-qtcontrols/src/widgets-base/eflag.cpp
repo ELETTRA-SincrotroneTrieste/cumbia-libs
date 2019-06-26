@@ -226,7 +226,6 @@ void EFlag::setValue(QVariant v, bool ref)
 		/* no mask specified: take the integer and put it as is in the data */
 		if(mask.size() == 0 )
 		{	
-			
 			for(int n = 0; n < cells.size(); n++)
 			{
 				if(data.size() < n + 1)

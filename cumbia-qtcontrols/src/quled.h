@@ -4,6 +4,7 @@
 #include <quledbase.h>
 #include <cudatalistener.h>
 #include <cucontexti.h>
+#include <qupalette.h>
 
 class QuLedPrivate;
 class Cumbia;
@@ -36,6 +37,10 @@ public:
     QString source() const;
 
     CuContext *getContext() const;
+
+    void setQuPalette(const QuPalette &colors);
+
+    QuPalette quPalette() const;
 
 public slots:
     void setSource(const QString& s);

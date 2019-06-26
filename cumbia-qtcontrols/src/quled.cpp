@@ -103,8 +103,7 @@ void QuLed::onUpdate(const CuData &da)
     if(d->read_ok && da.containsKey("state_color"))
     {
         CuVariant v = da["state_color"];
-        QuPalette p;
-        setColor(p[QString::fromStdString(v.toString())]);
+        setColor(d->palette[QString::fromStdString(v.toString())]);
     }
     else if(d->read_ok && da.containsKey("value"))
     {
@@ -130,6 +129,26 @@ void QuLed::onUpdate(const CuData &da)
 CuContext *QuLed::getContext() const
 {
     return d->context;
+}
+
+/** \brief change the association between color names and color values
+ *
+ * The QuLed behavior is equivalent to QuLabel's
+ *
+ * @see QuLabel::setQuPalette
+ * @see quPalette
+ */
+void QuLed::setQuPalette(const QuPalette &colors) {
+    d->palette = colors;
+}
+
+/** \brief returns the QuPalette in use
+ *
+ * @see QuLabel::quPalette
+ * @see setQuPalette
+ */
+QuPalette QuLed::quPalette() const {
+    return d->palette;
 }
 
 void QuLed::contextMenuEvent(QContextMenuEvent *e)

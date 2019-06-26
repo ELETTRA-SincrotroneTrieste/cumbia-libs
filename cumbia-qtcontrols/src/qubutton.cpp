@@ -157,10 +157,7 @@ void QuButton::onUpdate(const CuData &data)
             cumbia = d->context->cumbiaPool()->getBySrc(data["src"].toString());
         CuLog *log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log));
         if(log)
-        {
-            static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::Write, true);
             log->write(QString("QuButton [" + objectName() + "]").toStdString(), data["msg"].toString(), CuLog::Error, CuLog::Write);
-        }
     }
     else if(is_config) {
         CuVariant val = data["w_value"];

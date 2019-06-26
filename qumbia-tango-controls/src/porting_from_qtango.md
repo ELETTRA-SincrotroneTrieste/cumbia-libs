@@ -2,6 +2,8 @@ Porting a QTango application to cumbia-tango {#tutorial_from_qtango}
 ==============================================================================
 
 In this tutorial we will learn how to port a QTango application to cumbia.
+Additionally, <a href="tutorial_faq.html">frequently asked questions</a> page illustrates some more
+porting examples.
 
 ## Demo code used in the examples in this page
 
@@ -85,7 +87,6 @@ Always remember that:
 As a consequence:
 
 - several times you will have to fix the remaining issues manually
-
 
 ## 2. Complex QTango application with *application specific* QTango classes
 

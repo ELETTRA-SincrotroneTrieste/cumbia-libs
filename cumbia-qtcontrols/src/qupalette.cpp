@@ -20,6 +20,9 @@
 #define EDARK_GRAY	QColor(155,155,155)
 */
 
+/** \brief class constructor.
+ *
+ */
 QuPalette::QuPalette()
 {
     insert(QString("blue"), QColor(90, 121, 198));
@@ -32,9 +35,15 @@ QuPalette::QuPalette()
     insert(QString("dark_gray"), QColor(145,145,145));
     insert(QString("light_gray"), QColor(231, 182, 226));
     insert(QString("yellow"), QColor(244, 245, 153));
+    insert(QString("dark_yellow"), QColor(Qt::darkYellow));
     insert(QString("orange"), QColor(238, 181, 104));
     insert(QString("violet"), QColor(200, 148, 208));
     insert(QString("pink"), QColor(231, 182, 226));
     insert(QString("black"), QColor(Qt::black));
     insert(QString("white"), QColor(Qt::white));
+    insert(QString("white1"), QColor(253, 253, 253));
+    insert(QString("white2"), QColor(252, 252, 252));
+    insert(QString("white3"), QColor(251, 251, 251));
+    insert(QString("white4"), QColor(250, 250, 250));
+    insert(QString("white5"), QColor(249, 249, 249));
 }

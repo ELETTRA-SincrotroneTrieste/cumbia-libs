@@ -129,6 +129,42 @@ QString QuLabel::displayUnit() const
     return d->display_u;
 }
 
+/** \brief set a custom QuPalette to change the string/color association
+ *
+ * @param colors a new QuPalette that replaces the current one
+ *
+ * QuPalette maps color names to QColor colors.
+ * You can use this method as a trick to change the color for a state represented by the label.
+ * For example, if normally an *OK* state is associated to "green", you can set a custom palette
+ * so that the "green" color string is mapped into white color.
+ * In the following example, white color is used with the *green* key:
+ *
+ * \code
+ * QuPalette myPalette = stateWidget->quPalette();
+ * myPalette["green"] = QColor(Qt::white);
+ * stateWidget->setQuPalette(myPalette);
+ * \endcode
+ *
+ * Altering the QuPalette of a QuLabel (or a QuLed) is useful when a given state is associated
+ * to a predefined color (e.g. ON:green, OFF:white, ALARM:yellow, FAULT:red) and you want different
+ * combinations. Cumbia engines must store a *state_color* key/value pair in the *CuVariant* data
+ * delivered by the *onUpdate* method when the engine itself handles a *"state"* data type.
+ *
+ * @see quPalette
+ */
+void QuLabel::setQuPalette(const QuPalette &colors) {
+    d->palette = colors;
+}
+
+/** \brief returns the QuPalette currently used
+ *
+ * @return QuPalette in use
+ * @see setQuPalette
+ */
+QuPalette QuLabel::quPalette() const {
+    return d->palette;
+}
+
 /** \brief Connect the reader to the specified source.
  *
  * If a reader with a different source is configured, it is deleted.
@@ -200,8 +236,7 @@ void QuLabel::onUpdate(const CuData &da)
 
     if(da.containsKey("state_color")) {
         CuVariant v = da["state_color"];
-        QuPalette p;
-        background = p[QString::fromStdString(v.toString())];
+        background = d->palette[QString::fromStdString(v.toString())];
         if(background.isValid())
             setBackground(background);
     }

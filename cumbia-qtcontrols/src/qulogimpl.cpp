@@ -44,8 +44,6 @@ QuErrorDialog::QuErrorDialog(QWidget *parent,
     tw->setHeaderLabels(QStringList() << "origin" << "message");
 
     add(elist);
-
-    show();
 }
 
 QuErrorDialog::~QuErrorDialog()
@@ -90,13 +88,16 @@ void QuErrorDialog::add(const QuLogEntry &l)
     case QuLogImpl::Warn:
         i->setTextColor(0, QColor(Qt::yellow));
         break;
+    default:
+        break;
     }
 }
 
 QuLogImpl::QuLogImpl()
 {
     d = new QuLogImplPrivate;
-    d->dialog = NULL;
+    d->dialog = nullptr;
+    d->showPopupByLogClassMap[CuLog::Write] = true;
 }
 
 /** \brief Enable/disable popup for the given log_class_type
@@ -108,6 +109,18 @@ QuLogImpl::QuLogImpl()
 void QuLogImpl::showPopupOnMessage(int log_class_type, bool show)
 {
     d->showPopupByLogClassMap[log_class_type] = show;
+}
+
+bool QuLogImpl::popupOnMessageClass(int log_class_type) const
+{
+    return d->showPopupByLogClassMap[log_class_type];
+}
+
+QuErrorDialog *QuLogImpl::getDialog()
+{
+    if(!d->dialog)
+        d->dialog = new QuErrorDialog(nullptr, this, QList<QuLogEntry>());
+    return d->dialog;
 }
 
 QuLogImpl::~QuLogImpl()
@@ -126,7 +139,7 @@ void QuLogImpl::write(const std::string &origin, const std::string &msg, CuLog::
     QuLogEntry e(type, QString::fromStdString(origin), QString::fromStdString(msg));
     d->msgs.append(e);
     if(!d->dialog)
-        d->dialog = new QuErrorDialog(0, this, d->msgs);
+        d->dialog = new QuErrorDialog(nullptr, this, d->msgs);
     else
         d->dialog->add(e);
     if(d->showPopupByLogClassMap[c])
@@ -146,6 +159,7 @@ void QuLogImpl::write(const std::string &origin, CuLog::Level l, CuLog::Class c,
     vsnprintf(s, 2048, fmt, vl);
     QuLogEntry e(type, QString::fromStdString(origin), QString(s));
     d->msgs.append(e);
+
     if(!d->dialog)
         d->dialog = new QuErrorDialog(0, this, d->msgs);
     else

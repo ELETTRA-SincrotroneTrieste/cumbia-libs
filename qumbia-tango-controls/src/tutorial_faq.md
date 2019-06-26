@@ -14,8 +14,10 @@
 - [I either used QuWatcher or implemented CuDataListener on my custom graphical object. How do I configure it through the Tango database properties (setting maximum and minimum values, display unit and data format)?](#configure)
 - [How do I get a Tango device property?](#tangoprops)
 - [How to format a message from a Tango *Exception*?](#except)
+- [How to migrate from QTango *TUtil::instance()->addLog()* to cumbia log dialog?](#migrate_log)
+- [After converting a QTango project to a cumbia project, I get errors on the ui/ui_filexxx.h concerning properties of widgets that I know are defined in the cumbia widget version as well, e.g. *tLabel->setFalseString(..)*] (#ui_h_errors)
+- [How to migrate QTango *Config::instance()->setStateColor* (and setStateString) to cumbia?] (#migrate_config_state_color)
 - [How to support multiple engines (e.g. Tango and Epics) in the same application](#multiengine)
-- [](#)
 
 ## Q.
 
@@ -110,7 +112,7 @@ int main(int argc, char *argv[])
 
 ## A.
 
-Almost same code as above. Extract color from the "state_color", state string from the "state_string".
+Almost same code as above. Extract color from the "state_color", state string from the "value".
 
 ```cpp
         success = tw.read_att(td.getDevice(), argv[2], res);  // read attribute, store result in res, return success
@@ -452,6 +454,115 @@ catch(Tango::DevFailed &e)
 }
 
 ```
+
+<a name="migrate_log" />
+### How to migrate from QTango *TUtil::instance()->addLog()* to *cumbia* log dialog?
+
+## A.
+
+QTango:
+
+```cpp
+#include<TLog>
+#include<TUtil>
+// ...
+} catch (Tango::DevFailed &e) {
+    TLog log(e);
+    TUtil::instance()->addLog(log);
+}
+```
+
+cumbia
+
+```cpp
+#include <qulogimpl.h>
+#include <cumbiatango.h>
+// ...
+
+// 1. header file: class definition
+class MyClass : public QWidget
+{
+    Q_OBJECT
+
+public:
+    //...
+private:
+    CumbiaTango *cumbia_t;
+    QuLogImpl m_log_impl;  // cumbia-qtcontrols log implementation
+    CuLog *m_log;          // cumbia service, implements CuServiceI (cumbia/src/lib/services)
+};
+
+// 2. cpp file
+#include <cutango-world.h>
+
+MyClass::MyClass(...) {
+    // cumbia_t = ...
+    m_log = new CuLog(&m_log_impl);
+    cumbia_t->getServiceProvider()->registerService(CuServices::Log, m_log);
+}
+
+// manage exception and add message to log
+//
+} catch (Tango::DevFailed &e) {
+    CuTangoWorld tw;
+    std::string err = tw.strerror(e);
+    m_log->write("Dual", err);
+    m_log_impl.getDialog()->show(); // to show the dialog
+}
+```
+
+Please note that if you either migrate from a QTango project (*cumbia import [fast]*) or generate a new cumbia project
+(*cumbia new project*), most of the code needed to manage log messages is already written for you.
+The reason why more code is needed to *initialize* the log system is that cumbia does not resort to *singleton patterns*
+and the log model is more flexible: alternative implementations can be provided.
+
+## Q.
+<a name="ui_h_errors" />
+### After converting a QTango project to a cumbia project, I get errors on the ui/ui_filexxx.h concerning properties of widgets that I know are defined in the cumbia widget version as well, e.g. *tLabel->setFalseString(..)*
+
+## A.
+Open the *ui* file with the Qt designer and save it again, overwriting it.
+Then try rebuilding.
+
+## Q.
+<a name="migrate_config_state_color" />
+### How to migrate QTango *Config::instance()->setStateColor* (and *setStateString*) to cumbia?
+
+## A.
+There is no such singleton thing as QTango *Config::instance* in cumbia. Moreover, QuLabel, QuLed and other display widgets part of
+*cumbia-qtcontrols* must be unaware of the kind of engine in use.
+QuLed and QuLabel access the *state_color* key in the CuVariant data, if present. It is a simple string describing the color to use,
+such as "red", "green", "white"... That color description is used to fetch the actual QColor from the internal *QuPalette* used by
+suitable display widgets. What you can do is alter the QuPalette so that a different QColor is picked for a given color name.
+That operation is no more a global configuration; it must be applied to the individual widgets.
+
+### Old code
+```cpp
+Config::instance()->setStateColor(Tango::OPEN, EColor(Elettra::green));
+Config::instance()->setStateColor(Tango::CLOSE, EColor(Elettra::darkYellow));
+```
+
+These changes used to affect *all widgets representing a state* in the application.
+
+### New code
+Open the *ui* file and find the widget used to display the state. Suppose it is a QuLabel with name *tState*.
+From the CuTangoWorldConfig documentation, one can see the following association between states and color:
+
+- [Tango::CLOSE]       = "white1";
+- [Tango::OPEN]        = "white2";
+
+We have to replace the white colors with the desired ones.
+Open the *cpp* file and change the QuPalette of the QuLabel:
+
+```cpp
+#include <qupalette.h>
+QuPalette pa = ui->tState->quPalette();
+pa["white1"] = QColor(Qt::darkYellow);
+pa["white2"] = QColor(Qt::green);
+ui->tState->setQuPalette(pa);
+```
+At the moment of writing this documentation, there is no convenient way to map the default text associated
+to a Tango state to a custom one.
 
 ## Q.
 <a name="multiengine" />

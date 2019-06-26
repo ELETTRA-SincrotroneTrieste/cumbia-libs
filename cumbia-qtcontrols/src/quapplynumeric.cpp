@@ -136,10 +136,8 @@ void QuApplyNumeric::onUpdate(const CuData &da)
             cumbia = d->context->cumbiaPool()->getBySrc(da["src"].toString());
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
-        {
-            static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::Write, true);
             log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);
-        }
+
         d->context->getLinkStats()->addError(da["msg"].toString());
     }
     else if(d->auto_configure && is_config)

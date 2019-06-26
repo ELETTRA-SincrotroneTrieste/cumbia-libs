@@ -18,11 +18,18 @@
      * \li  ("dark_gray", QColor(145,145,145));
      * \li  ("light_gray", QColor(231, 182, 226));
      * \li  ("yellow", QColor(244, 245, 153));
+     * \li  ("dark_yellow"), QColor(Qt::darkYellow));
      * \li  ("orange", QColor(238, 181, 104));
      * \li  ("violet", QColor(200, 148, 208));
      * \li  ("pink", QColor(231, 182, 226));
      * \li  ("black", QColor(Qt::black));
      * \li  ("white", QColor(Qt::white));
+     * \li  ("white1"), QColor(253, 253, 253));
+     * \li  ("white2"), QColor(252, 252, 252));
+     * \li  ("white3"), QColor(251, 251, 251));
+     * \li  ("white4"), QColor(250, 250, 250));
+     * \li  ("white5"), QColor(249, 249, 249));
+     *
  */
 class QuPalette : public QMap<QString, QColor>
 {
