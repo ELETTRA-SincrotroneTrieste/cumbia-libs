@@ -98,6 +98,8 @@ Public Slots</h2></td></tr>
 Signals</h2></td></tr>
 <tr class="memitem:a51ac4e2f0a13c702e1e531524dd8ad35"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuLabel.html#a51ac4e2f0a13c702e1e531524dd8ad35">newData</a> (const CuData &amp;)</td></tr>
 <tr class="separator:a51ac4e2f0a13c702e1e531524dd8ad35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae240935c35c175d08d39ac21370c826a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuLabel.html#ae240935c35c175d08d39ac21370c826a">propertyReady</a> (const CuData &amp;)</td></tr>
+<tr class="separator:ae240935c35c175d08d39ac21370c826a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa377bd09299f63a4be8acbb51e0c5f8a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuLabel.html#aa377bd09299f63a4be8acbb51e0c5f8a">linkStatsRequest</a> (QWidget *myself, <a class="el" href="classCuContextI.html">CuContextI</a> *myself_as_cwi)</td></tr>
 <tr class="separator:aa377bd09299f63a4be8acbb51e0c5f8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -203,7 +205,8 @@ Properties</h2></td></tr>
 <li>Scalar numbers and strings can be displayed by <a class="el" href="classQuLabel.html" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors.">QuLabel</a>. </li>
 <li>Vectors are usually displayed only partially, according to the number of maximum characters allowed by setMaximumLength</li>
 </ul>
-<p>Connection is initiated with setSource. When new data arrives, it is displayed and the newData convenience signal is emitted.</p>
+<p>Connection is initiated with setSource. When new data arrives, it is displayed and the newData signal is emitted. A propertyReady signal is provided for convenience and emitted only once at configuration time.</p>
+<dl class="section user"><dt>Display enumeration values (if supported by the engine)</dt><dd>If the underlying engine supports a configuration property named <em>values</em>, the list of strings is used to associate a value to a label. Likewise, if the engine supports a <em>colors</em> property, the list of colors is used to associate a value to a color. The <em>values</em> and <em>colors</em> properties, if available, are extracted at configuration time into a <em>std::vector</em> of <em>std::string</em>. The value of the source is used as <em>index</em> to pick up the label and the color from the vectors. <em>Indexes</em> start from zero. Labels are displayed as they are, while color strings are mapped through <a class="el" href="classQuPalette.html" title="a map associating a color name to a QColor">QuPalette</a> into QColor. The <a class="el" href="classQuPalette.html" title="a map associating a color name to a QColor">QuPalette</a> used is accessible through quPalette and setQuPalette.</dd></dl>
 <p>getContext returns a pointer to the <a class="el" href="classCuContext.html" title="CuLinkControl stores a small set of objects to help create readers and writers.">CuContext</a> used as a delegate for the connection. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="afd19b65988219db05e57cdea4efe99bf"></a>
@@ -483,7 +486,35 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classQuLabel.html#a51ac4e2f0a13c702e1e531524dd8ad35">newData()</a>, <a class="el" href="classQuLabelBase.html#a63e9256197c38016de1a0dd4d0a9c5dc">QuLabelBase::setBackground()</a>, <a class="el" href="classQuLabelBase.html#af4ca5cf915665b28c4f6fe27cd933939">QuLabelBase::setBorderColor()</a>, and <a class="el" href="classQuLabelBase.html#a0efe11d0402a141f51ed2a9571273f79">QuLabelBase::setValue()</a>.</p>
+<p class="reference">References <a class="el" href="classQuLabel.html#a51ac4e2f0a13c702e1e531524dd8ad35">newData()</a>, <a class="el" href="classQuLabel.html#ae240935c35c175d08d39ac21370c826a">propertyReady()</a>, <a class="el" href="classQuLabelBase.html#a63e9256197c38016de1a0dd4d0a9c5dc">QuLabelBase::setBackground()</a>, <a class="el" href="classQuLabelBase.html#af4ca5cf915665b28c4f6fe27cd933939">QuLabelBase::setBorderColor()</a>, and <a class="el" href="classQuLabelBase.html#a0efe11d0402a141f51ed2a9571273f79">QuLabelBase::setValue()</a>.</p>
+
+</div>
+</div>
+<a id="ae240935c35c175d08d39ac21370c826a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae240935c35c175d08d39ac21370c826a">&#9670;&nbsp;</a></span>propertyReady</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void QuLabel::propertyReady </td>
+          <td>(</td>
+          <td class="paramtype">const CuData &amp;&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="classQuLabel.html#ac4d740169e8b996ce3fcf4176114eb12">onUpdate()</a>.</p>
 
 </div>
 </div>
@@ -701,7 +732,7 @@ false only the value is shown</dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 28 2019 11:51:32 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 28 2019 16:32:38 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

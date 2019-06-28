@@ -71,7 +71,8 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>utility class to find input arguments from objects with text or value properties </p>
-<p>This class is used to search input arguments for sources or targets from widgets exposing text or value properties. Text or values are edited within the widget and can be passed as input arguments to readers or writers. </p>
+<p>This class is used to search input arguments for sources or targets from widgets exposing text or value properties. Text or values are edited within the widget and can be passed as input arguments to readers or writers.</p>
+<p>Please refer to the findInput method documentation for more details. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="af278318370994b5fed60dd98d49640ea"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af278318370994b5fed60dd98d49640ea">&#9670;&nbsp;</a></span>CuControlsUtils()</h2>
@@ -125,12 +126,14 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a string with the argument.</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>The object providing input arguments must implement one of the following properties: <ul>
-<li>text (e.g. QLabel, QLineEdit, ...) </li>
-<li>value (e.g. QSpinBox, QDoubleSpinBox, <a class="el" href="classENumeric.html" title="a widget to set a value">ENumeric</a>) </li>
-<li>currentIndex (e.g. QComboBox) </li>
+<dl class="section note"><dt>Note</dt><dd>The object providing input arguments must implement one of the following properties, that are searched and evaluated in this order:</dd></dl>
+<ul>
+<li><em>data</em> (e.g. <a class="el" href="classQuComboBox.html" title="QuComboBox is a writer that uses QComboBox to display values. When the function is activated explicit...">QuComboBox</a>: data represented as string, either currentText or currentIndex according to <a class="el" href="classQuComboBox.html" title="QuComboBox is a writer that uses QComboBox to display values. When the function is activated explicit...">QuComboBox</a> indexMode property) </li>
+<li><em>text</em> (e.g. QLabel, QLineEdit, ...) </li>
+<li><em>value</em> (e.g. QSpinBox, QDoubleSpinBox, <a class="el" href="classENumeric.html" title="a widget to set a value">ENumeric</a>) </li>
+<li><em>currentIndex</em> (e.g. QComboBox)</li>
 </ul>
-</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The first property found in the list above is used. If you write a custom widget that displays data that may be internally represented by different types (e.g. a combo box that can be used to either change a numerical index or a text), make sure to provide a <em>data</em> property that can be converted to QString regardless of the internal storage type. </dd></dl>
 
 <p class="reference">Referenced by <a class="el" href="classCuControlsUtils.html#af8fb03a70a26bdadd6d5316d50f889dc">getArgs()</a>.</p>
 
@@ -286,7 +289,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 28 2019 11:51:32 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 28 2019 16:32:38 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
