@@ -36,6 +36,7 @@ QuLabel::QuLabel(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_f
 {
     m_init();
     d->context = new CuContext(cumbia, r_factory);
+    m_initCtx();
 }
 
 /** \brief Constructor with the parent widget, *CumbiaPool*  and *CuControlsFactoryPool*
@@ -47,6 +48,7 @@ QuLabel::QuLabel(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPoo
 {
     m_init();
     d->context = new CuContext(cumbia_pool, fpool);
+    m_initCtx();
 }
 
 void QuLabel::m_init()
@@ -67,12 +69,32 @@ void QuLabel::m_init()
     setDecoration(background, border);
 }
 
+void QuLabel::m_initCtx()
+{
+    std::vector<std::string> props;
+    props.push_back("colors");
+    props.push_back("values");
+    d->context->setOptions(CuData("fetch_props", props));
+}
+
 void QuLabel::m_configure(const CuData &da)
 {
     d->display_u = QString::fromStdString(da["display_unit"].toString());
     QString fmt = QString::fromStdString(da["format"].toString());
     if(format().isEmpty() && !fmt.isEmpty())
         setFormat(fmt);
+    // get colors and strings, if available
+    QColor c;
+    QString s;
+    std::vector<std::string> colors, labels;
+    if(da.containsKey("colors"))
+        colors = da["colors"].toStringVector();
+    if(da.containsKey("values"))
+        labels = da["values"].toStringVector();
+    for(size_t i = 0; i < qMax(colors.size(), labels.size()); i++) {
+        setEnumDisplay(static_cast<int>(i), i < labels.size() ? QString::fromStdString(labels[i]) : "-",
+                       i < colors.size() ? c = d->palette[QString::fromStdString(colors[i])] : c = QColor(Qt::white));
+    }
 }
 
 QuLabel::~QuLabel()
@@ -224,6 +246,7 @@ void QuLabel::onUpdate(const CuData &da)
     else {
         if(d->read_ok && d->auto_configure && da["type"].toString() == "property") {
             m_configure(da);
+            emit propertyReady(da);
         }
         if(da.containsKey("value"))
         {

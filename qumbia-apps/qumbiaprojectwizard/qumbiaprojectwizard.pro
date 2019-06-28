@@ -40,7 +40,7 @@ CONFIG += debug
 # using INSTALL_ROOT
 SHAREDIR=$${INSTALL_ROOT}/share
 DOCDIR=$${SHAREDIR}/doc/qumbiaprojectwizard
-TEMPLATES_INSTALLDIR=$${SHAREDIR}/qumbiacontrolwizard
+TEMPLATES_INSTALLDIR=$${SHAREDIR}/qumbiaprojectwizard
 
 # DEFINES += use prefix
 DEFINES_INCLUDEDIR = $${prefix}/include

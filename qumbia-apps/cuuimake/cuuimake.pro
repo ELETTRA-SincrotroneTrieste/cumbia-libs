@@ -25,8 +25,11 @@ isEmpty(prefix) {
     prefix = $${INSTALL_ROOT}
 }
 
+SHAREDIR = $${INSTALL_ROOT}/share
+DOCDIR = $${SHAREDIR}/doc/cuuimake
+
 DEFINES_SHAREDIR = $${prefix}/share
-DEFINES_DOCDIR = $${prefix}/doc/cuuimake
+DEFINES_DOCDIR = $${DEFINES_SHAREDIR}/doc/cuuimake
 #
 # where config files are found by the application at runtime: use prefix
 #

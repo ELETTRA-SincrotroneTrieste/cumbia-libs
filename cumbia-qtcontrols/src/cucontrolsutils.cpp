@@ -24,11 +24,20 @@ CuControlsUtils::CuControlsUtils()
  * @return a string with the argument.
  *
  * \note
- * The object providing input arguments must implement one of the following properties:
- * \li text (e.g. QLabel, QLineEdit, ...)
- * \li value (e.g. QSpinBox, QDoubleSpinBox, ENumeric)
- * \li currentIndex (e.g. QComboBox)
+ * The object providing input arguments must implement one of the following properties, that
+ * are searched and evaluated in this order:
  *
+ * \li *data* (e.g. QuComboBox: data represented as string, either currentText or currentIndex
+ *     according to QuComboBox indexMode property)
+ * \li *text* (e.g. QLabel, QLineEdit, ...)
+ * \li *value* (e.g. QSpinBox, QDoubleSpinBox, ENumeric)
+ * \li *currentIndex* (e.g. QComboBox)
+ *
+ * \note
+ * The first property found in the list above is used. If you write a custom widget that displays data
+ * that may be internally represented by different types (e.g. a combo box that can be used to either change
+ * a numerical index or a text), make sure to provide a *data* property that can be converted to QString
+ * regardless of the internal storage type.
  */
 QString CuControlsUtils::findInput(const QString &objectName, const QObject *leaf) const
 {
@@ -59,7 +68,9 @@ QString CuControlsUtils::findInput(const QString &objectName, const QObject *lea
     }
     // let cumbia-qtcontrols findInput deal with labels, line edits, combo boxes (currentText), spin boxes
     // and our Numeric
-    if(o && o->metaObject()->indexOfProperty("text") > -1)
+    if(o && o->metaObject()->indexOfProperty("data") > -1)
+        ret = o->property("data").toString();
+    else if(o && o->metaObject()->indexOfProperty("text") > -1)
         ret = o->property("text").toString();
     else if(o && o->metaObject()->indexOfProperty("value") > -1)
         ret = o->property("value").toString();

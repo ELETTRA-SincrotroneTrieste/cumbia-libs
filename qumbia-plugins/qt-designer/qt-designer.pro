@@ -17,6 +17,9 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT = /usr/local/cumbia-libs
 }
 
+isEmpty(prefix) {
+    prefix=$${INSTALL_ROOT}
+}
 
 DEFINES += QT_NO_DEBUG_OUTPUT
 

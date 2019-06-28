@@ -24,8 +24,20 @@ class CuLinkStats;
  * \li Vectors are usually displayed only partially, according to the number of maximum characters allowed by
  *     setMaximumLength
  *
- * Connection is initiated with setSource. When new data arrives, it is displayed and the newData convenience
- * signal is emitted.
+ * Connection is initiated with setSource. When new data arrives, it is displayed and the newData
+ * signal is emitted. A propertyReady signal is provided for convenience and emitted only once at
+ * configuration time.
+ *
+ * \par Display enumeration values (if supported by the engine)
+ * If the underlying engine supports a configuration property named *values*, the list of strings
+ * is used to associate a value to a label.
+ * Likewise, if the engine supports a *colors* property, the list of colors is used to associate
+ * a value to a color.
+ * The *values* and *colors* properties, if available, are extracted at configuration time into a
+ * *std::vector* of *std::string*. The value of the source is used as *index* to pick up the label
+ * and the color from the vectors. *Indexes* start from zero.
+ * Labels are displayed as they are, while color strings are mapped through
+ * QuPalette into QColor. The QuPalette used is accessible through quPalette and setQuPalette.
  *
  * getContext returns a pointer to the CuContext used as a delegate for the connection.
  *
@@ -62,6 +74,8 @@ public slots:
 signals:
     void newData(const CuData&);
 
+    void propertyReady(const CuData& );
+
     void linkStatsRequest(QWidget *myself, CuContextI *myself_as_cwi);
 
 protected:
@@ -71,6 +85,8 @@ private:
     QuLabelPrivate *d;
 
     void m_init();
+
+    void m_initCtx();
 
     void m_configure(const CuData& da);
 

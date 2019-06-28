@@ -453,8 +453,6 @@ void QuPlotBase::addCurve(const QString& title, QuPlotCurve *curve)
     QString color_nam = colors.at(d->curvesMap.size() % colors.size());
     QColor curveColor = palette.value(color_nam);
     QPen curvePen(curveColor);
-    //  curvePen.setWidth(0);
-    //  curve->setStyle(QwtPlotCurve::Lines);
     curve->setPen(curvePen);
     d->curvesMap.insert(title, curve);
     curve->attach(this);

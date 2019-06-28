@@ -15,6 +15,11 @@ public:
     bool err;
 };
 
+/** \brief the class constructor
+ *
+ * @param ctx a pointer to CuContext. The default is NULL, the parameter is not used
+ * by this class.
+ */
 CuApplicationLauncherExtension::CuApplicationLauncherExtension(const CuContext *ctx)
 {
     d = new CuApplicationLauncherPrivate;

@@ -1,21 +1,30 @@
 { "array" : [
-{
-"type" : "expand reader instantiation",
-"expand" : [ "QuLabel", "QuLed",  "QuTrendPlot", "QuSpectrumPlot", "QuTable", "QuWatcher" ],
-"in" :  "(=\\s*new\\s*$${expand}\\(this\\);)",
-"out" : "= new $${expand}(this, cu_t, cu_tango_r_fac);",
-"file" : "*",
-"comment" : "expanded \"new $${expand}(this)\" to \"new $${expand}(this, cu_t, cu_tango_r_fac)\"",
-"level" : "ok"
-},
-{
-"type" : "expand writer instantiation",
-"expand" : [ "QuButton", "QuApplyNumeric", "QuWriter" ],
-"in" :  "(=\\s*new\\s*$${expand}\\(this\\);)",
-"out" : "= new $${expand}(this, cu_t, cu_tango_w_fac);",
-"file" : "*",
-"comment" : "expanded \"new $${expand}(this)\" to \"new $${expand}(this, cu_t, cu_tango_w_fac)\"",
-"level" : "ok"
-}
-   ]
+        {
+            "type" : "expand reader instantiation",
+            "expand" : [ "QuLabel", "QuLed",  "QuTrendPlot", "QuSpectrumPlot", "QuTable", "QuWatcher", "QuCircularGauge", "QuLinearGauge" ],
+            "in" :  "(=\\s*new\\s*$${expand}\\(this\\);)",
+            "out" : "= new $${expand}(this, cu_t, cu_tango_r_fac);",
+            "file" : "*",
+            "comment" : "expanded \"new $${expand}(this)\" to \"new $${expand}(this, cu_t, cu_tango_r_fac)\"",
+            "level" : "ok"
+        },
+        {
+            "type" : "expand writer instantiation",
+            "expand" : [ "QuButton", "QuApplyNumeric", "QuWriter", "QuComboBox" ],
+            "in" :  "(=\\s*new\\s*$${expand}\\(this\\);)",
+            "out" : "= new $${expand}(this, cu_t, cu_tango_w_fac);",
+            "file" : "*",
+            "comment" : "expanded \"new $${expand}(this)\" to \"new $${expand}(this, cu_t, cu_tango_w_fac)\"",
+            "level" : "ok"
+        },
+        {
+            "type" : "expand reader/writer instantiation",
+            "expand" : [ "QuInputOutput", "QuCheckBox" ],
+            "in" :  "(=\\s*new\\s*$${expand}\\(this\\);)",
+            "out" : "= new $${expand}(this, cu_t, cu_tango_r_fac, cu_tango_w_fac);",
+            "file" : "*",
+            "comment" : "expanded \"new $${expand}(this)\" to \"new $${expand}(this, cu_t, cu_tango_r_fac, cu_tango_w_fac)\"",
+            "level" : "ok"
+        }
+    ]
 }

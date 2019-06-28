@@ -32,6 +32,8 @@ QumbiaProjectWizard::QumbiaProjectWizard(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::QumbiaProjectWizard)
 {
+    printf("\e[1;32m---\e[0m %s: using templates path \"%s\"\e[1;32m--\n",
+           qApp->arguments().join(" ").toStdString().c_str(), TEMPLATES_PATH);
     ui->setupUi(this);
     m_qtangoImport = NULL;
     m_rbFactorySaveChecked = NULL;

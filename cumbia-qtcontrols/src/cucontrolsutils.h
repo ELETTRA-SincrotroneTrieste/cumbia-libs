@@ -14,6 +14,8 @@ class CuInputProvider_I;
  * widgets exposing text or value properties. Text or values are edited within the
  * widget and can be passed as input arguments to readers or writers.
  *
+ * Please refer to the findInput method documentation for more details.
+ *
  */
 class CuControlsUtils
 {

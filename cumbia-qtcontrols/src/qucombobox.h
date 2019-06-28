@@ -29,7 +29,9 @@ class CuLinkStats;
 class QuComboBox : public QComboBox, public CuDataListener, public CuContextI
 {
     Q_OBJECT
-    Q_PROPERTY(QString target READ target WRITE setTarget DESIGNABLE true)
+    Q_PROPERTY(QString target READ target WRITE setTarget DESIGNABLE false)
+    // the source property is to allow easy qtango project import
+    Q_PROPERTY(QString source READ target WRITE setTarget DESIGNABLE false)
     Q_PROPERTY(bool indexMode READ indexMode WRITE setIndexMode DESIGNABLE true)
     Q_PROPERTY(bool executeOnIndexChanged READ executeOnIndexChanged WRITE setExecuteOnIndexChanged DESIGNABLE true)
     Q_PROPERTY(QString data READ getData DESIGNABLE false)

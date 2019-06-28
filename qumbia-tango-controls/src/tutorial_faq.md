@@ -11,6 +11,7 @@
 - [How did you know that the *res* CuData contained those very keys such as "value", "state_color", "timestamp_ms", and so on.. ?](#cudata_keys)
 - [A quick way to perform a command inout on a device](#commands)
 - [In QTango there used to be a widget ready to read and display a value. In cumbia there is not. How do I quickly adapt an existing Qt widget?](#cumbiawidget)
+- [How do I fetch specific Tango attribute properties to configure my custom cumbia widget?](#cumbiawidget_props)
 - [I either used QuWatcher or implemented CuDataListener on my custom graphical object. How do I configure it through the Tango database properties (setting maximum and minimum values, display unit and data format)?](#configure)
 - [How do I get a Tango device property?](#tangoprops)
 - [How to format a message from a Tango *Exception*?](#except)
@@ -320,6 +321,44 @@ void mywidget::onNewReport(const CuData &da)
 
 ## Q.
 
+<a name="cumbiawidget_props" />
+### How do I fetch specific Tango attribute properties to configure my custom cumbia widget?
+
+## A.
+Before setting the source, the CuContext must be informed of the desired properties to fetch at configuration time. An example implementation is represented by QuLabel, in cumbia-qtcontrols module.
+First of all, define a vector of strings with the list of the properties.
+Then encapsulate it into a CuData *key* named *fetch_props*. Remember that this *key* may be understood only by some engines. *cumbia-tango* is one of them. Let's write a private *m_initCtx* that sets up the link with the desired properties to retrieve:
+
+```cpp
+void MyWidget::m_initCtx(CuContext *ctx) {
+    std::vector<std::string> props;
+    props.push_back("labels");
+    d->context->setOptions(CuData("fetch_props", props));
+}
+```
+
+When the client of your widget activates the link with *setSource*, you will start receiving updates within
+the *onUpdate* method. Therein, look for the data with the *key* __type__ set to *property*, as usual.
+If the property names specified in the m_initCtx method exist, you will receive their values in the data bundle:
+
+```cpp
+void MyWidget::onUpdate(const CuData &da) {
+  if(!da["err"].toBool()  && da["type"].toString() == "property") {
+      // ... configuration
+      // use properties to configure mywidget
+      if(da.containsKey("labels")) {
+        std::vector<std::string> labels = da["labels"].toStringVector();
+        for(size_t i = 0; i < labels.size(); i++)
+          ; // use labels
+      }
+  }
+}
+```
+
+In the above code snippet you can see how the custom widget can be configured automatically through appropriate Tango attribute properties. See the QuLabel code in cumbia-qtcontrols for a working example.
+
+## Q.
+
 <a name="configure" />
 ### I either used QuWatcher or implemented CuDataListener on my custom graphical object. How do I configure it through the Tango database properties (setting maximum and minimum values, display unit and data format)?
 
@@ -619,6 +658,3 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     // ...
 }
 ```
-
-
-

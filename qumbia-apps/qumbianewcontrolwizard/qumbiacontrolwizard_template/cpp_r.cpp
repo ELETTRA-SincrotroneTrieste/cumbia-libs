@@ -99,7 +99,7 @@ void $MAINCLASS$::unsetSource()
 
 void $MAINCLASS$::contextMenuEvent(QContextMenuEvent *e)
 {
-    CuContextMenu* m = new CuContextMenu(this, this);
+    CuContextMenu* m = new CuContextMenu(this, d->context);
     connect(m, SIGNAL(linkStatsTriggered(QWidget*, CuContextI *)),
             this, SIGNAL(linkStatsRequest(QWidget*, CuContextI *)));
     m->popup(e->globalPos());

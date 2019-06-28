@@ -254,8 +254,8 @@
 {
  "type" : "replace include",
 "in" :  "TComboBox",
-"out" : "QComboBox",
-"comment" : "TComboBox is mapped into a simple Qt QCombobox",
+"out" : "QuComboBox",
+"comment" : "TComboBox is mapped into a QuComboBox",
 "level" : "ok"
 },
 {
@@ -502,9 +502,9 @@
 {
  "type" : "map class",
 "in" :  "TComboBox",
-"out" : "QComboBox",
+"out" : "QuComboBox",
 "include" : "QComboBox",
-"comment" : "TComboBox is mapped into QComboBox",
+"comment" : "TComboBox is mapped into QuComboBox",
 "level" : "ok"
 },
 {
@@ -685,12 +685,12 @@
 },
 {
  "type" : "replace expr",
-"in" : "<string>(?:\\$[0-9]+|[A-Za-z0-9_\\.]+/[A-Za-z0-9_\\.]+/[A-Za-z0-9_\\.]+)(?:\\-&gt;|/|\\->)[A-Za-z0-9_]+[\\(]{0,1}(?:&amp;)*[a-zA-Z0-9;_\\.]*[\\)]{0,1}([;]+.*)</string>",
-"in_unescaped" : "<string>(?:\$[0-9]+|[A-Za-z0-9_\.]+/[A-Za-z0-9_\.]+/[A-Za-z0-9_\.]+)(?:\-&gt;|/|\->)[A-Za-z0-9_]+[\(]{0,1}(?:&amp;)*[a-zA-Z0-9;_\.]*[\)]{0,1}([;]+.*)</string>",
+"in" : "<string>(?:\\$[0-9]+|[A-Za-z0-9_\\.]+/[A-Za-z0-9_\\.]+/[A-Za-z0-9_\\.]+)(?:\\-&gt;|/|\\->)[A-Za-z0-9_]+[\\(]{0,1}(?:&amp;)*[a-zA-Z0-9;_\\.]*[\\)]{0,1}([;]+.*</string>)",
+"in_unescaped" : "<string>(?:\$[0-9]+|[A-Za-z0-9_\.]+/[A-Za-z0-9_\.]+/[A-Za-z0-9_\.]+)(?:\-&gt;|/|\->)[A-Za-z0-9_]+[\(]{0,1}(?:&amp;)*[a-zA-Z0-9;_\.]*[\)]{0,1}([;]+.*</string>)",
 "in_example1" : "<string>$1/CurrentControl(&amp;tComboControl)</string>",
-"out" : "",
+"out" : "</string>",
 "file" : "*",
-"comment" : "in cumbia the targ:qet is single: removing multiple targets",
+"comment" : "in cumbia the target is single: removing multiple targets. Removing trailing ; character if present",
 "level" : "warn"
 },
 {

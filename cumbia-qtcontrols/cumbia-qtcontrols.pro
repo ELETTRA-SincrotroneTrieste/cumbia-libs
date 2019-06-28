@@ -37,7 +37,7 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/qulabel.cpp \
     src/qupalette.cpp \
     src/cucontrolsutils.cpp \
-    src/qulogimpl.cpp \
+    src/qulogimpl.cpp \  
 #    src/cucharts/callout.cpp \
 #    src/cucharts/quplotcommon.cpp \
 #    src/cucharts/quspectrumplot.cpp \
@@ -69,6 +69,7 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/widgets-base/quledbase.cpp \
     src/qucirculargauge.cpp \
     src/quspinbox.cpp \
+    src/qucombobox.cpp \
     src/qudoublespinbox.cpp \
     src/qulineedit.cpp \
     src/cumbiapool_o.cpp \
@@ -82,7 +83,7 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/cupluginloader.cpp
 
 HEADERS += cumbiaqtcontrols.h\
-        cumbia-qtcontrols_global.h \
+    cumbia-qtcontrols_global.h \
     src/qubutton.h \
     src/qulabel.h \
     src/cucontrolsreader_abs.h \
@@ -123,6 +124,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/quwatcher.h \
     src/qumbiaizer.h \
     src/qucheckbox.h \
+    src/qucombobox.h \
     src/qumbiaizerprivate.h \
     src/quvaluefilter.h \
     src/qumultireaderplugininterface.h \

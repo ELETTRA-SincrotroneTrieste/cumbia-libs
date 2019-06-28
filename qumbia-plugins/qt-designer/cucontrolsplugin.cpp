@@ -13,6 +13,7 @@
 #include "forms/tledbooleditor.h"
 #include "forms/ttablebooleditor.h"
 #include "qubutton.h"
+#include "qucombobox.h"
 #include "quapplynumeric.h"
 #include "qucheckbox.h"
 #include "quinputoutput.h"
@@ -214,6 +215,7 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
     d_plugins.append(new QuLedInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuCircularGaugeInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuLinearGaugeInterface(this, cumbia_pool, m_ctrl_factory_pool));
+    d_plugins.append(new QuComboBoxInterface(this, cumbia_pool, m_ctrl_factory_pool));
  //   d_plugins.append(new QuLineEditInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuTableInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuTrendPlotInterface(this, cumbia_pool, m_ctrl_factory_pool));
@@ -293,8 +295,9 @@ QObject *TaskMenuFactory::createExtension(QObject *object, const QString &iid, Q
     if (qobject_cast<QuLabel*>(object) || qobject_cast<QuLed *>(object)
             || qobject_cast<QuLinearGauge *>(object) || qobject_cast<QuCircularGauge *>(object)
             || qobject_cast<QuButton *>(object) || qobject_cast<QuApplyNumeric *>(object) || qobject_cast<QuTable *>(object)
-             || qobject_cast<QuTrendPlot *>(object)|| qobject_cast<QuSpectrumPlot *>(object)
-            || qobject_cast<QuCheckBox *>(object)|| qobject_cast<QuInputOutput *>(object) )
+            || qobject_cast<QuTrendPlot *>(object)|| qobject_cast<QuSpectrumPlot *>(object)
+            || qobject_cast<QuCheckBox *>(object)|| qobject_cast<QuInputOutput *>(object)
+            || qobject_cast<QuComboBox *>(object))
         return new TaskMenuExtension((QWidget*)object, parent);
 
     return QExtensionFactory::createExtension(object, iid, parent);
@@ -319,7 +322,7 @@ QList<QAction *> TaskMenuExtension::taskActions() const
         || cname == "QuButton" || cname == "QuTable" || cname == "QuTrendPlot"
             || cname == "QuSpectrumPlot" || cname == "QuApplyNumeric"
              || cname == "QuCheckBox" || cname == "QuInputOutput" || cname == "QuLinearGauge"
-            || cname == "QuCircularGauge")
+            || cname == "QuCircularGauge"  || cname == "QuComboBox" )
         list.append(d_editConnectionAction);
     /* 2. edit action */
     if ((cname == "QuLabel") || (cname == "QuLed") || cname == "QuTable")
@@ -431,14 +434,16 @@ void TaskMenuExtension::editConnection()
         src = t->source();
     else if(QuInputOutput *t = qobject_cast<QuInputOutput *>(d_widget))
         src = t->source();
-    else if(QuButton *b = qobject_cast<QuButton *>(d_widget))
-    {
+    else if(QuButton *b = qobject_cast<QuButton *>(d_widget)) {
         src = b->target();
         edit_source = false;
     }
-    else if(QuApplyNumeric *an = qobject_cast<QuApplyNumeric *>(d_widget))
-    {
+    else if(QuApplyNumeric *an = qobject_cast<QuApplyNumeric *>(d_widget)) {
         src = an->target();
+        edit_source = false;
+    }
+    else if(QuComboBox *cbx = qobject_cast<QuComboBox *>(d_widget)) {
+        src = cbx->target();
         edit_source = false;
     }
 
@@ -854,4 +859,33 @@ QWidget *QuInputOutputInterface::createWidget(QWidget *parent)
     DropEventFilter *dropEventFilter = new DropEventFilter(qio);
     qio->installEventFilter(dropEventFilter);
     return qio;
+}
+
+QuComboBoxInterface::QuComboBoxInterface(QObject *parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p)
+    :  CuCustomWidgetInterface(parent, cumbia_p ,ctrl_factory_p)
+{
+
+    d_name = "QuComboBox";
+    d_include = "qucombobox.h";
+    d_icon = QPixmap(":pixmaps/qucombobox.png");
+    d_domXml =
+            "<widget class=\"QuComboBox\" name=\"quComboBox\">\n"
+            " <property name=\"geometry\">\n"
+            "  <rect>\n"
+            "   <x>0</x>\n"
+            "   <y>0</y>\n"
+            "   <width>60</width>\n"
+            "   <height>20</height>\n"
+            "  </rect>\n"
+            " </property>\n"
+            "</widget>\n";
+}
+
+QWidget *QuComboBoxInterface::createWidget(QWidget *parent)
+{
+    QuComboBox * combobox = new QuComboBox(parent, cumbia_pool, ctrl_factory_pool);
+   // label->setDesignerMode(true);
+    DropEventFilter *dropEventFilter = new DropEventFilter(combobox);
+    combobox->installEventFilter(dropEventFilter);
+    return combobox;
 }
