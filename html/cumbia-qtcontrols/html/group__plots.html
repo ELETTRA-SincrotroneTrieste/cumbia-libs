@@ -204,6 +204,9 @@ Functions</h2></td></tr>
 <tr class="separator:ga565dac970ea9a20645339a010bacc204"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga554300c95daac27579366ec9deb4309a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__plots.html#ga554300c95daac27579366ec9deb4309a">QuPlotBase::inZoom</a> () const</td></tr>
 <tr class="separator:ga554300c95daac27579366ec9deb4309a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga169e2fb00eed629d1137a984bdfd2e5f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classQuPlotComponent.html">QuPlotComponent</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__plots.html#ga169e2fb00eed629d1137a984bdfd2e5f">QuPlotBase::getComponent</a> (const QString &amp;name) const</td></tr>
+<tr class="memdesc:ga169e2fb00eed629d1137a984bdfd2e5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the <a class="el" href="classQuPlotComponent.html" title="Interface defining a plot component. Operations can be delegated to plot components.">QuPlotComponent</a> corresponding to the given <em>name</em>, nullptr if <em>name</em> is not valid  <a href="#ga169e2fb00eed629d1137a984bdfd2e5f">More...</a><br /></td></tr>
+<tr class="separator:ga169e2fb00eed629d1137a984bdfd2e5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8304dbd695b731232fde3f0ecb1d8a3d"><td class="memItemLeft" align="right" valign="top">virtual QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__plots.html#ga8304dbd695b731232fde3f0ecb1d8a3d">QuPlotBase::plotTitle</a> ()</td></tr>
 <tr class="memdesc:ga8304dbd695b731232fde3f0ecb1d8a3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the plot title.  <a href="#ga8304dbd695b731232fde3f0ecb1d8a3d">More...</a><br /></td></tr>
 <tr class="separator:ga8304dbd695b731232fde3f0ecb1d8a3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -756,6 +759,34 @@ The ownership of the context menu strategy is taken by <a class="el" href="class
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ga169e2fb00eed629d1137a984bdfd2e5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga169e2fb00eed629d1137a984bdfd2e5f">&#9670;&nbsp;</a></span>getComponent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classQuPlotComponent.html">QuPlotComponent</a> * QuPlotBase::getComponent </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>returns the <a class="el" href="classQuPlotComponent.html" title="Interface defining a plot component. Operations can be delegated to plot components.">QuPlotComponent</a> corresponding to the given <em>name</em>, nullptr if <em>name</em> is not valid </p>
+<dl class="section user"><dt>Component list</dt><dd><ul>
+<li>"context_menu" returns <a class="el" href="classQuPlotContextMenuComponent.html" title="A QuPlotComponent managing the context menu for a plot.">QuPlotContextMenuComponent</a> </li>
+<li>"axes" returns <a class="el" href="classQuPlotAxesComponent.html" title="Plot component that manages the axes.">QuPlotAxesComponent</a> </li>
+<li>"zoom" returns <a class="el" href="classQuPlotZoomComponent.html" title="QuPlot component to zoom the plot.">QuPlotZoomComponent</a> </li>
+<li>"marker" returns <a class="el" href="classQuPlotMarkerComponent.html" title="QuPlot component to draw markers on the canvas.">QuPlotMarkerComponent</a> </li>
+<li>"canvas_painter" <a class="el" href="classQuPlotCanvasPainterComponent.html" title="plot canvas painting can be delegated to this object">QuPlotCanvasPainterComponent</a> </li>
+</ul>
+</dd></dl>
 
 </div>
 </div>
@@ -3010,7 +3041,7 @@ updateMarkers </dd>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 21 2019 15:46:54 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 28 2019 11:51:32 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

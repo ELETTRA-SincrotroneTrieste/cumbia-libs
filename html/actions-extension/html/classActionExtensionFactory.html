@@ -60,6 +60,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae6e45344cc3d702b161901f9cab7b691"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classActionExtensionFactory.html#ae6e45344cc3d702b161901f9cab7b691">ActionExtensionFactory</a> ()</td></tr>
 <tr class="separator:ae6e45344cc3d702b161901f9cab7b691"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1d8cb2bcd708369eebad6b1a6ef1c8f"><td class="memItemLeft" align="right" valign="top">QuActionExtensionI *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classActionExtensionFactory.html#ae1d8cb2bcd708369eebad6b1a6ef1c8f">create</a> (const QString &amp;name, const CuContext *ctx)</td></tr>
+<tr class="memdesc:ae1d8cb2bcd708369eebad6b1a6ef1c8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a specific implementation of QuActionExtensionI.  <a href="#ae1d8cb2bcd708369eebad6b1a6ef1c8f">More...</a><br /></td></tr>
 <tr class="separator:ae1d8cb2bcd708369eebad6b1a6ef1c8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -106,6 +107,18 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>one of the following names:</td></tr>
+  </table>
+  </dd>
+</dl>
+<ul>
+<li><a class="el" href="classGetTDbPropertyExtension.html">GetTDbPropertyExtension</a> to return a new <a class="el" href="classGetTDbPropertyExtension.html">GetTDbPropertyExtension</a> (needs CuContext) </li>
+<li><a class="el" href="classInfoDialogExtension.html">InfoDialogExtension</a> to return a new <a class="el" href="classInfoDialogExtension.html">InfoDialogExtension</a> (needs CuContext) </li>
+<li><a class="el" href="classCuApplicationLauncherExtension.html" title="extension to launch applications on demand">CuApplicationLauncherExtension</a> to return a new <a class="el" href="classCuApplicationLauncherExtension.html" title="extension to launch applications on demand">CuApplicationLauncherExtension</a> (ctx is null)</li>
+</ul>
+<dl class="section return"><dt>Returns</dt><dd>a new instance of the desired object or NULL if the specified name is not valid or the context is NULL where it should be valid (<a class="el" href="classGetTDbPropertyExtension.html">GetTDbPropertyExtension</a>, <a class="el" href="classInfoDialogExtension.html">InfoDialogExtension</a>) </dd></dl>
 
 </div>
 </div>

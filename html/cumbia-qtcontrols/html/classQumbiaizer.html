@@ -109,15 +109,9 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="signals"></a>
 Signals</h2></td></tr>
-<tr class="memitem:ae7e270e5979a222ab2e2bc51fe2523d9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#ae7e270e5979a222ab2e2bc51fe2523d9">connectionOk</a> (bool)</td></tr>
-<tr class="memdesc:ae7e270e5979a222ab2e2bc51fe2523d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connection ok notification.  <a href="#ae7e270e5979a222ab2e2bc51fe2523d9">More...</a><br /></td></tr>
-<tr class="separator:ae7e270e5979a222ab2e2bc51fe2523d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae972c97ed2b6d44b733478a4c2db0afe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#ae972c97ed2b6d44b733478a4c2db0afe">configured</a> (const CuData &amp;)</td></tr>
 <tr class="memdesc:ae972c97ed2b6d44b733478a4c2db0afe"><td class="mdescLeft">&#160;</td><td class="mdescRight">auto configuration signal.  <a href="#ae972c97ed2b6d44b733478a4c2db0afe">More...</a><br /></td></tr>
 <tr class="separator:ae972c97ed2b6d44b733478a4c2db0afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08c279af9777186eb1b3a409b7f375f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#a08c279af9777186eb1b3a409b7f375f1">connectionFailed</a> ()</td></tr>
-<tr class="memdesc:a08c279af9777186eb1b3a409b7f375f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">this signal is emitted after the source or target configuration and reveals a connection failure  <a href="#a08c279af9777186eb1b3a409b7f375f1">More...</a><br /></td></tr>
-<tr class="separator:a08c279af9777186eb1b3a409b7f375f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad039a0301d53c8dcee0bc8bf01d03a9e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#ad039a0301d53c8dcee0bc8bf01d03a9e">connectionErrorMessage</a> (const QString &amp;msg)</td></tr>
 <tr class="memdesc:ad039a0301d53c8dcee0bc8bf01d03a9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">a signal that contains the error message related to setSource - or setTargets - failures.  <a href="#ad039a0301d53c8dcee0bc8bf01d03a9e">More...</a><br /></td></tr>
 <tr class="separator:ad039a0301d53c8dcee0bc8bf01d03a9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -125,34 +119,46 @@ Signals</h2></td></tr>
 <tr class="memdesc:a0bab6ff4b949d0fce6782c5b794f2399"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emitted by the refresh method. The message is taken from the TVariant.  <a href="#a0bab6ff4b949d0fce6782c5b794f2399">More...</a><br /></td></tr>
 <tr class="separator:a0bab6ff4b949d0fce6782c5b794f2399"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addb24d404da12bca0f06843dcc7b3733"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#addb24d404da12bca0f06843dcc7b3733">readOk</a> (bool success)</td></tr>
-<tr class="memdesc:addb24d404da12bca0f06843dcc7b3733"><td class="mdescLeft">&#160;</td><td class="mdescRight">this signal is emitted by the refresh() method and the success parameter indicates whether the tango read was successful or not.  <a href="#addb24d404da12bca0f06843dcc7b3733">More...</a><br /></td></tr>
+<tr class="memdesc:addb24d404da12bca0f06843dcc7b3733"><td class="mdescLeft">&#160;</td><td class="mdescRight">this signal is emitted by the <a class="el" href="classQuWatcher.html#af3ff0cc012b1240ec58ce280cbadede8">QuWatcher::onUpdate</a> method and the success parameter indicates whether the reading is successful or not.  <a href="#addb24d404da12bca0f06843dcc7b3733">More...</a><br /></td></tr>
 <tr class="separator:addb24d404da12bca0f06843dcc7b3733"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0022a0a1ec4da027fc5c763f1d116b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#ae0022a0a1ec4da027fc5c763f1d116b5">newData</a> (short)</td></tr>
-<tr class="separator:ae0022a0a1ec4da027fc5c763f1d116b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b1c05e3f37f83e473b0e38338f209b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#a6b1c05e3f37f83e473b0e38338f209b6">newData</a> (int)</td></tr>
-<tr class="separator:a6b1c05e3f37f83e473b0e38338f209b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cce4647ddd4ecfef1b9a8a2258db0e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#a7cce4647ddd4ecfef1b9a8a2258db0e3">newData</a> (double)</td></tr>
-<tr class="separator:a7cce4647ddd4ecfef1b9a8a2258db0e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0f669e392587c7889d6cfbb26757ccc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#ae0f669e392587c7889d6cfbb26757ccc">newData</a> (const QString &amp;)</td></tr>
-<tr class="separator:ae0f669e392587c7889d6cfbb26757ccc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1f4cc2e7ecf4a79f3202974930db5d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#ae1f4cc2e7ecf4a79f3202974930db5d6">newData</a> (short s)</td></tr>
+<tr class="memdesc:ae1f4cc2e7ecf4a79f3202974930db5d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">newData for short data types  <a href="#ae1f4cc2e7ecf4a79f3202974930db5d6">More...</a><br /></td></tr>
+<tr class="separator:ae1f4cc2e7ecf4a79f3202974930db5d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91ee84e87a3ef14ddd5d84ca8cab387e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#a91ee84e87a3ef14ddd5d84ca8cab387e">newData</a> (int i)</td></tr>
+<tr class="memdesc:a91ee84e87a3ef14ddd5d84ca8cab387e"><td class="mdescLeft">&#160;</td><td class="mdescRight">newData for int data types  <a href="#a91ee84e87a3ef14ddd5d84ca8cab387e">More...</a><br /></td></tr>
+<tr class="separator:a91ee84e87a3ef14ddd5d84ca8cab387e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a743ca83f9a3e1f9df7fe68a7c15a4588"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#a743ca83f9a3e1f9df7fe68a7c15a4588">newData</a> (double d)</td></tr>
+<tr class="memdesc:a743ca83f9a3e1f9df7fe68a7c15a4588"><td class="mdescLeft">&#160;</td><td class="mdescRight">newData for double data types  <a href="#a743ca83f9a3e1f9df7fe68a7c15a4588">More...</a><br /></td></tr>
+<tr class="separator:a743ca83f9a3e1f9df7fe68a7c15a4588"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6b83d7c120b7686aa3baf0f957124d0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#ab6b83d7c120b7686aa3baf0f957124d0">newData</a> (const QString &amp;s)</td></tr>
+<tr class="memdesc:ab6b83d7c120b7686aa3baf0f957124d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">newData for string data types  <a href="#ab6b83d7c120b7686aa3baf0f957124d0">More...</a><br /></td></tr>
+<tr class="separator:ab6b83d7c120b7686aa3baf0f957124d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf10e77511f0813d07c29db3a487cb3c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#abf10e77511f0813d07c29db3a487cb3c">newData</a> ()</td></tr>
 <tr class="separator:abf10e77511f0813d07c29db3a487cb3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb9d2bb0cdb9efd8e407153d3aa39511"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#aeb9d2bb0cdb9efd8e407153d3aa39511">newData</a> (unsigned int)</td></tr>
-<tr class="separator:aeb9d2bb0cdb9efd8e407153d3aa39511"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57839cfac78c8ee4c7a70de7f1d9afb0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#a57839cfac78c8ee4c7a70de7f1d9afb0">newData</a> (unsigned short)</td></tr>
-<tr class="separator:a57839cfac78c8ee4c7a70de7f1d9afb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb78d8f5c4089296d11c07af9dee61a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#afb78d8f5c4089296d11c07af9dee61a0">newData</a> (bool)</td></tr>
-<tr class="separator:afb78d8f5c4089296d11c07af9dee61a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7311202921785c5cd10f766119284f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#ab7311202921785c5cd10f766119284f2">newData</a> (unsigned int ui)</td></tr>
+<tr class="memdesc:ab7311202921785c5cd10f766119284f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">newData for unsigned int data types  <a href="#ab7311202921785c5cd10f766119284f2">More...</a><br /></td></tr>
+<tr class="separator:ab7311202921785c5cd10f766119284f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8953740e2181cfedcf481c54118b4767"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#a8953740e2181cfedcf481c54118b4767">newData</a> (unsigned short us)</td></tr>
+<tr class="memdesc:a8953740e2181cfedcf481c54118b4767"><td class="mdescLeft">&#160;</td><td class="mdescRight">newData for unsigned short data types  <a href="#a8953740e2181cfedcf481c54118b4767">More...</a><br /></td></tr>
+<tr class="separator:a8953740e2181cfedcf481c54118b4767"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d9601c8316128b37761264bc2fe257b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#a6d9601c8316128b37761264bc2fe257b">newData</a> (bool b)</td></tr>
+<tr class="memdesc:a6d9601c8316128b37761264bc2fe257b"><td class="mdescLeft">&#160;</td><td class="mdescRight">newData for unsigned bool data types  <a href="#a6d9601c8316128b37761264bc2fe257b">More...</a><br /></td></tr>
+<tr class="separator:a6d9601c8316128b37761264bc2fe257b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa34bff7ec217d85019e03eed0abe0605"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#aa34bff7ec217d85019e03eed0abe0605">newData</a> (const QVector&lt; double &gt; &amp;)</td></tr>
+<tr class="memdesc:aa34bff7ec217d85019e03eed0abe0605"><td class="mdescLeft">&#160;</td><td class="mdescRight">newData for vector of double data types  <a href="#aa34bff7ec217d85019e03eed0abe0605">More...</a><br /></td></tr>
 <tr class="separator:aa34bff7ec217d85019e03eed0abe0605"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8ca7ea7db0fb3d2839a9d3da9422605"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#ae8ca7ea7db0fb3d2839a9d3da9422605">newData</a> (const QVector&lt; int &gt; &amp;)</td></tr>
-<tr class="separator:ae8ca7ea7db0fb3d2839a9d3da9422605"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13c1f2842d7b730b6eeab9639b347a56"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#a13c1f2842d7b730b6eeab9639b347a56">newData</a> (const QVector&lt; bool &gt; &amp;)</td></tr>
-<tr class="separator:a13c1f2842d7b730b6eeab9639b347a56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11379b8b4e2b92349301aba4156463f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#a11379b8b4e2b92349301aba4156463f8">newData</a> (const QStringList &amp;)</td></tr>
-<tr class="separator:a11379b8b4e2b92349301aba4156463f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa2ca8df5ce5ff311d3f5317d59a3eda"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#aaa2ca8df5ce5ff311d3f5317d59a3eda">newData</a> (const CuData &amp;)</td></tr>
-<tr class="separator:aaa2ca8df5ce5ff311d3f5317d59a3eda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b4062adbbfdd698ae9df1d7fa5eb424"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#a2b4062adbbfdd698ae9df1d7fa5eb424">newData</a> (const QVector&lt; int &gt; &amp;vi)</td></tr>
+<tr class="memdesc:a2b4062adbbfdd698ae9df1d7fa5eb424"><td class="mdescLeft">&#160;</td><td class="mdescRight">newData for vector of int data types  <a href="#a2b4062adbbfdd698ae9df1d7fa5eb424">More...</a><br /></td></tr>
+<tr class="separator:a2b4062adbbfdd698ae9df1d7fa5eb424"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac75f9a7fb0260949e9408f6594d3cad0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#ac75f9a7fb0260949e9408f6594d3cad0">newData</a> (const QVector&lt; bool &gt; &amp;bv)</td></tr>
+<tr class="memdesc:ac75f9a7fb0260949e9408f6594d3cad0"><td class="mdescLeft">&#160;</td><td class="mdescRight">newData for vector of boolean  <a href="#ac75f9a7fb0260949e9408f6594d3cad0">More...</a><br /></td></tr>
+<tr class="separator:ac75f9a7fb0260949e9408f6594d3cad0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a230105b4c28802e3dcb7973d09272a68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#a230105b4c28802e3dcb7973d09272a68">newData</a> (const QStringList &amp;slv)</td></tr>
+<tr class="memdesc:a230105b4c28802e3dcb7973d09272a68"><td class="mdescLeft">&#160;</td><td class="mdescRight">newData for string list  <a href="#a230105b4c28802e3dcb7973d09272a68">More...</a><br /></td></tr>
+<tr class="separator:a230105b4c28802e3dcb7973d09272a68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea29251fd85cab8d3f320bfc40fae2a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#aea29251fd85cab8d3f320bfc40fae2a5">newData</a> (const CuData &amp;<a class="el" href="classQumbiaizer.html#a87b11b3f87928dcc0b66985bc19ecc12">data</a>)</td></tr>
+<tr class="memdesc:aea29251fd85cab8d3f320bfc40fae2a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">newData signal passing the whole data bundle  <a href="#aea29251fd85cab8d3f320bfc40fae2a5">More...</a><br /></td></tr>
+<tr class="separator:aea29251fd85cab8d3f320bfc40fae2a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -716,8 +722,6 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>auto configuration signal. </p>
-<p>Mapped from QTangoCommunicationHandle::attributeAutoConfigured.</p>
-<dl class="section see"><dt>See also</dt><dd>QTangoCommunicationHandle::attributeAutoConfigured</dd></dl>
 <p>QTangoizer class can perform some simple auto configuration (see setAutoConfSlot method) when the associated widgets have suitable slots to set minimum, maximum, text values. In every case, this signal is <b>emitted before any auto configuration is done</b> by QTangoizer derived classes. This allows you to set minimum and maximum values (for example) without worrying to initialize the first value read by yourself. Actually, if the setPointSlot parameter of the void attach(QObject <em>refreshee, const char *slot, const char</em> setPointSlot = NULL, Qt::ConnectionType connType = Qt::AutoConnection); method is not NULL, the first value read is set by means of that slot. </p>
 
 <p class="reference">Referenced by <a class="el" href="classQumbiaizer.html#af4560a4f3f9e9b2f51c5d8980fe6c202">configure()</a>.</p>
@@ -755,66 +759,6 @@ Protected Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<a id="a08c279af9777186eb1b3a409b7f375f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08c279af9777186eb1b3a409b7f375f1">&#9670;&nbsp;</a></span>connectionFailed</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Qumbiaizer::connectionFailed </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>this signal is emitted after the source or target configuration and reveals a connection failure </p>
-<p>After the handle configures via setSource(), emits a signal to reveal a connection failure Mapped from QTangoCommunicationHandle::connectionFailed() </p>
-
-</div>
-</div>
-<a id="ae7e270e5979a222ab2e2bc51fe2523d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae7e270e5979a222ab2e2bc51fe2523d9">&#9670;&nbsp;</a></span>connectionOk</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Qumbiaizer::connectionOk </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Connection ok notification. </p>
-<p>Mapped from QTangoCommunicationHandle::connectionOk</p>
-<dl class="section see"><dt>See also</dt><dd>QTangoCommunicationHandle::connectionOk </dd></dl>
-
-<p class="reference">Referenced by <a class="el" href="classQuWatcher.html#af3ff0cc012b1240ec58ce280cbadede8">QuWatcher::onUpdate()</a>.</p>
 
 </div>
 </div>
@@ -1024,8 +968,8 @@ false the method failed (method signature not found or input argument count grea
 
 </div>
 </div>
-<a id="ae0022a0a1ec4da027fc5c763f1d116b5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0022a0a1ec4da027fc5c763f1d116b5">&#9670;&nbsp;</a></span>newData <span class="overload">[1/13]</span></h2>
+<a id="ae1f4cc2e7ecf4a79f3202974930db5d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1f4cc2e7ecf4a79f3202974930db5d6">&#9670;&nbsp;</a></span>newData <span class="overload">[1/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1037,7 +981,7 @@ false the method failed (method signature not found or input argument count grea
           <td class="memname">void Qumbiaizer::newData </td>
           <td>(</td>
           <td class="paramtype">short&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1048,10 +992,20 @@ false the method failed (method signature not found or input argument count grea
 </table>
 </div><div class="memdoc">
 
+<p>newData for short data types </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>value as short</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Note 1</dt><dd>The source must provide this precise data type</dd></dl>
+<dl class="section user"><dt>Note 2</dt><dd>The method extracts data["value"] and converts it to short </dd></dl>
+
 </div>
 </div>
-<a id="a6b1c05e3f37f83e473b0e38338f209b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b1c05e3f37f83e473b0e38338f209b6">&#9670;&nbsp;</a></span>newData <span class="overload">[2/13]</span></h2>
+<a id="a91ee84e87a3ef14ddd5d84ca8cab387e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91ee84e87a3ef14ddd5d84ca8cab387e">&#9670;&nbsp;</a></span>newData <span class="overload">[2/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1063,7 +1017,7 @@ false the method failed (method signature not found or input argument count grea
           <td class="memname">void Qumbiaizer::newData </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>i</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1074,10 +1028,20 @@ false the method failed (method signature not found or input argument count grea
 </table>
 </div><div class="memdoc">
 
+<p>newData for int data types </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">i</td><td>value as int</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Note 1</dt><dd>The source must provide this precise data type</dd></dl>
+<dl class="section user"><dt>Note 2</dt><dd>The method extracts data["value"] and converts it to int </dd></dl>
+
 </div>
 </div>
-<a id="a7cce4647ddd4ecfef1b9a8a2258db0e3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7cce4647ddd4ecfef1b9a8a2258db0e3">&#9670;&nbsp;</a></span>newData <span class="overload">[3/13]</span></h2>
+<a id="a743ca83f9a3e1f9df7fe68a7c15a4588"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a743ca83f9a3e1f9df7fe68a7c15a4588">&#9670;&nbsp;</a></span>newData <span class="overload">[3/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1089,7 +1053,7 @@ false the method failed (method signature not found or input argument count grea
           <td class="memname">void Qumbiaizer::newData </td>
           <td>(</td>
           <td class="paramtype">double&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>d</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1100,10 +1064,20 @@ false the method failed (method signature not found or input argument count grea
 </table>
 </div><div class="memdoc">
 
+<p>newData for double data types </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">d</td><td>value as double</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Note 1</dt><dd>The source must provide this precise data type</dd></dl>
+<dl class="section user"><dt>Note 2</dt><dd>The method extracts data["value"] and converts it to double </dd></dl>
+
 </div>
 </div>
-<a id="ae0f669e392587c7889d6cfbb26757ccc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0f669e392587c7889d6cfbb26757ccc">&#9670;&nbsp;</a></span>newData <span class="overload">[4/13]</span></h2>
+<a id="ab6b83d7c120b7686aa3baf0f957124d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab6b83d7c120b7686aa3baf0f957124d0">&#9670;&nbsp;</a></span>newData <span class="overload">[4/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1115,7 +1089,7 @@ false the method failed (method signature not found or input argument count grea
           <td class="memname">void Qumbiaizer::newData </td>
           <td>(</td>
           <td class="paramtype">const QString &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>s</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1125,6 +1099,16 @@ false the method failed (method signature not found or input argument count grea
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>newData for string data types </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>value as QString</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Note 1</dt><dd>The source must provide this precise data type</dd></dl>
+<dl class="section user"><dt>Note 2</dt><dd>The method extracts data["value"] and converts it to string </dd></dl>
 
 </div>
 </div>
@@ -1151,12 +1135,12 @@ false the method failed (method signature not found or input argument count grea
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classQuWatcher.html#af3ff0cc012b1240ec58ce280cbadede8">QuWatcher::onUpdate()</a>, and <a class="el" href="classQumbiaizer.html#aabbc07697467eed7d208993fe019edb2">updateValue()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classQumbiaizer.html#aabbc07697467eed7d208993fe019edb2">updateValue()</a>.</p>
 
 </div>
 </div>
-<a id="aeb9d2bb0cdb9efd8e407153d3aa39511"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb9d2bb0cdb9efd8e407153d3aa39511">&#9670;&nbsp;</a></span>newData <span class="overload">[6/13]</span></h2>
+<a id="ab7311202921785c5cd10f766119284f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7311202921785c5cd10f766119284f2">&#9670;&nbsp;</a></span>newData <span class="overload">[6/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1168,7 +1152,7 @@ false the method failed (method signature not found or input argument count grea
           <td class="memname">void Qumbiaizer::newData </td>
           <td>(</td>
           <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>ui</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1179,10 +1163,20 @@ false the method failed (method signature not found or input argument count grea
 </table>
 </div><div class="memdoc">
 
+<p>newData for unsigned int data types </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ui</td><td>value as unsigned</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Note 1</dt><dd>The source must provide this precise data type</dd></dl>
+<dl class="section user"><dt>Note 2</dt><dd>The method extracts data["value"] and converts it to unsigned int </dd></dl>
+
 </div>
 </div>
-<a id="a57839cfac78c8ee4c7a70de7f1d9afb0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57839cfac78c8ee4c7a70de7f1d9afb0">&#9670;&nbsp;</a></span>newData <span class="overload">[7/13]</span></h2>
+<a id="a8953740e2181cfedcf481c54118b4767"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8953740e2181cfedcf481c54118b4767">&#9670;&nbsp;</a></span>newData <span class="overload">[7/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1194,7 +1188,7 @@ false the method failed (method signature not found or input argument count grea
           <td class="memname">void Qumbiaizer::newData </td>
           <td>(</td>
           <td class="paramtype">unsigned short&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>us</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1205,10 +1199,20 @@ false the method failed (method signature not found or input argument count grea
 </table>
 </div><div class="memdoc">
 
+<p>newData for unsigned short data types </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">us</td><td>value as unsigned short</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Note 1</dt><dd>The source must provide this precise data type</dd></dl>
+<dl class="section user"><dt>Note 2</dt><dd>The method extracts data["value"] and converts it to unsigned short </dd></dl>
+
 </div>
 </div>
-<a id="afb78d8f5c4089296d11c07af9dee61a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb78d8f5c4089296d11c07af9dee61a0">&#9670;&nbsp;</a></span>newData <span class="overload">[8/13]</span></h2>
+<a id="a6d9601c8316128b37761264bc2fe257b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d9601c8316128b37761264bc2fe257b">&#9670;&nbsp;</a></span>newData <span class="overload">[8/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1220,7 +1224,7 @@ false the method failed (method signature not found or input argument count grea
           <td class="memname">void Qumbiaizer::newData </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>b</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1230,6 +1234,16 @@ false the method failed (method signature not found or input argument count grea
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>newData for unsigned bool data types </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">b</td><td>value as bool</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Note 1</dt><dd>The source must provide this precise data type</dd></dl>
+<dl class="section user"><dt>Note 2</dt><dd>The method extracts data["value"] and converts it to bool </dd></dl>
 
 </div>
 </div>
@@ -1257,10 +1271,20 @@ false the method failed (method signature not found or input argument count grea
 </table>
 </div><div class="memdoc">
 
+<p>newData for vector of double data types </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dv</td><td>value as QVector&lt;double&gt; (const reference)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Note 1</dt><dd>The source must provide this precise data type</dd></dl>
+<dl class="section user"><dt>Note 2</dt><dd>The method extracts data["value"] and converts it to a vector of double </dd></dl>
+
 </div>
 </div>
-<a id="ae8ca7ea7db0fb3d2839a9d3da9422605"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae8ca7ea7db0fb3d2839a9d3da9422605">&#9670;&nbsp;</a></span>newData <span class="overload">[10/13]</span></h2>
+<a id="a2b4062adbbfdd698ae9df1d7fa5eb424"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b4062adbbfdd698ae9df1d7fa5eb424">&#9670;&nbsp;</a></span>newData <span class="overload">[10/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1272,7 +1296,7 @@ false the method failed (method signature not found or input argument count grea
           <td class="memname">void Qumbiaizer::newData </td>
           <td>(</td>
           <td class="paramtype">const QVector&lt; int &gt; &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>vi</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1283,10 +1307,20 @@ false the method failed (method signature not found or input argument count grea
 </table>
 </div><div class="memdoc">
 
+<p>newData for vector of int data types </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vi</td><td>value as QVector&lt;int&gt; (const reference)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Note 1</dt><dd>The source must provide this precise data type</dd></dl>
+<dl class="section user"><dt>Note 2</dt><dd>The method extracts data["value"] and converts it to a vector of int </dd></dl>
+
 </div>
 </div>
-<a id="a13c1f2842d7b730b6eeab9639b347a56"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13c1f2842d7b730b6eeab9639b347a56">&#9670;&nbsp;</a></span>newData <span class="overload">[11/13]</span></h2>
+<a id="ac75f9a7fb0260949e9408f6594d3cad0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac75f9a7fb0260949e9408f6594d3cad0">&#9670;&nbsp;</a></span>newData <span class="overload">[11/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1298,7 +1332,7 @@ false the method failed (method signature not found or input argument count grea
           <td class="memname">void Qumbiaizer::newData </td>
           <td>(</td>
           <td class="paramtype">const QVector&lt; bool &gt; &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>bv</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1309,10 +1343,20 @@ false the method failed (method signature not found or input argument count grea
 </table>
 </div><div class="memdoc">
 
+<p>newData for vector of boolean </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bv</td><td>value as QVector&lt;bool&gt; (const reference)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Note 1</dt><dd>The source must provide this precise data type</dd></dl>
+<dl class="section user"><dt>Note 2</dt><dd>The method extracts data["value"] and converts it to a vector of bool </dd></dl>
+
 </div>
 </div>
-<a id="a11379b8b4e2b92349301aba4156463f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a11379b8b4e2b92349301aba4156463f8">&#9670;&nbsp;</a></span>newData <span class="overload">[12/13]</span></h2>
+<a id="a230105b4c28802e3dcb7973d09272a68"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a230105b4c28802e3dcb7973d09272a68">&#9670;&nbsp;</a></span>newData <span class="overload">[12/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1324,7 +1368,7 @@ false the method failed (method signature not found or input argument count grea
           <td class="memname">void Qumbiaizer::newData </td>
           <td>(</td>
           <td class="paramtype">const QStringList &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>slv</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1335,10 +1379,20 @@ false the method failed (method signature not found or input argument count grea
 </table>
 </div><div class="memdoc">
 
+<p>newData for string list </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">slv</td><td>value as QStringList (const reference)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Note 1</dt><dd>The source must provide this precise data type</dd></dl>
+<dl class="section user"><dt>Note 2</dt><dd>The method extracts data["value"] and converts it to a list of strings </dd></dl>
+
 </div>
 </div>
-<a id="aaa2ca8df5ce5ff311d3f5317d59a3eda"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa2ca8df5ce5ff311d3f5317d59a3eda">&#9670;&nbsp;</a></span>newData <span class="overload">[13/13]</span></h2>
+<a id="aea29251fd85cab8d3f320bfc40fae2a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea29251fd85cab8d3f320bfc40fae2a5">&#9670;&nbsp;</a></span>newData <span class="overload">[13/13]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1350,7 +1404,7 @@ false the method failed (method signature not found or input argument count grea
           <td class="memname">void Qumbiaizer::newData </td>
           <td>(</td>
           <td class="paramtype">const CuData &amp;&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1360,6 +1414,15 @@ false the method failed (method signature not found or input argument count grea
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>newData signal passing the whole data bundle </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>value as full CuData bundle</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>Note</dt><dd>This signal is always emitted after the <em>type specific</em> version of the method. It can be used in particular cases where the whole information from CuData is required (name of the source, data type, timestamp, message, and so on..) </dd></dl>
 
 </div>
 </div>
@@ -1387,14 +1450,14 @@ false the method failed (method signature not found or input argument count grea
 </table>
 </div><div class="memdoc">
 
-<p>this signal is emitted by the refresh() method and the success parameter indicates whether the tango read was successful or not. </p>
+<p>this signal is emitted by the <a class="el" href="classQuWatcher.html#af3ff0cc012b1240ec58ce280cbadede8">QuWatcher::onUpdate</a> method and the success parameter indicates whether the reading is successful or not. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">success</td><td>true if read was successful, false otherwise</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section see"><dt>See also</dt><dd>readFailed </dd></dl>
+<dl class="section user"><dt>Note</dt><dd>success contains the value of<div class="fragment"><div class="line">!<a class="code" href="classQumbiaizer.html#a87b11b3f87928dcc0b66985bc19ecc12">data</a>[<span class="stringliteral">&quot;err&quot;</span>].toBool() </div></div><!-- fragment --> </dd></dl>
 
 <p class="reference">Referenced by <a class="el" href="classQuWatcher.html#af3ff0cc012b1240ec58ce280cbadede8">QuWatcher::onUpdate()</a>.</p>
 
@@ -1449,10 +1512,11 @@ false the method failed (method signature not found or input argument count grea
 <p>Emitted by the refresh method. The message is taken from the TVariant. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">message</td><td>the error message, i.e. the tango exception, or the read information (last read timestamp) if read was successful. </td></tr>
+    <tr><td class="paramname">message</td><td>either the error message or other piece of information from the source (e.g. timestamp) </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classQumbiaizer.html#addb24d404da12bca0f06843dcc7b3733" title="this signal is emitted by the QuWatcher::onUpdate method and the success parameter indicates whether ...">readOk</a> </dd></dl>
 
 <p class="reference">Referenced by <a class="el" href="classQuWatcher.html#af3ff0cc012b1240ec58ce280cbadede8">QuWatcher::onUpdate()</a>.</p>
 
@@ -1834,7 +1898,7 @@ false the reader behaves as readers usually behave </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 21 2019 15:46:54 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 28 2019 11:51:32 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

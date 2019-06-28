@@ -47,6 +47,9 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
+<p>extension to launch applications on demand  
+ <a href="classCuApplicationLauncherExtension.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="cuapplicationlauncherextension_8h_source.html">cuapplicationlauncherextension.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for CuApplicationLauncherExtension:</div>
@@ -57,8 +60,9 @@ Inheritance diagram for CuApplicationLauncherExtension:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1c18c2bf4f38ee60d43a15979072f91c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuApplicationLauncherExtension.html#a1c18c2bf4f38ee60d43a15979072f91c">CuApplicationLauncherExtension</a> (const CuContext *ctx)</td></tr>
-<tr class="separator:a1c18c2bf4f38ee60d43a15979072f91c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8585094cfca3146a59e3ea3b7c12f8c3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuApplicationLauncherExtension.html#a8585094cfca3146a59e3ea3b7c12f8c3">CuApplicationLauncherExtension</a> (const CuContext *ctx=nullptr)</td></tr>
+<tr class="memdesc:a8585094cfca3146a59e3ea3b7c12f8c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">the class constructor  <a href="#a8585094cfca3146a59e3ea3b7c12f8c3">More...</a><br /></td></tr>
+<tr class="separator:a8585094cfca3146a59e3ea3b7c12f8c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4e4426d6929f7ecdec45296cc44d2a1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuApplicationLauncherExtension.html#ad4e4426d6929f7ecdec45296cc44d2a1">~CuApplicationLauncherExtension</a> ()</td></tr>
 <tr class="separator:ad4e4426d6929f7ecdec45296cc44d2a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d3981d96cd5407a43df0c3f6094d1e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuApplicationLauncherExtension.html#a9d3981d96cd5407a43df0c3f6094d1e4">start</a> ()</td></tr>
@@ -78,9 +82,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2059f520a28008a79870b6ccf9f94208"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuApplicationLauncherExtension.html#a2059f520a28008a79870b6ccf9f94208">error</a> () const</td></tr>
 <tr class="separator:a2059f520a28008a79870b6ccf9f94208"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a1c18c2bf4f38ee60d43a15979072f91c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1c18c2bf4f38ee60d43a15979072f91c">&#9670;&nbsp;</a></span>CuApplicationLauncherExtension()</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>With this extension, you can try to bring to foreground QuApplications already running or start new ones.</p>
+<dl class="section user"><dt>Example</dt><dd></dd></dl>
+<div class="fragment"><div class="line"><span class="keyword">const</span> <span class="keywordtype">char</span>* extensions_plugin_name = <span class="stringliteral">&quot;libactions-extension-plugin.so&quot;</span>;</div><div class="line">CuPluginLoader pl;</div><div class="line">QString pluginFilePath = pl.getPluginAbsoluteFilePath(QString(), extensions_plugin_name);</div><div class="line"><span class="keywordflow">if</span>(!pluginFilePath.isEmpty()) {</div><div class="line">    QPluginLoader pluginLoader(pluginFilePath);</div><div class="line">    QObject *plugin = pluginLoader.instance();</div><div class="line">    <span class="keywordflow">if</span>(plugin) {</div><div class="line">        QuActionExtensionPluginInterface *action_ex = qobject_cast&lt;QuActionExtensionPluginInterface *&gt;(plugin);</div><div class="line">        <span class="keywordflow">if</span>(action_ex) {</div><div class="line">            QuActionExtensionFactoryI *ae_fac = action_ex-&gt;getExtensionFactory();</div><div class="line">            QuActionExtensionI *ale = ae_fac-&gt;create(<span class="stringliteral">&quot;CuApplicationLauncherExtension&quot;</span>, <span class="keyword">nullptr</span>);</div><div class="line">            CuData cmdline(<span class="stringliteral">&quot;command&quot;</span>, <span class="stringliteral">&quot;xclock -analog -twentyfour&quot;</span>);</div><div class="line">            ale-&gt;execute(cmdline);</div><div class="line">        }</div><div class="line">    }</div><div class="line">}</div></div><!-- fragment --> </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a8585094cfca3146a59e3ea3b7c12f8c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8585094cfca3146a59e3ea3b7c12f8c3">&#9670;&nbsp;</a></span>CuApplicationLauncherExtension()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -89,11 +96,17 @@ Public Member Functions</h2></td></tr>
           <td class="memname">CuApplicationLauncherExtension::CuApplicationLauncherExtension </td>
           <td>(</td>
           <td class="paramtype">const CuContext *&#160;</td>
-          <td class="paramname"><em>ctx</em></td><td>)</td>
+          <td class="paramname"><em>ctx</em> = <code>nullptr</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ctx</td><td>a pointer to CuContext. The default is NULL, the parameter is not used by this class. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="reference">References <a class="el" href="classCuApplicationLauncherPrivate.html#a3381872b1d84a765cb6afb72431cc6cf">CuApplicationLauncherPrivate::ctx</a>, <a class="el" href="classCuApplicationLauncherPrivate.html#a6f19492ccdf06134995a7045e68e573d">CuApplicationLauncherPrivate::err</a>, and <a class="el" href="classCuApplicationLauncherPrivate.html#a2547b90beb846b1abdbfa00897b9a677">CuApplicationLauncherPrivate::qudbusctrl_i</a>.</p>
 
