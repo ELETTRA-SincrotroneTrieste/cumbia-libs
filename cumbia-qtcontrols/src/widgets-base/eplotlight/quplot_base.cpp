@@ -292,6 +292,23 @@ bool QuPlotBase::inZoom() const
     return static_cast<QuPlotZoomComponent *>(d->components_map.value("zoom"))->inZoom();
 }
 
+/*! \brief returns the QuPlotComponent corresponding to the given *name*, nullptr if *name* is not valid
+ *
+ * \par Component list
+ * \li "context_menu"  returns QuPlotContextMenuComponent
+ * \li "axes" returns QuPlotAxesComponent
+ * \li "zoom" returns QuPlotZoomComponent
+ * \li "marker" returns QuPlotMarkerComponent
+ * \li "canvas_painter" QuPlotCanvasPainterComponent
+ *
+ */
+QuPlotComponent *QuPlotBase::getComponent(const QString &name) const
+{
+    if(d->components_map.contains(name))
+        return d->components_map[name];
+    return nullptr;
+}
+
 /** \brief updates the marker, if visible, and returns true if it's visible, false otherwise
  *
  * @see refresh
@@ -325,13 +342,11 @@ bool QuPlotBase::updateScales()
     QList<int> autoScaleAxisIds; // will contain only axes that need autoscaling
     QList<int> axisIds = QList<int>()<< QwtPlot::yLeft << QwtPlot::yRight << QwtPlot::xBottom << QwtPlot::xTop; // 0, 1, 2, 3
     foreach(int axisId, axisIds) {
-        if(axisEnabled(axisId) && (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop)
-                && axes_c->autoscale(axisId)) {
+        if((axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop) && axes_c->autoscale(axisId)) {
             autoScaleAxisIds << axisId;
             need_xbounds = true;
         }
-        else if(axisEnabled(axisId) && (axisId == QwtPlot::yLeft || axisId == QwtPlot::yRight)
-                && axes_c->autoscale(axisId)) {
+        else if((axisId == QwtPlot::yLeft || axisId == QwtPlot::yRight) && axes_c->autoscale(axisId)) {
             autoScaleAxisIds << axisId;
             need_ybounds = true;
         }
@@ -821,7 +836,6 @@ void QuPlotBase::hideMarker()
 
 void QuPlotBase::mouseReleaseEvent(QMouseEvent *ev)
 {
-    printf("\e[1;32mMouseRELEASE\e[0m\n");
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
     if(ev->button() == Qt::MidButton && marker->isVisible())
         hideMarker();

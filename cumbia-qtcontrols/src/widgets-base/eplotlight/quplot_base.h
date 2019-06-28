@@ -39,6 +39,7 @@ class CuData;
 class QuPlotCurve;
 class QuWidgetUpdateStrategyI;
 class QuWidgetContextMenuStrategyI;
+class QuPlotComponent;
 
 /*! @private */
 class ShiftClickEater : public QObject
@@ -203,6 +204,8 @@ public:
 
     bool inZoom() const;
 
+    QuPlotComponent *getComponent(const QString& name) const;
+
 public slots:
     virtual void refresh();
 
@@ -251,6 +254,7 @@ public slots:
     void restoreDefaultBounds(Axis axisId = QwtPlot::yLeft);
 
     void setAxisScaleDefaultEnabled(bool en, Axis axisId = QwtPlot::yLeft);
+
 
 protected:
 
