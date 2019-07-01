@@ -46,6 +46,8 @@ public slots:
 
     void setTarget(const QString& target);
 
+    void onAnimationValueChanged(const QVariant& v);
+
 signals:
     void linkStatsRequest(QWidget *myself, CuContextI *myself_as_cwi);
     void newData(const CuData& da);
@@ -58,10 +60,6 @@ protected:
 private:
     QuButtonPrivate *d;
     void m_init(const QString& text);
-
-private slots:
-    void onAnimationValueChanged(const QVariant& v);
-
 };
 
 #endif // QUPUSHBUTTON_H

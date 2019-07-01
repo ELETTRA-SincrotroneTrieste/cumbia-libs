@@ -17,6 +17,7 @@
 #include <cuserviceprovider.h>
 #include <cuservices.h>
 #include <qulogimpl.h>
+#include <quanimation.h>
 
 /** @private */
 class QuComboBoxPrivate
@@ -26,7 +27,7 @@ public:
     bool ok;
     bool index_mode, execute_on_index_changed;
     CuContext *context;
-
+    QuAnimation animation;
     // for private use
     bool configured, index_changed_connected;
 };
@@ -66,6 +67,7 @@ void QuComboBox::m_init()
     d->index_mode = false;
     d->execute_on_index_changed = false;
     d->configured = d->index_changed_connected = false; // for private use
+    d->animation.setType(QuAnimation::RayOfLight);
 }
 
 QuComboBox::~QuComboBox()
@@ -75,6 +77,10 @@ QuComboBox::~QuComboBox()
     delete d;
 }
 
+/** \brief returns the target of the writer
+ *
+ * @return a QString with the name of the target
+ */
 QString QuComboBox::target() const {
     CuControlsWriterA *w = d->context->getWriter();
     if(w != NULL)
@@ -145,10 +151,17 @@ void QuComboBox::setTarget(const QString &target)
 
 void QuComboBox::contextMenuEvent(QContextMenuEvent *e)
 {
-    CuContextMenu* m = new CuContextMenu(this, d->context);
-    connect(m, SIGNAL(linkStatsTriggered(QWidget*, CuContextI *)),
-            this, SIGNAL(linkStatsRequest(QWidget*, CuContextI *)));
+    CuContextMenu* m = findChild<CuContextMenu *>();
+    if(!m) m = new CuContextMenu(this, d->context);
     m->popup(e->globalPos());
+}
+
+void QuComboBox::paintEvent(QPaintEvent *pe)
+{
+    QComboBox::paintEvent(pe);
+    if(d->animation.currentValue() != 0.0) {
+        d->animation.draw(this, pe->rect());
+    }
 }
 
 void QuComboBox::m_configure(const CuData& da)
@@ -217,6 +230,12 @@ void QuComboBox::m_configure(const CuData& da)
 void QuComboBox::onUpdate(const CuData &da)
 {
     d->ok = !da["err"].toBool();
+
+    // update link statistics
+    d->context->getLinkStats()->addOperation();
+    if(!d->ok)
+        d->context->getLinkStats()->addError(da["msg"].toString());
+
     if(!d->ok) {
         perr("QuComboBox [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
              da["src"].toString().c_str(), da["msg"].toString().c_str(),
@@ -232,7 +251,7 @@ void QuComboBox::onUpdate(const CuData &da)
             log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);
         }
     }
-    else if(d->auto_configure && da["type"].toString() == "property") {
+    else if(d->auto_configure &&  da.has("type", "property")) {
         //
         // --------------------------------------------------------------------------------------------
         // You may want to check data format and write type and issue a warning or avoid configuration
@@ -240,11 +259,18 @@ void QuComboBox::onUpdate(const CuData &da)
         // if(da["data_format_str"] == "scalar" && da["writable"].toInt() > 0)
         // --------------------------------------------------------------------------------------------
         m_configure(da);
+        d->animation.installOn(this);
     }
+    d->ok ? d->animation.setPenColor(QColor(Qt::green)) : d->animation.setPenColor(QColor(Qt::red));
+    d->ok ? d->animation.setDuration(1500) : d->animation.setDuration(3000);
+    d->animation.start();
     emit newData(da);
 }
 
 void QuComboBox::m_onIndexChanged(int i) {
+    d->animation.setPenColor(QColor(Qt::gray));
+    d->animation.loop(QuAnimation::RayOfLight);
+
     printf("\e[1;31mQuComboBox.m_onIndexChanged: new index %d \e[0m\n", i);
     if(d->index_mode) {
         printf("\e[0;31mWILL WRITE BY INDEX: %d\e[0m\n", i);
@@ -300,6 +326,12 @@ void QuComboBox::setExecuteOnIndexChanged(bool exe)
         d->index_changed_connected = true;
         connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(m_onIndexChanged(int)));
     }
+}
+
+void QuComboBox::onAnimationValueChanged(const QVariant &v)
+{
+    // optimize animation paint area with the clipped rect provided by QuAnimation::clippedRect
+    update(d->animation.clippedRect(rect()));
 }
 
 // perform the write operation on the target

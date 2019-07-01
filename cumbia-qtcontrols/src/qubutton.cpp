@@ -104,6 +104,11 @@ void QuButton::setTarget(const QString &target)
     if(w) w->setTarget(target);
 }
 
+/*! \brief This slot is invoked by QuAnimation when the animation value changes. Calls *update*
+ *         to draw the animation.
+ *
+ *  @see QuAnimation::installOn
+ */
 void QuButton::onAnimationValueChanged(const QVariant &)
 {
     // optimize animation paint area with the clipped rect provided by QuAnimation::clippedRect
@@ -140,7 +145,7 @@ QString QuButton::target() const
  */
 void QuButton::onUpdate(const CuData &data)
 {
-    bool is_config = data["type"].toString() == std::string("property");
+    bool is_config = data.has("type", "property");
     if(!data["is_result"].toBool() && !is_config)
         return;
 

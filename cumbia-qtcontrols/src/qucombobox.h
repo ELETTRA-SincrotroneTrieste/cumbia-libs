@@ -17,13 +17,19 @@ class CuControlsFactoryPool;
 class CuContext;
 class CuLinkStats;
 
-/*! \brief QuComboBox is a writer that uses QComboBox to display values.
- * When the function is activated explicitly, it can write on its target either the displayed value or the index
+/*! \brief QuComboBox derives from Qt QComboBox to display values.
+ * When the option is activated explicitly, it can write either the current text or the current index
  *
  * Connection is initiated with setTarget. 
  * The *values* property, if available from the underlying engine, is used to initialize the items at configuration time.
  * 
  * getContext returns a pointer to the CuContext used as a delegate for the connection.
+ *
+ * @see indexMode
+ * @see executeOnIndexChanged
+ *
+ * If the object is used to provide input arguments to other writers (e.g. QuPushButton), the data property
+ * provides a string representation of either the current text or index, according to indexMode. @see CuControlsUtils
  *
 */
 class QuComboBox : public QComboBox, public CuDataListener, public CuContextI
@@ -43,16 +49,8 @@ public:
 
     virtual ~QuComboBox();
 
-    /** \brief returns the target of the writer
-     *
-     * @return a QString with the name of the target
-     */
     QString target() const;
 
-    /** \brief returns a pointer to the CuContext used as a delegate for the connection.
-     *
-     * @return CuContext
-     */
     CuContext *getContext() const;
 
     bool indexMode() const;
@@ -62,11 +60,6 @@ public:
     QString getData() const;
 
 public slots:
-
-    /** \brief set the target
-     *
-     * @param the name of the target
-     */
     void setTarget(const QString& target);
 
     void write(int i);
@@ -77,7 +70,7 @@ public slots:
 
     void setExecuteOnIndexChanged(bool exe);
 
-    // ---------------- end of write slots -----------------------
+    void onAnimationValueChanged(const QVariant& v);
 
 signals:
     void newData(const CuData&);
@@ -86,6 +79,7 @@ signals:
 
 protected:
     void contextMenuEvent(QContextMenuEvent* e);
+    void paintEvent(QPaintEvent *pe);
 
 private:
     QuComboBoxPrivate *d;
