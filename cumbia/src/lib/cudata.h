@@ -65,6 +65,8 @@ public:
 
     bool containsKey(const std::string & key) const;
 
+    bool has(const std::string &key, const std::string& value) const;
+
     CuVariant& operator [] (const std::string& key);
 
     const CuVariant& operator [] (const std::string& key) const;

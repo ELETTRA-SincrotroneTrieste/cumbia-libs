@@ -181,6 +181,20 @@ bool CuData::containsKey(const std::string &key) const
     return d->datamap.count(key) > 0;
 }
 
+/*! \brief returns true if the specified key has the given string value
+ *
+ * This method is a shortcut to test if to a given key is associated a string with the given value.
+ *
+ * @param key the key
+ * @param value the value *as string*
+ * @return true if *data[key].toString() == value* false otherwise
+ */
+bool CuData::has(const std::string &key, const std::string &value) const
+{
+    bool ok;
+    return d->datamap[key].toString(&ok) == value && ok;
+}
+
 /*! \brief array subscript write operator; pushes a new key-value pair into the bundle
  *
  * Use the insert operator to add a new key/value pair to the bundle
