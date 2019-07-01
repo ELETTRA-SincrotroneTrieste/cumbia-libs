@@ -263,7 +263,8 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
     try{
         if(quality == Tango::ATTR_INVALID)
         {
-            d->message = "CuTangoWorld.extractData: attribute quality invalid";
+            d->message = "CuTangoWorld.extractData: attribute quality invalid - ";
+            d->message += strerror(p_da->get_err_stack());
             d->error = true;
         }
         else if(p_da->is_empty())
