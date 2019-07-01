@@ -118,9 +118,8 @@ void $MAINCLASS$::setTarget(const QString &target)
 
 void $MAINCLASS$::contextMenuEvent(QContextMenuEvent *e)
 {
-    CuContextMenu* m = new CuContextMenu(this, d->context);
-    connect(m, SIGNAL(linkStatsTriggered(QWidget*, CuContextI *)),
-            this, SIGNAL(linkStatsRequest(QWidget*, CuContextI *)));
+    CuContextMenu* m = findChild<CuContextMenu *>();
+    if(!m) m = new CuContextMenu(this, d->context);
     m->popup(e->globalPos());
 }
 
