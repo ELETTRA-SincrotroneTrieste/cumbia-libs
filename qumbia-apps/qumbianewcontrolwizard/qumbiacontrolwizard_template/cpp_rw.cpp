@@ -244,10 +244,16 @@ void $MAINCLASS$::onUpdate(const CuData &da)
     setEnabled(d->ok);
     setToolTip(QString::fromStdString(da["msg"].toString()));
 
+    // update link statistics
+    CuContext *ctx;
+    write_op ? ctx = d->in_ctx : ctx = d->out_ctx;
+    ctx->getLinkStats()->addOperation();
+    if(!d->ok)
+        ctx->getLinkStats()->addError(da["msg"].toString());
+
     // if not ok, show the popup only if the failed operation is a write operation
     if(!d->ok && write_op) {
-
-        perr("QuApplyNumeric [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
+        perr("$MAINCLASS$ [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
              da["src"].toString().c_str(), da["msg"].toString().c_str(),
                 da["data_format_str"].toString().c_str(), da["writable"].toInt());
 
@@ -261,10 +267,7 @@ void $MAINCLASS$::onUpdate(const CuData &da)
             log->write(QString("$MAINCLASS$ [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);
         }
     }
-    else if(!d->ok) { // reader: update link stats
-        d->out_ctx->getLinkStats()->addError(da["msg"].toString());
-    }
-    else if(d->auto_configure && da["type"].toString() == "property") {
+    else if(d->auto_configure && da.has("type", "property")) {
         //
         // --------------------------------------------------------------------------------------------
         // You may want to check data format and write type and issue a warning or avoid configuration

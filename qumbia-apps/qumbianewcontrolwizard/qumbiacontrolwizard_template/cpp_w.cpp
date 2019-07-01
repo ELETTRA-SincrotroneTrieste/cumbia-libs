@@ -214,6 +214,12 @@ void $MAINCLASS$::m_configure(const CuData& da)
 void $MAINCLASS$::onUpdate(const CuData &da)
 {
     d->ok = !da["err"].toBool();
+
+    // update link statistics
+    d->context->getLinkStats()->addOperation();
+    if(!d->ok)
+        d->context->getLinkStats()->addError(da["msg"].toString());
+    // log
     if(!d->ok) {
         perr("$MAINCLASS$ [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
              da["src"].toString().c_str(), da["msg"].toString().c_str(),
@@ -226,7 +232,7 @@ void $MAINCLASS$::onUpdate(const CuData &da)
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::Write, true);
-            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);
+            log->write(QString("$MAINCLASS$ [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);
         }
     }
     else if(d->auto_configure && da["type"].toString() == "property") {
