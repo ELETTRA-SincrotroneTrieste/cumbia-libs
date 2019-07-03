@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['name',['name',['../classCuDataQuality.html#a13c2f43836cafde1cf77ccd75f0dd72c',1,'CuDataQuality']]]
+  ['matches',['matches',['../classCuActivity.html#a02cf68bd6c041c41355ca8a4ee8c86f9',1,'CuActivity']]]
 ];

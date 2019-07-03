@@ -7,7 +7,7 @@
 <area shape="rect" id="node6" href="$classQuButton.html" title="A push button to write values or send commands to a target." alt="" coords="171,208,248,235"/>
 <area shape="rect" id="node7" href="$classQuCheckBox.html" title="A check box that reads, displays and writes a boolean value." alt="" coords="160,259,259,285"/>
 <area shape="rect" id="node8" href="$classQuCircularGauge.html" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors." alt="" coords="149,309,270,336"/>
-<area shape="rect" id="node9" href="$classQuComboBox.html" title="QuComboBox is a writer that uses QComboBox to display values. When the function is activated explicit..." alt="" coords="158,360,261,387"/>
+<area shape="rect" id="node9" href="$classQuComboBox.html" title="QuComboBox derives from Qt QComboBox to display values. When the option is activated explicitly,..." alt="" coords="158,360,261,387"/>
 <area shape="rect" id="node10" href="$classQuDoubleSpinBox.html" title=" " alt="" coords="145,411,273,437"/>
 <area shape="rect" id="node11" href="$classQuInputOutput.html" title="This element is a graphical interface to integrate a reader and a writer into one single object that ..." alt="" coords="156,461,263,488"/>
 <area shape="rect" id="node12" href="$classQuLabel.html" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors." alt="" coords="174,512,245,539"/>

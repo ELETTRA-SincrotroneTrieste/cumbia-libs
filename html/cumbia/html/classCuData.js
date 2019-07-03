@@ -8,6 +8,7 @@ var classCuData =
     [ "CuData", "classCuData.html#a6548401b6feddc7b3361ebccecbd61d8", null ],
     [ "add", "classCuData.html#a8a68df15bbe081b0e8453dc154ad11f8", null ],
     [ "containsKey", "classCuData.html#a89a88dac87b7b5c3a4de7aaf5e562409", null ],
+    [ "has", "classCuData.html#ac5f1635f2b00d74062f4bd2229ff7760", null ],
     [ "isEmpty", "classCuData.html#a6953fdf4037f206fc76695807845ea0d", null ],
     [ "keys", "classCuData.html#a9db04a83ab20e197ceab45b8146be4ac", null ],
     [ "operator !=", "classCuData.html#a08cc66fd73cb7baadf3bc538481403c1", null ],

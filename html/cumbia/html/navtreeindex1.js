@@ -1,5 +1,6 @@
 var NAVTREEINDEX1 =
 {
+"classCuThread.html#a748505fdff3458f7613b9e0c7689093b":[3,0,26,5],
 "classCuThread.html#a7f6f979bdf67a2ccc47e8e11ca7c1a72":[3,0,26,11],
 "classCuThread.html#a8080e3bb71c1d61b11bf78f06868ea06":[3,0,26,19],
 "classCuThread.html#a8c3f4a8c690cd063ff0fa50ac1238e2b":[3,0,26,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX1 =
 "cuevent_8h_source.html":[4,0,15],
 "cueventloop_8cpp.html":[4,0,16],
 "cueventloop_8h.html":[4,0,17],
-"cueventloop_8h_source.html":[4,0,17],
-"cuisolatedactivity_8cpp.html":[4,0,18]
+"cueventloop_8h_source.html":[4,0,17]
 };
