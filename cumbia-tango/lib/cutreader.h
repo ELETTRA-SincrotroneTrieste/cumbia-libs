@@ -47,7 +47,8 @@ public:
      * must be specified to sendData to trigger a manual reading.
      *
      */
-    enum RefreshMode { PolledRefresh = 0, ChangeEventRefresh, ArchiveEventRefresh, PeriodicEventRefresh, Manual };
+    enum RefreshMode { PolledRefresh = 0x01, ChangeEventRefresh=0x02,
+                       ArchiveEventRefresh=0x04, PeriodicEventRefresh=0x08, Manual=0x10 };
 
     CuTReader(const TSource& src, CumbiaTango *ct);
 
@@ -70,7 +71,7 @@ public:
 
     void getData(CuData &inout) const;
 
-    void setRefreshMode(RefreshMode rm);
+    void setRefreshMode(RefreshMode rm, int period = -1);
 
     std::string refreshModeStr() const;
 

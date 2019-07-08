@@ -74,8 +74,6 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a)
     else {
         pviolet2("(i) CuPoller.registerAction: found a running polling activity [%p] DISPOSABLE %d for device \"%s\" period %d\n",
                   activity, activity->isDisposable(), at["device"].toString().c_str(), at["period"].toInt());
-        if(d->actions_map.size() == 1)
-            d->cumbia_t->resumeActivity(activity);
     }
 
     // post insert to activity's thread. TSource is all what polling activity needs. don't pass pointers

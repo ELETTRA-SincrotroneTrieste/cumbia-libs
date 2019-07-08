@@ -13,13 +13,10 @@
 #include <cuthreadseventbridgefactory_i.h>
 #include <cuactivitymanager.h>
 #include "cueventactivity.h"
+#include "cupollingactivity.h" // for CuPollingActivity::Type
 #include "cupoller.h"
 #include <culog.h>
-
 #include <tango.h>
-
-/// to remove
-#include <cupollingactivity.h>
 
 class TSource;
 
@@ -38,6 +35,7 @@ public:
     CuTReader::RefreshMode refresh_mode;
     bool polling_fallback;
     std::list<void *> activities;
+    int manual_mode_period;
 };
 
 CuTReader::CuTReader(const TSource& src, CumbiaTango *ct) : CuTangoActionI()
@@ -51,6 +49,7 @@ CuTReader::CuTReader(const TSource& src, CumbiaTango *ct) : CuTangoActionI()
     d->period = 1000;
     d->refresh_mode = ChangeEventRefresh;
     d->polling_fallback = false;
+    d->manual_mode_period = 1000 * 3600 * 24 * 10; // ten days
 }
 
 CuTReader::~CuTReader()
@@ -119,6 +118,7 @@ void CuTReader::onResult(const CuData &data)
         CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                             get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
         if(!polling_service->actionRegistered(this, d->period) ) {
+            d->refresh_mode = CuTReader::PolledRefresh;
             m_registerToPoller();
         }
     }
@@ -165,51 +165,6 @@ CuTangoActionI::Type CuTReader::getType() const
     return CuTangoActionI::Reader;
 }
 
-/** \brief Send data with parameters to configure the reader.
- *
- * @param data a CuData bundle with the settings to apply to the reader.
- *
- * \par Valid keys
- * \li "period": integer. Change the polling period, if the refresh mode is CuTReader::PolledRefresh
- * \li "refresh_mode". A CuTReader::RefreshMode value to change the current refresh mode.
- *
- * @see getData
- *
- */
-void CuTReader::sendData(const CuData &data)
-{
-    int rm = -1, period = -1;
-    if(data.containsKey("refresh_mode"))
-        data["refresh_mode"].to<int>(rm);
-
-    if(data.containsKey("period"))
-        data["period"].to<int>(period);
-
-    // refresh mode specified is different from current
-    // let setRefreshMode deal with new mode (and new period, if pertinent)
-    //
-    if(rm > -1 && rm != d->refresh_mode) {
-        if(period > -1)
-            d->period = period;  // update period
-        // if either an event activity or a poller is active, update everything
-        // otherwise, just update d->refresh_mode and wait for start
-        setRefreshMode(static_cast<CuTReader::RefreshMode>(rm));
-    }
-    else if(period > 0 && d->refresh_mode == CuTReader::PolledRefresh) {
-        // - refresh mode has not changed.
-        // - period has changed; update poller, if this action has a poller
-        //
-        CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
-                                                                            get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
-        CuPoller *poller = polling_service->getPoller(d->cumbia_t, d->period); // poller with current period
-        if(poller && period != poller->period()) {
-            m_unregisterFromPoller(); // unregister from old poller with old period
-            d->period = period;       // update d->period
-            m_registerToPoller();     // with new period
-        }
-    }
-}
-
 /** \brief Get parameters from the reader.
  *
  * @param d_inout a reference to a CuData bundle containing the parameter names
@@ -233,6 +188,57 @@ void CuTReader::getData(CuData &d_inout) const
         d_inout["mode"] = refreshModeStr();
 }
 
+/** \brief Send data with parameters to configure the reader.
+ *
+ * @param data a CuData bundle with the settings to apply to the reader.
+ *
+ * \par Valid keys
+ * \li "period": integer. Change the polling period, if the refresh mode is CuTReader::PolledRefresh
+ * \li "refresh_mode". A CuTReader::RefreshMode value to change the current refresh mode.
+ *
+ * @see getData
+ *
+ */
+void CuTReader::sendData(const CuData &data)
+{
+    bool do_read = data.containsKey("read");
+    int rm = -1, period = -1;
+    if(data.containsKey("refresh_mode"))
+        data["refresh_mode"].to<int>(rm);
+    if(data.containsKey("period"))
+        data["period"].to<int>(period);
+
+    if(rm > -1 && rm != d->refresh_mode) { // refresh mode changed
+        setRefreshMode(static_cast<CuTReader::RefreshMode>(rm), period);
+    }
+    else if(period > 0 && d->refresh_mode == CuTReader::PolledRefresh) { // refresh mode unchanged, period changed
+        CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
+                                                                            get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
+        CuPoller *poller = polling_service->getPoller(d->cumbia_t, d->period); // poller with current period
+        if(poller && period != poller->period()) {
+            m_unregisterFromPoller(); // unregister from old poller (d->period must stay unchanged)
+            d->period = period;       // update d->period - mode unchanged
+            m_registerToPoller();     // with new period
+        }
+    }
+    else if(do_read) { // post a CuExecuteEvent to a polling activity
+        CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
+                                                                 get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
+        CuData at = getToken();
+        at.set("device", d->tsrc.getDeviceName()).set("period", d->period).set("activity", "poller");
+        CuActivity *activity = am->findActiveMatching(at);
+        if(activity && activity->getType() == CuPollingActivity::CuPollingActivityType) {
+            d->cumbia_t->postEvent(activity, new CuExecuteEvent());
+        }
+    }
+    else if(do_read && isEventRefresh(d->refresh_mode) && d->event_activity) {
+        CuData errdat(getToken());
+        errdat.set("err", true).set("msg", "CuTReader.sendData: sporadic \"read\" request cannot be forwarded to an event type activity");
+        perr("CuTReader.sendData: posting error event %s to event activity %p\n", errdat.toString().c_str(), d->event_activity);
+        d->cumbia_t->postEvent(d->event_activity, new CuDataEvent(errdat));
+    }
+}
+
 /*! \brief set or change the reader's refresh mode
  *
  * If the reading activity hasn't been started yet, the mode is saved for later.
@@ -240,19 +246,14 @@ void CuTReader::getData(CuData &d_inout) const
  * activity is unregistered and a new one is started.
  *
  * @param rm a value chosen from CuTReader::RefreshMode.
- *
- *
  */
-void CuTReader::setRefreshMode(CuTReader::RefreshMode rm)
+void CuTReader::setRefreshMode(CuTReader::RefreshMode rm, int period)
 {
-    printf("\e[1;33msetRefreshMode\e[0m\n");
-    d->refresh_mode = rm;
     CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
     bool polled = polling_service->actionRegistered(this, d->period);
     if(d->event_activity || polled) {
-        printf("\e[1;32msetRefreshMode new mode %d current one %d (%s) event actiity %p\e[0m\n",
-               rm, d->refresh_mode, refreshModeStr().c_str(), d->event_activity);
+
         // start a new event activity if
         // 1. rm is an event driven mode AND
         // 2a. running activity is a poller OR
@@ -261,30 +262,37 @@ void CuTReader::setRefreshMode(CuTReader::RefreshMode rm)
         if(!d->event_activity && isEventRefresh(rm) ) {
             // need an event activity and there is no one
             m_unregisterFromPoller();
+            d->refresh_mode = rm;
             m_startEventActivity();
         }
-        else if(isEventRefresh(rm) && d->event_activity &&  d->event_activity->getToken()["rmode"].toString() != refreshModeStr()) {
+        else if(isEventRefresh(rm) && d->event_activity && d->refresh_mode != rm) {
             // already have one but want different event mode
             m_unregisterEventActivity();  // unregister current with the current event refresh mode
+            d->refresh_mode = rm;
             m_startEventActivity();       // register a new one with the desired event refresh mode
         }
-        else if(rm == CuTReader::PolledRefresh || rm == CuTReader::Manual)
-        {
+        else if(rm == CuTReader::PolledRefresh || rm == CuTReader::Manual) {
             if(d->event_activity)
                 m_unregisterEventActivity();
-            printf("- registering to poller\n");
-            d->polling_fallback = false;
-            m_registerToPoller();
-        }
-        // if the desired mode is Manual, the current activity is a polling activity
-        if(rm == CuTReader::Manual)
-        {
-            printf("\e[1;31mTO IMPLEMENT\e[0m: mode is set to MANUAL -----> pausing activity!\n");
-            //d->poller->pause();
+            if(rm == CuTReader::Manual)
+                period = d->manual_mode_period;
+            if(period > -1 && d->period != period) {
+                m_unregisterFromPoller(); // unregister from old poller with old period
+                d->period = period;
+            }
+            if(d->refresh_mode != rm) {
+                d->polling_fallback = false;
+                m_registerToPoller();
+            }
         }
     }
+    else if(rm == CuTReader::Manual)
+        d->period = d->manual_mode_period;
     else
-        printf("\e[1;31m no event acivity %p, no polled for this wit period %d\e[0m\n", d->event_activity, d->period);
+        perr("CuTReader.setRefreshMode: found no event %p, nor polled activity with period %d", d->event_activity, d->period);
+
+    if(d->refresh_mode != rm) // time to store rm into d->refresh_mode if not already done before
+        d->refresh_mode = rm;
 }
 
 string CuTReader::refreshModeStr() const
@@ -377,8 +385,7 @@ bool CuTReader::exiting() const
  */
 bool CuTReader::isEventRefresh(CuTReader::RefreshMode rm) const
 {
-    return d->refresh_mode == ChangeEventRefresh || d->refresh_mode == PeriodicEventRefresh
-            || d->refresh_mode == ArchiveEventRefresh;
+    return rm == ChangeEventRefresh || rm == PeriodicEventRefresh || rm == ArchiveEventRefresh;
 }
 
 /*! \brief creates and registers a CuEventActivity or a CuPollingActivity to read from the Tango control system
@@ -398,8 +405,8 @@ bool CuTReader::isEventRefresh(CuTReader::RefreshMode rm) const
  * start is usually called by CumbiaTango::addAction, which in turn is called by qumbia-tango-controls
  * CuTControlsReader::setSource
  *
- * If the refresh mode is Manual, a CuPollingActivity is started and CumbiaTango::pauseActivity is
- * called immediately. To trigger a read in Manual mode, use sendData with a CuData containing a
+ * If the refresh mode is Manual, a CuPollingActivity is started, with a very long period.
+ * To trigger a read in Manual mode, use sendData with a CuData containing a
  * key named "*read*". See sendData for further details.
  *
  */
@@ -412,8 +419,6 @@ void CuTReader::start()
         d->polling_fallback = false;
         m_registerToPoller();
     }
-    if(d->refresh_mode == Manual)
-        d->cumbia_t->pauseActivity(d->event_activity);
 }
 
 void CuTReader::m_startEventActivity()
@@ -423,11 +428,8 @@ void CuTReader::m_startEventActivity()
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
 
     CuData at("src", d->tsrc.getName()); /* activity token */
-    at["device"] = d->tsrc.getDeviceName();
-    at["point"] = d->tsrc.getPoint();
-    at["activity"] = "event";
-    at["rmode"] = refreshModeStr();
-
+    at.set("device", d->tsrc.getDeviceName()).set("point", d->tsrc.getPoint()).set("activity", "event")
+            .set("rmode", refreshModeStr());
     CuData tt("device", d->tsrc.getDeviceName()); /* thread token */
     d->event_activity = new CuEventActivity(at, df);
     d->activities.push_back(d->event_activity);
@@ -443,7 +445,6 @@ void CuTReader::m_registerToPoller()
     CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
     polling_service->registerAction(d->cumbia_t, d->tsrc, d->period, this);
-    d->refresh_mode = PolledRefresh; // update refresh mode
 }
 
 void CuTReader::m_unregisterFromPoller()

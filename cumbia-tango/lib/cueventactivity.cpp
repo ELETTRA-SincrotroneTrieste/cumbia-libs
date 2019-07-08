@@ -74,9 +74,10 @@ int CuEventActivity::getType() const
  *
  * \note the body of this method is currently empty
  */
-void CuEventActivity::event(CuActivityEvent *e)
-{
-
+void CuEventActivity::event(CuActivityEvent *e) {
+    if(e->getType() == CuActivityEvent::Cu_Data) {
+        publishResult(static_cast<CuDataEvent *>(e)->getData());
+    }
 }
 
 /** \brief returns true if the passed token's *src* and *activity* values matche this activity token's
