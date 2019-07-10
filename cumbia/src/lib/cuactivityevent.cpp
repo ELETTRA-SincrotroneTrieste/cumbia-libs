@@ -46,7 +46,19 @@ int CuTimeoutChangeEvent::getTimeout() const
 /*! \brief returns CuActivityEvent::TimeoutChange
  * @return CuActivityEvent::TimeoutChange
  */
-CuActivityEvent::Type CuExecuteEvent::getType() const
-{
+CuActivityEvent::Type CuExecuteEvent::getType() const {
     return CuActivityEvent::Execute;
+}
+
+CuDataEvent::CuDataEvent(const CuData &errdat) {
+    m_data = errdat;
+}
+
+CuActivityEvent::Type CuDataEvent::getType() const
+{
+    return CuActivityEvent::Cu_Data;
+}
+
+CuData CuDataEvent::getData() const {
+    return m_data;
 }

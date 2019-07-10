@@ -26,6 +26,7 @@ public:
                 Resume, ///< CuResumeEvent: resume a thread's paused timer
                 TimeoutChange, ///< CuTimeoutChangeEvent: change thread's timer period
                 Execute, ///< CuExecuteEvent: trigger a call to CuActivity::execute
+                Cu_Data,
                 User = 100, ///< starting value for user defined events
                 MaxUser = 2048 ///< maximum value for user defined events
               };
@@ -98,6 +99,21 @@ public:
 
 private:
     int m_timeout;
+};
+
+/*! \brief An event that can be used to forward data through Cumbia::postEvent
+ *
+ */
+class CuDataEvent : public CuActivityEvent {
+public:
+    CuDataEvent(const CuData& errdat);
+
+    CuActivityEvent::Type getType() const;
+
+    CuData getData() const;
+
+private:
+    CuData m_data;
 };
 
 
