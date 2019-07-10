@@ -97,7 +97,7 @@ void CuTimer::pause()
 void CuTimer::resume()
 {
     std::unique_lock<std::mutex> lock(m_mutex);
-    pbblue("CuTimer.resume");
+    pbblue("CuTimer.resume: timeout %ld", m_timeout);
     m_pause = false;
     if(!m_quit) /* thread still running */
         m_wait.notify_one();
