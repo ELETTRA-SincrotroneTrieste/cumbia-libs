@@ -503,6 +503,7 @@ for x in "${meson_p[@]}" ; do
                 if [ -d builddir ]; then
                     rm -rf builddir
                 fi
+                mkdir builddir
 		meson builddir
 	fi
 
