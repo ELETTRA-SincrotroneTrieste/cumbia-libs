@@ -18,6 +18,9 @@
 #include <cuservices.h>
 #include <qulogimpl.h>
 #include <quanimation.h>
+#include <qustringlist.h>
+#include <quvector.h>
+#include <qustring.h>
 
 /** @private */
 class QuComboBoxPrivate
@@ -174,18 +177,17 @@ void QuComboBox::m_configure(const CuData& da)
         QString description, unit, label;
         CuVariant items;
 
-        unit = QString::fromStdString(da["display_unit"].toString());
-        label = QString::fromStdString(da["label"].toString());
-        description = QString::fromStdString(da["description"].toString());
+        unit = QuString(da, "display_unit");
+        label = QuString(da, "label");
+        description = QuString(da, "description");
 
         setProperty("description", description);
         setProperty("unit", unit);
 
-        if(da.containsKey("values")) {
-            const std::vector<std::string> labels = da["values"].toStringVector();
-            for(size_t i = 0; i < labels.size(); i++)
-                insertItem(static_cast<int>(i), QString::fromStdString(labels[i]));
-        }
+        // QuStringList will be nonempty only if the "values" key is found (and nonempty)
+        foreach(QString s, QuStringList(da, "values"))
+           insertItem(count(), s);
+
 
         // initialise the object with the "write" value (also called "set point"), if available:
         //
@@ -201,14 +203,15 @@ void QuComboBox::m_configure(const CuData& da)
             else {
                 std::string as_s = da["w_value"].toString(&ok);
                 if(ok) {
-                    index = findText(QString::fromStdString(as_s));
+                    index = findText(QuString(as_s));
                     if(index > -1)
                         setCurrentIndex(index);
                 }
             }
         }
 
-        QString toolTip = QString::fromStdString(da["msg"].toString()) + "\n";
+        QuString toolTip(da, "msg");
+        toolTip.append("\n");
         if(!label.isEmpty()) toolTip += label + " ";
         if(!unit.isEmpty()) toolTip += "[" + unit + "] ";
         if(!description.isEmpty()) toolTip += "\n" + description;
@@ -222,7 +225,7 @@ void QuComboBox::m_configure(const CuData& da)
         d->configured = true;
     }
     else { // !ok
-        setToolTip(da["msg"].toString().c_str());
+        setToolTip(QuString(da, "msg"));
     }
 }
 

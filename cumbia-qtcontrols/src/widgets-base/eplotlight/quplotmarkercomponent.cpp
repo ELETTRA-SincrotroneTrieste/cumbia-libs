@@ -12,7 +12,7 @@ void Arrow::draw(QPainter *painter, const QwtScaleMap &xMap, const QwtScaleMap &
 {
     //	qDebug() << begin << end;
     double x1, x2, y1, y2;
-    QColor penColor(QColor(Qt::lightGray));
+    QColor penColor(Qt::lightGray);
     x1 = xMap.transform(begin.x());
     x2 = xMap.transform(end.x());
     y1 = yMap.transform(begin.y());
@@ -27,8 +27,7 @@ QuPlotMarkerComponent::QuPlotMarkerComponent(QuPlotBase *plot)
     init(plot);
 }
 
-QString QuPlotMarkerComponent::name() const
-{
+QString QuPlotMarkerComponent::name() const {
     return "marker";
 }
 
@@ -99,6 +98,19 @@ bool QuPlotMarkerComponent::update(const QuPlotBase *plot)
     return false;
 }
 
+/*! \brief returns the text currently displayed
+ *
+ * @return the marker label text
+ */
+QString QuPlotMarkerComponent::label() const
+{
+    return m_marker->label().text();
+}
+
+/*! \brief set the marker label as QwtText
+ *
+ * @param text the marker label text
+ */
 void QuPlotMarkerComponent::setLabel(const QwtText &text)
 {
     m_marker->setLabel(text);
@@ -205,13 +217,44 @@ int QuPlotMarkerComponent::currentClosestPoint() const
     return m_currentClosestPoint;
 }
 
+Arrow *QuPlotMarkerComponent::getArrow() const {
+    return m_arrow;
+}
+
+QwtPlotMarker *QuPlotMarkerComponent::qwtPlotMarker() const {
+    return m_marker;
+}
+
+QwtPlotPicker *QuPlotMarkerComponent::qwtPlotPicker() const {
+    return m_picker;
+}
+
+/*! \brief returns a string containing a textual representation of the point on the curve
+ *         the marker refers to
+ *
+ * @param plot the pointer to the plot owning the marker
+ * @param curve the curve to which the marker refers
+ * @param index the index of the sample on the curve that the marker refers to
+ *
+ * This method can be reimplemented on a custom QuPlotMarkerComponent in order to
+ * provide a text different from the default one.
+ *
+ * \par Default text
+ * The default text contains *x: [x value]\n[source name]:[source value]*
+ *
+ * \par Note
+ * If you need further customization for the component, reimplement the
+ * QuPlotMarkerComponent::update(const QuPlotBase *, QwtPlotCurve *, int )
+ * method to provide a different placement strategy, text alignment and so on.
+ *
+ */
 QString QuPlotMarkerComponent::markerText(const QuPlotBase *plot,
                                           const QwtPlotCurve *curve,
                                           const int index)
 {
     QString s;
     double y, x, y1;
-    if(curve != NULL)
+    if(curve != nullptr)
     {
         x = curve->data()->sample(index).x();
         y = curve->data()->sample(index).y();

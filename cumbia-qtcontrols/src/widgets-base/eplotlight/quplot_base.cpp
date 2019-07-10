@@ -309,6 +309,10 @@ QuPlotComponent *QuPlotBase::getComponent(const QString &name) const
     return nullptr;
 }
 
+void QuPlotBase::registerComponent(QuPlotComponent *c, const QString &name) {
+    d->components_map[name] = c;
+}
+
 /** \brief updates the marker, if visible, and returns true if it's visible, false otherwise
  *
  * @see refresh
@@ -320,6 +324,7 @@ bool QuPlotBase::updateMarker()
     if(marker->isVisible()) {
         return marker->update(this);
     }
+    return false;
 }
 
 /** \brief Updates the axes bounds for which autoscale is enabled.
@@ -886,20 +891,15 @@ void QuPlotBase::showMarker(const QPolygon &p)
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
     closestPoint = findClosestPoint(p.point(0), &closestCurve);
 
-    if (closestPoint != -1)
-    {
+    if (closestPoint != -1) {
         marker->show();
         updateLabel(closestCurve, closestPoint);
         x = closestCurve->data()->sample(closestPoint).x();
         y = closestCurve->data()->sample(closestPoint).y();
         emit plotClicked(QCursor::pos(), closestCurve, x, y, QPoint(transform(closestCurve->xAxis(), x),
                                                                     transform(closestCurve->yAxis(), y)));
-        qDebug() << mapFromGlobal(QCursor::pos()) << "title: " << closestCurve->title().text() << "x " << x <<
-                    y << "point on plot " <<
-                    QPoint(transform(closestCurve->xAxis(), x), transform(closestCurve->yAxis(), y));
     }
-    else
-    {
+    else {
         marker->hide();
     }
     replot();
@@ -908,14 +908,11 @@ void QuPlotBase::showMarker(const QPolygon &p)
 void QuPlotBase::updateLabel(QwtPlotCurve *closestCurve, int closestPointIdx)
 {
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
-
-    if(closestCurve && closestPointIdx > -1 && marker->isVisible())
-    {
+    if(closestCurve && closestPointIdx > -1 && marker->isVisible()) {
         marker->update(this, closestCurve, closestPointIdx);
         replot();
     }
 }
-
 
 void QuPlotBase::print() {
     static_cast<QuPlotContextMenuComponent *>(d->components_map["context_menu"])->print(this);

@@ -97,7 +97,7 @@ void QuWatcher::onUpdate(const CuData &data)
     std::string msg = data["msg"].toString();
     !ok ? d->context->getLinkStats()->addError(msg) : d->context->getLinkStats()->addOperation();
 
-    if(data["type"].toString() == "property") {
+    if(data.has("type", "property")) {
         configure(data); // Qumbiaizer virtual configure method
     }
     if(data.containsKey("value")) {

@@ -37,7 +37,9 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/qulabel.cpp \
     src/qupalette.cpp \
     src/cucontrolsutils.cpp \
-    src/qulogimpl.cpp \  
+    src/qulogimpl.cpp \
+    src/qustring.cpp \
+    src/qustringlist.cpp \
 #    src/cucharts/callout.cpp \
 #    src/cucharts/quplotcommon.cpp \
 #    src/cucharts/quspectrumplot.cpp \
@@ -97,7 +99,10 @@ HEADERS += cumbiaqtcontrols.h\
 #    src/cucharts/quplotcommon.h \
 #    src/cucharts/quspectrumplot.h \
 #    src/cucharts/quchartconfdialog.h \
+    src/qustring.h \
+    src/qustringlist.h \
     src/qutable.h \
+    src/quvector.h \
     src/widgets-base/string_delegate.h \
     src/widgets-base/number_delegate.h \
     src/widgets-base/int_delegate.h \

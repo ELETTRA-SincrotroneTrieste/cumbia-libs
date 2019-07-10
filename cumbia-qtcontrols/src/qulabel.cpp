@@ -3,6 +3,8 @@
 #include <cumacros.h>
 #include <cumbiapool.h>
 #include <cudata.h>
+#include <qustringlist.h>
+#include <qustring.h>
 #include <QContextMenuEvent>
 #include <QPainter>
 #include <QPaintEvent>
@@ -86,14 +88,12 @@ void QuLabel::m_configure(const CuData &da)
     // get colors and strings, if available
     QColor c;
     QString s;
-    std::vector<std::string> colors, labels;
-    if(da.containsKey("colors"))
-        colors = da["colors"].toStringVector();
-    if(da.containsKey("values"))
-        labels = da["values"].toStringVector();
-    for(size_t i = 0; i < qMax(colors.size(), labels.size()); i++) {
-        setEnumDisplay(static_cast<int>(i), i < labels.size() ? QString::fromStdString(labels[i]) : "-",
-                       i < colors.size() ? c = d->palette[QString::fromStdString(colors[i])] : c = QColor(Qt::white));
+    // colors and labels will be empty if "colors" and "labels" are not found
+    QuStringList colors(da, "colors"), labels(da, "values");
+
+    for(int i = 0; i < qMax(colors.size(), labels.size()); i++) {
+        setEnumDisplay(i, i < labels.size() ? labels[i] : "-",
+                       i < colors.size() ? c = d->palette[colors[i]] : c = QColor(Qt::white));
     }
 }
 

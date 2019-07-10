@@ -33,9 +33,11 @@ public:
 
     bool update(const QuPlotBase *plot);
 
+    QString label() const;
+
     void setLabel(const QwtText &text);
 
-    void update(const QuPlotBase* plot, QwtPlotCurve *closestC, int closestPointIdx);
+    virtual void update(const QuPlotBase* plot, QwtPlotCurve *closestC, int closestPointIdx);
 
     void hide();
 
@@ -46,6 +48,11 @@ public:
     QwtPlotCurve *currentClosestCurve() const;
 
     int currentClosestPoint() const;
+
+    Arrow* getArrow() const;
+    QwtPlotMarker *qwtPlotMarker() const;
+    QwtPlotPicker *qwtPlotPicker() const;
+
 
 private:
     void init(QuPlotBase *plot);
@@ -64,7 +71,7 @@ public:
 
 protected:
 
-    QString markerText(const QuPlotBase *plot, const QwtPlotCurve *curve, const int index);
+    virtual QString markerText(const QuPlotBase *plot, const QwtPlotCurve *curve, const int index);
 
     QSet<QwtPlotCurve *> intersectingCurves(const QuPlotBase *plot, const double x, const double y, const QwtPlotCurve *curve);
 };
