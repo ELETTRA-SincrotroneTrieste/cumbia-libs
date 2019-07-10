@@ -9,12 +9,14 @@
 - [What is the quickest way to read a Tango attribute in a cumbia application](#readatt)
 - [What's the quickest procedure to display a Tango *state* and possibly get the associated color?](#state)
 - [How did you know that the *res* CuData contained those very keys such as "value", "state_color", "timestamp_ms", and so on.. ?](#cudata_keys)
+- [How to quickly convert std::vector/std::string-based data in CuData to more Qt friendly QVector/QStringList/QStringList ?](#stdvector_string_to_qvector_qstringlist)
 - [A quick way to perform a command inout on a device](#commands)
 - [In QTango there used to be a widget ready to read and display a value. In cumbia there is not. How do I quickly adapt an existing Qt widget?](#cumbiawidget)
 - [How do I fetch specific Tango attribute properties to configure my custom cumbia widget?](#cumbiawidget_props)
 - [I either used QuWatcher or implemented CuDataListener on my custom graphical object. How do I configure it through the Tango database properties (setting maximum and minimum values, display unit and data format)?](#configure)
 - [How do I get a Tango device property?](#tangoprops)
 - [How to format a message from a Tango *Exception*?](#except)
+- [How to trigger an asynchronous read request to the Tango engine?](#read_request)
 - [How to migrate from QTango *TUtil::instance()->addLog()* to cumbia log dialog?](#migrate_log)
 - [After converting a QTango project to a cumbia project, I get errors on the ui/ui_filexxx.h concerning properties of widgets that I know are defined in the cumbia widget version as well, e.g. *tLabel->setFalseString(..)*] (#ui_h_errors)
 - [How to migrate QTango *Config::instance()->setStateColor* (and setStateString) to cumbia?] (#migrate_config_state_color)
@@ -164,6 +166,66 @@ from which you can infer that a code like the following can work:
     }
 
 ```
+
+## Q. How to quickly convert std::vector/std::string-based data in CuData to more Qt friendly QVector/QStringList/QStringList ?
+<a name="stdvector_string_to_qvector_qstringlist>
+
+## A.
+Normally, you should use QString::fromStdString and cycle through std::vector<std::string> to append elements to a QStringList. The same goes for std::vector, requiring QVector::fromStdVector.
+
+The *cumbia-qtcontrols* module helps providing three classes that extremely reduce the needed code.
+Have a look at QuString, QuStringList and QuVector classes documentation. They are rich in examples and you will be pleased by how easy the conversion from standard c++ library vectors and strings to Qt counterparts is made.
+
+See the following code snippets to see how necessary code shrinks as soon as you employ QuStringList
+
+#### Sample code 1: without QuStringList (example taken from *cumbia-qtcontrols --> qulabel.cpp, function QuLabel::m_configure*)
+```cpp
+    QColor c;
+    QString s;
+    std::vector<std::string> colors, labels;
+    colors = da["colors"].toStringVector();
+    labels = da["values"].toStringVector();
+    for(size_t i = 0; i < qMax(colors.size(), labels.size()); i++) {
+        setEnumDisplay(static_cast<int>(i), i < labels.size() ? QString::fromStdString(labels[i]) : "-",
+                       i < colors.size() ? c = d->palette[QString::fromStdString(colors[i])] : c = QColor(Qt::white));
+    }
+```
+
+#### Sample code 2: exploiting QuStringList  (same source file as above)
+```cpp
+  QColor c;
+  QString s;
+  // colors and labels will be empty if "colors" and "labels" are not found
+  QuStringList colors(da, "colors"), labels(da, "values");
+  for(int i = 0; i < qMax(colors.size(), labels.size()); i++) {
+        setEnumDisplay(i, i < labels.size() ? labels[i] : "-",  i < colors.size() ? c = d->palette[colors[i]] : c = QColor(Qt::white));
+  }
+```
+
+Much more concise, right?
+
+#### Sample code 3: without using QuVector
+```cpp
+  void Writer::vDataReady(const CuData &v) {
+      QVector<double> readData = QVector<double>::fromStdVector( v["value"].toDoubleVector())
+      // ...
+  }
+```
+
+#### Sample code 4: using QuVector
+
+```cpp
+void Writer::vDataReady(const CuData &v)
+ {
+     // if v.containsKey("value") and v["value"] is a vector
+     // qv will contain v["value"] converted to QVector
+     QVector<double> qv = QuVector<double>(v);
+}
+```
+As you can see from the piece of code above, QuVector *is* a QVector and so the former can be directly
+assigned to the latter.
+
+Please refer to the specific documentation for more details.
 
 ## Q.
 
@@ -492,6 +554,22 @@ catch(Tango::DevFailed &e)
     std::string serr = tw.strerror(e);
 }
 
+```
+
+<a name="read_request">
+### How to trigger an asynchronous read request to the Tango engine?
+
+An explicit *read request* can be sent to the Tango engine only when the *refresh mode is either polled or manual*.
+In the following example the read operation is sent through a *QuReader*'s *CuContext*; it is nevertheless
+possible to do the same with any other reader through its *context*.
+
+```cpp
+d_ptr->hwatcher = new QuWatcher(this, cumbia_ptr, tango_reader_factory);
+d_ptr->hwatcher->getContext()->setOptions(CuData("refresh_mode", CuTReader::Manual));
+d_ptr->hwatcher->setSource("my/awesome/cool/source");
+
+// later...
+d_ptr->hwatcher->getContext()->sendData(CuData("read", ""));
 ```
 
 <a name="migrate_log" />
