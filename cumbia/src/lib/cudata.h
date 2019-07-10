@@ -55,6 +55,8 @@ public:
 
     virtual CuData &operator =(CuData &&other);
 
+    CuData& set(const std::string& key, const CuVariant& value);
+
     size_t size() const;
 
     CuVariant value() const;

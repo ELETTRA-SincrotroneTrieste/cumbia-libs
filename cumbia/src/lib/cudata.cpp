@@ -115,6 +115,12 @@ CuData &CuData::operator=(CuData &&other)
     return *this;
 }
 
+CuData &CuData::set(const std::string &key, const CuVariant &value)
+{
+    d->datamap[key] = value;
+    return *this;
+}
+
 /** \brief returns the number of key-value pairs stored
  *
  * @return the number of key-value pairs stored within this object
