@@ -3,13 +3,13 @@
 class CuTangoWorldConfigPrivate
 {
 public:
-    std::unordered_map<Tango::DevState, std::string> stateStrings;
-    std::unordered_map<Tango::DevState, std::string>  stateColors;
+    std::map<Tango::DevState, std::string> stateStrings;
+    std::map<Tango::DevState, std::string>  stateColors;
 
-    std::unordered_map<Tango::AttrQuality, std::string> qualityStrings;
-    std::unordered_map<Tango::AttrQuality, std::string> qualityColors;
+    std::map<Tango::AttrQuality, std::string> qualityStrings;
+    std::map<Tango::AttrQuality, std::string> qualityColors;
 
-    std::unordered_map<bool, std::string> successColors;
+    std::map<bool, std::string> successColors;
 
     /* non standard device servers with non standard "values" attribute property name */
     std::string valueAttrPropName;
@@ -116,22 +116,22 @@ std::string CuTangoWorldConfig::qualityString(Tango::AttrQuality q) const
     return "UNDEFINED QUALITY";
 }
 
-std::unordered_map<Tango::DevState, string> CuTangoWorldConfig::stateStrings()
+std::map<Tango::DevState, string> CuTangoWorldConfig::stateStrings()
 {
     return d->stateStrings;
 }
 
-std::unordered_map<Tango::DevState, string> CuTangoWorldConfig::stateColorNames()
+std::map<Tango::DevState, string> CuTangoWorldConfig::stateColorNames()
 {
     return d->stateColors;
 }
 
-std::unordered_map<Tango::AttrQuality, string> CuTangoWorldConfig::qualityStrings()
+std::map<Tango::AttrQuality, string> CuTangoWorldConfig::qualityStrings()
 {
     return d->qualityStrings;
 }
 
-std::unordered_map<Tango::AttrQuality, string> CuTangoWorldConfig::qualityColorNames()
+std::map<Tango::AttrQuality, string> CuTangoWorldConfig::qualityColorNames()
 {
     return d->qualityColors;
 }
