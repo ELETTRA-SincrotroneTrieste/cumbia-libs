@@ -1,0 +1,42 @@
+This is manual_refresh README file.
+
+This demo shows two widgets connected to the same source, refreshed in __manual mode__
+
+
+DEPENDENCIES:
+
+none
+
+Tango devices used
+------------------
+TANGO HOST:
+
+export TANGO_HOST=hokuto:20000
+
+SOURCES:
+test/device/1/double_scalar
+sys/tg_test/1/double_scalar
+
+
+
+Building
+--------
+
+qmake 
+make
+                                                                                                                                
+                                                                                                                                
+Main customer                                                                                                                   
+-------------
+
+
+Errors & Troubleshooting
+------------------------
+If you experience problems, please contact:
+
+Giacomo  <giacomo.strangolino@elettra.eu>
+
+Thank you.
+
+Sincrotrone Trieste s.c.p.a - ELETTRA Laboratory - Controls Group
+
