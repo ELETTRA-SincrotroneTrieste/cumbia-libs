@@ -1213,17 +1213,22 @@ void QuCircularGaugeBase::drawGauge(const QRectF &rect, int startAngle, int span
             mapTo(g_config->low_e, &aspan);
             mapTo(g_config->high_e, &dspan);
             pen.setColor(g_config->errorColor);
-            p.drawArc(ra, -startAngle * 16, -(aspan-startAngle) * 16); // starts from 3 o'clock, while our startAngle
+            p.setPen(pen);
+            p.drawArc(ra, -startAngle * 16, -(aspan-startAngle) * 16); // 0 degrees is at 3 o'clock
             p.drawArc(ra, -dspan * 16, -16 * (startAngle + span - dspan));
         }
         bool warning_ok = g_config->low_w < g_config->high_w && g_config->low_w >= g_config->min && g_config->high_w <= g_config->max;
         if( (warning_ok && error_ok && g_config->low_w > g_config->low_e && g_config->high_w < g_config->high_e) ||
                 (warning_ok && !error_ok) ) {
             pen.setColor(g_config->warningColor);
+            p.setPen(pen);
             mapTo(g_config->low_w, &bspan);
             mapTo(g_config->high_w, &cspan);
             p.drawArc(ra, -aspan * 16, -16 * (bspan - aspan));
             p.drawArc(ra, -cspan * 16, -16 * (dspan - cspan)); // starts from 3 o'clock, while our startAngle
+        }
+        else {
+
         }
         pen.setColor(g_config->normalColor);
     }
