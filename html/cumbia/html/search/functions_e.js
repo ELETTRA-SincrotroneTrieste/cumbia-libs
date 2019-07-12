@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['set',['set',['../classCuDataQuality.html#afa51c66be7fb25543d2009764995eedd',1,'CuDataQuality::set(int t)'],['../classCuDataQuality.html#afaf24f63256f42e35fcda603593c6223',1,'CuDataQuality::set(Type t)']]],
+  ['set',['set',['../classCuData.html#a9b30258d77c405bf17466134135145b7',1,'CuData::set()'],['../classCuDataQuality.html#afa51c66be7fb25543d2009764995eedd',1,'CuDataQuality::set(int t)'],['../classCuDataQuality.html#afaf24f63256f42e35fcda603593c6223',1,'CuDataQuality::set(Type t)']]],
   ['setactivitymanager',['setActivityManager',['../classCuActivity.html#a8b1a222feac7c2b75ccacb1bbc7da511',1,'CuActivity']]],
   ['setactivityperiod',['setActivityPeriod',['../classCumbia.html#aeb73555c75846bd6e948fceb9cf5053d',1,'Cumbia']]],
   ['setcueventlooplistener',['setCuEventLoopListener',['../classCuEventLoopService.html#ae54dbd5abef0be74676cc3aaceb44d9a',1,'CuEventLoopService']]],

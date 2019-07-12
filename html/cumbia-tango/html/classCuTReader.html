@@ -67,12 +67,12 @@ Inheritance diagram for CuTReader:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:aa7fdfba3098f8456948f8a4f4db96848"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848">RefreshMode</a> { <br />
-&#160;&#160;<a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848aa0beab070134a15c077018c55b55786b">PolledRefresh</a> = 0, 
-<a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848abef6d9cb08775329b86f20ff0e2a4172">ChangeEventRefresh</a>, 
-<a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848a67a54cca3bd69287c31bd8c83aeae076">ArchiveEventRefresh</a>, 
-<a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848a46164061204878bc667be129d86192b7">PeriodicEventRefresh</a>, 
+&#160;&#160;<a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848aa0beab070134a15c077018c55b55786b">PolledRefresh</a> = 0x01, 
+<a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848abef6d9cb08775329b86f20ff0e2a4172">ChangeEventRefresh</a> =0x02, 
+<a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848a67a54cca3bd69287c31bd8c83aeae076">ArchiveEventRefresh</a> =0x04, 
+<a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848a46164061204878bc667be129d86192b7">PeriodicEventRefresh</a> =0x08, 
 <br />
-&#160;&#160;<a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848ac4f8eb91cf33f91e054dc525f073d246">Manual</a>
+&#160;&#160;<a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848ac4f8eb91cf33f91e054dc525f073d246">Manual</a> =0x10
 <br />
  }</td></tr>
 <tr class="memdesc:aa7fdfba3098f8456948f8a4f4db96848"><td class="mdescLeft">&#160;</td><td class="mdescRight">The reader refresh mode.  <a href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848">More...</a><br /></td></tr>
@@ -118,9 +118,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0fb59e260adfcea9cd094623d5a45e90"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#a0fb59e260adfcea9cd094623d5a45e90">getData</a> (CuData &amp;inout) const</td></tr>
 <tr class="memdesc:a0fb59e260adfcea9cd094623d5a45e90"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get parameters from the reader.  <a href="#a0fb59e260adfcea9cd094623d5a45e90">More...</a><br /></td></tr>
 <tr class="separator:a0fb59e260adfcea9cd094623d5a45e90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b9a3f08371d35a5c86e85e57d57ea10"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#a9b9a3f08371d35a5c86e85e57d57ea10">setRefreshMode</a> (<a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848">RefreshMode</a> rm)</td></tr>
-<tr class="memdesc:a9b9a3f08371d35a5c86e85e57d57ea10"><td class="mdescLeft">&#160;</td><td class="mdescRight">set or change the reader's refresh mode  <a href="#a9b9a3f08371d35a5c86e85e57d57ea10">More...</a><br /></td></tr>
-<tr class="separator:a9b9a3f08371d35a5c86e85e57d57ea10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33fed2857754e3dbfc728fe9a23b35e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#a33fed2857754e3dbfc728fe9a23b35e2">setRefreshMode</a> (<a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848">RefreshMode</a> rm, int <a class="el" href="classCuTReader.html#ae426461b189140ac0227efdc2e31a932">period</a>=-1)</td></tr>
+<tr class="memdesc:a33fed2857754e3dbfc728fe9a23b35e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">set or change the reader's refresh mode  <a href="#a33fed2857754e3dbfc728fe9a23b35e2">More...</a><br /></td></tr>
+<tr class="separator:a33fed2857754e3dbfc728fe9a23b35e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1c2c0d8e8be6c4562f3336e0fc86d4d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#aa1c2c0d8e8be6c4562f3336e0fc86d4d">refreshModeStr</a> () const</td></tr>
 <tr class="separator:aa1c2c0d8e8be6c4562f3336e0fc86d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d1cb1c1406f67fc6c61b637f759b482"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848">RefreshMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#a7d1cb1c1406f67fc6c61b637f759b482">refreshMode</a> () const</td></tr>
@@ -430,6 +430,8 @@ Public Member Functions</h2></td></tr>
 <li>"type" --&gt; a constant string: "reader" </li>
 </ul>
 
+<p class="reference">Referenced by <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822">sendData()</a>.</p>
+
 </div>
 </div>
 <a id="abab56f2fa5c3711ceec6d52907875b37"></a>
@@ -493,7 +495,7 @@ Public Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848a67a54cca3bd69287c31bd8c83aeae076">ArchiveEventRefresh</a>, <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848abef6d9cb08775329b86f20ff0e2a4172">ChangeEventRefresh</a>, and <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848a46164061204878bc667be129d86192b7">PeriodicEventRefresh</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCuTReader.html#a9b9a3f08371d35a5c86e85e57d57ea10">setRefreshMode()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822">sendData()</a>, and <a class="el" href="classCuTReader.html#a33fed2857754e3dbfc728fe9a23b35e2">setRefreshMode()</a>.</p>
 
 </div>
 </div>
@@ -558,7 +560,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classCuPollingService.html#ac9e338ca5b1b36884ff1656b616dd57a">CuPollingService::actionRegistered()</a>, <a class="el" href="classCuActionFactoryService.html#ad2bb6770622dc3dc24a5846f818e8bdcafb23f61f823444e6df483206eb9b7e11">CuActionFactoryService::CuActionFactoryServiceType</a>, <a class="el" href="classCuPollingService.html#a6f3a3c6af39fbe1c15c6805dfbadde01a0fbe229fee084efbb94bf9641d57332b">CuPollingService::CuPollingServiceType</a>, <a class="el" href="classCuTReader.html#abab56f2fa5c3711ceec6d52907875b37">getType()</a>, and <a class="el" href="classCuActionFactoryService.html#a9d5825629c4a5868469a14267d9af8ac">CuActionFactoryService::unregisterAction()</a>.</p>
+<p class="reference">References <a class="el" href="classCuPollingService.html#ac9e338ca5b1b36884ff1656b616dd57a">CuPollingService::actionRegistered()</a>, <a class="el" href="classCuActionFactoryService.html#ad2bb6770622dc3dc24a5846f818e8bdcafb23f61f823444e6df483206eb9b7e11">CuActionFactoryService::CuActionFactoryServiceType</a>, <a class="el" href="classCuPollingService.html#a6f3a3c6af39fbe1c15c6805dfbadde01a0fbe229fee084efbb94bf9641d57332b">CuPollingService::CuPollingServiceType</a>, <a class="el" href="classCuTReader.html#abab56f2fa5c3711ceec6d52907875b37">getType()</a>, <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848aa0beab070134a15c077018c55b55786b">PolledRefresh</a>, and <a class="el" href="classCuActionFactoryService.html#a9d5825629c4a5868469a14267d9af8ac">CuActionFactoryService::unregisterAction()</a>.</p>
 
 </div>
 </div>
@@ -595,7 +597,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822">sendData()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822">sendData()</a>, and <a class="el" href="classCuTReader.html#a33fed2857754e3dbfc728fe9a23b35e2">setRefreshMode()</a>.</p>
 
 </div>
 </div>
@@ -633,7 +635,7 @@ Public Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848a67a54cca3bd69287c31bd8c83aeae076">ArchiveEventRefresh</a>, <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848abef6d9cb08775329b86f20ff0e2a4172">ChangeEventRefresh</a>, <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848ac4f8eb91cf33f91e054dc525f073d246">Manual</a>, <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848a46164061204878bc667be129d86192b7">PeriodicEventRefresh</a>, and <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848aa0beab070134a15c077018c55b55786b">PolledRefresh</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCuTReader.html#a0fb59e260adfcea9cd094623d5a45e90">getData()</a>, and <a class="el" href="classCuTReader.html#a9b9a3f08371d35a5c86e85e57d57ea10">setRefreshMode()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuTReader.html#a0fb59e260adfcea9cd094623d5a45e90">getData()</a>.</p>
 
 </div>
 </div>
@@ -715,7 +717,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Implements <a class="el" href="classCuTangoActionI.html#a086b8d5ad807f931e1a48583ce3aba5f">CuTangoActionI</a>.</p>
 
-<p class="reference">References <a class="el" href="classCuPollingService.html#a6f3a3c6af39fbe1c15c6805dfbadde01a0fbe229fee084efbb94bf9641d57332b">CuPollingService::CuPollingServiceType</a>, <a class="el" href="classCuPollingService.html#aa9e209dbe73297e2df06a80413c9cf46">CuPollingService::getPoller()</a>, <a class="el" href="classCuTReader.html#ae426461b189140ac0227efdc2e31a932">period()</a>, <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848aa0beab070134a15c077018c55b55786b">PolledRefresh</a>, and <a class="el" href="classCuTReader.html#a9b9a3f08371d35a5c86e85e57d57ea10">setRefreshMode()</a>.</p>
+<p class="reference">References <a class="el" href="classCuPollingActivity.html#a00c85b4b2fa32a723b8812d5f872a6d6a0986c7e1af20e80e899b746f61e8ff9f">CuPollingActivity::CuPollingActivityType</a>, <a class="el" href="classCuPollingService.html#a6f3a3c6af39fbe1c15c6805dfbadde01a0fbe229fee084efbb94bf9641d57332b">CuPollingService::CuPollingServiceType</a>, <a class="el" href="classCuPollingService.html#aa9e209dbe73297e2df06a80413c9cf46">CuPollingService::getPoller()</a>, <a class="el" href="classCuTReader.html#ac028bcf1c27c3c7d4c2847bfa409c10f">getToken()</a>, <a class="el" href="classCuTReader.html#afa9248f271e4945ea53f508d32ce4fc5">isEventRefresh()</a>, <a class="el" href="classCuTReader.html#ae426461b189140ac0227efdc2e31a932">period()</a>, <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848aa0beab070134a15c077018c55b55786b">PolledRefresh</a>, and <a class="el" href="classCuTReader.html#a33fed2857754e3dbfc728fe9a23b35e2">setRefreshMode()</a>.</p>
 
 </div>
 </div>
@@ -739,8 +741,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a9b9a3f08371d35a5c86e85e57d57ea10"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b9a3f08371d35a5c86e85e57d57ea10">&#9670;&nbsp;</a></span>setRefreshMode()</h2>
+<a id="a33fed2857754e3dbfc728fe9a23b35e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33fed2857754e3dbfc728fe9a23b35e2">&#9670;&nbsp;</a></span>setRefreshMode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -749,8 +751,18 @@ Public Member Functions</h2></td></tr>
           <td class="memname">void CuTReader::setRefreshMode </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848">CuTReader::RefreshMode</a>&#160;</td>
-          <td class="paramname"><em>rm</em></td><td>)</td>
+          <td class="paramname"><em>rm</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>period</em> = <code>-1</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -764,7 +776,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="reference">References <a class="el" href="classCuPollingService.html#ac9e338ca5b1b36884ff1656b616dd57a">CuPollingService::actionRegistered()</a>, <a class="el" href="classCuPollingService.html#a6f3a3c6af39fbe1c15c6805dfbadde01a0fbe229fee084efbb94bf9641d57332b">CuPollingService::CuPollingServiceType</a>, <a class="el" href="classCuTReader.html#afa9248f271e4945ea53f508d32ce4fc5">isEventRefresh()</a>, <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848ac4f8eb91cf33f91e054dc525f073d246">Manual</a>, <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848aa0beab070134a15c077018c55b55786b">PolledRefresh</a>, and <a class="el" href="classCuTReader.html#aa1c2c0d8e8be6c4562f3336e0fc86d4d">refreshModeStr()</a>.</p>
+<p class="reference">References <a class="el" href="classCuPollingService.html#ac9e338ca5b1b36884ff1656b616dd57a">CuPollingService::actionRegistered()</a>, <a class="el" href="classCuPollingService.html#a6f3a3c6af39fbe1c15c6805dfbadde01a0fbe229fee084efbb94bf9641d57332b">CuPollingService::CuPollingServiceType</a>, <a class="el" href="classCuTReader.html#afa9248f271e4945ea53f508d32ce4fc5">isEventRefresh()</a>, <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848ac4f8eb91cf33f91e054dc525f073d246">Manual</a>, <a class="el" href="classCuTReader.html#ae426461b189140ac0227efdc2e31a932">period()</a>, and <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848aa0beab070134a15c077018c55b55786b">PolledRefresh</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classCuTangoReaderFactory.html#ae660a4479b4d039a58f825ea41c69c34">CuTangoReaderFactory::create()</a>, and <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822">sendData()</a>.</p>
 
@@ -801,11 +813,11 @@ Public Member Functions</h2></td></tr>
 <li>instantiates and registers (i.e. starts) either a <a class="el" href="classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int...">CuEventActivity</a> or a <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity">CuPollingActivity</a>, according to the RefreshMode value. If the <a class="el" href="classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int...">CuEventActivity</a> fails subscribing to the <a class="el" href="namespaceTango.html">Tango</a> event system, it is replaced by <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity">CuPollingActivity</a> (in <a class="el" href="classCuTReader.html#a66c0cdbba00a83b339c07770c4626295">CuTReader::onResult</a>)</li>
 </ul>
 <dl class="section note"><dt>Note</dt><dd>start is usually called by <a class="el" href="classCumbiaTango.html#a76e8f317b5855f86d2d46957a19d899e">CumbiaTango::addAction</a>, which in turn is called by qumbia-tango-controls CuTControlsReader::setSource</dd></dl>
-<p>If the refresh mode is Manual, a <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity">CuPollingActivity</a> is started and CumbiaTango::pauseActivity is called immediately. To trigger a read in Manual mode, use sendData with a CuData containing a key named "*read*". See sendData for further details. </p>
+<p>If the refresh mode is Manual, a <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity">CuPollingActivity</a> is started, with a very long period. To trigger a read in Manual mode, use sendData with a CuData containing a key named "*read*". See sendData for further details. </p>
 
 <p>Implements <a class="el" href="classCuTangoActionI.html#a641aee21ef5e7a185271df3eead88172">CuTangoActionI</a>.</p>
 
-<p class="reference">References <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848abef6d9cb08775329b86f20ff0e2a4172">ChangeEventRefresh</a>, and <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848ac4f8eb91cf33f91e054dc525f073d246">Manual</a>.</p>
+<p class="reference">References <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848abef6d9cb08775329b86f20ff0e2a4172">ChangeEventRefresh</a>.</p>
 
 </div>
 </div>
@@ -853,7 +865,7 @@ See also Cumbia::unregisterActivity </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 3 2019 15:18:59 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jul 12 2019 12:17:26 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

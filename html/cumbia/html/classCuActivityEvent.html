@@ -105,11 +105,12 @@ Inheritance diagram for CuActivityEvent:</div>
 <div class="dyncontent">
 <div class="center"><img src="classCuActivityEvent__inherit__graph.png" border="0" usemap="#CuActivityEvent_inherit__map" alt="Inheritance graph"/></div>
 <map name="CuActivityEvent_inherit__map" id="CuActivityEvent_inherit__map">
-<area shape="rect"  title="Generic event to pass data to an activity." alt="" coords="215,5,331,32"/>
-<area shape="rect"  href="classCuExecuteEvent.html" title="triggers a call to CuActivity::execute" alt="" coords="5,80,125,107"/>
-<area shape="rect"  href="classCuPauseEvent.html" title="event to pause an activity&#39;s timer" alt="" coords="149,80,259,107"/>
-<area shape="rect"  href="classCuResumeEvent.html" title="event to resume an activity&#39;s timer" alt="" coords="283,80,403,107"/>
-<area shape="rect"  href="classCuTimeoutChangeEvent.html" title="this event changes the timeout of the activity&#39;s thread timer" alt="" coords="427,80,589,107"/>
+<area shape="rect"  title="Generic event to pass data to an activity." alt="" coords="269,5,385,32"/>
+<area shape="rect"  href="classCuDataEvent.html" title="An event that can be used to forward data through Cumbia::postEvent." alt="" coords="5,80,104,107"/>
+<area shape="rect"  href="classCuExecuteEvent.html" title="triggers a call to CuActivity::execute" alt="" coords="128,80,248,107"/>
+<area shape="rect"  href="classCuPauseEvent.html" title="event to pause an activity&#39;s timer" alt="" coords="272,80,381,107"/>
+<area shape="rect"  href="classCuResumeEvent.html" title="event to resume an activity&#39;s timer" alt="" coords="405,80,525,107"/>
+<area shape="rect"  href="classCuTimeoutChangeEvent.html" title="this event changes the timeout of the activity&#39;s thread timer" alt="" coords="549,80,712,107"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -121,7 +122,8 @@ Public Types</h2></td></tr>
 <a class="el" href="classCuActivityEvent.html#a3727016a1c613763a0936d426d80301aa71578c4e186f954e5f935b65910f2530">TimeoutChange</a>, 
 <a class="el" href="classCuActivityEvent.html#a3727016a1c613763a0936d426d80301aaa96cfb0fa5fffd89a82090728388cfe4">Execute</a>, 
 <br />
-&#160;&#160;<a class="el" href="classCuActivityEvent.html#a3727016a1c613763a0936d426d80301aa16e8985fc113cb8363e162706d3cc5e0">User</a> = 100, 
+&#160;&#160;<a class="el" href="classCuActivityEvent.html#a3727016a1c613763a0936d426d80301aaeacc488e72e12ebf2ff960c044b02775">Cu_Data</a>, 
+<a class="el" href="classCuActivityEvent.html#a3727016a1c613763a0936d426d80301aa16e8985fc113cb8363e162706d3cc5e0">User</a> = 100, 
 <a class="el" href="classCuActivityEvent.html#a3727016a1c613763a0936d426d80301aa36acc626ec3d6b87e6022658c123d1fb">MaxUser</a> = 2048
 <br />
  }</td></tr>
@@ -169,6 +171,7 @@ Public Member Functions</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="a3727016a1c613763a0936d426d80301aaa96cfb0fa5fffd89a82090728388cfe4"></a>Execute&#160;</td><td class="fielddoc"><p><a class="el" href="classCuExecuteEvent.html" title="triggers a call to CuActivity::execute">CuExecuteEvent</a>: trigger a call to <a class="el" href="classCuActivity.html#a3823ea2e31f89c377760859f399c26f0">CuActivity::execute</a>. </p>
 </td></tr>
+<tr><td class="fieldname"><a id="a3727016a1c613763a0936d426d80301aaeacc488e72e12ebf2ff960c044b02775"></a>Cu_Data&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a3727016a1c613763a0936d426d80301aa16e8985fc113cb8363e162706d3cc5e0"></a>User&#160;</td><td class="fielddoc"><p>starting value for user defined events </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a3727016a1c613763a0936d426d80301aa36acc626ec3d6b87e6022658c123d1fb"></a>MaxUser&#160;</td><td class="fielddoc"><p>maximum value for user defined events </p>
@@ -233,7 +236,7 @@ Public Member Functions</h2></td></tr>
 <p>returns the type of the event </p>
 <dl class="section return"><dt>Returns</dt><dd>a value from the <a class="el" href="classCuActivityEvent.html#a3727016a1c613763a0936d426d80301a">CuActivityEvent::Type</a> enum, or a user defined one </dd></dl>
 
-<p>Implemented in <a class="el" href="classCuTimeoutChangeEvent.html#a80303ee0ff79b36622f43a3856ffc028">CuTimeoutChangeEvent</a>, <a class="el" href="classCuExecuteEvent.html#aaa024ec3056b9cda8965f2dcaa3ec252">CuExecuteEvent</a>, <a class="el" href="classCuResumeEvent.html#a3b868e1da3c0f601670a2d22ca2f5888">CuResumeEvent</a>, and <a class="el" href="classCuPauseEvent.html#a33ae2dd679e40a69229e239e73c119ed">CuPauseEvent</a>.</p>
+<p>Implemented in <a class="el" href="classCuDataEvent.html#a0e833bb3a7e2bf9d4bae5f31e82753a1">CuDataEvent</a>, <a class="el" href="classCuTimeoutChangeEvent.html#a80303ee0ff79b36622f43a3856ffc028">CuTimeoutChangeEvent</a>, <a class="el" href="classCuExecuteEvent.html#aaa024ec3056b9cda8965f2dcaa3ec252">CuExecuteEvent</a>, <a class="el" href="classCuResumeEvent.html#a3b868e1da3c0f601670a2d22ca2f5888">CuResumeEvent</a>, and <a class="el" href="classCuPauseEvent.html#a33ae2dd679e40a69229e239e73c119ed">CuPauseEvent</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classCuContinuousActivity.html#ab6a20df06e8df1395dba6454aa35bc54">CuContinuousActivity::event()</a>, and <a class="el" href="classCuThread.html#a04430b04bde54f9575ad5f6e56172a23">CuThread::run()</a>.</p>
 
@@ -248,7 +251,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuActivityEvent.html">CuActivityEvent</a></li>
-    <li class="footer">Generated on Wed Jul 3 2019 15:18:56 for cumbia by
+    <li class="footer">Generated on Fri Jul 12 2019 12:17:22 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.15 </li>
   </ul>

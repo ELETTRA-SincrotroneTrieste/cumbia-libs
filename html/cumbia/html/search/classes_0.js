@@ -7,6 +7,7 @@ var searchData=
   ['cuconlogimpl',['CuConLogImpl',['../classCuConLogImpl.html',1,'']]],
   ['cucontinuousactivity',['CuContinuousActivity',['../classCuContinuousActivity.html',1,'']]],
   ['cudata',['CuData',['../classCuData.html',1,'']]],
+  ['cudataevent',['CuDataEvent',['../classCuDataEvent.html',1,'']]],
   ['cudatalistener',['CuDataListener',['../classCuDataListener.html',1,'']]],
   ['cudataquality',['CuDataQuality',['../classCuDataQuality.html',1,'']]],
   ['cueventi',['CuEventI',['../classCuEventI.html',1,'']]],

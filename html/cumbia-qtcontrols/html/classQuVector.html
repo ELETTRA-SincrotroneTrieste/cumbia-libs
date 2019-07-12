@@ -78,13 +78,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af695c6d7911ae354464546698bbbe1c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class T&gt;<br />
+<div class="textblock"><h3>template&lt;typename T&gt;<br />
 class QuVector&lt; T &gt;</h3>
 
 <p>convenience class that can be used to quickly convert a std::vector of a given type into a QVector of the <em>same type</em> </p>
 <p><a class="el" href="classQuVector.html" title="convenience class that can be used to quickly convert a std::vector of a given type into a QVector of...">QuVector</a> <em>is a QVector</em> and can be used to convert immediately <em>std::vector</em> based data into Qt QVector. Tedious and repetitive code writing is made unnecessary thanks to the versatile class constructors.</p>
 <dl class="section user"><dt>Example usage 1</dt><dd>Using <a class="el" href="classQuVector.html" title="convenience class that can be used to quickly convert a std::vector of a given type into a QVector of...">QuVector</a> you will be able to write</dd></dl>
-<div class="fragment"><div class="line"><span class="keywordtype">void</span> Writer::hDataReady(<span class="keyword">const</span> CuData&amp; v)</div><div class="line">{</div><div class="line">    QVector&lt;double&gt; readData = <a class="code" href="classQuVector.html">QuVector&lt;double&gt;</a>(v[<span class="stringliteral">&quot;value&quot;</span>].toDoubleVector());</div><div class="line">    <span class="comment">// ...</span></div><div class="line">}</div></div><!-- fragment --><p>instead of </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> Writer::vDataReady(<span class="keyword">const</span> CuData &amp;v)</div><div class="line">{</div><div class="line">    QVector&lt;double&gt; readData = QVector&lt;double&gt;::fromStdVector( v[<span class="stringliteral">&quot;value&quot;</span>].toDoubleVector())</div><div class="line">    <span class="comment">// ...</span></div><div class="line">}</div></div><!-- fragment --><dl class="section user"><dt>Example usage 2</dt><dd>This is a super quick example that builds a QVector directly from CuData Hypothesis: data contains the <em>value</em> key and the value is a vector type.</dd></dl>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> Writer::hDataReady(<span class="keyword">const</span> CuData&amp; v)</div><div class="line">{</div><div class="line">    QVector&lt;double&gt; readData = <a class="code" href="classQuVector.html">QuVector&lt;double&gt;</a>(v[<span class="stringliteral">&quot;value&quot;</span>].toDoubleVector());</div><div class="line">    <span class="comment">// ...</span></div><div class="line">}</div></div><!-- fragment --><p>instead of </p><div class="fragment"><div class="line"><span class="keywordtype">void</span> Writer::vDataReady(<span class="keyword">const</span> CuData &amp;v)</div><div class="line">{</div><div class="line">    QVector&lt;double&gt; readData = QVector&lt;double&gt;::fromStdVector( v[<span class="stringliteral">&quot;value&quot;</span>].toDoubleVector())</div><div class="line">    <span class="comment">// ...</span></div><div class="line">}</div></div><!-- fragment --><dl class="section user"><dt>Example usage 2</dt><dd>This example builds a QVector directly from CuData</dd></dl>
+<dl class="section user"><dt>Note</dt><dd>Data contains the <em>value</em> key and the data is a vector.</dd></dl>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> Writer::vDataReady(<span class="keyword">const</span> CuData &amp;v)</div><div class="line">{</div><div class="line">    <span class="comment">// if v.containsKey(&quot;value&quot;) and v[&quot;value&quot;] is a vector</span></div><div class="line">    <span class="comment">// qv will contain v[&quot;value&quot;] converted to QVector</span></div><div class="line">    QVector&lt;double&gt; qv = <a class="code" href="classQuVector.html">QuVector&lt;double&gt;</a>(v);</div></div><!-- fragment --><p>As you can see in the method documentation, any key can be specified to have its value converted to <a class="el" href="classQuVector.html" title="convenience class that can be used to quickly convert a std::vector of a given type into a QVector of...">QuVector</a> </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a5a253f5ca7dc970e12a72d2e88c8236c"></a>
@@ -93,7 +94,7 @@ class QuVector&lt; T &gt;</h3>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class T &gt; </div>
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classQuVector.html">QuVector</a>&lt; T &gt;::<a class="el" href="classQuVector.html">QuVector</a> </td>
@@ -117,7 +118,7 @@ template&lt;class T &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class T &gt; </div>
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classQuVector.html">QuVector</a>&lt; T &gt;::<a class="el" href="classQuVector.html">QuVector</a> </td>
@@ -159,7 +160,7 @@ template&lt;class T &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class T &gt; </div>
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classQuVector.html">QuVector</a>&lt; T &gt;::<a class="el" href="classQuVector.html">QuVector</a> </td>
@@ -188,7 +189,7 @@ template&lt;class T &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class T &gt; </div>
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classQuVector.html">QuVector</a>&lt; T &gt;::<a class="el" href="classQuVector.html">QuVector</a> </td>
@@ -204,14 +205,13 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="quvector_8h_source.html">quvector.h</a></li>
-<li><a class="el" href="quvector_8cpp.html">quvector.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 3 2019 15:19:06 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jul 12 2019 12:17:32 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

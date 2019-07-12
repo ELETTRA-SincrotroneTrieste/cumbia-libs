@@ -126,6 +126,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa20573964193ce9210a5fb105c523d2e"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classCuData.html">CuData</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuData.html#aa20573964193ce9210a5fb105c523d2e">operator=</a> (<a class="el" href="classCuData.html">CuData</a> &amp;&amp;other)</td></tr>
 <tr class="memdesc:aa20573964193ce9210a5fb105c523d2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">move assignment operator, moves contents from another source  <a href="#aa20573964193ce9210a5fb105c523d2e">More...</a><br /></td></tr>
 <tr class="separator:aa20573964193ce9210a5fb105c523d2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b30258d77c405bf17466134135145b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuData.html">CuData</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuData.html#a9b30258d77c405bf17466134135145b7">set</a> (const std::string &amp;key, const <a class="el" href="classCuVariant.html">CuVariant</a> &amp;<a class="el" href="classCuData.html#adfac36fe3d94c5302b086081e31e114d">value</a>)</td></tr>
+<tr class="separator:a9b30258d77c405bf17466134135145b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d888fa58fed0ec4f0d98f1ca78ac45e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuData.html#a6d888fa58fed0ec4f0d98f1ca78ac45e">size</a> () const</td></tr>
 <tr class="memdesc:a6d888fa58fed0ec4f0d98f1ca78ac45e"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the number of key-value pairs stored  <a href="#a6d888fa58fed0ec4f0d98f1ca78ac45e">More...</a><br /></td></tr>
 <tr class="separator:a6d888fa58fed0ec4f0d98f1ca78ac45e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -738,6 +740,36 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a9b30258d77c405bf17466134135145b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b30258d77c405bf17466134135145b7">&#9670;&nbsp;</a></span>set()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classCuData.html">CuData</a> &amp; CuData::set </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classCuVariant.html">CuVariant</a> &amp;&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuData.html#adfac36fe3d94c5302b086081e31e114d">value()</a>.</p>
+
+</div>
+</div>
 <a id="a6d888fa58fed0ec4f0d98f1ca78ac45e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6d888fa58fed0ec4f0d98f1ca78ac45e">&#9670;&nbsp;</a></span>size()</h2>
 
@@ -806,7 +838,7 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>the value associated to an empty key, if there's one empty key with a value (for example, created with the <a class="el" href="classCuData.html#af5fe84a0aa1ca31652cef2d596f759f1" title="constructor of a CuData initialised with one value (key: emtpy string)">CuData::CuData(const CuVariant &amp;v)</a> ) constructor, or an <em>empty</em> <a class="el" href="classCuVariant.html" title="CuVariant class acts like a union for the cumbia data types.">CuVariant</a></dd></dl>
 <p>If there's no value associated to an <em>empty key</em> (i.e. an <em>emtpy string</em>, ""), an <em>invalid and null</em> <a class="el" href="classCuVariant.html" title="CuVariant class acts like a union for the cumbia data types.">CuVariant</a> is returned. See <a class="el" href="classCuVariant.html#a2dbc2270a491340624e2b069085f2b26" title="Returns whether the data stored by CuVariant is valid.">CuVariant::isValid</a> and <a class="el" href="classCuVariant.html#af76f726f6bfaaea3e814e6bcae9f5ace" title="Returns whether the the data stored by CuVariant is NULL or not.">CuVariant::isNull</a> </p>
 
-<p class="reference">Referenced by <a class="el" href="classCuData.html#a8a68df15bbe081b0e8453dc154ad11f8">add()</a>, and <a class="el" href="classCuData.html#ac5f1635f2b00d74062f4bd2229ff7760">has()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuData.html#a8a68df15bbe081b0e8453dc154ad11f8">add()</a>, <a class="el" href="classCuData.html#ac5f1635f2b00d74062f4bd2229ff7760">has()</a>, and <a class="el" href="classCuData.html#a9b30258d77c405bf17466134135145b7">set()</a>.</p>
 
 </div>
 </div>
@@ -842,7 +874,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuData.html">CuData</a></li>
-    <li class="footer">Generated on Wed Jul 3 2019 15:18:56 for cumbia by
+    <li class="footer">Generated on Fri Jul 12 2019 12:17:22 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.15 </li>
   </ul>

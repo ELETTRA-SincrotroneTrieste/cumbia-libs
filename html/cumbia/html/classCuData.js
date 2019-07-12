@@ -19,6 +19,7 @@ var classCuData =
     [ "operator==", "classCuData.html#a41c23ff9385c4ce4924c9591e32fac6e", null ],
     [ "print", "classCuData.html#a04cb7dbc2bc3caa9901044f6f8dba1e3", null ],
     [ "putTimestamp", "classCuData.html#aed8611b2b5eaa56b21cf878769914926", null ],
+    [ "set", "classCuData.html#a9b30258d77c405bf17466134135145b7", null ],
     [ "size", "classCuData.html#a6d888fa58fed0ec4f0d98f1ca78ac45e", null ],
     [ "toString", "classCuData.html#ae04664b2bc005e88fdf0ebcd832cda5d", null ],
     [ "value", "classCuData.html#adfac36fe3d94c5302b086081e31e114d", null ],

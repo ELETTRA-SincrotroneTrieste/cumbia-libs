@@ -10,7 +10,8 @@ var files_dup =
       [ "CuPauseEvent", "classCuPauseEvent.html", "classCuPauseEvent" ],
       [ "CuResumeEvent", "classCuResumeEvent.html", "classCuResumeEvent" ],
       [ "CuExecuteEvent", "classCuExecuteEvent.html", "classCuExecuteEvent" ],
-      [ "CuTimeoutChangeEvent", "classCuTimeoutChangeEvent.html", "classCuTimeoutChangeEvent" ]
+      [ "CuTimeoutChangeEvent", "classCuTimeoutChangeEvent.html", "classCuTimeoutChangeEvent" ],
+      [ "CuDataEvent", "classCuDataEvent.html", "classCuDataEvent" ]
     ] ],
     [ "cuactivitymanager.cpp", "cuactivitymanager_8cpp.html", null ],
     [ "cuactivitymanager.h", "cuactivitymanager_8h.html", [

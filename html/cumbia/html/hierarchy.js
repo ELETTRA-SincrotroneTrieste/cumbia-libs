@@ -5,6 +5,7 @@ var hierarchy =
       [ "CuIsolatedActivity", "classCuIsolatedActivity.html", null ]
     ] ],
     [ "CuActivityEvent", "classCuActivityEvent.html", [
+      [ "CuDataEvent", "classCuDataEvent.html", null ],
       [ "CuExecuteEvent", "classCuExecuteEvent.html", null ],
       [ "CuExecuteEvent", "classCuExecuteEvent.html", null ],
       [ "CuPauseEvent", "classCuPauseEvent.html", null ],

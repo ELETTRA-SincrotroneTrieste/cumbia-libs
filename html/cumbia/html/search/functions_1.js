@@ -14,6 +14,7 @@ var searchData=
   ['cuactivitymanager',['CuActivityManager',['../classCuActivityManager.html#ae0ad26f90a6b91d3848513e81bb5b643',1,'CuActivityManager']]],
   ['cucontinuousactivity',['CuContinuousActivity',['../classCuContinuousActivity.html#a1ce7fc0152e15cb917c8775d0d6098e0',1,'CuContinuousActivity']]],
   ['cudata',['CuData',['../classCuData.html#a636fd4a6d64563228a08d8368ce0fde8',1,'CuData::CuData()'],['../classCuData.html#af5fe84a0aa1ca31652cef2d596f759f1',1,'CuData::CuData(const CuVariant &amp;v)'],['../classCuData.html#aa1d4c80e9f5ee8a83831b62ecf16e445',1,'CuData::CuData(const std::string &amp;key, const CuVariant &amp;v)'],['../classCuData.html#ab32aa3edff6a10f64626b4b4f1973751',1,'CuData::CuData(const CuData &amp;other)'],['../classCuData.html#a6548401b6feddc7b3361ebccecbd61d8',1,'CuData::CuData(CuData &amp;&amp;other)']]],
+  ['cudataevent',['CuDataEvent',['../classCuDataEvent.html#afd6e222a3f631c5001199741f4497851',1,'CuDataEvent']]],
   ['cudatalistener',['CuDataListener',['../classCuDataListener.html#adca50a3cc9b652b7d45c72624e317e90',1,'CuDataListener']]],
   ['cudataquality',['CuDataQuality',['../classCuDataQuality.html#a9257dd65772c95d4377ad7194d6f953a',1,'CuDataQuality::CuDataQuality()'],['../classCuDataQuality.html#aec0fdf6bd79f30360230bed3d5a79353',1,'CuDataQuality::CuDataQuality(Type t)'],['../classCuDataQuality.html#afed8e24d24bc0e29d7c863c82e4ca3ef',1,'CuDataQuality::CuDataQuality(int t)']]],
   ['cueventloopservice',['CuEventLoopService',['../classCuEventLoopService.html#ac693f83edd7327225d66248a03d02b12',1,'CuEventLoopService']]],
