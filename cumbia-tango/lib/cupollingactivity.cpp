@@ -406,13 +406,11 @@ void CuPollingActivity::execute()
     else {
 
     }
-
     if(success && d->repeat != d->period)
         d->repeat = d->period;
     else if(success)
         d->errCnt = 0; // reset consecutive error count
     else if(dev) {
-        printf("\e[1;31mdecreasing polling dev is not null success %d\e[0m\n", success);
         decreasePolling();
     }
     else { // device not defined into database
@@ -422,7 +420,7 @@ void CuPollingActivity::execute()
         // dev is null or some other error (device not defined in database)
         CuData dev_err;
         !dev ? dev_err["msg"] =  d->tdev->getMessage() :
-                dev_err["msg"] = "CuPollingActivity: failed to read \"" + tsrc.getName() + "\"";
+                dev_err["msg"] = "CuPollingActivity: failed to read \"" + tsrc.getName() + "\" (last err: " + d->message + ")";
         dev_err["err"] = true;
         dev_err["name"] = d->tdev->getName();
         dev_err["src"] = tsrc.getName();
