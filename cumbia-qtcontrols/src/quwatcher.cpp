@@ -91,13 +91,33 @@ CuContext *QuWatcher::getContext() const
     return d->context;
 }
 
+/*! \brief QuWatcher implementation of the onUpdate method
+ *
+ * @param data the data received from the reader
+ *
+ * If data contains the *property* key, Qumbiaizer::configure is called and the
+ * *configured* signal is whence emitted.
+ * If data contains the *value* key and *is not a property type*, Qumbiaizer::updateValue is called.
+ * From there, *type specific* signals are emitted and the configure slots are invoked.
+ *
+ * The following signals are always emitted at the end of this method:
+
+ * \li newData(const CuData&)
+ * \li readOk(bool ok)
+ * \li refreshMessage(const QString& msg)
+ *
+ * Both the generic *configure* and *newData* signals carry the full data coming from the engine.
+ *
+ * @see Qumbiaizer::updateValue
+ */
 void QuWatcher::onUpdate(const CuData &data)
 {
     bool ok = !data["err"].toBool();
+    bool is_config = data.has("type", "property");
     std::string msg = data["msg"].toString();
     !ok ? d->context->getLinkStats()->addError(msg) : d->context->getLinkStats()->addOperation();
 
-    if(data.has("type", "property")) {
+    if(is_config) {
         configure(data); // Qumbiaizer virtual configure method
     }
     if(data.containsKey("value")) {
@@ -106,8 +126,10 @@ void QuWatcher::onUpdate(const CuData &data)
             unsetSource();
         }
     }
-    // newData flavored signals and newData(const CuData&) generic signal
+    // newData flavored signals
     // are emitted from Qumbiaizer::updateValue
+    // generic newData signal is emitted here
     emit readOk(ok);
     emit refreshMessage(QString::fromStdString(msg));
+    emit newData(data);
 }

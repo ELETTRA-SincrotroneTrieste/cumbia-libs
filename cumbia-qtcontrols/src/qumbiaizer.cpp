@@ -356,7 +356,7 @@ void Qumbiaizer::configure(const CuData &data)
     if(object && !quizer_ptr->setPointMethodName.isEmpty())
     {
         /* invoke updateValue with a false parameter to extract the set point from the
-         * current value.
+         * current value. newData signal is not emitted when the second param is false
          */
         updateValue(data, false, qstoc(quizer_ptr->setPointMethodName), QuValueFilter::AutoConfiguration);
     }
@@ -376,6 +376,20 @@ int Qumbiaizer::extractCode(QString& method)
     return quizer_ptr->extractCode(method);
 }
 
+/*! \brief updates the listener with the new value
+ *
+ * @param v the new data
+ * @param read true the update refers to a read value (default: true and newData signals are emitted)
+ * @param read false the update refers to a *set point* value. In this case, no newData signal is emitted
+ * @param customMethod if not null, the customMethod is invoked rather then the methodName
+ * @param updateState either QuValueFilter::AutoConfiguration or QuValueFilter::Update (default QuValueFilter::Update)
+ *
+ * \par newData signals
+ * A *type specific* newData signal is emitted if the data v contains a valid *value* key and no error has occurred.
+ *
+ * \par slot invocation
+ * If an object and a *slot* were provided through the proper *attach* method, the *slot* is invoked on the object.
+ */
 void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMethod, QuValueFilter::State updateState)
 {
     QString methName;
@@ -634,9 +648,6 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
         if(object && !ok)
             perr("Qumbiaizer.updateValue: failed to invoke method \"%s\" on \"%s\": \"%s\"", qstoc(methName),
                  qstoc(object->objectName()), qstoc(message));
-
-        if(read)
-            emit newData(v);
     } // if(ok && (v.containsKey("value") || v.containsKey("w_value")))
 }
 
