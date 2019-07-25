@@ -310,18 +310,13 @@ void QuWriter::execute(const QVector<bool>& bv)
 
 void QuWriter::onUpdate(const CuData &data)
 {
-    printf("\e[1;33mQuWriter.onUpdate ENTER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\e[0m\n\n\n");
     d->configured = true;
     quizer_ptr->error = data["err"].toBool();
     quizer_ptr->message = QString::fromStdString(data["msg"].toString());
-    if(data["type"].toString() == "property" && d->auto_configure)
-    {
-        printf("QuWriter.onUpdate: \e[1;32mproperty: configuring\e[0m\n");
-        Qumbiaizer::configure(data);
+    if(data["type"].toString() == "property" && d->auto_configure) {
+        Qumbiaizer::configure(data); // emits configured and connectionOk
         CuControlsWriterA *w = d->context->getWriter();
-        if(quizer_ptr->executeOnConnection() && w)
-        {
-            printf("\e[1;32mexecuting scheduled execution for \"%s\"\e[0m\n", qstoc(target()));
+        if(quizer_ptr->executeOnConnection() && w) {
             CuVariant arg = quizer_ptr->executeArgument();
             if(!arg.isNull())
                 w->setArgs(arg);
@@ -329,10 +324,8 @@ void QuWriter::onUpdate(const CuData &data)
             postExecute();
         }
     }
-    else
-    {
-        printf("QuWriter.onUpdate: property: data update [%s]\n", data.toString().c_str());
-    }
+
+    emit newData(data);
 }
 
 

@@ -144,6 +144,7 @@ public:
 public:
     void onUpdate(const CuData &data);
     QString source() const;
+
 };
 
 #endif // READER_H

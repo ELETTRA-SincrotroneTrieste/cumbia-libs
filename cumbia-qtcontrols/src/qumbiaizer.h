@@ -191,17 +191,19 @@ signals:
 
     /** \brief auto configuration signal.
       *
-      *
-      * QTangoizer class can perform some simple auto configuration (see setAutoConfSlot method)
-      * when the associated widgets have suitable slots to set minimum, maximum, text values.
-      * In every case, this signal is <strong>emitted before any auto configuration is done</strong>
-      * by QTangoizer derived classes.
-      * This allows you to set minimum and maximum values (for example) without worrying to initialize
-      * the first value read by yourself. Actually, if the setPointSlot parameter of the
-      * void attach(QObject *refreshee, const char *slot, const char* setPointSlot = NULL, Qt::ConnectionType connType = Qt::AutoConnection);
-      * method is not NULL, the first value read is set by means of that slot.
+      * Emitted once, when the *type* of data received within *onUpdate* is set to *property*,
+      * contains the whole configuration data.
       */
     void configured(const CuData &);
+
+    /** \brief emitted when the *type* of data received within *onUpdate* is set to *property*
+     *
+     * @param ok true no error occurred
+     * @param ok false an error occurred
+     *
+     * Provided for convenience, connectionOk is emitted after the configured signal.
+     */
+    void connectionOk(bool ok);
 
     /** \brief a signal that contains the error message related to setSource - or setTargets - failures.
      *

@@ -340,6 +340,7 @@ const char *Qumbiaizer::type_str(Qumbiaizer::Type t) const
  *
  * The configured signal is emitted at the end. It can be used by the client to access other configuration
  * parameters in data.
+ * The connectionOk signal is also emitted for convenience.
  *
  * @see setAutoconfSlot
  */
@@ -362,6 +363,7 @@ void Qumbiaizer::configure(const CuData &data)
     }
 
     emit configured(data);
+    emit connectionOk(!data["err"].toBool());
 }
 
 bool Qumbiaizer::inTypeOfMethod(const QString &method, QObject *obj, char* in_type)
