@@ -254,8 +254,8 @@
 {
  "type" : "replace include",
 "in" :  "TComboBox",
-"out" : "QuComboBox",
-"comment" : "TComboBox is mapped into a QuComboBox",
+"out" : "qucombobox.h",
+"comment" : "TComboBox include is mapped into qucombobox.h",
 "level" : "ok"
 },
 {

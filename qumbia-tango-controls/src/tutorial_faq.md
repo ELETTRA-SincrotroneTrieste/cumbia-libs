@@ -168,7 +168,7 @@ from which you can infer that a code like the following can work:
 ```
 
 ## Q. How to quickly convert std::vector/std::string-based data in CuData to more Qt friendly QVector/QStringList/QStringList ?
-<a name="stdvector_string_to_qvector_qstringlist>
+<a name="stdvector_string_to_qvector_qstringlist">
 
 ## A.
 Normally, you should use QString::fromStdString and cycle through std::vector<std::string> to append elements to a QStringList. The same goes for std::vector, requiring QVector::fromStdVector.
@@ -560,17 +560,70 @@ catch(Tango::DevFailed &e)
 ### How to trigger an asynchronous read request to the Tango engine?
 
 An explicit *read request* can be sent to the Tango engine only when the *refresh mode is either polled or manual*.
-In the following example the read operation is sent through a *QuReader*'s *CuContext*; it is nevertheless
+In the following example the read operation is sent through a *QuLabel*'s *CuContext*; it is
 possible to do the same with any other reader through its *context*.
+Please note that there are two control widgets connected to the same source (*QuLabel and QuCircularGauge*): they share the
+same refresh mode. The *refresh button* updates both, but it is not possible to configure different modes for the
+same source because they share the same link.
 
 ```cpp
-d_ptr->hwatcher = new QuWatcher(this, cumbia_ptr, tango_reader_factory);
-d_ptr->hwatcher->getContext()->setOptions(CuData("refresh_mode", CuTReader::Manual));
-d_ptr->hwatcher->setSource("my/awesome/cool/source");
+// cumbia-tango
+#include <cuserviceprovider.h>
+#include <cumacros.h>
+// cumbia-tango
 
-// later...
-d_ptr->hwatcher->getContext()->sendData(CuData("read", ""));
+#include <cucontext.h>
+#include <qulabel.h>
+#include <cutreader.h>
+#include <qucirculargauge.h>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QApplication>
+#include <QLabel>
+
+Manual_refresh::Manual_refresh(CumbiaTango *cut, QWidget *parent) :
+    QWidget(parent)
+{
+   // cumbia-tango
+    cu_t = cut;
+    m_log = new CuLog(&m_log_impl);
+    cu_t->getServiceProvider()->registerService(CuServices::Log, m_log);
+    // cumbia-tango
+
+  QVBoxLayout *vlo = new QVBoxLayout(this);
+  QLabel *title = new QLabel("Manual Refresh Mode Example", this);
+  QLabel *src = new QLabel(this);
+  QuLabel *l = new QuLabel(this, cu_t, cu_tango_r_fac);
+  QuCircularGauge *g = new QuCircularGauge(this, cu_t, cu_tango_r_fac);
+  QPushButton *b = new QPushButton("Click to Refresh!", this);
+
+  // vertically fixed size for labels
+  foreach(QWidget *w, QList<QWidget *>()<<l << title << src)
+    w->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+
+  // configure sources!
+  if(qApp->arguments().size() > 1) {
+      l->getContext()->setOptions(CuData("refresh_mode", CuTReader::Manual));
+      l->setSource(qApp->arguments().at(1));
+      g->setSource(l->source());
+      src->setText(l->source());
+  } // else: usage: ...
+
+  foreach(QWidget *w, QList<QWidget *>() << title << src << l << g << b)
+    vlo->addWidget(w);
+
+  connect(b, SIGNAL(clicked()), this, SLOT(read()));
+  resize(300, 400);
+}
+
+// slot: request a read operation
+void Manual_refresh::read()
+{
+    QuLabel *l = findChild<QuLabel *>();
+    l->getContext()->sendData(CuData("read", ""));
+}
 ```
+
 
 <a name="migrate_log" />
 ### How to migrate from QTango *TUtil::instance()->addLog()* to *cumbia* log dialog?

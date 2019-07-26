@@ -1,5 +1,4 @@
 #include "manual_refresh.h"
-#include "ui_manual_refresh.h"
 
 // cumbia-tango
 #include <cuserviceprovider.h>
@@ -36,9 +35,8 @@ Manual_refresh::Manual_refresh(CumbiaTango *cut, QWidget *parent) :
     QPushButton *b = new QPushButton("Click to Refresh!", this);
 
     // vertically fixed size for labels
-    title->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-    src->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-    l->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    foreach(QWidget *w, QList<QWidget *>()<<l << title << src)
+        w->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);;
 
     if(qApp->arguments().size() > 1) {
         l->getContext()->setOptions(CuData("refresh_mode", CuTReader::Manual));
@@ -51,11 +49,8 @@ Manual_refresh::Manual_refresh(CumbiaTango *cut, QWidget *parent) :
         b->setDisabled(true);
     }
 
-    vlo->addWidget(title);
-    vlo->addWidget(src);
-    vlo->addWidget(l);
-    vlo->addWidget(g);
-    vlo->addWidget(b);
+    foreach(QWidget *w, QList<QWidget *>() << title << src << l << g << b)
+        vlo->addWidget(w);
 
     connect(b, SIGNAL(clicked()), this, SLOT(read()));
     resize(300, 400);
@@ -63,7 +58,6 @@ Manual_refresh::Manual_refresh(CumbiaTango *cut, QWidget *parent) :
 
 Manual_refresh::~Manual_refresh()
 {
-    delete ui;
 }
 
 void Manual_refresh::read()

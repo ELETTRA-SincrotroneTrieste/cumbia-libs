@@ -10,10 +10,6 @@
 #include <cumbiatango.h>
 // cumbia-tango
 
-namespace Ui {
-class Manual_refresh;
-}
-
 class Manual_refresh : public QWidget
 {
     Q_OBJECT
@@ -26,7 +22,6 @@ private slots:
     void read();
 
 private:
-    Ui::Manual_refresh *ui;
 
 // cumbia-tango
     CumbiaTango *cu_t;
