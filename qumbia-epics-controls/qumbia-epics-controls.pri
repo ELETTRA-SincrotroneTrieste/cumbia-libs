@@ -156,7 +156,7 @@ QMAKE_CLEAN = moc \
 
 packagesExist(qumbia-epics-controls$${QTVER_SUFFIX} cumbia-epics  ) {
 
-!isEmpty($${EPICS_BASE_LINUX_X86_64}) {
+!isEmpty(EPICS_BASE_LINUX_X86_64) {
         message("Adding include and lib paths from custom epics base dir \"$${EPICS_BASE_LINUX_X86_64}\"")
         unix:INCLUDEPATH += $${EPICS_BASE_LINUX_X86_64}/include $${EPICS_BASE_LINUX_X86_64}/include/os/Linux
         unix:LIBS+=-L$${EPICS_BASE_LINUX_X86_64}/lib/linux-x86_64
