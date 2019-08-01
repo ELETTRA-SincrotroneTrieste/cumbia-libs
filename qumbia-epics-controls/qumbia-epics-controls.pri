@@ -73,17 +73,22 @@ QWT_INCLUDES_USR = $${QWT_HOME_USR}/include/qwt
 CONFIG+=link_pkgconfig
 PKGCONFIG += cumbia cumbia-qtcontrols$${QTVER_SUFFIX}
 
-packagesExist(epics-base) {
+packagesExist(epics-base epics-base-linux-x86_64) {
     PKGCONFIG += epics-base
-}
-else {
-    message("package epics-base not found")
-}
-packagesExist(epics-base-linux-x86_64) {
     PKGCONFIG += epics-base-linux-x86_64
 }
 else {
-    message("package epics-base-linux-x86_64 not found")
+
+## no PKG_CONFIG
+#
+# must define this
+#
+
+    EPICS_BASE_LINUX_X86_64=/usr/local/epics/base-3.14.12.8
+
+    message("package epics-base not found.")
+    message("   Please verify that EPICS_BASE_LINUX_X86_64 points to the correct EPICS installation prefix:")
+    message("   EPICS_BASE_LINUX_X86_64  --> \"$${EPICS_BASE_LINUX_X86_64}\"")
 }
 
 packagesExist(cumbia-epics) {
@@ -149,7 +154,13 @@ QMAKE_CLEAN = moc \
     *.tag
 
 
-packagesExist(qumbia-epics-controls$${QTVER_SUFFIX} epics-base-linux-x86_64 cumbia-epics  ) {
+packagesExist(qumbia-epics-controls$${QTVER_SUFFIX} cumbia-epics  ) {
+
+!isEmpty($${EPICS_BASE_LINUX_X86_64}) {
+        message("Adding include and lib paths from custom epics base dir \"$${EPICS_BASE_LINUX_X86_64}\"")
+        unix:INCLUDEPATH += $${EPICS_BASE_LINUX_X86_64}/include $${EPICS_BASE_LINUX_X86_64}/include/os/Linux
+        unix:LIBS+=-L$${EPICS_BASE_LINUX_X86_64}/lib/linux-x86_64
+}
 
 DEFINES += CUMBIA_PRINTINFO
 
