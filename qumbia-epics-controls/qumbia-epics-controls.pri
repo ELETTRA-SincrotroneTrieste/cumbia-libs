@@ -78,8 +78,7 @@ packagesExist(epics-base epics-base-linux-x86_64) {
     PKGCONFIG += epics-base-linux-x86_64
 }
 else {
-
-## no PKG_CONFIG
+# no PKG_CONFIG
 #
 # must define this
 #
