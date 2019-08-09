@@ -73,28 +73,28 @@ QWT_INCLUDES_USR = $${QWT_HOME_USR}/include/qwt
 CONFIG+=link_pkgconfig
 PKGCONFIG += cumbia cumbia-qtcontrols$${QTVER_SUFFIX}
 
-packagesExist(epics-base epics-base-linux-x86_64) {
-    PKGCONFIG += epics-base
-    PKGCONFIG += epics-base-linux-x86_64
-}
-else {
-# no PKG_CONFIG
-#
-# must define this
-#
+message("qumbia-epics-controls.pri: checking if EPICS_BASE and EPICS_HOST_ARCH environment variables are defined")
 
-    EPICS_BASE_LINUX_X86_64=/usr/local/epics/base-3.14.12.8
-
-    message("package epics-base not found.")
-    message("   Please verify that EPICS_BASE_LINUX_X86_64 points to the correct EPICS installation prefix:")
-    message("   EPICS_BASE_LINUX_X86_64  --> \"$${EPICS_BASE_LINUX_X86_64}\"")
+EPICS_BASE = $$(EPICS_BASE)
+    isEmpty(EPICS_BASE) {
+        error("qumbia-epics-controls.pri: EPICS_BASE environment variable is not set")
+} else {
+        message("qumbia-epics-controls.pri: EPICS_BASE points to $${EPICS_BASE}")
 }
+
+EPICS_HOST_ARCH = $$(EPICS_HOST_ARCH)
+    isEmpty(EPICS_HOST_ARCH) {
+        error("qumbia-epics-controls.pri: EPICS_HOST_ARCH environment variable is not set")
+} else {
+        message("qumbia-epics-controls.pri: EPICS_HOST_ARCH is defined as $${EPICS_HOST_ARCH}")
+}
+
 
 packagesExist(cumbia-epics) {
     PKGCONFIG += cumbia-epics
 }
 else {
-    message("package cumbia-epics not found")
+    error("package cumbia-epics not found")
 }
 
 packagesExist(qumbia-epics-controls$${QTVER_SUFFIX}) {
@@ -155,10 +155,9 @@ QMAKE_CLEAN = moc \
 
 packagesExist(qumbia-epics-controls$${QTVER_SUFFIX} cumbia-epics  ) {
 
-!isEmpty(EPICS_BASE_LINUX_X86_64) {
-        message("Adding include and lib paths from custom epics base dir \"$${EPICS_BASE_LINUX_X86_64}\"")
-        unix:INCLUDEPATH += $${EPICS_BASE_LINUX_X86_64}/include $${EPICS_BASE_LINUX_X86_64}/include/os/Linux
-        unix:LIBS+=-L$${EPICS_BASE_LINUX_X86_64}/lib/linux-x86_64
+!isEmpty(EPICS_BASE) {
+        unix:INCLUDEPATH += $${EPICS_BASE}/include $${EPICS_BASE}/include/os/Linux
+        unix:LIBS+=-L$${EPICS_BASE}/lib/$${EPICS_HOST_ARCH}
 }
 
 DEFINES += CUMBIA_PRINTINFO
