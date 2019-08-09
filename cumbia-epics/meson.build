@@ -1,3 +1,11 @@
+## meson.build file to compile epics under Linux
+##
+## if the clang compiler is used, please uncomment the line
+##
+## epics_clang_compiler_specific
+##
+## below and comment `epics_gcc_compiler_specific=...'
+
 project('cumbia-epics', 'cpp', version : '1.0.0',
     default_options : ['c_std=c11', 'cpp_std=c++11'])
 
@@ -58,36 +66,46 @@ sources = [
 
 includedirs = include_directories('lib')
 
-
 cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1'
 
-deps = [dependency('epics-base'), dependency('cumbia')]
 
-## deps = [dependency('cumbia')]
+message(' \033[1;33m*\033[0m')
+message(' \033[1;33m*\033[0m You will have to call \033[0;36m meson configure\033[0m with the options:')
+message(' \033[1;33m*\033[0m  \033[1;36m-D\033[0;36mepics_base\033[0m=/path/to/epics/base and')
+message(' \033[1;33m*\033[0m  \033[1;36m-D\033[0;36mepics_host_arch\033[0m=linux-x86_64 (or whatever epics_host_arch)')
+message(' \033[1;33m*\033[0m')
+
+deps = [ dependency('cumbia') ]
 
 
-## Y are they missing in pkgconfig file?
-## PKG_CONFIG does not set -L either!
+linker_args = [ ]
 
-# epics_base = '/usr/local/epics/base'
-epics_base = '/home/giacomo/devel/base-7.0.2/'
-epics_libdir = epics_base + '/lib/linux-x86_64'
+# if -Depics_base is specified in meson configure, use it
+# if -Depics_host_arch  is specified in meson configure, use it
+epics_base = get_option('epics_base')
+epics_host_arch = get_option('epics_host_arch')
 
-##
-# if no epics pkgconfig is available, or if it is useless,
-# define include dirs explicitly and use them in the 
-# shared_library
+
 #
-# epics_includes = include_directories(epics_base + '/include')
-# epics_linux_includes = include_directories(epics_base + '/include/os/Linux')
+# add epics_includes and epics_linux_includes if epics_libdir specified
+if epics_base != ''
+  epics_includes = include_directories(epics_base + '/include')
+  epics_linux_includes = include_directories(epics_base + '/include/os/Linux')
+  epics_gcc_compiler_specific = include_directories(epics_base + '/include/compiler/gcc')
 
-linker_args = [  '-lca',  '-ldbCore', '-lCom', '-L' + epics_libdir  ]
+# epics_clang_compiler_specific = include_directories(epics_base + '/include/compiler/clang')
+
+  includedirs = [includedirs, epics_includes, epics_linux_includes, epics_gcc_compiler_specific ]
+  epics_libdir = epics_base + '/lib/' + epics_host_arch
+  linker_args = [ '-lca',  '-ldbCore', '-lCom' , '-L' + epics_libdir ]
+endif
+
+
 
 cumbiaepicslib = shared_library('cumbia-epics', sources,
         soversion : '0',
         version : meson.project_version(),
-#        include_directories : [includedirs, epics_includes, epics_linux_includes],
-	include_directories : [includedirs],
+        include_directories : [includedirs],
         cpp_args : cpp_arguments,
         dependencies : deps,
         link_args : linker_args,
