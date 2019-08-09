@@ -57,6 +57,10 @@ public:
     virtual QuActionExtensionI *getExtension(const QString& name) = 0;
 
     virtual QuActionExtensionFactoryI *getExtensionFactory() = 0;
+
+    /*! \brief removes all registered extensions
+     */
+    virtual void clear() = 0;
 };
 
 #define QuActionExtensionPluginInterface_iid "eu.elettra.qutils.QuActionExtensionPluginInterface"
