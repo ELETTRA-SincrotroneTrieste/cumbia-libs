@@ -1,0 +1,4 @@
+
+option('epics_base', type : 'string', value : '', description : 'the value of EPICS_BASE')
+option('epics_host_arch', type : 'string', value : '', description : 'the value of EPICS_HOST_ARCH')
+
