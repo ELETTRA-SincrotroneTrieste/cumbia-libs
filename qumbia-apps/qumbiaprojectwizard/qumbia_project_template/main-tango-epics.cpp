@@ -30,10 +30,12 @@ int main(int argc, char *argv[])
     $MAINCLASS$ *w = new $MAINCLASS$(cu_p, NULL);
     w->show();
 
-    /* register to window manager */
-    Display *disp = QX11Info::display();
-    Window root_win = (Window) w->winId();
-    XSetCommand(disp, root_win, argv, argc);
+    if(QX11Info::isPlatformX11()) {
+        /* register to window manager */
+        Display *disp = QX11Info::display();
+        Window root_win = (Window) w->winId();
+        XSetCommand(disp, root_win, argv, argc);
+    }
 
     ret = qu_app.exec();
     delete w;

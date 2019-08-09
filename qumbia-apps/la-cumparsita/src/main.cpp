@@ -40,9 +40,11 @@ int main(int argc, char *argv[])
         w->show();
 
         /* register to window manager */
-        Display *disp = QX11Info::display();
-        Window root_win = (Window) w->winId();
-        XSetCommand(disp, root_win, argv, argc);
+        if(QX11Info::isPlatformX11()) {
+            Display *disp = QX11Info::display();
+            Window root_win = (Window) w->winId();
+            XSetCommand(disp, root_win, argv, argc);
+        }
 
         ret = qu_app->exec();
         delete w;
