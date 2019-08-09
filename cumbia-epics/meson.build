@@ -91,11 +91,19 @@ epics_host_arch = get_option('epics_host_arch')
 if epics_base != ''
   epics_includes = include_directories(epics_base + '/include')
   epics_linux_includes = include_directories(epics_base + '/include/os/Linux')
-  epics_gcc_compiler_specific = include_directories(epics_base + '/include/compiler/gcc')
 
-# epics_clang_compiler_specific = include_directories(epics_base + '/include/compiler/clang')
+dirnames = [ epics_base + '/include/compiler/gcc', epics_base + '/include/compiler/clang' ]
 
-  includedirs = [includedirs, epics_includes, epics_linux_includes, epics_gcc_compiler_specific ]
+foreach dirnam : dirnames
+
+    if run_command('[', '-d', dirnam, ']').returncode() == 0
+        epics_compiler_specific = include_directories(dirnam)
+        includedirs = [includedirs, epics_compiler_specific ]
+    endif
+
+endforeach
+
+  includedirs = [includedirs, epics_includes, epics_linux_includes ]
   epics_libdir = epics_base + '/lib/' + epics_host_arch
   linker_args = [ '-lca',  '-ldbCore', '-lCom' , '-L' + epics_libdir ]
 endif
