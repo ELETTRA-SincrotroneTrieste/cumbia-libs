@@ -518,6 +518,20 @@ for x in "${meson_p[@]}" ; do
                 ## pkgconfig files will be generated accordingly and will be found under tmp_installdir/lib/pkgconfig
                 ## So, build and install in tmp_installdir
 
+               if [ ${x} == "cumbia-epics" ]; then
+                    if [[ ! -z "${EPICS_BASE}" ]] && [[ ! -z "${EPICS_HOST_ARCH}" ]]; then
+                        meson configure -Depics_base=${EPICS_BASE} -Depics_host_arch=${EPICS_HOST_ARCH}
+                    else
+                        echo -e "\e[1;31m\n*\n* BUILD project ${x}: either EPICS_BASE or EPICS_HOST_ARCH (or both) are unset\n*\e[0m"
+                        echo -e "\e[1;31m* BUILD project ${x}: EPICS_BASE=${EPICS_BASE}"
+                        echo -e "\e[1;31m* BUILD project ${x}: EPICS_HOST_ARCH=${EPICS_HOST_ARCH}"
+                        echo -e "\e[1;31m* project ${x} requires EPICS_BASE and EPICS_HOST_ARCH environment variables"
+                        echo -e "\e[1;31m* - EPICS_BASE points to the directory where EPICS is installed"
+                        echo -e "\e[1;31m* - EPICS_HOST_ARCH specifies the architecture epics has been built for (e.g. linux-x86_64)"
+                        echo -e "\e[1;31m* \e[0m\n"
+                        exit 1
+                    fi
+               fi
                meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
                meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
 
