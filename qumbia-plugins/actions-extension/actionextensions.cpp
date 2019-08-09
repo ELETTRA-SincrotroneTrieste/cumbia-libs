@@ -62,7 +62,12 @@ QuActionExtensionFactoryI *ActionExtensions::getExtensionFactory()
     return d->ae_factory;
 }
 
+void ActionExtensions::clear()
+{
+    d->extensions.clear();
+}
 
 #if QT_VERSION < 0x050000
 Q_EXPORT_PLUGIN2(actions-extension, ActionExtensions)
 #endif // QT_VERSION < 0x050000
+

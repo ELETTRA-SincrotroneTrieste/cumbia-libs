@@ -20,6 +20,8 @@ isEmpty(prefix) {
     prefix = $${INSTALL_ROOT}
 }
 
+DEFINES -= QT_NO_DEBUG_OUTPUT
+
 DEFINES_QUMBIA_PLUGINS_LIBDIR = $${prefix}/lib/qumbia-plugins
 
 # added by cumbia-qtcontrols.pri, not included by this file

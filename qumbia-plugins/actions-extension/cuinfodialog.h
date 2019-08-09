@@ -68,7 +68,11 @@ public:
 
     QString extractSource(const QString& expression, QString &formula);
 
+protected:
+
 public slots:
+    void liveReadCbToggled(bool start);
+    void showAppDetails(bool show);
     void exec(const CuData& in);
 
 private slots:
@@ -86,6 +90,11 @@ private:
 
     CuInfoDialogPrivate* d;
     QString m_makeHtml(const CuData &da, const QString &heading);
+    int m_populateAppDetails(QWidget *container);
+    void m_resizeToMinimumSizeHint();
+    QMap<QString, QString> m_appPropMap() const;
+
+    int mAppDetailsLayoutRow;
 };
 
 #endif // CUINFODIALOG_H

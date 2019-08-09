@@ -14,6 +14,7 @@
 #include <QLabel>
 #include <QTextBrowser>
 #include <QComboBox>
+#include <QCheckBox>
 #include <QScrollArea>
 #include <QGridLayout>
 #include <QFrame>
@@ -21,6 +22,9 @@
 #include <QScrollBar>
 #include <QPainter>
 #include <QMap>
+#include <QMutableMapIterator>
+#include <QPushButton>
+#include <QApplication>
 #include <quledbase.h>
 #include <cumacros.h>
 #include <qulabel.h>
@@ -140,6 +144,81 @@ QString CuInfoDialog::extractSource(const QString &expression, QString &formula)
     return extractSources(expression, formula).join(",");
 }
 
+void CuInfoDialog::liveReadCbToggled(bool start)
+{
+    if(!start) {
+        // liveFrame becomes a child of scrollArea
+        // it will be deleted alongside all liveFrame's children
+        //
+        if(findChild<QScrollArea *>("liveScrollArea"))
+            delete findChild<QScrollArea *>("liveScrollArea");
+        m_resizeToMinimumSizeHint();
+    }
+    else {
+        QList<CuControlsReaderA *> readers = d->ctx->readers();
+        QGridLayout *mainLo = findChild<QGridLayout *>("mainGridLayout");
+        int row = mainLo->rowCount();
+        QScrollArea *scrollArea = new QScrollArea(this);
+        scrollArea->setObjectName("liveScrollArea");
+        scrollArea->setWidgetResizable(true);
+        QFrame *liveF = new QFrame(this);
+        liveF->setObjectName("liveF");
+        // add the live scroll area with the labels+plots frame inside
+        scrollArea->setWidget(liveF);
+        scrollArea->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding));
+        mainLo->addWidget(scrollArea, row, 0, 10, d->layout_col_cnt); // below monitorF
+        QGridLayout *lilo = new QGridLayout(liveF);
+        QFont f = font();
+        f.setPointSize(f.pointSize() + 1);
+        f.setBold(true);
+        foreach(CuControlsReaderA *r, readers)
+        {
+            QString formula, src = extractSource(r->source(), formula);
+            QGroupBox *gb = new QGroupBox(src, liveF);
+            gb->setFont(f);
+            lilo->addWidget(gb, row, 0, 1, d->layout_col_cnt);
+            gb->setObjectName(src + "_live");
+            QVBoxLayout * gblilo = new QVBoxLayout(gb);
+            QuLabel *llive = NULL;
+            if(d->ctx->cumbia() && d->ctx->getReaderFactoryI())
+                llive = new QuLabel(liveF, d->ctx->cumbia(), *d->ctx->getReaderFactoryI());
+            else if(d->ctx->cumbiaPool())
+                llive = new QuLabel(liveF, d->ctx->cumbiaPool(), d->ctx->getControlsFactoryPool());
+            if(llive)
+            {
+                connect(llive, SIGNAL(newData(CuData)), this, SLOT(newLiveData(CuData)));
+                llive->setSource(r->source());
+                llive->setMaximumLength(80);
+                gblilo->addWidget(llive);
+                QTabWidget *liveTabW = new QTabWidget(liveF);
+                liveTabW->setObjectName(src + "liveTabW");
+                liveTabW->addTab(new QWidget(liveF), "Introspect");
+                gblilo->addWidget(liveTabW);
+                // add a layout to the tab widget's first widget
+                new QGridLayout(liveTabW->widget(0));
+            }
+            row++;
+        }
+    }
+}
+
+void CuInfoDialog::showAppDetails(bool show)
+{
+    if(show) {
+        QGroupBox *appDetGb = new QGroupBox(this); // app details group box
+        appDetGb->setObjectName("appDetailsGroupBox");
+        int rowcnt = m_populateAppDetails(appDetGb);
+        findChild<QGridLayout *>("mainGridLayout")->addWidget(appDetGb, mAppDetailsLayoutRow, 0, rowcnt, d->layout_col_cnt);
+    }
+    else {
+        QGroupBox *appDetGb = findChild<QGroupBox *>("appDetailsGroupBox");
+        if(appDetGb) {
+            delete appDetGb;
+            m_resizeToMinimumSizeHint();
+        }
+    }
+}
+
 void CuInfoDialog::exec(const CuData& in)
 {
     printf("\e[1;32mCuInfoDialog.exec with data \e[0;33m%s\e[0m\n", in.toString().c_str());
@@ -161,16 +240,49 @@ void CuInfoDialog::exec(const CuData& in)
     CuLinkStats *lis = d->ctx->getLinkStats();
 
     QGridLayout *lo = new QGridLayout(this);
+    lo->setObjectName("mainGridLayout");
     // use QLabel instead of group box title to use bold font
-    QLabel *lFTitleMon = new QLabel("Monitored object: \"" +
-                                    sender->objectName() + "\" type \""
-                                    + QString(sender->metaObject()->className()) + "\"", this);
-    lo->addWidget(lFTitleMon, row, 0, 1, d->layout_col_cnt);
-    lFTitleMon->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-    lFTitleMon->setAlignment(Qt::AlignHCenter);
-    lFTitleMon->setFont(f);
+    QLabel *lobj = new QLabel("Monitored object", this);
+    lobj->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
+    QLineEdit *leName = new QLineEdit(sender->objectName(),this);
+    leName->setReadOnly(true);
+
+    QLabel *l_Type = new QLabel("Type", this);
+    l_Type->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
+    QLineEdit *leType = new QLineEdit(sender->metaObject()->className(), this);
+    leType->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+
+    leType->setFont(f);
+    leName->setFont(f);
+
+//    QGroupBox *appDetGb = new QGroupBox(this); // app details group box
+//    appDetGb->setObjectName("appDetailsGroupBox");
+
+    // button to toggle app details visibility
+    QPushButton *pbShowAppDetails = new QPushButton("More...", this);
+    pbShowAppDetails->setCheckable(true);
+    pbShowAppDetails->setChecked(false);
+    connect(pbShowAppDetails, SIGNAL(toggled(bool)), this, SLOT(showAppDetails(bool)));
+
+    foreach(QLabel *l, QList<QLabel*> () << lobj << l_Type )
+        l->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+
+
+    lo->addWidget(lobj, row, 0, 1, 1);
+    lo->addWidget(leName, row, 1, 1, 3);
+    lo->addWidget(l_Type, row, 4, 1, 1);
+    lo->addWidget(leType, row, 5, 1, 2);
+    lo->addWidget(pbShowAppDetails, row, 7, 1, 1);
 
     row++;
+    mAppDetailsLayoutRow = row;
+    row += m_appPropMap().size() / 2;
+
+//    int rowcnt = m_populateAppDetails(appDetGb);
+//    lo->addWidget(appDetGb, row, 0, rowcnt, d->layout_col_cnt);
+//    row += rowcnt;
+//    appDetGb->setVisible(false);
+
 
     // operation count
     QLabel *lopcnt = new QLabel("Operation count:", this);
@@ -179,7 +291,7 @@ void CuInfoDialog::exec(const CuData& in)
     leopcnt->setReadOnly(true);
     leopcnt->setText(QString::number(lis->opCnt()));
     lo->addWidget(lopcnt, row, 0, 1, 1);
-    lo->addWidget(leopcnt, row, 1, 1, 1);
+    lo->addWidget(leopcnt, row, 1, 1, 3);
 
     // error count
     QLabel *lerrcnt = new QLabel("Error count:", this);
@@ -188,8 +300,8 @@ void CuInfoDialog::exec(const CuData& in)
     leerrcnt->setObjectName("leerrcnt");
     leerrcnt->setReadOnly(true);
     leerrcnt->setText(QString::number(lis->errorCnt()));
-    lo->addWidget(lerrcnt, row, 2, 1, 1);
-    lo->addWidget(leerrcnt, row, 3, 1, 1);
+    lo->addWidget(lerrcnt, row, 4, 1, 1);
+    lo->addWidget(leerrcnt, row, 5, 1, 3);
 
     row++;
 
@@ -297,49 +409,16 @@ void CuInfoDialog::exec(const CuData& in)
     // live stuff
     // Live Frame
     if(readers.size() > 0) {
-        QScrollArea *scrollArea = new QScrollArea(this);
-        scrollArea->setWidgetResizable(true);
-        QFrame *liveF = new QFrame(this);
-        liveF->setObjectName("liveF");
-        QGridLayout *lilo = new QGridLayout(liveF);
-        foreach(CuControlsReaderA *r, readers)
-        {
-            QString formula, src = extractSource(r->source(), formula);
-            QGroupBox *gb = new QGroupBox(src, liveF);
-            gb->setFont(f);
-            lilo->addWidget(gb, row, 0, 1, d->layout_col_cnt);
-            gb->setObjectName(src + "_live");
-            printf("\e[1;32mcreating fuckin groubleox with name %s\e[0m", qstoc(gb->objectName()));
-            QVBoxLayout * gblilo = new QVBoxLayout(gb);
-            QuLabel *llive = NULL;
-            if(d->ctx->cumbia() && d->ctx->getReaderFactoryI())
-                llive = new QuLabel(liveF, d->ctx->cumbia(), *d->ctx->getReaderFactoryI());
-            else if(d->ctx->cumbiaPool())
-                llive = new QuLabel(liveF, d->ctx->cumbiaPool(), d->ctx->getControlsFactoryPool());
-            if(llive)
-            {
-                connect(llive, SIGNAL(newData(CuData)), this, SLOT(newLiveData(CuData)));
-                printf("\e[1;31mSETTING SOURCE %s ON LIVE READER\e[0m\n", qstoc(r->source()));
-                llive->setSource(r->source());
-                llive->setMaximumLength(80);
-                gblilo->addWidget(llive);
-            }
-            row++;
-        }
-        // title of second group box, the "live" one
-        QLabel *lFTitleLive = new QLabel("Live reader", this);
-        lFTitleLive->setFont(f);
-        lFTitleLive->setAlignment(Qt::AlignHCenter);
-        lFTitleLive->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        lo->addWidget(lFTitleLive, row, 0, 1, d->layout_col_cnt);
-        row++;
 
-        // add the live scroll area with the labels+plots frame inside
-        scrollArea->setWidget(liveF);
-        scrollArea->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding));
-        lo->addWidget(scrollArea, row, 0, 10, d->layout_col_cnt); // below monitorF
+        QCheckBox *cb = new QCheckBox("Start a live reader", this);
+        cb->setFont(f);
+        cb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        connect(cb, SIGNAL(toggled(bool)), this, SLOT(liveReadCbToggled(bool)));
+        lo->addWidget(cb, row, 0, 1, d->layout_col_cnt);
+        row++;
     }
 
+    m_resizeToMinimumSizeHint();
     show();
 }
 
@@ -471,77 +550,131 @@ div { width=80%; } \
  return html;
  }
 
+ QMap<QString, QString> CuInfoDialog::m_appPropMap() const
+ {
+     QMap<QString, QString> app_p; // app properties
+     app_p["App name"] = qApp->applicationName();
+     app_p["Version"] = qApp->applicationVersion();
+     app_p["Platform"] = qApp->platformName();
+     app_p["Author"] = qApp->property("author").toString();
+     app_p["e-mail"] = qApp->property("mail").toString();
+     app_p["Phone"]  = qApp->property("phone").toString();
+     app_p["Office"]  = qApp->property("office").toString();
+     app_p["Hardware referent"]  = qApp->property("hwReferent").toString();
+     app_p["Organization name"] = qApp->organizationName();
+     app_p["PID"] =  QString::number(qApp->applicationPid());
+     app_p["App"] = qApp->applicationFilePath();
+     QMutableMapIterator<QString, QString> i(app_p);
+     while(i.hasNext()) {
+         i.next();
+         if(i.value().isEmpty() || i.value().contains("$"))
+             i.remove();
+     }
+     return app_p;
+ }
+
+ int CuInfoDialog::m_populateAppDetails(QWidget *container)
+ {
+     QGridLayout *lo = new QGridLayout(container);
+     QStringList orderedKeys = QStringList() << "App name" <<"Version"  <<"Platform" <<"Author" << "e-mail" << "Phone"
+                                             <<"Office" << "Hardware referent" << "PID" << "App";
+     QMap<QString, QString> app_p = m_appPropMap(); // app properties
+     int r = 0;
+     int c = 0;
+     foreach(QString k, orderedKeys) {
+         if(app_p[k].length() > 0 && !app_p[k].contains("$")) {
+             if(c >= 8)
+                 c = 0;
+             QLabel *l = new QLabel(k, this);
+             l->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
+             QLineEdit *ln = new QLineEdit(app_p[k], this);
+             ln->setReadOnly(true);
+             lo->addWidget(l, r / 2, c, 1, 1);
+             lo->addWidget(ln, r / 2, c + 1, 1, 3);
+             c += 4;
+             r++;
+         }
+     }
+     return r / 4;
+ }
+
+ void CuInfoDialog::m_resizeToMinimumSizeHint() {
+     resize(qRound(minimumSizeHint().width() * 1.5), minimumSizeHint().height());
+ }
+
  void CuInfoDialog::newLiveData(const CuData &data)
  {
      printf("\e[1;33mCuInfoDialog:newLive data %s\e[0m\n", data.toString().c_str());
-     if(data.containsKey("data_format_str"))
-         sender()->disconnect(this, SLOT(newLiveData(const CuData&)));
+     //     if(data.containsKey("data_format_str"))
+     //         sender()->disconnect(this, SLOT(newLiveData(const CuData&)));
 
      QString src = QString::fromStdString(data["src"].toString());
      std::string format = data["data_format_str"].toString();
      QWidget *plotw = NULL;
-     QGroupBox *liveGb = findChild<QGroupBox *>(src + "_live");
-     if(liveGb) {
-         QVBoxLayout *livelo = qobject_cast<QVBoxLayout *>(liveGb->layout());
-         Cumbia *cumbia = d->ctx->cumbia();
-         CuControlsReaderFactoryI *rfac = d->ctx->getReaderFactoryI();
-         CumbiaPool *cu_pool = d->ctx->cumbiaPool();
-         CuControlsFactoryPool fpool = d->ctx->getControlsFactoryPool();
+     QTabWidget *liveTabW = findChild<QTabWidget *>(src + "liveTabW");
+     QuTrendPlot *trplot = findChild<QuTrendPlot *>("trplot_" + src);
+     QuSpectrumPlot *splot = findChild<QuSpectrumPlot *>("trplot_" + src);
+     if(liveTabW) {
+         if(!trplot && !splot) {
+             Cumbia *cumbia = d->ctx->cumbia();
+             CuControlsReaderFactoryI *rfac = d->ctx->getReaderFactoryI();
+             CumbiaPool *cu_pool = d->ctx->cumbiaPool();
+             CuControlsFactoryPool fpool = d->ctx->getControlsFactoryPool();
 
-         if(format == "scalar")
-         {
-             QuTrendPlot *trplot = findChild<QuTrendPlot *>("trplot_" + src);
-             if(!trplot)
+             if(format == "scalar")
              {
-                 // add the trend plot.
-                 // if the data is vector, the trend plot will be replaced by a spectrum plot
-                 if(cumbia && rfac)
-                     trplot = new QuTrendPlot(findChild<QFrame *>("liveF"), cumbia, *rfac);
-                 else if(cu_pool)
-                     trplot = new QuTrendPlot(findChild<QFrame *>("liveF"), cu_pool, fpool);
-                 if(trplot)
-                     plotw = trplot;
-             }
-         }
-         else if(format == "vector")
-         {
-             QuSpectrumPlot *splot = findChild<QuSpectrumPlot *>("trplot_" + src);
-             if(!splot)
-             {
-                 if(cumbia)
-                     splot = new QuSpectrumPlot(findChild<QFrame *>("liveF"), cumbia, *rfac);
-                 else if(d->cu_pool)
-                     splot = new QuSpectrumPlot(findChild<QFrame *>("liveF"),  cu_pool, fpool);
-                 if(splot)
-                     plotw = splot;
-             }
-         }
-         if(plotw)
-         {
-             plotw->setObjectName("trplot_" + src);
-             QStringList srcs;
-             if(data.containsKey("formula") && data.containsKey("srcs")) {
-                 std::string formula_src;
-                 std::string srclist;
-                 std::vector<std::string> vsrcs = data["srcs"].toStringVector();
-                 std::string fname = data["src"].toString(); // formula name [in square brackets]
-                 for(size_t i = 0; i < vsrcs.size(); i++) {
-                     i < vsrcs.size() - 1 ? srclist += vsrcs[i] + "," : srclist += vsrcs[i];
-                     srcs << QString::fromStdString(vsrcs[i]);
+                 if(!trplot)
+                 {
+                     // add the trend plot.
+                     // if the data is vector, the trend plot will be replaced by a spectrum plot
+                     if(cumbia && rfac)
+                         trplot = new QuTrendPlot(findChild<QFrame *>("liveF"), cumbia, *rfac);
+                     else if(cu_pool)
+                         trplot = new QuTrendPlot(findChild<QFrame *>("liveF"), cu_pool, fpool);
+                     if(trplot)
+                         plotw = trplot;
                  }
-                 formula_src = "formula://";
-                 if(fname.length() > 0)
-                     formula_src += "[" + fname + "]";
-                 formula_src += "{" + srclist + "}" + data["formula"].toString();
-                 srcs << QString::fromStdString(formula_src);
              }
-             else {
-                 srcs << src;
-             }
+             else if(format == "vector")
+             {
 
-             qDebug() << __PRETTY_FUNCTION__ << "setting sources srcs " << srcs;
-             plotw->setProperty("sources", srcs);
-             livelo->addWidget(plotw);
+                 if(!splot)
+                 {
+                     if(cumbia)
+                         splot = new QuSpectrumPlot(findChild<QFrame *>("liveF"), cumbia, *rfac);
+                     else if(d->cu_pool)
+                         splot = new QuSpectrumPlot(findChild<QFrame *>("liveF"),  cu_pool, fpool);
+                     if(splot)
+                         plotw = splot;
+                 }
+             }
+             if(plotw)
+             {
+                 plotw->setObjectName("trplot_" + src);
+                 QStringList srcs;
+                 if(data.containsKey("formula") && data.containsKey("srcs")) {
+                     std::string formula_src;
+                     std::string srclist;
+                     std::vector<std::string> vsrcs = data["srcs"].toStringVector();
+                     std::string fname = data["src"].toString(); // formula name [in square brackets]
+                     for(size_t i = 0; i < vsrcs.size(); i++) {
+                         i < vsrcs.size() - 1 ? srclist += vsrcs[i] + "," : srclist += vsrcs[i];
+                         srcs << QString::fromStdString(vsrcs[i]);
+                     }
+                     formula_src = "formula://";
+                     if(fname.length() > 0)
+                         formula_src += "[" + fname + "]";
+                     formula_src += "{" + srclist + "}" + data["formula"].toString();
+                     srcs << QString::fromStdString(formula_src);
+                 }
+                 else {
+                     srcs << src;
+                 }
+
+                 qDebug() << __PRETTY_FUNCTION__ << "setting sources srcs " << srcs;
+                 plotw->setProperty("sources", srcs);
+                 liveTabW->addTab(plotw, "Plot");
+             }
          }
 
          if(data["type"].toString() == "property") {
@@ -551,9 +684,22 @@ div { width=80%; } \
                  tbp = new QTextBrowser(findChild<QFrame *>("liveF"));
                  tbp->setReadOnly(true);
                  tbp->setObjectName("tb_live_properties");
-                 livelo->addWidget(tbp);
+                 QGridLayout *glo = qobject_cast<QGridLayout*>(liveTabW->widget(0)->layout());
+                 glo->addWidget(tbp, 0, 0, 4, 4);
              }
              tbp->setHtml(html);
+         }
+         else {
+             QString html = m_makeHtml(data, "data from \"" + src + "\"");
+             QTextBrowser *tbpdata = findChild<QFrame *>("liveF")->findChild<QTextBrowser *>("tb_live_data");
+             if(!tbpdata) {
+                 tbpdata = new QTextBrowser(findChild<QFrame *>("liveF"));
+                 tbpdata->setReadOnly(true);
+                 tbpdata->setObjectName("tb_live_data");
+                 QGridLayout *glo = qobject_cast<QGridLayout*>(liveTabW->widget(0)->layout());
+                 glo->addWidget(tbpdata, 0, 4, 4, 4);
+             }
+             tbpdata->setHtml(html);
          }
      }
      else {

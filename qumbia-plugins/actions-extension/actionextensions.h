@@ -26,11 +26,12 @@ public:
     QStringList extensions() const;
     QuActionExtensionI *getExtension(const QString &name);
     QuActionExtensionFactoryI *getExtensionFactory();
+    void clear();
 
 private:
     ActionExtensionPrivate *d;
-
-public:
 };
+
+
 
 #endif // ACTIONEXTENSION_H

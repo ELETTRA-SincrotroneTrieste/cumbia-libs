@@ -11,6 +11,7 @@
 #include <cupluginloader.h>
 #include <QDir>
 #include <QPluginLoader>
+#include <QtDebug>
 #include <QProcessEnvironment>
 
 // tango
@@ -47,6 +48,7 @@ void WidgetStdContextMenuActions::setup(QWidget *widget, const CuContext *ctx)
     const char* extensions_plugin_name = "libactions-extension-plugin.so";
     d->m_ctx = ctx;
     d->m_widget = widget;
+    d->m_actions.clear();
 
     CuPluginLoader pl;
     QString pluginFilePath = pl.getPluginAbsoluteFilePath(CUMBIA_QTCONTROLS_PLUGIN_DIR, extensions_plugin_name);
