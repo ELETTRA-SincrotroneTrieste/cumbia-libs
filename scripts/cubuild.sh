@@ -520,6 +520,7 @@ for x in "${meson_p[@]}" ; do
 
                if [ ${x} == "cumbia-epics" ]; then
                     if [[ ! -z "${EPICS_BASE}" ]] && [[ ! -z "${EPICS_HOST_ARCH}" ]]; then
+                        echo "\e[1;32m* \e[0mEPICS_BASE and EPICS_HOST_ARCH defined"
                         meson configure -Depics_base=${EPICS_BASE} -Depics_host_arch=${EPICS_HOST_ARCH}
                     else
                         echo -e "\e[1;31m\n*\n* BUILD project ${x}: either EPICS_BASE or EPICS_HOST_ARCH (or both) are unset\n*\e[0m"
