@@ -105,7 +105,8 @@ endforeach
 
   includedirs = [includedirs, epics_includes, epics_linux_includes ]
   epics_libdir = epics_base + '/lib/' + epics_host_arch
-  linker_args = [ '-lca',  '-ldbCore', '-lCom' , '-L' + epics_libdir ]
+##  linker_args = [ '-lca',  '-ldbCore', '-lCom' , '-L' + epics_libdir ]
+   linker_args = [ '-lca',  '-lCom' , '-L' + epics_libdir ]
 endif
 
 
