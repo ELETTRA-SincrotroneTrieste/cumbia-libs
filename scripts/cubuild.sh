@@ -529,6 +529,7 @@ for x in "${meson_p[@]}" ; do
                         meson configure -Depics_base=$EPICS_BASE -Depics_host_arch=$EPICS_HOST_ARCH -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
                         #    ninja install
                          if [ $? -ne 0 ]; then
+                                 echo "meson configure output = `meson configure`"
                                  exit 1
                           fi
                         meson configure -Depics_base=$EPICS_BASE -Depics_host_arch=$EPICS_HOST_ARCH -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
