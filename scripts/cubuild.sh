@@ -533,7 +533,7 @@ for x in "${meson_p[@]}" ; do
                         exit 1
                     fi
                fi
-        #       meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
+               meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
                meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
 
             #    ninja install
