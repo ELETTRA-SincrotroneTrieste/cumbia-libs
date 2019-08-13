@@ -526,12 +526,12 @@ for x in "${meson_p[@]}" ; do
                         echo -e  "\e[1;32m* \e[0mEPICS_HOST_ARCH=\e[1;36m${EPICS_HOST_ARCH}\e[0m"
                         echo -e "\e[1;32m* \e[0m"
 
-                        meson configure -Depics_base=${EPICS_BASE} -Depics_host_arch=${EPICS_HOST_ARCH} -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
+                        meson configure -Depics_base=$EPICS_BASE -Depics_host_arch=$EPICS_HOST_ARCH -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
                         #    ninja install
                          if [ $? -ne 0 ]; then
                                  exit 1
                           fi
-                        meson configure -Depics_base=${EPICS_BASE} -Depics_host_arch=${EPICS_HOST_ARCH} -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
+                        meson configure -Depics_base=$EPICS_BASE -Depics_host_arch=$EPICS_HOST_ARCH -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
 
                         #    ninja install
                          if [ $? -ne 0 ]; then
