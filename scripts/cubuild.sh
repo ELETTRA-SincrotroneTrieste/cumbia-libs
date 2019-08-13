@@ -519,14 +519,18 @@ for x in "${meson_p[@]}" ; do
                 ## So, build and install in tmp_installdir
 
                if [ ${x} == "cumbia-epics" ]; then
-                    if [[ ! -z "${EPICS_BASE}" ]] && [[ ! -z "${EPICS_HOST_ARCH}" ]]; then
+                    if [[ ! -z "${EPICS_BASE}" ]] &&
+                    [[ ! -z "${EPICS_HOST_ARCH}" ]]; then
                         echo  -e "\e[1;32m* \e[0mEPICS_BASE and EPICS_HOST_ARCH defined as"
                         echo  -e "\e[1;32m* \e[0mEPICS_BASE=\e[1;36m${EPICS_BASE}\e[0m"
                         echo -e  "\e[1;32m* \e[0mEPICS_HOST_ARCH=\e[1;36m${EPICS_HOST_ARCH}\e[0m"
                         echo -e "\e[1;32m* \e[0m"
 
-                        meson configure -Depics_base=${EPICS_BASE} -Depics_host_arch=${EPICS_HOST_ARCH}
                         meson configure -Depics_base=${EPICS_BASE} -Depics_host_arch=${EPICS_HOST_ARCH} -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
+                        #    ninja install
+                         if [ $? -ne 0 ]; then
+                                 exit 1
+                          fi
                         meson configure -Depics_base=${EPICS_BASE} -Depics_host_arch=${EPICS_HOST_ARCH} -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
 
                         #    ninja install
