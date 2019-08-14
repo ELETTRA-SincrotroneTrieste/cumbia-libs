@@ -129,7 +129,8 @@ once again.
 The [Meson Build System](http://mesonbuild.com) is an open source build system designed
 to be fast and user friendly. It provides multi platform support.
 The *cumbia*, *cumbia-tango* and *cumbia-epics* modules rely on *meson* for compilation and
-installation. The modules involving the Qt libraries, *cumbia-qtcontrols*, *qumbia-tango-controls*
+installation. Dedicated sections below for each module.
+The modules involving the Qt libraries, *cumbia-qtcontrols*, *qumbia-tango-controls*
 and *qumbia-epics-controls* adopt Qt's *qmake* build system.
 Meson configuration files are named *meson.build*. One file resides inside the main project
 directory and another one, intended to build and install the documentation, is under the doc
@@ -359,7 +360,8 @@ and then proceed the same way to build the library and install the documentation
 
 ### 5. cumbia-epics.
 
-If you rely on the Epics control system, please install this module as follows:
+The *cumbia-epics* module can be installed as follows:
+
 
 > cd ../cumbia-epics
 
@@ -367,14 +369,29 @@ If you rely on the Epics control system, please install this module as follows:
 
 > cd builddir
 
-Optional:
+Configuration through *pkg-config* is not available because some early EPICS versions do not provide a *pkgconfig* file
+and newer versions' support seems not complete.
+The installation procedure relies on the definition of two variables that can be passed to *meson* with the *-D* option:
 
-> meson configure
+> meson configure -Depics_base=$EPICS_BASE
+> meson configure -Depics_host_arch=$EPICS_HOST_ARCH
+
+In the example above, EPICS_BASE and EPICS_HOST_ARCH are environment variables defined earlier.
+You can provide the actual values to the *-D* options as well:
+
+> meson configure -Depics_base=/usr/local/epics/base-3.14.12.8
+> meson configure -Depics_host_arch=$linux-x86_64
+
+Don't forget to specify the installation directory, and the *libdir* option if you want to install the libraries under *lib* rather then *lib64*.
+The *-Dbuildtype=* option can be used to build the module in *release* or *debug* mode.
+A *meson configure* command condensed in one line looks like this:
+
+> meson configure -Depics_base=$EPICS_BASE -Depics_host_arch=$EPICS_HOST_ARCH -Dprefix=/usr/local/cumbia-libs -Dlibdir=lib -Dbuildtype=release
 
 Build library and docs:
 > ninja
 
-Install everything:
+Install cumbia-epics:
 > ninja install
 
 To read the *documentation*, execute:
