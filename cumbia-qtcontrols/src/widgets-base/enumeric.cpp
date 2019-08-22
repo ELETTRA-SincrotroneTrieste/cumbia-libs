@@ -160,7 +160,7 @@ void ENumeric::setValue(double v)
             emit valueChanged(temp*pow(10.0, -decDig));
     }
     else
-        perr("ENumeric \"%s\": value %f outta range [%f, %f]", qstoc(objectName()), v, minVal, maxVal);
+        perr("ENumeric \"%s\": value %f outta range [%lld, %lld]: please set minimum/maximum properly", qstoc(objectName()), v, minVal, maxVal);
 }
 
 void ENumeric::silentSetValue(double v)
