@@ -8,6 +8,7 @@
 #include <QMetaProperty>
 #include <string>
 #include <cumacros.h>
+#include <cudata.h>
 
 #include <QtDebug>
 
@@ -183,41 +184,59 @@ QList<QObject *> CuControlsUtils::findObjects(const QString& target, const QObje
     return objects;
 }
 
-bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, const CuVariant &val)
+/*! \brief initialize objects setting range (min, max, if relevant) and the value according to value_key
+ *
+ * @param target the name of the target
+ * @param leaf the parent object under which children are searched by findObjects
+ * @param data the CuData holding configuration values (min, max, if present), and a value to display on the object
+ * @param value_key the key to look for the value that must be displayed (example: "value" or "w_value")
+ *
+ * @return true if the operation was successful, false otherwise
+ */
+bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, const CuData &data, const char* value_key)
 {
     bool ret, has_target;
     int idx, match = 0;
-    int siz = static_cast<int>(val.getSize());
+    double min = -1, max = -1;
+    int data_siz = -1;
     CuControlsUtils cu;
     QVariant::Type vtype;
     std::string value_as_str;
     std::vector<std::string> values_str;
+    const CuVariant& val = data[value_key];
+
+    if(val.isValid())
+        data_siz = static_cast<int>(val.getSize());
+    // min, max
+    if(data["max"].isValid() && data["min"].isValid()) {
+        data["max"].to<double>(max);
+        data["min"].to<double>(min);
+    }
     QList<QObject *> inputobjs = cu.findObjects(target, leaf);
-    printf("found %d objects associated to target %s object %s VAL %s\n",
-           inputobjs.size(), qstoc(target), qstoc(leaf->objectName()), val.toString().c_str());
     CuVariant::DataFormat fmt = val.getFormat();
     if(fmt == CuVariant::Scalar)
         value_as_str = val.toString(&ret);
     else
         values_str = val.toStringVector(&ret);
 
-    printf("objects found %d val size %d ret %d\n", inputobjs.size(), siz, ret);
-    for(int i = 0; i < inputobjs.size() && i < siz && ret; i++) {
+    for(int i = 0; i < inputobjs.size() && ret; i++) {
         QObject *o = inputobjs[i];
         has_target = o->metaObject()->indexOfProperty("target") >= 0 && !o->property("target").toString().isEmpty();
-        printf("CuControlsUtils.initObjects: object %s class %s has targets %d index %d prop %s\e[0m\n", qstoc(o->objectName()), o->metaObject()->className(),
-               has_target,o->metaObject()->indexOfProperty("target"), qstoc(o->property("target").toString()) );
+        printf("CuControlsUtils.initObjects: object %s class %s has targets [%s], target %s\e[0m\n",
+               qstoc(o->objectName()), o->metaObject()->className(),
+               has_target ? "yes" : "no", qstoc(o->property("target").toString()) );
         if(!has_target) {  // initialise
-            {
-                printf("\e[1;32mCuControlsUtils.initObjects: object %s class %s has NO targets\e[0m\n", qstoc(o->objectName()), o->metaObject()->className() );
-                ret = false;
-                std::string vs;
+            ret = true;
+            std::string vs;
+            const QMetaObject *mo = o->metaObject();
+            if(i < data_siz) {
                 fmt == CuVariant::Scalar ? vs = value_as_str : vs = values_str[i];
-                if(o->metaObject()->indexOfProperty("text") > -1)
+                if((idx = mo->indexOfProperty("text") ) > -1 && mo->property(idx).isWritable()) {
                     ret = o->setProperty("text", QString::fromStdString(vs));
-                else if((idx = o->metaObject()->indexOfProperty("value") ) > -1) {
+                }
+                else if((idx = mo->indexOfProperty("value") ) > -1 && mo->property(idx).isWritable()) {
                     try {
-                        vtype = o->metaObject()->property(idx).type();
+                        vtype = mo->property(idx).type();
                         if(vtype == QVariant::Double)
                             ret =o->setProperty("value", strtod(vs.c_str(), NULL));
                         else if(vtype == QVariant::Int)
@@ -226,21 +245,31 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
                             ret =o->setProperty("value", static_cast<unsigned int>(strtoul(vs.c_str(), NULL, 10)));
                         else if(vtype == QVariant::Bool)
                             ret =o->setProperty("value", vs != "0" && strcasecmp(vs.c_str(), "false") != 0);
+                        else {
+                            printf("\e[1;31m cannot set prop value cuz type %d not supported\e[0m\n", vtype);
+                        }
                     }
                     catch(const std::invalid_argument &ia) {
                         perr("CuControlsUtils.initObjects: could not convert \"%s\" to a number", vs.c_str());
                     }
                 }
-                else if(o->metaObject()->indexOfProperty("currentText") > -1)
+                else if(( idx = mo->indexOfProperty("currentText") ) > -1 && mo->property(idx).isWritable())
                     ret = o->setProperty("currentText", QString::fromStdString(val.toString()));
-                else if(o->metaObject()->indexOfProperty("checked") > -1)
+                else if(( idx = mo->indexOfProperty("checked")) > -1 && mo->property(idx).isWritable())
                     ret = o->setProperty("value", vs != "0" && strcasecmp(vs.c_str(), "false") != 0);
+            } // i < data_siz
 
-                if(!ret)
-                    perr("CuControlsUtils.initObjects: failed to set value \"%s\" on object \"%s\"", vs.c_str(), qstoc(o->objectName()));
-                else
-                    match++;
+            // min, max
+            if( (min != max) &&  (idx = mo->indexOfProperty("minimum")) > -1 && mo->property(idx).isWritable() &&
+                    (idx = mo->indexOfProperty("maximum")) > -1 && mo->property(idx).isWritable()) {
+                ret = o->setProperty("minimum", min) && o->setProperty("maximum", max);
             }
+
+            if(!ret)
+                perr("CuControlsUtils.initObjects: failed to set value \"%s\" on object \"%s\"", vs.c_str(), qstoc(o->objectName()));
+            else
+                match++;
+
         }
     }
     return inputobjs.size() == match;

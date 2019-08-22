@@ -7,6 +7,7 @@
 class QString;
 class QObject;
 class CuInputProvider_I;
+class CuData;
 
 /*! \brief utility class to find input arguments from objects with text or value properties
  *
@@ -30,7 +31,7 @@ public:
 
     QList<QObject *> findObjects(const QString &target, const QObject *leaf);
 
-    bool initObjects(const QString& target, const QObject* leaf, const CuVariant& val);
+    bool initObjects(const QString& target, const QObject* leaf, const CuData &data, const char *value_key);
 };
 
 #endif // CUCONTROLSUTILS_H
