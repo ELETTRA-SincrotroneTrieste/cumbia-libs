@@ -60,19 +60,15 @@ template<typename T> bool CuVariant::to(T &val) const
             try
             {
                 // try converting to long double
-                errno = 0; /* To distinguish success/failure after call */
-                char *endptr;
-                const char *str = toString().c_str();
-                val = static_cast<T>(strtold(str, &endptr));
-                valid = (endptr != str && errno == 0);
+                val = static_cast<T>( std::stold(toString()));
             }
 
             catch(const std::invalid_argument& ) {
-                perr("CuVariant.toVector: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
+                pwarn("CuVariant.toVector: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
                 valid = false;
             }
             catch(const std::out_of_range& ) {
-                perr("CuVariant.toVector: string \"%s\" to number conversion failed: out of range", toString().c_str());
+                pwarn("CuVariant.toVector: string \"%s\" to number conversion failed: out of range", toString().c_str());
                 valid = false;
             }
             break;
@@ -81,7 +77,7 @@ template<typename T> bool CuVariant::to(T &val) const
             break;
         }
         if(!valid)
-            perr("CuVariant.to: unsupported scalar conversion from type %s and format %s", dataTypeStr(d->type).c_str(),
+            pwarn("CuVariant.to: unsupported scalar conversion from type %s and format %s", dataTypeStr(d->type).c_str(),
                  dataFormatStr(d->format).c_str());
     }
     return valid;
@@ -166,15 +162,15 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
                 try
                 {
                     // try converting to long double
-                    ld = strtold(sv[i].c_str(), NULL);
+                    ld = std::stold(sv[i]);
                     v.push_back(static_cast<T>(ld));
                 }
                 catch(const std::invalid_argument& ) {
-                    perr("CuVariant.toVector: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
+                    pwarn("CuVariant.toVector: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
                     valid = false;
                 }
                 catch(const std::out_of_range &) {
-                    perr("CuVariant.toVector: string \"%s\" to number conversion failed: out of range", toString().c_str());
+                    pwarn("CuVariant.toVector: string \"%s\" to number conversion failed: out of range", toString().c_str());
                     valid = false;
                 }
             }
@@ -207,15 +203,15 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
             try
             {
                 // try converting to long double
-                long double ld = strtold(toString().c_str(), NULL);
+                long double ld = std::stold(toString());
                 v.push_back(static_cast<T>(ld));
             }
             catch(const std::invalid_argument &) {
-                perr("CuVariant.toVector: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
+                pwarn("CuVariant.toVector: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
                 valid = false;
             }
             catch(const std::out_of_range &) {
-                perr("CuVariant.toVector: string \"%s\" to number conversion failed: out of range", toString().c_str());
+                pwarn("CuVariant.toVector: string \"%s\" to number conversion failed: out of range", toString().c_str());
                 valid = false;
             }
         }
