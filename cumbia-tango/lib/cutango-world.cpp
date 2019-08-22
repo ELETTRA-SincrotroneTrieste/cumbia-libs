@@ -17,8 +17,8 @@ public:
 CuTangoWorld::CuTangoWorld()
 {
     d = new CuTangoWorldPrivate();
-    d->src_patterns.push_back("[A-Za-z0-9_\\.\\$]+/.+");
-    d->src_patterns.push_back("[A-Za-z0-9_\\.\\$]+->.+");
+    d->src_patterns.push_back("[A-Za-z0-9_\\-\\.\\$]+/.+");
+    d->src_patterns.push_back("[A-Za-z0-9_\\-\\.\\$]+->.+");
 }
 
 CuTangoWorld::~CuTangoWorld()
@@ -1020,7 +1020,8 @@ bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &re
 bool CuTangoWorld::source_valid(const string &src)
 {
     //  (tango://){0,1}([A-Za-z_0-9\._\-]*[:]{1}[0-9]+[/]){0,1}(([A-Za-z_0-9_\-\.]+/[A-Za-z_0-9_\-\.]+/[A-Za-z_0-9_\-\.]+([/]{1,1}|[->]{2,2})[A-Za-z_0-9_\-\.]+)([\(]{1}[&A-Za-z_0-9_\-\\.,]+[\)]){0,1})    const char* SOURCE_REGEXP = "(tango://){0,1}"
-    std::regex re = std::regex("(tango://){0,1}([A-Za-z_0-9_\\-\\.]*[:]{1}[0-9]+[/]){0,1}(([A-Za-z_0-9_\\-\\.]+/[A-Za-z_0-9_\\-\\.]+/[A-Za-z_0-9_\\-\\.]+([/]{1,1}|[->]{2,2})[A-Za-z_0-9_\\-\\.]+)([\\(]{1}[&A-Za-z_0-9_\\-\\\\.,]+[\\)]){0,1})");
+    const char *pattern = "(tango://){0,1}([A-Za-z_0-9_\\-\\.]*[:]{1}[0-9]+[/]){0,1}(([A-Za-z_0-9_\\-\\.]+/[A-Za-z_0-9_\\-\\.]+/[A-Za-z_0-9_\\-\\.]+([/]{1,1}|[->]{2,2})[A-Za-z_0-9_\\-\\.]+)([\\(]{1}[&A-Za-z_0-9_\\-\\\\.,]+[\\)]){0,1})";
+    std::regex re = std::regex(pattern);
     std::smatch m;
     return std::regex_match(src, m, re);
 }
