@@ -11,7 +11,7 @@
 #include "quwidgetupdatestrategy_i.h"
 #include "culinkstats.h"
 #include "cucontext.h"
-#include "quplotbasecontextmenustrategy.h"
+#include "quplotcontextmenustrategy.h"
 
 #include "qutimescaledraw.h"
 #include <QImage>
@@ -24,8 +24,6 @@ class QuSpectrumPlotPrivate
 public:
     bool auto_configure, timeScaleDrawEnabled;
     bool read_ok;
-    CuContext *context;
-
     QuPlotCommon *plot_common;
     QuTimeScaleDraw *timeScaleDraw;
     QVector<double> x_data;
@@ -73,7 +71,7 @@ void QuSpectrumPlot::m_init()
 {
     d->auto_configure = true;
     d->read_ok = false;
-    setContextMenuStrategy(new QuPlotBaseContextMenuStrategy());
+    setContextMenuStrategy(new QuPlotContextMenuStrategy(getContext()));
 }
 
 QString QuSpectrumPlot::source() const
@@ -219,8 +217,4 @@ CuContext *QuSpectrumPlot::getContext() const
 {
     return d->plot_common->getContext();
 }
-
-
-
-
 

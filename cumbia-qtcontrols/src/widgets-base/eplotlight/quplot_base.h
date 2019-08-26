@@ -257,7 +257,6 @@ public slots:
 
     void setAxisScaleDefaultEnabled(bool en, Axis axisId = QwtPlot::yLeft);
 
-
 protected:
 
     /** \brief returns the plot title.
@@ -281,7 +280,7 @@ protected:
 
     virtual void init();
 
-    void contextMenuEvent(QContextMenuEvent *e);
+    void contextMenuEvent(QContextMenuEvent *);
 
 signals:
   void plotClicked(const QPoint& pt, QwtPlotCurve *closestCurve, double x, double y, const QPoint& curvePoint);

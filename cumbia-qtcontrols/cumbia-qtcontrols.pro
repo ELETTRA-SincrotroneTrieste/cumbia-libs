@@ -47,6 +47,7 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/quled.cpp \
     src/qutable.cpp \
     src/quplotcommon.cpp \
+    src/widgets-base/eplotlight/quplotcontextmenustrategy.cpp \
     src/widgets-base/number_delegate.cpp \
     src/widgets-base/eng_notation.cpp \
     src/widgets-base/leftclick_with_modifiers_eater.cpp \
@@ -103,6 +104,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/qustringlist.h \
     src/qutable.h \
     src/quvector.h \
+    src/widgets-base/eplotlight/quplotcontextmenustrategy.h \
     src/widgets-base/string_delegate.h \
     src/widgets-base/number_delegate.h \
     src/widgets-base/int_delegate.h \

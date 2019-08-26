@@ -40,6 +40,12 @@ public slots:
 
     QStringList cmdOpt() const;
 
+    QString hostname() const;
+
+    int display() const;
+
+    int screen();
+
 signals:
     void dbusRegistered(const QString& exename, const QStringList& args, const QString& dbus_servicenam);
     void dbusUnregistered(const QString& exename, const QStringList& args, const QString& dbus_servicenam);

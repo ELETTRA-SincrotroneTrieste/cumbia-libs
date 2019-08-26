@@ -4,6 +4,7 @@
 #include <cudatalistener.h>
 #include "quwidgetinterface.h"
 #include "quplot_base.h"
+#include "quplotbasecontextmenustrategy.h"
 #include <cucontexti.h>
 
 class QuSpectrumPlotPrivate;

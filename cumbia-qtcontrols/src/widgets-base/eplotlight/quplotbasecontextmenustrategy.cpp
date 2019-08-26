@@ -1,4 +1,6 @@
 #include "quplotbasecontextmenustrategy.h"
+#include "cucontext.h"
+#include "cucontextmenu.h"
 #include <quplot_base.h>
 
 #include <QMenu>
@@ -14,6 +16,6 @@ QMenu *QuPlotBaseContextMenuStrategy::createMenu(QWidget *w)
     rClickM->addSeparator();
     rClickM->addAction("Configure", plot, SLOT(configurePlot()))->setObjectName("configure");
     rClickM->addSeparator();
-    rClickM->addAction("Link stats...", plot, SLOT(requestLinkStats()))->setObjectName("linkstats");
+
     return rClickM;
 }

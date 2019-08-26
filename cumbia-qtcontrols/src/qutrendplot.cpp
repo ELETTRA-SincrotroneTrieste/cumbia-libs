@@ -10,8 +10,8 @@
 #include "cucontrolsreader_abs.h"
 #include "cucontext.h"
 #include "quwidgetupdatestrategy_i.h"
-#include "quplotbasecontextmenustrategy.h"
 #include "cucontext.h"
+#include "quplotcontextmenustrategy.h"
 #include "culinkstats.h"
 #include "qutimescaledraw.h"
 #include <quplotcurve.h>
@@ -69,7 +69,7 @@ void QuTrendPlot::m_init()
     setUpperBoundExtra(QwtPlot::xBottom, 0.1);
     setUpperBoundExtra(QwtPlot::xTop, 0.1);
     d->directPainter = new QwtPlotDirectPainter( this );
-    setContextMenuStrategy(new QuPlotBaseContextMenuStrategy());
+    setContextMenuStrategy(new QuPlotContextMenuStrategy(getContext()));
     if ( QwtPainter::isX11GraphicsSystem() )
         canvas()->setAttribute( Qt::WA_PaintOnScreen, true );
 }

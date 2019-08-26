@@ -4,6 +4,7 @@
 #include <quplotcomponent.h>
 
 class QPoint;
+class CuContext;
 class QuWidgetContextMenuStrategyI;
 
 /*! \brief A QuPlotComponent managing the context menu for a plot.

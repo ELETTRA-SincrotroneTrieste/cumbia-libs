@@ -2,6 +2,8 @@
 #include "qudbusplugininterface.h"
 #include <QDir>
 #include <QPluginLoader>
+#include <unistd.h> // gethostname
+#include <QtX11Extras/QX11Info>
 
 #include <cupluginloader.h>
 #include <cumacros.h>
@@ -45,6 +47,7 @@ QuApplication::QuApplication(int & argc, char **argv) : QApplication(argc, argv)
  */
 int QuApplication::exec()
 {
+    printf("\e[1;34mQuApplication.exec: hostname %s display %d\e[0m\n", qstoc(this->hostname()), display());
     if(d->dbus_i)
     {
         d->dbus_i->registerApp(this);
@@ -128,6 +131,26 @@ QStringList QuApplication::cmdOpt() const
     QStringList ar = QApplication::arguments();
     ar.removeFirst();
     return ar;
+}
+
+QString QuApplication::hostname() const
+{
+    char hostname[256] = "";
+    gethostname(hostname, 256);
+    return QString(hostname);
+}
+
+int QuApplication::display() const
+{
+    if(!QX11Info::isPlatformX11())
+        return -1;
+    printf("display returns: %d\n", QX11Info::appScreen());
+    return QX11Info::appScreen();
+}
+
+int QuApplication::screen()
+{
+
 }
 
 /*! @private
