@@ -526,20 +526,12 @@ for x in "${meson_p[@]}" ; do
                         echo -e  "\e[1;32m* \e[0mEPICS_HOST_ARCH=\e[1;36m${EPICS_HOST_ARCH}\e[0m"
                         echo -e "\e[1;32m* \e[0m"
 
-                        meson configure -Depics_base=$EPICS_BASE -Depics_host_arch=$EPICS_HOST_ARCH -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
+                        meson configure -Depics_base=$EPICS_BASE -Depics_host_arch=$EPICS_HOST_ARCH
                         #    ninja install
                          if [ $? -ne 0 ]; then
                                  echo "meson configure output = `meson configure`"
                                  exit 1
                           fi
-                        meson configure -Depics_base=$EPICS_BASE -Depics_host_arch=$EPICS_HOST_ARCH -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
-
-                        #    ninja install
-                         if [ $? -ne 0 ]; then
-                                 exit 1
-                         else
-                             date > $tmp_build_d/${x}
-                         fi
                     else
                         echo -e "\e[1;31m\n*\n* BUILD project ${x}: either EPICS_BASE or EPICS_HOST_ARCH (or both) are unset\n*\e[0m"
                         echo -e "\e[1;31m* BUILD project ${x}: EPICS_BASE=${EPICS_BASE}"
@@ -551,6 +543,21 @@ for x in "${meson_p[@]}" ; do
                         exit 1
                     fi
                fi
+               meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
+               #    ninja install
+                if [ $? -ne 0 ]; then
+                        echo "meson configure output = `meson configure`"
+                        exit 1
+                 fi
+               meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
+
+               #    ninja install
+                if [ $? -ne 0 ]; then
+                        exit 1
+                else
+                    date > $tmp_build_d/${x}
+                fi
+
 	fi
 
 	#
