@@ -3,13 +3,13 @@
 #include <QDir>
 #include <QPluginLoader>
 #include <unistd.h> // gethostname
-#include <QtX11Extras/QX11Info>
 
 #include <cupluginloader.h>
 #include <cumacros.h>
 #include <QtDebug>
 #include <QWidget>
 #include <QWindow>
+#include <QtX11Extras/QX11Info>
 
 class QuApplicationPrivate
 {
@@ -47,7 +47,7 @@ QuApplication::QuApplication(int & argc, char **argv) : QApplication(argc, argv)
  */
 int QuApplication::exec()
 {
-    printf("\e[1;34mQuApplication.exec: hostname %s display %d\e[0m\n", qstoc(this->hostname()), display());
+    printf("\e[1;34mQuApplication.exec: hostname \"%s\" display %d screen %d\e[0m\n", qstoc(this->display_host()), display_number(), screen_number());
     if(d->dbus_i)
     {
         d->dbus_i->registerApp(this);
@@ -103,7 +103,6 @@ QStringList QuApplication::arguments() const
     return QApplication::arguments();
 }
 
-
 /*! \brief returns the executable name
  *
  * @return the executable name obtained by QApplication::arguments().first()
@@ -133,24 +132,39 @@ QStringList QuApplication::cmdOpt() const
     return ar;
 }
 
-QString QuApplication::hostname() const
+QString QuApplication::display_host() const
 {
-    char hostname[256] = "";
-    gethostname(hostname, 256);
-    return QString(hostname);
+    QString disp = QString(getenv("DISPLAY"));
+    QRegExp re("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
+    if(re.indexIn(disp) > -1 && re.capturedTexts().size() > 1) {
+        return re.capturedTexts().at(1);
+    }
+    return "";
 }
 
-int QuApplication::display() const
+int QuApplication::display_number() const
 {
-    if(!QX11Info::isPlatformX11())
-        return -1;
-    printf("display returns: %d\n", QX11Info::appScreen());
-    return QX11Info::appScreen();
+    QString disp = QString(getenv("DISPLAY"));
+    QRegExp re("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
+    if(re.indexIn(disp) > -1 && re.capturedTexts().size() > 2) {
+        return re.capturedTexts().at(2).toInt();
+    }
+    return -1;
 }
 
-int QuApplication::screen()
+int QuApplication::screen_number() const
 {
+    QString disp = QString(getenv("DISPLAY"));
+    QRegExp re("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
+    if(re.indexIn(disp) > -1 && re.capturedTexts().size() > 3) {
+        return re.capturedTexts().at(3).toInt();
+    }
+    return -1;
+}
 
+bool QuApplication::isPlatformX11() const
+{
+    return QX11Info::isPlatformX11();
 }
 
 /*! @private

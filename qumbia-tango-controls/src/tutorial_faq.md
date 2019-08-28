@@ -14,6 +14,7 @@
 - [In QTango there used to be a widget ready to read and display a value. In cumbia there is not. How do I quickly adapt an existing Qt widget?](#cumbiawidget)
 - [How do I fetch specific Tango attribute properties to configure my custom cumbia widget?](#cumbiawidget_props)
 - [I either used QuWatcher or implemented CuDataListener on my custom graphical object. How do I configure it through the Tango database properties (setting maximum and minimum values, display unit and data format)?](#configure)
+- [I want to write an array value of four elements simply using spin boxes and an apply button. How to do it?](#array_write_spinboxes)
 - [How do I get a Tango device property?](#tangoprops)
 - [How to format a message from a Tango *Exception*?](#except)
 - [How to trigger an asynchronous read request to the Tango engine?](#read_request)
@@ -447,6 +448,16 @@ void MyCustomWidget::onUpdate(const CuData &da)
         }
 
 ```
+
+## Q.
+
+<a name="tarray_write_spinboxes" />
+
+### I want to write an array value of four elements simply using spin boxes and an apply button. How to do it?
+
+### A.
+
+
 
 ## Q.
 

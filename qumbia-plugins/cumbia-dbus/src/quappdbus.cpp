@@ -9,7 +9,7 @@
 #include <QUrl>
 #include <QStringList>
 #include <unistd.h>
-#include "cumbiadbus_adaptor.h"
+#include "../cumbiadbus_adaptor.h"
 
 QuAppDBus::QuAppDBus(QObject *parent) : QObject(parent)
 {
@@ -31,7 +31,7 @@ void QuAppDBus::registerApp(QuApplication *app)
 {
     QStringList args = app->arguments();
     args.removeFirst();
-    new QuAppDBusInterfaceAdaptor(app);
+    new QuApplicationAdaptor(app);
     QDBusConnection connection = QDBusConnection::sessionBus();
     QString serviceName = getServiceName(app);
     bool ret = connection.registerObject("/QuApplication", app);

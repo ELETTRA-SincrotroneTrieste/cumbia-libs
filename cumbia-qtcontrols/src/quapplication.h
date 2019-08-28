@@ -40,11 +40,13 @@ public slots:
 
     QStringList cmdOpt() const;
 
-    QString hostname() const;
+    QString display_host() const;
 
-    int display() const;
+    int display_number() const;
 
-    int screen();
+    int screen_number() const;
+
+    bool isPlatformX11() const;
 
 signals:
     void dbusRegistered(const QString& exename, const QStringList& args, const QString& dbus_servicenam);

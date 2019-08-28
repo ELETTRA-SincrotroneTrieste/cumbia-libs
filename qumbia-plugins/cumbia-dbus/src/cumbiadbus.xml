@@ -1,8 +1,7 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
-<node name="/eu/elettra/cumbia-qtcontrols/cumbia-dbus">
-  <interface name="eu.elettra.qudbus.QuAppDBusInterface" >
-
-<signal name="dbusRegistered">
+<node>
+  <interface name="local.QuApplication">
+    <signal name="dbusRegistered">
       <arg name="exename" type="s" direction="out"/>
       <arg name="args" type="as" direction="out"/>
       <arg name="dbus_servicenam" type="s" direction="out"/>
@@ -12,18 +11,32 @@
       <arg name="args" type="as" direction="out"/>
       <arg name="dbus_servicenam" type="s" direction="out"/>
     </signal>
-
-
     <method name="raise">
     </method>
     <method name="minimize">
     </method>
+    <method name="quit">
+    </method>
     <method name="arguments">
       <arg type="as" direction="out"/>
     </method>
-    <method name="quit"/>
-
+    <method name="exename">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="cmdOpt">
+      <arg type="as" direction="out"/>
+    </method>
+    <method name="display_host">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="display_number">
+      <arg type="i" direction="out"/>
+    </method>
+    <method name="screen_number">
+      <arg type="i" direction="out"/>
+    </method>
+    <method name="isPlatformX11">
+      <arg type="b" direction="out"/>
+    </method>
   </interface>
 </node>
-<!-- generated running qdbuscpp2xml src/quapplication.h -o /tmp/quapplication.xml from cumbia-qtcontrols directory -->
-

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += widgets opengl x11extras
+QT       += widgets opengl
 
 
 !android-g++ {

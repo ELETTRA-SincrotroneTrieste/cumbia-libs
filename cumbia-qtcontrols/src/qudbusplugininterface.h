@@ -7,6 +7,17 @@
 
 class QuApplication;
 
+class QuAppInfoPrivate {
+public:
+    QString dbus_servicename;
+    QStringList args;
+    pid_t pid;
+    QString display_host;
+    int display_number, screen_number;
+    bool is_platform_x11;
+    QString m_argv0;
+};
+
 /*! \brief a class that groups information about a QuApplication
  *
  * \ingroup plugins
@@ -15,7 +26,12 @@ class QuAppInfo
 {
 public:
 
-    QuAppInfo() { pid = -1; }
+    virtual ~QuAppInfo() {
+    }
+
+    QuAppInfo() {
+        d.pid = -1;
+    }
 
     /** \brief QuAppInfo constructor that accepts the <em>full</em> command line as provided by
      *         QApplication::arguments, including argv[0].
@@ -30,36 +46,50 @@ public:
      * \li path returns the application path, if provided, that is argv[0] - exename
      * \li argv0 returns the argv[0]
      */
-    QuAppInfo(const QStringList& _args, const QString& dbus_servnam = QString()) {
+    QuAppInfo(const QStringList& _args, const QString& dbus_servnam,
+              const QString& display_host, const int display_number, const int screen_number,
+              bool is_plat_x11)
+    {
         if(_args.size() > 0) {
-            m_argv0 = _args.first();
-            args = _args;
-            args.removeFirst();
-            dbus_servicename = dbus_servnam;
-            pid = -1;
+            d.pid = -1;
+            d.m_argv0 = _args.first();
+            d.args = _args;
+            d.args.removeFirst();
         }
+        d.dbus_servicename = dbus_servnam;
+        d.display_host = display_host;
+        d.display_number = display_number;
+        d.screen_number = screen_number;
+        d.is_platform_x11 = is_plat_x11;
     }
 
-    QuAppInfo(const QString& exenam, const QStringList& argums, const QString& dbus_servicenam) {
-        m_argv0 = exenam;
-        args = argums;
-        dbus_servicename = dbus_servicenam;
+    QuAppInfo(const QString& exenam, const QStringList& argums, const QString& dbus_servicenam,
+              const QString& display_host, const int display_number, const int screen_number,
+              bool is_plat_x11) {
+        d.pid = -1;
+        d.m_argv0 = exenam;
+        d.args = argums;
+        d.dbus_servicename = dbus_servicenam;
+        d.display_host = display_host;
+        d.display_number = display_number;
+        d.screen_number = screen_number;
+        d.is_platform_x11 = is_plat_x11;
     }
 
     /** \brief QuAppInfo is empty if argv[0] is empty
      *
      */
     bool isEmpty() const {
-        return m_argv0.isEmpty();
+        return d.m_argv0.isEmpty();
     }
 
     /** \brief Returns the executable name, that is argv[0] without the path
      *
      */
     QString exename() const {
-        if(m_argv0.contains("/"))
-            return m_argv0.split("/",QString::SkipEmptyParts).last();
-        return m_argv0;
+        if(d.m_argv0.contains("/"))
+            return d.m_argv0.split("/",QString::SkipEmptyParts).last();
+        return d.m_argv0;
     }
 
     /** \brief Returns the path of the executable, if provided in the constructor.
@@ -67,7 +97,7 @@ public:
      * If the QuApplication has been build without the path, an empty string must be expected.
      */
     QString path() const {
-        QString out(m_argv0);
+        QString out(d.m_argv0);
         out.remove(exename());
         return out;
     }
@@ -75,15 +105,35 @@ public:
     /** \brief Returns argv[0]
      */
     QString argv0() const {
-        return m_argv0;
+        return d.m_argv0;
     }
 
-    QString dbus_servicename;
-    QStringList args;
-    pid_t pid;
+    QStringList args() const {
+        return d.args;
+    }
+
+    QString dbusServiceName() const {
+        return d.dbus_servicename;
+    }
+
+    QString display_host() const {
+        return d.display_host;
+    }
+
+    int display_number() const {
+        return d.display_number;
+    }
+
+    int screen_number() const {
+        return d.screen_number;
+    }
+
+    bool isPlatformX11() const {
+        return d.is_platform_x11;
+    }
 
 private:
-    QString m_argv0;
+    QuAppInfoPrivate d;
 };
 
 /** \brief an interface defining the behaviour of a *cumbia* application
