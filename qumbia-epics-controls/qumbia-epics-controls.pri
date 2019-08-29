@@ -156,7 +156,8 @@ QMAKE_CLEAN = moc \
 packagesExist(qumbia-epics-controls$${QTVER_SUFFIX} cumbia-epics  ) {
 
 !isEmpty(EPICS_BASE) {
-        unix:INCLUDEPATH += $${EPICS_BASE}/include $${EPICS_BASE}/include/os/Linux
+        unix:INCLUDEPATH += $${EPICS_BASE}/include $${EPICS_BASE}/include/os/Linux  $${EPICS_BASE}/include/compiler/gcc \
+            $${EPICS_BASE}/include/os/compiler/clang
         unix:LIBS+=-L$${EPICS_BASE}/lib/$${EPICS_HOST_ARCH}
 }
 
