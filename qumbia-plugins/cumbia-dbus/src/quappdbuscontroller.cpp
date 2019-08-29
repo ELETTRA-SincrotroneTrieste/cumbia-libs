@@ -115,10 +115,10 @@ void QuAppDBusController::start_monitor(const QString &serviceName)
 {
     LocalQuApplicationInterface *quappdbusi =
             new LocalQuApplicationInterface(serviceName,  "/QuApplication", QDBusConnection::sessionBus(), this);
-    connect(quappdbusi, SIGNAL(dbusRegistered(QString,QStringList,QString)), this,
-            SLOT(onAppRegistered(QString,QStringList,QString)));
-    connect(quappdbusi, SIGNAL(dbusUnregistered(QString,QStringList,QString)), this,
-            SLOT(onAppUnregistered(QString,QStringList,QString)));
+    connect(quappdbusi, SIGNAL(dbusRegistered(QString,QStringList,QString,QString,int,int,bool)), this,
+            SLOT(onAppRegistered(QString,QStringList,QString,QString,int,int,bool)));
+    connect(quappdbusi, SIGNAL(dbusUnregistered(QString,QStringList,QString,QString,int,int,bool)), this,
+            SLOT(onAppUnregistered(QString,QStringList,QString,QString,int,int,bool)));
     quappdbusi->setObjectName(serviceName);
     qDebug() << __FUNCTION__ << "mapped signals to monitor " << serviceName;
     if(!d->dbus_if)

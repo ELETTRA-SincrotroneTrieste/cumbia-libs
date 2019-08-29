@@ -48,7 +48,8 @@ public:
     void removeCtrlListener(QuAppDBusControllerListener *l);
 
 public slots:
-    void onAppRegistered(const QString& exenam, const QStringList &args, const QString& dbus_servicenam, const QString &display_h, int disp_num, int screen_num, bool is_plat_x11);
+    void onAppRegistered(const QString& exenam, const QStringList &args, const QString& dbus_servicenam,
+                         const QString &display_h, int disp_num, int screen_num, bool is_plat_x11);
 
     void onAppUnregistered(const QString& exenam, const QStringList &args, const QString& dbus_servicenam,
                            const QString& display_h, int disp_num, int screen_num, bool is_plat_x11);

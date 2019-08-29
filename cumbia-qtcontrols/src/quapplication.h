@@ -21,6 +21,13 @@ class QuApplicationPrivate;
  */
 class QuApplication : public QApplication
 {
+    /// NOTE
+    ///
+    /// Changes to this file require running
+    /// $ qdbuscpp2xml src/quapplication.h -o ../qumbia-plugins/cumbia-dbus/src/cumbiadbus.xml
+    /// Then rebuild cumbia-dbus
+    ///
+
     Q_OBJECT
 public:
     QuApplication(int & argc, char **argv);
@@ -49,11 +56,15 @@ public slots:
     bool isPlatformX11() const;
 
 signals:
-    void dbusRegistered(const QString& exename, const QStringList& args, const QString& dbus_servicenam);
-    void dbusUnregistered(const QString& exename, const QStringList& args, const QString& dbus_servicenam);
+    void dbusRegistered(const QString& exename, const QStringList& args, const QString& dbus_servicenam,
+                        const QString& display_host, int display_number, int screen_number, bool is_plat_x11);
+    void dbusUnregistered(const QString& exename, const QStringList& args, const QString& dbus_servicenam,
+                          const QString& display_host, int display_number, int screen_number, bool is_plat_x11);
 
 private:
     bool m_loadPlugin();
+
+    void m_get_display_info(QString* host, int* d_num, int  *screen_num) const;
 
     QuApplicationPrivate *d;
 };

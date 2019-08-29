@@ -5,11 +5,19 @@
       <arg name="exename" type="s" direction="out"/>
       <arg name="args" type="as" direction="out"/>
       <arg name="dbus_servicenam" type="s" direction="out"/>
+      <arg name="display_host" type="s" direction="out"/>
+      <arg name="display_number" type="i" direction="out"/>
+      <arg name="screen_number" type="i" direction="out"/>
+      <arg name="is_plat_x11" type="b" direction="out"/>
     </signal>
     <signal name="dbusUnregistered">
       <arg name="exename" type="s" direction="out"/>
       <arg name="args" type="as" direction="out"/>
       <arg name="dbus_servicenam" type="s" direction="out"/>
+      <arg name="display_host" type="s" direction="out"/>
+      <arg name="display_number" type="i" direction="out"/>
+      <arg name="screen_number" type="i" direction="out"/>
+      <arg name="is_plat_x11" type="b" direction="out"/>
     </signal>
     <method name="raise">
     </method>

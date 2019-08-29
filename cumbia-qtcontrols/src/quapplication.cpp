@@ -47,11 +47,14 @@ QuApplication::QuApplication(int & argc, char **argv) : QApplication(argc, argv)
  */
 int QuApplication::exec()
 {
+    QString disp_h;
+    int disp_n, screen_n;
+    m_get_display_info(&disp_h, &disp_n, &screen_n);
     printf("\e[1;34mQuApplication.exec: hostname \"%s\" display %d screen %d\e[0m\n", qstoc(this->display_host()), display_number(), screen_number());
     if(d->dbus_i)
     {
         d->dbus_i->registerApp(this);
-        emit dbusRegistered(exename(), cmdOpt(), d->dbus_i->getServiceName(this));
+        emit dbusRegistered(exename(), cmdOpt(), d->dbus_i->getServiceName(this), disp_h, disp_n, screen_n, isPlatformX11());
     }
     else
         perr("QuApplication.exec: plugin \"%s\" is not loaded", qstoc(d->cumbia_dbus_plugin));
@@ -60,7 +63,7 @@ int QuApplication::exec()
     if(d->dbus_i)
     {
         d->dbus_i->unregisterApp(this);
-        emit dbusUnregistered(exename(), cmdOpt(), d->dbus_i->getServiceName(this));
+        emit dbusUnregistered(exename(), cmdOpt(), d->dbus_i->getServiceName(this), disp_h, disp_n, screen_n, isPlatformX11());
         delete d->dbus_i;
     }
     return ret;
@@ -198,4 +201,19 @@ bool QuApplication::m_loadPlugin()
              plugin_name, CUMBIA_QTCONTROLS_PLUGIN_DIR);
 
     return false;
+}
+
+void QuApplication::m_get_display_info(QString *host, int *d_num, int *screen_num) const
+{
+    *host = ""; *d_num = *screen_num = 0;
+    QString disp = QString(getenv("DISPLAY"));
+    QRegExp re("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
+    const int pos = re.indexIn(disp);
+    const QStringList& caps = re.capturedTexts();
+    if(pos > -1 && caps.size() > 1)
+        *host = caps[1];
+    if(pos > -1 && caps.size() > 2)
+        *d_num = caps[2].toInt();
+    if(pos > -1 && caps.size() > 3)
+        *d_num = caps[3].toInt();
 }
