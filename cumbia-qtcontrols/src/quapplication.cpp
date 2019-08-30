@@ -50,9 +50,7 @@ int QuApplication::exec()
     QString disp_h;
     int disp_n, screen_n;
     m_get_display_info(&disp_h, &disp_n, &screen_n);
-    printf("\e[1;34mQuApplication.exec: hostname \"%s\" display %d screen %d\e[0m\n", qstoc(this->display_host()), display_number(), screen_number());
-    if(d->dbus_i)
-    {
+    if(d->dbus_i) {
         d->dbus_i->registerApp(this);
         emit dbusRegistered(exename(), cmdOpt(), d->dbus_i->getServiceName(this), disp_h, disp_n, screen_n, isPlatformX11());
     }
@@ -60,8 +58,7 @@ int QuApplication::exec()
         perr("QuApplication.exec: plugin \"%s\" is not loaded", qstoc(d->cumbia_dbus_plugin));
 
     int ret = QApplication::exec();
-    if(d->dbus_i)
-    {
+    if(d->dbus_i) {
         d->dbus_i->unregisterApp(this);
         emit dbusUnregistered(exename(), cmdOpt(), d->dbus_i->getServiceName(this), disp_h, disp_n, screen_n, isPlatformX11());
         delete d->dbus_i;
@@ -152,7 +149,7 @@ int QuApplication::display_number() const
     if(re.indexIn(disp) > -1 && re.capturedTexts().size() > 2) {
         return re.capturedTexts().at(2).toInt();
     }
-    return -1;
+    return 0;
 }
 
 int QuApplication::screen_number() const
@@ -162,7 +159,7 @@ int QuApplication::screen_number() const
     if(re.indexIn(disp) > -1 && re.capturedTexts().size() > 3) {
         return re.capturedTexts().at(3).toInt();
     }
-    return -1;
+    return 0;
 }
 
 bool QuApplication::isPlatformX11() const
@@ -215,5 +212,5 @@ void QuApplication::m_get_display_info(QString *host, int *d_num, int *screen_nu
     if(pos > -1 && caps.size() > 2)
         *d_num = caps[2].toInt();
     if(pos > -1 && caps.size() > 3)
-        *d_num = caps[3].toInt();
+        *screen_num = caps[3].toInt();
 }
