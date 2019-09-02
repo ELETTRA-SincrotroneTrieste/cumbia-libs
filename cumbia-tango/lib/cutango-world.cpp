@@ -809,25 +809,24 @@ bool CuTangoWorld::get_att_config(Tango::DeviceProxy *dev, const string &attribu
     bool attr_read_ok = true;
     if(!skip_read_att)
         attr_read_ok = read_att(dev, attribute, dres);
-
+    //
+    // read attribute may fail, (example: device server is online but read
+    // generates an internal exception). get_attribute_config may be successful
+    // nevertheless. An unsuccessful read_attribute here is not an error.
+    //
     Tango::AttributeInfoEx aiex;
-    if(attr_read_ok)
-    {
-        try
-        {
-            aiex = dev->get_attribute_config(attribute);
-            fillFromAttributeConfig(aiex, dres);
-            d->message = "successfully got configuration for " + dres["src"].toString();
-            return true;
-        }
-        catch(Tango::DevFailed &e)
-        {
-            d->error = true;
-            d->message = strerror(e);
-        }
+    try {
+        aiex = dev->get_attribute_config(attribute);
+        fillFromAttributeConfig(aiex, dres);
+        d->message = "successfully got configuration for " + dres["src"].toString();
     }
+    catch(Tango::DevFailed &e) {
+        d->error = true;
+        d->message = strerror(e);
+    }
+    dres["err"] = d->error;
     dres["success_color"] = d->t_world_conf.successColor(!d->error);
-    return false;
+    return !d->error;
 }
 
 bool CuTangoWorld::get_att_props(Tango::DeviceProxy *dev,
