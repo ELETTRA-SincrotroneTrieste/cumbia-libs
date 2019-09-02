@@ -1115,7 +1115,7 @@ void QuCircularGaugeBase::paintEvent(QPaintEvent *pe)
         return;
 
     p.setPen(QColor(Qt::lightGray));
-    p.drawRect(r);
+  //  p.drawRect(r);
 
     if(g_config->drawBackground)
         drawBackground(r, p);
