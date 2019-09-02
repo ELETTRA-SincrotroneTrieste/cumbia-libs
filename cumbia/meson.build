@@ -1,4 +1,4 @@
-project('cumbia', 'cpp', version : '1.0.0',
+project('cumbia', 'cpp', version : '1.0.1',
     default_options : ['c_std=c11', 'cpp_std=c++11'])
 
 project_description = 'library that offers a carefree approach to multi thread application design and implementation'

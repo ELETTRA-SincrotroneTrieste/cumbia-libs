@@ -1,0 +1,3 @@
+v1.0.1 cumbia-tango: properties are delivered at configuration time even though the attribute value cannot be read
+
+v1.0.0 First release of the library
