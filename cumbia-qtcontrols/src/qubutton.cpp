@@ -165,8 +165,10 @@ void QuButton::onUpdate(const CuData &data)
             log->write(QString("QuButton [" + objectName() + "]").toStdString(), data["msg"].toString(), CuLog::Error, CuLog::Write);
     }
     else if(is_config) {
-        CuControlsUtils cu;
-        cu.initObjects(target(), this, data, "w_value");
+        if(data.containsKey("w_value")) {
+            CuControlsUtils cu;
+            cu.initObjects(target(), this, data, "w_value");
+        }
         CuControlsWriterA *w = d->context->getWriter();
         if(w)
             w->saveConfiguration(data);

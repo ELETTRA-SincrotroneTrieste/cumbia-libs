@@ -1,3 +1,11 @@
-v1.0.1 cumbia-tango: properties are delivered at configuration time even though the attribute value cannot be read
+v1.0.1
+a. cumbia-tango
+   a1. properties are delivered at configuration time even though the attribute value cannot be read
+   a2. removed printf from CuWriteActivity.execute
+
+b. cumbia-qtcontrols
+   b1. QuButton: CuControlsUtils.initObjects is not called if data has no w_value key (this avoids pointless error
+       message from CuVariant.toStringVector)
+   b2. QuCheckBox: fixed bug preventing successful write operations
 
 v1.0.0 First release of the library

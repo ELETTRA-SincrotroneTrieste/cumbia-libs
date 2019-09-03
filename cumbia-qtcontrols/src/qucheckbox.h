@@ -79,7 +79,7 @@ protected:
     void contextMenuEvent(QContextMenuEvent* e);
 
 protected slots:
-    virtual void checkboxClicked();
+    virtual void checkboxClicked(bool checked);
 
 private:
     QuCheckboxPrivate *d;

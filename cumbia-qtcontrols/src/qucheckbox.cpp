@@ -74,7 +74,7 @@ void QuCheckBox::m_init()
     d->ok = false;
     d->text_from_label = true;
     setText("No Link");
-    connect(this, SIGNAL(clicked()), this, SLOT(checkboxClicked()));
+    connect(this, SIGNAL(clicked(bool)), this, SLOT(checkboxClicked(bool)));
 }
 
 QString QuCheckBox::source() const
@@ -163,9 +163,9 @@ void QuCheckBox::contextMenuEvent(QContextMenuEvent *e)
     m->popup(e->globalPos());
 }
 
-void QuCheckBox::checkboxClicked()
+void QuCheckBox::checkboxClicked(bool checked)
 {
-      CuVariant arg(d->last_val);
+      CuVariant arg(checked);
       CuControlsWriterA *w = d->in_ctx->getWriter();
       if(w) {
           w->setArgs(arg);

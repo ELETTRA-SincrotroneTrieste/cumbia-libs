@@ -76,11 +76,7 @@ void CuWriteActivity::execute()
         {
             if(d->point_info.isEmpty()) {
                 success = tangoworld.get_command_info(d->tdev->getDevice(), at["point"].toString(), d->point_info);
-                printf("\e[1;35m :-/ point info not found for COMMAND %s\e[0m\n", at["src"].toString().c_str());
             }
-            else
-                printf("\e[1;32mCuWriteActivity::execute VERY GOOD! using saved point info for COMMAND %s {%s}!\e[0m\n",
-                   at["src"].toString().c_str(), d->point_info.toString().c_str());
             if(success)
             {
                 Tango::DeviceData din = tangoworld.toDeviceData(at["write_value"], d->point_info);
@@ -93,12 +89,7 @@ void CuWriteActivity::execute()
             bool skip_read_attribute = true;
             if(d->point_info.isEmpty()) {
                 success = tangoworld.get_att_config(d->tdev->getDevice(), at["point"].toString(), d->point_info, skip_read_attribute);
-                printf("\e[1;35m :-/ point info not found for ATTRIBUTE %s\e[0m\n", at["src"].toString().c_str());
             }
-            else
-                printf("\e[1;32mCuWriteActivity::execute VERY GOOD! using saved point info for ATTRIBUTE %s {%s}!\e[0m\n",
-                   at["src"].toString().c_str(), d->point_info.toString().c_str());
-
             if(success)
                 success = tangoworld.write_att(dev, at["point"].toString(), at["write_value"], d->point_info, at);
         }
