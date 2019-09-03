@@ -545,10 +545,6 @@ for x in "${meson_p[@]}" ; do
                fi
                meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
                #    ninja install
-                if [ $? -ne 0 ]; then
-                        echo "meson configure output = `meson configure`"
-                        exit 1
-                 fi
                meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
 
                #    ninja install
