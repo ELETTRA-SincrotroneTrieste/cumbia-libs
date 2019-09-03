@@ -7,5 +7,9 @@ b. cumbia-qtcontrols
    b1. QuButton: CuControlsUtils.initObjects is not called if data has no w_value key (this avoids pointless error
        message from CuVariant.toStringVector)
    b2. QuCheckBox: fixed bug preventing successful write operations
+   b3. CuContextMenuActionsPlugin_I added order() method to interface to allow ordering actions in contextual menus
+
+c. qumbia-plugins
+   c1. Let WidgetStdContextMenuActions implement the order() method from CuContextMenuActionsPlugin_I interface
 
 v1.0.0 First release of the library

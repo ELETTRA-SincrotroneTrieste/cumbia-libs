@@ -58,7 +58,7 @@ void WidgetStdContextMenuActions::setup(QWidget *widget, const CuContext *ctx)
         if(plugin) {
             d->m_action_extensions = qobject_cast<QuActionExtensionPluginInterface *>(plugin);
             if(d->m_action_extensions) {
-                printf("WidgetStdContextMenuActions::WidgetStdContextMenuActions: loaded plugin \e[1;32m\"%s\"\e[0m\n", extensions_plugin_name);
+                printf("\e[1;32m*\e[0m WidgetStdContextMenuActions: loaded plugin \e[1;32m\"%s\"\e[0m\n", qstoc(pluginFilePath));
                 QuActionExtensionFactoryI *ae_fac = d->m_action_extensions->getExtensionFactory();
                 QuActionExtensionI* tango_db_ex = ae_fac->create("GetTDbPropertyExtension", ctx);
 
@@ -85,6 +85,11 @@ void WidgetStdContextMenuActions::setup(QWidget *widget, const CuContext *ctx)
 QList<QAction *> WidgetStdContextMenuActions::getActions() const
 {
     return d->m_actions;
+}
+
+int WidgetStdContextMenuActions::order() const
+{
+    return 0;
 }
 
 void WidgetStdContextMenuActions::onInfoActionTriggered()

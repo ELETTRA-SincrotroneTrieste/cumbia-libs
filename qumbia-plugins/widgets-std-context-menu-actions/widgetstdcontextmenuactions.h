@@ -52,6 +52,7 @@ public:
 
     // CuContextMenuActionsPlugin_I interface
     QList<QAction *> getActions() const;
+    int order() const;
 
 private slots:
     void onInfoActionTriggered();
@@ -61,5 +62,7 @@ private slots:
 private:
     WidgetStdContextMenuActionsPrivate *d;
 };
+
+
 
 #endif // WIDGETSTDCONTEXTMENUACTIONS_H

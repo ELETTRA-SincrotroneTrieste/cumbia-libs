@@ -43,7 +43,7 @@ SOURCES += \
 HEADERS += \
         widgetstdcontextmenuactions.h
 
-DISTFILES += widgets-std-context-menu-actions.json 
+DISTFILES += widgets-std-context-menu-actions.json
 
 inc.files = $${HEADERS}
 

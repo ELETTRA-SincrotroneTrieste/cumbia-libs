@@ -4,6 +4,7 @@
 #include "cucontextmenuactionsplugin_i.h"
 #include "cupluginloader.h"
 #include <QAction>
+#include <QMultiMap>
 #include <QtDebug>
 #include <QDir>
 #include <QPluginLoader>
@@ -35,7 +36,7 @@ CuContextMenu::CuContextMenu(QWidget *parent, const CuContext *ctx) :
     QMenu(parent), m_ctx(ctx)
 {
     unsigned loaded_p_cnt = 0;
-    QList<QAction *> actions;
+    QMultiMap<int, QList<QAction *> > actions_map;
     CuPluginLoader cupl;
     QStringList pluginPaths = cupl.getPluginAbsoluteFilePaths(CUMBIA_QTCONTROLS_PLUGIN_DIR, QRegExp(".*context-menu-actions\\.so"));
     for(int i = 0; i < pluginPaths.size(); i++) {
@@ -47,7 +48,10 @@ CuContextMenu::CuContextMenu(QWidget *parent, const CuContext *ctx) :
             w_std_menu_actions_plugin = qobject_cast<CuContextMenuActionsPlugin_I *> (plugin);
             if(w_std_menu_actions_plugin) {
                 w_std_menu_actions_plugin->setup(parent, ctx);
-                actions.append(w_std_menu_actions_plugin->getActions());
+                QList<QAction *> pl_actions = w_std_menu_actions_plugin->getActions();
+                printf("\e[1;32m*\e[0m CuContextMenu: loaded plugin \e[1;32m%s\e[0m that provides %d actions\n",
+                       qstoc(pluginPaths[i]), pl_actions.size());
+                actions_map.insert(w_std_menu_actions_plugin->order(), pl_actions);
             }
         }
         if(!plugin || !w_std_menu_actions_plugin){
@@ -55,8 +59,11 @@ CuContextMenu::CuContextMenu(QWidget *parent, const CuContext *ctx) :
                  qstoc(pluginPaths[i]), CUMBIA_QTCONTROLS_PLUGIN_DIR);
         }
     } // for pluginPaths
-    foreach(QAction *a, actions) {
-        addAction(a);
+
+    QMultiMap<int, QList<QAction *> >::iterator i = actions_map.begin();
+    while(i != actions_map.end()) {
+        insertActions(nullptr, i.value());
+        ++i;
     }
 
     if(loaded_p_cnt == 0) {
