@@ -19,13 +19,15 @@ public:
     QRectF paintArea;
     QRectF oldRect;
     QSize labelSize;
-    float labelPointSize;
+    double labelPointSize;
+    int textLabelPixelSize; // pixel size of the optional text label
 
     void invalidate(){
         labelsDistrib.clear();
         longestLabel = QString();
         paintArea = oldRect = QRectF();
         labelPointSize = 10;
+        textLabelPixelSize = -1;
         labelSize = QSize();
     }
 
@@ -59,10 +61,10 @@ QuCircularGaugeBase::QuCircularGaugeBase(QWidget *parent) : QWidget(parent)
     d->spanAngle = 300;
     g_config->pivotRadius = 0.08; // 8% of the radius
     d->propertyAnimation = NULL;
-    d->labelPosition = NoLabel;
+    d->labelPosition = South;
     d->labelDistFromCenter = 0.25;
     d->labelValueFormat = "%.2f";
-    d->labelFontScale = 0.9;
+    d->labelFontScale = -1.0;
     d->readError = false;
     m_anglesUpdate();
 }
@@ -335,13 +337,14 @@ double QuCircularGaugeBase::labelDistFromCenter() const
     return d->labelDistFromCenter;
 }
 
-/*! \brief scales the label font respect to the font size of the text on the gauge
+/*! \brief scales the label font respect to the automatically calculated size
  *
  * @return the label font scale value, between 0 and 2.
  *
- * The font size of the text on the gauge is scaled by this factor.
+ * The font size of the text on the gauge is scaled by this factor
+ * respect to the automatically calculated size
  *
- * \note The default value is 0.9
+ * \note The default value is -1, meaning label font is automatically calculated
  */
 double QuCircularGaugeBase::labelFontScale() const
 {
@@ -563,22 +566,18 @@ void QuCircularGaugeBase::setUnit(const QString &u)
     update();
 }
 
-/*! \brief changes the label font size respect to the size of the text on the gauge
+/*! \brief changes the label font size  respect to the automatically calculated size
  *
- * @param factor the label font scale value, > 0 and  <= 2.
+ * @param factor the label font scale value
  *
- * The font size of the text on the gauge is scaled by this factor.
+ * The font size of the text on the gauge is scaled by this factor respect to the automatically calculated size
  *
- * \note The default value is 0.9
+ * \note The default value is -1
  */
 void QuCircularGaugeBase::setLabelFontScale(double factor)
 {
-    if(factor > 0 && factor <= 2.0) {
-        d->labelFontScale = factor;
-        update();
-    }
-    else
-        perr("QuCircularGaugeBase::setLabelFontScale: factor must be  0 < factor <= 2.0");
+    d->labelFontScale = factor;
+    update();
 }
 
 void QuCircularGaugeBase::setHighError(double e) {
@@ -1115,7 +1114,7 @@ void QuCircularGaugeBase::paintEvent(QPaintEvent *pe)
         return;
 
     p.setPen(QColor(Qt::lightGray));
-  //  p.drawRect(r);
+    //  p.drawRect(r);
 
     if(g_config->drawBackground)
         drawBackground(r, p);
@@ -1336,21 +1335,52 @@ void QuCircularGaugeBase::drawLabel(const QRectF &rect, QPainter& p)
 {
     QPen pen(Qt::black);
     p.setPen(pen);
-    QFont f = p.font();
-    f.setPointSizeF(d->cache.labelPointSize * d->labelFontScale);
-    p.setFont(f);
-    QFontMetrics fm(f);
     QString txt;
+
     if(d->label.isEmpty()) {
         txt = formatLabel(g_config->value, d->labelValueFormat);
         if(!g_config->unit.isEmpty())
             txt.append(QString(" [%1]").arg(g_config->unit));
     }
-        else txt = d->label;
+    else
+        txt = d->label;
 
+    QFont f = p.font();
+    // need to recalculate font size ?
+    if(d->label_p.length() != txt.length() || d->cache.textLabelPixelSize < 0) {
+        const int wid = qRound(paintArea().width() / 4.5);
+        int pix_siz;
+        txt.length() > 0 ? pix_siz = wid / txt.length() : pix_siz = 16;
+        f.setPixelSize(pix_siz);
+        QFontMetrics fm(f);
+        bool increase_font = false;
+        while(fm.width(txt) <= wid) {
+            f.setPixelSize(f.pixelSize() + 5);
+            fm = QFontMetrics(f);
+            increase_font = true;
+        }
+        while(!increase_font && fm.width(txt) > wid) {
+            f.setPixelSize(f.pixelSize() - 5);
+            fm = QFontMetrics(f);
+        }
+        d->cache.textLabelPixelSize = f.pixelSize();
+    }
+    else {
+        // text length didn't change: its size may change only slightly
+        // reuse previously calculated pixel size
+        f.setPixelSize(d->cache.textLabelPixelSize);
+    }
+
+    d->label_p = txt;
+
+    if(d->labelFontScale > 0)
+        f.setPointSizeF(d->cache.textLabelPixelSize * d->labelFontScale);
+
+    p.setFont(f);
+    QFontMetrics fm(f);
     int w = fm.width(txt);
     int h = fm.height();
-    int radius = rect.width() / 2.0;
+    double radius = rect.width() / 2.0;
     double cx = rect.center().x();
     double cy = rect.center().y();
     QRectF textR;
@@ -1373,6 +1403,8 @@ void QuCircularGaugeBase::drawLabel(const QRectF &rect, QPainter& p)
         else if(d->labelPosition == SouthWest) { angle = -3/4.0 * M_PI; w_off = -w; }
         textR = QRectF(cx + radius * d->labelDistFromCenter * cos(angle) + w_off, cy - radius * d->labelDistFromCenter * sin(angle) + h_off, w, h);
     }
+    QColor gray(70, 70, 80);
+    p.setPen(gray);
     p.drawText(textR, Qt::AlignHCenter|Qt::AlignVCenter, txt);
 }
 
@@ -1388,6 +1420,7 @@ void QuCircularGaugeBase::resizeEvent(QResizeEvent *re)
     QWidget::resizeEvent(re);
     updatePaintArea();   // first. does not need to know font size
     updateLabelsFontSize(); // second. needs to know updated paint area
+    d->cache.textLabelPixelSize = -1; // force optional text label font recalc in drawLabel
 }
 
 QSize QuCircularGaugeBase::sizeHint() const
@@ -1471,7 +1504,7 @@ void QuCircularGaugeBase::updatePaintArea()
             r_a = (wr.width() - margin_w) / modmaxcos;
         }
         if(d->quad == q1) {
-//            printf("Q1\n");
+            //            printf("Q1\n");
             r_a = (wr.height() - margin_h) / -d->sin_a0;
             if(r_a * d->cos_a1 > wr.width() - margin_w)
                 r_a = (wr.width() - margin_w) / d->cos_a1;
