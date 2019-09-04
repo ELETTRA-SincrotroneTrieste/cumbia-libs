@@ -1351,7 +1351,7 @@ void QuCircularGaugeBase::drawLabel(const QRectF &rect, QPainter& p)
     QFont f = p.font();
     // need to recalculate font size ?
     if(d->cache.label_txt.length() != txt.length() || d->cache.textLabelPtSiz < 0) {
-        const int wid = qRound(paintArea().width() / 3.5);
+        const int wid = qRound(paintArea().width() / 3.2);
         // start with a font with same size as gauge text labels
         f.setPointSizeF(labelFontSize());
         QFontMetrics fm(f);
