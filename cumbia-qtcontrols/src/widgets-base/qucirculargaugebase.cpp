@@ -1356,7 +1356,7 @@ void QuCircularGaugeBase::drawLabel(const QRectF &rect, QPainter& p)
         f.setPointSizeF(labelFontSize());
         QFontMetrics fm(f);
         //  decrease if either wider than wid or taller than gauge text labels' height
-        while(fm.width(txt) > wid || f.pointSizeF() > labelFontSize()) {
+        while(f.pointSizeF() > 3.0 && ( fm.width(txt) > wid || f.pointSizeF() > labelFontSize()) ) {
             f.setPointSizeF(f.pointSizeF() - 0.5);
             fm = QFontMetrics(f);
         }
