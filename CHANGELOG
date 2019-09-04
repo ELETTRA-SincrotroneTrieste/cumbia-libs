@@ -8,6 +8,7 @@ b. cumbia-qtcontrols
        message from CuVariant.toStringVector)
    b2. QuCheckBox: fixed bug preventing successful write operations
    b3. CuContextMenuActionsPlugin_I added order() method to interface to allow ordering actions in contextual menus
+   b4. QuCircularGaugeBase: label is displayed by default and its size calculation has been automated for optimal size
 
 c. qumbia-plugins
    c1. Let WidgetStdContextMenuActions implement the order() method from CuContextMenuActionsPlugin_I interface
