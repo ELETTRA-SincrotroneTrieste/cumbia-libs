@@ -83,13 +83,21 @@ Public Slots</h2></td></tr>
 <tr class="separator:aab4cf1ff154c9172e3f61bc083bff66b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a811d12b347ab61e56d1e6cb607d7f92b"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuApplication.html#a811d12b347ab61e56d1e6cb607d7f92b">cmdOpt</a> () const</td></tr>
 <tr class="separator:a811d12b347ab61e56d1e6cb607d7f92b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef42121824ecca69eed7e3efe6cd0859"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuApplication.html#aef42121824ecca69eed7e3efe6cd0859">display_host</a> () const</td></tr>
+<tr class="separator:aef42121824ecca69eed7e3efe6cd0859"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bdbb587b1ec47fd8742c6af2b02a543"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuApplication.html#a1bdbb587b1ec47fd8742c6af2b02a543">display_number</a> () const</td></tr>
+<tr class="separator:a1bdbb587b1ec47fd8742c6af2b02a543"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab2e190fea99cf6111fadb60abd6219c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuApplication.html#aab2e190fea99cf6111fadb60abd6219c">screen_number</a> () const</td></tr>
+<tr class="separator:aab2e190fea99cf6111fadb60abd6219c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8799df2ba21e961674bfb20dcab96abc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuApplication.html#a8799df2ba21e961674bfb20dcab96abc">isPlatformX11</a> () const</td></tr>
+<tr class="separator:a8799df2ba21e961674bfb20dcab96abc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="signals"></a>
 Signals</h2></td></tr>
-<tr class="memitem:ad509746941502d03308b5897b985ede0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuApplication.html#ad509746941502d03308b5897b985ede0">dbusRegistered</a> (const QString &amp;<a class="el" href="classQuApplication.html#aab4cf1ff154c9172e3f61bc083bff66b">exename</a>, const QStringList &amp;args, const QString &amp;dbus_servicenam)</td></tr>
-<tr class="separator:ad509746941502d03308b5897b985ede0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abdf9d6797345b7b53d7d82d20524a303"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuApplication.html#abdf9d6797345b7b53d7d82d20524a303">dbusUnregistered</a> (const QString &amp;<a class="el" href="classQuApplication.html#aab4cf1ff154c9172e3f61bc083bff66b">exename</a>, const QStringList &amp;args, const QString &amp;dbus_servicenam)</td></tr>
-<tr class="separator:abdf9d6797345b7b53d7d82d20524a303"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecc5be5e2a495d96760a7b64a600a441"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuApplication.html#aecc5be5e2a495d96760a7b64a600a441">dbusRegistered</a> (const QString &amp;<a class="el" href="classQuApplication.html#aab4cf1ff154c9172e3f61bc083bff66b">exename</a>, const QStringList &amp;args, const QString &amp;dbus_servicenam, const QString &amp;<a class="el" href="classQuApplication.html#aef42121824ecca69eed7e3efe6cd0859">display_host</a>, int <a class="el" href="classQuApplication.html#a1bdbb587b1ec47fd8742c6af2b02a543">display_number</a>, int <a class="el" href="classQuApplication.html#aab2e190fea99cf6111fadb60abd6219c">screen_number</a>, bool is_plat_x11)</td></tr>
+<tr class="separator:aecc5be5e2a495d96760a7b64a600a441"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab74198c1bd178fd1dab0c7fa27821964"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuApplication.html#ab74198c1bd178fd1dab0c7fa27821964">dbusUnregistered</a> (const QString &amp;<a class="el" href="classQuApplication.html#aab4cf1ff154c9172e3f61bc083bff66b">exename</a>, const QStringList &amp;args, const QString &amp;dbus_servicenam, const QString &amp;<a class="el" href="classQuApplication.html#aef42121824ecca69eed7e3efe6cd0859">display_host</a>, int <a class="el" href="classQuApplication.html#a1bdbb587b1ec47fd8742c6af2b02a543">display_number</a>, int <a class="el" href="classQuApplication.html#aab2e190fea99cf6111fadb60abd6219c">screen_number</a>, bool is_plat_x11)</td></tr>
+<tr class="separator:ab74198c1bd178fd1dab0c7fa27821964"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -132,6 +140,8 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The class constructor. </p>
+<p>NOTE</p>
+<p>Changes to this file require running $ qdbuscpp2xml <a class="el" href="quapplication_8h.html">src/quapplication.h</a> -o ../qumbia-plugins/cumbia-dbus/src/cumbiadbus.xml Then rebuild cumbia-dbus</p>
 <p><a class="el" href="classQuApplication.html" title="A QApplication with additional functions, such as to register with dbus, minimize and raise the main ...">QuApplication</a> is build the very same way as QApplication. Just replace QApplication with <a class="el" href="classQuApplication.html" title="A QApplication with additional functions, such as to register with dbus, minimize and raise the main ...">QuApplication</a> in your main.cpp </p>
 
 </div>
@@ -194,8 +204,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad509746941502d03308b5897b985ede0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad509746941502d03308b5897b985ede0">&#9670;&nbsp;</a></span>dbusRegistered</h2>
+<a id="aecc5be5e2a495d96760a7b64a600a441"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aecc5be5e2a495d96760a7b64a600a441">&#9670;&nbsp;</a></span>dbusRegistered</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -219,7 +229,31 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const QString &amp;&#160;</td>
-          <td class="paramname"><em>dbus_servicenam</em>&#160;</td>
+          <td class="paramname"><em>dbus_servicenam</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>display_host</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>display_number</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>screen_number</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>is_plat_x11</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -238,8 +272,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="abdf9d6797345b7b53d7d82d20524a303"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abdf9d6797345b7b53d7d82d20524a303">&#9670;&nbsp;</a></span>dbusUnregistered</h2>
+<a id="ab74198c1bd178fd1dab0c7fa27821964"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab74198c1bd178fd1dab0c7fa27821964">&#9670;&nbsp;</a></span>dbusUnregistered</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -263,7 +297,31 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const QString &amp;&#160;</td>
-          <td class="paramname"><em>dbus_servicenam</em>&#160;</td>
+          <td class="paramname"><em>dbus_servicenam</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const QString &amp;&#160;</td>
+          <td class="paramname"><em>display_host</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>display_number</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>screen_number</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>is_plat_x11</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -279,6 +337,56 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="reference">Referenced by <a class="el" href="classQuApplication.html#abd65a515d2c775dd7e1ad971849a436f">exec()</a>.</p>
+
+</div>
+</div>
+<a id="aef42121824ecca69eed7e3efe6cd0859"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef42121824ecca69eed7e3efe6cd0859">&#9670;&nbsp;</a></span>display_host</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString QuApplication::display_host </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1bdbb587b1ec47fd8742c6af2b02a543"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bdbb587b1ec47fd8742c6af2b02a543">&#9670;&nbsp;</a></span>display_number</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int QuApplication::display_number </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -302,7 +410,7 @@ Public Member Functions</h2></td></tr>
 <p>If the QPluginLoader can load the <a class="el" href="classQuDBusPluginInterface.html" title="Interface for the QuDBus plugin.">QuDBusPluginInterface</a> plugin, then the application is registered with DBus. The dbusRegistered signal is emitted, then QApplication::exec is called. After QApplication::exec returns, dbusUnregistered signal is emitted, the plugin is released and the result of QApplication::exec is returned.</p>
 <p>See QApplication::exec </p>
 
-<p class="reference">References <a class="el" href="classQuApplication.html#a811d12b347ab61e56d1e6cb607d7f92b">cmdOpt()</a>, <a class="el" href="classQuApplication.html#ad509746941502d03308b5897b985ede0">dbusRegistered()</a>, <a class="el" href="classQuApplication.html#abdf9d6797345b7b53d7d82d20524a303">dbusUnregistered()</a>, and <a class="el" href="classQuApplication.html#aab4cf1ff154c9172e3f61bc083bff66b">exename()</a>.</p>
+<p class="reference">References <a class="el" href="classQuApplication.html#a811d12b347ab61e56d1e6cb607d7f92b">cmdOpt()</a>, <a class="el" href="classQuApplication.html#aecc5be5e2a495d96760a7b64a600a441">dbusRegistered()</a>, <a class="el" href="classQuApplication.html#ab74198c1bd178fd1dab0c7fa27821964">dbusUnregistered()</a>, <a class="el" href="classQuApplication.html#aab4cf1ff154c9172e3f61bc083bff66b">exename()</a>, and <a class="el" href="classQuApplication.html#a8799df2ba21e961674bfb20dcab96abc">isPlatformX11()</a>.</p>
 
 </div>
 </div>
@@ -332,6 +440,33 @@ Public Member Functions</h2></td></tr>
 <p>returns the executable name </p>
 <dl class="section return"><dt>Returns</dt><dd>the executable name obtained by QApplication::arguments().first() from where the path is removed.</dd></dl>
 <dl class="section user"><dt>example</dt><dd>If the application is /usr/local/bin/qumbiaprojectwizard, exename returns <em>qumbiaprojectwizard</em>. </dd></dl>
+
+<p class="reference">Referenced by <a class="el" href="classQuApplication.html#abd65a515d2c775dd7e1ad971849a436f">exec()</a>.</p>
+
+</div>
+</div>
+<a id="a8799df2ba21e961674bfb20dcab96abc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8799df2ba21e961674bfb20dcab96abc">&#9670;&nbsp;</a></span>isPlatformX11</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool QuApplication::isPlatformX11 </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 <p class="reference">Referenced by <a class="el" href="classQuApplication.html#abd65a515d2c775dd7e1ad971849a436f">exec()</a>.</p>
 
@@ -420,6 +555,31 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aab2e190fea99cf6111fadb60abd6219c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab2e190fea99cf6111fadb60abd6219c">&#9670;&nbsp;</a></span>screen_number</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int QuApplication::screen_number </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="quapplication_8h_source.html">quapplication.h</a></li>
 <li><a class="el" href="quapplication_8cpp.html">quapplication.cpp</a></li>
@@ -427,7 +587,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 12 2019 12:21:32 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 6 2019 15:43:19 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

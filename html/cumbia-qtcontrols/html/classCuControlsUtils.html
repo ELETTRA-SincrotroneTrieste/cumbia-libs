@@ -66,8 +66,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af8fb03a70a26bdadd6d5316d50f889dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af639583aa02277cca2b0fc8e65a6c1bf"><td class="memItemLeft" align="right" valign="top">QList&lt; QObject * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuControlsUtils.html#af639583aa02277cca2b0fc8e65a6c1bf">findObjects</a> (const QString &amp;target, const QObject *leaf)</td></tr>
 <tr class="separator:af639583aa02277cca2b0fc8e65a6c1bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad13cf4e753db15b0c4c0197e7d35fb42"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuControlsUtils.html#ad13cf4e753db15b0c4c0197e7d35fb42">initObjects</a> (const QString &amp;target, const QObject *leaf, const CuVariant &amp;val)</td></tr>
-<tr class="separator:ad13cf4e753db15b0c4c0197e7d35fb42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61be22838de486c948557359bbeccf30"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuControlsUtils.html#a61be22838de486c948557359bbeccf30">initObjects</a> (const QString &amp;target, const QObject *leaf, const CuData &amp;data, const char *value_key)</td></tr>
+<tr class="memdesc:a61be22838de486c948557359bbeccf30"><td class="mdescLeft">&#160;</td><td class="mdescRight">initialize objects setting range (min, max, if relevant) and the value according to value_key  <a href="#a61be22838de486c948557359bbeccf30">More...</a><br /></td></tr>
+<tr class="separator:a61be22838de486c948557359bbeccf30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>utility class to find input arguments from objects with text or value properties </p>
@@ -197,7 +198,7 @@ Public Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classCuControlsUtils.html#aab84521a84f3a92c35c0d486cdf40d5e">findObject()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCuControlsUtils.html#ad13cf4e753db15b0c4c0197e7d35fb42">initObjects()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuControlsUtils.html#a61be22838de486c948557359bbeccf30">initObjects()</a>.</p>
 
 </div>
 </div>
@@ -244,8 +245,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad13cf4e753db15b0c4c0197e7d35fb42"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad13cf4e753db15b0c4c0197e7d35fb42">&#9670;&nbsp;</a></span>initObjects()</h2>
+<a id="a61be22838de486c948557359bbeccf30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61be22838de486c948557359bbeccf30">&#9670;&nbsp;</a></span>initObjects()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -265,8 +266,14 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const CuVariant &amp;&#160;</td>
-          <td class="paramname"><em>val</em>&#160;</td>
+          <td class="paramtype">const CuData &amp;&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>value_key</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -275,6 +282,18 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>initialize objects setting range (min, max, if relevant) and the value according to value_key </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">target</td><td>the name of the target </td></tr>
+    <tr><td class="paramname">leaf</td><td>the parent object under which children are searched by findObjects </td></tr>
+    <tr><td class="paramname">data</td><td>the CuData holding configuration values (min, max, if present), and a value to display on the object </td></tr>
+    <tr><td class="paramname">value_key</td><td>the key to look for the value that must be displayed (example: "value" or "w_value")</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the operation was successful, false otherwise </dd></dl>
 
 <p class="reference">References <a class="el" href="classCuControlsUtils.html#af639583aa02277cca2b0fc8e65a6c1bf">findObjects()</a>.</p>
 
@@ -289,7 +308,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 12 2019 12:21:32 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 6 2019 15:43:19 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

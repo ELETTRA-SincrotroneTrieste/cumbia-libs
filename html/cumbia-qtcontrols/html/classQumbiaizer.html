@@ -112,6 +112,9 @@ Signals</h2></td></tr>
 <tr class="memitem:ae972c97ed2b6d44b733478a4c2db0afe"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#ae972c97ed2b6d44b733478a4c2db0afe">configured</a> (const CuData &amp;)</td></tr>
 <tr class="memdesc:ae972c97ed2b6d44b733478a4c2db0afe"><td class="mdescLeft">&#160;</td><td class="mdescRight">auto configuration signal.  <a href="#ae972c97ed2b6d44b733478a4c2db0afe">More...</a><br /></td></tr>
 <tr class="separator:ae972c97ed2b6d44b733478a4c2db0afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa444a1936515188d194cdca119ed82e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#aa444a1936515188d194cdca119ed82e2">connectionOk</a> (bool ok)</td></tr>
+<tr class="memdesc:aa444a1936515188d194cdca119ed82e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">emitted when the <em>type</em> of data received within <em>onUpdate</em> is set to <em>property</em>  <a href="#aa444a1936515188d194cdca119ed82e2">More...</a><br /></td></tr>
+<tr class="separator:aa444a1936515188d194cdca119ed82e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad039a0301d53c8dcee0bc8bf01d03a9e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#ad039a0301d53c8dcee0bc8bf01d03a9e">connectionErrorMessage</a> (const QString &amp;msg)</td></tr>
 <tr class="memdesc:ad039a0301d53c8dcee0bc8bf01d03a9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">a signal that contains the error message related to setSource - or setTargets - failures.  <a href="#ad039a0301d53c8dcee0bc8bf01d03a9e">More...</a><br /></td></tr>
 <tr class="separator:ad039a0301d53c8dcee0bc8bf01d03a9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -119,7 +122,7 @@ Signals</h2></td></tr>
 <tr class="memdesc:a0bab6ff4b949d0fce6782c5b794f2399"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emitted by the refresh method. The message is taken from the TVariant.  <a href="#a0bab6ff4b949d0fce6782c5b794f2399">More...</a><br /></td></tr>
 <tr class="separator:a0bab6ff4b949d0fce6782c5b794f2399"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addb24d404da12bca0f06843dcc7b3733"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#addb24d404da12bca0f06843dcc7b3733">readOk</a> (bool success)</td></tr>
-<tr class="memdesc:addb24d404da12bca0f06843dcc7b3733"><td class="mdescLeft">&#160;</td><td class="mdescRight">this signal is emitted by the <a class="el" href="classQuWatcher.html#af3ff0cc012b1240ec58ce280cbadede8">QuWatcher::onUpdate</a> method and the success parameter indicates whether the reading is successful or not.  <a href="#addb24d404da12bca0f06843dcc7b3733">More...</a><br /></td></tr>
+<tr class="memdesc:addb24d404da12bca0f06843dcc7b3733"><td class="mdescLeft">&#160;</td><td class="mdescRight">this signal is emitted by the <a class="el" href="classQuWatcher.html#af3ff0cc012b1240ec58ce280cbadede8" title="QuWatcher implementation of the onUpdate method.">QuWatcher::onUpdate</a> method and the success parameter indicates whether the reading is successful or not.  <a href="#addb24d404da12bca0f06843dcc7b3733">More...</a><br /></td></tr>
 <tr class="separator:addb24d404da12bca0f06843dcc7b3733"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1f4cc2e7ecf4a79f3202974930db5d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#ae1f4cc2e7ecf4a79f3202974930db5d6">newData</a> (short s)</td></tr>
 <tr class="memdesc:ae1f4cc2e7ecf4a79f3202974930db5d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">newData for short data types  <a href="#ae1f4cc2e7ecf4a79f3202974930db5d6">More...</a><br /></td></tr>
@@ -251,6 +254,7 @@ Protected Slots</h2></td></tr>
 <tr class="memdesc:af4560a4f3f9e9b2f51c5d8980fe6c202"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the attached object, if any.  <a href="#af4560a4f3f9e9b2f51c5d8980fe6c202">More...</a><br /></td></tr>
 <tr class="separator:af4560a4f3f9e9b2f51c5d8980fe6c202"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabbc07697467eed7d208993fe019edb2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQumbiaizer.html#aabbc07697467eed7d208993fe019edb2">updateValue</a> (const CuData &amp;v, bool read=true, const char *customMethod=NULL, <a class="el" href="classQuValueFilter.html#a6ece39c9fe68ba588fb38967a2a344ff">QuValueFilter::State</a> updateState=<a class="el" href="classQuValueFilter.html#a6ece39c9fe68ba588fb38967a2a344ffa43c816385b42a8657d195e0d038f55e9">QuValueFilter::Update</a>)</td></tr>
+<tr class="memdesc:aabbc07697467eed7d208993fe019edb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">updates the listener with the new value  <a href="#aabbc07697467eed7d208993fe019edb2">More...</a><br /></td></tr>
 <tr class="separator:aabbc07697467eed7d208993fe019edb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
@@ -688,10 +692,10 @@ Protected Attributes</h2></td></tr>
 
 <p>Configures the attached object, if any. </p>
 <p>If setAutoconfSlot has been called for some AutoConfType type, then the matching slots are invoked. If a custom slot has not been specified for the minimum and maximum properties, the method sets the <em>minimum</em> and <em>maximum</em> properties on the object, if they are defined. If attach was called specifying an additional slot to set the <em>set point</em> value, then it is invoked. This can be applied only to read/write quantities, when CuData contains the "w_value" value. Tango and Epics support read/write quantities.</p>
-<p>The configured signal is emitted at the end. It can be used by the client to access other configuration parameters in data.</p>
+<p>The configured signal is emitted at the end. It can be used by the client to access other configuration parameters in data. The connectionOk signal is also emitted for convenience.</p>
 <dl class="section see"><dt>See also</dt><dd>setAutoconfSlot </dd></dl>
 
-<p class="reference">References <a class="el" href="classQuValueFilter.html#a6ece39c9fe68ba588fb38967a2a344ffa7bfa69dc20e569b5007d2a2bb2612c81">QuValueFilter::AutoConfiguration</a>, <a class="el" href="classQumbiaizer.html#ae972c97ed2b6d44b733478a4c2db0afe">configured()</a>, <a class="el" href="classQumbiaizer.html#a87b11b3f87928dcc0b66985bc19ecc12">data()</a>, <a class="el" href="classQumbiaizer.html#a16866c15ac2cf4b17633a540a720aacd">quizer_ptr</a>, and <a class="el" href="classQumbiaizer.html#aabbc07697467eed7d208993fe019edb2">updateValue()</a>.</p>
+<p class="reference">References <a class="el" href="classQuValueFilter.html#a6ece39c9fe68ba588fb38967a2a344ffa7bfa69dc20e569b5007d2a2bb2612c81">QuValueFilter::AutoConfiguration</a>, <a class="el" href="classQumbiaizer.html#ae972c97ed2b6d44b733478a4c2db0afe">configured()</a>, <a class="el" href="classQumbiaizer.html#aa444a1936515188d194cdca119ed82e2">connectionOk()</a>, <a class="el" href="classQumbiaizer.html#a87b11b3f87928dcc0b66985bc19ecc12">data()</a>, <a class="el" href="classQumbiaizer.html#a16866c15ac2cf4b17633a540a720aacd">quizer_ptr</a>, and <a class="el" href="classQumbiaizer.html#aabbc07697467eed7d208993fe019edb2">updateValue()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classQuWatcher.html#af3ff0cc012b1240ec58ce280cbadede8">QuWatcher::onUpdate()</a>, and <a class="el" href="classQuWriter.html#afa7b936512e0dcb595d1d2ecb6edd5da">QuWriter::onUpdate()</a>.</p>
 
@@ -722,7 +726,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>auto configuration signal. </p>
-<p>QTangoizer class can perform some simple auto configuration (see setAutoConfSlot method) when the associated widgets have suitable slots to set minimum, maximum, text values. In every case, this signal is <b>emitted before any auto configuration is done</b> by QTangoizer derived classes. This allows you to set minimum and maximum values (for example) without worrying to initialize the first value read by yourself. Actually, if the setPointSlot parameter of the void attach(QObject <em>refreshee, const char *slot, const char</em> setPointSlot = NULL, Qt::ConnectionType connType = Qt::AutoConnection); method is not NULL, the first value read is set by means of that slot. </p>
+<p>Emitted once, when the <em>type</em> of data received within <em>onUpdate</em> is set to <em>property</em>, contains the whole configuration data. </p>
 
 <p class="reference">Referenced by <a class="el" href="classQumbiaizer.html#af4560a4f3f9e9b2f51c5d8980fe6c202">configure()</a>.</p>
 
@@ -759,6 +763,44 @@ Protected Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="aa444a1936515188d194cdca119ed82e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa444a1936515188d194cdca119ed82e2">&#9670;&nbsp;</a></span>connectionOk</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Qumbiaizer::connectionOk </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>ok</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>emitted when the <em>type</em> of data received within <em>onUpdate</em> is set to <em>property</em> </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ok</td><td>true no error occurred </td></tr>
+    <tr><td class="paramname">ok</td><td>false an error occurred</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Provided for convenience, connectionOk is emitted after the configured signal. </p>
+
+<p class="reference">Referenced by <a class="el" href="classQumbiaizer.html#af4560a4f3f9e9b2f51c5d8980fe6c202">configure()</a>.</p>
 
 </div>
 </div>
@@ -1135,7 +1177,7 @@ false the method failed (method signature not found or input argument count grea
 </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classQumbiaizer.html#aabbc07697467eed7d208993fe019edb2">updateValue()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classQuWatcher.html#af3ff0cc012b1240ec58ce280cbadede8">QuWatcher::onUpdate()</a>, <a class="el" href="classQuWriter.html#afa7b936512e0dcb595d1d2ecb6edd5da">QuWriter::onUpdate()</a>, and <a class="el" href="classQumbiaizer.html#aabbc07697467eed7d208993fe019edb2">updateValue()</a>.</p>
 
 </div>
 </div>
@@ -1450,7 +1492,7 @@ false the method failed (method signature not found or input argument count grea
 </table>
 </div><div class="memdoc">
 
-<p>this signal is emitted by the <a class="el" href="classQuWatcher.html#af3ff0cc012b1240ec58ce280cbadede8">QuWatcher::onUpdate</a> method and the success parameter indicates whether the reading is successful or not. </p>
+<p>this signal is emitted by the <a class="el" href="classQuWatcher.html#af3ff0cc012b1240ec58ce280cbadede8" title="QuWatcher implementation of the onUpdate method.">QuWatcher::onUpdate</a> method and the success parameter indicates whether the reading is successful or not. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">success</td><td>true if read was successful, false otherwise</td></tr>
@@ -1860,6 +1902,20 @@ false the reader behaves as readers usually behave </dd></dl>
 </table>
 </div><div class="memdoc">
 
+<p>updates the listener with the new value </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">v</td><td>the new data </td></tr>
+    <tr><td class="paramname">read</td><td>true the update refers to a read value (default: true and newData signals are emitted) </td></tr>
+    <tr><td class="paramname">read</td><td>false the update refers to a <em>set point</em> value. In this case, no newData signal is emitted </td></tr>
+    <tr><td class="paramname">customMethod</td><td>if not null, the customMethod is invoked rather then the methodName </td></tr>
+    <tr><td class="paramname">updateState</td><td>either <a class="el" href="classQuValueFilter.html#a6ece39c9fe68ba588fb38967a2a344ffa7bfa69dc20e569b5007d2a2bb2612c81">QuValueFilter::AutoConfiguration</a> or <a class="el" href="classQuValueFilter.html#a6ece39c9fe68ba588fb38967a2a344ffa43c816385b42a8657d195e0d038f55e9">QuValueFilter::Update</a> (default <a class="el" href="classQuValueFilter.html#a6ece39c9fe68ba588fb38967a2a344ffa43c816385b42a8657d195e0d038f55e9">QuValueFilter::Update</a>)</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section user"><dt>newData signals</dt><dd>A <em>type specific</em> newData signal is emitted if the data v contains a valid <em>value</em> key and no error has occurred.</dd></dl>
+<dl class="section user"><dt>slot invocation</dt><dd>If an object and a <em>slot</em> were provided through the proper <em>attach</em> method, the <em>slot</em> is invoked on the object. </dd></dl>
+
 <p class="reference">References <a class="el" href="classQumbiaizer.html#a9b60ff8531d0fa9831cb3cd7ff1bd813a4ddd7d21edb7ceabb01b87c2265126ed">Bool</a>, <a class="el" href="classQumbiaizer.html#a9b60ff8531d0fa9831cb3cd7ff1bd813a3b751089cf42e737ab7de5e0e51a5ca4">BoolVector</a>, <a class="el" href="classQumbiaizer.html#a9079fe8c72aadfa6cafda4b85a7d3aae">connectionType()</a>, <a class="el" href="classQumbiaizer.html#a87b11b3f87928dcc0b66985bc19ecc12">data()</a>, <a class="el" href="classQumbiaizer.html#a9b60ff8531d0fa9831cb3cd7ff1bd813ad262848ce3e900e2a84e2f2493d24799">Double</a>, <a class="el" href="classQumbiaizer.html#a9b60ff8531d0fa9831cb3cd7ff1bd813a2198036991ae995e91de3a52e0422bea">DoubleVector</a>, <a class="el" href="classQumbiaizer.html#a9b60ff8531d0fa9831cb3cd7ff1bd813a8968acde08bd3ecf711f64af54131121">Int</a>, <a class="el" href="classQumbiaizer.html#a9b60ff8531d0fa9831cb3cd7ff1bd813a5e0ed269c9227752eb7281575c9a73f4">IntVector</a>, <a class="el" href="classQumbiaizer.html#a57c775bb321043ff68a2511c42ed331e">message()</a>, <a class="el" href="classQumbiaizer.html#a23db32bf8d9ad706a86ce6e9e0a474f3">methodName()</a>, <a class="el" href="classQumbiaizer.html#abf10e77511f0813d07c29db3a487cb3c">newData()</a>, <a class="el" href="classQumbiaizer.html#a16866c15ac2cf4b17633a540a720aacd">quizer_ptr</a>, <a class="el" href="classQumbiaizer.html#a9b60ff8531d0fa9831cb3cd7ff1bd813a8713557488dbc39ae3319cc779810f4a">Short</a>, <a class="el" href="classQumbiaizer.html#acdf4de560da772f8a4029916090caaef">slot()</a>, <a class="el" href="classQumbiaizer.html#a9b60ff8531d0fa9831cb3cd7ff1bd813aad6db38a47c6d6b853aa2b17723a6a38">String</a>, <a class="el" href="classQumbiaizer.html#a9b60ff8531d0fa9831cb3cd7ff1bd813a9140eb8c949b974e43a37deed6b55d20">StringVector</a>, <a class="el" href="classQumbiaizer.html#a52e48622f80e71cea05ff1e0c6e43e4d">type()</a>, <a class="el" href="classQumbiaizer.html#ad88d0ad28fc282e939e80a6cac753632">type_str()</a>, and <a class="el" href="classQumbiaizer.html#a9b60ff8531d0fa9831cb3cd7ff1bd813a36195c6ae29d552b3e218a89e84e8580">UInt</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classQumbiaizer.html#af4560a4f3f9e9b2f51c5d8980fe6c202">configure()</a>, and <a class="el" href="classQuWatcher.html#af3ff0cc012b1240ec58ce280cbadede8">QuWatcher::onUpdate()</a>.</p>
@@ -1898,7 +1954,7 @@ false the reader behaves as readers usually behave </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 12 2019 12:21:32 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 6 2019 15:43:19 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

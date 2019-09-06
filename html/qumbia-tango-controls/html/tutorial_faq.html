@@ -57,6 +57,7 @@ $(function() {
 <li><a href="#cumbiawidget">In QTango there used to be a widget ready to read and display a value. In cumbia there is not. How do I quickly adapt an existing Qt widget?</a></li>
 <li><a href="#cumbiawidget_props">How do I fetch specific Tango attribute properties to configure my custom cumbia widget?</a></li>
 <li><a href="#configure">I either used QuWatcher or implemented CuDataListener on my custom graphical object. How do I configure it through the Tango database properties (setting maximum and minimum values, display unit and data format)?</a></li>
+<li><a href="#array_write_spinboxes">I want to write an array value of four elements simply using spin boxes and an apply button. How to do it?</a></li>
 <li><a href="#tangoprops">How do I get a Tango device property?</a></li>
 <li><a href="#except">How to format a message from a Tango <em>Exception</em>?</a></li>
 <li><a href="#read_request">How to trigger an asynchronous read request to the Tango engine?</a></li>
@@ -174,6 +175,10 @@ $(function() {
 <h2>A.</h2>
 <p>Just look for the CuData with the <em>type</em> key set to the <em>property</em> string. That's the bundle containing the Tango database configuration.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> MyCustomWidget::onUpdate(<span class="keyword">const</span> CuData &amp;da)</div><div class="line">{</div><div class="line">    <span class="keywordtype">bool</span> is_config = da[<span class="stringliteral">&quot;type&quot;</span>].toString() == std::string(<span class="stringliteral">&quot;property&quot;</span>);</div><div class="line">    <span class="keywordflow">if</span>(is_config) {</div><div class="line">        CuVariant m = da[<span class="stringliteral">&quot;min&quot;</span>], M = da[<span class="stringliteral">&quot;max&quot;</span>];</div><div class="line">        std::string print_format = da[<span class="stringliteral">&quot;format&quot;</span>].toString();</div><div class="line">        <span class="keywordtype">double</span> min, max;</div><div class="line">        <span class="keywordtype">bool</span> ok;</div><div class="line">        ok = m.to&lt;<span class="keywordtype">double</span>&gt;(min);     <span class="comment">// try to convert min</span></div><div class="line">        <span class="keywordflow">if</span>(ok)                      <span class="comment">// try to convert max if min succeeded</span></div><div class="line">            ok = M.to&lt;<span class="keywordtype">double</span>&gt;(max);</div><div class="line"></div><div class="line">        <span class="keywordflow">if</span>(ok) {  <span class="comment">// very good: Range properly configured in Tango database</span></div><div class="line">            setMinimum(min);  <span class="comment">// set minimum value on MyCustomWidget</span></div><div class="line">            setMaximum(max);  <span class="comment">// set maximum value on MyCustomWidget</span></div><div class="line">        }</div></div><!-- fragment --><h2>Q.</h2>
+<p><a class="anchor" id="tarray_write_spinboxes"></a></p>
+<h3>I want to write an array value of four elements simply using spin boxes and an apply button. How to do it?</h3>
+<h3>A.</h3>
+<h2>Q.</h2>
 <p><a class="anchor" id="tangoprops"></a> </p><h3>How do I get a Tango device property?</h3>
 <h2>A.</h2>
 <h4>1. The quick way (in current thread)</h4>
@@ -226,7 +231,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 12 2019 12:21:38 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 6 2019 15:43:28 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

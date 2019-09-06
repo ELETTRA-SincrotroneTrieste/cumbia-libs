@@ -61,6 +61,10 @@ Inheritance diagram for CuInfoDialog:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-slots"></a>
 Public Slots</h2></td></tr>
+<tr class="memitem:a1f4e521cf004a3cc18181118e174bf2a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuInfoDialog.html#a1f4e521cf004a3cc18181118e174bf2a">liveReadCbToggled</a> (bool start)</td></tr>
+<tr class="separator:a1f4e521cf004a3cc18181118e174bf2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e3fad0d213fb2d3a4b305a7f2219ace"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuInfoDialog.html#a0e3fad0d213fb2d3a4b305a7f2219ace">showAppDetails</a> (bool show)</td></tr>
+<tr class="separator:a0e3fad0d213fb2d3a4b305a7f2219ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bef5ae89b472793e81b959a9b521021"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuInfoDialog.html#a6bef5ae89b472793e81b959a9b521021">exec</a> (const CuData &amp;in)</td></tr>
 <tr class="separator:a6bef5ae89b472793e81b959a9b521021"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -176,7 +180,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classCuInfoDialogPrivate.html#ad20eebcdaa672b38282af113a7978599">CuInfoDialogPrivate::ctx</a>, <a class="el" href="classCuInfoDialog.html#a87092f21449187bb6f335af21f111650">extractSource()</a>, and <a class="el" href="classCuInfoDialogPrivate.html#ae65078bdb67bfc6937cf896eab8d6a40">CuInfoDialogPrivate::layout_col_cnt</a>.</p>
+<p class="reference">References <a class="el" href="classCuInfoDialogPrivate.html#ad20eebcdaa672b38282af113a7978599">CuInfoDialogPrivate::ctx</a>, <a class="el" href="classCuInfoDialog.html#a87092f21449187bb6f335af21f111650">extractSource()</a>, <a class="el" href="classCuInfoDialogPrivate.html#ae65078bdb67bfc6937cf896eab8d6a40">CuInfoDialogPrivate::layout_col_cnt</a>, <a class="el" href="classCuInfoDialog.html#a1f4e521cf004a3cc18181118e174bf2a">liveReadCbToggled()</a>, and <a class="el" href="classCuInfoDialog.html#a0e3fad0d213fb2d3a4b305a7f2219ace">showAppDetails()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classInfoDialogExtension.html#a42365b123ca2383fa0a42927f0a0ca63">InfoDialogExtension::execute()</a>.</p>
 
@@ -221,7 +225,7 @@ Public Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classCuInfoDialog.html#a120073d7375e6dc9f58632fe9970cdb5">extractSources()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCuInfoDialog.html#a6bef5ae89b472793e81b959a9b521021">exec()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuInfoDialog.html#a6bef5ae89b472793e81b959a9b521021">exec()</a>, and <a class="el" href="classCuInfoDialog.html#a1f4e521cf004a3cc18181118e174bf2a">liveReadCbToggled()</a>.</p>
 
 </div>
 </div>
@@ -262,6 +266,66 @@ Public Member Functions</h2></td></tr>
 <dl class="section user"><dt>Example</dt><dd>If expression is "{$1/double_scalar,$2/double_scalar}  function(a,b) {  return a-b;}" the method will return a QStringList ("$1/double_scalar","$2/double_scalar") and formula will contain "function(a,b) {  return a-b;}" </dd></dl>
 
 <p class="reference">Referenced by <a class="el" href="classCuInfoDialog.html#a87092f21449187bb6f335af21f111650">extractSource()</a>.</p>
+
+</div>
+</div>
+<a id="a1f4e521cf004a3cc18181118e174bf2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f4e521cf004a3cc18181118e174bf2a">&#9670;&nbsp;</a></span>liveReadCbToggled</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuInfoDialog::liveReadCbToggled </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>start</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuInfoDialogPrivate.html#ad20eebcdaa672b38282af113a7978599">CuInfoDialogPrivate::ctx</a>, <a class="el" href="classCuInfoDialog.html#a87092f21449187bb6f335af21f111650">extractSource()</a>, and <a class="el" href="classCuInfoDialogPrivate.html#ae65078bdb67bfc6937cf896eab8d6a40">CuInfoDialogPrivate::layout_col_cnt</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classCuInfoDialog.html#a6bef5ae89b472793e81b959a9b521021">exec()</a>.</p>
+
+</div>
+</div>
+<a id="a0e3fad0d213fb2d3a4b305a7f2219ace"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e3fad0d213fb2d3a4b305a7f2219ace">&#9670;&nbsp;</a></span>showAppDetails</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuInfoDialog::showAppDetails </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>show</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">slot</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuInfoDialogPrivate.html#ae65078bdb67bfc6937cf896eab8d6a40">CuInfoDialogPrivate::layout_col_cnt</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classCuInfoDialog.html#a6bef5ae89b472793e81b959a9b521021">exec()</a>.</p>
 
 </div>
 </div>
