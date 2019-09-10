@@ -42,7 +42,8 @@ porting an application from one platform to another is just a matter of a few cl
 
 ### Plugins
 *cumbia* libraries provide a set of fundamental capabilities that can be summarized in the concepts above. A set of plugins extends those functions
-and new ones can be added. The core framework remains small and easy to maintain, while the power grows distributed.
+and new ones can be added. The core framework remains small and easy to maintain, while the capabilities extend distributed.
+The set of widgets offered by the base *cumbia-qtcontrols* module can be extended by plugins as well.
 
 ### Screenshots
 <a href="screenshots.html">Here</a> you can see some screenshots of applications written with *cumbia*.
@@ -72,6 +73,7 @@ The library sources include copies of the *README.md* and *README.UBUNTU.md* fil
  |  <a href="html/qumbianewcontrolwizard/html/tutorial_qumbianewcontrolwizard.html"><em>cumbia new control</em></a>: quickly add a custom Qt widget to a cumbia project | <a href="html/qumbianewcontrolwizard/html/index.html">qumbia-apps/qumbianewcontrolwizard</a>  |
  |  <a href="html/cumbia-qtcontrols/html/understanding_cumbia_qtcontrols_constructors.html">Understanding <em>cumbia-qtcontrols constructors, sources and targets</em></a> |<a href="html/cumbia-qtcontrols/html/index.html">cumbia-qtcontrols</a>. |
  |  <a href="html/qumbia-tango-controls/html/tutorial_faq.html">Frequently Asked Questions (Tango)</a> | <a href="html/qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
+|  <a href="html/cumbia-qtcontrols/html/tutorial_extending_widgets.html">Extending the widget library</a> |<a href="html/cumbia-qtcontrols/html/index.html">cumbia-qtcontrols</a>. |
 
 
 ### Modules
