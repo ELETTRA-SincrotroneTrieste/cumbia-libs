@@ -48,7 +48,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="classQuXtraWidgetPluginI.html" title="QuXtraWidgetPluginI provides and interface that subclasses will use to provide one or more widgets ab...">QuXtraWidgetPluginI</a> provides and interface that subclasses will use to provide one or more widgets able to display or write values as any other <em>cumbia-qtcontrols</em> widget.  
+<p><a class="el" href="classQuXtraWidgetPluginI.html" title="QuXtraWidgetPluginI provides and interface that subclasses will use to provide one or more widgets ab...">QuXtraWidgetPluginI</a> provides and interface that subclasses will use to provide one or more widgets able to display or write values as any other <em>cumbia-qtcontrols</em> widget. Even though not strictly imposed by design, the returned widgets should implement the <a class="el" href="classQuXtraWidgetI.html" title="QuXtraWidgetI defines an interface for widgets created by an implementation of QuXtraWidgetPluginI.">QuXtraWidgetI</a> interface.  
  <a href="classQuXtraWidgetPluginI.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="quxtrawidgetplugininterface_8h_source.html">quxtrawidgetplugininterface.h</a>&gt;</code></p>
@@ -80,11 +80,30 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a937e1407235c2bca748e335a63cb04e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="classQuXtraWidgetPluginI.html" title="QuXtraWidgetPluginI provides and interface that subclasses will use to provide one or more widgets ab...">QuXtraWidgetPluginI</a> provides and interface that subclasses will use to provide one or more widgets able to display or write values as any other <em>cumbia-qtcontrols</em> widget. </p>
-<p>Subclasses will implement the <em>create</em> methods that are more appropriate. For example, a reader will typically implement both the Cumbia/CuControlsReaderFactoryI and the CumbiaPool/CuControlsFactoryPool versions.</p>
+<div class="textblock"><p><a class="el" href="classQuXtraWidgetPluginI.html" title="QuXtraWidgetPluginI provides and interface that subclasses will use to provide one or more widgets ab...">QuXtraWidgetPluginI</a> provides and interface that subclasses will use to provide one or more widgets able to display or write values as any other <em>cumbia-qtcontrols</em> widget. Even though not strictly imposed by design, the returned widgets should implement the <a class="el" href="classQuXtraWidgetI.html" title="QuXtraWidgetI defines an interface for widgets created by an implementation of QuXtraWidgetPluginI.">QuXtraWidgetI</a> interface. </p>
+<p>Subclasses will implement the <em>create</em> methods that are more appropriate. The QWidget instances returned by the <em>create</em> methods should implement the <a class="el" href="classQuXtraWidgetI.html" title="QuXtraWidgetI defines an interface for widgets created by an implementation of QuXtraWidgetPluginI.">QuXtraWidgetI</a> interface, notwithstanding the code design does not force the client to do that. If the objects instantiated by the plugin implement <a class="el" href="classQuXtraWidgetI.html" title="QuXtraWidgetI defines an interface for widgets created by an implementation of QuXtraWidgetPluginI.">QuXtraWidgetI</a>, they can be <em>dynamic_cast</em>-ed at runtime and the methods of the interface can be used. If you choose not to inherit from <a class="el" href="classQuXtraWidgetI.html" title="QuXtraWidgetI defines an interface for widgets created by an implementation of QuXtraWidgetPluginI.">QuXtraWidgetI</a>, you must provide access to the classes through <em>Qt properties</em>.</p>
+<p>A reader will typically implement both the Cumbia/CuControlsReaderFactoryI and the CumbiaPool/CuControlsFactoryPool versions of the <em>create</em> method, as suggested below.</p>
 <p>Users of the <em>extra widget plugins</em> can easily access the plugin that provides a given widget through the <a class="el" href="classQuXtraWidgetPluginLoader.html" title="The QuXtraWidgetPluginLoader class finds the plugin that exports a widget with a given file name.">QuXtraWidgetPluginLoader</a> helper class. <a class="el" href="classQuXtraWidgetPluginLoader.html" title="The QuXtraWidgetPluginLoader class finds the plugin that exports a widget with a given file name.">QuXtraWidgetPluginLoader</a> searches amongst the installed <em>extra widget plugins</em> by <em>class name</em>.</p>
 <p>The <em>extra widget plugins</em> file names must match a given pattern described in the introduction to <a class="el" href="classQuXtraWidgetPluginLoader.html" title="The QuXtraWidgetPluginLoader class finds the plugin that exports a widget with a given file name.">QuXtraWidgetPluginLoader</a>.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classQuXtraWidgetPluginLoader.html" title="The QuXtraWidgetPluginLoader class finds the plugin that exports a widget with a given file name.">QuXtraWidgetPluginLoader</a> </dd></dl>
+<p>The key methods of <a class="el" href="classQuXtraWidgetPluginI.html" title="QuXtraWidgetPluginI provides and interface that subclasses will use to provide one or more widgets ab...">QuXtraWidgetPluginI</a> are the create functions, defined in several flavours. Their default behavior is returning a null pointer. Subclasses will return valid QWidget intances only from the <em>create</em> method they actually reimplement.</p>
+<dl class="section user"><dt>Reader</dt><dd>A reader will typically overwrite <ul>
+<li><a class="el" href="classQuXtraWidgetPluginI.html#a670bbabc0bb6f3df90c22a851afe6b51" title="create allocate and return a new QWidget implementing QuXtraWidgetI">QuXtraWidgetPluginI::create(const QString&amp; name, QWidget *parent, Cumbia *cumbia, const CuControlsReaderFactoryI &amp;r_fac)</a> </li>
+<li><a class="el" href="classQuXtraWidgetPluginI.html#adccc8f6bb22bd40624c093d0d1d0f15e" title="create allocate and return a new QWidget implementing QuXtraWidgetI. CumbiaPool constructor version.">QuXtraWidgetPluginI::create(const QString&amp; name, QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &amp;fpool)</a></li>
+</ul>
+</dd></dl>
+<dl class="section user"><dt>Writer</dt><dd>A writer will provide valid QWidget instances from: <ul>
+<li><a class="el" href="classQuXtraWidgetPluginI.html#af7b5d3f9e1785bc26e6f392c27ce7b8b" title="create allocate and return a new QWidget implementing QuXtraWidgetI (writer version)">QuXtraWidgetPluginI::create(const QString&amp; name, QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &amp;w_fac)</a> </li>
+<li><a class="el" href="classQuXtraWidgetPluginI.html#adccc8f6bb22bd40624c093d0d1d0f15e" title="create allocate and return a new QWidget implementing QuXtraWidgetI. CumbiaPool constructor version.">QuXtraWidgetPluginI::create(const QString&amp; name, QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &amp;fpool)</a></li>
+</ul>
+</dd></dl>
+<dl class="section user"><dt>Reader and writer</dt><dd>A reader writer will reimplement <ul>
+<li><a class="el" href="classQuXtraWidgetPluginI.html#a814aafb890f13e5f8ed2c6bdf2c09a0d" title="create allocate and return a new QWidget implementing QuXtraWidgetI. Reader/Writer version.">create(const QString&amp; name, QWidget *parent, Cumbia *cumbia, const CuControlsReaderFactoryI &amp;r_fac, const CuControlsWriterFactoryI &amp;w_fac)</a> </li>
+<li><a class="el" href="classQuXtraWidgetPluginI.html#adccc8f6bb22bd40624c093d0d1d0f15e" title="create allocate and return a new QWidget implementing QuXtraWidgetI. CumbiaPool constructor version.">QuXtraWidgetPluginI::create(const QString&amp; name, QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &amp;fpool)</a></li>
+</ul>
+</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classQuXtraWidgetPluginLoader.html" title="The QuXtraWidgetPluginLoader class finds the plugin that exports a widget with a given file name.">QuXtraWidgetPluginLoader</a> </dd>
+<dd>
+<a class="el" href="classQuXtraWidgetI.html" title="QuXtraWidgetI defines an interface for widgets created by an implementation of QuXtraWidgetPluginI.">QuXtraWidgetI</a> </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a8483f697f802b8e5449b6420d9d6e104"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8483f697f802b8e5449b6420d9d6e104">&#9670;&nbsp;</a></span>~QuXtraWidgetPluginI()</h2>
@@ -467,7 +486,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 13 2019 15:09:57 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Sep 13 2019 15:26:19 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
