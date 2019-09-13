@@ -1,0 +1,8 @@
+<map id="QuPlotComponent" name="QuPlotComponent">
+<area shape="rect" id="node1" title="Interface defining a plot component. Operations can be delegated to plot components." alt="" coords="5,107,133,133"/>
+<area shape="rect" id="node2" href="$classQuPlotAxesComponent.html" title="Plot component that manages the axes." alt="" coords="209,5,367,32"/>
+<area shape="rect" id="node3" href="$classQuPlotCanvasPainterComponent.html" title="plot canvas painting can be delegated to this object" alt="" coords="181,56,395,83"/>
+<area shape="rect" id="node4" href="$classQuPlotContextMenuComponent.html" title="A QuPlotComponent managing the context menu for a plot." alt="" coords="185,107,391,133"/>
+<area shape="rect" id="node5" href="$classQuPlotMarkerComponent.html" title="QuPlot component to draw markers on the canvas." alt="" coords="204,157,372,184"/>
+<area shape="rect" id="node6" href="$classQuPlotZoomComponent.html" title="QuPlot component to zoom the plot." alt="" coords="207,208,369,235"/>
+</map>

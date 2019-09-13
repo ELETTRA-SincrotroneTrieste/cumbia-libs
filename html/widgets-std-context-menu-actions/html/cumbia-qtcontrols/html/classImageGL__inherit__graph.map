@@ -1,0 +1,5 @@
+<map id="ImageGL" name="ImageGL">
+<area shape="rect" id="node1" title="A QGLWidget to display two dimensional arrays as an image." alt="" coords="80,80,155,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,93,32"/>
+<area shape="rect" id="node3" href="$classEImageWidgetBase.html" title="a class inherited by EImageWidget to provide common functionalities to QWidget objects drawing an ima..." alt="" coords="118,5,255,32"/>
+</map>

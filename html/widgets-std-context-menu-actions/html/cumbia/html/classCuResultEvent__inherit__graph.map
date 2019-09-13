@@ -1,0 +1,4 @@
+<map id="CuResultEvent" name="CuResultEvent">
+<area shape="rect" id="node1" title="The CuResultEvent class stores a result that a CuActivity (sender) wants to deliver from the backgrou..." alt="" coords="5,80,115,107"/>
+<area shape="rect" id="node2" href="$classCuEventI.html" title="interface for a generic cumbia event designed to be generated in a secondary thread (CuActivity&#39;s thr..." alt="" coords="22,5,98,32"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="CuDataEvent" name="CuDataEvent">
+<area shape="rect" id="node1" title="An event that can be used to forward data through Cumbia::postEvent." alt="" coords="14,80,113,107"/>
+<area shape="rect" id="node2" href="$classCuActivityEvent.html" title="Generic event to pass data to an activity." alt="" coords="5,5,121,32"/>
+</map>

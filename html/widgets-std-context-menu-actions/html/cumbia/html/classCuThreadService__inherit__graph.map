@@ -1,0 +1,4 @@
+<map id="CuThreadService" name="CuThreadService">
+<area shape="rect" id="node1" title="cumbia service that creates threads and keeps references of the threads running within the applicatio..." alt="" coords="5,80,128,107"/>
+<area shape="rect" id="node2" href="$classCuServiceI.html" title="interface to write cumbia services that can be registered and fetched through the cumbia service prov..." alt="" coords="23,5,110,32"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="QuCheckBox" name="QuCheckBox">
+<area shape="rect" id="node1" title="A check box that reads, displays and writes a boolean value." alt="" coords="127,80,226,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,97,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="121,5,232,32"/>
+<area shape="rect" id="node4" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="256,5,343,32"/>
+</map>

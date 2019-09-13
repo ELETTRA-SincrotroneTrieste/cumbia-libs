@@ -1,0 +1,4 @@
+<map id="CumbiaPool_O" name="CumbiaPool_O">
+<area shape="rect" id="node1" title="Wraps CumbiaPool and CuControlsFactoryPool in a QObject that can be used to set a context property on..." alt="" coords="5,80,115,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="25,5,95,32"/>
+</map>

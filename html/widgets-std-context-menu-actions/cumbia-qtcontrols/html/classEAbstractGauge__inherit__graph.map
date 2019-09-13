@@ -1,0 +1,7 @@
+<map id="EAbstractGauge" name="EAbstractGauge">
+<area shape="rect" id="node1" title="an abstract class used to implement widgets with a color scale" alt="" coords="73,80,192,107"/>
+<area shape="rect" id="node3" href="$classECircularGauge.html" title="a tachometer like widget" alt="" coords="9,155,123,181"/>
+<area shape="rect" id="node5" href="$classELinearGauge.html" title="a thermometer like widget" alt="" coords="147,155,251,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="97,5,169,32"/>
+<area shape="rect" id="node4" href="$classQuCircularGauge.html" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors." alt="" coords="5,229,127,256"/>
+</map>

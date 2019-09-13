@@ -1,0 +1,4 @@
+<map id="CuResumeEvent" name="CuResumeEvent">
+<area shape="rect" id="node1" title="event to resume an activity&#39;s timer" alt="" coords="5,80,125,107"/>
+<area shape="rect" id="node2" href="$classCuActivityEvent.html" title="Generic event to pass data to an activity." alt="" coords="7,5,123,32"/>
+</map>
