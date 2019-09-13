@@ -5,6 +5,7 @@
 
 class QPoint;
 class CuContext;
+class QMenu;
 class QuWidgetContextMenuStrategyI;
 
 /*! \brief A QuPlotComponent managing the context menu for a plot.
@@ -34,6 +35,7 @@ public:
     void attachToPlot(QuPlotBase *plot);
     void connectToPlot(QuPlotBase *plot);
 
+    QMenu *getMenu(QuPlotBase *plot, QuWidgetContextMenuStrategyI*  ctxMenuStrategy) const;
     void execute(QuPlotBase *plot, QuWidgetContextMenuStrategyI* ctxMenuStrategy, const QPoint& pos);
     void print(QuPlotBase *p);
     void snapshot(QuPlotBase *p);

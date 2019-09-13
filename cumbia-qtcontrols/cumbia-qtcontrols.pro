@@ -49,6 +49,7 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/quled.cpp \
     src/qutable.cpp \
     src/quplotcommon.cpp \
+    src/quxtrawidgetpluginloader.cpp \
     src/widgets-base/eplotlight/quplotcontextmenustrategy.cpp \
     src/widgets-base/number_delegate.cpp \
     src/widgets-base/eng_notation.cpp \
@@ -106,6 +107,8 @@ HEADERS += cumbiaqtcontrols.h\
     src/qustringlist.h \
     src/qutable.h \
     src/quvector.h \
+    src/quxtrawidgetplugininterface.h \
+    src/quxtrawidgetpluginloader.h \
     src/widgets-base/eplotlight/quplotcontextmenustrategy.h \
     src/widgets-base/string_delegate.h \
     src/widgets-base/number_delegate.h \
@@ -249,7 +252,8 @@ SOURCES += \
     src/widgets-base/enumeric.cpp
 
 DISTFILES += \
-    cumbia-qtcontrols.pri
+    cumbia-qtcontrols.pri \
+    src/tutorial_extending_widgets.md
 
 unix:INCLUDEPATH -= \
     $${CUMBIA_QTCONTROLS_INCLUDES}

@@ -31,15 +31,20 @@ void QuPlotContextMenuComponent::connectToPlot(QuPlotBase *)
 
 }
 
+QMenu *QuPlotContextMenuComponent::getMenu(QuPlotBase *plot, QuWidgetContextMenuStrategyI* ctxMenuStrategy) const
+{
+    if(ctxMenuStrategy)
+        return ctxMenuStrategy->createMenu(plot);
+    return nullptr;
+}
+
 void QuPlotContextMenuComponent::execute(QuPlotBase *plot,
                                          QuWidgetContextMenuStrategyI*
                                          ctxMenuStrategy,
-                                         const QPoint &pos)
+                                         const QPoint &)
 {
-    Q_UNUSED(pos);
-    if(ctxMenuStrategy)
-    {
-        QMenu *menu = ctxMenuStrategy->createMenu(plot);
+    QMenu *menu = getMenu(plot, ctxMenuStrategy);
+    if(menu) {
         menu->exec(QCursor::pos());
         delete menu;
     }

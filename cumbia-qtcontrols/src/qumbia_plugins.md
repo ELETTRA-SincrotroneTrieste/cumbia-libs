@@ -1,4 +1,4 @@
-# Cumbia library plugins {#qumbia_plugins}
+# Cumbia library plugins. {#qumbia_plugins}
 
 *cumbia* library core functionalities can be extended thanks to specific plugins
 
