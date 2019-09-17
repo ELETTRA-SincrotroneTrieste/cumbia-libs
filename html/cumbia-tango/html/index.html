@@ -44,7 +44,7 @@ $(function() {
 <div class="title">cumbia-tango Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><em>cumbia-tango</em> integrates cumbia with the <a class="el" href="namespaceTango.html">Tango</a> control system framework, providing specialised Activities to read, write attributes and impart commands.</p>
+<div class="textblock"><p><em>cumbia-tango</em> integrates cumbia with the <a class="el" href="namespaceTango.html">Tango</a> control system framework, providing specialised Activities to read, write attributes and impart commands. Readings are accomplished through either a poller or the <a class="el" href="namespaceTango.html">Tango</a> event system, for those attributes suitably configured. Write operations are always executed in an asynchronous thread and the result is delivered later in the main thread. Cumbia activities are employed by the module to setup the connection, access the database, subscribe to events or carry out periodic readings. Progress and result events are delivered to the main thread from the background activity. As stated in the previous section, activities identified by the same token belong to the same thread. Here, the token is the <a class="el" href="namespaceTango.html">Tango</a> device name. Applications that connect to the <a class="el" href="namespaceTango.html">Tango</a> control system will typically instantiate a <a class="el" href="classCumbiaTango.html">CumbiaTango</a> object that defines which kind of threads will be used (e.g. Qt’s for graphical interfaces) and thereafter parametrizes each reader or writer. Several modern design patterns have been exploited to provide a flexible and scalable architecture. Singletons have been completely replaced by service providers in order to offer services For graphical applications. The component provides helpful classes that can be used from outside an activity to access devices, fetch database properties or interpret exceptions raised from within the engine. Aside from these utilities, one would not normally employ this module directly. Cumbia-qtcontrols and qumbia-tango-controls is where to look for when the integration between the control system and the user interface is the objective.</p>
 <h1><a class="anchor" id="related_readings"></a>
 Related readings</h1>
 <h2><a class="anchor" id=""></a>
@@ -174,7 +174,7 @@ cumbiatango in graphical applications</h1>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 13 2019 15:30:59 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Sep 17 2019 14:48:30 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

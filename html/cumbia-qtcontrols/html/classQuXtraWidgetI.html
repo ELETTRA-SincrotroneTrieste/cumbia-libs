@@ -87,7 +87,10 @@ Public Member Functions</h2></td></tr>
 <p>Since <a class="el" href="classQuXtraWidgetPluginI.html#a670bbabc0bb6f3df90c22a851afe6b51" title="create allocate and return a new QWidget implementing QuXtraWidgetI">QuXtraWidgetPluginI::create</a> methods instantiate a QWidget, <a class="el" href="classQuXtraWidgetI.html" title="QuXtraWidgetI defines an interface for widgets created by an implementation of QuXtraWidgetPluginI.">QuXtraWidgetI</a> can be accessed through a <em>dynamic_cast</em>.</p>
 <dl class="section user"><dt>Best practise</dt><dd>To avoid dynamic casting to <a class="el" href="classQuXtraWidgetI.html" title="QuXtraWidgetI defines an interface for widgets created by an implementation of QuXtraWidgetPluginI.">QuXtraWidgetI</a> from QWidget, it is a good practise to provide access to the widget useful methods through etither slots or properties. For example, the <em>source</em> property could be a shortcut to the <em>link</em> and <em>setLink</em> methods. For example: <div class="fragment"><div class="line"><span class="keyword">class </span>QuTextView : <span class="keyword">public</span> QTextEdit, <span class="keyword">public</span> <a class="code" href="classQuXtraWidgetI.html">QuXtraWidgetI</a>, <span class="keyword">public</span> CuDataListener</div><div class="line">{</div><div class="line"> Q_OBJECT</div><div class="line"> Q_PROPERTY(QString source READ <a class="code" href="classQuXtraWidgetI.html#a23de4e4e23d7c43a3bf4040b374d171a">link</a> WRITE <a class="code" href="classQuXtraWidgetI.html#af77a1ddf18d43d96b4dc2a1d56d63358">setLink</a>)</div><div class="line"> <span class="comment">// ...</span></div><div class="line">}</div></div><!-- fragment --></dd></dl>
 <dl class="section user"><dt>Note</dt><dd>Since <a class="el" href="classQuXtraWidgetI.html" title="QuXtraWidgetI defines an interface for widgets created by an implementation of QuXtraWidgetPluginI.">QuXtraWidgetI</a> subclasses can either be readers, writers or both, the usual <em>source, target</em>, <em>setSource</em> and <em>setTarget</em> methods have been unified under the names <em>setLink</em> and <em>link</em>. Through the <em>Qt property</em> system it is possible to map the <em>link</em> methods to either <em>source</em> or <em>target</em> property names, as aforementioned.</dd></dl>
-<dl class="section user"><dt>Real time plot example.</dt><dd>Please read the <a href="tutorial_extending_widgets.html">real time plot</a> tutorial for an example. </dd></dl>
+<dl class="section user"><dt>Real time plot example.</dt><dd>Please read the <a href="tutorial_extending_widgets.html">real time plot</a> tutorial for an example.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classQuXtraWidgetPluginLoader.html" title="The QuXtraWidgetPluginLoader class finds the plugin that exports a widget with a given file name.">QuXtraWidgetPluginLoader</a> </dd>
+<dd>
+<a class="el" href="classQuXtraWidgetPluginI.html" title="QuXtraWidgetPluginI provides and interface that subclasses will use to provide one or more widgets ab...">QuXtraWidgetPluginI</a> </dd></dl>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="afee1bb2798616d95d40d95efd47c9f00"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afee1bb2798616d95d40d95efd47c9f00">&#9670;&nbsp;</a></span>Type</h2>
@@ -292,7 +295,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Sep 13 2019 15:31:06 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Sep 17 2019 14:48:38 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

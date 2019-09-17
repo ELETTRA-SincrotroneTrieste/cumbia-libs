@@ -100,6 +100,19 @@ The library sources include copies of the *README.md* and *README.UBUNTU.md* fil
  | <a href="html/cumbia-dbus/html/index.html">dbus plugin</a>. |
  | <a href="html/cumbia-multiread/html/index.html">multi reader plugin</a>. |
  | <a href="html/widgets-std-context-menu-actions/html/index.html">context menu actions plugin</a>. |
+
+
+### Interfaces for additional plugins
+
+ |Plugin interfaces to extend *cumbia*  |
+ |-------------------------------------------------------------------|
+ | <a href="html/cumbia-qtcontrols/html/classQuXtraWidgetPluginI.html">extra widget plugin interface</a>. |
+ | <a href="html/cumbia-qtcontrols/html/classQuMultiReaderPluginInterface.html">multi reader plugin interface</a>. |
+
+
+### Additional plugins
+
+Additional plugins can be downloaded from the <a href="https://github.com/ELETTRA-SincrotroneTrieste/">ELETTRA-Sincrotrone Trieste</a> github page.
  
 
 ### Apps
