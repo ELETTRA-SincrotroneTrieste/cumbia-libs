@@ -14,6 +14,19 @@ class CuThreadsEventBridgeFactory_I;
 /** \mainpage
  * \a cumbia-tango integrates cumbia with the Tango control system framework, providing specialised Activities to read,
  * write attributes and impart commands.
+ * Readings are accomplished through either a poller or the Tango event system, for those attributes suitably configured.
+ * Write operations are always executed in an asynchronous thread and the result is delivered later in the main thread.
+ * Cumbia activities are employed by the module to setup the connection, access the database, subscribe to events or carry
+ * out periodic readings. Progress and result events are delivered to the main thread from the background activity.
+ * As stated in the previous section, activities identified by the same token belong to the same thread.
+ * Here, the token is the Tango device name. Applications that connect to the Tango control system will typically
+ * instantiate a CumbiaTango object that defines which kind of threads will be used (e.g. Qt’s for graphical interfaces)
+ * and thereafter parametrizes each reader or writer. Several modern design patterns have been exploited to provide
+ * a flexible and scalable architecture. Singletons have been completely replaced by service providers in order to offer
+ * services For graphical applications. The component provides helpful classes that can be used from outside an activity
+ * to access devices, fetch database properties or interpret exceptions raised from within the engine. Aside from these
+ * utilities, one would not normally employ this module directly. Cumbia-qtcontrols and qumbia-tango-controls is where
+ * to look for when the integration between the control system and the user interface is the objective.
  *
  *  \section related_readings Related readings
  *
@@ -48,47 +61,6 @@ class CuThreadsEventBridgeFactory_I;
  * | <a href="../../cumbia-epics/html/index.html">qumbia-epics module</a>.   |
  * | <a href="../../qumbia-epics-controls/html/index.html">qumbia-epics-controls module</a>.  |
  * | <a href="../../qumbia-plugins/html/index.html">qumbia-plugins module</a>.  |
- *
- * \subsection cu_apps apps
- *
- * These applications (and their documentation, that has already been mentioned in the *Tutorials* table above)
- * must be installed from the *qumbia-apps* sub-directory of the *cumbia-libs* distribution.
- * To install them, *cd* into that folder and execute:
- *
- * \code
- * qmake
- * make
- * sudo make install
- * \endcode
- *
- * Along the applications executables and documentation, two bash scripts will be installed:
- *
- * - /etc/bash_completion.d/cumbia
- * - /etc/bash/bashrc.d/cumbia.sh
- *
- * They define shortcuts for the common operations provided by the *qumbia-apps* applications as follows:
- *
- *
- * |Applications (command line)   | description                                 | app
- * |------------------------------|--------------------------------------------|:---------------:|
- * | *cumbia new project*          | create a new cumbia project               |<a href="../../qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
- * | *cumbia import*               | migrate a QTango project into cumbia      |<a href="../../qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
- * | *cumbia new control*          | write a *cumbia control* reader or writer | <a href="../../qumbianewcontrolwizard/html/index.html">qumbia-apps/qumbianewcontrolwizard</a>  |
- * | *cumbia ui make*              | run *cuuimake* to generate *qt+cumbia* ui_*.h files | <a href="../../cuuimake/html/index.html">qumbia-apps/cuuimake</a>  |
- * | *cumbia client*               | run a generic cumbia client | <a href="../../cumbia_client/html/index.html">qumbia-apps/cumbia_client</a>  |
- *
- * *bash auto completion* will help you use these shortcuts: try
- *
- * \code
- * cumbia <TAB>
- * \endcode
- *
- * or
- *
- * \code
- * cumbia new <TAB>
- * \endcode
- *
  *
  *
  *

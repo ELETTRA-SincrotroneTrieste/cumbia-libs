@@ -135,16 +135,17 @@ void CuEventActivity::init()
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
     /* get a reference to a TDevice, new or existing one */
-    d->tdev = d->device_srvc->getDevice(tk["device"].toString());
-    pbgreen("CuEventActivity.init: got TDevice %p DeviceProxy %p name %s from THIS THREAD 0x%lx is valid: %d",
-            d->tdev, d->tdev->getDevice(), d->tdev->getName().c_str(), pthread_self(), d->tdev->isValid());
+    d->tdev = d->device_srvc->getDevice(tk["device"].toString(), threadToken());
+    d->device_srvc->addRef(tk["device"].toString(), threadToken());
+    printf("CuEventActivity.init: got TDevice %p DeviceProxy %p name %s from THIS THREAD 0x%lx is valid: %d thread tok %s\n",
+            d->tdev, d->tdev->getDevice(), d->tdev->getName().c_str(), pthread_self(), d->tdev->isValid(), threadToken().toString().c_str());
+
     tk["conn"] = d->tdev->isValid();
     tk["msg"] = d->tdev->getMessage();
     tk["err"] = !d->tdev->isValid();
     tk.putTimestamp();
     CuTangoWorld().fillThreadInfo(tk, this);
     //  sleep(5);
-    d->tdev->addRef();
     publishResult(tk);
 }
 
@@ -221,7 +222,7 @@ void CuEventActivity::execute()
     /* do not publish result if subscription is successful because push_event with the first result is invoked immediately */
 }
 
-/*! \brief the implementation of the CuActivity::execute hook
+/*! \brief the implementation of the CuActivity::onExit hook
  *
  * This is called in the CuActivity's thread of execution.
  *
@@ -238,7 +239,7 @@ void CuEventActivity::onExit()
 {
     assert(d->my_thread_id == pthread_self());
     CuData at = getToken(); /* activity token */
-    int refcnt;
+    int refcnt = -1;
     at.putTimestamp();
     if(d->tdev->getDevice() && d->event_id != -1)
     {
@@ -260,10 +261,13 @@ void CuEventActivity::onExit()
         at["msg"] = d->tdev->getMessage();
         at["name"] = d->tdev->getName();
     }
-    refcnt = d->tdev->removeRef();
-
+    // removes reference (lock guarded) and deletes TDev if no more necessary
+    // Lock guarded because since 1.1.0 one thread per device is not a rule.
+    printf("\e[0;35mCuTConfigActivity::onExit: removing refernce to dev %s d->tdev %p thread 0x%lx thread tok %s\e[0m\n",
+           at["device"].toString().c_str(), d->tdev, pthread_self(), threadToken().toString().c_str());
+    refcnt = d->device_srvc->removeRef(at["device"].toString(), threadToken());
     if(refcnt == 0)
-        d->device_srvc->removeDevice(at["device"].toString());
+        d->tdev = nullptr;
     CuTangoWorld().fillThreadInfo(at, this); /* put thread and activity addresses as info */
     at["exit"] = true;
     publishResult(at);

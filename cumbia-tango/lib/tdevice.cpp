@@ -36,7 +36,7 @@ TDevice::TDevice(const std::string &name)
 
 TDevice::~TDevice()
 {
-    pdelete("~TDevice %p: deleting device %p \"%s\" in this thread 0x%lx\n", this, d->dev, d->name.c_str(),
+    printf("~TDevice %p: deleting device %p \"%s\" in this thread 0x%lx\n", this, d->dev, d->name.c_str(),
             pthread_self());
     if(d->dev) {
         delete d->dev;

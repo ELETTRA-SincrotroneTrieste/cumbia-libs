@@ -36,6 +36,7 @@ public:
     bool polling_fallback;
     std::list<void *> activities;
     int manual_mode_period;
+    CuData options;
 };
 
 CuTReader::CuTReader(const TSource& src, CumbiaTango *ct) : CuTangoActionI()
@@ -329,6 +330,20 @@ void CuTReader::setPeriod(int millis)
     d->period = millis;
 }
 
+/*!
+ * \brief CuTReader::setOptions sets the options on the reader
+ * \param options CuData key/value bundle
+ *
+ * Called by CuTangoActionI *CuTangoReaderFactory::create
+ */
+void CuTReader::setOptions(const CuData &options) {
+    d->options = options;
+    if(options.containsKey("period") && options["period"].toInt() > 0)
+        setPeriod(options["period"].toInt());
+    if(options.containsKey("refresh_mode"))
+        setRefreshMode(static_cast<CuTReader::RefreshMode>(options["refresh_mode"].toInt()));
+}
+
 /*
  * main thread
  */
@@ -430,13 +445,17 @@ void CuTReader::m_startEventActivity()
     CuData at("src", d->tsrc.getName()); /* activity token */
     at.set("device", d->tsrc.getDeviceName()).set("point", d->tsrc.getPoint()).set("activity", "event")
             .set("rmode", refreshModeStr());
-    CuData tt("device", d->tsrc.getDeviceName()); /* thread token */
+    // thread token: by default device name, but can be tuned
+    // through the "thread_token" option (setOptions)
+    //CuData tt = CuData("device", d->tsrc.getDeviceName());
+    CuData thtok;
+    d->options.containsKey("thread_token") ? thtok = d->options : thtok = CuData("device", d->tsrc.getDeviceName());
     d->event_activity = new CuEventActivity(at, df);
     d->activities.push_back(d->event_activity);
     d->refresh_mode = ChangeEventRefresh; // update refresh mode
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
-    d->cumbia_t->registerActivity(d->event_activity, this, tt, fi, bf);
+    d->cumbia_t->registerActivity(d->event_activity, this, thtok, fi, bf);
     cuprintf("> CuTReader.m_startEventActivity reader %p thread 0x%lx ACTIVITY %p\n", this, pthread_self(), d->event_activity);
 }
 
@@ -444,7 +463,7 @@ void CuTReader::m_registerToPoller()
 {
     CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
-    polling_service->registerAction(d->cumbia_t, d->tsrc, d->period, this);
+    polling_service->registerAction(d->cumbia_t, d->tsrc, d->period, this, d->options);
 }
 
 void CuTReader::m_unregisterFromPoller()
@@ -460,4 +479,5 @@ void CuTReader::m_unregisterEventActivity()
     d->event_activity = NULL; // not safe to dereference henceforth
     // but leave the activity in the list of activities!
 }
+
 

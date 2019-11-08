@@ -10,6 +10,7 @@
 #include <cuservices.h>
 #include <cuserviceprovider.h>
 #include <cudevicefactoryservice.h>
+#include <cuthreadevents.h>
 
 class CuPollerPrivate
 {
@@ -46,7 +47,7 @@ int CuPoller::period() const
     return d->period;
 }
 
-void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a)
+void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a, const CuData& options)
 {
     // insert in this thread
     d->actions_map.insert(std::pair<const CuTangoActionI*, const TSource>(a, tsrc));
@@ -63,7 +64,9 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a)
 
     CuActivity *activity = am->findActiveMatching(at); // polling activities compare device period and "activity"
     if(!activity) {
-        CuData tt("device", tsrc.getDeviceName()); /* thread token */
+        // thread token. CuTReader.setOptions can customize thread grouping behaviour
+        CuData tt;
+        options.containsKey("thread_token") ? tt = options : tt = CuData("device", tsrc.getDeviceName());
         activity = new CuPollingActivity(at, df);
         const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
         const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
@@ -175,11 +178,15 @@ void CuPoller::m_do_unregisterAction(CuTangoActionI *a)
         CuActivity *activity = am->findActiveMatching(at); // polling activities compare device period and "activity"
         // post remove to activity's thread
         if(activity) {
+            printf("\e[1;33mCuPoller.m_do_unregisterAction: postEvent to activity %p of type CuRemovePollActionEvent\e[0m\n", activity);
             d->cumbia_t->postEvent(activity, new CuRemovePollActionEvent(a->getSource()));
         }
 
         if(d->actions_map.size() == 0) {
             am->removeConnection(this);
+            printf("\e[1;33mCuPoller.m_do_unregisterAction: no more actions: calling \e[1;32mCumbiaTango.unregisterActivity for activity %p\e[0m\n", activity);
+            d->cumbia_t->unregisterActivity(activity);
         }
     }
 }
+

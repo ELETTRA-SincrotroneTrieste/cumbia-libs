@@ -275,10 +275,10 @@ void CuPollingActivity::init()
     CuData tk = getToken();
 
     /* get a reference to TDevice */
-    d->tdev = d->device_srvc->getDevice(tk["device"].toString());
+    d->tdev = d->device_srvc->getDevice(tk["device"].toString(), threadToken());
     // CHECK THIS /* if polling activity is a fallback because event subscription fails, no need to add ref */
     //if(!tk["fallback"].toBool())
-    d->tdev->addRef();
+    d->device_srvc->addRef(d->tdev->getName(), threadToken());
     tk["conn"] = d->tdev->isValid();
     tk["err"] = !d->tdev->isValid();
     tk["msg"] = d->tdev->getMessage();
@@ -448,21 +448,16 @@ void CuPollingActivity::onExit()
 {
     assert(d->my_thread_id == pthread_self());
     dispose();
-    int refcnt = -1;
     CuData at = getToken(); /* activity token */
     at["msg"] = "EXITED";
     at["mode"] = "POLLED";
     //    CuTangoWorld utils;
     //    utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
-    if(d->tdev)
-        refcnt = d->tdev->removeRef();
-//   printf("\e[1;31mCuPollingActivity::onExit(): %p refcnt = %d device %s att %s\e[0m\n",
-//            this, refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
-    if(refcnt == 0)
-    {
-        d->device_srvc->removeDevice(at["device"].toString());
-        d->tdev = NULL;
-    }
+
+    // thread safely remove ref and let d->device_srvc dispose TDev if no more referenced
+    d->device_srvc->removeRef(at["device"].toString(), threadToken());
+    //   printf("\e[1;31mCuPollingActivity::onExit(): %p refcnt = %d device %s att %s\e[0m\n",
+    //            this, refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
     at["exit"] = true;
     // do not publishResult because CuPoller (which is our listener) may be deleted by CuPollingService
     // from the main thread when its action list is empty (see CuPollingService::unregisterAction)
@@ -491,7 +486,7 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts)
     while(it != d->actions_map.end()) {
         if(it->first == ts.getName() && it->second.tsrc == ts) {
             it = d->actions_map.erase(it);
-            pred(" - CuPollingActivity %p event: removed %s from poller\n",this,  ts.toString().c_str());
+            printf(" - \e[1;32mCuPollingActivity %p event\e[0m: removed %s from poller\n",this,  ts.toString().c_str());
         }
         else
             ++it;

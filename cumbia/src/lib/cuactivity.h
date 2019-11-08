@@ -205,6 +205,10 @@ public:
 
     CuData getToken() const;
 
+    void setThreadToken(const CuData &tt);
+
+    const CuData& threadToken() const;
+
     /* template method: sets state and calls init */
     void doInit();
     /* template method: sets state and calls execute */

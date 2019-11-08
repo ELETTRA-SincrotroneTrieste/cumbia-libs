@@ -55,10 +55,7 @@ CuTangoReaderFactory::~CuTangoReaderFactory()
 CuTangoActionI *CuTangoReaderFactory::create(const std::string &s, CumbiaTango *ct) const
 {
     CuTReader* reader = new CuTReader(s, ct);
-    if(options.containsKey("period") && options["period"].toInt() > 0)
-        reader->setPeriod(options["period"].toInt());
-    if(options.containsKey("refresh_mode"))
-        reader->setRefreshMode(static_cast<CuTReader::RefreshMode>(options["refresh_mode"].toInt()));
+    reader->setOptions(options);
     return reader;
 }
 
@@ -125,9 +122,7 @@ CuData CuTConfFactoryBase::options() const
 CuTangoActionI *CuTReaderConfFactory::create(const std::string &s, CumbiaTango *ct) const
 {
     CuTConfiguration *w = new CuTConfiguration(s, ct, CuTangoActionI::ReaderConfig);
-    const CuData& op = options();
-    if(op.containsKey("fetch_props"))
-        w->setDesiredAttributeProperties(op["fetch_props"].toStringVector());
+    w->setOptions(options());
     return w;
 }
 

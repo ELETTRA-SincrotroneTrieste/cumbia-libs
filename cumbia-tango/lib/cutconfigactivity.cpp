@@ -71,9 +71,11 @@ void CuTConfigActivity::init()
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
+    const std::string& dnam = tk["device"].toString();
     /* get a TDevice */
-    d->tdev = d->device_service->getDevice(tk["device"].toString());
-    d->tdev->addRef();
+    d->tdev = d->device_service->getDevice(dnam, threadToken());
+    // thread safe: since cumbia 1.1.0 no thread per device guaranteed
+    d->device_service->addRef(dnam, threadToken());
     tk["msg"] =  "CuTConfigActivity.init: " + d->tdev->getMessage();
     tk["conn"] = d->tdev->isValid();
     tk["err"] = !d->tdev->isValid();
@@ -82,7 +84,6 @@ void CuTConfigActivity::init()
 
 void CuTConfigActivity::execute()
 {
-    assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
     CuData at = getToken(); /* activity token */
     d->err = !d->tdev->isValid();
@@ -144,14 +145,13 @@ void CuTConfigActivity::onExit()
         at["type"] = "property";
         at["err"] = d->err;
         CuTangoWorld utils;
-        utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
-        if(d->tdev)
-            refcnt = d->tdev->removeRef();
-        if(refcnt == 0)
-        {
-            d->device_service->removeDevice(at["device"].toString());
-            d->tdev = NULL;
-        }
+        utils.fillThreadInfo(at, this); /* put thread and actiity addresses as info */
+        // thread safe remove ref and disposal
+        printf("\e[0;35mCuTConfigActivity::onExit: removing refernce to dev %s d->tdev %p thread 0x%lx thread tok %s\e[0m\n",
+               at["device"].toString().c_str(), d->tdev, pthread_self(), threadToken().toString().c_str());
+        refcnt = d->device_service->removeRef(at["device"].toString(), threadToken());
+        if(!refcnt)
+            d->tdev = nullptr;
         at["exit"] = true;
         publishResult(at);
     }

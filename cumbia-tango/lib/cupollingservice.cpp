@@ -32,10 +32,10 @@ CuPoller *CuPollingService::getPoller(CumbiaTango *cu_t, int period)
     }
 }
 
-void CuPollingService::registerAction(CumbiaTango *ct, const TSource &tsrc, int period, CuTangoActionI *action)
+void CuPollingService::registerAction(CumbiaTango *ct, const TSource &tsrc, int period, CuTangoActionI *action, const CuData& options)
 {
     CuPoller *poller = getPoller(ct, period);
-    poller->registerAction(tsrc, action);
+    poller->registerAction(tsrc, action, options);
 }
 
 void CuPollingService::unregisterAction(int period, CuTangoActionI *action)

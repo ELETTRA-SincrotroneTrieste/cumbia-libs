@@ -79,6 +79,8 @@ public:
 
     void setPeriod(int millis);
 
+    void setOptions(const CuData& options);
+
     int period() const;
 
     void start();

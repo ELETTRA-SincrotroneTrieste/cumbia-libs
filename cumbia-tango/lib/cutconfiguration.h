@@ -17,6 +17,8 @@ public:
 
     void setDesiredAttributeProperties(const std::vector<std::string> props);
 
+    void setOptions(const CuData& options);
+
     // CuThreadListener interface
 public:
     void onProgress(int, int, const CuData &);

@@ -1,6 +1,7 @@
 #include "cumbia.h"
 #include "services/cuserviceprovider.h"
 #include "services/cuthreadservice.h"
+#include "services/cutimerservice.h"
 #include "cuthreadseventbridgefactory_i.h"
 #include "services/cuservices.h"
 #include "services/cuactivitymanager.h"
@@ -80,6 +81,36 @@ int Cumbia::getType() const
     return CumbiaBaseType;
 }
 
+/*!
+ * \brief Cumbia::threadToken returns a thread token that can be used to group threads together
+ *
+ * If the option passed as argument contains the *thread_token* key set with the *auto* value,
+ * the token will be generated so that the thread will be picked up from a limited number of
+ * instances in a pool.
+ *
+ * If the option contains the *thread_token* with another value, that value will be used to group
+ * threads with the same token
+ *
+ * If there is no *thread_token* key in the input options, the return value is the same as the input
+ * argument.
+ *
+ * \param options configuration options to customize thread grouping
+ *
+ * \return a thread token (CuData)
+ */
+CuData Cumbia::threadToken(const CuData &options) const
+{
+    if(!options.containsKey("thread_token"))
+        return options;
+    CuData ret;
+    if(options.has("thread_token", "auto")) // to be implemented
+        ret = CuData("thread_token", "auto");
+    else if(options.containsKey("thread_token"))
+        ret =  CuData("thread_token", options["thread_token"]);
+    printf("\e[1;33mCumbia.threadToken custom \"%s\"\e[0m\n", ret.toString().c_str());
+    return ret;
+}
+
 /*! \brief the class destructor
  *
  * Cleanup is delegated to the Cumbia::finish method
@@ -113,6 +144,7 @@ Cumbia::Cumbia()
     d->serviceProvider = new CuServiceProvider();
     d->serviceProvider->registerService(CuServices::Thread, new CuThreadService());
     d->serviceProvider->registerService(CuServices::ActivityManager, new CuActivityManager());
+    d->serviceProvider->registerService(CuServices::Timer, new CuTimerService());
 }
 
 CuServiceProvider *Cumbia::getServiceProvider() const
@@ -172,6 +204,7 @@ void Cumbia::registerActivity(CuActivity *activity,
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     CuThreadService *thread_service = static_cast<CuThreadService *>(d->serviceProvider->get(CuServices::Thread));
     CuThreadInterface *thread = NULL;
+    printf("\e[1;33mCumbia.registerActivity with  thread token \e[1;36m%s\e[0m\n", thread_token.toString().c_str());
     thread = thread_service->getThread(thread_token, eventsBridgeFactoryImpl, d->serviceProvider, thread_factory_impl);
     activityManager->addConnection(thread, activity, dataListener);
     activity->setActivityManager(activityManager);

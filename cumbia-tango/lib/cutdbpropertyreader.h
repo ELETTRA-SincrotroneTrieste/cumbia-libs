@@ -15,6 +15,14 @@ class CuDataListener;
  * provides a notification through the CuThreadListener interface when
  * data is available. Data is retrieved in a separate thread.
  *
+ * \par Object disposal
+ * This must not be deleted directly. Auto deletion is possible if you call
+ * deleteLater. In this case, the object will auto delete itself either after onResult
+ * or immediately, if onResult has already been called.
+ *
+ * \par Listener disposal
+ * Do not delete the listener unless you've previously called either cancel or removeListener.
+ *
  * @see CuTDbPropertyReader
  * @see get
  */
@@ -27,7 +35,12 @@ public:
 
     void get(const std::vector<CuData>& in_data);
 
+    void cancel();
+
     void addListener(CuDataListener *l);
+    void removeListener(CuDataListener *l);
+
+    void deleteLater();
 
     // CuThreadListener interface
 public:

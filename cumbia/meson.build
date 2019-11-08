@@ -1,4 +1,4 @@
-project('cumbia', 'cpp', version : '1.0.1',
+project('cumbia', 'cpp', version : '1.0.2',
     default_options : ['c_std=c11', 'cpp_std=c++11'])
 
 project_description = 'library that offers a carefree approach to multi thread application design and implementation'
@@ -39,6 +39,7 @@ headers = [
 'src/lib/services/cuserviceprovider.h',
 'src/lib/services/cuthreadservice.h',
 'src/lib/services/cuservicei.h',
+'src/lib/services/cutimerservice.h',
 'src/lib/services/culog.h',
 'src/lib/threads/cuthreadevents.h',
 'src/lib/threads/cuthreadfactoryimpl_i.h',
@@ -69,6 +70,7 @@ sources = [
 'src/lib/cudataquality.cpp',
 'src/lib/cudatalistener.cpp',
 'src/lib/services/cuthreadservice.cpp',
+'src/lib/services/cutimerservice.cpp',
 'src/lib/services/cuserviceprovider.cpp',
 'src/lib/services/culog.cpp',
 'src/lib/threads/cuthreadevents.cpp',

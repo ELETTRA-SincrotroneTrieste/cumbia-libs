@@ -30,6 +30,7 @@ public:
     CuVariant write_val;
     std::vector<std::string> desired_props;
     CuData conf_data; // save locally
+    CuData options;
     const CuTangoActionI::Type type;
 };
 
@@ -51,6 +52,13 @@ CuTConfiguration::~CuTConfiguration()
 void CuTConfiguration::setDesiredAttributeProperties(const std::vector<string> props)
 {
     d->desired_props = props;
+}
+
+void CuTConfiguration::setOptions(const CuData &options)
+{
+    d->options = options;
+    if(d->options.containsKey("fetch_props"))
+        setDesiredAttributeProperties(d->options["fetch_props"].toStringVector());
 }
 
 void CuTConfiguration::onProgress(int step, int total, const CuData &data)
@@ -156,7 +164,8 @@ void CuTConfiguration::start()
     at["activity"] = "attconfig";
     at["is_command"] = d->tsrc.getType() == TSource::Cmd;
 
-    CuData tt("device", d->tsrc.getDeviceName()); /* thread token */
+    CuData tt;
+    d->options.containsKey("thread_token") ? tt = d->options : tt = CuData("device", d->tsrc.getDeviceName());
     CuTConfigActivity::Type t;
     d->type == CuTangoActionI::ReaderConfig ? t = CuTConfigActivity::CuReaderConfigActivityType :
             t = CuTConfigActivity::CuWriterConfigActivityType;

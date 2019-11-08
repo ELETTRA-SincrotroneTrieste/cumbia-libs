@@ -20,7 +20,7 @@ public:
     CuActivityManager *activityManager;
     bool dispose;
     bool onExit;
-    CuData token;
+    CuData token, thread_tok;
     int flags, stateFlags;
 };
 
@@ -201,5 +201,13 @@ CuActivityManager *CuActivity::getActivityManager() const
 CuData CuActivity::getToken() const
 {
     return d->token;
+}
+
+void CuActivity::setThreadToken(const CuData &tt) {
+    d->thread_tok = tt;
+}
+
+const CuData &CuActivity::threadToken() const {
+    return d->thread_tok;
 }
 

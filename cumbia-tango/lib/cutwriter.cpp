@@ -31,7 +31,7 @@ public:
     CuConLogImpl li;
     CuLog log;
     CuVariant write_val;
-    CuData db_config;
+    CuData options;
 };
 
 CuTWriter::CuTWriter(const TSource& src,
@@ -62,7 +62,7 @@ void CuTWriter::setWriteValue(const CuVariant &write_val)
 }
 
 void CuTWriter::setConfiguration(const CuData& dbc) {
-    d->db_config = dbc;
+    d->options = dbc;
 }
 
 /*! this method is currently void
@@ -184,11 +184,12 @@ void CuTWriter::start()
     at["activity"] = "writer";
     at["write_value"] = d->write_val;
     at["cmd"] = (d->tsrc.getType() == TSource::Cmd);
-    CuData tt("device", d->tsrc.getDeviceName()); /* thread token */
-    d->activity = new CuWriteActivity(at, df, d->db_config);
+    CuData thtok; /* thread token */
+    d->options.containsKey("thread_token") ? thtok = d->options : thtok = CuData("device", d->tsrc.getDeviceName());
+    d->activity = new CuWriteActivity(at, df, d->options);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
-    d->cumbia_t->registerActivity(d->activity, this, tt, fi, bf);
+    d->cumbia_t->registerActivity(d->activity, this, thtok, fi, bf);
     cuprintf("> CuTWriter.start writer %p thread 0x%lx ACTIVITY %p\n", this, pthread_self(), d->activity);
 }
 

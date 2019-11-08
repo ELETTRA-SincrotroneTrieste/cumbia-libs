@@ -75,8 +75,6 @@ int CuContinuousActivity::getTimeout() const
  */
 int CuContinuousActivity::repeat() const
 {
-    cuprintf("\e[1;31mCuContinuousActivity.REPEAT: PAUSE %d interval %d ================= ==============================\e[0m\n",
-             d->pause, d->timeout);
     if(!d->pause)
         return d->timeout;
     return 0;
@@ -109,7 +107,9 @@ int CuContinuousActivity::getType() const
  */
 void CuContinuousActivity::event(CuActivityEvent *e)
 {
-    cuprintf("CuContinuousActivity.event type %d\n", e->getType());
+    printf("CuContinuousActivity.event type %d (pause %d resume %d exec %d timeout change %d)\n",
+           e->getType(), CuActivityEvent::Pause, CuActivityEvent::Resume, CuActivityEvent::Execute,
+           CuActivityEvent::TimeoutChange);
     if(e->getType() == CuActivityEvent::TimeoutChange)
         d->timeout = static_cast<CuTimeoutChangeEvent *>(e)->getTimeout();
     else if(e->getType() == CuActivityEvent::Pause)

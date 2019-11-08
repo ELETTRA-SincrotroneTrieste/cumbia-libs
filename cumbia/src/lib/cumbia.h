@@ -222,6 +222,8 @@ public:
 
     virtual int getType() const;
 
+    CuData threadToken(const CuData &options) const;
+
 private:
     CumbiaPrivate *d;
 

@@ -112,7 +112,7 @@ void CuEpControlsReader::setSource(const QString &s)
     CuEpControlsUtils tcu;
     CuEpicsPropertyFactory acf;
     d->source = tcu.replaceWildcards(s, qApp->arguments());
-    if(!d->read_options["properties-only"].toBool()) {
+    if(!d->read_options.value("properties-only").toBool()) {
         CuEpicsReaderFactory readf;
         readf.setOptions(d->read_options);
         needs_caget = d->cumbia_ep->addAction(d->source.toStdString(), d->tlistener, readf);

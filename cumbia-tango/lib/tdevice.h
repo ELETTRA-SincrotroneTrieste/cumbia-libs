@@ -11,10 +11,8 @@ class TDevicePrivate;
 
 class TDevice
 {
+    friend class  CuDeviceFactoryService;
 public:
-    TDevice(const std::string& name);
-
-    ~TDevice();
 
     Tango::DeviceProxy *getDevice() const;
 
@@ -26,14 +24,17 @@ public:
 
     std::string getName() const;
 
-    void addRef();
-
-    int removeRef();
-
     int refCnt() const;
 
 private:
     TDevicePrivate *d;
+
+    void addRef();
+
+    int removeRef();
+
+    ~TDevice();
+    TDevice(const std::string& name);
 };
 
 #endif // TDEVICE_H

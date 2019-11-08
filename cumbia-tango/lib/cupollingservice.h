@@ -8,6 +8,7 @@ class CuPollingServicePrivate;
 class CumbiaTango;
 class TSource;
 class CuTangoActionI;
+class CuData;
 
 class CuPollingService : public CuServiceI
 {
@@ -21,7 +22,7 @@ public:
 
     CuPoller *getPoller(CumbiaTango *cu_t, int period);
 
-    void registerAction(CumbiaTango* ct, const TSource& tsrc, int period, CuTangoActionI *action);
+    void registerAction(CumbiaTango* ct, const TSource& tsrc, int period, CuTangoActionI *action, const CuData &options);
 
     void unregisterAction(int period, CuTangoActionI *action);
 

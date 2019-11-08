@@ -28,18 +28,23 @@ CuDeviceFactoryService::~CuDeviceFactoryService()
  * @see TDevice::isValid
  * @see TDevice::getError
  */
-TDevice *CuDeviceFactoryService::getDevice(const std::string &name)
+TDevice *CuDeviceFactoryService::getDevice(const std::string &name, const CuData &thread_tok)
 {
     pr_thread();
     TDevice *td = NULL;
     std::lock_guard<std::mutex> lock(m_mutex);
-    std::map<std::string, TDevice *>::iterator it = m_devmap.find(name);
-    if(it != m_devmap.end())
-        td = it->second;
-    else
+    std::pair<std::multimap <std::string, TDevData>::const_iterator, std::multimap <std::string, TDevData>::iterator > ret;
+    ret = m_devmap.equal_range(name);
+    for(std::multimap<std::string, TDevData>::const_iterator it = ret.first; !td && it != ret.second; ++it) {
+        if(it->second.thread_token == thread_tok)
+            td = it->second.tdevice;
+    }
+    if(!td)
     {
         td = new TDevice(name);
-        std::pair<std::string, TDevice *> p(name, td);
+        TDevData devd(td, thread_tok);
+        std::pair<std::string, TDevData > p(name, devd);
+        printf("++++++++++++++ inserting into map %s %s\n", name.c_str(), devd.thread_token.toString().c_str());
         m_devmap.insert(p);
     }
     return td;
@@ -52,38 +57,57 @@ TDevice *CuDeviceFactoryService::getDevice(const std::string &name)
  *
  * @see getDevice
  */
-TDevice *CuDeviceFactoryService::findDevice(const std::string &name)
+TDevice *CuDeviceFactoryService::findDevice(const std::string &name, const CuData& thread_tok)
 {
     std::lock_guard<std::mutex> lock(m_mutex);
-    std::map<std::string, TDevice *>::iterator it = m_devmap.find(name);
-    if(it != m_devmap.end())
-        return it->second;
+    std::pair<std::multimap <std::string, TDevData>::const_iterator, std::multimap <std::string, TDevData>::iterator > ret;
+    ret = m_devmap.equal_range(name);
+    for(std::multimap<std::string, TDevData>::const_iterator it = ret.first; it != ret.second; ++it) {
+        if(it->second.thread_token == thread_tok)
+            return it->second.tdevice;
+    }
     return NULL;
 }
 
-#include <tango.h>
-
-/*! \brief remove the device with the given name from the list and *delete the device*
- *
- * \par note
- * The list of devices is internally stored by a map associating a device name to a TDevice.
- * The destruction of TDevice implies the destruction of the wrapped Tango::DeviceProxy.
- *
- * \par thread safety
- * The body of this method is lock guarded, so that it's safe to call removeDevice from
- * different threads.
- */
-void CuDeviceFactoryService::removeDevice(const std::string &name)
+void CuDeviceFactoryService::addRef(const string &devname, const CuData &thread_tok)
 {
-    pr_thread();
     std::lock_guard<std::mutex> lock(m_mutex);
-    std::map<std::string, TDevice *>::iterator it = m_devmap.find(name);
-    if(it != m_devmap.end())
-    {
-        delete it->second;
-        m_devmap.erase(it);
+    std::pair<std::multimap <std::string, TDevData>::const_iterator, std::multimap <std::string, TDevData>::iterator > ret;
+    ret = m_devmap.equal_range(devname);
+    for(std::multimap<std::string, TDevData>::const_iterator it = ret.first; it != ret.second; ++it) {
+        if(it->second.thread_token == thread_tok) {
+            printf("\e[0;33mCuDeviceFactoryService::addRef devnam %s thread tok %s thread 0x%lx references %d\e[0m\n",
+                   devname.c_str(), thread_tok.toString().c_str(), pthread_self(), it->second.tdevice->refCnt());
+            it->second.tdevice->addRef();
+            break;
+        }
     }
 }
+
+int CuDeviceFactoryService::removeRef(const string &devname, const CuData &thread_tok)
+{
+    std::lock_guard<std::mutex> lock(m_mutex);
+    int refcnt = -1;
+    std::multimap< std::string, TDevData>::iterator it = m_devmap.begin();
+    while(it != m_devmap.end())
+    {
+        if(it->first == devname && it->second.thread_token == thread_tok) {
+            TDevice *d = it->second.tdevice;
+            refcnt = d->removeRef();
+            printf("\e[0;33mCuDeviceFactoryService::removeRef devnam %s thread tok %s thread 0x%lx references %d\e[0m\n",
+                   devname.c_str(), thread_tok.toString().c_str(), pthread_self(), refcnt);
+            if(refcnt == 0) { // no more references for that device in that thread
+                delete d;
+                it = m_devmap.erase(it);
+            }
+            break; // removeRef once!
+        }
+        else
+            ++it;
+    }
+    return refcnt;
+}
+
 
 /*! \brief returns a string constant that identifies the name of this service
  *

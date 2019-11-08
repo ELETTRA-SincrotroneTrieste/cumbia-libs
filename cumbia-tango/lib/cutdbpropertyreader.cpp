@@ -17,7 +17,7 @@ public:
     std::string id;
     CumbiaTango *cumbia_t;
     CuGetTDbPropActivity *activity;
-    bool exit;
+    bool delete_later, done;
     CuConLogImpl li;
     CuLog log;
 };
@@ -37,11 +37,12 @@ CuTDbPropertyReader::CuTDbPropertyReader(const std::string &id, CumbiaTango *cum
     d = new CuTDbPropertyReaderPrivate;
     d->cumbia_t = cumbia_t;
     d->id = id;
+    d->delete_later = d->done = false;
 }
 
 CuTDbPropertyReader::~CuTDbPropertyReader()
 {
-    pdelete("~CuTDbPropertyReader %p", this);
+    printf("\e[1;31m~CuTDbPropertyReader %p\n", this);
     delete d;
 }
 
@@ -117,12 +118,58 @@ void CuTDbPropertyReader::get(const std::vector<CuData> &in_data)
     d->cumbia_t->registerActivity(d->activity, this, thread_tok, fi, bf);
 }
 
+/*!
+ * \brief CuTDbPropertyReader::cancel tries to unregister the activity and removes all listeners
+ *
+ * Listeners can be deleted after cancel is called, since *onUpdate* will not be invoked after.
+ * Nonetheless, cancel is not enough to ensure this object *can be safely deleted*. If you intend to
+ * *cancel and delete* the CuTDbPropertyReader, call deleteLater after cancel.
+ */
+void CuTDbPropertyReader::cancel()
+{
+    d->listeners.clear();
+    if(d->activity) {
+        d->cumbia_t->unregisterActivity(d->activity);
+        d->activity = nullptr;
+    }
+}
+
 /** \brief register a CuDataListener that will be notified when data is ready.
  *
  */
 void CuTDbPropertyReader::addListener(CuDataListener *l)
 {
     d->listeners.insert(l);
+}
+
+/*!
+ * \brief CuTDbPropertyReader::removeListener removes the given listener
+ * \param l a pointer to the listener to be removed
+ */
+void CuTDbPropertyReader::removeListener(CuDataListener *l)
+{
+    d->listeners.erase(l);
+}
+
+/*!
+ * \brief CuTDbPropertyReader::deleteLater schedule object auto destruction
+ *
+ * If the result has already been delivered, the object is immediately deleted.
+ * This object will be deleted right after result delivery otherwise.
+ *
+ * \par Warnings
+ * 1. Do not delete the listener set with addListener without previously calling either
+ * removeListener or cancel.
+ *
+ * 2. Do not directly *delete* a CuTDbPropertyReader unless you are really sure that
+ * onResult has been called.
+ *
+ * @see cancel
+ */
+void CuTDbPropertyReader::deleteLater()
+{
+    if(d->done)
+        delete this;
 }
 
 /** This is not used
@@ -136,6 +183,9 @@ void CuTDbPropertyReader::onResult(const CuData &data)
 {
     for(std::set<CuDataListener *>::const_iterator it = d->listeners.begin(); it != d->listeners.end(); ++it)
         (*it)->onUpdate(data);
+    d->done = true;
+    if(d->delete_later)
+        delete this;
 }
 
 CuData CuTDbPropertyReader::getToken() const

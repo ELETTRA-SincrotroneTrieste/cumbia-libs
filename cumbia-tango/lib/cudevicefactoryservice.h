@@ -5,8 +5,20 @@
 #include <map>
 #include <string>
 #include <mutex>
+#include <cudata.h>
 
 class TDevice;
+
+class TDevData {
+public:
+    TDevData(TDevice *td, const CuData& tk) {
+        tdevice = td;
+        thread_token = tk;
+    }
+
+    TDevice *tdevice;
+    CuData thread_token;
+};
 
 /*! \brief implements CuServiceI interface and provides a service to create and store Tango
  *         devices (wrapped by the TDevice class), find, remove (and destroy) them.
@@ -40,11 +52,13 @@ public:
 
     virtual ~CuDeviceFactoryService();
 
-    TDevice *getDevice(const std::string &name);
+    TDevice *getDevice(const std::string &name, const CuData &thread_tok);
 
-    TDevice *findDevice(const std::string &name);
+    TDevice *findDevice(const std::string &name, const CuData &thread_tok);
 
-    void removeDevice(const std::string& name);
+    void addRef(const std::string& devname, const CuData &thread_tok);
+    int removeRef(const std::string& devname, const CuData &thread_tok);
+
 
     // CuServiceI interface
 public:
@@ -52,7 +66,7 @@ public:
     CuServices::Type getType() const;
 
 private:
-    std::map<std::string, TDevice*> m_devmap;
+    std::multimap<std::string, TDevData> m_devmap;
     std::mutex m_mutex;
 };
 

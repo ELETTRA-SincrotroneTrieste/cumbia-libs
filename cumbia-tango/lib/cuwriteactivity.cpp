@@ -55,8 +55,9 @@ void CuWriteActivity::init()
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
     /* get a TDevice */
-    d->tdev = d->device_service->getDevice(tk["device"].toString());
-    d->tdev->addRef();
+    d->tdev = d->device_service->getDevice(tk["device"].toString(), threadToken());
+    // thread safely add ref (cumbia 1.1.0: no 1 thread per dev guaranteed)
+    d->device_service->addRef(tk["device"].toString(), threadToken());
 }
 
 void CuWriteActivity::execute()
@@ -124,14 +125,12 @@ void CuWriteActivity::onExit()
     CuTangoWorld utils;
     utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
     if(d->tdev)
-        refcnt = d->tdev->removeRef();
+        refcnt = d->device_service->removeRef(at["device"].toString(), threadToken());
     cuprintf("\e[1;31mrefcnt = %d called actionRemove for device %s att %s\e[0m\n",
            refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
     if(refcnt == 0)
-    {
-        d->device_service->removeDevice(at["device"].toString());
         d->tdev = NULL;
-    }
+
     at["exit"] = true;
     publishResult(at);
 }
