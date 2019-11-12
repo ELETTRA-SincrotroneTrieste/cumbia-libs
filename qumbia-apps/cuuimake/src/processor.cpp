@@ -33,7 +33,7 @@ bool Processor::expand(const Substitutions& subs, const QMap<QString,
     }
 
     QTextStream in(&f);
-    int pos;
+    int pos = -1;
     QStringList list;
     QString line;
     QString expanded_ui_h;

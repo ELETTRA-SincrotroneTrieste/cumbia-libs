@@ -271,8 +271,6 @@ public:
 
     bool loadConf(const QString& default_conf, const QString &localfname);
 
-    bool load(const QString& fname);
-
     bool guessFromSources();
 
     QString lastError() const;

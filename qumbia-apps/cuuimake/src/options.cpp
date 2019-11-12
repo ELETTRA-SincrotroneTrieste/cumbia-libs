@@ -26,6 +26,7 @@ Options::Options(const QStringList& args)
     m_helpMap.insert("--refresh", "remove ui_*.h files to refresh them before bulding the project again.");
     m_helpMap.insert("--clean", "execute make clean and remove ui_*.h files and exit.");
     m_helpMap.insert("--pre-clean", "like \"--clean\" but do not exit.");
+    m_helpMap.insert("--plain-text-output", "disable colored output.");
     m_helpMap.insert("--debug", "additional information is printed while operations are performed");
 
     // options with --option=something
@@ -105,7 +106,15 @@ QVariant Options::getopt(const QString &name)
 
 void Options::printHelp(const CuUiMake& cm) const
 {
-    cm.print(CuUiMake::Help, false, "\n%s command line options:\n\n", qstoc(qApp->applicationName()));
+    bool plain_text = m_map["plain-text-output"].toBool();
+    char color[16];
+    char white[16];
+    char italic[16];
+    plain_text ? strcpy(color, "") : strcpy(color, "\e[1;33m");
+    plain_text ? strcpy(white, "") : strcpy(white, "\e[0m");
+    plain_text ? strcpy(italic, "") : strcpy(italic, "\e[1;37;3m");
+
+    cm.print(CuUiMake::Help, false, plain_text, "\n%s command line options:\n\n", qstoc(qApp->applicationName()));
     QStringList lines;
     QString help;
     foreach(QString k, m_helpMap.keys())
@@ -113,14 +122,14 @@ void Options::printHelp(const CuUiMake& cm) const
         help = m_helpMap[k];
         lines = help.split("\n");
         foreach(QString l, lines)
-            cm.print(CuUiMake::Help, false, "\e[1;33m%s\e[0m:\e[1;37;3m\t%s\e[0m\n", qstoc(k), qstoc(l));
+            cm.print(CuUiMake::Help, false, plain_text, "%s%s%s:%s\t%s\n", color, qstoc(k), white, italic, qstoc(l), white);
     }
-    cm.print(CuUiMake::Help, false, "\n\e[1;37;3m");
-    cm.print(CuUiMake::Help, false, "\e[1;33m***\e[0m\tif a file with a name matching \"cuuimake[.*].conf\" is found in the\n");
-    cm.print(CuUiMake::Help, false, "\e[1;33m***\e[0m\tsame directory as cuuimake is run, then it is used to expand cumbia objects\n");
-    cm.print(CuUiMake::Help, false, "\e[1;33m***\e[0m\tthat have not been automatically detected.\n");
-    cm.print(CuUiMake::Help, false, "\e[1;33m***\e[0m\tExample of line: \"TDialWrite, cumbiatango, CumbiaTango *, CuTWriterFactory\"\n");
-    cm.print(CuUiMake::Help, false, "\e[1;33m***\e[0m\t                 \"ClassName, factory [cumbiatango,cumbiaepics,cumbiapool], first_param, second_param, ...\"\n");
+    cm.print(CuUiMake::Help, false, plain_text, "\n\n");
+    cm.print(CuUiMake::Help, false, plain_text, "\e[%s***\e[0m\tif a file with a name matching \"cuuimake[.*].conf\" is found in the\n", color);
+    cm.print(CuUiMake::Help, false, plain_text, "\e[%s***\e[0m\tsame directory as cuuimake is run, then it is used to expand cumbia objects\n", color);
+    cm.print(CuUiMake::Help, false, plain_text, "\e[%s***\e[0m\tthat have not been automatically detected.\n", color);
+    cm.print(CuUiMake::Help, false, plain_text, "\e[%s***\e[0m\tExample of line: \"TDialWrite, cumbiatango, CumbiaTango *, CuTWriterFactory\"\n", color);
+    cm.print(CuUiMake::Help, false, plain_text, "\e[%s***\e[0m\t                 \"ClassName, factory [cumbiatango,cumbiaepics,cumbiapool], first_param, second_param, ...\"\n", color);
     printf("\e[0m\n");
 
 
@@ -136,7 +145,8 @@ void Options::printOptionsList(const CuUiMake &) const
 
 void Options::printOptions(const CuUiMake &cm, const QStringList &theseOptions) const
 {
-    cm.print(CuUiMake::Conf, false, "%s options:\n", qstoc(qApp->applicationName()));
+    bool plain_text = m_map["plain-text-output"].toBool();
+    cm.print(CuUiMake::Conf, false, plain_text, "%s options:\n", qstoc(qApp->applicationName()));
     QRegExp re(LIST_PARAM_RE);
     QRegExp make_j_re("\\-j[0-9]{1,2}");
 
@@ -154,20 +164,20 @@ void Options::printOptions(const CuUiMake &cm, const QStringList &theseOptions) 
         {
             settingKey = k.split("=").first().remove("--");
             if(m_map.contains(settingKey))
-                cm.print(CuUiMake::Conf, false, "\e[1;33m%s\e[0m\t[\e[0;32;4m%s\e[0m]\t[\e[1;37;3m%s\e[0m]\n", qstoc(settingKey), qstoc(m_map.value(settingKey).toString()), qstoc(help));
+                cm.print(CuUiMake::Conf, false, plain_text, "\e[1;33m%s\e[0m\t[\e[0;32;4m%s\e[0m]\t[\e[1;37;3m%s\e[0m]\n", qstoc(settingKey), qstoc(m_map.value(settingKey).toString()), qstoc(help));
         }
         else if(k.startsWith("-j"))
         {
             settingKey = "makej";
             if(m_map.contains("makej"))
-                cm.print(CuUiMake::Conf, false, "\e[1;33mmake -j\e[0m\t[\e[0;32;4m%s\e[0m]\t[\e[1;37;3m%s\e[0m]\n",
+                cm.print(CuUiMake::Conf, false, plain_text, "\e[1;33mmake -j\e[0m\t[\e[0;32;4m%s\e[0m]\t[\e[1;37;3m%s\e[0m]\n",
                          qstoc(m_map.value("makej").toString()), qstoc(m_helpMap["-jN"]));
         }
         else if(k.startsWith("--"))
         {
             settingKey = k.remove("--");
             m_map.contains(settingKey) && m_map.value(settingKey).toBool() ? val = "true" : val = "false";
-            cm.print(CuUiMake::Conf, false, "\e[1;33m%s\e[0m\t[\e[0;32;4m%s\e[0m]\t[\e[1;37;3m%s\e[0m]\n", qstoc(settingKey), qstoc(val), qstoc(help));
+            cm.print(CuUiMake::Conf, false, plain_text, "\e[1;33m%s\e[0m\t[\e[0;32;4m%s\e[0m]\t[\e[1;37;3m%s\e[0m]\n", qstoc(settingKey), qstoc(val), qstoc(help));
 
         }
     }
@@ -175,6 +185,7 @@ void Options::printOptions(const CuUiMake &cm, const QStringList &theseOptions) 
 
 bool Options::configure(const CuUiMake &cm)
 {
+    bool plain_text = m_map["plain-text-output"].toBool();
     QStringList configurableOptions = QStringList() << "--qmake" << "--make" << "--pre-clean" << "--refresh";
     unsigned char c;
 
@@ -198,12 +209,12 @@ bool Options::configure(const CuUiMake &cm)
         k.remove("--");
         m_map.contains(k) && m_map.value(k).toBool() ? val = "true" : val = "false";
         do{
-            cm.print(CuUiMake::Conf, false, "\n");
-            cm.print(CuUiMake::Conf, false, "* option \"--%s\": [\e[1;37;3m%s\e[0m]: current setting: [\e[0;32;4m%s\e[0m] enable [y/n]? ",
+            cm.print(CuUiMake::Conf, false, plain_text, "\n");
+            cm.print(CuUiMake::Conf, false,plain_text, "* option \"--%s\": [\e[1;37;3m%s\e[0m]: current setting: [\e[0;32;4m%s\e[0m] enable [y/n]? ",
                      qstoc(k), qstoc(m_helpMap.value("--" + k)), qstoc(val));
             c = getchar();
             printf("\n");
-            cm.print(CuUiMake::Conf, false, "*           %s : [\e[0;34m%s\e[0m] --> [\e[1;32m%s\e[0m]\n",
+            cm.print(CuUiMake::Conf, false, plain_text, "*           %s : [\e[0;34m%s\e[0m] --> [\e[1;32m%s\e[0m]\n",
                      qstoc(k), qstoc(val), c == 'y' ? "true" : "false");
         } while(c != 'y' && c != 'n');
         s.setValue(k, (c == 'y'));
@@ -221,7 +232,7 @@ bool Options::configure(const CuUiMake &cm)
             makejopt = "unset";
         do{
             printf("\n");
-            cm.print(CuUiMake::Conf, false, "* make -jN option: [\e[1;37;3m%s\e[0m]: current setting: [\e[0;32;4m%s\e[0m]: set new integer [1-20]: ",
+            cm.print(CuUiMake::Conf, false, plain_text, "* make -jN option: [\e[1;37;3m%s\e[0m]: current setting: [\e[0;32;4m%s\e[0m]: set new integer [1-20]: ",
                  qstoc(m_helpMap.value("-jN")), qstoc(makejopt));
 
             match = scanf("%d", &j);
@@ -232,8 +243,10 @@ bool Options::configure(const CuUiMake &cm)
     }
 
     printf("\n");
-    cm.print(CuUiMake::Info, false, "\e[1;33;4mnote\e[0m\n");
-    cm.print(CuUiMake::Info, false, "1. configuration can be overridden by command line arguments\n");
-    cm.print(CuUiMake::Info, false, "2. execute \"%s --show-config\" to show the application settings\n", qstoc(qApp->arguments().at(0)));
+    cm.print(CuUiMake::Info, false, plain_text, "\e[1;33;4mnote\e[0m\n");
+    cm.print(CuUiMake::Info, false, plain_text, "1. configuration can be overridden by command line arguments\n");
+    cm.print(CuUiMake::Info, false, plain_text, "2. execute \"%s --show-config\" to show the application settings\n", qstoc(qApp->arguments().at(0)));
     printf("\n");
+
+    return true;
 }

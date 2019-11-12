@@ -37,7 +37,7 @@ CuUiMake::~CuUiMake()
     delete m_options;
 }
 
-void CuUiMake::print(CuUiMake::Step step, bool err, const char *fmt, ...) const
+void CuUiMake::print(CuUiMake::Step step, bool err, bool plain_text, const char *fmt, ...) const
 {
     va_list s;
     FILE* fd;
@@ -48,31 +48,40 @@ void CuUiMake::print(CuUiMake::Step step, bool err, const char *fmt, ...) const
         fd = stderr;
 
     char color[16];
-    if(err)
+    char cuuim_color[16];
+    if(plain_text) {
+        strcpy(color, "");
+        strcpy(cuuim_color, "");
+    }
+    else if(err) {
         strcpy(color, "\e[1;31m");
-    else
+        strcpy(cuuim_color, "\e[1;36m");
+    }
+    else {
         strcpy(color, "\e[1;32m");
+        strcpy(cuuim_color, "\e[1;36m");
+    }
 
     if(step == Uic)
-        fprintf(fd, "[\e[1;36mcuuimake\e[0m:%s     uic\e[0m] ", color);
+        fprintf(fd, "[%scuuimake\e[0m:%s     uic\e[0m] ", cuuim_color,  color);
     else if(step == Analysis)
-        fprintf(fd, "[\e[1;36mcuuimake\e[0m:%sanalysis\e[0m] ", color);
+        fprintf(fd, "[%scuuimake\e[0m:%sanalysis\e[0m] ", cuuim_color, color);
     else if(step == Expand)
-        fprintf(fd, "[\e[1;36mcuuimake\e[0m:%s  expand\e[0m] ", color);
+        fprintf(fd, "[%scuuimake\e[0m:%s  expand\e[0m] ", cuuim_color, color);
     else if(step == Conf)
-        fprintf(fd, "[\e[1;36mcuuimake\e[0m:%s  config\e[0m] ", color);
+        fprintf(fd, "[%scuuimake\e[0m:%s  config\e[0m] ", cuuim_color, color);
     else if(step == Help)
-        fprintf(fd, "[\e[1;36mcuuimake\e[0m:%s    help\e[0m] ", color);
+        fprintf(fd, "[%scuuimake\e[0m:%s    help\e[0m] ", cuuim_color, color);
     else if(step == Info)
-        fprintf(fd, "[\e[1;36mcuuimake\e[0m:%s    info\e[0m] ", color);
+        fprintf(fd, "[%scuuimake\e[0m:%s    info\e[0m] ", cuuim_color, color);
     else if(step == QMake)
-        fprintf(fd, "[\e[1;36mcuuimake\e[0m:%s   qmake\e[0m] ", color);
+        fprintf(fd, "[%scuuimake\e[0m:%s   qmake\e[0m] ", cuuim_color, color);
     else if(step == Make)
-        fprintf(fd, "[\e[1;36mcuuimake\e[0m:%s    make\e[0m] ", color);
+        fprintf(fd, "[%scuuimake\e[0m:%s    make\e[0m] ", cuuim_color, color);
     else if(step == Clean)
-        fprintf(fd, "[\e[1;36mcuuimake\e[0m:%s   clean\e[0m] ", color);
+        fprintf(fd, "[%scuuimake\e[0m:%s   clean\e[0m] ", cuuim_color, color);
     else if(step == Doc)
-        fprintf(fd, "[\e[1;36mcuuimake\e[0m:%s     doc\e[0m] ", color);
+        fprintf(fd, "[%scuuimake\e[0m:%s     doc\e[0m] ", cuuim_color, color);
 
     vfprintf(fd, fmt, s);
 
@@ -81,6 +90,11 @@ void CuUiMake::print(CuUiMake::Step step, bool err, const char *fmt, ...) const
 
 bool CuUiMake::make()
 {
+    bool plain_text = m_options->getopt("plain-text-output").toBool();
+    char color[16], white[16];
+    plain_text ? strcpy(color, "") : strcpy(color, "\e[1;35m");
+    plain_text ? strcpy(white, "") : strcpy(white, "\e[0m");
+
     // load configuration files
     int removed_ui_cnt = -1;
     Defs defs;
@@ -89,17 +103,17 @@ bool CuUiMake::make()
 
     QString localfname = m_findLocalConfFile();
     bool success = defs.loadConf(fname, localfname);
-    print(Doc, false, "file://%s/%s\n", CUUIMAKE_DOCDIR, "html/cuuimake.html");
+    print(Doc, false, plain_text, "file://%s/%s\n", CUUIMAKE_DOCDIR, "html/cuuimake.html");
     if(localfname.isEmpty()) {
-        print(Analysis, false, "\e[1;35minfo\e[0m: if any promoted widget is not automatically detected you can add a text file named \n");
-        print(Analysis, false, "\e[1;35minfo\e[0m: cuuimake[.*].conf with the list of the \e[0;4mpromoted widget\e[0m names to expand\n");
+        print(Analysis, false, plain_text, "%sinfo%s: if any promoted widget is not automatically detected you can add a text file named \n", color, white);
+        print(Analysis, false, plain_text, "%sinfo%s: cuuimake[.*].conf with the list of the \e[0;4mpromoted widget\e[0m names to expand\n", color, white);
     }
     if(!success)
         print(Analysis, true, "error loading configuration file \"%s\": %s\n", qstoc(fname), qstoc(defs.lastError()));
     else {
         foreach(QString msg, defs.messages)
             print(Analysis, false, "%s\n", qstoc(msg));
-        print(Analysis, false, "default configuration loaded\n");
+        print(Analysis, false, plain_text, "default configuration loaded\n");
     }
 
     bool pre_clean = m_options->getopt("pre-clean").toBool();
@@ -108,15 +122,15 @@ bool CuUiMake::make()
     if(success && (clean || pre_clean || refresh) ) {
         Processor p;
         removed_ui_cnt = p.remove_UI_H(defs.srcDirsInfo());
-        print(Clean, false, "removed %d ui_.*.h files\n", removed_ui_cnt);
+        print(Clean, false, plain_text, "removed %d ui_.*.h files\n", removed_ui_cnt);
     }
     if(success && (clean || pre_clean) )
     {
-        print(Clean, false, "cleaning and removing ui_*.h files\n");
+        print(Clean, false, plain_text, "cleaning and removing ui_*.h files\n");
         XMakeProcess xmake;
         success = xmake.clean();
         if(!success)
-            print(Clean, true, "failed to execute clean: %s\n", qstoc(xmake.lastError()));
+            print(Clean, true, plain_text, "failed to execute clean: %s\n", qstoc(xmake.lastError()));
         if(!m_options->getopt("pre-clean").toBool())
             return success;
         // otherwise go on
@@ -124,11 +138,11 @@ bool CuUiMake::make()
 
     if(success && m_options->getopt("qmake").toBool())
     {
-        print(QMake, false, "running qmake\n");
+        print(QMake, false, plain_text, "running qmake\n");
         XMakeProcess xmake;
         success = xmake.qmake();
         if(!success)
-            print(QMake, true, "failed to execute qmake: %s\n", qstoc(xmake.lastError()));
+            print(QMake, true, plain_text, "failed to execute qmake: %s\n", qstoc(xmake.lastError()));
     }
 
     if(success)
@@ -136,29 +150,29 @@ bool CuUiMake::make()
 
         SearchDirInfoSet searchDirInfoSet = defs.srcDirsInfo();
         Substitutions substitutions;
-        print(Analysis, false, "parsing files to find substitutions...\n");
+        print(Analysis, false, plain_text, "parsing files to find substitutions...\n");
         Parser p;
         p.setDebug(m_debug);
         QString mode = p.detect(searchDirInfoSet, defs.getSearchList(), substitutions);
         success = !mode.isEmpty();
         if(!success)
         {
-            print(Analysis, true, "error: no useful object definitions found:\n");
+            print(Analysis, true, plain_text, "error: no useful object definitions found:\n");
             foreach(Search s, defs.getSearchList())
-                print(Analysis, true, "%s", qstoc(s.toString()));
-            print(Analysis, true, "\n");
-            print(Analysis, true, "in the .cpp files.\n\n");
-            print(Analysis, true, "The following information may be useful:\n");
+                print(Analysis, true, plain_text, "%s", qstoc(s.toString()));
+            print(Analysis, true, plain_text, "\n");
+            print(Analysis, true, plain_text, "in the .cpp files.\n\n");
+            print(Analysis, true, plain_text, "The following information may be useful:\n");
 
             fflush(stderr);
             fflush(stdout);
-            print(Analysis, true, "\n");
-            print(Analysis, true, "You can use the cumbia project wizard to create a project\n\n");
+            print(Analysis, true, plain_text, "\n");
+            print(Analysis, true, plain_text, "You can use the cumbia project wizard to create a project\n\n");
         }
         else
         {
-            print(Analysis, false, "substitutions: %s\n", qstoc(substitutions.toString()));
-            print(Expand, false, "processing ui_h file[s]...\n", qstoc(substitutions.toString()));
+            print(Analysis, false, plain_text, "substitutions: %s\n", qstoc(substitutions.toString()));
+            print(Expand, false, plain_text, "processing ui_h file[s]...\n", qstoc(substitutions.toString()));
             Processor processor;
             UicProc uicp;
             QMap<QString, bool> uifmap = processor.findUI_H(searchDirInfoSet);
@@ -168,26 +182,26 @@ bool CuUiMake::make()
                 {
                     QString cmd = uicp.getUicCmd(uif, searchDirInfoSet);
                     if(cmd.isEmpty())
-                        print(Uic, true, "error executing uic on file  \"%s\": \"%s\"\n", qstoc(uif), qstoc(uicp.lastError()));
+                        print(Uic, true, plain_text, "error executing uic on file  \"%s\": \"%s\"\n", qstoc(uif), qstoc(uicp.lastError()));
                     else
                     {
-                        print(Uic, false, "executing \%s\"\n", qstoc(cmd));
+                        print(Uic, false, plain_text, "executing \%s\"\n", qstoc(cmd));
                         success = uicp.run(cmd);
                         if(success)
                         {
                             // ui file more recent than ui_*.h file or ui_h file not existing
                             success = processor.expand(substitutions, defs.getObjectMap(), uif, searchDirInfoSet);
                             if(!success)
-                                print(Expand, true, "error expanding file \"%s\": \"%s\"\n", qstoc(uif), qstoc(processor.lastError()));
+                                print(Expand, true, plain_text, "error expanding file \"%s\": \"%s\"\n", qstoc(uif), qstoc(processor.lastError()));
                             else
-                                print(Expand, false, "file \"%s\": successfully expanded\n", qstoc(uif), qstoc(processor.lastError()));
+                                print(Expand, false, plain_text, "file \"%s\": successfully expanded\n", qstoc(uif), qstoc(processor.lastError()));
                         }
                         else
-                            print(Uic, true, "error executing \"%s\": \"%s\"\n", qstoc(cmd), qstoc(uicp.lastError()));
+                            print(Uic, true, plain_text, "error executing \"%s\": \"%s\"\n", qstoc(cmd), qstoc(uicp.lastError()));
                     }
                 }
                 else
-                    print(Expand, false, "no need to expand \"%s\"...\n", qstoc(uif));
+                    print(Expand, false, plain_text, "no need to expand \"%s\"...\n", qstoc(uif));
             }
 
         }
@@ -195,12 +209,12 @@ bool CuUiMake::make()
 
     if(success && m_options->getopt("make").toBool())
     {
-        print(Make, false, "building project\n");
+        print(Make, false, plain_text, "building project\n");
         QString minus_j_opt = m_options->getopt("makej").toString();
         XMakeProcess xmake;
         success = xmake.make(minus_j_opt);
         if(!success)
-            print(Make, true, "failed to execute \e[1;31mmake %s\e[0m: %s\n", qstoc(minus_j_opt), qstoc(xmake.lastError()));
+            print(Make, true, plain_text, "failed to execute \e[1;31mmake %s\e[0m: %s\n", qstoc(minus_j_opt), qstoc(xmake.lastError()));
     }
 
     return true;

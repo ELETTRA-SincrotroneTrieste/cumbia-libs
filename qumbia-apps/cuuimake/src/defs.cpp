@@ -34,11 +34,6 @@ bool Defs::loadConf(const QString &default_conf, const QString& localfname)
     return success;
 }
 
-bool Defs::load(const QString &fname)
-{
-
-}
-
 bool Defs::guessFromSources()
 {
     int pos;

@@ -78,7 +78,7 @@ public:
 
     ~CuUiMake();
 
-    void print(Step step, bool err, const char *fmt, ...) const;
+    void print(Step step, bool err, bool plain_text, const char *fmt, ...) const;
 
     const char *toc(const QString& s) const;
 
