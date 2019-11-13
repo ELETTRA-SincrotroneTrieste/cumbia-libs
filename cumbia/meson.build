@@ -50,7 +50,8 @@ headers = [
 'src/lib/threads/cuevent.h',
 'src/lib/threads/cuthreadseventbridge_i.h',
 'src/lib/threads/cuthreadseventbridge.h',
-'src/lib/threads/cuthreadseventbridgefactory_i.h'
+'src/lib/threads/cuthreadseventbridgefactory_i.h' ,
+'src/lib/threads/cuthreadtokengeni.h'
 ]
 
 install_headers(headers, subdir : 'cumbia') # -> include/cumbia/

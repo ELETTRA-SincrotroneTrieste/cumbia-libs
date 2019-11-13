@@ -51,6 +51,7 @@ src/lib/threads/cuthreadseventbridge.cpp
 src/lib/threads/cuthreadseventbridge.h
 src/lib/threads/cuthreadseventbridge_i.h
 src/lib/threads/cuthreadseventbridgefactory_i.h
+src/lib/threads/cuthreadtokengeni.h
 src/lib/threads/cutimer.cpp
 src/lib/threads/cutimer.h
 src/lib/threads/cutimerlistener.h

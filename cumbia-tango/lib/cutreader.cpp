@@ -448,8 +448,9 @@ void CuTReader::m_startEventActivity()
     // thread token: by default device name, but can be tuned
     // through the "thread_token" option (setOptions)
     //CuData tt = CuData("device", d->tsrc.getDeviceName());
-    CuData thtok;
-    d->options.containsKey("thread_token") ? thtok = d->options : thtok = CuData("device", d->tsrc.getDeviceName());
+    CuData thtok= CuData("device", d->tsrc.getDeviceName());
+    if(d->options.containsKey("thread_token"))
+        thtok["thread_token"] = d->options["thread_token"];
     d->event_activity = new CuEventActivity(at, df);
     d->activities.push_back(d->event_activity);
     d->refresh_mode = ChangeEventRefresh; // update refresh mode

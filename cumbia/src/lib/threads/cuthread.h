@@ -78,6 +78,7 @@ public:
     void publishExitEvent(CuActivity *a);
     bool isEquivalent(const CuData &other_thread_token) const;
     CuData getToken() const;
+    pthread_t getId() const;
     void cleanup();
     int type() const;
     void start();
@@ -88,6 +89,7 @@ public:
 
     void postEvent(CuActivity *a, CuActivityEvent *e);
     int getActivityTimerPeriod(CuActivity *a) const;
+
 
 protected:
     virtual void run();

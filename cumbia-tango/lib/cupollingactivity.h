@@ -12,7 +12,6 @@ class CuData;
 class CuPollingActivityPrivate;
 class CuDeviceFactoryService;
 class CmdData;
-class ActionData; // defined in cupollingactivity.cpp
 
 class CuAddPollActionEvent : public CuActivityEvent
 {
@@ -42,6 +41,21 @@ public:
 public:
     virtual Type getType() const;
 };
+
+
+class ActionData {
+public:
+    ActionData(const TSource& ts, CuTangoActionI *a_ptr) {
+        tsrc = ts;
+        action = a_ptr;
+    }
+
+    ActionData() { action = NULL; }
+
+    TSource tsrc;
+    CuTangoActionI *action;
+};
+
 /*! \brief an activity to periodically read from Tango. Implements CuContinuousActivity
  *
  * Implementing CuActivity, the work is done in the background by the three methods
@@ -99,6 +113,12 @@ public:
     const std::map<int, int> &slowDownRate() const;
 
     void decreasePolling();
+
+    int successfulExecCnt() const;
+
+    int consecutiveErrCnt() const;
+
+    const std::multimap<const std::string, const ActionData > actionsMap() const;
 
     // CuActivity interface
 public:

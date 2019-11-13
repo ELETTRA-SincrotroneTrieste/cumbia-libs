@@ -1,3 +1,5 @@
+cutthreadtokengen.cpp
+cutthreadtokengen.h
 lib/cuactionfactoryservice.cpp
 lib/cuactionfactoryservice.h
 lib/cudevicefactoryservice.cpp

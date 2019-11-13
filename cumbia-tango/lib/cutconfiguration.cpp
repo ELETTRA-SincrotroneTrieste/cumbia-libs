@@ -164,8 +164,9 @@ void CuTConfiguration::start()
     at["activity"] = "attconfig";
     at["is_command"] = d->tsrc.getType() == TSource::Cmd;
 
-    CuData tt;
-    d->options.containsKey("thread_token") ? tt = d->options : tt = CuData("device", d->tsrc.getDeviceName());
+    CuData tt = CuData("device", d->tsrc.getDeviceName());
+    if(d->options.containsKey("thread_token"))
+        tt["thread_token"] = d->options["thread_token"];
     CuTConfigActivity::Type t;
     d->type == CuTangoActionI::ReaderConfig ? t = CuTConfigActivity::CuReaderConfigActivityType :
             t = CuTConfigActivity::CuWriterConfigActivityType;

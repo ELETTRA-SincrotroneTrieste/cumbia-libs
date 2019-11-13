@@ -39,7 +39,8 @@ headers = [
 'lib/cutangoopt_builder.h',
 'lib/cutconfigactivity.h',
 'lib/cutdbpropertyreader.h',
-'lib/cugettdbpropactivity.h'
+'lib/cugettdbpropactivity.h',
+'lib/cutthreadtokengen.h'
 ]
 
 install_headers(headers, subdir : 'cumbia-tango') # -> include/cumbia-tango/
@@ -65,12 +66,13 @@ sources = [
 'lib/cutangoopt_builder.cpp',
 'lib/cutconfigactivity.cpp',
 'lib/cutdbpropertyreader.cpp',
-'lib/cugettdbpropactivity.cpp'
+'lib/cugettdbpropactivity.cpp',
+'lib/cutthreadtokengen.cpp'
 ]
 
 includedirs = include_directories('lib')
 
-cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1'
+cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1 -DCUMBIA_TANGO_VERSION=' + cu_version
 # cpp_arguments = []
 
 deps = [ dependency('cumbia'), dependency('tango', method: 'pkg-config') ]

@@ -9,18 +9,6 @@
 #include <vector>
 #include <map>
 
-class ActionData {
-public:
-    ActionData(const TSource& ts, CuTangoActionI *a_ptr) {
-        tsrc = ts;
-        action = a_ptr;
-    }
-
-    ActionData() { action = NULL; }
-
-    TSource tsrc;
-    CuTangoActionI *action;
-};
 
 class CmdData {
 public:
@@ -91,8 +79,8 @@ public:
     CuDeviceFactoryService *device_srvc;
     TDevice *tdev;
     int repeat, period;
-    int errCnt; // consecutive error counter
-    int exec_cnt;
+    int consecutiveErrCnt; // consecutive error counter
+    int successfulExecCnt;
     std::string message;
     pthread_t my_thread_id, other_thread_id;
     CuVariant argins;
@@ -127,9 +115,9 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
 {
     d = new CuPollingActivityPrivate;
     d->device_srvc = df;
-    d->errCnt = 0;
+    d->consecutiveErrCnt = 0;
     d->other_thread_id = pthread_self();
-    d->exec_cnt = 0;
+    d->successfulExecCnt = 0;
 
     int period = 1000;
     if(token.containsKey("period"))
@@ -221,9 +209,9 @@ const std::map<int, int> &CuPollingActivity::slowDownRate() const {
 }
 
 void CuPollingActivity::decreasePolling() {
-    if(d->errCnt > 0) {
+    if(d->consecutiveErrCnt > 0) {
         for(std::map<int,int>::const_reverse_iterator it = d->slowDownRate.rbegin(); it != d->slowDownRate.rend(); ++it) {
-            if(d->errCnt >= it->first) {
+            if(d->consecutiveErrCnt >= it->first) {
                 d->repeat = it->second;
                 break;
             }
@@ -232,7 +220,34 @@ void CuPollingActivity::decreasePolling() {
     else
         d->repeat = d->period;
     printf("\e[0;33mCuPollingActivity::decreasePolling: \"%s\": error count is %d period is %d d->repeat has been set to %d\e[0m\n",
-           getToken().toString().c_str(), d->errCnt, d->period, d->repeat);
+           getToken().toString().c_str(), d->consecutiveErrCnt, d->period, d->repeat);
+}
+
+/*!
+ * \brief CuPollingActivity::successfulExecCnt count the number of succesful executions
+ * \return the number of successful executions
+ *
+ * @see consecutiveErrCnt
+ */
+int CuPollingActivity::successfulExecCnt() const {
+    return d->successfulExecCnt;
+}
+
+/*!
+ * \brief CuPollingActivity::consecutiveErrCnt count the consecutive errors during execution
+ * \return the number of consecutive errors encountered within the *execute* method.
+ *
+ * \note
+ * Upon each successful execution, the counter is reset to 0
+ *
+ * @see successfulExecCnt
+ */
+int CuPollingActivity::consecutiveErrCnt() const {
+    return d->consecutiveErrCnt;
+}
+
+const std::multimap<const string, const ActionData> CuPollingActivity::actionsMap() const {
+    return d->actions_map;
 }
 
 /** \brief returns true if the passed token's *device* *activity* and *period* values matche this activity token's
@@ -370,7 +385,7 @@ void CuPollingActivity::execute()
                     (*results)[i]["err"] = !success;
                     if(!success) {
                         (*results)[i]["msg"] = std::string("CuPollingActivity.execute: get_command_info failed for \"") + tsrc.getName() + std::string("\"");
-                        d->errCnt++;
+                        d->consecutiveErrCnt++;
                     }
                     else {
                         tangoworld.cmd_inout(dev, point, cmdd.din, has_argout, (*results)[i]);
@@ -399,7 +414,7 @@ void CuPollingActivity::execute()
             attdatalist.resize(att_idx);
             success = tangoworld.read_atts(d->tdev->getDevice(), attdatalist, results, att_offset);
             if(!success) {
-                d->errCnt++;
+                d->consecutiveErrCnt++;
             }
         }
     }
@@ -408,8 +423,10 @@ void CuPollingActivity::execute()
     }
     if(success && d->repeat != d->period)
         d->repeat = d->period;
-    else if(success)
-        d->errCnt = 0; // reset consecutive error count
+    else if(success) {
+        d->consecutiveErrCnt = 0; // reset consecutive error count
+        d->successfulExecCnt++;
+    }
     else if(dev) {
         decreasePolling();
     }

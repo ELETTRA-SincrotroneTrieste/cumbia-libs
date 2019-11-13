@@ -11,13 +11,41 @@
 #include "cumacros.h"
 #include "cuactivityevent.h"
 #include "cuactivity.h"
+#include "cuthreadtokengeni.h"
 
 /*! @private */
 class CumbiaPrivate
 {
 public:
     CuServiceProvider *serviceProvider;
+    CuThreadTokenGenI *threadTokenGenerator;
 };
+
+/*! \brief Cumbia class constructor
+ *
+ * \li instantiates a *cumbia service provider*, namely CuServiceProvider
+ * \li registers an instance of the *cumbia thread service*, CuThreadService, to
+ *     the service provider
+ * \li registers an instance of the *cumbia activity manager*, CuActivityManager, to
+ *     the service provider
+ *
+ * The cumbia *service provider* is a class member. A pointer to it can be obtained
+ * with Cumbia::getServiceProvider. The *service provider* remains the same
+ * throughout the whole application lifetime and is destroyed when the Cumbia object
+ * is destroyed (Cumbia::finish)
+ *
+ * Please refer to CuServiceProvider, CuThreadService and CuActivityManager documentation
+ * for further information.
+ */
+Cumbia::Cumbia()
+{
+    d = new CumbiaPrivate();
+    d->serviceProvider = new CuServiceProvider();
+    d->serviceProvider->registerService(CuServices::Thread, new CuThreadService());
+    d->serviceProvider->registerService(CuServices::ActivityManager, new CuActivityManager());
+    d->serviceProvider->registerService(CuServices::Timer, new CuTimerService());
+    d->threadTokenGenerator = nullptr;
+}
 
 /*! \brief called from the class destructor, cleans up the Cumbia object
  *
@@ -34,6 +62,7 @@ public:
  * \li each service from the list of CuServiceI fetched from CuServiceProvider
  *     is unregistered from the service provider through CuServiceProvider::unregisterService
  * \li the <strong>service provider is deleted</strong>.
+ * \li deletes the token generator, if set
  */
 void Cumbia::finish()
 {
@@ -67,6 +96,8 @@ void Cumbia::finish()
         d->serviceProvider->unregisterService(s->getType());
         delete s;
     }
+    if(d->threadTokenGenerator)
+        delete d->threadTokenGenerator;
     delete d->serviceProvider;
     delete d;
     d = NULL; /* avoid destroying twice if cleanup is called from a subclass destructor */
@@ -80,37 +111,6 @@ int Cumbia::getType() const
 {
     return CumbiaBaseType;
 }
-
-/*!
- * \brief Cumbia::threadToken returns a thread token that can be used to group threads together
- *
- * If the option passed as argument contains the *thread_token* key set with the *auto* value,
- * the token will be generated so that the thread will be picked up from a limited number of
- * instances in a pool.
- *
- * If the option contains the *thread_token* with another value, that value will be used to group
- * threads with the same token
- *
- * If there is no *thread_token* key in the input options, the return value is the same as the input
- * argument.
- *
- * \param options configuration options to customize thread grouping
- *
- * \return a thread token (CuData)
- */
-CuData Cumbia::threadToken(const CuData &options) const
-{
-    if(!options.containsKey("thread_token"))
-        return options;
-    CuData ret;
-    if(options.has("thread_token", "auto")) // to be implemented
-        ret = CuData("thread_token", "auto");
-    else if(options.containsKey("thread_token"))
-        ret =  CuData("thread_token", options["thread_token"]);
-    printf("\e[1;33mCumbia.threadToken custom \"%s\"\e[0m\n", ret.toString().c_str());
-    return ret;
-}
-
 /*! \brief the class destructor
  *
  * Cleanup is delegated to the Cumbia::finish method
@@ -120,31 +120,6 @@ Cumbia::~Cumbia()
     pdelete("~Cumbia %p\n", this);
     if(d)
         finish();
-}
-
-/*! \brief Cumbia class constructor
- *
- * \li instantiates a *cumbia service provider*, namely CuServiceProvider
- * \li registers an instance of the *cumbia thread service*, CuThreadService, to
- *     the service provider
- * \li registers an instance of the *cumbia activity manager*, CuActivityManager, to
- *     the service provider
- *
- * The cumbia *service provider* is a class member. A pointer to it can be obtained
- * with Cumbia::getServiceProvider. The *service provider* remains the same
- * throughout the whole application lifetime and is destroyed when the Cumbia object
- * is destroyed (Cumbia::finish)
- *
- * Please refer to CuServiceProvider, CuThreadService and CuActivityManager documentation
- * for further information.
- */
-Cumbia::Cumbia()
-{
-    d = new CumbiaPrivate();
-    d->serviceProvider = new CuServiceProvider();
-    d->serviceProvider->registerService(CuServices::Thread, new CuThreadService());
-    d->serviceProvider->registerService(CuServices::ActivityManager, new CuActivityManager());
-    d->serviceProvider->registerService(CuServices::Timer, new CuTimerService());
 }
 
 CuServiceProvider *Cumbia::getServiceProvider() const
@@ -205,7 +180,7 @@ void Cumbia::registerActivity(CuActivity *activity,
     CuThreadService *thread_service = static_cast<CuThreadService *>(d->serviceProvider->get(CuServices::Thread));
     CuThreadInterface *thread = NULL;
     printf("\e[1;33mCumbia.registerActivity with  thread token \e[1;36m%s\e[0m\n", thread_token.toString().c_str());
-    thread = thread_service->getThread(thread_token, eventsBridgeFactoryImpl, d->serviceProvider, thread_factory_impl);
+    thread = thread_service->getThread(threadToken(thread_token), eventsBridgeFactoryImpl, d->serviceProvider, thread_factory_impl);
     activityManager->addConnection(thread, activity, dataListener);
     activity->setActivityManager(activityManager);
     cuprintf("Cumbia::registerActivity: \e[1;32mgot thread \"0x%lx\", is running? [%d]\e[0m...\n", pthread_self(), thread->isRunning());
@@ -318,4 +293,74 @@ void Cumbia::postEvent(CuActivity *a, CuActivityEvent *e)
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     CuThreadInterface *thread = static_cast<CuThreadInterface *>(activityManager->getThread(a));
     thread->postEvent(a, e);
+}
+
+/*!
+ * \brief Cumbia::setThreadTokenGenerator install athread token generator that deals
+ *        with grouping activities into separate threads according to the specific engine implementation
+ *
+ * \param tg an implementation of the CuThreadTokenGenI interface
+ *
+ * \note
+ * Once you install a thread token generator with this method, *the ownership of the object is handed
+ * to Cumbia*. The generator will either be destroyed by Cumbia or by the removeThreadTokenGenerator
+ * method. Subsequent calls to setThreadTokenGenerator will also delete a previously installed generator.
+ */
+void Cumbia::setThreadTokenGenerator(CuThreadTokenGenI *tg) {
+    removeThreadTokenGenerator();
+    d->threadTokenGenerator = tg;
+}
+
+/*!
+ * \brief Cumbia::removeThreadTokenGenerator remove the currently installed generator, if any.
+ *
+ * \note The currently installed generator is deleted
+ */
+void Cumbia::removeThreadTokenGenerator()
+{
+    if(d->threadTokenGenerator)
+        delete d->threadTokenGenerator;
+    d->threadTokenGenerator = nullptr;
+}
+
+/*!
+ * \brief Cumbia::getThreadTokenGenerator returns the installed token generator or nullptr if none is installed
+ *
+ * @see setThreadTokenGenerator
+ *
+ * \return the currently installed CuThreadTokenGenI implementation, null if none is installed.
+ *
+ * @see setThreadTokenGenerator
+ */
+CuThreadTokenGenI *Cumbia::getThreadTokenGenerator() const {
+    return d->threadTokenGenerator;
+}
+
+/*!
+ * \brief Cumbia::threadToken returns a thread token that can be used to group threads together
+ *
+ * If a thread token generator (CuThreadTokenGenI) implementation has been registered with setThreadTokenGenerator,
+ * it is used to provide the thread token.
+ *
+ * If the option contains the *thread_token* with a given value, that value will be used to group
+ * threads with the same token
+ *
+ * If there is no *thread_token* key in the input options, the return value is the same as the input
+ * argument.
+ *
+ * \param options configuration options to customize thread grouping
+ *
+ * \return a thread token (CuData)
+ */
+CuData Cumbia::threadToken(const CuData &options) const
+{
+    CuData ret;
+    if(d->threadTokenGenerator)
+        ret = d->threadTokenGenerator->generate(options);
+    else if(!options.containsKey("thread_token"))
+        ret = options;
+    else
+        ret =  CuData("thread_token", options["thread_token"]);
+    printf("\e[1;33mCumbia.threadToken custom \"%s\"\e[0m\n", ret.toString().c_str());
+    return ret;
 }

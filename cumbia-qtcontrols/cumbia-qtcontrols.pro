@@ -90,6 +90,8 @@ SOURCES += cumbiaqtcontrols.cpp \
 
 HEADERS += cumbiaqtcontrols.h\
     cumbia-qtcontrols_global.h \
+    src/plugin_ifaces/cuintrospectionengineextensionplugin_i.h \
+    src/plugin_ifaces/cumbiaintrospectionplugin_i.h \
     src/qubutton.h \
     src/qulabel.h \
     src/cucontrolsreader_abs.h \
@@ -107,7 +109,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/qustringlist.h \
     src/qutable.h \
     src/quvector.h \
-    src/quxtrawidgetplugininterface.h \
+    src/plugin_ifaces/quxtrawidgetplugininterface.h \
     src/quxtrawidgetpluginloader.h \
     src/widgets-base/eplotlight/quplotcontextmenustrategy.h \
     src/widgets-base/string_delegate.h \
@@ -131,7 +133,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/cucontextactionbridge.h \
     src/cucontext.h \
     src/quapplication.h \
-    src/qudbusplugininterface.h \
+    src/plugin_ifaces/qudbusplugininterface.h \
     src/quwriter.h \
     src/quwatcher.h \
     src/qumbiaizer.h \
@@ -139,7 +141,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/qucombobox.h \
     src/qumbiaizerprivate.h \
     src/quvaluefilter.h \
-    src/qumultireaderplugininterface.h \
+    src/plugin_ifaces/qumultireaderplugininterface.h \
     src/cucontexti.h \
     src/quled.h \
     src/widgets-base/quledbase.h \
@@ -172,11 +174,11 @@ HEADERS += cumbiaqtcontrols.h\
     src/widgets-base/qulineargaugebase.h \
     src/quanimation.h \
     src/widgets-base/qulabelbase.h \
-    src/quaction-extension-plugininterface.h \
+    src/plugin_ifaces/quaction-extension-plugininterface.h \
     src/quactionextensionfactoryi.h \
-    src/cucontextmenuactionsplugin_i.h \
+    src/plugin_ifaces/cucontextmenuactionsplugin_i.h \
     src/cupluginloader.h \
-    src/cuformulaplugininterface.h
+    src/plugin_ifaces/cuformulaplugininterface.h
 
 unix:!android-g++ {
 

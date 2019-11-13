@@ -10,6 +10,7 @@ class CuData;
 class CuActivity;
 class CuContinuousActivity;
 class CuActivityEvent;
+class CuThreadTokenGenI;
 
 /** \mainpage
  *
@@ -221,6 +222,12 @@ public:
     void finish();
 
     virtual int getType() const;
+
+    void setThreadTokenGenerator(CuThreadTokenGenI *tg);
+
+    void removeThreadTokenGenerator();
+
+    CuThreadTokenGenI *getThreadTokenGenerator() const;
 
     CuData threadToken(const CuData &options) const;
 

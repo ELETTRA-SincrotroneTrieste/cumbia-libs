@@ -50,6 +50,7 @@ public:
 
     CuThreadsEventBridge_I *eventBridge;
 
+    pthread_t th_id;
 };
 
 /*! \brief builds a new CuThread
@@ -75,6 +76,7 @@ CuThread::CuThread(const CuData &token,
     d = new CuThreadPrivate();
     d->cuEventLoop = NULL;
     d->token = token;
+    d->th_id = 0;
     d->eventBridge = teb;
     d->serviceProvider = serviceProvider;
     d->thread = NULL;
@@ -316,16 +318,24 @@ bool CuThread::isEquivalent(const CuData &other_thread_token) const
  *
  * @see CuThread::CuThread
  */
-CuData CuThread::getToken() const
-{
+CuData CuThread::getToken() const {
     return d->token;
+}
+
+/*!
+ * \brief returns the pthread_self value saved as soon as the thread enters the run method
+ *
+ * \note
+ * If the thread hasn't been started, the returned value is 0.
+ */
+pthread_t CuThread::getId() const {
+    return d->th_id;
 }
 
 /*! @private
  * does nothing
  */
-void CuThread::cleanup()
-{
+void CuThread::cleanup() {
 
 }
 
@@ -355,6 +365,7 @@ void CuThread::start()
 void CuThread::run()
 {
     printf("+ CuThread.run 0x%lx TID (%ld) TOKEN %s \e[1;32mentering\e[0m\n", pthread_self(), pthread_self(), d->token.toString().c_str());
+    d->th_id = pthread_self();
     bool destroy = false;
     ThreadEvent *te = NULL;
     while(1)
