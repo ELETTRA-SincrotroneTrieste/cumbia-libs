@@ -1,5 +1,5 @@
 #include "quapplication.h"
-#include "qudbusplugininterface.h"
+#include "plugin_ifaces/qudbusplugininterface.h"
 #include <QDir>
 #include <QPluginLoader>
 #include <unistd.h> // gethostname

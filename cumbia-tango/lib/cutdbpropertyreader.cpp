@@ -42,7 +42,7 @@ CuTDbPropertyReader::CuTDbPropertyReader(const std::string &id, CumbiaTango *cum
 
 CuTDbPropertyReader::~CuTDbPropertyReader()
 {
-    printf("\e[1;31m~CuTDbPropertyReader %p\n", this);
+    pdelete("~CuTDbPropertyReader %p", this);
     delete d;
 }
 

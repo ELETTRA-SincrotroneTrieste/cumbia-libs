@@ -12,15 +12,56 @@ class QStandardItemModel;
 class Cumbia;
 class QDialog;
 class QStandardItem;
-class CuIntrospectionEngineExtensionPlugin_I;
+class CuTimerListener;
+class CuIntrospectionEngineExtensionI;
+
+class TimerInfo {
+public:
+    QString name;
+    int timeout;
+    QList<CuTimerListener *> timer_listeners;
+};
 
 class ThreadInfo {
 public:
     CuData token;
     QStringList devices;
-    pthread_t id;
     std::vector<CuActivity *> activities; // activities for thread
 };
+
+class CuIntrospectionEngineExtensionI {
+public:
+    virtual ~CuIntrospectionEngineExtensionI() {}
+
+    /*!
+     * \brief Specific engines can provide information about each activity adding rows represented of a list
+     *        of QStandardItem that will be children of the activity row
+     *
+     * \param a CuActivity
+     *
+     * \return A list of *list of items* that will be children rows of *a*.
+     *
+     * The default implementation returns an empty list.
+     *
+     * @see columnCount
+     */
+    virtual QList<QList<QStandardItem *> > activityChildRows(const CuActivity *a) const = 0;
+
+    /*!
+     * \brief Returns the column count to set on the model
+     *
+     * The default implementation returns 2. Subclasses will return another value
+     * if activityChildItems requires a greater number of columns.
+     *
+     * @see activityChildItems
+     */
+    virtual int modelColumnCount() const = 0;
+
+    virtual QStringList modelHeaderLabels() const = 0;
+
+    virtual QString dialogHeading() const = 0;
+};
+
 
 class CumbiaIntrospectionPlugin_I
 {
@@ -32,7 +73,7 @@ public:
 
     virtual int getThreadCount() const = 0;
 
-    virtual void installEngineExtension(CuIntrospectionEngineExtensionPlugin_I *eei) = 0;
+    virtual void installEngineExtension(CuIntrospectionEngineExtensionI *eei) = 0;
 
     /*!
      * \brief update the whole introspection data

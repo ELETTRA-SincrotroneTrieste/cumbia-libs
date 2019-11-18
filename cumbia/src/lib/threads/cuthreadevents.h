@@ -96,11 +96,15 @@ class CuTimerEvent : public ThreadEvent
 public:
     CuTimerEvent(int timeout);
 
+    CuTimerEvent(CuActivity *a, CuTimer *t);
+
     ThreadEvent::Type getType() const;
 
     CuTimer* getTimer() const;
 
     int getTimeout() const;
+
+    CuActivity *activity;
 
 private:
     CuTimer* m_sender;

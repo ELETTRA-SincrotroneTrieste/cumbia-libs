@@ -147,8 +147,6 @@ void CuTConfigActivity::onExit()
         CuTangoWorld utils;
         utils.fillThreadInfo(at, this); /* put thread and actiity addresses as info */
         // thread safe remove ref and disposal
-        printf("\e[0;35mCuTConfigActivity::onExit: removing refernce to dev %s d->tdev %p thread 0x%lx thread tok %s\e[0m\n",
-               at["device"].toString().c_str(), d->tdev, pthread_self(), threadToken().toString().c_str());
         refcnt = d->device_service->removeRef(at["device"].toString(), threadToken());
         if(!refcnt)
             d->tdev = nullptr;

@@ -29,4 +29,5 @@ l01/diagnostics/rtbpm_l01.01/VdPickup \
 "l01/diagnostics/rtbpm_l01.01->GetSum(0,1000)" \
 \
 \
+100 \
 --truncate 10

@@ -88,8 +88,9 @@ Cumbiareader::Cumbiareader(CumbiaPool *cumbia_pool, QWidget *parent) :
                     SLOT(onNewLongVector(QString,double,QVector<long>)));
 
             connect(r, SIGNAL(newError(QString,double,QString)), this, SLOT(onError(QString,double,QString)));
-            r->setSource(a);
+	    printf("setting period to %d\n", interval);
             r->setPeriod(interval);
+            r->setSource(a);
         }
     }
 

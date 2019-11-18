@@ -179,11 +179,9 @@ void Cumbia::registerActivity(CuActivity *activity,
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     CuThreadService *thread_service = static_cast<CuThreadService *>(d->serviceProvider->get(CuServices::Thread));
     CuThreadInterface *thread = NULL;
-    printf("\e[1;33mCumbia.registerActivity with  thread token \e[1;36m%s\e[0m\n", thread_token.toString().c_str());
     thread = thread_service->getThread(threadToken(thread_token), eventsBridgeFactoryImpl, d->serviceProvider, thread_factory_impl);
     activityManager->addConnection(thread, activity, dataListener);
     activity->setActivityManager(activityManager);
-    cuprintf("Cumbia::registerActivity: \e[1;32mgot thread \"0x%lx\", is running? [%d]\e[0m...\n", pthread_self(), thread->isRunning());
     if(!thread->isRunning())
         thread->start();
     thread->registerActivity(activity);
@@ -361,6 +359,5 @@ CuData Cumbia::threadToken(const CuData &options) const
         ret = options;
     else
         ret =  CuData("thread_token", options["thread_token"]);
-    printf("\e[1;33mCumbia.threadToken custom \"%s\"\e[0m\n", ret.toString().c_str());
     return ret;
 }

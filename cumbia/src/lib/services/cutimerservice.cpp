@@ -11,7 +11,6 @@ class CuTimerServicePrivate {
 public:
     // timers -> timeout map
     std::map<int,  CuTimer*> ti_map;
-
     std::mutex mutex;
 };
 
@@ -29,9 +28,8 @@ CuTimerService::~CuTimerService()
 CuTimer *CuTimerService::registerListener(CuTimerListener *th, int timeout)
 {
     std::lock_guard<std::mutex> lock(d->mutex);
-    CuTimer *timer = m_getTimer(th);
+    CuTimer *timer = findTimer(th);
     if(timer && timeout == timer->timeout()) {
-        printf("\e[1;33m***\e[0m CuTimerService.registerThread: thread %p already registered with timeout %d\n", th, timeout);
         return timer;
     }
     else if(timer && timer->timeout() != timeout) {
@@ -47,12 +45,9 @@ CuTimer *CuTimerService::registerListener(CuTimerListener *th, int timeout)
                timeout);
         timer = new CuTimer();
         timer->setTimeout(timeout);
-        timer->setSingleShot(false);
+//        timer->setSingleShot(false);
         d->ti_map[timeout] = timer;
         timer->start(timeout);
-    }
-    else {
-        printf("\e[1;32m***\e[0m CuTimerService::registerThread \e[1;35m timer already found with period %d\e[0m\n", timeout);
     }
     timer->addListener(th);
     return timer;
@@ -61,9 +56,8 @@ CuTimer *CuTimerService::registerListener(CuTimerListener *th, int timeout)
 void CuTimerService::unregisterListener(CuTimerListener *tl)
 {
     std::lock_guard<std::mutex> lock(d->mutex);
-    CuTimer *t = m_getTimer(tl); // does not acquire lock
+    CuTimer *t = findTimer(tl); // does not acquire lock
     t->removeListener(tl); // CuTimer lock guards its listeners list
-    printf("\e[1;32m**\e[0m CuTimerService::unregisterListener: unregistering listener %p (timer %p): there are still %ld listeners\n", tl, t, t->listeners().size());
     if(t->listeners().size() == 0) {
         int to = t->timeout();
         printf("\e[1;32m** -->\e[0m CuTimerService::unregisterListener: \e[1;32mno more listeners: stopping timer %p and deleting\e[0m\n", t);
@@ -81,7 +75,7 @@ void CuTimerService::changeTimeout(CuTimerListener *th, int timeout)
 
 bool CuTimerService::isRegistered(CuTimerListener *tlis, int timeout) {
     std::lock_guard<std::mutex> lock(d->mutex);
-    std::list<CuTimerListener *> listeners = m_getTimerListeners(timeout);
+    std::list<CuTimerListener *> listeners = getTimerListeners(timeout);
     std::list<CuTimerListener *>::const_iterator it = find(listeners.begin(), listeners.end(), tlis);
     return it != listeners.end();
 }
@@ -107,7 +101,7 @@ void CuTimerService::m_stopAll()
  *
  * does not lock guard. Lock must be acquired by the caller
  */
-std::list<CuTimerListener *> CuTimerService::m_getTimerListeners(int timeout)
+std::list<CuTimerListener *> CuTimerService::getTimerListeners(int timeout)
 {
     std::list<CuTimerListener *> listeners;
     if(d->ti_map.count(timeout) > 0) {
@@ -123,7 +117,7 @@ std::list<CuTimerListener *> CuTimerService::m_getTimerListeners(int timeout)
  *
  * does not lock guard. Lock must be acquired by the caller
  */
-CuTimer* CuTimerService::m_getTimer(const CuTimerListener *th)
+CuTimer* CuTimerService::findTimer(const CuTimerListener *th)
 {
     std::map<int, CuTimer *>::iterator it;
     for( it = d->ti_map.begin(); it != d->ti_map.end(); ++it) {
@@ -133,5 +127,14 @@ CuTimer* CuTimerService::m_getTimer(const CuTimerListener *th)
             return it->second; // timeout
     }
     return nullptr;
+}
+
+std::list<CuTimer *> CuTimerService::getTimers()
+{
+    std::list<CuTimer *>timers;
+    std::lock_guard<std::mutex> lock(d->mutex);
+    for(std::map<int, CuTimer *>::const_iterator it = d->ti_map.begin(); it != d->ti_map.end(); ++it)
+        timers.push_back(it->second);
+    return timers;
 }
 

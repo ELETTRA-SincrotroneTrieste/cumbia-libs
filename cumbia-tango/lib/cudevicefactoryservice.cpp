@@ -44,7 +44,6 @@ TDevice *CuDeviceFactoryService::getDevice(const std::string &name, const CuData
         td = new TDevice(name);
         TDevData devd(td, thread_tok);
         std::pair<std::string, TDevData > p(name, devd);
-        printf("++++++++++++++ inserting into map %s %s\n", name.c_str(), devd.thread_token.toString().c_str());
         m_devmap.insert(p);
     }
     return td;
@@ -76,8 +75,6 @@ void CuDeviceFactoryService::addRef(const string &devname, const CuData &thread_
     ret = m_devmap.equal_range(devname);
     for(std::multimap<std::string, TDevData>::const_iterator it = ret.first; it != ret.second; ++it) {
         if(it->second.thread_token == thread_tok) {
-            printf("\e[0;33mCuDeviceFactoryService::addRef devnam %s thread tok %s thread 0x%lx references %d\e[0m\n",
-                   devname.c_str(), thread_tok.toString().c_str(), pthread_self(), it->second.tdevice->refCnt());
             it->second.tdevice->addRef();
             break;
         }
@@ -94,8 +91,6 @@ int CuDeviceFactoryService::removeRef(const string &devname, const CuData &threa
         if(it->first == devname && it->second.thread_token == thread_tok) {
             TDevice *d = it->second.tdevice;
             refcnt = d->removeRef();
-            printf("\e[0;33mCuDeviceFactoryService::removeRef devnam %s thread tok %s thread 0x%lx references %d\e[0m\n",
-                   devname.c_str(), thread_tok.toString().c_str(), pthread_self(), refcnt);
             if(refcnt == 0) { // no more references for that device in that thread
                 delete d;
                 it = m_devmap.erase(it);

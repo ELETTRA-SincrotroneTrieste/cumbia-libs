@@ -503,7 +503,6 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts)
     while(it != d->actions_map.end()) {
         if(it->first == ts.getName() && it->second.tsrc == ts) {
             it = d->actions_map.erase(it);
-            printf(" - \e[1;32mCuPollingActivity %p event\e[0m: removed %s from poller\n",this,  ts.toString().c_str());
         }
         else
             ++it;

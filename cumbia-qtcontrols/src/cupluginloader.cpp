@@ -1,7 +1,6 @@
 #include "cupluginloader.h"
 #include <QProcessEnvironment>
 #include <QDir>
-#include <QPluginLoader>
 
 CuPluginLoader::CuPluginLoader()
 {
@@ -89,3 +88,4 @@ QStringList CuPluginLoader::getPluginAbsoluteFilePaths(const QString& default_pl
     }
     return sl;
 }
+

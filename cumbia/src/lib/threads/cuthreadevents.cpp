@@ -35,9 +35,20 @@ CuTimerEvent::CuTimerEvent(int timeout)
     m_timeout = timeout;
 }
 
+CuTimerEvent::CuTimerEvent(CuActivity *a, CuTimer *t)
+{
+    activity = a;
+    m_sender = t;
+}
+
 ThreadEvent::Type CuTimerEvent::getType() const
 {
     return TimerExpired;
+}
+
+CuTimer *CuTimerEvent::getTimer() const
+{
+    return m_sender;
 }
 
 int CuTimerEvent::getTimeout() const

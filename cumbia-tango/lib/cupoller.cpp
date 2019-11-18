@@ -178,13 +178,12 @@ void CuPoller::m_do_unregisterAction(CuTangoActionI *a)
         CuActivity *activity = am->findActiveMatching(at); // polling activities compare device period and "activity"
         // post remove to activity's thread
         if(activity) {
-            printf("\e[1;33mCuPoller.m_do_unregisterAction: postEvent to activity %p of type CuRemovePollActionEvent\e[0m\n", activity);
             d->cumbia_t->postEvent(activity, new CuRemovePollActionEvent(a->getSource()));
         }
 
         if(d->actions_map.size() == 0) {
             am->removeConnection(this);
-            printf("\e[1;33mCuPoller.m_do_unregisterAction: no more actions: calling \e[1;32mCumbiaTango.unregisterActivity for activity %p\e[0m\n", activity);
+            pgreen("CuPoller.m_do_unregisterAction: no more actions: calling \e[1;32mCumbiaTango.unregisterActivity for activity %p\e[0m", activity);
             d->cumbia_t->unregisterActivity(activity);
         }
     }

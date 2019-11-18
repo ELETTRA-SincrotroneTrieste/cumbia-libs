@@ -137,9 +137,6 @@ void CuEventActivity::init()
     /* get a reference to a TDevice, new or existing one */
     d->tdev = d->device_srvc->getDevice(tk["device"].toString(), threadToken());
     d->device_srvc->addRef(tk["device"].toString(), threadToken());
-    printf("CuEventActivity.init: got TDevice %p DeviceProxy %p name %s from THIS THREAD 0x%lx is valid: %d thread tok %s\n",
-            d->tdev, d->tdev->getDevice(), d->tdev->getName().c_str(), pthread_self(), d->tdev->isValid(), threadToken().toString().c_str());
-
     tk["conn"] = d->tdev->isValid();
     tk["msg"] = d->tdev->getMessage();
     tk["err"] = !d->tdev->isValid();
@@ -263,8 +260,6 @@ void CuEventActivity::onExit()
     }
     // removes reference (lock guarded) and deletes TDev if no more necessary
     // Lock guarded because since 1.1.0 one thread per device is not a rule.
-    printf("\e[0;35mCuTConfigActivity::onExit: removing refernce to dev %s d->tdev %p thread 0x%lx thread tok %s\e[0m\n",
-           at["device"].toString().c_str(), d->tdev, pthread_self(), threadToken().toString().c_str());
     refcnt = d->device_srvc->removeRef(at["device"].toString(), threadToken());
     if(refcnt == 0)
         d->tdev = nullptr;

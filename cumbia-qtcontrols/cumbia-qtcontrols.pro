@@ -90,7 +90,6 @@ SOURCES += cumbiaqtcontrols.cpp \
 
 HEADERS += cumbiaqtcontrols.h\
     cumbia-qtcontrols_global.h \
-    src/plugin_ifaces/cuintrospectionengineextensionplugin_i.h \
     src/plugin_ifaces/cumbiaintrospectionplugin_i.h \
     src/qubutton.h \
     src/qulabel.h \
@@ -263,7 +262,8 @@ unix:INCLUDEPATH -= \
 unix:INCLUDEPATH += src \
     src/widgets-base \
     src/widgets-base/eplotlight \
-    src/widgets-base/eimage
+    src/widgets-base/eimage \
+    src/plugin_ifaces
 
 unix:LIBS -= \
     -l$${cumbia_qtcontrols_LIB} -lpthread

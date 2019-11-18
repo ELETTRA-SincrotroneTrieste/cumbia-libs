@@ -3,8 +3,8 @@
 
 #include <thread>
 #include <mutex>
-#include <condition_variable>
 #include <list>
+#include <condition_variable>
 
 class CuTimerListener;
 
@@ -31,10 +31,10 @@ class CuTimerListener;
  */
 class CuTimer
 {
-    friend class CuTimerService;
-
 public:
-    CuTimer();
+    CuTimer(CuTimerListener *l);
+
+    CuTimer() {} // for test
 
     ~CuTimer();
 
@@ -46,26 +46,30 @@ public:
 
     bool isSingleShot() const;
 
+    void pause();
+
+    void start(int millis);
+
+    void resume();
+
+    void stop();
+
+    void addListener(CuTimerListener *) {} // for test
+    void removeListener(CuTimerListener *) {}
+
+    std::list<CuTimerListener *> listeners() {} // for test
+
 protected:
     void run();
 
 private:
-    std::list<CuTimerListener *> m_listeners;
-    int m_timeout;
+    CuTimerListener *m_listener;
+    unsigned long m_timeout;
     bool m_quit, m_pause, m_exited, m_singleShot;
 
     std::thread *m_thread;
-    std::mutex m_mutex, m_listeners_mutex;
+    std::mutex m_mutex;
     std::condition_variable m_wait;
-
-    void addListener(CuTimerListener *l);
-    void removeListener(CuTimerListener *l);
-    std::list<CuTimerListener *> listeners();
-
-    void pause();
-    void start(int millis);
-    void resume();
-    void stop();
 };
 
 #endif // CUTIMER_H

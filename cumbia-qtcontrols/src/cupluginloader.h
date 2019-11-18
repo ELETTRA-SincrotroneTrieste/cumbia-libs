@@ -3,6 +3,8 @@
 
 #include <QStringList>
 #include <QRegExp>
+#include <QPluginLoader>
+#include <QObject>
 
 /*! \brief Helper class that loads Qt plugins searching in the default cumbia plugin path and in directories
  *         listed in a proper environment variable.
@@ -27,6 +29,32 @@ public:
     QString getPluginAbsoluteFilePath(const QString &default_plugin_path, const QString &name);
     QString getPluginPath() const;
     QString getDefaultPluginPath() const;
+
+    template <class T>
+    T* get(const QString& name, QObject **plugin_as_qobject, const QString& default_plugin_path = QString()) {
+        QObject *plugin;
+        if(plugin_as_qobject != nullptr)
+            *plugin_as_qobject = nullptr;
+        T* pl = nullptr;
+        QString plugin_path = getPluginAbsoluteFilePath(default_plugin_path, name);
+        QPluginLoader loader(plugin_path);
+        plugin = loader.instance();
+        if(plugin) {
+            pl = qobject_cast<T *>(plugin);
+            if(!pl)
+                printf("\e[1;31m*\e[0m CuPluginLoader.get: failed to cast the plugin provided by \"%s\" into the desired type\n",
+                     name.toStdString().c_str());
+            else
+                printf("\e[1;32m* \e[0msuccessfully loaded plugin from \"%s\" as qobjecct %p\n",
+                       plugin_path.toStdString().c_str(), plugin);
+        }
+        else
+            printf("\e[1;31m*\e[0m CuPluginLoader.get: failed to load plugin \"%s\": \"%s\"\n",
+                   name.toStdString().c_str(), loader.errorString().toStdString().c_str());
+        if(plugin_as_qobject != nullptr)
+            *plugin_as_qobject = plugin;
+        return pl;
+    }
 };
 
 #endif // CUPLUGINLOADER_H

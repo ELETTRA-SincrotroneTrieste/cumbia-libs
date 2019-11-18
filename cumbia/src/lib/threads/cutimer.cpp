@@ -12,8 +12,9 @@
  * By default, the timeout is set to 1000 milliseconds, and the single shot
  * property is true.
  */
-CuTimer::CuTimer()
+CuTimer::CuTimer(CuTimerListener *l)
 {
+    m_listener = l;
     m_quit = false;
     m_pause = false;
     m_exited = false;
@@ -29,7 +30,7 @@ CuTimer::CuTimer()
  */
 CuTimer::~CuTimer()
 {
-    pdelete("CuTimer %p m_quit %d", this, m_quit);
+    pdelete("CuTimer %p", this);
     if(!m_quit)
         stop();
 }
@@ -137,7 +138,7 @@ void CuTimer::stop()
      //   auto locked = std::unique_lock<std::mutex>(m_mutex);
         pgreen("after lock");
         m_quit = true;
-        m_listeners.clear();
+        m_listener = NULL;
     }
     pgreen("CuTimer.stop calling m_wait.notify_one...");
     m_wait.notify_one();
@@ -151,41 +152,7 @@ void CuTimer::stop()
         pbblue("CuTimer.stop: NOT JOINABLE!!!");
     m_exited = true;
     delete m_thread;
-    m_thread = nullptr;
-}
-
-/*!
- * \brief CuTimer::addListener adds a listener to the timer
- * \param l the new listener
- *
- * This method can be accessed from several different threads
- */
-void CuTimer::addListener(CuTimerListener *l) {
-    std::lock_guard<std::mutex> lock(m_listeners_mutex);
-    m_listeners.push_back(l);
-}
-
-/*!
- * \brief CuTimer::removeListener removes a listener from the timer
- * \param l the listener to remove
- *
- * This method can be accessed from several different threads
- */
-void CuTimer::removeListener(CuTimerListener *l) {
-    std::lock_guard<std::mutex> lock(m_listeners_mutex);
-    m_listeners.remove(l);
-}
-
-/*!
- * \brief CuTimer::listeners returns the list of registered listeners
- *
- * @return the list of registered listeners
- *
- * This method can be accessed from several different threads
- */
-std::list<CuTimerListener *> CuTimer::listeners() {
-    std::lock_guard<std::mutex> lock(m_listeners_mutex);
-    return m_listeners;
+    m_thread = NULL;
 }
 
 /*! \brief the timer loop
@@ -197,7 +164,6 @@ std::list<CuTimerListener *> CuTimer::listeners() {
  */
 void CuTimer::run()
 {
-    printf("\e[0;36mCuTimer.run() %p timeout %ld ENTER\e[0m\n", this, m_timeout);
     std::unique_lock<std::mutex> lock(m_mutex);
     unsigned long timeout = m_timeout;
     while (!m_quit)
@@ -208,28 +174,23 @@ void CuTimer::run()
         std::cv_status status = m_wait.wait_for(lock, ms);
 
 
-//        printf("CuTimer.run pause is %d status is %d timeout %d\n", m_pause, (int) status, m_timeout);
+        //        cuprintf("CuTimer.run pause is %d status is %d timeout %d\n", m_pause, (int) status, m_timeout);
         //        if(status == std::cv_status::no_timeout)
         m_pause ?  timeout = ULONG_MAX : timeout = m_timeout;
-//        printf("CuTimer:run: this: %p triggering timeout in pthread 0x%lx (CuTimer's) m_listeners size %ld m_exit %d CURRENT TIMEOUT is %lu m_pause %d\n", this,
-//                           pthread_self(), m_listeners.size(), m_quit, timeout, m_pause);
-        if(status == std::cv_status::timeout && !m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
+
+        //            pbblue("CuTimer:run: this: %p triggering timeout in pthread 0x%lx (CuTimer's) m_listener %p m_exit %d CURRENT TIMEOUT is %lu m_pause %d", this,
+        //                   pthread_self(), m_listener, m_quit, timeout, m_pause);
+        if(status == std::cv_status::timeout && m_listener && !m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
         {
-            std::lock_guard<std::mutex> lock(m_listeners_mutex); // protect listeners
 //            printf("\e[1;32m CuTimer::run. cv_status is timeout, !m_quit and !m_pause: calling onTimeout!\e[0m\n");
-            std::list<CuTimerListener *>::iterator it;
-            for(it = m_listeners.begin(); it != m_listeners.end(); ++it)
-                (*it)->onTimeout(this);
+            m_listener->onTimeout(this);
         }
 
-        if(m_quit)
-            break;
-//        if(!m_quit) {
+        if(!m_quit) {
 //            printf("\e[1;31mCuTimer::run waiting for lock now....\n");
-          //  m_wait.wait(lock);
+            m_wait.wait(lock);
 //            printf("\e[1;32m    done waited!\e[0m\n");
-//        }
+        }
     }
-    printf("\e[0;36mCuTimer.run() %p period %ld EXIT\e[0m\n", this, m_timeout);
 }
 

@@ -674,7 +674,7 @@ void CuVariant::build_from(const CuVariant& other)
                 len = strlen(other_s);
                 str[i] = new char[len + 1];
                 memset(str[i], 0, sizeof(char) * (len + 1));
-                strncpy(str[i], other_s, len);
+                strncpy(str[i], other_s, len + 1);
             }
             else
                 str[i] = NULL;

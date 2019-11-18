@@ -1,7 +1,7 @@
 #include "cucontextmenu.h"
 #include <cumacros.h>
-#include "quaction-extension-plugininterface.h"
-#include "cucontextmenuactionsplugin_i.h"
+#include "plugin_ifaces/quaction-extension-plugininterface.h"
+#include "plugin_ifaces/cucontextmenuactionsplugin_i.h"
 #include "cupluginloader.h"
 #include <QAction>
 #include <QMultiMap>

@@ -2,7 +2,6 @@
 #define QUAPPLICATION_H
 
 #include <QApplication>
-
 #include <qudbusplugininterface.h>
 
 class QuApplicationPrivate;
