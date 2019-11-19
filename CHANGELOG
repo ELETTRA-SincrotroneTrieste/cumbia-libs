@@ -1,3 +1,13 @@
+v1.0.2
+a. cumbia-qtcontrols
+   a1. QuCircularGauge/QuCircularGaugeBase: fixes infinite loops in cache updates with certain property values (e.g. min = max)
+   a2. QuCircularGauge/QuCircularGaugeBase: disable cache regeneration while setting properties in QuCircularGauge::m_configure
+       by dint of the new QuCircularGaugeBase::setCacheRegenerationDisabled
+   a3. QuCircularGaugeBase: widget is updated only if value actually changes (QuCircularGauge::setValue)
+   a4. QuCircularBase::setValue optimization: if needle angle change is less than one degree animation is disabled (saves CPU time)
+
+b. qumbia-apps/cumbiareader test app: fixed setOptions/setSource call order
+
 v1.0.1
 a. cumbia-tango
    a1. properties are delivered at configuration time even though the attribute value cannot be read

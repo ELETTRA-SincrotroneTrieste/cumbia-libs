@@ -10,6 +10,7 @@
 class QuGaugeCache {
 public:
     QuGaugeCache() {
+        regen_disabled = false;
         invalidate();
     }
 
@@ -28,7 +29,7 @@ public:
 
     void invalidate(){
         labelsDistrib.clear();
-        longestLabel = QString();
+        longestLabel = "X";
         paintArea = oldRect = QRectF();
         labelPtSiz = 10;
         textLabelPtSiz = -1;
@@ -38,6 +39,7 @@ public:
     bool isValid() const {
         return labelsDistrib.size() == 4 && longestLabel.length() > 0;
     }
+    bool regen_disabled;
 };
 
 class QuCircularGaugeBasePrivate {
@@ -720,33 +722,39 @@ QString QuCircularGaugeBase::label(int i) const
 
 void QuCircularGaugeBase::setValue(double v)
 {
-    QDateTime now = QDateTime::currentDateTime();
-    if(g_config->animationEnabled) {
-        if(d->propertyAnimation && d->propertyAnimation->state() == QPropertyAnimation::Running) {
-            d->propertyAnimation->stop();
-        }
-        else if(!d->propertyAnimation) {
-            d->propertyAnimation = new QPropertyAnimation(this, "value_anim");
-        }
+    if(v != g_config->value) {
+        // disable animation if value change implies an angle variation
+        // less than one degree
+        double diff = qAbs(v - g_config->value);
+        double span = g_config->max - g_config->min;
+        bool animate = g_config->animationEnabled && (diff / span > 1.0f / d->spanAngle);
+        QDateTime now = QDateTime::currentDateTime();
+        if(animate) {
+            if(d->propertyAnimation && d->propertyAnimation->state() == QPropertyAnimation::Running) {
+                d->propertyAnimation->stop();
+            }
+            else if(!d->propertyAnimation) {
+                d->propertyAnimation = new QPropertyAnimation(this, "value_anim");
+            }
 
-        if(d->lastValueDateTime.isValid())
-            d->propertyAnimation->setDuration(qMin(g_config->maximumAnimDuration, d->lastValueDateTime.msecsTo(now)));
+            if(d->lastValueDateTime.isValid())
+                d->propertyAnimation->setDuration(qMin(g_config->maximumAnimDuration, d->lastValueDateTime.msecsTo(now)));
+            else
+                d->propertyAnimation->setDuration(g_config->maximumAnimDuration);
+
+            v > g_config->value_anim ? d->propertyAnimation->setEasingCurve(QEasingCurve(QEasingCurve::Linear)) :
+                                       d->propertyAnimation->setEasingCurve(QEasingCurve(QEasingCurve::InQuad));
+
+            d->propertyAnimation->setStartValue(g_config->value_anim);
+            d->propertyAnimation->setEndValue(v);
+            d->propertyAnimation->start();
+        }
         else
-            d->propertyAnimation->setDuration(g_config->maximumAnimDuration);
+            g_config->value_anim = v;
 
-        v > g_config->value_anim ? d->propertyAnimation->setEasingCurve(QEasingCurve(QEasingCurve::Linear)) :
-                                   d->propertyAnimation->setEasingCurve(QEasingCurve(QEasingCurve::InQuad));
-
-        d->propertyAnimation->setStartValue(g_config->value_anim);
-        d->propertyAnimation->setEndValue(v);
-        d->propertyAnimation->start();
+        g_config->value = v;
+        d->lastValueDateTime = now;
     }
-    else
-        g_config->value_anim = v;
-
-    g_config->value = v;
-    d->lastValueDateTime = now;
-
 }
 
 void QuCircularGaugeBase::setReadError(bool err)
@@ -954,7 +962,7 @@ void QuCircularGaugeBase::updateLabelsCache()
     d->cache.labels.clear();
     double step = (g_config->max - g_config->min) / (g_config->ticksCount - 1);
     double val = g_config->min;
-    while(val <= g_config->max) {
+    while(g_config->min != g_config->max && step > 0 && val <= g_config->max) {
         QString lab = formatLabel(val, getAppliedFormat());
         if(fm.width(lab) > fm.width(d->cache.longestLabel))
             d->cache.longestLabel = lab;
@@ -967,10 +975,12 @@ void QuCircularGaugeBase::updateLabelsCache()
 
 void QuCircularGaugeBase::regenerateCache()
 {
-    d->cache.invalidate();
-    updateLabelsCache();
-    d->cache.labelsDistrib = updateLabelsDistrib();
-    updateLabelsFontSize();
+    if(!d->cache.regen_disabled) {
+        d->cache.invalidate();
+        updateLabelsCache();
+        d->cache.labelsDistrib = updateLabelsDistrib();
+        updateLabelsFontSize();
+    }
 }
 
 void QuCircularGaugeBase::updateLabelsFontSize() {
@@ -998,6 +1008,7 @@ void QuCircularGaugeBase::updateLabelsFontSize() {
     fm = QFontMetrics(f);
     d->cache.labelSize = QSize(fm.width(d->cache.longestLabel), fm.height());
 }
+
 QRectF QuCircularGaugeBase::paintArea() {
     if(!d->cache.paintArea.isValid())
         updatePaintArea();
@@ -1072,7 +1083,11 @@ double QuCircularGaugeBase::m_getMarginH(double radius) {
     return margin_h;
 }
 
-
+/*!
+ * \brief Returns true if the value is within the warning range.
+ * \param val the value
+ * \return true if the val is within the warning range, false otherwise
+ */
 bool QuCircularGaugeBase::inWarningRange(double val) const
 {
     if(g_config->low_w == g_config->high_w)
@@ -1089,6 +1104,11 @@ bool QuCircularGaugeBase::inWarningRange(double val) const
     return false;
 }
 
+/*!
+ * \brief Returns true if the value is within the error range.
+ * \param val the value
+ * \return true if the val is within the error range, false otherwise
+ */
 bool QuCircularGaugeBase::inErrorRange(double val) const
 {
     if(g_config->low_e == g_config->high_e)
@@ -1096,12 +1116,43 @@ bool QuCircularGaugeBase::inErrorRange(double val) const
     return val <= g_config->low_e || val >= g_config->high_e;
 }
 
+/*!
+ * \brief returns the color associated to a value
+ * \param val the value
+ * \return  the associated color, according to warning and error ranges.
+ */
 QColor QuCircularGaugeBase::valueColor(double val) const
 {
     QColor c;
     if(inWarningRange(val)) return g_config->warningColor;
     else if(inErrorRange(val)) return g_config->errorColor;
     else return g_config->normalColor;
+}
+
+/*!
+ * \brief disables cache regeneration
+ * \param dis true regenerateCache does nothing
+ *
+ * Some property changes trigger a call to regenerateCache
+ * If you plan to update several properties at once, you can consider
+ * disabling cache regeneration temporarily and enable it again after
+ * the updates.
+ *
+ * \par Warning
+ * Enabling cache regeneration does not call regenerateCache automatically.
+ * The programmer must take care of it.
+ */
+void QuCircularGaugeBase::setCacheRegenerationDisabled(bool dis) {
+    d->cache.regen_disabled = dis;
+}
+
+/*!
+ * \brief returns true if regenerateCache is disabled, false otherwise
+ *
+ * @see setCacheRegenerationDisabled
+ */
+bool QuCircularGaugeBase::cacheRegenerationDisabled() const {
+    return d->cache.regen_disabled;
 }
 
 void QuCircularGaugeBase::paintEvent(QPaintEvent *pe)

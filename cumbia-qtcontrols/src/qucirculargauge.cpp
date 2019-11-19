@@ -6,6 +6,7 @@
 #include <QContextMenuEvent>
 #include <QPainter>
 #include <QPaintEvent>
+#include <QtDebug>
 
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
@@ -21,6 +22,7 @@ public:
     bool auto_configure;
     bool read_ok;
     CuContext *context;
+    CuVariant prev_val;
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
@@ -116,6 +118,8 @@ void QuCircularGauge::m_configure(const CuData& da)
     threshs["max_warning"] = "highWarning";
     threshs["max_alarm"] = "highError";
     threshs["min_alarm"] = "lowError";
+    // avoid cache regeneration at every property change
+    setCacheRegenerationDisabled(true);
     // map keys are not ordered!
     QStringList props = QStringList() << "min" << "max" << "max_alarm" << "min_alarm"
                                       << "min_warning" << "max_warning";
@@ -123,21 +127,26 @@ void QuCircularGauge::m_configure(const CuData& da)
         const char *name = thnam.toStdString().c_str();
         try {
             if(da.containsKey(name)) {
-                setProperty(threshs[thnam], strtod(da[name].toString().c_str(), NULL));
+                setProperty(threshs[thnam], std::stod(da[name].toString().c_str()));
             }
         }
         catch(const std::invalid_argument& ) {
-            char bound[16] = "";
-            memset(bound, 0, 16);
-            strncpy(bound, name, 3);
-            strncat(bound, "Value", 6);
-            setProperty(threshs[thnam], property(bound).toDouble());
+            // do not change the property
+            //            char bound[16] = "";
+            //            memset(bound, 0, 16);
+            //            strncpy(bound, name, 3);
+            //            strncat(bound, "Value", 6);
+            //            qDebug() << __PRETTY_FUNCTION__ <<" setting prop " << thnam << "bound" << bound
+            //                     << " to " << property(bound).toDouble();
+            //            setProperty(threshs[thnam], property(bound).toDouble());
         }
     }
     if(da["display_unit"].toString().length() > 0)
         setUnit(QString::fromStdString(da["display_unit"].toString()));
     if(da["format"].toString().length() > 0)
         setFormatProperty(QString::fromStdString(da["format"].toString()));
+    setCacheRegenerationDisabled(false);
+    regenerateCache();
 }
 
 void QuCircularGauge::m_set_value(const CuVariant &val)
@@ -155,6 +164,7 @@ void QuCircularGauge::m_set_value(const CuVariant &val)
     else {
         setToolTip("wrong data type " + QString::fromStdString(val.dataTypeStr(val.getType())));
     }
+
 }
 
 void QuCircularGauge::onUpdate(const CuData &da)

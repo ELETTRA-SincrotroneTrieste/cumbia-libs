@@ -54,7 +54,7 @@ QString Reader::source() const
 
 void Reader::setPeriod(int ms)
 {
-    m_context->sendData(CuData("period", ms));
+    m_context->setOptions(CuData("period", ms));
 }
 
 void Reader::setSource(const QString &s)
