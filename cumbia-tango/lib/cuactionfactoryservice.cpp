@@ -7,7 +7,7 @@
 
 #include <tango.h>
 #include <map>
-#include <mutex>
+#include <shared_mutex>
 #include <cumacros.h>
 
 /*! @private
@@ -16,7 +16,7 @@ class CuActionFactoryServicePrivate
 {
 public:
     std::list<CuTangoActionI * > actions;
-    std::mutex mutex;
+    std::shared_mutex shared_mutex;
 };
 
 /*! \brief the class constructor
@@ -49,7 +49,7 @@ CuTangoActionI* CuActionFactoryService::registerAction(const std::string& src,
                                                        CumbiaTango* ct)
 {
     CuTangoActionI* action = NULL;
-    std::lock_guard<std::mutex> lock(d->mutex);
+    std::unique_lock lock(d->shared_mutex);
     std::list<CuTangoActionI *>::const_iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
         if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src && !(*it)->exiting()) {
@@ -87,7 +87,7 @@ CuTangoActionI* CuActionFactoryService::registerAction(const std::string& src,
  */
 CuTangoActionI *CuActionFactoryService::findActive(const string &src, CuTangoActionI::Type at)
 {
-    std::lock_guard<std::mutex> lock(d->mutex);
+    std::shared_lock lock(d->shared_mutex);
     std::list<CuTangoActionI *>::const_iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
         if((*it)->getType() == at && (*it)->getSource().getName() == src && !(*it)->exiting())
@@ -111,7 +111,7 @@ CuTangoActionI *CuActionFactoryService::findActive(const string &src, CuTangoAct
  */
 std::vector<CuTangoActionI *> CuActionFactoryService::find(const string &src, CuTangoActionI::Type at)
 {
-    std::lock_guard<std::mutex> lock(d->mutex);
+    std::shared_lock lock(d->shared_mutex);
     std::vector <CuTangoActionI *> actions;
     std::list<CuTangoActionI *>::const_iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
@@ -150,7 +150,7 @@ size_t CuActionFactoryService::count() const
  */
 void CuActionFactoryService::unregisterAction(const string &src, CuTangoActionI::Type at)
 {
-    std::lock_guard<std::mutex> lock(d->mutex);
+    std::unique_lock lock(d->shared_mutex);
     std::list<CuTangoActionI *>::iterator it;
     size_t siz = d->actions.size();
 
@@ -176,7 +176,7 @@ void CuActionFactoryService::unregisterAction(const string &src, CuTangoActionI:
  */
 void CuActionFactoryService::cleanup()
 {
-    std::lock_guard<std::mutex> lock(d->mutex);
+    std::unique_lock lock(d->shared_mutex);
     std::list<CuTangoActionI *>::iterator it = d->actions.begin();
     while(it != d->actions.end())
     {

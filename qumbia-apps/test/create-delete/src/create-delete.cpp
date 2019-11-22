@@ -31,7 +31,7 @@
 #include <cuepcontrolswriter.h>
 #include <cuepics-world.h>
 #include <cuepreadoptions.h>
-#include <queplotupdatestrategy.h>
+#include <cutimerservice.h>
 #endif
 
 #include <cuthreadfactoryimpl.h>
@@ -39,7 +39,7 @@
 
 CreateDelete::CreateDelete(CumbiaPool *cumbia_pool, QWidget *parent) :
     QWidget(parent)
-{    
+{
     // valgrind test
     // new int[4000];
     cu_pool = cumbia_pool;
@@ -48,6 +48,8 @@ CreateDelete::CreateDelete(CumbiaPool *cumbia_pool, QWidget *parent) :
     cu_pool->registerCumbiaImpl("tango", cuta);
     m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
     m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
+    CuTimerService *timer_service = static_cast<CuTimerService *>(cuta->getServiceProvider()->get(CuServices::Timer));
+    timer_service->setTimerMaxCount(1);
 
 #ifdef QUMBIA_EPICS_CONTROLS
     CumbiaEpics* cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
@@ -116,8 +118,10 @@ CreateDelete::CreateDelete(CumbiaPool *cumbia_pool, QWidget *parent) :
         {
             if(a.contains("--set-unset-cnt="))
                 sbsu->setValue(a.remove("--set-unset-cnt=").toInt());
-            else if(a.contains("--set-nreaders="))
+            else if(a.contains("--set-nreaders=")) {
                 sb->setValue(a.remove("--set-nreaders=").toInt());
+                sbdelcnt->setValue(sb->value());
+            }
             else if(a.contains("--set-stress-create-delete="))
             {
                 for(int i = 0; i < a.remove("--set-stress-create-delete=").toInt(); i++)
@@ -186,7 +190,7 @@ void CreateDelete::addReader()
         QGridLayout *glo = qobject_cast<QGridLayout *>(gb->layout());
         int rows = gb->findChildren<QuLabel *>().size();
         QuLabel *label = new QuLabel(gb, cu_pool, m_ctrl_factory_pool);
-        label->getContext()->setOptions(CuData("period", 100));
+        label->getContext()->setOptions(CuData("period", 1000));
         label->setObjectName("label_" + QString::number(rows));
         glo->addWidget(label, rows, 0, 1, 2);
         QSpinBox *sbsu = findChild<QSpinBox *>("sbSetUnsetCnt");

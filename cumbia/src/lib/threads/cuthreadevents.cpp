@@ -30,14 +30,8 @@ ThreadEvent::Type ExitThreadEvent::getType() const
     return ThreadExit;
 }
 
-CuTimerEvent::CuTimerEvent(int timeout)
+CuTimerEvent::CuTimerEvent(CuTimer *t)
 {
-    m_timeout = timeout;
-}
-
-CuTimerEvent::CuTimerEvent(CuActivity *a, CuTimer *t)
-{
-    activity = a;
     m_sender = t;
 }
 

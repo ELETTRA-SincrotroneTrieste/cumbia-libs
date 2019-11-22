@@ -5,79 +5,164 @@
 #include <cutimer.h>
 #include <algorithm>
 #include <cumacros.h>
-#include <mutex>
+#include <shared_mutex>
 
 class CuTimerServicePrivate {
 public:
-    // timers -> timeout map
-    std::map<int,  CuTimer*> ti_map;
-    std::mutex mutex;
+    // timeout --> [listeners (threads) --> timer map]
+    std::multimap<int, CuTimer *> ti_map;
+    // for fast listener --> timer search
+    std::multimap<const CuTimerListener *, CuTimer *> ti_cache;
+    std::shared_mutex shared_mutex;
+    std::list<CuTimerListener *>restart_queue;
+    int timer_max_count;
 };
 
 CuTimerService::CuTimerService() {
     d = new CuTimerServicePrivate;
+    d->timer_max_count = 25;
 }
 
 CuTimerService::~CuTimerService()
 {
     m_stopAll();
     d->ti_map.clear();
+    d->ti_cache.clear();
     delete d;
 }
 
-CuTimer *CuTimerService::registerListener(CuTimerListener *th, int timeout)
+/*!
+ * \brief Register a new CuTimerListener with a given timeout. Reuse existing timers if possible
+ * \param timer_listener a CuTimerListener (e.g. CuThread)
+ * \param timeout the desired timeout
+ * \return a new CuTimer or a CuTimer already in use
+ *
+ * \par Timer registration
+ * If a timer associated to the given listener and timeout is already registered, it is reused.
+ * If timer_listener is new, the behaviour depends on the number of timers for the given timeout and
+ * the value of timerMaxCount:
+ * \li number of timers <= timersMaxCount: a new timer is returned
+ * \li an existing timer with the given timeout is reused
+ *
+ * @see timerMaxCount
+ * @see setTimerMaxCount
+ */
+CuTimer *CuTimerService::registerListener(CuTimerListener *timer_listener, int timeout)
 {
-    std::lock_guard<std::mutex> lock(d->mutex);
-    CuTimer *timer = findTimer(th);
-    if(timer && timeout == timer->timeout()) {
+    std::unique_lock lock(d->shared_mutex);
+    CuTimer *timer = m_findTimer(timer_listener, timeout);
+    if(timer) {
         return timer;
     }
-    else if(timer && timer->timeout() != timeout) {
-        // found the thread th but different timeout, unregiter it from its timer
-        CuTimer *timer = d->ti_map[timeout];
-        timer->removeListener(th);
+    else {
+        if(d->ti_map.count(timeout) >= static_cast<size_t>(d->timer_max_count)) {
+            // reuse a timer!
+            timer = m_findReusableTimer(timeout);
+            printf("CuTimerService::registerListener timers count for timeout %d is %ld >= max timers %d: \e[0;32mreusing timer %p\e[0m] that has now %ld listeners\e[0m\n",
+                   timeout, d->ti_map.count(timeout), d->timer_max_count, timer, timer->listeners().size());
+        }
+        else {
+            timer = new CuTimer();
+            timer->setTimeout(timeout);
+            printf("CuTimerService::registerListener timers count for timeout %d is %ld > max timers %d: \e[1;32mcreating NEW timer %p\e[0m] that has now %ld listeners\e[0m\n",
+                   timeout, d->ti_map.count(timeout), d->timer_max_count, timer, timer->listeners().size());
+            timer->start(timeout);
+            std::pair<int, CuTimer *> new_tmr(timeout, timer);
+            d->ti_map.insert(new_tmr);  // timeout -> timer  map
+        }
+        std::pair<CuTimerListener *, CuTimer *> ltp(timer_listener, timer);
+        d->ti_cache.insert(ltp); // listeners -> timer cache
+        timer->addListener(timer_listener);
     }
-    // find a timer with the needed timeout
-    if(d->ti_map.count(timeout) > 0)
-        timer = d->ti_map[timeout];
-    if(!timer) {
-        printf("\e[1;32m***\e[0m CuTimerService::registerThread \e[1;32m need to create a new timer with period %d\e[0m\n",
-               timeout);
-        timer = new CuTimer();
-        timer->setTimeout(timeout);
-//        timer->setSingleShot(false);
-        d->ti_map[timeout] = timer;
-        timer->start(timeout);
-    }
-    timer->addListener(th);
     return timer;
 }
 
-void CuTimerService::unregisterListener(CuTimerListener *tl)
+/*!
+ * \brief Unregister a listener with the given timeout from the service
+ * \param tl the CuTimerListner to unregister
+ * \param timeout the to remove listener's timeout
+ *
+ * If the timer associated to tl has no more listeners after unregistration,
+ * it will be stopped and deleted.
+ */
+void CuTimerService::unregisterListener(CuTimerListener *tl, int timeout)
 {
-    std::lock_guard<std::mutex> lock(d->mutex);
-    CuTimer *t = findTimer(tl); // does not acquire lock
-    t->removeListener(tl); // CuTimer lock guards its listeners list
-    if(t->listeners().size() == 0) {
-        int to = t->timeout();
-        printf("\e[1;32m** -->\e[0m CuTimerService::unregisterListener: \e[1;32mno more listeners: stopping timer %p and deleting\e[0m\n", t);
-        t->stop();
-        delete t;
-        d->ti_map.erase(to);
+    std::unique_lock lock(d->shared_mutex);
+    CuTimer *t = m_findTimer(tl, timeout); // does not acquire lock
+    if(!t)
+        perr("CuTimerService.unregisterListener: no listener %p registered with timeout %d", tl, timeout);
+    else {
+        t->removeListener(tl); // CuTimer lock guards its listeners list
+        if(t->listeners().size() == 0) {
+            printf("\e[1;32m** -->\e[0m CuTimerService::unregisterListener: \e[1;32mno more listeners: stopping timer %p and deleting\e[0m\n", t);
+            m_removeFromMaps(tl, timeout);
+            t->stop();
+            delete t;
+        }
     }
 }
 
-void CuTimerService::changeTimeout(CuTimerListener *th, int timeout)
+CuTimer *CuTimerService::changeTimeout(CuTimerListener *tl, int timeout)
 {
-    std::lock_guard<std::mutex> lock(d->mutex);
-
+    std::unique_lock lock(d->shared_mutex);
+    CuTimer *t = m_findTimer(tl, timeout);
+    if(t) {
+        printf("CuTimerService::changeTimeout: changing timeout from \e[1;32m%d to %d\e[0m for timer %p\n",
+               t->timeout(), timeout, t);
+        unregisterListener(tl, timeout);
+        printf("CuTimerService::changeTimeout: registering a \e[1;32mnew listener\e[0m\n");
+        t = registerListener(tl, timeout);
+    }
+    else if(!t)
+        perr("CuTimerService.changeTimeout: no listener %p registered with any timer", tl);
+    return t;
 }
 
 bool CuTimerService::isRegistered(CuTimerListener *tlis, int timeout) {
-    std::lock_guard<std::mutex> lock(d->mutex);
-    std::list<CuTimerListener *> listeners = getTimerListeners(timeout);
-    std::list<CuTimerListener *>::const_iterator it = find(listeners.begin(), listeners.end(), tlis);
-    return it != listeners.end();
+    std::shared_lock lock(d->shared_mutex);
+    std::pair<std::multimap<const CuTimerListener*, CuTimer *>::const_iterator, std::multimap<const CuTimerListener*, CuTimer *>::const_iterator > iterpair;
+    iterpair = d->ti_cache.equal_range(tlis); // find timers connected to the listener l
+    for(std::multimap<const CuTimerListener*, CuTimer *>::const_iterator cacheiter = iterpair.first; cacheiter != iterpair.second; ++cacheiter) {
+        if(cacheiter->second->timeout() == timeout)
+            return true;
+    }
+    return false;
+}
+
+/*!
+ * \brief Set the maximum number of timers that are allowed (per period)
+ *
+ * \param count the desired maximum number of timers for each period.
+ *
+ * After timerMaxCount number of timers is reached, timers are reused
+ *
+ *  \par Default value
+ * The default value is 25.
+ *
+ * \note
+ * Please configure this number before registering activities:
+ * changing this number later does not redistribute already registered timers.
+ */
+void CuTimerService::setTimerMaxCount(int count) {
+    d->timer_max_count = count;
+}
+
+int CuTimerService::timerMaxCount() const
+{
+    return d->timer_max_count;
+}
+
+/*!
+ * \brief restart the timer t with interval millis
+ * \param t the timer to restart
+ * \param millis the desired interval
+ *
+ * Normally, CuThread asks CuTimerService to restart a timer after
+ * activity execution, to prevent timer event accumulation on the
+ * queue
+ */
+void CuTimerService::restart(CuTimer *t , int millis) {
+    t->start(millis);
 }
 
 
@@ -91,48 +176,96 @@ CuServices::Type CuTimerService::getType() const {
 
 void CuTimerService::m_stopAll()
 {
+    std::unique_lock lock(d->shared_mutex);
     for(std::map<int, CuTimer *>::iterator it = d->ti_map.begin(); it != d->ti_map.end(); ++it) {
         CuTimer *timer = it->second;
         timer->stop(); // stops and joins
     }
 }
 
-/*! @private
- *
- * does not lock guard. Lock must be acquired by the caller
- */
-std::list<CuTimerListener *> CuTimerService::getTimerListeners(int timeout)
+void CuTimerService::m_removeFromMaps(CuTimerListener *l, int timeout)
 {
-    std::list<CuTimerListener *> listeners;
-    if(d->ti_map.count(timeout) > 0) {
-        CuTimer *timer = d->ti_map[timeout];
-        if(timer) {
-            listeners = timer->listeners();
+    // 1. find the timers connected to this listener (may be more than one)
+    std::multimap<int, CuTimer *>::iterator iter;
+    for(iter = d->ti_map.begin(); iter != d->ti_map.end(); ) {
+        if(iter->first == timeout) { // with the given timeout
+            CuTimer *t = iter->second;   // get the associated CuTimer
+            std::list<CuTimerListener *>tlisteners = t->listeners(); // get its listeners
+            // timer without listeners? remove from d->ti_map timer map
+            if(tlisteners.size() == 0) {
+                printf("X CuTimerService::m_removeFromMaps (1) removed (%d,%p) from timer map\n",
+                       timeout, t);
+                iter = d->ti_map.erase(iter);
+            }
+            else
+                ++iter;
+            //
+            // 2. remove from cache the couple timer listener / timer
+            //
+            std::pair<std::multimap<const CuTimerListener*, CuTimer *>::iterator, std::multimap<const CuTimerListener*, CuTimer *>::iterator > iterpair;
+            iterpair = d->ti_cache.equal_range(l); // find timers connected to the listener l
+            for(std::multimap<const CuTimerListener*, CuTimer *>::iterator cacheiter = iterpair.first; cacheiter != iterpair.second; ) {
+                if(cacheiter->second == t) { // timer is t found above
+                    cacheiter = d->ti_cache.erase(cacheiter);
+                    printf("X CuTimerService::m_removeFromMaps (2) removed (%p,%p) from cache\n", l, t);
+                }
+                else
+                    ++cacheiter;
+            }
+            // end step 2: couple (listener, timer) removal from d->ti_cache
+        }
+        else { // different timeout
+            ++iter;
         }
     }
-    return listeners;
 }
 
 /*! @private
  *
  * does not lock guard. Lock must be acquired by the caller
  */
-CuTimer* CuTimerService::findTimer(const CuTimerListener *th)
+CuTimer* CuTimerService::m_findReusableTimer(int timeout) {
+    int min = -1;
+    CuTimer *reuse = nullptr;
+    std::pair<std::multimap<int, CuTimer *>::const_iterator, std::multimap<int, CuTimer *>::const_iterator > ret;
+    ret = d->ti_map.equal_range(timeout);
+    for(std::multimap<int, CuTimer *>::const_iterator it = ret.first; it != ret.second; ++it) {
+        std::list<CuTimerListener *> tm_lis = it->second->listeners();
+        int listeners_cnt = tm_lis.size();
+        if(min < 0) { // first time
+            min = listeners_cnt;
+            reuse = it->second;
+        }
+        else if(min > listeners_cnt) {
+            min = listeners_cnt;
+            reuse = it->second;
+        }
+    }
+    return reuse;
+}
+
+/*! @private
+ *
+ * does not lock guard. Lock must be acquired by the caller
+ */
+CuTimer *CuTimerService::m_findTimer(const CuTimerListener *th, int timeout)
 {
-    std::map<int, CuTimer *>::iterator it;
-    for( it = d->ti_map.begin(); it != d->ti_map.end(); ++it) {
-        std::list<CuTimerListener *>listeners = it->second->listeners();
-        std::list<CuTimerListener *>::const_iterator tit = std::find(listeners.begin(), listeners.end(), th);
-        if(tit != listeners.end()) // found a thread with the given timeout
-            return it->second; // timeout
+    std::multimap<const CuTimerListener *, CuTimer*>::const_iterator it;
+    for(it = d->ti_cache.begin(); it != d->ti_cache.end(); ++it) {
+        if(it->first == th && it->second->timeout() == timeout)
+            return it->second;
     }
     return nullptr;
 }
 
+/*!
+ * \brief returns all the timers managed by the service
+ * \return  a list of the registered CuTimer instances
+ */
 std::list<CuTimer *> CuTimerService::getTimers()
 {
     std::list<CuTimer *>timers;
-    std::lock_guard<std::mutex> lock(d->mutex);
+    std::shared_lock lock(d->shared_mutex);
     for(std::map<int, CuTimer *>::const_iterator it = d->ti_map.begin(); it != d->ti_map.end(); ++it)
         timers.push_back(it->second);
     return timers;

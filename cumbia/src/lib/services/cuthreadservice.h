@@ -4,7 +4,7 @@
 #include <cuservices.h>
 #include <cuservicei.h>
 #include <list>
-#include <mutex>
+#include <shared_mutex>
 
 class CuThreadFactoryImplI;
 class CuThreadInterface;
@@ -56,11 +56,11 @@ public:
 
     virtual ~CuThreadService();
 
-    int count() const;
+    int count();
 
     void removeThread(CuThreadInterface *thread);
 
-    std::list<CuThreadInterface *> getThreads() const;
+    std::list<CuThreadInterface *> getThreads();
 
     // CuServiceI interface
 public:
@@ -69,7 +69,7 @@ public:
 
 private:
     std::list<CuThreadInterface *> mThreads;
-    std::mutex m_mutex;
+    std::shared_mutex m_shared_mutex;
 };
 
 #endif // THREADSERVICE_H

@@ -13,13 +13,14 @@ class CuTimerService : public CuServiceI
 public:
     CuTimerService();
     ~CuTimerService();
-    CuTimer* registerListener(CuTimerListener *th, int timeout);
-    CuTimer *findTimer(const CuTimerListener *th);
+    CuTimer* registerListener(CuTimerListener *timer_listener, int timeout);
     std::list<CuTimer *> getTimers();
-    std::list<CuTimerListener *>getTimerListeners(int timeout);
-    void unregisterListener(CuTimerListener *th);
-    void changeTimeout(CuTimerListener *th, int timeout);
+    void unregisterListener(CuTimerListener *th, int timeout);
+    CuTimer *changeTimeout(CuTimerListener *th, int timeout);
     bool isRegistered(CuTimerListener *th, int timeout);
+    void setTimerMaxCount(int count);
+    int timerMaxCount() const;
+    void restart(CuTimer *t, int millis);
 
     // CuServiceI interface
 public:
@@ -28,6 +29,9 @@ public:
 
 private:
     void m_stopAll();
+    void m_removeFromMaps(CuTimerListener *l, int timeout);
+    CuTimer *m_findReusableTimer(int timeout);
+    CuTimer *m_findTimer(const CuTimerListener *th, int timeout);
 
     CuTimerServicePrivate *d;
 };

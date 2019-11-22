@@ -209,6 +209,8 @@ void CuTReader::sendData(const CuData &data)
     if(data.containsKey("period"))
         data["period"].to<int>(period);
 
+    printf("CuTReader.sendData got options %s mode %d period %d\n", data.toString().c_str(),
+           rm, period);
     if(rm > -1 && rm != d->refresh_mode) { // refresh mode changed
         setRefreshMode(static_cast<CuTReader::RefreshMode>(rm), period);
     }

@@ -12,14 +12,11 @@
  * By default, the timeout is set to 1000 milliseconds, and the single shot
  * property is true.
  */
-CuTimer::CuTimer(CuTimerListener *l)
+CuTimer::CuTimer()
 {
-    m_listener = l;
-    m_quit = false;
-    m_pause = false;
-    m_exited = false;
+    m_quit = m_pause = m_exited = m_skip = false;
+    m_pending = 0;
     m_timeout = 1000;
-    m_singleShot = true;
     m_thread = NULL;
 }
 
@@ -30,7 +27,7 @@ CuTimer::CuTimer(CuTimerListener *l)
  */
 CuTimer::~CuTimer()
 {
-    pdelete("CuTimer %p", this);
+    pdelete("CuTimer %p m_quit %d", this, m_quit);
     if(!m_quit)
         stop();
 }
@@ -41,20 +38,9 @@ CuTimer::~CuTimer()
  */
 void CuTimer::setTimeout(int millis)
 {
-    std::unique_lock<std::mutex> lock(m_mutex);
     pbblue("CuTimer.setTimeout %d", millis);
     m_timeout = millis;
     m_wait.notify_one();
-}
-
-/*!
- * \brief enable or disable the single shot mode
- * @param single true the timer is run once
- * @param single false the timer is run continuously
- */
-void CuTimer::setSingleShot(bool single)
-{
-    m_singleShot = single;
 }
 
 /*!
@@ -67,42 +53,18 @@ int CuTimer::timeout() const
 }
 
 /*!
- * \brief returns true if the single shot mode is enabled.
- * @return true: the timer is running once
- * @return false: the timer is run repeatedly
- */
-bool CuTimer::isSingleShot() const
-{
-    return m_singleShot;
-}
-
-/*!
- * \brief pause the timer is paused
+ * \brief cancels current scheduled timeout.
  *
- * A timeout of ULONG_MAX (limits.h) is set on the timer
+ * \note
+ * start must be called after reset if you want to schedule
+ * the next timeout
+ *
+ * \note
+ * Not lock guarded
  */
-void CuTimer::pause()
-{
-    std::unique_lock<std::mutex> lock(m_mutex);
-    pbblue("CuTimer.pause");
-    m_pause = true;
+void CuTimer::reset() {
+    m_skip = true;
     m_wait.notify_one();
-}
-
-/*! \brief the timer is resumed if paused, started if not running
- *
- * The timer is resumed if the timer thread is still running,
- * started otherwise
- */
-void CuTimer::resume()
-{
-    std::unique_lock<std::mutex> lock(m_mutex);
-    pbblue("CuTimer.resume: timeout %ld", m_timeout);
-    m_pause = false;
-    if(!m_quit) /* thread still running */
-        m_wait.notify_one();
-    else  /* thread loop is over */
-        start(m_timeout);
 }
 
 /*! \brief start the timer with the given interval in milliseconds
@@ -114,15 +76,23 @@ void CuTimer::resume()
  */
 void CuTimer::start(int millis)
 {
+    std::unique_lock<std::mutex> lock(m_mutex);
     m_quit = m_pause = false;
     m_timeout = millis;
     if(!m_thread) { // first time start is called or after stop
         m_thread = new std::thread(&CuTimer::run, this);
     }
     else {
+        if(m_pending > 0) {
+            reset();
+//            m_last_start_pt = std::chrono::steady_clock::now();
+        }
+        else {
+//            m_first_start_pt = m_last_start_pt = std::chrono::steady_clock::now();
+        }
+        m_pending++;
         m_wait.notify_one();
     }
-
 }
 
 /*! \brief stops the timer, if active
@@ -133,15 +103,14 @@ void CuTimer::stop()
 {
     if(m_exited)
         return; /* already quit */
-    pgreen("CuTimer.stop!!!! for this %p before lock", this);
+
+    m_quit = true;
+    m_listeners.clear();
     {
-     //   auto locked = std::unique_lock<std::mutex>(m_mutex);
-        pgreen("after lock");
-        m_quit = true;
-        m_listener = NULL;
+        std::unique_lock<std::mutex> lock(m_mutex);
+        pgreen("CuTimer.stop calling m_wait.notify_one...");
+        m_wait.notify_one();
     }
-    pgreen("CuTimer.stop calling m_wait.notify_one...");
-    m_wait.notify_one();
     pgreen("CuTimer.stop called m_wait.notify_one...");
     if(m_thread->joinable())
     {
@@ -150,9 +119,44 @@ void CuTimer::stop()
     }
     else
         pbblue("CuTimer.stop: NOT JOINABLE!!!");
+    printf("CuTimer.stop joined this %p\n", this);
     m_exited = true;
     delete m_thread;
-    m_thread = NULL;
+    m_thread = nullptr;
+}
+
+/*!
+ * \brief CuTimer::addListener adds a listener to the timer
+ * \param l the new listener
+ *
+ * This method can be accessed from several different threads
+ */
+void CuTimer::addListener(CuTimerListener *l) {
+    std::unique_lock<std::mutex> lock(m_mutex);
+    m_listeners.push_back(l);
+}
+
+/*!
+ * \brief CuTimer::removeListener removes a listener from the timer
+ * \param l the listener to remove
+ *
+ * This method can be accessed from several different threads
+ */
+void CuTimer::removeListener(CuTimerListener *l) {
+    std::unique_lock<std::mutex> lock(m_mutex);
+    m_listeners.remove(l);
+}
+
+/*!
+ * \brief CuTimer::listeners returns the list of registered listeners
+ *
+ * @return the list of registered listeners
+ *
+ * This method can be accessed from several different threads
+ */
+std::list<CuTimerListener *> CuTimer::listeners() {
+    std::unique_lock<std::mutex> lock(m_mutex);
+    return m_listeners;
 }
 
 /*! \brief the timer loop
@@ -164,33 +168,39 @@ void CuTimer::stop()
  */
 void CuTimer::run()
 {
+    int cycle_cnt = 0;
     std::unique_lock<std::mutex> lock(m_mutex);
     unsigned long timeout = m_timeout;
-    while (!m_quit)
-    {
+    while (!m_quit) {
         timeout = m_timeout;
+        std::cv_status status;
         std::chrono::milliseconds ms{timeout};
-//        printf("CuTimer::run: waiting for millis %ld\e[0m\n", timeout);
-        std::cv_status status = m_wait.wait_for(lock, ms);
-
-
-        //        cuprintf("CuTimer.run pause is %d status is %d timeout %d\n", m_pause, (int) status, m_timeout);
-        //        if(status == std::cv_status::no_timeout)
-        m_pause ?  timeout = ULONG_MAX : timeout = m_timeout;
-
-        //            pbblue("CuTimer:run: this: %p triggering timeout in pthread 0x%lx (CuTimer's) m_listener %p m_exit %d CURRENT TIMEOUT is %lu m_pause %d", this,
-        //                   pthread_self(), m_listener, m_quit, timeout, m_pause);
-        if(status == std::cv_status::timeout && m_listener && !m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
-        {
-//            printf("\e[1;32m CuTimer::run. cv_status is timeout, !m_quit and !m_pause: calling onTimeout!\e[0m\n");
-            m_listener->onTimeout(this);
+//        printf("CuTimer.run: waiting for condition %p\n", this);
+        status = m_wait.wait_for(lock, ms);
+        if(m_skip && !m_quit) {
+//            printf("\e[1;31mCuTimer.run: cycle %d: skipping this time... pending %d\e[0m\n", cycle_cnt, static_cast<int>(m_pending));
+            m_skip = false;
         }
-
-        if(!m_quit) {
-//            printf("\e[1;31mCuTimer::run waiting for lock now....\n");
-            m_wait.wait(lock);
-//            printf("\e[1;32m    done waited!\e[0m\n");
-        }
+        else {
+//            printf("\n------------------\e[1;32mCYCLE %d------------------\n", ++cycle_cnt);
+            m_pause ?  timeout = ULONG_MAX : timeout = m_timeout;
+            if(status == std::cv_status::timeout && !m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
+            {
+                std::list<CuTimerListener *>::const_iterator it;
+                for(it = m_listeners.begin(); it != m_listeners.end(); ++it) {
+                    (*it)->onTimeout(this);
+                }
+//                auto t1 = std::chrono::steady_clock::now();
+//                long int delta_first_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_first_start_pt).count();
+//                long int delta_last_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_last_start_pt).count();
+//                printf("\e[0;32mCuTimer.run: notified timeout after %ld ms instead of %ldus\e[0m\t\t\t(\e[1;31mdelay %ldus\e[0m)\n\n",
+//                       delta_first_ms, delta_last_ms, -delta_last_ms+delta_first_ms);
+            }
+            m_pending = 0;
+            if(!m_quit) { // wait for next start()
+                m_wait.wait(lock);
+            }
+        } // !m_skip
     }
 }
 

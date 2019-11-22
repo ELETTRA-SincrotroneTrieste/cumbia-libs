@@ -6,6 +6,7 @@
 #include <cutcontrolsreader.h>
 #include <cutcontrolswriter.h>
 #include <cumacros.h>
+#include <cutreader.h> // PolledRefresh / EventRefresh
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
 #include <qulabel.h>
@@ -164,16 +165,30 @@ void QumbiaClient::configure(const CuData &d)
 void QumbiaClient::changeRefresh()
 {
     int period = ui->sbPeriod->value();
-    int refmode = ui->cbRefMode->currentIndex();
+    int refmode;
+    switch(ui->cbRefMode->currentIndex()) {
+    case 0:
+        refmode = CuTReader::PolledRefresh;
+        break;
+    case 1:
+    default:
+        refmode = CuTReader::ChangeEventRefresh;
+        break;
+    }
+
     CuData options;
     options["period"] = period;
     options["refresh_mode"] = refmode;
+
     QuTrendPlot *tp = findChild<QuTrendPlot *>();
-    if(tp)
+    if(tp) {
+        printf("sending data %s to plot \n", options.toString().c_str());
         tp->getContext()->sendData(options);
+    }
     QuSpectrumPlot *sp = findChild<QuSpectrumPlot *>();
-    if(sp)
+    if(sp) {
         sp->getContext()->sendData(options);
+    }
 }
 
 void QumbiaClient::sourcesChanged()
@@ -184,6 +199,12 @@ void QumbiaClient::sourcesChanged()
         lo = new QGridLayout(ui->widget);
     else
         lo = qobject_cast<QGridLayout *>(ui->widget->layout());
+
+    int period = ui->sbPeriod->value();
+    int refmode = ui->cbRefMode->currentIndex();
+    CuData options;
+    options["period"] = period;
+    options["refresh_mode"] = refmode;
 
     QStringList srcs = ui->leSrcs->text().split(QRegExp("\\s+"), QString::SkipEmptyParts);
     const int srcCnt = srcs.size();
@@ -260,6 +281,7 @@ void QumbiaClient::sourcesChanged()
     for(int i = 0; i < newSrcs.size(); i++)
     {
         QuLabel *l = new QuLabel(this, cu_pool, m_ctrl_factory_pool);
+        l->getContext()->setOptions(options);
         l->setMaximumLength(30); /* truncate if text is too long */
         connect(l, SIGNAL(newData(const CuData&)), this, SLOT(configure(const CuData&)));
         l->setSource(newSrcs.at(i));

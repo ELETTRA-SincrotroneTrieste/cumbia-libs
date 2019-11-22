@@ -95,6 +95,8 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a, const CuDa
  * If the method is called when CuPoller is not inside CuPoller::onResult, the action is unregistered
  * immediately.
  *
+ * \li after the last action is removed, this object is removed from the CuActivityManager
+ * thread listeners before next step:
  * \li a CuRemovePollActionEvent is posted to the CuPollingActivity managing the CuTangoActionI device
  * with the CuPoller::period interval
  * \li a dummy CuData with the "exit" flag is delivered through CuTangoActionI::onResult.
@@ -115,6 +117,10 @@ bool CuPoller::actionRegistered(const CuTangoActionI *a) const
     return d->actions_map.find(a) != d->actions_map.end();
 }
 
+/*!
+ * \brief counts the number of actions
+ * \return the number of actions
+ */
 size_t CuPoller::count() const
 {
     return d->actions_map.size();
@@ -159,10 +165,22 @@ CuData CuPoller::getToken() const
     return d->token;
 }
 
+// m_do_unregisterAction
+// - find action a
+// - remove a from the actions_map
+// this object will be deleted by CuPollingService upon returning from
+// this method (actually from the caller CuPoller.unregisterAction) if
+// there are no actions left. So:
+//   - if actions_map empty: call CuActivityManager.removeConnection
+//     to immediately remove this from the thread listeners
+//   - post a CuRemovePollActionEvent to the activity matching this action
+//     to remove the action
+//     - CuPollingActivity::m_unregisterAction will call CuThread.unregisterActivity
+//       if no actions are left
+//
 void CuPoller::m_do_unregisterAction(CuTangoActionI *a)
 {
     // remove in this thread
-
     if(d->actions_map.find(a) != d->actions_map.end()) {
         pgreen(" - CuPoller.unregisterAction: removed %s - %p from poller with period %d actions count %d\n",
                 a->getSource().getName().c_str(), a, d->period, count());
@@ -175,16 +193,15 @@ void CuPoller::m_do_unregisterAction(CuTangoActionI *a)
 
         CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
                                                                  get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
+
+        if(d->actions_map.size() == 0)
+            am->removeConnection(this);
+
         CuActivity *activity = am->findActiveMatching(at); // polling activities compare device period and "activity"
         // post remove to activity's thread
         if(activity) {
+            // CuPollingActivity will unregister itself if this is the last action
             d->cumbia_t->postEvent(activity, new CuRemovePollActionEvent(a->getSource()));
-        }
-
-        if(d->actions_map.size() == 0) {
-            am->removeConnection(this);
-            pgreen("CuPoller.m_do_unregisterAction: no more actions: calling \e[1;32mCumbiaTango.unregisterActivity for activity %p\e[0m", activity);
-            d->cumbia_t->unregisterActivity(activity);
         }
     }
 }

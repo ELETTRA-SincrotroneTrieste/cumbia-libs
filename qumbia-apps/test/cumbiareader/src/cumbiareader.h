@@ -35,7 +35,7 @@ private:
     QuLogImpl m_log_impl;
     CuControlsFactoryPool m_ctrl_factory_pool;
 
-    int m_truncate;
+    int m_truncate, m_max_timers;
 };
 
 #endif // Cumbiareader_H

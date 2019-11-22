@@ -11,11 +11,12 @@
 #include "cuactivityevent.h"
 #include "cuthreadlistener.h"
 #include "cuisolatedactivity.h"
+#include "cutimerservice.h"
 
 #include <set>
 #include <thread>
 #include <queue>
-#include <mutex>
+#include <shared_mutex>
 #include <atomic>
 #include <algorithm>
 #include <condition_variable>
@@ -28,27 +29,17 @@
 class CuThreadPrivate
 {
 public:
-
     std::queue <ThreadEvent *> eventQueue;
-
     CuData token;
-
     const CuServiceProvider *serviceProvider;
-
     CuEventLoopService *cuEventLoop;
-
-    std::mutex mutex;
-
+    std::shared_mutex shared_mutex;
+    std::mutex condition_var_mut;
     std::condition_variable conditionvar;
-
     std::thread *thread;
-
-    std::map< CuActivity *, CuTimer *> timerActivityMap;
-
+    std::map< CuActivity *, const CuTimer *> timerActivityMap;
     std::set<CuActivity *> activity_set;
-
     CuThreadsEventBridge_I *eventBridge;
-
 };
 
 /*! \brief builds a new CuThread
@@ -90,7 +81,7 @@ CuThread::~CuThread()
 {
     if(d->thread)
     {
-        perr("CuThread: thread destroyed while still running!\e[0m\n");
+        perr("CuThread::~CuThread(): thread destroyed while still running!\e[0m\n");
         delete d->thread;
     }
     delete d->eventBridge;
@@ -111,7 +102,7 @@ void CuThread::m_exit(bool auto_destroy)
     if(d->thread)
     {
         ThreadEvent *exitEvent = new ExitThreadEvent(auto_destroy);
-        std::unique_lock<std::mutex> lk(d->mutex);
+        std::unique_lock lk(d->shared_mutex);
         d->eventQueue.push(exitEvent);
         d->conditionvar.notify_one();
     }
@@ -121,6 +112,18 @@ void CuThread::m_unregisterFromService()
 {
     CuThreadService *ts = static_cast<CuThreadService *> (d->serviceProvider->get(CuServices::Thread));
     ts->removeThread(this);
+}
+
+/*! @private
+ *
+ * \brief inserts the pair (a,t) into d->timerActivityMap
+ *
+ * Must be called from the CuThread's thread (no lock guards)
+ */
+void CuThread::m_tmr_registered(CuActivity *a, CuTimer *t)
+{
+    std::pair<CuActivity *, const CuTimer *> p(a, t);
+    d->timerActivityMap.insert(p);
 }
 
 /** \brief Register a new activity on this thread.
@@ -138,7 +141,7 @@ void CuThread::registerActivity(CuActivity *l)
     /* need to protect event queue because this method is called from the main thread while
      * the queue is dequeued in the secondary thread
      */
-    std::unique_lock<std::mutex> lk(d->mutex);
+    std::unique_lock lk(d->shared_mutex);
     d->eventQueue.push(registerEvent);
     d->conditionvar.notify_one();
 }
@@ -161,12 +164,11 @@ void CuThread::registerActivity(CuActivity *l)
  */
 void CuThread::unregisterActivity(CuActivity *l)
 {
-    pbblue("CuThread.unregisterActivity: \e[1;31munregister activity %p\e[0m (main or activity's) 0x%lx", l, pthread_self());
     ThreadEvent *unregisterEvent = new UnRegisterActivityEvent(l); // type ThreadEvent::UnregisterActivity defined in cuthreadevents.h
     /* need to protect event queue because this method is called from the main thread while
      * the queue is dequeued in the secondary thread
      */
-    std::unique_lock<std::mutex> lk(d->mutex);
+    std::unique_lock lk(d->shared_mutex);
     d->eventQueue.push(unregisterEvent);
     d->conditionvar.notify_one();
 }
@@ -206,26 +208,21 @@ void CuThread::onEventPosted(CuEventI *event)
                 tl->onProgress(re->getStep(), re->getTotal(), re->getData());
             else if(re->isList()) {
                 const std::vector<CuData> &vd_ref = *re->getDataList();
-//                printf("\e[1;33mCuThread %p onEventPosted (cudata list version): post to CuThreadListener %p\e[0m\n", this,  tl);
                 tl->onResult(vd_ref);
             }
             else {
-//                printf("\e[1;33mCuThread %p onEventPosted (single data version): post to CuThreadListener %p data %s\e[0m\n", this,  tl, re->getData().toString().c_str());
+                //                printf("\e[1;33mCuThread %p onEventPosted (single data version): post to CuThreadListener %p data %s\e[0m\n", this,  tl, re->getData().toString().c_str());
                 tl->onResult(re->getData());
             }
         }
     }
 
-    else if(ty == CuEventI::CuActivityExitEvent)
-    {
-        pbblue("CuThread.onEventPosted: thread (should be main!) 0x%lx event type %d calling mOnActivityExit\n", pthread_self(), event->getType());
+    else if(ty == CuEventI::CuActivityExitEvent) {
         mOnActivityExited(static_cast<CuActivityExitEvent *>(event)->getActivity());
     }
     else if(ty == CuEventI::ThreadAutoDestroy) {
-        cuprintf("\e[0;35mCuThread:onEventPosted: auto destroy! joining... ");
         wait();
         m_unregisterFromService();
-        cuprintf("\t [\e[1;32mjoined\e[0m]\n");
         delete this;
     }
 }
@@ -239,9 +236,7 @@ void CuThread::onEventPosted(CuEventI *event)
  *
  * CuResultEvent is used in conjunction with CuThreadsEventBridge_I::postEvent
  */
-void CuThread::publishProgress(const CuActivity* activity, int step, int total, const CuData &data)
-{
-    //    pbblue("CuThread.publishProgress: thread (should be CuThread's!) 0x%lx", pthread_self());
+void CuThread::publishProgress(const CuActivity* activity, int step, int total, const CuData &data) {
     d->eventBridge->postEvent(new CuResultEvent(activity, step, total, data));
 }
 
@@ -252,9 +247,7 @@ void CuThread::publishProgress(const CuActivity* activity, int step, int total, 
  *
  * CuResultEvent is used in conjunction with CuThreadsEventBridge_I::postEvent
  */
-void CuThread::publishResult(const CuActivity* a,  const CuData &da)
-{
-    //    pbblue("CuThread.publishResult: thread (should be CuThread's!) 0x%lx data \e[0m%s", pthread_self(), da.toString().c_str());
+void CuThread::publishResult(const CuActivity* a,  const CuData &da) {
     d->eventBridge->postEvent(new CuResultEvent(a, da));
 }
 
@@ -277,7 +270,6 @@ void CuThread::publishResult(const CuActivity *a, const std::vector<CuData> *dal
  */
 void CuThread::publishExitEvent(CuActivity *a)
 {
-    pbblue("CuThread.publishExitEvent activity %p", a);
     d->eventBridge->postEvent(new CuActivityExitEvent(a));
 }
 
@@ -315,16 +307,14 @@ bool CuThread::isEquivalent(const CuData &other_thread_token) const
  *
  * @see CuThread::CuThread
  */
-CuData CuThread::getToken() const
-{
+CuData CuThread::getToken() const {
     return d->token;
 }
 
 /*! @private
  * does nothing
  */
-void CuThread::cleanup()
-{
+void CuThread::cleanup() {
 
 }
 
@@ -343,66 +333,73 @@ int CuThread::type() const
  *
  * return a new instance of std::thread
  */
-void CuThread::start()
-{
+void CuThread::start() {
     d->thread = new std::thread(&CuThread::run, this);
 }
 
 /*! @private
  * Thread loop
  */
-void CuThread::run()
-{
+void CuThread::run() {
+    //    printf("+ CuThread.run 0x%lx TID (%ld) TOKEN %s \e[1;32mentering\e[0m\n", pthread_self(), pthread_self(), d->token.toString().c_str());
     bool destroy = false;
     ThreadEvent *te = NULL;
+    CuTimerService *timer_s = static_cast<CuTimerService *>(d->serviceProvider->get(CuServices::Timer));
     while(1)
     {
-
         te = NULL;
         {
-            std::unique_lock<std::mutex> lk(d->mutex);
-            std::queue<ThreadEvent *> qcopy = d->eventQueue;
-            for(size_t i = 0; i < d->eventQueue.size(); i++)
-            {
-                qcopy.pop();
-            }
+            // acquire lock while dequeueing
+            std::unique_lock<std::mutex> condvar_lock(d->condition_var_mut);
             while(d->eventQueue.empty()) {
-                d->conditionvar.wait(lk);
+                d->conditionvar.wait(condvar_lock);
             }
             if(d->eventQueue.empty())
-            {
                 continue;
-            }
+
             te = d->eventQueue.front();
             d->eventQueue.pop();
         }
         if(te->getType() == ThreadEvent::RegisterActivity)
         {
-            pbgreen("CuThread.run pthread 0x%lx: registerActivity event", pthread_self());
             RegisterActivityEvent *rae = static_cast<RegisterActivityEvent *>(te);
             mActivityInit(rae->activity);
         }
         else if(te->getType() == ThreadEvent::UnregisterActivity)
         {
-            pbgreen("CuThread.run pthread 0x%lx: unregister activity event", pthread_self());
             UnRegisterActivityEvent *rae = static_cast<UnRegisterActivityEvent *>(te);
             mExitActivity(rae->activity, false);
         }
         else if(te->getType() == ThreadEvent::TimerExpired)
         {
+            // if at least one activity needs the timer, the
+            // service will restart it after execution.
+            // tmr is single-shot and needs restart to prevent
+            // queueing multiple timeout events caused by slow activities
+            int timeo_restart = -1;
             CuTimerEvent *tev = static_cast<CuTimerEvent *>(te);
             CuTimer *timer = tev->getTimer();
-            if(mFindActivity(timer) != NULL)
-            {
-                int repeat_ms = tev->activity->repeat();
-                /* repeat_ms > 0: schedule timer; repeat_ms = 0 pause; repeat_ms < 0 exit */
-                if(repeat_ms > 0)
-                {
-                    tev->activity->doExecute();
-                    timer->start(tev->activity->repeat());
+            std::list<CuActivity *> a_for_t = m_activitiesForTimer(timer); // no locks
+            for(std::list<CuActivity *>:: const_iterator it = a_for_t.begin(); it != a_for_t.end(); ++it) {
+                CuActivity *a = (*it);
+                if(a->repeat() > 0) {
+                    a->doExecute(); // first
+                    if(a->repeat() != timer->timeout()) { // in case of timeut change
+                        printf("CuThread.run: activity %p [%s]: requires a \e[1;32mtimeout change\e[0m %d-->%d\n",
+                               a, a->getToken().toString().c_str(), timer->timeout(), a->repeat());
+                        // this will start the timer: call after doExecute
+                        m_tmr_registered(a, timer_s->changeTimeout(this, a->repeat()));
+                    }
+                    else { // normally
+                        timeo_restart = timer->timeout();
+                    }
                 }
-                else if(repeat_ms < 0 && tev->activity->getFlags() & CuActivity::CuAUnregisterAfterExec)
-                    unregisterActivity(tev->activity);
+                else if(a->repeat() < 0 && a->getFlags() & CuActivity::CuAUnregisterAfterExec) {
+                    unregisterActivity(a);
+                }
+            } // for activity iter
+            if(timeo_restart > 0) {
+                timer_s->restart(timer, timeo_restart);
             }
         }
         else if(te->getType() == ThreadEvent::PostEventToActivity)
@@ -410,13 +407,9 @@ void CuThread::run()
             CuPostEventToActivity *tce = static_cast<CuPostEventToActivity *>(te);
             CuActivity *a = tce->getActivity();
             CuActivityEvent* ae = tce->getEvent();
-            CuTimer *t = mFindTimer(a);
-            if(t && ae->getType() == CuActivityEvent::Pause)
-                t->pause();
-            else if(t && ae->getType() == CuActivityEvent::Resume)
-                t->resume();
-            else if(t && ae->getType() == CuActivityEvent::TimeoutChange)
-                t->setTimeout(static_cast<CuTimeoutChangeEvent *>(ae)->getTimeout());
+            CuTimerService *timer_service = static_cast<CuTimerService *>(d->serviceProvider->get(CuServices::Timer));
+            if(ae->getType() == CuActivityEvent::TimeoutChange)
+                timer_service->changeTimeout(this, static_cast<CuTimeoutChangeEvent *>(ae)->getTimeout());
             // prevent event delivery to an already deleted action
             if(d->activity_set.find(a) != d->activity_set.end())
                 a->event(ae);
@@ -438,10 +431,9 @@ void CuThread::run()
         d->eventQueue.pop();
         delete qte;
     }
-    std::unique_lock<std::mutex> lk(d->mutex);
+    std::unique_lock lk(d->shared_mutex);
     CuActivityManager *am = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     std::vector<CuActivity *>  myActivities = am->activitiesForThread(this);
-    pbred2("CuThread.run loop exit: auto destroy %d activities left %ld\n", destroy, myActivities.size());
     std::vector<CuActivity *>::iterator i;
     for(i = myActivities.begin(); i != myActivities.end(); ++i)
         mExitActivity(*i, true);
@@ -451,6 +443,7 @@ void CuThread::run()
     if(destroy) {
         d->eventBridge->postEvent(new CuThreadAutoDestroyEvent());
     }
+    //    printf("- CuThread.run 0x%lx  (%ld) TOKEN %s \e[1;32mexiting\e[0m\n", pthread_self(),pthread_self(), d->token.toString().c_str());
 }
 
 /*! \brief returns true if the thread is running
@@ -469,19 +462,17 @@ void CuThread::mActivityInit(CuActivity *a)
 {
     int repeat_timeout;
     d->activity_set.insert(a);
-
+    a->setThreadToken(d->token);
     a->doInit();
     a->doExecute();
 
+    CuTimer *timer = nullptr;
     repeat_timeout = a->repeat();
-    CuTimer *timer = NULL;
     if(repeat_timeout > 0)
     {
-        timer = new CuTimer(this);
-        timer->setSingleShot(true);
-        timer->start(repeat_timeout);
-        std::pair<CuActivity *, CuTimer *> p(a, timer);
-        d->timerActivityMap.insert(p);
+        CuTimerService *t_service = static_cast<CuTimerService *>(d->serviceProvider->get(CuServices::Timer));
+        timer = t_service->registerListener(this, repeat_timeout); // checks for duplicates
+        m_tmr_registered(a, timer);
     }
     else if(a->getFlags() & CuActivity::CuAUnregisterAfterExec)
         unregisterActivity(a); /* will enqueue and Unregister event */
@@ -540,40 +531,40 @@ void CuThread::mExitActivity(CuActivity *a, bool onThreadQuit)
 /*! @private */
 void CuThread::mRemoveActivityTimer(CuActivity *a)
 {
-    std::map<CuActivity *, CuTimer *>::iterator it = d->timerActivityMap.begin();
-    pbgreen("CuThread.mRemoveActivityTimer pthread 0x%lx Searching timer in map sized %lu for activity %p (type %d) \e[0m\e[1;36mAND UNREGISTERING/DELETING ACTIVITY\e[0m", pthread_self(),
-            d->timerActivityMap.size(), a, a->getType());
+    int timeout = -1;
+
+    std::map<CuActivity *, const CuTimer *>::iterator it = d->timerActivityMap.begin();
     while(it != d->timerActivityMap.end()) {
         if(it->first == a)  {
-            if(it->second != NULL) {
-                it->second->stop();
-                delete it->second;
+            if(it->second != nullptr) {
+                timeout = it->second->timeout();
             }
             it = d->timerActivityMap.erase(it);
         }
         else
             ++it;
     }
+    // no more timers with that timeout needed for this thread?
+    bool can_unregister = timeout > 0;
+    for(it = d->timerActivityMap.begin(); can_unregister && it != d->timerActivityMap.end(); ++it) {
+        if(it->second->timeout() == timeout) {
+            can_unregister = false;
+        }
+    }
+    if(can_unregister) {
+        CuTimerService *t_service = static_cast<CuTimerService *>(d->serviceProvider->get(CuServices::Timer));
+        t_service->unregisterListener(this, timeout);
+    }
 }
 
 /*! @private */
-CuTimer *CuThread::mFindTimer(CuActivity *a) const
+const CuTimer *CuThread::mFindTimer(CuActivity *a) const
 {
-    std::map<CuActivity *, CuTimer *>::iterator it;
+    std::map<CuActivity *, const CuTimer *>::iterator it;
     for(it = d->timerActivityMap.begin(); it != d->timerActivityMap.end(); ++it)
         if(it->first == a)
             return it->second;
-    return NULL;
-}
-
-/*! @private */
-CuActivity *CuThread::mFindActivity(CuTimer *t) const
-{
-    std::map<CuActivity *, CuTimer *>::iterator it;
-    for(it = d->timerActivityMap.begin(); it != d->timerActivityMap.end(); ++it)
-        if(it->second == t)
-            return it->first;
-    return NULL;
+    return nullptr;
 }
 
 /*! \brief sends the event e to the activity a *from the main thread
@@ -603,14 +594,11 @@ CuActivity *CuThread::mFindActivity(CuTimer *t) const
  */
 void CuThread::postEvent(CuActivity *a, CuActivityEvent *e)
 {
-    //    pbblue("CuThread.postEvent: posting event to activity %p type %d. This thread 0x%lx\e[0m (should be Main's!)", a,
-    //           e->getType(), pthread_self());
-
     ThreadEvent *event = new CuPostEventToActivity(a, e);
     /* need to protect event queue because this method is called from the main thread while
-         * the queue is dequeued in the secondary thread
-         */
-    std::unique_lock<std::mutex> lk(d->mutex);
+     * the queue is dequeued in the secondary thread
+     */
+    std::unique_lock lk(d->shared_mutex);
     d->eventQueue.push(event);
     d->conditionvar.notify_one();
 }
@@ -623,12 +611,11 @@ void CuThread::postEvent(CuActivity *a, CuActivityEvent *e)
  */
 int CuThread::getActivityTimerPeriod(CuActivity *a) const
 {
-    pbblue("CuThread.getActivityPeriod: getting period of activity %p. This thread 0x%lx\e[0m (should be Main's!)", a, pthread_self());
     /* need to protect event queue because this method is called from the main thread while
      * the queue is dequeued in the secondary thread
      */
-    std::unique_lock<std::mutex> lk(d->mutex);
-    std::map<CuActivity *, CuTimer *>::const_iterator it;
+    std::unique_lock lk(d->shared_mutex);
+    std::map<CuActivity *, const CuTimer *>::const_iterator it;
     for(it = d->timerActivityMap.begin(); it != d->timerActivityMap.end(); ++it)
         if(it->first == a)
             return it->second->timeout();
@@ -638,29 +625,36 @@ int CuThread::getActivityTimerPeriod(CuActivity *a) const
 /*! @private */
 void CuThread::onTimeout(CuTimer *sender)
 {
-    //    pbblue("CuThread.onTimeout: thread (should be Timer's!) 0x%lx", pthread_self());
-    std::map<CuActivity *, CuTimer *>::iterator it;
-    for(it = d->timerActivityMap.begin(); it != d->timerActivityMap.end(); ++it)
-    {
-        if(it->second == sender)
-        {
-            CuTimerEvent *te = new CuTimerEvent(it->first, sender);
-            std::unique_lock<std::mutex> lk(d->mutex);
-            d->eventQueue.push(te);
-            d->conditionvar.notify_one();
-        }
-    }
+    // unique lock to push on the event queue
+    std::unique_lock ulock(d->shared_mutex);
+    CuTimerEvent *te = new CuTimerEvent(sender);
+    d->eventQueue.push(te);
+    d->conditionvar.notify_one();
 }
 
 /*! @private */
 void CuThread::wait()
 {
-    pbviolet("CuThread::wait: d->thread %p. Joining!", d->thread);
     if(d->thread)
     {
         d->thread->join();
-        pbviolet("CuThread::wait: THREAD  %p JOINED", d->thread);
         delete d->thread;
         d->thread = NULL;
     }
+}
+
+/*! @private
+ * \brief returns the list of activities associated to the given timer (not lock guarded)
+ * \note
+ * not lock guarded
+ * \note
+ * iterates over d->timerActivityMap
+ */
+std::list<CuActivity *> CuThread::m_activitiesForTimer(const CuTimer *t) const {
+    std::list<CuActivity*> activities;
+    std::map<CuActivity *, const CuTimer *>::const_iterator it;
+    for(it = d->timerActivityMap.begin(); it != d->timerActivityMap.end(); ++it)
+        if(it->second == t)
+            activities.push_back(it->first);
+    return activities;
 }

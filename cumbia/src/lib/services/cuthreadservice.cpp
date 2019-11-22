@@ -62,7 +62,7 @@ CuThreadInterface *CuThreadService::getThread(const CuData& token,
             return (*it);
     }
     thread = thread_factory_impl.createThread(token, eventsBridgeFactory.createEventBridge(service_provider), service_provider);
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::unique_lock lock(m_shared_mutex);
     mThreads.push_back(thread);
     return thread;
 }
@@ -81,8 +81,9 @@ CuThreadService::~CuThreadService()
  *
  * @return the number of threads the service is currently aware of.
  */
-int CuThreadService::count() const
+int CuThreadService::count()
 {
+    std::shared_lock lock(m_shared_mutex);
     return mThreads.size();
 }
 
@@ -97,7 +98,7 @@ int CuThreadService::count() const
 void CuThreadService::removeThread(CuThreadInterface *thread)
 {
     // this method is accessed from the run method of different threads
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::unique_lock lock(m_shared_mutex);
     std::list<CuThreadInterface *>::iterator it = std::find(mThreads.begin(), mThreads.end(), thread);
     if(it != mThreads.end())
         mThreads.erase(it);
@@ -110,8 +111,9 @@ void CuThreadService::removeThread(CuThreadInterface *thread)
  *
  * Called by Cumbia::finish
  */
-std::list<CuThreadInterface *> CuThreadService::getThreads() const
+std::list<CuThreadInterface *> CuThreadService::getThreads()
 {
+    std::shared_lock lock(m_shared_mutex);
     return mThreads;
 }
 

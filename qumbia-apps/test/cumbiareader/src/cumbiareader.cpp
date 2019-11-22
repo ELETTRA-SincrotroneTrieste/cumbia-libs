@@ -14,6 +14,7 @@
 #include <cuserviceprovider.h>
 #include <qthreadseventbridgefactory.h>
 #include <cumacros.h>
+#include <cutimerservice.h>
 #include <reader.h>
 #include <QCoreApplication>
 #include <QDateTime>
@@ -44,6 +45,7 @@ Cumbiareader::Cumbiareader(CumbiaPool *cumbia_pool, QWidget *parent) :
     cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
 
     int interval = 1000;
+    m_max_timers = 25;
     m_truncate = -1;
 
     bool ok;
@@ -62,6 +64,23 @@ Cumbiareader::Cumbiareader(CumbiaPool *cumbia_pool, QWidget *parent) :
                 m_truncate = t.toInt();
             else
                 m_truncate = 12;
+        }
+        else if(a.startsWith("--max-timers=")) {
+            QString t(a);
+            t.remove("--max-timers=");
+            if(t.toInt(&ok) && ok) {
+                m_max_timers = t.toInt();
+                CuTimerService *ts = static_cast<CuTimerService *>(cuta->getServiceProvider()->get(CuServices::Timer));
+                ts->setTimerMaxCount(m_max_timers);
+                printf("setted max timers to %d\n", m_max_timers);
+            }
+        }
+        else if(a.startsWith("--help")) {
+            printf("Usage: %s [--truncate] (truncate to 12 values) "
+                   " [--truncate=n] (truncate to n values) "
+                   " [--max-timers=m] (limit timers count to m) "
+                   " x [ms] (polling period in milliseconds\n\n", qstoc(qApp->arguments().first()));
+            exit(EXIT_SUCCESS);
         }
         else
             srcs.append(a);

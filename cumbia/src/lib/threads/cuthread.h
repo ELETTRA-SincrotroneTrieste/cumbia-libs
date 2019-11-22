@@ -4,6 +4,7 @@
 #include <cuthreadinterface.h>
 #include <thread>
 #include <mutex>
+#include <list>
 #include <condition_variable>
 #include <cuactivity.h>
 #include <cutimerlistener.h>
@@ -89,6 +90,7 @@ public:
     void postEvent(CuActivity *a, CuActivityEvent *e);
     int getActivityTimerPeriod(CuActivity *a) const;
 
+
 protected:
     virtual void run();
 
@@ -100,8 +102,9 @@ private:
     void mRemoveActivityTimer(CuActivity *a);
     void m_exit(bool auto_destroy);
     void m_unregisterFromService();
-    CuTimer *mFindTimer(CuActivity *a) const;
-    CuActivity *mFindActivity(CuTimer *t) const;
+    void m_tmr_registered(CuActivity *a, CuTimer *t);
+    const CuTimer *mFindTimer(CuActivity *a) const;
+    std::list<CuActivity *> m_activitiesForTimer(const CuTimer *t) const;
 
     // CuThreadsEventBridgeListener interface
 public:

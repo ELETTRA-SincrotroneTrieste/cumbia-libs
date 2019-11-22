@@ -18,7 +18,7 @@ CuPollingService::CuPollingService()
 
 CuPollingService::~CuPollingService()
 {
-
+    delete d;
 }
 
 CuPoller *CuPollingService::getPoller(CumbiaTango *cu_t, int period)

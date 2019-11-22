@@ -1,3 +1,22 @@
+v1.1.0
+
+Requires c++17
+
+a. cumbia-tango
+a1. CuPoller, CuPollingActivity: CuPoller::m_do_unregisterAction: removed wrong call to
+    unregisterActivity that lead to a potential delay upon source disconnection as long as
+    the timer timeout. CuPollingActivity::m_unregisterAction gets a reference to its thread
+    and unregisters itself when no more in charge of any action.
+
+b. qumbia-apps/qumbia-client: use setOptions before setSource to connect to a source according
+   to the refresh mode and period options on the user interface.
+
+c. cumbia
+c1. CuTimerService allows to limit the number of timers used by the application.
+c2. A limit on the number of threads created by activities can be set, as well as a custom thread token allows
+    the user to group threads
+c3. C++17 shared_locks replace unique locks where the protected variables are only read
+
 v1.0.1
 a. cumbia-tango
    a1. properties are delivered at configuration time even though the attribute value cannot be read

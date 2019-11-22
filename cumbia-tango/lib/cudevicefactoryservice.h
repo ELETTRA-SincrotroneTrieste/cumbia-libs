@@ -4,7 +4,7 @@
 #include <cuservicei.h>
 #include <map>
 #include <string>
-#include <mutex>
+#include <shared_mutex>
 #include <cudata.h>
 
 class TDevice;
@@ -67,7 +67,7 @@ public:
 
 private:
     std::multimap<std::string, TDevData> m_devmap;
-    std::mutex m_mutex;
+    std::shared_mutex m_shared_mutex;
 };
 
 #endif // DEVICEFACTORYSERVICE_H

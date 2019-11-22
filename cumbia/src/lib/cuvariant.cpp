@@ -509,7 +509,6 @@ CuVariant &CuVariant::operator=(CuVariant &&other)
  */
 bool CuVariant::operator ==(const CuVariant &other) const
 {
-    cuprintf(">>> CuVariant::operator ==\e[1;33mWARNING WARNING WARNING --- CHECK ME --- \e[0m\n");
     if(! (other.getFormat() ==  this->getFormat() && other.getSize() ==  this->getSize() &&
           other.getType() ==  this->getType() && other.isNull() ==  this->isNull() &&
           other.isValid() ==  this->isValid() ) )

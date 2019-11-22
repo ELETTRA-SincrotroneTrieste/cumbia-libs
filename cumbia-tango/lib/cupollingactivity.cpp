@@ -2,13 +2,14 @@
 #include "cudevicefactoryservice.h"
 #include "tdevice.h"
 #include "tsource.h"
+#include "cuactivitymanager.h"
+#include "cuthreadinterface.h"
 #include "cutango-world.h"
 #include "cutangoactioni.h"
 #include <tango.h>
 #include <cumacros.h>
 #include <vector>
 #include <map>
-
 
 class CmdData {
 public:
@@ -138,6 +139,7 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
  */
 CuPollingActivity::~CuPollingActivity()
 {
+    pdelete("CuPollingActivity %p", this);
     delete d;
 }
 
@@ -448,13 +450,11 @@ void CuPollingActivity::execute()
     publishResult(results);
 }
 
-/*! \brief the implementation of the CuActivity::execute hook
+/*! \brief the implementation of the CuActivity::onExit hook
  *
  * This is called in the CuActivity's thread of execution.
  *
  * \li client reference counter is decreased on the TDevice (TDevice::removeRef)
- * \li CuDeviceFactoryService::removeDevice is called to remove the device from the device factory
- *     if the reference count is zero
  * \li the result of the operation is *published* to the main thread through publishResult
  *
  * See also CuActivity::onExit
@@ -466,19 +466,10 @@ void CuPollingActivity::onExit()
     assert(d->my_thread_id == pthread_self());
     dispose();
     CuData at = getToken(); /* activity token */
-    at["msg"] = "EXITED";
-    at["mode"] = "POLLED";
-    //    CuTangoWorld utils;
-    //    utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
-
     // thread safely remove ref and let d->device_srvc dispose TDev if no more referenced
     d->device_srvc->removeRef(at["device"].toString(), threadToken());
-    //   printf("\e[1;31mCuPollingActivity::onExit(): %p refcnt = %d device %s att %s\e[0m\n",
-    //            this, refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
-    at["exit"] = true;
     // do not publishResult because CuPoller (which is our listener) may be deleted by CuPollingService
     // from the main thread when its action list is empty (see CuPollingService::unregisterAction)
-    // publishResult(at);
 }
 
 void CuPollingActivity::m_registerAction(const TSource& ts, CuTangoActionI *a)
@@ -498,7 +489,6 @@ void CuPollingActivity::m_registerAction(const TSource& ts, CuTangoActionI *a)
 
 void CuPollingActivity::m_unregisterAction(const TSource &ts)
 {
-
     std::multimap< const std::string, const ActionData>::iterator it = d->actions_map.begin();
     while(it != d->actions_map.end()) {
         if(it->first == ts.getName() && it->second.tsrc == ts) {
@@ -509,6 +499,13 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts)
     }
     if(d->actions_map.size() == 0) {
         dispose(); // do not use this activity since now
+        // unregister this from the thread
+        CuThreadInterface *thread = getActivityManager()->getThread(this);
+        printf("CuPollingActivity.m_unregisterAction: asking thread %p to remove activity %p\n",
+               thread, this);
+        /* CuActivityManager.removeConnection is invoked by the thread in order to ensure all scheduled events are processed */
+        if(thread)
+            thread->unregisterActivity(this);
     }
 }
 
