@@ -1,15 +1,7 @@
 #include "cumbiareader.h"
 
 #include <cumbiapool.h>
-#include <cumbiaepics.h>
-#include <cumbiatango.h>
-#include <cuepcontrolsreader.h>
-#include <cuepcontrolswriter.h>
-#include <cutcontrolsreader.h>
-#include <cutcontrolswriter.h>
 #include <cucontextactionbridge.h>
-#include <cutango-world.h>
-#include <cuepics-world.h>
 #include <cuthreadfactoryimpl.h>
 #include <cuserviceprovider.h>
 #include <qthreadseventbridgefactory.h>
@@ -19,30 +11,64 @@
 #include <QCoreApplication>
 #include <QDateTime>
 
+#ifdef QUMBIA_EPICS_CONTROLS_VERSION
+#include <cumbiaepics.h>
+#include <cuepcontrolsreader.h>
+#include <cuepcontrolswriter.h>
+#include <cuepics-world.h>
+#endif
+#ifdef QUMBIA_TANGO_CONTROLS_VERSION
+#include <cumbiatango.h>
+#include <cumbiatango.h>
+#include <cutcontrolsreader.h>
+#include <cutcontrolswriter.h>
+#include <cutango-world.h>
+#endif
+#ifdef CUMBIA_RANDOM_VERSION
+#include <cumbiarandom.h>
+#include <curndreader.h>
+#include <curndactionfactories.h>
+#include <cumbiarndworld.h>
+#endif
+
 Cumbiareader::Cumbiareader(CumbiaPool *cumbia_pool, QWidget *parent) :
     QObject(parent)
 {
+    QStringList engines;
     cu_pool = cumbia_pool;
     // setup Cumbia pool and register cumbia implementations for tango and epics
+#ifdef QUMBIA_EPICS_CONTROLS_VERSION
     CumbiaEpics* cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    cu_pool->registerCumbiaImpl("tango", cuta);
     cu_pool->registerCumbiaImpl("epics", cuep);
-    m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
-    m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
     m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
     m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
-
-    CuTangoWorld tw;
-    m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
-    cu_pool->setSrcPatterns("tango", tw.srcPatterns());
+    cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
     CuEpicsWorld ew;
     m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
     cu_pool->setSrcPatterns("epics", ew.srcPatterns());
-
-    // log
+    engines << "epics";
+#endif
+#ifdef QUMBIA_TANGO_CONTROLS_VERSION
+    CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    cu_pool->registerCumbiaImpl("tango", cuta);
+    m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
+    m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
     cuta->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
-    cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+    CuTangoWorld tw;
+    m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
+    cu_pool->setSrcPatterns("tango", tw.srcPatterns());
+    engines << "tango";
+#endif
+#ifdef CUMBIA_RANDOM_VERSION
+    CumbiaRandom *cura = new CumbiaRandom(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    CumbiaRNDWorld rndw;
+    cu_pool->registerCumbiaImpl("random", cura);
+    m_ctrl_factory_pool.registerImpl("random", CuRNDReaderFactory());
+    m_ctrl_factory_pool.setSrcPatterns("random", rndw.srcPatterns());
+    cu_pool->setSrcPatterns("random", rndw.srcPatterns());
+    cura->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+    engines << "random";
+#endif
 
     int interval = 1000;
     m_max_timers = 25;
@@ -75,11 +101,12 @@ Cumbiareader::Cumbiareader(CumbiaPool *cumbia_pool, QWidget *parent) :
                 printf("setted max timers to %d\n", m_max_timers);
             }
         }
-        else if(a.startsWith("--help")) {
+        else if(qApp->arguments().size() == 1 || a.startsWith("--help")) {
             printf("Usage: %s [--truncate] (truncate to 12 values) "
                    " [--truncate=n] (truncate to n values) "
                    " [--max-timers=m] (limit timers count to m) "
-                   " x [ms] (polling period in milliseconds)\n\n", qstoc(qApp->arguments().first()));
+                   " x [ms] (polling period in milliseconds)\n", qstoc(qApp->arguments().first()));
+            printf("Available engines: %s\n\n", qstoc(engines.join(",")));
             exit(EXIT_SUCCESS);
         }
         else
@@ -107,7 +134,6 @@ Cumbiareader::Cumbiareader(CumbiaPool *cumbia_pool, QWidget *parent) :
                     SLOT(onNewLongVector(QString,double,QVector<long>)));
 
             connect(r, SIGNAL(newError(QString,double,QString)), this, SLOT(onError(QString,double,QString)));
-	    printf("setting period to %d\n", interval);
             r->setPeriod(interval);
             r->setSource(a);
         }

@@ -4,8 +4,8 @@
 #include <QObject>
 #include <qulogimpl.h>
 #include <cucontrolsfactorypool.h>
-#include <cumbiatango.h>
-#include <cumbiaepics.h>
+
+
 
 class CuData;
 class CumbiaPool;

@@ -1,10 +1,19 @@
 include (/usr/local/cumbia-libs/include/qumbia-epics-controls/qumbia-epics-controls.pri)
 include (/usr/local/cumbia-libs/include/qumbia-tango-controls/qumbia-tango-controls.pri)
 
+exists(/usr/local/cumbia-libs/include/cumbia-random/cumbia-random.pri) {
+    message("including support for cumbia-random module")
+    include(/usr/local/cumbia-libs/include/cumbia-random/cumbia-random.pri)
+}
+
 TEMPLATE = app
 
 QT +=  core gui
 
+
+SHAREDIR = $${INSTALL_ROOT}/share
+DOCDIR = $${SHAREDIR}/doc/cumbiareader
+DEFINES += DOC_PATH=\"\\\"$${DOCDIR}\\\"\"
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets x11extras
 
