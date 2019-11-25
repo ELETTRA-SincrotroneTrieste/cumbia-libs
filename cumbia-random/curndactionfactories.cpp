@@ -44,10 +44,7 @@ CuRNDActionReaderFactory::~CuRNDActionReaderFactory()
 CuRNDActionI *CuRNDActionReaderFactory::create(const std::string &s, CumbiaRandom *c_rnd) const
 {
     CuRNDActionReader* reader = new CuRNDActionReader(s, c_rnd);
-    if(options.containsKey("period") && options["period"].toInt() > 0)
-        reader->setPeriod(options["period"].toInt());
-    if(options.containsKey("refresh_mode"))
-        reader->setRefreshMode(static_cast<CuRNDActionReader::RefreshMode>(options["refresh_mode"].toInt()));
+    reader->setOptions(options);
     return reader;
 }
 

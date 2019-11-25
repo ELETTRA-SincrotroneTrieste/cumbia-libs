@@ -10,6 +10,7 @@
 class CuData;
 class CuRandomGenActivityPrivate;
 class CmdData;
+class CuRndFunctionGenA;
 
 class CuAddPollActionEvent : public CuActivityEvent
 {
@@ -88,6 +89,10 @@ public:
     // CuActivity interface
 public:
     bool matches(const CuData &token) const;
+    void setBounds(double min, double max);
+    void setSize(size_t size);
+    void setPeriod(int millis);
+    void setFunctionGenerator(CuRndFunctionGenA *fg);
 
 protected:
     void init();
@@ -96,7 +101,6 @@ protected:
 
 private:
     CuRandomGenActivityPrivate *d;
-
 public:
     void event(CuActivityEvent *e);
 

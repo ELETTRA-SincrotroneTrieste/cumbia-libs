@@ -20,4 +20,5 @@ void CuRNDActionI::onResult(const std::vector<CuData> &datalist)
 
 CuData CuRNDActionI::getToken() const
 {
+    return CuData();
 }

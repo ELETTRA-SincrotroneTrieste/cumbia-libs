@@ -16,7 +16,7 @@ lessThan(QT_MAJOR_VERSION, 5) {
 #
 
 isEmpty(INSTALL_ROOT) {
-    INSTALL_ROOT = /usr/local
+    INSTALL_ROOT = /usr/local/cumbia-libs
 }
 #
 #
@@ -68,8 +68,8 @@ android-g++ {
 
 DEFINES += CUMBIA_PRINTINFO
 
-VERSION_HEX = 0x000001
-VERSION = 0.0.1
+VERSION_HEX = 0x010100
+VERSION = 1.1.0
 
 DEFINES += CUMBIA_RANDOM_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
     CUMBIA_RANDOM_VERSION=$${VERSION_HEX}
@@ -112,6 +112,11 @@ unix:!android-g++ {
 
 
 }
+
+HEADERS += \
+    $$PWD/curndfunctiongeni.h
+
+SOURCES +=
 
 
 

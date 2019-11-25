@@ -10,6 +10,7 @@
 #include <cuthreadseventbridgefactory_i.h>
 #include <cuactivitymanager.h>
 #include <curandomgenactivity.h>
+#include "curndfunctiongenerators.h"
 
 #include "curndactionreader.h"
 #include <cumacros.h>
@@ -25,7 +26,7 @@ public:
     CumbiaRandom *cumbia_rnd;
     bool exit;
     CuRandomGenActivity *randomgen_a;
-    CuData property_d, value_d;
+    CuData options, value_d;
     int period;
     CuRNDActionReader::RefreshMode refresh_mode;
 };
@@ -38,6 +39,9 @@ CuRNDActionReader::CuRNDActionReader(const RNDSource& src, CumbiaRandom *ct) : C
     d->exit = false;  // set to true by stop
     d->period = 1000;
     d->refresh_mode = RandomGenerator;
+    d->options["min"] = 0;
+    d->options["max"] = 1000;
+    d->options["size"] = 1;
 }
 
 CuRNDActionReader::~CuRNDActionReader()
@@ -54,14 +58,16 @@ CuRNDActionReader::~CuRNDActionReader()
  *
  * The current implementation does nothing
  */
-void CuRNDActionReader::onProgress(int step, int total, const CuData &data)
-{
+void CuRNDActionReader::onProgress(int step, int total, const CuData &data) {
     (void) step;  (void) total;  (void) data;
 }
 
-void CuRNDActionReader::onResult(const std::vector<CuData> &datalist)
-{
+void CuRNDActionReader::onResult(const std::vector<CuData> &datalist) {
     (void) datalist;
+}
+
+void CuRNDActionReader::setOptions(const CuData &options) {
+    d->options = options;
 }
 
 /*
@@ -160,7 +166,6 @@ void CuRNDActionReader::sendData(const CuData &data)
         d->refresh_mode = static_cast<CuRNDActionReader::RefreshMode>(data["refresh_mode"].toInt());
     if(data.containsKey("period")) {
         int period2 = data["period"].toInt();
-
     }
 }
 
@@ -213,18 +218,15 @@ string CuRNDActionReader::refreshModeStr() const
     }
 }
 
-int CuRNDActionReader::period() const
-{
+int CuRNDActionReader::period() const {
     return d->period;
 }
 
-CuRNDActionReader::RefreshMode CuRNDActionReader::refreshMode() const
-{
+CuRNDActionReader::RefreshMode CuRNDActionReader::refreshMode() const {
     return d->refresh_mode;
 }
 
-void CuRNDActionReader::setPeriod(int millis)
-{
+void CuRNDActionReader::setPeriod(int millis) {
     qDebug() << __FUNCTION__ << "set period" << millis;
     d->period = millis;
 }
@@ -304,6 +306,21 @@ void CuRNDActionReader::m_startRandomGenActivity()
 
     CuData tt("device", d->tsrc.getDeviceName()); /* thread token */
     d->randomgen_a = new CuRandomGenActivity(at);
+    double min, max; int siz = 1, period = 1000;
+    d->options["min"].to<double>(min);
+    d->options["max"].to<double>(max);
+    d->options["size"].to<int>(siz);
+    d->options["period"].to<int>(period);
+    d->randomgen_a->setBounds(min, max);
+    d->randomgen_a->setSize(siz);
+    d->randomgen_a->setPeriod(period);
+    if(d->options.containsKey("jsfile"))
+        d->randomgen_a->setFunctionGenerator(
+                    new CuRndJsFunctionGen(QString::fromStdString(d->options["jsfile"].toString())));
+    else if(d->options.has("function", "sin"))
+        d->randomgen_a->setFunctionGenerator(new CuRndSinFunctionGen());
+    // else the default random generation will be selected by d->randomgen_a
+
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_rnd->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_rnd->getThreadFactoryImpl());
     d->cumbia_rnd->registerActivity(d->randomgen_a, this, tt, fi, bf);

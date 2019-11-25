@@ -8,6 +8,8 @@ include(cumbia-random.pri)
 
 QT       -= gui
 
+QT     += qml
+
 CONFIG += debug
 
 CONFIG += silent
@@ -32,6 +34,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         cumbiarandom.cpp \
+    curndfunctiongena.cpp \
+    curndfunctiongenerators.cpp \
     curndreader.cpp \
     cumbiarndworld.cpp \
     curndactionfactoryservice.cpp \
@@ -39,11 +43,14 @@ SOURCES += \
     curndactionreader.cpp \
     rnd_source.cpp \
     curandomgenactivity.cpp \
-    curndactionfactories.cpp
+    curndactionfactories.cpp \
+    rndsourcebuilder.cpp
 
 HEADERS += \
         cumbiarandom.h \
-        cumbia-random_global.h \ 
+    curndfunctiongena.h \
+    curndfunctiongenerators.h \
+    rndsourcebuilder.h \
     curndreader.h \
     cumbiarndworld.h \
     curndactionfactoryservice.h \

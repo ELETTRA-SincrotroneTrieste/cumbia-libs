@@ -3,6 +3,7 @@
 #include "curndreader.h"
 #include "curndactionreader.h"
 #include "curndactionfactories.h"
+#include "rndsourcebuilder.h"
 #include <cudatalistener.h>
 #include <cudata.h>
 #include <cumacros.h>
@@ -78,9 +79,12 @@ CuRNDReader::~CuRNDReader()
 void CuRNDReader::setSource(const QString &s)
 {
     d->source = s;
+    RndSourceBuilder rndsb;
+    rndsb.fromSource(s);
     CuRNDActionReaderFactory rndrf;
-    rndrf.setOptions(d->options);
-    printf("CuRNDReader.setSource: %s\n", qstoc(s));
+    rndrf.setOptions(rndsb.options);
+    printf("CuRNDReader.setSource: %s --> %s options %s\n", qstoc(s), qstoc(rndsb.name),
+           rndsb.options.toString().c_str());
     qDebug() << __FUNCTION__ << "source" << s;
     d->cumbia_rnd->addAction(s.toStdString(), d->tlistener, rndrf);
 }

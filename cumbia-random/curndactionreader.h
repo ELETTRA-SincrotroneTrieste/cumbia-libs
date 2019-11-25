@@ -2,7 +2,6 @@
 #define CURNDACTIONREADER_H
 
 #include <string>
-#include <cuthreadlistener.h>
 #include <curndactioni.h>
 #include <curndactionfactoryi.h>
 #include <rnd_source.h>
@@ -11,7 +10,7 @@ class CuRNDActionReaderPrivate;
 class CuActivityManager;
 class CuDataListener;
 class CumbiaRandom;
-
+class CuData;
 
 
 /** \brief Low level class to read tango attributes and commands with output arguments.
@@ -63,6 +62,8 @@ public:
     void onResult(const CuData &data);
 
     void onResult(const std::vector<CuData> &datalist);
+
+    void setOptions(const CuData& options);
 
     CuData getToken() const;
 

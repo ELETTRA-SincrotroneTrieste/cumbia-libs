@@ -2,11 +2,13 @@
 #include "rnd_source.h"
 #include "curndactioni.h"
 #include <cumacros.h>
+#include "curndfunctiongenerators.h"
 #include <vector>
 #include <map>
 #include <iostream>
 #include <QtAlgorithms>
 #include <QtDebug>
+#include <QDateTime>
 #include <QThread> // for current thread
 
 /* @private */
@@ -15,9 +17,12 @@ class CuRandomGenActivityPrivate
 public:
     int repeat, errCnt;
     int exec_cnt;
-    std::string message;
+    std::string message, label;
     pthread_t my_thread_id, other_thread_id;
     bool exiting;
+    double min, max;
+    size_t size;
+    CuRndFunctionGenA *f_generator;
 };
 
 /*! \brief the class constructor that sets up a Tango polling activity
@@ -44,6 +49,10 @@ CuRandomGenActivity::CuRandomGenActivity(const CuData &token)
     d->other_thread_id = pthread_self();
     d->exiting = false;
     d->exec_cnt = 0;
+    d->min = 0;
+    d->max = 1000;
+    d->label = "random";
+    d->f_generator = nullptr;
 
     int period = 5;
     if(token.containsKey("period"))
@@ -52,6 +61,13 @@ CuRandomGenActivity::CuRandomGenActivity(const CuData &token)
     setInterval(period);
     //  flag CuActivity::CuADeleteOnExit is true
     setFlag(CuActivity::CuAUnregisterAfterExec, true);
+
+    // src contains either "spectrum" or "vector": initialize size to a default value
+    if(token["src"].toString().find("spectrum") != std::string::npos ||
+            token["src"].toString().find("vector") != std::string::npos)
+        d->size = 1000;
+    else
+        d->size = 1;
 }
 
 /*! \brief the class destructor
@@ -61,6 +77,8 @@ CuRandomGenActivity::CuRandomGenActivity(const CuData &token)
 CuRandomGenActivity::~CuRandomGenActivity()
 {
     qDebug() << __FUNCTION__ << "deleted CuRandomGenActivity" << this;
+    if(d->f_generator)
+        delete d->f_generator;
     delete d;
 }
 
@@ -82,15 +100,35 @@ bool CuRandomGenActivity::matches(const CuData &token) const
     return token["src"] == mytok["src"];
 }
 
+void CuRandomGenActivity::setBounds(double min, double max) {
+    d->min = min;
+    d->max = max;
+}
+
+void CuRandomGenActivity::setSize(size_t size) {
+    d->size = size;
+}
+
+void CuRandomGenActivity::setPeriod(int millis) {
+    d->repeat = millis;
+}
+
+/*!
+ * \brief Replace the function generator with a new one.
+ * \param fg the new CuRndFunctionGenI function generator
+ * \note Takes ownership of the generator
+ * \note The former generator is deleted
+ */
+void CuRandomGenActivity::setFunctionGenerator(CuRndFunctionGenA *fg) {
+    if(d->f_generator)
+        delete d->f_generator;
+    d->f_generator = fg;
+}
+
 /*! \brief the implementation of the CuActivity::init hook
  *
  * This is called in the CuActivity's thread of execution.
  *
- * \par Notes
- * \li in cumbia-tango, threads are grouped by device
- * \li CuDeviceFactoryService::getDevice is called to obtain a reference to a Tango device (in the form
- *     of TDevice)
- * \li TDevice's user refrence count is incremented with TDevice::addRef
  *
  * See also CuActivity::init, execute and onExit
  *
@@ -101,7 +139,22 @@ void CuRandomGenActivity::init()
 {
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
-    printf("CuRandomGenActivity %p init complete", this);
+    // simulate a configuration (property type)
+    CuData c;
+    c["type"] = "property";
+    c["mode"] = "random";
+    c["min"] = d->min;
+    c["max"] = d->max;
+    c["period"] = d->repeat;
+    c["size"] = d->size;
+    d->size > 1 ? c["data_format_str"] = "spectrum" : c["data_format_str"] = "scalar";
+    c["label"] = getToken()["src"];
+    if(!d->f_generator)
+        d->f_generator = new CuRndRandomFunctionGen();
+    d->f_generator->configure(c);
+    CuData res = getToken();
+    d->f_generator->generate(res);
+    publishResult(res);
 }
 
 /*! \brief the implementation of the CuActivity::execute hook
@@ -118,35 +171,16 @@ void CuRandomGenActivity::execute()
 {
     assert(d->my_thread_id == pthread_self());
     d->exec_cnt++;
-    int qdebug_rate = 10000 / d->repeat;
     CuData res = getToken();
-    if(d->exec_cnt % qdebug_rate == 0)
-        qDebug() << "CuRandomGenActivity::execute" <<this<< d->exec_cnt << res["src"].toString().c_str() << "thread" << pthread_self() << QThread::currentThread();
-    time_t tp;
-    time(&tp);
-    qsrand(tp);
-    if(res["src"].toString().find("spectrum") != std::string::npos ||
-            res["src"].toString().find("vector") != std::string::npos) {
-        std::vector<double> vd;
+    d->f_generator->generate(res);
 
-        for(int i = 0; i < 1000; i++) {
-            time(&tp);
-            qsrand(tp);
-            vd.push_back(rand() % 100);
-        }
-        res["value"] = vd;
-    }
-    else
-        res["value"] = qrand() % 100;
-
+    res["mode"] = "random";
+    res["period"] = d->repeat;
     res.putTimestamp(); // timestamp_ms and timestamp_us
 
 //    printf("CuRandomGenActivity.execute: period %d *** data %s\n", getTimeout(), res.toString().c_str());
     publishResult(res);
-
 }
-
-
 
 /*! \brief the implementation of the CuActivity::onExit hook
  *
