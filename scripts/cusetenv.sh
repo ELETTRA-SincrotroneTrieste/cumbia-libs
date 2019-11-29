@@ -18,9 +18,11 @@ echo -e " \e[1;33minfo\e[0m: installation prefix is \"$install_prefix\""
 
 echo -e "\n \e[1;32m---\e[0m\n"
 
-echo -e " \e[1;32maction\e[0m prepending \e[0;32m$install_prefix/lib/pkgconfig\e[0m to \e[0;3mPKG_CONFIG_PATH"
+echo -e " \e[1;32maction\e[0m prepending \e[0;32m$install_prefix/lib/pkgconfig\e[0m to \e[0;3mPKG_CONFIG_PATH "
 PKG_CONFIG_PATH=$install_prefix/lib/pkgconfig:$PKG_CONFIG_PATH
 export PKG_CONFIG_PATH
+echo -e " \e[1;33minfo\e[0m: you can now build using this version of the library. Remember to call "
+echo -e " \e[1;33minfo\e[0m: \e[1;32mqmake INSTALL_ROOT=$install_prefix\e[0m before building \e[1;32mQt applications\e[0m\n"
 
 echo -e " \e[1;32maction\e[0m prepending \e[0;32m$install_prefix/lib\e[0m to \e[0;3mLD_LIBRARY_PATH \e[0m"
 export LD_LIBRARY_PATH=$install_prefix/lib:$LD_LIBRARY_PATH
