@@ -5,13 +5,12 @@
 #include <string>
 #include <curndactionreader.h>
 #include <curndactionfactoryi.h>
-#include "cumbia-random_global.h"
 
 class CuThreadFactoryImplI;
 class CuThreadsEventBridgeFactory_I;
 class CuDataListener;
 
-class CUMBIARANDOMSHARED_EXPORT CumbiaRandom : public Cumbia
+class CumbiaRandom : public Cumbia
 {
 
 public:

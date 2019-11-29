@@ -779,9 +779,8 @@ if [ $make_install -eq 1 ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_install
             fi
 
             # 1. try as normal user
-            if [ -w $(dirname "$install_prefix") ] ; then
-                mkdir -p $install_prefix
-            else # 2. no permissions? --> sudo
+            mkdir -p $install_prefix
+            if [ "$?" -ne 0 ]; then
                 if  [[ ! -z  $sudocmd  ]]; then
                         echo -e " The \e[1;32msudo\e[0m password is required to create the directory \"$install_prefix\""
                 fi
