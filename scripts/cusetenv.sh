@@ -53,10 +53,8 @@ fi
 
 if [ -d $install_prefix/share/bash-completion.d ]; then
     echo -e " \e[1;32maction\e[0m sourcing files under \e[0;36m$install_prefix/share/bash-completion.d\e[0m for bash completion"
-    for f in $install_prefix/share/bash-completion.d/
-        do
-           echo -e "- \e[1;32m$f\e[0m"
-        done
+    echo -e -n " \e[1;33minfo\e[0m: scripts: "
+    echo -e " \e[0;34m | `find $install_prefix/share/bash-completion.d -type f -printf "%f | "` \e[0m\n"
 
     source $install_prefix/share/bash-completion.d/*
 fi
