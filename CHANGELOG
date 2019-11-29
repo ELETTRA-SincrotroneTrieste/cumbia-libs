@@ -1,5 +1,24 @@
 v1.1.0
 
+LIBRARY NEWS
+
+* cumbia
+Version 1.1.0 allows the application developer to customize how threads are grouped together, as well
+as to define an upper limit for them.
+Additionally, timers in polled reads can be reused in order to limit timer threads.
+
+* cumbia-random
+cumbia-random has been expanded in order to offer great flexibility to accurately test higher level cumbia modules
+and applications. Source names alone can specify how data is generated, threads grouped and much more. JavaScript
+functions in .js files can be set as source of data for the cumbia-random module.
+
+APP NEWS
+qumbia-apps/cumbiareader has been deeply expanded in order to support the cumbia-random module and a
+great number of command line options.
+Coupled with the qumbia-tango-findsrc-plugin and the qumbia-tango-find-src app, that can be installed from
+https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin.git
+it provides Tango sources auto completion on the command line.
+
 Requires c++17
 
 a. cumbia-tango
@@ -16,6 +35,49 @@ c1. CuTimerService allows to limit the number of timers used by the application.
 c2. A limit on the number of threads created by activities can be set, as well as a custom thread token allows
     the user to group threads
 c3. C++17 shared_locks replace unique locks where the protected variables are only read
+
+
+d. cumbia-qtcontrols
+d1. cupluginloader provides a template method to directly get the desired plugin CuPluginLoader::get
+
+e. cumbia-random
+
+Library has been expanded to support several new operations for testing purposes.
+The source name can define group threading, period, size of generated data, minimum, maximum and period.
+The source can specify a JavaScript file to generate data from a custom function
+e1. enabled in scripts/cubuild.sh
+
+f. qumbia-apps/cumbiareader
+f1. support for cumbia-random
+f2. in combination with the qumbia-tango-findsrc-plugin + qumbia-tango-find-src app, Tango sources auto completion
+    is available.
+f3. improved output formatting
+f4. improved options from command line (single shot, read x times and quit...)
+f5. support for Tango database properties (device, attribute, class)
+
+g. External new plugin qumbia-tango-findsrc-plugin + qumbia-tango-find-src app:
+   https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin.git
+   Finds the name of a Tango source (attribute or command) from a partial name.
+   Can be used for auto completion of Tango sources.
+
+h. qumbia-tango-controls
+h1. added interface qutfindsrcsplugini.h for the qumbia-tango-findsrc-plugin (see g.)
+
+i. qumbia-apps/cumbia/cumbia shell script for "cumbia" command line shortcuts
+i1. support for cumbiareader (cumbia read)
+i2. qumbia-apps/cumbia/bash_completion.d/cumbia: completion for cumbia read
+
+v1.0.2
+a. cumbia-qtcontrols
+   a1. QuCircularGauge/QuCircularGaugeBase: fixes infinite loops in cache updates with certain property values (e.g. min = max)
+   a2. QuCircularGauge/QuCircularGaugeBase: disable cache regeneration while setting properties in QuCircularGauge::m_configure
+       by dint of the new QuCircularGaugeBase::setCacheRegenerationDisabled
+   a3. QuCircularGaugeBase: widget is updated only if value actually changes (QuCircularGauge::setValue)
+   a4. QuCircularBase::setValue optimization: if needle angle change is less than one degree animation is disabled (saves CPU time)
+
+b. qumbia-apps/cumbiareader test app: fixed setOptions/setSource call order
+
+c. created branch_1.0
 
 v1.0.1
 a. cumbia-tango

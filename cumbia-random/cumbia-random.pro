@@ -8,7 +8,7 @@ include(cumbia-random.pri)
 
 QT       -= gui
 
-QT     += qml
+QT     += script
 
 CONFIG += debug
 

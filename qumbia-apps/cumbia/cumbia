@@ -26,6 +26,7 @@ print_menu() {
 		printf "|%-24s| %-38s| %-58s|\n" "cumbia import fast" "as above, proceed in the current dir" ""
 		printf "|%-24s| %-38s| %-58s|\n" "cumbia ui make" "call cuuimake" "[--help] | [--clean] | [--pre-clean | --qmake | --make]"
 		printf "|%-24s| %-38s| %-58s|\n" "cumbia client" "run the cumbia generic client" "list of sources: test/device/1 [a/src/2 source:ai1]"
+                printf "|%-24s| %-38s| %-58s|\n" "cumbia read" "run the command line reader" "list of sources: test/device/1 [a/src/2 source:ai1] [--truncate=n] [--help]"
 		printf "|%-24s| %-38s| %-58s|\n" "cumbia upgrade" "upgrade to a newer version of cumbia" ""
 		printf "+%.24s--%.38s--%.58s+\n" "--------------------------------" "--------------------------------------------" "--------------------------------------------------------------------"
 		printf "\n"
@@ -45,6 +46,9 @@ elif [ $# -gt 0 ] && [ $1 == "ui" ] && [ $2 == "make" ]; then
         cuuimake  ${@:3}
 elif [ $# -gt 0 ] && [ $1 == "client" ]; then
         qumbia-client ${@:2}
+elif [ $# -gt 0 ] && [ $1 == "read" ]; then
+        cumbiareader ${@:2}
+        echo -e "\e[1;31m* \e[1;4mhint\e[0m: use \e[0;32;3mqutangoreader\e[0m instead of \e[3mcumbia read\e[0m for \e[1;32mTango source names \e[0;4mauto completion\e[0m\n";
 elif [ $# -gt 0 ] && [ $1 == "import" ] && [ $2 == "fast" ]; then
         qumbiaprojectwizard --from-qtango --fast ${@:3}
 elif [ $# -gt 0 ] && [ $1 == "import" ]; then

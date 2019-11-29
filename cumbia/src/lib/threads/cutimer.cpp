@@ -85,10 +85,10 @@ void CuTimer::start(int millis)
     else {
         if(m_pending > 0) {
             reset();
-//            m_last_start_pt = std::chrono::steady_clock::now();
+            //            m_last_start_pt = std::chrono::steady_clock::now();
         }
         else {
-//            m_first_start_pt = m_last_start_pt = std::chrono::steady_clock::now();
+            //            m_first_start_pt = m_last_start_pt = std::chrono::steady_clock::now();
         }
         m_pending++;
         m_wait.notify_one();
@@ -103,23 +103,17 @@ void CuTimer::stop()
 {
     if(m_exited)
         return; /* already quit */
-
-    m_quit = true;
-    m_listeners.clear();
     {
         std::unique_lock<std::mutex> lock(m_mutex);
-        pgreen("CuTimer.stop calling m_wait.notify_one...");
+        m_quit = true;
+        m_listeners.clear();
         m_wait.notify_one();
     }
     pgreen("CuTimer.stop called m_wait.notify_one...");
-    if(m_thread->joinable())
-    {
+    if(m_thread->joinable()) {
         m_thread->join();
-        pbblue("CuTimer.stop: joined!");
     }
-    else
-        pbblue("CuTimer.stop: NOT JOINABLE!!!");
-    printf("CuTimer.stop joined this %p\n", this);
+    pbblue("CuTimer.stop joined this %p\n", this);
     m_exited = true;
     delete m_thread;
     m_thread = nullptr;
@@ -168,21 +162,20 @@ std::list<CuTimerListener *> CuTimer::listeners() {
  */
 void CuTimer::run()
 {
-    int cycle_cnt = 0;
     std::unique_lock<std::mutex> lock(m_mutex);
     unsigned long timeout = m_timeout;
     while (!m_quit) {
         timeout = m_timeout;
         std::cv_status status;
         std::chrono::milliseconds ms{timeout};
-//        printf("CuTimer.run: waiting for condition %p\n", this);
+        //        printf("CuTimer.run: waiting for condition %p\n", this);
         status = m_wait.wait_for(lock, ms);
         if(m_skip && !m_quit) {
-//            printf("\e[1;31mCuTimer.run: cycle %d: skipping this time... pending %d\e[0m\n", cycle_cnt, static_cast<int>(m_pending));
+            //            printf("\e[1;31mCuTimer.run: cycle %d: skipping this time... pending %d\e[0m\n", cycle_cnt, static_cast<int>(m_pending));
             m_skip = false;
         }
         else {
-//            printf("\n------------------\e[1;32mCYCLE %d------------------\n", ++cycle_cnt);
+            //            printf("\n------------------\e[1;32mCYCLE %d------------------\n", ++cycle_cnt);
             m_pause ?  timeout = ULONG_MAX : timeout = m_timeout;
             if(status == std::cv_status::timeout && !m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
             {
@@ -190,11 +183,11 @@ void CuTimer::run()
                 for(it = m_listeners.begin(); it != m_listeners.end(); ++it) {
                     (*it)->onTimeout(this);
                 }
-//                auto t1 = std::chrono::steady_clock::now();
-//                long int delta_first_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_first_start_pt).count();
-//                long int delta_last_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_last_start_pt).count();
-//                printf("\e[0;32mCuTimer.run: notified timeout after %ld ms instead of %ldus\e[0m\t\t\t(\e[1;31mdelay %ldus\e[0m)\n\n",
-//                       delta_first_ms, delta_last_ms, -delta_last_ms+delta_first_ms);
+                //                auto t1 = std::chrono::steady_clock::now();
+                //                long int delta_first_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_first_start_pt).count();
+                //                long int delta_last_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_last_start_pt).count();
+                //                printf("\e[0;32mCuTimer.run: notified timeout after %ld ms instead of %ldus\e[0m\t\t\t(\e[1;31mdelay %ldus\e[0m)\n\n",
+                //                       delta_first_ms, delta_last_ms, -delta_last_ms+delta_first_ms);
             }
             m_pending = 0;
             if(!m_quit) { // wait for next start()

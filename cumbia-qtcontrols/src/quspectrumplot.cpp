@@ -179,7 +179,7 @@ void QuSpectrumPlot::update(const CuData &da)
 
     // configure triggers replot at the end but should not be too expensive
     // to do it once here at configuration time and once more from appendData
-    if(d->read_ok && d->auto_configure && da["type"].toString() == "property") {
+    if(d->read_ok && d->auto_configure && da["type"].toString() == std::string("property")) {
         configure(da);
     }
 

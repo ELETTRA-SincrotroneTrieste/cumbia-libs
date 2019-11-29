@@ -110,9 +110,10 @@ std::vector<CuRNDActionI *> CuRNDActionFactoryService::find(const string &src, C
     std::lock_guard<std::mutex> lock(d->mutex);
     std::vector <CuRNDActionI *> actions;
     std::list<CuRNDActionI *>::const_iterator it;
-    for(it = d->actions.begin(); it != d->actions.end(); ++it)
+    for(it = d->actions.begin(); it != d->actions.end(); ++it) {
         if((*it)->getType() == at && (*it)->getSource().getName() == src)
             actions.push_back(*it);
+    }
     return actions;
 }
 

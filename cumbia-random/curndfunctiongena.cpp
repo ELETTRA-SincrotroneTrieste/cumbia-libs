@@ -17,7 +17,6 @@ void CuRndFunctionGenA::extractConf(const CuData &res) const
     else
         data->size = 1;
 
-    printf("DTA DUCKING SIZE %d  CUZ RES %s\n", data->size, res.toString().c_str());
     // min max
     if(res.containsKey("min") && res.containsKey("max")) {
         res["min"].to<double>(data->min);

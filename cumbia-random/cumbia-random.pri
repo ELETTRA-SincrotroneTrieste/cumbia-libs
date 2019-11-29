@@ -113,9 +113,6 @@ unix:!android-g++ {
 
 }
 
-HEADERS += \
-    $$PWD/curndfunctiongeni.h
-
 SOURCES +=
 
 

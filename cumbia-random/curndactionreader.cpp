@@ -46,7 +46,7 @@ CuRNDActionReader::CuRNDActionReader(const RNDSource& src, CumbiaRandom *ct) : C
 
 CuRNDActionReader::~CuRNDActionReader()
 {
-    pdelete("~CuRNDActionReader %p", this);
+    pdelete("~CuRNDActionReader %p\n", this);
     delete d;
 }
 
@@ -87,21 +87,14 @@ void CuRNDActionReader::setOptions(const CuData &options) {
  */
 void CuRNDActionReader::onResult(const CuData &data)
 {
-    bool err = data["err"].toBool();
+//    bool err = data["err"].toBool();
     bool a_exit = data["exit"].toBool(); // activity exit flag
     // iterator can be invalidated if listener's onUpdate unsets source: use a copy
     std::set<CuDataListener *> lis_copy = d->listeners;
     std::set<CuDataListener *>::iterator it;
-    bool event_subscribe_fail = err && !d->exit && data["event"].toString() == "subscribe";
-
     // if it's just subscribe_event failure, do not notify listeners
-    for(it = lis_copy.begin(); it != lis_copy.end() && !event_subscribe_fail;   ++it) {
+    for(it = lis_copy.begin(); it != lis_copy.end(); ++it) {
         (*it)->onUpdate(data);
-    }
-
-    if(err && !d->exit)
-    {
-
     }
 
     /* remove last listener and delete this
@@ -227,7 +220,6 @@ CuRNDActionReader::RefreshMode CuRNDActionReader::refreshMode() const {
 }
 
 void CuRNDActionReader::setPeriod(int millis) {
-    qDebug() << __FUNCTION__ << "set period" << millis;
     d->period = millis;
 }
 
@@ -254,18 +246,9 @@ void CuRNDActionReader::addDataListener(CuDataListener *l)
 
 void CuRNDActionReader::removeDataListener(CuDataListener *l)
 {
-    if(l->invalid())
-    {
-        d->listeners.erase(l);
-        if(!d->listeners.size()) {
-            stop();
-        }
-    }
-    else if(d->listeners.size() == 1) {
+    d->listeners.erase(l);
+    if(d->listeners.size() == 0)
         stop();
-    }
-    else
-        d->listeners.erase(l);
 }
 
 size_t CuRNDActionReader::dataListenersCount()
@@ -298,13 +281,13 @@ void CuRNDActionReader::start()
 void CuRNDActionReader::m_startRandomGenActivity()
 {
     CuData at("src", d->tsrc.getName()); /* activity token */
-    at["device"] = d->tsrc.getDeviceName();
-    at["point"] = d->tsrc.getPoint();
-    at["activity"] = "event";
+    at["activity"] = "random";
     at["rmode"] = refreshModeStr();
     at["period"] = d->period;
-
-    CuData tt("device", d->tsrc.getDeviceName()); /* thread token */
+    if(d->options.containsKey("label"))
+        at["label"] = d->options["label"].toString();
+    CuData tt; // thread token
+    d->options.containsKey("thread_token") ? tt["thtok"] = d->options["thread_token"] : tt["thtok"] = d->tsrc.getName();
     d->randomgen_a = new CuRandomGenActivity(at);
     double min, max; int siz = 1, period = 1000;
     d->options["min"].to<double>(min);
@@ -324,7 +307,6 @@ void CuRNDActionReader::m_startRandomGenActivity()
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_rnd->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_rnd->getThreadFactoryImpl());
     d->cumbia_rnd->registerActivity(d->randomgen_a, this, tt, fi, bf);
-    cuprintf("> CuRNDActionReader.m_startEventActivity reader %p thread 0x%lx ACTIVITY %p\n", this, pthread_self(), d->randomgen_a);
 }
 
 void CuRNDActionReader::m_stopRandomGenActivity()

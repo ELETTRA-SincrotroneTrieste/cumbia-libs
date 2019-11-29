@@ -182,39 +182,42 @@ void QuLabelBase::setDrawInternalBorder(bool draw) {
 void QuLabelBase::setValue(const CuVariant& v, bool *background_modified)
 {
     bool bg_modified = false;
+    QString txt;
     if(v.getType() == CuVariant::String) {
-        QString txt = QString::fromStdString(v.toString());
-        if(d_ptr->max_len > -1 && txt.length() > d_ptr->max_len) {
-            setToolTip(toolTip() + "\n\n" + txt);
-            txt.truncate(d_ptr->max_len);
-        }
-        QLabel::setText(txt);
+        txt = QString::fromStdString(v.toString());
     }
     else if(v.getType() == CuVariant::Boolean) {
         bool bv = v.toBool();
-        QString txt = (bv ? property("trueString").toString() : property("falseString").toString());
+        txt = (bv ? property("trueString").toString() : property("falseString").toString());
         if(txt.isEmpty())
             txt = QString::fromStdString(v.toString());
         QColor background = bv ? property("trueColor").value<QColor>() : property("falseColor").value<QColor>();
         bg_modified = background.isValid();
         if(bg_modified) // valid
             setBackground(background);
-        QLabel::setText(txt);
     }
     else if(v.isInteger() && v.getFormat() == CuVariant::Scalar) {
         long int li;
         v.to<long int>(li);
         if(d_ptr->enum_d.contains(li)) {
-            QLabel::setText(d_ptr->enum_d[li].first);
+            txt = d_ptr->enum_d[li].first;
             setBackground(d_ptr->enum_d[li].second);
             bg_modified = d_ptr->enum_d[li].second.isValid();
         }
         else {
-            QLabel::setText(QString::fromStdString(v.toString(NULL, d_ptr->format.toStdString().c_str())));
+            txt = QString::fromStdString(v.toString(NULL, d_ptr->format.toStdString().c_str()));
         }
     }
     else {
-        QLabel::setText(QString::fromStdString(v.toString(NULL, d_ptr->format.toStdString().c_str())));
+        txt = QString::fromStdString(v.toString(NULL, d_ptr->format.toStdString().c_str()));
+    }
+    if(!txt.isEmpty()) {
+        if(d_ptr->max_len > -1 && txt.length() > d_ptr->max_len) {
+            setToolTip(toolTip() + "\n\n" + txt);
+            txt.truncate(d_ptr->max_len - strlen(" [...]"));
+            txt += " [...]";
+        }
+        QLabel::setText(txt);
     }
     if(background_modified)
         *background_modified = bg_modified;

@@ -37,17 +37,16 @@ int main(int argc, char *argv[])
         QStringList args(qu_app.arguments());
         calc->read(args.at(1));
         if(calc->hasFinished())
-           calc->code() == 0 ? ret = EXIT_SUCCESS : ret = EXIT_FAILURE;
+            calc->code() == 0 ? ret = EXIT_SUCCESS : ret = EXIT_FAILURE;
         else
             ret = qu_app.exec();
 
         delete calc;
-	Cumbia *c;
+        Cumbia *c;
         c = cu_p->get("tango");
-	if(c) delete c;
+        if(c) delete c;
         c = cu_p->get("epics");
-	printf("got epics %p\n", c);
-	if(c) delete c;
+        if(c) delete c;
     }
     return 0;
 }

@@ -9,6 +9,7 @@ meson=0
 epics=0
 tango=0
 qml=1
+random=1
 websocket=0
 pull=0
 srcupdate=0
@@ -183,6 +184,13 @@ if [[ $@ == **no-qml** ]]; then
         qml=0
 fi
 
+if [[ $@ == **random** ]]; then
+        random=1
+fi
+
+if [[ $@ == **no-qml** ]]; then
+        random=0
+fi
 
 if [[ $@ == **websocket** ]]; then
         websocket=1
@@ -216,6 +224,11 @@ fi
 if [[ $qml -eq 1 ]]; then
         qmake_p+=(cumbia-qtcontrols/qml)
 fi
+
+if [[ $random -eq 1 ]]; then
+        qmake_p+=(cumbia-random)
+fi
+
 
 if [ ${#operations[@]} -eq 0 ]; then
 	operations+=(build)
@@ -403,6 +416,8 @@ echo -e "\n# tango enabled" >> $srcupdate_conf_f
 echo "tango=$tango" >> $srcupdate_conf_f
 echo -e "\n# epics enabled" >> $srcupdate_conf_f
 echo "epics=$epics" >> $srcupdate_conf_f
+echo -e "\n# random module enabled" >> $srcupdate_conf_f
+echo "random=$random" >> $srcupdate_conf_f
 echo -e "\n# directory with the cumbia sources " >> $srcupdate_conf_f
 echo "srcdir=$topdir" >> $srcupdate_conf_f
 #

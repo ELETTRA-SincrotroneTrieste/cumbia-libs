@@ -101,6 +101,9 @@ protected:
 
 private:
     CuRandomGenActivityPrivate *d;
+
+    void m_putInfo(CuData &res);
+
 public:
     void event(CuActivityEvent *e);
 

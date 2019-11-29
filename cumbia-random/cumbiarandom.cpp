@@ -13,7 +13,6 @@
 
 CumbiaRandom::CumbiaRandom(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb)
 {
-    qDebug() << "CumbiaRandom constructor...\n";
     m_threadsEventBridgeFactory = teb;
     m_threadFactoryImplI = tfi;
     m_init();
@@ -48,10 +47,6 @@ void CumbiaRandom::addAction(const std::string &source, CuDataListener *l, const
         if(!a) {
             a = af->registerAction(source, f, this);
             a->start();
-        }
-        else {
-            cuprintf("CumbiaRandom.addAction: action %p already found for source \"%s\" and type %d thread 0x%lx TYPE %d\n",
-                  a, source.c_str(), f.getType(), pthread_self(), f.getType());
         }
         a->addDataListener(l);
     }

@@ -1,8 +1,14 @@
-include (/usr/local/cumbia-libs/include/qumbia-epics-controls/qumbia-epics-controls.pri)
-include (/usr/local/cumbia-libs/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+exists (/usr/local/cumbia-libs/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
+    message("- adding EPICS support")
+    include (/usr/local/cumbia-libs/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+}
+exists  (/usr/local/cumbia-libs/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
+    message("- adding Tango support")
+    include (/usr/local/cumbia-libs/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+}
 
 exists(/usr/local/cumbia-libs/include/cumbia-random/cumbia-random.pri) {
-    message("including support for cumbia-random module")
+    message("- adding cumbia-random module support")
     include(/usr/local/cumbia-libs/include/cumbia-random/cumbia-random.pri)
 }
 
@@ -19,6 +25,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets x11extras
 
 CONFIG +=
 
+# CONFIG+=qml_debug
+# CONFIG+=declarative_debug
+
 CONFIG+=link_pkgconfig
 PKGCONFIG += x11
 
@@ -30,11 +39,17 @@ OBJECTS_DIR = obj
 
 
 SOURCES += src/main.cpp \
+    src/cmdlineoptions.cpp \
                 src/cumbiareader.cpp \
-    src/reader.cpp
+    src/rconfig.cpp \
+    src/reader.cpp \
+    src/tgdbprophelper.cpp
 
 HEADERS += src/cumbiareader.h \
-    src/reader.h
+    src/cmdlineoptions.h \
+    src/rconfig.h \
+    src/reader.h \
+    src/tgdbprophelper.h
 
 # cuuimake runs uic
 # FORMS    = src/cumbiareader.ui
@@ -61,8 +76,24 @@ doc.files = doc/*
 doc.path = $${DOCDIR}
 QMAKE_EXTRA_TARGETS += doc
 
+BASH_COMPLETION_DIR=$$system(pkg-config --variable=completionsdir bash-completion)
+completion.path = $${BASH_COMPLETION_DIR}
+completion.files = bash_completion.d/cumbiareader
+
+message(" ")
+message("bash completion dir is $${BASH_COMPLETION_DIR}")
+message(" ")
+
 inst.files = $${TARGET}
 inst.path = $${INSTALL_ROOT}/bin
 
-INSTALLS += inst doc
+script.path = $${INSTALL_ROOT}/bin
+script.files = qutangoreader/qutangoreader
+
+INSTALLS += inst doc completion script
+
+DISTFILES += \
+    bash_completion.d/cumbiareader \
+    js_functions/sin.js \
+    qutangoreader/qutangoreader
 

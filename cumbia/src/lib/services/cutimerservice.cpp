@@ -58,13 +58,13 @@ CuTimer *CuTimerService::registerListener(CuTimerListener *timer_listener, int t
         if(d->ti_map.count(timeout) >= static_cast<size_t>(d->timer_max_count)) {
             // reuse a timer!
             timer = m_findReusableTimer(timeout);
-            printf("CuTimerService::registerListener timers count for timeout %d is %ld >= max timers %d: \e[0;32mreusing timer %p\e[0m] that has now %ld listeners\e[0m\n",
+            pgreen("CuTimerService::registerListener timers count for timeout %d is %ld >= max timers %d: \e[0;32mreusing timer %p\e[0m] that has now %ld listeners\e[0m\n",
                    timeout, d->ti_map.count(timeout), d->timer_max_count, timer, timer->listeners().size());
         }
         else {
             timer = new CuTimer();
             timer->setTimeout(timeout);
-            printf("CuTimerService::registerListener timers count for timeout %d is %ld > max timers %d: \e[1;32mcreating NEW timer %p\e[0m] that has now %ld listeners\e[0m\n",
+            pgreen("CuTimerService::registerListener timers count for timeout %d is %ld > max timers %d: \e[1;32mcreating NEW timer %p\e[0m] that has now %ld listeners\e[0m\n",
                    timeout, d->ti_map.count(timeout), d->timer_max_count, timer, timer->listeners().size());
             timer->start(timeout);
             std::pair<int, CuTimer *> new_tmr(timeout, timer);
@@ -94,7 +94,7 @@ void CuTimerService::unregisterListener(CuTimerListener *tl, int timeout)
     else {
         t->removeListener(tl); // CuTimer lock guards its listeners list
         if(t->listeners().size() == 0) {
-            printf("\e[1;32m** -->\e[0m CuTimerService::unregisterListener: \e[1;32mno more listeners: stopping timer %p and deleting\e[0m\n", t);
+//            printf("\e[1;32m** -->\e[0m CuTimerService::unregisterListener: \e[1;32mno more listeners: stopping timer %p and deleting\e[0m\n", t);
             m_removeFromMaps(tl, timeout);
             t->stop();
             delete t;
@@ -193,8 +193,6 @@ void CuTimerService::m_removeFromMaps(CuTimerListener *l, int timeout)
             std::list<CuTimerListener *>tlisteners = t->listeners(); // get its listeners
             // timer without listeners? remove from d->ti_map timer map
             if(tlisteners.size() == 0) {
-                printf("X CuTimerService::m_removeFromMaps (1) removed (%d,%p) from timer map\n",
-                       timeout, t);
                 iter = d->ti_map.erase(iter);
             }
             else
@@ -207,7 +205,6 @@ void CuTimerService::m_removeFromMaps(CuTimerListener *l, int timeout)
             for(std::multimap<const CuTimerListener*, CuTimer *>::iterator cacheiter = iterpair.first; cacheiter != iterpair.second; ) {
                 if(cacheiter->second == t) { // timer is t found above
                     cacheiter = d->ti_cache.erase(cacheiter);
-                    printf("X CuTimerService::m_removeFromMaps (2) removed (%p,%p) from cache\n", l, t);
                 }
                 else
                     ++cacheiter;

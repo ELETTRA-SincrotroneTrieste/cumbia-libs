@@ -1,5 +1,5 @@
 QMAKE_PRL_BUILD_DIR = /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-random
 QMAKE_PRO_INPUT = cumbia-random.pro
 QMAKE_PRL_TARGET = libcumbia-random.so.1.1.0
-QMAKE_PRL_CONFIG = silent lex yacc debug exceptions depend_includepath testcase_targets import_plugins import_qpa_plugin file_copies qmake_use qt warn_on link_prl incremental shared linux unix posix gcc link_pkgconfig c++11 debug create_pc create_prl no_install_prl have_target dll debug_info thread link_ltcg link_ltcg moc resources
+QMAKE_PRL_CONFIG = silent lex yacc debug exceptions depend_includepath testcase_targets import_plugins import_qpa_plugin file_copies qmake_use qt warn_on link_prl incremental shared linux unix posix gcc link_pkgconfig c++11 debug create_pc create_prl no_install_prl have_target dll debug_info thread link_ltcg moc resources
 QMAKE_PRL_VERSION = 1.1.0

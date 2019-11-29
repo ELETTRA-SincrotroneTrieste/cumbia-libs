@@ -46,6 +46,7 @@ SOURCES += src/qumbiatangocontrols.cpp \
     src/qutrealtimeplot.cpp
 
 HEADERS += src/qumbiatangocontrols.h\
+    src/plugin_ifaces/qutfindsrcsplugini.h \
         src/qumbia-tango-controls_global.h \
     src/cutcontrolsreader.h \
     src/cutcontrols-utils.h \

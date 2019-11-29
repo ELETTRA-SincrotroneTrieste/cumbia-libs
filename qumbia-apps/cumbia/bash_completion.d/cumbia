@@ -9,7 +9,7 @@ _cumbia()
     #
     #  The basic options we'll complete.
     #
-    opts="new ui client import upgrade"
+    opts="new ui client read import upgrade"
 
 
     #
@@ -35,14 +35,20 @@ _cumbia()
 			local names=$(for x in fast `ls  -1 *.pro`; do echo ${x} ; done )
             COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
             return 0
-			;;
+                        ;;
+            read)
+            local running=$(for x in `cumbiareader --list-options`; do echo ${x} ; done )
+            COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            return 0
+            ;;
         *)
+
         ;;
     esac
-
-
 
    COMPREPLY=($(compgen -W "${opts}" -- ${cur}))  
    return 0
 }
+
+
 complete -F _cumbia cumbia

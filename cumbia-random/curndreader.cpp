@@ -61,7 +61,6 @@ public:
 CuRNDReader::CuRNDReader(Cumbia *cumbia_rnd, CuDataListener *tl)
     : CuControlsReaderA(cumbia_rnd, tl)
 {
-    printf("CuRNDReader constructor!!!!!!!!!!\n");
     assert(cumbia_rnd->getType() == CumbiaRandom::CumbiaRNDType);
     d = new CuRNDReaderPrivate;
     d->cumbia_rnd = static_cast<CumbiaRandom *>(cumbia_rnd);
@@ -70,7 +69,7 @@ CuRNDReader::CuRNDReader(Cumbia *cumbia_rnd, CuDataListener *tl)
 
 CuRNDReader::~CuRNDReader()
 {
-    qDebug() << __FUNCTION__ << "deleting myself " <<this << source();
+    pdelete("CuRNDReader %p", this);
     d->tlistener->invalidate();
     unsetSource();
     delete d;
@@ -83,9 +82,6 @@ void CuRNDReader::setSource(const QString &s)
     rndsb.fromSource(s);
     CuRNDActionReaderFactory rndrf;
     rndrf.setOptions(rndsb.options);
-    printf("CuRNDReader.setSource: %s --> %s options %s\n", qstoc(s), qstoc(rndsb.name),
-           rndsb.options.toString().c_str());
-    qDebug() << __FUNCTION__ << "source" << s;
     d->cumbia_rnd->addAction(s.toStdString(), d->tlistener, rndrf);
 }
 

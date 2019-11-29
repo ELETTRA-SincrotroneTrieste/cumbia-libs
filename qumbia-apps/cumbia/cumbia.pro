@@ -40,7 +40,6 @@ completion.files = bash_completion.d/cumbia
 script.path = $${INSTALL_ROOT}/bin
 script.files = cumbia
 
-
 message("bash completion dir $${BASH_COMPLETION_DIR}")
 
 

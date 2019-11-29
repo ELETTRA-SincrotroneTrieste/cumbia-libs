@@ -44,9 +44,6 @@ public:
             if(!pl)
                 printf("\e[1;31m*\e[0m CuPluginLoader.get: failed to cast the plugin provided by \"%s\" into the desired type\n",
                      name.toStdString().c_str());
-            else
-                printf("\e[1;32m* \e[0msuccessfully loaded plugin from \"%s\" as qobjecct %p\n",
-                       plugin_path.toStdString().c_str(), plugin);
         }
         else
             printf("\e[1;31m*\e[0m CuPluginLoader.get: failed to load plugin \"%s\": \"%s\"\n",

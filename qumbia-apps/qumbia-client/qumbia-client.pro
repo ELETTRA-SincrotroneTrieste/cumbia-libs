@@ -6,6 +6,10 @@
 
 include(../../qumbia-tango-controls/qumbia-tango-controls.pri)
 include(../../qumbia-epics-controls/qumbia-epics-controls.pri)
+exists(/usr/local/cumbia-libs/include/cumbia-random/cumbia-random.pri) {
+    message("including support for cumbia-random module")
+    include(/usr/local/cumbia-libs/include/cumbia-random/cumbia-random.pri)
+}
 
 # The application will be installed under INSTALL_ROOT (i.e. prefix)
 #

@@ -5,6 +5,7 @@
 #include "curndfunctiongenerators.h"
 #include <vector>
 #include <map>
+#include <chrono>
 #include <iostream>
 #include <QtAlgorithms>
 #include <QtDebug>
@@ -17,7 +18,7 @@ class CuRandomGenActivityPrivate
 public:
     int repeat, errCnt;
     int exec_cnt;
-    std::string message, label;
+    std::string message, label, thread_token;
     pthread_t my_thread_id, other_thread_id;
     bool exiting;
     double min, max;
@@ -76,7 +77,6 @@ CuRandomGenActivity::CuRandomGenActivity(const CuData &token)
  */
 CuRandomGenActivity::~CuRandomGenActivity()
 {
-    qDebug() << __FUNCTION__ << "deleted CuRandomGenActivity" << this;
     if(d->f_generator)
         delete d->f_generator;
     delete d;
@@ -137,23 +137,30 @@ void CuRandomGenActivity::setFunctionGenerator(CuRndFunctionGenA *fg) {
  */
 void CuRandomGenActivity::init()
 {
+    auto t1 = std::chrono::steady_clock::now();
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
     // simulate a configuration (property type)
-    CuData c;
-    c["type"] = "property";
-    c["mode"] = "random";
-    c["min"] = d->min;
-    c["max"] = d->max;
-    c["period"] = d->repeat;
-    c["size"] = d->size;
-    d->size > 1 ? c["data_format_str"] = "spectrum" : c["data_format_str"] = "scalar";
-    c["label"] = getToken()["src"];
+    CuData res = getToken();
+    d->thread_token = threadToken()["thtok"].toString();
+    res["type"] = "property";
+    res["mode"] = "random";
+    res["type"] = "property";
+    res["mode"] = "random";
+    res["min"] = d->min;
+    res["max"] = d->max;
+    res["period"] = d->repeat;
+    res["size"] = d->size;
+    d->size > 1 ? res["data_format_str"] = "vector" : res["data_format_str"] = "scalar";
     if(!d->f_generator)
         d->f_generator = new CuRndRandomFunctionGen();
-    d->f_generator->configure(c);
-    CuData res = getToken();
+    // 1. configure
+    d->f_generator->configure(res);
+    // get a value
     d->f_generator->generate(res);
+    m_putInfo(res);
+    auto t2 = std::chrono::steady_clock::now();
+    res["elapsed_us"] = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
     publishResult(res);
 }
 
@@ -170,15 +177,13 @@ void CuRandomGenActivity::init()
 void CuRandomGenActivity::execute()
 {
     assert(d->my_thread_id == pthread_self());
+    auto t1 = std::chrono::steady_clock::now();
     d->exec_cnt++;
     CuData res = getToken();
     d->f_generator->generate(res);
-
-    res["mode"] = "random";
-    res["period"] = d->repeat;
-    res.putTimestamp(); // timestamp_ms and timestamp_us
-
-//    printf("CuRandomGenActivity.execute: period %d *** data %s\n", getTimeout(), res.toString().c_str());
+    m_putInfo(res);
+    auto t2 = std::chrono::steady_clock::now();
+    res["elapsed_us"] = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
     publishResult(res);
 }
 
@@ -199,18 +204,22 @@ void CuRandomGenActivity::onExit()
 {
     assert(d->my_thread_id == pthread_self());
     d->exiting = true;
-    int refcnt = -1;
     CuData at = getToken(); /* activity token */
-    qDebug() << __FUNCTION__ << "exiting for source after "  << d->exec_cnt << "executions" << at["src"].toString().c_str();
-    at["msg"] = "EXITED";
-    at["mode"] = "RANDOM";
-
-    cuprintf("\e[1;31mCuRandomGenActivity::onExit(): refcnt = %d called actionRemove for device %s att %s\e[0m\n",
-             refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
     at["exit"] = true;
     // do not publishResult because CuPoller (which is our listener) may be deleted by CuPollingService
     // from the main thread when its action list is empty (see CuPollingService::unregisterAction)
     publishResult(at);
+}
+
+void CuRandomGenActivity::m_putInfo(CuData &res)
+{
+    res["mode"] = "random";
+    res["period"] = d->repeat;
+    res["thread"] = d->thread_token;
+    const CuData& atok = getToken();
+    if(atok.containsKey("label"))
+        res["label"] = atok["label"];
+    res.putTimestamp(); // timestamp_ms and timestamp_us
 }
 
 /** \brief Receive events *from the main thread to the CuActivity thread*.

@@ -2,11 +2,23 @@
 #include "ui_qumbia-client.h"
 #include "writer.h"
 #include <cumbiapool.h>
+#include <cumacros.h>
+
+#ifdef QUMBIA_TANGO_CONTROLS_VERSION
 #include <cumbiatango.h>
 #include <cutcontrolsreader.h>
 #include <cutcontrolswriter.h>
-#include <cumacros.h>
 #include <cutreader.h> // PolledRefresh / EventRefresh
+#include <cutango-world.h>
+#endif
+
+#ifdef CUMBIA_RANDOM_VERSION
+#include <cumbiarandom.h>
+#include <curndreader.h>
+#include <curndactionfactories.h>
+#include <cumbiarndworld.h>
+#endif
+
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
 #include <qulabel.h>
@@ -22,7 +34,6 @@
 #include <QScrollArea>
 #include <QSpinBox>
 #include <QComboBox>
-#include <cutango-world.h>
 #include <cucontext.h>
 #include <QTimer>
 
@@ -42,6 +53,7 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     ui(new Ui::QumbiaClient),
     m_layoutColumnCount(10)
 {
+    QStringList engines;
     // for valgrind test
     // int *f= new int[1000];
     cu_pool = cumbia_pool;
@@ -56,19 +68,31 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
     cu_pool->setSrcPatterns("epics", ew.srcPatterns());
     cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+    engines << "EPICS";
 #endif
 
+#ifdef QUMBIA_TANGO_CONTROLS_VERSION
     CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
     cu_pool->registerCumbiaImpl("tango", cuta);
     m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
     m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
-
     CuTangoWorld tw;
     m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
     cu_pool->setSrcPatterns("tango", tw.srcPatterns());
-
-    // m_log = new CuLog(&m_log_impl);
     cuta->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+    engines << "tango";
+#endif
+
+#ifdef CUMBIA_RANDOM_VERSION
+    CumbiaRandom *cura = new CumbiaRandom(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    CumbiaRNDWorld rndw;
+    cu_pool->registerCumbiaImpl("random", cura);
+    m_ctrl_factory_pool.registerImpl("random", CuRNDReaderFactory());
+    m_ctrl_factory_pool.setSrcPatterns("random", rndw.srcPatterns());
+    cu_pool->setSrcPatterns("random", rndw.srcPatterns());
+    cura->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+    engines << "random";
+#endif
 
     ui->setupUi(this);
     connect(ui->pbSetSources, SIGNAL(clicked()), this, SLOT(sourcesChanged()));
@@ -102,6 +126,9 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
 
     connect(ui->pbWrite, SIGNAL(toggled(bool)), ui->gbWriters, SLOT(setVisible(bool)));
     ui->gbWriters->setVisible(false);
+
+    // engines information
+    ui->lengines->setText("Engines: " + engines.join(", "));
 }
 
 QumbiaClient::~QumbiaClient()
@@ -112,7 +139,7 @@ QumbiaClient::~QumbiaClient()
 void QumbiaClient::configure(const CuData &d)
 {
     if(d["type"].toString() == "property") {
-     //   printf("\e[1;33mQumbiaClient.configure data arrived is %s\e[0m\n", d.toString().c_str());
+        printf("\e[1;33mQumbiaClient.configure data arrived is %s\e[0m\n", d.toString().c_str());
         sender()->disconnect(this, SLOT(configure(CuData)));
         const int plotRowCnt = 5;
         int layout_row = 2;
@@ -130,6 +157,7 @@ void QumbiaClient::configure(const CuData &d)
                     layout_row += plotRowCnt;
                 lo->addWidget(plot, layout_row, 0, plotRowCnt, m_layoutColumnCount);
             }
+            plot->configure(d);
             plot->addSource(d["src"].toString().c_str());
         }
         else if(format == "vector")
@@ -142,6 +170,7 @@ void QumbiaClient::configure(const CuData &d)
                     layout_row += plotRowCnt;
                 lo->addWidget(splot, layout_row, 0, plotRowCnt, m_layoutColumnCount);
             }
+            splot->configure(d);
             splot->addSource(d["src"].toString().c_str());
 
             data_dim = d["dim_x"].toLongInt();
@@ -282,6 +311,7 @@ void QumbiaClient::sourcesChanged()
     {
         QuLabel *l = new QuLabel(this, cu_pool, m_ctrl_factory_pool);
         l->getContext()->setOptions(options);
+        l->setWordWrap(true);
         l->setMaximumLength(30); /* truncate if text is too long */
         connect(l, SIGNAL(newData(const CuData&)), this, SLOT(configure(const CuData&)));
         l->setSource(newSrcs.at(i));
