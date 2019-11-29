@@ -3,12 +3,23 @@
 # Project created by QtCreator 2017-04-14T11:52:03
 #
 #-------------------------------------------------
+isEmpty(INSTALL_ROOT) {
+    INSTALL_ROOT=/usr/local/cumbia-libs
+}
 
-include(../../qumbia-tango-controls/qumbia-tango-controls.pri)
-include(../../qumbia-epics-controls/qumbia-epics-controls.pri)
-exists(/usr/local/cumbia-libs/include/cumbia-random/cumbia-random.pri) {
+exists($${INSTALL_ROOT}/qumbia-tango-controls.pri) {
+    message("including support for qumbia-tango-controls module")
+    include($${INSTALL_ROOT}/qumbia-tango-controls/qumbia-tango-controls.pri)
+}
+
+exists($${INSTALL_ROOT}/qumbia-epics-controls.pri) {
+    message("including support for qumbia-epics-controls module")
+    include($${INSTALL_ROOT}/qumbia-epics-controls.pri)
+}
+
+exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {
     message("including support for cumbia-random module")
-    include(/usr/local/cumbia-libs/include/cumbia-random/cumbia-random.pri)
+    include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
 }
 
 # The application will be installed under INSTALL_ROOT (i.e. prefix)

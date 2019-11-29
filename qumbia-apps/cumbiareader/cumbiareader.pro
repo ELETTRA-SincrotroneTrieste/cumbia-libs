@@ -1,15 +1,19 @@
-exists (/usr/local/cumbia-libs/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
-    message("- adding EPICS support")
-    include (/usr/local/cumbia-libs/include/qumbia-epics-controls/qumbia-epics-controls.pri)
-}
-exists  (/usr/local/cumbia-libs/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
-    message("- adding Tango support")
-    include (/usr/local/cumbia-libs/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+isEmpty(INSTALL_ROOT) {
+    INSTALL_ROOT=/usr/local/cumbia-libs
 }
 
-exists(/usr/local/cumbia-libs/include/cumbia-random/cumbia-random.pri) {
+exists ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
+    message("- adding EPICS support")
+    include ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+}
+exists  ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
+    message("- adding Tango support")
+    include ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+}
+
+exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {
     message("- adding cumbia-random module support")
-    include(/usr/local/cumbia-libs/include/cumbia-random/cumbia-random.pri)
+    include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
 }
 
 TEMPLATE = app
