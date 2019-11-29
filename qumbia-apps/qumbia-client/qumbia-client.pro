@@ -7,7 +7,7 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT=/usr/local/cumbia-libs
 }
 
-exists($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-epics-controls.pri) {
+exists($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
     message("including support for qumbia-epics-controls module under $${INSTALL_ROOT}")
     include($${INSTALL_ROOT}/include/qumbia-epics-controls.pri)
 }
@@ -17,7 +17,7 @@ exists($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
     include($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
 }
 
-exists($${INSTALL_ROOT}/include/qumbia-tango-controls/cumbia-random/cumbia-random.pri) {
+exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random/cumbia-random.pri) {
     message("including support for cumbia-random module under $${INSTALL_ROOT}")
     include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
 }
