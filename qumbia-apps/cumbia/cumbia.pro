@@ -12,6 +12,17 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT = /usr/local/cumbia-libs
 }
 
+# comment this line if you want to install bash completion scripts
+# system wide
+isEmpty(BASH_COMPLETION_DIR) {
+    BASH_COMPLETION_DIR=$${INSTALL_ROOT}/share/bash-completion.d
+}
+
+isEmpty(BASH_COMPLETION_DIR) {
+    message("cumbia: BASH_COMPLETION_DIR is empty: using pkg-config to find system wide bash completion dir")
+    BASH_COMPLETION_DIR=$$system(pkg-config --variable=completionsdir bash-completion)
+}
+
 # avoid stripping executable files (cumbia bash script)
 QMAKE_STRIP = echo
 
@@ -26,7 +37,6 @@ INCLUDEDIR = $${INSTALL_ROOT}/include
 
 SHAREDIR = $${INSTALL_ROOT}/share
 
-BASH_COMPLETION_DIR=$$system(pkg-config --variable=completionsdir bash-completion)
 
 #target.path = $${INSTALL_ROOT}/bin
 #target.files = $${TARGET}

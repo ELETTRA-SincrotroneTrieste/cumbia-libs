@@ -2,10 +2,12 @@
 #include <QRegularExpression>
 #include "cumbiareader.h" // for Verbosity enum
 #include <cumacros.h>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
 
 CmdLineOptions::CmdLineOptions()
 {
-    m_help_map["--period=x"] = "specify a custom period [x ms] for polled sources. Default: 1sec";
+    m_help_map["-p x --period=x"] = "specify a custom period [x ms] for polled sources. Default: 1sec";
     m_help_map["--truncate"] = "truncate output from arrays to 12 elements";
     m_help_map["--truncate=x"] = "truncate output from arrays to x elements";
     m_help_map["--max-timers=x"] = "use at most x timers for polled sources";

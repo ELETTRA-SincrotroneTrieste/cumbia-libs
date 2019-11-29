@@ -303,8 +303,21 @@ void Cumbiareader::m_createReaders(const QStringList &srcs) {
     else {
         for(int i = 1; i < srcs.size(); i++)
         {
+            // square brackets in bash shell are OK
+            // if present, replace them with ()
+            // [A-Za-z0-9\-_\.,/]+->[A-Za-z0-9\-_\.,]+(?:\[.*\]){0,1}
+            // match for example aa/bb/cc:command[1,2] and replace with
+            // aa/bb/cc->command(1,2)
+            //
+            QRegularExpression squarebrackets_cmd("[A-Za-z0-9\\-_\\.,/]+->[A-Za-z0-9\\-_\\.,]+(?:\\[.*\\]){0,1}");
             CuData reader_ctx_options;
             QString a = m_conf.sources.at(i);
+            if(a.count('/') == 4 && a.count("//") == 1)
+                a.replace("//", "->");
+            QRegularExpressionMatch match = squarebrackets_cmd.match(a);
+            if(match.hasMatch()) {
+                a.replace('[', '(').replace(']', ')');
+            }
             Reader *r = new Reader(this, cu_pool, m_ctrl_factory_pool);
             if(m_conf.verbosity > Low)
                 r->saveProperty();

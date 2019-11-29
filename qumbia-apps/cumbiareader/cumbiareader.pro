@@ -84,11 +84,16 @@ message(" ")
 message("bash completion dir is $${BASH_COMPLETION_DIR}")
 message(" ")
 
+QMAKE_STRIP=echo
+
 inst.files = $${TARGET}
 inst.path = $${INSTALL_ROOT}/bin
+inst.extra = strip $(TARGET); cp -f $(TARGET) $${INSTALL_ROOT}/bin
 
 script.path = $${INSTALL_ROOT}/bin
 script.files = qutangoreader/qutangoreader
+# INSTALLS tries to strip the bash script
+
 
 INSTALLS += inst doc completion script
 
