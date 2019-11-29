@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#save working dir
+savedir=$PWD
+
 DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 
@@ -65,4 +68,7 @@ done
 fi
 echo ""
 
-echo -e "\n \e[1;32m---\e[0m\n"
+# restore dir
+cd $savedir
+
+echo -e " \e[1;32m---\e[0m\n"
