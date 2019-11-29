@@ -56,7 +56,11 @@ if [ -d $install_prefix/share/bash-completion.d ]; then
     echo -e -n " \e[1;33minfo\e[0m: scripts: "
     echo -e " \e[0;34m | `find $install_prefix/share/bash-completion.d -type f -printf "%f | "` \e[0m\n"
 
-    source `find $install_prefix/share/bash-completion.d -type f`
+for f in $install_prefix/share/bash-completion.d/*
+    do
+    source $f
+done
+ #   source `find $install_prefix/share/bash-completion.d -type f`
 
 fi
 echo ""
