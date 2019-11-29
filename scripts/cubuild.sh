@@ -835,7 +835,10 @@ if [ $make_install -eq 1 ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_install
 		if [[ "$prefix_cl" == "/usr/local" ]] || [[ "$prefix_cl" == "/usr" ]] ; then
                         echo -e "\e[0;33m*\n* INSTALL \e[1;33mWARNING \e[0m check if under $install_prefix (your prefix) there are symbolic links between *lib* and *lib64*, e.g."
                         echo -e "\e[0;33m*\e[0m                  $install_prefix/lib --> $install_prefix/lib64"
-		fi           
+                fi
+                echo -e ""
+                echo -e "\e[0;33m*\n* INSTALL \e[1;32mINFO \e[0mYou can execute $DIR/cusetenv.sh to use the new libraries in the current shell"
+                echo -e ""
 		echo -e "\e[0;33m*\n* INSTALL \e[1;33mWARNING \e[0mDo you want to add $libprefix to ld.so.conf paths by adding a file \e[0m"
 		echo -e "\e[0;33m                  \e[0;4mcumbia.conf\e[0m under "/etc/ld.so.conf.d/"  [y|n] ? [n] \e[0m"
 		read  -s -n 1 addconf
@@ -906,6 +909,7 @@ if [ $make_install -eq 1 ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_install
 	fi
 
 	echo -e "\e[1;32m*\n* \e[1;34;4mDOCUMENTATION\e[0m: https://elettra-sincrotronetrieste.github.io/cumbia-libs/"
+        echo -e "\e[1;32m*\n* \e[1;32;4mmINFO \e[0m:Execute $DIR/cusetenv.sh to use the new libraries in the current shell"
 	echo -e "\e[1;32m*\n*\e[0m"
 	
 elif  [ ! -r $tmp_installdir ] && [ $make_install -eq 1 ];  then
