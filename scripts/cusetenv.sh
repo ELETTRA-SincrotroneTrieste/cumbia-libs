@@ -35,9 +35,9 @@ if [ -f $install_prefix/share/bash_completion.d/cumbia ]; then
     echo -e " \e[1;32maction\e[0m sourcing \e[0;36m$install_prefix/share/bash_completion.d/cumbia/bin\e[0m for bash completion"
 fi
 
-if [ -d $install_prefix/share/bash_completion.d ]; then
-    echo -e " \e[1;32maction\e[0m sourcing files under \e[0;36m$install_prefix/share/bash_completion.d\e[0m for bash completion"
-    source $install_prefix/share/bash_completion.d/*
+if [ -d $install_prefix/share/bash-completion.d ]; then
+    echo -e " \e[1;32maction\e[0m sourcing files under \e[0;36m$install_prefix/share/bash-completion.d\e[0m for bash completion"
+    source $install_prefix/share/bash-completion.d/*
 fi
 
 
