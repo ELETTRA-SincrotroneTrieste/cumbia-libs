@@ -3,16 +3,16 @@ isEmpty(INSTALL_ROOT) {
 }
 
 exists ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
-    message("- adding EPICS support")
+    message("- adding EPICS support under $${INSTALL_ROOT}")
     include ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
 }
 exists  ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
-    message("- adding Tango support")
+    message("- adding Tango support under $${INSTALL_ROOT}")
     include ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
 }
 
 exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {
-    message("- adding cumbia-random module support")
+    message("- adding cumbia-random module support under $${INSTALL_ROOT}")
     include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
 }
 
