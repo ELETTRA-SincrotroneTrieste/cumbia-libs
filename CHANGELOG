@@ -8,6 +8,8 @@ a. cumbia-qtcontrols
 
 b. qumbia-apps/cumbiareader test app: fixed setOptions/setSource call order
 
+c. created branch_1.0 
+
 v1.0.1
 a. cumbia-tango
    a1. properties are delivered at configuration time even though the attribute value cannot be read
