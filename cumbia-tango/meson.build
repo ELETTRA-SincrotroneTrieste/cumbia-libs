@@ -75,7 +75,7 @@ includedirs = include_directories('lib')
 cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1 -DCUMBIA_TANGO_VERSION=' + cu_version
 # cpp_arguments = []
 
-deps = [ dependency('cumbia'), dependency('tango', method: 'pkg-config') ]
+deps = [ dependency('threads'), dependency('cumbia'), dependency('tango', method: 'pkg-config') ]
 
 cumbiatangolib = shared_library('cumbia-tango', sources,
         version : meson.project_version(),
