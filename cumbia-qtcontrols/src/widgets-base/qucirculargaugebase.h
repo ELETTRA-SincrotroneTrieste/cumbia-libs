@@ -140,6 +140,10 @@ public:
 
     QColor valueColor(double val) const;
 
+    void setCacheRegenerationDisabled(bool dis);
+
+    bool cacheRegenerationDisabled() const;
+
 signals:
 
 public slots:
@@ -218,6 +222,8 @@ protected:
 
     void resizeEvent(QResizeEvent *re);
 
+    QuGaugeConfig *g_config;
+
 private:
 
     void m_anglesUpdate();
@@ -225,7 +231,6 @@ private:
     double m_getMarginW(double radius);
     double m_getMarginH(double radius);
 
-    QuGaugeConfig *g_config;
 
     QuCircularGaugeBasePrivate *d;
 

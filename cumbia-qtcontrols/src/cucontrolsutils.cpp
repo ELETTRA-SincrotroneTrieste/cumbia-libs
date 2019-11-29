@@ -222,9 +222,6 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
     for(int i = 0; i < inputobjs.size() && ret; i++) {
         QObject *o = inputobjs[i];
         has_target = o->metaObject()->indexOfProperty("target") >= 0 && !o->property("target").toString().isEmpty();
-        printf("CuControlsUtils.initObjects: object %s class %s has targets [%s], target %s\e[0m\n",
-               qstoc(o->objectName()), o->metaObject()->className(),
-               has_target ? "yes" : "no", qstoc(o->property("target").toString()) );
         if(!has_target) {  // initialise
             ret = true;
             std::string vs;
