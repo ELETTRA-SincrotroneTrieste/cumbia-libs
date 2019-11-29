@@ -9,7 +9,7 @@ isEmpty(INSTALL_ROOT) {
 
 exists($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
     message("including support for qumbia-epics-controls module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/qumbia-epics-controls.pri)
+    include($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
 }
 
 exists($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
