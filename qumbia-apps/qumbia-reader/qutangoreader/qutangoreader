@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cumbiareader ${@:1}

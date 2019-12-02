@@ -1,0 +1,30 @@
+This is qumbia-reader README file.
+
+DEPENDENCIES:
+
+cumbia libraries >= 1.1.0
+
+ADD ONS
+https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin.git
+
+Building
+--------
+
+qmake 
+make
+[make install]
+
+Running
+--------
+./bin/qumbia-reader --help
+
+Errors & Troubleshooting
+------------------------
+If you experience problems, please contact:
+
+Giacomo  <giacomo.strangolino@elettra.eu>
+
+Thank you.
+
+Sincrotrone Trieste s.c.p.a - ELETTRA Laboratory - Controls Group
+
