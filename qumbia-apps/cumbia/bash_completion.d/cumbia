@@ -9,7 +9,7 @@ _cumbia()
     #
     #  The basic options we'll complete.
     #
-    opts="new ui client read import upgrade"
+    opts="new ui client read monitor import upgrade"
 
 
     #
@@ -26,19 +26,28 @@ _cumbia()
             COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
             return 0
             ;;
-		make)
-			local names=$(for x in `cuuimake --list-options`; do echo ${x} ; done )
+        make)
+            local names=$(for x in `cuuimake --list-options`; do echo ${x} ; done )
             COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
             return 0
-			;;
-		import)
-			local names=$(for x in fast `ls  -1 *.pro`; do echo ${x} ; done )
+            ;;
+        import)
+            local names=$(for x in fast `ls  -1 *.pro`; do echo ${x} ; done )
             COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
             return 0
-                        ;;
-            read)
-            local running=$(for x in `cumbiareader --list-options`; do echo ${x} ; done )
-            COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            ;;
+        read|monitor)
+            which qumbia-tango-find-src &>/dev/null
+            if [ "$?" -ne 0 ] || [ "${cur}" = "-" ] ||  [ "${cur}" = "--" ]; then
+                    local reader_op=$(for x in `qumbia-reader --list-options ${cur}`; do echo ${x} ; done )
+                    COMPREPLY=( $(compgen -W "${reader_op}" -- ${cur}) )
+            else
+                    local running=$(for x in `qumbia-tango-find-src ${cur}`; do echo ${x} ; done )
+                    COMPREPLY=( $(compgen -W "${running}" -- ${cur}) )
+            fi
+            [[ $COMPREPLY == */ ]] && compopt -o nospace
+            [[ "$COMPREPLY" == *"//"* ]] && compopt -o nospace
+            [[ "$COMPREPLY" == *-\> ]] && compopt -o nospace
             return 0
             ;;
         *)

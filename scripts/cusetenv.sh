@@ -15,38 +15,61 @@ if [ ! -r $DIR/config.sh ]; then
 fi
 
 echo -e "\n \e[1;33minfo\e[0m: reading configuration from \"$DIR/config.sh\""
-. "$DIR/config.sh"
+. "$DIR/config.sh" &>/dev/null
 
 echo -e " \e[1;33minfo\e[0m: installation prefix is \"$install_prefix\""
 
 echo -e "\n \e[1;32m---\e[0m\n"
 
 echo -e "\e[4mPKGCONFIG\e[0m"
-echo -e " \e[1;32maction\e[0m prepending \e[0;32m$install_prefix/lib/pkgconfig\e[0m to \e[0;3mPKG_CONFIG_PATH "
-PKG_CONFIG_PATH=$install_prefix/lib/pkgconfig:$PKG_CONFIG_PATH
-export PKG_CONFIG_PATH
+pkg_cfg_p=$install_prefix/lib/pkgconfig
+if [[ $PKG_CONFIG_PATH != *"$pkg_cfg_p"* ]]; then
+    echo -e " \e[1;32maction\e[0m prepending \e[0;32m$pkg_cfg_p\e[0m to \e[0;3mPKG_CONFIG_PATH "
+    PKG_CONFIG_PATH=$pkg_cfg_p:$PKG_CONFIG_PATH
+    export PKG_CONFIG_PATH
+else
+    echo -e " \e[1;33minfo\e[0m: \e[0;3m$pkg_cfg_p\e[0m already in PKG_CONFIG_PATH"
+fi
+
 echo -e " \e[1;33minfo\e[0m: you can now build using this version of the library. Remember to call "
-echo -e " \e[1;33minfo\e[0m: \e[1;32mqmake INSTALL_ROOT=$install_prefix\e[0m before building \e[1;32mQt applications\e[0m\n"
+echo -e " \e[1;33minfo\e[0m: \e[1;32mqmake INSTALL_ROOT=$install_prefix\e[0m before building \e[1;32mQt applications\e[0m"
 echo ""
 
 echo -e "\e[4mLD_LIBRARY_PATH\e[0m"
-echo -e " \e[1;32maction\e[0m prepending \e[0;32m$install_prefix/lib\e[0m to \e[0;3mLD_LIBRARY_PATH \e[0m"
-export LD_LIBRARY_PATH=$install_prefix/lib:$LD_LIBRARY_PATH
-echo -e -n " \e[1;33minfo\e[0m: added plugins: "
-echo -e " \e[0;34m | `find $install_prefix/lib -name *.so.*.*.* -printf "%f | "` \e[0m\n"
-echo ""
+libpath=$install_prefix/lib
+if [[ $LD_LIBRARY_PATH != *"$libpath"* ]]; then
+    echo -e " \e[1;32maction\e[0m prepending \e[0;32m$libpath\e[0m to \e[0;3mLD_LIBRARY_PATH \e[0m"
+    export LD_LIBRARY_PATH=$libpath:$LD_LIBRARY_PATH
+    echo -e -n " \e[1;33minfo\e[0m: found (and added to LD_LIBRARY_PATH) libraries: "
+else
+    echo -e " \e[1;33minfo\e[0m: \e[0;3m$libpath\e[0m already in LD_LIBRARY_PATH. Libraries: "
+fi
+echo -e " \e[0;34m | `find $libpath -name *.so.*.*.* -printf "%f | "` \e[0m"
 echo ""
 
 echo -e "\e[4mQT_PLUGINS_PATH\e[0m"
-echo -e " \e[1;32maction\e[0m prepending \e[0;32m$install_prefix/lib/qumbia-plugins\e[0m to \e[0;3mQT_PLUGIN_PATH \e[0m"
-export QT_PLUGIN_PATH=$install_prefix/lib/qumbia-plugins:$QT_PLUGIN_PATH
-echo -e -n " \e[1;33minfo\e[0m: added plugins: "
-echo -e " \e[0;34m | `find $install_prefix/lib/qumbia-plugins/ -name *.so -printf "%f | "` \e[0m\n"
+
+plupath=$install_prefix/lib/qumbia-plugins
+
+if [[ $QT_PLUGIN_PATH != *"$plupath"* ]]; then
+    echo -e " \e[1;32maction\e[0m prepending \e[0;32m$plupath\e[0m to \e[0;3mQT_PLUGIN_PATH \e[0m"
+    export QT_PLUGIN_PATH=$plupath:$QT_PLUGIN_PATH
+    echo -e -n " \e[1;33minfo\e[0m: added plugins: "
+else
+    echo -e " \e[1;33minfo\e[0m: \e[0;3m$plupath\e[0m already in QT_PLUGIN_PATH. Plugins: "
+fi
+echo -e " \e[0;34m | `find $install_prefix/lib/qumbia-plugins/ -name *.so -printf "%f | "` \e[0m"
 echo ""
 
 echo -e "\e[4mPATH\e[0m"
-echo -e " \e[1;32maction\e[0m prepending \e[0;32m$install_prefix/bin\e[0m to \e[0;3mPATH \e[0m"
-export PATH=$install_prefix/bin:$PATH
+path=$install_prefix/bin
+if [[ $PATH != *"$path"* ]]; then
+    echo -e " \e[1;32maction\e[0m prepending \e[0;32m$path\e[0m to \e[0;3mPATH \e[0m"
+    export PATH=$install_prefix/bin:$PATH
+else
+    echo -e " \e[1;33minfo\e[0m: \e[0;3m$path\e[0m already in PATH."
+fi
+
 echo ""
 
 echo -e "\e[4mBASH COMPLETION\e[0m"

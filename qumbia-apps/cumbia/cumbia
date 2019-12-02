@@ -47,8 +47,10 @@ elif [ $# -gt 0 ] && [ $1 == "ui" ] && [ $2 == "make" ]; then
 elif [ $# -gt 0 ] && [ $1 == "client" ]; then
         qumbia-client ${@:2}
 elif [ $# -gt 0 ] && [ $1 == "read" ]; then
-        cumbiareader ${@:2}
-        echo -e "\e[1;31m* \e[1;4mhint\e[0m: use \e[0;32;3mqutangoreader\e[0m instead of \e[3mcumbia read\e[0m for \e[1;32mTango source names \e[0;4mauto completion\e[0m\n";
+        qumbia-reader ${@:2}
+elif [ $# -gt 0 ] && [ $1 == "monitor" ]; then
+        qumbia-reader --monitor ${@:2}
+
 elif [ $# -gt 0 ] && [ $1 == "import" ] && [ $2 == "fast" ]; then
         qumbiaprojectwizard --from-qtango --fast ${@:3}
 elif [ $# -gt 0 ] && [ $1 == "import" ]; then

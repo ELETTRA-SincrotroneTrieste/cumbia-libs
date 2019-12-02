@@ -25,7 +25,9 @@
 #
 # pkg_config_path=/usr/local/lib/pkgconfig:/usr/local/tango-9.2.5a/lib/pkgconfig:/usr/local/omniorb-4.2.1/lib/pkgconfig:/usr/local/zeromq-4.0.7/lib/pkgconfig:/usr/local/epics/base-3.16.1/lib/pkgconfig:/usr/local/qwt-6.1.3/lib/pkgconfig 
 
-
+if [ -z $install_prefix ]; then
+    prefix_from_environment=0
+ 
 ## =======================================================================================================
 
 
@@ -38,7 +40,22 @@
 ## This will set INSTALL_ROOT variable in Qt qmake projects and -Dprefix=$prefix in meson projects
 ##
 
-install_prefix=/usr/local/cumbia-libs-1.1
+##  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ 
+    install_prefix=/usr/local/cumbia-libs
+
+##  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+## =======================================================================================================
+
+
+
+    echo -e "\e[1;32m* \e[0;4mconfig.sh\e[0m: install_prefix: $install_prefix."
+    echo -e "\e[1;32m* \e[0mYou can either set the \"install_prefix\" variable before calling this script"
+    echo -e "\e[1;32m* \e[0mor edit scripts/config.sh"
+else
+    prefix_from_environment=1
+fi
 
 #
 #

@@ -501,8 +501,6 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts)
         dispose(); // do not use this activity since now
         // unregister this from the thread
         CuThreadInterface *thread = getActivityManager()->getThread(this);
-        printf("CuPollingActivity.m_unregisterAction: asking thread %p to remove activity %p\n",
-               thread, this);
         /* CuActivityManager.removeConnection is invoked by the thread in order to ensure all scheduled events are processed */
         if(thread)
             thread->unregisterActivity(this);

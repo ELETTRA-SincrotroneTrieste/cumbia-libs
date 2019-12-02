@@ -94,7 +94,16 @@ echo -e "\n \e[1;33minfo\e[0m: reading configuration from \"$DIR/config.sh\""
 . "$DIR/projects.sh"
 . "$DIR/config.sh"
 
-echo -e " \e[1;33minfo\e[0m: installation prefix is \"$install_prefix\""
+echo -e -n " \e[1;33minfo\e[0m: installation prefix is \"$install_prefix\""
+
+if [ $prefix_from_environment -eq 1 ]; then
+    echo -e " [\e[1;33m from environment variable\e[0m ]"
+else
+    echo -e " [\e[1;33m from scripts/config.sh settings\e[0m ]"
+    echo -e " \e[1;33minfo\e[0m: You can call \e[1;32minstall_prefix=/your/desired/prefix $0\e[0m to override the setting in scripts/config.sh"
+fi
+
+echo ""
 
 if [[ $@ == **pull** ]]
 then
@@ -744,6 +753,12 @@ for x in "${qmake_subdir_p[@]}"; do
 	cd ..
 done
 
+# copy scripts/cusetenv.sh and scripts/config.sh into $tmp_installdir/bin
+if [ ! -d $tmp_installdir/bin ]; then
+    mkdir -p $tmp_installdir/bin
+fi
+cp -a scripts/cusetenv.sh scripts/config.sh $tmp_installdir/bin
+
 # INSTALL  SECTION
 #
 #
@@ -909,7 +924,7 @@ if [ $make_install -eq 1 ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_install
 	fi
 
 	echo -e "\e[1;32m*\n* \e[1;34;4mDOCUMENTATION\e[0m: https://elettra-sincrotronetrieste.github.io/cumbia-libs/"
-        echo -e "\e[1;32m*\n* \e[1;32;4mmINFO \e[0m:Execute \e[1;32msource $DIR/cusetenv.sh\e[0m to use the new libraries in the current shell"
+        echo -e "\e[1;32m*\n* \e[1;32;4mINFO \e[0m:Execute \e[1;32msource $binpath/cusetenv.sh\e[0m to use the new libraries in the current shell"
 	echo -e "\e[1;32m*\n*\e[0m"
 	
 elif  [ ! -r $tmp_installdir ] && [ $make_install -eq 1 ];  then

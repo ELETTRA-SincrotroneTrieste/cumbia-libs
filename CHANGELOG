@@ -47,7 +47,7 @@ The source name can define group threading, period, size of generated data, mini
 The source can specify a JavaScript file to generate data from a custom function
 e1. enabled in scripts/cubuild.sh
 
-f. qumbia-apps/cumbiareader
+f. qumbia-apps/cumbiareader moved to qumbia-apps/qumbia-reader
 f1. support for cumbia-random
 f2. in combination with the qumbia-tango-findsrc-plugin + qumbia-tango-find-src app, Tango sources auto completion
     is available.
