@@ -116,7 +116,7 @@ The library sources include copies of the *README.md* and *README.UBUNTU.md* fil
 Additional plugins can be downloaded from the <a href="https://github.com/ELETTRA-SincrotroneTrieste/">ELETTRA-Sincrotrone Trieste</a> github page.
 
 |Plugin interfaces to extend *cumbia*  | Description |
-|-------------------------------------------------------------------|
+|--------------------------------------|-------------------------------------------------------|
 | <a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-qtcontrols-introspection-plugin">cumbia-qtcontrols introspection plugin</a>. | Look inside cumbia objects |
 | <a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-tango-introspection-plugin">Tango specific introspection plugin</a>.  | Look inside cumbia-tango objects |
 | <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">Plugin and app to search Tango database names</a>. | Find Tango source names (and provide auto completion for apps!) |
