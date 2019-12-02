@@ -13,6 +13,29 @@ to the Tango control system. The integration is possible both on the client and 
 TANGO device using Cumbia to do work in background has already been developed, as well as simple Qt graphical
 clients relying on the framework. An Epics module has been added to the cumbia-libs set.
 
+## Features
+
+The base library supports several engines, including:
+
+- Tango control system support https://www.tango-controls.org/
+- EPICS control system support https://epics-controls.org/
+- A test environment, named *cumbia-random*
+
+## Apps
+
+The default installation provides some base applications ready to be used with the supported engines
+
+- *cumbia read* a command line reader featuring source names *auto completion* (1)
+- *cumbia monitor* a command line monitor featuring source names *auto completion* (1)
+- *cumbia client* a Qt client to read from and write to sources and targets
+- *cumbia ui make* to build cumbia Qt applications
+- *cumbia new application* to start writing a project
+
+The *cumbia random* module is a tool to test the behaviour and performance of the upper level modules
+(e.g. the graphical components) without connecting to any control system.
+
+(1) Auto completion needs the <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">qumbia-tango-findsrc-plugin</a>.
+
 ## Library documentation
 
 *cumbia* documentation is hosted on *github pages*.
@@ -50,7 +73,7 @@ requires the installation of official *ubuntu packages* only (by means of *apt-g
 
 The cubuild.sh bash scripts installs the cumbia base libraries and apps, including support for either Tango or Epics, or both, if specified.
 
-#### Dependency checklist for an installation with Tango modules
+#### Dependency checklist for an installation with Tango, EPICS and *random* modules
 
 This section can be skipped if you have installed an *ubuntu* system following the instructions in <a href="README.UBUNTU.md">README.UBUNTU.md</a>.
 
@@ -63,6 +86,7 @@ Necessary dependencies
 - qwt libraries
 - doxygen
 - graphviz
+- EPICS (v >= 3.14)
 
 Once all dependencies are installed on your system, check the file *scripts/config.sh*, where: 
 
@@ -70,6 +94,17 @@ Once all dependencies are installed on your system, check the file *scripts/conf
   (if you prepared an *ubuntu* environment as described in <a href="README.UBUNTU.md">README.UBUNTU.md</a> file
   this is not necessary)
 - installation prefix can be changed (section II) if you don't want to install under the default location */usr/local/*
+
+The installation prefix can also be set through an environment variable
+
+> install_prefix=/usr/local/cumbia-libs ./scripts/cubuild.sh
+
+EPICS modules require two environment variables:
+
+- EPICS_BASE
+- EPICS_HOST_ARCH
+
+The *cumbia-random* doesn't need any special prerequisite.
 
 #### Install *cumbia* through *scripts/cubuild.sh*
 
@@ -466,11 +501,11 @@ Adjust qt-designer.pro if necessary:
 Some base tools are provided to test the cumbia-libs and perform some basic operations on the
 underlying control system (reading or writing quantities).
 
-#### 8a. generic_client: a client to read/write from/to Tango and Epics:
+#### 8a. qumbia-client: a client to read/write from/to Tango and Epics:
 
-> cd generic_client
+> cd qumbia-client
 
-Check generic_client.pro and adjust the include directives if needed.
+Check qumbia-client.pro and adjust the include directives if needed.
 Beware that the lines
 
 > CONFIG+=link_pkgconfig  and PKGCONFIG +=
@@ -485,11 +520,19 @@ To build generic_client type:
 
 Read the README.txt for details
 
-> ./generic_client test/device/1/double_scalar,giacomo:ai1,test/device/1/double_spectrum_ro
+> ./qumbia-client test/device/1/double_scalar,giacomo:ai1,test/device/1/double_spectrum_ro
 
-starts the generic_client and performs readings on the two Tango attributes specified and the Epics PV giacomo:ai1
+starts the qumbia-client and performs readings on the two Tango attributes specified and the Epics PV giacomo:ai1
 
-> make install copies the generic_client binary file into INSTALL_ROOT/bin. See generic_client.pro
+> make install
+
+copies the qumbia-client binary file into INSTALL_ROOT/bin. See qumbia-client.pro
+
+If the library has been installed with the *scripts/cubuild.sh* procedure, the command
+
+> cumbia client test/device/1/double_scalar,giacomo:ai1,test/device/1/double_spectrum_ro
+
+will start the client
 
 #### 8b. qumbiaprojectwizard: create a new Qt + cumbia project with a graphical interface.
 

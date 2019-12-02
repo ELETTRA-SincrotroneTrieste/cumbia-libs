@@ -55,6 +55,7 @@ if [ -z $install_prefix ]; then
     echo -e "\e[1;32m* \e[0mor edit scripts/config.sh"
 else
     prefix_from_environment=1
+    install_prefix=$install_prefix
 fi
 
 #

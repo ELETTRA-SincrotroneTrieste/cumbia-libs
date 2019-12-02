@@ -268,3 +268,8 @@ std::list<CuTimer *> CuTimerService::getTimers()
     return timers;
 }
 
+std::list<CuTimerListener *> CuTimerService::getListeners(CuTimer *t) const
+{
+    return t->m_listeners;
+}
+

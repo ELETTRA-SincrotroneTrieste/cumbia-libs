@@ -39,6 +39,7 @@ c3. C++17 shared_locks replace unique locks where the protected variables are on
 
 d. cumbia-qtcontrols
 d1. cupluginloader provides a template method to directly get the desired plugin CuPluginLoader::get
+d2. qulabelbase.cpp: wordwrap no more set to true by default. Fixed size-hint related methods
 
 e. cumbia-random
 

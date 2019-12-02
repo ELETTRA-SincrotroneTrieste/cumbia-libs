@@ -15,6 +15,7 @@ public:
     ~CuTimerService();
     CuTimer* registerListener(CuTimerListener *timer_listener, int timeout);
     std::list<CuTimer *> getTimers();
+    std::list<CuTimerListener *>getListeners(CuTimer *t) const;
     void unregisterListener(CuTimerListener *th, int timeout);
     CuTimer *changeTimeout(CuTimerListener *th, int timeout);
     bool isRegistered(CuTimerListener *th, int timeout);
