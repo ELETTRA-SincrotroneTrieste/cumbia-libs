@@ -72,9 +72,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5125316ea1178c965bdebc971d598abd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTDbPropertyReader.html#a5125316ea1178c965bdebc971d598abd">get</a> (const std::vector&lt; CuData &gt; &amp;in_data)</td></tr>
 <tr class="memdesc:a5125316ea1178c965bdebc971d598abd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a list of device, class or attribute properties from the <a class="el" href="namespaceTango.html">Tango</a> database.  <a href="#a5125316ea1178c965bdebc971d598abd">More...</a><br /></td></tr>
 <tr class="separator:a5125316ea1178c965bdebc971d598abd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa22eaad55ece9b8073271a4be5c5c8e4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTDbPropertyReader.html#aa22eaad55ece9b8073271a4be5c5c8e4">cancel</a> ()</td></tr>
+<tr class="memdesc:aa22eaad55ece9b8073271a4be5c5c8e4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCuTDbPropertyReader.html#aa22eaad55ece9b8073271a4be5c5c8e4" title="CuTDbPropertyReader::cancel tries to unregister the activity and removes all listeners.">CuTDbPropertyReader::cancel</a> tries to unregister the activity and removes all listeners.  <a href="#aa22eaad55ece9b8073271a4be5c5c8e4">More...</a><br /></td></tr>
+<tr class="separator:aa22eaad55ece9b8073271a4be5c5c8e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a951f5c6621ef550e893d2e0af5e05d06"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTDbPropertyReader.html#a951f5c6621ef550e893d2e0af5e05d06">addListener</a> (CuDataListener *l)</td></tr>
 <tr class="memdesc:a951f5c6621ef550e893d2e0af5e05d06"><td class="mdescLeft">&#160;</td><td class="mdescRight">register a CuDataListener that will be notified when data is ready.  <a href="#a951f5c6621ef550e893d2e0af5e05d06">More...</a><br /></td></tr>
 <tr class="separator:a951f5c6621ef550e893d2e0af5e05d06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c4272bfce126045e0d23902b87a5d9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTDbPropertyReader.html#a7c4272bfce126045e0d23902b87a5d9d">removeListener</a> (CuDataListener *l)</td></tr>
+<tr class="memdesc:a7c4272bfce126045e0d23902b87a5d9d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCuTDbPropertyReader.html#a7c4272bfce126045e0d23902b87a5d9d" title="CuTDbPropertyReader::removeListener removes the given listener.">CuTDbPropertyReader::removeListener</a> removes the given listener.  <a href="#a7c4272bfce126045e0d23902b87a5d9d">More...</a><br /></td></tr>
+<tr class="separator:a7c4272bfce126045e0d23902b87a5d9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a288d2e49b4df8d0ca64abc5ab0b44012"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTDbPropertyReader.html#a288d2e49b4df8d0ca64abc5ab0b44012">deleteLater</a> ()</td></tr>
+<tr class="memdesc:a288d2e49b4df8d0ca64abc5ab0b44012"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCuTDbPropertyReader.html#a288d2e49b4df8d0ca64abc5ab0b44012" title="CuTDbPropertyReader::deleteLater schedule object auto destruction.">CuTDbPropertyReader::deleteLater</a> schedule object auto destruction.  <a href="#a288d2e49b4df8d0ca64abc5ab0b44012">More...</a><br /></td></tr>
+<tr class="separator:a288d2e49b4df8d0ca64abc5ab0b44012"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae66f3f0116718a3196583121cf70b450"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTDbPropertyReader.html#ae66f3f0116718a3196583121cf70b450">onProgress</a> (int step, int total, const CuData &amp;data)</td></tr>
 <tr class="separator:ae66f3f0116718a3196583121cf70b450"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a931f46877413b9c2b3868a028081d214"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTDbPropertyReader.html#a931f46877413b9c2b3868a028081d214">onResult</a> (const CuData &amp;data)</td></tr>
@@ -87,6 +96,8 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Read <a class="el" href="namespaceTango.html">Tango</a> device, attribute and class properties. </p>
 <p><a class="el" href="classCuTDbPropertyReader.html" title="Read Tango device, attribute and class properties.">CuTDbPropertyReader</a> fetches properties from the <a class="el" href="namespaceTango.html">Tango</a> database and provides a notification through the CuThreadListener interface when data is available. Data is retrieved in a separate thread.</p>
+<dl class="section user"><dt>Object disposal</dt><dd>This must not be deleted directly. Auto deletion is possible if you call deleteLater. In this case, the object will auto delete itself either after onResult or immediately, if onResult has already been called.</dd></dl>
+<dl class="section user"><dt>Listener disposal</dt><dd>Do not delete the listener unless you've previously called either cancel or removeListener.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuTDbPropertyReader.html" title="Read Tango device, attribute and class properties.">CuTDbPropertyReader</a> </dd>
 <dd>
 <a class="el" href="classCuTDbPropertyReader.html#a5125316ea1178c965bdebc971d598abd" title="Get a list of device, class or attribute properties from the Tango database.">get</a> </dd></dl>
@@ -174,6 +185,52 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>register a CuDataListener that will be notified when data is ready. </p>
+
+</div>
+</div>
+<a id="aa22eaad55ece9b8073271a4be5c5c8e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa22eaad55ece9b8073271a4be5c5c8e4">&#9670;&nbsp;</a></span>cancel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuTDbPropertyReader::cancel </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classCuTDbPropertyReader.html#aa22eaad55ece9b8073271a4be5c5c8e4" title="CuTDbPropertyReader::cancel tries to unregister the activity and removes all listeners.">CuTDbPropertyReader::cancel</a> tries to unregister the activity and removes all listeners. </p>
+<p>Listeners can be deleted after cancel is called, since <em>onUpdate</em> will not be invoked after. Nonetheless, cancel is not enough to ensure this object <em>can be safely deleted</em>. If you intend to <em>cancel and delete</em> the <a class="el" href="classCuTDbPropertyReader.html" title="Read Tango device, attribute and class properties.">CuTDbPropertyReader</a>, call deleteLater after cancel. </p>
+
+</div>
+</div>
+<a id="a288d2e49b4df8d0ca64abc5ab0b44012"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a288d2e49b4df8d0ca64abc5ab0b44012">&#9670;&nbsp;</a></span>deleteLater()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuTDbPropertyReader::deleteLater </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classCuTDbPropertyReader.html#a288d2e49b4df8d0ca64abc5ab0b44012" title="CuTDbPropertyReader::deleteLater schedule object auto destruction.">CuTDbPropertyReader::deleteLater</a> schedule object auto destruction. </p>
+<p>If the result has already been delivered, the object is immediately deleted. This object will be deleted right after result delivery otherwise.</p>
+<dl class="section user"><dt>Warnings</dt><dd><ol type="1">
+<li>Do not delete the listener set with addListener without previously calling either removeListener or cancel.</li>
+<li>Do not directly <em>delete</em> a <a class="el" href="classCuTDbPropertyReader.html" title="Read Tango device, attribute and class properties.">CuTDbPropertyReader</a> unless you are really sure that onResult has been called.</li>
+</ol>
+</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuTDbPropertyReader.html#aa22eaad55ece9b8073271a4be5c5c8e4" title="CuTDbPropertyReader::cancel tries to unregister the activity and removes all listeners.">cancel</a> </dd></dl>
 
 </div>
 </div>
@@ -320,6 +377,32 @@ Tutorial</h2>
 
 </div>
 </div>
+<a id="a7c4272bfce126045e0d23902b87a5d9d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c4272bfce126045e0d23902b87a5d9d">&#9670;&nbsp;</a></span>removeListener()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuTDbPropertyReader::removeListener </td>
+          <td>(</td>
+          <td class="paramtype">CuDataListener *&#160;</td>
+          <td class="paramname"><em>l</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classCuTDbPropertyReader.html#a7c4272bfce126045e0d23902b87a5d9d" title="CuTDbPropertyReader::removeListener removes the given listener.">CuTDbPropertyReader::removeListener</a> removes the given listener. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">l</td><td>a pointer to the listener to be removed </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="cutdbpropertyreader_8h_source.html">cutdbpropertyreader.h</a></li>
 <li><a class="el" href="cutdbpropertyreader_8cpp.html">cutdbpropertyreader.cpp</a></li>
@@ -327,7 +410,7 @@ Tutorial</h2>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 17 2019 14:48:30 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 2 2019 16:50:53 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

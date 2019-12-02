@@ -42,5 +42,7 @@ var classCuActivity =
     [ "repeat", "classCuActivity.html#a9108d99d0eaebb2251230656ee68bee2", null ],
     [ "setActivityManager", "classCuActivity.html#a8b1a222feac7c2b75ccacb1bbc7da511", null ],
     [ "setFlag", "classCuActivity.html#afd96d5ed45042a3fa82e3f83a7a1e307", null ],
-    [ "setFlags", "classCuActivity.html#a628784b290540313025578994ecbe8a9", null ]
+    [ "setFlags", "classCuActivity.html#a628784b290540313025578994ecbe8a9", null ],
+    [ "setThreadToken", "classCuActivity.html#a27a307be0ec0863a8a5ce6b69f3245e3", null ],
+    [ "threadToken", "classCuActivity.html#a78f70813af02a1708cf58ea8e89d0657", null ]
 ];

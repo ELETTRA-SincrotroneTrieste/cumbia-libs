@@ -68,6 +68,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2a5878ceb64a7d755868aab8d4560e79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab474f1f72f6596b4cee5a70b58812947"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTConfiguration.html#ab474f1f72f6596b4cee5a70b58812947">setDesiredAttributeProperties</a> (const std::vector&lt; std::string &gt; props)</td></tr>
 <tr class="separator:ab474f1f72f6596b4cee5a70b58812947"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedd059e5861885a2b16882cdae735ae2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTConfiguration.html#aedd059e5861885a2b16882cdae735ae2">setOptions</a> (const CuData &amp;options)</td></tr>
+<tr class="separator:aedd059e5861885a2b16882cdae735ae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed77f25053d133da6fdeaaf6b970f9af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTConfiguration.html#aed77f25053d133da6fdeaaf6b970f9af">onProgress</a> (int, int, const CuData &amp;)</td></tr>
 <tr class="separator:aed77f25053d133da6fdeaaf6b970f9af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd79d732d6e9aab53a7fa4c3757cae0e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTConfiguration.html#afd79d732d6e9aab53a7fa4c3757cae0e">onResult</a> (const CuData &amp;data)</td></tr>
@@ -566,7 +568,29 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classCuTReaderConfFactory.html#a456b2795949e2023bc661abb041c19fc">CuTReaderConfFactory::create()</a>, and <a class="el" href="classCuTWriterConfFactory.html#a8f3fda76515035abbd8832f9a42d1d25">CuTWriterConfFactory::create()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuTWriterConfFactory.html#a8f3fda76515035abbd8832f9a42d1d25">CuTWriterConfFactory::create()</a>, and <a class="el" href="classCuTConfiguration.html#aedd059e5861885a2b16882cdae735ae2">setOptions()</a>.</p>
+
+</div>
+</div>
+<a id="aedd059e5861885a2b16882cdae735ae2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedd059e5861885a2b16882cdae735ae2">&#9670;&nbsp;</a></span>setOptions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuTConfiguration::setOptions </td>
+          <td>(</td>
+          <td class="paramtype">const CuData &amp;&#160;</td>
+          <td class="paramname"><em>options</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuTConfiguration.html#ab474f1f72f6596b4cee5a70b58812947">setDesiredAttributeProperties()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classCuTReaderConfFactory.html#a456b2795949e2023bc661abb041c19fc">CuTReaderConfFactory::create()</a>.</p>
 
 </div>
 </div>
@@ -603,7 +627,7 @@ See also Cumbia::registerActivity </dd></dl>
 
 <p>Implements <a class="el" href="classCuTangoActionI.html#a641aee21ef5e7a185271df3eead88172">CuTangoActionI</a>.</p>
 
-<p class="reference">References <a class="el" href="classTSource.html#ab5fbb8717108ab3b13720384711610cba12d7f1efb56860c03f84ee190e87c9c8">TSource::Cmd</a>, <a class="el" href="classCuDeviceFactoryService.html#a5bc620117b95857cc16fd6776ad9c4edae1c868c8330b3db88024a43631ccbf95">CuDeviceFactoryService::CuDeviceFactoryServiceType</a>, <a class="el" href="classCuTConfigActivity.html#a288c450c41444523809e797d87affd64a95e710ae8ddd834268a9bdb52d5c8992">CuTConfigActivity::CuReaderConfigActivityType</a>, <a class="el" href="classCuTConfigActivity.html#a288c450c41444523809e797d87affd64aa45f4232215830b81190064ae6eb2c8d">CuTConfigActivity::CuWriterConfigActivityType</a>, and <a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a6caccb8082e4cdc6fb68a67c0e1df6c3">CuTangoActionI::ReaderConfig</a>.</p>
+<p class="reference">References <a class="el" href="classTSource.html#ab5fbb8717108ab3b13720384711610cba12d7f1efb56860c03f84ee190e87c9c8">TSource::Cmd</a>, <a class="el" href="classCuDeviceFactoryService.html#a5bc620117b95857cc16fd6776ad9c4edae1c868c8330b3db88024a43631ccbf95">CuDeviceFactoryService::CuDeviceFactoryServiceType</a>, <a class="el" href="classCuTConfigActivity.html#a288c450c41444523809e797d87affd64a95e710ae8ddd834268a9bdb52d5c8992">CuTConfigActivity::CuReaderConfigActivityType</a>, <a class="el" href="classCuTConfigActivity.html#a288c450c41444523809e797d87affd64aa45f4232215830b81190064ae6eb2c8d">CuTConfigActivity::CuWriterConfigActivityType</a>, <a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a6caccb8082e4cdc6fb68a67c0e1df6c3">CuTangoActionI::ReaderConfig</a>, and <a class="el" href="classCuTConfigActivity.html#a7212d0260a6fbf1a56211119e337506a">CuTConfigActivity::setDesiredAttributeProperties()</a>.</p>
 
 </div>
 </div>
@@ -649,7 +673,7 @@ See also Cumbia::registerActivity </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 17 2019 14:48:30 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 2 2019 16:50:53 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

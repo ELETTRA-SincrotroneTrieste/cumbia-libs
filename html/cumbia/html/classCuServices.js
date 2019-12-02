@@ -2,6 +2,7 @@ var classCuServices =
 [
     [ "Type", "classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b", [
       [ "Thread", "classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bae0d1c54f00092061a920aeb27b732c6c", null ],
+      [ "Timer", "classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bab4e2a6f342d95f03144c33e3b429158e", null ],
       [ "ActivityManager", "classCuServices.html#aa03cab8558f097dcdba9b49c90140c0ba1e004777922d94ed95db35331853c4fc", null ],
       [ "EventLoop", "classCuServices.html#aa03cab8558f097dcdba9b49c90140c0baad975f983fa59d673f8d86e0596fff94", null ],
       [ "Log", "classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bafe0f9b13689ac2ce980076b364b04b1e", null ],

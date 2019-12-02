@@ -86,6 +86,7 @@ The library sources include copies of the *README.md* and *README.UBUNTU.md* fil
  | <a href="html/qumbia-tango-controls/html/index.html">cumbia-tango-controls</a>.  |
  | <a href="html/cumbia-epics/html/index.html">qumbia-epics</a>.   |
  | <a href="html/qumbia-epics-controls/html/index.html">qumbia-epics-controls</a>.  |
+ | <a href="html/cumbia-random/html/index.html">cumbia-random</a>.  |
  | <a href="html/cumbia-websocket/html/index.html">cumbia-websocket</a>.  |
  | <a href="html/cumbia-qtcontrols/html/qumbia_plugins.html">qumbia-plugins module</a>.  |
 
@@ -113,7 +114,13 @@ The library sources include copies of the *README.md* and *README.UBUNTU.md* fil
 ### Additional plugins
 
 Additional plugins can be downloaded from the <a href="https://github.com/ELETTRA-SincrotroneTrieste/">ELETTRA-Sincrotrone Trieste</a> github page.
- 
+|Plugin interfaces to extend *cumbia*  |
+|-------------------------------------------------------------------|
+| <a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-qtcontrols-introspection-plugin">cumbia-qtcontrols introspection plugin</a>. |
+| <a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-tango-introspection-plugin">Tango specific introspection plugin</a>. |
+| <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">Plugin and app to search Tango database names</a>. |
+
+
 
 ### Apps
 

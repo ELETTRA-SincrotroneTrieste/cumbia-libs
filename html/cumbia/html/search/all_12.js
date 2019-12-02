@@ -2,8 +2,14 @@ var searchData=
 [
   ['thread',['Thread',['../classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bae0d1c54f00092061a920aeb27b732c6c',1,'CuServices']]],
   ['threadautodestroy',['ThreadAutoDestroy',['../classCuEventI.html#ab4bba34f5f3639c29e9529f4617d0e51a168335fd02c1de0d735cc67c6a04e7d8',1,'CuEventI']]],
-  ['timeout',['timeout',['../classCuTimer.html#aec23de65a1e03aabdaee041999f563f1',1,'CuTimer']]],
+  ['threadtoken',['threadToken',['../classCuActivity.html#a78f70813af02a1708cf58ea8e89d0657',1,'CuActivity::threadToken()'],['../classCumbia.html#a7771a2ce3b7ee3366d96ca7bf6f2ed39',1,'Cumbia::threadToken()']]],
+  ['ti_5fcache',['ti_cache',['../classCuTimerServicePrivate.html#a05b9a558a973d01f55c55551aad85b3a',1,'CuTimerServicePrivate']]],
+  ['ti_5fmap',['ti_map',['../classCuTimerServicePrivate.html#a53737fb7d6f5ce9fe7451d41b5ff81db',1,'CuTimerServicePrivate']]],
+  ['timeout',['timeout',['../classCuTimer.html#aec23de65a1e03aabdaee041999f563f1',1,'CuTimer::timeout() const'],['../classCuTimer.html#aec23de65a1e03aabdaee041999f563f1',1,'CuTimer::timeout() const']]],
   ['timeoutchange',['TimeoutChange',['../classCuActivityEvent.html#a3727016a1c613763a0936d426d80301aa71578c4e186f954e5f935b65910f2530',1,'CuActivityEvent']]],
+  ['timer',['Timer',['../classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bab4e2a6f342d95f03144c33e3b429158e',1,'CuServices']]],
+  ['timer_5fmax_5fcount',['timer_max_count',['../classCuTimerServicePrivate.html#a30ea1ce5bfb0dab83671cb3d766a4b6f',1,'CuTimerServicePrivate']]],
+  ['timermaxcount',['timerMaxCount',['../classCuTimerService.html#a0448606e0bddbcb0413374fe9c8fc7ef',1,'CuTimerService']]],
   ['timestamplen',['TIMESTAMPLEN',['../cuvariant_8h.html#a6eb3bc36623bc3d26813b12d8fd06ba5',1,'cuvariant.h']]],
   ['to',['to',['../classCuVariant.html#a81e3979570e1c6eccc9d9f909354ecc4',1,'CuVariant']]],
   ['tobool',['toBool',['../classCuVariant.html#aa5869b485e482c1e643e458d508c88a8',1,'CuVariant']]],
@@ -45,6 +51,6 @@ var searchData=
   ['tovector',['toVector',['../classCuVariant.html#ae776f45b5c040992ec153e28c42fb3f5',1,'CuVariant::toVector(std::vector&lt; T &gt; &amp;v) const'],['../classCuVariant.html#a3450c6f6b842a4ac8adffd4d5f534da5',1,'CuVariant::toVector()']]],
   ['tovoidp',['toVoidP',['../classCuVariant.html#a6b1f3e78894429efd9182fb25e0034e7',1,'CuVariant']]],
   ['tutorial_5fcuactivity_2emd',['tutorial_cuactivity.md',['../tutorial__cuactivity_8md.html',1,'']]],
-  ['type',['type',['../classCuDataQuality.html#a7af66c8b96b023fadda61aed90fb18f5',1,'CuDataQuality::type()'],['../classCuThread.html#a2a5c85c2573534a39273890056ad9ff8',1,'CuThread::type()'],['../classCuThreadInterface.html#aae520d5364a5101e7afae2334927fea1',1,'CuThreadInterface::type()'],['../classCuActivityEvent.html#a3727016a1c613763a0936d426d80301a',1,'CuActivityEvent::Type()'],['../classCuDataQuality.html#a6a78fa28ebb7b9ac9c8450bf836615a7',1,'CuDataQuality::Type()'],['../classCumbia.html#a30cb729a1d7d92a1fa5d55a69bb405eb',1,'Cumbia::Type()'],['../classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b',1,'CuServices::Type()']]],
+  ['type',['type',['../classCuDataQuality.html#a7af66c8b96b023fadda61aed90fb18f5',1,'CuDataQuality::type()'],['../classCuThread.html#a2a5c85c2573534a39273890056ad9ff8',1,'CuThread::type() const'],['../classCuThread.html#a2a5c85c2573534a39273890056ad9ff8',1,'CuThread::type() const'],['../classCuThreadInterface.html#aae520d5364a5101e7afae2334927fea1',1,'CuThreadInterface::type()'],['../classCuActivityEvent.html#a3727016a1c613763a0936d426d80301a',1,'CuActivityEvent::Type()'],['../classCuDataQuality.html#a6a78fa28ebb7b9ac9c8450bf836615a7',1,'CuDataQuality::Type()'],['../classCumbia.html#a30cb729a1d7d92a1fa5d55a69bb405eb',1,'Cumbia::Type()'],['../classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b',1,'CuServices::Type()']]],
   ['typeinvalid',['TypeInvalid',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cadca45a1917f5ceb9ed99f324504c1976',1,'CuVariant']]]
 ];

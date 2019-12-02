@@ -80,6 +80,9 @@ var files_dup =
     [ "cuthread.h", "cuthread_8h.html", [
       [ "CuThread", "classCuThread.html", "classCuThread" ]
     ] ],
+    [ "cuthread_new.h", "cuthread__new_8h.html", [
+      [ "CuThread", "classCuThread.html", "classCuThread" ]
+    ] ],
     [ "cuthreadevents.cpp", "cuthreadevents_8cpp.html", null ],
     [ "cuthreadevents.h", "cuthreadevents_8h.html", null ],
     [ "cuthreadfactory.cpp", "cuthreadfactory_8cpp.html", null ],
@@ -112,11 +115,23 @@ var files_dup =
     [ "cuthreadseventbridgefactory_i.h", "cuthreadseventbridgefactory__i_8h.html", [
       [ "CuThreadsEventBridgeFactory_I", "classCuThreadsEventBridgeFactory__I.html", "classCuThreadsEventBridgeFactory__I" ]
     ] ],
+    [ "cuthreadtokengeni.h", "cuthreadtokengeni_8h.html", [
+      [ "CuThreadTokenGenI", "classCuThreadTokenGenI.html", "classCuThreadTokenGenI" ]
+    ] ],
     [ "cutimer.cpp", "cutimer_8cpp.html", null ],
     [ "cutimer.h", "cutimer_8h.html", [
       [ "CuTimer", "classCuTimer.html", "classCuTimer" ]
     ] ],
+    [ "cutimer_new.h", "cutimer__new_8h.html", [
+      [ "CuTimer", "classCuTimer.html", "classCuTimer" ]
+    ] ],
     [ "cutimerlistener.h", "cutimerlistener_8h.html", null ],
+    [ "cutimerservice.cpp", "cutimerservice_8cpp.html", [
+      [ "CuTimerServicePrivate", "classCuTimerServicePrivate.html", "classCuTimerServicePrivate" ]
+    ] ],
+    [ "cutimerservice.h", "cutimerservice_8h.html", [
+      [ "CuTimerService", "classCuTimerService.html", "classCuTimerService" ]
+    ] ],
     [ "cuvariant.cpp", "cuvariant_8cpp.html", null ],
     [ "cuvariant.h", "cuvariant_8h.html", "cuvariant_8h" ],
     [ "cuvariant_t.h", "cuvariant__t_8h.html", null ],

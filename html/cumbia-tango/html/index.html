@@ -98,32 +98,7 @@ Modules</h2>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><a href="../../qumbia-plugins/html/index.html">qumbia-plugins module</a>.   </td></tr>
 </table>
-<h2><a class="anchor" id="cu_apps"></a>
-apps</h2>
-<p>These applications (and their documentation, that has already been mentioned in the <em>Tutorials</em> table above) must be installed from the <em>qumbia-apps</em> sub-directory of the <em>cumbia-libs</em> distribution. To install them, <em>cd</em> into that folder and execute:</p>
-<div class="fragment"><div class="line">qmake</div><div class="line">make</div><div class="line">sudo make install</div></div><!-- fragment --><p>Along the applications executables and documentation, two bash scripts will be installed:</p>
-<ul>
-<li>/etc/bash_completion.d/cumbia</li>
-<li>/etc/bash/bashrc.d/cumbia.sh</li>
-</ul>
-<p>They define shortcuts for the common operations provided by the <em>qumbia-apps</em> applications as follows:</p>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Applications (command line)  </th><th class="markdownTableHeadNone">description  </th><th class="markdownTableHeadCenter">app   </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><em>cumbia new project</em>  </td><td class="markdownTableBodyNone">create a new cumbia project  </td><td class="markdownTableBodyCenter"><a href="../../qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>   </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><em>cumbia import</em>  </td><td class="markdownTableBodyNone">migrate a QTango project into cumbia  </td><td class="markdownTableBodyCenter"><a href="../../qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>   </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><em>cumbia new control</em>  </td><td class="markdownTableBodyNone">write a <em>cumbia control</em> reader or writer  </td><td class="markdownTableBodyCenter"><a href="../../qumbianewcontrolwizard/html/index.html">qumbia-apps/qumbianewcontrolwizard</a>   </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><em>cumbia ui make</em>  </td><td class="markdownTableBodyNone">run <em>cuuimake</em> to generate <em>qt+cumbia</em> ui_*.h files  </td><td class="markdownTableBodyCenter"><a href="../../cuuimake/html/index.html">qumbia-apps/cuuimake</a>   </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><em>cumbia client</em>  </td><td class="markdownTableBodyNone">run a generic cumbia client  </td><td class="markdownTableBodyCenter"><a href="../../cumbia_client/html/index.html">qumbia-apps/cumbia_client</a>   </td></tr>
-</table>
-<p><em>bash auto completion</em> will help you use these shortcuts: try</p>
-<div class="fragment"><div class="line">cumbia &lt;TAB&gt;</div></div><!-- fragment --><p>or</p>
-<div class="fragment"><div class="line">cumbia new &lt;TAB&gt;</div></div><!-- fragment --><h1><a class="anchor" id="implementation"></a>
+<h1><a class="anchor" id="implementation"></a>
 Implementation</h1>
 <p>The <em><a class="el" href="classCumbiaTango.html">CumbiaTango</a></em> class is an extension of the <em>Cumbia</em> base one. Its main task is managing the so called <em>actions</em>. An <em>action</em> represents a task associated to either a <a class="el" href="namespaceTango.html">Tango</a> device attribute or a command (called source). Read, write, configure are the main sort of jobs an action can accomplish. More types of actions are foreseen, such as multiple readings or writings in sequence. <em><a class="el" href="classCuTangoActionI.html" title="an interface for a Tango action, typically a reader or a writer are implementors">CuTangoActionI</a></em> defines the interface of an action. Operations include adding or removing data listeners, starting and stopping an action, sending and getting data to and from the underlying thread (for example retrieve or change the polling period of a source). <em><a class="el" href="classCuTReader.html" title="Low level class to read tango attributes and commands with output arguments.">CuTReader</a></em> implements the interface and holds a reference to either an activity designed to receive events from <em><a class="el" href="namespaceTango.html">Tango</a></em> or another intended to poll a source.</p>
 <p><em>Activities</em> is where the <em><a class="el" href="namespaceTango.html">Tango</a></em> connection is setup, database is accessed for configuration, events are subscribed, a poller is started or a write operation is performed. This is done inside the thread safe <em>init</em>, <em>execute</em> and <em>onExit</em> methods, invoked from another thread. Progress and results are forwarded by the <em>publishProgress</em> and <em>publishResult</em> methods in the activity and received in the <em>onProgress</em> and <em>onResult</em> ones implemented by the action. Therein, CuDataListener’s <em>onUpdate</em> method is invoked with the new data. Reception safely occurs in the main thread.</p>
@@ -174,7 +149,7 @@ cumbiatango in graphical applications</h1>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 17 2019 14:48:30 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 2 2019 16:50:53 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

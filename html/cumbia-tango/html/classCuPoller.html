@@ -67,14 +67,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af5337b4d1347521a23b0a8ff5067c6f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60c531b29906eba959c1ba3c8a6c0d6c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPoller.html#a60c531b29906eba959c1ba3c8a6c0d6c">period</a> () const</td></tr>
 <tr class="separator:a60c531b29906eba959c1ba3c8a6c0d6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed29c4677568724b15eebee1eb733b55"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPoller.html#aed29c4677568724b15eebee1eb733b55">registerAction</a> (const <a class="el" href="classTSource.html">TSource</a> &amp;tsrc, <a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *a)</td></tr>
-<tr class="separator:aed29c4677568724b15eebee1eb733b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc1ee3055effcf64ed3f60feb83c2ab8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPoller.html#abc1ee3055effcf64ed3f60feb83c2ab8">registerAction</a> (const <a class="el" href="classTSource.html">TSource</a> &amp;tsrc, <a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *a, const CuData &amp;options)</td></tr>
+<tr class="separator:abc1ee3055effcf64ed3f60feb83c2ab8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b9608ce50d7e0afa1640dbcebeb0a8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPoller.html#a3b9608ce50d7e0afa1640dbcebeb0a8f">unregisterAction</a> (<a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *a)</td></tr>
 <tr class="memdesc:a3b9608ce50d7e0afa1640dbcebeb0a8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">unregister an action from the poller.  <a href="#a3b9608ce50d7e0afa1640dbcebeb0a8f">More...</a><br /></td></tr>
 <tr class="separator:a3b9608ce50d7e0afa1640dbcebeb0a8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5281dd21fb6498e9b018772afd5d3b1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPoller.html#af5281dd21fb6498e9b018772afd5d3b1">actionRegistered</a> (const <a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *a) const</td></tr>
 <tr class="separator:af5281dd21fb6498e9b018772afd5d3b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a338a6c8ba80fefeefa9eb263f97d12a2"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPoller.html#a338a6c8ba80fefeefa9eb263f97d12a2">count</a> () const</td></tr>
+<tr class="memdesc:a338a6c8ba80fefeefa9eb263f97d12a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">counts the number of actions  <a href="#a338a6c8ba80fefeefa9eb263f97d12a2">More...</a><br /></td></tr>
 <tr class="separator:a338a6c8ba80fefeefa9eb263f97d12a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa50667afde5ce894614b190e0484f64d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPoller.html#aa50667afde5ce894614b190e0484f64d">onProgress</a> (int step, int total, const CuData &amp;data)</td></tr>
 <tr class="separator:aa50667afde5ce894614b190e0484f64d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -176,6 +177,9 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>counts the number of actions </p>
+<dl class="section return"><dt>Returns</dt><dd>the number of actions </dd></dl>
 
 <p class="reference">Referenced by <a class="el" href="classCuPollingService.html#a296d52306e2cd545de58f5a2a4c43195">CuPollingService::unregisterAction()</a>.</p>
 
@@ -319,8 +323,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aed29c4677568724b15eebee1eb733b55"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aed29c4677568724b15eebee1eb733b55">&#9670;&nbsp;</a></span>registerAction()</h2>
+<a id="abc1ee3055effcf64ed3f60feb83c2ab8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc1ee3055effcf64ed3f60feb83c2ab8">&#9670;&nbsp;</a></span>registerAction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -335,7 +339,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *&#160;</td>
-          <td class="paramname"><em>a</em>&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const CuData &amp;&#160;</td>
+          <td class="paramname"><em>options</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -347,7 +357,7 @@ Public Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classCuDeviceFactoryService.html#a5bc620117b95857cc16fd6776ad9c4edae1c868c8330b3db88024a43631ccbf95">CuDeviceFactoryService::CuDeviceFactoryServiceType</a>, <a class="el" href="classTSource.html#a7978372c10e561d5c00a8d2bcbdbb7d5">TSource::getDeviceName()</a>, <a class="el" href="classTSource.html#a20f3ea627e2c57d01f01d04faac37246">TSource::getName()</a>, and <a class="el" href="classCuTangoActionI.html#af7b69aff3c5d964471c43789f5ca233b">CuTangoActionI::getSource()</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCuPollingService.html#a53011ba0ac1027e39540ebdaeb1e3a65">CuPollingService::registerAction()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuPollingService.html#add8a852c6c14cb48227664f28ecb33f5">CuPollingService::registerAction()</a>.</p>
 
 </div>
 </div>
@@ -376,6 +386,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p>A <a class="el" href="classCuTangoActionI.html" title="an interface for a Tango action, typically a reader or a writer are implementors">CuTangoActionI</a> can invoke unregisterAction from within CuTangoActionI::onResult. In this case, the operation is delayed after <a class="el" href="classCuPoller.html#ad0f788348f0c189494676ae6e7e3e0be">CuPoller::onResult</a> has finished delivering results. If the method is called when <a class="el" href="classCuPoller.html">CuPoller</a> is not inside <a class="el" href="classCuPoller.html#ad0f788348f0c189494676ae6e7e3e0be">CuPoller::onResult</a>, the action is unregistered immediately.</p>
 <ul>
+<li>after the last action is removed, this object is removed from the CuActivityManager thread listeners before next step: </li>
 <li>a <a class="el" href="classCuRemovePollActionEvent.html">CuRemovePollActionEvent</a> is posted to the <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity">CuPollingActivity</a> managing the <a class="el" href="classCuTangoActionI.html" title="an interface for a Tango action, typically a reader or a writer are implementors">CuTangoActionI</a> device with the <a class="el" href="classCuPoller.html#a60c531b29906eba959c1ba3c8a6c0d6c">CuPoller::period</a> interval </li>
 <li>a dummy CuData with the "exit" flag is delivered through CuTangoActionI::onResult. This is why unregister operations must be enqueued and performed outside result delivery taking place in <a class="el" href="classCuPoller.html#ad0f788348f0c189494676ae6e7e3e0be">CuPoller::onResult</a> </li>
 </ul>
@@ -391,7 +402,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 17 2019 14:48:30 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 2 2019 16:50:52 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

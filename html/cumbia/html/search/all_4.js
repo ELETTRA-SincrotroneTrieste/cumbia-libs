@@ -7,7 +7,7 @@ var searchData=
   ['eventloop',['EventLoop',['../classCuServices.html#aa03cab8558f097dcdba9b49c90140c0baad975f983fa59d673f8d86e0596fff94',1,'CuServices']]],
   ['exec',['exec',['../classCuEventLoopService.html#a5017eb0fd9c3d4b8164aad60d301726a',1,'CuEventLoopService']]],
   ['execute',['execute',['../classCuActivity.html#a3823ea2e31f89c377760859f399c26f0',1,'CuActivity::execute()'],['../classCuActivityEvent.html#a3727016a1c613763a0936d426d80301aaa96cfb0fa5fffd89a82090728388cfe4',1,'CuActivityEvent::Execute()']]],
-  ['exit',['exit',['../classCuEventLoopService.html#ae7be6136ad48826007611ad11ad28e94',1,'CuEventLoopService::exit()'],['../classCuThread.html#a604b58acc86a6aac579e5da87a5f779a',1,'CuThread::exit()'],['../classCuThreadInterface.html#a4b442dbb940e3c4a31582b0f8c96d338',1,'CuThreadInterface::exit()']]],
+  ['exit',['exit',['../classCuEventLoopService.html#ae7be6136ad48826007611ad11ad28e94',1,'CuEventLoopService::exit()'],['../classCuThread.html#a604b58acc86a6aac579e5da87a5f779a',1,'CuThread::exit()'],['../classCuThread.html#a604b58acc86a6aac579e5da87a5f779a',1,'CuThread::exit()'],['../classCuThreadInterface.html#a4b442dbb940e3c4a31582b0f8c96d338',1,'CuThreadInterface::exit()']]],
   ['exitloop',['ExitLoop',['../classCuEventI.html#ab4bba34f5f3639c29e9529f4617d0e51a0520d784d12549205846a6886dfbd57d',1,'CuEventI']]],
   ['exitonthreadquit',['exitOnThreadQuit',['../classCuActivity.html#ab0889ca85586eb5d3df5b84b907dd624',1,'CuActivity']]]
 ];

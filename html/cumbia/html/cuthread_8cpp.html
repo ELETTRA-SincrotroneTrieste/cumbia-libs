@@ -106,10 +106,11 @@ $(document).ready(function(){initNavTree('cuthread_8cpp.html','');});
 <code>#include &quot;<a class="el" href="cuactivityevent_8h_source.html">cuactivityevent.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="cuthreadlistener_8h_source.html">cuthreadlistener.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="cuisolatedactivity_8h_source.html">cuisolatedactivity.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="cutimerservice_8h_source.html">cutimerservice.h</a>&quot;</code><br />
 <code>#include &lt;set&gt;</code><br />
 <code>#include &lt;thread&gt;</code><br />
 <code>#include &lt;queue&gt;</code><br />
-<code>#include &lt;mutex&gt;</code><br />
+<code>#include &lt;shared_mutex&gt;</code><br />
 <code>#include &lt;atomic&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;condition_variable&gt;</code><br />
@@ -122,46 +123,48 @@ Include dependency graph for cuthread.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="cuthread_8cpp__incl.png" border="0" usemap="#cuthread_8cpp" alt=""/></div>
 <map name="cuthread_8cpp" id="cuthread_8cpp">
-<area shape="rect"  title=" " alt="" coords="1049,5,1146,32"/>
-<area shape="rect"  href="cuthread_8h.html" title=" " alt="" coords="865,80,948,107"/>
-<area shape="rect"  href="cumacros_8h.html" title=" " alt="" coords="252,379,343,405"/>
-<area shape="rect"  title=" " alt="" coords="735,379,793,405"/>
-<area shape="rect"  title=" " alt="" coords="1145,155,1204,181"/>
-<area shape="rect"  title=" " alt="" coords="1228,155,1287,181"/>
-<area shape="rect"  title=" " alt="" coords="994,155,1121,181"/>
-<area shape="rect"  href="cuactivity_8h.html" title=" " alt="" coords="535,155,623,181"/>
-<area shape="rect"  href="cudata_8h.html" title=" " alt="" coords="412,229,484,256"/>
-<area shape="rect"  href="cutimer_8h.html" title=" " alt="" coords="1023,80,1097,107"/>
+<area shape="rect"  title=" " alt="" coords="1167,5,1265,32"/>
+<area shape="rect"  href="cuthread_8h.html" title=" " alt="" coords="1175,80,1257,107"/>
+<area shape="rect"  href="cumacros_8h.html" title=" " alt="" coords="204,379,295,405"/>
+<area shape="rect"  title=" " alt="" coords="639,379,697,405"/>
+<area shape="rect"  title=" " alt="" coords="1384,155,1443,181"/>
+<area shape="rect"  title=" " alt="" coords="1467,155,1594,181"/>
+<area shape="rect"  href="cuactivity_8h.html" title=" " alt="" coords="437,155,525,181"/>
+<area shape="rect"  href="cudata_8h.html" title=" " alt="" coords="364,229,436,256"/>
+<area shape="rect"  href="cutimer_8h.html" title=" " alt="" coords="1532,80,1607,107"/>
+<area shape="rect"  title=" " alt="" coords="1619,155,1723,181"/>
+<area shape="rect"  title=" " alt="" coords="1747,155,1808,181"/>
+<area shape="rect"  title=" " alt="" coords="1832,155,1893,181"/>
 <area shape="rect"  href="cuthreadevents_8h.html" title=" " alt="" coords="43,155,165,181"/>
-<area shape="rect"  href="cuactivitymanager_8h.html" title=" " alt="" coords="1223,80,1361,107"/>
-<area shape="rect"  href="cuserviceprovider_8h.html" title=" " alt="" coords="1535,80,1670,107"/>
-<area shape="rect"  href="cuthreadservice_8h.html" title=" " alt="" coords="1385,80,1511,107"/>
-<area shape="rect"  href="cuevent_8h.html" title=" " alt="" coords="647,155,726,181"/>
+<area shape="rect"  href="cuactivitymanager_8h.html" title=" " alt="" coords="711,80,849,107"/>
+<area shape="rect"  href="cuserviceprovider_8h.html" title=" " alt="" coords="874,80,1009,107"/>
+<area shape="rect"  href="cuthreadservice_8h.html" title=" " alt="" coords="1281,80,1407,107"/>
+<area shape="rect"  href="cuevent_8h.html" title=" " alt="" coords="550,155,629,181"/>
 <area shape="rect"  href="cuactivityevent_8h.html" title=" " alt="" coords="241,155,362,181"/>
-<area shape="rect"  href="cuthreadlistener_8h.html" title=" " alt="" coords="386,155,510,181"/>
-<area shape="rect"  href="cuisolatedactivity_8h.html" title=" " alt="" coords="492,80,625,107"/>
-<area shape="rect"  title=" " alt="" coords="1695,80,1735,107"/>
-<area shape="rect"  title=" " alt="" coords="1759,80,1817,107"/>
-<area shape="rect"  title=" " alt="" coords="1841,80,1903,107"/>
-<area shape="rect"  title=" " alt="" coords="1927,80,2001,107"/>
-<area shape="rect"  title=" " alt="" coords="2025,80,2087,107"/>
-<area shape="rect"  title=" " alt="" coords="2111,80,2180,107"/>
-<area shape="rect"  title=" " alt="" coords="2204,80,2257,107"/>
-<area shape="rect"  href="cuthreadinterface_8h.html" title=" " alt="" coords="801,229,935,256"/>
-<area shape="rect"  href="cutimerlistener_8h.html" title=" " alt="" coords="852,155,969,181"/>
-<area shape="rect"  href="cuthreadseventbridge__i_8h.html" title=" " alt="" coords="214,304,381,331"/>
-<area shape="rect"  title=" " alt="" coords="199,453,260,480"/>
-<area shape="rect"  title=" " alt="" coords="316,528,380,555"/>
-<area shape="rect"  title=" " alt="" coords="572,379,663,405"/>
-<area shape="rect"  href="cuvariant_8h.html" title=" " alt="" coords="405,304,491,331"/>
-<area shape="rect"  title=" " alt="" coords="638,453,693,480"/>
-<area shape="rect"  href="cuvariant__t_8h.html" title=" " alt="" coords="399,379,497,405"/>
-<area shape="rect"  href="cuvariantprivate_8h.html" title=" " alt="" coords="385,453,511,480"/>
-<area shape="rect"  title=" " alt="" coords="535,453,614,480"/>
-<area shape="rect"  href="cuservicei_8h.html" title=" " alt="" coords="1362,155,1454,181"/>
-<area shape="rect"  title=" " alt="" coords="1478,155,1525,181"/>
-<area shape="rect"  href="cuservices_8h.html" title=" " alt="" coords="1515,229,1611,256"/>
-<area shape="rect"  title=" " alt="" coords="1601,155,1639,181"/>
+<area shape="rect"  href="cuthreadlistener_8h.html" title=" " alt="" coords="253,80,377,107"/>
+<area shape="rect"  href="cuisolatedactivity_8h.html" title=" " alt="" coords="401,80,535,107"/>
+<area shape="rect"  href="cutimerservice_8h.html" title=" " alt="" coords="1033,80,1151,107"/>
+<area shape="rect"  title=" " alt="" coords="1783,80,1823,107"/>
+<area shape="rect"  title=" " alt="" coords="1847,80,1905,107"/>
+<area shape="rect"  title=" " alt="" coords="1929,80,2004,107"/>
+<area shape="rect"  title=" " alt="" coords="2028,80,2097,107"/>
+<area shape="rect"  title=" " alt="" coords="2121,80,2175,107"/>
+<area shape="rect"  href="cuthreadinterface_8h.html" title=" " alt="" coords="755,229,888,256"/>
+<area shape="rect"  title=" " alt="" coords="1187,155,1245,181"/>
+<area shape="rect"  title=" " alt="" coords="1270,155,1309,181"/>
+<area shape="rect"  href="cutimerlistener_8h.html" title=" " alt="" coords="1045,155,1163,181"/>
+<area shape="rect"  href="cuthreadseventbridge__i_8h.html" title=" " alt="" coords="166,304,333,331"/>
+<area shape="rect"  title=" " alt="" coords="151,453,212,480"/>
+<area shape="rect"  title=" " alt="" coords="268,528,332,555"/>
+<area shape="rect"  title=" " alt="" coords="524,379,615,405"/>
+<area shape="rect"  href="cuvariant_8h.html" title=" " alt="" coords="357,304,443,331"/>
+<area shape="rect"  title=" " alt="" coords="590,453,645,480"/>
+<area shape="rect"  href="cuvariant__t_8h.html" title=" " alt="" coords="351,379,449,405"/>
+<area shape="rect"  href="cuvariantprivate_8h.html" title=" " alt="" coords="337,453,463,480"/>
+<area shape="rect"  title=" " alt="" coords="487,453,566,480"/>
+<area shape="rect"  href="cuservicei_8h.html" title=" " alt="" coords="929,155,1021,181"/>
+<area shape="rect"  title=" " alt="" coords="755,155,802,181"/>
+<area shape="rect"  href="cuservices_8h.html" title=" " alt="" coords="912,229,1008,256"/>
 </map>
 </div>
 </div></div><!-- contents -->
@@ -170,7 +173,7 @@ Include dependency graph for cuthread.cpp:</div>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c85d3e3c5052e9ad9ce18c6863244a25.html">lib</a></li><li class="navelem"><a class="el" href="dir_cdf9e096f2e9fac5247a6c7abb90da86.html">threads</a></li><li class="navelem"><a class="el" href="cuthread_8cpp.html">cuthread.cpp</a></li>
-    <li class="footer">Generated on Tue Sep 17 2019 14:48:25 for cumbia by
+    <li class="footer">Generated on Mon Dec 2 2019 16:50:48 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.15 </li>
   </ul>

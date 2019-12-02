@@ -74,8 +74,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aba92641a0c2a8a399cced3c215c55c5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9e209dbe73297e2df06a80413c9cf46"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuPoller.html">CuPoller</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingService.html#aa9e209dbe73297e2df06a80413c9cf46">getPoller</a> (<a class="el" href="classCumbiaTango.html">CumbiaTango</a> *cu_t, int period)</td></tr>
 <tr class="separator:aa9e209dbe73297e2df06a80413c9cf46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53011ba0ac1027e39540ebdaeb1e3a65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingService.html#a53011ba0ac1027e39540ebdaeb1e3a65">registerAction</a> (<a class="el" href="classCumbiaTango.html">CumbiaTango</a> *ct, const <a class="el" href="classTSource.html">TSource</a> &amp;tsrc, int period, <a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *action)</td></tr>
-<tr class="separator:a53011ba0ac1027e39540ebdaeb1e3a65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add8a852c6c14cb48227664f28ecb33f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingService.html#add8a852c6c14cb48227664f28ecb33f5">registerAction</a> (<a class="el" href="classCumbiaTango.html">CumbiaTango</a> *ct, const <a class="el" href="classTSource.html">TSource</a> &amp;tsrc, int period, <a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *action, const CuData &amp;options)</td></tr>
+<tr class="separator:add8a852c6c14cb48227664f28ecb33f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a296d52306e2cd545de58f5a2a4c43195"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingService.html#a296d52306e2cd545de58f5a2a4c43195">unregisterAction</a> (int period, <a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *action)</td></tr>
 <tr class="separator:a296d52306e2cd545de58f5a2a4c43195"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac9e338ca5b1b36884ff1656b616dd57a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuPollingService.html#ac9e338ca5b1b36884ff1656b616dd57a">actionRegistered</a> (<a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *ac, int period)</td></tr>
@@ -230,7 +230,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classCuPollingService.html#a53011ba0ac1027e39540ebdaeb1e3a65">registerAction()</a>, and <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822">CuTReader::sendData()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuPollingService.html#add8a852c6c14cb48227664f28ecb33f5">registerAction()</a>, and <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822">CuTReader::sendData()</a>.</p>
 
 </div>
 </div>
@@ -261,8 +261,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a53011ba0ac1027e39540ebdaeb1e3a65"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a53011ba0ac1027e39540ebdaeb1e3a65">&#9670;&nbsp;</a></span>registerAction()</h2>
+<a id="add8a852c6c14cb48227664f28ecb33f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add8a852c6c14cb48227664f28ecb33f5">&#9670;&nbsp;</a></span>registerAction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -289,7 +289,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *&#160;</td>
-          <td class="paramname"><em>action</em>&#160;</td>
+          <td class="paramname"><em>action</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const CuData &amp;&#160;</td>
+          <td class="paramname"><em>options</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -299,7 +305,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classCuPollingService.html#aa9e209dbe73297e2df06a80413c9cf46">getPoller()</a>, and <a class="el" href="classCuPoller.html#aed29c4677568724b15eebee1eb733b55">CuPoller::registerAction()</a>.</p>
+<p class="reference">References <a class="el" href="classCuPollingService.html#aa9e209dbe73297e2df06a80413c9cf46">getPoller()</a>, and <a class="el" href="classCuPoller.html#abc1ee3055effcf64ed3f60feb83c2ab8">CuPoller::registerAction()</a>.</p>
 
 </div>
 </div>
@@ -340,7 +346,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 17 2019 14:48:30 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 2 2019 16:50:53 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

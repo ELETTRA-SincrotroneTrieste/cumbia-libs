@@ -149,6 +149,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a18ee264b73e2c6426555ef98ec4f7ca7"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbia.html#a18ee264b73e2c6426555ef98ec4f7ca7">getType</a> () const</td></tr>
 <tr class="memdesc:a18ee264b73e2c6426555ef98ec4f7ca7"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the <a class="el" href="classCumbia.html#a30cb729a1d7d92a1fa5d55a69bb405ebab23a7e0fb02f1370bd3fad19a3ba0882" title="basic Cumbia type">Cumbia::CumbiaBaseType</a> type  <a href="#a18ee264b73e2c6426555ef98ec4f7ca7">More...</a><br /></td></tr>
 <tr class="separator:a18ee264b73e2c6426555ef98ec4f7ca7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1294d5af961ea0899aabf299e7f2c56"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbia.html#ad1294d5af961ea0899aabf299e7f2c56">setThreadTokenGenerator</a> (<a class="el" href="classCuThreadTokenGenI.html">CuThreadTokenGenI</a> *tg)</td></tr>
+<tr class="memdesc:ad1294d5af961ea0899aabf299e7f2c56"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCumbia.html#ad1294d5af961ea0899aabf299e7f2c56" title="Cumbia::setThreadTokenGenerator install athread token generator that deals with grouping activities i...">Cumbia::setThreadTokenGenerator</a> install athread token generator that deals with grouping activities into separate threads according to the specific engine implementation.  <a href="#ad1294d5af961ea0899aabf299e7f2c56">More...</a><br /></td></tr>
+<tr class="separator:ad1294d5af961ea0899aabf299e7f2c56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3de3f4be86eecce578660b88745dd7f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbia.html#a3de3f4be86eecce578660b88745dd7f9">removeThreadTokenGenerator</a> ()</td></tr>
+<tr class="memdesc:a3de3f4be86eecce578660b88745dd7f9"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCumbia.html#a3de3f4be86eecce578660b88745dd7f9" title="Cumbia::removeThreadTokenGenerator remove the currently installed generator, if any.">Cumbia::removeThreadTokenGenerator</a> remove the currently installed generator, if any.  <a href="#a3de3f4be86eecce578660b88745dd7f9">More...</a><br /></td></tr>
+<tr class="separator:a3de3f4be86eecce578660b88745dd7f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a599900ac24e7b88e6c859a5572905635"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuThreadTokenGenI.html">CuThreadTokenGenI</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbia.html#a599900ac24e7b88e6c859a5572905635">getThreadTokenGenerator</a> () const</td></tr>
+<tr class="memdesc:a599900ac24e7b88e6c859a5572905635"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCumbia.html#a599900ac24e7b88e6c859a5572905635" title="Cumbia::getThreadTokenGenerator returns the installed token generator or nullptr if none is installed...">Cumbia::getThreadTokenGenerator</a> returns the installed token generator or nullptr if none is installed.  <a href="#a599900ac24e7b88e6c859a5572905635">More...</a><br /></td></tr>
+<tr class="separator:a599900ac24e7b88e6c859a5572905635"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7771a2ce3b7ee3366d96ca7bf6f2ed39"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuData.html">CuData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbia.html#a7771a2ce3b7ee3366d96ca7bf6f2ed39">threadToken</a> (const <a class="el" href="classCuData.html">CuData</a> &amp;options) const</td></tr>
+<tr class="memdesc:a7771a2ce3b7ee3366d96ca7bf6f2ed39"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCumbia.html#a7771a2ce3b7ee3366d96ca7bf6f2ed39" title="Cumbia::threadToken returns a thread token that can be used to group threads together.">Cumbia::threadToken</a> returns a thread token that can be used to group threads together.  <a href="#a7771a2ce3b7ee3366d96ca7bf6f2ed39">More...</a><br /></td></tr>
+<tr class="separator:a7771a2ce3b7ee3366d96ca7bf6f2ed39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>primary cumbia class where activities are registered and unregistered. Provides access to the cumbia <em>service provider</em> </p>
@@ -224,7 +236,7 @@ Public Member Functions</h2></td></tr>
 <p>The cumbia <em>service provider</em> is a class member. A pointer to it can be obtained with <a class="el" href="classCumbia.html#aaaf0d8e9ad0b480a5c95997e7bfbf7da">Cumbia::getServiceProvider</a>. The <em>service provider</em> remains the same throughout the whole application lifetime and is destroyed when the <a class="el" href="classCumbia.html" title="primary cumbia class where activities are registered and unregistered. Provides access to the cumbia ...">Cumbia</a> object is destroyed (<a class="el" href="classCumbia.html#a17c9894c182fe02d4667aff851824f81" title="called from the class destructor, cleans up the Cumbia object">Cumbia::finish</a>)</p>
 <p>Please refer to <a class="el" href="classCuServiceProvider.html" title="The CuServiceProvider class is the cumbia service provider where cumbia services can be registered an...">CuServiceProvider</a>, <a class="el" href="classCuThreadService.html" title="cumbia service that creates threads and keeps references of the threads running within the applicatio...">CuThreadService</a> and <a class="el" href="classCuActivityManager.html" title="This service stores the links between threads, activities and thread listeners.">CuActivityManager</a> documentation for further information. </p>
 
-<p class="reference">References <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0ba1e004777922d94ed95db35331853c4fc">CuServices::ActivityManager</a>, and <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bae0d1c54f00092061a920aeb27b732c6c">CuServices::Thread</a>.</p>
+<p class="reference">References <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0ba1e004777922d94ed95db35331853c4fc">CuServices::ActivityManager</a>, <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bae0d1c54f00092061a920aeb27b732c6c">CuServices::Thread</a>, and <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bab4e2a6f342d95f03144c33e3b429158e">CuServices::Timer</a>.</p>
 
 </div>
 </div>
@@ -305,9 +317,10 @@ Public Member Functions</h2></td></tr>
 <li>for each thread, hrough the <a class="el" href="classCuActivityManager.html" title="This service stores the links between threads, activities and thread listeners.">CuActivityManager</a>, a list of activities linked to the thread is obtained and, for each <a class="el" href="classCuActivity.html" title="a class with hook functions where work can be done in a separate thread and wherefrom results are pub...">CuActivity</a>, <a class="el" href="classCuActivityManager.html#a12eb21616708bdf5ef9b1768cab1f27f" title="Removes all links where a is involved.">CuActivityManager::removeConnection</a> is called. This unbinds <em>threads from activities</em> and <em>thread listeners</em> (<a class="el" href="classCuThreadListener.html" title="interface for a listener that is notified when progress is done in the background and data is ready">CuThreadListener</a>) from <em>activities</em> (<a class="el" href="classCuActivity.html" title="a class with hook functions where work can be done in a separate thread and wherefrom results are pub...">CuActivity</a>). See <a class="el" href="classCuActivityManager.html#a12eb21616708bdf5ef9b1768cab1f27f" title="Removes all links where a is involved.">CuActivityManager::removeConnection</a>. <b>At last, the activity is deleted</b>. </li>
 <li>each service from the list of <a class="el" href="classCuServiceI.html" title="interface to write cumbia services that can be registered and fetched through the cumbia service prov...">CuServiceI</a> fetched from <a class="el" href="classCuServiceProvider.html" title="The CuServiceProvider class is the cumbia service provider where cumbia services can be registered an...">CuServiceProvider</a> is unregistered from the service provider through <a class="el" href="classCuServiceProvider.html#a4f8d6f70b3bef2edc45ac14a5965fb6a" title="unregister a service from the service provider">CuServiceProvider::unregisterService</a> </li>
 <li>the <b>service provider is deleted</b>. </li>
+<li>deletes the token generator, if set </li>
 </ul>
 
-<p class="reference">References <a class="el" href="classCuActivityManager.html#a99fd2a70c96a6b80fb83083e5fe379e1">CuActivityManager::activitiesForThread()</a>, <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0ba1e004777922d94ed95db35331853c4fc">CuServices::ActivityManager</a>, <a class="el" href="classCuThreadInterface.html#a4b442dbb940e3c4a31582b0f8c96d338">CuThreadInterface::exit()</a>, <a class="el" href="classCuThreadService.html#a7612344fc2efd6a1e54b00be2d4793c7">CuThreadService::getThreads()</a>, <a class="el" href="classCuServiceI.html#a186c5bb0678fd7aeee96237686428850">CuServiceI::getType()</a>, <a class="el" href="classCuActivityManager.html#a12eb21616708bdf5ef9b1768cab1f27f">CuActivityManager::removeConnection()</a>, <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bae0d1c54f00092061a920aeb27b732c6c">CuServices::Thread</a>, and <a class="el" href="classCuThreadInterface.html#a7852cb2231ef629bc93bf8e419fef296">CuThreadInterface::wait()</a>.</p>
+<p class="reference">References <a class="el" href="classCuActivityManager.html#a99fd2a70c96a6b80fb83083e5fe379e1">CuActivityManager::activitiesForThread()</a>, <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0ba1e004777922d94ed95db35331853c4fc">CuServices::ActivityManager</a>, <a class="el" href="classCuThreadInterface.html#a4b442dbb940e3c4a31582b0f8c96d338">CuThreadInterface::exit()</a>, <a class="el" href="classCuThreadService.html#a79f982e39fd2f0a6ce399631845c092c">CuThreadService::getThreads()</a>, <a class="el" href="classCuServiceI.html#a186c5bb0678fd7aeee96237686428850">CuServiceI::getType()</a>, <a class="el" href="classCuActivityManager.html#a12eb21616708bdf5ef9b1768cab1f27f">CuActivityManager::removeConnection()</a>, <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bae0d1c54f00092061a920aeb27b732c6c">CuServices::Thread</a>, and <a class="el" href="classCuThreadInterface.html#a7852cb2231ef629bc93bf8e419fef296">CuThreadInterface::wait()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classCumbia.html#af621d7098a99f46aeb8335fd9164439c">~Cumbia()</a>.</p>
 
@@ -356,6 +369,28 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a599900ac24e7b88e6c859a5572905635"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a599900ac24e7b88e6c859a5572905635">&#9670;&nbsp;</a></span>getThreadTokenGenerator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classCuThreadTokenGenI.html">CuThreadTokenGenI</a> * Cumbia::getThreadTokenGenerator </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classCumbia.html#a599900ac24e7b88e6c859a5572905635" title="Cumbia::getThreadTokenGenerator returns the installed token generator or nullptr if none is installed...">Cumbia::getThreadTokenGenerator</a> returns the installed token generator or nullptr if none is installed. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classCumbia.html#ad1294d5af961ea0899aabf299e7f2c56" title="Cumbia::setThreadTokenGenerator install athread token generator that deals with grouping activities i...">setThreadTokenGenerator</a></dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>the currently installed <a class="el" href="classCuThreadTokenGenI.html">CuThreadTokenGenI</a> implementation, null if none is installed.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classCumbia.html#ad1294d5af961ea0899aabf299e7f2c56" title="Cumbia::setThreadTokenGenerator install athread token generator that deals with grouping activities i...">setThreadTokenGenerator</a> </dd></dl>
 
 </div>
 </div>
@@ -517,7 +552,29 @@ Public Member Functions</h2></td></tr>
 <p>At last, the thread is started (if not reused and already running) and the new activity is registered to the thread itself (through <a class="el" href="classCuThread.html#a02c30fbca8a06d2eea0ed3cfe20a992d" title="Register a new activity on this thread.">CuThread::registerActivity</a>). <a class="el" href="classCuThread.html#a02c30fbca8a06d2eea0ed3cfe20a992d" title="Register a new activity on this thread.">CuThread::registerActivity</a> starts immediately the activity in the background thread.</p>
 <p>see <a class="el" href="classCumbia.html#ae72c237833f06276a2ba62f5598197f5" title="unregister an activity from cumbia">Cumbia::unregisterActivity</a> see <a class="el" href="classCuActivity.html#a23c71d30d18fdf76bf7b3b0ce148013d">CuActivity::Flags</a> </p>
 
-<p class="reference">References <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0ba1e004777922d94ed95db35331853c4fc">CuServices::ActivityManager</a>, <a class="el" href="classCuActivityManager.html#ac03e72fe7f5badf1ef3f30bdb122c7e6">CuActivityManager::addConnection()</a>, <a class="el" href="cumacros_8h.html#ada414d70bad931bb2fea6abc8acaefbc">cuprintf</a>, <a class="el" href="classCuActivity.html#a8b1a222feac7c2b75ccacb1bbc7da511">CuActivity::setActivityManager()</a>, and <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bae0d1c54f00092061a920aeb27b732c6c">CuServices::Thread</a>.</p>
+<p class="reference">References <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0ba1e004777922d94ed95db35331853c4fc">CuServices::ActivityManager</a>, <a class="el" href="classCuActivityManager.html#ac03e72fe7f5badf1ef3f30bdb122c7e6">CuActivityManager::addConnection()</a>, <a class="el" href="classCuActivity.html#a8b1a222feac7c2b75ccacb1bbc7da511">CuActivity::setActivityManager()</a>, <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bae0d1c54f00092061a920aeb27b732c6c">CuServices::Thread</a>, and <a class="el" href="classCumbia.html#a7771a2ce3b7ee3366d96ca7bf6f2ed39">threadToken()</a>.</p>
+
+</div>
+</div>
+<a id="a3de3f4be86eecce578660b88745dd7f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3de3f4be86eecce578660b88745dd7f9">&#9670;&nbsp;</a></span>removeThreadTokenGenerator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Cumbia::removeThreadTokenGenerator </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classCumbia.html#a3de3f4be86eecce578660b88745dd7f9" title="Cumbia::removeThreadTokenGenerator remove the currently installed generator, if any.">Cumbia::removeThreadTokenGenerator</a> remove the currently installed generator, if any. </p>
+<dl class="section note"><dt>Note</dt><dd>The currently installed generator is deleted </dd></dl>
+
+<p class="reference">Referenced by <a class="el" href="classCumbia.html#ad1294d5af961ea0899aabf299e7f2c56">setThreadTokenGenerator()</a>.</p>
 
 </div>
 </div>
@@ -589,6 +646,69 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ad1294d5af961ea0899aabf299e7f2c56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1294d5af961ea0899aabf299e7f2c56">&#9670;&nbsp;</a></span>setThreadTokenGenerator()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Cumbia::setThreadTokenGenerator </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classCuThreadTokenGenI.html">CuThreadTokenGenI</a> *&#160;</td>
+          <td class="paramname"><em>tg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classCumbia.html#ad1294d5af961ea0899aabf299e7f2c56" title="Cumbia::setThreadTokenGenerator install athread token generator that deals with grouping activities i...">Cumbia::setThreadTokenGenerator</a> install athread token generator that deals with grouping activities into separate threads according to the specific engine implementation. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tg</td><td>an implementation of the <a class="el" href="classCuThreadTokenGenI.html">CuThreadTokenGenI</a> interface</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>Once you install a thread token generator with this method, <em>the ownership of the object is handed to <a class="el" href="classCumbia.html" title="primary cumbia class where activities are registered and unregistered. Provides access to the cumbia ...">Cumbia</a></em>. The generator will either be destroyed by <a class="el" href="classCumbia.html" title="primary cumbia class where activities are registered and unregistered. Provides access to the cumbia ...">Cumbia</a> or by the removeThreadTokenGenerator method. Subsequent calls to setThreadTokenGenerator will also delete a previously installed generator. </dd></dl>
+
+<p class="reference">References <a class="el" href="classCumbia.html#a3de3f4be86eecce578660b88745dd7f9">removeThreadTokenGenerator()</a>.</p>
+
+</div>
+</div>
+<a id="a7771a2ce3b7ee3366d96ca7bf6f2ed39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7771a2ce3b7ee3366d96ca7bf6f2ed39">&#9670;&nbsp;</a></span>threadToken()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classCuData.html">CuData</a> Cumbia::threadToken </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classCuData.html">CuData</a> &amp;&#160;</td>
+          <td class="paramname"><em>options</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classCumbia.html#a7771a2ce3b7ee3366d96ca7bf6f2ed39" title="Cumbia::threadToken returns a thread token that can be used to group threads together.">Cumbia::threadToken</a> returns a thread token that can be used to group threads together. </p>
+<p>If a thread token generator (<a class="el" href="classCuThreadTokenGenI.html">CuThreadTokenGenI</a>) implementation has been registered with setThreadTokenGenerator, it is used to provide the thread token.</p>
+<p>If the option contains the <em>thread_token</em> with a given value, that value will be used to group threads with the same token</p>
+<p>If there is no <em>thread_token</em> key in the input options, the return value is the same as the input argument.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">options</td><td>configuration options to customize thread grouping</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a thread token (<a class="el" href="classCuData.html" title="container for data exchange for the cumbia library and its clients">CuData</a>) </dd></dl>
+
+<p class="reference">References <a class="el" href="classCuData.html#a89a88dac87b7b5c3a4de7aaf5e562409">CuData::containsKey()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classCumbia.html#affe4f4e6912be2d453411d5efa8df1b7">registerActivity()</a>.</p>
+
+</div>
+</div>
 <a id="ae72c237833f06276a2ba62f5598197f5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae72c237833f06276a2ba62f5598197f5">&#9670;&nbsp;</a></span>unregisterActivity()</h2>
 
@@ -630,7 +750,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCumbia.html">Cumbia</a></li>
-    <li class="footer">Generated on Tue Sep 17 2019 14:48:25 for cumbia by
+    <li class="footer">Generated on Mon Dec 2 2019 16:50:48 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.15 </li>
   </ul>

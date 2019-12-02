@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['timeout',['timeout',['../classCuTimer.html#aec23de65a1e03aabdaee041999f563f1',1,'CuTimer']]],
+  ['threadtoken',['threadToken',['../classCuActivity.html#a78f70813af02a1708cf58ea8e89d0657',1,'CuActivity::threadToken()'],['../classCumbia.html#a7771a2ce3b7ee3366d96ca7bf6f2ed39',1,'Cumbia::threadToken()']]],
+  ['timeout',['timeout',['../classCuTimer.html#aec23de65a1e03aabdaee041999f563f1',1,'CuTimer::timeout() const'],['../classCuTimer.html#aec23de65a1e03aabdaee041999f563f1',1,'CuTimer::timeout() const']]],
+  ['timermaxcount',['timerMaxCount',['../classCuTimerService.html#a0448606e0bddbcb0413374fe9c8fc7ef',1,'CuTimerService']]],
   ['to',['to',['../classCuVariant.html#a81e3979570e1c6eccc9d9f909354ecc4',1,'CuVariant']]],
   ['tobool',['toBool',['../classCuVariant.html#aa5869b485e482c1e643e458d508c88a8',1,'CuVariant']]],
   ['toboolp',['toBoolP',['../classCuVariant.html#af419cdac8e055d93d59468ed1c5662cf',1,'CuVariant']]],
@@ -40,5 +42,5 @@ var searchData=
   ['toushortvector',['toUShortVector',['../classCuVariant.html#a05852724325b86d59debf28d97387ce0',1,'CuVariant']]],
   ['tovector',['toVector',['../classCuVariant.html#ae776f45b5c040992ec153e28c42fb3f5',1,'CuVariant::toVector(std::vector&lt; T &gt; &amp;v) const'],['../classCuVariant.html#a3450c6f6b842a4ac8adffd4d5f534da5',1,'CuVariant::toVector()']]],
   ['tovoidp',['toVoidP',['../classCuVariant.html#a6b1f3e78894429efd9182fb25e0034e7',1,'CuVariant']]],
-  ['type',['type',['../classCuDataQuality.html#a7af66c8b96b023fadda61aed90fb18f5',1,'CuDataQuality::type()'],['../classCuThread.html#a2a5c85c2573534a39273890056ad9ff8',1,'CuThread::type()'],['../classCuThreadInterface.html#aae520d5364a5101e7afae2334927fea1',1,'CuThreadInterface::type()']]]
+  ['type',['type',['../classCuDataQuality.html#a7af66c8b96b023fadda61aed90fb18f5',1,'CuDataQuality::type()'],['../classCuThread.html#a2a5c85c2573534a39273890056ad9ff8',1,'CuThread::type() const'],['../classCuThread.html#a2a5c85c2573534a39273890056ad9ff8',1,'CuThread::type() const'],['../classCuThreadInterface.html#aae520d5364a5101e7afae2334927fea1',1,'CuThreadInterface::type()']]]
 ];

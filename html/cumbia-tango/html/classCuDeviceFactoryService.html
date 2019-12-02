@@ -74,15 +74,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3b6480c1ac93388eb4bcadd11709da5c"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuDeviceFactoryService.html#a3b6480c1ac93388eb4bcadd11709da5c">~CuDeviceFactoryService</a> ()</td></tr>
 <tr class="memdesc:a3b6480c1ac93388eb4bcadd11709da5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">the class destructor  <a href="#a3b6480c1ac93388eb4bcadd11709da5c">More...</a><br /></td></tr>
 <tr class="separator:a3b6480c1ac93388eb4bcadd11709da5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8336867c61da31e3058edc3cda837c56"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classTDevice.html">TDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuDeviceFactoryService.html#a8336867c61da31e3058edc3cda837c56">getDevice</a> (const std::string &amp;name)</td></tr>
-<tr class="memdesc:a8336867c61da31e3058edc3cda837c56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a device for the given name.  <a href="#a8336867c61da31e3058edc3cda837c56">More...</a><br /></td></tr>
-<tr class="separator:a8336867c61da31e3058edc3cda837c56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a38c8b362f57b572a7745b4d17cff3385"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classTDevice.html">TDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuDeviceFactoryService.html#a38c8b362f57b572a7745b4d17cff3385">findDevice</a> (const std::string &amp;name)</td></tr>
-<tr class="memdesc:a38c8b362f57b572a7745b4d17cff3385"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find a device with the given name.  <a href="#a38c8b362f57b572a7745b4d17cff3385">More...</a><br /></td></tr>
-<tr class="separator:a38c8b362f57b572a7745b4d17cff3385"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a378bda3c747880effc55fc673b7e3457"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuDeviceFactoryService.html#a378bda3c747880effc55fc673b7e3457">removeDevice</a> (const std::string &amp;name)</td></tr>
-<tr class="memdesc:a378bda3c747880effc55fc673b7e3457"><td class="mdescLeft">&#160;</td><td class="mdescRight">remove the device with the given name from the list and <em>delete the device</em>  <a href="#a378bda3c747880effc55fc673b7e3457">More...</a><br /></td></tr>
-<tr class="separator:a378bda3c747880effc55fc673b7e3457"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25f48d8da40706e066d60660aef9951e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classTDevice.html">TDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuDeviceFactoryService.html#a25f48d8da40706e066d60660aef9951e">getDevice</a> (const std::string &amp;name, const CuData &amp;thread_tok)</td></tr>
+<tr class="memdesc:a25f48d8da40706e066d60660aef9951e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a device for the given name.  <a href="#a25f48d8da40706e066d60660aef9951e">More...</a><br /></td></tr>
+<tr class="separator:a25f48d8da40706e066d60660aef9951e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d761a6d5e7cd049d24d55fca3a858d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classTDevice.html">TDevice</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuDeviceFactoryService.html#a8d761a6d5e7cd049d24d55fca3a858d9">findDevice</a> (const std::string &amp;name, const CuData &amp;thread_tok)</td></tr>
+<tr class="memdesc:a8d761a6d5e7cd049d24d55fca3a858d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find a device with the given name.  <a href="#a8d761a6d5e7cd049d24d55fca3a858d9">More...</a><br /></td></tr>
+<tr class="separator:a8d761a6d5e7cd049d24d55fca3a858d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abca317c3bebfd7caba55a7262f5c08c3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuDeviceFactoryService.html#abca317c3bebfd7caba55a7262f5c08c3">addRef</a> (const std::string &amp;devname, const CuData &amp;thread_tok)</td></tr>
+<tr class="separator:abca317c3bebfd7caba55a7262f5c08c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2965bdd2d928385836db61abd09ffc5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuDeviceFactoryService.html#aa2965bdd2d928385836db61abd09ffc5">removeRef</a> (const std::string &amp;devname, const CuData &amp;thread_tok)</td></tr>
+<tr class="separator:aa2965bdd2d928385836db61abd09ffc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a8326f636a4e741882d66994646af3e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuDeviceFactoryService.html#a2a8326f636a4e741882d66994646af3e">getName</a> () const</td></tr>
 <tr class="memdesc:a2a8326f636a4e741882d66994646af3e"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns a string constant that identifies the name of this service  <a href="#a2a8326f636a4e741882d66994646af3e">More...</a><br /></td></tr>
 <tr class="separator:a2a8326f636a4e741882d66994646af3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -96,7 +97,7 @@ Public Member Functions</h2></td></tr>
 <p><a class="el" href="classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int...">CuEventActivity</a>, <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity">CuPollingActivity</a>, CuAttConfigActivity and <a class="el" href="classCuWriteActivity.html">CuWriteActivity</a> are clients of this service.</p>
 <ul>
 <li>Within the init method (e.g. <a class="el" href="classCuPollingActivity.html#a378fa24b5e138e6404d4f88629d7ccdd" title="the implementation of the CuActivity::init hook">CuPollingActivity::init</a>), getDevice is used to get a new device (or reuse an already existing one) </li>
-<li>within the onExit method (e.g. <a class="el" href="classCuPollingActivity.html#a73fe770126fcc0d8cec27e0a895886ff" title="the implementation of the CuActivity::execute hook">CuPollingActivity::onExit</a>), removeDevice is called remove the device from the list and <em>delete</em> it.</li>
+<li>within the onExit method (e.g. <a class="el" href="classCuPollingActivity.html#a73fe770126fcc0d8cec27e0a895886ff" title="the implementation of the CuActivity::onExit hook">CuPollingActivity::onExit</a>), removeDevice is called remove the device from the list and <em>delete</em> it.</li>
 </ul>
 <p>findDevice can be used to find an existing device with the given name.</p>
 <p>getDevice, findDevice and removeDevice are lock guarded, so that it's safe to call them from different threads.</p>
@@ -150,8 +151,36 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a38c8b362f57b572a7745b4d17cff3385"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38c8b362f57b572a7745b4d17cff3385">&#9670;&nbsp;</a></span>findDevice()</h2>
+<a id="abca317c3bebfd7caba55a7262f5c08c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abca317c3bebfd7caba55a7262f5c08c3">&#9670;&nbsp;</a></span>addRef()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuDeviceFactoryService::addRef </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>devname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const CuData &amp;&#160;</td>
+          <td class="paramname"><em>thread_tok</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8d761a6d5e7cd049d24d55fca3a858d9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d761a6d5e7cd049d24d55fca3a858d9">&#9670;&nbsp;</a></span>findDevice()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -160,8 +189,18 @@ Public Member Functions</h2></td></tr>
           <td class="memname"><a class="el" href="classTDevice.html">TDevice</a> * CuDeviceFactoryService::findDevice </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const CuData &amp;&#160;</td>
+          <td class="paramname"><em>thread_tok</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -174,12 +213,12 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a pointer to the device with that name or NULL if a device with that name isn't found.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuDeviceFactoryService.html#a8336867c61da31e3058edc3cda837c56" title="Get a device for the given name.">getDevice</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuDeviceFactoryService.html#a25f48d8da40706e066d60660aef9951e" title="Get a device for the given name.">getDevice</a> </dd></dl>
 
 </div>
 </div>
-<a id="a8336867c61da31e3058edc3cda837c56"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8336867c61da31e3058edc3cda837c56">&#9670;&nbsp;</a></span>getDevice()</h2>
+<a id="a25f48d8da40706e066d60660aef9951e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25f48d8da40706e066d60660aef9951e">&#9670;&nbsp;</a></span>getDevice()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -188,8 +227,18 @@ Public Member Functions</h2></td></tr>
           <td class="memname"><a class="el" href="classTDevice.html">TDevice</a> * CuDeviceFactoryService::getDevice </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const CuData &amp;&#160;</td>
+          <td class="paramname"><em>thread_tok</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -203,7 +252,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a pointer to the device with the given name.</dd></dl>
 <p>If a device with the given name already exists, it is returned. If a device with that name does not exist yet, then a new one is created and returned. <a class="el" href="classTDevice.html">TDevice</a> tries to create a Tango::DeviceProxy: check for <a class="el" href="classTDevice.html#ab38b80e8dbb9a3489fc775dd3c5f7b08">TDevice::isValid</a> to test for <a class="el" href="namespaceTango.html">Tango</a> errors.</p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuDeviceFactoryService.html#a38c8b362f57b572a7745b4d17cff3385" title="Find a device with the given name.">findDevice</a> </dd>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuDeviceFactoryService.html#a8d761a6d5e7cd049d24d55fca3a858d9" title="Find a device with the given name.">findDevice</a> </dd>
 <dd>
 <a class="el" href="classTDevice.html#ab38b80e8dbb9a3489fc775dd3c5f7b08">TDevice::isValid</a> </dd>
 <dd>
@@ -257,25 +306,31 @@ TDevice::getError </dd></dl>
 
 </div>
 </div>
-<a id="a378bda3c747880effc55fc673b7e3457"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a378bda3c747880effc55fc673b7e3457">&#9670;&nbsp;</a></span>removeDevice()</h2>
+<a id="aa2965bdd2d928385836db61abd09ffc5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2965bdd2d928385836db61abd09ffc5">&#9670;&nbsp;</a></span>removeRef()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void CuDeviceFactoryService::removeDevice </td>
+          <td class="memname">int CuDeviceFactoryService::removeRef </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>name</em></td><td>)</td>
+          <td class="paramname"><em>devname</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const CuData &amp;&#160;</td>
+          <td class="paramname"><em>thread_tok</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>remove the device with the given name from the list and <em>delete the device</em> </p>
-<dl class="section user"><dt>note</dt><dd>The list of devices is internally stored by a map associating a device name to a <a class="el" href="classTDevice.html">TDevice</a>. The destruction of <a class="el" href="classTDevice.html">TDevice</a> implies the destruction of the wrapped Tango::DeviceProxy.</dd></dl>
-<dl class="section user"><dt>thread safety</dt><dd>The body of this method is lock guarded, so that it's safe to call removeDevice from different threads. </dd></dl>
 
 </div>
 </div>
@@ -286,7 +341,7 @@ TDevice::getError </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 17 2019 14:48:30 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 2 2019 16:50:52 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

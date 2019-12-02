@@ -39,7 +39,10 @@ var annotated_dup =
     [ "CuThreadsEventBridgeFactory", "classCuThreadsEventBridgeFactory.html", "classCuThreadsEventBridgeFactory" ],
     [ "CuThreadsEventBridgeFactory_I", "classCuThreadsEventBridgeFactory__I.html", "classCuThreadsEventBridgeFactory__I" ],
     [ "CuThreadsEventBridgeListener", "classCuThreadsEventBridgeListener.html", "classCuThreadsEventBridgeListener" ],
+    [ "CuThreadTokenGenI", "classCuThreadTokenGenI.html", "classCuThreadTokenGenI" ],
     [ "CuTimeoutChangeEvent", "classCuTimeoutChangeEvent.html", "classCuTimeoutChangeEvent" ],
     [ "CuTimer", "classCuTimer.html", "classCuTimer" ],
+    [ "CuTimerService", "classCuTimerService.html", "classCuTimerService" ],
+    [ "CuTimerServicePrivate", "classCuTimerServicePrivate.html", "classCuTimerServicePrivate" ],
     [ "CuVariant", "classCuVariant.html", "classCuVariant" ]
 ];

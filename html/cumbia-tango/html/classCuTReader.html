@@ -127,6 +127,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7d1cb1c1406f67fc6c61b637f759b482"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac42436e8294cdf21989a30a77d9da10"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#aac42436e8294cdf21989a30a77d9da10">setPeriod</a> (int millis)</td></tr>
 <tr class="separator:aac42436e8294cdf21989a30a77d9da10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b92741e79070c307ff5870f3c06c27a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#a7b92741e79070c307ff5870f3c06c27a">setOptions</a> (const CuData &amp;options)</td></tr>
+<tr class="memdesc:a7b92741e79070c307ff5870f3c06c27a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCuTReader.html#a7b92741e79070c307ff5870f3c06c27a" title="CuTReader::setOptions sets the options on the reader.">CuTReader::setOptions</a> sets the options on the reader.  <a href="#a7b92741e79070c307ff5870f3c06c27a">More...</a><br /></td></tr>
+<tr class="separator:a7b92741e79070c307ff5870f3c06c27a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae426461b189140ac0227efdc2e31a932"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#ae426461b189140ac0227efdc2e31a932">period</a> () const</td></tr>
 <tr class="separator:ae426461b189140ac0227efdc2e31a932"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3facbcb1d69b84d9d302db4511522671"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#a3facbcb1d69b84d9d302db4511522671">start</a> ()</td></tr>
@@ -721,6 +724,37 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a7b92741e79070c307ff5870f3c06c27a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b92741e79070c307ff5870f3c06c27a">&#9670;&nbsp;</a></span>setOptions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuTReader::setOptions </td>
+          <td>(</td>
+          <td class="paramtype">const CuData &amp;&#160;</td>
+          <td class="paramname"><em>options</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p><a class="el" href="classCuTReader.html#a7b92741e79070c307ff5870f3c06c27a" title="CuTReader::setOptions sets the options on the reader.">CuTReader::setOptions</a> sets the options on the reader. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">options</td><td>CuData key/value bundle</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Called by <a class="el" href="classCuTangoActionI.html" title="an interface for a Tango action, typically a reader or a writer are implementors">CuTangoActionI</a> *CuTangoReaderFactory::create </p>
+
+<p class="reference">References <a class="el" href="classCuTReader.html#aac42436e8294cdf21989a30a77d9da10">setPeriod()</a>, and <a class="el" href="classCuTReader.html#a33fed2857754e3dbfc728fe9a23b35e2">setRefreshMode()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classCuTangoReaderFactory.html#ae660a4479b4d039a58f825ea41c69c34">CuTangoReaderFactory::create()</a>.</p>
+
+</div>
+</div>
 <a id="aac42436e8294cdf21989a30a77d9da10"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aac42436e8294cdf21989a30a77d9da10">&#9670;&nbsp;</a></span>setPeriod()</h2>
 
@@ -737,7 +771,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classCuTangoReaderFactory.html#ae660a4479b4d039a58f825ea41c69c34">CuTangoReaderFactory::create()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuTReader.html#a7b92741e79070c307ff5870f3c06c27a">setOptions()</a>.</p>
 
 </div>
 </div>
@@ -778,7 +812,7 @@ Public Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classCuPollingService.html#ac9e338ca5b1b36884ff1656b616dd57a">CuPollingService::actionRegistered()</a>, <a class="el" href="classCuPollingService.html#a6f3a3c6af39fbe1c15c6805dfbadde01a0fbe229fee084efbb94bf9641d57332b">CuPollingService::CuPollingServiceType</a>, <a class="el" href="classCuTReader.html#afa9248f271e4945ea53f508d32ce4fc5">isEventRefresh()</a>, <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848ac4f8eb91cf33f91e054dc525f073d246">Manual</a>, <a class="el" href="classCuTReader.html#ae426461b189140ac0227efdc2e31a932">period()</a>, and <a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848aa0beab070134a15c077018c55b55786b">PolledRefresh</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCuTangoReaderFactory.html#ae660a4479b4d039a58f825ea41c69c34">CuTangoReaderFactory::create()</a>, and <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822">sendData()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822">sendData()</a>, and <a class="el" href="classCuTReader.html#a7b92741e79070c307ff5870f3c06c27a">setOptions()</a>.</p>
 
 </div>
 </div>
@@ -865,7 +899,7 @@ See also Cumbia::unregisterActivity </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 17 2019 14:48:30 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 2 2019 16:50:53 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

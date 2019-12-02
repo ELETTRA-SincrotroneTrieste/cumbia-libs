@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,75,32"/>
-<area shape="rect" id="node2" href="$classQuVector.html" title="convenience class that can be used to quickly convert a std::vector of a given type into a QVector of..." alt="" coords="123,5,231,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,92,32"/>
+<area shape="rect" id="node2" href="$classQuStringList.html" title="convenience class to build a Qt QStringList from std::vector&lt;std::string&gt; or from a value stored in C..." alt="" coords="140,5,235,32"/>
 </map>

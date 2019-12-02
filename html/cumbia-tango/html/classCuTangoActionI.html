@@ -314,7 +314,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section user"><dt>note</dt><dd>getData must be synchronous: it's called with input arguments (d_inout) and they are filled in within the same method in the same thread. <em>Asynchronous</em> data fetch from an activity executed in a separate thread can be accomplished by sendData <em>in combination with</em> CuDataListener::onUpdate. There, received data will have to be recognised as coming from a specific request and treated accordingly. </dd></dl>
 
-<p>Implemented in <a class="el" href="classCuTReader.html#a0fb59e260adfcea9cd094623d5a45e90">CuTReader</a>, <a class="el" href="classCuTWriter.html#acb0395a8679959f96acd5928ebd1c32d">CuTWriter</a>, and <a class="el" href="classCuTConfiguration.html#a83620305059e47dabb0fb7cbd782a873">CuTConfiguration</a>.</p>
+<p>Implemented in <a class="el" href="classCuTReader.html#a0fb59e260adfcea9cd094623d5a45e90">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a83620305059e47dabb0fb7cbd782a873">CuTConfiguration</a>, and <a class="el" href="classCuTWriter.html#acb0395a8679959f96acd5928ebd1c32d">CuTWriter</a>.</p>
 
 </div>
 </div>
@@ -346,7 +346,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classCuTReader.html#acba17a60f24f4c75359422b84fd91975">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a86b1e3dafc7238a59cbe6d2b00a6e615">CuTConfiguration</a>, and <a class="el" href="classCuTWriter.html#a8718f1a13c8ae9f6d3769cd741696906">CuTWriter</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCuPoller.html#aed29c4677568724b15eebee1eb733b55">CuPoller::registerAction()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuPoller.html#abc1ee3055effcf64ed3f60feb83c2ab8">CuPoller::registerAction()</a>.</p>
 
 </div>
 </div>
@@ -450,7 +450,7 @@ Public Member Functions</h2></td></tr>
 <p>The data can be set locally on the object implementing this interface or can be forwarded to the activity by means of Cumbia::postEvent carrying an argument derived from CuActivityEvent. See <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822" title="Send data with parameters to configure the reader.">CuTReader::sendData</a> for an example</p>
 <dl class="section user"><dt>Send a request and receive a response asynchronously</dt><dd>Use sendData <em>in conjunction with</em> CuDataListener::onUpdate, as described in the getData documentation. </dd></dl>
 
-<p>Implemented in <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822">CuTReader</a>, <a class="el" href="classCuTWriter.html#ae12ad830de4f023c61e09160140ffd7d">CuTWriter</a>, and <a class="el" href="classCuTConfiguration.html#a857f4ece2a32edc69dc2d72111b3a12f">CuTConfiguration</a>.</p>
+<p>Implemented in <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a857f4ece2a32edc69dc2d72111b3a12f">CuTConfiguration</a>, and <a class="el" href="classCuTWriter.html#ae12ad830de4f023c61e09160140ffd7d">CuTWriter</a>.</p>
 
 </div>
 </div>
@@ -533,7 +533,7 @@ See also Cumbia::unregisterActivity </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 17 2019 14:48:30 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Dec 2 2019 16:50:53 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

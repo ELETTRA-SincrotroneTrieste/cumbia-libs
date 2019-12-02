@@ -11,11 +11,15 @@ var classCumbia =
     [ "finish", "classCumbia.html#a17c9894c182fe02d4667aff851824f81", null ],
     [ "getActivityPeriod", "classCumbia.html#a783d8ef496e96945f300c66311dca6ff", null ],
     [ "getServiceProvider", "classCumbia.html#aaaf0d8e9ad0b480a5c95997e7bfbf7da", null ],
+    [ "getThreadTokenGenerator", "classCumbia.html#a599900ac24e7b88e6c859a5572905635", null ],
     [ "getType", "classCumbia.html#a18ee264b73e2c6426555ef98ec4f7ca7", null ],
     [ "pauseActivity", "classCumbia.html#ad8751aff10e046203495bd4990358fea", null ],
     [ "postEvent", "classCumbia.html#aa165b8ccd53aa26dba6ec1e769f5e4a6", null ],
     [ "registerActivity", "classCumbia.html#affe4f4e6912be2d453411d5efa8df1b7", null ],
+    [ "removeThreadTokenGenerator", "classCumbia.html#a3de3f4be86eecce578660b88745dd7f9", null ],
     [ "resumeActivity", "classCumbia.html#acace44228226547dce18b4f12a246b58", null ],
     [ "setActivityPeriod", "classCumbia.html#aeb73555c75846bd6e948fceb9cf5053d", null ],
+    [ "setThreadTokenGenerator", "classCumbia.html#ad1294d5af961ea0899aabf299e7f2c56", null ],
+    [ "threadToken", "classCumbia.html#a7771a2ce3b7ee3366d96ca7bf6f2ed39", null ],
     [ "unregisterActivity", "classCumbia.html#ae72c237833f06276a2ba62f5598197f5", null ]
 ];
