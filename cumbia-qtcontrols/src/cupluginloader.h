@@ -46,8 +46,8 @@ public:
                      name.toStdString().c_str());
         }
         else
-            printf("\e[1;31m*\e[0m CuPluginLoader.get: failed to load plugin \"%s\": \"%s\"\n",
-                   name.toStdString().c_str(), loader.errorString().toStdString().c_str());
+            printf("\e[1;31m*\e[0m CuPluginLoader.get: failed to load plugin \"%s\" from \"%s\": \"%s\"\n",
+                   name.toStdString().c_str(), plugin_path.toStdString().c_str(), loader.errorString().toStdString().c_str());
         if(plugin_as_qobject != nullptr)
             *plugin_as_qobject = plugin;
         return pl;

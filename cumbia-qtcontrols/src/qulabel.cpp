@@ -61,7 +61,6 @@ void QuLabel::m_init()
     d->read_ok = false;
     d->display_u_enabled = true;
     d->max_len = -1;
-    setWordWrap(true);
     setProperty("trueString", "TRUE");
     setProperty("falseString", "FALSE");
     setProperty("trueColor", QColor(Qt::green));
