@@ -93,7 +93,7 @@ The library sources include copies of the *README.md* and *README.UBUNTU.md* fil
 
 
  
-### Plugins
+### Plugins shipped with the base installation
  
  |*cumbia* plugins  |
  |-------------------------------------------------------------------|
