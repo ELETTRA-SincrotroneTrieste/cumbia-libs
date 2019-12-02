@@ -1,15 +1,3 @@
-include (../../qumbia-epics-controls/qumbia-epics-controls.pri)
-include (../../qumbia-tango-controls/qumbia-tango-controls.pri)
-include (../../cumbia-qtcontrols/cumbia-qtcontrols.pri)
-
-TEMPLATE = app
-
-QT +=  core gui uitools
-
-DOCDIR = $${INSTALL_ROOT}/share/doc/la-cumparsita
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets x11extras
-
 
 # INSTALL_ROOT is used to install the target
 # prefix is used within DEFINES +=
@@ -19,9 +7,38 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets x11extras
 # configuration files must be found by the application when the script
 # installs everything at destination
 #
+isEmpty(INSTALL_ROOT) {
+    INSTALL_ROOT=/usr/local/cumbia-libs
+}
+
 isEmpty(prefix) {
     prefix = $${INSTALL_ROOT}
 }
+exists($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
+    message("including support for qumbia-epics-controls module under $${INSTALL_ROOT}")
+    include($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+}
+
+exists($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
+    message("including support for qumbia-tango-controls module under $${INSTALL_ROOT}")
+    include($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+}
+
+exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {
+    message("including support for cumbia-random module under $${INSTALL_ROOT}")
+    include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
+}
+
+include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
+
+TEMPLATE = app
+
+QT +=  core gui uitools
+
+DOCDIR = $${INSTALL_ROOT}/share/doc/la-cumparsita
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets x11extras
+
 
 DEFINES += CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${prefix}/lib/qumbia-plugins\\\"\"
 # qt debug output
