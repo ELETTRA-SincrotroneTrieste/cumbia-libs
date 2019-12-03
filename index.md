@@ -18,6 +18,16 @@ Refer to the <a href="html/cuformula/html/index.html">formula plugin</a> section
 full C++ Qt application in style and behavior. For the most demanding users, *la-cumparsita* allows
 *javascript* integration to display function results as described earlier in this page.
 
+### Test application interface, performance and usability without connecting to real control system engines
+The *cumbia-random* module offers an interface to periodically generate random data of a given size and within a given range.
+Additionally, JavaScript files can be used as data sources. Read more about *cumbia-random*
+<a href="html/cumbia-random/html/index.html">here</a>.
+
+### Use the shipped client applications to interact immediately with multiple control systems
+The Qt graphical client and a command line tool are ready to communicate with the supported control systems and
+the *cumbia-random* module. An external <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">plugin</a>
+makes Tango source *bash auto completion* possible!
+
 ### Keywords and technologies
 - C++-11
 - <a href="https://www.qt.io/">Qt</a>
@@ -95,21 +105,13 @@ The library sources include copies of the *README.md* and *README.UBUNTU.md* fil
  
 ### Plugins shipped with the base installation
  
- |*cumbia* plugins  |
- |-------------------------------------------------------------------|
- | <a href="html/cuformula/html/index.html">formula plugin</a>. |
- | <a href="html/cumbia-dbus/html/index.html">dbus plugin</a>. |
- | <a href="html/cumbia-multiread/html/index.html">multi reader plugin</a>. |
- | <a href="html/widgets-std-context-menu-actions/html/index.html">context menu actions plugin</a>. |
-
-
-### Interfaces for additional plugins
-
- |Plugin interfaces to extend *cumbia*  |
- |-------------------------------------------------------------------|
- | <a href="html/cumbia-qtcontrols/html/classQuXtraWidgetPluginI.html">extra widget plugin interface</a>. |
- | <a href="html/cumbia-qtcontrols/html/classQuMultiReaderPluginInterface.html">multi reader plugin interface</a>. |
-
+ |*cumbia* plugins  | Description |
+ |-------------------------------------------------------------------|--------------------|
+ | <a href="html/cuformula/html/index.html">formula plugin</a>. | Compose sources into formulas |
+ | <a href="html/cumbia-dbus/html/index.html">dbus plugin</a>. | DBus plugin for inter app communication |
+ | <a href="html/cumbia-multiread/html/index.html">multi reader plugin</a>. | Read multiple sources |
+ | <a href="html/widgets-std-context-menu-actions/html/index.html">context menu actions plugin</a>. | Contextual menu actions plugin for widgets|
+ | Qt designer plugin | Qt designer cumbia widget integration |
 
 ### Additional plugins
 
@@ -120,6 +122,8 @@ Additional plugins can be downloaded from the <a href="https://github.com/ELETTR
 | <a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-qtcontrols-introspection-plugin">cumbia-qtcontrols introspection plugin</a>. | Look inside cumbia objects |
 | <a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-tango-introspection-plugin">Tango specific introspection plugin</a>.  | Look inside cumbia-tango objects |
 | <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">Plugin and app to search Tango database names</a>. | Find Tango source names (and provide auto completion for apps!) |
+| <a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-copy-source-context-menu-actions">Add a *copy source* action to the context menu</a>. | Adds a *copy source* action to the widgets contextual menu |
+| <a href="https://github.com/ELETTRA-SincrotroneTrieste/textview-xwidgetplugin">Text view extra widget</a>. | Provides a text view widget |
 
 
 
