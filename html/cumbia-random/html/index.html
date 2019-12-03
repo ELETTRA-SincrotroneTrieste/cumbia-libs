@@ -95,11 +95,11 @@ Further reading</h2>
 Including the module in a cumbia application</h1>
 <p>Just a few lines of code are necessary to integrate the <em>cumbia-random</em> module in your graphical application. Presently, you will be able to take advantage of the testing features provided by the module.</p>
 <h2><a class="anchor" id="pkg_config"></a>
-pkg-config file</h2>
+Using pkg-config file</h2>
 <p>A <em>cumbia-random.pc</em> <em>pkg-config</em> file is distributed under the <em>INSTALL_ROOT/lib/pkgconfig</em> directory. It can be used to include <em>cumbia-random</em> in your project.</p>
 <h2><a class="anchor" id="qt_pro"></a>
-Qt pro file</h2>
-<p>For Qt applications, it's enough to add the following lines to the Qt <em>project file</em> (.pro)</p>
+Through the Qt pro file</h2>
+<p>For Qt applications, adding the following lines to the Qt <em>project file</em> (.pro) is enough:</p>
 <div class="fragment"><div class="line">exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {</div><div class="line">  include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)</div><div class="line">}</div></div><!-- fragment --><h2><a class="anchor" id="h_file"></a>
 header file</h2>
 <p>CumbiaPool and CuControlsFactoryPool objects are necessary when your application is required to support multiple engines. If the project is generated with the <em>cumbia new project</em> tool and the <em>multiple engine support</em> option is chosen, then you only need to add the following lines to the main class <em>cpp file</em>:</p>
@@ -116,7 +116,7 @@ header file</h2>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 3 2019 16:13:48 for cumbia-random by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 3 2019 16:15:17 for cumbia-random by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
