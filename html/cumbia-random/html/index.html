@@ -52,13 +52,23 @@ Features</h1>
 <p>The sources supplied to the module determine how data is generated in terms of size, bounds and update period. Moreover, names can be used to determine thread grouping in case of multiple readers.</p>
 <h2><a class="anchor" id="Examples"></a>
 Examples</h2>
-<p>Using the <em>cumbia read</em> command line client, the following instructions can be issued:</p>
+<p>In the examples below, we use the <em>cumbia read</em> command line client.</p>
+<h3><a class="anchor" id="Read"></a>
+a randomly generated scalar value</h3>
 <div class="fragment"><div class="line">cumbia read random:<span class="comment">//one/random/number/1/0/100/one_r </span></div></div><!-- fragment --><p>The output will be:</p>
-<div class="fragment"><div class="line">* one_r: [14:02:45+0.648788]  [double] 59.72 </div></div><!-- fragment --> </div></div><!-- PageDoc -->
+<div class="fragment"><div class="line">* one_r: [14:02:45+0.648788]  [double] 59.72 </div></div><!-- fragment --><p>The source in the example is made up of several sections separated by a '/':</p><ul>
+<li><em>random://</em> associates what follows to the <em>cumbia-random</em> module (through the CumbiaPool and CuControlsFactoryPool)</li>
+<li>one/random/number an arbitrary name that is given to the random source. Everything that precedes the '/'-separated numeric section is interpreted as the source name.</li>
+<li>first number: the size of the generated result</li>
+<li>second number: the minimum value that can be generated</li>
+<li>third number: the maximum value</li>
+<li><em>one_r</em> a <em>label</em> that can be associated to the source name (optional). If present, it is displayed in the output at the beginning of the line </li>
+</ul>
+</div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 3 2019 14:04:14 for cumbia-random by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 3 2019 14:12:28 for cumbia-random by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

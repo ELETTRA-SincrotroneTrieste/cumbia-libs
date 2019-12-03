@@ -151,8 +151,10 @@ Along with the application executables and documentation, two bash scripts will 
 They define shortcuts for the common operations provided by the *cumbia applications* as follows:
  
  
-|Applications (command line)   | description                                 | app
+|Applications   | description                                 | app
 |------------------------------|--------------------------------------------|:---------------:|
+| *cumbia read*                | read a quantity from the supported engines |<a href="qumbia-apps/qumbia-reader">cumbia reader</a>  |
+| *cumbia monitor*             | monitor a quantity over time from the supported engines |<a href="qumbia-apps/qumbia-reader">cumbia reader</a>  |
 | *cumbia new project*          | create a new cumbia project               |<a href="html/qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
 | *cumbia import*               | migrate a QTango project into cumbia      |<a href="html/qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
 | *cumbia new control*          | write a *cumbia control* reader or writer | <a href="html/qumbianewcontrolwizard/html/index.html">qumbia-apps/qumbianewcontrolwizard</a>  |
