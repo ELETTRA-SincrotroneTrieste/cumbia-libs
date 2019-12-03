@@ -98,7 +98,7 @@ Including the module in a cumbia application</h1>
 pkg-config file</h2>
 <p>A <em>cumbia-random.pc</em> <em>pkg-config</em> file is distributed under the <em>INSTALL_ROOT/lib/pkgconfig</em> directory. It can be used to include <em>cumbia-random</em> in your project.</p>
 <h2><a class="anchor" id="qt_pro"></a>
-Qt .pro file</h2>
+Qt pro file</h2>
 <p>For Qt applications, it's enough to add the following lines to the Qt <em>project file</em> (.pro)</p>
 <div class="fragment"><div class="line">exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {</div><div class="line">  include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)</div><div class="line">}</div></div><!-- fragment --><h2><a class="anchor" id="h_file"></a>
 header file</h2>
@@ -112,11 +112,11 @@ header file</h2>
 <li>the <em>setSrcPatterns</em> methods register sources starting with the <em>random://</em> prefix with the <em>cumbia-random</em> module.</li>
 </ul>
 </dd></dl>
-<p>According to the considerations above, the main class will have these attributes </p><div class="fragment"><div class="line"><span class="keyword">private</span>:</div><div class="line">   CumbiaPool *cu_pool;</div><div class="line">   QuLogImpl m_log_impl;</div><div class="line">   CuLog *m_log;</div><div class="line">   CuControlsFactoryPool m_ctrl_factory_pool;</div></div><!-- fragment --> </div></div><!-- PageDoc -->
+<p>To comply with the given implementation, the main class will have these attributes </p><div class="fragment"><div class="line"><span class="keyword">private</span>:</div><div class="line">   CumbiaPool *cu_pool;</div><div class="line">   QuLogImpl m_log_impl;</div><div class="line">   CuLog *m_log;</div><div class="line">   CuControlsFactoryPool m_ctrl_factory_pool;</div></div><!-- fragment --> </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 3 2019 16:12:30 for cumbia-random by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 3 2019 16:13:48 for cumbia-random by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
