@@ -1,4 +1,4 @@
-# cumbia library documentation   [<a href="news.md">news</a>]
+# cumbia library documentation   [<a href="news.html">news</a>]
 
 ### Write your own activities
 Concentrate on the task you want to run in the background and use *cumbia* base library to write custom *activities* that will be executed on a separate
