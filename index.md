@@ -14,12 +14,12 @@ can be introduced into functions. The results can be displayed into any *cumbia-
 Refer to the <a href="html/cuformula/html/index.html">formula plugin</a> section for details.
 
 ### Realize Qt applications without writing any code
-*la-cumparsita* is an application that interprets *Qt designer UI files* on the fly and performs as a
+<a href="html/la-cumparsita/html/index.html">la-cumparsita</a> is an application that interprets *Qt designer UI files* on the fly and performs as a
 full C++ Qt application in style and behavior. For the most demanding users, *la-cumparsita* allows
 *javascript* integration to display function results as described earlier in this page.
 
 ### Test application interface, performance and usability without connecting to real control system engines
-The *cumbia-random* module offers an interface to periodically generate random data of a given size and within a given range.
+The <a href="html/cumbia-random/html/index.html">cumbia-random</a> module offers an interface to periodically generate random data of a given size and within a given range.
 Additionally, JavaScript files can be used as data sources. Read more about *cumbia-random*
 <a href="html/cumbia-random/html/index.html">here</a>.
 
