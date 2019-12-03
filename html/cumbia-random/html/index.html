@@ -44,17 +44,17 @@ $(function() {
 <div class="title">cumbia-random Documentation</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="Introduction"></a>
+<div class="textblock"><h1><a class="anchor" id="introduction"></a>
 Introduction</h1>
 <p>The <a class="el" href="classCumbiaRandom.html">CumbiaRandom</a> module generates data randomly or from a specified JavaScript file. Data can be used to test higher level applications in terms of usability, performance and behaviour in case of errors.</p>
-<h1><a class="anchor" id="Features"></a>
+<h1><a class="anchor" id="features"></a>
 Features</h1>
 <p>The sources supplied to the module determine how data is generated in terms of size, bounds and update period. Moreover, names can be used to determine thread grouping in case of multiple readers.</p>
-<h2><a class="anchor" id="Examples"></a>
+<h2><a class="anchor" id="examples"></a>
 Examples</h2>
 <p>In the examples below, we use the <em>cumbia read</em> command line client.</p>
-<h3><a class="anchor" id="Read"></a>
-a randomly generated scalar value</h3>
+<h3><a class="anchor" id="read_scalar"></a>
+Read a randomly generated scalar value</h3>
 <div class="fragment"><div class="line">cumbia read random:<span class="comment">//one/random/number/1/0/100/one_r </span></div></div><!-- fragment --><p>The output will be:</p>
 <div class="fragment"><div class="line">* one_r: [14:02:45+0.648788]  [double] 59.72 </div></div><!-- fragment --><p>The source in the example is made up of several sections separated by a '/':</p><ul>
 <li><em>random://</em> associates what follows to the <em>cumbia-random</em> module (through the CumbiaPool and CuControlsFactoryPool)</li>
@@ -64,21 +64,21 @@ a randomly generated scalar value</h3>
 <li>third number: the maximum value</li>
 <li><em>one_r</em> a <em>label</em> that can be associated to the source name (optional). If present, it is displayed in the output at the beginning of the line</li>
 </ul>
-<h3><a class="anchor" id="Read"></a>
-a randomly generated scalar value</h3>
-<div class="fragment"><div class="line">cumbia read random:<span class="comment">//a/random/array/3/-100/100/array_3 </span></div></div><!-- fragment --><p> The output will be: </p><div class="fragment"><div class="line">* array_3: [14:37:26+0.249328] [double,3] { 61.62,-35.80,-35.02 } </div></div><!-- fragment --><h3><a class="anchor" id="Monitor"></a>
-a randomly generated vector of 3 values between -10 and +10 with a period of one second</h3>
+<h3><a class="anchor" id="read_array"></a>
+Read a randomly generated vector of 3 values between -100 and 100</h3>
+<div class="fragment"><div class="line">cumbia read random:<span class="comment">//a/random/array/3/-100/100/array_3 </span></div></div><!-- fragment --><p> The output will be: </p><div class="fragment"><div class="line">* array_3: [14:37:26+0.249328] [double,3] { 61.62,-35.80,-35.02 } </div></div><!-- fragment --><h3><a class="anchor" id="monitor_array"></a>
+Monitor a randomly generated vector of 3 values between -10 and +10 with a period of one second</h3>
 <div class="fragment"><div class="line">cumbia monitor random:<span class="comment">//one/random/array/3/-10/10/monitor_a_3 </span></div></div><!-- fragment --><p> The output will be: </p><div class="fragment"><div class="line"> * monitor started: press any key to exit</div><div class="line">monitor_a_3: [14:39:16+0.627573] [double,3] { 8.11,3.82,-4.99 }</div><div class="line">monitor_a_3: [14:39:16+0.627634] [double,3] { 0.53,6.21,-8.98 }</div><div class="line">monitor_a_3: [14:39:17+0.627987] [double,3] { 1.39,-5.77,-6.22 }</div><div class="line">monitor_a_3: [14:39:18+0.628198] [double,3] { -6.17,-8.67,-9.01 }</div><div class="line">monitor_a_3: [14:39:19+0.628415] [double,3] { 1.48,7.36,9.45 }</div><div class="line">[...]</div></div><!-- fragment --><p>A monitor is stopped whenever a key is pressed. Avoid <em>CTRL-C</em> for proper termination.</p>
-<h3><a class="anchor" id="Monitor"></a>
-a randomly generated vector of 3 values between -10 and +10 with a period of one second</h3>
+<h3><a class="anchor" id="monitor_3_arrays"></a>
+Monitor three randomly generated vectors of 3 values each, with a period of one second</h3>
 <div class="fragment"><div class="line">cumbia monitor random:<span class="comment">//a/random/array/3/-10/10/a_3  random://b/random/array/3/-12/12/b_3</span></div><div class="line"> random:<span class="comment">//c/random/array/3/-100/100/c_3  </span></div></div><!-- fragment --><p> The output will be: </p><div class="fragment"><div class="line">monitor started: press any key to exit</div><div class="line">a_3: [14:42:49+0.430095] [double,3] { 7.75,-1.79,4.73 }</div><div class="line">a_3: [14:42:49+0.430147] [double,3] { -2.53,-2.72,1.63 }</div><div class="line">b_3: [14:42:49+0.431249] [double,3] { 8.37,10.42,-9.41 }</div><div class="line">b_3: [14:42:49+0.431287] [double,3] { 9.46,4.48,5.46 }</div><div class="line">c_3: [14:42:49+0.431744] [double,3] { -16.46,-64.88,-15.70 }</div><div class="line">c_3: [14:42:49+0.431785] [double,3] { 68.69,1.35,20.00 }</div><div class="line">a_3: [14:42:50+0.430501] [double,3] { -5.11,4.62,-2.32 }</div><div class="line">b_3: [14:42:50+0.43159] [double,3] { 11.27,6.16,0.61 }</div><div class="line">c_3: [14:42:50+0.432018] [double,3] { -52.93,19.59,64.50 }</div><div class="line">a_3: [14:42:51+0.430715] [double,3] { -1.04,1.17,2.77 }</div><div class="line">b_3: [14:42:51+0.431767] [double,3] { 2.43,8.20,6.89 }</div><div class="line">c_3: [14:42:51+0.432161] [double,3] { -59.39,-99.55,67.54 }</div></div><!-- fragment --><p>Now take the last example and fetch some extra information, by adding &ndash;l=medium to the command line. The output will be more detailed:</p>
 <div class="fragment"><div class="line"> [...]</div><div class="line">a_3: -10.00 &lt; [14:45:32+0.47847] [double,3] { -5.78,-0.14,-5.87 } [random:<span class="comment">//a/random/array/3/-10/10/a_3] &lt; 10.00 [in 30us]</span></div><div class="line">b_3: -12.00 &lt; [14:45:32+0.478849] [double,3] { -8.28,-1.76,-8.73 } [random:<span class="comment">//b/random/array/3/-12/12/b_3] &lt; 12.00 [in 19us]</span></div><div class="line">c_3: -100.00 &lt; [14:45:32+0.479327] [double,3] { 89.96,-66.21,-37.81 } [random:<span class="comment">//c/random/array/3/-100/100/c_3] &lt; 100.00 [in 26us]</span></div><div class="line">[...] </div></div><!-- fragment --><p>The output encloses the read value between upper and lower bounds, shows the full source name and the execution time.</p>
-<h3><a class="anchor" id="Thread"></a>
-grouping</h3>
+<h3><a class="anchor" id="thread_grouping"></a>
+Thread grouping</h3>
 <p>The <em>cumbia-random</em> module takes the first section of the source string delimited by '/' to determine how to group number generator threads together. Add the &ndash;l=high option to get even more detailed information while reading:</p>
 <div class="fragment"><div class="line">cumbia read random:<span class="comment">//th1/scalar/1/-10.0/10.2/r1  random://th2/array/2/0.0/10.0/r2  random://th1/array/3/-10.0/10.0/r3</span></div><div class="line">    --l=high</div></div><!-- fragment --><p>Output: </p><div class="fragment"><div class="line">r1: [th1] -10.00 &lt; [14:50:56+0.0891559]  [double] 10.10 [random:<span class="comment">//th1/scalar/1/-10.0/10.2/r1] &lt; 10.20 [in 50us]</span></div><div class="line">r2: [th2] 0.00 &lt; [14:50:56+0.0895171] [double,2] { 5.05,7.84 } [random:<span class="comment">//th2/array/2/0.0/10.0/r2] &lt; 10.00 [in 39us]</span></div><div class="line">r3: [th1] -10.00 &lt; [14:50:56+0.0900221] [double,3] { 6.04,-4.54,8.10 } [random:<span class="comment">//th1/array/3/-10.0/10.0/r3] &lt; 10.00 [in 25us]</span></div></div><!-- fragment --><p>After the labels, r1, r2, r3, <em>thread information</em> is shown between square brackets. As you can see, the <em>th1</em> and <em>th2</em> sections in the source names have been used to execute the three readings in two threads grouped by name.</p>
-<h3><a class="anchor" id="JavaScript"></a>
-generated data</h3>
+<h3><a class="anchor" id="js_gen"></a>
+JavaScript generated data</h3>
 <p>A <em>cumbia-random</em> source can specify a JavaScript file (name ending in *.js) as data provider. The <em>pattern</em> for the source must be:</p>
 <div class="fragment"><div class="line">random:<span class="comment">//anything/you/want/file://path/to/file.js/SIZE/MIN/MAX[/PERIOD]/label</span></div></div><!-- fragment --><p>file.js will be passed the four arguments given in the source name (period is optional, default is 1 second) plus two additional parameters: the number of calls made to the function up to that moment and the value from the last call.</p>
 <p>For example: </p><div class="fragment"><div class="line">cumbia monitor  random:<span class="comment">//file://js_functions/sin.js/100/-10/10/sin_f</span></div></div><!-- fragment --><p> will produce the following output</p>
@@ -88,14 +88,17 @@ generated data</h3>
 <div class="caption">
 cumbia client with a sin function generated by a JavaScript function in a js file</div></div>
 <p>In the example, the working directory contains a file named <em>sin.js</em> under the <em>js_functions</em> folder. An absolute path can be specified as well</p>
-<div class="fragment"><div class="line">cumbia monitor random:<span class="comment">//file:///home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/qumbia-apps/qumbia-reader/js_functions/sin.js/100/0/1</span></div></div><!-- fragment --><h2><a class="anchor" id="Further"></a>
-reading</h2>
-<p>The <a href="../../qumbia-reader/html/index.html">cumbia reader</a> command line client with bash auto completion functionality. The <a href="../../qumbia-client/html/index.html">cumbia client</a> Qt graphical client with bash auto completion functionality. </p>
+<div class="fragment"><div class="line">cumbia monitor random:<span class="comment">//file:///home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/qumbia-apps/qumbia-reader/js_functions/sin.js/100/0/1</span></div></div><!-- fragment --><h2><a class="anchor" id="further_reading"></a>
+Further reading</h2>
+<p>The <a href="../../qumbia-reader/html/index.html">cumbia reader</a> command line client with bash auto completion functionality. The <a href="../../qumbia-client/html/index.html">cumbia client</a> Qt graphical client with bash auto completion functionality.</p>
+<h1><a class="anchor" id="include_module"></a>
+Including the module in a cumbia application</h1>
+<p>Just a few lines of code are necessary to integrate the <em>cumbia-random</em> module in your graphical application. Presently, you will be able to take advantage of the testing features provided by the module. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 3 2019 15:26:22 for cumbia-random by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 3 2019 15:31:33 for cumbia-random by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
