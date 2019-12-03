@@ -62,13 +62,20 @@ a randomly generated scalar value</h3>
 <li>first number: the size of the generated result</li>
 <li>second number: the minimum value that can be generated</li>
 <li>third number: the maximum value</li>
-<li><em>one_r</em> a <em>label</em> that can be associated to the source name (optional). If present, it is displayed in the output at the beginning of the line </li>
+<li><em>one_r</em> a <em>label</em> that can be associated to the source name (optional). If present, it is displayed in the output at the beginning of the line</li>
 </ul>
-</div></div><!-- PageDoc -->
+<h3><a class="anchor" id="Read"></a>
+a randomly generated scalar value</h3>
+<div class="fragment"><div class="line">cumbia read random:<span class="comment">//a/random/array/3/-100/100/array_3 </span></div></div><!-- fragment --><p> The output will be: </p><div class="fragment"><div class="line">* array_3: [14:37:26+0.249328] [double,3] { 61.62,-35.80,-35.02 } </div></div><!-- fragment --><h3><a class="anchor" id="Monitor"></a>
+a randomly generated vector of 3 values between -10 and +10 with a period of one second</h3>
+<div class="fragment"><div class="line">cumbia monitor random:<span class="comment">//one/random/array/3/-10/10/monitor_a_3 </span></div></div><!-- fragment --><p> The output will be: </p><div class="fragment"><div class="line"> * monitor started: press any key to exit</div><div class="line">monitor_a_3: [14:39:16+0.627573] [double,3] { 8.11,3.82,-4.99 }</div><div class="line">monitor_a_3: [14:39:16+0.627634] [double,3] { 0.53,6.21,-8.98 }</div><div class="line">monitor_a_3: [14:39:17+0.627987] [double,3] { 1.39,-5.77,-6.22 }</div><div class="line">monitor_a_3: [14:39:18+0.628198] [double,3] { -6.17,-8.67,-9.01 }</div><div class="line">monitor_a_3: [14:39:19+0.628415] [double,3] { 1.48,7.36,9.45 }</div><div class="line">[...]</div></div><!-- fragment --><p>A monitor is stopped whenever a key is pressed. Avoid <em>CTRL-C</em> for proper termination.</p>
+<h3><a class="anchor" id="Monitor"></a>
+a randomly generated vector of 3 values between -10 and +10 with a period of one second</h3>
+<div class="fragment"><div class="line">cumbia monitor random:<span class="comment">//a/random/array/3/-10/10/a_3  random://b/random/array/3/-12/12/b_3</span></div><div class="line"> random:<span class="comment">//c/random/array/3/-100/100/c_3  </span></div></div><!-- fragment --><p> The output will be: </p><div class="fragment"><div class="line"> * monitor started: press any key to exit</div><div class="line">a_3: [14:42:49+0.430095] [double,3] { 7.75,-1.79,4.73 }</div><div class="line">a_3: [14:42:49+0.430147] [double,3] { -2.53,-2.72,1.63 }</div><div class="line">b_3: [14:42:49+0.431249] [double,3] { 8.37,10.42,-9.41 }</div><div class="line">b_3: [14:42:49+0.431287] [double,3] { 9.46,4.48,5.46 }</div><div class="line">c_3: [14:42:49+0.431744] [double,3] { -16.46,-64.88,-15.70 }</div><div class="line">c_3: [14:42:49+0.431785] [double,3] { 68.69,1.35,20.00 }</div><div class="line">a_3: [14:42:50+0.430501] [double,3] { -5.11,4.62,-2.32 }</div><div class="line">b_3: [14:42:50+0.43159] [double,3] { 11.27,6.16,0.61 }</div><div class="line">c_3: [14:42:50+0.432018] [double,3] { -52.93,19.59,64.50 }</div><div class="line">a_3: [14:42:51+0.430715] [double,3] { -1.04,1.17,2.77 }</div><div class="line">b_3: [14:42:51+0.431767] [double,3] { 2.43,8.20,6.89 }</div><div class="line">c_3: [14:42:51+0.432161] [double,3] { -59.39,-99.55,67.54 }</div></div><!-- fragment --> </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 3 2019 14:36:22 for cumbia-random by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 3 2019 14:43:55 for cumbia-random by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
