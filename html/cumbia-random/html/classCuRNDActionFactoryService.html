@@ -76,7 +76,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a145a930b0a77d989f91a0aa44b66ae55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abdb3ddc1193a3d00d240d42644a35d4b"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuRNDActionFactoryService.html#abdb3ddc1193a3d00d240d42644a35d4b">~CuRNDActionFactoryService</a> ()</td></tr>
 <tr class="separator:abdb3ddc1193a3d00d240d42644a35d4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10e0910c10c4461f5f9afda5e318d4ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuRNDActionI.html">CuRNDActionI</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuRNDActionFactoryService.html#a10e0910c10c4461f5f9afda5e318d4ca">registerAction</a> (const std::string &amp;src, const <a class="el" href="classCuRNDActionFactoryI.html">CuRNDActionFactoryI</a> &amp;f, CumbiaRandom *ct)</td></tr>
+<tr class="memitem:a10e0910c10c4461f5f9afda5e318d4ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuRNDActionI.html">CuRNDActionI</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuRNDActionFactoryService.html#a10e0910c10c4461f5f9afda5e318d4ca">registerAction</a> (const std::string &amp;src, const <a class="el" href="classCuRNDActionFactoryI.html">CuRNDActionFactoryI</a> &amp;f, <a class="el" href="classCumbiaRandom.html">CumbiaRandom</a> *ct)</td></tr>
 <tr class="memdesc:a10e0910c10c4461f5f9afda5e318d4ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create and register a new action if an action with the same source and type is not already running.  <a href="#a10e0910c10c4461f5f9afda5e318d4ca">More...</a><br /></td></tr>
 <tr class="separator:a10e0910c10c4461f5f9afda5e318d4ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac487e07bfb26a5de7c2dafa1f280de33"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuRNDActionI.html">CuRNDActionI</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuRNDActionFactoryService.html#ac487e07bfb26a5de7c2dafa1f280de33">findActive</a> (const std::string &amp;name, <a class="el" href="classCuRNDActionI.html#a9776acc7e31aa8950a308ffbf160077d">CuRNDActionI::Type</a> at)</td></tr>
@@ -103,7 +103,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>implements CuServiceI interface and provides a service to register, unregister and find <em>Websocket actions</em> </p>
-<dl class="section note"><dt>Note</dt><dd>This service is internally used by CumbiaRandom and clients of the library should rarely need to use it.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This service is internally used by <a class="el" href="classCumbiaRandom.html">CumbiaRandom</a> and clients of the library should rarely need to use it.</dd></dl>
 <p>This class is a cumbia <em>service</em> (implements getName and getType). It is registered by CumbiaTango at construction time through the cumbia service provider, namely CuServiceProvider:</p>
 <div class="fragment"><div class="line">getServiceProvider()-&gt;registerService(static_cast&lt;CuServices::Type&gt; (CuActionFactoryService::CuActionFactoryServiceType), <span class="keyword">new</span> CuActionFactoryService());</div></div><!-- fragment --><p>A reference to the service can be obtained through the Cumbia::getServiceProvider method:</p>
 <div class="fragment"><div class="line">CuActionFactoryService *af =</div><div class="line">         static_cast&lt;CuActionFactoryService *&gt;(getServiceProvider()-&gt;get(static_cast&lt;CuServices::Type&gt; (CuActionFactoryService::CuActionFactoryServiceType)));</div></div><!-- fragment --><p>Through the service provider, the service can be unregistered with CuServiceProvider::unregisterService</p>
@@ -253,6 +253,8 @@ Public Member Functions</h2></td></tr>
 <dl class="section user"><dt>Note</dt><dd>Multiple actions can be found with the given src and type. This is likely to happen when a new action is registered, stopped and registered again with the same src in a short time. In this case, we end up with a not active action and an active one with the same src.</dd></dl>
 <dl class="section user"><dt>Note</dt><dd>To find active actions (whose stop method hasn't been called yet), use findActive </dd></dl>
 
+<p class="reference">Referenced by <a class="el" href="classCumbiaRandom.html#a7a64a208a52fb799588390e55aac971e">CumbiaRandom::unlinkListener()</a>.</p>
+
 </div>
 </div>
 <a id="ac487e07bfb26a5de7c2dafa1f280de33"></a>
@@ -292,6 +294,8 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>the active action with the given src and type.</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>An action is <em>active</em> as long as <a class="el" href="classCuRNDActionI.html#ab46088db669f92cf08b5f508c466f0ac" title="returns true if the action has been stopped and it&#39;s exiting">CuRNDActionI::exiting</a> returns false. Usually, an action is marked as <em>exiting</em> when <a class="el" href="classCuRNDActionI.html#aeee23f4b1de8187c9bd1635a039c78f4" title="the method where activities are unregistered from Cumbia">CuRNDActionI::stop</a> is called. For example, see CuTReader::stop and CuTWriter::stop An action can be stopped when a data listener is removed, as in CuTReader::removeDataListener and CuTWriter::removeDataListener. CuTReader::removeDataListener and CuTWriter::removeDataListener are invoked by CumbiaTango::unlinkListener. qumbia-tango-controls <a class="elRef" doxygen="/archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-tango-controls/doc/qumbia-tango-controls.tag:../../qumbia-tango-controls/html/" href="../../qumbia-tango-controls/html/classCuTControlsReader.html">CuTControlsReader</a> (<a class="elRef" doxygen="/archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-tango-controls/doc/qumbia-tango-controls.tag:../../qumbia-tango-controls/html/" href="../../qumbia-tango-controls/html/classCuTControlsWriter.html">CuTControlsWriter</a>) and qumbia-epics-controls <a class="elRef" doxygen="/archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-epics-controls/doc/qumbia-epics-controls.tag:../../qumbia-epics-controls/html/" href="../../qumbia-epics-controls/html/classCuEpControlsReader.html">CuEpControlsReader</a> (<a class="elRef" doxygen="/archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-epics-controls/doc/qumbia-epics-controls.tag:../../qumbia-epics-controls/html/" href="../../qumbia-epics-controls/html/classCuEpControlsWriter.html">CuEpControlsWriter</a>) call CumbiaTango::unlinkListener from within unsetSource (unsetTarget for writers).</dd></dl>
 <p>This sequence is an example if you ever need to deal with stopping and unregistering an action from a client. </p>
+
+<p class="reference">Referenced by <a class="el" href="classCumbiaRandom.html#a494844de57dd03c99b2cd763d3b4995e">CumbiaRandom::addAction()</a>, and <a class="el" href="classCumbiaRandom.html#a0779f2c8e25bbedf29b57697e55e5cdb">CumbiaRandom::findAction()</a>.</p>
 
 </div>
 </div>
@@ -361,7 +365,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CumbiaRandom *&#160;</td>
+          <td class="paramtype"><a class="el" href="classCumbiaRandom.html">CumbiaRandom</a> *&#160;</td>
           <td class="paramname"><em>ct</em>&#160;</td>
         </tr>
         <tr>
@@ -384,6 +388,8 @@ Public Member Functions</h2></td></tr>
 <a class="el" href="classCuRNDActionFactoryService.html#a549453b5521d03aaf29fc5d20db68a86" title="Unregister the action with the given source and type if the action&#39;s exiting() method returns true.">unregisterAction</a> </dd></dl>
 
 <p class="reference">References <a class="el" href="classCuRNDActionFactoryI.html#a490610a4e6abfc106f2ae811f384f200">CuRNDActionFactoryI::create()</a>, and <a class="el" href="classCuRNDActionFactoryI.html#a4fefe6d947e856b952acaa49e55aa948">CuRNDActionFactoryI::getType()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classCumbiaRandom.html#a494844de57dd03c99b2cd763d3b4995e">CumbiaRandom::addAction()</a>.</p>
 
 </div>
 </div>
@@ -436,7 +442,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 3 2019 15:16:17 for cumbia-random by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 3 2019 15:17:43 for cumbia-random by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
