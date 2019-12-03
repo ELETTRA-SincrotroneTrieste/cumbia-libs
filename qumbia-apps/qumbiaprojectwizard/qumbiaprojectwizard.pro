@@ -127,7 +127,7 @@ DISTFILES += \
 
 SUBDIRS += \
     qumbia_project_template/qumbiaproject-websocket.pro \
-    qumbia_project_template/qumbiaprojectqml-tango-epics.pro
+    qumbia_project_template/qumbiaprojectqml-multi-engine.pro
 
 RESOURCES += \
     qumbia_project_template/qml.qrc

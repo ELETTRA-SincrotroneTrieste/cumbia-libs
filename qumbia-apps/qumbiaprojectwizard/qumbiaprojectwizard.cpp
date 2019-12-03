@@ -631,10 +631,10 @@ void QumbiaProjectWizard::qmlToggled(bool t)
     }
 
     foreach(QRadioButton *rb, ui->gbSupport->findChildren<QRadioButton *>()) {
-        rb->setVisible((!ui->rbQml->isChecked() && rb->text() != "websocket") || (rb->text() == "tango-epics" )
+        rb->setVisible((!ui->rbQml->isChecked() && rb->text() != "websocket") || (rb->text() == "multi-engine" )
                        || (ui->rbQml->isChecked() && rb->text() == "websocket"));
     }
-    QRadioButton *rbte = ui->gbSupport->findChild<QRadioButton *>("rb-tango-epics");
+    QRadioButton *rbte = ui->gbSupport->findChild<QRadioButton *>("rb-multi-engine");
     QRadioButton *rbws = ui->gbSupport->findChild<QRadioButton *>("rb-websocket");
     if(rbte && !rbte->isChecked() && ui->rbQml->isChecked() && rbws)
         rbws->setChecked(true);
