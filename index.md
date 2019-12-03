@@ -1,4 +1,4 @@
-# cumbia library documentation
+# cumbia library documentation   [<a href="news.md">news</a>]
 
 ### Write your own activities
 Concentrate on the task you want to run in the background and use *cumbia* base library to write custom *activities* that will be executed on a separate
@@ -23,10 +23,10 @@ The *cumbia-random* module offers an interface to periodically generate random d
 Additionally, JavaScript files can be used as data sources. Read more about *cumbia-random*
 <a href="html/cumbia-random/html/index.html">here</a>.
 
-### Use the shipped client applications to interact immediately with multiple control systems
-The Qt graphical client and a command line tool are ready to communicate with the supported control systems and
+### Use the included apps (with bash Tango source auto completion!) to access immediately multiple control systems
+A Qt graphical client and a command line application are ready to communicate with the supported control systems and
 the *cumbia-random* module. An external <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">plugin</a>
-makes Tango source *bash auto completion* possible!
+makes Tango source <b>bash auto completion</b> possible!
 
 ### Keywords and technologies
 - C++-11
