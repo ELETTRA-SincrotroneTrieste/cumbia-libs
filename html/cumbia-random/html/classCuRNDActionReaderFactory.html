@@ -21,7 +21,7 @@
    <div id="projectname">cumbia-random
    &#160;<span id="projectnumber">1.x</span>
    </div>
-   <div id="projectbrief">Qt widgets on top of the cumbia C++ library</div>
+   <div id="projectbrief">Generate numbers or arrays to use with cumbia, randomly or from JavaScript files</div>
   </td>
  </tr>
  </tbody>
@@ -67,7 +67,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:adb2089bb7124fdf6fbceae32c863c25d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a23eaa168d64f0d52d3c3cf10853c8ec1"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuRNDActionReaderFactory.html#a23eaa168d64f0d52d3c3cf10853c8ec1">~CuRNDActionReaderFactory</a> ()</td></tr>
 <tr class="separator:a23eaa168d64f0d52d3c3cf10853c8ec1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac058d00c50f43f8a16aabf36fe712720"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuRNDActionI.html">CuRNDActionI</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuRNDActionReaderFactory.html#ac058d00c50f43f8a16aabf36fe712720">create</a> (const std::string &amp;s, <a class="el" href="classCumbiaRandom.html">CumbiaRandom</a> *c_rnd) const</td></tr>
+<tr class="memitem:ac058d00c50f43f8a16aabf36fe712720"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuRNDActionI.html">CuRNDActionI</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuRNDActionReaderFactory.html#ac058d00c50f43f8a16aabf36fe712720">create</a> (const std::string &amp;s, CumbiaRandom *c_rnd) const</td></tr>
 <tr class="memdesc:ac058d00c50f43f8a16aabf36fe712720"><td class="mdescLeft">&#160;</td><td class="mdescRight">creates and returns a <a class="el" href="classCuRNDActionReader.html" title="Low level class to read tango attributes and commands with output arguments.">CuRNDActionReader</a>, (that implements the <a class="el" href="classCuRNDActionI.html">CuRNDActionI</a> interface)  <a href="#ac058d00c50f43f8a16aabf36fe712720">More...</a><br /></td></tr>
 <tr class="separator:ac058d00c50f43f8a16aabf36fe712720"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c94c78dd4edd59b3c271a0f0b9b6519"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuRNDActionI.html#a9776acc7e31aa8950a308ffbf160077d">CuRNDActionI::Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuRNDActionReaderFactory.html#a3c94c78dd4edd59b3c271a0f0b9b6519">getType</a> () const</td></tr>
@@ -141,7 +141,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCumbiaRandom.html">CumbiaRandom</a> *&#160;</td>
+          <td class="paramtype">CumbiaRandom *&#160;</td>
           <td class="paramname"><em>c_rnd</em>&#160;</td>
         </tr>
         <tr>
@@ -161,12 +161,12 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">s</td><td>a string with the name of the source </td></tr>
-    <tr><td class="paramname">ct</td><td>a pointer to <a class="el" href="classCumbiaRandom.html">CumbiaRandom</a> </td></tr>
+    <tr><td class="paramname">ct</td><td>a pointer to CumbiaRandom </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a <a class="el" href="classCuRNDActionReader.html" title="Low level class to read tango attributes and commands with output arguments.">CuRNDActionReader</a>, that implements the <a class="el" href="classCuRNDActionI.html">CuRNDActionI</a> interface</dd></dl>
-<p>The source and the <a class="el" href="classCumbiaRandom.html">CumbiaRandom</a> reference are passed to the <a class="el" href="classCuRNDActionReader.html" title="Low level class to read tango attributes and commands with output arguments.">CuRNDActionReader</a> If options have been set, normally through <a class="el" href="classCuRNDActionReaderFactory.html#ac058d00c50f43f8a16aabf36fe712720" title="creates and returns a CuRNDActionReader, (that implements the CuRNDActionI interface)">CuRNDActionReaderFactory::create</a>, they are used to configure the <a class="el" href="classCuRNDActionReader.html" title="Low level class to read tango attributes and commands with output arguments.">CuRNDActionReader</a>.</p>
+<p>The source and the CumbiaRandom reference are passed to the <a class="el" href="classCuRNDActionReader.html" title="Low level class to read tango attributes and commands with output arguments.">CuRNDActionReader</a> If options have been set, normally through <a class="el" href="classCuRNDActionReaderFactory.html#ac058d00c50f43f8a16aabf36fe712720" title="creates and returns a CuRNDActionReader, (that implements the CuRNDActionI interface)">CuRNDActionReaderFactory::create</a>, they are used to configure the <a class="el" href="classCuRNDActionReader.html" title="Low level class to read tango attributes and commands with output arguments.">CuRNDActionReader</a>.</p>
 <dl class="section user"><dt>options</dt><dd>The recognised options are: <ul>
 <li>"period" an integer, in milliseconds, for the polling period. Converted with: CuVariant::toInt </li>
 <li>"refresh_mode": an integer defining the Tango refresh mode. Converted with: CuVariant::toInt</li>
@@ -257,7 +257,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 3 2019 14:43:55 for cumbia-random by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 3 2019 15:12:49 for cumbia-random by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>

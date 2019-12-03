@@ -153,7 +153,7 @@ They define shortcuts for the common operations provided by the *cumbia applicat
  
 |Applications   | description                                 | app
 |------------------------------|--------------------------------------------|:---------------:|
-| *cumbia read*                | read a quantity from the supported engines |<a href="/html/qumbia-reader/html/index.html">cumbia reader</a>  |
+| *cumbia read*                | read a quantity from the supported engines |<a href="html/qumbia-reader/html/index.html">cumbia reader</a>  |
 | *cumbia monitor*             | monitor a quantity over time from the supported engines |<a href="html/qumbia-reader/html/index.html">cumbia reader</a>  |
 | *cumbia new project*          | create a new cumbia project               |<a href="html/qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
 | *cumbia import*               | migrate a QTango project into cumbia      |<a href="html/qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
