@@ -157,9 +157,9 @@ They define shortcuts for the common operations provided by the *cumbia applicat
 | *cumbia import*               | migrate a QTango project into cumbia      |<a href="html/qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
 | *cumbia new control*          | write a *cumbia control* reader or writer | <a href="html/qumbianewcontrolwizard/html/index.html">qumbia-apps/qumbianewcontrolwizard</a>  |
 | *cumbia ui make*              | run *cuuimake* to generate *qt+cumbia* ui_*.h files | <a href="html/cuuimake/html/index.html">qumbia-apps/cuuimake</a>  |
-| *cumbia client*               | run a generic cumbia client | <a href="html/cumbia_client/html/index.html">qumbia-apps/cumbia_client</a>  |
+| *cumbia client*               | run a generic cumbia client | <a href="html/cumbia_client/html/index.html">qumbia-apps/qumbia-client</a>  |
 | *cumbia upgrade*              | upgrade to a newer version of cumbia|  - |
-| *la-cumparsita*               | on the fly applications from a *Qt designer UI file* | <a href="html/la-cumparsita/html/index.html">qumbia-apps/la-cumparsita/a>  |
+| *la-cumparsita*               | on the fly applications from a *Qt designer UI file* | <a href="html/la-cumparsita/html/index.html">qumbia-apps/la-cumparsita</a>  |
 
 
 *bash auto completion* will help you find out these shortcuts: try
