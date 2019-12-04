@@ -110,7 +110,7 @@ void CuEpConfiguration::removeDataListener(CuDataListener *l)
 {
     if(d->listeners.size() > 0)
         d->listeners.remove(l);
-    else
+    if(d->listeners.size() == 0)
         stop();
 }
 

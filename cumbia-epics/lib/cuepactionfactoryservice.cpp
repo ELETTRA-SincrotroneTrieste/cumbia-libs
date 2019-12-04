@@ -89,8 +89,6 @@ string CuEpicsActionFactoryService::getLastError() const
 
 void CuEpicsActionFactoryService::unregisterAction(const string &src, CuEpicsActionI::Type at)
 {
-    cuprintf("\e[1;31mCuActionFactoryService::unregisterAction for src %s and type %d\e[0m\n",
-           src.c_str(), at);
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuEpicsActionI *>::iterator it;
     it = d->actions.begin();
@@ -108,8 +106,6 @@ void CuEpicsActionFactoryService::deleteActions()
     std::list<CuEpicsActionI *>::iterator it = d->actions.begin();
     while(it != d->actions.end())
     {
-        printf("CuActionFactoryService::deleteActions: deleting action %p (%s) type %d\n",
-               (*it), (*it)->getSource().getName().c_str(), (*it)->getType());
         delete (*it);
         it = d->actions.erase(it);
     }
@@ -118,7 +114,7 @@ void CuEpicsActionFactoryService::deleteActions()
 
 std::string CuEpicsActionFactoryService::getName() const
 {
-    return std::string("DeviceFactory");
+    return std::string("EpicsActionFactory");
 }
 
 CuServices::Type CuEpicsActionFactoryService::getType() const

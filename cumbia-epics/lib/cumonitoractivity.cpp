@@ -44,6 +44,7 @@ CuMonitorActivity::CuMonitorActivity(const CuData &token,
 
 CuMonitorActivity::~CuMonitorActivity()
 {
+    pdelete("CuMonitorActivity %p\n", this);
     delete d;
 }
 
@@ -108,13 +109,10 @@ void CuMonitorActivity::onExit()
     at["mode"] = "POLLED";
     CuEpicsWorld utils;
     utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
-
-    /* Shut down Channel Access */
-    printf("\e[1;31monExit calling >>>>>>>>> ca_context_destroy <<<<<<<<<<<< \e[0m\n");
-    ca_context_destroy();
-
     at["exit"] = true;
     publishResult(at);
+    /* Shut down Channel Access */
+    ca_context_destroy();
 }
 
 void CuMonitorActivity::m_setTokenError(const char *msg, CuData &d)
@@ -159,7 +157,6 @@ void CuMonitorActivity::event_handler(evargs args)
     CuPV* _pv = (CuPV *) args.usr;
     CuData d = getToken();
     CuEpicsWorld utils;
-    cuprintf("CuMonitorActivity.event_handler: in thread: 0x%lx pv %s activity %p\n", pthread_self(), _pv->name);
     utils.fillThreadInfo(d, this); /* put thread and activity info */
 
     _pv->status = args.status;
@@ -185,8 +182,6 @@ void CuMonitorActivity::connection_handler(connection_handler_args args)
     int nConn = 0;
     CuData d = getToken();
     d["type"] = "connection";
-
-    printf("CuMonitorActivity -- connection_handler\n");
     unsigned long eventMask = DBE_VALUE | DBE_ALARM;
     int floatAsString = 0;
     int enumAsNr = 0;

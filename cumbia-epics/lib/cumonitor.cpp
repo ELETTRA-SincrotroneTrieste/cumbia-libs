@@ -7,6 +7,7 @@
 #include <cuserviceprovider.h>
 #include <cumacros.h>
 #include <list>
+#include <algorithm>
 #include <cuthreadfactoryimpl_i.h>
 #include <cuthreadseventbridgefactory_i.h>
 #include <cuactivitymanager.h>
@@ -47,7 +48,7 @@ CuMonitor::CuMonitor(const EpSource& src, CumbiaEpics *ct) : CuEpicsActionI()
 
 CuMonitor::~CuMonitor()
 {
-    pdelete("~CuMonitor deleting %p", this);
+    pdelete("CuMonitor %p", this);
     delete d;
 }
 
@@ -61,10 +62,12 @@ void CuMonitor::onProgress(int step, int total, const CuData &data)
  */
 void CuMonitor::onResult(const CuData &data)
 {
-    std::list<CuDataListener *>::iterator it;
-    for(it = d->listeners.begin(); it != d->listeners.end(); ++it)
+    std::list<CuDataListener *>::const_iterator it;
+    // iterator can be invalidated if listener's onUpdate unsets source: use a copy
+    std::list<CuDataListener *> l_cp = d->listeners;
+    for(it = l_cp.begin(); it != l_cp.end(); ++it) {
         (*it)->onUpdate(data);
-
+    }
 
     /* remove last listener and delete this only if this result with the "exit" flag belongs to the current
      * activity, to avoid that old results, queued and delivered late, delete this before the current activity
@@ -161,8 +164,6 @@ void CuMonitor::stop()
     { 
         d->exit = true;
         int t = d->current_activity->getType();
-        cuprintf("\e[1;35mCuMonitor.stop(): unregistering activity %p current type %d looking for %d\n",
-                 d->current_activity, t, CuMonitorActivity::CuMonitorActivityType);
         if(t == CuMonitorActivity::CuMonitorActivityType)
             d->cumbia_e->unregisterActivity(d->current_activity);
     }
@@ -176,9 +177,10 @@ void CuMonitor::addDataListener(CuDataListener *l)
 
 void CuMonitor::removeDataListener(CuDataListener *l)
 {
-    d->listeners.remove(l);
-    if(d->listeners.size() == 0)
+    d->listeners.erase(std::find(d->listeners.begin(), d->listeners.end(), l));
+    if(d->listeners.size() == 0) {
         stop();
+    }
 }
 
 size_t CuMonitor::dataListenersCount()
@@ -202,8 +204,6 @@ void CuMonitor::m_startMonitorActivity()
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_e->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_e->getThreadFactoryImpl());
     d->cumbia_e->registerActivity(d->current_activity, this, tt, fi, bf);
-    cuprintf("> CuMonitor.m_startMonitorActivity reader %p thread 0x%lx ACTIVITY %p == \e[0;32mSTARTING MONITOR FLAGS %d\e[0m\n\n",
-             this, pthread_self(), d->current_activity, d->current_activity->getFlags());
 }
 
 
