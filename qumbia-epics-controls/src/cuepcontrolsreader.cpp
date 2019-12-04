@@ -26,7 +26,6 @@ CuEpReaderFactory::~CuEpReaderFactory()
 
 CuControlsReaderA *CuEpReaderFactory::create(Cumbia *c, CuDataListener *l) const
 {
-    printf("creating with cumbia %p listener %p this %p\n", c, l, this);
     CuEpControlsReader *r = new CuEpControlsReader(c, l);
     r->setOptions(d->r_options);
     return r;
@@ -65,6 +64,7 @@ CuEpControlsReader::CuEpControlsReader(Cumbia *cumbia_epics, CuDataListener *tl)
 
 CuEpControlsReader::~CuEpControlsReader()
 {
+    pdelete("CuEpControlsReader %p", this);
     unsetSource();
     delete d;
 }
@@ -76,7 +76,6 @@ QString CuEpControlsReader::source() const
 
 void CuEpControlsReader::unsetSource()
 {
-   // d->cumbia_ep->unlinkListener(d->source.toStdString(), CuEpicsActionI::AttConfig, d->tlistener);
     d->cumbia_ep->unlinkListener(d->source.toStdString(), CuEpicsActionI::Reader, d->tlistener);
     d->source = QString();
 }
@@ -102,8 +101,6 @@ void CuEpControlsReader::getData(CuData &d_ino) const
 
 void CuEpControlsReader::setSource(const QString &s)
 {
-    printf("CuEpControlsReader.setSource: current options %s for source %s\e[0m\n", d->read_options.toString().c_str(),
-           qstoc(s));
     // if needs_caget is true, a caget is called a CuEpicsPropertyFactory is used to perform an explicit read
     // for configuration purposes
     // needs_caget will be false if d->cumbia_ep->addAction with CuEpicsReaderFactory returns false
@@ -118,8 +115,6 @@ void CuEpControlsReader::setSource(const QString &s)
         needs_caget = d->cumbia_ep->addAction(d->source.toStdString(), d->tlistener, readf);
     }
     if(needs_caget) {
-        printf("\e[0;32m*\n* either an action has already been found for source %s or a *configuration only* option is requested\e[0m\n",
-               qstoc(s));
         d->cumbia_ep->addAction(d->source.toStdString(), d->tlistener, acf);
     }
 }
