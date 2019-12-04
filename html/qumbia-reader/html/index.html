@@ -44,13 +44,29 @@ $(function() {
 <div class="title">cumbia read command line client </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>The <em>cumbia read</em> application is a command line tool to read <em>sources</em> from different engines. EPICS, Tango and <em>random</em> modules are included.</p>
+<div class="textblock"><dl class="section user"><dt>Introduction</dt><dd>The <em>qumbia-reader</em> (<em>cumbia read</em>) application is a command line tool to read <em>sources</em> from different engines. EPICS, Tango and <em>random</em> modules are supported.</dd></dl>
+<dl class="section user"><dt>Features</dt><dd></dd></dl>
+<dl class="section user"><dt>Source name auto completion (Tango only, for the time being)</dt><dd>Install the <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">qumbia-tango-findsrc-plugin</a> from <em>github</em> and the included <em>qumbia-tango-find-src</em> tool (instructions in the project page) to obtain the Tango source <b>bash auto completion</b>.</dd></dl>
+<dl class="section user"><dt>Formula support</dt><dd>Formulas can be used through the <a href="../../cuformula/html/index.html">formula plugin</a>. See the plugin documentation and the example section below for more details.</dd></dl>
+<dl class="section user"><dt>Library internals awareness</dt><dd>Increase the output detail level to see how threads are grouped, understand <em>how</em> they are grouped by means of the <a href="../../cumbia-random/html">cumbia random</a> test features. Set a bound on the number of threads used by <em>timers</em> for polled sources to verify the impact on performance.</dd></dl>
+<dl class="section user"><dt>Property mode: get the configuration of the sources</dt><dd>Source configuration stored somewhere by the system can be obtained (if this is applies to the engine) <b>Tango</b> <em>device, attribute and class</em> properties can be fetched from the Tango database as well (requires Tango modules).</dd></dl>
+<dl class="section user"><dt>Tune application output</dt><dd>The command line output can be tuned in terms of<ul>
+<li>detail level (low, medim, high and debug)</li>
+<li><em>format</em> of numbers (<em>printf style</em>)</li>
+<li>length of displayed data for arrays</li>
+</ul>
+</dd></dl>
+<dl class="section user"><dt>Usage</dt><dd></dd></dl>
+<p><em>cumbia</em> installation provides two shortcuts to launch the <em>qumbia-reader</em> application:</p><ul>
+<li><em>cumbia read</em>: read once or <em>n</em> times the specified source(s)</li>
+<li><em>cumbia monitor</em>: indefinitely monitor the specified source(s) until a key is pressed</li>
+</ul>
 <p>See <a href="../../cumbia-random/html">the cumbia random module </a>. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 3 2019 17:01:12 for qumbia-reader by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Dec 4 2019 10:17:51 for qumbia-reader by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
