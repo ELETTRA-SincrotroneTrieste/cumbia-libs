@@ -37,16 +37,25 @@ public:
 
 signals:
     void newDouble(const QString& src, double timestamp_us, double val, const CuData& da);
+    void newFloat(const QString& src, double timestamp_us, float val, const CuData& da);
+    void newBool(const QString& src, double timestamp_us, bool val, const CuData& da);
+    void newLong(const QString& src, double timestamp_us, long val, const CuData& da);
+    void newShort(const QString& src, double timestamp_us, short val, const CuData& da);
+    void newUShort(const QString& src, double timestamp_us, unsigned short val, const CuData& da);
+    void newULong(const QString& src, double timestamp_us, unsigned long val, const CuData& da);
+    void newString(const QString& src, double timestamp_us, const QString& val, const CuData& da);
+    void toString(const QString& src, const QString& fromType, double timestamp_us, const QString& val, const CuData& da);
 
     void newDoubleVector(const QString& src, double timestamp_us, const QVector<double>& v, const CuData& da);
-
-    void newShort(const QString& src, double timestamp_us, short val, const CuData& da);
-
+    void newFloatVector(const QString& src, double timestamp_us, const QVector<float>& v, const CuData& da);
+    void newBoolVector(const QString& src, double timestamp_us, const QVector<bool>& v, const CuData& da);
     void newShortVector(const QString& src, double timestamp_us, const QVector<short>& v, const CuData& da);
-
     void newLongVector(const QString& src, double timestamp_us, const QVector<long>& v, const CuData& da);
+    void newULongVector(const QString& src, double timestamp_us, const QVector<unsigned long>& v, const CuData& da);
+    void newUShortVector(const QString& src, double timestamp_us, const QVector<unsigned short>& v, const CuData& da);
+    void newStringList(const QString& src, double timestamp_us, const QStringList& v, const CuData& da);
+    void toStringList(const QString& src, const QString& fromType, double timestamp_us, const QStringList& v, const CuData& da);
 
-    void newLong(const QString& src, double timestamp_us, long val, const CuData& da);
 
     void newError(const QString& src, double timestamp_us, const QString& msg, const CuData& da);
 

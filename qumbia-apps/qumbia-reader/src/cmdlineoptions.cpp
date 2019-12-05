@@ -19,7 +19,7 @@ CmdLineOptions::CmdLineOptions()
     m_help_map["--tango-property"] = "all sources are intended as Tango device or attribute property names."
                                      "Implies --single-shot";
     m_help_map["--tp"] = "shortcut for --tango-property";
-    m_help_map["--property"] = "print the configuration properties of the sources (if available from the engine) and exit";
+    m_help_map["--property -p"] = "print the configuration properties of the sources (if available from the engine) and exit";
     m_help_map["--format=fmt"] = "format numbers into the specified format (e.g. %g, %.1f, %.0f)";
 
     m_help_map["--help"] = "print this help";
@@ -85,7 +85,7 @@ RConfig CmdLineOptions::parse(const QStringList &args) const
             if(ma.capturedTexts().size() == 2)
                 o.format = ma.captured(1);
         }
-        else if(a == "--property") {
+        else if(a == "--property" || a == "-p") {
             // read "property" data type only
             o.setPropertyOnly();
         }
@@ -114,7 +114,7 @@ RConfig CmdLineOptions::parse(const QStringList &args) const
 
 void CmdLineOptions::usage(const QString& appname) const
 {
-    printf("\n\nUsage: %s options\n\n", qstoc(appname));
+    printf("\n\nUsage: %s sources [options]\n\n", qstoc(appname));
     foreach(QString hk, m_help_map.keys()) {
         printf(" \e[1;32m%-35s\e[0m|\e[1;3m%s\e[0m\n", qstoc(hk), qstoc(m_help_map[hk]));
     }

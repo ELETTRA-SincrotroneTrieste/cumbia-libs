@@ -22,7 +22,7 @@ CONFIG +=  console
 QT -= gui
 
 SHAREDIR = $${INSTALL_ROOT}/share
-DOCDIR = $${SHAREDIR}/doc/cumbiareader
+DOCDIR = $${SHAREDIR}/doc/qumbia-reader
 DEFINES += DOC_PATH=\"\\\"$${DOCDIR}\\\"\"
 
 CONFIG +=

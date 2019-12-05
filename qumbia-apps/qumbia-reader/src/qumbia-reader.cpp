@@ -120,7 +120,6 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
 }
 
 QumbiaReader::~QumbiaReader() {
-
 }
 
 QString QumbiaReader::makeTimestamp(const double d) const {
@@ -142,16 +141,53 @@ void QumbiaReader::onNewDouble(const QString& src, double ts, double val, const 
     m_checkRefreshCnt(sender());
 }
 
+void QumbiaReader::onNewFloat(const QString &src, double ts, float val, const CuData &da)
+{
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s]  [\e[1;36mfloat\e[0m] \e[1;32m%s\e[0m", qstoc(makeTimestamp(ts)), qstoc(m_format<float>(val, "%.2f")));
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
 void QumbiaReader::onNewDoubleVector(const QString &src, double ts, const QVector<double> &v, const CuData& da)
 {
     m_refreshCntMap[src]++;
     m_print_extra1(da);
-    printf("[%s] [\e[1;36mdouble\e[0m,%d] { ",  qstoc(makeTimestamp(ts)), v.size());
+    printf("[%s] [\e[0;36mdouble\e[0m,%d] { ",  qstoc(makeTimestamp(ts)), v.size());
     for(int i = 0; i < v.size() -1 && (m_conf.truncate < 0 || i < m_conf.truncate - 1); i++)
         printf("%s,", qstoc(m_format<double>(v[i], "%.2f")));
     if(m_conf.truncate > -1 && m_conf.truncate < v.size())
         printf(" ..., ");
     printf("%s \e[0m}", qstoc(m_format<double>(v[v.size() - 1], "%.2f")));
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewFloatVector(const QString &src, double ts, const QVector<float> &v, const CuData &da)
+{
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[0;36mfloat[0m,%d] { ",  qstoc(makeTimestamp(ts)), v.size());
+    for(int i = 0; i < v.size() -1 && (m_conf.truncate < 0 || i < m_conf.truncate - 1); i++)
+        printf("%s,", qstoc(m_format<float>(v[i], "%.2f")));
+    if(m_conf.truncate > -1 && m_conf.truncate < v.size())
+        printf(" ..., ");
+    printf("%s \e[0m}", qstoc(m_format<float>(v[v.size() - 1], "%.2f")));
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewBoolVector(const QString &src, double ts, const QVector<bool> &v, const CuData &da)
+{
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[0;35mbool[0m,%d] { ",  qstoc(makeTimestamp(ts)), v.size());
+    for(int i = 0; i < v.size() -1 && (m_conf.truncate < 0 || i < m_conf.truncate - 1); i++)
+        printf("%s,", v[i] ? "TRUE" : "FALSE");
+    if(m_conf.truncate > -1 && m_conf.truncate < v.size())
+        printf(" ..., ");
+    printf("%s \e[0m}", v[v.size() - 1] ? "TRUE" : "FALSE");
     m_print_extra2(da);
     m_checkRefreshCnt(sender());
 }
@@ -165,11 +201,56 @@ void QumbiaReader::onNewShort(const QString &src, double ts, short val, const Cu
     m_checkRefreshCnt(sender());
 }
 
+void QumbiaReader::onNewBool(const QString &src, double ts, bool val, const CuData &da)
+{
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[1;35mbool\e[0m] %s\e[0m", qstoc(makeTimestamp(ts)), val ? "TRUE" : "FALSE");
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewUShort(const QString &src, double ts, unsigned short val, const CuData &da)
+{
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[0;34munsigned short\e[0m] %s\e[0m", qstoc(makeTimestamp(ts)), qstoc(m_format<unsigned short>(val, "%d")));
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
 void QumbiaReader::onNewLong(const QString &src, double ts, long val, const CuData& da)
 {
     m_refreshCntMap[src]++;
     m_print_extra1(da);
     printf("[%s] [\e[1;34mlong\e[0m] %s\e[0m", qstoc(makeTimestamp(ts)), qstoc(m_format<long>(val, "%ld")));
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewULong(const QString &src, double ts, unsigned long val, const CuData &da)
+{
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[0;34munsigned long\e[0m] %s\e[0m", qstoc(makeTimestamp(ts)), qstoc(m_format<unsigned long>(val, "%lu")));
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewString(const QString &src, double ts, const QString &val, const CuData &da)
+{
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[1;36mstring\e[0m] %s\e[0m", qstoc(makeTimestamp(ts)), qstoc(val));
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onStringConversion(const QString &src, const QString &fromType, double timestamp_us, const QString &v, const CuData &da) {
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[0;31m%s-->string\e[0m] [\e[1;36mstring\e[0m] %s\e[0m",
+           qstoc(makeTimestamp(timestamp_us)), qstoc(fromType), qstoc(v));
     m_print_extra2(da);
     m_checkRefreshCnt(sender());
 }
@@ -184,6 +265,73 @@ void QumbiaReader::onNewLongVector(const QString &src, double ts, const QVector<
     if(m_conf.truncate > -1 && m_conf.truncate < v.size())
         printf(" ..., ");
     printf("%s \e[0m}", qstoc(m_format<long>(v[v.size() - 1], "%ld")));
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewULongVector(const QString &src, double ts, const QVector<unsigned long> &v, const CuData &da)
+{
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[0;35munsigned long\e[0m,%d] { ", qstoc(makeTimestamp(ts)), v.size());
+    for(int i = 0; i < v.size() -1 && (m_conf.truncate < 0 || i < m_conf.truncate - 1); i++)
+        printf("%s,", qstoc(m_format<unsigned long>(v[i], "%lu")));
+    if(m_conf.truncate > -1 && m_conf.truncate < v.size())
+        printf(" ..., ");
+    printf("%s \e[0m}", qstoc(m_format<unsigned long>(v[v.size() - 1], "%lu")));
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewStringList(const QString &src, double ts, const QStringList &val, const CuData &da)
+{
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[1;34mstring\e[0m,%d] { ", qstoc(makeTimestamp(ts)), val.size());
+    for(int i = 0; i < val.size() -1 && (m_conf.truncate < 0 || i < m_conf.truncate - 1); i++)
+        printf("%s,", qstoc(val[i]));
+    if(m_conf.truncate > -1 && m_conf.truncate < val.size())
+        printf(" ..., ");
+    printf("%s \e[0m}", qstoc(val[val.size() - 1]));
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onStringListConversion(const QString &src, const QString &fromType,
+                                          double timestamp_us, const QStringList &v, const CuData &da)
+{
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[0;31m%s-->string list\e[0m,%d] [\e[1;36mstring\e[0m] %s\e[0m",
+           qstoc(makeTimestamp(timestamp_us)), qstoc(fromType), v.size(), qstoc(v.join(",")));
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewShortVector(const QString &src, double ts, const QVector<short> &v, const CuData& da)
+{
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[1;34mshort\e[0m,%d] { ", qstoc(makeTimestamp(ts)), v.size());
+    for(int i = 0; i < v.size() -1 && (m_conf.truncate < 0 || i < m_conf.truncate - 1); i++)
+        printf("%s,", qstoc(m_format<short>(v[i], "%u")));
+    if(m_conf.truncate > -1 && m_conf.truncate < v.size())
+        printf(" ..., ");
+    printf("%s \e[0m}", qstoc(m_format<short>(v[v.size() - 1], "%u")));
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewUShortVector(const QString &src, double ts, const QVector<unsigned short> &v, const CuData& da)
+{
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[0;34munsigned short\e[0m,%d] { ", qstoc(makeTimestamp(ts)), v.size());
+    for(int i = 0; i < v.size() -1 && (m_conf.truncate < 0 || i < m_conf.truncate - 1); i++)
+        printf("%s,", qstoc(m_format<unsigned short>(v[i], "%u")));
+    if(m_conf.truncate > -1 && m_conf.truncate < v.size())
+        printf(" ..., ");
+    printf("%s \e[0m}", qstoc(m_format<unsigned short>(v[v.size() - 1], "%u")));
     m_print_extra2(da);
     m_checkRefreshCnt(sender());
 }
@@ -208,20 +356,6 @@ void QumbiaReader::onPropertyReady(const QString &src, double ts,const CuData &p
 
     if(m_conf.verbosity == Debug)
         printf("\n\e[0;35m--l=debug\e[0m: \e[1;35m{\e[0m %s \e[1;35m}\n", pr.toString().c_str());
-}
-
-void QumbiaReader::onNewShortVector(const QString &src, double ts, const QVector<short> &v, const CuData& da)
-{
-    m_refreshCntMap[src]++;
-    m_print_extra1(da);
-    printf("[%s] [\e[1;34mshort\e[0m,%d] { ", qstoc(makeTimestamp(ts)), v.size());
-    for(int i = 0; i < v.size() -1 && (m_conf.truncate < 0 || i < m_conf.truncate - 1); i++)
-        printf("%s,", qstoc(m_format<short>(v[i], "%d")));
-    if(m_conf.truncate > -1 && m_conf.truncate < v.size())
-        printf(" ..., ");
-    printf("%s \e[0m}", qstoc(m_format<short>(v[v.size() - 1], "%d")));
-    m_print_extra2(da);
-    m_checkRefreshCnt(sender());
 }
 
 void QumbiaReader::onError(const QString &src, double ts, const QString &msg, const CuData& da)
@@ -333,20 +467,47 @@ void QumbiaReader::m_createReaders(const QStringList &srcs) {
             if(m_conf.property) { // property only
                 r->propertyOnly();
                 reader_ctx_options["properties-only"] = true;
+                connect(r, SIGNAL(propertyReady(QString,double,CuData)), this, SLOT(onPropertyReady(QString,double,CuData)));
             }
-
+            // scalar
             connect(r, SIGNAL(newDouble(QString,double,double, const CuData&)), this,
                     SLOT(onNewDouble(QString,double,double, const CuData&)));
-            connect(r, SIGNAL(newDoubleVector(QString,double,QVector<double>, const CuData&)), this,
-                    SLOT(onNewDoubleVector(QString,double,QVector<double>, const CuData&)));
-            connect(r, SIGNAL(newShort(QString,double,short, const CuData&)), this,
-                    SLOT(onNewShort(QString,double,short, const CuData&)));
-            connect(r, SIGNAL(newShortVector(QString,double,QVector<short>, const CuData&)), this,
-                    SLOT(onNewShortVector(QString,double,QVector<short>, const CuData&)));
+            connect(r, SIGNAL(newFloat(QString,double,float, const CuData&)), this,
+                    SLOT(onNewFloat(QString,double,float, const CuData&)));
+            connect(r, SIGNAL(newBool(QString,double,bool, const CuData&)), this,
+                    SLOT(onNewBool(QString,double,bool, const CuData&)));
             connect(r, SIGNAL(newLong(QString,double,long, const CuData&)), this,
                     SLOT(onNewLong(QString,double,long, const CuData&)));
+            connect(r, SIGNAL(newShort(QString,double,short, const CuData&)), this,
+                    SLOT(onNewShort(QString,double,short, const CuData&)));
+            connect(r, SIGNAL(newUShort(QString,double,unsigned short, const CuData&)), this,
+                    SLOT(onNewUShort(QString,double,unsigned short, const CuData&)));
+            connect(r, SIGNAL(newString(QString,double,QString, const CuData&)), this,
+                    SLOT(onNewString(QString,double,QString, const CuData&)));
+            connect(r, SIGNAL(toString(QString,QString,double,QString, const CuData&)), this,
+                    SLOT(onStringConversion(QString,QString,double,QString, const CuData&)));
+            // arrays
+            connect(r, SIGNAL(newDoubleVector(QString,double,QVector<double>, const CuData&)), this,
+                    SLOT(onNewDoubleVector(QString,double,QVector<double>, const CuData&)));
+            connect(r, SIGNAL(newFloatVector(QString,double,QVector<float>, const CuData&)), this,
+                    SLOT(onNewFloatVector(QString,double,QVector<float>, const CuData&)));
+            connect(r, SIGNAL(newBoolVector(QString,double,QVector<bool>, const CuData&)), this,
+                    SLOT(onNewBoolVector(QString,double,QVector<bool>, const CuData&)));
+            connect(r, SIGNAL(newShortVector(QString,double,QVector<short>, const CuData&)), this,
+                    SLOT(onNewShortVector(QString,double,QVector<short>, const CuData&)));
+            connect(r, SIGNAL(newUShortVector(QString,double,QVector<unsigned short>, const CuData&)), this,
+                    SLOT(onNewUShortVector(QString,double,QVector<unsigned short>, const CuData&)));
             connect(r, SIGNAL(newLongVector(QString,double,QVector<long>, const CuData&)), this,
                     SLOT(onNewLongVector(QString,double,QVector<long>, const CuData&)));
+            connect(r, SIGNAL(newULongVector(QString,double,QVector<unsigned long>, const CuData&)), this,
+                    SLOT(onNewULongVector(QString,double,QVector<unsigned long>, const CuData&)));
+            connect(r, SIGNAL(newStringList(QString,double,QStringList,CuData)), this,
+                    SLOT(onNewStringList(QString,double,QStringList,CuData)));
+            connect(r, SIGNAL(toStringList(QString,QString,double,QStringList,CuData)), this,
+                    SLOT(onStringListConversion(QString,QString,double,QStringList,CuData)));
+
+            connect(r, SIGNAL(newError(QString,double,QString, const CuData&)),
+                    this, SLOT(onError(QString,double,QString, const CuData&)));
 
             connect(r, SIGNAL(destroyed(QObject*)), this, SLOT(onReaderDestroyed(QObject *)));
             reader_ctx_options["period"] = m_conf.period;
