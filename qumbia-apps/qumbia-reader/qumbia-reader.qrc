@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>help/man.txt</file>
+    </qresource>
+</RCC>
