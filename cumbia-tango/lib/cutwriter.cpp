@@ -141,15 +141,9 @@ void CuTWriter::addDataListener(CuDataListener *l)
 
 void CuTWriter::removeDataListener(CuDataListener *l)
 {
-    if(l->invalid()) {
-        d->listeners.remove(l);
-        if(!d->listeners.size())
-            stop();
-    }
-    else if(d->listeners.size() == 1)
+    d->listeners.remove(l);
+    if(!d->listeners.size())
         stop();
-    else
-        d->listeners.remove(l);
 }
 
 size_t CuTWriter::dataListenersCount()

@@ -227,7 +227,7 @@ void CuEventActivity::execute()
  * \li client reference counter is decreased on the TDevice (TDevice::removeRef)
  * \li CuDeviceFactoryService::removeDevice is called to remove the device from the device factory
  *     if the reference count is zero
- * \li the result of the operation is *published* to the main thread through publishResult
+ * \li publishResult is not called (it's likely that all listeners have been removed)
  * \li the omni_thread::ensure_self instance is deleted
  *
  * See also CuActivity::onExit
@@ -235,37 +235,27 @@ void CuEventActivity::execute()
 void CuEventActivity::onExit()
 {
     assert(d->my_thread_id == pthread_self());
-    CuData at = getToken(); /* activity token */
     int refcnt = -1;
-    at.putTimestamp();
     if(d->tdev->getDevice() && d->event_id != -1)
     {
-        at["value"] = "-";
         try{
             d->tdev->getDevice()->unsubscribe_event(d->event_id);
             pbgreen("CuEventActivity.onExit: unsubscribed id %d! OK!", d->event_id);
-            at["msg"] = "successfully unsubscribed events";
-            at["err"]  = false;
         }
         catch(Tango::DevFailed &e)
         {
-            at["msg"] = CuTangoWorld().strerror(e);
-            at["err"]  = true;
+            CuTangoWorld tw;
+            perr("CuEventActivity.onExit: failed to unsubscribe_event for src \"%s\": \"%s\"",
+                 d->tdev->getName().c_str(), tw.strerror(e).c_str());
         }
     }
     else if(!d->tdev->getDevice()) {
-        at["err"] = true;
-        at["msg"] = d->tdev->getMessage();
-        at["name"] = d->tdev->getName();
     }
     // removes reference (lock guarded) and deletes TDev if no more necessary
     // Lock guarded because since 1.1.0 one thread per device is not a rule.
-    refcnt = d->device_srvc->removeRef(at["device"].toString(), threadToken());
+    refcnt = d->device_srvc->removeRef(d->tdev->getDevice()->name(), threadToken());
     if(refcnt == 0)
         d->tdev = nullptr;
-    CuTangoWorld().fillThreadInfo(at, this); /* put thread and activity addresses as info */
-    at["exit"] = true;
-    publishResult(at);
 
     // delete omni_thread::ensure_self
     if(d->se) delete d->se;

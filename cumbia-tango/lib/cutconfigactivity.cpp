@@ -137,22 +137,12 @@ void CuTConfigActivity::execute()
 void CuTConfigActivity::onExit()
 {
     assert(d->my_thread_id == pthread_self());
-    if(!d->exiting)
-    {
+    if(!d->exiting) {
         int refcnt = -1;
         CuData at = getToken(); /* activity token */
-        at["msg"] = "CuTConfigActivity.onExit: " + d->msg;
-        at["type"] = "property";
-        at["err"] = d->err;
-        CuTangoWorld utils;
-        utils.fillThreadInfo(at, this); /* put thread and actiity addresses as info */
         // thread safe remove ref and disposal
         refcnt = d->device_service->removeRef(at["device"].toString(), threadToken());
         if(!refcnt)
             d->tdev = nullptr;
-        at["exit"] = true;
-        publishResult(at);
     }
-    else
-        perr("CuTAttConfigActivity.onExit already called for %p", this);
 }

@@ -119,18 +119,8 @@ void CuWriteActivity::onExit()
     assert(d->my_thread_id == pthread_self());
     int refcnt = -1;
     CuData at = getToken(); /* activity token */
-    at["msg"] = d->msg;
-    at["mode"] = "WRITE";
-    at["err"] = d->err;
-    CuTangoWorld utils;
-    utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
     if(d->tdev)
         refcnt = d->device_service->removeRef(at["device"].toString(), threadToken());
-    cuprintf("\e[1;31mrefcnt = %d called actionRemove for device %s att %s\e[0m\n",
-           refcnt, at["device"].toString().c_str(), at["src"].toString().c_str());
     if(refcnt == 0)
         d->tdev = NULL;
-
-    at["exit"] = true;
-    publishResult(at);
 }

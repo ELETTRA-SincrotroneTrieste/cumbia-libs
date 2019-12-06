@@ -94,14 +94,12 @@ void CuTReader::onResult(const std::vector<CuData> &datalist)
  */
 void CuTReader::onResult(const CuData &data)
 {
-    bool polling_fallback = false;
     bool err = data["err"].toBool();
     bool a_exit = data["exit"].toBool(); // activity exit flag
     // iterator can be invalidated if listener's onUpdate unsets source: use a copy
     std::set<CuDataListener *> lis_copy = d->listeners;
     std::set<CuDataListener *>::iterator it;
     bool event_subscribe_fail = err && !d->exit && data["event"].toString() == "subscribe";
-    const std::string& mode = data["mode"].toString();
     if(a_exit) // remove from list of started activities
         d->activities.remove(data["ptr"].toVoidP()); // when list is null, can delete this
 
@@ -111,7 +109,6 @@ void CuTReader::onResult(const CuData &data)
     }
     if(err && !d->exit)
     {
-        polling_fallback = true;
         // stop event activity. it will auto delete.
         // m_unregisterEventActivity will set d->event_activity to NULL
         if(d->event_activity)
@@ -208,9 +205,6 @@ void CuTReader::sendData(const CuData &data)
         data["refresh_mode"].to<int>(rm);
     if(data.containsKey("period"))
         data["period"].to<int>(period);
-
-    printf("CuTReader.sendData got options %s mode %d period %d\n", data.toString().c_str(),
-           rm, period);
     if(rm > -1 && rm != d->refresh_mode) { // refresh mode changed
         setRefreshMode(static_cast<CuTReader::RefreshMode>(rm), period);
     }
@@ -369,18 +363,10 @@ void CuTReader::addDataListener(CuDataListener *l)
 
 void CuTReader::removeDataListener(CuDataListener *l)
 {
-    if(l->invalid())
-    {
-        d->listeners.erase(l);
-        if(!d->listeners.size()) {
-            stop();
-        }
-    }
-    else if(d->listeners.size() == 1) {
+    d->listeners.erase(l);
+    if(!d->listeners.size()) {
         stop();
     }
-    else
-        d->listeners.erase(l);
 }
 
 size_t CuTReader::dataListenersCount()
@@ -459,7 +445,6 @@ void CuTReader::m_startEventActivity()
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
     d->cumbia_t->registerActivity(d->event_activity, this, thtok, fi, bf);
-    cuprintf("> CuTReader.m_startEventActivity reader %p thread 0x%lx ACTIVITY %p\n", this, pthread_self(), d->event_activity);
 }
 
 void CuTReader::m_registerToPoller()
