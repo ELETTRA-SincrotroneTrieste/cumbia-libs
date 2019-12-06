@@ -226,6 +226,7 @@ The execute hook</h2>
 <h2><a class="anchor" id="exit_hk"></a>
 The onExit hook</h2>
 <p>After <em>init</em> and <em>execute</em> finish, the onExit hook is invoked. The code inside onExit, as well as in the two other mentioned hooks, is run in a separate thread. There you would clean up the resources allocated in <em>init</em> and exploited in the <em>execute</em> method. In our example, the <em>tcp connection</em> may be closed. See the <a class="el" href="classCuActivity.html#cont_act">Continuous activities</a> section for further details about onExit invocation in <em>continuous activities</em>.</p>
+<dl class="section note"><dt>Note</dt><dd>Calling publishResult from within onExit requires special attention. You must be sure that listeners have not been destroyed by that time.</dd></dl>
 <h2><a class="anchor" id="execution_thred"></a>
 Thread of execution</h2>
 <p>When <a class="el" href="classCumbia.html#affe4f4e6912be2d453411d5efa8df1b7" title="registers (adds) an activity to cumbia, links it to a data listener, assigns its execution to an exis...">Cumbia::registerActivity</a> is called to run a new activity, a so called <em>thread token</em> is passed as input argument to the method. The <em>thread token</em> is compared to all other <em>threads running in the same cumbia</em> application using <a class="el" href="classCuThread.html#ad0b8cdef8f5a753a2498eb78da85a8ff" title="returns true if this thread token is equal to other_thread_token">CuThread::isEquivalent</a>. If an <em>equivalent</em> thread is found, it is reused for the new activity. A new thread is started otherwise.</p>
@@ -1087,7 +1088,7 @@ Used internally.</dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuActivity.html">CuActivity</a></li>
-    <li class="footer">Generated on Wed Dec 4 2019 11:19:30 for cumbia by
+    <li class="footer">Generated on Fri Dec 6 2019 10:58:11 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.15 </li>
   </ul>
