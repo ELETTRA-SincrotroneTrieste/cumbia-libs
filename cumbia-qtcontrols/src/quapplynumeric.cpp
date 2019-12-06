@@ -155,8 +155,6 @@ void QuApplyNumeric::onUpdate(const CuData &da)
             ok = m.to<double>(min);
             if(ok)
                 ok = M.to<double>(max);
-            printf("QuApplyNumeric min is %s max %s OK is %d min %f max %f\n", m.toString().c_str(), M.toString().c_str(),
-                   ok, min, max);
             if(ok)
             {
                 configureNumber(min, max, QString::fromStdString(print_format));
