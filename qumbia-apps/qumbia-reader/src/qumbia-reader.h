@@ -30,6 +30,12 @@ class RConfig;
  * Formulas can be used through the <a href="../../cuformula/html/index.html">formula plugin</a>. See the
  * plugin documentation and the example section below for more details.
  *
+ * \par *cumbia-random* module support
+ * Read the <a href="../../cumbia-random/html">cumbia random</a> documentation to correctly provide the reader
+ * sources that can be used for testing. Specific *cumbia-random* source patterns allow to group threads, specify
+ * the range of generated data, the generation interval, in milliseconds, and the size.
+ * It is also possible to specify JavaScript files as sources, wherefrom a custom function supplies data.
+ *
  * \par Library internals awareness
  * Increase the output detail level to see how threads are grouped, understand *how* they are grouped
  * by means of the <a href="../../cumbia-random/html">cumbia random</a> test features.

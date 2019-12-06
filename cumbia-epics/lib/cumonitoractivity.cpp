@@ -104,13 +104,6 @@ void CuMonitorActivity::onExit()
 {
     assert(d->my_thread_id == pthread_self());
     d->exiting = true;
-    CuData at = getToken(); /* activity token */
-    at["msg"] = "EXITED";
-    at["mode"] = "POLLED";
-    CuEpicsWorld utils;
-    utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
-    at["exit"] = true;
-    publishResult(at);
     /* Shut down Channel Access */
     ca_context_destroy();
 }

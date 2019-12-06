@@ -759,6 +759,17 @@ if [ ! -d $tmp_installdir/bin ]; then
 fi
 cp -a scripts/cusetenv.sh scripts/config.sh $tmp_installdir/bin
 
+# restore prefix in meson.build and .pro files
+
+# fix meson.build prefix
+echo -e -n "\n... \e[0;32mrestoring\e[0m meson projects -Dprefix=$install_prefix\e[0m in all Qt projects..."
+find . -type d -name "builddir" -exec meson configure -Dprefix=$install_prefix  {} \;
+
+
+# fix all qmake INSTALL_ROOT that in the build phase used to point to tmp_installdir
+echo -e -n "\n... \e[0;32mrestoring\e[0m qmake INSTALL_ROOT=$install_prefix\e[0m in all Qt projects..."
+find . -name "*.pro" -execdir qmake INSTALL_ROOT=$install_prefix  \; &>/dev/null
+
 # INSTALL  SECTION
 #
 #
@@ -839,15 +850,6 @@ if [ $make_install -eq 1 ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_install
                 echo -e  "\e[1;32;4m$f\e[0m - built on `cat tmp-build-dir/$f`"
             done
         fi # install_ok
-
-        # fix meson.build prefix
-        echo -e -n "\n... \e[0;32mrestoring\e[0m meson projects -Dprefix=$install_prefix\e[0m in all Qt projects..."
-        find . -type d -name "builddir" -exec meson configure -Dprefix=$install_prefix  {} \;
-
-
-        # fix all qmake INSTALL_ROOT that in the build phase used to point to tmp_installdir
-        echo -e -n "\n... \e[0;32mrestoring\e[0m qmake INSTALL_ROOT=$install_prefix\e[0m in all Qt projects..."
-        find . -name "*.pro" -execdir qmake INSTALL_ROOT=$install_prefix  \; &>/dev/null
 
         libprefix=$install_prefix/lib
 

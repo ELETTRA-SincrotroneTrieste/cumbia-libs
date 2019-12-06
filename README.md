@@ -34,7 +34,7 @@ The default installation provides some base applications ready to be used with t
 The *cumbia random* module is a tool to test the behaviour and performance of the upper level modules
 (e.g. the graphical components) without connecting to any control system.
 
-(1) Auto completion needs the <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">qumbia-tango-findsrc-plugin</a>.
+(1) Auto completion is provided by the <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">qumbia-tango-findsrc-plugin</a>.
 
 ## Library documentation
 

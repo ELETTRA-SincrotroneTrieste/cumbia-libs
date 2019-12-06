@@ -4,7 +4,7 @@ _cumbia()
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
-	prevprev="${COMP_WORDS[COMP_CWORD-2]}"
+    prevprev="${COMP_WORDS[COMP_CWORD-2]}"
 
     #
     #  The basic options we'll complete.
@@ -15,6 +15,13 @@ _cumbia()
     #
     #  Complete the arguments to some of the basic commands.
     #
+    dev_regex="^[0-9a-zA-Z_\.-]+/[0-9a-zA-Z_\.-]+/[0-9a-zA-Z_\.-]+$"
+    att_regex="^[0-9a-zA-Z_\.-]+/[0-9a-zA-Z_\.-]+/[0-9a-zA-Z_\.-]+/[0-9a-z_\.-]+$"
+    cmd_regex="^[0-9a-zA-Z_\.-]+/[0-9a-zA-Z_\.-]+/[0-9a-zA-Z_\.-]+//[][0-9a-zA-Z,_\.-]+$"
+   # echo "prev is ${prev}"
+    if [[ "${prev}"  =~ $dev_regex ]] || [[ "${prev}" =~ $att_regex ]] || [[ "${prev}" =~ $cmd_regex ]]; then
+        prev="tgsrc"
+    fi
     case "${prev}" in
         new)
             local running=$(for x in project control; do echo ${x} ; done )
@@ -36,7 +43,7 @@ _cumbia()
             COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
             return 0
             ;;
-        read|monitor)
+        read|monitor|tgsrc)
             which qumbia-tango-find-src &>/dev/null
             if [ "$?" -ne 0 ] || [ "${cur}" = "-" ] ||  [ "${cur}" = "--" ]; then
                     local reader_op=$(for x in `qumbia-reader --list-options ${cur}`; do echo ${x} ; done )

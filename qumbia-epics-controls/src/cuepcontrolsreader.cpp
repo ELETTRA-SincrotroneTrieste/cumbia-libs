@@ -4,6 +4,7 @@
 #include "cuepactionfactories.h"
 #include "cuepactioni.h"
 
+#include <cudatalistener.h>
 #include <assert.h>
 #include <QCoreApplication>
 #include <cumacros.h>
@@ -76,6 +77,7 @@ QString CuEpControlsReader::source() const
 
 void CuEpControlsReader::unsetSource()
 {
+    d->tlistener->invalidate();
     d->cumbia_ep->unlinkListener(d->source.toStdString(), CuEpicsActionI::Reader, d->tlistener);
     d->source = QString();
 }

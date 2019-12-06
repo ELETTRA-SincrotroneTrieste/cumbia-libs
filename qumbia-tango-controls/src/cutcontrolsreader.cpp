@@ -132,7 +132,6 @@ CuTControlsReader::CuTControlsReader(Cumbia *cumbia_tango, CuDataListener *tl)
 CuTControlsReader::~CuTControlsReader()
 {
     pdelete("~CuTControlsReader %p", this);
-    d->tlistener->invalidate();
     unsetSource();
     delete d;
 }

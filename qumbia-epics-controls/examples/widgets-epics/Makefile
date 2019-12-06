@@ -14,7 +14,7 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DCUMBIA_PRINTINFO -DQUMBIA_EPICS_CONTROLS -DQUMBIA_EPICS_CONTROLS_VERSION_STR="\"1.0.2\"" -DQUMBIA_EPICS_CONTROLS_VERSION=0x010002 -DQT_DEPRECATED_WARNINGS -DQT_CONCURRENT_LIB -DQT_PRINTSUPPORT_LIB -DQT_SVG_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -D_GNU_SOURCE -D_DEFAULT_SOURCE -DUSE_TYPED_RSET -D_X86_64_ -DUNIX -Dlinux -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DCUMBIA_PRINTINFO -DQUMBIA_EPICS_CONTROLS -DQUMBIA_EPICS_CONTROLS_VERSION_STR="\"1.1.0\"" -DQUMBIA_EPICS_CONTROLS_VERSION=0x010100 -DQT_DEPRECATED_WARNINGS -DQT_CONCURRENT_LIB -DQT_PRINTSUPPORT_LIB -DQT_SVG_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -D_GNU_SOURCE -D_DEFAULT_SOURCE -DUSE_TYPED_RSET -D_X86_64_ -DUNIX -Dlinux -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -mtune=generic -m64 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -std=c++11 -Wall -g -std=gnu++11 -mtune=generic -m64 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I. -I/home/giacomo/devel/base-7.0.2/include -I/home/giacomo/devel/base-7.0.2/include/os/Linux -I/home/giacomo/devel/base-7.0.2/include/compiler/gcc -I/home/giacomo/devel/base-7.0.2/include/os/compiler/clang -I/usr/local/cumbia-libs/include/qumbia-epics-controls -I/usr/local/cumbia-libs/include/cumbia -I/usr/local/cumbia-libs/include/cumbia-qtcontrols -I/usr/local/cumbia-libs/include/cumbia-epics -I/usr/local/qwt-6.1.3/include -isystem /usr/include/qt5/QtConcurrent -isystem /usr/include/qt5 -isystem /usr/include/qt5/QtPrintSupport -isystem /usr/include/qt5/QtSvg -isystem /usr/include/qt5/QtOpenGL -isystem /usr/include/qt5/QtWidgets -isystem /usr/include/qt5/QtGui -isystem /usr/include/qt5/QtCore -I/archivi/devel/base-7.0.2/include -I/archivi/devel/base-7.0.2/include/os/Linux -I/archivi/devel/base-7.0.2/include/compiler/gcc -Imoc -isystem /usr/include/libdrm -Isrc -I/usr/lib64/qt5/mkspecs/linux-g++
@@ -36,8 +36,8 @@ DEL_DIR       = rmdir
 MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
-DISTNAME      = widgets1.0.2
-DISTDIR = /archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-epics-controls/examples/widgets-epics/obj/widgets1.0.2
+DISTNAME      = widgets1.1.0
+DISTDIR = /archivi/devel/utils/git/cppqtclients/cumbia-libs/qumbia-epics-controls/examples/widgets-epics/obj/widgets1.1.0
 LINK          = g++
 LFLAGS        = -fPIC
 LIBS          = $(SUBLIBS) -L/home/giacomo/devel/base-7.0.2/lib/linux-x86_64 -L/usr/local/cumbia-libs/lib -lCom -lca -lcumbia -lcumbia-qtcontrols -lcumbia-epics -lqumbia-epics-controls -L/usr/local/qwt-6.1.3/lib -lqwt -lQt5Concurrent -lQt5PrintSupport -lQt5Svg -lQt5OpenGL -lQt5Widgets -lQt5Gui -lQt5Core -L/archivi/devel/base-7.0.2/lib/linux-x86_64 -rdynamic -m64 /usr/lib64/libQt5Widgets.so /usr/lib64/libQt5Gui.so /usr/lib64/libQt5Core.so /usr/lib64/libGL.so -lpthread   
@@ -265,7 +265,7 @@ DIST          = /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib64/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib64/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib64/qt5/mkspecs/features/spec_post.prf \
-		../../.qmake.stash \
+		../../../.qmake.stash \
 		/usr/lib64/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib64/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib64/qt5/mkspecs/features/default_pre.prf \
@@ -508,7 +508,7 @@ Makefile: widgets-epics.pro /usr/lib64/qt5/mkspecs/linux-g++/qmake.conf /usr/lib
 		/usr/lib64/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib64/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib64/qt5/mkspecs/features/spec_post.prf \
-		../../.qmake.stash \
+		../../../.qmake.stash \
 		/usr/lib64/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib64/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib64/qt5/mkspecs/features/default_pre.prf \
@@ -747,7 +747,7 @@ Makefile: widgets-epics.pro /usr/lib64/qt5/mkspecs/linux-g++/qmake.conf /usr/lib
 /usr/lib64/qt5/mkspecs/features/qt_config.prf:
 /usr/lib64/qt5/mkspecs/linux-g++/qmake.conf:
 /usr/lib64/qt5/mkspecs/features/spec_post.prf:
-../../.qmake.stash:
+../../../.qmake.stash:
 /usr/lib64/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib64/qt5/mkspecs/features/toolchain.prf:
 /usr/lib64/qt5/mkspecs/features/default_pre.prf:

@@ -49,6 +49,10 @@ class CuActivityEvent;
  * See the \ref cont_act section for further details about onExit invocation in *continuous
  * activities*.
  *
+ * \note
+ * Calling publishResult from within onExit requires special attention.
+ * You must be sure that listeners have not been destroyed by that time.
+ *
  * \subsection execution_thred Thread of execution
  * When Cumbia::registerActivity is called to run a new activity, a so called
  * *thread token* is passed as input argument to the method.

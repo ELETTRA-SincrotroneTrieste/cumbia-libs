@@ -68,6 +68,12 @@ i. qumbia-apps/cumbia/cumbia shell script for "cumbia" command line shortcuts
 i1. support for cumbiareader (cumbia read)
 i2. qumbia-apps/cumbia/bash_completion.d/cumbia: completion for cumbia read
 
+l. cumbia-epics
+l1. Fixed a potential crash when unset source is called within an update within a listener's onUpdate
+    method. Files: cumonitor.cpp. Function CuMonitor::onResult creates a copy of the listeners list
+    before iterating.
+l2. Removed prints.
+
 v1.0.2
 a. cumbia-qtcontrols
    a1. QuCircularGauge/QuCircularGaugeBase: fixes infinite loops in cache updates with certain property values (e.g. min = max)

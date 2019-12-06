@@ -1,36 +1,41 @@
 
-cumbia read command line client
+# cumbia read command line client
 
-Introduction
+## Introduction
     The qumbia-reader (cumbia read) application is a command line tool to read sources from different engines. EPICS, Tango and random modules are supported.
 
-Features
+## Features
 
-Source name auto completion (Tango only, for the time being)
+### Source name auto completion (Tango only, for the time being)
     Install the qumbia-tango-findsrc-plugin from github and the included qumbia-tango-find-src tool
     (instructions in the project page) to obtain the Tango source bash auto completion.
 
-Formula support
+### Formula support
     Formulas can be used through the formula plugin. See the plugin documentation and the example
     section below for more details.
 
-Library internals awareness
+### cumbia-random module support
+    Read the cumbia random documentation to correctly provide the reader
+    sources that can be used for testing. Specific *cumbia-random* source patterns allow to group threads, specify
+    the range of generated data, the generation interval, in milliseconds, and the size.
+    It is also possible to specify JavaScript files as sources, wherefrom a custom function supplies data.
+
+### Library internals awareness
     Increase the output detail level to see how threads are grouped, understand how they are grouped
     by means of the cumbia random test features. Set a bound on the number of threads used by timers for polled sources to verify the impact on performance.
 
-Property mode: get the configuration of the sources
+### Property mode: get the configuration of the sources
     Source configuration stored somewhere by the system can be obtained (if this is applies to the engine)
     Tango device, attribute and class properties can be fetched from the Tango database as well (requires Tango modules).
 
-Tune application output
+### Tune application output
     The command line output can be tuned in terms of
 
       -  detail level (low, medim, high and debug)
       -  format of numbers (printf style)
       -  length of displayed data for arrays
 
-Usage
-
+## Usage
     cumbia installation provides two shortcuts to launch the qumbia-reader application:
 
         cumbia read: read once or n times the specified source(s)
@@ -42,56 +47,85 @@ Usage
     For the latter, the random:// prefix is required. It is recommended to read the the cumbia random
     module documentation to learn about the required syntax for the sources.
 
-Read
+### Read
     Simply call cumbia read followed by the list of sources. Sources from different engines can be mixed.
     By default, one reading is performed, unless –x is specified:
 
-        cumbia read test/device/1/double_scalar giacomo:ai1 random://rnd/1/0/10
+        $ cumbia read test/device/1/double_scalar giacomo:ai1 random://rnd/1/0/10
 
     Output:
-        cumbia read inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8 --3 --format="%.4f"
+        $ cumbia read inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8 --3 --format="%.4f"
 
     Output of last command:
         inj/diagnostics/rtbpm_inj.01->GetHorPos(0,1000): [12:12:23+0.716406] [double,1000] { -0.0228,-0.0091,-0.0158,-0.0180,-0.0232,-0.0160,-0.0124, ..., -0.0178 }
         inj/diagnostics/rtbpm_inj.01->GetHorPos(0,1000): [12:12:24+0.883161] [double,1000] { -0.0190,-0.0145,-0.0172,-0.0174,-0.0173,-0.0198,-0.0131, ..., -0.0157 }
         inj/diagnostics/rtbpm_inj.01->GetHorPos(0,1000): [12:12:25+0.885003] [double,1000] { -0.0132,-0.0187,-0.0174,-0.0091,-0.0112,-0.0142,-0.0135, ..., -0.0129 }
 
-Note
-    In order to be auto completed and easily understood by the console without escape characters, Tango commands
-    can be written in the form:
-        tango/device/name//command_name[arg1,arg2]
-    instead of the classical syntax
-        tango/device/name->command_name(arg1,arg2)
-    that would require inverted commas:
-        cumbia read "inj/diagnostics/rtbpm_inj.01->GetHorPos(0,1000)"
+    Note
+        In order to be auto completed and easily understood by the console without escape characters, Tango commands
+        can be written in the form:
+            tango/device/name//command_name[arg1,arg2]
+        instead of the classical syntax
+            tango/device/name->command_name(arg1,arg2)
+        that would require inverted commas:
+            $ cumbia read "inj/diagnostics/rtbpm_inj.01->GetHorPos(0,1000)"
 
-    Both forms are accepted, but auto completion adopts the first syntax.
+        Both forms are accepted, but auto completion adopts the first syntax.
 
-Monitor
+### Monitor
     Simply replace cumbia read with cumbia monitor to start monitoring one or more sources.
     Interrupt the process pressing any key.
 
-Read (or monitor) and show more details
+### Read (or monitor) and show more details
     Output levels can be tuned with the –l=normal, –l=medium and –l=high.
     The number of details increases, up to the –l=debug, that prints the whole data structure
     passed from the lower layer to the application (the CuData bundle contents)
 
-Read sources configuration only
-
+### Read sources configuration only
     With the –property option it is possible to read the configuration of the sources: upper, lower bounds,
     alarm and warning thresholds, data format, measurement units, and so on:
-    cumbia read test/device/1/double_scalar giacomo:ai1 --property
+        $ cumbia read test/device/1/double_scalar giacomo:ai1 --property
 
-Read Tango properties
-
+### Read Tango properties
     Device properties
-        cumbia read --tp test/device/1:Description test/device/2:Description
+        $ cumbia read --tp test/device/1:Description test/device/2:Description
 
     List of attribute properties List the attribute properties of test/device/1/double_scalar
-        cumbia read --tp  test/device/1/double_scalar
+        $ cumbia read --tp  test/device/1/double_scalar
 
     Attribute property Read the values property of the string_scalar attribute
-        cumbia read --tp test/device/1/string_scalar/values
+        $ cumbia read --tp test/device/1/string_scalar/values
 
     Class property Read the description property of the class TangoTest
-        cumbia read --tp TangoTest/cvs_location
+        $ cumbia read --tp TangoTest/cvs_location
+
+### cumbia-random sources
+    Read the cumbia-random documentation for further details.
+    (https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/cumbia-random/html/index.html)
+    Some examples follow.
+
+    Read a randomly generated scalar value
+        $ cumbia read random://one/random/number/1/0/100/one_r
+
+    Read a randomly generated vector of 3 values between -100 and 100
+        $ cumbia read random://a/random/array/3/-100/100/array_3
+
+    Monitor a randomly generated vector of 3 values between -10 and +10 with a period of one second
+        cumbia monitor random://one/random/array/3/-10/10/monitor_a_3
+
+    Monitor three randomly generated vectors of 3 values each, with a period of one second
+        cumbia monitor random://a/random/array/3/-10/10/a_3  random://b/random/array/3/-12/12/b_3 random://c/random/array/3/-100/100/c_3
+
+    Thread grouping
+        The cumbia-random module takes the first section of the source string delimited by '/' to determine how to group number generator threads together. Add the –l=high
+        option to get even more detailed information while reading:
+            $ cumbia read random://th1/scalar/1/-10.0/10.2/r1  random://th2/array/2/0.0/10.0/r2  random://th1/array/3/-10.0/10.0/r3 --l=high
+
+    JavaScript generated data
+        A cumbia-random source can specify a JavaScript file (name ending in *.js) as data provider. The pattern for the source must be:
+        random://anything/you/want/file://path/to/file.js/SIZE/MIN/MAX[/PERIOD]/label
+        file.js will be passed the four arguments given in the source name (period is optional, default is 1 second)
+        plus two additional parameters: the number of calls made to the function up to that moment and the value from
+        the last call.
+        For example:
+            $ cumbia monitor  random://file://js_functions/sin.js/100/-10/10/sin_f

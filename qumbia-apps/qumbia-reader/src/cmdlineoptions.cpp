@@ -100,8 +100,10 @@ RConfig CmdLineOptions::parse(const QStringList &args) const
             o.usage = true;
             help(args.first(), a.remove("--help-"));
         }
-        else if(args.size() == 1 || a.startsWith("--help")) {
+        else if(args.size() == 1 || a == "--help") {
             o.usage = true;
+            if(a == "--help")
+                help(args.first(), "");
         }
         else if(a == ("--list-options")) {
             o.list_options = true;
@@ -118,17 +120,6 @@ RConfig CmdLineOptions::parse(const QStringList &args) const
 
 void CmdLineOptions::usage(const QString& appname) const
 {
-    QFile f(":/help/man.txt");
-    if(f.open(QIODevice::ReadOnly|QIODevice::Text)) {
-        QTextStream out(&f);
-        printf("%s\n", qstoc(out.readAll()));
-        f.close();
-    }
-    else
-        perr("CmdLineOptions.usage: unable to open file %s: %s\n", "man.txt", qstoc(f.errorString()));
-
-    printf("\e[1;32;4monline doc\e[0m: see %s for more information\n", QUMBIA_READER_DOC_URL);
-
     printf("\n\nUsage: %s sources [options]\n\n", qstoc(appname));
     foreach(QString hk, m_help_map.keys()) {
         printf(" \e[1;32m%-35s\e[0m|\e[1;3m%s\e[0m\n", qstoc(hk), qstoc(m_help_map[hk]));
@@ -137,10 +128,53 @@ void CmdLineOptions::usage(const QString& appname) const
 
 void CmdLineOptions::help(const QString& appname, const QString &modulenam) const
 {
-    if(modulenam == "formula") {
+    if(modulenam.isEmpty()) {
+        QFile f(":/help/man.txt");
+        if(f.open(QIODevice::ReadOnly|QIODevice::Text)) {
+            QTextStream out(&f);
+            QString txt = out.readAll();
+            QRegularExpression re("(\\$.*\\n)");
+            QRegularExpressionMatchIterator match_i = re.globalMatch(txt);
+            while(match_i.hasNext()) {
+                QRegularExpressionMatch ma = match_i.next();
+                if(ma.capturedTexts().size() > 1)
+                    txt.replace(ma.captured(1), QString("\e[1;32m%1\e[0m").arg(ma.captured(1)));
+            }
+
+            re.setPattern("\\n#\\s+(.+)\\n");
+            match_i = re.globalMatch(txt);
+            while(match_i.hasNext()) {
+                QRegularExpressionMatch ma = match_i.next();
+                if(ma.capturedTexts().size() > 1)
+                    txt.replace(ma.captured(0), QString("\n\e[1;32;4m%1\e[0m\n").arg(ma.captured(1)));
+            }
+            re.setPattern("\\n##\\s+(.+)\\n");
+            match_i = re.globalMatch(txt);
+            while(match_i.hasNext()) {
+                QRegularExpressionMatch ma = match_i.next();
+                if(ma.capturedTexts().size() > 1)
+                    txt.replace(ma.captured(0), QString("\n\e[1;32;4m%1\e[0m\n").arg(ma.captured(1)));
+            }
+            re.setPattern("\\n###\\s+(.+)\\n");
+            match_i = re.globalMatch(txt);
+            while(match_i.hasNext()) {
+                QRegularExpressionMatch ma = match_i.next();
+                if(ma.capturedTexts().size() > 1)
+                    txt.replace(ma.captured(0), QString("\n\e[1;34;3m%1\e[0m\n").arg(ma.captured(1)));
+            }
+
+            printf("%s\n", qstoc(txt));
+            f.close();
+        }
+        else
+            perr("CmdLineOptions.usage: unable to open file %s: %s\n", "man.txt", qstoc(f.errorString()));
+    }
+    else if(modulenam == "formula") {
         printf("\n\n\e[1;4mFormula plugin\e[0m\n\n");
         printf("Example 1. \"formula://{test/device/1/double_scalar,test/device/2/double_scalar} function(a,c) { return a+c; }\"\n");
     }
+
+    printf("\e[1;32;4monline doc\e[0m: see \e[0;32m%s\e[0m for more information\n", QUMBIA_READER_DOC_URL);
 }
 
 void CmdLineOptions::list_options() const

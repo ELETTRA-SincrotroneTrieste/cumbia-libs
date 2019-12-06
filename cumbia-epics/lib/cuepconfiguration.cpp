@@ -60,10 +60,7 @@ void CuEpConfiguration::onResult(const CuData &data)
     {
         std::list<CuDataListener *>::iterator it;
         for(it = d->listeners.begin(); it != d->listeners.end(); ++it)
-        {
-            printf("CuEpConfiguration::onResult: calling on update on %p\n\n", (*it));
             (*it)->onUpdate(data);
-        }
     }
     else
     {
@@ -94,7 +91,6 @@ CuEpicsActionI::Type CuEpConfiguration::getType() const
 
 void CuEpConfiguration::addDataListener(CuDataListener *l)
 {
-    printf("\e[1;35mCuEpConfiguration.addDataListener: adding %p to this %p \e[0m\n", l, this);
     std::list<CuDataListener *>::iterator it = d->listeners.begin();
     d->listeners.insert(it, l);
     /* if a new listener is added after onResult, call onUpdate.
@@ -106,30 +102,25 @@ void CuEpConfiguration::addDataListener(CuDataListener *l)
     }
 }
 
-void CuEpConfiguration::removeDataListener(CuDataListener *l)
-{
+void CuEpConfiguration::removeDataListener(CuDataListener *l) {
     if(d->listeners.size() > 0)
         d->listeners.remove(l);
     if(d->listeners.size() == 0)
         stop();
 }
 
-void CuEpConfiguration::sendData(const CuData &)
-{
+void CuEpConfiguration::sendData(const CuData &) {
 }
 
-void CuEpConfiguration::getData(CuData &d_inout) const
-{
-
+void CuEpConfiguration::getData(CuData &d_inout) const {
+    (void) d_inout;
 }
 
-size_t CuEpConfiguration::dataListenersCount()
-{
+size_t CuEpConfiguration::dataListenersCount() {
     return d->listeners.size();
 }
 
-void CuEpConfiguration::start()
-{
+void CuEpConfiguration::start() {
     CuEpCAService *df =
             static_cast<CuEpCAService *>(d->cumbia_epics->getServiceProvider()->
                                          get(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType)));
@@ -137,27 +128,22 @@ void CuEpConfiguration::start()
     at["pv"] = d->tsrc.getPV();
     at["activity"] = "attconfig";
     at["is_pv"] = d->tsrc.getType() == EpSource::PV;
-
     CuData tt("pv", d->tsrc.getPV()); /* thread token */
     d->activity = new CuEpConfigActivity(at, df);
     static_cast<CuEpConfigActivity *>(d->activity)->setDesiredAttributeProperties(d->desired_props);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_epics->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_epics->getThreadFactoryImpl());
     d->cumbia_epics->registerActivity(d->activity, this, tt, fi, bf);
-    cuprintf("> CuEpConfiguration.start this %p thread 0x%lx ACTIVITY %p\n", this, pthread_self(), d->activity);
 }
 
-void CuEpConfiguration::stop()
-{
+void CuEpConfiguration::stop() {
     d->exit = true;
 }
 
-bool CuEpConfiguration::exiting() const
-{
+bool CuEpConfiguration::exiting() const {
     return d->exit;
 }
 
-
-void CuEpConfiguration::onResult(const std::vector<CuData> &datalist)
-{
+void CuEpConfiguration::onResult(const std::vector<CuData> &datalist) {
+    (void) datalist;
 }
