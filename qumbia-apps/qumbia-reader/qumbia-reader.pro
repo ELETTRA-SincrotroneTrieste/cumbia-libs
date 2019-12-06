@@ -37,9 +37,6 @@ DEFINES += QT_NO_DEBUG_OUTPUT
 
 OBJECTS_DIR = obj
 
-# RESOURCES +=
-
-
 SOURCES += src/main.cpp \
     src/cmdlineoptions.cpp \
     src/kbdinputwaitthread.cpp \
@@ -89,4 +86,7 @@ INSTALLS += inst doc script
 DISTFILES += \
     js_functions/sin.js \
     qutangoreader/qutangoreader
+
+RESOURCES += \
+    qumbia-reader.qrc
 

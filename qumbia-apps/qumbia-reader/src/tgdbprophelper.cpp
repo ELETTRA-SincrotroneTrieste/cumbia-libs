@@ -36,11 +36,14 @@ void TgDbPropHelper::get(CumbiaPool *cu_p, const QStringList &props)
             {
                 bu["attribute"] = p.section("/", -1).toStdString();
             }
+            else if(p.count("/") == 1) { // class prop
+                bu["class"] = p.section("/", 0, 0).toStdString();
+                bu["name"] = p.section('/', -1).toStdString();
+            }
             else if(p.count(":")) { // device
                 bu["device"] = p.section(":", 0, 0).toStdString();
                 bu["name"] = p.section(":", -1).toStdString();
             }
-            printf("TgDbPropHelper.get: tg_prop: %s\n", bu.toString().c_str());
             m_dbr = new CuTDbPropertyReader(p.toStdString(), ct);
             in.push_back(bu);
         }

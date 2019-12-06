@@ -4,6 +4,10 @@
 #include <cumacros.h>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
+#include <QFile>
+#include <QTextStream>
+
+#define QUMBIA_READER_DOC_URL "https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/qumbia-reader/html/index.html"
 
 CmdLineOptions::CmdLineOptions()
 {
@@ -114,6 +118,17 @@ RConfig CmdLineOptions::parse(const QStringList &args) const
 
 void CmdLineOptions::usage(const QString& appname) const
 {
+    QFile f(":/help/man.txt");
+    if(f.open(QIODevice::ReadOnly|QIODevice::Text)) {
+        QTextStream out(&f);
+        printf("%s\n", qstoc(out.readAll()));
+        f.close();
+    }
+    else
+        perr("CmdLineOptions.usage: unable to open file %s: %s\n", "man.txt", qstoc(f.errorString()));
+
+    printf("\e[1;32;4monline doc\e[0m: see %s for more information\n", QUMBIA_READER_DOC_URL);
+
     printf("\n\nUsage: %s sources [options]\n\n", qstoc(appname));
     foreach(QString hk, m_help_map.keys()) {
         printf(" \e[1;32m%-35s\e[0m|\e[1;3m%s\e[0m\n", qstoc(hk), qstoc(m_help_map[hk]));

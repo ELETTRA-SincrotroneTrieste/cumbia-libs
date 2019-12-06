@@ -19,12 +19,12 @@ class RConfig;
  * The *qumbia-reader* (*cumbia read*) application is a command line tool to read *sources* from different engines.
  * EPICS, Tango and *random* modules are supported.
  *
- * \par **Features**
+ * \par <b>Features</b>
  *
  * \par Source name *auto completion* (Tango only, for the time being)
  * Install the <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">qumbia-tango-findsrc-plugin</a>
  * from *github* and the included *qumbia-tango-find-src* tool (instructions in the project page) to obtain
- * the Tango source **bash auto completion**.
+ * the Tango source <b>bash auto completion</b>.
  *
  * \par Formula support
  * Formulas can be used through the <a href="../../cuformula/html/index.html">formula plugin</a>. See the
@@ -38,7 +38,7 @@ class RConfig;
  *
  * \par *Property mode*: get the configuration of the sources
  * Source configuration stored somewhere by the system can be obtained (if this is applies to the engine)
- * **Tango** *device, attribute and class* properties can be fetched from the Tango database as well
+ * <b>Tango</b> *device, attribute and class* properties can be fetched from the Tango database as well
  * (requires Tango modules).
  *
  * \par Tune application output
@@ -68,12 +68,9 @@ class RConfig;
  * \code cumbia read test/device/1/double_scalar giacomo:ai1 random://rnd/1/0/10 \endcode
  *
  * Output:
- *
- *
  * \code cumbia read inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8 --3 --format="%.4f" \endcode
  *
  * Output of last command:
- *
  * \code
  * inj/diagnostics/rtbpm_inj.01->GetHorPos(0,1000): [12:12:23+0.716406] [double,1000] { -0.0228,-0.0091,-0.0158,-0.0180,-0.0232,-0.0160,-0.0124, ..., -0.0178 }
  * inj/diagnostics/rtbpm_inj.01->GetHorPos(0,1000): [12:12:24+0.883161] [double,1000] { -0.0190,-0.0145,-0.0172,-0.0174,-0.0173,-0.0198,-0.0131, ..., -0.0157 }
@@ -81,8 +78,8 @@ class RConfig;
  * \endcode
  *
  * \note
- * In order to be auto completed and easily understood by the console without escape characters, **Tango
- * commands** can be written in the form:
+ * In order to be auto completed and easily understood by the console without escape characters, <b>Tango
+ * commands</b> can be written in the form:
  *
  * \code tango/device/name//command_name[arg1,arg2] \endcode
  *
@@ -98,7 +95,36 @@ class RConfig;
  * the process pressing any key.
  *
  * \par Read (or monitor) and show more details
+ * Output levels can be tuned with the --l=normal, --l=medium and --l=high
+ * The number of details increases, up to the --l=debug, that prints the whole data structure passed
+ * from the lower layer to the application (the CuData bundle contents)
  *
+ * \par Read sources configuration only
+ *
+ * With the --property option it is possible to read the configuration of the sources: upper, lower
+ * bounds, alarm and warning thresholds, data format, measurement units, and so on:
+ *
+ * \code  cumbia read test/device/1/double_scalar giacomo:ai1 --property
+ * \endcode
+ *
+ * \par Read <b>Tango</b> properties
+ *
+ * <b>Device properties</b>
+ *
+ * \code cumbia read --tp test/device/1:Description test/device/2:Description \endcode
+ *
+ * <b>List of attribute properties</b>
+ * List the attribute properties of *test/device/1/double_scalar*
+ * \code cumbia read --tp  test/device/1/double_scalar \endcode
+ *
+ * <b>Attribute property</b>
+ * Read the *values* property of the *string_scalar* attribute
+ *
+ * \code cumbia read --tp test/device/1/string_scalar/values \endcode
+ *
+ * <b>Class property</b>
+ * Read the *description* property of the class *TangoTest*
+ * \code    cumbia read --tp TangoTest/cvs_location \endcode
  *
  */
 class QumbiaReader : public QObject
