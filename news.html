@@ -4,13 +4,18 @@
 
 <h3>Library</h3>
 
+<h4>New prerequisites</h4>
+<p>
+    The read/write locks adopted to provide greater speed require a compiler supporting the <em>C++ 17</em> standard.
+</p>
+
 <h4> cumbia </h4>
 <p>
 Version 1.1.0 allows the application developer to customize how threads are grouped together, as well
 as to define an upper limit on their number.
 Additionally, timers in polled reads can be reused in order to limit timer threads.
+See the <a href="html/cumbia/html/classCuTimerService.html">CuTimerService</a> documentation.
 </p>
-
 
 <h4>cumbia-random</h4>
 <p>
@@ -20,29 +25,20 @@ and applications with greater accuracy. Source names alone can specify how data 
 functions in .js files can be set as source of data for the cumbia-random module.
 </p>
 
+<h4>cumbia-qtcontrols</h4>
+<p>
+CuPluginLoader provides a template method to quickly obtain an instance of the desired plugin. See
+<a href="html/cumbia-qtcontrols/html/classCuPluginLoader.html">CuPluginLoader</a>::get.
+</p>
+
 <h3>Apps</h3>
-qumbia-apps/cumbiareader has been deeply expanded in order to support the cumbia-random module and a
+<p>
+<a href="html/qumbia-reader/html/index.html>cumbia read</a> has been expanded in order to support the cumbia-random module and a
 great number of command line options.
 Coupled with the qumbia-tango-findsrc-plugin and the qumbia-tango-find-src app, that can be installed from
 https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin.git
-it provides Tango sources auto completion on the command line.
-
-Requires c++17
-
-a. cumbia-tango
-a1. CuPoller, CuPollingActivity: CuPoller::m_do_unregisterAction: removed wrong call to
-    unregisterActivity that lead to a potential delay upon source disconnection as long as
-    the timer timeout. CuPollingActivity::m_unregisterAction gets a reference to its thread
-    and unregisters itself when no more in charge of any action.
-
-b. qumbia-apps/qumbia-client: use setOptions before setSource to connect to a source according
-   to the refresh mode and period options on the user interface.
-
-c. cumbia
-c1. CuTimerService allows to limit the number of timers used by the application.
-c2. A limit on the number of threads created by activities can be set, as well as a custom thread token allows
-    the user to group threads
-c3. C++17 shared_locks replace unique locks where the protected variables are only read
+it provides <cite>Tango sources auto completion</cite> on the command line.
+</p>
 
 
 d. cumbia-qtcontrols
