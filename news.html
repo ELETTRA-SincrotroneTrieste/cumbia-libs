@@ -24,6 +24,10 @@ has been expanded in order to offer great flexibility to test higher level cumbi
 and applications with greater accuracy. Source names alone can specify how data is generated, threads grouped and much more. JavaScript
 functions in .js files can be set as source of data for the cumbia-random module.
 </p>
+<ul>
+<li>The source name can define group threading, period, size of generated data, minimum, maximum and period.</li>
+<li>The source can specify a JavaScript file to generate data from a custom function</li>
+</ul>
 
 <h4>cumbia-qtcontrols</h4>
 <p>
@@ -39,11 +43,16 @@ Coupled with the qumbia-tango-findsrc-plugin and the qumbia-tango-find-src app, 
 https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin.git
 it provides <cite>Tango sources auto completion</cite> on the command line.
 </p>
+<p>
+Additional features:
+<ul>
+<li>customizable output detail level</li>
+<li>support for Tango database properties (device, attribute, class)</li>
+<li>either monitor or single shot mode</li>
+See the documentation for a more detailed description.
+</ul>
+</p>
 
-
-d. cumbia-qtcontrols
-d1. cupluginloader provides a template method to directly get the desired plugin CuPluginLoader::get
-d2. qulabelbase.cpp: wordwrap no more set to true by default. Fixed size-hint related methods
 
 e. cumbia-random
 
