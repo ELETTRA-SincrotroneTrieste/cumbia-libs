@@ -4,5 +4,5 @@
 <area shape="rect" id="node3" href="$classCuEventLoopService.html" title="service that implements a simple event loop for cumbia applications." alt="" coords="140,56,284,83"/>
 <area shape="rect" id="node4" href="$classCuLog.html" title="a cumbia service providing an interface for logging facilities" alt="" coords="183,107,241,133"/>
 <area shape="rect" id="node5" href="$classCuThreadService.html" title="cumbia service that creates threads and keeps references of the threads running within the applicatio..." alt="" coords="151,157,273,184"/>
-<area shape="rect" id="node6" href="$classCuTimerService.html" title=" " alt="" coords="155,208,269,235"/>
+<area shape="rect" id="node6" href="$classCuTimerService.html" title="The CuTimerService class provides access to cumbia timers. It is normally used internally by the libr..." alt="" coords="155,208,269,235"/>
 </map>
