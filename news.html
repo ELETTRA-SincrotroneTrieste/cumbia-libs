@@ -53,37 +53,13 @@ See the documentation for a more detailed description.
 </ul>
 </p>
 
+<h3>Plugins</h3>
+<h4>qumbia-tango-findsrc-plugin</h4>
+<p>
+ An external new plugin qumbia-tango-findsrc-plugin + qumbia-tango-find-src app are now available from
+   <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin.git">github.com</a>
+   The utility finds the name of a Tango source (attribute or command) from a partial name.
+   <em>The plugin can be loaded from any application featuring <strong>auto completion of Tango sources</strong></em>.
+</p>
 
-e. cumbia-random
-
-Library has been expanded to support several new operations for testing purposes.
-The source name can define group threading, period, size of generated data, minimum, maximum and period.
-The source can specify a JavaScript file to generate data from a custom function
-e1. enabled in scripts/cubuild.sh
-
-f. qumbia-apps/cumbiareader moved to qumbia-apps/qumbia-reader
-f1. support for cumbia-random
-f2. in combination with the qumbia-tango-findsrc-plugin + qumbia-tango-find-src app, Tango sources auto completion
-    is available.
-f3. improved output formatting
-f4. improved options from command line (single shot, read x times and quit...)
-f5. support for Tango database properties (device, attribute, class)
-
-g. External new plugin qumbia-tango-findsrc-plugin + qumbia-tango-find-src app:
-   https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin.git
-   Finds the name of a Tango source (attribute or command) from a partial name.
-   Can be used for auto completion of Tango sources.
-
-h. qumbia-tango-controls
-h1. added interface qutfindsrcsplugini.h for the qumbia-tango-findsrc-plugin (see g.)
-
-i. qumbia-apps/cumbia/cumbia shell script for "cumbia" command line shortcuts
-i1. support for cumbiareader (cumbia read)
-i2. qumbia-apps/cumbia/bash_completion.d/cumbia: completion for cumbia read
-
-l. cumbia-epics
-l1. Fixed a potential crash when unset source is called within an update within a listener's onUpdate
-    method. Files: cumonitor.cpp. Function CuMonitor::onResult creates a copy of the listeners list
-    before iterating.
-l2. Removed prints.
 
