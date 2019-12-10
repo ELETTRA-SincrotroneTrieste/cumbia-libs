@@ -969,32 +969,73 @@ bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &re
         for(std::unordered_map<std::string, std::list< CuData> >::const_iterator it = dprops.begin(); it != dprops.end(); ++it)
         {
             Tango::DbData db_data;
-            for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit)
-                db_data.push_back(Tango::DbDatum((*dit)["name"].toString().c_str()));
+            std::map<std::string, std::string> dev_prop_wildcards;
+            for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit) {
+                std::string name;
+                if((*dit).containsKey("name") )
+                    name = (*dit)["name"].toString();
 
-            db->get_device_property(it->first, db_data);
-            for(size_t i = 0; i < db_data.size(); i++) {
-                if(!db_data[i].is_empty()) {
-                    db_data[i] >> vs;
-                    names.push_back(it->first + ":" + db_data[i].name);
-                    res[names.at(names.size() - 1)] = vs;
+                if(name.length() > 0 && name.find("*") == std::string::npos)
+                    db_data.push_back(Tango::DbDatum((*dit)["name"].toString().c_str()));
+                else if(name.length() > 0)
+                    dev_prop_wildcards[(*dit)["device"].toString()] = name; // wildcard specified
+                else  {
+                    dev_prop_wildcards[(*dit)["device"].toString()] = "*";
                 }
+            }
+            if(db_data.size() > 0) {
+                db->get_device_property(it->first, db_data);
+                for(size_t i = 0; i < db_data.size(); i++) {
+                    if(!db_data[i].is_empty()) {
+                        db_data[i] >> vs;
+                        names.push_back(it->first + ":" + db_data[i].name);
+                        res[names.at(names.size() - 1)] = vs;
+                    }
+                }
+            }
+            for(std::map<std::string, std::string>::const_iterator it = dev_prop_wildcards.begin(); it != dev_prop_wildcards.end(); ++it) {
+                std::string devna = it->first, wildcard = it->second;
+                Tango::DbDatum dplist = db->get_device_property_list(devna, wildcard);
+                std::vector<std::string> s_dplist;
+                dplist >> s_dplist;
+                names.push_back(it->first + ":" + it->second);
+                res[names.at(names.size() - 1)] = s_dplist;
             }
         }
         // 3. class properties
         // scan the per-class map
+        // if no "name" key is found, then get the list of class properties for the given class "name"
         for(std::unordered_map<std::string, std::list< CuData> >::const_iterator it = cprops.begin(); it != cprops.end(); ++it)
         {
+            std::vector<std::string> cl_names; // list of class names to use with get_class_property_list
             Tango::DbData db_data;
-            for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit)
-                db_data.push_back(Tango::DbDatum((*dit)["name"].toString().c_str()));
+            for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit) {
+                if((*dit).containsKey("name") && (*dit)["name"].toString().length() > 0)
+                    db_data.push_back(Tango::DbDatum((*dit)["name"].toString().c_str()));
+                else if(!(*dit).containsKey("name")) {
+                    cl_names.push_back((*dit)["class"].toString());
+                }
+            }
 
-            db->get_class_property(it->first, db_data); // it->first is class name
-            for(size_t i = 0; i < db_data.size(); i++) {
-                if(!db_data[i].is_empty()) {
-                    db_data[i] >> vs;
-                    names.push_back(it->first + ":" + db_data[i].name);
-                    res[names.at(names.size() -1)] = vs;
+            if(db_data.size() > 0) {
+                db->get_class_property(it->first, db_data); // it->first is class name
+                for(size_t i = 0; i < db_data.size(); i++) {
+                    if(!db_data[i].is_empty()) {
+                        db_data[i] >> vs;
+                        names.push_back(it->first + ":" + db_data[i].name);
+                        res[names.at(names.size() -1)] = vs;
+                    }
+                }
+            }
+            if(cl_names.size() > 0) {
+                printf("CuTangoWorld.get_properties\n");
+                for(size_t i = 0; i < cl_names.size(); i++) {
+                    Tango::DbDatum plist = db->get_class_property_list(cl_names[i]);
+                    std::vector<std::string> s_plist;
+                    plist >> s_plist;
+                    names.push_back(it->first + ":*");
+                    printf("pushed in names %s\n", names.at(names.size() - 1).c_str());
+                    res[names.at(names.size() - 1)] = s_plist;
                 }
             }
         }

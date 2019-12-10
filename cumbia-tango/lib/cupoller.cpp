@@ -182,21 +182,15 @@ void CuPoller::m_do_unregisterAction(CuTangoActionI *a)
 {
     // remove in this thread
     if(d->actions_map.find(a) != d->actions_map.end()) {
-        pgreen(" - CuPoller.unregisterAction: removed %s - %p from poller with period %d actions count %d\n",
-                a->getSource().getName().c_str(), a, d->period, count());
         d->actions_map.erase(a);
-        pgreen(" - CuPoller.unregisterAction: after removing %p count %d\n", a, count());
         TSource tsrc = a->getSource();
         CuData at("device", tsrc.getDeviceName()); /* activity token */
         at["activity"] = "poller";
         at["period"] = d->period;
-
         CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
                                                                  get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
-
         if(d->actions_map.size() == 0)
             am->removeConnection(this);
-
         CuActivity *activity = am->findActiveMatching(at); // polling activities compare device period and "activity"
         // post remove to activity's thread
         if(activity) {

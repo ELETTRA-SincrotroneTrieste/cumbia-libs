@@ -249,11 +249,9 @@ void CuEventActivity::onExit()
                  d->tdev->getName().c_str(), tw.strerror(e).c_str());
         }
     }
-    else if(!d->tdev->getDevice()) {
-    }
     // removes reference (lock guarded) and deletes TDev if no more necessary
     // Lock guarded because since 1.1.0 one thread per device is not a rule.
-    refcnt = d->device_srvc->removeRef(d->tdev->getDevice()->name(), threadToken());
+    refcnt = d->device_srvc->removeRef(d->tdev->getName().c_str(), threadToken());
     if(refcnt == 0)
         d->tdev = nullptr;
 
