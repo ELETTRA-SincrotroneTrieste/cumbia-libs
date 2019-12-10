@@ -58,7 +58,7 @@ public:
      *
      * virtual class destructor
      */
-    virtual ~CuThreadsEventBridge_I() { cuprintf("\e[1;31mx deleting FAMIGERATED threadseventbirds %p\e[0m\n", this); }
+    virtual ~CuThreadsEventBridge_I() { }
 
     /*! \brief bridge's method to forward an event from the background thread to the
      *         main thread.

@@ -15,45 +15,45 @@ class RConfig;
 /*!
  * \mainpage cumbia read command line client
  *
- * \par Introduction
+ * \section intro Introduction
  * The *qumbia-reader* (*cumbia read*) application is a command line tool to read *sources* from different engines.
  * EPICS, Tango and *random* modules are supported.
  *
- * \par <b>Features</b>
+ * \section _features Features
  *
- * \par Source name *auto completion* (Tango only, for the time being)
+ * \subsection _src_autocomp Source name *auto completion* (Tango only, for the time being)
  * Install the <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">qumbia-tango-findsrc-plugin</a>
  * from *github* and the included *qumbia-tango-find-src* tool (instructions in the project page) to obtain
  * the Tango source <b>bash auto completion</b>.
  *
- * \par Formula support
+ * \subsection _formula_support Formula support
  * Formulas can be used through the <a href="../../cuformula/html/index.html">formula plugin</a>. See the
  * plugin documentation and the example section below for more details.
  *
- * \par *cumbia-random* module support
+ * \subsection _cumbia_random *cumbia-random* module support
  * Read the <a href="../../cumbia-random/html">cumbia random</a> documentation to correctly provide the reader
  * sources that can be used for testing. Specific *cumbia-random* source patterns allow to group threads, specify
  * the range of generated data, the generation interval, in milliseconds, and the size.
  * It is also possible to specify JavaScript files as sources, wherefrom a custom function supplies data.
  *
- * \par Library internals awareness
+ * \subsection _lib_internals Library internals awareness
  * Increase the output detail level to see how threads are grouped, understand *how* they are grouped
  * by means of the <a href="../../cumbia-random/html">cumbia random</a> test features.
  * Set a bound on the number of threads used by *timers* for polled sources to verify the impact on
  * performance.
  *
- * \par *Property mode*: get the configuration of the sources
+ * \subsection _prop_mode *Property mode*: get the configuration of the sources
  * Source configuration stored somewhere by the system can be obtained (if this is applies to the engine)
  * <b>Tango</b> *device, attribute and class* properties can be fetched from the Tango database as well
  * (requires Tango modules).
  *
- * \par Tune application output
+ * \subsection _tune_output Tune application output
  * The command line output can be tuned in terms of
  * - detail level (low, medim, high and debug)
  * - *format* of numbers (*printf style*)
  * - length of displayed data for arrays
  *
- * \par Usage
+ * \section _usage Usage
  *
  * *cumbia* installation provides two shortcuts to launch the *qumbia-reader* application:
  * - *cumbia read*: read once or *n* times the specified source(s)
@@ -67,7 +67,7 @@ class RConfig;
  * <a href="../../cumbia-random/html">the cumbia random module</a> documentation to learn about the
  * required syntax for the sources.
  *
- * \par Read
+ * \subsection _read Read
  * Simply call *cumbia read* followed by the list of sources. Sources from different engines can be mixed.
  * By default, one reading is performed, unless --x is specified:
  *
@@ -96,16 +96,16 @@ class RConfig;
  *
  * Both forms are accepted, but auto completion adopts the first syntax.
  *
- * \par Monitor
+ * \subsection _monitor Monitor
  * Simply replace *cumbia read* with *cumbia monitor* to start monitoring one or more sources. Interrupt
  * the process pressing any key.
  *
- * \par Read (or monitor) and show more details
+ * \subsection _read_detailed Read (or monitor) and show more details
  * Output levels can be tuned with the --l=normal, --l=medium and --l=high
  * The number of details increases, up to the --l=debug, that prints the whole data structure passed
  * from the lower layer to the application (the CuData bundle contents)
  *
- * \par Read sources configuration only
+ * \subsection _read_config Read sources configuration only
  *
  * With the --property option it is possible to read the configuration of the sources: upper, lower
  * bounds, alarm and warning thresholds, data format, measurement units, and so on:
@@ -113,25 +113,63 @@ class RConfig;
  * \code  cumbia read test/device/1/double_scalar giacomo:ai1 --property
  * \endcode
  *
- * \par Read <b>Tango</b> properties
+ * \subsection _tg_props Read Tango properties
  *
- * <b>Device properties</b>
+ * \subsubsection _tg_dev_prop Device properties
  *
  * \code cumbia read --tp test/device/1:Description test/device/2:Description \endcode
  *
- * <b>List of attribute properties</b>
+ * \subsubsection _tg_all_props List all device properties
+ *
+ * The following command lists all *properties* of the given devices
+ * \code cumbia read --tp  test/device/1  test/device/2 \endcode
+ * Example output:
+ \code
+ - test/device/1
+ *   --> description,helperApplication,helperApplication2Prop,helperApplication_old,polled_attr,poll_ring_depth,values,windowTitle
+ - test/device/2
+ *    --> description,polled_attr,poll_ring_depth
+ \endcode
+ *
+ * \subsubsection _tg_filtered_props Filtered list of *device properties*
+ * If the device name is followed by a semicolon and a wildcard (*) is present, then the filtered list
+ * of *device properties* matching the wildcard expression is returned:
+ * \code cumbia read --tp  test/device/1:helper* \endcode
+ * The output will be:
+ \code
+ - test/device/1
+   helper*                   --> helperApplication,helperApplication2Prop,helperApplication_old
+ \endcode
+ *
+ * \subsubsection _tg_prop_list List of attribute properties
  * List the attribute properties of *test/device/1/double_scalar*
  * \code cumbia read --tp  test/device/1/double_scalar \endcode
  *
- * <b>Attribute property</b>
+ * \subsubsection _tg_att_props Attribute property
  * Read the *values* property of the *string_scalar* attribute
  *
  * \code cumbia read --tp test/device/1/string_scalar/values \endcode
  *
- * <b>Class property</b>
- * Read the *description* property of the class *TangoTest*
+ * \subsubsection _tg_cl_prop Class property
+ * Read the *cvs_location* property of the class *TangoTest*
  * \code    cumbia read --tp TangoTest/cvs_location \endcode
  *
+ * <b>List of properties of a given Tango *class*</b>
+ * The following command fetches the list of properties of the *TdbArchiver* and *HdbArchiver* classes:
+ *
+ * \code  qumbia-reader --tp  TdbArchiver: HdbArchiver: \endcode
+ *
+ * Output
+ * \code
+ - HdbArchiver
+   *   --> DbHost,DbName,DbSchema,Description,eventsDBUpdatePolicy,Facility,ProjectTitle,UseEvents
+-------------------------------------------------
+ - TdbArchiver
+   *   --> DbHost,DbName,DbSchema,Description,Facility,ProjectTitle
+ * \endcode
+ *
+ * \par Note
+ * Class name must be terminated by a semicolon.
  */
 class QumbiaReader : public QObject
 {

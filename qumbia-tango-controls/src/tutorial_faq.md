@@ -22,6 +22,8 @@
 - [After converting a QTango project to a cumbia project, I get errors on the ui/ui_filexxx.h concerning properties of widgets that I know are defined in the cumbia widget version as well, e.g. *tLabel->setFalseString(..)*] (#ui_h_errors)
 - [How to migrate QTango *Config::instance()->setStateColor* (and setStateString) to cumbia?] (#migrate_config_state_color)
 - [How to support multiple engines (e.g. Tango and Epics) in the same application](#multiengine)
+- [My application connects to several different Tango devices: I want to customize thread grouping to reduce their number. How to?] (#thread_grouping)
+- [How to limit the number of timers for polled sources?] (#timer_limit)
 
 ## Q.
 
@@ -800,3 +802,16 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     // ...
 }
 ```
+
+## Q.
+<a name="thread_grouping" />
+### My application connects to several different Tango devices: I want to customize thread grouping to reduce their number. How to do it?
+
+## A.
+
+## Q.
+<a name="timer_limit" />
+### How to limit the number of timers for polled sources?
+
+## A.
+

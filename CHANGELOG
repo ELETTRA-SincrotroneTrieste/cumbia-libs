@@ -4,7 +4,7 @@ LIBRARY NEWS
 
 * cumbia
 Version 1.1.0 allows the application developer to customize how threads are grouped together, as well
-as to define an upper limit for them.
+as to define an upper limit on their number.
 Additionally, timers in polled reads can be reused in order to limit timer threads.
 
 * cumbia-random
@@ -26,6 +26,8 @@ a1. CuPoller, CuPollingActivity: CuPoller::m_do_unregisterAction: removed wrong 
     unregisterActivity that lead to a potential delay upon source disconnection as long as
     the timer timeout. CuPollingActivity::m_unregisterAction gets a reference to its thread
     and unregisters itself when no more in charge of any action.
+a2. CuTangoWorld::get_properties: added support for wildcards when searching device properties.
+    CuTangoWorld::get_properties: added Tango class property list for a given class name
 
 b. qumbia-apps/qumbia-client: use setOptions before setSource to connect to a source according
    to the refresh mode and period options on the user interface.

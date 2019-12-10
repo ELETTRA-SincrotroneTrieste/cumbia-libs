@@ -28,7 +28,7 @@ void TgDbPropHelper::get(CumbiaPool *cu_p, const QStringList &props)
             if(p.count("/") > 1 && p.count(":") == 0) {
                 bu["device"] = p.section("/", 0, 2).toStdString();
             }
-            if(p.count("/") == 4) {
+            if(p.count("/") == 4) { // specific attribute property
                 bu["attribute"] = p.section("/", 3, 3).toStdString();
                 bu["name"] = p.section("/", -1).toStdString();
             }
@@ -36,13 +36,19 @@ void TgDbPropHelper::get(CumbiaPool *cu_p, const QStringList &props)
             {
                 bu["attribute"] = p.section("/", -1).toStdString();
             }
-            else if(p.count("/") == 1) { // class prop
+            else if(p.count("/") == 1) { // specific class prop
                 bu["class"] = p.section("/", 0, 0).toStdString();
                 bu["name"] = p.section('/', -1).toStdString();
             }
-            else if(p.count(":")) { // device
+            else if(p.count("/") == 0 && p.endsWith(":")) { // class name
+                // get all properties for the given class
+                // - only "class" key is specified
+                bu["class"] = p.section(":", 0, 0).toStdString();
+            }
+            else if(p.count(":")) { // specific device property
                 bu["device"] = p.section(":", 0, 0).toStdString();
-                bu["name"] = p.section(":", -1).toStdString();
+                if(!p.section(":", -1).isEmpty())
+                    bu["name"] = p.section(":", -1).toStdString();
             }
             m_dbr = new CuTDbPropertyReader(p.toStdString(), ct);
             in.push_back(bu);
