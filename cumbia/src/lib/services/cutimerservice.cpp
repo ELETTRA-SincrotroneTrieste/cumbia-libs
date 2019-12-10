@@ -18,6 +18,10 @@ public:
     int timer_max_count;
 };
 
+/*!
+ * \brief Class constructor
+ * Initializes timerMaxCount to 25
+ */
 CuTimerService::CuTimerService() {
     d = new CuTimerServicePrivate;
     d->timer_max_count = 25;
@@ -102,6 +106,15 @@ void CuTimerService::unregisterListener(CuTimerListener *tl, int timeout)
     }
 }
 
+/*!
+ * \brief Changet the timeout of the timer that serves the given listener
+ * \param tl the CuTimerListener requiring a change in timeout
+ * \param timeout the new timeout, in milliseconds
+ * \return A fresh or existing timer satisfying the requirements in terms of timeout.
+ *
+ * \note
+ * Internally, unregisterListener and registerListener are called
+ */
 CuTimer *CuTimerService::changeTimeout(CuTimerListener *tl, int timeout)
 {
     std::unique_lock lock(d->shared_mutex);
@@ -118,6 +131,12 @@ CuTimer *CuTimerService::changeTimeout(CuTimerListener *tl, int timeout)
     return t;
 }
 
+/*!
+ * \brief CuTimerService::isRegistered returns true if a timer is registered for the given listener and timeout
+ * \param tlis the CuTimerListener
+ * \param timeout the timeout
+ * \return true if there is a timer registered for the given listener and timeout, false otherwise
+ */
 bool CuTimerService::isRegistered(CuTimerListener *tlis, int timeout) {
     std::shared_lock lock(d->shared_mutex);
     std::pair<std::multimap<const CuTimerListener*, CuTimer *>::const_iterator, std::multimap<const CuTimerListener*, CuTimer *>::const_iterator > iterpair;
@@ -165,11 +184,18 @@ void CuTimerService::restart(CuTimer *t , int millis) {
     t->start(millis);
 }
 
-
+/*!
+ * \brief Returns the name of the service
+ * \return "CuTimerService"
+ */
 std::string CuTimerService::getName() const {
     return std::string("CuTimerService");
 }
 
+/*!
+ * \brief CuTimerService::getType returns the service type
+ * \return CuServices::Timer
+ */
 CuServices::Type CuTimerService::getType() const {
     return  CuServices::Timer;
 }
@@ -268,6 +294,11 @@ std::list<CuTimer *> CuTimerService::getTimers()
     return timers;
 }
 
+/*!
+ * \brief Returns the list of CuTimerListener registered to the timer t
+ * \param t the timer whose listeners the caller is seeking for
+ * \return the list of listeners of the timer t
+ */
 std::list<CuTimerListener *> CuTimerService::getListeners(CuTimer *t) const
 {
     return t->m_listeners;
