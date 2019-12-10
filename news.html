@@ -12,7 +12,11 @@
 <h4> cumbia </h4>
 <p>
 Version 1.1.0 allows the application developer to customize how threads are grouped together, as well
-as to define an upper limit on their number.
+as to define an upper limit on their number. The *cumbia-tango* engine groups threads by Tango device.
+If you want to customize the default behaviour, refer to the
+<a href="html/cumbia-tango/html/classCuTThreadTokenGen.html">CuTThreadTokenGen</a> and the
+<a href="html/cumbia/html/classCumbia.html#ad1294d5af961ea0899aabf299e7f2c56">Cumbia::setThreadTokenGenerator</a>
+documentation pages.
 Additionally, timers in polled reads can be reused in order to limit timer threads.
 See the <a href="html/cumbia/html/classCuTimerService.html">CuTimerService</a> documentation.
 </p>
