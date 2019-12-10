@@ -31,7 +31,11 @@ var NAVTREE =
       [ "Plugins", "index.html#cuplugins", null ],
       [ "apps", "index.html#cu_apps", null ]
     ] ],
-    [ "Cumbia", "index.html#cumbia_mainpar", null ],
+    [ "Cumbia", "index.html#cumbia_mainpar", [
+      [ "Activities", "index.html#_activities", null ],
+      [ "Services", "index.html#_services", null ],
+      [ "Data interchange", "index.html#_data_interchange", null ]
+    ] ],
     [ "Writing a simple activity", "tutorial_cuactivity.html", null ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
