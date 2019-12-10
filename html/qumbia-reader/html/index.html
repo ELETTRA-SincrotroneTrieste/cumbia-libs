@@ -44,45 +44,78 @@ $(function() {
 <div class="title">cumbia read command line client </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><dl class="section user"><dt>Introduction</dt><dd>The <em>qumbia-reader</em> (<em>cumbia read</em>) application is a command line tool to read <em>sources</em> from different engines. EPICS, Tango and <em>random</em> modules are supported.</dd></dl>
-<dl class="section user"><dt>Features</dt><dd></dd></dl>
-<dl class="section user"><dt>Source name auto completion (Tango only, for the time being)</dt><dd>Install the <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">qumbia-tango-findsrc-plugin</a> from <em>github</em> and the included <em>qumbia-tango-find-src</em> tool (instructions in the project page) to obtain the Tango source <b>bash auto completion</b>.</dd></dl>
-<dl class="section user"><dt>Formula support</dt><dd>Formulas can be used through the <a href="../../cuformula/html/index.html">formula plugin</a>. See the plugin documentation and the example section below for more details.</dd></dl>
-<dl class="section user"><dt>cumbia-random module support</dt><dd>Read the <a href="../../cumbia-random/html">cumbia random</a> documentation to correctly provide the reader sources that can be used for testing. Specific <em>cumbia-random</em> source patterns allow to group threads, specify the range of generated data, the generation interval, in milliseconds, and the size. It is also possible to specify JavaScript files as sources, wherefrom a custom function supplies data.</dd></dl>
-<dl class="section user"><dt>Library internals awareness</dt><dd>Increase the output detail level to see how threads are grouped, understand <em>how</em> they are grouped by means of the <a href="../../cumbia-random/html">cumbia random</a> test features. Set a bound on the number of threads used by <em>timers</em> for polled sources to verify the impact on performance.</dd></dl>
-<dl class="section user"><dt>Property mode: get the configuration of the sources</dt><dd>Source configuration stored somewhere by the system can be obtained (if this is applies to the engine) <b>Tango</b> <em>device, attribute and class</em> properties can be fetched from the Tango database as well (requires Tango modules).</dd></dl>
-<dl class="section user"><dt>Tune application output</dt><dd>The command line output can be tuned in terms of<ul>
+<div class="textblock"><h1><a class="anchor" id="intro"></a>
+Introduction</h1>
+<p>The <em>qumbia-reader</em> (<em>cumbia read</em>) application is a command line tool to read <em>sources</em> from different engines. EPICS, Tango and <em>random</em> modules are supported.</p>
+<h1><a class="anchor" id="_features"></a>
+Features</h1>
+<h2><a class="anchor" id="_src_autocomp"></a>
+Source name &lt;em&gt;auto completion&lt;/em&gt; (Tango only, for the time being)</h2>
+<p>Install the <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">qumbia-tango-findsrc-plugin</a> from <em>github</em> and the included <em>qumbia-tango-find-src</em> tool (instructions in the project page) to obtain the Tango source <b>bash auto completion</b>.</p>
+<h2><a class="anchor" id="_formula_support"></a>
+Formula support</h2>
+<p>Formulas can be used through the <a href="../../cuformula/html/index.html">formula plugin</a>. See the plugin documentation and the example section below for more details.</p>
+<h2><a class="anchor" id="_cumbia_random"></a>
+&lt;em&gt;cumbia-random&lt;/em&gt; module support</h2>
+<p>Read the <a href="../../cumbia-random/html">cumbia random</a> documentation to correctly provide the reader sources that can be used for testing. Specific <em>cumbia-random</em> source patterns allow to group threads, specify the range of generated data, the generation interval, in milliseconds, and the size. It is also possible to specify JavaScript files as sources, wherefrom a custom function supplies data.</p>
+<h2><a class="anchor" id="_lib_internals"></a>
+Library internals awareness</h2>
+<p>Increase the output detail level to see how threads are grouped, understand <em>how</em> they are grouped by means of the <a href="../../cumbia-random/html">cumbia random</a> test features. Set a bound on the number of threads used by <em>timers</em> for polled sources to verify the impact on performance.</p>
+<h2><a class="anchor" id="_prop_mode"></a>
+&lt;em&gt;Property mode&lt;/em&gt;: get the configuration of the sources</h2>
+<p>Source configuration stored somewhere by the system can be obtained (if this is applies to the engine) <b>Tango</b> <em>device, attribute and class</em> properties can be fetched from the Tango database as well (requires Tango modules).</p>
+<h2><a class="anchor" id="_tune_output"></a>
+Tune application output</h2>
+<p>The command line output can be tuned in terms of</p><ul>
 <li>detail level (low, medim, high and debug)</li>
 <li><em>format</em> of numbers (<em>printf style</em>)</li>
 <li>length of displayed data for arrays</li>
 </ul>
-</dd></dl>
-<dl class="section user"><dt>Usage</dt><dd></dd></dl>
+<h1><a class="anchor" id="_usage"></a>
+Usage</h1>
 <p><em>cumbia</em> installation provides two shortcuts to launch the <em>qumbia-reader</em> application:</p><ul>
 <li><em>cumbia read</em>: read once or <em>n</em> times the specified source(s)</li>
 <li><em>cumbia monitor</em>: indefinitely monitor the specified source(s) until a key is pressed The latter, executes qumbia-reader &ndash;monitor</li>
 </ul>
 <p>Started without options (equal to <em>&ndash;help</em>), the tool prints a summary of its functions</p>
 <p>The list of sources ensue. The implementation supports Tango, EPICS and <em>cumbia-random</em> sources. For the latter, the random:// prefix is required. It is recommended to read the <a href="../../cumbia-random/html">the cumbia random module</a> documentation to learn about the required syntax for the sources.</p>
-<dl class="section user"><dt>Read</dt><dd>Simply call <em>cumbia read</em> followed by the list of sources. Sources from different engines can be mixed. By default, one reading is performed, unless &ndash;x is specified:</dd></dl>
+<h2><a class="anchor" id="_read"></a>
+Read</h2>
+<p>Simply call <em>cumbia read</em> followed by the list of sources. Sources from different engines can be mixed. By default, one reading is performed, unless &ndash;x is specified:</p>
 <div class="fragment"><div class="line">cumbia read test/device/1/double_scalar giacomo:ai1 random:<span class="comment">//rnd/1/0/10 </span></div></div><!-- fragment --><p>Output: </p><div class="fragment"><div class="line">cumbia read inj/diagnostics/rtbpm_inj.01<span class="comment">//GetHorPos[0,1000] --truncate=8 --3 --format=&quot;%.4f&quot; </span></div></div><!-- fragment --><p>Output of last command: </p><div class="fragment"><div class="line">inj/diagnostics/rtbpm_inj.01-&gt;GetHorPos(0,1000): [12:12:23+0.716406] [double,1000] { -0.0228,-0.0091,-0.0158,-0.0180,-0.0232,-0.0160,-0.0124, ..., -0.0178 }</div><div class="line">inj/diagnostics/rtbpm_inj.01-&gt;GetHorPos(0,1000): [12:12:24+0.883161] [double,1000] { -0.0190,-0.0145,-0.0172,-0.0174,-0.0173,-0.0198,-0.0131, ..., -0.0157 }</div><div class="line">inj/diagnostics/rtbpm_inj.01-&gt;GetHorPos(0,1000): [12:12:25+0.885003] [double,1000] { -0.0132,-0.0187,-0.0174,-0.0091,-0.0112,-0.0142,-0.0135, ..., -0.0129 }</div></div><!-- fragment --><dl class="section note"><dt>Note</dt><dd>In order to be auto completed and easily understood by the console without escape characters, <b>Tango commands</b> can be written in the form:</dd></dl>
 <div class="fragment"><div class="line">tango/device/name<span class="comment">//command_name[arg1,arg2] </span></div></div><!-- fragment --><p>instead of the classical syntax</p><div class="fragment"><div class="line">tango/device/name-&gt;command_name(arg1,arg2) </div></div><!-- fragment --><p> that would require inverted commas:</p>
 <div class="fragment"><div class="line">cumbia read <span class="stringliteral">&quot;inj/diagnostics/rtbpm_inj.01-&gt;GetHorPos(0,1000)&quot;</span> </div></div><!-- fragment --><p>Both forms are accepted, but auto completion adopts the first syntax.</p>
-<dl class="section user"><dt>Monitor</dt><dd>Simply replace <em>cumbia read</em> with <em>cumbia monitor</em> to start monitoring one or more sources. Interrupt the process pressing any key.</dd></dl>
-<dl class="section user"><dt>Read (or monitor) and show more details</dt><dd>Output levels can be tuned with the &ndash;l=normal, &ndash;l=medium and &ndash;l=high The number of details increases, up to the &ndash;l=debug, that prints the whole data structure passed from the lower layer to the application (the CuData bundle contents)</dd></dl>
-<dl class="section user"><dt>Read sources configuration only</dt><dd></dd></dl>
+<h2><a class="anchor" id="_monitor"></a>
+Monitor</h2>
+<p>Simply replace <em>cumbia read</em> with <em>cumbia monitor</em> to start monitoring one or more sources. Interrupt the process pressing any key.</p>
+<h2><a class="anchor" id="_read_detailed"></a>
+Read (or monitor) and show more details</h2>
+<p>Output levels can be tuned with the &ndash;l=normal, &ndash;l=medium and &ndash;l=high The number of details increases, up to the &ndash;l=debug, that prints the whole data structure passed from the lower layer to the application (the CuData bundle contents)</p>
+<h2><a class="anchor" id="_read_config"></a>
+Read sources configuration only</h2>
 <p>With the &ndash;property option it is possible to read the configuration of the sources: upper, lower bounds, alarm and warning thresholds, data format, measurement units, and so on:</p>
-<div class="fragment"><div class="line">cumbia read test/device/1/double_scalar giacomo:ai1 --<span class="keyword">property</span></div></div><!-- fragment --><dl class="section user"><dt>Read Tango properties</dt><dd></dd></dl>
-<p><b>Device properties</b></p>
-<div class="fragment"><div class="line">cumbia read --tp test/device/1:Description test/device/2:Description </div></div><!-- fragment --><p><b>List all device properties</b></p>
-<p>The following command lists all <em>properties</em> of the given devices </p><div class="fragment"><div class="line">cumbia read --tp  test/device/1  test/device/2 </div></div><!-- fragment --><p> Example output: </p><div class="fragment"><div class="line">- test/device/1</div><div class="line">    --&gt; description,helperApplication,helperApplication2Prop,helperApplication_old,polled_attr,poll_ring_depth,values,windowTitle</div><div class="line">- test/device/2</div><div class="line">     --&gt; description,polled_attr,poll_ring_depth</div></div><!-- fragment --><p><b>Filtered list of <em>device properties</em></b> If the device name is followed by a semicolon and a wildcard (*) is present, then the filtered list of <em>device properties</em> matching the wildcard expression is returned: </p><div class="fragment"><div class="line">cumbia read --tp  test/device/1:helper* </div></div><!-- fragment --><p> The output will be: </p><div class="fragment"><div class="line">- test/device/1</div><div class="line">  helper*                   --&gt; helperApplication,helperApplication2Prop,helperApplication_old</div></div><!-- fragment --><p><b>List of attribute properties</b> List the attribute properties of <em>test/device/1/double_scalar</em> </p><div class="fragment"><div class="line">cumbia read --tp  test/device/1/double_scalar </div></div><!-- fragment --><p><b>Attribute property</b> Read the <em>values</em> property of the <em>string_scalar</em> attribute</p>
-<div class="fragment"><div class="line">cumbia read --tp test/device/1/string_scalar/values </div></div><!-- fragment --><p><b>Class property</b> Read the <em>description</em> property of the class <em>TangoTest</em> </p><div class="fragment"><div class="line">cumbia read --tp TangoTest/cvs_location </div></div><!-- fragment --><p><b>List of properties of a given Tango <em>class</em></b> The following command fetches the list of properties of the <em>TangoTest</em> class:</p>
+<div class="fragment"><div class="line">cumbia read test/device/1/double_scalar giacomo:ai1 --<span class="keyword">property</span></div></div><!-- fragment --><h2><a class="anchor" id="_tg_props"></a>
+Read &lt;b&gt;Tango&lt;/b&gt; properties</h2>
+<h3><a class="anchor" id="_tg_dev_prop"></a>
+Device properties</h3>
+<div class="fragment"><div class="line">cumbia read --tp test/device/1:Description test/device/2:Description </div></div><!-- fragment --><h3><a class="anchor" id="_tg_all_props"></a>
+List all device properties</h3>
+<p>The following command lists all <em>properties</em> of the given devices </p><div class="fragment"><div class="line">cumbia read --tp  test/device/1  test/device/2 </div></div><!-- fragment --><p> Example output: </p><div class="fragment"><div class="line">- test/device/1</div><div class="line">    --&gt; description,helperApplication,helperApplication2Prop,helperApplication_old,polled_attr,poll_ring_depth,values,windowTitle</div><div class="line">- test/device/2</div><div class="line">     --&gt; description,polled_attr,poll_ring_depth</div></div><!-- fragment --><h3><a class="anchor" id="_tg_filtered_props"></a>
+Filtered list of &lt;em&gt;device properties&lt;/em&gt;</h3>
+<p>If the device name is followed by a semicolon and a wildcard (*) is present, then the filtered list of <em>device properties</em> matching the wildcard expression is returned: </p><div class="fragment"><div class="line">cumbia read --tp  test/device/1:helper* </div></div><!-- fragment --><p> The output will be: </p><div class="fragment"><div class="line">- test/device/1</div><div class="line">  helper*                   --&gt; helperApplication,helperApplication2Prop,helperApplication_old</div></div><!-- fragment --><h3><a class="anchor" id="_tg_prop_list"></a>
+List of attribute properties</h3>
+<p>List the attribute properties of <em>test/device/1/double_scalar</em> </p><div class="fragment"><div class="line">cumbia read --tp  test/device/1/double_scalar </div></div><!-- fragment --><h3><a class="anchor" id="_tg_att_props"></a>
+Attribute property</h3>
+<p>Read the <em>values</em> property of the <em>string_scalar</em> attribute</p>
+<div class="fragment"><div class="line">cumbia read --tp test/device/1/string_scalar/values </div></div><!-- fragment --><h3><a class="anchor" id="_tg_cl_prop"></a>
+Class property</h3>
+<p>Read the <em>description</em> property of the class <em>TangoTest</em> </p><div class="fragment"><div class="line">cumbia read --tp TangoTest/cvs_location </div></div><!-- fragment --><p><b>List of properties of a given Tango <em>class</em></b> The following command fetches the list of properties of the <em>TangoTest</em> class:</p>
 <div class="fragment"><div class="line">qumbia-reader --tp  TdbArchiver: HdbArchiver: </div></div><!-- fragment --><p>Output </p><div class="fragment"><div class="line"> - HdbArchiver</div><div class="line">       --&gt; DbHost,DbName,DbSchema,Description,eventsDBUpdatePolicy,Facility,ProjectTitle,UseEvents</div><div class="line">-------------------------------------------------</div><div class="line"> - TdbArchiver</div><div class="line">       --&gt; DbHost,DbName,DbSchema,Description,Facility,ProjectTitle</div></div><!-- fragment --><dl class="section user"><dt>Note</dt><dd>Class name must be terminated by a semicolon. </dd></dl>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Dec 10 2019 16:38:18 for qumbia-reader by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Dec 10 2019 16:45:44 for qumbia-reader by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
