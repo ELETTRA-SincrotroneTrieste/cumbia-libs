@@ -12,28 +12,34 @@
 <h2>version 1.1.0</h2>
 
 
-<h2>Apps</h2>
+<h2>App: cumbia read</h2>
 <p>
 <a href="html/qumbia-reader/html/index.html">cumbia read</a> has been expanded in order to support the cumbia-random module and a
 great number of command line options.
 Coupled with the qumbia-tango-findsrc-plugin and the qumbia-tango-find-src app, that can be installed from
 <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin.git">github</a>.
-it provides <cite>Tango sources auto completion</cite> on the command line.
+it provides <td>Tango sources auto completion</cite> on the command line.
 </p>
-<h3>Try it out immediately!</h3>
+<h3>Try it out!</h3>
 
-<h4>read sources from heterogeneous engines</h4>
-<cite>cumbia read test/device/1/double_scalar epics:ai1 random://rnd/1/0/10  </cite>
-<h4>read sources configuration only from heterogeneous engines</h4>
-<cite>cumbia read test/device/1/double_scalar epics:ai1 --property</cite>
-<h4>Impart a Tango command to read an array three times, truncate the output to 8 elements, print with a custom format</h4>
-<cite>cumbia read inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8 --3 --format="%.4f"</cite>
-<h4>Monitor a Tango command</h4>
-<cite>cumbia monitor inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8</cite>
-<h4>Filtered list of Tango device properties</h4>
-<cite>cumbia read --tp  test/device/1:helper* </cite>
-<h4>Read a Tango attribute property</h4>
-<cite>cumbia read --tp test/device/1/string_scalar/values </cite>
+<p>
+<td>Hint</cite>: hit the <em>TAB</em> key to auto complete Tango source names.
+</p>
+
+<table>
+
+<tr><td>read sources from heterogeneous engines</td>
+<td>cumbia read test/device/1/double_scalar epics:ai1 random://rnd/1/0/10  </td> </tr>
+<tr>read sources configuration only, from heterogeneous engines</td>
+<td>cumbia read test/device/1/double_scalar epics:ai1 --property </tr>
+<tr>Impart a Tango command to read an array three times, truncate the output to 8 elements, print with a custom format</td>
+<td>cumbia read inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8 --3 --format="%.4f" </tr>
+<tr>Monitor a Tango command</td>
+<td>cumbia monitor inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8 </tr>
+<tr>Filtered list of Tango device properties</td>
+<td>cumbia read --tp  test/device/1:helper*  </tr>
+<tr>Read a Tango attribute property</td>
+<td>cumbia read --tp test/device/1/string_scalar/values  </tr>
 
 <p>
 More examples <a href="html/qumbia-reader/html/index.html">here</a>.
