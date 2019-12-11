@@ -9,10 +9,10 @@
 <body>
 <h1>News</h1>
 
-<h3>version 1.1.0</h3>
+<h2>version 1.1.0</h2>
 
 
-<h3>Apps</h3>
+<h2>Apps</h2>
 <p>
 <a href="html/qumbia-reader/html/index.html">cumbia read</a> has been expanded in order to support the cumbia-random module and a
 great number of command line options.
@@ -20,7 +20,7 @@ Coupled with the qumbia-tango-findsrc-plugin and the qumbia-tango-find-src app, 
 <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin.git">github</a>.
 it provides <cite>Tango sources auto completion</cite> on the command line.
 </p>
-<h4>Try it out immediately!</h4>
+<h3>Try it out immediately!</h3>
 
 <h5>read sources from heterogeneous engines</h5>
 <cite>cumbia read test/device/1/double_scalar epics:ai1 random://rnd/1/0/10  </cite>
@@ -49,14 +49,14 @@ See the documentation for a more detailed description.
 </ul>
 </p>
 
-<h3>Library</h3>
+<h2>Library</h2>
 
-<h4>New prerequisites</h4>
+<h3>New prerequisites</h3>
 <p>
     The read/write locks adopted to provide greater speed require a compiler supporting the <em>C++ 17</em> standard.
 </p>
 
-<h4> cumbia </h4>
+<h3> cumbia </h3>
 <p>
 Version 1.1.0 allows the application developer to customize how threads are grouped together, as well
 as to define an upper limit on their number. The *cumbia-tango* engine groups threads by Tango device.
@@ -68,7 +68,7 @@ Additionally, timers in polled reads can be reused in order to limit timer threa
 See the <a href="html/cumbia/html/classCuTimerService.html">CuTimerService</a> documentation.
 </p>
 
-<h4>cumbia-tango</h4>
+<h3>cumbia-tango</h3>
 <h5>Database search
 <p>
 CuTdbPropertyReader
@@ -78,7 +78,7 @@ CuTdbPropertyReader
 </ul>
 </p>
 
-<h4>cumbia-random</h4>
+<h3>cumbia-random</h3>
 <p>
 <a href="html/cumbia-random/html/index.html">cumbia-random</a>
 has been expanded in order to offer great flexibility to test higher level cumbia modules
@@ -90,20 +90,20 @@ functions in .js files can be set as source of data for the cumbia-random module
 <li>The source can specify a JavaScript file to generate data from a custom function</li>
 </ul>
 
-<h4>cumbia-qtcontrols</h4>
+<h3>cumbia-qtcontrols</h3>
 <p>
 CuPluginLoader provides a template method to quickly obtain an instance of the desired plugin. See
 <a href="html/cumbia-qtcontrols/html/classCuPluginLoader.html">CuPluginLoader</a>::get.
 </p>
 
 
-<h3>Plugins</h3>
-<h4>qumbia-tango-findsrc-plugin</h4>
+<h2>Plugins</h2>
+<h3>qumbia-tango-findsrc-plugin</h3>
 <p>
  An external new plugin named qumbia-tango-findsrc-plugin and the qumbia-tango-find-src app are available from
    <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin.git">github.com</a>
    The utility finds the name of a Tango source (attribute or command) from a partial name.
-   <em>The plugin can be loaded from any application featuring <strong>auto completion of Tango sources</strong></em>.
+   <em>The plugin can be loaded from any application willing to provide <strong>Tango sources auto completion</strong></em>.
 </p>
 
 
