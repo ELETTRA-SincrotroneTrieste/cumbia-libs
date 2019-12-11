@@ -95,6 +95,9 @@ $(document).ready(function(){initNavTree('classCuThreadTokenGenI.html','');});
 </div><!--header-->
 <div class="contents">
 
+<p>The <a class="el" href="classCuThreadTokenGenI.html" title="The CuThreadTokenGenI is an interface for custom thread token generators.">CuThreadTokenGenI</a> is an interface for custom thread token generators.  
+ <a href="classCuThreadTokenGenI.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="cuthreadtokengeni_8h_source.html">cuthreadtokengeni.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -104,7 +107,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7eb1b515800de10f7da90562161c2970"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classCuData.html">CuData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuThreadTokenGenI.html#a7eb1b515800de10f7da90562161c2970">generate</a> (const <a class="el" href="classCuData.html">CuData</a> &amp;in)=0</td></tr>
 <tr class="separator:a7eb1b515800de10f7da90562161c2970"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>The <a class="el" href="classCuThreadTokenGenI.html" title="The CuThreadTokenGenI is an interface for custom thread token generators.">CuThreadTokenGenI</a> is an interface for custom thread token generators. </p>
+<p>Subclasses must implement the <em>generate</em> method that returns a <em>token</em> in the form of <a class="el" href="classCuData.html" title="container for data exchange for the cumbia library and its clients">CuData</a> using the information available in the input parameter of type <a class="el" href="classCuData.html" title="container for data exchange for the cumbia library and its clients">CuData</a>.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classCumbia.html#ad1294d5af961ea0899aabf299e7f2c56" title="Cumbia::setThreadTokenGenerator install athread token generator that deals with grouping activities i...">Cumbia::setThreadTokenGenerator</a> </dd>
+<dd>
+<a class="el" href="classCumbia.html#a7771a2ce3b7ee3366d96ca7bf6f2ed39" title="Cumbia::threadToken returns a thread token that can be used to group threads together.">Cumbia::threadToken</a> </dd></dl>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a5e445ffc83d4c31e48475521e96e8345"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5e445ffc83d4c31e48475521e96e8345">&#9670;&nbsp;</a></span>~CuThreadTokenGenI()</h2>
 
@@ -166,7 +175,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuThreadTokenGenI.html">CuThreadTokenGenI</a></li>
-    <li class="footer">Generated on Wed Dec 11 2019 10:41:28 for cumbia by
+    <li class="footer">Generated on Wed Dec 11 2019 11:33:08 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.15 </li>
   </ul>
