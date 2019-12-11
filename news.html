@@ -11,6 +11,34 @@
 
 <h3>version 1.1.0</h3>
 
+
+<h3>Apps</h3>
+<p>
+<a href="html/qumbia-reader/html/index.html">cumbia read</a> has been expanded in order to support the cumbia-random module and a
+great number of command line options.
+Coupled with the qumbia-tango-findsrc-plugin and the qumbia-tango-find-src app, that can be installed from
+<a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin.git">github</a>.
+it provides <cite>Tango sources auto completion</cite> on the command line.
+</p>
+<h4>Try it out immediately!</h4>
+
+<h5>read sources from heterogeneous engines</h5>
+<cite>cumbia read test/device/1/double_scalar epics:ai1 random://rnd/1/0/10  </cite>
+<h5>Impart a Tango command to read an array three times, truncate the output to 8 elements, print with a custom format</h5>
+<cite>cumbia read inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8 --3 --format="%.4f"</cite>
+<h5>Monitor a Tango command</h5>
+<cite>cumbia monitor inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8</cite>
+
+<p>
+Additional features:
+<ul>
+<li>customizable output detail level</li>
+<li>support for Tango database properties (device, attribute, class)</li>
+<li>either monitor or single shot mode</li>
+See the documentation for a more detailed description.
+</ul>
+</p>
+
 <h3>Library</h3>
 
 <h4>New prerequisites</h4>
@@ -58,23 +86,6 @@ CuPluginLoader provides a template method to quickly obtain an instance of the d
 <a href="html/cumbia-qtcontrols/html/classCuPluginLoader.html">CuPluginLoader</a>::get.
 </p>
 
-<h3>Apps</h3>
-<p>
-<a href="html/qumbia-reader/html/index.html">cumbia read</a> has been expanded in order to support the cumbia-random module and a
-great number of command line options.
-Coupled with the qumbia-tango-findsrc-plugin and the qumbia-tango-find-src app, that can be installed from
-<a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin.git">github</a>.
-it provides <cite>Tango sources auto completion</cite> on the command line.
-</p>
-<p>
-Additional features:
-<ul>
-<li>customizable output detail level</li>
-<li>support for Tango database properties (device, attribute, class)</li>
-<li>either monitor or single shot mode</li>
-See the documentation for a more detailed description.
-</ul>
-</p>
 
 <h3>Plugins</h3>
 <h4>qumbia-tango-findsrc-plugin</h4>
