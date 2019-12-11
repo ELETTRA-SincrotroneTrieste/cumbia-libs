@@ -24,10 +24,20 @@ it provides <cite>Tango sources auto completion</cite> on the command line.
 
 <h5>read sources from heterogeneous engines</h5>
 <cite>cumbia read test/device/1/double_scalar epics:ai1 random://rnd/1/0/10  </cite>
+<h5>read sources configuration only from heterogeneous engines</h5>
+<cite>cumbia read test/device/1/double_scalar epics:ai1 --property</cite>
 <h5>Impart a Tango command to read an array three times, truncate the output to 8 elements, print with a custom format</h5>
 <cite>cumbia read inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8 --3 --format="%.4f"</cite>
 <h5>Monitor a Tango command</h5>
 <cite>cumbia monitor inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8</cite>
+<h5>Filtered list of Tango device properties</h5>
+<cite>cumbia read --tp  test/device/1:helper* </cite>
+<h5>Read a Tango attribute property</h5>
+<cite>cumbia read --tp test/device/1/string_scalar/values </cite>
+
+<p>
+More examples <a href="html/qumbia-reader/html/index.html">here</a>.
+</p>
 
 <p>
 Additional features:
