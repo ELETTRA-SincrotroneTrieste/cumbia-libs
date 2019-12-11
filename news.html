@@ -22,17 +22,17 @@ it provides <cite>Tango sources auto completion</cite> on the command line.
 </p>
 <h3>Try it out immediately!</h3>
 
-<h5>read sources from heterogeneous engines</h5>
+<h4>read sources from heterogeneous engines</h4>
 <cite>cumbia read test/device/1/double_scalar epics:ai1 random://rnd/1/0/10  </cite>
-<h5>read sources configuration only from heterogeneous engines</h5>
+<h4>read sources configuration only from heterogeneous engines</h4>
 <cite>cumbia read test/device/1/double_scalar epics:ai1 --property</cite>
-<h5>Impart a Tango command to read an array three times, truncate the output to 8 elements, print with a custom format</h5>
+<h4>Impart a Tango command to read an array three times, truncate the output to 8 elements, print with a custom format</h4>
 <cite>cumbia read inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8 --3 --format="%.4f"</cite>
-<h5>Monitor a Tango command</h5>
+<h4>Monitor a Tango command</h4>
 <cite>cumbia monitor inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8</cite>
-<h5>Filtered list of Tango device properties</h5>
+<h4>Filtered list of Tango device properties</h4>
 <cite>cumbia read --tp  test/device/1:helper* </cite>
-<h5>Read a Tango attribute property</h5>
+<h4>Read a Tango attribute property</h4>
 <cite>cumbia read --tp test/device/1/string_scalar/values </cite>
 
 <p>
@@ -69,7 +69,7 @@ See the <a href="html/cumbia/html/classCuTimerService.html">CuTimerService</a> d
 </p>
 
 <h3>cumbia-tango</h3>
-<h5>Database search
+<h4>Database search
 <p>
 CuTdbPropertyReader
 <ul>
