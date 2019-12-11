@@ -28,6 +28,11 @@ A Qt graphical client and a command line application are ready to communicate wi
 the *cumbia-random* module. An external <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">plugin</a>
 makes Tango source <b>bash auto completion</b> possible!
 
+### Getting started
+- Download and install *cumbia*, following to the instructions in the <a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs">cumbia-libs</a> *README.md*
+file.
+- <a href="html/qumbiaprojectwizard/html/tutorial_qumbiatango.html">Write your first <em>Qt application</em> with cumbia and Tango</a>
+
 ### Keywords and technologies
 - C++-11
 - <a href="https://www.qt.io/">Qt</a>
@@ -88,21 +93,15 @@ The library sources include copies of the *README.md* and *README.UBUNTU.md* fil
 
 ### Modules
 
- |*cumbia* modules  |
+ |*cumbia* modules  |                         |
  |-------------------------------------------------------------------|
- | <a href="html/cumbia/html/index.html">cumbia base</a>. |
- | <a href="html/cumbia-tango/html/index.html">cumbia-tango</a>. |
- | <a href="html/cumbia-qtcontrols/html/index.html">cumbia-qtcontrols</a>.  |
- | <a href="html/qumbia-tango-controls/html/index.html">cumbia-tango-controls</a>.  |
- | <a href="html/cumbia-epics/html/index.html">qumbia-epics</a>.   |
- | <a href="html/qumbia-epics-controls/html/index.html">qumbia-epics-controls</a>.  |
- | <a href="html/cumbia-random/html/index.html">cumbia-random</a>.  |
- | <a href="html/cumbia-websocket/html/index.html">cumbia-websocket</a>.  |
- | <a href="html/cumbia-qtcontrols/html/qumbia_plugins.html">qumbia-plugins module</a>.  |
+ | <a href="html/cumbia/html/index.html">cumbia base</a>.  | <a href="html/qumbia-epics-controls/html/index.html">qumbia-epics-controls</a>.  |
+ | <a href="html/cumbia-tango/html/index.html">cumbia-tango</a>.  | <a href="html/cumbia-random/html/index.html">cumbia-random</a>.  |
+ | <a href="html/cumbia-qtcontrols/html/index.html">cumbia-qtcontrols</a>.   | <a href="html/cumbia-websocket/html/index.html">cumbia-websocket</a>.  |
+ | <a href="html/qumbia-tango-controls/html/index.html">cumbia-tango-controls</a>. | <a href="html/cumbia-qtcontrols/html/qumbia_plugins.html">qumbia-plugins module</a>.  |
+ | <a href="html/cumbia-epics/html/index.html">qumbia-epics</a>.   |  \
 
 
-
- 
 ### Plugins shipped with the base installation
  
  |*cumbia* plugins  | Description |

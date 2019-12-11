@@ -233,9 +233,9 @@ $(function() {
 <p><a class="anchor" id="thread_grouping"></a> </p><h3>My application connects to several different Tango devices: I want to customize thread grouping to reduce their number. How to do it?</h3>
 <h2>A.</h2>
 <p>You can directly employ the <a href="../../cumbia-tango/html/classCuTThreadTokenGen.html">CuTThreadTokenGen</a> class and register it with cumbia through the <a href="../html/cumbia/html/classCumbia.html#ad1294d5af961ea0899aabf299e7f2c56">Cumbia::setThreadTokenGenerator</a> The CuTThreadTokenGen, given a limit on the number of desired threads, automatically reuses threads so that their number respects the limit. Sources referring to the same device are guaranteed to belong to the same thread. Since threads in cumbia are grouped by <em>token</em> (a string), it is also possible to provide a specific <em>thread_token</em> configuration data when a new source is set up. Refer to Cumbia::threadToken for more details.</p>
+<p>### Example </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cutthreadtokengen.h&gt;</span></div><div class="line"><span class="preprocessor">#include &lt;cumbia.h&gt;</span></div><div class="line"></div><div class="line"><span class="comment">// 10: the thread count limit</span></div><div class="line"><span class="comment">// &quot;my_thread_tok_&quot; the string prepended to the automatically generated token</span></div><div class="line">CuTThreadTokenGen *tango_tk_gen = <span class="keyword">new</span> CuTThreadTokenGen(10, <span class="stringliteral">&quot;my_thread_tok_&quot;</span>);</div><div class="line"><span class="comment">// cumbia_t_ptr is a pointer to Cumbia (for a Tango application, CumbiaTango)</span></div><div class="line">cumbia_t_ptr-&gt;setThreadTokenGenerator(tango_tk_gen);</div></div><!-- fragment --><p>The ownership of the <em>token generator</em> is handed to Cumbia. There will be no need to manually delete it afterwords. A token generator can be removed or replaced. See Cumbia documentation for more details</p>
 <h4>Note</h4>
 <p>This feature is supported since cumbia 1.1.0</p>
-<p>### Example </p><div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cutthreadtokengen.h&gt;</span></div><div class="line"><span class="preprocessor">#include &lt;cumbia.h&gt;</span></div><div class="line"></div><div class="line"><span class="comment">// 10: the thread count limit</span></div><div class="line"><span class="comment">// &quot;my_thread_tok_&quot; the string prepended to the automatically generated token</span></div><div class="line">CuTThreadTokenGen *tango_tk_gen = <span class="keyword">new</span> CuTThreadTokenGen(10, <span class="stringliteral">&quot;my_thread_tok_&quot;</span>);</div><div class="line"><span class="comment">// cumbia_t_ptr is a pointer to Cumbia (for a Tango application, CumbiaTango)</span></div><div class="line">cumbia_t_ptr-&gt;setThreadTokenGenerator(tango_tk_gen);</div></div><!-- fragment --><p>The ownership of the <em>token generator</em> is handed to Cumbia. There will be no need to manually delete it afterwords. A token generator can be removed or replaced. See Cumbia documentation for more details</p>
 <h2>Q.</h2>
 <p><a class="anchor" id="timer_limit"></a> </p><h3>How to limit the number of timers for polled sources?</h3>
 <h2>A.</h2>
@@ -246,7 +246,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Dec 11 2019 14:51:30 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Dec 11 2019 15:11:16 for qumbia-tango-controls by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.15
 </small></address>
