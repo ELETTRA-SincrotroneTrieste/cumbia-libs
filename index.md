@@ -99,7 +99,7 @@ The library sources include copies of the *README.md* and *README.UBUNTU.md* fil
  | <a href="html/cumbia-tango/html/index.html">cumbia-tango</a>.  | <a href="html/cumbia-random/html/index.html">cumbia-random</a>.  |
  | <a href="html/cumbia-qtcontrols/html/index.html">cumbia-qtcontrols</a>.   | <a href="html/cumbia-websocket/html/index.html">cumbia-websocket</a>.  |
  | <a href="html/qumbia-tango-controls/html/index.html">cumbia-tango-controls</a>. | <a href="html/cumbia-qtcontrols/html/qumbia_plugins.html">qumbia-plugins module</a>.  |
- | <a href="html/cumbia-epics/html/index.html">qumbia-epics</a>.   |  \
+ | <a href="html/cumbia-epics/html/index.html">qumbia-epics</a>.   |  |
 
 
 ### Plugins shipped with the base installation
