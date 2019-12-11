@@ -27,18 +27,19 @@ it provides <cite>Tango sources auto completion</cite> on the command line.
 </p>
 
 <table>
+<tr><th>description</th><th>command</th></tr>
 <tr><td>read sources from heterogeneous engines</td>
 <td>cumbia read test/device/1/double_scalar epics:ai1 random://rnd/1/0/10  </td> </tr>
-<tr>read sources configuration only, from heterogeneous engines</td>
-<td>cumbia read test/device/1/double_scalar epics:ai1 --property </tr> </tr>
-<tr>Impart a Tango command to read an array three times, truncate the output to 8 elements, print with a custom format</td>
+<tr><td>read sources configuration only, from heterogeneous engines</td>
+<td>cumbia read test/device/1/double_scalar epics:ai1 --property </tr>
+<tr><td>Impart a Tango command to read an array three times, truncate the output to 8 elements, print with a custom format</td>
 <td>cumbia read inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8 --3 --format="%.4f" </tr>
-<tr>Monitor a Tango command</td>
-<td>cumbia monitor inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8 </tr>
-<tr>Filtered list of Tango device properties</td>
-<td>cumbia read --tp  test/device/1:helper*  </tr>
-<tr>Read a Tango attribute property</td>
-<td>cumbia read --tp test/device/1/string_scalar/values  </tr>
+<tr><td>Monitor a Tango command</td>
+<td>cumbia monitor inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8</td> </tr>
+<tr><td>Filtered list of Tango device properties</td>
+<td>cumbia read --tp  test/device/1:helper*  </td></tr>
+<tr><td>Read a Tango attribute property</td>
+<td>cumbia read --tp test/device/1/string_scalar/values  </td></tr>
 </table>
 
 <p>
