@@ -145,8 +145,8 @@ To do this, *cd* into that folder and execute:
  
 Along with the application executables and documentation, two bash scripts will be installed:
  
-- /usr/local/bin/cumbia  (or whatever/install/prefix/bin/cumbia)
-- /usr/share/bash-completion/completions/cumbia  (or wherever points the output of `pkg-config --variable=completionsdir bash-completion` )
+- /usr/local/cumbia-libs/bin/cumbia  (or whatever/install/prefix/bin/cumbia)
+- source /usr/local/cumbia-libs/share/bash-completion.d/cumbia (output of `pkg-config --variable=completionsdir bash-completion` can also be used, edit qumbia-apps/cumbia/cumbia.pro and look for BASH_COMPLETION_DIR)
 
 They define shortcuts for the common operations provided by the *cumbia applications* as follows:
  
@@ -175,7 +175,7 @@ or
 
 After the installation, it may be necessary to type
 
-> source /etc/profile
+> source /usr/local/cumbia-libs/share/bash-completion.d/cumbia
 
 from the current shell or log out and log in again.
 
