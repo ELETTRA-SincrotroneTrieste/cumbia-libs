@@ -32,6 +32,7 @@ makes Tango source <b>bash auto completion</b> possible!
 - Download and install *cumbia*, following to the instructions in the <a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs">cumbia-libs</a> *README.md*
 file.
 - <a href="html/qumbiaprojectwizard/html/tutorial_qumbiatango.html">Write your first <em>Qt application</em> with cumbia and Tango</a>
+- Find answers to common questions in the <a href="html/qumbia-tango-controls/html/tutorial_faq.html">FAQ section</a> (Tango)
 
 ### Keywords and technologies
 - C++-11
@@ -88,7 +89,7 @@ The library sources include copies of the *README.md* and *README.UBUNTU.md* fil
  |  <a href="html/qumbianewcontrolwizard/html/tutorial_qumbianewcontrolwizard.html"><em>cumbia new control</em></a>: quickly add a custom Qt widget to a cumbia project | <a href="html/qumbianewcontrolwizard/html/index.html">qumbia-apps/qumbianewcontrolwizard</a>  |
  |  <a href="html/cumbia-qtcontrols/html/understanding_cumbia_qtcontrols_constructors.html">Understanding <em>cumbia-qtcontrols constructors, sources and targets</em></a> |<a href="html/cumbia-qtcontrols/html/index.html">cumbia-qtcontrols</a>. |
  |  <a href="html/qumbia-tango-controls/html/tutorial_faq.html">Frequently Asked Questions (Tango)</a> | <a href="html/qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
-|  <a href="html/cumbia-qtcontrols/html/tutorial_extending_widgets.html">Extending the widget library</a> |<a href="html/cumbia-qtcontrols/html/index.html">cumbia-qtcontrols</a>. |
+ |  <a href="html/cumbia-qtcontrols/html/tutorial_extending_widgets.html">Extending the widget library</a> |<a href="html/cumbia-qtcontrols/html/index.html">cumbia-qtcontrols</a>. |
 
 
 ### Modules
