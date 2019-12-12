@@ -57,6 +57,9 @@ echo "PKG_CONFIG_PATH is $PKG_CONFIG_PATH"
 
 if [[ $@ == **help** ]]
 then
+        echo -e "\n\e[1;32mENVIRONMENT\e[0m\n"
+        echo -e " export install_prefix=/usr/local/cumbia-libs - specify a custom install_prefix"
+        echo -e " (install_prefix is defined in $DIR/config.sh and can be edited there)"
 	echo -e "\n\e[1;32mOPTIONS\e[0m\n"
 	echo -e " [no arguments] - build cumbia, cumbia-qtcontrols, qumbia-apps, qumbia-plugins."
 	echo -e "                  No engine specific projects will be built (cumbia-tango, cumbia-epics, qumbia-tango-controls)" 
@@ -77,8 +80,8 @@ then
         echo -e "             the copy of the sources managed with srcupdates is not intended to be modified and committed to git."
         echo -e "             This option is normally used by the \e[0;4mcumbia upgrade\e[0m command."
 	echo ""
-	echo -e "\e[1;32mEXAMPLES\e[0m\n1. $0 pull clean install tango - git pull sources, execute make clean, build and install cumbia, cumbia-qtcontrols, apps, plugins and the tango modules"
-	echo -e "2. $0 docs push-documentation tango epics - regenerate the projects' documentation and update it on the \"github.io\" pages (including tango and epics modules)"
+        echo -e "\e[1;32mEXAMPLES\e[0m\n1. $0 pull clean install tango epics random - git pull sources, execute make clean, build and install cumbia, cumbia-qtcontrols, apps, plugins, the tango, EPICS and random modules"
+        echo -e "2. $0 install - install the library built with command 1."
 	echo -e "3. $0 tango - build cumbia, cumbia-tango, cumbia-qtcontrols, qumbia-tango-controls, qumbia-apps and qumbia-plugins"
 	echo ""
 
@@ -764,10 +767,13 @@ cp -a scripts/cusetenv.sh scripts/config.sh $tmp_installdir/bin
 # fix meson.build prefix
 echo -e -n "\n... \e[0;32mrestoring\e[0m meson projects -Dprefix=$install_prefix -Dlibdir=$lib_dir -Dbuildtype=$build_type\e[0m in all Qt projects..."
 find . -type d -name "builddir" -exec meson configure -Dprefix=$install_prefix -Dlibdir=$lib_dir -Dbuildtype=$build_type  {} \;
+echo -e "\t[\e[1;32mdone\e[0m\n"
 
 # fix all qmake INSTALL_ROOT that in the build phase used to point to tmp_installdir
 echo -e -n "\n... \e[0;32mrestoring\e[0m qmake INSTALL_ROOT=$install_prefix\e[0m in all Qt projects..."
 find . -name "*.pro" -execdir qmake INSTALL_ROOT=$install_prefix  \; &>/dev/null
+echo -e "\t[\e[1;32mdone\e[0m\n\n"
+
 
 # INSTALL  SECTION
 #
