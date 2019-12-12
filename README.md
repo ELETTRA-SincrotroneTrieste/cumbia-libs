@@ -97,7 +97,7 @@ Once all dependencies are installed on your system, check the file *scripts/conf
 
 The installation prefix can also be set through an environment variable
 
-> install_prefix=/usr/local/cumbia-libs ./scripts/cubuild.sh
+> export install_prefix=/usr/local/cumbia-libs
 
 EPICS modules require two environment variables:
 
@@ -110,13 +110,15 @@ The *cumbia-random* doesn't need any special prerequisite.
 
 The build process can be automated by executing
 
-> scripts/cubuild.sh install tango 
+> scripts/cubuild.sh install tango epics random
 
 from the *cumbia-libs* directory resulting from the *git clone ...* command above.
 
-- To change the installation prefix edit scripts/config.sh and change *prefix=/usr/local/cumbia-libs* (the default)
+- To change the installation prefix either edit scripts/config.sh and change *prefix=/usr/local/cumbia-libs* (the default)
+  or export the install_prefix environment variable as described above
 
-The command in the example builds and installs the cumbia base modules, cumbia-tango, qumbia-tango-controls, qumbia-apps and qumbia-plugins
+The command in the example builds and installs the cumbia base modules, cumbia-tango, qumbia-tango-controls,
+cumbia-epics, qumbia-epics-controls, cumbia-random, qumbia-apps and qumbia-plugins
 
 Type 
 
@@ -132,6 +134,18 @@ is already included in the *ldconfig* search paths. If not, you have two possibi
 
 If the *quick installation using the cubuild.sh bash script* fails, please read the *step by step installation* procedure to 
 point out the possible causes.
+
+#### Post installation
+The install procedure will ask your permission to add paths to the sytem *profile*. If this is accepted, you may need to execute
+> source /etc/profile
+before using cumbia
+If you installed the libraries either using a custom prefix or without modifying the system profile, you can set up an
+environment in bash by typing
+> source $install_prefix/bin/cusetenv.sh
+
+#### Testing
+> export TANGO_HOST=test-tango-host:PORT
+> cumbia read sys/tg_test/test/double_scalar  sys/tg_test/test/long_scalar
 
 ### Upgrading *cumbia*
 
