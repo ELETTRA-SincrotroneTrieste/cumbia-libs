@@ -765,7 +765,7 @@ cp -a scripts/cusetenv.sh scripts/config.sh $tmp_installdir/bin
 # restore prefix in meson.build and .pro files
 
 # fix meson.build prefix
-echo -e -n "\n... \e[0;32mrestoring\e[0m meson projects -Dprefix=$install_prefix -Dlibdir=$lib_dir -Dbuildtype=$build_type\e[0m in all Qt projects..."
+echo -e -n "\n... \e[0;32mrestoring\e[0m meson projects -Dprefix=$install_prefix -Dlibdir=$lib_dir -Dbuildtype=$build_type\e[0m in all meson projects..."
 find . -type d -name "builddir" -exec meson configure -Dprefix=$install_prefix -Dlibdir=$lib_dir -Dbuildtype=$build_type  {} \;
 echo -e "\t[\e[1;32mdone\e[0m]\n"
 
