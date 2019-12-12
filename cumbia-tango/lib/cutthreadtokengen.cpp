@@ -120,7 +120,6 @@ int CuTThreadTokenGen::which_thread(const std::string &device) const
  *         if tok does not exactly match prefix + number
  */
 int CuTThreadTokenGen::which_from_token(const std::string& tok) const {
-    printf("tok %s  prefix %s\n", tok.c_str(), d->thread_tok_prefix.c_str());
     std::string idx_as_str(tok);
     idx_as_str.erase(0, d->thread_tok_prefix.size());
     int idx = -1;
@@ -133,6 +132,11 @@ int CuTThreadTokenGen::which_from_token(const std::string& tok) const {
     return idx;
 }
 
+/*!
+ * \brief Returns the list of devices whose sources belong to the thread with the given token
+ * \param token the thread token
+ * \return list of devices whose sources live in the same thread with the given token
+ */
 std::list<std::string> CuTThreadTokenGen::devicesForToken(const std::string& token) const {
     int idx = which_from_token(token);
     std::list<std::string> devs;
@@ -153,6 +157,10 @@ std::list<std::string> CuTThreadTokenGen::devicesForToken(const std::string& tok
     return devs;
 }
 
+/*!
+ * \brief Returns the prefix used for the token name
+ * \return the string used as prefix to name the token
+ */
 std::string CuTThreadTokenGen::tok_prefix() const {
     return d->thread_tok_prefix;
 }

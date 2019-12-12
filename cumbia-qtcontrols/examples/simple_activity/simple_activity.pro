@@ -3,7 +3,7 @@ include(/usr/local/cumbia-libs/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 DEFINES -= QT_NO_DEBUG_OUTPUT
 
 TEMPLATE = app
-CONFIG += c++11
+CONFIG += c++17
 QT += core gui widgets
 
 SOURCES += main.cpp \

@@ -91,3 +91,8 @@ CuData SimpleA::getToken() const
 {
     return CuData("activity", "simple_activity");
 }
+
+
+void SimpleA::onResult(const std::vector<CuData> &datalist)
+{
+}

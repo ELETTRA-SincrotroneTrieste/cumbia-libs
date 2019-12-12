@@ -21,7 +21,7 @@ class RConfig;
  *
  * \section _features Features
  *
- * \subsection _src_autocomp Source name *auto completion* (Tango only, for the time being)
+ * \subsection _src_autocomp Source name auto completion (Tango only, for the time being)
  * Install the <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">qumbia-tango-findsrc-plugin</a>
  * from *github* and the included *qumbia-tango-find-src* tool (instructions in the project page) to obtain
  * the Tango source <b>bash auto completion</b>.
@@ -30,7 +30,7 @@ class RConfig;
  * Formulas can be used through the <a href="../../cuformula/html/index.html">formula plugin</a>. See the
  * plugin documentation and the example section below for more details.
  *
- * \subsection _cumbia_random *cumbia-random* module support
+ * \subsection _cumbia_random cumbia-random module support
  * Read the <a href="../../cumbia-random/html">cumbia random</a> documentation to correctly provide the reader
  * sources that can be used for testing. Specific *cumbia-random* source patterns allow to group threads, specify
  * the range of generated data, the generation interval, in milliseconds, and the size.
@@ -42,7 +42,7 @@ class RConfig;
  * Set a bound on the number of threads used by *timers* for polled sources to verify the impact on
  * performance.
  *
- * \subsection _prop_mode *Property mode*: get the configuration of the sources
+ * \subsection _prop_mode Property mode: get the configuration of the sources
  * Source configuration stored somewhere by the system can be obtained (if this is applies to the engine)
  * <b>Tango</b> *device, attribute and class* properties can be fetched from the Tango database as well
  * (requires Tango modules).
@@ -131,7 +131,7 @@ class RConfig;
  *    --> description,polled_attr,poll_ring_depth
  \endcode
  *
- * \subsubsection _tg_filtered_props Filtered list of *device properties*
+ * \subsubsection _tg_filtered_props Filtered list of device properties
  * If the device name is followed by a semicolon and a wildcard (*) is present, then the filtered list
  * of *device properties* matching the wildcard expression is returned:
  * \code cumbia read --tp  test/device/1:helper* \endcode
@@ -154,7 +154,7 @@ class RConfig;
  * Read the *cvs_location* property of the class *TangoTest*
  * \code    cumbia read --tp TangoTest/cvs_location \endcode
  *
- * <b>List of properties of a given Tango *class*</b>
+ * \subsubsection _tg_cl_prop_list List of properties of a given Tango class
  * The following command fetches the list of properties of the *TdbArchiver* and *HdbArchiver* classes:
  *
  * \code  qumbia-reader --tp  TdbArchiver: HdbArchiver: \endcode

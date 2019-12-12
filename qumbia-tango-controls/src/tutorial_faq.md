@@ -808,10 +808,50 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
 ### My application connects to several different Tango devices: I want to customize thread grouping to reduce their number. How to do it?
 
 ## A.
+You can directly employ the [CuTThreadTokenGen](../../cumbia-tango/html/classCuTThreadTokenGen.html) class and register it with
+cumbia through the [Cumbia::setThreadTokenGenerator] (../html/cumbia/html/classCumbia.html#ad1294d5af961ea0899aabf299e7f2c56)
+The CuTThreadTokenGen, given a limit on the number of desired threads, automatically reuses threads so that their number respects
+the limit. Sources referring to the same device are guaranteed to belong to the same thread.
+Since threads in cumbia are grouped by *token* (a string), it is also possible to provide a specific *thread_token* configuration data
+when a new source is set up. Refer to Cumbia::threadToken for more details.
+
+### Example
+```cpp
+  #include <cutthreadtokengen.h>
+  #include <cumbia.h>
+  
+  // 10: the thread count limit
+  // "my_thread_tok_" the string prepended to the automatically generated token
+  CuTThreadTokenGen *tango_tk_gen = new CuTThreadTokenGen(10, "my_thread_tok_");
+  // cumbia_t_ptr is a pointer to Cumbia (for a Tango application, CumbiaTango)
+  cumbia_t_ptr->setThreadTokenGenerator(tango_tk_gen);
+```
+
+The ownership of the *token generator* is handed to Cumbia. There will be no need to manually delete it afterwords.
+A token generator can be removed or replaced. See Cumbia documentation for more details
+
+#### Note
+This feature is supported since cumbia 1.1.0
 
 ## Q.
 <a name="timer_limit" />
 ### How to limit the number of timers for polled sources?
 
 ## A.
+One thread is employed for each timer used in polled sources. Pollers group together sources linked to the same device. Notwithstanding, if the
+application connects to several polled sources of *different* devices, the number of threads allocated for each timer may grow.
+Setting a limit on their number is easy, as shown in the next code snippet:
 
+```cpp
+#include <cutimerservice.h>
+#include <cuserviceprovider.h>
+#include <cumbia.h>
+
+// cumbia_ptr is a pointer to the Cumbia object
+CuTimerService *ts = static_cast<CuTimerService *>(cumbia_ptr->getServiceProvider()->get(CuServices::Timer));
+// we want 10 timers max
+ts->setTimerMaxCount(10);
+```
+
+#### Note
+This feature is supported since cumbia 1.1.0
