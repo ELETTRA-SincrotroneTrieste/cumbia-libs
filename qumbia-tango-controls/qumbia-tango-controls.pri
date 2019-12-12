@@ -67,7 +67,7 @@ QWT_INCLUDES=$${QWT_HOME}/include
 QWT_HOME_USR = /usr
 QWT_INCLUDES_USR = $${QWT_HOME_USR}/include/qwt
 
-CONFIG+=link_pkgconfig
+CONFIG += c++17 link_pkgconfig
 PKGCONFIG += tango
 PKGCONFIG += x11
 
@@ -117,8 +117,8 @@ VERSION = 1.0.2
 DEFINES += QUMBIA_TANGO_CONTROLS_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
     QUMBIA_TANGO_CONTROLS_VERSION=$${VERSION_HEX}
 
-QMAKE_CXXFLAGS += -std=gnu++17 -Wall
-CONFIG +=
+QMAKE_CXXFLAGS += -Wall
+CONFIG += c++17
 
 freebsd-g++ {
     message( )
