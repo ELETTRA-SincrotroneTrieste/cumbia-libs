@@ -34,6 +34,19 @@ file.
 - <a href="html/qumbiaprojectwizard/html/tutorial_qumbiatango.html">Write your first <em>Qt application</em> with cumbia and Tango</a>
 - Find answers to common questions in the <a href="html/qumbia-tango-controls/html/tutorial_faq.html">FAQ section</a> (Tango)
 
+### Examples
+Several examples come along with the library. Just look for the *examples* directories under each subproject.
+
+- Under the *cumbia-tango* module, you'll find examples to write a multi threaded Tango server using cumbia *activities* and read properties from the database.
+- *cumbia-qtcontrols* includes examples of usage of some widgets as well as writing a simple activity to understand the basic concepts and thread
+management.
+- *qumbia-tango-controls* provides examples of a *multireader*, a widget refreshed *manually* and an application that helps understand the
+  concept of *cumbia-qtcontrols* *context* (<a href="html/cumbia-qtcontrols/html/classCuContext.html">CuContext</a>).
+- *qumbia-epics-controls* is shipped with examples showing how to use widgets with EPICS
+- *qumbia-plugins* will teach you how to integrate formulas into applications
+
+More examples you will find within cumbia sources!
+
 ### Keywords and technologies
 - C++-11
 - <a href="https://www.qt.io/">Qt</a>
