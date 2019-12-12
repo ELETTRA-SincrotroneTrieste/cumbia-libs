@@ -87,7 +87,6 @@ packagesExist(qumbia-tango-controls$${QTVER_SUFFIX}) {
  PKGCONFIG += qumbia-tango-controls$${QTVER_SUFFIX}
 }
 
-CONFIG += c++17
 TEMPLATE = app
 QT +=  core gui widgets
 
@@ -118,8 +117,8 @@ VERSION = 1.0.2
 DEFINES += QUMBIA_TANGO_CONTROLS_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
     QUMBIA_TANGO_CONTROLS_VERSION=$${VERSION_HEX}
 
-QMAKE_CXXFLAGS += -Wall
-
+QMAKE_CXXFLAGS += -std=c++17 -Wall
+CONFIG +=
 
 freebsd-g++ {
     message( )
@@ -128,7 +127,6 @@ freebsd-g++ {
     message( * :-P)
     message( )
     unix:LIBS -= -ldl
-    QMAKE_CXXFLAGS -= -std=c++0x
 }
 
 MOC_DIR = moc
