@@ -140,7 +140,7 @@ DEFINES += CUMBIA_QTCONTROLS_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
     CUMBIA_QTCONTROLS_VERSION=$${VERSION_HEX}
 
 CONFIG += c++17
-QMAKE_CXXFLAGS += -Wall
+QMAKE_CXXFLAGS += -std=c++17 -Wall
 
 freebsd-g++ {
     message( )
