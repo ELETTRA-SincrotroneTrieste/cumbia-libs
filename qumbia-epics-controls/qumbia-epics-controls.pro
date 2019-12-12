@@ -2,8 +2,6 @@ include(qumbia-epics-controls.pri)
 
 QT       += widgets
 
-# CONFIG += c++11 in .pri
-
 # Debug or release?
 CONFIG += debug
 

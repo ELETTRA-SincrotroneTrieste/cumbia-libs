@@ -125,7 +125,7 @@ else:packagesExist(Qt5Qwt6){
 VERSION_HEX = 0x010100
 VERSION = 1.1.0
 
-QMAKE_CXXFLAGS += -std=c++11 -Wall
+QMAKE_CXXFLAGS += -std=c++17 -Wall
 
 
 freebsd-g++ {
@@ -137,8 +137,6 @@ freebsd-g++ {
     unix:LIBS -= -ldl
     QMAKE_CXXFLAGS -= -std=c++0x
 }
-
-CONFIG += c++11
 
 MOC_DIR = moc
 OBJECTS_DIR = obj

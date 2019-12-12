@@ -139,7 +139,7 @@ DEFINES += CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${DEFINES_CUMBIA_QTCONTROLS_PLUGI
 DEFINES += CUMBIA_QTCONTROLS_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
     CUMBIA_QTCONTROLS_VERSION=$${VERSION_HEX}
 
-QMAKE_CXXFLAGS += -std=c++11 -Wall
+QMAKE_CXXFLAGS += -Wall
 
 freebsd-g++ {
     message( )
@@ -151,7 +151,7 @@ freebsd-g++ {
     QMAKE_CXXFLAGS -= -std=c++0x
 }
 
-CONFIG += c++11
+CONFIG += c++17
 
 MOC_DIR = moc
 OBJECTS_DIR = obj

@@ -87,7 +87,7 @@ packagesExist(qumbia-tango-controls$${QTVER_SUFFIX}) {
  PKGCONFIG += qumbia-tango-controls$${QTVER_SUFFIX}
 }
 
-CONFIG += c++11
+CONFIG += c++17
 TEMPLATE = app
 QT +=  core gui widgets
 
@@ -118,7 +118,7 @@ VERSION = 1.0.2
 DEFINES += QUMBIA_TANGO_CONTROLS_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
     QUMBIA_TANGO_CONTROLS_VERSION=$${VERSION_HEX}
 
-QMAKE_CXXFLAGS += -std=c++11 -Wall
+QMAKE_CXXFLAGS += -Wall
 
 
 freebsd-g++ {
