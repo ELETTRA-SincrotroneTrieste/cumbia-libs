@@ -767,12 +767,12 @@ cp -a scripts/cusetenv.sh scripts/config.sh $tmp_installdir/bin
 # fix meson.build prefix
 echo -e -n "\n... \e[0;32mrestoring\e[0m meson projects -Dprefix=$install_prefix -Dlibdir=$lib_dir -Dbuildtype=$build_type\e[0m in all Qt projects..."
 find . -type d -name "builddir" -exec meson configure -Dprefix=$install_prefix -Dlibdir=$lib_dir -Dbuildtype=$build_type  {} \;
-echo -e "\t[\e[1;32mdone\e[0m\n"
+echo -e "\t[\e[1;32mdone\e[0m]\n"
 
 # fix all qmake INSTALL_ROOT that in the build phase used to point to tmp_installdir
 echo -e -n "\n... \e[0;32mrestoring\e[0m qmake INSTALL_ROOT=$install_prefix\e[0m in all Qt projects..."
 find . -name "*.pro" -execdir qmake INSTALL_ROOT=$install_prefix  \; &>/dev/null
-echo -e "\t[\e[1;32mdone\e[0m\n\n"
+echo -e "\t[\e[1;32mdone\e[0m]\n\n"
 
 
 # INSTALL  SECTION
