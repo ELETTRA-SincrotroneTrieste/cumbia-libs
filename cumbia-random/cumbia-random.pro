@@ -12,7 +12,7 @@ QT     += script
 
 CONFIG += debug
 
-CONFIG += silent
+CONFIG +=
 
 TARGET = cumbia-random$${QTVER_SUFFIX}
 TEMPLATE = lib

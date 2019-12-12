@@ -75,9 +75,7 @@ DEFINES += CUMBIA_RANDOM_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
     CUMBIA_RANDOM_VERSION=$${VERSION_HEX}
 
 
-QMAKE_CXXFLAGS += -Wall
-
-CONFIG += c++17
+QMAKE_CXXFLAGS += -std=gnu++17 -Wall
 
 MOC_DIR = moc
 OBJECTS_DIR = obj
@@ -112,10 +110,3 @@ unix:!android-g++ {
 
 
 }
-
-SOURCES +=
-
-
-
-
-
