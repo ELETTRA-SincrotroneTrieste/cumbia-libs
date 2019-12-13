@@ -432,6 +432,10 @@ echo -e "\n# random module enabled" >> $srcupdate_conf_f
 echo "random=$random" >> $srcupdate_conf_f
 echo -e "\n# directory with the cumbia sources " >> $srcupdate_conf_f
 echo "srcdir=$topdir" >> $srcupdate_conf_f
+if [ $prefix_from_environment -eq 1 ]; then
+     "install_prefix=$install_prefix" >> $srcupdate_conf_f
+fi
+
 #
 ## end save configuration in $HOME/.config/cumbia/srcupdate.conf
 #
