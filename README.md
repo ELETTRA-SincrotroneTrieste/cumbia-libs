@@ -156,7 +156,8 @@ environment in bash by typing
 
 #### Plugins
 
-##### Foreword
+##### Foreword about plugin path
+
 *cumbia plugins* are installed under
 
 - $install_prefix/lib/qumbia-plugins/
@@ -167,7 +168,7 @@ The command
 exports the variable for you.
 Alternatively, the *QT_PLUGIN_PATH* should be correctly set if the *system profile files* installation option was selected.
 
-##### Additional plugins installation
+##### Additional plugin installation
 
 Once installed the main distribution package, you may want to add some plugins.
 
@@ -196,11 +197,12 @@ After qmake, *make* and *make install* can be issued
 
 > make && make install
 
-It is important that the install_prefix is the same as that used for *cumbia-libs*, so that the plugins are installed under
+##### Note
+If the install_prefix is the same as that used for *cumbia-libs*, the plugins are installed under
 
 $install_prefix/lib/qumbia-plugins/
 
-and the *QT_PLUGIN_PATH* required to find the plugins for the base *cumbia-libs* can be used for additional ones as well.
+and the *QT_PLUGIN_PATH* required to find the plugins for the base *cumbia-libs* can be used for the additional ones as well.
 If you proceed otherwise, remember to add the plugin installation directory to *QT_PLUGIN_PATH*.
 
 ### Upgrading *cumbia*
