@@ -774,7 +774,7 @@ echo -e -n "\n... \e[0;32mrestoring\e[0m qmake INSTALL_ROOT=$install_prefix\e[0m
 find . -name "*.pro" -execdir qmake INSTALL_ROOT=$install_prefix  \; &>/dev/null
 echo -e "\t[\e[1;32mdone\e[0m]\n\n"
 
-if [ $make_install -eq 1 ] && [ $build -eq 1 ]; then
+if [ $make_install -eq 0 ] && [ $build -eq 1 ]; then
     echo "Type \e[1;32m$0 install\e[0m to install the library under \e[1;32m$install_prefix\e[0m\n"
 fi
 
