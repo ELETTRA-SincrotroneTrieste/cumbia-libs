@@ -90,6 +90,9 @@
     Device properties
         $ cumbia read --tp test/device/1:Description test/device/2:Description
 
+    Filtered list of device properties
+        $ cumbia read --tp test/device/1:helper*
+
     List of attribute properties List the attribute properties of test/device/1/double_scalar
         $ cumbia read --tp  test/device/1/double_scalar
 
