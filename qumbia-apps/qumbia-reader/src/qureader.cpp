@@ -55,7 +55,6 @@ void Qu_Reader::onUpdate(const CuData &da)
     double ts = -1.0;
     if(!da["timestamp_us"].isNull()) {
         ts = da["timestamp_us"].toDouble();
-        printf("timestamp_us is %f\n", ts);
     }
     else if(!da["timestamp_ns"].isNull())
         ts = da["timestamp_ns"].toDouble();

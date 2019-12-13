@@ -302,8 +302,13 @@ void QumbiaReader::onStringListConversion(const QString &src, const QString &fro
 {
     m_refreshCntMap[src]++;
     m_print_extra1(da);
-    printf("[%s] [\e[0;31m%s-->string list\e[0m,%d] [\e[1;36mstring\e[0m] %s\e[0m",
-           qstoc(makeTimestamp(timestamp_us)), qstoc(fromType), v.size(), qstoc(v.join(",")));
+    printf("[%s] [\e[0;31m%s-->string list\e[0m,%d] [\e[1;36mstring\e[0m]\e[0m",
+           qstoc(makeTimestamp(timestamp_us)), qstoc(fromType), v.size());
+    for(int i = 0; i < v.size() -1 && (m_conf.truncate < 0 || i < m_conf.truncate - 1); i++)
+        printf("%s,", qstoc(v[i]));
+    if(m_conf.truncate > -1 && m_conf.truncate < v.size())
+        printf(" ..., ");
+    printf("%s \e[0m}", qstoc(v[v.size() - 1]));
     m_print_extra2(da);
     m_checkRefreshCnt(sender());
 }
