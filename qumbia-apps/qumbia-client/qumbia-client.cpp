@@ -139,7 +139,6 @@ QumbiaClient::~QumbiaClient()
 void QumbiaClient::configure(const CuData &d)
 {
     if(d["type"].toString() == "property") {
-        printf("\e[1;33mQumbiaClient.configure data arrived is %s\e[0m\n", d.toString().c_str());
         sender()->disconnect(this, SLOT(configure(CuData)));
         const int plotRowCnt = 5;
         int layout_row = 2;
@@ -183,7 +182,6 @@ void QumbiaClient::configure(const CuData &d)
         if(d["writable"].toInt() > 0)
         {
             QWidget *wi = ui->gbWriters->findChild<QScrollArea *>()->widget();
-            printf("\e[1;32mcreating writer for %s\e[0m\n",  d["src"].toString().c_str());
             ui->pbWrite->setChecked(true);
             Writer *w = new Writer(wi, cu_pool, m_ctrl_factory_pool, data_dim, QString::fromStdString(d["src"].toString()));
             qobject_cast<QVBoxLayout *>(wi->layout())->addWidget(w);
