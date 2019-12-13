@@ -300,15 +300,23 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
             p_da->extract_read(v);
             if(f == Tango::SCALAR && v.size())
                 dat["value"] = static_cast<long int>(v.at(0));
-            else
-                dat["value"] = v;
+            else {
+                std::vector<long int> vlo;
+                for(size_t i = 0; i < v.size(); i++)
+                    vlo.push_back(static_cast<long int>(v.at(i)));
+                dat["value"] = vlo;
+            }
             if(w)
             {
                 p_da->extract_set(v);
                 if(f == Tango::SCALAR)
                     dat["w_value"] = v.at(0);
-                else
-                    dat["w_value"] = v;
+                else {
+                    std::vector<long int> vlo;
+                    for(size_t i = 0; i < v.size(); i++)
+                        vlo.push_back(static_cast<long int>(v.at(i)));
+                    dat["w_value"] = vlo;
+                }
             }
         }
         else if(p_da->get_type() == Tango::DEV_LONG64)
