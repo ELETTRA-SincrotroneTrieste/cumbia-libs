@@ -23,6 +23,7 @@ QT -= gui
 
 SHAREDIR = $${INSTALL_ROOT}/share
 DOCDIR = $${SHAREDIR}/doc/qumbia-reader
+EXAMPLESDIR = $${SHAREDIR}/examples/qumbia-reader
 DEFINES += DOC_PATH=\"\\\"$${DOCDIR}\\\"\"
 
 CONFIG +=
@@ -76,12 +77,15 @@ inst.files = $${TARGET}
 inst.path = $${INSTALL_ROOT}/bin
 inst.extra = strip $(TARGET); cp -f $(TARGET) $${INSTALL_ROOT}/bin
 
+examples.files = js_functions/sin.js
+examples.path = $${EXAMPLESDIR}/js_functions
+
 script.path = $${INSTALL_ROOT}/bin
 script.files = qutangoreader/qutangoreader
 # INSTALLS tries to strip the bash script
 
 
-INSTALLS += inst doc script
+INSTALLS += inst doc script examples
 
 DISTFILES += \
     js_functions/sin.js \
