@@ -9,15 +9,12 @@ if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 realp=`realpath $DIR`
 root_d=`dirname $realp`
 
-
-
-# change into cumbia source top level folder
-cd $root_d
-
 if [ ! -r $root_d/bin/config.sh ]; then
         echo -e  " \e[1;31merror\e[0m file $root_d/bin/config.sh is missing"
 else
 
+    # change into cumbia source top level folder
+    cd $root_d
     echo -e "\n \e[1;33minfo\e[0m: reading configuration from \"$root_d/bin/config.sh\""
     . "$root_d/bin/config.sh" &>/dev/null
 
