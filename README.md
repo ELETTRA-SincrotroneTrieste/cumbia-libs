@@ -95,9 +95,15 @@ Once all dependencies are installed on your system, check the file *scripts/conf
   this is not necessary)
 - installation prefix can be changed (section II) if you don't want to install under the default location */usr/local/*
 
-The installation prefix can also be set through an environment variable
+The installation prefix can also be set through an environment variable. We provide two scenarios:
+
+- system wide:
 
 > export install_prefix=/usr/local/cumbia-libs
+
+- locally, e.g. to try the last version:
+
+> export install_prefix=/home/myself/.local/cumbia-libs
 
 EPICS modules require two environment variables:
 
@@ -146,6 +152,56 @@ environment in bash by typing
 #### Testing
 > export TANGO_HOST=test-tango-host:PORT
 > cumbia read sys/tg_test/test/double_scalar  sys/tg_test/test/long_scalar
+
+
+#### Plugins
+
+##### Foreword
+*cumbia plugins* are installed under
+
+- $install_prefix/lib/qumbia-plugins/
+
+and they are searched under the *QT_PLUGIN_PATH* environment variable at runtime.
+The command
+> source $install_prefix/bin/cusetenv.sh
+exports the variable for you.
+Alternatively, the *QT_PLUGIN_PATH* should be correctly set if the *system profile files* installation option was selected.
+
+##### Additional plugins installation
+
+Once installed the main distribution package, you may want to add some plugins.
+
+Change directory one level up:
+
+> cd ..
+
+Clone the desired plugin(s). Example: qumbia-tango-findsrc-plugin for bash auto completion of Tango source names.
+
+> git clone https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin
+
+> cd qumbia-tango-findsrc-plugin
+
+Follow the build instructions provided with the plugin. Usually, if it is a Qt project, you will need to execute *qmake*, *make* and
+*make install*. According to how install_prefix has been chosen in the cumbia-libs installation, two scenarios are possible:
+
+- install_prefix variable in scripts/config.sh untouched *and* no *install_prefix* variable exported before installation:
+
+> qmake
+
+- a custom install_prefix was specified, for example by means of the *export install_prefix* command before scripts/cubuild.sh was called:
+
+> qmake INSTALL_PREFIX=$install_prefix
+
+After qmake, *make* and *make install* can be issued
+
+> make && make install
+
+It is important that the install_prefix is the same as that used for *cumbia-libs*, so that the plugins are installed under
+
+$install_prefix/lib/qumbia-plugins/
+
+and the *QT_PLUGIN_PATH* required to find the plugins for the base *cumbia-libs* can be used for additional ones as well.
+If you proceed otherwise, remember to add the plugin installation directory to *QT_PLUGIN_PATH*.
 
 ### Upgrading *cumbia*
 
