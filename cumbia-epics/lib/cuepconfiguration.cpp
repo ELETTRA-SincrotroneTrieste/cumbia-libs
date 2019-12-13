@@ -36,7 +36,7 @@ CuEpConfiguration::CuEpConfiguration(const EpSource &src,
 
 CuEpConfiguration::~CuEpConfiguration()
 {
-    printf("\e[1;31m~~~~~~~~~~~~~~~~~ DELETING CuEpConfiguration %p\n\n\e[0m\n", this);
+    pdelete("CuEpConfiguration %p", this);
     delete d;
 }
 
