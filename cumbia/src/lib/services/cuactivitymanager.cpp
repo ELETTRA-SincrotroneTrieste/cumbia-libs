@@ -149,7 +149,6 @@ CuActivity *CuActivityManager::findActiveMatching(const CuData &token)
  */
 CuThreadInterface *CuActivityManager::getThread(CuActivity *activity)
 {
-//    cuprintf("CuActivityManager.getThread: activity: %p this thread 0x%lx\n", activity, pthread_self());
     // std::lock_guard<std::mutex> lock(m_mutex);
     std::multimap< CuThreadInterface *, CuActivity *>::const_iterator it;
     for(it = mConnectionsMultiMap.begin(); it != mConnectionsMultiMap.end(); ++it)
