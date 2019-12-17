@@ -153,7 +153,6 @@ void CuActionFactoryService::unregisterAction(const string &src, CuTangoActionI:
     std::unique_lock lock(d->shared_mutex);
     std::list<CuTangoActionI *>::iterator it;
     size_t siz = d->actions.size();
-
     it = d->actions.begin();
     while( it != d->actions.end())  {
         if((*it)->getType() == at && (*it)->getSource().getName() == src && (*it)->exiting()) {

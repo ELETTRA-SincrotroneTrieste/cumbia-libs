@@ -137,12 +137,15 @@ void CuTConfigActivity::execute()
 void CuTConfigActivity::onExit()
 {
     assert(d->my_thread_id == pthread_self());
+    CuData at = getToken(); /* activity token */
     if(!d->exiting) {
+        d->exiting = true;
         int refcnt = -1;
-        CuData at = getToken(); /* activity token */
         // thread safe remove ref and disposal
         refcnt = d->device_service->removeRef(at["device"].toString(), threadToken());
         if(!refcnt)
             d->tdev = nullptr;
     }
+    at["exit"] = true;
+    publishResult(at);
 }

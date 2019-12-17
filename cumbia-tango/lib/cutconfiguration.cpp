@@ -45,7 +45,7 @@ CuTConfiguration::CuTConfiguration(const TSource& src,
 
 CuTConfiguration::~CuTConfiguration()
 {
-    pdelete("~CuTAttConfiguration: %p", this);
+    pdelete("~CuTConfiguration: %p", this);
     delete d;
 }
 
