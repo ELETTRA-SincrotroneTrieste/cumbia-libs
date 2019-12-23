@@ -179,6 +179,19 @@ void QuTrendPlot::update(const CuData &da)
         v.to(y);
         appendData(src, x, y);
     }
+    else if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Vector) {
+        printf("QuTrendPlot.update: data \e[1;36m%s\e[0m SIZE \e[1;31m%d\e[0m\n", da.toString().c_str(), v.getSize());
+        if(da.containsKey("time_scale_ms")) {
+            const CuVariant& xv = da["time_scale_ms"];
+            insertData(src, xv.toDoubleP(), v.toDoubleP(), v.getSize());
+        }
+        else {
+            double *xvals = new double[v.getSize()];
+            for(size_t i = 0; i < v.getSize(); i++)
+                xvals[i] = i;
+            insertData(src, xvals, v.toDoubleP(), v.getSize());
+        }
+    }
     else {
         // appendData triggers a replot when necessary. If !d->read_ok, then there's at least
         // one curve with an Invalid state. A replot is necessary in this case
@@ -229,8 +242,7 @@ void QuTrendPlot::refresh()
 {
     bool fullReplot = (updateMarker() || curves().size() > 1);
     fullReplot |= updateScales();
-    if(fullReplot)
-    {
+    if(fullReplot) {
         QwtPlot::replot();
     }
     else

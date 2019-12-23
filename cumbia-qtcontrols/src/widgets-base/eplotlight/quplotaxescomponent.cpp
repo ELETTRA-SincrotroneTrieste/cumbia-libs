@@ -128,7 +128,7 @@ bool QuPlotAxesComponent::applyScaleFromCurveBounds(QuPlotBase *plot, int axisId
     if(d->ub_extra[axisId] > 0)
     {
         margin = (bounds.second - bounds.first) *  d->ub_extra[axisId];
-        if(bounds.second > ub)
+        if(bounds.second > ub || bounds.first < lb)
         {
             bounds.second += margin;
             plot->setAxisScale(axisId, bounds.first, bounds.second);
@@ -168,6 +168,9 @@ bool QuPlotAxesComponent::getBoundsFromCurves(const QuPlotBase *plot,
         if(calc_x) {
             crvmin = c->minXValue();
             crvmax = c->maxXValue();
+//            printf("QuPlotAxesComponent::getBoundsFromCurves: X min %s, X max %s\n",
+//                   qstoc(QDateTime::fromMSecsSinceEpoch(crvmin).toString()),
+//                    qstoc(QDateTime::fromMSecsSinceEpoch(crvmax).toString()));
             if(*xmin == *xmax) {
                 *xmin = crvmin;
                 *xmax = crvmax;

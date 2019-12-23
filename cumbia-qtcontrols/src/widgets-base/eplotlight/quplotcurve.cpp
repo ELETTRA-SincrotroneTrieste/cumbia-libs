@@ -94,6 +94,13 @@ void QuPlotCurve::appendData(double *x, double *y, int count)
     d->data->append(x, y, count);
 }
 
+void QuPlotCurve::insertData(double *x, double *y, int count)
+{
+    /* add count elements */
+    m_setSymbol(data()->size());
+    d->data->insert(x, y, count);
+}
+
 void QuPlotCurve::popFront()
 {
     if(d->data->count() > 0)

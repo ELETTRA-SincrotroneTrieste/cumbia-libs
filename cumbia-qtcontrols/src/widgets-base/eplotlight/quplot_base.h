@@ -247,7 +247,11 @@ public slots:
 
     virtual void setData(const QString &curveName, const QVector<double> &xData, const QVector<double> &yData);
 
+    virtual void setData(const QString &curveName, double *xData,  double *yData, int size);
+
     virtual void appendData(const QString &curveName, double x, double y);
+
+    virtual void insertData(const QString &curveName, double *xData,  double *yData, int size);
 
     void setRefreshTimeout(int millis);
 

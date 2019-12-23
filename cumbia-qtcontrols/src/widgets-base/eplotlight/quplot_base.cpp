@@ -356,6 +356,7 @@ bool QuPlotBase::updateScales()
             need_ybounds = true;
         }
     }
+//    printf("QuPlotBase.updateScales: need_xbounds %d need_ybounds %d\n", need_xbounds, need_ybounds);
     if(need_xbounds || need_ybounds) // get the bounds for the needed axes
         axes_c->getBoundsFromCurves(this, &xm, &xM, &ym, &yM, need_xbounds, need_ybounds);
 
@@ -364,8 +365,11 @@ bool QuPlotBase::updateScales()
         old_ub = axes_c->upperBoundFromCurves(axisId);
         //            if(axisId == QwtPlot::yLeft)
         //                printf("\e[1;32maxis autoscale for axis %d old low %f old up %f\e[0m\n", axisId, old_lb, old_ub);
-        if(need_xbounds && (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop))
+        if(need_xbounds && (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop)) {
+//            printf("QuPlotBase.updateScales: new X bounds from curves from %s to %s\n", qstoc(QDateTime::fromMSecsSinceEpoch(xm).toString()),
+//                   qstoc(QDateTime::fromMSecsSinceEpoch(xM).toString()));
             axes_c->setBoundsFromCurves(xm, xM, axisId);
+        }
         else if(need_ybounds && (axisId == QwtPlot::yRight || axisId == QwtPlot::yLeft))
             axes_c->setBoundsFromCurves(ym, yM, axisId);
 
@@ -374,9 +378,9 @@ bool QuPlotBase::updateScales()
         else if(zoomer->inZoom())
             zoomer->changeRect(axisId, axes_c->lowerBoundFromCurves(axisId) - old_lb,
                                axes_c->upperBoundFromCurves(axisId) - old_ub);
-        //            if(axisId == QwtPlot::yLeft)
-        //                printf("\e[1;32mbounds changed %d -  - - new lb %f new ub %f\e[0m\n", boundsChanged, axes_c->lowerBoundFromCurves(axisId)
-        //                   , axes_c->upperBoundFromCurves(axisId));
+//                    if(axisId == QwtPlot::xBottom)
+//                        printf("\e[1;32mbounds changed (xBottom) %d -  - - new lb %f new ub %f\e[0m\n", boundsChanged, axes_c->lowerBoundFromCurves(axisId)
+//                           , axes_c->upperBoundFromCurves(axisId));
     }
     return boundsChanged;
 }
@@ -488,6 +492,34 @@ void QuPlotBase::appendData(const QString& curveName, double x, double y)
     appendData(curveName, &x, &y, 1);
 }
 
+/*!
+ * \brief insert data into the plot ordered by x values
+ *
+ * \param curveName the name of the curve
+ * \param xData pointer to x data
+ * \param yData pointer of y data
+ * \param size size of x and y
+ *
+ * Data contained in points (xData,yData) is inserted into the existing data for the given curve
+ * so that the resulting set is the union of existing and new data ordered by x
+ *
+ * \since v1.1.0
+ */
+void QuPlotBase::insertData(const QString &curveName, double *xData, double *yData, int size)
+{
+    QuPlotCurve* curve = d->curvesMap.value(curveName);
+    if(curve)
+        curve->insertData(xData, yData, size);
+    int bufSiz = dataBufferSize();
+    while(bufSiz > 0 && curve->count() > bufSiz) {
+        curve->popFront();
+    }
+    curve->updateRawData();
+    if(d->refresh_timeo <= 0) {
+        refresh();
+    }
+}
+
 void QuPlotBase::setRefreshTimeout(int millis)
 {
     d->refresh_timeo = millis;
@@ -574,6 +606,17 @@ void QuPlotBase::setData(const QString& curveName, const QVector< double > &xDat
     curve->setData(xData, yData);
     if(d->refresh_timeo <= 0) {
         refresh();
+    }
+}
+
+void QuPlotBase::setData(const QString &curveName, double *xData, double *yData, int size)
+{
+    QuPlotCurve* curve = d->curvesMap.value(curveName);
+    if(curve) {
+        curve->setSamples(xData, yData, size);
+        if(d->refresh_timeo <= 0) {
+            refresh();
+        }
     }
 }
 

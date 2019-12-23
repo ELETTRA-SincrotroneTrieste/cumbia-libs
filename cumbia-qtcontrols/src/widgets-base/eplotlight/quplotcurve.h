@@ -65,6 +65,14 @@ public:
      * One may consider calling updateRawData() before drawing the curve
      */
     void appendData(double *x, double *y, int count);
+
+    /*!
+     * \brief insert data ordered by x
+     * \param x vector of x values (typically time scale values)
+     * \param y vector of values
+     * \param count number of elements of x and y
+     */
+    void insertData(double *x, double *y, int count);
     
     void setData(const QVector< double > &xData, const QVector< double > &yData);
 

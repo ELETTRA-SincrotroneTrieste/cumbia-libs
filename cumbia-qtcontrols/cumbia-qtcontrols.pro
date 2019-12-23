@@ -19,7 +19,7 @@ TEMPLATE = lib
 
 DEFINES += CUMBIAQTCONTROLS_LIBRARY
 
-DEFINES += QT_NO_DEBUG_OUTPUT
+DEFINES -= QT_NO_DEBUG_OUTPUT
 
 QT += x11extras
 
@@ -177,7 +177,8 @@ HEADERS += cumbiaqtcontrols.h\
     src/quactionextensionfactoryi.h \
     src/plugin_ifaces/cucontextmenuactionsplugin_i.h \
     src/cupluginloader.h \
-    src/plugin_ifaces/cuformulaplugininterface.h
+    src/plugin_ifaces/cuformulaplugininterface.h \
+    src/plugin_ifaces/cuhistoricaldbplugin_i.h
 
 unix:!android-g++ {
 
