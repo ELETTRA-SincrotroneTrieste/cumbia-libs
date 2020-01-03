@@ -8,6 +8,7 @@
 - [What is the default structure used to exchange data by cumbia library? How do I use it?](#cudata)
 - [What is the quickest way to read a Tango attribute in a cumbia application](#readatt)
 - [What's the quickest procedure to display a Tango *state* and possibly get the associated color?](#state)
+- [How to specify a custom refresh mode for a Tango attribute reader?](#refresh_mode)
 - [How did you know that the *res* CuData contained those very keys such as "value", "state_color", "timestamp_ms", and so on.. ?](#cudata_keys)
 - [How to quickly convert std::vector/std::string-based data in CuData to more Qt friendly QVector/QStringList/QStringList ?](#stdvector_string_to_qvector_qstringlist)
 - [A quick way to perform a command inout on a device](#commands)
@@ -112,6 +113,7 @@ int main(int argc, char *argv[])
 }
 ```
 
+
 ## Q.
 <a name="state"/>
 ### Cool. Now, what's the quickest procedure to display a Tango *state* and possibly get the associated color?
@@ -130,6 +132,24 @@ Almost same code as above. Extract color from the "state_color", state string fr
                      << "as DevState: " << state;
         }
 ```
+
+
+## Q.
+<a name="refresh_mode" />
+### How to specify a custom refresh mode for a Tango attribute reader?](#refresh_mode)
+
+## A.
+Before calling *setSource*, get the reference to the CuContext and set the desired option as in the following example:
+```cpp
+    // suppose we want a poller with a 2 seconds period
+    CuData conf("refresh_mode", CuTReader::PolledRefresh);
+    conf["period"] = 2000; // millis
+    findChild<QuLabel *>()->getContext()->setOptions(conf);
+    findChild<QuLabel *>()->setSource("$1/Current");
+```
+
+See the CuTReader documentation for further options
+
 ## Q.
 
 <a name="cudata_keys"/>
