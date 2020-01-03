@@ -28,7 +28,6 @@ void CurveData::set(const QVector< double > &xData, const QVector< double > &yDa
 void CurveData::append(double *x, double *y, int count)
 {
     int newSize = ( (d_count + count) / 10 + 1 ) * 10;
-    printf("CurveData.append: d_count %d count %d new size %d AFIQ!?\n", d_count, count, newSize);
     if ( newSize > size() )
     {
         d_x.reserve(newSize);
@@ -43,15 +42,11 @@ void CurveData::append(double *x, double *y, int count)
     d_count += count;
 }
 
-
-#include <QDateTime>
-#include <cumacros.h>
 void CurveData::insert(double *x, double *y, int count)
 {
     size_t i = 0;
     int j = 0;
     size_t ds = d_x.size();
-    printf("\n>>> CurveData.insert: size b4 %d going to add %d values\n", d_x.size(), count);
     while(i < ds && j < count) {
         while(j < count && x[j] <= d_x[i]) {
             if(x[j] == d_x[i]) {
@@ -67,12 +62,7 @@ void CurveData::insert(double *x, double *y, int count)
         i++;
         ds = d_x.size();
     }
-    printf("CurveData.insert: now appending %d values count %d j %d \n", count - j, count, j);
     append(x + j, y + j, count - j);
-    for(int i = 0; i < d_x.size(); i++) {
-        printf("\e[1;33m%s: \e[1;32m%f\e[0m\n", qstoc(QDateTime::fromMSecsSinceEpoch(d_x[i]).toString()), d_y[i]);
-    }
-    printf("\n>>> CurveData.insert: size afta %d\n", d_x.size());
 }
 
 int CurveData::count() const
@@ -100,10 +90,3 @@ void CurveData::reserve(int newSize)
     d_x.reserve(newSize);
     d_y.reserve(newSize);
 }
-
-
-
-
-
-
-
