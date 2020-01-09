@@ -78,12 +78,6 @@ Cumbiaplots::Cumbiaplots(CumbiaTango *cut, QWidget *parent) :
     timer->setInterval(millis);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateAll()));
     timer->start();
-
-
-    // after all cumbia widgets have been instantiated
-    // if you add widgets later, you can use the connectObject(QObject *w)
-    // method from CuContextActionBridge.
-    new CuContextActionBridge(this, cu_t, cu_tango_r_fac);
 }
 
 Cumbiaplots::~Cumbiaplots()
