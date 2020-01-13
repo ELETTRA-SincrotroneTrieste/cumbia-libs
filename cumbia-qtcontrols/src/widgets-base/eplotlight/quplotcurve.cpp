@@ -12,7 +12,7 @@
 #include <qwt_symbol.h>
 
 #define MAX_STATE_SYMBOLS 6
-#define STATE_SYMBOL_SIZE 14
+#define STATE_SYMBOL_SIZE 10
 #define YLABEL_OFFSET 3
 
 class EPlotCurvePrivate
@@ -25,6 +25,7 @@ public:
     // keep a boolean to test if symbol is enabled instead of making a call to
     // QwtPlotCurve::symbol
     bool symbol;
+    QMap<double, QString> txtmap;
 };
 
 QuPlotCurve::QuPlotCurve() :  QwtPlotCurve()
@@ -83,7 +84,7 @@ QuPlotCurve::~QuPlotCurve()
 void QuPlotCurve::setData(const QVector< double > &xData, const QVector< double > &yData)
 {
     m_setSymbol(xData.size());
-//    d->data->set(xData, yData);
+    //    d->data->set(xData, yData);
     QwtPlotCurve::setSamples(xData, yData);
 }
 
@@ -94,11 +95,11 @@ void QuPlotCurve::appendData(double *x, double *y, int count)
     d->data->append(x, y, count);
 }
 
-void QuPlotCurve::insertData(double *x, double *y, int count)
+void QuPlotCurve::insertData(double *x, double *y, int count, double default_y)
 {
     /* add count elements */
     m_setSymbol(data()->size());
-    d->data->insert(x, y, count);
+    d->data->insert(x, y, count, default_y);
 }
 
 void QuPlotCurve::popFront()
@@ -124,6 +125,17 @@ QuPlotCurve::State QuPlotCurve::state() const { return d->state; }
 
 void QuPlotCurve::setState(QuPlotCurve::State s) { d->state = s; }
 
+QString QuPlotCurve::text(const double &x) const {
+    QString s;
+    if(d->txtmap.contains(x))
+        s = d->txtmap[x];
+    return s;
+}
+
+void QuPlotCurve::setText(const double &x, const QString &txt) {
+    d->txtmap[x] = txt;
+}
+
 /** \brief one of the drawing methods.
   *
   * This method is invoked to draw the curve from the point from to the point to.
@@ -143,9 +155,11 @@ void QuPlotCurve::drawCurve(QPainter *p, int style,
                             int from, int to) const
 {
     double y = 0.0, x = 0.0;
+    const QPen& pe = QwtPlotCurve::pen();
+    p->setPen(pe);
+    const QColor& c = pe.color();
     if(d->state == Invalid)
     {
-        printf("drawCurve: invalid state drawing\n");
         /* always (re)draw all the markers, because the number of them is limited to
          * MAX_STATE_SYMBOLS.
          */
@@ -182,22 +196,41 @@ void QuPlotCurve::drawCurve(QPainter *p, int style,
         {
             x = data()->sample(i * step).x();
             y = data()->sample(i * step).y();
-            QRect rect(xMap.transform(x), yMap.transform(y) - STATE_SYMBOL_SIZE / 2,
-                       STATE_SYMBOL_SIZE, STATE_SYMBOL_SIZE);
-            QPolygon poly(QVector<QPoint>() << rect.bottomLeft() << QPoint(rect.left() + rect.width()/2, rect.top())
-                          << rect.bottomRight());
-            p->setPen(Qt::black);
-            QwtPainter::drawText(p, rect, Qt::AlignHCenter|Qt::AlignCenter, "!");
-            errPen.setColor(KRED);
-            p->setPen(errPen);
-            QwtPainter::drawPolygon(p, poly);
+
             i++;
         }
         p->restore();
     }
 
-//    printf("\e[1;33mNOTE\e[0m: calling drawCurve %s from %d to %d!\n", qstoc(title().text()), from, to);
     QwtPlotCurve::drawCurve(p, style, xMap, yMap, canvasRect, from, to);
+
+    p->setRenderHint(QPainter::Antialiasing, true);
+    foreach(double x, d->txtmap.keys()) {
+       for(size_t i = 0; i < data()->size(); i++) {
+           if(d->data->x()[i] == x) {
+               y = d->data->y()[i];
+               double x0t, xt = xMap.transform(x);
+               double y0t, yt = yMap.transform(y);
+               if(i > 0) {
+                   x0t = xMap.transform(d->data->x()[i-1]);
+                   y0t = yMap.transform(d->data->y()[i-1]);
+               }
+               QRect rect(xt - STATE_SYMBOL_SIZE / 2, yt- STATE_SYMBOL_SIZE / 2,
+                          STATE_SYMBOL_SIZE, STATE_SYMBOL_SIZE);
+               QPen ep(QColor(Qt::red));
+               ep.setWidthF(1.5);
+               p->setPen(ep);
+               QwtPainter::drawEllipse(p, rect);
+               if(i > 0)
+                    QwtPainter::drawLine(p, x0t, y0t, xt, yt);
+               ep.setColor(Qt::black);
+               ep.setWidthF(0.0f);
+               p->setPen(ep);
+               rect.translate(-rect.width()/1.2f, -rect.height()/1.7f);
+               QwtPainter::drawText(p, rect, Qt::AlignHCenter|Qt::AlignCenter, "i");
+           }
+       }
+    }
 }
 
 double QuPlotCurve::x(int index) const
@@ -213,6 +246,12 @@ double QuPlotCurve::y(int index) const
 size_t QuPlotCurve::size() const
 {
     return this->data()->size();
+}
+
+double QuPlotCurve::lastValue() const {
+    double v;
+    d->data->count() > 0 ? v = d->data->y()[d->data->count() - 1] : v = 0.0;
+    return v;
 }
 
 

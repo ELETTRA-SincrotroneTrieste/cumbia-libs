@@ -107,7 +107,7 @@ void CuTimerService::unregisterListener(CuTimerListener *tl, int timeout)
 }
 
 /*!
- * \brief Changet the timeout of the timer that serves the given listener
+ * \brief Changes the timeout of the timer that serves the given listener
  * \param tl the CuTimerListener requiring a change in timeout
  * \param timeout the new timeout, in milliseconds
  * \return A fresh or existing timer satisfying the requirements in terms of timeout.
@@ -117,14 +117,17 @@ void CuTimerService::unregisterListener(CuTimerListener *tl, int timeout)
  */
 CuTimer *CuTimerService::changeTimeout(CuTimerListener *tl, int timeout)
 {
-    std::unique_lock lock(d->shared_mutex);
-    CuTimer *t = m_findTimer(tl, timeout);
+    CuTimer *t = nullptr;
+    {
+        std::unique_lock lock(d->shared_mutex);
+        t = m_findTimer(tl, -1); // does not lock
+    }
     if(t) {
         printf("CuTimerService::changeTimeout: changing timeout from \e[1;32m%d to %d\e[0m for timer %p\n",
                t->timeout(), timeout, t);
-        unregisterListener(tl, timeout);
+        unregisterListener(tl, t->timeout()); // locks
         printf("CuTimerService::changeTimeout: registering a \e[1;32mnew listener\e[0m\n");
-        t = registerListener(tl, timeout);
+        t = registerListener(tl, timeout); // locks
     }
     else if(!t)
         perr("CuTimerService.changeTimeout: no listener %p registered with any timer", tl);
@@ -275,7 +278,7 @@ CuTimer *CuTimerService::m_findTimer(const CuTimerListener *th, int timeout)
 {
     std::multimap<const CuTimerListener *, CuTimer*>::const_iterator it;
     for(it = d->ti_cache.begin(); it != d->ti_cache.end(); ++it) {
-        if(it->first == th && it->second->timeout() == timeout)
+        if(it->first == th && (timeout < 0 || it->second->timeout() == timeout))
             return it->second;
     }
     return nullptr;

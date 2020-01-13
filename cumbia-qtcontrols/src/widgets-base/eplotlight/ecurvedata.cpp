@@ -42,7 +42,7 @@ void CurveData::append(double *x, double *y, int count)
     d_count += count;
 }
 
-void CurveData::insert(double *x, double *y, int count)
+void CurveData::insert(double *x, double *y, int count, double default_y)
 {
     size_t i = 0;
     int j = 0;
@@ -51,10 +51,10 @@ void CurveData::insert(double *x, double *y, int count)
         while(j < count && x[j] <= d_x[i]) {
             if(x[j] == d_x[i]) {
                 // replace y
-                d_y[i] = y[j];
+                d_y[i] = m_get_yval(y, i, count, default_y);
             } else {
                 d_x.insert(i, x[j]);
-                d_y.insert(i, y[j]);
+                d_y.insert(i, m_get_yval(y, j, count, default_y));
                 d_count++;
             }
             j++;
@@ -62,7 +62,12 @@ void CurveData::insert(double *x, double *y, int count)
         i++;
         ds = d_x.size();
     }
-    append(x + j, y + j, count - j);
+    double yv = m_get_yval(y, j, count, default_y);
+    double *yarr = new double[count - j];
+    for(int i = 0; i < count - j; i++)
+        yarr[i] = yv;
+    append(x + j, yarr, count - j);
+    delete yarr;
 }
 
 int CurveData::count() const
@@ -89,4 +94,15 @@ void CurveData::reserve(int newSize)
 {
     d_x.reserve(newSize);
     d_y.reserve(newSize);
+}
+
+double CurveData::m_get_yval(double *y, int idx, int siz, double default_y) const {
+    if(y != nullptr && idx < siz)
+        return y[idx];
+    int i = idx - 1;
+    while(d_y.size() < i)
+        i--;
+    if(i > -1)
+        return d_y[i];
+    return default_y;
 }

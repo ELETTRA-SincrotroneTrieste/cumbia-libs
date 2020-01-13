@@ -73,7 +73,6 @@ Bpmqtango::Bpmqtango(CumbiaTango *cut, QWidget *parent) :
 
 
     }
-    new CuContextActionBridge(this, cu_t, cu_tango_r_fac);
 
 }
 

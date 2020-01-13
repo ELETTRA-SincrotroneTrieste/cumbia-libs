@@ -33,7 +33,7 @@ public:
     CurveData();
 
     void append(double *x, double *y, int count);
-    void insert(double *x, double *y, int count);
+    void insert(double *x, double *y, int count, double default_y = 0.0);
     void set(const QVector<double> &xData, const QVector<double> &yData);
     void removeFirstElements(int n);
 
@@ -50,6 +50,7 @@ private:
     int d_count;
     QVector<double> d_x;
     QVector<double> d_y;
+    double m_get_yval(double *y, int idx, int siz, double default_y) const;
 };
 
 

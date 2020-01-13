@@ -119,8 +119,18 @@ void CuWriteActivity::onExit()
     assert(d->my_thread_id == pthread_self());
     int refcnt = -1;
     CuData at = getToken(); /* activity token */
+    at["msg"] = d->msg;
+    at["mode"] = "WRITE";
+    at["err"] = d->err;
+    CuTangoWorld utils;
+    utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
+
     if(d->tdev)
         refcnt = d->device_service->removeRef(at["device"].toString(), threadToken());
     if(refcnt == 0)
         d->tdev = NULL;
+    at["exit"] = true;
+    // CuTWriter, our listener, will call CuActionFactoryService.unregisterAction when the
+    // exit flag is set.
+    publishResult(at);
 }

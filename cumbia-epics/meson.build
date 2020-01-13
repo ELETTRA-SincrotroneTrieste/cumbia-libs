@@ -112,7 +112,6 @@ endif
 
 
 cumbiaepicslib = shared_library('cumbia-epics', sources,
-        soversion : '0',
         version : meson.project_version(),
         include_directories : [includedirs],
         cpp_args : cpp_arguments,

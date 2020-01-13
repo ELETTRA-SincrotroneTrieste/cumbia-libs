@@ -42,6 +42,12 @@ c3. C++17 shared_locks replace unique locks where the protected variables are on
 d. cumbia-qtcontrols
 d1. cupluginloader provides a template method to directly get the desired plugin CuPluginLoader::get
 d2. qulabelbase.cpp: wordwrap no more set to true by default. Fixed size-hint related methods
+d3. qutrendplot.cpp, quplotcurve: custom notes can be set on arbitrary curve points. They are indicated by red circles
+    and the marker shows the text of the note. Signals added to notify marker visible / hidden and marker text changed.
+    Custom notes store error messages for trend plots and can be used by the historical database plugin to mark the points where
+    errors occurred.
+d4. quinputoutput.cpp: fixed crash when configuration is valid but no "value" is set on the data bundle (e.g. read attribute
+    fails while get_attribute_config is ok)
 
 e. cumbia-random
 

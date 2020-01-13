@@ -704,6 +704,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
             (*reslist)[results_offset]["err"] = d->error;
             (*reslist)[results_offset]["msg"] = d->message;
             (*reslist)[results_offset]["success_color"] = d->t_world_conf.successColor(!d->error);
+            (*reslist)[results_offset].putTimestamp();
             results_offset++;
         }
     }

@@ -7,6 +7,7 @@
 
 class QwtPlotPicker;
 class QwtPlotMarker;
+class QuPlotMarkerComponentPrivate;
 
 /*! @private */
 class Arrow: public QwtPlotItem
@@ -26,6 +27,7 @@ class QuPlotMarkerComponent : public QuPlotComponent
 {
 public:
     QuPlotMarkerComponent(QuPlotBase *plot);
+    virtual ~QuPlotMarkerComponent();
 
     // QuPlotComponent interface
 public:
@@ -33,6 +35,8 @@ public:
 
     bool update(const QuPlotBase *plot);
 
+    QString xLabel() const;
+    QString yLabel() const;
     QString label() const;
 
     void setLabel(const QwtText &text);
@@ -56,13 +60,7 @@ public:
 
 private:
     void init(QuPlotBase *plot);
-
-    QwtPlotMarker *m_marker;
-    QwtPlotPicker *m_picker;
-    Arrow *m_arrow;
-
-    QwtPlotCurve *m_currentClosestCurve;
-    int m_currentClosestPoint;
+    QuPlotMarkerComponentPrivate *d;
 
     // QuPlotComponent interface
 public:

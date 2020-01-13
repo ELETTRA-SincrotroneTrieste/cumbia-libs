@@ -11,10 +11,10 @@ void QuTimeScaleDraw::setDateEnabled(bool en)
 {
     if(en)
     {
-        setDateFormat( QwtDate::Millisecond, "hh:mm:ss:zzz\nddd dd MMM" );
-        setDateFormat( QwtDate::Second, "hh:mm:ss\nddd dd MMM yyyy" );
-        setDateFormat( QwtDate::Minute, "hh:mm\nddd dd MMM" );
-        setDateFormat( QwtDate::Hour, "hh:mm\nddd dd MMM" );
+        setDateFormat( QwtDate::Millisecond, "MMM.dd hh:mm:ss:zzz" );
+        setDateFormat( QwtDate::Second, "MMM.dd hh:mm:ss" );
+        setDateFormat( QwtDate::Minute, "MMM.dd hh:mm" );
+        setDateFormat( QwtDate::Hour, "MMM.dd hh:mm" );
         setDateFormat( QwtDate::Day, "ddd dd MMM" );
         setDateFormat( QwtDate::Week, "Www" );
         setDateFormat( QwtDate::Month, "MMM" );

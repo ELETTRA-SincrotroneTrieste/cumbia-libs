@@ -1,4 +1,5 @@
 #include "quplotmarkercomponent.h"
+#include "quplotcurve.h"
 #include <QColor>
 #include <QPen>
 
@@ -22,9 +23,25 @@ void Arrow::draw(QPainter *painter, const QwtScaleMap &xMap, const QwtScaleMap &
     painter->drawLine(QPointF(x1, y1), QPointF(x2, y2));
 }
 
+class QuPlotMarkerComponentPrivate {
+public:
+    QwtPlotMarker *m_marker;
+    QwtPlotPicker *m_picker;
+    Arrow *m_arrow;
+    QwtPlotCurve *m_currentClosestCurve;
+    int m_currentClosestPoint;
+    QString xText, yText;
+};
+
 QuPlotMarkerComponent::QuPlotMarkerComponent(QuPlotBase *plot)
 {
+    d = new QuPlotMarkerComponentPrivate;
     init(plot);
+}
+
+QuPlotMarkerComponent::~QuPlotMarkerComponent()
+{
+    delete d;
 }
 
 QString QuPlotMarkerComponent::name() const {
@@ -38,9 +55,9 @@ void QuPlotMarkerComponent::init(QuPlotBase *plot)
     QColor bgColor(QColor(245,245,245));
     QColor txtColor(QColor(Qt::black));
     QColor bgPen(QColor(Qt::darkGray));
-    m_marker = new QwtPlotMarker();
-    m_picker = new QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft, QwtPlotPicker::NoRubberBand, QwtPicker::AlwaysOff, plot->canvas());
-    m_picker->setStateMachine(new QwtPickerClickPointMachine());
+    d->m_marker = new QwtPlotMarker();
+    d->m_picker = new QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft, QwtPlotPicker::NoRubberBand, QwtPicker::AlwaysOff, plot->canvas());
+    d->m_picker->setStateMachine(new QwtPickerClickPointMachine());
     QwtText text("", QwtText::PlainText);
     text.setRenderFlags(Qt::AlignCenter | Qt::TextIncludeTrailingSpaces);
     QFont f(plot->font());
@@ -52,50 +69,62 @@ void QuPlotMarkerComponent::init(QuPlotBase *plot)
     bgPen.setAlpha(alpha);
     text.setColor(txtColor);
     text.setBackgroundBrush(QBrush(bgColor));
-    m_marker->setLabel(text);
-    m_marker->setLabelAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    m_marker->setLineStyle(QwtPlotMarker::NoLine);
-    m_marker->setValue(0.0, 0.0);
-    m_marker->hide();
-    m_arrow = new Arrow();
-    m_currentClosestCurve = NULL;
-    m_currentClosestPoint = -1;
-    m_arrow->hide();
+    d->m_marker->setLabel(text);
+    d->m_marker->setLabelAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    d->m_marker->setLineStyle(QwtPlotMarker::NoLine);
+    d->m_marker->setValue(0.0, 0.0);
+    d->m_marker->hide();
+    d->m_arrow = new Arrow();
+    d->m_currentClosestCurve = NULL;
+    d->m_currentClosestPoint = -1;
+    d->m_arrow->hide();
 }
 
 void QuPlotMarkerComponent::attachToPlot(QuPlotBase *plot)
 {
-    m_arrow->attach(plot);
-    m_marker->attach(plot);
+    d->m_arrow->attach(plot);
+    d->m_marker->attach(plot);
 }
 
 void QuPlotMarkerComponent::connectToPlot(QuPlotBase *plot)
 {
-    QObject::connect(m_picker, SIGNAL(selected(const QPolygon &)), plot, SLOT(showMarker(const QPolygon &)));
+    QObject::connect(d->m_picker, SIGNAL(selected(const QPolygon &)), plot, SLOT(showMarker(const QPolygon &)));
 }
 
 /*
  * \brief Returns true if the marker has been updated, false otherwise
  *
- * A marker is updated when it's visible and the linked curve is visible.
+ * A marker is updated when it's visible and the linked curve is visible and the text
+ * hasn't changed
  */
 bool QuPlotMarkerComponent::update(const QuPlotBase *plot)
 {
     /* update arrow if the arrow is visible and if the curve has not been removed */
-    if(m_arrow->isVisible() && plot->curves().contains(m_currentClosestCurve) &&
-            m_currentClosestCurve->isVisible() &&
-            m_currentClosestCurve && m_currentClosestPoint != -1)
+    if(d->m_arrow->isVisible() && plot->curves().contains(d->m_currentClosestCurve) &&
+            d->m_currentClosestCurve->isVisible() &&
+            d->m_currentClosestCurve && d->m_currentClosestPoint != -1)
     {
-        double x = m_currentClosestCurve->data()->sample(m_currentClosestPoint).x();
-        double y = m_currentClosestCurve->data()->sample(m_currentClosestPoint).y();
-        m_arrow->begin = QPointF(x, y);
-        //  m_arrow->end = QPointF(m_currentClosestCurve->x(closestPoint)+hoff, up);
-        QwtText l = m_marker->label();
-        l.setText(markerText(plot, m_currentClosestCurve, m_currentClosestPoint));
-        m_marker->setLabel(l);
-        return true;
+        double x = d->m_currentClosestCurve->data()->sample(d->m_currentClosestPoint).x();
+        double y = d->m_currentClosestCurve->data()->sample(d->m_currentClosestPoint).y();
+        d->m_arrow->begin = QPointF(x, y);
+        //  d->m_arrow->end = QPointF(d->m_currentClosestCurve->x(closestPoint)+hoff, up);
+        QwtText l = d->m_marker->label();
+        QString mtxt = markerText(plot, d->m_currentClosestCurve, d->m_currentClosestPoint);
+        if(mtxt != l.text()) {
+            l.setText(mtxt);
+            d->m_marker->setLabel(l);
+            return true;
+        }
     }
     return false;
+}
+
+QString QuPlotMarkerComponent::xLabel() const {
+    return d->xText;
+}
+
+QString QuPlotMarkerComponent::yLabel() const {
+    return d->yText;
 }
 
 /*! \brief returns the text currently displayed
@@ -104,7 +133,7 @@ bool QuPlotMarkerComponent::update(const QuPlotBase *plot)
  */
 QString QuPlotMarkerComponent::label() const
 {
-    return m_marker->label().text();
+    return d->m_marker->label().text();
 }
 
 /*! \brief set the marker label as QwtText
@@ -113,7 +142,7 @@ QString QuPlotMarkerComponent::label() const
  */
 void QuPlotMarkerComponent::setLabel(const QwtText &text)
 {
-    m_marker->setLabel(text);
+    d->m_marker->setLabel(text);
 }
 
 void QuPlotMarkerComponent::update(const QuPlotBase *plot,
@@ -130,12 +159,12 @@ void QuPlotMarkerComponent::update(const QuPlotBase *plot,
     yub = plot->axisScaleDiv(closestC->yAxis()).upperBound();
     range = xub - xlb;
 
-    m_currentClosestCurve = closestC;
-    m_currentClosestPoint = closestPointIdx;
+    d->m_currentClosestCurve = closestC;
+    d->m_currentClosestPoint = closestPointIdx;
 
-    QwtText l = m_marker->label();
+    QwtText l = d->m_marker->label();
     l.setText(markerText(plot, closestC, closestPointIdx));
-    m_marker->setLabel(l);
+    d->m_marker->setLabel(l);
 
     markerW = l.textSize(l.font()).width();
     markerH = l.textSize(l.font()).height();
@@ -143,17 +172,17 @@ void QuPlotMarkerComponent::update(const QuPlotBase *plot,
     if(x <= xlb + range/3)
     {
         hoff = 0.1*range; // + .2*x;
-        m_marker->setLabelAlignment(Qt::AlignRight|Qt::AlignBottom);
+        d->m_marker->setLabelAlignment(Qt::AlignRight|Qt::AlignBottom);
     }
     else if(x >= xlb + 2 * range/3)
     {
         hoff = -0.1*range;
-        m_marker->setLabelAlignment(Qt::AlignLeft|Qt::AlignBottom);
+        d->m_marker->setLabelAlignment(Qt::AlignLeft|Qt::AlignBottom);
     }
     else
     {
         hoff = -0.1*range;
-        m_marker->setLabelAlignment(Qt::AlignHCenter|Qt::AlignBottom);
+        d->m_marker->setLabelAlignment(Qt::AlignHCenter|Qt::AlignBottom);
     }
 
     QPointF begin, end, arrowEnd;
@@ -161,8 +190,8 @@ void QuPlotMarkerComponent::update(const QuPlotBase *plot,
     begin = QPointF(x, y);
     end = QPointF(x + hoff, up);
 
-    m_marker->setYAxis(closestC->yAxis());
-    m_marker->setValue(end);
+    d->m_marker->setYAxis(closestC->yAxis());
+    d->m_marker->setValue(end);
 
    /* 1. to obtain the position of the end point of the arrow, transform first the end point into
    * pixel coordinates.
@@ -184,49 +213,49 @@ void QuPlotMarkerComponent::update(const QuPlotBase *plot,
     /* 3. Finally set arrow end point, transforming back into plot coordinates */
     arrowEnd = QPointF(plot->invTransform(closestC->xAxis(), arrowXEndPix),
                        plot->invTransform(closestC->yAxis(), arrowYEndPix));
-    m_arrow->setYAxis(closestC->yAxis());
-    m_arrow->begin = begin;
-    m_arrow->end = arrowEnd;
+    d->m_arrow->setYAxis(closestC->yAxis());
+    d->m_arrow->begin = begin;
+    d->m_arrow->end = arrowEnd;
 }
 
 
 void QuPlotMarkerComponent::hide()
 {
-    m_marker->hide();
-    m_arrow->hide();
+    d->m_marker->hide();
+    d->m_arrow->hide();
 }
 
 void QuPlotMarkerComponent::show()
 {
-    m_marker->show();
-    m_arrow->show();
+    d->m_marker->show();
+    d->m_arrow->show();
 }
 
 bool QuPlotMarkerComponent::isVisible() const
 {
-    return m_marker->isVisible();
+    return d->m_marker->isVisible();
 }
 
 QwtPlotCurve *QuPlotMarkerComponent::currentClosestCurve() const
 {
-    return m_currentClosestCurve;
+    return d->m_currentClosestCurve;
 }
 
 int QuPlotMarkerComponent::currentClosestPoint() const
 {
-    return m_currentClosestPoint;
+    return d->m_currentClosestPoint;
 }
 
 Arrow *QuPlotMarkerComponent::getArrow() const {
-    return m_arrow;
+    return d->m_arrow;
 }
 
 QwtPlotMarker *QuPlotMarkerComponent::qwtPlotMarker() const {
-    return m_marker;
+    return d->m_marker;
 }
 
 QwtPlotPicker *QuPlotMarkerComponent::qwtPlotPicker() const {
-    return m_picker;
+    return d->m_picker;
 }
 
 /*! \brief returns a string containing a textual representation of the point on the curve
@@ -252,7 +281,9 @@ QString QuPlotMarkerComponent::markerText(const QuPlotBase *plot,
                                           const QwtPlotCurve *curve,
                                           const int index)
 {
-    QString s;
+    d->xText.clear();
+    d->yText.clear();
+    QString sx, sy;
     double y, x, y1;
     if(curve != nullptr)
     {
@@ -260,21 +291,32 @@ QString QuPlotMarkerComponent::markerText(const QuPlotBase *plot,
         y = curve->data()->sample(index).y();
         /* place the x coordinate label, taken from the x axis scale */
         const QwtScaleDraw *scaleDraw = plot->axisScaleDraw(curve->xAxis());
-        s += QString("x: %1\n").arg(scaleDraw->label(x).text());
+        d->xText = QString("x: %1").arg(scaleDraw->label(x).text());
+        sx = d->xText + "\n";
         /* get overlapping curves in point x,y and add to the marker the y values */
         QSet<QwtPlotCurve *> overlappingCurves = intersectingCurves(plot, x, y, curve);
         /* add the current curve to the overlapping set */
         overlappingCurves.insert((QwtPlotCurve *)(curve)); /* remove constness */
         foreach(QwtPlotCurve *pc, overlappingCurves.values())
         {
-            y1 = pc->data()->sample(index).y();
-            /* place the curve title on the marker text first */
-            if(pc->title() != QwtText(QString()))
-                s += QString("%1: ").arg(pc->title().text());
-            s += QString("%1").arg(y1, 0, 'g', 5) + "\n";
+            sy.clear();
+            if(pc->rtti() == QwtPlotItem::Rtti_PlotUserItem + RTTI_CURVE_OFFSET) {
+                QuPlotCurve *qpl = static_cast<QuPlotCurve *>(pc);
+                if(!qpl->text(x).isEmpty())
+                    sy = QString("%1:\n%2").arg(pc->title().text()).arg(qpl->text(x));
+            }
+            if(sy.isEmpty()) {
+                y1 = pc->data()->sample(index).y();
+                /* place the curve title on the marker text first */
+                if(pc->title() != QwtText(QString()))
+                    sy += QString("%1: ").arg(pc->title().text());
+                sy += QString("%1").arg(y1, 0, 'g', 5);
+            }
+            d->yText += sy + "\n";
+            sx += sy + "\n";
         }
     }
-    return s;
+    return sx;
 }
 
 QSet<QwtPlotCurve *> QuPlotMarkerComponent::intersectingCurves(const QuPlotBase *plot,

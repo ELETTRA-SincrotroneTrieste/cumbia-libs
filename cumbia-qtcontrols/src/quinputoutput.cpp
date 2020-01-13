@@ -98,13 +98,12 @@ void QuInputOutput::setWriterType(QuInputOutput::WriterType t)
         case DoubleSpinBox:
             setInputWidget(new QDoubleSpinBox(this));
             break;
-        case LineEdit:
-            setInputWidget(new QLineEdit(this));
-            break;
         case ComboBox:
             setInputWidget(new QComboBox(this));
             break;
+        case LineEdit:
         default:
+            setInputWidget(new QLineEdit(this));
             break;
         }
         d->w_type = t;
@@ -246,9 +245,9 @@ void QuInputOutput::m_configure(const CuData &da)
         CuVariant v = da["value"];
         if(d->w_type == None && da["values"].isValid())
             setWriterType(ComboBox);
-        else if(d->w_type == None && (v.isFloatingPoint()  || v.isInteger()) )
+        else if(d->w_type == None && !v.isNull() && (v.isFloatingPoint()  || v.isInteger()) )
             setWriterType(Numeric);
-        else if(d->w_type == None && v.getType() == CuVariant::String)
+        else if(d->w_type == None && !v.isNull() && v.getType() == CuVariant::String)
             setWriterType(LineEdit);
 
         if(d->w_type == ComboBox && da["values"].isValid())
@@ -312,7 +311,8 @@ void QuInputOutput::m_configure(const CuData &da)
             if(!da["description"].isNull()) {
                 desc.prepend(QString::fromStdString(da["description"].toString()));
             }
-            in->setWhatsThis(desc);
+            if(in)
+                in->setWhatsThis(desc);
         }
     }
     else

@@ -445,6 +445,9 @@ void CuPollingActivity::execute()
         dev_err["src"] = tsrc.getName();
         dev_err.putTimestamp();
         results->push_back(dev_err);
+        for(size_t i = 0; i < results->size(); i++)
+            printf("CuPollingActivity::execute \e[1;31mresult %ld: %s results size %ld\n",
+               i, results->at(i).toString().c_str(), results->size());
     }
 
     publishResult(results);

@@ -30,6 +30,12 @@ class CuContext;
  * from within onUpdate and the base operations aforementioned are performed.
  * <em>Strategies</em> must implement QuWidgetUpdateStrategyI interface.
  *
+ * \par Attach notes to specific x values on the plot \since v1.1
+ * If data received by the *onUpdate* method contains the following keys
+ * - notes_time_scale_ms (scalar or vector of timestamps as double)
+ * - notes (string scalar or vector)
+ * and the size of the two values is equal, a note is associated to each
+ *
  * @see QuPlotBase
  */
 class QuTrendPlot : public QuPlotBase, public CuDataListener, public CuContextI

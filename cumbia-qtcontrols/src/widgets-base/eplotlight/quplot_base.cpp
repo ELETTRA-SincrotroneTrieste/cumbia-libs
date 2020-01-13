@@ -322,7 +322,12 @@ bool QuPlotBase::updateMarker()
 {
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
     if(marker->isVisible()) {
-        return marker->update(this);
+        bool updated = marker->update(this);
+        if(updated) {
+            double x = marker->currentClosestCurve()->data()->sample(marker->currentClosestPoint()).x();
+            double y = marker->currentClosestCurve()->data()->sample(marker->currentClosestPoint()).y();
+            emit markerTextChanged(marker->yLabel(), marker->xLabel(), x, y);
+        }
     }
     return false;
 }
@@ -505,11 +510,11 @@ void QuPlotBase::appendData(const QString& curveName, double x, double y)
  *
  * \since v1.1.0
  */
-void QuPlotBase::insertData(const QString &curveName, double *xData, double *yData, int size)
+void QuPlotBase::insertData(const QString &curveName, double *xData, double *yData, int size, double default_y)
 {
     QuPlotCurve* curve = d->curvesMap.value(curveName);
     if(curve)
-        curve->insertData(xData, yData, size);
+        curve->insertData(xData, yData, size, default_y);
     int bufSiz = dataBufferSize();
     while(bufSiz > 0 && curve->count() > bufSiz) {
         curve->popFront();
@@ -822,7 +827,6 @@ void QuPlotBase::setZoomDisabled(bool disable)
     ShiftClickEater *shiftClickEater = findChild<ShiftClickEater *>("shiftClickEater");
     if(disable && !shiftClickEater)
     {
-        pinfo("creating shift + click eater to eat zoom events");
         shiftClickEater = new ShiftClickEater(this);
         shiftClickEater->setObjectName("shiftClickEater");
         canvas()->installEventFilter(shiftClickEater);
@@ -883,8 +887,10 @@ void QuPlotBase::hideMarker()
 void QuPlotBase::mouseReleaseEvent(QMouseEvent *ev)
 {
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
-    if(ev->button() == Qt::MidButton && marker->isVisible())
+    if(ev->button() == Qt::MidButton && marker->isVisible()) {
         hideMarker();
+        emit markerVisibilityChanged(false);
+    }
     QWidget::mouseReleaseEvent(ev);
 }
 
@@ -893,7 +899,6 @@ void QuPlotBase::keyPressEvent(QKeyEvent *ke)
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
     if(marker->isVisible())
     {
-        printf("key press move marker\n");
         ke->ignore();
         if(ke->key() == Qt::Key_Left)
             moveCurveToYRight(marker->currentClosestCurve(), false);
@@ -907,8 +912,10 @@ void QuPlotBase::keyPressEvent(QKeyEvent *ke)
 void QuPlotBase::plotZoomed(const QRectF&)
 {
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
-    if(marker->isVisible())
+    if(marker->isVisible()) {
         hideMarker();
+        emit markerVisibilityChanged(false);
+    }
 }
 
 void QuPlotBase::moveCurveToYRight(QwtPlotCurve *c, bool yr)
@@ -930,13 +937,13 @@ void QuPlotBase::showMarker(const QPolygon &p)
 {
     int closestPoint;
     QwtPlotCurve *closestCurve;
-    double x, y;
+    double x = 0.0, y = 0.0;
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
     closestPoint = findClosestPoint(p.point(0), &closestCurve);
 
     if (closestPoint != -1) {
         marker->show();
-        updateLabel(closestCurve, closestPoint);
+        m_updateLabel(closestCurve, closestPoint); // does not emit marker text changed. Does not replot
         x = closestCurve->data()->sample(closestPoint).x();
         y = closestCurve->data()->sample(closestPoint).y();
         emit plotClicked(QCursor::pos(), closestCurve, x, y, QPoint(transform(closestCurve->xAxis(), x),
@@ -946,14 +953,16 @@ void QuPlotBase::showMarker(const QPolygon &p)
         marker->hide();
     }
     replot();
+
+    emit markerTextChanged(closestPoint != -1 ? marker->yLabel() : "", closestPoint != -1 ? marker->xLabel() : "", x, y);
+    emit markerVisibilityChanged(closestPoint != -1);
 }
 
-void QuPlotBase::updateLabel(QwtPlotCurve *closestCurve, int closestPointIdx)
+void QuPlotBase::m_updateLabel(QwtPlotCurve *closestCurve, int closestPointIdx)
 {
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
     if(closestCurve && closestPointIdx > -1 && marker->isVisible()) {
         marker->update(this, closestCurve, closestPointIdx);
-        replot();
     }
 }
 

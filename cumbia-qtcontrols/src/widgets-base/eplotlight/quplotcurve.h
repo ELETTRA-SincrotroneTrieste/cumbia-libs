@@ -72,7 +72,7 @@ public:
      * \param y vector of values
      * \param count number of elements of x and y
      */
-    void insertData(double *x, double *y, int count);
+    void insertData(double *x, double *y, int count, double default_y = 0.0);
     
     void setData(const QVector< double > &xData, const QVector< double > &yData);
 
@@ -93,6 +93,10 @@ public:
     State state() const;
 
     void setState(State s);
+
+    QString text(const double& x) const;
+
+    void setText(const double& x, const QString& txt);
     
     /* \brief Draws error markers when state is Invalid or y values as labels when the option
      * showYValuesEnabled is enabled.
@@ -117,6 +121,8 @@ public:
     double y(int index) const;
 
     size_t size() const;
+
+    double lastValue() const;
 
 protected:
 

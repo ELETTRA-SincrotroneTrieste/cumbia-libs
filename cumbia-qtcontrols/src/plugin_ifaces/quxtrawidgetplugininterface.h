@@ -139,7 +139,6 @@ public:
  * \li create(const QString& name, QWidget *parent, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac, const CuControlsWriterFactoryI &w_fac)
  * \li  QuXtraWidgetPluginI::create(const QString& name, QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
  *
- *
  * @see QuXtraWidgetPluginLoader
  * @see QuXtraWidgetI
  *

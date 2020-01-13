@@ -40,7 +40,7 @@ public:
     std::list<CuTimer *> getTimers();
     std::list<CuTimerListener *>getListeners(CuTimer *t) const;
     void unregisterListener(CuTimerListener *th, int timeout);
-    CuTimer *changeTimeout(CuTimerListener *th, int timeout);
+    CuTimer *changeTimeout(CuTimerListener *th, int timeout = -1);
     bool isRegistered(CuTimerListener *th, int timeout);
     void setTimerMaxCount(int count);
     int timerMaxCount() const;

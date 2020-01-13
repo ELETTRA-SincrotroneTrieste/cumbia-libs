@@ -2,6 +2,7 @@
 #include "quplotcommon.h"
 #include <cumacros.h>
 #include <cudata.h>
+#include <qustring.h>
 #include <QtDebug>
 #include <QDateTime>
 
@@ -145,8 +146,10 @@ void QuTrendPlot::onUpdate(const CuData &da)
 
 void QuTrendPlot::update(const CuData &da)
 {
+    bool need_replot = false;
     d->read_ok = !da["err"].toBool();
-    QString src = QString::fromStdString(da["src"].toString());
+    QString src, msg = QString::fromStdString(da["msg"].toString());
+    src = QString::fromStdString(da["src"].toString());
 
     // update link statistics
     CuLinkStats *link_s = d->plot_common->getContext()->getLinkStats();
@@ -161,26 +164,26 @@ void QuTrendPlot::update(const CuData &da)
 
 
     QuPlotCurve *crv = curve(src);
-    if(!crv)
+    if(!crv) {
         addCurve(src, crv = new QuPlotCurve(src));
+    }
 
     // set the curve state
     d->read_ok ? crv->setState(QuPlotCurve::Normal) : crv->setState(QuPlotCurve::Invalid);
 
+    double x, y;
+    if(da.containsKey("timestamp_ms") && crv)
+        x = static_cast<qint64>(da["timestamp_ms"].toLongInt());
+    else
+        x = crv->size() > 0 ? crv->x(crv->size() - 1) + 1 : 0;
+
     const CuVariant &v = da["value"];
     if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Scalar)
     {
-        double x, y;
-        if(da.containsKey("timestamp_ms") && crv)
-            x = static_cast<qint64>(da["timestamp_ms"].toLongInt());
-        else
-            x = crv->size() > 0 ? crv->x(crv->size() - 1) + 1 : 0;
-
         v.to(y);
         appendData(src, x, y);
     }
     else if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Vector) {
-        printf("QuTrendPlot.update: data \e[1;36m%s\e[0m SIZE \e[1;31m%d\e[0m\n", da.toString().c_str(), v.getSize());
         if(da.containsKey("time_scale_ms")) {
             const CuVariant& xv = da["time_scale_ms"];
             insertData(src, xv.toDoubleP(), v.toDoubleP(), v.getSize());
@@ -192,11 +195,27 @@ void QuTrendPlot::update(const CuData &da)
             insertData(src, xvals, v.toDoubleP(), v.getSize());
         }
     }
-    else {
-        // appendData triggers a replot when necessary. If !d->read_ok, then there's at least
-        // one curve with an Invalid state. A replot is necessary in this case
-        replot();
+    else if(!d->read_ok && da.containsKey("timestamp_ms")) {
+        crv->size() > 0 ? y = crv->lastValue() : y = yLowerBound();
+        crv->setText(static_cast<double>(x), msg);
+        appendData(src, x, y);
+        need_replot = true;
     }
+
+    if(da.containsKey("notes_time_scale_ms") && da.containsKey("notes")) {
+        need_replot = true;
+        std::vector<double> notes_ts;
+        std::vector<std::string> notes;
+        da["notes_time_scale_ms"].toVector<double>(notes_ts);
+        notes = da["notes"].toStringVector();
+        insertData(src, notes_ts.data(), nullptr, notes_ts.size(), yLowerBound());
+        for(size_t i = 0; notes_ts.size() == notes.size() && i < notes_ts.size(); i++) {
+            crv->setText(notes_ts[i], QuString(notes[i]));
+        }
+    }
+    if(need_replot)
+        replot();
+
     setToolTip(QString("\"%1\": %2").arg(src).arg(QString::fromStdString(da["msg"].toString())));
 }
 

@@ -251,7 +251,7 @@ public slots:
 
     virtual void appendData(const QString &curveName, double x, double y);
 
-    virtual void insertData(const QString &curveName, double *xData,  double *yData, int size);
+    virtual void insertData(const QString &curveName, double *xData,  double *yData, int size, double default_y = 0.0);
 
     void setRefreshTimeout(int millis);
 
@@ -280,8 +280,6 @@ protected:
 
     void moveCurveToYRight(QwtPlotCurve *c, bool yr);
 
-    void updateLabel(QwtPlotCurve *closestCurve, int closestPointIdx);
-
     virtual void init();
 
     void contextMenuEvent(QContextMenuEvent *);
@@ -304,6 +302,9 @@ signals:
    * via a Qt::DirectConnection to your slot.
    */
   void curveRemoved(QuPlotCurve *);
+
+  void markerTextChanged(const QString& yText, const QString& xText = "", double x = 0.0, double y = 0.0 );
+  void markerVisibilityChanged(bool visible);
 
 protected slots:
     void displayZoomHint();
@@ -333,6 +334,7 @@ private:
     QuPlotBasePrivate *d;
 
     int findClosestPoint(QPoint p, QwtPlotCurve **closestCrv);
+    void m_updateLabel(QwtPlotCurve *closestCurve, int closestPointIdx);
 };
 
 #endif
