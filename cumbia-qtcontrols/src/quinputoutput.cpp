@@ -282,7 +282,7 @@ void QuInputOutput::m_configure(const CuData &da)
             if(ok)
                 ok = M.to<double>(max);
             QWidget *in = inputWidget();
-            if(ok && d->w_type == Numeric)
+            if(in && ok && d->w_type == Numeric)
             {
                 ENumeric * en = qobject_cast<ENumeric *>(in);
                 en->configureNumber(min, max, QString::fromStdString(print_format));
@@ -292,9 +292,8 @@ void QuInputOutput::m_configure(const CuData &da)
                 en->setMinimum(min);
                 en->setMaximum(max);
             }
-
             // the following applies to ENumeric or spin boxes
-            else if(ok)
+            else if(in && ok)
             {
                 in->setProperty("maximum", max);
                 in->setProperty("miniumum", min);
@@ -306,7 +305,7 @@ void QuInputOutput::m_configure(const CuData &da)
             /* can set current values instead */
             double val;
             bool can_be_double = da["w_value"].to<double>(val);
-            if (can_be_double)
+            if (in && can_be_double)
                 in->setProperty("value", val);
             if(!da["description"].isNull()) {
                 desc.prepend(QString::fromStdString(da["description"].toString()));
