@@ -171,8 +171,7 @@ void QuCircularGauge::onUpdate(const CuData &da)
 {
     d->read_ok = !da["err"].toBool();
     setReadError(!d->read_ok);
-    if(!d->read_ok)
-        setLabel("####");
+    d->read_ok ? setLabel("") : setLabel(labelErrorText());
     setToolTip(da["msg"].toString().c_str());
 
     // update link statistics

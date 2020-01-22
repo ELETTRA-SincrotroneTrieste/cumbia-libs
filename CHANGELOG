@@ -48,6 +48,8 @@ d3. qutrendplot.cpp, quplotcurve: custom notes can be set on arbitrary curve poi
     errors occurred.
 d4. quinputoutput.cpp: fixed crash when configuration is valid but no "value" is set on the data bundle (e.g. read attribute
     fails while get_attribute_config is ok)
+d5. qucirculargauge.cpp: fix preventing label to keep displaying error message "####" after a previously broken connection is restored
+d6. qucirculargauge.cpp: added labelErrorText property to provide an alternative text to "####" as error indication
 
 e. cumbia-random
 

@@ -46,6 +46,7 @@ class QuCircularGaugeBasePrivate {
 public:
     QString label;   // text property. If empty, value is displayed
     QString labelValueFormat; // if label displays value, use this format
+    QString labelErrorText; // text displayed in case of error (default: ####)
     int startAngle, spanAngle;
     QSize minSizeHint, sizeHint;
     QuCircularGaugeBase::Quads quad;
@@ -71,6 +72,7 @@ QuCircularGaugeBase::QuCircularGaugeBase(QWidget *parent) : QWidget(parent)
     d->labelValueFormat = "%.2f";
     d->labelFontScale = -1.0;
     d->readError = false;
+    d->labelErrorText = "####";
     m_anglesUpdate();
 }
 
@@ -1009,6 +1011,10 @@ void QuCircularGaugeBase::updateLabelsFontSize() {
     d->cache.labelSize = QSize(fm.width(d->cache.longestLabel), fm.height());
 }
 
+void QuCircularGaugeBase::setLabelErrorText(QString labelErrorText) {
+    d->labelErrorText = labelErrorText;
+}
+
 QRectF QuCircularGaugeBase::paintArea() {
     if(!d->cache.paintArea.isValid())
         updatePaintArea();
@@ -1153,6 +1159,10 @@ void QuCircularGaugeBase::setCacheRegenerationDisabled(bool dis) {
  */
 bool QuCircularGaugeBase::cacheRegenerationDisabled() const {
     return d->cache.regen_disabled;
+}
+
+QString QuCircularGaugeBase::labelErrorText() const {
+    return d->labelErrorText;
 }
 
 void QuCircularGaugeBase::paintEvent(QPaintEvent *pe)

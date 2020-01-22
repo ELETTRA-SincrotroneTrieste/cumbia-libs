@@ -49,6 +49,7 @@ class QuCircularGaugeBase : public QWidget
     Q_PROPERTY(int backgroundColorAlpha READ backgroundColorAlpha WRITE setBackgroundColorAlpha DESIGNABLE true)
 
     Q_PROPERTY(QString label READ label WRITE setLabel )
+    Q_PROPERTY(QString labelErrorText READ labelErrorText WRITE setLabelErrorText DESIGNABLE true)
     Q_PROPERTY(LabelPosition labelPosition READ labelPosition WRITE setLabelPosition DESIGNABLE true)
     Q_PROPERTY(double labelDistFromCenter READ labelDistFromCenter WRITE setLabelDistFromCenter DESIGNABLE true)
     Q_PROPERTY(QString labelValueFormat READ labelValueFormat WRITE setLabelValueFormat )
@@ -144,6 +145,8 @@ public:
 
     bool cacheRegenerationDisabled() const;
 
+    QString labelErrorText() const;
+
 signals:
 
 public slots:
@@ -201,6 +204,8 @@ public slots:
 
     void updateLabelsFontSize();
 
+    void setLabelErrorText(QString labelErrorText);
+
 protected:
     void paintEvent(QPaintEvent *pe);
 
@@ -234,6 +239,7 @@ private:
 
     QuCircularGaugeBasePrivate *d;
 
+    QString m_labelErrorText;
 };
 
 #endif // QUCIRCULARGAUGEBASE_H
