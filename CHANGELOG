@@ -1,3 +1,22 @@
+v1.1.1
+a. cumbia
+a1. CuVariant
+a1.1 added constructors and conversion functions for the additional data types:
+     - long long int
+     - long long unsigned int
+     - std::vector<void *>
+a1.2 added the append() method that converts the content of a CuVariant into a vector
+     type and appends the value of another variant to this variant
+
+b. cumbia-epics
+b1. cuepics-world: src patterns regexp is more specialized
+
+c. cumbia-qtcontrols
+c1. cumbia-qtcontrols/src/qutable.cpp cumbia-qtcontrols/src/qucheckbox.cpp need include QContextMenuEvent
+
+d. qumbia-apps
+d1. qumbia-reader: initial support for hdb++
+
 v1.1.0
 
 LIBRARY NEWS

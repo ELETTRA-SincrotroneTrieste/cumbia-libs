@@ -17,6 +17,7 @@ public:
     void setTangoProperty();
     void setPropertyOnly();
     QString format;
+    QString db_profile, db_output_file; // if historical db plugin available
 };
 
 #endif // CONFIGURATION_H

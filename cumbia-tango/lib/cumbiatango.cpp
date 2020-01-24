@@ -76,8 +76,9 @@ void CumbiaTango::addAction(const std::string &source, CuDataListener *l, const 
         }
         a->addDataListener(l);
     }
-    else
+    else {
         perr("CumbiaTango.addAction: source \"%s\" is not valid, ignoring", source.c_str());
+    }
 }
 
 /** \brief Removes a listener from the action(s) with the given source name and type

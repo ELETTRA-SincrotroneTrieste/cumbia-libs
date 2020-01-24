@@ -28,6 +28,13 @@
     Source configuration stored somewhere by the system can be obtained (if this is applies to the engine)
     Tango device, attribute and class properties can be fetched from the Tango database as well (requires Tango modules).
 
+### Historical database support (Tango hdb++)
+    If both the hdbextractor library [https://github.com/ELETTRA-SincrotroneTrieste/hdbextractor] and the cumbia-historicaldb
+    [https://github.com/ELETTRA-SincrotroneTrieste/cumbia-historicaldb] module are installed, cumbia-reader can access the
+    hdb++ historical database for Tango and display data for a given a source name and a date time interval.
+    Additionally, data can be saved on a file in the comma separated value format (CSV).
+    See the dedicated section below.
+
 ### Tune application output
     The command line output can be tuned in terms of
 
@@ -101,6 +108,25 @@
 
     Class property Read the description property of the class TangoTest
         $ cumbia read --tp TangoTest/cvs_location
+
+### Read from the Tango historical database (hdb++)
+    Install hdbextractor library from https://github.com/ELETTRA-SincrotroneTrieste/hdbextractor
+    Install the cumbia-historicaldb module from https://github.com/ELETTRA-SincrotroneTrieste/cumbia-historicaldb
+
+    Display data from the database
+        $ cumbia read "hdb://tango_host:20000/a/power_supply/ps_a/current(2019-11-18 16:00:59,2019-11-20 16:00:59)"
+    Note 1: the quotation marks are required due to parentheses enclosing the time interval.
+    Note 2: hdb:// domain prefix is recommended in order to correctly route the source to the hdb++ engine
+    Note 3: pay attention to the exact syntax required in the date interval expression
+
+    Output database results on a file
+        $ cumbia read  --db-output-file=current.csv "hdb://srv-tango-srf.fcs.elettra.trieste.it:20000/lh/power_supply/psb_lh.01/current(2019-11-18 16:00:59,2019-11-20 16:00:59)"
+    The CSV file will output, for each source:
+    - one line with the source name, the data type (e.g. double, int, uint, string, bool), the write mode (ro, rw), the
+      data format (scalar, vector) and the specified date/time interval
+    - for each timestamp, a comma separated row in the form "yyyy-MM-dd hh:mm:ss,value[0],value[1], ..., value[N].
+      For scalar data, the row is reduced to the form "yyyy-MM-dd hh:mm:ss,value"
+
 
 ### cumbia-random sources
     Read the cumbia-random documentation for further details.

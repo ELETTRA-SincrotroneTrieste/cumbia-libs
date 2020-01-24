@@ -9,6 +9,7 @@
 #include "culinkstats.h"
 #include "cucontextmenu.h"
 #include <QVector>
+#include <QContextMenuEvent>
 #include <QtDebug>
 
 /** @private */

@@ -60,6 +60,7 @@ signals:
     void newError(const QString& src, double timestamp_us, const QString& msg, const CuData& da);
 
     void propertyReady(const QString& src, double timestamp_us, const CuData& p);
+    void newHdbData(const QString& src, const CuData& da);
 
 
 public slots:

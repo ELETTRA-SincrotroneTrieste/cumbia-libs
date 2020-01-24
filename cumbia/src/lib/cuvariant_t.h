@@ -221,5 +221,4 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
     return valid;
 }
 
-
 #endif // CUVARIANT_T_H

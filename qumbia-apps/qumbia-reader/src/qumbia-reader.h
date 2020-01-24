@@ -7,6 +7,7 @@
 #include <QMap>
 
 #include "rconfig.h"
+#include "qur_hdbhelper.h"
 
 class CuData;
 class CumbiaPool;
@@ -205,6 +206,8 @@ public slots:
     void onNewStringList(const QString &src, double ts, const QStringList& val, const CuData& da);
     void onStringListConversion(const QString& src, const QString& fromType, double timestamp_us, const QStringList& v, const CuData& da);
 
+    void onNewHdbData(const QString& src, const CuData& hdbd);
+
     void onPropertyReady(const QString& src, double ts, const CuData& p);
     void onError(const QString& src, double ts, const QString& msg, const CuData& da);
 
@@ -218,6 +221,7 @@ private:
     CuControlsFactoryPool m_ctrl_factory_pool;
     QList <QObject *> m_readers;
     RConfig m_conf;
+    QuR_HdbHelper m_hdbHelper;
 
     void m_print_extra1(const CuData& da);
     void m_print_extra2(const CuData& da);

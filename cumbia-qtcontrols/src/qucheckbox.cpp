@@ -1,6 +1,7 @@
 #include "qucheckbox.h"
 
 #include <QCheckBox>
+#include <QContextMenuEvent>
 #include <cudata.h>
 #include <cumacros.h>
 #include <cumbiapool.h>

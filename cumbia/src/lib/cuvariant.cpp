@@ -401,6 +401,18 @@ CuVariant::CuVariant(const std::vector<long int> &li)
     from(li);
 }
 
+/*!
+ * \brief builds a CuVariant holding the specified vector of long long integers
+ * \param lli vector of long long integers
+ * Specific conversion method: CuVariant::toLongLongIntVector
+ */
+CuVariant::CuVariant(const std::vector<long long> &lli)
+{
+    d = new CuVariantPrivate();
+    init(Vector, LongLongInt);
+    from(lli);
+}
+
 /*! \brief builds a CuVariant holding the specified vector of unsigned long integers
  *
  * @param li the value that will be stored by the object as vector of unsigned long integer elements
@@ -414,6 +426,13 @@ CuVariant::CuVariant(const std::vector<unsigned long> &lui)
     from(lui);
 }
 
+CuVariant::CuVariant(const std::vector<unsigned long long> &llui)
+{
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
+    init(Vector, LongLongUInt);
+    from(llui);
+}
+
 /*! \brief builds a CuVariant holding the specified vector of float
  *
  * @param li the value that will be stored by the object as vector of float elements
@@ -425,6 +444,19 @@ CuVariant::CuVariant(const std::vector<float> &vf)
     d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     init(Vector, Float);
     from(vf);
+}
+
+/*! \brief builds a CuVariant holding the specified vector of void* pointers
+ *
+ * @param li the value that will be stored by the object as vector of void* elements
+ *
+ * Specific conversion method: CuVariant::toFloatVector
+ */
+CuVariant::CuVariant(const std::vector<void *> &vptr)
+{
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
+    init(Vector, VoidPtr);
+    from(vptr);
 }
 
 /** \brief Creates an empty (invalid) CuVariant
@@ -951,6 +983,19 @@ std::vector<unsigned int> CuVariant::toUIntVector() const
     return uivalues;
 }
 
+/** \brief convert the stored data into a vector of unsigned long long integers
+ *
+ * @return std::vector<unsigned long long> representation of the stored data
+ *
+ * Compatible constructor: CuVariant::CuVariant(const std::vector<unsigned long long> &vi)
+ */
+std::vector<unsigned long long> CuVariant::toLongLongUIntVector() const
+{
+    unsigned long long int *u_ll_i_val = static_cast<unsigned long long int *>(d->val);
+    std::vector<unsigned long long int> u_ll_ivalues(u_ll_i_val, u_ll_i_val + d->mSize);
+    return u_ll_ivalues;
+}
+
 /** \brief convert the stored data into a vector of unsigned integers
  *
  * @return std::vector<unsigned int> representation of the stored data
@@ -975,6 +1020,13 @@ std::vector<long int> CuVariant::toLongIntVector() const
     long int *i_val = (long int *) d->val;
     std::vector<long int> ivalues(i_val, i_val + d->mSize);
     return ivalues;
+}
+
+std::vector<long long> CuVariant::toLongLongIntVector() const
+{
+    long long int *ll_i_val = (long long int *) d->val;
+    std::vector<long long int> ll_ivalues(ll_i_val, ll_i_val + d->mSize);
+    return ll_ivalues;
 }
 
 /** \brief convert the stored data into a vector of booleans
@@ -1130,12 +1182,12 @@ int CuVariant::toInt(bool *ok) const
  */
 unsigned int CuVariant::toUInt(bool *ok) const
 {
-   unsigned int i = UINT_MAX;
-   bool can_convert = (d->format == Scalar && d->val != NULL  && d->mIsValid && (d->type == UInt || d->type == UShort) );
-   if(can_convert && d->type == UInt)
+    unsigned int i = UINT_MAX;
+    bool can_convert = (d->format == Scalar && d->val != NULL  && d->mIsValid && (d->type == UInt || d->type == UShort) );
+    if(can_convert && d->type == UInt)
         i = *(static_cast<unsigned int *>(d->val) );
-   else if(can_convert && d->type == UShort)
-       i = static_cast<unsigned int>( *(static_cast<unsigned short *>(d->val)) );
+    else if(can_convert && d->type == UShort)
+        i = static_cast<unsigned int>( *(static_cast<unsigned short *>(d->val)) );
     if(ok)
         *ok = can_convert;
     return i;
@@ -1143,17 +1195,17 @@ unsigned int CuVariant::toUInt(bool *ok) const
 
 unsigned long long int CuVariant::toULongLongInt(bool *ok) const
 {
-   unsigned long long int i = ULONG_LONG_MAX;
-   bool can_convert = (d->format == Scalar && d->val != NULL  && d->mIsValid &&
-           (d->type == UInt || d->type == UShort || d->type == LongLongUInt || d->type == LongUInt) );
-   if(can_convert && d->type == UInt)
+    unsigned long long int i = ULONG_LONG_MAX;
+    bool can_convert = (d->format == Scalar && d->val != NULL  && d->mIsValid &&
+            (d->type == UInt || d->type == UShort || d->type == LongLongUInt || d->type == LongUInt) );
+    if(can_convert && d->type == UInt)
         i = *(static_cast<unsigned int *>(d->val) );
-   else if(can_convert && d->type == UShort)
-       i = static_cast<unsigned long long int>( *(static_cast<unsigned short *>(d->val)) );
-   else if(can_convert && d->type == LongUInt)
-       i = static_cast<unsigned long long int>( *(static_cast<unsigned long *>(d->val)) );
-   else if(can_convert && d->type == LongLongUInt)
-       i = *(static_cast<unsigned long long *>(d->val));
+    else if(can_convert && d->type == UShort)
+        i = static_cast<unsigned long long int>( *(static_cast<unsigned short *>(d->val)) );
+    else if(can_convert && d->type == LongUInt)
+        i = static_cast<unsigned long long int>( *(static_cast<unsigned long *>(d->val)) );
+    else if(can_convert && d->type == LongLongUInt)
+        i = *(static_cast<unsigned long long *>(d->val));
     if(ok)
         *ok = can_convert;
     return i;
@@ -1654,6 +1706,126 @@ void *CuVariant::toVoidP() const
         return d->val;
     }
     return NULL;
+}
+
+/*!
+ * \brief Append the content of another variant to this variant
+ *
+ * \param other another CuVariant
+ *
+ * The data stored into this variant is converted to a std::vector of the
+ * same type using the native *toXXXVector* method.
+ * The *other* variant value is converted to a std::vector of
+ * the type of *this* variant using CuVariant::toVector<T>.
+ *
+ * The vector from the *other* variant is then appended to the vector from *this*
+ * variant.
+ */
+void CuVariant::append(const CuVariant &other) {
+    // cast to DataType so that we get warned by the compiler if
+    // a case is not handled
+    DataType dt = static_cast<DataType> (d->type);
+    switch (dt) {
+    case Short: {
+        std::vector<short> t_sv = toShortVector(), o_sv;
+        other.toVector<short>(o_sv);
+        t_sv.insert(t_sv.end(), o_sv.begin(), o_sv.end());
+        *this = CuVariant(t_sv);
+    }
+        break;
+    case UShort: {
+        std::vector<unsigned short> t_usv = toUShortVector(), o_usv;
+        other.toVector<unsigned short>(o_usv);
+        t_usv.insert(t_usv.end(), o_usv.begin(), o_usv.end());
+        *this = CuVariant(t_usv);
+    }
+        break;
+    case Int: {
+        std::vector<int> t_iv = toIntVector(), o_iv;
+        other.toVector<int>(o_iv);
+        t_iv.insert(t_iv.end(), o_iv.begin(), o_iv.end());
+        *this = CuVariant(t_iv);
+    }
+        break;
+    case UInt: {
+        std::vector<unsigned int> t_uiv = toUIntVector(), o_uiv;
+        other.toVector<unsigned int>(o_uiv);
+        t_uiv.insert(t_uiv.end(), o_uiv.begin(), o_uiv.end());
+        *this = CuVariant(t_uiv);
+    }
+        break;
+    case LongInt: {
+        std::vector<long int> t_liv = toLongIntVector(), o_liv;
+        other.toVector<long int>(o_liv);
+        t_liv.insert(t_liv.end(), o_liv.begin(), o_liv.end());
+        *this = CuVariant(t_liv);
+    }
+        break;
+    case LongUInt: {
+        std::vector<unsigned long int> t_uliv = this->toULongIntVector(), o_uliv;
+        other.toVector<unsigned long int>(o_uliv);
+        t_uliv.insert(t_uliv.end(), o_uliv.begin(), o_uliv.end());
+        *this = CuVariant(t_uliv);
+    }
+        break;
+    case Float: {
+        std::vector<float> t_fv = this->toFloatVector(), o_fv;
+        other.toVector<float>(o_fv);
+        t_fv.insert(t_fv.end(), o_fv.begin(), o_fv.end());
+        *this = CuVariant(t_fv);
+    }
+        break;
+    case Double: {
+        std::vector<double> t_dv = this->toDoubleVector(), o_dv;
+        other.toVector<double>(o_dv);
+        t_dv.insert(t_dv.end(), o_dv.begin(), o_dv.end());
+        *this = CuVariant(t_dv);
+    }
+        break;
+    case LongDouble: {
+        std::vector<long double> t_ldv = this->toLongDoubleVector(), o_ldv;
+        other.toVector<long double>(o_ldv);
+        t_ldv.insert(t_ldv.end(), o_ldv.begin(), o_ldv.end());
+        *this = CuVariant(t_ldv);
+    }
+        break;
+    case Boolean: {
+        std::vector<bool> t_bv = this->toBoolVector(), o_bv;
+        other.toVector<bool>(o_bv);
+        t_bv.insert(t_bv.end(), o_bv.begin(), o_bv.end());
+        *this = CuVariant(t_bv);
+    }
+        break;
+    case String: {
+        std::vector<std::string> t_sv = this->toStringVector(), o_sv;
+        o_sv = other.toStringVector();
+        t_sv.insert(t_sv.end(), o_sv.begin(), o_sv.end());
+        *this = CuVariant(t_sv);
+    }
+        break;
+    case LongLongInt: {
+        std::vector<long long int> t_lliv = toLongLongIntVector(), o_lliv;
+        other.toVector<long long int>(o_lliv);
+        t_lliv.insert(t_lliv.end(), o_lliv.begin(), o_lliv.end());
+        *this = CuVariant(t_lliv);
+    }
+    case LongLongUInt: {
+        std::vector<long long unsigned int> t_lluiv = toLongLongUIntVector(), o_lluiv;
+        other.toVector<long long  unsigned int>(o_lluiv);
+        t_lluiv.insert(t_lluiv.end(), o_lluiv.begin(), o_lluiv.end());
+        *this = CuVariant(t_lluiv);
+    }
+        break;
+    case VoidPtr: {
+        perr("CuVariant.append: cannot append data to a VoidPtr CuVariant");
+    }
+        break;
+    case TypeInvalid:
+        perr("CuVariant.append: cannot append data to a TypeInvalid CuVariant");
+        break;
+    case EndDataTypes:
+        break;
+    }
 }
 
 /** \brief Change the storage format to Vector

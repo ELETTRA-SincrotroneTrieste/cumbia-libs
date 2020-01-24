@@ -8,7 +8,7 @@
 class CmdLineOptions
 {
 public:
-    CmdLineOptions();
+    CmdLineOptions(bool formula_plugin_enabled, bool historical_db_plugin_enabled);
 
     RConfig parse(const QStringList &args) const;
 

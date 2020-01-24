@@ -151,7 +151,11 @@ public:
 
     CuVariant(const std::vector<long int> &li);
 
+    CuVariant(const std::vector<long long int> &lli);
+
     CuVariant(const std::vector<long unsigned int> &lui);
+
+    CuVariant(const std::vector<long long unsigned int> &llui);
 
     CuVariant(const std::vector<float> &vf);
 
@@ -162,6 +166,8 @@ public:
     CuVariant(const std::vector<bool> &vd);
 
     CuVariant(const std::vector<std::string > &vd);
+
+    CuVariant(const std::vector<void *> &vptr);
 
     CuVariant(const CuVariant &other);
 
@@ -201,7 +207,11 @@ public:
 
     std::vector<unsigned int> toUIntVector() const;
 
+    std::vector<unsigned long long int> toLongLongUIntVector() const;
+
     std::vector<long int> toLongIntVector() const;
+
+    std::vector<long long int> toLongLongIntVector() const;
 
     std::vector<unsigned long int> toULongIntVector() const;
 
@@ -274,6 +284,8 @@ public:
     template<typename T> bool to(T &val) const;
 
     template<typename T> bool toVector(std::vector<T> &v) const;
+
+    void append(const CuVariant& other);
 
     CuVariant &toVector();
 

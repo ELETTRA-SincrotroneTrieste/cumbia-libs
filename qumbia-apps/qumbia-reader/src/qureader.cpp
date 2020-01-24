@@ -58,74 +58,78 @@ void Qu_Reader::onUpdate(const CuData &da)
     }
     else if(!da["timestamp_ns"].isNull())
         ts = da["timestamp_ns"].toDouble();
-    QString src = QString::fromStdString(data["src"].toString());
+
+    bool hdb_data = da.has("activity", "hdb");
     if(data["err"].toBool())
-        emit newError(src, ts, QString::fromStdString(data["msg"].toString()), data);
+        emit newError(source(), ts, QString::fromStdString(data["msg"].toString()), data);
+    else if(hdb_data)
+        emit newHdbData(source(), da);
     else if(m_tg_property_list.size() > 0 && data.containsKey("list")) {
         // use propertyReady: receiver will use the "list" key to print values
-        emit propertyReady(src, ts, data);
+        emit propertyReady(source(), ts, data);
     }
     else if(data.has("type", "property"))  {
         if(m_save_property)
             m_prop = data;
         if(m_property_only) {
-            emit propertyReady(src, ts, data);
+            emit propertyReady(source(), ts, data);
         }
     }
-    if(m_save_property && !m_prop.isEmpty()) {
+
+    if(!hdb_data && m_save_property && !m_prop.isEmpty()) {
         // copy relevant property values into data
         foreach(QString p, QStringList() << "label" << "min" << "max" << "display_unit")
             data[qstoc(p)] = m_prop[qstoc(p)];
     }
 
-    if(!da["err"].toBool() && !m_property_only) {
+    if(!hdb_data && !da["err"].toBool() && !m_property_only) {
         // if !m_save property we can notify.
         // otherwise wait for property, merge m_prop with data and notify
         // (epics properties are not guaranteed to be delivered first)
         if(!m_save_property || (m_save_property && !m_prop.isEmpty()) ) {
             if(v.getFormat() == CuVariant::Scalar && v.getType() == CuVariant::Double)
-                emit newDouble(src, ts, v.toDouble(), data);
+                emit newDouble(source(), ts, v.toDouble(), data);
             else if(v.getFormat() == CuVariant::Scalar && v.getType() == CuVariant::Float)
-                emit newFloat(src, ts, v.toFloat(), data);
+                emit newFloat(source(), ts, v.toFloat(), data);
             else if(v.getFormat() == CuVariant::Scalar && v.getType() == CuVariant::Boolean)
-                emit newBool(src, ts, v.toBool(), data);
+                emit newBool(source(), ts, v.toBool(), data);
             else if(v.getFormat() == CuVariant::Scalar && v.getType() == CuVariant::Short)
-                emit newShort(src, ts, v.toShortInt(), data);
+                emit newShort(source(), ts, v.toShortInt(), data);
             else if(v.getFormat() == CuVariant::Scalar && v.getType() == CuVariant::LongUInt)
-                emit newULong(src, ts, v.toULongInt(), data);
+                emit newULong(source(), ts, v.toULongInt(), data);
             else if(v.getFormat() == CuVariant::Scalar && v.getType() == CuVariant::LongInt)
-                emit newLong(src, ts, v.toLongInt(), data);
+                emit newLong(source(), ts, v.toLongInt(), data);
             else if(v.getFormat() == CuVariant::Scalar && v.getType() == CuVariant::Short)
-                emit newShort(src, ts, v.toShortInt(), data);
+                emit newShort(source(), ts, v.toShortInt(), data);
             else if(v.getFormat() == CuVariant::Scalar && v.getType() == CuVariant::UShort)
-                emit newUShort(src, ts, v.toUShortInt(), data);
+                emit newUShort(source(), ts, v.toUShortInt(), data);
             else if(v.getFormat() == CuVariant::Scalar && v.getType() == CuVariant::String)
-                emit newString(src, ts, QuString(v.toString()), data);
+                emit newString(source(), ts, QuString(v.toString()), data);
             else if(v.getFormat() == CuVariant::Scalar) {
                 QString from_ty = QuString(v.dataTypeStr(v.getType()));
-                emit toString(src, from_ty, ts, QuString(v.toString()), data);
+                emit toString(source(), from_ty, ts, QuString(v.toString()), data);
             }
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::Double)
-                emit newDoubleVector(src, ts, QVector<double>::fromStdVector(v.toDoubleVector()), data);
+                emit newDoubleVector(source(), ts, QVector<double>::fromStdVector(v.toDoubleVector()), data);
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::Float)
-                emit newFloatVector(src, ts, QVector<float>::fromStdVector(v.toFloatVector()), data);
+                emit newFloatVector(source(), ts, QVector<float>::fromStdVector(v.toFloatVector()), data);
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::Boolean)
-                emit newBoolVector(src, ts, QVector<bool>::fromStdVector(v.toBoolVector()), data);
+                emit newBoolVector(source(), ts, QVector<bool>::fromStdVector(v.toBoolVector()), data);
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::LongUInt)
-                emit newULongVector(src, ts, QVector<unsigned long>::fromStdVector(v.toULongIntVector()), data);
+                emit newULongVector(source(), ts, QVector<unsigned long>::fromStdVector(v.toULongIntVector()), data);
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::Short)
-                emit newShortVector(src, ts, QVector<short>::fromStdVector(v.toShortVector()), data);
+                emit newShortVector(source(), ts, QVector<short>::fromStdVector(v.toShortVector()), data);
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::UShort)
-                emit newUShortVector(src, ts, QVector<unsigned short>::fromStdVector(v.toUShortVector()), data);
+                emit newUShortVector(source(), ts, QVector<unsigned short>::fromStdVector(v.toUShortVector()), data);
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::LongInt)
-                emit newLongVector(src, ts, QVector<long>::fromStdVector(v.toLongIntVector()), data);
+                emit newLongVector(source(), ts, QVector<long>::fromStdVector(v.toLongIntVector()), data);
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::Short)
-                emit newShortVector(src, ts, QVector<short>::fromStdVector(v.toShortVector()), data);
+                emit newShortVector(source(), ts, QVector<short>::fromStdVector(v.toShortVector()), data);
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::String)
-                emit newStringList(src, ts, QuStringList(v.toStringVector()), data);
+                emit newStringList(source(), ts, QuStringList(v.toStringVector()), data);
             else if(v.getFormat() == CuVariant::Vector) {
                 QString from_ty = QuString(v.dataTypeStr(v.getType()));
-                emit toStringList(src, from_ty, ts, QuStringList(v.toStringVector()), data);
+                emit toStringList(source(), from_ty, ts, QuStringList(v.toStringVector()), data);
             }
 
             else if(!v.isNull()) {
@@ -134,7 +138,7 @@ void Qu_Reader::onUpdate(const CuData &da)
                         .arg(v.dataTypeStr(v.getType()).c_str()).arg(v.dataFormatStr(v.getFormat()).c_str())
                         .arg(data.toString().c_str());
                         perr("%s", qstoc(msg));
-                emit newError(src, ts, msg, data);
+                emit newError(source(), ts, msg, data);
             }
         }
     }

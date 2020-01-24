@@ -19,6 +19,7 @@
 // plugin
 #include <cupluginloader.h>
 #include <cuformulaplugininterface.h>
+#include <cuhistoricaldbplugin_i.h>
 
 #ifdef QUMBIA_EPICS_CONTROLS_VERSION
 #include <cumbiaepics.h>
@@ -88,12 +89,23 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
         fplu->initialize(cu_pool, m_ctrl_factory_pool);
         engines << "formula plugin";
     }
+
+    // historical database
+    QObject *hdb_o;
+    CuHdbPlugin_I *hdb_p = pload.get<CuHdbPlugin_I>("cuhdb-qt-plugin.so", &hdb_o);
+    if(hdb_p) {
+        cu_pool->registerCumbiaImpl("hdb", hdb_p->getCumbia());
+        cu_pool->setSrcPatterns("hdb", hdb_p->getSrcPatterns());
+        m_ctrl_factory_pool.registerImpl("hdb", *hdb_p->getReaderFactory());
+        engines << "historical database";
+    }
+
     m_props_map[Low] = QStringList() << "min" << "min_alarm" << "min_warning" << "max_warning" <<
                                         "max_alarm" << "max" << "data_format_str" << "display_unit"
                                      << "label" << "description";
     m_props_map[Medium] = QStringList() << "activity" << "worker_activity" << "worker_thread";
 
-    CmdLineOptions cmdo;
+    CmdLineOptions cmdo(fplu != nullptr, hdb_p != nullptr);
     m_conf = cmdo.parse(qApp->arguments());
 
     if(m_conf.max_timers > 0) {
@@ -106,6 +118,13 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
     }
     else if(m_conf.list_options)
         cmdo.list_options();
+
+    if(hdb_p && !m_conf.db_profile.isEmpty()) {
+        hdb_p->setDbProfile(m_conf.db_profile);
+    }
+    else if(hdb_p && !m_conf.list_options){
+        printf("\e[1;33m* \e[0;4mcumbia read\e[0m: using \e[1;33mdefault\e[0m historical database profile, if available\n");
+    }
 
     if(!m_conf.usage && !m_conf.list_options)
         m_createReaders(m_conf.sources);
@@ -313,6 +332,19 @@ void QumbiaReader::onStringListConversion(const QString &src, const QString &fro
     m_checkRefreshCnt(sender());
 }
 
+void QumbiaReader::onNewHdbData(const QString &src, const CuData &hdbd)
+{
+    m_hdbHelper.mergeResult(src, hdbd);
+    if(m_hdbHelper.allComplete()) {
+        m_refreshCntMap[qobject_cast<Qu_Reader *>(sender())->source()]++;
+        m_hdbHelper.print_all(m_hdbHelper.takeAll(), m_conf.db_output_file);
+        m_checkRefreshCnt(sender());
+        if(m_conf.db_output_file.isEmpty())
+            printf("\e[1;33m*\e[0m \e[0;4mcumbia read\e[0m: \e[1;33mhint\e[0m:  use \e[3m--db-output-file=out.csv\e[0m "
+                   "command line option to save data on a \e[3mCSV\e[0m file.\n");
+    }
+}
+
 void QumbiaReader::onNewShortVector(const QString &src, double ts, const QVector<short> &v, const CuData& da)
 {
     m_refreshCntMap[src]++;
@@ -510,6 +542,7 @@ void QumbiaReader::m_createReaders(const QStringList &srcs) {
                     SLOT(onNewStringList(QString,double,QStringList,CuData)));
             connect(r, SIGNAL(toStringList(QString,QString,double,QStringList,CuData)), this,
                     SLOT(onStringListConversion(QString,QString,double,QStringList,CuData)));
+            connect(r, SIGNAL(newHdbData(QString,CuData)), this, SLOT(onNewHdbData(QString, CuData)));
 
             connect(r, SIGNAL(newError(QString,double,QString, const CuData&)),
                     this, SLOT(onError(QString,double,QString, const CuData&)));

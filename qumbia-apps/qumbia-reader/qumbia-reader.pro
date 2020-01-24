@@ -16,6 +16,24 @@ exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {
     include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
 }
 
+
+CONFIG+=link_pkgconfig
+PKGCONFIG -= x11
+
+packagesExist(cumbia-hdb) {
+    DEFINES += HAS_CUHDB
+    PKGCONFIG += cumbia-hdb
+    message("- adding cumbia-hdb module support")
+}   else {
+    message("---")
+    message("--> cumbia-hdb module not found: install the hdbextractor and cumbia-hdb modules from github if you want to")
+    message("--> display or save to file historical data")
+    message("--> https://github.com/ELETTRA-SincrotroneTrieste/hdbextractor")
+    message("--> https://github.com/ELETTRA-SincrotroneTrieste/cumbia-historicaldb")
+    message("--> then export PKGCONFIG_PATH variable according to the chosen installation directory")
+    message("---")
+}
+
 TEMPLATE = app
 
 CONFIG +=  console
@@ -31,8 +49,6 @@ CONFIG +=
 # CONFIG+=qml_debug
 # CONFIG+=declarative_debug
 
-CONFIG+=link_pkgconfig
-PKGCONFIG -= x11
 
 DEFINES += QT_NO_DEBUG_OUTPUT
 
@@ -42,6 +58,7 @@ SOURCES += src/main.cpp \
     src/cmdlineoptions.cpp \
     src/kbdinputwaitthread.cpp \
     src/qumbia-reader.cpp \
+    src/qur_hdbhelper.cpp \
     src/qureader.cpp \
     src/rconfig.cpp \
     src/tgdbprophelper.cpp
@@ -50,6 +67,7 @@ HEADERS += \
     src/cmdlineoptions.h \
     src/kbdinputwaitthread.h \
     src/qumbia-reader.h \
+    src/qur_hdbhelper.h \
     src/qureader.h \
     src/rconfig.h \
     src/tgdbprophelper.h

@@ -9,7 +9,7 @@
 
 #define QUMBIA_READER_DOC_URL "https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/qumbia-reader/html/index.html"
 
-CmdLineOptions::CmdLineOptions()
+CmdLineOptions::CmdLineOptions(bool formula_plugin_enabled, bool historical_db_plugin_enabled)
 {
     m_help_map["-p x --period=x"] = "specify a custom period [x ms] for polled sources. Default: 1sec";
     m_help_map["--truncate"] = "truncate output from arrays to 12 elements";
@@ -20,11 +20,19 @@ CmdLineOptions::CmdLineOptions()
     m_help_map["--single-shot"] = "read each source once and exit";
     m_help_map["--x"] = "read each source x times and exit (0 = --monitor)";
     m_help_map["-m | --monitor"] = "monitor source until a key is pressed";
+#ifdef QUMBIA_TANGO_CONTROLS_VERSION
     m_help_map["--tango-property"] = "all sources are intended as Tango device or attribute property names."
-                                     "Implies --single-shot";
+                                    "Implies --single-shot";
     m_help_map["--tp"] = "shortcut for --tango-property";
+#endif
     m_help_map["--property -p"] = "print the configuration properties of the sources (if available from the engine) and exit";
     m_help_map["--format=fmt"] = "format numbers into the specified format (e.g. %g, %.1f, %.0f)";
+
+    if(historical_db_plugin_enabled) {
+        m_help_map["--db-profile=dbprofile"] = "use the specified historical db profile. "
+                                               "See hdb-db-profile-manager for more information";
+        m_help_map["--db-output-file=filename"] = "write into filename the data fetched from hdb";
+    }
 
     m_help_map["--help"] = "print this help";
 #ifdef CUMBIA_RANDOM_VERSION
@@ -36,7 +44,10 @@ CmdLineOptions::CmdLineOptions()
 #ifdef QUMBIA_EPICS_CONTROLS_VERSION
     m_help_map["--help-epics"] = "EPICS module specific help";
 #endif
-    m_help_map["--help-formula"] = "formula plugin specific help";
+    if(formula_plugin_enabled)
+        m_help_map["--help-formula"] = "formula plugin specific help";
+    if(historical_db_plugin_enabled)
+        m_help_map["--help-hdb"] = "historical database plugin specific help";
 }
 
 RConfig CmdLineOptions::parse(const QStringList &args) const
@@ -112,8 +123,20 @@ RConfig CmdLineOptions::parse(const QStringList &args) const
         else if(a == "--tango-property" || a == "--tp")
             o.setTangoProperty();
 #endif
-        else
+        else if(a.startsWith("--db-profile=")) {
+            o.db_profile = a.remove("--db-profile=");
+        }
+        else if(a.startsWith("--db-output-file=")) {
+            o.db_output_file = a.remove("--db-output-file=");
+        }
+        else if(!a.startsWith("-"))
             o.sources.append(a);
+        else if(!o.list_options) { // !o.list_options: do not mess up with auto completion
+            printf("\n");
+            printf("\nCmdLineOptions::parse: unrecognized option \"%s\"", qstoc(a));
+            printf("\n");
+            o.usage = true;
+        }
     }
     return o;
 }
