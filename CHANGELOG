@@ -13,6 +13,10 @@ b1. cuepics-world: src patterns regexp is more specialized
 
 c. cumbia-qtcontrols
 c1. cumbia-qtcontrols/src/qutable.cpp cumbia-qtcontrols/src/qucheckbox.cpp need include QContextMenuEvent
+c2. quplot_base: added us_to_ms method that converts a vector of timestamp in microseconds to
+    milliseconds.
+c3. qutrendplot: uses the key "time_scale_us" to insert chunks of data (x: array of timestamps,
+    y: array of data) into the plot. Useful to accept data from cumbia-historicaldb plugin.
 
 d. qumbia-apps
 d1. qumbia-reader: initial support for hdb++

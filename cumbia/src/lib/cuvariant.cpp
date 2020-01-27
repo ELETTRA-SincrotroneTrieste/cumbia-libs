@@ -1821,7 +1821,13 @@ void CuVariant::append(const CuVariant &other) {
     }
         break;
     case TypeInvalid:
-        perr("CuVariant.append: cannot append data to a TypeInvalid CuVariant");
+        if(other.d->type != TypeInvalid) {
+            *this = CuVariant(other);
+            this->d->format = Vector;
+        }
+
+        else
+            perr("CuVariant.append: cannot cat two invalid CuVariants");
         break;
     case EndDataTypes:
         break;

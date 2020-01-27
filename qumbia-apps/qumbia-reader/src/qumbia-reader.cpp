@@ -15,6 +15,7 @@
 #include <QCoreApplication>
 #include <QRegularExpression>
 #include <QDateTime>
+#include <QtDebug>
 
 // plugin
 #include <cupluginloader.h>
@@ -338,7 +339,9 @@ void QumbiaReader::onNewHdbData(const QString &src, const CuData &hdbd)
     if(m_hdbHelper.allComplete()) {
         m_refreshCntMap[qobject_cast<Qu_Reader *>(sender())->source()]++;
         m_hdbHelper.print_all(m_hdbHelper.takeAll(), m_conf.db_output_file);
-        m_checkRefreshCnt(sender());
+        // all complete, all printed, delete all
+        foreach(Qu_Reader *r, findChildren<Qu_Reader *>())
+            r->deleteLater();
         if(m_conf.db_output_file.isEmpty())
             printf("\e[1;33m*\e[0m \e[0;4mcumbia read\e[0m: \e[1;33mhint\e[0m:  use \e[3m--db-output-file=out.csv\e[0m "
                    "command line option to save data on a \e[3mCSV\e[0m file.\n");

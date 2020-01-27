@@ -284,6 +284,8 @@ protected:
 
     void contextMenuEvent(QContextMenuEvent *);
 
+    void us_to_ms(std::vector<double> & ts_us) const;
+
 signals:
   void plotClicked(const QPoint& pt, QwtPlotCurve *closestCurve, double x, double y, const QPoint& curvePoint);
 

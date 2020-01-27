@@ -184,9 +184,10 @@ void QuTrendPlot::update(const CuData &da)
         appendData(src, x, y);
     }
     else if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Vector) {
-        if(da.containsKey("time_scale_ms")) {
-            const CuVariant& xv = da["time_scale_ms"];
-            insertData(src, xv.toDoubleP(), v.toDoubleP(), v.getSize());
+        if(da.containsKey("time_scale_us")) {
+            std::vector <double> timestamps = da["time_scale_us"].toDoubleVector();
+            us_to_ms(timestamps);
+            insertData(src, timestamps.data(), v.toDoubleP(), v.getSize());
         }
         else {
             double *xvals = new double[v.getSize()];
@@ -202,11 +203,11 @@ void QuTrendPlot::update(const CuData &da)
         need_replot = true;
     }
 
-    if(da.containsKey("notes_time_scale_ms") && da.containsKey("notes")) {
+    if(da.containsKey("notes_time_scale_us") && da.containsKey("notes")) {
         need_replot = true;
-        std::vector<double> notes_ts;
         std::vector<std::string> notes;
-        da["notes_time_scale_ms"].toVector<double>(notes_ts);
+        std::vector<double> notes_ts = da["notes_time_scale_us"].toDoubleVector();
+        us_to_ms(notes_ts);
         notes = da["notes"].toStringVector();
         insertData(src, notes_ts.data(), nullptr, notes_ts.size(), yLowerBound());
         for(size_t i = 0; notes_ts.size() == notes.size() && i < notes_ts.size(); i++) {

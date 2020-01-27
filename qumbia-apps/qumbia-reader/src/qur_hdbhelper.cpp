@@ -2,6 +2,7 @@
 #ifdef HAS_CUHDB
 #include <cumbiahdbworld.h>
 #include <QDateTime>
+#include <algorithm>
 #endif
 
 QuR_HdbHelper::QuR_HdbHelper()
@@ -19,8 +20,8 @@ void QuR_HdbHelper::mergeResult(const QString &src, const CuData &data)
         CuData &da = mMap[src];
         if(data["err"].toBool())
             da["err"] = true;
-        if(da.containsKey("time_scale") && data.containsKey("time_scale")) {
-            da["time_scale"].append(data["time_scale"]);
+        if(da.containsKey("time_scale_us") && data.containsKey("time_scale_us")) {
+            da["time_scale_us"].append(data["time_scale_us"]);
         }
         if(da.containsKey("progress") && data.containsKey("progress")) {
             int progress;
@@ -33,15 +34,22 @@ void QuR_HdbHelper::mergeResult(const QString &src, const CuData &data)
         if(da.containsKey("w_value") && data.containsKey("w_value")) {
             da["w_value"].append(data["w_value"]);
         }
+        if(data.containsKey("notes_time_scale_us")) {
+            da["notes_time_scale_us"].append(data["notes_time_scale_us"]);
+        }
+        if(data.containsKey("notes"))
+            da["notes"].append(data["notes"]);
+
+        if(data["exit"].toBool())
+            da["exit"] = true;
     }
 }
 
 bool QuR_HdbHelper::isComplete(const QString &name) const
 {
-    int progress = 0;
     if(mMap.contains(name))
-        mMap[name]["progress"].to<int>(progress);
-    return progress == 100;
+        return mMap[name]["exit"].toBool();
+    return false;
 }
 
 bool QuR_HdbHelper::allComplete() const
@@ -117,14 +125,16 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
                         d["start_date"].toString().c_str(), c[Default],
                         c[Cyan], d["stop_date"].toString().c_str(), c[Default]);
             }
-            std::vector<double> tss = d["time_scale"].toDoubleVector();
+            std::vector<double> tss = d["time_scale_us"].toDoubleVector();
+            std::vector<double> notes_tss = d["notes_time_scale_us"].toDoubleVector();
+            std::vector<std::string> notes = d["notes"].toStringVector();
             size_t rowcnt = tss.size();
             if(v.getSize() % rowcnt == 0) {
                 size_t siz = v.getSize() / rowcnt;
                 if(d["data_type_str"].toString() == "double") {
                     std::vector<double> dv = v.toDoubleVector();
                     for(size_t r = 0; r < rowcnt; r++) {
-                        fprintf(fp, "%s", qstoc(QDateTime::fromSecsSinceEpoch(tss[r]).toString("yyyy-MM-dd hh:mm:ss")));
+                        fprintf(fp, "%s", qstoc(QDateTime::fromMSecsSinceEpoch(tss[r] * 1000).toString("yyyy-MM-dd hh:mm:ss.zzz")));
                         on_file ? fprintf(fp, ",") : fprintf(fp, " ");
                         if(siz > 1 && color) fprintf(fp, "%s{%s ", c[Blue], c[Default]);
                         for(size_t i = 0; i < dv.size() / rowcnt; i++) {
@@ -132,6 +142,7 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
                             if(i < dv.size() / rowcnt - 1)  fprintf(fp, ", ");
                         }
                         if(siz > 1 && color) fprintf(fp, "%s }%s ", c[Blue], c[Default]);
+                        print_note(fp, tss, notes_tss, notes, r, on_file);
                         fprintf(fp, "\n");
                     }
                 }
@@ -145,6 +156,7 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
                             if(i < liv.size() / rowcnt - 1) fprintf(fp, ", ");
                         }
                         if(siz > 1 && !color) fprintf(fp, "%s}%s ", c[Blue], c[Default]);
+                        print_note(fp, tss, notes_tss, notes, r, on_file);
                         fprintf(fp, "\n");
                     }
                 }
@@ -158,6 +170,7 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
                             if(i < luiv.size() / rowcnt - 1)  fprintf(fp, ", ");
                         }
                         if(siz > 1 && !color) fprintf(fp, "%s}%s ", c[Blue], c[Default]);
+                        print_note(fp, tss, notes_tss, notes, r, on_file);
                         fprintf(fp, "\n");
                     }
                 }
@@ -170,6 +183,7 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
                             if(i < boov.size() / rowcnt - 1)  fprintf(fp, ", ");
                         }
                         if(siz > 1 && !color) fprintf(fp, "%s}%s ", c[Blue], c[Default]);
+                        print_note(fp, tss, notes_tss, notes, r, on_file);
                         fprintf(fp, "\n");
                     }
                 }
@@ -182,6 +196,7 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
                             if(i < str_v.size() / rowcnt - 1)  fprintf(fp, ", ");
                         }
                         if(siz > 1 && !color) fprintf(fp, "%s}%s ", c[Blue], c[Default]);
+                        print_note(fp, tss, notes_tss, notes, r, on_file);
                         fprintf(fp, "\n");
                     }
                 }
@@ -197,4 +212,18 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
         fclose(fp);
 
 #endif
+}
+
+void QuR_HdbHelper::print_note(FILE *fp, const std::vector<double> &ts, const std::vector<double> &notes_ts,
+                               const std::vector<std::string> &notes, int index, bool on_file)
+{
+    if(notes_ts.size() > 0 && index < ts.size()) {
+        double t_ms = ts[index];
+        auto it = std::find(notes_ts.begin(), notes_ts.end(), t_ms);
+        if(it != notes_ts.end()) {
+            size_t note_idx = distance(notes_ts.begin(), it);
+            on_file ? fprintf(fp, ",%s", notes[note_idx].c_str()) :
+                      fprintf(fp, "\e[1;31m %s\e[0m\n", notes[note_idx].c_str());
+        }
+    }
 }

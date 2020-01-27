@@ -270,6 +270,17 @@ void QuPlotBase::contextMenuEvent(QContextMenuEvent *)
     static_cast<QuPlotContextMenuComponent *>(d->components_map["context_menu"])->execute(this, d->ctxMenuStrategy, QCursor::pos());
 }
 
+/*!
+ * \brief convert input vector of timestamps in microseconds to a vector of timestamps in
+ *        milliseconds
+ * \param ts_us *non const* reference vector of double representing timestamps in the format
+ * seconds.microseconds that will be converted into milliseconds.microseconds
+ */
+void QuPlotBase::us_to_ms(std::vector<double> &ts_us) const {
+    for(size_t i = 0; i < ts_us.size(); i++)
+        ts_us[i] = ts_us[i] * 1000.0;
+}
+
 int QuPlotBase::refreshTimeout() const
 {
     return d->refresh_timeo;
