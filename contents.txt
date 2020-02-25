@@ -1,0 +1,48 @@
+Contents                                     |   Number of pages
+
+Introduction and main page                      8
+        
+Installation                                    11
+
+Installation on ubuntu                          4
+
+cumbia base lib introduction                    3
+
+cumbia-tango base lib introduction              4
+
+cumbia-qtcontrols base lib introduction         13
+
+cumbia-random base lib                          7
+
+cumbia lib plugins                              1
+
+cumbia base: writing an activity                7
+
+cumbia-tango base: write an activity to read      
+    device, attribute and class properties      11
+
+CuData bundle description for data exchange     7
+
+Writing a Qt widget that integrates with cumbia 6
+
+Build a Qt widget project with cumbia: cuuimake 3
+
+Set up a graphical app with cumbia and Tango    4
+
+Porting from QTango                             28
+
+Adding a custom cumbia widget to a project      13
+
+Understand cumbia-qtcontrols widgets 
+    constructors, sources and targets            3
+   
+Frequently asked questions                      17
+
+Writing plugins to add widgets to cumbia        7
+
+Formula plugin                                  3
+
+Sequential reading of multiple sources (plugin) 1
+
+cumbia read command line client                 4
+
