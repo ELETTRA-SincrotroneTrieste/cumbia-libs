@@ -48,6 +48,7 @@ void CurveData::insert(double *x, double *y, int count, double default_y)
     int j = 0;
     size_t ds = d_x.size();
     while(i < ds && j < count) {
+        // insert new values amongst old ones
         while(j < count && x[j] <= d_x[i]) {
             if(x[j] == d_x[i]) {
                 // replace y
@@ -62,11 +63,14 @@ void CurveData::insert(double *x, double *y, int count, double default_y)
         i++;
         ds = d_x.size();
     }
-    double yv = m_get_yval(y, j, count, default_y);
     double *yarr = new double[count - j];
-    for(int i = 0; i < count - j; i++)
-        yarr[i] = yv;
-    append(x + j, yarr, count - j);
+    const int y_dim = count - j;
+    const int y_start = j;
+    for(int i = 0; i < y_dim; i++) {
+        yarr[i] = m_get_yval(y, j, count, default_y);;
+        j++;
+    }
+    append(x + y_start, yarr, y_dim);
     delete yarr;
 }
 
@@ -96,6 +100,9 @@ void CurveData::reserve(int newSize)
     d_y.reserve(newSize);
 }
 
+// returns y[idx] if idx < y size (siz)
+// returns the value of the last element of y if idx >= y size and y is not empty
+// returns the default_y otherwise
 double CurveData::m_get_yval(double *y, int idx, int siz, double default_y) const {
     if(y != nullptr && idx < siz)
         return y[idx];
