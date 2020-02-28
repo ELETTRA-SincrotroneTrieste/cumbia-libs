@@ -46,7 +46,7 @@ Visit the dedicated <a href="https://elettra-sincrotronetrieste.github.io/cumbia
 
 New releases of the library, including the version from the master branch, can be built,
 installed and tested locally under the user's home directory.
-Use the [cubuild.sh script method](#quick-installation-using-the-cubuild.sh-bash-script) discussed
+Use the [cubuild.sh script method](#quick-installation-using-the-*cubuild.sh*-bash-script) discussed
 below and then proceed to the instructions described in the
 [local environment setup](#set-up-the-environment-for-a-local-installation)  section.
 
