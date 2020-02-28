@@ -42,8 +42,15 @@ The *cumbia random* module is a tool to test the behaviour and performance of th
 
 Visit the dedicated <a href="https://elettra-sincrotronetrieste.github.io/cumbia-libs/">github.io</a> pages.
 
-## Download and installation
+## Enjoy and safely test the latest version of the library
 
+New releases of the library, including the version from the master branch, can be built,
+installed and tested locally under the user's home directory.
+Use the [cubuild.sh script method](#quick-installation-using-the-cubuild.sh-bash) discussed
+below and then proceed to the instructions described in the
+[local environment setup](#set-up-the-environment-for-a-local-installation)  section.
+
+## Download and installation
 
 ### Download the cumbia-libs set of modules
 
@@ -67,7 +74,6 @@ shows the list of the required packages to build all the modules in cumbia-libs:
 If you are interested in using ubuntu, please refer to the instructions in <a href="README.UBUNTU.md">README.UBUNTU.md</a> file.
 The time required to set up a *cumbia*-ready *ubuntu desktop* is about five to eight minutes and the procedure in the README.UBUNTU.md file
 requires the installation of official *ubuntu packages* only (by means of *apt-get install* or *Ubuntu Software*).
-
 
 ### Quick installation using the *cubuild.sh* bash script
 
@@ -145,9 +151,14 @@ point out the possible causes.
 The install procedure will ask your permission to add paths to the sytem *profile*. If this is accepted, you may need to execute
 > source /etc/profile
 before using cumbia
-If you installed the libraries either using a custom prefix or without modifying the system profile, you can set up an
-environment in bash by typing
+
+#### Set up the environment for a local installation
+If you installed the libraries either using a custom prefix or without modifying the system
+profile, you can set up an environment in bash by typing
+
 > source $install_prefix/bin/cusetenv.sh
+
+This is useful if you are testing new versions locally.
 
 #### Testing
 > export TANGO_HOST=test-tango-host:PORT
