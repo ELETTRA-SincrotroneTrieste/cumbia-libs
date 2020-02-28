@@ -108,32 +108,33 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
     }
 
     foreach(const CuData& d, dl) {
-
-//        printf("QuR_HdbHelper.print_all: %s\n", d.toString().c_str());
-
+        size_t notes_idx = 0;
+        std::vector<double> notes_tss = d["notes_time_scale_us"].toDoubleVector();
+        std::vector<std::string> notes = d["notes"].toStringVector();
         const CuVariant &v = d["value"];
+        std::string d1 = d["start_date"].toString(), d2 = d["stop_date"].toString();
         if(v.isValid() && d.containsKey("data_type_str")) {
             fprintf(fp, "%s%s%s", c[Cyan], d["src"].toString().c_str(), c[Default]);
             if(on_file) {
                 // write data type and write type on file
                 fprintf(fp, ",%s,%s,%s,%s,%s\n", d["data_type_str"].toString().c_str(),
                         d["write_mode_str"].toString().c_str(), d["data_format_str"].toString().c_str(),
-                        d["start_date"].toString().c_str(), d["stop_date"].toString().c_str());
+                        d1.c_str(), d2.c_str());
             }
             else {
-                fprintf(fp, " [ %s%s%s --> %s%s%s ]\n", c[Cyan],
-                        d["start_date"].toString().c_str(), c[Default],
-                        c[Cyan], d["stop_date"].toString().c_str(), c[Default]);
+                d1 != d2 ? fprintf(fp, " [ %s%s%s --> %s%s%s ]\n", c[Cyan], d1.c_str(), c[Default], c[Cyan], d2.c_str(), c[Default])
+                          : fprintf(fp, " [ %s%s%s ]\n", c[Cyan], d1.c_str(), c[Default]);
             }
             std::vector<double> tss = d["time_scale_us"].toDoubleVector();
-            std::vector<double> notes_tss = d["notes_time_scale_us"].toDoubleVector();
-            std::vector<std::string> notes = d["notes"].toStringVector();
             size_t rowcnt = tss.size();
             if(v.getSize() % rowcnt == 0) {
                 size_t siz = v.getSize() / rowcnt;
                 if(d["data_type_str"].toString() == "double") {
                     std::vector<double> dv = v.toDoubleVector();
                     for(size_t r = 0; r < rowcnt; r++) {
+                        while(notes_tss.size() > notes_idx && notes_tss[notes_idx] < tss[r]) {
+                            print_note(fp, notes_tss, notes, notes_idx++, on_file);
+                        }
                         fprintf(fp, "%s", qstoc(QDateTime::fromMSecsSinceEpoch(tss[r] * 1000).toString("yyyy-MM-dd hh:mm:ss.zzz")));
                         on_file ? fprintf(fp, ",") : fprintf(fp, " ");
                         if(siz > 1 && color) fprintf(fp, "%s{%s ", c[Blue], c[Default]);
@@ -142,7 +143,8 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
                             if(i < dv.size() / rowcnt - 1)  fprintf(fp, ", ");
                         }
                         if(siz > 1 && color) fprintf(fp, "%s }%s ", c[Blue], c[Default]);
-                        print_note(fp, tss, notes_tss, notes, r, on_file);
+                        if(notes_tss.size() > notes_idx && notes_tss[notes_idx] < tss[r])
+                            print_note(fp, notes_tss, notes, r, on_file);
                         fprintf(fp, "\n");
                     }
                 }
@@ -150,13 +152,15 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
                     // CumbiaHdbWorld::extract_data: long int stored in CuVariant:
                     std::vector<long int> liv = v.toLongIntVector();
                     for(size_t r = 0; r < rowcnt; r++) {
-                        fprintf(fp, "%s ", qstoc(QDateTime::fromSecsSinceEpoch(tss[r]).toString("yyyy-MM-dd hh:mm:ss")));
+                        while(notes_tss.size() > notes_idx && notes_tss[notes_idx] < tss[r]) {
+                            print_note(fp, notes_tss, notes, notes_idx++, on_file);
+                        }
+                        fprintf(fp, "%s", qstoc(QDateTime::fromMSecsSinceEpoch(tss[r] * 1000).toString("yyyy-MM-dd hh:mm:ss.zzz")));
                         for(size_t i = 0; i < liv.size() / rowcnt; i++) {
                             fprintf(fp, "%s%ld%s", c[Green], liv[r * siz + i], c[Default]);
                             if(i < liv.size() / rowcnt - 1) fprintf(fp, ", ");
                         }
                         if(siz > 1 && !color) fprintf(fp, "%s}%s ", c[Blue], c[Default]);
-                        print_note(fp, tss, notes_tss, notes, r, on_file);
                         fprintf(fp, "\n");
                     }
                 }
@@ -164,39 +168,45 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
                     // CumbiaHdbWorld::extract_data: long unsigned int stored in CuVariant:
                     std::vector<unsigned long> luiv = v.toULongIntVector();
                     for(size_t r = 0; r < rowcnt; r++) {
-                        fprintf(fp, "%s ", qstoc(QDateTime::fromSecsSinceEpoch(tss[r]).toString("yyyy-MM-dd hh:mm:ss")));
+                        while(notes_tss.size() > notes_idx && notes_tss[notes_idx] < tss[r]) {
+                            print_note(fp, notes_tss, notes, notes_idx++, on_file);
+                        }
+                        fprintf(fp, "%s", qstoc(QDateTime::fromMSecsSinceEpoch(tss[r] * 1000).toString("yyyy-MM-dd hh:mm:ss.zzz")));
                         for(size_t i = 0; i < luiv.size() / rowcnt; i++) {
                             fprintf(fp, "%s%lu%s", c[Green], luiv[r * siz + i], c[Default]);
                             if(i < luiv.size() / rowcnt - 1)  fprintf(fp, ", ");
                         }
                         if(siz > 1 && !color) fprintf(fp, "%s}%s ", c[Blue], c[Default]);
-                        print_note(fp, tss, notes_tss, notes, r, on_file);
                         fprintf(fp, "\n");
                     }
                 }
                 if(d["data_type_str"].toString() == "bool") {
                     std::vector<bool> boov = v.toBoolVector();
                     for(size_t r = 0; r < rowcnt; r++) {
-                        fprintf(fp, "%s ", qstoc(QDateTime::fromSecsSinceEpoch(tss[r]).toString("yyyy-MM-dd hh:mm:ss")));
+                        while(notes_tss.size() > notes_idx && notes_tss[notes_idx] < tss[r]) {
+                            print_note(fp, notes_tss, notes, notes_idx++, on_file);
+                        }
+                        fprintf(fp, "%s", qstoc(QDateTime::fromMSecsSinceEpoch(tss[r] * 1000).toString("yyyy-MM-dd hh:mm:ss.zzz")));
                         for(size_t i = 0; i < boov.size() / rowcnt; i++) {
                             fprintf(fp, "%s%s%s", c[Cyan], boov[r * siz + i] ? "true" : "false", c[Default]);
                             if(i < boov.size() / rowcnt - 1)  fprintf(fp, ", ");
                         }
                         if(siz > 1 && !color) fprintf(fp, "%s}%s ", c[Blue], c[Default]);
-                        print_note(fp, tss, notes_tss, notes, r, on_file);
                         fprintf(fp, "\n");
                     }
                 }
                 if(d["data_type_str"].toString() == "string") {
                     std::vector<std::string> str_v = v.toStringVector();
                     for(size_t r = 0; r < rowcnt; r++) {
-                        fprintf(fp, "%s ", qstoc(QDateTime::fromSecsSinceEpoch(tss[r]).toString("yyyy-MM-dd hh:mm:ss")));
+                        while(notes_tss.size() > notes_idx && notes_tss[notes_idx] < tss[r]) {
+                            print_note(fp, notes_tss, notes, notes_idx++, on_file);
+                        }
+                        fprintf(fp, "%s", qstoc(QDateTime::fromMSecsSinceEpoch(tss[r] * 1000).toString("yyyy-MM-dd hh:mm:ss.zzz")));
                         for(size_t i = 0; i < str_v.size() / rowcnt; i++) {
                             fprintf(fp, "%s%s%s", c[Cyan], str_v[r * siz + i].c_str(), c[Default]);
                             if(i < str_v.size() / rowcnt - 1)  fprintf(fp, ", ");
                         }
                         if(siz > 1 && !color) fprintf(fp, "%s}%s ", c[Blue], c[Default]);
-                        print_note(fp, tss, notes_tss, notes, r, on_file);
                         fprintf(fp, "\n");
                     }
                 }
@@ -206,6 +216,11 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
             }
         } // v.isValid() && d.containsKey("data_type_str")
 
+        // print notes whose timestamp is after last valid data timestamp
+        while(notes_tss.size() > notes_idx) {
+            print_note(fp, notes_tss, notes, notes_idx++, on_file);
+        }
+
     } // foreach(const CuData& d, dl)
 
     if(!out_filenam.isEmpty() && fp != nullptr)
@@ -214,16 +229,12 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
 #endif
 }
 
-void QuR_HdbHelper::print_note(FILE *fp, const std::vector<double> &ts, const std::vector<double> &notes_ts,
-                               const std::vector<std::string> &notes, int index, bool on_file)
+void QuR_HdbHelper::print_note(FILE *fp, const std::vector<double> &notes_ts,
+                               const std::vector<std::string> &notes, size_t index, bool on_file)
 {
-    if(notes_ts.size() > 0 && index < ts.size()) {
-        double t_ms = ts[index];
-        auto it = std::find(notes_ts.begin(), notes_ts.end(), t_ms);
-        if(it != notes_ts.end()) {
-            size_t note_idx = distance(notes_ts.begin(), it);
-            on_file ? fprintf(fp, ",%s", notes[note_idx].c_str()) :
-                      fprintf(fp, "\e[1;31m %s\e[0m\n", notes[note_idx].c_str());
-        }
+    if(index < notes_ts.size()) {
+        const char* ts = QDateTime::fromMSecsSinceEpoch(notes_ts[index] * 1000).toString("yyyy-MM-dd hh:mm:ss.zzz").toLocal8Bit().data();
+        on_file ? fprintf(fp, "%s,%s\n", ts, notes[index].c_str()) :
+                  fprintf(fp, "%s \e[1;31m%s\e[0m\n", ts, notes[index].c_str());
     }
 }
