@@ -46,7 +46,7 @@ Visit the dedicated <a href="https://elettra-sincrotronetrieste.github.io/cumbia
 
 New releases of the library, including the version from the master branch, can be built,
 installed and tested locally under the user's home directory.
-Use the [cubuild.sh script method](#quick-installation-using-the-cubuild.sh-bash-script) discussed
+Use the [cubuild.sh script method](#quick-installation-using-the-cubuild-bash-script) discussed
 below and then proceed to the instructions described in the
 [local environment setup](#set-up-the-environment-for-a-local-installation)  section.
 
@@ -75,7 +75,7 @@ If you are interested in using ubuntu, please refer to the instructions in <a hr
 The time required to set up a *cumbia*-ready *ubuntu desktop* is about five to eight minutes and the procedure in the README.UBUNTU.md file
 requires the installation of official *ubuntu packages* only (by means of *apt-get install* or *Ubuntu Software*).
 
-### Quick installation using the cubuild.sh bash script
+### Quick installation using the cubuild bash script
 
 The cubuild.sh bash scripts installs the cumbia base libraries and apps, including support for either Tango or Epics, or both, if specified.
 
