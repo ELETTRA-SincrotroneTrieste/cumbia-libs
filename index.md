@@ -27,7 +27,6 @@ Additionally, JavaScript files can be used as data sources. Read more about *cum
 Testing a new library version under your home directory is as easy as executing the *scripts/cubuild.sh* installation procedure specifying the custom path and 
 executing a *one line command* thereafter to set up the local environment in the current shell.
 
-
 ### Use the included apps (with bash Tango source auto completion!) to access immediately multiple control systems
 A Qt graphical client and a command line application are ready to communicate with the supported control systems and
 the *cumbia-random* module. An external <a href="https://github.com/ELETTRA-SincrotroneTrieste/qumbia-tango-findsrc-plugin">plugin</a>
