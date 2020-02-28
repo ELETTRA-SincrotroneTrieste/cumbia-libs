@@ -78,6 +78,9 @@ porting an application from one platform to another is just a matter of a few cl
 and new ones can be added. The core framework remains small and easy to maintain, while the capabilities extend distributed.
 The set of widgets offered by the base *cumbia-qtcontrols* module can be extended by plugins as well.
 
+![The 3D plot offered by the <a href="https://github.com/ELETTRA-SincrotroneTrieste/qutimearray3dplotplugin">qutimearray3dplotplugin</a> shows historical data](qu3dplot.png)
+
+
 ### Screenshots
 <a href="screenshots.html">Here</a> you can see some screenshots of applications written with *cumbia*.
 
