@@ -51,7 +51,8 @@ Thereafter, a *one line instruction* is enough to use and test the latest featur
 Build using the [cubuild.sh script method](#quick-installation-using-the-cubuild-bash-script) discussed
 below (editing scripts/config.sh and changing the *prefix=* line) and then proceed to
 the instructions described in the
-[local environment setup](#set-up-the-environment-for-a-local-installation) section.
+[local environment setup](#set-up-the-environment-for-a-local-installation) section
+(*source $install_prefix/bin/cusetenv.sh*)
 
 ## Download and installation
 
