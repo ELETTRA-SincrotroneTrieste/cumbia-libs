@@ -1,4 +1,4 @@
-prefix=/usr/local/cumbia-libs
+prefix=/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir
 exec_prefix=${prefix}
 libdir=${prefix}/lib
 includedir=${prefix}/include/cumbia-random

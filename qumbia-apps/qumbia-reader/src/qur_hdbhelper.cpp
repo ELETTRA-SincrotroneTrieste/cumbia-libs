@@ -1,7 +1,7 @@
 #include "qur_hdbhelper.h"
+#include <QDateTime>
 #ifdef HAS_CUHDB
 #include <cumbiahdbworld.h>
-#include <QDateTime>
 #include <algorithm>
 #endif
 
