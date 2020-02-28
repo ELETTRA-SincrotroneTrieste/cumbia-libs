@@ -80,6 +80,8 @@ The set of widgets offered by the base *cumbia-qtcontrols* module can be extende
 
 ![The 3D plot offered by the <a href="https://github.com/ELETTRA-SincrotroneTrieste/qutimearray3dplotplugin">qutimearray3dplotplugin</a> shows historical data](qu3dplot.png)
 
+<center><small><strong>Figure 2.</strong>The 3D plot offered by the <a href="https://github.com/ELETTRA-SincrotroneTrieste/qutimearray3dplotplugin">qutimearray3dplotplugin</a> shows historical data.</small></center>
+
 
 ### Screenshots
 <a href="screenshots.html">Here</a> you can see some screenshots of applications written with *cumbia*.
@@ -215,7 +217,7 @@ improvement in performance.
 
 ![cumbia and qtango performances compared](readers_performance.png)
 
-<center><small><strong>Figure 2.</strong> The graph shows a relevant gap in *CPU* usage by two equivalent applications (they read the same *attributes/commands* from the *Tango*
+<center><small><strong>Figure 3.</strong> The graph shows a relevant gap in *CPU* usage by two equivalent applications (they read the same *attributes/commands* from the *Tango*
 control system and print them on the console), one relying on *qtango* (blue), the other on *cumbia* (green).</small></center>
 
 
