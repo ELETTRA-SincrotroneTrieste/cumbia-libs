@@ -215,6 +215,9 @@ public slots:
     
     void setYAxisAutoscaleEnabled(bool en);
 
+    void setXTopAxisAutoscaleEnabled(bool autoscale);
+    void setYRightAxisAutoscaleEnabled(bool autoscale);
+
     void setYLowerBound(double l);
 
     void setYUpperBound(double u);
