@@ -71,12 +71,16 @@ Nevertheless, method 2 below is the recommended.
 #### 2. Install Qwt from source
 
 > wget https://downloads.sourceforge.net/project/qwt/qwt/6.1.4/qwt-6.1.4.tar.bz2
+
 > tar xjf qwt-6.1.4.tar.bz2
-> cd qwt-6.1.4/
+
+> cd qwt-6.1.4
 
 - Edit qwtconfig.pri
 - Uncomment the line 
+
 > *QWT_CONFIG     += QwtPkgConfig*
+
   so that the *pkgconfig file Qt5Qwt6.pc* will be generated and installed
   
 > qmake && make -j5 && sudo make install
