@@ -122,6 +122,14 @@ The following instructions may replace the *Install from source* procedure entir
 
 The command installs tango version 9.2.5a and the *TangoTest* server (*/usr/lib/tango/TangoTest*)
 
+#### Note
+Both *ubuntu packages* and *manually installed* Tango and zeromq libraries can coexist.
+This may facilitate the installation of other useful piece of software such as *python-tango, python-taurus,
+python3-taurus, python-pytango* and so on using the packages provided by the distribution.
+
+*LD_LIBRARY_PATH* can be used to select the proper dependency at runtime *if necessary*.
+
+
 #### Setting TANGO_HOST
 During the installation, the *Configuring tango-common* dialog will ask you to specify the name of the host where the *TANGO* database server is running.
 Type the *hostname:port* couple and continue.
