@@ -56,6 +56,18 @@ The additional packages libqwt-headers and libqwt-qt5-6 are installed.
 This method is not recommended because the *pkgconfig* file is not installed. 
 In fact, *pkgconfig support must be explicitly enabled when building Qwt* (see section below)
 
+
+#### Observations 
+
+About *ubuntu Qwt* installation:
+
+- Qwt include files are placed under /usr/include/qwt
+- Qwt libraries are named libqwt-qt5.so
+- No pkg-config file is installed
+
+*cumbia* relies on *pkg-config* to find dependencies. Nevertheless *Qwt* installation on ubuntu should be detected.
+Nevertheless, method 2 below is the recommended.
+
 #### 2. Install Qwt from source
 
 > wget https://downloads.sourceforge.net/project/qwt/qwt/6.1.4/qwt-6.1.4.tar.bz2
@@ -74,17 +86,6 @@ The libraries will be installed under */usr/local/qwt-6.1.4* by default and you 
 > /usr/local/qwt-6.1.4/lib/pkgconfig/
 
 to the *PKG_CONFIG_PATH* when building *cumbia* modules depending on Qt (Qwt)
-
-
-#### Observations 
-
-About *ubuntu Qwt* installation:
-
-- Qwt include files are placed under /usr/include/qwt
-- Qwt libraries are named libqwt-qt5.so
-- No pkg-config file is installed
-
-*cumbia* relies on *pkg-config* to find dependencies. Nevertheless *Qwt* installation on ubuntu should be detected.
 
 
 ### cumbia libraries
