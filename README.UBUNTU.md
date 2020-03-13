@@ -1,6 +1,6 @@
 # Add cumbia to a fresh ubuntu installation
 
-In this document we will describe the necessary steps to set up *cumbia* in a freshly installed *ubuntu 18.04* desktop edition.
+In this document we will describe the necessary steps to set up *cumbia* in a freshly installed *ubuntu 19.10* desktop edition.
 
 We downloaded and installed an *ubuntu desktop 18.10* from the iso image found at:
 
@@ -34,22 +34,47 @@ Install the qt5 libraries for graphical applications, the *qt designer* and the 
 
 > sudo apt-get install qt5-default qtcreator libqt5x11extras5-dev qttools5-dev qtscript5-dev
 
-Qt version *5.9.5* and *qtcreator* version *4.5.2* will be installed.
+Qt version *5.12* and *qtcreator* version *4.8.2* will be installed.
 
 - libqt5x11extras5-dev provides the QT module *x11extras*, needed by the qumbia-plugins/qt-designer
 - qttools5-dev provides the QT module *designer*, needed by the qumbia-plugins/qt-designer
 
 In order to build the qml module, the following installation is necessary
 
-> sudo apt-get install qml-module-qtcharts qml-module-qtquick-controls2 qml-module-qtquick-dialogs qml-module-qtquick-extras qml-module-qtquick-scene2d qml-module-qtquick-scene3d qml-module-qtquick-templates2  qtdeclarative5-dev libqt5charts5-dev qtcharts5-examples qtcharts5-doc-html 
+> sudo apt-get install qml-module-qtcharts qml-module-qtquick-controls2 qml-module-qtquick-dialogs qml-module-qtquick-extras qml-module-qtquick-scene2d qml-module-qtquick-scene3d qml-module-qtquick-templates2  qtdeclarative5-dev libqt5charts5-dev qtcharts5-examples qtcharts5-doc-html libqt5svg5  libqt5svg5-dev qt
 
 ### Qwt libraries: widgets for technical applications
+
+#### 1. Install ubuntu packages (not recommended)
 
 The Qwt libraries are used by *cumbia-qtcontrols* to provide *plot* widgets. Version 6 for *qt5* must be installed:
 
 > sudo apt-get install libqwt-qt5-dev
 
 The additional packages libqwt-headers and libqwt-qt5-6 are installed.
+
+This method is not recommended because the *pkgconfig* file is not installed. 
+In fact, *pkgconfig support must be explicitly enabled when building Qwt* (see section below)
+
+#### 2. Install Qwt from source
+
+> wget https://downloads.sourceforge.net/project/qwt/qwt/6.1.4/qwt-6.1.4.tar.bz2
+> tar xjf qwt-6.1.4.tar.bz2
+> cd qwt-6.1.4/
+
+- Edit qwtconfig.pri
+- Uncomment the line 
+> *QWT_CONFIG     += QwtPkgConfig*
+  so that the *pkgconfig file Qt5Qwt6.pc* will be generated and installed
+  
+> qmake && make -j5 && sudo make install
+
+The libraries will be installed under */usr/local/qwt-6.1.4* by default and you will therefore add
+
+> /usr/local/qwt-6.1.4/lib/pkgconfig/
+
+to the *PKG_CONFIG_PATH* when building *cumbia* modules depending on Qt (Qwt)
+
 
 #### Observations 
 
