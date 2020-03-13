@@ -75,8 +75,15 @@ shows the list of the required packages to build all the modules in cumbia-libs:
 ### Prepare an ubuntu system for cumbia installation (time: 5 - 8 minutes)
 
 If you are interested in using ubuntu, please refer to the instructions in <a href="README.UBUNTU.md">README.UBUNTU.md</a> file.
-The time required to set up a *cumbia*-ready *ubuntu desktop* is about five to eight minutes and the procedure in the README.UBUNTU.md file
-requires the installation of official *ubuntu packages* only (by means of *apt-get install* or *Ubuntu Software*).
+Since *cumbia* requires the C++-17 standard, the Tango packages shipped with ubuntu are not compatible (at least at the moment of writing this moment and *ubuntu-19.10*). Therefore a manual build of both Tango and its *zeromq* dependency are 
+presently needed. Omniorb dependency can be installed with *apt-get*.
+
+The <a href="README.UBUNTU.md">README.UBUNTU.md</a> describes the following procedures aimed at the *cumbia* installation:
+
+- Prepare the ubuntu environment
+- *zeromq* installation from source
+- *tango* installation from source
+- *epics installation from source*
 
 ### Quick installation using the cubuild bash script
 
