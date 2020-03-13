@@ -2,9 +2,9 @@
 
 In this document we will describe the necessary steps to set up *cumbia* in a freshly installed *ubuntu 19.10* desktop edition.
 
-We downloaded and installed an *ubuntu desktop 18.10* from the iso image found at:
+We downloaded and installed an *ubuntu desktop 19.10* from the iso image found at:
 
-http://releases.ubuntu.com/18.10/ubuntu-18.10-desktop-amd64.iso
+http://releases.ubuntu.com/19.10/ubuntu-19.10-desktop-amd64.iso
 
 #### Note
 The *Normal installation* default option has been chosen during the installation procedure
@@ -16,9 +16,80 @@ The *Normal installation* default option has been chosen during the installation
 
 The following command installs the GNU compiler, GNU make, meson...
 
-> sudo apt-get install  build-essential  ninja-build  meson  git  doxygen graphviz
+> sudo apt-get install  build-essential  ninja-build  meson  git  doxygen graphviz cmake
 
 ### Tango libraries
+
+Tango libraries shipped with ubuntu 19.10 are not up to date enough to support the C++-17 standard
+required by *cumbia libs*. You are forced to build tango from source until the deb packages are updated.
+This requires to build *zeromq* as dependency.
+*omniorb* can be installed with *apt-get*:
+
+> sudo apt-get install omniorb omniidl libcos4-dev libomnithread4-dev 
+
+#### Install from source method
+
+Change directory into your development folder
+
+> cd devel
+
+Install zmq (*zeromq*) dependency using cmake:
+
+> git clone https://github.com/zeromq/libzmq.git
+
+> cd libzmq/
+
+> mkdir build && cd build
+
+> cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/zeromq
+
+> make -j9 && sudo make install
+
+Back to *devel* directory
+
+> cd ../..
+
+> git clone https://github.com/zeromq/cppzmq.git
+
+> cd cppzmq && mkdir build && cd build 
+
+> cmake .. && make -j9
+
+> sudo make install
+
+Back to devel directory
+
+> cd ../..
+
+Download and install Tango
+
+> git clone https://github.com/tango-controls/tango-idl.git
+
+> git clone https://github.com/tango-controls/cppTango.git
+
+> cd tango-idl
+
+> mkdir build && cd build
+
+> cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.3.3
+
+> sudo make install
+
+> cd ../../cppTango/
+
+>  mkdir  build && cd build
+
+> cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.3.3  -DCPPZMQ_BASE=/usr/local/zeromq -DZMQ_BASE=/usr/local/zeromq  -DOMNIIDL_PATH=/usr/bin -DIDL_BASE=/usr/local/tango-9.3.3
+
+> make -j9
+
+> sudo make install
+
+
+#### The apt-get install method
+
+At the moment of writing this document, ubuntu 19.10 does not provide Tango packages supporting the C++-17 standard.
+The following instructions can replace the *Install from source* procedure entirely in a future *ubuntu* release.
 
 > sudo apt-get install libtango-dev libtango-tools tango-test
 
