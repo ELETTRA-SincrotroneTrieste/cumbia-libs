@@ -18,6 +18,29 @@ The following command installs the GNU compiler, GNU make, meson...
 
 > sudo apt-get install  build-essential  ninja-build  meson  git  doxygen graphviz cmake
 
+
+### EPICS libraries
+
+Change directory into your development folder
+
+> cd devel
+
+> wget https://epics.anl.gov/download/base/base-7.0.3.1.tar.gz
+
+> tar xzf base-7.0.3.1.tar.gz && cd base-7.0.3.1.tar.gz
+
+> make -j9 && cd ..
+
+The following installation instructions are just an example:
+
+> sudo mkdir  /usr/local/epics
+> sudo cp -a base-7.0.3.1  /usr/local/epics
+
+#### PKG_CONFIG_PATH note
+Remember that /usr/local/epics/base-7.0.3.1/lib/pkgconfig shall be added to the PKG_CONFIG_PATH when building *cumbia*
+later.
+
+
 ### Tango libraries
 
 Tango libraries shipped with ubuntu 19.10 are not up to date enough to support the C++-17 standard
@@ -86,10 +109,14 @@ Download and install Tango
 > sudo make install
 
 
+#### PKG_CONFIG_PATH note
+Remember that */usr/local/tango-9.3.3/lib/pkgconfig* shall be added to the PKG_CONFIG_PATH when building *cumbia*
+later, as well as */usr/local/zeromq/lib/pkgconfig*
+
 #### The apt-get install method
 
 At the moment of writing this document, ubuntu 19.10 does not provide Tango packages supporting the C++-17 standard.
-The following instructions can replace the *Install from source* procedure entirely in a future *ubuntu* release.
+The following instructions may replace the *Install from source* procedure entirely in a future *ubuntu* release.
 
 > sudo apt-get install libtango-dev libtango-tools tango-test
 
