@@ -1,10 +1,5 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2017-12-27T15:40:52
-#
-#-------------------------------------------------
-include(../../cumbia-qtcontrols/cumbia-qtcontrols.pri)
 include(../qumbia-plugins.pri)
+include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 
 TARGET = cumbia-multiread-plugin
 TEMPLATE = lib

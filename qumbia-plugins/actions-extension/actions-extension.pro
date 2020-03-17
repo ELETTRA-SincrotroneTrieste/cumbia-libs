@@ -1,11 +1,19 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2018-10-26T14:13:50
-#
-#-------------------------------------------------
 include(../qumbia-plugins.pri)
-include(../../cumbia-qtcontrols/cumbia-qtcontrols.pri)
-include(../../qumbia-tango-controls/qumbia-tango-controls.pri)
+
+# configuration files must be found by the application when the script
+# installs everything at destination
+#
+exists($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
+    message("including support for qumbia-epics-controls module under $${INSTALL_ROOT}")
+    include($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+}
+
+exists($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
+    message("including support for qumbia-tango-controls module under $${INSTALL_ROOT}")
+    include($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+}
+
+include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 
 QT       += core gui
 

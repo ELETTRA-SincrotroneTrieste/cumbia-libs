@@ -2,7 +2,9 @@
 # $Name $
 
 include(../qumbia-plugins.pri)
-include(../../cumbia-qtcontrols/cumbia-qtcontrols.pri)
+
+include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
+
 
 TEMPLATE = lib
 CONFIG += plugin
