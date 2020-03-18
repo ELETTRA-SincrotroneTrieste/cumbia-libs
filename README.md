@@ -153,6 +153,16 @@ is already included in the *ldconfig* search paths. If not, you have two possibi
 - [y] "yes" answer: add a file cumbia.conf under */etc/ld.so.conf.d/*
 - [n] "no", the default: deal with it manually later (either dealing with ldconfig configuration files or exporting a proper LD_LIBRARY_PATH)
 
+With the same logic, the script scans the *PATH* environment variable to determine if *install_prefix/bin* is
+included. If not, a new file named *cumbia-bin-path.sh* can be placed under */etc/profile.d* to append to
+the *PATH* list *install_prefix/bin*.
+
+#### Notes
+1. If the script does not prompt for the installation of *cumbia-bin-path.sh*, you have probably already
+   included  *install_prefix/bin* in your *$PATH*. The opposite may happen:
+2. *install_prefix/bin* is in the user's *$PATH* but still the script asks to add *cumbia-bin-path.sh*
+   to */etc/profile.d*: you have probably called the *cubuild.sh* script with *sudo*, and the *PATH* is
+   thus different from the user's.
 
 If the *quick installation using the cubuild.sh bash script* fails, please read the *step by step installation* procedure to 
 point out the possible causes.
