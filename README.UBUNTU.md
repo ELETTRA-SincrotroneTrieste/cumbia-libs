@@ -27,7 +27,8 @@ Change directory into your development folder
 
 > wget https://epics.anl.gov/download/base/base-7.0.3.1.tar.gz
 
-> tar xzf base-7.0.3.1.tar.gz && cd base-7.0.3.1.tar.gz
+> tar xzf base-7.0.3.1.tar.gz
+> cd base-7.0.3.1.tar.gz
 
 > make -j9 && cd ..
 
@@ -76,7 +77,7 @@ Back to *devel* directory
 
 > cd cppzmq && mkdir build && cd build 
 
-> cmake .. && make -j9
+> cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/zeromq && make -j9
 
 > sudo make install
 
