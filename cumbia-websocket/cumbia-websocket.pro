@@ -12,7 +12,7 @@ QT += websockets
 
 CONFIG += debug
 
-CONFIG += silent
+# CONFIG += silent
 
 PKGCONFIG -= cumbia-websocket$${QTVER_SUFFIX}
 
@@ -86,23 +86,30 @@ unix {
     other_inst.files = $${DISTFILES}
     other_inst.path = $${CUMBIA_WS_INCLUDES}
 
+android-g++|wasm-emscripten {
+    target.path = $${CUMBIA_WS_LIBDIR}/wasm
+} else {
     target.path = $${CUMBIA_WS_LIBDIR}
+}
     INSTALLS += target inc other_inst
 
     !android-g++ {
             INSTALLS += doc
     }
 
-# generate pkg config file
-    CONFIG += create_pc create_prl no_install_prl
+android-g++|wasm-emscripten {
+} else {
+    # generate pkg config file
+        CONFIG += create_pc create_prl no_install_prl
 
-    QMAKE_PKGCONFIG_NAME = cumbia-websocket
-    QMAKE_PKGCONFIG_DESCRIPTION = Qt websocket module for cumbia
-    QMAKE_PKGCONFIG_PREFIX = $${INSTALL_ROOT}
-    QMAKE_PKGCONFIG_LIBDIR = $${target.path}
-    QMAKE_PKGCONFIG_INCDIR = $${inc.path}
-    QMAKE_PKGCONFIG_VERSION = $${VERSION}
-    QMAKE_PKGCONFIG_DESTDIR = pkgconfig
+        QMAKE_PKGCONFIG_NAME = cumbia-websocket
+        QMAKE_PKGCONFIG_DESCRIPTION = Qt websocket module for cumbia
+        QMAKE_PKGCONFIG_PREFIX = $${INSTALL_ROOT}
+        QMAKE_PKGCONFIG_LIBDIR = $${target.path}
+        QMAKE_PKGCONFIG_INCDIR = $${inc.path}
+        QMAKE_PKGCONFIG_VERSION = $${VERSION}
+        QMAKE_PKGCONFIG_DESTDIR = pkgconfig
+    }
 }
 
 LIBS -= -lcumbia-websocket$${QTVER_SUFFIX}

@@ -100,7 +100,7 @@ CuWSActionReader::CuWSActionReader(const WSSource& src, CumbiaWebSocket *ct) : C
     d->exit = false;  // set to true by stop
     d->networkAccessManager = NULL;
     std::string proto = src.getProtocol(); // tango:// ?
-    printf("\e[1;36mFOUND PROTOCOL \"%s\"\e[0m\n", proto.c_str());
+    pinfo("CuWSActionReader: found protocol \"%s\" within \"%s\"", proto.c_str(), src.getName().c_str());
     d->proto_helpers = new ProtocolHelpers();
     d->proto_helper_i = d->proto_helpers->get(QString::fromStdString(proto));
 }
@@ -248,6 +248,7 @@ bool CuWSActionReader::exiting() const
 void CuWSActionReader::onNetworkReplyFinished(QNetworkReply *reply)
 {
     QByteArray data = reply->readAll();
+    qDebug() << __PRETTY_FUNCTION__ <<  "data" << data << " error " << reply->errorString();
     QString requrl = reply->request().url().toString();
     if(requrl == d->cumbia_ws->httpUrl() + QString::fromStdString(d->tsrc.getName())) {
         // we got the first reading of the source
@@ -259,8 +260,10 @@ void CuWSActionReader::onNetworkReplyFinished(QNetworkReply *reply)
     else {
         QString key = requrl.section('/', -1);
         d->source_configuration.add(key, QString(data).remove("\""));
-        if(reply->error() != QNetworkReply::NoError)
+        if(reply->error() != QNetworkReply::NoError) {
             d->source_configuration.setError(reply->errorString());
+            perr("CuWSActionReader.onNetworkReplyFinished: %s", qstoc(reply->errorString()));
+        }
 
         if(d->source_configuration.isComplete()) {
             CuData conf = d->source_configuration.toCuData();
@@ -278,28 +281,46 @@ void CuWSActionReader::onNetworkReplyFinished(QNetworkReply *reply)
     }
 }
 
+void CuWSActionReader::onReplyFinished()
+{
+    QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
+    qDebug() << __PRETTY_FUNCTION__ << r->errorString() << r->readAll();
+}
+
 void CuWSActionReader::start()
 {
     QString url_s = QString::fromStdString(d->tsrc.getName());
     d->networkAccessManager = new QNetworkAccessManager(this);
+//    connect(d->networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onNetworkReplyFinished(QNetworkReply*)));
 
     // 1. get configuration parameters for the source
     //
     // for now, we must fetch each property with a separate get
     WSSourceConfiguration soco;
     QStringList keys = soco.keys();
+    keys.push_back("label");
+    keys.push_back("unit");
+    QStringList tmpkeys = QStringList() << "label";
     QNetworkRequest config_r;
-    foreach(QString key, keys) {
+    /// TEST TEST tempkeys
+    foreach(QString key, tmpkeys) {
         config_r.setUrl(QUrl(d->cumbia_ws->httpUrl() + url_s + "/" + key));
-        d->networkAccessManager->get(config_r);
+        qDebug() << __PRETTY_FUNCTION__ << "Sending " << config_r.url().toString();
+        QNetworkReply *re = d->networkAccessManager->get(config_r);
+        connect(re, SIGNAL(finished()), this, SLOT(onReplyFinished()));
     }
 
     // 2. subscribe to events
+
     QNetworkRequest subscribe_request(d->cumbia_ws->httpUrl() + url_s);
+  ///
+// QNetworkRequest subscribe_request(QUrl("https://localhost:12702"));
 //    subscribe_request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
-    pgreen2tmp("CuWSActionReader::start: subscribing to \"%s\"", qstoc(subscribe_request.url().toString()));
-    d->networkAccessManager->sendCustomRequest(subscribe_request, QByteArray("SUBSCRIBE"));
-    connect(d->networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onNetworkReplyFinished(QNetworkReply*)));
+//    pgreen2tmp("CuWSActionReader::start: subscribing to \"%s\"", qstoc(subscribe_request.url().toString()));
+//    QNetworkReply * r = d->networkAccessManager->sendCustomRequest(subscribe_request, QByteArray("SUBSCRIBE"));
+//    connect(r, SIGNAL(finished()), this, SLOT(onReplyFinished()));
+////    r->waitForReadyRead(1000);
+//    qDebug() << __PRETTY_FUNCTION__ << "sendCustomRequest sent: reply ?" << r->errorString() << r->readAll();
 }
 
 void CuWSActionReader::stop()

@@ -16,6 +16,11 @@ exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {
     include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
 }
 
+exists($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri) {
+    message("- adding cumbia-websocket module support under $${INSTALL_ROOT}")
+    include($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
+}
+
 
 CONFIG+=link_pkgconfig
 PKGCONFIG -= x11

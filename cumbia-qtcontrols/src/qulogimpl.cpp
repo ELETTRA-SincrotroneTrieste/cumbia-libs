@@ -132,7 +132,7 @@ QuLogImpl::~QuLogImpl()
 void QuLogImpl::write(const std::string &origin, const std::string &msg, CuLog::Level l, CuLog::Class c)
 {
     QString type;
-    if(l == CuLog::Info) type == "INFO";
+    if(l == CuLog::Info) type = "INFO";
     else if(l == CuLog::Warn) type = "WARN";
     else type = "ERR";
 
@@ -152,7 +152,7 @@ void QuLogImpl::write(const std::string &origin, CuLog::Level l, CuLog::Class c,
     va_list vl;
     va_start(vl, fmt);
     char s[2048];QString type;
-    if(l == CuLog::Info) type == "INFO";
+    if(l == CuLog::Info) type = "INFO";
     else if(l == CuLog::Warn) type = "WARN";
     else type = "ERR";
 

@@ -85,25 +85,30 @@ unix {
     other_inst.files = $${DISTFILES}
     other_inst.path = $${CUMBIA_RND_INCLUDES}
 
+    # set to  either $${INSTALL_ROOT}/lib or $${INSTALL_ROOT}/lib/wasm in .pri
     target.path = $${CUMBIA_RND_LIBDIR}
+
     INSTALLS += target inc other_inst
 
     !android-g++ {
             INSTALLS += doc
     }
 
-# generate pkg config file
-    CONFIG += create_pc create_prl no_install_prl
+wasm-emscripten|android-g++ {
+} else {
+    # generate pkg config file
+        CONFIG += create_pc create_prl no_install_prl
 
-    QMAKE_PKGCONFIG_NAME = cumbia-random
-    QMAKE_PKGCONFIG_DESCRIPTION = Qt random module for cumbia
-    QMAKE_PKGCONFIG_PREFIX = $${INSTALL_ROOT}
-    QMAKE_PKGCONFIG_LIBDIR = $${target.path}
-    QMAKE_PKGCONFIG_INCDIR = $${inc.path}
-    QMAKE_PKGCONFIG_VERSION = $${VERSION}
-    QMAKE_PKGCONFIG_DESTDIR = pkgconfig
+        QMAKE_PKGCONFIG_NAME = cumbia-random
+        QMAKE_PKGCONFIG_DESCRIPTION = Qt random module for cumbia
+        QMAKE_PKGCONFIG_PREFIX = $${INSTALL_ROOT}
+        QMAKE_PKGCONFIG_LIBDIR = $${target.path}
+        QMAKE_PKGCONFIG_INCDIR = $${inc.path}
+        QMAKE_PKGCONFIG_VERSION = $${VERSION}
+        QMAKE_PKGCONFIG_DESTDIR = pkgconfig
+    }
 }
 
-unix:INCLUDEPATH -= /usr/local/cumbia-libs/include/cumbia/cumbia-random
+unix:INCLUDEPATH -= $${CUMBIA_RND_INCLUDES}
 
 LIBS -= -lcumbia-random$${QTVER_SUFFIX}

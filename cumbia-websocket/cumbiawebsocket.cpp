@@ -26,6 +26,13 @@ public:
     QString http_url, ws_url;
 };
 
+/*!
+ * \brief CumbiaWebSocket
+ * \param websocket_url the url to be used for websocket incoming data
+ * \param http_url the http (https) url to be used to send requests to the server (output)
+ * \param tfi thread factory implementation
+ * \param teb thread events bridge factory
+ */
 CumbiaWebSocket::CumbiaWebSocket(const QString &websocket_url,
                                  const QString &http_url,
                                  CuThreadFactoryImplI *tfi,

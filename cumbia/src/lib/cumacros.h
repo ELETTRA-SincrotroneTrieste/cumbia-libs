@@ -2,7 +2,7 @@
 #define CUMBIA_MACROS_H
 
 #include <stdio.h>
-
+#include <pthread.h>
 #include <stdlib.h>
 
 #define perr(x, args...) do {  fprintf(stderr, "\e[1;31m!! \e[0;4merror\e[0m: "); printf(x, ##args); printf("\n"); }while(0)

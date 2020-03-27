@@ -73,6 +73,8 @@ public:
 private slots:
     void onNetworkReplyFinished(QNetworkReply *reply);
 
+    void onReplyFinished();
+
 private:
     CuWSActionReaderPrivate *d;
 

@@ -1132,7 +1132,11 @@ long int CuVariant::toLongInt(bool *ok) const
 
 long long CuVariant::toLongLongInt(bool *ok) const
 {
+#ifdef LONG_LONG_MIN
     long long int i = LONG_LONG_MIN;
+#else
+    long long int i = LONG_MIN;
+#endif
     bool canConvert = (d->type == Int || d->type == LongInt || d->type == LongLongInt)  && d->format == Scalar && d->val != NULL && d->mIsValid;
     if(canConvert && d->format == Scalar && d->val != NULL && d->type == Int)
         i = static_cast<long long int> ( *(static_cast<int *>(d->val)) );
@@ -1195,7 +1199,11 @@ unsigned int CuVariant::toUInt(bool *ok) const
 
 unsigned long long int CuVariant::toULongLongInt(bool *ok) const
 {
+#ifdef ULONG_LONG_MAX
     unsigned long long int i = ULONG_LONG_MAX;
+#else
+    unsigned long long int i = LONG_MAX;
+#endif
     bool can_convert = (d->format == Scalar && d->val != NULL  && d->mIsValid &&
             (d->type == UInt || d->type == UShort || d->type == LongLongUInt || d->type == LongUInt) );
     if(can_convert && d->type == UInt)

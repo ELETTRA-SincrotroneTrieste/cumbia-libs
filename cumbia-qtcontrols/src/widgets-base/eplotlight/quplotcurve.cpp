@@ -217,7 +217,7 @@ void QuPlotCurve::drawCurve(QPainter *p, int style,
                }
                QRect rect(xt - STATE_SYMBOL_SIZE / 2, yt- STATE_SYMBOL_SIZE / 2,
                           STATE_SYMBOL_SIZE, STATE_SYMBOL_SIZE);
-               QPen ep(QColor(Qt::red));
+               QPen ep(Qt::red);
                ep.setWidthF(1.5);
                p->setPen(ep);
                QwtPainter::drawEllipse(p, rect);

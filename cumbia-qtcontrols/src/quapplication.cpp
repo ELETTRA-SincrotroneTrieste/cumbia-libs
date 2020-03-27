@@ -9,7 +9,7 @@
 #include <QtDebug>
 #include <QWidget>
 #include <QWindow>
-#include <QtX11Extras/QX11Info>
+// #include <QtX11Extras/QX11Info>
 
 class QuApplicationPrivate
 {
@@ -164,7 +164,11 @@ int QuApplication::screen_number() const
 
 bool QuApplication::isPlatformX11() const
 {
+#ifdef QT_X11EXTRAS_LIB
     return QX11Info::isPlatformX11();
+#else
+    return false;
+#endif
 }
 
 /*! @private

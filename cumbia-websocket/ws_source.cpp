@@ -87,7 +87,7 @@ string WSSource::getName() const
 string WSSource::getProtocol() const
 {
     std::regex base_regex("([a-zA-Z0-9_]+)://");
-    string source = "https://pwma-dev.elettra.eu:10443/v1/cs/tango://ken.elettra.trieste.it:20000/test/device/1/double_scalar";
+    string source = m_s;
     // default constructor = end-of-sequence:
     std::vector<std::string> matches;
     std::regex_token_iterator<std::string::iterator> rend;

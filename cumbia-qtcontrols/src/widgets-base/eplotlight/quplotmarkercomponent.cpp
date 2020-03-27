@@ -53,8 +53,8 @@ void QuPlotMarkerComponent::init(QuPlotBase *plot)
 {
     const int alpha = 220;
     QColor bgColor(QColor(245,245,245));
-    QColor txtColor(QColor(Qt::black));
-    QColor bgPen(QColor(Qt::darkGray));
+    QColor txtColor(Qt::black);
+    QColor bgPen(Qt::darkGray);
     d->m_marker = new QwtPlotMarker();
     d->m_picker = new QwtPlotPicker(QwtPlot::xBottom, QwtPlot::yLeft, QwtPlotPicker::NoRubberBand, QwtPicker::AlwaysOff, plot->canvas());
     d->m_picker->setStateMachine(new QwtPickerClickPointMachine());

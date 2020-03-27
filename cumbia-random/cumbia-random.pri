@@ -4,6 +4,12 @@ lessThan(QT_MAJOR_VERSION, 5) {
     QTVER_SUFFIX =
 }
 
+wasm-emscripten {
+# library is compiled statically
+# cumbia-random needs Qt Script
+    QT += script
+}
+
 # + ----------------------------------------------------------------- +
 #
 # Customization section:
@@ -14,7 +20,10 @@ lessThan(QT_MAJOR_VERSION, 5) {
 # Here qumbia-random will be installed
 # INSTALL_ROOT can be specified from the command line running qmake "INSTALL_ROOT=/my/install/path"
 #
-
+# WebAssembly: includes under $${INSTALL_ROOT}/include/cumbia-random, libs under $${INSTALL_ROOT}/lib/wasm
+# cumbia and cumbia-qtcontrols includes searched under $${INSTALL_ROOT}/include/cumbia and
+# $${INSTALL_ROOT}/include/cumbia-qtcontrols
+#
 isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT = /usr/local/cumbia-libs
 }
@@ -24,30 +33,36 @@ isEmpty(INSTALL_ROOT) {
     CUMBIA_RND_INCLUDES=$${INSTALL_ROOT}/include/cumbia-random
 #
 #
-# Here qumbia-tango-controls share files will be installed
+# Here cumbia-random share files will be installed
 #
     CUMBIA_RND_SHARE=$${INSTALL_ROOT}/share/cumbia-random
 ##
 #
-# Here qumbia-tango-controls libraries will be installed
+# Here cumbia-random libraries will be installed
     CUMBIA_RND_LIBDIR=$${INSTALL_ROOT}/lib
 #
 #
-# Here qumbia-tango-controls documentation will be installed
+# Here cumbia-random documentation will be installed
     CUMBIA_RND_DOCDIR=$${INSTALL_ROOT}/share/doc/cumbia-random
+
 #
 # The name of the library
     cumbia_rnd_LIB=cumbia-random$${QTVER_SUFFIX}
 #
-# Here qumbia-tango-controls libraries will be installed
-    CUMBIA_RND_LIBDIR=$${INSTALL_ROOT}/lib
+# Here qumbia-random libraries will be installed
+    wasm-emscripten {
+        CUMBIA_RND_LIBDIR=$${INSTALL_ROOT}/lib/wasm
+    } else {
+        CUMBIA_RND_LIBDIR=$${INSTALL_ROOT}/lib
+    }
 #
 #
-# Here qumbia-tango-controls documentation will be installed
+# Here cumbia-random documentation will be installed
     CUMBIA_QTCONTROLS_DOCDIR=$${INSTALL_ROOT}/share/doc/cumbia-random
 #
 
-!android-g++ {
+android-g++|wasm-emscripten {
+} else {
     CONFIG += link_pkgconfig
     PKGCONFIG += cumbia
     PKGCONFIG += cumbia-qtcontrols$${QTVER_SUFFIX}
@@ -60,10 +75,6 @@ isEmpty(INSTALL_ROOT) {
             message("Qwt: using pkg-config to configure cumbia cumbia-qtcontrols$${QTVER_SUFFIX} includes and libraries")
         }
     }
-}
-
-android-g++ {
-    INCLUDEPATH += /usr/local/include/cumbia-qtcontrols
 }
 
 DEFINES += CUMBIA_PRINTINFO
@@ -96,17 +107,18 @@ unix:android-g++ {
     unix:INCLUDEPATH += /usr/local/include/cumbia /usr/local/include/cumbia/cumbia-random
     unix:LIBS +=  -L/libs/armeabi-v7a/ -lcumbia
     unix:LIBS += -lcumbia-random$${QTVER_SUFFIX}
-}
+} else {
+    wasm-emscripten {
+        LIBS +=  -L$${CUMBIA_RND_LIBDIR}/wasm -lcumbia-random$${QTVER_SUFFIX}
+        INCLUDEPATH += $${CUMBIA_RND_INCLUDES} $${INSTALL_ROOT}/include/cumbia-qtcontrols $${INSTALL_ROOT}/include/cumbia
 
-unix:!android-g++ {
-    packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
     } else {
-        message("no cumbia/cumbia-qtcontrols/cumbia-random pkg-config files found")
-        unix:INCLUDEPATH += /usr/local/include/cumbia /usr/local/include/cumbia/cumbia-random
-        unix:LIBS += -L/usr/local/lib -lcumbia
-        LIBS += -lcumbia-random$${QTVER_SUFFIX}
+        packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
+        } else {
+            message("either cumbia or cumbia-qtcontrols pkg-config files found")
+            unix:INCLUDEPATH += /usr/local/include/cumbia /usr/local/include/cumbia/cumbia-random
+            unix:LIBS += -L/usr/local/lib -lcumbia
+            LIBS += -lcumbia-random$${QTVER_SUFFIX}
+        }
     }
-
-
-
 }
