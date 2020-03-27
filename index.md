@@ -61,6 +61,7 @@ More examples you will find within cumbia sources!
 - <a href="https://epics.anl.gov/">EPICS</a>
 - <a href="https://www.android.com/">Android</a>
 - <a href="https://en.wikipedia.org/wiki/Linux">Linux</a>
+- <a href="https://doc.qt.io/qt-5/wasm.html">Qt for WebAssembly</a>
 
 
 ### Everywhere
@@ -96,6 +97,10 @@ Instructions to prepare an *ubuntu-desktop* for *cumbia*, can be found in the *R
 
 The library sources include copies of the *README.md* and *README.UBUNTU.md* files in the top level directory.
 
+#### Cumbia for WebAssembly
+
+To build Qt and cumbia for <a href="https://webassembly.org/">WebAssembly</a>, please refer to
+<a href="html/cumbia/html/cumbia_wasm.html">this document</a>.
 
 ### Tutorials
 
