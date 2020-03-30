@@ -25,6 +25,10 @@ CuWSClient::~CuWSClient()
     close();
 }
 
+bool CuWSClient::isOpen() const {
+    return m_webSocket.isValid();
+}
+
 /*! \brief shortcut for close. Neeeded by QmlAppStateManager to close the socket when
  *         the application becomes inactive/hidden/suspended
  *
@@ -45,7 +49,7 @@ void CuWSClient::start() {
 
 void CuWSClient::open()
 {
-    pgreen2tmp("+ opening web socket %s", qstoc(m_url.toString()));
+    pviolet2tmp("+ opening web socket %s", qstoc(m_url.toString()));
     m_webSocket.open(m_url);
 }
 
@@ -55,9 +59,18 @@ void CuWSClient::close()
     m_webSocket.close();
 }
 
+void CuWSClient::sendMessage(const QString &msg) {
+    if(m_webSocket.isValid())
+        m_webSocket.sendTextMessage(msg);
+    else
+        m_msg_queue.enqueue(msg);
+}
+
 void CuWSClient::onConnected()
 {
-    pgreen2tmp("-*- CuWSClient: connected to %s\n", qstoc(m_url.toString()));
+    pviolet2tmp("-*- CuWSClient: connected to %s\n", qstoc(m_url.toString()));
+    while(!m_msg_queue.isEmpty() && m_webSocket.isValid())
+        m_webSocket.sendTextMessage(m_msg_queue.dequeue());
 }
 
 void CuWSClient::onDisconnected()
@@ -74,7 +87,7 @@ void CuWSClient::onMessageReceived(const QString &message)
 
 void CuWSClient::onSocketError(QAbstractSocket::SocketError se)
 {
-    perr("CuWSClient.onSocketError: %s [err: %d]", qstoc(m_webSocket.errorString()), se);
+    perr("CuWSClient.onSocketError: %s [err: %d] URL: %s", qstoc(m_webSocket.errorString()), se, qstoc(m_url.toString()));
 }
 
 

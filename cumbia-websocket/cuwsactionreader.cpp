@@ -1,5 +1,5 @@
 #include "cuwsactionreader.h"
-#include "cumbiawebsocket.h"
+#include "cuwsclient.h"
 #include "cuwsactionfactoryservice.h"
 #include "protocolhelper_i.h"
 #include "protocolhelpers.h"
@@ -57,8 +57,7 @@ CuData WSSourceConfiguration::toCuData() const
     return res;
 }
 
-QStringList WSSourceConfiguration::keys() const
-{
+QStringList WSSourceConfiguration::keys() const {
     return m_keys;
 }
 
@@ -83,22 +82,24 @@ class CuWSActionReaderPrivate
 public:
     std::set<CuDataListener *> listeners;
     WSSource tsrc;
-    CumbiaWebSocket *cumbia_ws;
+    CuWSClient *ws_client;
+    QString http_url;
     bool exit;
-    CuData property_d, value_d;
+    CuData property_d, value_d, options;
     QNetworkAccessManager *networkAccessManager;
     WSSourceConfiguration source_configuration;
     ProtocolHelpers *proto_helpers;
     ProtocolHelper_I *proto_helper_i;
 };
 
-CuWSActionReader::CuWSActionReader(const WSSource& src, CumbiaWebSocket *ct) : CuWSActionI()
+CuWSActionReader::CuWSActionReader(const WSSource& src, CuWSClient *wscli, const QString& http_url) : CuWSActionI()
 {
     d = new CuWSActionReaderPrivate;
     d->tsrc = src;
-    d->cumbia_ws = ct;
+    d->ws_client = wscli;
+    d->http_url = http_url;
     d->exit = false;  // set to true by stop
-    d->networkAccessManager = NULL;
+    d->networkAccessManager = nullptr;
     std::string proto = src.getProtocol(); // tango:// ?
     pinfo("CuWSActionReader: found protocol \"%s\" within \"%s\"", proto.c_str(), src.getName().c_str());
     d->proto_helpers = new ProtocolHelpers();
@@ -172,6 +173,7 @@ size_t CuWSActionReader::dataListenersCount()
 
 void CuWSActionReader::decodeMessage(const QJsonDocument &json)
 {
+    qDebug () << __PRETTY_FUNCTION__ << "decoding " << json;
     CuData res = getToken();
     if(json.isNull()) {
         res["err"] = true;
@@ -245,12 +247,16 @@ bool CuWSActionReader::exiting() const
     return d->exit;
 }
 
+void CuWSActionReader::setOptions(const CuData &o) {
+    d->options = o;
+}
+
 void CuWSActionReader::onNetworkReplyFinished(QNetworkReply *reply)
 {
     QByteArray data = reply->readAll();
     qDebug() << __PRETTY_FUNCTION__ <<  "data" << data << " error " << reply->errorString();
     QString requrl = reply->request().url().toString();
-    if(requrl == d->cumbia_ws->httpUrl() + QString::fromStdString(d->tsrc.getName())) {
+    if(requrl == d->http_url + QString::fromStdString(d->tsrc.getName())) {
         // we got the first reading of the source
         QJsonParseError jpe;
         QJsonDocument jd = QJsonDocument::fromJson(data, &jpe);
@@ -258,69 +264,65 @@ void CuWSActionReader::onNetworkReplyFinished(QNetworkReply *reply)
             decodeMessage(jd);
     }
     else {
-        QString key = requrl.section('/', -1);
-        d->source_configuration.add(key, QString(data).remove("\""));
         if(reply->error() != QNetworkReply::NoError) {
             d->source_configuration.setError(reply->errorString());
             perr("CuWSActionReader.onNetworkReplyFinished: %s", qstoc(reply->errorString()));
         }
+        else {
+            qDebug() << __PRETTY_FUNCTION__ << requrl;
+            QString key = requrl.section('/', -1);
+            d->source_configuration.add(key, QString(data).remove("\""));
+            if(d->source_configuration.isComplete()) {
+                CuData conf = d->source_configuration.toCuData();
+                conf["src"] = d->tsrc.getName();
+                conf["err"] = false; //d->source_configuration.error();
+                if(d->proto_helper_i)
+                    conf["data_format_str"] = d->proto_helper_i->dataFormatToStr(conf["data_format"].toInt());
+                conf["msg"] = d->source_configuration.errorMessage().toStdString();
+                conf["type"] = "property";
 
-        if(d->source_configuration.isComplete()) {
-            CuData conf = d->source_configuration.toCuData();
-            conf["src"] = d->tsrc.getName();
-            conf["err"] = false; //d->source_configuration.error();
-            if(d->proto_helper_i)
-                conf["data_format_str"] = d->proto_helper_i->dataFormatToStr(conf["data_format"].toInt());
-            conf["msg"] = d->source_configuration.errorMessage().toStdString();
-            conf["type"] = "property";
-
-            for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it) {
-                (*it)->onUpdate(conf);
+                for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it) {
+                    (*it)->onUpdate(conf);
+                }
             }
         }
     }
 }
 
-void CuWSActionReader::onReplyFinished()
-{
-    QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
-    qDebug() << __PRETTY_FUNCTION__ << r->errorString() << r->readAll();
-}
-
 void CuWSActionReader::start()
 {
     QString url_s = QString::fromStdString(d->tsrc.getName());
-    d->networkAccessManager = new QNetworkAccessManager(this);
-//    connect(d->networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onNetworkReplyFinished(QNetworkReply*)));
-
-    // 1. get configuration parameters for the source
-    //
-    // for now, we must fetch each property with a separate get
-    WSSourceConfiguration soco;
-    QStringList keys = soco.keys();
-    keys.push_back("label");
-    keys.push_back("unit");
-    QStringList tmpkeys = QStringList() << "label";
-    QNetworkRequest config_r;
-    /// TEST TEST tempkeys
-    foreach(QString key, tmpkeys) {
-        config_r.setUrl(QUrl(d->cumbia_ws->httpUrl() + url_s + "/" + key));
-        qDebug() << __PRETTY_FUNCTION__ << "Sending " << config_r.url().toString();
-        QNetworkReply *re = d->networkAccessManager->get(config_r);
-        connect(re, SIGNAL(finished()), this, SLOT(onReplyFinished()));
+    qDebug() << __PRETTY_FUNCTION__ << "http_url is " << d->http_url;
+    if(d->http_url.isEmpty()) {
+        // communicate over websocket only
+        QString msg = QString("SUBSCRIBE %1").arg(url_s);
+        d->ws_client->sendMessage(msg);
     }
+    else {
+        d->networkAccessManager = new QNetworkAccessManager(this);
+        connect(d->networkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onNetworkReplyFinished(QNetworkReply*)));
 
-    // 2. subscribe to events
+        // get configuration parameters for the source (pwma/canoned)
+        // This implies fetching each property with a dedicated GET
+        if(!d->options["auto_configuration"].toBool()) {
+            WSSourceConfiguration soco;
+            QStringList keys = soco.keys();
+            QNetworkRequest config_r;
+            foreach(QString key, keys) {
+                config_r.setUrl(QUrl(d->http_url + url_s + "/" + key));
+                qDebug() << __PRETTY_FUNCTION__ << "Sending " << config_r.url().toString();
+                d->networkAccessManager->get(config_r);
+            }
+        }
 
-    QNetworkRequest subscribe_request(d->cumbia_ws->httpUrl() + url_s);
-  ///
-// QNetworkRequest subscribe_request(QUrl("https://localhost:12702"));
-//    subscribe_request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
-//    pgreen2tmp("CuWSActionReader::start: subscribing to \"%s\"", qstoc(subscribe_request.url().toString()));
-//    QNetworkReply * r = d->networkAccessManager->sendCustomRequest(subscribe_request, QByteArray("SUBSCRIBE"));
-//    connect(r, SIGNAL(finished()), this, SLOT(onReplyFinished()));
-////    r->waitForReadyRead(1000);
-//    qDebug() << __PRETTY_FUNCTION__ << "sendCustomRequest sent: reply ?" << r->errorString() << r->readAll();
+        // 2. subscribe to events
+
+        QNetworkRequest subscribe_request(d->http_url + url_s);
+        //    subscribe_request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+        //    pgreen2tmp("CuWSActionReader::start: subscribing to \"%s\"", qstoc(subscribe_request.url().toString()));
+        d->networkAccessManager->sendCustomRequest(subscribe_request, QByteArray("SUBSCRIBE"));
+        //    qDebug() << __PRETTY_FUNCTION__ << "sendCustomRequest sent: reply ?" << r->errorString() << r->readAll();
+    }
 }
 
 void CuWSActionReader::stop()
@@ -331,10 +333,10 @@ void CuWSActionReader::stop()
     CuData tok = getToken();
     QString url_s = QString::fromStdString(tok["src"].toString());
     // unsubscribe
-    if(d->networkAccessManager) {
+    if(d->networkAccessManager) { // created in start if d->http_url is not empty
         QNetworkRequest unsubscribe_request;
-        unsubscribe_request.setUrl(QUrl(d->cumbia_ws->httpUrl() + url_s));
-//        unsubscribe_request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
+        unsubscribe_request.setUrl(QUrl(d->http_url + url_s));
+        //        unsubscribe_request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
         pviolet2tmp("CuWSActionReader::stop: unsubscribing from \"%s\"", qstoc(unsubscribe_request.url().toString()));
         d->networkAccessManager->sendCustomRequest(unsubscribe_request, QByteArray("UNSUBSCRIBE"));
 

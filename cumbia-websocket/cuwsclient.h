@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QWebSocket>
+#include <QQueue>
 
 class CuData;
 
@@ -19,6 +20,8 @@ public:
 
     ~CuWSClient();
 
+    bool isOpen() const;
+
 signals:
     void closed();
 
@@ -32,6 +35,8 @@ public slots:
 
     void close();
 
+    void sendMessage(const QString& msg);
+
 private slots:
     void onConnected();
     void onDisconnected();
@@ -42,6 +47,7 @@ private:
     QWebSocket m_webSocket;
     QUrl m_url;
     CuWSClientListener *m_listener;
+    QQueue<QString> m_msg_queue;
     bool m_socket_open;
 };
 

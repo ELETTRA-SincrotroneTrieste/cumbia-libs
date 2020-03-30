@@ -334,6 +334,9 @@ public:
     void unlinkListener(const string &source, CuWSActionI::Type t, CuDataListener *l);
     CuWSActionI *findAction(const std::string &source, CuWSActionI::Type t) const;
 
+    void openSocket();
+    void closeSocket();
+
     // CuWSClientListener interface
 public:
     virtual void onUpdate(const QString& message);

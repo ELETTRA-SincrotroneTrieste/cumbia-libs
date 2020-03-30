@@ -42,7 +42,8 @@ CuWSActionFactoryService::~CuWSActionFactoryService()
  */
 CuWSActionI *CuWSActionFactoryService::registerAction(const std::string& src,
                                                        const CuWSActionFactoryI &f,
-                                                       CumbiaWebSocket* ct)
+                                                       CuWSClient* cli,
+                                                      const QString& http_url)
 {
     CuWSActionI* action = NULL;
     std::lock_guard<std::mutex> lock(d->mutex);
@@ -54,7 +55,7 @@ CuWSActionI *CuWSActionFactoryService::registerAction(const std::string& src,
 
     if(it == d->actions.end())
     {
-        action = f.create(src, ct);
+        action = f.create(src, cli, http_url);
         d->actions.push_back(action);
     }
     return action;

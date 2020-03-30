@@ -80,8 +80,6 @@ void CuWSReader::setSource(const QString &s)
     d->source = s;
     CuWSActionReaderFactory wsrf;
     wsrf.setOptions(d->options);
-    printf("CuWSReader.setSource: %s\n", qstoc(s));
-    qDebug() << __FUNCTION__ << "source" << s;
     d->cumbia_ws->addAction(s.toStdString(), d->tlistener, wsrf);
 }
 

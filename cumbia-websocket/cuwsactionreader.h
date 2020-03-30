@@ -12,7 +12,7 @@
 class CuWSActionReaderPrivate;
 class CuActivityManager;
 class CuDataListener;
-class CumbiaWebSocket;
+class CuWSClient;
 class QNetworkReply;
 
 class WSSourceConfiguration {
@@ -46,7 +46,7 @@ class CuWSActionReader: public QObject,  public CuWSActionI
 {
     Q_OBJECT
 public:
-    CuWSActionReader(const WSSource& src, CumbiaWebSocket *ct);
+    CuWSActionReader(const WSSource& src, CuWSClient *wscli, const QString& http_url);
 
     ~CuWSActionReader();
 
@@ -70,10 +70,10 @@ public:
 
     bool exiting() const;
 
+    void setOptions(const CuData& o);
+
 private slots:
     void onNetworkReplyFinished(QNetworkReply *reply);
-
-    void onReplyFinished();
 
 private:
     CuWSActionReaderPrivate *d;

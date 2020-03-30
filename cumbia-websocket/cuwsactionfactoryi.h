@@ -1,7 +1,8 @@
 #ifndef CUWSACTIONFACTORYI_H
 #define CUWSACTIONFACTORYI_H
 
-class CumbiaWebSocket;
+class CuWSClient;
+class QString;
 
 #include <string>
 #include <cuwsactioni.h>
@@ -28,7 +29,7 @@ public:
      * @param source a string identifying a source to connect to
      * @param ct a pointer to a CumbiaWebSocket instance
      */
-    virtual CuWSActionI *create(const std::string& source, CumbiaWebSocket *ct) const = 0;
+    virtual CuWSActionI *create(const std::string &s, CuWSClient *cli, const QString& http_addr) const = 0;
 
     /** \brief Return the type of action that the factory creates
      *

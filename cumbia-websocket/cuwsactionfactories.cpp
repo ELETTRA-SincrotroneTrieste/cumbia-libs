@@ -2,6 +2,8 @@
 #include "cuwsactionreader.h"
 #include "cumbiawebsocket.h"
 
+class CuWSClient;
+
 class CuWSReaderFactoryPrivate {
     public:
 
@@ -28,9 +30,9 @@ CuWSActionReaderFactory::~CuWSActionReaderFactory()
  * @param ct a pointer to CumbiaWebSocket
  * @return a CuWSActionReader, that implements the CuWSActionI interface
  */
-CuWSActionI *CuWSActionReaderFactory::create(const std::string &s, CumbiaWebSocket *c_ws) const
+CuWSActionI *CuWSActionReaderFactory::create(const std::string &s, CuWSClient *cli, const QString &http_addr) const
 {
-    CuWSActionReader* reader = new CuWSActionReader(s, c_ws);
+    CuWSActionReader* reader = new CuWSActionReader(s, cli, http_addr);
     // no refresh mode options, no period for websocket
     return reader;
 }

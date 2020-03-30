@@ -4,6 +4,9 @@
 #include <cuwsactioni.h>
 #include <cuwsactionfactoryi.h>
 
+class CuWSClient;
+
+
 class CuWSActionReaderFactory : public CuWSActionFactoryI
 {
 public:
@@ -15,7 +18,7 @@ public:
 
     // CuTangoActionFactoryI interface
 public:
-    CuWSActionI *create(const std::string &s, CumbiaWebSocket *c_ws) const;
+    CuWSActionI *create(const std::string &s, CuWSClient *cli, const QString& http_addr) const;
 
     CuWSActionI::Type getType() const;
 
