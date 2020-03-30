@@ -72,23 +72,24 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
     CumbiaTango* cuta = nullptr;
 #endif
 
-    if(!m_conf.ws_addr.isEmpty() && m_conf.ws_port > 0 && !m_conf.ws_http_addr.isEmpty()) {
+    if(!m_conf.ws_url.isEmpty()) {
 #ifdef CUMBIA_WEBSOCKET_VERSION
-        printf("activating cumbia websocket...\n");
+        printf("activating cumbia websocket...ws url %s http url %s\n", qstoc(m_conf.ws_url), qstoc(m_conf.ws_http_url));
         // setup Cumbia web socket with the web socket address and the host name to prepend to the sources
         // for the HTTP requests
         CumbiaWSWorld wsw;
-        QUrl u(QString("wss://%1:%2").arg(m_conf.ws_addr).arg(m_conf.ws_port));
-        CumbiaWebSocket* cuws = new CumbiaWebSocket(u.toString(), m_conf.ws_http_addr, new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+        QUrl u(m_conf.ws_url);
+        CumbiaWebSocket* cuws = new CumbiaWebSocket(u.toString(), m_conf.ws_http_url, new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
         cu_pool->registerCumbiaImpl("tango", cuws);
         cu_pool->setSrcPatterns("tango", wsw.srcPatterns());
         m_ctrl_factory_pool.setSrcPatterns("tango", wsw.srcPatterns());
         m_ctrl_factory_pool.registerImpl("tango", CuWSReaderFactory());
+        cuws->openSocket();
 #else
         perr("QumbiaReader: module cumbia-websocket is not available");
 #endif
     }
-    else if(m_conf.ws_addr.isEmpty() ^ (m_conf.ws_port > 0) ^ (m_conf.ws_http_addr.isEmpty()))
+    else if(m_conf.ws_url.isEmpty() ^ m_conf.ws_http_url.isEmpty())
         perr("QumbiaReader: websocket command line arguments incomplete");
     else {
 

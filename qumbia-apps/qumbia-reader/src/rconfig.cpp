@@ -12,7 +12,6 @@ RConfig::RConfig()
     property = false;
     tango_property = false;
     format = QString();
-    ws_port = -1;
 }
 
 void RConfig::setTangoProperty()

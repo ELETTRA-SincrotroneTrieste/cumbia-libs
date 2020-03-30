@@ -129,13 +129,11 @@ RConfig CmdLineOptions::parse(const QStringList &args) const
         else if(a.startsWith("--db-output-file=")) {
             o.db_output_file = a.remove("--db-output-file=");
         }
-        else if(a.startsWith("--websocket-address=")) {
-            o.ws_addr = a.remove("--websocket-address=");
+        else if(a.startsWith("--ws-url=")) {
+            o.ws_url = a.remove("--ws-url=");
         }
-        else if(a.startsWith("--websocket-port="))
-            o.ws_port = a.remove("--websocket-port=").toInt();
-        else if(a.startsWith("--websocket-http-address="))
-            o.ws_http_addr = a.remove("--websocket-http-address=");
+        else if(a.startsWith("--ws-http-url="))
+            o.ws_http_url = a.remove("--ws-http-url=");
         else if(!a.startsWith("-"))
             o.sources.append(a);
         else if(!o.list_options) { // !o.list_options: do not mess up with auto completion

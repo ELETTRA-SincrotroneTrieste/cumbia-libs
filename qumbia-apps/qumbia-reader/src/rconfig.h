@@ -20,8 +20,7 @@ public:
     QString db_profile, db_output_file; // if historical db plugin available
 
     // websocket
-    QString ws_addr, ws_http_addr;
-    qint16 ws_port;
+    QString ws_url, ws_http_url;
 };
 
 #endif // CONFIGURATION_H
