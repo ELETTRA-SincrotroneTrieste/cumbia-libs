@@ -214,7 +214,7 @@ class CuDataListener;
  * - *m_ctrl_factory_pool* is a private attribute of the main class, type CuControlsFactoryPool
  * - *m_log_impl* is a log implementation
  * - *CuRNDReaderFactory* is a factory that instantiates random readers
- * - the *setSrcPatterns* methods register sources starting with the *random://* prefix with the *cumbia-random*
+ * - the *setSrcPatterns* methods register sources starting with the <em>random://</em> prefix with the *cumbia-random*
  *   module.
  *
  * To comply with the given implementation, the main class will have these attributes
