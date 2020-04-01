@@ -2,9 +2,14 @@
 #include <cumacros.h>
 #include <regex>
 
-/*! the class constructor
+/*! \brief the class constructor
  *
- * Creates an empty CumbiaPool.
+ * Creates an empty CumbiaPool with no registered implementations
+ *
+ * \note
+ * This class is used in combination with cumbia-qtcontrols CuControlsFactoryPool to set up
+ * a multi engine environment for a cumbia/Qt application.
+ * cumbia-qtcontrols CuControlsFactoryPool documentation is a recommended reading.
  */
 CumbiaPool::CumbiaPool()
 {
@@ -71,9 +76,7 @@ Cumbia *CumbiaPool::get(const std::string &domain) const
     std::map<std::string, Cumbia *>::const_iterator it = m_map.find(domain);
     if(it != m_map.end())
         return it->second;
-
-    perr("CumbiaPool.get: no cumbia implementation registered with domain \"%s\": too bad", domain.c_str());
-    return NULL;
+    return nullptr;
 }
 
 /** \brief Calls get with the domain extracted from the full source name "src"
