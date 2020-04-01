@@ -75,7 +75,7 @@ void QumbiaProjectWizard::init()
         rb->setProperty("factory", f);
         rb->setText(f);
         connect(rb, SIGNAL(toggled(bool)), this, SLOT(setFactory(bool)));
-        if(rb->objectName() == "rb-tango")
+        if(rb->objectName() == "rb-multi-engine")
             rb->setChecked(true);
         if(hblo)
             hblo->addWidget(rb);
@@ -261,7 +261,7 @@ void QumbiaProjectWizard::create()
 
                 foreach(QLineEdit *le, findChildren<QLineEdit *>())
                 {
-                    if(le->isEnabled() && !le->text().isEmpty())
+                    if(!le->text().isEmpty())
                     {
                         QVariant placeholder = le->property("placeholder");
                         if(placeholder.isValid())

@@ -1,5 +1,26 @@
-include ($INCLUDE_DIR$/qumbia-epics-controls/qumbia-epics-controls.pri)
-include ($INCLUDE_DIR$/qumbia-tango-controls/qumbia-tango-controls.pri)
+isEmpty(INSTALL_ROOT) {
+    INSTALL_ROOT=/usr/local/cumbia-libs
+}
+
+exists ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
+    message("- adding EPICS support under $${INSTALL_ROOT}")
+    include ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+}
+exists  ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
+    message("- adding Tango support under $${INSTALL_ROOT}")
+    include ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+}
+
+exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {
+    message("- adding cumbia-random module support under $${INSTALL_ROOT}")
+    include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
+}
+
+exists($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri) {
+    message("- adding cumbia-websocket module support under $${INSTALL_ROOT}")
+    include($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
+}
+
 
 TEMPLATE = app
 
