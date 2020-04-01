@@ -50,7 +50,7 @@ SOURCES += \
 
 HEADERS += \
         cumbiawebsocket.h \
-        cumbia-websocket_global.h \ 
+        cumbia-websocket_global.h \
     cuwsreader.h \
     cumbiawsworld.h \
     cuwsactionfactoryservice.h \

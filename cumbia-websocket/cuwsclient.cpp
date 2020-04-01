@@ -49,13 +49,13 @@ void CuWSClient::start() {
 
 void CuWSClient::open()
 {
-    pviolet2tmp("+ opening web socket %s", qstoc(m_url.toString()));
+    pviolet2tmp("+ opening web socket %s [CuWSClient.open]", qstoc(m_url.toString()));
     m_webSocket.open(m_url);
 }
 
 void CuWSClient::close()
 {
-    pviolet2tmp("X closing web socket %s", qstoc(m_url.toString()));
+    pviolet2tmp("X closing web socket %s [CuWSClient.close]", qstoc(m_url.toString()));
     m_webSocket.close();
 }
 
@@ -68,14 +68,14 @@ void CuWSClient::sendMessage(const QString &msg) {
 
 void CuWSClient::onConnected()
 {
-    pviolet2tmp("-*- CuWSClient: connected to %s\n", qstoc(m_url.toString()));
+    pviolet2tmp("-*- connected to %s [CuWSClient.onConnected]", qstoc(m_url.toString()));
     while(!m_msg_queue.isEmpty() && m_webSocket.isValid())
         m_webSocket.sendTextMessage(m_msg_queue.dequeue());
 }
 
 void CuWSClient::onDisconnected()
 {
-    pviolet2tmp("-/- CuWSClient: disconnected from %s\n", qstoc(m_url.toString()));
+    pviolet2tmp("-/- disconnected from %s [CuWSClient.onDisconnected]", qstoc(m_url.toString()));
 }
 
 void CuWSClient::onMessageReceived(const QString &message)
@@ -87,7 +87,7 @@ void CuWSClient::onMessageReceived(const QString &message)
 
 void CuWSClient::onSocketError(QAbstractSocket::SocketError se)
 {
-    perr("CuWSClient.onSocketError: %s [err: %d] URL: %s", qstoc(m_webSocket.errorString()), se, qstoc(m_url.toString()));
+    perr("socket error: %s [err: %d] URL: %s [CuWSClient.onSocketError]", qstoc(m_webSocket.errorString()), se, qstoc(m_url.toString()));
 }
 
 

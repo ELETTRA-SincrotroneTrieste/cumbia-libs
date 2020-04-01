@@ -30,7 +30,7 @@ private:
 class CuWSReader : public CuControlsReaderA
 {
 public:
-    CuWSReader(Cumbia *cumbia_tango, CuDataListener *tl);
+    CuWSReader(Cumbia *cumbia, CuDataListener *tl);
 
     virtual ~CuWSReader();
 

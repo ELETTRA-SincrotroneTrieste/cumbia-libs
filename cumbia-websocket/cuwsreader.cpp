@@ -4,12 +4,15 @@
 #include "cuwsactionreader.h"
 #include "cuwsactionfactories.h"
 #include <cudatalistener.h>
+#include <qureplacewildcards_i.h>
 #include <cudata.h>
 #include <cumacros.h>
 #include <QString>
 #include <vector>
 #include <string>
 #include <QtDebug>
+#include <QList>
+#include <QCoreApplication>
 
 class CuWSReaderFactoryPrivate {
 public:
@@ -57,13 +60,12 @@ public:
     CuData options;
 };
 
-CuWSReader::CuWSReader(Cumbia *cumbia_ws, CuDataListener *tl)
-    : CuControlsReaderA(cumbia_ws, tl)
+CuWSReader::CuWSReader(Cumbia *cumbia, CuDataListener *tl)
+    : CuControlsReaderA(cumbia, tl)
 {
-    printf("CuWSReader constructor!!!!!!!!!!\n");
-    assert(cumbia_ws->getType() == CumbiaWebSocket::CumbiaWSType);
+    assert(cumbia->getType() == CumbiaWebSocket::CumbiaWSType);
     d = new CuWSReaderPrivate;
-    d->cumbia_ws = static_cast<CumbiaWebSocket *>(cumbia_ws);
+    d->cumbia_ws = static_cast<CumbiaWebSocket *>(cumbia);
     d->tlistener = tl;
 }
 
@@ -75,12 +77,15 @@ CuWSReader::~CuWSReader()
     delete d;
 }
 
-void CuWSReader::setSource(const QString &s)
-{
+void CuWSReader::setSource(const QString &s) {
     d->source = s;
+    QList<QuReplaceWildcards_I *>rwis = d->cumbia_ws->getReplaceWildcard_Ifaces();
+    // d->source is equal to 's' if no replacement is made
+    for(int i = 0; i < rwis.size() && d->source == s; i++) // leave loop if s != d->source (=replacement made)
+        d->source = rwis[i]->replaceWildcards(s, qApp->arguments());
     CuWSActionReaderFactory wsrf;
     wsrf.setOptions(d->options);
-    d->cumbia_ws->addAction(s.toStdString(), d->tlistener, wsrf);
+    d->cumbia_ws->addAction(d->source.toStdString(), d->tlistener, wsrf);
 }
 
 QString CuWSReader::source() const

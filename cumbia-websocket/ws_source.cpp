@@ -18,34 +18,6 @@ WSSource::WSSource(const WSSource &other)
     this->m_s = other.m_s;
 }
 
-string WSSource::getDeviceName() const
-{
-    string dev;
-    /* attribute or command ? */
-    size_t pos = m_s.rfind("->");
-    if(pos == string::npos)
-    {
-        /* attribute */
-        dev = m_s.substr(0, m_s.rfind('/'));
-    }
-    else
-    {
-        dev = m_s.substr(0, pos);
-    }
-    return dev;
-}
-
-string WSSource::getPoint() const
-{
-    string p;
-    size_t pos = m_s.rfind("->");
-    if(pos == string::npos) /* attribute */
-        p = m_s.substr(m_s.rfind('/') + 1, m_s.find('(') - m_s.rfind('/') - 1); /* exclude args between parentheses */
-    else
-        p = m_s.substr(pos + 2, m_s.find('(') - pos - 2); /* exclude args */
-    return p;
-}
-
 std::vector<string> WSSource::getArgs() const
 {
     std::string a = getArgsString();
@@ -72,20 +44,50 @@ std::string WSSource::getArgsString() const
     return a;
 }
 
+/*!
+ * \brief Returns the full name that was given to the constructor without the *cumbia domain
+ *        engine* specification
+ *
+ * \return the source that was passed to the constructor, without the *cumbia domain
+ *         engine* specification, if specified (either ws:// or wss://)
+ *
+ * \par example
+ * \code
+ * WSSource s("wss://tango://test/device/1/double_scalar");
+ * printf("name: %s\n", s.getName().c_str());
+ * //
+ * // output
+ * // name: tango://test/device/1/double_scalar
+ * //
+ * \endcode
+ *
+ */
 string WSSource::getName() const
 {
+    std::regex re("ws[s]{0,1}://");
+    std::smatch match;
+    if(std::regex_search(m_s, match, re))
+        return m_s.substr(match.position() + match.length());
     return m_s;
 }
 
-/*! \brief matches last protocol found in the source name, matching the pattern
+/*!
+ * \brief WSSource::getFullName returns the full name that was given to the constructor
+ * \return the full name that was given to the constructor, including the *cumbia domain
+ *         engine* specification, if provided (either ws:// or wss://)
+ */
+string WSSource::getFullName() const {
+    return m_s;
+}
+
+/*! \brief matches last protocol specification found in the source name, matching the pattern
  *         <strong>protocol://</strong>
  *
  * \par example
  * In the source "https://pwma-dev.elettra.eu:10443/v1/cs/tango://ken.elettra.trieste.it:20000/test/device/1/double_scalar"
- * "tango://" is found
+ * "tango://" is returned
  */
-string WSSource::getProtocol() const
-{
+string WSSource::getProtocol() const {
     std::regex base_regex("([a-zA-Z0-9_]+)://");
     string source = m_s;
     // default constructor = end-of-sequence:
@@ -102,12 +104,6 @@ string WSSource::getProtocol() const
     return "";
 }
 
-WSSource::Type WSSource::getType() const
-{
-    if(m_s.rfind("->") == string::npos)
-        return Attr;
-    return Cmd;
-}
 
 WSSource &WSSource::operator=(const WSSource &other)
 {
@@ -124,9 +120,6 @@ bool WSSource::operator ==(const WSSource &other) const
 std::string WSSource::toString() const
 {
     char repr[512];
-    char type[8];
-    getType() == Attr ? snprintf(type, 8, "attr") :  snprintf(type, 8, "cmd");
-    snprintf(repr, 512, "WSSource [%p] [name:\"%s\"] [device:\"%s\"] [point:\"%s\"] [type:%s] [args:\"%s\"]",
-             this, m_s.c_str(), getDeviceName().c_str(), getPoint().c_str(), type, getArgsString().c_str());
+    snprintf(repr, 512, "WSSource [name:\"%s\"] [args:\"%s\"]",  m_s.c_str(), getArgsString().c_str());
     return std::string(repr);
 }

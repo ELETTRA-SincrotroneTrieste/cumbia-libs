@@ -2,7 +2,7 @@
 
 CumbiaWSWorld::CumbiaWSWorld()
 {
-    m_src_patterns.push_back("http[s]{0,1}://.+");
+    m_src_patterns.push_back("ws[s]{0,1}://.+");
 }
 
 void CumbiaWSWorld::setSrcPatterns(const std::vector<std::string> &pat_regex)

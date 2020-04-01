@@ -11,6 +11,7 @@
 
 #include <cuthreadfactoryimpl.h>
 #include <cuthreadseventbridgefactory_i.h>
+#include <qureplacewildcards_i.h>
 
 #include <QJsonParseError>
 #include <QJsonDocument>
@@ -24,6 +25,7 @@ public:
     CuThreadFactoryImplI *m_threadFactoryImplI;
     CuWSClient *cu_wscli;
     QString http_url, ws_url;
+    QList<QuReplaceWildcards_I *> m_repl_wildcards_i;
 };
 
 /*!
@@ -65,6 +67,8 @@ CumbiaWebSocket::~CumbiaWebSocket()
             d->cu_wscli->close();
         delete d->cu_wscli;
     }
+    foreach(QuReplaceWildcards_I *i, d->m_repl_wildcards_i)
+        delete i;
     delete d;
 }
 
@@ -129,6 +133,14 @@ void CumbiaWebSocket::closeSocket() {
     d->cu_wscli->close();
 }
 
+void CumbiaWebSocket::addReplaceWildcardI(QuReplaceWildcards_I *rwi) {
+    d->m_repl_wildcards_i << rwi;
+}
+
+QList<QuReplaceWildcards_I *> CumbiaWebSocket::getReplaceWildcard_Ifaces() const{
+    return d->m_repl_wildcards_i;
+}
+
 CuThreadFactoryImplI *CumbiaWebSocket::getThreadFactoryImpl() const
 {
     return d->m_threadFactoryImplI;
@@ -151,8 +163,7 @@ int CumbiaWebSocket::getType() const {
     return CumbiaWSType;
 }
 
-CuWSClient *CumbiaWebSocket::websocketClient() const
-{
+CuWSClient *CumbiaWebSocket::websocketClient() const {
     return d->cu_wscli;
 }
 
@@ -165,11 +176,12 @@ CuWSClient *CumbiaWebSocket::websocketClient() const
  */
 void CumbiaWebSocket::onUpdate(const QString &message)
 {
-    qDebug() << __PRETTY_FUNCTION__ << message;
     // 1. extract src
     QJsonParseError jpe;
     QJsonDocument jsd = QJsonDocument::fromJson(message.toUtf8(), &jpe);
-    std::string src = jsd["event"].toString().toStdString();
+    std::string src;
+
+    jsd["event"].toString().length() > 0 ? src = jsd["event"].toString().toStdString() : src = jsd["src"].toString().toStdString();
 
     // 2. find action: data from websocket is always related to readers
     CuWSActionI *action = findAction(src, CuWSActionI::Reader);

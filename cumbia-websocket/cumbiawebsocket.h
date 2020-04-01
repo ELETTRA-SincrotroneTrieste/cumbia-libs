@@ -12,6 +12,7 @@
 class CuThreadFactoryImplI;
 class CuThreadsEventBridgeFactory_I;
 class CuDataListener;
+class QuReplaceWildcards_I;
 
 class CumbiaWebSocketPrivate;
 /*!
@@ -336,6 +337,10 @@ public:
 
     void openSocket();
     void closeSocket();
+
+    void addReplaceWildcardI(QuReplaceWildcards_I *rwi);
+
+    QList<QuReplaceWildcards_I *> getReplaceWildcard_Ifaces() const;
 
     // CuWSClientListener interface
 public:
