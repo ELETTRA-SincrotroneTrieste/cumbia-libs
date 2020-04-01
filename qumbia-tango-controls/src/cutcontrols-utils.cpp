@@ -41,3 +41,4 @@ QString CuTControlsUtils::replaceWildcards(const QString &s, const QStringList &
             ret.replace(QString("$%1").arg(i+1), devs[i]);
     return ret;
 }
+
