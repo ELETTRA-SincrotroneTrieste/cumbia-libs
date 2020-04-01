@@ -78,7 +78,6 @@ private:
 
     std::map<std::string, std::vector<std::string> >m_dom_patterns;
 
-    std::string m_last_registered_w_dom, m_last_registered_r_dom;
 };
 
 #endif // CUMBIAPOOL_H

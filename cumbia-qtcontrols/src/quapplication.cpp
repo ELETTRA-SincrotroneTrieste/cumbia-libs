@@ -9,7 +9,10 @@
 #include <QtDebug>
 #include <QWidget>
 #include <QWindow>
-// #include <QtX11Extras/QX11Info>
+
+#ifdef QT_X11EXTRAS_LIB
+#include <QtX11Extras/QX11Info>
+#endif
 
 class QuApplicationPrivate
 {
