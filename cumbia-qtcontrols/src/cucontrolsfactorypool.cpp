@@ -34,6 +34,7 @@ CuControlsFactoryPool::CuControlsFactoryPool()
 void CuControlsFactoryPool::registerImpl(const std::string &domain, const CuControlsReaderFactoryI &rf)
 {
     m_rmap[domain] = rf.clone();
+    m_last_registered_r_dom = domain;
 }
 
 /*! \brief register a writer factory for a domain:
@@ -46,6 +47,7 @@ void CuControlsFactoryPool::registerImpl(const std::string &domain, const CuCont
 void CuControlsFactoryPool::registerImpl(const std::string &domain, const CuControlsWriterFactoryI &wf)
 {
     m_wmap[domain] = wf.clone();
+    m_last_registered_w_dom = domain;
 }
 
 /*! \brief set or change the source patterns (regular expressions) for the domain
@@ -72,35 +74,37 @@ void CuControlsFactoryPool::clearSrcPatterns(const std::string &domain)
 /*! \brief returns the reader factory that was registered with the given domain
  *
  * @param domain the name of the domain registered with registerImpl
- * @return the CuControlsReaderFactoryI implementation corresponding to the given domain, or
- *         NULL if the domain wasn't registered.
+ * @return the CuControlsReaderFactoryI implementation corresponding to the given domain,
+ *         the last registered CuControlsReaderFactoryI if *domain* is not found or
+ *         NULL if the no domain is registered.
  */
 CuControlsReaderFactoryI *CuControlsFactoryPool::getReadFactory(const std::string &domain) const
 {
     std::map<std::string, CuControlsReaderFactoryI *>::const_iterator it = m_rmap.find(domain);
     if(it != m_rmap.end())
         return it->second;
-    if(m_rmap.size() > 0)
-        return m_rmap.begin()->second;
+    if(m_rmap.count(m_last_registered_r_dom) > 0)
+        return m_rmap.at(m_last_registered_r_dom);
     perr("CuControlsFactoryPool.getReadFactory: no CuControlsReaderFactoryI implementation registered with domain \"%s\"", domain.c_str());
-    return NULL;
+    return nullptr;
 }
 
 /*! \brief returns the writer factory that was registered with the given domain
  *
  * @param domain the name of the domain registered with registerImpl
- * @return the CuControlsWriterFactoryI implementation corresponding to the given domain, or
- *         NULL if the domain wasn't registered.
+ * @return the CuControlsWriterFactoryI implementation corresponding to the given domain,
+ *         the last registered CuControlsWriterFactoryI if *domain* is not found or
+ *         NULL if the no domain is registered.
  */
 CuControlsWriterFactoryI *CuControlsFactoryPool::getWriteFactory(const std::string &domain) const
 {
     std::map<std::string, CuControlsWriterFactoryI *>::const_iterator it = m_wmap.find(domain);
     if(it != m_wmap.end())
         return it->second;
-    if(m_wmap.size() > 0)
-        return m_wmap.begin()->second;
+    if(m_wmap.count(m_last_registered_w_dom) > 0)
+        return m_wmap.at(m_last_registered_w_dom);
     perr("CuControlsFactoryPool.getWriteFactory: no CuControlsWriterFactoryI implementation registered with domain \"%s\"", domain.c_str());
-    return NULL;
+    return nullptr;
 }
 
 /** \brief uses the registered patterns to match the given source and return a CuControlsReaderFactoryI
@@ -110,13 +114,12 @@ CuControlsWriterFactoryI *CuControlsFactoryPool::getWriteFactory(const std::stri
  * @return a CuControlsReaderFactoryI implementation matching the source.
  *
  * \par Domain matching.
- * If the source src contains the "://" substring, the domain is matched with the string preceding
- * the substring, and the corresponding factory implementation is returned.
- * Otherwise, the domain is guessed matching src against the regular expression patterns registered
- * with setSrcPatterns.
+ * If the source src contains one or more "*domain*://" substrings, the domain is extracted from
+ * the first occurrence of "*domain*://," and the corresponding factory implementation is returned.
+ * The domain is guessed matching src against the regular expression patterns registered
+ * with setSrcPatterns if no "*domain*://" is found within *src*
  *
- * \note If no match is found, a random CuControlsReaderFactoryI implementation may be returned
- * (the first stored in the std::map).
+ * \note If no match is found, which CuControlsReaderFactoryI implementation is returned is undefined.
  *
  */
 CuControlsReaderFactoryI *CuControlsFactoryPool::getRFactoryBySrc(const std::string &src) const
@@ -127,8 +130,10 @@ CuControlsReaderFactoryI *CuControlsFactoryPool::getRFactoryBySrc(const std::str
 
     std::string domain;
     size_t pos = src.find("://");
-    if(pos != std::string::npos)
+    if(pos != std::string::npos) {
+        printf("CuControlsFactoryPool::getRFactoryBySrc: BY DOMAIN src %s domain %s\n", src.c_str(), domain.c_str());
         domain = src.substr(0, pos);
+    }
     else
         domain = guessDomainBySrc(src);
 
@@ -172,9 +177,9 @@ CuControlsWriterFactoryI *CuControlsFactoryPool::getWFactoryBySrc(const std::str
         return getWriteFactory(domain);
 
     perr("CuControlsFactoryPool.getWFactoryBySrc: could not guess domain from \"%s\":\n"
-         "this may have unwanted side effects: returning factory for \"%s\"\n", src.c_str(),
-         m_wmap.begin()->first.c_str());
-    return m_wmap.begin()->second; // return the default cumbia impl (the first registered)
+         "returning last registered factory with domain \"%s\"\n", src.c_str(),
+         m_last_registered_w_dom.c_str());
+    return m_wmap.at(m_last_registered_w_dom); // return the default cumbia impl (the first registered)
 }
 
 /*! \brief given the source string, , tries to match it with the
@@ -186,11 +191,10 @@ CuControlsWriterFactoryI *CuControlsFactoryPool::getWFactoryBySrc(const std::str
 std::string CuControlsFactoryPool::guessDomainBySrc(const std::string &src) const
 {
     std::map<std::string, std::vector<std::string> >::const_iterator it;
-    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it)
-    {
+    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it) {
         const std::vector<std::string> &patterns = it->second;
-        for(size_t i = 0; i < patterns.size(); i++)
-        {
+        for(size_t i = 0; i < patterns.size(); i++)  {
+            printf("CuControlsFactoryPool::guessDomainBySrc: matching %s with pattern %s\n", src.c_str(), patterns.at(i).c_str());
             if(std::regex_match(src, std::regex(patterns.at(i))))
                 return it->first; // get by domain name
         }

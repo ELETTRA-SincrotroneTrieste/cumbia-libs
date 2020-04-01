@@ -108,6 +108,7 @@ HEADERS += cumbiaqtcontrols.h\
 #    src/cucharts/quplotcommon.h \
 #    src/cucharts/quspectrumplot.h \
 #    src/cucharts/quchartconfdialog.h \
+    src/qureplacewildcards_i.h \
     src/qustring.h \
     src/qustringlist.h \
     src/qutable.h \
