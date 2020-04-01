@@ -122,8 +122,8 @@ else:packagesExist(Qt5Qwt6){
 }
 
 
-VERSION_HEX = 0x010100
-VERSION = 1.1.0
+VERSION_HEX = 0x010101
+VERSION = 1.1.1
 
 QMAKE_CXXFLAGS += -std=c++17 -Wall
 

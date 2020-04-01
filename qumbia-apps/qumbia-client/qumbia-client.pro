@@ -22,6 +22,12 @@ exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {
     include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
 }
 
+exists($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri) {
+    message("including support for cumbia-websocket module under $${INSTALL_ROOT}")
+    include($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
+}
+
+
 QT       += core gui
 
 CONFIG += debug
@@ -32,7 +38,7 @@ CONFIG += debug
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = qumbia-client
+TARGET = bin/qumbia-client
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use

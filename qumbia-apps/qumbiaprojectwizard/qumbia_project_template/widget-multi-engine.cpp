@@ -19,7 +19,8 @@
 #include <cutcontrolsreader.h>
 #include <cutcontrolswriter.h>
 #include <cutango-world.h>
-#include <cutcontrols-utils.h> // replace wildcards
+#include <cutcontrols-utils.h>
+#include <cutangoreplacewildcards.h>
 #endif
 #ifdef CUMBIA_RANDOM_VERSION
 #include <cumbiarandom.h>

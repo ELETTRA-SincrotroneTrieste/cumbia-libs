@@ -83,6 +83,7 @@ void CuWSReader::setSource(const QString &s) {
     // d->source is equal to 's' if no replacement is made
     for(int i = 0; i < rwis.size() && d->source == s; i++) // leave loop if s != d->source (=replacement made)
         d->source = rwis[i]->replaceWildcards(s, qApp->arguments());
+    qDebug() << __PRETTY_FUNCTION__ << "replace wildcards size " << rwis.size() << "src" << d->source;
     CuWSActionReaderFactory wsrf;
     wsrf.setOptions(d->options);
     d->cumbia_ws->addAction(d->source.toStdString(), d->tlistener, wsrf);

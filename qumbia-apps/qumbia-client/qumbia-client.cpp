@@ -10,6 +10,7 @@
 #include <cutcontrolswriter.h>
 #include <cutreader.h> // PolledRefresh / EventRefresh
 #include <cutango-world.h>
+#include <cutangoreplacewildcards.h>
 #endif
 
 #ifdef CUMBIA_RANDOM_VERSION
@@ -17,6 +18,12 @@
 #include <curndreader.h>
 #include <curndactionfactories.h>
 #include <cumbiarndworld.h>
+#endif
+
+#ifdef CUMBIA_WEBSOCKET_VERSION
+#include <cumbiawebsocket.h>
+#include <cumbiawsworld.h>
+#include <cuwsreader.h> // for CuWSReaderFactory
 #endif
 
 #include <cuthreadfactoryimpl.h>
@@ -43,6 +50,7 @@
 #include <cuepcontrolswriter.h>
 #include <cuepics-world.h>
 #include <cuepreadoptions.h>
+#include <qcommandlineparser.h>
 #endif
 
 #include <cuthreadfactoryimpl.h>
@@ -93,6 +101,34 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     cura->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
     engines << "random";
 #endif
+#ifdef CUMBIA_WEBSOCKET_VERSION
+    QCommandLineParser parser;
+    QCommandLineOption ws_url_o(QStringList() << "u" << "websocket-url", "URL to websocket server", "url", "ws://localhost:12702");
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.addOption(ws_url_o);
+    parser.process(*qApp);
+    if(parser.isSet(ws_url_o)) {
+        // setup Cumbia web socket with the web socket address and the host name to prepend to the sources
+        // for the HTTP requests
+        CumbiaWSWorld wsw;
+        CumbiaWebSocket* cuws = new CumbiaWebSocket("ws://localhost:12702", "", new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+        cu_pool->registerCumbiaImpl("ws", cuws);
+        cu_pool->setSrcPatterns("ws", wsw.srcPatterns());
+        // example source: "ws://tango://hokuto:20000/test/device/1/double_scalar"
+        // ws:// domain prefix will be discarded
+        m_ctrl_factory_pool.setSrcPatterns("ws", wsw.srcPatterns());
+        m_ctrl_factory_pool.registerImpl("ws", CuWSReaderFactory());
+        // open the websocket
+        cuws->openSocket();
+        // use websocket with tango sources
+    #ifdef QUMBIA_TANGO_CONTROLS_VERSION
+        CuTangoReplaceWildcards *tgrwi = new CuTangoReplaceWildcards;
+        cuws->addReplaceWildcardI(tgrwi);
+        engines << "websocket";
+    } // parser.isSet(ws_url_o)
+    #endif // #ifdef QUMBIA_TANGO_CONTROLS_VERSION
+#endif // #ifdef CUMBIA_WEBSOCKET_VERSION
 
     ui->setupUi(this);
     connect(ui->pbSetSources, SIGNAL(clicked()), this, SLOT(sourcesChanged()));

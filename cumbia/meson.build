@@ -1,4 +1,4 @@
-project('cumbia', 'cpp', version : '1.1.0',
+project('cumbia', 'cpp', version : '1.1.1',
     default_options : ['c_std=c17', 'cpp_std=c++17'])
 
 project_description = 'library that offers a carefree approach to multi thread application design and implementation'
@@ -92,36 +92,35 @@ cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1'
 
 deps = [ dependency('threads') ]
 
-# cumbialib = shared_library('cumbia', sources,
-cumbialib = static_library('cumbia', sources,
+cumbialib = shared_library('cumbia', sources,
         version : meson.project_version(),
         include_directories : includedirs,
         cpp_args : cpp_arguments,
         dependencies : deps ,
         install : true)
 
-#pkg = import('pkgconfig')
-#pkg.generate(version : meson.project_version(),
- #   name : 'libcumbia',
-  #  filebase : 'cumbia',
-   # description : project_description)
+pkg = import('pkgconfig')
+pkg.generate(version : meson.project_version(),
+    name : 'libcumbia',
+    filebase : 'cumbia',
+    description : project_description)
 
 ### ====================================== pkg config   ============================
-#pkgconfig = find_program('pkg-config', required: false)
-#if not pkgconfig.found()
-#  error('MESON_SKIP_TEST: pkg-config not found')
-#endif
+pkgconfig = find_program('pkg-config', required: false)
+if not pkgconfig.found()
+  error('MESON_SKIP_TEST: pkg-config not found')
+endif
 
-#pkgg = import('pkgconfig')
+pkgg = import('pkgconfig')
 
-#h = ['cumbia']  # subdirectories of ${prefix}/${includedir} to add to header path
-#pkgg.generate(
- #   libraries : cumbialib,
- #   subdirs : h,
- #   version : meson.project_version(),
- #   name : 'libcumbia',
- #   filebase : 'cumbia',
- #   description : project_description )
+h = ['cumbia']  # subdirectories of ${prefix}/${includedir} to add to header path
+pkgg.generate(
+    libraries : cumbialib,
+    subdirs : h,
+    version : meson.project_version(),
+    name : 'libcumbia',
+    filebase : 'cumbia',
+    description : project_description )
 
 
 ### ====================================== documentation ===========================

@@ -42,6 +42,7 @@ SOURCES += \
     cumbiawsworld.cpp \
     cuwsactionfactoryservice.cpp \
     cuwsactionreader.cpp \
+    protocol/tango/cuwstangoreplacewildcards.cpp \
     ws_source.cpp \
     cuwsactionfactories.cpp \
     cuwsclient.cpp \
@@ -57,6 +58,7 @@ HEADERS += \
     cuwsactioni.h \
     cuwsactionfactoryi.h \
     cuwsactionreader.h \
+    protocol/tango/cuwstangoreplacewildcards.h \
     ws_source.h \
     cuwsactionfactories.h \
     cuwsclient.h \
