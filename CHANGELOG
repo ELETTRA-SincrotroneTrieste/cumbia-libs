@@ -1,11 +1,13 @@
 v1.1.2
 a. cumbia
 a1. CumbiaPool: removed printf when no implementation is found and improved doc
+a2. Support for cross compilation with emscripten / wasm
 
 b. cumbia-qtcontrols
 b1. CuControlsFactoryPool: NULL replaced with nullptr.
 b2. A QuReplaceWildcards_I definition has been introduced to provide an interface for command line *replace wildcards* capable
     engines.
+b3. Support for cross compilation with emscripten / wasm
 
 c. qumbia-apps
 c1. qumbia-read: support for websocket
