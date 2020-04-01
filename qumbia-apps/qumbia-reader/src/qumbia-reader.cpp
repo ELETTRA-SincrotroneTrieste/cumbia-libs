@@ -34,6 +34,7 @@
 #include <cutcontrolsreader.h>
 #include <cutcontrolswriter.h>
 #include <cutango-world.h>
+#include <cutcontrols-utils.h> // replace wildcards
 #endif
 #ifdef CUMBIA_RANDOM_VERSION
 #include <cumbiarandom.h>
@@ -80,43 +81,48 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
         CumbiaWSWorld wsw;
         QUrl u(m_conf.ws_url);
         CumbiaWebSocket* cuws = new CumbiaWebSocket(u.toString(), m_conf.ws_http_url, new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-        cu_pool->registerCumbiaImpl("tango", cuws);
-        cu_pool->setSrcPatterns("tango", wsw.srcPatterns());
-        m_ctrl_factory_pool.setSrcPatterns("tango", wsw.srcPatterns());
-        m_ctrl_factory_pool.registerImpl("tango", CuWSReaderFactory());
+        cu_pool->registerCumbiaImpl("ws", cuws);
+        cu_pool->setSrcPatterns("ws", wsw.srcPatterns());
+        m_ctrl_factory_pool.setSrcPatterns("ws", wsw.srcPatterns());
+        m_ctrl_factory_pool.registerImpl("ws", CuWSReaderFactory());
         cuws->openSocket();
+#ifdef QUMBIA_TANGO_CONTROLS_VERSION
+        CuTangoReplaceWildcards *tgrwi = new CuTangoReplaceWildcards;
+        cuws->addReplaceWildcardI(tgrwi);
+        engines << "websocket";
+#endif
 #else
         perr("QumbiaReader: module cumbia-websocket is not available");
 #endif
     }
     else if(m_conf.ws_url.isEmpty() ^ m_conf.ws_http_url.isEmpty())
         perr("QumbiaReader: websocket command line arguments incomplete");
-    else {
 
-        // setup Cumbia pool and register cumbia implementations for tango and epics
+
+    // setup Cumbia pool and register cumbia implementations for tango and epics
 #ifdef QUMBIA_EPICS_CONTROLS_VERSION
-        cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-        cu_pool->registerCumbiaImpl("epics", cuep);
-        m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
-        m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
-        cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
-        CuEpicsWorld ew;
-        m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
-        cu_pool->setSrcPatterns("epics", ew.srcPatterns());
-        engines << "epics";
+    cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    cu_pool->registerCumbiaImpl("epics", cuep);
+    m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
+    m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
+    cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+    CuEpicsWorld ew;
+    m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
+    cu_pool->setSrcPatterns("epics", ew.srcPatterns());
+    engines << "epics";
 #endif
 #ifdef QUMBIA_TANGO_CONTROLS_VERSION
-        cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-        cu_pool->registerCumbiaImpl("tango", cuta);
-        m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
-        m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
-        cuta->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
-        CuTangoWorld tw;
-        m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
-        cu_pool->setSrcPatterns("tango", tw.srcPatterns());
-        engines << "tango";
+    cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    cu_pool->registerCumbiaImpl("tango", cuta);
+    m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
+    m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
+    cuta->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+    CuTangoWorld tw;
+    m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
+    cu_pool->setSrcPatterns("tango", tw.srcPatterns());
+    engines << "tango";
 #endif
-    }
+
 
 #ifdef CUMBIA_RANDOM_VERSION
     CumbiaRandom *cura = new CumbiaRandom(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
