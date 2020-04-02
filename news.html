@@ -9,6 +9,49 @@
 <body>
 <h1>News</h1>
 
+<h2>version 1.1.1</h2>
+
+<h3>cumbia</h3>
+<ul>
+<li>CumbiaPool: removed printf when no implementation is found and improved doc</li>
+<li>Support for cross compilation with emscripten / wasm</li>
+</ul>
+
+<h3>cumbia-qtcontrols</h3>
+<ul>
+<li>CuControlsFactoryPool: NULL replaced with nullptr.</li>
+<li> A QuReplaceWildcards_I definition has been introduced to provide an interface for command line *replace wildcards* capable
+    engines.</li>
+<li> Support for cross compilation with emscripten / wasm</li>
+</ul>
+
+<h3>qumbia-apps</h3>
+<ul>
+<li>qumbia-read: support for websocket</li>
+</ul>
+<ul>qumbiaprojectwizard:
+<li>fixed $APPLICATION_NAME$" and "$ORGANIZATION_NAME$" placeholder replacement</li>
+<li>multi-engine is the default option and the templates create a skeleton including cumbia-random and cumbia-websocket modules,
+     if available. cumbia-websocket is added only if a proper command line option is detected. QCommandLineParser is used to find
+     the required option to activate cumbia-websocket connection</li>
+</ul>
+
+<h3>cumbia-websocket</h3>
+<ul>
+<li>added support for a full-duplex communication with generic server on a single web socket.
+    Former support to canoned (pwma) server is maintained and selected if an http url is provided
+    to the constructor alongside the websocket URL.</li>
+<li>d1. can be tested using the simple https://github.com/ELETTRA-SincrotroneTrieste/cumbia-websocket-proxy-server.git
+    websocket server "proxy"</li>
+<li>added support for command line argument wildcard replacement for tango by an implementation of QuReplaceWildcards_I</li>
+</ul>
+
+<h3>qumbia-tango-controls</h3>
+<ul>
+<li>cutcontrols-utils:  CuTangoReplaceWildcards implementation of the QuReplaceWildcards_I interface is used to perform
+    command line arguments wildcard replacement</li>
+</ul>
+
 <h2>version 1.1.0</h2>
 
 
