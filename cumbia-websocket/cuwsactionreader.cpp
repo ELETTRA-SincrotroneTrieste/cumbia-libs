@@ -1,8 +1,8 @@
 #include "cuwsactionreader.h"
 #include "cuwsclient.h"
 #include "cuwsactionfactoryservice.h"
-#include "protocolhelper_i.h"
-#include "protocolhelpers.h"
+#include "cuwsprotocolhelper_i.h"
+#include "cuwsprotocolhelpers.h"
 
 #include <cudatalistener.h>
 #include <cuserviceprovider.h>
@@ -88,7 +88,7 @@ public:
     CuData property_d, value_d, options;
     QNetworkAccessManager *networkAccessManager;
     WSSourceConfiguration source_configuration;
-    ProtocolHelpers *proto_helpers;
+    CuWsProtocolHelpers *proto_helpers;
     ProtocolHelper_I *proto_helper_i;
 };
 
@@ -102,7 +102,7 @@ CuWSActionReader::CuWSActionReader(const WSSource& src, CuWSClient *wscli, const
     d->networkAccessManager = nullptr;
     std::string proto = src.getProtocol(); // tango:// ?
     pinfo("CuWSActionReader: found protocol \"%s\" within \"%s\"", proto.c_str(), src.getName().c_str());
-    d->proto_helpers = new ProtocolHelpers();
+    d->proto_helpers = new CuWsProtocolHelpers();
     d->proto_helper_i = d->proto_helpers->get(QString::fromStdString(proto));
 }
 

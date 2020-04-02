@@ -2,6 +2,7 @@
 #define PROTOCOLHELPER_I_H
 
 #include <string>
+#include <vector>
 
 class ProtocolHelper_I
 {
@@ -16,6 +17,8 @@ public:
     virtual std::string dataTypeToStr(int dt) const = 0;
 
     virtual int dataTypeStrToInt(const std::string &dt ) const = 0;
+
+    virtual std::vector<std::string> srcPatterns() const = 0;
 };
 
 #endif // PROTOCOLHELPER_I_H

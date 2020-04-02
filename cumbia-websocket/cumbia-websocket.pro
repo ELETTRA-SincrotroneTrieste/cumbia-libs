@@ -42,12 +42,12 @@ SOURCES += \
     cumbiawsworld.cpp \
     cuwsactionfactoryservice.cpp \
     cuwsactionreader.cpp \
+    protocol/tango/cuwsprotocolhelpers.cpp \
+    protocol/tango/cuwstangohelper.cpp \
     protocol/tango/cuwstangoreplacewildcards.cpp \
     ws_source.cpp \
     cuwsactionfactories.cpp \
-    cuwsclient.cpp \
-    protocol/tango/tangohelper.cpp \
-    protocol/tango/protocolhelpers.cpp
+    cuwsclient.cpp
 
 HEADERS += \
         cumbiawebsocket.h \
@@ -58,13 +58,13 @@ HEADERS += \
     cuwsactioni.h \
     cuwsactionfactoryi.h \
     cuwsactionreader.h \
+    protocol/cuwsprotocolhelper_i.h \
+    protocol/tango/cuwsprotocolhelpers.h \
+    protocol/tango/cuwstangohelper.h \
     protocol/tango/cuwstangoreplacewildcards.h \
     ws_source.h \
     cuwsactionfactories.h \
-    cuwsclient.h \
-    protocol/protocolhelper_i.h \
-    protocol/tango/tangohelper.h \
-    protocol/tango/protocolhelpers.h
+    cuwsclient.h
 
 INCLUDEPATH += protocol protocol/tango
 

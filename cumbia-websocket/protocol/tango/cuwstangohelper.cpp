@@ -1,12 +1,12 @@
-#include "tangohelper.h"
+#include "cuwstangohelper.h"
 #include <cumacros.h>
 
-TangoHelper::TangoHelper()
+CuWsTangoHelper::CuWsTangoHelper()
 {
 
 }
 
-TangoHelper::~TangoHelper()
+CuWsTangoHelper::~CuWsTangoHelper()
 {
 
 }
@@ -14,7 +14,7 @@ TangoHelper::~TangoHelper()
 // from idl/tango.h
 //   enum AttrDataFormat { SCALAR, SPECTRUM, IMAGE, FMT_UNKNOWN /*, __max_AttrDataFormat=0xffffffff */ };
 
-int TangoHelper::dataFormatStrToInt(const std::string &fmt) const
+int CuWsTangoHelper::dataFormatStrToInt(const std::string &fmt) const
 {
     if(fmt == "scalar") return 0;
     else if (fmt == "vector") return 1;
@@ -22,7 +22,7 @@ int TangoHelper::dataFormatStrToInt(const std::string &fmt) const
     else return 3;
 }
 
-std::string TangoHelper::dataFormatToStr(int fmt) const
+std::string CuWsTangoHelper::dataFormatToStr(int fmt) const
 {
     // from idl/tango.h
     switch(fmt) {
@@ -77,7 +77,7 @@ std::string TangoHelper::dataFormatToStr(int fmt) const
 };
 
  */
-std::string TangoHelper::dataTypeToStr(int dt) const
+std::string CuWsTangoHelper::dataTypeToStr(int dt) const
 {
     if(dt == 0) return "void";
     else if(dt == 1) return "bool";
@@ -106,8 +106,15 @@ std::string TangoHelper::dataTypeToStr(int dt) const
     else return "unknown_type";
 }
 
-int TangoHelper::dataTypeStrToInt(const std::string &) const
+int CuWsTangoHelper::dataTypeStrToInt(const std::string &) const
 {
     pred("TangoHelper.dataTypeToInt: unimplemented\n");
     return -1;
+}
+
+std::vector<std::string> CuWsTangoHelper::srcPatterns() const {
+    std::vector<std::string> src_patterns;
+    src_patterns.push_back("[A-Za-z0-9_\\-\\.\\$]+/.+");
+    src_patterns.push_back("[A-Za-z0-9_\\-\\.\\$]+->.+");
+    return src_patterns;
 }
