@@ -2,13 +2,17 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT=/usr/local/cumbia-libs
 }
 
-exists ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
-    message("- adding EPICS support under $${INSTALL_ROOT}")
-    include ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
-}
-exists  ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
-    message("- adding Tango support under $${INSTALL_ROOT}")
-    include ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+
+linux-g++ {
+    exists ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
+        message("- adding EPICS support under $${INSTALL_ROOT}")
+        include ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+    }
+    exists  ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
+        message("- adding Tango support under $${INSTALL_ROOT}")
+        include ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+    }
+    greaterThan(QT_MAJOR_VERSION, 4): QT += x11extras
 }
 
 exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {
@@ -27,12 +31,9 @@ TEMPLATE = app
 QT +=  core gui
 
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets x11extras
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG +=
-
-CONFIG+=link_pkgconfig
-PKGCONFIG += x11
 
 DEFINES += QT_NO_DEBUG_OUTPUT
 
