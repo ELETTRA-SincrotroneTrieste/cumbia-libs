@@ -1,3 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classConversionHealth.html" title=" " alt="" coords="5,5,129,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,56,80,83"/>
+<area shape="rect" id="node2" href="$classConversionDialog.html" title=" " alt="" coords="128,5,265,32"/>
+<area shape="rect" id="node3" href="$classDemoDialog.html" title=" " alt="" coords="145,56,248,83"/>
+<area shape="rect" id="node4" href="$classGetOptionDialog.html" title=" " alt="" coords="131,107,262,133"/>
 </map>

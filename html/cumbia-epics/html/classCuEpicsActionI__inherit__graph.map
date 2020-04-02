@@ -1,7 +1,7 @@
 <map id="CuEpicsActionI" name="CuEpicsActionI">
-<area shape="rect" id="node1" title="an interface for an EPICS action, as a reader (implemented) or a writer (not yet implemented)" alt="" coords="145,80,257,107"/>
-<area shape="rect" id="node3" href="$classCuEpConfiguration.html" title=" " alt="" coords="5,155,136,181"/>
-<area shape="rect" id="node4" href="$classCuMonitor.html" title=" " alt="" coords="161,155,242,181"/>
-<area shape="rect" id="node5" href="$classCuPut.html" title=" " alt="" coords="267,155,325,181"/>
-<area shape="rect" id="node2" title=" " alt="" coords="139,5,263,32"/>
+<area shape="rect" id="node1" title="an interface for an EPICS action, as a reader (implemented) or a writer (not yet implemented)" alt="" coords="157,80,276,107"/>
+<area shape="rect" id="node3" href="$classCuEpConfiguration.html" title=" " alt="" coords="5,155,148,181"/>
+<area shape="rect" id="node4" href="$classCuMonitor.html" title=" " alt="" coords="172,155,261,181"/>
+<area shape="rect" id="node5" href="$classCuPut.html" title=" " alt="" coords="285,155,345,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="149,5,285,32"/>
 </map>

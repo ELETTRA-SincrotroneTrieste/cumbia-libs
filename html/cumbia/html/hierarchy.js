@@ -60,8 +60,6 @@ var hierarchy =
     [ "CuThreadsEventBridgeListener", "classCuThreadsEventBridgeListener.html", [
       [ "CuThreadInterface", "classCuThreadInterface.html", [
         [ "CuThread", "classCuThread.html", null ],
-        [ "CuThread", "classCuThread.html", null ],
-        [ "CuThread", "classCuThread.html", null ],
         [ "CuThread", "classCuThread.html", null ]
       ] ],
       [ "CuThreadInterface", "classCuThreadInterface.html", null ]

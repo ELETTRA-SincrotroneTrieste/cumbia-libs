@@ -1,5 +1,5 @@
 <map id="ELabel" name="ELabel">
-<area shape="rect" id="node1" title="A label that can be used to display numeric, boolean or enum values." alt="" coords="24,155,87,181"/>
-<area shape="rect" id="node2" href="$classQuLabelBase.html" title="A QLabel that in addition decorates its border and background." alt="" coords="5,80,105,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="24,5,87,32"/>
+<area shape="rect" id="node1" title="A label that can be used to display numeric, boolean or enum values." alt="" coords="26,155,91,181"/>
+<area shape="rect" id="node2" href="$classQuLabelBase.html" title="A QLabel that in addition decorates its border and background." alt="" coords="5,80,112,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="25,5,92,32"/>
 </map>

@@ -1,6 +1,6 @@
 <map id="QuComboBox" name="QuComboBox">
-<area shape="rect" id="node1" title="QuComboBox derives from Qt QComboBox to display values. When the option is activated explicitly,..." alt="" coords="130,80,233,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,101,32"/>
-<area shape="rect" id="node3" title=" " alt="" coords="126,5,237,32"/>
-<area shape="rect" id="node4" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="261,5,347,32"/>
+<area shape="rect" id="node1" title="QuComboBox derives from Qt QComboBox to display values. When the option is activated explicitly,..." alt="" coords="139,80,249,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,108,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="133,5,255,32"/>
+<area shape="rect" id="node4" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="280,5,375,32"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="CuTangoActionI" name="CuTangoActionI">
-<area shape="rect" id="node1" title="an interface for a Tango action, typically a reader or a writer are implementors" alt="" coords="139,80,253,107"/>
-<area shape="rect" id="node3" href="$classCuTConfiguration.html" title=" " alt="" coords="5,155,128,181"/>
-<area shape="rect" id="node4" href="$classCuTReader.html" title="Low level class to read tango attributes and commands with output arguments." alt="" coords="153,155,239,181"/>
-<area shape="rect" id="node5" href="$classCuTWriter.html" title=" " alt="" coords="264,155,344,181"/>
-<area shape="rect" id="node2" title=" " alt="" coords="134,5,258,32"/>
+<area shape="rect" id="node1" title="an interface for a Tango action, typically a reader or a writer are implementors" alt="" coords="148,80,271,107"/>
+<area shape="rect" id="node3" href="$classCuTConfiguration.html" title=" " alt="" coords="5,155,139,181"/>
+<area shape="rect" id="node4" href="$classCuTReader.html" title="Low level class to read tango attributes and commands with output arguments." alt="" coords="163,155,256,181"/>
+<area shape="rect" id="node5" href="$classCuTWriter.html" title=" " alt="" coords="281,155,367,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="141,5,277,32"/>
 </map>

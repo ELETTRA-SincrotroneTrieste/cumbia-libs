@@ -1,21 +1,21 @@
 <map id="examples" name="examples">
-<area shape="rect" id="node2" href="dir_0cc8622a4b39ab0f54fab82037e0781f.html" title="build&#45;qmlandroidpwma&#45;Android_for_armeabi_v7a_GCC_4_9_Qt_5_11_1_for_Android_armv7&#45;Debug" alt="" coords="1873,63,2463,111"/>
-<area shape="rect" id="node3" href="dir_bdb440d5a0753222bd498500ec0ff592.html" title="build&#45;qmlandroidpwma&#45;GentooQT&#45;Debug" alt="" coords="1594,63,1849,111"/>
-<area shape="rect" id="node4" href="dir_564ae6b26fad224ae6b8629b59b21f6b.html" title="build&#45;qmlandroidspectrumplot&#45;Android_for_armeabi_v7a_GCC_4_9_Qt_5_11_1_for_Android_armv7&#45;Debug" alt="" coords="939,63,1570,111"/>
-<area shape="rect" id="node5" href="dir_b869ccc534a3d2956287788f3810fefd.html" title="build&#45;trendplot&#45;Qt_5_9_6_qt5&#45;Debug" alt="" coords="685,63,915,111"/>
-<area shape="rect" id="node6" href="dir_75fcdb5a18fc6dbd9bb40ecd2ed0ef72.html" title="button" alt="" coords="589,63,661,111"/>
-<area shape="rect" id="node12" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html" title="src" alt="" coords="291,159,363,207"/>
-<area shape="rect" id="edge1-headlabel" href="dir_000041_000024.html" title="3" alt="" coords="377,180,385,195"/>
-<area shape="rect" id="node7" href="dir_26aa184d8a11829212bc9b8f8c008b5d.html" title="components" alt="" coords="472,63,565,111"/>
-<area shape="rect" id="edge6-headlabel" href="dir_000042_000024.html" title="3" alt="" coords="379,166,387,181"/>
-<area shape="rect" id="node8" href="dir_73d64f0877d30072a7295399a67465b0.html" title="qmlandroidpwma" alt="" coords="329,63,447,111"/>
-<area shape="rect" id="edge4-headlabel" href="dir_000043_000024.html" title="3" alt="" coords="355,141,363,155"/>
-<area shape="rect" id="node9" href="dir_76e2b438036588ecf4bfe0c49a9e667a.html" title="qmlwriter" alt="" coords="229,63,304,111"/>
-<area shape="rect" id="edge3-headlabel" href="dir_000044_000024.html" title="3" alt="" coords="305,131,313,146"/>
-<area shape="rect" id="node10" href="dir_85956292db4c2773ba91c17ce187aea5.html" title="trendplot" alt="" coords="133,63,205,111"/>
-<area shape="rect" id="edge2-headlabel" href="dir_000045_000024.html" title="3" alt="" coords="273,146,281,161"/>
-<area shape="rect" id="node11" href="dir_0fb948a3c106f90f5506aca39978a3dc.html" title="tumbler" alt="" coords="37,63,109,111"/>
-<area shape="rect" id="edge5-headlabel" href="dir_000046_000024.html" title="3" alt="" coords="270,160,278,175"/>
-<area shape="rect" id="clust2" href="dir_b7b655889ccea742ee7050696d0a1d06.html" alt="" coords="27,52,2577,121"/>
-<area shape="rect" id="clust1" href="dir_fcf7993eee5bbc2ed690871c2369bd6f.html" title="qml" alt="" coords="16,16,2588,132"/>
+<area shape="rect" id="node2" href="dir_0cc8622a4b39ab0f54fab82037e0781f.html" title="build&#45;qmlandroidpwma&#45;Android_for_armeabi_v7a_GCC_4_9_Qt_5_11_1_for_Android_armv7&#45;Debug" alt="" coords="2065,63,2727,111"/>
+<area shape="rect" id="node3" href="dir_bdb440d5a0753222bd498500ec0ff592.html" title="build&#45;qmlandroidpwma&#45;GentooQT&#45;Debug" alt="" coords="1751,63,2041,111"/>
+<area shape="rect" id="node4" href="dir_564ae6b26fad224ae6b8629b59b21f6b.html" title="build&#45;qmlandroidspectrumplot&#45;Android_for_armeabi_v7a_GCC_4_9_Qt_5_11_1_for_Android_armv7&#45;Debug" alt="" coords="1017,63,1727,111"/>
+<area shape="rect" id="node5" href="dir_b869ccc534a3d2956287788f3810fefd.html" title="build&#45;trendplot&#45;Qt_5_9_6_qt5&#45;Debug" alt="" coords="735,63,993,111"/>
+<area shape="rect" id="node6" href="dir_75fcdb5a18fc6dbd9bb40ecd2ed0ef72.html" title="button" alt="" coords="639,63,711,111"/>
+<area shape="rect" id="node12" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html" title="src" alt="" coords="315,159,387,207"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000047_000024.html" title="3" alt="" coords="401,182,410,196"/>
+<area shape="rect" id="node7" href="dir_26aa184d8a11829212bc9b8f8c008b5d.html" title="components" alt="" coords="511,63,614,111"/>
+<area shape="rect" id="edge6-headlabel" href="dir_000048_000024.html" title="3" alt="" coords="402,168,411,183"/>
+<area shape="rect" id="node8" href="dir_73d64f0877d30072a7295399a67465b0.html" title="qmlandroidpwma" alt="" coords="351,63,487,111"/>
+<area shape="rect" id="edge4-headlabel" href="dir_000049_000024.html" title="3" alt="" coords="380,142,389,156"/>
+<area shape="rect" id="node9" href="dir_76e2b438036588ecf4bfe0c49a9e667a.html" title="qmlwriter" alt="" coords="241,63,327,111"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000050_000024.html" title="3" alt="" coords="326,132,335,146"/>
+<area shape="rect" id="node10" href="dir_85956292db4c2773ba91c17ce187aea5.html" title="trendplot" alt="" coords="135,63,217,111"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000051_000024.html" title="3" alt="" coords="295,148,305,163"/>
+<area shape="rect" id="node11" href="dir_0fb948a3c106f90f5506aca39978a3dc.html" title="tumbler" alt="" coords="38,63,111,111"/>
+<area shape="rect" id="edge5-headlabel" href="dir_000052_000024.html" title="3" alt="" coords="293,162,302,176"/>
+<area shape="rect" id="clust2" href="dir_b7b655889ccea742ee7050696d0a1d06.html" alt="" coords="27,52,2849,121"/>
+<area shape="rect" id="clust1" href="dir_fcf7993eee5bbc2ed690871c2369bd6f.html" title="qml" alt="" coords="16,16,2860,132"/>
 </map>

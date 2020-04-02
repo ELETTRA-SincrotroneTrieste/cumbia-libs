@@ -1,7 +1,7 @@
 <map id="QuLinearGauge" name="QuLinearGauge">
-<area shape="rect" id="node1" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors." alt="" coords="171,155,283,181"/>
-<area shape="rect" id="node2" href="$classQuLinearGaugeBase.html" title=" " alt="" coords="5,80,148,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="41,5,113,32"/>
-<area shape="rect" id="node4" title=" " alt="" coords="172,80,283,107"/>
-<area shape="rect" id="node5" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="307,80,393,107"/>
+<area shape="rect" id="node1" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors." alt="" coords="184,155,307,181"/>
+<area shape="rect" id="node2" href="$classQuLinearGaugeBase.html" title=" " alt="" coords="5,80,160,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="43,5,122,32"/>
+<area shape="rect" id="node4" title=" " alt="" coords="184,80,307,107"/>
+<area shape="rect" id="node5" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="331,80,426,107"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="cupluginloader.h" name="cupluginloader.h">
-<area shape="rect" id="node1" title=" " alt="" coords="248,5,363,32"/>
-<area shape="rect" id="node2" href="$cucontextmenu_8cpp.html" title=" " alt="" coords="5,80,141,107"/>
-<area shape="rect" id="node3" href="$cupluginloader_8cpp.html" title=" " alt="" coords="166,80,295,107"/>
-<area shape="rect" id="node4" href="$quapplication_8cpp.html" title=" " alt="" coords="320,80,443,107"/>
-<area shape="rect" id="node5" href="$quxtrawidgetpluginloader_8cpp.html" title=" " alt="" coords="467,80,655,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="271,5,400,32"/>
+<area shape="rect" id="node2" href="$cucontextmenu_8cpp.html" title=" " alt="" coords="5,80,156,107"/>
+<area shape="rect" id="node3" href="$cupluginloader_8cpp.html" title=" " alt="" coords="181,80,325,107"/>
+<area shape="rect" id="node4" href="$quapplication_8cpp.html" title=" " alt="" coords="349,80,487,107"/>
+<area shape="rect" id="node5" href="$quxtrawidgetpluginloader_8cpp.html" title=" " alt="" coords="511,80,725,107"/>
 </map>

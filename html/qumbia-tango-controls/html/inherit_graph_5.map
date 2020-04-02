@@ -1,5 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,31,77,57"/>
-<area shape="rect" id="node2" href="$classQuConnectionSettingsWidget.html" title="a QWidget that emits a settingsChanged signal when tango connection settings are changed." alt="" coords="125,5,317,32"/>
-<area shape="rect" id="node3" href="$classRtConfWidget.html" title="the real time plot configuration widget has not yet been made compatible with cumbia&#45;qtcontrols plots" alt="" coords="170,56,273,83"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,189,32"/>
+<area shape="rect" id="node2" href="$classCuTWriterFactory.html" title="implements CuControlsWriterFactoryI and creates Tango writers Given a pointer to a Cumbia object and ..." alt="" coords="237,5,372,32"/>
 </map>

@@ -1,12 +1,13 @@
 <map id="cuvariant.h" name="cuvariant.h">
-<area shape="rect" id="node1" title=" " alt="" coords="246,5,333,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,96,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="120,80,179,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="303,155,358,181"/>
-<area shape="rect" id="node5" href="$cumacros_8h.html" title=" " alt="" coords="203,80,293,107"/>
-<area shape="rect" id="node8" href="$cuvariant__t_8h.html" title=" " alt="" coords="369,80,466,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="167,155,228,181"/>
-<area shape="rect" id="node7" title=" " alt="" coords="364,229,428,256"/>
-<area shape="rect" id="node9" href="$cuvariantprivate_8h.html" title=" " alt="" coords="433,155,559,181"/>
-<area shape="rect" id="node10" title=" " alt="" coords="583,155,662,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="225,5,319,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,80,101,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="126,80,189,107"/>
+<area shape="rect" id="node4" title=" " alt="" coords="111,155,169,181"/>
+<area shape="rect" id="node5" href="$cumacros_8h.html" title=" " alt="" coords="555,80,653,107"/>
+<area shape="rect" id="node9" href="$cuvariant__t_8h.html" title=" " alt="" coords="264,80,371,107"/>
+<area shape="rect" id="node6" title=" " alt="" coords="521,155,588,181"/>
+<area shape="rect" id="node7" title=" " alt="" coords="613,155,697,181"/>
+<area shape="rect" id="node8" title=" " alt="" coords="337,229,407,256"/>
+<area shape="rect" id="node10" href="$cuvariantprivate_8h.html" title=" " alt="" coords="193,155,335,181"/>
+<area shape="rect" id="node11" title=" " alt="" coords="410,155,497,181"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="CuEventActivity" name="CuEventActivity">
-<area shape="rect" id="node1" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int..." alt="" coords="50,80,166,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,88,32"/>
-<area shape="rect" id="node3" title=" " alt="" coords="112,5,229,32"/>
+<area shape="rect" id="node1" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int..." alt="" coords="52,80,179,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,95,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="119,5,245,32"/>
 </map>

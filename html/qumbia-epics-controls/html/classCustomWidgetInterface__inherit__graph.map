@@ -1,10 +1,10 @@
 <map id="CustomWidgetInterface" name="CustomWidgetInterface">
-<area shape="rect" id="node1" title=" " alt="" coords="272,107,431,133"/>
-<area shape="rect" id="node4" href="$classQuButtonInterface.html" title=" " alt="" coords="483,5,611,32"/>
-<area shape="rect" id="node5" href="$classQuLabelInterface.html" title=" " alt="" coords="487,56,608,83"/>
-<area shape="rect" id="node6" href="$classQuLedInterface.html" title=" " alt="" coords="492,107,603,133"/>
-<area shape="rect" id="node7" href="$classQuLineEditInterface.html" title=" " alt="" coords="479,157,616,184"/>
-<area shape="rect" id="node8" href="$classQuTableInterface.html" title=" " alt="" coords="487,208,608,235"/>
-<area shape="rect" id="node2" title=" " alt="" coords="79,81,150,108"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,132,224,159"/>
+<area shape="rect" id="node1" title=" " alt="" coords="297,107,473,133"/>
+<area shape="rect" id="node4" href="$classQuButtonInterface.html" title=" " alt="" coords="526,5,667,32"/>
+<area shape="rect" id="node5" href="$classQuLabelInterface.html" title=" " alt="" coords="530,56,663,83"/>
+<area shape="rect" id="node6" href="$classQuLedInterface.html" title=" " alt="" coords="536,107,657,133"/>
+<area shape="rect" id="node7" href="$classQuLineEditInterface.html" title=" " alt="" coords="521,157,672,184"/>
+<area shape="rect" id="node8" href="$classQuTableInterface.html" title=" " alt="" coords="531,208,663,235"/>
+<area shape="rect" id="node2" title=" " alt="" coords="90,81,165,108"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,132,249,159"/>
 </map>

@@ -1,8 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuTangoActionFactoryI.html" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="5,56,164,83"/>
-<area shape="rect" id="node2" href="$classCuTangoReaderFactory.html" title=" " alt="" coords="212,5,371,32"/>
-<area shape="rect" id="node3" href="$classCuTangoWriterFactory.html" title=" " alt="" coords="216,56,367,83"/>
-<area shape="rect" id="node4" href="$classCuTConfFactoryBase.html" title=" " alt="" coords="218,107,365,133"/>
-<area shape="rect" id="node5" href="$classCuTReaderConfFactory.html" title=" " alt="" coords="419,81,577,108"/>
-<area shape="rect" id="node6" href="$classCuTWriterConfFactory.html" title=" " alt="" coords="423,132,573,159"/>
+<area shape="rect" id="node1" href="$classCuTangoActionFactoryI.html" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="5,56,175,83"/>
+<area shape="rect" id="node2" href="$classCuTangoReaderFactory.html" title=" " alt="" coords="223,5,393,32"/>
+<area shape="rect" id="node3" href="$classCuTangoWriterFactory.html" title=" " alt="" coords="226,56,390,83"/>
+<area shape="rect" id="node4" href="$classCuTConfFactoryBase.html" title=" " alt="" coords="231,107,385,133"/>
+<area shape="rect" id="node5" href="$classCuTReaderConfFactory.html" title=" " alt="" coords="441,81,612,108"/>
+<area shape="rect" id="node6" href="$classCuTWriterConfFactory.html" title=" " alt="" coords="445,132,609,159"/>
 </map>

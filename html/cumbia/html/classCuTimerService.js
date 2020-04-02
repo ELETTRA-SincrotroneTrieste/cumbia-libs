@@ -2,7 +2,7 @@ var classCuTimerService =
 [
     [ "CuTimerService", "classCuTimerService.html#a391a4a774102c330eeb897c0a9493adc", null ],
     [ "~CuTimerService", "classCuTimerService.html#a2d1cc18aded170f94fc6c8978a9bcc84", null ],
-    [ "changeTimeout", "classCuTimerService.html#a0239b4957975f9692beb22e0e0168332", null ],
+    [ "changeTimeout", "classCuTimerService.html#afbc985f37bbf881e62f5b510f7829080", null ],
     [ "getListeners", "classCuTimerService.html#aa1490ce9b8dd597c5d0d18fe66d65df9", null ],
     [ "getName", "classCuTimerService.html#a19afaabd0023d00030ebb03944dd95c1", null ],
     [ "getTimers", "classCuTimerService.html#a68d13de14f0c16a1230e57d9af370c05", null ],

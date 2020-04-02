@@ -9,7 +9,7 @@ var indexSectionsWithContent =
   6: "abcdefgilmprstuvw",
   7: "c",
   8: "copqst",
-  9: "w"
+  9: "qw"
 };
 
 var indexSectionNames =

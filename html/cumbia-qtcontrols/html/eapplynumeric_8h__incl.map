@@ -1,13 +1,13 @@
 <map id="eapplynumeric.h" name="eapplynumeric.h">
-<area shape="rect" id="node1" title=" " alt="" coords="345,5,462,32"/>
-<area shape="rect" id="node2" href="$enumeric_8h.html" title=" " alt="" coords="176,80,263,107"/>
-<area shape="rect" id="node9" href="$eapplybutton_8h.html" title=" " alt="" coords="350,80,457,107"/>
-<area shape="rect" id="node11" title=" " alt="" coords="481,80,576,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,155,68,181"/>
-<area shape="rect" id="node4" title=" " alt="" coords="93,155,162,181"/>
-<area shape="rect" id="node5" title=" " alt="" coords="186,155,253,181"/>
-<area shape="rect" id="node6" href="$float__delegate_8h.html" title=" " alt="" coords="277,155,391,181"/>
-<area shape="rect" id="node7" href="$number__delegate_8h.html" title=" " alt="" coords="268,229,400,256"/>
-<area shape="rect" id="node8" title=" " alt="" coords="301,304,367,331"/>
-<area shape="rect" id="node10" title=" " alt="" coords="416,155,516,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="362,5,493,32"/>
+<area shape="rect" id="node2" href="$enumeric_8h.html" title=" " alt="" coords="183,80,277,107"/>
+<area shape="rect" id="node9" href="$eapplybutton_8h.html" title=" " alt="" coords="367,80,487,107"/>
+<area shape="rect" id="node11" title=" " alt="" coords="511,80,613,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,155,73,181"/>
+<area shape="rect" id="node4" title=" " alt="" coords="97,155,171,181"/>
+<area shape="rect" id="node5" title=" " alt="" coords="195,155,265,181"/>
+<area shape="rect" id="node6" href="$float__delegate_8h.html" title=" " alt="" coords="289,155,416,181"/>
+<area shape="rect" id="node7" href="$number__delegate_8h.html" title=" " alt="" coords="279,229,427,256"/>
+<area shape="rect" id="node8" title=" " alt="" coords="317,304,388,331"/>
+<area shape="rect" id="node10" title=" " alt="" coords="441,155,547,181"/>
 </map>

@@ -1,4 +1,4 @@
 <map id="QThreadsEventBridgeFactory" name="QThreadsEventBridgeFactory">
-<area shape="rect" id="node1" title="a factory that instantiates a QThreadsEventBridge instance" alt="" coords="13,80,208,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,216,32"/>
+<area shape="rect" id="node1" title="a factory that instantiates a QThreadsEventBridge instance" alt="" coords="14,80,225,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,233,32"/>
 </map>

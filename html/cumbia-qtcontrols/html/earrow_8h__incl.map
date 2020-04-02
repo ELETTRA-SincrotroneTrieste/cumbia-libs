@@ -1,7 +1,7 @@
 <map id="earrow.h" name="earrow.h">
-<area shape="rect" id="node1" title=" " alt="" coords="139,5,210,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,77,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="102,80,165,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="189,80,245,107"/>
-<area shape="rect" id="node5" title=" " alt="" coords="270,80,405,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="147,5,225,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,80,84,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="108,80,176,107"/>
+<area shape="rect" id="node4" title=" " alt="" coords="201,80,259,107"/>
+<area shape="rect" id="node5" title=" " alt="" coords="283,80,430,107"/>
 </map>

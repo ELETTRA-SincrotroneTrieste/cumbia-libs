@@ -1,8 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuActivityEvent.html" title="Generic event to pass data to an activity." alt="" coords="5,107,121,133"/>
-<area shape="rect" id="node2" href="$classCuDataEvent.html" title="An event that can be used to forward data through Cumbia::postEvent." alt="" coords="201,5,300,32"/>
-<area shape="rect" id="node3" href="$classCuExecuteEvent.html" title="triggers a call to CuActivity::execute" alt="" coords="191,56,311,83"/>
-<area shape="rect" id="node4" href="$classCuPauseEvent.html" title="event to pause an activity&#39;s timer" alt="" coords="196,107,305,133"/>
-<area shape="rect" id="node5" href="$classCuResumeEvent.html" title="event to resume an activity&#39;s timer" alt="" coords="191,157,311,184"/>
-<area shape="rect" id="node6" href="$classCuTimeoutChangeEvent.html" title="this event changes the timeout of the activity&#39;s thread timer" alt="" coords="169,208,332,235"/>
+<area shape="rect" id="node1" href="$classCuActivityEvent.html" title="Generic event to pass data to an activity." alt="" coords="5,107,132,133"/>
+<area shape="rect" id="node2" href="$classCuDataEvent.html" title="An event that can be used to forward data through Cumbia::postEvent." alt="" coords="216,5,323,32"/>
+<area shape="rect" id="node3" href="$classCuExecuteEvent.html" title="triggers a call to CuActivity::execute" alt="" coords="206,56,333,83"/>
+<area shape="rect" id="node4" href="$classCuPauseEvent.html" title="event to pause an activity&#39;s timer" alt="" coords="212,107,327,133"/>
+<area shape="rect" id="node5" href="$classCuResumeEvent.html" title="event to resume an activity&#39;s timer" alt="" coords="205,157,334,184"/>
+<area shape="rect" id="node6" href="$classCuTimeoutChangeEvent.html" title="this event changes the timeout of the activity&#39;s thread timer" alt="" coords="180,208,359,235"/>
 </map>
