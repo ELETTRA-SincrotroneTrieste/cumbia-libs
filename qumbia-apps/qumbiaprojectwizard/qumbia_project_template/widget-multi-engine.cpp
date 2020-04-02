@@ -66,62 +66,85 @@ $MAINCLASS$::$MAINCLASS$(CumbiaPool *cumbia_pool, QWidget *parent) :
         CumbiaWSWorld wsw;
         CumbiaWebSocket* cuws = new CumbiaWebSocket("ws://localhost:12702", "", new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
         cu_pool->registerCumbiaImpl("ws", cuws);
-        cu_pool->setSrcPatterns("ws", wsw.srcPatterns());
+        m_ctrl_factory_pool.registerImpl("ws", CuWSReaderFactory());
         // example source: "ws://tango://hokuto:20000/test/device/1/double_scalar"
         // ws:// domain prefix will be discarded
-        m_ctrl_factory_pool.setSrcPatterns("ws", wsw.srcPatterns());
-        m_ctrl_factory_pool.registerImpl("ws", CuWSReaderFactory());
-        // open the websocket
-        cuws->openSocket();
-        // use websocket with tango sources
+        //
+        // case 1: websocket specific app
+        //
+        // m_ctrl_factory_pool.setSrcPatterns("ws", wsw.srcPatterns());
+        // cu_pool->setSrcPatterns("ws", wsw.srcPatterns());
+        //
+        // case 2: access Tango through a websocket server
+        //
+        // Share the same source syntax (e.g. $1/attribute, my/tango/dev/attribute)
+        // across native tango engine and websocket proxy server.
+        // This allows to leave the application code unchanged. See (*) below
+        //
     #ifdef QUMBIA_TANGO_CONTROLS_VERSION
         CuTangoReplaceWildcards *tgrwi = new CuTangoReplaceWildcards;
         cuws->addReplaceWildcardI(tgrwi);
+        CuTangoWorld tw;
+        m_ctrl_factory_pool.setSrcPatterns("ws", tw.srcPatterns());
+        cu_pool->setSrcPatterns("ws", tw.srcPatterns());
+    #endif // #ifdef QUMBIA_TANGO_CONTROLS_VERSION
+        //
+        // open the websocket
+        //
+        cuws->openSocket();
+        //
         engines << "websocket";
     } // parser.isSet(ws_url_o)
-    #endif // #ifdef QUMBIA_TANGO_CONTROLS_VERSION
 #endif // #ifdef CUMBIA_WEBSOCKET_VERSION
 
-    // cumbia-random
+    //
+    // (*) additional engines are registered if websocket is not in use so that applications
+    // can rely either on websocket or other engines without changing the definition of
+    // their sources (i.e. without code changes and rebuild)
+    //
+    if(!cu_pool->get("ws")) {
+        // cumbia-random
 #ifdef CUMBIA_RANDOM_VERSION
-    CumbiaRandom *cura = new CumbiaRandom(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    CumbiaRNDWorld rndw;
-    cu_pool->registerCumbiaImpl("random", cura);
-    m_ctrl_factory_pool.registerImpl("random", CuRNDReaderFactory());
-    m_ctrl_factory_pool.setSrcPatterns("random", rndw.srcPatterns());
-    cu_pool->setSrcPatterns("random", rndw.srcPatterns());
-    cura->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
-    engines << "random";
+        CumbiaRandom *cura = new CumbiaRandom(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+        CumbiaRNDWorld rndw;
+        cu_pool->registerCumbiaImpl("random", cura);
+        m_ctrl_factory_pool.registerImpl("random", CuRNDReaderFactory());
+        m_ctrl_factory_pool.setSrcPatterns("random", rndw.srcPatterns());
+        cu_pool->setSrcPatterns("random", rndw.srcPatterns());
+        cura->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+        engines << "random";
 #endif
 
-    // EPICS
+        // EPICS
 #ifdef QUMBIA_EPICS_CONTROLS_VERSION
-    cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    cu_pool->registerCumbiaImpl("epics", cuep);
-    m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
-    m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
-    cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
-    CuEpicsWorld ew;
-    m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
-    cu_pool->setSrcPatterns("epics", ew.srcPatterns());
-    engines << "epics";
+        cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+        cu_pool->registerCumbiaImpl("epics", cuep);
+        m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
+        m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
+        cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+        CuEpicsWorld ew;
+        m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
+        cu_pool->setSrcPatterns("epics", ew.srcPatterns());
+        engines << "epics";
 #endif
 
-    // Tango
+        // Tango
 #ifdef QUMBIA_TANGO_CONTROLS_VERSION
-    cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    cu_pool->registerCumbiaImpl("tango", cuta);
-    m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
-    m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
-    cuta->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
-    CuTangoWorld tw;
-    m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
-    cu_pool->setSrcPatterns("tango", tw.srcPatterns());
-    engines << "tango";
+        cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+        cu_pool->registerCumbiaImpl("tango", cuta);
+        m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
+        m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
+        cuta->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+        CuTangoWorld tw;
+        m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
+        cu_pool->setSrcPatterns("tango", tw.srcPatterns());
+        engines << "tango";
 #endif
+    }
 
     ui->setupUi(this, cu_pool, m_ctrl_factory_pool);
 
+    // needs DEFINES -= QT_NO_DEBUG_OUTPUT in .pro
     qDebug() << __PRETTY_FUNCTION__ << "available engines" << engines;
 }
 
