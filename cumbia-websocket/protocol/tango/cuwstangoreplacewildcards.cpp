@@ -1,7 +1,7 @@
 #include "cuwstangoreplacewildcards.h"
 
 // (ws[s]{0,1}://){0,1}(tango://){0,1}([A-Za-z_0-9\-\.]*[:]{1}[0-9]+[/]){0,1}[A-Za-z_0-9\-\.]+/[A-Za-z_0-9\-\.]+/[A-Za-z_0-9\-\.]+
-#define DEVICE_REGEXP "(ws[s]{0,1}://)(tango://){0,1}([A-Za-z_0-9\\-\\.]*[:]{1}[0-9]+[/]){0,1}[A-Za-z_0-9\\-\\.]+/[A-Za-z_0-9\\-\\.]+/[A-Za-z_0-9\\-\\.]+"
+#define DEVICE_REGEXP "(ws[s]{0,1}://){0,1}(tango://){0,1}([A-Za-z_0-9\\-\\.]*[:]{1}[0-9]+[/]){0,1}[A-Za-z_0-9\\-\\.]+/[A-Za-z_0-9\\-\\.]+/[A-Za-z_0-9\\-\\.]+"
 
 /** \brief Replace wildcard arguments ($1, $2, ... $N) in tango sources with the command line
  *         arguments.
