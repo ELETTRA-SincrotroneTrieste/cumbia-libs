@@ -13,6 +13,9 @@ linux-g++ {
         include ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
     }
     greaterThan(QT_MAJOR_VERSION, 4): QT += x11extras
+} else {
+    # include cumbia-qtcontrols for necessary qt engine-unaware dependency (widgets, qwt, ...)
+    include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 }
 
 exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {

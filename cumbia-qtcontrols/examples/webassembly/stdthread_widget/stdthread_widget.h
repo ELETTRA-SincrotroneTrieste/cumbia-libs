@@ -6,9 +6,11 @@
 #include <thread>
 #include <mutex>
 
+#include <QLabel>
+
 class ThreadListener {
 public:
-    virtual void onUpdate(const std::string& txt) = 0;
+    virtual void onUpdate(int val) = 0;
 };
 
 class Thread {
@@ -27,6 +29,14 @@ public:
     std::thread * th;
 };
 
+class Label : public QLabel {
+    Q_OBJECT
+public: Label(QWidget *parent);
+
+public slots:
+    void onUpdate(int val);
+};
+
 class Widget : public QWidget, public ThreadListener
 {
     Q_OBJECT
@@ -39,6 +49,6 @@ public:
 
     // ThreadListener interface
 public:
-    void onUpdate(const std::string &txt);
+    void onUpdate(int val);
 };
 #endif // WIDGET_H

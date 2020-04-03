@@ -6,11 +6,22 @@
 #include <QGridLayout>
 #include <QLabel>
 
+Label::Label(QWidget *parent) : QLabel(parent)
+{
+
+}
+
+void Label::onUpdate(int val)
+{
+    printf("calling label set text\n");
+    QLabel::setText(QString::number(val));
+}
+
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
     QGridLayout *lo = new QGridLayout(this);
-    QLabel *la = new QLabel(this);
+    Label *la = new Label(this);
     lo->addWidget(la, 0, 0, 1, 1);
     th = new Thread(this);
     resize(200, 150);
@@ -23,9 +34,9 @@ Widget::~Widget()
     printf("done\n");
 }
 
-void Widget::onUpdate(const std::string &txt)
+void Widget::onUpdate(int val)
 {
-    findChild<QLabel *>()->setText(txt.c_str());
+    findChild<Label *>()->onUpdate(val);
 }
 
 
@@ -43,7 +54,7 @@ void Thread::run()
         std::unique_lock<std::mutex> condvar_lock(m_mut);
         cnt++;
         printf("incrementing value: %d\n", cnt);
-        lis->onUpdate(std::to_string(cnt));
+        lis->onUpdate(cnt);
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 }
@@ -53,3 +64,4 @@ void Thread::exit()
     _exit = true;
     th->join();
 }
+
