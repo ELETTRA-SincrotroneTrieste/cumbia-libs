@@ -217,6 +217,7 @@ void QuLabelBase::setValue(const CuVariant& v, bool *background_modified)
             txt.truncate(d_ptr->max_len - strlen(" [...]"));
             txt += " [...]";
         }
+        printf("QuLabelBase::calling QLabel.setText with %s\n", qstoc(txt));
         QLabel::setText(txt);
     }
     if(background_modified)
@@ -315,6 +316,7 @@ QString QuLabelBase::format() const
  */
 void QuLabelBase::paintEvent(QPaintEvent *pe)
 {
+    printf("QuLabelBase.paintEvent: paintduckingenvet\n");
     QLabel::paintEvent(pe);
 
     double pwidth = d_ptr->borderWidth;
