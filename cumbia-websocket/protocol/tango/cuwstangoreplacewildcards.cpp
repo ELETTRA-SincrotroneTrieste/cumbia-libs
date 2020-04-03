@@ -1,7 +1,26 @@
 #include "cuwstangoreplacewildcards.h"
+#include <QtDebug>
 
 // (ws[s]{0,1}://){0,1}(tango://){0,1}([A-Za-z_0-9\-\.]*[:]{1}[0-9]+[/]){0,1}[A-Za-z_0-9\-\.]+/[A-Za-z_0-9\-\.]+/[A-Za-z_0-9\-\.]+
 #define DEVICE_REGEXP "(ws[s]{0,1}://){0,1}(tango://){0,1}([A-Za-z_0-9\\-\\.]*[:]{1}[0-9]+[/]){0,1}[A-Za-z_0-9\\-\\.]+/[A-Za-z_0-9\\-\\.]+/[A-Za-z_0-9\\-\\.]+"
+
+class CuWsTangoReplaceWildcardsPrivate {
+public:
+    QStringList args;
+};
+
+/*!
+ * \brief class constructor
+ * \param args the command line arguments
+ */
+CuWsTangoReplaceWildcards::CuWsTangoReplaceWildcards(const QStringList& args) {
+    d = new CuWsTangoReplaceWildcardsPrivate;
+    d->args = args;
+}
+
+CuWsTangoReplaceWildcards::~CuWsTangoReplaceWildcards() {
+    delete d;
+}
 
 /** \brief Replace wildcard arguments ($1, $2, ... $N) in tango sources with the command line
  *         arguments.
@@ -14,11 +33,16 @@
  * \li source: $2/double_scalar  args: ./bin/app 1 --verbose ws://test/dev/1 test/dev/c --> will be test/dev/c/double_scalar
  *
  */
-QString CuWsTangoReplaceWildcards::replaceWildcards(const QString &s, const QStringList &args) const
+QString CuWsTangoReplaceWildcards::replaceWildcards(const QString &s, const QStringList &_args) const
 {
     QString ret(s);
     QStringList devs;
-    for (int i = 1; i < args.size(); i++)
+    QStringList args;
+    int i0;
+    d->args.isEmpty() ? args = _args : args = d->args;
+    d->args.isEmpty() ? i0 = 1 : i0 = 0;
+    qDebug() << __PRETTY_FUNCTION__ << "using args " << args << "d_args" << d->args << "_args" << args;
+    for (int i = i0; i < args.size(); i++)
     {
        if(QRegExp(DEVICE_REGEXP).exactMatch(args[i]))
        {

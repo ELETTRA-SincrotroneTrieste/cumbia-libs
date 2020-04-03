@@ -189,4 +189,6 @@ void CumbiaWebSocket::onUpdate(const QString &message)
         // 3. let the action decode the content (according to data format, type, and so on) and notify the listeners
         action->decodeMessage(jsd);
     }
+    else
+        perr("CumbiaWebSocket::onUpdate: no action found with source %s", src.c_str());
 }

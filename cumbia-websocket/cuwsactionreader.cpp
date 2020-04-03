@@ -239,9 +239,9 @@ void CuWSActionReader::decodeMessage(const QJsonDocument &json)
 
             // timestamp millis
             if(data_o.contains("timestamp_ms")) // timestamp_ms converted to long int
-                res["timestamp_ms"] = static_cast<long int>(data_o["timestamp_ms"].toDouble());
+                res["timestamp_ms"] = data_o["timestamp_ms"].toDouble();
             else if(ts_us >= 0)
-                res["timestamp_ms"] = static_cast<long long int>(floor(ts_us) * 1000 + (ts_us - floor(ts_us)) * 10e6 / 1000);
+                res["timestamp_ms"] = floor(ts_us) * 1000.0 + (ts_us - floor(ts_us)) * 10e6 / 1000.0;
 
             if(data_o.contains("error")) {
                 res["msg"] = data_o["error"].toString().toStdString();

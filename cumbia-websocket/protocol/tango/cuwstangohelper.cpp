@@ -116,5 +116,6 @@ std::vector<std::string> CuWsTangoHelper::srcPatterns() const {
     std::vector<std::string> src_patterns;
     src_patterns.push_back("[A-Za-z0-9_\\-\\.\\$]+/.+");
     src_patterns.push_back("[A-Za-z0-9_\\-\\.\\$]+->.+");
+    perr("CuWsTangoHelper::srcPatterns(): returning src_patterns");
     return src_patterns;
 }

@@ -64,10 +64,10 @@ std::string WSSource::getArgsString() const
  */
 string WSSource::getName() const
 {
-    std::regex re("ws[s]{0,1}://");
-    std::smatch match;
-    if(std::regex_search(m_s, match, re))
-        return m_s.substr(match.position() + match.length());
+//    std::regex re("ws[s]{0,1}://");
+//    std::smatch match;
+//    if(std::regex_search(m_s, match, re))
+//        return m_s.substr(match.position() + match.length());
     return m_s;
 }
 
