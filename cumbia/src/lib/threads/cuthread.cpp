@@ -344,6 +344,9 @@ void CuThread::run() {
     //    printf("+ CuThread.run 0x%lx TID (%ld) TOKEN %s \e[1;32mentering\e[0m\n", pthread_self(), pthread_self(), d->token.toString().c_str());
     bool destroy = false;
     ThreadEvent *te = NULL;
+
+    int cycle_cnt = 0;
+
     CuTimerService *timer_s = static_cast<CuTimerService *>(d->serviceProvider->get(CuServices::Timer));
     while(1)
     {
@@ -372,6 +375,7 @@ void CuThread::run() {
         }
         else if(te->getType() == ThreadEvent::TimerExpired)
         {
+            printf("CuThread.run. TimerExpired this thread 0x%ld\n", pthread_self());
             // if at least one activity needs the timer, the
             // service will restart it after execution.
             // tmr is single-shot and needs restart to prevent
@@ -399,6 +403,7 @@ void CuThread::run() {
                 }
             } // for activity iter
             if(timeo_restart > 0) {
+                printf("CuThread.run:   calling timer_s->restart CYCLE %d this thread 0x%ld\n", ++cycle_cnt, pthread_self());
                 timer_s->restart(timer, timeo_restart);
             }
         }

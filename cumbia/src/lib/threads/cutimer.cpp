@@ -64,6 +64,7 @@ int CuTimer::timeout() const
  */
 void CuTimer::reset() {
     m_skip = true;
+    printf("CuTimer.reset: calling m_wait.notify_one\n");
     m_wait.notify_one();
 }
 
@@ -84,13 +85,16 @@ void CuTimer::start(int millis)
     }
     else {
         if(m_pending > 0) {
+            printf("CuTimer.start: m_pending is true: calling reset\n");
             reset();
             //            m_last_start_pt = std::chrono::steady_clock::now();
         }
         else {
-            //            m_first_start_pt = m_last_start_pt = std::chrono::steady_clock::now();
+            printf("CuTimer.start: m_pending is false\n");
+                        m_first_start_pt = m_last_start_pt = std::chrono::steady_clock::now();
         }
         m_pending++;
+        printf("CuTimer.start: calling m_wait.notify_one from THREAD 0x%ld\n", pthread_self());
         m_wait.notify_one();
     }
 }
@@ -160,6 +164,9 @@ std::list<CuTimerListener *> CuTimer::listeners() {
  * The timer loop waits for the timeout to expire before quitting (if single shot)
  * or waiting again
  */
+
+int cycle_cnt = 0;
+
 void CuTimer::run()
 {
     std::unique_lock<std::mutex> lock(m_mutex);
@@ -168,29 +175,34 @@ void CuTimer::run()
         timeout = m_timeout;
         std::cv_status status;
         std::chrono::milliseconds ms{timeout};
-        //        printf("CuTimer.run: waiting for condition %p\n", this);
+        printf("CuTimer.run: waiting for condition (TIMER) %p THREAD 0x%ld\n", this, pthread_self());
         status = m_wait.wait_for(lock, ms);
         if(m_skip && !m_quit) {
-            //            printf("\e[1;31mCuTimer.run: cycle %d: skipping this time... pending %d\e[0m\n", cycle_cnt, static_cast<int>(m_pending));
+            printf("\e[1;31mCuTimer.run: cycle %d: skipping this time... pending %d THREAD 0x%ld\e[0m\n", cycle_cnt, static_cast<int>(m_pending), pthread_self());
             m_skip = false;
         }
         else {
-            //            printf("\n------------------\e[1;32mCYCLE %d------------------\n", ++cycle_cnt);
+            printf("\n------------------CYCLE %d status is %d ------------------\n", ++cycle_cnt, status);
+            if(status == std::cv_status::no_timeout)
+                printf("CuTimer.run: STATUS IS no_timeout!!!!!!!!!!!!!!\n");
             m_pause ?  timeout = ULONG_MAX : timeout = m_timeout;
-            if(status == std::cv_status::timeout && !m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
+            if(/*status == std::cv_status::timeout && */!m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
             {
                 std::list<CuTimerListener *>::const_iterator it;
                 for(it = m_listeners.begin(); it != m_listeners.end(); ++it) {
                     (*it)->onTimeout(this);
                 }
-                //                auto t1 = std::chrono::steady_clock::now();
-                //                long int delta_first_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_first_start_pt).count();
-                //                long int delta_last_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_last_start_pt).count();
-                //                printf("\e[0;32mCuTimer.run: notified timeout after %ld ms instead of %ldus\e[0m\t\t\t(\e[1;31mdelay %ldus\e[0m)\n\n",
-                //                       delta_first_ms, delta_last_ms, -delta_last_ms+delta_first_ms);
+                                auto t1 = std::chrono::steady_clock::now();
+                                long int delta_first_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_first_start_pt).count();
+                                long int delta_last_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_last_start_pt).count();
+                                printf("\e[0;32mCuTimer.run: notified timeout after %ld ms instead of %ldus\e[0m\t\t\t(\e[1;31mdelay %ldus\e[0m)  THREAD 0x%ld\n",
+                                       delta_first_ms, delta_last_ms, -delta_last_ms+delta_first_ms, pthread_self());
             }
+            else
+                printf("CuTimer.run: status is %d m_quit is %d m_pause is %d\n", status, m_quit, m_pause);
             m_pending = 0;
             if(!m_quit) { // wait for next start()
+                printf("CuTimer.run: ---- END OF CYCLE ---- waiting for next start (m_wait.wait(lock)  THREAD 0x%ld ) \n", pthread_self());
                 m_wait.wait(lock);
             }
         } // !m_skip

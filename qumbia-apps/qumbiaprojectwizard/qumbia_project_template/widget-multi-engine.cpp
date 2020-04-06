@@ -20,7 +20,6 @@
 #include <cutcontrolswriter.h>
 #include <cutango-world.h>
 #include <cutcontrols-utils.h>
-#include <cutangoreplacewildcards.h>
 #endif
 #ifdef CUMBIA_RANDOM_VERSION
 #include <cumbiarandom.h>
@@ -33,6 +32,8 @@
 #include <cumbiawebsocket.h>
 #include <cumbiawsworld.h>
 #include <cuwsreader.h> // for CuWSReaderFactory
+#include <cuwstangoreplacewildcards.h>
+#include <cuwstangohelper.h>
 #endif
 
 #include <QtDebug>
@@ -60,7 +61,17 @@ $MAINCLASS$::$MAINCLASS$(CumbiaPool *cumbia_pool, QWidget *parent) :
     parser.addVersionOption();
     parser.addOption(ws_url_o);
     parser.process(*qApp);
-    if(parser.isSet(ws_url_o)) {
+    QString ws_url;
+    if(parser.isSet(ws_url_o))
+        ws_url = parser.value(ws_url_o);
+    //
+    // WebAssembly
+    // -----------
+    // Please read https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/cumbia/html/cumbia_wasm.html
+    //
+    // ws_url = "ws://localhost:12702";  // if command line args is not working (see link above for patch)
+    //
+    if(!ws_url.isEmpty()) {
         // setup Cumbia web socket with the web socket address and the host name to prepend to the sources
         // for the HTTP requests
         CumbiaWSWorld wsw;
@@ -81,13 +92,11 @@ $MAINCLASS$::$MAINCLASS$(CumbiaPool *cumbia_pool, QWidget *parent) :
         // across native tango engine and websocket proxy server.
         // This allows to leave the application code unchanged. See (*) below
         //
-    #ifdef QUMBIA_TANGO_CONTROLS_VERSION
-        CuTangoReplaceWildcards *tgrwi = new CuTangoReplaceWildcards;
+        CuWsTangoReplaceWildcards *tgrwi = new CuWsTangoReplaceWildcards;
         cuws->addReplaceWildcardI(tgrwi);
         CuTangoWorld tw;
         m_ctrl_factory_pool.setSrcPatterns("ws", tw.srcPatterns());
         cu_pool->setSrcPatterns("ws", tw.srcPatterns());
-    #endif // #ifdef QUMBIA_TANGO_CONTROLS_VERSION
         //
         // open the websocket
         //

@@ -4,22 +4,27 @@
 #include <QString>
 #include <QtDebug>
 #include <QTimer>
+#include <QLabel>
+#include <QGridLayout>
 
 QthWidget::QthWidget(QWidget *parent)
     : QWidget(parent)
 {
+    QGridLayout *lo = new QGridLayout(this);
+    QLabel *label = new QLabel(this);
+    lo->addWidget(label, 0, 0, 1, 1);
     bool thread = true;
     if(thread) {
         QThread *updater = new Thread(this);
         qobject_cast<Thread *>(updater)->start();
-        connect(updater, SIGNAL(onUpdate(QString)), ui->label, SLOT(setText(QString)), Qt::QueuedConnection);
+        connect(updater, SIGNAL(onUpdate(QString)), label, SLOT(setText(QString)), Qt::QueuedConnection);
     }
     else {
         QTimer *t = new QTimer(this);
         t->setSingleShot(false);
         t->setInterval(1000);
         connect(t, SIGNAL(timeout()), this, SLOT(onTimeout()));
-        connect(this, SIGNAL(timerTxtReady(QString)), ui->label, SLOT(setText(QString)));
+        connect(this, SIGNAL(timerTxtReady(QString)), label, SLOT(setText(QString)));
         t->start();
     }
 }

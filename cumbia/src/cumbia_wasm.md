@@ -15,13 +15,13 @@ It contains basic information and further links, including a <a href="https://wi
 
 > cd emsdk
 
-Qt and cumbia libraries have been tested with chromium browser, the Emscripten version 1.38.30 and Qt 5.13
+Qt and cumbia libraries have been tested with chromium browser, the Emscripten version 1.38.47 and Qt 5.14
 
-> ./emsdk install emscripten-1.38.30  emscripten-tag-1.38.30-32bit  binaryen-tag-1.38.30-64bit  sdk-fastcomp-tag-1.38.30-64bit sdk-fastcomp-1.38.30-64bit
+> ./emsdk install emscripten-1.38.47-fastcomp
 
-> ./emsdk activate binaryen-tag-1.38.30-64bit  sdk-fastcomp-tag-1.38.30-64bit sdk-fastcomp-1.38.30-64bit
+> ./emsdk activate 1.38.47-fastcomp
 
-#### Qt build and installation
+### Qt build and installation
 
 > cd ~/devel
 
@@ -29,7 +29,7 @@ Qt and cumbia libraries have been tested with chromium browser, the Emscripten v
 
 > cd qt
 
-> git checkout 5.13.2
+> git checkout 5.14.2
 
 > ./init-repository
 
@@ -37,10 +37,19 @@ Set the environment for *emscripten*
 
 > source ~/devel/emsdk/emsdk_env.sh
 
+#### Command line arguments patch
+
+Check whether the following patch has been applied or not: it is important in order to pass command line arguments to
+applications
+
+https://codereview.qt-project.org/c/qt/qtbase/+/248624/6/src/plugins/platforms/wasm/qtloader.js#420
+
+#### Configure, build and install
+
 Configure Qt with *-feature-thread*, skip tests and examples
 Further options can be found executing  *./configure --help*
 
-> ./configure -xplatform wasm-emscripten -prefix /usr/local/qt-5.13.2-wasm -feature-thread -skip qtwebengine -nomake examples  -nomake tests -opensource -confirm-license  && make install
+> ./configure -xplatform wasm-emscripten -prefix /usr/local/qt-5.14.2-wasm -feature-thread -skip qtwebengine -skip qtquick3d  -skip qtpurchasing -skip qtserialport   -nomake examples  -nomake tests -opensource -confirm-license  && make -j9 && make install
 
 > make -j9
 

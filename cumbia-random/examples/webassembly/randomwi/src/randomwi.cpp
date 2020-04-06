@@ -30,6 +30,9 @@ Randomwi::Randomwi(CumbiaPool *cumbia_pool, QWidget *parent) :
 //    ui->quTrendPlot->setSource("random://th1/scalar/1/-10.0/10.2/r1");
     ui->quLabel->setSource("random://th1/scalar/1/-10.0/10.2/r1");
     ui->quCircularGauge->setSource("random://th1/scalar/1/-10.0/10.2/r1");
+//    ui->quLed->setSource("random://th1/scalar/bool/1/0/1/b1");
+//    ui->quTrendPlot->setSource("random://th1/scalar/1/-100.0/100.0/r2");
+//    ui->quSpectrumPlot->setSource("random://th1/spectrum/100/-100.0/100.0/r2");
 }
 
 Randomwi::~Randomwi()

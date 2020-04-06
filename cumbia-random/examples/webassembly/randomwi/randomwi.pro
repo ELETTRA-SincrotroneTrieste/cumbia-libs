@@ -49,9 +49,9 @@ TARGET   = bin/randomwi
 
 # unix:INCLUDEPATH +=  . ../../src
 
-QMAKE_CXXFLAGS += -s \"BINARYEN_TRAP_MODE=\'clamp\'\"
+#QMAKE_CXXFLAGS += -s \"BINARYEN_TRAP_MODE=\'clamp\'\"
 
-QMAKE_LFLAGS +=  -s \"BINARYEN_TRAP_MODE=\'clamp\'\"
+# QMAKE_LFLAGS +=  -s \"BINARYEN_TRAP_MODE=\'clamp\'\"
 
 
 message("-")
