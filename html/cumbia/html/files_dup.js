@@ -118,7 +118,7 @@ var files_dup =
     [ "cuthreadtokengeni.h", "cuthreadtokengeni_8h.html", [
       [ "CuThreadTokenGenI", "classCuThreadTokenGenI.html", "classCuThreadTokenGenI" ]
     ] ],
-    [ "cutimer.cpp", "cutimer_8cpp.html", null ],
+    [ "cutimer.cpp", "cutimer_8cpp.html", "cutimer_8cpp" ],
     [ "cutimer.h", "cutimer_8h.html", [
       [ "CuTimer", "classCuTimer.html", "classCuTimer" ]
     ] ],

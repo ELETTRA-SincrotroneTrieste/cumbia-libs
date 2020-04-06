@@ -99,14 +99,14 @@ $(document).ready(function(){initNavTree('cumbia_wasm.html',''); initResizable()
 <blockquote class="doxtable">
 <p>cd emsdk </p>
 </blockquote>
-<p>Qt and cumbia libraries have been tested with chromium browser, the Emscripten version 1.38.30 and Qt 5.13</p>
+<p>Qt and cumbia libraries have been tested with chromium browser, the Emscripten version 1.38.47 and Qt 5.14</p>
 <blockquote class="doxtable">
-<p>./emsdk install emscripten-1.38.30 emscripten-tag-1.38.30-32bit binaryen-tag-1.38.30-64bit sdk-fastcomp-tag-1.38.30-64bit sdk-fastcomp-1.38.30-64bit </p>
+<p>./emsdk install emscripten-1.38.47-fastcomp </p>
 </blockquote>
 <blockquote class="doxtable">
-<p>./emsdk activate binaryen-tag-1.38.30-64bit sdk-fastcomp-tag-1.38.30-64bit sdk-fastcomp-1.38.30-64bit </p>
+<p>./emsdk activate 1.38.47-fastcomp </p>
 </blockquote>
-<h3>Qt build and installation</h3>
+<h2>Qt build and installation</h2>
 <blockquote class="doxtable">
 <p>cd ~/devel </p>
 </blockquote>
@@ -117,7 +117,7 @@ $(document).ready(function(){initNavTree('cumbia_wasm.html',''); initResizable()
 <p>cd qt </p>
 </blockquote>
 <blockquote class="doxtable">
-<p>git checkout 5.13.2 </p>
+<p>git checkout 5.14.2 </p>
 </blockquote>
 <blockquote class="doxtable">
 <p>./init-repository </p>
@@ -126,9 +126,13 @@ $(document).ready(function(){initNavTree('cumbia_wasm.html',''); initResizable()
 <blockquote class="doxtable">
 <p>source ~/devel/emsdk/emsdk_env.sh </p>
 </blockquote>
+<h3>Command line arguments patch</h3>
+<p>Check whether the following patch has been applied or not: it is important in order to pass command line arguments to applications</p>
+<p><a href="https://codereview.qt-project.org/c/qt/qtbase/+/248624/6/src/plugins/platforms/wasm/qtloader.js#420">https://codereview.qt-project.org/c/qt/qtbase/+/248624/6/src/plugins/platforms/wasm/qtloader.js#420</a></p>
+<h3>Configure, build and install</h3>
 <p>Configure Qt with <em>-feature-thread</em>, skip tests and examples Further options can be found executing *./configure &ndash;help*</p>
 <blockquote class="doxtable">
-<p>./configure -xplatform wasm-emscripten -prefix /usr/local/qt-5.13.2-wasm -feature-thread -skip qtwebengine -nomake examples -nomake tests -opensource -confirm-license &amp;&amp; make install </p>
+<p>./configure -xplatform wasm-emscripten -prefix /usr/local/qt-5.14.2-wasm -feature-thread -skip qtwebengine -skip qtquick3d -skip qtpurchasing -skip qtserialport -nomake examples -nomake tests -opensource -confirm-license &amp;&amp; make -j9 &amp;&amp; make install </p>
 </blockquote>
 <blockquote class="doxtable">
 <p>make -j9 </p>
@@ -143,7 +147,7 @@ $(document).ready(function(){initNavTree('cumbia_wasm.html',''); initResizable()
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Thu Apr 2 2020 14:48:52 for cumbia by
+    <li class="footer">Generated on Mon Apr 6 2020 17:51:27 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

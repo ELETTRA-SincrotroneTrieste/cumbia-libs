@@ -131,5 +131,6 @@ var searchData=
   ['cuvariant_2eh_137',['cuvariant.h',['../cuvariant_8h.html',1,'']]],
   ['cuvariant_5ft_2eh_138',['cuvariant_t.h',['../cuvariant__t_8h.html',1,'']]],
   ['cuvariantprivate_2ecpp_139',['cuvariantprivate.cpp',['../cuvariantprivate_8cpp.html',1,'']]],
-  ['cuvariantprivate_2eh_140',['cuvariantprivate.h',['../cuvariantprivate_8h.html',1,'']]]
+  ['cuvariantprivate_2eh_140',['cuvariantprivate.h',['../cuvariantprivate_8h.html',1,'']]],
+  ['cycle_5fcnt_141',['cycle_cnt',['../cutimer_8cpp.html#a01a59db737c057b6a45251aa6b6b4769',1,'cutimer.cpp']]]
 ];
