@@ -38,6 +38,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         cumbiawebsocket.cpp \
+    cuwsactionwriter.cpp \
+    cuwsactionwriterconf.cpp \
+    cuwscontrolswriter.cpp \
     cuwsreader.cpp \
     cumbiawsworld.cpp \
     cuwsactionfactoryservice.cpp \
@@ -52,6 +55,9 @@ SOURCES += \
 HEADERS += \
         cumbiawebsocket.h \
         cumbia-websocket_global.h \
+    cuwsactionwriter.h \
+    cuwsactionwriterconf.h \
+    cuwscontrolswriter.h \
     cuwsreader.h \
     cumbiawsworld.h \
     cuwsactionfactoryservice.h \

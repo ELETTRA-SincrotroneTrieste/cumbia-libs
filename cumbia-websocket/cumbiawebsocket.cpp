@@ -174,8 +174,7 @@ CuWSClient *CumbiaWebSocket::websocketClient() const {
  *
  * @see CuWSClient::onMessageReceived
  */
-void CumbiaWebSocket::onUpdate(const QString &message)
-{
+void CumbiaWebSocket::onUpdate(const QString &message) {
     // 1. extract src
     QJsonParseError jpe;
     QJsonDocument jsd = QJsonDocument::fromJson(message.toUtf8(), &jpe);
@@ -183,8 +182,13 @@ void CumbiaWebSocket::onUpdate(const QString &message)
 
     jsd["event"].toString().length() > 0 ? src = jsd["event"].toString().toStdString() : src = jsd["src"].toString().toStdString();
 
-    // 2. find action: data from websocket is always related to readers
-    CuWSActionI *action = findAction(src, CuWSActionI::Reader);
+    // 2a. find action amongst readers
+    QString atype = jsd["atype"].toString();
+    CuWSActionI::Type t = CuWSActionI::Reader;
+    if(atype == "conf") t = CuWSActionI::WriterConfig;
+    else if(atype == "write") t = CuWSActionI::Writer;
+
+    CuWSActionI *action = findAction(src, t);
     if(action) {
         // 3. let the action decode the content (according to data format, type, and so on) and notify the listeners
         action->decodeMessage(jsd);

@@ -33,6 +33,10 @@ Qt and cumbia libraries have been tested with chromium browser, the Emscripten v
 
 > ./init-repository
 
+#### init-repository excluding some modules:
+
+> ./init-repository --module-subset=all,-qtwayland,-qtx11extras,-qtwebengine,-qtpim,-qtquick3d,-qtmacextras
+
 Set the environment for *emscripten*
 
 > source ~/devel/emsdk/emsdk_env.sh

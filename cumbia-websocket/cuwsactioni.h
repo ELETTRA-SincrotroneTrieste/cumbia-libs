@@ -13,7 +13,7 @@ class CuWSActionI
 {
 public:
 
-    enum Type { Reader = 0, Writer, AttConfig, DbReadProp, DbWriteProp };
+    enum Type { Reader = 0, Writer, WriterConfig, DbReadProp, DbWriteProp };
 
     /*! \brief virtual destructor, to make compilers happy
      */
