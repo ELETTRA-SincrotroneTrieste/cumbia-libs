@@ -175,7 +175,6 @@ void QuTrendPlot::update(const CuData &da)
     if(da.containsKey("timestamp_ms") && crv) {
         CuVariant ts = da["timestamp_ms"];
         ts.getType() == CuVariant::LongInt ? x = static_cast<qint64>(ts.toLongInt()) : x = ts.toDouble();
-        printf("QuTrendPlot.onUpdate timestamp in double %f from type %s\n", x, ts.dataTypeStr(ts.getType()).c_str());
     }
     else
         x = crv->size() > 0 ? crv->x(crv->size() - 1) + 1 : 0;
