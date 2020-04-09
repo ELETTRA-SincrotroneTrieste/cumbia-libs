@@ -164,19 +164,23 @@ WebassWebso::WebassWebso(CumbiaPool *cumbia_pool, QWidget *parent) :
     la->setSource("$1/double_scalar");
     lo->addWidget(la, 0, 0, 1, 10);
     QuTrendPlot *tp = new QuTrendPlot(this, cu_pool, m_ctrl_factory_pool);
-//    tp->setSources(QStringList() << "$1/double_scalar" /*<< "$1/long_scalar"*/);
+    tp->setSources(QStringList() << "$1/double_scalar" /*<< "$1/long_scalar"*/);
     lo->addWidget(tp, 1, 0, 5, 10);
     QLabel *swsl = new QLabel("Switch States", this);
+    QuLabel *stl = new QuLabel(this, cu_pool, m_ctrl_factory_pool);
+    stl->setSource("$1->State");
     QuButton *bu = new QuButton(this, cu_pool, m_ctrl_factory_pool);
     bu->setTarget("$1->SwitchStates");
+    bu->setText("State");
     QLabel *dsl = new QLabel("double_scalar", this);
     QuApplyNumeric *an = new QuApplyNumeric(this, cu_pool, m_ctrl_factory_pool);
     an->setTarget("$1/double_scalar");
 
     lo->addWidget(swsl, 6, 0, 1, 1);
-    lo->addWidget(bu, 6, 1, 1, 1);
-    lo->addWidget(dsl, 6, 2, 1, 1);
-    lo->addWidget(an, 6, 3, 1, 1);
+    lo->addWidget(stl, 6, 1, 1, 1);
+    lo->addWidget(bu, 6, 2, 1, 1);
+    lo->addWidget(dsl, 6, 3, 1, 1);
+    lo->addWidget(an, 6, 4, 1, 1);
 
 //    QuSpectrumPlot *sp = new QuSpectrumPlot(this, cu_pool, m_ctrl_factory_pool);
 //    sp->setSources(QStringList() << "$1/double_spectrum_ro" << "$1/long_spectrum_ro");

@@ -38,13 +38,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         cumbiawebsocket.cpp \
-    cuwsactionwriter.cpp \
-    cuwsactionwriterconf.cpp \
+    cuwscontrolsreader.cpp \
     cuwscontrolswriter.cpp \
-    cuwsreader.cpp \
     cumbiawsworld.cpp \
     cuwsactionfactoryservice.cpp \
     cuwsactionreader.cpp \
+    cuwsactionwriter.cpp \
+    cuwsactionconf.cpp \
     protocol/tango/cuwsprotocolhelpers.cpp \
     protocol/tango/cuwstangohelper.cpp \
     protocol/tango/cuwstangoreplacewildcards.cpp \
@@ -55,15 +55,15 @@ SOURCES += \
 HEADERS += \
         cumbiawebsocket.h \
         cumbia-websocket_global.h \
-    cuwsactionwriter.h \
-    cuwsactionwriterconf.h \
+    cuwscontrolsreader.h \
     cuwscontrolswriter.h \
-    cuwsreader.h \
     cumbiawsworld.h \
     cuwsactionfactoryservice.h \
     cuwsactioni.h \
     cuwsactionfactoryi.h \
     cuwsactionreader.h \
+    cuwsactionconf.h \
+    cuwsactionwriter.h \
     protocol/cuwsprotocolhelper_i.h \
     protocol/tango/cuwsprotocolhelpers.h \
     protocol/tango/cuwstangohelper.h \

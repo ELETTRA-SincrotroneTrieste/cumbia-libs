@@ -152,18 +152,9 @@ void CuWSActionReader::addDataListener(CuDataListener *l)
 
 void CuWSActionReader::removeDataListener(CuDataListener *l)
 {
-    if(l->invalid())
-    {
-        d->listeners.erase(l);
-        if(!d->listeners.size()) {
-            stop();
-        }
-    }
-    else if(d->listeners.size() == 1) {
+    d->listeners.erase(l);
+    if(d->listeners.size() == 0)
         stop();
-    }
-    else
-        d->listeners.erase(l);
 }
 
 size_t CuWSActionReader::dataListenersCount()
@@ -173,13 +164,10 @@ size_t CuWSActionReader::dataListenersCount()
 
 void CuWSActionReader::decodeMessage(const QJsonDocument &json)
 {
-    qDebug () << __PRETTY_FUNCTION__ << "decoding " << json;
     CuData res = getToken();
     CumbiaWSWorld wsw;
     wsw.json_decode(json, res);
     for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it) {
-        printf("\e[1;32mCuWSActionReader.decodeMessage: posting update %s on listener %p\e[0m\n",
-               res.toString().c_str(), (*it));
         (*it)->onUpdate(res);
     }
 }
@@ -196,7 +184,6 @@ void CuWSActionReader::setOptions(const CuData &o) {
 void CuWSActionReader::onNetworkReplyFinished(QNetworkReply *reply)
 {
     QByteArray data = reply->readAll();
-    qDebug() << __PRETTY_FUNCTION__ <<  "data" << data << " error " << reply->errorString();
     QString requrl = reply->request().url().toString();
     if(requrl == d->http_url + QString::fromStdString(d->tsrc.getName())) {
         // we got the first reading of the source
@@ -211,7 +198,6 @@ void CuWSActionReader::onNetworkReplyFinished(QNetworkReply *reply)
             perr("CuWSActionReader.onNetworkReplyFinished: %s", qstoc(reply->errorString()));
         }
         else {
-            qDebug() << __PRETTY_FUNCTION__ << requrl;
             QString key = requrl.section('/', -1);
             d->source_configuration.add(key, QString(data).remove("\""));
             if(d->source_configuration.isComplete()) {
@@ -234,10 +220,11 @@ void CuWSActionReader::onNetworkReplyFinished(QNetworkReply *reply)
 void CuWSActionReader::start()
 {
     QString url_s = QString::fromStdString(d->tsrc.getName());
-    qDebug() << __PRETTY_FUNCTION__ << "http_url is " << d->http_url;
     if(d->http_url.isEmpty()) {
         // communicate over websocket only
         QString msg = QString("SUBSCRIBE %1").arg(url_s);
+        d->ws_client->sendMessage(msg);
+        msg = QString("CONF %1").arg(url_s);
         d->ws_client->sendMessage(msg);
     }
     else {
@@ -252,7 +239,6 @@ void CuWSActionReader::start()
             QNetworkRequest config_r;
             foreach(QString key, keys) {
                 config_r.setUrl(QUrl(d->http_url + url_s + "/" + key));
-                qDebug() << __PRETTY_FUNCTION__ << "Sending " << config_r.url().toString();
                 d->networkAccessManager->get(config_r);
             }
         }
@@ -261,9 +247,7 @@ void CuWSActionReader::start()
 
         QNetworkRequest subscribe_request(d->http_url + url_s);
         //    subscribe_request.setSslConfiguration(QSslConfiguration::defaultConfiguration());
-        //    pgreen2tmp("CuWSActionReader::start: subscribing to \"%s\"", qstoc(subscribe_request.url().toString()));
         d->networkAccessManager->sendCustomRequest(subscribe_request, QByteArray("SUBSCRIBE"));
-        //    qDebug() << __PRETTY_FUNCTION__ << "sendCustomRequest sent: reply ?" << r->errorString() << r->readAll();
     }
 }
 
@@ -285,5 +269,11 @@ void CuWSActionReader::stop()
         delete d->networkAccessManager;
         d->networkAccessManager = NULL;
     }
+    else {
+        // communicate over websocket only
+        QString msg = QString("UNSUBSCRIBE %1").arg(url_s);
+        d->ws_client->sendMessage(msg);
+    }
+    this->deleteLater();
 }
 

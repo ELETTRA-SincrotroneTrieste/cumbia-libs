@@ -157,7 +157,6 @@ void CuWsControlsWriter::clearTarget()
  *
  */
 void CuWsControlsWriter::execute() {
-    qDebug() << __PRETTY_FUNCTION__  << d->target << getArgs().toString().c_str();
     CuWSActionWriterFactory wtf;
     wtf.setWriteValue(getArgs());
     wtf.setConfiguration(getConfiguration());
@@ -188,8 +187,7 @@ void CuWsControlsWriter::setTarget(const QString &s) {
     // d->source is equal to 's' if no replacement is made
     for(int i = 0; i < rwis.size() && d->target == s; i++) // leave loop if s != d->source (=replacement made)
         d->target = rwis[i]->replaceWildcards(s, qApp->arguments());
-    qDebug() << __PRETTY_FUNCTION__ << "replace wildcards size " << rwis.size() << "target" << d->target;
-    CuWSActionWriterConfFactory wswconff;
+    CuWSActionConfFactory wswconff;
     wswconff.setOptions(d->w_options);
     d->cu_ws->addAction(d->target.toStdString(), d->tlistener, wswconff);
 }

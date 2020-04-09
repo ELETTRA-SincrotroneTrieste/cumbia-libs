@@ -48,7 +48,6 @@ CumbiaWebSocket::CumbiaWebSocket(const QString &websocket_url,
 
     // CuWSClient waits for messages on the websocket and invokes onUpdate on this
     // upon new data
-    qDebug() << __PRETTY_FUNCTION__ << "creating CuWsClient wirh utr" << websocket_url;
     d->cu_wscli = new CuWSClient(QUrl(websocket_url), this, NULL);
 
     m_init();
@@ -90,7 +89,6 @@ void CumbiaWebSocket::addAction(const std::string &source, CuDataListener *l, co
     {
         CuWSActionFactoryService *af =
                 static_cast<CuWSActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuWSActionFactoryService::CuWSActionFactoryServiceType)));
-
         CuWSActionI *a = af->findActive(source, f.getType());
         if(!a) {
             a = af->registerAction(source, f, d->cu_wscli, d->http_url);
@@ -179,10 +177,8 @@ void CumbiaWebSocket::onUpdate(const QString &message) {
     QJsonParseError jpe;
     QJsonDocument jsd = QJsonDocument::fromJson(message.toUtf8(), &jpe);
     std::string src;
-
     jsd["event"].toString().length() > 0 ? src = jsd["event"].toString().toStdString() : src = jsd["src"].toString().toStdString();
-
-    // 2a. find action amongst readers
+    // 2. find action amongst readers
     QString atype = jsd["atype"].toString();
     CuWSActionI::Type t = CuWSActionI::Reader;
     if(atype == "conf") t = CuWSActionI::WriterConfig;
@@ -192,7 +188,16 @@ void CumbiaWebSocket::onUpdate(const QString &message) {
     if(action) {
         // 3. let the action decode the content (according to data format, type, and so on) and notify the listeners
         action->decodeMessage(jsd);
+        if(action->exiting()) {
+            // unregister and delete one shot actions (write and conf)
+            // They set the exit flag to true after update
+            CuWSActionFactoryService *af =
+                    static_cast<CuWSActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuWSActionFactoryService::CuWSActionFactoryServiceType)));
+                af->unregisterAction(src, t);
+                delete action;
+
+        }
     }
     else
-        perr("CumbiaWebSocket::onUpdate: no action found with source %s", src.c_str());
+        perr("CumbiaWebSocket::onUpdate: no action found with source %s searched with type %d (%s)", src.c_str(), t, qstoc(atype));
 }

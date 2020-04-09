@@ -4,6 +4,7 @@
 #include <cudata.h>
 #include <QStringList>
 #include <QJsonArray>
+#include <QtDebug>
 #include <math.h>
 
 CumbiaWSWorld::CumbiaWSWorld()
@@ -35,50 +36,54 @@ bool CumbiaWSWorld::json_decode(const QJsonDocument &json, CuData &res)
     else {
         QJsonObject data_o = json["data"].toObject();
         if(!data_o.isEmpty()) {
-            foreach(const QString &vk,  QStringList() << "value" << "w_value") {
-                if(data_o.contains(vk)) {
-                    const std::string& svk = vk.toStdString();
-                    QJsonValue value = data_o[vk];
-                    if(!value.isNull() && value.isArray()) {
-                        res["data_format_str"] = std::string("vector");
-                        QJsonArray jarr = value.toArray();
-                        // decide type
-                        if(jarr.size() > 0 && jarr.at(0).isDouble()) {
-                            std::vector<double> vd;
-                            for(int i = 0; i < jarr.size(); i++) {
-                                QJsonValue ithval = jarr.at(i);
-                                vd.push_back(ithval.toDouble());
-                            }
-                            res[svk] = vd;
+            QStringList keys = data_o.keys();
+
+            // NOTE
+            // these are the keys storing values that necessary need to be converted to int
+            QStringList i_keys = QStringList() << "state" << "quality" << "writable" << "data_type" << "data_format";
+            QStringList special_keys = QStringList() << "timestamp" << "timestamp_us" << "timestamp_ms" << "err" << "error" << "msg";
+
+            foreach(QString k, keys + special_keys ) {
+                const QJsonValue &v = data_o[k];
+                const std::string &c = k.toStdString();
+                if(!i_keys.contains(k) && v.isArray()) {
+                    QJsonArray jarr = v.toArray();
+                    // decide type
+                    if(jarr.size() > 0 && jarr.at(0).isDouble()) {
+                        // all type of ints are saved as double in Json
+                        std::vector<double> vd;
+                        for(int i = 0; i < jarr.size(); i++) {
+                            QJsonValue ithval = jarr.at(i);
+                            vd.push_back(ithval.toDouble());
                         }
-                        else if(jarr.size() > 0 && jarr.at(0).isBool()) {
-                            std::vector<bool> vb;
-                            for(int i = 0; i < jarr.size(); i++) {
-                                QJsonValue ithval = jarr.at(i);
-                                vb.push_back(ithval.toBool());
-                            }
-                            res[svk] = vb;
-                        }
-                        else if(jarr.size() > 0 && jarr.at(0).isString()) {
-                            std::vector<std::string> vs;
-                            for(int i = 0; i < jarr.size(); i++) {
-                                QJsonValue ithval = jarr.at(i);
-                                vs.push_back(ithval.toString().toStdString());
-                            }
-                            res[svk] = vs;
-                        }
+                        res[c] = vd;
                     }
-                    else if(!value.isNull()){ // scalar
-                        res["data_format_str"] = std::string("scalar");
-                        if(value.isBool())
-                            res[svk] = value.toBool();
-                        else if(value.isDouble())
-                            res[svk] = value.toDouble();
-                        else if(value.isString())
-                            res[svk] = value.toString().toStdString();
+                    else if(jarr.size() > 0 && jarr.at(0).isBool()) {
+                        std::vector<bool> vb;
+                        for(int i = 0; i < jarr.size(); i++) {
+                            QJsonValue ithval = jarr.at(i);
+                            vb.push_back(ithval.toBool());
+                        }
+                        res[c] = vb;
+                    }
+                    else if(jarr.size() > 0 && jarr.at(0).isString()) {
+                        std::vector<std::string> vs;
+                        for(int i = 0; i < jarr.size(); i++) {
+                            QJsonValue ithval = jarr.at(i);
+                            vs.push_back(ithval.toString().toStdString());
+                        }
+                        res[c] = vs;
                     }
                 }
-            } // foreach(QString &vk..
+                else if(!i_keys.contains(k)) { // scalar
+                    if(v.isString())
+                        res[c] = v.toString().toStdString();
+                    else if(v.isBool())
+                        res[c] = v.toBool();
+                    else if(v.isDouble())
+                        res[c] = v.toDouble();
+                }
+            }
 
             // timestamp
             char *endptr;
@@ -105,27 +110,9 @@ bool CumbiaWSWorld::json_decode(const QJsonDocument &json, CuData &res)
                 res["msg"] = data_o["msg"].toString().toStdString();
             }
 
-            // type: property: configuration
-            if(data_o["type"].toString() == "property") {
-                QStringList keys = QStringList () << "abs_change" << "archive_abs_change" << "archive_period"
-                                                  << "archive_rel_change" <<  "description" <<  "disp_level" << "display_unit"
-                                                  << "label"<< "max" << "max_alarm"<< "max_dim_x"  << "max_dim_y" << "max_warning" << "min"
-                                                  << "min_alarm" << "min_warning" << "periodic_period"  << "rel_change" << "root_attr_name"
-                                                  << "standard_unit" << "writable_attr_name" << "delta_t";
-                foreach(QString k, keys) {
-                    if(data_o.contains(k))
-                        res[k.toStdString()] = data_o[k].toString().toStdString();
-                }
-            }
-            // quality, state
-            QStringList keys = QStringList() << "data_format_str" << "state_color" << "quality_color" << "activity" << "quality_string" << "type";
-            foreach(const QString& k, keys) {
-                if(data_o.contains(k))
-                    res[k.toStdString()] = data_o[k].toString().toStdString();
-            }
+            //
             // to int
-            keys = QStringList() << "state" << "quality" << "writable" << "data_type" << "data_format";
-            foreach(const QString& k, keys)
+            foreach(const QString& k, i_keys)
                 if(data_o.contains(k))
                     res[k.toStdString()] = data_o[k].toInt();
         }

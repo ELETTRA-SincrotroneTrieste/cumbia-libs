@@ -44,12 +44,12 @@ private:
     CuVariant m_write_val;
 };
 
-class CuWSActionWriterConfFactory : public CuWSActionFactoryI
+class CuWSActionConfFactory : public CuWSActionFactoryI
 {
 public:
     void setOptions(const CuData &o);
 
-    virtual ~CuWSActionWriterConfFactory();
+    virtual ~CuWSActionConfFactory();
 
     // CuTangoActionFactoryI interface
 public:

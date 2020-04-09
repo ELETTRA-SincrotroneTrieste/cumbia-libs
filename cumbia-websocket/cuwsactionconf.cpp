@@ -1,6 +1,6 @@
 #include "cumbiawsworld.h"
 #include "cuwsactionreader.h"
-#include "cuwsactionwriterconf.h"
+#include "cuwsactionconf.h"
 
 #include "cuwsclient.h"
 #include "ws_source.h"
@@ -21,18 +21,22 @@
 class CuWsActionWriterConfPrivate
 {
 public:
+    CuWsActionWriterConfPrivate() : exit(false), networkAccessManager(nullptr),
+        proto_helper_i(nullptr), proto_helpers(nullptr), ws_client(nullptr) {
+
+    }
     std::set<CuDataListener *> listeners;
     WSSource wsconf_src;
-    CuWSClient *ws_client;
     QString http_url;
     bool exit;
     CuData property_d, value_d, options;
     QNetworkAccessManager *networkAccessManager;
-    CuWsProtocolHelpers *proto_helpers;
     ProtocolHelper_I *proto_helper_i;
+    CuWsProtocolHelpers *proto_helpers;
+    CuWSClient *ws_client;
 };
 
-CuWsActionWriterConf::CuWsActionWriterConf(const WSSource &src, CuWSClient *wscli, const QString &http_url)
+CuWsActionConf::CuWsActionConf(const WSSource &src, CuWSClient *wscli, const QString &http_url)
 {
     d = new CuWsActionWriterConfPrivate;
     d->ws_client = wscli;
@@ -40,36 +44,42 @@ CuWsActionWriterConf::CuWsActionWriterConf(const WSSource &src, CuWSClient *wscl
     d->wsconf_src = src;
 }
 
-void CuWsActionWriterConf::onNetworkReplyFinished(QNetworkReply *) {
+CuWsActionConf::~CuWsActionConf()
+{
+    pdelete("~CuWsActionConf %p", this);
+    if(d->networkAccessManager) delete d->networkAccessManager;
+    delete d;
+}
+
+void CuWsActionConf::onNetworkReplyFinished(QNetworkReply *) {
 
 }
 
-WSSource CuWsActionWriterConf::getSource() const {
+WSSource CuWsActionConf::getSource() const {
     return d->wsconf_src;
 }
 
-CuWSActionI::Type CuWsActionWriterConf::getType() const {
+CuWSActionI::Type CuWsActionConf::getType() const {
     return CuWSActionI::WriterConfig;
 }
 
-void CuWsActionWriterConf::addDataListener(CuDataListener *l) {
+void CuWsActionConf::addDataListener(CuDataListener *l) {
     d->listeners.insert(l);
 }
 
-void CuWsActionWriterConf::removeDataListener(CuDataListener *l)
+void CuWsActionConf::removeDataListener(CuDataListener *l)
 {
     d->listeners.erase(l);
     if(d->listeners.size() == 0)
         stop();
 }
 
-size_t CuWsActionWriterConf::dataListenersCount() {
+size_t CuWsActionConf::dataListenersCount() {
     return d->listeners.size();
 }
 
-void CuWsActionWriterConf::start() {
+void CuWsActionConf::start() {
     QString url_s = QString::fromStdString(d->wsconf_src.getName());
-    qDebug() << __PRETTY_FUNCTION__ << "write url is " << url_s << "http_url is " << d->http_url;
     if(d->http_url.isEmpty()) { // communicate over websocket only
         QString msg = QString("CONF %1").arg(url_s);
         d->ws_client->sendMessage(msg);
@@ -79,22 +89,22 @@ void CuWsActionWriterConf::start() {
     }
 }
 
-bool CuWsActionWriterConf::exiting() const {
+bool CuWsActionConf::exiting() const {
     return d->exit;
 }
 
-void CuWsActionWriterConf::stop() {
+void CuWsActionConf::stop() {
+    d->listeners.clear();
     d->exit = true;
 }
 
-void CuWsActionWriterConf::decodeMessage(const QJsonDocument &json) {
-    qDebug () << __PRETTY_FUNCTION__ << "decoding " << json;
+void CuWsActionConf::decodeMessage(const QJsonDocument &json) {
     CuData res("src", d->wsconf_src.getName());
     CumbiaWSWorld wsw;
     wsw.json_decode(json, res);
+    printf("\e[1;34mCuWsActionConf::decodeMessage got data %s\e[0m\n", res.toString().c_str());
     for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it) {
-        printf("\e[1;CuWsActionWriterConf.decodeMessage: posting update %s on listener %p\e[0m\n",
-               res.toString().c_str(), (*it));
         (*it)->onUpdate(res);
     }
+    stop(); // activate exit flag
 }

@@ -1,7 +1,7 @@
 #include "cuwsactionfactories.h"
 #include "cuwsactionreader.h"
 #include "cuwsactionwriter.h"
-#include "cuwsactionwriterconf.h"
+#include "cuwsactionconf.h"
 #include "cumbiawebsocket.h"
 
 class CuWSClient;
@@ -50,6 +50,8 @@ CuWSActionWriterFactory::~CuWSActionWriterFactory() {
 CuWSActionI *CuWSActionWriterFactory::create(const string &s, CuWSClient *cli, const QString &http_addr) const
 {
     CuWsActionWriter *w = new CuWsActionWriter(s, cli, http_addr);
+    w->setWriteValue(m_write_val);
+    w->setConfiguration(configuration);
     return w;
 }
 
@@ -57,18 +59,18 @@ CuWSActionI::Type CuWSActionWriterFactory::getType() const {
     return CuWSActionI::Writer;
 }
 
-void CuWSActionWriterConfFactory::setOptions(const CuData &o) {
+void CuWSActionConfFactory::setOptions(const CuData &o) {
     options = o;
 }
 
-CuWSActionWriterConfFactory::~CuWSActionWriterConfFactory() {
+CuWSActionConfFactory::~CuWSActionConfFactory() {
 
 }
 
-CuWSActionI *CuWSActionWriterConfFactory::create(const string &s, CuWSClient *cli, const QString &http_addr) const {
-    return new CuWsActionWriterConf(s, cli, http_addr);
+CuWSActionI *CuWSActionConfFactory::create(const string &s, CuWSClient *cli, const QString &http_addr) const {
+    return new CuWsActionConf(s, cli, http_addr);
 }
 
-CuWSActionI::Type CuWSActionWriterConfFactory::getType() const {
+CuWSActionI::Type CuWSActionConfFactory::getType() const {
     return CuWSActionI::WriterConfig;
 }

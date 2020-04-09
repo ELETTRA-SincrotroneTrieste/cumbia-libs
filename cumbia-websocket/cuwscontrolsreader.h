@@ -1,5 +1,5 @@
-#ifndef CUWSREADER_H
-#define CUWSREADER_H
+#ifndef CUWSCONTROLSREADER_H
+#define CUWSCONTROLSREADER_H
 
 #include <QString>
 #include <cucontrolsfactories_i.h>
@@ -27,12 +27,12 @@ private:
     CuWSReaderFactoryPrivate *d;
 };
 
-class CuWSReader : public CuControlsReaderA
+class CuWsControlsReader : public CuControlsReaderA
 {
 public:
-    CuWSReader(Cumbia *cumbia, CuDataListener *tl);
+    CuWsControlsReader(Cumbia *cumbia, CuDataListener *tl);
 
-    virtual ~CuWSReader();
+    virtual ~CuWsControlsReader();
 
     void setSource(const QString& s);
 

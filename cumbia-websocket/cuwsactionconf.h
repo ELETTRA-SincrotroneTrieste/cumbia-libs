@@ -1,5 +1,5 @@
-#ifndef CUWSACTIONWRITERCONF_H
-#define CUWSACTIONWRITERCONF_H
+#ifndef CUWSACTIONCONF_H
+#define CUWSACTIONCONF_H
 
 #include <cuwsactioni.h>
 class CuWsActionWriterConfPrivate;
@@ -9,12 +9,12 @@ class CuWSClient;
 
 #include <QObject>
 
-class CuWsActionWriterConf : public QObject, public CuWSActionI
+class CuWsActionConf : public QObject, public CuWSActionI
 {
     Q_OBJECT
 public:
-    CuWsActionWriterConf(const WSSource& src, CuWSClient *wscli, const QString& http_url);
-
+    CuWsActionConf(const WSSource& src, CuWSClient *wscli, const QString& http_url);
+    ~CuWsActionConf();
 private slots:
     void onNetworkReplyFinished(QNetworkReply*);
 

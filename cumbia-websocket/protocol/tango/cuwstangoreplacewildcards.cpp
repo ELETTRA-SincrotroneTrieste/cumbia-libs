@@ -41,7 +41,6 @@ QString CuWsTangoReplaceWildcards::replaceWildcards(const QString &s, const QStr
     int i0;
     d->args.isEmpty() ? args = _args : args = d->args;
     d->args.isEmpty() ? i0 = 1 : i0 = 0;
-    qDebug() << __PRETTY_FUNCTION__ << "using args " << args << "d_args" << d->args << "_args" << args;
     for (int i = i0; i < args.size(); i++)
     {
        if(QRegExp(DEVICE_REGEXP).exactMatch(args[i]))

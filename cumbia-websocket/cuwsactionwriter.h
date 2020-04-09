@@ -14,6 +14,7 @@ class CuWsActionWriter : public QObject, public CuWSActionI
     Q_OBJECT
 public:
     CuWsActionWriter(const WSSource& target, CuWSClient *wscli, const QString& http_url);
+    ~CuWsActionWriter();
     void setWriteValue(const CuVariant& w);
     void setConfiguration(const CuData& co);
 
