@@ -52,24 +52,28 @@ $(function() {
 <area shape="rect" href="classCumbiaWSWorld.html" title=" " alt="" coords="5,5,136,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_1.png" border="0" usemap="#CuWSActionFactoryI" alt=""/>
-<map name="CuWSActionFactoryI" id="CuWSActionFactoryI">
-<area shape="rect" href="classCuWSActionFactoryI.html" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="5,5,159,32"/>
-<area shape="rect" href="classCuWSActionReaderFactory.html" title=" " alt="" coords="207,5,401,32"/>
+<tr><td><img src="inherit_graph_1.png" border="0" usemap="#CuWsActionConf" alt=""/>
+<map name="CuWsActionConf" id="CuWsActionConf">
+<area shape="rect" href="classCuWSActionI.html" title=" " alt="" coords="5,56,112,83"/>
+<area shape="rect" href="classCuWsActionConf.html" title=" " alt="" coords="169,5,299,32"/>
+<area shape="rect" href="classCuWSActionReader.html" title=" " alt="" coords="160,56,308,83"/>
+<area shape="rect" href="classCuWsActionWriter.html" title=" " alt="" coords="164,107,304,133"/>
+<area shape="rect" title=" " alt="" coords="21,107,96,133"/>
+<area shape="rect" href="classCuWSClient.html" title=" " alt="" coords="185,157,283,184"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_2.png" border="0" usemap="#CuWSActionFactoryService" alt=""/>
+<tr><td><img src="inherit_graph_2.png" border="0" usemap="#CuWSActionFactoryI" alt=""/>
+<map name="CuWSActionFactoryI" id="CuWSActionFactoryI">
+<area shape="rect" href="classCuWSActionFactoryI.html" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="5,56,159,83"/>
+<area shape="rect" href="classCuWSActionConfFactory.html" title=" " alt="" coords="215,5,393,32"/>
+<area shape="rect" href="classCuWSActionReaderFactory.html" title=" " alt="" coords="207,56,401,83"/>
+<area shape="rect" href="classCuWSActionWriterFactory.html" title=" " alt="" coords="209,107,399,133"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_3.png" border="0" usemap="#CuWSActionFactoryService" alt=""/>
 <map name="CuWSActionFactoryService" id="CuWSActionFactoryService">
 <area shape="rect" title=" " alt="" coords="5,5,96,32"/>
 <area shape="rect" href="classCuWSActionFactoryService.html" title="implements CuServiceI interface and provides a service to register, unregister and find Websocket act..." alt="" coords="144,5,341,32"/>
-</map>
-</td></tr>
-<tr><td><img src="inherit_graph_3.png" border="0" usemap="#CuWSActionReader" alt=""/>
-<map name="CuWSActionReader" id="CuWSActionReader">
-<area shape="rect" href="classCuWSActionI.html" title=" " alt="" coords="5,5,112,32"/>
-<area shape="rect" href="classCuWSActionReader.html" title=" " alt="" coords="160,5,308,32"/>
-<area shape="rect" title=" " alt="" coords="21,56,96,83"/>
-<area shape="rect" href="classCuWSClient.html" title=" " alt="" coords="185,56,283,83"/>
 </map>
 </td></tr>
 <tr><td><img src="inherit_graph_4.png" border="0" usemap="#CuWSClientListener" alt=""/>
@@ -79,24 +83,36 @@ $(function() {
 <area shape="rect" href="classCuWSClientListener.html" title=" " alt="" coords="5,56,156,83"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_5.png" border="0" usemap="#CuWSReader" alt=""/>
-<map name="CuWSReader" id="CuWSReader">
+<tr><td><img src="inherit_graph_5.png" border="0" usemap="#CuWsControlsReader" alt=""/>
+<map name="CuWsControlsReader" id="CuWsControlsReader">
 <area shape="rect" title=" " alt="" coords="5,5,153,32"/>
-<area shape="rect" href="classCuWSReader.html" title=" " alt="" coords="201,5,308,32"/>
+<area shape="rect" href="classCuWsControlsReader.html" title=" " alt="" coords="201,5,360,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_6.png" border="0" usemap="#CuWSReaderFactory" alt=""/>
+<tr><td><img src="inherit_graph_6.png" border="0" usemap="#CuWsControlsWriter" alt=""/>
+<map name="CuWsControlsWriter" id="CuWsControlsWriter">
+<area shape="rect" title=" " alt="" coords="5,5,148,32"/>
+<area shape="rect" href="classCuWsControlsWriter.html" title="implements CuControlsWriterA abstract class and provides an interface to connect a Tango writer to a ..." alt="" coords="196,5,349,32"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_7.png" border="0" usemap="#CuWsControlsWriterFactory" alt=""/>
+<map name="CuWsControlsWriterFactory" id="CuWsControlsWriterFactory">
+<area shape="rect" title=" " alt="" coords="5,5,189,32"/>
+<area shape="rect" href="classCuWsControlsWriterFactory.html" title="implements CuControlsWriterFactoryI and creates Websocket writers Given a pointer to a Cumbia object ..." alt="" coords="237,5,437,32"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_8.png" border="0" usemap="#CuWSReaderFactory" alt=""/>
 <map name="CuWSReaderFactory" id="CuWSReaderFactory">
 <area shape="rect" title=" " alt="" coords="5,5,196,32"/>
 <area shape="rect" href="classCuWSReaderFactory.html" title=" " alt="" coords="244,5,397,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_7.png" border="0" usemap="#WSSource" alt=""/>
+<tr><td><img src="inherit_graph_9.png" border="0" usemap="#WSSource" alt=""/>
 <map name="WSSource" id="WSSource">
 <area shape="rect" href="classWSSource.html" title=" " alt="" coords="5,5,92,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_8.png" border="0" usemap="#WSSourceConfiguration" alt=""/>
+<tr><td><img src="inherit_graph_10.png" border="0" usemap="#WSSourceConfiguration" alt=""/>
 <map name="WSSourceConfiguration" id="WSSourceConfiguration">
 <area shape="rect" href="classWSSourceConfiguration.html" title=" " alt="" coords="5,5,180,32"/>
 </map>
@@ -105,7 +121,7 @@ $(function() {
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Apr 2 2020 14:49:16 for cumbia-websocket by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Apr 10 2020 14:29:31 for cumbia-websocket by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,196,32"/>
-<area shape="rect" id="node2" href="$classCuWSReaderFactory.html" title=" " alt="" coords="244,5,397,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,148,32"/>
+<area shape="rect" id="node2" href="$classCuWsControlsWriter.html" title="implements CuControlsWriterA abstract class and provides an interface to connect a Tango writer to a ..." alt="" coords="196,5,349,32"/>
 </map>

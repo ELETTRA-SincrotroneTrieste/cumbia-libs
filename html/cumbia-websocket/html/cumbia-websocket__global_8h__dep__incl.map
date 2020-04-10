@@ -1,7 +1,8 @@
 <map id="cumbia&#45;websocket_global.h" name="cumbia&#45;websocket_global.h">
-<area shape="rect" id="node1" title=" " alt="" coords="185,5,387,32"/>
-<area shape="rect" id="node2" href="$cumbiawebsocket_8h.html" title=" " alt="" coords="211,80,361,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="285,5,487,32"/>
+<area shape="rect" id="node2" href="$cumbiawebsocket_8h.html" title=" " alt="" coords="311,80,461,107"/>
 <area shape="rect" id="node3" href="$cumbiawebsocket_8cpp.html" title=" " alt="" coords="5,155,172,181"/>
 <area shape="rect" id="node4" href="$cuwsactionfactories_8cpp.html" title=" " alt="" coords="197,155,375,181"/>
-<area shape="rect" id="node5" href="$cuwsreader_8cpp.html" title=" " alt="" coords="399,155,522,181"/>
+<area shape="rect" id="node5" href="$cuwscontrolsreader_8cpp.html" title=" " alt="" coords="400,155,575,181"/>
+<area shape="rect" id="node6" href="$cuwscontrolswriter_8cpp.html" title=" " alt="" coords="599,155,770,181"/>
 </map>
