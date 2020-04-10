@@ -244,13 +244,23 @@ $(document).ready(function(){initNavTree('cumbia_wasm.html',''); initResizable()
 <blockquote class="doxtable">
 <p>make &amp;&amp; make install </p>
 </blockquote>
+<h2>Prepare applications for the web.</h2>
+<h3>Notes</h3>
+<p>Remember that Tango and EPICS modules haven't been built. This means that you need to access those systems through a proxy. A websocket proxy server can be downloaded from</p>
+<blockquote class="doxtable">
+<p><a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-websocket-proxy-server.git">https://github.com/ELETTRA-SincrotroneTrieste/cumbia-websocket-proxy-server.git</a> </p>
+</blockquote>
+<p>It is a small Qt project uniquely aimed at testing websocket based C++ and WebAssembly applications and not intended for production.</p>
+<p>Plugins that are available for C++ and are dynamically loaded at runtime (dbus, introspection, historical db, formula) are not suitable for WebAssembly builds.</p>
+<h3>Next steps</h3>
+<p>With these modules ready, you can now start writing and building applications for WebAssembly. Refer to <a href="../../cumbia-websocket/html/cumbia_ws_wasm.html">this page</a> for details. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Apr 10 2020 15:45:32 for cumbia by
+    <li class="footer">Generated on Fri Apr 10 2020 15:54:32 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>
