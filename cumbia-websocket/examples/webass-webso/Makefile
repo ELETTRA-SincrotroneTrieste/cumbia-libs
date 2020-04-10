@@ -17,7 +17,7 @@ CXX           = g++
 DEFINES       = -DCUMBIA_PRINTINFO -DQUMBIA_EPICS_CONTROLS -DQUMBIA_EPICS_CONTROLS_VERSION_STR="\"1.1.0\"" -DQUMBIA_EPICS_CONTROLS_VERSION=0x010100 -DCUMBIA_DEBUG_OUTPUT -DQUMBIA_TANGO_CONTROLS_VERSION_STR="\"1.1.0\"" -DQUMBIA_TANGO_CONTROLS_VERSION=0x010100 -DCUMBIA_PRINTINFO -DCUMBIA_RANDOM_VERSION_STR="\"1.1.1\"" -DCUMBIA_RANDOM_VERSION=0x010101 -DCUMBIA_PRINTINFO -DCUMBIA_WEBSOCKET_VERSION_STR="\"1.1.1\"" -DCUMBIA_WEBSOCKET_VERSION=0x010101 -DQT_CONCURRENT_LIB -DQT_PRINTSUPPORT_LIB -DQT_SVG_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -D__x86_64__ -D__linux__ -D__OSVERSION__=2 -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_X11EXTRAS_LIB -DQT_GUI_LIB -DQT_WEBSOCKETS_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -std=c++17 -Wall -std=c++17 -Wall -std=gnu++17 -Wall -std=c++11 -Wall -O2 -std=gnu++1z -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -I/usr/local/epics/base-7.0.3.1/include -I/usr/local/epics/base-7.0.3.1/include/os/Linux -I/usr/local/epics/base-7.0.3.1/include/compiler/gcc -I/usr/local/epics/base-7.0.3.1/include/os/compiler/clang -I/usr/local/cumbia-libs/include/qumbia-epics-controls -I/usr/local/cumbia-libs/include/qumbia-tango-controls -Iui -Isrc -I/usr/local/cumbia-libs/include/cumbia -I/usr/local/cumbia-libs/include/cumbia-qtcontrols -I/usr/local/cumbia-libs/include/cumbia-epics -I/usr/local/qwt-6.1.4/include -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt -isystem /usr/include/qt/QtCore -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtConcurrent -isystem /usr/include/qt/QtPrintSupport -isystem /usr/include/qt/QtSvg -isystem /usr/include/qt/QtOpenGL -I/usr/local/tango-9.3.3/include/tango -isystem /usr/include/pgm-5.2 -I/usr/local/omniorb-4.2.3/include -I/usr/local/cumbia-libs/include/cumbia-tango -I/usr/local/cumbia-libs/include/cumbia-random -I/usr/local/cumbia-libs/include/cumbia-websocket -isystem /usr/include/qt/QtX11Extras -isystem /usr/include/qt/QtWebSockets -isystem /usr/include/qt/QtNetwork -Imoc -I/usr/lib/qt/mkspecs/linux-g++
+INCPATH       = -I. -I/usr/local/epics/base-7.0.3.1/include -I/usr/local/epics/base-7.0.3.1/include/os/Linux -I/usr/local/epics/base-7.0.3.1/include/compiler/gcc -I/usr/local/epics/base-7.0.3.1/include/os/compiler/clang -I/usr/local/cumbia-libs/include/qumbia-epics-controls -I/usr/local/cumbia-libs/include/qumbia-tango-controls -Iui -Isrc -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-epics -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/qumbia-epics-controls -I/usr/local/qwt-6.1.4/include -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt -isystem /usr/include/qt/QtCore -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtConcurrent -isystem /usr/include/qt/QtPrintSupport -isystem /usr/include/qt/QtSvg -isystem /usr/include/qt/QtOpenGL -I/usr/local/tango-9.3.3/include/tango -isystem /usr/include/pgm-5.2 -I/usr/local/omniorb-4.2.3/include -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-tango -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/qumbia-tango-controls -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-random -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-websocket -isystem /usr/include/qt/QtX11Extras -isystem /usr/include/qt/QtWebSockets -isystem /usr/include/qt/QtNetwork -Imoc -I/usr/lib/qt/mkspecs/linux-g++
 QMAKE         = /usr/bin/qmake
 DEL_FILE      = rm -rf
 CHK_DIR_EXISTS= test -d
@@ -40,7 +40,7 @@ DISTNAME      = webass-webso1.1.1
 DISTDIR = /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-websocket/examples/webass-webso/obj/webass-webso1.1.1
 LINK          = g++
 LFLAGS        = -Wl,-O1 -Wl,-rpath-link,/usr/lib
-LIBS          = $(SUBLIBS) -L/usr/local/epics/base-7.0.3.1/lib/linux-x86_64 -L/usr/local/cumbia-libs/lib -lca -lCom -lcumbia -lcumbia-qtcontrols -lcumbia-epics -lqumbia-epics-controls -L/usr/local/qwt-6.1.4/lib -lqwt -lQt5Concurrent -lQt5PrintSupport -lQt5Svg -lQt5OpenGL -lQt5Widgets -lQt5Gui -lQt5Core -L/usr/local/tango-9.3.3/lib -ltango -lzmq -L/usr/local/omniorb-4.2.3/lib -lCOS4 -lomniDynamic4 -lomniORB4 -lomnithread -lX11 -lcumbia-tango -lqumbia-tango-controls -lcumbia-random -lcumbia-websocket /usr/lib/libQt5Widgets.so /usr/lib/libQt5X11Extras.so /usr/lib/libQt5Gui.so /usr/lib/libQt5WebSockets.so /usr/lib/libQt5Network.so /usr/lib/libQt5Core.so -lGL -lpthread   
+LIBS          = $(SUBLIBS) -L/usr/local/epics/base-7.0.3.1/lib/linux-x86_64 -L/usr/local/cumbia-libs/lib -lca -lCom -L/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/lib -lcumbia -lcumbia-qtcontrols -lcumbia-epics -lqumbia-epics-controls -L/usr/local/qwt-6.1.4/lib -lqwt -lQt5Concurrent -lQt5PrintSupport -lQt5Svg -lQt5OpenGL -lQt5Widgets -lQt5Gui -lQt5Core -L/usr/local/tango-9.3.3/lib -ltango -lzmq -L/usr/local/omniorb-4.2.3/lib -lCOS4 -lomniDynamic4 -lomniORB4 -lomnithread -lX11 -lcumbia-tango -lqumbia-tango-controls -lcumbia-random -lcumbia-websocket /usr/lib/libQt5Widgets.so /usr/lib/libQt5X11Extras.so /usr/lib/libQt5Gui.so /usr/lib/libQt5WebSockets.so /usr/lib/libQt5Network.so /usr/lib/libQt5Core.so -lGL -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -997,14 +997,14 @@ compiler_moc_header_make_all: moc/moc_webass-webso.cpp
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc/moc_webass-webso.cpp
 moc/moc_webass-webso.cpp: src/webass-webso.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/qulogimpl.h \
-		/usr/local/cumbia-libs/include/cumbia/culog.h \
-		/usr/local/cumbia-libs/include/cumbia/cuservicei.h \
-		/usr/local/cumbia-libs/include/cumbia/cuservices.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/cucontrolsfactorypool.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/qulogimpl.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/culog.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuservicei.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuservices.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/cucontrolsfactorypool.h \
 		moc/moc_predefs.h \
 		/usr/bin/moc
-	/usr/bin/moc $(DEFINES) --include /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-websocket/examples/webass-webso/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-websocket/examples/webass-webso -I/usr/local/epics/base-7.0.3.1/include -I/usr/local/epics/base-7.0.3.1/include/os/Linux -I/usr/local/epics/base-7.0.3.1/include/compiler/gcc -I/usr/local/epics/base-7.0.3.1/include/os/compiler/clang -I/usr/local/cumbia-libs/include/qumbia-epics-controls -I/usr/local/cumbia-libs/include/qumbia-tango-controls -I/archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-websocket/examples/webass-webso/ui -I/archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-websocket/examples/webass-webso/src -I/usr/local/cumbia-libs/include/cumbia -I/usr/local/cumbia-libs/include/cumbia-qtcontrols -I/usr/local/cumbia-libs/include/cumbia-epics -I/usr/local/qwt-6.1.4/include -I/usr/include/qt/QtWidgets -I/usr/include/qt -I/usr/include/qt/QtCore -I/usr/include/qt/QtGui -I/usr/include/qt/QtConcurrent -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtSvg -I/usr/include/qt/QtOpenGL -I/usr/local/tango-9.3.3/include/tango -I/usr/include/pgm-5.2 -I/usr/local/omniorb-4.2.3/include -I/usr/local/cumbia-libs/include/cumbia-tango -I/usr/local/cumbia-libs/include/cumbia-random -I/usr/local/cumbia-libs/include/cumbia-websocket -I/usr/include/qt/QtX11Extras -I/usr/include/qt/QtWebSockets -I/usr/include/qt/QtNetwork -I/usr/include/c++/9 -I/usr/include/c++/9/x86_64-generic-linux -I/usr/include/c++/9/backward -I/usr/lib64/gcc/x86_64-generic-linux/9/include -I/usr/local/include -I/usr/lib64/gcc/x86_64-generic-linux/9/include-fixed -I/usr/include src/webass-webso.h -o moc/moc_webass-webso.cpp
+	/usr/bin/moc $(DEFINES) --include /archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-websocket/examples/webass-webso/moc/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-websocket/examples/webass-webso -I/usr/local/epics/base-7.0.3.1/include -I/usr/local/epics/base-7.0.3.1/include/os/Linux -I/usr/local/epics/base-7.0.3.1/include/compiler/gcc -I/usr/local/epics/base-7.0.3.1/include/os/compiler/clang -I/usr/local/cumbia-libs/include/qumbia-epics-controls -I/usr/local/cumbia-libs/include/qumbia-tango-controls -I/archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-websocket/examples/webass-webso/ui -I/archivi/devel/utils/git/cppqtclients/cumbia-libs/cumbia-websocket/examples/webass-webso/src -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-epics -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/qumbia-epics-controls -I/usr/local/qwt-6.1.4/include -I/usr/include/qt/QtWidgets -I/usr/include/qt -I/usr/include/qt/QtCore -I/usr/include/qt/QtGui -I/usr/include/qt/QtConcurrent -I/usr/include/qt/QtPrintSupport -I/usr/include/qt/QtSvg -I/usr/include/qt/QtOpenGL -I/usr/local/tango-9.3.3/include/tango -I/usr/include/pgm-5.2 -I/usr/local/omniorb-4.2.3/include -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-tango -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/qumbia-tango-controls -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-random -I/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-websocket -I/usr/include/qt/QtX11Extras -I/usr/include/qt/QtWebSockets -I/usr/include/qt/QtNetwork -I/usr/include/c++/9 -I/usr/include/c++/9/x86_64-generic-linux -I/usr/include/c++/9/backward -I/usr/lib64/gcc/x86_64-generic-linux/9/include -I/usr/local/include -I/usr/lib64/gcc/x86_64-generic-linux/9/include-fixed -I/usr/include src/webass-webso.h -o moc/moc_webass-webso.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -1022,51 +1022,51 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 
 ####### Compile
 
-obj/main.o: src/main.cpp /usr/local/cumbia-libs/include/cumbia-qtcontrols/quapplication.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/qudbusplugininterface.h \
+obj/main.o: src/main.cpp /home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/quapplication.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/qudbusplugininterface.h \
 		src/webass-webso.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/qulogimpl.h \
-		/usr/local/cumbia-libs/include/cumbia/culog.h \
-		/usr/local/cumbia-libs/include/cumbia/cuservicei.h \
-		/usr/local/cumbia-libs/include/cumbia/cuservices.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/cucontrolsfactorypool.h \
-		/usr/local/cumbia-libs/include/cumbia/cumbiapool.h \
-		/usr/local/cumbia-libs/include/cumbia/cumbia.h \
-		/usr/local/cumbia-libs/include/cumbia/cuthreadfactoryimpl.h \
-		/usr/local/cumbia-libs/include/cumbia/cuthreadfactoryimpl_i.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/qthreadseventbridgefactory.h \
-		/usr/local/cumbia-libs/include/cumbia/cuthreadseventbridgefactory_i.h
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/qulogimpl.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/culog.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuservicei.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuservices.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/cucontrolsfactorypool.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cumbiapool.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cumbia.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuthreadfactoryimpl.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuthreadfactoryimpl_i.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/qthreadseventbridgefactory.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuthreadseventbridgefactory_i.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/main.o src/main.cpp
 
 obj/webass-webso.o: src/webass-webso.cpp src/webass-webso.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/qulogimpl.h \
-		/usr/local/cumbia-libs/include/cumbia/culog.h \
-		/usr/local/cumbia-libs/include/cumbia/cuservicei.h \
-		/usr/local/cumbia-libs/include/cumbia/cuservices.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/cucontrolsfactorypool.h \
-		/usr/local/cumbia-libs/include/cumbia/cumbiapool.h \
-		/usr/local/cumbia-libs/include/cumbia/cumbia.h \
-		/usr/local/cumbia-libs/include/cumbia/cuthreadfactoryimpl.h \
-		/usr/local/cumbia-libs/include/cumbia/cuthreadfactoryimpl_i.h \
-		/usr/local/cumbia-libs/include/cumbia/cuserviceprovider.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/qthreadseventbridgefactory.h \
-		/usr/local/cumbia-libs/include/cumbia/cuthreadseventbridgefactory_i.h \
-		/usr/local/cumbia-libs/include/cumbia/cumacros.h \
-		/usr/local/cumbia-libs/include/cumbia-epics/cumbiaepics.h \
-		/usr/local/cumbia-libs/include/cumbia-epics/cuepactioni.h \
-		/usr/local/cumbia-libs/include/cumbia-epics/epsource.h \
-		/usr/local/cumbia-libs/include/cumbia/cuvariant.h \
-		/usr/local/cumbia-libs/include/cumbia/cuvariant_t.h \
-		/usr/local/cumbia-libs/include/cumbia/cuvariantprivate.h \
-		/usr/local/cumbia-libs/include/cumbia/cuthreadlistener.h \
-		/usr/local/cumbia-libs/include/cumbia/cudata.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/qulogimpl.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/culog.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuservicei.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuservices.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/cucontrolsfactorypool.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cumbiapool.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cumbia.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuthreadfactoryimpl.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuthreadfactoryimpl_i.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuserviceprovider.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/qthreadseventbridgefactory.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuthreadseventbridgefactory_i.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cumacros.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-epics/cumbiaepics.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-epics/cuepactioni.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-epics/epsource.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuvariant.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuvariant_t.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuvariantprivate.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cuthreadlistener.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cudata.h \
 		/usr/local/cumbia-libs/include/qumbia-epics-controls/cuepcontrolsreader.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/cucontrolsreader_abs.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/cucontrolsfactories_i.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/cucontrolsreader_abs.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/cucontrolsfactories_i.h \
 		/usr/local/cumbia-libs/include/qumbia-epics-controls/cuepcontrolswriter.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/cucontrolswriter_abs.h \
-		/usr/local/cumbia-libs/include/cumbia-epics/cuepics-world.h \
-		/usr/local/cumbia-libs/include/cumbia/cudataquality.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/cucontrolswriter_abs.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-epics/cuepics-world.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cudataquality.h \
 		/usr/local/epics/base-7.0.3.1/include/cadef.h \
 		/usr/local/epics/base-7.0.3.1/include/epicsThread.h \
 		/usr/local/epics/base-7.0.3.1/include/shareLib.h \
@@ -1087,12 +1087,12 @@ obj/webass-webso.o: src/webass-webso.cpp src/webass-webso.h \
 		/usr/local/epics/base-7.0.3.1/include/os/Linux/osdTime.h \
 		/usr/local/epics/base-7.0.3.1/include/errMdef.h \
 		/usr/local/epics/base-7.0.3.1/include/caeventmask.h \
-		/usr/local/cumbia-libs/include/cumbia-tango/cumbiatango.h \
-		/usr/local/cumbia-libs/include/cumbia-tango/cutangoactioni.h \
-		/usr/local/cumbia-libs/include/cumbia-tango/tsource.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-tango/cumbiatango.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-tango/cutangoactioni.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-tango/tsource.h \
 		/usr/local/cumbia-libs/include/qumbia-tango-controls/cutcontrolsreader.h \
 		/usr/local/cumbia-libs/include/qumbia-tango-controls/cutcontrolswriter.h \
-		/usr/local/cumbia-libs/include/cumbia-tango/cutango-world.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-tango/cutango-world.h \
 		/usr/local/tango-9.3.3/include/tango/tango.h \
 		/usr/local/tango-9.3.3/include/tango/tango_config.h \
 		/usr/local/omniorb-4.2.3/include/omniORB4/acconfig.h \
@@ -1290,36 +1290,35 @@ obj/webass-webso.o: src/webass-webso.cpp src/webass-webso.h \
 		/usr/local/tango-9.3.3/include/tango/w_attrsetval.tpp \
 		/usr/local/tango-9.3.3/include/tango/event.h \
 		/usr/local/cumbia-libs/include/qumbia-tango-controls/cutcontrols-utils.h \
-		/usr/local/cumbia-libs/include/cumbia-random/cumbiarandom.h \
-		/usr/local/cumbia-libs/include/cumbia-random/curndactionreader.h \
-		/usr/local/cumbia-libs/include/cumbia-random/curndactioni.h \
-		/usr/local/cumbia-libs/include/cumbia-random/rnd_source.h \
-		/usr/local/cumbia-libs/include/cumbia-random/curndactionfactoryi.h \
-		/usr/local/cumbia-libs/include/cumbia-random/curndreader.h \
-		/usr/local/cumbia-libs/include/cumbia-random/curndactionfactories.h \
-		/usr/local/cumbia-libs/include/cumbia-random/cumbiarndworld.h \
-		/usr/local/cumbia-libs/include/cumbia-websocket/cuwstangohelper.h \
-		/usr/local/cumbia-libs/include/cumbia-websocket/cuwsprotocolhelper_i.h \
-		/usr/local/cumbia-libs/include/cumbia-websocket/cumbiawebsocket.h \
-		/usr/local/cumbia-libs/include/cumbia-websocket/cuwsactionreader.h \
-		/usr/local/cumbia-libs/include/cumbia-websocket/cuwsactioni.h \
-		/usr/local/cumbia-libs/include/cumbia-websocket/ws_source.h \
-		/usr/local/cumbia-libs/include/cumbia-websocket/cuwsactionfactoryi.h \
-		/usr/local/cumbia-libs/include/cumbia-websocket/cumbia-websocket_global.h \
-		/usr/local/cumbia-libs/include/cumbia-websocket/cuwsclient.h \
-		/usr/local/cumbia-libs/include/cumbia-websocket/cumbiawsworld.h \
-		/usr/local/cumbia-libs/include/cumbia-websocket/cuwsreader.h \
-		/usr/local/cumbia-libs/include/cumbia-websocket/cuwscontrolswriter.h \
-		/usr/local/cumbia-libs/include/cumbia-websocket/cuwstangoreplacewildcards.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/qureplacewildcards_i.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/qulabel.h \
-		/usr/local/cumbia-libs/include/cumbia/cudatalistener.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/cucontexti.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/qupalette.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/qulabelbase.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/qutrendplot.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/quwidgetinterface.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/quplot_base.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-random/cumbiarandom.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-random/curndactionreader.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-random/curndactioni.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-random/rnd_source.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-random/curndactionfactoryi.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-random/curndreader.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-random/curndactionfactories.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-random/cumbiarndworld.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-websocket/cuwstangohelper.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-websocket/cuwsprotocolhelper_i.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-websocket/cumbiawebsocket.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-websocket/cuwsactionreader.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-websocket/cuwsactioni.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-websocket/ws_source.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-websocket/cuwsactionfactoryi.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-websocket/cumbia-websocket_global.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-websocket/cuwsclient.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-websocket/cumbiawsworld.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-websocket/cuwscontrolswriter.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-websocket/cuwstangoreplacewildcards.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/qureplacewildcards_i.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/qulabel.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia/cudatalistener.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/cucontexti.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/qupalette.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/qulabelbase.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/qutrendplot.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/quwidgetinterface.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/quplot_base.h \
 		/usr/local/qwt-6.1.4/include/qwt_plot.h \
 		/usr/local/qwt-6.1.4/include/qwt_global.h \
 		/usr/local/qwt-6.1.4/include/qwt_text.h \
@@ -1349,16 +1348,16 @@ obj/webass-webso.o: src/webass-webso.cpp src/webass-webso.h \
 		/usr/local/qwt-6.1.4/include/qwt_scale_engine.h \
 		/usr/local/qwt-6.1.4/include/qwt_date_scale_draw.h \
 		/usr/local/qwt-6.1.4/include/qwt_date.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/quspectrumplot.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/quplotbasecontextmenustrategy.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/quwidgetcontextmenustrategyi.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/qubutton.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/quapplynumeric.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/eapplynumeric.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/enumeric.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/float_delegate.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/number_delegate.h \
-		/usr/local/cumbia-libs/include/cumbia-qtcontrols/eapplybutton.h
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/quspectrumplot.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/quplotbasecontextmenustrategy.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/quwidgetcontextmenustrategyi.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/qubutton.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/quapplynumeric.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/eapplynumeric.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/enumeric.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/float_delegate.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/number_delegate.h \
+		/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/tmp-install-dir/include/cumbia-qtcontrols/eapplybutton.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/webass-webso.o src/webass-webso.cpp
 
 obj/moc_webass-webso.o: moc/moc_webass-webso.cpp 
