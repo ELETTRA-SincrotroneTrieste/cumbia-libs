@@ -122,6 +122,10 @@ $(document).ready(function(){initNavTree('cumbia_wasm.html',''); initResizable()
 <blockquote class="doxtable">
 <p>./init-repository </p>
 </blockquote>
+<h3>init-repository excluding some modules:</h3>
+<blockquote class="doxtable">
+<p>./init-repository &ndash;module-subset=all,-qtwayland,-qtx11extras,-qtwebengine,-qtpim,-qtquick3d,-qtmacextras </p>
+</blockquote>
 <p>Set the environment for <em>emscripten</em></p>
 <blockquote class="doxtable">
 <p>source ~/devel/emsdk/emsdk_env.sh </p>
@@ -141,13 +145,52 @@ $(document).ready(function(){initNavTree('cumbia_wasm.html',''); initResizable()
 <blockquote class="doxtable">
 <p>[sudo] make install </p>
 </blockquote>
+<h2><a class="el" href="classCumbia.html" title="primary cumbia class where activities are registered and unregistered. Provides access to the cumbia ...">Cumbia</a> build and installation</h2>
+<h3>Set the environment for <em>emscripten</em></h3>
+<blockquote class="doxtable">
+<p>source ~/devel/emsdk/emsdk_env.sh </p>
+</blockquote>
+<h3>Clone cumbia-libs</h3>
+<blockquote class="doxtable">
+<p>git clone <a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs.git">https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs.git</a> </p>
+</blockquote>
+<h3>Build</h3>
+<p>The modules that we will build for WebAssembly are the following:</p>
+<ul>
+<li>cumbia (base c++ library, threads, services)</li>
+<li>cumbia-qtcontrols (widgets and their multi engine support)</li>
+<li>cumbia-websocket (websocket engine)</li>
+<li>cumbia-random [optional]</li>
+</ul>
+<blockquote class="doxtable">
+<p>cd cumbia-libs/cumbia </p>
+</blockquote>
+<p>Amongst others, you will find these files:</p>
+<ul>
+<li>meson.build -&gt; meson.build.cpp (default links to the cpp shared library build file)</li>
+<li>meson.build.cpp</li>
+<li>meson.build.wasm</li>
+<li>wasm-cross.txt (the meson cross file)</li>
+</ul>
+<h4>Check paths in wasm-cross.txt</h4>
+<p>Edit wasm-cross.txt and check the following lines:</p>
+<p>c = '/home/test/devel/emsdk/fastcomp/emscripten/emcc' cpp = '/home/test/devel/emsdk/fastcomp/emscripten/em++' ar = '/home/test/devel/emsdk/fastcomp/emscripten/emar'</p>
+<p>to make sure they match the emsdk installation paths</p>
+<p>Use meson.build.wasm:</p>
+<blockquote class="doxtable">
+<p>ln -sf meson.build.wasm meson.build </p>
+</blockquote>
+<p>Run meson and output to build-wasm</p>
+<blockquote class="doxtable">
+<p>meson &ndash;cross-file=wasm-cross.txt build-wasm </p>
+</blockquote>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Apr 6 2020 17:51:27 for cumbia by
+    <li class="footer">Generated on Fri Apr 10 2020 14:08:41 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>
