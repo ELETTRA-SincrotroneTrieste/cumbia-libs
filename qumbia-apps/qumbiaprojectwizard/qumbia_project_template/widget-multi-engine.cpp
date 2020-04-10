@@ -75,9 +75,10 @@ $MAINCLASS$::$MAINCLASS$(CumbiaPool *cumbia_pool, QWidget *parent) :
         // setup Cumbia web socket with the web socket address and the host name to prepend to the sources
         // for the HTTP requests
         CumbiaWSWorld wsw;
-        CumbiaWebSocket* cuws = new CumbiaWebSocket("ws://localhost:12702", "", new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+        CumbiaWebSocket* cuws = new CumbiaWebSocket(ws_url, "", new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
         cu_pool->registerCumbiaImpl("ws", cuws);
         m_ctrl_factory_pool.registerImpl("ws", CuWSReaderFactory());
+        m_ctrl_factory_pool.registerImpl("ws", CuWsControlsWriterFactory());
         // example source: "ws://tango://hokuto:20000/test/device/1/double_scalar"
         // ws:// domain prefix will be discarded
         //
@@ -92,11 +93,11 @@ $MAINCLASS$::$MAINCLASS$(CumbiaPool *cumbia_pool, QWidget *parent) :
         // across native tango engine and websocket proxy server.
         // This allows to leave the application code unchanged. See (*) below
         //
-        CuWsTangoReplaceWildcards *tgrwi = new CuWsTangoReplaceWildcards;
+        CuWsTangoReplaceWildcards *tgrwi = new CuWsTangoReplaceWildcards(/*QStringList() << "test/device/1"*/);
         cuws->addReplaceWildcardI(tgrwi);
-        CuTangoWorld tw;
-        m_ctrl_factory_pool.setSrcPatterns("ws", tw.srcPatterns());
-        cu_pool->setSrcPatterns("ws", tw.srcPatterns());
+        CuWsTangoHelper th;
+        m_ctrl_factory_pool.setSrcPatterns("ws", th.srcPatterns());
+        cu_pool->setSrcPatterns("ws", th.srcPatterns());
         //
         // open the websocket
         //
