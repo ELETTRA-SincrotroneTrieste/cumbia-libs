@@ -87,7 +87,8 @@ $(document).ready(function(){initNavTree('cumbia_wasm.html',''); initResizable()
 <div class="title">Qt and cumbia for WebAssembly </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1>Build multi threaded Qt for WebAssembly.</h1>
+<div class="textblock"><p>In this section, we will learn how to build Qt and cumbia for WebAssembly. To start write and build applications for WebAssembly, please skip to <a href="../../cumbia-websocket/html/cumbia_ws_wasm.html">this page</a>.</p>
+<h1>Build multi threaded Qt for WebAssembly.</h1>
 <p>At the moment of writing this documentation, precompiled Qt binaries do not support multi threaded applications. Qt must be built from source. The official documentation is available <a href="https://doc.qt.io/qt-5/wasm.html">here</a>. It contains basic information and further links, including a <a href="https://wiki.qt.io/Qt_for_WebAssembly">wiki page</a>.</p>
 <h2>Emscripten installation</h2>
 <blockquote class="doxtable">
@@ -162,6 +163,8 @@ $(document).ready(function(){initNavTree('cumbia_wasm.html',''); initResizable()
 <li>cumbia-websocket (websocket engine)</li>
 <li>cumbia-random [optional]</li>
 </ul>
+<p>In the example installation below, we opt for an installation of the libraries under <em>prefix/lib/wasm</em>, while include files are fully compatible across cross-builds and can be installed over a previous C++ installation. If the only static library in your environment is WebAssembly's, then <em>prefix/lib</em> can be shared across dynamic C++ shared libraries and <em>wasm</em> static library.</p>
+<h4>cumbia</h4>
 <blockquote class="doxtable">
 <p>cd cumbia-libs/cumbia </p>
 </blockquote>
@@ -184,13 +187,25 @@ $(document).ready(function(){initNavTree('cumbia_wasm.html',''); initResizable()
 <blockquote class="doxtable">
 <p>meson &ndash;cross-file=wasm-cross.txt build-wasm </p>
 </blockquote>
+<blockquote class="doxtable">
+<p>cd build-wasm </p>
+</blockquote>
+<p>Configure install prefix and lib dir. In this example, we want an installation in the user's home.</p>
+<blockquote class="doxtable">
+<p>meson configure -Dprefix=/home/test/.local/cumbia-libs meson configure -Dlibdir=lib/wasm </p>
+</blockquote>
+<blockquote class="doxtable">
+<p>ninja &amp;&amp; ninja install </p>
+</blockquote>
+<h4>cumbia-qtcontrols</h4>
+<p>cd ../cumbia-qtcontrols </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Apr 10 2020 14:29:06 for cumbia by
+    <li class="footer">Generated on Fri Apr 10 2020 15:05:46 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>
