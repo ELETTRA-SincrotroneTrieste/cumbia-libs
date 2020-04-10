@@ -163,7 +163,7 @@ $(document).ready(function(){initNavTree('cumbia_wasm.html',''); initResizable()
 <li>cumbia-websocket (websocket engine)</li>
 <li>cumbia-random [optional]</li>
 </ul>
-<p>In the example installation below, we opt for an installation of the libraries under <em>prefix/lib/wasm</em>, while include files are fully compatible across cross-builds and can be installed over a previous C++ installation. If the only static library in your environment is WebAssembly's, then <em>prefix/lib</em> can be shared across dynamic C++ shared libraries and <em>wasm</em> static library.</p>
+<p>In the example installation below, we opt for an installation of the libraries under <em>prefix/lib/wasm</em>, while include files are fully compatible across cross-builds and can be installed over a previous C++ installation. If the only static library in your cumbia install environment is WebAssembly's, then <em>prefix/lib</em> can be shared across dynamic C++ shared libraries and <em>wasm</em> static library. In this case, the *.pro* and *.pri* files used by the Qt modules discussed below need to be adjusted.</p>
 <h4>cumbia</h4>
 <blockquote class="doxtable">
 <p>cd cumbia-libs/cumbia </p>
@@ -198,14 +198,59 @@ $(document).ready(function(){initNavTree('cumbia_wasm.html',''); initResizable()
 <p>ninja &amp;&amp; ninja install </p>
 </blockquote>
 <h4>cumbia-qtcontrols</h4>
-<p>cd ../cumbia-qtcontrols </p>
+<p>Move from cumbia/build-wasm into cumbia-qtcontrols</p>
+<blockquote class="doxtable">
+<p>cd ../../cumbia-qtcontrols </p>
+</blockquote>
+<p>Execute the qmake from the Qt for WebAssembly installation. In this example we assume qt was installed under the .local directory in the user's home.</p>
+<p>Make sure the <em>prefix</em> is the same used for the <em>cumbia</em> installation above. qmake accepts INSTALL_ROOT to configure the prefix. cumbia base libraries are searched under</p>
+<blockquote class="doxtable">
+<p>/home/test/.local/qt-5.14.2-wasm/bin/qmake INSTALL_ROOT=/home/test/.local/cumbia-libs </p>
+</blockquote>
+<p>You should read a message like this:</p>
+<div class="fragment"><div class="line">Project MESSAGE: cumbia-qtcontrols: building for WebAssembly</div>
+<div class="line">Project MESSAGE: Setting PTHREAD_POOL_SIZE to 4</div>
+<div class="line">Project MESSAGE: Setting TOTAL_MEMORY to 1GB</div>
+<div class="line">bash</div>
+</div><!-- fragment --><h4>Note</h4>
+<p>Applications should set the expected number of concurrent threads at build time. This can be done either by setting QMAKE_WASM_PTHREAD_POOL_SIZE in the .pro file or passing the <em>QMAKE_WASM_PTHREAD_POOL_SIZE=x</em> option to <em>qmake</em>. This maps to Emscripten PTHREAD_POOL_SIZE option.</p>
+<blockquote class="doxtable">
+<p>/home/test/.local/qt-5.14.2-wasm/bin/qmake INSTALL_ROOT=/home/test/.local/cumbia-libs QMAKE_WASM_PTHREAD_POOL_SIZE=12 </p>
+</blockquote>
+<p>Please refer to the <a href="https://wiki.qt.io/Qt_for_WebAssembly#Multithreading_Support">Multithreading Support</a> section in the <a href="https://wiki.qt.io/Qt_for_WebAssembly">Qt for WebAssembly</a> page for additional details.</p>
+<p>Now you can <em>build cumbia-qtcontrols</em>:</p>
+<blockquote class="doxtable">
+<p>make -j9 &amp;&amp; make install </p>
+</blockquote>
+<h4>cumbia-websocket and cumbia-random</h4>
+<p>Exactly the same procedure can be followed for the other two modules that need to be compiled (the latter is optional)</p>
+<p><em>websocket module</em></p>
+<blockquote class="doxtable">
+<p>cd ../cumbia-websocket </p>
+</blockquote>
+<blockquote class="doxtable">
+<p>/home/test/.local/qt-5.14.2-wasm/bin/qmake INSTALL_ROOT=/home/test/.local/cumbia-libs </p>
+</blockquote>
+<blockquote class="doxtable">
+<p>make &amp;&amp; make install </p>
+</blockquote>
+<p><em>random module</em>, for testing purposes</p>
+<blockquote class="doxtable">
+<p>cd ../cumbia-random/ </p>
+</blockquote>
+<blockquote class="doxtable">
+<p>/home/test/.local/qt-5.14.2-wasm/bin/qmake INSTALL_ROOT=/home/test/.local/cumbia-libs </p>
+</blockquote>
+<blockquote class="doxtable">
+<p>make &amp;&amp; make install </p>
+</blockquote>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Apr 10 2020 15:05:46 for cumbia by
+    <li class="footer">Generated on Fri Apr 10 2020 15:45:32 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>
