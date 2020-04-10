@@ -31,7 +31,7 @@
 #ifdef CUMBIA_WEBSOCKET_VERSION
 #include <cumbiawebsocket.h>
 #include <cumbiawsworld.h>
-#include <cuwsreader.h> // for CuWSReaderFactory
+#include <cuwscontrolsreader.h> // for CuWSReaderFactory
 #include <cuwscontrolswriter.h>
 #include <cuwstangoreplacewildcards.h>
 #endif
