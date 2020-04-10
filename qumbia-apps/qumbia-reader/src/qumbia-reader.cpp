@@ -47,7 +47,7 @@
 #ifdef CUMBIA_WEBSOCKET_VERSION
 #include <cumbiawebsocket.h>
 #include <cumbiawsworld.h>
-#include <cuwsreader.h> // for CuWSReaderFactory
+#include <cuwscontrolsreader.h> // for CuWSReaderFactory
 #endif
 
 QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
