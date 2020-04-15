@@ -45,6 +45,7 @@ SOURCES += \
     cuwsactionreader.cpp \
     cuwsactionwriter.cpp \
     cuwsactionconf.cpp \
+    cuwsregisterengine.cpp \
     protocol/tango/cuwsprotocolhelpers.cpp \
     protocol/tango/cuwstangohelper.cpp \
     protocol/tango/cuwstangoreplacewildcards.cpp \
@@ -64,6 +65,7 @@ HEADERS += \
     cuwsactionreader.h \
     cuwsactionconf.h \
     cuwsactionwriter.h \
+    cuwsregisterengine.h \
     protocol/cuwsprotocolhelper_i.h \
     protocol/tango/cuwsprotocolhelpers.h \
     protocol/tango/cuwstangohelper.h \
