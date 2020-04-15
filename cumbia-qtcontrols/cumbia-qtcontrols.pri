@@ -201,12 +201,13 @@ unix:LIBS +=  \
 # need to adjust qwt path
 
 unix: android-g++ {
-    unix:INCLUDEPATH += /usr/local/cumbia-libs/include/cumbia
+    unix:INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia
     unix:LIBS += -L/libs/armeabi-v7a/ -lcumbia
 }
 
 wasm-emscripten {
     LIBS += -L$${WASM_CUMBIA_LIBS} -lcumbia -L$${WASM_CUMBIA_QTCONTROLS_LIB}  -L$${QWT_HOME}/lib -L$${QWT_HOME_USR}/lib -lqwt
+    INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia
 }
 
 android-g++|wasm-emscripten {
