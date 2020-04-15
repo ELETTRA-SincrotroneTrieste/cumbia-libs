@@ -1,4 +1,4 @@
-prefix=/usr
+prefix=/usr/local/cumbia-libs
 exec_prefix=${prefix}
 libdir=${prefix}/lib
 includedir=${prefix}/include
@@ -7,7 +7,6 @@ includedir=${prefix}/include
 Name: qumbia-tango-controls
 Description: Qt controls widget for graphical interfaces over cumbia and the Tango control system
 Version: 1.0.0
-Libs: -l 
-Libs.private: -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread   
-Cflags: 
+Libs: -L${libdir} -l 
+Cflags: -I${includedir}
 

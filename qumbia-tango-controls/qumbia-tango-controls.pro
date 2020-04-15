@@ -34,6 +34,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += src/qumbiatangocontrols.cpp \
+    src/cutangoregisterengine.cpp \
     src/cutangoreplacewildcards.cpp \
     src/cutcontrolsreader.cpp \
     src/cutcontrols-utils.cpp \
@@ -45,6 +46,7 @@ SOURCES += src/qumbiatangocontrols.cpp \
     src/qutrealtimeplot.cpp
 
 HEADERS += src/qumbiatangocontrols.h\
+    src/cutangoregisterengine.h \
     src/cutangoreplacewildcards.h \
     src/plugin_ifaces/qutfindsrcsplugini.h \
         src/qumbia-tango-controls_global.h \
