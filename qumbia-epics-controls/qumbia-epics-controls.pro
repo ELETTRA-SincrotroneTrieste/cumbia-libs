@@ -34,6 +34,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/cuepregisterengine.cpp \
     src/qumbiaepicscontrols.cpp \
     src/cuepcontrolswriter.cpp \
     src/cuepcontrolsreader.cpp \
@@ -44,6 +45,7 @@ HEADERS +=\
     src/cuepcontrols-utils.h \
     src/cuepcontrolsreader.h \
     src/cuepcontrolswriter.h \
+    src/cuepregisterengine.h \
     src/qumbia-epics-controls_global.h \
     src/qumbiaepicscontrols.h \
     src/quepicsplotupdatestrategy.h
