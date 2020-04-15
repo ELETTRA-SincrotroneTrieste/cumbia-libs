@@ -44,7 +44,8 @@ SOURCES += \
     rnd_source.cpp \
     curandomgenactivity.cpp \
     curndactionfactories.cpp \
-    rndsourcebuilder.cpp
+    rndsourcebuilder.cpp \
+    curndregisterengine.cpp
 
 HEADERS += \
         cumbiarandom.h \
@@ -59,7 +60,8 @@ HEADERS += \
     curndactionreader.h \
     rnd_source.h \
     curandomgenactivity.h \
-    curndactionfactories.h
+    curndactionfactories.h \
+    curndregisterengine.h
 
 DISTFILES += \
     cumbia-random.pri
