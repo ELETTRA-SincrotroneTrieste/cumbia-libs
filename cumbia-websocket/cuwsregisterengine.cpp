@@ -69,5 +69,6 @@ bool CuWsRegisterEngine::hasCmdOption(QCommandLineParser *parser, const QStringL
     QCommandLineOption ws_url_o(QStringList() << "u" << "websocket-url", "URL to websocket server", "url", url());
     parser->addOption(ws_url_o);
     parser->process(args);
-    return parser->isSet(ws_url_o) && !parser->value(ws_url_o).isEmpty();
+    d->url = parser->value(ws_url_o);
+    return parser->isSet(ws_url_o) && !d->url.isEmpty();
 }

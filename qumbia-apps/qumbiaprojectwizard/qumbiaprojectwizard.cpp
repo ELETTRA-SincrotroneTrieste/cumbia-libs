@@ -259,8 +259,7 @@ void QumbiaProjectWizard::create()
                 contents = QString(f.readAll());
                 contents.replace("$INCLUDE_DIR$", INCLUDE_PATH);
 
-                foreach(QLineEdit *le, findChildren<QLineEdit *>())
-                {
+                foreach(QLineEdit *le, findChildren<QLineEdit *>()) {
                     if(!le->text().isEmpty())
                     {
                         QVariant placeholder = le->property("placeholder");
@@ -273,7 +272,6 @@ void QumbiaProjectWizard::create()
                             contents.replace(placeh_lower, le->text().toLower());
                         }
                     }
-
                 }
 
                 f.close(); /* done with the file */

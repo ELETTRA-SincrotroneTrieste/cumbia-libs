@@ -122,4 +122,10 @@ android-g++|wasm-emscripten {
     }
 }
 
+wasm-emscripten {
+CONFIG += create_prl
+}
+
 LIBS -= -lcumbia-websocket$${QTVER_SUFFIX}
+
+LIBS += -lcumbia-qtcontrols$${QTVER_SUFFIX}

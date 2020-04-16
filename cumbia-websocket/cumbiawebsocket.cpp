@@ -181,7 +181,8 @@ void CumbiaWebSocket::onUpdate(const QString &message) {
     // 2. find action amongst readers
     QString atype = jsd["atype"].toString();
     CuWSActionI::Type t = CuWSActionI::Reader;
-    if(atype == "conf") t = CuWSActionI::WriterConfig;
+    if(atype == "rconf") t = CuWSActionI::ReaderConfig;
+    else if(atype == "wconf") t = CuWSActionI::WriterConfig;
     else if(atype == "write") t = CuWSActionI::Writer;
 
     CuWSActionI *action = findAction(src, t);
@@ -195,7 +196,6 @@ void CumbiaWebSocket::onUpdate(const QString &message) {
                     static_cast<CuWSActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuWSActionFactoryService::CuWSActionFactoryServiceType)));
                 af->unregisterAction(src, t);
                 delete action;
-
         }
     }
     else

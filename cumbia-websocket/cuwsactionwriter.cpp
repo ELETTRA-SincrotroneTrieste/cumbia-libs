@@ -47,7 +47,7 @@ CuWsActionWriter::CuWsActionWriter(const WSSource &target, CuWSClient *wscli, co
 
 CuWsActionWriter::~CuWsActionWriter()
 {
-    pdelete("~CuWsActionWriter %p", this);
+    pdelete("~CuWsActionWriter \"%s\" %p", d->ws_target.getName().c_str(), this);
     if(d->networkAccessManager)
         delete d->networkAccessManager;
     delete d;
@@ -90,7 +90,7 @@ size_t CuWsActionWriter::dataListenersCount() {
 
 void CuWsActionWriter::start() {
     QString url_s = "WRITE " + QString::fromStdString(d->ws_target.getName());
-     if(!d->w_val.isNull())
+    if(!d->w_val.isNull())
         url_s += "(" + QuString(d->w_val.toString()) + ")";
     if(d->http_url.isEmpty()) {
         // communicate over websocket only
@@ -115,11 +115,10 @@ void CuWsActionWriter::decodeMessage(const QJsonDocument &json) {
     CuData res("src", d->ws_target.getName());
     CumbiaWSWorld wsw;
     wsw.json_decode(json, res);
-    for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it) {
-        (*it)->onUpdate(res);
+    d->exit = res["is_result"].toBool();
+    if(res["err"].toBool() || res["is_result"].toBool()) {
+        for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it)
+            (*it)->onUpdate(res);
     }
-    if(res["exit"].toBool()) {
-        stop();
-    }
-
+    if(d->exit) d->listeners.clear();
 }

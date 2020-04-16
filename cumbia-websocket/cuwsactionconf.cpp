@@ -18,10 +18,10 @@
 #include <cudatalistener.h>
 #include <qustring.h>
 
-class CuWsActionWriterConfPrivate
+class CuWsActionConfPrivate
 {
 public:
-    CuWsActionWriterConfPrivate() : exit(false), networkAccessManager(nullptr),
+    CuWsActionConfPrivate() : exit(false), networkAccessManager(nullptr),
         proto_helper_i(nullptr), proto_helpers(nullptr), ws_client(nullptr) {
 
     }
@@ -34,19 +34,21 @@ public:
     ProtocolHelper_I *proto_helper_i;
     CuWsProtocolHelpers *proto_helpers;
     CuWSClient *ws_client;
+    CuWSActionI::Type action_type;
 };
 
-CuWsActionConf::CuWsActionConf(const WSSource &src, CuWSClient *wscli, const QString &http_url)
+CuWsActionConf::CuWsActionConf(const WSSource &src, CuWSClient *wscli, const CuWSActionI::Type action_type, const QString &http_url)
 {
-    d = new CuWsActionWriterConfPrivate;
+    d = new CuWsActionConfPrivate;
     d->ws_client = wscli;
     d->http_url = http_url;
     d->wsconf_src = src;
+    d->action_type = action_type;
 }
 
 CuWsActionConf::~CuWsActionConf()
 {
-    pdelete("~CuWsActionConf %p", this);
+    pdelete("~CuWsActionConf \"%s\" %p", d->wsconf_src.getName().c_str(), this);
     if(d->networkAccessManager) delete d->networkAccessManager;
     delete d;
 }
@@ -60,7 +62,7 @@ WSSource CuWsActionConf::getSource() const {
 }
 
 CuWSActionI::Type CuWsActionConf::getType() const {
-    return CuWSActionI::WriterConfig;
+    return d->action_type;
 }
 
 void CuWsActionConf::addDataListener(CuDataListener *l) {
@@ -79,14 +81,17 @@ size_t CuWsActionConf::dataListenersCount() {
 }
 
 void CuWsActionConf::start() {
+    QString msg;
     QString url_s = QString::fromStdString(d->wsconf_src.getName());
-    if(d->http_url.isEmpty()) { // communicate over websocket only
-        QString msg = QString("CONF %1").arg(url_s);
-        d->ws_client->sendMessage(msg);
-    }
+    if(d->http_url.isEmpty() && d->action_type == CuWSActionI::ReaderConfig)  // communicate over websocket only
+        msg = QString("RCONF %1").arg(url_s);
+    else if(d->http_url.isEmpty() && d->action_type == CuWSActionI::WriterConfig)
+        msg = QString("WCONF %1").arg(url_s);
     else {
         perr("CuWsActionWriterConf.start: write over http not implemented yet: %s", qstoc(url_s));
     }
+    if(!msg.isEmpty())
+        d->ws_client->sendMessage(msg);
 }
 
 bool CuWsActionConf::exiting() const {

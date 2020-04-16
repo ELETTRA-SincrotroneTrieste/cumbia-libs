@@ -2,7 +2,7 @@
 #define CUWSACTIONCONF_H
 
 #include <cuwsactioni.h>
-class CuWsActionWriterConfPrivate;
+class CuWsActionConfPrivate;
 class QNetworkReply;
 class WSSource;
 class CuWSClient;
@@ -13,7 +13,7 @@ class CuWsActionConf : public QObject, public CuWSActionI
 {
     Q_OBJECT
 public:
-    CuWsActionConf(const WSSource& src, CuWSClient *wscli, const QString& http_url);
+    CuWsActionConf(const WSSource& src, CuWSClient *wscli, const CuWSActionI::Type action_type, const QString& http_url);
     ~CuWsActionConf();
 private slots:
     void onNetworkReplyFinished(QNetworkReply*);
@@ -33,7 +33,7 @@ public:
 
 
 private:
-    CuWsActionWriterConfPrivate *d;
+    CuWsActionConfPrivate *d;
 };
 
 #endif // CUWSACTIONWRITER_H

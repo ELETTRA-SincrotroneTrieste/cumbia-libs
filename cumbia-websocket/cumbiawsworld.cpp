@@ -34,7 +34,7 @@ bool CumbiaWSWorld::json_decode(const QJsonDocument &json, CuData &res)
         res["msg"] = "CuWSActionReader.decodeMessage: invalid json document";
     }
     else {
-        QJsonObject data_o = json["data"].toObject();
+        const QJsonObject data_o = json["data"].toObject();
         if(!data_o.isEmpty()) {
             QStringList keys = data_o.keys();
 
@@ -43,8 +43,8 @@ bool CumbiaWSWorld::json_decode(const QJsonDocument &json, CuData &res)
             QStringList i_keys = QStringList() << "state" << "quality" << "writable" << "data_type" << "data_format";
             QStringList special_keys = QStringList() << "timestamp" << "timestamp_us" << "timestamp_ms" << "err" << "error" << "msg";
 
-            foreach(QString k, keys + special_keys ) {
-                const QJsonValue &v = data_o[k];
+            foreach(const QString &k, keys + special_keys ) {
+                const QJsonValue &v = data_o[k]; // const version, data_o is const
                 const std::string &c = k.toStdString();
                 if(!i_keys.contains(k) && v.isArray()) {
                     QJsonArray jarr = v.toArray();

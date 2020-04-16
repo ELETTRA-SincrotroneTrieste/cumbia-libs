@@ -65,8 +65,10 @@ isEmpty(prefix) {
 #
 # Here qumbia-qtcontrols libraries will be installed
 wasm-emscripten {
+    OBJECTS_DIR = obj-wasm
     CUMBIA_QTCONTROLS_LIBDIR=$${INSTALL_ROOT}/lib/wasm
 } else {
+    OBJECTS_DIR = obj
     CUMBIA_QTCONTROLS_LIBDIR=$${INSTALL_ROOT}/lib
 }
 #
@@ -172,7 +174,6 @@ freebsd-g++ {
 CONFIG += c++17
 
 MOC_DIR = moc
-OBJECTS_DIR = obj
 FORMS_DIR = ui
 LANGUAGE = C++
 UI_DIR = src
@@ -210,7 +211,7 @@ wasm-emscripten {
 
     CONFIG += link_prl
 
-}
+}F
 
 android-g++|wasm-emscripten {
 } else {

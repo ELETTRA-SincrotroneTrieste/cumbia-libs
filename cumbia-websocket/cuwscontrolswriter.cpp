@@ -143,7 +143,7 @@ QString CuWsControlsWriter::target() const
  */
 void CuWsControlsWriter::clearTarget()
 {
-    d->cu_ws->unlinkListener(d->target.toStdString(), CuWSActionI::WriterConfig, d->tlistener);
+    d->cu_ws->unlinkListener(d->target.toStdString(), CuWSActionI::ReaderConfig, d->tlistener);
     d->cu_ws->unlinkListener(d->target.toStdString(), CuWSActionI::Writer, d->tlistener);
     d->target = QString();
 }
@@ -187,7 +187,7 @@ void CuWsControlsWriter::setTarget(const QString &s) {
     // d->source is equal to 's' if no replacement is made
     for(int i = 0; i < rwis.size() && d->target == s; i++) // leave loop if s != d->source (=replacement made)
         d->target = rwis[i]->replaceWildcards(s, qApp->arguments());
-    CuWSActionConfFactory wswconff;
-    wswconff.setOptions(d->w_options);
-    d->cu_ws->addAction(d->target.toStdString(), d->tlistener, wswconff);
+    CuWsActionWriterConfFactory wswriconff;
+    wswriconff.setOptions(d->w_options);
+    d->cu_ws->addAction(d->target.toStdString(), d->tlistener, wswriconff);
 }

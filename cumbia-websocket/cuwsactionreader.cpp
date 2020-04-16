@@ -109,7 +109,7 @@ CuWSActionReader::CuWSActionReader(const WSSource& src, CuWSClient *wscli, const
 
 CuWSActionReader::~CuWSActionReader()
 {
-    pdelete("~CuWSActionReader %p", this);
+    pdelete("~CuWSActionReader \"%s\" %p", d->tsrc.getName().c_str(), this);
     if(d->networkAccessManager)
         delete d->networkAccessManager;
     if(d->proto_helpers)
@@ -224,7 +224,7 @@ void CuWSActionReader::start()
         // communicate over websocket only
         QString msg = QString("SUBSCRIBE %1").arg(url_s);
         d->ws_client->sendMessage(msg);
-        msg = QString("CONF %1").arg(url_s);
+        msg = QString("RCONF %1").arg(url_s);
         d->ws_client->sendMessage(msg);
     }
     else {

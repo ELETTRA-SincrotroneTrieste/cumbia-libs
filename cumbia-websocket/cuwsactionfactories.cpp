@@ -7,7 +7,7 @@
 class CuWSClient;
 
 class CuWSReaderFactoryPrivate {
-    public:
+public:
 };
 
 
@@ -68,9 +68,13 @@ CuWSActionConfFactory::~CuWSActionConfFactory() {
 }
 
 CuWSActionI *CuWSActionConfFactory::create(const string &s, CuWSClient *cli, const QString &http_addr) const {
-    return new CuWsActionConf(s, cli, http_addr);
+    return new CuWsActionConf(s, cli, getType(), http_addr);
 }
 
 CuWSActionI::Type CuWSActionConfFactory::getType() const {
+    return CuWSActionI::ReaderConfig;
+}
+
+CuWSActionI::Type CuWsActionWriterConfFactory::getType() const {
     return CuWSActionI::WriterConfig;
 }

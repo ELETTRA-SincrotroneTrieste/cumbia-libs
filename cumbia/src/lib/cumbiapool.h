@@ -87,6 +87,7 @@ private:
 
     std::map<std::string, std::vector<std::string> >m_dom_patterns;
 
+    void m_print_registered_domain_info() const;
 };
 
 #endif // CUMBIAPOOL_H

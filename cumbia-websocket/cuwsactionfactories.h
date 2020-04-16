@@ -62,4 +62,8 @@ private:
 
 };
 
+class CuWsActionWriterConfFactory : public CuWSActionConfFactory {
+    CuWSActionI::Type getType() const;
+};
+
 #endif // CUWSACTIONFACTORIES_H

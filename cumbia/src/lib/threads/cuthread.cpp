@@ -375,7 +375,6 @@ void CuThread::run() {
         }
         else if(te->getType() == ThreadEvent::TimerExpired)
         {
-            printf("CuThread.run. TimerExpired this thread 0x%ld\n", pthread_self());
             // if at least one activity needs the timer, the
             // service will restart it after execution.
             // tmr is single-shot and needs restart to prevent
@@ -403,7 +402,6 @@ void CuThread::run() {
                 }
             } // for activity iter
             if(timeo_restart > 0) {
-                printf("CuThread.run:   calling timer_s->restart CYCLE %d this thread 0x%ld\n", ++cycle_cnt, pthread_self());
                 timer_s->restart(timer, timeo_restart);
             }
         }

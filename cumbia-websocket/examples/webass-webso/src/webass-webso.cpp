@@ -101,6 +101,9 @@ WebassWebso::WebassWebso(CumbiaPool *cumbia_pool, QWidget *parent) :
         CuWsTangoHelper th;
         m_ctrl_factory_pool.setSrcPatterns("ws", th.srcPatterns());
         cu_pool->setSrcPatterns("ws", th.srcPatterns());
+
+        // log
+        cuws->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
         //
         // open the websocket
         //
