@@ -118,6 +118,9 @@ void QuCircularGauge::m_configure(const CuData& da)
     threshs["max_warning"] = "highWarning";
     threshs["max_alarm"] = "highError";
     threshs["min_alarm"] = "lowError";
+    char *p;
+    const char *str;
+    double val;
     // avoid cache regeneration at every property change
     setCacheRegenerationDisabled(true);
     // map keys are not ordered!
@@ -125,20 +128,11 @@ void QuCircularGauge::m_configure(const CuData& da)
                                       << "min_warning" << "max_warning";
     foreach(QString thnam, props) {
         const char *name = thnam.toStdString().c_str();
-        try {
-            if(da.containsKey(name)) {
-                setProperty(threshs[thnam], std::stod(da[name].toString().c_str()));
-            }
-        }
-        catch(const std::invalid_argument& ) {
-            // do not change the property
-            //            char bound[16] = "";
-            //            memset(bound, 0, 16);
-            //            strncpy(bound, name, 3);
-            //            strncat(bound, "Value", 6);
-            //            qDebug() << __PRETTY_FUNCTION__ <<" setting prop " << thnam << "bound" << bound
-            //                     << " to " << property(bound).toDouble();
-            //            setProperty(threshs[thnam], property(bound).toDouble());
+        if(da.containsKey(name)) {
+            str = da[name].toString().c_str();
+            val = strtod(da[name].toString().c_str(), &p);
+            if(*p != 0 && p != str)
+                setProperty(threshs[thnam], val);
         }
     }
     if(da["display_unit"].toString().length() > 0)

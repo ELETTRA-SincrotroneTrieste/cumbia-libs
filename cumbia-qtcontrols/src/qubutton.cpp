@@ -160,9 +160,14 @@ void QuButton::onUpdate(const CuData &data)
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
             cumbia = d->context->cumbiaPool()->getBySrc(data["src"].toString());
-        CuLog *log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log));
-        if(log)
-            log->write(QString("QuButton [" + objectName() + "]").toStdString(), data["msg"].toString(), CuLog::Error, CuLog::Write);
+        if(cumbia) {
+            CuLog *log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log));
+            if(log)
+                log->write(QString("QuButton [" + objectName() + "]").toStdString(), data["msg"].toString(), CuLog::Error, CuLog::Write);
+        }
+        else {
+            perr("QuButton.onUpdate: cannot get a reference to cumbia either from context or CumbiaPool with target \"%s\"", data["src"].toString().c_str());
+        }
     }
     else if(is_config) {
         if(data.containsKey("w_value")) {

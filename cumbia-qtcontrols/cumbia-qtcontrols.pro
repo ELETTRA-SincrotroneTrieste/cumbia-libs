@@ -23,8 +23,14 @@ DEFINES += QT_NO_DEBUG_OUTPUT
 
 
 android-g++|wasm-emscripten {
+
 } else {
 QT += x11extras
+}
+
+wasm-emscripten {
+CONFIG += create_prl
+CONFIG += link_prl
 }
 
 # The following define makes your compiler emit warnings if you use

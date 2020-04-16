@@ -113,7 +113,6 @@ QWT_INCLUDES_USR = $${QWT_HOME_USR}/include/qwt
 wasm-emscripten {
     message("cumbia-qtcontrols: building for WebAssembly")
     WASM_CUMBIA_LIBS=$${INSTALL_ROOT}/lib/wasm
-    WASM_CUMBIA_QTCONTROLS_LIB=$${INSTALL_ROOT}/lib/wasm
 } else {
     !android-g++ {
         CONFIG += link_pkgconfig
@@ -206,8 +205,11 @@ unix: android-g++ {
 }
 
 wasm-emscripten {
-    LIBS += -L$${WASM_CUMBIA_LIBS} -lcumbia -L$${WASM_CUMBIA_QTCONTROLS_LIB}  -L$${QWT_HOME}/lib -L$${QWT_HOME_USR}/lib -lqwt
+    LIBS += -L$${WASM_CUMBIA_LIBS} -lcumbia  -L$${QWT_HOME}/lib -L$${QWT_HOME_USR}/lib -lqwt
     INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia
+
+    CONFIG += link_prl
+
 }
 
 android-g++|wasm-emscripten {
