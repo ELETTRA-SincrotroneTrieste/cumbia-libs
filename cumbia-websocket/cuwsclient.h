@@ -7,6 +7,8 @@
 
 class CuData;
 
+class CuWSClientPrivate;
+
 class CuWSClientListener {
 public:
     virtual void onUpdate(const QString& message) = 0;
@@ -42,13 +44,10 @@ private slots:
     void onDisconnected();
     void onMessageReceived(const QString& message);
     void onSocketError(QAbstractSocket::SocketError se);
+    void deliverMsgs();
 
 private:
-    QWebSocket m_webSocket;
-    QUrl m_url;
-    CuWSClientListener *m_listener;
-    QQueue<QString> m_msg_queue;
-    bool m_socket_open;
+    CuWSClientPrivate *d;
 };
 
 #endif // CUWSCLIENT_H

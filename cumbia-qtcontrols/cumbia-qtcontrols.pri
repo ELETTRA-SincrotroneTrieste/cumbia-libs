@@ -208,10 +208,10 @@ unix: android-g++ {
 wasm-emscripten {
     LIBS += -L$${WASM_CUMBIA_LIBS} -lcumbia  -L$${QWT_HOME}/lib -L$${QWT_HOME_USR}/lib -lqwt
     INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia
-
+    QMAKE_WASM_PTHREAD_POOL_SIZE=16
+#    QMAKE_LFLAGS +=  -s ASSERTIONS=1
     CONFIG += link_prl
-
-}F
+}
 
 android-g++|wasm-emscripten {
 } else {

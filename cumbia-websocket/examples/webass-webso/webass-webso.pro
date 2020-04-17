@@ -1,31 +1,31 @@
-isEmpty(INSTALL_ROOT) {
-    INSTALL_ROOT=/usr/local/cumbia-libs
+isEmpty(CUMBIA_ROOT) {
+    CUMBIA_ROOT=/usr/local/cumbia-libs
 }
 
 
 linux-g++ {
-    exists ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
-        message("- adding EPICS support under $${INSTALL_ROOT}")
-        include ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+    exists ($${CUMBIA_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
+        message("- adding EPICS support under $${CUMBIA_ROOT}")
+        include ($${CUMBIA_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
     }
-    exists  ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
-        message("- adding Tango support under $${INSTALL_ROOT}")
-        include ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+    exists  ($${CUMBIA_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
+        message("- adding Tango support under $${CUMBIA_ROOT}")
+        include ($${CUMBIA_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
     }
     greaterThan(QT_MAJOR_VERSION, 4): QT += x11extras
 } else {
     # include cumbia-qtcontrols for necessary qt engine-unaware dependency (widgets, qwt, ...)
-    include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
+    include ($${CUMBIA_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 }
 
-exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {
-    message("- adding cumbia-random module support under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
+exists($${CUMBIA_ROOT}/include/cumbia-random/cumbia-random.pri) {
+    message("- adding cumbia-random module support under $${CUMBIA_ROOT}")
+    include($${CUMBIA_ROOT}/include/cumbia-random/cumbia-random.pri)
 }
 
-exists($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri) {
-    message("- adding cumbia-websocket module support under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
+exists($${CUMBIA_ROOT}/include/cumbia-websocket/cumbia-websocket.pri) {
+    message("- adding cumbia-websocket module support under $${CUMBIA_ROOT}")
+    include($${CUMBIA_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
 }
 
 
@@ -36,11 +36,10 @@ QT +=  core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+
 CONFIG +=
 
 DEFINES -= QT_NO_DEBUG_OUTPUT
-
-OBJECTS_DIR = obj
 
 # RESOURCES +=
 
@@ -66,7 +65,38 @@ HEADERS += \
 #
 INCLUDEPATH += ui src
 
-TARGET   = bin/webass-webso
+wasm-emscripten{
+    TARGET=wasm/webass-webso
+}else{
+    TARGET=bin/webass-webso
+}
+
+# unix:LIBS += -L. -lmylib
+
+# unix:INCLUDEPATH +=  . ../../src
+
+#
+# make install works if INSTALL_DIR is given to qmake
+#
+!isEmpty(INSTALL_DIR) {
+    wasm-emscripten {
+        inst.files = wasm/*
+    } else {
+        inst.files = $${TARGET}
+    }
+    inst.path = $${INSTALL_DIR}
+    INSTALLS += inst
+    message("-")
+    message("INSTALLATION")
+    message("       execute `make install` to install 'webass-webso' under $${INSTALL_DIR} ")
+    message("-")
+} else {
+    message("-")
+    message("INSTALLATION")
+    message("       call qmake INSTALL_DIR=/usr/local/bin to install webass-webso later with `make install` ")
+    message("-")
+}
+
 
 # unix:LIBS += -L. -lmylib
 

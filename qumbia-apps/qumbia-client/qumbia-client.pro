@@ -7,14 +7,21 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT=/usr/local/cumbia-libs
 }
 
-exists($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
-    message("including support for qumbia-epics-controls module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
-}
+!wasm-emscripten {
+    exists($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
+        message("including support for qumbia-epics-controls module under $${INSTALL_ROOT}")
+        include($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+    }
 
-exists($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
-    message("including support for qumbia-tango-controls module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+    exists($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
+        message("including support for qumbia-tango-controls module under $${INSTALL_ROOT}")
+        include($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+    }
+} else {
+    exists($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri) {
+        message("including support for cumbia-qtcontrols module under $${INSTALL_ROOT}")
+        include($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
+    }
 }
 
 exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {

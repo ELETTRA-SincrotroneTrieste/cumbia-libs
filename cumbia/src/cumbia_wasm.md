@@ -26,6 +26,12 @@ Qt and cumbia libraries have been tested with chromium browser, the Emscripten v
 
 > ./emsdk activate 1.38.47-fastcomp
 
+You may want to install multiple versions of the SDK, in which case the "--embedded" option is useful.
+It locates all configuration and cache files inside the SDK dir so that multiple versions do not conflict.
+
+> ./emsdk activate --embedded 1.38.47-fastcomp
+
+
 ### Qt build and installation
 
 > cd ~/devel

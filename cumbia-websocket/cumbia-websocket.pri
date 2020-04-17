@@ -62,10 +62,12 @@ android-g++|wasm-emscripten {
 
 android-g++ {
     INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia-qtcontrols
+    OBJECTS_DIR = obj-android
 }
 wasm-emscripten {
     INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia-qtcontrols $${INSTALL_ROOT}/include/cumbia $${CUMBIA_WS_INCLUDES}
     OBJECTS_DIR = obj-wasm
+    QMAKE_WASM_PTHREAD_POOL_SIZE=16
 }
 
 DEFINES += CUMBIA_PRINTINFO
@@ -82,7 +84,6 @@ QMAKE_CXXFLAGS += -std=c++11 -Wall
 CONFIG += c++11
 
 MOC_DIR = moc
-OBJECTS_DIR = obj
 
 QMAKE_CLEAN = moc \
     obj \
@@ -109,7 +110,6 @@ wasm-emscripten {
 android-g++|wasm-emscripten {
     LIBS += -L$${INSTALL_ROOT}/lib/wasm -lcumbia-websocket$${QTVER_SUFFIX} -lcumbia
 } else {
-
     OBJECTS_DIR = obj
     packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
         message("cumbia-websocket.pri: using pkg-config to configure cumbia cumbia-qtcontrols$${QTVER_SUFFIX} includes and libraries")

@@ -145,7 +145,6 @@ QString QuButton::target() const
  */
 void QuButton::onUpdate(const CuData &data)
 {
-    printf("\e[1;33mQuButton.onUpdate %s\e[0m\n", data.toString().c_str());
     bool is_config = data.has("type", "property");
     if(!data["is_result"].toBool() && !is_config)
         return;
@@ -180,8 +179,6 @@ void QuButton::onUpdate(const CuData &data)
             w->saveConfiguration(data);
         d->animation.installOn(this);
     }
-    printf("QuButton.onResult \e[1;35m%s\e[0m write ok %d\n", data.toString().c_str(), d->write_ok);
-
     d->write_ok ? d->animation.setPenColor(QColor(Qt::green)) : d->animation.setPenColor(QColor(Qt::red));
     d->write_ok ? d->animation.setDuration(1500) : d->animation.setDuration(3000);
     d->animation.start();

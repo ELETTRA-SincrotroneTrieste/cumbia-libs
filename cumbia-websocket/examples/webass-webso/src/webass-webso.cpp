@@ -185,9 +185,9 @@ WebassWebso::WebassWebso(CumbiaPool *cumbia_pool, QWidget *parent) :
     lo->addWidget(dsl, 6, 3, 1, 1);
     lo->addWidget(an, 6, 4, 1, 1);
 
-//    QuSpectrumPlot *sp = new QuSpectrumPlot(this, cu_pool, m_ctrl_factory_pool);
-//    sp->setSources(QStringList() << "$1/double_spectrum_ro" << "$1/long_spectrum_ro");
-//    lo->addWidget(sp, 6, 0, 5, 10);
+    QuSpectrumPlot *sp = new QuSpectrumPlot(this, cu_pool, m_ctrl_factory_pool);
+    sp->setSources(QStringList() << "$1/double_spectrum_ro" << "$1/long_spectrum_ro");
+    lo->addWidget(sp, 6, 0, 5, 10);
 
 }
 

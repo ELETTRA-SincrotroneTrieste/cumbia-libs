@@ -8,6 +8,8 @@ wasm-emscripten {
 # library is compiled statically
 # cumbia-random needs Qt Script
     QT += script
+    OBJECTS_DIR = obj-wasm
+    QMAKE_WASM_PTHREAD_POOL_SIZE=16
 }
 
 # + ----------------------------------------------------------------- +
@@ -63,6 +65,9 @@ isEmpty(INSTALL_ROOT) {
 
 android-g++|wasm-emscripten {
 } else {
+
+    OBJECTS_DIR = obj
+
     CONFIG += link_pkgconfig
     PKGCONFIG += cumbia
     PKGCONFIG += cumbia-qtcontrols$${QTVER_SUFFIX}
@@ -89,7 +94,6 @@ DEFINES += CUMBIA_RANDOM_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
 QMAKE_CXXFLAGS += -std=gnu++17 -Wall
 
 MOC_DIR = moc
-OBJECTS_DIR = obj
 
 QMAKE_CLEAN = moc \
     obj \

@@ -118,7 +118,7 @@ void QuCircularGauge::m_configure(const CuData& da)
     threshs["max_warning"] = "highWarning";
     threshs["max_alarm"] = "highError";
     threshs["min_alarm"] = "lowError";
-    char *p;
+    char *endptr;
     const char *str;
     double val;
     // avoid cache regeneration at every property change
@@ -130,9 +130,10 @@ void QuCircularGauge::m_configure(const CuData& da)
         const char *name = thnam.toStdString().c_str();
         if(da.containsKey(name)) {
             str = da[name].toString().c_str();
-            val = strtod(da[name].toString().c_str(), &p);
-            if(*p != 0 && p != str)
+            val = strtod(da[name].toString().c_str(), &endptr);
+            if(endptr != str) { // no conversion performed
                 setProperty(threshs[thnam], val);
+            }
         }
     }
     if(da["display_unit"].toString().length() > 0)

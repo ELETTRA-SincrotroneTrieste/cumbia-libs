@@ -107,9 +107,9 @@ void CuWsActionConf::decodeMessage(const QJsonDocument &json) {
     CuData res("src", d->wsconf_src.getName());
     CumbiaWSWorld wsw;
     wsw.json_decode(json, res);
-    printf("\e[1;34mCuWsActionConf::decodeMessage got data %s\e[0m\n", res.toString().c_str());
+    d->exit = true;
     for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it) {
         (*it)->onUpdate(res);
     }
-    stop(); // activate exit flag
+    d->listeners.clear();
 }

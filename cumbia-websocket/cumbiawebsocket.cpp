@@ -17,6 +17,7 @@
 #include <QJsonDocument>
 #include <QJsonValue>
 #include <QJsonObject>
+#include <QThread> // for QThread::currentThread()
 #include "cuwsclient.h"
 
 class CumbiaWebSocketPrivate {
@@ -84,6 +85,8 @@ void CumbiaWebSocket::m_init()
 
 void CumbiaWebSocket::addAction(const std::string &source, CuDataListener *l, const CuWSActionFactoryI &f)
 {
+    CuWSActionFactoryService *af =
+            static_cast<CuWSActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuWSActionFactoryService::CuWSActionFactoryServiceType)));
     CumbiaWSWorld w;
     if(w.source_valid(source))
     {
