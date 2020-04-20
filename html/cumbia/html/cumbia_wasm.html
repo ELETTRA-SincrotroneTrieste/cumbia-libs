@@ -107,6 +107,10 @@ $(document).ready(function(){initNavTree('cumbia_wasm.html',''); initResizable()
 <blockquote class="doxtable">
 <p>./emsdk activate 1.38.47-fastcomp </p>
 </blockquote>
+<p>You may want to install multiple versions of the SDK, in which case the "--embedded" option is useful. It locates all configuration and cache files inside the SDK dir so that multiple versions do not conflict.</p>
+<blockquote class="doxtable">
+<p>./emsdk activate &ndash;embedded 1.38.47-fastcomp </p>
+</blockquote>
 <h2>Qt build and installation</h2>
 <blockquote class="doxtable">
 <p>cd ~/devel </p>
@@ -260,7 +264,7 @@ $(document).ready(function(){initNavTree('cumbia_wasm.html',''); initResizable()
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Apr 15 2020 16:41:11 for cumbia by
+    <li class="footer">Generated on Mon Apr 20 2020 13:51:38 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>
