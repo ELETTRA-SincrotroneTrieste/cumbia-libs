@@ -128,9 +128,25 @@ and *tango* engines only.
 Add the support for the necessary engines
 
 ```cpp
-include (/usr/local/cumbia-libs/include/qumbia-tango-controls/qumbia-tango-controls.pri)
-include (/usr/local/cumbia-libs/include/cumbia-websocket/cumbia-websocket.pri)
+isEmpty(CUMBIA_ROOT) {
+    CUMBIA_ROOT=/usr/local/cumbia-libs
+}
+
+linux-g++ {
+    exists  ($${CUMBIA_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
+        include ($${CUMBIA_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+    }
+} else {
+    # include cumbia-qtcontrols for necessary qt engine-unaware dependency (widgets, qwt, ...)
+    include ($${CUMBIA_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
+    include ($${CUMBIA_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
+}
 ```
+
+Dependencies from qtx11extras should be removed or moved within the linux-g++ scope.
+Removing qtx11extras support implies removing or conditionally include sections of code
+related to X, like for example those using QX11Info, calling XSetCommand and so on.
+
 
 #### Header File
 

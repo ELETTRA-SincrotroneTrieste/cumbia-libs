@@ -430,6 +430,8 @@ echo -e "\n# epics enabled" >> $srcupdate_conf_f
 echo "epics=$epics" >> $srcupdate_conf_f
 echo -e "\n# random module enabled" >> $srcupdate_conf_f
 echo "random=$random" >> $srcupdate_conf_f
+echo -e "\n# websocket module enabled" >> $srcupdate_conf_f
+echo "random=$websocket" >> $srcupdate_conf_f
 echo -e "\n# directory with the cumbia sources " >> $srcupdate_conf_f
 echo "srcdir=$topdir" >> $srcupdate_conf_f
 #
