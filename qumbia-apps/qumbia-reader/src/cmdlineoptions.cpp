@@ -45,7 +45,7 @@ CmdLineOptions::CmdLineOptions(bool formula_plugin_enabled, bool historical_db_p
     m_help_map["--help-epics"] = "EPICS module specific help";
 #endif
 #ifdef CUMBIA_WEBSOCKET_VERSION
-    m_help_map["--ws-url"] = "websocket url, e.g. ws://localhost:12702, wss://wshost:PORT"
+    m_help_map["--ws-url"] = "websocket url, e.g. ws://localhost:12702, wss://wshost:PORT";
 #endif
     if(formula_plugin_enabled)
         m_help_map["--help-formula"] = "formula plugin specific help";
