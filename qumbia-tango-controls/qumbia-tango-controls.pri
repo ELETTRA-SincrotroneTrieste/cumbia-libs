@@ -125,7 +125,8 @@ linux-g++|freebsd-g++ {
     }
 
     MOC_DIR = moc
-    OBJECTS_DIR = obj
+# don't call it obj! (BSD!)
+    OBJECTS_DIR = objs
     FORMS_DIR = ui
     LANGUAGE = C++
     UI_DIR = src

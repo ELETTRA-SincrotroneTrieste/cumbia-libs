@@ -3,7 +3,7 @@ project('cumbia', 'cpp', version : '1.1.1',
 
 project_description = 'library that offers a carefree approach to multi thread application design and implementation'
 
-cu_version = meson.project_version() # set in project() below
+cu_version = meson.project_version()
 ver_arr = cu_version.split('.')
 
 cu_major_version = ver_arr[0]

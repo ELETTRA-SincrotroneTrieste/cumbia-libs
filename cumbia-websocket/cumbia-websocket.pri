@@ -86,7 +86,7 @@ CONFIG += c++11
 MOC_DIR = moc
 
 QMAKE_CLEAN = moc \
-    obj \
+    objects \
     Makefile \
     *.tag
 
@@ -110,7 +110,7 @@ wasm-emscripten {
 android-g++|wasm-emscripten {
     LIBS += -L$${INSTALL_ROOT}/lib/wasm -lcumbia-websocket$${QTVER_SUFFIX} -lcumbia
 } else {
-    OBJECTS_DIR = obj
+    OBJECTS_DIR = objs
     packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
         message("cumbia-websocket.pri: using pkg-config to configure cumbia cumbia-qtcontrols$${QTVER_SUFFIX} includes and libraries")
     } else {
@@ -122,7 +122,6 @@ android-g++|wasm-emscripten {
             unix:LIBS += -lcumbia-websocket$${QTVER_SUFFIX}
         }
     }
-
 }
 
 

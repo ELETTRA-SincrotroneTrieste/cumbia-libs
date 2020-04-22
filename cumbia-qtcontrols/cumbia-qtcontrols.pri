@@ -68,7 +68,8 @@ wasm-emscripten {
     OBJECTS_DIR = obj-wasm
     CUMBIA_QTCONTROLS_LIBDIR=$${INSTALL_ROOT}/lib/wasm
 } else {
-    OBJECTS_DIR = obj
+# don't call it obj (*BSD)!
+    OBJECTS_DIR = objs
     CUMBIA_QTCONTROLS_LIBDIR=$${INSTALL_ROOT}/lib
 }
 #
