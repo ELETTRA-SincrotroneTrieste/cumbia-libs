@@ -2,6 +2,7 @@
 #define CUTHREADSEVENTBRIDGEFACTORY_I_H
 
 #include <stdlib.h>
+#include <cumacros.h>
 
 class CuServiceProvider;
 
@@ -21,7 +22,7 @@ public:
      *
      * virtual destructor
      */
-    virtual ~CuThreadsEventBridgeFactory_I() {}
+    virtual ~CuThreadsEventBridgeFactory_I() { pdelete("~CuThreadsEventBridgeFactory_I %p", this); }
 
     /*! \brief return an implementation of the CuThreadsEventBridge_I interface
      *

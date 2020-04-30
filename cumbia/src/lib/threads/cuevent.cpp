@@ -17,7 +17,6 @@ CuResultEventPrivate::CuResultEventPrivate(const std::vector<CuData> *dli) : dat
 CuResultEventPrivate::~CuResultEventPrivate()
 {
     if(data_list) {
-//        printf("\e[1;31mdeleting data_list size %ld\e[0m\n", data_list->size());
         delete data_list;
     }
 }

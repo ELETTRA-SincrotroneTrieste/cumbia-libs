@@ -6,6 +6,8 @@ class CuData;
 class CuServiceProvider;
 class CuThreadsEventBridge_I;
 
+#include <cumacros.h>
+
 /** \brief an interface that requires the implementation of a method to create a thread
  *
  * The implementors of this interface will provide the createThread method in order to
@@ -22,7 +24,7 @@ public:
      *
      * provided to avoid compilers' warnings about virtual destructors
      */
-    virtual ~CuThreadFactoryImplI() {}
+    virtual ~CuThreadFactoryImplI() { pdelete("~CuThreadFactoryImpl %p", this); }
 
     /*! \brief instantiates and returns an instance of an implementation of the CuThreadInterface
      *

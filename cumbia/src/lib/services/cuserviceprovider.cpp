@@ -1,13 +1,23 @@
 #include "cuserviceprovider.h"
 #include "cuservicei.h"
+#include <set>
+
+class CuServiceProviderPrivate {
+public:
+    std::map<CuServices::Type, CuServiceI *> services_map;
+    std::set<CuServices::Type> shared_srvcs;
+};
 
 /*! \brief the class constructor
  *
  * no parameters needed.
  */
-CuServiceProvider::CuServiceProvider()
-{
+CuServiceProvider::CuServiceProvider() {
+    d = new CuServiceProviderPrivate;
+}
 
+CuServiceProvider::~CuServiceProvider() {
+    delete d;
 }
 
 /*! \brief register a service to the *service provider*
@@ -17,10 +27,26 @@ CuServiceProvider::CuServiceProvider()
  *
  * The service can be retrieved with CuServiceProvider::get
  * The service can be unregistered with  CuServiceProvider::unregisterService
+ *
+ * The service is deleted automatically by Cumbia when the latter is deleted.
+ * If a service *is shared across multiple Cumbia instances*, like CuEventLoop,
+ * then registerSharedService must be called instead.
  */
-void CuServiceProvider::registerService(CuServices::Type name, CuServiceI *service)
-{
-    mServicesMap[name] = service;
+void CuServiceProvider::registerService(CuServices::Type name, CuServiceI *service) {
+    d->services_map[name] = service;
+}
+
+/*!
+ * \brief Same as registerService, but mark the service as potentially shared across multiple
+ *        Cumbia instances, thus preventing *service* from being automatically deleted.
+ * \param name the service name, as CuServices::Type
+ * \param service the service to register as a *shared service*.
+ *
+ * \note The object ownership is left to the caller, and *service* must be manually deleted.
+ */
+void CuServiceProvider::registerSharedService(CuServices::Type name, CuServiceI *service) {
+    d->services_map[name] = service;
+    d->shared_srvcs.insert(name);
 }
 
 /*! \brief unregister a service from the *service provider*
@@ -29,10 +55,17 @@ void CuServiceProvider::registerService(CuServices::Type name, CuServiceI *servi
  *
  * The service with the given name is removed from the service provider
  */
-void CuServiceProvider::unregisterService(CuServices::Type name)
-{
-    if(mServicesMap.count(name) > 0)
-        mServicesMap.erase(name);
+void CuServiceProvider::unregisterService(CuServices::Type name) {
+    if(d->services_map.count(name) > 0)
+        d->services_map.erase(name);
+}
+
+bool CuServiceProvider::isShared(CuServices::Type t) const {
+    return d->shared_srvcs.count(t) > 0;
+}
+
+void CuServiceProvider::setShared(CuServices::Type t, bool shared) {
+    if(shared) d->shared_srvcs.insert(t); else d->shared_srvcs.erase(t);
 }
 
 /*! \brief returns the service with the given name, if registered
@@ -46,8 +79,8 @@ void CuServiceProvider::unregisterService(CuServices::Type name)
 CuServiceI* CuServiceProvider::get(CuServices::Type name) const
 {
     CuServiceI *service = NULL;
-    std::map<CuServices::Type, CuServiceI *>::const_iterator it = mServicesMap.find(name);
-    if(it != mServicesMap.end())
+    std::map<CuServices::Type, CuServiceI *>::const_iterator it = d->services_map.find(name);
+    if(it != d->services_map.end())
         service = it->second;
     return service;
 }
@@ -59,7 +92,7 @@ CuServiceI* CuServiceProvider::get(CuServices::Type name) const
 std::list<CuServiceI *> CuServiceProvider::getServices() const
 {
     std::list< CuServiceI *> l;
-    for(std::map<CuServices::Type, CuServiceI *>::const_iterator it = mServicesMap.begin(); it != mServicesMap.end(); ++it)
+    for(std::map<CuServices::Type, CuServiceI *>::const_iterator it = d->services_map.begin(); it != d->services_map.end(); ++it)
         l.push_back(it->second);
     return l;
 }

@@ -17,6 +17,11 @@
  *
  * CuServices::Type is used to register, unregister and get references to service
  * from CuServiceProvider
+ *
+ * If a service is shared across multiple Cumbia instances (for example, CuEventLoop), then
+ * it must be registered using the CuServiceProvider::registerService with the *shared* option
+ * set to true. This informs each Cumbia instance not to delete the service. Its disposal is
+ * in charge of the client.
  */
 class CuServiceI
 {

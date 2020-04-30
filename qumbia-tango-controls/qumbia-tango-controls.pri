@@ -1,4 +1,4 @@
-linux-g++|freebsd-g++ {
+linuxcome|freebsd|openbsd {
 
     lessThan(QT_MAJOR_VERSION, 5) {
         QTVER_SUFFIX = -qt$${QT_MAJOR_VERSION}
@@ -106,8 +106,8 @@ linux-g++|freebsd-g++ {
 
     DEFINES += CUMBIA_DEBUG_OUTPUT
 
-    VERSION_HEX = 0x010101
-    VERSION = 1.1.1
+    VERSION_HEX = 0x010102
+    VERSION = 1.1.2
 
     DEFINES += QUMBIA_TANGO_CONTROLS_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
         QUMBIA_TANGO_CONTROLS_VERSION=$${VERSION_HEX}

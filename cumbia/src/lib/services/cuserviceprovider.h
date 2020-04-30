@@ -6,6 +6,7 @@
 #include <list>
 
 class CuServiceI;
+class CuServiceProviderPrivate;
 
 /*!
  * \brief The CuServiceProvider class is the *cumbia service provider* where
@@ -26,7 +27,9 @@ class CuServiceI;
  * Cumbia instantiates a CuServiceProvider in its class constructor (Cumbia::Cumbia)
  * and holds a reference to it throughout all Cumbia's lifetime (see Cumbia::finish).
  * Within Cumbia::finish, all services still registered (as returned by
- * CuServiceProvider::getServices) are first unregistered and then deleted.
+ * CuServiceProvider::getServices) are first unregistered and then deleted, unless
+ * the service had been registered with the *shared* option set to true
+ * (see CuServiceProvider::registerService(CuServices::Type name, CuServiceI *service, bool shared) )
  *
  * Cumbia::getServiceProvider can be called to get a reference to the *service
  * provider*.
@@ -37,16 +40,24 @@ class CuServiceProvider
 public:
     CuServiceProvider();
 
+    virtual ~CuServiceProvider();
+
     void registerService(CuServices::Type name, CuServiceI *service);
 
+    void registerSharedService(CuServices::Type name, CuServiceI *service);
+
     void unregisterService(CuServices::Type name);
+
+    bool isShared(CuServices::Type t) const;
+
+    void setShared(CuServices::Type t, bool shared);
 
     CuServiceI *get(CuServices::Type name) const;
 
     std::list<CuServiceI *>getServices() const;
 
 private:
-    std::map<CuServices::Type, CuServiceI *> mServicesMap;
+    CuServiceProviderPrivate *d;
 };
 
 #endif // SERVICEPROVIDER_H

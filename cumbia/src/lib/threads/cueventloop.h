@@ -51,15 +51,17 @@ class CuEventLoopService : public CuServiceI
 public:
 
 public:
-    CuEventLoopService(CuEventLoopListener *l = NULL);
+    CuEventLoopService(CuEventLoopListener *l = nullptr);
 
     virtual ~CuEventLoopService();
 
     void exec(bool threaded);
 
-    void postEvent(CuEventI* e);
+    void postEvent(CuEventLoopListener *l, CuEventI* e);
 
-    void setCuEventLoopListener(CuEventLoopListener *l);
+    void addCuEventLoopListener(CuEventLoopListener *l);
+
+    void removeCuEventLoopListener(CuEventLoopListener *l);
 
     void exit();
 
