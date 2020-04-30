@@ -1,4 +1,4 @@
-linuxcome|freebsd|openbsd {
+linux|freebsd|openbsd{
 
     lessThan(QT_MAJOR_VERSION, 5) {
         QTVER_SUFFIX = -qt$${QT_MAJOR_VERSION}

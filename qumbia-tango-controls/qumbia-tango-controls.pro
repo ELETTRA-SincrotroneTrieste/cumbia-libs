@@ -62,12 +62,7 @@ DISTFILES += \
     src/tutorial_faq.md
 
 unix {
-    doc.commands = doxytag \
-    -t \
-    qt.tag \
-    /usr/share/qt4/doc/html/noplease; \
-    doxygen \
-    Doxyfile;
+    doc.commands = doxygen Doxyfile;
     doc.files = doc/*
     doc.path = $${QUMBIA_TANGO_CONTROLS_DOCDIR}
     QMAKE_EXTRA_TARGETS += doc
