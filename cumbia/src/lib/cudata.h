@@ -57,6 +57,8 @@ public:
 
     CuData& set(const std::string& key, const CuVariant& value);
 
+    CuData& merge(const CuData& other);
+
     size_t size() const;
 
     CuVariant value() const;

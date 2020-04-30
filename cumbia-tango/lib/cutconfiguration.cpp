@@ -157,6 +157,7 @@ void CuTConfiguration::start()
     at["argins"] = d->tsrc.getArgs();
     at["activity"] = "attconfig";
     at["is_command"] = d->tsrc.getType() == TSource::Cmd;
+    at.merge(d->options);
 
     CuData tt = CuData("device", d->tsrc.getDeviceName());
     if(d->options.containsKey("thread_token"))
