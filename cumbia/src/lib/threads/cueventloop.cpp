@@ -92,10 +92,7 @@ void CuEventLoopService::postEvent(CuEventLoopListener *lis, CuEventI *e)
  *
  * @param l a CuEventLoopListener that will receive events from the event loop
  */
-void CuEventLoopService::addCuEventLoopListener(CuEventLoopListener *l)
-{
-    cuprintf("\e[1;35mCuEventLoopService::setCuEventLoopListener from %p to %p\e[0m\n",
-             d->eloo_liss, l);
+void CuEventLoopService::addCuEventLoopListener(CuEventLoopListener *l) {
     d->eloo_liss.push_back(l);
 }
 

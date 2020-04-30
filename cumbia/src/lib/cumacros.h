@@ -7,6 +7,22 @@
 
 #define perr(x, args...) do {  fprintf(stderr, "\e[1;31m!! \e[0;4merror\e[0m: "); printf(x, ##args); printf("\n"); }while(0)
 
+#define stoc(x) x.c_str()
+
+// CuVariant when it's a string type
+// example
+// CuData d("astring", "hello");
+// const char *hello = vtoc(d["astring"]);
+#define vtoc(x)  x.toString().c_str()
+
+// CuVariant when it's a string type, second form
+// example
+// CuData d("astring", "hello");
+// const char *hello = vtoc(d, "astring");
+#define vtoc2(x, n) x[n].toString().c_str()
+
+#define cuda_to_s(x) x.toString().c_str()
+
 // qstoc  and qslisttoc outside #ifdef CUMBIA_DEBUG_OUTPUT
 
 #ifdef QT_CORE_LIB
