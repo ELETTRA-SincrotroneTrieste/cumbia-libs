@@ -25,6 +25,7 @@ var hierarchy =
       [ "CuResultEvent", "classCuResultEvent.html", null ],
       [ "CuThreadAutoDestroyEvent", "classCuThreadAutoDestroyEvent.html", null ]
     ] ],
+    [ "CuEventInfo", "classCuEventInfo.html", null ],
     [ "CuEventLoopListener", "classCuEventLoopListener.html", [
       [ "CuThreadsEventBridge", "classCuThreadsEventBridge.html", null ],
       [ "CuThreadsEventBridge", "classCuThreadsEventBridge.html", null ]
@@ -44,6 +45,7 @@ var hierarchy =
       [ "CuTimerService", "classCuTimerService.html", null ]
     ] ],
     [ "CuServiceProvider", "classCuServiceProvider.html", null ],
+    [ "CuServiceProviderPrivate", "classCuServiceProviderPrivate.html", null ],
     [ "CuServices", "classCuServices.html", null ],
     [ "CuThreadFactoryImplI", "classCuThreadFactoryImplI.html", [
       [ "CuThreadFactoryImpl", "classCuThreadFactoryImpl.html", null ],

@@ -1,6 +1,7 @@
 var cumacros_8h =
 [
     [ "cuprintf", "cumacros_8h.html#ada414d70bad931bb2fea6abc8acaefbc", null ],
+    [ "datos", "cumacros_8h.html#a0645e1ed0749a9f0a4af5222d4605858", null ],
     [ "objinfo", "cumacros_8h.html#ac8d242bfa2f105c297988ba928657f38", null ],
     [ "padd", "cumacros_8h.html#a4f5772a1a56a9c487661e2eac1211170", null ],
     [ "pbblue", "cumacros_8h.html#af8783598d3f4134cfaa43e75799616ba", null ],
@@ -62,5 +63,8 @@ var cumacros_8h =
     [ "pyellow2tmp", "cumacros_8h.html#abc690fa0573c8ac744a426fbdaffff03", null ],
     [ "pyellowtmp", "cumacros_8h.html#a4ca6c0bb6b9742059e7c873263a1daaa", null ],
     [ "qobjinfo", "cumacros_8h.html#a22166b48145c760514384122f0944fc9", null ],
-    [ "qobjname", "cumacros_8h.html#ade229e426fdc3192097eb3e004b92241", null ]
+    [ "qobjname", "cumacros_8h.html#ade229e426fdc3192097eb3e004b92241", null ],
+    [ "stoc", "cumacros_8h.html#acd534b7281c2661a9b1a32e0dcb19a3a", null ],
+    [ "vtoc", "cumacros_8h.html#a3b4803b8e261926666ee88211c194e17", null ],
+    [ "vtoc2", "cumacros_8h.html#a276e702cb7c675524add2a255142cd5e", null ]
 ];

@@ -11,6 +11,7 @@ var classCuData =
     [ "has", "classCuData.html#ac5f1635f2b00d74062f4bd2229ff7760", null ],
     [ "isEmpty", "classCuData.html#a6953fdf4037f206fc76695807845ea0d", null ],
     [ "keys", "classCuData.html#a9db04a83ab20e197ceab45b8146be4ac", null ],
+    [ "merge", "classCuData.html#a25337e973d6930a14e11c35606fc2242", null ],
     [ "operator!=", "classCuData.html#a90c982bf56017afa12aefec5c711e52a", null ],
     [ "operator=", "classCuData.html#a755d22b6c3b2feb7a9378dcc989965e6", null ],
     [ "operator=", "classCuData.html#aa20573964193ce9210a5fb105c523d2e", null ],

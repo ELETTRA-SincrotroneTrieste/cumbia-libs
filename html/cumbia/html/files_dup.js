@@ -41,7 +41,9 @@ var files_dup =
       [ "CuResultEvent", "classCuResultEvent.html", "classCuResultEvent" ],
       [ "CuActivityExitEvent", "classCuActivityExitEvent.html", "classCuActivityExitEvent" ]
     ] ],
-    [ "cueventloop.cpp", "cueventloop_8cpp.html", null ],
+    [ "cueventloop.cpp", "cueventloop_8cpp.html", [
+      [ "CuEventInfo", "classCuEventInfo.html", "classCuEventInfo" ]
+    ] ],
     [ "cueventloop.h", "cueventloop_8h.html", [
       [ "CuEventLoopListener", "classCuEventLoopListener.html", "classCuEventLoopListener" ],
       [ "CuEventLoopService", "classCuEventLoopService.html", "classCuEventLoopService" ]
@@ -69,7 +71,9 @@ var files_dup =
     [ "cuservicei.h", "cuservicei_8h.html", [
       [ "CuServiceI", "classCuServiceI.html", "classCuServiceI" ]
     ] ],
-    [ "cuserviceprovider.cpp", "cuserviceprovider_8cpp.html", null ],
+    [ "cuserviceprovider.cpp", "cuserviceprovider_8cpp.html", [
+      [ "CuServiceProviderPrivate", "classCuServiceProviderPrivate.html", "classCuServiceProviderPrivate" ]
+    ] ],
     [ "cuserviceprovider.h", "cuserviceprovider_8h.html", [
       [ "CuServiceProvider", "classCuServiceProvider.html", "classCuServiceProvider" ]
     ] ],

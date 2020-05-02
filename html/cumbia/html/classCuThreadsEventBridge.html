@@ -111,8 +111,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a561227bc5de7c1f3e4f9df583a23c0f9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuThreadsEventBridge.html#a561227bc5de7c1f3e4f9df583a23c0f9">CuThreadsEventBridge</a> (const <a class="el" href="classCuServiceProvider.html">CuServiceProvider</a> *sp)</td></tr>
 <tr class="memdesc:a561227bc5de7c1f3e4f9df583a23c0f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">the class constructor  <a href="classCuThreadsEventBridge.html#a561227bc5de7c1f3e4f9df583a23c0f9">More...</a><br /></td></tr>
 <tr class="separator:a561227bc5de7c1f3e4f9df583a23c0f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fc79790979388d8eb76779cc6c58ce1"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuThreadsEventBridge.html#a4fc79790979388d8eb76779cc6c58ce1">~CuThreadsEventBridge</a> ()</td></tr>
-<tr class="separator:a4fc79790979388d8eb76779cc6c58ce1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dbb6734efb5f1c2c1f754bc59c6d99e"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuThreadsEventBridge.html#a5dbb6734efb5f1c2c1f754bc59c6d99e">~CuThreadsEventBridge</a> ()</td></tr>
+<tr class="separator:a5dbb6734efb5f1c2c1f754bc59c6d99e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2962296dccfa5d888e7d85ce6230670b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuThreadsEventBridge.html#a2962296dccfa5d888e7d85ce6230670b">postEvent</a> (<a class="el" href="classCuEventI.html">CuEventI</a> *e)</td></tr>
 <tr class="memdesc:a2962296dccfa5d888e7d85ce6230670b"><td class="mdescLeft">&#160;</td><td class="mdescRight">post the event to the event loop  <a href="classCuThreadsEventBridge.html#a2962296dccfa5d888e7d85ce6230670b">More...</a><br /></td></tr>
 <tr class="separator:a2962296dccfa5d888e7d85ce6230670b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,12 +171,12 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p>A <a class="el" href="classCuEventLoopService.html" title="service that implements a simple event loop for cumbia applications.">CuEventLoopService</a> must have been previously created and registered to the <a class="el" href="classCuServiceProvider.html" title="The CuServiceProvider class is the cumbia service provider where cumbia services can be registered an...">CuServiceProvider</a> </p>
 
-<p class="reference">References <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0baad975f983fa59d673f8d86e0596fff94">CuServices::EventLoop</a>, <a class="el" href="classCuServiceProvider.html#a76401ea9bf747574c065b2600e1b4dae">CuServiceProvider::get()</a>, <a class="el" href="cumacros_8h.html#ace3ed8e68957fe0cd2c27043cc5137db">perr</a>, and <a class="el" href="classCuEventLoopService.html#ae54dbd5abef0be74676cc3aaceb44d9a">CuEventLoopService::setCuEventLoopListener()</a>.</p>
+<p class="reference">References <a class="el" href="classCuEventLoopService.html#ad3e16c6bf175bb0de759d5c70f96f7e2">CuEventLoopService::addCuEventLoopListener()</a>, <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0baad975f983fa59d673f8d86e0596fff94">CuServices::EventLoop</a>, <a class="el" href="classCuServiceProvider.html#a76401ea9bf747574c065b2600e1b4dae">CuServiceProvider::get()</a>, and <a class="el" href="cumacros_8h.html#ace3ed8e68957fe0cd2c27043cc5137db">perr</a>.</p>
 
 </div>
 </div>
-<a id="a4fc79790979388d8eb76779cc6c58ce1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4fc79790979388d8eb76779cc6c58ce1">&#9670;&nbsp;</a></span>~CuThreadsEventBridge()</h2>
+<a id="a5dbb6734efb5f1c2c1f754bc59c6d99e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5dbb6734efb5f1c2c1f754bc59c6d99e">&#9670;&nbsp;</a></span>~CuThreadsEventBridge()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -185,7 +185,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual CuThreadsEventBridge::~CuThreadsEventBridge </td>
+          <td class="memname">CuThreadsEventBridge::~CuThreadsEventBridge </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -193,10 +193,12 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="cumacros_8h.html#ada414d70bad931bb2fea6abc8acaefbc">cuprintf</a>, and <a class="el" href="classCuEventLoopService.html#a9cba979e394388ae3e7081d9ffce552c">CuEventLoopService::removeCuEventLoopListener()</a>.</p>
 
 </div>
 </div>
@@ -265,11 +267,11 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>post the event to the event loop </p>
-<p>calls postEvent on the event loop service (<a class="el" href="classCuEventLoopService.html" title="service that implements a simple event loop for cumbia applications.">CuEventLoopService</a>) </p>
+<p>calls postEvent on the event loop service (<a class="el" href="classCuEventLoopService.html" title="service that implements a simple event loop for cumbia applications.">CuEventLoopService</a>) with this as a listener </p>
 
 <p>Implements <a class="el" href="classCuThreadsEventBridge__I.html#adb2b8b08cb599ad1917bcdcbec062230">CuThreadsEventBridge_I</a>.</p>
 
-<p class="reference">References <a class="el" href="classCuEventLoopService.html#aa3371b2bcd1895a85cdc2b712ab44a40">CuEventLoopService::postEvent()</a>.</p>
+<p class="reference">References <a class="el" href="classCuEventLoopService.html#adba945504b49ff5ea54393ad16a61d1a">CuEventLoopService::postEvent()</a>.</p>
 
 </div>
 </div>
@@ -322,7 +324,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuThreadsEventBridge.html">CuThreadsEventBridge</a></li>
-    <li class="footer">Generated on Mon Apr 20 2020 14:06:28 for cumbia by
+    <li class="footer">Generated on Sat May 2 2020 14:12:51 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

@@ -101,12 +101,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af72083ec93432a9fd33f4abc086ddc98"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuServiceProvider.html#af72083ec93432a9fd33f4abc086ddc98">CuServiceProvider</a> ()</td></tr>
 <tr class="memdesc:af72083ec93432a9fd33f4abc086ddc98"><td class="mdescLeft">&#160;</td><td class="mdescRight">the class constructor  <a href="classCuServiceProvider.html#af72083ec93432a9fd33f4abc086ddc98">More...</a><br /></td></tr>
 <tr class="separator:af72083ec93432a9fd33f4abc086ddc98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c8cc9b95367b8777b262277529f5dbc"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuServiceProvider.html#a3c8cc9b95367b8777b262277529f5dbc">~CuServiceProvider</a> ()</td></tr>
+<tr class="separator:a3c8cc9b95367b8777b262277529f5dbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d17022cccf23580aabdf7826d95462a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuServiceProvider.html#a9d17022cccf23580aabdf7826d95462a">registerService</a> (<a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b">CuServices::Type</a> name, <a class="el" href="classCuServiceI.html">CuServiceI</a> *service)</td></tr>
 <tr class="memdesc:a9d17022cccf23580aabdf7826d95462a"><td class="mdescLeft">&#160;</td><td class="mdescRight">register a service to the <em>service provider</em>  <a href="classCuServiceProvider.html#a9d17022cccf23580aabdf7826d95462a">More...</a><br /></td></tr>
 <tr class="separator:a9d17022cccf23580aabdf7826d95462a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a762cd60cfdb0a62be358c8212f189984"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuServiceProvider.html#a762cd60cfdb0a62be358c8212f189984">registerSharedService</a> (<a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b">CuServices::Type</a> name, <a class="el" href="classCuServiceI.html">CuServiceI</a> *service)</td></tr>
+<tr class="memdesc:a762cd60cfdb0a62be358c8212f189984"><td class="mdescLeft">&#160;</td><td class="mdescRight">Same as registerService, but mark the service as potentially shared across multiple <a class="el" href="classCumbia.html" title="primary cumbia class where activities are registered and unregistered. Provides access to the cumbia ...">Cumbia</a> instances, thus preventing <em>service</em> from being automatically deleted.  <a href="classCuServiceProvider.html#a762cd60cfdb0a62be358c8212f189984">More...</a><br /></td></tr>
+<tr class="separator:a762cd60cfdb0a62be358c8212f189984"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f8d6f70b3bef2edc45ac14a5965fb6a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuServiceProvider.html#a4f8d6f70b3bef2edc45ac14a5965fb6a">unregisterService</a> (<a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b">CuServices::Type</a> name)</td></tr>
 <tr class="memdesc:a4f8d6f70b3bef2edc45ac14a5965fb6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">unregister a service from the <em>service provider</em>  <a href="classCuServiceProvider.html#a4f8d6f70b3bef2edc45ac14a5965fb6a">More...</a><br /></td></tr>
 <tr class="separator:a4f8d6f70b3bef2edc45ac14a5965fb6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa05eaedb2b70ddbb769a099d6f8b55ff"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuServiceProvider.html#aa05eaedb2b70ddbb769a099d6f8b55ff">isShared</a> (<a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b">CuServices::Type</a> t) const</td></tr>
+<tr class="separator:aa05eaedb2b70ddbb769a099d6f8b55ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59857a691c41061f662123fda85d9590"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuServiceProvider.html#a59857a691c41061f662123fda85d9590">setShared</a> (<a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b">CuServices::Type</a> t, bool shared)</td></tr>
+<tr class="separator:a59857a691c41061f662123fda85d9590"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76401ea9bf747574c065b2600e1b4dae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuServiceI.html">CuServiceI</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuServiceProvider.html#a76401ea9bf747574c065b2600e1b4dae">get</a> (<a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b">CuServices::Type</a> name) const</td></tr>
 <tr class="memdesc:a76401ea9bf747574c065b2600e1b4dae"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the service with the given name, if registered  <a href="classCuServiceProvider.html#a76401ea9bf747574c065b2600e1b4dae">More...</a><br /></td></tr>
 <tr class="separator:a76401ea9bf747574c065b2600e1b4dae"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,7 +127,7 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><p>The <a class="el" href="classCuServiceProvider.html" title="The CuServiceProvider class is the cumbia service provider where cumbia services can be registered an...">CuServiceProvider</a> class is the <em>cumbia service provider</em> where <em>cumbia services</em> can be registered and have their references stored throughout their lifetime. </p>
 <p><em>cumbia services</em> are classes that must implement the <a class="el" href="classCuServiceI.html" title="interface to write cumbia services that can be registered and fetched through the cumbia service prov...">CuServiceI</a> interface. It forces them to provide a name as string and a type as <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b" title="enumerates the type of available services">CuServices::Type</a>. Services are registered to the <em>service provider</em> with the <a class="el" href="classCuServiceProvider.html#a9d17022cccf23580aabdf7826d95462a" title="register a service to the service provider">CuServiceProvider::registerService</a>, removed with the <a class="el" href="classCuServiceProvider.html#a4f8d6f70b3bef2edc45ac14a5965fb6a" title="unregister a service from the service provider">CuServiceProvider::unregisterService</a> and references to registered services can be obtained by <em>type</em> (<a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b" title="enumerates the type of available services">CuServices::Type</a>) with the <a class="el" href="classCuServiceProvider.html#a76401ea9bf747574c065b2600e1b4dae" title="returns the service with the given name, if registered">CuServiceProvider::get</a> method.</p>
 <p>The <a class="el" href="classCuServiceProvider.html#a4239f86498aebe49fbe75001813223a3" title="returns the list of registered services">CuServiceProvider::getServices</a> returns a std::list of the registered services.</p>
-<p><a class="el" href="classCumbia.html" title="primary cumbia class where activities are registered and unregistered. Provides access to the cumbia ...">Cumbia</a> instantiates a <a class="el" href="classCuServiceProvider.html" title="The CuServiceProvider class is the cumbia service provider where cumbia services can be registered an...">CuServiceProvider</a> in its class constructor (<a class="el" href="classCumbia.html#a3e3c4f63d56450245bf926be665a41e5" title="Cumbia class constructor.">Cumbia::Cumbia</a>) and holds a reference to it throughout all <a class="el" href="classCumbia.html" title="primary cumbia class where activities are registered and unregistered. Provides access to the cumbia ...">Cumbia</a>'s lifetime (see <a class="el" href="classCumbia.html#a17c9894c182fe02d4667aff851824f81" title="called from the class destructor, cleans up the Cumbia object">Cumbia::finish</a>). Within <a class="el" href="classCumbia.html#a17c9894c182fe02d4667aff851824f81" title="called from the class destructor, cleans up the Cumbia object">Cumbia::finish</a>, all services still registered (as returned by <a class="el" href="classCuServiceProvider.html#a4239f86498aebe49fbe75001813223a3" title="returns the list of registered services">CuServiceProvider::getServices</a>) are first unregistered and then deleted.</p>
+<p><a class="el" href="classCumbia.html" title="primary cumbia class where activities are registered and unregistered. Provides access to the cumbia ...">Cumbia</a> instantiates a <a class="el" href="classCuServiceProvider.html" title="The CuServiceProvider class is the cumbia service provider where cumbia services can be registered an...">CuServiceProvider</a> in its class constructor (<a class="el" href="classCumbia.html#a3e3c4f63d56450245bf926be665a41e5" title="Cumbia class constructor.">Cumbia::Cumbia</a>) and holds a reference to it throughout all <a class="el" href="classCumbia.html" title="primary cumbia class where activities are registered and unregistered. Provides access to the cumbia ...">Cumbia</a>'s lifetime (see <a class="el" href="classCumbia.html#a17c9894c182fe02d4667aff851824f81" title="called from the class destructor, cleans up the Cumbia object">Cumbia::finish</a>). Within <a class="el" href="classCumbia.html#a17c9894c182fe02d4667aff851824f81" title="called from the class destructor, cleans up the Cumbia object">Cumbia::finish</a>, all services still registered (as returned by <a class="el" href="classCuServiceProvider.html#a4239f86498aebe49fbe75001813223a3" title="returns the list of registered services">CuServiceProvider::getServices</a>) are first unregistered and then deleted, unless the service had been registered with the <em>shared</em> option set to true (see CuServiceProvider::registerService(CuServices::Type name, CuServiceI *service, bool shared) )</p>
 <p><a class="el" href="classCumbia.html#aaaf0d8e9ad0b480a5c95997e7bfbf7da">Cumbia::getServiceProvider</a> can be called to get a reference to the <em>service provider</em>. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="af72083ec93432a9fd33f4abc086ddc98"></a>
@@ -138,6 +147,31 @@ Public Member Functions</h2></td></tr>
 
 <p>the class constructor </p>
 <p>no parameters needed. </p>
+
+</div>
+</div>
+<a id="a3c8cc9b95367b8777b262277529f5dbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c8cc9b95367b8777b262277529f5dbc">&#9670;&nbsp;</a></span>~CuServiceProvider()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuServiceProvider::~CuServiceProvider </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -168,6 +202,8 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>the instance of the service with that name, if registered, NULL otherwise</dd></dl>
 <dl class="section user"><dt>warning</dt><dd>The method can return NULL if no service with the given name is registered. </dd></dl>
 
+<p class="reference">References <a class="el" href="classCuServiceProviderPrivate.html#a226bd4c1f5a644b1661604f7a243ec85">CuServiceProviderPrivate::services_map</a>.</p>
+
 <p class="reference">Referenced by <a class="el" href="classCuThreadsEventBridge.html#a561227bc5de7c1f3e4f9df583a23c0f9">CuThreadsEventBridge::CuThreadsEventBridge()</a>.</p>
 
 </div>
@@ -189,6 +225,28 @@ Public Member Functions</h2></td></tr>
 
 <p>returns the list of registered services </p>
 <dl class="section return"><dt>Returns</dt><dd>the list of registered services </dd></dl>
+
+<p class="reference">References <a class="el" href="classCuServiceProviderPrivate.html#a226bd4c1f5a644b1661604f7a243ec85">CuServiceProviderPrivate::services_map</a>.</p>
+
+</div>
+</div>
+<a id="aa05eaedb2b70ddbb769a099d6f8b55ff"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa05eaedb2b70ddbb769a099d6f8b55ff">&#9670;&nbsp;</a></span>isShared()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CuServiceProvider::isShared </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b">CuServices::Type</a>&#160;</td>
+          <td class="paramname"><em>t</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuServiceProviderPrivate.html#a3a776178e5d41fc4d11fae84fe014c17">CuServiceProviderPrivate::shared_srvcs</a>.</p>
 
 </div>
 </div>
@@ -226,7 +284,80 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>The service can be retrieved with <a class="el" href="classCuServiceProvider.html#a76401ea9bf747574c065b2600e1b4dae" title="returns the service with the given name, if registered">CuServiceProvider::get</a> The service can be unregistered with <a class="el" href="classCuServiceProvider.html#a4f8d6f70b3bef2edc45ac14a5965fb6a" title="unregister a service from the service provider">CuServiceProvider::unregisterService</a> </p>
+<p>The service can be retrieved with <a class="el" href="classCuServiceProvider.html#a76401ea9bf747574c065b2600e1b4dae" title="returns the service with the given name, if registered">CuServiceProvider::get</a> The service can be unregistered with <a class="el" href="classCuServiceProvider.html#a4f8d6f70b3bef2edc45ac14a5965fb6a" title="unregister a service from the service provider">CuServiceProvider::unregisterService</a></p>
+<p>The service is deleted automatically by <a class="el" href="classCumbia.html" title="primary cumbia class where activities are registered and unregistered. Provides access to the cumbia ...">Cumbia</a> when the latter is deleted. If a service <em>is shared across multiple <a class="el" href="classCumbia.html" title="primary cumbia class where activities are registered and unregistered. Provides access to the cumbia ...">Cumbia</a> instances</em>, like CuEventLoop, then registerSharedService must be called instead. </p>
+
+<p class="reference">References <a class="el" href="classCuServiceProviderPrivate.html#a226bd4c1f5a644b1661604f7a243ec85">CuServiceProviderPrivate::services_map</a>.</p>
+
+</div>
+</div>
+<a id="a762cd60cfdb0a62be358c8212f189984"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a762cd60cfdb0a62be358c8212f189984">&#9670;&nbsp;</a></span>registerSharedService()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuServiceProvider::registerSharedService </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b">CuServices::Type</a>&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCuServiceI.html">CuServiceI</a> *&#160;</td>
+          <td class="paramname"><em>service</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Same as registerService, but mark the service as potentially shared across multiple <a class="el" href="classCumbia.html" title="primary cumbia class where activities are registered and unregistered. Provides access to the cumbia ...">Cumbia</a> instances, thus preventing <em>service</em> from being automatically deleted. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>the service name, as <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b" title="enumerates the type of available services">CuServices::Type</a> </td></tr>
+    <tr><td class="paramname">service</td><td>the service to register as a <em>shared service</em>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>The object ownership is left to the caller, and <em>service</em> must be manually deleted. </dd></dl>
+
+<p class="reference">References <a class="el" href="classCuServiceProviderPrivate.html#a226bd4c1f5a644b1661604f7a243ec85">CuServiceProviderPrivate::services_map</a>, and <a class="el" href="classCuServiceProviderPrivate.html#a3a776178e5d41fc4d11fae84fe014c17">CuServiceProviderPrivate::shared_srvcs</a>.</p>
+
+</div>
+</div>
+<a id="a59857a691c41061f662123fda85d9590"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59857a691c41061f662123fda85d9590">&#9670;&nbsp;</a></span>setShared()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuServiceProvider::setShared </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b">CuServices::Type</a>&#160;</td>
+          <td class="paramname"><em>t</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>shared</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuServiceProviderPrivate.html#a3a776178e5d41fc4d11fae84fe014c17">CuServiceProviderPrivate::shared_srvcs</a>.</p>
 
 </div>
 </div>
@@ -255,6 +386,8 @@ Public Member Functions</h2></td></tr>
 </dl>
 <p>The service with the given name is removed from the service provider </p>
 
+<p class="reference">References <a class="el" href="classCuServiceProviderPrivate.html#a226bd4c1f5a644b1661604f7a243ec85">CuServiceProviderPrivate::services_map</a>.</p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
@@ -267,7 +400,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuServiceProvider.html">CuServiceProvider</a></li>
-    <li class="footer">Generated on Mon Apr 20 2020 14:06:28 for cumbia by
+    <li class="footer">Generated on Sat May 2 2020 14:12:51 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

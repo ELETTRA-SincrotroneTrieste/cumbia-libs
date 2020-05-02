@@ -91,33 +91,36 @@ $(document).ready(function(){initNavTree('cuthreadseventbridgefactory__i_8h_sour
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor">#define CUTHREADSEVENTBRIDGEFACTORY_I_H</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">class </span><a class="code" href="classCuServiceProvider.html">CuServiceProvider</a>;</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">class </span><a class="code" href="classCuThreadsEventBridge__I.html">CuThreadsEventBridge_I</a>;</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classCuThreadsEventBridgeFactory__I.html">   16</a></span>&#160;<span class="keyword">class </span><a class="code" href="classCuThreadsEventBridgeFactory__I.html">CuThreadsEventBridgeFactory_I</a></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classCuThreadsEventBridgeFactory__I.html#a306e60890f83dda81d2970e134d9144f">   24</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classCuThreadsEventBridgeFactory__I.html#a306e60890f83dda81d2970e134d9144f">~CuThreadsEventBridgeFactory_I</a>() {}</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classCuThreadsEventBridge__I.html">CuThreadsEventBridge_I</a> *<a class="code" href="classCuThreadsEventBridgeFactory__I.html#a264f12bdbfdf933e0e03fd2401316306">createEventBridge</a>(<span class="keyword">const</span> <a class="code" href="classCuServiceProvider.html">CuServiceProvider</a> *sp) <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#endif // CUTHREADSEVENTBRIDGEFACTORY_I_H</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="cumacros_8h.html">cumacros.h</a>&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">class </span><a class="code" href="classCuServiceProvider.html">CuServiceProvider</a>;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">class </span><a class="code" href="classCuThreadsEventBridge__I.html">CuThreadsEventBridge_I</a>;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classCuThreadsEventBridgeFactory__I.html">   17</a></span>&#160;<span class="keyword">class </span><a class="code" href="classCuThreadsEventBridgeFactory__I.html">CuThreadsEventBridgeFactory_I</a></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classCuThreadsEventBridgeFactory__I.html#a306e60890f83dda81d2970e134d9144f">   25</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classCuThreadsEventBridgeFactory__I.html#a306e60890f83dda81d2970e134d9144f">~CuThreadsEventBridgeFactory_I</a>() { <a class="code" href="cumacros_8h.html#a629905ebf3b84e70ff80248220fdc7a4">pdelete</a>(<span class="stringliteral">&quot;~CuThreadsEventBridgeFactory_I %p&quot;</span>, <span class="keyword">this</span>); }</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classCuThreadsEventBridge__I.html">CuThreadsEventBridge_I</a> *<a class="code" href="classCuThreadsEventBridgeFactory__I.html#a264f12bdbfdf933e0e03fd2401316306">createEventBridge</a>(<span class="keyword">const</span> <a class="code" href="classCuServiceProvider.html">CuServiceProvider</a> *sp) <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;};</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#endif // CUTHREADSEVENTBRIDGEFACTORY_I_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
+<div class="ttc" id="acumacros_8h_html_a629905ebf3b84e70ff80248220fdc7a4"><div class="ttname"><a href="cumacros_8h.html#a629905ebf3b84e70ff80248220fdc7a4">pdelete</a></div><div class="ttdeci">#define pdelete(x, args...)</div><div class="ttdef"><b>Definition:</b> cumacros.h:140</div></div>
 <div class="ttc" id="aclassCuThreadsEventBridge__I_html"><div class="ttname"><a href="classCuThreadsEventBridge__I.html">CuThreadsEventBridge_I</a></div><div class="ttdoc">interface to a threads event bridge</div><div class="ttdef"><b>Definition:</b> cuthreadseventbridge_i.h:53</div></div>
-<div class="ttc" id="aclassCuServiceProvider_html"><div class="ttname"><a href="classCuServiceProvider.html">CuServiceProvider</a></div><div class="ttdoc">The CuServiceProvider class is the cumbia service provider where cumbia services can be registered an...</div><div class="ttdef"><b>Definition:</b> cuserviceprovider.h:35</div></div>
-<div class="ttc" id="aclassCuThreadsEventBridgeFactory__I_html"><div class="ttname"><a href="classCuThreadsEventBridgeFactory__I.html">CuThreadsEventBridgeFactory_I</a></div><div class="ttdoc">interface for a factory to create a bridge binding a thread to an event loop</div><div class="ttdef"><b>Definition:</b> cuthreadseventbridgefactory_i.h:16</div></div>
-<div class="ttc" id="aclassCuThreadsEventBridgeFactory__I_html_a306e60890f83dda81d2970e134d9144f"><div class="ttname"><a href="classCuThreadsEventBridgeFactory__I.html#a306e60890f83dda81d2970e134d9144f">CuThreadsEventBridgeFactory_I::~CuThreadsEventBridgeFactory_I</a></div><div class="ttdeci">virtual ~CuThreadsEventBridgeFactory_I()</div><div class="ttdoc">class destructor</div><div class="ttdef"><b>Definition:</b> cuthreadseventbridgefactory_i.h:24</div></div>
+<div class="ttc" id="aclassCuServiceProvider_html"><div class="ttname"><a href="classCuServiceProvider.html">CuServiceProvider</a></div><div class="ttdoc">The CuServiceProvider class is the cumbia service provider where cumbia services can be registered an...</div><div class="ttdef"><b>Definition:</b> cuserviceprovider.h:38</div></div>
+<div class="ttc" id="acumacros_8h_html"><div class="ttname"><a href="cumacros_8h.html">cumacros.h</a></div></div>
+<div class="ttc" id="aclassCuThreadsEventBridgeFactory__I_html"><div class="ttname"><a href="classCuThreadsEventBridgeFactory__I.html">CuThreadsEventBridgeFactory_I</a></div><div class="ttdoc">interface for a factory to create a bridge binding a thread to an event loop</div><div class="ttdef"><b>Definition:</b> cuthreadseventbridgefactory_i.h:17</div></div>
+<div class="ttc" id="aclassCuThreadsEventBridgeFactory__I_html_a306e60890f83dda81d2970e134d9144f"><div class="ttname"><a href="classCuThreadsEventBridgeFactory__I.html#a306e60890f83dda81d2970e134d9144f">CuThreadsEventBridgeFactory_I::~CuThreadsEventBridgeFactory_I</a></div><div class="ttdeci">virtual ~CuThreadsEventBridgeFactory_I()</div><div class="ttdoc">class destructor</div><div class="ttdef"><b>Definition:</b> cuthreadseventbridgefactory_i.h:25</div></div>
 <div class="ttc" id="aclassCuThreadsEventBridgeFactory__I_html_a264f12bdbfdf933e0e03fd2401316306"><div class="ttname"><a href="classCuThreadsEventBridgeFactory__I.html#a264f12bdbfdf933e0e03fd2401316306">CuThreadsEventBridgeFactory_I::createEventBridge</a></div><div class="ttdeci">virtual CuThreadsEventBridge_I * createEventBridge(const CuServiceProvider *sp) const =0</div><div class="ttdoc">return an implementation of the CuThreadsEventBridge_I interface</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a class="el" href="dir_c85d3e3c5052e9ad9ce18c6863244a25.html">lib</a></li><li class="navelem"><a class="el" href="dir_cdf9e096f2e9fac5247a6c7abb90da86.html">threads</a></li><li class="navelem"><a class="el" href="cuthreadseventbridgefactory__i_8h.html">cuthreadseventbridgefactory_i.h</a></li>
-    <li class="footer">Generated on Mon Apr 20 2020 14:06:28 for cumbia by
+    <li class="footer">Generated on Sat May 2 2020 14:12:51 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

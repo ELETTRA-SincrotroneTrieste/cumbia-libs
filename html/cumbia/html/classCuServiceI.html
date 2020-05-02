@@ -127,7 +127,8 @@ Public Member Functions</h2></td></tr>
 <li>getName, returns a string with the name of the service </li>
 <li>getType, returns a value from <a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b" title="enumerates the type of available services">CuServices::Type</a> to identify the service.</li>
 </ul>
-<p><a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b" title="enumerates the type of available services">CuServices::Type</a> is used to register, unregister and get references to service from <a class="el" href="classCuServiceProvider.html" title="The CuServiceProvider class is the cumbia service provider where cumbia services can be registered an...">CuServiceProvider</a> </p>
+<p><a class="el" href="classCuServices.html#aa03cab8558f097dcdba9b49c90140c0b" title="enumerates the type of available services">CuServices::Type</a> is used to register, unregister and get references to service from <a class="el" href="classCuServiceProvider.html" title="The CuServiceProvider class is the cumbia service provider where cumbia services can be registered an...">CuServiceProvider</a></p>
+<p>If a service is shared across multiple <a class="el" href="classCumbia.html" title="primary cumbia class where activities are registered and unregistered. Provides access to the cumbia ...">Cumbia</a> instances (for example, CuEventLoop), then it must be registered using the <a class="el" href="classCuServiceProvider.html#a9d17022cccf23580aabdf7826d95462a" title="register a service to the service provider">CuServiceProvider::registerService</a> with the <em>shared</em> option set to true. This informs each <a class="el" href="classCumbia.html" title="primary cumbia class where activities are registered and unregistered. Provides access to the cumbia ...">Cumbia</a> instance not to delete the service. Its disposal is in charge of the client. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa6e947cbad6f685162f8cb930d9aac9d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa6e947cbad6f685162f8cb930d9aac9d">&#9670;&nbsp;</a></span>~CuServiceI()</h2>
@@ -226,7 +227,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuServiceI.html">CuServiceI</a></li>
-    <li class="footer">Generated on Mon Apr 20 2020 14:06:28 for cumbia by
+    <li class="footer">Generated on Sat May 2 2020 14:12:51 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>

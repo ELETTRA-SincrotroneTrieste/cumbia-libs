@@ -111,9 +111,21 @@ $(function() {
 <p>If an existing <em>cumbia</em> project was created with a single engine in mind, a few code modifications are needed to port it to the multi engine form. In this example, we assume to be working on a Tango app and we want to support the <em>websocket</em> and <em>tango</em> engines only.</p>
 <h3>qmake project file</h3>
 <p>Add the support for the necessary engines</p>
-<div class="fragment"><div class="line">include (/usr/local/cumbia-libs/include/qumbia-tango-controls/qumbia-tango-controls.pri)</div>
-<div class="line">include (/usr/local/cumbia-libs/include/cumbia-websocket/cumbia-websocket.pri)</div>
-</div><!-- fragment --><h3>Header File</h3>
+<div class="fragment"><div class="line">isEmpty(CUMBIA_ROOT) {</div>
+<div class="line">    CUMBIA_ROOT=/usr/local/cumbia-libs</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">linux-g++ {</div>
+<div class="line">    exists  ($${CUMBIA_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {</div>
+<div class="line">        include ($${CUMBIA_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)</div>
+<div class="line">    }</div>
+<div class="line">} <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="preprocessor">    # include cumbia-qtcontrols for necessary qt engine-unaware dependency (widgets, qwt, ...)</span></div>
+<div class="line">    include ($${CUMBIA_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)</div>
+<div class="line">    include ($${CUMBIA_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Dependencies from qtx11extras should be removed or moved within the linux-g++ scope. Removing qtx11extras support implies removing or conditionally include sections of code related to X, like for example those using QX11Info, calling XSetCommand and so on.</p>
+<h3>Header File</h3>
 <p>The following lines</p>
 <div class="fragment"><div class="line"><span class="comment">// - to be removed</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="codeRef" href="../../qumbia-tango-controls/html/cutcontrolsreader_8h.html">cutcontrolsreader.h</a>&gt;</span></div>
@@ -348,7 +360,7 @@ $(function() {
 <div class="ttc" id="aclassCuEpRegisterEngine_html_a929861be5152dfd4150ce448b1ff90b2"><div class="ttname"><a href="../../qumbia-epics-controls/html/classCuEpRegisterEngine.html#a929861be5152dfd4150ce448b1ff90b2">CuEpRegisterEngine::registerWithDefaults</a></div><div class="ttdeci">CumbiaEpics * registerWithDefaults(CumbiaPool *cu_pool, CuControlsFactoryPool &amp;fpoo)</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Apr 20 2020 14:06:54 for cumbia-websocket by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat May 2 2020 14:13:15 for cumbia-websocket by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.17
 </small></address>

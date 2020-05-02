@@ -172,8 +172,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aeb5d28f9e4141fafa088c739734e2e45"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivity.html#aeb5d28f9e4141fafa088c739734e2e45">publishExitResult</a> (const <a class="el" href="classCuData.html">CuData</a> *data)</td></tr>
 <tr class="separator:aeb5d28f9e4141fafa088c739734e2e45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a596aaa0a63161b559b15c454fa800ddb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivity.html#a596aaa0a63161b559b15c454fa800ddb">publishResult</a> (const std::vector&lt; <a class="el" href="classCuData.html">CuData</a> &gt; *datalist)</td></tr>
+<tr class="memdesc:a596aaa0a63161b559b15c454fa800ddb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Publish a result from the activity to the main thread. Datalist version.  <a href="classCuActivity.html#a596aaa0a63161b559b15c454fa800ddb">More...</a><br /></td></tr>
 <tr class="separator:a596aaa0a63161b559b15c454fa800ddb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c6eb2f9902d6b8ba43474a243720e8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuActivityManager.html">CuActivityManager</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivity.html#a0c6eb2f9902d6b8ba43474a243720e8f">getActivityManager</a> () const</td></tr>
+<tr class="memdesc:a0c6eb2f9902d6b8ba43474a243720e8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the reference to the activity manager.  <a href="classCuActivity.html#a0c6eb2f9902d6b8ba43474a243720e8f">More...</a><br /></td></tr>
 <tr class="separator:a0c6eb2f9902d6b8ba43474a243720e8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae05621fc262128f5e373d32d9a6d3baa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuData.html">CuData</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivity.html#ae05621fc262128f5e373d32d9a6d3baa">getToken</a> () const</td></tr>
 <tr class="memdesc:ae05621fc262128f5e373d32d9a6d3baa"><td class="mdescLeft">&#160;</td><td class="mdescRight">return the activity token  <a href="classCuActivity.html#ae05621fc262128f5e373d32d9a6d3baa">More...</a><br /></td></tr>
@@ -603,6 +605,9 @@ Used internally.</dd></dl>
       </table>
 </div><div class="memdoc">
 
+<p>Returns the reference to the activity manager. </p>
+<dl class="section return"><dt>Returns</dt><dd>a pointer to the <a class="el" href="classCuActivityManager.html" title="This service stores the links between threads, activities and thread listeners.">CuActivityManager</a> used by this instance </dd></dl>
+
 </div>
 </div>
 <a id="a5c3147502a8740cc3961f4d079b1d508"></a>
@@ -918,6 +923,15 @@ Used internally.</dd></dl>
       </table>
 </div><div class="memdoc">
 
+<p>Publish a result from the activity to the main thread. Datalist version. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">datalist</td><td>a <em>heap allocated</em> vector of <a class="el" href="classCuData.html" title="container for data exchange for the cumbia library and its clients">CuData</a></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>datalist is deleted by the library when no more needed. </dd></dl>
+
 <p class="reference">References <a class="el" href="classCuThreadInterface.html#aadbb7855f5572d516a373640d0751940">CuThreadInterface::publishResult()</a>.</p>
 
 </div>
@@ -1084,7 +1098,7 @@ Used internally.</dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuActivity.html">CuActivity</a></li>
-    <li class="footer">Generated on Mon Apr 20 2020 14:06:28 for cumbia by
+    <li class="footer">Generated on Sat May 2 2020 14:12:51 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.17 </li>
   </ul>
