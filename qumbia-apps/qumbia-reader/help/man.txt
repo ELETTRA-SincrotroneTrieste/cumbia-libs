@@ -158,3 +158,21 @@
         the last call.
         For example:
             $ cumbia monitor  random://file://js_functions/sin.js/100/-10/10/sin_f
+
+### Read from a websocket server
+    Reading from a websocket server is an option excluding all other engines (Tango, EPICS), that will be disabled,
+    so that the source syntax is allowed to remain the same.
+    The websocket server is a proxy to the real engines that allows cumbia, web, and mobile apps to exchange
+    data with control systems without having neither their specific libraries installed nor access to the field.
+
+    For the examples below to work, the cumbia-websocket-proxy-server must be listening on the port 12702.
+    If you need cumbia-websocket-proxy-server, check it out from
+       https://github.com/ELETTRA-SincrotroneTrieste/cumbia-websocket-proxy-server
+
+    The required parameter is --ws-url=ws://websocket-url:PORT . The only active engine will be cumbia-websocket
+    Example read:
+            $ cumbia read --ws-url=ws://localhost:12702 test/device/1/double_scalar
+    Example monitor:
+            $ cumbia read --ws-url=ws://localhost:12702 test/device/1/double_scalar -m
+
+
