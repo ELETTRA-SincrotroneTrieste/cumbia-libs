@@ -13,10 +13,10 @@ public:
     std::string msg;
     bool err;
     pthread_t my_thread_id, other_thread_id;
-    std::vector<string> props;
     bool exiting;
     int repeat, try_cnt;
     CuTConfigActivity::Type type;
+    CuData options;
 };
 
 CuTConfigActivity::CuTConfigActivity(const CuData &tok, CuDeviceFactoryService *df, Type t) : CuActivity(tok)
@@ -34,15 +34,14 @@ CuTConfigActivity::CuTConfigActivity(const CuData &tok, CuDeviceFactoryService *
     setFlag(CuActivity::CuADeleteOnExit, true);
 }
 
-void CuTConfigActivity::setDesiredAttributeProperties(const std::vector<string> &props)
-{
-    d->props = props;
-}
-
 CuTConfigActivity::~CuTConfigActivity()
 {
     pdelete("CuTAttConfigActivity %p", this);
     delete d;
+}
+
+void CuTConfigActivity::setOptions(const CuData &o) {
+    d->options = o;
 }
 
 int CuTConfigActivity::getType() const
@@ -91,31 +90,36 @@ void CuTConfigActivity::execute()
     bool cmd = at["is_command"].toBool();
     at["properties"] = std::vector<std::string>();
     at["type"] = "property";
+    bool value_only = d->options["value-only"].toBool();
 
     d->try_cnt++;
     bool success = false;
 
-    if(d->tdev->isValid())
-    {
+    if(d->tdev->isValid()) {
         Tango::DeviceProxy *dev = d->tdev->getDevice();
         CuTangoWorld utils;
         utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
         if(dev && cmd)
         {
-            success = utils.get_command_info(dev, point, at);
+            success = value_only || utils.get_command_info(dev, point, at);
             if(success && d->type == CuReaderConfigActivityType) {
                 success = utils.cmd_inout(dev, point, at);
             }
         }
-        else if(dev)
-        {
-            success = utils.get_att_config(dev, point, at);
+        else if(dev)  {
+            value_only ? success = utils.read_att(dev, point, at)  : success = utils.get_att_config(dev, point, at);
         }
         else
             d->msg = d->tdev->getMessage();
 
-        if(d->props.size() > 0 && success && dev)
-            success = utils.get_att_props(dev, point, at, d->props);
+        //
+        // fetch attribute properties
+        if(d->options.containsKey("fetch_props")) {
+            const std::vector<std::string> &props = d->options["fetch_props"].toStringVector();
+            if(props.size() > 0 && success && dev)
+                success = utils.get_att_props(dev, point, at, props);
+        }
+        //
 
         at["data"] = true;
         at["msg"] = "CuTConfigActivity.execute: " + utils.getLastMessage();
