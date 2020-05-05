@@ -135,9 +135,7 @@ CuTangoActionI::Type CuTReaderConfFactory::getType() const
 CuTangoActionI *CuTWriterConfFactory::create(const string &s, CumbiaTango *ct) const
 {
     CuTConfiguration *w = new CuTConfiguration(s, ct, CuTangoActionI::WriterConfig);
-    const CuData& op = options();
-    if(op.containsKey("fetch_props"))
-        w->setDesiredAttributeProperties(op["fetch_props"].toStringVector());
+    w->setOptions(options());
     return w;
 }
 
