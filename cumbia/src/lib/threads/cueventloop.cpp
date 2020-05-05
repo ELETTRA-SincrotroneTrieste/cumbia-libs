@@ -49,7 +49,6 @@ CuEventLoopService::CuEventLoopService(CuEventLoopListener *l)
  */
 CuEventLoopService::~CuEventLoopService()
 {
-    cuprintf("~CuEventLoopService \e[1;31m DELETING EVENT LOOOOOOOP\e[0m %p\n", this);
     if(d->thread)
         perr("~CuEventLoopService: destroyed while thread still running. Please call exit() and wait()");
     delete d;
@@ -111,6 +110,7 @@ void CuEventLoopService::removeCuEventLoopListener(CuEventLoopListener *l) {
  */
 void CuEventLoopService::exit()
 {
+    cuprintf("CuEventLoopService::exit\n");
     std::unique_lock<std::mutex> lk(d->m_mutex);
     d->m_eventQueue.push(CuEventInfo(new CuExitLoopEvent, nullptr));
     d->m_evloop_cv.notify_one();
@@ -140,11 +140,9 @@ void CuEventLoopService::wait()
  */
 void CuEventLoopService::run()
 {
-    pblue("CuEventLoop run: entering loop: this thread: \e[1;31m0x%lx\e[0m", pthread_self());
     bool repeat = true;
     while (repeat)
     {
-        cuprintf("CuEventLoopService.run %p \e[1;32mthread \e[1;31m0x%lx\e[0m: waiting for events...\e[0m\n", this, pthread_self());
         std::list<CuEventI *> events;
         // Wait for a message to be added to the queue
         {
@@ -160,14 +158,12 @@ void CuEventLoopService::run()
                 else if(std::find(d->eloo_liss.begin(), d->eloo_liss.end(), event_info->lis)
                         != d->eloo_liss.end()) {
                     event_info->lis->onEvent(event_info->event);
-                    cuprintf("CuEventLoopService.run: calling on event on %p\n", event_info->lis);
                 }
                 d->m_eventQueue.pop();
                 delete event_info->event;
             }
         }
     }
-    pblue("\e[1;32mCuEventLoopService.run leaving loop!\e[0m\n");
 }
 
 std::string CuEventLoopService::getName() const

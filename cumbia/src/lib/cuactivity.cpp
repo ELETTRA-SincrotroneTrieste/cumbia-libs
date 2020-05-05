@@ -159,9 +159,10 @@ void CuActivity::publishResult(const CuData &data)
         thread->publishResult(this, data);
 }
 
+
 /*!
  * \brief Publish a result from the activity to the main thread. Datalist version
- * \param datalist a heap allocated vector of CuData
+ * \param datalist a *heap allocated* vector of CuData
  *
  * \note datalist is deleted by the library when no more needed.
  */
@@ -185,6 +186,10 @@ void CuActivity::publishProgress(int step, int total, const CuData &data)
         thread->publishProgress(this, step, total, data);
 }
 
+/*!
+ * \brief Returns the reference to the activity manager
+ * \return a pointer to the CuActivityManager used by this instance
+ */
 CuActivityManager *CuActivity::getActivityManager() const
 {
     return d->activityManager;

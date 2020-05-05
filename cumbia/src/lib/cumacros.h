@@ -21,7 +21,7 @@
 // const char *hello = vtoc(d, "astring");
 #define vtoc2(x, n) x[n].toString().c_str()
 
-#define cuda_to_s(x) x.toString().c_str()
+#define datos(x) x.toString().c_str()
 
 // qstoc  and qslisttoc outside #ifdef CUMBIA_DEBUG_OUTPUT
 

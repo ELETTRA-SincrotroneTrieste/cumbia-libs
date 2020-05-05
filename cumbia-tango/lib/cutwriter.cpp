@@ -31,7 +31,7 @@ public:
     CuConLogImpl li;
     CuLog log;
     CuVariant write_val;
-    CuData options;
+    CuData db_conf, options;
 };
 
 CuTWriter::CuTWriter(const TSource& src,
@@ -61,8 +61,16 @@ void CuTWriter::setWriteValue(const CuVariant &write_val)
     d->write_val = write_val;
 }
 
-void CuTWriter::setConfiguration(const CuData& dbc) {
-    d->options = dbc;
+/*!
+ * \brief Set database configuration
+ * \param db_conf data of type "property" obtained from a
+ */
+void CuTWriter::setConfiguration(const CuData& db_conf) {
+    d->db_conf = db_conf;
+}
+
+void CuTWriter::setOptions(const CuData &options) {
+    d->options = options;
 }
 
 /*! this method is currently void
@@ -167,8 +175,7 @@ size_t CuTWriter::dataListenersCount()
  * CuTControlsWriter::execute.
  *
  */
-void CuTWriter::start()
-{
+void CuTWriter::start() {
     CuDeviceFactoryService *df =
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
@@ -182,30 +189,26 @@ void CuTWriter::start()
     CuData thtok = CuData("device", d->tsrc.getDeviceName()); /* thread token */
     if(d->options.containsKey("thread_token"))
         thtok["thread_token"] = d->options["thread_token"];
-    d->activity = new CuWriteActivity(at, df, d->options);
+    d->activity = new CuWriteActivity(at, df, d->db_conf);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
     d->cumbia_t->registerActivity(d->activity, this, thtok, fi, bf);
     cuprintf("> CuTWriter.start writer %p thread 0x%lx ACTIVITY %p\n", this, pthread_self(), d->activity);
 }
 
-void CuTWriter::stop()
-{
+void CuTWriter::stop() {
     d->exit = true;
 }
 
-bool CuTWriter::exiting() const
-{
+bool CuTWriter::exiting() const {
     return d->exit;
 }
 
-void CuTWriter::sendData(const CuData& )
-{
+void CuTWriter::sendData(const CuData& ) {
 
 }
 
-void CuTWriter::getData(CuData &d_inout) const
-{
+void CuTWriter::getData(CuData &d_inout) const {
     d_inout = CuData();
 }
 
