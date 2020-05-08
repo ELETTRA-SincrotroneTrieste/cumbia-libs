@@ -104,7 +104,8 @@ void CuTReader::onResult(const CuData &data)
         d->activities.remove(data["ptr"].toVoidP()); // when list is null, can delete this
 
     // if it's just subscribe_event failure, do not notify listeners
-    for(it = lis_copy.begin(); it != lis_copy.end() && !event_subscribe_fail;   ++it) {
+    for(it = lis_copy.begin();
+        !a_exit  && !event_subscribe_fail && it != lis_copy.end();   ++it) {
         (*it)->onUpdate(data);
     }
     if(err && !d->exit)
