@@ -4,9 +4,11 @@
 #
 #-------------------------------------------------
 include(../qumbia-plugins.pri)
-include(../../qumbia-tango-controls/qumbia-tango-controls.pri)
 
-
+exists($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
+    message("including support for qumbia-tango-controls module under $${INSTALL_ROOT}")
+    include($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+}
 
 # INSTALL_ROOT is used to install the target
 # prefix is used within DEFINES +=

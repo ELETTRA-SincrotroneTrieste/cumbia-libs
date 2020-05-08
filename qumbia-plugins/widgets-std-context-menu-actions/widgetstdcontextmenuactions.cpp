@@ -45,6 +45,7 @@ WidgetStdContextMenuActions::~WidgetStdContextMenuActions()
 
 void WidgetStdContextMenuActions::setup(QWidget *widget, const CuContext *ctx)
 {
+    qDebug () << __PRETTY_FUNCTION__ << widget << ctx;
     const char* extensions_plugin_name = "libactions-extension-plugin.so";
     d->m_ctx = ctx;
     d->m_widget = widget;
@@ -65,17 +66,27 @@ void WidgetStdContextMenuActions::setup(QWidget *widget, const CuContext *ctx)
                 // 1. link stats
                 QuActionExtensionI* infodlg_ex = ae_fac->create("InfoDialogExtension", ctx);
                 if(infodlg_ex) {
-                    d->m_action_extensions->registerExtension("InfoDialogExtension", infodlg_ex);
-                    QAction *info = new QAction("Link stats", this);
-                    connect(info, SIGNAL(triggered(bool)), this, SLOT(onInfoActionTriggered()));
-                    d->m_actions << info;
+                    QAction *info = findChild<QAction *>("linkStatsA");
+                    if(!info) {
+                        d->m_action_extensions->registerExtension("InfoDialogExtension", infodlg_ex);
+                        info =    new QAction("Link stats", this);
+                        info->setObjectName("linkStatsA");
+                        connect(info, SIGNAL(triggered(bool)), this, SLOT(onInfoActionTriggered()));
+                        d->m_actions << info;
+                    }
                 }
                 // 2. helper application
                 if(tango_db_ex) {
-                    d->m_action_extensions->registerExtension("GetTDbPropertyExtension", tango_db_ex);
-                    QAction *a = new QAction("Helper application", this);
-                    connect(a, SIGNAL(triggered(bool)), this, SLOT(onHelperAActionTriggered()));
-                    d->m_actions << a;
+                    QAction *a = findChild<QAction *>("helperAppA");
+                    if(!a) {
+                        printf("\e[1;31mWidgetStdContextMenuActions::setup: action helperAppA not found, creating and connectin'\e[0m\n");
+                        d->m_action_extensions->registerExtension("GetTDbPropertyExtension", tango_db_ex);
+                        a = new QAction("Helper application", this);
+                        a->setObjectName("helperAppA");
+                        connect(tango_db_ex->get_qobject(), SIGNAL(onDataReady(const CuData&)), this, SLOT(onDataReady(const CuData&)));
+                        connect(a, SIGNAL(triggered(bool)), this, SLOT(onHelperAActionTriggered()));
+                        d->m_actions << a;
+                    }
                 }
             }
         }
@@ -92,6 +103,19 @@ int WidgetStdContextMenuActions::order() const
     return 0;
 }
 
+void WidgetStdContextMenuActions::onHelperAActionTriggered(const QString &source)
+{
+    QuActionExtensionI* tango_db_ex = d->m_action_extensions->getExtension("GetTDbPropertyExtension");
+    if(tango_db_ex) {
+        std::vector<CuData> in_datalist;
+        TSource tsrc(source.toStdString());
+        CuData din("device", tsrc.getDeviceName());
+        din["name"] = std::string("helperApplication");
+        in_datalist.push_back(din);
+        tango_db_ex->execute(in_datalist);
+    }
+}
+
 void WidgetStdContextMenuActions::onInfoActionTriggered()
 {
     QuActionExtensionI* infodlg_ex = d->m_action_extensions->getExtension("InfoDialogExtension");
@@ -103,7 +127,6 @@ void WidgetStdContextMenuActions::onHelperAActionTriggered()
 {
     if(d->m_action_extensions) {
         QString source;
-        QuActionExtensionI* tango_db_ex = d->m_action_extensions->getExtension("GetTDbPropertyExtension");
         CuControlsReaderA *reader = d->m_ctx->getReader();
         CuControlsWriterA *writer = d->m_ctx->getWriter();
         if(reader)
@@ -111,17 +134,8 @@ void WidgetStdContextMenuActions::onHelperAActionTriggered()
         else if(writer)
             source = writer->target();
         if(!source.isEmpty()) {
-            std::vector<CuData> in_datalist;
-            TSource tsrc(source.toStdString());
-            CuData din("device", tsrc.getDeviceName());
-            din["name"] = std::string("helperApplication");
-            in_datalist.push_back(din);
-            connect(tango_db_ex->get_qobject(), SIGNAL(onDataReady(const CuData&)), this, SLOT(onDataReady(const CuData&)));
-            tango_db_ex->execute(in_datalist);
+            onHelperAActionTriggered(source);
         }
-        //        QStringList args = cmd.split(QRegExp("\\s+"));
-        //        CuApplicationLauncher launcher(args);
-        //        launcher.start();
     }
 }
 
@@ -149,18 +163,17 @@ void WidgetStdContextMenuActions::onDataReady(const CuData &da)
                                 registerExtension(applauncher_ext,
                                                   (app_launcher = d->m_action_extensions->getExtensionFactory()->
                                 create(applauncher_ext, d->m_ctx)));
-                        if(app_launcher) {
-                            std::string dev = prop.substr(0, prop.find(":helperApplication"));
-                            if(dev.length()  > 0)
-                                app += std::string(" ") + dev;
-                            CuData in("command", app);
-                            app_launcher->execute(in);
-                        }
-                        else
-                            perr("WidgetStdContextMenuActions::onDataReady: no CuApplicationLauncherExtension found in "
-                                 "extension factory");
                     }
-
+                    if(app_launcher) {
+                        std::string dev = prop.substr(0, prop.find(":helperApplication"));
+                        if(dev.length()  > 0)
+                            app += std::string(" ") + dev;
+                        CuData in("command", app);
+                        app_launcher->execute(in);
+                    }
+                    else
+                        perr("WidgetStdContextMenuActions::onDataReady: no CuApplicationLauncherExtension found in "
+                             "extension factory");
                 }
             }
         }

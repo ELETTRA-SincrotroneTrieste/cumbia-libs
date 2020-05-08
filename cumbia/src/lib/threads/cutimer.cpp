@@ -64,6 +64,7 @@ int CuTimer::timeout() const
  */
 void CuTimer::reset() {
     m_skip = true;
+    printf("CuTimer.reset: calling m_wait.notify_one\n");
     m_wait.notify_one();
 }
 
@@ -85,10 +86,10 @@ void CuTimer::start(int millis)
     else {
         if(m_pending > 0) {
             reset();
-            //            m_last_start_pt = std::chrono::steady_clock::now();
+//            m_last_start_pt = std::chrono::steady_clock::now();
         }
         else {
-            //            m_first_start_pt = m_last_start_pt = std::chrono::steady_clock::now();
+//            m_first_start_pt = m_last_start_pt = std::chrono::steady_clock::now();
         }
         m_pending++;
         m_wait.notify_one();
@@ -168,26 +169,25 @@ void CuTimer::run()
         timeout = m_timeout;
         std::cv_status status;
         std::chrono::milliseconds ms{timeout};
-        //        printf("CuTimer.run: waiting for condition %p\n", this);
         status = m_wait.wait_for(lock, ms);
         if(m_skip && !m_quit) {
-            //            printf("\e[1;31mCuTimer.run: cycle %d: skipping this time... pending %d\e[0m\n", cycle_cnt, static_cast<int>(m_pending));
             m_skip = false;
         }
         else {
-            //            printf("\n------------------\e[1;32mCYCLE %d------------------\n", ++cycle_cnt);
             m_pause ?  timeout = ULONG_MAX : timeout = m_timeout;
-            if(status == std::cv_status::timeout && !m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
+            // issues with wasm: erratically expected timeout status is no_timeout
+            (void ) status;
+            if(/*status == std::cv_status::timeout && */!m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
             {
                 std::list<CuTimerListener *>::const_iterator it;
                 for(it = m_listeners.begin(); it != m_listeners.end(); ++it) {
                     (*it)->onTimeout(this);
                 }
-                //                auto t1 = std::chrono::steady_clock::now();
-                //                long int delta_first_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_first_start_pt).count();
-                //                long int delta_last_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_last_start_pt).count();
-                //                printf("\e[0;32mCuTimer.run: notified timeout after %ld ms instead of %ldus\e[0m\t\t\t(\e[1;31mdelay %ldus\e[0m)\n\n",
-                //                       delta_first_ms, delta_last_ms, -delta_last_ms+delta_first_ms);
+//                auto t1 = std::chrono::steady_clock::now();
+//                long int delta_first_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_first_start_pt).count();
+//                long int delta_last_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_last_start_pt).count();
+//                printf("\e[0;32mCuTimer.run: notified timeout after %ld ms instead of %ldus\e[0m\t\t\t(\e[1;31mdelay %ldus\e[0m)  THREAD 0x%ld\n",
+//                       delta_first_ms, delta_last_ms, -delta_last_ms+delta_first_ms, pthread_self());
             }
             m_pending = 0;
             if(!m_quit) { // wait for next start()

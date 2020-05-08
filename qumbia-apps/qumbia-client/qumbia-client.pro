@@ -7,20 +7,33 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT=/usr/local/cumbia-libs
 }
 
-exists($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
-    message("including support for qumbia-epics-controls module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
-}
+!wasm-emscripten {
+    exists($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
+        message("including support for qumbia-epics-controls module under $${INSTALL_ROOT}")
+        include($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+    }
 
-exists($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
-    message("including support for qumbia-tango-controls module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+    exists($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
+        message("including support for qumbia-tango-controls module under $${INSTALL_ROOT}")
+        include($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+    }
+} else {
+    exists($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri) {
+        message("including support for cumbia-qtcontrols module under $${INSTALL_ROOT}")
+        include($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
+    }
 }
 
 exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {
     message("including support for cumbia-random module under $${INSTALL_ROOT}")
     include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
 }
+
+exists($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri) {
+    message("including support for cumbia-websocket module under $${INSTALL_ROOT}")
+    include($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
+}
+
 
 QT       += core gui
 
@@ -32,7 +45,7 @@ CONFIG += debug
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = qumbia-client
+TARGET = bin/qumbia-client
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use

@@ -1,9 +1,9 @@
-project('cumbia', 'cpp', version : '1.1.0',
+project('cumbia', 'cpp', version : '1.1.2',
     default_options : ['c_std=c17', 'cpp_std=c++17'])
 
 project_description = 'library that offers a carefree approach to multi thread application design and implementation'
 
-cu_version = meson.project_version() # set in project() below
+cu_version = meson.project_version()
 ver_arr = cu_version.split('.')
 
 cu_major_version = ver_arr[0]

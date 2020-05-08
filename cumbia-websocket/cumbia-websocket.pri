@@ -16,9 +16,12 @@ lessThan(QT_MAJOR_VERSION, 5) {
 # Here qumbia-websocket will be installed
 # INSTALL_ROOT can be specified from the command line running qmake "INSTALL_ROOT=/my/install/path"
 #
-
+# WebAssembly: includes under $${INSTALL_ROOT}/include/cumbia-random, libs under $${INSTALL_ROOT}/lib/wasm
+# cumbia and cumbia-qtcontrols includes searched under $${INSTALL_ROOT}/include/cumbia and
+# $${INSTALL_ROOT}/include/cumbia-qtcontrols
+#
 isEmpty(INSTALL_ROOT) {
-    INSTALL_ROOT = /usr/local
+    INSTALL_ROOT = /usr/local/cumbia-libs
 }
 #
 #
@@ -49,9 +52,8 @@ isEmpty(INSTALL_ROOT) {
     CUMBIA_QTCONTROLS_DOCDIR=$${INSTALL_ROOT}/share/doc/cumbia-websocket
 #
 
-!android-g++ {
-    CONFIG += link_pkgconfig
-
+android-g++|wasm-emscripten {
+} else {
     CONFIG += link_pkgconfig
     PKGCONFIG += cumbia
     PKGCONFIG += cumbia-qtcontrols$${QTVER_SUFFIX}
@@ -59,13 +61,19 @@ isEmpty(INSTALL_ROOT) {
 }
 
 android-g++ {
-    INCLUDEPATH += /usr/local/include/cumbia-qtcontrols
+    INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia-qtcontrols
+    OBJECTS_DIR = obj-android
+}
+wasm-emscripten {
+    INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia-qtcontrols $${INSTALL_ROOT}/include/cumbia $${CUMBIA_WS_INCLUDES}
+    OBJECTS_DIR = obj-wasm
+    QMAKE_WASM_PTHREAD_POOL_SIZE=16
 }
 
 DEFINES += CUMBIA_PRINTINFO
 
-VERSION_HEX = 0x000001
-VERSION = 0.0.1
+VERSION_HEX = 0x010102
+VERSION = 1.1.2
 
 DEFINES += CUMBIA_WEBSOCKET_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
     CUMBIA_WEBSOCKET_VERSION=$${VERSION_HEX}
@@ -76,10 +84,9 @@ QMAKE_CXXFLAGS += -std=c++11 -Wall
 CONFIG += c++11
 
 MOC_DIR = moc
-OBJECTS_DIR = obj
 
 QMAKE_CLEAN = moc \
-    obj \
+    objects \
     Makefile \
     *.tag
 
@@ -91,18 +98,19 @@ doc.commands = doxygen \
     Doxyfile;
 
 unix:android-g++ {
-    unix:INCLUDEPATH += /usr/local/include/cumbia  /usr/local/include/cumbia-websocket
+    unix:INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia  $${INSTALL_ROOT}/include/cumbia-websocket
     unix:LIBS +=  -L/libs/armeabi-v7a/ -lcumbia
     unix:LIBS += -lcumbia-websocket$${QTVER_SUFFIX}
 }
 
-unix:!android-g++ {
+wasm-emscripten {
+    CONFIG += link_prl
+}
 
-    CONFIG += link_pkgconfig
-    PKGCONFIG += cumbia
-    PKGCONFIG += cumbia-qtcontrols$${QTVER_SUFFIX}
-    PKGCONFIG += cumbia-websocket$${QTVER_SUFFIX}
-
+android-g++|wasm-emscripten {
+    LIBS += -L$${INSTALL_ROOT}/lib/wasm -lcumbia-websocket$${QTVER_SUFFIX} -lcumbia
+} else {
+    OBJECTS_DIR = objs
     packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
         message("cumbia-websocket.pri: using pkg-config to configure cumbia cumbia-qtcontrols$${QTVER_SUFFIX} includes and libraries")
     } else {
@@ -114,7 +122,6 @@ unix:!android-g++ {
             unix:LIBS += -lcumbia-websocket$${QTVER_SUFFIX}
         }
     }
-
 }
 
 

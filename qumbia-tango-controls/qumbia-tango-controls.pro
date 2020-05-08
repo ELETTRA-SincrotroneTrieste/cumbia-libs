@@ -15,9 +15,6 @@ TARGET = $${QUMBIA_TANGO_CONTROLS_LIB}
 
 TEMPLATE = lib
 
-OBJECTS_DIR = obj
-MOC_DIR = moc
-
 DEFINES += QUMBIATANGOCONTROLS_LIBRARY=1 CUMBIA_PRINTINFO=1
 
 DEFINES -= QT_NO_DEBUG_OUTPUT
@@ -34,6 +31,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += src/qumbiatangocontrols.cpp \
+    src/cutangoregisterengine.cpp \
+    src/cutangoreplacewildcards.cpp \
     src/cutcontrolsreader.cpp \
     src/cutcontrols-utils.cpp \
     src/cutcontrolswriter.cpp \
@@ -44,6 +43,8 @@ SOURCES += src/qumbiatangocontrols.cpp \
     src/qutrealtimeplot.cpp
 
 HEADERS += src/qumbiatangocontrols.h\
+    src/cutangoregisterengine.h \
+    src/cutangoreplacewildcards.h \
     src/plugin_ifaces/qutfindsrcsplugini.h \
         src/qumbia-tango-controls_global.h \
     src/cutcontrolsreader.h \
@@ -61,12 +62,7 @@ DISTFILES += \
     src/tutorial_faq.md
 
 unix {
-    doc.commands = doxytag \
-    -t \
-    qt.tag \
-    /usr/share/qt4/doc/html/noplease; \
-    doxygen \
-    Doxyfile;
+    doc.commands = doxygen Doxyfile;
     doc.files = doc/*
     doc.path = $${QUMBIA_TANGO_CONTROLS_DOCDIR}
     QMAKE_EXTRA_TARGETS += doc

@@ -6,6 +6,11 @@
 
 QT       += widgets opengl
 
+wasm-emscripten {
+# library is compiled statically
+# qwt needs QSvgRenderer symbols
+    QT += svg
+}
 
 !android-g++ {
     QT += printsupport
@@ -28,9 +33,11 @@ lessThan(QT_MAJOR_VERSION, 5) {
 # Here qumbia-qtcontrols will be installed
 # INSTALL_ROOT can be specified from the command line running qmake "INSTALL_ROOT=/my/install/path"
 #
-
+# Note for WebAssembly: pkg-config is not used. cumbia includes and libs will be searched under
+# $${INSTALL_ROOT}/include/cumbia and $${INSTALL_ROOT}/lib/wasm respectively
+#
 isEmpty(INSTALL_ROOT) {
-    INSTALL_ROOT = /usr/local/cumbia-libs
+        INSTALL_ROOT = /usr/local/cumbia-libs
 }
 
 # INSTALL_ROOT is used to install the target
@@ -57,7 +64,14 @@ isEmpty(prefix) {
 #
 #
 # Here qumbia-qtcontrols libraries will be installed
+wasm-emscripten {
+    OBJECTS_DIR = obj-wasm
+    CUMBIA_QTCONTROLS_LIBDIR=$${INSTALL_ROOT}/lib/wasm
+} else {
+# don't call it obj (*BSD)!
+    OBJECTS_DIR = objs
     CUMBIA_QTCONTROLS_LIBDIR=$${INSTALL_ROOT}/lib
+}
 #
 #
 # Here qumbia-qtcontrols documentation will be installed
@@ -98,24 +112,30 @@ QWT_INCLUDES_USR = $${QWT_HOME_USR}/include/qwt
 # (or wherever cumbia lib is installed) before running qmake
 #
 
-unix:!android-g++ {
-    CONFIG += link_pkgconfig
-    PKGCONFIG += cumbia cumbia-qtcontrols$${QTVER_SUFFIX}
 
-    packagesExist(qwt){
-        PKGCONFIG += qwt
-        QWT_PKGCONFIG = qwt
-        message("cumbia-qtcontrols.pri: using pkg-config to configure qwt includes and libraries")
-    }
-    else:packagesExist(Qt5Qwt6){
-        PKGCONFIG += Qt5Qwt6
-        QWT_PKGCONFIG = Qt5Qwt6
-        message("cumbia-qtcontrols.pri: using pkg-config to configure qwt includes and libraries (Qt5Qwt6)")
-    } else {
-        warning("cumbia-qtcontrols.pri: no pkg-config file found")
-        warning("cumbia-qtcontrols.pri: export PKG_CONFIG_PATH=/usr/path/to/qwt/lib/pkgconfig if you want to enable pkg-config for qwt")
-        warning("cumbia-qtcontrols.pri: if you build and install qwt from sources, be sure to uncomment/enable ")
-        warning("cumbia-qtcontrols.pri: QWT_CONFIG     += QwtPkgConfig in qwtconfig.pri qwt project configuration file")
+wasm-emscripten {
+    message("cumbia-qtcontrols: building for WebAssembly")
+    WASM_CUMBIA_LIBS=$${INSTALL_ROOT}/lib/wasm
+} else {
+    !android-g++ {
+        CONFIG += link_pkgconfig
+        PKGCONFIG += cumbia cumbia-qtcontrols$${QTVER_SUFFIX}
+
+        packagesExist(qwt){
+            PKGCONFIG += qwt
+            QWT_PKGCONFIG = qwt
+            message("cumbia-qtcontrols.pri: using pkg-config to configure qwt includes and libraries")
+        }
+        else:packagesExist(Qt5Qwt6){
+            PKGCONFIG += Qt5Qwt6
+            QWT_PKGCONFIG = Qt5Qwt6
+            message("cumbia-qtcontrols.pri: using pkg-config to configure qwt includes and libraries (Qt5Qwt6)")
+        } else {
+            warning("cumbia-qtcontrols.pri: no pkg-config file found for either qwt or Qt5Qwt6")
+            warning("cumbia-qtcontrols.pri: export PKG_CONFIG_PATH=/usr/path/to/qwt/lib/pkgconfig if you want to enable pkg-config for qwt")
+            warning("cumbia-qtcontrols.pri: if you build and install qwt from sources, be sure to uncomment/enable ")
+            warning("cumbia-qtcontrols.pri: QWT_CONFIG     += QwtPkgConfig in qwtconfig.pri qwt project configuration file")
+        }
     }
 }
 
@@ -125,8 +145,8 @@ unix:!android-g++ {
 
 DEFINES += CUMBIA_DEBUG_OUTPUT=1
 
-VERSION_HEX = 0x010100
-VERSION = 1.1.0
+VERSION_HEX = 0x010102
+VERSION = 1.1.2
 
 # cumbia plugin directory.
 # it should be the same as that defined by
@@ -155,7 +175,6 @@ freebsd-g++ {
 CONFIG += c++17
 
 MOC_DIR = moc
-OBJECTS_DIR = obj
 FORMS_DIR = ui
 LANGUAGE = C++
 UI_DIR = src
@@ -183,12 +202,20 @@ unix:LIBS +=  \
 # need to adjust qwt path
 
 unix: android-g++ {
-    unix:INCLUDEPATH += /usr/local/cumbia-libs/include/cumbia
+    unix:INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia
     unix:LIBS += -L/libs/armeabi-v7a/ -lcumbia
 }
 
+wasm-emscripten {
+    LIBS += -L$${WASM_CUMBIA_LIBS} -lcumbia  -L$${QWT_HOME}/lib -L$${QWT_HOME_USR}/lib -lqwt
+    INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia
+    QMAKE_WASM_PTHREAD_POOL_SIZE=16
+#    QMAKE_LFLAGS +=  -s ASSERTIONS=1
+    CONFIG += link_prl
+}
 
-unix: !android-g++ {
+android-g++|wasm-emscripten {
+} else {
 
     isEmpty(QWT_PKGCONFIG) {
 

@@ -45,11 +45,11 @@ elif [ $# -gt 1 ] && [ $1 == "new" ] && [ $2 == "control" ]; then
 elif [ $# -gt 0 ] && [ $1 == "ui" ] && [ $2 == "make" ]; then
         cuuimake  ${@:3}
 elif [ $# -gt 0 ] && [ $1 == "client" ]; then
-        qumbia-client ${@:2}
+        qumbia-client "${@:2}"
 elif [ $# -gt 0 ] && [ $1 == "read" ]; then
-        qumbia-reader ${@:2}
+        qumbia-reader "${@:2}"
 elif [ $# -gt 0 ] && [ $1 == "monitor" ]; then
-        qumbia-reader --monitor ${@:2}
+        qumbia-reader --monitor "${@:2}"
 
 elif [ $# -gt 0 ] && [ $1 == "import" ] && [ $2 == "fast" ]; then
         qumbiaprojectwizard --from-qtango --fast ${@:3}

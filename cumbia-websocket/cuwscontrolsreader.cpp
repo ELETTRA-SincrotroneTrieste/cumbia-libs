@@ -1,15 +1,18 @@
-#include "cuwsreader.h"
+#include "cuwscontrolsreader.h"
 #include "cumbiawebsocket.h"
-#include "cuwsreader.h"
+#include "cuwscontrolsreader.h"
 #include "cuwsactionreader.h"
 #include "cuwsactionfactories.h"
 #include <cudatalistener.h>
+#include <qureplacewildcards_i.h>
 #include <cudata.h>
 #include <cumacros.h>
 #include <QString>
 #include <vector>
 #include <string>
 #include <QtDebug>
+#include <QList>
+#include <QCoreApplication>
 
 class CuWSReaderFactoryPrivate {
 public:
@@ -29,7 +32,7 @@ CuWSReaderFactory::~CuWSReaderFactory()
 
 CuControlsReaderA *CuWSReaderFactory::create(Cumbia *c, CuDataListener *l) const
 {
-    CuWSReader *r = new CuWSReader(c, l);
+    CuWsControlsReader *r = new CuWsControlsReader(c, l);
     r->setOptions(d->options);
     return r;
 }
@@ -57,61 +60,65 @@ public:
     CuData options;
 };
 
-CuWSReader::CuWSReader(Cumbia *cumbia_ws, CuDataListener *tl)
-    : CuControlsReaderA(cumbia_ws, tl)
+CuWsControlsReader::CuWsControlsReader(Cumbia *cumbia, CuDataListener *tl)
+    : CuControlsReaderA(cumbia, tl)
 {
-    printf("CuWSReader constructor!!!!!!!!!!\n");
-    assert(cumbia_ws->getType() == CumbiaWebSocket::CumbiaWSType);
+    assert(cumbia->getType() == CumbiaWebSocket::CumbiaWSType);
     d = new CuWSReaderPrivate;
-    d->cumbia_ws = static_cast<CumbiaWebSocket *>(cumbia_ws);
+    d->cumbia_ws = static_cast<CumbiaWebSocket *>(cumbia);
     d->tlistener = tl;
 }
 
-CuWSReader::~CuWSReader()
+CuWsControlsReader::~CuWsControlsReader()
 {
-    qDebug() << __FUNCTION__ << "deleting myself " <<this << source();
     d->tlistener->invalidate();
     unsetSource();
     delete d;
 }
 
-void CuWSReader::setSource(const QString &s)
-{
+void CuWsControlsReader::setSource(const QString &s) {
     d->source = s;
+    QList<QuReplaceWildcards_I *>rwis = d->cumbia_ws->getReplaceWildcard_Ifaces();
+    // d->source is equal to 's' if no replacement is made
+    for(int i = 0; i < rwis.size() && d->source == s; i++) // leave loop if s != d->source (=replacement made)
+        d->source = rwis[i]->replaceWildcards(s, qApp->arguments());
+
+    CuWSActionConfFactory wswconff;
+    wswconff.setOptions(d->options);
+    d->cumbia_ws->addAction(d->source.toStdString(), d->tlistener, wswconff);
+
     CuWSActionReaderFactory wsrf;
     wsrf.setOptions(d->options);
-    printf("CuWSReader.setSource: %s\n", qstoc(s));
-    qDebug() << __FUNCTION__ << "source" << s;
-    d->cumbia_ws->addAction(s.toStdString(), d->tlistener, wsrf);
+    d->cumbia_ws->addAction(d->source.toStdString(), d->tlistener, wsrf);
 }
 
-QString CuWSReader::source() const
+QString CuWsControlsReader::source() const
 {
     return d->source;
 }
 
-void CuWSReader::unsetSource()
+void CuWsControlsReader::unsetSource()
 {
     d->cumbia_ws->unlinkListener(d->source.toStdString(), CuWSActionI::Reader, d->tlistener);
     d->source = QString();
 }
 
-void CuWSReader::setOptions(const CuData &o)
+void CuWsControlsReader::setOptions(const CuData &o)
 {
     d->options = o;
 }
 
-CuData CuWSReader::getOptions() const
+CuData CuWsControlsReader::getOptions() const
 {
     return d->options;
 }
 
-void CuWSReader::sendData(const CuData &)
+void CuWsControlsReader::sendData(const CuData &)
 {
 
 }
 
-void CuWSReader::getData(CuData &d_ino) const
+void CuWsControlsReader::getData(CuData &d_ino) const
 {
     Q_UNUSED(d_ino);
 }

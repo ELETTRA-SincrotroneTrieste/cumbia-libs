@@ -23,12 +23,11 @@ public:
     std::list<CuDataListener *> listeners;
     const TSource tsrc;
     CumbiaTango *cumbia_t;
-    CuActivity *activity;
+    CuTConfigActivity *activity;
     bool exiting; // set to true by stop()
     CuConLogImpl li;
     CuLog log;
     CuVariant write_val;
-    std::vector<std::string> desired_props;
     CuData conf_data; // save locally
     CuData options;
     const CuTangoActionI::Type type;
@@ -49,16 +48,12 @@ CuTConfiguration::~CuTConfiguration()
     delete d;
 }
 
-void CuTConfiguration::setDesiredAttributeProperties(const std::vector<string> props)
-{
-    d->desired_props = props;
+void CuTConfiguration::setDesiredAttributeProperties(const std::vector<string> props) {
+    d->options["fetch_props"] = props;
 }
 
-void CuTConfiguration::setOptions(const CuData &options)
-{
+void CuTConfiguration::setOptions(const CuData &options) {
     d->options = options;
-    if(d->options.containsKey("fetch_props"))
-        setDesiredAttributeProperties(d->options["fetch_props"].toStringVector());
 }
 
 void CuTConfiguration::onProgress(int step, int total, const CuData &data)
@@ -157,6 +152,7 @@ void CuTConfiguration::start()
     at["argins"] = d->tsrc.getArgs();
     at["activity"] = "attconfig";
     at["is_command"] = d->tsrc.getType() == TSource::Cmd;
+    at.merge(d->options);
 
     CuData tt = CuData("device", d->tsrc.getDeviceName());
     if(d->options.containsKey("thread_token"))
@@ -165,7 +161,7 @@ void CuTConfiguration::start()
     d->type == CuTangoActionI::ReaderConfig ? t = CuTConfigActivity::CuReaderConfigActivityType :
             t = CuTConfigActivity::CuWriterConfigActivityType;
     d->activity = new CuTConfigActivity(at, df, t);
-    static_cast<CuTConfigActivity *>(d->activity)->setDesiredAttributeProperties(d->desired_props);
+    d->activity->setOptions(d->options);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
     d->cumbia_t->registerActivity(d->activity, this, tt, fi, bf);

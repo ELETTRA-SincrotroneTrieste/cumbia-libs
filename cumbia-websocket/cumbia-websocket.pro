@@ -12,7 +12,7 @@ QT += websockets
 
 CONFIG += debug
 
-CONFIG += silent
+# CONFIG += silent
 
 PKGCONFIG -= cumbia-websocket$${QTVER_SUFFIX}
 
@@ -38,31 +38,41 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         cumbiawebsocket.cpp \
-    cuwsreader.cpp \
+    cuwscontrolsreader.cpp \
+    cuwscontrolswriter.cpp \
     cumbiawsworld.cpp \
     cuwsactionfactoryservice.cpp \
     cuwsactionreader.cpp \
+    cuwsactionwriter.cpp \
+    cuwsactionconf.cpp \
+    cuwsregisterengine.cpp \
+    protocol/tango/cuwsprotocolhelpers.cpp \
+    protocol/tango/cuwstangohelper.cpp \
+    protocol/tango/cuwstangoreplacewildcards.cpp \
     ws_source.cpp \
     cuwsactionfactories.cpp \
-    cuwsclient.cpp \
-    protocol/tango/tangohelper.cpp \
-    protocol/tango/protocolhelpers.cpp
+    cuwsclient.cpp
 
 HEADERS += \
         cumbiawebsocket.h \
-        cumbia-websocket_global.h \ 
-    cuwsreader.h \
+        cumbia-websocket_global.h \
+    cuwscontrolsreader.h \
+    cuwscontrolswriter.h \
     cumbiawsworld.h \
     cuwsactionfactoryservice.h \
     cuwsactioni.h \
     cuwsactionfactoryi.h \
     cuwsactionreader.h \
+    cuwsactionconf.h \
+    cuwsactionwriter.h \
+    cuwsregisterengine.h \
+    protocol/cuwsprotocolhelper_i.h \
+    protocol/tango/cuwsprotocolhelpers.h \
+    protocol/tango/cuwstangohelper.h \
+    protocol/tango/cuwstangoreplacewildcards.h \
     ws_source.h \
     cuwsactionfactories.h \
-    cuwsclient.h \
-    protocol/protocolhelper_i.h \
-    protocol/tango/tangohelper.h \
-    protocol/tango/protocolhelpers.h
+    cuwsclient.h
 
 INCLUDEPATH += protocol protocol/tango
 
@@ -86,23 +96,36 @@ unix {
     other_inst.files = $${DISTFILES}
     other_inst.path = $${CUMBIA_WS_INCLUDES}
 
+android-g++|wasm-emscripten {
+    target.path = $${CUMBIA_WS_LIBDIR}/wasm
+} else {
     target.path = $${CUMBIA_WS_LIBDIR}
+}
     INSTALLS += target inc other_inst
 
     !android-g++ {
             INSTALLS += doc
     }
 
-# generate pkg config file
-    CONFIG += create_pc create_prl no_install_prl
+android-g++|wasm-emscripten {
+} else {
+    # generate pkg config file
+        CONFIG += create_pc create_prl no_install_prl
 
-    QMAKE_PKGCONFIG_NAME = cumbia-websocket
-    QMAKE_PKGCONFIG_DESCRIPTION = Qt websocket module for cumbia
-    QMAKE_PKGCONFIG_PREFIX = $${INSTALL_ROOT}
-    QMAKE_PKGCONFIG_LIBDIR = $${target.path}
-    QMAKE_PKGCONFIG_INCDIR = $${inc.path}
-    QMAKE_PKGCONFIG_VERSION = $${VERSION}
-    QMAKE_PKGCONFIG_DESTDIR = pkgconfig
+        QMAKE_PKGCONFIG_NAME = cumbia-websocket
+        QMAKE_PKGCONFIG_DESCRIPTION = Qt websocket module for cumbia
+        QMAKE_PKGCONFIG_PREFIX = $${INSTALL_ROOT}
+        QMAKE_PKGCONFIG_LIBDIR = $${target.path}
+        QMAKE_PKGCONFIG_INCDIR = $${inc.path}
+        QMAKE_PKGCONFIG_VERSION = $${VERSION}
+        QMAKE_PKGCONFIG_DESTDIR = pkgconfig
+    }
+}
+
+wasm-emscripten {
+CONFIG += create_prl
 }
 
 LIBS -= -lcumbia-websocket$${QTVER_SUFFIX}
+
+LIBS += -lcumbia-qtcontrols$${QTVER_SUFFIX}

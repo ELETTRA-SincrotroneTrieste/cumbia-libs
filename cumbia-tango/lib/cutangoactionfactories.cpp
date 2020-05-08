@@ -89,16 +89,15 @@ void CuTangoWriterFactory::setConfiguration(const CuData &configuration)
     m_configuration = configuration;
 }
 
-CuTangoActionI *CuTangoWriterFactory::create(const std::string &s, CumbiaTango *ct) const
-{
+CuTangoActionI *CuTangoWriterFactory::create(const std::string &s, CumbiaTango *ct) const {
     CuTWriter *w = new CuTWriter(s, ct);
-    w->setConfiguration(m_configuration);
+    w->setConfiguration(m_configuration); // from Tango db
+    w->setOptions(options); // general options
     w->setWriteValue(m_write_val);
     return w;
 }
 
-CuTangoActionI::Type CuTangoWriterFactory::getType() const
-{
+CuTangoActionI::Type CuTangoWriterFactory::getType() const {
     return CuTangoActionI::Writer;
 }
 
@@ -108,32 +107,27 @@ CuTConfFactoryBase::~CuTConfFactoryBase() {
 
 }
 
-void CuTConfFactoryBase::setOptions(const CuData &o)
-{
+void CuTConfFactoryBase::setOptions(const CuData &o) {
     m_options = o;
 }
 
-CuData CuTConfFactoryBase::options() const
-{
+CuData CuTConfFactoryBase::options() const {
     return m_options;
 }
 
 // Configuration: Reader
-CuTangoActionI *CuTReaderConfFactory::create(const std::string &s, CumbiaTango *ct) const
-{
+CuTangoActionI *CuTReaderConfFactory::create(const std::string &s, CumbiaTango *ct) const {
     CuTConfiguration *w = new CuTConfiguration(s, ct, CuTangoActionI::ReaderConfig);
     w->setOptions(options());
     return w;
 }
 
-CuTangoActionI::Type CuTReaderConfFactory::getType() const
-{
+CuTangoActionI::Type CuTReaderConfFactory::getType() const {
     return CuTangoActionI::ReaderConfig;
 }
 
 // Configuration: Writer
-CuTangoActionI *CuTWriterConfFactory::create(const string &s, CumbiaTango *ct) const
-{
+CuTangoActionI *CuTWriterConfFactory::create(const string &s, CumbiaTango *ct) const {
     CuTConfiguration *w = new CuTConfiguration(s, ct, CuTangoActionI::WriterConfig);
     const CuData& op = options();
     if(op.containsKey("fetch_props"))
@@ -141,7 +135,6 @@ CuTangoActionI *CuTWriterConfFactory::create(const string &s, CumbiaTango *ct) c
     return w;
 }
 
-CuTangoActionI::Type CuTWriterConfFactory::getType() const
-{
+CuTangoActionI::Type CuTWriterConfFactory::getType() const {
     return CuTangoActionI::WriterConfig;
 }

@@ -61,6 +61,8 @@ Cumbia::Cumbia()
  *     <strong>At last, the activity is deleted</strong>.
  * \li each service from the list of CuServiceI fetched from CuServiceProvider
  *     is unregistered from the service provider through CuServiceProvider::unregisterService
+ * \li if the service had not been registered with the *shared* option
+ *     (see CuServiceProvider::registerService), the service is deleted.
  * \li the <strong>service provider is deleted</strong>.
  * \li deletes the token generator, if set
  */
@@ -94,7 +96,8 @@ void Cumbia::finish()
     {
         CuServiceI *s = (*it);
         d->serviceProvider->unregisterService(s->getType());
-        delete s;
+        if(!d->serviceProvider->isShared(s->getType()))
+            delete s;
     }
     if(d->threadTokenGenerator)
         delete d->threadTokenGenerator;

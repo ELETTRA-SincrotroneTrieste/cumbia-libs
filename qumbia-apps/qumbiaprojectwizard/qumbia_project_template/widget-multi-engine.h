@@ -4,8 +4,6 @@
 #include <QWidget>
 #include <qulogimpl.h>
 #include <cucontrolsfactorypool.h>
-#include <cumbiatango.h>
-#include <cumbiaepics.h>
 
 namespace Ui {
 class $UIFORMCLASS$;

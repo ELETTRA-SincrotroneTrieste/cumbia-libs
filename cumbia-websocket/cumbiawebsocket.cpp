@@ -11,11 +11,13 @@
 
 #include <cuthreadfactoryimpl.h>
 #include <cuthreadseventbridgefactory_i.h>
+#include <qureplacewildcards_i.h>
 
 #include <QJsonParseError>
 #include <QJsonDocument>
 #include <QJsonValue>
 #include <QJsonObject>
+#include <QThread> // for QThread::currentThread()
 #include "cuwsclient.h"
 
 class CumbiaWebSocketPrivate {
@@ -24,8 +26,16 @@ public:
     CuThreadFactoryImplI *m_threadFactoryImplI;
     CuWSClient *cu_wscli;
     QString http_url, ws_url;
+    QList<QuReplaceWildcards_I *> m_repl_wildcards_i;
 };
 
+/*!
+ * \brief CumbiaWebSocket
+ * \param websocket_url the url to be used for websocket incoming data
+ * \param http_url the http (https) url to be used to send requests to the server (output)
+ * \param tfi thread factory implementation
+ * \param teb thread events bridge factory
+ */
 CumbiaWebSocket::CumbiaWebSocket(const QString &websocket_url,
                                  const QString &http_url,
                                  CuThreadFactoryImplI *tfi,
@@ -52,8 +62,13 @@ CumbiaWebSocket::~CumbiaWebSocket()
         delete d->m_threadsEventBridgeFactory;
     if(d->m_threadFactoryImplI)
         delete d->m_threadFactoryImplI;
-    if(d->cu_wscli)
+    if(d->cu_wscli) {
+        if(d->cu_wscli->isOpen())
+            d->cu_wscli->close();
         delete d->cu_wscli;
+    }
+    foreach(QuReplaceWildcards_I *i, d->m_repl_wildcards_i)
+        delete i;
     delete d;
 }
 
@@ -62,7 +77,7 @@ void CumbiaWebSocket::m_init()
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuWSActionFactoryService::CuWSActionFactoryServiceType),
                                           new CuWSActionFactoryService());
     // make sure urls end with '/'
-    if(!d->http_url.endsWith('/'))
+    if(!d->http_url.isEmpty() && !d->http_url.endsWith('/'))
         d->http_url += '/';
     if(!d->ws_url.endsWith('/'))
         d->ws_url += "/";
@@ -70,15 +85,16 @@ void CumbiaWebSocket::m_init()
 
 void CumbiaWebSocket::addAction(const std::string &source, CuDataListener *l, const CuWSActionFactoryI &f)
 {
+    CuWSActionFactoryService *af =
+            static_cast<CuWSActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuWSActionFactoryService::CuWSActionFactoryServiceType)));
     CumbiaWSWorld w;
     if(w.source_valid(source))
     {
         CuWSActionFactoryService *af =
                 static_cast<CuWSActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuWSActionFactoryService::CuWSActionFactoryServiceType)));
-
         CuWSActionI *a = af->findActive(source, f.getType());
         if(!a) {
-            a = af->registerAction(source, f, this);
+            a = af->registerAction(source, f, d->cu_wscli, d->http_url);
             a->start();
         }
         else {
@@ -109,6 +125,23 @@ CuWSActionI *CumbiaWebSocket::findAction(const std::string &source, CuWSActionI:
     return a;
 }
 
+void CumbiaWebSocket::openSocket() {
+    if(!d->cu_wscli->isOpen())
+        d->cu_wscli->open();
+}
+
+void CumbiaWebSocket::closeSocket() {
+    d->cu_wscli->close();
+}
+
+void CumbiaWebSocket::addReplaceWildcardI(QuReplaceWildcards_I *rwi) {
+    d->m_repl_wildcards_i << rwi;
+}
+
+QList<QuReplaceWildcards_I *> CumbiaWebSocket::getReplaceWildcard_Ifaces() const{
+    return d->m_repl_wildcards_i;
+}
+
 CuThreadFactoryImplI *CumbiaWebSocket::getThreadFactoryImpl() const
 {
     return d->m_threadFactoryImplI;
@@ -131,8 +164,7 @@ int CumbiaWebSocket::getType() const {
     return CumbiaWSType;
 }
 
-CuWSClient *CumbiaWebSocket::websocketClient() const
-{
+CuWSClient *CumbiaWebSocket::websocketClient() const {
     return d->cu_wscli;
 }
 
@@ -143,17 +175,32 @@ CuWSClient *CumbiaWebSocket::websocketClient() const
  *
  * @see CuWSClient::onMessageReceived
  */
-void CumbiaWebSocket::onUpdate(const QString &message)
-{
+void CumbiaWebSocket::onUpdate(const QString &message) {
     // 1. extract src
     QJsonParseError jpe;
     QJsonDocument jsd = QJsonDocument::fromJson(message.toUtf8(), &jpe);
-    std::string src = jsd["event"].toString().toStdString();
+    std::string src;
+    jsd["event"].toString().length() > 0 ? src = jsd["event"].toString().toStdString() : src = jsd["src"].toString().toStdString();
+    // 2. find action amongst readers
+    QString atype = jsd["atype"].toString();
+    CuWSActionI::Type t = CuWSActionI::Reader;
+    if(atype == "rconf") t = CuWSActionI::ReaderConfig;
+    else if(atype == "wconf") t = CuWSActionI::WriterConfig;
+    else if(atype == "write") t = CuWSActionI::Writer;
 
-    // 2. find action: data from websocket is always related to readers
-    CuWSActionI *action = findAction(src, CuWSActionI::Reader);
+    CuWSActionI *action = findAction(src, t);
     if(action) {
         // 3. let the action decode the content (according to data format, type, and so on) and notify the listeners
         action->decodeMessage(jsd);
+        if(action->exiting()) {
+            // unregister and delete one shot actions (write and conf)
+            // They set the exit flag to true after update
+            CuWSActionFactoryService *af =
+                    static_cast<CuWSActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuWSActionFactoryService::CuWSActionFactoryServiceType)));
+                af->unregisterAction(src, t);
+                delete action;
+        }
     }
+    else
+        perr("CumbiaWebSocket::onUpdate: no action found with source %s searched with type %d (%s)", src.c_str(), t, qstoc(atype));
 }

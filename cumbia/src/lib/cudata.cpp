@@ -121,6 +121,12 @@ CuData &CuData::set(const std::string &key, const CuVariant &value)
     return *this;
 }
 
+CuData &CuData::merge(const CuData &other) {
+    for(const std::string& key : other.keys())
+        (*this).set(key, other.value(key));
+    return *this;
+}
+
 /** \brief returns the number of key-value pairs stored
  *
  * @return the number of key-value pairs stored within this object

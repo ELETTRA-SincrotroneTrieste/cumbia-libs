@@ -5,11 +5,8 @@
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
 
-#include <X11/Xlib.h>
-#include <QX11Info>
 
-#define CVSVERSION "$Name:  $"
-
+#define VERSION "1.0"
 
 int main(int argc, char *argv[])
 {
@@ -17,7 +14,7 @@ int main(int argc, char *argv[])
     QuApplication qu_app( argc, argv );
     qu_app.setOrganizationName("$ORGANIZATION_NAME$");
     qu_app.setApplicationName("$APPLICATION_NAME$");
-    QString version(CVSVERSION);
+    QString version(VERSION);
     qu_app.setApplicationVersion(version);
     qu_app.setProperty("author", "$AUTHOR$");
     qu_app.setProperty("mail", "$AU_EMAIL$");
@@ -30,16 +27,17 @@ int main(int argc, char *argv[])
     $MAINCLASS$ *w = new $MAINCLASS$(cu_p, NULL);
     w->show();
 
-    if(QX11Info::isPlatformX11()) {
-        /* register to window manager */
-        Display *disp = QX11Info::display();
-        Window root_win = (Window) w->winId();
-        XSetCommand(disp, root_win, argv, argc);
-    }
-
     ret = qu_app.exec();
     delete w;
-    delete cu_p->get("tango");
-    delete cu_p->get("epics");
+
+    Cumbia *c = cu_p->get("tango");
+    if(c) delete c;
+    c = cu_p->get("epics");
+    if(c) delete c;
+    c = cu_p->get("random");
+    if(c) delete c;
+    c = cu_p->get("ws");
+    if(c) delete c;
+
     return ret;
 }

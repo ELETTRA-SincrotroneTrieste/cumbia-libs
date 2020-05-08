@@ -137,6 +137,9 @@ void QuApplyNumeric::onUpdate(const CuData &da)
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
             log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);
+        else if(!cumbia) {
+            perr("QuApplyNumeric.onUpdate: cannot get a reference to cumbia either from context or CumbiaPool with target \"%s\"", da["src"].toString().c_str());
+        }
 
         d->context->getLinkStats()->addError(da["msg"].toString());
     }

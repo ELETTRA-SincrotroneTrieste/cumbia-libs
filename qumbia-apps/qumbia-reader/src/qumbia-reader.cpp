@@ -40,6 +40,8 @@ class CuHdbPlugin_I;
 #include <cutcontrolsreader.h>
 #include <cutcontrolswriter.h>
 #include <cutango-world.h>
+#include <cutcontrols-utils.h>
+#include <cutangoreplacewildcards.h>
 #endif
 #ifdef CUMBIA_RANDOM_VERSION
 #include <cumbiarandom.h>
@@ -48,15 +50,65 @@ class CuHdbPlugin_I;
 #include <cumbiarndworld.h>
 #endif
 
+#ifdef CUMBIA_WEBSOCKET_VERSION
+#include <cumbiawebsocket.h>
+#include <cumbiawsworld.h>
+#include <cuwscontrolsreader.h> // for CuWSReaderFactory
+#endif
+
 QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
     QObject(parent)
 {
     QStringList engines;
     cu_pool = cumbia_pool;
 
+    // plugins, instantiate if possible. Initialize only after engines.
+    CuPluginLoader pload;
+    QObject *plugin_qob;
+    CuFormulaPluginI *fplu = pload.get<CuFormulaPluginI>("cuformula-plugin.so", &plugin_qob);
+    QObject *hdb_o;
+    CuHdbPlugin_I *hdb_p = pload.get<CuHdbPlugin_I>("cuhdb-qt-plugin.so", &hdb_o);
+
+    // parse configuration
+    CmdLineOptions cmdo(fplu != nullptr, hdb_p != nullptr);
+    m_conf = cmdo.parse(qApp->arguments());
+
+#ifdef QUMBIA_EPICS_CONTROLS_VERSION
+    CumbiaEpics* cuep = nullptr;
+#endif
+#ifdef QUMBIA_TANGO_CONTROLS_VERSION
+    CumbiaTango* cuta = nullptr;
+#endif
+
+    if(!m_conf.ws_url.isEmpty()) {
+#ifdef CUMBIA_WEBSOCKET_VERSION
+        printf("activating cumbia websocket...ws url %s http url %s\n", qstoc(m_conf.ws_url), qstoc(m_conf.ws_http_url));
+        // setup Cumbia web socket with the web socket address and the host name to prepend to the sources
+        // for the HTTP requests
+        CumbiaWSWorld wsw;
+        QUrl u(m_conf.ws_url);
+        CumbiaWebSocket* cuws = new CumbiaWebSocket(u.toString(), m_conf.ws_http_url, new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+        cu_pool->registerCumbiaImpl("ws", cuws);
+        cu_pool->setSrcPatterns("ws", wsw.srcPatterns());
+        m_ctrl_factory_pool.setSrcPatterns("ws", wsw.srcPatterns());
+        m_ctrl_factory_pool.registerImpl("ws", CuWSReaderFactory());
+        cuws->openSocket();
+#ifdef QUMBIA_TANGO_CONTROLS_VERSION
+        CuTangoReplaceWildcards *tgrwi = new CuTangoReplaceWildcards;
+        cuws->addReplaceWildcardI(tgrwi);
+        engines << "websocket";
+#endif
+#else
+        perr("QumbiaReader: module cumbia-websocket is not available");
+#endif
+    }
+    else if(m_conf.ws_url.isEmpty() ^ m_conf.ws_http_url.isEmpty())
+        perr("QumbiaReader: websocket command line arguments incomplete");
+
+
     // setup Cumbia pool and register cumbia implementations for tango and epics
 #ifdef QUMBIA_EPICS_CONTROLS_VERSION
-    CumbiaEpics* cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
     cu_pool->registerCumbiaImpl("epics", cuep);
     m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
     m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
@@ -67,7 +119,7 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
     engines << "epics";
 #endif
 #ifdef QUMBIA_TANGO_CONTROLS_VERSION
-    CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
     cu_pool->registerCumbiaImpl("tango", cuta);
     m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
     m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
@@ -77,6 +129,8 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
     cu_pool->setSrcPatterns("tango", tw.srcPatterns());
     engines << "tango";
 #endif
+
+
 #ifdef CUMBIA_RANDOM_VERSION
     CumbiaRandom *cura = new CumbiaRandom(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
     CumbiaRNDWorld rndw;
@@ -89,9 +143,7 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
 #endif
 
     // formulas. load after engines
-    CuPluginLoader pload;
-    QObject *plugin_qob;
-    CuFormulaPluginI *fplu = pload.get<CuFormulaPluginI>("cuformula-plugin.so", &plugin_qob);
+
     if(fplu) {
         fplu->initialize(cu_pool, m_ctrl_factory_pool);
         engines << "formula plugin";
@@ -101,8 +153,12 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
 
 #ifdef HAS_CUHDB
     // historical database
+<<<<<<< HEAD
     QObject *hdb_o;
     hdb_p = pload.get<CuHdbPlugin_I>("cuhdb-qt-plugin.so", &hdb_o);
+=======
+
+>>>>>>> cd90fdb821215bb5034b090c2522861cd07fe5f4
     if(hdb_p) {
         cu_pool->registerCumbiaImpl("hdb", hdb_p->getCumbia());
         cu_pool->setSrcPatterns("hdb", hdb_p->getSrcPatterns());
@@ -116,13 +172,13 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
                                      << "label" << "description";
     m_props_map[Medium] = QStringList() << "activity" << "worker_activity" << "worker_thread";
 
-    CmdLineOptions cmdo(fplu != nullptr, hdb_p != nullptr);
-    m_conf = cmdo.parse(qApp->arguments());
 
-    if(m_conf.max_timers > 0) {
+#ifdef QUMBIA_TANGO_CONTROLS_VERSION
+    if(cuta && m_conf.max_timers > 0) {
         CuTimerService *ts = static_cast<CuTimerService *>(cuta->getServiceProvider()->get(CuServices::Timer));
         ts->setTimerMaxCount(m_conf.max_timers);
     }
+#endif
     if(m_conf.usage) {
         cmdo.usage(qApp->arguments().first());
         printf("\nAvailable engines: %s\n\n", qstoc(engines.join(", ")));

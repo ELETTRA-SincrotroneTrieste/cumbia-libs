@@ -43,7 +43,7 @@ class CuDataListener;
  * \code  * one_r: [14:02:45+0.648788]  [double] 59.72 \endcode
  *
  * The source in the example is made up of several sections separated by a '/':
- * - *random://*  associates what follows to the *cumbia-random* module (through the CumbiaPool and CuControlsFactoryPool)
+ * - random://  associates what follows to the *cumbia-random* module (through the CumbiaPool and CuControlsFactoryPool)
  * - one/random/number  an arbitrary name that is given to the random source. Everything that precedes the '/'-separated numeric
  *   section is interpreted as the source name.
  * - first number: the size of the generated result
@@ -214,7 +214,7 @@ class CuDataListener;
  * - *m_ctrl_factory_pool* is a private attribute of the main class, type CuControlsFactoryPool
  * - *m_log_impl* is a log implementation
  * - *CuRNDReaderFactory* is a factory that instantiates random readers
- * - the *setSrcPatterns* methods register sources starting with the *random://* prefix with the *cumbia-random*
+ * - the *setSrcPatterns* methods register sources starting with the <em>random://</em> prefix with the *cumbia-random*
  *   module.
  *
  * To comply with the given implementation, the main class will have these attributes

@@ -433,6 +433,7 @@ void CuTReader::m_startEventActivity()
     CuData at("src", d->tsrc.getName()); /* activity token */
     at.set("device", d->tsrc.getDeviceName()).set("point", d->tsrc.getPoint()).set("activity", "event")
             .set("rmode", refreshModeStr());
+    at.merge(d->options);
     // thread token: by default device name, but can be tuned
     // through the "thread_token" option (setOptions)
     //CuData tt = CuData("device", d->tsrc.getDeviceName());

@@ -58,7 +58,7 @@ public:
      *
      * virtual class destructor
      */
-    virtual ~CuThreadsEventBridge_I() { }
+    virtual ~CuThreadsEventBridge_I() { pdelete("~CuThreadsEventBridge_I %p", this); }
 
     /*! \brief bridge's method to forward an event from the background thread to the
      *         main thread.

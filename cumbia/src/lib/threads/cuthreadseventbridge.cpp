@@ -21,16 +21,21 @@ CuThreadsEventBridge::CuThreadsEventBridge(const CuServiceProvider *sp)
     if(!m_event_loop)
         perr("CuTThreadsEventBridge: must create a CuEventLoopService and register it as a Cumbia service before creating CuTThreadsEventBridge");
     assert(m_event_loop != NULL);
-    m_event_loop->setCuEventLoopListener(this);
+    m_event_loop->addCuEventLoopListener(this);
+}
+
+CuThreadsEventBridge::~CuThreadsEventBridge() {
+    cuprintf("~CuThreadsEventBridge: \e[1;31mremoving %p from event loop listeners\e[0m\n", this);
+    m_event_loop->removeCuEventLoopListener(this);
 }
 
 /*! \brief post the event to the event loop
  *
  * calls postEvent on the event loop service (CuEventLoopService)
+ * with this as a listener
  */
-void CuThreadsEventBridge::postEvent(CuEventI *e)
-{
-    m_event_loop->postEvent(e);
+void CuThreadsEventBridge::postEvent(CuEventI *e) {
+    m_event_loop->postEvent(this, e);
 }
 
 /*! \brief sets the CuThreadsEventBridgeListener on this event bridge

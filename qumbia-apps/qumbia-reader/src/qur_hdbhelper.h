@@ -17,8 +17,8 @@ public:
     QList<CuData> takeAll();
 
     void print_all(const QList<CuData> & dl, const QString& out_filenam = QString(), bool color = true);
-    void print_note(FILE* fp, const std::vector<double>& ts, const std::vector<double> &notes_ts,
-                    const std::vector<std::string>& notes, int index, bool on_file);
+    void print_note(FILE* fp, const std::vector<double> &notes_ts,
+                    const std::vector<std::string>& notes, size_t index, bool on_file);
 
 private:
     QMap<QString, CuData> mMap;

@@ -75,7 +75,7 @@ void QumbiaProjectWizard::init()
         rb->setProperty("factory", f);
         rb->setText(f);
         connect(rb, SIGNAL(toggled(bool)), this, SLOT(setFactory(bool)));
-        if(rb->objectName() == "rb-tango")
+        if(rb->objectName() == "rb-multi-engine")
             rb->setChecked(true);
         if(hblo)
             hblo->addWidget(rb);
@@ -259,9 +259,8 @@ void QumbiaProjectWizard::create()
                 contents = QString(f.readAll());
                 contents.replace("$INCLUDE_DIR$", INCLUDE_PATH);
 
-                foreach(QLineEdit *le, findChildren<QLineEdit *>())
-                {
-                    if(le->isEnabled() && !le->text().isEmpty())
+                foreach(QLineEdit *le, findChildren<QLineEdit *>()) {
+                    if(!le->text().isEmpty())
                     {
                         QVariant placeholder = le->property("placeholder");
                         if(placeholder.isValid())
@@ -273,7 +272,6 @@ void QumbiaProjectWizard::create()
                             contents.replace(placeh_lower, le->text().toLower());
                         }
                     }
-
                 }
 
                 f.close(); /* done with the file */

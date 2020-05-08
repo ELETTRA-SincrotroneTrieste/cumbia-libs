@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+class QJsonDocument;
+class CuData;
 
 class CumbiaWSWorld
 {
@@ -15,6 +17,8 @@ public:
     std::vector<std::string> srcPatterns() const;
 
     bool source_valid(const std::string& s);
+
+    bool json_decode(const QJsonDocument &json, CuData& out );
 
 private:
     std::vector<std::string> m_src_patterns;

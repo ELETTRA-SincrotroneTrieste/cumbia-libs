@@ -6,6 +6,10 @@
 class CuTAttConfigActivityPrivate;
 class CuDeviceFactoryService;
 
+/*!
+ * \brief Activity to get attribute configuration or command info. Optionally, it can perform a one
+ *        shot attribute read (or command inout) if the option *value-only* is set to true
+ */
 class CuTConfigActivity : public CuActivity
 {
 public:
@@ -13,9 +17,9 @@ public:
 
     CuTConfigActivity(const CuData& tok, CuDeviceFactoryService *df, Type t);
 
-    void setDesiredAttributeProperties(const std::vector<std::string> &props);
-
     virtual ~CuTConfigActivity();
+
+    void setOptions(const CuData& o);
 
     // CuActivity interface
 public:

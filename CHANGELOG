@@ -1,3 +1,35 @@
+v1.1.2
+a. cumbia
+a1. CumbiaPool: removed printf when no implementation is found and improved doc
+a2. Support for cross compilation with emscripten / wasm
+
+b. cumbia-qtcontrols
+b1. CuControlsFactoryPool: NULL replaced with nullptr.
+b2. A QuReplaceWildcards_I definition has been introduced to provide an interface for command line *replace wildcards* capable
+    engines.
+b3. Support for cross compilation with emscripten / wasm
+
+c. qumbia-apps
+c1. qumbia-read: support for websocket
+
+c2. qumbiaprojectwizard:
+c2.1 fixed $APPLICATION_NAME$" and "$ORGANIZATION_NAME$" placeholder replacement
+c2.2 multi-engine is the default option and the templates create a skeleton including cumbia-random and cumbia-websocket modules,
+     if available. cumbia-websocket is added only if a proper command line option is detected. QCommandLineParser is used to find
+     the required option to activate cumbia-websocket connection
+
+d. cumbia-websocket
+d1. added support for a full-duplex communication with generic server on a single web socket.
+    Former support to canoned (pwma) server is maintained and selected if an http url is provided
+    to the constructor alongside the websocket URL.
+d2. d1. can be tested using the simple https://github.com/ELETTRA-SincrotroneTrieste/cumbia-websocket-proxy-server.git
+    websocket server "proxy"
+d3. added support for command line argument wildcard replacement for tango by an implementation of QuReplaceWildcards_I
+
+e. qumbia-tango-controls
+e1. cutcontrols-utils:  CuTangoReplaceWildcards implementation of the QuReplaceWildcards_I interface is used to perform
+    command line arguments wildcard replacement
+
 v1.1.1
 a. cumbia
 a1. CuVariant

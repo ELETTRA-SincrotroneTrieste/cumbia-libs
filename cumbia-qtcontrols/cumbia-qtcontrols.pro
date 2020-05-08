@@ -21,7 +21,17 @@ DEFINES += CUMBIAQTCONTROLS_LIBRARY
 
 DEFINES += QT_NO_DEBUG_OUTPUT
 
+
+android-g++|wasm-emscripten {
+
+} else {
 QT += x11extras
+}
+
+wasm-emscripten {
+CONFIG += create_prl
+CONFIG += link_prl
+}
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
@@ -104,6 +114,7 @@ HEADERS += cumbiaqtcontrols.h\
 #    src/cucharts/quplotcommon.h \
 #    src/cucharts/quspectrumplot.h \
 #    src/cucharts/quchartconfdialog.h \
+    src/qureplacewildcards_i.h \
     src/qustring.h \
     src/qustringlist.h \
     src/qutable.h \
@@ -284,7 +295,7 @@ unix {
 
     other_inst.files = $${DISTFILES}
     other_inst.path = $${CUMBIA_QTCONTROLS_INCLUDES}
-
+    # set to  either $${INSTALL_ROOT}/lib or $${INSTALL_ROOT}/lib/wasm in .pri
     target.path = $${CUMBIA_QTCONTROLS_LIBDIR}
     INSTALLS += target inc other_inst
 
@@ -296,6 +307,8 @@ unix {
         INSTALLS += doc
     }
 
+android-g++|wasm-emscripten {
+} else {
 # generate pkg config file
     CONFIG += create_pc create_prl no_install_prl
 
@@ -306,4 +319,5 @@ unix {
     QMAKE_PKGCONFIG_INCDIR = $${inc.path}
     QMAKE_PKGCONFIG_VERSION = $${VERSION}
     QMAKE_PKGCONFIG_DESTDIR = pkgconfig
+    }
 }

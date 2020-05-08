@@ -4,20 +4,23 @@
 #include <cumbiapool.h>
 #include <cumacros.h>
 
+#ifdef CUMBIA_WEBSOCKET_VERSION
+#include <cuwsregisterengine.h>
+#endif
+
 #ifdef QUMBIA_TANGO_CONTROLS_VERSION
-#include <cumbiatango.h>
-#include <cutcontrolsreader.h>
-#include <cutcontrolswriter.h>
-#include <cutreader.h> // PolledRefresh / EventRefresh
-#include <cutango-world.h>
+#include <cutangoregisterengine.h>
+#include <cutreader.h>
+#endif
+
+#ifdef QUMBIA_EPICS_CONTROLS_VERSION
+#include <cuepregisterengine.h>
 #endif
 
 #ifdef CUMBIA_RANDOM_VERSION
-#include <cumbiarandom.h>
-#include <curndreader.h>
-#include <curndactionfactories.h>
-#include <cumbiarndworld.h>
+#include <curndregisterengine.h>
 #endif
+
 
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
@@ -37,14 +40,6 @@
 #include <cucontext.h>
 #include <QTimer>
 
-#ifdef QUMBIA_EPICS_CONTROLS
-#include <cumbiaepics.h>
-#include <cuepcontrolsreader.h>
-#include <cuepcontrolswriter.h>
-#include <cuepics-world.h>
-#include <cuepreadoptions.h>
-#endif
-
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
 
@@ -54,44 +49,46 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     m_layoutColumnCount(10)
 {
     QStringList engines;
+    QCommandLineParser cmdlparser;
+    Cumbia *cuws = nullptr, *cuta = nullptr;
+    Cumbia *cuep, *curnd;
     // for valgrind test
     // int *f= new int[1000];
     cu_pool = cumbia_pool;
     m_switchCnt = 0;
-    // setup Cumbia pool and register cumbia implementations for tango and epics
-#ifdef QUMBIA_EPICS_CONTROLS
-    CumbiaEpics* cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    cu_pool->registerCumbiaImpl("epics", cuep);
-    m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
-    m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
-    CuEpicsWorld ew;
-    m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
-    cu_pool->setSrcPatterns("epics", ew.srcPatterns());
-    cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
-    engines << "EPICS";
-#endif
+#ifdef CUMBIA_WEBSOCKET_VERSION
+    CuWsRegisterEngine wsre;
+    if(wsre.hasCmdOption(&cmdlparser, qApp->arguments())) {
+        cuws = wsre.registerWithDefaults(cumbia_pool, m_ctrl_factory_pool);
+        static_cast<CumbiaWebSocket *>(cuws)->openSocket();
+        cuws->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+        engines << "websocket";
+    }
 
+#endif
 #ifdef QUMBIA_TANGO_CONTROLS_VERSION
-    CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    cu_pool->registerCumbiaImpl("tango", cuta);
-    m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
-    m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
-    CuTangoWorld tw;
-    m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
-    cu_pool->setSrcPatterns("tango", tw.srcPatterns());
-    cuta->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
-    engines << "tango";
+    if(!cuws) {
+        CuTangoRegisterEngine tare;
+        cuta = tare.registerWithDefaults(cu_pool, m_ctrl_factory_pool);
+        cuta->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+        engines << "tango";
+    }
 #endif
-
+#ifdef QUMBIA_EPICS_CONTROLS
+    if(!cuws) {
+        CuEpRegisterEngine epre;
+        cuep = epre.registerWithDefaults(cumbia_pool, m_ctrl_factory_pool);
+        cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+        engines << "EPICS";
+    }
+#endif
 #ifdef CUMBIA_RANDOM_VERSION
-    CumbiaRandom *cura = new CumbiaRandom(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    CumbiaRNDWorld rndw;
-    cu_pool->registerCumbiaImpl("random", cura);
-    m_ctrl_factory_pool.registerImpl("random", CuRNDReaderFactory());
-    m_ctrl_factory_pool.setSrcPatterns("random", rndw.srcPatterns());
-    cu_pool->setSrcPatterns("random", rndw.srcPatterns());
-    cura->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
-    engines << "random";
+    if(!cuws) {
+        CuRndRegisterEngine rndre;
+        curnd = rndre.registerWithDefaults(cu_pool, m_ctrl_factory_pool);
+        curnd->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+        engines << "random";
+    }
 #endif
 
     ui->setupUi(this);
@@ -101,9 +98,8 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
 
     if(qApp->arguments().count() >= 2)
     {
-        for(int i = 1; i < qApp->arguments().count(); i++)
-        {
-            ui->leSrcs->setText(ui->leSrcs->text() + " " + qApp->arguments().at(i));
+        foreach(const QString& a, cmdlparser.positionalArguments()) {
+            ui->leSrcs->setText(ui->leSrcs->text() + a);
         }
         sourcesChanged();
     }
@@ -192,7 +188,8 @@ void QumbiaClient::configure(const CuData &d)
 void QumbiaClient::changeRefresh()
 {
     int period = ui->sbPeriod->value();
-    int refmode;
+    int refmode = 0;
+#ifdef QUMBIA_TANGO_CONTROLS_VERSION
     switch(ui->cbRefMode->currentIndex()) {
     case 0:
         refmode = CuTReader::PolledRefresh;
@@ -202,6 +199,9 @@ void QumbiaClient::changeRefresh()
         refmode = CuTReader::ChangeEventRefresh;
         break;
     }
+#else
+    printf("QumbiaClient.changeRefresh: warning: Tango module is not supported: this method may fail\n");
+#endif
 
     CuData options;
     options["period"] = period;
@@ -234,7 +234,7 @@ void QumbiaClient::sourcesChanged()
     options["refresh_mode"] = refmode;
 
     QStringList srcs = ui->leSrcs->text().split(QRegExp("\\s+"), QString::SkipEmptyParts);
-    const int srcCnt = srcs.size();
+    const int srcCnt = srcs.size() > 0 ? srcs.size() : 1;
     const int colSpan = m_layoutColumnCount / srcCnt;
 
     if(m_oldSrcs.size() == 0) {

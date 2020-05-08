@@ -1,5 +1,3 @@
-cutthreadtokengen.cpp
-cutthreadtokengen.h
 lib/cuactionfactoryservice.cpp
 lib/cuactionfactoryservice.h
 lib/cudevicefactoryservice.cpp
@@ -35,6 +33,8 @@ lib/cutdbpropertyreader.cpp
 lib/cutdbpropertyreader.h
 lib/cutreader.cpp
 lib/cutreader.h
+lib/cutthreadtokengen.cpp
+lib/cutthreadtokengen.h
 lib/cutwriter.cpp
 lib/cutwriter.h
 lib/cuwriteactivity.cpp

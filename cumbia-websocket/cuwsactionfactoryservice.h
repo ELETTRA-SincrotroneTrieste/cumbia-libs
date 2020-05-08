@@ -6,7 +6,7 @@
 #include <vector>
 
 class CuWSActionFactoryI;
-class CumbiaWebSocket;
+class CuWSClient;
 class CuDataListener;
 
 class CuWSActionFactoryServicePrivate;
@@ -50,7 +50,7 @@ public:
 
     virtual ~CuWSActionFactoryService();
 
-    CuWSActionI* registerAction(const std::string& src, const CuWSActionFactoryI& f, CumbiaWebSocket *ct);
+    CuWSActionI* registerAction(const std::string& src, const CuWSActionFactoryI& f, CuWSClient *cli, const QString &http_url);
 
     CuWSActionI *findActive(const std::string &name, CuWSActionI::Type at);
 

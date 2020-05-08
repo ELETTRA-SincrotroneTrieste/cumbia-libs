@@ -6,12 +6,12 @@ class ProtocolHelper_I;
 #include <QString>
 #include <QMap>
 
-class ProtocolHelpers
+class CuWsProtocolHelpers
 {
 public:
-    ProtocolHelpers();
+    CuWsProtocolHelpers();
 
-    ~ProtocolHelpers();
+    ~CuWsProtocolHelpers();
 
     ProtocolHelper_I *get(const QString& protonam) const;
 

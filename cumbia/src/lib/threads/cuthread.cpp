@@ -188,7 +188,7 @@ void CuThread::unregisterActivity(CuActivity *l)
  * \par note
  * The association between *activities*, *threads* and *CuThreadListener* objects is
  * defined by Cumbia::registerActivity. Please read Cumbia::registerActivity documentation
- * for more details.
+ * for more details. 
  *
  */
 void CuThread::onEventPosted(CuEventI *event)
@@ -206,7 +206,7 @@ void CuThread::onEventPosted(CuEventI *event)
             CuThreadListener *tl = threadListeners.at(i);
             if(re->getType() == CuEventI::Progress)
                 tl->onProgress(re->getStep(), re->getTotal(), re->getData());
-            else if(re->isList()) {
+            else if(re->isList()) { // vector will be deleted from within ~CuResultEventPrivate
                 const std::vector<CuData> &vd_ref = *re->getDataList();
                 tl->onResult(vd_ref);
             }

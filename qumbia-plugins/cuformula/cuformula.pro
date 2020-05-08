@@ -1,12 +1,6 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2018-10-26T14:13:50
-#
-#-------------------------------------------------
 include(../qumbia-plugins.pri)
-include(../../cumbia-qtcontrols/cumbia-qtcontrols.pri)
-include(../../qumbia-tango-controls/qumbia-tango-controls.pri)
-include(../../qumbia-epics-controls/qumbia-epics-controls.pri)
+
+include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 
 QT       += core gui script
 

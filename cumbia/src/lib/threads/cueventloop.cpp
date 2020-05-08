@@ -7,15 +7,26 @@
 #include <thread>
 #include <assert.h>
 #include <cumacros.h>
+#include <list>
+#include <algorithm> // for std::find
+
+class CuEventInfo {
+public:
+    CuEventInfo(CuEventI *eve, CuEventLoopListener *l) :
+        event(eve), lis(l) {}
+
+    CuEventI *event;
+    CuEventLoopListener *lis;
+};
 
 /*! @private */
 class CuEventLoopPrivate
 {
 public:
-    std::queue<CuEventI *> m_eventQueue;
+    std::queue<CuEventInfo> m_eventQueue;
     std::mutex m_mutex;
     std::condition_variable m_evloop_cv;
-    CuEventLoopListener *eventLoopListener;
+    std::list<CuEventLoopListener* > eloo_liss;
     std::thread *thread;
 };
 
@@ -26,7 +37,8 @@ public:
 CuEventLoopService::CuEventLoopService(CuEventLoopListener *l)
 {
     d = new CuEventLoopPrivate;
-    d->thread = NULL;
+    d->thread = nullptr;
+    if(l) d->eloo_liss.push_back(l);
 }
 
 /*! \brief the class destructor
@@ -52,7 +64,6 @@ void CuEventLoopService::exec(bool threaded)
 {
     if(threaded)
     {
-        pr_thread();
         pblue("CuEventLoop.exec: will run the event loop in a separate thread from this: 0x%lx...", pthread_self());
         if(!d->thread)
             d->thread = new std::thread(&CuEventLoopService::run, this);
@@ -69,10 +80,10 @@ void CuEventLoopService::exec(bool threaded)
  *
  * @param e the event to be delivered
  */
-void CuEventLoopService::postEvent(CuEventI *e)
+void CuEventLoopService::postEvent(CuEventLoopListener *lis, CuEventI *e)
 {
     std::unique_lock<std::mutex> lk(d->m_mutex);
-    d->m_eventQueue.push(e);
+    d->m_eventQueue.push(CuEventInfo(e, lis));
     d->m_evloop_cv.notify_one();
 }
 
@@ -80,9 +91,12 @@ void CuEventLoopService::postEvent(CuEventI *e)
  *
  * @param l a CuEventLoopListener that will receive events from the event loop
  */
-void CuEventLoopService::setCuEventLoopListener(CuEventLoopListener *l)
-{
-    d->eventLoopListener = l;
+void CuEventLoopService::addCuEventLoopListener(CuEventLoopListener *l) {
+    d->eloo_liss.push_back(l);
+}
+
+void CuEventLoopService::removeCuEventLoopListener(CuEventLoopListener *l) {
+    d->eloo_liss.remove(l);
 }
 
 /*! \brief exit the event loop cleanly
@@ -96,8 +110,9 @@ void CuEventLoopService::setCuEventLoopListener(CuEventLoopListener *l)
  */
 void CuEventLoopService::exit()
 {
+    cuprintf("CuEventLoopService::exit\n");
     std::unique_lock<std::mutex> lk(d->m_mutex);
-    d->m_eventQueue.push(new CuExitLoopEvent);
+    d->m_eventQueue.push(CuEventInfo(new CuExitLoopEvent, nullptr));
     d->m_evloop_cv.notify_one();
 }
 
@@ -125,39 +140,30 @@ void CuEventLoopService::wait()
  */
 void CuEventLoopService::run()
 {
-    pblue("CuEventLoop run: entering loop: this thread: \e[1;31m0x%lx\e[0m", pthread_self());
     bool repeat = true;
     while (repeat)
     {
-        CuEventI* event = 0;
+        std::list<CuEventI *> events;
+        // Wait for a message to be added to the queue
         {
-            cuprintf("\e[1;32mthread \e[1;31m0x%lx\e[0m: waiting for events...\e[0m\n", pthread_self());
+            std::unique_lock<std::mutex> lk(d->m_mutex);
+            while (d->m_eventQueue.empty())
+                d->m_evloop_cv.wait(lk);
 
-            // Wait for a message to be added to the queue
+            while(!d->m_eventQueue.empty())
             {
-                std::unique_lock<std::mutex> lk(d->m_mutex);
-                while (d->m_eventQueue.empty())
-                    d->m_evloop_cv.wait(lk);
-
-                if (d->m_eventQueue.empty())
-                {
-                    cuprintf("\e[1;31mevent queue is emtpyyyy\e[0m\n");
-                    continue;
+                CuEventInfo* event_info = &d->m_eventQueue.front();
+                if(event_info->event->getType() == CuEventI::ExitLoop)
+                    repeat = false;
+                else if(std::find(d->eloo_liss.begin(), d->eloo_liss.end(), event_info->lis)
+                        != d->eloo_liss.end()) {
+                    event_info->lis->onEvent(event_info->event);
                 }
-                event = d->m_eventQueue.front();
                 d->m_eventQueue.pop();
+                delete event_info->event;
             }
-
-            if(d->eventLoopListener)
-                d->eventLoopListener->onEvent(event);
-
-            if(event->getType() == CuEventI::ExitLoop)
-                repeat = false; /* leave loop */
-
-            delete event;
         }
     }
-    pblue("\e[1;32mCuEventLoopService.run leaving loop!\e[0m\n");
 }
 
 std::string CuEventLoopService::getName() const

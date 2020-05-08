@@ -1,24 +1,46 @@
-include ($INCLUDE_DIR$/qumbia-epics-controls/qumbia-epics-controls.pri)
-include ($INCLUDE_DIR$/qumbia-tango-controls/qumbia-tango-controls.pri)
+isEmpty(CUMBIA_ROOT) {
+    CUMBIA_ROOT=/usr/local/cumbia-libs
+}
+
+
+linux-g++ {
+    exists ($${CUMBIA_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
+        message("- adding EPICS support under $${CUMBIA_ROOT}")
+        include ($${CUMBIA_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+    }
+    exists  ($${CUMBIA_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
+        message("- adding Tango support under $${CUMBIA_ROOT}")
+        include ($${CUMBIA_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+    }
+    greaterThan(QT_MAJOR_VERSION, 4): QT += x11extras
+} else {
+    # include cumbia-qtcontrols for necessary qt engine-unaware dependency (widgets, qwt, ...)
+    include ($${CUMBIA_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
+}
+
+exists($${CUMBIA_ROOT}/include/cumbia-random/cumbia-random.pri) {
+    message("- adding cumbia-random module support under $${CUMBIA_ROOT}")
+    include($${CUMBIA_ROOT}/include/cumbia-random/cumbia-random.pri)
+}
+
+exists($${CUMBIA_ROOT}/include/cumbia-websocket/cumbia-websocket.pri) {
+    message("- adding cumbia-websocket module support under $${CUMBIA_ROOT}")
+    include($${CUMBIA_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
+}
+
 
 TEMPLATE = app
 
 QT +=  core gui
 
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets x11extras
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG +=
 
-CONFIG+=link_pkgconfig
-PKGCONFIG += x11
-
 DEFINES += QT_NO_DEBUG_OUTPUT
 
-OBJECTS_DIR = obj
-
 # RESOURCES +=
-
 
 SOURCES += src/main.cpp \
                 src/$CPPFILE$
@@ -41,18 +63,48 @@ HEADERS += \
 #
 INCLUDEPATH += ui src
 
-TARGET   = bin/$PROJECT_NAME$
+wasm-emscripten {
+    TARGET   = wasm/$PROJECT_NAME$
+} else {
+    TARGET = bin/$PROJECT_NAME$
+}
 
 # unix:LIBS += -L. -lmylib
 
 # unix:INCLUDEPATH +=  . ../../src
 
-message("")
+#
+# make install works if INSTALL_DIR is given to qmake
+#
+!isEmpty(INSTALL_DIR) {
+    wasm-emscripten {
+        inst.files = wasm/*
+    } else {
+        inst.files = $${TARGET}
+    }
+    inst.path = $${INSTALL_DIR}
+    INSTALLS += inst
+    message("-")
+    message("INSTALLATION")
+    message("       execute `make install` to install '$PROJECT_NAME$' under $${INSTALL_DIR} ")
+    message("-")
+} else {
+    message("-")
+    message("INSTALLATION")
+    message("       call qmake INSTALL_DIR=/usr/local/bin to install $PROJECT_NAME$ later with `make install` ")
+    message("-")
+}
+
+# unix:LIBS += -L. -lmylib
+
+# unix:INCLUDEPATH +=  . ../../src
+
+message("-")
 message("NOTE")
 message("You need to run cuuimake in order to build the project")
-message("")
+message("-")
 message("        cuuimake --show-config to see cuuimake configuration options")
 message("        cuuimake --configure to configure cuuimake")
 message("        cuuimake -jN to execute cuuimake and then make -jN")
 message("        cuuimake --make to run cuuimake and then make")
-message("")
+message("-")

@@ -2,9 +2,14 @@
 #include <cumacros.h>
 #include <regex>
 
-/*! the class constructor
+/*! \brief the class constructor
  *
- * Creates an empty CumbiaPool.
+ * Creates an empty CumbiaPool with no registered implementations
+ *
+ * \note
+ * This class is used in combination with cumbia-qtcontrols CuControlsFactoryPool to set up
+ * a multi engine environment for a cumbia/Qt application.
+ * cumbia-qtcontrols CuControlsFactoryPool documentation is a recommended reading.
  */
 CumbiaPool::CumbiaPool()
 {
@@ -71,9 +76,7 @@ Cumbia *CumbiaPool::get(const std::string &domain) const
     std::map<std::string, Cumbia *>::const_iterator it = m_map.find(domain);
     if(it != m_map.end())
         return it->second;
-
-    perr("CumbiaPool.get: no cumbia implementation registered with domain \"%s\": too bad", domain.c_str());
-    return NULL;
+    return nullptr;
 }
 
 /** \brief Calls get with the domain extracted from the full source name "src"
@@ -95,8 +98,10 @@ Cumbia *CumbiaPool::getBySrc(const std::string &src) const
     if(!cu)
         cu = guessBySrc(src);
 
-    if(!cu)
+    if(!cu) {
         perr("CumbiaPool.getBySrc: could not guess domain from \"%s\"", src.c_str());
+        m_print_registered_domain_info();
+    }
 
     return cu;
 }
@@ -132,6 +137,20 @@ Cumbia *CumbiaPool::guessBySrc(const std::string &src) const
 bool CumbiaPool::isEmpty() const
 {
     return m_map.size() == 0;
+}
+
+void CumbiaPool::m_print_registered_domain_info() const
+{
+    int i = 0;
+    std::map<std::string, std::vector<std::string> >::const_iterator it;
+    printf("   CumbiaPool: registered domains and patterns:\n");
+    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it)
+    {
+        printf("      - domain\t%d: %s -> ", ++i, it->first.c_str());
+        const std::vector<std::string> &patterns = it->second;
+        for(size_t i = 0; i < patterns.size(); i++)
+            i < patterns.size() - 1 ? printf("%s, ", patterns[i].c_str()) : printf("%s\n", patterns[i].c_str());
+    }
 }
 
 

@@ -8,21 +8,41 @@
 #include <QJsonObject>
 #include <cudata.h>
 
+/// TEST
+#include <QThread>
+#include <QTimer>
+
+class CuWSClientPrivate {
+public:
+    QWebSocket m_webSocket;
+    QUrl m_url;
+    CuWSClientListener *m_listener;
+    QQueue<QString> m_out_msg_queue, m_in_msg_queue;
+    bool m_socket_open;
+    QTimer *m_tmr_queue;
+};
+
 CuWSClient::CuWSClient(const QUrl &url, CuWSClientListener * listener, QObject *parent) : QObject(parent)
 {
-    m_url = url;
-    m_listener = listener;
-    m_socket_open = false;
-    connect(&m_webSocket, &QWebSocket::connected, this, &CuWSClient::onConnected);
-    connect(&m_webSocket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
-    connect(&m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onSocketError(QAbstractSocket::SocketError)));
-    connect(&m_webSocket, &QWebSocket::textMessageReceived, this, &CuWSClient::onMessageReceived);
+    d = new CuWSClientPrivate;
+    d->m_url = url;
+    d->m_listener = listener;
+    d->m_socket_open = false;
+    connect(&d->m_webSocket, SIGNAL(connected()), this, SLOT(onConnected()));
+    connect(&d->m_webSocket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
+    connect(&d->m_webSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onSocketError(QAbstractSocket::SocketError)));
+    connect(&d->m_webSocket, SIGNAL(textMessageReceived(const QString&)), this, SLOT(onMessageReceived(const QString&)));
 }
 
 CuWSClient::~CuWSClient()
 {
     pdelete("~CuWSClient %p", this);
+    delete d;
     close();
+}
+
+bool CuWSClient::isOpen() const {
+    return d->m_webSocket.isValid();
 }
 
 /*! \brief shortcut for close. Neeeded by QmlAppStateManager to close the socket when
@@ -45,36 +65,52 @@ void CuWSClient::start() {
 
 void CuWSClient::open()
 {
-    pgreen2tmp("+ opening web socket %s", qstoc(m_url.toString()));
-    m_webSocket.open(m_url);
+    pviolet2tmp("+ opening web socket %s [CuWSClient.open]", qstoc(d->m_url.toString()));
+    d->m_webSocket.open(d->m_url);
 }
 
 void CuWSClient::close()
 {
-    pviolet2tmp("X closing web socket %s", qstoc(m_url.toString()));
-    m_webSocket.close();
+    pviolet2tmp("X closing web socket %s [CuWSClient.close]", qstoc(d->m_url.toString()));
+    d->m_webSocket.close();
+}
+
+void CuWSClient::sendMessage(const QString &msg) {
+    if(d->m_webSocket.isValid())
+        d->m_webSocket.sendTextMessage(msg);
+    else
+        d->m_out_msg_queue.enqueue(msg);
 }
 
 void CuWSClient::onConnected()
 {
-    pgreen2tmp("-*- CuWSClient: connected to %s\n", qstoc(m_url.toString()));
+    pviolet2tmp("-*- connected to %s [CuWSClient.onConnected]", qstoc(d->m_url.toString()));
+    while(!d->m_out_msg_queue.isEmpty() && d->m_webSocket.isValid())
+        d->m_webSocket.sendTextMessage(d->m_out_msg_queue.dequeue());
+    /// TEST
+    d->m_tmr_queue = new QTimer(this);
+    d->m_tmr_queue->setInterval(1000);
+    connect(d->m_tmr_queue, SIGNAL(timeout()), this, SLOT(deliverMsgs()));
+    d->m_tmr_queue->start();
 }
 
 void CuWSClient::onDisconnected()
 {
-    pviolet2tmp("-/- CuWSClient: disconnected from %s\n", qstoc(m_url.toString()));
+    pviolet2tmp("-/- disconnected from %s [CuWSClient.onDisconnected]", qstoc(d->m_url.toString()));
 }
 
 void CuWSClient::onMessageReceived(const QString &message)
 {
-    // listener is CumbiaWebSocket
-    //
-    m_listener->onUpdate(message);
+    d->m_in_msg_queue.enqueue(message);
 }
 
 void CuWSClient::onSocketError(QAbstractSocket::SocketError se)
 {
-    perr("CuWSClient.onSocketError: %s [err: %d]", qstoc(m_webSocket.errorString()), se);
+    perr("socket error: %s [err: %d] URL: %s [CuWSClient.onSocketError]", qstoc(d->m_webSocket.errorString()), se, qstoc(d->m_url.toString()));
 }
 
-
+void CuWSClient::deliverMsgs() {
+    // listener is CumbiaWebSocket
+    while(!d->m_in_msg_queue.isEmpty())
+        d->m_listener->onUpdate(d->m_in_msg_queue.dequeue());
+}

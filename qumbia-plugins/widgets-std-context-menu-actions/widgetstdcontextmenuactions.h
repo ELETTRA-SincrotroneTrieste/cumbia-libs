@@ -54,6 +54,9 @@ public:
     QList<QAction *> getActions() const;
     int order() const;
 
+public slots:
+    void onHelperAActionTriggered(const QString& source);
+
 private slots:
     void onInfoActionTriggered();
     void onHelperAActionTriggered();

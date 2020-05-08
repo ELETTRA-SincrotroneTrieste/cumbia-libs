@@ -42,8 +42,18 @@ The *cumbia random* module is a tool to test the behaviour and performance of th
 
 Visit the dedicated <a href="https://elettra-sincrotronetrieste.github.io/cumbia-libs/">github.io</a> pages.
 
-## Download and installation
+## Enjoy and safely test the latest version of the library
 
+New releases of the library, including the version from the master branch, can be built and
+installed locally, under the user's home directory.
+Thereafter, a *one line instruction* is enough to use and test the latest features.
+
+Build using the [cubuild.sh script method](#quick-installation-using-the-cubuild-bash-script) discussed
+below (editing scripts/config.sh and changing the *prefix=* line) and then proceed to
+the instructions described in the
+[local environment setup](#set-up-the-environment-for-a-local-installation) section.
+
+## Download and installation
 
 ### Download the cumbia-libs set of modules
 
@@ -65,11 +75,17 @@ shows the list of the required packages to build all the modules in cumbia-libs:
 ### Prepare an ubuntu system for cumbia installation (time: 5 - 8 minutes)
 
 If you are interested in using ubuntu, please refer to the instructions in <a href="README.UBUNTU.md">README.UBUNTU.md</a> file.
-The time required to set up a *cumbia*-ready *ubuntu desktop* is about five to eight minutes and the procedure in the README.UBUNTU.md file
-requires the installation of official *ubuntu packages* only (by means of *apt-get install* or *Ubuntu Software*).
+Since *cumbia* requires the C++-17 standard, the Tango packages shipped with ubuntu are not compatible (at least at the moment of writing this moment and *ubuntu-19.10*). Therefore a manual build of both Tango and its *zeromq* dependency are 
+presently needed. Omniorb dependency can be installed with *apt-get*.
 
+The <a href="README.UBUNTU.md">README.UBUNTU.md</a> describes the following procedures aimed at the *cumbia* installation:
 
-### Quick installation using the *cubuild.sh* bash script
+- Prepare the ubuntu environment
+- *zeromq* installation from source
+- *tango* installation from source
+- *epics installation from source*
+
+### Quick installation using the cubuild bash script
 
 The cubuild.sh bash scripts installs the cumbia base libraries and apps, including support for either Tango or Epics, or both, if specified.
 
@@ -137,6 +153,16 @@ is already included in the *ldconfig* search paths. If not, you have two possibi
 - [y] "yes" answer: add a file cumbia.conf under */etc/ld.so.conf.d/*
 - [n] "no", the default: deal with it manually later (either dealing with ldconfig configuration files or exporting a proper LD_LIBRARY_PATH)
 
+With the same logic, the script scans the *PATH* environment variable to determine if *install_prefix/bin* is
+included. If not, a new file named *cumbia-bin-path.sh* can be placed under */etc/profile.d* to append to
+the *PATH* list *install_prefix/bin*.
+
+#### Notes
+1. If the script does not prompt for the installation of *cumbia-bin-path.sh*, you have probably already
+   included  *install_prefix/bin* in your *$PATH*. The opposite may happen:
+2. *install_prefix/bin* is in the user's *$PATH* but still the script asks to add *cumbia-bin-path.sh*
+   to */etc/profile.d*: you have probably called the *cubuild.sh* script with *sudo*, and the *PATH* is
+   thus different from the user's.
 
 If the *quick installation using the cubuild.sh bash script* fails, please read the *step by step installation* procedure to 
 point out the possible causes.
@@ -145,9 +171,14 @@ point out the possible causes.
 The install procedure will ask your permission to add paths to the sytem *profile*. If this is accepted, you may need to execute
 > source /etc/profile
 before using cumbia
-If you installed the libraries either using a custom prefix or without modifying the system profile, you can set up an
-environment in bash by typing
+
+#### Set up the environment for a local installation
+If you installed the libraries either using a custom prefix or without modifying the system
+profile, you can set up an environment in bash by typing
+
 > source $install_prefix/bin/cusetenv.sh
+
+This is useful if you are testing new versions locally.
 
 #### Testing
 > export TANGO_HOST=test-tango-host:PORT

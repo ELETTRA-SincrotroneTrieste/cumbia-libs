@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>720</width>
-    <height>869</height>
+    <height>965</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,7 +42,7 @@
       <string>Organization &amp;Name</string>
      </property>
      <property name="checkable">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="save" stdset="0">
       <bool>true</bool>
@@ -353,7 +353,7 @@
       <string>App&amp;lication Name</string>
      </property>
      <property name="checkable">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="save" stdset="0">
       <bool>true</bool>

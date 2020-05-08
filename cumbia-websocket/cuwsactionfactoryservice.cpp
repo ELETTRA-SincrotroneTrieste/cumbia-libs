@@ -42,19 +42,20 @@ CuWSActionFactoryService::~CuWSActionFactoryService()
  */
 CuWSActionI *CuWSActionFactoryService::registerAction(const std::string& src,
                                                        const CuWSActionFactoryI &f,
-                                                       CumbiaWebSocket* ct)
+                                                       CuWSClient* cli,
+                                                      const QString& http_url)
 {
     CuWSActionI* action = NULL;
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuWSActionI *>::const_iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src && !(*it)->exiting()) {
+        if((*it)->getType() == f.getType() && (*it)->getSource().getFullName() == src && !(*it)->exiting()) {
             break;
         }
 
     if(it == d->actions.end())
     {
-        action = f.create(src, ct);
+        action = f.create(src, cli, http_url);
         d->actions.push_back(action);
     }
     return action;
@@ -86,7 +87,7 @@ CuWSActionI *CuWSActionFactoryService::findActive(const string &src, CuWSActionI
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuWSActionI *>::const_iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == at && (*it)->getSource().getName() == src && !(*it)->exiting())
+        if((*it)->getType() == at && (*it)->getSource().getFullName() == src && !(*it)->exiting())
             return (*it);
     return NULL;
 }
@@ -111,7 +112,7 @@ std::vector<CuWSActionI *> CuWSActionFactoryService::find(const string &src, CuW
     std::vector <CuWSActionI *> actions;
     std::list<CuWSActionI *>::const_iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == at && (*it)->getSource().getName() == src)
+        if((*it)->getType() == at && (*it)->getSource().getFullName() == src)
             actions.push_back(*it);
     return actions;
 }
@@ -152,7 +153,7 @@ void CuWSActionFactoryService::unregisterAction(const std::string &src, CuWSActi
 
     it = d->actions.begin();
     while( it != d->actions.end())  {
-        if((*it)->getType() == at && (*it)->getSource().getName() == src && (*it)->exiting()) {
+        if((*it)->getType() == at && (*it)->getSource().getFullName() == src && (*it)->exiting()) {
             it = d->actions.erase(it);
         }
         else
@@ -185,7 +186,7 @@ void CuWSActionFactoryService::cleanup()
  *
  * @return the constant string "*CuWSActionFactoryService" identifying this type of service.
  *
- * Implements CuServiceI::getName pure virtual method
+ * Implements CuServiceI::getFullName pure virtual method
  */
 std::string CuWSActionFactoryService::getName() const
 {

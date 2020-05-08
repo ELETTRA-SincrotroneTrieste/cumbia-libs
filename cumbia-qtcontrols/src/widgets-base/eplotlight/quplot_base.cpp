@@ -685,6 +685,22 @@ void QuPlotBase::setYAxisAutoscaleEnabled(bool autoscale)
     replot();
 }
 
+void QuPlotBase::setXTopAxisAutoscaleEnabled(bool autoscale) {
+    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
+    axes_c->setAutoscale(QwtPlot::xTop, autoscale);
+    if(!autoscale)
+        axes_c->setBounds(this, QwtPlot::xTop, axisScaleDiv(QwtPlot::xTop).lowerBound(), axisScaleDiv(QwtPlot::xTop).upperBound());
+    replot();
+}
+
+void QuPlotBase::setYRightAxisAutoscaleEnabled(bool autoscale) {
+    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
+    axes_c->setAutoscale(QwtPlot::yRight, autoscale);
+    if(!autoscale)
+        axes_c->setBounds(this, QwtPlot::yRight, axisScaleDiv(QwtPlot::yRight).lowerBound(), axisScaleDiv(QwtPlot::yRight).upperBound());
+    replot();
+}
+
 double QuPlotBase::yUpperBound()
 {
     return axisScaleDiv(QwtPlot::yLeft).upperBound();

@@ -88,8 +88,11 @@ void CuWriteActivity::execute()
         else if(dev && !at["cmd"].toBool()) /* attribute */
         {
             bool skip_read_attribute = true;
+            cuprintf("CuWriteActivity.execute: d->point_info.isEmpty() %d?..\n", d->point_info.isEmpty());
             if(d->point_info.isEmpty()) {
+                cuprintf("CuWriteActivity.execute: calling get_att_config...\n");
                 success = tangoworld.get_att_config(d->tdev->getDevice(), at["point"].toString(), d->point_info, skip_read_attribute);
+                cuprintf("CuWriteActivity.execute: att config result %d\n", success);
             }
             if(success)
                 success = tangoworld.write_att(dev, at["point"].toString(), at["write_value"], d->point_info, at);

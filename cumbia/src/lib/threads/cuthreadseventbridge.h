@@ -45,7 +45,7 @@ class CuThreadsEventBridge : public CuThreadsEventBridge_I, public CuEventLoopLi
 public:
     CuThreadsEventBridge(const CuServiceProvider *sp);
 
-    virtual ~CuThreadsEventBridge() {}
+    virtual ~CuThreadsEventBridge();
 
     // CuThreadsEventBridge_I interface
     void postEvent(CuEventI *e);

@@ -83,7 +83,7 @@ CuControlsReaderFactoryI *CuControlsFactoryPool::getReadFactory(const std::strin
     if(m_rmap.size() > 0)
         return m_rmap.begin()->second;
     perr("CuControlsFactoryPool.getReadFactory: no CuControlsReaderFactoryI implementation registered with domain \"%s\"", domain.c_str());
-    return NULL;
+    return nullptr;
 }
 
 /*! \brief returns the writer factory that was registered with the given domain
@@ -100,7 +100,7 @@ CuControlsWriterFactoryI *CuControlsFactoryPool::getWriteFactory(const std::stri
     if(m_wmap.size() > 0)
         return m_wmap.begin()->second;
     perr("CuControlsFactoryPool.getWriteFactory: no CuControlsWriterFactoryI implementation registered with domain \"%s\"", domain.c_str());
-    return NULL;
+    return nullptr;
 }
 
 /** \brief uses the registered patterns to match the given source and return a CuControlsReaderFactoryI

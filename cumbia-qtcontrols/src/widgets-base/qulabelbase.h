@@ -67,7 +67,7 @@ public slots:
     void setMaximumLength(int len);
 
 protected:
-    void paintEvent(QPaintEvent *pe);
+    void paintEvent(QPaintEvent *pe) override;
 
 private:
     QuLabelBasePrivate *d_ptr;

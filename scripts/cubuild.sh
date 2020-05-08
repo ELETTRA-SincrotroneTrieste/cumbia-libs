@@ -430,6 +430,8 @@ echo -e "\n# epics enabled" >> $srcupdate_conf_f
 echo "epics=$epics" >> $srcupdate_conf_f
 echo -e "\n# random module enabled" >> $srcupdate_conf_f
 echo "random=$random" >> $srcupdate_conf_f
+echo -e "\n# websocket module enabled" >> $srcupdate_conf_f
+echo "random=$websocket" >> $srcupdate_conf_f
 echo -e "\n# directory with the cumbia sources " >> $srcupdate_conf_f
 echo "srcdir=$topdir" >> $srcupdate_conf_f
 #
@@ -921,7 +923,7 @@ if [ $make_install -eq 1 ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_install
                         $sudocmd rm -f $cumbia_bin_sh_path
                     fi
                     # (re)create file
-                    echo "export PATH=$PATH:$binpath" | $sudocmd tee $cumbia_bin_sh_path
+                    echo 'export PATH=$PATH:'"$binpath" | $sudocmd tee $cumbia_bin_sh_path
                     $sudocmd chmod +x $cumbia_bin_sh_path
                     echo -e "\e[1;32m*\e[0;32m\n* INSTALL \e[1;32myou may need to execute\n*\n  \e[1;36msource  /etc/profile\e[1;32m \n*"
                     echo -e "* to enable shortcuts for cumbia apps. Then type \n*\n  \e[1;36mcumbia\e[1;32m\n*\n* to see the available options\n*\e[0m"

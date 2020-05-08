@@ -18,6 +18,9 @@ public:
     void setPropertyOnly();
     QString format;
     QString db_profile, db_output_file; // if historical db plugin available
+
+    // websocket
+    QString ws_url, ws_http_url;
 };
 
 #endif // CONFIGURATION_H

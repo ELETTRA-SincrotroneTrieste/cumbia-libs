@@ -1250,7 +1250,7 @@ void QuCircularGaugeBase::drawNeedle(const QPointF &end, int angle, const QRectF
     po << rect.center() << p1 << end << p2;
 
     QBrush b(g_config->needleColor);
-    QPen pen(QColor(Qt::darkGray));
+    QPen pen(Qt::darkGray);
     pen.setWidthF(1.0);
     p.setBrush(b);
     p.setPen(pen);
