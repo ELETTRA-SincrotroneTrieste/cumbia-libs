@@ -20,7 +20,13 @@
 // plugin
 #include <cupluginloader.h>
 #include <cuformulaplugininterface.h>
+
+#ifdef HAS_CUHDB
 #include <cuhistoricaldbplugin_i.h>
+#else
+class CuHdbPlugin_I;
+#endif
+
 
 #ifdef QUMBIA_EPICS_CONTROLS_VERSION
 #include <cumbiaepics.h>
@@ -91,15 +97,19 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
         engines << "formula plugin";
     }
 
+	CuHdbPlugin_I *hdb_p;
+
+#ifdef HAS_CUHDB
     // historical database
     QObject *hdb_o;
-    CuHdbPlugin_I *hdb_p = pload.get<CuHdbPlugin_I>("cuhdb-qt-plugin.so", &hdb_o);
+    hdb_p = pload.get<CuHdbPlugin_I>("cuhdb-qt-plugin.so", &hdb_o);
     if(hdb_p) {
         cu_pool->registerCumbiaImpl("hdb", hdb_p->getCumbia());
         cu_pool->setSrcPatterns("hdb", hdb_p->getSrcPatterns());
         m_ctrl_factory_pool.registerImpl("hdb", *hdb_p->getReaderFactory());
         engines << "historical database";
     }
+#endif
 
     m_props_map[Low] = QStringList() << "min" << "min_alarm" << "min_warning" << "max_warning" <<
                                         "max_alarm" << "max" << "data_format_str" << "display_unit"
@@ -119,13 +129,14 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
     }
     else if(m_conf.list_options)
         cmdo.list_options();
-
+#ifdef HAS_CUHDB
     if(hdb_p && !m_conf.db_profile.isEmpty()) {
         hdb_p->setDbProfile(m_conf.db_profile);
     }
     else if(hdb_p && !m_conf.list_options){
         printf("\e[1;33m* \e[0;4mcumbia read\e[0m: using \e[1;33mdefault\e[0m historical database profile, if available\n");
     }
+#endif
 
     if(!m_conf.usage && !m_conf.list_options)
         m_createReaders(m_conf.sources);
