@@ -110,7 +110,7 @@ void CuTWriter::onResult(const CuData &data)
     // iterator can be invalidated if listener's onUpdate unsets source: use a copy
     std::list<CuDataListener *> lis_copy = d->listeners;
     std::list<CuDataListener *>::iterator it;
-    for(it = lis_copy.begin(); it != lis_copy.end(); ++it)
+    for(it = lis_copy.begin(); !d->exit && it != lis_copy.end(); ++it)
         (*it)->onUpdate(data);
 
     if(d->exit)
