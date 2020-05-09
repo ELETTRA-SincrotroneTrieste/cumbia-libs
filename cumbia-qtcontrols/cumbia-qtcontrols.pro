@@ -282,6 +282,11 @@ unix:LIBS -= \
 
 unix {
 
+PATH_VAR = $$(PATH)
+DOXYGEN = "doxygen"
+contains(PATH_VAR, DOXYGEN) {
+    message("Doxygen found")
+
     doc.commands = \
     doxygen \
     Doxyfile;
@@ -289,7 +294,15 @@ unix {
     doc.files = doc/*
     doc.path = $${CUMBIA_QTCONTROLS_DOCDIR}
     QMAKE_EXTRA_TARGETS += doc
+    !android-g++ {
+        INSTALLS += doc
+    }
 
+
+
+} else {
+	message("Doxygen not found")
+}
     inc.files = $${HEADERS}
     inc.path = $${CUMBIA_QTCONTROLS_INCLUDES}
 
@@ -302,10 +315,6 @@ unix {
 #message("=====================================")
 #message("DOC INSTALL SKIPPED!!!!!!!!!!!!!!!!")
 #message("=====================================")
-
-    !android-g++ {
-        INSTALLS += doc
-    }
 
 android-g++|wasm-emscripten {
 } else {

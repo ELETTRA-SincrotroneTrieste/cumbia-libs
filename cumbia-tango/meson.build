@@ -105,17 +105,20 @@ pkgg.generate(
 ### ====================================== documentation ===========================
 doxygen = find_program('doxygen', required : false)
 if not doxygen.found()
-  error('MESON_SKIP_TEST doxygen not found.')
-endif
+  message('doxygen not found. Documentation will not be generated')
+else
+
   doxydata = configuration_data()
   doxydata.set('VERSION', meson.project_version())
 
 
-if find_program('dot', required : false).found()
-  doxydata.set('HAVE_DOT', 'YES')
-else
-  doxydata.set('HAVE_DOT', 'NO')
+  if find_program('dot', required : false).found()
+    doxydata.set('HAVE_DOT', 'YES')
+  else
+    doxydata.set('HAVE_DOT', 'NO')
 endif
 
-subdir('doc')
+
+  subdir('doc')
+endif
 

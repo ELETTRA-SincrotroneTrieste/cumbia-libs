@@ -110,7 +110,7 @@ wasm-emscripten {
 android-g++|wasm-emscripten {
     LIBS += -L$${INSTALL_ROOT}/lib/wasm -lcumbia-websocket$${QTVER_SUFFIX} -lcumbia
 } else {
-    OBJECTS_DIR = objs
+    OBJECTS_DIR = objects
     packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
         message("cumbia-websocket.pri: using pkg-config to configure cumbia cumbia-qtcontrols$${QTVER_SUFFIX} includes and libraries")
     } else {

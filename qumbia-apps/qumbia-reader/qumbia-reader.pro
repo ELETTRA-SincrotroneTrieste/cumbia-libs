@@ -57,7 +57,7 @@ CONFIG +=
 
 DEFINES += QT_NO_DEBUG_OUTPUT
 
-OBJECTS_DIR = obj
+OBJECTS_DIR = objects
 
 SOURCES += src/main.cpp \
     src/cmdlineoptions.cpp \
