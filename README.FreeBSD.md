@@ -53,12 +53,12 @@ git clone https://github.com/tango-controls/cppTango.git
 
 cd tango-idl/
 mkdir build && cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.3.3
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.4.0
 sudo make install
 
 > cd ../../cppTango/
 > mkdir build && cd build
-> cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.3.3 -DZMQ_BASE=/usr/local/zeromq -DCPPZMQ_BASE=/usr/local/zeromq  -DOMNIIDL_PATH=/usr/local -DOMNI_BASE=/usr/local -DIDL_BASE=/usr/local/tango-9.3.3
+> cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.4.0 -DZMQ_BASE=/usr/local/zeromq -DCPPZMQ_BASE=/usr/local/zeromq  -DOMNIIDL_PATH=/usr/local -DOMNI_BASE=/usr/local -DIDL_BASE=/usr/local/tango-9.4.0  -DBUILD_TESTING=off
 > make
 > make install
 
