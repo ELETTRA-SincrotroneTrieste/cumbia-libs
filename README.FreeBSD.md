@@ -51,23 +51,34 @@ make -j9
 git clone https://github.com/tango-controls/tango-idl.git
 git clone https://github.com/tango-controls/cppTango.git
 
-cd tango-idl/
-mkdir build && cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.3.3
-sudo make install
+> cd tango-idl/
+> mkdir build
+> cd build
+> cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.4.0
+> sudo make install
 
 > cd ../../cppTango/
 > mkdir build && cd build
-> cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.3.3 -DZMQ_BASE=/usr/local/zeromq -DCPPZMQ_BASE=/usr/local/zeromq  -DOMNIIDL_PATH=/usr/local -DOMNI_BASE=/usr/local -DIDL_BASE=/usr/local/tango-9.3.3
+> cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.4.0 -DZMQ_BASE=/usr/local/zeromq -DCPPZMQ_BASE=/usr/local/zeromq  -DOMNIIDL_PATH=/usr/local -DOMNI_BASE=/usr/local -DIDL_BASE=/usr/local/tango-9.4.0  -DBUILD_TESTING=off
 > make
 > make install
 
 QWT
 Download latest qwt
-unzip qwt-6.1.4.zip
-cd qwt-6.1.4
-edit qwtconfig.pri enable QwtPkgConfig
-qmake && make -j9 && sudo make install
+
+> unzip qwt-6.1.4.zip
+> cd qwt-6.1.4
+
+- edit qwtconfig.pri enable QwtPkgConfig
+- edit qwtbuild.pri and change OBJECTS_DIR from obj to *objects*
+
+```bash
+OBJECTS_DIR       = objects
+
+```
+
+
+> qmake && make -j9 && sudo make install
 
 
 cumbia
