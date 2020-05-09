@@ -66,9 +66,14 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
     CuPluginLoader pload;
     QObject *plugin_qob;
     CuFormulaPluginI *fplu = pload.get<CuFormulaPluginI>("cuformula-plugin.so", &plugin_qob);
-    QObject *hdb_o;
-    CuHdbPlugin_I *hdb_p = pload.get<CuHdbPlugin_I>("cuhdb-qt-plugin.so", &hdb_o);
+    CuHdbPlugin_I *hdb_p;
 
+#ifdef HAS_CUHDB
+    // historical database
+    QObject *hdb_o;
+    hdb_p = pload.get<CuHdbPlugin_I>("cuhdb-qt-plugin.so", &hdb_o);
+    hdb_p = pload.get<CuHdbPlugin_I>("cuhdb-qt-plugin.so", &hdb_o);
+#endif
     // parse configuration
     CmdLineOptions cmdo(fplu != nullptr, hdb_p != nullptr);
     m_conf = cmdo.parse(qApp->arguments());
@@ -149,16 +154,8 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
         engines << "formula plugin";
     }
 
-	CuHdbPlugin_I *hdb_p;
 
 #ifdef HAS_CUHDB
-    // historical database
-<<<<<<< HEAD
-    QObject *hdb_o;
-    hdb_p = pload.get<CuHdbPlugin_I>("cuhdb-qt-plugin.so", &hdb_o);
-=======
-
->>>>>>> cd90fdb821215bb5034b090c2522861cd07fe5f4
     if(hdb_p) {
         cu_pool->registerCumbiaImpl("hdb", hdb_p->getCumbia());
         cu_pool->setSrcPatterns("hdb", hdb_p->getSrcPatterns());
