@@ -4,7 +4,9 @@ Starting point: a fresh FreeBSD desktop installation
 
 Prerequisites
 
-> pkg install git cmake cvs python3
+> pkg install git cmake cvs python3 doxygen
+
+Qt installation
 
 1. ZEROMQ
 
@@ -78,19 +80,71 @@ OBJECTS_DIR       = objects
 ```
 
 
-> qmake && make -j9 && sudo make install
+> qmake && make -j9
+> su
+> make install
 
 
-cumbia
+## cumbia libs
 
-export EPICS_BASE=/usr/local/epics/base-7.0.3.1
-export EPICS_HOST_ARCH=linux-x86_64
-export PKG_CONFIG_PATH=/usr/local/qwt-6.1.4/lib/pkgconfig:/usr/local/tango-9.3.3/lib/pkgconfig:/usr/local/omniorb-4.2.3/lib/pkgconfig:/usr/local/zeromq/lib/pkgconfig
+EPICS at the moment cannot be built, so that the following two commands do not apply:
 
-/scripts/cubuild.sh tango epics websocket random build
+> export EPICS_BASE=/usr/local/epics/base-7.0.3.1
+> export EPICS_HOST_ARCH=linux-x86_64
+
+Set PKG_CONFIG_PATH appropriately:
+
+> export PKG_CONFIG_PATH=/usr/local/qwt-6.1.4/lib/pkgconfig:/usr/local/tango-9.3.3/lib/pkgconfig:/usr/local/omniorb-4.2.3/lib/pkgconfig:/usr/local/zeromq/lib/pkgconfig
+
+### The scripts/cubuild.sh way
+
+The ./scripts/cubuild.sh script can be used. 
+
+> bash ./scripts/cubuild.sh tango random websocket build
+
+The manual way is described hereafter, and installs cumbia-libs under */usr/local/cumbia-libs*
+
+### cumbia
+
+> cd cumbia
+> meson builddir
+> cd builddir
+> meson configure -Dprefix=/usr/local/cumbia-libs/ -Dlibdir=lib
+> ninja
+> su 
+> ninja install
 
 ADD cumbia-libs to pkgconfig
 export PKG_CONFIG_PATH=/usr/local/qwt-6.1.4/lib/pkgconfig:/usr/local/tango-9.3.3/lib/pkgconfig:/usr/local/omniorb-4.2.3/lib/pkgconfig:/usr/local/zeromq/lib/pkgconfig:/usr/local/cumbia-libs/lib/pkgconfig
+
+### cumbia-tango
+
+Add */usr/local/cumbia-libs/libdata/pkgconfig/* to PKG_CONFIG_PATH
+
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/cumbia-libs/libdata/pkgconfig/
+
+> cd ../../cumbia-tango
+> meson builddir
+> cd builddir
+> meson configure -Dprefix=/usr/local/cumbia-libs/ -Dlibdir=lib
+> ninja
+> su 
+> ninja install
+
+### cumbia-qtcontrols
+
+> cd ../../cumbia-qtcontrols
+
+> qmake
+```bash
+Info: creating stash file /usr/home/giacomo/devel/utils/git/cppqtclients/cumbia-libs/cumbia-qtcontrols/.qmake.stash
+Project MESSAGE: cumbia-qtcontrols.pri: using pkg-config to configure qwt includes and libraries (Qt5Qwt6)
+```
+
+> make -j9
+> su
+> make install
+
 
 qutimearray3dplotplugin
 qumbia-tango-findsrc-plugin
@@ -98,6 +152,11 @@ qumbia-tango-findsrc-plugin
 qmake && make -j9 && make install
 
 
+### cumbia-qtcontrols
+
+> cd ../../qumbia-tango-controls
+
+cumbia-qtcontrols installed *pkgconfig* file under */usr/local/cumbia
 
 hdbextractor C++ lib
 
