@@ -49,7 +49,7 @@ else
         else
             echo -e " \e[1;33minfo\e[0m: \e[0;3m$libpath\e[0m already in LD_LIBRARY_PATH. Libraries: "
         fi
-        echo -e " \e[0;34m | `find $libpath -name *.so.*.*.* -printf "%f | "` \e[0m"
+        echo -e " \e[0;34m `find $libpath -name *.so.*.*.*  | awk -F/ '{print $NF}'` \e[0m"
         echo ""
 
         echo -e "\e[4mQT_PLUGINS_PATH\e[0m"
@@ -63,7 +63,7 @@ else
         else
             echo -e " \e[1;33minfo\e[0m: \e[0;3m$plupath\e[0m already in QT_PLUGIN_PATH. Plugins: "
         fi
-        echo -e " \e[0;34m | `find $root_d/lib/qumbia-plugins/ -name *.so -printf "%f | "` \e[0m"
+        echo -e " \e[0;34m `find $root_d/lib/qumbia-plugins/ -name *.so  | awk -F/ '{print $NF}'` \e[0m"
         echo ""
 
         echo -e "\e[4mPATH\e[0m"
@@ -85,7 +85,7 @@ else
         if [ -d $root_d/share/bash-completion.d ]; then
             echo -e " \e[1;32maction\e[0m sourcing files under \e[0;36m$root_d/share/bash-completion.d\e[0m for bash completion"
             echo -e -n " \e[1;33minfo\e[0m: scripts: "
-            echo -e " \e[0;34m | `find $root_d/share/bash-completion.d -type f -printf "%f | "` \e[0m\n"
+            echo -e " \e[0;34m `find $root_d/share/bash-completion.d -type f  | awk -F/ '{print $NF}' `\e[0m\n"
 
         for f in $root_d/share/bash-completion.d/*
             do
