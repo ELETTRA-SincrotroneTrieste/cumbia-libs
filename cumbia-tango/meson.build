@@ -99,6 +99,7 @@ pkgg.generate(
     version : meson.project_version(),
     name : 'libcumbia-tango',
     filebase : 'cumbia-tango',
+    install_dir : 'lib/pkgconfig',
     description : project_description )
 
 
