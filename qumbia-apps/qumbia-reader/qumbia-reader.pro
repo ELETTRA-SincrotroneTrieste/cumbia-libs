@@ -21,6 +21,11 @@ exists($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri) {
     include($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
 }
 
+exists($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri) {
+    message("- adding cumbia-http module support under $${INSTALL_ROOT}")
+    include($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri)
+}
+
 
 CONFIG+=link_pkgconfig
 PKGCONFIG -= x11
