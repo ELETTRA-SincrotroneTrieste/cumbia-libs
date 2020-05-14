@@ -80,10 +80,7 @@ void CumbiaHttp::onActionFinished(const string &source, CuHTTPActionA::Type t) {
 
     CuHTTPActionA *a = af->unregisterAction(source, t);
     qDebug() << __PRETTY_FUNCTION__ << source.c_str() << "type " << t << "found " << a;
-    if(a) {
-
-        delete a;
-    }
+    if(a) delete a;
 }
 
 void CumbiaHttp::addAction(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI &f)
@@ -153,15 +150,4 @@ QString CumbiaHttp::url() const {
 
 int CumbiaHttp::getType() const {
     return CumbiaHTTPType;
-}
-
-/*! \brief Callback invoked by CuHTTPClient when a new message is received from the http
- *
- * The received message is used to build a JSon document in order to extract the source.
- * The decoding of the message is taken over by the CuHTTPActionI with the given source
- *
- * @see CuHTTPClient::onMessageReceived
- */
-void CumbiaHttp::onUpdate(const QString &message) {
-
 }
