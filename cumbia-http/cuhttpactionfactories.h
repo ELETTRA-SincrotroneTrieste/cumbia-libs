@@ -6,38 +6,28 @@
 
 class QNetworkAccessManager;
 
-
-class CuHTTPActionReaderFactory : public CuHTTPActionFactoryI
-{
+class CuHTTPActionReaderFactory : public CuHTTPActionFactoryI {
 public:
-    void setOptions(const CuData &o);
-
     virtual ~CuHTTPActionReaderFactory();
 
+    void setOptions(const CuData &o);
     // CuTangoActionFactoryI interface
-public:
     CuHTTPActionA *create(const std::string &s, QNetworkAccessManager *nam, const QString& http_addr) const;
-
     CuHTTPActionA::Type getType() const;
-
 private:
     CuData options;
-
 };
 
 class CuHTTPActionWriterFactory : public CuHTTPActionFactoryI
 {
 public:
+    virtual ~CuHTTPActionWriterFactory();
+
     void setConfiguration(const CuData &conf);
     void setWriteValue(const CuVariant &write_val);
 
-    virtual ~CuHTTPActionWriterFactory();
-
-
     // CuTangoActionFactoryI interface
-public:
     CuHTTPActionA *create(const std::string &s, QNetworkAccessManager *qnam, const QString& http_addr) const;
-
     CuHTTPActionA::Type getType() const;
 
 private:
@@ -49,22 +39,14 @@ class CuHTTPActionConfFactory : public CuHTTPActionFactoryI
 {
 public:
     void setOptions(const CuData &o);
-
     virtual ~CuHTTPActionConfFactory();
 
     // CuTangoActionFactoryI interface
-public:
     CuHTTPActionA *create(const std::string &s, QNetworkAccessManager *qnam, const QString& http_addr) const;
-
     CuHTTPActionA::Type getType() const;
 
 private:
     CuData options;
-
-};
-
-class CuHttpActionWriterConfFactory : public CuHTTPActionConfFactory {
-    CuHTTPActionA::Type getType() const;
 };
 
 #endif // CUHTTPACTIONFACTORIES_H

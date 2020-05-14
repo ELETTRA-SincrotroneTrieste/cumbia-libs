@@ -70,13 +70,10 @@ CuHTTPActionConfFactory::~CuHTTPActionConfFactory() {
 }
 
 CuHTTPActionA *CuHTTPActionConfFactory::create(const string &s, QNetworkAccessManager *qnam, const QString &http_addr) const {
-    return new CuHttpActionConf(s, qnam, getType(), http_addr);
+    return new CuHttpActionConf(s, qnam, http_addr);
 }
 
 CuHTTPActionA::Type CuHTTPActionConfFactory::getType() const {
-    return CuHTTPActionA::ReaderConfig;
+    return CuHTTPActionA::Config;
 }
 
-CuHTTPActionA::Type CuHttpActionWriterConfFactory::getType() const {
-    return CuHTTPActionA::WriterConfig;
-}
