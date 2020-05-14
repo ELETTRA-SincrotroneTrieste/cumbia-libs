@@ -143,7 +143,7 @@ QString CuHttpControlsWriter::target() const
  */
 void CuHttpControlsWriter::clearTarget()
 {
-    d->cu_http->unlinkListener(d->target.toStdString(), CuHTTPActionA::ReaderConfig, d->tlistener);
+    d->cu_http->unlinkListener(d->target.toStdString(), CuHTTPActionA::Config, d->tlistener);
     d->cu_http->unlinkListener(d->target.toStdString(), CuHTTPActionA::Writer, d->tlistener);
     d->target = QString();
 }
@@ -160,20 +160,21 @@ void CuHttpControlsWriter::execute() {
     CuHTTPActionWriterFactory wtf;
     wtf.setWriteValue(getArgs());
     wtf.setConfiguration(getConfiguration());
-    d->cu_http->addAction(d->target.toStdString(), d->tlistener, wtf);
+    std::string t = d->target.toStdString();
+    // remove placeholders from the target, f.e. a/b/c/d(&objectref) -> a/b/c/d
+    t = t.substr(0, t.find("("));
+    d->cu_http->addAction(t, d->tlistener, wtf);
 }
 
 /*! \brief This is not implemented yet
  */
-void CuHttpControlsWriter::sendData(const CuData & /* data */)
-{
+void CuHttpControlsWriter::sendData(const CuData & /* data */) {
     printf("CuHttpWriter.sendData: not implemented\n");
 }
 
 /*! \brief This is not implemented yet
  */
-void CuHttpControlsWriter::getData(CuData & /*d_ino*/) const
-{
+void CuHttpControlsWriter::getData(CuData & /*d_ino*/) const {
     printf("CuHttpWriter.getData: not implemented\n");
 }
 
@@ -187,7 +188,12 @@ void CuHttpControlsWriter::setTarget(const QString &s) {
     // d->source is equal to 's' if no replacement is made
     for(int i = 0; i < rwis.size() && d->target == s; i++) // leave loop if s != d->source (=replacement made)
         d->target = rwis[i]->replaceWildcards(s, qApp->arguments());
-    CuHttpActionWriterConfFactory httpwriconff;
-    httpwriconff.setOptions(d->w_options);
-    d->cu_http->addAction(d->target.toStdString(), d->tlistener, httpwriconff);
+    // same CuHTTPActionConfFactory for readers and writers: same "conf" method
+    // The service will safely avoid "reading" a command
+    CuHTTPActionConfFactory cf;
+    cf.setOptions(d->w_options);
+    std::string t = d->target.toStdString();
+    // remove placeholders from the target, f.e. a/b/c/d(&objectref) -> a/b/c/d
+    t = t.substr(0, t.find("("));
+    d->cu_http->addAction(t, d->tlistener, cf);
 }
