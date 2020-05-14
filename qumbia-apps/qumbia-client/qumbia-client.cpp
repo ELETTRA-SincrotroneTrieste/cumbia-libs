@@ -8,6 +8,10 @@
 #include <cuwsregisterengine.h>
 #endif
 
+#ifdef CUMBIA_HTTP_VERSION
+#include <cuhttpregisterengine.h>
+#endif
+
 #ifdef QUMBIA_TANGO_CONTROLS_VERSION
 #include <cutangoregisterengine.h>
 #include <cutreader.h>
@@ -50,44 +54,57 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     m_layoutColumnCount(10)
 {
     QStringList engines;
-    QCommandLineParser cmdlparser;
-    Cumbia *cuws = nullptr, *cuta = nullptr;
+    Cumbia *cuws = nullptr, *cuta = nullptr, *cuhttp = nullptr;
     Cumbia *cuep, *curnd;
+    m_log = new CuLog(&m_log_impl);
     // for valgrind test
     // int *f= new int[1000];
     cu_pool = cumbia_pool;
     m_switchCnt = 0;
+
+#if defined(CUMBIA_WEBSOCKET_VERSION) || defined (CUMBIA_HTTP_VERSION)
+    QCommandLineParser cmdlparser;
+#endif
+
 #ifdef CUMBIA_WEBSOCKET_VERSION
     CuWsRegisterEngine wsre;
     if(wsre.hasCmdOption(&cmdlparser, qApp->arguments())) {
         cuws = wsre.registerWithDefaults(cumbia_pool, m_ctrl_factory_pool);
         static_cast<CumbiaWebSocket *>(cuws)->openSocket();
-        cuws->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+        cuws->getServiceProvider()->registerSharedService(CuServices::Log, m_log);
         engines << "websocket";
     }
-
+#endif
+#ifdef CUMBIA_HTTP_VERSION
+    CuHttpRegisterEngine httpre;
+    if(httpre.hasCmdOption(&cmdlparser, qApp->arguments())) {
+        cuhttp = httpre.registerWithDefaults(cumbia_pool, m_ctrl_factory_pool);
+        cuhttp->getServiceProvider()->registerSharedService(CuServices::Log, m_log);
+        qDebug() << __PRETTY_FUNCTION__ << "enabled http engine";
+        engines << "http";
+    }
 #endif
 #ifdef QUMBIA_TANGO_CONTROLS_VERSION
-    if(!cuws) {
+    if(!cuws && !cuhttp) {
         CuTangoRegisterEngine tare;
         cuta = tare.registerWithDefaults(cu_pool, m_ctrl_factory_pool);
-        cuta->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+        cuta->getServiceProvider()->registerSharedService(CuServices::Log, m_log);
         engines << "tango";
     }
 #endif
 #ifdef QUMBIA_EPICS_CONTROLS
-    if(!cuws) {
+    if(!cuws && !cuhttp) {
         CuEpRegisterEngine epre;
         cuep = epre.registerWithDefaults(cumbia_pool, m_ctrl_factory_pool);
-        cuep->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+        cuep->getServiceProvider()->registerSharedService(CuServices::Log, m_log);
         engines << "EPICS";
     }
 #endif
 #ifdef CUMBIA_RANDOM_VERSION
-    if(!cuws) {
+    if(!cuws && !cuhttp) {
         CuRndRegisterEngine rndre;
         curnd = rndre.registerWithDefaults(cu_pool, m_ctrl_factory_pool);
-        curnd->getServiceProvider()->registerService(CuServices::Log, new CuLog(&m_log_impl));
+        curnd->getServiceProvider()->registerSharedService(CuServices::Log, m_log);
         engines << "random";
     }
 #endif
