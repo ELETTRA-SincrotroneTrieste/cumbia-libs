@@ -33,18 +33,15 @@ public:
     QNetworkAccessManager *networkAccessManager;
     ProtocolHelper_I *proto_helper_i;
     CuHttpProtocolHelpers *proto_helpers;
-    CuHTTPActionA::Type action_type;
 };
 
-CuHttpActionConf::CuHttpActionConf(const HTTPSource &src, QNetworkAccessManager *qnam,
-                                   const CuHTTPActionA::Type action_type, const QString &url)
+CuHttpActionConf::CuHttpActionConf(const HTTPSource &src, QNetworkAccessManager *qnam, const QString &url)
     : CuHTTPActionA(qnam)
 {
     d = new CuHttpActionConfPrivate;
     d->networkAccessManager = qnam;
     d->url = url;
     d->httpconf_src = src;
-    d->action_type = action_type;
 }
 
 CuHttpActionConf::~CuHttpActionConf() {
@@ -57,7 +54,7 @@ HTTPSource CuHttpActionConf::getSource() const {
 }
 
 CuHTTPActionA::Type CuHttpActionConf::getType() const {
-    return d->action_type;
+    return CuHTTPActionA::Config;
 }
 
 void CuHttpActionConf::addDataListener(CuDataListener *l) {
@@ -78,15 +75,8 @@ size_t CuHttpActionConf::dataListenersCount() {
 void CuHttpActionConf::start() {
     QString src;
     QString url_s = QString::fromStdString(d->httpconf_src.getName());
-    if(d->action_type == CuHTTPActionA::ReaderConfig) {
-        src = QString("/x/conf/%1").arg(url_s);
-    }
-    else if(d->action_type == CuHTTPActionA::WriterConfig) {
-        src = QString("/x/conf/%1").arg(url_s);
-    }
-    if(!src.isEmpty()) {
-        startRequest(d->url + src);
-    }
+    src = QString("/x/conf/%1").arg(url_s);
+    startRequest(d->url + src);
 }
 
 bool CuHttpActionConf::exiting() const {
@@ -99,7 +89,6 @@ void CuHttpActionConf::stop() {
 }
 
 void CuHttpActionConf::decodeMessage(const QJsonDocument &json) {
-    qDebug() << __PRETTY_FUNCTION__ << "decoding " << json;
     CuData res("src", d->httpconf_src.getName());
     CumbiaHTTPWorld httpw;
     httpw.json_decode(json, res);
