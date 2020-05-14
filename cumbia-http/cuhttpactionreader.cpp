@@ -3,6 +3,7 @@
 #include "cuhttpprotocolhelper_i.h"
 #include "cuhttpprotocolhelpers.h"
 #include "cumbiahttpworld.h"
+#include "cuhttpactionreader.h"
 
 #include <cudatalistener.h>
 #include <cuserviceprovider.h>
@@ -13,7 +14,6 @@
 #include <cuactivitymanager.h>
 #include <math.h>
 
-#include "cuhttpactionreader.h"
 #include <cumacros.h>
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
@@ -26,66 +26,13 @@
 #include <QJsonObject>
 #include <QJsonParseError>
 
-HTTPSourceConfiguration::HTTPSourceConfiguration()
-{
-    m_keys   << "min_value" << "max_value" << "data_type" << "display_unit" << "format" << "data_format";
-}
-
-void HTTPSourceConfiguration::add(const QString &key, const QString &value)
-{
-    m_map.insert(key, value);
-}
-
-bool HTTPSourceConfiguration::isComplete() const
-{
-    foreach(QString key, m_keys) {
-        if(!m_map.contains(key))
-            return false;
-    }
-    return true;
-}
-
-CuData HTTPSourceConfiguration::toCuData() const
-{
-    CuData res;
-    res["min"] = m_map["min_value"].toStdString();
-    res["max"] = m_map["max_value"].toStdString();
-    res["display_unit"] = m_map["display_unit"].toStdString();
-    res["format"] = m_map["format"].toStdString();
-    res["data_type"] = m_map["data_type"].toInt();
-    res["data_format"] = m_map["data_format"].toInt();
-    return res;
-}
-
-QStringList HTTPSourceConfiguration::keys() const {
-    return m_keys;
-}
-
-void HTTPSourceConfiguration::setError(const QString &message)
-{
-    m_errorMsg = message;
-}
-
-bool HTTPSourceConfiguration::error() const
-{
-    return !m_errorMsg.isEmpty();
-}
-
-QString HTTPSourceConfiguration::errorMessage() const
-{
-    return m_errorMsg;
-}
-
-
-class CuHTTPActionReaderPrivate
-{
+class CuHTTPActionReaderPrivate {
 public:
     std::set<CuDataListener *> listeners;
     HTTPSource tsrc;
     QString url;
     bool exit;
     CuData property_d, value_d, options;
-    HTTPSourceConfiguration source_configuration;
     CuHttpProtocolHelpers *proto_helpers;
     ProtocolHelper_I *proto_helper_i;
 };
@@ -125,36 +72,31 @@ CuData CuHTTPActionReader::getToken() const {
  *
  * @return a TSource object that describes the Tango source
  */
-HTTPSource CuHTTPActionReader::getSource() const
-{
+HTTPSource CuHTTPActionReader::getSource() const {
     return d->tsrc;
 }
 
-CuHTTPActionA::Type CuHTTPActionReader::getType() const
-{
+CuHTTPActionA::Type CuHTTPActionReader::getType() const {
     return CuHTTPActionA::Reader;
 }
 
-void CuHTTPActionReader::addDataListener(CuDataListener *l)
-{
+void CuHTTPActionReader::addDataListener(CuDataListener *l) {
     std::set<CuDataListener *>::iterator it = d->listeners.begin();
     d->listeners.insert(it, l);
 }
 
-void CuHTTPActionReader::removeDataListener(CuDataListener *l)
-{
+void CuHTTPActionReader::removeDataListener(CuDataListener *l) {
+    qDebug() << __PRETTY_FUNCTION__ << l;
     d->listeners.erase(l);
     if(d->listeners.size() == 0)
         stop();
 }
 
-size_t CuHTTPActionReader::dataListenersCount()
-{
+size_t CuHTTPActionReader::dataListenersCount() {
     return d->listeners.size();
 }
 
-void CuHTTPActionReader::decodeMessage(const QJsonDocument &json)
-{
+void CuHTTPActionReader::decodeMessage(const QJsonDocument &json) {
     CuData res = getToken();
     CumbiaHTTPWorld httpw;
     httpw.json_decode(json, res);
@@ -171,8 +113,7 @@ void CuHTTPActionReader::setOptions(const CuData &o) {
     d->options = o;
 }
 
-QNetworkRequest CuHTTPActionReader::prepareRequest(const QUrl &url) const
-{
+QNetworkRequest CuHTTPActionReader::prepareRequest(const QUrl &url) const {
     /*
      * -- sniffed from JS EventSource -- tcpdump -vvvs 1024 -l -A -i lo port 8001 -n
      * .^...^..GET /sub/subscribe/hokuto:20000/test/device/1/double_scalar HTTP/1.1
@@ -208,13 +149,14 @@ void CuHTTPActionReader::start() {
     startRequest(d->url + src);
 }
 
-void CuHTTPActionReader::stop()
-{
-    if(!d->exit)
+void CuHTTPActionReader::stop() {
+    // stopRequest -> CuHttpActionA::d->reply->close()
+    // --> SLOT(CuHttpActionA::onReplyFinished)
+    // --> CumbiaHttp::onActionFinished (CumbiaHttp is a CuHTTPActionListener)
+    // --> CumbiaHttp unregisters and deletes this
+    if(!d->exit) {
         d->exit = true;
-    stopRequest();
-
-    cuprintf("CuHTTPActionReader.stop: unsubscribe request sent... what do we do now?????\n");
-    //  getListener()->onActionFinished(d->tsrc.getName(), getType());
+        stopRequest();
+    }
 }
 
