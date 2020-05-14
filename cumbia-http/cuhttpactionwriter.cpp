@@ -26,9 +26,9 @@ public:
 
     std::set<CuDataListener *> listeners;
     HTTPSource http_target;
-    QString http_url;
+    QString url;
     bool exit;
-    CuData property_d, value_d, options;
+    CuData options;
     QNetworkAccessManager *nam;
     ProtocolHelper_I *proto_helper_i;
     CuHttpProtocolHelpers *proto_helpers;
@@ -40,7 +40,7 @@ CuHttpActionWriter::CuHttpActionWriter(const HTTPSource &target, QNetworkAccessM
 {
     d = new CuHTTPActionWriterPrivate;
     d->nam = qnam;
-    d->http_url = http_url;
+    d->url = http_url;
     d->http_target = target;
 }
 
@@ -86,17 +86,12 @@ size_t CuHttpActionWriter::dataListenersCount() {
 }
 
 void CuHttpActionWriter::start() {
-    QString url_s = "WRITE " + QString::fromStdString(d->http_target.getName());
-    if(!d->w_val.isNull())
-        url_s += "(" + QuString(d->w_val.toString()) + ")";
-    if(d->http_url.isEmpty()) {
-        // communicate over http only
-        QString msg = QString("%1").arg(url_s);
-//        d->http_client->sendMessage(msg);
-    }
-    else {
-        perr("CuHttpActionWriter.start: write over http not implemented yet: %s", qstoc(url_s));
-    }
+    QString src;
+    QString url_s = QString::fromStdString(d->http_target.getName());
+    src = QString("/x/write/%1").arg(url_s);
+    if(d->w_val.isValid())
+        src += QString("(%1)").arg(d->w_val.toString().c_str());
+    startRequest(d->url + src);
 }
 
 bool CuHttpActionWriter::exiting() const {
