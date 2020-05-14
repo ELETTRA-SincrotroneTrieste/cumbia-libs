@@ -160,7 +160,10 @@ void CuWsControlsWriter::execute() {
     CuWSActionWriterFactory wtf;
     wtf.setWriteValue(getArgs());
     wtf.setConfiguration(getConfiguration());
-    d->cu_ws->addAction(d->target.toStdString(), d->tlistener, wtf);
+    std::string t = d->target.toStdString();
+    t = t.substr(0, t.find("(")); // remove placeholders from the target, f.e. a/b/c/d(&objectref)
+    printf("CuWsControlsWriter:execute calling addAction with target %s values %s\n", t.c_str(), getArgs().toString().c_str());
+    d->cu_ws->addAction(t, d->tlistener, wtf);
 }
 
 /*! \brief This is not implemented yet
@@ -189,5 +192,8 @@ void CuWsControlsWriter::setTarget(const QString &s) {
         d->target = rwis[i]->replaceWildcards(s, qApp->arguments());
     CuWsActionWriterConfFactory wswriconff;
     wswriconff.setOptions(d->w_options);
-    d->cu_ws->addAction(d->target.toStdString(), d->tlistener, wswriconff);
+    std::string t = d->target.toStdString();
+    t = t.substr(0, t.find("(")); // remove placeholders from the target, f.e. a/b/c/d(&objectref)
+    printf("CuWsControlsWriter:setTarget calling addAction with target %s\n", t.c_str());
+    d->cu_ws->addAction(t, d->tlistener, wswriconff);
 }
