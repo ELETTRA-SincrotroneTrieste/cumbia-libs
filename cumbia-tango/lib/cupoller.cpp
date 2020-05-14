@@ -67,23 +67,13 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a, const CuDa
         // thread token. CuTReader.setOptions can customize thread grouping behaviour
         CuData tt;
         options.containsKey("thread_token") ? tt = options : tt = CuData("device", tsrc.getDeviceName());
+        at.merge(options); // as of v1.1.2, merge options into activity token
         activity = new CuPollingActivity(at, df);
         const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
         const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
         d->cumbia_t->registerActivity(activity, this, tt, fi, bf);
-        pgreen("(+) CuPoller.registerAction: created a new polling activity for device \"%s\" period %d\n",
-                  at["device"].toString().c_str(), at["period"].toInt());
     }
-    else {
-        pviolet2("(i) CuPoller.registerAction: found a running polling activity [%p] DISPOSABLE %d for device \"%s\" period %d\n",
-                  activity, activity->isDisposable(), at["device"].toString().c_str(), at["period"].toInt());
-    }
-
-    // post insert to activity's thread. TSource is all what polling activity needs. don't pass pointers
-    // to something that can be destroyed while activity is running in the background
     d->cumbia_t->postEvent(activity, new CuAddPollActionEvent(a->getSource(), a));
-    //    if(d->actions_map.size() == 1)
-    //        d->cumbia_t->resumeActivity(activity);
 }
 
 /*! \brief unregister an action from the poller.
@@ -104,16 +94,12 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a, const CuDa
  * in CuPoller::onResult
  *
  */
-void CuPoller::unregisterAction(CuTangoActionI *a)
-{
-    if(!d->deliveringResults)
-        m_do_unregisterAction(a);
-    else
-        d->to_remove_actionlist.push_back(a);
+void CuPoller::unregisterAction(CuTangoActionI *a) {
+    if(!d->deliveringResults) m_do_unregisterAction(a);
+    else d->to_remove_actionlist.push_back(a);
 }
 
-bool CuPoller::actionRegistered(const CuTangoActionI *a) const
-{
+bool CuPoller::actionRegistered(const CuTangoActionI *a) const {
     return d->actions_map.find(a) != d->actions_map.end();
 }
 
@@ -121,20 +107,13 @@ bool CuPoller::actionRegistered(const CuTangoActionI *a) const
  * \brief counts the number of actions
  * \return the number of actions
  */
-size_t CuPoller::count() const
-{
+size_t CuPoller::count() const {
     return d->actions_map.size();
 }
 
-void CuPoller::onProgress(int step, int total, const CuData &data)
-{
-}
+void CuPoller::onProgress(int , int , const CuData &) { }
 
-void CuPoller::onResult(const CuData &data)
-{
-    pyellow2("CuPoller.onResult data %s EXIT FLAG %d", data.toString().c_str(), data["exit"].toBool());
-    pyellow2("actions size now: %ld", d->actions_map.size());
-}
+void CuPoller::onResult(const CuData &) { }
 
 void CuPoller::onResult(const std::vector<CuData> &datalist)
 {
@@ -144,13 +123,8 @@ void CuPoller::onResult(const std::vector<CuData> &datalist)
     for(size_t i = 0; i < datalist.size(); i++) {
         CuTangoActionI *receiver = static_cast<CuTangoActionI *>(datalist[i]["action_ptr"].toVoidP());
         // receiver information arrives from another thread. receiver may have been destroyed meanwhile
-        const std::string& src = datalist[i]["src"].toString();
         if(d->actions_map.find(receiver) != d->actions_map.end()) {
             receiver->onResult(datalist[i]);
-        }
-        else {
-            pred("CuPoller.onResult: [%s] action \e[1;36m%p\e[1;31m has been removed! [%s]",
-                    src.c_str(), receiver, datalist[i].toString().c_str());
         }
     }
     d->deliveringResults = false;
