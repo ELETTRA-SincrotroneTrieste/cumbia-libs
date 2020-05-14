@@ -34,6 +34,10 @@ exists($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri) {
     include($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
 }
 
+exists($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri) {
+    message("including support for cumbia-http module under $${INSTALL_ROOT}")
+    include($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri)
+}
 
 QT       += core gui
 
