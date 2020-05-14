@@ -18,7 +18,7 @@ class CuHTTPActionA : public QObject
     Q_OBJECT
 public:
 
-    enum Type { Reader = 0, Writer, ReaderConfig, WriterConfig, DbReadProp, DbWriteProp };
+    enum Type { Reader = 0, Writer, Config };
 
     CuHTTPActionA(QNetworkAccessManager *nam);
 
@@ -72,6 +72,7 @@ public:
 protected slots:
     virtual void onNewData();
     virtual void onReplyFinished();
+    virtual void onReplyDestroyed(QObject *);
     virtual void onSslErrors(const QList<QSslError> &errors);
     virtual void onError(QNetworkReply::NetworkError code);
 
@@ -84,6 +85,8 @@ private:
     CuHTTPActionAPrivate *d;
 
     void m_on_buf_complete();
+    QByteArray m_extract_data(const QByteArray& in) const;
+
 };
 
 /*!
