@@ -27,10 +27,10 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
 {
     if(json.isNull()) {
         res["err"] = true;
-        res["msg"] = "CuHTTPActionReader.decodeMessage: invalid json document";
+        res["msg"] = "CumbiaHTTPWorld.decodeMessage: invalid json document";
     }
     else {
-        const QJsonObject data_o = json["data"].toObject();
+        const QJsonObject data_o = json.object();
         if(!data_o.isEmpty()) {
             QStringList keys = data_o.keys();
 
