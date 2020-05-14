@@ -2,6 +2,7 @@
 #define KBDINPUTWAITTHREAD_H
 
 #include <QThread>
+#include <termios.h>
 
 class KbdInputWaitThread : public QThread
 {
@@ -9,9 +10,14 @@ class KbdInputWaitThread : public QThread
 public:
     KbdInputWaitThread(QObject* parent);
 
+    ~KbdInputWaitThread();
+
     // QThread interface
 protected:
     void run();
+
+private:
+    struct termios m_default_tio;
 };
 
 #endif // KBDINPUTWAITTHREAD_H
