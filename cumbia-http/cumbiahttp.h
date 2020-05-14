@@ -56,10 +56,6 @@ public:
 
     QList<QuReplaceWildcards_I *> getReplaceWildcard_Ifaces() const;
 
-    // CuHTTPClientListener interface
-public:
-    virtual void onUpdate(const QString& message);
-
 private:
 
     void m_init();
