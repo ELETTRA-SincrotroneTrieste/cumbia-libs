@@ -28,6 +28,10 @@ exists($${CUMBIA_ROOT}/include/cumbia-websocket/cumbia-websocket.pri) {
     include($${CUMBIA_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
 }
 
+exists($${CUMBIA_ROOT}/include/cumbia-http/cumbia-http.pri) {
+    message("including support for cumbia-http module under $${CUMBIA_ROOT}")
+    include($${CUMBIA_ROOT}/include/cumbia-http/cumbia-http.pri)
+}
 
 TEMPLATE = app
 
