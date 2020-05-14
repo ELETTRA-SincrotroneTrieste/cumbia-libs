@@ -15,7 +15,7 @@ public:
     HTTPSource(const HTTPSource& other);
 
     string getName() const;
-    string getFullName() const;
+    string getNameNoArgs() const;
     string getProtocol() const;
 
     std::vector<string> getArgs() const;

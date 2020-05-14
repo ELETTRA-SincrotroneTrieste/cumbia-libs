@@ -3,23 +3,17 @@
 #include <algorithm>
 #include <regex>
 
-HTTPSource::HTTPSource()
-{
+HTTPSource::HTTPSource() { }
 
-}
-
-HTTPSource::HTTPSource(const string& s)
-{
+HTTPSource::HTTPSource(const string& s) {
     m_s = s;
 }
 
-HTTPSource::HTTPSource(const HTTPSource &other)
-{
+HTTPSource::HTTPSource(const HTTPSource &other) {
     this->m_s = other.m_s;
 }
 
-std::vector<string> HTTPSource::getArgs() const
-{
+std::vector<string> HTTPSource::getArgs() const {
     std::string a = getArgsString();
     std::string delim = ",";
     std::regex re(delim);
@@ -35,8 +29,7 @@ std::vector<string> HTTPSource::getArgs() const
     return ret;
 }
 
-std::string HTTPSource::getArgsString() const
-{
+std::string HTTPSource::getArgsString() const {
     std::string a;
     size_t pos = m_s.find('(');
     if(pos != string::npos)
@@ -48,36 +41,28 @@ std::string HTTPSource::getArgsString() const
  * \brief Returns the full name that was given to the constructor without the *cumbia domain
  *        engine* specification
  *
- * \return the source that was passed to the constructor, without the *cumbia domain
- *         engine* specification, if specified (either http:// or https://)
- *
- * \par example
- * \code
- * HTTPSource s("https://tango://test/device/1/double_scalar");
- * printf("name: %s\n", s.getName().c_str());
- * //
- * // output
- * // name: tango://test/device/1/double_scalar
- * //
- * \endcode
- *
+ * \return the source that was passed to the constructor
  */
-string HTTPSource::getName() const
-{
-//    std::regex re("http[s]{0,1}://");
-//    std::smatch match;
-//    if(std::regex_search(m_s, match, re))
-//        return m_s.substr(match.position() + match.length());
+string HTTPSource::getName() const {
     return m_s;
 }
 
 /*!
- * \brief HTTPSource::getFullName returns the full name that was given to the constructor
- * \return the full name that was given to the constructor, including the *cumbia domain
- *         engine* specification, if provided (either http:// or https://)
+ * \brief Returns the source name as given to the constructor without arguments or placeholders
+ *
+ * \return source name without arguments or placeholders
+ *
+ * \par Example
+ * \code
+ * HTTPSource s("myhost:20000/ab/cd/ef/hi(200)");
+ * HTTPSource s2("myhost:20000/ab/cd/ef/hello(&hello_spinbox)");
+ * s.getName(); // "myhost:20000/ab/cd/ef/hi(200)"
+ * s.getNameNoArgs(); // "myhost:20000/ab/cd/ef/hi"
+ * s2.getNameNoArgs(); // "myhost:20000/ab/cd/ef/hello"
+ * \endcode
  */
-string HTTPSource::getFullName() const {
-    return m_s;
+string HTTPSource::getNameNoArgs() const {
+    return m_s.substr(0, m_s.find("("));
 }
 
 /*! \brief matches last protocol specification found in the source name, matching the pattern
@@ -104,16 +89,13 @@ string HTTPSource::getProtocol() const {
     return "";
 }
 
-
-HTTPSource &HTTPSource::operator=(const HTTPSource &other)
-{
+HTTPSource &HTTPSource::operator=(const HTTPSource &other) {
     if(this != &other)
         m_s = other.m_s;
     return *this;
 }
 
-bool HTTPSource::operator ==(const HTTPSource &other) const
-{
+bool HTTPSource::operator ==(const HTTPSource &other) const {
     return m_s == other.m_s;
 }
 
