@@ -8,7 +8,7 @@ CONFIG +=
 
 DEFINES += QT_NO_DEBUG_OUTPUT
 
-OBJECTS_DIR = obj
+OBJECTS_DIR = objects
 
 # RESOURCES += 
 

@@ -54,6 +54,15 @@ class CuHdbPlugin_I;
 #include <cumbiawebsocket.h>
 #include <cumbiawsworld.h>
 #include <cuwscontrolsreader.h> // for CuWSReaderFactory
+#include <cuwstangoreplacewildcards.h>
+#endif
+
+#ifdef CUMBIA_HTTP_VERSION
+#include <cumbiahttp.h>
+#include <cumbiahttpworld.h>
+#include <cuhttpcontrolsreader.h> // for CuHttpReaderFactory
+#include <cuhttpregisterengine.h>
+#include <cuhttptangoreplacewildcards.h>
 #endif
 
 QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
@@ -66,9 +75,14 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
     CuPluginLoader pload;
     QObject *plugin_qob;
     CuFormulaPluginI *fplu = pload.get<CuFormulaPluginI>("cuformula-plugin.so", &plugin_qob);
-    QObject *hdb_o;
-    CuHdbPlugin_I *hdb_p = pload.get<CuHdbPlugin_I>("cuhdb-qt-plugin.so", &hdb_o);
+    CuHdbPlugin_I *hdb_p;
 
+#ifdef HAS_CUHDB
+    // historical database
+    QObject *hdb_o;
+    hdb_p = pload.get<CuHdbPlugin_I>("cuhdb-qt-plugin.so", &hdb_o);
+    hdb_p = pload.get<CuHdbPlugin_I>("cuhdb-qt-plugin.so", &hdb_o);
+#endif
     // parse configuration
     CmdLineOptions cmdo(fplu != nullptr, hdb_p != nullptr);
     m_conf = cmdo.parse(qApp->arguments());
@@ -80,29 +94,37 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
     CumbiaTango* cuta = nullptr;
 #endif
 
-    if(!m_conf.ws_url.isEmpty()) {
+    if(m_conf.url.startsWith("wss://") || m_conf.url.startsWith("ws://")) {
 #ifdef CUMBIA_WEBSOCKET_VERSION
-        printf("activating cumbia websocket...ws url %s http url %s\n", qstoc(m_conf.ws_url), qstoc(m_conf.ws_http_url));
+        printf("activating cumbia websocket...ws url %s\n", qstoc(m_conf.url));
         // setup Cumbia web socket with the web socket address and the host name to prepend to the sources
         // for the HTTP requests
         CumbiaWSWorld wsw;
-        QUrl u(m_conf.ws_url);
-        CumbiaWebSocket* cuws = new CumbiaWebSocket(u.toString(), m_conf.ws_http_url, new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+        QUrl u(m_conf.url);
+        CumbiaWebSocket* cuws = new CumbiaWebSocket(u.toString(), "", new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
         cu_pool->registerCumbiaImpl("ws", cuws);
         cu_pool->setSrcPatterns("ws", wsw.srcPatterns());
         m_ctrl_factory_pool.setSrcPatterns("ws", wsw.srcPatterns());
         m_ctrl_factory_pool.registerImpl("ws", CuWSReaderFactory());
         cuws->openSocket();
-#ifdef QUMBIA_TANGO_CONTROLS_VERSION
-        CuTangoReplaceWildcards *tgrwi = new CuTangoReplaceWildcards;
+        CuWsTangoReplaceWildcards *tgrwi = new CuWsTangoReplaceWildcards;
         cuws->addReplaceWildcardI(tgrwi);
         engines << "websocket";
-#endif
 #else
         perr("QumbiaReader: module cumbia-websocket is not available");
 #endif
     }
-    else if(m_conf.ws_url.isEmpty() ^ m_conf.ws_http_url.isEmpty())
+    else if(m_conf.url.startsWith("https://") || m_conf.url.startsWith("http://")) {
+#ifdef CUMBIA_HTTP_VERSION
+        CuHttpRegisterEngine httpre;
+        httpre.setUrl(m_conf.url);
+        CumbiaHttp *cuhttp = httpre.registerWithDefaults(cu_pool, m_ctrl_factory_pool);
+        printf("activating cumbia http... url %s\n", qstoc(m_conf.url));
+#else
+        perr("QumbiaReader: module cumbia-http is not available");
+#endif
+    }
+    else if(m_conf.url.isEmpty())
         perr("QumbiaReader: websocket command line arguments incomplete");
 
 
@@ -149,16 +171,8 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
         engines << "formula plugin";
     }
 
-	CuHdbPlugin_I *hdb_p;
 
 #ifdef HAS_CUHDB
-    // historical database
-<<<<<<< HEAD
-    QObject *hdb_o;
-    hdb_p = pload.get<CuHdbPlugin_I>("cuhdb-qt-plugin.so", &hdb_o);
-=======
-
->>>>>>> cd90fdb821215bb5034b090c2522861cd07fe5f4
     if(hdb_p) {
         cu_pool->registerCumbiaImpl("hdb", hdb_p->getCumbia());
         cu_pool->setSrcPatterns("hdb", hdb_p->getSrcPatterns());

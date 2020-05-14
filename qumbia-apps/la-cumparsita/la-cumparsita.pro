@@ -47,7 +47,7 @@ DEFINES += QT_NO_DEBUG_OUTPUT
 CONFIG+=link_pkgconfig
 PKGCONFIG += x11
 
-OBJECTS_DIR = obj
+OBJECTS_DIR = objects
 
 # RESOURCES +=
 

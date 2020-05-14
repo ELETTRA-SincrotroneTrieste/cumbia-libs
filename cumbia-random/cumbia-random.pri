@@ -66,7 +66,7 @@ isEmpty(INSTALL_ROOT) {
 android-g++|wasm-emscripten {
 } else {
 
-    OBJECTS_DIR = obj
+    OBJECTS_DIR = objects
 
     CONFIG += link_pkgconfig
     PKGCONFIG += cumbia
@@ -96,7 +96,7 @@ QMAKE_CXXFLAGS += -std=gnu++17 -Wall
 MOC_DIR = moc
 
 QMAKE_CLEAN = moc \
-    obj \
+    objects \
     Makefile \
     *.tag
 

@@ -37,6 +37,7 @@
 #include <QCommandLineParser>
 #include <QScrollArea>
 #include <QSpinBox>
+#include <QCommandLineParser>
 #include <QComboBox>
 #include <cucontext.h>
 #include <QTimer>

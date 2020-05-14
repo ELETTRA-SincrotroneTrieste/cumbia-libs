@@ -120,17 +120,17 @@ pkgg.generate(
     version : meson.project_version(),
     name : 'libcumbia',
     filebase : 'cumbia',
+    install_dir : 'lib/pkgconfig',
     description : project_description )
 
 
 ### ====================================== documentation ===========================
 doxygen = find_program('doxygen', required : false)
 if not doxygen.found()
-  error('MESON_SKIP_TEST doxygen not found.')
-endif
+  message('doxygen not found. Will not generate doc')
+else
   doxydata = configuration_data()
   doxydata.set('VERSION', meson.project_version())
-
 
 if find_program('dot', required : false).found()
   # In the real world this would set the variable
@@ -142,5 +142,9 @@ else
   doxydata.set('HAVE_DOT', 'NO')
 endif
 
-subdir('doc')
+
+  subdir('doc')
+
+endif
+
 

@@ -45,7 +45,7 @@ CmdLineOptions::CmdLineOptions(bool formula_plugin_enabled, bool historical_db_p
     m_help_map["--help-epics"] = "EPICS module specific help";
 #endif
 #ifdef CUMBIA_WEBSOCKET_VERSION
-    m_help_map["--ws-url"] = "websocket url, e.g. ws://localhost:12702, wss://wshost:PORT";
+    m_help_map["--url"] = "either websocket or http url, e.g. ws://localhost:12702, wss://wshost:PORT, https://wshost.domain.eu:8443";
 #endif
     if(formula_plugin_enabled)
         m_help_map["--help-formula"] = "formula plugin specific help";
@@ -132,11 +132,9 @@ RConfig CmdLineOptions::parse(const QStringList &args) const
         else if(a.startsWith("--db-output-file=")) {
             o.db_output_file = a.remove("--db-output-file=");
         }
-        else if(a.startsWith("--ws-url=")) {
-            o.ws_url = a.remove("--ws-url=");
+        else if(a.startsWith("--url=")) {
+            o.url = a.remove("--url=");
         }
-        else if(a.startsWith("--ws-http-url="))
-            o.ws_http_url = a.remove("--ws-http-url=");
         else if(!a.startsWith("-"))
             o.sources.append(a);
         else if(!o.list_options) { // !o.list_options: do not mess up with auto completion

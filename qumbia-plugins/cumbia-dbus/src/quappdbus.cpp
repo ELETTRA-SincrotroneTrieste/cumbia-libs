@@ -62,7 +62,7 @@ void QuAppDBus::unregisterApp(QuApplication *app)
 QString QuAppDBus::getServiceName(QuApplication* app) const
 {
     QString dbus_servicenam;
-    char hostname[HOST_NAME_MAX] = "unknown_host";
+    char hostname[256] = "unknown_host";
     char *display;
     QString qsdisplay;
     QString appname;
@@ -72,7 +72,7 @@ QString QuAppDBus::getServiceName(QuApplication* app) const
     if(appname.contains("/"))
         appname = appname.split("/", QString::SkipEmptyParts).last();
 
-    if(gethostname(hostname, HOST_NAME_MAX))
+    if(gethostname(hostname, 256))
         perr("QuAppDBus.getServiceName: hostname unavailable");
 
     display = getenv("DISPLAY");
