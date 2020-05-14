@@ -64,11 +64,12 @@ QString CuHttpRegisterEngine::url() const {
     return d->url;
 }
 
-bool CuHttpRegisterEngine::hasCmdOption(QCommandLineParser *parser, const QStringList &args) const
-{
+bool CuHttpRegisterEngine::hasCmdOption(QCommandLineParser *parser, const QStringList &args) const {
     QCommandLineOption http_url_o(QStringList() << "u" << "http-url", "URL to http server", "url", url());
-    parser->addOption(http_url_o);
+    if(!parser->optionNames().contains("u")) {
+        parser->addOption(http_url_o);
+    }
     parser->process(args);
     d->url = parser->value(http_url_o);
-    return parser->isSet(http_url_o) && !d->url.isEmpty();
+    return parser->isSet(http_url_o) && (d->url.startsWith("http://") || d->url.startsWith("https://"));
 }
