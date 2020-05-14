@@ -38,6 +38,7 @@
 #include <qulogimpl.h>
 #include <QtDebug>
 #include <QMessageBox>
+#include <QCommandLineParser>
 #include <QScrollArea>
 #include <QSpinBox>
 #include <QCommandLineParser>
