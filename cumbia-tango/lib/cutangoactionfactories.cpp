@@ -132,6 +132,7 @@ CuTangoActionI *CuTWriterConfFactory::create(const string &s, CumbiaTango *ct) c
     const CuData& op = options();
     if(op.containsKey("fetch_props"))
         w->setDesiredAttributeProperties(op["fetch_props"].toStringVector());
+    w->setOptions(op);
     return w;
 }
 
