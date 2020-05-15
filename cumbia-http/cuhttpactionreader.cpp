@@ -87,7 +87,6 @@ void CuHTTPActionReader::addDataListener(CuDataListener *l) {
 
 void CuHTTPActionReader::removeDataListener(CuDataListener *l) {
     d->listeners.erase(l);
-    qDebug() << __PRETTY_FUNCTION__ << l << "listeners after erase: " << d->listeners.size();
     if(d->listeners.size() == 0)
         stop();
 }
@@ -100,9 +99,9 @@ void CuHTTPActionReader::decodeMessage(const QJsonDocument &json) {
     CuData res = getToken();
     CumbiaHTTPWorld httpw;
     httpw.json_decode(json, res);
-    for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it) {
+    std::set<CuDataListener *> lcp = d->listeners;
+    for(std::set<CuDataListener *>::iterator it = lcp.begin(); it != lcp.end(); ++it)
         (*it)->onUpdate(res);
-    }
 }
 
 bool CuHTTPActionReader::exiting() const {

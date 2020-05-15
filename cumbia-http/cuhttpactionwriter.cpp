@@ -109,8 +109,10 @@ void CuHttpActionWriter::decodeMessage(const QJsonDocument &json) {
     httpw.json_decode(json, res);
     d->exit = res["is_result"].toBool();
     if(res["err"].toBool() || res["is_result"].toBool()) {
-        for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it)
+        for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it) {
             (*it)->onUpdate(res);
+            cuprintf("CuHttpActionWriter::decodeMessage: updating with result %s\n", datos(res));
+        }
     }
     if(d->exit) d->listeners.clear();
 }

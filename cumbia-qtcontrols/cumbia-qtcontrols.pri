@@ -145,8 +145,8 @@ wasm-emscripten {
 
 DEFINES += CUMBIA_DEBUG_OUTPUT=1
 
-VERSION_HEX = 0x010102
-VERSION = 1.1.2
+VERSION_HEX = 0x010200
+VERSION = 1.2.0
 
 # cumbia plugin directory.
 # it should be the same as that defined by

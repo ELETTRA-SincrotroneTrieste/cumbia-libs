@@ -89,5 +89,4 @@ $MAINCLASS$::$MAINCLASS$(CumbiaPool *cumbia_pool, QWidget *parent) :
 $MAINCLASS$::~$MAINCLASS$()
 {
     delete ui;
-    delete m_log;
 }

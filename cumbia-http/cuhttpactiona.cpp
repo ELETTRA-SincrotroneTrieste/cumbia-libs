@@ -63,14 +63,17 @@ void CuHTTPActionA::m_on_buf_complete(){
 }
 
 void CuHTTPActionA::onNewData() {
-    d->buf += d->reply->readAll();
+    QByteArray ba = d->reply->readAll();
+    if(!d->buf.isEmpty())
+        cuprintf("CuHTTPActionA::onNewData: buf completed by \e[1;32m%s\e[0m\n", ba.data());
+    d->buf += ba;
     // buf complete?
-    if(d->buf.endsWith("}\n\n")) { // buf complete
+    if(d->buf.endsWith("\n\n")) { // buf complete
         m_on_buf_complete();
         d->buf.clear();
     }
     else
-        cuprintf("\e[1;35mCuHTTPActionA::onNewData: buf incomplete waiting for next buf from the net\e[0m\n");
+        cuprintf("CuHTTPActionA::onNewData: \e[1;35mbuf \e[0;35m%s\e[1;35m incomplete waiting for next buf from the net\e[0m\n", ba.data());
 }
 
 void CuHTTPActionA::onReplyFinished() {
