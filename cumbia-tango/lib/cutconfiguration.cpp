@@ -165,7 +165,6 @@ void CuTConfiguration::start()
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
     d->cumbia_t->registerActivity(d->activity, this, tt, fi, bf);
-    cuprintf("> CuTAttConfiguration.start attconfig %p thread 0x%lx ACTIVITY %p\n", this, pthread_self(), d->activity);
 }
 
 /*! \brief calls unregisterActivity on Cumbia in order to enter the exit state
@@ -175,7 +174,6 @@ void CuTConfiguration::start()
  */
 void CuTConfiguration::stop()
 {
-    cuprintf("\e[1;35mCuTattConfigureation.stop called this %p activity %p d->exiting %d\e[0m\n", this, d->activity, d->exiting);
     if(!d->exiting) {
         d->exiting = true;
         d->cumbia_t->unregisterActivity(d->activity);
