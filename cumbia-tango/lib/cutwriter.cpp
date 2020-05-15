@@ -105,7 +105,6 @@ void CuTWriter::onResult(const std::vector<CuData> &datalist)
  */
 void CuTWriter::onResult(const CuData &data)
 {
-    cuprintf("CuTWriter.onResult: data received %s\n", data.toString().c_str());
     d->exit = data["exit"].toBool();
     // iterator can be invalidated if listener's onUpdate unsets source: use a copy
     std::list<CuDataListener *> lis_copy = d->listeners;
@@ -193,7 +192,6 @@ void CuTWriter::start() {
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
     d->cumbia_t->registerActivity(d->activity, this, thtok, fi, bf);
-    cuprintf("> CuTWriter.start writer %p thread 0x%lx ACTIVITY %p\n", this, pthread_self(), d->activity);
 }
 
 void CuTWriter::stop() {
