@@ -104,6 +104,8 @@ void CuTConfigActivity::execute()
             success = value_only || utils.get_command_info(dev, point, at);
             if(success && d->type == CuReaderConfigActivityType) {
                 success = utils.cmd_inout(dev, point, at);
+            } else if(success) { // successful get_command_info but no cmd_inout
+                at.putTimestamp();
             }
         }
         else if(dev)  {
