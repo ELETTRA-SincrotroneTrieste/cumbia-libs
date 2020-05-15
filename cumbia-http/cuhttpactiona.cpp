@@ -31,17 +31,6 @@ CuHTTPActionListener *CuHTTPActionA::getHttpActionListener() const {
     return d->listener;
 }
 
-void CuHTTPActionA::m_on_buf_complete(){
-    QJsonParseError jpe;
-    qDebug() << __PRETTY_FUNCTION__ << "BUF" << d->buf;
-    QByteArray json = m_extract_data(d->buf);
-    QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
-    if(jsd.isNull())
-        perr("CuHTTPActionA.m_on_buf_complete: invalid json: %s\n", qstoc(json));
-    decodeMessage(jsd);
-    d->buf.clear();
-}
-
 // data from event source has a combination of fields, one per line
 // (event, id, retry, data)
 // https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
@@ -64,10 +53,24 @@ QNetworkRequest CuHTTPActionA::prepareRequest(const QUrl &url) const {
     return r;
 }
 
+void CuHTTPActionA::m_on_buf_complete(){
+    QJsonParseError jpe;
+    qDebug() << __PRETTY_FUNCTION__ << "BUF" << d->buf;
+    QByteArray json = m_extract_data(d->buf);
+    QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
+    if(jsd.isNull())
+        perr("CuHTTPActionA.m_on_buf_complete: invalid json: %s\n", qstoc(json));
+    decodeMessage(jsd);
+    d->buf.clear();
+}
+
 void CuHTTPActionA::onNewData() {
-    d->buf = d->reply->readAll();
-    if(true) // buf complete
+    d->buf += d->reply->readAll();
+    // buf complete?
+    if(d->buf.endsWith("}\n\n")) { // buf complete
         m_on_buf_complete();
+        d->buf.clear();
+    }
 }
 
 void CuHTTPActionA::onReplyFinished() {
