@@ -35,6 +35,8 @@ void CuHTTPActionA::m_on_buf_complete(){
     QJsonParseError jpe;
     QByteArray json = m_extract_data(d->buf);
     QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
+    if(jsd.isNull())
+        perr("CuHTTPActionA.m_on_buf_complete: invalid json: %s\n", qstoc(json));
     decodeMessage(jsd);
     d->buf.clear();
 }

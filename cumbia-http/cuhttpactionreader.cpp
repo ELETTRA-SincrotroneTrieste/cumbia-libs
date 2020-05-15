@@ -86,8 +86,8 @@ void CuHTTPActionReader::addDataListener(CuDataListener *l) {
 }
 
 void CuHTTPActionReader::removeDataListener(CuDataListener *l) {
-    qDebug() << __PRETTY_FUNCTION__ << l;
     d->listeners.erase(l);
+    qDebug() << __PRETTY_FUNCTION__ << l << "listeners after erase: " << d->listeners.size();
     if(d->listeners.size() == 0)
         stop();
 }
