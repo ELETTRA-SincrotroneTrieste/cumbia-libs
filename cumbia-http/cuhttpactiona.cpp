@@ -33,6 +33,7 @@ CuHTTPActionListener *CuHTTPActionA::getHttpActionListener() const {
 
 void CuHTTPActionA::m_on_buf_complete(){
     QJsonParseError jpe;
+    qDebug() << __PRETTY_FUNCTION__ << "BUF" << d->buf;
     QByteArray json = m_extract_data(d->buf);
     QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
     if(jsd.isNull())
