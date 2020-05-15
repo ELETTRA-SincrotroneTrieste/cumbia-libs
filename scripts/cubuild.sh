@@ -11,6 +11,7 @@ tango=0
 qml=1
 random=1
 websocket=0
+http=0
 pull=0
 srcupdate=0
 sudocmd=sudo
@@ -73,6 +74,7 @@ then
 	echo -e " tango - include cumbia-tango and qumbia-tango-controls modules in the specified operations"
 	echo -e " epics - include cumbia-epics and qumbia-epics-controls modules in the specified operations"
         echo -e " websocket - include cumbia-websocket module in the specified operations"
+        echo -e " http - include cumbia-http module in the specified operations"
         echo -e " qml - build cumbia-qtcontrols QML module (default: enabled)"
 	echo -e " no-tango - exclude cumbia-tango and qumbia-tango-controls modules from the specified operations"
 	echo -e " no-epics - remove cumbia-epics and qumbia-epics-controls modules from the specified operations"
@@ -212,6 +214,13 @@ if [[ $@ == **no-websocket** ]]; then
         websocket=0
 fi
 
+if [[ $@ == **http** ]]; then
+        http=1
+fi
+
+if [[ $@ == **no-http** ]]; then
+        http=0
+fi
 
 
 if  [ "$#" == 0 ]; then
@@ -231,6 +240,10 @@ fi
 
 if [[ $websocket -eq 1 ]]; then
         qmake_p+=(cumbia-websocket)
+fi
+
+if [[ $http -eq 1 ]]; then
+        qmake_p+=(cumbia-http)
 fi
 
 if [[ $qml -eq 1 ]]; then
@@ -430,8 +443,13 @@ echo -e "\n# epics enabled" >> $srcupdate_conf_f
 echo "epics=$epics" >> $srcupdate_conf_f
 echo -e "\n# random module enabled" >> $srcupdate_conf_f
 echo "random=$random" >> $srcupdate_conf_f
+
 echo -e "\n# websocket module enabled" >> $srcupdate_conf_f
-echo "random=$websocket" >> $srcupdate_conf_f
+echo "websocket=$websocket" >> $srcupdate_conf_f
+
+echo -e "\n# http module enabled" >> $srcupdate_conf_f
+echo "http=$http" >> $srcupdate_conf_f
+
 echo -e "\n# directory with the cumbia sources " >> $srcupdate_conf_f
 echo "srcdir=$topdir" >> $srcupdate_conf_f
 #
