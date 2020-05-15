@@ -31,6 +31,13 @@ CuHTTPActionListener *CuHTTPActionA::getHttpActionListener() const {
     return d->listener;
 }
 
+QNetworkRequest CuHTTPActionA::prepareRequest(const QUrl &url) const {
+    QNetworkRequest r(url);
+    r.setRawHeader("Accept", "application/json");
+    r.setHeader(QNetworkRequest::UserAgentHeader, QByteArray("cumbia-http ") + QByteArray(CUMBIA_HTTP_VERSION_STR));
+    return r;
+}
+
 // data from event source has a combination of fields, one per line
 // (event, id, retry, data)
 // https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
@@ -46,22 +53,13 @@ QByteArray CuHTTPActionA::m_extract_data(const QByteArray &in) const {
     return jd;
 }
 
-QNetworkRequest CuHTTPActionA::prepareRequest(const QUrl &url) const {
-    QNetworkRequest r(url);
-    r.setRawHeader("Accept", "application/json");
-    r.setHeader(QNetworkRequest::UserAgentHeader, QByteArray("cumbia-http ") + QByteArray(CUMBIA_HTTP_VERSION_STR));
-    return r;
-}
-
 void CuHTTPActionA::m_on_buf_complete(){
     QJsonParseError jpe;
-    qDebug() << __PRETTY_FUNCTION__ << "BUF" << d->buf;
     QByteArray json = m_extract_data(d->buf);
     QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
     if(jsd.isNull())
         perr("CuHTTPActionA.m_on_buf_complete: invalid json: %s\n", qstoc(json));
     decodeMessage(jsd);
-    d->buf.clear();
 }
 
 void CuHTTPActionA::onNewData() {
@@ -71,6 +69,8 @@ void CuHTTPActionA::onNewData() {
         m_on_buf_complete();
         d->buf.clear();
     }
+    else
+        cuprintf("\e[1;35mCuHTTPActionA::onNewData: buf incomplete waiting for next buf from the net\e[0m\n");
 }
 
 void CuHTTPActionA::onReplyFinished() {
@@ -112,7 +112,8 @@ void CuHTTPActionA::startRequest(const QUrl &src)
 void CuHTTPActionA::stopRequest() {
     if(d->reply) {
         cuprintf("CuHTTPActionA.stopRequest: closing %p\n", d->reply);
-        disconnect(d->reply, SIGNAL(error(QNetworkReply::NetworkError)));
+        disconnect(d->reply, SIGNAL(error(QNetworkReply::NetworkError)), this, nullptr);
+        disconnect(d->reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, nullptr);
         d->reply->close();
     }
 }
