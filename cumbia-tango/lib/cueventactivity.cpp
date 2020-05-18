@@ -137,13 +137,7 @@ void CuEventActivity::init()
     /* get a reference to a TDevice, new or existing one */
     d->tdev = d->device_srvc->getDevice(tk["device"].toString(), threadToken());
     d->device_srvc->addRef(tk["device"].toString(), threadToken());
-    tk["conn"] = d->tdev->isValid();
-    tk["msg"] = d->tdev->getMessage();
-    tk["err"] = !d->tdev->isValid();
-    tk.putTimestamp();
-    CuTangoWorld().fillThreadInfo(tk, this);
-    //  sleep(5);
-    publishResult(tk);
+    // since v1.2.0, do not publishResult upon connection
 }
 
 Tango::EventType CuEventActivity::m_tevent_type_from_string(const std::string& set) const
