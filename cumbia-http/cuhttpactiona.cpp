@@ -69,7 +69,7 @@ void CuHTTPActionA::m_on_buf_complete(){
 void CuHTTPActionA::onNewData() {
     QByteArray ba = d->reply->readAll();
     bool buf_empty = d->buf.isEmpty();
-    if(!d->buf.isEmpty())
+    if(!buf_empty)
         cuprintf("CuHTTPActionA::onNewData: buf completed by \e[1;32m%s\e[0m\n", ba.data());
     d->buf += ba;
     // buf complete?
