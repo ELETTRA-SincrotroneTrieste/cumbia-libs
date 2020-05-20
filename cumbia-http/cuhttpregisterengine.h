@@ -15,17 +15,15 @@ class CuHttpRegisterEngine
 {
 public:
     CuHttpRegisterEngine();
-
     virtual ~CuHttpRegisterEngine();
 
     CumbiaHttp *registerWithDefaults(CumbiaPool *cu_pool, CuControlsFactoryPool &fpoo);
 
     void setUrl(const QString& url);
-
+    void setChannel(const QString& chan);
     QString url() const;
-
+    QString channel() const;
     bool hasCmdOption(QCommandLineParser *parser, const QStringList& args) const;
-
 private:
     CuHttpRegisterEnginePrivate *d;
 };

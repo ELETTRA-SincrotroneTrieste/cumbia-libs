@@ -5,6 +5,7 @@
 #include "cuhttptangoreplacewildcards.h"
 #include "cuhttptangohelper.h"
 
+#include <QRegularExpression>
 #include <cucontrolsfactorypool.h>
 #include <cumbiahttpworld.h>
 #include <cuthreadfactoryimpl.h>
@@ -13,12 +14,13 @@
 
 class CuHttpRegisterEnginePrivate {
 public:
-    QString url;
+    QString url, chan;
 };
 
 CuHttpRegisterEngine::CuHttpRegisterEngine() {
     d = new CuHttpRegisterEnginePrivate;
     d->url = "http://localhost:12702";
+    d->chan = "1";
 }
 
 CuHttpRegisterEngine::~CuHttpRegisterEngine() {
@@ -30,7 +32,7 @@ CumbiaHttp *CuHttpRegisterEngine::registerWithDefaults(CumbiaPool *cu_pool, CuCo
     // setup Cumbia http with the http address and the host name to prepend to the sources
     // for the HTTP requests
     CumbiaHTTPWorld httpw;
-    CumbiaHttp* cuhttp = new CumbiaHttp(url(), new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    CumbiaHttp* cuhttp = new CumbiaHttp(url(), channel(), new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
     cu_pool->registerCumbiaImpl("http", cuhttp);
     fpoo.registerImpl("http", CuHTTPReaderFactory());
     fpoo.registerImpl("http", CuHttpControlsWriterFactory());
@@ -60,16 +62,30 @@ void CuHttpRegisterEngine::setUrl(const QString &url) {
     d->url = url;
 }
 
+void CuHttpRegisterEngine::setChannel(const QString &chan) {
+    d->chan = chan;
+}
+
 QString CuHttpRegisterEngine::url() const {
     return d->url;
 }
 
+QString CuHttpRegisterEngine::channel() const {
+    return d->chan;
+}
+
 bool CuHttpRegisterEngine::hasCmdOption(QCommandLineParser *parser, const QStringList &args) const {
-    QCommandLineOption http_url_o(QStringList() << "u" << "http-url", "URL to http server", "url", url());
+    QCommandLineOption http_url_o(QStringList() << "u" << "http-url", "URL to http server/channel", "url", url());
     if(!parser->optionNames().contains("u")) {
         parser->addOption(http_url_o);
     }
     parser->process(args);
-    d->url = parser->value(http_url_o);
-    return parser->isSet(http_url_o) && (d->url.startsWith("http://") || d->url.startsWith("https://"));
+    QString url = parser->value(http_url_o);
+    d->chan = url.section(QRegularExpression("[^:^/]/"), -1); // match last token after a / but skip http[s]://
+    d->chan != url ? d->url = url.remove(url.indexOf('/', -1), d->chan.length()) : d->chan.remove(0, d->chan.length());
+    printf("DUCK~! URL: %s CHAN %s\n", qstoc(d->url), qstoc(d->chan));
+    if(d->url.contains(QRegularExpression("http[s]{0,1}://.*")) && d->chan.isEmpty())
+         printf("\e[1;33m*\e[0m CuHttpRegisterEngine: channel not detected in URL: required form: \"%s/\e[1;33mchannel_name\e[0m\"\n",
+                qstoc(d->url));
+    return !d->url.isEmpty() && d->chan.size() > 0 && (d->url.startsWith("http://") || d->url.startsWith("https://"));
 }
