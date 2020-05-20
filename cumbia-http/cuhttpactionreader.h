@@ -13,12 +13,13 @@ class CuActivityManager;
 class CuDataListener;
 class QNetworkAccessManager;
 class QNetworkReply;
+class CuHttpChannelReceiver;
 
 class CuHTTPActionReader:  public CuHTTPActionA
 {
     Q_OBJECT
 public:
-    CuHTTPActionReader(const HTTPSource& src, QNetworkAccessManager *qnam, const QString& url);
+    CuHTTPActionReader(const HTTPSource& src, CuHttpChannelReceiver *chan_recv, QNetworkAccessManager *qnam, const QString& url);
     ~CuHTTPActionReader();
 
     CuData getToken() const;
@@ -32,10 +33,12 @@ public:
     size_t dataListenersCount();
 
     void decodeMessage(const QJsonDocument& json);
-    QNetworkRequest prepareRequest(const QUrl& url) const;
 
     bool exiting() const;
     void setOptions(const CuData& o);
+
+private slots:
+    void onUnsubscribeReplyFinished();
 
 private:
     CuHTTPActionReaderPrivate *d;

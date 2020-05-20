@@ -83,9 +83,9 @@ void CuHttpControlsReader::setSource(const QString &s) {
     for(int i = 0; i < rwis.size() && d->source == s; i++) // leave loop if s != d->source (=replacement made)
         d->source = rwis[i]->replaceWildcards(s, qApp->arguments());
 
-    CuHTTPActionConfFactory httpwconff;
-    httpwconff.setOptions(d->options);
-    d->cumbia_http->addAction(d->source.toStdString(), d->tlistener, httpwconff);
+//    CuHTTPActionConfFactory httpwconff;
+//    httpwconff.setOptions(d->options);
+//    d->cumbia_http->addAction(d->source.toStdString(), d->tlistener, httpwconff);
     CuHTTPActionReaderFactory httprf;
     httprf.setOptions(d->options);
     d->cumbia_http->addAction(d->source.toStdString(), d->tlistener, httprf);

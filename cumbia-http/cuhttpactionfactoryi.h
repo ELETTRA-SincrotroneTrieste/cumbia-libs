@@ -2,6 +2,7 @@
 #define CUHTTPACTIONFACTORYI_H
 
 class QNetworkAccessManager;
+class CuHttpChannelReceiver;
 class QString;
 
 #include <string>
@@ -23,13 +24,14 @@ public:
     CuHTTPActionFactoryI() {}
 
     /**
-     * Pure virtual method that must be implemented by subclasses to return a valid CuTangoActionI
+     * Pure virtual method that must be implemented by subclasses to return a valid CuHTTPActionA
      * instance.
      *
-     * @param source a string identifying a source to connect to
-     * @param ct a pointer to a CumbiaHttp instance
      */
-    virtual CuHTTPActionA *create(const std::string &s, QNetworkAccessManager *nam, const QString& http_addr) const = 0;
+    virtual CuHTTPActionA *create(const std::string &s,
+                                  QNetworkAccessManager *nam,
+                                  const QString& http_addr,
+                                  CuHttpChannelReceiver* cr = nullptr) const = 0;
 
     /** \brief Return the type of action that the factory creates
      *

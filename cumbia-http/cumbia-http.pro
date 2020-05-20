@@ -41,6 +41,7 @@ SOURCES += \
     cuhttpactionfactoryservice.cpp \
     cuhttpactionreader.cpp \
     cuhttpactionwriter.cpp \
+    cuhttpchannelreceiver.cpp \
     cuhttpcontrolsreader.cpp \
     cuhttpcontrolswriter.cpp \
     cuhttpregisterengine.cpp \
@@ -59,6 +60,7 @@ HEADERS += \
     cuhttpactionfactoryservice.h \
     cuhttpactionreader.h \
     cuhttpactionwriter.h \
+    cuhttpchannelreceiver.h \
     cuhttpcontrolsreader.h \
     cuhttpcontrolswriter.h \
     cuhttpregisterengine.h \

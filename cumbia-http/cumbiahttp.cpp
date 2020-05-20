@@ -1,4 +1,5 @@
 #include "cumbiahttp.h"
+#include "cuhttpchannelreceiver.h"
 
 #include <cumacros.h>
 #include <cudatalistener.h>
@@ -27,6 +28,7 @@ public:
     QString url;
     QList<QuReplaceWildcards_I *> m_repl_wildcards_i;
     QNetworkAccessManager *qnam;
+    CuHttpChannelReceiver *chan_recv;
 };
 
 /*!
@@ -37,6 +39,7 @@ public:
  * \param teb thread events bridge factory
  */
 CumbiaHttp::CumbiaHttp(const QString &url,
+                       const QString& channel,
                                  CuThreadFactoryImplI *tfi,
                                  CuThreadsEventBridgeFactory_I *teb)
 {
@@ -45,6 +48,8 @@ CumbiaHttp::CumbiaHttp(const QString &url,
     d->m_threadFactoryImplI = tfi;
     d->url = url;
     d->qnam = new QNetworkAccessManager(nullptr);
+    d->chan_recv = new CuHttpChannelReceiver(d->url, channel, d->qnam);
+    d->chan_recv->start();
     cuprintf("CumbiaHttp: instantiated with url %s\n", qstoc(url));
     m_init();
 }
@@ -52,6 +57,7 @@ CumbiaHttp::CumbiaHttp(const QString &url,
 CumbiaHttp::~CumbiaHttp()
 {
     pdelete("~CumbiaHttp %p", this);
+    d->chan_recv->stop();
     /* all registered services are unregistered and deleted by cumbia destructor after threads have joined */
     if(d->m_threadsEventBridgeFactory)
         delete d->m_threadsEventBridgeFactory;
@@ -92,7 +98,7 @@ void CumbiaHttp::addAction(const std::string &source, CuDataListener *l, const C
                 static_cast<CuHTTPActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuHTTPActionFactoryService::CuHTTPActionFactoryServiceType)));
         CuHTTPActionA *a = af->findActive(source, f.getType());
         if(!a) {
-            a = af->registerAction(source, f, d->qnam, d->url);
+            a = af->registerAction(source, f, d->qnam, d->url, d->chan_recv);
             qDebug() << __PRETTY_FUNCTION__ << "registered action with source " << source.c_str() << f.getType();
             a->setHttpActionListener(this);
             a->start();

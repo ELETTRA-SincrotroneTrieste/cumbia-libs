@@ -80,11 +80,13 @@ void CuHttpActionConf::start() {
 }
 
 bool CuHttpActionConf::exiting() const {
+    cuprintf("CuHttpActionConf.exiting: d->exit is %d\n", d->exit);
     return d->exit;
 }
 
 void CuHttpActionConf::stop() {
     d->listeners.clear();
+    cuprintf("CuHttpActionConf.stop: setting d->exit to true\n");
     d->exit = true;
 }
 

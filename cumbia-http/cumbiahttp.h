@@ -36,7 +36,7 @@ class CumbiaHttp : public Cumbia, public CuHTTPActionListener
 public:
     enum Type { CumbiaHTTPType = Cumbia::CumbiaUserType + 18 };
 
-    CumbiaHttp(const QString& url, CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb);
+    CumbiaHttp(const QString& url, const QString &channel, CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb);
 
     ~CumbiaHttp();
 

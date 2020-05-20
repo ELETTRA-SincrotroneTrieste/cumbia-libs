@@ -18,7 +18,7 @@ class CuHTTPActionA : public QObject
     Q_OBJECT
 public:
 
-    enum Type { Reader = 0, Writer, Config };
+    enum Type { Reader = 0, Writer, Config, ChannelReceiver };
 
     CuHTTPActionA(QNetworkAccessManager *nam);
 
@@ -80,6 +80,8 @@ protected slots:
     virtual void stopRequest();
 
     CuHTTPActionListener *getHttpActionListener() const ;
+
+    QNetworkAccessManager *getNetworkAccessManager() const;
 
 private:
     CuHTTPActionAPrivate *d;

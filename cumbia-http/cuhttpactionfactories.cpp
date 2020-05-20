@@ -3,6 +3,7 @@
 #include "cuhttpactionwriter.h"
 #include "cuhtttpactionconf.h"
 #include "cumbiahttp.h"
+#include "cuhttpchannelreceiver.h"
 
 #include <QNetworkAccessManager>
 
@@ -27,8 +28,11 @@ CuHTTPActionReaderFactory::~CuHTTPActionReaderFactory() {
  * @param ct a pointer to CumbiaHttp
  * @return a CuHTTPActionReader, that implements the CuHTTPActionI interface
  */
-CuHTTPActionA *CuHTTPActionReaderFactory::create(const std::string &s, QNetworkAccessManager *nam, const QString &http_addr) const {
-    CuHTTPActionReader* reader = new CuHTTPActionReader(s, nam, http_addr);
+CuHTTPActionA *CuHTTPActionReaderFactory::create(const std::string &s,
+                                                 QNetworkAccessManager *nam,
+                                                 const QString &http_addr,
+                                                 CuHttpChannelReceiver* cr) const {
+    CuHTTPActionReader* reader = new CuHTTPActionReader(s, cr, nam, http_addr);
     // no refresh mode options, no period for http
     return reader;
 }
@@ -49,7 +53,10 @@ CuHTTPActionWriterFactory::~CuHTTPActionWriterFactory() {
 
 }
 
-CuHTTPActionA *CuHTTPActionWriterFactory::create(const string &s, QNetworkAccessManager *qnam, const QString &http_addr) const
+CuHTTPActionA *CuHTTPActionWriterFactory::create(const string &s,
+                                                 QNetworkAccessManager *qnam,
+                                                 const QString &http_addr,
+                                                 CuHttpChannelReceiver* ) const
 {
     CuHttpActionWriter *w = new CuHttpActionWriter(s, qnam, http_addr);
     w->setWriteValue(m_write_val);
@@ -69,7 +76,10 @@ CuHTTPActionConfFactory::~CuHTTPActionConfFactory() {
 
 }
 
-CuHTTPActionA *CuHTTPActionConfFactory::create(const string &s, QNetworkAccessManager *qnam, const QString &http_addr) const {
+CuHTTPActionA *CuHTTPActionConfFactory::create(const string &s,
+                                               QNetworkAccessManager *qnam,
+                                               const QString &http_addr,
+                                               CuHttpChannelReceiver* ) const {
     return new CuHttpActionConf(s, qnam, http_addr);
 }
 

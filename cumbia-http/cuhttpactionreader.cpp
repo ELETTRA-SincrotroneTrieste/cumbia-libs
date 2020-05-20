@@ -4,6 +4,7 @@
 #include "cuhttpprotocolhelpers.h"
 #include "cumbiahttpworld.h"
 #include "cuhttpactionreader.h"
+#include "cuhttpchannelreceiver.h"
 
 #include <cudatalistener.h>
 #include <cuserviceprovider.h>
@@ -35,14 +36,16 @@ public:
     CuData property_d, value_d, options;
     CuHttpProtocolHelpers *proto_helpers;
     ProtocolHelper_I *proto_helper_i;
+    CuHttpChannelReceiver *chan_recv;
 };
 
-CuHTTPActionReader::CuHTTPActionReader(const HTTPSource& src, QNetworkAccessManager *qnam, const QString& url)
+CuHTTPActionReader::CuHTTPActionReader(const HTTPSource& src, CuHttpChannelReceiver *chan_recv, QNetworkAccessManager *qnam, const QString& url)
     : CuHTTPActionA(qnam) {
     d = new CuHTTPActionReaderPrivate;
     d->tsrc = src;
     d->url = url;
     d->exit = false;  // set to true by stop
+    d->chan_recv = chan_recv;
     std::string proto = src.getProtocol(); // tango:// ?
     pinfo("CuHTTPActionReader: found protocol \"%s\" within \"%s\"", proto.c_str(), src.getName().c_str());
     d->proto_helpers = new CuHttpProtocolHelpers();
@@ -112,50 +115,28 @@ void CuHTTPActionReader::setOptions(const CuData &o) {
     d->options = o;
 }
 
-QNetworkRequest CuHTTPActionReader::prepareRequest(const QUrl &url) const {
-    /*
-     * -- sniffed from JS EventSource -- tcpdump -vvvs 1024 -l -A -i lo port 8001 -n
-     * .^...^..GET /sub/subscribe/hokuto:20000/test/device/1/double_scalar HTTP/1.1
-        Host: woody.elettra.eu:8001
-        User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:76.0) Gecko/20100101 Firefox/76.0
-        Accept: text/event-stream
-        Accept-Language: en-US,en;q=0.5
-        Accept-Encoding: gzip, deflate
-        Origin: http://woody:8001
-        DNT: 1
-        Connection: keep-alive
-        Referer: http://woody:8001/
-        Pragma: no-cache
-        Cache-Control: no-cache
-    */
-    QNetworkRequest r (url);
-    r = CuHTTPActionA::prepareRequest(url);
-    r.setRawHeader("Accept", "text/event-stream");
-    r.setRawHeader("Accept-Encoding", "gzip, deflate");
-    r.setRawHeader("Accept-Encoding", "gzip, deflate");
-    r.setRawHeader("Connection", "keep-alive");
-    r.setRawHeader("Pragma", "no-cache");
-    r.setRawHeader("Cache-Control", "no-cache");
-
-    r.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
-    r.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork); // Events shouldn't be cached
-    return r;
-}
-
-void CuHTTPActionReader::start() {
-    QString url_s = QString::fromStdString(d->tsrc.getName());
-    QString src = QString("/sub/subscribe/%1").arg(url_s);
-    startRequest(d->url + src);
-}
-
-void CuHTTPActionReader::stop() {
+void CuHTTPActionReader::onUnsubscribeReplyFinished() {
     // stopRequest -> CuHttpActionA::d->reply->close()
     // --> SLOT(CuHttpActionA::onReplyFinished)
     // --> CumbiaHttp::onActionFinished (CumbiaHttp is a CuHTTPActionListener)
     // --> CumbiaHttp unregisters and deletes this
-    if(!d->exit) {
-        d->exit = true;
-        stopRequest();
-    }
+    sender()->deleteLater();
+    stopRequest();
+}
+
+void CuHTTPActionReader::start() {
+    QString url_s = QString::fromStdString(d->tsrc.getName());
+    QString src = QString("/s/%1/p/%2").arg(d->chan_recv->channel()).arg(url_s);
+    startRequest(d->url + src);
+    d->chan_recv->registerReader(url_s, this);
+}
+
+void CuHTTPActionReader::stop() {
+    d->exit = true;
+    d->chan_recv->unregisterReader(QString::fromStdString(d->tsrc.getName()));
+    QString url = QString::fromStdString(d->tsrc.getName());
+    QNetworkRequest r = prepareRequest(url + "/u/1");
+    QNetworkReply *reply = getNetworkAccessManager()->get(r);
+    connect(reply, SIGNAL(finished()), this, SLOT(onUnsubscribeReplyFinished()));
 }
 

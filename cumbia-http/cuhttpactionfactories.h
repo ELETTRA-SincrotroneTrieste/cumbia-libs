@@ -5,6 +5,7 @@
 #include <cuhttpactionfactoryi.h>
 
 class QNetworkAccessManager;
+class CuHttpChannelReceiver;
 
 class CuHTTPActionReaderFactory : public CuHTTPActionFactoryI {
 public:
@@ -12,7 +13,7 @@ public:
 
     void setOptions(const CuData &o);
     // CuTangoActionFactoryI interface
-    CuHTTPActionA *create(const std::string &s, QNetworkAccessManager *nam, const QString& http_addr) const;
+    CuHTTPActionA *create(const std::string &s, QNetworkAccessManager *nam, const QString& http_addr, CuHttpChannelReceiver *cr) const;
     CuHTTPActionA::Type getType() const;
 private:
     CuData options;
@@ -27,7 +28,7 @@ public:
     void setWriteValue(const CuVariant &write_val);
 
     // CuTangoActionFactoryI interface
-    CuHTTPActionA *create(const std::string &s, QNetworkAccessManager *qnam, const QString& http_addr) const;
+    CuHTTPActionA *create(const std::string &s, QNetworkAccessManager *qnam, const QString& http_addr, CuHttpChannelReceiver * cr= nullptr) const;
     CuHTTPActionA::Type getType() const;
 
 private:
@@ -42,7 +43,7 @@ public:
     virtual ~CuHTTPActionConfFactory();
 
     // CuTangoActionFactoryI interface
-    CuHTTPActionA *create(const std::string &s, QNetworkAccessManager *qnam, const QString& http_addr) const;
+    CuHTTPActionA *create(const std::string &s, QNetworkAccessManager *qnam, const QString& http_addr, CuHttpChannelReceiver *cr = nullptr) const;
     CuHTTPActionA::Type getType() const;
 
 private:

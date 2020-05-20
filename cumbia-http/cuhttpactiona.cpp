@@ -31,6 +31,10 @@ CuHTTPActionListener *CuHTTPActionA::getHttpActionListener() const {
     return d->listener;
 }
 
+QNetworkAccessManager *CuHTTPActionA::getNetworkAccessManager() const {
+    return d->nam;
+}
+
 QNetworkRequest CuHTTPActionA::prepareRequest(const QUrl &url) const {
     QNetworkRequest r(url);
     r.setRawHeader("Accept", "application/json");

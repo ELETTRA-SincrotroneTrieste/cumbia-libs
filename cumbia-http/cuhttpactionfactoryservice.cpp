@@ -1,5 +1,6 @@
 #include "cuhttpactionfactoryservice.h"
 #include "cuhttpactionfactoryi.h"
+#include "cuhttpchannelreceiver.h"
 #include "cuhttp_source.h"
 #include "cuhttpactiona.h"
 #include <map>
@@ -44,7 +45,8 @@ CuHTTPActionFactoryService::~CuHTTPActionFactoryService()
 CuHTTPActionA *CuHTTPActionFactoryService::registerAction(const std::string& src,
                                                        const CuHTTPActionFactoryI &f,
                                                        QNetworkAccessManager* qnam,
-                                                      const QString& url)
+                                                       const QString& url,
+                                                       CuHttpChannelReceiver* cr)
 {
     CuHTTPActionA* action = NULL;
     std::lock_guard<std::mutex> lock(d->mutex);
@@ -56,7 +58,7 @@ CuHTTPActionA *CuHTTPActionFactoryService::registerAction(const std::string& src
 
     if(it == d->actions.end())
     {
-        action = f.create(src, qnam, url);
+        action = f.create(src, qnam, url, cr);
         d->actions.push_back(action);
     }
     return action;
