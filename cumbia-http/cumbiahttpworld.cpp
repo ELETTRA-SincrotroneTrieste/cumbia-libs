@@ -33,6 +33,9 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
         const QJsonObject data_o = json.object();
         if(!data_o.isEmpty()) {
             QStringList keys = data_o.keys();
+            // value keys must be converted to the original type: Json converts all numbers to double
+            // value_type key stores the CuVariant data type to facilitate conversion
+            QStringList value_keys = QStringList() << "value" << "w_value";
 
             // NOTE
             // these are the keys storing values that necessary need to be converted to int
@@ -45,7 +48,7 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
                 if(!i_keys.contains(k) && v.isArray()) {
                     QJsonArray jarr = v.toArray();
                     // decide type
-                    if(jarr.size() > 0 && jarr.at(0).isDouble()) {
+                    if(jarr.size() > 0 && jarr.at(0).isDouble() && !value_keys.contains(k)) {
                         // all type of ints are saved as double in Json
                         std::vector<double> vd;
                         for(int i = 0; i < jarr.size(); i++) {
@@ -111,8 +114,169 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
             foreach(const QString& k, i_keys)
                 if(data_o.contains(k))
                     res[k.toStdString()] = data_o[k].toInt();
-        }
-    }
+
+            // value, w_value
+            CuVariant::DataType t = static_cast<CuVariant::DataType>(data_o["value_type"].toDouble());
+            foreach(const QString &k, value_keys) {
+                const QJsonValue &v = data_o[k];
+                CuVariant va; // will store value
+                if(v.isArray()) {
+                    QJsonArray jarr = v.toArray();
+                    // decide type
+                    if(jarr.size() > 0 && jarr.at(0).isDouble()) {
+                        // all type of ints are saved as double in Json
+                        switch(t) {
+                        case CuVariant::Double: {
+                            std::vector<double> vd;
+                            for(int i = 0; i < jarr.size(); i++) {
+                                QJsonValue ithval = jarr.at(i);
+                                vd.push_back(ithval.toDouble());
+                            }
+                            va = vd;
+                        }
+                            break;
+                        case CuVariant::LongDouble: {
+                            std::vector<long double> vd;
+                            for(int i = 0; i < jarr.size(); i++) {
+                                vd.push_back(static_cast<long double>(jarr.at(i).toDouble()));
+                            }
+                            va = vd;
+                        }
+                            break;
+                        case CuVariant::Int: {
+                            std::vector<int> vi;
+                            for(int i = 0; i < jarr.size(); i++) {
+                                QJsonValue ithval = jarr.at(i);
+                                vi.push_back(static_cast<int>(ithval.toDouble()));
+                            }
+                            va = vi;
+                        }
+                            break;
+                        case CuVariant::LongInt: {
+                            std::vector<long int> vli;
+                            for(int i = 0; i < jarr.size(); i++) {
+                                vli.push_back(static_cast<long int>(jarr.at(i).toDouble()));
+                            }
+                            va = vli;
+                            break;
+                        }
+                        case CuVariant::LongLongInt: {
+                            std::vector<long long int> vlli;
+                            for(int i = 0; i < jarr.size(); i++) {
+                                vlli.push_back(static_cast<long long int>(jarr.at(i).toDouble()));
+                            }
+                            va = vlli;
+                            break;
+                        }
+                        case CuVariant::LongLongUInt: {
+                            std::vector<long long unsigned int> vulli;
+                            for(int i = 0; i < jarr.size(); i++) {
+                                vulli.push_back(static_cast<long long unsigned int>(jarr.at(i).toDouble()));
+                            }
+                            va = vulli;
+                            break;
+                        }
+                        case CuVariant::LongUInt: {
+                            std::vector<long unsigned int> vuli;
+                            for(int i = 0; i < jarr.size(); i++) {
+                                vuli.push_back(static_cast<long unsigned int>(jarr.at(i).toDouble()));
+                            }
+                            va = vuli;
+                            break;
+                        }
+                        case CuVariant::UInt: {
+                            std::vector<unsigned int> vui;
+                            for(int i = 0; i < jarr.size(); i++) {
+                                vui.push_back(static_cast<unsigned int>(jarr.at(i).toDouble()));
+                            }
+                            va = vui;
+                            break;
+                        }
+                        case CuVariant::UShort: {
+                            std::vector<unsigned short> vus;
+                            for(int i = 0; i < jarr.size(); i++) {
+                                vus.push_back(static_cast<unsigned short>(jarr.at(i).toDouble()));
+                            }
+                            va = vus;
+                            break;
+                        }
+                        case CuVariant::Short: {
+                            std::vector<short> vus;
+                            for(int i = 0; i < jarr.size(); i++) {
+                                vus.push_back(static_cast<short>(jarr.at(i).toDouble()));
+                            }
+                            va = vus;
+                            break;
+                        }
+                        case CuVariant::Float: {
+                            std::vector<float> vf;
+                            for(int i = 0; i < jarr.size(); i++) {
+                                vf.push_back(static_cast<float>(jarr.at(i).toDouble()));
+                            }
+                            va = vf;
+                            break;
+                        }
+                        case CuVariant::String:
+                        case CuVariant::TypeInvalid:
+                        case CuVariant::Boolean:
+                        case CuVariant::VoidPtr:
+                        case CuVariant::EndDataTypes:
+                            break;
+                        }
+                    } // if(jarr.size() > 0 && jarr.at(0).isDouble())
+                } // if(v.isArray())
+                else {
+                    double dv = v.toDouble();
+                    switch(t) {
+                    case CuVariant::Double:
+                        va = dv;
+                        break;
+                    case CuVariant::LongDouble:
+                        va = static_cast<long double>(dv);
+                        break;
+                    case CuVariant::Int:
+                        va = static_cast<int>(dv);
+                        break;
+                    case CuVariant::LongInt:
+                        va = static_cast<long int>(dv);
+                        break;
+
+                    case CuVariant::LongLongInt:
+                        va = static_cast<long long int>(dv);
+                        break;
+
+                    case CuVariant::LongLongUInt:
+                        va = static_cast<long long unsigned >(dv);
+                        break;
+                    case CuVariant::LongUInt:
+                        va = static_cast<long unsigned >(dv);
+                        break;
+                    case CuVariant::UInt:
+                        va = static_cast<unsigned >(dv);
+                        break;
+                    case CuVariant::UShort:
+                        va = static_cast<unsigned short>(dv);
+                        break;
+                    case CuVariant::Short:
+                        va = static_cast<short>(dv);
+                        break;
+                    case CuVariant::Float:
+                        va = static_cast<float>(dv);
+                        break;
+                    // dealt with in first loop
+                    case CuVariant::String:
+                    case CuVariant::TypeInvalid:
+                    case CuVariant::Boolean:
+                    case CuVariant::VoidPtr:
+                    case CuVariant::EndDataTypes:
+                        break;
+                    }
+                }
+            } // foreach(const QString &k, value_keys)
+        } // if(!data_o.isEmpty())
+
+    } // else (json is not null here)
+
     return !json.isNull();
 }
 
