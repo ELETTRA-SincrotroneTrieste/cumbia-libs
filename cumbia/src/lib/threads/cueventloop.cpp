@@ -154,7 +154,7 @@ void CuEventLoopService::run()
             //            cuprintf("CuEventLoopService::run\e[1;35m -- locking\e[0m\n");
             std::unique_lock<std::mutex> lk(d->m_mutex);
             while (d->queue.empty()) {
-                cuprintf("CuEventLoopService::run\e[1;35m -- WAITING while queue empty\e[0m\n");
+//                cuprintf("CuEventLoopService::run\e[1;35m -- WAITING while queue empty\e[0m\n");
                 d->m_evloop_cv.wait(lk);
             }
             while(!d->queue.empty())  {
