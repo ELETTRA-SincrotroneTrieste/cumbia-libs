@@ -1,5 +1,5 @@
 #include <quapplication.h>
-#include "test.h"
+#include "httptest.h"
 
 #include <cumbiapool.h>
 #include <cuthreadfactoryimpl.h>
@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     
 
     CumbiaPool *cu_p = new CumbiaPool();
-    Test *w = new Test(cu_p, NULL);
+    HttpTest *w = new HttpTest(cu_p, NULL);
     w->show();
 
     ret = qu_app.exec();

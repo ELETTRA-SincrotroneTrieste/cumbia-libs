@@ -47,9 +47,10 @@ DEFINES += QT_NO_DEBUG_OUTPUT
 # RESOURCES +=
 
 SOURCES += src/main.cpp \
-                src/test.cpp
+    src/httptest.cpp
 
-HEADERS += src/test.h
+HEADERS += \
+    src/httptest.h
 
 # cuuimake runs uic
 # FORMS    = src/test.ui

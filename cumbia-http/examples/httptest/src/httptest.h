@@ -12,13 +12,13 @@ class Test;
 class CuData;
 class CumbiaPool;
 
-class Test : public QWidget
+class HttpTest : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Test(CumbiaPool *cu_p, QWidget *parent = 0);
-    ~Test();
+    explicit HttpTest(CumbiaPool *cu_p, QWidget *parent = 0);
+    ~HttpTest();
 
 private:
     Ui::Test *ui;
