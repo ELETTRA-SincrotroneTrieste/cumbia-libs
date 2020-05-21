@@ -82,12 +82,12 @@ void CuEventLoopService::exec(bool threaded)
  */
 void CuEventLoopService::postEvent(CuEventLoopListener *lis, CuEventI *e)
 {
-//    cuprintf("CuEventLoopService::postEvent\e[1;36m -- locking\e[0m\n");
+    //    cuprintf("CuEventLoopService::postEvent\e[1;36m -- locking\e[0m\n");
     std::unique_lock<std::mutex> lk(d->m_mutex);
     d->queue.push(CuEventInfo(e, lis));
-//    cuprintf("CuEventLoopService::postEvent\e[1;36m -- notifying\e[0m\n");
+    //    cuprintf("CuEventLoopService::postEvent\e[1;36m -- notifying\e[0m\n");
     d->m_evloop_cv.notify_one();
-//    cuprintf("CuEventLoopService::postEvent\e[1;36m -- leaving\e[0m\n");
+    //    cuprintf("CuEventLoopService::postEvent\e[1;36m -- leaving\e[0m\n");
 }
 
 /*! \brief set the CuEventLoopListener that will receive events from this service
@@ -151,7 +151,7 @@ void CuEventLoopService::run()
 
         {
             // lock as short as possible: just to copy d->queue into a local queue
-//            cuprintf("CuEventLoopService::run\e[1;35m -- locking\e[0m\n");
+            //            cuprintf("CuEventLoopService::run\e[1;35m -- locking\e[0m\n");
             std::unique_lock<std::mutex> lk(d->m_mutex);
             while (d->queue.empty()) {
                 cuprintf("CuEventLoopService::run\e[1;35m -- WAITING while queue empty\e[0m\n");
@@ -161,19 +161,21 @@ void CuEventLoopService::run()
                 qcopy.push(d->queue.front());
                 d->queue.pop();
             }
-//            cuprintf("CuEventLoopService::run\e[1;35m -- unlocking\e[0m\n");
+            //            cuprintf("CuEventLoopService::run\e[1;35m -- unlocking\e[0m\n");
         }
         // lock free section ensues
-//        cuprintf("CuEventLoopService::run\e[1;35m -- processing queue siz %ld\e[0m\n", qcopy.size());
-        CuEventInfo* event_info = &qcopy.front();
-        if(event_info->event->getType() == CuEventI::ExitLoop)
-            repeat = false;
-        else if(std::find(d->eloo_liss.begin(), d->eloo_liss.end(), event_info->lis)
-                != d->eloo_liss.end()) {
-            event_info->lis->onEvent(event_info->event);
+        //        cuprintf("CuEventLoopService::run\e[1;35m -- processing queue siz %ld\e[0m\n", qcopy.size());
+        while(!qcopy.empty()) {
+            CuEventInfo* event_info = &qcopy.front();
+            if(event_info->event->getType() == CuEventI::ExitLoop)
+                repeat = false;
+            else if(std::find(d->eloo_liss.begin(), d->eloo_liss.end(), event_info->lis)
+                    != d->eloo_liss.end()) {
+                event_info->lis->onEvent(event_info->event);
+            }
+            qcopy.pop();
+            delete event_info->event;
         }
-        qcopy.pop();
-        delete event_info->event;
     }
 }
 
