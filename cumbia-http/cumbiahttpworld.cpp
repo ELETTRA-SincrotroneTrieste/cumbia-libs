@@ -117,7 +117,6 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
 
             // value, w_value
             CuVariant::DataType t = static_cast<CuVariant::DataType>(data_o["value_type"].toDouble());
-            cuprintf("CumbiaHttpWorld.json_decode: decoded type %d\n", t);
             foreach(const QString &k, value_keys) {
                 const QJsonValue &v = data_o[k];
                 if(v.isArray()) {
