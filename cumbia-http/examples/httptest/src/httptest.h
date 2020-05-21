@@ -6,7 +6,7 @@
 #include <cucontrolsfactorypool.h>
 
 namespace Ui {
-class Test;
+class HttpTest;
 }
 
 class CuData;
@@ -21,7 +21,7 @@ public:
     ~HttpTest();
 
 private:
-    Ui::Test *ui;
+    Ui::HttpTest *ui;
 
     CumbiaPool *cu_pool;
     QuLogImpl m_log_impl;

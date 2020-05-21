@@ -1,5 +1,5 @@
-#include "test.h"
-#include "ui_test.h"
+#include "httptest.h"
+#include "ui_httptest.h"
 
 #include <cumbiapool.h>
 #include <cuthreadfactoryimpl.h>
@@ -26,9 +26,9 @@
 #include <cuhttpregisterengine.h>
 #endif
 
-Test::Test(CumbiaPool *cumbia_pool, QWidget *parent) :
+HttpTest::HttpTest(CumbiaPool *cumbia_pool, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::Test)
+    ui(new Ui::HttpTest)
 {
     QStringList engines;
     cu_pool = cumbia_pool;
@@ -86,7 +86,7 @@ Test::Test(CumbiaPool *cumbia_pool, QWidget *parent) :
     qDebug() << __PRETTY_FUNCTION__ << "available engines" << engines;
 }
 
-Test::~Test()
+HttpTest::~HttpTest()
 {
     delete ui;
 }
