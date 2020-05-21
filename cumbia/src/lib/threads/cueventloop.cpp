@@ -23,7 +23,7 @@ public:
 class CuEventLoopPrivate
 {
 public:
-    std::queue<CuEventInfo> m_eventQueue;
+    std::queue<CuEventInfo> queue;
     std::mutex m_mutex;
     std::condition_variable m_evloop_cv;
     std::list<CuEventLoopListener* > eloo_liss;
@@ -84,7 +84,7 @@ void CuEventLoopService::postEvent(CuEventLoopListener *lis, CuEventI *e)
 {
     cuprintf("CuEventLoopService::postEvent\e[1;36m -- locking\e[0m\n");
     std::unique_lock<std::mutex> lk(d->m_mutex);
-    d->m_eventQueue.push(CuEventInfo(e, lis));
+    d->queue.push(CuEventInfo(e, lis));
     cuprintf("CuEventLoopService::postEvent\e[1;36m -- notifying\e[0m\n");
     d->m_evloop_cv.notify_one();
     cuprintf("CuEventLoopService::postEvent\e[1;36m -- leaving\e[0m\n");
@@ -115,7 +115,7 @@ void CuEventLoopService::exit()
 {
     cuprintf("CuEventLoopService::exit\n");
     std::unique_lock<std::mutex> lk(d->m_mutex);
-    d->m_eventQueue.push(CuEventInfo(new CuExitLoopEvent, nullptr));
+    d->queue.push(CuEventInfo(new CuExitLoopEvent, nullptr));
     d->m_evloop_cv.notify_one();
 }
 
@@ -146,30 +146,34 @@ void CuEventLoopService::run()
     bool repeat = true;
     while (repeat)
     {
-        std::list<CuEventI *> events;
+        std::queue<CuEventInfo> qcopy;
         // Wait for a message to be added to the queue
+
         {
+            // lock as short as possible: just to copy d->queue into a local queue
             cuprintf("CuEventLoopService::run\e[1;35m -- locking\e[0m\n");
             std::unique_lock<std::mutex> lk(d->m_mutex);
-            while (d->m_eventQueue.empty()) {
+            while (d->queue.empty()) {
                 cuprintf("CuEventLoopService::run\e[1;35m -- WAITING while queue empty\e[0m\n");
                 d->m_evloop_cv.wait(lk);
             }
-
-            while(!d->m_eventQueue.empty())
-            {
-                cuprintf("CuEventLoopService::run\e[1;35m -- processing queue siz %ld\e[0m\n", d->m_eventQueue.size());
-                CuEventInfo* event_info = &d->m_eventQueue.front();
-                if(event_info->event->getType() == CuEventI::ExitLoop)
-                    repeat = false;
-                else if(std::find(d->eloo_liss.begin(), d->eloo_liss.end(), event_info->lis)
-                        != d->eloo_liss.end()) {
-                    event_info->lis->onEvent(event_info->event);
-                }
-                d->m_eventQueue.pop();
-                delete event_info->event;
+            while(!d->queue.empty())  {
+                qcopy.push(d->queue.front());
+                d->queue.pop();
             }
+            cuprintf("CuEventLoopService::run\e[1;35m -- unlocking\e[0m\n");
         }
+        // lock free section ensues
+        cuprintf("CuEventLoopService::run\e[1;35m -- processing queue siz %ld\e[0m\n", qcopy.size());
+        CuEventInfo* event_info = &qcopy.front();
+        if(event_info->event->getType() == CuEventI::ExitLoop)
+            repeat = false;
+        else if(std::find(d->eloo_liss.begin(), d->eloo_liss.end(), event_info->lis)
+                != d->eloo_liss.end()) {
+            event_info->lis->onEvent(event_info->event);
+        }
+        qcopy.pop();
+        delete event_info->event;
     }
 }
 
