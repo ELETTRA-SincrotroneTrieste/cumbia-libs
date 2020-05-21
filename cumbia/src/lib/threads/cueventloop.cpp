@@ -82,9 +82,12 @@ void CuEventLoopService::exec(bool threaded)
  */
 void CuEventLoopService::postEvent(CuEventLoopListener *lis, CuEventI *e)
 {
+    cuprintf("CuEventLoopService::postEvent\e[1;36m -- locking\e[0m\n");
     std::unique_lock<std::mutex> lk(d->m_mutex);
     d->m_eventQueue.push(CuEventInfo(e, lis));
+    cuprintf("CuEventLoopService::postEvent\e[1;36m -- notifying\e[0m\n");
     d->m_evloop_cv.notify_one();
+    cuprintf("CuEventLoopService::postEvent\e[1;36m -- leaving\e[0m\n");
 }
 
 /*! \brief set the CuEventLoopListener that will receive events from this service
@@ -146,12 +149,16 @@ void CuEventLoopService::run()
         std::list<CuEventI *> events;
         // Wait for a message to be added to the queue
         {
+            cuprintf("CuEventLoopService::run\e[1;35m -- locking\e[0m\n");
             std::unique_lock<std::mutex> lk(d->m_mutex);
-            while (d->m_eventQueue.empty())
+            while (d->m_eventQueue.empty()) {
+                cuprintf("CuEventLoopService::run\e[1;35m -- WAITING while queue empty\e[0m\n");
                 d->m_evloop_cv.wait(lk);
+            }
 
             while(!d->m_eventQueue.empty())
             {
+                cuprintf("CuEventLoopService::run\e[1;35m -- processing queue siz %ld\e[0m\n", d->m_eventQueue.size());
                 CuEventInfo* event_info = &d->m_eventQueue.front();
                 if(event_info->event->getType() == CuEventI::ExitLoop)
                     repeat = false;
