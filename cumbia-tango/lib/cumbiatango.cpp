@@ -69,7 +69,7 @@ void CumbiaTango::addAction(const std::string &source, CuDataListener *l, const 
         if(!a) {
             a = af->registerAction(source, f, this);
             a->start();
-            cuprintf("CumbiaTango.addAction: \e[1;32madded action %p source %f type %d\e[0m\n", a, source.c_str(), f.getType());
+            cuprintf("CumbiaTango.addAction: \e[1;32madded action %p source %s type %d\e[0m\n", a, source.c_str(), f.getType());
         }
         else {
             cuprintf("CumbiaTango.addAction: action %p already found for source \"%s\" and type %d thread 0x%lx TYPE %d\n",
