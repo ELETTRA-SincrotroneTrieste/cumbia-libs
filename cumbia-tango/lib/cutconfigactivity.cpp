@@ -137,6 +137,7 @@ void CuTConfigActivity::execute()
         at["err"] = true;
         at.putTimestamp();
     }
+    cuprintf("CuTConfigActivity.onExecute exit calling publishResult for src %s\n", at["src"].toString().c_str());
     publishResult(at);
 }
 

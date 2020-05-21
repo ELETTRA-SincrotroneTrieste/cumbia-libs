@@ -66,6 +66,8 @@ void CuTConfiguration::onProgress(int step, int total, const CuData &data)
 void CuTConfiguration::onResult(const CuData &data)
 {
     d->conf_data = data;
+    cuprintf("CuTConfiguration.onResult %s exit? %d listeners %ld\n", data["src"].toString().c_str(), data["exit"].toBool(), d->listeners.size());
+
     if(data["exit"].toBool()) // ! important: evaluate data["exit"] before deleting this
     {
         d->exiting = true; // for action factory to unregisterAction, exiting must return true
