@@ -124,9 +124,6 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
         perr("QumbiaReader: module cumbia-http is not available");
 #endif
     }
-    else if(m_conf.url.isEmpty())
-        perr("QumbiaReader: websocket command line arguments incomplete");
-
 
     // setup Cumbia pool and register cumbia implementations for tango and epics
 #ifdef QUMBIA_EPICS_CONTROLS_VERSION
