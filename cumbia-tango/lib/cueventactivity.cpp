@@ -295,7 +295,8 @@ void CuEventActivity::push_event(Tango::EventData *e)
         d["err"] = true;
         d["msg"] = utils.strerror(e->errors);
     }
-    cuprintf("CuEventActivity.push_event for %s val %s\n", vtos(v, "value"), vtos(v, "src"));
+
+    cuprintf("CuEventActivity.push_event for %s val %s\n", d["src"].toString().c_str(), d["value"].toString().c_str());
     publishResult(d);
 }
 
