@@ -66,21 +66,23 @@ class CumbiaPool
 public:
     CumbiaPool();
 
-    void registerCumbiaImpl(const std::string &domain, Cumbia *cumbia);
+    void registerCumbiaImpl(const std::string &name, Cumbia *cumbia);
 
-    void setSrcPatterns(const std::string& domain, const std::vector<std::string> &regexps);
+    void setSrcPatterns(const std::string& name, const std::vector<std::string> &regexps);
 
-    void clearSrcPatterns(const std::string& domain);
+    void clearSrcPatterns(const std::string& name);
 
-    void unregisterCumbiaImpl(const std::string& domain);
+    void unregisterCumbiaImpl(const std::string& name);
 
-    Cumbia *get(const std::string& domain) const;
+    Cumbia *get(const std::string& name) const;
 
     Cumbia *getBySrc(const std::string& src) const;
 
     Cumbia *guessBySrc(const std::string& src) const;
 
     bool isEmpty() const;
+
+    const std::vector<std::string> names() const;
 
 private:
     std::map<std::string, Cumbia *> m_map;

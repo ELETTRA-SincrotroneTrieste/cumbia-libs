@@ -46,9 +46,9 @@ void CumbiaPool::setSrcPatterns(const std::string &domain, const std::vector<std
  *
  * @param domain the domain name whose patterns will be removed
  */
-void CumbiaPool::clearSrcPatterns(const std::string &domain)
+void CumbiaPool::clearSrcPatterns(const std::string &name)
 {
-    m_dom_patterns.erase(domain);
+    m_dom_patterns.erase(name);
 }
 
 /*! \brief remove the domain from the list of the registered ones.
@@ -137,6 +137,13 @@ Cumbia *CumbiaPool::guessBySrc(const std::string &src) const
 bool CumbiaPool::isEmpty() const
 {
     return m_map.size() == 0;
+}
+
+const std::vector<std::string> CumbiaPool::names() const {
+    std::vector<std::string> n;
+    for(auto it : m_map)
+        n.push_back(it.first);
+    return n;
 }
 
 void CumbiaPool::m_print_registered_domain_info() const
