@@ -118,6 +118,7 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
             // value, w_value
             CuVariant::DataType t = static_cast<CuVariant::DataType>(data_o["value_type"].toDouble());
             foreach(const QString &k, value_keys) {
+                std::string sk = k.toStdString();
                 const QJsonValue &v = data_o[k];
                 if(v.isArray()) {
                     QJsonArray jarr = v.toArray();
@@ -131,7 +132,7 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
                                 QJsonValue ithval = jarr.at(i);
                                 vd.push_back(ithval.toDouble());
                             }
-                            res["value"] = vd;
+                            res[sk] = vd;
                         }
                             break;
                         case CuVariant::LongDouble: {
@@ -139,7 +140,7 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
                             for(int i = 0; i < jarr.size(); i++) {
                                 vd.push_back(static_cast<long double>(jarr.at(i).toDouble()));
                             }
-                            res["value"] = vd;
+                            res[sk] = vd;
                         }
                             break;
                         case CuVariant::Int: {
@@ -148,7 +149,7 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
                                 QJsonValue ithval = jarr.at(i);
                                 vi.push_back(static_cast<int>(ithval.toDouble()));
                             }
-                            res["value"] = vi;
+                            res[sk] = vi;
                         }
                             break;
                         case CuVariant::LongInt: {
@@ -156,7 +157,7 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
                             for(int i = 0; i < jarr.size(); i++) {
                                 vli.push_back(static_cast<long int>(jarr.at(i).toDouble()));
                             }
-                            res["value"] = vli;
+                            res[sk] = vli;
                             break;
                         }
                         case CuVariant::LongLongInt: {
@@ -164,7 +165,7 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
                             for(int i = 0; i < jarr.size(); i++) {
                                 vlli.push_back(static_cast<long long int>(jarr.at(i).toDouble()));
                             }
-                            res["value"] = vlli;
+                            res[sk] = vlli;
                             break;
                         }
                         case CuVariant::LongLongUInt: {
@@ -172,7 +173,7 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
                             for(int i = 0; i < jarr.size(); i++) {
                                 vulli.push_back(static_cast<long long unsigned int>(jarr.at(i).toDouble()));
                             }
-                            res["value"] = vulli;
+                            res[sk] = vulli;
                             break;
                         }
                         case CuVariant::LongUInt: {
@@ -180,7 +181,7 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
                             for(int i = 0; i < jarr.size(); i++) {
                                 vuli.push_back(static_cast<long unsigned int>(jarr.at(i).toDouble()));
                             }
-                            res["value"] = vuli;
+                            res[sk] = vuli;
                             break;
                         }
                         case CuVariant::UInt: {
@@ -188,7 +189,7 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
                             for(int i = 0; i < jarr.size(); i++) {
                                 vui.push_back(static_cast<unsigned int>(jarr.at(i).toDouble()));
                             }
-                            res["value"] = vui;
+                            res[sk] = vui;
                             break;
                         }
                         case CuVariant::UShort: {
@@ -196,7 +197,7 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
                             for(int i = 0; i < jarr.size(); i++) {
                                 vus.push_back(static_cast<unsigned short>(jarr.at(i).toDouble()));
                             }
-                            res["value"] = vus;
+                            res[sk] = vus;
                             break;
                         }
                         case CuVariant::Short: {
@@ -204,7 +205,7 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
                             for(int i = 0; i < jarr.size(); i++) {
                                 vus.push_back(static_cast<short>(jarr.at(i).toDouble()));
                             }
-                            res["value"] = vus;
+                            res[sk] = vus;
                             break;
                         }
                         case CuVariant::Float: {
@@ -212,7 +213,7 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
                             for(int i = 0; i < jarr.size(); i++) {
                                 vf.push_back(static_cast<float>(jarr.at(i).toDouble()));
                             }
-                            res["value"] = vf;
+                            res[sk] = vf;
                             break;
                         }
                         case CuVariant::String:
@@ -228,37 +229,37 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
                     double dv = v.toDouble();
                     switch(t) {
                     case CuVariant::Double:
-                        res["value"] = dv;
+                        res[sk] = dv;
                         break;
                     case CuVariant::LongDouble:
-                        res["value"] = static_cast<long double>(dv);
+                        res[sk] = static_cast<long double>(dv);
                         break;
                     case CuVariant::Int:
-                        res["value"] = static_cast<int>(dv);
+                        res[sk] = static_cast<int>(dv);
                         break;
                     case CuVariant::LongInt:
-                        res["value"] = static_cast<long int>(dv);
+                        res[sk] = static_cast<long int>(dv);
                         break;
                     case CuVariant::LongLongInt:
-                        res["value"] = static_cast<long long int>(dv);
+                        res[sk] = static_cast<long long int>(dv);
                         break;
                     case CuVariant::LongLongUInt:
-                        res["value"] = static_cast<long long unsigned >(dv);
+                        res[sk] = static_cast<long long unsigned >(dv);
                         break;
                     case CuVariant::LongUInt:
-                        res["value"] = static_cast<long unsigned >(dv);
+                        res[sk] = static_cast<long unsigned >(dv);
                         break;
                     case CuVariant::UInt:
-                        res["value"] = static_cast<unsigned >(dv);
+                        res[sk] = static_cast<unsigned >(dv);
                         break;
                     case CuVariant::UShort:
-                        res["value"] = static_cast<unsigned short>(dv);
+                        res[sk] = static_cast<unsigned short>(dv);
                         break;
                     case CuVariant::Short:
-                        res["value"] = static_cast<short>(dv);
+                        res[sk] = static_cast<short>(dv);
                         break;
                     case CuVariant::Float:
-                        res["value"] = static_cast<float>(dv);
+                        res[sk] = static_cast<float>(dv);
                         break;
                     // dealt with in first loop
                     case CuVariant::String:

@@ -282,9 +282,10 @@ unix:LIBS -= \
 
 unix {
 
-PATH_VAR = $$(PATH)
-DOXYGEN = "doxygen"
-contains(PATH_VAR, DOXYGEN) {
+DOXYGEN_BIN = $$system(which doxygen)
+isEmpty(DOXYGEN_BIN) {
+    message("cumbia-qtcontrols.pro: doxygen not found")
+} else {
     message("Doxygen found")
 
     doc.commands = \
@@ -297,11 +298,6 @@ contains(PATH_VAR, DOXYGEN) {
     !android-g++ {
         INSTALLS += doc
     }
-
-
-
-} else {
-	message("Doxygen not found")
 }
     inc.files = $${HEADERS}
     inc.path = $${CUMBIA_QTCONTROLS_INCLUDES}

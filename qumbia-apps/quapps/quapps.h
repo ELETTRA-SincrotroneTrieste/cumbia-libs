@@ -162,7 +162,7 @@ public:
     }
 
     virtual ~CuModuleLoader() {
-        if(d->log) delete d->log;
+//        if(d->log) delete d->log;
         delete d;
     }
 
