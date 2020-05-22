@@ -30,14 +30,9 @@ int main(int argc, char *argv[])
     ret = qu_app.exec();
     delete w;
 
-    Cumbia *c = cu_p->get("tango");
-    if(c) delete c;
-    c = cu_p->get("epics");
-    if(c) delete c;
-    c = cu_p->get("random");
-    if(c) delete c;
-    c = cu_p->get("ws");
-    if(c) delete c;
+    for(std::string n : cu_p->names())
+        if(cu_p->get(n))
+            delete cu_p->get(n);
 
     return ret;
 }
