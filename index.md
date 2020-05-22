@@ -8,6 +8,10 @@ thread. You will receive the progress updates and the results when they are read
 Write graphical user interface components and applications communicating with the Tango and Epics control systems. More control system engines can be
 added in the future and plugged into existing cumbia installations and applications.
 
+### Let your application written in any technology run from Everywhere through http[s] or websocket
+Yes, the *same* app that connects to Tango or EPICS, can be restarted and rely on either *http* or *websocket* transparently.
+No code change, no source name changes, no rebuilding.
+
 ### Combine results into formulas and functions
 Mixing the  Qt *javascript* integration and the *cumbia formula plugin*, read results from Tango and Epics
 can be introduced into functions. The results can be displayed into any *cumbia-qtcontrols* widget.
@@ -66,7 +70,17 @@ More examples you will find within cumbia sources!
 
 ### Everywhere
 cumbia is written in C++ and uses the Qt libraries to develop graphical user interfaces. This means *cumbia applications* work on *desktop computers* as well as
-on *Android* devices. In principle, cumbia is available *wherever C++ and Qt are supported*. *Android* and *Linux* platforms have been successfully tested and
+on *Android* devices. From version 1.2, cumbia is not only available *wherever C++ and Qt are supported*, but thanks to the *websocket* and *http* modules, *any
+application, web included*, can rely on cumbia to access control system data!
+
+Not only, *the same application* can use either a *native* or a *http/websocket* engine *transparently*, that is, without changing one line of code or rebuilding,
+not even changing the *source names*. How difficult is that? As difficult as specifying a *URL* to a *http* or *websocket* service on the command line, or configure
+a *http* or *websocket* default engine in your environment.
+
+### Smart working apps
+You can run your application relying on the native control system engine from your office or run it from home via *http*.
+
+*Android* and *Linux* platforms have been successfully tested and
 porting an application from one platform to another is just a matter of a few clicks with the *Qt creator* IDE.
 
 ![cumbia reads Tango from an Android device](android-plot1.jpg)
@@ -127,8 +141,7 @@ To build Qt and cumbia for <a href="https://webassembly.org/">WebAssembly</a>, p
  | <a href="html/cumbia-tango/html/index.html">cumbia-tango</a>.  | <a href="html/cumbia-random/html/index.html">cumbia-random</a>.  |
  | <a href="html/cumbia-qtcontrols/html/index.html">cumbia-qtcontrols</a>.   | <a href="html/cumbia-websocket/html/index.html">cumbia-websocket</a>.  |
  | <a href="html/qumbia-tango-controls/html/index.html">cumbia-tango-controls</a>. | <a href="html/cumbia-qtcontrols/html/qumbia_plugins.html">qumbia-plugins module</a>.  |
- | <a href="html/cumbia-epics/html/index.html">qumbia-epics</a>.   |  |
-
+ | <a href="html/cumbia-epics/html/index.html">qumbia-epics</a>.   |  <a href="html/cumbia-http/html/index.html">cumbia-http</a>.  |
 
 ### Plugins shipped with the base installation
  
