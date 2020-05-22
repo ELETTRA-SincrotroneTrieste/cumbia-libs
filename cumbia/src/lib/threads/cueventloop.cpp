@@ -14,6 +14,7 @@ class CuEventInfo {
 public:
     CuEventInfo(CuEventI *eve, CuEventLoopListener *l) :
         event(eve), lis(l) {}
+    CuEventInfo() { event = nullptr; lis = nullptr; }
 
     CuEventI *event;
     CuEventLoopListener *lis;
@@ -144,6 +145,7 @@ void CuEventLoopService::wait()
 void CuEventLoopService::run()
 {
     bool repeat = true;
+    CuEventInfo event_i;
     while (repeat)
     {
         std::queue<CuEventInfo> qcopy;
@@ -157,26 +159,23 @@ void CuEventLoopService::run()
                 cuprintf("CuEventLoopService::run\e[1;35m -- WAITING while queue empty\e[0m\n");
                 d->m_evloop_cv.wait(lk);
             }
-            while(!d->queue.empty())  {
-                qcopy.push(d->queue.front());
-                d->queue.pop();
-            }
-                        cuprintf("CuEventLoopService::run\e[1;35m -- unlocking\e[0m\n");
+            if(d->queue.empty())
+                continue;
+            event_i = d->queue.front();
+            d->queue.pop();
+            cuprintf("CuEventLoopService::run\e[1;35m -- unlocking\e[0m\n");
         }
         // lock free section ensues
-
-        while(!qcopy.empty()) {
-            cuprintf("CuEventLoopService::run\e[1;35m -- processing queue siz %ld\e[0m\n", qcopy.size());
-            CuEventInfo* event_info = &qcopy.front();
-            if(event_info->event->getType() == CuEventI::ExitLoop)
+        cuprintf("CuEventLoopService::run\e[1;35m -- processing queue siz %ld\e[0m\n", qcopy.size());
+            if(event_i.event->getType() == CuEventI::ExitLoop)
                 repeat = false;
-            else if(std::find(d->eloo_liss.begin(), d->eloo_liss.end(), event_info->lis)
+            else if(std::find(d->eloo_liss.begin(), d->eloo_liss.end(), event_i.lis)
                     != d->eloo_liss.end()) {
-                event_info->lis->onEvent(event_info->event);
+                    event_i.lis->onEvent(event_i.event);
             }
             qcopy.pop();
-            delete event_info->event;
-        }
+            delete event_i.event;
+
     }
 }
 
