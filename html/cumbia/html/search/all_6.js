@@ -2,7 +2,7 @@ var searchData=
 [
   ['generate_172',['generate',['../classCuThreadTokenGenI.html#a7eb1b515800de10f7da90562161c2970',1,'CuThreadTokenGenI']]],
   ['generic_173',['Generic',['../classCuLog.html#aa25342f943a18ae41499e1bd38b1e447a5747575687d2c764d962fac4b708777c',1,'CuLog']]],
-  ['get_174',['get',['../classCumbiaPool.html#ae993bb128c009f4886d1673ae2178e30',1,'CumbiaPool::get()'],['../classCuServiceProvider.html#a76401ea9bf747574c065b2600e1b4dae',1,'CuServiceProvider::get()']]],
+  ['get_174',['get',['../classCumbiaPool.html#af2bad5060e43262b2bd413efdb93c98b',1,'CumbiaPool::get()'],['../classCuServiceProvider.html#a76401ea9bf747574c065b2600e1b4dae',1,'CuServiceProvider::get()']]],
   ['getactivity_175',['getActivity',['../classCuResultEvent.html#afd7025a6711afed7859e9041b8547213',1,'CuResultEvent::getActivity()'],['../classCuActivityExitEvent.html#a9880079e8cd9dcfc30d8d58108fd68cd',1,'CuActivityExitEvent::getActivity()']]],
   ['getactivitymanager_176',['getActivityManager',['../classCuActivity.html#a0c6eb2f9902d6b8ba43474a243720e8f',1,'CuActivity']]],
   ['getactivityperiod_177',['getActivityPeriod',['../classCumbia.html#a783d8ef496e96945f300c66311dca6ff',1,'Cumbia']]],

@@ -3,7 +3,7 @@ var searchData=
   ['info_203',['Info',['../classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a7ea6527d5f5e914bbd5100b11dd09ba5',1,'CuLog']]],
   ['init_204',['init',['../classCuActivity.html#ac97d4e1a3ac1dfab8cad8c084e2b1d45',1,'CuActivity']]],
   ['int_205',['Int',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cac7444c6f5d4524d704e38427c40a662a',1,'CuVariant']]],
-  ['invalid_206',['invalid',['../classCuDataListener.html#a1a6d5c5fb04d06ab8ba26d006dec06e1',1,'CuDataListener::invalid()'],['../classCuDataQuality.html#a6a78fa28ebb7b9ac9c8450bf836615a7a231e4aced696f0162cba44d96e7c599e',1,'CuDataQuality::Invalid()']]],
+  ['invalid_206',['Invalid',['../classCuDataQuality.html#a6a78fa28ebb7b9ac9c8450bf836615a7a231e4aced696f0162cba44d96e7c599e',1,'CuDataQuality::Invalid()'],['../classCuDataListener.html#a1a6d5c5fb04d06ab8ba26d006dec06e1',1,'CuDataListener::invalid()']]],
   ['invalidate_207',['invalidate',['../classCuDataListener.html#a880a62460797e204d31e403eb219b934',1,'CuDataListener']]],
   ['isdisposable_208',['isDisposable',['../classCuActivity.html#a37eeeec3e21577cfe49693f4e4061bdc',1,'CuActivity']]],
   ['isempty_209',['isEmpty',['../classCuData.html#a6953fdf4037f206fc76695807845ea0d',1,'CuData::isEmpty()'],['../classCumbiaPool.html#ac25018d67e134d1e1d289e2f9c7d523d',1,'CumbiaPool::isEmpty()']]],

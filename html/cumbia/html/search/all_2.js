@@ -4,7 +4,7 @@ var searchData=
   ['changing_11',['Changing',['../classCuDataQuality.html#a6a78fa28ebb7b9ac9c8450bf836615a7a7af0f83603ed80a03e670dab8debadaf',1,'CuDataQuality']]],
   ['class_12',['Class',['../classCuLog.html#aa25342f943a18ae41499e1bd38b1e447',1,'CuLog']]],
   ['cleanup_13',['cleanup',['../classCuThread.html#a8c3f4a8c690cd063ff0fa50ac1238e2b',1,'CuThread::cleanup()'],['../classCuThread.html#a8c3f4a8c690cd063ff0fa50ac1238e2b',1,'CuThread::cleanup()'],['../classCuThreadInterface.html#aeff2f7469d90d37ba25ab5ee54ea178b',1,'CuThreadInterface::cleanup()']]],
-  ['clearsrcpatterns_14',['clearSrcPatterns',['../classCumbiaPool.html#a8f67e35f57af1c63b9fb3c0777c7ce84',1,'CumbiaPool']]],
+  ['clearsrcpatterns_14',['clearSrcPatterns',['../classCumbiaPool.html#a948814eb485bdb78935f9595c04d3103',1,'CumbiaPool']]],
   ['color_15',['color',['../classCuDataQuality.html#ac6c0654b1e3720c0c272e982a9fb46fe',1,'CuDataQuality']]],
   ['connect_16',['Connect',['../classCuLog.html#aa25342f943a18ae41499e1bd38b1e447aa5266e14318638a6f8a37d72dd1f0a90',1,'CuLog']]],
   ['connectionexists_17',['connectionExists',['../classCuActivityManager.html#a2e88050a39a888a05f87d204dee8167a',1,'CuActivityManager']]],

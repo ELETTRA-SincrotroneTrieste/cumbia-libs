@@ -2,5 +2,5 @@
 <area shape="rect" id="node1" title=" " alt="" coords="11,5,89,32"/>
 <area shape="rect" id="node2" href="$classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int..." alt="" coords="148,5,275,32"/>
 <area shape="rect" id="node3" title=" " alt="" coords="5,56,95,83"/>
-<area shape="rect" id="node4" href="$classCuTConfigActivity.html" title=" " alt="" coords="143,56,280,83"/>
+<area shape="rect" id="node4" href="$classCuTConfigActivity.html" title="Activity to get attribute configuration or command info. Optionally, it can perform a one shot attrib..." alt="" coords="143,56,280,83"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="CuTConfiguration" name="CuTConfiguration">
-<area shape="rect" id="node1" title=" " alt="" coords="7,155,140,181"/>
+<area shape="rect" id="node1" title="Get command or attribute configuration from the Tango database." alt="" coords="7,155,140,181"/>
 <area shape="rect" id="node2" href="$classCuTangoActionI.html" title="an interface for a Tango action, typically a reader or a writer are implementors" alt="" coords="12,80,135,107"/>
 <area shape="rect" id="node3" title=" " alt="" coords="5,5,141,32"/>
 </map>
