@@ -164,8 +164,9 @@ void CuEventLoopService::run()
                         cuprintf("CuEventLoopService::run\e[1;35m -- unlocking\e[0m\n");
         }
         // lock free section ensues
-                cuprintf("CuEventLoopService::run\e[1;35m -- processing queue siz %ld\e[0m\n", qcopy.size());
+
         while(!qcopy.empty()) {
+            cuprintf("CuEventLoopService::run\e[1;35m -- processing queue siz %ld\e[0m\n", qcopy.size());
             CuEventInfo* event_info = &qcopy.front();
             if(event_info->event->getType() == CuEventI::ExitLoop)
                 repeat = false;
