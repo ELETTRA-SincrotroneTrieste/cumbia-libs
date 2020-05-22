@@ -1,46 +1,9 @@
 isEmpty(CUMBIA_ROOT) {
     CUMBIA_ROOT=/usr/local/cumbia-libs
 }
+include($${CUMBIA_ROOT}/include/quapps/quapps.pri)
 
-
-linux-g++ {
-    exists ($${CUMBIA_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
-        message("- adding EPICS support under $${CUMBIA_ROOT}")
-        include ($${CUMBIA_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
-    }
-    exists  ($${CUMBIA_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
-        message("- adding Tango support under $${CUMBIA_ROOT}")
-        include ($${CUMBIA_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
-    }
-    greaterThan(QT_MAJOR_VERSION, 4): QT += x11extras
-} else {
-    # include cumbia-qtcontrols for necessary qt engine-unaware dependency (widgets, qwt, ...)
-    include ($${CUMBIA_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
-}
-
-exists($${CUMBIA_ROOT}/include/cumbia-random/cumbia-random.pri) {
-    message("- adding cumbia-random module support under $${CUMBIA_ROOT}")
-    include($${CUMBIA_ROOT}/include/cumbia-random/cumbia-random.pri)
-}
-
-exists($${CUMBIA_ROOT}/include/cumbia-websocket/cumbia-websocket.pri) {
-    message("- adding cumbia-websocket module support under $${CUMBIA_ROOT}")
-    include($${CUMBIA_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
-}
-
-exists($${CUMBIA_ROOT}/include/cumbia-http/cumbia-http.pri) {
-    message("including support for cumbia-http module under $${CUMBIA_ROOT}")
-    include($${CUMBIA_ROOT}/include/cumbia-http/cumbia-http.pri)
-}
-
-TEMPLATE = app
-
-QT +=  core gui
-
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-CONFIG +=
+# CONFIG += debug | release
 
 DEFINES += QT_NO_DEBUG_OUTPUT
 
@@ -72,10 +35,6 @@ wasm-emscripten {
 } else {
     TARGET = bin/$PROJECT_NAME$
 }
-
-# unix:LIBS += -L. -lmylib
-
-# unix:INCLUDEPATH +=  . ../../src
 
 #
 # make install works if INSTALL_DIR is given to qmake
