@@ -362,16 +362,14 @@ void CuTReader::addDataListener(CuDataListener *l)
     d->listeners.insert(it, l);
 }
 
-void CuTReader::removeDataListener(CuDataListener *l)
-{
+void CuTReader::removeDataListener(CuDataListener *l) {
     d->listeners.erase(l);
     if(!d->listeners.size()) {
         stop();
     }
 }
 
-size_t CuTReader::dataListenersCount()
-{
+size_t CuTReader::dataListenersCount() {
     return d->listeners.size();
 }
 
