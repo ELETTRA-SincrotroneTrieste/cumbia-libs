@@ -82,8 +82,7 @@ bool CuHttpRegisterEngine::hasCmdOption(QCommandLineParser *parser, const QStrin
     parser->process(args);
     QString url = parser->value(http_url_o);
     d->chan = url.section(QRegularExpression("[^:^/]/"), -1); // match last token after a / but skip http[s]://
-    d->chan != url ? d->url = url.remove(url.indexOf('/', -1), d->chan.length()) : d->chan.remove(0, d->chan.length());
-    printf("DUCK~! URL: %s CHAN %s\n", qstoc(d->url), qstoc(d->chan));
+    d->chan != url ? d->url = url.remove(url.lastIndexOf('/'), d->chan.length() + 1) : d->chan.remove(0, d->chan.length());
     if(d->url.contains(QRegularExpression("http[s]{0,1}://.*")) && d->chan.isEmpty())
          printf("\e[1;33m*\e[0m CuHttpRegisterEngine: channel not detected in URL: required form: \"%s/\e[1;33mchannel_name\e[0m\"\n",
                 qstoc(d->url));
