@@ -133,9 +133,11 @@ void CuHTTPActionReader::start() {
 
 void CuHTTPActionReader::stop() {
     d->exit = true;
-    d->chan_recv->unregisterReader(QString::fromStdString(d->tsrc.getName()));
-    QString url = QString::fromStdString(d->tsrc.getName());
-    QNetworkRequest r = prepareRequest(url + "/u/1");
+    QString url_s = QString::fromStdString(d->tsrc.getName());
+    QString src = QString("/u/%1/%2").arg(d->chan_recv->channel()).arg(url_s);
+    d->chan_recv->unregisterReader(url_s);
+    printf("CuHttpActionReader.stop: requesting unsubscribe: %s\n", qstoc(QString(d->url + src)));
+    QNetworkRequest r = prepareRequest(d->url + src);
     QNetworkReply *reply = getNetworkAccessManager()->get(r);
     connect(reply, SIGNAL(finished()), this, SLOT(onUnsubscribeReplyFinished()));
 }
