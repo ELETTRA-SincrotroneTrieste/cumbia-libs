@@ -120,8 +120,7 @@ std::vector<std::string> CuHttpTangoHelper::srcPatterns() const {
     // support tango://host:PORT/a/b/c/d and tango://host:PORT/a/b/c->e
     // when CumbiaPool.guessBySrc needs to be used
     // with the two above only, sources like "tango://hokuto:20000/test/device/1/double_scalar"
-    // are not identified unless they are preceded by an additional http://, like
-    // "http://tango://hokuto:20000/test/device/1/double_scalar"
+    // or "hokuto:20000/test/device/1/double_scalar" are not identified
     src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\$]+/.+");
     src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\$]+->.+");
     return src_patterns;
