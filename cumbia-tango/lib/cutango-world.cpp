@@ -19,6 +19,13 @@ CuTangoWorld::CuTangoWorld()
     d = new CuTangoWorldPrivate();
     d->src_patterns.push_back("[A-Za-z0-9_\\-\\.\\$]+/.+");
     d->src_patterns.push_back("[A-Za-z0-9_\\-\\.\\$]+->.+");
+
+    // support tango://host:PORT/a/b/c/d and tango://host:PORT/a/b/c->e
+    // when CumbiaPool.guessBySrc needs to be used
+    // with the two above only, sources like "tango://hokuto:20000/test/device/1/double_scalar"
+    // or "hokuto:20000/test/device/1/double_scalar" are not identified
+    d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\$]+/.+");
+    d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\$]+->.+");
 }
 
 CuTangoWorld::~CuTangoWorld()
