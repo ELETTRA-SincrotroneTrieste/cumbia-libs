@@ -21,6 +21,8 @@ public:
 
     bool json_decode(const QJsonDocument &json, CuData& out );
 
+    QJsonDocument make_error(const QString& msg) const;
+
 private:
     std::vector<std::string> m_src_patterns;
 };

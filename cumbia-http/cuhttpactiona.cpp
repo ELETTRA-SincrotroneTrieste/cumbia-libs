@@ -1,4 +1,5 @@
 #include "cuhttpactiona.h"
+#include "cumbiahttpworld.h"
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QtDebug>
@@ -74,8 +75,6 @@ void CuHTTPActionA::onNewData() {
     d->buf += ba;
     // buf complete?
     if(d->buf.endsWith("\n\n")) { // buf complete
-        if(buf_empty)
-            cuprintf("\e[1;32mBUF ARRIVED COMPLETE\e[0m: %s\n", ba.data());
         m_on_buf_complete();
         d->buf.clear();
     }
@@ -94,12 +93,14 @@ void CuHTTPActionA::onReplyDestroyed(QObject *) {
 }
 
 void CuHTTPActionA::onSslErrors(const QList<QSslError> &errors) {
+    QString msg;
     foreach(const QSslError &e, errors)
-        qDebug() << __PRETTY_FUNCTION__ << e.errorString();
+        msg += e.errorString() + "\n";
+    decodeMessage(CumbiaHTTPWorld().make_error(msg));
 }
 
 void CuHTTPActionA::onError(QNetworkReply::NetworkError code) {
-    qDebug() << __PRETTY_FUNCTION__ << d->reply->errorString() << "code" << code;
+    decodeMessage(CumbiaHTTPWorld().make_error(d->reply->errorString() + QString( "code %1").arg(code)));
 }
 
 void CuHTTPActionA::startRequest(const QUrl &src)

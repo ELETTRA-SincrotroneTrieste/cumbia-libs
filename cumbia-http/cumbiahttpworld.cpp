@@ -6,6 +6,7 @@
 #include <QJsonArray>
 #include <QtDebug>
 #include <math.h>
+#include <sys/time.h>
 
 CumbiaHTTPWorld::CumbiaHTTPWorld() {
     m_src_patterns.push_back("http[s]{0,1}://.+");
@@ -276,5 +277,18 @@ bool CumbiaHTTPWorld::json_decode(const QJsonDocument &json, CuData &res)
     } // else (json is not null here)
 
     return !json.isNull();
+}
+
+QJsonDocument CumbiaHTTPWorld::make_error(const QString &msg) const
+{
+    QJsonObject o;
+    o["msg"] = msg;
+    o["err"] = true;
+    // timestamp
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    o["timestamp_ms"] =  tv.tv_sec * 1000 + tv.tv_usec / 1000.0;
+    o["timestamp_us"] = static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6;
+    return QJsonDocument(o);
 }
 
