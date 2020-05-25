@@ -615,6 +615,9 @@ void CuTangoWorld::fillFromCommandInfo(const Tango::CommandInfo &ci, CuData &d)
     d["display_level"] = ci.disp_level;
     d["data_type"] = ci.out_type;
 
+    printf("CuTangoWorld.fillFromCommandInfo %s in ty %ld out ty %ld in desc %s out desc %s\n", ci.cmd_name.c_str(),
+           ci.in_type, ci.out_type, ci.in_type_desc.c_str(), ci.out_type_desc.c_str());
+
     /* fake data_format property for commands */
     switch(ci.out_type)
     {
@@ -1075,8 +1078,8 @@ bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &re
 
 bool CuTangoWorld::source_valid(const string &src)
 {
-    //  (tango://){0,1}([A-Za-z_0-9\._\-]*[:]{1}[0-9]+[/]){0,1}(([A-Za-z_0-9_\-\.]+/[A-Za-z_0-9_\-\.]+/[A-Za-z_0-9_\-\.]+([/]{1,1}|[->]{2,2})[A-Za-z_0-9_\-\.]+)([\(]{1}[&A-Za-z_0-9_\-\\.,]+[\)]){0,1})    const char* SOURCE_REGEXP = "(tango://){0,1}"
-    const char *pattern = "(tango://){0,1}([A-Za-z_0-9_\\-\\.]*[:]{1}[0-9]+[/]){0,1}(([A-Za-z_0-9_\\-\\.]+/[A-Za-z_0-9_\\-\\.]+/[A-Za-z_0-9_\\-\\.]+([/]{1,1}|[->]{2,2})[A-Za-z_0-9_\\-\\.]+)([\\(]{1}[&A-Za-z_0-9_\\-\\\\.,]+[\\)]){0,1})";
+    //  (tango://){0,1}([A-Za-z_0-9\._\-]*[:]{1}[0-9]+[/]){0,1}(([A-Za-z_0-9_\-\.]+/[A-Za-z_0-9_\-\.]+/[A-Za-z_0-9_\-\.]+([/]{1,1}|[->]{2,2})[A-Za-z_0-9_\-\.]+)([\(]{1}[&A-Za-z_0-9_\-\\.,\*/]+[\)]){0,1})    const char* SOURCE_REGEXP = "(tango://){0,1}"
+    const char *pattern = "(tango://){0,1}([A-Za-z_0-9_\\-\\.]*[:]{1}[0-9]+[/]){0,1}(([A-Za-z_0-9_\\-\\.]+/[A-Za-z_0-9_\\-\\.]+/[A-Za-z_0-9_\\-\\.]+([/]{1,1}|[->]{2,2})[A-Za-z_0-9_\\-\\.]+)([\\(]{1}[&A-Za-z_0-9_\\-\\\\.,\\*/]+[\\)]){0,1})";
     std::regex re = std::regex(pattern);
     std::smatch m;
     return std::regex_match(src, m, re);
