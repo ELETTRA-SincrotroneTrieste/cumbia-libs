@@ -36,6 +36,8 @@ public:
 
 private:
     CuHttpChannelReceiverPrivate *d;
+
+    bool m_data_fresh(const double timestamp_ms) const;
 };
 
 #endif // CUHTTPCHANNELRECEIVER_H
