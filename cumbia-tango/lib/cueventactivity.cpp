@@ -279,7 +279,6 @@ void CuEventActivity::push_event(Tango::EventData *e)
 {
     CuData d = getToken();
     CuTangoWorld utils;
-    utils.fillThreadInfo(d, this); /* put thread and activity addresses as info */
     d["mode"] = "event";
     d["event"] = e->event;
     Tango::DeviceAttribute *da = e->attr_value;

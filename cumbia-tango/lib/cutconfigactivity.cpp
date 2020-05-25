@@ -98,10 +98,9 @@ void CuTConfigActivity::execute()
     if(d->tdev->isValid()) {
         Tango::DeviceProxy *dev = d->tdev->getDevice();
         CuTangoWorld utils;
-        utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
         if(dev && cmd)
         {
-            success = value_only || utils.get_command_info(dev, point, at);
+            success = utils.get_command_info(dev, point, at);
             if(success && d->type == CuReaderConfigActivityType) {
                 success = utils.cmd_inout(dev, point, at);
             } else if(success) { // successful get_command_info but no cmd_inout

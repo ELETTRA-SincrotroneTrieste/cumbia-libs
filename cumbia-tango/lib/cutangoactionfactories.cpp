@@ -2,6 +2,7 @@
 #include "cutreader.h"
 #include "cutwriter.h"
 #include "cutconfiguration.h"
+#include "cutadb.h"
 #include <cumacros.h>
 #include <tango.h>
 
@@ -138,4 +139,35 @@ CuTangoActionI *CuTWriterConfFactory::create(const string &s, CumbiaTango *ct) c
 
 CuTangoActionI::Type CuTWriterConfFactory::getType() const {
     return CuTangoActionI::WriterConfig;
+}
+
+class CuTaDbFactoryPrivate {
+public:
+    CuData o;
+};
+
+CuTaDbFactory::CuTaDbFactory() {
+    d = new CuTaDbFactoryPrivate;
+}
+
+CuTaDbFactory::~CuTaDbFactory() {
+    delete d;
+}
+
+CuTangoActionI *CuTaDbFactory::create(const string &s, CumbiaTango *ct) const {
+    CuTaDb *tadb = new CuTaDb(s, ct);
+    tadb->setOptions(d->o);
+    return tadb;
+}
+
+CuTangoActionI::Type CuTaDbFactory::getType() const {
+    return CuTangoActionI::TaDb;
+}
+
+void CuTaDbFactory::setOptions(const CuData &o) {
+    d->o = o;
+}
+
+CuData CuTaDbFactory::options() const {
+    return d->o;
 }

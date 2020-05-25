@@ -117,9 +117,15 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
     else if(m_conf.url.startsWith("https://") || m_conf.url.startsWith("http://")) {
 #ifdef CUMBIA_HTTP_VERSION
         CuHttpRegisterEngine httpre;
-        httpre.setUrl(m_conf.url);
+        QString url, chan = m_conf.url.section(QRegularExpression("[^:^/]/"), -1); // match last token after a / but skip http[s]://
+        chan != m_conf.url ? url = m_conf.url.remove(m_conf.url.lastIndexOf('/'), chan.length() + 1) : chan.remove(0, chan.length());
+        if(url.contains(QRegularExpression("http[s]{0,1}://.*")) && chan.isEmpty())
+             printf("\e[1;33m*\e[0m cumbia read: channel not detected in URL: required form: \"%s/\e[1;33mchannel_name\e[0m\"\n",
+                    qstoc(url));
+        httpre.setUrl(url);
+        httpre.setChannel(chan);
         CumbiaHttp *cuhttp = httpre.registerWithDefaults(cu_pool, m_ctrl_factory_pool);
-        printf("activating cumbia http... url %s\n", qstoc(m_conf.url));
+        printf("activating cumbia http... url %s channel %s\n", qstoc(url), qstoc(chan));
 #else
         perr("QumbiaReader: module cumbia-http is not available");
 #endif

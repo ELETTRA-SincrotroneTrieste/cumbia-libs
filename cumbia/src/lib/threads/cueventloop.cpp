@@ -149,8 +149,7 @@ void CuEventLoopService::run()
     while (repeat)
     {
         std::queue<CuEventInfo> qcopy;
-        // Wait for a message to be added to the queue
-
+        // Wait for a message to be added to the queue        
         {
             // lock as short as possible: just to copy d->queue into a local queue
                         cuprintf("CuEventLoopService::run\e[1;35m -- locking\e[0m\n");
@@ -175,7 +174,6 @@ void CuEventLoopService::run()
             }
             qcopy.pop();
             delete event_i.event;
-
     }
 }
 

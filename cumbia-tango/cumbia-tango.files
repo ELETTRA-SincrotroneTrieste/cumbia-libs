@@ -14,6 +14,10 @@ lib/cupollingactivity.cpp
 lib/cupollingactivity.h
 lib/cupollingservice.cpp
 lib/cupollingservice.h
+lib/cutadb.cpp
+lib/cutadb.h
+lib/cutadbactivity.cpp
+lib/cutadbactivity.h
 lib/cutango-world-config.cpp
 lib/cutango-world-config.h
 lib/cutango-world.cpp
