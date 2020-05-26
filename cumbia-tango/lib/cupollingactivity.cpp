@@ -362,7 +362,7 @@ void CuPollingActivity::execute()
             std::string point = tsrc.getPoint();
             std::vector<std::string> argins = tsrc.getArgs();
             void *action_ptr = action_data.action;
-            bool is_command = tsrc.getType() == TSource::Cmd;
+            bool is_command = tsrc.getType() == TSource::SrcCmd;
             if(is_command) { // write into results[i]
                 (*results)[i] = getToken();
                 (*results)[i]["mode"] = "polled";

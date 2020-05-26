@@ -56,58 +56,39 @@ public:
 
     // CuThreadListener interface
     void onProgress(int step, int total, const CuData &data);
-
     void onResult(const CuData &data);
-
     void onResult(const std::vector<CuData> &datalist);
 
     CuData getToken() const;
-
     TSource getSource() const;
-
     CuTangoActionI::Type getType() const;
 
     void sendData(const CuData& data);
-
     void getData(CuData &inout) const;
 
     void setRefreshMode(RefreshMode rm, int period = -1);
-
     std::string refreshModeStr() const;
-
     RefreshMode refreshMode() const;
-
+    bool isEventRefresh(RefreshMode rm) const;
+    int period() const;
     void setPeriod(int millis);
 
     void setOptions(const CuData& options);
 
-    int period() const;
-
     void start();
-
     void stop();
-
     void addDataListener(CuDataListener *l);
-
     void removeDataListener(CuDataListener *l);
-
     size_t dataListenersCount();
-
     bool exiting() const;
-
-    bool isEventRefresh(RefreshMode rm) const;
 
 private:
     CuTReaderPrivate *d;
 
     void m_startEventActivity();
-
     void m_registerToPoller();
-
     void m_unregisterFromPoller();
-
     void m_unregisterEventActivity();
-
 };
 
 

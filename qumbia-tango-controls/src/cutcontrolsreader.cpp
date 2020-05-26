@@ -243,12 +243,18 @@ void CuTControlsReader::setSource(const QString &s)
 {
     CuTControlsUtils tcu;
     d->source = tcu.replaceWildcards(s, qApp->arguments());
-    if(!d->ta_options.value("no-properties").toBool()) {
+    TSource tsrc(s.toStdString());
+    if(tsrc.isDbOp()) {
+        CuTaDbFactory dbf;
+        dbf.setOptions(d->ta_options);
+        d->cumbia_tango->addAction(tsrc.getName(), d->tlistener, dbf);
+    }
+    else if(!d->ta_options.value("no-properties").toBool()) {
         CuTReaderConfFactory acf;
         acf.setOptions(d->ta_options);
         d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, acf);
     }
-    if(!d->ta_options.value("properties-only").toBool()) {
+    else if(!d->ta_options.value("properties-only").toBool()) {
         CuTangoReaderFactory readf;
         readf.setOptions(d->ta_options);
         d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, readf);

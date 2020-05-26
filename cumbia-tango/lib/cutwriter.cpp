@@ -183,7 +183,7 @@ void CuTWriter::start() {
     at["point"] = d->tsrc.getPoint();
     at["activity"] = "writer";
     at["write_value"] = d->write_val;
-    at["cmd"] = (d->tsrc.getType() == TSource::Cmd);
+    at["cmd"] = (d->tsrc.getType() == TSource::SrcCmd);
     at.merge(d->options);
     CuData thtok = CuData("device", d->tsrc.getDeviceName()); /* thread token */
     if(d->options.containsKey("thread_token"))

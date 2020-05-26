@@ -1078,8 +1078,8 @@ bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &re
 
 bool CuTangoWorld::source_valid(const string &src)
 {
-    //  [A-Za-z_0-9_\-\.\,\*/\+\:\(\)>]+
-    const char *pattern = "[A-Za-z_0-9_\\-\\.\\,\\*/\\+\\:\\(\\)>]+";
+    //  [A-Za-z_0-9_\-\.\,\*/\+\:\(\)>#]+
+    const char *pattern = "[A-Za-z_0-9_\\-\\.\\,\\*/\\+\\:\\(\\)>#]+";
     std::regex re = std::regex(pattern);
     std::smatch m;
     return std::regex_match(src, m, re);

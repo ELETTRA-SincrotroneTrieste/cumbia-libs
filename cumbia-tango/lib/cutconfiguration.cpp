@@ -153,7 +153,7 @@ void CuTConfiguration::start()
     at["point"] = d->tsrc.getPoint();
     at["argins"] = d->tsrc.getArgs();
     at["activity"] = "attconfig";
-    at["is_command"] = d->tsrc.getType() == TSource::Cmd;
+    at["is_command"] = d->tsrc.getType() == TSource::SrcCmd;
     at.merge(d->options);
 
     CuData tt = CuData("device", d->tsrc.getDeviceName());
