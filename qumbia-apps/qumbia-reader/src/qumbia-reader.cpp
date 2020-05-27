@@ -368,7 +368,8 @@ void QumbiaReader::onNewLongVector(const QString &src, double ts, const QVector<
         printf("%s,", qstoc(m_format<long>(v[i], "%ld")));
     if(m_conf.truncate > -1 && m_conf.truncate < v.size())
         printf(" ..., ");
-    printf("%s \e[0m}", qstoc(m_format<long>(v[v.size() - 1], "%ld")));
+    if(v.size() > 0)
+        printf("%s \e[0m}", qstoc(m_format<long>(v[v.size() - 1], "%ld")));
     m_print_extra2(da);
     m_checkRefreshCnt(sender());
 }
@@ -382,7 +383,8 @@ void QumbiaReader::onNewULongVector(const QString &src, double ts, const QVector
         printf("%s,", qstoc(m_format<unsigned long>(v[i], "%lu")));
     if(m_conf.truncate > -1 && m_conf.truncate < v.size())
         printf(" ..., ");
-    printf("%s \e[0m}", qstoc(m_format<unsigned long>(v[v.size() - 1], "%lu")));
+    if(v.size() > 0)
+        printf("%s \e[0m}", qstoc(m_format<unsigned long>(v[v.size() - 1], "%lu")));
     m_print_extra2(da);
     m_checkRefreshCnt(sender());
 }
@@ -396,7 +398,8 @@ void QumbiaReader::onNewStringList(const QString &src, double ts, const QStringL
         printf("%s,", qstoc(val[i]));
     if(m_conf.truncate > -1 && m_conf.truncate < val.size())
         printf(" ..., ");
-    printf("%s \e[0m}", qstoc(val[val.size() - 1]));
+    if(val.size() > 0)
+        printf("%s \e[0m}", qstoc(val[val.size() - 1]));
     m_print_extra2(da);
     m_checkRefreshCnt(sender());
 }
@@ -412,7 +415,8 @@ void QumbiaReader::onStringListConversion(const QString &src, const QString &fro
         printf("%s,", qstoc(v[i]));
     if(m_conf.truncate > -1 && m_conf.truncate < v.size())
         printf(" ..., ");
-    printf("%s \e[0m}", qstoc(v[v.size() - 1]));
+    if(v.size() > 0)
+        printf("%s \e[0m}", qstoc(v[v.size() - 1]));
     m_print_extra2(da);
     m_checkRefreshCnt(sender());
 }
@@ -441,7 +445,8 @@ void QumbiaReader::onNewShortVector(const QString &src, double ts, const QVector
         printf("%s,", qstoc(m_format<short>(v[i], "%u")));
     if(m_conf.truncate > -1 && m_conf.truncate < v.size())
         printf(" ..., ");
-    printf("%s \e[0m}", qstoc(m_format<short>(v[v.size() - 1], "%u")));
+    if(v.size() > 0)
+        printf("%s \e[0m}", qstoc(m_format<short>(v[v.size() - 1], "%u")));
     m_print_extra2(da);
     m_checkRefreshCnt(sender());
 }
@@ -455,13 +460,16 @@ void QumbiaReader::onNewUShortVector(const QString &src, double ts, const QVecto
         printf("%s,", qstoc(m_format<unsigned short>(v[i], "%u")));
     if(m_conf.truncate > -1 && m_conf.truncate < v.size())
         printf(" ..., ");
-    printf("%s \e[0m}", qstoc(m_format<unsigned short>(v[v.size() - 1], "%u")));
+    if(v.size() > 0)
+        printf("%s \e[0m}", qstoc(m_format<unsigned short>(v[v.size() - 1], "%u")));
     m_print_extra2(da);
     m_checkRefreshCnt(sender());
 }
 
 void QumbiaReader::onPropertyReady(const QString &src, double ts,const CuData &pr)
 {
+    printf("QumbiaReader::onPropertyReady IN\n");
+
     m_refreshCntMap[src]++;
     printf("\n \e[1;36m*\e[0m ");
     if(m_conf.verbosity > Low && pr.containsKey("thread"))
@@ -479,7 +487,7 @@ void QumbiaReader::onPropertyReady(const QString &src, double ts,const CuData &p
     }
 
     if(m_conf.verbosity == Debug)
-        printf("\n\e[0;35m--l=debug\e[0m: \e[1;35m{\e[0m %s \e[1;35m}\n", pr.toString().c_str());
+        printf("\n\e[0;35m--l=debug\e[0m: \e[1;35m{\e[0m %s \e[1;35m}\e[0m\n", pr.toString().c_str());
 }
 
 void QumbiaReader::onError(const QString &src, double ts, const QString &msg, const CuData& da)
@@ -579,8 +587,18 @@ void QumbiaReader::m_createReaders(const QStringList &srcs) {
             QRegularExpression squarebrackets_cmd("[A-Za-z0-9\\-_\\.,/]+->[A-Za-z0-9\\-_\\.,]+(?:\\[.*\\]){0,1}");
             CuData reader_ctx_options;
             QString a = m_conf.sources.at(i);
-            if(a.count('/') == 4 && a.count("//") == 1)
-                a.replace("//", "->");
+            // do not replace domain:// with domain-> !
+            std::string save_dom;
+            std::vector<std::string> doms = cu_pool->names();
+            for(size_t i = 0; i < doms.size() && save_dom.length() == 0; i++) {
+                const std::string& dom = doms[i];
+                if(a.startsWith(QString::fromStdString(dom) + "://"))
+                    save_dom = dom + "://";
+            }
+            if(save_dom.length() > 0)
+                a.remove(QString::fromStdString(save_dom));
+            a.replace("//", "->");
+            a = QString("%1%2").arg(save_dom.c_str()).arg(a);
             QRegularExpressionMatch match = squarebrackets_cmd.match(a);
             if(match.hasMatch()) {
                 a.replace('[', '(').replace(']', ')');

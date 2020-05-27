@@ -159,7 +159,7 @@ public:
 
     ~CumbiaTango();
 
-    void addAction(const std::string& source, CuDataListener *l, const CuTangoActionFactoryI &f);
+    void addAction(const TSource &source, CuDataListener *l, const CuTangoActionFactoryI &f);
 
     void unlinkListener(const std::string& source, CuTangoActionI::Type t, CuDataListener *l);
 

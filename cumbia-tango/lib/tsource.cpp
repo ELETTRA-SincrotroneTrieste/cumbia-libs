@@ -21,7 +21,7 @@ TSource::TSource(const string s)
     m_s = s;
     m_ty = m_get_ty(s);
 
-    cuprintf("TSource: src is %s database is \e[1;35m%s\e[0m \n", m_s.c_str(), getTangoHost(m_s).c_str());
+    cuprintf("TSource: src is %s database is \e[1;35m%s\e[0m \n", m_s.c_str(), getTangoHost().c_str());
     cuprintf("TSource: device is \e[1;32m%s\e[0m point is \e[1;36m%s\e[0m prop is \e[1;33m%s\e[0m search pattern: \e[0;33m%s\e[0m\n",
              getDeviceName().c_str(), getPoint().c_str(), getPropNam().c_str(), getSearchPattern().c_str());
     if(m_ty == SrcDbClassProp)
@@ -51,9 +51,9 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
     ewa = s.size() > 2 && (ai == s.length() - 2); // ends with arrow do/fa/me->
     hasa = s.size() > 2 && ai != std::string::npos;
     Type t = SrcInvalid;
-    if(swht) // free prop:  :MyFreeProp
+    if(swht && std::count(s.begin(), s.end(), '#') == 2) // free prop:  #MyObj#MyFreeProp
         t= SrcDbFreeProp;
-    else if(ewht && sep == 0) // class:
+    else if(ewht && sep == 0) // class#
         t = SrcDbClassProps;
     else if(!ewht && has_ht && sep == 0) // class#prop
         t = SrcDbClassProp;
@@ -109,6 +109,10 @@ string TSource::getDeviceName() const {
     return dev;
 }
 
+string TSource::getDeviceNameOnly() const {
+    return rem_tghostproto(getDeviceName());
+}
+
 /*!
  * \brief Returns the attribute name if the type is SrcAttr, the command name if the type is SrcCmd,
  *        an empty string in all other cases
@@ -120,6 +124,15 @@ string TSource::getPoint() const {
         p = m_s.substr(m_s.rfind('/') + 1, m_s.find('(') - m_s.rfind('/') - 1); /* exclude args between parentheses */
     else if(m_ty == SrcCmd)
         p = m_s.substr(pos + 2, m_s.find('(') - pos - 2); /* exclude args */
+    else if(m_ty == SrcDbGetCmdI)
+        p = m_s.substr(m_s.find("->") + 2, m_s.rfind('/')); // src is tango://test/device/1->get/
+    else if(m_ty == SrcDbAProps) { // src is tango://test/device/1/get/
+        // remove last /
+        std::string s = m_s.substr(0, m_s.rfind('/'));
+        p = s.substr(s.rfind('/') + 1);
+    }
+    else if(m_ty == SrcDbAProp) // src is tango://hokuto:20000/test/device/1/double_scalar#values
+        p = m_s.substr(m_s.rfind('/') + 1, m_s.rfind("#")- m_s.rfind('/') -1 );
     return p;
 }
 
@@ -155,10 +168,10 @@ std::string TSource::getName() const {
     return m_s;
 }
 
-std::string TSource::getTangoHost(const std::string& src) const {
+std::string TSource::getTangoHost() const {
     std::regex host_re(TGHOST_RE);
     std::smatch sm;
-    if(std::regex_search(src, sm, host_re) && sm.size() > 1)
+    if(std::regex_search(m_s, sm, host_re) && sm.size() > 1)
         return sm[1];
     return std::string();
 }
@@ -173,14 +186,34 @@ std::string TSource::getTangoHost(const std::string& src) const {
  * - hokuto:20000/test/device/1/double_scalar#values (values attribute property)
  * - test/de/1#dprop  (dprop device property)
  * - TangoTest#version (version class property)
+ * - #ObjectName#FreePropName (version free property)
+ *
+ * @see getFreePropObj
  *
  */
 std::string TSource::getPropNam() const {
     std::string p;
-    size_t i = m_s.find("#");
+    size_t i = m_s.rfind("#");
     if(i != std::string::npos)
         p = m_s.substr(i + 1);
     return p;
+}
+
+/*!
+ * \brief get the object name the free property refers to
+ * \return the object name or an empty string
+ *
+ * \par Syntax
+ * - #MyObject#MyProperty getFreePropObj returns MyObject while getPropNam returns MyProperty
+ * \par Example
+ * - #Sequencer#TestList getFreePropObj returns Sequencer while getPropNam returns TestList
+ */
+string TSource::getFreePropObj() const {
+    std::regex re("#(.*)#");  // #(.*)#
+    std::smatch sm;
+    if(std::regex_search(m_s, sm, re) && sm.size() > 1)
+        return sm[1];
+    return std::string();
 }
 
 /*!

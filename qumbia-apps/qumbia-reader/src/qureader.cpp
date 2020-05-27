@@ -6,6 +6,7 @@
 #include <cudata.h>
 #include <qustring.h>
 #include <qustringlist.h>
+#include <QtDebug>
 
 #ifdef QUMBIA_TANGO_CONTROLS_VERSION
 #include <cumbiatango.h>
@@ -19,8 +20,7 @@ Qu_Reader::Qu_Reader(QObject *parent, CumbiaPool *cumbia_pool, const CuControlsF
     m_property_only = false;
 }
 
-Qu_Reader::~Qu_Reader()
-{
+Qu_Reader::~Qu_Reader() {
     delete m_context;
 }
 
@@ -50,6 +50,7 @@ void Qu_Reader::setContextOptions(const CuData &options) {
 //
 void Qu_Reader::onUpdate(const CuData &da)
 {
+    bool property_only = m_property_only || da.has("activity", "cudadb");
     CuData data(da);
     const CuVariant&  v = data["value"];
     double ts = -1.0;
@@ -71,7 +72,7 @@ void Qu_Reader::onUpdate(const CuData &da)
     else if(data.has("type", "property"))  {
         if(m_save_property)
             m_prop = data;
-        if(m_property_only) {
+        if(property_only) {
             emit propertyReady(source(), ts, data);
         }
     }
@@ -79,10 +80,11 @@ void Qu_Reader::onUpdate(const CuData &da)
     if(!hdb_data && m_save_property && !m_prop.isEmpty()) {
         // copy relevant property values into data
         foreach(QString p, QStringList() << "label" << "min" << "max" << "display_unit")
-            data[qstoc(p)] = m_prop[qstoc(p)];
+            if(m_prop[qstoc(p)].isValid())
+                data[qstoc(p)] = m_prop[qstoc(p)];
     }
 
-    if(!hdb_data && !da["err"].toBool() && !m_property_only) {
+    if(!hdb_data && !da["err"].toBool() && !property_only) {
         // if !m_save property we can notify.
         // otherwise wait for property, merge m_prop with data and notify
         // (epics properties are not guaranteed to be delivered first)

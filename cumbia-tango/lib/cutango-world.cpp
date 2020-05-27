@@ -1,8 +1,10 @@
 #include "cutango-world.h"
 #include "cutango-world-config.h"
+#include "tsource.h"
 #include <unordered_map>
 #include <cumacros.h>
 #include <regex>
+
 
 class CuTangoWorldPrivate
 {
@@ -33,7 +35,7 @@ CuTangoWorld::~CuTangoWorld()
     delete d;
 }
 
-std::string CuTangoWorld::strerror(const Tango::DevFailed &e)
+std::string CuTangoWorld::strerror(const Tango::DevFailed &e) const
 {
     std::string msg;
     if(e.errors.length() > 0)
@@ -42,7 +44,7 @@ std::string CuTangoWorld::strerror(const Tango::DevFailed &e)
     return msg;
 }
 
-std::string CuTangoWorld::strerror(const Tango::DevErrorList &errors)
+std::string CuTangoWorld::strerror(const Tango::DevErrorList &errors) const
 {
     std::string msg;
     for(int i = errors.length() - 1; i >= 0; i--)
@@ -910,8 +912,19 @@ Tango::Database *CuTangoWorld::getTangoDb(const std::string& dbhost) const
     std::string db = dbhost;
     if(dbhost.size() == 0)
         return new Tango::Database();
-    else
-        return new Tango::Database(db);
+    else {
+        std::string h = dbhost.substr(0, dbhost.find(":"));
+        std::string p = dbhost.substr(dbhost.find(":") + 1);
+        try {
+            int port = std::stoi(p);
+            return new Tango::Database(h, port);
+        }  catch (const std::invalid_argument& ia) {
+            d->error = true;
+            d->message = "CuTangoWorld::getTangoDb: invalid hostname:port \"" + dbhost + "\"";
+            perr("%s", d->message.c_str());
+        }
+    }
+    return nullptr;
 }
 
 /**
@@ -949,130 +962,293 @@ bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &re
             cprops[in["class"].toString()].push_back(in);
     }
     Tango::Database *db = getTangoDb(dbhost);
-    d->error = false;
-    d->message = "";
-    std::string attnam;
-    std::vector<std::string> vs;
+    d->error = (db != nullptr);
+    if(!d->error) {
+        d->message = "";
+        std::string attnam;
+        std::vector<std::string> vs;
 
-    try {
-        // 1. device attribute properties
-        // scan the per-device map
-        for(std::unordered_map<std::string, std::list< CuData> >::const_iterator it = daprops.begin(); it != daprops.end(); ++it)
-        {
-            Tango::DbData db_data;
-            std::vector<std::string> req_a, req_p; // requested attributes, requested properties
-            for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit) {
-                const std::string &attname = (*dit)["attribute"].toString();
-                if(find(req_a.begin(), req_a.end(), attname) == req_a.end()) {
-                    db_data.push_back(Tango::DbDatum(attname.c_str()));
-                    req_a.push_back(attname);
-                    if((*dit).containsKey("name"))
-                        req_p.push_back((*dit)["name"].toString());
+        try {
+            // 1. device attribute properties
+            // scan the per-device map
+            for(std::unordered_map<std::string, std::list< CuData> >::const_iterator it = daprops.begin(); it != daprops.end(); ++it)
+            {
+                Tango::DbData db_data;
+                std::vector<std::string> req_a, req_p; // requested attributes, requested properties
+                for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit) {
+                    const std::string &attname = (*dit)["attribute"].toString();
+                    if(find(req_a.begin(), req_a.end(), attname) == req_a.end()) {
+                        db_data.push_back(Tango::DbDatum(attname.c_str()));
+                        req_a.push_back(attname);
+                        if((*dit).containsKey("name"))
+                            req_p.push_back((*dit)["name"].toString());
+                    }
                 }
-            }
 
-            db->get_device_attribute_property(it->first, db_data);
-            for(size_t i = 0; i < db_data.size(); i++) {
-                if(i == 0)
-                    attnam = db_data[i].name;
-                else if(!db_data[i].is_empty() && (req_p.size() == 0 || find(req_p.begin(), req_p.end(), db_data[i].name) != req_p.end()))
-                {
-                    db_data[i] >> vs;
-                    names.push_back(it->first + "/" + attnam + ":" + db_data[i].name);
-                    res[names.at(names.size() - 1)] = vs;
-                }
-            }
-        }
-        // 2. device properties
-        // scan the per-device map
-        for(std::unordered_map<std::string, std::list< CuData> >::const_iterator it = dprops.begin(); it != dprops.end(); ++it)
-        {
-            Tango::DbData db_data;
-            std::map<std::string, std::string> dev_prop_wildcards;
-            for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit) {
-                std::string name;
-                if((*dit).containsKey("name") )
-                    name = (*dit)["name"].toString();
-
-                if(name.length() > 0 && name.find("*") == std::string::npos)
-                    db_data.push_back(Tango::DbDatum((*dit)["name"].toString().c_str()));
-                else if(name.length() > 0)
-                    dev_prop_wildcards[(*dit)["device"].toString()] = name; // wildcard specified
-                else  {
-                    dev_prop_wildcards[(*dit)["device"].toString()] = "*";
-                }
-            }
-            if(db_data.size() > 0) {
-                db->get_device_property(it->first, db_data);
+                db->get_device_attribute_property(it->first, db_data);
                 for(size_t i = 0; i < db_data.size(); i++) {
-                    if(!db_data[i].is_empty()) {
+                    if(i == 0)
+                        attnam = db_data[i].name;
+                    else if(!db_data[i].is_empty() && (req_p.size() == 0 || find(req_p.begin(), req_p.end(), db_data[i].name) != req_p.end()))
+                    {
                         db_data[i] >> vs;
-                        names.push_back(it->first + ":" + db_data[i].name);
+                        names.push_back(it->first + "/" + attnam + ":" + db_data[i].name);
                         res[names.at(names.size() - 1)] = vs;
                     }
                 }
             }
-            for(std::map<std::string, std::string>::const_iterator it = dev_prop_wildcards.begin(); it != dev_prop_wildcards.end(); ++it) {
-                std::string devna = it->first, wildcard = it->second;
-                Tango::DbDatum dplist = db->get_device_property_list(devna, wildcard);
-                std::vector<std::string> s_dplist;
-                dplist >> s_dplist;
-                names.push_back(it->first + ":" + it->second);
-                res[names.at(names.size() - 1)] = s_dplist;
-            }
-        }
-        // 3. class properties
-        // scan the per-class map
-        // if no "name" key is found, then get the list of class properties for the given class "name"
-        for(std::unordered_map<std::string, std::list< CuData> >::const_iterator it = cprops.begin(); it != cprops.end(); ++it)
-        {
-            std::vector<std::string> cl_names; // list of class names to use with get_class_property_list
-            Tango::DbData db_data;
-            for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit) {
-                if((*dit).containsKey("name") && (*dit)["name"].toString().length() > 0)
-                    db_data.push_back(Tango::DbDatum((*dit)["name"].toString().c_str()));
-                else if(!(*dit).containsKey("name")) {
-                    cl_names.push_back((*dit)["class"].toString());
+            // 2. device properties
+            // scan the per-device map
+            for(std::unordered_map<std::string, std::list< CuData> >::const_iterator it = dprops.begin(); it != dprops.end(); ++it)
+            {
+                Tango::DbData db_data;
+                std::map<std::string, std::string> dev_prop_wildcards;
+                for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit) {
+                    std::string name;
+                    if((*dit).containsKey("name") )
+                        name = (*dit)["name"].toString();
+
+                    if(name.length() > 0 && name.find("*") == std::string::npos)
+                        db_data.push_back(Tango::DbDatum((*dit)["name"].toString().c_str()));
+                    else if(name.length() > 0)
+                        dev_prop_wildcards[(*dit)["device"].toString()] = name; // wildcard specified
+                    else  {
+                        dev_prop_wildcards[(*dit)["device"].toString()] = "*";
+                    }
+                }
+                if(db_data.size() > 0) {
+                    db->get_device_property(it->first, db_data);
+                    for(size_t i = 0; i < db_data.size(); i++) {
+                        if(!db_data[i].is_empty()) {
+                            db_data[i] >> vs;
+                            names.push_back(it->first + ":" + db_data[i].name);
+                            res[names.at(names.size() - 1)] = vs;
+                        }
+                    }
+                }
+                for(std::map<std::string, std::string>::const_iterator it = dev_prop_wildcards.begin(); it != dev_prop_wildcards.end(); ++it) {
+                    std::string devna = it->first, wildcard = it->second;
+                    Tango::DbDatum dplist = db->get_device_property_list(devna, wildcard);
+                    std::vector<std::string> s_dplist;
+                    dplist >> s_dplist;
+                    names.push_back(it->first + ":" + it->second);
+                    res[names.at(names.size() - 1)] = s_dplist;
                 }
             }
+            // 3. class properties
+            // scan the per-class map
+            // if no "name" key is found, then get the list of class properties for the given class "name"
+            for(std::unordered_map<std::string, std::list< CuData> >::const_iterator it = cprops.begin(); it != cprops.end(); ++it)
+            {
+                std::vector<std::string> cl_names; // list of class names to use with get_class_property_list
+                Tango::DbData db_data;
+                for(std::list<CuData>::const_iterator dit = it->second.begin(); dit != it->second.end(); ++dit) {
+                    if((*dit).containsKey("name") && (*dit)["name"].toString().length() > 0)
+                        db_data.push_back(Tango::DbDatum((*dit)["name"].toString().c_str()));
+                    else if(!(*dit).containsKey("name")) {
+                        cl_names.push_back((*dit)["class"].toString());
+                    }
+                }
 
-            if(db_data.size() > 0) {
-                db->get_class_property(it->first, db_data); // it->first is class name
-                for(size_t i = 0; i < db_data.size(); i++) {
-                    if(!db_data[i].is_empty()) {
-                        db_data[i] >> vs;
-                        names.push_back(it->first + ":" + db_data[i].name);
-                        res[names.at(names.size() -1)] = vs;
+                if(db_data.size() > 0) {
+                    db->get_class_property(it->first, db_data); // it->first is class name
+                    for(size_t i = 0; i < db_data.size(); i++) {
+                        if(!db_data[i].is_empty()) {
+                            db_data[i] >> vs;
+                            names.push_back(it->first + ":" + db_data[i].name);
+                            res[names.at(names.size() -1)] = vs;
+                        }
+                    }
+                }
+                if(cl_names.size() > 0) {
+                    printf("CuTangoWorld.get_properties\n");
+                    for(size_t i = 0; i < cl_names.size(); i++) {
+                        Tango::DbDatum plist = db->get_class_property_list(cl_names[i]);
+                        std::vector<std::string> s_plist;
+                        plist >> s_plist;
+                        names.push_back(it->first + ":*");
+                        printf("pushed in names %s\n", names.at(names.size() - 1).c_str());
+                        res[names.at(names.size() - 1)] = s_plist;
                     }
                 }
             }
-            if(cl_names.size() > 0) {
-                printf("CuTangoWorld.get_properties\n");
-                for(size_t i = 0; i < cl_names.size(); i++) {
-                    Tango::DbDatum plist = db->get_class_property_list(cl_names[i]);
-                    std::vector<std::string> s_plist;
-                    plist >> s_plist;
-                    names.push_back(it->first + ":*");
-                    printf("pushed in names %s\n", names.at(names.size() - 1).c_str());
-                    res[names.at(names.size() - 1)] = s_plist;
+            res["list"] = names;
+        }
+        catch(Tango::DevFailed& e)
+        {
+            d->error = true;
+            d->message = strerror(e);
+        }
+
+        res.putTimestamp();
+        res["err"] = d->error;
+        if(!d->error) {
+            d->message = std::string("CuTangoWorld.get_properties successfully completed on " +  dateTimeToStr(NULL));
+        }
+        res["msg"] = d->message;
+
+    } // if !d->error
+
+    return !d->error;
+}
+
+bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) const {
+    d->error = false;
+    std::string msg;
+    const TSource::Type t = tsrc.getType();
+    Tango::DbData db_data;
+    Tango::DbDatum dbd;
+    Tango::DeviceProxy *dev = nullptr;
+    std::string p = tsrc.getSearchPattern();
+    std::string ps(p); // p + '*' if p ends with '/'
+    if(p.length() > 0 && p.at(p.length() - 1) == '/')
+        ps = p + "*";
+    std::string tgh = tsrc.getTangoHost();
+    std::string dnam = tsrc.getDeviceName();
+    std::string dnam_nhnp = tsrc.getDeviceNameOnly(); // dnam no host no proto
+    Tango::Database *db = getTangoDb(tgh);
+    if(db != nullptr) {
+        res["pattern"] = p;
+        if(dnam.length() > 0)
+            res["device"] = dnam;
+        if(tgh.length() > 0)
+            res["tango_host"] = tgh;
+        if(tsrc.getPoint().length() > 0)
+            res["point"] = tsrc.getPoint();
+        if(tsrc.getPropNam().length() > 0)
+            res["property"] = tsrc.getPropNam();
+        if(tsrc.getPropClassNam().length() > 0)
+            res["class"] = tsrc.getPropClassNam();
+
+        std::vector<std::string> r;
+        try {
+
+            switch(t) {
+            case TSource::SrcInvalid:
+            case TSource::SrcCmd:
+            case TSource::SrcAttr:
+            case TSource::SrcEndTypes:
+                break;
+            case TSource::SrcDbDoma:
+                dbd = db->get_device_domain(p);
+                dbd >> r;
+                break;
+            case  TSource::SrcDbFam:
+                dbd = db->get_device_family(ps != p ? ps : p);
+                dbd >> r;
+                break;
+            case  TSource::SrcDbMem:
+                dbd = db->get_device_member(ps != p ? ps : p);
+                dbd >> r;
+                break;
+            case TSource::SrcDbFreeProp:
+                // cumbia read tango://ken:20000/#Sequencer#TestList
+                db_data.push_back(Tango::DbDatum(tsrc.getPropNam()));
+                db->get_property(tsrc.getFreePropObj(), db_data);
+                if(db_data.size() > 0)
+                    db_data[0] >> r;
+                break;
+            case TSource::SrcDbAtts: {
+                dev = new Tango::DeviceProxy(dnam);
+                std::vector<std::string> *al = dev->get_attribute_list();
+                if(al) {
+                    r = *al;
+                    delete al;
                 }
             }
+                break;
+            case TSource::SrcDbCmds: {
+                dev = new Tango::DeviceProxy(dnam);
+                Tango::CommandInfoList *cil = dev->command_list_query();
+                if(cil) {
+                    for(size_t i = 0; i < cil->size(); i++)
+                        r.push_back(cil->at(i).cmd_name);
+                    delete cil;
+                }
+            }
+                break;
+            case TSource::SrcDbAProps:
+            case TSource::SrcDbDevProps: {  //  test/device/1/double_scalar/
+                msg = "CuTangoWorld.get_from_pattern type SrcDbAProps and SrcDbDevProps not implemented";
+                d->error = true;
+                perr("%s", msg.c_str());
+            }
+                break;
+            case  TSource::SrcDbGetCmdI: { // "tango://test/device/1->get/"
+                dev = new Tango::DeviceProxy(dnam);
+                Tango::CommandInfo ci = dev->command_query(tsrc.getPoint());
+                res["cmd_in_type"] = ci.in_type;
+                res["cmd_out_type"] = ci.out_type;
+                res["cmd_in_type_str"] = cmdArgTypeToDataFormat(static_cast<Tango::CmdArgType>( ci.in_type));
+                res["cmd_out_type_str"] = cmdArgTypeToDataFormat(static_cast<Tango::CmdArgType>( ci.out_type));
+                res["cmd_in_desc"] = ci.in_type_desc;
+                res["cmd_out_desc"] = ci.out_type_desc;
+
+            }
+                break;
+            case TSource::SrcDbClassProps: { //  tango://class#, tango://hokuto:20000/class#
+                std::string cl = p.substr(0, p.rfind("#"));
+                dbd = db->get_class_property_list(cl);
+                dbd >> r;
+            }
+                break;
+
+            case TSource::SrcDbAProp: {   // tango://hokuto:20000/test/device/1/double_scalar#values
+                std::string prop = tsrc.getPropNam();
+                db_data.push_back(tsrc.getPoint());
+                // use device name without tango:// and host:port/
+                db->get_device_attribute_property(dnam_nhnp, db_data);
+                for (size_t i=0; i < db_data.size(); i++)  {
+                    long nb_prop;
+                    db_data[i] >> nb_prop;
+                    i++;
+                    for (int k=0; k < nb_prop; k++, i++) {
+                        if(db_data[i].name == prop)
+                            db_data[i] >> r;
+                    }
+                }
+            }
+                break;
+            case TSource::SrcDbClassProp: { // tango://hokuto:20000/class#prop
+                std::string c = tsrc.getPropClassNam();
+                std::string p = tsrc.getPropNam();
+                db_data.push_back(Tango::DbDatum(p));
+                db->get_class_property(c, db_data);
+                for(size_t i = 0; i < db_data.size() && !db_data[i].is_empty(); i++) {
+                    db_data[i] >> r;
+                }
+                break;
+            }
+            case TSource::SrcDbDevProp: {
+                std::string p = tsrc.getPropNam();
+                db_data.push_back(Tango::DbDatum(p));
+                // use device name without tango:// and host:port/
+                db->get_device_property(dnam_nhnp, db_data);
+                if(!db_data[0].is_empty())
+                   db_data[0] >> r;
+            }
+                break;
+            }
+
+            res["value"] = r;
+            d->error |= !r.size();
+            if(r.size() == 0) {
+                msg = "not found";
+            }
+
+            msg.size() == 0 ? res["msg"] = std::string("operation \"") + tsrc.getTypeName(t) + "\" successful" : res["msg"] = msg;
+
+            if(dev)
+                delete dev;
+
+        }  catch (const Tango::DevFailed &e) {
+            d->error = true;
+            msg = strerror(e);
         }
-        res["list"] = names;
+        res["err"] = d->error;
+        res["msg"] = msg;
+        res.putTimestamp();
     }
-    catch(Tango::DevFailed& e)
-    {
-        d->error = true;
-        d->message = strerror(e);
-    }
-
-    res.putTimestamp();
-    res["err"] = d->error;
-    if(!d->error) {
-        d->message = std::string("CuTangoWorld.get_properties successfully completed on " +  dateTimeToStr(NULL));
-    }
-    res["msg"] = d->message;
-
     return !d->error;
 }
 

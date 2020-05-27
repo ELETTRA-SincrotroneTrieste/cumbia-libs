@@ -57,28 +57,21 @@ CumbiaTango::~CumbiaTango()
     af->cleanup();
 }
 
-void CumbiaTango::addAction(const std::string &source, CuDataListener *l, const CuTangoActionFactoryI& f)
-{
+void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTangoActionFactoryI& f) {
     CuTangoWorld w;
-    if(w.source_valid(source))
-    {
+    const std::string& src = source.getName();
+    if(w.source_valid(src)) {
         CuActionFactoryService *af =
                 static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
-
-        CuTangoActionI *a = af->findActive(source, f.getType());
+        CuTangoActionI *a = af->findActive(src, f.getType());
         if(!a) {
-            a = af->registerAction(source, f, this);
+            a = af->registerAction(src, f, this);
             a->start();
-            cuprintf("CumbiaTango.addAction: \e[1;32madded action %p source %s type %d\e[0m\n", a, source.c_str(), f.getType());
-        }
-        else {
-            cuprintf("CumbiaTango.addAction: action %p already found for source \"%s\" and type %d thread 0x%lx TYPE %d\n",
-                  a, source.c_str(), f.getType(), pthread_self(), f.getType());
         }
         a->addDataListener(l);
     }
     else {
-        perr("CumbiaTango.addAction: source \"%s\" is not valid, ignoring", source.c_str());
+        perr("CumbiaTango.addAction: source \"%s\" is not valid, ignoring", src.c_str());
     }
 }
 
@@ -106,8 +99,7 @@ void CumbiaTango::addAction(const std::string &source, CuDataListener *l, const 
  *
  * @see CuTangoActionI::removeDataListener
  */
-void CumbiaTango::unlinkListener(const string &source, CuTangoActionI::Type t, CuDataListener *l)
-{
+void CumbiaTango::unlinkListener(const string &source, CuTangoActionI::Type t, CuDataListener *l) {
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
     std::vector<CuTangoActionI *> actions = af->find(source, t);
@@ -116,26 +108,22 @@ void CumbiaTango::unlinkListener(const string &source, CuTangoActionI::Type t, C
     }
 }
 
-CuTangoActionI *CumbiaTango::findAction(const std::string &source, CuTangoActionI::Type t) const
-{
+CuTangoActionI *CumbiaTango::findAction(const std::string &source, CuTangoActionI::Type t) const {
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
     CuTangoActionI* a = af->findActive(source, t);
     return a;
 }
 
-CuThreadFactoryImplI *CumbiaTango::getThreadFactoryImpl() const
-{
+CuThreadFactoryImplI *CumbiaTango::getThreadFactoryImpl() const {
     return m_threadFactoryImplI;
 }
 
-CuThreadsEventBridgeFactory_I *CumbiaTango::getThreadEventsBridgeFactory() const
-{
+CuThreadsEventBridgeFactory_I *CumbiaTango::getThreadEventsBridgeFactory() const {
     return m_threadsEventBridgeFactory;
 }
 
-int CumbiaTango::getType() const
-{
+int CumbiaTango::getType() const {
     return CumbiaTangoType;
 }
 

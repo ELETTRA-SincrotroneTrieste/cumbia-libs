@@ -25,10 +25,12 @@ public:
     TSource(const TSource& other);
 
     std::string getDeviceName() const;
+    std::string getDeviceNameOnly() const;
     std::string getPoint() const;
     std::string getName() const;
-    std::string getTangoHost(const string &src) const;
+    std::string getTangoHost() const;
     std::string getPropNam() const;
+    std::string getFreePropObj() const;
     std::string getSearchPattern() const;
     std::string getPropClassNam() const;
 

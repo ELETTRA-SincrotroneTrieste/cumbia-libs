@@ -8,6 +8,7 @@
 
 class CuTangoWorldPrivate;
 class CuActivity;
+class TSource;
 
 class CuTangoWorld
 {
@@ -16,9 +17,9 @@ public:
 
     virtual ~CuTangoWorld();
 
-    std::string strerror(const Tango::DevFailed& e);
+    std::string strerror(const Tango::DevFailed& e) const;
 
-    std::string strerror(const Tango::DevErrorList &e);
+    std::string strerror(const Tango::DevErrorList &e) const;
 
     void fillThreadInfo(CuData &d, const CuActivity *a);
 
@@ -65,6 +66,8 @@ public:
     bool get_att_props(Tango::DeviceProxy *dev, const string &attribute, CuData& res, const std::vector<std::string> props);
 
     bool get_properties(const std::vector<CuData> &in_list, CuData& res, const string &dbhost = "");
+
+    bool db_get(const TSource& tsrc, CuData& res) const;
 
     bool source_valid(const std::string& src);
 
