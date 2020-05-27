@@ -93,21 +93,59 @@
     alarm and warning thresholds, data format, measurement units, and so on:
         $ cumbia read test/device/1/double_scalar giacomo:ai1 --property
 
-### Read Tango properties
-    Device properties
-        $ cumbia read --tp test/device/1:Description test/device/2:Description
+### Read the Tango database
+    Domain search: src must end with wildcard:  tango://host/port/doma*
+        $ cumbia read  tango://ken:20000/seq*
+        $ * tango://ken:20000/seq*: [16:10:42+0.569857] [string,2] { seq,sequencer }
 
-    Filtered list of device properties
-        $ cumbia read --tp test/device/1:helper*
+    Search all families under a given domain:
+        $ cumbia read tango://ken:20000/sequencer/
+        $ * tango://ken:20000/sequencer/: [16:27:33+0.470669] [string,3] { fermi,ps,test }
+    Search all families under a given domain, with wildcard:
+        $ cumbia read tango://ken:20000/sequencer/fe*
+        $ * tango://ken:20000/sequencer/fe*: [16:29:02+0.798002] [string,1] { fermi }
 
-    List of attribute properties List the attribute properties of test/device/1/double_scalar
-        $ cumbia read --tp  test/device/1/double_scalar
+    Search all members under a given domain/family
+        $ cumbia read tango://ken:20000/sequencer/fermi/
+        $ * tango://ken:20000/sequencer/fermi/: [16:30:11+0.886962] [string,2] { test.01,test.02 }
+    Search all members under a given domain/family, with wildcard:
+        $ cumbia read tango://ken:20000/sequencer/test/s*a*
+        $ * tango://ken:20000/sequencer/test/s*a*: [16:31:42+0.568593] [string,3] { scan1d-test.01,stats-01,stats-02 }
 
-    Attribute property Read the values property of the string_scalar attribute
-        $ cumbia read --tp test/device/1/string_scalar/values
+    Get a free property from an object in the database
+        $ cumbia read tango://ken:20000/#Sequencer#TestList
+        $ * tango://ken:20000/#Sequencer#TestList: [16:40:17+0.056525] [string,3] { seq/test/launch_super,seq/test/launch_a,seq/test/launch_b }
 
-    Class property Read the description property of the class TangoTest
-        $ cumbia read --tp TangoTest/cvs_location
+    Get the list of attributes of a device
+        $ cumbia read tango://ken:20000/test/device/1/
+        $ * tango://ken:20000/test/device/1/: [16:44:02+0.281213] [string,62] { ampli,boolean_scalar,double_scalar,double_scalar_rww,double_scalar_w,...
+
+    Get a device property
+        $ cumbia read tango://hokuto:20000/test/device/1#helperApplication
+        $ * tango://hokuto:20000/test/device/1#helperApplication: [17:04:08+0.448944] [string,1] { cumbia client }
+
+    Get an attribute property (1)
+        $ cumbia read tango://hokuto:20000/test/device/1/double_scalar#values
+        $ * tango://hokuto:20000/test/device/1/double_scalar#values: [17:15:19+0.270333] [string,8] { 10.1,10.2,10.3,12.0,16.2,80.12,100.1,200.8 }
+
+    Get min max, min alarm and max alarm attribute properties
+        $ cumbia read tango://hokuto:20000/test/device/1/double_scalar#min_value \
+        > tango://hokuto:20000/test/device/1/double_scalar#max_value \
+        > tango://hokuto:20000/test/device/1/double_scalar#min_alarm \
+        > tango://hokuto:20000/test/device/1/double_scalar#max_alarm
+         * tango://hokuto:20000/test/device/1/double_scalar#min_value: [17:18:10+0.657599] [string,1] { -255 }
+         * tango://hokuto:20000/test/device/1/double_scalar#max_value: [17:18:11+0.151619] [string,1] { 255 }
+         * tango://hokuto:20000/test/device/1/double_scalar#min_alarm: [17:18:11+0.630817] [string,1] { -200 }
+         * tango://hokuto:20000/test/device/1/double_scalar#max_alarm: [17:18:12+0.120427] [string,1] { 200 }
+
+    List all properties of a given class
+        $ cumbia read tango://TangoTest#
+        $ * tango://TangoTest#: [17:19:41+0.748766] [string,8] { Csoglia,cvs_location,cvs_tag,Description,doc_url,helperApplication_old,InheritedFrom,ProjectTitle }
+    Get a class property
+        $ cumbia read tango://hokuto:20000/TangoTest#ProjectTitle
+        $ * tango://hokuto:20000/TangoTest#ProjectTitle: [17:25:40+0.681607] [string,1] { TANGO Device Server for testing generic clients }
+
+
 
 ### Read from the Tango historical database (hdb++)
     Install hdbextractor library from https://github.com/ELETTRA-SincrotroneTrieste/hdbextractor
