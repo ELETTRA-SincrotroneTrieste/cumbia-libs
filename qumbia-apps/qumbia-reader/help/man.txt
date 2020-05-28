@@ -128,7 +128,6 @@
              helperApplication         --> atkpanel
              values                    --> 10,20,30,40,50
 
-
     Get one attribute property
         $ cumbia read cumbia read "tango://hokuto:20000/test/device/1/double_scalar(values)"
         $ * tango://hokuto:20000/test/device/1/double_scalar(values) [11:35:45+0.346103]

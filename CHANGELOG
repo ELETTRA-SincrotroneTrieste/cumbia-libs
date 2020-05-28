@@ -1,3 +1,13 @@
+v.1.2.0
+a. cumbia-tango
+a1. Database access integration into readers with specific source syntax
+
+b. qumbia-apps
+b1. cumbia reader: support for Tango database readers
+b2. qumbiaprojectwizard: support for automatic engine detection
+b3. quapps: offers a quapps.pri project include files to design multi engine apps
+    that can be run from everywhere
+
 v1.1.2
 a. cumbia
 a1. CumbiaPool: removed printf when no implementation is found and improved doc
