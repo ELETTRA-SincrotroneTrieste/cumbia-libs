@@ -83,12 +83,9 @@ void CuEventLoopService::exec(bool threaded)
  */
 void CuEventLoopService::postEvent(CuEventLoopListener *lis, CuEventI *e)
 {
-       cuprintf("CuEventLoopService::postEvent\e[1;36m -- locking\e[0m\n");
     std::unique_lock<std::mutex> lk(d->m_mutex);
     d->queue.push(CuEventInfo(e, lis));
-        cuprintf("CuEventLoopService::postEvent\e[1;36m -- notifying\e[0m\n");
     d->m_evloop_cv.notify_one();
-        cuprintf("CuEventLoopService::postEvent\e[1;36m -- leaving\e[0m\n");
 }
 
 /*! \brief set the CuEventLoopListener that will receive events from this service
@@ -145,35 +142,34 @@ void CuEventLoopService::wait()
 void CuEventLoopService::run()
 {
     bool repeat = true;
-    CuEventInfo event_i;
-    while (repeat)
-    {
+    while (repeat)  {
         std::queue<CuEventInfo> qcopy;
-        // Wait for a message to be added to the queue        
+        // Wait for a message to be added to the queue
         {
             // lock as short as possible: just to copy d->queue into a local queue
-                        cuprintf("CuEventLoopService::run\e[1;35m -- locking\e[0m\n");
             std::unique_lock<std::mutex> lk(d->m_mutex);
             while (d->queue.empty()) {
-                cuprintf("CuEventLoopService::run\e[1;35m -- WAITING while queue empty\e[0m\n");
                 d->m_evloop_cv.wait(lk);
             }
             if(d->queue.empty())
                 continue;
-            event_i = d->queue.front();
-            d->queue.pop();
-            cuprintf("CuEventLoopService::run\e[1;35m -- unlocking\e[0m\n");
+            while(!d->queue.empty()) {
+                qcopy.push(d->queue.front());
+                d->queue.pop();
+            }
         }
         // lock free section ensues
-        cuprintf("CuEventLoopService::run\e[1;35m -- processing queue siz %ld\e[0m\n", qcopy.size());
+        while(!qcopy.empty()) {
+            const CuEventInfo &event_i = qcopy.front();
             if(event_i.event->getType() == CuEventI::ExitLoop)
                 repeat = false;
             else if(std::find(d->eloo_liss.begin(), d->eloo_liss.end(), event_i.lis)
                     != d->eloo_liss.end()) {
-                    event_i.lis->onEvent(event_i.event);
+                event_i.lis->onEvent(event_i.event);
             }
             qcopy.pop();
             delete event_i.event;
+        }
     }
 }
 
