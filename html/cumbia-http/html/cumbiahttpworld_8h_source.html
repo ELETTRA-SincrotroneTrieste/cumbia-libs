@@ -67,22 +67,25 @@ $(function() {
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classCumbiaHTTPWorld.html#aacc1dd512f31eb9582cf7c983680ea39">json_decode</a>(<span class="keyword">const</span> QJsonDocument &amp;json, CuData&amp; out );</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    std::vector&lt;std::string&gt; m_src_patterns;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;};</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#endif // CUMBIAHTTPWORLD_H</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    QJsonDocument <a class="code" href="classCumbiaHTTPWorld.html#ae6935aba07e48e0d4318727f384a2166">make_error</a>(<span class="keyword">const</span> QString&amp; msg) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    std::vector&lt;std::string&gt; m_src_patterns;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;};</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#endif // CUMBIAHTTPWORLD_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassCumbiaHTTPWorld_html_a1dc56a744720d47db4d852e96da2576c"><div class="ttname"><a href="classCumbiaHTTPWorld.html#a1dc56a744720d47db4d852e96da2576c">CumbiaHTTPWorld::CumbiaHTTPWorld</a></div><div class="ttdeci">CumbiaHTTPWorld()</div><div class="ttdef"><b>Definition:</b> cumbiahttpworld.cpp:10</div></div>
+<div class="ttc" id="aclassCumbiaHTTPWorld_html_a1dc56a744720d47db4d852e96da2576c"><div class="ttname"><a href="classCumbiaHTTPWorld.html#a1dc56a744720d47db4d852e96da2576c">CumbiaHTTPWorld::CumbiaHTTPWorld</a></div><div class="ttdeci">CumbiaHTTPWorld()</div><div class="ttdef"><b>Definition:</b> cumbiahttpworld.cpp:11</div></div>
+<div class="ttc" id="aclassCumbiaHTTPWorld_html_ae6935aba07e48e0d4318727f384a2166"><div class="ttname"><a href="classCumbiaHTTPWorld.html#ae6935aba07e48e0d4318727f384a2166">CumbiaHTTPWorld::make_error</a></div><div class="ttdeci">QJsonDocument make_error(const QString &amp;msg) const</div><div class="ttdef"><b>Definition:</b> cumbiahttpworld.cpp:282</div></div>
 <div class="ttc" id="aclassCumbiaHTTPWorld_html"><div class="ttname"><a href="classCumbiaHTTPWorld.html">CumbiaHTTPWorld</a></div><div class="ttdef"><b>Definition:</b> cumbiahttpworld.h:12</div></div>
-<div class="ttc" id="aclassCumbiaHTTPWorld_html_a17c67970a3058799d8bea7665cc57c20"><div class="ttname"><a href="classCumbiaHTTPWorld.html#a17c67970a3058799d8bea7665cc57c20">CumbiaHTTPWorld::srcPatterns</a></div><div class="ttdeci">std::vector&lt; std::string &gt; srcPatterns() const</div><div class="ttdef"><b>Definition:</b> cumbiahttpworld.cpp:18</div></div>
-<div class="ttc" id="aclassCumbiaHTTPWorld_html_aacc1dd512f31eb9582cf7c983680ea39"><div class="ttname"><a href="classCumbiaHTTPWorld.html#aacc1dd512f31eb9582cf7c983680ea39">CumbiaHTTPWorld::json_decode</a></div><div class="ttdeci">bool json_decode(const QJsonDocument &amp;json, CuData &amp;out)</div><div class="ttdef"><b>Definition:</b> cumbiahttpworld.cpp:26</div></div>
-<div class="ttc" id="aclassCumbiaHTTPWorld_html_aabfc366d72e384656bc7d2cf744ecbb1"><div class="ttname"><a href="classCumbiaHTTPWorld.html#aabfc366d72e384656bc7d2cf744ecbb1">CumbiaHTTPWorld::source_valid</a></div><div class="ttdeci">bool source_valid(const std::string &amp;s)</div><div class="ttdef"><b>Definition:</b> cumbiahttpworld.cpp:22</div></div>
-<div class="ttc" id="aclassCumbiaHTTPWorld_html_a9e64773531753c5f64a6ba77bc17a677"><div class="ttname"><a href="classCumbiaHTTPWorld.html#a9e64773531753c5f64a6ba77bc17a677">CumbiaHTTPWorld::setSrcPatterns</a></div><div class="ttdeci">void setSrcPatterns(const std::vector&lt; std::string &gt; &amp;pat_regex)</div><div class="ttdef"><b>Definition:</b> cumbiahttpworld.cpp:14</div></div>
+<div class="ttc" id="aclassCumbiaHTTPWorld_html_a17c67970a3058799d8bea7665cc57c20"><div class="ttname"><a href="classCumbiaHTTPWorld.html#a17c67970a3058799d8bea7665cc57c20">CumbiaHTTPWorld::srcPatterns</a></div><div class="ttdeci">std::vector&lt; std::string &gt; srcPatterns() const</div><div class="ttdef"><b>Definition:</b> cumbiahttpworld.cpp:19</div></div>
+<div class="ttc" id="aclassCumbiaHTTPWorld_html_aacc1dd512f31eb9582cf7c983680ea39"><div class="ttname"><a href="classCumbiaHTTPWorld.html#aacc1dd512f31eb9582cf7c983680ea39">CumbiaHTTPWorld::json_decode</a></div><div class="ttdeci">bool json_decode(const QJsonDocument &amp;json, CuData &amp;out)</div><div class="ttdef"><b>Definition:</b> cumbiahttpworld.cpp:27</div></div>
+<div class="ttc" id="aclassCumbiaHTTPWorld_html_aabfc366d72e384656bc7d2cf744ecbb1"><div class="ttname"><a href="classCumbiaHTTPWorld.html#aabfc366d72e384656bc7d2cf744ecbb1">CumbiaHTTPWorld::source_valid</a></div><div class="ttdeci">bool source_valid(const std::string &amp;s)</div><div class="ttdef"><b>Definition:</b> cumbiahttpworld.cpp:23</div></div>
+<div class="ttc" id="aclassCumbiaHTTPWorld_html_a9e64773531753c5f64a6ba77bc17a677"><div class="ttname"><a href="classCumbiaHTTPWorld.html#a9e64773531753c5f64a6ba77bc17a677">CumbiaHTTPWorld::setSrcPatterns</a></div><div class="ttdeci">void setSrcPatterns(const std::vector&lt; std::string &gt; &amp;pat_regex)</div><div class="ttdef"><b>Definition:</b> cumbiahttpworld.cpp:15</div></div>
 <div class="ttc" id="acumbiahttpworld_8h_html"><div class="ttname"><a href="cumbiahttpworld_8h.html">cumbiahttpworld.h</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri May 22 2020 15:05:55 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 28 2020 15:18:22 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

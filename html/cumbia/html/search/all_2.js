@@ -48,7 +48,7 @@ var searchData=
   ['cuevent_2ecpp_55',['cuevent.cpp',['../cuevent_8cpp.html',1,'']]],
   ['cuevent_2eh_56',['cuevent.h',['../cuevent_8h.html',1,'']]],
   ['cueventi_57',['CuEventI',['../classCuEventI.html',1,'']]],
-  ['cueventinfo_58',['CuEventInfo',['../classCuEventInfo.html',1,'CuEventInfo'],['../classCuEventInfo.html#a93601f4a091bab91b43f5d8afe18f020',1,'CuEventInfo::CuEventInfo()']]],
+  ['cueventinfo_58',['CuEventInfo',['../classCuEventInfo.html',1,'CuEventInfo'],['../classCuEventInfo.html#a93601f4a091bab91b43f5d8afe18f020',1,'CuEventInfo::CuEventInfo(CuEventI *eve, CuEventLoopListener *l)'],['../classCuEventInfo.html#a937d5ad210b56267a8a5178654fd227d',1,'CuEventInfo::CuEventInfo()']]],
   ['cueventloop_2ecpp_59',['cueventloop.cpp',['../cueventloop_8cpp.html',1,'']]],
   ['cueventloop_2eh_60',['cueventloop.h',['../cueventloop_8h.html',1,'']]],
   ['cueventlooplistener_61',['CuEventLoopListener',['../classCuEventLoopListener.html',1,'']]],

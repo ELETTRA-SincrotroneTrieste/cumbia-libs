@@ -1,10 +1,11 @@
 # cumbia library documentation   [<a href="news.html">news</a>]
 
 ### Platform independent apps from anywhere
-The cumbia version 1.2.0 moves definitely towards the application portability and aims at broader integration
-among several sources of data (call them *modules*, *services*, *native control system engines*).
-Alongside the *websocket* module, cumbia 1.2.0 introduces initial support to *http and
-Server Sent Events* technologies, looking forward to such services becoming available soon.
+cumbia targets application portability and aims at extensive integration
+across several sources of data (*services* as well as *native control system engines*).
+After introducing the *websocket* module in 1.0, cumbia 1.2 introduces initial support to *http and
+Server Sent Events* technologies, looking forward to such services becoming available.
+
 Applications written in any language will thus be enabled to connect to native control system engines from
 *anywhere*.
 

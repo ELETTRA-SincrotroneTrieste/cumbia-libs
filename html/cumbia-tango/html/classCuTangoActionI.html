@@ -58,11 +58,12 @@ Inheritance diagram for CuTangoActionI:</div>
 <div class="dyncontent">
 <div class="center"><img src="classCuTangoActionI__inherit__graph.png" border="0" usemap="#CuTangoActionI_inherit__map" alt="Inheritance graph"/></div>
 <map name="CuTangoActionI_inherit__map" id="CuTangoActionI_inherit__map">
-<area shape="rect" title="an interface for a Tango action, typically a reader or a writer are implementors" alt="" coords="148,80,271,107"/>
-<area shape="rect" href="classCuTConfiguration.html" title="Get command or attribute configuration from the Tango database." alt="" coords="5,155,139,181"/>
-<area shape="rect" href="classCuTReader.html" title="Low level class to read tango attributes and commands with output arguments." alt="" coords="163,155,256,181"/>
-<area shape="rect" href="classCuTWriter.html" title=" " alt="" coords="281,155,367,181"/>
-<area shape="rect" title=" " alt="" coords="141,5,277,32"/>
+<area shape="rect" title="an interface for a Tango action, typically a reader or a writer are implementors" alt="" coords="174,80,297,107"/>
+<area shape="rect" href="classCuTaDb.html" title="Get data from the Tango database." alt="" coords="5,155,76,181"/>
+<area shape="rect" href="classCuTConfiguration.html" title="Get command or attribute configuration from the Tango database." alt="" coords="101,155,234,181"/>
+<area shape="rect" href="classCuTReader.html" title="Low level class to read tango attributes and commands with output arguments." alt="" coords="258,155,351,181"/>
+<area shape="rect" href="classCuTWriter.html" title=" " alt="" coords="376,155,463,181"/>
+<area shape="rect" title=" " alt="" coords="167,5,303,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -75,8 +76,7 @@ Public Types</h2></td></tr>
 <a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a6caccb8082e4cdc6fb68a67c0e1df6c3">ReaderConfig</a>, 
 <br />
 &#160;&#160;<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92aea7de597735cbb4df75f5a10280bbeb6">WriterConfig</a>, 
-<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a3df66f83f17416350e8af1e388a5f4ad">DbReadProp</a>, 
-<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a36dd4bb9bc0d1827f602817d50668c1a">DbWriteProp</a>
+<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a5fe0d25bed59ab95f63bde65000017ef">TaDb</a>
 <br />
  }</td></tr>
 <tr class="memdesc:ade015baf4bca143a9bafcce41aa2dd92"><td class="mdescLeft">&#160;</td><td class="mdescRight">list of types of actions  <a href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92">More...</a><br /></td></tr>
@@ -149,8 +149,7 @@ Public Member Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="ade015baf4bca143a9bafcce41aa2dd92a6495f1b3ab137e0542cab88c964415e5"></a>Writer&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ade015baf4bca143a9bafcce41aa2dd92a6caccb8082e4cdc6fb68a67c0e1df6c3"></a>ReaderConfig&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="ade015baf4bca143a9bafcce41aa2dd92aea7de597735cbb4df75f5a10280bbeb6"></a>WriterConfig&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ade015baf4bca143a9bafcce41aa2dd92a3df66f83f17416350e8af1e388a5f4ad"></a>DbReadProp&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ade015baf4bca143a9bafcce41aa2dd92a36dd4bb9bc0d1827f602817d50668c1a"></a>DbWriteProp&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ade015baf4bca143a9bafcce41aa2dd92a5fe0d25bed59ab95f63bde65000017ef"></a>TaDb&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -216,9 +215,9 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classCuTReader.html#acb39983108f53b2e5b30a7c23c647754">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#abc0257e28038a8648ffc1b8f06d6ea2f">CuTConfiguration</a>, and <a class="el" href="classCuTWriter.html#a3d3fea230b06343cc2779c139d7c1bbc">CuTWriter</a>.</p>
+<p>Implemented in <a class="el" href="classCuTReader.html#acb39983108f53b2e5b30a7c23c647754">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#abc0257e28038a8648ffc1b8f06d6ea2f">CuTConfiguration</a>, <a class="el" href="classCuTaDb.html#aa1bac23f20c2f1193bfdd1fe355d12cd">CuTaDb</a>, and <a class="el" href="classCuTWriter.html#a3d3fea230b06343cc2779c139d7c1bbc">CuTWriter</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCumbiaTango.html#a76e8f317b5855f86d2d46957a19d899e">CumbiaTango::addAction()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCumbiaTango.html#ab71bcb5522095fe1a864d63092b2132a">CumbiaTango::addAction()</a>.</p>
 
 </div>
 </div>
@@ -248,7 +247,7 @@ Public Member Functions</h2></td></tr>
 <p>return the number of registered data listeners </p>
 <dl class="section return"><dt>Returns</dt><dd>the number of data listeners currently installed </dd></dl>
 
-<p>Implemented in <a class="el" href="classCuTReader.html#a3b5f38ec6e07ee826c4377ae658ccbd5">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#ae14f925b5a1355079d6cda55086445e1">CuTConfiguration</a>, and <a class="el" href="classCuTWriter.html#a583025630a0ad0f927e2c0cc9ceb2b23">CuTWriter</a>.</p>
+<p>Implemented in <a class="el" href="classCuTReader.html#a3b5f38ec6e07ee826c4377ae658ccbd5">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#ae14f925b5a1355079d6cda55086445e1">CuTConfiguration</a>, <a class="el" href="classCuTaDb.html#a1707b483d765042a31cfe88989907ff8">CuTaDb</a>, and <a class="el" href="classCuTWriter.html#a583025630a0ad0f927e2c0cc9ceb2b23">CuTWriter</a>.</p>
 
 </div>
 </div>
@@ -279,7 +278,7 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>true if the action is exiting (normally, stop has been called), false otherwise</dd></dl>
 <p>Used by <a class="el" href="classCuActionFactoryService.html#a9d5825629c4a5868469a14267d9af8ac" title="Unregister the action with the given source and type if the action&#39;s exiting() method returns true.">CuActionFactoryService::unregisterAction</a> to check whether the action is still running before unregistering. </p>
 
-<p>Implemented in <a class="el" href="classCuTReader.html#ac6953809b2974858ca1c36656a2f87db">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a3216b4700b2bdd350bbb638b4ca25887">CuTConfiguration</a>, and <a class="el" href="classCuTWriter.html#a0e822b064bccaa534bc8740acd52ab6a">CuTWriter</a>.</p>
+<p>Implemented in <a class="el" href="classCuTReader.html#ac6953809b2974858ca1c36656a2f87db">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a3216b4700b2bdd350bbb638b4ca25887">CuTConfiguration</a>, <a class="el" href="classCuTaDb.html#a0299c469423b82eb2531c55a5a9a1e28">CuTaDb</a>, and <a class="el" href="classCuTWriter.html#a0e822b064bccaa534bc8740acd52ab6a">CuTWriter</a>.</p>
 
 </div>
 </div>
@@ -316,7 +315,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section user"><dt>note</dt><dd>getData must be synchronous: it's called with input arguments (d_inout) and they are filled in within the same method in the same thread. <em>Asynchronous</em> data fetch from an activity executed in a separate thread can be accomplished by sendData <em>in combination with</em> CuDataListener::onUpdate. There, received data will have to be recognised as coming from a specific request and treated accordingly. </dd></dl>
 
-<p>Implemented in <a class="el" href="classCuTReader.html#a0fb59e260adfcea9cd094623d5a45e90">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a83620305059e47dabb0fb7cbd782a873">CuTConfiguration</a>, and <a class="el" href="classCuTWriter.html#acb0395a8679959f96acd5928ebd1c32d">CuTWriter</a>.</p>
+<p>Implemented in <a class="el" href="classCuTReader.html#a0fb59e260adfcea9cd094623d5a45e90">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a83620305059e47dabb0fb7cbd782a873">CuTConfiguration</a>, <a class="el" href="classCuTWriter.html#acb0395a8679959f96acd5928ebd1c32d">CuTWriter</a>, and <a class="el" href="classCuTaDb.html#a26a086f4e153120c87a3d6f5233a8e80">CuTaDb</a>.</p>
 
 </div>
 </div>
@@ -346,7 +345,7 @@ Public Member Functions</h2></td></tr>
 <p>return a <a class="el" href="classTSource.html">TSource</a> object that stores information about the <a class="el" href="namespaceTango.html">Tango</a> source </p>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classTSource.html">TSource</a>, an object storing information on the <a class="el" href="namespaceTango.html">Tango</a> source </dd></dl>
 
-<p>Implemented in <a class="el" href="classCuTReader.html#acba17a60f24f4c75359422b84fd91975">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a86b1e3dafc7238a59cbe6d2b00a6e615">CuTConfiguration</a>, and <a class="el" href="classCuTWriter.html#a8718f1a13c8ae9f6d3769cd741696906">CuTWriter</a>.</p>
+<p>Implemented in <a class="el" href="classCuTReader.html#acba17a60f24f4c75359422b84fd91975">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a86b1e3dafc7238a59cbe6d2b00a6e615">CuTConfiguration</a>, <a class="el" href="classCuTaDb.html#a48a9924ad07affd523206ce29de239b7">CuTaDb</a>, and <a class="el" href="classCuTWriter.html#a8718f1a13c8ae9f6d3769cd741696906">CuTWriter</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classCuPoller.html#abc1ee3055effcf64ed3f60feb83c2ab8">CuPoller::registerAction()</a>.</p>
 
@@ -378,7 +377,7 @@ Public Member Functions</h2></td></tr>
 <p>returns the type of <a class="el" href="classCuTangoActionI.html" title="an interface for a Tango action, typically a reader or a writer are implementors">CuTangoActionI</a> implemented </p>
 <dl class="section return"><dt>Returns</dt><dd>one of the values from the Type enum </dd></dl>
 
-<p>Implemented in <a class="el" href="classCuTReader.html#abab56f2fa5c3711ceec6d52907875b37">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a75e780db22e9611d3d390a391fcfb118">CuTConfiguration</a>, and <a class="el" href="classCuTWriter.html#ac73ce6a85d6e405e24b68e0ce0af8858">CuTWriter</a>.</p>
+<p>Implemented in <a class="el" href="classCuTReader.html#abab56f2fa5c3711ceec6d52907875b37">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a75e780db22e9611d3d390a391fcfb118">CuTConfiguration</a>, <a class="el" href="classCuTaDb.html#af13f98f187134c960b3d83fe9010da9d">CuTaDb</a>, and <a class="el" href="classCuTWriter.html#ac73ce6a85d6e405e24b68e0ce0af8858">CuTWriter</a>.</p>
 
 </div>
 </div>
@@ -414,7 +413,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classCuTReader.html#a439883dad7d9b6cfb0a2c0085dc93e87">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#ac3f5987b3efe8dc23c0bd2980820c6b0">CuTConfiguration</a>, and <a class="el" href="classCuTWriter.html#ae438f73a551f9fd5ee31552ec8bd8744">CuTWriter</a>.</p>
+<p>Implemented in <a class="el" href="classCuTReader.html#a439883dad7d9b6cfb0a2c0085dc93e87">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#ac3f5987b3efe8dc23c0bd2980820c6b0">CuTConfiguration</a>, <a class="el" href="classCuTaDb.html#ad66b9f626a1b12ec5be82392469ad7fa">CuTaDb</a>, and <a class="el" href="classCuTWriter.html#ae438f73a551f9fd5ee31552ec8bd8744">CuTWriter</a>.</p>
 
 </div>
 </div>
@@ -452,7 +451,7 @@ Public Member Functions</h2></td></tr>
 <p>The data can be set locally on the object implementing this interface or can be forwarded to the activity by means of Cumbia::postEvent carrying an argument derived from CuActivityEvent. See <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822" title="Send data with parameters to configure the reader.">CuTReader::sendData</a> for an example</p>
 <dl class="section user"><dt>Send a request and receive a response asynchronously</dt><dd>Use sendData <em>in conjunction with</em> CuDataListener::onUpdate, as described in the getData documentation. </dd></dl>
 
-<p>Implemented in <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a857f4ece2a32edc69dc2d72111b3a12f">CuTConfiguration</a>, and <a class="el" href="classCuTWriter.html#ae12ad830de4f023c61e09160140ffd7d">CuTWriter</a>.</p>
+<p>Implemented in <a class="el" href="classCuTReader.html#a5d5f615f01f028fe3f32306c584c9822">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a857f4ece2a32edc69dc2d72111b3a12f">CuTConfiguration</a>, <a class="el" href="classCuTWriter.html#ae12ad830de4f023c61e09160140ffd7d">CuTWriter</a>, and <a class="el" href="classCuTaDb.html#a3945af538a9bc4ddb2f383a5ceef9536">CuTaDb</a>.</p>
 
 </div>
 </div>
@@ -487,9 +486,9 @@ Public Member Functions</h2></td></tr>
 </ul>
 See also Cumbia::registerActivity </dd></dl>
 
-<p>Implemented in <a class="el" href="classCuTReader.html#a3facbcb1d69b84d9d302db4511522671">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#ae044883c04cf666270336eadff696cb7">CuTConfiguration</a>, and <a class="el" href="classCuTWriter.html#a95093fad383dcaac279d11cfaec445d0">CuTWriter</a>.</p>
+<p>Implemented in <a class="el" href="classCuTReader.html#a3facbcb1d69b84d9d302db4511522671">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#ae044883c04cf666270336eadff696cb7">CuTConfiguration</a>, <a class="el" href="classCuTaDb.html#a840e0f88b1fa30e1f2c2b75e1589b605">CuTaDb</a>, and <a class="el" href="classCuTWriter.html#a95093fad383dcaac279d11cfaec445d0">CuTWriter</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCumbiaTango.html#a76e8f317b5855f86d2d46957a19d899e">CumbiaTango::addAction()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCumbiaTango.html#ab71bcb5522095fe1a864d63092b2132a">CumbiaTango::addAction()</a>.</p>
 
 </div>
 </div>
@@ -524,7 +523,7 @@ See also Cumbia::registerActivity </dd></dl>
 </ul>
 See also Cumbia::unregisterActivity </dd></dl>
 
-<p>Implemented in <a class="el" href="classCuTReader.html#ae4731c847e160a5203d24fb9b6fe8ae5">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a580c605917dbfaf5ee61d07aa6b3010a">CuTConfiguration</a>, and <a class="el" href="classCuTWriter.html#ad2a58ee36294ef83e28fe62d7d40fcf9">CuTWriter</a>.</p>
+<p>Implemented in <a class="el" href="classCuTReader.html#ae4731c847e160a5203d24fb9b6fe8ae5">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a580c605917dbfaf5ee61d07aa6b3010a">CuTConfiguration</a>, <a class="el" href="classCuTaDb.html#a5d5e09f3ba1c98aa2bfeb31e1905e4db">CuTaDb</a>, and <a class="el" href="classCuTWriter.html#ad2a58ee36294ef83e28fe62d7d40fcf9">CuTWriter</a>.</p>
 
 </div>
 </div>
@@ -535,7 +534,7 @@ See also Cumbia::unregisterActivity </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri May 22 2020 15:05:32 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 28 2020 15:21:52 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

@@ -18,7 +18,7 @@ var searchData=
   ['cudataevent_607',['CuDataEvent',['../classCuDataEvent.html#afd6e222a3f631c5001199741f4497851',1,'CuDataEvent']]],
   ['cudatalistener_608',['CuDataListener',['../classCuDataListener.html#adca50a3cc9b652b7d45c72624e317e90',1,'CuDataListener']]],
   ['cudataquality_609',['CuDataQuality',['../classCuDataQuality.html#a9257dd65772c95d4377ad7194d6f953a',1,'CuDataQuality::CuDataQuality()'],['../classCuDataQuality.html#aec0fdf6bd79f30360230bed3d5a79353',1,'CuDataQuality::CuDataQuality(Type t)'],['../classCuDataQuality.html#afed8e24d24bc0e29d7c863c82e4ca3ef',1,'CuDataQuality::CuDataQuality(int t)']]],
-  ['cueventinfo_610',['CuEventInfo',['../classCuEventInfo.html#a93601f4a091bab91b43f5d8afe18f020',1,'CuEventInfo']]],
+  ['cueventinfo_610',['CuEventInfo',['../classCuEventInfo.html#a93601f4a091bab91b43f5d8afe18f020',1,'CuEventInfo::CuEventInfo(CuEventI *eve, CuEventLoopListener *l)'],['../classCuEventInfo.html#a937d5ad210b56267a8a5178654fd227d',1,'CuEventInfo::CuEventInfo()']]],
   ['cueventloopservice_611',['CuEventLoopService',['../classCuEventLoopService.html#abb42844e5d2a0a78660e6981152d67db',1,'CuEventLoopService']]],
   ['cuisolatedactivity_612',['CuIsolatedActivity',['../classCuIsolatedActivity.html#adf912e98048533e137e21cc7dc0d2f3e',1,'CuIsolatedActivity']]],
   ['culog_613',['CuLog',['../classCuLog.html#af7dcda1c4a28a97002ebd951df47b189',1,'CuLog::CuLog(CuLogImplI *log_impl)'],['../classCuLog.html#a7b8a6c18b85dc8fe46ca67cb00a526d8',1,'CuLog::CuLog()']]],

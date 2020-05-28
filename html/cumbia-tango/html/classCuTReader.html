@@ -85,8 +85,7 @@ Public Types</h2></td></tr>
 <a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a6caccb8082e4cdc6fb68a67c0e1df6c3">ReaderConfig</a>, 
 <br />
 &#160;&#160;<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92aea7de597735cbb4df75f5a10280bbeb6">WriterConfig</a>, 
-<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a3df66f83f17416350e8af1e388a5f4ad">DbReadProp</a>, 
-<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a36dd4bb9bc0d1827f602817d50668c1a">DbWriteProp</a>
+<a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92a5fe0d25bed59ab95f63bde65000017ef">TaDb</a>
 <br />
  }</td></tr>
 <tr class="memdesc:ade015baf4bca143a9bafcce41aa2dd92"><td class="mdescLeft">&#160;</td><td class="mdescRight">list of types of actions  <a href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92">More...</a><br /></td></tr>
@@ -126,13 +125,16 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa1c2c0d8e8be6c4562f3336e0fc86d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d1cb1c1406f67fc6c61b637f759b482"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848">RefreshMode</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#a7d1cb1c1406f67fc6c61b637f759b482">refreshMode</a> () const</td></tr>
 <tr class="separator:a7d1cb1c1406f67fc6c61b637f759b482"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa9248f271e4945ea53f508d32ce4fc5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#afa9248f271e4945ea53f508d32ce4fc5">isEventRefresh</a> (<a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848">RefreshMode</a> rm) const</td></tr>
+<tr class="memdesc:afa9248f271e4945ea53f508d32ce4fc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns true if the parameter is an event driven RefreshMode, false otherwise.  <a href="classCuTReader.html#afa9248f271e4945ea53f508d32ce4fc5">More...</a><br /></td></tr>
+<tr class="separator:afa9248f271e4945ea53f508d32ce4fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae426461b189140ac0227efdc2e31a932"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#ae426461b189140ac0227efdc2e31a932">period</a> () const</td></tr>
+<tr class="separator:ae426461b189140ac0227efdc2e31a932"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac42436e8294cdf21989a30a77d9da10"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#aac42436e8294cdf21989a30a77d9da10">setPeriod</a> (int millis)</td></tr>
 <tr class="separator:aac42436e8294cdf21989a30a77d9da10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b92741e79070c307ff5870f3c06c27a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#a7b92741e79070c307ff5870f3c06c27a">setOptions</a> (const CuData &amp;options)</td></tr>
 <tr class="memdesc:a7b92741e79070c307ff5870f3c06c27a"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCuTReader.html#a7b92741e79070c307ff5870f3c06c27a" title="CuTReader::setOptions sets the options on the reader.">CuTReader::setOptions</a> sets the options on the reader.  <a href="classCuTReader.html#a7b92741e79070c307ff5870f3c06c27a">More...</a><br /></td></tr>
 <tr class="separator:a7b92741e79070c307ff5870f3c06c27a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae426461b189140ac0227efdc2e31a932"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#ae426461b189140ac0227efdc2e31a932">period</a> () const</td></tr>
-<tr class="separator:ae426461b189140ac0227efdc2e31a932"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3facbcb1d69b84d9d302db4511522671"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#a3facbcb1d69b84d9d302db4511522671">start</a> ()</td></tr>
 <tr class="memdesc:a3facbcb1d69b84d9d302db4511522671"><td class="mdescLeft">&#160;</td><td class="mdescRight">creates and registers a <a class="el" href="classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int...">CuEventActivity</a> or a <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity">CuPollingActivity</a> to read from the <a class="el" href="namespaceTango.html">Tango</a> control system  <a href="classCuTReader.html#a3facbcb1d69b84d9d302db4511522671">More...</a><br /></td></tr>
 <tr class="separator:a3facbcb1d69b84d9d302db4511522671"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -151,9 +153,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac6953809b2974858ca1c36656a2f87db"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#ac6953809b2974858ca1c36656a2f87db">exiting</a> () const</td></tr>
 <tr class="memdesc:ac6953809b2974858ca1c36656a2f87db"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns true if the action has been stopped and it's exiting  <a href="classCuTReader.html#ac6953809b2974858ca1c36656a2f87db">More...</a><br /></td></tr>
 <tr class="separator:ac6953809b2974858ca1c36656a2f87db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa9248f271e4945ea53f508d32ce4fc5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTReader.html#afa9248f271e4945ea53f508d32ce4fc5">isEventRefresh</a> (<a class="el" href="classCuTReader.html#aa7fdfba3098f8456948f8a4f4db96848">RefreshMode</a> rm) const</td></tr>
-<tr class="memdesc:afa9248f271e4945ea53f508d32ce4fc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns true if the parameter is an event driven RefreshMode, false otherwise.  <a href="classCuTReader.html#afa9248f271e4945ea53f508d32ce4fc5">More...</a><br /></td></tr>
-<tr class="separator:afa9248f271e4945ea53f508d32ce4fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classCuTangoActionI"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classCuTangoActionI')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classCuTangoActionI.html">CuTangoActionI</a></td></tr>
 <tr class="memitem:a7d5610e53b102d9cadc2d3b6a90e0481 inherit pub_methods_classCuTangoActionI"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuTangoActionI.html#a7d5610e53b102d9cadc2d3b6a90e0481">~CuTangoActionI</a> ()</td></tr>
 <tr class="memdesc:a7d5610e53b102d9cadc2d3b6a90e0481 inherit pub_methods_classCuTangoActionI"><td class="mdescLeft">&#160;</td><td class="mdescRight">virtual destructor, to make compilers happy  <a href="classCuTangoActionI.html#a7d5610e53b102d9cadc2d3b6a90e0481">More...</a><br /></td></tr>
@@ -847,7 +846,7 @@ Public Member Functions</h2></td></tr>
 <li>fills in a CuData called <em>thread token</em>, used to register the <a class="el" href="classCuWriteActivity.html">CuWriteActivity</a> and make the activity shared between writers with the same target. </li>
 <li>instantiates and registers (i.e. starts) either a <a class="el" href="classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int...">CuEventActivity</a> or a <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity">CuPollingActivity</a>, according to the RefreshMode value. If the <a class="el" href="classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int...">CuEventActivity</a> fails subscribing to the <a class="el" href="namespaceTango.html">Tango</a> event system, it is replaced by <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity">CuPollingActivity</a> (in <a class="el" href="classCuTReader.html#a66c0cdbba00a83b339c07770c4626295">CuTReader::onResult</a>)</li>
 </ul>
-<dl class="section note"><dt>Note</dt><dd>start is usually called by <a class="el" href="classCumbiaTango.html#a76e8f317b5855f86d2d46957a19d899e">CumbiaTango::addAction</a>, which in turn is called by qumbia-tango-controls CuTControlsReader::setSource</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>start is usually called by <a class="el" href="classCumbiaTango.html#ab71bcb5522095fe1a864d63092b2132a">CumbiaTango::addAction</a>, which in turn is called by qumbia-tango-controls CuTControlsReader::setSource</dd></dl>
 <p>If the refresh mode is Manual, a <a class="el" href="classCuPollingActivity.html" title="an activity to periodically read from Tango. Implements CuContinuousActivity">CuPollingActivity</a> is started, with a very long period. To trigger a read in Manual mode, use sendData with a CuData containing a key named "*read*". See sendData for further details. </p>
 
 <p>Implements <a class="el" href="classCuTangoActionI.html#a641aee21ef5e7a185271df3eead88172">CuTangoActionI</a>.</p>
@@ -900,7 +899,7 @@ See also Cumbia::unregisterActivity </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri May 22 2020 15:05:32 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 28 2020 15:21:52 for cumbia-tango by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>
