@@ -11,10 +11,29 @@
 
 <h2>version 1.2.0</h2>
 
+<h3>Tango Database read access becomes easy!</h3>
+<p>
+Reading class properties is accomplished by a source like <em>tango://TangoTest(ProjectTitle,Description)</em>
+Device properties can be obtained like <em>tango://ken:20000/test/device/1(description, helperApplication,values)</em>,
+and get the list of attributes of a device through <em>ken:20000/test/device/1(description, helperApplication,values)</em>
+</p>
+<p>
+Type <br/>
+<em>cumbia read --help</em><br/>
+and scroll to the section <em>Read the Tango database</em> to play and get acquainted with this new functionality in no time!
+</p>
+<p>
+This new feature allows to get properties in your app with just the little code needed for usual sources, and integrate
+them easily in graphical elements.
+</p>
+
 <h3>cumbia-http</h3>
 <p>
-The new <em>cumbia-http</em> module allows connecting to a http / SSE server from anywhere!
-Include it in your installation is as easy as adding *http* to the <em>scripts/cubuild.sh</em>
+Nowadays the need to access control systems from home and portable devices is constantly growing.
+The new <em>cumbia-http</em> has been designed with this purpose and http and Server Sent Event services in mind.
+When such services become available, clients of any kind will be able to connect from anywhere!
+</p><p>
+Include <em>cumbia-http</em> in your installation is as easy as adding <strong>http</strong> to the <em>scripts/cubuild.sh</em>
 command.
 </p>
 
