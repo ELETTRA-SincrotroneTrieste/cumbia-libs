@@ -12,7 +12,7 @@ class TSource
 public:
     enum Type { SrcInvalid = 0, SrcCmd, SrcAttr,
                 // search types
-                SrcDbDoma, SrcDbFam, SrcDbMem, SrcDbAtts, SrcDbClassProps, SrcDbCmds, SrcDbAProps, SrcDbDevProps,
+                SrcDbDoma, SrcDbFam, SrcDbMem, SrcDbAtts, SrcDbClassProps, SrcDbCmds, SrcDbAttInfo, SrcDbDevProps,
                 // attribute, class, dev, free prop and command info
                 SrcDbAProp, SrcDbGetCmdI, SrcDbClassProp, SrcDbDevProp, SrcDbFreeProp, SrcEndTypes };
 
@@ -29,7 +29,7 @@ public:
     std::string getPoint() const;
     std::string getName() const;
     std::string getTangoHost() const;
-    std::string getPropNam() const;
+    std::string getFreePropNam() const;
     std::string getFreePropObj() const;
     std::string getSearchPattern() const;
     std::string getPropClassNam() const;
@@ -37,6 +37,8 @@ public:
     bool isDbOp() const;
 
     std::vector<string> getArgs() const;
+    std::string getArgsString() const;
+    std::vector<std::string> getPropNames() const;
 
     string toString() const;
     std::string remove_tgproto(const std::string& src) const;
@@ -51,7 +53,6 @@ public:
 
     bool operator ==(const TSource &other) const;
 
-    std::string getArgsString() const;
 
 private:
     string m_s;

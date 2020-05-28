@@ -120,8 +120,8 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
         QString url, chan = m_conf.url.section(QRegularExpression("[^:^/]/"), -1); // match last token after a / but skip http[s]://
         chan != m_conf.url ? url = m_conf.url.remove(m_conf.url.lastIndexOf('/'), chan.length() + 1) : chan.remove(0, chan.length());
         if(url.contains(QRegularExpression("http[s]{0,1}://.*")) && chan.isEmpty())
-             printf("\e[1;33m*\e[0m cumbia read: channel not detected in URL: required form: \"%s/\e[1;33mchannel_name\e[0m\"\n",
-                    qstoc(url));
+            printf("\e[1;33m*\e[0m cumbia read: channel not detected in URL: required form: \"%s/\e[1;33mchannel_name\e[0m\"\n",
+                   qstoc(url));
         httpre.setUrl(url);
         httpre.setChannel(chan);
         CumbiaHttp *cuhttp = httpre.registerWithDefaults(cu_pool, m_ctrl_factory_pool);
@@ -468,8 +468,6 @@ void QumbiaReader::onNewUShortVector(const QString &src, double ts, const QVecto
 
 void QumbiaReader::onPropertyReady(const QString &src, double ts,const CuData &pr)
 {
-    printf("QumbiaReader::onPropertyReady IN\n");
-
     m_refreshCntMap[src]++;
     printf("\n \e[1;36m*\e[0m ");
     if(m_conf.verbosity > Low && pr.containsKey("thread"))
@@ -477,14 +475,15 @@ void QumbiaReader::onPropertyReady(const QString &src, double ts,const CuData &p
     // src and timestamp
     printf("%s [%s] ", qstoc(src), qstoc(makeTimestamp(ts)));
 
-    if(pr.containsKey("list")) {
+    printf("\n - \e[1;32m%s\e[0m\n", vtoc2(pr, "device"));
+
+
+    if(pr.containsKey("keys"))
         m_print_list_props(pr);
-        qApp->quit();
-    }
-    else {
+    else
         m_print_property(pr);
-        m_checkRefreshCnt(sender());
-    }
+
+    m_checkRefreshCnt(sender());
 
     if(m_conf.verbosity == Debug)
         printf("\n\e[0;35m--l=debug\e[0m: \e[1;35m{\e[0m %s \e[1;35m}\e[0m\n", pr.toString().c_str());
@@ -572,7 +571,6 @@ void QumbiaReader::m_createReaders(const QStringList &srcs) {
         r->setTgPropertyList(srcs);
         connect(r, SIGNAL(newError(QString,double,QString, const CuData&)),
                 this, SLOT(onError(QString,double,QString, const CuData&)));
-        connect(r, SIGNAL(propertyReady(QString,double,CuData)), this, SLOT(onPropertyReady(QString,double,CuData)));
         r->getTgProps();
     }
     else {
@@ -653,6 +651,9 @@ void QumbiaReader::m_createReaders(const QStringList &srcs) {
                     this, SLOT(onError(QString,double,QString, const CuData&)));
 
             connect(r, SIGNAL(destroyed(QObject*)), this, SLOT(onReaderDestroyed(QObject *)));
+
+            connect(r, SIGNAL(propertyReady(QString,double,CuData)), this, SLOT(onPropertyReady(QString,double,CuData)));
+
             reader_ctx_options["period"] = m_conf.period;
             r->setContextOptions(reader_ctx_options);
             r->setSource(a);
@@ -664,30 +665,23 @@ void QumbiaReader::m_createReaders(const QStringList &srcs) {
 
 void QumbiaReader::m_print_list_props(const CuData &pr)
 {
-    //    printf("\e[1;33m%s\e[0m\n", pr.toString().c_str());
-    const CuVariant &plist = pr["list"];
-    // get the list of device (or class or device/attribute) + property name
-    // e.g.  ["list" -> test/device/1/double_scalar:abs_change,test/device/1/double_scalar:archive_abs_change,...]
+    const CuVariant &plist = pr["keys"];
     const std::vector<std::string> vp = plist.toStringVector();
-    // group properties by device
-    QMap<QString, QStringList> dev_pr_map;
+
     foreach(QuString p, vp) {
-        // get the property values
-        if(pr.containsKey(p.toStdString()) && p.count(":") == 1)  // group prints by dev
-            dev_pr_map[p.section(':', 0, 0)].append(p.section(':', 1, 1));
+        printf("   \e[1;32m%-25s\e[0m --> \e[1;3m%s\e[0m\n", qstoc(p),
+               pr[p.toStdString()].toString().c_str());
     }
-    foreach(QString dev, dev_pr_map.keys()) {
-        printf("\n - \e[1;32m%s\e[0m\n", qstoc(dev));
-        foreach(QString prop, dev_pr_map[dev]) {
-            printf("   \e[1;32m%-25s\e[0m --> \e[1;3m%s\e[0m\n", qstoc(prop),
-                   pr[QString("%1:%2").arg(dev).arg(prop).toStdString()].toString().c_str());
-        }
-        printf("\e[1;36m-------------------------------------------------\e[0m\n");
-    }
+    printf("\e[1;36m-------------------------------------------------\e[0m\n");
 }
 
 void QumbiaReader::m_print_property(const CuData &pr)
 {
+    if(pr.containsKey("class")) printf(" - class: %s\n", vtoc2(pr, "class"));
+    if(pr.containsKey("pattern")) printf(" - pattern: \"%s\"\n", vtoc2(pr, "pattern"));
+    if(pr.containsKey("value")) printf(" - value: %s\n", vtoc2(pr, "value"));
+    if(pr.containsKey("tango_host")) printf(" - tango host: %s\n", vtoc2(pr, "tango_host"));
+
     QStringList outputted_props;
     for(int i = Low; i <= static_cast<int>(Medium); i++) {
         printf("\e[1;36m-------------------------------------------------\e[0m\n");

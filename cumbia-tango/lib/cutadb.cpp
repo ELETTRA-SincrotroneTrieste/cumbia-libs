@@ -53,8 +53,6 @@ void CuTaDb::onProgress(int step, int total, const CuData &data) {
 void CuTaDb::onResult(const CuData &data)
 {
     d->cached_data = data;
-    cuprintf("CuTaDb.onResult %s exit? %d listeners %ld\n", data["src"].toString().c_str(), data["exit"].toBool(), d->listeners.size());
-
     if(data["exit"].toBool()) // ! important: evaluate data["exit"] before deleting this
     {
         d->xit = true; // for action factory to unregisterAction, exiting must return true
@@ -67,9 +65,7 @@ void CuTaDb::onResult(const CuData &data)
     else { // do not update configuration data if exit
         std::list <CuDataListener *> listeners = d->listeners;
         std::list<CuDataListener *>::iterator it;
-
         for(it = listeners.begin(); it != listeners.end(); ++it) {
-            cuprintf("CuTaDb.onResult %s exit? %d listeners %ld onUpdate on %p\n", data["src"].toString().c_str(), data["exit"].toBool(), d->listeners.size(), (*it));
             (*it)->onUpdate(data);
         }
     }

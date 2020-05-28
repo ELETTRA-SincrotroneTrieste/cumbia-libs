@@ -19,12 +19,13 @@ TSource::TSource() {
 TSource::TSource(const string s)
 {
     m_s = s;
+    m_s.erase(std::remove(m_s.begin(), m_s.end(), ' '), m_s.end()); // remove spaces
     m_ty = m_get_ty(s);
 
     cuprintf("TSource: src is %s database is \e[1;35m%s\e[0m \n", m_s.c_str(), getTangoHost().c_str());
     cuprintf("TSource: device is \e[1;32m%s\e[0m point is \e[1;36m%s\e[0m prop is \e[1;33m%s\e[0m search pattern: \e[0;33m%s\e[0m\n",
-             getDeviceName().c_str(), getPoint().c_str(), getPropNam().c_str(), getSearchPattern().c_str());
-    if(m_ty == SrcDbClassProp)
+             getDeviceName().c_str(), getPoint().c_str(), getArgsString().c_str(), getSearchPattern().c_str());
+    if(m_ty == SrcDbClassProp || m_ty == SrcDbClassProps)
         cuprintf("TSource: class \e[1;34m%s\e[0m\n", getPropClassNam().c_str());
     cuprintf("TSource: detected type \e[1;32m%s\e[0m\n", getTypeName(m_ty));
 }
@@ -43,8 +44,9 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
     int sep = std::count(s.begin(), s.end(), '/');
     bool ewc = s.size() > 1 && s[s.size()-1] == '*'; // ends with wildcard
     bool ewsep = s.size() > 1 && s[s.size()-1] == '/'; // ends with slash
-    bool has_ht = s.length() > 2 && s.find("#") != std::string::npos; // has #
-    bool ewht = s.length() > 1 && s.find("#") == s.length() - 1;
+    const std::vector<string> props = getPropNames();
+    bool hasprops = props.size() > 0; // has {arg1,arg2,...}
+    bool arg_wildcard = props.size() == 1 && props[0] == "*";
     bool swht = s.length() > 1 && s[0] == '#'; // starts with hash tag: free prop
     size_t ai = s.find("->"); // arrow index
     bool ewa, hasa;
@@ -53,13 +55,13 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
     Type t = SrcInvalid;
     if(swht && std::count(s.begin(), s.end(), '#') == 2) // free prop:  #MyObj#MyFreeProp
         t= SrcDbFreeProp;
-    else if(ewht && sep == 0) // class#
+    else if(arg_wildcard && sep == 0) // class(*))
         t = SrcDbClassProps;
-    else if(!ewht && has_ht && sep == 0) // class#prop
+    else if(hasprops && sep == 0) // class{prop1,prop2,..}
         t = SrcDbClassProp;
-    else if(ewht && sep == 2)   //   a/tg/dev#  get device prop list
+    else if(arg_wildcard && sep == 2)   //   a/tg/dev(*)  get device prop list
         t = SrcDbDevProps;
-    else if(has_ht && sep == 2)  //  a/tg/dev#devprop
+    else if(hasprops && sep == 2 && !hasa)  //  a/tg/dev(devprop1,devprop2,...)
         t = SrcDbDevProp;
     else if(sep == 0 && ewc) // domai*
         t = SrcDbDoma;
@@ -74,8 +76,8 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
     else if(sep == 3 && ewsep)  //   dom/fam/mem/
         t = SrcDbAtts;
     else if(sep == 4 && ewsep)  // dom/fam/mem/attr/
-        t = SrcDbAProps;
-    else if(sep == 3 && has_ht) //  a/tg/dev/attr#prop
+        t = SrcDbAttInfo;
+    else if(sep == 3 && hasprops) //  a/tg/dev/attr(prop1,prop2,...)
         t = SrcDbAProp;
     else if(sep == 3)  // te/de/1/double_a
         t = SrcAttr;
@@ -125,23 +127,24 @@ string TSource::getPoint() const {
     else if(m_ty == SrcCmd)
         p = m_s.substr(pos + 2, m_s.find('(') - pos - 2); /* exclude args */
     else if(m_ty == SrcDbGetCmdI)
-        p = m_s.substr(m_s.find("->") + 2, m_s.rfind('/')); // src is tango://test/device/1->get/
-    else if(m_ty == SrcDbAProps) { // src is tango://test/device/1/get/
+        p = m_s.substr(m_s.find("->") + 2, m_s.rfind('/') - m_s.find("->")  -2); // src is tango://test/device/1->get/
+    else if(m_ty == SrcDbAttInfo) { // src is tango://test/device/1/get/
         // remove last /
         std::string s = m_s.substr(0, m_s.rfind('/'));
         p = s.substr(s.rfind('/') + 1);
     }
-    else if(m_ty == SrcDbAProp) // src is tango://hokuto:20000/test/device/1/double_scalar#values
-        p = m_s.substr(m_s.rfind('/') + 1, m_s.rfind("#")- m_s.rfind('/') -1 );
+    else if(m_ty == SrcDbAProp) // src is tango://hokuto:20000/test/device/1/double_scalar(p1,p2,..)
+        p = m_s.substr(m_s.rfind('/') + 1, m_s.rfind("(")- m_s.rfind('/') -1 );
     return p;
 }
 
 /*!
  * \brief Finds and returns the  comma separated arguments within parentheses, if present
+ * \param curly_b_delim if true, search args between {}. Default: false
  * \return vector of the detected arguments, as string
  */
 std::vector<string> TSource::getArgs() const {
-    std::string a = getArgsString();
+    std::string a;
     std::string delim = ",";
     std::regex re(delim);
     std::vector<std::string> ret;
@@ -154,6 +157,10 @@ std::vector<string> TSource::getArgs() const {
         if((*iter).length() > 0)
             ret.push_back((*iter));
     return ret;
+}
+
+std::vector<std::string> TSource::getPropNames() const {
+    return getArgs();
 }
 
 std::string TSource::getArgsString() const {
@@ -191,7 +198,7 @@ std::string TSource::getTangoHost() const {
  * @see getFreePropObj
  *
  */
-std::string TSource::getPropNam() const {
+std::string TSource::getFreePropNam() const {
     std::string p;
     size_t i = m_s.rfind("#");
     if(i != std::string::npos)
@@ -222,9 +229,9 @@ string TSource::getFreePropObj() const {
  */
 string TSource::getPropClassNam() const {
     std::string p;
-    if(m_ty == SrcDbClassProp) {
+    if(m_ty == SrcDbClassProp || m_ty == SrcDbClassProps) {
         std::string s = rem_tghostproto(m_s);
-        size_t i = s.find("#");
+        size_t i = s.find("(");
         if(i != std::string::npos)
             p = s.substr(0, i);
     }

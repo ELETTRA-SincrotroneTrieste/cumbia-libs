@@ -617,9 +617,6 @@ void CuTangoWorld::fillFromCommandInfo(const Tango::CommandInfo &ci, CuData &d)
     d["display_level"] = ci.disp_level;
     d["data_type"] = ci.out_type;
 
-    printf("CuTangoWorld.fillFromCommandInfo %s in ty %ld out ty %ld in desc %s out desc %s\n", ci.cmd_name.c_str(),
-           ci.in_type, ci.out_type, ci.in_type_desc.c_str(), ci.out_type_desc.c_str());
-
     /* fake data_format property for commands */
     switch(ci.out_type)
     {
@@ -909,21 +906,28 @@ bool CuTangoWorld::get_att_props(Tango::DeviceProxy *dev,
 
 Tango::Database *CuTangoWorld::getTangoDb(const std::string& dbhost) const
 {
-    std::string db = dbhost;
-    if(dbhost.size() == 0)
-        return new Tango::Database();
-    else {
-        std::string h = dbhost.substr(0, dbhost.find(":"));
-        std::string p = dbhost.substr(dbhost.find(":") + 1);
-        try {
-            int port = std::stoi(p);
-            return new Tango::Database(h, port);
-        }  catch (const std::invalid_argument& ia) {
-            d->error = true;
-            d->message = "CuTangoWorld::getTangoDb: invalid hostname:port \"" + dbhost + "\"";
-            perr("%s", d->message.c_str());
+    try {
+        std::string db = dbhost;
+        if(dbhost.size() == 0)
+            return new Tango::Database();
+        else {
+            std::string h = dbhost.substr(0, dbhost.find(":"));
+            std::string p = dbhost.substr(dbhost.find(":") + 1);
+            try {
+                int port = std::stoi(p);
+                return new Tango::Database(h, port);
+            }  catch (const std::invalid_argument& ia) {
+                d->error = true;
+                d->message = "CuTangoWorld::getTangoDb: invalid hostname:port \"" + dbhost + "\"";
+                perr("%s", d->message.c_str());
+            }
         }
     }
+    catch(const Tango::DevFailed& e) {
+        d->message =  "CuTangoWorld::getTangoDb: failed to connect to database \"" + dbhost + "\": " + strerror(e);
+        d->error = true;
+    }
+
     return nullptr;
 }
 
@@ -1094,7 +1098,8 @@ bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &re
 
 bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) const {
     d->error = false;
-    std::string msg;
+    d->message.clear();
+    bool res_ismap = false;
     const TSource::Type t = tsrc.getType();
     Tango::DbData db_data;
     Tango::DbDatum dbd;
@@ -1115,8 +1120,8 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) const {
             res["tango_host"] = tgh;
         if(tsrc.getPoint().length() > 0)
             res["point"] = tsrc.getPoint();
-        if(tsrc.getPropNam().length() > 0)
-            res["property"] = tsrc.getPropNam();
+        if(tsrc.getFreePropNam().length() > 0)
+            res["property"] = tsrc.getFreePropNam();
         if(tsrc.getPropClassNam().length() > 0)
             res["class"] = tsrc.getPropClassNam();
 
@@ -1143,7 +1148,7 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) const {
                 break;
             case TSource::SrcDbFreeProp:
                 // cumbia read tango://ken:20000/#Sequencer#TestList
-                db_data.push_back(Tango::DbDatum(tsrc.getPropNam()));
+                db_data.push_back(Tango::DbDatum(tsrc.getFreePropNam()));
                 db->get_property(tsrc.getFreePropObj(), db_data);
                 if(db_data.size() > 0)
                     db_data[0] >> r;
@@ -1167,11 +1172,11 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) const {
                 }
             }
                 break;
-            case TSource::SrcDbAProps:
+            case TSource::SrcDbAttInfo:
             case TSource::SrcDbDevProps: {  //  test/device/1/double_scalar/
-                msg = "CuTangoWorld.get_from_pattern type SrcDbAProps and SrcDbDevProps not implemented";
+                d->message = "CuTangoWorld.get_from_pattern type SrcDbAProps and SrcDbDevProps not implemented";
                 d->error = true;
-                perr("%s", msg.c_str());
+                perr("%s", d->message.c_str());
             }
                 break;
             case  TSource::SrcDbGetCmdI: { // "tango://test/device/1->get/"
@@ -1183,79 +1188,106 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) const {
                 res["cmd_out_type_str"] = cmdArgTypeToDataFormat(static_cast<Tango::CmdArgType>( ci.out_type));
                 res["cmd_in_desc"] = ci.in_type_desc;
                 res["cmd_out_desc"] = ci.out_type_desc;
-
+                r = std::vector<std::string> { "cmd_in_type", "cmd_out_type", "cmd_in_type_str",
+                    "cmd_out_type_str", "cmd_in_desc", "cmd_out_desc" };
+                res_ismap = true;
             }
                 break;
-            case TSource::SrcDbClassProps: { //  tango://class#, tango://hokuto:20000/class#
-                std::string cl = p.substr(0, p.rfind("#"));
+            case TSource::SrcDbClassProps: { //  tango://class(*), tango://hokuto:20000/class(*)
+                std::string cl = tsrc.getPropClassNam();
                 dbd = db->get_class_property_list(cl);
                 dbd >> r;
             }
                 break;
 
             case TSource::SrcDbAProp: {   // tango://hokuto:20000/test/device/1/double_scalar#values
-                std::string prop = tsrc.getPropNam();
+                std::vector<std::string> props = tsrc.getPropNames();
                 db_data.push_back(tsrc.getPoint());
+                std::vector<std::string> v, keys;
+                std::string prop;
                 // use device name without tango:// and host:port/
                 db->get_device_attribute_property(dnam_nhnp, db_data);
+                res_ismap = true;
+                if(props.size() > 0) prop = props[0];
                 for (size_t i=0; i < db_data.size(); i++)  {
                     long nb_prop;
                     db_data[i] >> nb_prop;
                     i++;
                     for (int k=0; k < nb_prop; k++, i++) {
-                        if(db_data[i].name == prop)
-                            db_data[i] >> r;
+                        if(std::find(props.begin(), props.end(), db_data[i].name) != props.end()) {
+                            db_data[i] >> v;
+                            keys.push_back(db_data[i].name);
+                            res[db_data[i].name] = v;
+                            if(db_data[i].name == prop)
+                                r = v;
+                        }
                     }
                 }
+                res["keys"] = keys;
             }
                 break;
-            case TSource::SrcDbClassProp: { // tango://hokuto:20000/class#prop
+            case TSource::SrcDbClassProp: { // tango://hokuto:20000/class(pr1,pr2,..)
                 std::string c = tsrc.getPropClassNam();
-                std::string p = tsrc.getPropNam();
-                db_data.push_back(Tango::DbDatum(p));
+                std::vector<std::string> keys, v, prs = tsrc.getPropNames();
+                for(std::string p : prs)
+                    db_data.push_back(Tango::DbDatum(p));
                 db->get_class_property(c, db_data);
-                for(size_t i = 0; i < db_data.size() && !db_data[i].is_empty(); i++) {
-                    db_data[i] >> r;
+                for(size_t i = 0; i < db_data.size(); i++) {
+                    if(!db_data[i].is_empty()) {
+                        db_data[i] >> v;
+                        res[db_data[i].name] = v;
+                        keys.push_back(db_data[i].name);
+                        if(i == 0) r = v;
+                    }
                 }
-                break;
+                res["keys"] = keys;
+                res_ismap = true;
             }
+                break;
             case TSource::SrcDbDevProp: {
-                std::string p = tsrc.getPropNam();
-                db_data.push_back(Tango::DbDatum(p));
+                std::string p;
+                std::vector<std::string> keys, v, prs = tsrc.getPropNames();
+                for(std::string p : prs)
+                    db_data.push_back(Tango::DbDatum(p));
                 // use device name without tango:// and host:port/
                 db->get_device_property(dnam_nhnp, db_data);
-                if(!db_data[0].is_empty())
-                   db_data[0] >> r;
+                for(size_t i = 0; i < db_data.size(); i++) {
+                    if(!db_data[i].is_empty()) {
+                        db_data[i] >> v;
+                        res[db_data[i].name] = v;
+                        keys.push_back(db_data[i].name);
+                        if(i == 0) r = v;
+                    }
+                }
+                res["keys"] = keys;
+                res_ismap = true;
             }
                 break;
             }
-
             res["value"] = r;
             d->error |= !r.size();
             if(r.size() == 0) {
-                msg = "not found";
+                d->message = "not found";
             }
-
-            msg.size() == 0 ? res["msg"] = std::string("operation \"") + tsrc.getTypeName(t) + "\" successful" : res["msg"] = msg;
-
+            d->message.size() == 0 ? res["msg"] = std::string("operation \"") + tsrc.getTypeName(t) + "\" successful" : res["msg"] = d->message;
             if(dev)
                 delete dev;
 
         }  catch (const Tango::DevFailed &e) {
             d->error = true;
-            msg = strerror(e);
+            d->message = strerror(e);
         }
-        res["err"] = d->error;
-        res["msg"] = msg;
-        res.putTimestamp();
     }
+    res["err"] = d->error;
+    res["msg"] = d->message;
+    res.putTimestamp();
     return !d->error;
 }
 
 bool CuTangoWorld::source_valid(const string &src)
 {
-    //  [A-Za-z_0-9_\-\.\,\*/\+\:\(\)>#]+
-    const char *pattern = "[A-Za-z_0-9_\\-\\.\\,\\*/\\+\\:\\(\\)>#]+";
+    //  [A-Za-z_0-9_\-\.\,\*/\+\:\(\)>#{}]+
+    const char *pattern = "[A-Za-z_0-9_\\-\\.\\,\\*/\\+\\:\\(\\)>#{}]+";
     std::regex re = std::regex(pattern);
     std::smatch m;
     return std::regex_match(src, m, re);

@@ -120,31 +120,46 @@
         $ cumbia read tango://ken:20000/test/device/1/
         $ * tango://ken:20000/test/device/1/: [16:44:02+0.281213] [string,62] { ampli,boolean_scalar,double_scalar,double_scalar_rww,double_scalar_w,...
 
-    Get a device property
-        $ cumbia read tango://hokuto:20000/test/device/1#helperApplication
-        $ * tango://hokuto:20000/test/device/1#helperApplication: [17:04:08+0.448944] [string,1] { cumbia client }
+    Get device properties
+        $ cumbia read "tango://ken:20000/test/device/1(description, helperApplication,values)"
+        $  * tango://ken:20000/test/device/1(description, helperApplication,values) [11:32:55+0.426527]
+           - tango://ken:20000/test/device/1
+             description               --> This is a Tango Test device with ,many interesing attributes and commands
+             helperApplication         --> atkpanel
+             values                    --> 10,20,30,40,50
 
-    Get an attribute property (1)
-        $ cumbia read tango://hokuto:20000/test/device/1/double_scalar#values
-        $ * tango://hokuto:20000/test/device/1/double_scalar#values: [17:15:19+0.270333] [string,8] { 10.1,10.2,10.3,12.0,16.2,80.12,100.1,200.8 }
 
-    Get min max, min alarm and max alarm attribute properties
-        $ cumbia read tango://hokuto:20000/test/device/1/double_scalar#min_value \
-        > tango://hokuto:20000/test/device/1/double_scalar#max_value \
-        > tango://hokuto:20000/test/device/1/double_scalar#min_alarm \
-        > tango://hokuto:20000/test/device/1/double_scalar#max_alarm
-         * tango://hokuto:20000/test/device/1/double_scalar#min_value: [17:18:10+0.657599] [string,1] { -255 }
-         * tango://hokuto:20000/test/device/1/double_scalar#max_value: [17:18:11+0.151619] [string,1] { 255 }
-         * tango://hokuto:20000/test/device/1/double_scalar#min_alarm: [17:18:11+0.630817] [string,1] { -200 }
-         * tango://hokuto:20000/test/device/1/double_scalar#max_alarm: [17:18:12+0.120427] [string,1] { 200 }
+    Get one attribute property
+        $ cumbia read cumbia read "tango://hokuto:20000/test/device/1/double_scalar(values)"
+        $ * tango://hokuto:20000/test/device/1/double_scalar(values) [11:35:45+0.346103]
+          - tango://hokuto:20000/test/device/1
+            values                    --> 10.1,10.2,10.3,12.0,16.2,80.12,100.1,200.8
+
+    Get multiple attribute properties
+        $ cumbia read "tango://hokuto:20000/test/device/1/double_scalar(min_value,max_value,min_alarm,max_alarm,format)"
+        $ * tango://hokuto:20000/test/device/1/double_scalar(min_value,max_value,min_alarm,max_alarm,format) [11:43:02+0.779032]
+          - tango://hokuto:20000/test/device/1
+            format                    --> %2.3f
+            max_alarm                 --> 200
+            max_value                 --> 255
+            min_alarm                 --> -200
+            min_value                 --> -255
+         -------------------------------------------------
 
     List all properties of a given class
-        $ cumbia read tango://TangoTest#
-        $ * tango://TangoTest#: [17:19:41+0.748766] [string,8] { Csoglia,cvs_location,cvs_tag,Description,doc_url,helperApplication_old,InheritedFrom,ProjectTitle }
-    Get a class property
-        $ cumbia read tango://hokuto:20000/TangoTest#ProjectTitle
-        $ * tango://hokuto:20000/TangoTest#ProjectTitle: [17:25:40+0.681607] [string,1] { TANGO Device Server for testing generic clients }
-
+        $ cumbia read "tango://hokuto:20000/TangoTest(*)"
+        * tango://hokuto:20000/TangoTest(*) [12:02:44+0.146309]
+          -
+          - class: TangoTest
+          - pattern: "TangoTest(*)"
+          - value: Csoglia,cvs_location,cvs_tag,Description,doc_url,helperApplication_old,InheritedFrom,ProjectTitle
+          - tango host: hokuto:20000
+    Fetch class properties
+        $ cumbia read "tango://hokuto:20000/TangoTest(ProjectTitle,Description)"
+        $ * tango://hokuto:20000/TangoTest(ProjectTitle,Description) [12:08:04+0.329729]
+          -
+            ProjectTitle              --> TANGO Device Server for testing generic clients
+            Description               --> A device to test generic clients. It offers a "echo" like command for each TANGO data type (i.e. each command returns an exact copy of <argin>).
 
 
 ### Read from the Tango historical database (hdb++)
