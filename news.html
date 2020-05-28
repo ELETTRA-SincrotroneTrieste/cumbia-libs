@@ -11,6 +11,21 @@
 
 <h2>version 1.2.0</h2>
 
+The cumbia version 1.2.0 moves definitely towards the application portability and aims at broader integration
+across several engines (that translates into <em>cumbia modules</em>).
+Alongside the <em>websocket</em> integration, cumbia 1.2.0 introduces initial support to <em>http and
+Server Sent Events</em> technologies, looking forward to such services becoming available soon.
+Applications written in any language will thus be enabled to connect to native control system engines from
+<em>anywhere</em>.
+
+<h3>New quapps.pri project include file</h3>
+<p>
+The <em>qumbia-apps</em> module includes a new <em>quapps</em> utility that offers automatic
+cumbia module (engine) detection at application startup.
+Just include <strong>quapps.pri</strong> from your <em>path/to/cumbia-libs/include/quapps</em> to use the
+CuModuleLoader helper class.
+</p>
+
 <h3>Tango Database read access becomes easy!</h3>
 <p>
 Reading class properties is accomplished by a source like <em>tango://TangoTest(ProjectTitle,Description)</em>
