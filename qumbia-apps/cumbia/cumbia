@@ -50,7 +50,16 @@ elif [ $# -gt 0 ] && [ $1 == "read" ]; then
         qumbia-reader "${@:2}"
 elif [ $# -gt 0 ] && [ $1 == "monitor" ]; then
         qumbia-reader --monitor "${@:2}"
-
+elif [ $# -gt 0 ] && [ $1 == "apps" ] && [ $2 == "module-default" ] && [ $3 == "show" ]; then
+        cu-component-config -c modules
+elif [ $# -gt 0 ] && [ $1 == "apps" ] && [ $2 == "module-default" ] && [ $3 == "set" ]; then
+        cu-component-config -c modules -s
+elif [ $# -gt 0 ] && [ $1 == "apps" ] && [ $2 == "module-default" ]; then
+        cu-component-config -c modules
+elif [ $# -gt 0 ] && [ $1 == "modules" ]; then
+        cu-component-config -c modules -l
+elif [ $# -gt 0 ] && [ $1 == "modules" ] && [ $2 == "list" ]; then
+        cu-component-config -c modules -l
 elif [ $# -gt 0 ] && [ $1 == "import" ] && [ $2 == "fast" ]; then
         qumbiaprojectwizard --from-qtango --fast ${@:3}
 elif [ $# -gt 0 ] && [ $1 == "import" ]; then

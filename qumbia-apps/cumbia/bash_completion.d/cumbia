@@ -9,7 +9,7 @@ _cumbia()
     #
     #  The basic options we'll complete.
     #
-    opts="new ui client read monitor import upgrade"
+    opts="new ui client read monitor import upgrade apps modules"
 
 
     #
@@ -38,6 +38,22 @@ _cumbia()
             COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
             return 0
             ;;
+        apps)
+            local names=$(for x in module-default; do echo ${x} ; done )
+            COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
+            return 0
+            ;;
+        modules)
+            local names=$(for x in list; do echo ${x} ; done )
+            COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
+            return 0
+            ;;
+        module-default)
+            local names=$(for x in show set; do echo ${x} ; done )
+            COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
+            return 0
+            ;;
+
         import)
             local names=$(for x in fast `ls  -1 *.pro`; do echo ${x} ; done )
             COMPREPLY=( $(compgen -W "${names}" -- ${cur}) )
