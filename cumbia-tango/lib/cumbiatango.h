@@ -11,6 +11,8 @@ class CuDataListener;
 class CuThreadFactoryImplI;
 class CuThreadsEventBridgeFactory_I;
 
+#define CUMBIA_TANGO_VERSION CU_TANGO_VERSION
+
 /** \mainpage
  * \a cumbia-tango integrates cumbia with the Tango control system framework, providing specialised Activities to read,
  * write attributes and impart commands.
