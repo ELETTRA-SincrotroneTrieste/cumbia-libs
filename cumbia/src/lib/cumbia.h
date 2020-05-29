@@ -12,6 +12,8 @@ class CuContinuousActivity;
 class CuActivityEvent;
 class CuThreadTokenGenI;
 
+#define CUMBIA_VERSION CU_VERSION
+
 /** \mainpage
  *
  * Cumbia is a library that offers a carefree approach to multi thread application design and implementation.
