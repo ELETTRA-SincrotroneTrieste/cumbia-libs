@@ -5,14 +5,15 @@
 #include <cumacros.h>
 #include <regex>
 
-
 class CuTangoWorldPrivate
 {
 public:
     bool error;
     std::string message;
     CuTangoWorldConfig t_world_conf;
-
+    // this is used in source_valid
+    //  [A-Za-z_0-9_\-\.\,\*/\+\:\(\)>#{}]+
+    char src_valid_pattern[128] = "[A-Za-z_0-9_\\-\\.\\,\\*/\\+\\:\\(\\)>#{}]+";
     std::vector <std::string> src_patterns;
 };
 
@@ -1286,11 +1287,13 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) const {
 
 bool CuTangoWorld::source_valid(const string &src)
 {
-    //  [A-Za-z_0-9_\-\.\,\*/\+\:\(\)>#{}]+
-    const char *pattern = "[A-Za-z_0-9_\\-\\.\\,\\*/\\+\\:\\(\\)>#{}]+";
-    std::regex re = std::regex(pattern);
+    std::regex re = std::regex(d->src_valid_pattern);
     std::smatch m;
     return std::regex_match(src, m, re);
+}
+
+const char *CuTangoWorld::source_valid_pattern() const {
+    return d->src_valid_pattern;
 }
 
 string CuTangoWorld::getLastMessage() const
