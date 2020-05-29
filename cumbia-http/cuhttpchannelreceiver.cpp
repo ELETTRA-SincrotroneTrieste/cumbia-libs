@@ -104,18 +104,18 @@ QNetworkRequest CuHttpChannelReceiver::prepareRequest(const QUrl &url) const
 }
 
 bool CuHttpChannelReceiver::m_data_fresh(const double timestamp_ms) const {
-    const long data_old = 60;
+    const long data_old = 1;
     long ts_sec = static_cast<long>(timestamp_ms / 1000.0);
     time_t now;
     time(&now);
-    char _now[256], _then[256];
-    strcpy(_now, ctime(&now));
-    strcpy(_then, ctime(&ts_sec));
-    printf("CaCuTangoEImpl data ts %s, data now %s now -ts_sec %ld < %ld? %s\n",
-           _then, _now, now - ts_sec, data_old, (now - ts_sec < data_old) ? "\e[1;32myes\e[0m" : "\e[1;31mno\e[0m");
-    if(now - ts_sec >= data_old)
-        cuprintf("CaCuTangoEImpl.m_data_valid \n\e[1;35m%ld %s -  %ld %s < 3 sec ? %ld\e[0m\n",
-                  now, _now, ts_sec, _then, (now - ts_sec));
+//    char _now[256], _then[256];
+//    strcpy(_now, ctime(&now));
+//    strcpy(_then, ctime(&ts_sec));
+//    printf("CaCuTangoEImpl data ts %s, data now %s now -ts_sec %ld < %ld? %s\n",
+//           _then, _now, now - ts_sec, data_old, (now - ts_sec < data_old) ? "\e[1;32myes\e[0m" : "\e[1;31mno\e[0m");
+//    if(now - ts_sec >= data_old)
+//        cuprintf("CaCuTangoEImpl.m_data_valid \n\e[1;35m%ld %s -  %ld %s < 3 sec ? %ld\e[0m\n",
+//                  now, _now, ts_sec, _then, (now - ts_sec));
     return now - ts_sec < data_old;
 }
 
