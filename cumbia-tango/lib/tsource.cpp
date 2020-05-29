@@ -19,7 +19,6 @@ TSource::TSource() {
 TSource::TSource(const string s)
 {
     m_s = s;
-    m_s.erase(std::remove(m_s.begin(), m_s.end(), ' '), m_s.end()); // remove spaces
     m_ty = m_get_ty(s);
 
     cuprintf("TSource: src is %s database is \e[1;35m%s\e[0m \n", m_s.c_str(), getTangoHost().c_str());
@@ -148,6 +147,8 @@ std::vector<string> TSource::getArgs() const {
     std::string delim = ",";
     std::regex re(delim);
     std::vector<std::string> ret;
+    std::string s(m_s);
+//    s.erase(std::remove(s.begin() + s.find('('), s.begin() + s.find(')') + 1, ' '), s.end()); // remove spaces
     size_t pos = m_s.find('(');
     if(pos != string::npos)
         a = m_s.substr(pos + 1, m_s.rfind(')') - pos - 1);
