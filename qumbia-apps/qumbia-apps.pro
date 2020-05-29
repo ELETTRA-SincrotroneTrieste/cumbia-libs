@@ -5,4 +5,5 @@ SUBDIRS=qumbiaprojectwizard \
 	cuuimake \
 	qumbia-client \
         cumbia \
-        la-cumparsita
+        la-cumparsita \
+        cumbia-component-config
