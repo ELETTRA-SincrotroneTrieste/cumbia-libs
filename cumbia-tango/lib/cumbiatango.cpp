@@ -71,7 +71,10 @@ void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTa
         a->addDataListener(l);
     }
     else {
-        perr("CumbiaTango.addAction: source \"%s\" is not valid, ignoring", src.c_str());
+        CuData e("err", true);
+        l->onUpdate(e.set("msg", "source \"" + source.getName() + "\" is not valid. valid pattern: \""
+                          + w.source_valid_pattern() + "\""));
+        perr("CumbiaTango.addAction: source \"%s\" is not valid, ignoring - good pattern: \"%s\"", src.c_str(), w.source_valid_pattern());
     }
 }
 
