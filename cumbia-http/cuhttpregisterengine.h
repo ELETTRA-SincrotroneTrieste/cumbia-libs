@@ -24,8 +24,13 @@ public:
     QString url() const;
     QString channel() const;
     bool hasCmdOption(QCommandLineParser *parser, const QStringList& args) const;
+
+    QString urlFromConfig() const;
+
+
 private:
     CuHttpRegisterEnginePrivate *d;
+    QByteArray m_make_hash(const QStringList& args) const;
 };
 
 #endif // CUHTTPREGISTERENGINE_H

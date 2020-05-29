@@ -11,6 +11,10 @@
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
 
+#include <QDir>
+#include <QTextStream>
+#include <QFile>
+#include <QCryptographicHash>
 
 class CuHttpRegisterEnginePrivate {
 public:
@@ -19,8 +23,6 @@ public:
 
 CuHttpRegisterEngine::CuHttpRegisterEngine() {
     d = new CuHttpRegisterEnginePrivate;
-    d->url = "http://localhost:12702";
-    d->chan = "1";
 }
 
 CuHttpRegisterEngine::~CuHttpRegisterEngine() {
@@ -75,16 +77,63 @@ QString CuHttpRegisterEngine::channel() const {
 }
 
 bool CuHttpRegisterEngine::hasCmdOption(QCommandLineParser *parser, const QStringList &args) const {
-    QCommandLineOption http_url_o(QStringList() << "u" << "http-url", "URL to http server/channel", "url", url());
+    QCommandLineOption http_url_o(QStringList() << "u" << "http-url", "URL to http server/channel or URL only if -c [--channel] is provided", "url");
+    QCommandLineOption chan_o(QStringList() << "c" << "channel", "Server Sent Events channel name", "chan");
     if(!parser->optionNames().contains("u")) {
         parser->addOption(http_url_o);
     }
-    parser->process(args);
-    QString url = parser->value(http_url_o);
-    d->chan = url.section(QRegularExpression("[^:^/]/"), -1); // match last token after a / but skip http[s]://
-    d->chan != url ? d->url = url.remove(url.lastIndexOf('/'), d->chan.length() + 1) : d->chan.remove(0, d->chan.length());
-    if(d->url.contains(QRegularExpression("http[s]{0,1}://.*")) && d->chan.isEmpty())
-         printf("\e[1;33m*\e[0m CuHttpRegisterEngine: channel not detected in URL: required form: \"%s/\e[1;33mchannel_name\e[0m\"\n",
-                qstoc(d->url));
-    return !d->url.isEmpty() && d->chan.size() > 0 && (d->url.startsWith("http://") || d->url.startsWith("https://"));
+    parser->addOption(chan_o);
+    parser->parse(args);
+    QString url;
+    if(parser->isSet(http_url_o))
+        url = parser->value(http_url_o);
+    if(parser->isSet(chan_o))
+        d->chan = parser->value(chan_o);
+    else if(!url.isEmpty()) {
+        d->chan = url.section(QRegularExpression("[^:^/]/"), -1); // match last token after a / but skip http[s]://
+        d->chan != url ? d->url = url.remove(url.lastIndexOf('/'), d->chan.length() + 1) : d->chan.remove(0, d->chan.length());
+        if(d->url.contains(QRegularExpression("http[s]{0,1}://.*")) && d->chan.isEmpty())
+            printf("\e[1;33m*\e[0m CuHttpRegisterEngine: channel not detected in URL: required form: \"%s/\e[1;33mchannel_name\e[0m\"\n",
+                   qstoc(d->url));
+    }
+    if(url.isEmpty()) // d->chan is set only if specified in -c option at this point
+        url = urlFromConfig();
+    if(!url.isEmpty()) {
+        d->url = url;
+        if(d->chan.isEmpty())   // hash of app name and cmd line args
+            d->chan = m_make_hash(args);
+    }
+    bool http_mod = !d->url.isEmpty() && d->chan.size() > 0 && (d->url.startsWith("http://") || d->url.startsWith("https://"));
+    cuprintf("CuHttpRegisterEngine::hasCmdOption: URL \e[1;32;4m%s\e[0m channel \"\e[1;36m%s\e[0m: using http mod: %s\n",
+             qstoc(d->url), qstoc(d->chan), http_mod ? "\e[1;32mYES\e[0m" : "\e[1");
+    return http_mod;
+}
+
+QString CuHttpRegisterEngine::urlFromConfig() const
+{
+    QString url;
+    printf("CuHttpRegisterEngine::urlFromConfig \e[1;31mIMPROVE\e[0m method to get config file name\e[0m\n");
+    QString cfgf = QDir::homePath() + "/.config/cumbia/modules";
+    QFile f(cfgf);
+    if(f.open(QIODevice::ReadOnly)) {
+        QTextStream in(&f);
+        while(!in.atEnd() && url.isEmpty()) {
+            QString l = in.readLine();
+            if(l.startsWith("url:"))
+                url = l.remove("url:");
+        }
+        f.close();
+    }
+    else
+        printf("CuHttpRegisterEngine::urlFromConfig: file %s not found: cannot use a default url\n", qstoc(cfgf));
+    cuprintf("CuHttpRegisterEngine::urlFromConfig url is %s\n", qstoc(url));
+    return url;
+}
+
+QByteArray CuHttpRegisterEngine::m_make_hash(const QStringList &args) const
+{
+    QCryptographicHash cryha(QCryptographicHash::Md5);
+    for(int i = 1; i < args.size(); i++)
+        cryha.addData(args[i].toLocal8Bit());
+    return args[0].section('/', -1).toLocal8Bit() + '-' + cryha.result().toHex();
 }
