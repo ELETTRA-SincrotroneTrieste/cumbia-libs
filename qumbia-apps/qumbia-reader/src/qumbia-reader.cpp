@@ -578,11 +578,11 @@ void QumbiaReader::m_createReaders(const QStringList &srcs) {
         {
             // square brackets in bash shell are OK
             // if present, replace them with ()
-            // [A-Za-z0-9\-_\.,/]+->[A-Za-z0-9\-_\.,]+(?:\[.*\]){0,1}
+            // [A-Za-z0-9\-_\.,/]+(?:->|/)[A-Za-z0-9\-_\.,]+(?:\[.*\]){0,1}
             // match for example aa/bb/cc:command[1,2] and replace with
             // aa/bb/cc->command(1,2)
-            //
-            QRegularExpression squarebrackets_cmd("[A-Za-z0-9\\-_\\.,/]+->[A-Za-z0-9\\-_\\.,]+(?:\\[.*\\]){0,1}");
+            // t/de/1[values] --> t/de/1(description,values) <-- this is a device property read
+            QRegularExpression squarebrackets_src("[A-Za-z0-9\\-_\\.,/]+(?:->|/)[A-Za-z0-9\\-_\\.,]+(?:\\[.*\\]){0,1}");
             CuData reader_ctx_options;
             QString a = m_conf.sources.at(i);
             // do not replace domain:// with domain-> !
@@ -597,7 +597,7 @@ void QumbiaReader::m_createReaders(const QStringList &srcs) {
                 a.remove(QString::fromStdString(save_dom));
             a.replace("//", "->");
             a = QString("%1%2").arg(save_dom.c_str()).arg(a);
-            QRegularExpressionMatch match = squarebrackets_cmd.match(a);
+            QRegularExpressionMatch match = squarebrackets_src.match(a);
             if(match.hasMatch()) {
                 a.replace('[', '(').replace(']', ')');
             }
