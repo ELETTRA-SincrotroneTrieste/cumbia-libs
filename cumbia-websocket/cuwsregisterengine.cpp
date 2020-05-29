@@ -18,7 +18,6 @@ public:
 
 CuWsRegisterEngine::CuWsRegisterEngine() {
     d = new CuWsRegisterEnginePrivate;
-    d->url = "ws://localhost:12702";
 }
 
 CuWsRegisterEngine::~CuWsRegisterEngine() {
@@ -66,10 +65,10 @@ QString CuWsRegisterEngine::url() const {
 
 bool CuWsRegisterEngine::hasCmdOption(QCommandLineParser *parser, const QStringList &args) const
 {
-    QCommandLineOption ws_url_o(QStringList() << "u" << "url", "URL to either websocket or http server", "url", url());
+    QCommandLineOption ws_url_o(QStringList() << "u" << "url", "URL to either websocket or http server", "url");
     if(!parser->optionNames().contains("u"))
         parser->addOption(ws_url_o);
-    parser->process(args);
+    parser->parse(args);
     d->url = parser->value(ws_url_o);
     return parser->isSet(ws_url_o) && (d->url.startsWith("ws://") || d->url.startsWith("wss://")) ;
 }
