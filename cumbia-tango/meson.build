@@ -76,7 +76,7 @@ sources = [
 
 includedirs = include_directories('lib')
 
-cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1 -DCUMBIA_TANGO_VERSION=' + cu_version
+cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1 -DCU_TANGO_VERSION=' + cu_version
 # cpp_arguments = []
 
 deps = [ dependency('threads'), dependency('cumbia'), dependency('tango', method: 'pkg-config') ]
