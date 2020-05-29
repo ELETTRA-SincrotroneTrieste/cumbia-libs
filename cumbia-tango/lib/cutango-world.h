@@ -71,6 +71,8 @@ public:
 
     bool source_valid(const std::string& src);
 
+    const char *source_valid_pattern() const;
+
     std::string getLastMessage() const;
 
     std::string formatToStr(Tango::AttrDataFormat f) const;
