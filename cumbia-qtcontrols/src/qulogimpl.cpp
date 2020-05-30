@@ -146,29 +146,6 @@ void QuLogImpl::write(const std::string &origin, const std::string &msg, CuLog::
         d->dialog->show();
 }
 
-void QuLogImpl::write(const std::string &origin, CuLog::Level l, CuLog::Class c, const char *fmt, ...)
-{
-
-    va_list vl;
-    va_start(vl, fmt);
-    char s[2048];QString type;
-    if(l == CuLog::Info) type = "INFO";
-    else if(l == CuLog::Warn) type = "WARN";
-    else type = "ERR";
-
-    vsnprintf(s, 2048, fmt, vl);
-    QuLogEntry e(type, QString::fromStdString(origin), QString(s));
-    d->msgs.append(e);
-
-    if(!d->dialog)
-        d->dialog = new QuErrorDialog(0, this, d->msgs);
-    else
-        d->dialog->add(e);
-    if(d->showPopupByLogClassMap[c])
-        d->dialog->show();
-    va_end(vl);
-}
-
 std::string QuLogImpl::getName() const
 {
     return "QuLogImpl";
