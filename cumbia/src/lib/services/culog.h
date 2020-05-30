@@ -58,6 +58,8 @@ public:
 
     void write(const std::string &origin, const std::string &msg, Level l = Error, Class c = Generic);
 
+    void write(const std::string& origin, Level l, const char *fmt, ...);
+
     void write(const std::string& origin, Level l, Class c, const char *fmt, ...);
 
     CuLogImplI *getImpl(const std::string &name);
@@ -95,8 +97,6 @@ public:
 
     virtual void write(const std::string & origin, const std::string & msg, CuLog::Level l = CuLog::Error, CuLog::Class c = CuLog::Generic) = 0;
 
-    virtual void write(const std::string& origin, CuLog::Level l, CuLog::Class c, const char *, ...) = 0;
-
     virtual std::string getName() const = 0;
 };
 
@@ -110,8 +110,6 @@ class CuNullLogImpl : CuLogImplI
 {
 public:
     virtual void write(const std::string &, const std::string &, CuLog::Level = CuLog::Error, CuLog::Class  = CuLog::Generic) {}
-
-    virtual void write(const std::string&, CuLog::Level, CuLog::Class, const char *, ...) {}
 
     virtual std::string getName() const;
 };
@@ -127,8 +125,6 @@ class CuConLogImpl : public CuLogImplI
     // CuLogImplI interface
 public:
     virtual void write(const std::string & origin, const std::string & msg, CuLog::Level l = CuLog::Error, CuLog::Class c = CuLog::Generic);
-
-    virtual void write(const std::string& origin, CuLog::Level l, CuLog::Class c, const char *, ...);
 
     virtual std::string getName() const;
 };

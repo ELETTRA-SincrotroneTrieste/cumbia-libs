@@ -12,8 +12,7 @@
  */
 CuLog::CuLog(CuLogImplI *log_impl)
 {
-    std::list<CuLogImplI *>::iterator it = mLogImpls.begin();
-    mLogImpls.insert(it, log_impl);
+    mLogImpls.push_back(log_impl);
 }
 
 /*! \brief empty class constructor
@@ -78,7 +77,20 @@ void CuLog::write(const std::string & origin, const std::string & msg, CuLog::Le
 {
     std::list<CuLogImplI *>::iterator it;
     for(it = mLogImpls.begin(); it != mLogImpls.end(); ++it)
-         (*it)->write(origin, msg, l, c);
+        (*it)->write(origin, msg, l, c);
+}
+
+void CuLog::write(const std::string &origin, CuLog::Level l, const char *fmt, ...) {
+    va_list s;
+    va_start(s, fmt);
+    std::list<CuLogImplI *>::iterator it;
+    char st[2048];
+    vsnprintf(st, 2048, fmt, s);
+    std::string str(st);
+    for(it = mLogImpls.begin(); it != mLogImpls.end(); ++it) {
+        (*it)->write(origin, str, l, CuLog::Generic);
+    }
+    va_end(s);
 }
 
 /*! \brief writes a log message on every CuLogImplI registered with addImpl (with printf format)
@@ -100,10 +112,14 @@ void CuLog::write(const std::string & origin, const std::string & msg, CuLog::Le
 void CuLog::write(const std::string& origin, CuLog::Level l, CuLog::Class c, const char *fmt, ...)
 {
     va_list s;
-    va_start( s, fmt);
+    va_start(s, fmt);
     std::list<CuLogImplI *>::iterator it;
-    for(it = mLogImpls.begin(); it != mLogImpls.end(); ++it)
-        (*it)->write(origin, l, c, fmt, s);
+    char st[2048];
+    vsnprintf(st, 2048, fmt, s);
+    std::string str(st);
+    for(it = mLogImpls.begin(); it != mLogImpls.end(); ++it) {
+        (*it)->write(origin, str, l, c);
+    }
     va_end(s);
 }
 
@@ -174,30 +190,6 @@ void CuConLogImpl::write(const std::string & origin, const std::string & msg, Cu
     else
         fprintf(stderr, "\e[1;31me\e[0m: \e[0;31;3m%s\e[0m: %s\n", origin.c_str(), msg.c_str());
 
-}
-
-/*! \brief writes a message on the console.
- *
- * Writes on stderr if the CuLog::Level is different from CuLog::Info and CuLog::Warn,
- * on stdout otherwise
- *
- * See CuLog::write(const std::string& origin, CuLog::Level l, CuLog::Class c, const char *fmt, ...)
- * for the input parameters description
- */
-void CuConLogImpl::write(const std::string &origin, CuLog::Level l, CuLog::Class c,  const char *fmt, ...)
-{
-    va_list s;
-    va_start( s, fmt);
-    if(l == CuLog::Info)
-        fprintf(stdout, "\e[1;36mi\e[0m: \e[3m%s\e[0m: ", origin.c_str());
-    else if(l == CuLog::Warn)
-        fprintf(stdout, "\e[1;33mw\e[0m: \e[3m%s\e[0m: ", origin.c_str());
-    else
-        fprintf(stderr, "\e[1;31;4merror\e[0m: \e[0;31;3m%s\e[0m: ", origin.c_str());
-
-    vfprintf(stdout, fmt, s);
-    fprintf(stderr, "\n");
-    va_end(s);
 }
 
 /*! \brief returns the name of the console log implementation
