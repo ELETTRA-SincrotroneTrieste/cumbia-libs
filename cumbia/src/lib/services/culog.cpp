@@ -28,6 +28,9 @@ CuLog::CuLog()
 /*! \brief the class destructor
  *
  * virtual class destructor
+ *
+ * \par note
+ * Does not delete implementations
  */
 CuLog::~CuLog()
 {
