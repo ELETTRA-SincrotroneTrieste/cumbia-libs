@@ -204,7 +204,7 @@ bool CuData::containsKey(const std::string &key) const
 bool CuData::has(const std::string &key, const std::string &value) const
 {
     bool ok;
-    return d->datamap.find(key) != d->datamap.end() && d->datamap.at(key).toString(&ok) == value && ok;
+    return d->datamap.count(key) > 0 && d->datamap.at(key).toString(&ok) == value && ok;
 }
 
 /*! \brief array subscript write operator; pushes a new key-value pair into the bundle
