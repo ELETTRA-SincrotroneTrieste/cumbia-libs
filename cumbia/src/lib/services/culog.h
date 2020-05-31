@@ -109,7 +109,7 @@ public:
 class CuNullLogImpl : CuLogImplI
 {
 public:
-    virtual void write(const std::string &, const std::string &, int level = CuLog::Error, int category  = CuLog::Generic) {}
+    virtual void write(const std::string &, const std::string &, int  = CuLog::Error, int   = CuLog::Generic) {}
 
     virtual std::string getName() const;
 };
