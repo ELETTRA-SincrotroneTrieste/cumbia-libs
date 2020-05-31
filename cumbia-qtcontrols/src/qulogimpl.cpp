@@ -129,7 +129,7 @@ QuLogImpl::~QuLogImpl()
     delete d;
 }
 
-void QuLogImpl::write(const std::string &origin, const std::string &msg, CuLog::Level l, CuLog::Class c)
+void QuLogImpl::write(const std::string &origin, const std::string &msg, int l, int c)
 {
     QString type;
     if(l == CuLog::Info) type = "INFO";

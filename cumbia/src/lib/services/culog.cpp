@@ -73,14 +73,14 @@ void CuLog::removeImpl(const std::string &name)
  * Calls the CuLogImplI::write(const std::string & origin, const std::string & msg, CuLog::Level l = CuLog::Error, CuLog::Class c = CuLog::Generic)
  * on all registered CuLogImplI's
  */
-void CuLog::write(const std::string & origin, const std::string & msg, CuLog::Level l, CuLog::Class c)
+void CuLog::write(const std::string & origin, const std::string & msg, int l, int c)
 {
     std::list<CuLogImplI *>::iterator it;
     for(it = mLogImpls.begin(); it != mLogImpls.end(); ++it)
         (*it)->write(origin, msg, l, c);
 }
 
-void CuLog::write(const std::string &origin, CuLog::Level l, const char *fmt, ...) {
+void CuLog::write(const std::string &origin, int l, const char *fmt, ...) {
     va_list s;
     va_start(s, fmt);
     std::list<CuLogImplI *>::iterator it;
@@ -109,7 +109,7 @@ void CuLog::write(const std::string &origin, CuLog::Level l, const char *fmt, ..
  *      "stop called twice for reader %s", data["source"].toString().c_str());
  * \endcode
  */
-void CuLog::write(const std::string& origin, CuLog::Level l, CuLog::Class c, const char *fmt, ...)
+void CuLog::write(const std::string& origin, int l, int category, const char *fmt, ...)
 {
     va_list s;
     va_start(s, fmt);
@@ -118,7 +118,7 @@ void CuLog::write(const std::string& origin, CuLog::Level l, CuLog::Class c, con
     vsnprintf(st, 2048, fmt, s);
     std::string str(st);
     for(it = mLogImpls.begin(); it != mLogImpls.end(); ++it) {
-        (*it)->write(origin, str, l, c);
+        (*it)->write(origin, str, l, category);
     }
     va_end(s);
 }
@@ -181,7 +181,7 @@ CuServices::Type CuLog::getType() const
  * See CuLog::write(const std::string & origin, const std::string & msg, CuLog::Level l, CuLog::Class c)
  * for the input parameters description
  */
-void CuConLogImpl::write(const std::string & origin, const std::string & msg, CuLog::Level l, CuLog::Class c)
+void CuConLogImpl::write(const std::string & origin, const std::string & msg, int l, int c)
 {
     if(l == CuLog::Info)
         fprintf(stdout, "\e[1;36mi\e[0m: \e[3m%s\e[0m: %s\n", origin.c_str(), msg.c_str());

@@ -42,9 +42,9 @@ class CuLog : public CuServiceI
 {
 public:
 
-    enum Class { Generic = 0, Connect, Write, Read, User = 100 };
+    enum Category { Generic = 0, Network, Write, Read, User = 100 };
 
-    enum Level { Info = 0, Warn, Error };
+    enum Level { Debug = 0, Info, Warn, Error };
 
     CuLog(CuLogImplI *log_impl);
 
@@ -56,11 +56,11 @@ public:
 
     void removeImpl(const std::string& name);
 
-    void write(const std::string &origin, const std::string &msg, Level l = Error, Class c = Generic);
+    void write(const std::string &origin, const std::string &msg, int l = Error, int c = Generic);
 
-    void write(const std::string& origin, Level l, const char *fmt, ...);
+    void write(const std::string& origin, int l, const char *fmt, ...);
 
-    void write(const std::string& origin, Level l, Class c, const char *fmt, ...);
+    void write(const std::string& origin, int l, int category, const char *fmt, ...);
 
     CuLogImplI *getImpl(const std::string &name);
 
@@ -95,7 +95,7 @@ public:
      */
     virtual ~CuLogImplI() {}
 
-    virtual void write(const std::string & origin, const std::string & msg, CuLog::Level l = CuLog::Error, CuLog::Class c = CuLog::Generic) = 0;
+    virtual void write(const std::string & origin, const std::string & msg, int l = CuLog::Error, int category = CuLog::Generic) = 0;
 
     virtual std::string getName() const = 0;
 };
@@ -109,7 +109,7 @@ public:
 class CuNullLogImpl : CuLogImplI
 {
 public:
-    virtual void write(const std::string &, const std::string &, CuLog::Level = CuLog::Error, CuLog::Class  = CuLog::Generic) {}
+    virtual void write(const std::string &, const std::string &, int level = CuLog::Error, int category  = CuLog::Generic) {}
 
     virtual std::string getName() const;
 };
@@ -124,7 +124,7 @@ class CuConLogImpl : public CuLogImplI
 {
     // CuLogImplI interface
 public:
-    virtual void write(const std::string & origin, const std::string & msg, CuLog::Level l = CuLog::Error, CuLog::Class c = CuLog::Generic);
+    virtual void write(const std::string & origin, const std::string & msg, int l = CuLog::Error, int c = CuLog::Generic);
 
     virtual std::string getName() const;
 };

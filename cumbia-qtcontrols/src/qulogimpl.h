@@ -99,7 +99,7 @@ public:
 
     // CuLogImplI interface
 public:
-    void write(const std::string &origin, const std::string &write, CuLog::Level l, CuLog::Class c);
+    void write(const std::string &origin, const std::string &write, int l, int c);
     std::string getName() const;
 };
 
