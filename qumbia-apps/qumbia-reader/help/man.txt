@@ -214,7 +214,7 @@
 ### Connect to a websocket server
     Reading from a websocket server is an option excluding all other engines (Tango, EPICS).
     They will be disabled, to allow the source name[s] to remain unaffected.
-    The websocket server is a proxy to the real engines that enables cumbia, web, and mobile apps to exchange
+    The websocket server is a proxy to the real engines that enables cumbia desktop, web, and mobile apps to exchange
     data with control systems without having neither their specific libraries installed nor access to the field.
 
     For the examples below to work, the cumbia-websocket-proxy-server must be listening on the port 12702.
@@ -234,7 +234,7 @@
     data with control systems without having neither their specific libraries installed nor access to the field.
 
     When implemented, nginx with nchan module will have to be configured to forward requests to a specific service
-    in charge of connecting to the native control system.
+    in charge of connecting to the native control system(s).
 
     The required parameter is --url [-u]  http://woody.elettra.eu:8001/sse_channel_name
     Another option is to provide the url and the channel name separately: -u http://woody.elettra.eu:8001 -c sse_channel_name
@@ -243,8 +243,9 @@
             $cumbia read -u http://woody.elettra.eu:8001/ -c sse_chan hokuto:20000/test/device/1/double_scalar
 
 ### Default engine for cumbia apps.
-    Not only cumbia read but every app can be told to use a default module by default.
+    Every cumbia app can be told to load a specific module by default.
     The utility `cumbia apps module-default` shows the current module in use. To change it, execute `cumbia apps module-default set`.
+    To see the set of available modules, type `cumbia modules`
 
     http and websocket modules can thus be set as default in environments where native engines are not installed or unreachable.
 

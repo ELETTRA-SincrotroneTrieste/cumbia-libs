@@ -76,7 +76,7 @@ RConfig CmdLineOptions::parse(const QStringList &args) const
     p.addOption(helpO);
     p.addOption(help2O);
     p.addOption(listOptsO);
-    p.process(args);
+    p.parse(args);
 
     bool ok;
     RConfig o;
