@@ -16,26 +16,30 @@
 print_menu() {
 
 		printf "\n"
-		printf "+%.24s--%.38s--%.58s+\n" "--------------------------------" "--------------------------------------------" "-----------------------------------------------------------------"
-		printf "|%-24s| %-38s| %-58s|\n" "cumbia launcher options" "description" "options"
-		printf "|%.24s| %.38s| %.58s|\n" "--------------------------------" "---------------------------------------------" "------------------------------------------------------------------"
-		printf "|%-24s| %-38s| %-58s|\n" "" ""
-		printf "|%-24s| %-38s| %-58s|\n" "cumbia new project" "write a new cumbia project" ""
-		printf "|%-24s| %-38s| %-58s|\n" "cumbia new control" "write a new cumbia control widget"
-		printf "|%-24s| %-38s| %-58s|\n" "cumbia import" "try to migrate a qtango project" ""
-		printf "|%-24s| %-38s| %-58s|\n" "cumbia import fast" "as above, proceed in the current dir" ""
-		printf "|%-24s| %-38s| %-58s|\n" "cumbia ui make" "call cuuimake" "[--help] | [--clean] | [--pre-clean | --qmake | --make]"
-		printf "|%-24s| %-38s| %-58s|\n" "cumbia client" "run the cumbia generic client" "list of sources: test/device/1 [a/src/2 source:ai1]"
-                printf "|%-24s| %-38s| %-58s|\n" "cumbia read" "run the command line reader" "list of sources: test/device/1 [a/src/2 source:ai1] [--truncate=n] [--help]"
-		printf "|%-24s| %-38s| %-58s|\n" "cumbia upgrade" "upgrade to a newer version of cumbia" ""
-		printf "+%.24s--%.38s--%.58s+\n" "--------------------------------" "--------------------------------------------" "--------------------------------------------------------------------"
+                printf "+%.27s--%.38s--%.58s+\n" "--------------------------------" "--------------------------------------------" "-----------------------------------------------------------------"
+                printf "|%-27s| %-38s| %-58s|\n" "cumbia launcher options" "description" "options"
+                printf "|%.27s| %.38s| %.58s|\n" "--------------------------------" "---------------------------------------------" "------------------------------------------------------------------"
+                printf "|%-27s| %-38s| %-58s|\n" "" ""
+                printf "|%-27s| %-38s| %-58s|\n" "cumbia read" "run the command line reader" "list of sources: test/device/1 [a/src/2 source:ai1] [-h]"
+                printf "|%-27s| %-38s| %-58s|\n" "cumbia apps module-default" "show default module used by apps" "set: change the default module"
+                printf "|%-27s| %-38s| %-58s|\n" "cumbia apps modules list" "list installed modules" ""
+                printf "|%-27s| %-38s| %-58s|\n" "cumbia ui make" "call cuuimake" "[--help] | [--clean] | [--pre-clean | --qmake | --make]"
+                printf "|%-27s| %-38s| %-58s|\n" "cumbia client" "run the cumbia generic client" "list of sources: test/device/1 [a/src/2 source:ai1]"
+                printf "|%-27s| %-38s| %-58s|\n" "cumbia upgrade" "upgrade to a newer version of cumbia" ""
+                printf "|%-27s| %-38s| %-58s|\n" "cumbia new project" "write a new cumbia project" ""
+                printf "|%-27s| %-38s| %-58s|\n" "cumbia new control" "write a new cumbia control widget"
+                printf "|%-27s| %-38s| %-58s|\n" "cumbia import" "try to migrate a qtango project" ""
+                printf "|%-27s| %-38s| %-58s|\n" "cumbia import fast" "as above, proceed in the current dir" ""
+                printf "+%.27s--%.38s--%.58s+\n" "--------------------------------" "--------------------------------------------" "--------------------------------------------------------------------"
 		printf "\n"
+
+                printf "cumbia \e[1;32m<\e[0mTAB\e[1;32m>\e[0m completes options\n"
 }
 
 conf_f=$HOME/.config/cumbia/srcupdate.conf
 
 if [ $# -lt 1 ]; then
-#	print_menu
+        print_menu
         echo "$#"
 
 elif [ $# -gt 1 ] && [ $1 == "new" ] && [ $2 == "project" ]; then
@@ -50,11 +54,11 @@ elif [ $# -gt 0 ] && [ $1 == "read" ]; then
         qumbia-reader "${@:2}"
 elif [ $# -gt 0 ] && [ $1 == "monitor" ]; then
         qumbia-reader --monitor "${@:2}"
-elif [ $# -gt 0 ] && [ $1 == "apps" ] && [ $2 == "module-default" ] && [ $3 == "show" ]; then
+elif [ $# -eq 3 ] && [ $1 == "apps" ] && [ $2 == "module-default" ] && [ $3 == "show" ]; then
         cu-component-config -c modules
-elif [ $# -gt 0 ] && [ $1 == "apps" ] && [ $2 == "module-default" ] && [ $3 == "set" ]; then
+elif [ $# -eq 3 ] && [ $1 == "apps" ] && [ $2 == "module-default" ] && [ $3 == "set" ]; then
         cu-component-config -c modules -s
-elif [ $# -gt 0 ] && [ $1 == "apps" ] && [ $2 == "module-default" ]; then
+elif [ $# -eq 2 ] && [ $1 == "apps" ] && [ $2 == "module-default" ]; then
         cu-component-config -c modules
 elif [ $# -gt 0 ] && [ $1 == "modules" ]; then
         cu-component-config -c modules -l
