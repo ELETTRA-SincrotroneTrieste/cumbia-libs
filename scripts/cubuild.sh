@@ -716,7 +716,7 @@ for x in "${qmake_subdir_p[@]}"; do
         ## Rely on qmake to correctly manage subdirs
         if [ $build -eq 1 ]; then
                 echo -e "\e[1;32m\n*\n* BUILD project ${sd}...\n*\e[0m"
-                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j3 && make install
+                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j3 && qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make install
                 if [ $? -ne 0 ]; then
                         exit 1
                 else
