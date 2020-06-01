@@ -1,6 +1,7 @@
 CONFIG += ordered
 TEMPLATE = subdirs
-SUBDIRS=qumbiaprojectwizard \
+SUBDIRS= quapps \
+        qumbiaprojectwizard \
 	qumbianewcontrolwizard \
 	cuuimake \
 	qumbia-client \
