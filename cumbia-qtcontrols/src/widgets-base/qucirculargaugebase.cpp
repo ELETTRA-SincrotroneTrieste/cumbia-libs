@@ -1030,8 +1030,8 @@ void QuCircularGaugeBase::m_anglesUpdate()
     d->cos_a0 = cos(a0);
     d->cos_a1 = cos(a1);
 
-    cuprintf("m_anglesUpdate a0 = %d a1 = %d \e[1;34msin a0 %f cos a0 %f \e[1;33m sin a1 %f cos a1 %f\e[0m\n",
-             d->startAngle, d->startAngle + d->spanAngle, d->sin_a0, d->cos_a0, d->sin_a1, d->cos_a1);
+//    cuprintf("m_anglesUpdate a0 = %d a1 = %d \e[1;34msin a0 %f cos a0 %f \e[1;33m sin a1 %f cos a1 %f\e[0m\n",
+//             d->startAngle, d->startAngle + d->spanAngle, d->sin_a0, d->cos_a0, d->sin_a1, d->cos_a1);
 
     if(d->sin_a0 < 0 && d->cos_a0 >= 0 && d->sin_a1 <= 0 && d->cos_a1 >= 0)
         d->quad = q1;
