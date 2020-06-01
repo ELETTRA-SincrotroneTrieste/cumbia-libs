@@ -19,4 +19,4 @@ qmake_p=(cumbia-qtcontrols)
 # they are qt projects with the TEMPLATE=subdir directive in the .pro file
 # for example, qumbia-apps and qumbia-plugins
 
-qmake_subdir_p=(qumbia-apps  qumbia-plugins)
+qmake_subdir_p=(qumbia-apps  qumbia-plugins qumbia-apps/quapps)
