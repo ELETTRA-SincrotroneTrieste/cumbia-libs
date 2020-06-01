@@ -2,6 +2,10 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT=/usr/local/cumbia-libs
 }
 
+isEmpty(CU_USER_CONFIG_DIR) {
+    CU_USER_CONFIG_DIR=.config
+}
+
 linux-g++ {
     exists ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
         message("- adding EPICS support under $${INSTALL_ROOT}")
@@ -53,6 +57,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 DEFINES += QT_NO_DEBUG_OUTPUT
+
+message("-")
+message("quapps.pri: user configuration dir is set to $${CU_USER_CONFIG_DIR} under the home dir")
+message("            it can be changed by calling qmake CU_USER_CONFIG_DIR=someotherdir")
+message("quapps.pri: the 'cumbia-apps module-default' utility can help configure the default engine")
+message("            for your applications, for example 'http' or 'native'")
+message("            Type `cumbia apps module-default` or `cumbia apps module-default set` at the terminal")
+message("-")
+DEFINES += CUMBIA_USER_CONFIG_DIR=\"\\\"$${CU_USER_CONFIG_DIR}\\\"\"
 
 unix:INCLUDEPATH += $${INSTALL_ROOT}/include/quapps
 
