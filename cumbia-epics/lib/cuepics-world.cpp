@@ -531,7 +531,7 @@ bool CuEpicsWorld::m_ep_caget(CuPV *pv, CuData &res, CaGetMode cagetMode, double
         result = ca_pend_io(timeout);
         if(result == ECA_TIMEOUT) {
             success = false;
-            snprintf(msg, 256, "CuEpicsWorld.m_ep_caget timeout (>%f seconds) while reading \"%s\"",
+            snprintf(msg, 230, "CuEpicsWorld.m_ep_caget timeout (>%f seconds) while reading \"%s\"",
                      timeout, pv->name);
             res["msg"] = std::string(msg);
         }
