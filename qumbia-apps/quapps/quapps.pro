@@ -2,6 +2,18 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT=/usr/local/cumbia-libs
 }
 
+# INSTALL_ROOT is used to install the target
+# prefix is used within DEFINES +=
+#
+# cumbia installation script uses a temporary INSTALL_ROOT during build
+# and then files are copied into the destination prefix. That's where
+# configuration files must be found by the application when the script
+# installs everything at destination
+#
+isEmpty(prefix) {
+    prefix = $${INSTALL_ROOT}
+}
+
 linux-g++ {
     exists ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
         message("- adding EPICS support under $${INSTALL_ROOT}")
