@@ -4,7 +4,10 @@ isEmpty(INSTALL_ROOT) {
 
 exists ($${INSTALL_ROOT}/include/quapps/quapps.pri) {
     include ($${INSTALL_ROOT}/include/quapps/quapps.pri)
+} else {
+    error("file $${INSTALL_ROOT}/include/quapps/quapps.pri not found")
 }
+
 
 CONFIG+=link_pkgconfig
 PKGCONFIG -= x11
