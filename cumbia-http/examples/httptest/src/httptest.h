@@ -21,12 +21,11 @@ public:
     ~HttpTest();
 
 private:
-    Ui::HttpTest *ui;
-
     CumbiaPool *cu_pool;
     QuLogImpl m_log_impl;
     CuLog *m_log;
     CuControlsFactoryPool m_ctrl_factory_pool;
+    Ui::HttpTest *ui;
 };
 
 #endif // Test_H
