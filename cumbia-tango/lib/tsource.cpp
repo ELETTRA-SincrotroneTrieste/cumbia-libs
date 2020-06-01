@@ -20,13 +20,6 @@ TSource::TSource(const string s)
 {
     m_s = s;
     m_ty = m_get_ty(s);
-
-    cuprintf("TSource: src is %s database is \e[1;35m%s\e[0m \n", m_s.c_str(), getTangoHost().c_str());
-    cuprintf("TSource: device is \e[1;32m%s\e[0m point is \e[1;36m%s\e[0m prop is \e[1;33m%s\e[0m search pattern: \e[0;33m%s\e[0m\n",
-             getDeviceName().c_str(), getPoint().c_str(), getArgsString().c_str(), getSearchPattern().c_str());
-    if(m_ty == SrcDbClassProp || m_ty == SrcDbClassProps)
-        cuprintf("TSource: class \e[1;34m%s\e[0m\n", getPropClassNam().c_str());
-    cuprintf("TSource: detected type \e[1;32m%s\e[0m\n", getTypeName(m_ty));
 }
 
 TSource::TSource(const TSource &other)
