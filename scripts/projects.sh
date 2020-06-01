@@ -10,7 +10,7 @@ meson_p=(cumbia)
 # cumbia-tango and cumbia-epics will be appended to the list according to the
 # cubuild.sh command line arguments
 
-qmake_p=(cumbia-qtcontrols)
+qmake_p=(cumbia-qtcontrols qumbia-apps/quapps)
 
 # qumbia-epics-controls and qumbia-tango-controls will be appended to the list according to the
 # cubuild.sh command line arguments
@@ -19,4 +19,4 @@ qmake_p=(cumbia-qtcontrols)
 # they are qt projects with the TEMPLATE=subdir directive in the .pro file
 # for example, qumbia-apps and qumbia-plugins
 
-qmake_subdir_p=(qumbia-apps  qumbia-plugins qumbia-apps/quapps)
+qmake_subdir_p=(qumbia-apps  qumbia-plugins)
