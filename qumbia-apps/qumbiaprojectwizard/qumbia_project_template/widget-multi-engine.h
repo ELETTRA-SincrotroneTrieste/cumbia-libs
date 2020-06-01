@@ -21,11 +21,10 @@ public:
     ~$MAINCLASS$();
 
 private:
-    Ui::$UIFORMCLASS$ *ui;
-
     CumbiaPool *cu_pool;
     QuLogImpl m_log_impl;
     CuControlsFactoryPool m_ctrl_factory_pool;
+    Ui::$UIFORMCLASS$ *ui;
 };
 
 #endif // $MAINCLASS$_H

@@ -10,6 +10,7 @@
 
 $MAINCLASS$::$MAINCLASS$(CumbiaPool *cumbia_pool, QWidget *parent) :
     QWidget(parent),
+    cu_pool(cumbia_pool),
     ui(new Ui::$UIFORMCLASS$)
 {
     CuModuleLoader mloader(cumbia_pool, &m_ctrl_factory_pool, &m_log_impl);
