@@ -12,8 +12,6 @@ public:
 
     RConfig parse(const QStringList &args) const;
 
-    void usage(const QString& appname) const;
-
     void help(const QString &appname, const QString& modulenam) const;
 
     void list_options() const;

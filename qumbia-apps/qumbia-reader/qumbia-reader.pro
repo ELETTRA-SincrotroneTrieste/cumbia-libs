@@ -2,30 +2,9 @@ isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT=/usr/local/cumbia-libs
 }
 
-exists ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
-    message("- adding EPICS support under $${INSTALL_ROOT}")
-    include ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+exists ($${INSTALL_ROOT}/include/quapps/quapps.pri) {
+    include ($${INSTALL_ROOT}/include/quapps/quapps.pri)
 }
-exists  ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
-    message("- adding Tango support under $${INSTALL_ROOT}")
-    include ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
-}
-
-exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {
-    message("- adding cumbia-random module support under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
-}
-
-exists($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri) {
-    message("- adding cumbia-websocket module support under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
-}
-
-exists($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri) {
-    message("- adding cumbia-http module support under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri)
-}
-
 
 CONFIG+=link_pkgconfig
 PKGCONFIG -= x11
@@ -46,7 +25,7 @@ packagesExist(cumbia-hdb) {
 
 TEMPLATE = app
 
-CONFIG +=  console
+CONFIG += console
 QT -= gui
 
 SHAREDIR = $${INSTALL_ROOT}/share
@@ -60,7 +39,7 @@ CONFIG +=
 # CONFIG+=declarative_debug
 
 
-DEFINES += QT_NO_DEBUG_OUTPUT
+DEFINES -= QT_NO_DEBUG_OUTPUT
 
 OBJECTS_DIR = objects
 

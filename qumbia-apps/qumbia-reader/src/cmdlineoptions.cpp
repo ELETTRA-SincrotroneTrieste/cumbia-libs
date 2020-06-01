@@ -6,153 +6,127 @@
 #include <QCommandLineOption>
 #include <QFile>
 #include <QTextStream>
+#include <QtDebug>
 
 #define QUMBIA_READER_DOC_URL "https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/qumbia-reader/html/index.html"
 
 CmdLineOptions::CmdLineOptions(bool formula_plugin_enabled, bool historical_db_plugin_enabled)
 {
-    m_help_map["-p x --period=x"] = "specify a custom period [x ms] for polled sources. Default: 1sec";
-    m_help_map["--truncate"] = "truncate output from arrays to 12 elements";
-    m_help_map["--truncate=x"] = "truncate output from arrays to x elements";
-    m_help_map["--max-timers=x"] = "use at most x timers for polled sources";
-    m_help_map["--l=low|medium|high|debug"] = "set output information detail level";
-    m_help_map["--out-level=low|medium|high|debug"] = "same as --l";
-    m_help_map["--single-shot"] = "read each source once and exit";
-    m_help_map["--x"] = "read each source x times and exit (0 = --monitor)";
-    m_help_map["-m | --monitor"] = "monitor source until a key is pressed";
-#ifdef QUMBIA_TANGO_CONTROLS_VERSION
-    m_help_map["--tango-property"] = "all sources are intended as Tango device or attribute property names."
-                                    "Implies --single-shot";
-    m_help_map["--tp"] = "shortcut for --tango-property";
+   QStringList ops = QStringList () << "format" << "period" << "truncate" << "max-timers" << "out-level"
+            << "single-shot" << "refresh-limit" << "monitor" << "help" << "help-topic" << "list-options";
+   #if defined (HAS_CUHDB)
+   ops << "db-profile" << "db-output-file";
 #endif
-    m_help_map["--property -p"] = "print the configuration properties of the sources (if available from the engine) and exit";
-    m_help_map["--format=fmt"] = "format numbers into the specified format (e.g. %g, %.1f, %.0f)";
+#if defined (CUMBIA_WEBSOCKET_VERSION) || defined (CUMBIA_HTTP_VERSION)
+   ops << "url";
+#endif
 
-    if(historical_db_plugin_enabled) {
-        m_help_map["--db-profile=dbprofile"] = "use the specified historical db profile. "
-                                               "See hdb-db-profile-manager for more information";
-        m_help_map["--db-output-file=filename"] = "write into filename the data fetched from hdb";
-    }
+   foreach(const QString& o, ops)
+       m_help_map[o] = "";
 
-    m_help_map["--help"] = "print this help";
 #ifdef CUMBIA_RANDOM_VERSION
-    m_help_map["--help-random"] = "cumbia-random module specific help";
+    m_help_map["help-random"] = "cumbia-random module specific help";
 #endif
 #ifdef QUMBIA_TANGO_CONTROLS_VERSION
-    m_help_map["--help-tango"] = "Tango module specific help";
+    m_help_map["help-tango"] = "Tango module specific help";
 #endif
 #ifdef QUMBIA_EPICS_CONTROLS_VERSION
-    m_help_map["--help-epics"] = "EPICS module specific help";
-#endif
-#ifdef CUMBIA_WEBSOCKET_VERSION
-    m_help_map["--url"] = "either websocket or http url, e.g. ws://localhost:12702, wss://wshost:PORT, https://wshost.domain.eu:8443";
+    m_help_map["help-epics"] = "EPICS module specific help";
 #endif
     if(formula_plugin_enabled)
-        m_help_map["--help-formula"] = "formula plugin specific help";
+        m_help_map["help-formula"] = "formula plugin specific help";
     if(historical_db_plugin_enabled)
-        m_help_map["--help-hdb"] = "historical database plugin specific help";
+        m_help_map["help-hdb"] = "historical database plugin specific help";
 }
 
 RConfig CmdLineOptions::parse(const QStringList &args) const
 {
+    QCommandLineParser p;
+    QCommandLineOption formatO(QStringList() << "f" << "format", "custom format for numbers, e.g. %d or %.2f", "format");
+    QCommandLineOption periodO(QStringList() << "p" << "period", "refresh period is set to <millis>, if the source is not event driven", "millis");
+    QCommandLineOption truncO(QStringList() << "t" << "truncate", "truncate output to a maximum <length>" , "length");
+    QCommandLineOption maxTimersO(QStringList() << "x" << "max-timers", "limit the number of timers to <max_t>" "max_t");
+    QCommandLineOption out_detailO(QStringList() << "l" << "out-level", "increase the default output level to <level> (medium|high|debug)", "level");
+    QCommandLineOption singleShotO(QStringList() << "s" << "single-shot", "one shot operation");
+    QCommandLineOption refreshLimitO(QStringList() << "r" << "refresh-limit", "read <n> times then exit" , "n");
+    QCommandLineOption monitorO(QStringList() << "m" << "monitor", "monitor source(s) until a key is pressed");
+    QCommandLineOption helpO(QStringList() << "h" << "help", "read the manual");
+    QCommandLineOption help2O(QStringList() << "i" << "help-topic", "help topic specific help [--help-tango|--help-epics|--help-random]", "topic");
+    QCommandLineOption listOptsO(QStringList() << "o" << "list-options", "list application options");
+
+#if defined (HAS_CUHDB)
+    QCommandLineOption dbProO(QStringList() << "d" << "db-profile", "set the db profile to <profile>", "profile");
+    QCommandLineOption dbOutFileO(QStringList() << "b" << "db-output-file", "write historical db data into <file>", "file");
+    p.addOption(dbProO);
+    p.addOption(dbOutFileO);
+#endif
+#if defined (CUMBIA_WEBSOCKET_VERSION) || defined (CUMBIA_HTTP_VERSION)
+    QCommandLineOption urlO(QStringList() << "u" << "url", "specify <url> for either http[s] or websocket, example: \"http://my.nginx-nchan.host.eu:8001/mychannel\"", "url");
+    p.addOption(urlO);
+#endif
+
+    p.addOption(formatO);
+    p.addOption(periodO);
+    p.addOption(truncO);
+    p.addOption(maxTimersO);
+    p.addOption(out_detailO);
+    p.addOption(singleShotO);
+    p.addOption(refreshLimitO);
+    p.addOption(monitorO);
+    p.addOption(helpO);
+    p.addOption(help2O);
+    p.addOption(listOptsO);
+    p.process(args);
+
     bool ok;
     RConfig o;
     QRegularExpression refreshLimitRe("\\-\\-(\\d+)");
     // fmtRe \-\-format=(%\d*\.{0,1}\d*[hxfegd])
-    QRegularExpression fmtRe("\\-\\-format=(%\\d*\\.{0,1}\\d*[hxfegd])");
-    foreach(QString a, args) {
-        if(a.startsWith("--period=")) {
-            QString t(a);
-            t.remove("--period=");
-            if(t.toInt(&ok) && ok)
-                o.period = t.toInt();
-        }
-        else if(a == "--truncate")
-            o.truncate = 12;
-        else if(a.startsWith("--truncate=")) {
-            QString t(a);
-            t.remove("--truncate=");
-            if(t.toInt(&ok) && ok)
-                o.truncate = t.toInt();
-            else
-                o.truncate = 12;
-        }
-        else if(a.startsWith("--max-timers=")) {
-            QString t(a);
-            t.remove("--max-timers=");
-            if(t.toInt(&ok) && ok) {
-                o.max_timers = t.toInt();
-            }
-        }
-        else if(a.startsWith("--out-level=") || a.startsWith("--l=")) {
-            QString t(a);
-            t.remove("--out-level=").remove("--l=");
-            if(t == "medium") o.verbosity = QumbiaReader::Medium;
-            else if(t == "high")  o.verbosity = QumbiaReader::High;
-            else if(t == "debug")  o.verbosity = QumbiaReader::Debug;
-        }
-        else if(a == "--single-shot")
-            o.refresh_limit = 1;
-        else if(a.contains(refreshLimitRe)) {
-            QRegularExpressionMatch ma = refreshLimitRe.match(a);
-            if(ma.capturedTexts().size() == 2)
-                o.refresh_limit = ma.captured(1).toInt();
-        }
-        else if(a.contains(fmtRe)) {
-            QRegularExpressionMatch ma = fmtRe.match(a);
-            if(ma.capturedTexts().size() == 2)
-                o.format = ma.captured(1);
-        }
-        else if(a == "--property" || a == "-p") {
-            // read "property" data type only
-            o.setPropertyOnly();
-        }
-        else if(a == ("--monitor") || a == "-m") {
-            o.refresh_limit = 0;
-        }
-        else if(a.startsWith("--help-")) {
-            o.usage = true;
-            help(args.first(), a.remove("--help-"));
-        }
-        else if(args.size() == 1 || a == "--help") {
-            o.usage = true;
-            if(a == "--help")
-                help(args.first(), "");
-        }
-        else if(a == ("--list-options")) {
-            o.list_options = true;
-        }
-#ifdef QUMBIA_TANGO_CONTROLS_VERSION
-        else if(a == "--tango-property" || a == "--tp")
-            o.setTangoProperty();
-#endif
-        else if(a.startsWith("--db-profile=")) {
-            o.db_profile = a.remove("--db-profile=");
-        }
-        else if(a.startsWith("--db-output-file=")) {
-            o.db_output_file = a.remove("--db-output-file=");
-        }
-        else if(a.startsWith("--url=")) {
-            o.url = a.remove("--url=");
-        }
-        else if(!a.startsWith("-"))
-            o.sources.append(a);
-        else if(!o.list_options) { // !o.list_options: do not mess up with auto completion
-            printf("\n");
-            printf("\nCmdLineOptions::parse: unrecognized option \"%s\"", qstoc(a));
-            printf("\n");
-            o.usage = true;
-        }
+    QRegularExpression fmtRe("(%\\d*\\.{0,1}\\d*[hxfegd])");
+    if(p.isSet(periodO) && p.value(periodO).toInt(&ok) > 10 && ok) o.period = p.value(periodO).toInt();
+    if(p.isSet(truncO) && p.value(truncO).toInt(&ok) > 0 && ok) o.truncate = p.value(truncO).toInt();
+    if(p.isSet(maxTimersO) && p.value(maxTimersO).toInt(&ok) > 0 && ok) o.max_timers = p.value(maxTimersO).toInt();
+    if(p.isSet(out_detailO)) {
+        QString v =  p.value(out_detailO);
+        if(v == "medium") o.verbosity = QumbiaReader::Medium;
+        else if(v == "high") o.verbosity = QumbiaReader::High;
+        else if(v == "debug") o.verbosity = QumbiaReader::Debug;
     }
-    return o;
-}
+    if(p.isSet(singleShotO)) o.refresh_limit = 1;
+    if(p.isSet(refreshLimitO) && p.value(refreshLimitO).toInt(&ok) && ok) o.refresh_limit = p.value(refreshLimitO).toInt();
+    if(p.isSet(formatO)) {
+        QString a = p.value(formatO);
+        QRegularExpressionMatch ma = fmtRe.match(a);
+        if(ma.hasMatch())
+            o.format = p.value(formatO);
+        else
+            perr("CmdLineOptions::parse: invalid -f format option: \"%s\"", qstoc(p.value(formatO)));
+    }
+    if(p.isSet(monitorO)) o.refresh_limit = 0;
+    if(p.isSet(helpO))
+        o.usage = true;
+    if(p.isSet(help2O)) {
+        o.usage = true;
+        help(args.first(), p.value(help2O));
+    }
 
-void CmdLineOptions::usage(const QString& appname) const
-{
-    printf("\n\nUsage: %s sources [options]\n\n", qstoc(appname));
-    foreach(QString hk, m_help_map.keys()) {
-        printf(" \e[1;32m%-35s\e[0m|\e[1;3m%s\e[0m\n", qstoc(hk), qstoc(m_help_map[hk]));
-    }
+    if(p.isSet(listOptsO)) o.list_options = true;
+
+ #if defined (HAS_CUHDB)
+    if(p.isSet(dbProO)) o.db_profile = p.value(dbProO);
+    if(p.isSet(dbOutFileO)) o.db_output_file = p.value(dbOutFileO);
+#endif
+
+#if defined (CUMBIA_WEBSOCKET_VERSION) || defined (CUMBIA_HTTP_VERSION)
+    if(p.isSet(urlO)) o.url = p.value(urlO);
+#endif
+
+    foreach(QString pa, p.positionalArguments())
+        o.sources.append(pa);
+
+    o.usage = o.sources.isEmpty() && !o.list_options;
+
+    return o;
 }
 
 void CmdLineOptions::help(const QString& appname, const QString &modulenam) const
@@ -208,10 +182,8 @@ void CmdLineOptions::help(const QString& appname, const QString &modulenam) cons
 
 void CmdLineOptions::list_options() const
 {
-    QString opt;
     foreach(QString o, m_help_map.keys()) {
-        o.count("=") > 0 ? opt = o.section('=', 0, 0) + "=" : opt = o;
-        printf("%s ", qstoc(opt));
+        printf("--%s ", qstoc(o));
     }
     printf("\n");
 }

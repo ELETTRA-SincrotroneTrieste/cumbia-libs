@@ -9,16 +9,10 @@ RConfig::RConfig()
     max_timers = -1;
     usage = list_options = false;
     period = 1000;
-    property = false;
-    tango_property = false;
     format = QString();
+    property = false;
 }
 
-void RConfig::setTangoProperty()
-{
-    tango_property = true;
-    refresh_limit = 1;
-}
 
 void RConfig::setPropertyOnly()
 {
