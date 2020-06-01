@@ -4,6 +4,10 @@ isEmpty(INSTALL_ROOT) {
 
 exists ($${INSTALL_ROOT}/include/quapps/quapps.pri) {
     include ($${INSTALL_ROOT}/include/quapps/quapps.pri)
+} else {
+    exists(../quapps/quapps.pri) {
+        include(../quapps/quapps.pri)
+    }
 }
 
 CONFIG+=link_pkgconfig
