@@ -9,7 +9,7 @@
 // cumbia
 
 $MAINCLASS$::$MAINCLASS$(CumbiaPool *cumbia_pool, QWidget *parent) :
-    QWidget(parent),
+    QWidget(parent)
 {
     // cumbia
     CuModuleLoader mloader(cumbia_pool, &m_ctrl_factory_pool, &m_log_impl);
