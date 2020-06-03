@@ -6,6 +6,12 @@
 include(cumbia-http.pri)
 
 
+isEmpty(CU_USER_CONFIG_DIR) {
+    CU_USER_CONFIG_DIR=.config/cumbia
+}
+
+DEFINES += CUMBIA_USER_CONFIG_DIR=\"\\\"$${CU_USER_CONFIG_DIR}\\\"\"
+
 QT       -= gui
 
 CONFIG += debug
