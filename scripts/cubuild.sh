@@ -737,8 +737,6 @@ for x in "${qmake_subdir_p[@]}"; do
 
 		if [ -f $pro_file ]; then
 			#
-                        ## build ^^^ moved out of the for loop
-			#
                         if [ $build -eq 1 ]; then
                                 echo -e "\e[1;32m\n*\n* BUILD project ${sd}...\n*\e[0m"
                                 qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j3 && make install
