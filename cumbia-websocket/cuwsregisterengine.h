@@ -24,7 +24,7 @@ public:
 
     QString url() const;
 
-    bool hasCmdOption(QCommandLineParser *parser, const QStringList& args) const;
+    bool hasCmdOption(const QStringList& args) const;
 
 private:
     CuWsRegisterEnginePrivate *d;

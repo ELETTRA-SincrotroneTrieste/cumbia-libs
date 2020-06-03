@@ -63,12 +63,12 @@ QString CuWsRegisterEngine::url() const {
     return d->url;
 }
 
-bool CuWsRegisterEngine::hasCmdOption(QCommandLineParser *parser, const QStringList &args) const
+bool CuWsRegisterEngine::hasCmdOption(const QStringList &args) const
 {
+    QCommandLineParser parser;
     QCommandLineOption ws_url_o(QStringList() << "u" << "url", "URL to either websocket or http server", "url");
-    if(!parser->optionNames().contains("u"))
-        parser->addOption(ws_url_o);
-    parser->parse(args);
-    d->url = parser->value(ws_url_o);
-    return parser->isSet(ws_url_o) && (d->url.startsWith("ws://") || d->url.startsWith("wss://")) ;
+    parser.addOption(ws_url_o);
+    parser.parse(args);
+    d->url = parser.value(ws_url_o);
+    return parser.isSet(ws_url_o) && (d->url.startsWith("ws://") || d->url.startsWith("wss://")) ;
 }

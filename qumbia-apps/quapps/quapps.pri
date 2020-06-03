@@ -3,7 +3,7 @@ isEmpty(INSTALL_ROOT) {
 }
 
 isEmpty(CU_USER_CONFIG_DIR) {
-    CU_USER_CONFIG_DIR=.config
+    CU_USER_CONFIG_DIR=.config/cumbia
 }
 
 linux-g++ {
@@ -65,6 +65,7 @@ message("quapps.pri: the 'cumbia-apps module-default' utility can help configure
 message("            for your applications, for example 'http' or 'native'")
 message("            Type `cumbia apps module-default` or `cumbia apps module-default set` at the terminal")
 message("-")
+
 DEFINES += CUMBIA_USER_CONFIG_DIR=\"\\\"$${CU_USER_CONFIG_DIR}\\\"\"
 
 unix:INCLUDEPATH += $${INSTALL_ROOT}/include/quapps

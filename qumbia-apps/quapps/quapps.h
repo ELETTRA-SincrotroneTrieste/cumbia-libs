@@ -6,8 +6,6 @@
 #include <culog.h>
 
 #include <QStringList>
-#include <QCommandLineParser>
-
 
 #ifdef QUMBIA_EPICS_CONTROLS_VERSION
 #include <cuepregisterengine.h>
@@ -29,7 +27,6 @@ class CuModuleLoaderPrivate {
 public:
     CuLog* log;
     QStringList modules;
-    QCommandLineParser parser;
 };
 
 /*!
@@ -108,9 +105,6 @@ public:
      * The CuModuleLoader::modules method returns the list of modules (or, equivalently
      * *engines, domains*) loaded.
      *
-     * You can reuse the QCommandLineParser employed by CuModuleLoader in your code, getting a reference
-     * to it through the commandLineParser method.
-     *
      */
     CuModuleLoader(CumbiaPool *cu_pool, CuControlsFactoryPool *ctrl_f_pool, CuLogImplI* log_impl) {
         d = new CuModuleLoaderPrivate;
@@ -121,7 +115,7 @@ public:
         // websocket engine
 #ifdef CUMBIA_WEBSOCKET_VERSION
         CuWsRegisterEngine wsre;
-        if(wsre.hasCmdOption(&d->parser, qApp->arguments())) {
+        if(wsre.hasCmdOption(qApp->arguments())) {
             cuws = wsre.registerWithDefaults(cu_pool, *ctrl_f_pool);
             static_cast<CumbiaWebSocket *>(cuws)->openSocket();
             cuws->getServiceProvider()->registerSharedService(CuServices::Log, d->log);
@@ -131,7 +125,7 @@ public:
 #ifdef CUMBIA_HTTP_VERSION
         if(!cuws) {
             CuHttpRegisterEngine httpre;
-            if(httpre.hasCmdOption(&d->parser, qApp->arguments())) {
+            if(httpre.hasCmdOption(qApp->arguments())) {
                 cuhttp = httpre.registerWithDefaults(cu_pool, *ctrl_f_pool);
                 cuhttp->getServiceProvider()->registerSharedService(CuServices::Log, d->log);
                 d->modules << "http";
@@ -172,10 +166,6 @@ public:
 
     QStringList modules() const {
         return d->modules;
-    }
-
-    QCommandLineParser & commandLineParser() const {
-        return d->parser;
     }
 };
 
