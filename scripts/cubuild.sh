@@ -712,17 +712,17 @@ for x in "${qmake_subdir_p[@]}"; do
 
 	cd $DIR/../${x}
 
-        ## with subdirs template there may be dependencies
-        ## Rely on qmake to correctly manage subdirs
-        if [ $build -eq 1 ]; then
-                echo -e "\e[1;32m\n*\n* BUILD project ${sd}...\n*\e[0m"
-                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j3 && make install
-                if [ $? -ne 0 ]; then
-                        exit 1
-                else
-                        date > "$tmp_build_d/${x}-->${dire_nam}"
-                fi
-        fi
+#        ## with subdirs template there may be dependencies
+#        ## Rely on qmake to correctly manage subdirs
+#        if [ $build -eq 1 ]; then
+#                echo -e "\e[1;32m\n*\n* BUILD project ${sd}...\n*\e[0m"
+#                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j3 && make install
+#                if [ $? -ne 0 ]; then
+#                        exit 1
+#                else
+#                        date > "$tmp_build_d/${x}-->${dire_nam}"
+#                fi
+#        fi
 
 	for sd in `ls -1 -d */`; do
 		cd ${sd} 
@@ -739,15 +739,15 @@ for x in "${qmake_subdir_p[@]}"; do
 			#
                         ## build ^^^ moved out of the for loop
 			#
-#			if [ $build -eq 1 ]; then
-#				echo -e "\e[1;32m\n*\n* BUILD project ${sd}...\n*\e[0m"
-#                                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j3 && make install
-#				if [ $? -ne 0 ]; then
-#                                        exit 1
-#                                else
-#                                        date > "$tmp_build_d/${x}-->${dire_nam}"
-#				fi
-#			fi
+                        if [ $build -eq 1 ]; then
+                                echo -e "\e[1;32m\n*\n* BUILD project ${sd}...\n*\e[0m"
+                                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j3 && make install
+                                if [ $? -ne 0 ]; then
+                                        exit 1
+                                else
+                                        date > "$tmp_build_d/${x}-->${dire_nam}"
+                                fi
+                        fi
 
 			if [ $docs -eq 1 ]; then	
 				echo -e "\e[1;36m\n*\n* BUILD DOCS project ${sd}...\n*\e[0m"
