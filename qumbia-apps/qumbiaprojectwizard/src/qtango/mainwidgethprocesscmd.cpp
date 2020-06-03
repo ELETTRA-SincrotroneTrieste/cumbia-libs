@@ -38,7 +38,7 @@ QString MainWidgetHProcessCmd::process(const QString &input)
         QString constructorDecl = constrRe.cap(1);
         constructorArgs = constrRe.cap(2);
         if(!constructorDecl.isEmpty() && !constructorArgs.isEmpty()) {
-            constructorDecl.replace(constructorArgs, "CumbiaTango *cut, " + constructorArgs);
+            constructorDecl.replace(constructorArgs, "CumbiaPool *cu_p, " + constructorArgs);
             out.replace(constrRe.cap(1), constructorDecl);
         }
     }

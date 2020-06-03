@@ -11,7 +11,7 @@
 #include <QX11Info>
 
 
-#define CVSVERSION "$Name:  $"
+#define VERSION "1.0.0"
 
 
 int main(int argc, char *argv[])
@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     QuApplication qu_app( argc, argv );
     qu_app.setOrganizationName("$ORGANIZATION_NAME$");
     qu_app.setApplicationName("$APPLICATION_NAME$");
-    QString version(CVSVERSION);
+    QString version(VERSION);
     qu_app.setApplicationVersion(version);
     qu_app.setProperty("author", "$AUTHOR$");
     qu_app.setProperty("mail", "$AU_EMAIL$");

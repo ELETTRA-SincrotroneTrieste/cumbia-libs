@@ -9,7 +9,7 @@ ProConvertCmd::ProConvertCmd(const QString& filenam) : FileCmd(filenam)
 }
 
 /*
- * Use the qumbiaproject-tango.pro template and replace
+ * Use the qumbiaproject-multi-engine.pro template and replace
  * HEADERS, SOURCES, FORMS, TARGET from the input pro file.
  * FORMS are commented.
  *
@@ -23,7 +23,7 @@ ProConvertCmd::ProConvertCmd(const QString& filenam) : FileCmd(filenam)
 QString ProConvertCmd::process(const QString &input)
 {
     QString rep;
-    QString pro_template_fnam = QString(TEMPLATES_PATH) + "/qumbiaproject-tango.pro";
+    QString pro_template_fnam = QString(TEMPLATES_PATH) + "/qumbiaproject-multi-engine.pro";
     QString pro_out = m_get_file_contents(pro_template_fnam);
     pro_out.replace("$INCLUDE_DIR$", INCLUDE_PATH);
     int in_pos, out_pos;
@@ -49,6 +49,8 @@ QString ProConvertCmd::process(const QString &input)
             if(r == "FORMS") {
                 rep = m_comment_lines(rep);
                 m_add_ui_h_to_headers(rep, pro_out);
+            } else if(r == "TARGET") {
+                rep.remove("bin/"); // template has bin/
             }
             pro_out.replace(template_re.cap(1), rep);
             m_log.append(OpQuality("pro file", r, r == "FORMS" ? "# " + r : r, filename(), "replaced", Quality::Ok, lineno));

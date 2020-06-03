@@ -2,15 +2,16 @@
 #define $MAINCLASS$_H
 
 #include <QWidget>
+
+// cumbia
 #include <qulogimpl.h>
 #include <cucontrolsfactorypool.h>
+class CumbiaPool;
+// cumbia
 
 namespace Ui {
 class $UIFORMCLASS$;
 }
-
-class CuData;
-class CumbiaPool;
 
 class $MAINCLASS$ : public QWidget
 {
@@ -21,10 +22,13 @@ public:
     ~$MAINCLASS$();
 
 private:
+    Ui::$UIFORMCLASS$ *ui;
+
+    // cumbia
     CumbiaPool *cu_pool;
     QuLogImpl m_log_impl;
     CuControlsFactoryPool m_ctrl_factory_pool;
-    Ui::$UIFORMCLASS$ *ui;
+    // cumbia
 };
 
 #endif // $MAINCLASS$_H

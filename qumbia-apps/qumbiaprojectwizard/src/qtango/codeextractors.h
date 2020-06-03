@@ -6,7 +6,7 @@
 class ExtractorHelper
 {
 public:
-    QList<Section> extractCumbiaTangoSections(const QString &s);
+    QList<Section> extractCumbiaPoolSections(const QString &s);
     QString newline_wrap(const QString& s);
 };
 

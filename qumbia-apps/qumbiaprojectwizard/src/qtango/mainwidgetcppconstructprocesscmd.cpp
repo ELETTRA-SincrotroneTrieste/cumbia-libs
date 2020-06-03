@@ -21,13 +21,13 @@ QString MainWidgetCppConstructProcessCmd::process(const QString &input)
     if(pos > -1 ) {
         constructorArgs = constrRe.cap(1);
         if(!constructorArgs.isEmpty()) {
-            QRegExp cutRe ("cu_t\\s*=\\s*([A-Za-z0-9_]+);");
-            pos = cutRe.indexIn(out);
+            QRegExp cupoolRe ("cu_pool\\s*=\\s*([A-Za-z0-9_]+);");
+            pos = cupoolRe.indexIn(out);
             if(pos > -1) {
-                QString cumbia_tango_varnam = cutRe.cap(1);
-                if(!cumbia_tango_varnam.isEmpty()) {
-                    QString newconstr = QString("%1::%1(CumbiaTango *%2, %3)").
-                            arg(m_mainclass).arg(cumbia_tango_varnam).arg(constructorArgs);
+                QString cu_pool_varnam = cupoolRe.cap(1);
+                if(!cu_pool_varnam.isEmpty()) {
+                    QString newconstr = QString("%1::%1(CumbiaPool *%2, %3)").
+                            arg(m_mainclass).arg(cu_pool_varnam).arg(constructorArgs);
                     out.replace(constrRe, newconstr);
                     m_log.append(OpQuality("expand main widget constructor", constrRe.cap(0), newconstr, filename(),
                                            "expanded main widget constructor", Quality::Ok, -1));
@@ -75,7 +75,7 @@ QString MainWidgetCppConstructProcessCmd::process(const QString &input)
 
         // 3. remove ui instantiation if in this form:
         //
-        // ComplexQTangoDemo::ComplexQTangoDemo(CumbiaTango *cut, QWidget *parent) :
+        // ComplexQTangoDemo::ComplexQTangoDemo(CumbiaPool *cut, QWidget *parent) :
         // QWidget(parent),
         // ui(new Ui::ComplexQTangoDemo) <----
         // unescaped pattern: (,\n*\s*ui\(new Ui::ClassName\))
@@ -102,8 +102,11 @@ QString MainWidgetCppConstructProcessCmd::process(const QString &input)
     }
 
 
-    if(m_err)
+    if(m_err) {
         m_msg = "MainWidgetCppConstructProcessCmd::process: could not match constructor arguments";
+        qDebug() << __PRETTY_FUNCTION__ << "could not match pattern " << constrRe.pattern() << "in";
+        qDebug() << __PRETTY_FUNCTION__ << out << "INDEX" << pos;
+    }
     return out;
 }
 

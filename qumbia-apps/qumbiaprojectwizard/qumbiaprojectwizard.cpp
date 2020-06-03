@@ -265,11 +265,19 @@ void QumbiaProjectWizard::create()
                         QVariant placeholder = le->property("placeholder");
                         if(placeholder.isValid())
                         {
-                            contents.replace(placeholder.toString(), le->text());
+                            int pos;
+                            QString text = contents;
+
+                            while((pos = contents.indexOf(placeholder.toString())) > -1) {
+                                qDebug() << __PRETTY_FUNCTION__ << "replacing " << placeholder.toString() << "INTO"
+                                         << contents ;
+                                contents.replace(placeholder.toString(), le->text());
+                            }
                             /* look for _LOWERCASE in contents */
                             placeh_lower = placeholder.toString();
                             placeh_lower.remove(placeh_lower.length() - 1, 1) + "_LOWERCASE$";
-                            contents.replace(placeh_lower, le->text().toLower());
+                            while((pos = contents.indexOf(placeh_lower)) > -1)
+                                contents.replace(placeh_lower, le->text().toLower());
                         }
                     }
                 }

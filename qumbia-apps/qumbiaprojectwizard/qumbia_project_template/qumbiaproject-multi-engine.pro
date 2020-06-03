@@ -30,10 +30,12 @@ HEADERS += \
 #
 INCLUDEPATH += ui src
 
-wasm-emscripten {
-    TARGET   = wasm/$PROJECT_NAME$
+TARGET = $PROJECT_NAME$
+
+!wasm-emscripten {
+    TARGET   = bin/$${TARGET}
 } else {
-    TARGET = bin/$PROJECT_NAME$
+    TARGET = wasm/$${TARGET}
 }
 
 #

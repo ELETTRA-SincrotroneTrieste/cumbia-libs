@@ -82,10 +82,10 @@ QString CodeExtractorA::m_get_file_contents(CodeExtractorA::Type t)
 {
     QString s;
     QMap<CodeExtractorA::Type, QString> filenamMap;
-    filenamMap[CodeExtractorA::MainCpp] = QString(TEMPLATES_PATH) + "/main-tango.cpp";
-    filenamMap[CodeExtractorA::MainWCpp] = QString(TEMPLATES_PATH) + "/widget-tango.cpp";
-    filenamMap[CodeExtractorA::MainWH] = QString(TEMPLATES_PATH) + "/widget-tango.h";
-    filenamMap[CodeExtractorA::Pro] = QString(TEMPLATES_PATH) + "qumbiaproject-tango.pro";
+    filenamMap[CodeExtractorA::MainCpp] = QString(TEMPLATES_PATH) + "/main-multi-engine.cpp";
+    filenamMap[CodeExtractorA::MainWCpp] = QString(TEMPLATES_PATH) + "/widget-multi-engine.cpp";
+    filenamMap[CodeExtractorA::MainWH] = QString(TEMPLATES_PATH) + "/widget-multi-engine.h";
+    filenamMap[CodeExtractorA::Pro] = QString(TEMPLATES_PATH) + "qumbiaproject-multi-engine.pro";
 
     QFile f(filenamMap[t]);
     m_err = !f.open(QIODevice::ReadOnly|QIODevice::Text);

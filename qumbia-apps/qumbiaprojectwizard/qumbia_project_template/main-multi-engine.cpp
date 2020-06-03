@@ -1,16 +1,16 @@
 #include <quapplication.h>
 #include "$HFILE$"
 
+// cumbia
 #include <cumbiapool.h>
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
-
+// cumbia
 
 #define VERSION "1.0"
 
 int main(int argc, char *argv[])
 {
-    int ret;
     QuApplication qu_app( argc, argv );
     qu_app.setOrganizationName("$ORGANIZATION_NAME$");
     qu_app.setApplicationName("$APPLICATION_NAME$");
@@ -26,8 +26,9 @@ int main(int argc, char *argv[])
     CumbiaPool *cu_p = new CumbiaPool();
     $MAINCLASS$ *w = new $MAINCLASS$(cu_p, NULL);
     w->show();
-
-    ret = qu_app.exec();
+    // exec application loop
+    int ret = qu_app.exec();
+    // delete resources and return
     delete w;
 
     for(std::string n : cu_p->names())
