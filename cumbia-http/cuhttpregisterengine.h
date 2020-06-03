@@ -23,7 +23,7 @@ public:
     void setChannel(const QString& chan);
     QString url() const;
     QString channel() const;
-    bool hasCmdOption(QCommandLineParser *parser, const QStringList& args) const;
+    bool hasCmdOption(const QStringList& args) const;
 
     QString urlFromConfig() const;
 

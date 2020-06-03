@@ -76,19 +76,18 @@ QString CuHttpRegisterEngine::channel() const {
     return d->chan;
 }
 
-bool CuHttpRegisterEngine::hasCmdOption(QCommandLineParser *parser, const QStringList &args) const {
+bool CuHttpRegisterEngine::hasCmdOption(const QStringList &args) const {
+    QCommandLineParser parser;
     QCommandLineOption http_url_o(QStringList() << "u" << "http-url", "URL to http server/channel or URL only if -c [--channel] is provided", "url");
     QCommandLineOption chan_o(QStringList() << "c" << "channel", "Server Sent Events channel name", "chan");
-    if(!parser->optionNames().contains("u")) {
-        parser->addOption(http_url_o);
-    }
-    parser->addOption(chan_o);
-    parser->parse(args);
+    parser.addOption(http_url_o);
+    parser.addOption(chan_o);
+    parser.parse(args);
     QString url;
-    if(parser->isSet(http_url_o))
-        url = parser->value(http_url_o);
-    if(parser->isSet(chan_o))
-        d->chan = parser->value(chan_o);
+    if(parser.isSet(http_url_o))
+        url = parser.value(http_url_o);
+    if(parser.isSet(chan_o))
+        d->chan = parser.value(chan_o);
     else if(!url.isEmpty()) {
         d->chan = url.section(QRegularExpression("[^:^/]/"), -1); // match last token after a / but skip http[s]://
         d->chan != url ? d->url = url.remove(url.lastIndexOf('/'), d->chan.length() + 1) : d->chan.remove(0, d->chan.length());
@@ -104,16 +103,13 @@ bool CuHttpRegisterEngine::hasCmdOption(QCommandLineParser *parser, const QStrin
             d->chan = m_make_hash(args);
     }
     bool http_mod = !d->url.isEmpty() && d->chan.size() > 0 && (d->url.startsWith("http://") || d->url.startsWith("https://"));
-    cuprintf("CuHttpRegisterEngine::hasCmdOption: URL \e[1;32;4m%s\e[0m channel \"\e[1;36m%s\e[0m: using http mod: %s\n",
-             qstoc(d->url), qstoc(d->chan), http_mod ? "\e[1;32mYES\e[0m" : "\e[1");
     return http_mod;
 }
 
 QString CuHttpRegisterEngine::urlFromConfig() const
 {
     QString url;
-    printf("CuHttpRegisterEngine::urlFromConfig \e[1;31mIMPROVE\e[0m method to get config file name\e[0m\n");
-    QString cfgf = QDir::homePath() + "/.config/cumbia/modules";
+    QString cfgf = QDir::homePath() + QString("/%1/modules").arg(CUMBIA_USER_CONFIG_DIR);
     QFile f(cfgf);
     if(f.open(QIODevice::ReadOnly)) {
         QTextStream in(&f);
@@ -124,9 +120,6 @@ QString CuHttpRegisterEngine::urlFromConfig() const
         }
         f.close();
     }
-    else
-        printf("CuHttpRegisterEngine::urlFromConfig: file %s not found: cannot use a default url\n", qstoc(cfgf));
-    cuprintf("CuHttpRegisterEngine::urlFromConfig url is %s\n", qstoc(url));
     return url;
 }
 
