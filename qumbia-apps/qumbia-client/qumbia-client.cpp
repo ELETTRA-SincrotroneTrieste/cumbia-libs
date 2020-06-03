@@ -68,7 +68,7 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
 
 #ifdef CUMBIA_WEBSOCKET_VERSION
     CuWsRegisterEngine wsre;
-    if(wsre.hasCmdOption(&cmdlparser, qApp->arguments())) {
+    if(wsre.hasCmdOption(qApp->arguments())) {
         cuws = wsre.registerWithDefaults(cumbia_pool, m_ctrl_factory_pool);
         static_cast<CumbiaWebSocket *>(cuws)->openSocket();
         cuws->getServiceProvider()->registerSharedService(CuServices::Log, m_log);
@@ -77,7 +77,7 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
 #endif
 #ifdef CUMBIA_HTTP_VERSION
     CuHttpRegisterEngine httpre;
-    if(httpre.hasCmdOption(&cmdlparser, qApp->arguments())) {
+    if(httpre.hasCmdOption( qApp->arguments())) {
         cuhttp = httpre.registerWithDefaults(cumbia_pool, m_ctrl_factory_pool);
         cuhttp->getServiceProvider()->registerSharedService(CuServices::Log, m_log);
         qDebug() << __PRETTY_FUNCTION__ << "enabled http engine";
