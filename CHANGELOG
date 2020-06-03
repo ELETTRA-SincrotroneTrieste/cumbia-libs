@@ -7,6 +7,7 @@ b1. cumbia reader: support for Tango database readers
 b2. qumbiaprojectwizard: support for automatic engine detection
 b3. quapps: offers a quapps.pri project include files to design multi engine apps
     that can be run from everywhere
+b4. qumbiaprojectwizard: a multi-engine version of the application is created upon migration from QTango
 
 v1.1.2
 a. cumbia
