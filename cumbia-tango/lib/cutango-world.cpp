@@ -967,7 +967,7 @@ bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &re
             cprops[in["class"].toString()].push_back(in);
     }
     Tango::Database *db = getTangoDb(dbhost);
-    d->error = (db != nullptr);
+    d->error = (db == nullptr);
     if(!d->error) {
         d->message = "";
         std::string attnam;
@@ -1094,6 +1094,7 @@ bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &re
 
     } // if !d->error
 
+    printf("CuTangoWorld.get_properties >>> %s\n", res.toString().c_str());
     return !d->error;
 }
 
