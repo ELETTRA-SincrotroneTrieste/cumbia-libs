@@ -23,7 +23,7 @@ class TSource;
 class CuTWriterPrivate
 {
 public:
-    std::list<CuDataListener *> listeners;
+    std::set<CuDataListener *> listeners;
     TSource tsrc;
     CumbiaTango *cumbia_t;
     CuActivity *activity;
@@ -107,9 +107,9 @@ void CuTWriter::onResult(const CuData &data)
 {
     d->exit = data["exit"].toBool();
     // iterator can be invalidated if listener's onUpdate unsets source: use a copy
-    std::list<CuDataListener *> lis_copy = d->listeners;
-    std::list<CuDataListener *>::iterator it;
-    for(it = lis_copy.begin(); !d->exit && it != lis_copy.end(); ++it)
+    std::set<CuDataListener *> set_copy = d->listeners;
+    std::set<CuDataListener *>::iterator it;
+    for(it = set_copy.begin(); !d->exit && it != set_copy.end(); ++it)
         (*it)->onUpdate(data);
 
     if(d->exit)
@@ -141,14 +141,13 @@ CuTangoActionI::Type CuTWriter::getType() const
 
 void CuTWriter::addDataListener(CuDataListener *l)
 {
-    std::list<CuDataListener *>::iterator it = d->listeners.begin();
     l->setValid();
-    d->listeners.insert(it, l);
+    d->listeners.insert(l);
 }
 
 void CuTWriter::removeDataListener(CuDataListener *l)
 {
-    d->listeners.remove(l);
+    d->listeners.erase(l);
     if(!d->listeners.size())
         stop();
 }

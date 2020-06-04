@@ -5,6 +5,7 @@
 #include <cuactivity.h>
 #include <cuevent.h>
 #include <cudatalistener.h>
+#include <set>
 #include "cumbiatango.h"
 #include "tsource.h"
 #include "cudevicefactoryservice.h"
@@ -20,7 +21,7 @@ public:
         tsrc(t_src), type(t) {
     }
 
-    std::list<CuDataListener *> listeners;
+    std::set<CuDataListener *> listeners;
     const TSource tsrc;
     CumbiaTango *cumbia_t;
     CuTConfigActivity *activity;
@@ -76,8 +77,8 @@ void CuTConfiguration::onResult(const CuData &data)
         delete this;
     }
     else { // do not update configuration data if exit
-        std::list <CuDataListener *> listeners = d->listeners;
-        std::list<CuDataListener *>::iterator it;
+        std::set<CuDataListener *> listeners = d->listeners;
+        std::set<CuDataListener *>::iterator it;
         for(it = listeners.begin(); it != listeners.end(); ++it) {
             (*it)->onUpdate(data);
         }
@@ -111,8 +112,7 @@ CuTangoActionI::Type CuTConfiguration::getType() const
 
 void CuTConfiguration::addDataListener(CuDataListener *l)
 {
-    std::list<CuDataListener *>::iterator it = d->listeners.begin();
-    d->listeners.insert(it, l);
+    d->listeners.insert(l);
     l->setValid();
     /* if a new listener is added after onResult, call onUpdate.
      * This happens when multiple items connect to the same source
@@ -125,7 +125,7 @@ void CuTConfiguration::addDataListener(CuDataListener *l)
 
 void CuTConfiguration::removeDataListener(CuDataListener *l)
 {
-    d->listeners.remove(l);
+    d->listeners.erase(l);
     if(!d->listeners.size())
         stop();
 }

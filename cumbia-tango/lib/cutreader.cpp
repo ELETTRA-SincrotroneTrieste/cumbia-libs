@@ -356,10 +356,8 @@ void CuTReader::stop()
     }
 }
 
-void CuTReader::addDataListener(CuDataListener *l)
-{
-    std::set<CuDataListener *>::iterator it = d->listeners.begin();
-    d->listeners.insert(it, l);
+void CuTReader::addDataListener(CuDataListener *l) {
+    d->listeners.insert(l);
 }
 
 void CuTReader::removeDataListener(CuDataListener *l) {
