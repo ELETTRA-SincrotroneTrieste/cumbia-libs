@@ -68,6 +68,8 @@ void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTa
             a = af->registerAction(src, f, this);
             a->start();
         }
+        else if(f.getType() == 2)
+            printf("CumbiaTango.addAction:action CONFIG type already found for %s\n", source.getName().c_str());
         a->addDataListener(l);
     }
     else {

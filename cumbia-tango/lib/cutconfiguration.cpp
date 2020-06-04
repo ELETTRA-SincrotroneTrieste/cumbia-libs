@@ -112,7 +112,9 @@ CuTangoActionI::Type CuTConfiguration::getType() const
 
 void CuTConfiguration::addDataListener(CuDataListener *l)
 {
+    printf("CuTConfiguration.addDataListener %p - size before %ld ", l, d->listeners.size());
     d->listeners.insert(l);
+    printf("after %ld\n", d->listeners.size());
     l->setValid();
     /* if a new listener is added after onResult, call onUpdate.
      * This happens when multiple items connect to the same source
