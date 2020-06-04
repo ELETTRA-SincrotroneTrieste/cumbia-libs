@@ -45,7 +45,7 @@ CuTConfiguration::CuTConfiguration(const TSource& src,
 
 CuTConfiguration::~CuTConfiguration()
 {
-    pdelete("~CuTConfiguration: %p", this);
+    printf("~CuTConfiguration: %p [%s]\n", this, d->tsrc.getName().c_str());
     delete d;
 }
 
@@ -69,6 +69,7 @@ void CuTConfiguration::onResult(const CuData &data)
     d->conf_data = data;
     if(data["exit"].toBool()) // ! important: evaluate data["exit"] before deleting this
     {
+        printf("CuTConfiguration::onResult %p [%s] exiting\n", this, d->tsrc.getName().c_str());
         d->exiting = true; // for action factory to unregisterAction, exiting must return true
         CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
                                                                             ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
@@ -112,7 +113,7 @@ CuTangoActionI::Type CuTConfiguration::getType() const
 
 void CuTConfiguration::addDataListener(CuDataListener *l)
 {
-    printf("CuTConfiguration.addDataListener %p - size before %ld ", l, d->listeners.size());
+    printf("CuTConfiguration.addDataListener %p [%s] - size before %ld ", l, d->tsrc.getName().c_str(), d->listeners.size());
     d->listeners.insert(l);
     printf("after %ld\n", d->listeners.size());
     l->setValid();
