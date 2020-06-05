@@ -44,11 +44,31 @@ $(function() {
 <div class="title">Platform independent apps from anywhere. </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"></div></div><!-- contents -->
+<div class="textblock"><h1>Introduction</h1>
+<p>cumbia libraries have supported multiple engines since the beginning. Tango and EPICS have first benefited from <em>native</em> support, that means they are supported on machines where they <em>are installed</em>. Portable devices and <em>smart working</em> require more flexibility, and applications need be run from a desktop where no specific <em>native</em> control system software is installed, from a web browser or an <em>Android</em> app. <em>cumbia</em> introduced the first <em>engine independent</em> module with <em>cumbia-websocket</em>, relying on a specific server designed in the context of the <a href="https://gitlab.com/PWMA/PWMA">PWMA project</a>.</p>
+<p><em>cumbia version 1.2.0</em> introduces even greater possibilities. The evolution of web technologies, the need for performance, scalability and high security levels are both the spur and the objective of the <em>cumbia-http</em> module. This will be used together with a new service that is currently under development and makes use of the features listed below. If you want to take a peek at the latter, <a href="https://gitlab.com/PWMA/canone3">here</a> is the secret (that you may want to keep for the moment).</p>
+<h2>Features</h2>
+<ul>
+<li>encrypted data transfer through <em>https</em>;</li>
+<li>scalability obtained with source multiplexing and the nginx <em>High performance Load Balancer and Web Server;</em></li>
+<li><em>*event based</em> data exchange pattern, through the <em>Server Sent Events</em> technology in conjunction with the <a href="https://nchan.io/">nchan</a> module for <em>nginx</em>, offering a scalable and flexible <em>pub/sub</em> service for the modern web.</li>
+<li>secure authentication for the so called <em>write</em> operations, that potentially modify the state of the control system.</li>
+</ul>
+<h1>Rationale</h1>
+<h3>Foreword</h3>
+<p>In this document we will employ the term <em>engine</em> or <em>module</em> as synonyms, the meaning of the former being slightly more intended as the "control system software or *engine*", the latter as a piece of software. Nonetheless a <em>native cumbia module</em> will connect to a <em>native engine</em>, but here and there in the software sources we speak of loading a cumbia engine or a cumbia module without too much concern.</p>
+<p>In this document we describe how to create a Qt project supporting the multi engine pattern. If you find the title <em>Platform independent</em> misleading, please rather concentrate on the <em>anywhere</em> word for now. Well, the aforementioned http/SSE service is what actually makes app development <em>platform independent</em>, but since <em>cumbia-http</em> is written in Qt, it works wherever the Qt installation is available, which again means potentially <em>everywhere</em>. In the future, a cumbia-http module in pure C++ may become available, but for now the effort has been concentrated in Qt graphical applications design, since there is plenty of <em>http/SSE</em> implementations in any language for other <em>platform independent</em> technologies.</p>
+<h2>Objective</h2>
+<p>The developer does not want to write an application using classes and method specific to an engine. Moreover, the end user of the application does not want to know which engine the software relies on. Additionally, the user wishes to launch the application with the same parameters unregarding where it connects to.</p>
+<p>This is very easy and is accomplished through very few lines of code. After that, application logic, source names and cumbia objects (for example, the <em>cumbia-qtcontrols</em> components) remain engine (module) unaware and they are used transparently.</p>
+<p>One option is to use the <em>cumbia new project</em> utility and to choose the <em>multi engine</em> option in the appropriate box. It creates a skeleton project ready to be populated with graphical elements.</p>
+<p>In this tutorial, we describe how this skeleton project is made.</p>
+<h1>Writing a multi engine project</h1>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 5 2020 15:52:38 for cuapps by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 5 2020 16:43:17 for cuapps by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>
