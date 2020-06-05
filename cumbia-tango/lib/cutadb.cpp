@@ -100,7 +100,6 @@ void CuTaDb::addDataListener(CuDataListener *l)
 {
     std::list<CuDataListener *>::iterator it = d->listeners.begin();
     d->listeners.insert(it, l);
-    l->setValid();
     /* if a new listener is added after onResult, call onUpdate.
      * This happens when multiple items connect to the same source
      * Post the result, so that it is delivered later.
