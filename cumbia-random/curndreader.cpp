@@ -70,7 +70,6 @@ CuRNDReader::CuRNDReader(Cumbia *cumbia_rnd, CuDataListener *tl)
 CuRNDReader::~CuRNDReader()
 {
     pdelete("CuRNDReader %p", this);
-    d->tlistener->invalidate();
     unsetSource();
     delete d;
 }

@@ -71,7 +71,6 @@ CuWsControlsReader::CuWsControlsReader(Cumbia *cumbia, CuDataListener *tl)
 
 CuWsControlsReader::~CuWsControlsReader()
 {
-    d->tlistener->invalidate();
     unsetSource();
     delete d;
 }

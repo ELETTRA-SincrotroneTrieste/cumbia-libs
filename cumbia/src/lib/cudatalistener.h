@@ -26,12 +26,8 @@ class CuDataListenerPrivate;
  *     CuTReader::onResult invokes CuDataListener::onUpdate on every listener
  *     registered with CuTReader::addDataListener
  *
- * \par Invalidate data listeners
- * The implementation of three methods of this abstract class allow to set and get
- * an *invalid* flag that can be used by subclasses to know wheter the listener is
- * in an invalid state, for example it's being destroyed. In that case,
- * CuDataListener::onUpdate can not be called and the object can be removed from
- * the list of list of listeners.
+ * \par Note
+ * Since v1.2.0 the invalid, invalidate and setValid methods are not used
  *
  */
 class CuDataListener
@@ -45,9 +41,7 @@ public:
     virtual void onUpdate(const CuData& data) = 0;
 
     virtual bool invalid() const;
-
     virtual bool invalidate();
-
     virtual void setValid();
 
 private:

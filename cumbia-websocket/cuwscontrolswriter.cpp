@@ -106,7 +106,6 @@ CuWsControlsWriter::CuWsControlsWriter(Cumbia *cu_ws, CuDataListener *tl)
  */
 CuWsControlsWriter::~CuWsControlsWriter()
 {
-    d->tlistener->invalidate();
     clearTarget();
     delete d;
 }

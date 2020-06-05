@@ -1,11 +1,11 @@
 #include "cudatalistener.h"
+#include <cumacros.h>
 
 /*! @private
  */
 class CuDataListenerPrivate
 {
 public:
-    bool invalid;
 };
 
 /*! \brief class constructor
@@ -14,26 +14,19 @@ public:
  */
 CuDataListener::CuDataListener() {
     d = new CuDataListenerPrivate;
-    d->invalid = false;
 }
 
-/*! \brief invalidates the data listener
- *
- * the invalid flag is set to true
+/*! \brief not implemented
  */
-bool CuDataListener::invalidate()
-{
-    d->invalid = true;
-    return d->invalid;
+bool CuDataListener::invalidate() {
+    perr("CuDataListener.invalidate: not implemented - returning false.");
+    return false;
 }
 
-/*! \brief  set the data listener to *valid*
- *
- * the invalid flag is reset to false
+/*! \brief  not implemented since 1.2.0
  */
-void CuDataListener::setValid()
-{
-    d->invalid = false;
+void CuDataListener::setValid() {
+    perr("CuDataListener.setValid: not implemented.");
 }
 
 /*! \brief class destructor
@@ -44,18 +37,10 @@ CuDataListener::~CuDataListener() {
     delete d;
 }
 
-/*! \brief returns true if the data listener is invalid
- *
- * @return true the data listener has been marked as invalid
- * @return false the data listener is still valid
- *
- * \par Example
- * This method is used by the cumbia-tango CuTReader class, from
- * CuTReader::removeDataListener, and from the same method of
- * CuTWriter
+/*! \brief returns false since v1.2.0
  */
-bool CuDataListener::invalid() const
-{
-    return d->invalid;
+bool CuDataListener::invalid() const {
+    perr("CuDataListener.invalid: not implemented - returning false.");
+    return false;
 }
 

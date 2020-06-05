@@ -110,7 +110,6 @@ CuTControlsWriter::CuTControlsWriter(Cumbia *cumbia_tango, CuDataListener *tl)
  */
 CuTControlsWriter::~CuTControlsWriter()
 {
-    d->tlistener->invalidate();
     clearTarget();
     delete d;
 }
