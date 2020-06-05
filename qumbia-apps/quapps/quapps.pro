@@ -50,6 +50,7 @@ HEADERS += \
     quapps.h
 
 DISTFILES += \
+    quapps.md \
     quapps.pri
 
 ## compile a dummy main.cpp
