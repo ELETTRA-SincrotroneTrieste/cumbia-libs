@@ -65,9 +65,11 @@ void CuTConfiguration::onProgress(int step, int total, const CuData &data)
 
 void CuTConfiguration::onResult(const CuData &data)
 {
-    // do not update configuration data if exit
+    // activity publishes only once from execute
+    // we can clean everything after listeners update
     std::set<CuDataListener *> listeners = d->listeners;
     std::set<CuDataListener *>::iterator it;
+    printf("CuTConfiguration.onResult %p [%s] - \e[1;32mupdating %ld listeners\e[0m\n", this, d->tsrc.getName().c_str(), d->listeners.size());
     for(it = listeners.begin(); it != listeners.end(); ++it) {
         (*it)->onUpdate(data);
     }
@@ -107,13 +109,6 @@ void CuTConfiguration::addDataListener(CuDataListener *l)
     printf("CuTConfiguration.addDataListener %p [%s] - size before %ld ", l, d->tsrc.getName().c_str(), d->listeners.size());
     d->listeners.insert(l);
     printf("after %ld\n", d->listeners.size());
-    /* if a new listener is added after onResult, call onUpdate.
-     * This happens when multiple items connect to the same source
-     * Post the result, so that it is delivered later.
-     */
-    if(!d->conf_data.isEmpty()) {
-        d->activity->publishResult(d->conf_data);
-    }
 }
 
 void CuTConfiguration::removeDataListener(CuDataListener *l)
@@ -126,9 +121,7 @@ void CuTConfiguration::removeDataListener(CuDataListener *l)
 void CuTConfiguration::sendData(const CuData &) {
 }
 
-void CuTConfiguration::getData(CuData &d_inout) const {
-
-}
+void CuTConfiguration::getData(CuData &d_inout) const { (void) d_inout; }
 
 size_t CuTConfiguration::dataListenersCount() {
     return d->listeners.size();
@@ -143,7 +136,7 @@ void CuTConfiguration::start()
     at["device"] = d->tsrc.getDeviceName();
     at["point"] = d->tsrc.getPoint();
     at["argins"] = d->tsrc.getArgs();
-    at["activity"] = "attconfig";
+    at["activity"] = "property";
     at["is_command"] = d->tsrc.getType() == TSource::SrcCmd;
     at.merge(d->options);
 

@@ -126,7 +126,7 @@ void CuEpConfiguration::start() {
                                          get(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType)));
     CuData at("src", d->tsrc.getName()); /* activity token */
     at["pv"] = d->tsrc.getPV();
-    at["activity"] = "attconfig";
+    at["activity"] = "property";
     at["is_pv"] = d->tsrc.getType() == EpSource::PV;
     CuData tt("pv", d->tsrc.getPV()); /* thread token */
     d->activity = new CuEpConfigActivity(at, df);
