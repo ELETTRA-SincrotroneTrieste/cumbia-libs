@@ -7,7 +7,7 @@ After introducing the *websocket* module in 1.0, cumbia 1.2 introduces initial s
 Server Sent Events* technologies, looking forward to such services becoming available.
 
 Applications written in any language will thus be enabled to connect to native control system engines from
-*anywhere*.
+*anywhere*. Find out more <a href="html/quapps/html/quapps.html">here</a>.
 
 ### Write your own activities
 Concentrate on the task you want to run in the background and use *cumbia* base library to write custom *activities* that will be executed on a separate
@@ -88,6 +88,7 @@ a *http* or *websocket* default engine in your environment.
 
 ### Smart working apps
 You can run your application relying on the native control system engine from your office or run it from home via *http*.
+Read the <a href="html/quapps/html/quapps.html">Platform independent apps from anywhere</a> chapter.
 
 *Android* and *Linux* platforms have been successfully tested and
 porting an application from one platform to another is just a matter of a few clicks with the *Qt creator* IDE.
@@ -129,6 +130,7 @@ To build Qt and cumbia for <a href="https://webassembly.org/">WebAssembly</a>, p
 
  |Tutorials                                     | Module               |
  |-------------------------------------------------------------------|--------------------------|
+ |  <a href="html/quapps/html/quapps.html">Writing a platform independent app</a> |  |
  |  <a href="html/cumbia/html/tutorial_cuactivity.html">Writing a *cumbia* activity</a> | <a href="html/cumbia/html/index.html">cumbia</a> |
  |  <a href="html/cumbia-tango/html/tutorial_activity.html">Writing an activity</a> | <a href="html/cumbia-tango/html/index.html">cumbia-tango</a> |
  |  <a href="html/cumbia-tango/html/cudata_for_tango.html">CuData for Tango</a> | <a href="html/cumbia-tango/html/index.html">cumbia-tango</a> |
@@ -204,6 +206,7 @@ They define shortcuts for the common operations provided by the *cumbia applicat
 |------------------------------|--------------------------------------------|:---------------:|
 | *cumbia read*                | read a quantity from the supported engines |<a href="html/qumbia-reader/html/index.html">cumbia reader</a>  |
 | *cumbia monitor*             | monitor a quantity over time from the supported engines |<a href="html/qumbia-reader/html/index.html">cumbia reader</a>  |
+| *cumbia apps module-default* | show [set] the default module loaded by multi engine apps | <a href="html/quapps/html/quapps.html">Writing a platform independent app</a> |
 | *cumbia new project*          | create a new cumbia project               |<a href="html/qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
 | *cumbia import*               | migrate a QTango project into cumbia      |<a href="html/qumbiaprojectwizard/html/index.html">qumbia-apps/qumbiaprojectwizard</a>  |
 | *cumbia new control*          | write a *cumbia control* reader or writer | <a href="html/qumbianewcontrolwizard/html/index.html">qumbia-apps/qumbianewcontrolwizard</a>  |
