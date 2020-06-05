@@ -75,7 +75,7 @@ void CuEpConfiguration::onResult(const CuData &data)
 CuData CuEpConfiguration::getToken() const
 {
     CuData da("source", d->tsrc.getName());
-    da["type"] = std::string("attconfig");
+    da["type"] = std::string("property");
     return da;
 }
 

@@ -29,7 +29,6 @@ public:
     CuConLogImpl li;
     CuLog log;
     CuVariant write_val;
-    CuData conf_data; // save locally
     CuData options;
     const CuTangoActionI::Type type;
 };
@@ -66,24 +65,18 @@ void CuTConfiguration::onProgress(int step, int total, const CuData &data)
 
 void CuTConfiguration::onResult(const CuData &data)
 {
-    d->conf_data = data;
-    if(data["exit"].toBool()) // ! important: evaluate data["exit"] before deleting this
-    {
-        printf("CuTConfiguration::onResult %p [%s] exiting\n", this, d->tsrc.getName().c_str());
-        d->exiting = true; // for action factory to unregisterAction, exiting must return true
-        CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
-                                                                            ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
-        af->unregisterAction(d->tsrc.getName(), getType());
-        d->listeners.clear();
-        delete this;
+    // do not update configuration data if exit
+    std::set<CuDataListener *> listeners = d->listeners;
+    std::set<CuDataListener *>::iterator it;
+    for(it = listeners.begin(); it != listeners.end(); ++it) {
+        (*it)->onUpdate(data);
     }
-    else { // do not update configuration data if exit
-        std::set<CuDataListener *> listeners = d->listeners;
-        std::set<CuDataListener *>::iterator it;
-        for(it = listeners.begin(); it != listeners.end(); ++it) {
-            (*it)->onUpdate(data);
-        }
-    }
+    d->exiting = true; // for action factory to unregisterAction, exiting must return true
+    CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
+                                                                        ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
+    af->unregisterAction(d->tsrc.getName(), getType());
+    d->listeners.clear();
+    delete this;
 }
 
 /*! \brief unused. Complies with CuThreadListener interface
@@ -94,15 +87,13 @@ void CuTConfiguration::onResult(const std::vector<CuData> &datalist)
     (void) datalist;
 }
 
-CuData CuTConfiguration::getToken() const
-{
+CuData CuTConfiguration::getToken() const {
     CuData da("source", d->tsrc.getName());
-    da["type"] = std::string("attconfig");
+    da["type"] = std::string("property");
     return da;
 }
 
-TSource CuTConfiguration::getSource() const
-{
+TSource CuTConfiguration::getSource() const {
     return d->tsrc;
 }
 
@@ -116,7 +107,6 @@ void CuTConfiguration::addDataListener(CuDataListener *l)
     printf("CuTConfiguration.addDataListener %p [%s] - size before %ld ", l, d->tsrc.getName().c_str(), d->listeners.size());
     d->listeners.insert(l);
     printf("after %ld\n", d->listeners.size());
-    l->setValid();
     /* if a new listener is added after onResult, call onUpdate.
      * This happens when multiple items connect to the same source
      * Post the result, so that it is delivered later.
