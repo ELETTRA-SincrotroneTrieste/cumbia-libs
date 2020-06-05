@@ -1,0 +1,1 @@
+sudo apt-get install   qml-module-qtcharts qml-module-qtquick-controls2 qml-module-qtquick-dialogs qml-module-qtquick-extras   qml-module-qtquick-scene2d qml-module-qtquick-scene3d qml-module-qtquick-templates2  qtdeclarative5-dev libqt5charts5-dev qtcharts5-examples qtcharts5-doc-html 

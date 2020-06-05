@@ -1,0 +1,168 @@
+| Fresh Ubuntu 19.10 on Gnome Boxes |  2020.03.13   |
++---------------------------------------------------+
+
+sudo apt-get install build-essential ninja-build meson git doxygen graphviz libtango-dev libtango-tools tango-test  qt5-default qtcreator libqt5x11extras5-dev qttools5-dev qtscript5-dev libqt5x11extras5-dev qttools5-dev  qml-module-qtcharts qml-module-qtquick-controls2 qml-module-qtquick-dialogs qml-module-qtquick-extras qml-module-qtquick-scene2d qml-module-qtquick-scene3d qml-module-qtquick-templates2 qtdeclarative5-dev libqt5charts5-dev qtcharts5-examples qtcharts5-doc-html
+
+sudo apt-get install vim
+
+
+## Questo mancava nella doc! ora ho aggiornato
+##
+sudo apt-get install libqt5svg5  libqt5svg5-dev
+
+wget https://downloads.sourceforge.net/project/qwt/qwt/6.1.4/qwt-6.1.4.tar.bz2
+
+tar xjf 
+
+cd qwt-6.1.4
+
+vim qwtconfig.pri
+
+# decommentare
+
+    QWT_CONFIG += QwtPkgConfig
+
+# salvare e compilare qwt con supporto PKGCONFIG:
+
+    qmake && make -j5 && sudo make install
+    
+# saranno in 
+
+/usr/local/qwt-6.1.4/
+
+# tenere presente per PKG_CONFIG_PATH:
+
+/usr/local/qwt-6.1.4/lib/pkgconfig/
+
+
+
+=== EPICS ===
+
+
+wget https://epics.anl.gov/download/base/base-7.0.3.1.tar.gz
+
+tar xzf base..
+
+cd base-7.0.3.1
+
+make -j9
+
+cd ..
+
+
+sudo mkdir  /usr/local/epics
+sudo cp -a base-7.0.3.1  /usr/local/epics
+
+
+## PKGCONFIG & altro env
+
+export PKG_CONFIG_PATH=/usr/local/qwt-6.1.4/lib/pkgconfig
+export EPICS_BASE=/usr/local/epics/base-7.0.3.1
+export EPICS_HOST_ARCH=linux-x86_64
+
+
+========== cumbia =================
+
+git clone https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs.git
+
+cd cumbia-libs
+
+./scripts/cubuild.sh tango epics random build
+
+sudo ./scripts/cubuild.sh install
+
+# dopo l'installazione, io ho scelto "y" a un paio di domande, ma non e ` essenziale.
+
+# invece, alla fine: 
+
+source /usr/local/cumbia-libs/bin/cusetenv.sh
+
+# LD_LIBRARY_PATH per
+- zeromq
+- tango
+- epics
+- qwt
+
+export LD_LIBRARY_PATH=/usr/local/zeromq/lib:/usr/local/tango-9.3.3/lib:/usr/local/qwt-6.1.4/lib:$LD_LIBRARY_PATH:/usr/local/epics/base-7.0.3.1/lib/linux-x86_64
+
+Ho comunque creato i file 
+
+-rw-r--r-- 1 root root  50 mar 13 15:59 libtango.conf
+-rw-r--r-- 1 root root  47 mar 13 15:59 epics.conf
+-rw-r--r-- 1 root root  25 mar 13 16:00 qwt.conf
+
+e fatto sudo ldconfig 
+
+export TANGO_HOST=hokuto.elettra.trieste.it:20000
+
+
+#######################   TEST   ####################################################
+giacomo@ubuntu-test:~/devel/cumbia-libs$ cumbia read test/device/1/double_scalar
+Unable to find a real number in EPICS_CA_CONN_TMO=30.0
+EPICS "EPICS_CA_CONN_TMO" double fetch failed
+Defaulting "EPICS_CA_CONN_TMO" = 30,000000
+* CuPluginLoader.get: failed to load plugin "cuhdb-qt-plugin.so" from "": "The shared library was not found."
+ * a double: [16:02:20+0.283035]  [double] -17,86
+ 
+############# OK ######################## 
+
+
+## Creo progetto test
+
+cumbia new project
+
+Project Name: cutest
+Location    : /tmp
+...         : ...
+
+
+# Seleziono check per aprire designer e qtcreator, clicco su Create --> OK
+## Qtcreator apre il progetto e vede gli include correttamente, ad esempio posizionandomi su:
+   #include <qthreadseventbridgefactory.h>
+e facendo F2 apre il .h in /usr/local/...
+
+## Qt designer vede i plugin --> OK
+
+# Apro ora un altro terminale e vado in
+cd /tmp/cutest/
+
+# devo fare 
+
+source /usr/local/cumbia-libs/bin/cusetenv.sh
+
+# se non ho provveduto gia` al reboot, altrimenti non vede i path per i binari cumbia, ad esempio cumbia ui make
+
+# facendo qmake 
+
+qmake
+
+# Leggo:
+$ Info: creating stash file /tmp/cutest/.qmake.stash
+$ Project WARNING: Qwt: no pkg-config file found
+$ Project WARNING: Qwt: export PKG_CONFIG_PATH=/usr/path/to/qwt/lib/pkgconfig if you want to enable pkg-config for qwt
+$ ...
+
+# Questo mi fa insospettire che serve PKG_CONFIG_PATH:
+export PKG_CONFIG_PATH=/usr/local/cumbia-libs/lib/pkgconfig:/usr/local/qwt-6.1.4/lib/pkgconfig:/usr/local/tango-9.3.3/lib/pkgconfig:/usr/local/zeromq/lib/pkgconfig:/usr/local/epics/base-7.0.3.1/lib/pkgconfig
+
+# compilo
+
+cuuimake -j9
+
+
+# OK. Torno al designer, inserisco una QuTable con source $1/boolean_spectrum_ro e una QuLabel e QuApplyNumeric con source /target $1/double_scalar
+
+cuuimake -j9
+
+# lancio
+
+export TANGO_HOST=hokuto.elettra.trieste.it:20000
+
+./bin/cutest test/device/1
+
+Ed e` OK.
+
+
+
+
+
