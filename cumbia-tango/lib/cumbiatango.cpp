@@ -65,12 +65,9 @@ void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTa
                 static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
         CuTangoActionI *a = af->findActive(src, f.getType());
         if(!a) {
-            printf("CumbiaTango.addAction:action: \e[1;32mregistering a NEW action for %s type %d\e[0m\n", src.c_str(), f.getType());
             a = af->registerAction(src, f, this);
             a->start();
         }
-        else if(f.getType() == 2)
-            printf("CumbiaTango.addAction:action CONFIG type already found for %s type %d\n", source.getName().c_str(), f.getType());
         a->addDataListener(l);
     }
     else {
