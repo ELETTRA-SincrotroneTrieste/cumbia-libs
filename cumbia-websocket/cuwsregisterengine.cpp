@@ -67,8 +67,11 @@ bool CuWsRegisterEngine::hasCmdOption(const QStringList &args) const
 {
     QCommandLineParser parser;
     QCommandLineOption ws_url_o(QStringList() << "u" << "url", "URL to either websocket or http server", "url");
+    QCommandLineOption no_ws_o(QStringList()  << "no-ws", "Do not load websocket module");
+    parser.addOption(no_ws_o);
     parser.addOption(ws_url_o);
+    parser.addHelpOption();
     parser.parse(args);
     d->url = parser.value(ws_url_o);
-    return parser.isSet(ws_url_o) && (d->url.startsWith("ws://") || d->url.startsWith("wss://")) ;
+    return !parser.isSet(no_ws_o) && parser.isSet(ws_url_o) && (d->url.startsWith("ws://") || d->url.startsWith("wss://")) ;
 }
