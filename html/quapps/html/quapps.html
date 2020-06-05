@@ -58,17 +58,86 @@ $(function() {
 <h3>Foreword</h3>
 <p>In this document we will employ the term <em>engine</em> or <em>module</em> as synonyms, the meaning of the former being slightly more intended as the "control system software or *engine*", the latter as a piece of software. Nonetheless a <em>native cumbia module</em> will connect to a <em>native engine</em>, but here and there in the software sources we speak of loading a cumbia engine or a cumbia module without too much concern.</p>
 <p>In this document we describe how to create a Qt project supporting the multi engine pattern. If you find the title <em>Platform independent</em> misleading, please rather concentrate on the <em>anywhere</em> word for now. Well, the aforementioned http/SSE service is what actually makes app development <em>platform independent</em>, but since <em>cumbia-http</em> is written in Qt, it works wherever the Qt installation is available, which again means potentially <em>everywhere</em>. In the future, a cumbia-http module in pure C++ may become available, but for now the effort has been concentrated in Qt graphical applications design, since there is plenty of <em>http/SSE</em> implementations in any language for other <em>platform independent</em> technologies.</p>
+<h2>Model</h2>
+<p>The realization of a multi engine framework and in particular of the new <em>cumbia-http</em> module and the corresponding service which is an ongoing development was inspired by an outstanding example of multi platform software, the <a href="https://telegram.org/">Telegram messaging app</a>. Its architecture allows to use the service from anywhere. Android and iOS (iPhone, iPad) native apps are available, as well as Windows, Linux and FreeBSD (Qt) clients. Finally, a web interface completes the list of available clients.</p>
 <h2>Objective</h2>
 <p>The developer does not want to write an application using classes and method specific to an engine. Moreover, the end user of the application does not want to know which engine the software relies on. Additionally, the user wishes to launch the application with the same parameters unregarding where it connects to.</p>
 <p>This is very easy and is accomplished through very few lines of code. After that, application logic, source names and cumbia objects (for example, the <em>cumbia-qtcontrols</em> components) remain engine (module) unaware and they are used transparently.</p>
 <p>One option is to use the <em>cumbia new project</em> utility and to choose the <em>multi engine</em> option in the appropriate box. It creates a skeleton project ready to be populated with graphical elements.</p>
 <p>In this tutorial, we describe how this skeleton project is made.</p>
 <h1>Writing a multi engine project</h1>
-</div></div><!-- contents -->
+<h3>main.cpp</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;quapplication.h&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;httptest.h&quot;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#include &lt;cumbiapool.h&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> <a class="code" href="dummy_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">int</span> ret;</div>
+<div class="line">    QuApplication qu_app( argc, argv );</div>
+<div class="line">    qu_app.setApplicationName(<span class="stringliteral">&quot;Test&quot;</span>);</div>
+<div class="line">    qu_app.setApplicationVersion(<span class="stringliteral">&quot;1.0&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line">    CumbiaPool *cu_p = <span class="keyword">new</span> CumbiaPool();</div>
+<div class="line">    HttpTest *w = <span class="keyword">new</span> HttpTest(cu_p, NULL);</div>
+<div class="line">    w-&gt;show();</div>
+<div class="line"> </div>
+<div class="line">    ret = qu_app.exec();</div>
+<div class="line">    <span class="keyword">delete</span> w;</div>
+<div class="line">    <span class="keywordflow">return</span> ret;</div>
+<div class="line">}</div>
+</div><!-- fragment --><h3>widget.h</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;QWidget&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;qulogimpl.h&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;cucontrolsfactorypool.h&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">namespace </span>Ui {</div>
+<div class="line"><span class="keyword">class </span>HttpTest;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">class </span>CuData;</div>
+<div class="line"><span class="keyword">class </span>CumbiaPool;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">class </span>HttpTest : <span class="keyword">public</span> QWidget</div>
+<div class="line">{</div>
+<div class="line">    Q_OBJECT</div>
+<div class="line"><span class="keyword">public</span>:</div>
+<div class="line">    <span class="keyword">explicit</span> HttpTest(CumbiaPool *cu_p, QWidget *parent = 0);</div>
+<div class="line">    ~HttpTest();</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">private</span>:</div>
+<div class="line">    CumbiaPool *cu_pool;</div>
+<div class="line">    QuLogImpl m_log_impl;</div>
+<div class="line">    CuLog *m_log;</div>
+<div class="line">    CuControlsFactoryPool m_ctrl_factory_pool;</div>
+<div class="line">    Ui::HttpTest *ui;</div>
+<div class="line">};</div>
+</div><!-- fragment --><h3>widget.cpp</h3>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;httptest.h&quot;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;ui_httptest.h&quot;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="quapps_8h.html">quapps.h</a>&gt;</span></div>
+<div class="line"> </div>
+<div class="line">HttpTest::HttpTest(CumbiaPool *cumbia_pool, QWidget *parent) :</div>
+<div class="line">    QWidget(parent),</div>
+<div class="line">    cu_pool(cumbia_pool),</div>
+<div class="line">    ui(new Ui::HttpTest) {</div>
+<div class="line">    <a class="code" href="classCuModuleLoader.html">CuModuleLoader</a> mloader(cumbia_pool, &amp;m_ctrl_factory_pool, &amp;m_log_impl);</div>
+<div class="line">    qDebug() &lt;&lt; __PRETTY_FUNCTION__ &lt;&lt; <span class="stringliteral">&quot;available engines&quot;</span> &lt;&lt; mloader.modules();</div>
+<div class="line">    ui-&gt;setupUi(<span class="keyword">this</span>, cumbia_pool, m_ctrl_factory_pool);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">HttpTest::~HttpTest() {</div>
+<div class="line">    <span class="keyword">delete</span> ui;</div>
+<div class="line">}</div>
+</div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- PageDoc -->
+<div class="ttc" id="adummy_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="dummy_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition:</b> dummy.cpp:4</div></div>
+<div class="ttc" id="aquapps_8h_html"><div class="ttname"><a href="quapps_8h.html">quapps.h</a></div></div>
+<div class="ttc" id="aclassCuModuleLoader_html"><div class="ttname"><a href="classCuModuleLoader.html">CuModuleLoader</a></div><div class="ttdoc">Find and load installed cumbia modules.</div><div class="ttdef"><b>Definition:</b> quapps.h:71</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jun 5 2020 16:43:33 for cuapps by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 5 2020 17:40:26 for cuapps by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>
