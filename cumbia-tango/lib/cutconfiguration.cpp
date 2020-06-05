@@ -38,7 +38,7 @@ CuTConfiguration::CuTConfiguration(const TSource& src,
 }
 
 CuTConfiguration::~CuTConfiguration() {
-    printf("~CuTConfiguration: %p [%s]\n", this, d->tsrc.getName().c_str());
+    pdelete("~CuTConfiguration: %p [%s]\n", this, d->tsrc.getName().c_str());
     delete d;
 }
 
