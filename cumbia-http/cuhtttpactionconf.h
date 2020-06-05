@@ -7,11 +7,12 @@ class CuHttpActionConfPrivate;
 class QNetworkReply;
 class HTTPSource;
 class QNetworkAccessManager;
+class CuHttpAuthManager;
 
 class CuHttpActionConf : public CuHTTPActionA {
     Q_OBJECT
 public:
-    CuHttpActionConf(const HTTPSource& src, QNetworkAccessManager *qnam, const QString& http_url);
+    CuHttpActionConf(const HTTPSource& src, QNetworkAccessManager *qnam, const QString& http_url, CuHttpAuthManager *aman = nullptr);
     ~CuHttpActionConf();
 
     // CuHTTPActionI interface

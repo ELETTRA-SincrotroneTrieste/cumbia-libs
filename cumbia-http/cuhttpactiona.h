@@ -69,6 +69,8 @@ public:
 
     virtual QNetworkRequest prepareRequest(const QUrl& url) const;
 
+    virtual void notifyActionFinished();
+
 protected slots:
     virtual void onNewData();
     virtual void onReplyFinished();

@@ -19,7 +19,11 @@ class CuHTTPActionReader:  public CuHTTPActionA
 {
     Q_OBJECT
 public:
-    CuHTTPActionReader(const HTTPSource& src, CuHttpChannelReceiver *chan_recv, QNetworkAccessManager *qnam, const QString& url);
+    CuHTTPActionReader(const HTTPSource& src,
+                       CuHttpChannelReceiver *chan_recv,
+                       QNetworkAccessManager *qnam,
+                       const QString& url,
+                       CuHttpAuthManager *aman = nullptr);
     ~CuHTTPActionReader();
 
     CuData getToken() const;

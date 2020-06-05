@@ -195,5 +195,6 @@ void CuHttpControlsWriter::setTarget(const QString &s) {
     std::string t = d->target.toStdString();
     // remove placeholders from the target, f.e. a/b/c/d(&objectref) -> a/b/c/d
     t = t.substr(0, t.find("("));
+    cuprintf("\e[1;35mCuHttpControlsWriter::setTarget %s\e[0m\n", qstoc(s));
     d->cu_http->addAction(t, d->tlistener, cf);
 }

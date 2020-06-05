@@ -12,7 +12,17 @@ isEmpty(CU_USER_CONFIG_DIR) {
 
 DEFINES += CUMBIA_USER_CONFIG_DIR=\"\\\"$${CU_USER_CONFIG_DIR}\\\"\"
 
-QT       -= gui
+#
+# CuHttpAuthManager checks if qApp is an instance of QApplication and
+# can pop up a message box for authentication if so.
+#
+isEmpty(QT_NO_WIDGETS) {
+    message("-")
+    message("cumbia-http.pro: QT widgets enabled for authorization manager dialog")
+    message("cumbia-http.pro: You can disable QT widgets by calling qmake QT_NO_WIDGETS=1")
+    message("-")
+    QT       += widgets
+}
 
 CONFIG += debug
 
@@ -47,6 +57,9 @@ SOURCES += \
     cuhttpactionfactoryservice.cpp \
     cuhttpactionreader.cpp \
     cuhttpactionwriter.cpp \
+    cuhttpauthcookiestore.cpp \
+    cuhttpauthmanager.cpp \
+    cuhttpauthmanagertools.cpp \
     cuhttpchannelreceiver.cpp \
     cuhttpcontrolsreader.cpp \
     cuhttpcontrolswriter.cpp \
@@ -66,6 +79,9 @@ HEADERS += \
     cuhttpactionfactoryservice.h \
     cuhttpactionreader.h \
     cuhttpactionwriter.h \
+    cuhttpauthcookiestore.h \
+    cuhttpauthmanager.h \
+    cuhttpauthmanagertools.h \
     cuhttpchannelreceiver.h \
     cuhttpcontrolsreader.h \
     cuhttpcontrolswriter.h \

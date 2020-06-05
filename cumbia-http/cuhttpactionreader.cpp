@@ -39,7 +39,11 @@ public:
     CuHttpChannelReceiver *chan_recv;
 };
 
-CuHTTPActionReader::CuHTTPActionReader(const HTTPSource& src, CuHttpChannelReceiver *chan_recv, QNetworkAccessManager *qnam, const QString& url)
+CuHTTPActionReader::CuHTTPActionReader(const HTTPSource& src,
+                                       CuHttpChannelReceiver *chan_recv,
+                                       QNetworkAccessManager *qnam,
+                                       const QString& url,
+                                       CuHttpAuthManager *aman)
     : CuHTTPActionA(qnam) {
     d = new CuHTTPActionReaderPrivate;
     d->tsrc = src;

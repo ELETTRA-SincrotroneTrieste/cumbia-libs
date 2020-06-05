@@ -80,10 +80,17 @@ bool CuHttpRegisterEngine::hasCmdOption(const QStringList &args) const {
     QCommandLineParser parser;
     QCommandLineOption http_url_o(QStringList() << "u" << "http-url", "URL to http server/channel or URL only if -c [--channel] is provided", "url");
     QCommandLineOption chan_o(QStringList() << "c" << "channel", "Server Sent Events channel name", "chan");
+    QCommandLineOption no_http_o(QStringList()  << "no-http", "Do not load http module");
     parser.addOption(http_url_o);
     parser.addOption(chan_o);
+    parser.addOption(no_http_o);
+    parser.addHelpOption();
     parser.parse(args);
     QString url;
+    if(parser.isSet("help"))
+        printf("http module \e[1;32mhelp\e[0m:\n\e[1;36m%s\e[0m\n", qstoc(parser.helpText()));
+    if(parser.isSet(no_http_o))
+        return false;
     if(parser.isSet(http_url_o))
         url = parser.value(http_url_o);
     if(parser.isSet(chan_o))

@@ -7,6 +7,7 @@
 
 #include <QNetworkAccessManager>
 
+class CuHttpAuthManager;
 class CuHTTPClient;
 
 class CuHTTPReaderFactoryPrivate {
@@ -31,8 +32,9 @@ CuHTTPActionReaderFactory::~CuHTTPActionReaderFactory() {
 CuHTTPActionA *CuHTTPActionReaderFactory::create(const std::string &s,
                                                  QNetworkAccessManager *nam,
                                                  const QString &http_addr,
+                                                 CuHttpAuthManager *authman,
                                                  CuHttpChannelReceiver* cr) const {
-    CuHTTPActionReader* reader = new CuHTTPActionReader(s, cr, nam, http_addr);
+    CuHTTPActionReader* reader = new CuHTTPActionReader(s, cr, nam, http_addr, authman);
     // no refresh mode options, no period for http
     return reader;
 }
@@ -56,9 +58,10 @@ CuHTTPActionWriterFactory::~CuHTTPActionWriterFactory() {
 CuHTTPActionA *CuHTTPActionWriterFactory::create(const string &s,
                                                  QNetworkAccessManager *qnam,
                                                  const QString &http_addr,
+                                                 CuHttpAuthManager *aman,
                                                  CuHttpChannelReceiver* ) const
 {
-    CuHttpActionWriter *w = new CuHttpActionWriter(s, qnam, http_addr);
+    CuHttpActionWriter *w = new CuHttpActionWriter(s, qnam, http_addr, aman);
     w->setWriteValue(m_write_val);
     w->setConfiguration(configuration);
     return w;
@@ -79,8 +82,9 @@ CuHTTPActionConfFactory::~CuHTTPActionConfFactory() {
 CuHTTPActionA *CuHTTPActionConfFactory::create(const string &s,
                                                QNetworkAccessManager *qnam,
                                                const QString &http_addr,
+                                               CuHttpAuthManager *aman,
                                                CuHttpChannelReceiver* ) const {
-    return new CuHttpActionConf(s, qnam, http_addr);
+    return new CuHttpActionConf(s, qnam, http_addr, aman);
 }
 
 CuHTTPActionA::Type CuHTTPActionConfFactory::getType() const {

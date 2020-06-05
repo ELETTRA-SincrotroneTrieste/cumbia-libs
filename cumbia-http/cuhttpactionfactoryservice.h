@@ -8,6 +8,7 @@
 class CuHTTPActionFactoryI;
 class QNetworkAccessManager;
 class CuDataListener;
+class CuHttpAuthManager;
 class CuHttpChannelReceiver;
 
 class CuHTTPActionFactoryServicePrivate;
@@ -55,7 +56,7 @@ public:
                                   const CuHTTPActionFactoryI& f,
                                   QNetworkAccessManager *qnam,
                                   const QString &url,
-                                  CuHttpChannelReceiver *cr);
+                                  CuHttpChannelReceiver *cr, CuHttpAuthManager *authman);
 
     CuHTTPActionA *findActive(const std::string &name, CuHTTPActionA::Type at);
 

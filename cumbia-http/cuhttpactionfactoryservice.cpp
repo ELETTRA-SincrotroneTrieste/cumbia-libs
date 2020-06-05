@@ -43,10 +43,11 @@ CuHTTPActionFactoryService::~CuHTTPActionFactoryService()
  * @see unregisterAction
  */
 CuHTTPActionA *CuHTTPActionFactoryService::registerAction(const std::string& src,
-                                                       const CuHTTPActionFactoryI &f,
-                                                       QNetworkAccessManager* qnam,
-                                                       const QString& url,
-                                                       CuHttpChannelReceiver* cr)
+                                                          const CuHTTPActionFactoryI &f,
+                                                          QNetworkAccessManager* qnam,
+                                                          const QString& url,
+                                                          CuHttpChannelReceiver* cr,
+                                                          CuHttpAuthManager *authman)
 {
     CuHTTPActionA* action = NULL;
     std::lock_guard<std::mutex> lock(d->mutex);
@@ -58,7 +59,7 @@ CuHTTPActionA *CuHTTPActionFactoryService::registerAction(const std::string& src
 
     if(it == d->actions.end())
     {
-        action = f.create(src, qnam, url, cr);
+        action = f.create(src, qnam, url, authman, cr);
         d->actions.push_back(action);
     }
     return action;
@@ -165,7 +166,7 @@ CuHTTPActionA *CuHTTPActionFactoryService::unregisterAction(const std::string &s
             ++it;
     }
     if(d->actions.size() == siz) // nothing removed
-        perr("CuActionFactoryService::unregisterAction: no actions unregistered");
+        perr("CuHTTPActionFactoryService::unregisterAction: no actions unregistered with src %s and type %d", src.c_str(), at);
     return a;
 }
 

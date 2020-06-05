@@ -88,6 +88,7 @@ void CuHttpControlsReader::setSource(const QString &s) {
 //    d->cumbia_http->addAction(d->source.toStdString(), d->tlistener, httpwconff);
     CuHTTPActionReaderFactory httprf;
     httprf.setOptions(d->options);
+    cuprintf("\e[1;32mCuHttpControlsReader::setSource %s\e[0m\n", qstoc(s));
     d->cumbia_http->addAction(d->source.toStdString(), d->tlistener, httprf);
 }
 

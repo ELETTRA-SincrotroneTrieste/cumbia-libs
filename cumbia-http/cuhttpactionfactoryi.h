@@ -3,6 +3,7 @@
 
 class QNetworkAccessManager;
 class CuHttpChannelReceiver;
+class CuHttpAuthManager;
 class QString;
 
 #include <string>
@@ -31,6 +32,7 @@ public:
     virtual CuHTTPActionA *create(const std::string &s,
                                   QNetworkAccessManager *nam,
                                   const QString& http_addr,
+                                  CuHttpAuthManager *authman,
                                   CuHttpChannelReceiver* cr = nullptr) const = 0;
 
     /** \brief Return the type of action that the factory creates

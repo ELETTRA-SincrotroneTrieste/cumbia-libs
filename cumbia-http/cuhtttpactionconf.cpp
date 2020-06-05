@@ -35,7 +35,7 @@ public:
     CuHttpProtocolHelpers *proto_helpers;
 };
 
-CuHttpActionConf::CuHttpActionConf(const HTTPSource &src, QNetworkAccessManager *qnam, const QString &url)
+CuHttpActionConf::CuHttpActionConf(const HTTPSource &src, QNetworkAccessManager *qnam, const QString &url, CuHttpAuthManager *)
     : CuHTTPActionA(qnam)
 {
     d = new CuHttpActionConfPrivate;
@@ -76,6 +76,7 @@ void CuHttpActionConf::start() {
     QString src;
     QString url_s = QString::fromStdString(d->httpconf_src.getName());
     src = QString("/x/conf/%1").arg(url_s);
+    cuprintf("\e[1;36mCuHttpActionConf::start %s\e[0m\n", qstoc(QString(d->url + src)));
     startRequest(d->url + src);
 }
 
@@ -95,6 +96,7 @@ void CuHttpActionConf::decodeMessage(const QJsonDocument &json) {
     CumbiaHTTPWorld httpw;
     httpw.json_decode(json, res);
     d->exit = true;
+    cuprintf("\e[1;36mCuHttpActionConf::decodeMessage %ld listeners\e[0m\n", d->listeners.size());
     for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it) {
         (*it)->onUpdate(res);
     }

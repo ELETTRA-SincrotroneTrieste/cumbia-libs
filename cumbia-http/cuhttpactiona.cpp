@@ -43,6 +43,16 @@ QNetworkRequest CuHTTPActionA::prepareRequest(const QUrl &url) const {
     return r;
 }
 
+/*!
+ * \brief the default implementation calls onActionFinished on the registered CuHttpListener
+ *
+ * This is normally called from onReplyDestroyed, but CuHttpActionWriter can call this
+ * method to unregister tha action after the authentication fails
+ */
+void CuHTTPActionA::notifyActionFinished() {
+    d->listener->onActionFinished(getSource().getName(), getType());
+}
+
 // data from event source has a combination of fields, one per line
 // (event, id, retry, data)
 // https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
@@ -83,12 +93,13 @@ void CuHTTPActionA::onNewData() {
 }
 
 void CuHTTPActionA::onReplyFinished() {
+    qDebug() << __PRETTY_FUNCTION__ << getType() << "deleting reply later";
     d->reply->deleteLater();
 }
 
 void CuHTTPActionA::onReplyDestroyed(QObject *) {
     if(exiting())
-        d->listener->onActionFinished(getSource().getName(), getType());
+        notifyActionFinished();
     d->reply = nullptr;
 }
 
