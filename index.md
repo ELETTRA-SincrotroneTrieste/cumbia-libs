@@ -48,6 +48,7 @@ makes Tango source <b>bash auto completion</b> possible!
 ### Getting started
 - Download and install *cumbia*, following to the instructions in the <a href="https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs">cumbia-libs</a> *README.md*
 file.
+- <a href="html/quapps/html/quapps.html">Write a *platform independent* with cumbia *multi engine* support</a>.
 - <a href="html/qumbiaprojectwizard/html/tutorial_qumbiatango.html">Write your first <em>Qt application</em> with cumbia and Tango</a>
 - Find answers to common questions in the <a href="html/qumbia-tango-controls/html/tutorial_faq.html">FAQ section</a> (Tango)
 
