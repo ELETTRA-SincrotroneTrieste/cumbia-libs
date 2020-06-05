@@ -128,7 +128,6 @@ void CuTConfigActivity::execute()
         at["err"] = true;
         at.putTimestamp();
     }
-    cuprintf("CuTConfigActivity.onExecute exit calling publishResult for src %s\n", at["src"].toString().c_str());
     d->exiting = true;
     d->device_service->removeRef(at["device"].toString(), threadToken());
     publishResult(at);
