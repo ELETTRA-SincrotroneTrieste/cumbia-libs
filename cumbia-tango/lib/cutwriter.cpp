@@ -94,32 +94,30 @@ void CuTWriter::onResult(const std::vector<CuData> &datalist)
     (void) datalist;
 }
 
-/*! \brief calls onUpdate on all listeners or deletes itself when the *exiting* flag is set
+/*! \brief calls onUpdate on all listeners and deletes itself afterwards
  *
  * @param data CuData with the result to be delivered to every CuDataListener
  *
- * The method calls delete this if the *exit* flag is true, after calling CuActionFactoryService::unregisterAction
+ * \note
+ * onResult is called just once from CuWriteActivity.execute (since v1.2.0)
+ * This allows cleaning everything after updating listeners.
  *
  * \note
  * onResult is executed in the main thread
  */
 void CuTWriter::onResult(const CuData &data)
 {
-    d->exit = data["exit"].toBool();
     // iterator can be invalidated if listener's onUpdate unsets source: use a copy
     std::set<CuDataListener *> set_copy = d->listeners;
     std::set<CuDataListener *>::iterator it;
-    for(it = set_copy.begin(); !d->exit && it != set_copy.end(); ++it)
+    for(it = set_copy.begin(); it != set_copy.end(); ++it)
         (*it)->onUpdate(data);
-
-    if(d->exit)
-    {
-        CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
+    d->exit = true;
+    CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
                                                                             ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
-        af->unregisterAction(d->tsrc.getName(), getType());
-        d->listeners.clear();
-        delete this;
-    }
+    af->unregisterAction(d->tsrc.getName(), getType());
+    d->listeners.clear();
+    delete this;
 }
 
 CuData CuTWriter::getToken() const
@@ -129,31 +127,25 @@ CuData CuTWriter::getToken() const
     return da;
 }
 
-TSource CuTWriter::getSource() const
-{
+TSource CuTWriter::getSource() const {
     return d->tsrc;
 }
 
-CuTangoActionI::Type CuTWriter::getType() const
-{
+CuTangoActionI::Type CuTWriter::getType() const {
     return CuTangoActionI::Writer;
 }
 
-void CuTWriter::addDataListener(CuDataListener *l)
-{
-    l->setValid();
+void CuTWriter::addDataListener(CuDataListener *l) {
     d->listeners.insert(l);
 }
 
-void CuTWriter::removeDataListener(CuDataListener *l)
-{
+void CuTWriter::removeDataListener(CuDataListener *l) {
     d->listeners.erase(l);
     if(!d->listeners.size())
         stop();
 }
 
-size_t CuTWriter::dataListenersCount()
-{
+size_t CuTWriter::dataListenersCount() {
     return d->listeners.size();
 }
 
