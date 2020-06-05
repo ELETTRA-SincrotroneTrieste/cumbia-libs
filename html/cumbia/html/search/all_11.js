@@ -10,11 +10,11 @@ var searchData=
   ['setflags_352',['setFlags',['../classCuActivity.html#a628784b290540313025578994ecbe8a9',1,'CuActivity']]],
   ['setinterval_353',['setInterval',['../classCuContinuousActivity.html#aaf579eeba20dac8420bfcef77dec6067',1,'CuContinuousActivity']]],
   ['setshared_354',['setShared',['../classCuServiceProvider.html#a59857a691c41061f662123fda85d9590',1,'CuServiceProvider']]],
-  ['setsingleshot_355',['setSingleShot',['../classCuTimer.html#a4bc285454e24aa5ed786090279d47cb3',1,'CuTimer::setSingleShot(bool single)'],['../classCuTimer.html#a4bc285454e24aa5ed786090279d47cb3',1,'CuTimer::setSingleShot(bool single)']]],
+  ['setsingleshot_355',['setSingleShot',['../classCuTimer.html#a4bc285454e24aa5ed786090279d47cb3',1,'CuTimer']]],
   ['setsrcpatterns_356',['setSrcPatterns',['../classCumbiaPool.html#a05fb53ac6e5f72209249b083b832d05d',1,'CumbiaPool']]],
   ['setthreadtoken_357',['setThreadToken',['../classCuActivity.html#a27a307be0ec0863a8a5ce6b69f3245e3',1,'CuActivity']]],
   ['setthreadtokengenerator_358',['setThreadTokenGenerator',['../classCumbia.html#ad1294d5af961ea0899aabf299e7f2c56',1,'Cumbia']]],
-  ['settimeout_359',['setTimeout',['../classCuTimer.html#a7e9b7f2b6d0679a742b7672580ecbe40',1,'CuTimer::setTimeout(int millis)'],['../classCuTimer.html#a7e9b7f2b6d0679a742b7672580ecbe40',1,'CuTimer::setTimeout(int millis)']]],
+  ['settimeout_359',['setTimeout',['../classCuTimer.html#a7e9b7f2b6d0679a742b7672580ecbe40',1,'CuTimer']]],
   ['settimermaxcount_360',['setTimerMaxCount',['../classCuTimerService.html#ac8dd191a510fd5b75079632fffb44759',1,'CuTimerService']]],
   ['settype_361',['setType',['../classCuResultEvent.html#afad736adef0f3033e646ec7e190a76e7',1,'CuResultEvent']]],
   ['setvalid_362',['setValid',['../classCuDataListener.html#a6bd1c3762945d39bc0a0fe66c6b0247d',1,'CuDataListener']]],
@@ -23,9 +23,8 @@ var searchData=
   ['short_365',['Short',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caada2d4d65b9a01bf828b550ef983194b',1,'CuVariant']]],
   ['size_366',['size',['../classCuData.html#a6d888fa58fed0ec4f0d98f1ca78ac45e',1,'CuData']]],
   ['srclen_367',['SRCLEN',['../cuvariant_8h.html#ae098e25543ad7257780c7257750902d0',1,'cuvariant.h']]],
-  ['start_368',['start',['../classCuThread.html#a0aad3da3a03fe51ad001fa82495d1f0a',1,'CuThread::start()'],['../classCuThread.html#a0aad3da3a03fe51ad001fa82495d1f0a',1,'CuThread::start()'],['../classCuThreadInterface.html#acdb649780463740ae020a6d94d6debe9',1,'CuThreadInterface::start()'],['../classCuTimer.html#a920113a648608bba7f1db5adfafbb710',1,'CuTimer::start()']]],
+  ['start_368',['start',['../classCuThread.html#a0aad3da3a03fe51ad001fa82495d1f0a',1,'CuThread::start()'],['../classCuThreadInterface.html#acdb649780463740ae020a6d94d6debe9',1,'CuThreadInterface::start()']]],
   ['stateflags_369',['StateFlags',['../classCuActivity.html#aa459424928f1c4976aad955fa0058aa4',1,'CuActivity']]],
   ['stoc_370',['stoc',['../cumacros_8h.html#acd534b7281c2661a9b1a32e0dcb19a3a',1,'cumacros.h']]],
-  ['stop_371',['stop',['../classCuTimer.html#ab15ea29155684878813bbce54aadf144',1,'CuTimer']]],
-  ['string_372',['String',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2',1,'CuVariant']]]
+  ['string_371',['String',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2',1,'CuVariant']]]
 ];

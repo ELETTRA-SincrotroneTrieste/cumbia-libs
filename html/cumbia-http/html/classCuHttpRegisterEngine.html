@@ -66,8 +66,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a37076b45cc6cccdb3820c8c1a348d11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36c294765b039855f3d1178e7001deca"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHttpRegisterEngine.html#a36c294765b039855f3d1178e7001deca">channel</a> () const</td></tr>
 <tr class="separator:a36c294765b039855f3d1178e7001deca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a679571d7ec1cb6c5d6758b10b63a3f7c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHttpRegisterEngine.html#a679571d7ec1cb6c5d6758b10b63a3f7c">hasCmdOption</a> (QCommandLineParser *parser, const QStringList &amp;args) const</td></tr>
-<tr class="separator:a679571d7ec1cb6c5d6758b10b63a3f7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c6dfaeeb77ffc8bfe17ad924fe3851f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHttpRegisterEngine.html#a9c6dfaeeb77ffc8bfe17ad924fe3851f">hasCmdOption</a> (const QStringList &amp;args) const</td></tr>
+<tr class="separator:a9c6dfaeeb77ffc8bfe17ad924fe3851f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cdb1cad5a73b1b90668289e027ad1e8"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHttpRegisterEngine.html#a5cdb1cad5a73b1b90668289e027ad1e8">urlFromConfig</a> () const</td></tr>
+<tr class="separator:a5cdb1cad5a73b1b90668289e027ad1e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a14027ba2470d5ea0d9aa62e2ec16398c"></a>
@@ -132,8 +134,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a679571d7ec1cb6c5d6758b10b63a3f7c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a679571d7ec1cb6c5d6758b10b63a3f7c">&#9670;&nbsp;</a></span>hasCmdOption()</h2>
+<a id="a9c6dfaeeb77ffc8bfe17ad924fe3851f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c6dfaeeb77ffc8bfe17ad924fe3851f">&#9670;&nbsp;</a></span>hasCmdOption()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -141,24 +143,14 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool CuHttpRegisterEngine::hasCmdOption </td>
           <td>(</td>
-          <td class="paramtype">QCommandLineParser *&#160;</td>
-          <td class="paramname"><em>parser</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const QStringList &amp;&#160;</td>
-          <td class="paramname"><em>args</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
+          <td class="paramname"><em>args</em></td><td>)</td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classCuHttpRegisterEngine.html#a37076b45cc6cccdb3820c8c1a348d11d">url()</a>.</p>
+<p class="reference">References <a class="el" href="classCuHttpRegisterEngine.html#a37076b45cc6cccdb3820c8c1a348d11d">url()</a>, and <a class="el" href="classCuHttpRegisterEngine.html#a5cdb1cad5a73b1b90668289e027ad1e8">urlFromConfig()</a>.</p>
 
 </div>
 </div>
@@ -245,7 +237,28 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classCuHttpRegisterEngine.html#a679571d7ec1cb6c5d6758b10b63a3f7c">hasCmdOption()</a>, <a class="el" href="classCuHttpRegisterEngine.html#af076ab9c97dff6a1b90a9e79d5031d3a">registerWithDefaults()</a>, and <a class="el" href="classCuHttpRegisterEngine.html#ae211302187f5c089a659778e21d9d7f7">setUrl()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuHttpRegisterEngine.html#a9c6dfaeeb77ffc8bfe17ad924fe3851f">hasCmdOption()</a>, <a class="el" href="classCuHttpRegisterEngine.html#af076ab9c97dff6a1b90a9e79d5031d3a">registerWithDefaults()</a>, <a class="el" href="classCuHttpRegisterEngine.html#ae211302187f5c089a659778e21d9d7f7">setUrl()</a>, and <a class="el" href="classCuHttpRegisterEngine.html#a5cdb1cad5a73b1b90668289e027ad1e8">urlFromConfig()</a>.</p>
+
+</div>
+</div>
+<a id="a5cdb1cad5a73b1b90668289e027ad1e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5cdb1cad5a73b1b90668289e027ad1e8">&#9670;&nbsp;</a></span>urlFromConfig()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString CuHttpRegisterEngine::urlFromConfig </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuHttpRegisterEngine.html#a37076b45cc6cccdb3820c8c1a348d11d">url()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="classCuHttpRegisterEngine.html#a9c6dfaeeb77ffc8bfe17ad924fe3851f">hasCmdOption()</a>.</p>
 
 </div>
 </div>
@@ -256,7 +269,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 28 2020 15:18:22 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 5 2020 15:52:46 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

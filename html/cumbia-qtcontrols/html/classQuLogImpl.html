@@ -88,10 +88,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae839ae7f5b320834b57a35acaead6941"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e732d21e039de1be2e5b60bcab2d505"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuLogImpl.html#a7e732d21e039de1be2e5b60bcab2d505">onDialogDeleted</a> ()</td></tr>
 <tr class="separator:a7e732d21e039de1be2e5b60bcab2d505"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79631d0a7bd6badebfacb56ef79bfd63"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuLogImpl.html#a79631d0a7bd6badebfacb56ef79bfd63">write</a> (const std::string &amp;origin, const std::string &amp;write, CuLog::Level l, CuLog::Class c)</td></tr>
-<tr class="separator:a79631d0a7bd6badebfacb56ef79bfd63"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aecb6d5d2e621f2fcc9fd43977d0ec0fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuLogImpl.html#aecb6d5d2e621f2fcc9fd43977d0ec0fa">write</a> (const std::string &amp;origin, CuLog::Level l, CuLog::Class c, const char *fmt,...)</td></tr>
-<tr class="separator:aecb6d5d2e621f2fcc9fd43977d0ec0fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d9c94f68eabf1b4aebeec2f9bd154e9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuLogImpl.html#a8d9c94f68eabf1b4aebeec2f9bd154e9">write</a> (const std::string &amp;origin, const std::string &amp;write, int l, int c)</td></tr>
+<tr class="separator:a8d9c94f68eabf1b4aebeec2f9bd154e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a14f32038706c77d0bf86c542ac574afa"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQuLogImpl.html#a14f32038706c77d0bf86c542ac574afa">getName</a> () const</td></tr>
 <tr class="separator:a14f32038706c77d0bf86c542ac574afa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -275,8 +273,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a79631d0a7bd6badebfacb56ef79bfd63"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79631d0a7bd6badebfacb56ef79bfd63">&#9670;&nbsp;</a></span>write() <span class="overload">[1/2]</span></h2>
+<a id="a8d9c94f68eabf1b4aebeec2f9bd154e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d9c94f68eabf1b4aebeec2f9bd154e9">&#9670;&nbsp;</a></span>write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -296,13 +294,13 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CuLog::Level&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>l</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">CuLog::Class&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>c</em>&#160;</td>
         </tr>
         <tr>
@@ -317,52 +315,6 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aecb6d5d2e621f2fcc9fd43977d0ec0fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aecb6d5d2e621f2fcc9fd43977d0ec0fa">&#9670;&nbsp;</a></span>write() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void QuLogImpl::write </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>origin</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">CuLog::Level&#160;</td>
-          <td class="paramname"><em>l</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">CuLog::Class&#160;</td>
-          <td class="paramname"><em>c</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>fmt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="qulogimpl_8h_source.html">qulogimpl.h</a></li>
 <li><a class="el" href="qulogimpl_8cpp.html">qulogimpl.cpp</a></li>
@@ -370,7 +322,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 28 2020 15:18:09 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 5 2020 15:52:30 for cumbia-qtcontrols by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

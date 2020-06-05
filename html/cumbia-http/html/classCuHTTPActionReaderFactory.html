@@ -65,9 +65,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4f82ea1d18d86470c3a7154799fe3059"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d2ceaef91f5e19eeed6ddf9938d9082"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionReaderFactory.html#a9d2ceaef91f5e19eeed6ddf9938d9082">setOptions</a> (const CuData &amp;o)</td></tr>
 <tr class="separator:a9d2ceaef91f5e19eeed6ddf9938d9082"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3bfe27b530ecbb3bd05541a39ad054f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuHTTPActionA.html">CuHTTPActionA</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionReaderFactory.html#aa3bfe27b530ecbb3bd05541a39ad054f">create</a> (const std::string &amp;s, QNetworkAccessManager *nam, const QString &amp;http_addr, <a class="el" href="classCuHttpChannelReceiver.html">CuHttpChannelReceiver</a> *cr) const</td></tr>
-<tr class="memdesc:aa3bfe27b530ecbb3bd05541a39ad054f"><td class="mdescLeft">&#160;</td><td class="mdescRight">creates and returns a <a class="el" href="classCuHTTPActionReader.html">CuHTTPActionReader</a>, (that implements the CuHTTPActionI interface)  <a href="classCuHTTPActionReaderFactory.html#aa3bfe27b530ecbb3bd05541a39ad054f">More...</a><br /></td></tr>
-<tr class="separator:aa3bfe27b530ecbb3bd05541a39ad054f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cbb0d221d0c58903431044657fe1b4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuHTTPActionA.html">CuHTTPActionA</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionReaderFactory.html#a4cbb0d221d0c58903431044657fe1b4d">create</a> (const std::string &amp;s, QNetworkAccessManager *nam, const QString &amp;http_addr, <a class="el" href="classCuHttpAuthManager.html">CuHttpAuthManager</a> *authman, <a class="el" href="classCuHttpChannelReceiver.html">CuHttpChannelReceiver</a> *cr) const</td></tr>
+<tr class="memdesc:a4cbb0d221d0c58903431044657fe1b4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">creates and returns a <a class="el" href="classCuHTTPActionReader.html">CuHTTPActionReader</a>, (that implements the CuHTTPActionI interface)  <a href="classCuHTTPActionReaderFactory.html#a4cbb0d221d0c58903431044657fe1b4d">More...</a><br /></td></tr>
+<tr class="separator:a4cbb0d221d0c58903431044657fe1b4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e94875d0a4ac8fb1ab19410b31b34db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuHTTPActionA.html#a6957211b3af840324217a9a7d3181582">CuHTTPActionA::Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionReaderFactory.html#a1e94875d0a4ac8fb1ab19410b31b34db">getType</a> () const</td></tr>
 <tr class="memdesc:a1e94875d0a4ac8fb1ab19410b31b34db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the type of action that the factory creates.  <a href="classCuHTTPActionReaderFactory.html#a1e94875d0a4ac8fb1ab19410b31b34db">More...</a><br /></td></tr>
 <tr class="separator:a1e94875d0a4ac8fb1ab19410b31b34db"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -102,8 +102,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa3bfe27b530ecbb3bd05541a39ad054f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3bfe27b530ecbb3bd05541a39ad054f">&#9670;&nbsp;</a></span>create()</h2>
+<a id="a4cbb0d221d0c58903431044657fe1b4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4cbb0d221d0c58903431044657fe1b4d">&#9670;&nbsp;</a></span>create()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -128,6 +128,12 @@ Public Member Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">const QString &amp;&#160;</td>
           <td class="paramname"><em>http_addr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCuHttpAuthManager.html">CuHttpAuthManager</a> *&#160;</td>
+          <td class="paramname"><em>authman</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -158,7 +164,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>a <a class="el" href="classCuHTTPActionReader.html">CuHTTPActionReader</a>, that implements the CuHTTPActionI interface </dd></dl>
 
-<p>Implements <a class="el" href="classCuHTTPActionFactoryI.html#a41355e524d8c68ccc7dd097ba2466548">CuHTTPActionFactoryI</a>.</p>
+<p>Implements <a class="el" href="classCuHTTPActionFactoryI.html#ae80184dfaab22adb0156a79f9a27ad9c">CuHTTPActionFactoryI</a>.</p>
 
 </div>
 </div>
@@ -221,7 +227,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 28 2020 15:18:22 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 5 2020 15:52:46 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

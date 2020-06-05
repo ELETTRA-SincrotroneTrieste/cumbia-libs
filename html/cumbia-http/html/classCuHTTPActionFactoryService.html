@@ -76,9 +76,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a3d45a955845a77d7edf5f4a1955fd4a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9dc6d81d9d2631ae9423a025371b550"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionFactoryService.html#ab9dc6d81d9d2631ae9423a025371b550">~CuHTTPActionFactoryService</a> ()</td></tr>
 <tr class="separator:ab9dc6d81d9d2631ae9423a025371b550"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87bf6402060f321c8981573543741ae3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuHTTPActionA.html">CuHTTPActionA</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionFactoryService.html#a87bf6402060f321c8981573543741ae3">registerAction</a> (const std::string &amp;src, const <a class="el" href="classCuHTTPActionFactoryI.html">CuHTTPActionFactoryI</a> &amp;f, QNetworkAccessManager *qnam, const QString &amp;url, <a class="el" href="classCuHttpChannelReceiver.html">CuHttpChannelReceiver</a> *cr)</td></tr>
-<tr class="memdesc:a87bf6402060f321c8981573543741ae3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create and register a new action if an action with the same source and type is not already running.  <a href="classCuHTTPActionFactoryService.html#a87bf6402060f321c8981573543741ae3">More...</a><br /></td></tr>
-<tr class="separator:a87bf6402060f321c8981573543741ae3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4212abd72e8a07ea61d2eac7078ab3c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuHTTPActionA.html">CuHTTPActionA</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionFactoryService.html#aa4212abd72e8a07ea61d2eac7078ab3c">registerAction</a> (const std::string &amp;src, const <a class="el" href="classCuHTTPActionFactoryI.html">CuHTTPActionFactoryI</a> &amp;f, QNetworkAccessManager *qnam, const QString &amp;url, <a class="el" href="classCuHttpChannelReceiver.html">CuHttpChannelReceiver</a> *cr, <a class="el" href="classCuHttpAuthManager.html">CuHttpAuthManager</a> *authman)</td></tr>
+<tr class="memdesc:aa4212abd72e8a07ea61d2eac7078ab3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create and register a new action if an action with the same source and type is not already running.  <a href="classCuHTTPActionFactoryService.html#aa4212abd72e8a07ea61d2eac7078ab3c">More...</a><br /></td></tr>
+<tr class="separator:aa4212abd72e8a07ea61d2eac7078ab3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac20b30ae10af10b893cbd2f87dd8175b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuHTTPActionA.html">CuHTTPActionA</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionFactoryService.html#ac20b30ae10af10b893cbd2f87dd8175b">findActive</a> (const std::string &amp;name, <a class="el" href="classCuHTTPActionA.html#a6957211b3af840324217a9a7d3181582">CuHTTPActionA::Type</a> at)</td></tr>
 <tr class="memdesc:ac20b30ae10af10b893cbd2f87dd8175b"><td class="mdescLeft">&#160;</td><td class="mdescRight">find an <em>active</em> action given the source name and the action type  <a href="classCuHTTPActionFactoryService.html#ac20b30ae10af10b893cbd2f87dd8175b">More...</a><br /></td></tr>
 <tr class="separator:ac20b30ae10af10b893cbd2f87dd8175b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -347,8 +347,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a87bf6402060f321c8981573543741ae3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a87bf6402060f321c8981573543741ae3">&#9670;&nbsp;</a></span>registerAction()</h2>
+<a id="aa4212abd72e8a07ea61d2eac7078ab3c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4212abd72e8a07ea61d2eac7078ab3c">&#9670;&nbsp;</a></span>registerAction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -381,7 +381,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="classCuHttpChannelReceiver.html">CuHttpChannelReceiver</a> *&#160;</td>
-          <td class="paramname"><em>cr</em>&#160;</td>
+          <td class="paramname"><em>cr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCuHttpAuthManager.html">CuHttpAuthManager</a> *&#160;</td>
+          <td class="paramname"><em>authman</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -402,7 +408,7 @@ Public Member Functions</h2></td></tr>
 <dd>
 <a class="el" href="classCuHTTPActionFactoryService.html#a86afd29d1fa45f28d9cbf5243d1bd425" title="Unregister the action with the given source and type if the action&#39;s exiting() method returns true.">unregisterAction</a> </dd></dl>
 
-<p class="reference">References <a class="el" href="classCuHTTPActionFactoryI.html#a41355e524d8c68ccc7dd097ba2466548">CuHTTPActionFactoryI::create()</a>, and <a class="el" href="classCuHTTPActionFactoryI.html#a947b5374be8667d1f77c370c3c989dbf">CuHTTPActionFactoryI::getType()</a>.</p>
+<p class="reference">References <a class="el" href="classCuHTTPActionFactoryI.html#ae80184dfaab22adb0156a79f9a27ad9c">CuHTTPActionFactoryI::create()</a>, and <a class="el" href="classCuHTTPActionFactoryI.html#a947b5374be8667d1f77c370c3c989dbf">CuHTTPActionFactoryI::getType()</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classCumbiaHttp.html#aa68fe60fd06f1173a1978b3aad7499df">CumbiaHttp::addAction()</a>.</p>
 
@@ -458,7 +464,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 28 2020 15:18:22 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 5 2020 15:52:46 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

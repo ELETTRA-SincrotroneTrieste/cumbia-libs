@@ -107,13 +107,13 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac89a3dccbcc4180bceb7ba6104f10344"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuDataListener.html#ac89a3dccbcc4180bceb7ba6104f10344">onUpdate</a> (const <a class="el" href="classCuData.html">CuData</a> &amp;data)=0</td></tr>
 <tr class="separator:ac89a3dccbcc4180bceb7ba6104f10344"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a6d5c5fb04d06ab8ba26d006dec06e1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuDataListener.html#a1a6d5c5fb04d06ab8ba26d006dec06e1">invalid</a> () const</td></tr>
-<tr class="memdesc:a1a6d5c5fb04d06ab8ba26d006dec06e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns true if the data listener is invalid  <a href="classCuDataListener.html#a1a6d5c5fb04d06ab8ba26d006dec06e1">More...</a><br /></td></tr>
+<tr class="memdesc:a1a6d5c5fb04d06ab8ba26d006dec06e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns false since v1.2.0  <a href="classCuDataListener.html#a1a6d5c5fb04d06ab8ba26d006dec06e1">More...</a><br /></td></tr>
 <tr class="separator:a1a6d5c5fb04d06ab8ba26d006dec06e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a880a62460797e204d31e403eb219b934"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuDataListener.html#a880a62460797e204d31e403eb219b934">invalidate</a> ()</td></tr>
-<tr class="memdesc:a880a62460797e204d31e403eb219b934"><td class="mdescLeft">&#160;</td><td class="mdescRight">invalidates the data listener  <a href="classCuDataListener.html#a880a62460797e204d31e403eb219b934">More...</a><br /></td></tr>
+<tr class="memdesc:a880a62460797e204d31e403eb219b934"><td class="mdescLeft">&#160;</td><td class="mdescRight">not implemented  <a href="classCuDataListener.html#a880a62460797e204d31e403eb219b934">More...</a><br /></td></tr>
 <tr class="separator:a880a62460797e204d31e403eb219b934"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6bd1c3762945d39bc0a0fe66c6b0247d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuDataListener.html#a6bd1c3762945d39bc0a0fe66c6b0247d">setValid</a> ()</td></tr>
-<tr class="memdesc:a6bd1c3762945d39bc0a0fe66c6b0247d"><td class="mdescLeft">&#160;</td><td class="mdescRight">set the data listener to <em>valid</em>  <a href="classCuDataListener.html#a6bd1c3762945d39bc0a0fe66c6b0247d">More...</a><br /></td></tr>
+<tr class="memdesc:a6bd1c3762945d39bc0a0fe66c6b0247d"><td class="mdescLeft">&#160;</td><td class="mdescRight">not implemented since 1.2.0  <a href="classCuDataListener.html#a6bd1c3762945d39bc0a0fe66c6b0247d">More...</a><br /></td></tr>
 <tr class="separator:a6bd1c3762945d39bc0a0fe66c6b0247d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -126,7 +126,7 @@ Public Member Functions</h2></td></tr>
 <li><em>cumbia-tango</em> module <em>CuTReader</em> class implements the <a class="el" href="classCuThreadListener.html" title="interface for a listener that is notified when progress is done in the background and data is ready">CuThreadListener</a> interface, and its <a class="el" href="classCuThreadListener.html#a4feb7802a8844232a2d9cea98f2554c7" title="onProgress notifies the listener&#39;s thread about the progress of the ongoing work in the activity&#39;s ba...">CuThreadListener::onProgress</a> and <a class="el" href="classCuThreadListener.html#a8195c9a446ac1dabb4cea737de770c4c" title="onResult delivers to the listener&#39;s thread the results of the work performed by the activity&#39;s backgr...">CuThreadListener::onResult</a> methods. CuTReader::onResult invokes <a class="el" href="classCuDataListener.html#ac89a3dccbcc4180bceb7ba6104f10344">CuDataListener::onUpdate</a> on every listener registered with CuTReader::addDataListener</li>
 </ul>
 </dd></dl>
-<dl class="section user"><dt>Invalidate data listeners</dt><dd>The implementation of three methods of this abstract class allow to set and get an <em>invalid</em> flag that can be used by subclasses to know wheter the listener is in an invalid state, for example it's being destroyed. In that case, <a class="el" href="classCuDataListener.html#ac89a3dccbcc4180bceb7ba6104f10344">CuDataListener::onUpdate</a> can not be called and the object can be removed from the list of list of listeners. </dd></dl>
+<dl class="section user"><dt>Note</dt><dd>Since v1.2.0 the invalid, invalidate and setValid methods are not used </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="adca50a3cc9b652b7d45c72624e317e90"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adca50a3cc9b652b7d45c72624e317e90">&#9670;&nbsp;</a></span>CuDataListener()</h2>
@@ -200,11 +200,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>returns true if the data listener is invalid </p>
-<dl class="section return"><dt>Returns</dt><dd>true the data listener has been marked as invalid </dd>
-<dd>
-false the data listener is still valid</dd></dl>
-<dl class="section user"><dt>Example</dt><dd>This method is used by the cumbia-tango CuTReader class, from CuTReader::removeDataListener, and from the same method of CuTWriter </dd></dl>
+<p>returns false since v1.2.0 </p>
+
+<p class="reference">References <a class="el" href="cumacros_8h.html#ace3ed8e68957fe0cd2c27043cc5137db">perr</a>.</p>
 
 </div>
 </div>
@@ -231,8 +229,9 @@ false the data listener is still valid</dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>invalidates the data listener </p>
-<p>the invalid flag is set to true </p>
+<p>not implemented </p>
+
+<p class="reference">References <a class="el" href="cumacros_8h.html#ace3ed8e68957fe0cd2c27043cc5137db">perr</a>.</p>
 
 </div>
 </div>
@@ -285,8 +284,9 @@ false the data listener is still valid</dd></dl>
 </table>
 </div><div class="memdoc">
 
-<p>set the data listener to <em>valid</em> </p>
-<p>the invalid flag is reset to false </p>
+<p>not implemented since 1.2.0 </p>
+
+<p class="reference">References <a class="el" href="cumacros_8h.html#ace3ed8e68957fe0cd2c27043cc5137db">perr</a>.</p>
 
 </div>
 </div>
@@ -300,7 +300,7 @@ false the data listener is still valid</dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuDataListener.html">CuDataListener</a></li>
-    <li class="footer">Generated on Thu May 28 2020 15:21:47 for cumbia by
+    <li class="footer">Generated on Fri Jun 5 2020 15:52:18 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['class_843',['Class',['../classCuLog.html#aa25342f943a18ae41499e1bd38b1e447',1,'CuLog']]],
-  ['cueventtype_844',['CuEventType',['../classCuEventI.html#ab4bba34f5f3639c29e9529f4617d0e51',1,'CuEventI']]]
+  ['category_837',['Category',['../classCuLog.html#aebaaf836a828026e82b001950c6947c4',1,'CuLog']]],
+  ['cueventtype_838',['CuEventType',['../classCuEventI.html#ab4bba34f5f3639c29e9529f4617d0e51',1,'CuEventI']]]
 ];

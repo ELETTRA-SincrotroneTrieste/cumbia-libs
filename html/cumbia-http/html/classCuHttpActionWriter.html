@@ -62,8 +62,8 @@ Inheritance diagram for CuHttpActionWriter:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3176b3cd170f17a67de2571bff44c77d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHttpActionWriter.html#a3176b3cd170f17a67de2571bff44c77d">CuHttpActionWriter</a> (const <a class="el" href="classHTTPSource.html">HTTPSource</a> &amp;target, QNetworkAccessManager *qnam, const QString &amp;http_url)</td></tr>
-<tr class="separator:a3176b3cd170f17a67de2571bff44c77d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2369f4345df9b1f5f3ad8723ed5d2d2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHttpActionWriter.html#ab2369f4345df9b1f5f3ad8723ed5d2d2">CuHttpActionWriter</a> (const <a class="el" href="classHTTPSource.html">HTTPSource</a> &amp;target, QNetworkAccessManager *qnam, const QString &amp;http_url, <a class="el" href="classCuHttpAuthManager.html">CuHttpAuthManager</a> *authman)</td></tr>
+<tr class="separator:ab2369f4345df9b1f5f3ad8723ed5d2d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeb12ea0f788303a60a56cfe876d0053d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHttpActionWriter.html#aeb12ea0f788303a60a56cfe876d0053d">~CuHttpActionWriter</a> ()</td></tr>
 <tr class="separator:aeb12ea0f788303a60a56cfe876d0053d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6dd159b633a5f3851271a72f9b2aec50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHttpActionWriter.html#a6dd159b633a5f3851271a72f9b2aec50">setWriteValue</a> (const CuVariant &amp;w)</td></tr>
@@ -93,6 +93,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9d718d2ed98c2955676157e6fd8e0236"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac12de959e71c5826a3942393bb223862"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHttpActionWriter.html#ac12de959e71c5826a3942393bb223862">decodeMessage</a> (const QJsonDocument &amp;json)</td></tr>
 <tr class="separator:ac12de959e71c5826a3942393bb223862"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0926018845633caaa60ca11a746e0ccd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHttpActionWriter.html#a0926018845633caaa60ca11a746e0ccd">notifyActionFinished</a> ()</td></tr>
+<tr class="memdesc:a0926018845633caaa60ca11a746e0ccd"><td class="mdescLeft">&#160;</td><td class="mdescRight">the default implementation calls onActionFinished on the registered CuHttpListener  <a href="classCuHttpActionWriter.html#a0926018845633caaa60ca11a746e0ccd">More...</a><br /></td></tr>
+<tr class="separator:a0926018845633caaa60ca11a746e0ccd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbe287bb06f672ff8ac00dd304a563c5"><td class="memItemLeft" align="right" valign="top">QNetworkRequest&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHttpActionWriter.html#adbe287bb06f672ff8ac00dd304a563c5">prepareRequest</a> (const QUrl &amp;url) const</td></tr>
+<tr class="separator:adbe287bb06f672ff8ac00dd304a563c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classCuHTTPActionA"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classCuHTTPActionA')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classCuHTTPActionA.html">CuHTTPActionA</a></td></tr>
 <tr class="memitem:ad6d686e61f14685d45c036dde14e4097 inherit pub_methods_classCuHTTPActionA"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionA.html#ad6d686e61f14685d45c036dde14e4097">CuHTTPActionA</a> (QNetworkAccessManager *nam)</td></tr>
 <tr class="separator:ad6d686e61f14685d45c036dde14e4097 inherit pub_methods_classCuHTTPActionA"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -101,8 +106,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aee2c2a493f1866cbe0b44c377719d795 inherit pub_methods_classCuHTTPActionA"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a15e514323d8c0d30e9e3427a5ae0b432 inherit pub_methods_classCuHTTPActionA"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionA.html#a15e514323d8c0d30e9e3427a5ae0b432">setHttpActionListener</a> (<a class="el" href="classCuHTTPActionListener.html">CuHTTPActionListener</a> *l)</td></tr>
 <tr class="separator:a15e514323d8c0d30e9e3427a5ae0b432 inherit pub_methods_classCuHTTPActionA"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:add97694107222371a71f7d4d5969b9fb inherit pub_methods_classCuHTTPActionA"><td class="memItemLeft" align="right" valign="top">virtual QNetworkRequest&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionA.html#add97694107222371a71f7d4d5969b9fb">prepareRequest</a> (const QUrl &amp;url) const</td></tr>
-<tr class="separator:add97694107222371a71f7d4d5969b9fb inherit pub_methods_classCuHTTPActionA"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -134,8 +137,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:afaea7d8c76bb7831ca05191df8848e34 inherit pro_slots_classCuHTTPActionA"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a3176b3cd170f17a67de2571bff44c77d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3176b3cd170f17a67de2571bff44c77d">&#9670;&nbsp;</a></span>CuHttpActionWriter()</h2>
+<a id="ab2369f4345df9b1f5f3ad8723ed5d2d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2369f4345df9b1f5f3ad8723ed5d2d2">&#9670;&nbsp;</a></span>CuHttpActionWriter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -156,7 +159,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const QString &amp;&#160;</td>
-          <td class="paramname"><em>http_url</em>&#160;</td>
+          <td class="paramname"><em>http_url</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCuHttpAuthManager.html">CuHttpAuthManager</a> *&#160;</td>
+          <td class="paramname"><em>authman</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -371,6 +380,66 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a0926018845633caaa60ca11a746e0ccd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0926018845633caaa60ca11a746e0ccd">&#9670;&nbsp;</a></span>notifyActionFinished()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuHttpActionWriter::notifyActionFinished </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>the default implementation calls onActionFinished on the registered CuHttpListener </p>
+<p>This is normally called from onReplyDestroyed, but <a class="el" href="classCuHttpActionWriter.html">CuHttpActionWriter</a> can call this method to unregister tha action after the authentication fails </p>
+
+<p>Reimplemented from <a class="el" href="classCuHTTPActionA.html#ab21590789d7b7946674a7f6bcf9eb07f">CuHTTPActionA</a>.</p>
+
+<p class="reference">References <a class="el" href="classCuHTTPActionA.html#ab21590789d7b7946674a7f6bcf9eb07f">CuHTTPActionA::notifyActionFinished()</a>, and <a class="el" href="classCuHttpActionWriter.html#a9d718d2ed98c2955676157e6fd8e0236">stop()</a>.</p>
+
+</div>
+</div>
+<a id="adbe287bb06f672ff8ac00dd304a563c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adbe287bb06f672ff8ac00dd304a563c5">&#9670;&nbsp;</a></span>prepareRequest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QNetworkRequest CuHttpActionWriter::prepareRequest </td>
+          <td>(</td>
+          <td class="paramtype">const QUrl &amp;&#160;</td>
+          <td class="paramname"><em>url</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reimplemented from <a class="el" href="classCuHTTPActionA.html#add97694107222371a71f7d4d5969b9fb">CuHTTPActionA</a>.</p>
+
+</div>
+</div>
 <a id="a444f6adf7d52140beffd4773b9452631"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a444f6adf7d52140beffd4773b9452631">&#9670;&nbsp;</a></span>removeDataListener()</h2>
 
@@ -425,7 +494,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classCuHTTPActionWriterFactory.html#a863bbdf5cc7180e6bc08308d8889624d">CuHTTPActionWriterFactory::create()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuHTTPActionWriterFactory.html#abef440008a20f8cbac75c8a6610bb171">CuHTTPActionWriterFactory::create()</a>.</p>
 
 </div>
 </div>
@@ -445,7 +514,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">Referenced by <a class="el" href="classCuHTTPActionWriterFactory.html#a863bbdf5cc7180e6bc08308d8889624d">CuHTTPActionWriterFactory::create()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuHTTPActionWriterFactory.html#abef440008a20f8cbac75c8a6610bb171">CuHTTPActionWriterFactory::create()</a>.</p>
 
 </div>
 </div>
@@ -503,7 +572,7 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classCuHTTPActionA.html#a9a3944651457afe762ececf6ba42a005">CuHTTPActionA</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCuHttpActionWriter.html#a444f6adf7d52140beffd4773b9452631">removeDataListener()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuHttpActionWriter.html#a0926018845633caaa60ca11a746e0ccd">notifyActionFinished()</a>, and <a class="el" href="classCuHttpActionWriter.html#a444f6adf7d52140beffd4773b9452631">removeDataListener()</a>.</p>
 
 </div>
 </div>
@@ -514,7 +583,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 28 2020 15:18:22 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 5 2020 15:52:46 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

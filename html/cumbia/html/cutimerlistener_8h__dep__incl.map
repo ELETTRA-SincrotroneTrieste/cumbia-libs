@@ -1,9 +1,8 @@
 <map id="cutimerlistener.h" name="cutimerlistener.h">
-<area shape="rect" id="node1" title=" " alt="" coords="236,5,368,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="171,5,303,32"/>
 <area shape="rect" id="node2" href="$cutimerservice_8cpp.html" title=" " alt="" coords="21,80,167,107"/>
 <area shape="rect" id="node3" href="$cuthread_8h.html" title=" " alt="" coords="191,80,282,107"/>
-<area shape="rect" id="node7" href="$cuthread__new_8h.html" title=" " alt="" coords="307,80,431,107"/>
-<area shape="rect" id="node8" href="$cutimer_8cpp.html" title=" " alt="" coords="455,80,554,107"/>
+<area shape="rect" id="node7" href="$cutimer_8cpp.html" title=" " alt="" coords="306,80,405,107"/>
 <area shape="rect" id="node4" href="$cuthreadservice_8cpp.html" title=" " alt="" coords="5,155,159,181"/>
 <area shape="rect" id="node5" href="$cuthread_8cpp.html" title=" " alt="" coords="183,155,290,181"/>
 <area shape="rect" id="node6" href="$cuthreadfactoryimpl_8cpp.html" title=" " alt="" coords="314,155,495,181"/>

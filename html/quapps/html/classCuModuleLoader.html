@@ -64,8 +64,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6f9331ac6a061ae3c5c38bd99d94a4b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34c66dffff5ccfa08e57d66f47f6eb80"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuModuleLoader.html#a34c66dffff5ccfa08e57d66f47f6eb80">modules</a> () const</td></tr>
 <tr class="separator:a34c66dffff5ccfa08e57d66f47f6eb80"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57c737274329ad1883c47709b11c9d73"><td class="memItemLeft" align="right" valign="top">QCommandLineParser &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuModuleLoader.html#a57c737274329ad1883c47709b11c9d73">commandLineParser</a> () const</td></tr>
-<tr class="separator:a57c737274329ad1883c47709b11c9d73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Find and load installed cumbia modules. </p>
@@ -138,8 +136,7 @@ Public Member Functions</h2></td></tr>
 <p>If <em>-u + url</em> is detected, one of <em>cumbia-http</em> or <em>cumbia-websocket</em> modules is loaded. Since a cumbia application is studied to rely on any supported engine at runtime transparently, no other modules are loaded after either <em>http</em> or <em>websocket</em>. They indeed share the same source syntax as the native engines.</p>
 <p>If no URL is provided, all the other available engines are loaded.</p>
 <p>Parameters <em>cu_pool</em> and <em>ctrl_f_pool</em> must be valid. If <em>log_impl</em> is null, then no CuLog service is instantiated and registered. If <em>log_impl</em> is not null, a CuLog is created for you with the given CuLogImplI instance, and can be fetched with the <a class="el" href="classCuModuleLoader.html#a6f9331ac6a061ae3c5c38bd99d94a4b2">CuModuleLoader::log</a> method. If a CuLog is instantiated, it will be deleted together with <a class="el" href="classCuModuleLoader.html" title="Find and load installed cumbia modules.">CuModuleLoader</a>.</p>
-<p>The <a class="el" href="classCuModuleLoader.html#a34c66dffff5ccfa08e57d66f47f6eb80">CuModuleLoader::modules</a> method returns the list of modules (or, equivalently <em>engines, domains</em>) loaded.</p>
-<p>You can reuse the QCommandLineParser employed by <a class="el" href="classCuModuleLoader.html" title="Find and load installed cumbia modules.">CuModuleLoader</a> in your code, getting a reference to it through the commandLineParser method. </p>
+<p>The <a class="el" href="classCuModuleLoader.html#a34c66dffff5ccfa08e57d66f47f6eb80">CuModuleLoader::modules</a> method returns the list of modules (or, equivalently <em>engines, domains</em>) loaded. </p>
 
 </div>
 </div>
@@ -169,31 +166,6 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a57c737274329ad1883c47709b11c9d73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57c737274329ad1883c47709b11c9d73">&#9670;&nbsp;</a></span>commandLineParser()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">QCommandLineParser&amp; CuModuleLoader::commandLineParser </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a6f9331ac6a061ae3c5c38bd99d94a4b2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6f9331ac6a061ae3c5c38bd99d94a4b2">&#9670;&nbsp;</a></span>log()</h2>
 
@@ -250,7 +222,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 28 2020 15:18:30 for cuapps by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 5 2020 15:52:56 for cuapps by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

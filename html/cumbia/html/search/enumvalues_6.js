@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['generic_877',['Generic',['../classCuLog.html#aa25342f943a18ae41499e1bd38b1e447a5747575687d2c764d962fac4b708777c',1,'CuLog']]]
+  ['generic_871',['Generic',['../classCuLog.html#aebaaf836a828026e82b001950c6947c4a5747575687d2c764d962fac4b708777c',1,'CuLog']]]
 ];

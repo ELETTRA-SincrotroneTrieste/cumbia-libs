@@ -1,5 +1,5 @@
 <map id="cuactivity.h" name="cuactivity.h">
-<area shape="rect" id="node1" title=" " alt="" coords="465,5,561,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="409,5,505,32"/>
 <area shape="rect" id="node2" href="$cuactivity_8cpp.html" title=" " alt="" coords="5,80,116,107"/>
 <area shape="rect" id="node3" href="$cucontinuousactivity_8h.html" title=" " alt="" coords="140,80,307,107"/>
 <area shape="rect" id="node5" href="$cumbia_8cpp.html" title=" " alt="" coords="253,155,351,181"/>
@@ -7,7 +7,6 @@
 <area shape="rect" id="node8" href="$cuthread_8cpp.html" title=" " alt="" coords="562,155,669,181"/>
 <area shape="rect" id="node9" href="$cuactivitymanager_8cpp.html" title=" " alt="" coords="606,80,777,107"/>
 <area shape="rect" id="node10" href="$cuthread_8h.html" title=" " alt="" coords="801,80,891,107"/>
-<area shape="rect" id="node13" href="$cuthread__new_8h.html" title=" " alt="" coords="916,80,1040,107"/>
 <area shape="rect" id="node4" href="$cucontinuousactivity_8cpp.html" title=" " alt="" coords="47,155,229,181"/>
 <area shape="rect" id="node7" href="$cuisolatedactivity_8cpp.html" title=" " alt="" coords="375,155,538,181"/>
 <area shape="rect" id="node11" href="$cuthreadservice_8cpp.html" title=" " alt="" coords="731,155,884,181"/>

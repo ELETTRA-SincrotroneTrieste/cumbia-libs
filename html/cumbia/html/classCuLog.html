@@ -108,17 +108,18 @@ Inheritance diagram for CuLog:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aa25342f943a18ae41499e1bd38b1e447"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447">Class</a> { <br />
-&#160;&#160;<a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447a5747575687d2c764d962fac4b708777c">Generic</a> = 0, 
-<a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447aa5266e14318638a6f8a37d72dd1f0a90">Connect</a>, 
-<a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447ade6fa57ef66af9759d349374491b4ec9">Write</a>, 
-<a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447a82f822565b2e3c4916ec9d327c85f3ca">Read</a>, 
+<tr class="memitem:aebaaf836a828026e82b001950c6947c4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuLog.html#aebaaf836a828026e82b001950c6947c4">Category</a> { <br />
+&#160;&#160;<a class="el" href="classCuLog.html#aebaaf836a828026e82b001950c6947c4a5747575687d2c764d962fac4b708777c">Generic</a> = 0, 
+<a class="el" href="classCuLog.html#aebaaf836a828026e82b001950c6947c4a00d6bb6d134f924607d4602348459eca">Network</a>, 
+<a class="el" href="classCuLog.html#aebaaf836a828026e82b001950c6947c4ade6fa57ef66af9759d349374491b4ec9">Write</a>, 
+<a class="el" href="classCuLog.html#aebaaf836a828026e82b001950c6947c4a82f822565b2e3c4916ec9d327c85f3ca">Read</a>, 
 <br />
-&#160;&#160;<a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447a08bf7020e0c9781d1c35eb95603608b0">User</a> = 100
+&#160;&#160;<a class="el" href="classCuLog.html#aebaaf836a828026e82b001950c6947c4a08bf7020e0c9781d1c35eb95603608b0">User</a> = 100
 <br />
  }</td></tr>
-<tr class="separator:aa25342f943a18ae41499e1bd38b1e447"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd2350b2a3cfcd601126df046ed5c723"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">Level</a> { <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a7ea6527d5f5e914bbd5100b11dd09ba5">Info</a> = 0, 
+<tr class="separator:aebaaf836a828026e82b001950c6947c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd2350b2a3cfcd601126df046ed5c723"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">Level</a> { <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a2bad060a1634d9d52b97ae42f364efb8">Debug</a> = 0, 
+<a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a7ea6527d5f5e914bbd5100b11dd09ba5">Info</a>, 
 <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723ade058190fd462aef8d79dcc1fe37d0c6">Warn</a>, 
 <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a526fcad181e90aef701bf3f9efec4a40">Error</a>
  }</td></tr>
@@ -141,12 +142,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9ac887418ae3eeb10e79b088abf753c5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuLog.html#a9ac887418ae3eeb10e79b088abf753c5">removeImpl</a> (const std::string &amp;name)</td></tr>
 <tr class="memdesc:a9ac887418ae3eeb10e79b088abf753c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">remove the log implementation with the given name from the logging service  <a href="classCuLog.html#a9ac887418ae3eeb10e79b088abf753c5">More...</a><br /></td></tr>
 <tr class="separator:a9ac887418ae3eeb10e79b088abf753c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0eebb179599cf922e8842783260a262f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f">write</a> (const std::string &amp;origin, const std::string &amp;msg, <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">Level</a> l=<a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a526fcad181e90aef701bf3f9efec4a40">Error</a>, <a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447">Class</a> c=<a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447a5747575687d2c764d962fac4b708777c">Generic</a>)</td></tr>
-<tr class="memdesc:a0eebb179599cf922e8842783260a262f"><td class="mdescLeft">&#160;</td><td class="mdescRight">writes a log message on every <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation">CuLogImplI</a> registered with addImpl  <a href="classCuLog.html#a0eebb179599cf922e8842783260a262f">More...</a><br /></td></tr>
-<tr class="separator:a0eebb179599cf922e8842783260a262f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59f98ed686a5bdd9b010499cf9f59441"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuLog.html#a59f98ed686a5bdd9b010499cf9f59441">write</a> (const std::string &amp;origin, <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">Level</a> l, <a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447">Class</a> c, const char *fmt,...)</td></tr>
-<tr class="memdesc:a59f98ed686a5bdd9b010499cf9f59441"><td class="mdescLeft">&#160;</td><td class="mdescRight">writes a log message on every <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation">CuLogImplI</a> registered with addImpl (with printf format)  <a href="classCuLog.html#a59f98ed686a5bdd9b010499cf9f59441">More...</a><br /></td></tr>
-<tr class="separator:a59f98ed686a5bdd9b010499cf9f59441"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af36505063857a791401394d7af2af74f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuLog.html#af36505063857a791401394d7af2af74f">write</a> (const std::string &amp;origin, const std::string &amp;msg, int l=<a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a526fcad181e90aef701bf3f9efec4a40">Error</a>, int c=<a class="el" href="classCuLog.html#aebaaf836a828026e82b001950c6947c4a5747575687d2c764d962fac4b708777c">Generic</a>)</td></tr>
+<tr class="memdesc:af36505063857a791401394d7af2af74f"><td class="mdescLeft">&#160;</td><td class="mdescRight">writes a log message on every <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation">CuLogImplI</a> registered with addImpl  <a href="classCuLog.html#af36505063857a791401394d7af2af74f">More...</a><br /></td></tr>
+<tr class="separator:af36505063857a791401394d7af2af74f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a684a54c7a740b3bfd468b065644b08dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuLog.html#a684a54c7a740b3bfd468b065644b08dd">write</a> (const std::string &amp;origin, int l, const char *fmt,...)</td></tr>
+<tr class="separator:a684a54c7a740b3bfd468b065644b08dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62fd0faa4395f1cb2e3b0ef4fd98bef0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuLog.html#a62fd0faa4395f1cb2e3b0ef4fd98bef0">write</a> (const std::string &amp;origin, int l, int category, const char *fmt,...)</td></tr>
+<tr class="memdesc:a62fd0faa4395f1cb2e3b0ef4fd98bef0"><td class="mdescLeft">&#160;</td><td class="mdescRight">writes a log message on every <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation">CuLogImplI</a> registered with addImpl (with printf format)  <a href="classCuLog.html#a62fd0faa4395f1cb2e3b0ef4fd98bef0">More...</a><br /></td></tr>
+<tr class="separator:a62fd0faa4395f1cb2e3b0ef4fd98bef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28044bf591ce1789a835515c8f51bc52"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuLogImplI.html">CuLogImplI</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuLog.html#a28044bf591ce1789a835515c8f51bc52">getImpl</a> (const std::string &amp;name)</td></tr>
 <tr class="memdesc:a28044bf591ce1789a835515c8f51bc52"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation">CuLogImplI</a> implementation with the given name  <a href="classCuLog.html#a28044bf591ce1789a835515c8f51bc52">More...</a><br /></td></tr>
 <tr class="separator:a28044bf591ce1789a835515c8f51bc52"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -167,28 +170,28 @@ Public Member Functions</h2></td></tr>
 <li>define a "*class*" of log: Generic, Connect, Write, Read, <em>user defined</em></li>
 </ul>
 <p>Several <em>log implementations</em> (CuLogImpl) can be added to <a class="el" href="classCuLog.html" title="a cumbia service providing an interface for logging facilities">CuLog</a> through the <a class="el" href="classCuLog.html#a2b1b54fa9fc154b161f9970f5f365990" title="register a new CuLogImplI implementation into the logging service">CuLog::addImpl</a> method. A pointer to a registered <em>log implementation</em> can be obtained from <a class="el" href="classCuLog.html#a28044bf591ce1789a835515c8f51bc52" title="returns the CuLogImplI implementation with the given name">CuLog::getImpl</a> specifying a name as string. <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation">CuLogImplI</a> interface actually defines a <a class="el" href="classCuLogImplI.html#a57963d62e932ae4eacf7632db07bd0df">CuLogImplI::getName</a> method to force the specific log implementation to provide a name</p>
-<p>When a log message is written with <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="writes a log message on every CuLogImplI registered with addImpl">CuLog::write</a>, <a class="el" href="classCuLogImplI.html#a786babd38463c9f05d18c0496455e35e">CuLogImplI::write</a> is called for every registered log implementation. This allows to have a <em>log implementation</em> that writes on the console, another one writing on a file and a third one inserting messages on a database.</p>
+<p>When a log message is written with <a class="el" href="classCuLog.html#af36505063857a791401394d7af2af74f" title="writes a log message on every CuLogImplI registered with addImpl">CuLog::write</a>, <a class="el" href="classCuLogImplI.html#adae5f9fcaac6d7899c74cf66a074b5dc">CuLogImplI::write</a> is called for every registered log implementation. This allows to have a <em>log implementation</em> that writes on the console, another one writing on a file and a third one inserting messages on a database.</p>
 <p>The <a class="el" href="classCuLog.html#a28fe578cbb25a07828bd8857871c5e58" title="returns the name of the cumbia service">CuLog::getName</a> and <a class="el" href="classCuLog.html#aae292bec2e3caa526a8e982703050b58" title="returns the type of the cumbia service">CuLog::getType</a> methods are implemented from the <a class="el" href="classCuServiceI.html" title="interface to write cumbia services that can be registered and fetched through the cumbia service prov...">CuServiceI</a> interface for cumbia <em>services</em> to identify the specific <a class="el" href="classCuServiceI.html" title="interface to write cumbia services that can be registered and fetched through the cumbia service prov...">CuServiceI</a>.</p>
 <p>This service can enable, disable, change the logging method at runtime. This can be useful for test purposes. <a class="el" href="classCuNullLogImpl.html" title="null log implementation">CuNullLogImpl</a> is a <em>null</em> implementation of <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation">CuLogImplI</a> which <em>write</em> methods are empty. <a class="el" href="classCuConLogImpl.html" title="console log implementation">CuConLogImpl</a> is a <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation">CuLogImplI</a> that prints messages on the console.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation">CuLogImplI</a> </dd></dl>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="aa25342f943a18ae41499e1bd38b1e447"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa25342f943a18ae41499e1bd38b1e447">&#9670;&nbsp;</a></span>Class</h2>
+<a id="aebaaf836a828026e82b001950c6947c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aebaaf836a828026e82b001950c6947c4">&#9670;&nbsp;</a></span>Category</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447">CuLog::Class</a></td>
+          <td class="memname">enum <a class="el" href="classCuLog.html#aebaaf836a828026e82b001950c6947c4">CuLog::Category</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa25342f943a18ae41499e1bd38b1e447a5747575687d2c764d962fac4b708777c"></a>Generic&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aa25342f943a18ae41499e1bd38b1e447aa5266e14318638a6f8a37d72dd1f0a90"></a>Connect&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aa25342f943a18ae41499e1bd38b1e447ade6fa57ef66af9759d349374491b4ec9"></a>Write&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aa25342f943a18ae41499e1bd38b1e447a82f822565b2e3c4916ec9d327c85f3ca"></a>Read&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aa25342f943a18ae41499e1bd38b1e447a08bf7020e0c9781d1c35eb95603608b0"></a>User&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aebaaf836a828026e82b001950c6947c4a5747575687d2c764d962fac4b708777c"></a>Generic&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="aebaaf836a828026e82b001950c6947c4a00d6bb6d134f924607d4602348459eca"></a>Network&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="aebaaf836a828026e82b001950c6947c4ade6fa57ef66af9759d349374491b4ec9"></a>Write&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="aebaaf836a828026e82b001950c6947c4a82f822565b2e3c4916ec9d327c85f3ca"></a>Read&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="aebaaf836a828026e82b001950c6947c4a08bf7020e0c9781d1c35eb95603608b0"></a>User&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -205,7 +208,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="acd2350b2a3cfcd601126df046ed5c723a7ea6527d5f5e914bbd5100b11dd09ba5"></a>Info&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="acd2350b2a3cfcd601126df046ed5c723a2bad060a1634d9d52b97ae42f364efb8"></a>Debug&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="acd2350b2a3cfcd601126df046ed5c723a7ea6527d5f5e914bbd5100b11dd09ba5"></a>Info&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="acd2350b2a3cfcd601126df046ed5c723ade058190fd462aef8d79dcc1fe37d0c6"></a>Warn&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="acd2350b2a3cfcd601126df046ed5c723a526fcad181e90aef701bf3f9efec4a40"></a>Error&#160;</td><td class="fielddoc"></td></tr>
 </table>
@@ -284,7 +288,8 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>the class destructor </p>
-<p>virtual class destructor </p>
+<p>virtual class destructor</p>
+<dl class="section user"><dt>note</dt><dd>Does not delete implementations </dd></dl>
 
 <p class="reference">References <a class="el" href="cumacros_8h.html#a629905ebf3b84e70ff80248220fdc7a4">pdelete</a>.</p>
 
@@ -314,7 +319,7 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<p>When <a class="el" href="classCuLog.html#a0eebb179599cf922e8842783260a262f" title="writes a log message on every CuLogImplI registered with addImpl">CuLog::write</a> is invoked, the call is forwarded to every registered implementation of <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation">CuLogImplI</a> </p>
+<p>When <a class="el" href="classCuLog.html#af36505063857a791401394d7af2af74f" title="writes a log message on every CuLogImplI registered with addImpl">CuLog::write</a> is invoked, the call is forwarded to every registered implementation of <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation">CuLogImplI</a> </p>
 
 </div>
 </div>
@@ -449,8 +454,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a0eebb179599cf922e8842783260a262f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0eebb179599cf922e8842783260a262f">&#9670;&nbsp;</a></span>write() <span class="overload">[1/2]</span></h2>
+<a id="af36505063857a791401394d7af2af74f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af36505063857a791401394d7af2af74f">&#9670;&nbsp;</a></span>write() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -470,14 +475,14 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">CuLog::Level</a>&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>l</em> = <code><a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a526fcad181e90aef701bf3f9efec4a40">Error</a></code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447">CuLog::Class</a>&#160;</td>
-          <td class="paramname"><em>c</em> = <code><a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447a5747575687d2c764d962fac4b708777c">Generic</a></code>&#160;</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>c</em> = <code><a class="el" href="classCuLog.html#aebaaf836a828026e82b001950c6947c4a5747575687d2c764d962fac4b708777c">Generic</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -493,16 +498,16 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramname">origin</td><td>the source of the message </td></tr>
     <tr><td class="paramname">msg</td><td>the message </td></tr>
     <tr><td class="paramname">l</td><td>the log <em>level</em>, one of <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">CuLog::Level</a> enum values </td></tr>
-    <tr><td class="paramname">c</td><td>the log <em>class</em>, one of <a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447">CuLog::Class</a> enum values</td></tr>
+    <tr><td class="paramname">c</td><td>the log <em>class</em>, one of CuLog::Class enum values</td></tr>
   </table>
   </dd>
 </dl>
-<p>Calls the <a class="el" href="classCuLogImplI.html#a786babd38463c9f05d18c0496455e35e">CuLogImplI::write</a>(const std::string &amp; origin, const std::string &amp; msg, <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">CuLog::Level</a> l = <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a526fcad181e90aef701bf3f9efec4a40">CuLog::Error</a>, <a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447">CuLog::Class</a> c = <a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447a5747575687d2c764d962fac4b708777c">CuLog::Generic</a>) on all registered <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation">CuLogImplI</a>'s </p>
+<p>Calls the <a class="el" href="classCuLogImplI.html#adae5f9fcaac6d7899c74cf66a074b5dc">CuLogImplI::write</a>(const std::string &amp; origin, const std::string &amp; msg, <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">CuLog::Level</a> l = <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a526fcad181e90aef701bf3f9efec4a40">CuLog::Error</a>, CuLog::Class c = <a class="el" href="classCuLog.html#aebaaf836a828026e82b001950c6947c4a5747575687d2c764d962fac4b708777c">CuLog::Generic</a>) on all registered <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation">CuLogImplI</a>'s </p>
 
 </div>
 </div>
-<a id="a59f98ed686a5bdd9b010499cf9f59441"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a59f98ed686a5bdd9b010499cf9f59441">&#9670;&nbsp;</a></span>write() <span class="overload">[2/2]</span></h2>
+<a id="a684a54c7a740b3bfd468b065644b08dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a684a54c7a740b3bfd468b065644b08dd">&#9670;&nbsp;</a></span>write() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -516,14 +521,56 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">CuLog::Level</a>&#160;</td>
+          <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>l</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447">CuLog::Class</a>&#160;</td>
-          <td class="paramname"><em>c</em>, </td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fmt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuLog.html#aebaaf836a828026e82b001950c6947c4a5747575687d2c764d962fac4b708777c">Generic</a>.</p>
+
+</div>
+</div>
+<a id="a62fd0faa4395f1cb2e3b0ef4fd98bef0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62fd0faa4395f1cb2e3b0ef4fd98bef0">&#9670;&nbsp;</a></span>write() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CuLog::write </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>origin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>l</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>category</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -550,13 +597,13 @@ Public Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">origin</td><td>the source of the message </td></tr>
     <tr><td class="paramname">l</td><td>the log <em>level</em>, one of <a class="el" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723">CuLog::Level</a> enum values </td></tr>
-    <tr><td class="paramname">c</td><td>the log <em>class</em>, one of <a class="el" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447">CuLog::Class</a> enum values </td></tr>
+    <tr><td class="paramname">c</td><td>the log <em>class</em>, one of CuLog::Class enum values </td></tr>
     <tr><td class="paramname">fmt</td><td>the format ... á la printf, using va_list</td></tr>
   </table>
   </dd>
 </dl>
-<p>Calls the <a class="el" href="classCuLogImplI.html#a966a16ee0530cf001b33bbbec8a685f0">CuLogImplI::write(const std::string &amp;, CuLog::Level, CuLog::Class, const char* fmt, ...)</a> on all registered <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation">CuLogImplI</a>'s</p>
-<dl class="section user"><dt>example</dt><dd><div class="fragment"><div class="line">log.write(<span class="stringliteral">&quot;CuTReader.stop&quot;</span>, <a class="code" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a526fcad181e90aef701bf3f9efec4a40">CuLog::Error</a>, <a class="code" href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447a82f822565b2e3c4916ec9d327c85f3ca">CuLog::Read</a>,</div>
+<p>Calls the CuLogImplI::write(const std::string &amp;, CuLog::Level, CuLog::Class, const char* fmt, ...) on all registered <a class="el" href="classCuLogImplI.html" title="interface for a concrete log implementation">CuLogImplI</a>'s</p>
+<dl class="section user"><dt>example</dt><dd><div class="fragment"><div class="line">log.write(<span class="stringliteral">&quot;CuTReader.stop&quot;</span>, <a class="code" href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a526fcad181e90aef701bf3f9efec4a40">CuLog::Error</a>, <a class="code" href="classCuLog.html#aebaaf836a828026e82b001950c6947c4a82f822565b2e3c4916ec9d327c85f3ca">CuLog::Read</a>,</div>
 <div class="line">     <span class="stringliteral">&quot;stop called twice for reader %s&quot;</span>, data[<span class="stringliteral">&quot;source&quot;</span>].toString().c_str());</div>
 </div><!-- fragment --> </dd></dl>
 
@@ -569,12 +616,12 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <div class="ttc" id="aclassCuLog_html_acd2350b2a3cfcd601126df046ed5c723a526fcad181e90aef701bf3f9efec4a40"><div class="ttname"><a href="classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a526fcad181e90aef701bf3f9efec4a40">CuLog::Error</a></div><div class="ttdeci">@ Error</div><div class="ttdef"><b>Definition:</b> culog.h:47</div></div>
-<div class="ttc" id="aclassCuLog_html_aa25342f943a18ae41499e1bd38b1e447a82f822565b2e3c4916ec9d327c85f3ca"><div class="ttname"><a href="classCuLog.html#aa25342f943a18ae41499e1bd38b1e447a82f822565b2e3c4916ec9d327c85f3ca">CuLog::Read</a></div><div class="ttdeci">@ Read</div><div class="ttdef"><b>Definition:</b> culog.h:45</div></div>
+<div class="ttc" id="aclassCuLog_html_aebaaf836a828026e82b001950c6947c4a82f822565b2e3c4916ec9d327c85f3ca"><div class="ttname"><a href="classCuLog.html#aebaaf836a828026e82b001950c6947c4a82f822565b2e3c4916ec9d327c85f3ca">CuLog::Read</a></div><div class="ttdeci">@ Read</div><div class="ttdef"><b>Definition:</b> culog.h:45</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuLog.html">CuLog</a></li>
-    <li class="footer">Generated on Thu May 28 2020 15:21:47 for cumbia by
+    <li class="footer">Generated on Fri Jun 5 2020 15:52:18 for cumbia by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.18 </li>
   </ul>

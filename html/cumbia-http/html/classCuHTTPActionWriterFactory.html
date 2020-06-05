@@ -67,8 +67,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a45f240b144bc420086cf16ac675e2ca0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a485618cf96125510fd90ab3d62376a68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionWriterFactory.html#a485618cf96125510fd90ab3d62376a68">setWriteValue</a> (const CuVariant &amp;write_val)</td></tr>
 <tr class="separator:a485618cf96125510fd90ab3d62376a68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a863bbdf5cc7180e6bc08308d8889624d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuHTTPActionA.html">CuHTTPActionA</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionWriterFactory.html#a863bbdf5cc7180e6bc08308d8889624d">create</a> (const std::string &amp;s, QNetworkAccessManager *qnam, const QString &amp;http_addr, <a class="el" href="classCuHttpChannelReceiver.html">CuHttpChannelReceiver</a> *cr=nullptr) const</td></tr>
-<tr class="separator:a863bbdf5cc7180e6bc08308d8889624d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abef440008a20f8cbac75c8a6610bb171"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuHTTPActionA.html">CuHTTPActionA</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionWriterFactory.html#abef440008a20f8cbac75c8a6610bb171">create</a> (const std::string &amp;s, QNetworkAccessManager *qnam, const QString &amp;http_addr, <a class="el" href="classCuHttpAuthManager.html">CuHttpAuthManager</a> *authman, <a class="el" href="classCuHttpChannelReceiver.html">CuHttpChannelReceiver</a> *cr=nullptr) const</td></tr>
+<tr class="separator:abef440008a20f8cbac75c8a6610bb171"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30bee6f874f94f60a88cf6365586062a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuHTTPActionA.html#a6957211b3af840324217a9a7d3181582">CuHTTPActionA::Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionWriterFactory.html#a30bee6f874f94f60a88cf6365586062a">getType</a> () const</td></tr>
 <tr class="memdesc:a30bee6f874f94f60a88cf6365586062a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the type of action that the factory creates.  <a href="classCuHTTPActionWriterFactory.html#a30bee6f874f94f60a88cf6365586062a">More...</a><br /></td></tr>
 <tr class="separator:a30bee6f874f94f60a88cf6365586062a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -103,8 +103,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a863bbdf5cc7180e6bc08308d8889624d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a863bbdf5cc7180e6bc08308d8889624d">&#9670;&nbsp;</a></span>create()</h2>
+<a id="abef440008a20f8cbac75c8a6610bb171"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abef440008a20f8cbac75c8a6610bb171">&#9670;&nbsp;</a></span>create()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -133,6 +133,12 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"><a class="el" href="classCuHttpAuthManager.html">CuHttpAuthManager</a> *&#160;</td>
+          <td class="paramname"><em>authman</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"><a class="el" href="classCuHttpChannelReceiver.html">CuHttpChannelReceiver</a> *&#160;</td>
           <td class="paramname"><em>cr</em> = <code>nullptr</code>&#160;</td>
         </tr>
@@ -150,7 +156,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Pure virtual method that must be implemented by subclasses to return a valid <a class="el" href="classCuHTTPActionA.html">CuHTTPActionA</a> instance. </p>
 
-<p>Implements <a class="el" href="classCuHTTPActionFactoryI.html#a41355e524d8c68ccc7dd097ba2466548">CuHTTPActionFactoryI</a>.</p>
+<p>Implements <a class="el" href="classCuHTTPActionFactoryI.html#ae80184dfaab22adb0156a79f9a27ad9c">CuHTTPActionFactoryI</a>.</p>
 
 <p class="reference">References <a class="el" href="classCuHttpActionWriter.html#a8b9e42cecd1e8b5c0d32867e39e0575d">CuHttpActionWriter::setConfiguration()</a>, and <a class="el" href="classCuHttpActionWriter.html#a6dd159b633a5f3851271a72f9b2aec50">CuHttpActionWriter::setWriteValue()</a>.</p>
 
@@ -235,7 +241,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 28 2020 15:18:22 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 5 2020 15:52:46 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

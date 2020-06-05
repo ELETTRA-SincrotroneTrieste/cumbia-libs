@@ -1,10 +1,9 @@
 <map id="cuthreadinterface.h" name="cuthreadinterface.h">
-<area shape="rect" id="node1" title=" " alt="" coords="201,5,350,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="157,5,306,32"/>
 <area shape="rect" id="node2" href="$cuactivity_8cpp.html" title=" " alt="" coords="5,80,116,107"/>
 <area shape="rect" id="node3" href="$cumbia_8cpp.html" title=" " alt="" coords="140,80,237,107"/>
-<area shape="rect" id="node4" href="$cuthreadservice_8cpp.html" title=" " alt="" coords="163,155,316,181"/>
-<area shape="rect" id="node5" href="$cuthread_8h.html" title=" " alt="" coords="313,80,403,107"/>
-<area shape="rect" id="node8" href="$cuthread__new_8h.html" title=" " alt="" coords="428,80,552,107"/>
-<area shape="rect" id="node6" href="$cuthread_8cpp.html" title=" " alt="" coords="341,155,447,181"/>
-<area shape="rect" id="node7" href="$cuthreadfactoryimpl_8cpp.html" title=" " alt="" coords="471,155,653,181"/>
+<area shape="rect" id="node4" href="$cuthreadservice_8cpp.html" title=" " alt="" coords="180,155,333,181"/>
+<area shape="rect" id="node5" href="$cuthread_8h.html" title=" " alt="" coords="349,80,439,107"/>
+<area shape="rect" id="node6" href="$cuthread_8cpp.html" title=" " alt="" coords="358,155,465,181"/>
+<area shape="rect" id="node7" href="$cuthreadfactoryimpl_8cpp.html" title=" " alt="" coords="489,155,670,181"/>
 </map>

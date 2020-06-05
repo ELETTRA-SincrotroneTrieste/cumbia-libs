@@ -61,9 +61,7 @@ var files_dup =
     ] ],
     [ "cumacros.h", "cumacros_8h.html", "cumacros_8h" ],
     [ "cumbia.cpp", "cumbia_8cpp.html", null ],
-    [ "cumbia.h", "cumbia_8h.html", [
-      [ "Cumbia", "classCumbia.html", "classCumbia" ]
-    ] ],
+    [ "cumbia.h", "cumbia_8h.html", "cumbia_8h" ],
     [ "cumbiapool.cpp", "cumbiapool_8cpp.html", null ],
     [ "cumbiapool.h", "cumbiapool_8h.html", [
       [ "CumbiaPool", "classCumbiaPool.html", "classCumbiaPool" ]
@@ -82,9 +80,6 @@ var files_dup =
     ] ],
     [ "cuthread.cpp", "cuthread_8cpp.html", null ],
     [ "cuthread.h", "cuthread_8h.html", [
-      [ "CuThread", "classCuThread.html", "classCuThread" ]
-    ] ],
-    [ "cuthread_new.h", "cuthread__new_8h.html", [
       [ "CuThread", "classCuThread.html", "classCuThread" ]
     ] ],
     [ "cuthreadevents.cpp", "cuthreadevents_8cpp.html", null ],
@@ -124,9 +119,6 @@ var files_dup =
     ] ],
     [ "cutimer.cpp", "cutimer_8cpp.html", null ],
     [ "cutimer.h", "cutimer_8h.html", [
-      [ "CuTimer", "classCuTimer.html", "classCuTimer" ]
-    ] ],
-    [ "cutimer_new.h", "cutimer__new_8h.html", [
       [ "CuTimer", "classCuTimer.html", "classCuTimer" ]
     ] ],
     [ "cutimerlistener.h", "cutimerlistener_8h.html", null ],

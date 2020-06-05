@@ -49,37 +49,40 @@ $(function() {
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160; </div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">class </span>QNetworkAccessManager;</div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="keyword">class </span><a class="code" href="classCuHttpChannelReceiver.html">CuHttpChannelReceiver</a>;</div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">class </span>QString;</div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="cuhttpactiona_8h.html">cuhttpactiona.h</a>&gt;</span></div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="classCuHTTPActionFactoryI.html">   21</a></span>&#160;<span class="keyword">class </span><a class="code" href="classCuHTTPActionFactoryI.html">CuHTTPActionFactoryI</a></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;{</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classCuHTTPActionFactoryI.html#afb4f154004a05e81dfa12b84e94dd817">   24</a></span>&#160;    <a class="code" href="classCuHTTPActionFactoryI.html#afb4f154004a05e81dfa12b84e94dd817">CuHTTPActionFactoryI</a>() {}</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classCuHTTPActionFactoryI.html#a41355e524d8c68ccc7dd097ba2466548">   31</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classCuHTTPActionA.html">CuHTTPActionA</a> *<a class="code" href="classCuHTTPActionFactoryI.html#a41355e524d8c68ccc7dd097ba2466548">create</a>(<span class="keyword">const</span> std::string &amp;s,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                                  QNetworkAccessManager *nam,</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;                                  <span class="keyword">const</span> QString&amp; http_addr,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                                  <a class="code" href="classCuHttpChannelReceiver.html">CuHttpChannelReceiver</a>* cr = <span class="keyword">nullptr</span>) <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classCuHTTPActionFactoryI.html#a947b5374be8667d1f77c370c3c989dbf">   40</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classCuHTTPActionA.html#a6957211b3af840324217a9a7d3181582">CuHTTPActionA::Type</a> <a class="code" href="classCuHTTPActionFactoryI.html#a947b5374be8667d1f77c370c3c989dbf">getType</a>() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;};</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#endif // CUTANGOACTIONFACTORYI_H</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">class </span><a class="code" href="classCuHttpAuthManager.html">CuHttpAuthManager</a>;</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">class </span>QString;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="cuhttpactiona_8h.html">cuhttpactiona.h</a>&gt;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classCuHTTPActionFactoryI.html">   22</a></span>&#160;<span class="keyword">class </span><a class="code" href="classCuHTTPActionFactoryI.html">CuHTTPActionFactoryI</a></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;{</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classCuHTTPActionFactoryI.html#afb4f154004a05e81dfa12b84e94dd817">   25</a></span>&#160;    <a class="code" href="classCuHTTPActionFactoryI.html#afb4f154004a05e81dfa12b84e94dd817">CuHTTPActionFactoryI</a>() {}</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classCuHTTPActionFactoryI.html#ae80184dfaab22adb0156a79f9a27ad9c">   32</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classCuHTTPActionA.html">CuHTTPActionA</a> *<a class="code" href="classCuHTTPActionFactoryI.html#ae80184dfaab22adb0156a79f9a27ad9c">create</a>(<span class="keyword">const</span> std::string &amp;s,</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;                                  QNetworkAccessManager *nam,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                                  <span class="keyword">const</span> QString&amp; http_addr,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                                  <a class="code" href="classCuHttpAuthManager.html">CuHttpAuthManager</a> *authman,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                                  <a class="code" href="classCuHttpChannelReceiver.html">CuHttpChannelReceiver</a>* cr = <span class="keyword">nullptr</span>) <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classCuHTTPActionFactoryI.html#a947b5374be8667d1f77c370c3c989dbf">   42</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="classCuHTTPActionA.html#a6957211b3af840324217a9a7d3181582">CuHTTPActionA::Type</a> <a class="code" href="classCuHTTPActionFactoryI.html#a947b5374be8667d1f77c370c3c989dbf">getType</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;};</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#endif // CUTANGOACTIONFACTORYI_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassCuHTTPActionFactoryI_html_a41355e524d8c68ccc7dd097ba2466548"><div class="ttname"><a href="classCuHTTPActionFactoryI.html#a41355e524d8c68ccc7dd097ba2466548">CuHTTPActionFactoryI::create</a></div><div class="ttdeci">virtual CuHTTPActionA * create(const std::string &amp;s, QNetworkAccessManager *nam, const QString &amp;http_addr, CuHttpChannelReceiver *cr=nullptr) const =0</div></div>
-<div class="ttc" id="aclassCuHTTPActionFactoryI_html"><div class="ttname"><a href="classCuHTTPActionFactoryI.html">CuHTTPActionFactoryI</a></div><div class="ttdoc">Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu...</div><div class="ttdef"><b>Definition:</b> cuhttpactionfactoryi.h:22</div></div>
+<div class="ttc" id="aclassCuHTTPActionFactoryI_html_ae80184dfaab22adb0156a79f9a27ad9c"><div class="ttname"><a href="classCuHTTPActionFactoryI.html#ae80184dfaab22adb0156a79f9a27ad9c">CuHTTPActionFactoryI::create</a></div><div class="ttdeci">virtual CuHTTPActionA * create(const std::string &amp;s, QNetworkAccessManager *nam, const QString &amp;http_addr, CuHttpAuthManager *authman, CuHttpChannelReceiver *cr=nullptr) const =0</div></div>
+<div class="ttc" id="aclassCuHTTPActionFactoryI_html"><div class="ttname"><a href="classCuHTTPActionFactoryI.html">CuHTTPActionFactoryI</a></div><div class="ttdoc">Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu...</div><div class="ttdef"><b>Definition:</b> cuhttpactionfactoryi.h:23</div></div>
 <div class="ttc" id="aclassCuHTTPActionFactoryI_html_a947b5374be8667d1f77c370c3c989dbf"><div class="ttname"><a href="classCuHTTPActionFactoryI.html#a947b5374be8667d1f77c370c3c989dbf">CuHTTPActionFactoryI::getType</a></div><div class="ttdeci">virtual CuHTTPActionA::Type getType() const =0</div><div class="ttdoc">Return the type of action that the factory creates.</div></div>
-<div class="ttc" id="aclassCuHTTPActionFactoryI_html_afb4f154004a05e81dfa12b84e94dd817"><div class="ttname"><a href="classCuHTTPActionFactoryI.html#afb4f154004a05e81dfa12b84e94dd817">CuHTTPActionFactoryI::CuHTTPActionFactoryI</a></div><div class="ttdeci">CuHTTPActionFactoryI()</div><div class="ttdef"><b>Definition:</b> cuhttpactionfactoryi.h:24</div></div>
+<div class="ttc" id="aclassCuHttpAuthManager_html"><div class="ttname"><a href="classCuHttpAuthManager.html">CuHttpAuthManager</a></div><div class="ttdef"><b>Definition:</b> cuhttpauthmanager.h:15</div></div>
+<div class="ttc" id="aclassCuHTTPActionFactoryI_html_afb4f154004a05e81dfa12b84e94dd817"><div class="ttname"><a href="classCuHTTPActionFactoryI.html#afb4f154004a05e81dfa12b84e94dd817">CuHTTPActionFactoryI::CuHTTPActionFactoryI</a></div><div class="ttdeci">CuHTTPActionFactoryI()</div><div class="ttdef"><b>Definition:</b> cuhttpactionfactoryi.h:25</div></div>
 <div class="ttc" id="aclassCuHttpChannelReceiver_html"><div class="ttname"><a href="classCuHttpChannelReceiver.html">CuHttpChannelReceiver</a></div><div class="ttdoc">Receive messages on the channel and distributes them.</div><div class="ttdef"><b>Definition:</b> cuhttpchannelreceiver.h:13</div></div>
 <div class="ttc" id="aclassCuHTTPActionA_html_a6957211b3af840324217a9a7d3181582"><div class="ttname"><a href="classCuHTTPActionA.html#a6957211b3af840324217a9a7d3181582">CuHTTPActionA::Type</a></div><div class="ttdeci">Type</div><div class="ttdef"><b>Definition:</b> cuhttpactiona.h:21</div></div>
 <div class="ttc" id="aclassCuHTTPActionA_html"><div class="ttname"><a href="classCuHTTPActionA.html">CuHTTPActionA</a></div><div class="ttdef"><b>Definition:</b> cuhttpactiona.h:17</div></div>
 <div class="ttc" id="acuhttpactiona_8h_html"><div class="ttname"><a href="cuhttpactiona_8h.html">cuhttpactiona.h</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 28 2020 15:18:22 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 5 2020 15:52:46 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>

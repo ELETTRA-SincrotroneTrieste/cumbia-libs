@@ -1,7 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuHttpActionConf.html" title=" " alt="" coords="5,56,144,83"/>
-<area shape="rect" id="node2" href="$classCuHTTPActionA.html" title=" " alt="" coords="192,56,315,83"/>
-<area shape="rect" id="node3" href="$classCuHTTPActionReader.html" title=" " alt="" coords="372,5,531,32"/>
-<area shape="rect" id="node4" href="$classCuHttpActionWriter.html" title=" " alt="" coords="377,56,525,83"/>
-<area shape="rect" id="node5" href="$classCuHttpChannelReceiver.html" title="Receive messages on the channel and distributes them." alt="" coords="363,107,540,133"/>
+<area shape="rect" id="node1" href="$classCuHttpActionWriter.html" title=" " alt="" coords="5,56,153,83"/>
+<area shape="rect" id="node2" href="$classCuHTTPActionA.html" title=" " alt="" coords="217,56,340,83"/>
+<area shape="rect" id="node6" href="$classCuHttpAuthManager.html" title=" " alt="" coords="201,107,356,133"/>
+<area shape="rect" id="node3" href="$classCuHttpActionConf.html" title=" " alt="" coords="423,5,562,32"/>
+<area shape="rect" id="node4" href="$classCuHTTPActionReader.html" title=" " alt="" coords="413,56,572,83"/>
+<area shape="rect" id="node5" href="$classCuHttpChannelReceiver.html" title="Receive messages on the channel and distributes them." alt="" coords="404,107,581,133"/>
 </map>

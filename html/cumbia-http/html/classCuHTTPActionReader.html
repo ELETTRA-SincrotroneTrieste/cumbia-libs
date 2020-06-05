@@ -62,8 +62,8 @@ Inheritance diagram for CuHTTPActionReader:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3a221ca91cb6ad748e950eefc500d959"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionReader.html#a3a221ca91cb6ad748e950eefc500d959">CuHTTPActionReader</a> (const <a class="el" href="classHTTPSource.html">HTTPSource</a> &amp;src, <a class="el" href="classCuHttpChannelReceiver.html">CuHttpChannelReceiver</a> *chan_recv, QNetworkAccessManager *qnam, const QString &amp;url)</td></tr>
-<tr class="separator:a3a221ca91cb6ad748e950eefc500d959"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4453ff926ccd142d11a8810fd37532bd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionReader.html#a4453ff926ccd142d11a8810fd37532bd">CuHTTPActionReader</a> (const <a class="el" href="classHTTPSource.html">HTTPSource</a> &amp;src, <a class="el" href="classCuHttpChannelReceiver.html">CuHttpChannelReceiver</a> *chan_recv, QNetworkAccessManager *qnam, const QString &amp;url, <a class="el" href="classCuHttpAuthManager.html">CuHttpAuthManager</a> *aman=nullptr)</td></tr>
+<tr class="separator:a4453ff926ccd142d11a8810fd37532bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b664bb1a833a558d4aa7bdd4ebac76e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionReader.html#a0b664bb1a833a558d4aa7bdd4ebac76e">~CuHTTPActionReader</a> ()</td></tr>
 <tr class="separator:a0b664bb1a833a558d4aa7bdd4ebac76e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a06ba2324812ede6440345b99f600d3"><td class="memItemLeft" align="right" valign="top">CuData&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionReader.html#a2a06ba2324812ede6440345b99f600d3">getToken</a> () const</td></tr>
@@ -103,6 +103,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a15e514323d8c0d30e9e3427a5ae0b432 inherit pub_methods_classCuHTTPActionA"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add97694107222371a71f7d4d5969b9fb inherit pub_methods_classCuHTTPActionA"><td class="memItemLeft" align="right" valign="top">virtual QNetworkRequest&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionA.html#add97694107222371a71f7d4d5969b9fb">prepareRequest</a> (const QUrl &amp;url) const</td></tr>
 <tr class="separator:add97694107222371a71f7d4d5969b9fb inherit pub_methods_classCuHTTPActionA"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab21590789d7b7946674a7f6bcf9eb07f inherit pub_methods_classCuHTTPActionA"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuHTTPActionA.html#ab21590789d7b7946674a7f6bcf9eb07f">notifyActionFinished</a> ()</td></tr>
+<tr class="memdesc:ab21590789d7b7946674a7f6bcf9eb07f inherit pub_methods_classCuHTTPActionA"><td class="mdescLeft">&#160;</td><td class="mdescRight">the default implementation calls onActionFinished on the registered CuHttpListener  <a href="classCuHTTPActionA.html#ab21590789d7b7946674a7f6bcf9eb07f">More...</a><br /></td></tr>
+<tr class="separator:ab21590789d7b7946674a7f6bcf9eb07f inherit pub_methods_classCuHTTPActionA"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -134,8 +137,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:afaea7d8c76bb7831ca05191df8848e34 inherit pro_slots_classCuHTTPActionA"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a3a221ca91cb6ad748e950eefc500d959"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a221ca91cb6ad748e950eefc500d959">&#9670;&nbsp;</a></span>CuHTTPActionReader()</h2>
+<a id="a4453ff926ccd142d11a8810fd37532bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4453ff926ccd142d11a8810fd37532bd">&#9670;&nbsp;</a></span>CuHTTPActionReader()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -162,7 +165,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const QString &amp;&#160;</td>
-          <td class="paramname"><em>url</em>&#160;</td>
+          <td class="paramname"><em>url</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCuHttpAuthManager.html">CuHttpAuthManager</a> *&#160;</td>
+          <td class="paramname"><em>aman</em> = <code>nullptr</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -527,7 +536,7 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 28 2020 15:18:22 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 5 2020 15:52:46 for cumbia-http by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.18
 </small></address>
