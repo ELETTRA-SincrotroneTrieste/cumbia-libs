@@ -125,9 +125,6 @@ size_t CuTaDb::dataListenersCount() {
 
 void CuTaDb::start()
 {
-    CuDeviceFactoryService *df =
-            static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
-                                                  get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
     CuData at("src", d->tsrc.getName()); /* activity token */
     CuData tt("thread_token", "tangodb"); // same thread for all db accesses
     at["activity"] = "cutadb";
