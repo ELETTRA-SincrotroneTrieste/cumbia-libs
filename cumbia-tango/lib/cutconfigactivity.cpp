@@ -67,23 +67,15 @@ int CuTConfigActivity::repeat() const
 
 void CuTConfigActivity::init()
 {
-    d->my_thread_id = pthread_self();
-    assert(d->other_thread_id != d->my_thread_id);
-    CuData tk = getToken();
-    const std::string& dnam = tk["device"].toString();
+    const std::string& dnam = getToken()["device"].toString();
     /* get a TDevice */
     d->tdev = d->device_service->getDevice(dnam, threadToken());
     // thread safe: since cumbia 1.1.0 no thread per device guaranteed
     d->device_service->addRef(dnam, threadToken());
-    tk["msg"] =  "CuTConfigActivity.init: " + d->tdev->getMessage();
-    tk["conn"] = d->tdev->isValid();
-    tk["err"] = !d->tdev->isValid();
-    tk.putTimestamp();
 }
 
 void CuTConfigActivity::execute()
 {
-    assert(d->my_thread_id == pthread_self());
     CuData at = getToken(); /* activity token */
     d->err = !d->tdev->isValid();
     std::string point = at["point"].toString();
@@ -137,21 +129,9 @@ void CuTConfigActivity::execute()
         at.putTimestamp();
     }
     cuprintf("CuTConfigActivity.onExecute exit calling publishResult for src %s\n", at["src"].toString().c_str());
+    d->exiting = true;
+    d->device_service->removeRef(at["device"].toString(), threadToken());
     publishResult(at);
 }
 
-void CuTConfigActivity::onExit()
-{
-    assert(d->my_thread_id == pthread_self());
-    CuData at = getToken(); /* activity token */
-    if(!d->exiting) {
-        d->exiting = true;
-        int refcnt = -1;
-        // thread safe remove ref and disposal
-        refcnt = d->device_service->removeRef(at["device"].toString(), threadToken());
-        if(!refcnt)
-            d->tdev = nullptr;
-    }
-    at["exit"] = true;
-    publishResult(at);
-}
+void CuTConfigActivity::onExit() { }

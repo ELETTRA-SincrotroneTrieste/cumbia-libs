@@ -1,5 +1,4 @@
 #include "cutconfiguration.h"
-#include <culog.h>
 #include <cumacros.h>
 #include <cuserviceprovider.h>
 #include <cuactivity.h>
@@ -26,24 +25,19 @@ public:
     CumbiaTango *cumbia_t;
     CuTConfigActivity *activity;
     bool exiting; // set to true by stop()
-    CuConLogImpl li;
-    CuLog log;
-    CuVariant write_val;
     CuData options;
     const CuTangoActionI::Type type;
 };
 
 CuTConfiguration::CuTConfiguration(const TSource& src,
                                    CumbiaTango *ct,
-                                   CuTangoActionI::Type t)
-{
+                                   CuTangoActionI::Type t) {
     d = new CuTAttConfigurationPrivate(src, t); // src, t are const
     d->cumbia_t = ct;
     d->exiting = false;
 }
 
-CuTConfiguration::~CuTConfiguration()
-{
+CuTConfiguration::~CuTConfiguration() {
     printf("~CuTConfiguration: %p [%s]\n", this, d->tsrc.getName().c_str());
     delete d;
 }
@@ -56,15 +50,9 @@ void CuTConfiguration::setOptions(const CuData &options) {
     d->options = options;
 }
 
-void CuTConfiguration::onProgress(int step, int total, const CuData &data)
-{
-    (void) step; // unused
-    (void) total;
-    (void) data;
-}
+void CuTConfiguration::onProgress(int , int , const CuData &) { }
 
-void CuTConfiguration::onResult(const CuData &data)
-{
+void CuTConfiguration::onResult(const CuData &data) {
     // activity publishes only once from execute
     // we can clean everything after listeners update
     std::set<CuDataListener *> listeners = d->listeners;
