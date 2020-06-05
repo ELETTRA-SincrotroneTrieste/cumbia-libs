@@ -38,7 +38,7 @@ CuTConfiguration::CuTConfiguration(const TSource& src,
 }
 
 CuTConfiguration::~CuTConfiguration() {
-    pdelete("~CuTConfiguration: %p [%s]\n", this, d->tsrc.getName().c_str());
+    printf("~CuTConfiguration: %p [%s]\n", this, d->tsrc.getName().c_str());
     delete d;
 }
 
@@ -57,6 +57,9 @@ void CuTConfiguration::onResult(const CuData &data) {
     // we can clean everything after listeners update
     std::set<CuDataListener *> listeners = d->listeners;
     std::set<CuDataListener *>::iterator it;
+    for(it = listeners.begin(); it != listeners.end(); ++it) {
+        (*it)->onUpdate(data);
+    }
     d->exiting = true; // for action factory to unregisterAction, exiting must return true
     CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
                                                                         ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
@@ -88,8 +91,7 @@ CuTangoActionI::Type CuTConfiguration::getType() const
     return d->type;
 }
 
-void CuTConfiguration::addDataListener(CuDataListener *l)
-{
+void CuTConfiguration::addDataListener(CuDataListener *l) {
     d->listeners.insert(l);
 }
 
