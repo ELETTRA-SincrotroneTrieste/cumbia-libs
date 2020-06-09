@@ -40,7 +40,7 @@ CuHTTPActionA *CuHTTPActionReaderFactory::create(const CuHTTPSrc &s,
                                                  CuHttpAuthManager *authman,
                                                  CuHttpChannelReceiver* cr) const {
     CuHTTPActionReader* reader = new CuHTTPActionReader(s, cr, nam, http_addr, authman);
-    reader->setOptions(d->options);
+    reader->mergeOptions(d->options);
     // no refresh mode options, no period for http
     return reader;
 }

@@ -118,8 +118,8 @@ bool CuHTTPActionReader::exiting() const {
     return d->exit;
 }
 
-void CuHTTPActionReader::setOptions(const CuData &o) {
-    d->options = o;
+void CuHTTPActionReader::mergeOptions(const CuData &o) {
+    d->options.merge(o);
 }
 
 void CuHTTPActionReader::onUnsubscribeReplyFinished() {

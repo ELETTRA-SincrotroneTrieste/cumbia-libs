@@ -39,7 +39,7 @@ public:
     void decodeMessage(const QJsonDocument& json);
 
     bool exiting() const;
-    void setOptions(const CuData& o);
+    void mergeOptions(const CuData& o);
 
 private slots:
     void onUnsubscribeReplyFinished();
