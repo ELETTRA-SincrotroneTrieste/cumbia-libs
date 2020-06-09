@@ -66,15 +66,8 @@ void CuTaDbActivity::execute()
     at.merge(d->options);
     CuTangoWorld w;
     w.db_get(d->tsrc, at);
+    d->exiting = true;
     publishResult(at);
 }
 
-void CuTaDbActivity::onExit()
-{
-    CuData at = getToken(); /* activity token */
-    if(!d->exiting) {
-        d->exiting = true;
-    }
-    at["exit"] = true;
-    publishResult(at);
-}
+void CuTaDbActivity::onExit() { }

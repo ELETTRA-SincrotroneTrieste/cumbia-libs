@@ -1,19 +1,24 @@
 #include "cuhttp_source.h"
+#include "protocol/tango/cuhttptangosrc.h"
+#include "protocol/tango/cuhttptangohelper.h"
 #include <stdio.h>
 #include <algorithm>
 #include <regex>
+#include <qustringlist.h>
+#include <QRegularExpression>
+#include <QtDebug>
 
-HTTPSource::HTTPSource() { }
+CuHTTPSrc::CuHTTPSrc() { }
 
-HTTPSource::HTTPSource(const string& s) {
+CuHTTPSrc::CuHTTPSrc(const string& s) {
     m_s = s;
 }
 
-HTTPSource::HTTPSource(const HTTPSource &other) {
+CuHTTPSrc::CuHTTPSrc(const CuHTTPSrc &other) {
     this->m_s = other.m_s;
 }
 
-std::vector<string> HTTPSource::getArgs() const {
+std::vector<string> CuHTTPSrc::getArgs() const {
     std::string a = getArgsString();
     std::string delim = ",";
     std::regex re(delim);
@@ -29,7 +34,7 @@ std::vector<string> HTTPSource::getArgs() const {
     return ret;
 }
 
-std::string HTTPSource::getArgsString() const {
+std::string CuHTTPSrc::getArgsString() const {
     std::string a;
     size_t pos = m_s.find('(');
     if(pos != string::npos)
@@ -38,12 +43,40 @@ std::string HTTPSource::getArgsString() const {
 }
 
 /*!
+ * \brief returns true if the source is a single shot src
+ * \return true if the source is not a reader that requires continuous updates over time
+ * \return false if it is not possible to determine whether the source is a one time type
+ * or not.
+ *
+ * \note
+ * The method tries to individuate a Tango pattern. If found, the CuHttpTangoSrc helper is
+ * used to determine whether the source is a database operation. In that case, true is
+ * return, to indicate to the caller that the operation is a one time database read rather
+ * than a traditional attribute/command continuous (polled or event based) reading of the source.
+ */
+bool CuHTTPSrc::isSingleShot() const {
+    CuHttpTangoHelper tgh;
+    QuStringList tgpatterns(tgh.srcPatterns());
+    foreach(const QString& pa, tgpatterns) {
+        QRegularExpression re(pa);
+        QRegularExpressionMatch ma = re.match(m_s.c_str());
+        qDebug () << __PRETTY_FUNCTION__ << "matching " << re.pattern() << "with src" << m_s.c_str() << "HAS MATCH" << ma.hasMatch();
+        if(ma.hasMatch()) {
+            CuHttpTangoSrc tgsrc(m_s);
+            qDebug () << __PRETTY_FUNCTION__ << "is db op? " << tgsrc.isDbOp();
+            return  tgsrc.isDbOp();
+        }
+    }
+    return false;
+}
+
+/*!
  * \brief Returns the full name that was given to the constructor without the *cumbia domain
  *        engine* specification
  *
  * \return the source that was passed to the constructor
  */
-string HTTPSource::getName() const {
+string CuHTTPSrc::getName() const {
     return m_s;
 }
 
@@ -61,7 +94,7 @@ string HTTPSource::getName() const {
  * s2.getNameNoArgs(); // "myhost:20000/ab/cd/ef/hello"
  * \endcode
  */
-string HTTPSource::getNameNoArgs() const {
+string CuHTTPSrc::getNameNoArgs() const {
     return m_s.substr(0, m_s.find("("));
 }
 
@@ -72,7 +105,7 @@ string HTTPSource::getNameNoArgs() const {
  * In the source "https://pwma-dev.elettra.eu:10443/v1/cs/tango://ken.elettra.trieste.it:20000/test/device/1/double_scalar"
  * "tango://" is returned
  */
-string HTTPSource::getProtocol() const {
+string CuHTTPSrc::getProtocol() const {
     std::regex base_regex("([a-zA-Z0-9_]+)://");
     string source = m_s;
     // default constructor = end-of-sequence:
@@ -89,17 +122,17 @@ string HTTPSource::getProtocol() const {
     return "";
 }
 
-HTTPSource &HTTPSource::operator=(const HTTPSource &other) {
+CuHTTPSrc &CuHTTPSrc::operator=(const CuHTTPSrc &other) {
     if(this != &other)
         m_s = other.m_s;
     return *this;
 }
 
-bool HTTPSource::operator ==(const HTTPSource &other) const {
+bool CuHTTPSrc::operator ==(const CuHTTPSrc &other) const {
     return m_s == other.m_s;
 }
 
-std::string HTTPSource::toString() const
+std::string CuHTTPSrc::toString() const
 {
     char repr[512];
     snprintf(repr, 512, "HTTPSource [name:\"%s\"] [args:\"%s\"]",  m_s.c_str(), getArgsString().c_str());

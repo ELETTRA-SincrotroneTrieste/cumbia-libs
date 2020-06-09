@@ -460,17 +460,14 @@ void QumbiaReader::m_createReaders(const QStringList &srcs)  {
         CuData reader_ctx_options;
         QString a = m_conf.sources.at(i);
         // do not replace domain:// with domain-> !
-        std::string save_dom;
-        std::vector<std::string> doms = cu_pool->names();
-        for(size_t i = 0; i < doms.size() && save_dom.length() == 0; i++) {
-            const std::string& dom = doms[i];
-            if(a.startsWith(QString::fromStdString(dom) + "://"))
-                save_dom = dom + "://";
+        int idx = a.indexOf("://");
+        QString save_dom;
+        if(idx > -1) {
+            save_dom = a.section("://", 0, 0) + "://";
+            a.remove(save_dom);
         }
-        if(save_dom.length() > 0)
-            a.remove(QString::fromStdString(save_dom));
         a.replace("//", "->");
-        a = QString("%1%2").arg(save_dom.c_str()).arg(a);
+        a = QString("%1%2").arg(save_dom).arg(a);
         QRegularExpressionMatch match = squarebrackets_src.match(a);
         if(match.hasMatch()) {
             a.replace('[', '(').replace(']', ')');

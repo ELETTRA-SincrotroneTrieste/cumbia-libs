@@ -30,7 +30,7 @@ public:
      *
      * @return HTTPSource, an object storing information on the Tango source
      */
-    virtual HTTPSource getSource() const  = 0;
+    virtual CuHTTPSrc getSource() const  = 0;
 
     /*! \brief returns the type of CuHTTPActionI implemented
      *

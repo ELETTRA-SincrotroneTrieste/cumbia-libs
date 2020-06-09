@@ -23,7 +23,7 @@ signals:
 
     // CuHTTPActionA interface
 public:
-    HTTPSource getSource() const;
+    CuHTTPSrc getSource() const;
     Type getType() const;
     void addDataListener(CuDataListener *l);
     void removeDataListener(CuDataListener *l);

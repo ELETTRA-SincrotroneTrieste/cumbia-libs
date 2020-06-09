@@ -66,10 +66,10 @@ QString Parser::detect(const SearchDirInfoSet &dirInfoSet, const QList<Search> &
                         foreach(QString classname, se.searches)
                         {
                             contains = find_match(f, classname, varname);
-
                             if(contains)
                             {
-                                if(m_debug) printf(" \e[1;32mfound declaration \"%s\" var name \"%s\"\e[0m\n", qstoc(classname), qstoc(varname));
+                                if(m_debug) printf(" \e[1;32mfound declaration \"%s\" var name \"%s\" selected mode \"%s\"\e[0m\n",
+                                                   qstoc(classname), qstoc(varname), qstoc(se.factory));
                                 subs.insertSubstitution(classname, varname);
                                 subs.selectMode(se.factory);
                             }
@@ -77,14 +77,13 @@ QString Parser::detect(const SearchDirInfoSet &dirInfoSet, const QList<Search> &
                                 printf(" declaration for \"%s\" not found\n", qstoc(classname));
 
                         }
-                        if(contains && mode.isEmpty())
-                        {
+                        if(contains && mode.isEmpty()) {
                             mode = se.factory;
                         }
-                        else if(contains && !mode.isEmpty())
-                        {
+                        else if(contains && mode != subs.selectedMode()) {
                             m_error = true;
-                            m_lastError = "ModeDetector.detect: conflicting modes detected: " + se.factory + " and " + mode;
+                            m_lastError = "ModeDetector.detect: conflicting modes detected: " + subs.selectedMode() + " and " + mode;
+                            printf("Parser.parse: \e[1;31m%s\e[0m\n", qstoc(m_lastError));
                             return QString();
                         }
                         if(m_debug && contains)

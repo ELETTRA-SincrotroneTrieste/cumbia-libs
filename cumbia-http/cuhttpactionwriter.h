@@ -7,14 +7,14 @@
 class CuHTTPActionWriterPrivate;
 class QNetworkReply;
 class QNetworkAccessManager;
-class HTTPSource;
+class CuHTTPSrc;
 class CuHttpAuthManager;
 
 class CuHttpActionWriter : public CuHTTPActionA
 {
     Q_OBJECT
 public:
-    CuHttpActionWriter(const HTTPSource& target, QNetworkAccessManager *qnam, const QString& http_url, CuHttpAuthManager *authman);
+    CuHttpActionWriter(const CuHTTPSrc& target, QNetworkAccessManager *qnam, const QString& http_url, CuHttpAuthManager *authman);
     ~CuHttpActionWriter();
     void setWriteValue(const CuVariant& w);
     void setConfiguration(const CuData& co);
@@ -33,7 +33,7 @@ private:
 
     // CuHTTPActionA
 public:
-    HTTPSource getSource() const;
+    CuHTTPSrc getSource() const;
     Type getType() const;
     void addDataListener(CuDataListener *l);
     void removeDataListener(CuDataListener *l);

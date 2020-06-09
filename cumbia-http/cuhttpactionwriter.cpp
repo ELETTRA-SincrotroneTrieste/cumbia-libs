@@ -27,7 +27,7 @@ public:
     }
 
     std::set<CuDataListener *> listeners;
-    HTTPSource http_target;
+    CuHTTPSrc http_target;
     QString url;
     bool exit;
     CuData options;
@@ -38,7 +38,7 @@ public:
     CuHttpAuthManager *auth_manager;
 };
 
-CuHttpActionWriter::CuHttpActionWriter(const HTTPSource &target,
+CuHttpActionWriter::CuHttpActionWriter(const CuHTTPSrc &target,
                                        QNetworkAccessManager *qnam,
                                        const QString &http_url,
                                        CuHttpAuthManager *authman)
@@ -84,7 +84,7 @@ void CuHttpActionWriter::onCredentials(const QString &user, const QString &passw
 
 }
 
-HTTPSource CuHttpActionWriter::getSource() const {
+CuHTTPSrc CuHttpActionWriter::getSource() const {
     return d->http_target;
 }
 
@@ -157,8 +157,7 @@ QNetworkRequest CuHttpActionWriter::prepareRequest(const QUrl &url) const {
 
 void CuHttpActionWriter::onAuthReply(bool authorised, const QString &user, const QString &message, bool encrypted) {
     qDebug() << __PRETTY_FUNCTION__ << authorised << user << message << encrypted;
-    if(authorised)
-        start();
+    authorised ? start() : m_notify_result(m_make_error_data("not authorised").set("is_result", true));
 }
 
 void CuHttpActionWriter::onAuthError(const QString &errm) {

@@ -2,9 +2,6 @@
 #include "httptest.h"
 
 #include <cumbiapool.h>
-#include <cuthreadfactoryimpl.h>
-#include <qthreadseventbridgefactory.h>
-
 
 #define VERSION "1.0"
 

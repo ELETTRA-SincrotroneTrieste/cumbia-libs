@@ -1,12 +1,6 @@
 #include "httptest.h"
 #include "ui_httptest.h"
 
-#include <cumbiapool.h>
-#include <cuthreadfactoryimpl.h>
-#include <cuserviceprovider.h>
-#include <qthreadseventbridgefactory.h>
-#include <cumacros.h>
-
 #include <quapps.h>
 
 HttpTest::HttpTest(CumbiaPool *cumbia_pool, QWidget *parent) :

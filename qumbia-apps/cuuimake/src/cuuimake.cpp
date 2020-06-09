@@ -157,7 +157,7 @@ bool CuUiMake::make()
         success = !mode.isEmpty();
         if(!success)
         {
-            print(Analysis, true, plain_text, "error: no useful object definitions found:\n");
+            print(Analysis, true, plain_text, "error: no useful object definitions found: %s\n", qstoc(p.lastError()));
             foreach(Search s, defs.getSearchList())
                 print(Analysis, true, plain_text, "%s", qstoc(s.toString()));
             print(Analysis, true, plain_text, "\n");

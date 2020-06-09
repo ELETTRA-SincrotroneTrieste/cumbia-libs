@@ -7,12 +7,12 @@
 
 using namespace std;
 
-class HTTPSource
+class CuHTTPSrc
 {
 public:
-    HTTPSource();
-    HTTPSource(const std::string& src);
-    HTTPSource(const HTTPSource& other);
+    CuHTTPSrc();
+    CuHTTPSrc(const std::string& src);
+    CuHTTPSrc(const CuHTTPSrc& other);
 
     string getName() const;
     string getNameNoArgs() const;
@@ -22,11 +22,13 @@ public:
 
     string toString() const;
 
-    HTTPSource & operator=(const HTTPSource& other);
+    CuHTTPSrc & operator=(const CuHTTPSrc& other);
 
-    bool operator ==(const HTTPSource &other) const;
+    bool operator ==(const CuHTTPSrc &other) const;
 
     std::string getArgsString() const;
+
+    bool isSingleShot() const;
 
 private:
     string m_s;

@@ -26,7 +26,7 @@ public:
 
     }
     std::set<CuDataListener *> listeners;
-    HTTPSource httpconf_src;
+    CuHTTPSrc httpconf_src;
     QString url;
     bool exit;
     CuData property_d, value_d, options;
@@ -35,7 +35,7 @@ public:
     CuHttpProtocolHelpers *proto_helpers;
 };
 
-CuHttpActionConf::CuHttpActionConf(const HTTPSource &src, QNetworkAccessManager *qnam, const QString &url, CuHttpAuthManager *)
+CuHttpActionConf::CuHttpActionConf(const CuHTTPSrc &src, QNetworkAccessManager *qnam, const QString &url, CuHttpAuthManager *)
     : CuHTTPActionA(qnam)
 {
     d = new CuHttpActionConfPrivate;
@@ -49,7 +49,7 @@ CuHttpActionConf::~CuHttpActionConf() {
     delete d;
 }
 
-HTTPSource CuHttpActionConf::getSource() const {
+CuHTTPSrc CuHttpActionConf::getSource() const {
     return d->httpconf_src;
 }
 

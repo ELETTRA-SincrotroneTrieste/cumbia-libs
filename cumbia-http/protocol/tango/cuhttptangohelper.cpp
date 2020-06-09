@@ -123,5 +123,10 @@ std::vector<std::string> CuHttpTangoHelper::srcPatterns() const {
     // or "hokuto:20000/test/device/1/double_scalar" are not identified
     src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\$]+/.+");
     src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\$]+->.+");
+    // tango://ken:20000/#Sequencer#TestList
+    src_patterns.push_back("(?:tango://){1,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\$#]+");
+    src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){1,1}[A-Za-z0-9_\\-\\.\\$#]+");
     return src_patterns;
 }
+
+

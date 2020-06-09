@@ -12,15 +12,20 @@ class CuHTTPClient;
 
 class CuHTTPReaderFactoryPrivate {
 public:
+    CuData options;
 };
 
 
 void CuHTTPActionReaderFactory::setOptions(const CuData &o) {
-    options = o;
+    d->options = o;
+}
+
+CuHTTPActionReaderFactory::CuHTTPActionReaderFactory() {
+    d  = new CuHTTPReaderFactoryPrivate;
 }
 
 CuHTTPActionReaderFactory::~CuHTTPActionReaderFactory() {
-
+    delete d;
 }
 
 /** \brief creates and returns a CuHTTPActionReader, (that implements the CuHTTPActionI interface)
@@ -35,6 +40,7 @@ CuHTTPActionA *CuHTTPActionReaderFactory::create(const std::string &s,
                                                  CuHttpAuthManager *authman,
                                                  CuHttpChannelReceiver* cr) const {
     CuHTTPActionReader* reader = new CuHTTPActionReader(s, cr, nam, http_addr, authman);
+    reader->setOptions(d->options);
     // no refresh mode options, no period for http
     return reader;
 }

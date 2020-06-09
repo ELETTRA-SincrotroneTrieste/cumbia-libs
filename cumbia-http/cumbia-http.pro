@@ -69,7 +69,8 @@ SOURCES += \
     cumbiahttpworld.cpp \
     protocol/tango/cuhttpprotocolhelpers.cpp \
     protocol/tango/cuhttptangohelper.cpp \
-    protocol/tango/cuhttptangoreplacewildcards.cpp
+    protocol/tango/cuhttptangoreplacewildcards.cpp \
+    protocol/tango/cuhttptangosrc.cpp
 
 HEADERS += \
     cuhttp_source.h \
@@ -86,13 +87,15 @@ HEADERS += \
     cuhttpcontrolsreader.h \
     cuhttpcontrolswriter.h \
     cuhttpregisterengine.h \
+    cuhttpsrchelper_i.h \
     cuhtttpactionconf.h \
     cumbiahttp.h \
     cumbiahttpworld.h \
     protocol/cuhttpprotocolhelper_i.h \
     protocol/tango/cuhttpprotocolhelpers.h \
     protocol/tango/cuhttptangohelper.h \
-    protocol/tango/cuhttptangoreplacewildcards.h
+    protocol/tango/cuhttptangoreplacewildcards.h \
+    protocol/tango/cuhttptangosrc.h
 
 INCLUDEPATH += protocol protocol/tango
 

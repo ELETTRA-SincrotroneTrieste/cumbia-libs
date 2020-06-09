@@ -5,19 +5,19 @@
 
 class CuHttpActionConfPrivate;
 class QNetworkReply;
-class HTTPSource;
+class CuHTTPSrc;
 class QNetworkAccessManager;
 class CuHttpAuthManager;
 
 class CuHttpActionConf : public CuHTTPActionA {
     Q_OBJECT
 public:
-    CuHttpActionConf(const HTTPSource& src, QNetworkAccessManager *qnam, const QString& http_url, CuHttpAuthManager *aman = nullptr);
+    CuHttpActionConf(const CuHTTPSrc& src, QNetworkAccessManager *qnam, const QString& http_url, CuHttpAuthManager *aman = nullptr);
     ~CuHttpActionConf();
 
     // CuHTTPActionI interface
 public:
-    HTTPSource getSource() const;
+    CuHTTPSrc getSource() const;
     Type getType() const;
     void addDataListener(CuDataListener *l);
     void removeDataListener(CuDataListener *l);

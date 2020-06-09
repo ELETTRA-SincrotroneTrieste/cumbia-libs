@@ -24,7 +24,6 @@ public:
     CumbiaTango *cumbia_t;
     CuTaDbActivity *activity;
     bool xit; // set to true by stop()
-    CuData cached_data; // save locally
     CuData options;
 };
 
@@ -52,23 +51,18 @@ void CuTaDb::onProgress(int step, int total, const CuData &data) {
 
 void CuTaDb::onResult(const CuData &data)
 {
-    d->cached_data = data;
-    if(data["exit"].toBool()) // ! important: evaluate data["exit"] before deleting this
-    {
-        d->xit = true; // for action factory to unregisterAction, exiting must return true
-        CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
-                                                                            ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
-        af->unregisterAction(d->tsrc.getName(), getType());
-        d->listeners.clear();
-        delete this;
+    // do not update configuration data if exit
+    std::list <CuDataListener *> listeners = d->listeners;
+    std::list<CuDataListener *>::iterator it;
+    for(it = listeners.begin(); it != listeners.end(); ++it) {
+        (*it)->onUpdate(data);
     }
-    else { // do not update configuration data if exit
-        std::list <CuDataListener *> listeners = d->listeners;
-        std::list<CuDataListener *>::iterator it;
-        for(it = listeners.begin(); it != listeners.end(); ++it) {
-            (*it)->onUpdate(data);
-        }
-    }
+    d->xit = true; // for action factory to unregisterAction, exiting must return true
+    CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
+                                                                        ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
+    af->unregisterAction(d->tsrc.getName(), getType());
+    d->listeners.clear();
+    delete this;
 }
 
 /*! \brief unused. Complies with CuThreadListener interface
@@ -100,13 +94,6 @@ void CuTaDb::addDataListener(CuDataListener *l)
 {
     std::list<CuDataListener *>::iterator it = d->listeners.begin();
     d->listeners.insert(it, l);
-    /* if a new listener is added after onResult, call onUpdate.
-     * This happens when multiple items connect to the same source
-     * Post the result, so that it is delivered later.
-     */
-    if(!d->cached_data.isEmpty()) {
-        d->activity->publishResult(d->cached_data);
-    }
 }
 
 void CuTaDb::removeDataListener(CuDataListener *l) {

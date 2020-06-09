@@ -7,9 +7,11 @@
 class QNetworkAccessManager;
 class CuHttpChannelReceiver;
 class CuHttpAuthManager;
+class CuHTTPReaderFactoryPrivate;
 
 class CuHTTPActionReaderFactory : public CuHTTPActionFactoryI {
 public:
+    CuHTTPActionReaderFactory();
     virtual ~CuHTTPActionReaderFactory();
 
     void setOptions(const CuData &o);
@@ -21,7 +23,7 @@ public:
                           CuHttpChannelReceiver *cr) const;
     CuHTTPActionA::Type getType() const;
 private:
-    CuData options;
+    CuHTTPReaderFactoryPrivate *d;
 };
 
 class CuHTTPActionWriterFactory : public CuHTTPActionFactoryI
