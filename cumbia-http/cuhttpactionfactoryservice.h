@@ -52,7 +52,7 @@ public:
 
     virtual ~CuHTTPActionFactoryService();
 
-    CuHTTPActionA* registerAction(const std::string& src,
+    CuHTTPActionA* registerAction(const CuHTTPSrc &src,
                                   const CuHTTPActionFactoryI& f,
                                   QNetworkAccessManager *qnam,
                                   const QString &url,

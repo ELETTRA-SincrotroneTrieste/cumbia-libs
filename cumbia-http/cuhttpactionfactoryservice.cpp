@@ -42,7 +42,7 @@ CuHTTPActionFactoryService::~CuHTTPActionFactoryService()
  * @see findAction
  * @see unregisterAction
  */
-CuHTTPActionA *CuHTTPActionFactoryService::registerAction(const std::string& src,
+CuHTTPActionA *CuHTTPActionFactoryService::registerAction(const CuHTTPSrc& src,
                                                           const CuHTTPActionFactoryI &f,
                                                           QNetworkAccessManager* qnam,
                                                           const QString& url,
@@ -53,7 +53,7 @@ CuHTTPActionA *CuHTTPActionFactoryService::registerAction(const std::string& src
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuHTTPActionA *>::const_iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src && !(*it)->exiting()) {
+        if((*it)->getType() == f.getType() && (*it)->getSourceName().toStdString() == src.getName() && !(*it)->exiting()) {
             break;
         }
 
@@ -91,7 +91,7 @@ CuHTTPActionA *CuHTTPActionFactoryService::findActive(const string &src, CuHTTPA
     std::lock_guard<std::mutex> lock(d->mutex);
     std::list<CuHTTPActionA *>::const_iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == at && (*it)->getSource().getName() == src && !(*it)->exiting())
+        if((*it)->getType() == at && (*it)->getSourceName().toStdString() == src && !(*it)->exiting())
             return (*it);
     return NULL;
 }
@@ -116,7 +116,7 @@ std::vector<CuHTTPActionA *> CuHTTPActionFactoryService::find(const string &src,
     std::vector <CuHTTPActionA *> actions;
     std::list<CuHTTPActionA *>::const_iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == at && (*it)->getSource().getName() == src)
+        if((*it)->getType() == at && (*it)->getSourceName().toStdString() == src)
             actions.push_back(*it);
     return actions;
 }
@@ -158,7 +158,7 @@ CuHTTPActionA *CuHTTPActionFactoryService::unregisterAction(const std::string &s
 
     it = d->actions.begin();
     while( it != d->actions.end())  {
-        if((*it)->getType() == at && (*it)->getSource().getName() == src && (*it)->exiting()) {
+        if((*it)->getType() == at && (*it)->getSourceName().toStdString() == src && (*it)->exiting()) {
             if(!a) a = (*it);
             it = d->actions.erase(it);
         }

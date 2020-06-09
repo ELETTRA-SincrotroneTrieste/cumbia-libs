@@ -46,13 +46,12 @@ public:
     std::string rem_tghostproto(const std::string& src) const;
 
     const char* getTypeName(Type t) const;
-
     Type getType() const;
 
     CuHttpTangoSrc & operator=(const CuHttpTangoSrc& other);
 
     bool operator ==(const CuHttpTangoSrc &other) const;
-
+    bool isValid() const;
 
 private:
     string m_s;

@@ -99,14 +99,10 @@ CuHttpControlsWriter::CuHttpControlsWriter(Cumbia *cu_http, CuDataListener *tl)
     d->tlistener = tl;
 }
 
-/*! \brief the class destructor.
- *
- * The class destructors sets the invalidate flag on the listener, so that it won't be
- * used later, and calls clearTarget
+/*! \brief the class destructor calls clearTarget
  */
 CuHttpControlsWriter::~CuHttpControlsWriter()
 {
-    d->tlistener->invalidate();
     clearTarget();
     delete d;
 }

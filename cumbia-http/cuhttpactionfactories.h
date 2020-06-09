@@ -16,7 +16,7 @@ public:
 
     void setOptions(const CuData &o);
     // CuTangoActionFactoryI interface
-    CuHTTPActionA *create(const std::string &s,
+    CuHTTPActionA *create(const CuHTTPSrc &s,
                           QNetworkAccessManager *nam,
                           const QString& http_addr,
                           CuHttpAuthManager *authman,
@@ -35,7 +35,7 @@ public:
     void setWriteValue(const CuVariant &write_val);
 
     // CuTangoActionFactoryI interface
-    CuHTTPActionA *create(const std::string &s,
+    CuHTTPActionA *create(const CuHTTPSrc &s,
                           QNetworkAccessManager *qnam,
                           const QString& http_addr,
                           CuHttpAuthManager *authman,
@@ -54,7 +54,7 @@ public:
     virtual ~CuHTTPActionConfFactory();
 
     // CuTangoActionFactoryI interface
-    CuHTTPActionA *create(const std::string &s,
+    CuHTTPActionA *create(const CuHTTPSrc &s,
                           QNetworkAccessManager *qnam,
                           const QString& http_addr,
                           CuHttpAuthManager *authman,

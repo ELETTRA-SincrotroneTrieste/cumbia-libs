@@ -270,6 +270,10 @@ bool CuHttpTangoSrc::operator ==(const CuHttpTangoSrc &other) const
     return m_s == other.m_s && m_ty == other.m_ty;
 }
 
+bool CuHttpTangoSrc::isValid() const {
+    return m_s.size() > 0;
+}
+
 std::string CuHttpTangoSrc::toString() const
 {
     char repr[512];

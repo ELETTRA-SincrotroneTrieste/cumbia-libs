@@ -30,8 +30,7 @@
 class CuHTTPActionReaderPrivate {
 public:
     std::set<CuDataListener *> listeners;
-    CuHTTPSrc http_src;
-    QString url;
+    QString url, http_src, prepared_http_src;
     bool exit;
     CuData property_d, value_d, options;
     CuHttpProtocolHelpers *proto_helpers;
@@ -45,19 +44,23 @@ CuHTTPActionReader::CuHTTPActionReader(const CuHTTPSrc& src,
                                        const QString& url,
                                        CuHttpAuthManager *aman)
     : CuHTTPActionA(qnam) {
+    (void) aman;
     d = new CuHTTPActionReaderPrivate;
-    d->http_src = src;
+    d->http_src = QString::fromStdString(src.getName());
     d->url = url;
     d->exit = false;  // set to true by stop
     d->chan_recv = chan_recv;
     std::string proto = src.getProtocol(); // tango:// ?
-    pinfo("CuHTTPActionReader: found protocol \"%s\" within \"%s\"", proto.c_str(), src.getName().c_str());
     d->proto_helpers = new CuHttpProtocolHelpers();
     d->proto_helper_i = d->proto_helpers->get(QString::fromStdString(proto));
+    if(!src.canMonitor()) d->options.set("method", "read");
+    d->prepared_http_src = QString::fromStdString(src.prepare());
+    printf("CuHTTPActionReader: found protocol \"%s\" within \"%s\" -- options %s -- prepared src: %s\n",
+           proto.c_str(), src.getName().c_str(), datos(d->options), qstoc(d->prepared_http_src));
 }
 
 CuHTTPActionReader::~CuHTTPActionReader() {
-    pdelete("~CuHTTPActionReader \"%s\" %p", d->http_src.getName().c_str(), this);
+    pdelete("~CuHTTPActionReader \"%s\" %p", qstoc(d->http_src), this);
     if(d->proto_helpers)
         delete d->proto_helpers; // deletes its ProtocolHelper_I's
     delete d;
@@ -71,7 +74,7 @@ CuHTTPActionReader::~CuHTTPActionReader() {
  * \li "type" --> a constant string: "reader"
  */
 CuData CuHTTPActionReader::getToken() const {
-    CuData da("src", d->http_src.getName());
+    CuData da("src", d->http_src.toStdString());
     return da;
 }
 
@@ -79,7 +82,7 @@ CuData CuHTTPActionReader::getToken() const {
  *
  * @return a TSource object that describes the Tango source
  */
-CuHTTPSrc CuHTTPActionReader::getSource() const {
+QString CuHTTPActionReader::getSourceName() const {
     return d->http_src;
 }
 
@@ -129,7 +132,7 @@ void CuHTTPActionReader::onUnsubscribeReplyFinished() {
 }
 
 void CuHTTPActionReader::start() {
-    QString url_s = QString::fromStdString(d->http_src.getName());
+    QString url_s = !d->prepared_http_src.isEmpty() ? d->prepared_http_src : d->http_src;
     url_s.replace("#", "%23");
     QString src;
     if(d->options["method"].toString() == "read") {
@@ -144,7 +147,7 @@ void CuHTTPActionReader::start() {
 
 void CuHTTPActionReader::stop() {
     d->exit = true;
-    QString url_s = QString::fromStdString(d->http_src.getName());
+    QString url_s = d->http_src;
     QString src = QString("/u/%1/%2").arg(d->chan_recv->channel()).arg(url_s);
     d->chan_recv->unregisterReader(url_s);
     printf("CuHttpActionReader.stop: requesting unsubscribe: %s\n", qstoc(QString(d->url + src)));

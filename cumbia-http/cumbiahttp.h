@@ -11,6 +11,7 @@ class CuThreadFactoryImplI;
 class CuThreadsEventBridgeFactory_I;
 class CuDataListener;
 class QuReplaceWildcards_I;
+class CuHttpSrcHelper_I;
 
 class CumbiaHttpPrivate;
 /*!
@@ -53,8 +54,10 @@ public:
     CuHTTPActionA *findAction(const std::string &source, CuHTTPActionA::Type t) const;
 
     void addReplaceWildcardI(QuReplaceWildcards_I *rwi);
+    void addSrcHelper(CuHttpSrcHelper_I *srch);
 
     QList<QuReplaceWildcards_I *> getReplaceWildcard_Ifaces() const;
+    QList<CuHttpSrcHelper_I *>getSrcHelpers() const;
 
 private:
 

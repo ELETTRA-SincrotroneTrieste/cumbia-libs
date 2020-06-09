@@ -29,7 +29,7 @@ public:
      * instance.
      *
      */
-    virtual CuHTTPActionA *create(const std::string &s,
+    virtual CuHTTPActionA *create(const CuHTTPSrc &s,
                                   QNetworkAccessManager *nam,
                                   const QString& http_addr,
                                   CuHttpAuthManager *authman,

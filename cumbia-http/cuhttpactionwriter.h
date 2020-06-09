@@ -33,7 +33,7 @@ private:
 
     // CuHTTPActionA
 public:
-    CuHTTPSrc getSource() const;
+    QString getSourceName() const;
     Type getType() const;
     void addDataListener(CuDataListener *l);
     void removeDataListener(CuDataListener *l);

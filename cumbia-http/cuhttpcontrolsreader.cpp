@@ -69,9 +69,7 @@ CuHttpControlsReader::CuHttpControlsReader(Cumbia *cumbia, CuDataListener *tl)
     d->tlistener = tl;
 }
 
-CuHttpControlsReader::~CuHttpControlsReader()
-{
-    d->tlistener->invalidate();
+CuHttpControlsReader::~CuHttpControlsReader() {
     unsetSource();
     delete d;
 }
@@ -83,13 +81,7 @@ void CuHttpControlsReader::setSource(const QString &s) {
     for(int i = 0; i < rwis.size() && d->source == s; i++) // leave loop if s != d->source (=replacement made)
         d->source = rwis[i]->replaceWildcards(s, qApp->arguments());
 
-    CuHTTPSrc httpsrc(s.toStdString());
-    httpsrc.isSingleShot() ?  d->options.set("method", "read") : d->options.set("method", "subscribe");
-//    CuHTTPActionConfFactory httpwconff;
-//    httpwconff.setOptions(d->options);
-//    d->cumbia_http->addAction(d->source.toStdString(), d->tlistener, httpwconff);
     CuHTTPActionReaderFactory httprf;
-    httprf.setOptions(d->options);
     cuprintf("\e[1;32mCuHttpControlsReader::setSource %s\e[0m\n", qstoc(s));
     d->cumbia_http->addAction(d->source.toStdString(), d->tlistener, httprf);
 }

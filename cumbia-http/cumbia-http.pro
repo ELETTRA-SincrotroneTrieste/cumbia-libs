@@ -70,7 +70,8 @@ SOURCES += \
     protocol/tango/cuhttpprotocolhelpers.cpp \
     protocol/tango/cuhttptangohelper.cpp \
     protocol/tango/cuhttptangoreplacewildcards.cpp \
-    protocol/tango/cuhttptangosrc.cpp
+    protocol/tango/cuhttptangosrc.cpp \
+    protocol/tango/cuhttptangosrchelper.cpp
 
 HEADERS += \
     cuhttp_source.h \
@@ -95,7 +96,8 @@ HEADERS += \
     protocol/tango/cuhttpprotocolhelpers.h \
     protocol/tango/cuhttptangohelper.h \
     protocol/tango/cuhttptangoreplacewildcards.h \
-    protocol/tango/cuhttptangosrc.h
+    protocol/tango/cuhttptangosrc.h \
+    protocol/tango/cuhttptangosrchelper.h
 
 INCLUDEPATH += protocol protocol/tango
 

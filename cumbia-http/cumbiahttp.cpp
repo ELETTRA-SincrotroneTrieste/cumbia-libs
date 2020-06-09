@@ -1,6 +1,7 @@
 #include "cumbiahttp.h"
 #include "cuhttpchannelreceiver.h"
 #include "cuhttpauthmanager.h"
+#include "cuhttpsrchelper_i.h"
 
 #include <cumacros.h>
 #include <cudatalistener.h>
@@ -28,6 +29,7 @@ public:
     CuThreadFactoryImplI *m_threadFactoryImplI;
     QString url;
     QList<QuReplaceWildcards_I *> m_repl_wildcards_i;
+    QList<CuHttpSrcHelper_I *>src_helpers;
     QNetworkAccessManager *qnam;
     CuHttpChannelReceiver *chan_recv;
     CuHttpAuthManager *auth_man;
@@ -69,6 +71,10 @@ CumbiaHttp::~CumbiaHttp()
     delete d->qnam;
     foreach(QuReplaceWildcards_I *i, d->m_repl_wildcards_i)
         delete i;
+    foreach(CuHttpSrcHelper_I *sh, d->src_helpers)
+        delete sh;
+    d->src_helpers.clear();
+    d->m_repl_wildcards_i.clear();
     delete d;
 }
 
@@ -97,11 +103,12 @@ void CumbiaHttp::addAction(const std::string &source, CuDataListener *l, const C
     CumbiaHTTPWorld w;
     if(w.source_valid(source))
     {
+        CuHTTPSrc httpsrc(source, d->src_helpers);
         CuHTTPActionFactoryService *af =
                 static_cast<CuHTTPActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuHTTPActionFactoryService::CuHTTPActionFactoryServiceType)));
         CuHTTPActionA *a = af->findActive(source, f.getType());
         if(!a) {
-            a = af->registerAction(source, f, d->qnam, d->url, d->chan_recv, d->auth_man);
+            a = af->registerAction(httpsrc, f, d->qnam, d->url, d->chan_recv, d->auth_man);
             qDebug() << __PRETTY_FUNCTION__ << "registered action with source " << source.c_str() << f.getType();
             a->setHttpActionListener(this);
             a->start();
@@ -135,12 +142,32 @@ CuHTTPActionA *CumbiaHttp::findAction(const std::string &source, CuHTTPActionA::
     return a;
 }
 
+/*!
+ * \brief add a QuReplaceWildcards_I instance
+ * \par Note
+ * Ownership is handed to CumbiaHttp and objects are deleted in ~CumbiaHttp
+ */
 void CumbiaHttp::addReplaceWildcardI(QuReplaceWildcards_I *rwi) {
     d->m_repl_wildcards_i << rwi;
 }
 
+/*!
+ * \brief Add an implementation of CuHttpSrcHelper_I to help processing and preparing the sources
+ *        before sending them through the http module.
+ * \param srch a pointer to a valid CuHttpSrcHelper_I instance.
+ * \par Ownership
+ * Ownership is handed to CumbiaHttp and CuHttpSrcHelper_I is deleted within the CumbiaHttp destructor.
+ */
+void CumbiaHttp::addSrcHelper(CuHttpSrcHelper_I *srch) {
+    d->src_helpers.append(srch);
+}
+
 QList<QuReplaceWildcards_I *> CumbiaHttp::getReplaceWildcard_Ifaces() const{
     return d->m_repl_wildcards_i;
+}
+
+QList<CuHttpSrcHelper_I *> CumbiaHttp::getSrcHelpers() const {
+    return d->src_helpers;
 }
 
 CuThreadFactoryImplI *CumbiaHttp::getThreadFactoryImpl() const

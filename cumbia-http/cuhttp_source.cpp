@@ -8,66 +8,38 @@
 #include <QRegularExpression>
 #include <QtDebug>
 
-CuHTTPSrc::CuHTTPSrc() { }
+CuHTTPSrc::CuHTTPSrc() {
+}
 
-CuHTTPSrc::CuHTTPSrc(const string& s) {
-    m_s = s;
+CuHTTPSrc::~CuHTTPSrc() {
+}
+
+CuHTTPSrc::CuHTTPSrc(const string &s, const QList<CuHttpSrcHelper_I *> &srchs) {
+    d.m_s = s;
+    d.helper = m_find_helper(s, srchs);
 }
 
 CuHTTPSrc::CuHTTPSrc(const CuHTTPSrc &other) {
-    this->m_s = other.m_s;
-}
-
-std::vector<string> CuHTTPSrc::getArgs() const {
-    std::string a = getArgsString();
-    std::string delim = ",";
-    std::regex re(delim);
-    std::vector<std::string> ret;
-    size_t pos = m_s.find('(');
-    if(pos != string::npos)
-        a = m_s.substr(pos + 1, m_s.rfind(')') - pos - 1);
-    std::sregex_token_iterator iter(a.begin(), a.end(), re, -1);
-    std::sregex_token_iterator end;
-    for ( ; iter != end; ++iter)
-        if((*iter).length() > 0)
-            ret.push_back((*iter));
-    return ret;
-}
-
-std::string CuHTTPSrc::getArgsString() const {
-    std::string a;
-    size_t pos = m_s.find('(');
-    if(pos != string::npos)
-        a = m_s.substr(pos + 1, m_s.rfind(')') - pos - 1);
-    return a;
+    this->d.m_s = other.d.m_s;
+    this->d.helper = other.d.helper;
 }
 
 /*!
- * \brief returns true if the source is a single shot src
- * \return true if the source is not a reader that requires continuous updates over time
- * \return false if it is not possible to determine whether the source is a one time type
- * or not.
+ * \brief returns true if the source is suitable to be monitored
+ * \return true if the source is a reader that can be monitored over time or if no helpers
+ *         are installed. false if an installed helper's CuHttpSrcHelper_I::can_monitor returns
+ *         negative for the given source.
  *
- * \note
- * The method tries to individuate a Tango pattern. If found, the CuHttpTangoSrc helper is
- * used to determine whether the source is a database operation. In that case, true is
- * return, to indicate to the caller that the operation is a one time database read rather
- * than a traditional attribute/command continuous (polled or event based) reading of the source.
+ * \par Example
+ * if CuHttpTangoSrcHelper is installed, canMonitor will return true if a source is an attribute or a command.
+ * They are indeed suitable to monitor values over time. The method returns false if the Tango helper detects
+ * a database data fetch related source, which shall be a one shot operation.
+ *
+ * \par Default behaviour
+ * If no helpers are installed, it is assumed that a source *can monitor* and true is returned
  */
-bool CuHTTPSrc::isSingleShot() const {
-    CuHttpTangoHelper tgh;
-    QuStringList tgpatterns(tgh.srcPatterns());
-    foreach(const QString& pa, tgpatterns) {
-        QRegularExpression re(pa);
-        QRegularExpressionMatch ma = re.match(m_s.c_str());
-        qDebug () << __PRETTY_FUNCTION__ << "matching " << re.pattern() << "with src" << m_s.c_str() << "HAS MATCH" << ma.hasMatch();
-        if(ma.hasMatch()) {
-            CuHttpTangoSrc tgsrc(m_s);
-            qDebug () << __PRETTY_FUNCTION__ << "is db op? " << tgsrc.isDbOp();
-            return  tgsrc.isDbOp();
-        }
-    }
-    return false;
+bool CuHTTPSrc::canMonitor() const {
+    return d.helper ? ( d.helper->can_monitor(d.m_s) < 0 ? false : true ) : true;
 }
 
 /*!
@@ -77,25 +49,26 @@ bool CuHTTPSrc::isSingleShot() const {
  * \return the source that was passed to the constructor
  */
 string CuHTTPSrc::getName() const {
-    return m_s;
+    return d.m_s;
 }
 
-/*!
- * \brief Returns the source name as given to the constructor without arguments or placeholders
- *
- * \return source name without arguments or placeholders
- *
- * \par Example
- * \code
- * HTTPSource s("myhost:20000/ab/cd/ef/hi(200)");
- * HTTPSource s2("myhost:20000/ab/cd/ef/hello(&hello_spinbox)");
- * s.getName(); // "myhost:20000/ab/cd/ef/hi(200)"
- * s.getNameNoArgs(); // "myhost:20000/ab/cd/ef/hi"
- * s2.getNameNoArgs(); // "myhost:20000/ab/cd/ef/hello"
- * \endcode
- */
-string CuHTTPSrc::getNameNoArgs() const {
-    return m_s.substr(0, m_s.find("("));
+string CuHTTPSrc::native_type() const {
+    return d.helper ? d.helper->native_type() : std::string();
+}
+
+string CuHTTPSrc::prepare() const {
+    return d.helper ? d.helper->prepare(d.m_s) : d.m_s;
+}
+
+string CuHTTPSrc::get(const char *what) const {
+    return d.helper ? d.helper->get(d.m_s, what) : std::string();
+}
+
+CuHttpSrcHelper_I* CuHTTPSrc::m_find_helper(const std::string &src, const QList<CuHttpSrcHelper_I*>& helpers) {
+    qDebug() << __PRETTY_FUNCTION__ << "finding helper for " << src.c_str() << "helpers size" << helpers.size();
+    for(int i = 0; i < helpers.size(); i++)
+        if(helpers[i]->is_valid(src)) return helpers[i];
+    return nullptr;
 }
 
 /*! \brief matches last protocol specification found in the source name, matching the pattern
@@ -107,7 +80,7 @@ string CuHTTPSrc::getNameNoArgs() const {
  */
 string CuHTTPSrc::getProtocol() const {
     std::regex base_regex("([a-zA-Z0-9_]+)://");
-    string source = m_s;
+    string source = d.m_s;
     // default constructor = end-of-sequence:
     std::vector<std::string> matches;
     std::regex_token_iterator<std::string::iterator> rend;
@@ -123,18 +96,25 @@ string CuHTTPSrc::getProtocol() const {
 }
 
 CuHTTPSrc &CuHTTPSrc::operator=(const CuHTTPSrc &other) {
-    if(this != &other)
-        m_s = other.m_s;
+    if(this != &other) {
+        d.m_s = other.d.m_s;
+        this->d.helper = other.d.helper;
+    }
     return *this;
 }
 
+/*!
+ * \brief returns true if this source raw name equals other's
+ * \param other another CuHTTPSrc
+ * \return true if raw names are the same
+ */
 bool CuHTTPSrc::operator ==(const CuHTTPSrc &other) const {
-    return m_s == other.m_s;
+    return d.m_s == other.d.m_s;
 }
 
 std::string CuHTTPSrc::toString() const
 {
     char repr[512];
-    snprintf(repr, 512, "HTTPSource [name:\"%s\"] [args:\"%s\"]",  m_s.c_str(), getArgsString().c_str());
+    snprintf(repr, 512, "HTTPSource [name:\"%s\"]",  d.m_s.c_str());
     return std::string(repr);
 }

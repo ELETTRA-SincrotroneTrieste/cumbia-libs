@@ -50,7 +50,7 @@ QNetworkRequest CuHTTPActionA::prepareRequest(const QUrl &url) const {
  * method to unregister tha action after the authentication fails
  */
 void CuHTTPActionA::notifyActionFinished() {
-    d->listener->onActionFinished(getSource().getName(), getType());
+    d->listener->onActionFinished(getSourceName().toStdString(), getType());
 }
 
 // data from event source has a combination of fields, one per line

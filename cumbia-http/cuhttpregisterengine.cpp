@@ -4,6 +4,7 @@
 #include "cuhttpcontrolswriter.h"
 #include "cuhttptangoreplacewildcards.h"
 #include "cuhttptangohelper.h"
+#include "cuhttptangosrchelper.h"
 
 #include <QRegularExpression>
 #include <cucontrolsfactorypool.h>
@@ -29,6 +30,21 @@ CuHttpRegisterEngine::~CuHttpRegisterEngine() {
     delete d;
 }
 
+/*!
+ * \brief Setup CumbiaHttp with some default options
+ * \param cu_pool a pointer to a valid CumbiaPool. A new CumbiaHttp instance will be registered with name "http"
+ * \param fpoo a reference to a CuControlsFactoryPool that will be initialized with registerImpl, name "http"
+ * \return a pointer to a newly allocated CumbiaHttp registered into cu_pool with name "http"
+ *
+ * \par Default operations
+ * The following helpers are installed on CumbiaHttp:
+ * \li CuHttpTangoReplaceWildcards to replace wildcards in the command line arguments as the native tango engine
+ *     would do;
+ * \li CuHttpTangoHelper is used to get Tango source patterns
+ * \li CuHttpTangoSrcHelper is registered to CumbiaHttp so that attribute and command readings suitable to be
+ *     monitored over time can be distinguished from single-shot database operations and the TANGO_HOST is
+ *     prepended to the source name if missing. See CuHttpTangoSrcHelper::setOperation
+ */
 CumbiaHttp *CuHttpRegisterEngine::registerWithDefaults(CumbiaPool *cu_pool, CuControlsFactoryPool &fpoo)
 {
     // setup Cumbia http with the http address and the host name to prepend to the sources
@@ -57,6 +73,11 @@ CumbiaHttp *CuHttpRegisterEngine::registerWithDefaults(CumbiaPool *cu_pool, CuCo
     CuHttpTangoHelper th;
     fpoo.setSrcPatterns("http", th.srcPatterns());
     cu_pool->setSrcPatterns("http", th.srcPatterns());
+    // if a Tango source is forwarded to the http/SSE service without the host information, the service may not
+    // be able to connect. CuHttpTangoSrcHelper comes in prepending the host to the source, if missing
+    CuHttpTangoSrcHelper *tg_src_h = new CuHttpTangoSrcHelper();
+    tg_src_h->setOperation(CuHttpTangoSrcHelper::PrependHost, true);
+    cuhttp->addSrcHelper(tg_src_h);
     return cuhttp;
 }
 

@@ -32,9 +32,9 @@ void CuHttpChannelReceiver::unregisterReader(const QString &src) {
     d->rmap.remove(src);
 }
 
-CuHTTPSrc CuHttpChannelReceiver::getSource() const {
+QString CuHttpChannelReceiver::getSourceName() const {
     QString channel = d->url + "/sub/" + d->chan;
-    return CuHTTPSrc(channel.toStdString());
+    return channel;
 }
 
 CuHTTPActionA::Type CuHttpChannelReceiver::getType() const {

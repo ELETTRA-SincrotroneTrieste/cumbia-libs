@@ -34,7 +34,7 @@ CuHTTPActionReaderFactory::~CuHTTPActionReaderFactory() {
  * @param ct a pointer to CumbiaHttp
  * @return a CuHTTPActionReader, that implements the CuHTTPActionI interface
  */
-CuHTTPActionA *CuHTTPActionReaderFactory::create(const std::string &s,
+CuHTTPActionA *CuHTTPActionReaderFactory::create(const CuHTTPSrc &s,
                                                  QNetworkAccessManager *nam,
                                                  const QString &http_addr,
                                                  CuHttpAuthManager *authman,
@@ -61,7 +61,7 @@ CuHTTPActionWriterFactory::~CuHTTPActionWriterFactory() {
 
 }
 
-CuHTTPActionA *CuHTTPActionWriterFactory::create(const string &s,
+CuHTTPActionA *CuHTTPActionWriterFactory::create(const CuHTTPSrc &s,
                                                  QNetworkAccessManager *qnam,
                                                  const QString &http_addr,
                                                  CuHttpAuthManager *aman,
@@ -85,7 +85,7 @@ CuHTTPActionConfFactory::~CuHTTPActionConfFactory() {
 
 }
 
-CuHTTPActionA *CuHTTPActionConfFactory::create(const string &s,
+CuHTTPActionA *CuHTTPActionConfFactory::create(const CuHTTPSrc &s,
                                                QNetworkAccessManager *qnam,
                                                const QString &http_addr,
                                                CuHttpAuthManager *aman,

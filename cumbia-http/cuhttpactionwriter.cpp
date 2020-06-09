@@ -27,7 +27,7 @@ public:
     }
 
     std::set<CuDataListener *> listeners;
-    CuHTTPSrc http_target;
+    QString http_target, prepared_http_target;
     QString url;
     bool exit;
     CuData options;
@@ -47,8 +47,9 @@ CuHttpActionWriter::CuHttpActionWriter(const CuHTTPSrc &target,
     d = new CuHTTPActionWriterPrivate;
     d->nam = qnam;
     d->url = http_url;
-    d->http_target = target;
+    d->http_target = QString::fromStdString(target.getName());
     d->auth_manager = authman;
+    d->prepared_http_target = QString::fromStdString(target.prepare());
     connect(d->auth_manager, SIGNAL(credentials(QString, QString)), this, SLOT(onCredentials(QString, QString)));
     connect(d->auth_manager, SIGNAL(authReply(bool, QString, QString, bool)), this, SLOT(onAuthReply(bool, QString, QString, bool)));
     connect(d->auth_manager, SIGNAL(error(const QString&)), this, SLOT(onAuthError(const QString&)));
@@ -56,7 +57,7 @@ CuHttpActionWriter::CuHttpActionWriter(const CuHTTPSrc &target,
 
 CuHttpActionWriter::~CuHttpActionWriter()
 {
-    pdelete("~CuHttpActionWriter \"%s\" %p", d->http_target.getName().c_str(), this);
+    pdelete("~CuHttpActionWriter \"%s\" %p", qstoc(d->http_target), this);
     delete d;
 }
 
@@ -84,7 +85,7 @@ void CuHttpActionWriter::onCredentials(const QString &user, const QString &passw
 
 }
 
-CuHTTPSrc CuHttpActionWriter::getSource() const {
+QString CuHttpActionWriter::getSourceName() const {
     return d->http_target;
 }
 
@@ -109,8 +110,7 @@ size_t CuHttpActionWriter::dataListenersCount() {
 
 void CuHttpActionWriter::start() {
     QString src;
-    QString url_s = QString::fromStdString(d->http_target.getName());
-    src = QString("/x/write/%1").arg(url_s);
+    src = QString("/x/write/%1").arg(d->prepared_http_target.isEmpty() ? d->http_target : d->prepared_http_target);
     if(d->w_val.isValid())
         src += QString("(%1)").arg(d->w_val.toString().c_str());
     startRequest(d->url + src);
@@ -126,7 +126,7 @@ void CuHttpActionWriter::stop() {
 }
 
 void CuHttpActionWriter::decodeMessage(const QJsonDocument &json) {
-    CuData res("src", d->http_target.getName());
+    CuData res("src", d->http_target.toStdString());
     CumbiaHTTPWorld httpw;
     httpw.json_decode(json, res);
     if(res["err"].toBool() && !res["authorized"].toBool()) {
@@ -157,7 +157,11 @@ QNetworkRequest CuHttpActionWriter::prepareRequest(const QUrl &url) const {
 
 void CuHttpActionWriter::onAuthReply(bool authorised, const QString &user, const QString &message, bool encrypted) {
     qDebug() << __PRETTY_FUNCTION__ << authorised << user << message << encrypted;
-    authorised ? start() : m_notify_result(m_make_error_data("not authorised").set("is_result", true));
+    if(authorised) start();
+    else {
+        m_notify_result(m_make_error_data("not authorised").set("is_result", true));
+        notifyActionFinished(); // unregister action
+    }
 }
 
 void CuHttpActionWriter::onAuthError(const QString &errm) {
@@ -168,7 +172,7 @@ void CuHttpActionWriter::onAuthError(const QString &errm) {
 
 CuData CuHttpActionWriter::m_make_error_data(const QString &msg) {
     CuData da("msg", msg.toStdString());
-    da.set("err", true).set("src", d->http_target.getName()).putTimestamp();
+    da.set("err", true).set("src", d->http_target.toStdString()).putTimestamp();
     return da;
 }
 

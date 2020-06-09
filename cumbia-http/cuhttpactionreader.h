@@ -27,7 +27,7 @@ public:
     ~CuHTTPActionReader();
 
     CuData getToken() const;
-    CuHTTPSrc getSource() const;
+    QString getSourceName() const;
     CuHTTPActionA::Type getType() const;
     void start();
     void stop();

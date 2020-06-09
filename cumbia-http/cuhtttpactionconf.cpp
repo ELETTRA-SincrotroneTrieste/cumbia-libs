@@ -26,8 +26,7 @@ public:
 
     }
     std::set<CuDataListener *> listeners;
-    CuHTTPSrc httpconf_src;
-    QString url;
+    QString url, httpconf_src, prepared_httpconf_src;
     bool exit;
     CuData property_d, value_d, options;
     QNetworkAccessManager *networkAccessManager;
@@ -41,15 +40,16 @@ CuHttpActionConf::CuHttpActionConf(const CuHTTPSrc &src, QNetworkAccessManager *
     d = new CuHttpActionConfPrivate;
     d->networkAccessManager = qnam;
     d->url = url;
-    d->httpconf_src = src;
+    d->httpconf_src = QString::fromStdString(src.getName());
+    d->prepared_httpconf_src = QString::fromStdString(src.prepare());
 }
 
 CuHttpActionConf::~CuHttpActionConf() {
-    pdelete("~CuHttpActionConf \"%s\" %p", d->httpconf_src.getName().c_str(), this);
+    pdelete("~CuHttpActionConf \"%s\" %p", qstoc(d->httpconf_src), this);
     delete d;
 }
 
-CuHTTPSrc CuHttpActionConf::getSource() const {
+QString CuHttpActionConf::getSourceName() const {
     return d->httpconf_src;
 }
 
@@ -73,9 +73,7 @@ size_t CuHttpActionConf::dataListenersCount() {
 }
 
 void CuHttpActionConf::start() {
-    QString src;
-    QString url_s = QString::fromStdString(d->httpconf_src.getName());
-    src = QString("/x/conf/%1").arg(url_s);
+    const QString src = QString("/x/conf/%1").arg(d->prepared_httpconf_src.isEmpty() ?  d->httpconf_src : d->prepared_httpconf_src);
     cuprintf("\e[1;36mCuHttpActionConf::start %s\e[0m\n", qstoc(QString(d->url + src)));
     startRequest(d->url + src);
 }
@@ -92,7 +90,7 @@ void CuHttpActionConf::stop() {
 }
 
 void CuHttpActionConf::decodeMessage(const QJsonDocument &json) {
-    CuData res("src", d->httpconf_src.getName());
+    CuData res("src", d->httpconf_src.toStdString());
     CumbiaHTTPWorld httpw;
     httpw.json_decode(json, res);
     d->exit = true;
