@@ -147,7 +147,7 @@ void CuHTTPActionReader::start() {
 
 void CuHTTPActionReader::stop() {
     d->exit = true;
-    QString url_s = d->http_src;
+    QString url_s = !d->prepared_http_src.isEmpty() ? d->prepared_http_src : d->http_src;
     QString src = QString("/u/%1/%2").arg(d->chan_recv->channel()).arg(url_s);
     d->chan_recv->unregisterReader(url_s);
     printf("CuHttpActionReader.stop: requesting unsubscribe: %s\n", qstoc(QString(d->url + src)));
