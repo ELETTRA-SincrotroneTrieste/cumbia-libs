@@ -68,6 +68,7 @@ void CuHttpChannelReceiver::stop() {
 void CuHttpChannelReceiver::decodeMessage(const QJsonDocument &json) {
     const QJsonObject data_o = json.object();
     const QString& src = data_o["src"].toString();
+    printf("CuHttpChannelReceiver::decodeMessage \e[1;33mreceived update %s\e[0m\n", qstoc(src));
     double t_ms = data_o["timestamp_ms"].toDouble();
     if(d->rmap.contains(src) && m_data_fresh(t_ms))
         d->rmap.value(src)->decodeMessage(json);
