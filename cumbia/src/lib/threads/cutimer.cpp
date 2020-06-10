@@ -181,6 +181,7 @@ void CuTimer::run()
             {
                 std::list<CuTimerListener *>::const_iterator it;
                 for(it = m_listeners.begin(); it != m_listeners.end(); ++it) {
+                    printf("CuTimer.run -> on timeout on %p\n", (*it));
                     (*it)->onTimeout(this);
                 }
 //                auto t1 = std::chrono::steady_clock::now();
