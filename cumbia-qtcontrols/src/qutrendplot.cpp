@@ -24,7 +24,7 @@
 class QuTrendPlotPrivate
 {
 public:
-    bool auto_configure, timeScaleDrawEnabled;
+    bool auto_configure, timeScaleDrawEnabled, dateOnTimeScaleDrawEnabled;
     bool read_ok;
     QuPlotCommon *plot_common;
     QuTimeScaleDraw *timeScaleDraw;
@@ -66,6 +66,7 @@ void QuTrendPlot::m_init()
 {
     d->auto_configure = true;
     d->read_ok = false;
+    d->dateOnTimeScaleDrawEnabled = false;
     setTimeScaleDrawEnabled(true);
     setUpperBoundExtra(QwtPlot::xBottom, 0.1);
     setUpperBoundExtra(QwtPlot::xTop, 0.1);
@@ -234,6 +235,7 @@ void QuTrendPlot::setTimeScaleDrawEnabled(bool enable)
     else
     {
         d->timeScaleDraw = new QuTimeScaleDraw();
+        d->timeScaleDraw->setDateEnabled(d->dateOnTimeScaleDrawEnabled);
         setAxisScaleDraw(QwtPlot::xBottom, d->timeScaleDraw);
         setAxisLabelRotation(QwtPlot::xBottom, -50.0);
         setAxisScaleEngine(QwtPlot::xBottom, new QwtDateScaleEngine(Qt::LocalTime));
@@ -250,6 +252,7 @@ bool QuTrendPlot::timeScaleDrawEnabled()
 
 void QuTrendPlot::setShowDateOnTimeAxis(bool en)
 {
+    d->dateOnTimeScaleDrawEnabled = en;
     if(d->timeScaleDrawEnabled && d->timeScaleDraw)
         d->timeScaleDraw->setDateEnabled(en);
 }
