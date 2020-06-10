@@ -250,7 +250,7 @@ bool QuTrendPlot::timeScaleDrawEnabled()
 
 void QuTrendPlot::setShowDateOnTimeAxis(bool en)
 {
-    if(d->timeScaleDraw)
+    if(d->timeScaleDrawEnabled && d->timeScaleDraw)
         d->timeScaleDraw->setDateEnabled(en);
 }
 

@@ -110,8 +110,9 @@ void CuHTTPActionReader::decodeMessage(const QJsonDocument &json) {
     CumbiaHTTPWorld httpw;
     httpw.json_decode(json, res);
     std::set<CuDataListener *> lcp = d->listeners;
-    for(std::set<CuDataListener *>::iterator it = lcp.begin(); it != lcp.end(); ++it)
+    for(std::set<CuDataListener *>::iterator it = lcp.begin(); it != lcp.end(); ++it) {
         (*it)->onUpdate(res);
+    }
 }
 
 bool CuHTTPActionReader::exiting() const {

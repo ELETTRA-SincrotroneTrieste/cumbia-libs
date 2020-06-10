@@ -8,6 +8,7 @@ class CuHttpChannelReceiverPrivate {
 public:
     QMap<QString, CuHTTPActionReader *> rmap;
     QString url, chan;
+    time_t data_exp_t;
     bool exit;
 };
 
@@ -17,6 +18,7 @@ CuHttpChannelReceiver::CuHttpChannelReceiver(const QString &url,
     d = new CuHttpChannelReceiverPrivate;
     d->url = url;
     d->chan = chan;
+    d->data_exp_t = 3; // after three seconds data is old
     d->exit = false;
 }
 
@@ -30,6 +32,29 @@ void CuHttpChannelReceiver::registerReader(const QString &src, CuHTTPActionReade
 
 void CuHttpChannelReceiver::unregisterReader(const QString &src) {
     d->rmap.remove(src);
+}
+
+/*!
+ * \brief set the number of seconds after which data from the channel is considered old and discarded
+ *
+ * \par Note
+ * The timestamp stored in the received data is compared to the current system time in order to
+ * determine whether it is expired or still valid.
+ *
+ * \par Default value
+ * 3 seconds
+ */
+void CuHttpChannelReceiver::setDataExpireSecs(time_t secs) {
+    d->data_exp_t = secs;
+}
+
+/*!
+ * \brief returns the number of seconds after which data received from the channel is discarded
+ * \
+ * @see setDataExpireSecs
+ */
+time_t CuHttpChannelReceiver::dataExpiresSecs() const {
+    return d->data_exp_t;
 }
 
 QString CuHttpChannelReceiver::getSourceName() const {
@@ -68,10 +93,14 @@ void CuHttpChannelReceiver::stop() {
 void CuHttpChannelReceiver::decodeMessage(const QJsonDocument &json) {
     const QJsonObject data_o = json.object();
     const QString& src = data_o["src"].toString();
-    printf("CuHttpChannelReceiver::decodeMessage \e[1;33mreceived update %s\e[0m\n", qstoc(src));
     double t_ms = data_o["timestamp_ms"].toDouble();
-    if(d->rmap.contains(src) && m_data_fresh(t_ms))
+    time_t diff_t;
+    bool data_fresh = m_data_fresh(t_ms, &diff_t);
+    if(d->rmap.contains(src) && data_fresh) {
         d->rmap.value(src)->decodeMessage(json);
+    }
+    else if(!data_fresh)
+        perr("CuHttpChannelReceiver::decodeMessage: source \"%s\" data is too old: %lds > %lds ", qstoc(src), diff_t, d->data_exp_t);
 }
 
 QNetworkRequest CuHttpChannelReceiver::prepareRequest(const QUrl &url) const
@@ -104,19 +133,20 @@ QNetworkRequest CuHttpChannelReceiver::prepareRequest(const QUrl &url) const
     return r;
 }
 
-bool CuHttpChannelReceiver::m_data_fresh(const double timestamp_ms) const {
-    const long data_old = 1;
+bool CuHttpChannelReceiver::m_data_fresh(const double timestamp_ms, time_t* diff_t) const {
+    const long data_old = 3;
     long ts_sec = static_cast<long>(timestamp_ms / 1000.0);
     time_t now;
     time(&now);
-//    char _now[256], _then[256];
-//    strcpy(_now, ctime(&now));
-//    strcpy(_then, ctime(&ts_sec));
+    char _now[256], _then[256];
+    strcpy(_now, ctime(&now));
+    strcpy(_then, ctime(&ts_sec));
+    *diff_t = now - ts_sec;
 //    printf("CaCuTangoEImpl data ts %s, data now %s now -ts_sec %ld < %ld? %s\n",
-//           _then, _now, now - ts_sec, data_old, (now - ts_sec < data_old) ? "\e[1;32myes\e[0m" : "\e[1;31mno\e[0m");
-//    if(now - ts_sec >= data_old)
+//           _then, _now, now - ts_sec, data_old, (*diff_t < data_old) ? "\e[1;32myes\e[0m" : "\e[1;31mno\e[0m");
+//    if(*diff_t >= data_old)
 //        cuprintf("CaCuTangoEImpl.m_data_valid \n\e[1;35m%ld %s -  %ld %s < 3 sec ? %ld\e[0m\n",
-//                  now, _now, ts_sec, _then, (now - ts_sec));
-    return now - ts_sec < data_old;
+//                  now, _now, ts_sec, _then, *diff_t);
+    return *diff_t < data_old;
 }
 

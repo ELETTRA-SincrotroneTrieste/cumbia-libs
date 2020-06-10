@@ -18,6 +18,8 @@ public:
     QString channel() const;
     void registerReader(const QString& src, CuHTTPActionReader *r);
     void unregisterReader(const QString& src);
+    void setDataExpireSecs(time_t secs);
+    time_t dataExpiresSecs() const;
 
 signals:
 
@@ -37,7 +39,7 @@ public:
 private:
     CuHttpChannelReceiverPrivate *d;
 
-    bool m_data_fresh(const double timestamp_ms) const;
+    bool m_data_fresh(const double timestamp_ms, time_t *diff_t) const;
 };
 
 #endif // CUHTTPCHANNELRECEIVER_H
