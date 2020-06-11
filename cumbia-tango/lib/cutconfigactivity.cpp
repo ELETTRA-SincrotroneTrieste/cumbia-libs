@@ -36,7 +36,7 @@ CuTConfigActivity::CuTConfigActivity(const CuData &tok, CuDeviceFactoryService *
 
 CuTConfigActivity::~CuTConfigActivity()
 {
-    pdelete("CuTAttConfigActivity %p", this);
+    pdelete("CuTAttConfigActivity %p [%s]", this, vtoc2(getToken(), "src"));
     delete d;
 }
 
