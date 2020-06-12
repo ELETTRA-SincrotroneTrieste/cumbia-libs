@@ -13,7 +13,7 @@ public:
     CuTangoWorldConfig t_world_conf;
     // this is used in source_valid
     //  [A-Za-z_0-9_\-\.\,\*/\+\:\(\)>#{}]+
-    char src_valid_pattern[128] = "[A-Za-z_0-9_\\-\\.\\,\\*/\\+\\:\\(\\)>#{}]+";
+    char src_valid_pattern[128] = "[A-Za-z_0-9_\\-\\.\\,\\*/\\+\\:&\\(\\)>#{}]+";
     std::vector <std::string> src_patterns;
 };
 
@@ -717,6 +717,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
             (*reslist)[results_offset].putTimestamp();
             results_offset++;
         }
+        perr("CuTangoWorld.read_atts: %s", d->message.c_str());
     }
     return !d->error;
 }
