@@ -44,6 +44,7 @@
 #include <QComboBox>
 #include <cucontext.h>
 #include <QTimer>
+#include <quwatcher.h>
 
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
@@ -61,6 +62,7 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     // int *f= new int[1000];
     cu_pool = cumbia_pool;
     m_switchCnt = 0;
+
 
 #if defined(CUMBIA_WEBSOCKET_VERSION) || defined (CUMBIA_HTTP_VERSION)
     QCommandLineParser cmdlparser;
@@ -143,6 +145,12 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
 
     // engines information
     ui->lengines->setText("Engines: " + engines.join(", "));
+
+
+    QuWatcher *w = new QuWatcher(this, cumbia_pool, m_ctrl_factory_pool);
+    w->setSingleShot(true);
+    w->setSource("test/device/1/long_scalar");
+    w->attach(this, SLOT(onNewLong(int)));
 }
 
 QumbiaClient::~QumbiaClient()
@@ -326,6 +334,7 @@ void QumbiaClient::sourcesChanged()
     for(int i = 0; i < newSrcs.size(); i++)
     {
         QuLabel *l = new QuLabel(this, cu_pool, m_ctrl_factory_pool);
+        options.set("single-shot", true);
         l->getContext()->setOptions(options);
         l->setWordWrap(true);
         l->setMaximumLength(30); /* truncate if text is too long */
@@ -335,6 +344,12 @@ void QumbiaClient::sourcesChanged()
     }
 
     m_oldSrcs = srcs;
+
+//    if(qobject_cast<QPushButton *>(sender())) {
+
+//        printf("WARNING: \e[1;31mTERMINATING APP AFTER SET SOURCES\e[0m\n");
+//        QTimer::singleShot(1000, qApp, SLOT(quit()));
+//    }
 }
 
 void QumbiaClient::unsetSources()
@@ -354,5 +369,10 @@ void QumbiaClient::switchSources()
     QString src = QString("test/device/%1/double_spectrum_ro").arg(m_switchCnt % 2 + 1);
     ui->leSrcs->setText(src);
     sourcesChanged();
+}
+
+void QumbiaClient::onNewLong(int l)
+{
+    printf("------------------------- FUCKIN NEW LONG %ld\n", l);
 }
 

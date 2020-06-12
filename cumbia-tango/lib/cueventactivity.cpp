@@ -234,7 +234,7 @@ void CuEventActivity::onExit()
     {
         try{
             d->tdev->getDevice()->unsubscribe_event(d->event_id);
-            pbgreen("CuEventActivity.onExit: unsubscribed id %d! OK!", d->event_id);
+            cuprintf("CuEventActivity.onExit: \e[1;35munsubscribed id %d for \e[1;32m%s! OK!\e[0m\n", d->event_id, vtoc2(getToken(), "src"));
         }
         catch(Tango::DevFailed &e)
         {
