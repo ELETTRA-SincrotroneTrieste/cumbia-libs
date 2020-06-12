@@ -68,13 +68,24 @@ QByteArray CuHTTPActionA::m_extract_data(const QByteArray &in) const {
     return jd;
 }
 
-void CuHTTPActionA::m_on_buf_complete(){
-    QJsonParseError jpe;
-    QByteArray json = m_extract_data(d->buf);
-    QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
-    if(jsd.isNull())
-        perr("CuHTTPActionA.m_on_buf_complete: invalid json: %s\n", qstoc(json));
-    decodeMessage(jsd);
+CuHTTPActionA::MsgFmt CuHTTPActionA::m_likely_format(const QByteArray &ba) const {
+    if(ba.startsWith("<html>")) return FmtHtml;
+    return FmtJson;
+}
+
+bool CuHTTPActionA::m_likely_valid(const QByteArray &ba) const {
+    return !ba.startsWith(": hi\n");
+}
+
+void CuHTTPActionA::m_on_buf_complete() {
+    if(m_likely_valid(d->buf)) {
+        QJsonParseError jpe;
+        QByteArray json = m_extract_data(d->buf);
+        QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
+        if(jsd.isNull())
+            perr("CuHTTPActionA.m_on_buf_complete: invalid json: %s\n", qstoc(json));
+        decodeMessage(jsd);
+    }
 }
 
 void CuHTTPActionA::onNewData() {

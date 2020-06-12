@@ -20,6 +20,8 @@ public:
 
     enum Type { Reader = 0, Writer, Config, ChannelReceiver };
 
+    enum MsgFmt { FmtText, FmtJson, FmtHtml };
+
     CuHTTPActionA(QNetworkAccessManager *nam);
 
     /*! \brief virtual destructor, to make compilers happy
@@ -90,6 +92,8 @@ private:
 
     void m_on_buf_complete();
     QByteArray m_extract_data(const QByteArray& in) const;
+    MsgFmt m_likely_format(const QByteArray& ba) const;
+    bool m_likely_valid(const QByteArray& ba) const;
 
 };
 
