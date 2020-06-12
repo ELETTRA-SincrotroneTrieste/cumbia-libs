@@ -2,6 +2,7 @@
 #include "cumbiahttp.h"
 #include "cuhttpcontrolsreader.h"
 #include "cuhttpactionreader.h"
+#include "cuhttpactionconf.h"
 #include "cuhttpactionfactories.h"
 #include <cudatalistener.h>
 #include <qureplacewildcards_i.h>
@@ -54,10 +55,10 @@ void CuHTTPReaderFactory::setOptions(const CuData &options)
 class CuHTTPReaderPrivate
 {
 public:
-    QString source;
-    CumbiaHttp *cumbia_http;
-    CuDataListener *tlistener;
-    CuData options;
+    QString s;
+    CumbiaHttp *cu_http;
+    CuDataListener *dlis;
+    CuData o;
 };
 
 CuHttpControlsReader::CuHttpControlsReader(Cumbia *cumbia, CuDataListener *tl)
@@ -65,8 +66,8 @@ CuHttpControlsReader::CuHttpControlsReader(Cumbia *cumbia, CuDataListener *tl)
 {
     assert(cumbia->getType() == CumbiaHttp::CumbiaHTTPType);
     d = new CuHTTPReaderPrivate;
-    d->cumbia_http = static_cast<CumbiaHttp *>(cumbia);
-    d->tlistener = tl;
+    d->cu_http = static_cast<CumbiaHttp *>(cumbia);
+    d->dlis = tl;
 }
 
 CuHttpControlsReader::~CuHttpControlsReader() {
@@ -75,45 +76,37 @@ CuHttpControlsReader::~CuHttpControlsReader() {
 }
 
 void CuHttpControlsReader::setSource(const QString &s) {
-    d->source = s;
-    QList<QuReplaceWildcards_I *>rwis = d->cumbia_http->getReplaceWildcard_Ifaces();
+    d->s = s;
+    QList<QuReplaceWildcards_I *>rwis = d->cu_http->getReplaceWildcard_Ifaces();
     // d->source is equal to 's' if no replacement is made
-    for(int i = 0; i < rwis.size() && d->source == s; i++) // leave loop if s != d->source (=replacement made)
-        d->source = rwis[i]->replaceWildcards(s, qApp->arguments());
+    for(int i = 0; i < rwis.size() && d->s == s; i++) // leave loop if s != d->source (=replacement made)
+        d->s = rwis[i]->replaceWildcards(s, qApp->arguments());
 
-    CuHTTPActionReaderFactory httprf;
-    cuprintf("\e[1;32mCuHttpControlsReader::setSource %s\e[0m\n", qstoc(s));
-    d->cumbia_http->addAction(d->source.toStdString(), d->tlistener, httprf);
+    printf("\e[1;33mCuHttpControlsReader::setSource single shot ? %d\e[0m\n", d->o.value("single-shot").toBool());
+    CuHTTPActionReaderFactory httprf(d->o.value("single-shot").toBool());
+    d->cu_http->addAction(d->s.toStdString(), d->dlis, httprf);
 }
 
-QString CuHttpControlsReader::source() const
-{
-    return d->source;
+QString CuHttpControlsReader::source() const {
+    return d->s;
 }
 
-void CuHttpControlsReader::unsetSource()
-{
-    d->cumbia_http->unlinkListener(d->source.toStdString(), CuHTTPActionA::Reader, d->tlistener);
-    d->source = QString();
+void CuHttpControlsReader::unsetSource() {
+    d->cu_http->unlinkListener(d->s.toStdString(), CuHTTPActionA::Reader, d->dlis);
+    d->s = QString();
 }
 
-void CuHttpControlsReader::setOptions(const CuData &o)
-{
-    d->options = o;
+void CuHttpControlsReader::setOptions(const CuData &o) {
+    d->o = o;
 }
 
-CuData CuHttpControlsReader::getOptions() const
-{
-    return d->options;
+CuData CuHttpControlsReader::getOptions() const {
+    return d->o;
 }
 
-void CuHttpControlsReader::sendData(const CuData &)
-{
+void CuHttpControlsReader::sendData(const CuData &) { }
 
-}
-
-void CuHttpControlsReader::getData(CuData &d_ino) const
-{
+void CuHttpControlsReader::getData(CuData &d_ino) const {
     Q_UNUSED(d_ino);
 }
 

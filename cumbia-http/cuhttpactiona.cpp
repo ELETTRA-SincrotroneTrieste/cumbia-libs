@@ -68,17 +68,19 @@ QByteArray CuHTTPActionA::m_extract_data(const QByteArray &in) const {
     return jd;
 }
 
+// totally incomplete
 CuHTTPActionA::MsgFmt CuHTTPActionA::m_likely_format(const QByteArray &ba) const {
     if(ba.startsWith("<html>")) return FmtHtml;
     return FmtJson;
 }
 
+// discard hello message
 bool CuHTTPActionA::m_likely_valid(const QByteArray &ba) const {
     return !ba.startsWith(": hi\n");
 }
 
 void CuHTTPActionA::m_on_buf_complete() {
-    if(m_likely_valid(d->buf)) {
+    if(m_likely_valid(d->buf)) {  // discard hi:
         QJsonParseError jpe;
         QByteArray json = m_extract_data(d->buf);
         QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
@@ -109,6 +111,7 @@ void CuHTTPActionA::onReplyFinished() {
 }
 
 void CuHTTPActionA::onReplyDestroyed(QObject *) {
+    qDebug() << __PRETTY_FUNCTION__ << getType() << "reply destroyed exiting ? " << exiting();
     if(exiting())
         notifyActionFinished();
     d->reply = nullptr;
@@ -143,6 +146,7 @@ void CuHTTPActionA::startRequest(const QUrl &src)
 }
 
 void CuHTTPActionA::stopRequest() {
+    qDebug() << __PRETTY_FUNCTION__ << "stop request : d->reply" << d->reply;
     if(d->reply) {
         cuprintf("CuHTTPActionA.stopRequest: closing %p\n", d->reply);
         disconnect(d->reply, SIGNAL(error(QNetworkReply::NetworkError)), this, nullptr);

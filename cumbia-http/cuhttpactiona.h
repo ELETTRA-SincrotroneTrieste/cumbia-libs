@@ -18,7 +18,7 @@ class CuHTTPActionA : public QObject
     Q_OBJECT
 public:
 
-    enum Type { Reader = 0, Writer, Config, ChannelReceiver };
+    enum Type { Reader = 0, SingleShotReader, Writer, Config, ChannelReceiver };
 
     enum MsgFmt { FmtText, FmtJson, FmtHtml };
 

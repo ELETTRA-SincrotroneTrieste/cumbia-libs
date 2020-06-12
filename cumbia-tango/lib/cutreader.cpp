@@ -206,6 +206,7 @@ void CuTReader::sendData(const CuData &data)
         data["refresh_mode"].to<int>(rm);
     if(data.containsKey("period"))
         data["period"].to<int>(period);
+    printf("CuTReader.sendData: mode %d current d->refresh_mode %d period %d\n", rm, d->refresh_mode, period);
     if(rm > -1 && rm != d->refresh_mode) { // refresh mode changed
         setRefreshMode(static_cast<CuTReader::RefreshMode>(rm), period);
     }
@@ -213,6 +214,7 @@ void CuTReader::sendData(const CuData &data)
         CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                             get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
         CuPoller *poller = polling_service->getPoller(d->cumbia_t, d->period); // poller with current period
+        printf("CuTReader.sendData: poller period %d d->period %d new period %d\n", poller->period(), d->period, period);
         if(poller && period != poller->period()) {
             m_unregisterFromPoller(); // unregister from old poller (d->period must stay unchanged)
             d->period = period;       // update d->period - mode unchanged
@@ -291,6 +293,7 @@ void CuTReader::setRefreshMode(CuTReader::RefreshMode rm, int period)
 
     if(d->refresh_mode != rm) // time to store rm into d->refresh_mode if not already done before
         d->refresh_mode = rm;
+    printf("CUTreadersetRefreshMode set d->refresh_mode to %d\n", d->refresh_mode);
 }
 
 string CuTReader::refreshModeStr() const
@@ -433,7 +436,6 @@ void CuTReader::m_startEventActivity()
     at.merge(d->options);
     // thread token: by default device name, but can be tuned
     // through the "thread_token" option (setOptions)
-    //CuData tt = CuData("device", d->tsrc.getDeviceName());
     CuData thtok= CuData("device", d->tsrc.getDeviceName());
     if(d->options.containsKey("thread_token"))
         thtok["thread_token"] = d->options["thread_token"];

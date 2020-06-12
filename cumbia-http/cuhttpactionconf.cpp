@@ -1,6 +1,6 @@
 #include "cumbiahttpworld.h"
 #include "cuhttpactionreader.h"
-#include "cuhtttpactionconf.h"
+#include "cuhttpactionconf.h"
 #include "cuhttp_source.h"
 
 #include <QNetworkAccessManager>

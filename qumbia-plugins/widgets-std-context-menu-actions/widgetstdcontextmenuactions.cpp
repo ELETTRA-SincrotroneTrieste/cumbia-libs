@@ -72,8 +72,8 @@ void WidgetStdContextMenuActions::setup(QWidget *widget, const CuContext *ctx)
                         info =    new QAction("Link stats", this);
                         info->setObjectName("linkStatsA");
                         connect(info, SIGNAL(triggered(bool)), this, SLOT(onInfoActionTriggered()));
-                        d->m_actions << info;
                     }
+                    d->m_actions << info;
                 }
                 // 2. helper application
                 if(tango_db_ex) {
@@ -85,8 +85,8 @@ void WidgetStdContextMenuActions::setup(QWidget *widget, const CuContext *ctx)
                         a->setObjectName("helperAppA");
                         connect(tango_db_ex->get_qobject(), SIGNAL(onDataReady(const CuData&)), this, SLOT(onDataReady(const CuData&)));
                         connect(a, SIGNAL(triggered(bool)), this, SLOT(onHelperAActionTriggered()));
-                        d->m_actions << a;
                     }
+                    d->m_actions << a;
                 }
             }
         }

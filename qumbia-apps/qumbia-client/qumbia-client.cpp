@@ -44,10 +44,10 @@
 #include <QComboBox>
 #include <cucontext.h>
 #include <QTimer>
-#include <quwatcher.h>
 
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
+#include <quapps.h>
 
 QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     QWidget(parent),
@@ -57,72 +57,17 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     QStringList engines;
     Cumbia *cuws = nullptr, *cuta = nullptr, *cuhttp = nullptr;
     Cumbia *cuep, *curnd;
-    m_log = new CuLog(&m_log_impl);
-    // for valgrind test
-    // int *f= new int[1000];
     cu_pool = cumbia_pool;
     m_switchCnt = 0;
 
-
-#if defined(CUMBIA_WEBSOCKET_VERSION) || defined (CUMBIA_HTTP_VERSION)
-    QCommandLineParser cmdlparser;
-#endif
-
-#ifdef CUMBIA_WEBSOCKET_VERSION
-    CuWsRegisterEngine wsre;
-    if(wsre.hasCmdOption(qApp->arguments())) {
-        cuws = wsre.registerWithDefaults(cumbia_pool, m_ctrl_factory_pool);
-        static_cast<CumbiaWebSocket *>(cuws)->openSocket();
-        cuws->getServiceProvider()->registerSharedService(CuServices::Log, m_log);
-        engines << "websocket";
-    }
-#endif
-#ifdef CUMBIA_HTTP_VERSION
-    CuHttpRegisterEngine httpre;
-    if(httpre.hasCmdOption( qApp->arguments())) {
-        cuhttp = httpre.registerWithDefaults(cumbia_pool, m_ctrl_factory_pool);
-        cuhttp->getServiceProvider()->registerSharedService(CuServices::Log, m_log);
-        qDebug() << __PRETTY_FUNCTION__ << "enabled http engine";
-        engines << "http";
-    }
-#endif
-#ifdef QUMBIA_TANGO_CONTROLS_VERSION
-    if(!cuws && !cuhttp) {
-        CuTangoRegisterEngine tare;
-        cuta = tare.registerWithDefaults(cu_pool, m_ctrl_factory_pool);
-        cuta->getServiceProvider()->registerSharedService(CuServices::Log, m_log);
-        engines << "tango";
-    }
-#endif
-#ifdef QUMBIA_EPICS_CONTROLS
-    if(!cuws && !cuhttp) {
-        CuEpRegisterEngine epre;
-        cuep = epre.registerWithDefaults(cumbia_pool, m_ctrl_factory_pool);
-        cuep->getServiceProvider()->registerSharedService(CuServices::Log, m_log);
-        engines << "EPICS";
-    }
-#endif
-#ifdef CUMBIA_RANDOM_VERSION
-    if(!cuws && !cuhttp) {
-        CuRndRegisterEngine rndre;
-        curnd = rndre.registerWithDefaults(cu_pool, m_ctrl_factory_pool);
-        curnd->getServiceProvider()->registerSharedService(CuServices::Log, m_log);
-        engines << "random";
-    }
-#endif
+    CuModuleLoader mloader(cumbia_pool, &m_ctrl_factory_pool, &m_log_impl);
 
     ui->setupUi(this);
     connect(ui->pbSetSources, SIGNAL(clicked()), this, SLOT(sourcesChanged()));
     connect(ui->pbApplyRefresh, SIGNAL(clicked()), this, SLOT(changeRefresh()));
     connect(ui->pbUnsetSrc, SIGNAL(clicked()), this, SLOT(unsetSources()));
 
-    if(qApp->arguments().count() >= 2)
-    {
-        foreach(const QString& a, cmdlparser.positionalArguments()) {
-            ui->leSrcs->setText(ui->leSrcs->text() + a);
-        }
-        sourcesChanged();
-    }
+    ui->leSrcs->setPlaceholderText("Type a space separated list of sources");
 
     resize(1000, 600);
 
@@ -145,12 +90,6 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
 
     // engines information
     ui->lengines->setText("Engines: " + engines.join(", "));
-
-
-    QuWatcher *w = new QuWatcher(this, cumbia_pool, m_ctrl_factory_pool);
-    w->setSingleShot(true);
-    w->setSource("test/device/1/long_scalar");
-    w->attach(this, SLOT(onNewLong(int)));
 }
 
 QumbiaClient::~QumbiaClient()
@@ -232,7 +171,6 @@ void QumbiaClient::changeRefresh()
     CuData options;
     options["period"] = period;
     options["refresh_mode"] = refmode;
-
     QuTrendPlot *tp = findChild<QuTrendPlot *>();
     if(tp) {
         printf("sending data %s to plot \n", options.toString().c_str());
@@ -254,7 +192,7 @@ void QumbiaClient::sourcesChanged()
         lo = qobject_cast<QGridLayout *>(ui->widget->layout());
 
     int period = ui->sbPeriod->value();
-    int refmode = ui->cbRefMode->currentIndex();
+    int refmode = ui->cbRefMode->currentIndex() == 0 ? CuTReader::PolledRefresh : CuTReader::ChangeEventRefresh;
     CuData options;
     options["period"] = period;
     options["refresh_mode"] = refmode;
@@ -288,10 +226,7 @@ void QumbiaClient::sourcesChanged()
         foreach(QString s, remSrcs)
             if(psrcs.contains(s))
                 tr_plot->unsetSource(s);
-        if(!tr_plot->sources().count())
-        {
-            printf("\e[1;31mDELETING SCALAR PLOTTTT\e[0m\n");
-
+        if(!tr_plot->sources().count())  {
             delete tr_plot;
         }
     }
@@ -300,20 +235,12 @@ void QumbiaClient::sourcesChanged()
     if(sp_plot)
     {
         QStringList psrcs = sp_plot->sources();
-        foreach(QString s, remSrcs)
-        {
-            printf("see if has src %s\n", qstoc(s));
+        foreach(QString s, remSrcs) {
             if(psrcs.contains(s))
-            {
-                printf("unsetting source on spectrum plot src %s\n", qstoc(s));
                 sp_plot->unsetSource(s);
-            }
         }
         if(!sp_plot->sources().count())
-        {
-            printf("\n\n\n\n\e[1;31mDELETING SPECTRUM PLOTTTT\e[0m\n\n\n\n\n");
             delete sp_plot;
-        }
     }
 
     foreach(QuLabel *l, ui->widget->findChildren<QuLabel *>())
@@ -334,7 +261,6 @@ void QumbiaClient::sourcesChanged()
     for(int i = 0; i < newSrcs.size(); i++)
     {
         QuLabel *l = new QuLabel(this, cu_pool, m_ctrl_factory_pool);
-        options.set("single-shot", true);
         l->getContext()->setOptions(options);
         l->setWordWrap(true);
         l->setMaximumLength(30); /* truncate if text is too long */
@@ -344,12 +270,6 @@ void QumbiaClient::sourcesChanged()
     }
 
     m_oldSrcs = srcs;
-
-//    if(qobject_cast<QPushButton *>(sender())) {
-
-//        printf("WARNING: \e[1;31mTERMINATING APP AFTER SET SOURCES\e[0m\n");
-//        QTimer::singleShot(1000, qApp, SLOT(quit()));
-//    }
 }
 
 void QumbiaClient::unsetSources()
@@ -369,10 +289,5 @@ void QumbiaClient::switchSources()
     QString src = QString("test/device/%1/double_spectrum_ro").arg(m_switchCnt % 2 + 1);
     ui->leSrcs->setText(src);
     sourcesChanged();
-}
-
-void QumbiaClient::onNewLong(int l)
-{
-    printf("------------------------- FUCKIN NEW LONG %ld\n", l);
 }
 

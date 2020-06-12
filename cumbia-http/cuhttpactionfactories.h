@@ -11,7 +11,7 @@ class CuHTTPReaderFactoryPrivate;
 
 class CuHTTPActionReaderFactory : public CuHTTPActionFactoryI {
 public:
-    CuHTTPActionReaderFactory();
+    CuHTTPActionReaderFactory(bool single_shot);
     virtual ~CuHTTPActionReaderFactory();
 
     void setOptions(const CuData &o);

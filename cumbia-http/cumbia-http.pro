@@ -53,6 +53,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     cuhttp_source.cpp \
     cuhttpactiona.cpp \
+    cuhttpactionconf.cpp \
     cuhttpactionfactories.cpp \
     cuhttpactionfactoryservice.cpp \
     cuhttpactionreader.cpp \
@@ -64,7 +65,6 @@ SOURCES += \
     cuhttpcontrolsreader.cpp \
     cuhttpcontrolswriter.cpp \
     cuhttpregisterengine.cpp \
-    cuhtttpactionconf.cpp \
     cumbiahttp.cpp \
     cumbiahttpworld.cpp \
     protocol/tango/cuhttpprotocolhelpers.cpp \
@@ -76,6 +76,7 @@ SOURCES += \
 HEADERS += \
     cuhttp_source.h \
     cuhttpactiona.h \
+    cuhttpactionconf.h \
     cuhttpactionfactories.h \
     cuhttpactionfactoryi.h \
     cuhttpactionfactoryservice.h \
@@ -89,7 +90,6 @@ HEADERS += \
     cuhttpcontrolswriter.h \
     cuhttpregisterengine.h \
     cuhttpsrchelper_i.h \
-    cuhtttpactionconf.h \
     cumbiahttp.h \
     cumbiahttpworld.h \
     protocol/cuhttpprotocolhelper_i.h \

@@ -1,7 +1,7 @@
 #include "cuhttpactionfactories.h"
 #include "cuhttpactionreader.h"
 #include "cuhttpactionwriter.h"
-#include "cuhtttpactionconf.h"
+#include "cuhttpactionconf.h"
 #include "cumbiahttp.h"
 #include "cuhttpchannelreceiver.h"
 
@@ -20,8 +20,9 @@ void CuHTTPActionReaderFactory::setOptions(const CuData &o) {
     d->options = o;
 }
 
-CuHTTPActionReaderFactory::CuHTTPActionReaderFactory() {
+CuHTTPActionReaderFactory::CuHTTPActionReaderFactory(bool single_shot) {
     d  = new CuHTTPReaderFactoryPrivate;
+    if(single_shot) d->options.set("method", "read");
 }
 
 CuHTTPActionReaderFactory::~CuHTTPActionReaderFactory() {
@@ -46,7 +47,7 @@ CuHTTPActionA *CuHTTPActionReaderFactory::create(const CuHTTPSrc &s,
 }
 
 CuHTTPActionA::Type CuHTTPActionReaderFactory::getType() const {
-    return CuHTTPActionA::Reader;
+    return d->options.has("method", "read") ? CuHTTPActionA::SingleShotReader : CuHTTPActionA::Reader;
 }
 
 void CuHTTPActionWriterFactory::setConfiguration(const CuData &conf) {

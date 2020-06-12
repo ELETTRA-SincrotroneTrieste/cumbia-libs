@@ -43,6 +43,7 @@ public:
 
 private slots:
     void onUnsubscribeReplyFinished();
+    void onSubscribeReplyDestroyed(QObject *);
 
 private:
     CuHTTPActionReaderPrivate *d;

@@ -32,7 +32,7 @@ public:
     std::set<CuDataListener *> listeners;
     QString url, http_src, prepared_http_src;
     bool exit;
-    CuData property_d, value_d, options;
+    CuData property_d, value_d, o;
     CuHttpProtocolHelpers *proto_helpers;
     ProtocolHelper_I *proto_helper_i;
     CuHttpChannelReceiver *chan_recv;
@@ -53,10 +53,10 @@ CuHTTPActionReader::CuHTTPActionReader(const CuHTTPSrc& src,
     std::string proto = src.getProtocol(); // tango:// ?
     d->proto_helpers = new CuHttpProtocolHelpers();
     d->proto_helper_i = d->proto_helpers->get(QString::fromStdString(proto));
-    if(!src.canMonitor()) d->options.set("method", "read");
+    if(!src.canMonitor()) d->o.set("method", "read");
     d->prepared_http_src = QString::fromStdString(src.prepare());
     printf("CuHTTPActionReader: found protocol \"%s\" within \"%s\" -- options %s -- prepared src: %s\n",
-           proto.c_str(), src.getName().c_str(), datos(d->options), qstoc(d->prepared_http_src));
+           proto.c_str(), src.getName().c_str(), datos(d->o), qstoc(d->prepared_http_src));
 }
 
 CuHTTPActionReader::~CuHTTPActionReader() {
@@ -87,7 +87,7 @@ QString CuHTTPActionReader::getSourceName() const {
 }
 
 CuHTTPActionA::Type CuHTTPActionReader::getType() const {
-    return CuHTTPActionA::Reader;
+    return d->o.has("method", "read") ? CuHTTPActionA::SingleShotReader : CuHTTPActionA::Reader;
 }
 
 void CuHTTPActionReader::addDataListener(CuDataListener *l) {
@@ -97,6 +97,7 @@ void CuHTTPActionReader::addDataListener(CuDataListener *l) {
 
 void CuHTTPActionReader::removeDataListener(CuDataListener *l) {
     d->listeners.erase(l);
+    cuprintf("CuHTTPActionReader::removeDataListener: remainding %ld listeners\n", d->listeners.size());
     if(d->listeners.size() == 0)
         stop();
 }
@@ -113,6 +114,10 @@ void CuHTTPActionReader::decodeMessage(const QJsonDocument &json) {
     for(std::set<CuDataListener *>::iterator it = lcp.begin(); it != lcp.end(); ++it) {
         (*it)->onUpdate(res);
     }
+    if(getType() == CuHTTPActionA::SingleShotReader) {
+        d->exit = true;
+        d->listeners.clear();
+    }
 }
 
 bool CuHTTPActionReader::exiting() const {
@@ -120,7 +125,7 @@ bool CuHTTPActionReader::exiting() const {
 }
 
 void CuHTTPActionReader::mergeOptions(const CuData &o) {
-    d->options.merge(o);
+    d->o.merge(o);
 }
 
 void CuHTTPActionReader::onUnsubscribeReplyFinished() {
@@ -132,11 +137,15 @@ void CuHTTPActionReader::onUnsubscribeReplyFinished() {
     stopRequest();
 }
 
+void CuHTTPActionReader::onSubscribeReplyDestroyed(QObject *) {
+    notifyActionFinished();
+}
+
 void CuHTTPActionReader::start() {
     QString url_s = !d->prepared_http_src.isEmpty() ? d->prepared_http_src : d->http_src;
     url_s.replace("#", "%23");
     QString src;
-    if(d->options["method"].toString() == "read") {
+    if(d->o.has("method", "read")) {
         src = QString("/x/read/%1").arg(url_s);
     }
     else {
@@ -148,12 +157,18 @@ void CuHTTPActionReader::start() {
 
 void CuHTTPActionReader::stop() {
     d->exit = true;
-    QString url_s = !d->prepared_http_src.isEmpty() ? d->prepared_http_src : d->http_src;
-    QString src = QString("/u/%1/%2").arg(d->chan_recv->channel()).arg(url_s);
-    d->chan_recv->unregisterReader(url_s);
-    printf("CuHttpActionReader.stop: requesting unsubscribe: %s\n", qstoc(QString(d->url + src)));
-    QNetworkRequest r = prepareRequest(d->url + src);
-    QNetworkReply *reply = getNetworkAccessManager()->get(r);
-    connect(reply, SIGNAL(finished()), this, SLOT(onUnsubscribeReplyFinished()));
+    if(getType() == CuHTTPActionA::Reader) {
+        QString url_s = !d->prepared_http_src.isEmpty() ? d->prepared_http_src : d->http_src;
+        QString src = QString("/u/%1/%2").arg(d->chan_recv->channel()).arg(url_s);
+        d->chan_recv->unregisterReader(url_s);
+        printf("CuHttpActionReader.stop: requesting unsubscribe: %s\n", qstoc(QString(d->url + src)));
+        QNetworkRequest r = prepareRequest(d->url + src);
+        QNetworkReply *reply = getNetworkAccessManager()->get(r);
+        connect(reply, SIGNAL(finished()), this, SLOT(onUnsubscribeReplyFinished()));
+        connect(reply, SIGNAL(destroyed(QObject*)), this, SLOT(onSubscribeReplyDestroyed(QObject *)));
+    }
+    else
+        cuprintf("\e[1;35mCuHTTPActionReader::stop SOURCE %s WAS NOT SUBSCRIBED TO CHANNEL -- had options %s\e[0m\n",
+                 qstoc(d->http_src), datos(d->o));
 }
 

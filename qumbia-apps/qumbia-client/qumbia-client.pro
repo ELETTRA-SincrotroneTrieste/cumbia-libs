@@ -8,14 +8,9 @@ isEmpty(INSTALL_ROOT) {
 }
 
 !wasm-emscripten {
-    exists($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
-        message("including support for qumbia-epics-controls module under $${INSTALL_ROOT}")
-        include($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
-    }
-
-    exists($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
-        message("including support for qumbia-tango-controls module under $${INSTALL_ROOT}")
-        include($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+    exists($${INSTALL_ROOT}/include/quapps/quapps.pri) {
+        message("including support for quapps module under $${INSTALL_ROOT}")
+        include($${INSTALL_ROOT}/include/quapps/quapps.pri)
     }
 } else {
     exists($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri) {
@@ -24,30 +19,9 @@ isEmpty(INSTALL_ROOT) {
     }
 }
 
-exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {
-    message("including support for cumbia-random module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
-}
-
-exists($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri) {
-    message("including support for cumbia-websocket module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
-}
-
-exists($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri) {
-    message("including support for cumbia-http module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri)
-}
-
-QT       += core gui
-
 CONFIG += debug
 
-# silent compilation
-# CONFIG += silent
-
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += widgets
 
 TARGET = bin/qumbia-client
 TEMPLATE = app

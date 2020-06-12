@@ -53,8 +53,6 @@ private slots:
 
     void switchSources();
 
-    void onNewLong(int l);
-
 private:
     Ui::QumbiaClient *ui;
 
