@@ -65,7 +65,6 @@ string CuHTTPSrc::get(const char *what) const {
 }
 
 CuHttpSrcHelper_I* CuHTTPSrc::m_find_helper(const std::string &src, const QList<CuHttpSrcHelper_I*>& helpers) {
-    qDebug() << __PRETTY_FUNCTION__ << "finding helper for " << src.c_str() << "helpers size" << helpers.size();
     for(int i = 0; i < helpers.size(); i++)
         if(helpers[i]->is_valid(src)) return helpers[i];
     return nullptr;

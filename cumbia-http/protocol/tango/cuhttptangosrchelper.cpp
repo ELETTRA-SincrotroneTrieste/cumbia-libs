@@ -40,7 +40,6 @@ bool CuHttpTangoSrcHelper::is_valid(const std::string &src) const {
         const QString& pa = tgpatterns[i];
         QRegularExpression re(pa);
         ma = re.match(src.c_str());
-        qDebug () << __PRETTY_FUNCTION__ << "matching " << re.pattern() << "with src" << src.c_str() << "HAS MATCH" << ma.hasMatch();
         if(ma.hasMatch())
             break;
     }
@@ -59,7 +58,6 @@ std::string CuHttpTangoSrcHelper::prepare(const std::string& in) const {
         std::string notgprot = ts.remove_tgproto(in);
         notgprot.size() == in.size() ? s = th + "/" + s : s = "tango://" + th + "/" + notgprot;
     }
-    qDebug() << __PRETTY_FUNCTION__ << " >>>>>  processed source is " << s.c_str();
     return s;
 }
 
