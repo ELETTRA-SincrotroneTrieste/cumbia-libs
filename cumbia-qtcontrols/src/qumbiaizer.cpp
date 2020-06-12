@@ -141,16 +141,12 @@ bool Qumbiaizer::autoDestroy() const
     return quizer_ptr->autoDestroy;
 }
 
-void Qumbiaizer::setAutoDestroy(bool autoDestroy)
-{
-
+void Qumbiaizer::setAutoDestroy(bool autoDestroy) {
     quizer_ptr->singleShot = true;
     quizer_ptr->autoDestroy = autoDestroy;
 }
 
-void Qumbiaizer::setSingleShot(bool singleShot)
-{
-
+void Qumbiaizer::setSingleShot(bool singleShot) {
     quizer_ptr->singleShot = singleShot;
 }
 
