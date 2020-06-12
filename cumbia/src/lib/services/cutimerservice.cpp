@@ -98,7 +98,7 @@ void CuTimerService::unregisterListener(CuTimerListener *tl, int timeout)
     else {
         t->removeListener(tl); // CuTimer lock guards its listeners list
         if(t->listeners().size() == 0) {
-//            printf("\e[1;32m** -->\e[0m CuTimerService::unregisterListener: \e[1;32mno more listeners: stopping timer %p and deleting\e[0m\n", t);
+            cuprintf("\e[1;32m** -->\e[0m CuTimerService::unregisterListener: \e[1;32mno more listeners: stopping timer %p and deleting\e[0m\n", t);
             m_removeFromMaps(tl, timeout);
             t->stop();
             delete t;
@@ -115,22 +115,22 @@ void CuTimerService::unregisterListener(CuTimerListener *tl, int timeout)
  * \note
  * Internally, unregisterListener and registerListener are called
  */
-CuTimer *CuTimerService::changeTimeout(CuTimerListener *tl, int timeout)
+CuTimer *CuTimerService::changeTimeout(CuTimerListener *tl, int from_timeo, int to_timeo)
 {
     CuTimer *t = nullptr;
     {
         std::unique_lock lock(d->shared_mutex);
-        t = m_findTimer(tl, -1); // does not lock
+        t = m_findTimer(tl, from_timeo); // does not lock
     }
     if(t) {
-        printf("CuTimerService::changeTimeout: changing timeout from \e[1;32m%d to %d\e[0m for timer %p\n",
-               t->timeout(), timeout, t);
+        cuprintf("CuTimerService::changeTimeout: changing timeout from \e[1;32m%d to %d\e[0m for timer %p\n",
+               t->timeout(), to_timeo, t);
         unregisterListener(tl, t->timeout()); // locks
-        printf("CuTimerService::changeTimeout: registering a \e[1;32mnew listener\e[0m\n");
-        t = registerListener(tl, timeout); // locks
+        cuprintf("CuTimerService::changeTimeout: registering a \e[1;32mnew listener\e[0m\n");
+        t = registerListener(tl, to_timeo); // locks
     }
     else if(!t)
-        perr("CuTimerService.changeTimeout: no listener %p registered with any timer", tl);
+        perr("CuTimerService.changeTimeout: no listener %p registered with timer's timeout %d", tl, from_timeo);
     return t;
 }
 
