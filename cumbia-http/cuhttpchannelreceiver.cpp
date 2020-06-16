@@ -18,7 +18,7 @@ CuHttpChannelReceiver::CuHttpChannelReceiver(const QString &url,
     d = new CuHttpChannelReceiverPrivate;
     d->url = url;
     d->chan = chan;
-    d->data_exp_t = 3; // after three seconds data is old
+    d->data_exp_t = DEFAULT_CHAN_MSG_TTL; // after these seconds data is old
     d->exit = false;
 }
 
@@ -42,7 +42,7 @@ void CuHttpChannelReceiver::unregisterReader(const QString &src) {
  * determine whether it is expired or still valid.
  *
  * \par Default value
- * 3 seconds
+ * DEFAULT_CHAN_MSG_TTL value configured in cumbia-http.pro (seconds)
  */
 void CuHttpChannelReceiver::setDataExpireSecs(time_t secs) {
     d->data_exp_t = secs;
