@@ -64,7 +64,6 @@ int CuTimer::timeout() const
  */
 void CuTimer::reset() {
     m_skip = true;
-    printf("CuTimer.reset: calling m_wait.notify_one\n");
     m_wait.notify_one();
 }
 
