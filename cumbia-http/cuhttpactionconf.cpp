@@ -84,6 +84,7 @@ bool CuHttpActionConf::exiting() const {
 }
 
 void CuHttpActionConf::stop() {
+    cancelRequest();
     d->listeners.clear();
     cuprintf("CuHttpActionConf.stop: setting d->exit to true\n");
     d->exit = true;
