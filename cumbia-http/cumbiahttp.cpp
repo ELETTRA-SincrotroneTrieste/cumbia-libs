@@ -173,10 +173,24 @@ QList<CuHttpSrcHelper_I *> CumbiaHttp::getSrcHelpers() const {
     return d->src_helpers;
 }
 
+/*!
+ * \brief Change the message time to live on the channel
+ * \param secs number of seconds
+ * @see chanMsgTtl
+ */
 void CumbiaHttp::setChanMsgTtl(int secs) {
     return d->chan_recv->setDataExpireSecs(static_cast<time_t>(secs));
 }
 
+/*!
+ * \brief Messages received from the channel that are older than this value in seconds are discarded
+ *
+ * \par Default value
+ * DEFAULT_CHAN_MSG_TTL value configured in cumbia-http.pro (seconds)
+ * \par Command line argument
+ * --ttl=X or --chan-msgs-ttl=X are recognized by CuHttpRegisterEngine and allow tuning the value
+ * at startup.
+ */
 int CumbiaHttp::chanMsgTtl() const {
     return static_cast<time_t>(d->chan_recv->dataExpiresSecs());
 }
