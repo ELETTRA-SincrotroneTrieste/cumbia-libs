@@ -55,12 +55,13 @@ CuHTTPActionReader::CuHTTPActionReader(const CuHTTPSrc& src,
     d->proto_helper_i = d->proto_helpers->get(QString::fromStdString(proto));
     if(!src.canMonitor()) d->o.set("method", "read");
     d->prepared_http_src = QString::fromStdString(src.prepare());
-    printf("CuHTTPActionReader: found protocol \"%s\" within \"%s\" -- options %s -- prepared src: %s\n",
-           proto.c_str(), src.getName().c_str(), datos(d->o), qstoc(d->prepared_http_src));
+    cuprintf("\e[1;32m+++ CuHTTPActionReader %p as  CuHttpActionA %p src %s\e[0m\n", this, qobject_cast<CuHTTPActionA *>(this), src.getName().c_str());
 }
 
 CuHTTPActionReader::~CuHTTPActionReader() {
-    pdelete("~CuHTTPActionReader \"%s\" %p", qstoc(d->http_src), this);
+    pdelete("~CuHTTPActionReader \"%s\" %p as CuHttpActionA %p", qstoc(d->http_src), this,
+            qobject_cast<CuHTTPActionA *>(this));
+    d->listeners.clear();
     if(d->proto_helpers)
         delete d->proto_helpers; // deletes its ProtocolHelper_I's
     delete d;
@@ -97,7 +98,6 @@ void CuHTTPActionReader::addDataListener(CuDataListener *l) {
 
 void CuHTTPActionReader::removeDataListener(CuDataListener *l) {
     d->listeners.erase(l);
-    cuprintf("CuHTTPActionReader::removeDataListener: remainding %ld listeners\n", d->listeners.size());
     if(d->listeners.size() == 0)
         stop();
 }
@@ -106,14 +106,19 @@ size_t CuHTTPActionReader::dataListenersCount() {
     return d->listeners.size();
 }
 
+/* This method is called from both CuHttpChannelReceiver::decodeMessage and CuHTTPActionA::m_on_buf_complete
+ * if the action type is CuHTTPActionA::Reader, from CuHTTPActionA::m_on_buf_complete only if type is
+ * CuHTTPActionA::SingleShotReader.
+ * Registered CuDataListener instances are updated, and if the type is *single shot*, the exit flag is set to
+ * true. In this latter case, CuHTTPActionA::onReplyDestroyed will lead to action disposal.
+ */
 void CuHTTPActionReader::decodeMessage(const QJsonDocument &json) {
     CuData res = getToken();
     CumbiaHTTPWorld httpw;
     httpw.json_decode(json, res);
     std::set<CuDataListener *> lcp = d->listeners;
-    for(std::set<CuDataListener *>::iterator it = lcp.begin(); it != lcp.end(); ++it) {
+    for(std::set<CuDataListener *>::iterator it = lcp.begin(); it != lcp.end(); ++it)
         (*it)->onUpdate(res);
-    }
     if(getType() == CuHTTPActionA::SingleShotReader) {
         d->exit = true;
         d->listeners.clear();
@@ -137,7 +142,7 @@ void CuHTTPActionReader::onUnsubscribeReplyFinished() {
     stopRequest();
 }
 
-void CuHTTPActionReader::onSubscribeReplyDestroyed(QObject *) {
+void CuHTTPActionReader::onUnSubscribeReplyDestroyed(QObject *) {
     notifyActionFinished();
 }
 
@@ -158,6 +163,7 @@ void CuHTTPActionReader::start() {
 void CuHTTPActionReader::stop() {
     d->exit = true;
     if(getType() == CuHTTPActionA::Reader) {
+        // 1. stop reading from channel
         QString url_s = !d->prepared_http_src.isEmpty() ? d->prepared_http_src : d->http_src;
         QString src = QString("/u/%1/%2").arg(d->chan_recv->channel()).arg(url_s);
         d->chan_recv->unregisterReader(url_s);
@@ -165,10 +171,13 @@ void CuHTTPActionReader::stop() {
         QNetworkRequest r = prepareRequest(d->url + src);
         QNetworkReply *reply = getNetworkAccessManager()->get(r);
         connect(reply, SIGNAL(finished()), this, SLOT(onUnsubscribeReplyFinished()));
-        connect(reply, SIGNAL(destroyed(QObject*)), this, SLOT(onSubscribeReplyDestroyed(QObject *)));
+        connect(reply, SIGNAL(destroyed(QObject*)), this, SLOT(onUnSubscribeReplyDestroyed(QObject *)));
     }
     else
         cuprintf("\e[1;35mCuHTTPActionReader::stop SOURCE %s WAS NOT SUBSCRIBED TO CHANNEL -- had options %s\e[0m\n",
                  qstoc(d->http_src), datos(d->o));
+
+    // 2. if the reply from CuHTTPActionA::startRequest is still pending, cancel it
+    cancelRequest();
 }
 
