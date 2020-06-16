@@ -33,6 +33,7 @@ public:
     QNetworkAccessManager *qnam;
     CuHttpChannelReceiver *chan_recv;
     CuHttpAuthManager *auth_man;
+    int chan_ttl;
 };
 
 /*!
@@ -51,8 +52,10 @@ CumbiaHttp::CumbiaHttp(const QString &url,
     d->m_threadsEventBridgeFactory = teb;
     d->m_threadFactoryImplI = tfi;
     d->url = url;
+    d->chan_ttl = 5;
     d->qnam = new QNetworkAccessManager(nullptr);
     d->chan_recv = new CuHttpChannelReceiver(d->url, channel, d->qnam);
+    d->chan_recv->setDataExpireSecs(static_cast<time_t>(d->chan_ttl));
     d->auth_man = new CuHttpAuthManager(d->qnam);
     d->chan_recv->start();
     cuprintf("CumbiaHttp: instantiated with url %s\n", qstoc(url));
@@ -168,6 +171,14 @@ QList<QuReplaceWildcards_I *> CumbiaHttp::getReplaceWildcard_Ifaces() const{
 
 QList<CuHttpSrcHelper_I *> CumbiaHttp::getSrcHelpers() const {
     return d->src_helpers;
+}
+
+void CumbiaHttp::setChanMsgTtl(int secs) {
+    return d->chan_recv->setDataExpireSecs(static_cast<time_t>(secs));
+}
+
+int CumbiaHttp::chanMsgTtl() const {
+    return static_cast<time_t>(d->chan_recv->dataExpiresSecs());
 }
 
 CuThreadFactoryImplI *CumbiaHttp::getThreadFactoryImpl() const

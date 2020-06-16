@@ -96,6 +96,9 @@ public:
     QList<QuReplaceWildcards_I *> getReplaceWildcard_Ifaces() const;
     QList<CuHttpSrcHelper_I *>getSrcHelpers() const;
 
+    void setChanMsgTtl(int secs);
+    int chanMsgTtl() const;
+
 private:
 
     void m_init();
