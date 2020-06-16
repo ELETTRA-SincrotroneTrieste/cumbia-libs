@@ -47,10 +47,12 @@ QNetworkRequest CuHTTPActionA::prepareRequest(const QUrl &url) const {
  * \brief the default implementation calls onActionFinished on the registered CuHttpListener
  *
  * This is normally called from onReplyDestroyed, but CuHttpActionWriter can call this
- * method to unregister tha action after the authentication fails
+ * method to unregister the action after the authentication fails.
+ * CuHttpActionReader calls this when the unsubscribe reply is destroyed
  */
 void CuHTTPActionA::notifyActionFinished() {
-    d->listener->onActionFinished(getSourceName().toStdString(), getType());
+    if(!d->reply) // otherwise must wait for reply destroyed
+        d->listener->onActionFinished(getSourceName().toStdString(), getType());
 }
 
 // data from event source has a combination of fields, one per line
@@ -106,12 +108,12 @@ void CuHTTPActionA::onNewData() {
 }
 
 void CuHTTPActionA::onReplyFinished() {
-    qDebug() << __PRETTY_FUNCTION__ << getType() << "deleting reply later";
+    qDebug() << __PRETTY_FUNCTION__ << this << getType() << "deleting reply " << d->reply << " later";
     d->reply->deleteLater();
 }
 
 void CuHTTPActionA::onReplyDestroyed(QObject *) {
-    qDebug() << __PRETTY_FUNCTION__ << getType() << "reply destroyed exiting ? " << exiting();
+    qDebug() << __PRETTY_FUNCTION__<< this  << getType() << "reply destroyed exiting ? " << exiting() << "REPLY DELETED WAS " << d->reply;
     if(exiting())
         notifyActionFinished();
     d->reply = nullptr;
@@ -130,10 +132,10 @@ void CuHTTPActionA::onError(QNetworkReply::NetworkError code) {
 
 void CuHTTPActionA::startRequest(const QUrl &src)
 {
-    qDebug () << __PRETTY_FUNCTION__ << src;
     QNetworkRequest r = prepareRequest(src);
     if(!d->reply) {
         d->reply = d->nam->get(r);
+        cuprintf("\e[0;32mCuHTTPActionA::startRequest: this is %p reply is %p src %s\e[0m\n", this, d->reply, qstoc(src.toString()));
         connect(d->reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
         connect(d->reply, SIGNAL(finished()), this, SLOT(onReplyFinished()));
         connect(d->reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, SLOT(onSslErrors(const QList<QSslError> &)));
@@ -151,7 +153,19 @@ void CuHTTPActionA::stopRequest() {
         cuprintf("CuHTTPActionA.stopRequest: closing %p\n", d->reply);
         disconnect(d->reply, SIGNAL(error(QNetworkReply::NetworkError)), this, nullptr);
         disconnect(d->reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, nullptr);
-        d->reply->close();
+        if(d->reply->isOpen())
+            d->reply->close();
+    }
+}
+
+void CuHTTPActionA::cancelRequest() {
+    if(d->reply && !d->reply->isFinished()) {
+        disconnect(d->reply, SIGNAL(error(QNetworkReply::NetworkError)), this, nullptr);
+        disconnect(d->reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, nullptr);
+        disconnect(d->reply, SIGNAL(readyRead()), this, nullptr);
+        printf("\e[1;31mCuHttpActionA %p cancelRequest: CANCELLING REQUEST!!!! { %s } ABORTING REPLY %p\e[0m\n",
+               this, qstoc(getSourceName()), d->reply);
+        d->reply->abort();
     }
 }
 
