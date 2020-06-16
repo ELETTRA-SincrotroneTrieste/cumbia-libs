@@ -20,10 +20,12 @@
 class CuHttpRegisterEnginePrivate {
 public:
     QString url, chan;
+    int ttl;
 };
 
 CuHttpRegisterEngine::CuHttpRegisterEngine() {
     d = new CuHttpRegisterEnginePrivate;
+    d->ttl = 5;
 }
 
 CuHttpRegisterEngine::~CuHttpRegisterEngine() {
@@ -51,6 +53,7 @@ CumbiaHttp *CuHttpRegisterEngine::registerWithDefaults(CumbiaPool *cu_pool, CuCo
     // for the HTTP requests
     CumbiaHTTPWorld httpw;
     CumbiaHttp* cuhttp = new CumbiaHttp(url(), channel(), new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    cuhttp->setChanMsgTtl(ttl());
     cu_pool->registerCumbiaImpl("http", cuhttp);
     fpoo.registerImpl("http", CuHTTPReaderFactory());
     fpoo.registerImpl("http", CuHttpControlsWriterFactory());
@@ -89,6 +92,23 @@ void CuHttpRegisterEngine::setChannel(const QString &chan) {
     d->chan = chan;
 }
 
+/*!
+ * \brief change the period, in seconds, after that a message on the channel is discarded
+ * \param ttl number of seconds
+ *
+ * When a source subscribes to a channel, it may receive messages that are discarded if older
+ * than ttl.
+ *
+ * @see ttl
+ *
+ * \par Note
+ * The --ttl command line argument can be used to tune this value
+ * The default value is 5 seconds.
+ */
+void CuHttpRegisterEngine::setTtl(int ttl) {
+    d->ttl = ttl;
+}
+
 QString CuHttpRegisterEngine::url() const {
     return d->url;
 }
@@ -97,25 +117,38 @@ QString CuHttpRegisterEngine::channel() const {
     return d->chan;
 }
 
+/*!
+ * \brief Time to live of the messages on the channel
+ * \return an integer representing the seconds after which a message on the channel is discarded
+ * @see setTtl
+ */
+int CuHttpRegisterEngine::ttl() const {
+    return d->ttl;
+}
+
 bool CuHttpRegisterEngine::hasCmdOption(const QStringList &args) const {
     QCommandLineParser parser;
     QCommandLineOption http_url_o(QStringList() << "u" << "http-url", "URL to http server/channel or URL only if -c [--channel] is provided", "url");
     QCommandLineOption chan_o(QStringList() << "c" << "channel", "Server Sent Events channel name", "chan");
-    QCommandLineOption no_http_o(QStringList()  << "no-http", "Do not load http module");
+    QCommandLineOption native_o(QStringList()  << "n" << "native", "Prefer native module");
+    QCommandLineOption ttl_o(QStringList()  << "ttl" << "chan-msgs-ttl" , "Time to live: discard messages from the channel older than this value [seconds]", "integer");;
     parser.addOption(http_url_o);
     parser.addOption(chan_o);
-    parser.addOption(no_http_o);
+    parser.addOption(native_o);
+    parser.addOption(ttl_o);
     parser.addHelpOption();
     parser.parse(args);
     QString url;
     if(parser.isSet("help"))
         printf("http module \e[1;32mhelp\e[0m:\n\e[1;36m%s\e[0m\n", qstoc(parser.helpText()));
-    if(parser.isSet(no_http_o))
+    if(parser.isSet(native_o))
         return false;
     if(parser.isSet(http_url_o))
         url = parser.value(http_url_o);
     if(parser.isSet(chan_o))
         d->chan = parser.value(chan_o);
+    if(parser.isSet(ttl_o))
+        d->ttl = parser.value(ttl_o).toInt();
     else if(!url.isEmpty()) {
         d->chan = url.section(QRegularExpression("[^:^/]/"), -1); // match last token after a / but skip http[s]://
         d->chan != url ? d->url = url.remove(url.lastIndexOf('/'), d->chan.length() + 1) : d->chan.remove(0, d->chan.length());

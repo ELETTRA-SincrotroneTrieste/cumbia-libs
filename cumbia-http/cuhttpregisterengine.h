@@ -21,8 +21,10 @@ public:
 
     void setUrl(const QString& url);
     void setChannel(const QString& chan);
+    void setTtl(int ttl);
     QString url() const;
     QString channel() const;
+    int ttl() const;
     bool hasCmdOption(const QStringList& args) const;
 
     QString urlFromConfig() const;
