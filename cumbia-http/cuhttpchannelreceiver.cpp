@@ -134,7 +134,6 @@ QNetworkRequest CuHttpChannelReceiver::prepareRequest(const QUrl &url) const
 }
 
 bool CuHttpChannelReceiver::m_data_fresh(const double timestamp_ms, time_t* diff_t) const {
-    const long data_old = 3;
     long ts_sec = static_cast<long>(timestamp_ms / 1000.0);
     time_t now;
     time(&now);
@@ -147,6 +146,6 @@ bool CuHttpChannelReceiver::m_data_fresh(const double timestamp_ms, time_t* diff
 //    if(*diff_t >= data_old)
 //        cuprintf("CaCuTangoEImpl.m_data_valid \n\e[1;35m%ld %s -  %ld %s < 3 sec ? %ld\e[0m\n",
 //                  now, _now, ts_sec, _then, *diff_t);
-    return *diff_t < data_old;
+    return *diff_t < d->data_exp_t;
 }
 

@@ -82,6 +82,7 @@ protected slots:
 
     virtual void startRequest(const QUrl& src);
     virtual void stopRequest();
+    virtual void cancelRequest();
 
     CuHTTPActionListener *getHttpActionListener() const ;
 
