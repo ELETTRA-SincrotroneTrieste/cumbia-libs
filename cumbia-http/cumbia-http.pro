@@ -28,13 +28,19 @@ CONFIG += debug
 
 # CONFIG += silent
 
+isEmpty(DEFAULT_CHANNEL_MSG_TTL) {
+    DEFAULT_CHANNEL_MSG_TTL=5
+    message("cumbia-http.pro: setting default channel message ttl to $${DEFAULT_CHANNEL_MSG_TTL}")
+    message("cumbia-http.pro: change it executing qmake DEFAULT_CHANNEL_MSG_TTL=X")
+}
+
 PKGCONFIG -= cumbia-http$${QTVER_SUFFIX}
 
 TARGET = cumbia-http$${QTVER_SUFFIX}
 TEMPLATE = lib
 
 DEFINES += CUMBIAHTTP_LIBRARY
-DEFINES += CUMBIA_DEBUG_OUTPUT=1
+DEFINES += CUMBIA_DEBUG_OUTPUT=1 -DDEFAULT_CHAN_MSG_TTL=$${DEFAULT_CHANNEL_MSG_TTL}
 
 DEFINES -= QT_NO_DEBUG_OUTPUT
 
