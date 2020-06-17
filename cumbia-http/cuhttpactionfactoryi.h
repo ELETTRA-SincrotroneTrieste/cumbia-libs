@@ -40,6 +40,10 @@ public:
      * @return the type of action that the factory creates
      */
     virtual CuHTTPActionA::Type getType() const = 0;
+
+    virtual CuHTTPActionFactoryI* clone() const = 0;
+
+    virtual CuData options() const = 0;
 };
 
 #endif // CUTANGOACTIONFACTORYI_H

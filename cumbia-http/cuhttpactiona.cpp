@@ -4,6 +4,8 @@
 #include <QJsonParseError>
 #include <QtDebug>
 
+static int reqs_started = 0, reqs_ended = 0;
+
 class CuHTTPActionAPrivate {
 public:
     QNetworkAccessManager *nam;
@@ -108,6 +110,9 @@ void CuHTTPActionA::onNewData() {
 }
 
 void CuHTTPActionA::onReplyFinished() {
+    reqs_ended++;
+    cuprintf("\e[0;32m + \e[0mCuHTTPActionA::onReplyFinished: this is %p reply is %p src %s \e[1;32mREQS STARTED %d ENDED %d\e[0m\n", this, d->reply, qstoc(getSourceName()),
+             reqs_started, reqs_ended);
     qDebug() << __PRETTY_FUNCTION__ << this << getType() << "deleting reply " << d->reply << " later";
     d->reply->deleteLater();
 }
@@ -135,7 +140,9 @@ void CuHTTPActionA::startRequest(const QUrl &src)
     QNetworkRequest r = prepareRequest(src);
     if(!d->reply) {
         d->reply = d->nam->get(r);
-        cuprintf("\e[0;32mCuHTTPActionA::startRequest: this is %p reply is %p src %s\e[0m\n", this, d->reply, qstoc(src.toString()));
+        reqs_started++;
+        cuprintf("\e[0;32m + \e[0mCuHTTPActionA::startRequest: this is %p reply is %p src %s \e[1;32mREQS STARTED %d ENDED %d\e[0m\n", this, d->reply, qstoc(src.toString()),
+                 reqs_started, reqs_ended);
         connect(d->reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
         connect(d->reply, SIGNAL(finished()), this, SLOT(onReplyFinished()));
         connect(d->reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, SLOT(onSslErrors(const QList<QSslError> &)));

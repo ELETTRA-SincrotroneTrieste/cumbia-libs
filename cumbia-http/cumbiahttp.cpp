@@ -2,6 +2,8 @@
 #include "cuhttpchannelreceiver.h"
 #include "cuhttpauthmanager.h"
 #include "cuhttpsrchelper_i.h"
+#include "cuhttpsrcman.h"
+#include "cuhttpbundledsrcreq.h"
 
 #include <cumacros.h>
 #include <cudatalistener.h>
@@ -33,6 +35,7 @@ public:
     QNetworkAccessManager *qnam;
     CuHttpChannelReceiver *chan_recv;
     CuHttpAuthManager *auth_man;
+    CuHttpSrcMan *src_q_man;
     int chan_ttl;
 };
 
@@ -58,6 +61,7 @@ CumbiaHttp::CumbiaHttp(const QString &url,
     d->chan_recv->setDataExpireSecs(static_cast<time_t>(d->chan_ttl));
     d->auth_man = new CuHttpAuthManager(d->qnam);
     d->chan_recv->start();
+    d->src_q_man = new CuHttpSrcMan(this);
     cuprintf("CumbiaHttp: instantiated with url %s\n", qstoc(url));
     m_init();
 }
@@ -101,29 +105,40 @@ void CumbiaHttp::onActionFinished(const string &source, CuHTTPActionA::Type t) {
     if(a) delete a;
 }
 
+void CumbiaHttp::onSrcBundleReqReady(const QList<SrcItem> &srcs) {
+    qDebug() << __PRETTY_FUNCTION__ << "bundle of " << srcs.size() << "sources ready";
+    CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(srcs);
+    r->start(d->url + "/bu/src-bundle", d->qnam);
+}
+
+void CumbiaHttp::onSrcBundleReplyReady(const QByteArray &json) {
+    qDebug() << __PRETTY_FUNCTION__ << "src bundle result from server " << json;
+}
+
 void CumbiaHttp::addAction(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI &f)
 {
     CumbiaHTTPWorld w;
     if(w.source_valid(source))
-    {
-        CuHTTPSrc httpsrc(source, d->src_helpers);
-        CuHTTPActionFactoryService *af =
-                static_cast<CuHTTPActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuHTTPActionFactoryService::CuHTTPActionFactoryServiceType)));
-        CuHTTPActionA *a = af->findActive(source, f.getType());
-        if(!a) {
-            a = af->registerAction(httpsrc, f, d->qnam, d->url, d->chan_recv, d->auth_man);
-            qDebug() << __PRETTY_FUNCTION__ << "registered action with source " << source.c_str() << f.getType();
-            a->setHttpActionListener(this);
-            a->start();
-        }
-        else {
-            cuprintf("CumbiaHttp.addAction: action %p already found for source \"%s\" and type %d thread 0x%lx TYPE %d\n",
-                     a, source.c_str(), f.getType(), pthread_self(), f.getType());
-        }
-        a->addDataListener(l);
-    }
-    else
-        perr("CumbiaHttp.addAction: source \"%s\" is not valid, ignoring", source.c_str());
+        d->src_q_man->enqueueSrc(source, l, f);
+//    {
+//        CuHTTPSrc httpsrc(source, d->src_helpers);
+//        CuHTTPActionFactoryService *af =
+//                static_cast<CuHTTPActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuHTTPActionFactoryService::CuHTTPActionFactoryServiceType)));
+//        CuHTTPActionA *a = af->findActive(source, f.getType());
+//        if(!a) {
+//            a = af->registerAction(httpsrc, f, d->qnam, d->url, d->chan_recv, d->auth_man);
+//            qDebug() << __PRETTY_FUNCTION__ << "registered action with source " << source.c_str() << f.getType();
+//            a->setHttpActionListener(this);
+//            a->start();
+//        }
+//        else {
+//            cuprintf("CumbiaHttp.addAction: action %p already found for source \"%s\" and type %d thread 0x%lx TYPE %d\n",
+//                     a, source.c_str(), f.getType(), pthread_self(), f.getType());
+//        }
+//        a->addDataListener(l);
+//    }
+//    else
+//        perr("CumbiaHttp.addAction: source \"%s\" is not valid, ignoring", source.c_str());
 }
 
 void CumbiaHttp::unlinkListener(const string &source, CuHTTPActionA::Type t, CuDataListener *l)

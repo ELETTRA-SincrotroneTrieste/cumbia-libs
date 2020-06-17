@@ -7,6 +7,9 @@
 #include <cuhttpactionfactoryi.h>
 #include <QString>
 
+#include "cuhttpsrcman.h"
+#include "cuhttpbundledsrcreq.h"
+
 class CuThreadFactoryImplI;
 class CuThreadsEventBridgeFactory_I;
 class CuDataListener;
@@ -68,7 +71,7 @@ class CumbiaHttpPrivate;
  * be unregistered and deleted.
  *
  */
-class CumbiaHttp : public Cumbia, public CuHTTPActionListener
+class CumbiaHttp : public Cumbia, public CuHttpBundledSrcReqListener, public CuHttpSrcQueueManListener, public CuHTTPActionListener
 {
 
 public:
@@ -110,6 +113,14 @@ private:
 public:
     void onActionStarted(const string &source, CuHTTPActionA::Type t);
     void onActionFinished(const string &source, CuHTTPActionA::Type t);
+
+    // CuHttpSrcQueueManListener interface
+public:
+    void onSrcBundleReqReady(const QList<SrcItem> &srcs);
+
+    // CuHttpBundledSrcReqListener interface
+public:
+    void onSrcBundleReplyReady(const QByteArray &json);
 };
 
 #endif // CUMBIAHTTP_H

@@ -22,6 +22,8 @@ public:
                           CuHttpAuthManager *authman,
                           CuHttpChannelReceiver *cr) const;
     CuHTTPActionA::Type getType() const;
+    CuHTTPActionFactoryI* clone() const;
+    CuData options() const;
 private:
     CuHTTPReaderFactoryPrivate *d;
 };
@@ -41,7 +43,8 @@ public:
                           CuHttpAuthManager *authman,
                           CuHttpChannelReceiver * cr= nullptr) const;
     CuHTTPActionA::Type getType() const;
-
+    CuHTTPActionFactoryI* clone() const;
+    CuData options() const;
 private:
     CuData configuration;
     CuVariant m_write_val;
@@ -60,9 +63,11 @@ public:
                           CuHttpAuthManager *authman,
                           CuHttpChannelReceiver *cr = nullptr) const;
     CuHTTPActionA::Type getType() const;
+    CuHTTPActionFactoryI* clone() const;
+    CuData options() const;
 
 private:
-    CuData options;
+    CuData m_o;
 };
 
 #endif // CUHTTPACTIONFACTORIES_H

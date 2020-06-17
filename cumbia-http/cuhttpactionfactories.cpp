@@ -50,6 +50,16 @@ CuHTTPActionA::Type CuHTTPActionReaderFactory::getType() const {
     return d->options.has("method", "read") ? CuHTTPActionA::SingleShotReader : CuHTTPActionA::Reader;
 }
 
+CuHTTPActionFactoryI *CuHTTPActionReaderFactory::clone() const {
+    CuHTTPActionReaderFactory *f = new CuHTTPActionReaderFactory(false);
+    f->d->options = d->options; // single shot option is saved in options
+    return f;
+}
+
+CuData CuHTTPActionReaderFactory::options() const {
+    return d->options;
+}
+
 void CuHTTPActionWriterFactory::setConfiguration(const CuData &conf) {
     configuration = conf;
 }
@@ -57,6 +67,11 @@ void CuHTTPActionWriterFactory::setConfiguration(const CuData &conf) {
 void CuHTTPActionWriterFactory::setWriteValue(const CuVariant &write_val) {
     m_write_val = write_val;
 }
+
+CuData CuHTTPActionWriterFactory::options() const {
+    return configuration;
+}
+
 
 CuHTTPActionWriterFactory::~CuHTTPActionWriterFactory() {
 
@@ -78,8 +93,15 @@ CuHTTPActionA::Type CuHTTPActionWriterFactory::getType() const {
     return CuHTTPActionA::Writer;
 }
 
+CuHTTPActionFactoryI *CuHTTPActionWriterFactory::clone() const {
+    CuHTTPActionWriterFactory* f = new CuHTTPActionWriterFactory;
+    f->setConfiguration(configuration);
+    f->setWriteValue(m_write_val);
+    return f;
+}
+
 void CuHTTPActionConfFactory::setOptions(const CuData &o) {
-    options = o;
+    m_o = o;
 }
 
 CuHTTPActionConfFactory::~CuHTTPActionConfFactory() {
@@ -96,5 +118,16 @@ CuHTTPActionA *CuHTTPActionConfFactory::create(const CuHTTPSrc &s,
 
 CuHTTPActionA::Type CuHTTPActionConfFactory::getType() const {
     return CuHTTPActionA::Config;
+}
+
+CuHTTPActionFactoryI *CuHTTPActionConfFactory::clone() const
+{
+    CuHTTPActionConfFactory *f = new CuHTTPActionConfFactory;
+    f->m_o = this->m_o;
+    return f;
+}
+
+CuData CuHTTPActionConfFactory::options() const {
+    return m_o;
 }
 

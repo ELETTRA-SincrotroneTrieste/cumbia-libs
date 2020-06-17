@@ -67,10 +67,12 @@ SOURCES += \
     cuhttpauthcookiestore.cpp \
     cuhttpauthmanager.cpp \
     cuhttpauthmanagertools.cpp \
+    cuhttpbundledsrcreq.cpp \
     cuhttpchannelreceiver.cpp \
     cuhttpcontrolsreader.cpp \
     cuhttpcontrolswriter.cpp \
     cuhttpregisterengine.cpp \
+    cuhttpsrcman.cpp \
     cumbiahttp.cpp \
     cumbiahttpworld.cpp \
     protocol/tango/cuhttpprotocolhelpers.cpp \
@@ -91,11 +93,13 @@ HEADERS += \
     cuhttpauthcookiestore.h \
     cuhttpauthmanager.h \
     cuhttpauthmanagertools.h \
+    cuhttpbundledsrcreq.h \
     cuhttpchannelreceiver.h \
     cuhttpcontrolsreader.h \
     cuhttpcontrolswriter.h \
     cuhttpregisterengine.h \
     cuhttpsrchelper_i.h \
+    cuhttpsrcman.h \
     cumbiahttp.h \
     cumbiahttpworld.h \
     protocol/cuhttpprotocolhelper_i.h \
