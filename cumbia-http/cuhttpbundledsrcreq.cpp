@@ -42,7 +42,8 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
 
 void CuHttpBundledSrcReq::onNewData() {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
-    QByteArray ba = r->readAll();
+    qint64 bytes_avail = r->bytesAvailable();
+    QByteArray ba = r->read(bytes_avail);
     qDebug() << __PRETTY_FUNCTION__ << "received " << ba;
     bool buf_empty = d->buf.isEmpty();
     if(!buf_empty)
@@ -60,7 +61,7 @@ void CuHttpBundledSrcReq::onNewData() {
 void CuHttpBundledSrcReq::onReplyFinished()
 {
     qDebug() << __PRETTY_FUNCTION__ << this << "deleting reply " << sender() << " later";
-    sender()->deleteLater();
+//    sender()->deleteLater();
 }
 
 void CuHttpBundledSrcReq::onReplyDestroyed(QObject *o)
