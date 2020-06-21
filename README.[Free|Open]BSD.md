@@ -106,9 +106,7 @@ two.
 > make
 > make install
 
-QWT
-
-#### 4c. FreeBSD
+### QWT
 
 Download latest qwt
 
@@ -126,18 +124,6 @@ OBJECTS_DIR       = objects
 > qmake && make -j9
 > su
 > make install
-
-####  4d. OpenBSD
-
-We choose to install the package from ports
-
-> cd /usr/ports/x11/qwt
-
-> /usr/ports/x11/qwt
-
-> export FLAVOR=qt5
-
-> make install clean
 
 ## cumbia libs
 
