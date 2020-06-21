@@ -6,11 +6,33 @@ Prerequisites
 
 > pkg install git cmake cvs python3 doxygen
 
-Qt installation
+### Qt
 
-1. ZEROMQ
+#### Openbsd: Qt
 
-1a. FreeBSD
+Find qt5 meta package
+
+> pkg_info | grep qt
+
+```
+...
+qt5-5.13.2p1        C++ general-purpose toolkit, meta-package
+qtbase-5.13.2p0     C++ general-purpose toolkit
+qtcharts-5.13.2     Qt5 components for drawing 2D charts
+...
+```
+
+Install the qt meta-package:
+
+> pkg_add qt5-5.13.2p1  
+
+#### Note
+qmake is named qmake-qt5
+
+
+### 1. ZEROMQ
+
+#### 1a. FreeBSD
 
 Configuration script warns that sodium library is missing:
 
@@ -29,7 +51,7 @@ If you want to build tests, you will have to fix some includes. For now, disable
 > cd cppzmq && mkdir build && cd build
 cmake .. && make -j9
 
-1b. OpenBSD
+#### 1b. OpenBSD
 
 Install zeromq from ports
 
@@ -41,7 +63,7 @@ Install zeromq from ports
 
 > make install clean
 
-2. OMNIORB
+### 2. OMNIORB
 
 #### 2a. FreeBSD
 
