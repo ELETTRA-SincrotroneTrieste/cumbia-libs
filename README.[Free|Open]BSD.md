@@ -41,12 +41,9 @@ Install zeromq from ports
 
 > make install clean
 
-
-
-
 2. OMNIORB
 
-2a. FreeBSD
+#### 2a. FreeBSD
 
 > pkg install omniorb
 
@@ -56,7 +53,7 @@ New packages to be INSTALLED:
 
 ```
 
-2b OpenBSD
+#### 2b. OpenBSD
 
 Download omniorb and then
 
@@ -70,15 +67,15 @@ Download omniorb and then
 
 
 
-3. EPICS -- does not build
+### 3. EPICS -- does not build
 wget https://epics.anl.gov/download/base/base-7.0.3.1.tar.gz
 tar xzf  base-7.0.3.1.tar.gz 
 cd  base-7.0.3.1
 make -j9
 
 
-4. TANGO
-*WARNING* Needs Python2 in path
+### 4. TANGO
+*WARNING* Needs Python2 in path  (issue encountered on FreeBSD)
 
 git clone https://github.com/tango-controls/tango-idl.git
 git clone https://github.com/tango-controls/cppTango.git
@@ -95,11 +92,11 @@ git clone https://github.com/tango-controls/cppTango.git
 > mkdir build && cd build
 
 
-4a. FreeBSD
+#### 4a. FreeBSD
 
 > cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.4.0 -DZMQ_BASE=/usr/local/zeromq -DCPPZMQ_BASE=/usr/local/zeromq  -DOMNIIDL_PATH=/usr/local -DOMNI_BASE=/usr/local -DIDL_BASE=/usr/local/tango-9.4.0  -DBUILD_TESTING=off
 
-4b. OpenBSD
+#### 4b. OpenBSD
 
 In this case, zeromq was built through ports while omniorb was installed by hand. Just need to adjust the paths for the 
 two.
@@ -111,7 +108,7 @@ two.
 
 QWT
 
-4c. FreeBSD
+#### 4c. FreeBSD
 
 Download latest qwt
 
@@ -130,7 +127,7 @@ OBJECTS_DIR       = objects
 > su
 > make install
 
-OpenBSD
+####  4d. OpenBSD
 
 We choose to install the package from ports
 
