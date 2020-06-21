@@ -10,6 +10,8 @@ Qt installation
 
 1. ZEROMQ
 
+1a. FreeBSD
+
 Configuration script warns that sodium library is missing:
 
 > pkg install libsodium
@@ -27,10 +29,24 @@ If you want to build tests, you will have to fix some includes. For now, disable
 > cd cppzmq && mkdir build && cd build
 cmake .. && make -j9
 
+1b. OpenBSD
+
+Install zeromq from ports
+
+> cd /usr/ports/net/zeromq
+
+> make install clean
+
+> cd /usr/ports/net/cppzmq
+
+> make install clean
+
 
 
 
 2. OMNIORB
+
+2a. FreeBSD
 
 > pkg install omniorb
 
@@ -39,6 +55,20 @@ New packages to be INSTALLED:
         omniORB: 4.2.3_1
 
 ```
+
+2b OpenBSD
+
+Download omniorb and then
+
+> tar xjf omniORB-4.3.0-b1.tar.bz2
+
+> cd omniORB-4.3.0
+
+> ./configure --prefix=/usr/local/omniorb-4.3.0
+
+> gmake && gmake install
+
+
 
 3. EPICS -- does not build
 wget https://epics.anl.gov/download/base/base-7.0.3.1.tar.gz
@@ -56,16 +86,33 @@ git clone https://github.com/tango-controls/cppTango.git
 > cd tango-idl/
 > mkdir build
 > cd build
+
 > cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.4.0
-> sudo make install
+> su
+> make install
 
 > cd ../../cppTango/
 > mkdir build && cd build
+
+
+4a. FreeBSD
+
 > cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.4.0 -DZMQ_BASE=/usr/local/zeromq -DCPPZMQ_BASE=/usr/local/zeromq  -DOMNIIDL_PATH=/usr/local -DOMNI_BASE=/usr/local -DIDL_BASE=/usr/local/tango-9.4.0  -DBUILD_TESTING=off
+
+4b. OpenBSD
+
+In this case, zeromq was built through ports while omniorb was installed by hand. Just need to adjust the paths for the 
+two.
+
+> cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.4.0 -DZMQ_BASE=/usr/local -DCPPZMQ_BASE=/usr/local -DOMNIIDL_PATH=/usr/local/omniorb-4.3.0 -DOMNI_BASE=/usr/local/omniorb-4.3.0 -DIDL_BASE=/usr/local/tango-9.4.0  -DBUILD_TESTING=off
+
 > make
 > make install
 
 QWT
+
+4c. FreeBSD
+
 Download latest qwt
 
 > unzip qwt-6.1.4.zip
@@ -79,11 +126,21 @@ OBJECTS_DIR       = objects
 
 ```
 
-
 > qmake && make -j9
 > su
 > make install
 
+OpenBSD
+
+We choose to install the package from ports
+
+> cd /usr/ports/x11/qwt
+
+> /usr/ports/x11/qwt
+
+> export FLAVOR=qt5
+
+> make install clean
 
 ## cumbia libs
 
