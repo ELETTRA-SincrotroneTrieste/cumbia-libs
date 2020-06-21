@@ -125,6 +125,8 @@ two.
 
 > cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.4.0 -DZMQ_BASE=/usr/local -DCPPZMQ_BASE=/usr/local -DOMNIIDL_PATH=/usr/local/omniorb-4.3.0 -DOMNI_BASE=/usr/local/omniorb-4.3.0 -DIDL_BASE=/usr/local/tango-9.4.0  -DBUILD_TESTING=off
 
+Note: build is successful on OpenBSD even without disabling testing, that is, omitting -DBUILD_TESTING=off
+
 > make
 > make install
 
