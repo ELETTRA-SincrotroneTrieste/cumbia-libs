@@ -89,7 +89,7 @@ public:
 
     virtual int getType() const;
 
-    void addAction(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI &f);
+    void addAction(const std::string &source, CuDataListener *l, CuHTTPActionA::Type t);
     void unlinkListener(const string &source, CuHTTPActionA::Type t, CuDataListener *l);
     CuHTTPActionA *findAction(const std::string &source, CuHTTPActionA::Type t) const;
 

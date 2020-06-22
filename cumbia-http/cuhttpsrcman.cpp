@@ -1,5 +1,6 @@
 #include "cuhttpsrcman.h"
 #include "cuhttpactionfactoryi.h"
+#include "cuhttp_source.h"
 #include <QQueue>
 #include <QTimer>
 #include <QMultiMap>
@@ -15,12 +16,17 @@ public:
     CuHttpSrcQueueManListener *lis;
 };
 
-SrcItem::SrcItem(const std::string &s, CuDataListener *li, const CuHTTPActionFactoryI &fa) :
-    src(s), l(li), factory(fa.clone()) { }
+SrcItem::SrcItem(const std::string &s, CuDataListener *li, const CuHTTPActionA::Type typ, const QString &chan) :
+    src(s), l(li), type(typ), channel(typ == CuHTTPActionA::Reader || typ == CuHTTPActionA::Stop ? chan : "") {
+}
 
 SrcItem::SrcItem() : l(nullptr) { }
 
-SrcData::SrcData(CuDataListener *l, const CuHTTPActionA::Type typ) : lis(l), type(typ) { }
+SrcData::SrcData(CuDataListener *l, const CuHTTPActionA::Type typ, const QString &chan) : lis(l), type(typ), channel(chan) { }
+
+bool SrcData::isEmpty() const {
+    return this->lis == nullptr;
+}
 
 SrcData::SrcData() : lis(nullptr) { }
 
@@ -40,11 +46,18 @@ void CuHttpSrcMan::setQueueManListener(CuHttpSrcQueueManListener *l) {
     d->lis = l;
 }
 
-void CuHttpSrcMan::enqueueSrc(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI &f) {
+void CuHttpSrcMan::enqueueSrc(const CuHTTPSrc &httpsrc, CuDataListener *l, const CuHTTPActionA::Type &type, const QString& chan) {
     if(d->timer->interval() > TMR_DEQUEUE_INTERVAL)
         d->timer->setInterval(TMR_DEQUEUE_INTERVAL); // restore quick timeout if new sources are on the way
     if(!d->timer->isActive()) d->timer->start();
-    d->srcq.enqueue(SrcItem(source, l, f));
+    std::string s = httpsrc.prepare();
+    d->srcq.enqueue(SrcItem(s, l, type, chan));
+}
+
+QList<SrcData> CuHttpSrcMan::takeSrcs(const QString &src) const {
+    QList<SrcData> srcd = d->srcd.values(src);
+    d->srcd.remove(src);
+    return srcd;
 }
 
 void CuHttpSrcMan::onDequeueTimeout() {
@@ -52,7 +65,7 @@ void CuHttpSrcMan::onDequeueTimeout() {
     QList<SrcItem> items;
     while(!d->srcq.isEmpty()) {
         const SrcItem& i = d->srcq.dequeue();
-        d->srcd.insert(QString::fromStdString(i.src), SrcData(i.l, i.factory->getType()));
+        d->srcd.insert(QString::fromStdString(i.src), SrcData(i.l, i.type, i.channel));
         items.append(i);
     }
     // slow down timer if no sources

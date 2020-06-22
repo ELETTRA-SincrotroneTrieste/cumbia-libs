@@ -20,6 +20,9 @@ public:
     explicit HttpTest(CumbiaPool *cu_p, QWidget *parent = 0);
     ~HttpTest();
 
+private slots:
+    void onStopSrc();
+
 private:
     CumbiaPool *cu_pool;
     QuLogImpl m_log_impl;

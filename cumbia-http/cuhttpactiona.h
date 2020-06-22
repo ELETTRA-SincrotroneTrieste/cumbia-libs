@@ -18,7 +18,7 @@ class CuHTTPActionA : public QObject
     Q_OBJECT
 public:
 
-    enum Type { Reader = 0, SingleShotReader, Writer, Config, ChannelReceiver };
+    enum Type { Reader = 0, SingleShotReader, Writer, Config, ChannelReceiver, Stop };
 
     enum MsgFmt { FmtText, FmtJson, FmtHtml };
 
@@ -65,7 +65,7 @@ public:
 
     virtual void stop() = 0;
 
-    virtual void decodeMessage(const QJsonDocument& json) = 0;
+    virtual void decodeMessage(const QJsonValue& v) = 0;
 
     virtual void setHttpActionListener(CuHTTPActionListener *l);
 

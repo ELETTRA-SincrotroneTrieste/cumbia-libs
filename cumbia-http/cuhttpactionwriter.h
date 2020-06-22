@@ -41,7 +41,7 @@ public:
     void start();
     bool exiting() const;
     void stop();
-    void decodeMessage(const QJsonDocument &json);
+    void decodeMessage(const QJsonValue &jsv);
     void notifyActionFinished();
     QNetworkRequest prepareRequest(const QUrl& url) const;
 };

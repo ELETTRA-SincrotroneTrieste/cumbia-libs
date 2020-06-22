@@ -19,12 +19,16 @@ public:
 
     bool source_valid(const std::string& s);
 
-    bool json_decode(const QJsonDocument &json, CuData& out );
+    bool json_decode(const QByteArray &ba, std::list< CuData>& out ) const;
 
-    QJsonDocument make_error(const QString& msg) const;
+    bool json_decode(const QJsonValue &v, CuData& out ) const;
+
+    QJsonObject make_error(const QString& msg) const;
 
 private:
     std::vector<std::string> m_src_patterns;
+
+    void m_json_decode(const QJsonValue &o, CuData& out) const;
 };
 
 #endif // CUMBIAHTTPWORLD_H

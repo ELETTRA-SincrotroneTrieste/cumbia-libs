@@ -27,13 +27,14 @@ signals:
 public:
     QString getSourceName() const;
     Type getType() const;
-    void addDataListener(CuDataListener *l);
+    void addDataListener(const QString& src, CuDataListener *l);
+    void addDataListener( CuDataListener *l);
     void removeDataListener(CuDataListener *l);
     size_t dataListenersCount();
     void start();
     bool exiting() const;
     void stop();
-    void decodeMessage(const QJsonDocument &json);
+    void decodeMessage(const QJsonValue &json);
     QNetworkRequest prepareRequest(const QUrl& url) const;
 
 private:

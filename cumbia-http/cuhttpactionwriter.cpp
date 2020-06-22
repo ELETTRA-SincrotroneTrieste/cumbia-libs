@@ -125,10 +125,10 @@ void CuHttpActionWriter::stop() {
     d->listeners.clear();
 }
 
-void CuHttpActionWriter::decodeMessage(const QJsonDocument &json) {
+void CuHttpActionWriter::decodeMessage(const QJsonValue &jsv) {
     CuData res("src", d->http_target.toStdString());
     CumbiaHTTPWorld httpw;
-    httpw.json_decode(json, res);
+    httpw.json_decode(jsv, res);
     if(res["err"].toBool() && !res["authorized"].toBool()) {
         // manage authorization. Get a dialog to insert user and password. Pass the auth url
         d->auth_manager->authPrompt(QuString(res, "auth_url"), false); // false: use dialog not cli

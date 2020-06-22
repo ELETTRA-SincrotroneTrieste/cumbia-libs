@@ -14,11 +14,12 @@ public:
     QByteArray buf;
     QByteArray req_payload;
     QByteArray m_json_pack(const QList<SrcItem>& srcs) const;
-
+    CuHttpBundledSrcReqListener *listener;
 };
 
-CuHttpBundledSrcReq::CuHttpBundledSrcReq(const QList<SrcItem> &srcs, QObject *parent) : QObject(parent) {
+CuHttpBundledSrcReq::CuHttpBundledSrcReq(const QList<SrcItem> &srcs, CuHttpBundledSrcReqListener *l, QObject *parent) : QObject(parent) {
     d = new CuHttpBundledSrcReqPrivate(srcs);
+    d->listener = l;
 }
 
 CuHttpBundledSrcReq::~CuHttpBundledSrcReq()
@@ -79,8 +80,8 @@ void CuHttpBundledSrcReq::onSslErrors(const QList<QSslError> &errors) {
 void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError code)
 {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
-    QString e = CumbiaHTTPWorld().make_error(r->errorString() + QString( "code %1").arg(code)).toJson();
-    qDebug() << __PRETTY_FUNCTION__ << e;
+    QJsonObject eo = CumbiaHTTPWorld().make_error(r->errorString() + QString( "code %1").arg(code));
+    qDebug() << __PRETTY_FUNCTION__ << QJsonValue(eo).toString();
 }
 
 void CuHttpBundledSrcReq::m_on_buf_complete() {
@@ -90,7 +91,7 @@ void CuHttpBundledSrcReq::m_on_buf_complete() {
         QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
         if(jsd.isNull())
             perr("CuHTTPActionA.m_on_buf_complete: invalid json: %s\n", qstoc(json));
-        qDebug() << __PRETTY_FUNCTION__ << "received " << jsd.toJson();
+        d->listener->onSrcBundleReplyReady(jsd.toJson());
     }
 }
 
@@ -108,14 +109,15 @@ QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs) c
     foreach(const SrcItem& i, srcs) {
         QJsonObject so;
         so["src"] = QString::fromStdString(i.src);
-        if(i.factory->getType() == CuHTTPActionA::SingleShotReader) so["method"] = "read";
-        else if(i.factory->getType() == CuHTTPActionA::Reader) so["method"] = "s";
-        else if(i.factory->getType() == CuHTTPActionA::Writer) so["method"] = "write";
-        else if(i.factory->getType() == CuHTTPActionA::Config) so["method"] = "conf";
+        so["op1"] = "p"; // configuration is first operation returned in sync reply
+        so["channel"] = i.channel;
+        if(i.type == CuHTTPActionA::SingleShotReader) so["method"] = "read";
+        else if(i.type == CuHTTPActionA::Reader) so["method"] = "s";
+        else if(i.type == CuHTTPActionA::Writer) so["method"] = "write";
+        else if(i.type == CuHTTPActionA::Config) so["method"] = "conf";
+        else if(i.type == CuHTTPActionA::Stop) so["method"] = "u";
         else so["method"] = "invalid";
-        QJsonArray keys;
-        keys.append("src");
-        keys.append("method");
+        QJsonArray keys { "src", "method", "op1", "channel" };
         so["keys"] = keys;
         sa.append(so);
     }

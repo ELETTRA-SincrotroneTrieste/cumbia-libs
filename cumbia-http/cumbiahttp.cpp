@@ -48,8 +48,8 @@ public:
  */
 CumbiaHttp::CumbiaHttp(const QString &url,
                        const QString& channel,
-                                 CuThreadFactoryImplI *tfi,
-                                 CuThreadsEventBridgeFactory_I *teb)
+                       CuThreadFactoryImplI *tfi,
+                       CuThreadsEventBridgeFactory_I *teb)
 {
     d = new CumbiaHttpPrivate;
     d->m_threadsEventBridgeFactory = teb;
@@ -107,48 +107,38 @@ void CumbiaHttp::onActionFinished(const string &source, CuHTTPActionA::Type t) {
 
 void CumbiaHttp::onSrcBundleReqReady(const QList<SrcItem> &srcs) {
     qDebug() << __PRETTY_FUNCTION__ << "bundle of " << srcs.size() << "sources ready";
-    CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(srcs);
+    CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(srcs, this);
     r->start(d->url + "/bu/src-bundle", d->qnam);
 }
 
 void CumbiaHttp::onSrcBundleReplyReady(const QByteArray &json) {
-    qDebug() << __PRETTY_FUNCTION__ << "src bundle result from server " << json;
-}
-
-void CumbiaHttp::addAction(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI &f)
-{
     CumbiaHTTPWorld w;
-    if(w.source_valid(source))
-        d->src_q_man->enqueueSrc(source, l, f);
-//    {
-//        CuHTTPSrc httpsrc(source, d->src_helpers);
-//        CuHTTPActionFactoryService *af =
-//                static_cast<CuHTTPActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuHTTPActionFactoryService::CuHTTPActionFactoryServiceType)));
-//        CuHTTPActionA *a = af->findActive(source, f.getType());
-//        if(!a) {
-//            a = af->registerAction(httpsrc, f, d->qnam, d->url, d->chan_recv, d->auth_man);
-//            qDebug() << __PRETTY_FUNCTION__ << "registered action with source " << source.c_str() << f.getType();
-//            a->setHttpActionListener(this);
-//            a->start();
-//        }
-//        else {
-//            cuprintf("CumbiaHttp.addAction: action %p already found for source \"%s\" and type %d thread 0x%lx TYPE %d\n",
-//                     a, source.c_str(), f.getType(), pthread_self(), f.getType());
-//        }
-//        a->addDataListener(l);
-//    }
-//    else
-//        perr("CumbiaHttp.addAction: source \"%s\" is not valid, ignoring", source.c_str());
+    std::list<CuData> dali;
+    bool ok = w.json_decode(json, dali);
+    for(std::list<CuData>::iterator it = dali.begin(); it != dali.end(); ++it) {
+        const std::string &src = it->value("src").toString();
+        foreach(const SrcData& srcd, d->src_q_man->takeSrcs(QString::fromStdString(src))) {
+            qDebug() << __PRETTY_FUNCTION__ << json << src.c_str() << "listener " << srcd.lis << dynamic_cast<QObject* >(srcd.lis)->objectName();
+            srcd.lis->onUpdate(*it);
+            if(srcd.type == CuHTTPActionA::Reader)
+                d->chan_recv->addDataListener(QString::fromStdString(src), srcd.lis);
+            else if(srcd.type == CuHTTPActionA::Stop) {
+                d->chan_recv->removeDataListener(srcd.lis);
+            }
+        }
+    }
 }
 
-void CumbiaHttp::unlinkListener(const string &source, CuHTTPActionA::Type t, CuDataListener *l)
+void CumbiaHttp::addAction(const std::string &source, CuDataListener *l, CuHTTPActionA::Type t)
 {
-    cuprintf("CumbiaHttp::unlinkListener %s %d\n", source.c_str(), t);
-    CuHTTPActionFactoryService *af =
-            static_cast<CuHTTPActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuHTTPActionFactoryService::CuHTTPActionFactoryServiceType)));
-    std::vector<CuHTTPActionA *> actions = af->find(source, t);
-    for(size_t i = 0; i < actions.size(); i++) {
-        actions[i]->removeDataListener(l); /* when no more listeners, a stops itself */
+    if(CumbiaHTTPWorld().source_valid(source)) {
+        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, t, d->chan_recv->channel());
+    }
+}
+
+void CumbiaHttp::unlinkListener(const string &source, CuHTTPActionA::Type t, CuDataListener *l) {
+    if(CumbiaHTTPWorld().source_valid(source)) {
+        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, t, d->chan_recv->channel());
     }
 }
 
@@ -221,7 +211,7 @@ CuThreadsEventBridgeFactory_I *CumbiaHttp::getThreadEventsBridgeFactory() const
 }
 
 QString CumbiaHttp::url() const {
-     return d->url;
+    return d->url;
 }
 
 int CumbiaHttp::getType() const {

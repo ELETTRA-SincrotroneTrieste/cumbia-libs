@@ -2,28 +2,30 @@
 #define SRCQUEUEMANAGER_H
 
 #include <QObject>
-#include "cuhttpactionfactoryi.h"
+#include "cuhttpactiona.h"
 
 class SrcQueueManagerPrivate;
 class CuDataListener;
-class CuHTTPActionFactoryI;
 
 class SrcData {
 public:
     SrcData();
-    SrcData(CuDataListener *l, const CuHTTPActionA::Type typ);
+    SrcData(CuDataListener *l, const CuHTTPActionA::Type typ, const QString& chan);
     CuDataListener *lis;
     CuHTTPActionA::Type type;
+    bool isEmpty() const;
+    QString channel;
 };
 
 class SrcItem {
 public:
     SrcItem();
-    SrcItem(const std::string& s, CuDataListener*li, const CuHTTPActionFactoryI& fa);
+    SrcItem(const std::string& s, CuDataListener*li, const CuHTTPActionA::Type type, const QString& chan);
 
     std::string src;
     CuDataListener *l;
-    CuHTTPActionFactoryI *factory;
+    CuHTTPActionA::Type type;
+    QString channel;
 };
 
 class CuHttpSrcQueueManListener {
@@ -41,7 +43,9 @@ public:
     explicit CuHttpSrcMan(CuHttpSrcQueueManListener* l, QObject *parent = nullptr);
     virtual ~CuHttpSrcMan();
     void setQueueManListener(CuHttpSrcQueueManListener* l);
-    void enqueueSrc(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI &f);
+    void enqueueSrc(const CuHTTPSrc & httpsrc, CuDataListener *l, const CuHTTPActionA::Type &type, const QString &chan);
+
+    QList<SrcData> takeSrcs(const QString& src) const;
 
 private slots:
     void onDequeueTimeout();

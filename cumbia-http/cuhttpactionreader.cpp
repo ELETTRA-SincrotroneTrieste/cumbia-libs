@@ -112,10 +112,10 @@ size_t CuHTTPActionReader::dataListenersCount() {
  * Registered CuDataListener instances are updated, and if the type is *single shot*, the exit flag is set to
  * true. In this latter case, CuHTTPActionA::onReplyDestroyed will lead to action disposal.
  */
-void CuHTTPActionReader::decodeMessage(const QJsonDocument &json) {
+void CuHTTPActionReader::decodeMessage(const QJsonValue &v) {
     CuData res = getToken();
     CumbiaHTTPWorld httpw;
-    httpw.json_decode(json, res);
+    httpw.json_decode(v, res);
     std::set<CuDataListener *> lcp = d->listeners;
     for(std::set<CuDataListener *>::iterator it = lcp.begin(); it != lcp.end(); ++it)
         (*it)->onUpdate(res);

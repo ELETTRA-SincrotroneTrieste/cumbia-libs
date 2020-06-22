@@ -36,7 +36,7 @@ public:
     void removeDataListener(CuDataListener *l);
     size_t dataListenersCount();
 
-    void decodeMessage(const QJsonDocument& json);
+    void decodeMessage(const QJsonValue &v);
 
     bool exiting() const;
     void mergeOptions(const CuData& o);

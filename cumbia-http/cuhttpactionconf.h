@@ -25,7 +25,7 @@ public:
     void start();
     bool exiting() const;
     void stop();
-    void decodeMessage(const QJsonDocument &json);
+    void decodeMessage(const QJsonValue &data_v);
 
 private:
     CuHttpActionConfPrivate *d;

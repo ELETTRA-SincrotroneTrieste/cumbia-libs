@@ -90,10 +90,10 @@ void CuHttpActionConf::stop() {
     d->exit = true;
 }
 
-void CuHttpActionConf::decodeMessage(const QJsonDocument &json) {
+void CuHttpActionConf::decodeMessage(const QJsonValue &data_v) {
     CuData res("src", d->src.toStdString());
     CumbiaHTTPWorld httpw;
-    httpw.json_decode(json, res);
+    httpw.json_decode(data_v, res);
     d->exit = true;
     cuprintf("\e[1;36mCuHttpActionConf::decodeMessage %ld listeners\e[0m\n", d->listeners.size());
     for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it) {

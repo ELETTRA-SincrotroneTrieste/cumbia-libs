@@ -12,9 +12,22 @@ HttpTest::HttpTest(CumbiaPool *cumbia_pool, QWidget *parent) :
     // needs DEFINES -= QT_NO_DEBUG_OUTPUT in .pro
     qDebug() << __PRETTY_FUNCTION__ << "available engines" << mloader.modules();
     ui->setupUi(this, cumbia_pool, m_ctrl_factory_pool);
+    connect(ui->pbStop, SIGNAL(clicked()), this, SLOT(onStopSrc()));
 }
 
 HttpTest::~HttpTest()
 {
     delete ui;
+}
+
+void HttpTest::onStopSrc() {
+    QList<QCheckBox *> cbs = findChildren<QCheckBox *>(QRegularExpression("cb.*"));
+    QList<QWidget *> wids;
+    foreach(QCheckBox *cb, cbs) {
+        if(cb->isChecked()) wids << findChild<QWidget *>(cb->objectName().remove("cb"));
+    }
+    foreach(QWidget *w, wids) {
+        if(qobject_cast<QuLabel *>(w)) qobject_cast<QuLabel *>(w)->unsetSource();
+        else if(qobject_cast<QuTrendPlot *>(w)) qobject_cast<QuTrendPlot *>(w)->unsetSources();
+    }
 }

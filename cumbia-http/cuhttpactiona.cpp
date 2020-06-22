@@ -1,6 +1,8 @@
 #include "cuhttpactiona.h"
 #include "cumbiahttpworld.h"
 #include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 #include <QJsonParseError>
 #include <QtDebug>
 
@@ -90,7 +92,9 @@ void CuHTTPActionA::m_on_buf_complete() {
         QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
         if(jsd.isNull())
             perr("CuHTTPActionA.m_on_buf_complete: invalid json: %s\n", qstoc(json));
-        decodeMessage(jsd);
+        else {
+            decodeMessage(jsd.array());
+        }
     }
 }
 

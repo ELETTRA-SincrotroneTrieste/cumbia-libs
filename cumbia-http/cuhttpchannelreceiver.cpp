@@ -1,12 +1,14 @@
 #include "cuhttpchannelreceiver.h"
 #include "cuhttpactionreader.h"
+#include "cumbiahttpworld.h"
 #include <cudatalistener.h>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 
 class CuHttpChannelReceiverPrivate {
 public:
-    QMap<QString, CuHTTPActionReader *> rmap;
+    QMultiMap<QString, CuDataListener *> rmap;
     QString url, chan;
     time_t data_exp_t;
     bool exit;
@@ -26,12 +28,13 @@ QString CuHttpChannelReceiver::channel() const {
     return d->chan;
 }
 
-void CuHttpChannelReceiver::registerReader(const QString &src, CuHTTPActionReader *r) {
-    d->rmap.insert(src, r);
+void CuHttpChannelReceiver::registerReader(const QString &src, CuHTTPActionReader *r)
+{
+
 }
 
 void CuHttpChannelReceiver::unregisterReader(const QString &src) {
-    d->rmap.remove(src);
+
 }
 
 /*!
@@ -66,9 +69,21 @@ CuHTTPActionA::Type CuHttpChannelReceiver::getType() const {
     return CuHTTPActionA::ChannelReceiver;
 }
 
-void CuHttpChannelReceiver::addDataListener(CuDataListener *) { }
+void CuHttpChannelReceiver::addDataListener(const QString &src, CuDataListener *l) {
+    d->rmap.insert(src, l);
+}
 
-void CuHttpChannelReceiver::removeDataListener(CuDataListener *) { }
+void CuHttpChannelReceiver::addDataListener(CuDataListener *l) { }
+
+void CuHttpChannelReceiver::removeDataListener(CuDataListener *l) {
+    QMutableMapIterator<QString, CuDataListener* > it(d->rmap);
+    while(it.hasNext()) {
+        it.next();
+        if(it.value() == l) {
+            it.remove();
+        }
+    }
+}
 
 size_t CuHttpChannelReceiver::dataListenersCount() {
     return d->rmap.size();
@@ -90,17 +105,26 @@ void CuHttpChannelReceiver::stop() {
     stopRequest();
 }
 
-void CuHttpChannelReceiver::decodeMessage(const QJsonDocument &json) {
-    const QJsonObject data_o = json.object();
-    const QString& src = data_o["src"].toString();
-    double t_ms = data_o["timestamp_ms"].toDouble();
-    time_t diff_t;
-    bool data_fresh = m_data_fresh(t_ms, &diff_t);
-    if(d->rmap.contains(src) && data_fresh) {
-        d->rmap.value(src)->decodeMessage(json);
+void CuHttpChannelReceiver::decodeMessage(const QJsonValue &v) {
+    const QJsonArray a = v.toArray(); // data arrives within an array
+    if(a.size() == 1) {
+        const QString& src = a.at(0)["src"].toString();
+        double t_ms = a.at(0)["timestamp_ms"].toDouble();
+        qDebug() << __PRETTY_FUNCTION__ << v;
+        time_t diff_t;
+        bool data_fresh = m_data_fresh(t_ms, &diff_t);
+        if(d->rmap.contains(src) && data_fresh) {
+            CuData res("src", src.toStdString());
+            CumbiaHTTPWorld httpw;
+            httpw.json_decode(a.at(0), res);
+            foreach(CuDataListener *l, d->rmap.values(src)) {
+                printf("\e[1;32m UPDATING %s with value %s\e[0m\n", qstoc(src), datos(res));
+                l->onUpdate(res);
+            }
+        }
+        else if(!data_fresh)
+            perr("CuHttpChannelReceiver::decodeMessage: source \"%s\" data is too old: %lds > %lds ", qstoc(src), diff_t, d->data_exp_t);
     }
-    else if(!data_fresh)
-        perr("CuHttpChannelReceiver::decodeMessage: source \"%s\" data is too old: %lds > %lds ", qstoc(src), diff_t, d->data_exp_t);
 }
 
 QNetworkRequest CuHttpChannelReceiver::prepareRequest(const QUrl &url) const
@@ -141,11 +165,11 @@ bool CuHttpChannelReceiver::m_data_fresh(const double timestamp_ms, time_t* diff
     strcpy(_now, ctime(&now));
     strcpy(_then, ctime(&ts_sec));
     *diff_t = now - ts_sec;
-//    printf("CaCuTangoEImpl data ts %s, data now %s now -ts_sec %ld < %ld? %s\n",
-//           _then, _now, now - ts_sec, data_old, (*diff_t < data_old) ? "\e[1;32myes\e[0m" : "\e[1;31mno\e[0m");
-//    if(*diff_t >= data_old)
-//        cuprintf("CaCuTangoEImpl.m_data_valid \n\e[1;35m%ld %s -  %ld %s < 3 sec ? %ld\e[0m\n",
-//                  now, _now, ts_sec, _then, *diff_t);
+    //    printf("CaCuTangoEImpl data ts %s, data now %s now -ts_sec %ld < %ld? %s\n",
+    //           _then, _now, now - ts_sec, data_old, (*diff_t < data_old) ? "\e[1;32myes\e[0m" : "\e[1;31mno\e[0m");
+    //    if(*diff_t >= data_old)
+    //        cuprintf("CaCuTangoEImpl.m_data_valid \n\e[1;35m%ld %s -  %ld %s < 3 sec ? %ld\e[0m\n",
+    //                  now, _now, ts_sec, _then, *diff_t);
     return *diff_t < d->data_exp_t;
 }
 
