@@ -50,7 +50,6 @@ bool CumbiaHTTPWorld::json_decode(const QByteArray &ba, std::list<CuData> &out) 
 
 void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
 {
-    qDebug() << __PRETTY_FUNCTION__ << data_v;
     QJsonObject data_o = data_v.toObject();
     QStringList keys = data_o.keys();
     // value keys must be converted to the original type: Json converts all numbers to double
@@ -111,7 +110,7 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
         ts_us = strtod(data_o["timestamp"].toString().toStdString().c_str(), &endptr);
     else if(data_o.contains("timestamp_us"))
         ts_us = data_o["timestamp_us"].toDouble();
-    if(ts_us >= 0)
+    if(ts_us > 0)
         res["timestamp_us"] = ts_us;
 
     // timestamp millis
@@ -120,15 +119,8 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
     else if(ts_us >= 0)
         res["timestamp_ms"] = floor(ts_us) * 1000.0 + (ts_us - floor(ts_us)) * 10e6 / 1000.0;
 
-    if(data_o.contains("error")) {
-        res["msg"] = data_o["error"].toString().toStdString();
-        res["err"] = data_o["error"].toString().size() > 0;
-    }
-    else {
-        res["err"] = data_o["err"].toBool();
-        res["msg"] = data_o["msg"].toString().toStdString();
-    }
-
+    res["err"] = data_o["err"].toBool();
+    res["msg"] = data_o["msg"].toString().toStdString();
     //
     // to int
     foreach(const QString& k, i_keys)

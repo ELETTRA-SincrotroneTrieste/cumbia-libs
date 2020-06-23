@@ -34,6 +34,13 @@
      </property>
     </widget>
    </item>
+   <item row="7" column="1">
+    <widget class="QCheckBox" name="cbquTrendPlot2">
+     <property name="text">
+      <string>Plot 2</string>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="0" colspan="2">
     <widget class="QuLabel" name="quLabel1">
      <property name="sizePolicy">
@@ -67,12 +74,10 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="0" colspan="5">
-    <widget class="QuTrendPlot" name="quTrendPlot1">
-     <property name="sources">
-      <stringlist>
-       <string>$1/double_scalar</string>
-      </stringlist>
+   <item row="1" column="2">
+    <widget class="QCheckBox" name="cbquLabel2">
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </item>
@@ -89,6 +94,13 @@
      </property>
     </widget>
    </item>
+   <item row="7" column="0">
+    <widget class="QCheckBox" name="cbquTrendPlot1">
+     <property name="text">
+      <string>Plot 1</string>
+     </property>
+    </widget>
+   </item>
    <item row="1" column="0" colspan="2">
     <widget class="QuLabel" name="quLabel2">
      <property name="sizePolicy">
@@ -102,19 +114,10 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="0" colspan="5">
-    <widget class="QuTrendPlot" name="quTrendPlot2">
-     <property name="sources">
-      <stringlist>
-       <string>$1/long_scalar</string>
-      </stringlist>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="4">
-    <widget class="QPushButton" name="pbStop">
+   <item row="0" column="2">
+    <widget class="QCheckBox" name="cbquLabel1">
      <property name="text">
-      <string>Stop Selected</string>
+      <string/>
      </property>
     </widget>
    </item>
@@ -128,38 +131,45 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="2">
-    <widget class="QCheckBox" name="cbquLabel1">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
-    <widget class="QCheckBox" name="cbquLabel2">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QCheckBox" name="cbquTrendPlot1">
-     <property name="text">
-      <string>Plot 1</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QCheckBox" name="cbquTrendPlot2">
-     <property name="text">
-      <string>Plot 2</string>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="2">
-    <widget class="QCheckBox" name="cbquLabel2_2">
+    <widget class="QCheckBox" name="cbquLabel3">
      <property name="text">
       <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="5">
+    <widget class="QCheckBox" name="cbquCircularGauge">
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="6">
+    <widget class="QuTrendPlot" name="quTrendPlot1">
+     <property name="sources">
+      <stringlist>
+       <string>$1/double_scalar</string>
+      </stringlist>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0" colspan="6">
+    <widget class="QuTrendPlot" name="quTrendPlot2">
+     <property name="sources">
+      <stringlist>
+       <string>$1/long_scalar</string>
+      </stringlist>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="4" colspan="2">
+    <widget class="QPushButton" name="pbStop">
+     <property name="text">
+      <string>Stop Selected</string>
      </property>
     </widget>
    </item>

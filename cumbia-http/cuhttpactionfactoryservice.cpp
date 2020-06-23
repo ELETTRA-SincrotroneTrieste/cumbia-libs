@@ -49,20 +49,23 @@ CuHTTPActionA *CuHTTPActionFactoryService::registerAction(const CuHTTPSrc& src,
                                                           CuHttpChannelReceiver* cr,
                                                           CuHttpAuthManager *authman)
 {
-    CuHTTPActionA* action = NULL;
-    std::lock_guard<std::mutex> lock(d->mutex);
-    std::list<CuHTTPActionA *>::const_iterator it;
-    for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == f.getType() && (*it)->getSourceName().toStdString() == src.getName() && !(*it)->exiting()) {
-            break;
-        }
+    printf("\e[1;31mCuHTTPActionFactoryService::registerAction: NOT IMPLEMENTED\e[0m\n");
+    return nullptr;
 
-    if(it == d->actions.end())
-    {
-        action = f.create(src, qnam, url, authman, cr);
-        d->actions.push_back(action);
-    }
-    return action;
+//    CuHTTPActionA* action = NULL;
+//    std::lock_guard<std::mutex> lock(d->mutex);
+//    std::list<CuHTTPActionA *>::const_iterator it;
+//    for(it = d->actions.begin(); it != d->actions.end(); ++it)
+//        if(/*(*it)->getType() == f.getMethod() &&*/ (*it)->getSourceName().toStdString() == src.getName() && !(*it)->exiting()) {
+//            break;
+//        }
+
+//    if(it == d->actions.end())
+//    {
+//        action = f.create(src, qnam, url, authman, cr);
+//        d->actions.push_back(action);
+//    }
+//    return action;
 }
 
 /*! \brief find an *active* action given the source name and the action type

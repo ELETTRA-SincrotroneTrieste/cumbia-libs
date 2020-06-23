@@ -139,8 +139,8 @@ QString CuHttpControlsWriter::target() const
  */
 void CuHttpControlsWriter::clearTarget()
 {
-    d->cu_http->unlinkListener(d->target.toStdString(), CuHTTPActionA::Config, d->tlistener);
-    d->cu_http->unlinkListener(d->target.toStdString(), CuHTTPActionA::Writer, d->tlistener);
+    d->cu_http->unlinkListener(d->target.toStdString(), "conf", d->tlistener);
+    d->cu_http->unlinkListener(d->target.toStdString(), "write", d->tlistener);
     d->target = QString();
 }
 
@@ -159,7 +159,7 @@ void CuHttpControlsWriter::execute() {
     std::string t = d->target.toStdString();
     // remove placeholders from the target, f.e. a/b/c/d(&objectref) -> a/b/c/d
     t = t.substr(0, t.find("("));
-    d->cu_http->addAction(t, d->tlistener, wtf.getType());
+    d->cu_http->addAction(t, d->tlistener, wtf);
 }
 
 /*! \brief This is not implemented yet
@@ -192,5 +192,5 @@ void CuHttpControlsWriter::setTarget(const QString &s) {
     // remove placeholders from the target, f.e. a/b/c/d(&objectref) -> a/b/c/d
     t = t.substr(0, t.find("("));
     cuprintf("\e[1;35mCuHttpControlsWriter::setTarget %s\e[0m\n", qstoc(s));
-    d->cu_http->addAction(t, d->tlistener, cf.getType());
+    d->cu_http->addAction(t, d->tlistener, cf);
 }

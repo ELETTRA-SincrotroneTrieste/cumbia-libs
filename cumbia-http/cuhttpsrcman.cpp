@@ -16,13 +16,14 @@ public:
     CuHttpSrcQueueManListener *lis;
 };
 
-SrcItem::SrcItem(const std::string &s, CuDataListener *li, const CuHTTPActionA::Type typ, const QString &chan) :
-    src(s), l(li), type(typ), channel(typ == CuHTTPActionA::Reader || typ == CuHTTPActionA::Stop ? chan : "") {
+SrcItem::SrcItem(const std::string &s, CuDataListener *li, const std::string &metho, const QString &chan) :
+    src(s), l(metho != "stop" ? li : nullptr), method(metho),
+    channel(metho == "s" || metho == "u" ? chan : "") {
 }
 
 SrcItem::SrcItem() : l(nullptr) { }
 
-SrcData::SrcData(CuDataListener *l, const CuHTTPActionA::Type typ, const QString &chan) : lis(l), type(typ), channel(chan) { }
+SrcData::SrcData(CuDataListener *l, const string &me, const QString &chan) : lis(l), method(me), channel(chan) { }
 
 bool SrcData::isEmpty() const {
     return this->lis == nullptr;
@@ -46,12 +47,12 @@ void CuHttpSrcMan::setQueueManListener(CuHttpSrcQueueManListener *l) {
     d->lis = l;
 }
 
-void CuHttpSrcMan::enqueueSrc(const CuHTTPSrc &httpsrc, CuDataListener *l, const CuHTTPActionA::Type &type, const QString& chan) {
+void CuHttpSrcMan::enqueueSrc(const CuHTTPSrc &httpsrc, CuDataListener *l, const std::string& method, const QString& chan) {
     if(d->timer->interval() > TMR_DEQUEUE_INTERVAL)
         d->timer->setInterval(TMR_DEQUEUE_INTERVAL); // restore quick timeout if new sources are on the way
     if(!d->timer->isActive()) d->timer->start();
     std::string s = httpsrc.prepare();
-    d->srcq.enqueue(SrcItem(s, l, type, chan));
+    d->srcq.enqueue(SrcItem(s, l, method, chan));
 }
 
 QList<SrcData> CuHttpSrcMan::takeSrcs(const QString &src) const {
@@ -65,7 +66,7 @@ void CuHttpSrcMan::onDequeueTimeout() {
     QList<SrcItem> items;
     while(!d->srcq.isEmpty()) {
         const SrcItem& i = d->srcq.dequeue();
-        d->srcd.insert(QString::fromStdString(i.src), SrcData(i.l, i.type, i.channel));
+        d->srcd.insert(QString::fromStdString(i.src), SrcData(i.l, i.method, i.channel));
         items.append(i);
     }
     // slow down timer if no sources

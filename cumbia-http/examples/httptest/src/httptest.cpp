@@ -29,5 +29,6 @@ void HttpTest::onStopSrc() {
     foreach(QWidget *w, wids) {
         if(qobject_cast<QuLabel *>(w)) qobject_cast<QuLabel *>(w)->unsetSource();
         else if(qobject_cast<QuTrendPlot *>(w)) qobject_cast<QuTrendPlot *>(w)->unsetSources();
+        else if(qobject_cast<QuCircularGauge *>(w)) qobject_cast<QuCircularGauge *>(w)->unsetSource();
     }
 }

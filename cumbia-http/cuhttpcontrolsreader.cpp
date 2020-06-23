@@ -84,7 +84,7 @@ void CuHttpControlsReader::setSource(const QString &s) {
         d->s = rwis[i]->replaceWildcards(s, qApp->arguments());
     CuHTTPActionReaderFactory httprf(d->o.value("single-shot").toBool());
     qDebug() << __PRETTY_FUNCTION__ << "source " << d->s;
-    d->cu_http->addAction(d->s.toStdString(), d->dlis, httprf.getType());
+    d->cu_http->addAction(d->s.toStdString(), d->dlis, httprf);
 }
 
 QString CuHttpControlsReader::source() const {
@@ -92,7 +92,7 @@ QString CuHttpControlsReader::source() const {
 }
 
 void CuHttpControlsReader::unsetSource() {
-    d->cu_http->unlinkListener(d->s.toStdString(), CuHTTPActionA::Stop, d->dlis);
+    d->cu_http->unlinkListener(d->s.toStdString(), "stop", d->dlis);
     d->s = QString();
 }
 

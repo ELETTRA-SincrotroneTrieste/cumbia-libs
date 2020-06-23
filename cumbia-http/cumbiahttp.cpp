@@ -118,27 +118,27 @@ void CumbiaHttp::onSrcBundleReplyReady(const QByteArray &json) {
     for(std::list<CuData>::iterator it = dali.begin(); it != dali.end(); ++it) {
         const std::string &src = it->value("src").toString();
         foreach(const SrcData& srcd, d->src_q_man->takeSrcs(QString::fromStdString(src))) {
-            qDebug() << __PRETTY_FUNCTION__ << json << src.c_str() << "listener " << srcd.lis << dynamic_cast<QObject* >(srcd.lis)->objectName();
-            srcd.lis->onUpdate(*it);
-            if(srcd.type == CuHTTPActionA::Reader)
-                d->chan_recv->addDataListener(QString::fromStdString(src), srcd.lis);
-            else if(srcd.type == CuHTTPActionA::Stop) {
-                d->chan_recv->removeDataListener(srcd.lis);
+            printf("--> CumbiaHttp::onSrcBundleReplyReady: updating src %s value %s\n", src.c_str(), (*it)["value"].toString().c_str());
+            if(srcd.lis) srcd.lis->onUpdate(*it);
+            if(srcd.method == "s")
+           ; //     d->chan_recv->addDataListener(QString::fromStdString(src), srcd.lis);
+            else if(srcd.method == "u") {
+              ; //  d->chan_recv->removeDataListener(srcd.lis);
             }
         }
     }
 }
 
-void CumbiaHttp::addAction(const std::string &source, CuDataListener *l, CuHTTPActionA::Type t)
+void CumbiaHttp::addAction(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI& f)
 {
     if(CumbiaHTTPWorld().source_valid(source)) {
-        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, t, d->chan_recv->channel());
+        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, f.getMethod(), d->chan_recv->channel());
     }
 }
 
-void CumbiaHttp::unlinkListener(const string &source, CuHTTPActionA::Type t, CuDataListener *l) {
+void CumbiaHttp::unlinkListener(const string &source, const string &method, CuDataListener *l) {
     if(CumbiaHTTPWorld().source_valid(source)) {
-        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, t, d->chan_recv->channel());
+        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, method, d->chan_recv->channel());
     }
 }
 

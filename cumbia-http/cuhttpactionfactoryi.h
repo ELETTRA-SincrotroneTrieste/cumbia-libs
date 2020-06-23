@@ -39,7 +39,7 @@ public:
      *
      * @return the type of action that the factory creates
      */
-    virtual CuHTTPActionA::Type getType() const = 0;
+    virtual std::string getMethod() const = 0;
 
     virtual CuHTTPActionFactoryI* clone() const = 0;
 

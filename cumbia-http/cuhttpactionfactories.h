@@ -21,7 +21,7 @@ public:
                           const QString& http_addr,
                           CuHttpAuthManager *authman,
                           CuHttpChannelReceiver *cr) const;
-    CuHTTPActionA::Type getType() const;
+    std::string getMethod() const;
     CuHTTPActionFactoryI* clone() const;
     CuData options() const;
 private:
@@ -42,7 +42,7 @@ public:
                           const QString& http_addr,
                           CuHttpAuthManager *authman,
                           CuHttpChannelReceiver * cr= nullptr) const;
-    CuHTTPActionA::Type getType() const;
+    std::string getMethod() const;
     CuHTTPActionFactoryI* clone() const;
     CuData options() const;
 private:
@@ -62,7 +62,7 @@ public:
                           const QString& http_addr,
                           CuHttpAuthManager *authman,
                           CuHttpChannelReceiver *cr = nullptr) const;
-    CuHTTPActionA::Type getType() const;
+    std::string getMethod() const;
     CuHTTPActionFactoryI* clone() const;
     CuData options() const;
 

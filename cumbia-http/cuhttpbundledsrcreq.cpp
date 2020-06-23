@@ -22,8 +22,7 @@ CuHttpBundledSrcReq::CuHttpBundledSrcReq(const QList<SrcItem> &srcs, CuHttpBundl
     d->listener = l;
 }
 
-CuHttpBundledSrcReq::~CuHttpBundledSrcReq()
-{
+CuHttpBundledSrcReq::~CuHttpBundledSrcReq() {
     delete d;
 }
 
@@ -45,7 +44,7 @@ void CuHttpBundledSrcReq::onNewData() {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
     qint64 bytes_avail = r->bytesAvailable();
     QByteArray ba = r->read(bytes_avail);
-    qDebug() << __PRETTY_FUNCTION__ << "received " << ba;
+//    qDebug() << __PRETTY_FUNCTION__ << "received " << ba;
     bool buf_empty = d->buf.isEmpty();
     if(!buf_empty)
         cuprintf("CuHTTPActionA::onNewData: buf completed by \e[1;32m%s\e[0m\n", ba.data());
@@ -62,7 +61,7 @@ void CuHttpBundledSrcReq::onNewData() {
 void CuHttpBundledSrcReq::onReplyFinished()
 {
     qDebug() << __PRETTY_FUNCTION__ << this << "deleting reply " << sender() << " later";
-//    sender()->deleteLater();
+    sender()->deleteLater();
 }
 
 void CuHttpBundledSrcReq::onReplyDestroyed(QObject *o)
@@ -81,7 +80,7 @@ void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError code)
 {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
     QJsonObject eo = CumbiaHTTPWorld().make_error(r->errorString() + QString( "code %1").arg(code));
-    qDebug() << __PRETTY_FUNCTION__ << QJsonValue(eo).toString();
+    qDebug() << __PRETTY_FUNCTION__ << QJsonValue(eo).toString() << "error string" << r->errorString();
 }
 
 void CuHttpBundledSrcReq::m_on_buf_complete() {
@@ -111,12 +110,7 @@ QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs) c
         so["src"] = QString::fromStdString(i.src);
         so["op1"] = "p"; // configuration is first operation returned in sync reply
         so["channel"] = i.channel;
-        if(i.type == CuHTTPActionA::SingleShotReader) so["method"] = "read";
-        else if(i.type == CuHTTPActionA::Reader) so["method"] = "s";
-        else if(i.type == CuHTTPActionA::Writer) so["method"] = "write";
-        else if(i.type == CuHTTPActionA::Config) so["method"] = "conf";
-        else if(i.type == CuHTTPActionA::Stop) so["method"] = "u";
-        else so["method"] = "invalid";
+        so["method"] = QString::fromStdString(i.method);
         QJsonArray keys { "src", "method", "op1", "channel" };
         so["keys"] = keys;
         sa.append(so);

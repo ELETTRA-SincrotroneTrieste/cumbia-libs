@@ -46,8 +46,8 @@ CuHTTPActionA *CuHTTPActionReaderFactory::create(const CuHTTPSrc &s,
     return reader;
 }
 
-CuHTTPActionA::Type CuHTTPActionReaderFactory::getType() const {
-    return d->options.has("method", "read") ? CuHTTPActionA::SingleShotReader : CuHTTPActionA::Reader;
+std::string CuHTTPActionReaderFactory::getMethod() const {
+    return d->options.has("method", "read") ? "read" : "s";
 }
 
 CuHTTPActionFactoryI *CuHTTPActionReaderFactory::clone() const {
@@ -72,10 +72,7 @@ CuData CuHTTPActionWriterFactory::options() const {
     return configuration;
 }
 
-
-CuHTTPActionWriterFactory::~CuHTTPActionWriterFactory() {
-
-}
+CuHTTPActionWriterFactory::~CuHTTPActionWriterFactory() { }
 
 CuHTTPActionA *CuHTTPActionWriterFactory::create(const CuHTTPSrc &s,
                                                  QNetworkAccessManager *qnam,
@@ -89,8 +86,8 @@ CuHTTPActionA *CuHTTPActionWriterFactory::create(const CuHTTPSrc &s,
     return w;
 }
 
-CuHTTPActionA::Type CuHTTPActionWriterFactory::getType() const {
-    return CuHTTPActionA::Writer;
+string CuHTTPActionWriterFactory::getMethod() const {
+    return "writer";
 }
 
 CuHTTPActionFactoryI *CuHTTPActionWriterFactory::clone() const {
@@ -116,8 +113,8 @@ CuHTTPActionA *CuHTTPActionConfFactory::create(const CuHTTPSrc &s,
     return new CuHttpActionConf(s, qnam, http_addr, aman);
 }
 
-CuHTTPActionA::Type CuHTTPActionConfFactory::getType() const {
-    return CuHTTPActionA::Config;
+std::string CuHTTPActionConfFactory::getMethod() const {
+    return "conf";
 }
 
 CuHTTPActionFactoryI *CuHTTPActionConfFactory::clone() const

@@ -139,7 +139,10 @@ android-g++|wasm-emscripten {
     INSTALLS += target inc other_inst
 
     !android-g++ {
-            INSTALLS += doc
+    message("-----------------------------------")
+    message(" ----- doc install disabled ------ ")
+    message("-----------------------------------")
+    #        INSTALLS += doc
     }
 
 android-g++|wasm-emscripten {
