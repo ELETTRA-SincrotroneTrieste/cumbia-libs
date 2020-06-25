@@ -221,7 +221,7 @@ void CuPollingActivity::decreasePolling() {
     }
     else
         d->repeat = d->period;
-    printf("\e[0;33mCuPollingActivity::decreasePolling: \"%s\": error count is %d period is %d d->repeat has been set to %d\e[0m\n",
+    printf("\e[0;33mpolling activity: \"%s\": %d errors period %d --> %d\e[0m\n",
            getToken().toString().c_str(), d->consecutiveErrCnt, d->period, d->repeat);
 }
 

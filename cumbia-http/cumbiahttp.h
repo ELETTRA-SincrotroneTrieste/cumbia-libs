@@ -70,6 +70,24 @@ class CumbiaHttpPrivate;
  * CumbiaHttp is a CuHTTPActionListener in order to be notified when an action is finished, so that it can
  * be unregistered and deleted.
  *
+ * \section tech_notes Technical notes
+ * Either read or write operation will call CumbiaHttp::addAction with the complete name of the source, a pointer to a
+ * CuDataListener and a const reference to either a CuHTTPActionReaderFactory or a CuHTTPActionWriterFactory, respectively.
+ * See CuHttpControlsReader. The factories may contain options. A relevant one for a reader is the *single-shot*,
+ * that reads a quantity once.
+ *
+ * CumbiaHttp::addAction enqueues
+ * the request so that multiple requests are gathered together and sent in bundles, saving the number of http requests
+ * to the server. CuHttpSrcMan is where source subscriptions are enqueued and a timer quickly dequeues them so that they
+ * are packed in a small number of http requests. When a bundle is ready, CumbiaHttp::onSrcBundleReqReady starts an http
+ * request to the server, with the multiple subscription requests represented in Json format.
+ *
+ * Whatever the operation, single read, monitor, write... *a synchronous reply is always expected*. In the *monitor* case,
+ * subsequent updates are received through an SSE channel. The server will recollect results for each request and pack them
+ * in a reply which will contain either a value (a reading, configuration properties) or an error.
+ * In the *monitor* example, a request will contain a *subscribe* option. The *synchronous* reply will provide the first
+ * read value (or configuration) *or* an error condition. This implies that if one or more amongst the *n* sources takes
+ * time before being available, all sources in the bundle will be delivered late. Updates are distributed across the SSE channel.
  */
 class CumbiaHttp : public Cumbia, public CuHttpBundledSrcReqListener, public CuHttpSrcQueueManListener, public CuHTTPActionListener
 {
@@ -78,15 +96,11 @@ public:
     enum Type { CumbiaHTTPType = Cumbia::CumbiaUserType + 18 };
 
     CumbiaHttp(const QString& url, const QString &channel, CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb);
-
     ~CumbiaHttp();
 
     CuThreadFactoryImplI* getThreadFactoryImpl() const;
-
     CuThreadsEventBridgeFactory_I* getThreadEventsBridgeFactory() const;
-
     QString url() const;
-
     virtual int getType() const;
 
     void addAction(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI &f);

@@ -31,8 +31,9 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
     QNetworkRequest r(url);
     r.setRawHeader("Accept", "application/json");
     r.setHeader(QNetworkRequest::UserAgentHeader, QByteArray("cumbia-http ") + QByteArray(CUMBIA_HTTP_VERSION_STR));
+
+    printf("\e[1;36mCuHttpBundledSrcReq::start: PAYLOAD:\n%s\e[0m\n", d->req_payload.data());
     QNetworkReply *reply = nam->post(r, d->req_payload);
-    qDebug() << __PRETTY_FUNCTION__ << "URL" << url << "payload" << d->req_payload;
     connect(reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
     connect(reply, SIGNAL(finished()), this, SLOT(onReplyFinished()));
     connect(reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, SLOT(onSslErrors(const QList<QSslError> &)));
@@ -50,7 +51,7 @@ void CuHttpBundledSrcReq::onNewData() {
         cuprintf("CuHTTPActionA::onNewData: buf completed by \e[1;32m%s\e[0m\n", ba.data());
     d->buf += ba;
     // buf complete?
-    if(d->buf.endsWith("\n\n")) { // buf complete
+    if(d->buf.endsWith("\n\n") || d->buf.endsWith("\r\n\r\n")) { // buf complete
         m_on_buf_complete();
         d->buf.clear();
     }
@@ -117,5 +118,5 @@ QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs) c
     }
     root_o["srcs"] = sa;
     QJsonDocument doc(root_o);
-    return doc.toJson(QJsonDocument::Compact) + "\n\n";
+    return doc.toJson(QJsonDocument::Compact) + "\r\n\r\n";
 }

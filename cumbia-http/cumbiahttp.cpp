@@ -121,9 +121,9 @@ void CumbiaHttp::onSrcBundleReplyReady(const QByteArray &json) {
             printf("--> CumbiaHttp::onSrcBundleReplyReady: updating src %s value %s\n", src.c_str(), (*it)["value"].toString().c_str());
             if(srcd.lis) srcd.lis->onUpdate(*it);
             if(srcd.method == "s")
-           ; //     d->chan_recv->addDataListener(QString::fromStdString(src), srcd.lis);
+                  d->chan_recv->addDataListener(QString::fromStdString(src), srcd.lis);
             else if(srcd.method == "u") {
-              ; //  d->chan_recv->removeDataListener(srcd.lis);
+                d->chan_recv->removeDataListener(srcd.lis);
             }
         }
     }

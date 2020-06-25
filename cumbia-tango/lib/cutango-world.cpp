@@ -717,7 +717,6 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
             (*reslist)[results_offset].putTimestamp();
             results_offset++;
         }
-        perr("CuTangoWorld.read_atts: %s", d->message.c_str());
     }
     return !d->error;
 }
