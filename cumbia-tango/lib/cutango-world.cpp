@@ -664,7 +664,7 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
         d->error = true;
         d->message = strerror(e);
         res.putTimestamp();
-//        if(res["src"].toString().find("p/mod/hv_p2") != std::string::npos)
+        if(d->message.find("p/mod/hv_p2") != std::string::npos)
             printf("\e[1;31;31mCuTangoWorld.read_att: attribute ERRROR %s : %s\e[0m\n", attribute.c_str(),
                  d->message.c_str());
     }
