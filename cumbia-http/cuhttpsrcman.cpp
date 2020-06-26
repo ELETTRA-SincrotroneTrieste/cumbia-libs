@@ -6,13 +6,14 @@
 #include <QMultiMap>
 #include <QtDebug>
 
-#define TMR_DEQUEUE_INTERVAL 200
+#define TMR_DEQUEUE_INTERVAL 400
 
 class SrcQueueManagerPrivate {
 public:
     QTimer *timer;
     QQueue<SrcItem> srcq;
     QMultiMap<QString, SrcData> srcd;
+    QList<SrcItem> items;
     CuHttpSrcQueueManListener *lis;
 };
 
@@ -63,14 +64,15 @@ QList<SrcData> CuHttpSrcMan::takeSrcs(const QString &src) const {
 
 void CuHttpSrcMan::onDequeueTimeout() {
     qDebug() << __PRETTY_FUNCTION__ << "dequeueing" << d->srcq.size() << "items -- timer interval " << d->timer->interval();
-    QList<SrcItem> items;
+    bool empty = d->srcq.isEmpty();
     while(!d->srcq.isEmpty()) {
         const SrcItem& i = d->srcq.dequeue();
         d->srcd.insert(QString::fromStdString(i.src), SrcData(i.l, i.method, i.channel));
-        items.append(i);
+        d->items.append(i);
     }
     // slow down timer if no sources
-    if(items.size() == 0) d->timer->setInterval(d->timer->interval() * 2);
-    else d->lis->onSrcBundleReqReady(items);
+    if(empty) d->timer->stop();
+    else d->lis->onSrcBundleReqReady(d->items);
+    d->items.clear();
 }
 
