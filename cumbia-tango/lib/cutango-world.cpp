@@ -650,10 +650,11 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
 {
     d->error = false;
     d->message = "";
-     if(dev->name().find("p/mod/hv_p2") != std::string::npos)
-         printf("CuTangoWorld::read_att reading %s / %s\e[0m\n", dev->name().c_str(), attribute.c_str());
+
     try
     {
+        if(res["src"].toString().find("p/mod/hv_p2") != std::string::npos)
+                printf("CuTangoWorld::read_att reading %s\e[0m\n", res["src"].toString().c_str());
         std::string att(attribute);
         Tango::DeviceAttribute da = dev->read_attribute(att);
         extractData(&da, res);
@@ -663,7 +664,7 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
         d->error = true;
         d->message = strerror(e);
         res.putTimestamp();
-        if(dev->name().find("p/mod/hv_p2") != std::string::npos)
+        if(res["src"].toString().find("p/mod/hv_p2") != std::string::npos)
             cuprintf("\e[1;31;31mCuTangoWorld.read_att: attribute ERRROR %s : %s\e[0m\n", attribute.c_str(),
                  d->message.c_str());
     }
