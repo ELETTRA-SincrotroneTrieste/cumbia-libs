@@ -34,6 +34,7 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
 
     printf("\e[1;36mCuHttpBundledSrcReq::start: PAYLOAD:\n%s\e[0m\n", d->req_payload.data());
     QNetworkReply *reply = nam->post(r, d->req_payload);
+    reply->setProperty("payload", d->req_payload);
     connect(reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
     connect(reply, SIGNAL(finished()), this, SLOT(onReplyFinished()));
     connect(reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, SLOT(onSslErrors(const QList<QSslError> &)));
@@ -81,7 +82,8 @@ void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError code)
 {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
     QJsonObject eo = CumbiaHTTPWorld().make_error(r->errorString() + QString( "code %1").arg(code));
-    qDebug() << __PRETTY_FUNCTION__ << QJsonValue(eo).toString() << "error string" << r->errorString();
+    qDebug() << __PRETTY_FUNCTION__ << "!!!!!!!!!!!!!!" << QJsonValue(eo).toString() << "error string" << r->errorString() <<
+                r->property("payload").toString();
 }
 
 void CuHttpBundledSrcReq::m_on_buf_complete() {

@@ -71,8 +71,10 @@ void CuHttpSrcMan::onDequeueTimeout() {
         d->items.append(i);
     }
     // slow down timer if no sources
-    if(empty) d->timer->stop();
-    else d->lis->onSrcBundleReqReady(d->items);
-    d->items.clear();
+    if(empty) {
+        d->timer->stop();
+        d->lis->onSrcBundleReqReady(d->items);
+        d->items.clear();
+    }
 }
 
