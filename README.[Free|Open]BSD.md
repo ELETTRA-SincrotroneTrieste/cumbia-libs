@@ -6,9 +6,33 @@ Prerequisites
 
 > pkg install git cmake cvs python3 doxygen
 
-Qt installation
+### Qt
 
-1. ZEROMQ
+#### Openbsd: Qt
+
+Find qt5 meta package
+
+> pkg_info | grep qt
+
+```
+...
+qt5-5.13.2p1        C++ general-purpose toolkit, meta-package
+qtbase-5.13.2p0     C++ general-purpose toolkit
+qtcharts-5.13.2     Qt5 components for drawing 2D charts
+...
+```
+
+Install the qt meta-package:
+
+> pkg_add qt5-5.13.2p1  
+
+#### Note
+qmake is named qmake-qt5
+
+
+### 1. ZEROMQ
+
+#### 1a. FreeBSD
 
 Configuration script warns that sodium library is missing:
 
@@ -27,10 +51,21 @@ If you want to build tests, you will have to fix some includes. For now, disable
 > cd cppzmq && mkdir build && cd build
 cmake .. && make -j9
 
+#### 1b. OpenBSD
 
+Install zeromq from ports
 
+> cd /usr/ports/net/zeromq
 
-2. OMNIORB
+> make install clean
+
+> cd /usr/ports/net/cppzmq
+
+> make install clean
+
+### 2. OMNIORB
+
+#### 2a. FreeBSD
 
 > pkg install omniorb
 
@@ -40,15 +75,29 @@ New packages to be INSTALLED:
 
 ```
 
-3. EPICS -- does not build
+#### 2b. OpenBSD
+
+Download omniorb and then
+
+> tar xjf omniORB-4.3.0-b1.tar.bz2
+
+> cd omniORB-4.3.0
+
+> ./configure --prefix=/usr/local/omniorb-4.3.0
+
+> gmake && gmake install
+
+
+
+### 3. EPICS -- does not build
 wget https://epics.anl.gov/download/base/base-7.0.3.1.tar.gz
 tar xzf  base-7.0.3.1.tar.gz 
 cd  base-7.0.3.1
 make -j9
 
 
-4. TANGO
-*WARNING* Needs Python2 in path
+### 4. TANGO
+*WARNING* Needs Python2 in path  (issue encountered on FreeBSD)
 
 git clone https://github.com/tango-controls/tango-idl.git
 git clone https://github.com/tango-controls/cppTango.git
@@ -56,16 +105,33 @@ git clone https://github.com/tango-controls/cppTango.git
 > cd tango-idl/
 > mkdir build
 > cd build
+
 > cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.4.0
-> sudo make install
+> su
+> make install
 
 > cd ../../cppTango/
 > mkdir build && cd build
+
+
+#### 4a. FreeBSD
+
 > cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.4.0 -DZMQ_BASE=/usr/local/zeromq -DCPPZMQ_BASE=/usr/local/zeromq  -DOMNIIDL_PATH=/usr/local -DOMNI_BASE=/usr/local -DIDL_BASE=/usr/local/tango-9.4.0  -DBUILD_TESTING=off
+
+#### 4b. OpenBSD
+
+In this case, zeromq was built through ports while omniorb was installed by hand. Just need to adjust the paths for the 
+two.
+
+> cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.4.0 -DZMQ_BASE=/usr/local -DCPPZMQ_BASE=/usr/local -DOMNIIDL_PATH=/usr/local/omniorb-4.3.0 -DOMNI_BASE=/usr/local/omniorb-4.3.0 -DIDL_BASE=/usr/local/tango-9.4.0  -DBUILD_TESTING=off
+
+Note: build is successful on OpenBSD even without disabling testing, that is, omitting -DBUILD_TESTING=off
+
 > make
 > make install
 
-QWT
+### QWT
+
 Download latest qwt
 
 > unzip qwt-6.1.4.zip
@@ -79,11 +145,9 @@ OBJECTS_DIR       = objects
 
 ```
 
-
 > qmake && make -j9
 > su
 > make install
-
 
 ## cumbia libs
 
