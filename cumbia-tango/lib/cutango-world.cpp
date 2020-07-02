@@ -36,7 +36,7 @@ CuTangoWorld::~CuTangoWorld()
     delete d;
 }
 
-std::string CuTangoWorld::strerror(const Tango::DevFailed &e) const
+std::string CuTangoWorld::strerror(const Tango::DevFailed &e)
 {
     std::string msg;
     if(e.errors.length() > 0)
@@ -45,7 +45,7 @@ std::string CuTangoWorld::strerror(const Tango::DevFailed &e) const
     return msg;
 }
 
-std::string CuTangoWorld::strerror(const Tango::DevErrorList &errors) const
+std::string CuTangoWorld::strerror(const Tango::DevErrorList &errors)
 {
     std::string msg;
     for(int i = errors.length() - 1; i >= 0; i--)

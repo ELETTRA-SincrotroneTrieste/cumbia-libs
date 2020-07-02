@@ -17,9 +17,9 @@ public:
 
     virtual ~CuTangoWorld();
 
-    std::string strerror(const Tango::DevFailed& e) const;
+    std::string strerror(const Tango::DevFailed& e);
 
-    std::string strerror(const Tango::DevErrorList &e) const;
+    std::string strerror(const Tango::DevErrorList &e);
 
     void fillThreadInfo(CuData &d, const CuActivity *a);
 
