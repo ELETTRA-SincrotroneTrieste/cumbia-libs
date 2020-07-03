@@ -126,8 +126,10 @@ CuTimer *CuTimerService::changeTimeout(CuTimerListener *tl, int from_timeo, int 
         printf("CuTimerService::changeTimeout: changing timeout from \e[1;32m%d to %d\e[0m for timer %p LISTENER %p\n",
                t->timeout(), to_timeo, t, tl);
         unregisterListener(tl, t->timeout()); // locks
-        printf("CuTimerService::changeTimeout: registering \e[1;32m listener %p \e[0m with new timeout %d on timer %p\n", tl, to_timeo, t);
+        printf("CuTimerService::changeTimeout: registering \e[1;32m listener %p \e[0m with new timeout %d on timer %p... ", tl, to_timeo, t);
         t = registerListener(tl, to_timeo); // locks
+        printf("--> actual tmr timeo: %d\n", t->timeout());
+//        t->setTimeout(to_timeo);
     }
     else if(!t)
         perr("CuTimerService.changeTimeout: no listener %p registered with timer's timeout %d", tl, from_timeo);
