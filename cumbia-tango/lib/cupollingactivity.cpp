@@ -214,7 +214,7 @@ void CuPollingActivity::decreasePolling() {
     if(d->consecutiveErrCnt > 0) {
         for(std::map<int,int>::const_reverse_iterator it = d->slowDownRate.rbegin(); it != d->slowDownRate.rend(); ++it) {
             if(d->consecutiveErrCnt >= it->first) {
-                d->repeat *= it->second;
+                d->repeat = d->period * it->second;
                 break;
             }
         }
