@@ -55,14 +55,9 @@ CuTimer *CuTimerService::registerListener(CuTimerListener *timer_listener, int t
 {
     std::unique_lock lock(d->shared_mutex);
     CuTimer *timer = m_findTimer(timer_listener, timeout);
-    if(timer) {
-        printf("CuTimerService::registerListener returning timer %p for listener %p timeout %d timer timeo %d\n",
-               timer, timer_listener, timeout, timer->timeout());
-        return timer;
-    }
-    else {
+    if(!timer) {
         if(d->ti_map.count(timeout) >= static_cast<size_t>(d->timer_max_count)) {
-            // reuse a timer!
+            // we have one or more timers with this timeout: reuse the one with less listeners
             timer = m_findReusableTimer(timeout); // const, no map modification
             pgreen("CuTimerService::registerListener timers count for timeout %d is %ld >= max timers %d: \e[0;32mreusing timer %p\e[0m] that has now %ld listeners\e[0m\n",
                    timeout, d->ti_map.count(timeout), d->timer_max_count, timer, timer->listeners().size());
@@ -73,12 +68,12 @@ CuTimer *CuTimerService::registerListener(CuTimerListener *timer_listener, int t
             pgreen("CuTimerService::registerListener timers count for timeout %d is %ld > max timers %d: \e[1;32mcreating NEW timer %p\e[0m] that has now %ld listeners\e[0m\n",
                    timeout, d->ti_map.count(timeout), d->timer_max_count, timer, timer->listeners().size());
             timer->start(timeout);
+            std::pair<int, CuTimer *> new_tmr(timeout, timer);
+            d->ti_map.insert(new_tmr);  // timeout -> timer  map
         }
-        std::pair<int, CuTimer *> new_tmr(timeout, timer);
-        d->ti_map.insert(new_tmr);  // timeout -> timer  map
+        timer->addListener(timer_listener);
         std::pair<CuTimerListener *, CuTimer *> ltp(timer_listener, timer);
         d->ti_cache.insert(ltp); // listeners -> timer cache
-        timer->addListener(timer_listener);
     }
     return timer;
 }
@@ -131,7 +126,7 @@ CuTimer *CuTimerService::changeTimeout(CuTimerListener *tl, int from_timeo, int 
         printf("CuTimerService::changeTimeout: registering \e[1;32m listener %p \e[0m with new timeout %d on timer %p... ", tl, to_timeo, t);
         t = registerListener(tl, to_timeo); // locks
         printf("--> actual tmr timeo: %d\n", t->timeout());
-//        t->setTimeout(to_timeo);
+        //        t->setTimeout(to_timeo);
     }
     else if(!t)
         perr("CuTimerService.changeTimeout: no listener %p registered with timer's timeout %d", tl, from_timeo);
