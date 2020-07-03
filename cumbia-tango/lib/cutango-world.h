@@ -17,9 +17,9 @@ public:
 
     virtual ~CuTangoWorld();
 
-    std::string strerror(const Tango::DevFailed& e) const;
+    std::string strerror(const Tango::DevFailed& e);
 
-    std::string strerror(const Tango::DevErrorList &e) const;
+    std::string strerror(const Tango::DevErrorList &e);
 
     void fillThreadInfo(CuData &d, const CuActivity *a);
 
@@ -67,7 +67,7 @@ public:
 
     bool get_properties(const std::vector<CuData> &in_list, CuData& res, const string &dbhost = "");
 
-    bool db_get(const TSource& tsrc, CuData& res) const;
+    bool db_get(const TSource& tsrc, CuData& res);
 
     bool source_valid(const std::string& src);
 
@@ -85,7 +85,7 @@ public:
 
     std::vector<std::string> srcPatterns() const;
 
-    Tango::Database *getTangoDb(const string &dbhost) const;
+    Tango::Database *getTangoDb(const string &dbhost);
 
     void putDateTime(const Tango::TimeVal& ttv, CuData& data);
 

@@ -6,7 +6,7 @@ isEmpty(CU_USER_CONFIG_DIR) {
     CU_USER_CONFIG_DIR=.config/cumbia
 }
 
-linux-g++ {
+linux-g++|linux-clang|freebsd-clang|freebsd-g++|openbsd {
     exists ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
         message("- adding EPICS support under $${INSTALL_ROOT}")
         include ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)

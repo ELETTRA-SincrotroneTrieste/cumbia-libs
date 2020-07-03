@@ -36,7 +36,7 @@ CuTangoWorld::~CuTangoWorld()
     delete d;
 }
 
-std::string CuTangoWorld::strerror(const Tango::DevFailed &e) const
+std::string CuTangoWorld::strerror(const Tango::DevFailed &e)
 {
     std::string msg;
     if(e.errors.length() > 0)
@@ -45,7 +45,7 @@ std::string CuTangoWorld::strerror(const Tango::DevFailed &e) const
     return msg;
 }
 
-std::string CuTangoWorld::strerror(const Tango::DevErrorList &errors) const
+std::string CuTangoWorld::strerror(const Tango::DevErrorList &errors)
 {
     std::string msg;
     for(int i = errors.length() - 1; i >= 0; i--)
@@ -910,7 +910,7 @@ bool CuTangoWorld::get_att_props(Tango::DeviceProxy *dev,
     return !d->error;
 }
 
-Tango::Database *CuTangoWorld::getTangoDb(const std::string& dbhost) const
+Tango::Database *CuTangoWorld::getTangoDb(const std::string& dbhost)
 {
     try {
         std::string db = dbhost;
@@ -1103,7 +1103,7 @@ bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &re
     return !d->error;
 }
 
-bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) const {
+bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
     d->error = false;
     d->message.clear();
     bool res_ismap = false;

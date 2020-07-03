@@ -1,7 +1,11 @@
 #ifndef TERM_H
 #define TERM_H
 
+#ifdef __FreeBSD__
+#include <termios.h>
+#else
 #include <termio.h>
+#endif
 #include <unistd.h>
 
 class Term
