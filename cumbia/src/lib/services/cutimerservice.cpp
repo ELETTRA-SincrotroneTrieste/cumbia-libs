@@ -56,6 +56,8 @@ CuTimer *CuTimerService::registerListener(CuTimerListener *timer_listener, int t
     std::unique_lock lock(d->shared_mutex);
     CuTimer *timer = m_findTimer(timer_listener, timeout);
     if(timer) {
+        printf("CuTimerService::registerListener returning timer %p for listener %p timeout %d timer timeo %d\n",
+               timer, timer_listener, timeout, timer->timeout());
         return timer;
     }
     else {
@@ -71,9 +73,9 @@ CuTimer *CuTimerService::registerListener(CuTimerListener *timer_listener, int t
             pgreen("CuTimerService::registerListener timers count for timeout %d is %ld > max timers %d: \e[1;32mcreating NEW timer %p\e[0m] that has now %ld listeners\e[0m\n",
                    timeout, d->ti_map.count(timeout), d->timer_max_count, timer, timer->listeners().size());
             timer->start(timeout);
-            std::pair<int, CuTimer *> new_tmr(timeout, timer);
-            d->ti_map.insert(new_tmr);  // timeout -> timer  map
         }
+        std::pair<int, CuTimer *> new_tmr(timeout, timer);
+        d->ti_map.insert(new_tmr);  // timeout -> timer  map
         std::pair<CuTimerListener *, CuTimer *> ltp(timer_listener, timer);
         d->ti_cache.insert(ltp); // listeners -> timer cache
         timer->addListener(timer_listener);
