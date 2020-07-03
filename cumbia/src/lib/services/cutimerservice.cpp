@@ -123,10 +123,10 @@ CuTimer *CuTimerService::changeTimeout(CuTimerListener *tl, int from_timeo, int 
         t = m_findTimer(tl, from_timeo); // does not lock
     }
     if(t) {
-        cuprintf("CuTimerService::changeTimeout: changing timeout from \e[1;32m%d to %d\e[0m for timer %p\n",
-               t->timeout(), to_timeo, t);
+        printf("CuTimerService::changeTimeout: changing timeout from \e[1;32m%d to %d\e[0m for timer %p LISTENER %p\n",
+               t->timeout(), to_timeo, t, tl);
         unregisterListener(tl, t->timeout()); // locks
-        cuprintf("CuTimerService::changeTimeout: registering a \e[1;32mnew listener\e[0m\n");
+        printf("CuTimerService::changeTimeout: registering \e[1;32m listener %p \e[0m with new timeout %d on timer %p\n", tl, to_timeo, t);
         t = registerListener(tl, to_timeo); // locks
     }
     else if(!t)
