@@ -128,9 +128,9 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
     //  flag CuActivity::CuADeleteOnExit is true
     setFlag(CuActivity::CuAUnregisterAfterExec, true);
     // initialize period slow down policy in case of read errors
-    d->slowDownRate[1] = 3000;
-    d->slowDownRate[2] = 5000;
-    d->slowDownRate[4] = 10000;
+    d->slowDownRate[1] = 3;
+    d->slowDownRate[2] = 5;
+    d->slowDownRate[4] = 10;
 }
 
 /*! \brief the class destructor
@@ -174,9 +174,9 @@ size_t CuPollingActivity::srcCount() const
  *
  * The default slow down rate policy decreases the read timer to:
  *
- * \li three seconds after one error
- * \li five seconds after two consecutive errors
- * \li ten seconds after four consecutive errors
+ * \li three times the current period after one error
+ * \li five times the current period after two consecutive errors
+ * \li ten times the current period after four consecutive errors
  *
  * The default polling period is restored after a successful reading
  *
@@ -187,9 +187,9 @@ size_t CuPollingActivity::srcCount() const
  *
  * \code
  * std::map<int, int> sd_map;
- * sd_map[1] = 2000;
- * sd_map[2] = 5000;
- * sd_map[4] = 10000;
+ * sd_map[1] = 1.5;
+ * sd_map[2] = 3;
+ * sd_map[4] = 8;
  * activity->setSlowDownRate(sd_map);
  * \endcode
  *
@@ -214,7 +214,7 @@ void CuPollingActivity::decreasePolling() {
     if(d->consecutiveErrCnt > 0) {
         for(std::map<int,int>::const_reverse_iterator it = d->slowDownRate.rbegin(); it != d->slowDownRate.rend(); ++it) {
             if(d->consecutiveErrCnt >= it->first) {
-                d->repeat = it->second;
+                d->repeat *= it->second;
                 break;
             }
         }
