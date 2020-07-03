@@ -98,7 +98,7 @@ void CuTimerService::unregisterListener(CuTimerListener *tl, int timeout)
     else {
         t->removeListener(tl); // CuTimer lock guards its listeners list
         if(t->listeners().size() == 0) {
-            cuprintf("\e[1;32m** -->\e[0m CuTimerService::unregisterListener: \e[1;32mno more listeners: stopping timer %p and deleting\e[0m\n", t);
+            printf("\e[1;32m** -->\e[0m CuTimerService::unregisterListener: \e[1;32mno more listeners: stopping timer %p and deleting\e[0m\n", t);
             m_removeFromMaps(t);
             t->stop();
             delete t;
