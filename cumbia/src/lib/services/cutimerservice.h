@@ -53,8 +53,8 @@ public:
 
 private:
     void m_stopAll();
-    void m_removeFromMaps(CuTimerListener *l, int timeout);
-    CuTimer *m_findReusableTimer(int timeout);
+    void m_removeFromMaps(CuTimer *t);
+    CuTimer *m_findReusableTimer(int timeout) const;
     CuTimer *m_findTimer(const CuTimerListener *th, int timeout);
 
     CuTimerServicePrivate *d;

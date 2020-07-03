@@ -61,7 +61,7 @@ CuTimer *CuTimerService::registerListener(CuTimerListener *timer_listener, int t
     else {
         if(d->ti_map.count(timeout) >= static_cast<size_t>(d->timer_max_count)) {
             // reuse a timer!
-            timer = m_findReusableTimer(timeout);
+            timer = m_findReusableTimer(timeout); // const, no map modification
             pgreen("CuTimerService::registerListener timers count for timeout %d is %ld >= max timers %d: \e[0;32mreusing timer %p\e[0m] that has now %ld listeners\e[0m\n",
                    timeout, d->ti_map.count(timeout), d->timer_max_count, timer, timer->listeners().size());
         }
@@ -99,7 +99,7 @@ void CuTimerService::unregisterListener(CuTimerListener *tl, int timeout)
         t->removeListener(tl); // CuTimer lock guards its listeners list
         if(t->listeners().size() == 0) {
             cuprintf("\e[1;32m** -->\e[0m CuTimerService::unregisterListener: \e[1;32mno more listeners: stopping timer %p and deleting\e[0m\n", t);
-            m_removeFromMaps(tl, timeout);
+            m_removeFromMaps(t);
             t->stop();
             delete t;
         }
@@ -212,37 +212,17 @@ void CuTimerService::m_stopAll()
     }
 }
 
-void CuTimerService::m_removeFromMaps(CuTimerListener *l, int timeout)
-{
+void CuTimerService::m_removeFromMaps(CuTimer *t) {
     // 1. find the timers connected to this listener (may be more than one)
     std::multimap<int, CuTimer *>::iterator iter;
     for(iter = d->ti_map.begin(); iter != d->ti_map.end(); ) {
-        if(iter->first == timeout) { // with the given timeout
-            CuTimer *t = iter->second;   // get the associated CuTimer
-            std::list<CuTimerListener *>tlisteners = t->listeners(); // get its listeners
-            // timer without listeners? remove from d->ti_map timer map
-            if(tlisteners.size() == 0) {
-                iter = d->ti_map.erase(iter);
-            }
-            else
-                ++iter;
-            //
-            // 2. remove from cache the couple timer listener / timer
-            //
-            std::pair<std::multimap<const CuTimerListener*, CuTimer *>::iterator, std::multimap<const CuTimerListener*, CuTimer *>::iterator > iterpair;
-            iterpair = d->ti_cache.equal_range(l); // find timers connected to the listener l
-            for(std::multimap<const CuTimerListener*, CuTimer *>::iterator cacheiter = iterpair.first; cacheiter != iterpair.second; ) {
-                if(cacheiter->second == t) { // timer is t found above
-                    cacheiter = d->ti_cache.erase(cacheiter);
-                }
-                else
-                    ++cacheiter;
-            }
-            // end step 2: couple (listener, timer) removal from d->ti_cache
-        }
-        else { // different timeout
-            ++iter;
-        }
+        if(iter->second == t)  iter = d->ti_map.erase(iter);
+        else ++iter;
+    }
+    std::multimap<const CuTimerListener*, CuTimer *>::iterator cacheiter = d->ti_cache.begin();
+    while(cacheiter != d->ti_cache.end()) {
+        if(cacheiter->second == t) cacheiter = d->ti_cache.erase(cacheiter);
+        else ++cacheiter;
     }
 }
 
@@ -250,11 +230,11 @@ void CuTimerService::m_removeFromMaps(CuTimerListener *l, int timeout)
  *
  * does not lock guard. Lock must be acquired by the caller
  */
-CuTimer* CuTimerService::m_findReusableTimer(int timeout) {
+CuTimer* CuTimerService::m_findReusableTimer(int timeout) const {
     int min = -1;
     CuTimer *reuse = nullptr;
     std::pair<std::multimap<int, CuTimer *>::const_iterator, std::multimap<int, CuTimer *>::const_iterator > ret;
-    ret = d->ti_map.equal_range(timeout);
+    ret = d->ti_map.equal_range(timeout); // find all timers with desired timeout
     for(std::multimap<int, CuTimer *>::const_iterator it = ret.first; it != ret.second; ++it) {
         std::list<CuTimerListener *> tm_lis = it->second->listeners();
         int listeners_cnt = tm_lis.size();
@@ -262,7 +242,7 @@ CuTimer* CuTimerService::m_findReusableTimer(int timeout) {
             min = listeners_cnt;
             reuse = it->second;
         }
-        else if(min > listeners_cnt) {
+        else if(listeners_cnt < min) {
             min = listeners_cnt;
             reuse = it->second;
         }
