@@ -372,18 +372,13 @@ bool QuPlotBase::updateScales()
             need_ybounds = true;
         }
     }
-    printf("QuPlotBase.updateScales: need_xbounds %d need_ybounds %d\n", need_xbounds, need_ybounds);
     if(need_xbounds || need_ybounds) // get the bounds for the needed axes
         axes_c->getBoundsFromCurves(this, &xm, &xM, &ym, &yM, need_xbounds, need_ybounds);
 
     foreach(int axisId, autoScaleAxisIds) {
         old_lb = axes_c->lowerBoundFromCurves(axisId);
         old_ub = axes_c->upperBoundFromCurves(axisId);
-                    if(axisId == QwtPlot::yLeft)
-                        printf("\e[1;32maxis autoscale for axis %d old low %f old up %f\e[0m\n", axisId, old_lb, old_ub);
         if(need_xbounds && (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop)) {
-//            printf("QuPlotBase.updateScales: new X bounds from curves from %s to %s\n", qstoc(QDateTime::fromMSecsSinceEpoch(xm).toString()),
-//                   qstoc(QDateTime::fromMSecsSinceEpoch(xM).toString()));
             axes_c->setBoundsFromCurves(xm, xM, axisId);
         }
         else if(need_ybounds && (axisId == QwtPlot::yRight || axisId == QwtPlot::yLeft))
@@ -394,9 +389,6 @@ bool QuPlotBase::updateScales()
         else if(zoomer->inZoom())
             zoomer->changeRect(axisId, axes_c->lowerBoundFromCurves(axisId) - old_lb,
                                axes_c->upperBoundFromCurves(axisId) - old_ub);
-//                    if(axisId == QwtPlot::xBottom)
-//                        printf("\e[1;32mbounds changed (xBottom) %d -  - - new lb %f new ub %f\e[0m\n", boundsChanged, axes_c->lowerBoundFromCurves(axisId)
-//                           , axes_c->upperBoundFromCurves(axisId));
     }
     return boundsChanged;
 }
@@ -719,8 +711,6 @@ void QuPlotBase::setYLowerBound(double l)
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
     axes_c->setManualBounds(this, QwtPlot::yLeft, l, axisScaleDiv(QwtPlot::yLeft).upperBound());
     refresh();
-    qDebug() << __PRETTY_FUNCTION__ << "setting bounds manual to " << l <<  axisScaleDiv(QwtPlot::yLeft).upperBound()
-             << "SITUATION " <<  axisScaleDiv(QwtPlot::yLeft).lowerBound() <<  axisScaleDiv(QwtPlot::yLeft).upperBound();
 }
 
 /*
@@ -731,8 +721,6 @@ void QuPlotBase::setYUpperBound(double u)
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
     axes_c->setManualBounds(this, QwtPlot::yLeft, axisScaleDiv(QwtPlot::yLeft).lowerBound(), u);
     refresh();
-    qDebug() << __PRETTY_FUNCTION__ << "setting bounds manual to " << u <<  axisScaleDiv(QwtPlot::yLeft).upperBound()
-             << "SITUATION " <<  axisScaleDiv(QwtPlot::yLeft).lowerBound() <<  axisScaleDiv(QwtPlot::yLeft).upperBound();
 }
 
 double QuPlotBase::xUpperBound()

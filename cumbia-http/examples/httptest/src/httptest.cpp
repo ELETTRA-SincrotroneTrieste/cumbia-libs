@@ -1,6 +1,7 @@
 #include "httptest.h"
 #include "ui_httptest.h"
 
+#include <QTimer>
 #include <quapps.h>
 
 HttpTest::HttpTest(CumbiaPool *cumbia_pool, QWidget *parent) :
@@ -13,6 +14,9 @@ HttpTest::HttpTest(CumbiaPool *cumbia_pool, QWidget *parent) :
     qDebug() << __PRETTY_FUNCTION__ << "available engines" << mloader.modules();
     ui->setupUi(this, cumbia_pool, m_ctrl_factory_pool);
     connect(ui->pbStop, SIGNAL(clicked()), this, SLOT(onStopSrc()));
+
+    // test deactivate listener
+    QTimer::singleShot(100, this, SLOT(onDeactivateTimeout()));
 }
 
 HttpTest::~HttpTest()
@@ -31,4 +35,10 @@ void HttpTest::onStopSrc() {
         else if(qobject_cast<QuTrendPlot *>(w)) qobject_cast<QuTrendPlot *>(w)->unsetSources();
         else if(qobject_cast<QuCircularGauge *>(w)) qobject_cast<QuCircularGauge *>(w)->unsetSource();
     }
+}
+
+void HttpTest::onDeactivateTimeout() {
+    printf("HttpTest.onDeactivateTimeout: unsetting source on quLabel1 %s\n", qstoc(ui->quLabel1->source()));
+    ui->quLabel1->setText("unsetting source immediately..");
+    ui->quLabel1->unsetSource();
 }

@@ -138,6 +138,9 @@ void CumbiaHttp::addAction(const std::string &source, CuDataListener *l, const C
 
 void CumbiaHttp::unlinkListener(const string &source, const string &method, CuDataListener *l) {
     if(CumbiaHTTPWorld().source_valid(source)) {
+        d->src_q_man->deactivateListener(source, method, l);
+        if(d->src_q_man->contains(source, method, l))
+            d->src_q_man->remove(source, method, l);
         d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, method, d->chan_recv->channel());
     }
 }

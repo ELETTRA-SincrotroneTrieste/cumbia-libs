@@ -23,6 +23,8 @@ public:
 private slots:
     void onStopSrc();
 
+    void onDeactivateTimeout();
+
 private:
     CumbiaPool *cu_pool;
     QuLogImpl m_log_impl;

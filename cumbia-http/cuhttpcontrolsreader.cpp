@@ -92,7 +92,7 @@ QString CuHttpControlsReader::source() const {
 }
 
 void CuHttpControlsReader::unsetSource() {
-    d->cu_http->unlinkListener(d->s.toStdString(), "stop", d->dlis);
+    d->cu_http->unlinkListener(d->s.toStdString(), "u", d->dlis);
     d->s = QString();
 }
 

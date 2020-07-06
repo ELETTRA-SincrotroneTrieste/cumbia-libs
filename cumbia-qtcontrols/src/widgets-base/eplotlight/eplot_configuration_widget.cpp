@@ -222,7 +222,6 @@ int EPlotConfigurationWidget::getIndexOfProperty(const QString& name)
     const QMetaObject *mo = d_plot->metaObject();
     int idx;
     idx = mo->indexOfProperty(qstoc(name));
-    qDebug() << "getting property " << name << " from " << d_plot;
     if(idx < 0)
         pwarn("error reading property \"%s\" from object \"%s\"", qstoc(name), qstoc(parent()->objectName()));
     return idx;
@@ -237,7 +236,6 @@ void EPlotConfigurationWidget::writeProperty(const QString& name, const QVariant
         const QMetaObject *mo = d_plot->metaObject();
         QMetaProperty mp = mo->property(idx);
         ret = mp.write(d_plot, val);
-        qDebug() << __PRETTY_FUNCTION__ << "wrote value " << val << "on prop " << name << "ret" << ret;
     }
     if(!ret)
         perr("error setting double property \"%s\"", name.toStdString().c_str());
@@ -343,11 +341,8 @@ void EPlotConfigurationWidget::editCurveColor()
     }
 }
 
-void EPlotConfigurationWidget::propertyChanged()
-{
+void EPlotConfigurationWidget::propertyChanged() {
     d_changedProperties.insert(sender()->objectName());
-    qDebug() << "EPlotConfigurationWidget::propertyChanged()" << sender()->objectName() << "sender " << sender()
-             << d_changedProperties;
 }
 
 void EPlotConfigurationWidget::apply()
