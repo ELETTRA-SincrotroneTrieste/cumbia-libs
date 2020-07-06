@@ -235,6 +235,7 @@ void EPlotConfigurationWidget::writeProperty(const QString& name, const QVariant
         const QMetaObject *mo = d_plot->metaObject();
         QMetaProperty mp = mo->property(idx);
         ret = mp.write(d_plot, val);
+        qDebug() << __PRETTY_FUNCTION__ << "wrote value " << val << "on prop " << name << "ret" << ret;
     }
     if(!ret)
         perr("error setting double property \"%s\"", name.toStdString().c_str());
@@ -342,8 +343,9 @@ void EPlotConfigurationWidget::editCurveColor()
 
 void EPlotConfigurationWidget::propertyChanged()
 {
-    qDebug() << "EPlotConfigurationWidget::propertyChanged()" << sender()->objectName() << "sender " << sender();
     d_changedProperties.insert(sender()->objectName());
+    qDebug() << "EPlotConfigurationWidget::propertyChanged()" << sender()->objectName() << "sender " << sender()
+             << d_changedProperties;
 }
 
 void EPlotConfigurationWidget::apply()
@@ -355,18 +357,19 @@ void EPlotConfigurationWidget::apply()
     else
     {
         d_plot->setYAxisAutoscaleEnabled(false);
-        if(d_changedProperties.contains("yLowerBound") && ui->yLowerBound->text().toDouble(&ok) && ok)
+        if(d_changedProperties.contains("yLowerBound") && ui->yLowerBound->text().toDouble(&ok) && ok) {
             writeProperty("yLowerBound", ui->yLowerBound->text().toDouble());
-        if(d_changedProperties.contains("yUpperBound") && ui->yUpperBound->text().toDouble(&ok) && ok)
+            d_plot->updateAxes(); // need this if we need to set yUpperBound below
+        }
+        if(d_changedProperties.contains("yUpperBound") && ui->yUpperBound->text().toDouble(&ok) && ok) {
             writeProperty("yUpperBound", ui->yUpperBound->text().toDouble());
+            d_plot->updateAxes();
+        }
     }
     /* auto scale adjustment */
     if(d_changedProperties.contains("yAutoscaleAdjustEnabled"))
-    {
-        writeProperty("yAutoscaleAdjustEnabled", ui->yAutoscaleAdjustEnabled->isChecked());
-        /* also update the value */
-        writeProperty("yAutoscaleAdjustment", ui->yAutoscaleAdjustment->value());
-    }
+        writeProperty("yAutoscaleAdjustment",
+                      !ui->yAutoscaleAdjustEnabled->isChecked() ? 0.0f : ui->yAutoscaleAdjustment->value());
     else if(d_changedProperties.contains("yAutoscaleAdjustment"))
         writeProperty("yAutoscaleAdjustment", ui->yAutoscaleAdjustment->value());
 

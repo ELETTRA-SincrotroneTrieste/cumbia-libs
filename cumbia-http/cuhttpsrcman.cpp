@@ -70,14 +70,13 @@ void CuHttpSrcMan::onDequeueTimeout() {
         d->srcd.insert(QString::fromStdString(i.src), SrcData(i.l, i.method, i.channel));
         d->items.append(i);
     }
-    if(!empty) {
+    if(d->items.size()) {
         d->lis->onSrcBundleReqReady(d->items);
         d->items.clear();
     }
-    else {
+    // slow down timer if no sources
+    if(empty) {
         d->timer->stop();
-//        d->lis->onSrcBundleReqReady(d->items);
-//        d->items.clear();
     }
 }
 
