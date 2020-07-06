@@ -174,6 +174,8 @@ void EPlotConfigurationWidget::init()
     connect(ui->cbBufferUnlimited, SIGNAL(toggled(bool)), ui->sbBufferSize, SLOT(setDisabled(bool)));
     connect(ui->xAutoscaleAdjustEnabled, SIGNAL(toggled(bool)), ui->xAutoscaleAdjustment, SLOT(setEnabled(bool)));
     connect(ui->yAutoscaleAdjustEnabled, SIGNAL(toggled(bool)), ui->yAutoscaleAdjustment, SLOT(setEnabled(bool)));
+
+    ui->pbRememberAppearanceSettings->setVisible(false);
     connect(ui->pbRememberAppearanceSettings, SIGNAL(clicked()), this, SLOT(saveStyles()));
 
     idx = getIndexOfProperty("dataBufferSize");
