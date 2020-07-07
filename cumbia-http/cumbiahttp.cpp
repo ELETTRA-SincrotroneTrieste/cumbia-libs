@@ -121,7 +121,7 @@ void CumbiaHttp::onSrcBundleReplyReady(const QByteArray &json) {
             printf("--> CumbiaHttp::onSrcBundleReplyReady: updating src %s value %s\n", src.c_str(), (*it)["value"].toString().c_str());
             if(srcd.lis) srcd.lis->onUpdate(*it);
             if(srcd.method == "s")
-                  d->chan_recv->addDataListener(QString::fromStdString(src), srcd.lis);
+                d->chan_recv->addDataListener(QString::fromStdString(src), srcd.lis);
             else if(srcd.method == "u") {
                 d->chan_recv->removeDataListener(srcd.lis);
             }
@@ -136,12 +136,19 @@ void CumbiaHttp::addAction(const std::string &source, CuDataListener *l, const C
     }
 }
 
-void CumbiaHttp::unlinkListener(const string &source, const string &method, CuDataListener *l) {
+/*!
+ * \brief disconnect the listener l of the given source
+ * \param source the full name of the source, as from CuHTTPSrc.prepare
+ * \param l the CuDataListener to disconnect
+ *
+ * \note
+ * Disconnect the listener both from a pending sync reply (onSrcBundleReplyReady) and
+ * the channel receiver
+ */
+void CumbiaHttp::unlinkListener(const string &source, const std::string& method, CuDataListener *l) {
     if(CumbiaHTTPWorld().source_valid(source)) {
-        d->src_q_man->deactivateListener(source, method, l);
-        if(d->src_q_man->contains(source, method, l))
-            d->src_q_man->remove(source, method, l);
-        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, method, d->chan_recv->channel());
+        d->src_q_man->cancelSrc(CuHTTPSrc(source, d->src_helpers), method, l, d->chan_recv->channel());
+        d->chan_recv->removeDataListener(l);
     }
 }
 

@@ -44,9 +44,8 @@ public:
     virtual ~CuHttpSrcMan();
     void setQueueManListener(CuHttpSrcQueueManListener* l);
     void enqueueSrc(const CuHTTPSrc & httpsrc, CuDataListener *l, const std::string& method, const QString &chan);
-    void deactivateListener(const std::string& httpsrc, const string &method, CuDataListener *l);
-    bool contains(const std::string& src, const std::string& method, CuDataListener* l) const;
-    void remove(const std::string& src, const std::string& method, CuDataListener* l);
+    void cancelSrc(const CuHTTPSrc &httpsrc, const std::string& method, CuDataListener *l, const QString& chan);
+    bool queue_contains(const std::string& src, CuDataListener* l) const;
     QList<SrcData> takeSrcs(const QString& src) const;
 
 private slots:
@@ -55,6 +54,8 @@ private slots:
 private:
 
     SrcQueueManagerPrivate *d;
+    bool m_queue_remove(const std::string& src, CuDataListener* l);
+    bool m_wait_map_remove(const std::string& src, CuDataListener* l);
 };
 
 #endif // SRCQUEUEMANAGER_H

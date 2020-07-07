@@ -57,37 +57,51 @@ void CuHttpSrcMan::enqueueSrc(const CuHTTPSrc &httpsrc, CuDataListener *l, const
 }
 
 /*!
- * \brief if httpsrc is in the queue, set the listener to nullptr
- *        so that it will not receive updates thereafter.
+ * \brief cancel a previously set source
+ *
+ * There are two possibile situations:
+ * \li src enqueued for set source. Remove src from the queue so that the operation is canceled
+ * \li src waiting for the http sync reply: remove src from the wait map so that the reply will
+ *     not update l
  */
-void CuHttpSrcMan::deactivateListener(const std::string& src, const string &method, CuDataListener *l) {
+void CuHttpSrcMan::cancelSrc(const CuHTTPSrc &httpsrc, const std::string& method, CuDataListener *l, const QString& chan) {
+    printf("CuHttpSrcMan::cancelSrc srarching src %s\n", httpsrc.prepare().c_str());
+    bool rem = m_queue_remove(httpsrc.prepare(), l);
+    if(!rem) { // if rem, src was still in queue, no request sent
+        rem = m_wait_map_remove(httpsrc.prepare(), l);
+        // if not in queue, request could have been sent: send "u" unsubscribe req
+        enqueueSrc(httpsrc, l, method, chan);
+    }
+}
+
+bool CuHttpSrcMan::m_queue_remove(const string &src, CuDataListener *l) {
+    const int siz = d->srcq.size();
+    QMutableListIterator<SrcItem> mi(d->srcq);
+    while(mi.hasNext()) {
+        mi.next();
+        printf("CuHttpSrcMan.m_queue_remove comparing %s wit %s %p wit %p\e[0m\n", mi.value().src.c_str(), src.c_str(), mi.value().l, l);
+        if(mi.value().src == src && mi.value().l == l) {
+            printf("CuHttpSrcMan.m_queue_remove REMOVED\n");
+            mi.remove();
+        }
+    }
+    printf("CuHttpSrcMan.m_queue_remove SIZE B4 %d afat %d\n", siz, d->srcq.size());
+    return siz != d->srcq.size();
+}
+
+bool CuHttpSrcMan::m_wait_map_remove(const string &src, CuDataListener *l) {
+    bool r = false;
     QMutableMapIterator<QString, SrcData> mi(d->srcd);
     while(mi.hasNext()) {
         mi.next();
         if(mi.key() == QString::fromStdString(src) && mi.value().lis == l) {
             printf("\e[1;35mCuHttpSrcMan::unlinkSrc deactivating listener %p for src %s meth %s\n",
-                   l, src.c_str(), method.c_str());
-            mi.value().lis = nullptr;
+                   l, src.c_str(), mi.value().method.c_str());
+            mi.remove();
+            r = true;
         }
     }
-
-}
-
-bool CuHttpSrcMan::contains(const string &src, const string &method, CuDataListener *l) const {
-    QList<SrcData> srcd = d->srcd.values(src.c_str());
-    foreach(const SrcData& s , srcd)
-        if(s.lis == l && s.method == method)
-            return true;
-    return false;
-}
-
-void CuHttpSrcMan::remove(const string &src, const string &method, CuDataListener *l) {
-    QMutableMapIterator<QString, SrcData> mi(d->srcd);
-    while(mi.hasNext()) {
-        mi.next();
-        if(mi.key() == QString::fromStdString(src) && mi.value().lis == l && mi.value().method == method)
-            mi.remove();
-    }
+    return r;
 }
 
 QList<SrcData> CuHttpSrcMan::takeSrcs(const QString &src) const {
