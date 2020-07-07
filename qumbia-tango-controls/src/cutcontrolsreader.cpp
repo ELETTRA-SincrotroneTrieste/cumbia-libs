@@ -250,7 +250,9 @@ void CuTControlsReader::setSource(const QString &s)
 {
     CuTControlsUtils tcu;
     d->source = tcu.replaceWildcards(s, qApp->arguments());
-    TSource tsrc(s.toStdString());
+    printf("CuTControlsReader.setSource called with source %s d->source %s\n", qstoc(s), qstoc(d->source));
+
+    TSource tsrc(d->source.toStdString());
     d->is_db_op = tsrc.isDbOp();
     if(d->is_db_op) {
         CuTaDbFactory dbf;
