@@ -13,18 +13,20 @@ public:
     QTimer *timer;
     QQueue<SrcItem> srcq;
     QMultiMap<QString, SrcData> srcd;
-    QList<SrcItem> items;
+    QMap<QString, SrcData> tgtd;
+    QList<SrcItem> r_items, w_items;
     CuHttpSrcQueueManListener *lis;
 };
 
-SrcItem::SrcItem(const std::string &s, CuDataListener *li, const std::string &metho, const QString &chan) :
-    src(s), l(metho != "u" ? li : nullptr), method(metho),
-    channel(metho == "s" || metho == "u" ? chan : "") {
+SrcItem::SrcItem(const std::string &s, CuDataListener *li, const std::string &metho, const QString &chan, const CuVariant &w_val) :
+    src(s), l(li), method(metho),
+    channel(metho == "s" || metho == "u" ? chan : ""), wr_val(w_val) {
 }
 
 SrcItem::SrcItem() : l(nullptr) { }
 
-SrcData::SrcData(CuDataListener *l, const string &me, const QString &chan) : lis(l), method(me), channel(chan) { }
+SrcData::SrcData(CuDataListener *l, const string &me, const QString &chan, const CuVariant &w_val)
+    : lis(l), method(me), channel(chan), wr_val(w_val){ }
 
 bool SrcData::isEmpty() const {
     return this->lis == nullptr;
@@ -48,12 +50,16 @@ void CuHttpSrcMan::setQueueManListener(CuHttpSrcQueueManListener *l) {
     d->lis = l;
 }
 
-void CuHttpSrcMan::enqueueSrc(const CuHTTPSrc &httpsrc, CuDataListener *l, const std::string& method, const QString& chan) {
+void CuHttpSrcMan::enqueueSrc(const CuHTTPSrc &httpsrc,
+                              CuDataListener *l,
+                              const std::string& method,
+                              const QString& chan,
+                              const CuVariant &w_val) {
     if(d->timer->interval() > TMR_DEQUEUE_INTERVAL)
         d->timer->setInterval(TMR_DEQUEUE_INTERVAL); // restore quick timeout if new sources are on the way
     if(!d->timer->isActive()) d->timer->start();
     std::string s = httpsrc.prepare();
-    d->srcq.enqueue(SrcItem(s, l, method, chan));
+    d->srcq.enqueue(SrcItem(s, l, method, chan, w_val));
 }
 
 /*!
@@ -65,36 +71,37 @@ void CuHttpSrcMan::enqueueSrc(const CuHTTPSrc &httpsrc, CuDataListener *l, const
  *     not update l
  */
 void CuHttpSrcMan::cancelSrc(const CuHTTPSrc &httpsrc, const std::string& method, CuDataListener *l, const QString& chan) {
-    printf("CuHttpSrcMan::cancelSrc srarching src %s\n", httpsrc.prepare().c_str());
-    bool rem = m_queue_remove(httpsrc.prepare(), l);
+    bool rem = m_queue_remove(httpsrc.prepare(), method, l);
+    printf("CuHttpSrcMan::cancelSrc searched src %s method %s found in queue? %d\n",
+           httpsrc.prepare().c_str(), method.c_str(), rem);
+
     if(!rem) { // if rem, src was still in queue, no request sent
-        rem = m_wait_map_remove(httpsrc.prepare(), l);
+        rem = m_wait_map_remove(httpsrc.prepare(), method, l);
         // if not in queue, request could have been sent: send "u" unsubscribe req
-        enqueueSrc(httpsrc, l, method, chan);
+        if(method == "s")
+            enqueueSrc(httpsrc, l, "u", chan, CuVariant());
     }
 }
 
-bool CuHttpSrcMan::m_queue_remove(const string &src, CuDataListener *l) {
+bool CuHttpSrcMan::m_queue_remove(const string &src, const std::string& method, CuDataListener *l) {
     const int siz = d->srcq.size();
     QMutableListIterator<SrcItem> mi(d->srcq);
     while(mi.hasNext()) {
         mi.next();
-        printf("CuHttpSrcMan.m_queue_remove comparing %s wit %s %p wit %p\e[0m\n", mi.value().src.c_str(), src.c_str(), mi.value().l, l);
-        if(mi.value().src == src && mi.value().l == l) {
-            printf("CuHttpSrcMan.m_queue_remove REMOVED\n");
+//        printf("CuHttpSrcMan.m_queue_remove comparing %s wit %s %p wit %p\e[0m\n", mi.value().src.c_str(), src.c_str(), mi.value().l, l);
+        if((mi.value().src == src && mi.value().l == l && mi.value().method == method) || (mi.value().l == nullptr)) {
             mi.remove();
         }
     }
-    printf("CuHttpSrcMan.m_queue_remove SIZE B4 %d afat %d\n", siz, d->srcq.size());
     return siz != d->srcq.size();
 }
 
-bool CuHttpSrcMan::m_wait_map_remove(const string &src, CuDataListener *l) {
+bool CuHttpSrcMan::m_wait_map_remove(const string &src, const string &method, CuDataListener *l) {
     bool r = false;
     QMutableMapIterator<QString, SrcData> mi(d->srcd);
     while(mi.hasNext()) {
         mi.next();
-        if(mi.key() == QString::fromStdString(src) && mi.value().lis == l) {
+        if((mi.key() == QString::fromStdString(src) && mi.value().lis == l && mi.value().method == method) || mi.value().lis == nullptr) {
             printf("\e[1;35mCuHttpSrcMan::unlinkSrc deactivating listener %p for src %s meth %s\n",
                    l, src.c_str(), mi.value().method.c_str());
             mi.remove();
@@ -110,17 +117,28 @@ QList<SrcData> CuHttpSrcMan::takeSrcs(const QString &src) const {
     return srcd;
 }
 
+const QMap<QString, SrcData>& CuHttpSrcMan::targetMap() const {
+    return d->tgtd;
+}
+
+QMap<QString, SrcData> CuHttpSrcMan::takeTgts() const {
+    QMap<QString, SrcData> tgtd = std::move(d->tgtd);
+    d->tgtd.clear();
+    return tgtd;
+}
+
 void CuHttpSrcMan::onDequeueTimeout() {
-    qDebug() << __PRETTY_FUNCTION__ << "dequeueing" << d->srcq.size() << "items -- timer interval " << d->timer->interval();
     bool empty = d->srcq.isEmpty();
     while(!d->srcq.isEmpty()) {
         const SrcItem& i = d->srcq.dequeue();
-        d->srcd.insert(QString::fromStdString(i.src), SrcData(i.l, i.method, i.channel));
-        d->items.append(i);
+        i.method != "write" ?  d->srcd.insert(QString::fromStdString(i.src), SrcData(i.l, i.method, i.channel))
+                             : d->tgtd.insert(QString::fromStdString(i.src), SrcData(i.l, i.method, i.channel, i.wr_val));
+        i.method != "write" ?  d->r_items.append(i) : d->w_items.append(i);
     }
-    if(d->items.size()) {
-        d->lis->onSrcBundleReqReady(d->items);
-        d->items.clear();
+    if(d->r_items.size() || d->w_items.size()) {
+        d->lis->onSrcBundleReqReady(d->r_items, d->w_items);
+        d->r_items.clear();
+        d->w_items.clear();
     }
     // slow down timer if no sources
     if(empty) {

@@ -17,7 +17,14 @@ class CuHttpBundledSrcReq : public QObject
 {
     Q_OBJECT
 public:
-    explicit CuHttpBundledSrcReq(const QList<SrcItem>& srcs, CuHttpBundledSrcReqListener *l, QObject *parent = nullptr);
+    explicit CuHttpBundledSrcReq(const QList<SrcItem>& srcs,
+                                 CuHttpBundledSrcReqListener *l,
+                                 QObject *parent = nullptr);
+    explicit CuHttpBundledSrcReq(const QMap<QString, SrcData>& targetmap,
+                                 CuHttpBundledSrcReqListener *l,
+                                 const QByteArray& cookie = QByteArray(),
+                                 QObject *parent = nullptr);
+
     virtual ~CuHttpBundledSrcReq();
 
     void start(const QUrl &url, QNetworkAccessManager *nam);

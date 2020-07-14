@@ -46,7 +46,7 @@ public:
     CuHTTPActionFactoryI* clone() const;
     CuData options() const;
 private:
-    CuData configuration;
+    CuData o;
     CuVariant m_write_val;
 };
 

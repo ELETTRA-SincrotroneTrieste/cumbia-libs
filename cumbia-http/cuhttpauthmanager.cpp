@@ -21,14 +21,16 @@ class CuHttpAuthManagerPrivate {
 public:
     QNetworkAccessManager *netman;
     QNetworkReply *reply;
+    CuHttpAuthManListener *listener;
     QUrl auth_url;
     CuHttpAuthCookieStore cookie_store;
 };
 
-CuHttpAuthManager::CuHttpAuthManager(QNetworkAccessManager *netman, QObject *parent) : QObject(parent) {
+CuHttpAuthManager::CuHttpAuthManager(QNetworkAccessManager *netman, CuHttpAuthManListener *l, QObject *parent) : QObject(parent) {
     d = new CuHttpAuthManagerPrivate;
     d->netman = netman;
     d->reply = nullptr;
+    d->listener = l;
 }
 
 CuHttpAuthManager::~CuHttpAuthManager() {
@@ -81,8 +83,8 @@ void CuHttpAuthManager::onReplyFinished()
 {
     QByteArray ba = d->reply->readAll();
     QString msg;
-    qDebug() << __PRETTY_FUNCTION__ << ba;
     bool authorised = !ba.startsWith("login failed");
+    qDebug() << __PRETTY_FUNCTION__ << "AUTH MESSAGE: " << ba << "authorised" << authorised << "cookie" << d->reply->rawHeader("Set-Cookie");
     if(authorised) {
         QByteArray cookie = d->reply->rawHeader("Set-Cookie");
         if(!cookie.isEmpty()) {
@@ -95,18 +97,18 @@ void CuHttpAuthManager::onReplyFinished()
     else
         msg = "CuHttpAuthManager: login failed";
     d->reply->deleteLater();
-    emit authReply(authorised, d->reply->property("user").toString(), msg, d->reply->property("ssl").toBool());
+    d->listener->onAuthReply(authorised, d->reply->property("user").toString(), msg, d->reply->property("ssl").toBool());
 }
 
 void CuHttpAuthManager::onSslErrors(const QList<QSslError> &errors) {
     QString msg;
     foreach(const QSslError &e, errors)
         msg += e.errorString() + "\n";
-    emit error(msg);
+    d->listener->onAuthError(msg);
 }
 
 void CuHttpAuthManager::onError(QNetworkReply::NetworkError e) {
-    emit error(d->reply->errorString() + QString( "code %1").arg(e));
+    d->listener->onAuthError(d->reply->errorString() + QString( "code %1").arg(e));
 }
 
 void CuHttpAuthManager::onReplyDestroyed(QObject * o) {
@@ -120,7 +122,7 @@ void CuHttpAuthManager::onReplyEncrypted()
 }
 
 void CuHttpAuthManager::onCredsReady(const QString &user, const QString &passwd) {
-    emit credentials(user, passwd);
+    d->listener->onCredsReady(user, passwd);
 }
 
 CuData CuHttpAuthManager::m_make_error_data(const QString &msg) const {

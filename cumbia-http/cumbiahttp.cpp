@@ -3,6 +3,7 @@
 #include "cuhttpauthmanager.h"
 #include "cuhttpsrchelper_i.h"
 #include "cuhttpsrcman.h"
+#include "cuhttpwritehelper.h"
 #include "cuhttpbundledsrcreq.h"
 
 #include <cumacros.h>
@@ -24,6 +25,7 @@
 #include <QJsonValue>
 #include <QJsonObject>
 #include <QThread> // for QThread::currentThread()
+#include <qustring.h>
 
 class CumbiaHttpPrivate {
 public:
@@ -36,6 +38,7 @@ public:
     CuHttpChannelReceiver *chan_recv;
     CuHttpAuthManager *auth_man;
     CuHttpSrcMan *src_q_man;
+    CuHttpWriteHelper *w_helper;
     int chan_ttl;
 };
 
@@ -59,9 +62,10 @@ CumbiaHttp::CumbiaHttp(const QString &url,
     d->qnam = new QNetworkAccessManager(nullptr);
     d->chan_recv = new CuHttpChannelReceiver(d->url, channel, d->qnam);
     d->chan_recv->setDataExpireSecs(static_cast<time_t>(d->chan_ttl));
-    d->auth_man = new CuHttpAuthManager(d->qnam);
+    d->auth_man = new CuHttpAuthManager(d->qnam, this);
     d->chan_recv->start();
     d->src_q_man = new CuHttpSrcMan(this);
+    d->w_helper = nullptr;
     cuprintf("CumbiaHttp: instantiated with url %s\n", qstoc(url));
     m_init();
 }
@@ -75,6 +79,7 @@ CumbiaHttp::~CumbiaHttp()
         delete d->m_threadsEventBridgeFactory;
     if(d->m_threadFactoryImplI)
         delete d->m_threadFactoryImplI;
+    delete d->w_helper;
     delete d->qnam;
     foreach(QuReplaceWildcards_I *i, d->m_repl_wildcards_i)
         delete i;
@@ -91,48 +96,38 @@ void CumbiaHttp::m_init()
                                           new CuHTTPActionFactoryService());
 }
 
-void CumbiaHttp::onActionStarted(const string &source, CuHTTPActionA::Type t) {
-    Q_UNUSED(source)
-    Q_UNUSED(t)
-}
-
-void CumbiaHttp::onActionFinished(const string &source, CuHTTPActionA::Type t) {
-    CuHTTPActionFactoryService *af =
-            static_cast<CuHTTPActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuHTTPActionFactoryService::CuHTTPActionFactoryServiceType)));
-
-    CuHTTPActionA *a = af->unregisterAction(source, t);
-    qDebug() << __PRETTY_FUNCTION__ << source.c_str() << "type " << t << "found " << a;
-    if(a) delete a;
-}
-
-void CumbiaHttp::onSrcBundleReqReady(const QList<SrcItem> &srcs) {
-    qDebug() << __PRETTY_FUNCTION__ << "bundle of " << srcs.size() << "sources ready";
-    CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(srcs, this);
-    r->start(d->url + "/bu/src-bundle", d->qnam);
-}
-
-void CumbiaHttp::onSrcBundleReplyReady(const QByteArray &json) {
-    CumbiaHTTPWorld w;
-    std::list<CuData> dali;
-    bool ok = w.json_decode(json, dali);
-    for(std::list<CuData>::iterator it = dali.begin(); it != dali.end(); ++it) {
-        const std::string &src = it->value("src").toString();
-        foreach(const SrcData& srcd, d->src_q_man->takeSrcs(QString::fromStdString(src))) {
-            printf("--> CumbiaHttp::onSrcBundleReplyReady: updating src %s value %s\n", src.c_str(), (*it)["value"].toString().c_str());
-            if(srcd.lis) srcd.lis->onUpdate(*it);
-            if(srcd.method == "s")
-                d->chan_recv->addDataListener(QString::fromStdString(src), srcd.lis);
-            else if(srcd.method == "u") {
-                d->chan_recv->removeDataListener(srcd.lis);
-            }
-        }
+void CumbiaHttp::onSrcBundleReqReady(const QList<SrcItem> &rsrcs, const QList<SrcItem> &wsrcs) {
+    qDebug() << __PRETTY_FUNCTION__ << "bundle of " << rsrcs.size() << "r sources ready and "
+             << wsrcs.size() << "w sources";
+    if(rsrcs.size() > 0) {
+        CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(rsrcs, this);
+        r->start(d->url + "/bu/src-bundle", d->qnam);
+    }
+    if(wsrcs.size() > 0) {
+        QByteArray cookie = d->auth_man->getCookie();
+        CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(wsrcs, this);
+        r->start(d->url + "/bu/xec-bundle", d->qnam);
     }
 }
 
-void CumbiaHttp::addAction(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI& f)
-{
+void CumbiaHttp::onSrcBundleReplyReady(const QByteArray &json) {
+    printf("\e[1;36mCumbiaHttp::onSrcBundleReplyReady\n%s\e[0m\n", json.data());
+    CumbiaHTTPWorld w;
+    std::list<CuData> dali;
+    bool ok = w.json_decode(json, dali);
+    for(std::list<CuData>::iterator it = dali.begin(); ok && it != dali.end(); ++it)
+        m_data_is_auth_req(*it) ? m_auth_request(*it) : m_lis_update(*it);
+}
+
+void CumbiaHttp::readEnqueue(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI& f) {
     if(CumbiaHTTPWorld().source_valid(source)) {
-        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, f.getMethod(), d->chan_recv->channel());
+        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, f.getMethod(), d->chan_recv->channel(), CuVariant());
+    }
+}
+
+void CumbiaHttp::executeWrite(const string &source, CuDataListener *l, const CuHTTPActionFactoryI &f) {
+    if(CumbiaHTTPWorld().source_valid(source)) {
+        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, f.getMethod(), "", f.options().value("write_val"));
     }
 }
 
@@ -150,14 +145,6 @@ void CumbiaHttp::unlinkListener(const string &source, const std::string& method,
         d->src_q_man->cancelSrc(CuHTTPSrc(source, d->src_helpers), method, l, d->chan_recv->channel());
         d->chan_recv->removeDataListener(l);
     }
-}
-
-CuHTTPActionA *CumbiaHttp::findAction(const std::string &source, CuHTTPActionA::Type t) const
-{
-    CuHTTPActionFactoryService *af =
-            static_cast<CuHTTPActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuHTTPActionFactoryService::CuHTTPActionFactoryServiceType)));
-    CuHTTPActionA* a = af->findActive(source, t);
-    return a;
 }
 
 /*!
@@ -215,8 +202,7 @@ CuThreadFactoryImplI *CumbiaHttp::getThreadFactoryImpl() const
     return d->m_threadFactoryImplI;
 }
 
-CuThreadsEventBridgeFactory_I *CumbiaHttp::getThreadEventsBridgeFactory() const
-{
+CuThreadsEventBridgeFactory_I *CumbiaHttp::getThreadEventsBridgeFactory() const {
     return d->m_threadsEventBridgeFactory;
 }
 
@@ -226,4 +212,83 @@ QString CumbiaHttp::url() const {
 
 int CumbiaHttp::getType() const {
     return CumbiaHTTPType;
+}
+
+bool CumbiaHttp::m_data_is_auth_req(const CuData &da) const {
+    return da.containsKey("auth_url") && da.has("method", "write");
+}
+
+void CumbiaHttp::onCredsReady(const QString &user, const QString &passwd) {
+    if(user.isEmpty()) {
+        // unrecoverable, notify listeners and remove targets from src_q_man
+        CuData err = d->w_helper->makeErrData("invalid user name").set("is_result", true);
+        const QMap<QString, SrcData> &tm = d->src_q_man->takeTgts();
+        foreach(const QString& src, tm.keys()) {
+            qDebug() << __PRETTY_FUNCTION__ << "tgt" << src << "msg" << "invalid user nam";
+            if(tm[src].lis) tm[src].lis->onUpdate(err.set("src", src.toStdString()));
+        }
+    }
+    else
+        d->auth_man->tryAuthorize(user, passwd);
+}
+
+void CumbiaHttp::onAuthReply(bool authorised, const QString &user, const QString &message, bool encrypted) {
+    if(authorised) {
+        // restart writes
+        QByteArray cookie = d->auth_man->getCookie();
+        CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(d->src_q_man->targetMap(), this, cookie);
+        r->start(d->url + "/bu/xec-bundle", d->qnam);
+    }
+    else {
+        CuData err = d->w_helper->makeErrData(message).set("is_result", true).set("user", user.toStdString());
+        const QMap<QString, SrcData>& tamap = d->src_q_man->takeTgts();
+        foreach(const QString& src, tamap.keys()) {
+            qDebug() << __PRETTY_FUNCTION__ << "tgt" << src << "msg" << message;
+            if(tamap[src].lis) tamap[src].lis->onUpdate(err.set("src", src.toStdString()));
+        }
+    }
+}
+
+void CumbiaHttp::onAuthError(const QString &errm) {
+
+    CuData err = d->w_helper->makeErrData(errm).set("is_result", true);
+    const QMap<QString, SrcData> &tm = d->src_q_man->takeTgts();
+    foreach(const QString& src, tm.keys()) {
+        qDebug() << __PRETTY_FUNCTION__ << "src" << src << "error " << errm;
+        if(tm[src].lis) tm[src].lis->onUpdate(err.set("src", src.toStdString()));
+    }
+}
+
+void CumbiaHttp::m_auth_request(const CuData &da) {
+    if(!d->w_helper) {
+        d->w_helper = new CuHttpWriteHelper();
+        QObject::connect(d->auth_man, SIGNAL(credentials(QString, QString)), d->w_helper, SLOT(onCredentials(QString, QString)));
+        QObject::connect(d->auth_man, SIGNAL(authReply(bool, QString, QString, bool)), d->w_helper, SLOT(onAuthReply(bool, QString, QString, bool)));
+        QObject::connect(d->auth_man, SIGNAL(error(const QString&)), d->w_helper, SLOT(onAuthError(const QString&)));
+    }
+    d->auth_man->authPrompt(QuString(da, "auth_url"), false); // false: use dialog
+}
+
+void CumbiaHttp::m_lis_update(const CuData &da) {
+    const std::string &src = da.value("src").toString();
+    QList<SrcData> tgtli;
+    const QMap<QString, SrcData> &mp = d->src_q_man->takeTgts();
+    foreach(const QString& tgt, mp.keys()) {
+        tgtli.push_back(mp.value(tgt));
+        printf("CumbiaHttp::m_lis_update: tgt %s meth %s lis %p\n", qstoc(tgt), tgtli.last().method.c_str(), tgtli.last().lis);
+    }
+    const QList<SrcData> &dali = d->src_q_man->takeSrcs(QString::fromStdString(src)) + tgtli;
+
+    printf("CumbiaHttp::m_lis_update: %s data list siz %d\n", da.toString().c_str(), dali.size());
+    foreach(const SrcData& srcd, dali) {
+        printf("--> CumbiaHttp::m_lis_update: updating src %s value %s lis %p\n",
+               src.c_str(), da["value"].toString().c_str(), srcd.lis);
+        // update listener but not if method is "u": at this time it will have been deleted
+        if(srcd.lis && srcd.method != "u") srcd.lis->onUpdate(da);
+        if(srcd.method == "s")
+            d->chan_recv->addDataListener(QString::fromStdString(src), srcd.lis);
+        else if(srcd.method == "u") {
+            d->chan_recv->removeDataListener(srcd.lis);
+        }
+    }
 }

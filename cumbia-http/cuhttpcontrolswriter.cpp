@@ -1,5 +1,5 @@
 #include "cuhttpcontrolswriter.h"
-#include "cuhttpactionwriter.h"
+#include "cuhttpwritehelper.h"
 #include "cuhttpactionfactories.h"
 #include "qureplacewildcards_i.h"
 
@@ -159,7 +159,7 @@ void CuHttpControlsWriter::execute() {
     std::string t = d->target.toStdString();
     // remove placeholders from the target, f.e. a/b/c/d(&objectref) -> a/b/c/d
     t = t.substr(0, t.find("("));
-    d->cu_http->addAction(t, d->tlistener, wtf);
+    d->cu_http->executeWrite(t, d->tlistener, wtf);
 }
 
 /*! \brief This is not implemented yet
@@ -192,5 +192,5 @@ void CuHttpControlsWriter::setTarget(const QString &s) {
     // remove placeholders from the target, f.e. a/b/c/d(&objectref) -> a/b/c/d
     t = t.substr(0, t.find("("));
     cuprintf("\e[1;35mCuHttpControlsWriter::setTarget %s\e[0m\n", qstoc(s));
-    d->cu_http->addAction(t, d->tlistener, cf);
+    d->cu_http->readEnqueue(t, d->tlistener, cf);
 }

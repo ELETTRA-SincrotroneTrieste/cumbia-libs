@@ -24,17 +24,6 @@ class CuHTTPActionFactoryI
 public:
     CuHTTPActionFactoryI() {}
 
-    /**
-     * Pure virtual method that must be implemented by subclasses to return a valid CuHTTPActionA
-     * instance.
-     *
-     */
-    virtual CuHTTPActionA *create(const CuHTTPSrc &s,
-                                  QNetworkAccessManager *nam,
-                                  const QString& http_addr,
-                                  CuHttpAuthManager *authman,
-                                  CuHttpChannelReceiver* cr = nullptr) const = 0;
-
     /** \brief Return the type of action that the factory creates
      *
      * @return the type of action that the factory creates

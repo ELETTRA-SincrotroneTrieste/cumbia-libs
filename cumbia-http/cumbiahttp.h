@@ -9,6 +9,7 @@
 
 #include "cuhttpsrcman.h"
 #include "cuhttpbundledsrcreq.h"
+#include "cuhttpauthmanager.h"
 
 class CuThreadFactoryImplI;
 class CuThreadsEventBridgeFactory_I;
@@ -89,7 +90,10 @@ class CumbiaHttpPrivate;
  * read value (or configuration) *or* an error condition. This implies that if one or more amongst the *n* sources takes
  * time before being available, all sources in the bundle will be delivered late. Updates are distributed across the SSE channel.
  */
-class CumbiaHttp : public Cumbia, public CuHttpBundledSrcReqListener, public CuHttpSrcQueueManListener, public CuHTTPActionListener
+class CumbiaHttp : public Cumbia,
+        public CuHttpBundledSrcReqListener,
+        public CuHttpSrcQueueManListener,
+        public CuHttpAuthManListener
 {
 
 public:
@@ -103,9 +107,10 @@ public:
     QString url() const;
     virtual int getType() const;
 
-    void addAction(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI &f);
+    void readEnqueue(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI &f);
+    void executeWrite(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI &f);
+
     void unlinkListener(const string &source, const std::string& method, CuDataListener *l);
-    CuHTTPActionA *findAction(const std::string &source, CuHTTPActionA::Type t) const;
 
     void addReplaceWildcardI(QuReplaceWildcards_I *rwi);
     void addSrcHelper(CuHttpSrcHelper_I *srch);
@@ -119,22 +124,25 @@ public:
 private:
 
     void m_init();
+    bool m_data_is_auth_req(const CuData& da) const;
+    void m_auth_request(const CuData& da);
+    void m_lis_update(const CuData& da);
 
     CumbiaHttpPrivate *d;
 
-
-    // CuHTTPActionListener interface
-public:
-    void onActionStarted(const string &source, CuHTTPActionA::Type t);
-    void onActionFinished(const string &source, CuHTTPActionA::Type t);
-
     // CuHttpSrcQueueManListener interface
 public:
-    void onSrcBundleReqReady(const QList<SrcItem> &srcs);
+    void onSrcBundleReqReady(const QList<SrcItem>& rsrcs, const QList<SrcItem>& wsrcs);
 
     // CuHttpBundledSrcReqListener interface
 public:
     void onSrcBundleReplyReady(const QByteArray &json);
+
+    // CuHttpAuthManListener interface
+public:
+    void onCredsReady(const QString &user, const QString &passwd);
+    void onAuthReply(bool authorised, const QString &user, const QString &message, bool encrypted);
+    void onAuthError(const QString &errm);
 };
 
 #endif // CUMBIAHTTP_H

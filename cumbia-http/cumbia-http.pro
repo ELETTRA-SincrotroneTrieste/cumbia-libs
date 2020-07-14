@@ -63,7 +63,6 @@ SOURCES += \
     cuhttpactionfactories.cpp \
     cuhttpactionfactoryservice.cpp \
     cuhttpactionreader.cpp \
-    cuhttpactionwriter.cpp \
     cuhttpauthcookiestore.cpp \
     cuhttpauthmanager.cpp \
     cuhttpauthmanagertools.cpp \
@@ -73,6 +72,7 @@ SOURCES += \
     cuhttpcontrolswriter.cpp \
     cuhttpregisterengine.cpp \
     cuhttpsrcman.cpp \
+    cuhttpwritehelper.cpp \
     cumbiahttp.cpp \
     cumbiahttpworld.cpp \
     protocol/tango/cuhttpprotocolhelpers.cpp \
@@ -89,7 +89,6 @@ HEADERS += \
     cuhttpactionfactoryi.h \
     cuhttpactionfactoryservice.h \
     cuhttpactionreader.h \
-    cuhttpactionwriter.h \
     cuhttpauthcookiestore.h \
     cuhttpauthmanager.h \
     cuhttpauthmanagertools.h \
@@ -100,6 +99,7 @@ HEADERS += \
     cuhttpregisterengine.h \
     cuhttpsrchelper_i.h \
     cuhttpsrcman.h \
+    cuhttpwritehelper.h \
     cumbiahttp.h \
     cumbiahttpworld.h \
     protocol/cuhttpprotocolhelper_i.h \

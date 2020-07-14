@@ -1,6 +1,6 @@
 #include "cuhttpactionfactories.h"
 #include "cuhttpactionreader.h"
-#include "cuhttpactionwriter.h"
+#include "cuhttpwritehelper.h"
 #include "cuhttpactionconf.h"
 #include "cumbiahttp.h"
 #include "cuhttpchannelreceiver.h"
@@ -29,23 +29,6 @@ CuHTTPActionReaderFactory::~CuHTTPActionReaderFactory() {
     delete d;
 }
 
-/** \brief creates and returns a CuHTTPActionReader, (that implements the CuHTTPActionI interface)
- *
- * @param s a string with the name of the source
- * @param ct a pointer to CumbiaHttp
- * @return a CuHTTPActionReader, that implements the CuHTTPActionI interface
- */
-CuHTTPActionA *CuHTTPActionReaderFactory::create(const CuHTTPSrc &s,
-                                                 QNetworkAccessManager *nam,
-                                                 const QString &http_addr,
-                                                 CuHttpAuthManager *authman,
-                                                 CuHttpChannelReceiver* cr) const {
-    CuHTTPActionReader* reader = new CuHTTPActionReader(s, cr, nam, http_addr, authman);
-    reader->mergeOptions(d->options);
-    // no refresh mode options, no period for http
-    return reader;
-}
-
 std::string CuHTTPActionReaderFactory::getMethod() const {
     return d->options.has("method", "read") ? "read" : "s";
 }
@@ -61,41 +44,29 @@ CuData CuHTTPActionReaderFactory::options() const {
 }
 
 void CuHTTPActionWriterFactory::setConfiguration(const CuData &conf) {
-    configuration = conf;
+    o.merge(conf);
 }
 
 void CuHTTPActionWriterFactory::setWriteValue(const CuVariant &write_val) {
-    m_write_val = write_val;
+    o.merge(CuData("write_val", write_val));
+}
+
+string CuHTTPActionWriterFactory::getMethod() const {
+    return "write";
+}
+
+CuHTTPActionFactoryI *CuHTTPActionWriterFactory::clone() const {
+    CuHTTPActionWriterFactory *wf = new CuHTTPActionWriterFactory();
+    wf->o = this->o;
+    return wf;
 }
 
 CuData CuHTTPActionWriterFactory::options() const {
-    return configuration;
+    return o;
 }
 
 CuHTTPActionWriterFactory::~CuHTTPActionWriterFactory() { }
 
-CuHTTPActionA *CuHTTPActionWriterFactory::create(const CuHTTPSrc &s,
-                                                 QNetworkAccessManager *qnam,
-                                                 const QString &http_addr,
-                                                 CuHttpAuthManager *aman,
-                                                 CuHttpChannelReceiver* ) const
-{
-    CuHttpActionWriter *w = new CuHttpActionWriter(s, qnam, http_addr, aman);
-    w->setWriteValue(m_write_val);
-    w->setConfiguration(configuration);
-    return w;
-}
-
-string CuHTTPActionWriterFactory::getMethod() const {
-    return "writer";
-}
-
-CuHTTPActionFactoryI *CuHTTPActionWriterFactory::clone() const {
-    CuHTTPActionWriterFactory* f = new CuHTTPActionWriterFactory;
-    f->setConfiguration(configuration);
-    f->setWriteValue(m_write_val);
-    return f;
-}
 
 void CuHTTPActionConfFactory::setOptions(const CuData &o) {
     m_o = o;
@@ -103,14 +74,6 @@ void CuHTTPActionConfFactory::setOptions(const CuData &o) {
 
 CuHTTPActionConfFactory::~CuHTTPActionConfFactory() {
 
-}
-
-CuHTTPActionA *CuHTTPActionConfFactory::create(const CuHTTPSrc &s,
-                                               QNetworkAccessManager *qnam,
-                                               const QString &http_addr,
-                                               CuHttpAuthManager *aman,
-                                               CuHttpChannelReceiver* ) const {
-    return new CuHttpActionConf(s, qnam, http_addr, aman);
 }
 
 std::string CuHTTPActionConfFactory::getMethod() const {

@@ -120,8 +120,13 @@ void CuHttpChannelReceiver::decodeMessage(const QJsonValue &v) {
                 l->onUpdate(res);
             }
         }
-        else if(!data_fresh)
-            perr("CuHttpChannelReceiver::decodeMessage: source \"%s\" data is too old: %lds > %lds ", qstoc(src), diff_t, d->data_exp_t);
+        else if(!data_fresh) {
+            CuData res("src", src.toStdString());
+            CumbiaHTTPWorld httpw;
+            httpw.json_decode(a.at(0), res);
+            perr("CuHttpChannelReceiver::decodeMessage: source \"%s\" data is too old: %lds > %lds DATA %s",
+                 qstoc(src), diff_t, d->data_exp_t, datos(res));
+        }
     }
 }
 

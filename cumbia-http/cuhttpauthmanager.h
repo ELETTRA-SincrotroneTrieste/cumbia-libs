@@ -11,12 +11,19 @@ class CuHttpAuthManagerPrivate;
 class QString;
 class CuData;
 
+class CuHttpAuthManListener {
+public:
+    virtual void onCredsReady(const QString& user, const QString& passwd) = 0;
+    virtual void onAuthReply(bool authorised, const QString &user, const QString &message, bool encrypted) = 0;
+    virtual void onAuthError(const QString& errm) = 0;
+};
+
 class CuHttpAuthManager : public QObject
 {
     Q_OBJECT
 public:
 
-    CuHttpAuthManager(QNetworkAccessManager *netman, QObject *parent = nullptr);
+    CuHttpAuthManager(QNetworkAccessManager *netman, CuHttpAuthManListener *l, QObject *parent = nullptr);
     ~CuHttpAuthManager();
 
     void tryAuthorize(const QString &user, const QString &pass);
@@ -28,6 +35,8 @@ signals:
     void authReply(bool authorised, const QString& user, const QString& message, bool encrypted);
     void error(const QString& msg);
 
+protected slots:
+    void onCredsReady(const QString &user, const QString &passwd);
 private slots:
     void onNewData();
     void onReplyFinished();
@@ -36,7 +45,6 @@ private slots:
     void onReplyDestroyed(QObject *);
     void onReplyEncrypted();
 
-    void onCredsReady(const QString& user, const QString& passwd);
 
 private:
     CuHttpAuthManagerPrivate *d;
