@@ -167,8 +167,8 @@ void CuEventLoopService::run()
                     != d->eloo_liss.end()) {
                 event_i.lis->onEvent(event_i.event);
             }
-            qcopy.pop();
             delete event_i.event;
+            qcopy.pop();
         }
     }
 }
