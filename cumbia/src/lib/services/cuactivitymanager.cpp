@@ -2,16 +2,6 @@
 #include "cudata.h"
 #include "cuactivity.h"
 #include "cumacros.h"
-#include <map>
-#include <mutex> // for unique_lock
-#include <shared_mutex>
-
-class CuActivityManagerPrivate {
-public:
-    std::multimap< CuThreadInterface *, CuActivity *> conn_mumap;
-    std::multimap<const CuActivity *, CuThreadListener *> th_lis_mumap;
-    std::shared_mutex shared_mu;
-};
 
 /** \brief The Cumbia Activity Manager keeps the links between threads, activities and thread listeners.
  *         CuActivityManager deals with adding, removing and finding objects connected with each other.
@@ -20,14 +10,17 @@ public:
  * All the methods in this class are thread safe and can be accessed from within any CuActivity or
  * other thread.
  */
-CuActivityManager::CuActivityManager() {
-    d = new CuActivityManagerPrivate;
+CuActivityManager::CuActivityManager()
+{
+
 }
 
 CuActivityManager::~CuActivityManager()
 {
     pdelete("~CuActivityManager %p", this);
-    delete d;
+    // std::lock_guard<std::mutex> lock(m_mutex);
+    mConnectionsMultiMap.clear();
+    mThreadListenersMultiMap.clear();
 }
 
 void CuActivityManager::addConnection(CuThreadInterface *t, CuActivity *a, CuThreadListener *threadListener)
@@ -37,9 +30,8 @@ void CuActivityManager::addConnection(CuThreadInterface *t, CuActivity *a, CuThr
               t, a, threadListener, a->getToken().toString().c_str());
     std::pair< CuThreadInterface *, CuActivity *> p(t, a);
     std::pair<CuActivity *, CuThreadListener *> pl(a, threadListener);
-    std::unique_lock lo(d->shared_mu);
-    d->conn_mumap.insert(p);
-    d->th_lis_mumap.insert(pl);
+    mConnectionsMultiMap.insert(p);
+    mThreadListenersMultiMap.insert(pl);
 }
 
 /** \brief Removes all links where a is involved
@@ -54,20 +46,20 @@ void CuActivityManager::addConnection(CuThreadInterface *t, CuActivity *a, CuThr
 void CuActivityManager::removeConnection(CuActivity *a)
 {
     pviolet("CuActivityManager::removeConnection: removing connections for activity %p", a);
-    std::unique_lock lo(d->shared_mu);
-    std::multimap< CuThreadInterface *, CuActivity *>::iterator it = d->conn_mumap.begin();
-    while(it != d->conn_mumap.end())
+    // std::lock_guard<std::mutex> lock(m_mutex);
+    std::multimap< CuThreadInterface *, CuActivity *>::iterator it = mConnectionsMultiMap.begin();
+    while(it != mConnectionsMultiMap.end())
     {
         if(it->second == a)
-            it = d->conn_mumap.erase(it);
+            it = mConnectionsMultiMap.erase(it);
         else
             ++it;
     }
-    std::multimap<const CuActivity *, CuThreadListener *>::const_iterator lit = d->th_lis_mumap.begin();
-    while(lit != d->th_lis_mumap.end())
+    std::multimap<const CuActivity *, CuThreadListener *>::const_iterator lit = mThreadListenersMultiMap.begin();
+    while(lit != mThreadListenersMultiMap.end())
     {
         if(lit->first == a)
-            lit = d->th_lis_mumap.erase(lit);
+            lit = mThreadListenersMultiMap.erase(lit);
         else
             ++lit;
     }
@@ -88,22 +80,22 @@ void CuActivityManager::removeConnection(CuActivity *a)
 void CuActivityManager::removeConnections(CuThreadInterface *t)
 {
     pbviolet2("CuActivityManager::removeConnections: removing connections for thread %p", t);
-    std::unique_lock lo(d->shared_mu);
+    // std::lock_guard<std::mutex> lock(m_mutex);
     std::multimap< CuThreadInterface *, CuActivity *>::iterator it;
     std::multimap<const CuActivity *, CuThreadListener *>::const_iterator lit;
-    it = d->conn_mumap.begin();
-    while(it != d->conn_mumap.end())  {
+    it = mConnectionsMultiMap.begin();
+    while(it != mConnectionsMultiMap.end())  {
         if(it->first == t) {
             CuActivity *a = it->second;
-            lit = d->th_lis_mumap.begin();
-            while(lit != d->th_lis_mumap.end())
+            lit = mThreadListenersMultiMap.begin();
+            while(lit != mThreadListenersMultiMap.end())
             {
                 if(lit->first == a)
-                    lit = d->th_lis_mumap.erase(lit);
+                    lit = mThreadListenersMultiMap.erase(lit);
                 else
                     lit++;
             }
-            it = d->conn_mumap.erase(it);
+            it = mConnectionsMultiMap.erase(it);
         }
         else
             it++;
@@ -112,12 +104,12 @@ void CuActivityManager::removeConnections(CuThreadInterface *t)
 
 void CuActivityManager::removeConnection(CuThreadListener *l)
 {
-    std::unique_lock lo(d->shared_mu);
-    std::multimap<const CuActivity *, CuThreadListener *>::const_iterator lit = d->th_lis_mumap.begin();
-    while(lit != d->th_lis_mumap.end())
+    // std::lock_guard<std::mutex> lock(m_mutex);
+    std::multimap<const CuActivity *, CuThreadListener *>::const_iterator lit = mThreadListenersMultiMap.begin();
+    while(lit != mThreadListenersMultiMap.end())
     {
         if(lit->second == l)
-            lit = d->th_lis_mumap.erase(lit);
+            lit = mThreadListenersMultiMap.erase(lit);
         else
             lit++;
     }
@@ -136,9 +128,9 @@ void CuActivityManager::removeConnection(CuThreadListener *l)
  */
 CuActivity *CuActivityManager::findActiveMatching(const CuData &token)
 {
-    std::shared_lock lo(d->shared_mu);
+    // std::lock_guard<std::mutex> lock(m_mutex);
     std::multimap< CuThreadInterface *, CuActivity *>::const_iterator it;
-    for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it)
+    for(it = mConnectionsMultiMap.begin(); it != mConnectionsMultiMap.end(); ++it)
     {
         const CuActivity *a = it->second;
         if(a->matches(token) && !a->isDisposable())
@@ -157,9 +149,9 @@ CuActivity *CuActivityManager::findActiveMatching(const CuData &token)
  */
 CuThreadInterface *CuActivityManager::getThread(CuActivity *activity)
 {
-    std::shared_lock lo(d->shared_mu);
+    // std::lock_guard<std::mutex> lock(m_mutex);
     std::multimap< CuThreadInterface *, CuActivity *>::const_iterator it;
-    for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it)
+    for(it = mConnectionsMultiMap.begin(); it != mConnectionsMultiMap.end(); ++it)
     {
         if(it->second == activity)
             return it->first;
@@ -169,12 +161,12 @@ CuThreadInterface *CuActivityManager::getThread(CuActivity *activity)
 
 std::vector<CuThreadListener *> CuActivityManager::getThreadListeners(const CuActivity *activity)
 {
-    std::shared_lock lo(d->shared_mu);
+    // std::lock_guard<std::mutex> lock(m_mutex);
     std::vector< CuThreadListener *> listeners;
-    std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator lit = d->th_lis_mumap.find(activity);
+    std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator lit = mThreadListenersMultiMap.find(activity);
     std::pair<std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator,
             std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator> ret;
-    ret = d->th_lis_mumap.equal_range(activity);
+    ret = mThreadListenersMultiMap.equal_range(activity);
     for(std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator it = ret.first; it != ret.second; ++it)
         listeners.push_back(lit->second);
 
@@ -183,14 +175,15 @@ std::vector<CuThreadListener *> CuActivityManager::getThreadListeners(const CuAc
 
 bool CuActivityManager::connectionExists(CuThreadInterface *t, CuActivity *a, CuThreadListener *threadListener)
 {
-    std::shared_lock lo(d->shared_mu);
+    pbviolet2("CuActivityManager::connectionExists: see if tern %p %p %p is already linked", t, a, threadListener);
+    // std::lock_guard<std::mutex> lock(m_mutex);
     std::multimap< CuThreadInterface *, CuActivity *>::const_iterator it;
-    for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it)
+    for(it = mConnectionsMultiMap.begin(); it != mConnectionsMultiMap.end(); ++it)
     {
         if(it->second == a && it->first == t)
         {
             std::multimap<const CuActivity *, CuThreadListener *>::const_iterator lit;
-            for(lit = d->th_lis_mumap.begin(); lit != d->th_lis_mumap.end(); ++lit)
+            for(lit = mThreadListenersMultiMap.begin(); lit != mThreadListenersMultiMap.end(); ++lit)
                 if(lit->first == a && lit->second == threadListener)
                     return true;
         }
@@ -201,31 +194,36 @@ bool CuActivityManager::connectionExists(CuThreadInterface *t, CuActivity *a, Cu
 
 std::vector<CuActivity *> CuActivityManager::activitiesForThread(const CuThreadInterface *ti)
 {
-    std::shared_lock lo(d->shared_mu);
+    // std::lock_guard<std::mutex> lock(m_mutex);
     std::vector<CuActivity *> v;
     std::multimap< CuThreadInterface *, CuActivity *>::iterator it;
-    for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it)  {
+    for(it = mConnectionsMultiMap.begin(); it != mConnectionsMultiMap.end(); ++it)
+    {
         if(it->first == ti)
             v.push_back(it->second);
     }
+    pbviolet2("CuActivityManager::activitiesForThread: returning vector of activities for thread %p (there are %lu)", ti, v.size());
     return v;
 }
 
 int CuActivityManager::countActivitiesForThread(const CuThreadInterface *ti)
 {
     int count = 0;
-    std::shared_lock lo(d->shared_mu);
+    // std::lock_guard<std::mutex> lock(m_mutex);
     std::multimap< CuThreadInterface *, CuActivity *>::iterator it;
-    for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it)
+    for(it = mConnectionsMultiMap.begin(); it != mConnectionsMultiMap.end(); ++it)
         if(it->first == ti)
             count++;
+    pbviolet2("CuActivityManager::countActivitiesForThread: returning vector of activities for thread %p (there are %d)", ti, count);
     return count;
 }
 
-std::string CuActivityManager::getName() const {
-    return std::string("CuActivityManager");
+std::string CuActivityManager::getName() const
+{
+    return std::string("CuActivityTracker");
 }
 
-CuServices::Type CuActivityManager::getType() const {
+CuServices::Type CuActivityManager::getType() const
+{
     return CuServices::ActivityManager;
 }
