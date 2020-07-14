@@ -3,13 +3,13 @@
 
 #include <cuservicei.h>
 #include <vector>
-#include <map>
-#include <mutex>
 
 class CuThreadInterface;
 class CuActivity;
 class CuData;
 class CuThreadListener;
+
+class CuActivityManagerPrivate;
 
 /** \brief This service stores the links between threads, activities and thread listeners.
  *
@@ -51,10 +51,7 @@ public:
     CuServices::Type getType() const;
 
 private:
-    std::multimap< CuThreadInterface *, CuActivity *> mConnectionsMultiMap;
-    std::multimap<const CuActivity *, CuThreadListener *> mThreadListenersMultiMap;
-
-    std::mutex m_mutex;
+    CuActivityManagerPrivate *d;
 };
 
 #endif // CUACTIVITYTRACKER_H
