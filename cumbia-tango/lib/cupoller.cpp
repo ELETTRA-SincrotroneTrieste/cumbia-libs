@@ -39,6 +39,7 @@ CuPoller::CuPoller(CumbiaTango *cu_t, int period)
 
 CuPoller::~CuPoller()
 {
+    delete d;
     pdelete("~CuPoller %p", this);
 }
 
