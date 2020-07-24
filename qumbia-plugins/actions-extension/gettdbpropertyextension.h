@@ -22,8 +22,8 @@ public:
 public:
     QString getName() const;
 
-    CuData execute(const CuData &in);
-    std::vector<CuData> execute(const std::vector<CuData>& in_list);
+    CuData execute(const CuData &in, const CuContext *ctx);
+    std::vector<CuData> execute(const std::vector<CuData>& in_list, const CuContext *ctx);
 
     QObject* get_qobject();
     virtual const CuContext *getContext() const;

@@ -5,6 +5,7 @@
 #include <cumbiatango.h>
 #include <cumbiapool.h>
 #include <cutdbpropertyreader.h>
+#include <QtDebug>
 
 class GetTDbPropertyExtensionPrivate {
 public:
@@ -34,19 +35,24 @@ QString GetTDbPropertyExtension::getName() const
     return "GetTDbPropertyExtension";
 }
 
-CuData GetTDbPropertyExtension::execute(const CuData &in)
+CuData GetTDbPropertyExtension::execute(const CuData &in, const CuContext *ctx)
 {
+    qDebug() << __PRETTY_FUNCTION__ << in.toString().c_str() << ctx;
+    d->context = ctx;
     CuData da;
     std::vector<CuData> in_list, out_list;
     in_list.push_back(in);
-    out_list = execute(in_list);
+    out_list = execute(in_list, ctx);
     if(out_list.size() > 0)
         da = out_list[0];
     return da;
 }
 
-std::vector<CuData> GetTDbPropertyExtension::execute(const std::vector<CuData> &in_list)
+std::vector<CuData> GetTDbPropertyExtension::execute(const std::vector<CuData> &in_list, const CuContext *ctx)
 {
+    qDebug() << __PRETTY_FUNCTION__ << ctx;
+
+    d->context = ctx;
     std::vector<CuData> out;
     out.push_back(CuData("msg", "property fetch in progress..."));
     CumbiaTango *cu_t = NULL;

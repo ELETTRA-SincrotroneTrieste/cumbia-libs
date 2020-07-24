@@ -20,27 +20,23 @@ public:
  * @param ctx a pointer to CuContext. The default is NULL, the parameter is not used
  * by this class.
  */
-CuApplicationLauncherExtension::CuApplicationLauncherExtension(const CuContext *ctx)
-{
+CuApplicationLauncherExtension::CuApplicationLauncherExtension(const CuContext *ctx) {
     d = new CuApplicationLauncherPrivate;
     d->qudbusctrl_i = NULL;
     d->ctx = ctx;
     d->err = false;
 }
 
-CuApplicationLauncherExtension::~CuApplicationLauncherExtension()
-{
+CuApplicationLauncherExtension::~CuApplicationLauncherExtension() {
     // do not delete plugin instances
     delete d;
 }
 
-void CuApplicationLauncherExtension::start()
-{
+void CuApplicationLauncherExtension::start() {
     if(!d->qudbusctrl_i)
         m_loadCumbiaPlugin();
 
-    if(d->qudbusctrl_i)
-    {
+    if(d->qudbusctrl_i) {
         QStringList full_args = QStringList() << d->program;
         full_args += d->args;
         QList<QuAppInfo> ail = d->qudbusctrl_i->findApps(full_args);
@@ -55,7 +51,6 @@ void CuApplicationLauncherExtension::start()
 }
 
 void CuApplicationLauncherExtension::m_loadCumbiaPlugin() {
-
     QDir pluginsDir(CUMBIA_QTCONTROLS_PLUGIN_DIR);
     pluginsDir.cd("plugins");
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
@@ -67,10 +62,10 @@ void CuApplicationLauncherExtension::m_loadCumbiaPlugin() {
                 d->qudbusctrl_i = dpi->getAppCtrlIface();
         }
         else
-            perr("BrowserTreeDBusExtension.m_loadCumbiaPlugin: error loading plugin: %s", qstoc(pluginLoader.errorString()));
+            perr("CuApplicationLauncherExtension.m_loadCumbiaPlugin: error loading plugin: %s", qstoc(pluginLoader.errorString()));
     }
     if(d->qudbusctrl_i)
-        printf("\e[1;32m* \e[0msuccessfully loaded the \e[1;32;4mcumbia dbus\e[0m plugin\n");
+        printf("\e[1;32m* \e[0mCuApplicationLauncherExtension: successfully loaded the \e[1;32;4mcumbia dbus\e[0m plugin\n");
 }
 
 
@@ -78,8 +73,8 @@ QString CuApplicationLauncherExtension::getName() const {
     return "CuApplicationLauncherExtension";
 }
 
-CuData CuApplicationLauncherExtension::execute(const CuData &in)
-{
+CuData CuApplicationLauncherExtension::execute(const CuData &in, const CuContext *ctx) {
+    d->ctx = ctx;
     QString cmd = QString::fromStdString(in["command"].toString());
     QStringList ar = cmd.split(QRegExp("\\s+"));
     if(ar.size() > 0) {
@@ -99,8 +94,7 @@ const CuContext *CuApplicationLauncherExtension::getContext() const {
 }
 
 
-std::vector<CuData> CuApplicationLauncherExtension::execute(const std::vector<CuData>& )
-{
+std::vector<CuData> CuApplicationLauncherExtension::execute(const std::vector<CuData>& , const CuContext *) {
     return std::vector<CuData>();
 }
 

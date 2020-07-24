@@ -27,18 +27,18 @@ QString InfoDialogExtension::getName() const
     return "InfoDialogExtension";
 }
 
-CuData InfoDialogExtension::execute(const CuData &in)
+CuData InfoDialogExtension::execute(const CuData &in, const CuContext *ctx)
 {
 #ifdef CUMBIAQTCONTROLS_HAS_QWT
     // WA_DeleteOnClose attribute is set
-    CuInfoDialog* dlg = new CuInfoDialog(0, d->ctx);
-    dlg->exec(in);
+    CuInfoDialog* dlg = new CuInfoDialog(nullptr);
+    dlg->exec(in, ctx);
 #else
 #endif
     return CuData();
 }
 
-std::vector<CuData> InfoDialogExtension::execute(const std::vector<CuData>& )
+std::vector<CuData> InfoDialogExtension::execute(const std::vector<CuData>&, const CuContext *ctx)
 {
     return std::vector<CuData>();
 }
@@ -48,8 +48,7 @@ QObject *InfoDialogExtension::get_qobject()
     return this;
 }
 
-const CuContext *InfoDialogExtension::getContext() const
-{
+const CuContext *InfoDialogExtension::getContext() const {
     return d->ctx;
 }
 

@@ -112,15 +112,16 @@ void WidgetStdContextMenuActions::onHelperAActionTriggered(const QString &source
         CuData din("device", tsrc.getDeviceName());
         din["name"] = std::string("helperApplication");
         in_datalist.push_back(din);
-        tango_db_ex->execute(in_datalist);
+        tango_db_ex->execute(in_datalist, d->m_ctx);
     }
 }
 
 void WidgetStdContextMenuActions::onInfoActionTriggered()
 {
     QuActionExtensionI* infodlg_ex = d->m_action_extensions->getExtension("InfoDialogExtension");
+    qDebug() << __PRETTY_FUNCTION__ << "info dialog extension " << infodlg_ex << "widget" << d->m_widget;
     CuData in_par("sender", d->m_widget);
-    infodlg_ex->execute(in_par);
+    infodlg_ex->execute(in_par, d->m_ctx);
 }
 
 void WidgetStdContextMenuActions::onHelperAActionTriggered()
@@ -169,7 +170,7 @@ void WidgetStdContextMenuActions::onDataReady(const CuData &da)
                         if(dev.length()  > 0)
                             app += std::string(" ") + dev;
                         CuData in("command", app);
-                        app_launcher->execute(in);
+                        app_launcher->execute(in, d->m_ctx);
                     }
                     else
                         perr("WidgetStdContextMenuActions::onDataReady: no CuApplicationLauncherExtension found in "

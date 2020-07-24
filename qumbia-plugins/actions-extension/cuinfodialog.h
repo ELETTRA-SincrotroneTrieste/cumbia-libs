@@ -60,7 +60,7 @@ class CuInfoDialog : public QDialog
 {
     Q_OBJECT
 public:
-    CuInfoDialog(QWidget *parent, const CuContext *ctx);
+    CuInfoDialog(QWidget *parent);
 
     virtual ~CuInfoDialog();
 
@@ -73,7 +73,7 @@ protected:
 public slots:
     void liveReadCbToggled(bool start);
     void showAppDetails(bool show);
-    void exec(const CuData& in);
+    void exec(const CuData& in, const CuContext *ctx);
 
 private slots:
     void onMonitorUpdate(const CuData& da);

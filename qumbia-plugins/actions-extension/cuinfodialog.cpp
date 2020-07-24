@@ -43,22 +43,22 @@
 class CuInfoDialogPrivate
 {
 public:
-    CuInfoDialogPrivate(const CuContext *const_ctx) : ctx(const_ctx) {}
-
+    CuInfoDialogPrivate() {}
+    const CuContext *ctx;
     Cumbia *cumbia;
     CumbiaPool *cu_pool;
-    const CuContext *ctx;
     CuControlsFactoryPool f_pool;
     const CuControlsReaderFactoryI *r_fac;
     int layout_col_cnt;
 };
 
-CuInfoDialog::CuInfoDialog(QWidget *parent, const CuContext *ctx)
+CuInfoDialog::CuInfoDialog(QWidget *parent)
     : QDialog(parent)
 {
-    d = new CuInfoDialogPrivate(ctx);
+    d = new CuInfoDialogPrivate();
     d->r_fac = NULL; // pointer copied. object not cloned
     d->cu_pool = NULL;
+    d->ctx = nullptr;
     setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
@@ -219,9 +219,9 @@ void CuInfoDialog::showAppDetails(bool show)
     }
 }
 
-void CuInfoDialog::exec(const CuData& in)
+void CuInfoDialog::exec(const CuData& in, const CuContext* ctx)
 {
-    printf("\e[1;32mCuInfoDialog.exec with data \e[0;33m%s\e[0m\n", in.toString().c_str());
+    d->ctx = ctx;
     d->layout_col_cnt = 8;
     resize(700, 720);
     int row = 0;
@@ -237,7 +237,7 @@ void CuInfoDialog::exec(const CuData& in)
         src = sender->property("target").toString();
     src = extractSource(src, formula);
     setWindowTitle(src + " stats");
-    CuLinkStats *lis = d->ctx->getLinkStats();
+    CuLinkStats *lis = ctx->getLinkStats();
 
     QGridLayout *lo = new QGridLayout(this);
     lo->setObjectName("mainGridLayout");
@@ -277,12 +277,6 @@ void CuInfoDialog::exec(const CuData& in)
     row++;
     mAppDetailsLayoutRow = row;
     row += m_appPropMap().size() / 2;
-
-//    int rowcnt = m_populateAppDetails(appDetGb);
-//    lo->addWidget(appDetGb, row, 0, rowcnt, d->layout_col_cnt);
-//    row += rowcnt;
-//    appDetGb->setVisible(false);
-
 
     // operation count
     QLabel *lopcnt = new QLabel("Operation count:", this);
@@ -332,7 +326,7 @@ void CuInfoDialog::exec(const CuData& in)
     QGridLayout *molo = new QGridLayout(monitorF);
     molo->setObjectName(monitorF->objectName() + "_layout");
 
-    QList<CuControlsWriterA *> writers = d->ctx->writers();
+    QList<CuControlsWriterA *> writers = ctx->writers();
     foreach (CuControlsWriterA* w, writers) {
         QGroupBox *gb = new QGroupBox("", monitorF);
         gb->setObjectName(w->target() + "_write_monitor");
@@ -365,7 +359,7 @@ void CuInfoDialog::exec(const CuData& in)
         }
     }
 
-    QList<CuControlsReaderA *> readers = d->ctx->readers();
+    QList<CuControlsReaderA *> readers = ctx->readers();
     // create a set of GroupBoxes that will contain monitor widgets
     foreach(CuControlsReaderA *r, readers)
     {
@@ -604,10 +598,6 @@ div { width=80%; } \
 
  void CuInfoDialog::newLiveData(const CuData &data)
  {
-     printf("\e[1;33mCuInfoDialog:newLive data %s\e[0m\n", data.toString().c_str());
-     //     if(data.containsKey("data_format_str"))
-     //         sender()->disconnect(this, SLOT(newLiveData(const CuData&)));
-
      QString src = QString::fromStdString(data["src"].toString());
      std::string format = data["data_format_str"].toString();
      QWidget *plotw = NULL;
