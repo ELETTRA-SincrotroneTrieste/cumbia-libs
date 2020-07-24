@@ -41,7 +41,6 @@ void CuApplicationLauncherExtension::start() {
         full_args += d->args;
         QList<QuAppInfo> ail = d->qudbusctrl_i->findApps(full_args);
         if(ail.size() > 0) {
-            printf("found %d applications matching %s\n", ail.size(), qstoc(full_args.join(" ")));
             d->qudbusctrl_i->raise(ail.first());
         }
         else {
@@ -97,7 +96,6 @@ const CuContext *CuApplicationLauncherExtension::getContext() const {
 std::vector<CuData> CuApplicationLauncherExtension::execute(const std::vector<CuData>& , const CuContext *) {
     return std::vector<CuData>();
 }
-
 
 std::string CuApplicationLauncherExtension::message() const {
     return d->msg;
