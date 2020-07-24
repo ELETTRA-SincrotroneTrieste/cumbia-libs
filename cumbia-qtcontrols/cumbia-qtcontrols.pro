@@ -74,7 +74,6 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/qucheckbox.cpp \
     src/culinkstats.cpp \
     src/cucontextmenu.cpp \
-    src/cucontextactionbridge.cpp \
     src/cucontext.cpp \
     src/quapplication.cpp \
     src/qumbiaizer.cpp \
