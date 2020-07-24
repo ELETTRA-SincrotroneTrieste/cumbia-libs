@@ -52,7 +52,7 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
     if(!d->cookie.isEmpty())
         r.setRawHeader("Cookie", d->cookie);
 
-    printf("\e[1;36mCuHttpBundledSrcReq::start: PAYLOAD:\n%s COOKIE %s\e[0m\n", d->req_payload.data(), d->cookie.data());
+    cuprintf("\e[1;36mCuHttpBundledSrcReq::start: PAYLOAD:\n%s COOKIE %s\e[0m\n", d->req_payload.data(), d->cookie.data());
     QNetworkReply *reply = nam->post(r, d->req_payload);
     reply->setProperty("payload", d->req_payload);
     connect(reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
@@ -66,7 +66,6 @@ void CuHttpBundledSrcReq::onNewData() {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
     qint64 bytes_avail = r->bytesAvailable();
     QByteArray ba = r->read(bytes_avail);
-//    qDebug() << __PRETTY_FUNCTION__ << "received " << ba;
     bool buf_empty = d->buf.isEmpty();
     if(!buf_empty)
         cuprintf("CuHTTPActionA::onNewData: buf completed by \e[1;32m%s\e[0m\n", ba.data());

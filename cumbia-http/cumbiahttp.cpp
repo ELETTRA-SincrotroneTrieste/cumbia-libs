@@ -111,7 +111,7 @@ void CumbiaHttp::onSrcBundleReqReady(const QList<SrcItem> &rsrcs, const QList<Sr
 }
 
 void CumbiaHttp::onSrcBundleReplyReady(const QByteArray &json) {
-    printf("\e[1;36mCumbiaHttp::onSrcBundleReplyReady\n%s\e[0m\n", json.data());
+//    printf("\e[1;36mCumbiaHttp::onSrcBundleReplyReady\n%s\e[0m\n", json.data());
     CumbiaHTTPWorld w;
     std::list<CuData> dali;
     bool ok = w.json_decode(json, dali);
@@ -275,14 +275,10 @@ void CumbiaHttp::m_lis_update(const CuData &da) {
     const QMap<QString, SrcData> &mp = d->src_q_man->takeTgts();
     foreach(const QString& tgt, mp.keys()) {
         tgtli.push_back(mp.value(tgt));
-        printf("CumbiaHttp::m_lis_update: tgt %s meth %s lis %p\n", qstoc(tgt), tgtli.last().method.c_str(), tgtli.last().lis);
     }
     const QList<SrcData> &dali = d->src_q_man->takeSrcs(QString::fromStdString(src)) + tgtli;
 
-    printf("CumbiaHttp::m_lis_update: %s data list siz %d\n", da.toString().c_str(), dali.size());
     foreach(const SrcData& srcd, dali) {
-        printf("--> CumbiaHttp::m_lis_update: updating src %s value %s lis %p\n",
-               src.c_str(), da["value"].toString().c_str(), srcd.lis);
         // update listener but not if method is "u": at this time it will have been deleted
         if(srcd.lis && srcd.method != "u") srcd.lis->onUpdate(da);
         if(srcd.method == "s")

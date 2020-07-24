@@ -1096,8 +1096,8 @@ bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &re
             d->message = std::string("CuTangoWorld.get_properties successfully completed on " +  dateTimeToStr(NULL));
         }
         res["msg"] = d->message;
-
-    } // if !d->error
+        delete db;
+    } // if !d->error (i.e. db != nullptr)
 
     printf("CuTangoWorld.get_properties >>> %s\n", res.toString().c_str());
     return !d->error;
@@ -1284,7 +1284,8 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
             d->error = true;
             d->message = strerror(e);
         }
-    }
+        delete db;
+    } // if(db != nullptr)
     res["err"] = d->error;
     res["msg"] = d->message;
     res.putTimestamp();
