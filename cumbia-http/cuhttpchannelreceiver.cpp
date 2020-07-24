@@ -124,8 +124,8 @@ void CuHttpChannelReceiver::decodeMessage(const QJsonValue &v) {
             CuData res("src", src.toStdString());
             CumbiaHTTPWorld httpw;
             httpw.json_decode(a.at(0), res);
-            perr("CuHttpChannelReceiver::decodeMessage: source \"%s\" data is too old: %lds > %lds DATA %s",
-                 qstoc(src), diff_t, d->data_exp_t, datos(res));
+            perr("CuHttpChannelReceiver::decodeMessage: source \"%s\" data is too old: %lds > %lds",
+                 qstoc(src), diff_t, d->data_exp_t);
         }
     }
 }
@@ -168,11 +168,11 @@ bool CuHttpChannelReceiver::m_data_fresh(const double timestamp_ms, time_t* diff
     strcpy(_now, ctime(&now));
     strcpy(_then, ctime(&ts_sec));
     *diff_t = now - ts_sec;
-    //    printf("CaCuTangoEImpl data ts %s, data now %s now -ts_sec %ld < %ld? %s\n",
-    //           _then, _now, now - ts_sec, data_old, (*diff_t < data_old) ? "\e[1;32myes\e[0m" : "\e[1;31mno\e[0m");
-    //    if(*diff_t >= data_old)
-    //        cuprintf("CaCuTangoEImpl.m_data_valid \n\e[1;35m%ld %s -  %ld %s < 3 sec ? %ld\e[0m\n",
-    //                  now, _now, ts_sec, _then, *diff_t);
+//        printf("CaCuTangoEImpl data ts %s, data now %s now -ts_sec %ld < %ld? %s\n",
+//               _then, _now, now - ts_sec, d->data_exp_t, (*diff_t < d->data_exp_t) ? "\e[1;32myes\e[0m" : "\e[1;31mno\e[0m");
+//        if(*diff_t >= d->data_exp_t)
+//            cuprintf("CaCuTangoEImpl.m_data_valid \n\e[1;35m%ld %s -  %ld %s < 3 sec ? %ld\e[0m\n",
+//                      now, _now, ts_sec, _then, *diff_t);
     return *diff_t < d->data_exp_t;
 }
 
