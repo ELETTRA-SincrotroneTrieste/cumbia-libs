@@ -15,8 +15,9 @@ QuPlotContextMenuStrategy::QuPlotContextMenuStrategy(CuContext *ctx)
 QMenu *QuPlotContextMenuStrategy::createMenu(QWidget *w)
 {
     QMenu *m = QuPlotBaseContextMenuStrategy::createMenu(w);
-    QMenu *cm = new CuContextMenu(w, d->context);
+    CuContextMenu *cm = new CuContextMenu(w);
     cm->setTitle("More...");
+    cm->prepare(d->context);
     m->addMenu(cm);
     return m;
 }

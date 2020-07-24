@@ -155,6 +155,6 @@ void QuLed::contextMenuEvent(QContextMenuEvent *e)
 {
     CuContextMenu* m = findChild<CuContextMenu *>();
     if(!m)
-        m = new CuContextMenu(this, d->context);
-    m->popup(e->globalPos());
+        m = new CuContextMenu(this);
+    m->popup(e->globalPos(), d->context);
 }

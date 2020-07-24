@@ -155,8 +155,8 @@ void QuComboBox::setTarget(const QString &target)
 void QuComboBox::contextMenuEvent(QContextMenuEvent *e)
 {
     CuContextMenu* m = findChild<CuContextMenu *>();
-    if(!m) m = new CuContextMenu(this, d->context);
-    m->popup(e->globalPos());
+    if(!m) m = new CuContextMenu(this);
+    m->popup(e->globalPos(), d->context);
 }
 
 void QuComboBox::paintEvent(QPaintEvent *pe)

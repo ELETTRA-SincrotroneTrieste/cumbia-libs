@@ -21,9 +21,9 @@ class QuActionExtensionI {
 
     virtual QString getName() const = 0;
 
-    virtual CuData execute(const CuData& in) = 0;
+    virtual CuData execute(const CuData& in, const CuContext* ctx) = 0;
 
-    virtual std::vector<CuData> execute(const std::vector<CuData>& in_list) = 0;
+    virtual std::vector<CuData> execute(const std::vector<CuData>& in_list, const CuContext* ctx) = 0;
 
     virtual QObject* get_qobject() = 0;
 

@@ -1,5 +1,6 @@
 #include "cucontextmenu.h"
 #include <cumacros.h>
+#include <cucontext.h>
 #include "plugin_ifaces/quaction-extension-plugininterface.h"
 #include "plugin_ifaces/cucontextmenuactionsplugin_i.h"
 #include "cupluginloader.h"
@@ -9,6 +10,11 @@
 #include <QDir>
 #include <QPluginLoader>
 #include <QMessageBox>
+
+class CuContextMenuPrivate {
+public:
+    QObject *plugin;
+};
 
 /** \brief Creates a QMenu with a set of actions loaded from qumbia-plugins (*libwidgets-std-context-menu-actions.so*)
  *         and additional user actions defined in custom plugins.
@@ -32,48 +38,62 @@
  * and finally with the ones provided by *libwidgets-std-context-menu-actions.so*.
  *
  */
-CuContextMenu::CuContextMenu(QWidget *parent, const CuContext *ctx) :
-    QMenu(parent), m_ctx(ctx)
+CuContextMenu::CuContextMenu(QWidget *parent) :
+    QMenu(parent)
 {
-    unsigned loaded_p_cnt = 0;
-    QMultiMap<int, QList<QAction *> > actions_map;
-    CuPluginLoader cupl;
-    QStringList pluginPaths = cupl.getPluginAbsoluteFilePaths(CUMBIA_QTCONTROLS_PLUGIN_DIR, QRegExp(".*context-menu-actions\\.so"));
-    for(int i = 0; i < pluginPaths.size(); i++) {
-        CuContextMenuActionsPlugin_I *w_std_menu_actions_plugin = NULL;
-        QPluginLoader pluginLoader(pluginPaths[i]);
-        QObject *plugin = pluginLoader.instance();
-        if (plugin){
-            loaded_p_cnt++;
-            w_std_menu_actions_plugin = qobject_cast<CuContextMenuActionsPlugin_I *> (plugin);
-            if(w_std_menu_actions_plugin) {
-                w_std_menu_actions_plugin->setup(parent, ctx);
-                QList<QAction *> pl_actions = w_std_menu_actions_plugin->getActions();
-                printf("\e[1;32m*\e[0m CuContextMenu: loaded plugin \e[1;32m%s\e[0m that provides %d actions\n",
-                       qstoc(pluginPaths[i]), pl_actions.size());
-                actions_map.insert(w_std_menu_actions_plugin->order(), pl_actions);
+    d = new CuContextMenuPrivate;
+    d->plugin = nullptr;
+}
+
+CuContextMenu::~CuContextMenu() {
+    delete d;
+}
+
+void CuContextMenu::prepare(const CuContext *ctx) {
+    if(!d->plugin) {
+        unsigned loaded_p_cnt = 0;
+        QMultiMap<int, QList<QAction *> > actions_map;
+        CuPluginLoader cupl;
+        QStringList pluginPaths = cupl.getPluginAbsoluteFilePaths(CUMBIA_QTCONTROLS_PLUGIN_DIR, QRegExp(".*context-menu-actions\\.so"));
+        for(int i = 0; i < pluginPaths.size(); i++) {
+            CuContextMenuActionsPlugin_I *w_std_menu_actions_plugin = NULL;
+            QPluginLoader pluginLoader(pluginPaths[i]);
+            d->plugin = pluginLoader.instance();
+            if (d->plugin){
+                loaded_p_cnt++;
+                w_std_menu_actions_plugin = qobject_cast<CuContextMenuActionsPlugin_I *> (d->plugin);
+                if(w_std_menu_actions_plugin) {
+                    w_std_menu_actions_plugin->setup(parentWidget(), ctx);
+                    QList<QAction *> pl_actions = w_std_menu_actions_plugin->getActions();
+                    printf("\e[1;32m*\e[0m CuContextMenu: loaded plugin \e[1;32m%s\e[0m that provides %d actions\n",
+                           qstoc(pluginPaths[i]), pl_actions.size());
+                    actions_map.insert(w_std_menu_actions_plugin->order(), pl_actions);
+                }
             }
-        }
-        if(!plugin || !w_std_menu_actions_plugin){
-            perr("CuContextMenu::CuContextMenu: failed to load plugin \"%s\" under \"%s\"",
-                 qstoc(pluginPaths[i]), CUMBIA_QTCONTROLS_PLUGIN_DIR);
-        }
-    } // for pluginPaths
+            if(!d->plugin || !w_std_menu_actions_plugin){
+                perr("CuContextMenu::CuContextMenu: failed to load plugin \"%s\" under \"%s\"",
+                     qstoc(pluginPaths[i]), CUMBIA_QTCONTROLS_PLUGIN_DIR);
+            }
+        } // for pluginPaths
 
-    QMultiMap<int, QList<QAction *> >::iterator i = actions_map.begin();
-    while(i != actions_map.end()) {
-        insertActions(nullptr, i.value());
-        ++i;
+        QMultiMap<int, QList<QAction *> >::iterator i = actions_map.begin();
+        while(i != actions_map.end()) {
+            insertActions(nullptr, i.value());
+            ++i;
+        }
+
+        if(loaded_p_cnt == 0) {
+            addAction("No menu actions plugins found", this, SLOT(popup_noplugin_msg()));
+        }
     }
-
-    if(loaded_p_cnt == 0) {
-        addAction("No menu actions plugins found", this, SLOT(popup_noplugin_msg()));
+    else if(d->plugin && qobject_cast<CuContextMenuActionsPlugin_I *> (d->plugin)) {
+        qobject_cast<CuContextMenuActionsPlugin_I *> (d->plugin)->setup(parentWidget(), ctx);
     }
 }
 
-CuContextMenu::~CuContextMenu()
-{
-
+void CuContextMenu::popup(const QPoint &pos, const CuContext *ctx) {
+    prepare(ctx);
+    QMenu::popup(pos);
 }
 
 void CuContextMenu::popup_noplugin_msg()

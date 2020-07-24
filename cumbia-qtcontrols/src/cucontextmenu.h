@@ -2,7 +2,9 @@
 #define INFOCONTEXTMENUFILTER_H
 
 #include <QMenu>
+
 class CuContext;
+class CuContextMenuPrivate;
 class CuData;
 
 /** \brief A QObject filter that installs a context menu with actions defined by
@@ -18,15 +20,17 @@ class CuContextMenu : public QMenu
 {
     Q_OBJECT
 public:
-    explicit CuContextMenu(QWidget *parent, const CuContext *ctx);
+    explicit CuContextMenu(QWidget *parent);
 
     ~CuContextMenu();
 
+    void popup(const QPoint &pos, const CuContext *ctx);
+    void prepare(const CuContext *ctx);
 private slots:
     void popup_noplugin_msg();
 
 private:
-    const CuContext *m_ctx;
+    CuContextMenuPrivate *d;
 };
 
 #endif // INFOCONTEXTMENUFILTER_H

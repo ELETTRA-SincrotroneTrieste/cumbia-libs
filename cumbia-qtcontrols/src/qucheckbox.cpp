@@ -160,8 +160,8 @@ void QuCheckBox::contextMenuEvent(QContextMenuEvent *e)
 {
     CuContextMenu* m = findChild<CuContextMenu *>();
     if(!m)
-        m = new CuContextMenu(this, d->out_ctx);
-    m->popup(e->globalPos());
+        m = new CuContextMenu(this);
+    m->popup(e->globalPos(), d->out_ctx);
 }
 
 void QuCheckBox::checkboxClicked(bool checked)
