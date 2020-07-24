@@ -29,7 +29,7 @@ CONFIG += debug
 # CONFIG += silent
 
 isEmpty(DEFAULT_CHANNEL_MSG_TTL) {
-    DEFAULT_CHANNEL_MSG_TTL=5
+    DEFAULT_CHANNEL_MSG_TTL=15
     message("cumbia-http.pro: setting default channel message ttl to $${DEFAULT_CHANNEL_MSG_TTL}")
     message("cumbia-http.pro: change it executing qmake DEFAULT_CHANNEL_MSG_TTL=X")
 }
@@ -42,7 +42,7 @@ TEMPLATE = lib
 DEFINES += CUMBIAHTTP_LIBRARY
 DEFINES += CUMBIA_DEBUG_OUTPUT=1 DEFAULT_CHAN_MSG_TTL=$${DEFAULT_CHANNEL_MSG_TTL}
 
-DEFINES -= QT_NO_DEBUG_OUTPUT
+DEFINES += QT_NO_DEBUG_OUTPUT
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
