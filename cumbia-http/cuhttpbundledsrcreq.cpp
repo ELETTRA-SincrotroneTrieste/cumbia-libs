@@ -17,13 +17,17 @@ public:
         foreach(QString s, srcs.keys()) {
             const SrcData& sd = srcs[s];
             il.append(SrcItem(s.toStdString(), sd.lis, sd.method, sd.channel, sd.wr_val));
+            if(channel.isEmpty() && !sd.channel.isEmpty())
+                channel = sd.channel.toLatin1();
+            else if(channel != sd.channel.toLatin1())
+                perr("CuHttpBundledSrcReqPrivate: cannot mix channels in the same request: load balanced service instances may misbehave");
         }
         req_payload = m_json_pack(il);
     }
 
     QByteArray buf;
-    QByteArray req_payload, cookie;
-    QByteArray m_json_pack(const QList<SrcItem>& srcs) const;
+    QByteArray req_payload, cookie, channel;
+    QByteArray m_json_pack(const QList<SrcItem>& srcs);
     CuHttpBundledSrcReqListener *listener;
 };
 
@@ -51,6 +55,10 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
     r.setHeader(QNetworkRequest::UserAgentHeader, QByteArray("cumbia-http ") + QByteArray(CUMBIA_HTTP_VERSION_STR));
     if(!d->cookie.isEmpty())
         r.setRawHeader("Cookie", d->cookie);
+    if(!d->channel.isEmpty()) {
+        r.setRawHeader("X-Channel", d->channel);
+        printf("\e[1;32mCuHttpBundledSrcReq::start setting X-Channel header to %s\e[0m\n", d->channel.data());
+    }
 
     cuprintf("\e[1;36mCuHttpBundledSrcReq::start: PAYLOAD:\n%s COOKIE %s\e[0m\n", d->req_payload.data(), d->cookie.data());
     QNetworkReply *reply = nam->post(r, d->req_payload);
@@ -122,9 +130,8 @@ bool CuHttpBundledSrcReq::m_likely_valid(const QByteArray &ba) const {
 }
 
 
-QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs) const
+QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs)
 {
-    QString channel;
     QJsonObject root_o;
     root_o["type"] = "srcs";
     QJsonArray sa;
@@ -138,18 +145,20 @@ QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs) c
         // keys array
         QJsonArray keys { "src", "method", "options" };
 
-        if(channel.size() == 0)
-            channel = i.channel;
-        else if(channel != i.channel) {
+        if(channel.size() == 0 && !i.channel.isEmpty())
+            channel = i.channel.toLatin1();
+        else if(!i.channel.isEmpty() && channel != i.channel) {
             so["channel"] = i.channel; // specific channel
             keys.append("channel");
+            perr("CuHttpBundledSrcReqPrivate.m_json_pack: cannot mix channels (%s/%s) in the same request: load balanced service instances may misbehave",
+                 channel.data(), qstoc(i.channel));
         }
         so["keys"] = keys;
         sa.append(so);
     }
     // hopefully an app uses a single channel
     if(channel.size())
-        root_o["channel"] = channel;
+        root_o["channel"] = QString(channel);
     root_o["srcs"] = sa;
     QJsonDocument doc(root_o);
     return doc.toJson(QJsonDocument::Compact) + "\r\n\r\n";
