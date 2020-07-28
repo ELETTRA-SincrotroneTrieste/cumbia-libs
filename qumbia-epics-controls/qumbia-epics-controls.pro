@@ -90,6 +90,7 @@ packagesExist(cumbia-epics) {
         unix:INCLUDEPATH += $${EPICS_BASE}/include $${EPICS_BASE}/include/os/Linux  $${EPICS_BASE}/include/compiler/gcc \
             $${EPICS_BASE}/include/os/compiler/clang
         unix:LIBS+=-L$${EPICS_BASE}/lib/$${EPICS_HOST_ARCH}
+    }
 }
 
 
