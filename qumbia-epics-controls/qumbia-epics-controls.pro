@@ -84,6 +84,15 @@ unix {
     QMAKE_PKGCONFIG_DESTDIR = pkgconfig
 }
 
+packagesExist(cumbia-epics) {
+
+!isEmpty(EPICS_BASE) {
+        unix:INCLUDEPATH += $${EPICS_BASE}/include $${EPICS_BASE}/include/os/Linux  $${EPICS_BASE}/include/compiler/gcc \
+            $${EPICS_BASE}/include/os/compiler/clang
+        unix:LIBS+=-L$${EPICS_BASE}/lib/$${EPICS_HOST_ARCH}
+}
+
+
 # remove ourselves (added in .pri)
 #
 unix:INCLUDEPATH -=  $${QUMBIA_EPICS_CONTROLS_INCLUDES}
