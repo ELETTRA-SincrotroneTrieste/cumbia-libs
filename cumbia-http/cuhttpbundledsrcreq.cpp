@@ -1,6 +1,7 @@
 #include "cuhttpbundledsrcreq.h"
 #include "cuhttpactionfactoryi.h"
 #include "cumbiahttpworld.h"
+#include <cudata.h>
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
@@ -16,7 +17,7 @@ public:
         QList<SrcItem> il;
         foreach(QString s, srcs.keys()) {
             const SrcData& sd = srcs[s];
-            il.append(SrcItem(s.toStdString(), sd.lis, sd.method, sd.channel, sd.wr_val));
+            il.append(SrcItem(s.toStdString(), sd.lis, sd.method, sd.channel, sd.wr_val, sd.options));
             if(channel.isEmpty() && !sd.channel.isEmpty())
                 channel = sd.channel.toLatin1();
             else if(channel != sd.channel.toLatin1())
@@ -137,7 +138,7 @@ QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs)
     QJsonArray sa;
     foreach(const SrcItem& i, srcs) {
         QJsonObject so;
-        QJsonArray options { "p" };
+        QJsonArray options { i.options.value("no-properties").toBool() ? "r" : "p" };
         so["options"] = options;
         so["method"] = QString::fromStdString(i.method);
         i.method != "write" ? so["src"] = QString::fromStdString(i.src) :
