@@ -2,6 +2,7 @@
 #define SRCQUEUEMANAGER_H
 
 #include <QObject>
+#include <cudata.h>
 #include "cuhttp_source.h"
 
 class SrcQueueManagerPrivate;
@@ -12,13 +13,14 @@ public:
     SrcData();
     SrcData(CuDataListener *l,
             const std::string& method,
-            const QString& chan,
+            const QString& chan, const CuData& opts,
             const CuVariant& w_val = CuVariant());
     CuDataListener *lis;
     std::string method;
     bool isEmpty() const;
     QString channel;
     CuVariant wr_val;
+    CuData options;
 };
 
 class SrcItem {
@@ -28,13 +30,15 @@ public:
             CuDataListener*li,
             const std::string& method,
             const QString& chan,
-            const CuVariant& w_val);
+            const CuVariant& w_val,
+            const CuData& opts);
 
     std::string src;
     CuDataListener *l;
     std::string method;
     QString channel;
     CuVariant wr_val;
+    CuData options;
 };
 
 class CuHttpSrcQueueManListener {
@@ -52,7 +56,7 @@ public:
     explicit CuHttpSrcMan(CuHttpSrcQueueManListener* l, QObject *parent = nullptr);
     virtual ~CuHttpSrcMan();
     void setQueueManListener(CuHttpSrcQueueManListener* l);
-    void enqueueSrc(const CuHTTPSrc & httpsrc, CuDataListener *l, const std::string& method, const QString &chan, const CuVariant &w_val);
+    void enqueueSrc(const CuHTTPSrc & httpsrc, CuDataListener *l, const std::string& method, const QString &chan, const CuVariant &w_val, const CuData &options);
     void cancelSrc(const CuHTTPSrc &httpsrc, const std::string& method, CuDataListener *l, const QString& chan);
     bool queue_contains(const std::string& src, CuDataListener* l) const;
     QList<SrcData> takeSrcs(const QString& src) const;

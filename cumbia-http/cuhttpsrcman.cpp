@@ -16,17 +16,19 @@ public:
     QMap<QString, SrcData> tgtd;
     QList<SrcItem> r_items, w_items;
     CuHttpSrcQueueManListener *lis;
+    CuData options;
 };
 
-SrcItem::SrcItem(const std::string &s, CuDataListener *li, const std::string &metho, const QString &chan, const CuVariant &w_val) :
+SrcItem::SrcItem(const std::string &s, CuDataListener *li, const std::string &metho,
+                 const QString &chan, const CuVariant &w_val, const CuData &opts) :
     src(s), l(li), method(metho),
-    channel(metho == "s" || metho == "u" ? chan : ""), wr_val(w_val) {
+    channel(metho == "s" || metho == "u" ? chan : ""), wr_val(w_val), options(opts) {
 }
 
 SrcItem::SrcItem() : l(nullptr) { }
 
-SrcData::SrcData(CuDataListener *l, const string &me, const QString &chan, const CuVariant &w_val)
-    : lis(l), method(me), channel(chan), wr_val(w_val){ }
+SrcData::SrcData(CuDataListener *l, const string &me, const QString &chan, const CuData &opts, const CuVariant &w_val)
+    : lis(l), method(me), channel(chan), wr_val(w_val), options(opts) { }
 
 bool SrcData::isEmpty() const {
     return this->lis == nullptr;
@@ -54,12 +56,13 @@ void CuHttpSrcMan::enqueueSrc(const CuHTTPSrc &httpsrc,
                               CuDataListener *l,
                               const std::string& method,
                               const QString& chan,
-                              const CuVariant &w_val) {
+                              const CuVariant &w_val,
+                              const CuData& options) {
     if(d->timer->interval() > TMR_DEQUEUE_INTERVAL)
         d->timer->setInterval(TMR_DEQUEUE_INTERVAL); // restore quick timeout if new sources are on the way
     if(!d->timer->isActive()) d->timer->start();
     std::string s = httpsrc.prepare();
-    d->srcq.enqueue(SrcItem(s, l, method, chan, w_val));
+    d->srcq.enqueue(SrcItem(s, l, method, chan, w_val, options));
 }
 
 /*!
@@ -79,7 +82,7 @@ void CuHttpSrcMan::cancelSrc(const CuHTTPSrc &httpsrc, const std::string& method
         rem = m_wait_map_remove(httpsrc.prepare(), method, l);
         // if not in queue, request could have been sent: send "u" unsubscribe req
         if(method == "s")
-            enqueueSrc(httpsrc, l, "u", chan, CuVariant());
+            enqueueSrc(httpsrc, l, "u", chan, CuVariant(), CuData());
     }
 }
 
@@ -131,8 +134,8 @@ void CuHttpSrcMan::onDequeueTimeout() {
     bool empty = d->srcq.isEmpty();
     while(!d->srcq.isEmpty()) {
         const SrcItem& i = d->srcq.dequeue();
-        i.method != "write" ?  d->srcd.insert(QString::fromStdString(i.src), SrcData(i.l, i.method, i.channel))
-                             : d->tgtd.insert(QString::fromStdString(i.src), SrcData(i.l, i.method, i.channel, i.wr_val));
+        i.method != "write" ?  d->srcd.insert(QString::fromStdString(i.src), SrcData(i.l, i.method, i.channel, i.options))
+                             : d->tgtd.insert(QString::fromStdString(i.src), SrcData(i.l, i.method, i.channel, i.options, i.wr_val));
         i.method != "write" ?  d->r_items.append(i) : d->w_items.append(i);
     }
     if(d->r_items.size() || d->w_items.size()) {
