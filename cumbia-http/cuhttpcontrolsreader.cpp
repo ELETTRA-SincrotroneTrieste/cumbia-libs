@@ -85,6 +85,7 @@ void CuHttpControlsReader::setSource(const QString &s) {
             d->s = rwis[i]->replaceWildcards(s, qApp->arguments());
         d->o.value("single-shot").toBool() ? d->method = "read" : d->method = "s";
         CuHTTPActionReaderFactory httprf(d->method == "read");
+        httprf.mergeOptions(d->o);
         qDebug() << __PRETTY_FUNCTION__ << "source " << d->s;
         d->cu_http->readEnqueue(d->s.toStdString(), d->dlis, httprf);
     }
