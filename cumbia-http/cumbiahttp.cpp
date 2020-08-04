@@ -121,13 +121,13 @@ void CumbiaHttp::onSrcBundleReplyReady(const QByteArray &json) {
 
 void CumbiaHttp::readEnqueue(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI& f) {
     if(CumbiaHTTPWorld().source_valid(source)) {
-        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, f.getMethod(), d->chan_recv->channel(), CuVariant());
+        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, f.getMethod(), d->chan_recv->channel(), CuVariant(), f.options());
     }
 }
 
 void CumbiaHttp::executeWrite(const string &source, CuDataListener *l, const CuHTTPActionFactoryI &f) {
     if(CumbiaHTTPWorld().source_valid(source)) {
-        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, f.getMethod(), "", f.options().value("write_val"));
+        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, f.getMethod(), "", f.options().value("write_val"), f.options());
     }
 }
 
