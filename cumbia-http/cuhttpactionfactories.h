@@ -14,7 +14,7 @@ public:
     CuHTTPActionReaderFactory(bool single_shot);
     virtual ~CuHTTPActionReaderFactory();
 
-    void setOptions(const CuData &o);
+    void mergeOptions(const CuData &o);
     // CuTangoActionFactoryI interface
     CuHTTPActionA *create(const CuHTTPSrc &s,
                           QNetworkAccessManager *nam,

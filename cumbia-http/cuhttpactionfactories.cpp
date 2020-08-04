@@ -16,8 +16,8 @@ public:
 };
 
 
-void CuHTTPActionReaderFactory::setOptions(const CuData &o) {
-    d->options = o;
+void CuHTTPActionReaderFactory::mergeOptions(const CuData &o) {
+    d->options.merge(o);
 }
 
 CuHTTPActionReaderFactory::CuHTTPActionReaderFactory(bool single_shot) {
