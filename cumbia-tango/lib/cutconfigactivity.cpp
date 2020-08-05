@@ -101,11 +101,10 @@ void CuTConfigActivity::execute()
         }
         else if(dev)  {
             auto t1 = std::chrono::high_resolution_clock::now();
-            if(value_only) printf("[0x%lx] CuTConfigActivity.execute: value only for %s!...",  pthread_self(), vtoc2(at, "src"));
             value_only ? success = utils.read_att(dev, point, at)  : success = utils.get_att_config(dev, point, at);
             auto t2 = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
-            if(value_only) printf("\t[took %ldus]\n", duration);
+            if(value_only) printf("[0x%lx] CuTConfigActivity.execute: value only for %s!...\t[took %ldus]\n",  pthread_self(), vtoc2(at, "src"), duration);
         }
         else
             d->msg = d->tdev->getMessage();
