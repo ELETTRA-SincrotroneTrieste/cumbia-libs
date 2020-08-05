@@ -100,6 +100,7 @@ void CuTConfigActivity::execute()
             }
         }
         else if(dev)  {
+            if(value_only) printf("CuTConfigActivity.execute: value only for %s!\n", vtoc2(at, "src"));
             value_only ? success = utils.read_att(dev, point, at)  : success = utils.get_att_config(dev, point, at);
         }
         else
