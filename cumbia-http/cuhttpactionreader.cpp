@@ -55,7 +55,6 @@ CuHTTPActionReader::CuHTTPActionReader(const CuHTTPSrc& src,
     d->proto_helper_i = d->proto_helpers->get(QString::fromStdString(proto));
     if(!src.canMonitor()) d->o.set("method", "read");
     d->prepared_http_src = QString::fromStdString(src.prepare());
-    cuprintf("\e[1;32m+++ CuHTTPActionReader %p as  CuHttpActionA %p src %s\e[0m\n", this, qobject_cast<CuHTTPActionA *>(this), src.getName().c_str());
 }
 
 CuHTTPActionReader::~CuHTTPActionReader() {

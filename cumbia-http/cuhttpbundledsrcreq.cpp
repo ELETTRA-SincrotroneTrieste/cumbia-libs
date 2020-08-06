@@ -5,7 +5,11 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+
+// debug
 #include <QtDebug>
+#include <QFile>
+#include <QTextStream>
 
 class CuHttpBundledSrcReqPrivate {
 public:
@@ -69,6 +73,13 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
     connect(reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, SLOT(onSslErrors(const QList<QSslError> &)));
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(onError(QNetworkReply::NetworkError)));
     connect(reply, SIGNAL(destroyed(QObject *)), this, SLOT(onReplyDestroyed(QObject *)));
+
+    QFile f("/tmp/cuhttp-requests.txt");
+    if(f.open(QIODevice::Text|QIODevice::Append)) {
+        QTextStream out(&f);
+        out << d->req_payload.data();
+        f.close();
+    }
 }
 
 void CuHttpBundledSrcReq::onNewData() {
