@@ -134,6 +134,7 @@ void CuTConfiguration::start()
     d->activity->setOptions(d->options);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
+    printf("CuTConfiguration::start calling registerActivity for src %s\n", vtoc2(at, "src"));
     d->cumbia_t->registerActivity(d->activity, this, tt, fi, bf);
 }
 
