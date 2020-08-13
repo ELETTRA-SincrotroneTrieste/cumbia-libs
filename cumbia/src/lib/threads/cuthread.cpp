@@ -465,7 +465,10 @@ void CuThread::mActivityInit(CuActivity *a)
 {
     int repeat_timeout;
     d->activity_set.insert(a);
-    printf("CuThread.mActivityInit: tok src %s\n", vtoc2(a->getToken(), "src"));
+    if(a->getToken().value("src").isNull())
+        printf("CuThread.mActivityInit: tok  %s\n", datos(a->getToken()));
+    else
+        printf("CuThread.mActivityInit: tok src %s\n", vtoc2(a->getToken(), "src"));
     a->setThreadToken(d->token);
     a->doInit();
     a->doExecute();
