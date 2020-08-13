@@ -130,10 +130,6 @@ void CuTConfigActivity::execute()
     }
     d->exiting = true;
     d->device_service->removeRef(at["device"].toString(), threadToken());
-    if(at["device"].toString().find("p/mod/hv_p2") != std::string::npos)
-        printf("\e[1;35mCuTConfigActivity.execute: %s\e[0m\n", datos(at));
-    printf("CuTConfigActivity.execute: publishing result for \e[1;35m%s\e[0m %s { err: %s}\n",
-           vtoc2(at, "src"), at["value"].toString().c_str(), at["err"].toBool() ? "true" : "false");
     publishResult(at);
 }
 
