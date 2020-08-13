@@ -520,6 +520,7 @@ void QumbiaReader::m_createReaders(const QStringList &srcs)  {
 
         connect(r, SIGNAL(propertyReady(QString,double,CuData)), this, SLOT(onPropertyReady(QString,double,CuData)));
 
+        printf(">>>>>>>>> refresh limit %d\n", m_conf.refresh_limit);
         if(m_conf.refresh_limit == 1)
             reader_ctx_options["single-shot"] = true;
         reader_ctx_options["period"] = m_conf.period;

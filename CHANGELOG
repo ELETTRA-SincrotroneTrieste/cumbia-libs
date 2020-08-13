@@ -1,3 +1,6 @@
+1.2.2
+Fixed incorrect behavior of right click menu - Link stats
+
 v.1.2.0
 a. cumbia-tango
 a1. Database access integration into readers with specific source syntax
