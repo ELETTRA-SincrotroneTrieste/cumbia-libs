@@ -130,6 +130,7 @@ void CuTConfigActivity::execute()
     }
     d->exiting = true;
     d->device_service->removeRef(at["device"].toString(), threadToken());
+
     publishResult(at);
 }
 
