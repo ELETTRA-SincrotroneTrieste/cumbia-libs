@@ -119,7 +119,14 @@ wasm-emscripten {
 } else {
     !android-g++ {
         CONFIG += link_pkgconfig
-        PKGCONFIG += cumbia cumbia-qtcontrols$${QTVER_SUFFIX}
+	!packagesExist(cumbia) {
+		error("no cumbia pkgconfig file found")
+	} else {
+		PKGCONFIG += cumbia
+	}
+	packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
+	        PKGCONFIG += cumbia-qtcontrols$${QTVER_SUFFIX}
+	}
 
         packagesExist(qwt){
             PKGCONFIG += qwt
