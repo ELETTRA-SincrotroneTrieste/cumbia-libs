@@ -5,6 +5,7 @@
 #include <cutcontrolsreader.h>
 #include <cutcontrolswriter.h>
 #include <cutango-world.h>
+#include <cupluginloader.h>
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
 #include <cuserviceprovider.h>
@@ -143,15 +144,9 @@ void Multireader::seqReadComplete(const QList<CuData> &da)
 
 void Multireader::m_loadMultiReaderPlugin()
 {
-    QDir pluginsDir(CUMBIA_QTCONTROLS_PLUGIN_DIR);
-    pluginsDir.cd("plugins");
-    foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
-        QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
-        QObject *plugin = pluginLoader.instance();
-        if (plugin) {
-            m_multir = qobject_cast<QuMultiReaderPluginInterface *>(plugin);
-        }
-        else
-            perr("Multireader.m_loadMultiReaderPlugin: error loading plugin: %s", qstoc(pluginLoader.errorString()));
-    }
+    CuPluginLoader plo;
+    QObject *plugin_qob;
+    m_multir = plo.get<QuMultiReaderPluginInterface>("libcumbia-multiread-plugin.so", &plugin_qob);
+    if(!m_multir)
+        perr("Multireader: failed to load plugin \"libcumbia-multiread-plugin.so\"");
 }
