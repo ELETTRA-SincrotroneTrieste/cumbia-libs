@@ -83,7 +83,7 @@ void CuHttpControlsReader::setSource(const QString &s) {
         // d->source is equal to 's' if no replacement is made
         for(int i = 0; i < rwis.size() && d->s == s; i++) // leave loop if s != d->source (=replacement made)
             d->s = rwis[i]->replaceWildcards(s, qApp->arguments());
-        d->o.value("single-shot").toBool() ? d->method = "read" : d->method = "s";
+        d->o.value("single-shot").toBool() || d->o.value("manual").toBool() ? d->method = "read" : d->method = "s";
         CuHTTPActionReaderFactory httprf(d->method == "read");
         httprf.mergeOptions(d->o);
         d->cu_http->readEnqueue(d->s.toStdString(), d->dlis, httprf);
@@ -107,7 +107,14 @@ CuData CuHttpControlsReader::getOptions() const {
     return d->o;
 }
 
-void CuHttpControlsReader::sendData(const CuData &) { }
+void CuHttpControlsReader::sendData(const CuData &data) {
+    printf("CuHttpControlsReader::sendData \e[1;32m%s\e[0m\n", datos(data));
+    if(data.containsKey("read")) {
+        CuHTTPActionReaderFactory httprf(true);
+        httprf.mergeOptions(d->o);
+        d->cu_http->readEnqueue(d->s.toStdString(), d->dlis, httprf);
+    }
+}
 
 void CuHttpControlsReader::getData(CuData &d_ino) const {
     Q_UNUSED(d_ino);
