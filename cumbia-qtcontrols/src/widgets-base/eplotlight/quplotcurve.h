@@ -124,6 +124,9 @@ public:
 
     double lastValue() const;
 
+    void setMaxDataSizeForSymbol(int siz);
+    int maxDataSizeForSymbol() const;
+
 protected:
 
 private:

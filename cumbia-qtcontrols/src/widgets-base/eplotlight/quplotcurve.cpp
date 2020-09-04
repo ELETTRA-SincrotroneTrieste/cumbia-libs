@@ -243,6 +243,14 @@ double QuPlotCurve::y(int index) const
     return this->data()->sample(index).y();
 }
 
+void QuPlotCurve::setMaxDataSizeForSymbol(int siz) {
+    d->max_data_size_for_symbol = siz;
+}
+
+int QuPlotCurve::maxDataSizeForSymbol() const {
+    return d->max_data_size_for_symbol;
+}
+
 size_t QuPlotCurve::size() const
 {
     return this->data()->size();
