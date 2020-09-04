@@ -483,12 +483,11 @@ void TaskMenuExtension::editConnection()
             QDesignerFormWindowInterface *formWindow = 0;
             formWindow = QDesignerFormWindowInterface::findFormWindow(d_widget);
             QString target;
-            QList<QListWidgetItem *>itemList = d->ui.listWidget->findItems("*", Qt::MatchWildcard);
-            for(int i = 0; i < itemList.size(); i++)
+            for(int i = 0; i < d->ui.listWidget->count(); i++)
             {
-                QListWidgetItem *it = itemList.at(i);
+                QListWidgetItem *it = d->ui.listWidget->item(i);
                 target.append(it->text());
-                if(i < itemList.size() - 1)
+                if(i < d->ui.listWidget->count() - 1)
                     target += ";";
             }
             formWindow->cursor()->setProperty("target", target);
