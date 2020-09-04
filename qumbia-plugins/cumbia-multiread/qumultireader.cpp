@@ -47,7 +47,7 @@ void QuMultiReader::init(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &f
 {
     d->context = new CuContext(cumbia_pool, fpool);
     d->manual_mode_code = manual_mode_code;
-    d->sequential = d->manual_mode_code >= 0;
+    d->sequential = (d->manual_mode_code >= 0);
 }
 
 void QuMultiReader::setSources(const QStringList &srcs)
@@ -60,6 +60,8 @@ void QuMultiReader::setSources(const QStringList &srcs)
 void QuMultiReader::unsetSources()
 {
     d->context->disposeReader(); // empty arg: dispose all
+    d->srcs.clear();
+    d->readersMap.clear();
 }
 
 /** \brief inserts src at index position i in the list. If i <= 0, src is prepended to the list. If i >= size(),
@@ -78,9 +80,9 @@ void QuMultiReader::insertSource(const QString &src, int i)
     }
     CuControlsReaderA* r = d->context->add_reader(src.toStdString(), this);
     if(r) {
-        r->setSource(src);
-        d->readersMap.insert(src, r);
-        d->srcs.insert(i, src);
+        r->setSource(src); // then use r->source, not src
+        d->readersMap.insert(r->source(), r);
+        d->srcs.insert(i, r->source());
     }
 
     if(d->srcs.size() == 1 && d->sequential)
@@ -114,8 +116,7 @@ int QuMultiReader::period() const
     return d->period;
 }
 
-void QuMultiReader::setPeriod(int ms)
-{
+void QuMultiReader::setPeriod(int ms) {
     d->period = ms;
     if(!d->sequential)
     {
@@ -123,6 +124,14 @@ void QuMultiReader::setPeriod(int ms)
         foreach(CuControlsReaderA *r, d->context->readers())
             r->sendData(per);
     }
+}
+
+void QuMultiReader::setSequential(bool seq) {
+    d->sequential = seq;
+}
+
+bool QuMultiReader::sequential() const {
+    return d->sequential;
 }
 
 void QuMultiReader::startRead()
@@ -149,22 +158,26 @@ void QuMultiReader::onUpdate(const CuData &data)
 {
     QString from = QString::fromStdString( data["src"].toString());
     int pos = d->srcs.indexOf(from);
-    printf("QuMultiReader::onUpdate got data from %s [%d/%d]... {%s}\n", qstoc(from), pos, d->srcs.size(), datos(data));
-    emit onNewData(data);
+    printf("QuMultiReader::onUpdate got data from %s [%d/%d]...\n", qstoc(from), pos, d->srcs.size());
+    if(pos >= 0) {
+        emit onNewData(data);
 
-    if(d->sequential)
-        d->databuf.append(data);
+        if(d->sequential)
+            d->databuf.append(data);
 
-    if(d->sequential && ++pos < d->srcs.size()) {
-        d->readersMap[d->srcs[pos]]->sendData(CuData("read", ""));
+        if(d->sequential && ++pos < d->srcs.size()) {
+            d->readersMap[d->srcs[pos]]->sendData(CuData("read", ""));
+        }
+        else if(d->sequential) {
+            // one read cycle is over: emit signal
+            emit onSeqReadComplete(d->databuf);
+            d->databuf.clear();
+            d->timer->start(d->period);
+            printf("+ read cycle complete, restarting timer, timeout %d\n", d->timer->interval());
+        }
     }
-    else if(d->sequential) {
-        // one read cycle is over: emit signal
-        emit onSeqReadComplete(d->databuf);
-        d->databuf.clear();
-        d->timer->start(d->period);
-        printf("+ read cycle complete, restarting timer, timeout %d\n", d->timer->interval());
-    }
+    else
+        perr("QuMultiReader.onUpdate: source \"%s\" not found", qstoc(from));
 }
 
 #if QT_VERSION < 0x050000

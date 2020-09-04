@@ -82,8 +82,10 @@ public:
     QStringList sources() const;
 
     int period() const;
-
     void setPeriod(int ms);
+    void setSequential(bool seq);
+    bool sequential() const;
+
 
 public slots:
     void startRead();
