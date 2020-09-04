@@ -2,7 +2,7 @@
 
 #include <QComboBox>
 #include <QVariant>
-
+#include <QtDebug>
 
 EStringListEditor::EStringListEditor(QWidget *parent, const QStringList& itemList) : QDialog(parent)
 {
@@ -132,9 +132,11 @@ void EStringListEditor::on_listWidget_itemChanged(QListWidgetItem *)
 void EStringListEditor::on_itemTextLineEdit_textChanged(const QString &text)
 {
     int currentRow = ui.listWidget->currentRow();
+    qDebug() << __PRETTY_FUNCTION__ << text << currentRow;
     if (currentRow != -1) {
         QListWidgetItem *item = ui.listWidget->item(currentRow);
         item->setText(text);
+        qDebug() << __PRETTY_FUNCTION__ << "setting text on item " << item << item->text();
     }
 }
 
@@ -189,8 +191,9 @@ void EStringListEditor::updateEditor()
 QStringList EStringListEditor::stringList()
 {
   QStringList list;
-  foreach (QListWidgetItem *it, ui.listWidget->findItems("*", Qt::MatchWildcard))
-	list << it->text();
+  for(int i = 0; i < ui.listWidget->count(); i++)
+    list << ui.listWidget->item(i)->text();
+  qDebug() << __PRETTY_FUNCTION__ << "list widget size" << ui.listWidget->count() << "returning list " << list;
   return list;
 }
 
