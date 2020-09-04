@@ -119,16 +119,12 @@ void CumbiaHttp::onSrcBundleReplyReady(const QByteArray &json) {
         m_data_is_auth_req(*it) ? m_auth_request(*it) : m_lis_update(*it);
 }
 
-void CumbiaHttp::readEnqueue(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI& f) {
-    if(CumbiaHTTPWorld().source_valid(source)) {
-        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, f.getMethod(), d->chan_recv->channel(), CuVariant(), f.options());
-    }
+void CumbiaHttp::readEnqueue(const CuHTTPSrc &source, CuDataListener *l, const CuHTTPActionFactoryI& f) {
+        d->src_q_man->enqueueSrc(source, l, f.getMethod(), d->chan_recv->channel(), CuVariant(), f.options());
 }
 
-void CumbiaHttp::executeWrite(const string &source, CuDataListener *l, const CuHTTPActionFactoryI &f) {
-    if(CumbiaHTTPWorld().source_valid(source)) {
-        d->src_q_man->enqueueSrc(CuHTTPSrc(source, d->src_helpers), l, f.getMethod(), "", f.options().value("write_val"), f.options());
-    }
+void CumbiaHttp::executeWrite(const CuHTTPSrc &source, CuDataListener *l, const CuHTTPActionFactoryI &f) {
+        d->src_q_man->enqueueSrc(source, l, f.getMethod(), "", f.options().value("write_val"), f.options());
 }
 
 /*!
@@ -140,9 +136,9 @@ void CumbiaHttp::executeWrite(const string &source, CuDataListener *l, const CuH
  * Disconnect the listener both from a pending sync reply (onSrcBundleReplyReady) and
  * the channel receiver
  */
-void CumbiaHttp::unlinkListener(const string &source, const std::string& method, CuDataListener *l) {
-    if(CumbiaHTTPWorld().source_valid(source)) {
-        d->src_q_man->cancelSrc(CuHTTPSrc(source, d->src_helpers), method, l, d->chan_recv->channel());
+void CumbiaHttp::unlinkListener(const CuHTTPSrc &source, const std::string& method, CuDataListener *l) {
+    if(CumbiaHTTPWorld().source_valid(source.getName())) {
+        d->src_q_man->cancelSrc(source, method, l, d->chan_recv->channel());
         d->chan_recv->removeDataListener(l);
     }
 }

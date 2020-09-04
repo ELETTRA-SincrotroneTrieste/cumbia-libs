@@ -107,10 +107,10 @@ public:
     QString url() const;
     virtual int getType() const;
 
-    void readEnqueue(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI &f);
-    void executeWrite(const std::string &source, CuDataListener *l, const CuHTTPActionFactoryI &f);
+    void readEnqueue(const CuHTTPSrc &source, CuDataListener *l, const CuHTTPActionFactoryI &f);
+    void executeWrite(const CuHTTPSrc &source, CuDataListener *l, const CuHTTPActionFactoryI &f);
 
-    void unlinkListener(const string &source, const std::string& method, CuDataListener *l);
+    void unlinkListener(const CuHTTPSrc &source, const std::string& method, CuDataListener *l);
 
     void addReplaceWildcardI(QuReplaceWildcards_I *rwi);
     void addSrcHelper(CuHttpSrcHelper_I *srch);

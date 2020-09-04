@@ -139,8 +139,9 @@ QString CuHttpControlsWriter::target() const
  */
 void CuHttpControlsWriter::clearTarget()
 {
-    d->cu_http->unlinkListener(d->target.toStdString(), "conf", d->tlistener);
-    d->cu_http->unlinkListener(d->target.toStdString(), "write", d->tlistener);
+    const CuHTTPSrc hs(d->target.toStdString(), d->cu_http->getSrcHelpers());
+    d->cu_http->unlinkListener(hs, "conf", d->tlistener);
+    d->cu_http->unlinkListener(hs, "write", d->tlistener);
     d->target = QString();
 }
 
@@ -159,7 +160,8 @@ void CuHttpControlsWriter::execute() {
     std::string t = d->target.toStdString();
     // remove placeholders from the target, f.e. a/b/c/d(&objectref) -> a/b/c/d
     t = t.substr(0, t.find("("));
-    d->cu_http->executeWrite(t, d->tlistener, wtf);
+    // no need for helpers because setTarget already saves an all-inclusive d->target
+    d->cu_http->executeWrite(CuHTTPSrc(t, QList<CuHttpSrcHelper_I *>()), d->tlistener, wtf);
 }
 
 /*! \brief This is not implemented yet
@@ -188,9 +190,12 @@ void CuHttpControlsWriter::setTarget(const QString &s) {
     // The service will safely avoid "reading" a command
     CuHTTPActionConfFactory cf;
     cf.setOptions(d->w_options);
-    std::string t = d->target.toStdString();
+    std::string t = d->target.toStdString(), a;
+    t.find("(") != std::string::npos ? a =t.substr(t.find("("))  : a = ""; // save args (*)
     // remove placeholders from the target, f.e. a/b/c/d(&objectref) -> a/b/c/d
     t = t.substr(0, t.find("("));
-    cuprintf("\e[1;35mCuHttpControlsWriter::setTarget %s\e[0m\n", qstoc(s));
-    d->cu_http->readEnqueue(t, d->tlistener, cf);
+    CuHTTPSrc ht(t, d->cu_http->getSrcHelpers());
+    d->target = QString::fromStdString(ht.prepare() + a); // (*) restore args in d->target
+    cuprintf("\e[1;35mCuHttpControlsWriter::setTarget %s\e[0m\n", qstoc(d->target));
+    d->cu_http->readEnqueue(ht, d->tlistener, cf);
 }
