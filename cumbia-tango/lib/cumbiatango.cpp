@@ -60,7 +60,7 @@ CumbiaTango::~CumbiaTango()
 void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTangoActionFactoryI& f) {
     CuTangoWorld w;
     const std::string& src = source.getName();
-    if(w.source_valid(src)) {
+    /*if(w.source_valid(src))*/ {
         CuActionFactoryService *af =
                 static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
         CuTangoActionI *a = af->findActive(src, f.getType());
@@ -71,13 +71,13 @@ void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTa
         else
             printf("CumbiaTango.addAction: action \e[0;33malready found\e[0m for src \e[0;33m%s\e[0m type %d\n", src.c_str(), f.getType());
         a->addDataListener(l);
-    }
+    }/*
     else {
         CuData e("err", true);
         l->onUpdate(e.set("msg", "source \"" + source.getName() + "\" is not valid. valid pattern: \""
                           + w.source_valid_pattern() + "\""));
         perr("CumbiaTango.addAction: source \"%s\" is not valid, ignoring - good pattern: \"%s\"", src.c_str(), w.source_valid_pattern());
-    }
+    }*/
 }
 
 /** \brief Removes a listener from the action(s) with the given source name and type
