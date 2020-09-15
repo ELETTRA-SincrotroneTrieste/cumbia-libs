@@ -3,7 +3,7 @@ include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 
 TARGET = cumbia-multiread-plugin
 TEMPLATE = lib
-CONFIG += plugin debug silent
+CONFIG += plugin debug
 
 SOURCES += \
     qumultireader.cpp

@@ -7,73 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>680</width>
-    <height>770</height>
+    <height>810</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Test</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="4" rowspan="4">
-    <widget class="QuCircularGauge" name="quCircularGauge">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>1</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="source">
-      <string>$1/double_scalar</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="3">
-    <widget class="QuCheckBox" name="quCheckBox">
-     <property name="source">
-      <string>$1/boolean_scalar</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="1">
-    <widget class="QCheckBox" name="cbquTrendPlot2">
-     <property name="text">
-      <string>Plot 2</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="2">
-    <widget class="QuLabel" name="quLabel1">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>1</horstretch>
-       <verstretch>1</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="source">
-      <string>$1/double_scalar</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QuLed" name="quLed">
-     <property name="source">
-      <string>$1/boolean_scalar</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="2">
-    <widget class="QuLabel" name="quLabel3">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>1</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="source">
-      <string>$1/long_scalar</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="2">
     <widget class="QCheckBox" name="cbquLabel2">
      <property name="text">
@@ -81,23 +21,10 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="3">
-    <widget class="QuApplyNumeric" name="quApplyNum">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>1</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="target">
-      <string>$1/double_scalar</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="0">
-    <widget class="QCheckBox" name="cbquTrendPlot1">
-     <property name="text">
-      <string>Plot 1</string>
+   <item row="3" column="0">
+    <widget class="QuLed" name="quLed">
+     <property name="source">
+      <string>$1/boolean_scalar</string>
      </property>
     </widget>
    </item>
@@ -114,6 +41,67 @@
      </property>
     </widget>
    </item>
+   <item row="0" column="6" rowspan="4">
+    <widget class="QuCircularGauge" name="quCircularGauge">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="source">
+      <string>$1/double_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0" colspan="8">
+    <widget class="QuTrendPlot" name="quTrendPlot2">
+     <property name="sources">
+      <stringlist>
+       <string>$1/long_scalar</string>
+      </stringlist>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="4">
+    <widget class="QuCheckBox" name="quCheckBox">
+     <property name="source">
+      <string>$1/boolean_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="8">
+    <widget class="QuTrendPlot" name="quTrendPlot1">
+     <property name="sources">
+      <stringlist>
+       <string>$1/double_scalar</string>
+      </stringlist>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="QuLabel" name="quLabel3">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="source">
+      <string>$1/long_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="7">
+    <widget class="QCheckBox" name="cbquCircularGauge">
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="2">
     <widget class="QCheckBox" name="cbquLabel1">
      <property name="text">
@@ -121,13 +109,37 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="3">
-    <widget class="QuButton" name="quButton">
+   <item row="7" column="1">
+    <widget class="QCheckBox" name="cbquTrendPlot2">
      <property name="text">
-      <string>Switch States</string>
+      <string>Plot 2</string>
      </property>
-     <property name="target">
-      <string>$1-&gt;SwitchStates</string>
+    </widget>
+   </item>
+   <item row="7" column="6" colspan="2">
+    <widget class="QPushButton" name="pbStop">
+     <property name="text">
+      <string>Stop Selected</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QuLabel" name="quLabel1">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>1</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="source">
+      <string>$1/double_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QCheckBox" name="cbquTrendPlot1">
+     <property name="text">
+      <string>Plot 1</string>
      </property>
     </widget>
    </item>
@@ -138,38 +150,40 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="5">
-    <widget class="QCheckBox" name="cbquCircularGauge">
-     <property name="layoutDirection">
-      <enum>Qt::RightToLeft</enum>
-     </property>
+   <item row="2" column="4">
+    <widget class="QuButton" name="quButton">
      <property name="text">
-      <string/>
+      <string>Switch States</string>
+     </property>
+     <property name="target">
+      <string>$1-&gt;SwitchStates</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="0" colspan="6">
-    <widget class="QuTrendPlot" name="quTrendPlot1">
-     <property name="sources">
-      <stringlist>
-       <string>$1/double_scalar</string>
-      </stringlist>
+   <item row="1" column="4">
+    <widget class="QuLineEdit" name="quLe">
+     <property name="target" stdset="0">
+      <string>$1/double_scalar</string>
      </property>
     </widget>
    </item>
-   <item row="6" column="0" colspan="6">
-    <widget class="QuTrendPlot" name="quTrendPlot2">
-     <property name="sources">
-      <stringlist>
-       <string>$1/long_scalar</string>
-      </stringlist>
+   <item row="1" column="5">
+    <widget class="QuButton" name="quBuLe">
+     <property name="target">
+      <string>$1/double_scalar(&amp;quLe)</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="4" colspan="2">
-    <widget class="QPushButton" name="pbStop">
-     <property name="text">
-      <string>Stop Selected</string>
+   <item row="0" column="4" colspan="2">
+    <widget class="QuApplyNumeric" name="quApplyNum">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="target">
+      <string>$1/double_scalar</string>
      </property>
     </widget>
    </item>
@@ -216,6 +230,11 @@
    <class>EApplyNumeric</class>
    <extends>QWidget</extends>
    <header>eapplynumeric.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QuLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>qulineedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
