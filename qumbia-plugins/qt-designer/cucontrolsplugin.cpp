@@ -390,19 +390,14 @@ void TaskMenuExtension::setupSourceTargetDialog(QWidget *cb_widget)
             formWindow->cursor()->setProperty("source", wins->source());
 
         QString target;
-
-        QList<QListWidgetItem *>itemList = wint->ui.listWidget->findItems("*", Qt::MatchWildcard);
-        for(int i = 0; i < itemList.size(); i++)
-        {
-            QListWidgetItem *it = itemList.at(i);
+        for(int i = 0; i < wint->ui.listWidget->count(); i++)  {
+            QListWidgetItem *it = wint->ui.listWidget->item(i);
             target.append(it->text());
-            if(i < itemList.size() - 1)
+            if(i < wint->ui.listWidget->count() - 1)
                 target += ";";
         }
         formWindow->cursor()->setProperty("target", target);
     }
-    else
-        qDebug() << "Caso non accettato!";
 
     delete wins;
     delete wint;
