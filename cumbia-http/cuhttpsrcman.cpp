@@ -111,6 +111,16 @@ bool CuHttpSrcMan::m_wait_map_remove(const string &src, const string &method, Cu
             r = true;
         }
     }
+    QMutableMapIterator<QString, SrcData> tgtmi(d->tgtd);
+    while(tgtmi.hasNext()) {
+        tgtmi.next();
+        if((tgtmi.key() == QString::fromStdString(src) && tgtmi.value().lis == l && tgtmi.value().method == method) || tgtmi.value().lis == nullptr) {
+            printf("\e[1;35mCuHttpSrcMan::unlinkSrc deactivating listener %p for target %s meth %s\n",
+                   l, src.c_str(), tgtmi.value().method.c_str());
+            tgtmi.remove();
+            r = true;
+        }
+    }
     return r;
 }
 
