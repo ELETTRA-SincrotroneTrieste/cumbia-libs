@@ -150,7 +150,6 @@ HEADERS += cumbiaqtcontrols.h\
     src/qucombobox.h \
     src/qumbiaizerprivate.h \
     src/quvaluefilter.h \
-    src/plugin_ifaces/qumultireaderplugininterface.h \
     src/cucontexti.h \
     src/quled.h \
     src/widgets-base/quledbase.h \
