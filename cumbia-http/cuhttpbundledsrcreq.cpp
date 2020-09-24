@@ -65,7 +65,6 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
         printf("\e[1;32mCuHttpBundledSrcReq::start setting X-Channel header to %s\e[0m\n", d->channel.data());
     }
 
-    cuprintf("\e[1;36mCuHttpBundledSrcReq::start: PAYLOAD:\n%s COOKIE %s\e[0m\n", d->req_payload.data(), d->cookie.data());
     QNetworkReply *reply = nam->post(r, d->req_payload);
     reply->setProperty("payload", d->req_payload);
     connect(reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
@@ -114,7 +113,7 @@ void CuHttpBundledSrcReq::onSslErrors(const QList<QSslError> &errors) {
     QString msg;
     foreach(const QSslError &e, errors)
         msg += e.errorString() + "\n";
-    qDebug() << __PRETTY_FUNCTION__ << msg;
+    perr("CuHttpBundledSrcReq::onSslErrors: errors: %s", qstoc(msg));
 }
 
 void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError code)

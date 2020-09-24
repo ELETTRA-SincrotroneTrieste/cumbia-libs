@@ -91,7 +91,6 @@ void CuHttpControlsReader::setSource(const QString &s) {
         // d->s must store the complete src, including tango host
         d->s = QString::fromStdString(hs.prepare());
         d->cu_http->readEnqueue(hs, d->dlis, httprf);
-        printf("CuHttpControlsReade.setSource: source %s\n", qstoc(d->s));
     }
 }
 
@@ -113,7 +112,6 @@ CuData CuHttpControlsReader::getOptions() const {
 }
 
 void CuHttpControlsReader::sendData(const CuData &data) {
-    printf("CuHttpControlsReader::sendData \e[1;32m%s\e[0m\n", datos(data));
     if(data.containsKey("read")) {
         CuHTTPActionReaderFactory httprf(true);
         httprf.mergeOptions(d->o);
