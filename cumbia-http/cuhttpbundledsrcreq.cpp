@@ -57,6 +57,7 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
 {
     QNetworkRequest r(url);
     r.setRawHeader("Accept", "application/json");
+    r.setRawHeader("Content-Type", "application/json");
     r.setHeader(QNetworkRequest::UserAgentHeader, QByteArray("cumbia-http ") + QByteArray(CUMBIA_HTTP_VERSION_STR));
     if(!d->cookie.isEmpty())
         r.setRawHeader("Cookie", d->cookie);
@@ -120,8 +121,7 @@ void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError code)
 {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
     QJsonObject eo = CumbiaHTTPWorld().make_error(r->errorString() + QString( "code %1").arg(code));
-    qDebug() << __PRETTY_FUNCTION__ << "!!!!!!!!!!!!!!" << QJsonValue(eo).toString() << "error string" << r->errorString() <<
-                r->property("payload").toString();
+    perr("CuHttpBundledSrcReq::onError: %s/%s", qstoc(r->errorString()), qstoc(r->property("payload").toString()));
 }
 
 void CuHttpBundledSrcReq::m_on_buf_complete() {
