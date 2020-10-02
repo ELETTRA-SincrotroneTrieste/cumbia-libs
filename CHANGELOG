@@ -1,3 +1,21 @@
+1.2.3
+a. cumbia-qtcontrols: QuWatcher: string vector type besides scalar string can be attached to QString slots
+
+b. cumbia-http
+b1. source call after setSource returns the full source after wildcard replacement
+b2. fixed target removal from map in CuHttpSrcMan::m_wait_map_remove
+b3. cuhttptangohelper.cpp: fixed Tango class property syntax, such as: hokuto:20000/TangoTest(ProjectTitle,Description)
+
+c. cumbia-tango
+c1. cutango-world.cpp: fixed Tango class property syntax, such as: hokuto:20000/TangoTest(ProjectTitle,Description)
+
+d.
+d1. qumbia-plugins/qt-designer: fixed target dialog
+d2. qumbia-plugins/cumbia-multiread: removed from cumbia distribution to a separate plugin:
+    https://github.com/ELETTRA-SincrotroneTrieste/cumbia-multiread-plugin
+    Plugin interface definition (qumultireaderplugininterface.h) has been moved as well.
+
+
 1.2.2
 Fixed incorrect behavior of right click menu - Link stats
 
