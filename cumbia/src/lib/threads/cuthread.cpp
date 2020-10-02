@@ -211,7 +211,6 @@ void CuThread::onEventPosted(CuEventI *event)
                 tl->onResult(vd_ref);
             }
             else {
-                //                printf("\e[1;33mCuThread %p onEventPosted (single data version): post to CuThreadListener %p data %s\e[0m\n", this,  tl, re->getData().toString().c_str());
                 const CuData& da = re->getData();
 //                printf("CuThread.onEventPosted: calling on result \e[0;33m%s\e[0m %s { err %s}\n", vtoc2(da, "src"), da["value"].toString().c_str(),
 //                        da["err"].toBool() ? "true" : "false");
@@ -344,7 +343,6 @@ void CuThread::start() {
  * Thread loop
  */
 void CuThread::run() {
-    //    printf("+ CuThread.run 0x%lx TID (%ld) TOKEN %s \e[1;32mentering\e[0m\n", pthread_self(), pthread_self(), d->token.toString().c_str());
     bool destroy = false;
     ThreadEvent *te = NULL;
     CuTimerService *timer_s = static_cast<CuTimerService *>(d->serviceProvider->get(CuServices::Timer));
@@ -446,7 +444,6 @@ void CuThread::run() {
     if(destroy) {
         d->eventBridge->postEvent(new CuThreadAutoDestroyEvent());
     }
-    //    printf("- CuThread.run 0x%lx  (%ld) TOKEN %s \e[1;32mexiting\e[0m\n", pthread_self(),pthread_self(), d->token.toString().c_str());
 }
 
 /*! \brief returns true if the thread is running
@@ -465,10 +462,6 @@ void CuThread::mActivityInit(CuActivity *a)
 {
     int repeat_timeout;
     d->activity_set.insert(a);
-//    if(a->getToken().value("src").isNull())
-//        printf("CuThread.mActivityInit: tok  %s\n", datos(a->getToken()));
-//    else
-//        printf("CuThread.mActivityInit: tok src %s\n", vtoc2(a->getToken(), "src"));
     a->setThreadToken(d->token);
     a->doInit();
     a->doExecute();
