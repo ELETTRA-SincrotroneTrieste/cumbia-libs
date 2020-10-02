@@ -501,8 +501,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
             else
                 message += " [cannot convert to double] ";
         }
-
-        else if(type() == Qumbiaizer::String && val.getFormat() == CuVariant::Scalar)
+        else if(type() == Qumbiaizer::String && (val.getFormat() == CuVariant::Scalar || val.getFormat() == CuVariant::Vector ) )
         {
             QString str = QString::fromStdString(val.toString(&ok));
             if(ok)
