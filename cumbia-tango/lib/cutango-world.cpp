@@ -1185,9 +1185,8 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                 break;
             case TSource::SrcDbAttInfo:
             case TSource::SrcDbDevProps: {  //  test/device/1/double_scalar/
-                d->message = "CuTangoWorld.get_from_pattern type SrcDbAProps and SrcDbDevProps not implemented";
-                d->error = true;
-                perr("%s", d->message.c_str());
+                dev = new Tango::DeviceProxy(dnam);
+                dev->get_property_list("*", r);
             }
                 break;
             case  TSource::SrcDbGetCmdI: { // "tango://test/device/1->get/"
