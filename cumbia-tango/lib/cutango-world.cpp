@@ -1204,8 +1204,8 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                    if(p_values.size() > 0)
                        res["p_values"] = p_values;
                 }
-                break;
             }
+                break;
             case TSource::SrcDbDevProps: {  //  test/device/1/double_scalar/
                 dev = new Tango::DeviceProxy(dnam);
                 dev->get_property_list("*", r);
