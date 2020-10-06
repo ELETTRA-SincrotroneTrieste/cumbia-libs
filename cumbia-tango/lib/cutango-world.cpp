@@ -1183,7 +1183,30 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                 }
             }
                 break;
-            case TSource::SrcDbAttInfo:
+            case TSource::SrcDbAttInfo: {
+                Tango::DbData db_data;
+                std::vector<std::string> p_values;
+                db_data.push_back(Tango::DbDatum(tsrc.getPoint()));
+                db->get_device_attribute_property(dnam, db_data);
+                for (size_t i=0; i < db_data.size();i++)
+                {
+                   long nb_prop;
+                   const std::string &att_name = db_data[i].name;
+                   db_data[i] >> nb_prop;
+                   i++;
+                   for (int k=0;k < nb_prop;k++) {
+                       std::string pval;
+                       string &prop_name = db_data[i].name;
+                       db_data[i] >> pval;
+                       r.push_back(db_data[i].name);
+                       p_values.push_back(pval);
+                       i++;
+                    }
+                   if(p_values.size() > 0)
+                       res["p_values"] = p_values;
+                }
+                break;
+            }
             case TSource::SrcDbDevProps: {  //  test/device/1/double_scalar/
                 dev = new Tango::DeviceProxy(dnam);
                 dev->get_property_list("*", r);
