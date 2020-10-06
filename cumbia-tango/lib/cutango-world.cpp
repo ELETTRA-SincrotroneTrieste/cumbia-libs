@@ -1194,7 +1194,7 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                    long nb_prop;
                    db_data[i] >> nb_prop;
                    i++;
-                   printf("\e[0;33m  db_data.size %d nb_prop %ld %s\e[0m\n\n", db_data.size(), nb_prop );
+                   printf("\e[0;33m  db_data.size %ld nb_prop %ld\e[0m\n\n", db_data.size(), nb_prop );
                    for (int k=0;k < nb_prop;k++) {
                        std::string pval;
                        db_data[i] >> pval;
