@@ -1184,7 +1184,7 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
             }
                 break;
             case TSource::SrcDbAttInfo: {
-                printf("\e[1;33m> >>>>>>>>>>> >> >>>       >>   CuTangoWorld.db_get: SrcDbAttInfo point\e[0m\n", tsrc.getPoint().c_str());
+                printf("\e[1;33m> >>>>>>>>>>> >> >>>       >>   CuTangoWorld.db_get: SrcDbAttInfo point %s\e[0m\n", tsrc.getPoint().c_str());
                 Tango::DbData db_data;
                 std::vector<std::string> p_values;
                 db_data.push_back(Tango::DbDatum(tsrc.getPoint()));
