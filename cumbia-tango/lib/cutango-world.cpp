@@ -1184,7 +1184,7 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
             }
                 break;
             case TSource::SrcDbAttInfo: {
-                printf("\e[1;33mCuTangoWorld.db_get: SrcDbAttInfo\e[0m\n");
+                printf("\e[1;33m> >>>>>>>>>>> >> >>>       >>   CuTangoWorld.db_get: SrcDbAttInfo point\e[0m\n", tsrc.getPoint().c_str());
                 Tango::DbData db_data;
                 std::vector<std::string> p_values;
                 db_data.push_back(Tango::DbDatum(tsrc.getPoint()));
@@ -1203,7 +1203,9 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                     }
                    if(p_values.size() > 0)
                        res["p_values"] = p_values;
+                   printf("\e[0;33m  p_values %s\e[0m\n\n", res["p_values"].toString().c_str() );
                 }
+
             }
                 break;
             case TSource::SrcDbDevProps: {  //  test/device/1/double_scalar/
