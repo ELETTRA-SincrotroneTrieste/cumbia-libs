@@ -1188,7 +1188,7 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                 Tango::DbData db_data;
                 std::vector<std::string> p_values;
                 db_data.push_back(Tango::DbDatum(tsrc.getPoint()));
-                db->get_device_attribute_property(dnam, db_data);
+                db->get_device_attribute_property(dnam_nhnp, db_data);
                 for (size_t i=0; i < db_data.size();i++)
                 {
                    long nb_prop;
