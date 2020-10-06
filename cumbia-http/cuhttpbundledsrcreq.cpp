@@ -144,7 +144,6 @@ bool CuHttpBundledSrcReq::m_likely_valid(const QByteArray &ba) const {
 QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs)
 {
     QJsonObject root_o;
-    root_o["type"] = "srcs";
     QJsonArray sa;
     foreach(const SrcItem& i, srcs) {
         QJsonObject so;
@@ -153,18 +152,13 @@ QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs)
         so["method"] = QString::fromStdString(i.method);
         i.method != "write" ? so["src"] = QString::fromStdString(i.src) :
                 so["src"] = QString("%1(%2)").arg(i.src.c_str()).arg(i.wr_val.toString().c_str());
-        // keys array
-        QJsonArray keys { "src", "method", "options" };
-
         if(channel.size() == 0 && !i.channel.isEmpty())
             channel = i.channel.toLatin1();
         else if(!i.channel.isEmpty() && channel != i.channel) {
             so["channel"] = i.channel; // specific channel
-            keys.append("channel");
             perr("CuHttpBundledSrcReqPrivate.m_json_pack: cannot mix channels (%s/%s) in the same request: load balanced service instances may misbehave",
                  channel.data(), qstoc(i.channel));
         }
-        so["keys"] = keys;
         sa.append(so);
     }
     // hopefully an app uses a single channel
