@@ -55,7 +55,7 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
         t = SrcDbDevProps;
     else if(hasprops && sep == 2 && !hasa)  //  a/tg/dev(devprop1,devprop2,...)
         t = SrcDbDevProp;
-    else if(sep == 0 && ewc) // domai*
+    else if(s.size() == 0 || s == "*") // domai*
         t = SrcDbDoma;
     else if(sep == 1 && (ewsep || ewc)) // dom/  or  dom/fa*
         t = SrcDbFam;
@@ -76,6 +76,7 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
     else if(sep == 2 && hasa) // te/de/1->GetV
         t = SrcCmd;
 
+    printf("TSource m_getTy: s is %s type is %d\n", s.c_str(), t);
     return t;
 }
 

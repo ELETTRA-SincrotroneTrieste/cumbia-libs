@@ -26,6 +26,8 @@ CuTangoWorld::CuTangoWorld()
     // support class property syntax, such as: hokuto:20000/TangoTest(ProjectTitle,Description),
     // hokuto:20000/TangoTest(*)
     d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\]+(?:[\\(A-Za-z0-9_\\-,\\)\\s*]+)");
+    // tango domain search [tango://]hokuto:20000/ or [tango://]hokuto:20000/*
+    d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){1}[*]{0,1}");
 
     // support tango://host:PORT/a/b/c/d and tango://host:PORT/a/b/c->e
     // when CumbiaPool.guessBySrc needs to be used
@@ -1146,6 +1148,8 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
             case TSource::SrcEndTypes:
                 break;
             case TSource::SrcDbDoma:
+                // SrcDbDomain with an empty pattern corresponds to a wildcard domain search
+                if(p.size() == 0) p = "*";
                 dbd = db->get_device_domain(p);
                 dbd >> r;
                 break;
