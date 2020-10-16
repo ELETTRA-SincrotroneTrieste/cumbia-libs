@@ -26,6 +26,12 @@ CuTangoWorld::CuTangoWorld()
     // support class property syntax, such as: hokuto:20000/TangoTest(ProjectTitle,Description),
     // hokuto:20000/TangoTest(*)
     d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\]+(?:[\\(A-Za-z0-9_\\-,\\)\\s*]+)");
+
+    // free properties and device exported
+    // tango://ken:20000/#Sequencer#TestList
+    // ken:20000/#test/de*/*(*)
+    d->src_patterns.push_back("(?:tango://){1,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\$#\\*/]+(?:\\(\\*\\)){0,1}");
+    d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){1,1}[A-Za-z0-9_\\-\\.\\$#\\*/]+(?:\\(\\*\\)){0,1}");
     // tango domain search [tango://]hokuto:20000/ or [tango://]hokuto:20000/*
     d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){1}[*]{0,1}");
 
@@ -1167,6 +1173,13 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                 db->get_property(tsrc.getFreePropObj(), db_data);
                 if(db_data.size() > 0)
                     db_data[0] >> r;
+                break;
+            case TSource::SrcExportedDevs: {
+                std::string pattern = tsrc.getExportedDevSearchPattern();
+                printf("pattern for dev exported is %s\n", pattern.c_str());
+                Tango::DbDatum devs_dbd = db->get_device_exported(pattern);
+                devs_dbd >> r;
+            }
                 break;
             case TSource::SrcDbAtts: {
                 dev = new Tango::DeviceProxy(dnam);

@@ -14,11 +14,11 @@ public:
                 // search types
                 SrcDbDoma, SrcDbFam, SrcDbMem, SrcDbAtts, SrcDbClassProps, SrcDbCmds, SrcDbAttInfo, SrcDbDevProps,
                 // attribute, class, dev, free prop and command info
-                SrcDbAProp, SrcDbGetCmdI, SrcDbClassProp, SrcDbDevProp, SrcDbFreeProp, SrcEndTypes };
+                SrcDbAProp, SrcDbGetCmdI, SrcDbClassProp, SrcDbDevProp, SrcDbFreeProp, SrcExportedDevs, SrcEndTypes };
 
     const char *tynames[SrcEndTypes + 1] = { "SrcInvalid", "SrcCmd", "SrcAttr", "SrcDbDoma", "SrcDbFam", "SrcDbMem",
                                              "SrcDbAtts","SrcDbClassProps",  "SrcDbCmds", "SrcDbAProps",  "SrcDbDevProps",
-                                             "SrcDbAProp",  "SrcDbGetCmdI",  "SrcDbClassProp", "SrcDbDevProp", "SrcDbFreeProp", "SrcEndTypes" };
+                                             "SrcDbAProp",  "SrcDbGetCmdI",  "SrcDbClassProp", "SrcDbDevProp", "SrcDbFreeProp", "SrcExportedDevs" "SrcEndTypes" };
 
     TSource();
     TSource(const std::string s);
@@ -33,6 +33,7 @@ public:
     std::string getFreePropObj() const;
     std::string getSearchPattern() const;
     std::string getPropClassNam() const;
+    std::string getExportedDevSearchPattern() const;
 
     bool isDbOp() const;
 

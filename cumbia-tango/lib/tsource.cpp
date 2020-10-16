@@ -47,6 +47,8 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
     Type t = SrcInvalid;
     if(swht && std::count(s.begin(), s.end(), '#') == 2) // free prop:  #MyObj#MyFreeProp
         t= SrcDbFreeProp;
+    else if(arg_wildcard && std::count(s.begin(), s.end(), '*') > 1) // at least 2 (one shall be within (*) )
+        t = SrcExportedDevs;
     else if(arg_wildcard && sep == 0) // class(*))
         t = SrcDbClassProps;
     else if(hasprops && sep == 0) // class{prop1,prop2,..}
@@ -231,6 +233,15 @@ string TSource::getPropClassNam() const {
             p = s.substr(0, i);
     }
     return p;
+}
+
+string TSource::getExportedDevSearchPattern() const {
+    std::regex re("(.*)\\(\\*\\)");  // hokuto:20000/test/*/1(*)
+    const std::string &s = rem_tghostproto(m_s); // test/*/1(*)
+    std::smatch sm;
+    if(std::regex_search(s, sm, re) && sm.size() > 1)
+        return sm[1];
+    return std::string();
 }
 
 /*!
