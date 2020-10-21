@@ -47,6 +47,8 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
     Type t = SrcInvalid;
     if(swht && std::count(s.begin(), s.end(), '#') == 2) // free prop:  #MyObj#MyFreeProp
         t= SrcDbFreeProp;
+    else if(arg_wildcard && std::count(s.begin(), s.end(), '*') > 1) // at least 2 (one shall be within (*) )
+        t = SrcExportedDevs;
     else if(arg_wildcard && sep == 0) // class(*))
         t = SrcDbClassProps;
     else if(hasprops && sep == 0) // class{prop1,prop2,..}
@@ -55,7 +57,7 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
         t = SrcDbDevProps;
     else if(hasprops && sep == 2 && !hasa)  //  a/tg/dev(devprop1,devprop2,...)
         t = SrcDbDevProp;
-    else if(sep == 0 && ewc) // domai*
+    else if(s.size() == 0 || s == "*") // domai*
         t = SrcDbDoma;
     else if(sep == 1 && (ewsep || ewc)) // dom/  or  dom/fa*
         t = SrcDbFam;
@@ -76,6 +78,7 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
     else if(sep == 2 && hasa) // te/de/1->GetV
         t = SrcCmd;
 
+    printf("TSource m_getTy: s is %s type is %d\n", s.c_str(), t);
     return t;
 }
 
@@ -230,6 +233,15 @@ string TSource::getPropClassNam() const {
             p = s.substr(0, i);
     }
     return p;
+}
+
+string TSource::getExportedDevSearchPattern() const {
+    std::regex re("(.*)\\(\\*\\)");  // hokuto:20000/test/*/1(*)
+    const std::string &s = rem_tghostproto(m_s); // test/*/1(*)
+    std::smatch sm;
+    if(std::regex_search(s, sm, re) && sm.size() > 1)
+        return sm[1];
+    return std::string();
 }
 
 /*!

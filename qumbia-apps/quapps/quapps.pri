@@ -6,6 +6,11 @@ isEmpty(CU_USER_CONFIG_DIR) {
     CU_USER_CONFIG_DIR=.config/cumbia
 }
 
+# include cumbia-qtcontrols for necessary qt engine-unaware dependency (widgets, qwt, ...)
+# and for CUMBIA_QTCONTROLS_VERSION definition
+#
+include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
+
 linux-g++|linux-clang|freebsd-clang|freebsd-g++|openbsd {
     exists ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
         message("- adding EPICS support under $${INSTALL_ROOT}")
@@ -16,9 +21,6 @@ linux-g++|linux-clang|freebsd-clang|freebsd-g++|openbsd {
         include ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
     }
     greaterThan(QT_MAJOR_VERSION, 4): QT += x11extras
-} else {
-    # include cumbia-qtcontrols for necessary qt engine-unaware dependency (widgets, qwt, ...)
-    include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 }
 
 exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {

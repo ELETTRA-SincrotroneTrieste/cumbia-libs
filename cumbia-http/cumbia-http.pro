@@ -24,6 +24,12 @@ isEmpty(QT_NO_WIDGETS) {
     QT       += widgets
 }
 
+isEmpty(qdebug) {
+    DEFINES += QT_NO_DEBUG_OUTPUT
+} else {
+    DEFINES += QT_NO_DEBUG_OUTPUT
+}
+
 CONFIG += debug
 
 # CONFIG += silent
@@ -42,7 +48,6 @@ TEMPLATE = lib
 DEFINES += CUMBIAHTTP_LIBRARY
 DEFINES += CUMBIA_DEBUG_OUTPUT=1 DEFAULT_CHAN_MSG_TTL=$${DEFAULT_CHANNEL_MSG_TTL}
 
-DEFINES -= QT_NO_DEBUG_OUTPUT
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings

@@ -57,7 +57,7 @@ CuHttpTangoSrc::Type CuHttpTangoSrc::m_get_ty(const std::string& src) const {
         t = SrcDbDevProps;
     else if(hasprops && sep == 2 && !hasa)  //  a/tg/dev(devprop1,devprop2,...)
         t = SrcDbDevProp;
-    else if(sep == 0 && ewc) // domai*
+    else if( s == "/" || s == "/*") // domai*
         t = SrcDbDoma;
     else if(sep == 1 && (ewsep || ewc)) // dom/  or  dom/fa*
         t = SrcDbFam;

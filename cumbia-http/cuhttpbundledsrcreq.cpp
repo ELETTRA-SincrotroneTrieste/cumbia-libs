@@ -57,6 +57,7 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
 {
     QNetworkRequest r(url);
     r.setRawHeader("Accept", "application/json");
+    r.setRawHeader("Content-Type", "application/json");
     r.setHeader(QNetworkRequest::UserAgentHeader, QByteArray("cumbia-http ") + QByteArray(CUMBIA_HTTP_VERSION_STR));
     if(!d->cookie.isEmpty())
         r.setRawHeader("Cookie", d->cookie);
@@ -65,7 +66,6 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
         printf("\e[1;32mCuHttpBundledSrcReq::start setting X-Channel header to %s\e[0m\n", d->channel.data());
     }
 
-    cuprintf("\e[1;36mCuHttpBundledSrcReq::start: PAYLOAD:\n%s COOKIE %s\e[0m\n", d->req_payload.data(), d->cookie.data());
     QNetworkReply *reply = nam->post(r, d->req_payload);
     reply->setProperty("payload", d->req_payload);
     connect(reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
@@ -114,15 +114,14 @@ void CuHttpBundledSrcReq::onSslErrors(const QList<QSslError> &errors) {
     QString msg;
     foreach(const QSslError &e, errors)
         msg += e.errorString() + "\n";
-    qDebug() << __PRETTY_FUNCTION__ << msg;
+    perr("CuHttpBundledSrcReq::onSslErrors: errors: %s", qstoc(msg));
 }
 
 void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError code)
 {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
     QJsonObject eo = CumbiaHTTPWorld().make_error(r->errorString() + QString( "code %1").arg(code));
-    qDebug() << __PRETTY_FUNCTION__ << "!!!!!!!!!!!!!!" << QJsonValue(eo).toString() << "error string" << r->errorString() <<
-                r->property("payload").toString();
+    perr("CuHttpBundledSrcReq::onError: %s/%s", qstoc(r->errorString()), qstoc(r->property("payload").toString()));
 }
 
 void CuHttpBundledSrcReq::m_on_buf_complete() {
@@ -145,7 +144,6 @@ bool CuHttpBundledSrcReq::m_likely_valid(const QByteArray &ba) const {
 QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs)
 {
     QJsonObject root_o;
-    root_o["type"] = "srcs";
     QJsonArray sa;
     foreach(const SrcItem& i, srcs) {
         QJsonObject so;
@@ -154,18 +152,13 @@ QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs)
         so["method"] = QString::fromStdString(i.method);
         i.method != "write" ? so["src"] = QString::fromStdString(i.src) :
                 so["src"] = QString("%1(%2)").arg(i.src.c_str()).arg(i.wr_val.toString().c_str());
-        // keys array
-        QJsonArray keys { "src", "method", "options" };
-
         if(channel.size() == 0 && !i.channel.isEmpty())
             channel = i.channel.toLatin1();
         else if(!i.channel.isEmpty() && channel != i.channel) {
             so["channel"] = i.channel; // specific channel
-            keys.append("channel");
             perr("CuHttpBundledSrcReqPrivate.m_json_pack: cannot mix channels (%s/%s) in the same request: load balanced service instances may misbehave",
                  channel.data(), qstoc(i.channel));
         }
-        so["keys"] = keys;
         sa.append(so);
     }
     // hopefully an app uses a single channel

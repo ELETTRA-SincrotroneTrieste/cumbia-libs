@@ -27,6 +27,14 @@ CuTangoWorld::CuTangoWorld()
     // hokuto:20000/TangoTest(*)
     d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\]+(?:[\\(A-Za-z0-9_\\-,\\)\\s*]+)");
 
+    // free properties and device exported
+    // tango://ken:20000/#Sequencer#TestList
+    // ken:20000/#test/de*/*(*)
+    d->src_patterns.push_back("(?:tango://){1,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\$#\\*/]+(?:\\(\\*\\)){0,1}");
+    d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){1,1}[A-Za-z0-9_\\-\\.\\$#\\*/]+(?:\\(\\*\\)){0,1}");
+    // tango domain search [tango://]hokuto:20000/ or [tango://]hokuto:20000/*
+    d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){1}[*]{0,1}");
+
     // support tango://host:PORT/a/b/c/d and tango://host:PORT/a/b/c->e
     // when CumbiaPool.guessBySrc needs to be used
     // with the two above only, sources like "tango://hokuto:20000/test/device/1/double_scalar"
@@ -1146,6 +1154,8 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
             case TSource::SrcEndTypes:
                 break;
             case TSource::SrcDbDoma:
+                // SrcDbDomain with an empty pattern corresponds to a wildcard domain search
+                if(p.size() == 0) p = "*";
                 dbd = db->get_device_domain(p);
                 dbd >> r;
                 break;
@@ -1163,6 +1173,13 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                 db->get_property(tsrc.getFreePropObj(), db_data);
                 if(db_data.size() > 0)
                     db_data[0] >> r;
+                break;
+            case TSource::SrcExportedDevs: {
+                std::string pattern = tsrc.getExportedDevSearchPattern();
+                printf("pattern for dev exported is %s\n", pattern.c_str());
+                Tango::DbDatum devs_dbd = db->get_device_exported(pattern);
+                devs_dbd >> r;
+            }
                 break;
             case TSource::SrcDbAtts: {
                 dev = new Tango::DeviceProxy(dnam);
@@ -1183,11 +1200,35 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                 }
             }
                 break;
-            case TSource::SrcDbAttInfo:
+            case TSource::SrcDbAttInfo: {
+                printf("\e[1;33m> >>>>>>>>>>> >> >>>       >>   CuTangoWorld.db_get: SrcDbAttInfo dnam \"%s\" point %s\e[0m\n", dnam.c_str(), tsrc.getPoint().c_str());
+                Tango::DbData db_data;
+                std::vector<std::string> p_values;
+                db_data.push_back(Tango::DbDatum(tsrc.getPoint()));
+                db->get_device_attribute_property(dnam_nhnp, db_data);
+                for (size_t i=0; i < db_data.size();i++)
+                {
+                   long nb_prop;
+                   db_data[i] >> nb_prop;
+                   i++;
+                   printf("\e[0;33m  db_data.size %ld nb_prop %ld\e[0m\n\n", db_data.size(), nb_prop );
+                   for (int k=0;k < nb_prop;k++) {
+                       std::string pval;
+                       db_data[i] >> pval;
+                       r.push_back(db_data[i].name);
+                       p_values.push_back(pval);
+                       i++;
+                    }
+                   if(p_values.size() > 0)
+                       res["p_values"] = p_values;
+                   printf("\e[0;33m  p_values %s\e[0m\n\n", res["p_values"].toString().c_str() );
+                }
+
+            }
+                break;
             case TSource::SrcDbDevProps: {  //  test/device/1/double_scalar/
-                d->message = "CuTangoWorld.get_from_pattern type SrcDbAProps and SrcDbDevProps not implemented";
-                d->error = true;
-                perr("%s", d->message.c_str());
+                dev = new Tango::DeviceProxy(dnam);
+                dev->get_property_list("*", r);
             }
                 break;
             case  TSource::SrcDbGetCmdI: { // "tango://test/device/1->get/"
