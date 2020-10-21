@@ -1,3 +1,12 @@
+1.2.3
+Moved qumbia-plugins/cumbia-multiread and its qumultireaderplugininterface.h interface definition to a separate project:
+( https://github.com/ELETTRA-SincrotroneTrieste/cumbia-multiread-plugin )
+
+a. cumbia-http: fixes
+b. qumbia-plugins/qt-designer/cucontrolsplugin.cpp: fixed target dialog list widget
+
+
+
 1.2.2
 Fixed incorrect behavior of right click menu - Link stats
 
