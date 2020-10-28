@@ -78,7 +78,7 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
     else if(sep == 2 && hasa) // te/de/1->GetV
         t = SrcCmd;
 
-    printf("TSource m_getTy: s is %s type is %d\n", s.c_str(), t);
+//    printf("TSource m_getTy: s is %s type is %d\n", s.c_str(), t);
     return t;
 }
 
