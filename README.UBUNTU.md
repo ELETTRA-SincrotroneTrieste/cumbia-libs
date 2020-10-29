@@ -177,11 +177,11 @@ Nevertheless, method 2 below is the recommended.
 
 #### 2. Install Qwt from source
 
-> wget https://downloads.sourceforge.net/project/qwt/qwt/6.1.4/qwt-6.1.4.tar.bz2
+> wget https://downloads.sourceforge.net/project/qwt/qwt/6.1.5/qwt-6.1.5.tar.bz2
 
-> tar xjf qwt-6.1.4.tar.bz2
+> tar xjf qwt-6.1.5.tar.bz2
 
-> cd qwt-6.1.4
+> cd qwt-6.1.5
 
 - Edit qwtconfig.pri
 - Uncomment the line 
@@ -192,9 +192,9 @@ Nevertheless, method 2 below is the recommended.
   
 > qmake && make -j5 && sudo make install
 
-The libraries will be installed under */usr/local/qwt-6.1.4* by default and you will therefore add
+The libraries will be installed under */usr/local/qwt-6.1.5* by default and you will therefore add
 
-> /usr/local/qwt-6.1.4/lib/pkgconfig/
+> /usr/local/qwt-6.1.5/lib/pkgconfig/
 
 to the *PKG_CONFIG_PATH* when building *cumbia* modules depending on Qt (Qwt)
 
