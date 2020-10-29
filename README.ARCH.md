@@ -4,16 +4,20 @@ pacman -S qt
 
 
 1. ZEROMQ
+
 git clone https://github.com/zeromq/libzmq.git
+
 cd libzmq/
+
 mkdir build && cd build
+
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/zeromq
+
 make -j9 && sudo make install
 
 git clone https://github.com/zeromq/cppzmq.git
 cd cppzmq && mkdir build && cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/zeromq-4.3.4  &amp;&amp; make -j9
-
 
 
 
@@ -40,8 +44,11 @@ cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.3.3
 sudo make install
 
 cd ../../cppTango/
+
 mkdir build && cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.3.3/ -DZMQ_BASE=/usr/local/zeromq -DCPPZMQ_BASE=/usr/local/zeromq -DOMNIIDL_PATH=/usr/local/omniorb-4.2.3/bin/ -DOMNI_BASE=/usr/local/omniorb-4.2.3 -DIDL_BASE=/usr/local/tango-idl
+
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/tango-9.3.3/ -DZMQ_BASE=/usr/local/zeromq-4.3.4 -DCPPZMQ_BASE=/usr/local/zeromq-4.3.4 -DOMNIIDL_PATH=/usr/local/omniorb-4.2.4/bin/ -DOMNI_BASE=/usr/local/omniorb-4.2.4 -DIDL_BASE=/usr/local/tango-9.3.3
+
 sudo make install
 
 QWT
@@ -61,7 +68,7 @@ export PKG_CONFIG_PATH=/usr/local/qwt-6.1.4/lib/pkgconfig:/usr/local/tango-9.3.3
 /scripts/cubuild.sh tango epics websocket random build
 
 ADD cumbia-libs to pkgconfig
-export PKG_CONFIG_PATH=/usr/local/qwt-6.1.4/lib/pkgconfig:/usr/local/tango-9.3.3/lib/pkgconfig:/usr/local/omniorb-4.2.3/lib/pkgconfig:/usr/local/zeromq/lib/pkgconfig:/usr/local/cumbia-libs/lib/pkgconfig
+export PKG_CONFIG_PATH=/usr/local/qwt-6.1.5/lib/pkgconfig:/usr/local/tango-9.3.3/lib/pkgconfig:/usr/local/omniorb-4.2.4/lib/pkgconfig:/usr/local/zeromq-4.3.4/lib/pkgconfig:/usr/local/cumbia-libs/lib/pkgconfig
 
 qutimearray3dplotplugin
 qumbia-tango-findsrc-plugin
