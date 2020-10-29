@@ -1,4 +1,5 @@
-pacman -Ss make meson ninja wget cmake
+pacman -Ss make meson ninja wget cmake pkgconfig
+
 pacman -S qt
 
 
@@ -11,7 +12,7 @@ make -j9 && sudo make install
 
 git clone https://github.com/zeromq/cppzmq.git
 cd cppzmq && mkdir build && cd build
-cmake .. && make -j9
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/zeromq-4.3.4  &amp;&amp; make -j9
 
 
 
