@@ -269,6 +269,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
     struct timeval tiv;
     const Tango::AttrQuality quality = p_da->get_quality();
     const Tango::AttrDataFormat f = p_da->get_data_format();
+    printf("CuTangoWorld::extractData: \e[1;34mdata format %d for %s\e[0m\n", f, p_da->get_name().c_str());
     const bool w = (p_da->get_nb_written() > 0);
     tiv.tv_sec = tv.tv_sec;
     tiv.tv_usec = tv.tv_usec;
