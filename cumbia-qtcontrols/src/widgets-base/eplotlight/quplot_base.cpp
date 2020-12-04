@@ -120,12 +120,7 @@ void QuPlotBase::init()
 
     setAxisLabelAlignment(QwtPlot::xBottom, Qt::AlignLeft | Qt::AlignBottom);
 
-    //   setStyleSheet("QuPlotBase { background:white; }");
-
-    QuPlotZoomComponent *zoom_c = new QuPlotZoomComponent(this);
-    zoom_c->attachToPlot(this);
-    zoom_c->connectToPlot(this);
-    d->components_map.insert(zoom_c->name(), zoom_c);
+    setZoomDisabled(false);
 
     QuPlotMarkerComponent *marker_c = new QuPlotMarkerComponent(this);
     marker_c->attachToPlot(this);
@@ -300,7 +295,8 @@ double QuPlotBase::defaultUpperBound(QwtPlot::Axis axisId) const
 
 bool QuPlotBase::inZoom() const
 {
-    return static_cast<QuPlotZoomComponent *>(d->components_map.value("zoom"))->inZoom();
+    QuPlotZoomComponent* z = static_cast<QuPlotZoomComponent *>(d->components_map.value("zoom"));
+    return z && z->inZoom();
 }
 
 /*! \brief returns the QuPlotComponent corresponding to the given *name*, nullptr if *name* is not valid
@@ -384,9 +380,9 @@ bool QuPlotBase::updateScales()
         else if(need_ybounds && (axisId == QwtPlot::yRight || axisId == QwtPlot::yLeft))
             axes_c->setBoundsFromCurves(ym, yM, axisId);
 
-        if(!zoomer->inZoom())
+        if(zoomer && !zoomer->inZoom())
             boundsChanged |= axes_c->applyScaleFromCurveBounds(this, axisId); // no updates until replot
-        else if(zoomer->inZoom())
+        else if(zoomer)
             zoomer->changeRect(axisId, axes_c->lowerBoundFromCurves(axisId) - old_lb,
                                axes_c->upperBoundFromCurves(axisId) - old_ub);
     }
@@ -396,7 +392,7 @@ bool QuPlotBase::updateScales()
 void QuPlotBase::resetZoom()
 {
     QuPlotZoomComponent* zoomer = static_cast<QuPlotZoomComponent *>(d->components_map.value("zoom"));
-    if(!zoomer->inZoom())
+    if(zoomer && !zoomer->inZoom())
         zoomer->setZoomBase(false);
 }
 /** \brief Calls updateMarkers, updateScales and replot, resetting the zoom base in the end.
@@ -854,6 +850,16 @@ void QuPlotBase::setZoomDisabled(bool disable)
     {
         canvas()->removeEventFilter(shiftClickEater);
         delete shiftClickEater;
+    }
+    QuPlotZoomComponent *zoom_c = static_cast<QuPlotZoomComponent *>(d->components_map["zoom"]);
+    if(!disable && !zoom_c) {
+        zoom_c = new QuPlotZoomComponent(this);
+        zoom_c->attachToPlot(this);
+        zoom_c->connectToPlot(this);
+        d->components_map.insert(zoom_c->name(), zoom_c);
+    }
+    else if(zoom_c) {
+        delete zoom_c;
     }
 }
 
