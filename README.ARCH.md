@@ -1,4 +1,8 @@
-pacman -Ss make meson ninja wget cmake pkgconfig
+0. (a) BUILD TOOLS 
+
+pacman -Ss make meson ninja wget cmake pkgconfig doxygen graphviz
+
+0. (b) Qt libraries
 
 pacman -S qt
 
@@ -16,19 +20,22 @@ cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/zeromq
 make -j9 && sudo make install
 
 git clone https://github.com/zeromq/cppzmq.git
+
 cd cppzmq && mkdir build && cd build
+
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local/zeromq-4.3.4  &amp;&amp; make -j9
 
 
 
 2. OMNIORB
-[giacomo@woody omniORB-4.2.3]$ ./configure --prefix=/usr/local/omniorb-4.2.3
+[giacomo@woody omniORB-4.2.4]$ ./configure --prefix=/usr/local/omniorb-4.2.4
+
 make -j9 && sudo make install
 
 3. EPICS
 wget https://epics.anl.gov/download/base/base-7.0.3.1.tar.gz
 tar xzf  base-7.0.3.1.tar.gz 
-cd  base-7.0.3.1
+cd  base-R7.0.4.1
 make -j9
 
 
@@ -61,9 +68,9 @@ qmake && make -j9 && sudo make install
 
 cumbia
 
-export EPICS_BASE=/usr/local/epics/base-7.0.3.1
+export EPICS_BASE=/usr/local/epics/base-R7.0.4.1
 export EPICS_HOST_ARCH=linux-x86_64
-export PKG_CONFIG_PATH=/usr/local/qwt-6.1.4/lib/pkgconfig:/usr/local/tango-9.3.3/lib/pkgconfig:/usr/local/omniorb-4.2.3/lib/pkgconfig:/usr/local/zeromq/lib/pkgconfig
+export PKG_CONFIG_PATH=/usr/local/qwt-6.1.4/lib/pkgconfig:/usr/local/tango-9.3.3/lib/pkgconfig:/usr/local/omniorb-4.2.4/lib/pkgconfig:/usr/local/zeromq-4.3.4/lib/pkgconfig
 
 /scripts/cubuild.sh tango epics websocket random build
 
@@ -84,7 +91,7 @@ hdbextractor C++ lib
 > ./configure --prefix=/usr/local/hdbextractor
 make -j9 && sudo make install
 
- export PKG_CONFIG_PATH=/usr/local/qwt-6.1.4/lib/pkgconfig:/usr/local/tango-9.3.3/lib/pkgconfig:/usr/local/omniorb-4.2.3/lib/pkgconfig:/usr/local/zeromq/lib/pkgconfig:/usr/local/cumbia-libs/lib/pkgconfig:/usr/local/hdbextractor/lib/pkgconfig
+ export PKG_CONFIG_PATH=/usr/local/qwt-6.1.4/lib/pkgconfig:/usr/local/tango-9.3.3/lib/pkgconfig:/usr/local/omniorb-4.2.4/lib/pkgconfig:/usr/local/zeromq-4.3.4/lib/pkgconfig:/usr/local/cumbia-libs/lib/pkgconfig:/usr/local/hdbextractor/lib/pkgconfig
 
 
 
