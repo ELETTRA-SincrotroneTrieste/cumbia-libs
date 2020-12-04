@@ -75,9 +75,6 @@ void CuHttpSrcMan::enqueueSrc(const CuHTTPSrc &httpsrc,
  */
 void CuHttpSrcMan::cancelSrc(const CuHTTPSrc &httpsrc, const std::string& method, CuDataListener *l, const QString& chan) {
     bool rem = m_queue_remove(httpsrc.prepare(), method, l);
-    printf("CuHttpSrcMan::cancelSrc searched src %s method %s found in queue? %d\n",
-           httpsrc.prepare().c_str(), method.c_str(), rem);
-
     if(!rem) { // if rem, src was still in queue, no request sent
         rem = m_wait_map_remove(httpsrc.prepare(), method, l);
         // if not in queue, request could have been sent: send "u" unsubscribe req
@@ -91,7 +88,6 @@ bool CuHttpSrcMan::m_queue_remove(const string &src, const std::string& method, 
     QMutableListIterator<SrcItem> mi(d->srcq);
     while(mi.hasNext()) {
         mi.next();
-//        printf("CuHttpSrcMan.m_queue_remove comparing %s wit %s %p wit %p\e[0m\n", mi.value().src.c_str(), src.c_str(), mi.value().l, l);
         if((mi.value().src == src && mi.value().l == l && mi.value().method == method) || (mi.value().l == nullptr)) {
             mi.remove();
         }
@@ -105,8 +101,6 @@ bool CuHttpSrcMan::m_wait_map_remove(const string &src, const string &method, Cu
     while(mi.hasNext()) {
         mi.next();
         if((mi.key() == QString::fromStdString(src) && mi.value().lis == l && mi.value().method == method) || mi.value().lis == nullptr) {
-            printf("\e[1;35mCuHttpSrcMan::unlinkSrc deactivating listener %p for src %s meth %s\n",
-                   l, src.c_str(), mi.value().method.c_str());
             mi.remove();
             r = true;
         }
@@ -115,8 +109,6 @@ bool CuHttpSrcMan::m_wait_map_remove(const string &src, const string &method, Cu
     while(tgtmi.hasNext()) {
         tgtmi.next();
         if((tgtmi.key() == QString::fromStdString(src) && tgtmi.value().lis == l && tgtmi.value().method == method) || tgtmi.value().lis == nullptr) {
-            printf("\e[1;35mCuHttpSrcMan::unlinkSrc deactivating listener %p for target %s meth %s\n",
-                   l, src.c_str(), tgtmi.value().method.c_str());
             tgtmi.remove();
             r = true;
         }
