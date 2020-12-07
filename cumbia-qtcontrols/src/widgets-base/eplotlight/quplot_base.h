@@ -208,6 +208,8 @@ public:
 
     void registerComponent(QuPlotComponent *, const QString& name);
 
+    QuPlotComponent *unregisterComponent(const QString& name);
+
 public slots:
     virtual void refresh();
 

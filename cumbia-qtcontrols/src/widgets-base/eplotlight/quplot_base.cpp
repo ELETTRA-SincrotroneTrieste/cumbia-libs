@@ -320,6 +320,18 @@ void QuPlotBase::registerComponent(QuPlotComponent *c, const QString &name) {
     d->components_map[name] = c;
 }
 
+/*!
+ * \brief QuPlotBase::unregisterComponent unregister the component with the given name
+ * \param name the name of the component, f.e. *zoom, marker, axes, canvas_painter*
+ * \return the component removed from the map, if found. A null pointer otherwise.
+ *         The returned pointer can be used to delete the component.
+ */
+QuPlotComponent *QuPlotBase::unregisterComponent(const QString &name) {
+    QuPlotComponent *co = d->components_map[name];
+    d->components_map.remove(name);
+    return co;
+}
+
 /** \brief updates the marker, if visible, and returns true if it's visible, false otherwise
  *
  * @see refresh
@@ -859,6 +871,7 @@ void QuPlotBase::setZoomDisabled(bool disable)
         d->components_map.insert(zoom_c->name(), zoom_c);
     }
     else if(zoom_c) {
+        d->components_map.remove("zoom");
         delete zoom_c;
     }
 }
