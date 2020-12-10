@@ -37,7 +37,7 @@ QuWatcher::QuWatcher(QObject *parent, CumbiaPool *cumbia_pool, const CuControlsF
 
 QuWatcher::~QuWatcher()
 {
-    pdelete("QuWatcher %p [%s]\n", this, qstoc(source()));
+    pdelete("QuWatcher %p\n", this);
     delete d->context;
     delete d;
 }
@@ -73,7 +73,6 @@ void QuWatcher::setSource(const QString &s)
     CuControlsReaderA * r = d->context->replace_reader(s.toStdString(), this);
     if(r)
         r->setSource(s);
-    printf("QuWatcher.setSource: src %s options %s\n", qstoc(r->source()), datos(d->context->options()));
 }
 
 /** \brief Stop the watcher
@@ -115,7 +114,6 @@ CuContext *QuWatcher::getContext() const
  */
 void QuWatcher::onUpdate(const CuData &data)
 {
-    printf("QuWatcher.onUpdate: received data %s\n", datos(data));
     bool ok = !data["err"].toBool();
     bool is_config = data.has("type", "property");
     std::string msg = data["msg"].toString();
