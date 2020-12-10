@@ -32,10 +32,26 @@ CuHTTPReaderFactory::~CuHTTPReaderFactory()
     delete d;
 }
 
+/** \brief creates and returns a new CuHttpControlsReader, configured with the given
+ *         Cumbia and CuDataListener.
+ *
+ * Call setOptions before create to configure the reader.
+ *
+ * @param c a pointer to the Cumbia object
+ * @param l a pointer to an object implementing the CuDataListener interface
+ *
+ * @return a CuHttpControlsReader, an implementation of CuControlsReaderA abstract class
+ *
+ * \par Important note
+ * The options are reset (to an empty CuData) after  CuTControlsReader
+ * creation and initialization. This avoids applying the same options to subsequent create calls
+ * on the same factory
+ */
 CuControlsReaderA *CuHTTPReaderFactory::create(Cumbia *c, CuDataListener *l) const
 {
     CuHttpControlsReader *r = new CuHttpControlsReader(c, l);
     r->setOptions(d->options);
+    d->options = CuData(); // reset options
     return r;
 }
 
@@ -46,8 +62,7 @@ CuControlsReaderFactoryI *CuHTTPReaderFactory::clone() const
     return f;
 }
 
-void CuHTTPReaderFactory::setOptions(const CuData &options)
-{
+void CuHTTPReaderFactory::setOptions(const CuData &options) {
     d->options = options;
 }
 

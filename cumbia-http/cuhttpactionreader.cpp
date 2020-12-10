@@ -166,7 +166,6 @@ void CuHTTPActionReader::stop() {
         QString url_s = !d->prepared_http_src.isEmpty() ? d->prepared_http_src : d->http_src;
         QString src = QString("/u/%1/%2").arg(d->chan_recv->channel()).arg(url_s);
         d->chan_recv->unregisterReader(url_s);
-        printf("CuHttpActionReader.stop: requesting unsubscribe: %s\n", qstoc(QString(d->url + src)));
         QNetworkRequest r = prepareRequest(d->url + src);
         QNetworkReply *reply = getNetworkAccessManager()->get(r);
         connect(reply, SIGNAL(finished()), this, SLOT(onUnsubscribeReplyFinished()));
