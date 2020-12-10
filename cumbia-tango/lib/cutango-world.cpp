@@ -1530,9 +1530,7 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const std::vector<std::string> &arg
     std::string v = argins[0];
     try
     {
-        if(argins.size() == 1)
-        {
-            switch (in_type)
+        switch (in_type)
             {
             case Tango::DEV_BOOLEAN:
                 dd << (bool) std::stoi(v);
@@ -1570,74 +1568,75 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const std::vector<std::string> &arg
                 break;
             case Tango::DEV_VOID:
                 break;
-            default:
-                perr("CuTangoWorld::toDeviceData: in_type %ld not supported by the library", in_type);
-                break;
-            }
-        }
-        else
-        {
 
-            if(in_type == Tango::DEVVAR_BOOLEANARRAY)
+            case Tango::DEVVAR_BOOLEANARRAY:
             {
-                // std::vector<bool> bv = v.toBoolVector();
-                // dd << bv;
+                 std::vector<bool> bv;
+                 std::vector<std::string> a = argins;
+                 for(size_t i = 0; i < argins.size(); i++) {
+                     std::transform(a[i].begin(), a[i].end(), a[i].begin(), ::tolower);
+                     a[i] == std::string("true") || std::stoi(argins[i]) != 0 ? dd << true : dd << false;
+                 }
+                 break;
             }
-            else if (in_type == Tango::DEVVAR_SHORTARRAY)
+        case Tango::DEVVAR_SHORTARRAY:
             {
                 std::vector<short> sv;
                 for(size_t i = 0; i < argins.size(); i++)
                     sv.push_back((Tango::DevShort) std::stoi(argins[i]));
                 dd << sv;
+                break;
             }
-            else if (in_type ==  Tango::DEVVAR_USHORTARRAY)
+        case Tango::DEVVAR_USHORTARRAY:
             {
                 std::vector<unsigned short> usv;
                 for(size_t i = 0; i < argins.size(); i++)
                     usv.push_back((Tango::DevUShort) std::stoi(argins[i]));
                 dd << usv;
+                break;
             }
-            else if (in_type ==  Tango::DEVVAR_LONGARRAY)
+        case  Tango::DEVVAR_LONGARRAY:
             {
                 std::vector<Tango::DevLong> lv;
                 for(size_t i = 0; i < argins.size(); i++)
                     lv.push_back((Tango::DevLong) std::stol(argins[i]));
                 dd << lv;
-
+                break;
             }
-            else if (in_type ==  Tango::DEVVAR_ULONGARRAY)
+           case  Tango::DEVVAR_ULONGARRAY:
             {
                 std::vector<Tango::DevLong> ulv;
                 for(size_t i = 0; i < argins.size(); i++)
                     ulv.push_back((Tango::DevULong) std::stoul(argins[i]));
                 dd << ulv;
+                break;
             }
-            else if (in_type ==  Tango::DEVVAR_FLOATARRAY)
+        case    Tango::DEVVAR_FLOATARRAY:
             {
                 std::vector<Tango::DevFloat> fv;
                 for(size_t i = 0; i < argins.size(); i++)
                     fv.push_back((Tango::DevFloat) std::stof(argins[i]));
                 dd << fv;
+                break;
             }
-            else if (in_type ==  Tango::DEVVAR_DOUBLEARRAY)
+        case  Tango::DEVVAR_DOUBLEARRAY:
             {
                 std::vector<double> dv;
                 for(size_t i = 0; i < argins.size(); i++)
                     dv.push_back((Tango::DevDouble) std::stod(argins[i]));
                 dd << dv;
+                break;
             }
-            else if (in_type ==  Tango::DEVVAR_STRINGARRAY)
+         case Tango::DEVVAR_STRINGARRAY:
             {
                 std::vector<std::string> nonconstv = argins;
                 dd << nonconstv;
+                break;
             }
-            else
-            {
+        default:
                 perr("CuTangoWorld::toDeviceData: in_type %ld not supported by the library", in_type);
-            }
 
-
-        } /* if */
+        } /* switch */
     }
     catch(const std::invalid_argument& ia)
     {
