@@ -5,13 +5,14 @@
 #include <QThread>
 
 #ifdef QT_WIDGETS_LIB
-    #include <QDialog>
+#include <QDialog>
 #endif
 
 class CuHttpAuthPrompt_I {
 public:
     virtual void getCreds() = 0;
     virtual QObject *qobj() = 0;
+    virtual bool inExecution() const = 0;
 };
 
 #ifdef QT_WIDGETS_LIB
@@ -26,6 +27,7 @@ public:
 
     void accept();
     void reject();
+    bool inExecution() const;
 
 signals:
     void onCredsReady(const QString& u, const QString& pass);
@@ -34,12 +36,13 @@ signals:
 #endif
 
 class CuHttpCredInputCLIPrompt : public QThread, public CuHttpAuthPrompt_I {
- Q_OBJECT
+    Q_OBJECT
 public:
     CuHttpCredInputCLIPrompt(QObject *parent = nullptr);
     ~CuHttpCredInputCLIPrompt();
     void getCreds();
     QObject *qobj();
+    bool inExecution() const;
 
 protected slots:
     void onInputFinished();
@@ -52,11 +55,21 @@ private:
     QString m_user, m_pass;
 };
 
+class CuHttpAuthInputFactoryP;
 
-class CuHttpAuthInputFactory
+class CuHttpAuthInputFactory : public QObject
 {
+    Q_OBJECT
 public:
+    CuHttpAuthInputFactory();
+    virtual ~CuHttpAuthInputFactory();
     CuHttpAuthPrompt_I *create_prompt(bool cli = false, QObject* parent = nullptr) const;
+    bool inExecution() const;
+
+public slots:
+    void onPromptDestroyed();
+private:
+    CuHttpAuthInputFactoryP *d;
 };
 
 

@@ -1,5 +1,6 @@
 #include "cuserviceprovider.h"
 #include "cuservicei.h"
+#include <cumacros.h>
 #include <set>
 
 class CuServiceProviderPrivate {
@@ -17,6 +18,7 @@ CuServiceProvider::CuServiceProvider() {
 }
 
 CuServiceProvider::~CuServiceProvider() {
+    pdelete("CuServiceProvider %p", this);
     delete d;
 }
 

@@ -24,6 +24,7 @@ public:
     CuHttpAuthManListener *listener;
     QUrl auth_url;
     CuHttpAuthCookieStore cookie_store;
+    CuHttpAuthInputFactory auif;
 };
 
 CuHttpAuthManager::CuHttpAuthManager(QNetworkAccessManager *netman, CuHttpAuthManListener *l, QObject *parent) : QObject(parent) {
@@ -44,7 +45,7 @@ void CuHttpAuthManager::tryAuthorize(const QString &user,
     r.setHeader(QNetworkRequest::UserAgentHeader, QByteArray("cumbia-http ") + QByteArray(CUMBIA_HTTP_VERSION_STR));
     QUrlQuery q;
     q.addQueryItem("username", user);
-    q.addQueryItem("elettra_ldap_password", pass);
+    q.addQueryItem("puma_password", pass);
     d->auth_url.setQuery(q);
     r.setUrl(d->auth_url);
     qDebug () << __PRETTY_FUNCTION__ << user << pass << d->auth_url.toString();
@@ -70,10 +71,13 @@ QByteArray CuHttpAuthManager::getCookie() const {
 void CuHttpAuthManager::authPrompt(const QString &auth_url, bool cli)
 {
     d->auth_url = auth_url;
-    CuHttpAuthInputFactory auif;
-    CuHttpAuthPrompt_I *aup = auif.create_prompt(cli, nullptr);
-    connect(aup->qobj(), SIGNAL(onCredsReady(QString, QString)), this, SLOT(onCredsReady(QString, QString)));
-    aup->getCreds();
+    if(!d->auif.inExecution()) {
+        CuHttpAuthPrompt_I *aup = d->auif.create_prompt(cli, nullptr);
+        connect(aup->qobj(), SIGNAL(onCredsReady(QString, QString)), this, SLOT(onCredsReady(QString, QString)));
+        aup->getCreds();
+    }
+    else
+        printf("CuHttpAuthManager::authPrompt: prompt already in execution....\n");
 }
 
 void CuHttpAuthManager::onNewData() {
@@ -82,7 +86,7 @@ void CuHttpAuthManager::onNewData() {
 void CuHttpAuthManager::onReplyFinished()
 {
     QByteArray ba = d->reply->readAll();
-    QString msg;
+     QString msg;
     bool authorised = !ba.startsWith("login failed");
     qDebug() << __PRETTY_FUNCTION__ << "AUTH MESSAGE: " << ba << "authorised" << authorised << "cookie" << d->reply->rawHeader("Set-Cookie");
     if(authorised) {

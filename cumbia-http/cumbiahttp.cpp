@@ -111,7 +111,6 @@ void CumbiaHttp::onSrcBundleReqReady(const QList<SrcItem> &rsrcs, const QList<Sr
 }
 
 void CumbiaHttp::onSrcBundleReplyReady(const QByteArray &json) {
-//    printf("\e[1;36mCumbiaHttp::onSrcBundleReplyReady\n%s\e[0m\n", json.data());
     CumbiaHTTPWorld w;
     std::list<CuData> dali;
     bool ok = w.json_decode(json, dali);
@@ -215,6 +214,7 @@ bool CumbiaHttp::m_data_is_auth_req(const CuData &da) const {
 }
 
 void CumbiaHttp::onCredsReady(const QString &user, const QString &passwd) {
+    qDebug() << __PRETTY_FUNCTION__ << user << passwd;
     if(user.isEmpty()) {
         // unrecoverable, notify listeners and remove targets from src_q_man
         CuData err = d->w_helper->makeErrData("invalid user name").set("is_result", true);
@@ -229,6 +229,7 @@ void CumbiaHttp::onCredsReady(const QString &user, const QString &passwd) {
 }
 
 void CumbiaHttp::onAuthReply(bool authorised, const QString &user, const QString &message, bool encrypted) {
+    qDebug () << __PRETTY_FUNCTION__ << authorised << user << message << encrypted;
     if(authorised) {
         // restart writes
         QByteArray cookie = d->auth_man->getCookie();
@@ -246,7 +247,7 @@ void CumbiaHttp::onAuthReply(bool authorised, const QString &user, const QString
 }
 
 void CumbiaHttp::onAuthError(const QString &errm) {
-
+    qDebug() << __PRETTY_FUNCTION__ << errm;
     CuData err = d->w_helper->makeErrData(errm).set("is_result", true);
     const QMap<QString, SrcData> &tm = d->src_q_man->takeTgts();
     foreach(const QString& src, tm.keys()) {
@@ -256,12 +257,8 @@ void CumbiaHttp::onAuthError(const QString &errm) {
 }
 
 void CumbiaHttp::m_auth_request(const CuData &da) {
-    if(!d->w_helper) {
+    if(!d->w_helper)
         d->w_helper = new CuHttpWriteHelper();
-        QObject::connect(d->auth_man, SIGNAL(credentials(QString, QString)), d->w_helper, SLOT(onCredentials(QString, QString)));
-        QObject::connect(d->auth_man, SIGNAL(authReply(bool, QString, QString, bool)), d->w_helper, SLOT(onAuthReply(bool, QString, QString, bool)));
-        QObject::connect(d->auth_man, SIGNAL(error(const QString&)), d->w_helper, SLOT(onAuthError(const QString&)));
-    }
     d->auth_man->authPrompt(QuString(da, "auth_url"), false); // false: use dialog
 }
 

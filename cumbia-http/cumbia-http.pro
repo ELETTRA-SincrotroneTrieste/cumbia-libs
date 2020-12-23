@@ -27,7 +27,7 @@ isEmpty(QT_NO_WIDGETS) {
 isEmpty(qdebug) {
     DEFINES += QT_NO_DEBUG_OUTPUT
 } else {
-    DEFINES += QT_NO_DEBUG_OUTPUT
+    DEFINES -= QT_NO_DEBUG_OUTPUT
 }
 
 CONFIG += debug

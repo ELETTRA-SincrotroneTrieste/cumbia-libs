@@ -13,14 +13,46 @@
 
 #define BUF_SIZ 256
 
+class CuHttpAuthInputFactoryP {
+public:
+    CuHttpAuthInputFactoryP() : prompt(nullptr) {};
+    CuHttpAuthPrompt_I *prompt;
+};
+
+CuHttpAuthInputFactory::CuHttpAuthInputFactory() {
+    d = new CuHttpAuthInputFactoryP;
+}
+
+CuHttpAuthInputFactory::~CuHttpAuthInputFactory() {
+    delete d;
+}
+
 CuHttpAuthPrompt_I *CuHttpAuthInputFactory::create_prompt(bool cli , QObject *parent) const
 {
+    if(d->prompt)
+        return d->prompt;
+
 #ifdef QT_WIDGETS_LIB
     if(qobject_cast<QApplication *>(qApp) && !cli) {
-        return new CuHttpCredInputDialog(nullptr);
+        CuHttpCredInputDialog *dlg = new CuHttpCredInputDialog(nullptr);
+        connect(dlg, SIGNAL(destroyed()), this, SLOT(onPromptDestroyed()));
+        d->prompt = dlg;
     }
 #endif
-    return new CuHttpCredInputCLIPrompt(parent);
+    if(!d->prompt) {
+        CuHttpCredInputCLIPrompt *clip = new CuHttpCredInputCLIPrompt(parent);
+        connect(clip, SIGNAL(destroyed()), this, SLOT(onPromptDestroyed()));
+        d->prompt = clip;
+    }
+    return d->prompt;
+}
+
+bool CuHttpAuthInputFactory::inExecution() const {
+    return d->prompt != nullptr;
+}
+
+void CuHttpAuthInputFactory::onPromptDestroyed() {
+    d->prompt = nullptr;
 }
 
 #ifdef QT_WIDGETS_LIB
@@ -76,6 +108,11 @@ void CuHttpCredInputDialog::reject() {
     QDialog::reject();
 }
 
+bool CuHttpCredInputDialog::inExecution() const
+{
+
+}
+
 #endif
 
 CuHttpCredInputCLIPrompt::CuHttpCredInputCLIPrompt(QObject *parent) : QThread(parent) {
@@ -94,8 +131,13 @@ QObject *CuHttpCredInputCLIPrompt::qobj() {
     return qobject_cast<QObject *>(this);
 }
 
+bool CuHttpCredInputCLIPrompt::inExecution() const {
+    return !this->isFinished();
+}
+
 void CuHttpCredInputCLIPrompt::onInputFinished() {
     emit onCredsReady(m_user, m_pass);
+    deleteLater();
 }
 
 void CuHttpCredInputCLIPrompt::run()
