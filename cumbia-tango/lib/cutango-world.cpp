@@ -269,7 +269,6 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
     struct timeval tiv;
     const Tango::AttrQuality quality = p_da->get_quality();
     const Tango::AttrDataFormat f = p_da->get_data_format();
-    printf("CuTangoWorld::extractData: \e[1;34mdata format %d for %s\e[0m\n", f, p_da->get_name().c_str());
     const bool w = (p_da->get_nb_written() > 0);
     tiv.tv_sec = tv.tv_sec;
     tiv.tv_usec = tv.tv_usec;
@@ -663,23 +662,15 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
 {
     d->error = false;
     d->message = "";
-
-    try
-    {
-//        if(res["src"].toString().find("p/mod/hv_p2") != std::string::npos)
-//                printf("CuTangoWorld::read_att reading %s\e[0m\n", res["src"].toString().c_str());
+    try {
         std::string att(attribute);
         Tango::DeviceAttribute da = dev->read_attribute(att);
         extractData(&da, res);
     }
-    catch(Tango::DevFailed &e)
-    {
+    catch(Tango::DevFailed &e) {
         d->error = true;
         d->message = strerror(e);
         res.putTimestamp();
-        if(d->message.find("p/mod/hv_p2") != std::string::npos)
-            printf("\e[1;31;31mCuTangoWorld.read_att: attribute ERRROR %s : %s\e[0m\n", attribute.c_str(),
-                 d->message.c_str());
     }
     res["err"] = d->error;
     res["msg"] = d->message;
@@ -1084,13 +1075,11 @@ bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &re
                     }
                 }
                 if(cl_names.size() > 0) {
-                    printf("CuTangoWorld.get_properties\n");
                     for(size_t i = 0; i < cl_names.size(); i++) {
                         Tango::DbDatum plist = db->get_class_property_list(cl_names[i]);
                         std::vector<std::string> s_plist;
                         plist >> s_plist;
                         names.push_back(it->first + ":*");
-                        printf("pushed in names %s\n", names.at(names.size() - 1).c_str());
                         res[names.at(names.size() - 1)] = s_plist;
                     }
                 }
@@ -1111,8 +1100,6 @@ bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &re
         res["msg"] = d->message;
         delete db;
     } // if !d->error (i.e. db != nullptr)
-
-    printf("CuTangoWorld.get_properties >>> %s\n", res.toString().c_str());
     return !d->error;
 }
 
@@ -1177,7 +1164,6 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                 break;
             case TSource::SrcExportedDevs: {
                 std::string pattern = tsrc.getExportedDevSearchPattern();
-                printf("pattern for dev exported is %s\n", pattern.c_str());
                 Tango::DbDatum devs_dbd = db->get_device_exported(pattern);
                 devs_dbd >> r;
             }
@@ -1202,7 +1188,6 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
             }
                 break;
             case TSource::SrcDbAttInfo: {
-                printf("\e[1;33m> >>>>>>>>>>> >> >>>       >>   CuTangoWorld.db_get: SrcDbAttInfo dnam \"%s\" point %s\e[0m\n", dnam.c_str(), tsrc.getPoint().c_str());
                 Tango::DbData db_data;
                 std::vector<std::string> p_values;
                 db_data.push_back(Tango::DbDatum(tsrc.getPoint()));
@@ -1212,7 +1197,6 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                    long nb_prop;
                    db_data[i] >> nb_prop;
                    i++;
-                   printf("\e[0;33m  db_data.size %ld nb_prop %ld\e[0m\n\n", db_data.size(), nb_prop );
                    for (int k=0;k < nb_prop;k++) {
                        std::string pval;
                        db_data[i] >> pval;
@@ -1222,7 +1206,6 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                     }
                    if(p_values.size() > 0)
                        res["p_values"] = p_values;
-                   printf("\e[0;33m  p_values %s\e[0m\n\n", res["p_values"].toString().c_str() );
                 }
 
             }
