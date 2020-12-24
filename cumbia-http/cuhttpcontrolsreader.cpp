@@ -127,10 +127,13 @@ CuData CuHttpControlsReader::getOptions() const {
 }
 
 void CuHttpControlsReader::sendData(const CuData &data) {
-    if(data.containsKey("read")) {
-        CuHTTPActionReaderFactory httprf(true);
-        httprf.mergeOptions(d->o);
-        d->cu_http->readEnqueue(CuHTTPSrc(d->s.toStdString(), d->cu_http->getSrcHelpers()), d->dlis, httprf);
+    if(data.containsKey("read") || data.containsKey("args")) {
+        CuHTTPActionEditFactory httpeditf;
+        if(data.containsKey("args"))
+            httpeditf.setOptions(CuData("args", data["args"]));
+        else if(data.containsKey("read"))
+            httpeditf.setOptions(CuData("read", data["read"]));
+        d->cu_http->readEnqueue(CuHTTPSrc(d->s.toStdString(), d->cu_http->getSrcHelpers()), d->dlis, httpeditf);
     }
 }
 

@@ -9,6 +9,7 @@
 class CuTReaderPrivate;
 class CuActivityManager;
 class CuDataListener;
+class CuActivity;
 
 /** \brief Low level class to read tango attributes and commands with output arguments.
  *
@@ -89,6 +90,7 @@ private:
     void m_registerToPoller();
     void m_unregisterFromPoller();
     void m_unregisterEventActivity();
+    CuActivity *m_find_Activity();
 };
 
 

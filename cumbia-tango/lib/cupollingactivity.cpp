@@ -58,19 +58,20 @@ CuAddPollActionEvent::CuAddPollActionEvent(const TSource &t, CuTangoActionI* a)
     action = a;
 }
 
-CuActivityEvent::Type CuAddPollActionEvent::getType() const
-{
+CuActivityEvent::Type CuAddPollActionEvent::getType() const {
     return static_cast<CuActivityEvent::Type> (AddPollAction);
 }
 
-CuRemovePollActionEvent::CuRemovePollActionEvent(const TSource &t)
-{
+CuRemovePollActionEvent::CuRemovePollActionEvent(const TSource &t) {
     tsource = t;
 }
 
-CuActivityEvent::Type CuRemovePollActionEvent::getType() const
-{
+CuActivityEvent::Type CuRemovePollActionEvent::getType() const {
     return static_cast<CuActivityEvent::Type> (RemovePollAction);
+}
+
+CuActivityEvent::Type CuArgsChangeEvent::getType() const {
+    return static_cast<CuActivityEvent::Type> (ArgsChangeEvent);
 }
 
 /* @private */
@@ -86,7 +87,7 @@ public:
     pthread_t my_thread_id, other_thread_id;
     CuVariant argins;
     CuData point_info;
-    std::multimap<const std::string, const ActionData > actions_map;
+    std::multimap<const std::string, ActionData > actions_map;
     // cache for tango command_inout argins
     // multimap because argins may differ
     std::map<const std::string, CmdData> din_cache;
@@ -158,7 +159,7 @@ void CuPollingActivity::setArgins(const CuVariant &argins)
 size_t CuPollingActivity::actionsCount() const
 {
     size_t cnt = 0;
-    std::multimap <const std::string, const ActionData>::iterator it;
+    std::multimap <const std::string, ActionData>::iterator it;
     for(it = d->actions_map.begin(); it != d->actions_map.end(); ++it)
         cnt += d->actions_map.count(it->first);
     return cnt;
@@ -248,7 +249,7 @@ int CuPollingActivity::consecutiveErrCnt() const {
     return d->consecutiveErrCnt;
 }
 
-const std::multimap<const string, const ActionData> CuPollingActivity::actionsMap() const {
+const std::multimap<const std::string, ActionData> CuPollingActivity::actionsMap() const {
     return d->actions_map;
 }
 
@@ -347,20 +348,18 @@ void CuPollingActivity::execute()
     std::vector<CuData> attdatalist;
     Tango::DeviceProxy *dev = d->tdev->getDevice();
     bool success = (dev != NULL);
-    TSource tsrc;
     size_t i = 0;
     size_t att_idx = 0;
     size_t att_offset = 0;
     if(dev) { // dev is not null
         results->resize(d->actions_map.size());
         attdatalist.resize(d->actions_map.size());
-        std::multimap<const std::string, const ActionData>::iterator it;
+        std::multimap<const std::string, ActionData>::iterator it;
         for(it = d->actions_map.begin(); it != d->actions_map.end(); ++it) {
             const ActionData &action_data = it->second;
-            tsrc = action_data.tsrc;
+            const TSource &tsrc = action_data.tsrc;
             const std::string srcnam = tsrc.getName();
             std::string point = tsrc.getPoint();
-            std::vector<std::string> argins = tsrc.getArgs();
             void *action_ptr = action_data.action;
             bool is_command = tsrc.getType() == TSource::SrcCmd;
             if(is_command) { // write into results[i]
@@ -377,6 +376,7 @@ void CuPollingActivity::execute()
                 if(dev && cmd_data.is_empty) {
                     success = tangoworld.get_command_info(dev, point, (*results)[i]);
                     if(success) {
+                        const std::vector<std::string> &argins = tsrc.getArgs();
                         d->din_cache[srcnam] = CmdData((*results)[i], tangoworld.toDeviceData(argins, (*results)[i]), argins);
                     }
                 }
@@ -402,7 +402,6 @@ void CuPollingActivity::execute()
                 attdatalist[att_idx]["src"] = tsrc.getName();
                 attdatalist[att_idx]["point"] = point;
                 attdatalist[att_idx]["device"] = tsrc.getDeviceName();
-
                 attdatalist[att_idx]["action_ptr"] = CuVariant(action_ptr);
                 att_idx++;
             }
@@ -439,10 +438,9 @@ void CuPollingActivity::execute()
         // dev is null or some other error (device not defined in database)
         CuData dev_err;
         !dev ? dev_err["msg"] =  d->tdev->getMessage() :
-                dev_err["msg"] = "CuPollingActivity: failed to read \"" + tsrc.getName() + "\" (last err: " + d->message + ")";
+                dev_err["msg"] = "CuPollingActivity: read failed (last err: " + d->message + ")";
         dev_err["err"] = true;
         dev_err["name"] = d->tdev->getName();
-        dev_err["src"] = tsrc.getName();
         dev_err.putTimestamp();
         results->push_back(dev_err);
     }
@@ -489,7 +487,7 @@ void CuPollingActivity::m_registerAction(const TSource& ts, CuTangoActionI *a)
 
 void CuPollingActivity::m_unregisterAction(const TSource &ts)
 {
-    std::multimap< const std::string, const ActionData>::iterator it = d->actions_map.begin();
+    std::multimap< const std::string, ActionData>::iterator it = d->actions_map.begin();
     while(it != d->actions_map.end()) {
         if(it->first == ts.getName() && it->second.tsrc == ts) {
             it = d->actions_map.erase(it);
@@ -507,6 +505,14 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts)
     }
 }
 
+void CuPollingActivity::m_edit_args(const TSource &src, const std::vector<string> &args) {
+    std::map<std::string, CmdData>::iterator it = d->din_cache.find(src.getName());
+    if(it != d->din_cache.end()) {
+        it->second.argins = args;
+        it->second.din = CuTangoWorld().toDeviceData(args, it->second.cmdinfo);
+    }
+}
+
 /** \brief Receive events *from the main thread to the CuActivity thread*.
  *
  * @param e the event. Do not delete e after use. Cumbia will delete it after this method invocation.
@@ -515,14 +521,16 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts)
  *
  * \note the CuActivityEvent is forwarded to CuContinuousActivity::event
  */
-void CuPollingActivity::event(CuActivityEvent *e)
-{
+void CuPollingActivity::event(CuActivityEvent *e) {
     assert(d->my_thread_id == pthread_self());
     if(e->getType() == CuAddPollActionEvent::AddPollAction) {
         m_registerAction(static_cast<CuAddPollActionEvent *>(e)->tsource, static_cast<CuAddPollActionEvent *>(e)->action);
     }
     else if(e->getType() == CuRemovePollActionEvent::RemovePollAction) {
         m_unregisterAction(static_cast<CuRemovePollActionEvent *>(e)->tsource);
+    }
+    else if(e->getType() == CuArgsChangeEvent::ArgsChangeEvent) {
+        m_edit_args(static_cast<CuArgsChangeEvent* >(e)->ts, static_cast<CuArgsChangeEvent *>(e)->args);
     }
     else
         CuContinuousActivity::event(e);
@@ -543,8 +551,7 @@ int CuPollingActivity::getType() const
  *
  * @implements CuActivity::repeat
  */
-int CuPollingActivity::repeat() const
-{
+int CuPollingActivity::repeat() const {
     assert(d->my_thread_id == pthread_self());
     int ret;
     isDisposable() ? ret = -1 : ret = d->repeat;

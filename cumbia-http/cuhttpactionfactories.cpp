@@ -91,3 +91,26 @@ CuData CuHTTPActionConfFactory::options() const {
     return m_o;
 }
 
+
+void CuHTTPActionEditFactory::setOptions(const CuData &o) {
+    m_ed_o = o;
+}
+
+CuHTTPActionEditFactory::~CuHTTPActionEditFactory() {
+
+}
+
+std::string CuHTTPActionEditFactory::getMethod() const {
+    return "edit";
+}
+
+CuHTTPActionFactoryI *CuHTTPActionEditFactory::clone() const
+{
+    CuHTTPActionEditFactory *f = new CuHTTPActionEditFactory;
+    f->m_ed_o = this->m_ed_o;
+    return f;
+}
+
+CuData CuHTTPActionEditFactory::options() const {
+    return m_ed_o;
+}

@@ -12,20 +12,32 @@
 // ((?:tango://){0,1}(?:[A-Z-a-z0-9\-_\.\+~]+:\d*/){0,1}[A-Z-a-z0-9\-_\.\+~]+/[A-Z-a-z0-9\-_\.\+~]+/[A-Z-a-z0-9\-_\.\+~]+)
 #define TG_DEV_RE "((?:tango://){0,1}(?:[A-Z-a-z0-9\\-_\\.\\+~]+:\\d*/){0,1}[A-Z-a-z0-9\\-_\\.\\+~]+/[A-Z-a-z0-9\\-_\\.\\+~]+/[A-Z-a-z0-9\\-_\\.\\+~]+)"
 
+class TSourcePrivate {
+public:
+    string m_s;
+    TSource::Type m_ty;
+};
+
 TSource::TSource() {
-    m_ty = SrcInvalid;
+    d = new TSourcePrivate;
+    d->m_ty = SrcInvalid;
 }
 
 TSource::TSource(const string s)
 {
-    m_s = s;
-    m_ty = m_get_ty(s);
+    d = new TSourcePrivate;
+    d->m_s = s;
+    d->m_ty = m_get_ty(s);
 }
 
-TSource::TSource(const TSource &other)
-{
-    this->m_s = other.m_s;
-    this->m_ty = other.m_ty;
+TSource::TSource(const TSource &other) {
+    d = new TSourcePrivate;
+    this->d->m_s = other.d->m_s;
+    this->d->m_ty = other.d->m_ty;
+}
+
+TSource::~TSource() {
+    delete d;
 }
 
 TSource::Type TSource::m_get_ty(const std::string& src) const {
@@ -85,23 +97,23 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
 string TSource::getDeviceName() const {
     string dev;
     /* attribute or command ? */
-    size_t pos = m_s.rfind("->");
+    size_t pos = d->m_s.rfind("->");
     if(pos == string::npos) {
         /* attribute */
         // remove host and tango://
-        std::string s = rem_tghostproto(m_s);
+        std::string s = rem_tghostproto(d->m_s);
         if(std::count(s.begin(), s.end(), '/') == 3) // a/tg/dev/attr: 3 `/' once removed tango://db:PORT/
-            dev = m_s.substr(0, m_s.rfind('/'));
+            dev = d->m_s.substr(0, d->m_s.rfind('/'));
         else {
             // need regex
             std::regex dre(TG_DEV_RE);
             std::smatch sm;
-            if(std::regex_search(m_s, sm, dre) && sm.size() == 2)
+            if(std::regex_search(d->m_s, sm, dre) && sm.size() == 2)
                 dev = sm[1];
         }
     }
     else {
-        dev = m_s.substr(0, pos);
+        dev = d->m_s.substr(0, pos);
     }
     return dev;
 }
@@ -116,20 +128,20 @@ string TSource::getDeviceNameOnly() const {
  */
 string TSource::getPoint() const {
     string p;
-    size_t pos = m_s.rfind("->");
-    if(m_ty == SrcAttr) /* attribute */
-        p = m_s.substr(m_s.rfind('/') + 1, m_s.find('(') - m_s.rfind('/') - 1); /* exclude args between parentheses */
-    else if(m_ty == SrcCmd)
-        p = m_s.substr(pos + 2, m_s.find('(') - pos - 2); /* exclude args */
-    else if(m_ty == SrcDbGetCmdI)
-        p = m_s.substr(m_s.find("->") + 2, m_s.rfind('/') - m_s.find("->")  -2); // src is tango://test/device/1->get/
-    else if(m_ty == SrcDbAttInfo) { // src is tango://test/device/1/get/
+    size_t pos = d->m_s.rfind("->");
+    if(d->m_ty == SrcAttr) /* attribute */
+        p = d->m_s.substr(d->m_s.rfind('/') + 1, d->m_s.find('(') - d->m_s.rfind('/') - 1); /* exclude args between parentheses */
+    else if(d->m_ty == SrcCmd)
+        p = d->m_s.substr(pos + 2, d->m_s.find('(') - pos - 2); /* exclude args */
+    else if(d->m_ty == SrcDbGetCmdI)
+        p = d->m_s.substr(d->m_s.find("->") + 2, d->m_s.rfind('/') - d->m_s.find("->")  -2); // src is tango://test/device/1->get/
+    else if(d->m_ty == SrcDbAttInfo) { // src is tango://test/device/1/get/
         // remove last /
-        std::string s = m_s.substr(0, m_s.rfind('/'));
+        std::string s = d->m_s.substr(0, d->m_s.rfind('/'));
         p = s.substr(s.rfind('/') + 1);
     }
-    else if(m_ty == SrcDbAProp) // src is tango://hokuto:20000/test/device/1/double_scalar(p1,p2,..)
-        p = m_s.substr(m_s.rfind('/') + 1, m_s.rfind("(")- m_s.rfind('/') -1 );
+    else if(d->m_ty == SrcDbAProp) // src is tango://hokuto:20000/test/device/1/double_scalar(p1,p2,..)
+        p = d->m_s.substr(d->m_s.rfind('/') + 1, d->m_s.rfind("(")- d->m_s.rfind('/') -1 );
     return p;
 }
 
@@ -143,11 +155,11 @@ std::vector<string> TSource::getArgs() const {
     std::string delim = ",";
     std::regex re(delim);
     std::vector<std::string> ret;
-    std::string s(m_s);
+    std::string s(d->m_s);
 //    s.erase(std::remove(s.begin() + s.find('('), s.begin() + s.find(')') + 1, ' '), s.end()); // remove spaces
-    size_t pos = m_s.find('(');
+    size_t pos = d->m_s.find('(');
     if(pos != string::npos)
-        a = m_s.substr(pos + 1, m_s.rfind(')') - pos - 1);
+        a = d->m_s.substr(pos + 1, d->m_s.rfind(')') - pos - 1);
     std::sregex_token_iterator iter(a.begin(), a.end(), re, -1);
     std::sregex_token_iterator end;
     for ( ; iter != end; ++iter)
@@ -162,20 +174,20 @@ std::vector<std::string> TSource::getPropNames() const {
 
 std::string TSource::getArgsString() const {
     std::string a;
-    size_t pos = m_s.find('(');
+    size_t pos = d->m_s.find('(');
     if(pos != string::npos)
-        a = m_s.substr(pos + 1, m_s.rfind(')') - pos - 1);
+        a = d->m_s.substr(pos + 1, d->m_s.rfind(')') - pos - 1);
     return a;
 }
 
 std::string TSource::getName() const {
-    return m_s;
+    return d->m_s;
 }
 
 std::string TSource::getTangoHost() const {
     std::regex host_re(TGHOST_RE);
     std::smatch sm;
-    if(std::regex_search(m_s, sm, host_re) && sm.size() > 1)
+    if(std::regex_search(d->m_s, sm, host_re) && sm.size() > 1)
         return sm[1];
     return std::string();
 }
@@ -197,9 +209,9 @@ std::string TSource::getTangoHost() const {
  */
 std::string TSource::getFreePropNam() const {
     std::string p;
-    size_t i = m_s.rfind("#");
+    size_t i = d->m_s.rfind("#");
     if(i != std::string::npos)
-        p = m_s.substr(i + 1);
+        p = d->m_s.substr(i + 1);
     return p;
 }
 
@@ -215,7 +227,7 @@ std::string TSource::getFreePropNam() const {
 string TSource::getFreePropObj() const {
     std::regex re("#(.*)#");  // #(.*)#
     std::smatch sm;
-    if(std::regex_search(m_s, sm, re) && sm.size() > 1)
+    if(std::regex_search(d->m_s, sm, re) && sm.size() > 1)
         return sm[1];
     return std::string();
 }
@@ -226,8 +238,8 @@ string TSource::getFreePropObj() const {
  */
 string TSource::getPropClassNam() const {
     std::string p;
-    if(m_ty == SrcDbClassProp || m_ty == SrcDbClassProps) {
-        std::string s = rem_tghostproto(m_s);
+    if(d->m_ty == SrcDbClassProp || d->m_ty == SrcDbClassProps) {
+        std::string s = rem_tghostproto(d->m_s);
         size_t i = s.find("(");
         if(i != std::string::npos)
             p = s.substr(0, i);
@@ -237,7 +249,7 @@ string TSource::getPropClassNam() const {
 
 string TSource::getExportedDevSearchPattern() const {
     std::regex re("(.*)\\(\\*\\)");  // hokuto:20000/test/*/1(*)
-    const std::string &s = rem_tghostproto(m_s); // test/*/1(*)
+    const std::string &s = rem_tghostproto(d->m_s); // test/*/1(*)
     std::smatch sm;
     if(std::regex_search(s, sm, re) && sm.size() > 1)
         return sm[1];
@@ -250,8 +262,8 @@ string TSource::getExportedDevSearchPattern() const {
  * \return
  */
 string TSource::getSearchPattern() const {
-    std::string s = rem_tghostproto(m_s);
-    if(m_ty >= SrcDbDoma && m_ty <= SrcDbDevProps)
+    std::string s = rem_tghostproto(d->m_s);
+    if(d->m_ty >= SrcDbDoma && d->m_ty <= SrcDbDevProps)
         return s;
     return std::string();
 }
@@ -260,31 +272,31 @@ string TSource::getSearchPattern() const {
  * \brief returns true if the source represents an operation on the Tango Database
  */
 bool TSource::isDbOp() const {
-    return m_ty > SrcAttr && m_ty < SrcEndTypes;
+    return d->m_ty > SrcAttr && d->m_ty < SrcEndTypes;
 }
 
 TSource::Type TSource::getType() const {
-    return m_ty;
+    return d->m_ty;
 }
 
 TSource &TSource::operator=(const TSource &other) {
     if(this != &other) {
-        m_s = other.m_s;
-        m_ty = other.m_ty;
+        d->m_s = other.d->m_s;
+        d->m_ty = other.d->m_ty;
     }
     return *this;
 }
 
 bool TSource::operator ==(const TSource &other) const
 {
-    return m_s == other.m_s && m_ty == other.m_ty;
+    return d->m_s == other.d->m_s && d->m_ty == other.d->m_ty;
 }
 
 std::string TSource::toString() const
 {
     char repr[512];
     snprintf(repr, 512, "TSource [%p] [name:\"%s\"] [device:\"%s\"] [point:\"%s\"] [type:%s] [args:\"%s\"]",
-             this, m_s.c_str(), getDeviceName().c_str(), getPoint().c_str(), getTypeName(m_ty), getArgsString().c_str());
+             this, d->m_s.c_str(), getDeviceName().c_str(), getPoint().c_str(), getTypeName(d->m_ty), getArgsString().c_str());
     return std::string(repr);
 }
 

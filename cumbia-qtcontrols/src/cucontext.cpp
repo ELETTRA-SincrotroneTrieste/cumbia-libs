@@ -249,6 +249,14 @@ void CuContext::setOptions(const CuData &options)
  *     by CuControlsReaderA::sendData.
  *
  * @see CuTReader::sendData
+ *
+ * \since 1.2.3
+ * \par Argument editing
+ * The "args" key can be used to update the readers' arguments (Tango, also through cumbia-http).
+ * \par Example
+ * \code
+ * myreader->getContext()->sendData(CuData("args", std::vector<std::string> {"1", "0" }));
+ * \endcode
  */
 void CuContext::sendData(const CuData &data)
 {

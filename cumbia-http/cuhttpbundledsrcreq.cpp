@@ -8,8 +8,7 @@
 
 // debug
 #include <QtDebug>
-#include <QFile>
-#include <QTextStream>
+#include <qustringlist.h>
 
 class CuHttpBundledSrcReqPrivate {
 public:
@@ -66,6 +65,7 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
         printf("\e[1;32mCuHttpBundledSrcReq::start setting X-Channel header to %s\e[0m\n", d->channel.data());
     }
 
+    printf("\e[1;34mCuHttpBundledSrcReq::start: << %s >>\e[0m\n", d->req_payload.data());
     QNetworkReply *reply = nam->post(r, d->req_payload);
     reply->setProperty("payload", d->req_payload);
     connect(reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
@@ -73,13 +73,6 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
     connect(reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, SLOT(onSslErrors(const QList<QSslError> &)));
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(onError(QNetworkReply::NetworkError)));
     connect(reply, SIGNAL(destroyed(QObject *)), this, SLOT(onReplyDestroyed(QObject *)));
-
-    QFile f("/tmp/cuhttp-requests.txt");
-    if(f.open(QIODevice::Text|QIODevice::Append)) {
-        QTextStream out(&f);
-        out << d->req_payload.data();
-        f.close();
-    }
 }
 
 void CuHttpBundledSrcReq::onNewData() {
@@ -147,7 +140,21 @@ QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs)
     QJsonArray sa;
     foreach(const SrcItem& i, srcs) {
         QJsonObject so;
-        QJsonArray options { i.options.value("no-properties").toBool() ? "r" : "p" };
+        QJsonArray options;
+        if(i.method != "edit")
+            options.append(i.options.value("no-properties").toBool() ? "r" : "p");
+        else {
+            const std::vector<std::string> &edit_o = i.options.keys();
+            QJsonArray ops;
+            for(const std::string& s : edit_o) {
+                options.append(s.c_str());
+                const std::vector<std::string> v = i.options[s].toStringVector();
+                for(const std::string& s : v)
+                    ops.append(s.c_str());
+                so[s.c_str()] = ops;
+            }
+        }
+
         so["options"] = options;
         so["method"] = QString::fromStdString(i.method);
         i.method != "write" ? so["src"] = QString::fromStdString(i.src) :

@@ -43,15 +43,23 @@ public:
 };
 
 
+class CuArgsChangeEvent : public CuActivityEvent {
+
+public:
+    enum CuAChangeEvType { ArgsChangeEvent = CuActivityEvent::User + 14 };
+
+    CuArgsChangeEvent(const TSource& _ts, const std::vector<std::string> &_args)
+        : ts(_ts), args(_args) {}
+
+    const TSource ts;
+    const std::vector<std::string> args;
+    virtual Type getType() const;
+};
+
 class ActionData {
 public:
-    ActionData(const TSource& ts, CuTangoActionI *a_ptr) {
-        tsrc = ts;
-        action = a_ptr;
-    }
-
-    ActionData() { action = NULL; }
-
+    ActionData(const TSource& ts, CuTangoActionI *a_ptr) : tsrc(ts), action(a_ptr) {}
+    ActionData() { action = nullptr; }
     TSource tsrc;
     CuTangoActionI *action;
 };
@@ -99,26 +107,18 @@ public:
     enum Type { CuPollingActivityType = CuActivity::User + 3 };
 
     CuPollingActivity(const CuData& token, CuDeviceFactoryService *df);
-
     ~CuPollingActivity();
 
     void setArgins(const CuVariant &argins);
-
     size_t actionsCount() const;
-
     size_t srcCount() const;
-
     void setSlowDownRate(const std::map<int, int> &sr_millis);
-
     const std::map<int, int> &slowDownRate() const;
-
     void decreasePolling();
-
     int successfulExecCnt() const;
-
     int consecutiveErrCnt() const;
 
-    const std::multimap<const std::string, const ActionData > actionsMap() const;
+    const std::multimap<const std::string, ActionData > actionsMap() const;
 
     // CuActivity interface
 public:
@@ -133,8 +133,8 @@ private:
     CuPollingActivityPrivate *d;
 
     void m_registerAction(const TSource &ts, CuTangoActionI *a);
-
     void m_unregisterAction(const TSource &ts);
+    void m_edit_args(const TSource& src, const std::vector<std::string> &args);
 
     // CuActivity interface
 public:

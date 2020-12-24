@@ -222,20 +222,21 @@ void CuTReader::sendData(const CuData &data)
         }
     }
     else if(do_read) { // post a CuExecuteEvent to a polling activity
-        CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
-                                                                 get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
-        CuData at = getToken();
-        at.set("device", d->tsrc.getDeviceName()).set("period", d->period).set("activity", "poller");
-        CuActivity *activity = am->findActiveMatching(at);
-        if(activity && activity->getType() == CuPollingActivity::CuPollingActivityType) {
+        CuActivity *activity = m_find_Activity();
+        if(activity)
             d->cumbia_t->postEvent(activity, new CuExecuteEvent());
-        }
     }
     else if(do_read && isEventRefresh(d->refresh_mode) && d->event_activity) {
         CuData errdat(getToken());
         errdat.set("err", true).set("msg", "CuTReader.sendData: sporadic \"read\" request cannot be forwarded to an event type activity");
         perr("CuTReader.sendData: posting error event %s to event activity %p\n", errdat.toString().c_str(), d->event_activity);
         d->cumbia_t->postEvent(d->event_activity, new CuDataEvent(errdat));
+    }
+    if(data.containsKey("args")) {
+        CuActivity *activity = m_find_Activity();
+        if(activity)
+            d->cumbia_t->postEvent(activity, new CuArgsChangeEvent(d->tsrc, data["args"].toStringVector()));
+//        d->tsrc.setArgs(data["args"].toStringVector());
     }
 }
 
@@ -466,6 +467,17 @@ void CuTReader::m_unregisterEventActivity()
     d->cumbia_t->unregisterActivity(d->event_activity);
     d->event_activity = NULL; // not safe to dereference henceforth
     // but leave the activity in the list of activities!
+}
+
+CuActivity *CuTReader::m_find_Activity() {
+    CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
+                                                             get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
+    CuData at = getToken(); // activity manager needs device period activity
+    at.set("device", d->tsrc.getDeviceName()).set("period", d->period).set("activity", "poller");
+    CuActivity *activity = am->findActiveMatching(at);
+    if(activity && activity->getType() == CuPollingActivity::CuPollingActivityType)
+        return activity;
+    return nullptr;
 }
 
 

@@ -7,6 +7,8 @@
 
 using namespace std;
 
+class TSourcePrivate;
+
 class TSource
 {
 public:
@@ -23,6 +25,7 @@ public:
     TSource();
     TSource(const std::string s);
     TSource(const TSource& other);
+    ~TSource();
 
     std::string getDeviceName() const;
     std::string getDeviceNameOnly() const;
@@ -37,6 +40,7 @@ public:
 
     bool isDbOp() const;
 
+    void setArgs(const std::vector<std::string>& args);
     std::vector<string> getArgs() const;
     std::string getArgsString() const;
     std::vector<std::string> getPropNames() const;
@@ -51,14 +55,10 @@ public:
     Type getType() const;
 
     TSource & operator=(const TSource& other);
-
     bool operator ==(const TSource &other) const;
 
-
 private:
-    string m_s;
-    Type m_ty;
-
+    TSourcePrivate *d;
     TSource::Type m_get_ty(const std::string &src) const;
 };
 

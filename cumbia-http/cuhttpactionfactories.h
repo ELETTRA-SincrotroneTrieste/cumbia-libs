@@ -70,4 +70,25 @@ private:
     CuData m_o;
 };
 
+class CuHTTPActionEditFactory : public CuHTTPActionFactoryI
+{
+public:
+    void setOptions(const CuData &o);
+    virtual ~CuHTTPActionEditFactory();
+
+    // CuTangoActionFactoryI interface
+    CuHTTPActionA *create(const CuHTTPSrc &s,
+                          QNetworkAccessManager *qnam,
+                          const QString& http_addr,
+                          CuHttpAuthManager *authman,
+                          CuHttpChannelReceiver *cr = nullptr) const;
+    std::string getMethod() const;
+    CuHTTPActionFactoryI* clone() const;
+    CuData options() const;
+
+private:
+    CuData m_ed_o;
+};
+
+
 #endif // CUHTTPACTIONFACTORIES_H
