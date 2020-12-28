@@ -89,9 +89,11 @@ CuTangoActionI *CuActionFactoryService::findActive(const string &src, CuTangoAct
 {
     std::shared_lock lock(d->shared_mutex);
     std::list<CuTangoActionI *>::const_iterator it;
-    for(it = d->actions.begin(); it != d->actions.end(); ++it)
+    for(it = d->actions.begin(); it != d->actions.end(); ++it) {
+        printf("CuActionFactoryService::findActive : searching src %s comparing with %s\n", src.c_str(), (*it)->getSource().getName().c_str());
         if((*it)->getType() == at && (*it)->getSource().getName() == src && !(*it)->exiting())
             return (*it);
+    }
     return NULL;
 }
 
