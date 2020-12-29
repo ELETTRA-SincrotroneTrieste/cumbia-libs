@@ -3,6 +3,7 @@
 // cumbia-tango
 #include <cuserviceprovider.h>
 #include <cumacros.h>
+#include <quapps.h>
 // cumbia-tango
 
 #include <cucontext.h>
@@ -15,14 +16,12 @@
 #include <QMessageBox>
 #include <QLabel>
 
-Manual_refresh::Manual_refresh(CumbiaTango *cut, QWidget *parent) :
+Manual_refresh::Manual_refresh(CumbiaPool *cup, QWidget *parent) :
     QWidget(parent)
 {
-    // cumbia-tango
-    cu_t = cut;
-    m_log = new CuLog(&m_log_impl);
-    cu_t->getServiceProvider()->registerService(CuServices::Log, m_log);
-    // cumbia-tango
+    // cumbia
+    CuModuleLoader mloader(cup, &m_ctrl_factory_pool, &m_log_impl);
+    cu_p = cup;
 
     QVBoxLayout *vlo = new QVBoxLayout(this);
     QLabel *title = new QLabel("Manual Refresh Mode Example", this);
@@ -30,8 +29,8 @@ Manual_refresh::Manual_refresh(CumbiaTango *cut, QWidget *parent) :
     QFont f = title->font();
     f.setBold(true);
     title->setFont(f);
-    QuLabel *l = new QuLabel(this, cu_t, cu_tango_r_fac);
-    QuCircularGauge *g = new QuCircularGauge(this, cu_t, cu_tango_r_fac);
+    QuLabel *l = new QuLabel(this, cup, m_ctrl_factory_pool);
+    QuCircularGauge *g = new QuCircularGauge(this, cup, m_ctrl_factory_pool);
     QPushButton *b = new QPushButton("Click to Refresh!", this);
 
     // vertically fixed size for labels
@@ -39,7 +38,8 @@ Manual_refresh::Manual_refresh(CumbiaTango *cut, QWidget *parent) :
         w->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);;
 
     if(qApp->arguments().size() > 1) {
-        l->getContext()->setOptions(CuData("refresh_mode", CuTReader::Manual));
+        l->getContext()->setOptions(CuData("manual", true));
+        g->getContext()->setOptions(CuData("manual", true));
         l->setSource(qApp->arguments().at(1));
         g->setSource(l->source());
         src->setText(l->source());
@@ -64,4 +64,6 @@ void Manual_refresh::read()
 {
     QuLabel *l = findChild<QuLabel *>();
     l->getContext()->sendData(CuData("read", ""));
+    QuCircularGauge *g = findChild<QuCircularGauge *>();
+    g->getContext()->sendData(CuData("read", ""));
 }

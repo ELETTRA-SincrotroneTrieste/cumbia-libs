@@ -1,4 +1,9 @@
-include (../../qumbia-tango-controls.pri)
+isEmpty(INSTALL_ROOT) {
+    INSTALL_ROOT=/usr/local/cumbia-libs
+}
+
+include ($${INSTALL_ROOT}/include/quapps/quapps.pri)
+
 TEMPLATE = app
 
 QT +=  core gui

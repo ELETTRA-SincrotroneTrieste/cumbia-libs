@@ -133,7 +133,6 @@ bool CuHttpBundledSrcReq::m_likely_valid(const QByteArray &ba) const {
     return !ba.startsWith(": hi\n");
 }
 
-
 QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs)
 {
     QJsonObject root_o;
@@ -141,18 +140,19 @@ QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs)
     foreach(const SrcItem& i, srcs) {
         QJsonObject so;
         QJsonArray options;
-        if(i.method != "edit")
-            options.append(i.options.value("no-properties").toBool() ? "r" : "p");
-        else {
-            const std::vector<std::string> &edit_o = i.options.keys();
-            QJsonArray ops;
-            for(const std::string& s : edit_o) {
-                options.append(s.c_str());
-                const std::vector<std::string> v = i.options[s].toStringVector();
-                for(const std::string& s : v)
-                    ops.append(s.c_str());
-                so[s.c_str()] = ops;
+        const std::vector<std::string> &o = i.options.keys();
+        for(const std::string& s : o) {
+            QJsonArray v_ops;
+            options.append(s.c_str());
+            const CuVariant &v = i.options[s];
+            if(v.getFormat() == CuVariant::Vector) { // option is a vector
+                const std::vector<std::string> &vs = i.options[s].toStringVector();
+                for(size_t i = 0; i < vs.size(); i++)
+                    v_ops.append(vs[i].c_str());
+                so[s.c_str()] = v_ops;
             }
+            else // scalar option
+                so[s.c_str()] = i.options[s].toString().c_str();
         }
 
         so["options"] = options;

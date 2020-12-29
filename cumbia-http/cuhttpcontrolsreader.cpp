@@ -15,6 +15,8 @@
 #include <QList>
 #include <QCoreApplication>
 #include <cumbiahttpworld.h>
+#include <qustringlist.h>
+#include <qregularexpression.h>
 
 class CuHTTPReaderFactoryPrivate {
 public:
@@ -127,7 +129,18 @@ CuData CuHttpControlsReader::getOptions() const {
 }
 
 void CuHttpControlsReader::sendData(const CuData &data) {
-    if(data.containsKey("read") || data.containsKey("args")) {
+    if(data.containsKey("read") && d->o["manual"].toBool()) {
+        printf("\e[1;32mCuHttpControlsReader::sendData in MANUAL MODE\e[0m\n");
+        QString s(d->s);
+        CuHTTPActionReaderFactory httprf(true); // single shot
+        if(data.containsKey("args")) {
+            QuStringList vs(data["args"]);
+            s.replace(QRegularExpression("\\(.*\\)"), "(" + vs.join(','));
+        }
+        setSource(s);
+    }
+    else if(data.containsKey("read") || data.containsKey("args")) {
+        printf("\e[1;32mCuHttpControlsReader::sendData \e[1;35m NOT IN MANUAL MODE\e[0m\n");
         CuHTTPActionEditFactory httpeditf;
         if(data.containsKey("args"))
             httpeditf.setOptions(CuData("args", data["args"]));

@@ -2,7 +2,7 @@
 #include "manual_refresh.h"
 
 // cumbia-tango
-#include <cumbiatango.h>
+#include <cumbiapool.h>
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
 // cumbia-tango
@@ -28,9 +28,9 @@ int main(int argc, char *argv[])
     qu_app.setProperty("hwReferent", "$HW_REFERENT$"); /* name of the referent that provides the device server */
     
     // instantiate CumbiaTango
-    CumbiaTango *cu_t = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    CumbiaPool *cu_p = new CumbiaPool();
 
-    Manual_refresh *w = new Manual_refresh(cu_t, NULL);
+    Manual_refresh *w = new Manual_refresh(cu_p, NULL);
     w->show();
 
     /* register to window manager */
@@ -42,6 +42,6 @@ int main(int argc, char *argv[])
     int ret = qu_app.exec();
     // delete resources and return
     delete w;
-    delete cu_t;
+    delete cu_p;
     return ret;
 }
