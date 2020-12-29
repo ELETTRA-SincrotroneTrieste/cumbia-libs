@@ -192,8 +192,9 @@ void CuTReader::getData(CuData &d_inout) const
  * @param data a CuData bundle with the settings to apply to the reader.
  *
  * \par Valid keys
- * \li "period": integer. Change the polling period, if the refresh mode is CuTReader::PolledRefresh
+ * \li "period": integer. Change the polling period. Implies a change in refresh mode if not already CuTReader::PolledRefresh
  * \li "refresh_mode". A CuTReader::RefreshMode value to change the current refresh mode.
+ * \li "manual" Equivalent to *refresh_mode* set to CuTReader::Manual
  *
  * @see getData
  *
@@ -202,11 +203,14 @@ void CuTReader::sendData(const CuData &data)
 {
     bool do_read = data.containsKey("read");
     int rm = -1, period = -1;
-    if(data.containsKey("refresh_mode"))
+    if(data.containsKey("manual"))
+        rm = CuTReader::Manual;
+    else if(data.containsKey("refresh_mode"))
         data["refresh_mode"].to<int>(rm);
-    if(data.containsKey("period"))
+    if(data.containsKey("period")) {
         data["period"].to<int>(period);
-    printf("CuTReader.sendData: mode %d current d->refresh_mode %d period %d\n", rm, d->refresh_mode, period);
+        rm = CuTReader::PolledRefresh;
+    }
     if(rm > -1 && rm != d->refresh_mode) { // refresh mode changed
         setRefreshMode(static_cast<CuTReader::RefreshMode>(rm), period);
     }
@@ -214,7 +218,6 @@ void CuTReader::sendData(const CuData &data)
         CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                             get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
         CuPoller *poller = polling_service->getPoller(d->cumbia_t, d->period); // poller with current period
-        printf("CuTReader.sendData: poller period %d d->period %d new period %d\n", poller->period(), d->period, period);
         if(poller && period != poller->period()) {
             m_unregisterFromPoller(); // unregister from old poller (d->period must stay unchanged)
             d->period = period;       // update d->period - mode unchanged
@@ -236,7 +239,7 @@ void CuTReader::sendData(const CuData &data)
         CuActivity *activity = m_find_Activity();
         if(activity)
             d->cumbia_t->postEvent(activity, new CuArgsChangeEvent(d->tsrc, data["args"].toStringVector()));
-//        d->tsrc.setArgs(data["args"].toStringVector());
+        //        d->tsrc.setArgs(data["args"].toStringVector());
     }
 }
 
@@ -289,12 +292,8 @@ void CuTReader::setRefreshMode(CuTReader::RefreshMode rm, int period)
     }
     else if(rm == CuTReader::Manual)
         d->period = d->manual_mode_period;
-    else
-        perr("CuTReader.setRefreshMode: found no event %p, nor polled activity with period %d", d->event_activity, d->period);
-
     if(d->refresh_mode != rm) // time to store rm into d->refresh_mode if not already done before
         d->refresh_mode = rm;
-    printf("CUTreadersetRefreshMode set d->refresh_mode to %d\n", d->refresh_mode);
 }
 
 string CuTReader::refreshModeStr() const
@@ -339,10 +338,24 @@ void CuTReader::setPeriod(int millis)
  */
 void CuTReader::setOptions(const CuData &options) {
     d->options = options;
-    if(options.containsKey("period") && options["period"].toInt() > 0)
-        setPeriod(options["period"].toInt());
-    if(options.containsKey("refresh_mode"))
-        setRefreshMode(static_cast<CuTReader::RefreshMode>(options["refresh_mode"].toInt()));
+
+    if(options.containsKey("manual") && options["manual"].toBool())
+        setRefreshMode(CuTReader::Manual);
+    else {
+        if(options.containsKey("period")) {
+            int p;
+            options["period"].to<int>(p);
+            if(p > 0 ) {
+                setPeriod(p);
+                setRefreshMode(CuTReader::PolledRefresh);
+            }
+        }
+        if(options.containsKey("refresh_mode")) {
+            int rm;
+            options["refresh_mode"].to<int>(rm);
+            setRefreshMode(static_cast<CuTReader::RefreshMode>(rm));
+        }
+    }
 }
 
 /*
