@@ -291,7 +291,7 @@ void CuTReader::sendData(const CuData &data) {
     else if(do_read && isEventRefresh(d->refresh_mode) && d->event_activity) {
         CuData errdat(getToken());
         errdat.set("err", true).set("msg", "CuTReader.sendData: \"read\" request cannot be forwarded to an event type activity");
-        perr("CuTReader.sendData: posting error event %s to event activity %p\n", errdat.toString().c_str(), d->event_activity);
+        perr("CuTReader.sendData: error %s (posted to event activity %p)\n", errdat.toString().c_str(), d->event_activity);
         d->cumbia_t->postEvent(d->event_activity, new CuDataEvent(errdat));
     }
     if(data.containsKey("args")) {
