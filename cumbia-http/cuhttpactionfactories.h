@@ -54,6 +54,7 @@ class CuHTTPActionConfFactory : public CuHTTPActionFactoryI
 {
 public:
     void setOptions(const CuData &o);
+    void mergeOptions(const CuData &o);
     virtual ~CuHTTPActionConfFactory();
 
     // CuTangoActionFactoryI interface
