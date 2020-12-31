@@ -82,8 +82,8 @@ void CuTConfigActivity::execute()
     bool cmd = at["is_command"].toBool();
     at["properties"] = std::vector<std::string>();
     at["type"] = "property";
-    bool value_only = d->options["value-only"].toBool();
-
+    bool value_only;
+    d->options["value-only"].to<bool>(value_only);
     d->try_cnt++;
     bool success = false;
 
