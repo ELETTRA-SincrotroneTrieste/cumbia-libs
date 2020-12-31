@@ -123,7 +123,7 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
 
     int period = 1000;
     if(token.containsKey("period"))
-        period = token["period"].toInt();
+        token["period"].to<int>(period);
     d->repeat = d->period = period;
     setInterval(period);
     //  flag CuActivity::CuADeleteOnExit is true
@@ -473,15 +473,12 @@ void CuPollingActivity::onExit()
 void CuPollingActivity::m_registerAction(const TSource& ts, CuTangoActionI *a)
 {
     ActionData adata(ts, a);
-    //    if(ts.getType() == TSource::Cmd)
-    //        d->cmd_data[d->cmd_data_idx++] = adata;
-    //    else
-    //        d->att_data[d->att_data_idx++] = adata;
     if(d->actions_map.find(ts.getName()) != d->actions_map.end())
-        perr("CuPollingActivity %p m_registerAction: source \"%s\" period %d already registered", this, ts.getName().c_str(), getTimeout());
+        perr("CuPollingActivity.m_registerAction  %p: source \"%s\" period %d already registered", this, ts.getName().c_str(), getTimeout());
     else {
         d->actions_map.insert(std::pair<const std::string, const ActionData>(ts.getName(), adata)); // multimap
-        pgreen(" + CuPollingActivity %p event: added %s to poller\n", this, ts.toString().c_str());
+        pgreen(" + CuPollingActivity.m_registerAction %p: added %s to poller, period %d repeat %d\n", this, ts.toString().c_str(),
+               d->repeat, d->period);
     }
 }
 
