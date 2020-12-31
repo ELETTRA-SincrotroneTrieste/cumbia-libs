@@ -1,5 +1,4 @@
 #include "cuhttpactionfactories.h"
-#include "cuhttpactionreader.h"
 #include "cuhttpwritehelper.h"
 #include "cuhttpactionconf.h"
 #include "cumbiahttp.h"
@@ -13,6 +12,7 @@ class CuHTTPClient;
 class CuHTTPReaderFactoryPrivate {
 public:
     CuData options;
+    bool single_shot;
 };
 
 
@@ -22,7 +22,7 @@ void CuHTTPActionReaderFactory::mergeOptions(const CuData &o) {
 
 CuHTTPActionReaderFactory::CuHTTPActionReaderFactory(bool single_shot) {
     d  = new CuHTTPReaderFactoryPrivate;
-    if(single_shot) d->options.set("method", "read");
+    d->single_shot = single_shot;
 }
 
 CuHTTPActionReaderFactory::~CuHTTPActionReaderFactory() {
@@ -30,12 +30,12 @@ CuHTTPActionReaderFactory::~CuHTTPActionReaderFactory() {
 }
 
 std::string CuHTTPActionReaderFactory::getMethod() const {
-    return d->options.has("method", "read") ? "read" : "s";
+    return d->single_shot ? "read" : "s";
 }
 
 CuHTTPActionFactoryI *CuHTTPActionReaderFactory::clone() const {
     CuHTTPActionReaderFactory *f = new CuHTTPActionReaderFactory(false);
-    f->d->options = d->options; // single shot option is saved in options
+    f->d->options = d->options;
     return f;
 }
 
@@ -70,6 +70,10 @@ CuHTTPActionWriterFactory::~CuHTTPActionWriterFactory() { }
 
 void CuHTTPActionConfFactory::setOptions(const CuData &o) {
     m_o = o;
+}
+
+void CuHTTPActionConfFactory::mergeOptions(const CuData &o) {
+    m_o.merge(o);
 }
 
 CuHTTPActionConfFactory::~CuHTTPActionConfFactory() {
