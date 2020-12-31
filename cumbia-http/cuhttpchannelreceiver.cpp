@@ -1,5 +1,4 @@
 #include "cuhttpchannelreceiver.h"
-#include "cuhttpactionreader.h"
 #include "cumbiahttpworld.h"
 #include <cudatalistener.h>
 #include <QJsonDocument>
@@ -26,15 +25,6 @@ CuHttpChannelReceiver::CuHttpChannelReceiver(const QString &url,
 
 QString CuHttpChannelReceiver::channel() const {
     return d->chan;
-}
-
-void CuHttpChannelReceiver::registerReader(const QString &src, CuHTTPActionReader *r)
-{
-
-}
-
-void CuHttpChannelReceiver::unregisterReader(const QString &src) {
-
 }
 
 /*!
