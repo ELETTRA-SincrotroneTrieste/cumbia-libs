@@ -187,29 +187,78 @@ void CuTReader::getData(CuData &d_inout) const
         d_inout["mode"] = refreshModeStr();
 }
 
+
+/*!
+ * \brief CuTReader::setOptions sets the options on the reader
+ * \param options CuData key/value bundle
+ *
+ * \par Options
+ * \list
+ * \li manual [bool]: manual mode: the caller will not receive updates
+ * \li refresh_mode [int, one of CuTReader::RefreshMode] set the refresh mode to mode
+ * \li period set the period that will be used to refresh the source if the mode is polled
+ *
+ * \note If the current mode is not CuTReader::PolledRefresh, setting the *period* is not
+ *       enough to change the refresh mode. On the other hand, setting a *period* will
+ *       save the value shall the refresh mode change to polling
+ *
+ * @see sendData
+ *
+ */
+void CuTReader::setOptions(const CuData &options) {
+    d->options = options;
+    if(options.containsKey("manual") && options["manual"].toBool())
+        setRefreshMode(CuTReader::Manual);
+    else {
+        if(options.containsKey("period")) {
+            int p = 1000;
+            options["period"].to<int>(p);
+            if(p > 0 )
+                setPeriod(p);
+        }
+        if(options.containsKey("refresh_mode")) {
+            int rm = CuTReader::PolledRefresh;
+            options["refresh_mode"].to<int>(rm);
+            if(rm >= PolledRefresh && rm <= Manual)
+                setRefreshMode(static_cast<CuTReader::RefreshMode>(rm));
+        }
+    }
+}
+
 /** \brief Send data with parameters to configure the reader.
  *
  * @param data a CuData bundle with the settings to apply to the reader.
  *
  * \par Valid keys
- * \li "period": integer. Change the polling period. Implies a change in refresh mode if not already CuTReader::PolledRefresh
+ * \li "period": integer. Change the polling period. Does not imply a change in refresh mode
  * \li "refresh_mode". A CuTReader::RefreshMode value to change the current refresh mode.
- * \li "manual" Equivalent to *refresh_mode* set to CuTReader::Manual
+ * \li "manual" Equivalent to *refresh_mode* set to CuTReader::Manual, but more "engine unaware", recommended
+ * \li "read" [any value, *empty* included]: ask an immediate reading
+ * \li "args" [std::vector<std::string>]: change the arguments of an ongoing reading (applies to commands with
+ *     argins)
+ *
+ * \note *period, manual and refresh_mode* update internal *options*.
  *
  * @see getData
  *
  */
 void CuTReader::sendData(const CuData &data)
 {
+    printf("CuTReader.sendData: received %s\n", datos(data));
     bool do_read = data.containsKey("read");
     int rm = -1, period = -1;
-    if(data.containsKey("manual"))
+    if(data.containsKey("manual")) {
         rm = CuTReader::Manual;
-    else if(data.containsKey("refresh_mode"))
+        d->options["manual"] = data["manual"];
+    }
+    else if(data.containsKey("refresh_mode")) {
         data["refresh_mode"].to<int>(rm);
+        if(rm >= CuTReader::PolledRefresh && rm <= CuTReader::Manual)
+            d->options["refresh_mode"] = rm;
+    }
     if(data.containsKey("period")) {
         data["period"].to<int>(period);
-        rm = CuTReader::PolledRefresh;
+        if(period > 0) d->options["period"] = period;
     }
     if(rm > -1 && rm != d->refresh_mode) { // refresh mode changed
         setRefreshMode(static_cast<CuTReader::RefreshMode>(rm), period);
@@ -239,7 +288,6 @@ void CuTReader::sendData(const CuData &data)
         CuActivity *activity = m_find_Activity();
         if(activity)
             d->cumbia_t->postEvent(activity, new CuArgsChangeEvent(d->tsrc, data["args"].toStringVector()));
-        //        d->tsrc.setArgs(data["args"].toStringVector());
     }
 }
 
@@ -325,37 +373,8 @@ CuTReader::RefreshMode CuTReader::refreshMode() const
     return d->refresh_mode;
 }
 
-void CuTReader::setPeriod(int millis)
-{
+void CuTReader::setPeriod(int millis) {
     d->period = millis;
-}
-
-/*!
- * \brief CuTReader::setOptions sets the options on the reader
- * \param options CuData key/value bundle
- *
- * Called by CuTangoActionI *CuTangoReaderFactory::create
- */
-void CuTReader::setOptions(const CuData &options) {
-    d->options = options;
-
-    if(options.containsKey("manual") && options["manual"].toBool())
-        setRefreshMode(CuTReader::Manual);
-    else {
-        if(options.containsKey("period")) {
-            int p;
-            options["period"].to<int>(p);
-            if(p > 0 ) {
-                setPeriod(p);
-                setRefreshMode(CuTReader::PolledRefresh);
-            }
-        }
-        if(options.containsKey("refresh_mode")) {
-            int rm;
-            options["refresh_mode"].to<int>(rm);
-            setRefreshMode(static_cast<CuTReader::RefreshMode>(rm));
-        }
-    }
 }
 
 /*
