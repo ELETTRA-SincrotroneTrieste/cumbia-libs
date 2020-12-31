@@ -95,7 +95,6 @@ void CuTimerService::unregisterListener(CuTimerListener *tl, int timeout)
     else {
         t->removeListener(tl); // CuTimer lock guards its listeners list
         if(t->listeners().size() == 0) {
-            printf("\e[1;32m** -->\e[0m CuTimerService::unregisterListener: \e[1;32mno more listeners: stopping timer %p with timeo %d and deleting\e[0m\n", t, t->timeout());
             m_removeFromMaps(t);
             t->stop();
             delete t;
@@ -120,13 +119,8 @@ CuTimer *CuTimerService::changeTimeout(CuTimerListener *tl, int from_timeo, int 
         t = m_findTimer(tl, from_timeo); // does not lock
     }
     if(t) {
-        printf("CuTimerService::changeTimeout: changing timeout from \e[1;32m%d to %d\e[0m for timer %p LISTENER %p\n",
-               t->timeout(), to_timeo, t, tl);
         unregisterListener(tl, t->timeout()); // locks
-        printf("CuTimerService::changeTimeout: registering \e[1;32m listener %p \e[0m with new timeout %d on timer %p... ", tl, to_timeo, t);
         t = registerListener(tl, to_timeo); // locks
-        printf("--> actual tmr timeo: %d\n", t->timeout());
-        //        t->setTimeout(to_timeo);
     }
     else if(!t)
         perr("CuTimerService.changeTimeout: no listener %p registered with timer's timeout %d", tl, from_timeo);
@@ -281,8 +275,7 @@ std::list<CuTimer *> CuTimerService::getTimers()
  * \param t the timer whose listeners the caller is seeking for
  * \return the list of listeners of the timer t
  */
-std::list<CuTimerListener *> CuTimerService::getListeners(CuTimer *t) const
-{
+std::list<CuTimerListener *> CuTimerService::getListeners(CuTimer *t) const {
     return t->m_listeners;
 }
 
