@@ -1,7 +1,6 @@
 #include "cuhttpcontrolsreader.h"
 #include "cumbiahttp.h"
 #include "cuhttpcontrolsreader.h"
-#include "cuhttpactionreader.h"
 #include "cuhttpactionconf.h"
 #include "cuhttpactionfactories.h"
 #include <cudatalistener.h>
@@ -94,6 +93,26 @@ CuHttpControlsReader::~CuHttpControlsReader() {
     delete d;
 }
 
+/*!
+ * \brief Enqueue a request for either a *single shot* reading and an optional
+ *        subscription for data updates through the channel
+ *
+ * \param s the name of the source
+ *
+ * The reader always performs a *synchronous* immediate reading.
+ *
+ * CuHttpControlsReader stores a *method* property that determines the behaviour of the reader and can either be:
+ * - *read*, only one reading is performed "synchronously", that is, an http reply is sent in response to
+ *   the request;
+ * - *s*, subscribe mode: the single shot reading (as above) is followed by updates through the channel
+ *
+ * The single shot only *read* mode is activated by either *single-shot* or *manual* option set on the
+ * CuHTTPReaderFactory.
+ *
+ * Moreover, if the options contain the *property* key set to *true*, the synchronous reply
+ * shall contain the source configuration alongside its value. Otherwise, only the value will be
+ * fetched.
+ */
 void CuHttpControlsReader::setSource(const QString &s) {
     d->s = s;
     if(!s.isEmpty() && CumbiaHTTPWorld().source_valid(s.toStdString())) {
@@ -101,12 +120,13 @@ void CuHttpControlsReader::setSource(const QString &s) {
         // d->source is equal to 's' if no replacement is made
         for(int i = 0; i < rwis.size() && d->s == s; i++) // leave loop if s != d->source (=replacement made)
             d->s = rwis[i]->replaceWildcards(s, qApp->arguments());
-        d->o.value("single-shot").toBool() || d->o.value("manual").toBool() ? d->method = "read" : d->method = "s";
-        CuHTTPActionReaderFactory httprf(d->method == "read");
-        httprf.mergeOptions(d->o);
+
         const CuHTTPSrc hs(d->s.toStdString(), d->cu_http->getSrcHelpers());
         // d->s must store the complete src, including tango host
         d->s = QString::fromStdString(hs.prepare());
+        d->o.value("single-shot").toBool() || d->o.value("manual").toBool() ? d->method = "read" : d->method = "s";
+        CuHTTPActionReaderFactory httprf(d->method == "read");
+        httprf.mergeOptions(d->o);
         d->cu_http->readEnqueue(hs, d->dlis, httprf);
     }
 }
@@ -128,24 +148,37 @@ CuData CuHttpControlsReader::getOptions() const {
     return d->o;
 }
 
+/*!
+ * \brief Send data to the service managing this reader
+ * \param data the data to send
+ *
+ * \list keys
+ * \li *read* a read command
+ * \li *args* a list of arguments to change on the source. This is valid for
+ *     readings with input arguments only (e.g. Tango commands with argins)
+ *
+ * \par note
+ * Potentially, the http service shares sources across different clients.
+ * Changing the arguments (through the *args* key) of a shared source may lead to unwanted results for
+ * the other clients reading the same data. In this case, an *edit* command is issued.
+ * Issuing a *read* has only the side effect of potentially refreshing all clients connected to
+ * the same source.
+ *
+ * On the other hand, if the "manual" option is enabled for the current reader,
+ * then a new read is requested through http, which should be quite safe.
+ */
 void CuHttpControlsReader::sendData(const CuData &data) {
-    if(data.containsKey("read") && d->o["manual"].toBool()) {
-        printf("\e[1;32mCuHttpControlsReader::sendData in MANUAL MODE\e[0m\n");
-        QString s(d->s);
-        CuHTTPActionReaderFactory httprf(true); // single shot
-        if(data.containsKey("args")) {
-            QuStringList vs(data["args"]);
-            s.replace(QRegularExpression("\\(.*\\)"), "(" + vs.join(','));
+    bool a = data.containsKey("read") || data.containsKey("args");
+    if(d->o["manual"].toBool() && a) {
+        if(data.containsKey("args") && d->s.contains(QRegularExpression("\\(.*\\)"))) {
+            d->s.replace(QRegularExpression("\\(.*\\)"), "(" + QuStringList(data["args"]).join(',') + ')');
         }
-        setSource(s);
+        if(data.containsKey("read"))
+            setSource(d->s);
     }
-    else if(data.containsKey("read") || data.containsKey("args")) {
-        printf("\e[1;32mCuHttpControlsReader::sendData \e[1;35m NOT IN MANUAL MODE\e[0m\n");
+    else if(a) {
         CuHTTPActionEditFactory httpeditf;
-        if(data.containsKey("args"))
-            httpeditf.setOptions(CuData("args", data["args"]));
-        else if(data.containsKey("read"))
-            httpeditf.setOptions(CuData("read", data["read"]));
+        httpeditf.setOptions(data);
         d->cu_http->readEnqueue(CuHTTPSrc(d->s.toStdString(), d->cu_http->getSrcHelpers()), d->dlis, httpeditf);
     }
 }
