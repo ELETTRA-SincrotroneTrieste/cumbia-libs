@@ -57,18 +57,19 @@ template<typename T> bool CuVariant::to(T &val) const
             val = static_cast<T>(*(static_cast<bool *>(d->val)));
             break;
         case String:
-            try
-            {
-                // try converting to long double
-                val = static_cast<T>( std::stold(toString()));
+            try {
+                const std::string& s = toString();
+                if(s == "true") val = static_cast<T>(1);
+                else if(s == "false") val = static_cast<T>(0);
+                else // try converting to long double
+                    val = static_cast<T>( std::stold(s));
             }
-
             catch(const std::invalid_argument& ) {
-                pwarn("CuVariant.toVector: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
+                pwarn("CuVariant.to: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
                 valid = false;
             }
             catch(const std::out_of_range& ) {
-                pwarn("CuVariant.toVector: string \"%s\" to number conversion failed: out of range", toString().c_str());
+                pwarn("CuVariant.to: string \"%s\" to number conversion failed: out of range", toString().c_str());
                 valid = false;
             }
             break;
