@@ -225,6 +225,22 @@ void CuTReader::setOptions(const CuData &options) {
     }
 }
 
+void CuTReader::m_update_options(const CuData newo) {
+    int rm = -1, p = -1;
+    if(newo.containsKey("manual")) {
+        d->options["manual"] = newo["manual"];
+        rm = CuTReader::Manual;
+    }
+    if(newo.containsKey("refresh_mode"))
+        newo["refresh_mode"].to<int>(rm);
+    if(newo.containsKey("period"))
+        newo["period"].to<int>(p);
+    if(rm >= CuTReader::PolledRefresh && rm <= CuTReader::Manual)
+        d->options["refresh_mode"] = rm;
+    if(rm == CuTReader::Manual)
+        d->options["period"] = d->manual_mode_period;
+}
+
 /** \brief Send data with parameters to configure the reader.
  *
  * @param data a CuData bundle with the settings to apply to the reader.
@@ -242,23 +258,18 @@ void CuTReader::setOptions(const CuData &options) {
  * @see getData
  *
  */
-void CuTReader::sendData(const CuData &data)
-{
+void CuTReader::sendData(const CuData &data) {
+    m_update_options(data);
     bool do_read = data.containsKey("read");
     int rm = -1, period = -1;
-    if(data.containsKey("manual")) {
+    if(data.containsKey("manual"))
         rm = CuTReader::Manual;
-        d->options["manual"] = data["manual"];
-    }
-    else if(data.containsKey("refresh_mode")) {
+    else if(data.containsKey("refresh_mode"))
         data["refresh_mode"].to<int>(rm);
-        if(rm >= CuTReader::PolledRefresh && rm <= CuTReader::Manual)
-            d->options["refresh_mode"] = rm;
-    }
-    if(data.containsKey("period")) {
+
+    if(data.containsKey("period"))
         data["period"].to<int>(period);
-        if(period > 0) d->options["period"] = period;
-    }
+
     if(rm > -1 && rm != d->refresh_mode) { // refresh mode changed
         setRefreshMode(static_cast<CuTReader::RefreshMode>(rm), period);
     }
@@ -279,7 +290,7 @@ void CuTReader::sendData(const CuData &data)
     }
     else if(do_read && isEventRefresh(d->refresh_mode) && d->event_activity) {
         CuData errdat(getToken());
-        errdat.set("err", true).set("msg", "CuTReader.sendData: sporadic \"read\" request cannot be forwarded to an event type activity");
+        errdat.set("err", true).set("msg", "CuTReader.sendData: \"read\" request cannot be forwarded to an event type activity");
         perr("CuTReader.sendData: posting error event %s to event activity %p\n", errdat.toString().c_str(), d->event_activity);
         d->cumbia_t->postEvent(d->event_activity, new CuDataEvent(errdat));
     }
@@ -323,6 +334,8 @@ void CuTReader::setRefreshMode(CuTReader::RefreshMode rm, int period)
             m_startEventActivity();       // register a new one with the desired event refresh mode
         }
         else if(rm == CuTReader::PolledRefresh || rm == CuTReader::Manual) {
+            printf("CuTReader::setRefreshMode: rm %d d->refresh_mode %d d->event_activity %p period %d d->period %d\n",
+                   rm, d->refresh_mode, d->event_activity, period, d->period);
             if(d->event_activity)
                 m_unregisterEventActivity();
             if(rm == CuTReader::Manual)
@@ -333,6 +346,7 @@ void CuTReader::setRefreshMode(CuTReader::RefreshMode rm, int period)
             }
             if(d->refresh_mode != rm) {
                 d->polling_fallback = false;
+                printf("CuTReader::setRefreshMode calling m_registerToPoller d->period %d options %s\n", d->period, datos(d->options));
                 m_registerToPoller();
             }
         }

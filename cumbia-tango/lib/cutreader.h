@@ -90,6 +90,7 @@ private:
     void m_registerToPoller();
     void m_unregisterFromPoller();
     void m_unregisterEventActivity();
+    void m_update_options(const CuData newo);
     CuActivity *m_find_Activity();
 };
 
