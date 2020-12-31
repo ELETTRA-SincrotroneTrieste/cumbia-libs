@@ -52,7 +52,7 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a, const CuDa
 {
     // insert in this thread
     d->actions_map.insert(std::pair<const CuTangoActionI*, const TSource>(a, tsrc));
-    pgreen(" + CuPoller.registerAction: added %s - %p to poller\n", tsrc.getName().c_str(), a);
+    pgreen(" + CuPoller.registerAction: added %s - %p to poller - period %d\n", tsrc.getName().c_str(), a, d->period);
 
     CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
                                                              get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
