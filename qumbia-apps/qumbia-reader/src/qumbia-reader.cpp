@@ -39,7 +39,7 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
     CuPluginLoader pload;
     QObject *plugin_qob;
     CuFormulaPluginI *fplu = pload.get<CuFormulaPluginI>("cuformula-plugin.so", &plugin_qob);
-    CuHdbPlugin_I *hdb_p;
+    CuHdbPlugin_I *hdb_p = nullptr;
 
 #ifdef HAS_CUHDB
     // historical database
@@ -72,37 +72,47 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
                                      << "label" << "description";
     m_props_map[Medium] = QStringList() << "activity" << "worker_activity" << "worker_thread";
 
+    m_err = m_conf.property && m_conf.refresh_limit != 1;
+    if(m_err)  {
+        perr("-q (property) and -m (monitor) or -r X, X > 1 are not compatible\n");
+    }
+    else {
 
 #ifdef QUMBIA_TANGO_CONTROLS_VERSION
-    Cumbia *cuta = cu_pool->get("tango");
-    if(cuta && m_conf.max_timers > 0) {
-        CuTimerService *ts = static_cast<CuTimerService *>(cuta->getServiceProvider()->get(CuServices::Timer));
-        ts->setTimerMaxCount(m_conf.max_timers);
-    }
+        Cumbia *cuta = cu_pool->get("tango");
+        if(cuta && m_conf.max_timers > 0) {
+            CuTimerService *ts = static_cast<CuTimerService *>(cuta->getServiceProvider()->get(CuServices::Timer));
+            ts->setTimerMaxCount(m_conf.max_timers);
+        }
 #endif
-    if(m_conf.list_options)
-        cmdo.list_options();
+        if(m_conf.list_options)
+            cmdo.list_options();
 #ifdef HAS_CUHDB
-    if(hdb_p && !m_conf.db_profile.isEmpty()) {
-        hdb_p->setDbProfile(m_conf.db_profile);
-    }
-    else if(hdb_p && !m_conf.list_options){
-        printf("\e[1;33m* \e[0;4mcumbia read\e[0m: using \e[1;33mdefault\e[0m historical database profile, if available\n");
-    }
+        if(hdb_p && !m_conf.db_profile.isEmpty()) {
+            hdb_p->setDbProfile(m_conf.db_profile);
+        }
+        else if(hdb_p && !m_conf.list_options){
+            printf("\e[1;33m* \e[0;4mcumbia read\e[0m: using \e[1;33mdefault\e[0m historical database profile, if available\n");
+        }
 #endif
 
-    if(!m_conf.usage && !m_conf.list_options && m_conf.sources.size() > 0)
-        m_createReaders(m_conf.sources);
-    else if(m_conf.usage || m_conf.sources.size() == 0)
-        cmdo.help(qApp->arguments().first(), "");
+        if(!m_conf.usage && !m_conf.list_options && m_conf.sources.size() > 0)
+            m_createReaders(m_conf.sources);
+        else if(m_conf.sources.size() == 0 && !m_conf.list_options && !m_conf.help)
+            cmdo.help(qApp->arguments().first(), "");
+        else if(m_conf.help) {
+            printf("\e[1;32mcumbia read specific options\e[0m\n%s\n\n", qstoc(cmdo.help()));
+            printf("Type \e[1;32mcumbia read\e[0m with no parameters to read the manual\n\n");
+        }
 
-    if(m_conf.refresh_limit < 1 && m_conf.sources.size() > 0) {
-        // wait for keyboard input to stop
-        printf("\e[1;32m * \e[0;4mmonitor\e[0m started: press \e[1;32many key\e[0m to \e[1;32mexit\e[0m\n");
-        KbdInputWaitThread *kbdt = new KbdInputWaitThread(this);
-        connect(kbdt, SIGNAL(finished()), qApp, SLOT(quit()));
-        kbdt->start();
-    }
+        if(m_conf.refresh_limit < 1 && m_conf.sources.size() > 0 && !m_conf.help && !m_conf.list_options) {
+            // wait for keyboard input to stop
+            printf("\e[1;32m * \e[0;4mmonitor\e[0m started: press \e[1;32many key\e[0m to \e[1;32mexit\e[0m\n");
+            KbdInputWaitThread *kbdt = new KbdInputWaitThread(this);
+            connect(kbdt, SIGNAL(finished()), qApp, SLOT(quit()));
+            kbdt->start();
+        }
+    } // !m_err
 }
 
 QumbiaReader::~QumbiaReader() {
@@ -523,6 +533,8 @@ void QumbiaReader::m_createReaders(const QStringList &srcs)  {
         if(m_conf.refresh_limit == 1)
             reader_ctx_options["single-shot"] = true;
         reader_ctx_options["period"] = m_conf.period;
+        if(m_conf.property)
+            reader_ctx_options["property"] = true;
         r->setContextOptions(reader_ctx_options);
         r->setSource(a);
         m_readers.append(r);
@@ -583,4 +595,8 @@ QString QumbiaReader::m_format(const T &v, const char *fmt) const
     char str[64];
     !m_conf.format.isEmpty() ? snprintf(str, 64, qstoc(m_conf.format), v) : snprintf(str, 64, fmt, v);
     return QString(str);
+}
+
+bool QumbiaReader::config_error() const {
+    return m_err;
 }

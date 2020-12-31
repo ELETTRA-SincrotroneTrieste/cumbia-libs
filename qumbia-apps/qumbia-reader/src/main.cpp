@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 
     CumbiaPool *cu_p = new CumbiaPool();
     QumbiaReader *w = new QumbiaReader(cu_p, NULL);
-    if(!w->usage_only())
+    if(!w->usage_only() && !w->config_error())
         ret = qu_app.exec();
     delete w;
     if(cu_p->get("tango"))

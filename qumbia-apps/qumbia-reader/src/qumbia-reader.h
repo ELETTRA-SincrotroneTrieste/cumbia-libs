@@ -184,6 +184,7 @@ public:
 
     QString makeTimestamp(const double d) const;
     bool usage_only() const;
+    bool config_error() const; // clashing command line options
 
 public slots:
     void onNewDouble(const QString &src, double ts, double val, const CuData& da);
@@ -216,6 +217,7 @@ private slots:
 
 
 private:
+    bool m_err;
     CumbiaPool *cu_pool;
     QuLogImpl m_log_impl;
     CuControlsFactoryPool m_ctrl_factory_pool;

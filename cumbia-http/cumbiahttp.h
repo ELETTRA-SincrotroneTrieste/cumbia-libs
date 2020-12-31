@@ -3,7 +3,6 @@
 
 #include <cumbia.h>
 #include <string>
-#include <cuhttpactionreader.h>
 #include <cuhttpactionfactoryi.h>
 #include <QString>
 

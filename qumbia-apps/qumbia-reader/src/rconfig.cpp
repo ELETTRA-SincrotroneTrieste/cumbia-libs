@@ -10,7 +10,7 @@ RConfig::RConfig()
     usage = list_options = false;
     period = 1000;
     format = QString();
-    property = false;
+    property = help = false;
 }
 
 

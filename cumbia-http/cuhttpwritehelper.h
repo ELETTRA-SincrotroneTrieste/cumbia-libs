@@ -1,7 +1,6 @@
 #ifndef CUHTTPACTIONWRITER_H
 #define CUHTTPACTIONWRITER_H
 
-#include <cuhttpactiona.h>
 #include "cuhttpauthmanager.h"
 #include "cuhttpsrcman.h"
 

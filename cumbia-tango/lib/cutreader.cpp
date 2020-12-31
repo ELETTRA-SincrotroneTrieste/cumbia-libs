@@ -244,7 +244,6 @@ void CuTReader::setOptions(const CuData &options) {
  */
 void CuTReader::sendData(const CuData &data)
 {
-    printf("CuTReader.sendData: received %s\n", datos(data));
     bool do_read = data.containsKey("read");
     int rm = -1, period = -1;
     if(data.containsKey("manual")) {

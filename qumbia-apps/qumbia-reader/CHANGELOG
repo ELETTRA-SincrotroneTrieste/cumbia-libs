@@ -1,3 +1,8 @@
+1.2.3 improved help: -h option documents command line options only
+                     cumbia read with no params prints the manual
+                     -o lists the available options only
+      -q param performs a single shot reading plus property fetch
+
 1.1.0: added new type conversion methods and default toString/toStringList conversion
        many improvements and options. See doc
 

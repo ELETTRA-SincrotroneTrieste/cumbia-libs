@@ -264,10 +264,9 @@ void CuTControlsReader::setSource(const QString &s)
             acf.setOptions(d->ta_options);
             d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, acf);
         }
-        if(!d->ta_options.value("properties-only").toBool() && !d->ta_options.value("single-shot").toBool()) {
-            CuTangoReaderFactory readf;
-            readf.setOptions(d->ta_options);
-            d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, readf);
-        }
+    if(!d->ta_options.value("properties-only").toBool() && !d->ta_options.value("single-shot").toBool()) {
+        CuTangoReaderFactory readf;
+        readf.setOptions(d->ta_options);
+        d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, readf);
     }
 }

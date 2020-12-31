@@ -11,7 +11,7 @@ public:
     int truncate, max_timers, verbosity;
     QStringList sources;
     int period;
-    bool usage, list_options, property;
+    bool usage, list_options, property, help;
 
     void setPropertyOnly();
     QString format;
