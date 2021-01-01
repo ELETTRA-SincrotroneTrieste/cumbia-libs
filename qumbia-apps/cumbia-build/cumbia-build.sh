@@ -1,0 +1,49 @@
+#!/bin/bash
+
+
+CONF_FILE=$HOME/.config/cumbia/cumbia-build/options.sh
+
+if test -f "$CONF_FILE"; then
+    . $CONF_FILE
+else
+    echo "First time you run cumbia build? Execute cumbia build setup"
+fi
+
+
+function build {
+    qmake
+    cuuimake
+    make $MAKE_J
+}
+
+if [ -z "$1" ]; then
+    if [ ! -f *.pro ]; then
+        echo -e "This directory does not contain a cumbia project. To download and build a new one, type cumbia build \e[4mgit_repo\e[0m"
+        exit 1
+    fi
+    build
+    
+elif [ -d "$BUILD_PATH" ]; then
+    savedir=$PWD
+    REPO=$REPO_ROOT/$1
+    DESTDIR=$BUILD_PATH/$1
+    if [ ! -d $DESTDIR ]; then
+        echo -e "1. downloading \e[4m$1\e[0m into \e[4m$BUILD_PATH/$1\e[0m"
+        git clone $REPO $DESTDIR
+    else
+        echo -e "1. updating \e[4m$1\e[0m"
+        cd $DESTDIR
+        git pull
+    fi
+    if [ $? -eq 0 ]; then
+        cd $DESTDIR
+        echo -e "2. building \e[4m$1\e[0m..."
+        build
+    else    
+        echo -e "\e[1;31m:-(\e[0m failed to clone \"$1\" from $REPO\n"
+        exit 1
+    fi
+else
+    echo -e "\e[1;31m:-(\e[0m the build path specified in the configuration does not exist"
+fi
+
