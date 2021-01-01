@@ -14,6 +14,8 @@ function build {
     qmake
     cuuimake
     make $MAKE_J
+    
+    return $?
 }
 
 if [ -z "$1" ]; then
@@ -31,7 +33,7 @@ elif [ -d "$BUILD_PATH" ]; then
         echo -e "1. downloading \e[4m$1\e[0m into \e[4m$BUILD_PATH/$1\e[0m"
         git clone $REPO $DESTDIR
     else
-        echo -e "1. updating \e[4m$1\e[0m"
+        echo -e "1. updating \e[4m$1\e[0m under \e[4m$BUILD_PATH/$1\e[0m"
         cd $DESTDIR
         git pull
     fi
@@ -39,6 +41,10 @@ elif [ -d "$BUILD_PATH" ]; then
         cd $DESTDIR
         echo -e "2. building \e[4m$1\e[0m..."
         build
+        if [ ! $? -eq 0 ]; then
+            echo -e "\e[1;31m:-(\e[0m failed to build \"$1\" from $REPO\n"
+            exit 1
+        fi
     else    
         echo -e "\e[1;31m:-(\e[0m failed to clone \"$1\" from $REPO\n"
         exit 1
