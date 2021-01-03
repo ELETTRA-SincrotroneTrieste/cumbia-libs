@@ -68,23 +68,49 @@ def mkcmdlines(cmdls):
 			cmdlines.append(App( '%s %s/%s %s' % (args[Indexes.ENV], args[Indexes.PATH], args[Indexes.APP], args[Indexes.ARGS]), args[Indexes.DATETIME]))
 	return cmdlines
 
+def get_cmdparts(argv):
+	l = len(argv)
+	section='a'
+	a = [] # args
+	e = [] # env
+	cmd = '' # commmand, including path
+	for i in range (0, l):
+		if argv[i] == '-c':   # command (+ optional path)
+			section = 'c'
+		elif argv[i] == '-a': # arguments
+			section = 'a'
+		elif argv[i] == '-e': #environ vars
+			section = 'e'
+		else:
+			if section == 'a':
+				a.append(argv[i])
+			elif section == 'e':
+				e.append(argv[i])
+			elif section == 'c':
+				cmd = argv[i]
+	return (cmd, ' '.join(a), ' '.join(e) )
+
+
+# curun-db.py add -c path/to/app  -a arg1 arg2 ... argN  -r VARIABLE1=val1
 def main():
 	asiz = len(sys.argv)
-	a = []
-	if asiz == 5:
-		# curun-db.py add path/to/app VARIABLE1=val1 arg1 arg2 ... argN
-		tbl = ''
-		if sys.argv[1] == "add":
-			tbl = 'history'
-		elif sys.argv[1] == "addtest":
-			tbl = 'test'
-		if len(tbl) > 0:
-			add(sys.argv[2], sys.argv[3], sys.argv[4], tbl)
 
-	elif asiz == 3 and sys.argv[1] == "find":
+	
+	if asiz == 3 and sys.argv[1] == "find":
 		a = find(sys.argv[2], "history")
 	elif asiz == 3 and sys.argv[1] == "findtest":
 		a = find(sys.argv[2], "test")
+	elif asiz > 1:
+		tbl = ''
+		if sys.argv[1] == "add":
+			tbl = 'history'
+			(cmd, a, e) = get_cmdparts(sys.argv[2:])
+		elif sys.argv[1] == "addtest":
+			tbl = 'test'
+			(cmd, a, e) = get_cmdparts(sys.argv[2:])
+		if len(tbl) > 0:
+			add(cmd, a, e, tbl)
+
 
 
 	cmdlines = mkcmdlines(a)

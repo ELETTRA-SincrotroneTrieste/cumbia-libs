@@ -1,5 +1,6 @@
 #!/bin/bash
 
+CURUN_PY=./curun-db.py
 
 CONF_FILE=$HOME/.config/cumbia/cumbia-build/options.sh
 
@@ -21,7 +22,7 @@ function get_args {
             while IFS= read -r line
             do
             if [[ $line =~ ^args\s+* ]]; then
-                argus=${line#"args "}
+                argus=${line#"args "}CURUN_PY
                 args+=("$argus")
             elif [[ $line =~ ^export\+* ]]; then
                 exports+=("$line")
@@ -50,7 +51,17 @@ if [ -z "$1" ]; then
         echo -e "\e[1;31m-\e[0m Type \e[4mcumbia build $projnam\e[0m"
         exit 1
     fi
-    
+elif [[ $1 == *"/"* ]]; then
+	eval $@
+	if [ $? -eq 0 ]; then
+		args="${@:2}"
+		p=$1
+		echo "command $@ successful path $p args $args"
+		# curun-db.py add "path/to/app"  "arg1 arg2 ... argN" "VARIABLE1=val1"
+		$CURUN_PY add -c "$p" -a "$args"
+
+	fi
+   
 elif [ -d "$BUILD_PATH" ]; then
     savedir=$PWD
     REPO=$REPO_ROOT/$1
