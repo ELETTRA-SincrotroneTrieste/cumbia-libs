@@ -1,7 +1,8 @@
 #!/bin/bash
 
-
-CONF_FILE=$HOME/.config/cumbia/cumbia-build/options.sh
+# CONF_FILE defines REPO, BUILD_PATH
+#
+CONF_FILE=$HOME/.config/cumbia/cumbia-run/options.sh
 
 if test -f "$CONF_FILE"; then
     . $CONF_FILE
@@ -27,8 +28,8 @@ if [ -z "$1" ]; then
     
 elif [ -d "$BUILD_PATH" ]; then
     savedir=$PWD
-    REPO=$REPO_ROOT/$1
-    DESTDIR=$BUILD_PATH/$1
+    REPO=$REPO_ROOT/$1          # REPO defined in CONF_FILE
+    DESTDIR=$BUILD_PATH/$1      # BUILD_PATH defined in CONF_FILE
     if [ ! -d $DESTDIR ]; then
         echo -e "1. downloading \e[4m$1\e[0m into \e[4m$BUILD_PATH/$1\e[0m"
         git clone $REPO $DESTDIR

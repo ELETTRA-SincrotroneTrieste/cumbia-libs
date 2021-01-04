@@ -9,6 +9,8 @@ CREATE TABLE IF NOT EXISTS history (
 	env TEXT,
 	args TEXT,
 	datetime DATETIME NOT NULL,
+	stored INT DEFAULT 0,
+	tag TEXT,
     PRIMARY KEY(id,env,args)
 );
 

@@ -36,6 +36,7 @@ SOURCES = dummy.cpp
 INCLUDEDIR = $${INSTALL_ROOT}/include
 
 SHAREDIR = $${INSTALL_ROOT}/share
+DOCDIR = $${SHAREDIR}/doc/cumbia-run
 
 
 #target.path = $${INSTALL_ROOT}/bin
@@ -48,15 +49,20 @@ SHAREDIR = $${INSTALL_ROOT}/share
 # completion.files = bash_completion.d/cumbia
 
 script.path = $${INSTALL_ROOT}/bin
-script.files = cumbia-build cumbia-run curun-db.py
+script.files = cumbia-build cumbia-run curun_db.py
 
 sqlscript.path = $${SHAREDIR}/cumbia-run
 sqlscript.files = curun-create-db.sql
 
+doc.files = doc/*
+doc.path = $${DOCDIR}
+doc.commands = doxygen Doxyfile;
+
 #message("bash completion dir $${BASH_COMPLETION_DIR}")
 
 
-INSTALLS = script sqlscript
+QMAKE_EXTRA_TARGETS += doc
+INSTALLS = script sqlscript doc
 
 DISTFILES +=
 
