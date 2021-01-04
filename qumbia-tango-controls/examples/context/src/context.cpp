@@ -20,19 +20,20 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <cudata.h>
+#include <quapps.h>
 #include <cutangoopt_builder.h>
 
 #include <QtDebug>
 
-Context::Context(CumbiaTango *cut, QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Options)
+Context::Context(CumbiaPool *cumbia_pool, QWidget *parent) :
+    QWidget(parent)
 {
-    cu_t = cut;
-    m_log = new CuLog(&m_log_impl);
-    cu_t->getServiceProvider()->registerService(CuServices::Log, m_log);
+    // cumbia
+    CuModuleLoader mloader(cumbia_pool, &m_ctrl_factory_pool, &m_log_impl);
+    cu_pool = cumbia_pool;
+    ui = new Ui::Options;
+    ui->setupUi(this, cu_pool, m_ctrl_factory_pool);
 
-    ui->setupUi(this, cu_t, cu_tango_r_fac, cu_tango_w_fac);
 
     qDebug() << __FUNCTION__ << qApp << qApp->arguments();
     if(qApp->arguments().count() < 2)
@@ -59,7 +60,7 @@ Context::Context(CumbiaTango *cut, QWidget *parent) :
     f.setBold(true);
     leSrc->setFont(f);
     // row 2 QuInputOutput, information Line edit and reload values button
-    QuInputOutput *qio = new QuInputOutput(this, cu_t, cu_tango_r_fac, cu_tango_w_fac);
+    QuInputOutput *qio = new QuInputOutput(this, cu_pool, m_ctrl_factory_pool);
     lo->addWidget(qio, 1, 0, 1, 5);
     connect(qio->outputWidget(), SIGNAL(newData(const CuData& )), this, SLOT(onNewData(const CuData&)));
     QLineEdit *refresh_info = new QLineEdit(this);
@@ -147,30 +148,15 @@ Context::~Context()
     delete ui;
 }
 
-void Context::setMode()
-{
-    QuInputOutput *qio = findChild<QuInputOutput *>();
-    QSpinBox *sbper = findChild<QSpinBox *>();
-    CuTangoOptBuilder tob;
-    tob.setRefreshMode(m_getRefreshMode());
-    if(tob.mode() == CuTReader::PolledRefresh)
-        tob.setPeriod(sbper->value());
-    // the following line is not strictly necessary to change the period,
-    // setOptions rather stores the options on the qio object
-    qio->getOutputContext()->setOptions(tob.options());
-    qio->getOutputContext()->sendData(tob.options());
+void Context::setMode() {
+    CuData options("refresh_mode", static_cast<int>(m_getRefreshMode()));
+    if(options["refresh_mode"].toInt() == CuTReader::PolledRefresh)
+        options["period"] = findChild<QSpinBox *>()->value();
+    findChild<QuInputOutput *>()->getOutputContext()->sendData(options);
 }
 
-void Context::setPeriod()
-{
-    QuInputOutput *qio = findChild<QuInputOutput *>();
-    QSpinBox *sbper = findChild<QSpinBox *>();
-    CuTangoOptBuilder tob(qio->getOutputContext()->options());
-    tob.setPeriod(sbper->value());
-    // the following line is not strictly necessary to change the period,
-    // setOptions rather stores the options on the qio object
-    qio->getOutputContext()->setOptions(tob.options());
-    qio->getOutputContext()->sendData(tob.options());
+void Context::setPeriod() {
+    findChild<QuInputOutput *>()->getOutputContext()->sendData(CuData("period", findChild<QSpinBox *>()->value()));
 }
 
 void Context::reloadProps()
@@ -190,7 +176,7 @@ void Context::runModified()
     QuInputOutput *qio = findChild<QuInputOutput *>();
     QPushButton *b = qobject_cast<QPushButton *>(sender());
     QSpinBox *sbper = findChild<QSpinBox *>();
-    CuTangoOptBuilder tob(qio->getOutputContext()->options());
+    CuTangoOptBuilder tob;
     tob.setPeriod(sbper->value());
     tob.setRefreshMode(m_getRefreshMode());
     qio->getOutputContext()->setOptions(tob.options());
@@ -204,8 +190,7 @@ void Context::runModified()
 void Context::onNewData(const CuData &d)
 {
     QLineEdit *le = findChild<QLineEdit *>("leRefreshInfo");
-    if(d["mode"].isValid())
-    {
+    if(d["mode"].isValid()) {
         le->setText(QString::fromStdString(d["mode"].toString()));
         findChild<QSpinBox *>()->setEnabled(le->text().compare("EVENT", Qt::CaseInsensitive) != 0);
     }

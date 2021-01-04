@@ -1,4 +1,7 @@
-include (../../qumbia-tango-controls.pri)
+isEmpty(CUMBIA_ROOT) {
+    CUMBIA_ROOT=/usr/local/cumbia-libs
+}
+include($${CUMBIA_ROOT}/include/quapps/quapps.pri)
 
 TEMPLATE = app
 

@@ -2,13 +2,11 @@
 #define Options_H
 
 #include <QWidget>
-#include <qulogimpl.h>
 #include <cutreader.h>
-#include <cutcontrolsreader.h>
-#include <cutcontrolswriter.h>
-#include <cumbiatango.h>
+#include <qulogimpl.h>
+#include <cucontrolsfactorypool.h>
 
-class CumbiaTango;
+class CumbiaPool;
 
 namespace Ui {
 class Options;
@@ -21,7 +19,7 @@ class Context : public QWidget
     Q_OBJECT
 
 public:
-    explicit Context(CumbiaTango *cut, QWidget *parent = 0);
+    explicit Context(CumbiaPool *cumbia_pool, QWidget *parent = 0);
     ~Context();
 
 public slots:
@@ -45,10 +43,8 @@ private slots:
 
 private:
     Ui::Options *ui;
-
-    CumbiaTango *cu_t;
-    CuTReaderFactory cu_tango_r_fac;
-    CuTWriterFactory cu_tango_w_fac;
+    CumbiaPool *cu_pool;
+    CuControlsFactoryPool m_ctrl_factory_pool;
     QuLogImpl m_log_impl;
     CuLog *m_log;
 

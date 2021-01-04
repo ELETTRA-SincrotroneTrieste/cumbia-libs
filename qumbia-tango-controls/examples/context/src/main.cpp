@@ -2,7 +2,7 @@
 #include <quapplication.h>
 #include <X11/Xlib.h>
 #include <QX11Info>
-#include <cumbiatango.h>
+#include <cumbiapool.h>
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
 
@@ -24,9 +24,9 @@ int main(int argc, char *argv[])
     a.setProperty("office", "giacomo");
     a.setProperty("hwReferent", "-"); /* name of the referent that provides the device server */
     
-    CumbiaTango *cu_t = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    CumbiaPool *cu_p = new CumbiaPool();
 
-    Context *w = new Context(cu_t, NULL);
+    Context *w = new Context(cu_p, NULL);
     w->show();
 
     /* register to window manager */
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 
     ret = a.exec();
     delete w;
-    delete cu_t;
+    delete cu_p;
     return ret;
 
 
