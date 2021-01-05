@@ -15,12 +15,15 @@ SQL_DB_INIT_SCRIPT=$CUMBIA_ROOT/share/cumbia-run/curun-create-db.sql
 
 UPDATE=0
 
+## variables used as "return" values from functions
+#
 declare -a args=( )
 declare -a exports=()
 declare -a tests=()
 declare -a history_paths=()
 declare -a context_from_history=()
 lastcmd=""
+appname=""
 
 
 # ------------------------------------------------------- get_args ---------------------------------------
@@ -115,112 +118,11 @@ function paths_from_history {
 
 function rem_bin_suffix {
 	suffixes=($IGNORE_BIN_SUFFIXES)
-	app_no_suffix="$1"
+	appname="$1"
 	for i in "${suffixes[@]}"
 	do
-   		app_no_suffix=${app_no_suffix%"$i"}
+	        appname=${appname%"$i"}
 	done
-}
-
-# -------------------------------------------------- get_path --------------------------------
-function get_path {
-	#  array of paths
-	options=("$@")  
-	exe_full_path=''
-
-	echo "get pet: $1 and $2"
-	for i in "${options[@]}"
-	do
-		echo "path $i"
-	done
-		
-	
-    c=0
-	d=1
-	len=${#options[@]}
-	if [ $len -gt 1 ]; then
-		for i in "${options[@]}"
-        do
-		    echo -e "$d. from \e[1;32m${options[$c]}\e[0m"
-		    c=$((c+1))
-		    d=$((d+1))
-    		done
-        echo -e -n "multiple executables found: choose one: \e[1;32m[1-$len]\e[0m "
-        read choice
-		if [[ $choice -ge 1 ]] && [[ $choice -le $len ]]; then
-			exe_full_path=${options[$choice-1]}
-		fi
-	else
-		exe_full_path=${options[0]}
-	fi
-}
-
-# ------------------------------------------------------- run ---------------------------------------
-# run the command
-# expects exports, args and tests arrays
-#
-function run {
-	lastcmd=""
-
-	for i in "${exports[@]}"
-        do
-        ${exports[*]}
-    done
-    
-    c=0
-	d=1
-    declare -a options=()
-    
-    for i in "${args[@]}"
-        do
-        options+=("$CMD ${args[$c]}")
-        echo "$d. $CMD ${args[$c]}"
-        c=$((c+1))
-        d=$((d+1))
-    done
-    
-      
-    for i in "${tests[@]}"
-        do
-        t="${tests[*]}"
-        t="${t/"[target]"/$CMD}" 
-        options+=("$t")
-        echo "$d. $t"
-        c=$((c+1))
-        d=$((d+1))
-    done
-
-	len=${#contexts_from_history[@]}
-	if [ $len -gt 0 ]; then
-		c=0
-		echo -e "\e[0;32mfrom $CMD history: \e[0m"
-		for i in "${contexts_from_history[@]}"
-		    do
-		    options+=("$CMD ${contexts_from_history[$c]}")
-		    echo "$d. $CMD ${contexts_from_history[$c]}"
-		    c=$((c+1))
-		    d=$((d+1))
-			done
-	fi
-    
-    len=${#options[@]}
-    if [ $len -gt 1 ]; then
-        echo -e -n "Which command would you like to execute [1-$len]? "
-        read choice
-    
-
-        if [[ $choice -ge 1 ]] && [[ $choice -le $len ]]; then
-            echo "will execute $choice: --> ${options[$choice-1]}"
-            lastcmd=${options[$choice-1]}
-            # launch the program
-            eval $lastcmd
-        else
-            echo -e "\e[1.31m-\e[0m invalid choice\n"
-        fi
-    elif [ $len -eq 1 ]; then
-		lastcmd=${options[0]}
-        eval $lastcmd
-    fi
 }
 
 
@@ -254,60 +156,38 @@ fi
 if [ -z "$1" ] || [[ "$1" == "-a" ]]; then
 	#
 	# executed without params: find an executable here or under 'bin'
+	# do not descend below in dir tree
 	#
     projnam=`basename $PWD`
-	argums=""
-	path=""
-    if [ ! -x bin/$projnam ] && [ ! -x bin/$projnam-gui ] && [ ! -x $projnam-gui ] && [ ! -x $projnam-gui ]; then
-        echo -e "\e[1;31m-\e[0m Could not find a binary for the project $projnam under $PWD."
-        echo -e "\e[1;31m-\e[0m Type \e[4mcumbia build $projnam\e[0m"
-        exit 1
-	else
-		if [ $1 == "-a" ]; then
-			argums="${@:2}"
-			echo "detected args $args"
-		fi
-		# execute in this dir, right here or under bin/
-		#
-		if [ -x bin/$projnam ]; then
-			exe=$PWD/bin/$projnam
-		elif [ -x $projnam ]; then
-			exe=$PWD/$projnam
-		# -gui
-		elif [ -x bin/$projnam-gui ]; then
-			exe=$PWD/bin/$projnam-gui
-		elif [ -x $projnam-gui ]; then
-			exe=$PWD/$projnam-gui
-		fi
-
-	
-		# execute p
-		if [ ! -z $args ]; then				
-			# 1. with arguments specified with "-a" :
-			line="$p $args"
-		else
-			# 2. find arguments from README or run files in this dir
-			echo "cumbia-run: getting args from $PWD"
-			get_args $PWD  # fills args, tests, exports
-			CMD=$exe
-			run
-		fi
-
-		eval $line
-	
-		res=$?
-		#
-		# successful ?
-		#
-		if [ $res -eq 0 ] && [ ! -z "$lastcmd" ]; then
-			lastcmd_array=($lastcmd)
-			app="${lastcmd_array[0]}"
-			a="${lastcmd_array[1]}"  
-			echo "success executing with exe $app amd args $a"
-			rem_bin_suffix $app
-			$CURUN_PY add -c "$app_no_suffix" -a "$a"  # $? is the return value from function
-		fi
+    # if we are inside a bin/ directory, take the project name from parent dir
+    if [[ $projnam == "bin" ]]; then
+        parentdir=`dirname $PWD`
+	projnam=`basename "$parentdir"`
     fi
+    argums=""
+    path=$PWD
+
+        if [[ "$1" == "-a" ]]; then
+	        argums="${@:2}"
+	fi
+
+        # 2. find arguments from README or run files in this dir
+	py=$CURUN_PY find $path $projnam $argums
+	echo "cumbia-run: executing from $py"
+	cmdl=`$py`
+	echo "cumbia-run: found $cmdl"
+	eval $cmdl
+
+        echo "cumbia-run: success running $cmdl? $retval"
+
+        res=$?
+
+        #
+	# successful ?
+	#
+	if [ $res -eq 0 ]; then
+	        $CURUN_PY add $cmdl
+	fi
 elif [[ $1 == *"/"* ]]; then
 	eval $@
 	if [ $? -eq 0 ]; then

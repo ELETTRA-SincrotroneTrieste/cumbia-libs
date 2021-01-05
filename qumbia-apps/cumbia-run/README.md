@@ -52,3 +52,15 @@ If
 - none of those files contains lines starting with either *args* or *[test]*
 
 the binary is run with no arguments
+
+
+
+# Notes
+
+## Application binary suffix
+
+### Note
+A prerequisite is that an application has only one binary name at a time. Application *foo* shall only have either *foo-gui* or *foo* as binary
+at the same time. If the binary name changes from *foo-gui* to *foo-bin*, *foo-bin* will take over the previous name.
+
+
