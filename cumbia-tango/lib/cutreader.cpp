@@ -261,6 +261,8 @@ void CuTReader::m_update_options(const CuData newo) {
 void CuTReader::sendData(const CuData &data) {
     m_update_options(data);
     bool do_read = data.containsKey("read");
+    bool has_payload = data.containsKey("payload");
+    bool has_args = data.containsKey("args");
     int rm = -1, period = -1;
     if(data.containsKey("manual"))
         rm = CuTReader::Manual;
@@ -294,10 +296,10 @@ void CuTReader::sendData(const CuData &data) {
         perr("CuTReader.sendData: error %s (posted to event activity %p)\n", errdat.toString().c_str(), d->event_activity);
         d->cumbia_t->postEvent(d->event_activity, new CuDataEvent(errdat));
     }
-    if(data.containsKey("args")) {
+    if(has_args || has_payload) {
         CuActivity *activity = m_find_Activity();
-        if(activity)
-            d->cumbia_t->postEvent(activity, new CuArgsChangeEvent(d->tsrc, data["args"].toStringVector()));
+        if(activity && has_payload)  d->cumbia_t->postEvent(activity, new CuDataEvent(data));
+        else d->cumbia_t->postEvent(activity, new CuArgsChangeEvent(d->tsrc, data["args"].toStringVector()));
     }
 
 }
