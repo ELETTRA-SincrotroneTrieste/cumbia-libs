@@ -6,6 +6,7 @@
 #include <list>
 #include <cutangoactioni.h>
 #include <tsource.h>
+#include <unordered_map>
 #include <map>
 
 class CuData;
@@ -117,8 +118,6 @@ public:
     void decreasePolling();
     int successfulExecCnt() const;
     int consecutiveErrCnt() const;
-
-    const std::multimap<const std::string, ActionData > actionsMap() const;
 
     // CuActivity interface
 public:
