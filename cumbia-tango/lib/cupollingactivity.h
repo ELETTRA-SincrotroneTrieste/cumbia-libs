@@ -44,6 +44,7 @@ public:
 
 
 class CuArgsChangeEvent : public CuActivityEvent {
+
 public:
     enum CuAChangeEvType { ArgsChangeEvent = CuActivityEvent::User + 14 };
 
@@ -53,15 +54,6 @@ public:
     const TSource ts;
     const std::vector<std::string> args;
     virtual Type getType() const;
-};
-
-class CuSetPayloadEvent : public CuActivityEvent {
-public:
-    enum CuSetPayloadEvType { SetPayloadEvent = CuActivityEvent::User + 16 };
-    CuSetPayloadEvent(const TSource& _ts, const CuData& _payload) :
-        ts(_ts),payload(_payload) {}
-    const TSource ts;
-    const CuData payload;
 };
 
 class ActionData {
