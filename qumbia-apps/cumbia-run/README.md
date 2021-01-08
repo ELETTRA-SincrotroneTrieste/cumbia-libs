@@ -31,16 +31,7 @@ then what follows is used to set the environment before launching the binary
 
 ### 1.3
 
-If 
 
-- one of the following files is found: *RUN RUN.txt run run.txt README README.txt README.md* and
-- one line starting with *[test]* is found alongside the *[target]* placeholder within what follows
-
-the rest of the line that follows *test* is used as a complete command line and *[target]* is replaced with the found binary.
-
-For example
-
-> [test] TANGO_HOST=tom:20000
 
 
 ### 1.4

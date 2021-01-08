@@ -9,7 +9,7 @@
 #include <tango.h>
 #include <cumacros.h>
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 class CmdData {
 public:
@@ -87,7 +87,8 @@ public:
     pthread_t my_thread_id, other_thread_id;
     CuVariant argins;
     CuData point_info;
-    std::multimap<const std::string, ActionData > actions_map;
+    std::list<std::string> ordered_srcs;
+    std::unordered_map<std::string, ActionData > actions_map;
     // cache for tango command_inout argins
     // multimap because argins may differ
     std::map<const std::string, CmdData> din_cache;
@@ -159,7 +160,7 @@ void CuPollingActivity::setArgins(const CuVariant &argins)
 size_t CuPollingActivity::actionsCount() const
 {
     size_t cnt = 0;
-    std::multimap <const std::string, ActionData>::iterator it;
+    std::unordered_map <const std::string, ActionData>::iterator it;
     for(it = d->actions_map.begin(); it != d->actions_map.end(); ++it)
         cnt += d->actions_map.count(it->first);
     return cnt;
@@ -247,10 +248,6 @@ int CuPollingActivity::successfulExecCnt() const {
  */
 int CuPollingActivity::consecutiveErrCnt() const {
     return d->consecutiveErrCnt;
-}
-
-const std::multimap<const std::string, ActionData> CuPollingActivity::actionsMap() const {
-    return d->actions_map;
 }
 
 /** \brief returns true if the passed token's *device* *activity* and *period* values matche this activity token's
@@ -355,8 +352,10 @@ void CuPollingActivity::execute()
         results->resize(d->actions_map.size());
         attdatalist.resize(d->actions_map.size());
         std::multimap<const std::string, ActionData>::iterator it;
-        for(it = d->actions_map.begin(); it != d->actions_map.end(); ++it) {
-            const ActionData &action_data = it->second;
+        for(std::list<std::string>::const_iterator it = d->ordered_srcs.begin(); it != d->ordered_srcs.end(); ++it) {
+            printf("\e[1;34mCuPollingActivity.execute: executing (in order) \"\e[1;32m%s\" thread \e[1;31m0x%lx\e[0m this poller \e[1;33m%p\e[0m\n",
+                   (*it).c_str(), pthread_self(), this);
+            const ActionData& action_data = d->actions_map[(*it)];
             const TSource &tsrc = action_data.tsrc;
             const std::string srcnam = tsrc.getName();
             std::string point = tsrc.getPoint();
@@ -476,6 +475,7 @@ void CuPollingActivity::m_registerAction(const TSource& ts, CuTangoActionI *a)
     if(d->actions_map.find(ts.getName()) != d->actions_map.end())
         perr("CuPollingActivity.m_registerAction  %p: source \"%s\" period %d already registered", this, ts.getName().c_str(), getTimeout());
     else {
+        d->ordered_srcs.push_back(ts.getName());
         d->actions_map.insert(std::pair<const std::string, const ActionData>(ts.getName(), adata)); // multimap
         pgreen(" + CuPollingActivity.m_registerAction %p: added %s to poller, period %d repeat %d\n", this, ts.toString().c_str(),
                d->repeat, d->period);
@@ -484,10 +484,11 @@ void CuPollingActivity::m_registerAction(const TSource& ts, CuTangoActionI *a)
 
 void CuPollingActivity::m_unregisterAction(const TSource &ts)
 {
-    std::multimap< const std::string, ActionData>::iterator it = d->actions_map.begin();
+    std::unordered_map< const std::string, ActionData>::iterator it = d->actions_map.begin();
     while(it != d->actions_map.end()) {
         if(it->first == ts.getName() && it->second.tsrc == ts) {
             it = d->actions_map.erase(it);
+            d->ordered_srcs.remove(ts.getName()); // remove from ordered srcs
         }
         else
             ++it;
