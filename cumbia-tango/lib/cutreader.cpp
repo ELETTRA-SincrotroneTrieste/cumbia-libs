@@ -299,6 +299,7 @@ void CuTReader::sendData(const CuData &data) {
         if(activity)
             d->cumbia_t->postEvent(activity, new CuArgsChangeEvent(d->tsrc, data["args"].toStringVector()));
     }
+
 }
 
 /*! \brief set or change the reader's refresh mode

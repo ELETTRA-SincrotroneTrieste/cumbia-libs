@@ -6,7 +6,6 @@
 #include <list>
 #include <cutangoactioni.h>
 #include <tsource.h>
-#include <unordered_map>
 #include <map>
 
 class CuData;
@@ -45,7 +44,6 @@ public:
 
 
 class CuArgsChangeEvent : public CuActivityEvent {
-
 public:
     enum CuAChangeEvType { ArgsChangeEvent = CuActivityEvent::User + 14 };
 
@@ -55,6 +53,15 @@ public:
     const TSource ts;
     const std::vector<std::string> args;
     virtual Type getType() const;
+};
+
+class CuSetPayloadEvent : public CuActivityEvent {
+public:
+    enum CuSetPayloadEvType { SetPayloadEvent = CuActivityEvent::User + 16 };
+    CuSetPayloadEvent(const TSource& _ts, const CuData& _payload) :
+        ts(_ts),payload(_payload) {}
+    const TSource ts;
+    const CuData payload;
 };
 
 class ActionData {
@@ -118,6 +125,8 @@ public:
     void decreasePolling();
     int successfulExecCnt() const;
     int consecutiveErrCnt() const;
+
+    const std::multimap<const std::string, ActionData > actionsMap() const;
 
     // CuActivity interface
 public:
