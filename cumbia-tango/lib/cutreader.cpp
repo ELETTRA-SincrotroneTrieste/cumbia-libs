@@ -299,7 +299,7 @@ void CuTReader::sendData(const CuData &data) {
     if(has_args || has_payload) {
         CuActivity *activity = m_find_Activity();
         if(activity && has_payload)  d->cumbia_t->postEvent(activity, new CuDataEvent(data));
-        else d->cumbia_t->postEvent(activity, new CuArgsChangeEvent(d->tsrc, data["args"].toStringVector()));
+        else if(activity) d->cumbia_t->postEvent(activity, new CuArgsChangeEvent(d->tsrc, data["args"].toStringVector()));
     }
 
 }
