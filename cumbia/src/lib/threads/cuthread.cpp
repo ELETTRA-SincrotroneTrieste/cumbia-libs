@@ -211,7 +211,7 @@ void CuThread::onEventPosted(CuEventI *event)
                 tl->onResult(vd_ref);
             }
             else {
-                const CuData& da = re->getData();
+//                const CuData& da = re->getData();
 //                printf("CuThread.onEventPosted: calling on result \e[0;33m%s\e[0m %s { err %s}\n", vtoc2(da, "src"), da["value"].toString().c_str(),
 //                        da["err"].toBool() ? "true" : "false");
                 tl->onResult(re->getData());
