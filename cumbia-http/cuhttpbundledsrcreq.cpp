@@ -62,10 +62,9 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
         r.setRawHeader("Cookie", d->cookie);
     if(!d->channel.isEmpty()) {
         r.setRawHeader("X-Channel", d->channel);
-        printf("\e[1;32mCuHttpBundledSrcReq::start setting X-Channel header to %s\e[0m\n", d->channel.data());
     }
 
-    printf("\e[1;34mCuHttpBundledSrcReq::start: << %s >>\e[0m\n", d->req_payload.data());
+    cuprintf("\e[1;34mCuHttpBundledSrcReq::start: << %s >>\e[0m\n", d->req_payload.data());
     QNetworkReply *reply = nam->post(r, d->req_payload);
     reply->setProperty("payload", d->req_payload);
     connect(reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
