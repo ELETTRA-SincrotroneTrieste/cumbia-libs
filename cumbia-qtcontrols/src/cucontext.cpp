@@ -76,7 +76,6 @@ bool CuContext::isAuto() const
 
 CuControlsReaderA *CuContext::m_make_reader(const std::string &s, CuDataListener *datal) const
 {
-    printf("\e[1;31mCuContext.m_make_reader IN : source %s options %s\e[0m\n", s.c_str(), datos(d->options));
     Cumbia *cumbia = NULL;
     CuControlsReaderFactoryI *r_fa;
 
@@ -98,8 +97,6 @@ CuControlsReaderA *CuContext::m_make_reader(const std::string &s, CuDataListener
     if(!d->options.isEmpty()) { // otherwise use options from r_factory
         r_fa->setOptions(d->options);
     }
-    printf("\e[1;31mCuContext.m_make_reader: before r_fa->create source %s options %s\e[0m\n", s.c_str(), datos(d->options));
-
     return r_fa->create(cumbia, datal);
 }
 
