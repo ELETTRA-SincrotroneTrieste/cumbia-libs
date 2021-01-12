@@ -253,7 +253,6 @@ void CuTControlsReader::setSource(const QString &s)
     TSource tsrc(d->source.toStdString());
     d->is_db_op = tsrc.isDbOp();
     if(d->is_db_op) {
-        printf("CuTControlsReader.setSource s: \"%s\" is db \n", qstoc(s));
         CuTaDbFactory dbf;
         dbf.setOptions(d->ta_options);
         d->cumbia_tango->addAction(tsrc.getName(), d->tlistener, dbf);
