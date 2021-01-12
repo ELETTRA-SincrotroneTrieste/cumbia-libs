@@ -62,7 +62,11 @@ doc.commands = doxygen Doxyfile;
 
 
 QMAKE_EXTRA_TARGETS += doc
-INSTALLS = script sqlscript doc
+
+message("")
+message("cumbia-run: not installing cumbia-run files")
+message("")
+# INSTALLS = script sqlscript doc
 
 DISTFILES +=
 
