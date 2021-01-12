@@ -107,7 +107,7 @@ int CuContinuousActivity::getType() const
  */
 void CuContinuousActivity::event(CuActivityEvent *e)
 {
-    printf("CuContinuousActivity.event type %d (pause %d resume %d exec %d timeout change %d)\n",
+    cuprintf("CuContinuousActivity.event type %d (pause %d resume %d exec %d timeout change %d)\n",
            e->getType(), CuActivityEvent::Pause, CuActivityEvent::Resume, CuActivityEvent::Execute,
            CuActivityEvent::TimeoutChange);
     if(e->getType() == CuActivityEvent::TimeoutChange)
@@ -118,4 +118,8 @@ void CuContinuousActivity::event(CuActivityEvent *e)
         d->pause = false;
     else if(e->getType() == CuActivityEvent::Execute)
         execute();
+    else if(e->getType() == CuActivityEvent::Cu_Data) {
+        CuDataEvent *de = static_cast<CuDataEvent *>(e);
+        publishResult(de->getData());
+    }
 }
