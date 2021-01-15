@@ -14,67 +14,24 @@
    <string>Editargs</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="3">
-    <widget class="QDoubleSpinBox" name="dsb3">
-     <property name="minimum">
-      <double>-1000.000000000000000</double>
+   <item row="0" column="2" colspan="2">
+    <widget class="QPushButton" name="pbRead">
+     <property name="toolTip">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Request a read immediately&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
-     <property name="maximum">
-      <double>1000.000000000000000</double>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QDoubleSpinBox" name="dsb0">
-     <property name="minimum">
-      <double>-1000.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>1000.000000000000000</double>
+     <property name="text">
+      <string>UPDATE PLOT</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="4">
-    <widget class="QDoubleSpinBox" name="dsb4">
-     <property name="minimum">
-      <double>-1000.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>1000.000000000000000</double>
+   <item row="2" column="0" colspan="5">
+    <widget class="QGroupBox" name="gbEditA">
+     <property name="title">
+      <string>Edit args</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QDoubleSpinBox" name="dsb2">
-     <property name="minimum">
-      <double>-1000.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>1000.000000000000000</double>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="6">
-    <widget class="QDoubleSpinBox" name="dsb6">
-     <property name="minimum">
-      <double>-1000.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>1000.000000000000000</double>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="5">
-    <widget class="QDoubleSpinBox" name="dsb5">
-     <property name="minimum">
-      <double>-1000.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>1000.000000000000000</double>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="6">
+   <item row="0" column="0" colspan="2">
     <widget class="QLabel" name="label">
      <property name="text">
       <string>Tango Test DevVarDoubleArray command</string>
@@ -84,17 +41,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QDoubleSpinBox" name="dsb1">
-     <property name="minimum">
-      <double>-1000.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>1000.000000000000000</double>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="7">
+   <item row="0" column="4">
     <widget class="QCheckBox" name="cbRefreshOnChange">
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Send an update request as soon as the value is changed in one of the spin boxes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -104,25 +51,13 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="8">
+   <item row="1" column="0" colspan="5">
     <widget class="QuSpectrumPlot" name="plot">
      <property name="yAxisAutoscale" stdset="0">
       <bool>true</bool>
      </property>
      <property name="sources">
-      <stringlist>
-       <string>$1-&gt;DevVarDoubleArray(0,0,0,0,0,0)</string>
-      </stringlist>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="6" colspan="2">
-    <widget class="QPushButton" name="pbRead">
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Request a read immediately&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string>UPDATE PLOT</string>
+      <stringlist/>
      </property>
     </widget>
    </item>

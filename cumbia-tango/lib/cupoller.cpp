@@ -11,13 +11,14 @@
 #include <cuserviceprovider.h>
 #include <cudevicefactoryservice.h>
 #include <cuthreadevents.h>
+#include <cutreader.h>
 
 class CuPollerPrivate
 {
 public:
     CumbiaTango *cumbia_t;
-    // maps point to action
-    std::map<const CuTangoActionI*, const TSource > actions_map;
+    // maps period to actions
+    std::map<const std::string, CuTangoActionI*> actions_map;
     // maps device name -> activity
     std::map<std::string, CuPollingActivity *> activity_map;
     int period;
@@ -51,7 +52,7 @@ int CuPoller::period() const
 void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a, const CuData& options)
 {
     // insert in this thread
-    d->actions_map.insert(std::pair<const CuTangoActionI*, const TSource>(a, tsrc));
+    d->actions_map[tsrc.getName()] = a;
     pgreen(" + CuPoller.registerAction: added %s - %p to poller - period %d\n", tsrc.getName().c_str(), a, d->period);
 
     CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
@@ -101,8 +102,8 @@ void CuPoller::unregisterAction(CuTangoActionI *a) {
     else d->to_remove_actionlist.push_back(a);
 }
 
-bool CuPoller::actionRegistered(const CuTangoActionI *a) const {
-    return d->actions_map.find(a) != d->actions_map.end();
+bool CuPoller::actionRegistered(const std::string& src) const {
+    return d->actions_map.find(src) != d->actions_map.end();
 }
 
 /*!
@@ -123,11 +124,9 @@ void CuPoller::onResult(const std::vector<CuData> &datalist)
     // for each CuData, get the point and find the associated CuTangoActionI's, if still there's one or more
     //
     for(size_t i = 0; i < datalist.size(); i++) {
-        CuTangoActionI *receiver = static_cast<CuTangoActionI *>(datalist[i]["action_ptr"].toVoidP());
-        // receiver information arrives from another thread. receiver may have been destroyed meanwhile
-        if(d->actions_map.find(receiver) != d->actions_map.end()) {
-            receiver->onResult(datalist[i]);
-        }
+        const std::string& src = datalist[i]["src"].toString();
+        CuTangoActionI *a = m_find_a(src);
+        if(a) a->onResult(datalist[i]);
     }
     d->deliveringResults = false;
     for(std::list<CuTangoActionI*>::iterator it = d->to_remove_actionlist.begin(); it != d->to_remove_actionlist.end(); ++it) {
@@ -157,8 +156,9 @@ CuData CuPoller::getToken() const
 void CuPoller::m_do_unregisterAction(CuTangoActionI *a)
 {
     // remove in this thread
-    if(d->actions_map.find(a) != d->actions_map.end()) {
-        d->actions_map.erase(a);
+    const std::string& s = a->getSource().getName();
+    if(d->actions_map.find(s) != d->actions_map.end()) {
+        d->actions_map.erase(s);
         TSource tsrc = a->getSource();
         CuData at("device", tsrc.getDeviceName()); /* activity token */
         at["activity"] = "poller";
@@ -174,5 +174,10 @@ void CuPoller::m_do_unregisterAction(CuTangoActionI *a)
             d->cumbia_t->postEvent(activity, new CuRemovePollActionEvent(a->getSource()));
         }
     }
+}
+
+CuTangoActionI *CuPoller::m_find_a(const string &src) const {
+    std::map<const std::string, CuTangoActionI *>::const_iterator it = d->actions_map.find(src);
+    return it != d->actions_map.end() ? it->second : nullptr;
 }
 

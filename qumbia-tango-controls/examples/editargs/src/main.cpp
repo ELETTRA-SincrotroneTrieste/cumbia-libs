@@ -11,6 +11,12 @@
 
 int main(int argc, char *argv[])
 {
+    if(argc < 2) {
+        printf("Usage: %s src1 src2, ... srcN\n", argv[0]);
+        printf(" e.g.: %s test/device/1->DevVarDoubleArray(0,0,0,1) test/device/2->DevVarDoubleArray(0,1,0,0,0,0)\n\n", argv[1]);
+        return 0;
+    }
+
     QuApplication qu_app( argc, argv );
     qu_app.setOrganizationName("Elettra");
     qu_app.setApplicationName("Editargs");
@@ -21,7 +27,6 @@ int main(int argc, char *argv[])
     qu_app.setProperty("phone", "0403758073");
     qu_app.setProperty("office", "T2PT025");
     qu_app.setProperty("hwReferent", "$HW_REFERENT$"); /* name of the referent that provides the device server */
-    
 
     CumbiaPool *cu_p = new CumbiaPool();
     Editargs *w = new Editargs(cu_p, NULL);

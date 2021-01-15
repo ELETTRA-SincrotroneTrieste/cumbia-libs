@@ -23,9 +23,10 @@ public:
 
     void unregisterAction(CuTangoActionI *a);
 
-    bool actionRegistered(const CuTangoActionI *a) const;
+    bool actionRegistered(const std::string &src) const;
 
     size_t count() const;
+
 
     // CuThreadListener interface
 public:
@@ -38,6 +39,7 @@ private:
     CuPollerPrivate *d;
 
     void m_do_unregisterAction(CuTangoActionI *a);
+    CuTangoActionI *m_find_a(const std::string& src) const;
 };
 
 #endif // CUPOLLER_H

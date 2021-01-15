@@ -7,7 +7,11 @@
 #include <cumacros.h>
 #include <quapps.h>
 #include <cucontext.h>
+#include <cucontrolsreader_abs.h>
 // cumbia
+
+#include <QDoubleSpinBox>
+#include <QLabel>
 
 Editargs::Editargs(CumbiaPool *cumbia_pool, QWidget *parent) :
     QWidget(parent)
@@ -18,6 +22,26 @@ Editargs::Editargs(CumbiaPool *cumbia_pool, QWidget *parent) :
     ui = new Ui::Editargs;
     ui->setupUi(this, cu_pool, m_ctrl_factory_pool);
 
+    QStringList srcs;
+    QGridLayout * lo = new QGridLayout(ui->gbEditA);
+    int r = lo->rowCount();
+    for(int i = 1; i < qApp->arguments().size(); i++) {
+        const QString a = qApp->arguments().at(i);
+        if(a.count("/") < 2)
+            continue;
+        QLabel *l = new QLabel(a, this);
+        lo->addWidget(l, r, 0, 1, 1);
+        for(int j = 0; j < 10; j++) {
+            QDoubleSpinBox *sb = new QDoubleSpinBox(this);
+            sb->setObjectName(QString("sb_%1_%2").arg(i).arg(j));
+            lo->addWidget(sb, r, j + 1, 1 ,1 );
+            sb->setMinimum(-1e12);
+            sb->setMaximum(1e12);
+        }
+        srcs << a;
+        r++;
+    }
+    ui->plot->setSources(srcs);
     // mloader.modules() to get the list of loaded modules
     // cumbia
     foreach(QDoubleSpinBox *sb, findChildren<QDoubleSpinBox*>()) {
@@ -34,15 +58,27 @@ Editargs::~Editargs()
 
 void Editargs::onSbValueChanged(double v) {
     std::vector<std::string> args;
-    QStringList sbs = QStringList() << "dsb0" << "dsb1" << "dsb2" << "dsb3" <<"dsb4" << "dsb5" << "dsb6";
-    foreach(const QString& sb, sbs)
-        args.push_back(QString::number(findChild<QDoubleSpinBox *>(sb)->value()).toStdString());
+    const QString& n = sender()->objectName();
+    QString idx = n.split('_').at(1); // find spinboxes in row idx
+    QList<QDoubleSpinBox *> sbs;
+    for(int j = 0; j < 10; j++)
+        sbs << findChild<QDoubleSpinBox *>(QString("sb_%1_%2").arg(idx).arg(j));
+    foreach(const QDoubleSpinBox* sb, sbs)
+        args.push_back(QString::number(sb->value()).toStdString());
     CuData a("args", args);
     printf("Editargs.onSbValueChanged: sending data %s on context %p\n", datos(a), ui->plot->getContext());
-    ui->plot->getContext()->sendData(CuData("args", args));
-    if(ui->cbRefreshOnChange->isChecked()) ui->plot->getContext()->sendData(CuData("read", ""));
+
+    QList<CuControlsReaderA *> readers = ui->plot->getContext()->readers();
+    foreach(CuControlsReaderA *r, readers) {
+        if(r->source() == qApp->arguments().at(idx.toInt())) {
+            r->sendData(CuData("args", args));
+            if(ui->cbRefreshOnChange->isChecked()) r->sendData(CuData("read", ""));
+        }
+    }
 }
 
 void Editargs::onReadClicked() {
-    ui->plot->getContext()->sendData(CuData("read", ""));
+    QList<CuControlsReaderA *> readers = ui->plot->getContext()->readers();
+    foreach(CuControlsReaderA *r, readers)
+        r->sendData(CuData("read", ""));
 }
