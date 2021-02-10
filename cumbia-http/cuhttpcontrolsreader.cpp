@@ -127,6 +127,11 @@ void CuHttpControlsReader::setSource(const QString &s) {
         d->o.value("single-shot").toBool() || d->o.value("manual").toBool() ? d->method = "read" : d->method = "s";
         CuHTTPActionReaderFactory httprf(d->method == "read");
         httprf.mergeOptions(d->o);
+        // tell the service CuTReaderConfFactory can be safely used to get configuration *and* impart command_inout
+        // if we are a reader. By default, to avoid unwanted command_inouts upon target (writer) configuration,
+        // the service uses CuTWriterConfFactory if *read-value* is not in the options
+        // NOTE: this safety measure is needed only with commands.
+        httprf.mergeOptions(CuData("read-value", true));
         d->cu_http->readEnqueue(hs, d->dlis, httprf);
     }
 }

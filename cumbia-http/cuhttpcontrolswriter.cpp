@@ -5,6 +5,7 @@
 
 #include <cumbiahttp.h>
 #include <cudatalistener.h>
+#include <cuhttptangosrc.h>
 #include <QCoreApplication>
 #include <cumacros.h>
 #include <assert.h>
@@ -190,7 +191,6 @@ void CuHttpControlsWriter::setTarget(const QString &s) {
     // The service will use a CuTWriterConfFactory if "writer" option is set to true
     CuHTTPActionConfFactory cf;
     cf.setOptions(d->w_options);
-    cf.mergeOptions(CuData("writer", true));
     std::string t = d->target.toStdString(), a;
     t.find("(") != std::string::npos ? a =t.substr(t.find("("))  : a = ""; // save args (*)
     // remove placeholders from the target, f.e. a/b/c/d(&objectref) -> a/b/c/d
@@ -198,5 +198,8 @@ void CuHttpControlsWriter::setTarget(const QString &s) {
     CuHTTPSrc ht(t, d->cu_http->getSrcHelpers());
     d->target = QString::fromStdString(ht.prepare() + a); // (*) restore args in d->target
     cuprintf("\e[1;35mCuHttpControlsWriter::setTarget %s options %s\e[0m\n", qstoc(d->target), datos(cf.options()));
+    CuHttpTangoSrc ts(d->target.toStdString());
+    if(ts.getType() == CuHttpTangoSrc::SrcAttr)
+        cf.mergeOptions(CuData("read-value", true));
     d->cu_http->readEnqueue(ht, d->tlistener, cf);
 }
