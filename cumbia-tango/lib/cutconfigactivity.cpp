@@ -82,8 +82,9 @@ void CuTConfigActivity::execute()
     bool cmd = at["is_command"].toBool();
     at["properties"] = std::vector<std::string>();
     at["type"] = "property";
-    bool value_only;
+    bool value_only, skip_read;
     d->options["value-only"].to<bool>(value_only);
+    d->options["no-value"].to<bool>(skip_read);
     d->try_cnt++;
     bool success = false;
 
@@ -93,14 +94,15 @@ void CuTConfigActivity::execute()
         if(dev && cmd)
         {
             success = utils.get_command_info(dev, point, at);
-            if(success && d->type == CuReaderConfigActivityType) {
+            printf("type is CuReaderConfigActivity? %d skip read ? %d\n", d->type == CuReaderConfigActivityType, skip_read);
+            if(success && d->type == CuReaderConfigActivityType && !skip_read) {
                 success = utils.cmd_inout(dev, point, at);
             } else if(success) { // successful get_command_info but no cmd_inout
                 at.putTimestamp();
             }
         }
         else if(dev)  {
-            value_only ? success = utils.read_att(dev, point, at)  : success = utils.get_att_config(dev, point, at);
+            value_only ? success = utils.read_att(dev, point, at)  : success = utils.get_att_config(dev, point, at, skip_read);
         }
         else
             d->msg = d->tdev->getMessage();
