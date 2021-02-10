@@ -187,15 +187,16 @@ void CuHttpControlsWriter::setTarget(const QString &s) {
     for(int i = 0; i < rwis.size() && d->target == s; i++) // leave loop if s != d->source (=replacement made)
         d->target = rwis[i]->replaceWildcards(s, qApp->arguments());
     // same CuHTTPActionConfFactory for readers and writers: same "conf" method
-    // The service will safely avoid "reading" a command
+    // The service will use a CuTWriterConfFactory if "writer" option is set to true
     CuHTTPActionConfFactory cf;
     cf.setOptions(d->w_options);
+    cf.mergeOptions(CuData("writer", true));
     std::string t = d->target.toStdString(), a;
     t.find("(") != std::string::npos ? a =t.substr(t.find("("))  : a = ""; // save args (*)
     // remove placeholders from the target, f.e. a/b/c/d(&objectref) -> a/b/c/d
     t = t.substr(0, t.find("("));
     CuHTTPSrc ht(t, d->cu_http->getSrcHelpers());
     d->target = QString::fromStdString(ht.prepare() + a); // (*) restore args in d->target
-    cuprintf("\e[1;35mCuHttpControlsWriter::setTarget %s\e[0m\n", qstoc(d->target));
+    cuprintf("\e[1;35mCuHttpControlsWriter::setTarget %s options %s\e[0m\n", qstoc(d->target), datos(cf.options()));
     d->cu_http->readEnqueue(ht, d->tlistener, cf);
 }
