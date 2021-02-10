@@ -280,10 +280,6 @@ void QuWriter::execute(const QVector<int>& iv)
 
 void QuWriter::execute(const QVector<double>& dv)
 {
-    printf("QuWriter.execute <vector<bool>> : would exec write :");
-    foreach(double d, dv)
-        printf("%.4f, ", d);
-    printf("\n");
     std::vector <double> v = dv.toStdVector();
     CuControlsWriterA *w = d->context->getWriter();
     CuVariant vv(v);
