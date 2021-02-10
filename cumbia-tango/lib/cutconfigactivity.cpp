@@ -94,7 +94,6 @@ void CuTConfigActivity::execute()
         if(dev && cmd)
         {
             success = utils.get_command_info(dev, point, at);
-            printf("type is CuReaderConfigActivity? %d skip read ? %d\n", d->type == CuReaderConfigActivityType, skip_read);
             if(success && d->type == CuReaderConfigActivityType && !skip_read) {
                 success = utils.cmd_inout(dev, point, at);
             } else if(success) { // successful get_command_info but no cmd_inout
