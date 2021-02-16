@@ -226,6 +226,13 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
             ret = true;
             std::string vs;
             const QMetaObject *mo = o->metaObject();
+
+            // min, max, before value
+            if( (min != max) &&  (idx = mo->indexOfProperty("minimum")) > -1 && mo->property(idx).isWritable() &&
+                    (idx = mo->indexOfProperty("maximum")) > -1 && mo->property(idx).isWritable()) {
+                ret = o->setProperty("minimum", min) && o->setProperty("maximum", max);
+            }
+
             if(i < data_siz) {
                 fmt == CuVariant::Scalar ? vs = value_as_str : vs = values_str[i];
                 if((idx = mo->indexOfProperty("text") ) > -1 && mo->property(idx).isWritable()) {
@@ -255,12 +262,6 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
                 else if(( idx = mo->indexOfProperty("checked")) > -1 && mo->property(idx).isWritable())
                     ret = o->setProperty("value", vs != "0" && strcasecmp(vs.c_str(), "false") != 0);
             } // i < data_siz
-
-            // min, max
-            if( (min != max) &&  (idx = mo->indexOfProperty("minimum")) > -1 && mo->property(idx).isWritable() &&
-                    (idx = mo->indexOfProperty("maximum")) > -1 && mo->property(idx).isWritable()) {
-                ret = o->setProperty("minimum", min) && o->setProperty("maximum", max);
-            }
 
             if(!ret)
                 perr("CuControlsUtils.initObjects: failed to set value \"%s\" on object \"%s\"", vs.c_str(), qstoc(o->objectName()));
