@@ -158,19 +158,25 @@ void QuApplyNumeric::onUpdate(const CuData &da)
             ok = m.to<double>(min);
             if(ok)
                 ok = M.to<double>(max);
-            if(ok)
-            {
-                configureNumber(min, max, QString::fromStdString(print_format));
-                /* integerDigits() and decimalDigits() from NumberDelegate */
-                setIntDigits(integerDigits());
-                setDecDigits(decimalDigits());
+
+            if(!ok)
+                min = max = 0.0f; // configureNumber will use format only
+            configureNumber(min, max, QString::fromStdString(print_format));
+            /* integerDigits() and decimalDigits() from NumberDelegate */
+            setIntDigits(integerDigits());
+            setDecDigits(decimalDigits());
+            if(ok) {
                 setMaximum(max);
                 setMinimum(min);
-                desc = "\n(min: "+ QString("%1").arg(min) + " max: "+ QString("%1").arg(max) + ")";
             }
             else
-                pinfo("QuApplyNumeric: maximum and minimum values not set on the tango attribute \"%s\", object \"%s\": "
-                      "not setting format nor maximum/minimum", qstoc(target()), qstoc(objectName()));
+                updateMaxMinAuto();
+
+            desc = "\n(min: "+ QString("%1").arg(min) + " max: "+ QString("%1").arg(max) + ")";
+
+            if(!ok)
+                pinfo("QuApplyNumeric: maximum and minimum values not available for \"%s\", object \"%s\": "
+                      "setting number of int and dec digits from format \"%s\"", qstoc(target()), qstoc(objectName()), print_format.c_str());
 
             /* can set current values instead */
             double val;

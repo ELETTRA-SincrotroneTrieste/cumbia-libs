@@ -123,6 +123,7 @@ public:
 
     int neededHeight() const;
 
+    void updateMaxMinAuto();
 public slots:
     virtual void setEnabled(bool);
     virtual void setDisabled(bool);

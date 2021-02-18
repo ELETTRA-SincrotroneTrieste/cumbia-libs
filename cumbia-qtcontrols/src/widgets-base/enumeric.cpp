@@ -403,3 +403,10 @@ void ENumeric::showEvent(QShowEvent *e)
 {
     QTimer::singleShot(200, this, SLOT(valueUpdated()));
 }
+
+void ENumeric::updateMaxMinAuto() {
+    minVal = (long long int) -pow(10.0, digits) + 1;
+    maxVal = (long long int) pow(10.0, digits) - 1;
+    d_minAsDouble = (double) roundl(minVal);
+    d_maxAsDouble = (double) roundl(maxVal);
+}

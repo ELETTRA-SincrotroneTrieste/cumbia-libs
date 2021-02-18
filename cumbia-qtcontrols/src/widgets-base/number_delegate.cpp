@@ -41,7 +41,7 @@ void NumberDelegate::configureNumber(const double min, const double max, const Q
 
     /* integer digits is overwritten if there is a maximum and minimum */
     maxFromId = 1 + (int) log10(qMax(max, -min));
-    if(maxFromId != d_intDigits)
+    if(max != min && maxFromId != d_intDigits)
     {
         pinfo("maximum value %f has changed integer digits from %d (format) to %d",
               max, d_intDigits, maxFromId);

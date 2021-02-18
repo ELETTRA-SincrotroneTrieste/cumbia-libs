@@ -75,6 +75,10 @@ QSize EApplyNumeric::minimumSizeHint() const
     return QSize(w, h);
 }
 
+void EApplyNumeric::updateMaxMinAuto() {
+    data->updateMaxMinAuto();
+}
+
 void EApplyNumeric::numericValueChanged(double val)
 {
   if(d_applyButtonActive && button)

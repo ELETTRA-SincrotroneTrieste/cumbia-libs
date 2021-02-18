@@ -282,15 +282,22 @@ void QuInputOutput::m_configure(const CuData &da)
             if(ok)
                 ok = M.to<double>(max);
             QWidget *in = inputWidget();
-            if(in && ok && d->w_type == Numeric)
+            if(in && d->w_type == Numeric)
             {
                 ENumeric * en = qobject_cast<ENumeric *>(in);
+                if(!ok)
+                    min = max = 0.0f;
                 en->configureNumber(min, max, QString::fromStdString(print_format));
                 /* integerDigits() and decimalDigits() from NumberDelegate */
                 en->setIntDigits(en->integerDigits());
                 en->setDecDigits(en->decimalDigits());
-                en->setMinimum(min);
-                en->setMaximum(max);
+                if(ok) {
+                    en->setMinimum(min);
+                    en->setMaximum(max);
+                }
+                else {
+                    en->updateMaxMinAuto();
+                }
             }
             // the following applies to ENumeric or spin boxes
             else if(in && ok)
@@ -300,8 +307,8 @@ void QuInputOutput::m_configure(const CuData &da)
                 desc = "\n(min: "+ QString("%1").arg(min) + " max: "+ QString("%1").arg(max) + ")";
             }
             else
-                pinfo("QuInputOutput: maximum and minimum values not set on the target \"%s\", object \"%s\": "
-                      "not setting format nor maximum/minimum", target.c_str(), qstoc(objectName()));
+                printf("QuInputOutput: maximum and minimum values not available for target \"%s\", object \"%s\": "
+                      "using format %s to configure integer and decimal digits", target.c_str(), qstoc(objectName()), print_format.c_str());
             /* can set current values instead */
             double val;
             bool can_be_double = da["w_value"].to<double>(val);

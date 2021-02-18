@@ -167,6 +167,8 @@ public:
     QSize minimumSizeHint() const;
 
     QWidget *getButton() const { return button; }
+
+    void updateMaxMinAuto();
 	
 protected:
 
