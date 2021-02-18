@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Format_test</class>
+ <widget class="QWidget" name="Format_test">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>333</width>
+    <height>159</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Format_test</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>double</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QuLabel" name="quLabel">
+     <property name="source">
+      <string>$1/double_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QuApplyNumeric" name="quApplyNum">
+     <property name="target">
+      <string>$1/double_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>float</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QuLabel" name="quLabel_2">
+     <property name="source">
+      <string>$1/float_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QuApplyNumeric" name="quApplyNum_2">
+     <property name="target">
+      <string>$1/float_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>long</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QuLabel" name="quLabel_3">
+     <property name="source">
+      <string>$1/long_scalar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QuApplyNumeric" name="quApplyNum_3">
+     <property name="target">
+      <string>$1/long_scalar</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QuLabel</class>
+   <extends>QLabel</extends>
+   <header>qulabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QuApplyNumeric</class>
+   <extends>EApplyNumeric</extends>
+   <header>quapplynumeric.h</header>
+  </customwidget>
+  <customwidget>
+   <class>EApplyNumeric</class>
+   <extends>QWidget</extends>
+   <header>eapplynumeric.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

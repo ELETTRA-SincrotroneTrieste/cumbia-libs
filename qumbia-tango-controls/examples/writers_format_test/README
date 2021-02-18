@@ -1,0 +1,37 @@
+This is format_test README file.
+
+DEPENDENCIES:
+
+Tango devices used
+------------------
+TANGO HOST:
+
+export TANGO_HOST=ken:20000
+
+DEVICES:
+test/device/1
+
+
+
+Building
+--------
+
+qmake 
+cuuimake
+make
+                                                                                                                                
+                                                                                                                                
+Main customer                                                                                                                   
+-------------
+
+
+Errors & Troubleshooting
+------------------------
+If you experience problems, please contact:
+
+Giacomo  <giacomo.strangolino@elettra.eu>
+
+Thank you.
+
+Sincrotrone Trieste s.c.p.a - ELETTRA Laboratory - Controls Group
+
