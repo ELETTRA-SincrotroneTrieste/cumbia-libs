@@ -80,8 +80,10 @@ void QuLabel::m_initCtx()
 
 void QuLabel::m_configure(const CuData &da)
 {
+    printf("\033[1;33mQuLabel.m_configure: da %s\e[0m\n", datos(da));
     d->display_u = QString::fromStdString(da["display_unit"].toString());
     QString fmt = QString::fromStdString(da["format"].toString());
+    printf("\033[1;33mQuLabel.m_configure: fmt %s da[\"format\"] %s\e[0m\n", qstoc(fmt), vtoc2(da, "format"));
     if(format().isEmpty() && !fmt.isEmpty())
         setFormat(fmt);
     // get colors and strings, if available
