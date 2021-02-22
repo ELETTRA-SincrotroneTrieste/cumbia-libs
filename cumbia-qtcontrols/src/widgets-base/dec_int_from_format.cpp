@@ -18,38 +18,17 @@ bool DecIntFromFormat::decode()
 {
     int pos = - 1;
     printf("\e[1;36mDecIntFromFormat::decode() format %s\e[0m\n", qstoc(d_format));
-    if(d_format == "%d")
-    {
-        d_decDefaults = false;
-        d_decDigits = 0;
-        return true;
-    }
     /* add ' in [0-9] to recognize "%'d" */
-    QRegExp intRe("%[0-9]*\\.*[0-9']*d\\b");
+    QRegExp intRe("%([0-9]*d)\\b");
     pos = intRe.indexIn(d_format);
     if(pos >= 0) /* integer */
     {
         d_decDefaults = false;
         d_decDigits = 0;
-        QRegExp capRe("%\\.[']?([0-9]*)d\\b");
-        QRegExp capReV2("%[']?([0-9]*)d\\b");
-        pos = capRe.indexIn(d_format);
-        if(pos >= 0 && capRe.capturedTexts().size() > 1)
-        {
-            d_intDigits = capRe.capturedTexts().at(1).toInt();
+        d_intDefaults = intRe.capturedTexts().size() > 0;
+        if(!d_intDefaults) {
+            d_intDigits = intRe.capturedTexts().at(0).toInt();
             d_intDefaults = false;
-        }
-        else
-        {
-            pos = capReV2.indexIn(d_format);
-            if(pos >= 0  && capReV2.capturedTexts().size() > 1)
-            {
-                d_intDigits = capReV2.capturedTexts().at(1).toInt();
-                d_intDefaults = false;
-                printf("\e[1;36mDecIntFromFormat::decode()\e[1;33m* \e[0mwarning: format \"%s\" is not correct, anyway accepting it and setting %d decimals\n",
-                       qstoc(d_format),  d_intDigits);
-                printf("\e[1;36mDecIntFromFormat::decode()\e[1;33m* \e[0m\e[4mnote\e[0m the correct format is \"%%.%d\"\n", d_intDigits);
-            }
         }
     }
     else
