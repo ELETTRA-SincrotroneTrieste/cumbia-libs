@@ -22,15 +22,12 @@ bool NumberDelegate::configureNumber(const QString& fmt)
     /* first apply format, if - correctly - specified */
     DecIntFromFormat diff(format);
     decodeOk = diff.decode();
-    if(decodeOk)
-    {
+    if(decodeOk) {
         if(!diff.integerDefaults()) /* found a configuration format, not the default coming from DecIntFromFormat */
             d_intDigits = diff.numIntDigits();
         if(!diff.decimalDefaults())
             d_decDigits = diff.numDecDigits();
     }
-    else
-        perr("NumberDelegate: error decoding format \"%s\"", qstoc(format));
     return decodeOk;
 }
 
