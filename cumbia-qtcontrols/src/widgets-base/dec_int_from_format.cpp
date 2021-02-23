@@ -14,8 +14,7 @@ DecIntFromFormat::DecIntFromFormat(QString f)
     d_format = f;
 }
 
-bool DecIntFromFormat::decode()
-{
+bool DecIntFromFormat::decode() {
     int pos = - 1;
 //    printf("\e[1;36mDecIntFromFormat::decode() format %s\e[0m\n", qstoc(d_format));
     /* add ' in [0-9] to recognize "%'d" */
@@ -58,11 +57,9 @@ bool DecIntFromFormat::decode()
             }
         }
     }
-    if(pos < 0) {
+    if(pos < 0)
         perr("DecIntFromFormat::decode(): error or unsupported format \"%s\"", qstoc(d_format));
-        return false;
-    }
-    return true;
+    return pos >= 0;
 }
 
 
