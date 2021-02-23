@@ -38,7 +38,7 @@ CuWriteActivity::~CuWriteActivity()
     delete d;
 }
 
-void CuWriteActivity::event(CuActivityEvent *e)
+void CuWriteActivity::event(CuActivityEvent *)
 {
 
 }
