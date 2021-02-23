@@ -82,7 +82,7 @@ void CuTConfigActivity::execute()
     bool cmd = at["is_command"].toBool();
     at["properties"] = std::vector<std::string>();
     at["type"] = "property";
-    bool value_only, skip_read;
+    bool value_only = false, skip_read = false;
     d->options["value-only"].to<bool>(value_only);
     d->options["no-value"].to<bool>(skip_read);
     d->try_cnt++;
@@ -101,6 +101,7 @@ void CuTConfigActivity::execute()
             }
         }
         else if(dev)  {
+            printf("\e[1;32mCuTConfigActivity::execute value_only? %d\n", value_only);
             value_only ? success = utils.read_att(dev, point, at)  : success = utils.get_att_config(dev, point, at, skip_read);
         }
         else
