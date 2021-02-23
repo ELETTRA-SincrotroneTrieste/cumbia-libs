@@ -209,7 +209,6 @@ void QuLabelBase::setValue(const CuVariant& v, bool *background_modified)
         }
     }
     else {
-        printf("\e[1;33mQuLabelBase.setValue: %s format %s\n", v.toString(NULL, d_ptr->format.toStdString().c_str()).c_str(), d_ptr->format.toStdString().c_str());
         txt = QString::fromStdString(v.toString(NULL, d_ptr->format.toStdString().c_str()));
     }
     if(!txt.isEmpty()) {
