@@ -19,7 +19,7 @@ bool DecIntFromFormat::decode()
     int pos = - 1;
     printf("\e[1;36mDecIntFromFormat::decode() format %s\e[0m\n", qstoc(d_format));
     /* add ' in [0-9] to recognize "%'d" */
-    QRegExp intRe("%([0-9]*d)\\b");
+    QRegExp intRe("%(\\d+)d\\b");
     pos = intRe.indexIn(d_format);
     if(pos >= 0) /* integer */
     {
