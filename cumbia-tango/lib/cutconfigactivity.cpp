@@ -85,6 +85,12 @@ void CuTConfigActivity::execute()
     bool value_only, skip_read; //
     d->options["value-only"].to<bool>(value_only);
     d->options["no-value"].to<bool>(skip_read);
+
+    const CuVariant &vo = d->options["value-only"];
+
+    printf("CuTConfigActivity: options value-only: type %s format %s\n", vo.dataTypeStr(vo.getType()).c_str(),
+           vo.dataFormatStr(vo.getFormat()).c_str());
+
     d->try_cnt++;
     bool success = false;
 
