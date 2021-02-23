@@ -360,7 +360,6 @@ void CuPollingActivity::execute()
             const TSource &tsrc = action_data.tsrc;
             const std::string srcnam = tsrc.getName();
             std::string point = tsrc.getPoint();
-            void *action_ptr = action_data.action;
             bool is_command = tsrc.getType() == TSource::SrcCmd;
             if(is_command) { // write into results[i]
                 (*results)[i] = getToken();
@@ -369,9 +368,6 @@ void CuPollingActivity::execute()
                 (*results)[i]["src"] = tsrc.getName();
                 (*results)[i]["point"] = point;
                 (*results)[i]["device"] = tsrc.getDeviceName();
-                (*results)[i]["action_ptr"] = CuVariant(action_ptr);
-                //        pgreen2tmp("CuPollingActivity.execute: executing for \"%s\" period %d recipient %p source get name %s\n",
-                //                   res["device"].toString().c_str(), getTimeout(), action_ptr, tsrc.getName().c_str());
                 CmdData& cmd_data = d->din_cache[srcnam];
                 if(dev && cmd_data.is_empty) {
                     success = tangoworld.get_command_info(dev, point, (*results)[i]);
@@ -402,7 +398,6 @@ void CuPollingActivity::execute()
                 attdatalist[att_idx]["src"] = tsrc.getName();
                 attdatalist[att_idx]["point"] = point;
                 attdatalist[att_idx]["device"] = tsrc.getDeviceName();
-                attdatalist[att_idx]["action_ptr"] = CuVariant(action_ptr);
                 att_idx++;
             }
             i++;
