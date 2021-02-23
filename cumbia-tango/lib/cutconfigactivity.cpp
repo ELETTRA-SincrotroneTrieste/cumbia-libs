@@ -102,7 +102,6 @@ void CuTConfigActivity::execute()
             }
         }
         else if(dev)  {
-            printf("\e[1;32mCuTConfigActivity::execute value_only? %d\n", value_only);
             value_only ? success = utils.read_att(dev, point, at)  : success = utils.get_att_config(dev, point, at, skip_read);
         }
         else

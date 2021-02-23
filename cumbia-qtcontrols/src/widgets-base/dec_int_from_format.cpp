@@ -27,7 +27,7 @@ bool DecIntFromFormat::decode()
         d_decDigits = 0;
         d_intDefaults = intRe.capturedTexts().size() == 0;
         if(!d_intDefaults) {
-            d_intDigits = intRe.capturedTexts().at(0).toInt();
+            d_intDigits = intRe.capturedTexts().at(1).toInt();
             d_intDefaults = false;
         }
     }
