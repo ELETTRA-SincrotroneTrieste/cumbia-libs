@@ -26,8 +26,11 @@ bool DecIntFromFormat::decode()
         d_decDefaults = false;
         d_decDigits = 0;
         d_intDefaults = intRe.capturedTexts().size() == 0;
+        printf("DecIntFromFormat::decode d_intDefaults: %d\n", d_intDefaults);
         if(!d_intDefaults) {
+
             d_intDigits = intRe.capturedTexts().at(1).toInt();
+            printf("DecIntFromFormat::decode d_intDigits : %d\n", d_intDigits);
             d_intDefaults = false;
         }
     }
