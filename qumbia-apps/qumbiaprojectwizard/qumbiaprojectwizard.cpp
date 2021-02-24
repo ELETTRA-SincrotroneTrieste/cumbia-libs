@@ -411,12 +411,14 @@ void QumbiaProjectWizard::removeProperty()
 
 void QumbiaProjectWizard::projectNameChanged(const QString &p)
 {
+    printf("QumbiaProjectWizard.projectNameChanged %s\n", p.toStdString().c_str());
     QList<QLineEdit *> les = ui->grBoxFiles->findChildren<QLineEdit *>();
     /* add application name */
     les << ui->leApplicationName;
     foreach(QLineEdit *le, les)
     {
-        QString s = le->text();
+        QString s;
+        !le->text().isEmpty() ? s = le->text() : s = p;
         QString p1(p), s1(s);
         QString extension = le->property("extension").toString();
         s1.remove(extension);
@@ -427,8 +429,10 @@ void QumbiaProjectWizard::projectNameChanged(const QString &p)
             s1.truncate(qMin(s1.length(), p.length()));
             if(s1.compare(p1, Qt::CaseInsensitive) == 0)
                 s = p + extension;
-            if(s.length() > 0 && extension.isEmpty())
+            if(s.length() > 0 && extension.isEmpty()) {
+                s.remove("-").remove(QRegularExpression("\\s*"));
                 s[0] = s[0].toUpper();
+            }
 
             le->setText(s);
         }
