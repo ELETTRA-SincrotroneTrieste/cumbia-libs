@@ -9,6 +9,68 @@
 <body>
 <h1>News</h1>
 
+<h3>version 1.2.4</h3>
+
+<p>
+
+<ul>
+<li>
+cumbia-tango: CuTConfigActivity: if option "no-value" is found and set to true, then
+              neither command_inout nor read_attribute are performed during configuration.
+
+              Fixed to<bool> conversion in CuTConfigActivity that may prevent proper readers configuration
+
+              Removed "action_ptr" information in polling related CuData. CuPollingActivity action_data internal map stores std::string
+	      --> ActionData instead of ptr
+</li>
+<li>
+cumbia-http: CuHttpControlsWriter.setTarget and CuHttpControlsReader.setSource set option "read-value" to true on CuHTTPActionConfFactory
+             when it is safe to execute command_inout during configuration. Fixes a bug that
+	     caused command_inout to be imparted during writer configuration.
+	     In principle, "read-value" set to true should apply only to commands, and should not be necessary when dealing with attributes.
+	     This must be dealt on the server side. When this is fixed, then the property could be "do-cmd-read" or something else
+	     to have a proper meaning
+</li>
+<li>
+cumbia-qtcontrols: NumberDelegate/DecIntFromFormat:
+                without "min" and "max" properties in the configuration stage, the "format" is used to configure writers (applies to
+		quinputoutput, quapplynumeric)
+
+                QuWatcher: added convenience class Qu1TWatcher, one time, auto destroying QuWatcher
+
+</li>
+
+<li>
+qumbia-tango-controls: under examples, a new test application named "writers_format_test" to test cumbia-qtcontrols numeric widgets
+                configuration with format and without min and max properties
+
+</li>
+</p>
+
+
+<h2>version 1.2.3</h2>
+
+<p>
+Version <em>1.2.3</em> keeps improving cross engine transparency introducing <em>sources</em> that fetch
+Tango database properties.
+Numerous small issues have been fixed and a new feature for the Tango (and the http) engines allows changing
+source <cite>arguments</cite> in (polled) commands on the fly through a lightweight call to CuContext::sendData.
+</p>
+
+<h3>Tango database support in setSource</h3>
+<p>
+Support for Tango database readings has been added by means of setSource.
+</p>
+<h3>sendData supports the "args" key to change the source arguments while reading (Tango, http)</h3>
+<p>
+getContext()->sendData() supports an "args" parameter to change the source arguments for readers
+</p>
+<h5>Example</h5>
+<ul>
+<li>qumbia-tango-controls/examples/editargs</li>
+</ul>
+
+
 <h2>version 1.2.0</h2>
 
 The cumbia version 1.2.0 moves definitely towards the application portability and aims at broader integration
