@@ -418,19 +418,20 @@ void QumbiaProjectWizard::projectNameChanged(const QString &p)
     foreach(QLineEdit *le, les)
     {
         QString s;
-        !le->text().isEmpty() ? s = le->text() : s = p;
+      //  !le->text().isEmpty() ? s = le->text() : s = p;
+        s = p;
         QString p1(p), s1(s);
         QString extension = le->property("extension").toString();
         s1.remove(extension);
 
-        if(fabs(s1.length() - p.length()) < 2)
+//        if(fabs(s1.length() - p.length()) < 2)
         {
-            p1.truncate(qMin(s1.length(), p.length()));
-            s1.truncate(qMin(s1.length(), p.length()));
+//            p1.truncate(qMin(s1.length(), p.length()));
+//            s1.truncate(qMin(s1.length(), p.length()));
             if(s1.compare(p1, Qt::CaseInsensitive) == 0)
                 s = p + extension;
             if(s.length() > 0 && extension.isEmpty()) {
-                s.remove("-").remove(QRegularExpression("\\s*"));
+                s.remove(QRegularExpression("[\\-\\+\\:]")).remove(QRegularExpression("\\s*"));
                 s[0] = s[0].toUpper();
             }
 
