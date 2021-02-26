@@ -135,3 +135,24 @@ void QuWatcher::onUpdate(const CuData &data)
     emit refreshMessage(QString::fromStdString(msg));
     emit newData(data);
 }
+
+/*!
+ * \brief Qu1TWatcher::Qu1TWatcher one time auto destroying watcher
+ * \param parent QObject parent of this object
+ * \param cumbia_pool pointer to CumbiaPool
+ * \param fpool const reference to CuControlsFactoryPool
+ *
+ * This is a convenience class whose constructor calls
+ *
+ * \li setSingleShot(true)
+ * \li setAutoDestroy(true)
+ */
+Qu1TWatcher::Qu1TWatcher(QObject *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) :
+    QuWatcher(parent, cumbia_pool, fpool) {
+    setSingleShot(true);
+    setAutoDestroy(true);
+}
+
+Qu1TWatcher::~Qu1TWatcher() {
+
+}

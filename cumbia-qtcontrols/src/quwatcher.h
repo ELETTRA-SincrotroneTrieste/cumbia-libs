@@ -70,7 +70,7 @@ class QuWatcherPrivate;
   *
   * See the qtango/test/watcher example inside the library distribution for an example
   *
-  * \chapter Supported data types (release 4.2.0)
+  * \chapter Supported data types
   * \list
   * \li int
   * \li short
@@ -90,12 +90,16 @@ class QuWatcherPrivate;
   * <h3>Auto destruction</h3>
   * <p>
   * It is possible to setAutoDestroy to true to have your reader destroyed after the first reading.
-  * <strong>Note that the object will be destroyed even if the execution fails</strong>.
+  * <strong>Note that the object will be destroyed even if the execution fails</strong>.<br/>
+  * A convenience class, introduced in cumbia 1.2.4 is Qu1TWatcher, which is a single shot, auto destroying
+  * QuWatcher
   * </p>
   *
   * <h3>Single shot readings</h3>
   * <p>You can call setSingleShot to let your reader perform only one reading from the
   * source.
+  *
+  * @see Qu1TWatcher
   *
   * </p>
   *
@@ -122,13 +126,11 @@ public:
      */
     QuWatcher(QObject *parent, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
 
-
     QuWatcher(QObject *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
 
     virtual ~QuWatcher();
 
 public slots:
-
     void setSource(const QString &s);
     void unsetSource();
 
@@ -146,5 +148,13 @@ public:
     QString source() const;
 
 };
+
+class Qu1TWatcher : public QuWatcher {
+    Q_OBJECT
+public:
+    Qu1TWatcher(QObject *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    ~Qu1TWatcher();
+};
+
 
 #endif // READER_H
