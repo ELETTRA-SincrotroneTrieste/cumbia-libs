@@ -30,16 +30,28 @@ class CuFormulasPluginPrivate;
  *
  *
  * \code
-   CuPluginLoader plulo;
-   QString plupath = plulo.getPluginAbsoluteFilePath("", "cuformula-plugin.so");
-   QPluginLoader pluginLoader(plupath);
-   QObject *plugin = pluginLoader.instance();
-   if (plugin){
-        CuFormulaPluginI *fplu = qobject_cast<CuFormulaPluginI *>(plugin);
-        if(fplu) {
-            fplu->initialize(cu_pool, m_ctrl_factory_pool);
-        } // else: error message
-   } // else: error message
+
+// cumbia
+#include <cumbiapool.h>
+#include <quapps.h>
+// formula plugin
+#include <cupluginloader.h>
+#include <cuformulaplugininterface.h>
+
+MyApp::MyApp(CumbiaPool *cumbia_pool, QWidget *parent) :
+    QWidget(parent)
+{
+    // module loader first: initialize cumbia pool and factory pool
+    CuModuleLoader mloader(cumbia_pool, &m_ctrl_factory_pool, &m_log_impl);
+    CuPluginLoader pl;
+    QObject *o;
+    CuFormulaPluginI *formula_p = pl.get<CuFormulaPluginI>("cuformula-plugin.so", &o);
+    if(formula_p) { // ok
+        formula_p->initialize(cumbia_pool, m_ctrl_factory_pool);
+        ui = new Ui::MyApp;   // create and setup ui
+        ui->setupUi(this, cu_pool, m_ctrl_factory_pool);
+        // ...
+    }
  * \endcode
  *
  *
