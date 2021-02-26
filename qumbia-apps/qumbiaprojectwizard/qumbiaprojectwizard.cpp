@@ -417,25 +417,27 @@ void QumbiaProjectWizard::projectNameChanged(const QString &p)
     les << ui->leApplicationName;
     foreach(QLineEdit *le, les)
     {
-        QString s;
-      //  !le->text().isEmpty() ? s = le->text() : s = p;
-        s = p;
-        QString p1(p), s1(s);
-        QString extension = le->property("extension").toString();
-        s1.remove(extension);
+        if(le->objectName() != "leMain" && le->objectName() != "leMainQml") {
+            QString s;
+            //  !le->text().isEmpty() ? s = le->text() : s = p;
+            s = p;
+            QString p1(p), s1(s);
+            QString extension = le->property("extension").toString();
+            s1.remove(extension);
 
-//        if(fabs(s1.length() - p.length()) < 2)
-        {
-//            p1.truncate(qMin(s1.length(), p.length()));
-//            s1.truncate(qMin(s1.length(), p.length()));
-            if(s1.compare(p1, Qt::CaseInsensitive) == 0)
-                s = p + extension;
-            if(s.length() > 0 && extension.isEmpty()) {
-                s.remove(QRegularExpression("[\\-\\+\\:]")).remove(QRegularExpression("\\s*"));
-                s[0] = s[0].toUpper();
+            //        if(fabs(s1.length() - p.length()) < 2)
+            {
+                //            p1.truncate(qMin(s1.length(), p.length()));
+                //            s1.truncate(qMin(s1.length(), p.length()));
+                if(s1.compare(p1, Qt::CaseInsensitive) == 0)
+                    s = p + extension;
+                if(s.length() > 0 && extension.isEmpty()) {
+                    s.remove(QRegularExpression("[\\-\\+\\:]")).remove(QRegularExpression("\\s*"));
+                    s[0] = s[0].toUpper();
+                }
+
+                le->setText(s);
             }
-
-            le->setText(s);
         }
     }
 
@@ -464,8 +466,8 @@ bool QumbiaProjectWizard::qtangoImport(bool from_cwd)
     else {
         QString lastProjectDirnam = s.value("LAST_PROJECT_DIRNAM", QDir::homePath()).toString();
         pro_f = QFileDialog::getOpenFileName(this,
-                                                 "Select a QTango project file [*.pro]",
-                                                 lastProjectDirnam, "*.pro");
+                                             "Select a QTango project file [*.pro]",
+                                             lastProjectDirnam, "*.pro");
         QFileInfo fii(pro_f);
         ui->leLocation->setText(fii.absolutePath());
     }
