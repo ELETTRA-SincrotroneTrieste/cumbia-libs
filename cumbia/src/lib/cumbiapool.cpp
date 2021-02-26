@@ -141,7 +141,7 @@ bool CumbiaPool::isEmpty() const
 
 const std::vector<std::string> CumbiaPool::names() const {
     std::vector<std::string> n;
-    for(auto it : m_map)
+    for(auto& it : m_map)
         n.push_back(it.first);
     return n;
 }
