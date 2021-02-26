@@ -121,7 +121,7 @@ std::vector<std::string> CuHttpTangoHelper::srcPatterns() const {
     // support class property syntax, such as: hokuto:20000/TangoTest(ProjectTitle,Description),
     // hokuto:20000/TangoTest(*)
     // (?:tango://){0,1}(?:[A-Za-z0-9_\-\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\]+(?:[\(A-Za-z0-9_\-,\)\s*]+)
-    src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\]+(?:[\\(A-Za-z0-9_\\-,\\)\\s*]+)");
+    src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\]+(?:[\\(A-Za-z0-9_\\-,\\)\\s*]+)");
     // tango domain search [tango://]hokuto:20000/ or [tango://]hokuto:20000/*
     src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){1}[*]{0,1}");
 
