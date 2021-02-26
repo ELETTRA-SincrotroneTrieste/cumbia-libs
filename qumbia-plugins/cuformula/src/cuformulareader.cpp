@@ -189,7 +189,6 @@ void CuFormulaReader::setSource(const QString &s)
             watcher->getContext()->setOptions(d->options);
             connect(watcher, SIGNAL(newData(const CuData&)), this, SLOT(onNewData(const CuData&)));
             watcher->setSource(QString::fromStdString(src));
-            printf("\e[1;32msetSource %s on watcher %d\e[0m\n", src.c_str(), i+1);
             d->values.push_back(CuVariant());
             d->qualities.push_back(CuDataQuality(CuDataQuality::Undefined));
             d->errors.push_back(true);
