@@ -199,6 +199,8 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
             v.push_back(static_cast<T>(toDouble()));
         else if(d->type == LongDouble)
             v.push_back(static_cast<T>(toLongDouble()));
+        else if(d->type == Boolean)
+            v.push_back(static_cast<T>(toBool()));
         else if(d->type == String)
         {
             try
