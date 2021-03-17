@@ -15,6 +15,7 @@ var hierarchy =
       [ "CuTimeoutChangeEvent", "classCuTimeoutChangeEvent.html", null ],
       [ "CuTimeoutChangeEvent", "classCuTimeoutChangeEvent.html", null ]
     ] ],
+    [ "CuActivityManagerPrivate", "classCuActivityManagerPrivate.html", null ],
     [ "CuData", "classCuData.html", null ],
     [ "CuDataListener", "classCuDataListener.html", null ],
     [ "CuDataQuality", "classCuDataQuality.html", null ],

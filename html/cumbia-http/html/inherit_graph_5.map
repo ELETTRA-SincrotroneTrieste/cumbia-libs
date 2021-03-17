@@ -1,4 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,153,32"/>
-<area shape="rect" id="node2" href="$classCuHttpControlsReader.html" title=" " alt="" coords="201,5,368,32"/>
+<area shape="rect" id="node1" href="$classCuHttpAuthManListener.html" title=" " alt="" coords="25,5,203,32"/>
+<area shape="rect" id="node2" href="$classCumbiaHttp.html" title=" " alt="" coords="271,81,371,108"/>
+<area shape="rect" id="node3" href="$classCuHttpBundledSrcReqListener.html" title=" " alt="" coords="5,56,223,83"/>
+<area shape="rect" id="node4" href="$classCuHttpSrcQueueManListener.html" title=" " alt="" coords="9,107,219,133"/>
+<area shape="rect" id="node5" title=" " alt="" coords="78,157,150,184"/>
 </map>

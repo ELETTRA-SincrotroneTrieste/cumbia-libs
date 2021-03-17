@@ -1,6 +1,7 @@
 <map id="CuHTTPActionFactoryI" name="CuHTTPActionFactoryI">
-<area shape="rect" id="node1" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="241,5,405,32"/>
-<area shape="rect" id="node2" href="$classCuHTTPActionConfFactory.html" title=" " alt="" coords="5,80,196,107"/>
-<area shape="rect" id="node3" href="$classCuHTTPActionReaderFactory.html" title=" " alt="" coords="220,80,427,107"/>
-<area shape="rect" id="node4" href="$classCuHTTPActionWriterFactory.html" title=" " alt="" coords="451,80,651,107"/>
+<area shape="rect" id="node1" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="5,81,169,108"/>
+<area shape="rect" id="node2" href="$classCuHTTPActionConfFactory.html" title=" " alt="" coords="225,5,416,32"/>
+<area shape="rect" id="node3" href="$classCuHTTPActionEditFactory.html" title=" " alt="" coords="228,56,413,83"/>
+<area shape="rect" id="node4" href="$classCuHTTPActionReaderFactory.html" title=" " alt="" coords="217,107,424,133"/>
+<area shape="rect" id="node5" href="$classCuHTTPActionWriterFactory.html" title=" " alt="" coords="221,157,421,184"/>
 </map>

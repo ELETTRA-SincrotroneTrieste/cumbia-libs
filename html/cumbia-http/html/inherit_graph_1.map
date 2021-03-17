@@ -1,6 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuHTTPActionFactoryI.html" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="5,56,169,83"/>
+<area shape="rect" id="node1" href="$classCuHTTPActionFactoryI.html" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="5,81,169,108"/>
 <area shape="rect" id="node2" href="$classCuHTTPActionConfFactory.html" title=" " alt="" coords="225,5,416,32"/>
-<area shape="rect" id="node3" href="$classCuHTTPActionReaderFactory.html" title=" " alt="" coords="217,56,424,83"/>
-<area shape="rect" id="node4" href="$classCuHTTPActionWriterFactory.html" title=" " alt="" coords="221,107,421,133"/>
+<area shape="rect" id="node3" href="$classCuHTTPActionEditFactory.html" title=" " alt="" coords="228,56,413,83"/>
+<area shape="rect" id="node4" href="$classCuHTTPActionReaderFactory.html" title=" " alt="" coords="217,107,424,133"/>
+<area shape="rect" id="node5" href="$classCuHTTPActionWriterFactory.html" title=" " alt="" coords="221,157,421,184"/>
 </map>

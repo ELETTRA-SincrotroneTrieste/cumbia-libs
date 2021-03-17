@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['ti_5fcache_833',['ti_cache',['../classCuTimerServicePrivate.html#a05b9a558a973d01f55c55551aad85b3a',1,'CuTimerServicePrivate']]],
-  ['ti_5fmap_834',['ti_map',['../classCuTimerServicePrivate.html#a53737fb7d6f5ce9fe7451d41b5ff81db',1,'CuTimerServicePrivate']]],
-  ['timer_5fmax_5fcount_835',['timer_max_count',['../classCuTimerServicePrivate.html#a30ea1ce5bfb0dab83671cb3d766a4b6f',1,'CuTimerServicePrivate']]]
+  ['services_5fmap_840',['services_map',['../classCuServiceProviderPrivate.html#a226bd4c1f5a644b1661604f7a243ec85',1,'CuServiceProviderPrivate']]],
+  ['shared_5fmu_841',['shared_mu',['../classCuActivityManagerPrivate.html#ad14fdc69c797ad0225ac9991ac08b7c4',1,'CuActivityManagerPrivate']]],
+  ['shared_5fmutex_842',['shared_mutex',['../classCuTimerServicePrivate.html#a288f2b43b83dba6122b22cf2e855f91a',1,'CuTimerServicePrivate']]],
+  ['shared_5fsrvcs_843',['shared_srvcs',['../classCuServiceProviderPrivate.html#a3a776178e5d41fc4d11fae84fe014c17',1,'CuServiceProviderPrivate']]]
 ];

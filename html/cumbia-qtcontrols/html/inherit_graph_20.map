@@ -1,8 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="209,71,273,98"/>
-<area shape="rect" id="node2" href="$classorg_1_1kde_1_1necessitas_1_1ministro_1_1IMinistro_1_1Stub.html" title=" " alt="" coords="392,19,599,60"/>
-<area shape="rect" id="node3" href="$classorg_1_1kde_1_1necessitas_1_1ministro_1_1IMinistroCallback_1_1Stub.html" title=" " alt="" coords="392,97,599,139"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,71,89,98"/>
-<area shape="rect" id="node5" href="$interfaceorg_1_1kde_1_1necessitas_1_1ministro_1_1IMinistro.html" title=" " alt="" coords="137,5,344,47"/>
-<area shape="rect" id="node6" href="$interfaceorg_1_1kde_1_1necessitas_1_1ministro_1_1IMinistroCallback.html" title=" " alt="" coords="137,123,344,164"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,31,76,57"/>
+<area shape="rect" id="node2" href="$classEngString.html" title="a QString that recognizes the eng engineering format and formats a value according to the desired sig..." alt="" coords="124,5,208,32"/>
+<area shape="rect" id="node3" href="$classQuString.html" title="convenience class to build a Qt QString from an std::string or from a value stored in CuData" alt="" coords="127,56,205,83"/>
 </map>

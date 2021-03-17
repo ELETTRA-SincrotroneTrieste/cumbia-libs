@@ -1,8 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuHttpActionWriter.html" title=" " alt="" coords="5,56,153,83"/>
-<area shape="rect" id="node2" href="$classCuHTTPActionA.html" title=" " alt="" coords="217,56,340,83"/>
-<area shape="rect" id="node6" href="$classCuHttpAuthManager.html" title=" " alt="" coords="201,107,356,133"/>
-<area shape="rect" id="node3" href="$classCuHttpActionConf.html" title=" " alt="" coords="423,5,562,32"/>
-<area shape="rect" id="node4" href="$classCuHTTPActionReader.html" title=" " alt="" coords="413,56,572,83"/>
-<area shape="rect" id="node5" href="$classCuHttpChannelReceiver.html" title="Receive messages on the channel and distributes them." alt="" coords="404,107,581,133"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,157,80,184"/>
+<area shape="rect" id="node2" href="$classCuHTTPActionA.html" title=" " alt="" coords="155,31,278,57"/>
+<area shape="rect" id="node5" href="$classCuHttpAuthInputFactory.html" title=" " alt="" coords="128,81,305,108"/>
+<area shape="rect" id="node6" href="$classCuHttpAuthManager.html" title=" " alt="" coords="139,132,294,159"/>
+<area shape="rect" id="node7" href="$classCuHttpBundledSrcReq.html" title=" " alt="" coords="134,183,299,209"/>
+<area shape="rect" id="node8" href="$classCuHttpSrcMan.html" title="Http source queue and data manager." alt="" coords="159,233,274,260"/>
+<area shape="rect" id="node9" href="$classCuHttpWriteHelper.html" title=" " alt="" coords="144,284,289,311"/>
+<area shape="rect" id="node3" href="$classCuHttpActionConf.html" title=" " alt="" coords="373,5,511,32"/>
+<area shape="rect" id="node4" href="$classCuHttpChannelReceiver.html" title="Receive messages on the channel and distributes them." alt="" coords="353,56,531,83"/>
 </map>

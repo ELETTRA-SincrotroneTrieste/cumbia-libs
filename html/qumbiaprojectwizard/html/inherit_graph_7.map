@@ -1,3 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classExtractorHelper.html" title=" " alt="" coords="5,5,129,32"/>
+<area shape="rect" id="node1" href="$classFileCmd.html" title=" " alt="" coords="5,183,80,209"/>
+<area shape="rect" id="node2" href="$classCppInstantiationExpand.html" title=" " alt="" coords="173,5,350,32"/>
+<area shape="rect" id="node3" href="$classCumbiaCodeInjectCmd.html" title=" " alt="" coords="176,56,347,83"/>
+<area shape="rect" id="node4" href="$classFindReplace.html" title=" " alt="" coords="211,107,312,133"/>
+<area shape="rect" id="node5" href="$classMainCppExpandCmd.html" title=" " alt="" coords="183,157,340,184"/>
+<area shape="rect" id="node6" href="$classMainCppPrepareCmd.html" title=" " alt="" coords="182,208,341,235"/>
+<area shape="rect" id="node7" href="$classMainWidgetCppConstructProcessCmd.html" title=" " alt="" coords="128,259,395,285"/>
+<area shape="rect" id="node8" href="$classMainWidgetHProcessCmd.html" title="If mainwidget.h class declaration contains a Ui::MainwidgetName ui, check that it is a pointer type...." alt="" coords="166,309,357,336"/>
+<area shape="rect" id="node9" href="$classProConvertCmd.html" title=" " alt="" coords="199,360,323,387"/>
 </map>

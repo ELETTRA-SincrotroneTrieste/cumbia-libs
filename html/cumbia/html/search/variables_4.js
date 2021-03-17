@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['services_5fmap_830',['services_map',['../classCuServiceProviderPrivate.html#a226bd4c1f5a644b1661604f7a243ec85',1,'CuServiceProviderPrivate']]],
-  ['shared_5fmutex_831',['shared_mutex',['../classCuTimerServicePrivate.html#a288f2b43b83dba6122b22cf2e855f91a',1,'CuTimerServicePrivate']]],
-  ['shared_5fsrvcs_832',['shared_srvcs',['../classCuServiceProviderPrivate.html#a3a776178e5d41fc4d11fae84fe014c17',1,'CuServiceProviderPrivate']]]
+  ['restart_5fqueue_839',['restart_queue',['../classCuTimerServicePrivate.html#a49e91b45fd44e3e6c4ad6a26ec0974a3',1,'CuTimerServicePrivate']]]
 ];

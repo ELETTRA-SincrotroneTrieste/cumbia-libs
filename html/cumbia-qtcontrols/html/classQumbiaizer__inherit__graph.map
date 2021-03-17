@@ -1,6 +1,7 @@
 <map id="Qumbiaizer" name="Qumbiaizer">
-<area shape="rect" id="node1" title="QTangoizes anything (not really anything, but...)" alt="" coords="58,80,155,107"/>
-<area shape="rect" id="node3" href="$classQuWatcher.html" title="Manage readings of various type of objects in a different thread." alt="" coords="5,155,99,181"/>
-<area shape="rect" id="node4" href="$classQuWriter.html" title="A class that can be used to write values from (almost) any kind of widget or object." alt="" coords="123,155,203,181"/>
-<area shape="rect" id="node2" title=" " alt="" coords="69,5,144,32"/>
+<area shape="rect" id="node1" title="QTangoizes anything (not really anything, but...)" alt="" coords="66,80,163,107"/>
+<area shape="rect" id="node3" href="$classQuWatcher.html" title="Manage readings of various type of objects in a different thread." alt="" coords="13,155,107,181"/>
+<area shape="rect" id="node5" href="$classQuWriter.html" title="A class that can be used to write values from (almost) any kind of widget or object." alt="" coords="131,155,211,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="77,5,152,32"/>
+<area shape="rect" id="node4" href="$classQu1TWatcher.html" title=" " alt="" coords="5,229,115,256"/>
 </map>

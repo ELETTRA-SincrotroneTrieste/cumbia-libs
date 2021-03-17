@@ -4,6 +4,7 @@ var annotated_dup =
     [ "CuActivityEvent", "classCuActivityEvent.html", "classCuActivityEvent" ],
     [ "CuActivityExitEvent", "classCuActivityExitEvent.html", "classCuActivityExitEvent" ],
     [ "CuActivityManager", "classCuActivityManager.html", "classCuActivityManager" ],
+    [ "CuActivityManagerPrivate", "classCuActivityManagerPrivate.html", "classCuActivityManagerPrivate" ],
     [ "CuConLogImpl", "classCuConLogImpl.html", "classCuConLogImpl" ],
     [ "CuContinuousActivity", "classCuContinuousActivity.html", "classCuContinuousActivity" ],
     [ "CuData", "classCuData.html", "classCuData" ],

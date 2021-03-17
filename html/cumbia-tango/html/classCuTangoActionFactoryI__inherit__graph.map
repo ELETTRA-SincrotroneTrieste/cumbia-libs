@@ -1,9 +1,9 @@
 <map id="CuTangoActionFactoryI" name="CuTangoActionFactoryI">
-<area shape="rect" id="node1" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="245,5,415,32"/>
-<area shape="rect" id="node2" href="$classCuTaDbFactory.html" title=" " alt="" coords="5,80,124,107"/>
-<area shape="rect" id="node3" href="$classCuTangoReaderFactory.html" title=" " alt="" coords="149,80,319,107"/>
-<area shape="rect" id="node4" href="$classCuTangoWriterFactory.html" title=" " alt="" coords="344,80,508,107"/>
-<area shape="rect" id="node5" href="$classCuTConfFactoryBase.html" title=" " alt="" coords="533,80,687,107"/>
-<area shape="rect" id="node6" href="$classCuTReaderConfFactory.html" title=" " alt="" coords="429,155,599,181"/>
-<area shape="rect" id="node7" href="$classCuTWriterConfFactory.html" title=" " alt="" coords="624,155,788,181"/>
+<area shape="rect" id="node1" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="347,5,517,32"/>
+<area shape="rect" id="node2" href="$classCuTConfFactoryBase.html" title=" " alt="" coords="109,80,264,107"/>
+<area shape="rect" id="node5" href="$classCuTaDbFactory.html" title=" " alt="" coords="289,80,407,107"/>
+<area shape="rect" id="node6" href="$classCuTangoReaderFactory.html" title=" " alt="" coords="432,80,603,107"/>
+<area shape="rect" id="node7" href="$classCuTangoWriterFactory.html" title=" " alt="" coords="627,80,791,107"/>
+<area shape="rect" id="node3" href="$classCuTReaderConfFactory.html" title=" " alt="" coords="5,155,176,181"/>
+<area shape="rect" id="node4" href="$classCuTWriterConfFactory.html" title=" " alt="" coords="201,155,365,181"/>
 </map>

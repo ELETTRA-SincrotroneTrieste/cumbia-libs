@@ -13,7 +13,9 @@ var files_dup =
       [ "CuTimeoutChangeEvent", "classCuTimeoutChangeEvent.html", "classCuTimeoutChangeEvent" ],
       [ "CuDataEvent", "classCuDataEvent.html", "classCuDataEvent" ]
     ] ],
-    [ "cuactivitymanager.cpp", "cuactivitymanager_8cpp.html", null ],
+    [ "cuactivitymanager.cpp", "cuactivitymanager_8cpp.html", [
+      [ "CuActivityManagerPrivate", "classCuActivityManagerPrivate.html", "classCuActivityManagerPrivate" ]
+    ] ],
     [ "cuactivitymanager.h", "cuactivitymanager_8h.html", [
       [ "CuActivityManager", "classCuActivityManager.html", "classCuActivityManager" ]
     ] ],

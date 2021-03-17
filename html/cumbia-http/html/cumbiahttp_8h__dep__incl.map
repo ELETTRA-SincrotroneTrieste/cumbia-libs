@@ -1,9 +1,9 @@
 <map id="cumbiahttp.h" name="cumbiahttp.h">
-<area shape="rect" id="node1" title=" " alt="" coords="558,5,666,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="522,5,630,32"/>
 <area shape="rect" id="node2" href="$cuhttpactionfactories_8cpp.html" title=" " alt="" coords="5,80,192,107"/>
 <area shape="rect" id="node3" href="$cuhttpcontrolsreader_8cpp.html" title=" " alt="" coords="217,80,399,107"/>
 <area shape="rect" id="node4" href="$cuhttpcontrolswriter_8cpp.html" title=" " alt="" coords="424,80,603,107"/>
-<area shape="rect" id="node5" href="$cuhttpregisterengine_8h.html" title=" " alt="" coords="627,80,797,107"/>
-<area shape="rect" id="node6" href="$cuhttpregisterengine_8cpp.html" title=" " alt="" coords="681,155,865,181"/>
+<area shape="rect" id="node5" href="$cuhttpregisterengine_8cpp.html" title=" " alt="" coords="609,155,793,181"/>
+<area shape="rect" id="node6" href="$cuhttpregisterengine_8h.html" title=" " alt="" coords="678,80,847,107"/>
 <area shape="rect" id="node7" href="$cumbiahttp_8cpp.html" title=" " alt="" coords="872,80,995,107"/>
 </map>

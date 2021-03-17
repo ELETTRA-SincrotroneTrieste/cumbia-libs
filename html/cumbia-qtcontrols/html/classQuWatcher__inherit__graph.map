@@ -1,5 +1,6 @@
 <map id="QuWatcher" name="QuWatcher">
 <area shape="rect" id="node1" title="Manage readings of various type of objects in a different thread." alt="" coords="142,155,235,181"/>
+<area shape="rect" id="node6" href="$classQu1TWatcher.html" title=" " alt="" coords="134,229,243,256"/>
 <area shape="rect" id="node2" href="$classQumbiaizer.html" title="QTangoizes anything (not really anything, but...)" alt="" coords="5,80,103,107"/>
 <area shape="rect" id="node3" title=" " alt="" coords="17,5,91,32"/>
 <area shape="rect" id="node4" title=" " alt="" coords="127,80,250,107"/>

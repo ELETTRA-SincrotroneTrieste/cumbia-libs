@@ -1,6 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuMonitor.html" title=" " alt="" coords="5,31,95,57"/>
-<area shape="rect" id="node2" href="$classCuEpicsActionI.html" title="an interface for an EPICS action, as a reader (implemented) or a writer (not yet implemented)" alt="" coords="143,31,261,57"/>
-<area shape="rect" id="node3" href="$classCuEpConfiguration.html" title=" " alt="" coords="309,5,452,32"/>
-<area shape="rect" id="node4" href="$classCuPut.html" title=" " alt="" coords="351,56,411,83"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,56,141,83"/>
+<area shape="rect" id="node2" href="$classCuEpicsActionI.html" title="an interface for an EPICS action, as a reader (implemented) or a writer (not yet implemented)" alt="" coords="189,56,308,83"/>
+<area shape="rect" id="node3" href="$classCuEpConfiguration.html" title=" " alt="" coords="356,5,499,32"/>
+<area shape="rect" id="node4" href="$classCuMonitor.html" title=" " alt="" coords="383,56,472,83"/>
+<area shape="rect" id="node5" href="$classCuPut.html" title=" " alt="" coords="397,107,457,133"/>
 </map>

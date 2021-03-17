@@ -1,5 +1,7 @@
 <map id="CumbiaHttp" name="CumbiaHttp">
-<area shape="rect" id="node1" title=" " alt="" coords="62,80,162,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="279,80,379,107"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,5,77,32"/>
-<area shape="rect" id="node3" href="$classCuHTTPActionListener.html" title="The CuHTTPActionListener implementations are notified when an action is started and when it is finish..." alt="" coords="101,5,267,32"/>
+<area shape="rect" id="node3" href="$classCuHttpBundledSrcReqListener.html" title=" " alt="" coords="102,5,319,32"/>
+<area shape="rect" id="node4" href="$classCuHttpSrcQueueManListener.html" title=" " alt="" coords="343,5,553,32"/>
+<area shape="rect" id="node5" href="$classCuHttpAuthManListener.html" title=" " alt="" coords="577,5,754,32"/>
 </map>
