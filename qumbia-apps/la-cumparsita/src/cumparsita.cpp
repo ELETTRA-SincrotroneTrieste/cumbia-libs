@@ -56,9 +56,6 @@ QObject *Cumparsita::get_cumbia_customWidgetCollectionInterface() const
     return nullptr;
 }
 
-Cumparsita::~Cumparsita()
-{
-    printf("\e[1;31m~Cumparsita\e[0m\n");
+Cumparsita::~Cumparsita() {
     delete findChild<QUiLoader *>();
-    printf("deleted cum loader\n");
 }
