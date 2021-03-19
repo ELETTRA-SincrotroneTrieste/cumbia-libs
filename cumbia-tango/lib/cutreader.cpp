@@ -41,6 +41,7 @@ public:
 
 CuTReader::CuTReader(const TSource& src, CumbiaTango *ct) : CuTangoActionI()
 {
+    printf("CuTReader.CuTReader constructor %s\n", src.getName().c_str());
     d = new CuTReaderPrivate;
     d->tsrc = src;
     d->cumbia_t = ct;

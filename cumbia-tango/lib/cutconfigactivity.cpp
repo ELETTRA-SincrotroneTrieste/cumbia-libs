@@ -76,6 +76,7 @@ void CuTConfigActivity::init()
 
 void CuTConfigActivity::execute()
 {
+    printf("\e[1;36mCuTConfigActivity.execute: enter\e[0m\n");
     CuData at = getToken(); /* activity token */
     d->err = !d->tdev->isValid();
     std::string point = at["point"].toString();
@@ -117,7 +118,7 @@ void CuTConfigActivity::execute()
         //
 
         at["data"] = true;
-        at["msg"] = "CuTConfigActivity.execute: " + tw.getLastMessage();
+        at["msg"] = "CuTConfigActivity.execute (1): " + tw.getLastMessage();
         at["err"] = tw.error();
         d->err = !success || tw.error();
         d->msg = tw.getLastMessage();
@@ -126,7 +127,7 @@ void CuTConfigActivity::execute()
         d->err ?  d->repeat = 2000 * d->try_cnt : d->repeat = -1;
     }
     else {
-        at["msg"] = "CuTConfigActivity.execute: " + d->tdev->getMessage();
+        at["msg"] = "CuTConfigActivity.execute (2): " + d->tdev->getMessage();
         at["err"] = true;
         at.putTimestamp();
     }

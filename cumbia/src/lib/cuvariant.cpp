@@ -50,6 +50,10 @@ void CuVariant::delete_rdata()
             delete [] static_cast<short *> (d->val);
         else if(d->type == UShort)
             delete [] static_cast<unsigned short *> (d->val);
+        else if(d->type == UChar)
+            delete [] static_cast<unsigned char *> (d->val);
+        else if(d->type == Char)
+            delete [] static_cast<char *> (d->val);
         //        cuprintf("delete_rdata: CuVariant %p deleted d %p d->val %p type %d\n", this, d, d->val, d->dataType);
         d->val = NULL;
     }
@@ -568,7 +572,7 @@ CuVariant::CuVariant(const std::vector<bool> &vb, size_t dimx, size_t dimy) {
 CuVariant::CuVariant(const std::vector<std::string> &vs, size_t dimx, size_t dimy) {
     d = new CuVariantPrivate();
     init(Matrix, String);
-    v_to_matrix(vs, dimx, dimy);
+    v_to_string_matrix(vs, dimx, dimy);
 }
 
 
@@ -748,98 +752,150 @@ void CuVariant::build_from(const CuVariant& other)
     d->mIsValid = other.isValid();
     d->mIsNull = other.isNull();
 
-    //cuprintf("\e[0;36mCuVariant::build_from: %p copy from %p this->d: %p: format %d size %ld\e[0m \n", this, &other, d,
-    //      d->format,  d->mSize);
-
-    if(d->type == CuVariant::Double)
-    {
-        double *vd = new double[d->mSize];
-        for(size_t i = 0; i < d->mSize; i++)
-            vd[i] =  other.toDoubleP()[i];
-        d->val = vd;
-    }
-    else if(d->type == CuVariant::Int)
-    {
-        int *vi =  new int[d->mSize];
-
-        for(size_t i = 0; i < d->mSize; i++)
-            vi[i] = other.toIntP()[i];
-        d->val = vi;
-    }
-    else if(d->type == CuVariant::UInt)
-    {
-        unsigned int *vi =  new unsigned int[d->mSize];
-
-        for(size_t i = 0; i < d->mSize; i++)
-            vi[i] = other.toUIntP()[i];
-        d->val = vi;
-    }
-    else if(d->type == CuVariant::LongInt)
-    {
-        long int *vi =  new long int[d->mSize];
-
-        for(size_t i = 0; i < d->mSize; i++)
-            vi[i] = other.toLongIntP()[i];
-        d->val = vi;
-    }
-    else if(d->type == CuVariant::LongUInt)
-    {
-        unsigned long int *uli =  new unsigned long int[d->mSize];
-        for(size_t i = 0; i < d->mSize; i++)
-            uli[i] = other.toULongIntP()[i];
-        d->val = uli;
-    }
-    else if(d->type == CuVariant::VoidPtr) {
-        d->val = other.d->val;
-    }
-    else if(d->type == CuVariant::Boolean)
-    {
-        bool *vb = new bool[d->mSize];
-        for(size_t i = 0; i < d->mSize; i++)
-            vb[i] = other.toBoolP()[i];
-        d->val = vb;
-    }
-    else if(d->type == CuVariant::Short)
-    {
-        short *vs = new short[d->mSize];
-        for(size_t i = 0; i < d->mSize; i++)
-            vs[i] = other.toShortP()[i];
-        d->val = vs;
-    }
-    else if(d->type == CuVariant::UShort)
-    {
-        unsigned short *vus = new unsigned short[d->mSize];
-        for(size_t i = 0; i < d->mSize; i++)
-            vus[i] = other.toUShortP()[i];
-        d->val = vus;
-    }
-    else if(d->type == CuVariant::Float)
-    {
-        float *vf = new float[d->mSize];
-        for(size_t i = 0; i < d->mSize; i++)
-            vf[i] = other.toFloatP()[i];
-        d->val = vf;
-    }
-    else if(d->type == CuVariant::String)
-    {
-        char *other_s;
-        char **str = new char *[d->mSize];
-        size_t len;
-        for(size_t i = 0; i < d->mSize; i++)
-        {
-            other_s = other.toCharP()[i];
-            if(other_s != NULL)
-            {
-                len = strlen(other_s);
-                str[i] = new char[len + 1];
-                memset(str[i], 0, sizeof(char) * (len + 1));
-                strncpy(str[i], other_s, len + 1);
-            }
-            else
-                str[i] = NULL;
+    //    printf("\e[0;36mCuVariant::build_from: %s %p copy from %p this->d: %p: format %d size %ld\e[0m \n", other.toString().c_str(), this, &other, d,
+    //          d->format,  d->mSize);
+    switch(d->type) {
+    case CuVariant::Double: {
+        if(d->format == CuVariant::Scalar || d->format == CuVariant::Vector) {
+            double *vd = new double[d->mSize];
+            for(size_t i = 0; i < d->mSize; i++)
+                vd[i] =  other.toDoubleP()[i];
+            d->val = vd;
         }
-        d->val = str;
-    }
+        else if(d->format == CuVariant::Matrix )
+            d->val = static_cast<CuMatrix <double > *> (other.d->val)->clone();
+    } break;
+    case CuVariant::Int:
+    {
+        if(d->format == CuVariant::Scalar || d->format == CuVariant::Vector) {
+            int *vi =  new int[d->mSize];
+            for(size_t i = 0; i < d->mSize; i++)
+                vi[i] = other.toIntP()[i];
+            d->val = vi;
+        }
+        else if(d->format == CuVariant::Matrix )
+            d->val = static_cast<CuMatrix <int > *> (other.d->val)->clone();
+    } break;
+    case CuVariant::UInt:  {
+        if(d->format == CuVariant::Scalar || d->format == CuVariant::Vector) {
+            unsigned int *vi =  new unsigned int[d->mSize];
+            for(size_t i = 0; i < d->mSize; i++)
+                vi[i] = other.toUIntP()[i];
+            d->val = vi;
+        }
+        else if(d->format == CuVariant::Matrix )
+            d->val = static_cast<CuMatrix <unsigned int > *> (other.d->val)->clone();
+    } break;
+    case CuVariant::LongInt:  {
+        if(d->format == CuVariant::Scalar || d->format == CuVariant::Vector) {
+            long int *vi =  new long int[d->mSize];
+            for(size_t i = 0; i < d->mSize; i++)
+                vi[i] = other.toLongIntP()[i];
+            d->val = vi;
+        }
+        else if(d->format == CuVariant::Matrix )
+            d->val = static_cast<CuMatrix <long int > *> (other.d->val)->clone();
+    } break;
+    case CuVariant::LongUInt:  {
+        if(d->format == CuVariant::Scalar || d->format == CuVariant::Vector) {
+            unsigned long int *uli =  new unsigned long int[d->mSize];
+            for(size_t i = 0; i < d->mSize; i++)
+                uli[i] = other.toULongIntP()[i];
+            d->val = uli;
+        }
+        else if(d->format == CuVariant::Matrix )
+            d->val = static_cast<CuMatrix <unsigned long int > *> (other.d->val)->clone();
+    } break;
+    case CuVariant::VoidPtr: {
+        d->val = other.d->val;
+    } break;
+    case CuVariant::Boolean: {
+        if(d->format == CuVariant::Scalar || d->format == CuVariant::Vector) {
+            bool *vb = new bool[d->mSize];
+            for(size_t i = 0; i < d->mSize; i++)
+                vb[i] = other.toBoolP()[i];
+            d->val = vb;
+        }
+        else if(d->format == CuVariant::Matrix )
+            d->val = static_cast<CuMatrix <bool > *> (other.d->val)->clone();
+    } break;
+    case CuVariant::Short:  {
+        if(d->format == CuVariant::Scalar || d->format == CuVariant::Vector) {
+            short *vs = new short[d->mSize];
+            for(size_t i = 0; i < d->mSize; i++)
+                vs[i] = other.toShortP()[i];
+            d->val = vs;
+        }
+        else if(d->format == CuVariant::Matrix )
+            d->val = static_cast<CuMatrix <short > *> (other.d->val)->clone();
+    } break;
+    case CuVariant::UShort: {
+        if(d->format == CuVariant::Scalar || d->format == CuVariant::Vector) {
+            unsigned short *vus = new unsigned short[d->mSize];
+            for(size_t i = 0; i < d->mSize; i++)
+                vus[i] = other.toUShortP()[i];
+            d->val = vus;
+        }
+        else if(d->format == CuVariant::Matrix )
+            d->val = static_cast<CuMatrix <unsigned short > *> (other.d->val)->clone();
+    } break;
+    case CuVariant::Char:  {
+        if(d->format == CuVariant::Scalar || d->format == CuVariant::Vector) {
+            char *vc = new char[d->mSize];
+            for(size_t i = 0; i < d->mSize; i++)
+                vc[i] = other.toCharP()[i];
+            d->val = vc;
+        }
+        else if(d->format == CuVariant::Matrix )
+            d->val = static_cast<CuMatrix <char > *> (other.d->val)->clone();
+    } break;
+    case CuVariant::UChar: {
+        if(d->format == CuVariant::Scalar || d->format == CuVariant::Vector) {
+            unsigned char *vuch = new unsigned char[d->mSize];
+            for(size_t i = 0; i < d->mSize; i++)
+                vuch[i] = other.toUCharP()[i];
+            d->val = vuch;
+        }
+        else if(d->format == CuVariant::Matrix )
+            d->val = static_cast<CuMatrix <unsigned char > *> (other.d->val)->clone();
+    } break;
+    case CuVariant::Float: {
+        if(d->format == CuVariant::Scalar || d->format == CuVariant::Vector) {
+            float *vf = new float[d->mSize];
+            for(size_t i = 0; i < d->mSize; i++)
+                vf[i] = other.toFloatP()[i];
+            d->val = vf;
+        }
+        else if(d->format == CuVariant::Matrix )
+            d->val = static_cast<CuMatrix <float > *> (other.d->val)->clone();
+    } break;
+    case CuVariant::String: {
+        if(d->format == CuVariant::Scalar || d->format == CuVariant::Vector) {
+            char *other_s;
+            char **str = new char *[d->mSize];
+            size_t len;
+            for(size_t i = 0; i < d->mSize; i++)
+            {
+                other_s = other.to_C_charP()[i];
+                if(other_s != NULL)
+                {
+                    len = strlen(other_s);
+                    str[i] = new char[len + 1];
+                    memset(str[i], 0, sizeof(char) * (len + 1));
+                    strncpy(str[i], other_s, len + 1);
+                }
+                else
+                    str[i] = NULL;
+            }
+            d->val = str;
+        }
+        else if(d->format == CuVariant::Matrix )
+            d->val = static_cast<CuMatrix <std::string > *> (other.d->val)->clone();
+    } break;
+    default:
+        perr("CuVariant::build_from: unsupported data type %d (%s)", d->type, dataTypeStr(d->type).c_str());
+        break;
+    } // switch d->type
 }
 
 /** \brief get the format of the data stored
@@ -992,12 +1048,20 @@ void CuVariant::v_to_matrix(const std::vector<T> &v, size_t dimx, size_t dim_y) 
         perr("CuVariant::from_matrix <T>: invalid data type or format. Have you called init first??");
     else {
         CuMatrix<T> *m = new CuMatrix(v, dimx, dim_y);
-        d->val = static_cast<CuMatrix <T>* >(m);
+        printf("CuVariant::v_to_matrix: \e[1;32m matrix being assigned to d->val %s\e[0m", m->repr().c_str());
+        d->val = m ; // static_cast<CuMatrix <T>* >(m);
+        printf("CuVariant::v_to_matrix: \e[1;36m matrix being RECONVERTED frïp d->val %p d->val %s\e[0m", d->val, static_cast<CuMatrix<T> *>(d->val)->repr().c_str());
     }
 }
 
-void v_to_string_matrix(const std::vector<std::string> &vs, size_t dimx, size_t dim_y) {
-
+void CuVariant::v_to_string_matrix(const std::vector<std::string> &vs, size_t dimx, size_t dim_y) {
+    if(d->mIsValid && d->type == String) {
+        CuMatrix<std::string> *m = new CuMatrix(vs, dimx, dim_y);
+        d->val = m; /*static_cast<CuMatrix <std::string>* >(m);*/
+    }
+    else {
+        perr("CuVariant::from_matrix <T>: invalid data type or format. Have you called init first??");
+    }
 }
 
 /*
@@ -1538,7 +1602,7 @@ std::string CuVariant::toString(bool *ok, const char *format) const
     char converted[MAXLEN + 1];
     bool success = d->mSize > 0;
     memset(converted, 0, sizeof(char) * (MAXLEN + 1));
-    for(size_t i = 0; i < d->mSize && success; i++)
+    for(size_t i = 0; (d->format == Scalar || d->format == Vector) &&  i < d->mSize && success; i++)
     {
         if(i > 0)
             ret += ",";
@@ -1560,6 +1624,10 @@ std::string CuVariant::toString(bool *ok, const char *format) const
             snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%hd", static_cast<short int *>(d->val)[i]);
         else if(d->type == UShort)
             snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%hu", static_cast<unsigned short *>(d->val)[i]);
+        else if(d->type == Char)
+            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%d", static_cast<char *>(d->val)[i]);
+        else if(d->type == UChar)
+            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%d", static_cast<unsigned char *>(d->val)[i]);
         else if(d->type == Float)
             snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%g", static_cast<float *>(d->val)[i]);
         else if(d->type == Boolean)
@@ -1577,6 +1645,28 @@ std::string CuVariant::toString(bool *ok, const char *format) const
         if(d->type != String)
             ret += std::string(converted);
     }
+    if(d->format == Matrix) {
+        switch(d->type) {
+        case UChar: {
+            CuMatrix<unsigned char> *m = static_cast<CuMatrix <unsigned char > * >(d->val);
+            snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
+        }break;
+        case Char: {
+            CuMatrix<char> *m = static_cast<CuMatrix <char > * >(d->val);
+            snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
+            break;
+        }
+        case UShort: {
+            CuMatrix<unsigned short> *m = static_cast<CuMatrix <unsigned short > * >(d->val);
+            snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
+        }break;
+        case Short: {
+            CuMatrix<short> *m = static_cast<CuMatrix <short > * >(d->val);
+            snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
+        } break;
+        }
+
+    }// format matrix
 
     if(ok)
         *ok = success;
@@ -1636,6 +1726,8 @@ std::vector<std::string> CuVariant::toStringVector(bool *ok) const
                 snprintf(converted, MAXLEN, "%f", static_cast<float *>(d->val)[i]);
             else if(d->type == Boolean)
                 static_cast<bool *>(d->val)[i] ? sprintf(converted, "true") : sprintf(converted, "false");
+            else if(d->type == UChar)
+                else if(d->type == Char)
             else
             {
                 success = false;
@@ -1867,11 +1959,24 @@ bool *CuVariant::toBoolP() const
  * @see getSize
  * @see getData
  */
-char **CuVariant::toCharP() const
+char **CuVariant::to_C_charP() const
 {
     if(d->type == CuVariant::String)
         return (char **) d->val ;
     return NULL;
+}
+
+
+char *CuVariant::toCharP() const {
+    if(d->type == CuVariant::String)
+        return (char *) d->val ;
+    return nullptr;
+}
+
+unsigned char *CuVariant::toUCharP() const {
+    if(d->type == CuVariant::String)
+        return (unsigned char *) d->val ;
+    return nullptr;
 }
 
 void *CuVariant::toVoidP() const

@@ -9,6 +9,8 @@ exists ($${INSTALL_ROOT}/include/quapps/quapps.pri) {
 }
 
 
+CONFIG += debug
+
 CONFIG+=link_pkgconfig
 PKGCONFIG -= x11
 
@@ -35,8 +37,6 @@ SHAREDIR = $${INSTALL_ROOT}/share
 DOCDIR = $${SHAREDIR}/doc/qumbia-reader
 EXAMPLESDIR = $${SHAREDIR}/examples/qumbia-reader
 DEFINES += DOC_PATH=\"\\\"$${DOCDIR}\\\"\"
-
-CONFIG +=
 
 # CONFIG+=qml_debug
 # CONFIG+=declarative_debug

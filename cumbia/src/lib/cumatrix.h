@@ -20,22 +20,31 @@ public:
 template <typename T> class CuMatrix
 {
 public:
-    CuMatrix(const std::vector<T>& v, size_t nro, size_t nco)
-    {
-        d = new CuMatrixPrivate<T>(v, nro, nco);
+    CuMatrix(const std::vector<T>& v, size_t nro, size_t nco) {
+        d = new CuMatrixPrivate(v, nro, nco);
+        printf("CuMatrix const std::vector<T>& v, size_t nro, size_t nco  constructor d %p\n", d);
     }
-    CuMatrix(const CuMatrix &other)
-    {
-        d = new CuMatrixPrivate<T>(other.d->data, other.d->nrows, other.d->ncols);
+
+    CuMatrix(const CuMatrix &other) {
+        printf("CuMatrix from other: other.d = %p\n", other.d);
+        d = new CuMatrixPrivate(other.d->data, other.d->nrows, other.d->ncols);
     }
-    CuMatrix(CuMatrix && other)
-    {
+
+    CuMatrix(CuMatrix && other) {
+        printf("CuMatrix from other (MOVE): other.d = %p\n", other.d);
         /* no new d here! */
         d = other.d;
         other.d = nullptr; /* don't delete */
+        printf("CuMatrix from other (MOVE): this->d %p\n", d);
     }
+
     CuMatrix() {
-        d = new CuMatrixPrivate<T>(std::vector<T>(), 0, 0);
+        d = new CuMatrixPrivate(std::vector<T>(), 0, 0);
+        printf("CuMatrix empty constructor d %p\n", d);
+    }
+
+    CuMatrix *clone() const {
+        return new CuMatrix(d->data, d->nrows, d->ncols);
     }
 
     virtual ~CuMatrix() {
@@ -74,7 +83,9 @@ public:
         if(this != &other) {
             if(d) delete d;
             d = other.d;
+            printf("operator MOVE = d is like other %p\n", d);
             other.d  = nullptr; /* don't delete */
+            printf("operator MOVE = OTHER is NULL, d is %p\n", d);
         }
         return *this;
     }

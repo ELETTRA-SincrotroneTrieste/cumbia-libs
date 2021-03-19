@@ -113,6 +113,7 @@ size_t CuTConfiguration::dataListenersCount() {
 
 void CuTConfiguration::start()
 {
+    printf("CuTConfiguration::start: DAFFOQ \n");
     CuDeviceFactoryService *df =
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));

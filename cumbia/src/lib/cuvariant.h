@@ -292,7 +292,10 @@ public:
 
     bool *toBoolP() const;
 
-    char **toCharP() const;
+    char **to_C_charP() const;
+
+    unsigned char* toUCharP() const;
+    char* toCharP() const;
 
     void *toVoidP() const;
 
