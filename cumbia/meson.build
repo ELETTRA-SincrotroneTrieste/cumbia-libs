@@ -1,4 +1,4 @@
-project('cumbia', 'cpp', version : '1.2.4',
+project('cumbia', 'cpp', version : '1.2.5',
     default_options : ['c_std=c17', 'cpp_std=c++17'])
 
 project_description = 'library that offers a carefree approach to multi thread application design and implementation'
@@ -30,6 +30,7 @@ headers = [
 'src/lib/threads/cutimerlistener.h',
 'src/lib/cuvariant.h',
 'src/lib/cuvariant_t.h',
+'src/lib/cumatrix.h',
 'src/lib/cuvariantprivate.h',
 'src/lib/cudata.h',
 'src/lib/cudataquality.h',
@@ -67,6 +68,7 @@ sources = [
 'src/lib/threads/cutimer.cpp',
 'src/lib/cuvariant.cpp',
 'src/lib/cuvariantprivate.cpp',
+'src/lib/cumatrix.cpp',
 'src/lib/cudata.cpp',
 'src/lib/cudataquality.cpp',
 'src/lib/cudatalistener.cpp',
@@ -86,7 +88,7 @@ sources = [
 
 includedirs = include_directories('src/lib', 'src/lib/threads', 'src/lib/services')
 
-cpp_arguments = [ '-DCUMBIA_DEBUG_OUTPUT=1' , '-DCU_VERSION=1.2.4' ]
+cpp_arguments = [ '-DCUMBIA_DEBUG_OUTPUT=1' , '-DCU_VERSION=1.2.5' ]
 
 # cpp_arguments = []
 

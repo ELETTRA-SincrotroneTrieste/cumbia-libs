@@ -9,6 +9,7 @@ class CumbiaPool;
 class CuControlsFactoryPool;
 class CuContext;
 
+
 class Qu_Reader : public QObject, public CuDataListener
 {
     Q_OBJECT
@@ -55,6 +56,20 @@ signals:
     void newUShortVector(const QString& src, double timestamp_us, const QVector<unsigned short>& v, const CuData& da);
     void newStringList(const QString& src, double timestamp_us, const QStringList& v, const CuData& da);
     void toStringList(const QString& src, const QString& fromType, double timestamp_us, const QStringList& v, const CuData& da);
+
+    void newDoubleMatrix(const QString& src, double timestamp_us, const CuMatrix<double>& m, const CuData& da);
+    void newFloatMatrix(const QString& src, double timestamp_us, const CuMatrix<float>& m, const CuData& da);
+    void newBoolMatrix(const QString& src, double timestamp_us, const CuMatrix<bool>& m, const CuData& da);
+    void newUCharMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned char>& m, const CuData& da);
+    void newCharMatrix(const QString& src, double timestamp_us, const CuMatrix<char>& m, const CuData& da);
+    void newShortMatrix(const QString& src, double timestamp_us, const CuMatrix<short>& m, const CuData& da);
+    void newUShortMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned short>& m, const CuData& da);
+    void newStringMatrix(const QString& src, double timestamp_us, const CuMatrix<std::string>& m, const CuData& da);
+    void newIntMatrix(const QString& src, double timestamp_us, const CuMatrix<int>& m, const CuData& da);
+    void newUIntMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned>& m, const CuData& da);
+    void newULongMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned long>& m, const CuData& da);
+    void newLongMatrix(const QString& src, double timestamp_us, const CuMatrix<long>& m, const CuData& da);
+
 
 
     void newError(const QString& src, double timestamp_us, const QString& msg, const CuData& da);

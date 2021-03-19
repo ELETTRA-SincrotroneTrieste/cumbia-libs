@@ -85,6 +85,7 @@ void Qu_Reader::onUpdate(const CuData &da)
     }
 
     if(!hdb_data && !da["err"].toBool() && !property_only) {
+        QString from_ty = QuString(v.dataTypeStr(v.getType()));
         // if !m_save property we can notify.
         // otherwise wait for property, merge m_prop with data and notify
         // (epics properties are not guaranteed to be delivered first)
@@ -125,14 +126,30 @@ void Qu_Reader::onUpdate(const CuData &da)
                 emit newUShortVector(source(), ts, QVector<unsigned short>::fromStdVector(v.toUShortVector()), data);
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::LongInt)
                 emit newLongVector(source(), ts, QVector<long>::fromStdVector(v.toLongIntVector()), data);
-            else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::Short)
-                emit newShortVector(source(), ts, QVector<short>::fromStdVector(v.toShortVector()), data);
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::String)
                 emit newStringList(source(), ts, QuStringList(v.toStringVector()), data);
             else if(v.getFormat() == CuVariant::Vector) {
-                QString from_ty = QuString(v.dataTypeStr(v.getType()));
                 emit toStringList(source(), from_ty, ts, QuStringList(v.toStringVector()), data);
             }
+            else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::Double)
+                emit newDoubleMatrix(source(),  ts, v.toMatrix<double>(), data);
+            else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::Float)
+                emit newFloatMatrix(source(),  ts, v.toMatrix<float>(), data);
+            else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::Boolean)
+                emit newBoolMatrix(source(),  ts, v.toMatrix<bool>(), data);
+            else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::UChar)
+                emit newUCharMatrix(source(),ts, v.toMatrix<unsigned char>(), data);
+            else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::Char)
+                emit newCharMatrix(source(),ts, v.toMatrix< char>(), data);
+            else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::Short)
+                emit newShortMatrix(source(), ts, v.toMatrix<short>(), data);
+            else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::UShort)
+                emit newUShortMatrix(source(), ts, v.toMatrix<unsigned short>(), data);
+            else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::LongInt)
+                emit newLongMatrix(source(),ts, v.toMatrix<long>(), data);
+            else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::String)
+                emit newStringMatrix(source(), ts, v.toMatrix<std::string>(), data);
+
 
             else if(!v.isNull()) {
                 data["err"] = true;

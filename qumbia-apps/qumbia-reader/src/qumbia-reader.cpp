@@ -237,7 +237,7 @@ void QumbiaReader::onNewString(const QString &src, double ts, const QString &val
 {
     m_refreshCntMap[src]++;
     m_print_extra1(da);
-    printf("[%s] [\e[1;36mstring\e[0m] %s\e[0m", qstoc(makeTimestamp(ts)), qstoc(val));
+    printf("[%s] [\e[1;34mstring\e[0m] %s\e[0m", qstoc(makeTimestamp(ts)), qstoc(val));
     m_print_extra2(da);
     m_checkRefreshCnt(sender());
 }
@@ -328,6 +328,120 @@ void QumbiaReader::onNewHdbData(const QString &src, const CuData &hdbd)
     }
 }
 
+void QumbiaReader::onNewDoubleMatrix(const QString &src, double timestamp_us, const CuMatrix<double> &m, const CuData &da){
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[1;34mdouble\e[0m,matrix(%ldx%ld)] { ", qstoc(makeTimestamp(timestamp_us)), m.nrows(), m.ncols());
+    printf("---\n%s\n---\n", m.repr().c_str());
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewFloatMatrix(const QString &src, double timestamp_us, const CuMatrix<float> &m, const CuData &da) {
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[1;34mdouble\e[0m,matrix(%ldx%ld)] { ", qstoc(makeTimestamp(timestamp_us)), m.nrows(), m.ncols());
+    printf("---\n%s\n---\n", m.repr().c_str());
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewBoolMatrix(const QString& src, double timestamp_us, const CuMatrix<bool>& m, const CuData& da) {
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[1;35mbool\e[0m,matrix(%ldx%ld)] { ", qstoc(makeTimestamp(timestamp_us)), m.nrows(), m.ncols());
+    printf("---\n%s\n---\n", m.repr().c_str());
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewUCharMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned char>& m, const CuData& da)  {
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[1;32muchar\e[0m,matrix(%ldx%ld)] { ", qstoc(makeTimestamp(timestamp_us)), m.nrows(), m.ncols());
+    printf("---\n%s\n---\n", m.repr().c_str());
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewCharMatrix(const QString& src, double timestamp_us, const CuMatrix<char>& m, const CuData& da)  {
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[1;34mchar\e[0m,matrix(%ldx%ld)] { ", qstoc(makeTimestamp(timestamp_us)), m.nrows(), m.ncols());
+    printf("---\n%s\n---\n", m.repr().c_str());
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewShortMatrix(const QString& src, double timestamp_us, const CuMatrix<short>& m, const CuData& da)  {
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[1;35mshort\e[0m,matrix(%ldx%ld)] { ", qstoc(makeTimestamp(timestamp_us)), m.nrows(), m.ncols());
+    printf("---\n%s\n---\n", m.repr().c_str());
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewUShortMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned short>& m, const CuData& da)  {
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[0;35mushort\e[0m,matrix(%ldx%ld)] { ", qstoc(makeTimestamp(timestamp_us)), m.nrows(), m.ncols());
+    printf("---\n%s\n---\n", m.repr().c_str());
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewStringMatrix(const QString& src, double timestamp_us, const CuMatrix<std::string>& m, const CuData& da)  {
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[1;33mstring\e[0m,matrix(%ldx%ld)] \n{ ", qstoc(makeTimestamp(timestamp_us)), m.nrows(), m.ncols());
+    std::string sm;
+    for(size_t r = 0; r < m.nrows(); r++) {
+        for(size_t c = 0; c < m.ncols(); c++)
+            sm += m.data()[c + m.nrows() * r] + "\t";
+        sm += "\n";
+    }
+    printf("}\n");
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewIntMatrix(const QString& src, double timestamp_us, const CuMatrix<int>& m, const CuData& da)  {
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[1;36mint\e[0m,matrix(%ldx%ld)] { ", qstoc(makeTimestamp(timestamp_us)), m.nrows(), m.ncols());
+    printf("---\n%s\n---\n", m.repr().c_str());
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewUIntMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned>& m, const CuData& da) {
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[0;36muint\e[0m,matrix(%ldx%ld)] { ", qstoc(makeTimestamp(timestamp_us)), m.nrows(), m.ncols());
+    printf("---\n%s\n---\n", m.repr().c_str());
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewULongMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned long>& m, const CuData& da)  {
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[0;34mulong\e[0m,matrix(%ldx%ld)] { ", qstoc(makeTimestamp(timestamp_us)), m.nrows(), m.ncols());
+    printf("---\n%s\n---\n", m.repr().c_str());
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
+void QumbiaReader::onNewLongMatrix(const QString& src, double timestamp_us, const CuMatrix<long>& m, const CuData& da)  {
+    m_refreshCntMap[src]++;
+    m_print_extra1(da);
+    printf("[%s] [\e[1;34mlong\e[0m,matrix(%ldx%ld)] { ", qstoc(makeTimestamp(timestamp_us)), m.nrows(), m.ncols());
+    printf("---\n%s\n---\n", m.repr().c_str());
+    m_print_extra2(da);
+    m_checkRefreshCnt(sender());
+}
+
 void QumbiaReader::onNewShortVector(const QString &src, double ts, const QVector<short> &v, const CuData& da)
 {
     m_refreshCntMap[src]++;
@@ -357,6 +471,8 @@ void QumbiaReader::onNewUShortVector(const QString &src, double ts, const QVecto
     m_print_extra2(da);
     m_checkRefreshCnt(sender());
 }
+
+
 
 void QumbiaReader::onPropertyReady(const QString &src, double ts,const CuData &pr)
 {
@@ -522,6 +638,24 @@ void QumbiaReader::m_createReaders(const QStringList &srcs)  {
         connect(r, SIGNAL(toStringList(QString,QString,double,QStringList,CuData)), this,
                 SLOT(onStringListConversion(QString,QString,double,QStringList,CuData)));
         connect(r, SIGNAL(newHdbData(QString,CuData)), this, SLOT(onNewHdbData(QString, CuData)));
+
+        // matrix
+        connect(r, SIGNAL(newDoubleMatrix(const QString&, double, const CuMatrix<double>&, const CuData& ) ), this,
+                SLOT(onNewDoubleMatrix(const QString&,  double, const CuMatrix<double>&, const CuData& )));
+
+        connect(r, SIGNAL(newIntMatrix(const QString&, double, const CuMatrix<int>&, const CuData& ) ), this,
+                SLOT(onNewIntMatrix(const QString&,  double, const CuMatrix<int>&, const CuData& )));
+
+        connect(r, SIGNAL(newCharMatrix(const QString&, double, const CuMatrix< char>&, const CuData& ) ), this,
+                SLOT(onNewCharMatrix(const QString&,  double, const CuMatrix< char>&, const CuData& )));
+        connect(r, SIGNAL(newUCharMatrix(const QString&, double, const CuMatrix<unsigned char>&, const CuData& ) ), this,
+                SLOT(onNewUCharMatrix(const QString&,  double, const CuMatrix<unsigned char>&, const CuData& )));
+        connect(r, SIGNAL(newFloatMatrix(const QString&, double, const CuMatrix<float>&, const CuData& ) ), this,
+                SLOT(onNewFloatMatrix(const QString&,  double, const CuMatrix<float>&, const CuData& )));
+        connect(r, SIGNAL(newUShortMatrix(const QString&, double, const CuMatrix<unsigned short>&, const CuData& ) ), this,
+                SLOT(onNewUShortMatrix(const QString&,  double, const CuMatrix<unsigned short>&, const CuData& )));
+        connect(r, SIGNAL(newLongMatrix(const QString&, double, const CuMatrix<long int>&, const CuData& ) ), this,
+                SLOT(onNewDoubleMatrix(const QString&,  double, const CuMatrix<long int>&, const CuData& )));
 
         connect(r, SIGNAL(newError(QString,double,QString, const CuData&)),
                 this, SLOT(onError(QString,double,QString, const CuData&)));

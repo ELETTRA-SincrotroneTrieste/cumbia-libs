@@ -101,6 +101,18 @@ CuVariant::CuVariant(short i)
     from(i);
 }
 
+CuVariant::CuVariant(char c) {
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
+    init(Scalar, Char);
+    from(c);
+}
+
+CuVariant::CuVariant(unsigned char uc) {
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
+    init(Scalar, UChar);
+    from(uc);
+}
+
 /*! \brief builds a CuVariant holding the specified unsigned short integer
  *
  * @param u the value that will be stored by the object as unsigned short int
@@ -336,6 +348,26 @@ CuVariant::CuVariant(const std::vector<std::string> &vs)
     from(vs);
 }
 
+/*!
+ * \brief vector of char flavor
+ * \param vc std vector of char
+ */
+CuVariant::CuVariant(const std::vector<char> &vc) {
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
+    init(Vector, Char);
+    from(vc);
+}
+
+/*!
+ * \brief vector of unsigned char flavor
+ * \param vc std vector of unsigned char
+ */
+CuVariant::CuVariant(const std::vector<unsigned char> &vc) {
+    d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
+    init(Vector, UChar);
+    from(vc);
+}
+
 /*! \brief builds a CuVariant holding the specified vector of short integers
  *
  * @param si the value that will be stored by the object as vector of short integer elements
@@ -446,6 +478,100 @@ CuVariant::CuVariant(const std::vector<float> &vf)
     from(vf);
 }
 
+
+CuVariant::CuVariant(const std::vector<unsigned char> &m, size_t dimx, size_t dimy) {
+    d = new CuVariantPrivate();
+    init(Matrix, UChar);
+    v_to_matrix(m, dimx, dimy);
+}
+
+CuVariant::CuVariant(const std::vector<char> &m, size_t dimx, size_t dimy) {
+    d = new CuVariantPrivate();
+    init(Matrix, UChar);
+    v_to_matrix(m, dimx, dimy);
+}
+
+CuVariant::CuVariant(const std::vector<short> &i, size_t dimx, size_t dimy) {
+    d = new CuVariantPrivate();
+    init(Matrix, Short);
+    v_to_matrix(i, dimx, dimy);
+}
+
+CuVariant::CuVariant(const std::vector<unsigned short> &si, size_t dimx, size_t dimy) {
+    d = new CuVariantPrivate();
+    init(Matrix, UShort);
+    v_to_matrix(si, dimx, dimy);
+}
+
+CuVariant::CuVariant(const std::vector<int> &vi, size_t dimx, size_t dimy) {
+    d = new CuVariantPrivate();
+    init(Matrix, Int);
+    v_to_matrix(vi, dimx, dimy);
+}
+
+CuVariant::CuVariant(const std::vector<unsigned int> &ui, size_t dimx, size_t dimy){
+    d = new CuVariantPrivate();
+    init(Matrix, UInt);
+    v_to_matrix(ui, dimx, dimy);
+}
+
+CuVariant::CuVariant(const std::vector<long> &li, size_t dimx, size_t dimy) {
+    d = new CuVariantPrivate();
+    init(Matrix, LongInt);
+    v_to_matrix(li, dimx, dimy);
+}
+
+CuVariant::CuVariant(const std::vector<long long> &lli, size_t dimx, size_t dimy) {
+    d = new CuVariantPrivate();
+    init(Matrix, LongLongInt);
+    v_to_matrix(lli, dimx, dimy);
+}
+
+CuVariant::CuVariant(const std::vector<unsigned long> &lui, size_t dimx, size_t dimy) {
+    d = new CuVariantPrivate();
+    init(Matrix, LongUInt);
+    v_to_matrix(lui, dimx, dimy);
+}
+
+CuVariant::CuVariant(const std::vector<unsigned long long> &llui, size_t dimx, size_t dimy) {
+    d = new CuVariantPrivate();
+    init(Matrix, LongLongUInt);
+    v_to_matrix(llui, dimx, dimy);
+}
+
+CuVariant::CuVariant(const std::vector<float> &vf, size_t dimx, size_t dimy)
+{
+    d = new CuVariantPrivate();
+    init(Matrix, Float);
+    v_to_matrix(vf, dimx, dimy);
+}
+
+CuVariant::CuVariant(const std::vector<double> &vd, size_t dimx, size_t dimy)
+{
+    d = new CuVariantPrivate();
+    init(Matrix, Double);
+    v_to_matrix(vd, dimx, dimy);
+}
+
+CuVariant::CuVariant(const std::vector<long double> &vld, size_t dimx, size_t dimy) {
+    d = new CuVariantPrivate();
+    init(Matrix, LongDouble);
+    v_to_matrix(vld, dimx, dimy);
+}
+
+CuVariant::CuVariant(const std::vector<bool> &vb, size_t dimx, size_t dimy) {
+    d = new CuVariantPrivate();
+    init(Matrix, Boolean);
+    v_to_matrix(vb, dimx, dimy);
+}
+
+CuVariant::CuVariant(const std::vector<std::string> &vs, size_t dimx, size_t dimy) {
+    d = new CuVariantPrivate();
+    init(Matrix, String);
+    v_to_matrix(vs, dimx, dimy);
+}
+
+
 /*! \brief builds a CuVariant holding the specified vector of void* pointers
  *
  * @param li the value that will be stored by the object as vector of void* elements
@@ -546,8 +672,10 @@ bool CuVariant::operator ==(const CuVariant &other) const
           other.isValid() ==  this->isValid() ) )
         return false;
     /* one d->val is null and the other not */
-    if( (other.d->val == NULL &&  this->d->val != NULL) || (other.d->val != NULL &&  this->d->val == NULL) )
+    if( (other.d->val == nullptr &&  this->d->val != nullptr) || (other.d->val != nullptr &&  this->d->val == nullptr) )
         return false;
+    if(other.d->val == nullptr && d->val == nullptr)
+        return true;
 
     char **v_str = NULL, **other_v_str = NULL;
     /*
@@ -856,6 +984,22 @@ void CuVariant::from(const std::vector<T> &v)
     }
 }
 
+
+
+template<typename T>
+void CuVariant::v_to_matrix(const std::vector<T> &v, size_t dimx, size_t dim_y) {
+    if(!d->mIsValid || d->type == String)
+        perr("CuVariant::from_matrix <T>: invalid data type or format. Have you called init first??");
+    else {
+        CuMatrix<T> *m = new CuMatrix(v, dimx, dim_y);
+        d->val = static_cast<CuMatrix <T>* >(m);
+    }
+}
+
+void v_to_string_matrix(const std::vector<std::string> &vs, size_t dimx, size_t dim_y) {
+
+}
+
 /*
  * build a CuVariant holding a vector of strings
  */
@@ -1066,6 +1210,28 @@ std::vector<unsigned short> CuVariant::toUShortVector() const
     unsigned short *v_us = static_cast<unsigned short *>(d->val);
     std::vector<unsigned short> usvals(v_us, v_us + d->mSize);
     return usvals;
+}
+
+/*!
+ * \brief convert the stored data into a vector of char
+ * \return std::vector< char> representation of the stored data
+ */
+std::vector<char> CuVariant::toCharVector() const
+{
+    char *v_uc = static_cast<char *>(d->val);
+    std::vector<char> ucvals(v_uc, v_uc + d->mSize);
+    return ucvals;
+}
+
+/*!
+ * \brief convert the stored data into a vector of unsigned char
+ * \return std::vector<unsigned char> representation of the stored data
+ */
+std::vector<unsigned char> CuVariant::toUCharVector() const
+{
+    unsigned char *v_uc = static_cast<unsigned char *>(d->val);
+    std::vector<unsigned char> ucvals(v_uc, v_uc + d->mSize);
+    return ucvals;
 }
 
 /** \brief convert the stored data into a double scalar
@@ -1728,117 +1894,137 @@ void *CuVariant::toVoidP() const
  *
  * The vector from the *other* variant is then appended to the vector from *this*
  * variant.
+ *
+ * \note
+ * CuVariant::append for Matrix format is not supported
  */
 void CuVariant::append(const CuVariant &other) {
     // cast to DataType so that we get warned by the compiler if
     // a case is not handled
-    DataType dt = static_cast<DataType> (d->type);
-    switch (dt) {
-    case Short: {
-        std::vector<short> t_sv = toShortVector(), o_sv;
-        other.toVector<short>(o_sv);
-        t_sv.insert(t_sv.end(), o_sv.begin(), o_sv.end());
-        *this = CuVariant(t_sv);
+    if(other.getFormat() == Matrix || d->format == Matrix) {
+        perr("CuVariant.append: cannot append data in Matrix format");
     }
-        break;
-    case UShort: {
-        std::vector<unsigned short> t_usv = toUShortVector(), o_usv;
-        other.toVector<unsigned short>(o_usv);
-        t_usv.insert(t_usv.end(), o_usv.begin(), o_usv.end());
-        *this = CuVariant(t_usv);
-    }
-        break;
-    case Int: {
-        std::vector<int> t_iv = toIntVector(), o_iv;
-        other.toVector<int>(o_iv);
-        t_iv.insert(t_iv.end(), o_iv.begin(), o_iv.end());
-        *this = CuVariant(t_iv);
-    }
-        break;
-    case UInt: {
-        std::vector<unsigned int> t_uiv = toUIntVector(), o_uiv;
-        other.toVector<unsigned int>(o_uiv);
-        t_uiv.insert(t_uiv.end(), o_uiv.begin(), o_uiv.end());
-        *this = CuVariant(t_uiv);
-    }
-        break;
-    case LongInt: {
-        std::vector<long int> t_liv = toLongIntVector(), o_liv;
-        other.toVector<long int>(o_liv);
-        t_liv.insert(t_liv.end(), o_liv.begin(), o_liv.end());
-        *this = CuVariant(t_liv);
-    }
-        break;
-    case LongUInt: {
-        std::vector<unsigned long int> t_uliv = this->toULongIntVector(), o_uliv;
-        other.toVector<unsigned long int>(o_uliv);
-        t_uliv.insert(t_uliv.end(), o_uliv.begin(), o_uliv.end());
-        *this = CuVariant(t_uliv);
-    }
-        break;
-    case Float: {
-        std::vector<float> t_fv = this->toFloatVector(), o_fv;
-        other.toVector<float>(o_fv);
-        t_fv.insert(t_fv.end(), o_fv.begin(), o_fv.end());
-        *this = CuVariant(t_fv);
-    }
-        break;
-    case Double: {
-        std::vector<double> t_dv = this->toDoubleVector(), o_dv;
-        other.toVector<double>(o_dv);
-        t_dv.insert(t_dv.end(), o_dv.begin(), o_dv.end());
-        *this = CuVariant(t_dv);
-    }
-        break;
-    case LongDouble: {
-        std::vector<long double> t_ldv = this->toLongDoubleVector(), o_ldv;
-        other.toVector<long double>(o_ldv);
-        t_ldv.insert(t_ldv.end(), o_ldv.begin(), o_ldv.end());
-        *this = CuVariant(t_ldv);
-    }
-        break;
-    case Boolean: {
-        std::vector<bool> t_bv = this->toBoolVector(), o_bv;
-        other.toVector<bool>(o_bv);
-        t_bv.insert(t_bv.end(), o_bv.begin(), o_bv.end());
-        *this = CuVariant(t_bv);
-    }
-        break;
-    case String: {
-        std::vector<std::string> t_sv = this->toStringVector(), o_sv;
-        o_sv = other.toStringVector();
-        t_sv.insert(t_sv.end(), o_sv.begin(), o_sv.end());
-        *this = CuVariant(t_sv);
-    }
-        break;
-    case LongLongInt: {
-        std::vector<long long int> t_lliv = toLongLongIntVector(), o_lliv;
-        other.toVector<long long int>(o_lliv);
-        t_lliv.insert(t_lliv.end(), o_lliv.begin(), o_lliv.end());
-        *this = CuVariant(t_lliv);
-    }
-    case LongLongUInt: {
-        std::vector<long long unsigned int> t_lluiv = toLongLongUIntVector(), o_lluiv;
-        other.toVector<long long  unsigned int>(o_lluiv);
-        t_lluiv.insert(t_lluiv.end(), o_lluiv.begin(), o_lluiv.end());
-        *this = CuVariant(t_lluiv);
-    }
-        break;
-    case VoidPtr: {
-        perr("CuVariant.append: cannot append data to a VoidPtr CuVariant");
-    }
-        break;
-    case TypeInvalid:
-        if(other.d->type != TypeInvalid) {
-            *this = CuVariant(other);
-            this->d->format = Vector;
+    else {
+        DataType dt = static_cast<DataType> (d->type);
+        switch (dt) {
+        case Short: {
+            std::vector<short> t_sv = toShortVector(), o_sv;
+            other.toVector<short>(o_sv);
+            t_sv.insert(t_sv.end(), o_sv.begin(), o_sv.end());
+            *this = CuVariant(t_sv);
         }
+            break;
+        case UShort: {
+            std::vector<unsigned short> t_usv = toUShortVector(), o_usv;
+            other.toVector<unsigned short>(o_usv);
+            t_usv.insert(t_usv.end(), o_usv.begin(), o_usv.end());
+            *this = CuVariant(t_usv);
+        }
+            break;
+        case Int: {
+            std::vector<int> t_iv = toIntVector(), o_iv;
+            other.toVector<int>(o_iv);
+            t_iv.insert(t_iv.end(), o_iv.begin(), o_iv.end());
+            *this = CuVariant(t_iv);
+        }
+            break;
+        case UInt: {
+            std::vector<unsigned int> t_uiv = toUIntVector(), o_uiv;
+            other.toVector<unsigned int>(o_uiv);
+            t_uiv.insert(t_uiv.end(), o_uiv.begin(), o_uiv.end());
+            *this = CuVariant(t_uiv);
+        }
+            break;
+        case LongInt: {
+            std::vector<long int> t_liv = toLongIntVector(), o_liv;
+            other.toVector<long int>(o_liv);
+            t_liv.insert(t_liv.end(), o_liv.begin(), o_liv.end());
+            *this = CuVariant(t_liv);
+        }
+            break;
+        case LongUInt: {
+            std::vector<unsigned long int> t_uliv = this->toULongIntVector(), o_uliv;
+            other.toVector<unsigned long int>(o_uliv);
+            t_uliv.insert(t_uliv.end(), o_uliv.begin(), o_uliv.end());
+            *this = CuVariant(t_uliv);
+        }
+            break;
+        case Float: {
+            std::vector<float> t_fv = this->toFloatVector(), o_fv;
+            other.toVector<float>(o_fv);
+            t_fv.insert(t_fv.end(), o_fv.begin(), o_fv.end());
+            *this = CuVariant(t_fv);
+        }
+            break;
+        case Double: {
+            std::vector<double> t_dv = this->toDoubleVector(), o_dv;
+            other.toVector<double>(o_dv);
+            t_dv.insert(t_dv.end(), o_dv.begin(), o_dv.end());
+            *this = CuVariant(t_dv);
+        }
+            break;
+        case LongDouble: {
+            std::vector<long double> t_ldv = this->toLongDoubleVector(), o_ldv;
+            other.toVector<long double>(o_ldv);
+            t_ldv.insert(t_ldv.end(), o_ldv.begin(), o_ldv.end());
+            *this = CuVariant(t_ldv);
+        }
+            break;
+        case Boolean: {
+            std::vector<bool> t_bv = this->toBoolVector(), o_bv;
+            other.toVector<bool>(o_bv);
+            t_bv.insert(t_bv.end(), o_bv.begin(), o_bv.end());
+            *this = CuVariant(t_bv);
+        }
+            break;
+        case String: {
+            std::vector<std::string> t_sv = this->toStringVector(), o_sv;
+            o_sv = other.toStringVector();
+            t_sv.insert(t_sv.end(), o_sv.begin(), o_sv.end());
+            *this = CuVariant(t_sv);
+        }
+            break;
+        case LongLongInt: {
+            std::vector<long long int> t_lliv = toLongLongIntVector(), o_lliv;
+            other.toVector<long long int>(o_lliv);
+            t_lliv.insert(t_lliv.end(), o_lliv.begin(), o_lliv.end());
+            *this = CuVariant(t_lliv);
+        }
+        case LongLongUInt: {
+            std::vector<long long unsigned int> t_lluiv = toLongLongUIntVector(), o_lluiv;
+            other.toVector<long long  unsigned int>(o_lluiv);
+            t_lluiv.insert(t_lluiv.end(), o_lluiv.begin(), o_lluiv.end());
+            *this = CuVariant(t_lluiv);
+        }
+            break;
+        case VoidPtr: {
+            perr("CuVariant.append: cannot append data to a VoidPtr CuVariant");
+        }
+            break;
+        case UChar: {
+            std::vector<unsigned char> t_uchv = toUCharVector(), o_uchv;
+            other.toVector<unsigned char>(o_uchv);
+            t_uchv.insert(o_uchv.end(), o_uchv.begin(), o_uchv.end());
+            *this = CuVariant(o_uchv);
+        }
+        case Char: {
+            std::vector<char> t_chv = toCharVector(), o_chv;
+            other.toVector<char>(o_chv);
+            t_chv.insert(o_chv.end(), o_chv.begin(), o_chv.end());
+            *this = CuVariant(o_chv);
+        }
+        case TypeInvalid:
+            if(other.d->type != TypeInvalid) {
+                *this = CuVariant(other);
+                this->d->format = Vector;
+            }
 
-        else
-            perr("CuVariant.append: cannot cat two invalid CuVariants");
-        break;
-    case EndDataTypes:
-        break;
+            else
+                perr("CuVariant.append: cannot cat two invalid CuVariants");
+            break;
+        case EndDataTypes:
+            break;
+        }
     }
 }
 

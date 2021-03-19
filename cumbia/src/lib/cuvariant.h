@@ -6,6 +6,7 @@
 #include <string>
 
 #include <cumacros.h>
+#include <cumatrix.h>
 
 #define TIMESTAMPLEN    32
 #define SRCLEN          256
@@ -88,6 +89,8 @@ public:
      * @see getType
      */
     enum DataType { TypeInvalid = 0, ///< invalid data type
+                    Char,
+                    UChar,
                     Short, ///< short int
                     UShort, ///< unsigned short int
                     Int, ///< int
@@ -109,6 +112,10 @@ public:
              DataType dt);
 
     /* scalars */
+    CuVariant(char c);
+
+    CuVariant(unsigned char uc);
+
     CuVariant(short int i);
 
     CuVariant(short unsigned int u);
@@ -139,38 +146,42 @@ public:
 
     CuVariant(void *ptr);
 
+    /* matrix, since 1.2.5 */
+    CuVariant(const std::vector<unsigned char> &m, size_t dimx, size_t dimy);
+    CuVariant(const std::vector<char> &m, size_t dimx, size_t dimy);
+    CuVariant(const std::vector<short int> &i, size_t dimx, size_t dimy);
+    CuVariant(const std::vector<short unsigned int> &si, size_t dimx, size_t dimy);
+    CuVariant(const std::vector<int> &vi, size_t dimx, size_t dimy);
+    CuVariant(const std::vector<unsigned int> &ui, size_t dimx, size_t dimy);
+    CuVariant(const std::vector<long int> &li, size_t dimx, size_t dimy);
+    CuVariant(const std::vector<long long int> &lli, size_t dimx, size_t dimy);
+    CuVariant(const std::vector<long unsigned int> &lui, size_t dimx, size_t dimy);
+    CuVariant(const std::vector<long long unsigned int> &llui, size_t dimx, size_t dimy);
+    CuVariant(const std::vector<float> &vf, size_t dimx, size_t dimy);
+    CuVariant(const std::vector<double> &vd, size_t dimx, size_t dimy);
+    CuVariant(const std::vector<long double> &vd, size_t dimx, size_t dimy);
+    CuVariant(const std::vector<bool> &vb, size_t dimx, size_t dimy);
+    CuVariant(const std::vector<std::string > &vs, size_t dimx, size_t dimy);
 
     /* vector */
+    CuVariant(const std::vector<char> &c);
+    CuVariant(const std::vector<unsigned char> &uc);
     CuVariant(const std::vector<short int> &i);
-
     CuVariant(const std::vector<short unsigned int> &si);
-
     CuVariant(const std::vector<int> &vi);
-
     CuVariant(const std::vector<unsigned int> &ui);
-
     CuVariant(const std::vector<long int> &li);
-
     CuVariant(const std::vector<long long int> &lli);
-
     CuVariant(const std::vector<long unsigned int> &lui);
-
     CuVariant(const std::vector<long long unsigned int> &llui);
-
     CuVariant(const std::vector<float> &vf);
-
     CuVariant(const std::vector<double> &vd);
-
     CuVariant(const std::vector<long double> &vd);
-
     CuVariant(const std::vector<bool> &vd);
-
     CuVariant(const std::vector<std::string > &vd);
-
     CuVariant(const std::vector<void *> &vptr);
 
     CuVariant(const CuVariant &other);
-
     CuVariant(CuVariant && other);
 
     CuVariant();
@@ -220,6 +231,10 @@ public:
     std::vector<short> toShortVector() const;
 
     std::vector<unsigned short> toUShortVector() const;
+
+    std::vector<char> toCharVector() const;
+
+    std::vector<unsigned char> toUCharVector() const;
 
     double toDouble(bool *ok = NULL) const;
 
@@ -281,6 +296,8 @@ public:
 
     void *toVoidP() const;
 
+    template<typename T> CuMatrix<T> toMatrix() const;
+
     template<typename T> bool to(T &val) const;
 
     template<typename T> bool toVector(std::vector<T> &v) const;
@@ -305,9 +322,13 @@ private:
 
     template<typename T> void from(const std::vector<T> &v);
 
+    template<typename T> void v_to_matrix(const std::vector<T> &v, size_t dimx, size_t dim_y);
+    void v_to_string_matrix(const std::vector<std::string> &vs, size_t dimx, size_t dim_y);
+
     void from(const std::vector<std::string > & s);
 
     void from_std_string(const std::string & s);
+
 
     void init(DataFormat df, DataType dt);
 

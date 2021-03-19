@@ -91,18 +91,18 @@ void CuTConfigActivity::execute()
 
     if(d->tdev->isValid()) {
         Tango::DeviceProxy *dev = d->tdev->getDevice();
-        CuTangoWorld utils;
+        CuTangoWorld tw;
         if(dev && cmd)
         {
-            success = utils.get_command_info(dev, point, at);
+            success = tw.get_command_info(dev, point, at);
             if(success && d->type == CuReaderConfigActivityType && !skip_read) {
-                success = utils.cmd_inout(dev, point, at);
+                success = tw.cmd_inout(dev, point, at);
             } else if(success) { // successful get_command_info but no cmd_inout
                 at.putTimestamp();
             }
         }
         else if(dev)  {
-            value_only ? success = utils.read_att(dev, point, at)  : success = utils.get_att_config(dev, point, at, skip_read);
+            value_only ? success = tw.read_att(dev, point, at)  : success = tw.get_att_config(dev, point, at, skip_read);
         }
         else
             d->msg = d->tdev->getMessage();
@@ -112,15 +112,15 @@ void CuTConfigActivity::execute()
         if(d->options.containsKey("fetch_props")) {
             const std::vector<std::string> &props = d->options["fetch_props"].toStringVector();
             if(props.size() > 0 && success && dev)
-                success = utils.get_att_props(dev, point, at, props);
+                success = tw.get_att_props(dev, point, at, props);
         }
         //
 
         at["data"] = true;
-        at["msg"] = "CuTConfigActivity.execute: " + utils.getLastMessage();
-        at["err"] = utils.error();
-        d->err = !success || utils.error();
-        d->msg = utils.getLastMessage();
+        at["msg"] = "CuTConfigActivity.execute: " + tw.getLastMessage();
+        at["err"] = tw.error();
+        d->err = !success || tw.error();
+        d->msg = tw.getLastMessage();
 
         // retry?
         d->err ?  d->repeat = 2000 * d->try_cnt : d->repeat = -1;

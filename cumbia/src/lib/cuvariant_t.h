@@ -224,4 +224,12 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
     return valid;
 }
 
+
+template<typename T>
+CuMatrix<T> CuVariant::toMatrix() const {
+    if(d->format == Matrix)
+        return *(static_cast<CuMatrix <T> * >(d->val));
+    return CuMatrix<T>();
+}
+
 #endif // CUVARIANT_T_H

@@ -209,6 +209,19 @@ public slots:
 
     void onNewHdbData(const QString& src, const CuData& hdbd);
 
+    void onNewDoubleMatrix(const QString& src, double timestamp_us, const CuMatrix<double>& m, const CuData& da);
+    void onNewFloatMatrix(const QString& src, double timestamp_us, const CuMatrix<float>& m, const CuData& da);
+    void onNewBoolMatrix(const QString& src, double timestamp_us, const CuMatrix<bool>& m, const CuData& da);
+    void onNewUCharMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned char>& m, const CuData& da);
+    void onNewCharMatrix(const QString& src, double timestamp_us, const CuMatrix<char>& m, const CuData& da);
+    void onNewShortMatrix(const QString& src, double timestamp_us, const CuMatrix<short>& m, const CuData& da);
+    void onNewUShortMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned short>& m, const CuData& da);
+    void onNewStringMatrix(const QString& src, double timestamp_us, const CuMatrix<std::string>& m, const CuData& da);
+    void onNewIntMatrix(const QString& src, double timestamp_us, const CuMatrix<int>& m, const CuData& da);
+    void onNewUIntMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned>& m, const CuData& da);
+    void onNewULongMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned long>& m, const CuData& da);
+    void onNewLongMatrix(const QString& src, double timestamp_us, const CuMatrix<long>& m, const CuData& da);
+
     void onPropertyReady(const QString& src, double ts, const CuData& p);
     void onError(const QString& src, double ts, const QString& msg, const CuData& da);
 
