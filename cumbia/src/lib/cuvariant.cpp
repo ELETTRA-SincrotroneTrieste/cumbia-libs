@@ -1664,6 +1664,54 @@ std::string CuVariant::toString(bool *ok, const char *format) const
             CuMatrix<short> *m = static_cast<CuMatrix <short > * >(d->val);
             snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
         } break;
+        case Float: {
+            CuMatrix<float> *m = static_cast<CuMatrix <float > * >(d->val);
+            snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
+        } break;
+        case Double: {
+            CuMatrix<double> *m = static_cast<CuMatrix <double > * >(d->val);
+            snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
+        } break;
+        case LongDouble: {
+            CuMatrix<long double> *m = static_cast<CuMatrix <long double > * >(d->val);
+            snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
+        } break;
+        case Int: {
+            CuMatrix<int> *m = static_cast<CuMatrix <int > * >(d->val);
+            snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
+        } break;
+        case LongInt: {
+            CuMatrix<long int> *m = static_cast<CuMatrix <long int > * >(d->val);
+            snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
+        } break;
+        case LongLongInt: {
+            CuMatrix<long long int> *m = static_cast<CuMatrix <long long int > * >(d->val);
+            snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
+        } break;
+        case UInt: {
+            CuMatrix<unsigned int> *m = static_cast<CuMatrix <unsigned int > * >(d->val);
+            snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
+        } break;
+        case LongUInt: {
+            CuMatrix<unsigned long int> *m = static_cast<CuMatrix <unsigned long int > * >(d->val);
+            snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
+        } break;
+        case LongLongUInt: {
+            CuMatrix<unsigned long long int> *m = static_cast<CuMatrix <unsigned long long int > * >(d->val);
+            snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
+        } break;
+        case Boolean: {
+            CuMatrix<bool> *m = static_cast<CuMatrix <bool> * >(d->val);
+            snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
+        }break;
+        case String: {
+            CuMatrix<std::string> *m = static_cast<CuMatrix <std::string> * >(d->val);
+            snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
+        }break;
+        default:
+             perr("CuVariant.toString: error converting matrix data to string: type is %d (%s)",
+                 d->type, dataTypeStr(d->type).c_str());
+            break;
         }
 
     }// format matrix
@@ -1727,9 +1775,10 @@ std::vector<std::string> CuVariant::toStringVector(bool *ok) const
             else if(d->type == Boolean)
                 static_cast<bool *>(d->val)[i] ? sprintf(converted, "true") : sprintf(converted, "false");
             else if(d->type == UChar)
-                else if(d->type == Char)
-            else
-            {
+                snprintf(converted, MAXLEN, "%u", static_cast<unsigned char *>(d->val)[i]);
+            else if(d->type == Char)
+                snprintf(converted, MAXLEN, "%d", static_cast<char *>(d->val)[i]);
+            else {
                 success = false;
                 perr("CuVariant.toStringVector: error converting data to string vector: format is %s type is %s",
                      dataFormatStr(d->format).c_str(), dataTypeStr(d->type).c_str());

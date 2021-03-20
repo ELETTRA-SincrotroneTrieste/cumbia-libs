@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <sstream>
 
 template<typename T>
 class CuMatrixPrivate {
@@ -21,13 +22,13 @@ template <typename T> class CuMatrix
 {
 public:
     CuMatrix(const std::vector<T>& v, size_t nro, size_t nco) {
-        d = new CuMatrixPrivate(v, nro, nco);
+        d = new CuMatrixPrivate<T>(v, nro, nco);
         printf("CuMatrix const std::vector<T>& v, size_t nro, size_t nco  constructor d %p\n", d);
     }
 
     CuMatrix(const CuMatrix &other) {
         printf("CuMatrix from other: other.d = %p\n", other.d);
-        d = new CuMatrixPrivate(other.d->data, other.d->nrows, other.d->ncols);
+        d = new CuMatrixPrivate<T>(other.d->data, other.d->nrows, other.d->ncols);
     }
 
     CuMatrix(CuMatrix && other) {
@@ -39,7 +40,7 @@ public:
     }
 
     CuMatrix() {
-        d = new CuMatrixPrivate(std::vector<T>(), 0, 0);
+        d = new CuMatrixPrivate<T>(std::vector<T>(), 0, 0);
         printf("CuMatrix empty constructor d %p\n", d);
     }
 
@@ -91,14 +92,14 @@ public:
     }
 
     std::string repr() const {
-        std::string re;
+        std::stringstream sst;
         for(size_t r = 0; r < d->nrows; r++) {
             for(size_t c = 0; c < d->ncols; c++) {
-                re += std::to_string(d->data[c + r * d->nrows]) + std::string("\t");
+                sst << d->data[c + r * d->nrows] << std::string("\t");
             }
-            re += std::string("\n");
+            sst << std::string("\n");
         }
-        return re;
+        return sst.str();
     }
 
 private:

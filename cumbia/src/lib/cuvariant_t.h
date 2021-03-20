@@ -227,13 +227,8 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
 
 template<typename T>
 CuMatrix<T> CuVariant::toMatrix() const {
-    printf("\e[1;35mCuVariant.toMatrix from format %d %s\e[0m\n", d->format, dataFormatStr(d->format).c_str());
     if(d->format == Matrix) {
-        printf("CuVariant.toMatrix  \e[0;34mDAFFFOQ~!! d->val %p\e[0m\n", d->val);
-        CuMatrix<T> ret = *(static_cast<CuMatrix <T> * >(d->val));
-        printf("CuVariant.toMatrix returning mat %ld x %ld\n",
-               ret.nrows(), ret.ncols());
-        return ret;
+        return *(static_cast<CuMatrix <T> * >(d->val));
     }
     return CuMatrix<T>();
 }
