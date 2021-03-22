@@ -893,7 +893,7 @@ void CuVariant::build_from(const CuVariant& other)
             d->val = static_cast<CuMatrix <std::string > *> (other.d->val)->clone();
     } break;
     default:
-        perr("CuVariant::build_from: unsupported data type %d (%s)", d->type, dataTypeStr(d->type).c_str());
+        perr("CuVariant::build_from: unsupported data type %d (%s) other %s", d->type, dataTypeStr(d->type).c_str(), toString().c_str());
         break;
     } // switch d->type
 }
