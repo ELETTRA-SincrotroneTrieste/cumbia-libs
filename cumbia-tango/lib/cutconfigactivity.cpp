@@ -76,7 +76,6 @@ void CuTConfigActivity::init()
 
 void CuTConfigActivity::execute()
 {
-    printf("\e[1;36mCuTConfigActivity.execute: enter\e[0m\n");
     CuData at = getToken(); /* activity token */
     d->err = !d->tdev->isValid();
     std::string point = at["point"].toString();
