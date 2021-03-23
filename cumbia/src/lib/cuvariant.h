@@ -208,101 +208,61 @@ public:
 
     bool isVoidPtr() const;
 
+	bool isValid() const;
+	bool isNull() const;
+	bool isWNull() const;
+
     std::vector<double> toDoubleVector() const;
-
     std::vector<long double> toLongDoubleVector() const;
-
     std::vector<float> toFloatVector() const;
-
     std::vector<int> toIntVector() const;
-
     std::vector<unsigned int> toUIntVector() const;
-
     std::vector<unsigned long long int> toLongLongUIntVector() const;
-
     std::vector<long int> toLongIntVector() const;
-
     std::vector<long long int> toLongLongIntVector() const;
-
     std::vector<unsigned long int> toULongIntVector() const;
-
     std::vector<bool> toBoolVector() const;
-
     std::vector<short> toShortVector() const;
-
     std::vector<unsigned short> toUShortVector() const;
-
     std::vector<char> toCharVector() const;
-
     std::vector<unsigned char> toUCharVector() const;
 
-    double toDouble(bool *ok = NULL) const;
-
-    long double toLongDouble(bool *ok = NULL) const;
-
-    bool isValid() const;
-
-    bool isNull() const;
-
-    bool isWNull() const;
-
+	double toDouble(bool *ok = NULL) const;
+	long double toLongDouble(bool *ok = NULL) const;
     unsigned long int toULongInt(bool *ok = NULL) const;
-
     unsigned long long toULongLongInt(bool *ok) const;
-
     long int toLongInt( bool *ok = NULL) const;
-
     long long int toLongLongInt(bool *ok = NULL) const;
-
     int toInt( bool *ok = NULL) const;
-
     unsigned int toUInt( bool *ok = NULL) const;
-
     unsigned short toUShortInt(bool *ok = NULL) const;
-
     short toShortInt(bool *ok = NULL) const;
-
     float toFloat(bool *ok = NULL ) const;
-
     bool toBool(bool *ok = NULL) const;
-
     std::string toString(bool *ok = NULL, const char *format = "") const;
 
     std::vector<std::string> toStringVector(bool *ok = NULL) const;
 
     double *toDoubleP() const;
-
     long double *toLongDoubleP() const;
-
     long int *toLongIntP() const;
-
     long long int* toLongLongIntP() const;
-
     int *toIntP() const;
-
     unsigned int *toUIntP() const;
-
     short int *toShortP() const;
-
     unsigned short *toUShortP() const;
-
     unsigned long int *toULongIntP() const;
-
     float *toFloatP() const;
-
-    bool *toBoolP() const;
-
-    char **to_C_charP() const;
-
+	bool *toBoolP() const;
     unsigned char* toUCharP() const;
     char* toCharP() const;
 
+	char **to_C_charP() const;
     void *toVoidP() const;
 
     template<typename T> CuMatrix<T> toMatrix() const;
 
     template<typename T> bool to(T &val) const;
-
     template<typename T> bool toVector(std::vector<T> &v) const;
 
     void append(const CuVariant& other);

@@ -491,7 +491,7 @@ CuVariant::CuVariant(const std::vector<unsigned char> &m, size_t dimx, size_t di
 
 CuVariant::CuVariant(const std::vector<char> &m, size_t dimx, size_t dimy) {
     d = new CuVariantPrivate();
-    init(Matrix, UChar);
+    init(Matrix, Char);
     v_to_matrix(m, dimx, dimy);
 }
 
@@ -889,9 +889,12 @@ void CuVariant::build_from(const CuVariant& other)
             }
             d->val = str;
         }
-        else if(d->format == CuVariant::Matrix )
-            d->val = static_cast<CuMatrix <std::string > *> (other.d->val)->clone();
+        else if(d->format == CuVariant::Matrix ) {
+            d->val = CuMatrix<std::string>::from_string_matrix(*(static_cast<CuMatrix <std::string > *> (other.d->val)));
+        }
     } break;
+    case CuVariant::FormatInvalid:
+        break;
     default:
         perr("CuVariant::build_from: unsupported data type %d (%s) other %s", d->type, dataTypeStr(d->type).c_str(), toString().c_str());
         break;
@@ -1048,9 +1051,7 @@ void CuVariant::v_to_matrix(const std::vector<T> &v, size_t dimx, size_t dim_y) 
         perr("CuVariant::from_matrix <T>: invalid data type or format. Have you called init first??");
     else {
         CuMatrix<T> *m = new CuMatrix(v, dimx, dim_y);
-        printf("CuVariant::v_to_matrix: \e[1;32m matrix being assigned to d->val %s\e[0m", m->repr().c_str());
         d->val = m ; // static_cast<CuMatrix <T>* >(m);
-        printf("CuVariant::v_to_matrix: \e[1;36m matrix being RECONVERTED frïp d->val %p d->val %s\e[0m", d->val, static_cast<CuMatrix<T> *>(d->val)->repr().c_str());
     }
 }
 
@@ -1705,6 +1706,7 @@ std::string CuVariant::toString(bool *ok, const char *format) const
             snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
         }break;
         case String: {
+            printf("CuVariant.toString: Matrix, std::string\n");
             CuMatrix<std::string> *m = static_cast<CuMatrix <std::string> * >(d->val);
             snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
         }break;
@@ -1713,6 +1715,7 @@ std::string CuVariant::toString(bool *ok, const char *format) const
                  d->type, dataTypeStr(d->type).c_str());
             break;
         }
+        ret = std::string(converted);
 
     }// format matrix
 
@@ -2017,13 +2020,13 @@ char **CuVariant::to_C_charP() const
 
 
 char *CuVariant::toCharP() const {
-    if(d->type == CuVariant::String)
+    if(d->type == CuVariant::Char)
         return (char *) d->val ;
     return nullptr;
 }
 
 unsigned char *CuVariant::toUCharP() const {
-    if(d->type == CuVariant::String)
+    if(d->type == CuVariant::UChar)
         return (unsigned char *) d->val ;
     return nullptr;
 }
@@ -2202,7 +2205,7 @@ CuVariant& CuVariant::toVector()
 std::string CuVariant::dataTypeStr(int t) const
 {
     const char *v[] = {
-        "TypeInvalid", "Short", "UShort", "Int", "UInt",
+        "TypeInvalid", "Char", "UChar", "Short", "UShort", "Int", "UInt",
         "LongInt", "LongLongInt", "LongUInt", "LongLongUInt", "Float", "Double",
         "LongDouble", "Boolean", "String", "VoidPtr", "EndDataTypes"
     };
