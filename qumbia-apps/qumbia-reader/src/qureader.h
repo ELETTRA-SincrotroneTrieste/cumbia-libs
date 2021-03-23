@@ -68,7 +68,7 @@ signals:
     void newIntMatrix(const QString& src, double timestamp_us, const CuMatrix<int>& m, const CuData& da);
     void newUIntMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned>& m, const CuData& da);
     void newULongMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned long>& m, const CuData& da);
-    void newLongMatrix(const QString& src, double timestamp_us, const CuMatrix<long>& m, const CuData& da);
+    void newLongMatrix(const QString& src, double timestamp_us, const CuMatrix<long int>& m, const CuData& da);
 
 
 

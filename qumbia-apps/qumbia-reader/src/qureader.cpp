@@ -50,7 +50,6 @@ void Qu_Reader::setContextOptions(const CuData &options) {
 //
 void Qu_Reader::onUpdate(const CuData &da)
 {
-    printf("Qu_Reader.onUpdate entering\n");
     bool property_only = m_property_only || da.has("activity", "cutadb");
     CuData data(da);
     const CuVariant&  v = data["value"];
@@ -138,8 +137,10 @@ void Qu_Reader::onUpdate(const CuData &da)
                 emit newFloatMatrix(source(),  ts, v.toMatrix<float>(), data);
             else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::Boolean)
                 emit newBoolMatrix(source(),  ts, v.toMatrix<bool>(), data);
-            else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::UChar)
+            else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::UChar) {
+                printf("UfuckinCHar\n");
                 emit newUCharMatrix(source(),ts, v.toMatrix<unsigned char>(), data);
+            }
             else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::Char)
                 emit newCharMatrix(source(),ts, v.toMatrix< char>(), data);
             else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::Short)
@@ -147,11 +148,9 @@ void Qu_Reader::onUpdate(const CuData &da)
             else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::UShort)
                 emit newUShortMatrix(source(), ts, v.toMatrix<unsigned short>(), data);
             else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::LongInt)
-                emit newLongMatrix(source(),ts, v.toMatrix<long>(), data);
+                emit newLongMatrix(source(),ts, v.toMatrix<long int>(), data);
             else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::String)
                 emit newStringMatrix(source(), ts, v.toMatrix<std::string>(), data);
-
-
             else if(!v.isNull()) {
                 data["err"] = true;
                 QString msg = QString("Reader.onUpdate: unsupported data type %1 and format %2 in %3")

@@ -220,7 +220,7 @@ public slots:
     void onNewIntMatrix(const QString& src, double timestamp_us, const CuMatrix<int>& m, const CuData& da);
     void onNewUIntMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned>& m, const CuData& da);
     void onNewULongMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned long>& m, const CuData& da);
-    void onNewLongMatrix(const QString& src, double timestamp_us, const CuMatrix<long>& m, const CuData& da);
+    void onNewLongMatrix(const QString& src, double timestamp_us, const CuMatrix<long int>& m, const CuData& da);
 
     void onPropertyReady(const QString& src, double ts, const CuData& p);
     void onError(const QString& src, double ts, const QString& msg, const CuData& da);
