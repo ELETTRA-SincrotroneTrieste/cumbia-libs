@@ -88,9 +88,7 @@ public:
      *
      * @see getType
      */
-    enum DataType { TypeInvalid = 0, ///< invalid data type
-                    Char,
-                    UChar,
+	enum DataType { TypeInvalid = 0, ///< invalid data type
                     Short, ///< short int
                     UShort, ///< unsigned short int
                     Int, ///< int
@@ -105,6 +103,8 @@ public:
                     Boolean, ///< bool
                     String, ///< std::string, const char*
                     VoidPtr, ///< generic void*
+		            Char,
+		            UChar,
                     EndDataTypes = 64 ///< defines an upper bound of the enumeration
                   };
 

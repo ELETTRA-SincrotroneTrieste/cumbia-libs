@@ -2205,9 +2205,9 @@ CuVariant& CuVariant::toVector()
 std::string CuVariant::dataTypeStr(int t) const
 {
     const char *v[] = {
-        "TypeInvalid", "Char", "UChar", "Short", "UShort", "Int", "UInt",
+        "TypeInvalid", "Short", "UShort", "Int", "UInt",
         "LongInt", "LongLongInt", "LongUInt", "LongLongUInt", "Float", "Double",
-        "LongDouble", "Boolean", "String", "VoidPtr", "EndDataTypes"
+        "LongDouble", "Boolean", "String", "VoidPtr", "Char", "UChar", "EndDataTypes"
     };
     if(t >= 0 && t < EndDataTypes)
         return std::string(v[t]);
