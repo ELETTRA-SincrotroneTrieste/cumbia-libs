@@ -20,6 +20,7 @@ var annotated_dup =
     [ "CuIsolatedActivity", "classCuIsolatedActivity.html", "classCuIsolatedActivity" ],
     [ "CuLog", "classCuLog.html", "classCuLog" ],
     [ "CuLogImplI", "classCuLogImplI.html", "classCuLogImplI" ],
+    [ "CuMatrix", "classCuMatrix.html", "classCuMatrix" ],
     [ "Cumbia", "classCumbia.html", "classCumbia" ],
     [ "CumbiaPool", "classCumbiaPool.html", "classCumbiaPool" ],
     [ "CuNullLogImpl", "classCuNullLogImpl.html", "classCuNullLogImpl" ],

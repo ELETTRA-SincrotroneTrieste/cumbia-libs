@@ -62,6 +62,10 @@ var files_dup =
       [ "CuConLogImpl", "classCuConLogImpl.html", "classCuConLogImpl" ]
     ] ],
     [ "cumacros.h", "cumacros_8h.html", "cumacros_8h" ],
+    [ "cumatrix.cpp", "cumatrix_8cpp.html", null ],
+    [ "cumatrix.h", "cumatrix_8h.html", [
+      [ "CuMatrix", "classCuMatrix.html", "classCuMatrix" ]
+    ] ],
     [ "cumbia.cpp", "cumbia_8cpp.html", null ],
     [ "cumbia.h", "cumbia_8h.html", "cumbia_8h" ],
     [ "cumbiapool.cpp", "cumbiapool_8cpp.html", null ],

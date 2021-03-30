@@ -35,6 +35,7 @@ var hierarchy =
       [ "CuConLogImpl", "classCuConLogImpl.html", null ],
       [ "CuNullLogImpl", "classCuNullLogImpl.html", null ]
     ] ],
+    [ "CuMatrix< T >", "classCuMatrix.html", null ],
     [ "Cumbia", "classCumbia.html", null ],
     [ "CumbiaPool", "classCumbiaPool.html", null ],
     [ "CuServiceI", "classCuServiceI.html", [

@@ -129,6 +129,9 @@ Public Types</h2></td></tr>
 &#160;&#160;<a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caba717c3f69170621a9e0d216e6c30987">Boolean</a>
 , <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2">String</a>
 , <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caae540f48cd6737596cb4874e4324b942">VoidPtr</a>
+, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca598a29588744be0ed93451235ce2cad2">Char</a>
+, <br />
+&#160;&#160;<a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cabb6115dace7c2ae809fd8c0a094dcc48">UChar</a>
 , <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca4f6dda8ec340eff3256cbd767ecca60f">EndDataTypes</a> = 64
 <br />
  }</td></tr>
@@ -139,6 +142,10 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a74de4f5b23a096062edcf023f40bb0eb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a74de4f5b23a096062edcf023f40bb0eb">CuVariant</a> (const size_t size, <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2">DataFormat</a> df, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280c">DataType</a> dt)</td></tr>
 <tr class="separator:a74de4f5b23a096062edcf023f40bb0eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59f48dcb039df51913488231573ce3a6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a59f48dcb039df51913488231573ce3a6">CuVariant</a> (char c)</td></tr>
+<tr class="separator:a59f48dcb039df51913488231573ce3a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af52755785096668a8ed7c647ec746321"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#af52755785096668a8ed7c647ec746321">CuVariant</a> (unsigned char uc)</td></tr>
+<tr class="separator:af52755785096668a8ed7c647ec746321"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02795c9c98157511dd5c3a13a02e1c35"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a02795c9c98157511dd5c3a13a02e1c35">CuVariant</a> (short int i)</td></tr>
 <tr class="separator:a02795c9c98157511dd5c3a13a02e1c35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7073f7a2d6af2a446d3865bbe690bcfa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a7073f7a2d6af2a446d3865bbe690bcfa">CuVariant</a> (short unsigned int u)</td></tr>
@@ -180,6 +187,42 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac053982e2d402abaa6ac48adb322a534"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#ac053982e2d402abaa6ac48adb322a534">CuVariant</a> (void *ptr)</td></tr>
 <tr class="memdesc:ac053982e2d402abaa6ac48adb322a534"><td class="mdescLeft">&#160;</td><td class="mdescRight">builds a <a class="el" href="classCuVariant.html" title="CuVariant class acts like a union for the cumbia data types.">CuVariant</a> storing the void * pointer passed as argument  <a href="classCuVariant.html#ac053982e2d402abaa6ac48adb322a534">More...</a><br /></td></tr>
 <tr class="separator:ac053982e2d402abaa6ac48adb322a534"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28229b4bf6c1d49a0bb3cfd94cdf4f45"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a28229b4bf6c1d49a0bb3cfd94cdf4f45">CuVariant</a> (const std::vector&lt; unsigned char &gt; &amp;m, size_t dimx, size_t dimy)</td></tr>
+<tr class="separator:a28229b4bf6c1d49a0bb3cfd94cdf4f45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6687dc55b0674b65760731d5a2f2e3f5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a6687dc55b0674b65760731d5a2f2e3f5">CuVariant</a> (const std::vector&lt; char &gt; &amp;m, size_t dimx, size_t dimy)</td></tr>
+<tr class="separator:a6687dc55b0674b65760731d5a2f2e3f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08666d5b8ce8bfdad50d3794712e9b2e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a08666d5b8ce8bfdad50d3794712e9b2e">CuVariant</a> (const std::vector&lt; short int &gt; &amp;i, size_t dimx, size_t dimy)</td></tr>
+<tr class="separator:a08666d5b8ce8bfdad50d3794712e9b2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb9a4af9a747fd8f7d21a61071b9352a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#adb9a4af9a747fd8f7d21a61071b9352a">CuVariant</a> (const std::vector&lt; short unsigned int &gt; &amp;si, size_t dimx, size_t dimy)</td></tr>
+<tr class="separator:adb9a4af9a747fd8f7d21a61071b9352a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae54ea584d089e6554b18e12d86c9ac0f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#ae54ea584d089e6554b18e12d86c9ac0f">CuVariant</a> (const std::vector&lt; int &gt; &amp;vi, size_t dimx, size_t dimy)</td></tr>
+<tr class="separator:ae54ea584d089e6554b18e12d86c9ac0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49734e6fabc9c692ef3cd6a7f6ccb51f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a49734e6fabc9c692ef3cd6a7f6ccb51f">CuVariant</a> (const std::vector&lt; unsigned int &gt; &amp;ui, size_t dimx, size_t dimy)</td></tr>
+<tr class="separator:a49734e6fabc9c692ef3cd6a7f6ccb51f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84f4f82864e53a95ab66fe9fe8037aa8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a84f4f82864e53a95ab66fe9fe8037aa8">CuVariant</a> (const std::vector&lt; long int &gt; &amp;li, size_t dimx, size_t dimy)</td></tr>
+<tr class="separator:a84f4f82864e53a95ab66fe9fe8037aa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70aec9b3c0b5a2d7b4377dda06691375"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a70aec9b3c0b5a2d7b4377dda06691375">CuVariant</a> (const std::vector&lt; long long int &gt; &amp;lli, size_t dimx, size_t dimy)</td></tr>
+<tr class="separator:a70aec9b3c0b5a2d7b4377dda06691375"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47b46c2caeba5bfda2abce3111f78317"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a47b46c2caeba5bfda2abce3111f78317">CuVariant</a> (const std::vector&lt; long unsigned int &gt; &amp;lui, size_t dimx, size_t dimy)</td></tr>
+<tr class="separator:a47b46c2caeba5bfda2abce3111f78317"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a44a35319b11a50f7ec55fffed25395"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a2a44a35319b11a50f7ec55fffed25395">CuVariant</a> (const std::vector&lt; long long unsigned int &gt; &amp;llui, size_t dimx, size_t dimy)</td></tr>
+<tr class="separator:a2a44a35319b11a50f7ec55fffed25395"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89d6a9eefb7465bb79922bcf2483de7c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a89d6a9eefb7465bb79922bcf2483de7c">CuVariant</a> (const std::vector&lt; float &gt; &amp;vf, size_t dimx, size_t dimy)</td></tr>
+<tr class="separator:a89d6a9eefb7465bb79922bcf2483de7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2517df6700ab7657ba1f005ffe235cb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#ae2517df6700ab7657ba1f005ffe235cb">CuVariant</a> (const std::vector&lt; double &gt; &amp;vd, size_t dimx, size_t dimy)</td></tr>
+<tr class="separator:ae2517df6700ab7657ba1f005ffe235cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae8b5355a80de7d0d0f6b4404bc30e77"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#aae8b5355a80de7d0d0f6b4404bc30e77">CuVariant</a> (const std::vector&lt; long double &gt; &amp;vd, size_t dimx, size_t dimy)</td></tr>
+<tr class="separator:aae8b5355a80de7d0d0f6b4404bc30e77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9e8afbcecca94f5f3710f87e6ffe275"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#ab9e8afbcecca94f5f3710f87e6ffe275">CuVariant</a> (const std::vector&lt; bool &gt; &amp;vb, size_t dimx, size_t dimy)</td></tr>
+<tr class="separator:ab9e8afbcecca94f5f3710f87e6ffe275"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b6b453c6696ed8d276d116c538d234e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a9b6b453c6696ed8d276d116c538d234e">CuVariant</a> (const std::vector&lt; std::string &gt; &amp;vs, size_t dimx, size_t dimy)</td></tr>
+<tr class="separator:a9b6b453c6696ed8d276d116c538d234e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae32f3b06345ec890c6ee25e3d798bb0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#aae32f3b06345ec890c6ee25e3d798bb0">CuVariant</a> (const std::vector&lt; char &gt; &amp;c)</td></tr>
+<tr class="memdesc:aae32f3b06345ec890c6ee25e3d798bb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">vector of char flavor  <a href="classCuVariant.html#aae32f3b06345ec890c6ee25e3d798bb0">More...</a><br /></td></tr>
+<tr class="separator:aae32f3b06345ec890c6ee25e3d798bb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f1f519bc04e43e66e47f8ecb262c1a5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a5f1f519bc04e43e66e47f8ecb262c1a5">CuVariant</a> (const std::vector&lt; unsigned char &gt; &amp;uc)</td></tr>
+<tr class="memdesc:a5f1f519bc04e43e66e47f8ecb262c1a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">vector of unsigned char flavor  <a href="classCuVariant.html#a5f1f519bc04e43e66e47f8ecb262c1a5">More...</a><br /></td></tr>
+<tr class="separator:a5f1f519bc04e43e66e47f8ecb262c1a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1051de2fb9987ca519eec98846907310"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a1051de2fb9987ca519eec98846907310">CuVariant</a> (const std::vector&lt; short int &gt; &amp;i)</td></tr>
 <tr class="separator:a1051de2fb9987ca519eec98846907310"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c0f7fab42b4e7c5a0fc2bf6402f2a9f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a3c0f7fab42b4e7c5a0fc2bf6402f2a9f">CuVariant</a> (const std::vector&lt; short unsigned int &gt; &amp;si)</td></tr>
@@ -259,6 +302,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a389cd3b4985660d47b75b2e15340f35e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a389cd3b4985660d47b75b2e15340f35e">isVoidPtr</a> () const</td></tr>
 <tr class="memdesc:a389cd3b4985660d47b75b2e15340f35e"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns true if the data stored is a void * pointer  <a href="classCuVariant.html#a389cd3b4985660d47b75b2e15340f35e">More...</a><br /></td></tr>
 <tr class="separator:a389cd3b4985660d47b75b2e15340f35e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2dbc2270a491340624e2b069085f2b26"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a2dbc2270a491340624e2b069085f2b26">isValid</a> () const</td></tr>
+<tr class="memdesc:a2dbc2270a491340624e2b069085f2b26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether the data stored by <a class="el" href="classCuVariant.html" title="CuVariant class acts like a union for the cumbia data types.">CuVariant</a> is valid.  <a href="classCuVariant.html#a2dbc2270a491340624e2b069085f2b26">More...</a><br /></td></tr>
+<tr class="separator:a2dbc2270a491340624e2b069085f2b26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af76f726f6bfaaea3e814e6bcae9f5ace"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#af76f726f6bfaaea3e814e6bcae9f5ace">isNull</a> () const</td></tr>
+<tr class="memdesc:af76f726f6bfaaea3e814e6bcae9f5ace"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether the the data stored by <a class="el" href="classCuVariant.html" title="CuVariant class acts like a union for the cumbia data types.">CuVariant</a> is NULL or not.  <a href="classCuVariant.html#af76f726f6bfaaea3e814e6bcae9f5ace">More...</a><br /></td></tr>
+<tr class="separator:af76f726f6bfaaea3e814e6bcae9f5ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03e17821ed3e668674f50c5caadbd7ce"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a03e17821ed3e668674f50c5caadbd7ce">isWNull</a> () const</td></tr>
+<tr class="separator:a03e17821ed3e668674f50c5caadbd7ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0590236a1ff5d7d77d6a09563be8ab46"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a0590236a1ff5d7d77d6a09563be8ab46">toDoubleVector</a> () const</td></tr>
 <tr class="memdesc:a0590236a1ff5d7d77d6a09563be8ab46"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert the stored data into a vector of double  <a href="classCuVariant.html#a0590236a1ff5d7d77d6a09563be8ab46">More...</a><br /></td></tr>
 <tr class="separator:a0590236a1ff5d7d77d6a09563be8ab46"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -294,20 +345,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a05852724325b86d59debf28d97387ce0"><td class="memItemLeft" align="right" valign="top">std::vector&lt; unsigned short &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a05852724325b86d59debf28d97387ce0">toUShortVector</a> () const</td></tr>
 <tr class="memdesc:a05852724325b86d59debf28d97387ce0"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert the stored data into a vector of unsigned short integers  <a href="classCuVariant.html#a05852724325b86d59debf28d97387ce0">More...</a><br /></td></tr>
 <tr class="separator:a05852724325b86d59debf28d97387ce0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab93f52cfc80ab930373f8c284fcf7ee9"><td class="memItemLeft" align="right" valign="top">std::vector&lt; char &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#ab93f52cfc80ab930373f8c284fcf7ee9">toCharVector</a> () const</td></tr>
+<tr class="memdesc:ab93f52cfc80ab930373f8c284fcf7ee9"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert the stored data into a vector of char  <a href="classCuVariant.html#ab93f52cfc80ab930373f8c284fcf7ee9">More...</a><br /></td></tr>
+<tr class="separator:ab93f52cfc80ab930373f8c284fcf7ee9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7626981811673176d39534567e8b3bc8"><td class="memItemLeft" align="right" valign="top">std::vector&lt; unsigned char &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a7626981811673176d39534567e8b3bc8">toUCharVector</a> () const</td></tr>
+<tr class="memdesc:a7626981811673176d39534567e8b3bc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert the stored data into a vector of unsigned char  <a href="classCuVariant.html#a7626981811673176d39534567e8b3bc8">More...</a><br /></td></tr>
+<tr class="separator:a7626981811673176d39534567e8b3bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19a20b2b1136dc3a23c5fde4e3e449ac"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a19a20b2b1136dc3a23c5fde4e3e449ac">toDouble</a> (bool *ok=NULL) const</td></tr>
 <tr class="memdesc:a19a20b2b1136dc3a23c5fde4e3e449ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert the stored data into a double scalar  <a href="classCuVariant.html#a19a20b2b1136dc3a23c5fde4e3e449ac">More...</a><br /></td></tr>
 <tr class="separator:a19a20b2b1136dc3a23c5fde4e3e449ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90d4e6226ee18ba03301cb02b3c47ad9"><td class="memItemLeft" align="right" valign="top">long double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a90d4e6226ee18ba03301cb02b3c47ad9">toLongDouble</a> (bool *ok=NULL) const</td></tr>
 <tr class="memdesc:a90d4e6226ee18ba03301cb02b3c47ad9"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert the stored data into a long double scalar  <a href="classCuVariant.html#a90d4e6226ee18ba03301cb02b3c47ad9">More...</a><br /></td></tr>
 <tr class="separator:a90d4e6226ee18ba03301cb02b3c47ad9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2dbc2270a491340624e2b069085f2b26"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a2dbc2270a491340624e2b069085f2b26">isValid</a> () const</td></tr>
-<tr class="memdesc:a2dbc2270a491340624e2b069085f2b26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether the data stored by <a class="el" href="classCuVariant.html" title="CuVariant class acts like a union for the cumbia data types.">CuVariant</a> is valid.  <a href="classCuVariant.html#a2dbc2270a491340624e2b069085f2b26">More...</a><br /></td></tr>
-<tr class="separator:a2dbc2270a491340624e2b069085f2b26"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af76f726f6bfaaea3e814e6bcae9f5ace"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#af76f726f6bfaaea3e814e6bcae9f5ace">isNull</a> () const</td></tr>
-<tr class="memdesc:af76f726f6bfaaea3e814e6bcae9f5ace"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether the the data stored by <a class="el" href="classCuVariant.html" title="CuVariant class acts like a union for the cumbia data types.">CuVariant</a> is NULL or not.  <a href="classCuVariant.html#af76f726f6bfaaea3e814e6bcae9f5ace">More...</a><br /></td></tr>
-<tr class="separator:af76f726f6bfaaea3e814e6bcae9f5ace"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a03e17821ed3e668674f50c5caadbd7ce"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a03e17821ed3e668674f50c5caadbd7ce">isWNull</a> () const</td></tr>
-<tr class="separator:a03e17821ed3e668674f50c5caadbd7ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e75675adfaef824a5658a23e7561d1b"><td class="memItemLeft" align="right" valign="top">unsigned long int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a3e75675adfaef824a5658a23e7561d1b">toULongInt</a> (bool *ok=NULL) const</td></tr>
 <tr class="memdesc:a3e75675adfaef824a5658a23e7561d1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert the stored data into a scalar unsigned long number  <a href="classCuVariant.html#a3e75675adfaef824a5658a23e7561d1b">More...</a><br /></td></tr>
 <tr class="separator:a3e75675adfaef824a5658a23e7561d1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -374,11 +423,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af419cdac8e055d93d59468ed1c5662cf"><td class="memItemLeft" align="right" valign="top">bool *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#af419cdac8e055d93d59468ed1c5662cf">toBoolP</a> () const</td></tr>
 <tr class="memdesc:af419cdac8e055d93d59468ed1c5662cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the pointer to the data stored as a boolean, or NULL if no data is stored or if the data type is wrong.  <a href="classCuVariant.html#af419cdac8e055d93d59468ed1c5662cf">More...</a><br /></td></tr>
 <tr class="separator:af419cdac8e055d93d59468ed1c5662cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1dfea9670f2b7c9e72b171cd7b0fb43b"><td class="memItemLeft" align="right" valign="top">char **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a1dfea9670f2b7c9e72b171cd7b0fb43b">toCharP</a> () const</td></tr>
-<tr class="memdesc:a1dfea9670f2b7c9e72b171cd7b0fb43b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the pointer to the data stored as a char**, or NULL if no data is stored or if the data type is wrong.  <a href="classCuVariant.html#a1dfea9670f2b7c9e72b171cd7b0fb43b">More...</a><br /></td></tr>
-<tr class="separator:a1dfea9670f2b7c9e72b171cd7b0fb43b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b8be130c23f00e2b6e4314dec34ea0c"><td class="memItemLeft" align="right" valign="top">unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a0b8be130c23f00e2b6e4314dec34ea0c">toUCharP</a> () const</td></tr>
+<tr class="separator:a0b8be130c23f00e2b6e4314dec34ea0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac637f981171c9a543a75eecdd78fa181"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#ac637f981171c9a543a75eecdd78fa181">toCharP</a> () const</td></tr>
+<tr class="separator:ac637f981171c9a543a75eecdd78fa181"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e3e14057258aa627ec677db8133b40d"><td class="memItemLeft" align="right" valign="top">char **&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a6e3e14057258aa627ec677db8133b40d">to_C_charP</a> () const</td></tr>
+<tr class="memdesc:a6e3e14057258aa627ec677db8133b40d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the pointer to the data stored as a char**, or NULL if no data is stored or if the data type is wrong.  <a href="classCuVariant.html#a6e3e14057258aa627ec677db8133b40d">More...</a><br /></td></tr>
+<tr class="separator:a6e3e14057258aa627ec677db8133b40d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b1f3e78894429efd9182fb25e0034e7"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a6b1f3e78894429efd9182fb25e0034e7">toVoidP</a> () const</td></tr>
 <tr class="separator:a6b1f3e78894429efd9182fb25e0034e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a732ededba1a20aaff8922940ae5a2139"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a732ededba1a20aaff8922940ae5a2139"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classCuMatrix.html">CuMatrix</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a732ededba1a20aaff8922940ae5a2139">toMatrix</a> () const</td></tr>
+<tr class="separator:a732ededba1a20aaff8922940ae5a2139"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a81e3979570e1c6eccc9d9f909354ecc4"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a81e3979570e1c6eccc9d9f909354ecc4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classCuVariant.html#a81e3979570e1c6eccc9d9f909354ecc4">to</a> (T &amp;val) const</td></tr>
 <tr class="memdesc:a81e3979570e1c6eccc9d9f909354ecc4"><td class="mdescLeft">&#160;</td><td class="mdescRight">convert the current <em>scalar</em> <a class="el" href="classCuVariant.html" title="CuVariant class acts like a union for the cumbia data types.">CuVariant</a> into a variable of type T.  <a href="classCuVariant.html#a81e3979570e1c6eccc9d9f909354ecc4">More...</a><br /></td></tr>
@@ -408,7 +464,7 @@ Public Member Functions</h2></td></tr>
 <dl class="section user"><dt>Example</dt><dd><div class="fragment"><div class="line"><span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> in = 1, out;</div>
 <div class="line"><a class="code" href="classCuVariant.html">CuVariant</a> v(in);</div>
 <div class="line">out = v.toUInt() + 1;</div>
-<div class="ttc" id="aclassCuVariant_html"><div class="ttname"><a href="classCuVariant.html">CuVariant</a></div><div class="ttdoc">CuVariant class acts like a union for the cumbia data types.</div><div class="ttdef"><b>Definition:</b> cuvariant.h:64</div></div>
+<div class="ttc" id="aclassCuVariant_html"><div class="ttname"><a href="classCuVariant.html">CuVariant</a></div><div class="ttdoc">CuVariant class acts like a union for the cumbia data types.</div><div class="ttdef"><b>Definition:</b> cuvariant.h:65</div></div>
 </div><!-- fragment --></dd></dl>
 <p><a class="el" href="classCuVariant.html" title="CuVariant class acts like a union for the cumbia data types.">CuVariant</a> is used to store <em>values</em> associated to <em>keys</em> in <a class="el" href="classCuData.html" title="container for data exchange for the cumbia library and its clients">CuData</a> bundles. <a class="el" href="classCuData.html" title="container for data exchange for the cumbia library and its clients">CuData</a> is the object used to exchange data inside the <em>cumbia</em> library and between the library and the clients.</p>
 <dl class="section user"><dt>Example: extracting CuVariant values from CuData bundles</dt><dd>This example is taken from the QuLabel class in the cumbia-qtcontrols module. You will learn how to extract values from <a class="el" href="classCuData.html" title="container for data exchange for the cumbia library and its clients">CuData</a> and convert them to the desired type.</dd></dl>
@@ -429,10 +485,10 @@ Public Member Functions</h2></td></tr>
 <div class="line">}</div>
 <div class="ttc" id="aclassCuData_html"><div class="ttname"><a href="classCuData.html">CuData</a></div><div class="ttdoc">container for data exchange for the cumbia library and its clients</div><div class="ttdef"><b>Definition:</b> cudata.h:40</div></div>
 <div class="ttc" id="aclassCuData_html_a89a88dac87b7b5c3a4de7aaf5e562409"><div class="ttname"><a href="classCuData.html#a89a88dac87b7b5c3a4de7aaf5e562409">CuData::containsKey</a></div><div class="ttdeci">bool containsKey(const std::string &amp;key) const</div><div class="ttdoc">returns true if the bundle contains the given key</div><div class="ttdef"><b>Definition:</b> cudata.cpp:191</div></div>
-<div class="ttc" id="aclassCuVariant_html_a375b160105ad59b2d3505b88136a15e2"><div class="ttname"><a href="classCuVariant.html#a375b160105ad59b2d3505b88136a15e2">CuVariant::getType</a></div><div class="ttdeci">DataType getType() const</div><div class="ttdoc">Returns the DataType stored by CuVariant.</div><div class="ttdef"><b>Definition:</b> cuvariant.cpp:732</div></div>
-<div class="ttc" id="aclassCuVariant_html_a59001e846b421e520adfc83c2e614bf1"><div class="ttname"><a href="classCuVariant.html#a59001e846b421e520adfc83c2e614bf1">CuVariant::toString</a></div><div class="ttdeci">std::string toString(bool *ok=NULL, const char *format=&quot;&quot;) const</div><div class="ttdoc">Convert the stored value to a string representation.</div><div class="ttdef"><b>Definition:</b> cuvariant.cpp:1368</div></div>
-<div class="ttc" id="aclassCuVariant_html_aa5869b485e482c1e643e458d508c88a8"><div class="ttname"><a href="classCuVariant.html#aa5869b485e482c1e643e458d508c88a8">CuVariant::toBool</a></div><div class="ttdeci">bool toBool(bool *ok=NULL) const</div><div class="ttdoc">convert the stored data into a scalar boolean</div><div class="ttdef"><b>Definition:</b> cuvariant.cpp:1317</div></div>
-<div class="ttc" id="aclassCuVariant_html_abceb8a9b2638b0915066e197e9a7280caba717c3f69170621a9e0d216e6c30987"><div class="ttname"><a href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caba717c3f69170621a9e0d216e6c30987">CuVariant::Boolean</a></div><div class="ttdeci">@ Boolean</div><div class="ttdoc">bool</div><div class="ttdef"><b>Definition:</b> cuvariant.h:102</div></div>
+<div class="ttc" id="aclassCuVariant_html_a375b160105ad59b2d3505b88136a15e2"><div class="ttname"><a href="classCuVariant.html#a375b160105ad59b2d3505b88136a15e2">CuVariant::getType</a></div><div class="ttdeci">DataType getType() const</div><div class="ttdoc">Returns the DataType stored by CuVariant.</div><div class="ttdef"><b>Definition:</b> cuvariant.cpp:919</div></div>
+<div class="ttc" id="aclassCuVariant_html_a59001e846b421e520adfc83c2e614bf1"><div class="ttname"><a href="classCuVariant.html#a59001e846b421e520adfc83c2e614bf1">CuVariant::toString</a></div><div class="ttdeci">std::string toString(bool *ok=NULL, const char *format=&quot;&quot;) const</div><div class="ttdoc">Convert the stored value to a string representation.</div><div class="ttdef"><b>Definition:</b> cuvariant.cpp:1599</div></div>
+<div class="ttc" id="aclassCuVariant_html_aa5869b485e482c1e643e458d508c88a8"><div class="ttname"><a href="classCuVariant.html#aa5869b485e482c1e643e458d508c88a8">CuVariant::toBool</a></div><div class="ttdeci">bool toBool(bool *ok=NULL) const</div><div class="ttdoc">convert the stored data into a scalar boolean</div><div class="ttdef"><b>Definition:</b> cuvariant.cpp:1548</div></div>
+<div class="ttc" id="aclassCuVariant_html_abceb8a9b2638b0915066e197e9a7280caba717c3f69170621a9e0d216e6c30987"><div class="ttname"><a href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caba717c3f69170621a9e0d216e6c30987">CuVariant::Boolean</a></div><div class="ttdeci">@ Boolean</div><div class="ttdoc">bool</div><div class="ttdef"><b>Definition:</b> cuvariant.h:103</div></div>
 </div><!-- fragment --> </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a3a05e05644e584a050e77d895c69b5e2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3a05e05644e584a050e77d895c69b5e2">&#9670;&nbsp;</a></span>DataFormat</h2>
@@ -513,6 +569,8 @@ Public Member Functions</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="abceb8a9b2638b0915066e197e9a7280caae540f48cd6737596cb4874e4324b942"></a>VoidPtr&#160;</td><td class="fielddoc"><p>generic void* </p>
 </td></tr>
+<tr><td class="fieldname"><a id="abceb8a9b2638b0915066e197e9a7280ca598a29588744be0ed93451235ce2cad2"></a>Char&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="abceb8a9b2638b0915066e197e9a7280cabb6115dace7c2ae809fd8c0a094dcc48"></a>UChar&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="abceb8a9b2638b0915066e197e9a7280ca4f6dda8ec340eff3256cbd767ecca60f"></a>EndDataTypes&#160;</td><td class="fielddoc"><p>defines an upper bound of the enumeration </p>
 </td></tr>
 </table>
@@ -521,7 +579,7 @@ Public Member Functions</h2></td></tr>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a74de4f5b23a096062edcf023f40bb0eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74de4f5b23a096062edcf023f40bb0eb">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[1/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a74de4f5b23a096062edcf023f40bb0eb">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[1/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -554,8 +612,48 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a59f48dcb039df51913488231573ce3a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a59f48dcb039df51913488231573ce3a6">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[2/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>c</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca598a29588744be0ed93451235ce2cad2">Char</a>, and <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a45f9914d66e29d63f0e495b894f9e542">Scalar</a>.</p>
+
+</div>
+</div>
+<a id="af52755785096668a8ed7c647ec746321"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af52755785096668a8ed7c647ec746321">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[3/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">unsigned char&#160;</td>
+          <td class="paramname"><em>uc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a45f9914d66e29d63f0e495b894f9e542">Scalar</a>, and <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cabb6115dace7c2ae809fd8c0a094dcc48">UChar</a>.</p>
+
+</div>
+</div>
 <a id="a02795c9c98157511dd5c3a13a02e1c35"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a02795c9c98157511dd5c3a13a02e1c35">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[2/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a02795c9c98157511dd5c3a13a02e1c35">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[4/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -573,7 +671,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a7073f7a2d6af2a446d3865bbe690bcfa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7073f7a2d6af2a446d3865bbe690bcfa">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[3/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7073f7a2d6af2a446d3865bbe690bcfa">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[5/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -591,7 +689,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a70c740ef452dc97aa8257fe825911fb0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a70c740ef452dc97aa8257fe825911fb0">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[4/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a70c740ef452dc97aa8257fe825911fb0">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[6/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -620,7 +718,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a18eead14adf76b7c2af4e8ca8a88277c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a18eead14adf76b7c2af4e8ca8a88277c">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[5/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a18eead14adf76b7c2af4e8ca8a88277c">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[7/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -649,7 +747,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a6292cc08f1de33e2cec361944915bd6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6292cc08f1de33e2cec361944915bd6f">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[6/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6292cc08f1de33e2cec361944915bd6f">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[8/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -678,7 +776,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="af41aac602869bebc0589e0bce1c67c87"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af41aac602869bebc0589e0bce1c67c87">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[7/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af41aac602869bebc0589e0bce1c67c87">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[9/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -696,7 +794,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a89bc116f75fa2ed4e7c53c040f350540"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89bc116f75fa2ed4e7c53c040f350540">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[8/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a89bc116f75fa2ed4e7c53c040f350540">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[10/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -725,7 +823,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a47df80fc82ac29e4298440228695866d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a47df80fc82ac29e4298440228695866d">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[9/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a47df80fc82ac29e4298440228695866d">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[11/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -743,7 +841,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a642f1091b20ac79df9e3ee995c631696"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a642f1091b20ac79df9e3ee995c631696">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[10/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a642f1091b20ac79df9e3ee995c631696">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[12/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -772,7 +870,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a2b121716e3dd140dd0dc756ebbb1d30b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2b121716e3dd140dd0dc756ebbb1d30b">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[11/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b121716e3dd140dd0dc756ebbb1d30b">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[13/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -801,7 +899,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a3e751304bde55c81a27afb2e291e2978"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3e751304bde55c81a27afb2e291e2978">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[12/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e751304bde55c81a27afb2e291e2978">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[14/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -830,7 +928,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a144638e8e469aa625100e4c931b89413"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a144638e8e469aa625100e4c931b89413">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[13/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a144638e8e469aa625100e4c931b89413">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[15/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -859,7 +957,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a9b8f94950fe8fcfeeb568c8e5585daa0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b8f94950fe8fcfeeb568c8e5585daa0">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[14/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b8f94950fe8fcfeeb568c8e5585daa0">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[16/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -888,7 +986,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a84206c001c04cc713fbcf282a07ca091"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a84206c001c04cc713fbcf282a07ca091">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[15/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a84206c001c04cc713fbcf282a07ca091">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[17/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -917,7 +1015,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="ac053982e2d402abaa6ac48adb322a534"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac053982e2d402abaa6ac48adb322a534">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[16/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac053982e2d402abaa6ac48adb322a534">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[18/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -946,8 +1044,592 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a28229b4bf6c1d49a0bb3cfd94cdf4f45"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28229b4bf6c1d49a0bb3cfd94cdf4f45">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[19/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; unsigned char &gt; &amp;&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e">Matrix</a>, and <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cabb6115dace7c2ae809fd8c0a094dcc48">UChar</a>.</p>
+
+</div>
+</div>
+<a id="a6687dc55b0674b65760731d5a2f2e3f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6687dc55b0674b65760731d5a2f2e3f5">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[20/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; char &gt; &amp;&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca598a29588744be0ed93451235ce2cad2">Char</a>, and <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e">Matrix</a>.</p>
+
+</div>
+</div>
+<a id="a08666d5b8ce8bfdad50d3794712e9b2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a08666d5b8ce8bfdad50d3794712e9b2e">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[21/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; short int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>i</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adb9a4af9a747fd8f7d21a61071b9352a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb9a4af9a747fd8f7d21a61071b9352a">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[22/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; short unsigned int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>si</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae54ea584d089e6554b18e12d86c9ac0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae54ea584d089e6554b18e12d86c9ac0f">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[23/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cac7444c6f5d4524d704e38427c40a662a">Int</a>, and <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e">Matrix</a>.</p>
+
+</div>
+</div>
+<a id="a49734e6fabc9c692ef3cd6a7f6ccb51f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49734e6fabc9c692ef3cd6a7f6ccb51f">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[24/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; unsigned int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>ui</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e">Matrix</a>, and <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca07b0dcd0377c638765c48b1d4fec7b46">UInt</a>.</p>
+
+</div>
+</div>
+<a id="a84f4f82864e53a95ab66fe9fe8037aa8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84f4f82864e53a95ab66fe9fe8037aa8">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[25/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; long int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>li</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a70aec9b3c0b5a2d7b4377dda06691375"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70aec9b3c0b5a2d7b4377dda06691375">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[26/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; long long int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>lli</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a47b46c2caeba5bfda2abce3111f78317"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a47b46c2caeba5bfda2abce3111f78317">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[27/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; long unsigned int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>lui</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2a44a35319b11a50f7ec55fffed25395"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a44a35319b11a50f7ec55fffed25395">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[28/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; long long unsigned int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>llui</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a89d6a9eefb7465bb79922bcf2483de7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89d6a9eefb7465bb79922bcf2483de7c">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[29/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; float &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca3e2c8d74e493e6c8caa60b563d1e93c1">Float</a>, and <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e">Matrix</a>.</p>
+
+</div>
+</div>
+<a id="ae2517df6700ab7657ba1f005ffe235cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2517df6700ab7657ba1f005ffe235cb">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[30/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca470556b945ded3c51dacebfb9316996f">Double</a>, and <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e">Matrix</a>.</p>
+
+</div>
+</div>
+<a id="aae8b5355a80de7d0d0f6b4404bc30e77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae8b5355a80de7d0d0f6b4404bc30e77">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[31/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; long double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca945573e6f9761cd309c931a2989a9b7a">LongDouble</a>, and <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e">Matrix</a>.</p>
+
+</div>
+</div>
+<a id="ab9e8afbcecca94f5f3710f87e6ffe275"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9e8afbcecca94f5f3710f87e6ffe275">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[32/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; bool &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vb</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caba717c3f69170621a9e0d216e6c30987">Boolean</a>, and <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e">Matrix</a>.</p>
+
+</div>
+</div>
+<a id="a9b6b453c6696ed8d276d116c538d234e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9b6b453c6696ed8d276d116c538d234e">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[33/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; std::string &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>dimy</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e">Matrix</a>, and <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2">String</a>.</p>
+
+</div>
+</div>
+<a id="aae32f3b06345ec890c6ee25e3d798bb0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae32f3b06345ec890c6ee25e3d798bb0">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[34/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; char &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>vector of char flavor </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vc</td><td>std vector of char </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca598a29588744be0ed93451235ce2cad2">Char</a>, and <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a06c40110238c7bd77904234f323ddea4">Vector</a>.</p>
+
+</div>
+</div>
+<a id="a5f1f519bc04e43e66e47f8ecb262c1a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f1f519bc04e43e66e47f8ecb262c1a5">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[35/52]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CuVariant::CuVariant </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; unsigned char &gt; &amp;&#160;</td>
+          <td class="paramname"><em>vc</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>vector of unsigned char flavor </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">vc</td><td>std vector of unsigned char </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cabb6115dace7c2ae809fd8c0a094dcc48">UChar</a>, and <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a06c40110238c7bd77904234f323ddea4">Vector</a>.</p>
+
+</div>
+</div>
 <a id="a1051de2fb9987ca519eec98846907310"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1051de2fb9987ca519eec98846907310">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[17/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1051de2fb9987ca519eec98846907310">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[36/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -965,7 +1647,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a3c0f7fab42b4e7c5a0fc2bf6402f2a9f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3c0f7fab42b4e7c5a0fc2bf6402f2a9f">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[18/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c0f7fab42b4e7c5a0fc2bf6402f2a9f">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[37/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -983,7 +1665,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a13d4ba91fdc163dd933791596a3ee52b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13d4ba91fdc163dd933791596a3ee52b">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[19/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a13d4ba91fdc163dd933791596a3ee52b">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[38/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1012,7 +1694,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a0ac7c1174a0a05292ca072a7ea54d3a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ac7c1174a0a05292ca072a7ea54d3a4">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[20/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ac7c1174a0a05292ca072a7ea54d3a4">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[39/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1041,7 +1723,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a2f9875746a7a8ae4b4b59147c0263dc3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f9875746a7a8ae4b4b59147c0263dc3">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[21/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f9875746a7a8ae4b4b59147c0263dc3">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[40/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1070,7 +1752,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a8b3d4db9fa0a51c0f2c6320217660259"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b3d4db9fa0a51c0f2c6320217660259">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[22/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b3d4db9fa0a51c0f2c6320217660259">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[41/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1088,7 +1770,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a777a00ca4514acf03ed4cc8d9ff919b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a777a00ca4514acf03ed4cc8d9ff919b8">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[23/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a777a00ca4514acf03ed4cc8d9ff919b8">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[42/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1106,7 +1788,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="abd6abe12301ef841f6fee7f206ea8a06"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abd6abe12301ef841f6fee7f206ea8a06">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[24/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#abd6abe12301ef841f6fee7f206ea8a06">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[43/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1124,7 +1806,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a96a141fdf160805c2c807b58a5e2ffc6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96a141fdf160805c2c807b58a5e2ffc6">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[25/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a96a141fdf160805c2c807b58a5e2ffc6">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[44/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1153,7 +1835,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a72ffcccae88cc8a97616d5bf74f94f25"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72ffcccae88cc8a97616d5bf74f94f25">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[26/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a72ffcccae88cc8a97616d5bf74f94f25">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[45/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1182,7 +1864,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a2f67b0f9a8350de617875e443f77dee6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f67b0f9a8350de617875e443f77dee6">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[27/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f67b0f9a8350de617875e443f77dee6">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[46/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1211,7 +1893,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a8e172a24970225367dcd3c57e36ec76e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e172a24970225367dcd3c57e36ec76e">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[28/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e172a24970225367dcd3c57e36ec76e">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[47/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1240,7 +1922,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a7bcbfc440aae1db0da0febc695cfec9d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7bcbfc440aae1db0da0febc695cfec9d">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[29/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bcbfc440aae1db0da0febc695cfec9d">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[48/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1269,7 +1951,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a3d76d0d2136df974d718e144cb8ce2be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3d76d0d2136df974d718e144cb8ce2be">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[30/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d76d0d2136df974d718e144cb8ce2be">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[49/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1298,7 +1980,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="ad4c5aa87a6e9df2719fa0721ddd40871"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4c5aa87a6e9df2719fa0721ddd40871">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[31/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4c5aa87a6e9df2719fa0721ddd40871">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[50/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1325,7 +2007,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a4c3c525ee40d5e352158aa161af70a08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c3c525ee40d5e352158aa161af70a08">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[32/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c3c525ee40d5e352158aa161af70a08">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[51/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1352,7 +2034,7 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a id="a02556eb730fd1d471e02d70575c8c2c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a02556eb730fd1d471e02d70575c8c2c6">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[33/33]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a02556eb730fd1d471e02d70575c8c2c6">&#9670;&nbsp;</a></span>CuVariant() <span class="overload">[52/52]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1434,9 +2116,10 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <p>The data stored into this variant is converted to a std::vector of the same type using the native <em>toXXXVector</em> method. The <em>other</em> variant value is converted to a std::vector of the type of <em>this</em> variant using <a class="el" href="classCuVariant.html#ae776f45b5c040992ec153e28c42fb3f5" title="convert the current CuVariant into a vector of type T, if possible.">CuVariant::toVector&lt;T&gt;</a>.</p>
-<p>The vector from the <em>other</em> variant is then appended to the vector from <em>this</em> variant. </p>
+<p>The vector from the <em>other</em> variant is then appended to the vector from <em>this</em> variant.</p>
+<dl class="section note"><dt>Note</dt><dd><a class="el" href="classCuVariant.html#ac127912a1f63e3eb0c3dea05db8977d9" title="Append the content of another variant to this variant.">CuVariant::append</a> for Matrix format is not supported </dd></dl>
 
-<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caba717c3f69170621a9e0d216e6c30987">Boolean</a>, <a class="el" href="classCuVariant.html#a02556eb730fd1d471e02d70575c8c2c6">CuVariant()</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca470556b945ded3c51dacebfb9316996f">Double</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca4f6dda8ec340eff3256cbd767ecca60f">EndDataTypes</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca3e2c8d74e493e6c8caa60b563d1e93c1">Float</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cac7444c6f5d4524d704e38427c40a662a">Int</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca945573e6f9761cd309c931a2989a9b7a">LongDouble</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca8daeeeaf8cc61c7fe17394ecbb75b80b">LongInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caaa959e554a99169e7eec0b45bacc18b1">LongLongInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cadacad3f32c618ddba203623ac899795d">LongLongUInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca7df23990fcabbf137adc2a193e92f596">LongUInt</a>, <a class="el" href="cumacros_8h.html#ace3ed8e68957fe0cd2c27043cc5137db">perr</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caada2d4d65b9a01bf828b550ef983194b">Short</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2">String</a>, <a class="el" href="classCuVariant.html#a324aced8bd5e38979124b90b4ecb027a">toBoolVector()</a>, <a class="el" href="classCuVariant.html#a0590236a1ff5d7d77d6a09563be8ab46">toDoubleVector()</a>, <a class="el" href="classCuVariant.html#a5f81a493b2d768ae4378be9262704da9">toFloatVector()</a>, <a class="el" href="classCuVariant.html#a55b4429eeaf3d63a1e17590974fde59f">toIntVector()</a>, <a class="el" href="classCuVariant.html#a58b20c90d0440b307677e1b05ae2b8bb">toLongDoubleVector()</a>, <a class="el" href="classCuVariant.html#a1877686cd8bdb87128613e728463d13b">toLongIntVector()</a>, <a class="el" href="classCuVariant.html#a1d521108645b4f2ea532b5ce8e345764">toLongLongIntVector()</a>, <a class="el" href="classCuVariant.html#acfaf6efe7b3c0a373313d8a76271a5f2">toLongLongUIntVector()</a>, <a class="el" href="classCuVariant.html#a88837c985a666e94fcb4e8fc73986280">toShortVector()</a>, <a class="el" href="classCuVariant.html#a772ef4825fed8b966fb05ea50b4d63f6">toStringVector()</a>, <a class="el" href="classCuVariant.html#afbe34cad7927c4ff817749990efefb46">toUIntVector()</a>, <a class="el" href="classCuVariant.html#a9a0823341d9e8a2e184e555eb023edd1">toULongIntVector()</a>, <a class="el" href="classCuVariant.html#a05852724325b86d59debf28d97387ce0">toUShortVector()</a>, <a class="el" href="classCuVariant.html#ae776f45b5c040992ec153e28c42fb3f5">toVector()</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cadca45a1917f5ceb9ed99f324504c1976">TypeInvalid</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca07b0dcd0377c638765c48b1d4fec7b46">UInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca1e8a69d26b59520fb5a809306428978a">UShort</a>, <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a06c40110238c7bd77904234f323ddea4">Vector</a>, and <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caae540f48cd6737596cb4874e4324b942">VoidPtr</a>.</p>
+<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caba717c3f69170621a9e0d216e6c30987">Boolean</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca598a29588744be0ed93451235ce2cad2">Char</a>, <a class="el" href="classCuVariant.html#a02556eb730fd1d471e02d70575c8c2c6">CuVariant()</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca470556b945ded3c51dacebfb9316996f">Double</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca4f6dda8ec340eff3256cbd767ecca60f">EndDataTypes</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca3e2c8d74e493e6c8caa60b563d1e93c1">Float</a>, <a class="el" href="classCuVariant.html#a9ca24141db3b7ae87038c54adfcafe7d">getFormat()</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cac7444c6f5d4524d704e38427c40a662a">Int</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca945573e6f9761cd309c931a2989a9b7a">LongDouble</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca8daeeeaf8cc61c7fe17394ecbb75b80b">LongInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caaa959e554a99169e7eec0b45bacc18b1">LongLongInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cadacad3f32c618ddba203623ac899795d">LongLongUInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca7df23990fcabbf137adc2a193e92f596">LongUInt</a>, <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e">Matrix</a>, <a class="el" href="cumacros_8h.html#ace3ed8e68957fe0cd2c27043cc5137db">perr</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caada2d4d65b9a01bf828b550ef983194b">Short</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2">String</a>, <a class="el" href="classCuVariant.html#a324aced8bd5e38979124b90b4ecb027a">toBoolVector()</a>, <a class="el" href="classCuVariant.html#ab93f52cfc80ab930373f8c284fcf7ee9">toCharVector()</a>, <a class="el" href="classCuVariant.html#a0590236a1ff5d7d77d6a09563be8ab46">toDoubleVector()</a>, <a class="el" href="classCuVariant.html#a5f81a493b2d768ae4378be9262704da9">toFloatVector()</a>, <a class="el" href="classCuVariant.html#a55b4429eeaf3d63a1e17590974fde59f">toIntVector()</a>, <a class="el" href="classCuVariant.html#a58b20c90d0440b307677e1b05ae2b8bb">toLongDoubleVector()</a>, <a class="el" href="classCuVariant.html#a1877686cd8bdb87128613e728463d13b">toLongIntVector()</a>, <a class="el" href="classCuVariant.html#a1d521108645b4f2ea532b5ce8e345764">toLongLongIntVector()</a>, <a class="el" href="classCuVariant.html#acfaf6efe7b3c0a373313d8a76271a5f2">toLongLongUIntVector()</a>, <a class="el" href="classCuVariant.html#a88837c985a666e94fcb4e8fc73986280">toShortVector()</a>, <a class="el" href="classCuVariant.html#a772ef4825fed8b966fb05ea50b4d63f6">toStringVector()</a>, <a class="el" href="classCuVariant.html#a7626981811673176d39534567e8b3bc8">toUCharVector()</a>, <a class="el" href="classCuVariant.html#afbe34cad7927c4ff817749990efefb46">toUIntVector()</a>, <a class="el" href="classCuVariant.html#a9a0823341d9e8a2e184e555eb023edd1">toULongIntVector()</a>, <a class="el" href="classCuVariant.html#a05852724325b86d59debf28d97387ce0">toUShortVector()</a>, <a class="el" href="classCuVariant.html#ae776f45b5c040992ec153e28c42fb3f5">toVector()</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cadca45a1917f5ceb9ed99f324504c1976">TypeInvalid</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cabb6115dace7c2ae809fd8c0a094dcc48">UChar</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca07b0dcd0377c638765c48b1d4fec7b46">UInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca1e8a69d26b59520fb5a809306428978a">UShort</a>, <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a06c40110238c7bd77904234f323ddea4">Vector</a>, and <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caae540f48cd6737596cb4874e4324b942">VoidPtr</a>.</p>
 
 </div>
 </div>
@@ -1498,7 +2181,7 @@ Public Member Functions</h2></td></tr>
 
 <p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca4f6dda8ec340eff3256cbd767ecca60f">EndDataTypes</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCuVariant.html#a81e3979570e1c6eccc9d9f909354ecc4">to()</a>, and <a class="el" href="classCuVariant.html#a772ef4825fed8b966fb05ea50b4d63f6">toStringVector()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuVariant.html#a81e3979570e1c6eccc9d9f909354ecc4">to()</a>, <a class="el" href="classCuVariant.html#a59001e846b421e520adfc83c2e614bf1">toString()</a>, and <a class="el" href="classCuVariant.html#a772ef4825fed8b966fb05ea50b4d63f6">toStringVector()</a>.</p>
 
 </div>
 </div>
@@ -1521,7 +2204,7 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>the DataFormat (<a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a06c40110238c7bd77904234f323ddea4" title="a vector, or array">CuVariant::Vector</a>, <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a45f9914d66e29d63f0e495b894f9e542" title="a scalar value">CuVariant::Scalar</a>, <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e" title="a two dimensional vector (matrix)">CuVariant::Matrix</a>) </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuVariant.html#a375b160105ad59b2d3505b88136a15e2" title="Returns the DataType stored by CuVariant.">getType</a> </dd></dl>
 
-<p class="reference">Referenced by <a class="el" href="classCuVariant.html#a42ce50413eb203f3c1ee4d94773bd147">operator==()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuVariant.html#ac127912a1f63e3eb0c3dea05db8977d9">append()</a>, and <a class="el" href="classCuVariant.html#a42ce50413eb203f3c1ee4d94773bd147">operator==()</a>.</p>
 
 </div>
 </div>
@@ -1868,6 +2551,32 @@ false the conversion was not possible</dd></dl>
 
 </div>
 </div>
+<a id="a6e3e14057258aa627ec677db8133b40d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e3e14057258aa627ec677db8133b40d">&#9670;&nbsp;</a></span>to_C_charP()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char ** CuVariant::to_C_charP </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the pointer to the data stored as a char**, or NULL if no data is stored or if the data type is wrong. </p>
+<p>Combined with getSize allows to get the stored data in a "C" style (as scalar, if size is 1, or array)</p>
+<dl class="section return"><dt>Returns</dt><dd>pointer to the data held as int, NULL if no data is stored or the <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280c" title="The DataType enum lists the different data types that can be held by CuVariant.">CuVariant::DataType</a> is not <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2" title="std::string, const char*">CuVariant::String</a></dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuVariant.html#a2725b9d94c9d41486a83d1212f5ab62e" title="Returns the size of the data stored by the CuVariant.">getSize</a> </dd>
+<dd>
+getData </dd></dl>
+
+<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2">String</a>.</p>
+
+</div>
+</div>
 <a id="aa5869b485e482c1e643e458d508c88a8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa5869b485e482c1e643e458d508c88a8">&#9670;&nbsp;</a></span>toBool()</h2>
 
@@ -1948,14 +2657,14 @@ getData </dd></dl>
 
 </div>
 </div>
-<a id="a1dfea9670f2b7c9e72b171cd7b0fb43b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1dfea9670f2b7c9e72b171cd7b0fb43b">&#9670;&nbsp;</a></span>toCharP()</h2>
+<a id="ac637f981171c9a543a75eecdd78fa181"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac637f981171c9a543a75eecdd78fa181">&#9670;&nbsp;</a></span>toCharP()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char ** CuVariant::toCharP </td>
+          <td class="memname">char * CuVariant::toCharP </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -1963,14 +2672,29 @@ getData </dd></dl>
       </table>
 </div><div class="memdoc">
 
-<p>Returns the pointer to the data stored as a char**, or NULL if no data is stored or if the data type is wrong. </p>
-<p>Combined with getSize allows to get the stored data in a "C" style (as scalar, if size is 1, or array)</p>
-<dl class="section return"><dt>Returns</dt><dd>pointer to the data held as int, NULL if no data is stored or the <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280c" title="The DataType enum lists the different data types that can be held by CuVariant.">CuVariant::DataType</a> is not <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2" title="std::string, const char*">CuVariant::String</a></dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuVariant.html#a2725b9d94c9d41486a83d1212f5ab62e" title="Returns the size of the data stored by the CuVariant.">getSize</a> </dd>
-<dd>
-getData </dd></dl>
+<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca598a29588744be0ed93451235ce2cad2">Char</a>.</p>
 
-<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2">String</a>.</p>
+</div>
+</div>
+<a id="ab93f52cfc80ab930373f8c284fcf7ee9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab93f52cfc80ab930373f8c284fcf7ee9">&#9670;&nbsp;</a></span>toCharVector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; char &gt; CuVariant::toCharVector </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>convert the stored data into a vector of char </p>
+<dl class="section return"><dt>Returns</dt><dd>std::vector&lt; char&gt; representation of the stored data </dd></dl>
+
+<p class="reference">Referenced by <a class="el" href="classCuVariant.html#ac127912a1f63e3eb0c3dea05db8977d9">append()</a>.</p>
 
 </div>
 </div>
@@ -2457,6 +3181,24 @@ getData </dd></dl>
 
 </div>
 </div>
+<a id="a732ededba1a20aaff8922940ae5a2139"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a732ededba1a20aaff8922940ae5a2139">&#9670;&nbsp;</a></span>toMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classCuMatrix.html">CuMatrix</a>&lt; T &gt; CuVariant::toMatrix</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e">Matrix</a>.</p>
+
+</div>
+</div>
 <a id="aad79d04f9214177c18f17bb3661ca4bb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aad79d04f9214177c18f17bb3661ca4bb">&#9670;&nbsp;</a></span>toShortInt()</h2>
 
@@ -2596,7 +3338,7 @@ getData </dd></dl>
 <dl class="section user"><dt>Note is format is empty, a default conversion takes place according to the type of data, e.g.</dt><dd>"%f" for double and float, "%Lf" for long double, "%d" for int, "%lu" for long unsigned int, "%ld" for long int, "%hd" for short int, "%hu" for unsigned short.</dd></dl>
 <dl class="section user"><dt>Boolean data types</dt><dd>boolean values are mapped to either "true" or "false" string. </dd></dl>
 
-<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caba717c3f69170621a9e0d216e6c30987">Boolean</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca470556b945ded3c51dacebfb9316996f">Double</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca3e2c8d74e493e6c8caa60b563d1e93c1">Float</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cac7444c6f5d4524d704e38427c40a662a">Int</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca945573e6f9761cd309c931a2989a9b7a">LongDouble</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca8daeeeaf8cc61c7fe17394ecbb75b80b">LongInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca7df23990fcabbf137adc2a193e92f596">LongUInt</a>, <a class="el" href="cumacros_8h.html#ace3ed8e68957fe0cd2c27043cc5137db">perr</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caada2d4d65b9a01bf828b550ef983194b">Short</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2">String</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca07b0dcd0377c638765c48b1d4fec7b46">UInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca1e8a69d26b59520fb5a809306428978a">UShort</a>, and <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caae540f48cd6737596cb4874e4324b942">VoidPtr</a>.</p>
+<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caba717c3f69170621a9e0d216e6c30987">Boolean</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca598a29588744be0ed93451235ce2cad2">Char</a>, <a class="el" href="classCuVariant.html#a605415b71584a7c70e164e0fc63ab858">dataTypeStr()</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca470556b945ded3c51dacebfb9316996f">Double</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca3e2c8d74e493e6c8caa60b563d1e93c1">Float</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cac7444c6f5d4524d704e38427c40a662a">Int</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca945573e6f9761cd309c931a2989a9b7a">LongDouble</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca8daeeeaf8cc61c7fe17394ecbb75b80b">LongInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caaa959e554a99169e7eec0b45bacc18b1">LongLongInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cadacad3f32c618ddba203623ac899795d">LongLongUInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca7df23990fcabbf137adc2a193e92f596">LongUInt</a>, <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e">Matrix</a>, <a class="el" href="cumacros_8h.html#ace3ed8e68957fe0cd2c27043cc5137db">perr</a>, <a class="el" href="classCuMatrix.html#adf81bd76e16265ef199251905e7d1221">CuMatrix&lt; T &gt;::repr()</a>, <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a45f9914d66e29d63f0e495b894f9e542">Scalar</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caada2d4d65b9a01bf828b550ef983194b">Short</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2">String</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cabb6115dace7c2ae809fd8c0a094dcc48">UChar</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca07b0dcd0377c638765c48b1d4fec7b46">UInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca1e8a69d26b59520fb5a809306428978a">UShort</a>, <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a06c40110238c7bd77904234f323ddea4">Vector</a>, and <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caae540f48cd6737596cb4874e4324b942">VoidPtr</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classCuVariant.html#a81e3979570e1c6eccc9d9f909354ecc4">to()</a>, <a class="el" href="classCuVariant.html#a772ef4825fed8b966fb05ea50b4d63f6">toStringVector()</a>, and <a class="el" href="classCuVariant.html#ae776f45b5c040992ec153e28c42fb3f5">toVector()</a>.</p>
 
@@ -2628,9 +3370,50 @@ getData </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>a std::vector of std::string representing the data saved into <a class="el" href="classCuVariant.html" title="CuVariant class acts like a union for the cumbia data types.">CuVariant</a></dd></dl>
 <dl class="section note"><dt>Note</dt><dd>conversion is successful if the <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280c" title="The DataType enum lists the different data types that can be held by CuVariant.">CuVariant::DataType</a> is <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2" title="std::string, const char*">CuVariant::String</a> and the <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2" title="The DataFormat enum lists the different data formats supported by CuVariant.">CuVariant::DataFormat</a> is <em>either</em> <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a06c40110238c7bd77904234f323ddea4" title="a vector, or array">CuVariant::Vector</a> <em>or</em> <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a45f9914d66e29d63f0e495b894f9e542" title="a scalar value">CuVariant::Scalar</a> </dd></dl>
 
-<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caba717c3f69170621a9e0d216e6c30987">Boolean</a>, <a class="el" href="classCuVariant.html#a5f9d6d0c7389aca557bfb3050189c2e7">dataFormatStr()</a>, <a class="el" href="classCuVariant.html#a605415b71584a7c70e164e0fc63ab858">dataTypeStr()</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca470556b945ded3c51dacebfb9316996f">Double</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca3e2c8d74e493e6c8caa60b563d1e93c1">Float</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cac7444c6f5d4524d704e38427c40a662a">Int</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca945573e6f9761cd309c931a2989a9b7a">LongDouble</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca8daeeeaf8cc61c7fe17394ecbb75b80b">LongInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca7df23990fcabbf137adc2a193e92f596">LongUInt</a>, <a class="el" href="cumacros_8h.html#ace3ed8e68957fe0cd2c27043cc5137db">perr</a>, <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a45f9914d66e29d63f0e495b894f9e542">Scalar</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caada2d4d65b9a01bf828b550ef983194b">Short</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2">String</a>, <a class="el" href="classCuVariant.html#a59001e846b421e520adfc83c2e614bf1">toString()</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca07b0dcd0377c638765c48b1d4fec7b46">UInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca1e8a69d26b59520fb5a809306428978a">UShort</a>, and <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a06c40110238c7bd77904234f323ddea4">Vector</a>.</p>
+<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caba717c3f69170621a9e0d216e6c30987">Boolean</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca598a29588744be0ed93451235ce2cad2">Char</a>, <a class="el" href="classCuVariant.html#a5f9d6d0c7389aca557bfb3050189c2e7">dataFormatStr()</a>, <a class="el" href="classCuVariant.html#a605415b71584a7c70e164e0fc63ab858">dataTypeStr()</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca470556b945ded3c51dacebfb9316996f">Double</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca3e2c8d74e493e6c8caa60b563d1e93c1">Float</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cac7444c6f5d4524d704e38427c40a662a">Int</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca945573e6f9761cd309c931a2989a9b7a">LongDouble</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca8daeeeaf8cc61c7fe17394ecbb75b80b">LongInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca7df23990fcabbf137adc2a193e92f596">LongUInt</a>, <a class="el" href="cumacros_8h.html#ace3ed8e68957fe0cd2c27043cc5137db">perr</a>, <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a45f9914d66e29d63f0e495b894f9e542">Scalar</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caada2d4d65b9a01bf828b550ef983194b">Short</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca30b4f821fa4285e6cffb84369f34a4f2">String</a>, <a class="el" href="classCuVariant.html#a59001e846b421e520adfc83c2e614bf1">toString()</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cabb6115dace7c2ae809fd8c0a094dcc48">UChar</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca07b0dcd0377c638765c48b1d4fec7b46">UInt</a>, <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca1e8a69d26b59520fb5a809306428978a">UShort</a>, and <a class="el" href="classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a06c40110238c7bd77904234f323ddea4">Vector</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classCuVariant.html#ac127912a1f63e3eb0c3dea05db8977d9">append()</a>, and <a class="el" href="classCuVariant.html#ae776f45b5c040992ec153e28c42fb3f5">toVector()</a>.</p>
+
+</div>
+</div>
+<a id="a0b8be130c23f00e2b6e4314dec34ea0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b8be130c23f00e2b6e4314dec34ea0c">&#9670;&nbsp;</a></span>toUCharP()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char * CuVariant::toUCharP </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cabb6115dace7c2ae809fd8c0a094dcc48">UChar</a>.</p>
+
+</div>
+</div>
+<a id="a7626981811673176d39534567e8b3bc8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7626981811673176d39534567e8b3bc8">&#9670;&nbsp;</a></span>toUCharVector()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; unsigned char &gt; CuVariant::toUCharVector </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>convert the stored data into a vector of unsigned char </p>
+<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;unsigned char&gt; representation of the stored data </dd></dl>
+
+<p class="reference">Referenced by <a class="el" href="classCuVariant.html#ac127912a1f63e3eb0c3dea05db8977d9">append()</a>.</p>
 
 </div>
 </div>
@@ -2986,7 +3769,7 @@ false the conversion was not possible</dd></dl>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuVariant.html">CuVariant</a></li>
-    <li class="footer">Generated on Wed Mar 17 2021 09:45:48 for cumbia by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Tue Mar 30 2021 16:31:57 for cumbia by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>
