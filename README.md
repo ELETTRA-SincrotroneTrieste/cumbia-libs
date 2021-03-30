@@ -36,6 +36,10 @@ Change directory into the *cumbia-libs-gh-pages*
 
 > cd /path/to/cumbia-libs-gh-pages
 
+Add new files
+
+> git add html/*
+
 Commit changes
 
 > git commit . -m "cumbia documentation updates for version x.y.z"
