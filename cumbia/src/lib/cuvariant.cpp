@@ -1050,14 +1050,14 @@ void CuVariant::v_to_matrix(const std::vector<T> &v, size_t dimx, size_t dim_y) 
     if(!d->mIsValid || d->type == String)
         perr("CuVariant::from_matrix <T>: invalid data type or format. Have you called init first??");
     else {
-        CuMatrix<T> *m = new CuMatrix(v, dimx, dim_y);
+        CuMatrix<T> *m = new CuMatrix<T>(v, dimx, dim_y);
         d->val = m ; // static_cast<CuMatrix <T>* >(m);
     }
 }
 
 void CuVariant::v_to_string_matrix(const std::vector<std::string> &vs, size_t dimx, size_t dim_y) {
     if(d->mIsValid && d->type == String) {
-        CuMatrix<std::string> *m = new CuMatrix(vs, dimx, dim_y);
+        CuMatrix<std::string> *m = new CuMatrix<std::string>(vs, dimx, dim_y);
         d->val = m; /*static_cast<CuMatrix <std::string>* >(m);*/
     }
     else {
