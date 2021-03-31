@@ -37,7 +37,7 @@ public:
 		other.p = nullptr; /* don't delete */
 	}
 
-	CuMatrix() : nr(0), nc(0) {
+    CuMatrix<T>() : nr(0), nc(0) {
 		p = new T[0];
 	}
 
