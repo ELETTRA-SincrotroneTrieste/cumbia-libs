@@ -38,7 +38,6 @@ CuTimer::~CuTimer()
  */
 void CuTimer::setTimeout(int millis)
 {
-    pbblue("CuTimer.setTimeout %d", millis);
     m_timeout = millis;
     m_wait.notify_one();
 }
