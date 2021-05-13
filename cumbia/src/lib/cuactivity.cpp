@@ -29,13 +29,11 @@ CuActivity::CuActivity(CuActivityManager *activityManager, const CuData &token)
     d = new CuActivityPrivate(token);
     d->activityManager = activityManager;
     d->flags = d->stateFlags = 0;
-    d->token["ptr"] = CuVariant(static_cast<void *>(this));
 }
 
 CuActivity::CuActivity(const CuData &token)
 {
     d = new CuActivityPrivate(token);
-    d->token["ptr"] = CuVariant(static_cast<void *>(this));
 }
 
 void CuActivity::dispose(bool disposable)
