@@ -64,7 +64,7 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a, const CuDa
     at["activity"] = "poller";
     at["period"] = d->period;
 
-    CuActivity *activity = am->findActiveMatching(at); // polling activities compare device period and "activity"
+    CuActivity *activity = am->find(at); // polling activities compare device period and "activity"
     if(!activity) {
         // thread token. CuTReader.setOptions can customize thread grouping behaviour
         CuData tt;
@@ -167,8 +167,9 @@ void CuPoller::m_do_unregisterAction(CuTangoActionI *a)
                                                                  get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
         if(d->actions_map.size() == 0)
             am->removeConnection(this);
-        CuActivity *activity = am->findActiveMatching(at); // polling activities compare device period and "activity"
+        CuActivity *activity = am->find(at); // polling activities compare device period and "activity"
         // post remove to activity's thread
+        printf("CuPoller.m_do_unregisterAction action %p activity found %p\n", a, activity);
         if(activity) {
             // CuPollingActivity will unregister itself if this is the last action
             d->cumbia_t->postEvent(activity, new CuRemovePollActionEvent(a->getSource()));
