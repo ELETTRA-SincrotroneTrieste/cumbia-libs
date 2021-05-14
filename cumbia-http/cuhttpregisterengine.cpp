@@ -21,6 +21,7 @@ class CuHttpRegisterEnginePrivate {
 public:
     QString url, chan;
     int ttl;
+    QCommandLineParser parser;
 };
 
 CuHttpRegisterEngine::CuHttpRegisterEngine() {
@@ -127,28 +128,27 @@ int CuHttpRegisterEngine::ttl() const {
 }
 
 bool CuHttpRegisterEngine::hasCmdOption(const QStringList &args) const {
-    QCommandLineParser parser;
     QCommandLineOption http_url_o(QStringList() << "u" << "http-url", "URL to http server/channel or URL only if -c [--channel] is provided", "url");
     QCommandLineOption chan_o(QStringList() << "c" << "channel", "Server Sent Events channel name", "chan");
     QCommandLineOption native_o(QStringList()  << "n" << "native", "Prefer native module");
     QCommandLineOption ttl_o(QStringList()  << "ttl" << "chan-msgs-ttl" , "Time to live: discard messages from the channel older than this value [seconds]", "integer");;
-    parser.addOption(http_url_o);
-    parser.addOption(chan_o);
-    parser.addOption(native_o);
-    parser.addOption(ttl_o);
-    parser.addHelpOption();
-    parser.parse(args);
+    d->parser.addOption(http_url_o);
+    d->parser.addOption(chan_o);
+    d->parser.addOption(native_o);
+    d->parser.addOption(ttl_o);
+    d->parser.addHelpOption();
+    d->parser.parse(args);
     QString url;
-    if(parser.isSet("help"))
-        printf("http module \e[1;32mhelp\e[0m:\n\e[1;36m%s\e[0m\n", qstoc(parser.helpText()));
-    if(parser.isSet(native_o))
+    if(d->parser.isSet("help"))
+        printf("http module \e[1;32mhelp\e[0m:\n\e[1;36m%s\e[0m\n", qstoc(d->parser.helpText()));
+    if(d->parser.isSet(native_o))
         return false;
-    if(parser.isSet(http_url_o))
-        url = parser.value(http_url_o);
-    if(parser.isSet(chan_o))
-        d->chan = parser.value(chan_o);
-    if(parser.isSet(ttl_o))
-        d->ttl = parser.value(ttl_o).toInt();
+    if(d->parser.isSet(http_url_o))
+        url = d->parser.value(http_url_o);
+    if(d->parser.isSet(ttl_o))
+        d->ttl = d->parser.value(ttl_o).toInt();
+    if(d->parser.isSet(chan_o))
+        d->chan = d->parser.value(chan_o);
     else if(!url.isEmpty()) {
         d->chan = url.section(QRegularExpression("[^:^/]/"), -1); // match last token after a / but skip http[s]://
         d->chan != url ? d->url = url.remove(url.lastIndexOf('/'), d->chan.length() + 1) : d->chan.remove(0, d->chan.length());
