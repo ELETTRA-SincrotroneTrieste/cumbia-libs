@@ -15,12 +15,14 @@ int main(int argc, char *argv[])
 
     w->show();
 
-    int ret = a.exec();
-    delete w;
-    delete cu_poo->get("tango");
-#ifdef QUMBIA_EPICS_CONTROLS
-    delete cu_poo->get("epics");
-#endif
-    delete cu_poo;
-    return ret;
+    // exec application loop
+        int ret = a.exec();
+        // delete resources and return
+        delete w;
+
+        for(std::string n : cu_poo->names())
+            if(cu_poo->get(n))
+                delete cu_poo->get(n);
+
+        return ret;
 }
