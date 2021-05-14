@@ -108,7 +108,7 @@ size_t CuActionFactoryServiceImpl::count() const {
 }
 
 void CuActionFactoryServiceImpl::unregisterAction(const string &src, CuTangoActionI::Type at) {
-    printf("\e[1;35mCuActionFactoryServiceImpl::unregisterAction [NON THREAD SAFE]\e[0m\n");
+    printf("\e[0;35mCuActionFactoryServiceImpl::unregisterAction [NON THREAD SAFE]\e[0m\n");
     assert(d->creation_thread == pthread_self());
     return CuActionFactoryServiceImpl_Base::unregisterAction(src, at);
 }
@@ -131,7 +131,7 @@ CuActionFactoryServiceImpl_TS::~CuActionFactoryServiceImpl_TS() {
 }
 
 CuTangoActionI *CuActionFactoryServiceImpl_TS::registerAction(const string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct) {
-    printf("\e[1;32mCuActionFactoryServiceImpl::unregisterAction [ THREAD SAFE]\e[0m\n");
+    printf("\e[1;32mCuActionFactoryServiceImpl::registerAction [ THREAD SAFE]\e[0m\n");
     std::unique_lock lock(d->shared_mutex);
     return CuActionFactoryServiceImpl_Base::registerAction(src, f, ct);
 }
@@ -147,7 +147,7 @@ size_t CuActionFactoryServiceImpl_TS::count() const {
 }
 
 void CuActionFactoryServiceImpl_TS::unregisterAction(const string &src, CuTangoActionI::Type at) {
-    printf("\e[1;32mCuActionFactoryServiceImpl::unregisterAction [ THREAD SAFE]\e[0m\n");
+    printf("\e[0;32mCuActionFactoryServiceImpl::unregisterAction [ THREAD SAFE]\e[0m\n");
     std::unique_lock lock(d->shared_mutex);
     return CuActionFactoryServiceImpl_Base::unregisterAction(src, at);
 }
