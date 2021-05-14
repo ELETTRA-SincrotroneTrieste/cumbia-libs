@@ -8,8 +8,7 @@ class CuDataListener;
 #include <cutangoactioni.h>
 #include<string>
 
-class CuThreadFactoryImplI;
-class CuThreadsEventBridgeFactory_I;
+class CumbiaTangoPrivate;
 
 #define CUMBIA_TANGO_VERSION CU_TANGO_VERSION
 
@@ -153,22 +152,21 @@ class CuThreadsEventBridgeFactory_I;
  */
 class CumbiaTango : public Cumbia
 {
-
 public:
+
+    enum Options  { CuTaActionFactorySrvcSimple = 0x1, CuTaActionFactorySrvcThreadSafe = 0x2, EndOptions = 512 };
     enum Type { CumbiaTangoType = Cumbia::CumbiaUserType + 1 };
 
     CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb);
-
+    CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb, Options o);
     ~CumbiaTango();
 
     void addAction(const TSource &source, CuDataListener *l, const CuTangoActionFactoryI &f);
     void unlinkListener(const std::string& source, CuTangoActionI::Type t, CuDataListener *l);
     void removeAction(const std::string& source, CuTangoActionI::Type t);
-
     CuTangoActionI *findAction(const std::string& source, CuTangoActionI::Type t) const;
 
     CuThreadFactoryImplI* getThreadFactoryImpl() const;
-
     CuThreadsEventBridgeFactory_I* getThreadEventsBridgeFactory() const;
 
     virtual int getType() const;
@@ -176,9 +174,7 @@ public:
 private:
 
     void m_init();
-
-    CuThreadsEventBridgeFactory_I *m_threadsEventBridgeFactory;
-    CuThreadFactoryImplI *m_threadFactoryImplI;
+    CumbiaTangoPrivate *d;
 };
 
 #endif // CUMBIATANGO_H

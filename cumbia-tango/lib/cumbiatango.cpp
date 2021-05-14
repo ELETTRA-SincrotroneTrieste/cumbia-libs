@@ -15,6 +15,16 @@
 #include <cuthreadfactoryimpl.h>
 #include <cuthreadseventbridgefactory_i.h>
 
+class CumbiaTangoPrivate {
+public:
+    CumbiaTangoPrivate(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb, CumbiaTango::Options o) :
+        th_factory_i(tfi), th_eve_b_factory(teb), options(o) {}
+
+    CuThreadFactoryImplI *th_factory_i;
+    CuThreadsEventBridgeFactory_I *th_eve_b_factory;
+    CumbiaTango::Options options;
+};
+
 /** \brief CumbiaTango two parameters constructor
  *
  * The class constructor accepts a factory providing a thread implementation for cumbia (mainly CuThread)
@@ -30,10 +40,13 @@
  * \endcode
  *
  */
-CumbiaTango::CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb)
+CumbiaTango::CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb) {
+    d = new CumbiaTangoPrivate(tfi, teb, CumbiaTango::CuTaActionFactorySrvcSimple);
+}
+
+CumbiaTango::CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb, Options o)
 {
-    m_threadsEventBridgeFactory = teb;
-    m_threadFactoryImplI = tfi;
+    d = new CumbiaTangoPrivate(tfi, teb, o);
     m_init();
 }
 
@@ -48,10 +61,10 @@ CumbiaTango::~CumbiaTango()
 {
     pdelete("~CumbiaTango %p", this);
     /* all registered services are unregistered and deleted by cumbia destructor after threads have joined */
-    if(m_threadsEventBridgeFactory)
-        delete m_threadsEventBridgeFactory;
-    if(m_threadFactoryImplI)
-        delete m_threadFactoryImplI;
+    if(d->th_eve_b_factory)
+        delete d->th_eve_b_factory;
+    if(d->th_factory_i)
+        delete d->th_factory_i;
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
     af->cleanup();
@@ -116,11 +129,11 @@ CuTangoActionI *CumbiaTango::findAction(const std::string &source, CuTangoAction
 }
 
 CuThreadFactoryImplI *CumbiaTango::getThreadFactoryImpl() const {
-    return m_threadFactoryImplI;
+    return d->th_factory_i;
 }
 
 CuThreadsEventBridgeFactory_I *CumbiaTango::getThreadEventsBridgeFactory() const {
-    return m_threadsEventBridgeFactory;
+    return d->th_eve_b_factory;
 }
 
 int CumbiaTango::getType() const {
