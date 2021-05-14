@@ -62,12 +62,12 @@ var NAVTREEINDEX0 =
 "classCuActivityManager.html":[4,0,3],
 "classCuActivityManager.html#a12eb21616708bdf5ef9b1768cab1f27f":[4,0,3,12],
 "classCuActivityManager.html#a150eda1e76e34c375311a2fdf9a3d234":[4,0,3,7],
+"classCuActivityManager.html#a1a19c19bbbb1663239e7b02eccb26156":[4,0,3,6],
 "classCuActivityManager.html#a2e88050a39a888a05f87d204dee8167a":[4,0,3,4],
 "classCuActivityManager.html#a3eaed8060f39886cfc463df73f25da17":[4,0,3,11],
 "classCuActivityManager.html#a4bd6c93ba03ef9b825c662e6cc0eb09f":[4,0,3,8],
 "classCuActivityManager.html#a8403096bb2db1b16c14c61a8ec883a16":[4,0,3,5],
 "classCuActivityManager.html#a891225c6ee81470070b12603cfdcdfc8":[4,0,3,10],
-"classCuActivityManager.html#a913312b19f9e43881cc690de2045d7fb":[4,0,3,6],
 "classCuActivityManager.html#a99fd2a70c96a6b80fb83083e5fe379e1":[4,0,3,2],
 "classCuActivityManager.html#a9d0308c1f2114c564143394aac5570e7":[4,0,3,14],
 "classCuActivityManager.html#abe27edd2337bb48b7f2b5d4b146e910e":[4,0,3,1],
@@ -77,8 +77,9 @@ var NAVTREEINDEX0 =
 "classCuActivityManager.html#aee357c63269667322776b0f4ee42cc2a":[4,0,3,9],
 "classCuActivityManagerPrivate.html":[4,0,4],
 "classCuActivityManagerPrivate.html#a3efc6b0b4bde122a0f94a9609d962e55":[4,0,4,0],
-"classCuActivityManagerPrivate.html#ad14fdc69c797ad0225ac9991ac08b7c4":[4,0,4,1],
-"classCuActivityManagerPrivate.html#adbe521fe6f994f27da1575952766388b":[4,0,4,2],
+"classCuActivityManagerPrivate.html#a9d4019e244c7ce5b7fddca0e1f5aefed":[4,0,4,1],
+"classCuActivityManagerPrivate.html#ad14fdc69c797ad0225ac9991ac08b7c4":[4,0,4,2],
+"classCuActivityManagerPrivate.html#adbe521fe6f994f27da1575952766388b":[4,0,4,3],
 "classCuConLogImpl.html":[4,0,5],
 "classCuConLogImpl.html#a969b009a73594c04d02b505e8070a76c":[4,0,5,1],
 "classCuConLogImpl.html#abe865fe6a294d58b98f39b3d016bfcaf":[4,0,5,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "classCuPauseEvent.html#a33ae2dd679e40a69229e239e73c119ed":[4,0,24,0],
 "classCuResultEvent.html":[4,0,25],
 "classCuResultEvent.html#a07060b7798bf90ee733a56d70e2d06ed":[4,0,25,2],
-"classCuResultEvent.html#a1303981b1461fbea6df73ce8a7f310d6":[4,0,25,10],
-"classCuResultEvent.html#a1c7afc5976a2e0aeee16226c92815496":[4,0,25,6]
+"classCuResultEvent.html#a1303981b1461fbea6df73ce8a7f310d6":[4,0,25,10]
 };

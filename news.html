@@ -9,7 +9,27 @@
 <body>
 <h1>News</h1>
 
-<h3>version 1.2.4</h3>
+<h2>version 1.3.0</h2>
+
+<p>
+Changes in 1.3.0 shall provide an enhanced performance and brings a lighter and more readable code in cumbia-tango.
+</p>
+
+<p>
+<ul>
+<li>
+cumbia-tango: CumbiaTango constructor accepts an option to instantiate a thread safe implementation of CuActionFactoryService for complex applications
+that need to call find, registerAction and unregisterAction from different threads. For simple cases, this is not necessary and the library employs
+a lock free implementation of the service itself.
+</li>
+</p>
+
+<li>
+cumbia-tango: CuTReader code has been cleaned and a memory leak regression has been fixed.
+</li>
+</ul>
+
+<h2>version 1.2.4</h2>
 
 <p>
 

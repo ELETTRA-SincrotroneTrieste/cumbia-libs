@@ -62,6 +62,11 @@ Inheritance diagram for CumbiaTango:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:a00344bba6619558eb8202bf6d076cc25"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbiaTango.html#a00344bba6619558eb8202bf6d076cc25">Options</a> { <a class="el" href="classCumbiaTango.html#a00344bba6619558eb8202bf6d076cc25a891cf1e4a4fc9a5f6b533315898285ee">OptionActionFactorySrvcSimple</a> = 0x1
+, <a class="el" href="classCumbiaTango.html#a00344bba6619558eb8202bf6d076cc25a685d0ab859508207e7f9452af2f87edd">OptionActionFactorySrvcThreadSafe</a> = 0x2
+, <a class="el" href="classCumbiaTango.html#a00344bba6619558eb8202bf6d076cc25a076de982bb7f3f1cc17b744c3a449bbe">EndOptions</a> = 512
+ }</td></tr>
+<tr class="separator:a00344bba6619558eb8202bf6d076cc25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b176a4e84dfa57db75f61ad792e046c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbiaTango.html#a2b176a4e84dfa57db75f61ad792e046c">Type</a> { <a class="el" href="classCumbiaTango.html#a2b176a4e84dfa57db75f61ad792e046ca29299b53e0dab5ac62420b369cc35e37">CumbiaTangoType</a> = Cumbia::CumbiaUserType + 1
  }</td></tr>
 <tr class="separator:a2b176a4e84dfa57db75f61ad792e046c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -71,6 +76,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa1db94c068611a5c172bfb8602d92e3e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbiaTango.html#aa1db94c068611a5c172bfb8602d92e3e">CumbiaTango</a> (CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb)</td></tr>
 <tr class="memdesc:aa1db94c068611a5c172bfb8602d92e3e"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classCumbiaTango.html">CumbiaTango</a> two parameters constructor.  <a href="classCumbiaTango.html#aa1db94c068611a5c172bfb8602d92e3e">More...</a><br /></td></tr>
 <tr class="separator:aa1db94c068611a5c172bfb8602d92e3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f9ee004b44b8a029e11d6e23afa3bac"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbiaTango.html#a6f9ee004b44b8a029e11d6e23afa3bac">CumbiaTango</a> (CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb, <a class="el" href="classCumbiaTango.html#a00344bba6619558eb8202bf6d076cc25">Options</a> o)</td></tr>
+<tr class="separator:a6f9ee004b44b8a029e11d6e23afa3bac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad9df271be082292be5de7fa66e540a31"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbiaTango.html#ad9df271be082292be5de7fa66e540a31">~CumbiaTango</a> ()</td></tr>
 <tr class="separator:ad9df271be082292be5de7fa66e540a31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab71bcb5522095fe1a864d63092b2132a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbiaTango.html#ab71bcb5522095fe1a864d63092b2132a">addAction</a> (const <a class="el" href="classTSource.html">TSource</a> &amp;source, CuDataListener *l, const <a class="el" href="classCuTangoActionFactoryI.html">CuTangoActionFactoryI</a> &amp;f)</td></tr>
@@ -78,6 +85,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7b5ceb9f3ba037fe5b00c5e5fdca3edf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbiaTango.html#a7b5ceb9f3ba037fe5b00c5e5fdca3edf">unlinkListener</a> (const std::string &amp;source, <a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92">CuTangoActionI::Type</a> t, CuDataListener *l)</td></tr>
 <tr class="memdesc:a7b5ceb9f3ba037fe5b00c5e5fdca3edf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes a listener from the action(s) with the given source name and type.  <a href="classCumbiaTango.html#a7b5ceb9f3ba037fe5b00c5e5fdca3edf">More...</a><br /></td></tr>
 <tr class="separator:a7b5ceb9f3ba037fe5b00c5e5fdca3edf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2db3dc986ef14b098fe6aaaeadfc2814"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbiaTango.html#a2db3dc986ef14b098fe6aaaeadfc2814">removeAction</a> (const std::string &amp;source, <a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92">CuTangoActionI::Type</a> t)</td></tr>
+<tr class="separator:a2db3dc986ef14b098fe6aaaeadfc2814"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad077f1b9cdc5dfc2482c3616ef776c53"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuTangoActionI.html">CuTangoActionI</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbiaTango.html#ad077f1b9cdc5dfc2482c3616ef776c53">findAction</a> (const std::string &amp;source, <a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92">CuTangoActionI::Type</a> t) const</td></tr>
 <tr class="separator:ad077f1b9cdc5dfc2482c3616ef776c53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e0100fe16eb204b8a2571acc9e99903"><td class="memItemLeft" align="right" valign="top">CuThreadFactoryImplI *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCumbiaTango.html#a8e0100fe16eb204b8a2571acc9e99903">getThreadFactoryImpl</a> () const</td></tr>
@@ -88,6 +97,27 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7863fb32764138a81fd7aee138335c3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="a00344bba6619558eb8202bf6d076cc25"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a00344bba6619558eb8202bf6d076cc25">&#9670;&nbsp;</a></span>Options</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classCumbiaTango.html#a00344bba6619558eb8202bf6d076cc25">CumbiaTango::Options</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a00344bba6619558eb8202bf6d076cc25a891cf1e4a4fc9a5f6b533315898285ee"></a>OptionActionFactorySrvcSimple&#160;</td><td class="fielddoc"><p>the default, good for most simple cases </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a00344bba6619558eb8202bf6d076cc25a685d0ab859508207e7f9452af2f87edd"></a>OptionActionFactorySrvcThreadSafe&#160;</td><td class="fielddoc"><p>for complex apps: add, find and remove actions from different threads </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a00344bba6619558eb8202bf6d076cc25a076de982bb7f3f1cc17b744c3a449bbe"></a>EndOptions&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
 <a id="a2b176a4e84dfa57db75f61ad792e046c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2b176a4e84dfa57db75f61ad792e046c">&#9670;&nbsp;</a></span>Type</h2>
 
@@ -107,7 +137,7 @@ Public Member Functions</h2></td></tr>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa1db94c068611a5c172bfb8602d92e3e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa1db94c068611a5c172bfb8602d92e3e">&#9670;&nbsp;</a></span>CumbiaTango()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1db94c068611a5c172bfb8602d92e3e">&#9670;&nbsp;</a></span>CumbiaTango() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -142,9 +172,45 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section user"><dt>example</dt><dd><div class="fragment"><div class="line"><a class="code" href="classCumbiaTango.html">CumbiaTango</a>* cuta = <span class="keyword">new</span> <a class="code" href="classCumbiaTango.html#aa1db94c068611a5c172bfb8602d92e3e">CumbiaTango</a>(<span class="keyword">new</span> CuThreadFactoryImpl(), <span class="keyword">new</span> QThreadsEventBridgeFactory());</div>
-<div class="ttc" id="aclassCumbiaTango_html"><div class="ttname"><a href="classCumbiaTango.html">CumbiaTango</a></div><div class="ttdef"><b>Definition:</b> cumbiatango.h:155</div></div>
-<div class="ttc" id="aclassCumbiaTango_html_aa1db94c068611a5c172bfb8602d92e3e"><div class="ttname"><a href="classCumbiaTango.html#aa1db94c068611a5c172bfb8602d92e3e">CumbiaTango::CumbiaTango</a></div><div class="ttdeci">CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb)</div><div class="ttdoc">CumbiaTango two parameters constructor.</div><div class="ttdef"><b>Definition:</b> cumbiatango.cpp:33</div></div>
+<div class="ttc" id="aclassCumbiaTango_html"><div class="ttname"><a href="classCumbiaTango.html">CumbiaTango</a></div><div class="ttdef"><b>Definition:</b> cumbiatango.h:154</div></div>
+<div class="ttc" id="aclassCumbiaTango_html_aa1db94c068611a5c172bfb8602d92e3e"><div class="ttname"><a href="classCumbiaTango.html#aa1db94c068611a5c172bfb8602d92e3e">CumbiaTango::CumbiaTango</a></div><div class="ttdeci">CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb)</div><div class="ttdoc">CumbiaTango two parameters constructor.</div><div class="ttdef"><b>Definition:</b> cumbiatango.cpp:43</div></div>
 </div><!-- fragment --> </dd></dl>
+
+<p class="reference">References <a class="el" href="classCumbiaTango.html#a00344bba6619558eb8202bf6d076cc25a685d0ab859508207e7f9452af2f87edd">OptionActionFactorySrvcThreadSafe</a>.</p>
+
+</div>
+</div>
+<a id="a6f9ee004b44b8a029e11d6e23afa3bac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f9ee004b44b8a029e11d6e23afa3bac">&#9670;&nbsp;</a></span>CumbiaTango() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CumbiaTango::CumbiaTango </td>
+          <td>(</td>
+          <td class="paramtype">CuThreadFactoryImplI *&#160;</td>
+          <td class="paramname"><em>tfi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">CuThreadsEventBridgeFactory_I *&#160;</td>
+          <td class="paramname"><em>teb</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCumbiaTango.html#a00344bba6619558eb8202bf6d076cc25">Options</a>&#160;</td>
+          <td class="paramname"><em>o</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -200,7 +266,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classCuTangoActionI.html#a2f7cd98841abb677aa2dac34059eeab3">CuTangoActionI::addDataListener()</a>, <a class="el" href="classCuActionFactoryService.html#ad2bb6770622dc3dc24a5846f818e8bdcafb23f61f823444e6df483206eb9b7e11">CuActionFactoryService::CuActionFactoryServiceType</a>, <a class="el" href="classCuActionFactoryService.html#af95a988eb556a76b89f47d6ae8e2d54d">CuActionFactoryService::findActive()</a>, <a class="el" href="classTSource.html#af6720ad025d7f3e1e8b45bb0c74660df">TSource::getName()</a>, <a class="el" href="classCuTangoActionFactoryI.html#a6820d231ca837602377339c31e0e4997">CuTangoActionFactoryI::getType()</a>, <a class="el" href="classCuActionFactoryService.html#aa5ce995168e5a9a02b8ddee45027efab">CuActionFactoryService::registerAction()</a>, and <a class="el" href="classCuTangoActionI.html#a641aee21ef5e7a185271df3eead88172">CuTangoActionI::start()</a>.</p>
+<p class="reference">References <a class="el" href="classCuTangoActionI.html#a2f7cd98841abb677aa2dac34059eeab3">CuTangoActionI::addDataListener()</a>, <a class="el" href="classCuActionFactoryService.html#ad2bb6770622dc3dc24a5846f818e8bdcafb23f61f823444e6df483206eb9b7e11">CuActionFactoryService::CuActionFactoryServiceType</a>, <a class="el" href="classCuActionFactoryService.html#a3cdcbae52cec7f011a6052bc5e499474">CuActionFactoryService::find()</a>, <a class="el" href="classTSource.html#af6720ad025d7f3e1e8b45bb0c74660df">TSource::getName()</a>, <a class="el" href="classCuTangoActionFactoryI.html#a6820d231ca837602377339c31e0e4997">CuTangoActionFactoryI::getType()</a>, <a class="el" href="classCuActionFactoryService.html#aa5ce995168e5a9a02b8ddee45027efab">CuActionFactoryService::registerAction()</a>, and <a class="el" href="classCuTangoActionI.html#a641aee21ef5e7a185271df3eead88172">CuTangoActionI::start()</a>.</p>
 
 </div>
 </div>
@@ -230,7 +296,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classCuActionFactoryService.html#ad2bb6770622dc3dc24a5846f818e8bdcafb23f61f823444e6df483206eb9b7e11">CuActionFactoryService::CuActionFactoryServiceType</a>, and <a class="el" href="classCuActionFactoryService.html#af95a988eb556a76b89f47d6ae8e2d54d">CuActionFactoryService::findActive()</a>.</p>
+<p class="reference">References <a class="el" href="classCuActionFactoryService.html#ad2bb6770622dc3dc24a5846f818e8bdcafb23f61f823444e6df483206eb9b7e11">CuActionFactoryService::CuActionFactoryServiceType</a>, and <a class="el" href="classCuActionFactoryService.html#a3cdcbae52cec7f011a6052bc5e499474">CuActionFactoryService::find()</a>.</p>
 
 </div>
 </div>
@@ -295,6 +361,36 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a2db3dc986ef14b098fe6aaaeadfc2814"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2db3dc986ef14b098fe6aaaeadfc2814">&#9670;&nbsp;</a></span>removeAction()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CumbiaTango::removeAction </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>source</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92">CuTangoActionI::Type</a>&#160;</td>
+          <td class="paramname"><em>t</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="reference">References <a class="el" href="classCuActionFactoryService.html#ad2bb6770622dc3dc24a5846f818e8bdcafb23f61f823444e6df483206eb9b7e11">CuActionFactoryService::CuActionFactoryServiceType</a>, and <a class="el" href="classCuActionFactoryService.html#a9d5825629c4a5868469a14267d9af8ac">CuActionFactoryService::unregisterAction()</a>.</p>
+
+</div>
+</div>
 <a id="a7b5ceb9f3ba037fe5b00c5e5fdca3edf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7b5ceb9f3ba037fe5b00c5e5fdca3edf">&#9670;&nbsp;</a></span>unlinkListener()</h2>
 
@@ -342,7 +438,7 @@ Examples of <a class="el" href="classCuTangoActionI.html" title="an interface fo
 <dd>
 This call does not necessarily remove the CuActionI from cumbia. A CuActionI is removed when there are no linked CuDataListener anymore.</dd>
 <dd>
-There may be multiple actions with the given source and type. CuTangoActionI::removeDataListener(l) is called for each of them. Please see <a class="el" href="classCuActionFactoryService.html#a970e9c7f35f2196222947f206aba1b5e" title="find an action given its source and type">CuActionFactoryService::find</a> for more details</dd></dl>
+There may be multiple actions with the given source and type. CuTangoActionI::removeDataListener(l) is called for each of them. Please see <a class="el" href="classCuActionFactoryService.html#a3cdcbae52cec7f011a6052bc5e499474" title="find an action given the source name and the action type">CuActionFactoryService::find</a> for more details</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="classCuTangoActionI.html#ade015baf4bca143a9bafcce41aa2dd92" title="list of types of actions">CuTangoActionI::Type</a> </dd>
 <dd>
 CuDataListener </dd>
@@ -353,7 +449,7 @@ CuTAttConfiguration::removeDataListener</dd>
 <dd>
 <a class="el" href="classCuTangoActionI.html#a70ada28cceae397251f1523b3912f385" title="remove a CuDataListener from the list of listeners of data updates">CuTangoActionI::removeDataListener</a> </dd></dl>
 
-<p class="reference">References <a class="el" href="classCuActionFactoryService.html#ad2bb6770622dc3dc24a5846f818e8bdcafb23f61f823444e6df483206eb9b7e11">CuActionFactoryService::CuActionFactoryServiceType</a>, and <a class="el" href="classCuActionFactoryService.html#a970e9c7f35f2196222947f206aba1b5e">CuActionFactoryService::find()</a>.</p>
+<p class="reference">References <a class="el" href="classCuActionFactoryService.html#ad2bb6770622dc3dc24a5846f818e8bdcafb23f61f823444e6df483206eb9b7e11">CuActionFactoryService::CuActionFactoryServiceType</a>, <a class="el" href="classCuActionFactoryService.html#a3cdcbae52cec7f011a6052bc5e499474">CuActionFactoryService::find()</a>, and <a class="el" href="classCuTangoActionI.html#a70ada28cceae397251f1523b3912f385">CuTangoActionI::removeDataListener()</a>.</p>
 
 </div>
 </div>
@@ -364,7 +460,7 @@ CuTAttConfiguration::removeDataListener</dd>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 30 2021 16:32:01 for cumbia-tango by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri May 14 2021 16:58:01 for cumbia-tango by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>

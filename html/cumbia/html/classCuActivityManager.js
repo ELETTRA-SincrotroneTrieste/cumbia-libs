@@ -6,7 +6,7 @@ var classCuActivityManager =
     [ "addConnection", "classCuActivityManager.html#ac03e72fe7f5badf1ef3f30bdb122c7e6", null ],
     [ "connectionExists", "classCuActivityManager.html#a2e88050a39a888a05f87d204dee8167a", null ],
     [ "countActivitiesForThread", "classCuActivityManager.html#a8403096bb2db1b16c14c61a8ec883a16", null ],
-    [ "findActiveMatching", "classCuActivityManager.html#a913312b19f9e43881cc690de2045d7fb", null ],
+    [ "find", "classCuActivityManager.html#a1a19c19bbbb1663239e7b02eccb26156", null ],
     [ "getName", "classCuActivityManager.html#a150eda1e76e34c375311a2fdf9a3d234", null ],
     [ "getThread", "classCuActivityManager.html#a4bd6c93ba03ef9b825c662e6cc0eb09f", null ],
     [ "getThreadListeners", "classCuActivityManager.html#aee357c63269667322776b0f4ee42cc2a", null ],

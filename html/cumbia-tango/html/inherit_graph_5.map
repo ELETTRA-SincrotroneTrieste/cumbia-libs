@@ -1,5 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,31,147,57"/>
-<area shape="rect" id="node2" href="$classCuGetTDbPropActivity.html" title="an activity to get properties from the Tango database" alt="" coords="195,5,361,32"/>
-<area shape="rect" id="node3" href="$classCuWriteActivity.html" title=" " alt="" coords="216,56,340,83"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,131,32"/>
+<area shape="rect" id="node2" href="$classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int..." alt="" coords="184,5,311,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="23,56,113,83"/>
+<area shape="rect" id="node4" href="$classCuTConfigActivity.html" title="Activity to get attribute configuration or command info. Optionally, it can perform a one shot attrib..." alt="" coords="179,56,316,83"/>
+<area shape="rect" id="node5" href="$classCuTaDbActivity.html" title="Activity to get data from the Tango database." alt="" coords="187,107,308,133"/>
 </map>

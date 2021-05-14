@@ -1,5 +1,6 @@
 var NAVTREEINDEX2 =
 {
+"classCuVariant.html#ab9e8afbcecca94f5f3710f87e6ffe275":[4,0,48,33],
 "classCuVariant.html#abceb8a9b2638b0915066e197e9a7280c":[4,0,48,1],
 "classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca07b0dcd0377c638765c48b1d4fec7b46":[4,0,48,1,4],
 "classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca1e8a69d26b59520fb5a809306428978a":[4,0,48,1,2],
@@ -244,10 +245,9 @@ var NAVTREEINDEX2 =
 "cuvariantprivate_8h.html":[5,0,59],
 "cuvariantprivate_8h_source.html":[5,0,59],
 "files.html":[5,0],
-"functions.html":[4,2,0],
 "functions.html":[4,2,0,0],
+"functions.html":[4,2,0],
 "functions_b.html":[4,2,0,1],
 "functions_c.html":[4,2,0,2],
-"functions_d.html":[4,2,0,3],
-"functions_e.html":[4,2,0,4]
+"functions_d.html":[4,2,0,3]
 };

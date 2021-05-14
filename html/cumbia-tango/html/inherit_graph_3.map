@@ -1,6 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,56,132,83"/>
-<area shape="rect" id="node2" href="$classCuAddPollActionEvent.html" title=" " alt="" coords="194,5,361,32"/>
-<area shape="rect" id="node3" href="$classCuArgsChangeEvent.html" title=" " alt="" coords="200,56,355,83"/>
-<area shape="rect" id="node4" href="$classCuRemovePollActionEvent.html" title=" " alt="" coords="180,107,375,133"/>
+<area shape="rect" id="node1" href="$classCuActionFactoryServiceImpl__Base.html" title=" " alt="" coords="5,31,248,57"/>
+<area shape="rect" id="node2" href="$classCuActionFactoryServiceImpl.html" title="The CuActionFactoryServiceImpl class is the simple non thread safe implementation for most cases wher..." alt="" coords="307,5,511,32"/>
+<area shape="rect" id="node3" href="$classCuActionFactoryServiceImpl__TS.html" title="The CuActionFactoryServiceImpl_TS class is the thread safe version of CuActionFactoryServiceImpl for ..." alt="" coords="296,56,523,83"/>
 </map>

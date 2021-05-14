@@ -122,9 +122,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a9d0308c1f2114c564143394aac5570e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad46e762d26ce5d9ecdcf7d7a95522cdd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivityManager.html#ad46e762d26ce5d9ecdcf7d7a95522cdd">removeConnection</a> (<a class="el" href="classCuThreadListener.html">CuThreadListener</a> *l)</td></tr>
 <tr class="separator:ad46e762d26ce5d9ecdcf7d7a95522cdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a913312b19f9e43881cc690de2045d7fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuActivity.html">CuActivity</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivityManager.html#a913312b19f9e43881cc690de2045d7fb">findActiveMatching</a> (const <a class="el" href="classCuData.html">CuData</a> &amp;token)</td></tr>
-<tr class="memdesc:a913312b19f9e43881cc690de2045d7fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">finds an activity matching the given token  <a href="classCuActivityManager.html#a913312b19f9e43881cc690de2045d7fb">More...</a><br /></td></tr>
-<tr class="separator:a913312b19f9e43881cc690de2045d7fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a19c19bbbb1663239e7b02eccb26156"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuActivity.html">CuActivity</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivityManager.html#a1a19c19bbbb1663239e7b02eccb26156">find</a> (const <a class="el" href="classCuData.html">CuData</a> &amp;token)</td></tr>
+<tr class="memdesc:a1a19c19bbbb1663239e7b02eccb26156"><td class="mdescLeft">&#160;</td><td class="mdescRight">finds an activity matching the given token  <a href="classCuActivityManager.html#a1a19c19bbbb1663239e7b02eccb26156">More...</a><br /></td></tr>
+<tr class="separator:a1a19c19bbbb1663239e7b02eccb26156"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4bd6c93ba03ef9b825c662e6cc0eb09f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCuThreadInterface.html">CuThreadInterface</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCuActivityManager.html#a4bd6c93ba03ef9b825c662e6cc0eb09f">getThread</a> (<a class="el" href="classCuActivity.html">CuActivity</a> *activity)</td></tr>
 <tr class="memdesc:a4bd6c93ba03ef9b825c662e6cc0eb09f"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the <a class="el" href="classCuThreadInterface.html" title="interface to write thread implementations that can be used with the cumbia library">CuThreadInterface</a> that executes the given activity  <a href="classCuActivityManager.html#a4bd6c93ba03ef9b825c662e6cc0eb09f">More...</a><br /></td></tr>
 <tr class="separator:a4bd6c93ba03ef9b825c662e6cc0eb09f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,6 +169,8 @@ Public Member Functions</h2></td></tr>
 
 <p>The <a class="el" href="classCumbia.html" title="primary cumbia class where activities are registered and unregistered. Provides access to the cumbia ...">Cumbia</a> Activity Manager keeps the links between threads, activities and thread listeners. <a class="el" href="classCuActivityManager.html" title="This service stores the links between threads, activities and thread listeners.">CuActivityManager</a> deals with adding, removing and finding objects connected with each other. </p>
 <dl class="section user"><dt>Thread safety.</dt><dd>All the methods in this class are thread safe and can be accessed from within any <a class="el" href="classCuActivity.html" title="a class with hook functions where work can be done in a separate thread and wherefrom results are pub...">CuActivity</a> or other thread. </dd></dl>
+
+<p class="reference">References <a class="el" href="classCuActivityManagerPrivate.html#a9d4019e244c7ce5b7fddca0e1f5aefed">CuActivityManagerPrivate::creation_thread</a>.</p>
 
 </div>
 </div>
@@ -254,7 +256,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="reference">References <a class="el" href="classCuActivityManagerPrivate.html#a3efc6b0b4bde122a0f94a9609d962e55">CuActivityManagerPrivate::conn_mumap</a>, <a class="el" href="classCuActivity.html#ae05621fc262128f5e373d32d9a6d3baa">CuActivity::getToken()</a>, <a class="el" href="cumacros_8h.html#acfab0901833e70730957144c86bed632">pbviolet2</a>, <a class="el" href="classCuActivityManagerPrivate.html#ad14fdc69c797ad0225ac9991ac08b7c4">CuActivityManagerPrivate::shared_mu</a>, <a class="el" href="classCuActivityManagerPrivate.html#adbe521fe6f994f27da1575952766388b">CuActivityManagerPrivate::th_lis_mumap</a>, and <a class="el" href="classCuData.html#ae04664b2bc005e88fdf0ebcd832cda5d">CuData::toString()</a>.</p>
+<p class="reference">References <a class="el" href="classCuActivityManagerPrivate.html#a3efc6b0b4bde122a0f94a9609d962e55">CuActivityManagerPrivate::conn_mumap</a>, <a class="el" href="classCuActivityManagerPrivate.html#ad14fdc69c797ad0225ac9991ac08b7c4">CuActivityManagerPrivate::shared_mu</a>, and <a class="el" href="classCuActivityManagerPrivate.html#adbe521fe6f994f27da1575952766388b">CuActivityManagerPrivate::th_lis_mumap</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classCumbia.html#affe4f4e6912be2d453411d5efa8df1b7">Cumbia::registerActivity()</a>.</p>
 
@@ -316,14 +318,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a913312b19f9e43881cc690de2045d7fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a913312b19f9e43881cc690de2045d7fb">&#9670;&nbsp;</a></span>findActiveMatching()</h2>
+<a id="a1a19c19bbbb1663239e7b02eccb26156"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1a19c19bbbb1663239e7b02eccb26156">&#9670;&nbsp;</a></span>find()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classCuActivity.html">CuActivity</a> * CuActivityManager::findActiveMatching </td>
+          <td class="memname"><a class="el" href="classCuActivity.html">CuActivity</a> * CuActivityManager::find </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classCuData.html">CuData</a> &amp;&#160;</td>
           <td class="paramname"><em>token</em></td><td>)</td>
@@ -504,7 +506,7 @@ Public Member Functions</h2></td></tr>
 <p>This unbinds <em>threads from activities</em> and <em>thread listeners</em> (<a class="el" href="classCuThreadListener.html" title="interface for a listener that is notified when progress is done in the background and data is ready">CuThreadListener</a>) from <em>activities</em> (<a class="el" href="classCuActivity.html" title="a class with hook functions where work can be done in a separate thread and wherefrom results are pub...">CuActivity</a>).</p>
 <p>See <a class="el" href="classCuActivityManager.html#a12eb21616708bdf5ef9b1768cab1f27f" title="Removes all links where a is involved.">CuActivityManager::removeConnection</a> </p>
 
-<p class="reference">References <a class="el" href="classCuActivityManagerPrivate.html#a3efc6b0b4bde122a0f94a9609d962e55">CuActivityManagerPrivate::conn_mumap</a>, <a class="el" href="cumacros_8h.html#adbd57a613d24fa06f8271fdde6ec3f5e">pviolet</a>, <a class="el" href="classCuActivityManagerPrivate.html#ad14fdc69c797ad0225ac9991ac08b7c4">CuActivityManagerPrivate::shared_mu</a>, and <a class="el" href="classCuActivityManagerPrivate.html#adbe521fe6f994f27da1575952766388b">CuActivityManagerPrivate::th_lis_mumap</a>.</p>
+<p class="reference">References <a class="el" href="classCuActivityManagerPrivate.html#a3efc6b0b4bde122a0f94a9609d962e55">CuActivityManagerPrivate::conn_mumap</a>, <a class="el" href="classCuActivityManagerPrivate.html#ad14fdc69c797ad0225ac9991ac08b7c4">CuActivityManagerPrivate::shared_mu</a>, and <a class="el" href="classCuActivityManagerPrivate.html#adbe521fe6f994f27da1575952766388b">CuActivityManagerPrivate::th_lis_mumap</a>.</p>
 
 <p class="reference">Referenced by <a class="el" href="classCumbia.html#a17c9894c182fe02d4667aff851824f81">Cumbia::finish()</a>.</p>
 
@@ -576,7 +578,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="classCuActivityManager.html">CuActivityManager</a></li>
-    <li class="footer">Generated on Tue Mar 30 2021 16:31:57 for cumbia by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
+    <li class="footer">Generated on Fri May 14 2021 16:57:56 for cumbia by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>
 </body>

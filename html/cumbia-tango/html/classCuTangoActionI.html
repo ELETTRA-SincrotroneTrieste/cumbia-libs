@@ -276,7 +276,7 @@ Public Member Functions</h2></td></tr>
 
 <p>returns true if the action has been stopped and it's exiting </p>
 <dl class="section return"><dt>Returns</dt><dd>true if the action is exiting (normally, stop has been called), false otherwise</dd></dl>
-<p>Used by <a class="el" href="classCuActionFactoryService.html#a9d5825629c4a5868469a14267d9af8ac" title="Unregister the action with the given source and type if the action&#39;s exiting() method returns true.">CuActionFactoryService::unregisterAction</a> to check whether the action is still running before unregistering. </p>
+<p>Used by <a class="el" href="classCuActionFactoryService.html#a9d5825629c4a5868469a14267d9af8ac" title="Unregister the action with the given source and type.">CuActionFactoryService::unregisterAction</a> to check whether the action is still running before unregistering. </p>
 
 <p>Implemented in <a class="el" href="classCuTWriter.html#a0e822b064bccaa534bc8740acd52ab6a">CuTWriter</a>, <a class="el" href="classCuTReader.html#ac6953809b2974858ca1c36656a2f87db">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a3216b4700b2bdd350bbb638b4ca25887">CuTConfiguration</a>, and <a class="el" href="classCuTaDb.html#a0299c469423b82eb2531c55a5a9a1e28">CuTaDb</a>.</p>
 
@@ -347,7 +347,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classCuTWriter.html#a8718f1a13c8ae9f6d3769cd741696906">CuTWriter</a>, <a class="el" href="classCuTReader.html#acba17a60f24f4c75359422b84fd91975">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#a86b1e3dafc7238a59cbe6d2b00a6e615">CuTConfiguration</a>, and <a class="el" href="classCuTaDb.html#a48a9924ad07affd523206ce29de239b7">CuTaDb</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="classCuPollingService.html#ac9e338ca5b1b36884ff1656b616dd57a">CuPollingService::actionRegistered()</a>, and <a class="el" href="classCuPoller.html#abc1ee3055effcf64ed3f60feb83c2ab8">CuPoller::registerAction()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="classCuPollingService.html#ac9e338ca5b1b36884ff1656b616dd57a">CuPollingService::actionRegistered()</a>, <a class="el" href="classCuPoller.html#abc1ee3055effcf64ed3f60feb83c2ab8">CuPoller::registerAction()</a>, and <a class="el" href="classCuPollingService.html#a296d52306e2cd545de58f5a2a4c43195">CuPollingService::unregisterAction()</a>.</p>
 
 </div>
 </div>
@@ -415,6 +415,8 @@ Public Member Functions</h2></td></tr>
 
 <p>Implemented in <a class="el" href="classCuTWriter.html#ae438f73a551f9fd5ee31552ec8bd8744">CuTWriter</a>, <a class="el" href="classCuTReader.html#a439883dad7d9b6cfb0a2c0085dc93e87">CuTReader</a>, <a class="el" href="classCuTConfiguration.html#ac3f5987b3efe8dc23c0bd2980820c6b0">CuTConfiguration</a>, and <a class="el" href="classCuTaDb.html#ad66b9f626a1b12ec5be82392469ad7fa">CuTaDb</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="classCumbiaTango.html#a7b5ceb9f3ba037fe5b00c5e5fdca3edf">CumbiaTango::unlinkListener()</a>.</p>
+
 </div>
 </div>
 <a id="a086b8d5ad807f931e1a48583ce3aba5f"></a>
@@ -481,7 +483,7 @@ Public Member Functions</h2></td></tr>
 <p>the method where activities are created and registered </p>
 <p>This is the place where activities are created and registered to Cumbia through the method Cumbia::registerActivity.</p>
 <dl class="section user"><dt>Examples</dt><dd><ul>
-<li><a class="el" href="classCuTReader.html#a3facbcb1d69b84d9d302db4511522671" title="creates and registers a CuEventActivity or a CuPollingActivity to read from the Tango control system">CuTReader::start</a> </li>
+<li><a class="el" href="classCuTReader.html#a3facbcb1d69b84d9d302db4511522671" title="the method where activities are created and registered">CuTReader::start</a> </li>
 <li><a class="el" href="classCuTWriter.html#a95093fad383dcaac279d11cfaec445d0" title="creates and registers a CuWriteActivity to trigger a write operation on the Tango control system">CuTWriter::start</a></li>
 </ul>
 See also Cumbia::registerActivity </dd></dl>
@@ -534,7 +536,7 @@ See also Cumbia::unregisterActivity </dd></dl>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Mar 30 2021 16:32:01 for cumbia-tango by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+Generated on Fri May 14 2021 16:58:01 for cumbia-tango by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
 </small></address>
 </body>
 </html>
