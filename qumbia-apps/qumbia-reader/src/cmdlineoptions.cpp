@@ -65,6 +65,14 @@ RConfig CmdLineOptions::parse(const QStringList &args)
     m_parser.addOption(urlO);
 #endif
 
+#if defined (CUMBIA_HTTP_VERSION)
+    // fix using http option as sources!!
+    m_parser.addOption(QCommandLineOption(QStringList() << "c" << "channel", "Server Sent Events channel name", "chan"));
+    m_parser.addOption(QCommandLineOption(QStringList()  << "n" << "native", "Prefer native module"));
+    m_parser.addOption(QCommandLineOption(QStringList()  << "ttl" << "chan-msgs-ttl" , "Time to live: discard messages from the channel older than this value [seconds]", "integer"));
+
+#endif
+
     m_parser.addOption(formatO);
     m_parser.addOption(periodO);
     m_parser.addOption(truncO);
@@ -132,6 +140,7 @@ RConfig CmdLineOptions::parse(const QStringList &args)
     if(m_parser.isSet(urlO)) o.url = m_parser.value(urlO);
 #endif
 
+    qDebug() << __PRETTY_FUNCTION__ << "positionalArguments" << m_parser.positionalArguments();
     foreach(QString pa, m_parser.positionalArguments())
         o.sources.append(pa);
 
