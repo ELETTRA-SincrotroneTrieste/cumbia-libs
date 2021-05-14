@@ -1,4 +1,4 @@
-project('cumbia-tango', 'cpp', version : '1.2.5',
+project('cumbia-tango', 'cpp', version : '1.3.0',
     default_options : ['c_std=c17', 'cpp_std=c++17'])
 
 project_description = 'C++ library based on cumbia and the Tango control system'
