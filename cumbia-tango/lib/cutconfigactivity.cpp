@@ -21,6 +21,7 @@ public:
 
 CuTConfigActivity::CuTConfigActivity(const CuData &tok, CuDeviceFactoryService *df, Type t) : CuActivity(tok)
 {
+    printf("\e[1;32m+ \e[0m\e[1;33mCuTConfigActivity constructor %p\e[0m\n", this);
     d = new CuTAttConfigActivityPrivate;
     d->device_service = df;
     d->type = t;
@@ -36,6 +37,7 @@ CuTConfigActivity::CuTConfigActivity(const CuData &tok, CuDeviceFactoryService *
 
 CuTConfigActivity::~CuTConfigActivity()
 {
+    printf("\e[1;31mX \e[0m~\e[1;33mCuTConfigActivity %p\e[0m\n", this);
     pdelete("CuTAttConfigActivity %p [%s]", this, vtoc2(getToken(), "src"));
     delete d;
 }
