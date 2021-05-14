@@ -34,6 +34,7 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
 {
     QStringList engines;
     cu_pool = cumbia_pool;
+    CuModuleLoader mloader(cumbia_pool, &m_ctrl_factory_pool, &m_log_impl);
 
     // plugins, instantiate if possible. Initialize only after engines.
     CuPluginLoader pload;
@@ -50,9 +51,6 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
     // parse configuration
     CmdLineOptions cmdo(fplu != nullptr, hdb_p != nullptr);
     m_conf = cmdo.parse(qApp->arguments());
-
-    CuModuleLoader mloader(cumbia_pool, &m_ctrl_factory_pool, &m_log_impl);
-
     // formulas. load after engines
     if(fplu) {
         fplu->initialize(cu_pool, m_ctrl_factory_pool);
