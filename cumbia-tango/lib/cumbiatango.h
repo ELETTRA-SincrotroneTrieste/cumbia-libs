@@ -154,7 +154,11 @@ class CumbiaTango : public Cumbia
 {
 public:
 
-    enum Options  { CuTaActionFactorySrvcSimple = 0x1, CuTaActionFactorySrvcThreadSafe = 0x2, EndOptions = 512 };
+    enum Options  {
+        OptionActionFactorySrvcSimple = 0x1, ///< the default, good for most simple cases
+        OptionActionFactorySrvcThreadSafe = 0x2, ///< for complex apps: add, find and remove actions from different threads
+        EndOptions = 512
+    };
     enum Type { CumbiaTangoType = Cumbia::CumbiaUserType + 1 };
 
     CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb);
