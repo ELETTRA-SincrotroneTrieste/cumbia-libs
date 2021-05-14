@@ -226,7 +226,7 @@ void Cumbia::unregisterActivity(CuActivity *activity)
 CuActivity *Cumbia::findActivity(const CuData &token) const
 {
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
-    return  activityManager->findActiveMatching(token);
+    return  activityManager->find(token);
 }
 
 /*! \brief if a timer runs within an activity, change the timeout
