@@ -97,14 +97,11 @@ void CumbiaHttp::m_init()
 }
 
 void CumbiaHttp::onSrcBundleReqReady(const QList<SrcItem> &rsrcs, const QList<SrcItem> &wsrcs) {
-    qDebug() << __PRETTY_FUNCTION__ << "bundle of " << rsrcs.size() << "r sources ready and "
-             << wsrcs.size() << "w sources";
     if(rsrcs.size() > 0) {
         CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(rsrcs, this);
         r->start(d->url + "/bu/src-bundle", d->qnam);
     }
     if(wsrcs.size() > 0) {
-        QByteArray cookie = d->auth_man->getCookie();
         CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(wsrcs, this);
         r->start(d->url + "/bu/xec-bundle", d->qnam);
     }
@@ -251,7 +248,6 @@ void CumbiaHttp::onAuthError(const QString &errm) {
     CuData err = d->w_helper->makeErrData(errm).set("is_result", true);
     const QMap<QString, SrcData> &tm = d->src_q_man->takeTgts();
     foreach(const QString& src, tm.keys()) {
-        qDebug() << __PRETTY_FUNCTION__ << "src" << src << "error " << errm;
         if(tm[src].lis) tm[src].lis->onUpdate(err.set("src", src.toStdString()));
     }
 }

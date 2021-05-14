@@ -63,8 +63,6 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
     if(!d->channel.isEmpty()) {
         r.setRawHeader("X-Channel", d->channel);
     }
-
-    cuprintf("\e[1;34mCuHttpBundledSrcReq::start: << %s >>\e[0m\n", d->req_payload.data());
     QNetworkReply *reply = nam->post(r, d->req_payload);
     reply->setProperty("payload", d->req_payload);
     connect(reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
