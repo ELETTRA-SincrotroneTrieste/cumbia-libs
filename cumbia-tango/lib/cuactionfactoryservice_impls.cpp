@@ -52,12 +52,12 @@ CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const string &sr
 }
 
 CuTangoActionI *CuActionFactoryServiceImpl_Base::find(const string &name, CuTangoActionI::Type at) {
-        std::list<CuTangoActionI *>::const_iterator it;
-        for(it = d->actions.begin(); it != d->actions.end(); ++it) {
-            if((*it)->getType() == at && (*it)->getSource().getName() == name/* && !(*it)->exiting()*/)
-                return (*it);
-        }
-        return NULL;
+    std::list<CuTangoActionI *>::const_iterator it;
+    for(it = d->actions.begin(); it != d->actions.end(); ++it) {
+        if((*it)->getType() == at && (*it)->getSource().getName() == name/* && !(*it)->exiting()*/)
+            return (*it);
+    }
+    return nullptr;
 }
 
 size_t CuActionFactoryServiceImpl_Base::count() const {
@@ -65,18 +65,18 @@ size_t CuActionFactoryServiceImpl_Base::count() const {
 }
 
 void CuActionFactoryServiceImpl_Base::unregisterAction(const string &src, CuTangoActionI::Type at) {
-        std::list<CuTangoActionI *>::iterator it;
-        it = d->actions.begin();
-        while( it != d->actions.end())
-            ( (*it)->getType() == at && (*it)->getSource().getName() == src ) ? it = d->actions.erase(it) : ++it;
+    std::list<CuTangoActionI *>::iterator it;
+    it = d->actions.begin();
+    while( it != d->actions.end())
+        ( (*it)->getType() == at && (*it)->getSource().getName() == src ) ? it = d->actions.erase(it) : ++it;
 }
 
 void CuActionFactoryServiceImpl_Base::cleanup() {
-        std::list<CuTangoActionI *>::iterator it = d->actions.begin();
-        while(it != d->actions.end()) {
-            delete (*it);
-            it = d->actions.erase(it);
-        }
+    std::list<CuTangoActionI *>::iterator it = d->actions.begin();
+    while(it != d->actions.end()) {
+        delete (*it);
+        it = d->actions.erase(it);
+    }
 }
 
 /*!

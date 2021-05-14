@@ -42,6 +42,7 @@ public:
  */
 CumbiaTango::CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb) {
     d = new CumbiaTangoPrivate(tfi, teb, CumbiaTango::CuTaActionFactorySrvcSimple);
+    m_init();
 }
 
 CumbiaTango::CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb, Options o)
@@ -68,6 +69,7 @@ CumbiaTango::~CumbiaTango()
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
     af->cleanup();
+    delete d;
 }
 
 void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTangoActionFactoryI& f) {
