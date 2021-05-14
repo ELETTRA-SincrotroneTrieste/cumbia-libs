@@ -60,24 +60,20 @@ CumbiaTango::~CumbiaTango()
 void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTangoActionFactoryI& f) {
     CuTangoWorld w;
     const std::string& src = source.getName();
-    /*if(w.source_valid(src))*/ {
-        CuActionFactoryService *af =
-                static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
-        CuTangoActionI *a = af->findActive(src, f.getType());
-        if(!a) {
-            a = af->registerAction(src, f, this);
-            a->start();
-        }
-        else
-            printf("CumbiaTango.addAction: action \e[0;33malready found\e[0m for src \e[0;33m%s\e[0m type %d\n", src.c_str(), f.getType());
-        a->addDataListener(l);
-    }/*
-    else {
-        CuData e("err", true);
-        l->onUpdate(e.set("msg", "source \"" + source.getName() + "\" is not valid. valid pattern: \""
-                          + w.source_valid_pattern() + "\""));
-        perr("CumbiaTango.addAction: source \"%s\" is not valid, ignoring - good pattern: \"%s\"", src.c_str(), w.source_valid_pattern());
-    }*/
+    CuActionFactoryService *af =
+            static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
+    CuTangoActionI *a = af->find(src, f.getType());
+    if(!a) {
+        a = af->registerAction(src, f, this);
+        a->start();
+    }
+    a->addDataListener(l);
+}
+
+void CumbiaTango::removeAction(const string &source, CuTangoActionI::Type t) {
+    CuActionFactoryService * af = static_cast<CuActionFactoryService *>(getServiceProvider()
+                                                                        ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
+    af->unregisterAction(source, t);
 }
 
 /** \brief Removes a listener from the action(s) with the given source name and type
@@ -107,16 +103,15 @@ void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTa
 void CumbiaTango::unlinkListener(const string &source, CuTangoActionI::Type t, CuDataListener *l) {
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
-    std::vector<CuTangoActionI *> actions = af->find(source, t);
-    for(size_t i = 0; i < actions.size(); i++) {
-        actions[i]->removeDataListener(l); /* when no more listeners, a stops itself */
-    }
+    CuTangoActionI * a = af->find(source, t);
+    if(a)
+        a->removeDataListener(l); /* when no more listeners, a stops itself */
 }
 
 CuTangoActionI *CumbiaTango::findAction(const std::string &source, CuTangoActionI::Type t) const {
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
-    CuTangoActionI* a = af->findActive(source, t);
+    CuTangoActionI* a = af->find(source, t);
     return a;
 }
 
