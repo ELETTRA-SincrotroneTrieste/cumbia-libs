@@ -41,7 +41,7 @@ public:
  *
  */
 CumbiaTango::CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb) {
-    d = new CumbiaTangoPrivate(tfi, teb, CumbiaTango::CuTaActionFactorySrvcSimple);
+    d = new CumbiaTangoPrivate(tfi, teb, CumbiaTango::OptionActionFactorySrvcThreadSafe);
     m_init();
 }
 
@@ -54,7 +54,7 @@ CumbiaTango::CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_
 void CumbiaTango::m_init()
 {
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType),
-                                          new CuActionFactoryService(d->options & CumbiaTango::CuTaActionFactorySrvcThreadSafe));
+                                          new CuActionFactoryService(d->options & CumbiaTango::OptionActionFactorySrvcThreadSafe));
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType), new CuDeviceFactoryService());
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType), new CuPollingService());
 }
