@@ -86,11 +86,13 @@ public:
 private:
     CuTReaderPrivate *d;
 
+    void m_polling_fallback();
     void m_startEventActivity();
     void m_registerToPoller();
     void m_unregisterFromPoller();
     void m_unregisterEventActivity();
     void m_update_options(const CuData newo);
+    void m_destroy_self();
     CuActivity *m_find_Activity();
 };
 
