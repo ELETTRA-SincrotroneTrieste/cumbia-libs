@@ -16,7 +16,8 @@ class CuActionFactoryServicePrivate
 {
 public:
     std::list<CuTangoActionI * > actions;
-    std::shared_mutex shared_mutex;
+//  std::shared_mutex shared_mutex;
+    pthread_t creation_thread;
 };
 
 /*! \brief the class constructor
@@ -25,6 +26,7 @@ public:
 CuActionFactoryService::CuActionFactoryService()
 {
     d = new CuActionFactoryServicePrivate;
+    d->creation_thread = pthread_self();
 }
 
 CuActionFactoryService::~CuActionFactoryService()
@@ -38,8 +40,6 @@ CuActionFactoryService::~CuActionFactoryService()
  * \par Rules
  *  \li same source, different CuTangoActionI type: two distinct actions.
  *  \li Share actions of the same type among sources with the same name.
- *  \li If an action with the same source and type exists, but is stopping, it is discarded and a new
- *      action is created.
  *
  * @see findAction
  * @see unregisterAction
@@ -48,11 +48,12 @@ CuTangoActionI* CuActionFactoryService::registerAction(const std::string& src,
                                                        const CuTangoActionFactoryI& f,
                                                        CumbiaTango* ct)
 {
+    assert(d->creation_thread == pthread_self());
     CuTangoActionI* action = NULL;
-    std::unique_lock lock(d->shared_mutex);
+//    std::unique_lock lock(d->shared_mutex);
     std::list<CuTangoActionI *>::const_iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src && !(*it)->exiting()) {
+        if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src /*&& !(*it)->exiting()*/ ) {
             break;
         }
 
@@ -64,61 +65,21 @@ CuTangoActionI* CuActionFactoryService::registerAction(const std::string& src,
     return action;
 }
 
-/*! \brief find an *active* action given the source name and the action type
+/*! \brief find an action given the source name and the action type
  *
  * @param src the complete source (target) name (no wildcard)
  * @param at the action type (Reader, Writer, AttConfig, ...)
- * @return the active action with the given src and type.
- *
- * \note
- * An action is *active* as long as CuTangoActionI::exiting returns false.
- * Usually, an action is marked as *exiting* when CuTangoActionI::stop is called.
- * For example, see CuTReader::stop and CuTWriter::stop
- * An action can be stopped when a data listener is removed, as in CuTReader::removeDataListener
- * and CuTWriter::removeDataListener.
- * CuTReader::removeDataListener and CuTWriter::removeDataListener are invoked by
- * CumbiaTango::unlinkListener. qumbia-tango-controls CuTControlsReader
- * (CuTControlsWriter) and qumbia-epics-controls CuEpControlsReader (CuEpControlsWriter) call
- * CumbiaTango::unlinkListener from within unsetSource (unsetTarget for writers).
- *
- * This sequence is an example if you ever need to deal with stopping and unregistering an
- * action from a client.
- *
+ * @return the action with the given src and type.
  */
-CuTangoActionI *CuActionFactoryService::findActive(const string &src, CuTangoActionI::Type at)
-{
-    std::shared_lock lock(d->shared_mutex);
+CuTangoActionI *CuActionFactoryService::find(const string &src, CuTangoActionI::Type at) {
+    assert(d->creation_thread == pthread_self());
+//    std::shared_lock lock(d->shared_mutex);
     std::list<CuTangoActionI *>::const_iterator it;
     for(it = d->actions.begin(); it != d->actions.end(); ++it) {
-        if((*it)->getType() == at && (*it)->getSource().getName() == src && !(*it)->exiting())
+        if((*it)->getType() == at && (*it)->getSource().getName() == src/* && !(*it)->exiting()*/)
             return (*it);
     }
     return NULL;
-}
-
-/*! \brief find an action given its source and type
- *
- * @param src the complete source (target) name (no wildcard)
- * @param at the action type (Reader, Writer, AttConfig, ...)
- * @return a list of actions with the given src and type.
- *
- * \par Note
- * Multiple actions can be found with the given src and type. This is likely to happen when
- * a new action is registered, stopped and registered again with the same src in a short time.
- * In this case, we end up with a not active action and an active one with the same src.
- *
- * \par Note
- * To find active actions (whose stop method hasn't been called yet), use findActive
- */
-std::vector<CuTangoActionI *> CuActionFactoryService::find(const string &src, CuTangoActionI::Type at)
-{
-    std::shared_lock lock(d->shared_mutex);
-    std::vector <CuTangoActionI *> actions;
-    std::list<CuTangoActionI *>::const_iterator it;
-    for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == at && (*it)->getSource().getName() == src)
-            actions.push_back(*it);
-    return actions;
 }
 
 /*! \brief return the number of registered actions
@@ -127,59 +88,40 @@ std::vector<CuTangoActionI *> CuActionFactoryService::find(const string &src, Cu
  *
  * Actions are added with registerAction and removed with unregisterAction
  */
-size_t CuActionFactoryService::count() const
-{
+size_t CuActionFactoryService::count() const {
     return d->actions.size();
 }
 
-/** \brief Unregister the action with the given source and type if the action's exiting() method returns true
+/** \brief Unregister the action with the given source and type
  *
  * @param src the complete source name (no wildcards)
  * @param at the action type (Reader, Writer, AttConfig, ...)
  *
- * if an action with the given source (target) and type is found and the action is
- * exiting (CuTangoActionI::exiting returns false), it is removed
- * from the internal list of actions.
- *
- * If CuTangoActionI::exiting returns false, the action is not removed.
- *
  * \note
  * The action is <strong>not deleted</strong>.
- * CuTReader and CuTWriter auto delete themselves from within CuTReader::onResult and CuTWriter::onResult
- * when the *exiting* flag is true.
- *
+ * CuTReader and CuTWriter auto delete themselves
  */
-void CuActionFactoryService::unregisterAction(const string &src, CuTangoActionI::Type at)
-{
-    std::unique_lock lock(d->shared_mutex);
+void CuActionFactoryService::unregisterAction(const string &src, CuTangoActionI::Type at) {
+    assert(d->creation_thread == pthread_self());
+//    std::unique_lock lock(d->shared_mutex);
     std::list<CuTangoActionI *>::iterator it;
-    size_t siz = d->actions.size();
     it = d->actions.begin();
-    while( it != d->actions.end())  {
-        if((*it)->getType() == at && (*it)->getSource().getName() == src && (*it)->exiting()) {
-            it = d->actions.erase(it);
-        }
-        else
-            ++it;
-    }
-    if(d->actions.size() == siz) // nothing removed
-        perr("CuActionFactoryService::unregisterAction: no actions unregistered");
+    while( it != d->actions.end())
+        ( (*it)->getType() == at && (*it)->getSource().getName() == src ) ? it = d->actions.erase(it) : ++it;
 }
 
 /*! \brief all registered actions are <strong>deleted</strong> and removed from the service internal list.
  *
- * All references to the registered actions are removed from the service internal list,
- * whether or not CuTangoActionI::exiting returns true
+ * All references to the registered actions are removed from the service
  *
  * \note
  * The action is <strong>deleted</strong>.
  */
-void CuActionFactoryService::cleanup()
-{
-    std::unique_lock lock(d->shared_mutex);
+void CuActionFactoryService::cleanup() {
+    assert(d->creation_thread == pthread_self());
+//    std::unique_lock lock(d->shared_mutex);
     std::list<CuTangoActionI *>::iterator it = d->actions.begin();
-    while(it != d->actions.end())
-    {
+    while(it != d->actions.end()) {
         delete (*it);
         it = d->actions.erase(it);
     }
@@ -191,8 +133,7 @@ void CuActionFactoryService::cleanup()
  *
  * Implements CuTangoActionI::getName pure virtual method
  */
-std::string CuActionFactoryService::getName() const
-{
+std::string CuActionFactoryService::getName() const {
     return std::string("DeviceFactory");
 }
 
