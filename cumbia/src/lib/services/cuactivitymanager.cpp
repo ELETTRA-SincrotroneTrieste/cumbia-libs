@@ -11,6 +11,7 @@ public:
     std::multimap< CuThreadInterface *, CuActivity *> conn_mumap;
     std::multimap<const CuActivity *, CuThreadListener *> th_lis_mumap;
     std::shared_mutex shared_mu;
+    pthread_t creation_thread;
 };
 
 /** \brief The Cumbia Activity Manager keeps the links between threads, activities and thread listeners.
@@ -22,6 +23,7 @@ public:
  */
 CuActivityManager::CuActivityManager() {
     d = new CuActivityManagerPrivate;
+    d->creation_thread = pthread_self();
 }
 
 CuActivityManager::~CuActivityManager()
@@ -33,8 +35,6 @@ CuActivityManager::~CuActivityManager()
 void CuActivityManager::addConnection(CuThreadInterface *t, CuActivity *a, CuThreadListener *threadListener)
 {
     // std::lock_guard<std::mutex> lock(m_mutex);
-    pbviolet2("CuActivityManager::addConnection: adding  tern %p %p %p  token \e[1;36m%s\e[0m",
-              t, a, threadListener, a->getToken().toString().c_str());
     std::pair< CuThreadInterface *, CuActivity *> p(t, a);
     std::pair<CuActivity *, CuThreadListener *> pl(a, threadListener);
     std::unique_lock lo(d->shared_mu);
@@ -53,7 +53,6 @@ void CuActivityManager::addConnection(CuThreadInterface *t, CuActivity *a, CuThr
  */
 void CuActivityManager::removeConnection(CuActivity *a)
 {
-    pviolet("CuActivityManager::removeConnection: removing connections for activity %p", a);
     std::unique_lock lo(d->shared_mu);
     std::multimap< CuThreadInterface *, CuActivity *>::iterator it = d->conn_mumap.begin();
     while(it != d->conn_mumap.end())
@@ -133,12 +132,11 @@ void CuActivityManager::removeConnection(CuThreadListener *l)
  * Cumbia::unregisterActivity marks an activity disposable when it must be considered useless because
  * on its way to destruction.
  */
-CuActivity *CuActivityManager::findActiveMatching(const CuData &token)
+CuActivity *CuActivityManager::find(const CuData &token)
 {
     std::shared_lock lo(d->shared_mu);
     std::multimap< CuThreadInterface *, CuActivity *>::const_iterator it;
-    for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it)
-    {
+    for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it) {
         const CuActivity *a = it->second;
         if(a->matches(token) && !a->isDisposable())
             return it->second;
