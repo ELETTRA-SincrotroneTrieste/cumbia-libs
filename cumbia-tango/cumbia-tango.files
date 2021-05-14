@@ -1,5 +1,7 @@
 lib/cuactionfactoryservice.cpp
 lib/cuactionfactoryservice.h
+lib/cuactionfactoryservice_impls.cpp
+lib/cuactionfactoryservice_impls.h
 lib/cudevicefactoryservice.cpp
 lib/cudevicefactoryservice.h
 lib/cueventactivity.cpp

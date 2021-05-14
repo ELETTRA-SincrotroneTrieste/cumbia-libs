@@ -4,35 +4,26 @@
 #include "tdevice.h"
 #include "tsource.h"
 #include "cutangoactioni.h"
+#include "cuactionfactoryservice_impls.h"
 
-#include <tango.h>
-#include <map>
-#include <shared_mutex>
-#include <cumacros.h>
-
-/*! @private
- */
-class CuActionFactoryServicePrivate
-{
-public:
-    std::list<CuTangoActionI * > actions;
-//  std::shared_mutex shared_mutex;
-    pthread_t creation_thread;
-};
 
 /*! \brief the class constructor
  *
+ *  Instantiates a CuActionFactoryService
+ *
+ *  \param thread_safe true: a thread safe version is provided for complex applications requiring register/unregister
+ *  operations from different threads
+ *  \param thread_safe false: a version with no locking for most cases where methods are called from the same thread.
+ *
  */
-CuActionFactoryService::CuActionFactoryService()
-{
-    d = new CuActionFactoryServicePrivate;
-    d->creation_thread = pthread_self();
+CuActionFactoryService::CuActionFactoryService(bool thread_safe) : CuServiceI() {
+    thread_safe ? impl = new CuActionFactoryServiceImpl_TS : impl = new CuActionFactoryServiceImpl;
 }
 
 CuActionFactoryService::~CuActionFactoryService()
 {
     pdelete("~CuActionFactoryService %p", this);
-    delete d;
+    delete impl;
 }
 
 /** \brief Create and register a new action if an action with the same source and type is not already running.
@@ -46,23 +37,8 @@ CuActionFactoryService::~CuActionFactoryService()
  */
 CuTangoActionI* CuActionFactoryService::registerAction(const std::string& src,
                                                        const CuTangoActionFactoryI& f,
-                                                       CumbiaTango* ct)
-{
-    assert(d->creation_thread == pthread_self());
-    CuTangoActionI* action = NULL;
-//    std::unique_lock lock(d->shared_mutex);
-    std::list<CuTangoActionI *>::const_iterator it;
-    for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src /*&& !(*it)->exiting()*/ ) {
-            break;
-        }
-
-    if(it == d->actions.end())
-    {
-        action = f.create(src, ct);
-        d->actions.push_back(action);
-    }
-    return action;
+                                                       CumbiaTango* ct) {
+    return impl->registerAction(src, f, ct);
 }
 
 /*! \brief find an action given the source name and the action type
@@ -72,14 +48,7 @@ CuTangoActionI* CuActionFactoryService::registerAction(const std::string& src,
  * @return the action with the given src and type.
  */
 CuTangoActionI *CuActionFactoryService::find(const string &src, CuTangoActionI::Type at) {
-    assert(d->creation_thread == pthread_self());
-//    std::shared_lock lock(d->shared_mutex);
-    std::list<CuTangoActionI *>::const_iterator it;
-    for(it = d->actions.begin(); it != d->actions.end(); ++it) {
-        if((*it)->getType() == at && (*it)->getSource().getName() == src/* && !(*it)->exiting()*/)
-            return (*it);
-    }
-    return NULL;
+    return impl->find(src, at);
 }
 
 /*! \brief return the number of registered actions
@@ -89,7 +58,7 @@ CuTangoActionI *CuActionFactoryService::find(const string &src, CuTangoActionI::
  * Actions are added with registerAction and removed with unregisterAction
  */
 size_t CuActionFactoryService::count() const {
-    return d->actions.size();
+    return impl->count();
 }
 
 /** \brief Unregister the action with the given source and type
@@ -102,12 +71,7 @@ size_t CuActionFactoryService::count() const {
  * CuTReader and CuTWriter auto delete themselves
  */
 void CuActionFactoryService::unregisterAction(const string &src, CuTangoActionI::Type at) {
-    assert(d->creation_thread == pthread_self());
-//    std::unique_lock lock(d->shared_mutex);
-    std::list<CuTangoActionI *>::iterator it;
-    it = d->actions.begin();
-    while( it != d->actions.end())
-        ( (*it)->getType() == at && (*it)->getSource().getName() == src ) ? it = d->actions.erase(it) : ++it;
+    return impl->unregisterAction(src, at);
 }
 
 /*! \brief all registered actions are <strong>deleted</strong> and removed from the service internal list.
@@ -118,13 +82,7 @@ void CuActionFactoryService::unregisterAction(const string &src, CuTangoActionI:
  * The action is <strong>deleted</strong>.
  */
 void CuActionFactoryService::cleanup() {
-    assert(d->creation_thread == pthread_self());
-//    std::unique_lock lock(d->shared_mutex);
-    std::list<CuTangoActionI *>::iterator it = d->actions.begin();
-    while(it != d->actions.end()) {
-        delete (*it);
-        it = d->actions.erase(it);
-    }
+    impl->cleanup();
 }
 
 /*! \brief returns the service name
@@ -134,7 +92,7 @@ void CuActionFactoryService::cleanup() {
  * Implements CuTangoActionI::getName pure virtual method
  */
 std::string CuActionFactoryService::getName() const {
-    return std::string("DeviceFactory");
+    return "CuActionFactoryService";
 }
 
 /*! \brief returns the service type
@@ -146,7 +104,6 @@ std::string CuActionFactoryService::getName() const {
  *
  * Implements CuTangoActionI::getType pure virtual method
  */
-CuServices::Type CuActionFactoryService::getType() const
-{
+CuServices::Type CuActionFactoryService::getType() const {
     return static_cast<CuServices::Type >(CuActionFactoryServiceType);
 }

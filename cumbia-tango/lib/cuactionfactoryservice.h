@@ -10,8 +10,7 @@ class CuTangoActionI;
 class CuTangoActionFactoryI;
 class CumbiaTango;
 class CuDataListener;
-
-class CuActionFactoryServicePrivate;
+class CuActionFactoryServiceImpl_Base; // defined in cuactionfactoryservice_impls.h
 
 /*! \brief implements CuServiceI interface and provides a service to register, unregister
  *         and find *Tango actions* (CuTReader, CuTWriter - CuTangoActionI implementations)
@@ -48,28 +47,23 @@ class CuActionFactoryService : public CuServiceI
 public:
     enum Type { CuActionFactoryServiceType = CuServices::User + 21 };
 
-    CuActionFactoryService();
-
+    CuActionFactoryService(bool thread_safe = false);
     virtual ~CuActionFactoryService();
 
-    CuTangoActionI* registerAction(const std::string& src, const CuTangoActionFactoryI& f, CumbiaTango *ct);
-
-    CuTangoActionI *find(const std::string &name, CuTangoActionI::Type at);
-
-    size_t count() const;
-
-    void unregisterAction(const std::string& src, CuTangoActionI::Type at);
-
-    void cleanup();
+    virtual CuTangoActionI* registerAction(const std::string& src, const CuTangoActionFactoryI& f, CumbiaTango *ct);
+    virtual CuTangoActionI *find(const std::string &name, CuTangoActionI::Type at);
+    virtual size_t count() const;
+    virtual void unregisterAction(const std::string& src, CuTangoActionI::Type at);
+    virtual void cleanup();
 
     // CuServiceI interface
 public:
     std::string getName() const;
-
     CuServices::Type getType() const;
 
 private:
-    CuActionFactoryServicePrivate *d;
+    CuActionFactoryServiceImpl_Base *impl;
 };
+
 
 #endif // DEVICEFACTORYSERVICE_H
