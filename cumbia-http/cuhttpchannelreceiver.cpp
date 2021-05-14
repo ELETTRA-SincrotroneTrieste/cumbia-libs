@@ -99,9 +99,10 @@ void CuHttpChannelReceiver::decodeMessage(const QJsonValue &v) {
     const QJsonArray a = v.toArray(); // data arrives within an array
     if(a.size() == 1) {
         const QString& src = a.at(0)["src"].toString();
-        double t_ms = a.at(0)["timestamp_ms"].toDouble();
+//        double t_ms = a.at(0)["timestamp_ms"].toDouble();
         time_t diff_t;
-        bool data_fresh = m_data_fresh(t_ms, &diff_t);
+//        bool data_fresh = m_data_fresh(t_ms, &diff_t);
+        bool data_fresh = true;
         if(d->rmap.contains(src) && data_fresh) {
             CuData res("src", src.toStdString());
             CumbiaHTTPWorld httpw;
