@@ -82,9 +82,10 @@ void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTa
     if(!a) {
         a = af->registerAction(src, f, this);
         a->start();
+        printf("CumbiaTango.addAction: new actioin created %s %p\n", src.c_str(), a);
     }
     else
-        printf("CumbiaTango.addAction: action \e[0;33malready found\e[0m for src \e[0;33m%s\e[0m type %d\n", src.c_str(), f.getType());
+        printf("CumbiaTango.addAction: action \e[0;33malready found\e[0m for src \e[0;33m%s\e[0m type %d %p\n", src.c_str(), f.getType(), a);
     a->addDataListener(l);
 }
 
