@@ -1,5 +1,6 @@
 #include "cudevicefactoryservice.h"
 #include <shared_mutex>
+#include <mutex>
 #include <cumacros.h>
 #include "tdevice.h"
 #include "tsource.h"

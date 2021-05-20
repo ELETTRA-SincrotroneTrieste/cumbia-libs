@@ -52,7 +52,7 @@ CuTReader::CuTReader(const TSource& src, CumbiaTango *ct) : CuTangoActionI()
 
 CuTReader::~CuTReader()
 {
-    printf("\e[1;31mX\e[0m ~CuTReader  %p\n", this);
+    printf("\e[1;31mX\e[0m ~CuTReader  %p [\e[0;31m%s]\e[0m\n", this, d->tsrc.getName().c_str());
     pdelete("~CuTReader %p", this);
     delete d;
 }

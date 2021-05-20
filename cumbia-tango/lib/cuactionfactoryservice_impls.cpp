@@ -3,6 +3,7 @@
 #include <tango.h>
 #include <map>
 #include <shared_mutex>
+#include <mutex>
 #include <cumacros.h>
 
 /*! @private
