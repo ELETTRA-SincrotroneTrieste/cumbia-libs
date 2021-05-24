@@ -1,5 +1,5 @@
 #include "create-delete.h"
-#include <QApplication>
+#include <quapplication.h>
 #include <cumbiapool.h>
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
@@ -7,7 +7,7 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a( argc, argv );
+    QuApplication a( argc, argv );
     a.setApplicationName("CreateDelete");
     CumbiaPool *cu_poo = new CumbiaPool();
 

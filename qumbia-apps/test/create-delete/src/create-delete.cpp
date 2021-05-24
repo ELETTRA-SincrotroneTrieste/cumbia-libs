@@ -36,34 +36,16 @@
 
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
+#include <quapps.h>
 
 CreateDelete::CreateDelete(CumbiaPool *cumbia_pool, QWidget *parent) :
     QWidget(parent)
 {
     // valgrind test
     // new int[4000];
+    CuModuleLoader mloader(cumbia_pool, &m_ctrl_factory_pool, &m_log_impl);
     cu_pool = cumbia_pool;
-    // setup Cumbia pool and register cumbia implementations for tango and epics
-    CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    cu_pool->registerCumbiaImpl("tango", cuta);
-    m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
-    m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
-    CuTimerService *timer_service = static_cast<CuTimerService *>(cuta->getServiceProvider()->get(CuServices::Timer));
-    timer_service->setTimerMaxCount(1);
 
-#ifdef QUMBIA_EPICS_CONTROLS
-    CumbiaEpics* cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    cu_pool->registerCumbiaImpl("epics", cuep);
-    m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
-    m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
-    CuEpicsWorld ew;
-    m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
-    cu_pool->setSrcPatterns("epics", ew.srcPatterns());
-#endif
-
-    CuTangoWorld tw;
-    m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
-    cu_pool->setSrcPatterns("tango", tw.srcPatterns());
 
     QVBoxLayout *vlo = new QVBoxLayout(this);
     QStringList dlist = getDevList();

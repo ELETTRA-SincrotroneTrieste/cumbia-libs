@@ -1,6 +1,5 @@
 
-include(../../../qumbia-epics-controls/qumbia-epics-controls.pri)
-include(../../../qumbia-tango-controls/qumbia-tango-controls.pri)
+include(/usr/local/cumbia-libs/include/quapps/quapps.pri)
 
 TEMPLATE = app
 
