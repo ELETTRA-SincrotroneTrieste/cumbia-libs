@@ -25,7 +25,7 @@ public:
     virtual ~CuEventI() {}
 
     enum CuEventType { Progress = 0, Result, CuActivityExitEvent,
-                       ExitLoop, ThreadAutoDestroy, User = 100 };
+                       ExitLoop, ThreadAutoDestroy, TimerEvent, User = 100 };
 
     /*! \brief returns the event type
      *
@@ -133,14 +133,18 @@ class CuActivityExitEvent : public CuEventI
 {
 public:
     CuActivityExitEvent(CuActivity *sender);
-
     CuEventType getType() const;
-
     CuActivity *getActivity() const;
 
 private:
     CuActivity *m_activity;
 
+};
+
+class CuTimerEvent : public CuEventI {
+    // CuEventI interface
+public:
+    CuEventType getType() const;
 };
 
 #endif // CUELOOPEVENT_H

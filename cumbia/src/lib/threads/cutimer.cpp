@@ -1,23 +1,31 @@
 #include "cutimer.h"
+#include "cuevent.h"
 #include "cumacros.h"
 #include "cutimerlistener.h"
 #include <limits.h>
 
+
+
 /*! \brief create the timer and install the listener
  *
- * @param l a CuTimerListener
+ * @param loos a pointer to a CuEventLoopService
+ *
+ * \note if loos is not null, listeners will be notified in the CuEventLoopService thread
+ * of execution.
  *
  * CuThread is a CuTimerListener
  *
  * By default, the timeout is set to 1000 milliseconds, and the single shot
  * property is true.
  */
-CuTimer::CuTimer()
+CuTimer::CuTimer(CuEventLoopService *loos)
 {
+    printf("CuTimer.CuTimer created [thread 0x%lx] ->  loop service  %p\n", pthread_self(), loos );
     m_quit = m_pause = m_exited = m_skip = false;
     m_pending = 0;
     m_timeout = 1000;
     m_thread = NULL;
+    m_loop_service = loos;
 }
 
 /*! \brief class destructor
@@ -40,6 +48,17 @@ void CuTimer::setTimeout(int millis)
 {
     m_timeout = millis;
     m_wait.notify_one();
+}
+
+/*!
+ * \brief set or update the reference to the event loop service
+ * \param loop_sr pointer to a CuEventLoopService
+ * \since 1.3.0
+ *
+ * \note If null, the listeners will be notified *in the timer's thread*.
+ */
+void CuTimer::setEventLoop(CuEventLoopService *loop_sr) {
+    m_loop_service = loop_sr;
 }
 
 /*!
@@ -75,6 +94,7 @@ void CuTimer::reset() {
  */
 void CuTimer::start(int millis)
 {
+    printf("CuTimer.start [thread 0x%lx] ->  timeout  %d\n", pthread_self(), millis );
     std::unique_lock<std::mutex> lock(m_mutex);
     m_quit = m_pause = false;
     m_timeout = millis;
@@ -116,6 +136,26 @@ void CuTimer::stop()
     m_exited = true;
     delete m_thread;
     m_thread = nullptr;
+}
+
+void CuTimer::m_notify() {
+    std::list<CuTimerListener *>::const_iterator it;
+    for(it = m_listeners.begin(); it != m_listeners.end(); ++it) {
+        printf("CuTimer.onEvent [thread 0x%lx] -> on timeout on %p\n", pthread_self(), (*it) );
+        (*it)->onTimeout(this);
+    }
+//                auto t1 = std::chrono::steady_clock::now();
+//                long int delta_first_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_first_start_pt).count();
+//                long int delta_last_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_last_start_pt).count();
+//                printf("\e[0;32mCuTimer.run: notified timeout after %ld ms instead of %ldus\e[0m\t\t\t(\e[1;31mdelay %ldus\e[0m)  THREAD 0x%ld\n",
+//                       delta_first_ms, delta_last_ms, -delta_last_ms+delta_first_ms, pthread_self());
+}
+
+/*! \brief implements CuEventLoopListener interface.
+ *
+ */
+void CuTimer::onEvent(CuEventI *e) {
+    m_notify();
 }
 
 /*!
@@ -175,18 +215,11 @@ void CuTimer::run()
             m_pause ?  timeout = ULONG_MAX : timeout = m_timeout;
             // issues with wasm: erratically expected timeout status is no_timeout
             (void ) status;
-            if(/*status == std::cv_status::timeout && */!m_quit && !m_pause) /* if m_exit: m_listener must be NULL */
-            {
-                std::list<CuTimerListener *>::const_iterator it;
-                for(it = m_listeners.begin(); it != m_listeners.end(); ++it) {
-//                    printf("CuTimer.run [thread 0x%lx] -> on timeout on %p\n",pthread_self(), (*it) );
-                    (*it)->onTimeout(this);
-                }
-//                auto t1 = std::chrono::steady_clock::now();
-//                long int delta_first_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_first_start_pt).count();
-//                long int delta_last_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_last_start_pt).count();
-//                printf("\e[0;32mCuTimer.run: notified timeout after %ld ms instead of %ldus\e[0m\t\t\t(\e[1;31mdelay %ldus\e[0m)  THREAD 0x%ld\n",
-//                       delta_first_ms, delta_last_ms, -delta_last_ms+delta_first_ms, pthread_self());
+            if(/*status == std::cv_status::timeout && */!m_quit && !m_pause) /* if m_exit: m_listener must be NULL */ {
+                if(m_loop_service)
+                    m_loop_service->postEvent(this, new CuTimerEvent());
+                else
+                    m_notify();
             }
             m_pending = 0;
             if(!m_quit) { // wait for next start()

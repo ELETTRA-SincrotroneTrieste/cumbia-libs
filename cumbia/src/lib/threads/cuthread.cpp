@@ -378,7 +378,7 @@ void CuThread::run() {
             // tmr is single-shot and needs restart to prevent
             // queueing multiple timeout events caused by slow activities
             int timeo_restart = -1;
-            CuTimerEvent *tev = static_cast<CuTimerEvent *>(te);
+            CuThreadTimerEvent *tev = static_cast<CuThreadTimerEvent *>(te);
             CuTimer *timer = tev->getTimer();
             std::list<CuActivity *> a_for_t = m_activitiesForTimer(timer); // no locks
             for(std::list<CuActivity *>:: const_iterator it = a_for_t.begin(); it != a_for_t.end(); ++it) {
@@ -625,7 +625,7 @@ void CuThread::onTimeout(CuTimer *sender)
 {
     // unique lock to push on the event queue
     std::unique_lock ulock(d->shared_mutex);
-    CuTimerEvent *te = new CuTimerEvent(sender);
+    CuThreadTimerEvent *te = new CuThreadTimerEvent(sender);
     d->eventQueue.push(te);
     d->conditionvar.notify_one();
 }

@@ -1,6 +1,7 @@
 #ifndef CUTIMER_H
 #define CUTIMER_H
 
+#include <cueventloop.h>
 #include <thread>
 #include <mutex>
 #include <shared_mutex>
@@ -32,22 +33,24 @@ class CuTimerListener;
  * zero (in the private member CuThread::mActivityInit).
  *
  */
-class CuTimer
+class CuTimer : public CuEventLoopListener
 {
     friend class CuTimerService;
 
 public:
-    CuTimer();
+    CuTimer(CuEventLoopService *loos);
 
     ~CuTimer();
 
     void setTimeout(int millis);
-
     void setSingleShot(bool single);
-
+    void setEventLoop(CuEventLoopService *loop_sr);
     int timeout() const;
-
     bool isSingleShot() const;
+
+    // CuEventLoopListener interface
+public:
+    void onEvent(CuEventI *e);
 
 protected:
     void run();
@@ -64,6 +67,7 @@ private:
     std::thread *m_thread;
     std::mutex m_mutex;
     std::condition_variable m_wait;
+    CuEventLoopService *m_loop_service;
 
     void addListener(CuTimerListener *l);
     void removeListener(CuTimerListener *l);
@@ -72,6 +76,9 @@ private:
     void reset();
     void start(int millis);
     void stop();
+
+    void m_notify();
+
 };
 
 #endif // CUTIMER_H

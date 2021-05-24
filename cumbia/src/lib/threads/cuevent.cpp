@@ -171,3 +171,7 @@ CuActivity *CuActivityExitEvent::getActivity() const
 {
     return m_activity;
 }
+
+CuEventI::CuEventType CuTimerEvent::getType() const {
+    return CuEventI::TimerEvent;
+}

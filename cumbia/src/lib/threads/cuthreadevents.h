@@ -91,10 +91,10 @@ public:
 };
 
 /*! @private */
-class CuTimerEvent : public ThreadEvent
+class CuThreadTimerEvent : public ThreadEvent
 {
 public:
-    CuTimerEvent(CuTimer *t);
+    CuThreadTimerEvent(CuTimer *t);
 
     ThreadEvent::Type getType() const;
 
