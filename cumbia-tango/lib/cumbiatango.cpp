@@ -79,9 +79,9 @@ void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTa
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
     CuTangoActionI *a = af->find(src, f.getType());
     if(!a) {
-        printf("CumbiaTango.addAction: new action created %s %p\n", src.c_str(), a);
+//        printf("CumbiaTango.addAction: new action created %s %p\n", src.c_str(), a);
         a = af->registerAction(src, f, this);
-        printf("CumbiaTango.addAction: starting action %s %p\n", src.c_str(), a);
+//        printf("CumbiaTango.addAction: starting action %s %p\n", src.c_str(), a);
         a->start();
     }
     else
