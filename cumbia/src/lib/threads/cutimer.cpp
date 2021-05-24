@@ -20,7 +20,7 @@
  */
 CuTimer::CuTimer(CuEventLoopService *loos)
 {
-    printf("CuTimer.CuTimer created [thread 0x%lx] ->  loop service  %p\n", pthread_self(), loos );
+//    printf("CuTimer.CuTimer created [thread 0x%lx] ->  loop service  %p\n", pthread_self(), loos );
     m_quit = m_pause = m_exited = m_skip = false;
     m_pending = 0;
     m_timeout = 1000;
@@ -94,7 +94,7 @@ void CuTimer::reset() {
  */
 void CuTimer::start(int millis)
 {
-    printf("CuTimer.start [thread 0x%lx] ->  timeout  %d\n", pthread_self(), millis );
+//    printf("CuTimer.start [thread 0x%lx] ->  timeout  %d\n", pthread_self(), millis );
     std::unique_lock<std::mutex> lock(m_mutex);
     m_quit = m_pause = false;
     m_timeout = millis;
@@ -141,7 +141,7 @@ void CuTimer::stop()
 void CuTimer::m_notify() {
     std::list<CuTimerListener *>::const_iterator it;
     for(it = m_listeners.begin(); it != m_listeners.end(); ++it) {
-        printf("CuTimer.onEvent [thread 0x%lx] -> on timeout on %p\n", pthread_self(), (*it) );
+//        printf("CuTimer.onEvent [thread 0x%lx] -> on timeout on %p\n", pthread_self(), (*it) );
         (*it)->onTimeout(this);
     }
 //                auto t1 = std::chrono::steady_clock::now();
