@@ -15,13 +15,6 @@ public:
 
 /*! @private
  */
-class CuActionFactoryServiceImpl_R_Private {
-public:
-    std::shared_mutex shared_mutex;
-};
-
-/*! @private
- */
 class CuActionFactoryServiceImplPrivate {
 public:
     pthread_t creation_thread;
@@ -43,9 +36,7 @@ CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const string &sr
         if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src /*&& !(*it)->exiting()*/ ) {
             break;
         }
-
-    if(it == d->actions.end())
-    {
+    if(it == d->actions.end()) {
         action = f.create(src, ct);
         d->actions.push_back(action);
     }
@@ -80,9 +71,6 @@ void CuActionFactoryServiceImpl_Base::cleanup() {
     }
 }
 
-/*!
- *  non thread safe version
- */
 CuActionFactoryServiceImpl::CuActionFactoryServiceImpl() {
     d = new CuActionFactoryServiceImplPrivate;
     d->creation_thread = pthread_self();
@@ -93,67 +81,26 @@ CuActionFactoryServiceImpl::~CuActionFactoryServiceImpl() {
 }
 
 CuTangoActionI *CuActionFactoryServiceImpl::registerAction(const string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct) {
-    assert(d->creation_thread == pthread_self());
-    printf("\e[1;35mCuActionFactoryServiceImpl::registerAction [NON THREAD SAFE]\e[0m\n");
+//    assert(d->creation_thread == pthread_self());
     return CuActionFactoryServiceImpl_Base::registerAction(src, f, ct);
 }
 
 CuTangoActionI *CuActionFactoryServiceImpl::find(const string &name, CuTangoActionI::Type at) {
-    assert(d->creation_thread == pthread_self());
+//    assert(d->creation_thread == pthread_self());
     return CuActionFactoryServiceImpl_Base::find(name, at);
 }
 
 size_t CuActionFactoryServiceImpl::count() const {
-    assert(d->creation_thread == pthread_self());
+//    assert(d->creation_thread == pthread_self());
     return CuActionFactoryServiceImpl_Base::count();
 }
 
 void CuActionFactoryServiceImpl::unregisterAction(const string &src, CuTangoActionI::Type at) {
-    printf("\e[0;35mCuActionFactoryServiceImpl::unregisterAction [NON THREAD SAFE]\e[0m\n");
-    assert(d->creation_thread == pthread_self());
+//    assert(d->creation_thread == pthread_self());
     return CuActionFactoryServiceImpl_Base::unregisterAction(src, at);
 }
 
 void CuActionFactoryServiceImpl::cleanup() {
-    assert(d->creation_thread == pthread_self());
-    CuActionFactoryServiceImpl_Base::cleanup();
-}
-
-
-/*!
- *  thread safe version
- */
-CuActionFactoryServiceImpl_TS::CuActionFactoryServiceImpl_TS() {
-    d = new CuActionFactoryServiceImpl_R_Private;
-}
-
-CuActionFactoryServiceImpl_TS::~CuActionFactoryServiceImpl_TS() {
-    delete d;
-}
-
-CuTangoActionI *CuActionFactoryServiceImpl_TS::registerAction(const string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct) {
-    printf("\e[1;32mCuActionFactoryServiceImpl::registerAction [ THREAD SAFE]\e[0m\n");
-    std::unique_lock lock(d->shared_mutex);
-    return CuActionFactoryServiceImpl_Base::registerAction(src, f, ct);
-}
-
-CuTangoActionI *CuActionFactoryServiceImpl_TS::find(const string &name, CuTangoActionI::Type at) {
-    std::unique_lock lock(d->shared_mutex);
-    return CuActionFactoryServiceImpl_Base::find(name, at);
-}
-
-size_t CuActionFactoryServiceImpl_TS::count() const {
-    std::unique_lock lock(d->shared_mutex);
-    return CuActionFactoryServiceImpl_Base::count();
-}
-
-void CuActionFactoryServiceImpl_TS::unregisterAction(const string &src, CuTangoActionI::Type at) {
-    printf("\e[0;32mCuActionFactoryServiceImpl::unregisterAction [ THREAD SAFE]\e[0m\n");
-    std::unique_lock lock(d->shared_mutex);
-    return CuActionFactoryServiceImpl_Base::unregisterAction(src, at);
-}
-
-void CuActionFactoryServiceImpl_TS::cleanup() {
-    std::unique_lock lock(d->shared_mutex);
+//    assert(d->creation_thread == pthread_self());
     CuActionFactoryServiceImpl_Base::cleanup();
 }

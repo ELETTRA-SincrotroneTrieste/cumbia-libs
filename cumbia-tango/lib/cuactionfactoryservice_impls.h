@@ -26,8 +26,9 @@ protected:
 };
 
 /*!
- * \brief The CuActionFactoryServiceImpl class is the simple *non thread safe* implementation for most cases
- * where actions are registered and unregistered from the same thread (i.e. simple applications)
+ * \brief The CuActionFactoryServiceImpl class is the default implementation.
+ *
+ * Functions shall be called from the same thread.
  */
 class CuActionFactoryServiceImpl : public CuActionFactoryServiceImpl_Base {
 public:
@@ -44,26 +45,6 @@ public:
 private:
     CuActionFactoryServiceImplPrivate *d;
 };
-
-/*!
- * \brief The CuActionFactoryServiceImpl_TS class is the thread safe version of CuActionFactoryServiceImpl
- *      for cases registering and unregistering actions from different threads (i.e. complex applications)
- */
-class CuActionFactoryServiceImpl_TS : public CuActionFactoryServiceImpl_Base {
-public:
-    CuActionFactoryServiceImpl_TS();
-    virtual ~CuActionFactoryServiceImpl_TS();
-
-    virtual CuTangoActionI* registerAction(const std::string& src, const CuTangoActionFactoryI& f, CumbiaTango *ct);
-    virtual CuTangoActionI *find(const std::string &name, CuTangoActionI::Type at);
-    virtual size_t count() const;
-    virtual void unregisterAction(const std::string& src, CuTangoActionI::Type at);
-    virtual void cleanup();
-
-private:
-    CuActionFactoryServiceImpl_R_Private *d;
-};
-
 
 
 #endif // CUACTIONFACTORYSERVICE_IMPLS_H

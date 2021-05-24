@@ -11,13 +11,9 @@
  *
  *  Instantiates a CuActionFactoryService
  *
- *  \param thread_safe true: a thread safe version is provided for complex applications requiring register/unregister
- *  operations from different threads
- *  \param thread_safe false: a version with no locking for most cases where methods are called from the same thread.
- *
  */
-CuActionFactoryService::CuActionFactoryService(bool thread_safe) : CuServiceI() {
-    thread_safe ? impl = new CuActionFactoryServiceImpl_TS : impl = new CuActionFactoryServiceImpl;
+CuActionFactoryService::CuActionFactoryService() : CuServiceI() {
+    impl = new CuActionFactoryServiceImpl;
 }
 
 CuActionFactoryService::~CuActionFactoryService()

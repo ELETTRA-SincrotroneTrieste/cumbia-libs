@@ -18,6 +18,8 @@ class CuActionFactoryServiceImpl_Base; // defined in cuactionfactoryservice_impl
  * \note This service is internally used by CumbiaTango and clients of the library should
  *       rarely need to use it.
  *
+ * \note Methods shall be called from the same thread.
+ *
  * This class is a cumbia *service* (implements getName and getType). It is registered by
  * CumbiaTango at construction time through the cumbia service provider, namely CuServiceProvider:
  *
@@ -47,7 +49,7 @@ class CuActionFactoryService : public CuServiceI
 public:
     enum Type { CuActionFactoryServiceType = CuServices::User + 21 };
 
-    CuActionFactoryService(bool thread_safe = false);
+    CuActionFactoryService();
     virtual ~CuActionFactoryService();
 
     virtual CuTangoActionI* registerAction(const std::string& src, const CuTangoActionFactoryI& f, CumbiaTango *ct);
