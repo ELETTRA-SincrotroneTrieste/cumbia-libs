@@ -42,9 +42,9 @@ class CuLog : public CuServiceI
 {
 public:
 
-    enum Category { Generic = 0, Network, Write, Read, User = 100 };
+    enum Category { CategoryGeneric = 1, CategoryNetwork = 2, CategoryWrite = 4, CategoryRead = 8, CategoryAll = 255, CategoryUser = 256 };
 
-    enum Level { Debug = 0, Info, Warn, Error };
+    enum Level { LevelDebug = 1, LevelInfo = 2, LevelWarn = 4, LevelError = 8, LevelAll = 255, LevelUser = 256  };
 
     CuLog(CuLogImplI *log_impl);
 
@@ -56,7 +56,7 @@ public:
 
     void removeImpl(const std::string& name);
 
-    void write(const std::string &origin, const std::string &msg, int l = Error, int c = Generic);
+    void write(const std::string &origin, const std::string &msg, int l = LevelError, int c = CategoryGeneric);
 
     void write(const std::string& origin, int l, const char *fmt, ...);
 
@@ -95,7 +95,7 @@ public:
      */
     virtual ~CuLogImplI() {}
 
-    virtual void write(const std::string & origin, const std::string & msg, int l = CuLog::Error, int category = CuLog::Generic) = 0;
+    virtual void write(const std::string & origin, const std::string & msg, int l = CuLog::LevelError, int category = CuLog::CategoryGeneric) = 0;
 
     virtual std::string getName() const = 0;
 };
@@ -109,7 +109,7 @@ public:
 class CuNullLogImpl : CuLogImplI
 {
 public:
-    virtual void write(const std::string &, const std::string &, int  = CuLog::Error, int   = CuLog::Generic) {}
+    virtual void write(const std::string &, const std::string &, int  = CuLog::LevelError, int   = CuLog::CategoryGeneric) {}
 
     virtual std::string getName() const;
 };
@@ -124,7 +124,7 @@ class CuConLogImpl : public CuLogImplI
 {
     // CuLogImplI interface
 public:
-    virtual void write(const std::string & origin, const std::string & msg, int l = CuLog::Error, int c = CuLog::Generic);
+    virtual void write(const std::string & origin, const std::string & msg, int l = CuLog::LevelError, int c = CuLog::CategoryGeneric);
 
     virtual std::string getName() const;
 };

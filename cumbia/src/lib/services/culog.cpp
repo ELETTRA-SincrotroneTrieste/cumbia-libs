@@ -88,7 +88,7 @@ void CuLog::write(const std::string &origin, int l, const char *fmt, ...) {
     vsnprintf(st, 2048, fmt, s);
     std::string str(st);
     for(it = mLogImpls.begin(); it != mLogImpls.end(); ++it) {
-        (*it)->write(origin, str, l, CuLog::Generic);
+        (*it)->write(origin, str, l, CuLog::CategoryGeneric);
     }
     va_end(s);
 }
@@ -183,9 +183,9 @@ CuServices::Type CuLog::getType() const
  */
 void CuConLogImpl::write(const std::string & origin, const std::string & msg, int l, int c)
 {
-    if(l == CuLog::Info)
+    if(l == CuLog::LevelInfo)
         fprintf(stdout, "\e[1;36mi\e[0m: \e[3m%s\e[0m: %s\n", origin.c_str(), msg.c_str());
-    else if(l == CuLog::Warn)
+    else if(l == CuLog::LevelWarn)
         fprintf(stdout, "\e[1;33mw\e[0m: \e[3m%s\e[0m: %s\n", origin.c_str(), msg.c_str());
     else
         fprintf(stderr, "\e[1;31me\e[0m: \e[0;31;3m%s\e[0m: %s\n", origin.c_str(), msg.c_str());
