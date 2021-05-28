@@ -85,6 +85,7 @@ void CuTConfigActivity::execute()
     at["properties"] = std::vector<std::string>();
     at["type"] = "property";
     bool value_only = false, skip_read = false;
+    printf("CuTConfigActivity.execute: \e[1;34moptions \e[0;35m%s\e[0m\n", datos(d->options));
     d->options["value-only"].to<bool>(value_only);
     d->options["no-value"].to<bool>(skip_read);
 
