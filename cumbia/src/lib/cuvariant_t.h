@@ -16,12 +16,20 @@
  * This method tries to convert the value stored into the CuVariant into the desired
  * type passed as reference.
  *
+ * \par Warning
+ * If the CuVariant is null or the format is not scalar or the variant is in general invalid,
+ * *val* will contain the 0ULL value casted to T
+ *
  * @see toVector
  */
 template<typename T> bool CuVariant::to(T &val) const
 {
-    bool valid = (d->format == Scalar);
-    if(valid)
+
+    bool valid = (d->format == Scalar && !d->mIsNull && d->mIsValid);
+    if(!valid) {
+        val = static_cast<T> (0ULL);
+    }
+    else
     {
         switch(d->type)
         {
@@ -55,7 +63,6 @@ template<typename T> bool CuVariant::to(T &val) const
             break;
         case Boolean:
             val = static_cast<T>(*(static_cast<bool *>(d->val)));
-            printf("CuVariant.to case Boolean: converted to %d\n", static_cast<T>(*(static_cast<bool *>(d->val))));
             break;
         case String:
             try {
@@ -64,7 +71,6 @@ template<typename T> bool CuVariant::to(T &val) const
                 else if(s == "false") val = static_cast<T>(0);
                 else // try converting to long double
                     val = static_cast<T>( std::stold(s));
-                printf("CuVariant.to case String: %s converted to %d\n", s.c_str(), static_cast<T>(*(static_cast<bool *>(d->val))));
             }
             catch(const std::invalid_argument& ) {
                 pwarn("CuVariant.to: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
