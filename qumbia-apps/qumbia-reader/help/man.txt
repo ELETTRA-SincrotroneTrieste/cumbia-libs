@@ -172,7 +172,7 @@
     Note 3: pay attention to the exact syntax required in the date interval expression
 
     Output database results on a file
-        $ cumbia read  --db-output-file=current.csv "hdb://srv-tango-srf.fcs.elettra.trieste.it:20000/lh/power_supply/psb_lh.01/current(2019-11-18 16:00:59,2019-11-20 16:00:59)"
+	    $ cumbia read  --db-output-file=current.csv "hdb://srv-tango-srf-01.fcs.elettra.trieste.it:20000/lh/power_supply/psb_lh.01/current(2021-05-27 16:00:59,2021-05-28 16:00:59)"
     The CSV file will output, for each source:
     - one line with the source name, the data type (e.g. double, int, uint, string, bool), the write mode (ro, rw), the
       data format (scalar, vector) and the specified date/time interval
