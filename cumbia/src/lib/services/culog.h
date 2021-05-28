@@ -44,7 +44,7 @@ public:
 
     enum Category { CategoryGeneric = 1, CategoryNetwork = 2, CategoryWrite = 4, CategoryRead = 8, CategoryAll = 255, CategoryUser = 256 };
 
-    enum Level { LevelDebug = 1, LevelInfo = 2, LevelWarn = 4, LevelError = 8, LevelAll = 255, LevelUser = 256  };
+    enum Level { LevelError = 7, LevelWarn = 5,  LevelInfo = 3, LevelDebug = 1, LevelAll = 255, LevelUser = 256  };
 
     CuLog(CuLogImplI *log_impl);
 
