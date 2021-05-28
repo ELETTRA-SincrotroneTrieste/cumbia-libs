@@ -55,6 +55,7 @@ template<typename T> bool CuVariant::to(T &val) const
             break;
         case Boolean:
             val = static_cast<T>(*(static_cast<bool *>(d->val)));
+            printf("CuVariant.to case Boolean: converted to %d\n", static_cast<T>(*(static_cast<bool *>(d->val))));
             break;
         case String:
             try {
@@ -63,6 +64,7 @@ template<typename T> bool CuVariant::to(T &val) const
                 else if(s == "false") val = static_cast<T>(0);
                 else // try converting to long double
                     val = static_cast<T>( std::stold(s));
+                printf("CuVariant.to case String: %s converted to %d\n", s.c_str(), static_cast<T>(*(static_cast<bool *>(d->val))));
             }
             catch(const std::invalid_argument& ) {
                 pwarn("CuVariant.to: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
