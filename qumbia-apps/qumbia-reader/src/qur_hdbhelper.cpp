@@ -156,11 +156,15 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
                             print_note(fp, notes_tss, notes, notes_idx++, on_file);
                         }
                         fprintf(fp, "%s", qstoc(QDateTime::fromMSecsSinceEpoch(tss[r] * 1000).toString("yyyy-MM-dd hh:mm:ss.zzz")));
+                        on_file ? fprintf(fp, ",") : fprintf(fp, " ");
+                        if(siz > 1 && color) fprintf(fp, "%s{%s ", c[Blue], c[Default]);
                         for(size_t i = 0; i < liv.size() / rowcnt; i++) {
                             fprintf(fp, "%s%ld%s", c[Green], liv[r * siz + i], c[Default]);
                             if(i < liv.size() / rowcnt - 1) fprintf(fp, ", ");
                         }
                         if(siz > 1 && !color) fprintf(fp, "%s}%s ", c[Blue], c[Default]);
+                        if(notes_tss.size() > notes_idx && notes_tss[notes_idx] < tss[r])
+                            print_note(fp, notes_tss, notes, r, on_file);
                         fprintf(fp, "\n");
                     }
                 }
@@ -172,11 +176,15 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
                             print_note(fp, notes_tss, notes, notes_idx++, on_file);
                         }
                         fprintf(fp, "%s", qstoc(QDateTime::fromMSecsSinceEpoch(tss[r] * 1000).toString("yyyy-MM-dd hh:mm:ss.zzz")));
+                        on_file ? fprintf(fp, ",") : fprintf(fp, " ");
+                        if(siz > 1 && color) fprintf(fp, "%s{%s ", c[Blue], c[Default]);
                         for(size_t i = 0; i < luiv.size() / rowcnt; i++) {
                             fprintf(fp, "%s%lu%s", c[Green], luiv[r * siz + i], c[Default]);
                             if(i < luiv.size() / rowcnt - 1)  fprintf(fp, ", ");
                         }
                         if(siz > 1 && !color) fprintf(fp, "%s}%s ", c[Blue], c[Default]);
+                        if(notes_tss.size() > notes_idx && notes_tss[notes_idx] < tss[r])
+                            print_note(fp, notes_tss, notes, r, on_file);
                         fprintf(fp, "\n");
                     }
                 }
@@ -187,11 +195,15 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
                             print_note(fp, notes_tss, notes, notes_idx++, on_file);
                         }
                         fprintf(fp, "%s", qstoc(QDateTime::fromMSecsSinceEpoch(tss[r] * 1000).toString("yyyy-MM-dd hh:mm:ss.zzz")));
+                        on_file ? fprintf(fp, ",") : fprintf(fp, " ");
+                        if(siz > 1 && color) fprintf(fp, "%s{%s ", c[Blue], c[Default]);
                         for(size_t i = 0; i < boov.size() / rowcnt; i++) {
                             fprintf(fp, "%s%s%s", c[Cyan], boov[r * siz + i] ? "true" : "false", c[Default]);
                             if(i < boov.size() / rowcnt - 1)  fprintf(fp, ", ");
                         }
                         if(siz > 1 && !color) fprintf(fp, "%s}%s ", c[Blue], c[Default]);
+                        if(notes_tss.size() > notes_idx && notes_tss[notes_idx] < tss[r])
+                            print_note(fp, notes_tss, notes, r, on_file);
                         fprintf(fp, "\n");
                     }
                 }
@@ -202,11 +214,15 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
                             print_note(fp, notes_tss, notes, notes_idx++, on_file);
                         }
                         fprintf(fp, "%s", qstoc(QDateTime::fromMSecsSinceEpoch(tss[r] * 1000).toString("yyyy-MM-dd hh:mm:ss.zzz")));
+                        on_file ? fprintf(fp, ",") : fprintf(fp, " ");
+                        if(siz > 1 && color) fprintf(fp, "%s{%s ", c[Blue], c[Default]);
                         for(size_t i = 0; i < str_v.size() / rowcnt; i++) {
                             fprintf(fp, "%s%s%s", c[Cyan], str_v[r * siz + i].c_str(), c[Default]);
                             if(i < str_v.size() / rowcnt - 1)  fprintf(fp, ", ");
                         }
                         if(siz > 1 && !color) fprintf(fp, "%s}%s ", c[Blue], c[Default]);
+                        if(notes_tss.size() > notes_idx && notes_tss[notes_idx] < tss[r])
+                            print_note(fp, notes_tss, notes, r, on_file);
                         fprintf(fp, "\n");
                     }
                 }
