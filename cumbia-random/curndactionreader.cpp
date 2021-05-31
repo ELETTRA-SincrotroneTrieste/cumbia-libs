@@ -229,7 +229,7 @@ void CuRNDActionReader::setPeriod(int millis) {
 void CuRNDActionReader::stop()
 {
 //    if(d->exit)
-//        d->log.write("CuRNDActionReader.stop", CuLog::LevelError, CuLog::Read, "stop called twice for reader %s", this->getToken()["source"].toString().c_str());
+//        d->log.write("CuRNDActionReader.stop", CuLog::LevelError, CuLog::CategoryRead, "stop called twice for reader %s", this->getToken()["source"].toString().c_str());
 //    else
     if(!d->exit)
     {

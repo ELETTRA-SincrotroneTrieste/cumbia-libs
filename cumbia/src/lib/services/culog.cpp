@@ -105,7 +105,7 @@ void CuLog::write(const std::string &origin, int l, const char *fmt, ...) {
  *
  * \par example
  * \code
- * log.write("CuTReader.stop", CuLog::LevelError, CuLog::Read,
+ * log.write("CuTReader.stop", CuLog::LevelError, CuLog::CategoryRead,
  *      "stop called twice for reader %s", data["source"].toString().c_str());
  * \endcode
  */
