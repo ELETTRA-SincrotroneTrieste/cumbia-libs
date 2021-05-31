@@ -97,7 +97,7 @@ QuLogImpl::QuLogImpl()
 {
     d = new QuLogImplPrivate;
     d->dialog = nullptr;
-    d->showPopupByLogClassMap[CuLog::Write] = true;
+    d->showPopupByLogClassMap[CuLog::CategoryWrite] = true;
 }
 
 /** \brief Enable/disable popup for the given log_class_type
@@ -132,8 +132,8 @@ QuLogImpl::~QuLogImpl()
 void QuLogImpl::write(const std::string &origin, const std::string &msg, int l, int c)
 {
     QString type;
-    if(l == CuLog::Info) type = "INFO";
-    else if(l == CuLog::Warn) type = "WARN";
+    if(l == CuLog::LevelInfo) type = "INFO";
+    else if(l == CuLog::LevelWarn) type = "WARN";
     else type = "ERR";
 
     QuLogEntry e(type, QString::fromStdString(origin), QString::fromStdString(msg));

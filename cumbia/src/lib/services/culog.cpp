@@ -70,7 +70,7 @@ void CuLog::removeImpl(const std::string &name)
  * @param l the log *level*, one of CuLog::Level enum values
  * @param c the log *class*, one of CuLog::Class enum values
  *
- * Calls the CuLogImplI::write(const std::string & origin, const std::string & msg, CuLog::Level l = CuLog::Error, CuLog::Class c = CuLog::Generic)
+ * Calls the CuLogImplI::write(const std::string & origin, const std::string & msg, CuLog::Level l = CuLog::LevelError, CuLog::Class c = CuLog::CategoryGeneric)
  * on all registered CuLogImplI's
  */
 void CuLog::write(const std::string & origin, const std::string & msg, int l, int c)
@@ -105,7 +105,7 @@ void CuLog::write(const std::string &origin, int l, const char *fmt, ...) {
  *
  * \par example
  * \code
- * log.write("CuTReader.stop", CuLog::Error, CuLog::Read,
+ * log.write("CuTReader.stop", CuLog::LevelError, CuLog::Read,
  *      "stop called twice for reader %s", data["source"].toString().c_str());
  * \endcode
  */
@@ -175,7 +175,7 @@ CuServices::Type CuLog::getType() const
 
 /*! \brief writes a message on the console.
  *
- * Writes on stderr if the CuLog::Level is different from CuLog::Info and CuLog::Warn,
+ * Writes on stderr if the CuLog::Level is different from CuLog::LevelInfo and CuLog::LevelWarn,
  * on stdout otherwise
  *
  * See CuLog::write(const std::string & origin, const std::string & msg, CuLog::Level l, CuLog::Class c)

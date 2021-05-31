@@ -231,8 +231,8 @@ void $MAINCLASS$::onUpdate(const CuData &da)
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
-            static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::Write, true);
-            log->write(QString("$MAINCLASS$ [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::Error, CuLog::Write);
+            static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::CategoryWrite, true);
+            log->write(QString("$MAINCLASS$ [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::LevelError, CuLog::CategoryWrite);
         }
     }
     else if(d->auto_configure && da["type"].toString() == "property") {
