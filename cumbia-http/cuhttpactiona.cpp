@@ -64,14 +64,18 @@ void CuHTTPActionA::notifyActionFinished() {
 // https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
 // Here we extract data
 //
-QByteArray CuHTTPActionA::m_extract_data(const QByteArray &in) const {
-    QByteArray jd(in);
-    int idx = in.lastIndexOf("\ndata: ");
-    if(idx > 0)
-        jd.replace(0, idx + strlen("\ndata: "), "");
-    QJsonParseError e;
-    QJsonDocument d = QJsonDocument::fromJson(jd, &e);
-    return jd;
+QList<QByteArray> CuHTTPActionA::m_extract_data(const QByteArray &in) const {
+    QList<QByteArray> jdl; // json data list
+    QList<QByteArray> dl = in.split('\n');
+    printf("CuHTTPActionA::m_extract_data: in byte array %s\n", in.data());
+    foreach(QByteArray bai, dl) {
+        int idx = bai.lastIndexOf("data: ");
+        if(idx >= 0) {
+            bai.replace(0, idx + strlen("data: "), "");
+            jdl << bai;
+        }
+    }
+    return jdl;
 }
 
 // totally incomplete
@@ -88,29 +92,33 @@ bool CuHTTPActionA::m_likely_valid(const QByteArray &ba) const {
 void CuHTTPActionA::m_on_buf_complete() {
     if(m_likely_valid(d->buf)) {  // discard hi:
         QJsonParseError jpe;
-        QByteArray json = m_extract_data(d->buf);
-        QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
-        if(jsd.isNull())
-            perr("CuHTTPActionA.m_on_buf_complete: invalid json: %s\n", qstoc(json));
-        else {
-            decodeMessage(jsd.array());
+        QList<QByteArray> jsonli = m_extract_data(d->buf);
+
+        printf("CuHttpActionA.m_on_buf_complete: received buf %s and detected \e[1;32m%d \e[0m datas\n", d->buf.data(), jsonli.size());
+        foreach(const QByteArray &json, jsonli) {
+            QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
+            if(jsd.isNull())
+                perr("CuHTTPActionA.m_on_buf_complete: invalid json: %s\n", qstoc(json));
+            else {
+                decodeMessage(jsd.array());
+            }
         }
     }
 }
 
 void CuHTTPActionA::onNewData() {
     QByteArray ba = d->reply->readAll();
-//    bool buf_empty = d->buf.isEmpty();
-//    if(!buf_empty)
-//        cuprintf("CuHTTPActionA::onNewData: buf completed by \e[1;32m%s\e[0m\n", ba.data());
+    //    bool buf_empty = d->buf.isEmpty();
+    //    if(!buf_empty)
+    //        cuprintf("CuHTTPActionA::onNewData: buf completed by \e[1;32m%s\e[0m\n", ba.data());
     d->buf += ba;
     // buf complete?
     if(d->buf.endsWith("\n\n")) { // buf complete
         m_on_buf_complete();
         d->buf.clear();
     }
-//    else
-//        cuprintf("CuHTTPActionA::onNewData: \e[1;35mbuf \e[0;35m%s\e[1;35m incomplete waiting for next buf from the net\e[0m\n", ba.data());
+    //    else
+    //        cuprintf("CuHTTPActionA::onNewData: \e[1;35mbuf \e[0;35m%s\e[1;35m incomplete waiting for next buf from the net\e[0m\n", ba.data());
 }
 
 void CuHTTPActionA::onReplyFinished() {

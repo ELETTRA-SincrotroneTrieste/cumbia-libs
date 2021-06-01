@@ -92,7 +92,7 @@ private:
     CuHTTPActionAPrivate *d;
 
     void m_on_buf_complete();
-    QByteArray m_extract_data(const QByteArray& in) const;
+    QList<QByteArray>  m_extract_data(const QByteArray& in) const;
     MsgFmt m_likely_format(const QByteArray& ba) const;
     bool m_likely_valid(const QByteArray& ba) const;
 

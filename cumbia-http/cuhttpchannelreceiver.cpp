@@ -107,6 +107,7 @@ void CuHttpChannelReceiver::decodeMessage(const QJsonValue &v) {
             CuData res("src", src.toStdString());
             CumbiaHTTPWorld httpw;
             httpw.json_decode(a.at(0), res);
+            printf("CuHttpChannelReceiver.decodeMessage \e[1;33m to %s\e[0m\n", datos(res));
             foreach(CuDataListener *l, d->rmap.values(src)) {
                 l->onUpdate(res);
             }
