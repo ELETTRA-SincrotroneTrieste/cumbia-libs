@@ -288,7 +288,7 @@ void CuEventActivity::push_event(Tango::EventData *e)
     int r = rand();
 
     /// TEST TEST TESSSSSSST
-    if(r % 3 == 0) {
+    if(r % 2 == 0) {
         d["msg"] = ">>>> simulated exception in push_event <<<";
         d["err"] = true;
         d["ev_except"] = true;
