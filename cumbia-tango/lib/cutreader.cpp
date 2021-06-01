@@ -401,11 +401,14 @@ void CuTReader::m_polling_fallback() {
                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
     // stop event activity. it is eventually auto deleted.
     if(d->event_activity) {
+        printf("CuTReader::m_polling_fallback: unregistering event activity for %s\n", d->tsrc.getName().c_str());
         m_unregisterEventActivity();
         d->event_activity = nullptr;
     }
+
     if(!polling_service->actionRegistered(this, d->period) ) {
         d->refresh_mode = CuTReader::PolledRefresh;
+        printf("CuTReader::m_polling_fallback: registering to poller '%s' period %d\n", d->tsrc.getName().c_str(), d->period);
         m_registerToPoller();
     }
 }
