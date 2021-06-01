@@ -97,7 +97,7 @@ void CuTReader::onResult(const CuData &data) {
         if(event_subscribe_fail)
             printf("CuTReader.onResult: \e[1;35m: polling fallback after \e[1;34;35mevent subscription failure\e[0m\n");
         else
-            printf("CuTReader.onResult: \e[1;31m: polling fallback after *** \e[1;31;35mevent failure\e[0m\n");
+            printf("CuTReader.onResult: \e[1;31m: polling fallback after *** \e[1;31;35mevent failure src %s msg %s\e[0m\n", vtoc2(data, "src"), vtoc2(data, "msg"));
         m_polling_fallback();
     }
 }
