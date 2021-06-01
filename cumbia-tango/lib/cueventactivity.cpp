@@ -297,11 +297,9 @@ void CuEventActivity::push_event(Tango::EventData *e)
     else {
         /// END TEST!!!!
         if(!e->err)  {
-            printf("\e[1;32mCuEventActivity::push_event: no e->err....");
             utils.extractData(da, d);
             d["msg"] = utils.getLastMessage();
             d["err"] = utils.error();
-            printf("\e[1;36m utils.error? %d\e[0m\n", utils.error());
         }
         else  {
             // CuTReader must distinguish between push_event exception
@@ -310,7 +308,6 @@ void CuEventActivity::push_event(Tango::EventData *e)
             d["err"] = true;
             d["msg"] = utils.strerror(e->errors);
             d.putTimestamp();
-            printf("\e[1;31mCuEventActivity::push_event: YES e->err.... with message \"%s\"\e[0m\n", vtoc2(d, "msg"));
         }
     }
     publishResult(d);

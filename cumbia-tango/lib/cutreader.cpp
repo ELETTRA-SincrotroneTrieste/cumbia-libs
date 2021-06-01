@@ -86,8 +86,6 @@ void CuTReader::onResult(const CuData &data) {
     std::set<CuDataListener *> lis_copy = d->listeners;
     std::set<CuDataListener *>::iterator it;
     bool event_subscribe_fail = err && data["event"].toString() == "subscribe";
-    if(event_subscribe_fail)
-        printf("CuTReader.onResult: \e[1;35m event ** subscription ** failed\e[0m\n");
     // if it's just subscribe_event failure, do not notify listeners
     for(it = lis_copy.begin();
         !event_subscribe_fail && it != lis_copy.end();   ++it) {
@@ -401,7 +399,6 @@ void CuTReader::m_polling_fallback() {
                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
     // stop event activity. it is eventually auto deleted.
     if(d->event_activity) {
-        printf("CuTReader::m_polling_fallback: unregistering event activity for %s\n", d->tsrc.getName().c_str());
         m_unregisterEventActivity();
         d->event_activity = nullptr;
     }
