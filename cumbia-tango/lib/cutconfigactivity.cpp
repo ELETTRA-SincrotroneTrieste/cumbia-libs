@@ -21,7 +21,6 @@ public:
 
 CuTConfigActivity::CuTConfigActivity(const CuData &tok, CuDeviceFactoryService *df, Type t) : CuActivity(tok)
 {
-    printf("\e[1;32m+ \e[0m\e[1;33mCuTConfigActivity constructor %p\e[0m\n", this);
     d = new CuTAttConfigActivityPrivate;
     d->device_service = df;
     d->type = t;
@@ -37,7 +36,6 @@ CuTConfigActivity::CuTConfigActivity(const CuData &tok, CuDeviceFactoryService *
 
 CuTConfigActivity::~CuTConfigActivity()
 {
-    printf("\e[1;31mX \e[0m~\e[1;33mCuTConfigActivity %p\e[0m\n", this);
     pdelete("CuTAttConfigActivity %p [%s]", this, vtoc2(getToken(), "src"));
     delete d;
 }
@@ -85,7 +83,6 @@ void CuTConfigActivity::execute()
     at["properties"] = std::vector<std::string>();
     at["type"] = "property";
     bool value_only = false, skip_read = false;
-    printf("CuTConfigActivity.execute: \e[1;34moptions \e[0;35m%s\e[0m\n", datos(d->options));
     d->options["value-only"].to<bool>(value_only);
     d->options["no-value"].to<bool>(skip_read);
 

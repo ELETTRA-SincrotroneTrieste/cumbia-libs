@@ -51,9 +51,7 @@ CuEventActivity::CuEventActivity(const CuData &token,  CuDeviceFactoryService *d
 /*! \brief the class destructor
  *
  */
-CuEventActivity::~CuEventActivity()
-{
-    printf("\e[1;31mX \e[0m~\e[1;32mCuEventActivity %p\e[0m\n", this);
+CuEventActivity::~CuEventActivity() {
     pdelete("~CuEventActivity %p", this);
     delete d;
 }

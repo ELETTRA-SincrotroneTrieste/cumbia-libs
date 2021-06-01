@@ -115,7 +115,6 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
                                      CuDeviceFactoryService *df)
     : CuContinuousActivity(token)
 {
-    printf("\e[1;32m+ \e[0m\e[1;34mCuPollingActivity %p\e[0m\n", this);
     d = new CuPollingActivityPrivate;
     d->device_srvc = df;
     d->consecutiveErrCnt = 0;
@@ -141,7 +140,6 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
  */
 CuPollingActivity::~CuPollingActivity()
 {
-    printf("\e[1;31mX \e[0m~\e[1;34mCuPollingActivity %p\e[0m\n", this);
     pdelete("CuPollingActivity %p", this);
     delete d;
 }
@@ -224,8 +222,6 @@ void CuPollingActivity::decreasePolling() {
     }
     else
         d->repeat = d->period;
-    cuprintf("\e[0;33mpolling activity: \"%s\": %d errors period %d --> %d\e[0m\n",
-           vtoc2(getToken(), "src"), d->consecutiveErrCnt, d->period, d->repeat);
 }
 
 /*!
@@ -458,7 +454,6 @@ void CuPollingActivity::execute()
  */
 void CuPollingActivity::onExit()
 {
-    printf("\e[1;35m onExit \e[0m~\e[1;34mCuPollingActivity.onExit %p\e[0m\n");
     assert(d->my_thread_id == pthread_self());
     dispose();
     CuData at = getToken(); /* activity token */

@@ -52,7 +52,6 @@ CuTReader::CuTReader(const TSource& src, CumbiaTango *ct) : CuTangoActionI()
 
 CuTReader::~CuTReader()
 {
-    printf("\e[1;31mX\e[0m ~CuTReader  %p [\e[0;31m%s]\e[0m\n", this, d->tsrc.getName().c_str());
     pdelete("~CuTReader %p", this);
     delete d;
 }
@@ -87,12 +86,18 @@ void CuTReader::onResult(const CuData &data) {
     std::set<CuDataListener *> lis_copy = d->listeners;
     std::set<CuDataListener *>::iterator it;
     bool event_subscribe_fail = err && data["event"].toString() == "subscribe";
+    if(event_subscribe_fail)
+        printf("CuTReader.onResult: \e[1;35m event ** subscription ** failed\e[0m\n");
     // if it's just subscribe_event failure, do not notify listeners
     for(it = lis_copy.begin();
         !event_subscribe_fail && it != lis_copy.end();   ++it) {
         (*it)->onUpdate(data);
     }
     if(err) {
+        if(event_subscribe_fail)
+            printf("CuTReader.onResult: \e[1;35m: polling fallback after \e[1;34;35mevent subscription failure\e[0m\n");
+        else
+            printf("CuTReader.onResult: \e[1;31m: polling fallback after *** \e[1;31;35mevent failure\e[0m\n");
         m_polling_fallback();
     }
 }
