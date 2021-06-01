@@ -400,16 +400,12 @@ void CuTReader::m_polling_fallback() {
     CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
     // stop event activity. it is eventually auto deleted.
-    printf("CuTReader.m_polling fallback: %s event activity %p action regitered ? %d\n", d->tsrc.getName().c_str(), d->event_activity, polling_service->actionRegistered(this, d->period));
     if(d->event_activity) {
-        printf("CuTReader::m_polling_fallback: unregistering event activity for %s\n", d->tsrc.getName().c_str());
         m_unregisterEventActivity();
         d->event_activity = nullptr;
     }
-
     if(!polling_service->actionRegistered(this, d->period) ) {
         d->refresh_mode = CuTReader::PolledRefresh;
-        printf("CuTReader::m_polling_fallback: registering to poller '%s' period %d\n", d->tsrc.getName().c_str(), d->period);
         m_registerToPoller();
     }
 }
