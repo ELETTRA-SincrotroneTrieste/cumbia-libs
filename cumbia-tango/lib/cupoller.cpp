@@ -169,7 +169,6 @@ void CuPoller::m_do_unregisterAction(CuTangoActionI *a)
             am->removeConnection(this);
         CuActivity *activity = am->find(at); // polling activities compare device period and "activity"
         // post remove to activity's thread
-        printf("CuPoller.m_do_unregisterAction action %p activity found %p\n", a, activity);
         if(activity) {
             // CuPollingActivity will unregister itself if this is the last action
             d->cumbia_t->postEvent(activity, new CuRemovePollActionEvent(a->getSource()));

@@ -42,7 +42,6 @@ void CuPollingService::unregisterAction(int period, CuTangoActionI *action)
 {
     if(d->pollers_map.find(period) != d->pollers_map.end()) {
         CuPoller* poller = d->pollers_map[period];
-        printf("CuPollingService.unregisterAction: calling poller->unregisterAction on %p src %s\n", action, action->getSource().getName().c_str());
         poller->unregisterAction(action);
         if(poller->count() == 0) {
             d->pollers_map.erase(period);
