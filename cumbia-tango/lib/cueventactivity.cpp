@@ -285,15 +285,19 @@ void CuEventActivity::push_event(Tango::EventData *e)
     Tango::DeviceAttribute *da = e->attr_value;
     if(!e->err)
     {
+        printf("\e[1;32mCuEventActivity::push_event: no e->err....");
         utils.extractData(da, d);
         d["msg"] = utils.getLastMessage();
         d["err"] = utils.error();
+        printf("\e[1;36m utils.error? %d\e[0mn\n", utils.error());
+
     }
     else
     {
         d.putTimestamp();
         d["err"] = true;
         d["msg"] = utils.strerror(e->errors);
+        printf("\e[1;31mCuEventActivity::push_event: YES e->err.... with message \"%s\"\e[0m\n", vtoc2(d, "msg"));
     }
     publishResult(d);
 }
