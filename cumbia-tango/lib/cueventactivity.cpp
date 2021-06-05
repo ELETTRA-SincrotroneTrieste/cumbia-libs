@@ -282,33 +282,18 @@ void CuEventActivity::push_event(Tango::EventData *e)
     d["mode"] = "event";
     d["event"] = e->event;
     Tango::DeviceAttribute *da = e->attr_value;
-    time_t tp;
-    time(&tp);
-    srand(tp);
-    int r = rand();
-
-    /// TEST TEST TESSSSSSST
-    if(r % 2 == 0) {
-        d["msg"] = ">>>> simulated exception in push_event <<<";
-        d["err"] = true;
-        d["ev_except"] = true;
-        d["value"] = CuVariant();
+    if(!e->err)  {
+        utils.extractData(da, d);
+        d["msg"] = utils.getLastMessage();
+        d["err"] = utils.error();
     }
-    else {
-        /// END TEST!!!!
-        if(!e->err)  {
-            utils.extractData(da, d);
-            d["msg"] = utils.getLastMessage();
-            d["err"] = utils.error();
-        }
-        else  {
-            // CuTReader must distinguish between push_event exception
-            // and another error, like attribute quality invalid
-            d["ev_except"] = true;
-            d["err"] = true;
-            d["msg"] = utils.strerror(e->errors);
-            d.putTimestamp();
-        }
+    else  {
+        // CuTReader must distinguish between push_event exception
+        // and another error, like attribute quality invalid
+        d["ev_except"] = true;
+        d["err"] = true;
+        d["msg"] = utils.strerror(e->errors);
+        d.putTimestamp();
     }
     publishResult(d);
 }
