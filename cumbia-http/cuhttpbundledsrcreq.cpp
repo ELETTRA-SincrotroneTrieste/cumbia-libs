@@ -82,6 +82,7 @@ void CuHttpBundledSrcReq::onNewData() {
     d->buf += ba;
     // buf complete?
     if(d->buf.endsWith("\n\n") || d->buf.endsWith("\r\n\r\n")) { // buf complete
+        printf("CuHttpBundledSrcReq::onNewData: calling m_on_buf_complete with buf >>%s<<\n", d->buf.data());
         m_on_buf_complete();
         d->buf.clear();
     }
@@ -120,7 +121,7 @@ void CuHttpBundledSrcReq::m_on_buf_complete() {
         QByteArray json = d->buf;
         QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
         if(jsd.isNull())
-            perr("CuHTTPActionA.m_on_buf_complete: invalid json: %s\n", qstoc(json));
+            perr("CuHttpBundledSrcReq.m_on_buf_complete: invalid json: %s\n", qstoc(json));
         d->listener->onSrcBundleReplyReady(jsd.toJson());
     }
 }

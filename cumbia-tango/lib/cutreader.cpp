@@ -92,11 +92,9 @@ void CuTReader::onResult(const CuData &data) {
         (*it)->onUpdate(data);
     }
     if(err) {
-        if(event_subscribe_fail)
-            printf("CuTReader.onResult: \e[1;35m: polling fallback after \e[1;34;35mevent subscription failure '%s'\e[0m\n", vtoc2(data, "src"));
         if(data.containsKey("ev_except") && data["ev_except"].toBool()) {
             if(!event_subscribe_fail) // DEBUG PRINT only if !event_subs_fail
-                printf("CuTReader.onResult: \e[1;31m: polling fallback after *** \e[1;31;35mevent failure src %s msg %s\e[0m\n", vtoc2(data, "src"), vtoc2(data, "msg"));
+                perr("CuTReader.onResult: polling fallback after event failure: src %s msg %s", vtoc2(data, "src"), vtoc2(data, "msg"));
             m_polling_fallback();
         }
     }
@@ -405,7 +403,6 @@ void CuTReader::m_polling_fallback() {
 
     if(!polling_service->actionRegistered(this, d->period) ) {
         d->refresh_mode = CuTReader::PolledRefresh;
-        printf("CuTReader::m_polling_fallback: registering to poller '%s' period %d\n", d->tsrc.getName().c_str(), d->period);
         m_registerToPoller();
     }
 }

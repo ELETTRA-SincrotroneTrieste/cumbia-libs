@@ -288,13 +288,13 @@ void CuEventActivity::push_event(Tango::EventData *e)
     int r = rand();
 
     /// TEST TEST TESSSSSSST
-    /*if(r % 2 == 0) {
+    if(r % 2 == 0) {
         d["msg"] = ">>>> simulated exception in push_event <<<";
         d["err"] = true;
         d["ev_except"] = true;
         d["value"] = CuVariant();
     }
-    else*/ {
+    else {
         /// END TEST!!!!
         if(!e->err)  {
             utils.extractData(da, d);

@@ -67,7 +67,6 @@ void CuHTTPActionA::notifyActionFinished() {
 QList<QByteArray> CuHTTPActionA::m_extract_data(const QByteArray &in) const {
     QList<QByteArray> jdl; // json data list
     QList<QByteArray> dl = in.split('\n');
-    printf("CuHTTPActionA::m_extract_data: in byte array %s\n", in.data());
     foreach(QByteArray bai, dl) {
         int idx = bai.lastIndexOf("data: ");
         if(idx >= 0) {
@@ -113,7 +112,7 @@ void CuHTTPActionA::onNewData() {
     //        cuprintf("CuHTTPActionA::onNewData: buf completed by \e[1;32m%s\e[0m\n", ba.data());
     d->buf += ba;
     // buf complete?
-    if(d->buf.endsWith("\n\n")) { // buf complete
+    if(d->buf.endsWith("\n\n") || d->buf.endsWith("\r\n\r\n")) { // buf complete
         m_on_buf_complete();
         d->buf.clear();
     }
