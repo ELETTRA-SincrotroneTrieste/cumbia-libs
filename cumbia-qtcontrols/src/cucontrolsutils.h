@@ -26,7 +26,7 @@ public:
     CuVariant getArgs(const QString& target, const QObject *leaf) const;
     QList<QObject *> findObjects(const QString &target, const QObject *leaf);
     bool initObjects(const QString& target, const QObject* leaf, const CuData &data, const char *value_key);
-    QString msg(const CuData& da) const;
+    QString msg(const CuData& da, const QString& date_time_fmt = "yyyy-MM-dd HH:mm:ss.zzz") const;
 };
 
 #endif // CUCONTROLSUTILS_H

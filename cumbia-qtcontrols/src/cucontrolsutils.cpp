@@ -270,7 +270,16 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
     return inputobjs.size() == match;
 }
 
-QString CuControlsUtils::msg(const CuData &da) const {
+/*!
+ * \brief return a string with a message derived from the da input parameter
+ * \param da CuData
+ * \param date_time_fmt a custom timestamp date / time format. Default: "yyyy-MM-dd HH:mm:ss.zzz"
+ *
+ * \return the message stored in da["msg"] if da["err"] evaluates to true or
+ *  a new message with the source name, the value of da["mode"] (or da["activity"], if "mode" is empty) and the timestamp.
+ *  da["timestamp_ms"] or da["timestamp_us"] are used to provide a date /time in the format "yyyy-MM-dd HH:mm:ss.zzz".
+ */
+QString CuControlsUtils::msg(const CuData &da, const QString& date_time_fmt) const {
     QString m = QuString(da, "src");
     if(da.containsKey("msg"))
         return m + QuString(da, "msg");
@@ -285,12 +294,12 @@ QString CuControlsUtils::msg(const CuData &da) const {
         long int ts = 0;
         da["timestamp_ms"].to<long int>(ts);
         if(ts > 0)
-            m += QDateTime::fromMSecsSinceEpoch(ts).toString("yyyy-MM-dd HH:mm:ss.zzz");
+            m += QDateTime::fromMSecsSinceEpoch(ts).toString(date_time_fmt);
     } else if(da.containsKey("timestamp_ms")) {
         double tsd = 0.0;
         da["timestamp_us"].to<double>(tsd);  // secs.usecs in a double
         if(tsd > 0)
-            m += QDateTime::fromMSecsSinceEpoch(static_cast<long int>(tsd * 1000)).toString("yyyy-MM-dd HH:mm:ss.zzz");
+            m += QDateTime::fromMSecsSinceEpoch(static_cast<long int>(tsd * 1000)).toString(date_time_fmt);
     }
     return m;
 }
