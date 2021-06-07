@@ -19,6 +19,7 @@
 #include <qwt_date_scale_engine.h>
 #include <qwt_plot_directpainter.h>
 #include <qwt_painter.h>
+#include <cucontrolsutils.h>
 
 /** @private */
 class QuTrendPlotPrivate
@@ -29,6 +30,7 @@ public:
     QuPlotCommon *plot_common;
     QuTimeScaleDraw *timeScaleDraw;
     QwtPlotDirectPainter *directPainter;
+    CuControlsUtils u;
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
@@ -149,14 +151,13 @@ void QuTrendPlot::update(const CuData &da)
 {
     bool need_replot = false;
     d->read_ok = !da["err"].toBool();
-    QString src, msg = QString::fromStdString(da["msg"].toString());
-    src = QString::fromStdString(da["src"].toString());
+    const QString &src = QString::fromStdString(da["src"].toString()), &msg = d->u.msg(da);
 
     // update link statistics
     CuLinkStats *link_s = d->plot_common->getContext()->getLinkStats();
     link_s->addOperation();
     if(!d->read_ok)
-        link_s->addError(da["msg"].toString());
+        link_s->addError(msg.toStdString());
 
     // configure triggers replot at the end but should not be too expensive
     // to do it once here at configuration time and once more from appendData
@@ -220,7 +221,7 @@ void QuTrendPlot::update(const CuData &da)
     if(need_replot)
         replot();
 
-    setToolTip(QString("\"%1\": %2").arg(src).arg(QString::fromStdString(da["msg"].toString())));
+    setToolTip(msg);
 }
 
 void QuTrendPlot::setTimeScaleDrawEnabled(bool enable)

@@ -357,7 +357,6 @@ void CuPollingActivity::execute()
             const std::string& point = tsrc.getPoint();
             bool is_command = tsrc.getType() == TSource::SrcCmd;
             if(is_command) { // write into results[i]
-                (*results)[i] = getToken();
                 (*results)[i]["mode"] = "P";
                 (*results)[i]["period"] = getTimeout();
                 (*results)[i]["src"] = tsrc.getName();
@@ -385,7 +384,6 @@ void CuPollingActivity::execute()
                 att_offset++;
             }
             else { // save into attdatalist
-                attdatalist[att_idx] = getToken();
                 attdatalist[att_idx]["mode"] = "P";
                 attdatalist[att_idx]["period"] = getTimeout();
                 attdatalist[att_idx]["src"] = srcnam;

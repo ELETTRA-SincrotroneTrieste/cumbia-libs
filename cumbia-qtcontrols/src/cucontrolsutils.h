@@ -21,17 +21,12 @@ class CuData;
 class CuControlsUtils
 {
 public:
-    CuControlsUtils();
-
     QString findInput(const QString& objectName, const QObject* leaf) const;
-
     QObject *findObject(const QString& objectName, const QObject* leaf) const;
-
     CuVariant getArgs(const QString& target, const QObject *leaf) const;
-
     QList<QObject *> findObjects(const QString &target, const QObject *leaf);
-
     bool initObjects(const QString& target, const QObject* leaf, const CuData &data, const char *value_key);
+    QString msg(const CuData& da) const;
 };
 
 #endif // CUCONTROLSUTILS_H

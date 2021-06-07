@@ -8,6 +8,7 @@
 #include <QContextMenuEvent>
 #include <QPainter>
 #include <QPaintEvent>
+#include <cucontrolsutils.h>
 
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
@@ -27,6 +28,7 @@ public:
     QuPalette palette;
     int max_len;
     CuContext *context;
+    CuControlsUtils u;
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
@@ -225,6 +227,7 @@ void QuLabel::contextMenuEvent(QContextMenuEvent *e)
 
 void QuLabel::onUpdate(const CuData &da)
 {
+    printf("QuLabel.onUpdate: %s\n", datos(da));
     bool background_modified = false;
     QString txt;
     QColor background, border;
@@ -237,7 +240,7 @@ void QuLabel::onUpdate(const CuData &da)
 
     d->read_ok ? border = d->palette["dark_green"] : border = d->palette["dark_red"];
 
-    setToolTip(da["msg"].toString().c_str());
+    setToolTip(d->u.msg(da));
     setBorderColor(border);
 
     if(!d->read_ok)

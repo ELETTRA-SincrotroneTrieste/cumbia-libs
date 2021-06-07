@@ -15,6 +15,7 @@
 
 #include "qutimescaledraw.h"
 #include <QImage>
+#include <cucontrolsutils.h>
 #include <quplotcurve.h>
 #include <qwt_date_scale_engine.h>
 
@@ -27,6 +28,7 @@ public:
     QuPlotCommon *plot_common;
     QuTimeScaleDraw *timeScaleDraw;
     QVector<double> x_data;
+    CuControlsUtils u;
 
     void fill_x_data(int c)
     {
@@ -168,13 +170,14 @@ void QuSpectrumPlot::update(const CuData &da)
 {
     d->read_ok = !da["err"].toBool();
     const CuVariant &v = da["value"];
-    QString src = QString::fromStdString(da["src"].toString());
+    const QString &src = QString::fromStdString(da["src"].toString());
+    const QString& msg = d->u.msg(da);
 
     // update link statistics
     CuLinkStats *link_s = d->plot_common->getContext()->getLinkStats();
     link_s->addOperation();
     if(!d->read_ok)
-        link_s->addError(da["msg"].toString());
+        link_s->addError(msg.toStdString());
 
 
     // configure triggers replot at the end but should not be too expensive
@@ -205,7 +208,7 @@ void QuSpectrumPlot::update(const CuData &da)
         replot();
     }
 
-    setToolTip(da["msg"].toString().c_str());
+    setToolTip(msg);
 }
 
 void QuSpectrumPlot::requestLinkStats()

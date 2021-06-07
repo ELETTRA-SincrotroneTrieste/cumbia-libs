@@ -7,6 +7,7 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QtDebug>
+#include <cucontrolsutils.h>
 
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
@@ -23,6 +24,7 @@ public:
     bool read_ok;
     CuContext *context;
     CuVariant prev_val;
+    CuControlsUtils u;
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
@@ -127,7 +129,7 @@ void QuCircularGauge::m_configure(const CuData& da)
     QStringList props = QStringList() << "min" << "max" << "max_alarm" << "min_alarm"
                                       << "min_warning" << "max_warning";
     foreach(QString thnam, props) {
-        const char *name = thnam.toStdString().c_str();
+        const std::string name = thnam.toStdString();
         if(da.containsKey(name)) {
             str = da[name].toString().c_str();
             val = strtod(da[name].toString().c_str(), &endptr);
@@ -147,12 +149,12 @@ void QuCircularGauge::m_configure(const CuData& da)
 void QuCircularGauge::m_set_value(const CuVariant &val)
 {
     if(val.isInteger()) {
-        int i;
+        int i = 0;
         val.to<int>(i);
         setValue(i);
     }
     else if(val.isFloatingPoint()) {
-        double d;
+        double d = 0.0;
         val.to<double>(d);
         setValue(d);
     }
@@ -164,15 +166,16 @@ void QuCircularGauge::m_set_value(const CuVariant &val)
 
 void QuCircularGauge::onUpdate(const CuData &da)
 {
+    const QString& msg = d->u.msg(da);
     d->read_ok = !da["err"].toBool();
     setReadError(!d->read_ok);
     d->read_ok ? setLabel("") : setLabel(labelErrorText());
-    setToolTip(da["msg"].toString().c_str());
+    setToolTip(msg);
 
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
-        d->context->getLinkStats()->addError(da["msg"].toString());
+        d->context->getLinkStats()->addError(msg.toStdString());
 
     if(d->read_ok && d->auto_configure && da["type"].toString() == "property") {
         m_configure(da);

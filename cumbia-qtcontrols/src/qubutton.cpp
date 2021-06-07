@@ -29,6 +29,7 @@ public:
     CuLog *log;
     float anim_draw_penwidthF;
     QuAnimation animation;
+    CuControlsUtils u;
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsWriterFactoryI interface.
@@ -149,11 +150,12 @@ void QuButton::onUpdate(const CuData &data)
     if(!data["is_result"].toBool() && !is_config)
         return;
 
+    const QString& msg = d->u.msg(data);
     d->write_ok = !data["err"].toBool();
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->write_ok)
-        d->context->getLinkStats()->addError(data["msg"].toString());
+        d->context->getLinkStats()->addError(msg.toStdString());
 
     if(!d->write_ok)
     {
@@ -163,7 +165,7 @@ void QuButton::onUpdate(const CuData &data)
         if(cumbia) {
             CuLog *log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log));
             if(log)
-                log->write(QString("QuButton [" + objectName() + "]").toStdString(), data["msg"].toString(), CuLog::LevelError, CuLog::CategoryWrite);
+                log->write(QString("QuButton [" + objectName() + "]").toStdString(), msg.toStdString(), CuLog::LevelError, CuLog::CategoryWrite);
         }
         else {
             perr("QuButton.onUpdate: cannot get a reference to cumbia either from context or CumbiaPool with target \"%s\"", data["src"].toString().c_str());
@@ -182,6 +184,7 @@ void QuButton::onUpdate(const CuData &data)
     d->write_ok ? d->animation.setPenColor(QColor(Qt::green)) : d->animation.setPenColor(QColor(Qt::red));
     d->write_ok ? d->animation.setDuration(1500) : d->animation.setDuration(3000);
     d->animation.start();
+    setToolTip(msg);
     emit newData(data);
 }
 

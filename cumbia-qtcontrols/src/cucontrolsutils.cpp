@@ -1,4 +1,5 @@
-#include "cucontrolsutils.h"
+﻿#include "cucontrolsutils.h"
+#include "qustring.h"
 
 #include <QVariant>
 #include <QString>
@@ -10,12 +11,8 @@
 #include <cumacros.h>
 #include <cudata.h>
 
+#include <QDateTime>
 #include <QtDebug>
-
-CuControlsUtils::CuControlsUtils()
-{
-
-}
 
 /*! find the input argument from an object and return it in the shape of a string.
  *
@@ -271,5 +268,30 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
         }
     }
     return inputobjs.size() == match;
+}
+
+QString CuControlsUtils::msg(const CuData &da) const {
+    QString m = QuString(da, "src");
+    if(da.containsKey("msg"))
+        return m + QuString(da, "msg");
+    // pick mode or activity name
+    if(da.containsKey("mode"))
+        m += " [" + QuString(da, "mode") + "] ";
+    else
+        m += " [" + QuString(da, "activity") + "] ";
+
+    // timestamp
+    if(da.containsKey("timestamp_ms")) {
+        long int ts = 0;
+        da["timestamp_ms"].to<long int>(ts);
+        if(ts > 0)
+            m += QDateTime::fromMSecsSinceEpoch(ts).toString("yyyy-MM-dd HH:mm:ss.zzz");
+    } else if(da.containsKey("timestamp_ms")) {
+        double tsd = 0.0;
+        da["timestamp_us"].to<double>(tsd);  // secs.usecs in a double
+        if(tsd > 0)
+            m += QDateTime::fromMSecsSinceEpoch(static_cast<long int>(tsd * 1000)).toString("yyyy-MM-dd HH:mm:ss.zzz");
+    }
+    return m;
 }
 

@@ -16,6 +16,7 @@ class QuSpinBoxPrivate
 public:
     CuContext *context;
     bool auto_configure;
+    CuControlsUtils u;
 };
 
 QuSpinBox::QuSpinBox(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac)
@@ -47,10 +48,11 @@ CuContext *QuSpinBox::getContext() const
 
 void QuSpinBox::onUpdate(const CuData &da)
 {
+    const QString& msg = d->u.msg(da);
     if(da["err"].toBool())
     {
         perr("QuSpinBox [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
-             da["src"].toString().c_str(), da["msg"].toString().c_str(),
+             da["src"].toString().c_str(), qstoc(msg),
                 da["dfs"].toString().c_str(), da["writable"].toInt());
 
         Cumbia* cumbia = d->context->cumbia();
@@ -60,7 +62,7 @@ void QuSpinBox::onUpdate(const CuData &da)
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::CategoryWrite, true);
-            log->write(QString("QuSpinBox [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::LevelError, CuLog::CategoryWrite);
+            log->write(QString("QuSpinBox [" + objectName() + "]").toStdString(), msg.toStdString(), CuLog::LevelError, CuLog::CategoryWrite);
         }
     }
     else if(d->auto_configure && da["type"].toString() == "property")

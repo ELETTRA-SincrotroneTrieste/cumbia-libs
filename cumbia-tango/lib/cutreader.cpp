@@ -450,14 +450,13 @@ void CuTReader::m_startEventActivity()
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
 
     CuData at("src", d->tsrc.getName()); /* activity token */
-    at.set("device", d->tsrc.getDeviceName());
     // thread token: by default device name, but can be tuned
     // through the "thread_token" option (setOptions)
     CuData thtok= CuData("device", d->tsrc.getDeviceName());
     if(d->options.containsKey("thread_token"))
         thtok["thread_token"] = d->options["thread_token"];
     d->options.set("device", d->tsrc.getDeviceName()).set("point", d->tsrc.getPoint()).set("rmode", refreshModeStr());
-    d->event_activity = new CuEventActivity(at, df, d->options);
+    d->event_activity = new CuEventActivity(at.set("activity", "event"), df, d->options);
     d->refresh_mode = ChangeEventRefresh; // update refresh mode
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());

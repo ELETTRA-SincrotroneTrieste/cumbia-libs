@@ -26,6 +26,7 @@ public:
     bool write_ok;
     CuLog *log;
     QuAnimation animation;
+    CuControlsUtils u;
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsWriterFactoryI interface.
@@ -125,10 +126,11 @@ void QuApplyNumeric::onUpdate(const CuData &da)
     d->write_ok = !da["err"].toBool();
     // update link statistics
     d->context->getLinkStats()->addOperation();
+    const QString& msg = d->u.msg(da);
     if(!d->write_ok)
     {
         perr("QuApplyNumeric [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
-             da["src"].toString().c_str(), da["msg"].toString().c_str(),
+             da["src"].toString().c_str(), msg.toStdString().c_str(),
                 da["dfs"].toString().c_str(), da["writable"].toInt());
 
         Cumbia* cumbia = d->context->cumbia();
@@ -136,12 +138,12 @@ void QuApplyNumeric::onUpdate(const CuData &da)
             cumbia = d->context->cumbiaPool()->getBySrc(da["src"].toString());
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
-            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::LevelError, CuLog::CategoryWrite);
+            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), msg.toStdString(), CuLog::LevelError, CuLog::CategoryWrite);
         else if(!cumbia) {
             perr("QuApplyNumeric.onUpdate: cannot get a reference to cumbia either from context or CumbiaPool with target \"%s\"", da["src"].toString().c_str());
         }
 
-        d->context->getLinkStats()->addError(da["msg"].toString());
+        d->context->getLinkStats()->addError(msg.toStdString());
     }
     else if(d->auto_configure && is_config)
     {
@@ -201,6 +203,7 @@ void QuApplyNumeric::onUpdate(const CuData &da)
                  da["dfs"].toString().c_str(), da["writable"].toInt());
 
     }
+    setToolTip(msg);
     // animation
     d->write_ok ? d->animation.setPenColor(QColor(Qt::green)) : d->animation.setPenColor(QColor(Qt::red));
     d->write_ok ? d->animation.setDuration(1500) : d->animation.setDuration(5000);

@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QHash>
+#include <cucontrolsutils.h>
 #include "qumbiaizer.h"
 
 class QObject;
@@ -60,10 +61,9 @@ public:
     QuValueFilter *refreshFilter;
 
     bool error;
-
     QString message;
-
     void setError(bool err);
+    CuControlsUtils cucu;
 
 private:
     Qumbiaizer *q_ptr;

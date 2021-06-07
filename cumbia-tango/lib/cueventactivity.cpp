@@ -267,7 +267,8 @@ void CuEventActivity::onExit() {
  *     pairs that result from attribute or command read operations.
  */
 void CuEventActivity::push_event(Tango::EventData *e) {
-    CuData d = getToken();
+    // in d, copy only src from token
+    CuData d("src", getToken()["src"].toString());
     CuTangoWorld utils;
     d["mode"] = "E";
     d["E"] = e->event;

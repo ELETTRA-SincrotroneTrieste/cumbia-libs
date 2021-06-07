@@ -21,6 +21,7 @@
 #include <qustringlist.h>
 #include <quvector.h>
 #include <qustring.h>
+#include <cucontrolsutils.h>
 
 /** @private */
 class QuComboBoxPrivate
@@ -33,6 +34,7 @@ public:
     QuAnimation animation;
     // for private use
     bool configured, index_changed_connected;
+    CuControlsUtils u;
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
@@ -171,7 +173,9 @@ void QuComboBox::m_configure(const CuData& da)
 {
     d->ok = !da["err"].toBool();
 
+    CuControlsUtils u;
     setDisabled(!d->ok);
+    QString toolTip(u.msg(da));
 
     if(d->ok) {
         QString description, unit, label;
@@ -210,7 +214,6 @@ void QuComboBox::m_configure(const CuData& da)
             }
         }
 
-        QuString toolTip(da, "msg");
         toolTip.append("\n");
         if(!label.isEmpty()) toolTip += label + " ";
         if(!unit.isEmpty()) toolTip += "[" + unit + "] ";
@@ -225,7 +228,7 @@ void QuComboBox::m_configure(const CuData& da)
         d->configured = true;
     }
     else { // !ok
-        setToolTip(QuString(da, "msg"));
+        setToolTip(toolTip);
     }
 }
 
@@ -233,15 +236,15 @@ void QuComboBox::m_configure(const CuData& da)
 void QuComboBox::onUpdate(const CuData &da)
 {
     d->ok = !da["err"].toBool();
-
+    QString mes(d->u.msg(da));
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->ok)
-        d->context->getLinkStats()->addError(da["msg"].toString());
+        d->context->getLinkStats()->addError(mes.toStdString());
 
     if(!d->ok) {
         perr("QuComboBox [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
-             da["src"].toString().c_str(), da["msg"].toString().c_str(),
+             da["src"].toString().c_str(), mes.toStdString().c_str(),
                 da["dfs"].toString().c_str(), da["writable"].toInt());
 
         Cumbia* cumbia = d->context->cumbia();
@@ -251,7 +254,7 @@ void QuComboBox::onUpdate(const CuData &da)
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::CategoryWrite, true);
-            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::LevelError, CuLog::CategoryWrite);
+            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), mes.toStdString(), CuLog::LevelError, CuLog::CategoryWrite);
         }
     }
     else if(d->auto_configure &&  da.has("type", "property")) {

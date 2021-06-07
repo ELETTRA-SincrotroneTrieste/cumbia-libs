@@ -8,6 +8,7 @@
 #include <cuvariant.h>
 #include <cucontext.h>
 #include <QtDebug>
+#include <cucontrolsutils.h>
 
 #include "cucontrolsreader_abs.h"
 #include "cucontrolswriter_abs.h"
@@ -27,6 +28,7 @@ public:
     bool ok, last_val;
     bool text_from_label;
     CuContext *in_ctx, *out_ctx;
+    CuControlsUtils u;
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
@@ -232,6 +234,7 @@ void QuCheckBox::onUpdate(const CuData &da)
 {
     d->ok = !da["err"].toBool();
     bool write_op = da["activity"].toString() == "writer";
+    const QString& msg = d->u.msg(da);
     if(d->ok && d->auto_configure && da["type"].toString() == "property" &&
             da.containsKey("label")) {
         setProperty("label", QString::fromStdString(da["label"].toString()) );
@@ -246,17 +249,17 @@ void QuCheckBox::onUpdate(const CuData &da)
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::CategoryWrite, true);
-            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::LevelError, CuLog::CategoryWrite);
+            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), msg.toStdString(), CuLog::LevelError, CuLog::CategoryWrite);
         }
     }
     setEnabled(d->ok);
     // update link statistics
     d->out_ctx->getLinkStats()->addOperation();
     // tooltip message
-    setToolTip(da["msg"].toString().c_str());
+    setToolTip(msg);
 
     if(!d->ok && !write_op)
-        d->out_ctx->getLinkStats()->addError(da["msg"].toString());
+        d->out_ctx->getLinkStats()->addError(msg.toStdString());
     else if(da.containsKey("value"))
     {
         CuVariant val = da["value"];

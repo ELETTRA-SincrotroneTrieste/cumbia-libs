@@ -47,9 +47,7 @@ class CuContext
 {
 public:
     CuContext(Cumbia *cumbia, const CuControlsReaderFactoryI &r_factory);
-
     CuContext(Cumbia *cumbia, const CuControlsWriterFactoryI &w_factory);
-
     CuContext(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
 
     virtual ~CuContext();
@@ -57,55 +55,37 @@ public:
     bool isAuto() const;
 
     CuControlsReaderA *replace_reader(const std::string &s, CuDataListener* datal);
-
     CuControlsWriterA *replace_writer(const std::string &s, CuDataListener *datal);
-
     CuControlsReaderA *add_reader(const std::string &s, CuDataListener* datal);
-
     CuControlsWriterA *add_writer(const std::string &s, CuDataListener *datal);
 
     CuControlsPropertyReaderA* get_property_reader(const std::string& s, CuDataListener *datal);
 
     void disposeReader(const std::string &src = std::string());
-
     void disposeWriter(const std::string &src =  std::string());
 
     void setOptions(const CuData& options);
-
     void sendData(const CuData& data);
-
     void sendData(const QList<CuData> &data);
-
     void getData(CuData& d_inout);
-
     void getData(QList<CuData> &in_datalist);
 
     CuData options() const;
 
     CuControlsReaderA *getReader() const;
-
     CuControlsWriterA *getWriter() const;
-
     CuControlsReaderA *findReader(const std::string& srcnam);
-
     CuControlsWriterA *findWriter(const std::string& targetnam);
-
     CuControlsReaderFactoryI *getReaderFactoryI() const;
-
     CuControlsWriterFactoryI *getWriterFactoryI() const;
-
     CuControlsFactoryPool getControlsFactoryPool() const;
-
     CuLinkStats *getLinkStats() const;
 
     QList<CuControlsReaderA*> readers() const;
-
     QList<CuControlsWriterA *> writers() const;
 
     Cumbia* cumbia() const;
-
     CumbiaPool *cumbiaPool() const;
-
 
 private:
 

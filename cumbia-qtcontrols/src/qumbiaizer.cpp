@@ -391,7 +391,7 @@ int Qumbiaizer::extractCode(QString& method)
 void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMethod, QuValueFilter::State updateState)
 {
     QString methName;
-    QString message = QString::fromStdString(v["msg"].toString());
+    QString message = quizer_ptr->cucu.msg(v);
     bool ok = !v["err"].toBool();
 
     if(customMethod != NULL)

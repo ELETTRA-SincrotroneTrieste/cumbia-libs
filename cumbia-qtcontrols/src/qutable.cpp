@@ -3,6 +3,7 @@
 #include "cucontrolsreader_abs.h"
 #include <cumacros.h>
 #include <cudata.h>
+#include <cucontrolsutils.h>
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
 #include "cucontext.h"
@@ -20,6 +21,7 @@ public:
     std::vector<std::string> desired_att_props;
     QuPalette palette;
     CuContext *context;
+    CuControlsUtils u;
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
@@ -106,6 +108,7 @@ void QuTable::unsetSource()
 void QuTable::onUpdate(const CuData& da)
 {
     QColor background, border;
+    const QString& msg = d->u.msg(da);
     d->read_ok = !da["err"].toBool();
     setEnabled(d->read_ok);
 
@@ -115,12 +118,12 @@ void QuTable::onUpdate(const CuData& da)
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
-        d->context->getLinkStats()->addError(da["msg"].toString());
+        d->context->getLinkStats()->addError(msg.toStdString());
 
     if(da.containsKey("qc"))
         border = d->palette[QString::fromStdString(da["qc"].toString())];
 
-    setToolTip(da["msg"].toString().c_str());
+    setToolTip(msg);
 
     if(da["err"].toBool() ) {
         foreach(ELabel *l, cells)
