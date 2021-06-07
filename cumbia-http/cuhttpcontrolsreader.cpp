@@ -124,7 +124,7 @@ void CuHttpControlsReader::setSource(const QString &s) {
         const CuHTTPSrc hs(d->s.toStdString(), d->cu_http->getSrcHelpers());
         // d->s must store the complete src, including tango host
         d->s = QString::fromStdString(hs.prepare());
-        d->o.value("single-shot").toBool() || d->o.value("manual").toBool() ? d->method = "read" : d->method = "s";
+        d->o.value("single-shot").toBool() || d->o.value("manual").toBool() ? d->method = "read" :  d->method = "s";
         CuHTTPActionReaderFactory httprf(d->method == "read");
         httprf.mergeOptions(d->o);
         // tell the service CuTReaderConfFactory can be safely used to get configuration *and* impart command_inout

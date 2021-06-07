@@ -666,6 +666,8 @@ void QumbiaReader::m_createReaders(const QStringList &srcs)  {
         reader_ctx_options["period"] = m_conf.period;
         if(m_conf.property)
             reader_ctx_options["property"] = true;
+        if(m_conf.no_properties)
+            reader_ctx_options["no-properties"] = true;
         r->setContextOptions(reader_ctx_options);
         r->setSource(a);
         m_readers.append(r);

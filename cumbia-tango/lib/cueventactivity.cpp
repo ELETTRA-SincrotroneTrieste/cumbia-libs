@@ -16,6 +16,7 @@ CuActivityEvent::Type CuTAStopEvent::getType() const
 class CuEventActivityPrivate
 {
 public:
+    CuData options;
     CuDeviceFactoryService *device_srvc;
     TDevice *tdev;
     int event_id;
@@ -36,7 +37,7 @@ public:
  *     Instead, it keeps living within an event loop that delivers Tango events over time
  * \li CuActivity::CuADeleteOnExit: *true* lets the activity be deleted after onExit
  */
-CuEventActivity::CuEventActivity(const CuData &token,  CuDeviceFactoryService *df) : CuActivity(token)
+CuEventActivity::CuEventActivity(const CuData &token,  CuDeviceFactoryService *df, const CuData& options) : CuActivity(token)
 {
     d = new CuEventActivityPrivate;
     setFlag(CuActivity::CuAUnregisterAfterExec, false);
@@ -46,6 +47,7 @@ CuEventActivity::CuEventActivity(const CuData &token,  CuDeviceFactoryService *d
     d->event_id = -1;
     d->other_thread_id = pthread_self();
     d->se = NULL;
+    d->options = options;
 }
 
 /*! \brief the class destructor

@@ -87,6 +87,7 @@ public:
     pthread_t my_thread_id, other_thread_id;
     CuVariant argins;
     CuData point_info;
+    CuData options;
     std::multimap<const std::string, ActionData > actions_map;
     // cache for tango command_inout argins
     // multimap because argins may differ
@@ -112,7 +113,7 @@ public:
  *     the poller is not started and the activity is suspended (repeat will return -1).
  */
 CuPollingActivity::CuPollingActivity(const CuData &token,
-                                     CuDeviceFactoryService *df)
+                                     CuDeviceFactoryService *df, const CuData &options)
     : CuContinuousActivity(token)
 {
     d = new CuPollingActivityPrivate;
@@ -120,6 +121,7 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
     d->consecutiveErrCnt = 0;
     d->other_thread_id = pthread_self();
     d->successfulExecCnt = 0;
+    d->options = options;
 
     int period = 1000;
     if(token.containsKey("period"))
@@ -289,11 +291,7 @@ void CuPollingActivity::init()
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
-
-    /* get a reference to TDevice */
     d->tdev = d->device_srvc->getDevice(tk["device"].toString(), threadToken());
-    // CHECK THIS /* if polling activity is a fallback because event subscription fails, no need to add ref */
-    //if(!tk["fallback"].toBool())
     d->device_srvc->addRef(d->tdev->getName(), threadToken());
     tk["conn"] = d->tdev->isValid();
     tk["err"] = !d->tdev->isValid();
@@ -364,8 +362,6 @@ void CuPollingActivity::execute()
                 (*results)[i]["mode"] = "polled";
                 (*results)[i]["period"] = getTimeout();
                 (*results)[i]["src"] = tsrc.getName();
-                (*results)[i]["point"] = point;
-                (*results)[i]["device"] = tsrc.getDeviceName();
                 CmdData& cmd_data = d->din_cache[srcnam];
                 if(dev && cmd_data.is_empty) {
                     success = tangoworld.get_command_info(dev, point, (*results)[i]);

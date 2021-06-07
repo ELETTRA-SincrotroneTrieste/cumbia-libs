@@ -53,6 +53,7 @@ RConfig CmdLineOptions::parse(const QStringList &args)
     QCommandLineOption helpO(QStringList() << "h" << "help", "read the manual");
     QCommandLineOption help2O(QStringList() << "i" << "help-topic", "help topic specific help [--help-tango|--help-epics|--help-random]", "topic");
     QCommandLineOption listOptsO(QStringList() << "o" << "list-options", "list application options");
+    QCommandLineOption noPropO(QStringList() << "N" << "no-properties", "skip configuration phase");
 
 #if defined (HAS_CUHDB)
     QCommandLineOption dbProO(QStringList() << "d" << "db-profile", "set the db profile to <profile>", "profile");
@@ -85,6 +86,7 @@ RConfig CmdLineOptions::parse(const QStringList &args)
     m_parser.addOption(helpO);
     m_parser.addOption(help2O);
     m_parser.addOption(listOptsO);
+    m_parser.addOption(noPropO);
     m_parser.parse(args);
 
     bool ok;
@@ -95,6 +97,7 @@ RConfig CmdLineOptions::parse(const QStringList &args)
     if(m_parser.isSet(periodO) && m_parser.value(periodO).toInt(&ok) > 10 && ok) o.period = m_parser.value(periodO).toInt();
     if(m_parser.isSet(truncO) && m_parser.value(truncO).toInt(&ok) > 0 && ok) o.truncate = m_parser.value(truncO).toInt();
     if(m_parser.isSet(maxTimersO) && m_parser.value(maxTimersO).toInt(&ok) > 0 && ok) o.max_timers = m_parser.value(maxTimersO).toInt();
+    if(m_parser.isSet(noPropO)) o.no_properties = true;
 
 
     if(m_parser.isSet(propertyO)) {
