@@ -69,9 +69,8 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a, const CuDa
         // thread token. CuTReader.setOptions can customize thread grouping behaviour
         CuData tt;
         options.containsKey("thread_token") ? tt = options : tt = CuData("device", tsrc.getDeviceName());
-        at.merge(options); // as of v1.1.2, merge options into activity token
         at["period"] = d->period; // make sure at contains the new period
-        activity = new CuPollingActivity(at, df);
+        activity = new CuPollingActivity(at, df, options);
         const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
         const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
         d->cumbia_t->registerActivity(activity, this, tt, fi, bf);

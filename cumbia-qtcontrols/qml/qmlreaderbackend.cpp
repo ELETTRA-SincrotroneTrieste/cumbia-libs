@@ -232,10 +232,10 @@ void QmlReaderBackend::onUpdate(const CuData &da)
         m_set_value(da["value"]);
     }
     QString qs, sts;
-    if(d->read_ok && da["quality_color"].isValid())
-        qs = QString::fromStdString(da["quality_color"].toString());
-    if(d->read_ok && da["state_color"].isValid())
-        sts = QString::fromStdString(da["state_color"].toString());
+    if(d->read_ok && da["qc"].isValid())
+        qs = QString::fromStdString(da["qc"].toString());
+    if(d->read_ok && da["sc"].isValid())
+        sts = QString::fromStdString(da["sc"].toString());
 
     if(!d->read_ok) {
         m_set_value(CuVariant("####"));

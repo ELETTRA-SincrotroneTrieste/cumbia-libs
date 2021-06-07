@@ -29,7 +29,7 @@
 
 WSSourceConfiguration::WSSourceConfiguration()
 {
-    m_keys   << "min_value" << "max_value" << "data_type" << "display_unit" << "format" << "data_format";
+    m_keys   << "min_value" << "max_value" << "dt" << "display_unit" << "format" << "df";
 }
 
 void WSSourceConfiguration::add(const QString &key, const QString &value)
@@ -53,8 +53,8 @@ CuData WSSourceConfiguration::toCuData() const
     res["max"] = m_map["max_value"].toStdString();
     res["display_unit"] = m_map["display_unit"].toStdString();
     res["format"] = m_map["format"].toStdString();
-    res["data_type"] = m_map["data_type"].toInt();
-    res["data_format"] = m_map["data_format"].toInt();
+    res["dt"] = m_map["dt"].toInt();
+    res["df"] = m_map["df"].toInt();
     return res;
 }
 
@@ -205,7 +205,7 @@ void CuWSActionReader::onNetworkReplyFinished(QNetworkReply *reply)
                 conf["src"] = d->tsrc.getName();
                 conf["err"] = false; //d->source_configuration.error();
                 if(d->proto_helper_i)
-                    conf["data_format_str"] = d->proto_helper_i->dataFormatToStr(conf["data_format"].toInt());
+                    conf["dfs"] = d->proto_helper_i->dataFormatToStr(conf["df"].toInt());
                 conf["msg"] = d->source_configuration.errorMessage().toStdString();
                 conf["type"] = "property";
 

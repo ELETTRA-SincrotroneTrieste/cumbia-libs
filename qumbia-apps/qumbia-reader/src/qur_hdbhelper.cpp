@@ -118,7 +118,7 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
             if(on_file) {
                 // write data type and write type on file
                 fprintf(fp, ",%s,%s,%s,%s,%s\n", d["data_type_str"].toString().c_str(),
-                        d["write_mode_str"].toString().c_str(), d["data_format_str"].toString().c_str(),
+                        d["write_mode_str"].toString().c_str(), d["dfs"].toString().c_str(),
                         d1.c_str(), d2.c_str());
             }
             else {

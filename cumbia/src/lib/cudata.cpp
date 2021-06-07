@@ -215,7 +215,7 @@ bool CuData::has(const std::string &key, const std::string &value) const
  * \code
     CuData at("src", source.getName()); // string
     at["device"] = source.getDeviceName(); // string
-    at["activity"] = "event"; // string
+    at["activity"] = "E"; // string
     at["period"] = source.period(); // integer
     at["err"] = false; // bool
  * \endcode

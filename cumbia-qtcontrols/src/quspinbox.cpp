@@ -51,7 +51,7 @@ void QuSpinBox::onUpdate(const CuData &da)
     {
         perr("QuSpinBox [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
              da["src"].toString().c_str(), da["msg"].toString().c_str(),
-                da["data_format_str"].toString().c_str(), da["writable"].toInt());
+                da["dfs"].toString().c_str(), da["writable"].toInt());
 
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
@@ -66,7 +66,7 @@ void QuSpinBox::onUpdate(const CuData &da)
     else if(d->auto_configure && da["type"].toString() == "property")
     {
         QString desc = "";
-        if(da["data_format_str"] == "scalar" && da["writable"].toInt() > 0)
+        if(da["dfs"] == "scalar" && da["writable"].toInt() > 0)
         {
             /* first apply format, if - correctly - specified */
             CuVariant m, M;
@@ -97,7 +97,7 @@ void QuSpinBox::onUpdate(const CuData &da)
         }
         else
             perr("QuSpinBox [%s]: invalid data format \"%s\" or read only source (writable: %d)", qstoc(objectName()),
-                 da["data_format_str"].toString().c_str(), da["writable"].toInt());
+                 da["dfs"].toString().c_str(), da["writable"].toInt());
 
     }
 }

@@ -337,8 +337,8 @@ void CuFormulaReader::onNewData(const CuData &da)
                         err = !resvar.isValid();
                         if(!err) {
                             dat["value"] = resvar;
-                            resvar.getFormat() == CuVariant::Vector ? dat["data_format_str"] = "vector"
-                                    : dat["data_format_str"] = "scalar";
+                            resvar.getFormat() == CuVariant::Vector ? dat["dfs"] = "vector"
+                                    : dat["dfs"] = "scalar";
                         }
                         else
                             msg = d->message.toStdString(); // set by m_fromScriptValue
@@ -360,16 +360,16 @@ void CuFormulaReader::onNewData(const CuData &da)
             d->messages[index] = msg;
 
             // update quality for index idx: in case of error, Invalid quality
-            !err ? d->qualities[index] = da["quality"].toInt() :
+            !err ? d->qualities[index] = da["q"].toInt() :
                    d->qualities[index] = CuDataQuality(CuDataQuality::Invalid);
 
         } // if(!err && idx > -1 && da.containsKey("value"))
 
         // now combine all qualities together
         CuDataQuality cuq = combinedQuality();
-        dat["quality"] = cuq.toInt();
-        dat["quality_color"] = cuq.color();
-        dat["quality_string"] = cuq.name();
+        dat["q"] = cuq.toInt();
+        dat["qc"] = cuq.color();
+        dat["qs"] = cuq.name();
         dat["msg"] = combinedMessage();
         dat["mode"] = combinedModes();
         if(d->values.size() == 1) // single source
@@ -451,8 +451,8 @@ std::string CuFormulaReader::combinedModes() const
     if(combinedMode & RefreshModeUndefined)
         return "undefined";
     else if(combinedMode & Polled)
-        return "polled";
-    return "event";
+        return "P";
+    return "E";
 }
 
 std::vector<bool> CuFormulaReader::errors() const
@@ -630,9 +630,9 @@ bool CuFormulaReader::m_checkDisplayUnit(const CuVariant &duv)
 
 CuFormulaReader::RefreshMode CuFormulaReader::m_getRefreshMode(const std::string &mode) const
 {
-    if(mode == "event")
+    if(mode == "E")
         return CuFormulaReader::Event;
-    if(mode == "polled")
+    if(mode == "P")
         return CuFormulaReader::Polled;
     if(mode == "oneshot")
         return CuFormulaReader::OneShot;

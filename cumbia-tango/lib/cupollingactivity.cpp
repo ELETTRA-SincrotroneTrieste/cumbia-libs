@@ -320,13 +320,11 @@ void CuPollingActivity::init()
  * after 5 seconds and the following ones at intervals of 10 seconds until a successful read.
  *
  * \par contents of the CuData delivered by publishResult ("key": value)
- * \li "device": string: the Tango device name (use CuVariant::toString to convert)
- * \li "point": string: the Tango point (command or attribute name) (CuVariant::toString)
  * \li "is_command": bool: true if the source is a command, false if it is an attribute (CuVariant::toBool)
  * \li "err": bool: true if an error occurred, false otherwise
- * \li "mode": string: the read mode: "event" or "polled" ("polled" in this case)
+ * \li "mode": string: the read mode: "E" or "P" ("P" in this case)
  * \li "period": integer: the polling period, in milliseconds (CuVariant::toInt)
- * \li "msg": string: a message describing the read operation and its success/failure
+ * \li "msg": string: a message describing a read error upon failure. Not set in case of success (since: 1.3.0)
  * \li refer to \ref md_lib_cudata_for_tango for a complete description of the CuData key/value
  *     pairs that result from attribute or command read operations.
  *
@@ -359,7 +357,7 @@ void CuPollingActivity::execute()
             bool is_command = tsrc.getType() == TSource::SrcCmd;
             if(is_command) { // write into results[i]
                 (*results)[i] = getToken();
-                (*results)[i]["mode"] = "polled";
+                (*results)[i]["mode"] = "P";
                 (*results)[i]["period"] = getTimeout();
                 (*results)[i]["src"] = tsrc.getName();
                 CmdData& cmd_data = d->din_cache[srcnam];
@@ -387,11 +385,9 @@ void CuPollingActivity::execute()
             }
             else { // save into attdatalist
                 attdatalist[att_idx] = getToken();
-                attdatalist[att_idx]["mode"] = "polled";
+                attdatalist[att_idx]["mode"] = "P";
                 attdatalist[att_idx]["period"] = getTimeout();
                 attdatalist[att_idx]["src"] = tsrc.getName();
-                attdatalist[att_idx]["point"] = point;
-                attdatalist[att_idx]["device"] = tsrc.getDeviceName();
                 att_idx++;
             }
             i++;

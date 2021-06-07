@@ -13,8 +13,8 @@ value               |CuVariant                      |    -          |The attribu
 data                |bool                           |true           |A CuData with configuration data will have the "data" key always set to true                               |   -
 msg                 |string                         |    -          |A message bearing information about the success of the operation.                                          |See the *err* key below
 err                 |bool                           |    -          |true if an error occurred, false otherwise                                                                 |See the *msg* key above
-data_format         |Tango::AttrDataFormat (enum)   |    -          |Tango attribute format, Scalar,Spectrum,...                                                                |convert with toInt()
-data_format_str     |string                         |    -          |string representation of data_format                                                                       |   -
+df		            |Tango::AttrDataFormat (enum)   |    -          |Tango attribute format, Scalar,Spectrum,...                                                                |convert with toInt()
+dfs			        |string                         |    -          |string representation of data_format                                                                       |   -
 data_type           |int                            |    -          |Tango data type                                                                                            |   -
 description         |string                         |    -          |Tango attribute description from AttributeInfo                                                             |   -
 display_unit        |string                         |    -          |Tango display unit from AttributeInfo                                                                      |   -
@@ -46,7 +46,7 @@ description         |string                         |    -          |Tango attri
 display_unit        |string                         |    -          |Tango display unit from AttributeInfo                                                                      |   -
 standard_unit       |string                         |    -          |Tango standard unit from AttributeInfo                                                                     |   -
 unit                |string                         |    -          |Tango "unit" from AttributeInfo                                                                            |   -
-success_color       |string                         |    -          |A string with the name of the color provided the class CuTangoWorldConfig associated to an error/success   |Can be used to decorate widgets
+success		        |string                         |    -          |A string with the name of the color provided the class CuTangoWorldConfig associated to an error/success   |Can be used to decorate widgets
 
 
 #### The CuData received upon *command info* configuration type will contain the following keys:
@@ -62,11 +62,11 @@ value               |CuVariant                      |    -          |The attribu
 cmd_name            |string                         |   -           |The command name, from Tango::CommandInfo                                                                  |from Tango::CommandInfo, devapi.h
 in_type             |long                           |   -           |Input parameter data type                                                                                  |from Tango::CommandInfo, devapi.h
 out_type            |long                           |   -           |Output parameter data type                                                                                 |from Tango::CommandInfo, devapi.h
-data_type           |long                           |   -           |Output parameter type, same as "out_type", in order to be consistent with *attribute configuration* CuData |see CuData "data_type" from attribute configuration above
+dt		            |long                           |   -           |Output parameter type, same as "out_type", in order to be consistent with *attribute configuration* CuData |see CuData "data_type" from attribute configuration above
 in_type_desc        |string                         |   -           |Input parameter description                                                                                |from Tango::CommandInfo, devapi.h
 out_type_desc       |string                         |   -           |Output parameter description                                                                               |from Tango::CommandInfo, devapi.h
-data_format         |Tango::AttrDataFormat (enum)   |   -           |Provided for consistency with *attribute configuration* CuData, determined from CommandInfo out_type       |see CuData "data_format" from attribute configuration above
-success_color       |string                         |    -          |A string with the name of the color provided the class CuTangoWorldConfig associated to an error/success   |Can be used to decorate widgets
+df		            |Tango::AttrDataFormat (enum)   |   -           |Provided for consistency with *attribute configuration* CuData, determined from CommandInfo out_type       |see CuData "df" from attribute configuration above
+color               |string                         |    -          |A string with the name of the color provided the class CuTangoWorldConfig associated to an error/success   |Can be used to decorate widgets
 
 
 ### Example
@@ -117,17 +117,17 @@ data                |bool                           |true           |A CuData wi
 src                 |string                         |   -           |The source name as configured with setSource. Tango device / attribute                                     |*src* 
 msg                 |string                         |   -           |A message bearing information about the success of the operation.                                          |See the *err* key below
 err                 |bool                           |   -           |true if an error occurred, false otherwise                                                                 |See the *msg* key abovekey always present in CuData
-success_color       |string                         |    -          |A string with the name of the color provided the class CuTangoWorldConfig associated to an error/success   |Can be used to decorate widgets
+color	            |string                         |    -          |A string with the name of the color provided the class CuTangoWorldConfig associated to an error/success   |Can be used to decorate widgets
 timestamp_ms        |time_t + suseconds_t           |   -           |Timestamp as integer: a struct timeval is used to store the timestamp. Formula: tiv.tv_sec * 1000 + tiv.tv_usec / 1000;          |can convert with toLongInt()
 timestamp_us        |double                         |   -           |timestamp in a double: seconds.microseconds: static_cast<double>(tiv.tv_sec) + static_cast<double>(tiv.tv_usec) * 1e-6 | convert with toDouble
-quality             |const Tango::AttrQuality       |   -           |Tango attribute quality { ATTR_VALID, ATTR_INVALID, ATTR_ALARM, ATTR_CHANGING, ATTR_WARNING }              |from server/idl/tango.h. Convert with toInt
-quality_color       |string                         |   -           |A string with the name of the color provided the class CuTangoWorldConfig                                  |can be used to decorate widgets. Use in combination with QuPalette. Convert with toString
-data_format_str     |string                         |   -           |Data format as string ("scalar", "vector", matrix", "data format unknown")                                 |consistent naming across tango and epics
+q		            |const Tango::AttrQuality       |   -           |Tango attribute quality { ATTR_VALID, ATTR_INVALID, ATTR_ALARM, ATTR_CHANGING, ATTR_WARNING }              |from server/idl/tango.h. Convert with toInt
+qc			        |string                         |   -           |A string with the name of the color provided the class CuTangoWorldConfig                                  |can be used to decorate widgets. Use in combination with QuPalette. Convert with toString
+dfs			        |string                         |   -           |Data format as string ("scalar", "vector", matrix", "data format unknown")                                 |consistent naming across tango and epics
 value               |CuVariant                      |   -           |The attribute value. (read)                                                                                |The tango read value
 value               |string                         |   -           |For Tango::DEV_STATE attribute types, the state is mapped into its string representation.                  |Convenience conversion applied only for DEV_STATE attribute data type.
 w_value             |CuVariant                      |   -           |The attribute write value. Available if the attribute is read/write, key missing otherwise.                |Tango write value in read/write attributes
-state_color         |string                         |   -           |A string describing a color for a Tango::DEV_STATE, configuration possible through CuTangoWorldConfig.     |Can be used to decorate a widget. Available only if attribute.get_type() == Tango::DEV_STATE
-state               |long int                       |   -           |A Tango::DEV_STATE casted to long int. Available for Tango::DEV_STATE attributes                           |Available only if attribute.get_type() == Tango::DEV_STATE
+sc		            |string                         |   -           |state color: a string describing a color for a Tango::DEV_STATE, configuration possible through CuTangoWorldConfig.     |Can be used to decorate a widget. Available only if attribute.get_type() == Tango::DEV_STATE
+s	                |long int                       |   -           |A Tango::DEV_STATE casted to long int. Available for Tango::DEV_STATE attributes                           |Available only if attribute.get_type() == Tango::DEV_STATE
 
 
 ### CuData contents from Tango commands
@@ -142,15 +142,15 @@ data                |bool                           |true           |A CuData wi
 src                 |string                         |   -           |The source name as configured with setSource. Tango device / attribute                                     |*src* 
 msg                 |string                         |   -           |A message bearing information about the success of the operation.                                          |See the *err* key below
 err                 |bool                           |   -           |true if an error occurred, false otherwise                                                                 |See the *msg* key abovekey always present in CuData
-success_color       |string                         |    -          |A string with the name of the color provided the class CuTangoWorldConfig associated to an error/success   |Can be used to decorate widgets
+color		        |string                         |    -          |A string with the name of the color provided the class CuTangoWorldConfig associated to an error/success   |Can be used to decorate widgets
 timestamp_ms        |time_t + suseconds_t           |   -           |Timestamp as integer: a struct timeval is used to store the timestamp. Formula: tiv.tv_sec * 1000 + tiv.tv_usec / 1000;          |can convert with toLongInt()
 timestamp_us        |double                         |   -           |timestamp in a double: seconds.microseconds: static_cast<double>(tiv.tv_sec) + static_cast<double>(tiv.tv_usec) * 1e-6 | convert with toDouble
-data_format_str     |string                         |   -           |Data format as string ("scalar", "vector", matrix", "data format unknown")                                 |consistent naming across tango and epics
-data_type           |int                            |   -           |Tango::CmdArgType casted to an int: enum CmdArgType {DEV_VOID = 0,DEV_BOOLEAN,DEV_SHORT,DEV_LONG,... }     |From /lib/cpp/server/tango_const.h
+dfs			        |string                         |   -           |Data format as string ("scalar", "vector", matrix", "data format unknown")                                 |consistent naming across tango and epics
+dt		            |int                            |   -           |Tango::CmdArgType casted to an int: enum CmdArgType {DEV_VOID = 0,DEV_BOOLEAN,DEV_SHORT,DEV_LONG,... }     |From /lib/cpp/server/tango_const.h
 value               |CuVariant                      |   -           |The attribute value. (read)                                                                                |The tango read value
 value               |string                         |   -           |For Tango::DEV_STATE attribute types, the state is mapped into its string representation.                  |Convenience conversion applied only for DEV_STATE attribute data type.
-state_color         |string                         |   -           |A string describing a color for a Tango::DEV_STATE, configuration possible through CuTangoWorldConfig.     |Can be used to decorate a widget. Available only if attribute.get_type() == Tango::DEV_STATE
-state               |long int                       |   -           |A Tango::DEV_STATE casted to long int. Available for Tango::DEV_STATE attributes                           |Available only if attribute.get_type() == Tango::DEV_STATE
+sc		            |string                         |   -           |A string describing a color for a Tango::DEV_STATE, configuration possible through CuTangoWorldConfig.     |Can be used to decorate a widget. Available only if attribute.get_type() == Tango::DEV_STATE
+s	                |long int                       |   -           |A Tango::DEV_STATE casted to long int. Available for Tango::DEV_STATE attributes                           |Available only if attribute.get_type() == Tango::DEV_STATE
 
 
 ### CuData contents for attribute properties.

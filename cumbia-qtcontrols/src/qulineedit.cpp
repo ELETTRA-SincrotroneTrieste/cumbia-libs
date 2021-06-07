@@ -51,7 +51,7 @@ void QuLineEdit::onUpdate(const CuData &da)
     {
         perr("QuLineEdit [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
              da["src"].toString().c_str(), da["msg"].toString().c_str(),
-                da["data_format_str"].toString().c_str(), da["writable"].toInt());
+                da["dfs"].toString().c_str(), da["writable"].toInt());
 
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
@@ -75,7 +75,7 @@ void QuLineEdit::onUpdate(const CuData &da)
         }
         else
             perr("QuLineEdit [%s]: (data format \"%s\") is read only (writable: %d)", qstoc(objectName()),
-                 da["data_format_str"].toString().c_str(), da["writable"].toInt());
+                 da["dfs"].toString().c_str(), da["writable"].toInt());
     }
 }
 

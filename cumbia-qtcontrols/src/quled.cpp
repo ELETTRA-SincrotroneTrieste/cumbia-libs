@@ -92,17 +92,17 @@ void QuLed::onUpdate(const CuData &da)
     if(!d->read_ok)
         d->context->getLinkStats()->addError(da["msg"].toString());
 
-    if(da.containsKey("quality_color"))
-        background = d->palette[QString::fromStdString(da["quality_color"].toString())];
-    if(da.containsKey("success_color"))
-        border = d->palette[QString::fromStdString(da["success_color"].toString())];
+    if(da.containsKey("qc"))
+        background = d->palette[QString::fromStdString(da["qc"].toString())];
+    if(da.containsKey("color"))
+        border = d->palette[QString::fromStdString(da["color"].toString())];
 
     setToolTip(da["msg"].toString().c_str());
 
     setDisabled(da["err"].toBool() );
-    if(d->read_ok && da.containsKey("state_color"))
+    if(d->read_ok && da.containsKey("sc"))
     {
-        CuVariant v = da["state_color"];
+        CuVariant v = da["sc"];
         setColor(d->palette[QString::fromStdString(v.toString())]);
     }
     else if(d->read_ok && da.containsKey("value"))
@@ -120,8 +120,8 @@ void QuLed::onUpdate(const CuData &da)
     else if(!d->read_ok)
         setColor(QColor(Qt::gray));
 
-    if(da.containsKey("success_color"))
-        setBorderColor(d->palette[QString::fromStdString(da["success_color"].toString())]);
+    if(da.containsKey("color"))
+        setBorderColor(d->palette[QString::fromStdString(da["color"].toString())]);
 
     emit newData(da);
 }

@@ -38,7 +38,7 @@ ConversionDialog::ConversionDialog(QWidget *parent, const QString& outpath, bool
         comment = comm;
         lineno = line;
     */
-    tree->setHeaderLabels(QStringList() << "Type" << "from" << "to" << "file" << "quality" << "comment" << "line");
+    tree->setHeaderLabels(QStringList() << "Type" << "from" << "to" << "file" << "q" << "comment" << "line");
     tree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
     lo->addWidget(tree, 0, 0, 6, 7);

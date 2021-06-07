@@ -66,7 +66,7 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
 #endif
 
     m_props_map[Low] = QStringList() << "min" << "min_alarm" << "min_warning" << "max_warning" <<
-                                        "max_alarm" << "max" << "data_format_str" << "display_unit"
+                                        "max_alarm" << "max" << "dfs" << "display_unit"
                                      << "label" << "description";
     m_props_map[Medium] = QStringList() << "activity" << "worker_activity" << "worker_thread";
 

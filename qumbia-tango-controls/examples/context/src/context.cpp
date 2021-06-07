@@ -82,7 +82,7 @@ Context::Context(CumbiaPool *cumbia_pool, QWidget *parent) :
     QComboBox *cbMode = new QComboBox(this);
     cbMode->setObjectName("cbMode");
     lo->addWidget(cbMode, 2, 4, 1, 2);
-    cbMode->insertItems(0, QStringList() << "event [change]" << "polled" << "manual" << "archive event" << "periodic event");
+    cbMode->insertItems(0, QStringList() << "event [change]" << "P" << "manual" << "archive event" << "periodic event");
     QPushButton *pbApplyMode = new QPushButton("Set Mode", this);
     pbApplyMode->setToolTip("Apply the mode chosen on the left box.");
     connect(pbApplyMode, SIGNAL(clicked()), this, SLOT(setMode()));

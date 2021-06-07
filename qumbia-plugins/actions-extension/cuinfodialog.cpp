@@ -516,7 +516,7 @@ div { width=80%; } \
 
  QStringList priorityKeys = QStringList() << "src" << "device" << "point" <<
                                              "mode" << "err" << "msg" << "period" <<
-                                             "data_format_str";
+                                             "dfs";
 
  // 1. information table
  html += "<table>\n<tr><th colspan=\"2\"><cite>information</cite></th></tr>";
@@ -599,7 +599,7 @@ div { width=80%; } \
  void CuInfoDialog::newLiveData(const CuData &data)
  {
      QString src = QString::fromStdString(data["src"].toString());
-     std::string format = data["data_format_str"].toString();
+     std::string format = data["dfs"].toString();
      QWidget *plotw = NULL;
      QTabWidget *liveTabW = findChild<QTabWidget *>(src + "liveTabW");
      QuTrendPlot *trplot = findChild<QuTrendPlot *>("trplot_" + src);

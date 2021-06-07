@@ -169,7 +169,7 @@ QString QuLabel::displayUnit() const
  * Altering the QuPalette of a QuLabel (or a QuLed) is useful when a given state is associated
  * to a predefined color (e.g. ON:green, OFF:white, ALARM:yellow, FAULT:red) and you want different
  * combinations. Cumbia engines must store a *state_color* key/value pair in the *CuVariant* data
- * delivered by the *onUpdate* method when the engine itself handles a *"state"* data type.
+ * delivered by the *onUpdate* method when the engine itself handles a *"s"* data type.
  *
  * @see quPalette
  */
@@ -256,8 +256,8 @@ void QuLabel::onUpdate(const CuData &da)
         }
     }
 
-    if(da.containsKey("state_color")) {
-        CuVariant v = da["state_color"];
+    if(da.containsKey("sc")) {
+        CuVariant v = da["sc"];
         background = d->palette[QString::fromStdString(v.toString())];
         if(background.isValid())
             setBackground(background);
@@ -265,9 +265,9 @@ void QuLabel::onUpdate(const CuData &da)
     else if(!background_modified) {
         // background has not already been set by QuLabelBase::setValue (this happens if either a
         // boolean display or enum display have been configured)
-        // if so, use the "quality_color" as a background
-        if(da.containsKey("quality_color"))
-            background = d->palette[QString::fromStdString(da["quality_color"].toString())];
+        // if so, use the "qc" as a background
+        if(da.containsKey("qc"))
+            background = d->palette[QString::fromStdString(da["qc"].toString())];
         setBackground(background); // checks if background is valid
     }
 

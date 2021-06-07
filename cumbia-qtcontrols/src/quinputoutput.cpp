@@ -240,7 +240,7 @@ void QuInputOutput::onNewData(const CuData &da)
 void QuInputOutput::m_configure(const CuData &da)
 {
     std::string target = da["src"].toString();
-    if(da["data_format_str"].toString() == "scalar" && da["writable"].toInt() > 0)
+    if(da["dfs"].toString() == "scalar" && da["writable"].toInt() > 0)
     {
         CuVariant v = da["value"];
         if(d->w_type == None && da["values"].isValid())
@@ -323,7 +323,7 @@ void QuInputOutput::m_configure(const CuData &da)
     }
     else
         perr("QuInputOutput [%s]: invalid data format \"%s\" or read only source \"%s\" (writable: %d)", qstoc(objectName()),
-            da["data_format_str"].toString().c_str(), target.c_str(), da["writable"].toInt());
+            da["dfs"].toString().c_str(), target.c_str(), da["writable"].toInt());
 
     if(inputWidget())
         inputWidget()->setObjectName("inputWidget");

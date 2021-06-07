@@ -151,7 +151,7 @@ void CuRandomGenActivity::init()
     res["max"] = d->max;
     res["period"] = d->repeat;
     res["size"] = d->size;
-    d->size > 1 ? res["data_format_str"] = "vector" : res["data_format_str"] = "scalar";
+    d->size > 1 ? res["dfs"] = "vector" : res["dfs"] = "scalar";
     if(!d->f_generator)
         d->f_generator = new CuRndRandomFunctionGen();
     // 1. configure

@@ -74,7 +74,7 @@ void CuEpWidgets::configure(const CuData &d)
 
     const int plotRowCnt = 5;
     int layout_row = 2;
-    int format = d["data_format"].toInt();
+    int format = d["df"].toInt();
 
     QGridLayout *lo = qobject_cast<QGridLayout *>(ui->widget->layout());
     QStringList srcs = ui->leSrcs->text().split(",", QString::SkipEmptyParts);

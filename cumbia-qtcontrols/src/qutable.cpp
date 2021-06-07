@@ -117,8 +117,8 @@ void QuTable::onUpdate(const CuData& da)
     if(!d->read_ok)
         d->context->getLinkStats()->addError(da["msg"].toString());
 
-    if(da.containsKey("quality_color"))
-        border = d->palette[QString::fromStdString(da["quality_color"].toString())];
+    if(da.containsKey("qc"))
+        border = d->palette[QString::fromStdString(da["qc"].toString())];
 
     setToolTip(da["msg"].toString().c_str());
 
@@ -161,8 +161,8 @@ void QuTable::onUpdate(const CuData& da)
             setToolTip(QString("Wrong data type %1 format %2").arg(val.getType()).arg(val.getFormat()));
         }
     }
-    if(da.containsKey("state_color")) {
-        CuVariant v = da["state_color"];
+    if(da.containsKey("sc")) {
+        CuVariant v = da["sc"];
         background = d->palette[QString::fromStdString(v.toString())];
     }
 

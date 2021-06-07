@@ -96,7 +96,7 @@ std::string CuHttpTangoHelper::dataTypeToStr(int dt) const
     else if(dt == 14) return "ushort";
     else if(dt == 15) return "ulong";
     else if(dt == 16) return "string";
-    else if(dt == 19) return "state";
+    else if(dt == 19) return "s";
     else if(dt == 20) return "const string";
     else if(dt == 22) return "uchar";
     else if(dt == 23) return "long64";

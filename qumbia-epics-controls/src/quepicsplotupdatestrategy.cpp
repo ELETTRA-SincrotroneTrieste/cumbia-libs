@@ -28,10 +28,10 @@ void QuEpicsPlotUpdateStrategy::update(const CuData &da, QWidget *widget)
 {
     QColor background, border;
     QuPalette palette;
-    if(da.containsKey("quality_color"))
-        background = palette[QString::fromStdString(da["quality_color"].toString())];
-    if(da.containsKey("success_color"))
-        border = palette[QString::fromStdString(da["success_color"].toString())];
+    if(da.containsKey("qc"))
+        background = palette[QString::fromStdString(da["qc"].toString())];
+    if(da.containsKey("color"))
+        border = palette[QString::fromStdString(da["color"].toString())];
 
     bool read_ok = !da["err"].toBool();
 

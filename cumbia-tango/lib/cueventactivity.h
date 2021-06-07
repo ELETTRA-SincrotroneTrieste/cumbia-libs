@@ -51,8 +51,7 @@ class CuEventActivity : public CuActivity, public Tango::CallBack
 public:
     enum Type { CuEventActivityType = CuActivity::User + 2 };
 
-    CuEventActivity(const CuData& token, CuDeviceFactoryService *df);
-
+    CuEventActivity(const CuData& token, CuDeviceFactoryService *df, const CuData &extras);
     ~CuEventActivity();
 
     // CuActivity interface

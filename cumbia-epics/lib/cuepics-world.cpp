@@ -296,15 +296,15 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
     bool error = false;
     void *val_ptr = dbr_value_ptr(pv->value, pv->dbrType);
 
-    da["data_type"] = pv->dbrType;
+    da["dt"] = pv->dbrType;
     da["data_type_str"] = dbr_type_to_text(pv->dbrType);
 
     if(pv->nElems == 1) /* scalar */
-        da["data_format_str"] = "scalar";
+        da["dfs"] = "scalar";
     else if(pv->nElems > 1)
-        da["data_format_str"] = "vector";
+        da["dfs"] = "vector";
     else
-        da["data_format_str"] = "invalid";
+        da["dfs"] = "invalid";
 
     da["writable"] = static_cast<int>(ca_write_access(pv->ch_id));
 
@@ -457,7 +457,7 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
 
     if(!error)
         msg = da["src"].toString() + " [" + da["timestamp_str"].toString() + "] STAT: " + da["status"].toString()
-                + " SEV: " + da["severity"].toString() + " QUALITY: " + da["quality_string"].toString();
+                + " SEV: " + da["severity"].toString() + " QUALITY: " + da["qs"].toString();
     da["err"] = error;
     da["msg"] = msg;
 }
@@ -469,7 +469,7 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
 std::string CuEpicsWorld::extractException(exception_handler_args excargs, CuData &da) const
 {
     std::string s;
-    da["data_type"] = excargs.type;
+    da["dt"] = excargs.type;
     da["data_type_str"] = dbr_type_to_text(excargs.type);
     s += "data type: " + da["data_type_str"].toString() + "[" + std::to_string(excargs.type) + "]";
 
@@ -660,12 +660,12 @@ void CuEpicsWorld::putTimestamp(void* ep_data, CuData &dt) const
 
     int sev = (static_cast<T *>(ep_data)->severity);
 
-    // set an engine independent "quality" value, depending on severity
+    // set an engine independent "q" value, depending on severity
     // and on the "err" value in dt
     CuDataQuality dq = m_setQuality(sev, dt);
-    dt["quality"] = dq.toInt();
-    dt["quality_color"] = dq.color();
-    dt["quality_string"] = dq.name();
+    dt["q"] = dq.toInt();
+    dt["qc"] = dq.color();
+    dt["qs"] = dq.name();
 
     if((sev) >= 0 && (sev) <= (signed)lastEpicsAlarmSev) {
         //dt["severity"] = std::string(epicsAlarmSeverityStrings[sev]);

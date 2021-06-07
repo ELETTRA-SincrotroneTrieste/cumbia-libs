@@ -217,7 +217,7 @@ void QmlWriterBackend::onUpdate(const CuData &da)
     if(!d->ok) {
         perr("QmlWriterBackend [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
              da["src"].toString().c_str(), da["msg"].toString().c_str(),
-                da["data_format_str"].toString().c_str(), da["writable"].toInt());
+                da["dfs"].toString().c_str(), da["writable"].toInt());
 
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
@@ -234,7 +234,7 @@ void QmlWriterBackend::onUpdate(const CuData &da)
         // --------------------------------------------------------------------------------------------
         // You may want to check data format and write type and issue a warning or avoid configuration
         // at all if they are not as expected
-        // if(da["data_format_str"] == "scalar" && da["writable"].toInt() > 0)
+        // if(da["dfs"] == "scalar" && da["writable"].toInt() > 0)
         // --------------------------------------------------------------------------------------------
         m_configure(da);
     }

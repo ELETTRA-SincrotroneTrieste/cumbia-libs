@@ -58,7 +58,7 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
 
     // NOTE
     // these are the keys storing values that necessary need to be converted to int
-    QStringList i_keys = QStringList() << "state" << "quality" << "writable" << "data_type" << "data_format";
+    QStringList i_keys = QStringList() << "s" << "q" << "writable" << "dt" << "df";
     QStringList special_keys = QStringList() << "timestamp" << "timestamp_us" << "timestamp_ms" << "err" << "error" << "msg";
 
     foreach(const QString &k, keys + special_keys ) {

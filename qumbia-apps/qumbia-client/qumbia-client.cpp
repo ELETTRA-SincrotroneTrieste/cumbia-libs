@@ -103,7 +103,7 @@ void QumbiaClient::configure(const CuData &d)
         sender()->disconnect(this, SLOT(configure(CuData)));
         const int plotRowCnt = 5;
         int layout_row = 2;
-        std::string format = d["data_format_str"].toString();
+        std::string format = d["dfs"].toString();
 
         QGridLayout *lo = qobject_cast<QGridLayout *>(ui->widget->layout());
         int data_dim = 1;

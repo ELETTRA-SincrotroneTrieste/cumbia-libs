@@ -37,14 +37,14 @@ void SimpleFormulaEval::run()
     d->result["timestamp_ms"] = static_cast<long int>(QDateTime::currentMSecsSinceEpoch());
     if(sval.isValid()) {
         CuVariant val = qobject_cast<CuFormulaReader *>(parent())->fromScriptValue(sval);
-        val.getFormat() == CuVariant::Scalar ? d->result["data_format_str"] = "scalar" :
-                d->result["data_format_str"] = "vector";
+        val.getFormat() == CuVariant::Scalar ? d->result["dfs"] = "scalar" :
+                d->result["dfs"] = "vector";
         d->result["value"] = val;
         dq.set(CuDataQuality::Valid);
     }
-    d->result["quality"] = dq.toInt();
-    d->result["quality_color"] = dq.color();
-    d->result["quality_string"] = dq.name();
+    d->result["q"] = dq.toInt();
+    d->result["qc"] = dq.color();
+    d->result["qs"] = dq.name();
 }
 
 void SimpleFormulaEval::publishResult()

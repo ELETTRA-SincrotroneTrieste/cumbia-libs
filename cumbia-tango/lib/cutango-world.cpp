@@ -94,8 +94,8 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
     d->error = false;
     d->message = "";
     int t = (Tango::CmdArgType) data->get_type();
-    da["data_format_str"] = cmdArgTypeToDataFormat(static_cast<Tango::CmdArgType>(t));
-    da["data_type"] = t;
+    da["dfs"] = cmdArgTypeToDataFormat(static_cast<Tango::CmdArgType>(t));
+    da["dt"] = t;
 
     if (data->is_empty())
     {
@@ -115,8 +115,8 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
             Tango::DevState temp;
             *data >> temp;
             da["value"] = wc.stateString(temp);
-            da["state"] = static_cast<long int>(temp);
-            da["state_color"] = wc.stateColorName(temp);
+            da["s"] = static_cast<long int>(temp);
+            da["sc"] = wc.stateColorName(temp);
             break;
         }
         case Tango::DEV_BOOLEAN:
@@ -251,10 +251,6 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
             break;
         } // end switch(t)
 
-        time_t tp;
-        time(&tp);
-        d->message = da["mode"].toString() + ": " + dateTimeToStr(&tp) + "[" + da["data_format_str"].toString() + "]";
-
     } catch (Tango::DevFailed &e) {
         d->error = true;
         d->message = strerror(e);
@@ -272,15 +268,13 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
     const bool w = (p_da->get_nb_written() > 0);
     tiv.tv_sec = tv.tv_sec;
     tiv.tv_usec = tv.tv_usec;
-    // set the message field: mode and timestamp, e.g.: "polled: mar 16 jun 2018..."
-    d->message = dat["mode"].toString() + ": " + dateTimeToStr(&(tiv.tv_sec));
     putDateTime(tv, dat);
 
     CuDataQuality cuq = toCuQuality(quality);
-    dat["quality"] = cuq.toInt();
-    dat["quality_color"] = cuq.color();
-    dat["quality_string"] = cuq.name();
-    dat["data_format_str"] = formatToStr(f);
+    dat["q"] = cuq.toInt();
+    dat["qc"] = cuq.color();
+    dat["qs"] = cuq.name();
+    dat["dfs"] = formatToStr(f);
 
     try{
         if(quality == Tango::ATTR_INVALID)
@@ -374,8 +368,8 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 Tango::DevState state;
                 *p_da >> state;
                 dat["value"] = wc.stateString(state);
-                dat["state"] = static_cast<long int>(state);
-                dat["state_color"] = wc.stateColorName(state);
+                dat["s"] = static_cast<long int>(state);
+                dat["sc"] = wc.stateColorName(state);
             }
             else if(f == Tango::SPECTRUM || f == Tango::IMAGE)
             {
@@ -392,12 +386,12 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 }
                 if(f == Tango::SPECTRUM) {
                     dat["value"] = temp;
-                    dat["state"] = tempi;
-                    dat["state_color"] = state_colors;
+                    dat["s"] = tempi;
+                    dat["sc"] = state_colors;
                 } else {
                     dat["value"] = CuVariant(temp, p_da->get_dim_x(), p_da->get_dim_y());
-                    dat["state"] = CuVariant(tempi, p_da->get_dim_x(), p_da->get_dim_y());
-                    dat["state_color"] = CuVariant(state_colors, p_da->get_dim_x(), p_da->get_dim_y());
+                    dat["s"] = CuVariant(tempi, p_da->get_dim_x(), p_da->get_dim_y());
+                    dat["sc"] = CuVariant(state_colors, p_da->get_dim_x(), p_da->get_dim_y());
                 }
             }
             if(w)
@@ -407,7 +401,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     Tango::DevState state;
                     *p_da >> state;
                     dat["w_value"] = wc.stateString(state);
-                    dat["state_color"] = wc.stateColorName(state);
+                    dat["sc"] = wc.stateColorName(state);
                     dat["w_state"] = static_cast<long int>(state);
                 }
                 else if(f == Tango::SPECTRUM || f == Tango::IMAGE)
@@ -649,9 +643,9 @@ void CuTangoWorld::fillFromAttributeConfig(const Tango::AttributeInfoEx &ai, CuD
     d->error = false;
     d->message = "";
     dat["type"] = "property";
-    dat["data_format"] = ai.data_format;
-    dat["data_format_str"] = formatToStr(ai.data_format); /* as string */
-    dat["data_type"] = ai.data_type;
+    dat["df"] = ai.data_format;
+    dat["dfs"] = formatToStr(ai.data_format); /* as string */
+    dat["dt"] = ai.data_type;
     dat["description"] = ai.description;
     ai.display_unit != std::string("No display unit") ? dat["display_unit"] = ai.display_unit : dat["display_unit"] = "";
     dat["format"] = ai.format;
@@ -703,7 +697,7 @@ void CuTangoWorld::fillFromCommandInfo(const Tango::CommandInfo &ci, CuData &d)
     d["in_type_desc"] = ci.in_type_desc;
     d["out_type_desc"] = ci.out_type_desc;
     d["display_level"] = ci.disp_level;
-    d["data_type"] = ci.out_type;
+    d["dt"] = ci.out_type;
 
     /* fake data_format property for commands */
     switch(ci.out_type)
@@ -713,8 +707,8 @@ void CuTangoWorld::fillFromCommandInfo(const Tango::CommandInfo &ci, CuData &d)
     case Tango::DEV_USHORT: case Tango::DEV_ULONG: case Tango::DEV_STRING: case Tango::DEV_STATE:
     case Tango::CONST_DEV_STRING: case Tango::DEV_UCHAR: case Tango::DEV_LONG64: case Tango::DEV_ULONG64:
     case Tango::DEV_INT:
-        d["data_format"] = Tango::SCALAR;
-        d["data_format_str"] = formatToStr(Tango::SCALAR); /* as string */
+        d["df"] = Tango::SCALAR;
+        d["dfs"] = formatToStr(Tango::SCALAR); /* as string */
         break;
     case Tango::DEVVAR_STATEARRAY:
     case Tango::DEVVAR_LONG64ARRAY: case Tango::DEVVAR_ULONG64ARRAY:
@@ -724,12 +718,12 @@ void CuTangoWorld::fillFromCommandInfo(const Tango::CommandInfo &ci, CuData &d)
     case Tango::DEVVAR_USHORTARRAY: case Tango::DEVVAR_ULONGARRAY:
     case Tango::DEVVAR_STRINGARRAY: case Tango::DEVVAR_LONGSTRINGARRAY:
     case Tango::DEVVAR_DOUBLESTRINGARRAY:
-        d["data_format"] = Tango::SPECTRUM;
-        d["data_format_str"] = formatToStr(Tango::SPECTRUM); /* as string */
+        d["df"] = Tango::SPECTRUM;
+        d["dfs"] = formatToStr(Tango::SPECTRUM); /* as string */
         break;
     default:
-        d["data_format"] = Tango::FMT_UNKNOWN;
-        d["data_format_str"] = formatToStr(Tango::FMT_UNKNOWN); /* as string */
+        d["df"] = Tango::FMT_UNKNOWN;
+        d["dfs"] = formatToStr(Tango::FMT_UNKNOWN); /* as string */
     };
 }
 
@@ -748,8 +742,9 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
         res.putTimestamp();
     }
     res["err"] = d->error;
-    res["msg"] = d->message;
-    res["success_color"] = d->t_world_conf.successColor(!d->error);
+    if(d->message.length() > 0)
+        res["msg"] = d->message;
+    res["color"] = d->t_world_conf.successColor(!d->error);
     return !d->error;
 }
 
@@ -782,8 +777,9 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
             extractData(p_da, (*reslist)[results_offset]);
             (*reslist)[results_offset]["err"] = d->error;
-            (*reslist)[results_offset]["msg"] = d->message;
-            (*reslist)[results_offset]["success_color"] = d->t_world_conf.successColor(!d->error);
+            if(d->message.length() > 0)
+                (*reslist)[results_offset]["msg"] = d->message;
+            (*reslist)[results_offset]["color"] = d->t_world_conf.successColor(!d->error);
             results_offset++;
         }
         delete devattr;
@@ -796,7 +792,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
             (*reslist)[results_offset] = std::move(att_datalist[i]);
             (*reslist)[results_offset]["err"] = d->error;
             (*reslist)[results_offset]["msg"] = d->message;
-            (*reslist)[results_offset]["success_color"] = d->t_world_conf.successColor(!d->error);
+            (*reslist)[results_offset]["color"] = d->t_world_conf.successColor(!d->error);
             (*reslist)[results_offset].putTimestamp();
             results_offset++;
         }
@@ -848,8 +844,8 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
     // extractData does not set date/time information on data
     data.putTimestamp();
     data["err"] = d->error;
-    data["msg"] = d->message;
-    //  data["success_color"] = d->t_world_conf.successColor(!d->error);
+    if(d->message.length() > 0) data["msg"] = d->message;
+    //  data["color"] = d->t_world_conf.successColor(!d->error);
     return !d->error;
 }
 
@@ -866,7 +862,7 @@ bool CuTangoWorld::write_att(Tango::DeviceProxy *dev,
         if(!d->error)
         {
             dev->write_attribute(da);
-            d->message = "successfully written \"" + attnam + "\" on dev \"" + data["device"].toString() + "\"";
+            d->message = "WRITE OK: \"" + data["device"].toString() + "/" + attnam + "\"";
         }
     }
     catch(Tango::DevFailed &e)
@@ -921,14 +917,13 @@ bool CuTangoWorld::get_att_config(Tango::DeviceProxy *dev, const string &attribu
     try {
         aiex = dev->get_attribute_config(attribute);
         fillFromAttributeConfig(aiex, dres);
-        d->message = "successfully got configuration for " + dres["src"].toString();
     }
     catch(Tango::DevFailed &e) {
         d->error = true;
         d->message = strerror(e);
     }
     dres["err"] = d->error;
-    dres["success_color"] = d->t_world_conf.successColor(!d->error);
+    dres["color"] = d->t_world_conf.successColor(!d->error);
     return !d->error;
 }
 
@@ -985,7 +980,7 @@ bool CuTangoWorld::get_att_props(Tango::DeviceProxy *dev,
             d->message = strerror(e);
         }
     }
-    dres["success_color"] = d->t_world_conf.successColor(!d->error);
+    dres["color"] = d->t_world_conf.successColor(!d->error);
     return !d->error;
 }
 
@@ -1169,10 +1164,8 @@ bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &re
 
         res.putTimestamp();
         res["err"] = d->error;
-        if(!d->error) {
-            d->message = std::string("CuTangoWorld.get_properties successfully completed on " +  dateTimeToStr(NULL));
-        }
-        res["msg"] = d->message;
+        if(d->message.length() > 0)
+            res["msg"] = d->message;
         delete db;
     } // if !d->error (i.e. db != nullptr)
     return !d->error;
@@ -1391,7 +1384,8 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
         delete db;
     } // if(db != nullptr)
     res["err"] = d->error;
-    res["msg"] = d->message;
+    if(d->message.length() > 0)
+        res["msg"] = d->message;
     res.putTimestamp();
     return !d->error;
 }
@@ -1413,14 +1407,12 @@ string CuTangoWorld::getLastMessage() const
 }
 
 /** \brief returns a string representation of the attribute data format to be used in the
- *         CuData "data_format_str" property.
+ *         CuData "dfs" property.
  *
  * Valid return values are scalar, vector and matrix
  */
-string CuTangoWorld::formatToStr(Tango::AttrDataFormat f) const
-{
-    switch(f)
-    {
+string CuTangoWorld::formatToStr(Tango::AttrDataFormat f) const {
+    switch(f) {
     case Tango::SCALAR:
         return "scalar";
     case Tango::SPECTRUM:
@@ -1436,7 +1428,7 @@ string CuTangoWorld::formatToStr(Tango::AttrDataFormat f) const
  *
  * valid values for compatibility: scalar, vector
  *
- * CuData "data_format_str" property
+ * CuData "dfs" property
  */
 string CuTangoWorld::cmdArgTypeToDataFormat(Tango::CmdArgType t) const
 {
@@ -1723,8 +1715,8 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &name,
     std::string attname = name;
     Tango::DeviceAttribute da;
     CuVariant::DataType t = arg.getType();
-    int tango_type = attinfo["data_type"].toInt();
-    Tango::AttrDataFormat tango_format = static_cast<Tango::AttrDataFormat>(attinfo["data_format"].toInt());
+    int tango_type = attinfo["dt"].toInt();
+    Tango::AttrDataFormat tango_format = static_cast<Tango::AttrDataFormat>(attinfo["df"].toInt());
     if(tango_format == Tango::SCALAR && arg.getFormat() == CuVariant::Scalar)
     {
         if(t == CuVariant::Double && tango_type == Tango::DEV_DOUBLE)
@@ -1892,8 +1884,8 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &aname,
 {
     d->error = false;
     d->message = "";
-    int tango_type = attinfo["data_type"].toLongInt();
-    Tango::AttrDataFormat tango_fmt = static_cast<Tango::AttrDataFormat>(attinfo["data_format"].toInt());
+    int tango_type = attinfo["dt"].toLongInt();
+    Tango::AttrDataFormat tango_fmt = static_cast<Tango::AttrDataFormat>(attinfo["df"].toInt());
     Tango::DeviceAttribute da;
     std::string name(aname);
     if(argins.size() == 0)

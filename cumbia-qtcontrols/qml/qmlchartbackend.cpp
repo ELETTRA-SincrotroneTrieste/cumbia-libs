@@ -90,8 +90,8 @@ void QmlChartBackend::m_configure(const CuData &da)
     d->data[src] = QVector<QPointF>();
 
     // spectrum or scalar trend over time?
-    if(da.containsKey("data_format_str")) {
-        bool scalar_trend = da["data_format_str"].toString() == "scalar";
+    if(da.containsKey("dfs")) {
+        bool scalar_trend = da["dfs"].toString() == "scalar";
         if(scalar_trend != d->is_scalar_trend) {
             d->is_scalar_trend = scalar_trend;
         }
