@@ -749,6 +749,7 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
 }
 
 bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
+                             std::vector<std::string> &attnamlist,
                              std::vector<CuData>& att_datalist,
                              std::vector<CuData> *reslist,
                              int results_offset)
@@ -757,9 +758,6 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
     d->message = "";
     Tango::DeviceAttribute *p_da;
     std::vector<Tango::DeviceAttribute> *devattr = NULL;
-    std::vector<std::string> attrs;
-    for(size_t i = 0; i < att_datalist.size(); i++) // fill the list of attributes as string vector
-        attrs.push_back(att_datalist[i]["point"].toString());
     try
     {
         // read_attributes
@@ -770,7 +768,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         //         we enter the catch clause, where the results have to be manually populated
         //         with data reporting the error.
         //         In that case, the poller must be slowed down
-        devattr = dev->read_attributes(attrs);
+        devattr = dev->read_attributes(attnamlist);
         for(size_t i = 0; i < devattr->size(); i++) {
             (*reslist)[results_offset] = std::move(att_datalist[i]);
             p_da = &(*devattr)[i];
@@ -788,10 +786,11 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
     {
         d->error = true;
         d->message = strerror(e);
-        for(size_t i = 0; i < attrs.size(); i++) {
+        for(size_t i = 0; i < attnamlist.size(); i++) {
             (*reslist)[results_offset] = std::move(att_datalist[i]);
             (*reslist)[results_offset]["err"] = d->error;
-            (*reslist)[results_offset]["msg"] = d->message;
+            if(d->message.length() > 0)
+                (*reslist)[results_offset]["msg"] = d->message;
             (*reslist)[results_offset]["color"] = d->t_world_conf.successColor(!d->error);
             (*reslist)[results_offset].putTimestamp();
             results_offset++;

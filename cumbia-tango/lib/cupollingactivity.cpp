@@ -1,4 +1,4 @@
-#include "cupollingactivity.h"
+﻿#include "cupollingactivity.h"
 #include "cudevicefactoryservice.h"
 #include "tdevice.h"
 #include "tsource.h"
@@ -340,6 +340,7 @@ void CuPollingActivity::execute()
     CuTangoWorld tangoworld;
     std::vector<CuData> *results = new std::vector<CuData>();
     std::vector<CuData> attdatalist;
+    std::vector<std::string> attnamlist;
     Tango::DeviceProxy *dev = d->tdev->getDevice();
     bool success = (dev != NULL);
     size_t i = 0;
@@ -352,8 +353,8 @@ void CuPollingActivity::execute()
         for(it = d->actions_map.begin(); it != d->actions_map.end(); ++it) {
             const ActionData &action_data = it->second;
             const TSource &tsrc = action_data.tsrc;
-            const std::string srcnam = tsrc.getName();
-            std::string point = tsrc.getPoint();
+            const std::string& srcnam = tsrc.getName();
+            const std::string& point = tsrc.getPoint();
             bool is_command = tsrc.getType() == TSource::SrcCmd;
             if(is_command) { // write into results[i]
                 (*results)[i] = getToken();
@@ -387,7 +388,8 @@ void CuPollingActivity::execute()
                 attdatalist[att_idx] = getToken();
                 attdatalist[att_idx]["mode"] = "P";
                 attdatalist[att_idx]["period"] = getTimeout();
-                attdatalist[att_idx]["src"] = tsrc.getName();
+                attdatalist[att_idx]["src"] = srcnam;
+                attnamlist.push_back(point);
                 att_idx++;
             }
             i++;
@@ -398,14 +400,11 @@ void CuPollingActivity::execute()
 
         if(dev && att_idx > 0) {
             attdatalist.resize(att_idx);
-            success = tangoworld.read_atts(d->tdev->getDevice(), attdatalist, results, att_offset);
+            success = tangoworld.read_atts(d->tdev->getDevice(), attnamlist, attdatalist, results, att_offset);
             if(!success) {
                 d->consecutiveErrCnt++;
             }
         }
-    }
-    else {
-
     }
     if(success && d->repeat != d->period)
         d->repeat = d->period;
@@ -460,11 +459,8 @@ void CuPollingActivity::m_registerAction(const TSource& ts, CuTangoActionI *a)
     ActionData adata(ts, a);
     if(d->actions_map.find(ts.getName()) != d->actions_map.end())
         perr("CuPollingActivity.m_registerAction  %p: source \"%s\" period %d already registered", this, ts.getName().c_str(), getTimeout());
-    else {
+    else
         d->actions_map.insert(std::pair<const std::string, const ActionData>(ts.getName(), adata)); // multimap
-        pgreen(" + CuPollingActivity.m_registerAction %p: added %s to poller, period %d repeat %d\n", this, ts.toString().c_str(),
-               d->repeat, d->period);
-    }
 }
 
 void CuPollingActivity::m_unregisterAction(const TSource &ts)
