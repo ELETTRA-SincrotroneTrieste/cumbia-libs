@@ -282,7 +282,7 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
 QString CuControlsUtils::msg(const CuData &da, const QString& date_time_fmt) const {
     QString m = QuString(da, "src");
     if(da.containsKey("msg"))
-        return m + QuString(da, "msg");
+        return m + ": " + QuString(da, "msg");
     // pick mode or activity name
     if(da.containsKey("mode"))
         m += " [" + QuString(da, "mode") + "] ";
