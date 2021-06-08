@@ -51,7 +51,7 @@ public:
     enum RefreshMode { PolledRefresh = 0x01, ChangeEventRefresh=0x02,
                        ArchiveEventRefresh=0x04, PeriodicEventRefresh=0x08, Manual=0x10 };
 
-    CuTReader(const TSource& src, CumbiaTango *ct);
+    CuTReader(const TSource& src, CumbiaTango *ct, const CuData& op = CuData(), const CuData& tag = CuData());
 
     ~CuTReader();
 
@@ -75,6 +75,7 @@ public:
     void setPeriod(int millis);
 
     void setOptions(const CuData& options);
+    void setTag(const CuData& tag);
 
     void start();
     void stop();

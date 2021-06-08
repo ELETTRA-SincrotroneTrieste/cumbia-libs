@@ -19,7 +19,7 @@ public:
 
     int period() const;
 
-    void registerAction(const TSource &tsrc, CuTangoActionI *a, const CuData &options);
+    void registerAction(const TSource &tsrc, CuTangoActionI *a, const CuData &options, const CuData &tag);
 
     void unregisterAction(CuTangoActionI *a);
 

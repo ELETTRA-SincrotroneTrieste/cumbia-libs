@@ -16,7 +16,8 @@ CuActivityEvent::Type CuTAStopEvent::getType() const
 class CuEventActivityPrivate
 {
 public:
-    CuData s;
+    CuData s; // extra settings (point, device, rmode)
+    CuData tag; // tagged is carried along results
     CuDeviceFactoryService *device_srvc;
     TDevice *tdev;
     int event_id;
@@ -37,7 +38,7 @@ public:
  *     Instead, it keeps living within an event loop that delivers Tango events over time
  * \li CuActivity::CuADeleteOnExit: *true* lets the activity be deleted after onExit
  */
-CuEventActivity::CuEventActivity(const CuData &token, CuDeviceFactoryService *df, const CuData& extras) : CuActivity(token)
+CuEventActivity::CuEventActivity(const CuData &token, CuDeviceFactoryService *df, const CuData& extras, const CuData &tag) : CuActivity(token)
 {
     d = new CuEventActivityPrivate;
     setFlag(CuActivity::CuAUnregisterAfterExec, false);
@@ -48,6 +49,7 @@ CuEventActivity::CuEventActivity(const CuData &token, CuDeviceFactoryService *df
     d->other_thread_id = pthread_self();
     d->se = NULL;
     d->s = extras;
+    d->tag = tag;
 }
 
 /*! \brief the class destructor
@@ -269,6 +271,7 @@ void CuEventActivity::onExit() {
 void CuEventActivity::push_event(Tango::EventData *e) {
     // in d, copy only src from token
     CuData d("src", getToken()["src"].toString());
+    d.merge(this->d->tag);
     CuTangoWorld utils;
     d["mode"] = "E";
     d["E"] = e->event;

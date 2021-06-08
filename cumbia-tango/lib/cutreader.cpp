@@ -23,6 +23,18 @@ class TSource;
 class CuTReaderPrivate
 {
 public:
+    CuTReaderPrivate(const TSource& src, CumbiaTango *ct, const CuData &op, const CuData &_tag)
+        : tsrc(src),
+          cumbia_t(ct),
+          event_activity(nullptr),
+          log(CuLog(&li)),
+          period(1000),
+          refresh_mode(CuTReader::ChangeEventRefresh),
+          polling_fallback(false),
+          manual_mode_period( 1000 * 3600 * 24 * 10),
+          options(op),
+          tag(_tag) {  }
+
     std::set<CuDataListener *> listeners;
     TSource tsrc;
     CumbiaTango *cumbia_t;
@@ -34,20 +46,11 @@ public:
     CuTReader::RefreshMode refresh_mode;
     bool polling_fallback;
     int manual_mode_period;
-    CuData options;
+    CuData options, tag;
 };
 
-CuTReader::CuTReader(const TSource& src, CumbiaTango *ct) : CuTangoActionI()
-{
-    d = new CuTReaderPrivate;
-    d->tsrc = src;
-    d->cumbia_t = ct;
-    d->event_activity = NULL;
-    d->log = CuLog(&d->li);
-    d->period = 1000;
-    d->refresh_mode = ChangeEventRefresh;
-    d->polling_fallback = false;
-    d->manual_mode_period = 1000 * 3600 * 24 * 10; // ten days
+CuTReader::CuTReader(const TSource& src, CumbiaTango *ct, const CuData &op, const CuData &tag) : CuTangoActionI() {
+    d = new CuTReaderPrivate(src, ct, op, tag);
 }
 
 CuTReader::~CuTReader()
@@ -138,13 +141,13 @@ CuTangoActionI::Type CuTReader::getType() const {
  *
  * @see sendData
  */
-void CuTReader::getData(CuData &d_inout) const {
-    if(d_inout.containsKey("period"))
-        d_inout["period"] = d->period;
-    if(d_inout.containsKey("refresh_mode"))
-        d_inout["refresh_mode"] = d->refresh_mode;
-    if(d_inout.containsKey("mode"))
-        d_inout["mode"] = refreshModeStr();
+void CuTReader::getData(CuData &ino) const {
+    if(ino.containsKey("period"))
+        ino["period"] = d->period;
+    if(ino.containsKey("refresh_mode"))
+        ino["refresh_mode"] = d->refresh_mode;
+    if(ino.containsKey("mode"))
+        ino["mode"] = refreshModeStr();
 }
 
 
@@ -183,6 +186,10 @@ void CuTReader::setOptions(const CuData &options) {
                 setRefreshMode(static_cast<CuTReader::RefreshMode>(rm));
         }
     }
+}
+
+void CuTReader::setTag(const CuData &tag) {
+    d->tag = tag;
 }
 
 void CuTReader::m_update_options(const CuData newo) {
@@ -279,8 +286,7 @@ void CuTReader::sendData(const CuData &data) {
  *
  * @param rm a value chosen from CuTReader::RefreshMode.
  */
-void CuTReader::setRefreshMode(CuTReader::RefreshMode rm, int period)
-{
+void CuTReader::setRefreshMode(CuTReader::RefreshMode rm, int period) {
     CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
     bool polled = polling_service->actionRegistered(this, d->period);
@@ -327,8 +333,7 @@ void CuTReader::setRefreshMode(CuTReader::RefreshMode rm, int period)
         d->refresh_mode = rm;
 }
 
-string CuTReader::refreshModeStr() const
-{
+string CuTReader::refreshModeStr() const {
     switch(d->refresh_mode)
     {
     case CuTReader::PolledRefresh:
@@ -456,7 +461,7 @@ void CuTReader::m_startEventActivity()
     if(d->options.containsKey("thread_token"))
         thtok["thread_token"] = d->options["thread_token"];
     d->options.set("device", d->tsrc.getDeviceName()).set("point", d->tsrc.getPoint()).set("rmode", refreshModeStr());
-    d->event_activity = new CuEventActivity(at.set("activity", "event"), df, d->options);
+    d->event_activity = new CuEventActivity(at.set("activity", "event"), df, d->options, d->tag);
     d->refresh_mode = ChangeEventRefresh; // update refresh mode
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
@@ -466,7 +471,7 @@ void CuTReader::m_startEventActivity()
 void CuTReader::m_registerToPoller() {
     CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
-    polling_service->registerAction(d->cumbia_t, d->tsrc, d->period, this, d->options);
+    polling_service->registerAction(d->cumbia_t, d->tsrc, d->period, this, d->options, d->tag);
 }
 
 void CuTReader::m_unregisterFromPoller() {

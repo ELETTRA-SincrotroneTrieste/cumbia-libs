@@ -23,6 +23,13 @@ class TSource;
 class CuTWriterPrivate
 {
 public:
+    CuTWriterPrivate(const TSource& src,
+                     CumbiaTango *ct,
+                     const CuData &conf,
+                     const CuData &opts,
+                     const CuData &_tag)
+        : tsrc(src), cumbia_t(ct), db_conf(conf), options(opts), tag(_tag), exit(false) { }
+
     std::set<CuDataListener *> listeners;
     TSource tsrc;
     CumbiaTango *cumbia_t;
@@ -31,16 +38,13 @@ public:
     CuConLogImpl li;
     CuLog log;
     CuVariant write_val;
-    CuData db_conf, options;
+    CuData db_conf, options, tag;
 };
 
 CuTWriter::CuTWriter(const TSource& src,
-                     CumbiaTango *ct)
+                     CumbiaTango *ct, const CuData &conf, const CuData &options, const CuData &tag)
 {
-    d = new CuTWriterPrivate();
-    d->tsrc = src;
-    d->cumbia_t = ct;
-    d->exit = false;
+    d = new CuTWriterPrivate(src, ct, conf, options, tag);
     d->log = CuLog(&d->li);
 }
 
@@ -71,6 +75,10 @@ void CuTWriter::setConfiguration(const CuData& db_conf) {
 
 void CuTWriter::setOptions(const CuData &options) {
     d->options = options;
+}
+
+void CuTWriter::setTag(const CuData &tag) {
+    d->tag = tag;
 }
 
 /*! this method is currently void
@@ -179,7 +187,7 @@ void CuTWriter::start() {
     CuData thtok = CuData("device", d->tsrc.getDeviceName()); /* thread token */
     if(d->options.containsKey("thread_token"))
         thtok["thread_token"] = d->options["thread_token"];
-    d->activity = new CuWriteActivity(at, df, d->db_conf);
+    d->activity = new CuWriteActivity(at, df, d->db_conf, d->tag);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
     d->cumbia_t->registerActivity(d->activity, this, thtok, fi, bf);

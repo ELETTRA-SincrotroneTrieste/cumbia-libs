@@ -9,15 +9,16 @@ class CuTaDbActivityPrivate
 {
 public:
     bool exiting;
-    CuData options;
+    CuData options, tag;
     TSource tsrc;
 };
 
-CuTaDbActivity::CuTaDbActivity(const CuData &tok, const TSource &tsrc) : CuActivity(tok)
+CuTaDbActivity::CuTaDbActivity(const CuData &tok, const TSource &tsrc, const CuData &tag) : CuActivity(tok)
 {
     d = new CuTaDbActivityPrivate;
     d->exiting = false;
     d->tsrc = tsrc;
+    d->tag = tag;
     setFlag(CuActivity::CuAUnregisterAfterExec, true);
     setFlag(CuActivity::CuADeleteOnExit, true);
 }
@@ -63,7 +64,8 @@ void CuTaDbActivity::execute()
     TSource::Type ty = d->tsrc.getType();
     at["type"] = "property";
     at["op"] = d->tsrc.getTypeName(ty);
-    at.merge(d->options);
+    at.merge(d->tag);
+//    at.merge(d->options);
     CuTangoWorld w;
     w.db_get(d->tsrc, at);
     d->exiting = true;

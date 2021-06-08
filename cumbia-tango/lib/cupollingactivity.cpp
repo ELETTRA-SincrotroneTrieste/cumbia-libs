@@ -87,7 +87,7 @@ public:
     pthread_t my_thread_id, other_thread_id;
     CuVariant argins;
     CuData point_info;
-    CuData options;
+    CuData options, tag;
     std::multimap<const std::string, ActionData > actions_map;
     // cache for tango command_inout argins
     // multimap because argins may differ
@@ -113,7 +113,7 @@ public:
  *     the poller is not started and the activity is suspended (repeat will return -1).
  */
 CuPollingActivity::CuPollingActivity(const CuData &token,
-                                     CuDeviceFactoryService *df, const CuData &options)
+                                     CuDeviceFactoryService *df, const CuData &options, const CuData &tag)
     : CuContinuousActivity(token)
 {
     d = new CuPollingActivityPrivate;
@@ -122,6 +122,7 @@ CuPollingActivity::CuPollingActivity(const CuData &token,
     d->other_thread_id = pthread_self();
     d->successfulExecCnt = 0;
     d->options = options;
+    d->tag = tag;
 
     int period = 1000;
     if(token.containsKey("period"))
@@ -357,6 +358,7 @@ void CuPollingActivity::execute()
             const std::string& point = tsrc.getPoint();
             bool is_command = tsrc.getType() == TSource::SrcCmd;
             if(is_command) { // write into results[i]
+                (*results)[i] = d->tag;
                 (*results)[i]["mode"] = "P";
                 (*results)[i]["period"] = getTimeout();
                 (*results)[i]["src"] = tsrc.getName();
@@ -384,6 +386,7 @@ void CuPollingActivity::execute()
                 att_offset++;
             }
             else { // save into attdatalist
+                attdatalist[att_idx] = d->tag;
                 attdatalist[att_idx]["mode"] = "P";
                 attdatalist[att_idx]["period"] = getTimeout();
                 attdatalist[att_idx]["src"] = srcnam;

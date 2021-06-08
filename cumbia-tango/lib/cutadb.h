@@ -13,10 +13,11 @@ class CuTaDb : public CuTangoActionI
 {
 public:
 
-    CuTaDb(const TSource& src, CumbiaTango *ct);
+    CuTaDb(const TSource& src, CumbiaTango *ct, const CuData& options = CuData(), const CuData& tag = CuData());
     virtual ~CuTaDb();
 
     void setOptions(const CuData& options);
+    void setTag(const CuData& tag);
 
     // CuThreadListener interface
 public:

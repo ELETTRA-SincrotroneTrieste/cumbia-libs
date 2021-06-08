@@ -99,15 +99,17 @@ void CuHttpChannelReceiver::decodeMessage(const QJsonValue &v) {
     const QJsonArray a = v.toArray(); // data arrives within an array
     if(a.size() == 1) {
         const QString& src = a.at(0)["src"].toString();
+        qDebug() << __PRETTY_FUNCTION__  << v << "rmap contains? " << d->rmap.contains(src) << d->rmap;
 //        double t_ms = a.at(0)["timestamp_ms"].toDouble();
         time_t diff_t;
 //        bool data_fresh = m_data_fresh(t_ms, &diff_t);
         bool data_fresh = true;
+
         if(d->rmap.contains(src) && data_fresh) {
             CuData res("src", src.toStdString());
             CumbiaHTTPWorld httpw;
             httpw.json_decode(a.at(0), res);
-//            printf("CuHttpChannelReceiver.decodeMessage \e[1;33m to %s\e[0m\n", datos(res));
+            printf("CuHttpChannelReceiver.decodeMessage \e[1;33m to %s\e[0m\n", datos(res));
             foreach(CuDataListener *l, d->rmap.values(src)) {
                 l->onUpdate(res);
             }

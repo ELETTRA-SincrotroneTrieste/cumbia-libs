@@ -76,6 +76,7 @@ void CuHttpBundledSrcReq::onNewData() {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
     qint64 bytes_avail = r->bytesAvailable();
     QByteArray ba = r->read(bytes_avail);
+    qDebug() << __PRETTY_FUNCTION__ << "received this buffa" << ba;
     bool buf_empty = d->buf.isEmpty();
     if(!buf_empty)
         cuprintf("CuHTTPActionA::onNewData: buf completed by \e[1;32m%s\e[0m\n", ba.data());

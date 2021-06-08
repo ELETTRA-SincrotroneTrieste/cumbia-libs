@@ -22,7 +22,7 @@ public:
 
     CuPoller *getPoller(CumbiaTango *cu_t, int period);
 
-    void registerAction(CumbiaTango* ct, const TSource& tsrc, int period, CuTangoActionI *action, const CuData &options);
+    void registerAction(CumbiaTango* ct, const TSource& tsrc, int period, CuTangoActionI *action, const CuData &options, const CuData &tag);
 
     void unregisterAction(int period, CuTangoActionI *action);
 

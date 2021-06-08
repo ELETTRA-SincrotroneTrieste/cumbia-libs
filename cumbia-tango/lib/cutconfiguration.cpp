@@ -16,8 +16,12 @@
 class CuTAttConfigurationPrivate
 {
 public:
-    CuTAttConfigurationPrivate(const TSource& t_src, CuTangoActionI::Type t) :
-        tsrc(t_src), type(t) {
+    CuTAttConfigurationPrivate(const TSource& t_src,
+                               CumbiaTango *ct,
+                               CuTangoActionI::Type t,
+                               const CuData& op,
+                               const CuData& ta) :
+        tsrc(t_src), cumbia_t(ct), type(t), options(op), tag(ta) {
     }
 
     std::set<CuDataListener *> listeners;
@@ -25,14 +29,16 @@ public:
     CumbiaTango *cumbia_t;
     CuTConfigActivity *activity;
     bool exiting; // set to true by stop()
-    CuData options;
+    CuData options, tag;
     const CuTangoActionI::Type type;
 };
 
 CuTConfiguration::CuTConfiguration(const TSource& src,
                                    CumbiaTango *ct,
-                                   CuTangoActionI::Type t) {
-    d = new CuTAttConfigurationPrivate(src, t); // src, t are const
+                                   CuTangoActionI::Type t,
+                                   const CuData& options,
+                                   const CuData& tag) {
+    d = new CuTAttConfigurationPrivate(src, ct, t, options, tag); // src, t are const
     d->cumbia_t = ct;
     d->exiting = false;
 }
@@ -48,6 +54,10 @@ void CuTConfiguration::setDesiredAttributeProperties(const std::vector<string> p
 
 void CuTConfiguration::setOptions(const CuData &options) {
     d->options = options;
+}
+
+void CuTConfiguration::setTag(const CuData &tag) {
+    d->tag = tag;
 }
 
 void CuTConfiguration::onProgress(int , int , const CuData &) { }
@@ -71,8 +81,7 @@ void CuTConfiguration::onResult(const CuData &data) {
 /*! \brief unused. Complies with CuThreadListener interface
  *
  */
-void CuTConfiguration::onResult(const std::vector<CuData> &datalist)
-{
+void CuTConfiguration::onResult(const std::vector<CuData> &datalist) {
     (void) datalist;
 }
 
@@ -86,8 +95,7 @@ TSource CuTConfiguration::getSource() const {
     return d->tsrc;
 }
 
-CuTangoActionI::Type CuTConfiguration::getType() const
-{
+CuTangoActionI::Type CuTConfiguration::getType() const {
     return d->type;
 }
 
@@ -95,8 +103,7 @@ void CuTConfiguration::addDataListener(CuDataListener *l) {
     d->listeners.insert(l);
 }
 
-void CuTConfiguration::removeDataListener(CuDataListener *l)
-{
+void CuTConfiguration::removeDataListener(CuDataListener *l) {
     d->listeners.erase(l);
     if(!d->listeners.size())
         stop();
@@ -111,8 +118,7 @@ size_t CuTConfiguration::dataListenersCount() {
     return d->listeners.size();
 }
 
-void CuTConfiguration::start()
-{
+void CuTConfiguration::start() {
     CuDeviceFactoryService *df =
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
@@ -123,6 +129,7 @@ void CuTConfiguration::start()
     at["activity"] = "property";
     at["is_command"] = d->tsrc.getType() == TSource::SrcCmd;
     at.merge(d->options);
+    at.merge(d->tag); // tag is carried along in results
 
     CuData tt = CuData("device", d->tsrc.getDeviceName());
     if(d->options.containsKey("thread_token"))

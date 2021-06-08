@@ -9,13 +9,16 @@ class CuTWriterPrivate;
 class CuTWriter : public CuTangoActionI
 {
 public:
-    CuTWriter(const TSource &src, CumbiaTango *ct);
+    CuTWriter(const TSource &src, CumbiaTango *ct,
+              const CuData& conf,
+              const CuData& options = CuData(),
+              const CuData& tag = CuData());
     virtual ~CuTWriter();
 
     void setWriteValue(const CuVariant& wval);
     void setConfiguration(const CuData &db_conf);
     void setOptions(const CuData& options);
-
+    void setTag(const CuData& tag);
 
     // CuThreadListener interface
 public:

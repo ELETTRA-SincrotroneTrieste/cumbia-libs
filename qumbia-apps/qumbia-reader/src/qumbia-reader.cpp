@@ -592,7 +592,7 @@ void QumbiaReader::m_createReaders(const QStringList &srcs)  {
             a.replace('[', '(').replace(']', ')');
         }
         Qu_Reader *r = new Qu_Reader(this, cu_pool, m_ctrl_factory_pool);
-        if(m_conf.verbosity > Low)
+        if(m_conf.verbosity > Low && !m_conf.no_properties)
             r->saveProperty();
         // scalar
         connect(r, SIGNAL(newDouble(QString,double,double, const CuData&)), this,

@@ -19,7 +19,7 @@ class CumbiaTango;
 class CuTangoActionFactoryI
 {
 public:
-    CuTangoActionFactoryI() {}
+    virtual ~CuTangoActionFactoryI() {}
 
     /**
      * Pure virtual method that must be implemented by subclasses to return a valid CuTangoActionI

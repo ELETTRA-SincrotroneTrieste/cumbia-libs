@@ -106,7 +106,7 @@ public:
      */
     enum Type { CuPollingActivityType = CuActivity::User + 3 };
 
-    CuPollingActivity(const CuData& token, CuDeviceFactoryService *df, const CuData& options);
+    CuPollingActivity(const CuData& token, CuDeviceFactoryService *df, const CuData& options, const CuData& tag);
     ~CuPollingActivity();
 
     void setArgins(const CuVariant &argins);

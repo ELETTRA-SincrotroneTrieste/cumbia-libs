@@ -15,16 +15,18 @@ public:
     bool err;
     pthread_t my_thread_id, other_thread_id;
     CuData point_info; /* attribute or command info */
+    CuData tag;
 };
 
 CuWriteActivity::CuWriteActivity(const CuData &token,
                                  CuDeviceFactoryService *df,
-                                 const CuData& db_config)
+                                 const CuData& db_config, const CuData &tag)
     : CuIsolatedActivity(token)
 {
     d = new CuWriteActivityPrivate;
     d->device_service = df;
     d->point_info = db_config;
+    d->tag = tag;
     d->tdev = NULL;
     d->err = false;
     setFlag(CuActivity::CuAUnregisterAfterExec, true);
@@ -65,6 +67,7 @@ void CuWriteActivity::execute()
     assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
     CuData at = getToken(); /* activity token */
+    at.merge(d->tag);
     d->err = !d->tdev->isValid();
 
     if(d->tdev->isValid())

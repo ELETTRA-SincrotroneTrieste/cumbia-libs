@@ -6,11 +6,6 @@
 #include <cumacros.h>
 #include <tango.h>
 
-CuTangoReaderFactory::CuTangoReaderFactory()
-{
-
-}
-
 /*! \brief set the options on the reader factory in order to configure the actual reader
  *  within create.
  *
@@ -23,15 +18,15 @@ CuTangoReaderFactory::CuTangoReaderFactory()
  *
  * @see CuTangoOptBuilder
  */
-void CuTangoReaderFactory::setOptions(const CuData &o)
-{
+void CuTangoReaderFactory::setOptions(const CuData &o) {
     options = o;
 }
 
-CuTangoReaderFactory::~CuTangoReaderFactory()
-{
-
+void CuTangoReaderFactory::setTag(const CuData &t) {
+    tag = t;
 }
+
+CuTangoReaderFactory::~CuTangoReaderFactory() { }
 
 /** \brief creates and returns a CuTReader, (that implements the CuTangoActionI interface)
  *
@@ -53,47 +48,35 @@ CuTangoReaderFactory::~CuTangoReaderFactory()
  *
  * @see CuTangoOptBuilder
  */
-CuTangoActionI *CuTangoReaderFactory::create(const std::string &s, CumbiaTango *ct) const
-{
-    CuTReader* reader = new CuTReader(s, ct);
-    reader->setOptions(options);
+CuTangoActionI *CuTangoReaderFactory::create(const std::string &s, CumbiaTango *ct) const {
+    CuTReader* reader = new CuTReader(s, ct, options, tag);
     return reader;
 }
 
-CuTangoActionI::Type CuTangoReaderFactory::getType() const
-{
+CuTangoActionI::Type CuTangoReaderFactory::getType() const {
     return CuTangoActionI::Reader;
 }
 
-CuTangoWriterFactory::CuTangoWriterFactory()
-{
+CuTangoWriterFactory::~CuTangoWriterFactory() { }
 
-}
-
-CuTangoWriterFactory::~CuTangoWriterFactory()
-{
-
-}
-
-void CuTangoWriterFactory::setOptions(const CuData &o)
-{
+void CuTangoWriterFactory::setOptions(const CuData &o) {
     options = o;
 }
 
-void CuTangoWriterFactory::setWriteValue(const CuVariant &write_val)
-{
+void CuTangoWriterFactory::setTag(const CuData &t) {
+    m_tag = t;
+}
+
+void CuTangoWriterFactory::setWriteValue(const CuVariant &write_val) {
     m_write_val = write_val;
 }
 
-void CuTangoWriterFactory::setConfiguration(const CuData &configuration)
-{
+void CuTangoWriterFactory::setConfiguration(const CuData &configuration) {
     m_configuration = configuration;
 }
 
 CuTangoActionI *CuTangoWriterFactory::create(const std::string &s, CumbiaTango *ct) const {
-    CuTWriter *w = new CuTWriter(s, ct);
-    w->setConfiguration(m_configuration); // from Tango db
-    w->setOptions(options); // general options
+    CuTWriter *w = new CuTWriter(s, ct, m_configuration, options, m_tag);
     w->setWriteValue(m_write_val);
     return w;
 }
@@ -108,19 +91,25 @@ CuTConfFactoryBase::~CuTConfFactoryBase() {
 
 }
 
-void CuTConfFactoryBase::setOptions(const CuData &o) {
-    m_options = o;
+void CuTConfFactoryBase::setOptions(const CuData &options) {
+    opts = options;
+}
+
+void CuTConfFactoryBase::setTag(const CuData &tag)  {
+    dtag = tag;
 }
 
 CuData CuTConfFactoryBase::options() const {
-    return m_options;
+    return opts;
+}
+
+CuData  CuTConfFactoryBase::tag() const {
+    return dtag;
 }
 
 // Configuration: Reader
 CuTangoActionI *CuTReaderConfFactory::create(const std::string &s, CumbiaTango *ct) const {
-    CuTConfiguration *w = new CuTConfiguration(s, ct, CuTangoActionI::ReaderConfig);
-    w->setOptions(options());
-    return w;
+    return new CuTConfiguration(s, ct, CuTangoActionI::ReaderConfig, opts, dtag);
 }
 
 CuTangoActionI::Type CuTReaderConfFactory::getType() const {
@@ -129,11 +118,9 @@ CuTangoActionI::Type CuTReaderConfFactory::getType() const {
 
 // Configuration: Writer
 CuTangoActionI *CuTWriterConfFactory::create(const string &s, CumbiaTango *ct) const {
-    CuTConfiguration *w = new CuTConfiguration(s, ct, CuTangoActionI::WriterConfig);
-    const CuData& op = options();
-    if(op.containsKey("fetch_props"))
-        w->setDesiredAttributeProperties(op["fetch_props"].toStringVector());
-    w->setOptions(op);
+    CuTConfiguration *w = new CuTConfiguration(s, ct, CuTangoActionI::WriterConfig, opts, dtag);
+    if(opts.containsKey("fetch_props"))
+        w->setDesiredAttributeProperties(opts["fetch_props"].toStringVector());
     return w;
 }
 
@@ -143,7 +130,7 @@ CuTangoActionI::Type CuTWriterConfFactory::getType() const {
 
 class CuTaDbFactoryPrivate {
 public:
-    CuData o;
+    CuData o, tag;
 };
 
 CuTaDbFactory::CuTaDbFactory() {
@@ -155,9 +142,7 @@ CuTaDbFactory::~CuTaDbFactory() {
 }
 
 CuTangoActionI *CuTaDbFactory::create(const string &s, CumbiaTango *ct) const {
-    CuTaDb *tadb = new CuTaDb(s, ct);
-    tadb->setOptions(d->o);
-    return tadb;
+    return new CuTaDb(s, ct, d->o, d->tag);
 }
 
 CuTangoActionI::Type CuTaDbFactory::getType() const {
@@ -166,6 +151,10 @@ CuTangoActionI::Type CuTaDbFactory::getType() const {
 
 void CuTaDbFactory::setOptions(const CuData &o) {
     d->o = o;
+}
+
+void CuTaDbFactory::setTag(const CuData &t) {
+    d->tag = t;
 }
 
 CuData CuTaDbFactory::options() const {

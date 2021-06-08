@@ -28,14 +28,16 @@ class CuTConfiguration : public CuTangoActionI
 public:
 
     CuTConfiguration(const TSource& src,
-                        CumbiaTango *ct,
-                     CuTangoActionI::Type t);
+                     CumbiaTango *ct,
+                     CuTangoActionI::Type t,
+                     const CuData &options,
+                     const CuData &tag);
 
     virtual ~CuTConfiguration();
 
     void setDesiredAttributeProperties(const std::vector<std::string> props);
-
     void setOptions(const CuData& options);
+    void setTag(const CuData& tag);
 
     // CuThreadListener interface
 public:

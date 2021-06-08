@@ -13,10 +13,10 @@
 #include "cudatalistener.h"
 
 
-class CuTaDbPrivate
-{
+class CuTaDbPrivate {
 public:
-    CuTaDbPrivate(const TSource& t_src) : tsrc(t_src){
+    CuTaDbPrivate(const TSource& t_src, CumbiaTango *ct, const CuData &_options, const CuData &_tag)
+        : tsrc(t_src), cumbia_t(ct), options(_options), tag(_tag), xit(false) {
     }
 
     std::list<CuDataListener *> listeners;
@@ -24,13 +24,11 @@ public:
     CumbiaTango *cumbia_t;
     CuTaDbActivity *activity;
     bool xit; // set to true by stop()
-    CuData options;
+    CuData options, tag;
 };
 
-CuTaDb::CuTaDb(const TSource& src, CumbiaTango *ct) {
-    d = new CuTaDbPrivate(src); // src, t are const
-    d->cumbia_t = ct;
-    d->xit = false;
+CuTaDb::CuTaDb(const TSource& src, CumbiaTango *ct, const CuData &options, const CuData &tag) {
+    d = new CuTaDbPrivate(src, ct, options, tag); // src, t are const
 }
 
 CuTaDb::~CuTaDb()
@@ -41,6 +39,10 @@ CuTaDb::~CuTaDb()
 
 void CuTaDb::setOptions(const CuData &options) {
     d->options = options;
+}
+
+void CuTaDb::setTag(const CuData &tag) {
+    d->tag = tag;
 }
 
 void CuTaDb::onProgress(int step, int total, const CuData &data) {
@@ -118,7 +120,7 @@ void CuTaDb::start()
     at.merge(d->options);
     if(d->options.containsKey("thread_token"))
         tt["thread_token"] = d->options["thread_token"];
-    d->activity = new CuTaDbActivity(at, d->tsrc);
+    d->activity = new CuTaDbActivity(at, d->tsrc, d->tag);
     d->activity->setOptions(d->options);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
@@ -130,8 +132,7 @@ void CuTaDb::start()
  * - sets the exiting flag to true
  * - calls Cumbia::unregisterActivity
  */
-void CuTaDb::stop()
-{
+void CuTaDb::stop() {
     if(!d->xit) {
         d->xit = true;
         d->listeners.clear();
@@ -141,7 +142,6 @@ void CuTaDb::stop()
 
 /*! \brief CuActionFactory relies on this returning true to unregister the action
  */
-bool CuTaDb::exiting() const
-{
+bool CuTaDb::exiting() const {
     return d->xit;
 }

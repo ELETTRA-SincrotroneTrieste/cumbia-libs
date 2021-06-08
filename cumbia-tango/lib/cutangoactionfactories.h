@@ -11,8 +11,8 @@ class CumbiaTango;
 class CuTangoReaderFactory : public CuTangoActionFactoryI
 {
 public:
-    CuTangoReaderFactory();
     void setOptions(const CuData &o);
+    void setTag(const CuData &o);
     virtual ~CuTangoReaderFactory();
 
     // CuTangoActionFactoryI interface
@@ -22,16 +22,16 @@ public:
     bool isShareable() const;
 
 private:
-    CuData options;
+    CuData options, tag;
 };
 
 class CuTangoWriterFactory : public CuTangoActionFactoryI
 {
 public:
-    CuTangoWriterFactory();
     virtual ~CuTangoWriterFactory();
 
     void setOptions(const CuData &o);
+    void setTag(const CuData &o);
     void setWriteValue(const CuVariant &write_val);
 
     /*! \brief stores the result of get_attribute_config or get_command_info
@@ -50,18 +50,21 @@ public:
     bool isShareable() const;
 private:
     CuVariant m_write_val;
-    CuData options, m_configuration;
+    CuData options, m_configuration, m_tag;
 };
 
 class CuTConfFactoryBase : public CuTangoActionFactoryI
 {
 public:
     virtual ~CuTConfFactoryBase();
-    void setOptions(const CuData &o);
+    void setOptions(const CuData& options);
+    void setTag(const CuData& tag);
     CuData options() const;
+    CuData tag() const;
+
+    CuData opts, dtag;
 private:
     std::vector<std::string> m_props;
-    CuData m_options;
 };
 
 class CuTReaderConfFactory : public CuTConfFactoryBase
@@ -89,6 +92,7 @@ public:
     CuTangoActionI *create(const std::string &s, CumbiaTango *ct) const;
     CuTangoActionI::Type getType() const;
     void setOptions(const CuData &o);
+    void setTag(const CuData& t);
     CuData options() const;
 
 private:
