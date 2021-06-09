@@ -74,6 +74,10 @@ CumbiaHttp::~CumbiaHttp()
 {
     pdelete("~CumbiaHttp %p", this);
     d->chan_recv->stop();
+    // deleted CuHttpControlsReaders will have enqueued their unsubscribe requests
+    QList<SrcItem> ri, wi;
+    d->src_q_man->dequeueItems(ri, wi);
+    onSrcBundleReqReady(ri, wi);
     /* all registered services are unregistered and deleted by cumbia destructor after threads have joined */
     if(d->m_threadsEventBridgeFactory)
         delete d->m_threadsEventBridgeFactory;
@@ -97,8 +101,10 @@ void CumbiaHttp::m_init()
 }
 
 void CumbiaHttp::onSrcBundleReqReady(const QList<SrcItem> &rsrcs, const QList<SrcItem> &wsrcs) {
+    printf("CumbiaHttp::onSrcBundleReqReady: rsrcs %d wsrcs %d\n", rsrcs.size(), wsrcs.size());
     if(rsrcs.size() > 0) {
         CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(rsrcs, this);
+        r->setBlocking(d->chan_recv->exiting()); // destruction in progress
         r->start(d->url + "/bu/src-bundle", d->qnam);
     }
     if(wsrcs.size() > 0) {
@@ -112,7 +118,7 @@ void CumbiaHttp::onSrcBundleReplyReady(const QByteArray &json) {
     std::list<CuData> dali;
     bool ok = w.json_decode(json, dali);
     for(std::list<CuData>::iterator it = dali.begin(); ok && it != dali.end(); ++it)
-        m_data_is_auth_req(*it) ? m_auth_request(*it) : m_lis_update(*it);
+            m_data_is_auth_req(*it) ? m_auth_request(*it) :  m_lis_update(*it);
 }
 
 void CumbiaHttp::readEnqueue(const CuHTTPSrc &source, CuDataListener *l, const CuHTTPActionFactoryI& f) {

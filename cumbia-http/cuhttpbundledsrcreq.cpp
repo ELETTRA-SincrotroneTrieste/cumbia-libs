@@ -7,6 +7,7 @@
 #include <QJsonArray>
 
 // debug
+#include <QEventLoop>
 #include <QtDebug>
 #include <qustringlist.h>
 
@@ -14,6 +15,7 @@ class CuHttpBundledSrcReqPrivate {
 public:
     CuHttpBundledSrcReqPrivate(const QList<SrcItem>& srcs) {
         req_payload = m_json_pack(srcs);
+        blocking = false;
     }
 
     CuHttpBundledSrcReqPrivate(const QMap<QString, SrcData>& srcs) {
@@ -33,6 +35,7 @@ public:
     QByteArray req_payload, cookie, channel;
     QByteArray m_json_pack(const QList<SrcItem>& srcs);
     CuHttpBundledSrcReqListener *listener;
+    bool blocking;
 };
 
 CuHttpBundledSrcReq::CuHttpBundledSrcReq(const QList<SrcItem> &srcs,
@@ -70,6 +73,18 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
     connect(reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, SLOT(onSslErrors(const QList<QSslError> &)));
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(onError(QNetworkReply::NetworkError)));
     connect(reply, SIGNAL(destroyed(QObject *)), this, SLOT(onReplyDestroyed(QObject *)));
+    if(d->blocking) {
+        printf("CuHttpBundledSrcReq::start \e[1;34mQEventLoop\e[0m %s\n", url.toString().toStdString().c_str());
+        QEventLoop loop;
+        connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+        loop.exec();
+        printf("CuHttpBundledSrcReq::event loop \e[1;34mQEventLoop\e[0m out %s\n", url.toString().toStdString().c_str());
+        printf("CuHttpBundledSrcReq::start \e[1;34mrequest was\n%s\e[0m\n", d->req_payload.data());
+    }
+}
+
+void CuHttpBundledSrcReq::setBlocking(bool b) {
+    d->blocking = b;
 }
 
 void CuHttpBundledSrcReq::onNewData() {

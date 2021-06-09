@@ -60,8 +60,10 @@ public:
     void cancelSrc(const CuHTTPSrc &httpsrc, const std::string& method, CuDataListener *l, const QString& chan);
     bool queue_contains(const std::string& src, CuDataListener* l) const;
     QList<SrcData> takeSrcs(const QString& src) const;
+    int dequeueItems(QList<SrcItem> &read_i, QList<SrcItem> &write_i);
     QMap<QString, SrcData> takeTgts() const;
     const QMap<QString, SrcData> &targetMap() const;
+    void process_queue();
 
 private slots:
     void onDequeueTimeout();

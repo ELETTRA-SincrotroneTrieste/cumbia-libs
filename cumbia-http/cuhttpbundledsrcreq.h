@@ -24,10 +24,9 @@ public:
                                  CuHttpBundledSrcReqListener *l,
                                  const QByteArray& cookie = QByteArray(),
                                  QObject *parent = nullptr);
-
     virtual ~CuHttpBundledSrcReq();
-
     void start(const QUrl &url, QNetworkAccessManager *nam);
+    void setBlocking(bool b);
 
 signals:
 

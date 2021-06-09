@@ -34,8 +34,6 @@ bool CumbiaHTTPWorld::json_decode(const QByteArray &ba, std::list<CuData> &out) 
     QJsonDocument json = QJsonDocument::fromJson(ba, &pe);
     if(pe.error != QJsonParseError::NoError) {
         perr("CumbiaHTTPWorld::json_decode: parse error: %s", qstoc(pe.errorString()));
-        //        res["err"] = true;
-        //        res["msg"] = "CumbiaHTTPWorld.decodeMessage: invalid json document";
     }
     else {
         const QJsonArray a = json.array();
@@ -60,7 +58,7 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
     // NOTE
     // these are the keys storing values that necessary need to be converted to int
     QStringList i_keys = QStringList() << "s" << "q" << "writable" << "dt" << "df";
-    QStringList special_keys = QStringList() << "timestamp" << "timestamp_us" << "timestamp_ms" << "err" << "error" << "msg";
+    QStringList special_keys = QStringList() << "timestamp" << "timestamp_us" << "timestamp_ms" << "err" << "error";
 
     foreach(const QString &k, keys + special_keys ) {
         const QJsonValue &v = data_o[k]; // const version, data_o is const
@@ -121,7 +119,8 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
         res["timestamp_ms"] = floor(ts_us) * 1000.0 + (ts_us - floor(ts_us)) * 10e6 / 1000.0;
 
     res["err"] = data_o["err"].toBool();
-    res["msg"] = data_o["msg"].toString().toStdString();
+    if(data_o.contains("msg"))
+        res["msg"] = data_o["msg"].toString().toStdString();
     //
     // to int
     foreach(const QString& k, i_keys)

@@ -210,6 +210,7 @@ void CuTReader::m_update_options(const CuData newo) {
 
 void CuTReader::m_destroy_self() {
     d->cumbia_t->removeAction(getSource().getName(), getType());
+    printf("CuTReader.m_destroy_self: %s type %d %p\n", getSource().getName().c_str(), getType(), this);
     CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->get(CuServices::ActivityManager));
     am->removeConnection(this);
     delete this;
