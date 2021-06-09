@@ -59,14 +59,8 @@ size_t CuActionFactoryServiceImpl_Base::count() const {
 void CuActionFactoryServiceImpl_Base::unregisterAction(const string &src, CuTangoActionI::Type at) {
     std::list<CuTangoActionI *>::iterator it;
     it = d->actions.begin();
-    while( it != d->actions.end()) {
-        if( (*it)->getType() == at && (*it)->getSource().getName() == src ) {
-            printf("CuActionFactoryServiceImpl_Base::unregisterAction finds %p for %s type %d\n", *it, src.c_str(), at);
-            it = d->actions.erase(it);
-        }
-        else
-                    ++it;
-    }
+    while( it != d->actions.end())
+        ( (*it)->getType() == at && (*it)->getSource().getName() == src ) ? it = d->actions.erase(it) : ++it;
 }
 
 void CuActionFactoryServiceImpl_Base::cleanup() {
