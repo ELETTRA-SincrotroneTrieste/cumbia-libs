@@ -281,14 +281,14 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
  */
 QString CuControlsUtils::msg(const CuData &da, const QString& date_time_fmt) const {
     QString m = QuString(da, "src");
-    if(da.containsKey("msg"))
-        return m + ": " + QuString(da, "msg");
+    const QuString& msg = QuString(da, "msg");
+    if(!msg.isEmpty())
+        return m + ": " + msg;
     // pick mode or activity name
     if(da.containsKey("mode"))
-        m += " [" + QuString(da, "mode") + "] ";
+        m += (" [" + QuString(da, "mode") + "] ");
     else
-        m += " [" + QuString(da, "activity") + "] ";
-
+        m += (" [" + QuString(da, "activity") + "] ");
     // timestamp
     if(da.containsKey("timestamp_ms")) {
         long int ts = 0;

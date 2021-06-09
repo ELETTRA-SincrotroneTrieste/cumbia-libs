@@ -69,7 +69,7 @@ QString QuWatcher::source() const
 void QuWatcher::setSource(const QString &s)
 {
     if(singleShot())
-        d->context->setOptions(CuData("single-shot", true));
+        d->context->setOptions(d->context->options().set("single-shot", true));
     CuControlsReaderA * r = d->context->replace_reader(s.toStdString(), this);
     if(r)
         r->setSource(s);
