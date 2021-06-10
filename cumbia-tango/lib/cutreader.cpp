@@ -101,7 +101,8 @@ void CuTReader::onResult(const CuData &data) {
             if(!event_subscribe_fail) // DEBUG PRINT only if !event_subs_fail
                 perr("CuTReader.onResult: polling fallback after event failure: src %s msg %s", vtoc2(data, "src"), vtoc2(data, "msg"));
             m_polling_fallback();
-            d->tag.set("polling-failure-fallback", true);
+            if(!event_subscribe_fail)
+                d->tag.set("polling-failure-fallback", true);
         }
     }
 }
