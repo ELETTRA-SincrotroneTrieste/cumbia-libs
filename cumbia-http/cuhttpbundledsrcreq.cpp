@@ -74,12 +74,9 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(onError(QNetworkReply::NetworkError)));
     connect(reply, SIGNAL(destroyed(QObject *)), this, SLOT(onReplyDestroyed(QObject *)));
     if(d->blocking) {
-        printf("CuHttpBundledSrcReq::start \e[1;34mQEventLoop\e[0m %s\n", url.toString().toStdString().c_str());
         QEventLoop loop;
         connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
         loop.exec();
-        printf("CuHttpBundledSrcReq::event loop \e[1;34mQEventLoop\e[0m out %s\n", url.toString().toStdString().c_str());
-        printf("CuHttpBundledSrcReq::start \e[1;34mrequest was\n%s\e[0m\n", d->req_payload.data());
     }
 }
 
@@ -91,19 +88,12 @@ void CuHttpBundledSrcReq::onNewData() {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
     qint64 bytes_avail = r->bytesAvailable();
     QByteArray ba = r->read(bytes_avail);
-    qDebug() << __PRETTY_FUNCTION__ << "received this buffa" << ba;
-    bool buf_empty = d->buf.isEmpty();
-    if(!buf_empty)
-        cuprintf("CuHTTPActionA::onNewData: buf completed by \e[1;32m%s\e[0m\n", ba.data());
     d->buf += ba;
     // buf complete?
     if(d->buf.endsWith("\n\n") || d->buf.endsWith("\r\n\r\n")) { // buf complete
-        printf("CuHttpBundledSrcReq::onNewData: calling m_on_buf_complete with buf >>%s<<\n", d->buf.data());
         m_on_buf_complete();
         d->buf.clear();
     }
-    else
-        cuprintf("CuHTTPActionA::onNewData: \e[1;35mbuf \e[0;35m%s\e[1;35m incomplete waiting for next buf from the net\e[0m\n", ba.data());
 }
 
 void CuHttpBundledSrcReq::onReplyFinished()

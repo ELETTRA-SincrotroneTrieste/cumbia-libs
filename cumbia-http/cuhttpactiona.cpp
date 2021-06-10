@@ -92,8 +92,6 @@ void CuHTTPActionA::m_on_buf_complete() {
     if(m_likely_valid(d->buf)) {  // discard hi:
         QJsonParseError jpe;
         QList<QByteArray> jsonli = m_extract_data(d->buf);
-
-        printf("CuHttpActionA.m_on_buf_complete: received buf %s and detected \e[1;32m%d \e[0m datas\n", d->buf.data(), jsonli.size());
         foreach(const QByteArray &json, jsonli) {
             QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
             if(jsd.isNull())
@@ -107,17 +105,12 @@ void CuHTTPActionA::m_on_buf_complete() {
 
 void CuHTTPActionA::onNewData() {
     QByteArray ba = d->reply->readAll();
-    //    bool buf_empty = d->buf.isEmpty();
-    //    if(!buf_empty)
-    //        cuprintf("CuHTTPActionA::onNewData: buf completed by \e[1;32m%s\e[0m\n", ba.data());
     d->buf += ba;
     // buf complete?
     if(d->buf.endsWith("\n\n") || d->buf.endsWith("\r\n\r\n")) { // buf complete
         m_on_buf_complete();
         d->buf.clear();
     }
-    //    else
-    //        cuprintf("CuHTTPActionA::onNewData: \e[1;35mbuf \e[0;35m%s\e[1;35m incomplete waiting for next buf from the net\e[0m\n", ba.data());
 }
 
 void CuHTTPActionA::onReplyFinished() {
@@ -152,8 +145,6 @@ void CuHTTPActionA::startRequest(const QUrl &src)
     if(!d->reply) {
         d->reply = d->nam->get(r);
         reqs_started++;
-        cuprintf("\e[0;32m + \e[0mCuHTTPActionA::startRequest: this is %p reply is %p src %s \e[1;32mREQS STARTED %d ENDED %d\e[0m\n", this, d->reply, qstoc(src.toString()),
-                 reqs_started, reqs_ended);
         connect(d->reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
         connect(d->reply, SIGNAL(finished()), this, SLOT(onReplyFinished()));
         connect(d->reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, SLOT(onSslErrors(const QList<QSslError> &)));
@@ -168,7 +159,6 @@ void CuHTTPActionA::startRequest(const QUrl &src)
 void CuHTTPActionA::stopRequest() {
     qDebug() << __PRETTY_FUNCTION__ << "stop request : d->reply" << d->reply;
     if(d->reply) {
-        cuprintf("CuHTTPActionA.stopRequest: closing %p\n", d->reply);
         disconnect(d->reply, SIGNAL(error(QNetworkReply::NetworkError)), this, nullptr);
         disconnect(d->reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, nullptr);
         if(d->reply->isOpen())

@@ -48,7 +48,6 @@ bool CumbiaHTTPWorld::json_decode(const QByteArray &ba, std::list<CuData> &out) 
 
 void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
 {
-    qDebug() << __PRETTY_FUNCTION__ << data_v << datos(res);
     QJsonObject data_o = data_v.toObject();
     QStringList keys = data_o.keys();
     // value keys must be converted to the original type: Json converts all numbers to double

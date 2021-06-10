@@ -74,14 +74,11 @@ void CuHttpSrcMan::enqueueSrc(const CuHTTPSrc &httpsrc,
  *     not update l
  */
 void CuHttpSrcMan::cancelSrc(const CuHTTPSrc &httpsrc, const std::string& method, CuDataListener *l, const QString& chan) {
-    printf("CuHttpSrcMan.cancelSrc: %s %s chan %s\n", httpsrc.getName().c_str(), method.c_str(), qstoc(chan));
     bool rem = m_queue_remove(httpsrc.prepare(), method, l);
     if(!rem) { // if rem, src was still in queue, no request sent
         rem = m_wait_map_remove(httpsrc.prepare(), method, l);
         // if not in queue, request could have been sent: send "u" unsubscribe req
         if(method == "s") {
-
-            printf("CuHttpSrcMan.cancelSrc: enqueueSrc called: %s %s chan %s\n", httpsrc.getName().c_str(), method.c_str(), qstoc(chan));
             enqueueSrc(httpsrc, l, "u", chan, CuVariant(), CuData());
         }
     }
@@ -151,7 +148,6 @@ QMap<QString, SrcData> CuHttpSrcMan::takeTgts() const {
 
 void CuHttpSrcMan::onDequeueTimeout() {
     bool empty = d->srcq.isEmpty();
-    printf("\e[1;32mCuHttpSrcMan.onDequeueTimeout: src queue siz %d\e[0m\n", d->srcq.size());
     while(!d->srcq.isEmpty()) {
         const SrcItem& i = d->srcq.dequeue();
         i.method != "write" ?  d->srcd.insert(QString::fromStdString(i.src), SrcData(i.l, i.method, i.channel, i.options))
