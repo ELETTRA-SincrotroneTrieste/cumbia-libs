@@ -89,8 +89,22 @@ public:
 
     std::vector<std::string> keys() const;
 
+    // shortcuts to extract data
+    std::string s(const std::string& key) const;
+    double d(const std::string& key) const;
+    int i(const std::string& key) const;
+    unsigned int u(const std::string& key) const;
+    bool b(const std::string& key) const;
+
+    // to<T> version shortcuts
+    double D(const std::string& key) const;
+    int I(const std::string& key) const;
+    unsigned int U(const std::string& key) const;
+
+    bool B(const std::string& key) const;
+
 private:
-    CuDataPrivate *d;
+    CuDataPrivate *d_p;
 
     void mCopyData(const CuData &other);
 };
