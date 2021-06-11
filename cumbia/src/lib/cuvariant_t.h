@@ -25,44 +25,44 @@
 template<typename T> bool CuVariant::to(T &val) const
 {
 
-    bool valid = (d->format == Scalar && !d->mIsNull && d->mIsValid);
+    bool valid = (_d->format == Scalar && !_d->mIsNull && _d->mIsValid);
     if(!valid) {
         val = static_cast<T> (0ULL);
     }
     else
     {
-        switch(d->type)
+        switch(_d->type)
         {
         case Short:
-            val = static_cast<T>(*(static_cast<short *>(d->val)));
+            val = static_cast<T>(*(static_cast<short *>(_d->val)));
             break;
         case UShort:
-            val = static_cast<T>(*(static_cast<unsigned short *>(d->val)));
+            val = static_cast<T>(*(static_cast<unsigned short *>(_d->val)));
             break;
         case Int:
-            val = static_cast<T>(*(static_cast<int *>(d->val)));
+            val = static_cast<T>(*(static_cast<int *>(_d->val)));
             break;
         case UInt:
-            val = static_cast<T>(*(static_cast<unsigned int *>(d->val)));
+            val = static_cast<T>(*(static_cast<unsigned int *>(_d->val)));
             break;
 
         case LongInt:
-            val = static_cast<T>(*(static_cast<long int *>(d->val)));
+            val = static_cast<T>(*(static_cast<long int *>(_d->val)));
             break;
         case LongUInt:
-            val = static_cast<T>(*(static_cast<unsigned long *>(d->val)));
+            val = static_cast<T>(*(static_cast<unsigned long *>(_d->val)));
             break;
         case Float:
-            val = static_cast<T>(*(static_cast<float *>(d->val)));
+            val = static_cast<T>(*(static_cast<float *>(_d->val)));
             break;
         case Double:
-            val = static_cast<T>(*(static_cast<double *>(d->val)));
+            val = static_cast<T>(*(static_cast<double *>(_d->val)));
             break;
         case LongDouble:
-            val = static_cast<T>(*(static_cast<long double *>(d->val)));
+            val = static_cast<T>(*(static_cast<long double *>(_d->val)));
             break;
         case Boolean:
-            val = static_cast<T>(*(static_cast<bool *>(d->val)));
+            val = static_cast<T>(*(static_cast<bool *>(_d->val)));
             break;
         case String:
             try {
@@ -86,8 +86,8 @@ template<typename T> bool CuVariant::to(T &val) const
             break;
         }
         if(!valid)
-            pwarn("CuVariant.to: unsupported scalar conversion from type %s and format %s", dataTypeStr(d->type).c_str(),
-                 dataFormatStr(d->format).c_str());
+            pwarn("CuVariant.to: unsupported scalar conversion from type %s and format %s", dataTypeStr(_d->type).c_str(),
+                 dataFormatStr(_d->format).c_str());
     }
     return valid;
 }
@@ -110,60 +110,60 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
 {
     bool valid = true;
     size_t i;
-    if(d->format == Vector)
+    if(_d->format == Vector)
     {
-        if(d->type == Short)
+        if(_d->type == Short)
         {
             std::vector<short> vs = toShortVector();
             for(i = 0; i < vs.size(); i++)
                 v.push_back(static_cast<T>(vs[i]));
         }
-        else if(d->type == UShort) {
+        else if(_d->type == UShort) {
             std::vector<unsigned short> vus = toUShortVector();
             for(i = 0; i < vus.size(); i++)
                 v.push_back(static_cast<T>(vus[i]));
         }
-        else if(d->type == Int) {
+        else if(_d->type == Int) {
             std::vector<int> vi = toIntVector();
             for(i = 0; i < vi.size(); i++)
                 v.push_back(static_cast<T>(vi[i]));
         }
-        else if(d->type == UInt) {
+        else if(_d->type == UInt) {
             std::vector<unsigned int> vui = toUIntVector();
             for(i = 0; i < vui.size(); i++)
                 v.push_back(static_cast<T>(vui[i]));
         }
-        else if(d->type == LongInt) {
+        else if(_d->type == LongInt) {
             std::vector<long int> vli = toLongIntVector();
             for(i = 0; i < vli.size(); i++)
                 v.push_back(static_cast<T>(vli[i]));
         }
-        else if(d->type == LongUInt) {
+        else if(_d->type == LongUInt) {
             std::vector<long unsigned int> vlui = toULongIntVector();
             for(i = 0; i < vlui.size(); i++)
                 v.push_back(static_cast<T>(vlui[i]));
         }
-        else if(d->type == Float) {
+        else if(_d->type == Float) {
             std::vector<float> vf = toFloatVector();
             for(i = 0; i < vf.size(); i++)
                 v.push_back(static_cast<T>(vf[i]));
         }
-        else if(d->type == Double) {
+        else if(_d->type == Double) {
             std::vector<double> df = toDoubleVector();
             for(i = 0; i < df.size(); i++)
                 v.push_back(static_cast<T>(df[i]));
         }
-        else if(d->type == LongDouble) {
+        else if(_d->type == LongDouble) {
             std::vector<long double> ldv = toLongDoubleVector();
             for(i = 0; i < ldv.size(); i++)
                 v.push_back(static_cast<T>(ldv[i]));
         }
-        else if(d->type == Boolean) {
+        else if(_d->type == Boolean) {
             std::vector<bool> bv = toBoolVector();
             for(i = 0; i < bv.size(); i++)
                 v.push_back(static_cast<T>(bv[i]));
         }
-        else if(d->type == String) {
+        else if(_d->type == String) {
             long double ld;
             std::vector<std::string> sv = toStringVector();
             for(i = 0; i < sv.size() && valid; i++)
@@ -187,29 +187,29 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
         else
             valid = false;
     }
-    else if(d->format == Scalar)
+    else if(_d->format == Scalar)
     {
-        if(d->type == Short)
+        if(_d->type == Short)
             v.push_back(static_cast<T>(toShortInt()));
-        else if(d->type == UShort)
+        else if(_d->type == UShort)
             v.push_back(static_cast<T>(toUShortInt()));
-        else if(d->type == Int)
+        else if(_d->type == Int)
             v.push_back(static_cast<T>(toInt()));
-        else if(d->type == UInt)
+        else if(_d->type == UInt)
             v.push_back(static_cast<T>(toUInt()));
-        else if(d->type == LongInt)
+        else if(_d->type == LongInt)
             v.push_back(static_cast<T>(toLongInt()));
-        else if(d->type == LongUInt)
+        else if(_d->type == LongUInt)
             v.push_back(static_cast<T>(toULongInt()));
-        else if(d->type == Float)
+        else if(_d->type == Float)
             v.push_back(static_cast<T>(toFloat()));
-        else if(d->type == Double)
+        else if(_d->type == Double)
             v.push_back(static_cast<T>(toDouble()));
-        else if(d->type == LongDouble)
+        else if(_d->type == LongDouble)
             v.push_back(static_cast<T>(toLongDouble()));
-        else if(d->type == Boolean)
+        else if(_d->type == Boolean)
             v.push_back(static_cast<T>(toBool()));
-        else if(d->type == String)
+        else if(_d->type == String)
         {
             try
             {
@@ -235,8 +235,8 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
 
 template<typename T>
 CuMatrix<T> CuVariant::toMatrix() const {
-    if(d->format == Matrix) {
-        return *(static_cast<CuMatrix <T> * >(d->val));
+    if(_d->format == Matrix) {
+        return *(static_cast<CuMatrix <T> * >(_d->val));
     }
     return CuMatrix<T>();
 }

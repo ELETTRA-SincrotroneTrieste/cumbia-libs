@@ -213,35 +213,65 @@ public:
 	bool isWNull() const;
 
     std::vector<double> toDoubleVector() const;
+    std::vector<double> dv() const { return toDoubleVector(); }
     std::vector<long double> toLongDoubleVector() const;
+    std::vector<long double> ldv() const { return toLongDoubleVector(); }
     std::vector<float> toFloatVector() const;
+    std::vector<float> fv() const { return toFloatVector(); }
     std::vector<int> toIntVector() const;
+    std::vector<int> iv() const { return toIntVector(); }
     std::vector<unsigned int> toUIntVector() const;
+    std::vector<unsigned int> uv() const { return toUIntVector(); }
     std::vector<unsigned long long int> toLongLongUIntVector() const;
+    std::vector<unsigned long long int> ullv() const { return toLongLongUIntVector(); }
     std::vector<long int> toLongIntVector() const;
+    std::vector<long int> lv() const { return toLongIntVector(); }
     std::vector<long long int> toLongLongIntVector() const;
+    std::vector<long long int> llv() { return toLongLongIntVector(); }
     std::vector<unsigned long int> toULongIntVector() const;
+    std::vector<unsigned long int> ulv() const { return toULongIntVector(); }
+
     std::vector<bool> toBoolVector() const;
+    std::vector<bool> bv() const { return toBoolVector(); }
     std::vector<short> toShortVector() const;
+    std::vector<short> siv() const { return toShortVector(); }
+
     std::vector<unsigned short> toUShortVector() const;
+    std::vector<unsigned short> usv() const { return toUShortVector(); }
     std::vector<char> toCharVector() const;
+    std::vector<char> cv() const { return toCharVector(); }
     std::vector<unsigned char> toUCharVector() const;
+    std::vector<unsigned char> ucv() const { return toUCharVector(); }
 
-	double toDouble(bool *ok = NULL) const;
-	long double toLongDouble(bool *ok = NULL) const;
-    unsigned long int toULongInt(bool *ok = NULL) const;
+    double toDouble(bool *ok = nullptr) const;
+    double d() const;
+    long double toLongDouble(bool *ok = nullptr) const;
+    long double ld() const;
+    unsigned long int toULongInt(bool *ok = nullptr) const;
+    unsigned long int ul() const;
     unsigned long long toULongLongInt(bool *ok) const;
-    long int toLongInt( bool *ok = NULL) const;
-    long long int toLongLongInt(bool *ok = NULL) const;
-    int toInt( bool *ok = NULL) const;
-    unsigned int toUInt( bool *ok = NULL) const;
-    unsigned short toUShortInt(bool *ok = NULL) const;
-    short toShortInt(bool *ok = NULL) const;
-    float toFloat(bool *ok = NULL ) const;
-    bool toBool(bool *ok = NULL) const;
-    std::string toString(bool *ok = NULL, const char *format = "") const;
+    unsigned long long ull() const;
+    long int toLongInt( bool *ok = nullptr) const;
+    long int l() const;
+    long long int toLongLongInt(bool *ok = nullptr) const;
+    long long int ll() const;
+    int toInt( bool *ok = nullptr) const;
+    int i() const;
+    unsigned int toUInt( bool *ok = nullptr) const;
+    unsigned int u() const;
+    unsigned short toUShortInt(bool *ok = nullptr) const;
+    unsigned short us() const;
+    short toShortInt(bool *ok = nullptr) const;
+    short si() const;
+    float toFloat(bool *ok = nullptr ) const;
+    float f() const;
+    bool toBool(bool *ok = nullptr) const;
+    bool b() const;
+    std::string toString(bool *ok = nullptr, const char *format = "") const;
+    std::string s() const;
 
-    std::vector<std::string> toStringVector(bool *ok = NULL) const;
+    std::vector<std::string> toStringVector(bool *ok = nullptr) const;
+    std::vector<std::string> sv() const;
 
     double *toDoubleP() const;
     long double *toLongDoubleP() const;
@@ -299,7 +329,7 @@ private:
 
 private:
 
-    CuVariantPrivate *d;
+    CuVariantPrivate *_d;
 };
 
 /* implementation of public template methods must be included
