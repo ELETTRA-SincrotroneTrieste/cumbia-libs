@@ -85,8 +85,8 @@ void CuTReader::onResult(const std::vector<CuData> &datalist) {
  */
 void CuTReader::onResult(const CuData &data) {
     bool err = data["err"].toBool();
-    if(d->tag.containsKey("polling-failure-fallback"))
-        printf("CuTReader.onResult after polling fallback EVENT Failure: %s [%s]\n", vtoc2(data, "src"), vtoc2(data, "value"));
+//    if(d->tag.containsKey("polling-failure-fallback"))
+//        printf("CuTReader.onResult after polling fallback EVENT Failure: %s [%s]\n", vtoc2(data, "src"), vtoc2(data, "value"));
     // iterator can be invalidated if listener's onUpdate unsets source: use a copy
     std::set<CuDataListener *> lis_copy = d->listeners;
     std::set<CuDataListener *>::iterator it;
