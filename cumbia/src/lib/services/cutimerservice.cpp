@@ -128,12 +128,14 @@ CuTimer *CuTimerService::changeTimeout(CuTimerListener *tl, int from_timeo, int 
         std::unique_lock lock(d->shared_mutex);
         t = m_findTimer(tl, from_timeo); // does not lock
     }
+    printf("CuTimerService::changeTimeout frm %d to %d - timer found for timeo %d: %p\n", from_timeo, to_timeo, from_timeo, t);
     if(t) {
         unregisterListener(tl, t->timeout()); // locks
         t = registerListener(tl, to_timeo); // locks
     }
     else if(!t)
         perr("CuTimerService.changeTimeout: no listener %p registered with timer's timeout %d", tl, from_timeo);
+    printf("CuTimerService::changeTimeout  returning timer %p timeo %d\n", t, t->timeout());
     return t;
 }
 

@@ -388,8 +388,9 @@ void CuThread::run() {
                     if(a->repeat() != timer->timeout()) { // in case of timeut change
                         cuprintf("CuThread.run: activity %p [%s]: requires a \e[1;32mtimeout change\e[0m %d-->%d\n",
                                a, a->getToken().toString().c_str(), timer->timeout(), a->repeat());
-                        // this will start the timer: call after doExecute
-                        m_tmr_registered(a, timer_s->changeTimeout(this, timer->timeout(), a->repeat()));
+                        CuTimer *t = timer_s->changeTimeout(this, timer->timeout(), a->repeat());
+                        m_tmr_registered(a, t);
+                        timer_s->restart(t, a->repeat());
                     }
                     else { // normally
                         timeo_restart = timer->timeout();
