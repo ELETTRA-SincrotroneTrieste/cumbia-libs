@@ -83,7 +83,8 @@ void CuEventLoopService::exec(bool threaded)
  */
 void CuEventLoopService::postEvent(CuEventLoopListener *lis, CuEventI *e)
 {
-    printf(" CuEventLoopService::postEvent lis %p\n", lis);
+    if(e->getType() == CuEventI::TimerEvent)
+        printf(" CuEventLoopService::postEvent Timer event lis %p\n", lis);
     std::unique_lock<std::mutex> lk(d->m_mutex);
     d->queue.push(CuEventInfo(e, lis));
     d->m_evloop_cv.notify_one();
@@ -166,7 +167,8 @@ void CuEventLoopService::run()
                 repeat = false;
             else if(std::find(d->eloo_liss.begin(), d->eloo_liss.end(), event_i.lis)
                     != d->eloo_liss.end()) {
-                printf("CuEventLoopService.run calling onEvent on %p\n", event_i.lis);
+                if(e->getType() == CuEventI::TimerEvent)
+                    printf("CuEventLoopService.run calling TimerEvent onEvent on %p\n", event_i.lis);
                 event_i.lis->onEvent(event_i.event);
             }
             delete event_i.event;
