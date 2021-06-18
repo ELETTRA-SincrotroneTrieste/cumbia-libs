@@ -167,7 +167,7 @@ void CuEventLoopService::run()
                 repeat = false;
             else if(std::find(d->eloo_liss.begin(), d->eloo_liss.end(), event_i.lis)
                     != d->eloo_liss.end()) {
-                if(e->getType() == CuEventI::TimerEvent)
+                if(event_i.event->getType() == CuEventI::TimerEvent)
                     printf("CuEventLoopService.run calling TimerEvent onEvent on %p\n", event_i.lis);
                 event_i.lis->onEvent(event_i.event);
             }
