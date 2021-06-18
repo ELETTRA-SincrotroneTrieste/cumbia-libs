@@ -20,13 +20,12 @@
  */
 CuTimer::CuTimer(CuEventLoopService *loos)
 {
-//    printf("CuTimer.CuTimer created [thread 0x%lx] ->  loop service  %p\n", pthread_self(), loos );
     m_quit = m_pause = m_exited = m_skip = false;
     m_pending = 0;
     m_timeout = 1000;
     m_thread = NULL;
     m_loop_service = loos;
-    if(m_loop_service)
+    if(loos)
         m_loop_service->addCuEventLoopListener(this);
 }
 
@@ -222,7 +221,6 @@ void CuTimer::run()
             (void ) status;
             if(/*status == std::cv_status::timeout && */!m_quit && !m_pause) /* if m_exit: m_listener must be NULL */ {
                 if(m_loop_service) {
-                    printf("CuTimer.run: loop service postEvent\n");
                     m_loop_service->postEvent(this, new CuTimerEvent());
                 }
                 else
