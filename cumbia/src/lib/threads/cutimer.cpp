@@ -216,8 +216,10 @@ void CuTimer::run()
             // issues with wasm: erratically expected timeout status is no_timeout
             (void ) status;
             if(/*status == std::cv_status::timeout && */!m_quit && !m_pause) /* if m_exit: m_listener must be NULL */ {
-                if(m_loop_service)
+                if(m_loop_service) {
+                    printf("CuTimer.run: loop service postEvent\n");
                     m_loop_service->postEvent(this, new CuTimerEvent());
+                }
                 else
                     m_notify();
             }
