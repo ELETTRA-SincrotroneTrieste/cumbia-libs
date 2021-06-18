@@ -26,6 +26,8 @@ CuTimer::CuTimer(CuEventLoopService *loos)
     m_timeout = 1000;
     m_thread = NULL;
     m_loop_service = loos;
+    if(m_loop_service)
+        m_loop_service->addCuEventLoopListener(this);
 }
 
 /*! \brief class destructor
@@ -58,7 +60,10 @@ void CuTimer::setTimeout(int millis)
  * \note If null, the listeners will be notified *in the timer's thread*.
  */
 void CuTimer::setEventLoop(CuEventLoopService *loop_sr) {
-    m_loop_service = loop_sr;
+    if(loop_sr != m_loop_service) {
+        m_loop_service = loop_sr;
+        m_loop_service->addCuEventLoopListener(this);
+    }
 }
 
 /*!
