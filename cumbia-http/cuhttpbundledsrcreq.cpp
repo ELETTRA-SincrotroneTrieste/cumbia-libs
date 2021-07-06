@@ -86,11 +86,14 @@ void CuHttpBundledSrcReq::setBlocking(bool b) {
 
 void CuHttpBundledSrcReq::onNewData() {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
+    int clen = r->header(QNetworkRequest::ContentLengthHeader).toInt();
+    printf("\e[1;32mCuHttpBundleSrcReq.onNewData: content length: %d [%d/%d]\e[0m\n", clen, d->buf.length(), clen);
     qint64 bytes_avail = r->bytesAvailable();
     QByteArray ba = r->read(bytes_avail);
     d->buf += ba;
     // buf complete?
-    if(d->buf.endsWith("\n\n") || d->buf.endsWith("\r\n\r\n")) { // buf complete
+    if(d->buf.length() == clen || d->buf.endsWith("\n\n") || d->buf.endsWith("\r\n\r\n")) { // buf complete
+        printf("\e[1;32mCuHttpBundleSrcReq.onNewData: buf complete %d bytes content length: %d\e[0m\n", d->buf.length(), clen);
         m_on_buf_complete();
         d->buf.clear();
     }
@@ -177,5 +180,5 @@ QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs)
         root_o["channel"] = QString(channel);
     root_o["srcs"] = sa;
     QJsonDocument doc(root_o);
-    return doc.toJson(QJsonDocument::Compact) + "\r\n\r\n";
+    return doc.toJson(QJsonDocument::Compact);
 }
