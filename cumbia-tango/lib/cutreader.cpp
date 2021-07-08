@@ -23,7 +23,7 @@ class TSource;
 class CuTReaderPrivate
 {
 public:
-    CuTReaderPrivate(const TSource& src, CumbiaTango *ct, const CuData &op, const CuData &_tag)
+    CuTReaderPrivate(const TSource& src, CumbiaTango *ct, const CuData &_tag)
         : tsrc(src),
           cumbia_t(ct),
           event_activity(nullptr),
@@ -32,7 +32,6 @@ public:
           refresh_mode(CuTReader::ChangeEventRefresh),
           polling_fallback(false),
           manual_mode_period( 1000 * 3600 * 24 * 10),
-          options(op),
           tag(_tag) {  }
 
     std::set<CuDataListener *> listeners;
@@ -50,7 +49,8 @@ public:
 };
 
 CuTReader::CuTReader(const TSource& src, CumbiaTango *ct, const CuData &op, const CuData &tag) : CuTangoActionI() {
-    d = new CuTReaderPrivate(src, ct, op, tag);
+    d = new CuTReaderPrivate(src, ct, tag);
+    setOptions(op);
 }
 
 CuTReader::~CuTReader()
@@ -443,7 +443,6 @@ bool CuTReader::isEventRefresh(CuTReader::RefreshMode rm) const {
  */
 void CuTReader::start()
 {
-    pr_thread();
     if(d->refresh_mode == ChangeEventRefresh)
         m_startEventActivity();
     else {
