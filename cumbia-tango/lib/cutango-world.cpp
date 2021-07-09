@@ -521,7 +521,6 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
             else if(f == Tango::SPECTRUM)
                 dat["value"] = v;
             else if (f == Tango::IMAGE) {
-                printf("CuTangoWorld.extract_data: DEV_UCHAR format IMAGE\n");
                 dat["value"] = CuVariant(v, p_da->get_dim_x(), p_da->get_dim_y());
             }
             if(w)
