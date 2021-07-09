@@ -279,6 +279,7 @@ void CuEventActivity::push_event(Tango::EventData *e) {
     if(!e->err)  {
         utils.extractData(da, d);
         d["err"] = utils.error(); // no "msg" if no err
+        if(d.b("err")) d["msg"] = utils.getLastMessage();
     }
     else  {
         // CuTReader must distinguish between push_event exception
