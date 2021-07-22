@@ -17,7 +17,7 @@ class QuLedPrivate
 {
 public:
     bool auto_configure;
-    bool read_ok;
+    bool read_ok, value;
     QuPalette palette;
     CuContext *context;
 };
@@ -48,7 +48,7 @@ void QuLed::m_init()
 {
     d = new QuLedPrivate;
     d->auto_configure = true;
-    d->read_ok = false;
+    d->read_ok = d->value = false;
     setProperty("trueColor", QColor(Qt::green));
     setProperty("falseColor", QColor(Qt::red));
 }
@@ -82,6 +82,17 @@ void QuLed::unsetSource()
     d->context->disposeReader();
 }
 
+bool QuLed::value() {
+    return d->value;
+}
+
+void QuLed::setValue(bool v) {
+    d->value = v;
+    setColor(v ? property("trueColor").value<QColor>()
+               : property("falseColor").value<QColor>());
+    emit valueChanged(v);
+}
+
 void QuLed::onUpdate(const CuData &da)
 {
     QColor background, border;
@@ -109,9 +120,8 @@ void QuLed::onUpdate(const CuData &da)
     {
         CuVariant v = da["value"];
         switch (v.getType()) {
-            case CuVariant::Boolean:
-                setColor(v.toBool() ? property("trueColor").value<QColor>()
-                                    : property("falseColor").value<QColor>());
+        case CuVariant::Boolean:
+            setValue(v.b());
             break;
         default:
             break;
