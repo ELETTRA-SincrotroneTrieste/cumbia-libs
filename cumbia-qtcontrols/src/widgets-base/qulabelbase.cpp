@@ -344,8 +344,10 @@ void QuLabelBase::paintEvent(QPaintEvent *pe)
         p.drawRect(intBorderR); // draw gray border (external)
     }
     else { // draw only result border color, external
+        pen.setWidthF(d_ptr->borderWidth);
         p.setPen(pen);
-        p.drawRect(r.adjusted(1.0 + pen.widthF()/2.0, 1.0+pen.widthF()/2, -pen.widthF()/2.0, -pen.widthF()/2.0));
+        // p.drawRect(r.adjusted(1.0 + pen.widthF()/2.0, 1.0+pen.widthF()/2, -pen.widthF()/2.0, -pen.widthF()/2.0));
+        p.drawRect(rect());
     }
 }
 
