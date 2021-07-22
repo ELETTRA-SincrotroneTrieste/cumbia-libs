@@ -26,6 +26,7 @@ class QuLed : public QuLedBase, public CuDataListener, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)
+    Q_PROPERTY(bool value READ value WRITE setValue DESIGNABLE true NOTIFY valueChanged)
 
 public:
     QuLed(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
@@ -35,21 +36,21 @@ public:
     virtual ~QuLed();
 
     QString source() const;
-
     CuContext *getContext() const;
 
     void setQuPalette(const QuPalette &colors);
-
     QuPalette quPalette() const;
+    bool value();
 
 public slots:
     void setSource(const QString& s);
-
     void unsetSource();
+    void setValue(bool v);
 
 signals:
     void newData(const CuData&);
     void linkStatsRequest(QWidget *myself, CuContextI *myself_as_cwi);
+    void valueChanged(bool);
 
 protected:
 
