@@ -1750,6 +1750,16 @@ std::string CuVariant::toString(bool *ok, const char *format) const
 
 std::string CuVariant::s() const { return toString(nullptr); }
 
+std::string CuVariant::s(const char *fmt, bool *ok) const { return toString(ok, fmt); }
+
+std::vector<std::string> CuVariant::toStringVector(bool *ok) const {
+    return toStringVector(nullptr, ok);
+}
+
+std::vector<std::string> CuVariant::toStringVector(const char *fmt) const {
+    return toStringVector(fmt, nullptr);
+}
+
 /** \brief convert the stored data into a vector of strings
  *
  * @param *ok a pointer to a bool. If not null, its value will be set to true
@@ -1762,7 +1772,7 @@ std::string CuVariant::s() const { return toString(nullptr); }
  * CuVariant::DataFormat is *either* CuVariant::Vector *or* CuVariant::Scalar
  *
  */
-std::vector<std::string> CuVariant::toStringVector(bool *ok) const
+std::vector<std::string> CuVariant::toStringVector(const char *fmt, bool *ok) const
 {
     bool success = true;
     bool native_type = (_d->type == String && (_d->format == Vector || _d->format == Scalar) );
@@ -1784,29 +1794,29 @@ std::vector<std::string> CuVariant::toStringVector(bool *ok) const
             if(_d->type == String) // directly push back the native data
                 ret.push_back(std::string(static_cast<char **>(_d->val)[i]));
             else if(_d->type == Double)
-                snprintf(converted, MAXLEN, "%f", static_cast<double *>(_d->val)[i]);
+                snprintf(converted, MAXLEN, !fmt ? "%f" : fmt, static_cast<double *>(_d->val)[i]);
             else if(_d->type == LongDouble)
-                snprintf(converted, MAXLEN, "%Lf", static_cast<long double *>(_d->val)[i]);
+                snprintf(converted, MAXLEN,  !fmt ? "%Lf" : fmt, static_cast<long double *>(_d->val)[i]);
             else if(_d->type == Int)
-                snprintf(converted, MAXLEN, "%d", static_cast<int *>(_d->val)[i]);
+                snprintf(converted, MAXLEN, !fmt ? "%d" : fmt, static_cast<int *>(_d->val)[i]);
             else if(_d->type == UInt)
-                snprintf(converted, MAXLEN, "%u", static_cast<unsigned int *>(_d->val)[i]);
+                snprintf(converted, MAXLEN, !fmt ? "%u" : fmt, static_cast<unsigned int *>(_d->val)[i]);
             else if(_d->type == LongUInt)
-                snprintf(converted, MAXLEN, "%lu", static_cast<long unsigned int *>(_d->val)[i]);
+                snprintf(converted, MAXLEN, !fmt ? "%lu" : fmt, static_cast<long unsigned int *>(_d->val)[i]);
             else if(_d->type == LongInt)
-                snprintf(converted, MAXLEN, "%ld", static_cast<long int *>(_d->val)[i]);
+                snprintf(converted, MAXLEN, !fmt ? "%ld" : fmt, static_cast<long int *>(_d->val)[i]);
             else if(_d->type == Short)
-                snprintf(converted, MAXLEN, "%hd", static_cast<short int *>(_d->val)[i]);
+                snprintf(converted, MAXLEN, !fmt ? "%hd" : fmt, static_cast<short int *>(_d->val)[i]);
             else if(_d->type == UShort)
-                snprintf(converted, MAXLEN, "%hu", static_cast<unsigned short *>(_d->val)[i]);
+                snprintf(converted, MAXLEN, !fmt ? "%hu" : fmt, static_cast<unsigned short *>(_d->val)[i]);
             else if(_d->type == Float)
-                snprintf(converted, MAXLEN, "%f", static_cast<float *>(_d->val)[i]);
+                snprintf(converted, MAXLEN, !fmt ? "%f" : fmt, static_cast<float *>(_d->val)[i]);
             else if(_d->type == Boolean)
                 static_cast<bool *>(_d->val)[i] ? sprintf(converted, "true") : sprintf(converted, "false");
             else if(_d->type == UChar)
-                snprintf(converted, MAXLEN, "%u", static_cast<unsigned char *>(_d->val)[i]);
+                snprintf(converted, MAXLEN, !fmt ? "%u" : fmt, static_cast<unsigned char *>(_d->val)[i]);
             else if(_d->type == Char)
-                snprintf(converted, MAXLEN, "%d", static_cast<char *>(_d->val)[i]);
+                snprintf(converted, MAXLEN, !fmt ? "%d" : fmt, static_cast<char *>(_d->val)[i]);
             else {
                 success = false;
                 perr("CuVariant.toStringVector: error converting data to string vector: format is %s type is %s",
@@ -1829,7 +1839,11 @@ std::vector<std::string> CuVariant::toStringVector(bool *ok) const
     return ret;
 }
 
-std::vector<std::string> CuVariant::sv() const { return toStringVector(nullptr); }
+std::vector<std::string> CuVariant::sv() const { return toStringVector(nullptr, nullptr); }
+
+std::vector<std::string> CuVariant::sv(const char *fmt, bool *ok) const {
+    return toStringVector(fmt, ok);
+}
 
 /** \brief Returns the pointer to the data stored as double, or NULL if no data is stored
  *         or if the data type is wrong

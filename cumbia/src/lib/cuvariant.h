@@ -269,9 +269,13 @@ public:
     bool b() const;
     std::string toString(bool *ok = nullptr, const char *format = "") const;
     std::string s() const;
+    std::string s(const char *fmt, bool *ok = nullptr) const;
 
     std::vector<std::string> toStringVector(bool *ok = nullptr) const;
+    std::vector<std::string> toStringVector( const char *fmt) const;
+    std::vector<std::string> toStringVector( const char *fmt, bool *ok) const;
     std::vector<std::string> sv() const;
+    std::vector<std::string> sv(const char *fmt, bool *ok = nullptr) const;
 
     double *toDoubleP() const;
     long double *toLongDoubleP() const;
