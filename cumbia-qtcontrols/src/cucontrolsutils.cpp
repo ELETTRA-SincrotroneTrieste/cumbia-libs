@@ -117,8 +117,6 @@ CuVariant CuControlsUtils::getArgs(const QString &target, const QObject *leaf) c
         else
             argins.push_back(a.toStdString());
     }
-    for(size_t i = 0; i < argins.size(); i++)
-        cuprintf("argin %ld args.size %ld: %s\n", i, args.size(), argins.at(i).c_str());
     if(args.size() > 1)
         return CuVariant(argins);
     else if(args.size() == 1 && argins.size() > 0)
