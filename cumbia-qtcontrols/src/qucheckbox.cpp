@@ -265,7 +265,7 @@ void QuCheckBox::onUpdate(const CuData &da)
         CuVariant val = da["value"];
         if(val.getType() == CuVariant::Boolean) {
             d->last_val = val.toBool();
-            d->last_val ? setChecked(Qt::Checked) : setChecked(Qt::Unchecked);
+            d->last_val ? setCheckState(Qt::Checked) : setCheckState(Qt::Unchecked);
         }
         else {
             setChecked(Qt::PartiallyChecked);

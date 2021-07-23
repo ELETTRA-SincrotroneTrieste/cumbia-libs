@@ -334,7 +334,7 @@ void QuComboBox::setExecuteOnIndexChanged(bool exe)
     }
 }
 
-void QuComboBox::onAnimationValueChanged(const QVariant &v)
+void QuComboBox::onAnimationValueChanged(const QVariant &)
 {
     // optimize animation paint area with the clipped rect provided by QuAnimation::clippedRect
     update(d->animation.clippedRect(rect()));
