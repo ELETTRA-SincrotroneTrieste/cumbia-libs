@@ -122,56 +122,105 @@ Tango Database read access becomes easy!
 Reading class properties is accomplished by a source like tango://TangoTest(ProjectTitle,Description) Device properties can be obtained like tango://ken:20000/test/device/1(description, helperApplication,values), and get the list of attributes of a device through ken:20000/test/device/1(description, helperApplication,values)
 
 Type
+
+```
 cumbia read --help
-and scroll to the section Read the Tango database to play and get acquainted with this new functionality in no time!
+```
 
-This new feature allows to get properties in your app with just the little code needed for usual sources, and integrate them easily in graphical elements. Have a look at this documentation page.
+and scroll to the section Read the Tango database to play and get acquainted
+with this new functionality in no time!
 
-cumbia-http
-Nowadays the need to access control systems from home and portable devices is constantly growing. The new cumbia-http has been designed with this purpose and http and Server Sent Event services in mind. When such services become available, clients of any kind will be able to connect from anywhere!
+This new feature allows to get properties in your app with just the little
+code needed for usual sources, and integrate them easily in graphical elements.
+Have a look at [this][https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/cumbia-qtcontrols/html/understanding_cumbia_qtcontrols_constructors.html]
+documentation page.
 
-Include cumbia-http in your installation is as easy as adding http to the scripts/cubuild.sh command.
+### cumbia-http
+The need to access control systems from home and portable devices
+is constantly growing. The new cumbia-http has been designed with
+this purpose and http and Server Sent Event services in mind.
+Clients of any kind will be able to connect from anywhere through the
+[caserver][https://gitlab.elettra.eu/puma/server/canone3] service.
 
-CuModuleLoader loader in quapps
-The new header file provided by *qumbia-apps/quapps* module allows to find and load all available cumbia engines, depending on optional command line arguments. Thanks to this and to the flexible cumbia design, it is possible to connect any application to a native control system engine or let it obtain data through *http* or *websocket*.
+#### Build cumbia-libs with http support
 
-QTango migration creates a multi engine version of the app
-The cumbia project wizard now creates a multi engine version of the application when migrating from a QTango project.
+Include cumbia-http in your installation is as easy as adding http to
+the scripts/cubuild.sh command.
 
-version 1.1.1
-cumbia
-CumbiaPool: removed printf when no implementation is found and improved doc
-Support for cross compilation with emscripten / wasm
-cumbia-qtcontrols
-CuControlsFactoryPool: NULL replaced with nullptr.
-A QuReplaceWildcards_I definition has been introduced to provide an interface for command line *replace wildcards* capable engines.
-Support for cross compilation with emscripten / wasm
-qumbia-apps
-qumbia-read: support for websocket
-qumbiaprojectwizard:
-fixed $APPLICATION_NAME$" and "$ORGANIZATION_NAME$" placeholder replacement
-multi-engine is the default option and the templates create a skeleton including cumbia-random and cumbia-websocket modules, if available. cumbia-websocket is added only if a proper command line option is detected. QCommandLineParser is used to find the required option to activate cumbia-websocket connection
-cumbia-websocket
-added support for a full-duplex communication with generic server on a single web socket. Former support to canoned (pwma) server is maintained and selected if an http url is provided to the constructor alongside the websocket URL.
+### CuModuleLoader in applications
+
+The new header file provided by *qumbia-apps/quapps* module allows to
+find and load all available cumbia engines, depending on optional command line arguments.
+Thanks to this and to the flexible cumbia design, it is possible to connect any
+application to a native control system engine or let it obtain data through
+*http* or *websocket*.
+
+#### QTango migration
+QTango migration creates a multi engine version of the app.
+
+The cumbia project wizard now creates a multi engine version of the application
+when migrating from a QTango project.
+
+## version 1.1.1
+### cumbia
+- CumbiaPool: removed printf when no implementation is found and improved doc
+- Support for cross compilation with emscripten / wasm
+### cumbia-qtcontrols
+- CuControlsFactoryPool: NULL replaced with nullptr.
+- A QuReplaceWildcards_I definition has been introduced to provide an interface for command line *replace wildcards* capable engines.
+
+### qumbia-apps
+
+- qumbia-read: support for websocket
+
+### qumbiaprojectwizard:
+- fixed $APPLICATION_NAME$" and "$ORGANIZATION_NAME$" placeholder replacement
+- multi-engine is the default option and the templates create a skeleton including cumbia-random and cumbia-websocket modules, if available. cumbia-websocket is added only if a proper command line option is detected. QCommandLineParser is used to find the required option to activate cumbia-websocket connection
+
+### cumbia-websocket
+- added support for a full-duplex communication with generic server on a single web socket. Former support to canoned (pwma) server is maintained and selected if an http url is provided to the constructor alongside the websocket URL.
 d1. can be tested using the simple https://github.com/ELETTRA-SincrotroneTrieste/cumbia-websocket-proxy-server.git websocket server "proxy"
 added support for command line argument wildcard replacement for tango by an implementation of QuReplaceWildcards_I
-qumbia-tango-controls
-cutcontrols-utils: CuTangoReplaceWildcards implementation of the QuReplaceWildcards_I interface is used to perform command line arguments wildcard replacement
-version 1.1.0
+
+### qumbia-tango-controls
+
+- cutcontrols-utils: CuTangoReplaceWildcards implementation of the QuReplaceWildcards_I interface is used to perform command line arguments wildcard replacement
+
+## version 1.1.0
 App: cumbia read
-cumbia read has been expanded in order to support the cumbia-random module and a great number of command line options. Coupled with the qumbia-tango-findsrc-plugin and the qumbia-tango-find-src app, that can be installed from github. it provides Tango sources auto completion on the command line.
+cumbia read has been expanded in order to support the cumbia-random module
+and a great number of command line options.
+Coupled with the qumbia-tango-findsrc-plugin and the qumbia-tango-find-src app,
+that can be installed from github. it provides Tango sources auto completion on
+the command line.
 
 Try it out!
 Hint: hit the TAB key to auto complete Tango source names.
 
 description	command
-read sources from heterogeneous engines	cumbia read test/device/1/double_scalar epics:ai1 random://rnd/1/0/10
-read sources configuration only, from heterogeneous engines	cumbia read test/device/1/double_scalar epics:ai1 --property
-Impart a Tango command to read an array three times, truncate the output to 8 elements, print with a custom format	cumbia read inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8 --3 --format="%.4f"
-Monitor a Tango command	cumbia monitor inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8
+read sources from heterogeneous engines
+
+
+
+> cumbia read test/device/1/double_scalar epics:ai1 random://rnd/1/0/10
+
+
+read sources configuration only, from heterogeneous engines
+
+> cumbia read test/device/1/double_scalar epics:ai1 --property
+
+Impart a Tango command to read an array three times, truncate the output to 8 elements,
+print with a custom format
+
+> cumbia read inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8 --3 --format="%.4f"
+
+Monitor a Tango command
+
+> cumbia monitor inj/diagnostics/rtbpm_inj.01//GetHorPos[0,1000] --truncate=8
+
 Filtered list of Tango device properties	cumbia read --tp test/device/1:helper*
 Read a Tango attribute property	cumbia read --tp test/device/1/string_scalar/values
-More examples here.
+More examples [here][https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/qumbia-reader/html/index.html].
 
 Additional features:
 
@@ -181,26 +230,47 @@ either monitor or single shot mode
 See the documentation for a more detailed description.
 Library
 New prerequisites
-The read/write locks adopted to provide greater speed require a compiler supporting the C
+The read/write locks adopted to provide greater speed require a compiler
+supporting the C 17 standard.
 
-17 standard.
-cumbia
-Version 1.1.0 allows the application developer to customize how threads are grouped together, as well as to define an upper limit on their number. The *cumbia-tango* engine groups threads by Tango device. If you want to customize the default behaviour, refer to the CuTThreadTokenGen and the Cumbia::setThreadTokenGenerator documentation pages. Additionally, timers in polled reads can be reused in order to limit timer threads. See the CuTimerService documentation.
+### cumbia
+Version 1.1.0 allows the application developer to customize how threads are
+grouped together, as well as to define an upper limit on their number.
+The *cumbia-tango* engine groups threads by Tango device.
+If you want to customize the default behaviour, refer to the CuTThreadTokenGen
+and the Cumbia::setThreadTokenGenerator documentation pages.
 
-cumbia-tango
-Database search
+Additionally, timers in polled reads can be reused in order to limit timer threads.
+See the CuTimerService documentation.
+
+### cumbia-tango
+#### Database search
 CuTdbPropertyReader
 
-added support for wildcards when searching device properties
-added Tango class property list for a given class name
-cumbia-random
-cumbia-random has been expanded in order to offer great flexibility to test higher level cumbia modules and applications with greater accuracy. Source names alone can specify how data is generated, threads grouped and much more. JavaScript functions in .js files can be set as source of data for the cumbia-random module.
+- added support for wildcards when searching device properties
+- added Tango class property list for a given class name
 
-The source name can define group threading, period, size of generated data, minimum, maximum and period.
+### cumbia-random
+cumbia-random has been expanded in order to offer great flexibility to test
+higher level cumbia modules and applications with greater accuracy.
+Source names alone can specify how data is generated, threads grouped and much more.
+JavaScript functions in .js files can be set as source of data for the cumbia-random
+module.
+
+The source name can define group threading, period, size of generated data, minimum,
+maximum and period.
 The source can specify a JavaScript file to generate data from a custom function
 cumbia-qtcontrols
-CuPluginLoader provides a template method to quickly obtain an instance of the desired plugin. See CuPluginLoader::get.
 
-Plugins
-qumbia-tango-findsrc-plugin
-An external new plugin named qumbia-tango-findsrc-plugin and the qumbia-tango-find-src app are available from github.com The utility finds the name of a Tango source (attribute or command) from a partial name. The plugin can be loaded from any application willing to provide Tango sources auto completion.
+#### CuPluginLoader
+
+The CuPluginLoader provides a template method to quickly obtain an instance
+of the desired plugin. See CuPluginLoader::get.
+
+### Plugins
+#### qumbia-tango-findsrc-plugin
+An external new plugin named qumbia-tango-findsrc-plugin and the
+qumbia-tango-find-src app are available from github.com .
+The utility finds the name of a Tango source (attribute or command)
+from a partial name. The plugin can be loaded from any application willing to
+provide Tango sources auto completion.
