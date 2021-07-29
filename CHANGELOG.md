@@ -7,9 +7,14 @@ Changes in 1.3.0 shall provide an enhanced performance and brings a lighter and 
 - shortcuts for common conversion methods have been introduced in CuData:
   for example ```d.b("key")``` is the equivalent of ```d["key"].toBool()```
   and ```d.s("src")``` is the equivalent of ```d["src"].toString()```.
-The upper case versions: d.B(const std::string& key), d.D(const std::string& key) are shortcuts for the template conversion flavours provided by CuVariant. See CuData documentation.
+
+The upper case versions: ```d.B(const std::string& key)```,
+```d.D(const std::string& key)``` are shortcuts for the template conversion
+flavours provided by CuVariant. See CuData documentation.
+
 Matching methods have been introduced in CuVariant.
-cumbia: CuMatrix new class is a model for 2 dimensional arrays. See CuMatrix doc. CuVariant constructors have been added for the supported types, given a vector and the number of rows and columns. Template function CuVariant::toMatrix converts a CuVariant matrix to a matrix of type T
+
+- CuMatrix new class is a model for 2 dimensional arrays. See CuMatrix doc. CuVariant constructors have been added for the supported types, given a vector and the number of rows and columns. Template function CuVariant::toMatrix converts a CuVariant matrix to a matrix of type T
 cumbia: CuVariant vector of char and unsigned char support added
 cumbia: both CuVariant string and vector of strings conversion now can optionally take a parameter specifying the desired conversion format, printf - style.
 cumbia: if an EventLoopService is specified upon timer creation, CuTimer will post timer events on the event loop service thread (typically, the main thread).
