@@ -1,10 +1,18 @@
 # News
 ## version 1.3.0
 
-Changes in 1.3.0 shall provide an enhanced performance and brings a lighter and more readable code in cumbia-tango.
+Changes in 1.3.0 shall provide an enhanced performance and brings a
+lighter and more readable code in cumbia-tango.
+
+The advance in performance targets not only the native Tango engine:
+the *http* module and the interaction with the
+[caserver][https://gitlab.elettra.eu/puma/server/canone3] service
+will be substantially enhanced.
 
 ### cumbia
-- shortcuts for common conversion methods have been introduced in CuData:
+
+#### conversion shortcuts
+shortcuts for common conversion methods have been introduced in CuData:
   for example ```d.b("key")``` is the equivalent of ```d["key"].toBool()```
   and ```d.s("src")``` is the equivalent of ```d["src"].toString()```.
 
@@ -14,35 +22,101 @@ flavours provided by CuVariant. See CuData documentation.
 
 Matching methods have been introduced in CuVariant.
 
-- CuMatrix new class is a model for 2 dimensional arrays. See CuMatrix doc. CuVariant constructors have been added for the supported types, given a vector and the number of rows and columns. Template function CuVariant::toMatrix converts a CuVariant matrix to a matrix of type T
-cumbia: CuVariant vector of char and unsigned char support added
-cumbia: both CuVariant string and vector of strings conversion now can optionally take a parameter specifying the desired conversion format, printf - style.
-cumbia: if an EventLoopService is specified upon timer creation, CuTimer will post timer events on the event loop service thread (typically, the main thread).
-cumbia-tango
-cumbia-tango: CuTReader code has been cleaned and a memory leak regression has been fixed.
-cumbia applications: use cu_exclude_engines variable to qmake to list the engines you do not want to enable in the application.
+#### Matrix support
+
+CuMatrix new class is a model for 2 dimensional arrays. See CuMatrix doc. CuVariant constructors have been added for the supported types, given a vector and the number of rows and columns. Template function CuVariant::toMatrix converts a CuVariant matrix to a matrix of type T
+
+#### CuVariant
+- vector of char and unsigned char support added
+
+- both CuVariant string and vector of strings conversion now can optionally take a parameter specifying the desired conversion format, printf - style.
+
+#### CuTimer
+If an EventLoopService is specified upon timer creation, CuTimer will post
+timer events in the event loop service thread (that typically means, the main thread).
+
+### cumbia-tango
+
+#### CuTReader
+
+CuTReader code has been cleaned and a memory leak regression has been fixed.
+
+#### Applications: qmake options to exclude modules from linking
+
+use *cu_exclude_engines* variable to qmake to list the engines you do not want
+to enable in the application.
+
 For example:
-qmake cu_exclude_engines="websocket epics random" disables support for cumbia-websocket, cumbia-epics and cumbia-random
-version 1.2.4
-cumbia-tango: CuTConfigActivity: if option "no-value" is found and set to true, then neither command_inout nor read_attribute are performed during configuration. Fixed to conversion in CuTConfigActivity that may prevent proper readers configuration Removed "action_ptr" information in polling related CuData. CuPollingActivity action_data internal map stores std::string --> ActionData instead of ptr
-cumbia-http: CuHttpControlsWriter.setTarget and CuHttpControlsReader.setSource set option "read-value" to true on CuHTTPActionConfFactory when it is safe to execute command_inout during configuration. Fixes a bug that caused command_inout to be imparted during writer configuration. In principle, "read-value" set to true should apply only to commands, and should not be necessary when dealing with attributes. This must be dealt on the server side. When this is fixed, then the property could be "do-cmd-read" or something else to have a proper meaning
-cumbia-qtcontrols: NumberDelegate/DecIntFromFormat: without "min" and "max" properties in the configuration stage, the "format" is used to configure writers (applies to quinputoutput, quapplynumeric) QuWatcher: added convenience class Qu1TWatcher, one time, auto destroying QuWatcher
-qumbia-tango-controls: under examples, a new test application named "writers_format_test" to test cumbia-qtcontrols numeric widgets configuration with format and without min and max properties
-version 1.2.3
-Version 1.2.3 keeps improving cross engine transparency introducing sources that fetch Tango database properties. Numerous small issues have been fixed and a new feature for the Tango (and the http) engines allows changing source arguments in (polled) commands on the fly through a lightweight call to CuContext::sendData.
 
-Tango database support in setSource
-Support for Tango database readings has been added by means of setSource.
+```
+qmake cu_exclude_engines="websocket epics random"
+```
 
-sendData supports the "args" key to change the source arguments while reading (Tango, http)
+disables support for cumbia-websocket, cumbia-epics and cumbia-random
+
+
+## version 1.2.4
+
+### cumbia-tango
+
+CuTConfigActivity: if option "no-value" is found and set to true, then neither command_inout nor read_attribute are performed during configuration. Fixed to conversion in CuTConfigActivity that may prevent proper readers configuration Removed "action_ptr" information in polling related CuData. CuPollingActivity action_data internal map stores std::string --> ActionData instead of ptr
+
+### cumbia-http
+
+CuHttpControlsWriter.setTarget and CuHttpControlsReader.setSource set option "read-value" to true on CuHTTPActionConfFactory when it is safe to execute command_inout during configuration. Fixes a bug that caused command_inout to be imparted during writer configuration. In principle, "read-value" set to true should apply only to commands, and should not be necessary when dealing with attributes. This must be dealt on the server side. When this is fixed, then the property could be "do-cmd-read" or something else to have a proper meaning
+
+### cumbia-qtcontrols
+NumberDelegate/DecIntFromFormat: without "min" and "max" properties in the configuration stage, the "format" is used to configure writers (applies to quinputoutput, quapplynumeric) QuWatcher: added convenience class Qu1TWatcher, one time, auto destroying QuWatcher
+
+### qumbia-tango-controls
+under examples, a new test application named "writers_format_test" to test cumbia-qtcontrols numeric widgets configuration with format and without min and max properties
+
+
+## version 1.2.3
+
+### Introduction
+
+Version 1.2.3 ameliorates engine transparency introducing a special syntax for
+sources to fetch Tango database properties.
+Numerous small issues have been fixed and a new feature for the Tango (and the http)
+engines allows changing source arguments in (polled) commands on the fly through a
+lightweight call to CuContext::sendData.
+
+### cumbia-tango
+
+- Tango database read support integrated in *setSource*
+
+- sendData supports the "args" key to change the source arguments while reading (Tango, http)
 getContext()->sendData() supports an "args" parameter to change the source arguments for readers
 
-Example
-qumbia-tango-controls/examples/editargs
-version 1.2.0
-The cumbia version 1.2.0 moves definitely towards the application portability and aims at broader integration across several engines (that translates into cumbia modules). Alongside the websocket integration, cumbia 1.2.0 introduces initial support to http and Server Sent Events technologies, looking forward to such services becoming available soon. Applications written in any language will thus be enabled to connect to native control system engines from anywhere.
-New quapps.pri project include file
-The qumbia-apps module includes a new quapps utility that offers automatic cumbia module (engine) detection at application startup. Just include quapps.pri from your path/to/cumbia-libs/include/quapps to use the CuModuleLoader helper class.
+#### Example
+
+Please see
+```qumbia-tango-controls/examples/editargs```
+
+## version 1.2.0
+
+### Description
+The cumbia version 1.2.0 moves definitely towards the application portability
+and aims at broader integration across several engines (that translates into
+cumbia modules).
+Alongside the *websocket* integration, *cumbia 1.2.0 introduces initial support to
+http and Server Sent Events technologies*.
+
+Please see:
+
+https://gitlab.elettra.eu/puma/server/canone3
+
+Applications written in any language on any platform will thus be enabled to connect to native
+control system engines from anywhere.
+
+#### quapps.pri project include file
+
+The qumbia-apps module includes a new quapps utility that offers automatic
+cumbia module (engine) detection at application startup.
+
+Just include quapps.pri from your path/to/cumbia-libs/include/quapps to use the
+CuModuleLoader helper class.
 
 Tango Database read access becomes easy!
 Reading class properties is accomplished by a source like tango://TangoTest(ProjectTitle,Description) Device properties can be obtained like tango://ken:20000/test/device/1(description, helperApplication,values), and get the list of attributes of a device through ken:20000/test/device/1(description, helperApplication,values)
