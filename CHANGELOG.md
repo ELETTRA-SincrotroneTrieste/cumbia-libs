@@ -83,7 +83,32 @@ CuTReader code has been cleaned and a memory leak regression has been fixed.
 - CuActionFactoryService.findActive becomes CuActionFactoryService.find, because
   code refactoring simplified the whole implementation.
 
-#### Applications: qmake options to exclude modules from linking
+### cumbia-qtcontrols
+
+The module adapts to the lower level library changes just described.
+
+QuLabel border drawing has been made less intrusive when the *internal border*
+is disabled.
+
+If min and max values are not available in the configuration phase yet format is,
+configure writers with format only and do not impose a min max other than the one
+suggested by the format (ELETTRA request #13695).
+See also *qumbia-tango-controls/examples/writers_format_test* example.
+
+CuControlsReader sendData now accepts an *args* key to update input arguments for
+writings *at runtime* (typically, Tango commands). See *qumbia-tango-controls/examples/editargs*.
+
+### qumbia-tango-controls
+
+#### editargs example
+
+Please see *qumbia-tango-controls/examples/editargs* example in order to
+see how arguments for *writers* (typically, Tango commands) are treated
+and changed at runtime.
+
+### Applications
+
+#### qmake options to exclude modules from linking
 
 use *cu_exclude_engines* variable to qmake to list the engines you do not want
 to enable in the application.
@@ -96,6 +121,19 @@ qmake cu_exclude_engines="websocket epics random"
 
 disables support for cumbia-websocket, cumbia-epics and cumbia-random
 
+#### cumbia read: option to disable configuration
+
+An option (-n, --no-properties) disables property fetch at startup (typically:
+Tango database configuration)
+
+#### cumbia read: matrix support
+
+Try to read a Tango *IMAGE*!
+
+> cumbia read -n test/device/1/double_image_ro
+
+(-n: use the *native* engine: *http* module / [caserver](https://gitlab.elettra.eu/puma/server/canone3)
+may not support matrices yet).
 
 ## version 1.2.4
 
