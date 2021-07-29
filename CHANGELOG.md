@@ -6,7 +6,7 @@ lighter and more readable code in cumbia-tango.
 
 The advance in performance targets not only the native Tango engine:
 the *http* module and the interaction with the
-[caserver][https://gitlab.elettra.eu/puma/server/canone3] service
+[caserver](https://gitlab.elettra.eu/puma/server/canone3) service
 will be substantially enhanced.
 
 ### cumbia
@@ -132,7 +132,7 @@ with this new functionality in no time!
 
 This new feature allows to get properties in your app with just the little
 code needed for usual sources, and integrate them easily in graphical elements.
-Have a look at [this][https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/cumbia-qtcontrols/html/understanding_cumbia_qtcontrols_constructors.html]
+Have a look at [this](https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/cumbia-qtcontrols/html/understanding_cumbia_qtcontrols_constructors.html)
 documentation page.
 
 ### cumbia-http
@@ -140,7 +140,7 @@ The need to access control systems from home and portable devices
 is constantly growing. The new cumbia-http has been designed with
 this purpose and http and Server Sent Event services in mind.
 Clients of any kind will be able to connect from anywhere through the
-[caserver][https://gitlab.elettra.eu/puma/server/canone3] service.
+[caserver](https://gitlab.elettra.eu/puma/server/canone3) service.
 
 #### Build cumbia-libs with http support
 
@@ -220,7 +220,7 @@ Monitor a Tango command
 
 Filtered list of Tango device properties	cumbia read --tp test/device/1:helper*
 Read a Tango attribute property	cumbia read --tp test/device/1/string_scalar/values
-More examples [here][https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/qumbia-reader/html/index.html].
+More examples [here](https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/qumbia-reader/html/index.html).
 
 Additional features:
 
