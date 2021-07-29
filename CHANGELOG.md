@@ -9,6 +9,21 @@ the *http* module and the interaction with the
 [caserver](https://gitlab.elettra.eu/puma/server/canone3) service
 will be substantially enhanced.
 
+### Fresh plugins
+
+#### cumbia magic
+
+The [cumbia-magic plugin](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-magic-plugin)
+transforms any Qt object (QObject, QWidget) into a cumbia reader.
+
+#### cumbia image
+
+The [cumbia-image plugin](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-image-plugin)
+exploits cumbia 1.3.0 support for *matrices* (see below) to display images on dedicated
+widgets. Refer to the [documentation here](https://elettra-sincrotronetrieste.github.io/cumbia-image-plugin/)
+
+## Version changes
+
 ### cumbia
 
 #### conversion shortcuts
