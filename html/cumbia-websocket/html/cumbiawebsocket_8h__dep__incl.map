@@ -1,9 +1,9 @@
 <map id="cumbiawebsocket.h" name="cumbiawebsocket.h">
-<area shape="rect" id="node1" title=" " alt="" coords="511,5,661,32"/>
-<area shape="rect" id="node2" href="$cumbiawebsocket_8cpp.html" title=" " alt="" coords="5,80,172,107"/>
-<area shape="rect" id="node3" href="$cuwsactionfactories_8cpp.html" title=" " alt="" coords="197,80,375,107"/>
-<area shape="rect" id="node4" href="$cuwscontrolsreader_8cpp.html" title=" " alt="" coords="400,80,575,107"/>
-<area shape="rect" id="node5" href="$cuwscontrolswriter_8cpp.html" title=" " alt="" coords="599,80,770,107"/>
-<area shape="rect" id="node6" href="$cuwsregisterengine_8cpp.html" title=" " alt="" coords="778,155,954,181"/>
-<area shape="rect" id="node7" href="$cuwsregisterengine_8h.html" title=" " alt="" coords="845,80,1007,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="469,5,608,32"/>
+<area shape="rect" id="node2" href="$cumbiawebsocket_8cpp.html" title=" " alt="" coords="5,80,157,107"/>
+<area shape="rect" id="node3" href="$cuwsactionfactories_8cpp.html" title=" " alt="" coords="181,80,344,107"/>
+<area shape="rect" id="node4" href="$cuwscontrolsreader_8cpp.html" title=" " alt="" coords="368,80,528,107"/>
+<area shape="rect" id="node5" href="$cuwscontrolswriter_8cpp.html" title=" " alt="" coords="553,80,709,107"/>
+<area shape="rect" id="node6" href="$cuwsregisterengine_8h.html" title=" " alt="" coords="733,80,878,107"/>
+<area shape="rect" id="node7" href="$cuwsregisterengine_8cpp.html" title=" " alt="" coords="781,155,939,181"/>
 </map>

@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuHttpSrcHelper__I.html" title="The CuHttpSrcHelper_I interface defines a helper for a CuHttpSource that is unaware of what engine li..." alt="" coords="5,5,147,32"/>
+<area shape="rect" id="node1" href="$classCuHttpAuthManListener.html" title=" " alt="" coords="25,5,187,32"/>
+<area shape="rect" id="node2" href="$classCumbiaHttp.html" title=" " alt="" coords="255,81,347,108"/>
+<area shape="rect" id="node3" href="$classCuHttpBundledSrcReqListener.html" title=" " alt="" coords="5,56,207,83"/>
+<area shape="rect" id="node4" href="$classCuHttpSrcQueueManListener.html" title=" " alt="" coords="9,107,203,133"/>
+<area shape="rect" id="node5" title=" " alt="" coords="73,157,139,184"/>
 </map>

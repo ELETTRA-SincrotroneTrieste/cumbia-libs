@@ -1,12 +1,12 @@
 <map id="qulineargauge.h" name="qulineargauge.h">
-<area shape="rect" id="node1" title=" " alt="" coords="281,5,408,32"/>
-<area shape="rect" id="node2" href="$qulineargaugebase_8h.html" title=" " alt="" coords="29,80,188,107"/>
-<area shape="rect" id="node8" title=" " alt="" coords="212,80,339,107"/>
-<area shape="rect" id="node9" href="$cucontexti_8h.html" title=" " alt="" coords="363,80,465,107"/>
-<area shape="rect" id="node10" title=" " alt="" coords="489,80,568,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,155,84,181"/>
-<area shape="rect" id="node4" href="$qugaugeconfig_8h.html" title=" " alt="" coords="108,155,237,181"/>
-<area shape="rect" id="node5" title=" " alt="" coords="22,229,115,256"/>
-<area shape="rect" id="node6" title=" " alt="" coords="139,229,206,256"/>
-<area shape="rect" id="node7" title=" " alt="" coords="230,229,286,256"/>
+<area shape="rect" id="node1" title=" " alt="" coords="261,5,375,32"/>
+<area shape="rect" id="node2" href="$qulineargaugebase_8h.html" title=" " alt="" coords="31,80,173,107"/>
+<area shape="rect" id="node8" title=" " alt="" coords="197,80,311,107"/>
+<area shape="rect" id="node9" href="$cucontexti_8h.html" title=" " alt="" coords="335,80,429,107"/>
+<area shape="rect" id="node10" title=" " alt="" coords="453,80,525,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,155,79,181"/>
+<area shape="rect" id="node4" href="$qugaugeconfig_8h.html" title=" " alt="" coords="103,155,221,181"/>
+<area shape="rect" id="node5" title=" " alt="" coords="20,229,107,256"/>
+<area shape="rect" id="node6" title=" " alt="" coords="131,229,193,256"/>
+<area shape="rect" id="node7" title=" " alt="" coords="217,229,272,256"/>
 </map>

@@ -1,8 +1,8 @@
 <map id="cutangoactioni.h" name="cutangoactioni.h">
-<area shape="rect" id="node1" title=" " alt="" coords="111,5,241,32"/>
-<area shape="rect" id="node2" href="$tsource_8h.html" title=" " alt="" coords="68,80,151,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="175,80,313,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,155,64,181"/>
-<area shape="rect" id="node4" title=" " alt="" coords="88,155,131,181"/>
-<area shape="rect" id="node5" title=" " alt="" coords="155,155,250,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="107,5,225,32"/>
+<area shape="rect" id="node2" href="$tsource_8h.html" title=" " alt="" coords="65,80,141,107"/>
+<area shape="rect" id="node6" title=" " alt="" coords="166,80,291,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,155,60,181"/>
+<area shape="rect" id="node4" title=" " alt="" coords="84,155,123,181"/>
+<area shape="rect" id="node5" title=" " alt="" coords="147,155,233,181"/>
 </map>

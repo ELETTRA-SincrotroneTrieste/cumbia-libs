@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classQuAppDBusControllerInterface.html" title="this class remotely controls an application registered with the DBus session bus" alt="" coords="5,5,227,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,109,32"/>
+<area shape="rect" id="node2" href="$classQuPlotCurve.html" title="QwtPlot derived curve used in QuPlotBase." alt="" coords="157,5,255,32"/>
 </map>

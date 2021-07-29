@@ -1,8 +1,8 @@
 <map id="eapplybutton.h" name="eapplybutton.h">
-<area shape="rect" id="node1" title=" " alt="" coords="91,5,211,32"/>
-<area shape="rect" id="node2" href="$eapplybutton_8cpp.html" title=" " alt="" coords="5,80,140,107"/>
-<area shape="rect" id="node3" href="$eapplynumeric_8h.html" title=" " alt="" coords="165,80,295,107"/>
-<area shape="rect" id="node4" href="$quapplynumeric_8h.html" title=" " alt="" coords="78,155,217,181"/>
-<area shape="rect" id="node6" href="$eapplynumeric_8cpp.html" title=" " alt="" coords="241,155,387,181"/>
-<area shape="rect" id="node5" href="$quapplynumeric_8cpp.html" title=" " alt="" coords="70,229,225,256"/>
+<area shape="rect" id="node1" title=" " alt="" coords="85,5,191,32"/>
+<area shape="rect" id="node2" href="$eapplybutton_8cpp.html" title=" " alt="" coords="5,80,127,107"/>
+<area shape="rect" id="node3" href="$eapplynumeric_8h.html" title=" " alt="" coords="151,80,269,107"/>
+<area shape="rect" id="node4" href="$quapplynumeric_8h.html" title=" " alt="" coords="72,155,196,181"/>
+<area shape="rect" id="node6" href="$eapplynumeric_8cpp.html" title=" " alt="" coords="221,155,351,181"/>
+<area shape="rect" id="node5" href="$quapplynumeric_8cpp.html" title=" " alt="" coords="65,229,203,256"/>
 </map>

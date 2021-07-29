@@ -1,4 +1,4 @@
 <map id="CuIsolatedActivity" name="CuIsolatedActivity">
-<area shape="rect" id="node1" title="A convenient CuActivity designed to be executed only once." alt="" coords="5,80,147,107"/>
-<area shape="rect" id="node2" href="$classCuActivity.html" title="a class with hook functions where work can be done in a separate thread and wherefrom results are pub..." alt="" coords="31,5,121,32"/>
+<area shape="rect" id="node1" title="A convenient CuActivity designed to be executed only once." alt="" coords="5,80,135,107"/>
+<area shape="rect" id="node2" href="$classCuActivity.html" title="a class with hook functions where work can be done in a separate thread and wherefrom results are pub..." alt="" coords="29,5,111,32"/>
 </map>

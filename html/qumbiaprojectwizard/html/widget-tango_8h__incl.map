@@ -1,8 +1,8 @@
 <map id="widget&#45;tango.h" name="widget&#45;tango.h">
-<area shape="rect" id="node1" title=" " alt="" coords="245,5,365,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,84,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="109,80,207,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="231,80,378,107"/>
-<area shape="rect" id="node5" title=" " alt="" coords="403,80,545,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="569,80,688,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="229,5,335,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,80,79,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="103,80,191,107"/>
+<area shape="rect" id="node4" title=" " alt="" coords="215,80,349,107"/>
+<area shape="rect" id="node5" title=" " alt="" coords="373,80,503,107"/>
+<area shape="rect" id="node6" title=" " alt="" coords="527,80,634,107"/>
 </map>

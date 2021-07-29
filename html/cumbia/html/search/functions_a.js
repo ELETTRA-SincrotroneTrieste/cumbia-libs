@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['name_725',['name',['../classCuDataQuality.html#a13c2f43836cafde1cf77ccd75f0dd72c',1,'CuDataQuality']]],
-  ['names_726',['names',['../classCumbiaPool.html#a7ddb191b4b284209f859f122de838edc',1,'CumbiaPool']]],
-  ['ncols_727',['ncols',['../classCuMatrix.html#a4b7e086ce368ae1312169ac0f9d41548',1,'CuMatrix']]],
-  ['nrows_728',['nrows',['../classCuMatrix.html#af37769e0a7fc226293713be1d9062880',1,'CuMatrix']]]
+  ['l_765',['l',['../classCuVariant.html#a8657421ed17a8b079ece3c64c30e8c9e',1,'CuVariant']]],
+  ['ld_766',['ld',['../classCuVariant.html#ae6eb6cddcc4afe5c884fd78480c47ce7',1,'CuVariant']]],
+  ['ldv_767',['ldv',['../classCuVariant.html#ac80048ed9e6353bfb5ee2bd9b72c6a8f',1,'CuVariant']]],
+  ['ll_768',['ll',['../classCuVariant.html#ac08a4a3387a2281aea1e9f979e090dc3',1,'CuVariant']]],
+  ['llv_769',['llv',['../classCuVariant.html#a0d52e3c1e0ec1656442dc1a50ada1040',1,'CuVariant']]],
+  ['lv_770',['lv',['../classCuVariant.html#af0d324e0c3a95ff2a8511203c6dea5d4',1,'CuVariant']]]
 ];

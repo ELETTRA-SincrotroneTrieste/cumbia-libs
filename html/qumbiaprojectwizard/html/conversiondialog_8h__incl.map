@@ -1,10 +1,10 @@
 <map id="conversiondialog.h" name="conversiondialog.h">
-<area shape="rect" id="node1" title=" " alt="" coords="45,5,190,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,80,107"/>
-<area shape="rect" id="node3" href="$fileprocessor__a_8h.html" title=" " alt="" coords="173,80,305,107"/>
-<area shape="rect" id="node5" title=" " alt="" coords="90,229,145,256"/>
-<area shape="rect" id="node4" title=" " alt="" coords="414,229,485,256"/>
-<area shape="rect" id="node6" href="$definitions_8h.html" title=" " alt="" coords="206,155,309,181"/>
-<area shape="rect" id="node7" title=" " alt="" coords="169,229,271,256"/>
-<area shape="rect" id="node8" title=" " alt="" coords="295,229,390,256"/>
+<area shape="rect" id="node1" title=" " alt="" coords="47,5,177,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,80,75,107"/>
+<area shape="rect" id="node3" href="$fileprocessor__a_8h.html" title=" " alt="" coords="167,80,289,107"/>
+<area shape="rect" id="node5" title=" " alt="" coords="85,229,139,256"/>
+<area shape="rect" id="node4" title=" " alt="" coords="400,229,467,256"/>
+<area shape="rect" id="node6" href="$definitions_8h.html" title=" " alt="" coords="201,155,293,181"/>
+<area shape="rect" id="node7" title=" " alt="" coords="163,229,261,256"/>
+<area shape="rect" id="node8" title=" " alt="" coords="285,229,376,256"/>
 </map>

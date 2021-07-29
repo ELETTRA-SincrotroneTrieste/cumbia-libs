@@ -1,5 +1,5 @@
 <map id="ELinearGauge" name="ELinearGauge">
-<area shape="rect" id="node1" title="a thermometer like widget" alt="" coords="13,155,125,181"/>
-<area shape="rect" id="node2" href="$classEAbstractGauge.html" title="an abstract class used to implement widgets with a color scale" alt="" coords="5,80,132,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="29,5,108,32"/>
+<area shape="rect" id="node1" title="a thermometer like widget" alt="" coords="13,155,117,181"/>
+<area shape="rect" id="node2" href="$classEAbstractGauge.html" title="an abstract class used to implement widgets with a color scale" alt="" coords="5,80,124,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="28,5,101,32"/>
 </map>

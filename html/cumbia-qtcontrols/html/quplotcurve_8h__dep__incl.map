@@ -1,12 +1,12 @@
 <map id="quplotcurve.h" name="quplotcurve.h">
-<area shape="rect" id="node1" title=" " alt="" coords="492,5,603,32"/>
-<area shape="rect" id="node2" href="$quspectrumplot_8cpp.html" title=" " alt="" coords="5,87,156,114"/>
-<area shape="rect" id="node3" href="$qutrendplot_8cpp.html" title=" " alt="" coords="180,87,304,114"/>
-<area shape="rect" id="node4" href="$eplot__configuration__widget_8cpp.html" title=" " alt="" coords="329,80,475,121"/>
-<area shape="rect" id="node5" href="$plotsaver_8h.html" title=" " alt="" coords="500,87,595,114"/>
-<area shape="rect" id="node8" href="$quplot__base_8cpp.html" title=" " alt="" coords="619,87,747,114"/>
-<area shape="rect" id="node9" href="$quplotcurve_8cpp.html" title=" " alt="" coords="772,87,899,114"/>
-<area shape="rect" id="node10" href="$quplotmarkercomponent_8cpp.html" title=" " alt="" coords="923,87,1132,114"/>
-<area shape="rect" id="node6" href="$plotsaver_8cpp.html" title=" " alt="" coords="390,169,499,196"/>
-<area shape="rect" id="node7" href="$quplotcontextmenucomponent_8cpp.html" title=" " alt="" coords="524,169,773,196"/>
+<area shape="rect" id="node1" title=" " alt="" coords="450,5,550,32"/>
+<area shape="rect" id="node2" href="$quspectrumplot_8cpp.html" title=" " alt="" coords="5,87,141,114"/>
+<area shape="rect" id="node3" href="$qutrendplot_8cpp.html" title=" " alt="" coords="166,87,277,114"/>
+<area shape="rect" id="node4" href="$eplot__configuration__widget_8cpp.html" title=" " alt="" coords="301,80,432,121"/>
+<area shape="rect" id="node5" href="$plotsaver_8h.html" title=" " alt="" coords="457,87,543,114"/>
+<area shape="rect" id="node8" href="$quplot__base_8cpp.html" title=" " alt="" coords="568,87,685,114"/>
+<area shape="rect" id="node9" href="$quplotcurve_8cpp.html" title=" " alt="" coords="709,87,824,114"/>
+<area shape="rect" id="node10" href="$quplotmarkercomponent_8cpp.html" title=" " alt="" coords="848,87,1035,114"/>
+<area shape="rect" id="node6" href="$plotsaver_8cpp.html" title=" " alt="" coords="357,169,457,196"/>
+<area shape="rect" id="node7" href="$quplotcontextmenucomponent_8cpp.html" title=" " alt="" coords="481,169,703,196"/>
 </map>

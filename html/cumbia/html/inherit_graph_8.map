@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuEventLoopListener.html" title="listens for the events from the CuEventLoopService" alt="" coords="17,5,175,32"/>
-<area shape="rect" id="node2" href="$classCuThreadsEventBridge.html" title="cumbia basic thread event bridge" alt="" coords="235,31,405,57"/>
-<area shape="rect" id="node3" href="$classCuThreadsEventBridge__I.html" title="interface to a threads event bridge" alt="" coords="5,56,187,83"/>
+<area shape="rect" id="node1" href="$classCuLogImplI.html" title="interface for a concrete log implementation" alt="" coords="5,31,95,57"/>
+<area shape="rect" id="node2" href="$classCuConLogImpl.html" title="console log implementation" alt="" coords="143,5,252,32"/>
+<area shape="rect" id="node3" href="$classCuNullLogImpl.html" title="null log implementation" alt="" coords="143,56,251,83"/>
 </map>

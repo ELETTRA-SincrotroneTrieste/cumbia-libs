@@ -1,7 +1,7 @@
 <map id="QuLabel" name="QuLabel">
-<area shape="rect" id="node1" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors." alt="" coords="160,155,235,181"/>
-<area shape="rect" id="node2" href="$classQuLabelBase.html" title="A QLabel that in addition decorates its border and background." alt="" coords="5,80,112,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="25,5,92,32"/>
-<area shape="rect" id="node4" title=" " alt="" coords="136,80,259,107"/>
-<area shape="rect" id="node5" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="283,80,378,107"/>
+<area shape="rect" id="node1" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors." alt="" coords="151,155,221,181"/>
+<area shape="rect" id="node2" href="$classQuLabelBase.html" title="A QLabel that in addition decorates its border and background." alt="" coords="5,80,105,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="24,5,87,32"/>
+<area shape="rect" id="node4" title=" " alt="" coords="129,80,243,107"/>
+<area shape="rect" id="node5" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="267,80,356,107"/>
 </map>

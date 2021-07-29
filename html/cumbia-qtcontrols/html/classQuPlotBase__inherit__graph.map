@@ -1,7 +1,7 @@
 <map id="QuPlotBase" name="QuPlotBase">
-<area shape="rect" id="node1" title="A simple plot with zooming and scrolling capabilities." alt="" coords="88,80,185,107"/>
-<area shape="rect" id="node4" href="$classQuSpectrumPlot.html" title="Draw a line for each data source over time." alt="" coords="5,155,132,181"/>
-<area shape="rect" id="node5" href="$classQuTrendPlot.html" title="Draw a line for each data source over time." alt="" coords="156,155,256,181"/>
-<area shape="rect" id="node2" title=" " alt="" coords="33,5,107,32"/>
-<area shape="rect" id="node3" href="$classQuWidgetInterface.html" title="an interface to let subclasses provide an update strategy and a context menu strategy" alt="" coords="131,5,275,32"/>
+<area shape="rect" id="node1" title="A simple plot with zooming and scrolling capabilities." alt="" coords="84,80,176,107"/>
+<area shape="rect" id="node4" href="$classQuSpectrumPlot.html" title="Draw a line for each data source over time." alt="" coords="5,155,124,181"/>
+<area shape="rect" id="node5" href="$classQuTrendPlot.html" title="Draw a line for each data source over time." alt="" coords="148,155,243,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="34,5,103,32"/>
+<area shape="rect" id="node3" href="$classQuWidgetInterface.html" title="an interface to let subclasses provide an update strategy and a context menu strategy" alt="" coords="127,5,258,32"/>
 </map>

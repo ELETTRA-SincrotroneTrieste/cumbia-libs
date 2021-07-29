@@ -1,4 +1,4 @@
 <map id="CuTControlsReader" name="CuTControlsReader">
-<area shape="rect" id="node1" title="implements CuControlsReaderA abstract class and provides an interface to connect a Tango reader to a ..." alt="" coords="6,80,153,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,153,32"/>
+<area shape="rect" id="node1" title="implements CuControlsReaderA abstract class and provides an interface to connect a Tango reader to a ..." alt="" coords="5,80,144,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,144,32"/>
 </map>

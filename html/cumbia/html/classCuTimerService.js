@@ -8,7 +8,7 @@ var classCuTimerService =
     [ "getTimers", "classCuTimerService.html#a68d13de14f0c16a1230e57d9af370c05", null ],
     [ "getType", "classCuTimerService.html#af2152c6a57bd4894f83be461dc5c2e7d", null ],
     [ "isRegistered", "classCuTimerService.html#a75e67d64584e6f8d798abe7a5df39052", null ],
-    [ "registerListener", "classCuTimerService.html#ad2021b6213cde0b49b395f5d12337c1c", null ],
+    [ "registerListener", "classCuTimerService.html#a2b5bb68d7bee1b93ed20fae782034fc2", null ],
     [ "restart", "classCuTimerService.html#abad0697fd7eb98e72d9df753fb418529", null ],
     [ "setTimerMaxCount", "classCuTimerService.html#ac8dd191a510fd5b75079632fffb44759", null ],
     [ "timerMaxCount", "classCuTimerService.html#a0448606e0bddbcb0413374fe9c8fc7ef", null ],

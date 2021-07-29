@@ -1,10 +1,10 @@
 <map id="cumonitor.h" name="cumonitor.h">
-<area shape="rect" id="node1" title=" " alt="" coords="259,5,358,32"/>
-<area shape="rect" id="node2" href="$cuepactionfactories_8cpp.html" title=" " alt="" coords="5,229,183,256"/>
-<area shape="rect" id="node3" href="$cuepactionfactories_8h.html" title=" " alt="" coords="73,155,235,181"/>
-<area shape="rect" id="node4" href="$cuepreadoptions_8h.html" title=" " alt="" coords="157,80,300,107"/>
-<area shape="rect" id="node6" href="$cumbiaepics_8cpp.html" title=" " alt="" coords="325,80,455,107"/>
-<area shape="rect" id="node7" href="$cumonitor_8cpp.html" title=" " alt="" coords="479,80,594,107"/>
-<area shape="rect" id="node8" href="$cumonitoractivity_8cpp.html" title=" " alt="" coords="618,80,781,107"/>
-<area shape="rect" id="node5" href="$cuepreadoptions_8cpp.html" title=" " alt="" coords="259,155,417,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="240,5,331,32"/>
+<area shape="rect" id="node2" href="$cuepactionfactories_8h.html" title=" " alt="" coords="68,155,215,181"/>
+<area shape="rect" id="node3" href="$cuepactionfactories_8cpp.html" title=" " alt="" coords="5,229,165,256"/>
+<area shape="rect" id="node4" href="$cuepreadoptions_8h.html" title=" " alt="" coords="148,80,276,107"/>
+<area shape="rect" id="node6" href="$cumbiaepics_8cpp.html" title=" " alt="" coords="300,80,420,107"/>
+<area shape="rect" id="node7" href="$cumonitor_8cpp.html" title=" " alt="" coords="444,80,548,107"/>
+<area shape="rect" id="node8" href="$cumonitoractivity_8cpp.html" title=" " alt="" coords="573,80,718,107"/>
+<area shape="rect" id="node5" href="$cuepreadoptions_8cpp.html" title=" " alt="" coords="239,155,382,181"/>
 </map>

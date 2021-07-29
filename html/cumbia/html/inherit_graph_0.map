@@ -1,5 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuActivity.html" title="a class with hook functions where work can be done in a separate thread and wherefrom results are pub..." alt="" coords="5,31,95,57"/>
-<area shape="rect" id="node2" href="$classCuContinuousActivity.html" title="an implementation of CuActivity that calls CuActivity::execute repeatedly at a certain interval of ti..." alt="" coords="143,5,305,32"/>
-<area shape="rect" id="node3" href="$classCuIsolatedActivity.html" title="A convenient CuActivity designed to be executed only once." alt="" coords="153,56,295,83"/>
+<area shape="rect" id="node1" href="$classCuActivity.html" title="a class with hook functions where work can be done in a separate thread and wherefrom results are pub..." alt="" coords="5,31,88,57"/>
+<area shape="rect" id="node2" href="$classCuContinuousActivity.html" title="an implementation of CuActivity that calls CuActivity::execute repeatedly at a certain interval of ti..." alt="" coords="136,5,285,32"/>
+<area shape="rect" id="node3" href="$classCuIsolatedActivity.html" title="A convenient CuActivity designed to be executed only once." alt="" coords="146,56,275,83"/>
 </map>

@@ -1,4 +1,4 @@
 <map id="QuPalette" name="QuPalette">
-<area shape="rect" id="node1" title="a map associating a color name to a QColor" alt="" coords="58,80,143,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,196,32"/>
+<area shape="rect" id="node1" title="a map associating a color name to a QColor" alt="" coords="53,80,133,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,180,32"/>
 </map>

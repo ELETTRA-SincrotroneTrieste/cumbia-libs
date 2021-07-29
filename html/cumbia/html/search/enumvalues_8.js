@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['log_926',['Log',['../classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bafe0f9b13689ac2ce980076b364b04b1e',1,'CuServices']]],
-  ['longdouble_927',['LongDouble',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca945573e6f9761cd309c931a2989a9b7a',1,'CuVariant']]],
-  ['longint_928',['LongInt',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca8daeeeaf8cc61c7fe17394ecbb75b80b',1,'CuVariant']]],
-  ['longlongint_929',['LongLongInt',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caaa959e554a99169e7eec0b45bacc18b1',1,'CuVariant']]],
-  ['longlonguint_930',['LongLongUInt',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cadacad3f32c618ddba203623ac899795d',1,'CuVariant']]],
-  ['longuint_931',['LongUInt',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca7df23990fcabbf137adc2a193e92f596',1,'CuVariant']]]
+  ['matrix_1002',['Matrix',['../classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e',1,'CuVariant']]],
+  ['maxqualitytype_1003',['MaxQualityType',['../classCuDataQuality.html#a6a78fa28ebb7b9ac9c8450bf836615a7abcc8ed6dea0b0310c45a8b662f1ba53b',1,'CuDataQuality']]],
+  ['maxuser_1004',['MaxUser',['../classCuActivityEvent.html#a3727016a1c613763a0936d426d80301aa36acc626ec3d6b87e6022658c123d1fb',1,'CuActivityEvent']]],
+  ['maxuserflags_1005',['MaxUserFlags',['../classCuActivity.html#a23c71d30d18fdf76bf7b3b0ce148013da0139759378eabd86d914827123218a48',1,'CuActivity']]]
 ];

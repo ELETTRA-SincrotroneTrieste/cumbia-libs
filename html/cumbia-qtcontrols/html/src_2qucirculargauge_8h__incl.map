@@ -1,12 +1,12 @@
 <map id="qucirculargauge.h" name="qucirculargauge.h">
-<area shape="rect" id="node1" title=" " alt="" coords="281,5,419,32"/>
-<area shape="rect" id="node2" href="$qucirculargaugebase_8h.html" title=" " alt="" coords="24,80,193,107"/>
-<area shape="rect" id="node8" title=" " alt="" coords="217,80,344,107"/>
-<area shape="rect" id="node9" href="$cucontexti_8h.html" title=" " alt="" coords="368,80,471,107"/>
-<area shape="rect" id="node10" title=" " alt="" coords="495,80,573,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,155,84,181"/>
-<area shape="rect" id="node4" href="$qugaugeconfig_8h.html" title=" " alt="" coords="108,155,237,181"/>
-<area shape="rect" id="node5" title=" " alt="" coords="22,229,115,256"/>
-<area shape="rect" id="node6" title=" " alt="" coords="139,229,206,256"/>
-<area shape="rect" id="node7" title=" " alt="" coords="230,229,286,256"/>
+<area shape="rect" id="node1" title=" " alt="" coords="261,5,385,32"/>
+<area shape="rect" id="node2" href="$qucirculargaugebase_8h.html" title=" " alt="" coords="26,80,178,107"/>
+<area shape="rect" id="node8" title=" " alt="" coords="202,80,317,107"/>
+<area shape="rect" id="node9" href="$cucontexti_8h.html" title=" " alt="" coords="341,80,434,107"/>
+<area shape="rect" id="node10" title=" " alt="" coords="458,80,530,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,155,79,181"/>
+<area shape="rect" id="node4" href="$qugaugeconfig_8h.html" title=" " alt="" coords="103,155,221,181"/>
+<area shape="rect" id="node5" title=" " alt="" coords="20,229,107,256"/>
+<area shape="rect" id="node6" title=" " alt="" coords="131,229,193,256"/>
+<area shape="rect" id="node7" title=" " alt="" coords="217,229,272,256"/>
 </map>

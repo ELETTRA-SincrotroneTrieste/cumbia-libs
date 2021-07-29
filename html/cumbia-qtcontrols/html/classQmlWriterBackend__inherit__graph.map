@@ -1,6 +1,6 @@
 <map id="QmlWriterBackend" name="QmlWriterBackend">
-<area shape="rect" id="node1" title="QmlWriterBackend is an object that can be used as a backend for QMLwriters." alt="" coords="93,80,237,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,80,32"/>
-<area shape="rect" id="node3" title=" " alt="" coords="104,5,227,32"/>
-<area shape="rect" id="node4" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="251,5,346,32"/>
+<area shape="rect" id="node1" title="QmlWriterBackend is an object that can be used as a backend for QMLwriters." alt="" coords="91,80,222,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,76,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="100,5,213,32"/>
+<area shape="rect" id="node4" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="237,5,327,32"/>
 </map>

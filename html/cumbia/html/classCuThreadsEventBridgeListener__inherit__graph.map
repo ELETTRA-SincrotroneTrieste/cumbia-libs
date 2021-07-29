@@ -1,5 +1,5 @@
 <map id="CuThreadsEventBridgeListener" name="CuThreadsEventBridgeListener">
-<area shape="rect" id="node1" title="defines a method that must be written by the interface implementations in order to deal with events s..." alt="" coords="5,5,228,32"/>
-<area shape="rect" id="node2" href="$classCuThreadInterface.html" title="interface to write thread implementations that can be used with the cumbia library" alt="" coords="45,80,188,107"/>
-<area shape="rect" id="node3" href="$classCuThread.html" title="cumbia thread implementation" alt="" coords="75,155,159,181"/>
+<area shape="rect" id="node1" title="defines a method that must be written by the interface implementations in order to deal with events s..." alt="" coords="5,5,208,32"/>
+<area shape="rect" id="node2" href="$classCuThreadInterface.html" title="interface to write thread implementations that can be used with the cumbia library" alt="" coords="41,80,172,107"/>
+<area shape="rect" id="node3" href="$classCuThread.html" title="cumbia thread implementation" alt="" coords="67,155,146,181"/>
 </map>

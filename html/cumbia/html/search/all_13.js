@@ -1,13 +1,22 @@
 var searchData=
 [
-  ['uchar_451',['UChar',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cabb6115dace7c2ae809fd8c0a094dcc48',1,'CuVariant']]],
-  ['uint_452',['UInt',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca07b0dcd0377c638765c48b1d4fec7b46',1,'CuVariant']]],
-  ['undefined_453',['Undefined',['../classCuDataQuality.html#a6a78fa28ebb7b9ac9c8450bf836615a7a558cdef9c27ec8e8916ebf7efe7043b1',1,'CuDataQuality']]],
-  ['unregisteractivity_454',['unregisterActivity',['../classCumbia.html#ae72c237833f06276a2ba62f5598197f5',1,'Cumbia::unregisterActivity()'],['../classCuThread.html#a8080e3bb71c1d61b11bf78f06868ea06',1,'CuThread::unregisterActivity()'],['../classCuThreadInterface.html#ad6838e2e06a949bdcca0b222eaea8859',1,'CuThreadInterface::unregisterActivity()']]],
-  ['unregistercumbiaimpl_455',['unregisterCumbiaImpl',['../classCumbiaPool.html#aeb6c161231f2c84f5d740da317ae13e1',1,'CumbiaPool']]],
-  ['unregisterlistener_456',['unregisterListener',['../classCuTimerService.html#a365796ff7704c3cac09946522c05bdde',1,'CuTimerService']]],
-  ['unregisteronexit_457',['unregisterOnExit',['../classCuIsolatedActivity.html#a08b974e27363cdae18427ddd88b77c22',1,'CuIsolatedActivity']]],
-  ['unregisterservice_458',['unregisterService',['../classCuServiceProvider.html#a4f8d6f70b3bef2edc45ac14a5965fb6a',1,'CuServiceProvider']]],
-  ['user_459',['User',['../classCuActivity.html#a8d1ec3c656fa9d8b8b320741b2182514a047f2fa3a846d233e25184e0f20eea0b',1,'CuActivity::User()'],['../classCuActivityEvent.html#a3727016a1c613763a0936d426d80301aa16e8985fc113cb8363e162706d3cc5e0',1,'CuActivityEvent::User()'],['../classCuLog.html#aebaaf836a828026e82b001950c6947c4a08bf7020e0c9781d1c35eb95603608b0',1,'CuLog::User()'],['../classCuServices.html#aa03cab8558f097dcdba9b49c90140c0ba3416b40c8a581952acc4e8ae70969854',1,'CuServices::User()'],['../classCuEventI.html#ab4bba34f5f3639c29e9529f4617d0e51ad7512cf759da8d8338317f76dbd75b4b',1,'CuEventI::User()']]],
-  ['ushort_460',['UShort',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca1e8a69d26b59520fb5a809306428978a',1,'CuVariant']]]
+  ['u_476',['u',['../classCuData.html#ad14d91508b3d6fca05d8f8d52a34d98d',1,'CuData::u()'],['../classCuVariant.html#aa746a77c5bd169e33c6db00f605a0f90',1,'CuVariant::u()'],['../classCuData.html#a25c20197130000913d84faaab033cd09',1,'CuData::U()']]],
+  ['uchar_477',['UChar',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cabb6115dace7c2ae809fd8c0a094dcc48',1,'CuVariant']]],
+  ['ucv_478',['ucv',['../classCuVariant.html#ae900b9cadf56558a3700bdf58e01769f',1,'CuVariant']]],
+  ['uint_479',['UInt',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca07b0dcd0377c638765c48b1d4fec7b46',1,'CuVariant']]],
+  ['ul_480',['ul',['../classCuVariant.html#a0ea81c234a50de23b22484b4dbf2c90b',1,'CuVariant']]],
+  ['ull_481',['ull',['../classCuVariant.html#a310a82393e4c2f952ca445b5a6b8ded5',1,'CuVariant']]],
+  ['ullv_482',['ullv',['../classCuVariant.html#aa3d099b3c1a39b1d36b3854372be27d7',1,'CuVariant']]],
+  ['ulv_483',['ulv',['../classCuVariant.html#a48f5fe6f28fbdc8985b8a064450875d4',1,'CuVariant']]],
+  ['undefined_484',['Undefined',['../classCuDataQuality.html#a6a78fa28ebb7b9ac9c8450bf836615a7a558cdef9c27ec8e8916ebf7efe7043b1',1,'CuDataQuality']]],
+  ['unregisteractivity_485',['unregisterActivity',['../classCumbia.html#ae72c237833f06276a2ba62f5598197f5',1,'Cumbia::unregisterActivity()'],['../classCuThread.html#a8080e3bb71c1d61b11bf78f06868ea06',1,'CuThread::unregisterActivity()'],['../classCuThreadInterface.html#ad6838e2e06a949bdcca0b222eaea8859',1,'CuThreadInterface::unregisterActivity()']]],
+  ['unregistercumbiaimpl_486',['unregisterCumbiaImpl',['../classCumbiaPool.html#aeb6c161231f2c84f5d740da317ae13e1',1,'CumbiaPool']]],
+  ['unregisterlistener_487',['unregisterListener',['../classCuTimerService.html#a365796ff7704c3cac09946522c05bdde',1,'CuTimerService']]],
+  ['unregisteronexit_488',['unregisterOnExit',['../classCuIsolatedActivity.html#a08b974e27363cdae18427ddd88b77c22',1,'CuIsolatedActivity']]],
+  ['unregisterservice_489',['unregisterService',['../classCuServiceProvider.html#a4f8d6f70b3bef2edc45ac14a5965fb6a',1,'CuServiceProvider']]],
+  ['us_490',['us',['../classCuVariant.html#a6dd9d725818f979c0fad71914e8f0fea',1,'CuVariant']]],
+  ['user_491',['User',['../classCuActivity.html#a8d1ec3c656fa9d8b8b320741b2182514a047f2fa3a846d233e25184e0f20eea0b',1,'CuActivity::User()'],['../classCuActivityEvent.html#a3727016a1c613763a0936d426d80301aa16e8985fc113cb8363e162706d3cc5e0',1,'CuActivityEvent::User()'],['../classCuServices.html#aa03cab8558f097dcdba9b49c90140c0ba3416b40c8a581952acc4e8ae70969854',1,'CuServices::User()'],['../classCuEventI.html#ab4bba34f5f3639c29e9529f4617d0e51ad7512cf759da8d8338317f76dbd75b4b',1,'CuEventI::User()']]],
+  ['ushort_492',['UShort',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca1e8a69d26b59520fb5a809306428978a',1,'CuVariant']]],
+  ['usv_493',['usv',['../classCuVariant.html#a35731ea0608121b378b2b648ae3e8c03',1,'CuVariant']]],
+  ['uv_494',['uv',['../classCuVariant.html#ad8d94f46021f11af279214e95eade35e',1,'CuVariant']]]
 ];

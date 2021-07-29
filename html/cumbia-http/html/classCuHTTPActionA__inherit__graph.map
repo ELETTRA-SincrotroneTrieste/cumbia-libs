@@ -1,6 +1,6 @@
 <map id="CuHTTPActionA" name="CuHTTPActionA">
-<area shape="rect" id="node1" title=" " alt="" coords="104,80,227,107"/>
-<area shape="rect" id="node3" href="$classCuHttpActionConf.html" title=" " alt="" coords="5,155,144,181"/>
-<area shape="rect" id="node4" href="$classCuHttpChannelReceiver.html" title="Receive messages on the channel and distributes them." alt="" coords="169,155,346,181"/>
-<area shape="rect" id="node2" title=" " alt="" coords="128,5,203,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="96,80,215,107"/>
+<area shape="rect" id="node3" href="$classCuHttpActionConf.html" title=" " alt="" coords="5,155,135,181"/>
+<area shape="rect" id="node4" href="$classCuHttpChannelReceiver.html" title="Receive messages on the channel and distributes them." alt="" coords="159,155,323,181"/>
+<area shape="rect" id="node2" title=" " alt="" coords="120,5,191,32"/>
 </map>

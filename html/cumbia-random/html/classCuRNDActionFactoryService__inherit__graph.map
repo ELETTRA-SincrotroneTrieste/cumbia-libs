@@ -1,4 +1,4 @@
 <map id="CuRNDActionFactoryService" name="CuRNDActionFactoryService">
-<area shape="rect" id="node1" title="implements CuServiceI interface and provides a service to register, unregister and find Websocket act..." alt="" coords="5,80,209,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="62,5,153,32"/>
+<area shape="rect" id="node1" title="implements CuServiceI interface and provides a service to register, unregister and find Websocket act..." alt="" coords="5,80,200,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="59,5,146,32"/>
 </map>

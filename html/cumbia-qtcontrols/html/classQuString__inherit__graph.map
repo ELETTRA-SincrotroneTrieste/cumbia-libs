@@ -1,4 +1,4 @@
 <map id="QuString" name="QuString">
-<area shape="rect" id="node1" title="convenience class to build a Qt QString from an std::string or from a value stored in CuData" alt="" coords="5,80,84,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="9,5,80,32"/>
+<area shape="rect" id="node1" title="convenience class to build a Qt QString from an std::string or from a value stored in CuData" alt="" coords="5,80,79,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="9,5,75,32"/>
 </map>

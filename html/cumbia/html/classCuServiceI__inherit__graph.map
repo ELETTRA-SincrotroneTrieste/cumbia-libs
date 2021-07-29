@@ -1,8 +1,8 @@
 <map id="CuServiceI" name="CuServiceI">
-<area shape="rect" id="node1" title="interface to write cumbia services that can be registered and fetched through the cumbia service prov..." alt="" coords="341,5,432,32"/>
-<area shape="rect" id="node2" href="$classCuActivityManager.html" title="This service stores the links between threads, activities and thread listeners." alt="" coords="5,80,152,107"/>
-<area shape="rect" id="node3" href="$classCuEventLoopService.html" title="service that implements a simple event loop for cumbia applications." alt="" coords="176,80,331,107"/>
-<area shape="rect" id="node4" href="$classCuLog.html" title="a cumbia service providing an interface for logging facilities" alt="" coords="355,80,418,107"/>
-<area shape="rect" id="node5" href="$classCuThreadService.html" title="cumbia service that creates threads and keeps references of the threads running within the applicatio..." alt="" coords="442,80,574,107"/>
-<area shape="rect" id="node6" href="$classCuTimerService.html" title="The CuTimerService class provides access to cumbia timers. It is normally used internally by the libr..." alt="" coords="599,80,724,107"/>
+<area shape="rect" id="node1" title="interface to write cumbia services that can be registered and fetched through the cumbia service prov..." alt="" coords="319,5,406,32"/>
+<area shape="rect" id="node2" href="$classCuActivityManager.html" title="This service stores the links between threads, activities and thread listeners." alt="" coords="5,80,139,107"/>
+<area shape="rect" id="node3" href="$classCuEventLoopService.html" title="service that implements a simple event loop for cumbia applications." alt="" coords="163,80,309,107"/>
+<area shape="rect" id="node4" href="$classCuLog.html" title="a cumbia service providing an interface for logging facilities" alt="" coords="333,80,393,107"/>
+<area shape="rect" id="node5" href="$classCuThreadService.html" title="cumbia service that creates threads and keeps references of the threads running within the applicatio..." alt="" coords="417,80,540,107"/>
+<area shape="rect" id="node6" href="$classCuTimerService.html" title="The CuTimerService class provides access to cumbia timers. It is normally used internally by the libr..." alt="" coords="565,80,681,107"/>
 </map>

@@ -46,6 +46,7 @@ var annotated_dup =
     [ "CuThreadTokenGenI", "classCuThreadTokenGenI.html", "classCuThreadTokenGenI" ],
     [ "CuTimeoutChangeEvent", "classCuTimeoutChangeEvent.html", "classCuTimeoutChangeEvent" ],
     [ "CuTimer", "classCuTimer.html", "classCuTimer" ],
+    [ "CuTimerEvent", "classCuTimerEvent.html", "classCuTimerEvent" ],
     [ "CuTimerService", "classCuTimerService.html", "classCuTimerService" ],
     [ "CuTimerServicePrivate", "classCuTimerServicePrivate.html", "classCuTimerServicePrivate" ],
     [ "CuVariant", "classCuVariant.html", "classCuVariant" ]

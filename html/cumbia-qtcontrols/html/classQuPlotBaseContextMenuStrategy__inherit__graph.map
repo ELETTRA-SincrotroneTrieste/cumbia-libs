@@ -1,5 +1,5 @@
 <map id="QuPlotBaseContextMenuStrategy" name="QuPlotBaseContextMenuStrategy">
-<area shape="rect" id="node1" title="a context menu strategy to create a context menu for QuPlotBase (strategy pattern)" alt="" coords="5,80,244,107"/>
-<area shape="rect" id="node3" href="$classQuPlotContextMenuStrategy.html" title=" " alt="" coords="21,155,228,181"/>
-<area shape="rect" id="node2" href="$classQuWidgetContextMenuStrategyI.html" title="The QuWidgetContextMenuStrategyI class provides a menu that is shown within a context menu event." alt="" coords="9,5,241,32"/>
+<area shape="rect" id="node1" title="a context menu strategy to create a context menu for QuPlotBase (strategy pattern)" alt="" coords="5,80,224,107"/>
+<area shape="rect" id="node3" href="$classQuPlotContextMenuStrategy.html" title=" " alt="" coords="20,155,209,181"/>
+<area shape="rect" id="node2" href="$classQuWidgetContextMenuStrategyI.html" title="The QuWidgetContextMenuStrategyI class provides a menu that is shown within a context menu event." alt="" coords="9,5,220,32"/>
 </map>

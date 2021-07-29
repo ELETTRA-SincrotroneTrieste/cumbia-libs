@@ -1,4 +1,4 @@
 <map id="CuExitLoopEvent" name="CuExitLoopEvent">
-<area shape="rect" id="node1" title="This event is used by CuEventLoop service to exit the loop." alt="" coords="5,80,137,107"/>
-<area shape="rect" id="node2" href="$classCuEventI.html" title="interface for a generic cumbia event designed to be generated in a secondary thread (CuActivity&#39;s thr..." alt="" coords="31,5,111,32"/>
+<area shape="rect" id="node1" title="This event is used by CuEventLoop service to exit the loop." alt="" coords="5,80,129,107"/>
+<area shape="rect" id="node2" href="$classCuEventI.html" title="interface for a generic cumbia event designed to be generated in a secondary thread (CuActivity&#39;s thr..." alt="" coords="29,5,106,32"/>
 </map>

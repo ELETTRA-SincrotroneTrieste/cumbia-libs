@@ -1,4 +1,4 @@
 <map id="QuApplication" name="QuApplication">
-<area shape="rect" id="node1" title="A QApplication with additional functions, such as to register with dbus, minimize and raise the main ..." alt="" coords="5,80,119,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="9,5,115,32"/>
+<area shape="rect" id="node1" title="A QApplication with additional functions, such as to register with dbus, minimize and raise the main ..." alt="" coords="5,80,108,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="9,5,105,32"/>
 </map>

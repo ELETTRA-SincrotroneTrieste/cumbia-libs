@@ -1,21 +1,11 @@
 var searchData=
 [
-  ['set_765',['set',['../classCuDataQuality.html#afa51c66be7fb25543d2009764995eedd',1,'CuDataQuality::set(int t)'],['../classCuDataQuality.html#afaf24f63256f42e35fcda603593c6223',1,'CuDataQuality::set(Type t)'],['../classCuData.html#a9b30258d77c405bf17466134135145b7',1,'CuData::set()']]],
-  ['setactivitymanager_766',['setActivityManager',['../classCuActivity.html#a8b1a222feac7c2b75ccacb1bbc7da511',1,'CuActivity']]],
-  ['setactivityperiod_767',['setActivityPeriod',['../classCumbia.html#aeb73555c75846bd6e948fceb9cf5053d',1,'Cumbia']]],
-  ['setcuthreadseventbridgelistener_768',['setCuThreadsEventBridgeListener',['../classCuThreadsEventBridge.html#a0aa56215849fcc561bb7434d820ce49e',1,'CuThreadsEventBridge::setCuThreadsEventBridgeListener()'],['../classCuThreadsEventBridge__I.html#aa5ede0f83aa0c5916c3754c0b6aa64e6',1,'CuThreadsEventBridge_I::setCuThreadsEventBridgeListener()']]],
-  ['setflag_769',['setFlag',['../classCuActivity.html#afd96d5ed45042a3fa82e3f83a7a1e307',1,'CuActivity']]],
-  ['setflags_770',['setFlags',['../classCuActivity.html#a628784b290540313025578994ecbe8a9',1,'CuActivity']]],
-  ['setinterval_771',['setInterval',['../classCuContinuousActivity.html#aaf579eeba20dac8420bfcef77dec6067',1,'CuContinuousActivity']]],
-  ['setshared_772',['setShared',['../classCuServiceProvider.html#a59857a691c41061f662123fda85d9590',1,'CuServiceProvider']]],
-  ['setsingleshot_773',['setSingleShot',['../classCuTimer.html#a4bc285454e24aa5ed786090279d47cb3',1,'CuTimer']]],
-  ['setsrcpatterns_774',['setSrcPatterns',['../classCumbiaPool.html#a05fb53ac6e5f72209249b083b832d05d',1,'CumbiaPool']]],
-  ['setthreadtoken_775',['setThreadToken',['../classCuActivity.html#a27a307be0ec0863a8a5ce6b69f3245e3',1,'CuActivity']]],
-  ['setthreadtokengenerator_776',['setThreadTokenGenerator',['../classCumbia.html#ad1294d5af961ea0899aabf299e7f2c56',1,'Cumbia']]],
-  ['settimeout_777',['setTimeout',['../classCuTimer.html#a7e9b7f2b6d0679a742b7672580ecbe40',1,'CuTimer']]],
-  ['settimermaxcount_778',['setTimerMaxCount',['../classCuTimerService.html#ac8dd191a510fd5b75079632fffb44759',1,'CuTimerService']]],
-  ['settype_779',['setType',['../classCuResultEvent.html#afad736adef0f3033e646ec7e190a76e7',1,'CuResultEvent']]],
-  ['setvalid_780',['setValid',['../classCuDataListener.html#a6bd1c3762945d39bc0a0fe66c6b0247d',1,'CuDataListener']]],
-  ['size_781',['size',['../classCuData.html#a6d888fa58fed0ec4f0d98f1ca78ac45e',1,'CuData::size()'],['../classCuMatrix.html#a42167fcfb37e4d0320fd038e971a9319',1,'CuMatrix::size()']]],
-  ['start_782',['start',['../classCuThread.html#a0aad3da3a03fe51ad001fa82495d1f0a',1,'CuThread::start()'],['../classCuThreadInterface.html#acdb649780463740ae020a6d94d6debe9',1,'CuThreadInterface::start()']]]
+  ['pauseactivity_788',['pauseActivity',['../classCumbia.html#ad8751aff10e046203495bd4990358fea',1,'Cumbia']]],
+  ['postevent_789',['postEvent',['../classCumbia.html#aa165b8ccd53aa26dba6ec1e769f5e4a6',1,'Cumbia::postEvent()'],['../classCuEventLoopService.html#adba945504b49ff5ea54393ad16a61d1a',1,'CuEventLoopService::postEvent()'],['../classCuThread.html#ad2e3ff2f8451b0db55b3a36d0b3d5119',1,'CuThread::postEvent()'],['../classCuThreadInterface.html#a178cb47bdc8eb3a809a4c3e1c065d021',1,'CuThreadInterface::postEvent()'],['../classCuThreadsEventBridge.html#a2962296dccfa5d888e7d85ce6230670b',1,'CuThreadsEventBridge::postEvent()'],['../classCuThreadsEventBridge__I.html#adb2b8b08cb599ad1917bcdcbec062230',1,'CuThreadsEventBridge_I::postEvent()']]],
+  ['print_790',['print',['../classCuData.html#a04cb7dbc2bc3caa9901044f6f8dba1e3',1,'CuData']]],
+  ['publishexitevent_791',['publishExitEvent',['../classCuThread.html#a7f6f979bdf67a2ccc47e8e11ca7c1a72',1,'CuThread::publishExitEvent()'],['../classCuThreadInterface.html#acdbe2ad03436c2f283f9ce2502dc74fe',1,'CuThreadInterface::publishExitEvent()']]],
+  ['publishexitresult_792',['publishExitResult',['../classCuActivity.html#aeb5d28f9e4141fafa088c739734e2e45',1,'CuActivity']]],
+  ['publishprogress_793',['publishProgress',['../classCuActivity.html#ad556ecea30a5ff82e364f4d1a824b069',1,'CuActivity::publishProgress()'],['../classCuThread.html#ae34293a265323a4e89cbdbf03ab7c8e7',1,'CuThread::publishProgress()'],['../classCuThreadInterface.html#a23db4800456733404bcf27255a8e435c',1,'CuThreadInterface::publishProgress()']]],
+  ['publishresult_794',['publishResult',['../classCuActivity.html#aeccbb8c64988497bed4f292a28f1b20e',1,'CuActivity::publishResult(const CuData &amp;data)'],['../classCuActivity.html#a596aaa0a63161b559b15c454fa800ddb',1,'CuActivity::publishResult(const std::vector&lt; CuData &gt; *datalist)'],['../classCuThread.html#ac13bc0502ddbcc3097d967b3cdc47b45',1,'CuThread::publishResult(const CuActivity *activity, const CuData &amp;data)'],['../classCuThread.html#ac16dcb10ee043023a50f77e411848b99',1,'CuThread::publishResult(const CuActivity *activity, const std::vector&lt; CuData &gt; *data_list)'],['../classCuThreadInterface.html#aadbb7855f5572d516a373640d0751940',1,'CuThreadInterface::publishResult(const CuActivity *activity, const CuData &amp;d)=0'],['../classCuThreadInterface.html#a9b3a0ca756329f84b728a4e92c36fcf9',1,'CuThreadInterface::publishResult(const CuActivity *activity, const std::vector&lt; CuData &gt; *data_list)=0']]],
+  ['puttimestamp_795',['putTimestamp',['../classCuData.html#aed8611b2b5eaa56b21cf878769914926',1,'CuData']]]
 ];

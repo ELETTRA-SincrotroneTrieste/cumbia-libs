@@ -41,7 +41,8 @@ var files_dup =
       [ "CuExitLoopEvent", "classCuExitLoopEvent.html", "classCuExitLoopEvent" ],
       [ "CuThreadAutoDestroyEvent", "classCuThreadAutoDestroyEvent.html", null ],
       [ "CuResultEvent", "classCuResultEvent.html", "classCuResultEvent" ],
-      [ "CuActivityExitEvent", "classCuActivityExitEvent.html", "classCuActivityExitEvent" ]
+      [ "CuActivityExitEvent", "classCuActivityExitEvent.html", "classCuActivityExitEvent" ],
+      [ "CuTimerEvent", "classCuTimerEvent.html", "classCuTimerEvent" ]
     ] ],
     [ "cueventloop.cpp", "cueventloop_8cpp.html", [
       [ "CuEventInfo", "classCuEventInfo.html", "classCuEventInfo" ]

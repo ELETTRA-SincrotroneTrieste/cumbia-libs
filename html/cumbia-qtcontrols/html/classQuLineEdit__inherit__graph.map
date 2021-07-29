@@ -1,6 +1,6 @@
 <map id="QuLineEdit" name="QuLineEdit">
-<area shape="rect" id="node1" title=" " alt="" coords="129,80,221,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,89,32"/>
-<area shape="rect" id="node3" title=" " alt="" coords="114,5,237,32"/>
-<area shape="rect" id="node4" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="261,5,356,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="121,80,208,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,84,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="108,5,221,32"/>
+<area shape="rect" id="node4" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="245,5,335,32"/>
 </map>

@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['thread_945',['Thread',['../classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bae0d1c54f00092061a920aeb27b732c6c',1,'CuServices']]],
-  ['threadautodestroy_946',['ThreadAutoDestroy',['../classCuEventI.html#ab4bba34f5f3639c29e9529f4617d0e51a168335fd02c1de0d735cc67c6a04e7d8',1,'CuEventI']]],
-  ['timeoutchange_947',['TimeoutChange',['../classCuActivityEvent.html#a3727016a1c613763a0936d426d80301aa71578c4e186f954e5f935b65910f2530',1,'CuActivityEvent']]],
-  ['timer_948',['Timer',['../classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bab4e2a6f342d95f03144c33e3b429158e',1,'CuServices']]],
-  ['typeinvalid_949',['TypeInvalid',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cadca45a1917f5ceb9ed99f324504c1976',1,'CuVariant']]]
+  ['valid_1024',['Valid',['../classCuDataQuality.html#a6a78fa28ebb7b9ac9c8450bf836615a7a556ffdff5a70bd81c59d55a2f0aab868',1,'CuDataQuality']]],
+  ['vector_1025',['Vector',['../classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a06c40110238c7bd77904234f323ddea4',1,'CuVariant']]],
+  ['voidptr_1026',['VoidPtr',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caae540f48cd6737596cb4874e4324b942',1,'CuVariant']]]
 ];

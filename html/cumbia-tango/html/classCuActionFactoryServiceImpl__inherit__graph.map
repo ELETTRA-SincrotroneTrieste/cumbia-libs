@@ -1,4 +1,4 @@
 <map id="CuActionFactoryServiceImpl" name="CuActionFactoryServiceImpl">
-<area shape="rect" id="node1" title="The CuActionFactoryServiceImpl class is the simple non thread safe implementation for most cases wher..." alt="" coords="25,80,229,107"/>
-<area shape="rect" id="node2" href="$classCuActionFactoryServiceImpl__Base.html" title=" " alt="" coords="5,5,248,32"/>
+<area shape="rect" id="node1" title="The CuActionFactoryServiceImpl class is the default implementation." alt="" coords="24,80,213,107"/>
+<area shape="rect" id="node2" href="$classCuActionFactoryServiceImpl__Base.html" title=" " alt="" coords="5,5,232,32"/>
 </map>

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['matches_723',['matches',['../classCuActivity.html#a02cf68bd6c041c41355ca8a4ee8c86f9',1,'CuActivity']]],
-  ['merge_724',['merge',['../classCuData.html#a25337e973d6930a14e11c35606fc2242',1,'CuData']]]
+  ['keys_764',['keys',['../classCuData.html#a9db04a83ab20e197ceab45b8146be4ac',1,'CuData']]]
 ];

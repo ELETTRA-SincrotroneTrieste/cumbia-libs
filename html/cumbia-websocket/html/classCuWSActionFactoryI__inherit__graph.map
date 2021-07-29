@@ -1,7 +1,7 @@
 <map id="CuWSActionFactoryI" name="CuWSActionFactoryI">
-<area shape="rect" id="node1" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="248,5,401,32"/>
-<area shape="rect" id="node2" href="$classCuWSActionConfFactory.html" title=" " alt="" coords="25,80,203,107"/>
-<area shape="rect" id="node4" href="$classCuWSActionReaderFactory.html" title=" " alt="" coords="227,80,422,107"/>
-<area shape="rect" id="node5" href="$classCuWSActionWriterFactory.html" title=" " alt="" coords="446,80,635,107"/>
-<area shape="rect" id="node3" href="$classCuWsActionWriterConfFactory.html" title=" " alt="" coords="5,155,223,181"/>
+<area shape="rect" id="node1" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="235,5,381,32"/>
+<area shape="rect" id="node2" href="$classCuWSActionConfFactory.html" title=" " alt="" coords="21,80,192,107"/>
+<area shape="rect" id="node4" href="$classCuWSActionReaderFactory.html" title=" " alt="" coords="216,80,400,107"/>
+<area shape="rect" id="node5" href="$classCuWSActionWriterFactory.html" title=" " alt="" coords="424,80,600,107"/>
+<area shape="rect" id="node3" href="$classCuWsActionWriterConfFactory.html" title=" " alt="" coords="5,155,208,181"/>
 </map>

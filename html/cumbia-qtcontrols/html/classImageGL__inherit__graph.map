@@ -1,5 +1,5 @@
 <map id="ImageGL" name="ImageGL">
-<area shape="rect" id="node1" title="A QGLWidget to display two dimensional arrays as an image." alt="" coords="86,80,166,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,100,32"/>
-<area shape="rect" id="node3" href="$classEImageWidgetBase.html" title="a class inherited by EImageWidget to provide common functionalities to QWidget objects drawing an ima..." alt="" coords="125,5,274,32"/>
+<area shape="rect" id="node1" title="A QGLWidget to display two dimensional arrays as an image." alt="" coords="82,80,157,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,95,32"/>
+<area shape="rect" id="node3" href="$classEImageWidgetBase.html" title="a class inherited by EImageWidget to provide common functionalities to QWidget objects drawing an ima..." alt="" coords="119,5,258,32"/>
 </map>
