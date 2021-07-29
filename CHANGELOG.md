@@ -1,10 +1,10 @@
 # News
 ## version 1.3.0
 
-Changes in 1.3.0 shall provide an enhanced performance and brings a
-lighter and more readable code in cumbia-tango.
+Changes in 1.3.0 shall provide a better performance and bring a
+lighter and more readable code in the cumbia-tango module.
 
-The advance in performance targets not only the native Tango engine:
+The upgrade targets not only the native Tango engine:
 the *http* module and the interaction with the
 [caserver](https://gitlab.elettra.eu/puma/server/canone3) service
 will be substantially enhanced.
@@ -37,9 +37,51 @@ timer events in the event loop service thread (that typically means, the main th
 
 ### cumbia-tango
 
+#### CuData key simplification
+
+The *keys* used to retrieve information from CuData have become shorter.
+For example, *data_type* has become *dt*, *data_format df*, *quality q,
+data_format_str dfs*, *state_color sc* and so on.
+
+Reading the [CuData for Tango](https://elettra-sincrotronetrieste.github.io/cumbia-libs/html/cumbia-tango/html/cudata_for_tango.html)
+is *mandatory* in order to amend code employing the old keys.
+
+This relevant change imposes a review of the code only in the case the developer
+has explicitly used the keys to access data in the application. In other words,
+simple apps created with the Qt Designer and only built need not be updated.
+
+#### Activities tag
+
+cumbia-tango activities now carry a *tag* in the form of CuData. The *tag*, unlike
+configuration options, is carried alongside the results and delivered to the
+application.
+
+Factories (CuTangoReaderFactory, CuTangoWriterFactory) can be used to set a *tag*
+before *setSource*. The feature is currently used by the
+[caserver service](https://gitlab.elettra.eu/puma/server/canone3)
+
+#### Image support
+
+cumbia-tango 1.3.0 introduces *Tango IMAGE* support relying on *cumbia CuMatrix*
+for data storage and representation.
+
+#### Message in "msg" key for data without errors
+
+The *msg* key in CuData will be empty if no error message needs to be delivered.
+The only relevant information in error-less data is the *timestamp*, that can
+always be retrieved through *timestamp_ms* and *timestamp_us* and displayed
+at application level.
+
 #### CuTReader
 
 CuTReader code has been cleaned and a memory leak regression has been fixed.
+
+#### Developer notes
+
+- CuActionFactoryService moved to a *impl* pattern. CuActionFactoryServiceImpl
+  is the only implementation.
+- CuActionFactoryService.findActive becomes CuActionFactoryService.find, because
+  code refactoring simplified the whole implementation.
 
 #### Applications: qmake options to exclude modules from linking
 
