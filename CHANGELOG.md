@@ -15,12 +15,14 @@ will be substantially enhanced.
 
 The [cumbia-magic plugin](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-magic-plugin)
 transforms any Qt object (QObject, QWidget) into a cumbia reader.
+The plugin distribution comes with an example.
 
 #### cumbia image
 
 The [cumbia-image plugin](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-image-plugin)
 exploits cumbia 1.3.0 support for *matrices* (see below) to display images on dedicated
 widgets. Refer to the [documentation here](https://elettra-sincrotronetrieste.github.io/cumbia-image-plugin/)
+and the example included in the source distribution.
 
 ## Version changes
 
