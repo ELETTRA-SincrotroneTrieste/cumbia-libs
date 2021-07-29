@@ -15,19 +15,70 @@
 Changes in 1.3.0 shall provide an enhanced performance and brings a lighter and more readable code in cumbia-tango.
 </p>
 
+<h4>cumbia</h4>
+
 <p>
 <ul>
-<li>
-cumbia-tango: CumbiaTango constructor accepts an option to instantiate a thread safe implementation of CuActionFactoryService for complex applications
-that need to call find, registerAction and unregisterAction from different threads. For simple cases, this is not necessary and the library employs
-a lock free implementation of the service itself.
-</li>
-</p>
+<li>cumbia: shortcuts for common conversion methods have been introduced in CuData:
+for example d.b("key") is the equivalent of d["key"].toBool() and d.s("src") is the
+equivalent of d["src"].toString().
 
+<br/>
+The upper case versions: d.B(const std::string& key), d.D(const std::string& key) are shortcuts for
+the template conversion
+flavours provided by CuVariant.  See CuData documentation.
+
+<br/>
+Matching methods have been introduced in CuVariant.
+
+</li>
+
+<li>
+cumbia: CuMatrix new class is a model for 2 dimensional arrays. See CuMatrix doc.
+CuVariant constructors have been added for the supported types, given a vector and
+the number of rows and columns.
+Template function CuVariant::toMatrix<T> converts a CuVariant matrix to a matrix
+of type T
+</li>
+
+<li>
+cumbia: CuVariant vector of char and unsigned char support added
+</li>
+
+<li>
+cumbia: both CuVariant string and vector of strings conversion now can optionally
+take a parameter specifying the  desired <em>conversion format</em>,
+printf - style.
+</li>
+
+<li>
+cumbia: if an EventLoopService is specified upon timer creation, CuTimer will
+post timer events on the event loop service thread (typically, the main thread).
+</li>
+
+</ul>
+
+<h4>cumbia-tango</h4>
+
+<ul>
 <li>
 cumbia-tango: CuTReader code has been cleaned and a memory leak regression has been fixed.
 </li>
+
+<li>
+cumbia applications: use <em>cu_exclude_engines</em> variable to <em>qmake</em> to
+list the engines you <em>do not want to enable</em> in the application.
+<br/>
+For example:<br/>
+ <strong>qmake cu_exclude_engines="websocket epics random"</strong>
+
+disables support for cumbia-websocket, cumbia-epics and cumbia-random
+
+</li>
+
 </ul>
+
+</p>
 
 <h2>version 1.2.4</h2>
 
@@ -256,7 +307,7 @@ See the documentation for a more detailed description.
 
 <h3>New prerequisites</h3>
 <p>
-    The read/write locks adopted to provide greater speed require a compiler supporting the <em>C++ 17</em> standard.
+    The read/write locks adopted to provide greater speed require a compiler supporting the <em>C<li><li> 17</em> standard.
 </p>
 
 <h3> cumbia </h3>
