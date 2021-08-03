@@ -154,6 +154,7 @@ DEFINES += CUMBIA_DEBUG_OUTPUT=1
 
 CUMBIA_QTCTRL_VERSION_HEX = 0x010300
 CUMBIA_QTCTRL_VERSION = 1.3.0
+VERSION = $${CUMBIA_QTCTRL_VERSION}
 
 # cumbia plugin directory.
 # it should be the same as that defined by

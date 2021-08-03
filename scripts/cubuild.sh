@@ -650,7 +650,7 @@ for x in "${qmake_p[@]}"; do
                 ##
                 ## build and install under tmp_installdir
                 ##
-                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j1
+                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j5
 		if [ $? -ne 0 ]; then
 			exit 1
 		fi
@@ -739,7 +739,7 @@ for x in "${qmake_subdir_p[@]}"; do
 			#
                         if [ $build -eq 1 ]; then
                                 echo -e "\e[1;32m\n*\n* BUILD project ${sd}...\n*\e[0m"
-                                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j1 && make install
+                                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j5 && make install
                                 if [ $? -ne 0 ]; then
                                         exit 1
                                 else
