@@ -227,7 +227,6 @@ void QuLabel::contextMenuEvent(QContextMenuEvent *e)
 
 void QuLabel::onUpdate(const CuData &da)
 {
-    printf("QuLabel.onUpdate: %s\n", datos(da));
     bool background_modified = false;
     QString txt;
     QColor background, border;
