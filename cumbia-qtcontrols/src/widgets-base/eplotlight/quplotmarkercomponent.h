@@ -4,6 +4,7 @@
 #include <quplotcomponent.h>
 #include <qwt_plot_item.h>
 #include <qwt_plot_curve.h>
+#include <qwt_text.h>
 
 class QwtPlotPicker;
 class QwtPlotMarker;

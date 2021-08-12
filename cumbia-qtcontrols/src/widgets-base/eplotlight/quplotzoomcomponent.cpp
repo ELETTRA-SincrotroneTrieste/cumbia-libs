@@ -1,6 +1,7 @@
 #include "quplotzoomcomponent.h"
 #include "quplot_base.h"
 
+#include <QPen>
 #include <QtDebug>
 
 QuPlotZoomComponent::QuPlotZoomComponent(QuPlotBase *plot)
