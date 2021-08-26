@@ -47,10 +47,6 @@ if [ -z $install_prefix ]; then
 
 ##  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-## =======================================================================================================
-
-
-
     echo -e "\e[1;32m* \e[0;4mconfig.sh\e[0m: install_prefix: $install_prefix."
     echo -e "\e[1;32m* \e[0mYou can either set the \"install_prefix\" variable before calling this script"
     echo -e "\e[1;32m* \e[0mor edit scripts/config.sh"
@@ -58,6 +54,37 @@ else
     prefix_from_environment=1
     install_prefix=$install_prefix
 fi
+
+
+## =======================================================================================================
+
+#
+#                                                        III
+#
+#
+## ============================================= temporary installation prefix ==============================
+#
+## Use this to build and place all the library destination files into a specific directory
+## Default: $PWD/build
+#
+##  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+if [ -z $build_dir ]; then
+    build_dir=$PWD/build
+    build_dir_from_environment=0
+    echo -e "\e[0;32m* \e[0;4mconfig.sh\e[0m: build dir: $build_dir."
+    echo -e "\e[0;32m* \e[0mYou can either set the \"build_dir\" variable before calling this script"
+    echo -e "\e[0;32m* \e[0mor edit scripts/config.sh\n"
+
+else
+    build_dir_from_environment=1
+    echo ""
+    echo -e "\e[0;32m* \e[0;4mconfig.sh\e[0m: a complete build of the library  will be placed into \e[1;3m$build_dir\e[0m"
+    echo -e "\e[0;32m* \e[0mand will be \e[0;3mready to be manually copied\e[0m into \e[0;3m$install_prefix \e[0m\n"
+    build_dir=$build_dir
+fi
+
+## ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
 #
 #

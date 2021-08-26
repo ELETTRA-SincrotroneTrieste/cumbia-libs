@@ -7,7 +7,11 @@
 #
 # Here qumbia-qtcontrols will be installed
 # INSTALL_ROOT can be specified from the command line running qmake "INSTALL_ROOT=/my/install/path"
-#
+# or it can be set in a prf file
+
+exists(../../cumbia-qt.prf) {
+    include(../../cumbia-qt.prf)
+}
 
 isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT = /usr/local/cumbia-libs

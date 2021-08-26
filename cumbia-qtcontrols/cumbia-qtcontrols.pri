@@ -4,6 +4,12 @@
 #
 #-------------------------------------------------
 
+# install root
+#
+exists(../cumbia-qt.prf) {
+    include(../cumbia-qt.prf)
+}
+
 QT       += widgets opengl
 
 wasm-emscripten {
@@ -238,8 +244,8 @@ android-g++|wasm-emscripten {
         message("adding  -L$${QWT_HOME_USR}/lib -l$${QWT_LIB}$${QWT_QTVER_SUFFIX} to libs")
         message("this should work for ubuntu installations")
 
-        unix:INCLUDEPATH += $${QWT_INCLUDES} $${QWT_INCLUDES_USR} /usr/local/cumbia-libs/include/cumbia /usr/local/qwt-6.1.3/include
-        unix:LIBS += -L$${QWT_HOME_USR}/lib -L/usr/local/cumbia-libs/lib -L/usr/local/qwt-6.1.3/lib -lcumbia -l$${QWT_LIB}$${QWT_QTVER_SUFFIX}
+        unix:INCLUDEPATH += $${QWT_INCLUDES} $${QWT_INCLUDES_USR} $${INSTALL_ROOT}/include/cumbia /usr/local/qwt-6.1.3/include
+        unix:LIBS += -L$${QWT_HOME_USR}/lib -L$${INSTALL_ROOT}/lib -L/usr/local/qwt-6.1.3/lib -lcumbia -l$${QWT_LIB}$${QWT_QTVER_SUFFIX}
     }
 
 }

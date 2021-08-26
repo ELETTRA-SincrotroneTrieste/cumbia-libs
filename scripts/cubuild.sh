@@ -46,12 +46,14 @@ topdir=$PWD
 tmp_build_d=$PWD/tmp-build-dir
 
 ## temporary local installation directory (to make pkg-config work)
-## rm -rf $tmp_installdir takes place after clean
+## rm -rf $build_dir takes place after clean
 ##
-tmp_installdir=$PWD/tmp-install-dir
+if [ -z $build_dir ]; then
+    build_dir=$PWD/build
+fi
 
 save_pkg_config_path=$PKG_CONFIG_PATH
-PKG_CONFIG_PATH=$tmp_installdir/lib/pkgconfig:$PKG_CONFIG_PATH
+PKG_CONFIG_PATH=$build_dir/lib/pkgconfig:$PKG_CONFIG_PATH
 export PKG_CONFIG_PATH
 
 echo "PKG_CONFIG_PATH is $PKG_CONFIG_PATH"
@@ -59,8 +61,11 @@ echo "PKG_CONFIG_PATH is $PKG_CONFIG_PATH"
 if [[ $@ == **help** ]]
 then
         echo -e "\n\e[1;32mENVIRONMENT\e[0m\n"
-        echo -e " export install_prefix=/usr/local/cumbia-libs - specify a custom install_prefix"
+        echo -e "* export install_prefix=/usr/local/cumbia-libs - specify a custom install_prefix"
         echo -e " (install_prefix is defined in $DIR/config.sh and can be edited there)"
+        echo -e "* export build_dir=/my/build/dir - specify a custom build directory"
+        echo -e " (build_dir is defined in $DIR/config.sh and can be edited there)"
+        echo -e " libraries can be manually copied from the build_dir into the desired destination folder."
 	echo -e "\n\e[1;32mOPTIONS\e[0m\n"
 	echo -e " [no arguments] - build cumbia, cumbia-qtcontrols, qumbia-apps, qumbia-plugins."
 	echo -e "                  No engine specific projects will be built (cumbia-tango, cumbia-epics, qumbia-tango-controls)" 
@@ -106,6 +111,15 @@ if [ $prefix_from_environment -eq 1 ]; then
 else
     echo -e " [\e[1;33m from scripts/config.sh settings\e[0m ]"
     echo -e " \e[1;33minfo\e[0m: You can call \e[1;32minstall_prefix=/your/desired/prefix $0\e[0m to override the setting in scripts/config.sh"
+fi
+
+if [ $build_dir_from_environment -eq 1 ]; then
+    echo -e -n " \e[1;33minfo\e[0m: \e[1;4mbuild directory\e[0m is \"$build_dir\""
+    echo -e " [\e[1;33m from environment variable\e[0m ]"
+else
+    echo -e "If you want to build the libraries into a specific \e[1;3mbuild dir\e[0m"
+    echo -e "call \e[1;32mbuild_dir=/your/desired/build_dir $0\e[0m."
+    echo -e "You can later manually copy the contents into the destination installation folder"
 fi
 
 echo ""
@@ -158,7 +172,7 @@ fi
 
 if [[ $@ == **install** ]]
 then
-    if  [[ ! -r $tmp_installdir ]] || [[ $clean -eq 1 ]] ;  then
+    if  [[ ! -r $build_dir ]] || [[ $clean -eq 1 ]] ;  then
         build=1
         meson=1
         operations+=(build)
@@ -491,7 +505,7 @@ if [ $clean -eq 1 ]; then
     for x in "${qmake_p[@]}"; do
         cd $DIR/../${x}
         echo -e "\e[1;33m\n*\n* CLEAN project ${x}...\n*\e[0m"
-        qmake "INSTALL_ROOT=$tmp_installdir" "prefix=$install_prefix"  && make distclean
+        qmake "INSTALL_ROOT=$build_dir" "prefix=$install_prefix"  && make distclean
 
         ## Back to topdir!
         cd $topdir
@@ -511,7 +525,7 @@ if [ $clean -eq 1 ]; then
                 # a .pro file exists
                 if [ -f $pro_file ]; then
                         echo -e "\e[1;33m\n*\n* CLEAN project ${sd}...\n*\e[0m"
-                        qmake "INSTALL_ROOT=$tmp_installdir" "prefix=$install_prefix"  && make distclean
+                        qmake "INSTALL_ROOT=$build_dir" "prefix=$install_prefix"  && make distclean
 
                 fi # -f $pro_file
                 cd ..
@@ -522,12 +536,12 @@ if [ $clean -eq 1 ]; then
 fi  # clean -eq 1
 
 #
-# remove tmp_installdir to clean previous build local installation
+# remove build_dir to clean previous build local installation
 #
-if  [ $make_install -eq 0 ] && [  -d $tmp_installdir ]; then
-        echo -e "\nRemoving temporary build directory: \"$tmp_installdir\""
-        rm -rf $tmp_installdir
-        if [  -d $tmp_installdir ]; then
+if  [ $make_install -eq 0 ] && [  -d $build_dir ]; then
+        echo -e "\nRemoving temporary build directory: \"$build_dir\""
+        rm -rf $build_dir
+        if [  -d $build_dir ]; then
             rm -f $tmp_build_d/*
         fi
 fi
@@ -561,9 +575,9 @@ for x in "${meson_p[@]}" ; do
 	if [ $build -eq 1 ]; then
 		echo -e "\e[1;32m\n*\n* BUILD project ${x}...\n*\e[0m"
 
-                ## when building need to install in tmp_installdir
-                ## pkgconfig files will be generated accordingly and will be found under tmp_installdir/lib/pkgconfig
-                ## So, build and install in tmp_installdir
+                ## when building need to install in build_dir
+                ## pkgconfig files will be generated accordingly and will be found under build_dir/lib/pkgconfig
+                ## So, build and install in build_dir
 
                if [ ${x} == "cumbia-epics" ]; then
                     if [[ ! -z "${EPICS_BASE}" ]] &&
@@ -590,9 +604,9 @@ for x in "${meson_p[@]}" ; do
                         exit 1
                     fi
                fi
-               meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
+               meson configure -Dprefix=$build_dir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
                #    ninja install
-               meson configure -Dprefix=$tmp_installdir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
+               meson configure -Dprefix=$build_dir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
 
                #    ninja install
                 if [ $? -ne 0 ]; then
@@ -648,9 +662,9 @@ for x in "${qmake_p[@]}"; do
 	if [ $build -eq 1 ]; then
 		echo -e "\e[1;32m\n*\n* BUILD project ${x}...\n*\e[0m"
                 ##
-                ## build and install under tmp_installdir
+                ## build and install under build_dir
                 ##
-                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j5
+                qmake "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make -j5
 		if [ $? -ne 0 ]; then
 			exit 1
 		fi
@@ -678,7 +692,7 @@ for x in "${qmake_p[@]}"; do
 		if [ -d doc ]; then
 			rm -rf doc
 		fi
-                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make doc
+                qmake "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make doc
 		if [ $? -ne 0 ]; then
 			echo -e "\e[1;36m\n*\n* BUILD DOCS project ${x} has no \"doc\" target...\n*\e[0m\n"
 		fi
@@ -716,7 +730,7 @@ for x in "${qmake_subdir_p[@]}"; do
 #        ## Rely on qmake to correctly manage subdirs
 #        if [ $build -eq 1 ]; then
 #                echo -e "\e[1;32m\n*\n* BUILD project ${sd}...\n*\e[0m"
-#                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j3 && make install
+#                qmake "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make -j3 && make install
 #                if [ $? -ne 0 ]; then
 #                        exit 1
 #                else
@@ -739,7 +753,7 @@ for x in "${qmake_subdir_p[@]}"; do
 			#
                         if [ $build -eq 1 ]; then
                                 echo -e "\e[1;32m\n*\n* BUILD project ${sd}...\n*\e[0m"
-                                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make -j5 && make install
+                                qmake "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make -j5 && make install
                                 if [ $? -ne 0 ]; then
                                         exit 1
                                 else
@@ -754,7 +768,7 @@ for x in "${qmake_subdir_p[@]}"; do
 					rm -rf doc
 				fi
 			
-                                qmake "INSTALL_ROOT=$tmp_installdir"  "prefix=$install_prefix"  && make doc
+                                qmake "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make doc
 				if [ $? -ne 0 ]; then
 					echo -e "\e[1;36m\n*\n* BUILD DOCS project ${sd} has no \"doc\" target...\n*\e[0m\n"
 				else
@@ -786,11 +800,11 @@ for x in "${qmake_subdir_p[@]}"; do
 	cd ..
 done
 
-# copy scripts/cusetenv.sh and scripts/config.sh into $tmp_installdir/bin
-if [ ! -d $tmp_installdir/bin ]; then
-    mkdir -p $tmp_installdir/bin
+# copy scripts/cusetenv.sh and scripts/config.sh into $build_dir/bin
+if [ ! -d $build_dir/bin ]; then
+    mkdir -p $build_dir/bin
 fi
-cp -a scripts/cusetenv.sh scripts/config.sh $tmp_installdir/bin
+cp -a scripts/cusetenv.sh scripts/config.sh $build_dir/bin
 
 # restore prefix in meson.build and .pro files
 
@@ -799,7 +813,7 @@ echo -e -n "\n... \e[0;32mrestoring\e[0m meson projects -Dprefix=$install_prefix
 find . -type d -name "builddir" -exec meson configure -Dprefix=$install_prefix -Dlibdir=$lib_dir -Dbuildtype=$build_type  {} \;
 echo -e "\t[\e[1;32mdone\e[0m]\n"
 
-# fix all qmake INSTALL_ROOT that in the build phase used to point to tmp_installdir
+# fix all qmake INSTALL_ROOT that in the build phase used to point to build_dir
 echo -e -n "\n... \e[0;32mrestoring\e[0m qmake INSTALL_ROOT=$install_prefix\e[0m in all Qt projects..."
 find . -name "*.pro" -execdir qmake INSTALL_ROOT=$install_prefix  \; &>/dev/null
 echo -e "\t[\e[1;32mdone\e[0m]\n\n"
@@ -813,23 +827,23 @@ fi
 #
 #
 #
-if [ $make_install -eq 1 ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_installdir)" ]; then
+if [ $make_install -eq 1 ] && [ -r $build_dir ] &&  [ "$(ls -A $build_dir)" ]; then
 
-        # Replace any occurrence of $tmp_installdir in any file (e.g. pkgconfig files)
+        # Replace any occurrence of $build_dir in any file (e.g. pkgconfig files)
         #
         #
         echo -e -n "\n\n\e[1;32m* \e[0mreplacing temporary install dir references in \e[1;2mpkgconfig files\e[0m with \"\e[1;2m$install_prefix\e[0m\"..."
-        find $tmp_installdir -type f -name "*.pc" -exec  sed -i 's#'"$tmp_installdir"'#'"$install_prefix"'#g' {} +
+        find $build_dir -type f -name "*.pc" -exec  sed -i 's#'"$build_dir"'#'"$install_prefix"'#g' {} +
         echo -e "\t[\e[1;32mdone\e[0m]\n"
 
-        echo -e "\e[1;35mchecking\e[0m for temporary install dir references in files under \e[1;2m$tmp_installdir\e[0m:"
-        echo -e "[ \e[1;37;3mgrep -rI  "$tmp_installdir"  $tmp_installdir/* \e[0m]"
+        echo -e "\e[1;35mchecking\e[0m for temporary install dir references in files under \e[1;2m$build_dir\e[0m:"
+        echo -e "[ \e[1;37;3mgrep -rI  "$build_dir"  $build_dir/* \e[0m]"
         echo -e "\e[0;33m+----------------------------------------------------------------------------------------+\e[0m"
         echo -e "\e[1;31m"
 
         # grep -rI r: recursive I ignore binary files
         #
-        grep -rI "$tmp_installdir" $tmp_installdir/*
+        grep -rI "$build_dir" $build_dir/*
         #
         echo -e "\e[0;33m+----------------------------------------------------------------------------------------+\e[0m"
         echo -e "\e[0m [\e[1;35mcheck \e[0;32mdone\e[0m] (^^ make sure there are no red lines within the dashed line block above ^^)"
@@ -867,12 +881,12 @@ if [ $make_install -eq 1 ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_install
         # 1. try install as normal user
         install_ok=0
         if [ -w $install_prefix ] ; then
-            cp -a $tmp_installdir/* $install_prefix/
+            cp -a $build_dir/* $install_prefix/
         else # 2. no permissions? --> install with sudo
             if  [[ ! -z  $sudocmd  ]]; then
                     echo -e " The \e[1;32msudo\e[0m password is required to install the library under \"$install_prefix\""
             fi
-            $sudocmd cp -a $tmp_installdir/* $install_prefix/
+            $sudocmd cp -a $build_dir/* $install_prefix/
             if [ "$?" -ne 0 ]; then
                     echo -e "\t[\e[1;31merror\e[0m]\nfailed to install into directory \"$install_prefix\""
                     exit 1
@@ -981,7 +995,7 @@ if [ $make_install -eq 1 ] && [ -r $tmp_installdir ] &&  [ "$(ls -A $tmp_install
         echo -e "\e[1;32m*\n* \e[1;32;4mINFO\e[0m: execute \e[1;32msource $binpath/cusetenv.sh\e[0m to use the new libraries in the current shell"
 	echo -e "\e[1;32m*\n*\e[0m"
 	
-elif  [ ! -r $tmp_installdir ] && [ $make_install -eq 1 ];  then
+elif  [ ! -r $build_dir ] && [ $make_install -eq 1 ];  then
     echo -e "\e[1;31merror\e[0m: temporary install directory not found. Try executing once again"
 
 fi

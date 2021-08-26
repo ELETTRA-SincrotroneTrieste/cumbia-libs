@@ -1,9 +1,8 @@
 linux-g++|freebsd-g++ {
 
-    lessThan(QT_MAJOR_VERSION, 5) {
-        QTVER_SUFFIX = -qt$${QT_MAJOR_VERSION}
-    } else {
-        QTVER_SUFFIX =
+
+    exists(../../cumbia-qt.prf) {
+        include(../../cumbia-qt.prf)
     }
 
 
