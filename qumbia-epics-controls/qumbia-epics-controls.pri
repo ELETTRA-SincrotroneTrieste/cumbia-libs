@@ -1,8 +1,8 @@
 linux-g++|freebsd-g++ {
 
 
-    exists(../../cumbia-qt.prf) {
-        include(../../cumbia-qt.prf)
+    exists(../cumbia-qt.prf) {
+        include(../cumbia-qt.prf)
     }
 
 

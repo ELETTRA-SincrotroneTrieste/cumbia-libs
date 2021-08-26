@@ -1,10 +1,12 @@
-QT += network
 
-lessThan(QT_MAJOR_VERSION, 5) {
-    QTVER_SUFFIX = -qt$${QT_MAJOR_VERSION}
-} else {
-    QTVER_SUFFIX =
+# install root
+#
+exists(../cumbia-qt.prf) {
+    include(../cumbia-qt.prf)
 }
+
+
+QT += network
 
 # + ----------------------------------------------------------------- +
 #
@@ -42,7 +44,7 @@ isEmpty(INSTALL_ROOT) {
     CUMBIA_HTTP_DOCDIR=$${INSTALL_ROOT}/share/doc/cumbia-http
 #
 # The name of the library
-    cumbia_ws_LIB=cumbia-http$${QTVER_SUFFIX}
+    cumbia_http_LIB=cumbia-http
 #
 # Here qumbia-tango-controls libraries will be installed
     CUMBIA_HTTP_LIBDIR=$${INSTALL_ROOT}/lib
@@ -56,8 +58,8 @@ android-g++|wasm-emscripten {
 } else {
     CONFIG += link_pkgconfig
     PKGCONFIG += cumbia
-    PKGCONFIG += cumbia-qtcontrols$${QTVER_SUFFIX}
-    PKGCONFIG += cumbia-http$${QTVER_SUFFIX}
+    PKGCONFIG += cumbia-qtcontrols
+    PKGCONFIG += cumbia-http
 }
 
 android-g++ {
@@ -100,7 +102,7 @@ doc.commands = doxygen \
 unix:android-g++ {
     unix:INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia  $${INSTALL_ROOT}/include/cumbia-http
     unix:LIBS +=  -L/libs/armeabi-v7a/ -lcumbia
-    unix:LIBS += -lcumbia-http$${QTVER_SUFFIX}
+    unix:LIBS += -lcumbia-http
 }
 
 wasm-emscripten {
@@ -108,18 +110,18 @@ wasm-emscripten {
 }
 
 android-g++|wasm-emscripten {
-    LIBS += -L$${INSTALL_ROOT}/lib/wasm -lcumbia-http$${QTVER_SUFFIX} -lcumbia
+    LIBS += -L$${INSTALL_ROOT}/lib/wasm -lcumbia-http -lcumbia
 } else {
     OBJECTS_DIR = objects
-    packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
-        message("cumbia-http.pri: using pkg-config to configure cumbia cumbia-qtcontrols$${QTVER_SUFFIX} includes and libraries")
+    packagesExist(cumbia):packagesExist(cumbia-qtcontrols) {
+        message("cumbia-http.pri: using pkg-config to configure cumbia cumbia-qtcontrols includes and libraries")
     } else {
-        packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}):packagesExist(cumbia-http$${QTVER_SUFFIX}) {
-            message("cumbia-http.pri: using pkg-config to configure cumbia cumbia-qtcontrols$${QTVER_SUFFIX} and cumbia-http$${QTVER_SUFFIX} includes and libraries")
+        packagesExist(cumbia):packagesExist(cumbia-qtcontrols):packagesExist(cumbia-http) {
+            message("cumbia-http.pri: using pkg-config to configure cumbia cumbia-qtcontrols and cumbia-http includes and libraries")
         } else {
             unix:INCLUDEPATH += /usr/local/include/cumbia  /usr/local/include/cumbia-http
             unix:LIBS +=  -L/usr/local/lib -lcumbia
-            unix:LIBS += -lcumbia-http$${QTVER_SUFFIX}
+            unix:LIBS += -lcumbia-http
         }
     }
 }

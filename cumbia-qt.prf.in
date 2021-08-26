@@ -1,0 +1,32 @@
+# + ----------------------------------------------------------------- +
+#
+# Customization section:
+#
+# Customize the following paths according to your installation:
+#
+#
+# Here cumbia qt libraries will be installed
+# INSTALL_ROOT can be specified from the command line running qmake "/usr/local/cumbia-libs-1.3.0
+#
+# Note for WebAssembly: pkg-config is not used. cumbia includes and libs will be searched under
+# $${INSTALL_ROOT}/include/cumbia and $${INSTALL_ROOT}/lib/wasm respectively
+#
+isEmpty(INSTALL_ROOT) {
+        INSTALL_ROOT = /usr/local/cumbia-libs
+}
+
+# INSTALL_ROOT is used to install the target
+# prefix is used within DEFINES +=
+#
+# cumbia installation script uses a temporary INSTALL_ROOT during build
+# and then files are copied into the destination prefix. That's where
+# configuration files must be found by the application when the script
+# installs everything at destination
+#
+isEmpty(prefix) {
+    prefix = $${INSTALL_ROOT}
+}
+
+
+message("cumbia-qt.prf: INSTALL_ROOT is $${INSTALL_ROOT}")
+message("cumbia-qt.prf: prefix is $${prefix}")

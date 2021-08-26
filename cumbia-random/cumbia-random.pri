@@ -1,8 +1,10 @@
-lessThan(QT_MAJOR_VERSION, 5) {
-    QTVER_SUFFIX = -qt$${QT_MAJOR_VERSION}
-} else {
-    QTVER_SUFFIX =
+
+# install root
+#
+exists(../cumbia-qt.prf) {
+    include(../cumbia-qt.prf)
 }
+
 
 wasm-emscripten {
 # library is compiled statically
@@ -49,7 +51,7 @@ isEmpty(INSTALL_ROOT) {
 
 #
 # The name of the library
-    cumbia_rnd_LIB=cumbia-random$${QTVER_SUFFIX}
+    cumbia_rnd_LIB=cumbia-random
 #
 # Here qumbia-random libraries will be installed
     wasm-emscripten {
@@ -70,14 +72,14 @@ android-g++|wasm-emscripten {
 
     CONFIG += link_pkgconfig
     PKGCONFIG += cumbia
-    PKGCONFIG += cumbia-qtcontrols$${QTVER_SUFFIX}
-    PKGCONFIG += cumbia-random$${QTVER_SUFFIX}
+    PKGCONFIG += cumbia-qtcontrols
+    PKGCONFIG += cumbia-random
 
-    packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
-        message("Qwt: using pkg-config to configure cumbia cumbia-qtcontrols$${QTVER_SUFFIX} includes and libraries")
+    packagesExist(cumbia):packagesExist(cumbia-qtcontrols) {
+        message("Qwt: using pkg-config to configure cumbia cumbia-qtcontrols includes and libraries")
     } else {
-        packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}):packagesExist(cumbia-random$${QTVER_SUFFIX}) {
-            message("Qwt: using pkg-config to configure cumbia cumbia-qtcontrols$${QTVER_SUFFIX} includes and libraries")
+        packagesExist(cumbia):packagesExist(cumbia-qtcontrols):packagesExist(cumbia-random) {
+            message("Qwt: using pkg-config to configure cumbia cumbia-qtcontrols includes and libraries")
         }
     }
 }
@@ -110,19 +112,19 @@ doc.commands = doxygen \
 unix:android-g++ {
     unix:INCLUDEPATH += /usr/local/include/cumbia /usr/local/include/cumbia/cumbia-random
     unix:LIBS +=  -L/libs/armeabi-v7a/ -lcumbia
-    unix:LIBS += -lcumbia-random$${QTVER_SUFFIX}
+    unix:LIBS += -lcumbia-random
 } else {
     wasm-emscripten {
-        LIBS +=  -L$${CUMBIA_RND_LIBDIR}/wasm -lcumbia-random$${QTVER_SUFFIX}
+        LIBS +=  -L$${CUMBIA_RND_LIBDIR}/wasm -lcumbia-random
         INCLUDEPATH += $${CUMBIA_RND_INCLUDES} $${INSTALL_ROOT}/include/cumbia-qtcontrols $${INSTALL_ROOT}/include/cumbia
 
     } else {
-        packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
+        packagesExist(cumbia):packagesExist(cumbia-qtcontrols) {
         } else {
             message("either cumbia or cumbia-qtcontrols pkg-config files found")
             unix:INCLUDEPATH += /usr/local/include/cumbia /usr/local/include/cumbia/cumbia-random
             unix:LIBS += -L/usr/local/lib -lcumbia
-            LIBS += -lcumbia-random$${QTVER_SUFFIX}
+            LIBS += -lcumbia-random
         }
     }
 }

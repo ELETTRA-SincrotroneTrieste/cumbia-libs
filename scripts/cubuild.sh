@@ -104,7 +104,7 @@ echo -e "\n \e[1;33minfo\e[0m: reading configuration from \"$DIR/config.sh\""
 . "$DIR/projects.sh"
 . "$DIR/config.sh"
 
-echo -e -n " \e[1;33minfo\e[0m: installation prefix is \"$install_prefix\""
+echo -e -n " \e[1;33minfo\e[0m: \e[1;4minstallation prefix\e[0m is \"$install_prefix\""
 
 if [ $prefix_from_environment -eq 1 ]; then
     echo -e " [\e[1;33m from environment variable\e[0m ]"
@@ -818,6 +818,34 @@ echo -e -n "\n... \e[0;32mrestoring\e[0m qmake INSTALL_ROOT=$install_prefix\e[0m
 find . -name "*.pro" -execdir qmake INSTALL_ROOT=$install_prefix  \; &>/dev/null
 echo -e "\t[\e[1;32mdone\e[0m]\n\n"
 
+# Replace any occurrence of $build_dir in any file (e.g. pkgconfig files)
+echo -e -n "\n\n\e[1;32m* \e[0mreplacing temporary install dir references in \e[1;2mpkgconfig files\e[0m with \"\e[1;2m$install_prefix\e[0m\"..."
+find $build_dir -type f -name "*.pc" -exec  sed -i 's#'"$build_dir"'#'"$install_prefix"'#g' {} +
+echo -e "\t[\e[1;32mdone\e[0m]\n"
+
+echo -e "\e[1;35mchecking\e[0m for temporary install dir references in files under \e[1;2m$build_dir\e[0m:"
+echo -e "[ \e[1;37;3mgrep -rI  "$build_dir"  $build_dir/* \e[0m]"
+echo -e "\e[0;33m+----------------------------------------------------------------------------------------+\e[0m"
+echo -e "\e[1;31m"
+
+# grep -rI r: recursive I ignore binary files
+#
+grep -rI "$build_dir" $build_dir/*
+#
+echo -e "\e[0;33m+----------------------------------------------------------------------------------------+\e[0m"
+echo -e "\e[0m [\e[1;35mcheck \e[0;32mdone\e[0m] (^^ make sure there are no red lines within the dashed line block above ^^)"
+
+
+qt_prf_file=$build_dir/include/cumbia-qt.prf
+
+# copy cumbia-qt.prf.in into include dir as cumbia-qt.prf
+cp -a cumbia-qt.prf.in $qt_prf_file
+
+# Set the correct INSTALL_ROOT in $build_dir/cumbia-qt.prf:
+sed -i 's|'INSTALL_ROOT[[:space:]]=[[:space:]].*'|INSTALL_ROOT = '$install_prefix'|g' $qt_prf_file
+
+
+
 if [ $make_install -eq 0 ] && [ $build -eq 1 ]; then
     echo  -e "Type \e[1;32m$0 install\e[0m to install the library under \e[1;32m$install_prefix\e[0m\n"
 fi
@@ -828,25 +856,6 @@ fi
 #
 #
 if [ $make_install -eq 1 ] && [ -r $build_dir ] &&  [ "$(ls -A $build_dir)" ]; then
-
-        # Replace any occurrence of $build_dir in any file (e.g. pkgconfig files)
-        #
-        #
-        echo -e -n "\n\n\e[1;32m* \e[0mreplacing temporary install dir references in \e[1;2mpkgconfig files\e[0m with \"\e[1;2m$install_prefix\e[0m\"..."
-        find $build_dir -type f -name "*.pc" -exec  sed -i 's#'"$build_dir"'#'"$install_prefix"'#g' {} +
-        echo -e "\t[\e[1;32mdone\e[0m]\n"
-
-        echo -e "\e[1;35mchecking\e[0m for temporary install dir references in files under \e[1;2m$build_dir\e[0m:"
-        echo -e "[ \e[1;37;3mgrep -rI  "$build_dir"  $build_dir/* \e[0m]"
-        echo -e "\e[0;33m+----------------------------------------------------------------------------------------+\e[0m"
-        echo -e "\e[1;31m"
-
-        # grep -rI r: recursive I ignore binary files
-        #
-        grep -rI "$build_dir" $build_dir/*
-        #
-        echo -e "\e[0;33m+----------------------------------------------------------------------------------------+\e[0m"
-        echo -e "\e[0m [\e[1;35mcheck \e[0;32mdone\e[0m] (^^ make sure there are no red lines within the dashed line block above ^^)"
 
         # A) Create install dir
         if [ ! -r $install_prefix ]; then
@@ -941,7 +950,6 @@ if [ $make_install -eq 1 ] && [ -r $build_dir ] &&  [ "$(ls -A $build_dir)" ]; t
 		echo -e "\e[0;32m\n*\n* INSTALL \e[1;32m$libprefix\e[0m has been found in ldconfig paths."
 	fi
 
-        binpath=/usr/local/cumbia-libs/bin
         binpath=$install_prefix/bin
         cumbia_bin_sh_path=/etc/profile.d/cumbia-bin-path.sh
         if [[ -z `echo $PATH |grep $binpath` ]]; then

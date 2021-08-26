@@ -1,3 +1,9 @@
+# ../cumbia-qt.prf defines INSTALL_ROOT
+#
+exists(../cumbia-qt.prf) {
+    include(../cumbia-qt.prf)
+}
+
 isEmpty(INSTALL_ROOT) {
     INSTALL_ROOT=/usr/local/cumbia-libs
 }

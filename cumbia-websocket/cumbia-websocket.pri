@@ -1,9 +1,9 @@
 QT += websockets
 
-lessThan(QT_MAJOR_VERSION, 5) {
-    QTVER_SUFFIX = -qt$${QT_MAJOR_VERSION}
-} else {
-    QTVER_SUFFIX =
+# install root
+#
+exists(../cumbia-qt.prf) {
+    include(../cumbia-qt.prf)
 }
 
 # + ----------------------------------------------------------------- +
@@ -42,7 +42,7 @@ isEmpty(INSTALL_ROOT) {
     CUMBIA_WS_DOCDIR=$${INSTALL_ROOT}/share/doc/cumbia-websocket
 #
 # The name of the library
-    cumbia_ws_LIB=cumbia-websocket$${QTVER_SUFFIX}
+    cumbia_ws_LIB=cumbia-websocket
 #
 # Here qumbia-tango-controls libraries will be installed
     CUMBIA_WS_LIBDIR=$${INSTALL_ROOT}/lib
@@ -56,8 +56,8 @@ android-g++|wasm-emscripten {
 } else {
     CONFIG += link_pkgconfig
     PKGCONFIG += cumbia
-    PKGCONFIG += cumbia-qtcontrols$${QTVER_SUFFIX}
-    PKGCONFIG += cumbia-websocket$${QTVER_SUFFIX}
+    PKGCONFIG += cumbia-qtcontrols
+    PKGCONFIG += cumbia-websocket
 }
 
 android-g++ {
@@ -100,7 +100,7 @@ doc.commands = doxygen \
 unix:android-g++ {
     unix:INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia  $${INSTALL_ROOT}/include/cumbia-websocket
     unix:LIBS +=  -L/libs/armeabi-v7a/ -lcumbia
-    unix:LIBS += -lcumbia-websocket$${QTVER_SUFFIX}
+    unix:LIBS += -lcumbia-websocket
 }
 
 wasm-emscripten {
@@ -108,18 +108,18 @@ wasm-emscripten {
 }
 
 android-g++|wasm-emscripten {
-    LIBS += -L$${INSTALL_ROOT}/lib/wasm -lcumbia-websocket$${QTVER_SUFFIX} -lcumbia
+    LIBS += -L$${INSTALL_ROOT}/lib/wasm -lcumbia-websocket -lcumbia
 } else {
     OBJECTS_DIR = objects
-    packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
-        message("cumbia-websocket.pri: using pkg-config to configure cumbia cumbia-qtcontrols$${QTVER_SUFFIX} includes and libraries")
+    packagesExist(cumbia):packagesExist(cumbia-qtcontrols) {
+        message("cumbia-websocket.pri: using pkg-config to configure cumbia cumbia-qtcontrols includes and libraries")
     } else {
-        packagesExist(cumbia):packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}):packagesExist(cumbia-websocket$${QTVER_SUFFIX}) {
-            message("cumbia-websocket.pri: using pkg-config to configure cumbia cumbia-qtcontrols$${QTVER_SUFFIX} and cumbia-websocket$${QTVER_SUFFIX} includes and libraries")
+        packagesExist(cumbia):packagesExist(cumbia-qtcontrols):packagesExist(cumbia-websocket) {
+            message("cumbia-websocket.pri: using pkg-config to configure cumbia cumbia-qtcontrols and cumbia-websocket includes and libraries")
         } else {
             unix:INCLUDEPATH += /usr/local/include/cumbia  /usr/local/include/cumbia-websocket
             unix:LIBS +=  -L/usr/local/lib -lcumbia
-            unix:LIBS += -lcumbia-websocket$${QTVER_SUFFIX}
+            unix:LIBS += -lcumbia-websocket
         }
     }
 }
