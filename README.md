@@ -125,8 +125,7 @@ The installation prefix can also be set through an environment variable. We prov
 
 Another environment variable named *build_dir* can be exported to let the script build the libraries under the specified build directory.
 If install_prefix=A and build_dir=B, then the directory *B* can be copied (moved) to *A* after building and this just works fine for the
-installation.
-lareconchita
+installation. In other words, whatever is *build_dir*, at last libraries and includes must be placed under *install_prefix*.
 
 EPICS modules require two environment variables:
 
