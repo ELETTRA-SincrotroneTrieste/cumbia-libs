@@ -26,7 +26,3 @@ isEmpty(INSTALL_ROOT) {
 isEmpty(prefix) {
     prefix = $${INSTALL_ROOT}
 }
-
-
-message("cumbia-qt.prf: INSTALL_ROOT is $${INSTALL_ROOT}")
-message("cumbia-qt.prf: prefix is $${prefix}")
