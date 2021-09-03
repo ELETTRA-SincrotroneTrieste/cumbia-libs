@@ -35,42 +35,34 @@ protected:
 class EInputOutputWidget : public QFrame
 {
     Q_OBJECT
+    Q_PROPERTY(bool onApplyHideWriter READ onApplyHideWriter WRITE setOnApplyHideWriter DESIGNABLE true)
 public:
-
     EInputOutputWidget(QWidget *outputw, QWidget *parent);
-
     EInputOutputWidget(QWidget *parent);
 
     void setInputWidget(QWidget *inputw);
-
     void setOutputWidget(QWidget *outputw);
 
     QSize minimumSizeHint() const;
-
     QSize sizeHint() const;
 
     QWidget *outputWidget() const;
-
     QWidget *inputWidget() const;
-
     QFrame *getContainer() const;
 
     virtual QPushButton *getApplyButton();
 
+    bool onApplyHideWriter() const;
+
 public slots:
 
     void setInputValue(double val);
-
     void setInputValue(int val);
-
     void setInputText(const QString& text);
-
     void setOutputValue(int val);
-
     void setOutputValue(double val);
-
     void setOutputText(const QString& text);
-
+    void setOnApplyHideWriter(bool h);
 
 signals:
 

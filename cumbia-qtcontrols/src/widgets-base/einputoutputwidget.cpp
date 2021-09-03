@@ -23,10 +23,13 @@ void Container::hideEvent(QHideEvent *e) {
 class EReaderWriterPrivate
 {
 public:
+    EReaderWriterPrivate() : on_apply_hide_writer(true) {}
+
     QWidget *input_w;
     Container *w_container;
     QPushButton *pbApply, *pbEdit;
     QWidget *output_w;
+    bool on_apply_hide_writer;
 };
 
 /** \brief A container to organize an output (display) widget and an input (writer) widget.
@@ -182,11 +185,18 @@ QFrame *EInputOutputWidget::getContainer() const
  *
  * \note The apply button must be created only once.
  */
-QPushButton *EInputOutputWidget::getApplyButton()
-{
+QPushButton *EInputOutputWidget::getApplyButton() {
     if(!d->pbApply)
         d->pbApply = new QPushButton("OK", this);
     return d->pbApply;
+}
+
+/*!
+ * \brief EInputOutputWidget::onApplyHideWriter
+ * \return true if the writer is hidden after Apply button is clicked, false otherwise
+ */
+bool EInputOutputWidget::onApplyHideWriter() const {
+    return d->on_apply_hide_writer;
 }
 
 /** \brief Tries to write the "value" property on the input widget.
@@ -252,6 +262,15 @@ void EInputOutputWidget::setOutputValue(double val)
 void EInputOutputWidget::setOutputText(const QString &text)
 {
     m_setText(text, d->output_w);
+}
+
+/*!
+ * \brief EInputOutputWidget::setOnApplyHideWriter
+ * \param h true hide writer when apply is clicked (default).
+ * \param h false keep the writer visible after apply is clicked.
+ */
+void EInputOutputWidget::setOnApplyHideWriter(bool h) {
+    d->on_apply_hide_writer = h;
 }
 
 /*! \brief returns the output widget
@@ -343,6 +362,8 @@ void EInputOutputWidget::m_applyClicked()
 
     if(pi >= 0 || ok)
         emit applyClicked(text);
+    if(d->on_apply_hide_writer)
+        d->w_container->setVisible(false);
 }
 
 /*! @private */
