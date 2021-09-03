@@ -211,14 +211,13 @@ void QuLabelBase::setValue(const CuVariant& v, bool *background_modified)
     else {
         txt = QString::fromStdString(v.toString(NULL, d_ptr->format.toStdString().c_str()));
     }
-    if(!txt.isEmpty()) {
-        if(d_ptr->max_len > -1 && txt.length() > d_ptr->max_len) {
-            setToolTip(toolTip() + "\n\n" + txt);
-            txt.truncate(d_ptr->max_len - strlen(" [...]"));
-            txt += " [...]";
-        }
-        QLabel::setText(txt);
+    if(d_ptr->max_len > -1 && txt.length() > d_ptr->max_len) {
+        setToolTip(toolTip() + "\n\n" + txt);
+        txt.truncate(d_ptr->max_len - strlen(" [...]"));
+        txt += " [...]";
     }
+    QLabel::setText(txt);
+
     if(background_modified)
         *background_modified = bg_modified;
 }
