@@ -10,6 +10,30 @@ class QwtPlotPicker;
 class QwtPlotMarker;
 class QuPlotMarkerComponentPrivate;
 
+class QuPlotMarkerFormat_I {
+public:
+    virtual ~QuPlotMarkerFormat_I() {}
+
+    /*! \brief reimplement this method to provide custom text for the marker
+     *
+     * @param plot a pointer to the QuPlotBase in use
+     * @param curves the curves crossing the closest curve at (x,y) corresponding to index
+     *        The first item in the list is the curve *closest to the click position*.
+     * @param index the index of the curve closest to the click position
+     * @param x shall contain the section of the text involving the x value
+     * @param y shall contain the section of the text involving the y value
+     *
+     * \return the string to display on the marker
+     *
+     * \note
+     * The curve closest to the click position is stored as first item in the curve
+     * list.
+     */
+    virtual QString format(const QuPlotBase *plot,
+                   QList<QwtPlotCurve *>curves,
+                   const int index, QString& x, QString& y) const = 0;
+};
+
 /*! @private */
 class Arrow: public QwtPlotItem
 {
@@ -40,18 +64,19 @@ public:
     QString yLabel() const;
     QString label() const;
 
+    void setFormatter(QuPlotMarkerFormat_I *pmf);
+    QuPlotMarkerFormat_I *formatter() const;
+
     void setLabel(const QwtText &text);
 
     virtual void update(const QuPlotBase* plot, QwtPlotCurve *closestC, int closestPointIdx);
 
     void hide();
-
     void show();
 
     bool isVisible() const;
 
     QwtPlotCurve *currentClosestCurve() const;
-
     int currentClosestPoint() const;
 
     Arrow* getArrow() const;
@@ -67,12 +92,8 @@ private:
 public:
     void attachToPlot(QuPlotBase *plot);
     void connectToPlot(QuPlotBase *plot);
-
-protected:
-
-    virtual QString markerText(const QuPlotBase *plot, const QwtPlotCurve *curve, const int index);
-
-    QSet<QwtPlotCurve *> intersectingCurves(const QuPlotBase *plot, const double x, const double y, const QwtPlotCurve *curve);
+    virtual QString markerText(const QuPlotBase *plot, const QwtPlotCurve *closest_curve, const int index);
+    QList<QwtPlotCurve *> intersectingCurves(const QuPlotBase *plot, const double x, const double y, const QwtPlotCurve *curve);
 };
 
 #endif // QUPLOTMARKERCOMPONENT_H

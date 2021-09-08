@@ -66,12 +66,12 @@ bool ShiftClickEater::eventFilter(QObject *obj, QEvent *event)
 
 QuPlotBase::QuPlotBase(QWidget *parent) : QwtPlot(parent)
 {
-    init();
+    QuPlotBase::init();
 }
 
 QuPlotBase::QuPlotBase(const QwtText &title, QWidget *parent) : QwtPlot(title, parent)
 {
-    init();
+    QuPlotBase::init();
 }
 
 QuPlotBase::~QuPlotBase()
@@ -116,10 +116,7 @@ void QuPlotBase::init()
     plotgrid->attach(this);
     plotgrid->enableX(true);
     plotgrid->enableY(true);
-
-
     setAxisLabelAlignment(QwtPlot::xBottom, Qt::AlignLeft | Qt::AlignBottom);
-
     setZoomDisabled(false);
 
     QuPlotMarkerComponent *marker_c = new QuPlotMarkerComponent(this);
@@ -339,16 +336,17 @@ QuPlotComponent *QuPlotBase::unregisterComponent(const QString &name) {
  */
 bool QuPlotBase::updateMarker()
 {
+    bool updated = false;
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
     if(marker->isVisible()) {
-        bool updated = marker->update(this);
+        updated = marker->update(this);
         if(updated) {
             double x = marker->currentClosestCurve()->data()->sample(marker->currentClosestPoint()).x();
             double y = marker->currentClosestCurve()->data()->sample(marker->currentClosestPoint()).y();
             emit markerTextChanged(marker->yLabel(), marker->xLabel(), x, y);
         }
     }
-    return false;
+    return updated;
 }
 
 /** \brief Updates the axes bounds for which autoscale is enabled.
@@ -469,8 +467,8 @@ void QuPlotBase::addCurve(const QString &curveName)
 
 void QuPlotBase::addCurve(const QString& title, QuPlotCurve *curve)
 {
-    if(d->curvesMap.contains(title))
-        delete curve;
+    if(d->curvesMap.contains(title)) // remove existing curve
+        delete d->curvesMap[title];
     QuPalette palette;
     QStringList colors = QStringList() << "dark_green" << "blue" << "violet"
                                        << "red" << "black" << "light_gray" << "yellow" <<  "green" << "gray"
@@ -524,15 +522,16 @@ void QuPlotBase::appendData(const QString& curveName, double x, double y)
 void QuPlotBase::insertData(const QString &curveName, double *xData, double *yData, int size, double default_y)
 {
     QuPlotCurve* curve = d->curvesMap.value(curveName);
-    if(curve)
+    if(curve) {
         curve->insertData(xData, yData, size, default_y);
-    int bufSiz = dataBufferSize();
-    while(bufSiz > 0 && curve->count() > bufSiz) {
-        curve->popFront();
-    }
-    curve->updateRawData();
-    if(d->refresh_timeo <= 0) {
-        refresh();
+        int bufSiz = dataBufferSize();
+        while(bufSiz > 0 && curve->count() > bufSiz) {
+            curve->popFront();
+        }
+        curve->updateRawData();
+        if(d->refresh_timeo <= 0) {
+            refresh();
+        }
     }
 }
 
@@ -879,14 +878,12 @@ void QuPlotBase::setZoomDisabled(bool disable)
 int QuPlotBase::findClosestPoint(QPoint p, QwtPlotCurve **closestCrv)
 {
     QList<double> distances;
-    QMap<QwtPlotCurve*, double> curveDistancesMap;
-    QMap<QwtPlotCurve*, int> curveClosestPointMap;
+    QHash<QwtPlotCurve*, double> curveDistancesMap;
+    QHash<QwtPlotCurve*, int> curveClosestPointMap;
     int closestPoint = -1;
     double dist = -1, minDist = -1;
-    *closestCrv = NULL;
-
-    foreach(QwtPlotItem* i, itemList())
-    {
+    *closestCrv = nullptr;
+    foreach(QwtPlotItem* i, itemList()) {
         if(i->rtti() == QwtPlotItem::Rtti_PlotUserItem + RTTI_CURVE_OFFSET ||
                 i->rtti() == QwtPlotItem::Rtti_PlotCurve)
         {
@@ -894,12 +891,10 @@ int QuPlotBase::findClosestPoint(QPoint p, QwtPlotCurve **closestCrv)
             if(c->isVisible())
             {
                 closestPoint = c->closestPoint(p, &dist);
-                if(closestPoint > -1)
-                {
+                if(closestPoint > -1) {
                     curveDistancesMap.insert(c, dist);
                     curveClosestPointMap.insert(c, closestPoint);
                 }
-                //                printf("curve %s, dist %.2f closestPoint %d\n", qstoc(c->title().text()), dist, closestPoint);
             }
         }
     }
@@ -925,7 +920,7 @@ void QuPlotBase::hideMarker()
 void QuPlotBase::mouseReleaseEvent(QMouseEvent *ev)
 {
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
-    if(ev->button() == Qt::MidButton && marker->isVisible()) {
+    if(ev->button() == Qt::MiddleButton && marker->isVisible()) {
         hideMarker();
         emit markerVisibilityChanged(false);
     }
@@ -974,12 +969,12 @@ void QuPlotBase::moveCurveToYRight(QwtPlotCurve *c, bool yr)
 void QuPlotBase::showMarker(const QPolygon &p)
 {
     int closestPoint;
-    QwtPlotCurve *closestCurve;
+    QwtPlotCurve *closestCurve = nullptr;
     double x = 0.0, y = 0.0;
     QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
     closestPoint = findClosestPoint(p.point(0), &closestCurve);
 
-    if (closestPoint != -1) {
+    if (closestPoint != -1 && closestCurve != nullptr) {
         marker->show();
         m_updateLabel(closestCurve, closestPoint); // does not emit marker text changed. Does not replot
         x = closestCurve->data()->sample(closestPoint).x();

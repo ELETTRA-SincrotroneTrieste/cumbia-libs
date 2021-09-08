@@ -1,4 +1,19 @@
 # News
+
+## version 1.3.1
+
+### Fixes
+
+#### cumbia-qtcontrols
+
+Plots: fixed marker positioning when x scale is inverted
+
+### New features
+
+Plots: *QuPlotMarkerComponent*: custom marker contents can be provided by implementing a new interface
+called *QuPlotMarkerFormat_I* and defined in quplotmarkercomponent.h, instead of reimplementing 
+QuPlotMarkerComponent itself
+
 ## version 1.3.0
 
 Changes in 1.3.0 shall provide a better performance and bring a
