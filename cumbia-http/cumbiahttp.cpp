@@ -101,7 +101,6 @@ void CumbiaHttp::m_init()
 }
 
 void CumbiaHttp::onSrcBundleReqReady(const QList<SrcItem> &rsrcs, const QList<SrcItem> &wsrcs) {
-    printf("CumbiaHttp::onSrcBundleReqReady: rsrcs %d wsrcs %d\n", rsrcs.size(), wsrcs.size());
     if(rsrcs.size() > 0) {
         CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(rsrcs, this);
         r->setBlocking(d->chan_recv->exiting()); // destruction in progress
