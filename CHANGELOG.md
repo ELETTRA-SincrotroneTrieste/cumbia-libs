@@ -4,6 +4,15 @@
 
 ### Fixes
 
+#### cumbia
+
+CuVariant: improved support for UChar and Char types
+isInteger returns true if either type is Uchar or Char
+
+#### cumbia-tango
+
+fixes in DEV_UCHAR support
+
 #### cumbia-qtcontrols
 
 Plots: fixed marker positioning when x scale is inverted
