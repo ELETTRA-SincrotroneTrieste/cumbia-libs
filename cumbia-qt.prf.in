@@ -26,3 +26,6 @@ isEmpty(INSTALL_ROOT) {
 isEmpty(prefix) {
     prefix = $${INSTALL_ROOT}
 }
+
+cu_exclude_engines=websocket,epics,random
+

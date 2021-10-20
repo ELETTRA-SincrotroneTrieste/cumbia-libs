@@ -67,8 +67,6 @@ linux-g++|freebsd-g++ {
     CONFIG+=link_pkgconfig
     PKGCONFIG += cumbia cumbia-qtcontrols$${QTVER_SUFFIX}
 
-    message("qumbia-epics-controls.pri: checking if EPICS_BASE and EPICS_HOST_ARCH environment variables are defined")
-
     EPICS_BASE = $$(EPICS_BASE)
         isEmpty(EPICS_BASE) {
             error("qumbia-epics-controls.pri: EPICS_BASE environment variable is not set")
@@ -102,12 +100,10 @@ linux-g++|freebsd-g++ {
     packagesExist(qwt){
         PKGCONFIG += qwt
         QWT_PKGCONFIG = qwt
-        message("Qwt: using pkg-config to configure qwt includes and libraries")
     }
     else:packagesExist(Qt5Qwt6){
         PKGCONFIG += Qt5Qwt6
         QWT_PKGCONFIG = Qt5Qwt6
-        message("Qwt: using pkg-config to configure qwt includes and libraries (Qt5Qwt6)")
     } else {
         warning("Qwt: no pkg-config file found")
         warning("Qwt: export PKG_CONFIG_PATH=/usr/path/to/qwt/lib/pkgconfig if you want to enable pkg-config for qwt")
