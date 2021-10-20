@@ -45,48 +45,48 @@ include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 
 linux-g++|linux-clang|freebsd-clang|freebsd-g++|openbsd {
     exists ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri):isEmpty(ep_x) {
-       message("- adding EPICS module under $${INSTALL_ROOT}")
+	   message("+ adding EPICS module under $${INSTALL_ROOT}")
        include ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
 	}
 	exists ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri):!isEmpty(ep_in) {
-	    message("- adding EPICS module under $${INSTALL_ROOT}")
+	    message("+ adding EPICS module under $${INSTALL_ROOT}")
 		include ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
 	}
     exists  ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri):isEmpty(tg_x) {
-        message("- adding Tango module under $${INSTALL_ROOT}")
+	    message("+ adding Tango module under $${INSTALL_ROOT}")
         include ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
     }
 	exists  ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri):!isEmpty(tg_in) {
-	    message("- adding Tango module under $${INSTALL_ROOT}")
+	    message("+ adding Tango module under $${INSTALL_ROOT}")
 		include ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
 		}
     greaterThan(QT_MAJOR_VERSION, 4): QT += x11extras
 }
 
 exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri):isEmpty(rnd_x) {
-    message("- adding cumbia-random module under $${INSTALL_ROOT}")
+    message("+ adding cumbia-random module under $${INSTALL_ROOT}")
     include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
 }
 exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri):!isEmpty(rnd_in) {
-    message("- adding cumbia-random module under $${INSTALL_ROOT}")
+    message("+ adding cumbia-random module under $${INSTALL_ROOT}")
 	include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
 }
 
 exists($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri):isEmpty(ws_x)  {
-    message("- adding cumbia-websocket module under $${INSTALL_ROOT}")
+    message("+ adding cumbia-websocket module under $${INSTALL_ROOT}")
     include($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
 }
 exists($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri):!isEmpty(ws_in)  {
-    message("- adding cumbia-websocket module under $${INSTALL_ROOT}")
+    message("+ adding cumbia-websocket module under $${INSTALL_ROOT}")
 	include($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
 }
 
 exists($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri):isEmpty(http_x)  {
-    message("- adding cumbia-http module under $${INSTALL_ROOT}")
+    message("+ adding cumbia-http module under $${INSTALL_ROOT}")
     include($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri)
 }
 exists($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri):!isEmpty(http_in)  {
-    message("- adding cumbia-http module under $${INSTALL_ROOT}")
+    message("+ adding cumbia-http module under $${INSTALL_ROOT}")
 	include($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri)
 }
 

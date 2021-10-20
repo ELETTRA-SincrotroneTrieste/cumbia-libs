@@ -108,12 +108,11 @@ public:
      */
     CuModuleLoader(CumbiaPool *cu_pool, CuControlsFactoryPool *ctrl_f_pool, CuLogImplI* log_impl) {
         d = new CuModuleLoaderPrivate;
-        Cumbia *cuws = nullptr, *cuta = nullptr, *cuhttp = nullptr;
-        Cumbia *cuep = nullptr, *cura = nullptr;
         log_impl ? d->log = new CuLog(log_impl) : d->log = nullptr;
 
         // websocket engine
 #ifdef CUMBIA_WEBSOCKET_VERSION
+        Cumbia *cuws = nullptr;
         CuWsRegisterEngine wsre;
         if(wsre.hasCmdOption(qApp->arguments())) {
             cuws = wsre.registerWithDefaults(cu_pool, *ctrl_f_pool);
@@ -122,8 +121,10 @@ public:
             d->modules << "websocket";
         }
 #endif
+
 #ifdef CUMBIA_HTTP_VERSION
-        if(!cuws) {
+        Cumbia *cuhttp = nullptr;
+        if(!d->modules.contains("websocket")) {
             CuHttpRegisterEngine httpre;
             if(httpre.hasCmdOption(qApp->arguments())) {
                 cuhttp = httpre.registerWithDefaults(cu_pool, *ctrl_f_pool);
@@ -132,21 +133,24 @@ public:
             }
         }
 #endif
-        // other engines, if websocket is not in use
-        if(!cuws && !cuhttp) {
+        // other engines, if both websocket and http are not in use
+        if(!d->modules.contains("websocket") && !d->modules.contains("http")) {
 #ifdef QUMBIA_TANGO_CONTROLS_VERSION
+            Cumbia *cuta = nullptr;
             CuTangoRegisterEngine tare;
             cuta = tare.registerWithDefaults(cu_pool, *ctrl_f_pool);
             cuta->getServiceProvider()->registerSharedService(CuServices::Log, d->log);
             d->modules << "tango";
 #endif
 #ifdef CUMBIA_RANDOM_VERSION
+            Cumbia *cura = nullptr;
             CuRndRegisterEngine rndre;
             cura = rndre.registerWithDefaults(cu_pool, *ctrl_f_pool);
             cura->getServiceProvider()->registerSharedService(CuServices::Log, d->log);
             d->modules << "random";
 #endif
 #ifdef QUMBIA_EPICS_CONTROLS_VERSION
+            Cumbia *cuep = nullptr;
             CuEpRegisterEngine epre;
             cuep = epre.registerWithDefaults(cu_pool, *ctrl_f_pool);
             cuep->getServiceProvider()->registerSharedService(CuServices::Log, d->log);
