@@ -23,6 +23,14 @@ Plots: *QuPlotMarkerComponent*: custom marker contents can be provided by implem
 called *QuPlotMarkerFormat_I* and defined in quplotmarkercomponent.h, instead of reimplementing 
 QuPlotMarkerComponent itself
 
+When building cumbia qt applications, modules can be excluded with the *qmake* option *cu_exclude_modules*.
+Since 1.3.0, by default epics,random and websocket modules are excluded.
+
+#### cumbia-qt.prf file
+
+The file *cumbia-qt.prf* in the root directory is used to define global configuration variables for cumbia.
+It is installed under the prefix/include directory and included by *quapps.pri*
+
 ## version 1.3.0
 
 Changes in 1.3.0 shall provide a better performance and bring a
