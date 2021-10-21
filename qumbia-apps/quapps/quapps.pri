@@ -2,6 +2,14 @@
 #
 exists(../cumbia-qt.prf) {
     include(../cumbia-qt.prf)
+	!isEmpty(cu_exclude_engines){
+	    message("-")
+		message("excluding engines: $${cu_exclude_engines}")
+		message("from file cumbia-qt.prf under $${INSTALL_ROOT}/include.")
+		message("To include any of them, override \"cu_exclude_engines\"")
+		message("when calling qmake")
+		message("-")
+	}
 }
 
 isEmpty(INSTALL_ROOT) {
@@ -13,15 +21,9 @@ isEmpty(CU_USER_CONFIG_DIR) {
 }
 
 !isEmpty(cu_exclude_engines){
-    message("* ---------------------------------------- *")
-    message("excluding engines: $${cu_exclude_engines}")
-    message("* ---------------------------------------- *")
-}
-
-!isEmpty(cu_include_engines){
-    message("* ---------------------------------------- *")
-	message("including engines: $${cu_exclude_engines}")
-	message("* ---------------------------------------- *")
+    message("-")
+	message("excluding engines: $${cu_exclude_engines}")
+	message("-")
 }
 
 # exclude modules?
@@ -32,12 +34,6 @@ http_x=$$find(cu_exclude_engines,http)
 rnd_x=$$find(cu_exclude_engines,random)
 
 
-ep_in=$$find(cu_include_engines,epics)
-tg_in=$$find(cu_include_engines,tango)
-ws_in=$$find(cu_include_engines,websocket)
-http_in=$$find(cu_include_engines,http)
-rnd_in=$$find(cu_include_engines,random)
-
 # include cumbia-qtcontrols for necessary qt engine-unaware dependency (widgets, qwt, ...)
 # and for CUMBIA_QTCONTROLS_VERSION definition
 #
@@ -46,46 +42,27 @@ include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 linux-g++|linux-clang|freebsd-clang|freebsd-g++|openbsd {
     exists ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri):isEmpty(ep_x) {
 	   message("+ adding EPICS module under $${INSTALL_ROOT}")
-       include ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+	   include ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
 	}
-	exists ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri):!isEmpty(ep_in) {
-	    message("+ adding EPICS module under $${INSTALL_ROOT}")
-		include ($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
-	}
+
     exists  ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri):isEmpty(tg_x) {
-	    message("+ adding Tango module under $${INSTALL_ROOT}")
-        include ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
-    }
-	exists  ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri):!isEmpty(tg_in) {
 	    message("+ adding Tango module under $${INSTALL_ROOT}")
 		include ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
 		}
-    greaterThan(QT_MAJOR_VERSION, 4): QT += x11extras
+		greaterThan(QT_MAJOR_VERSION, 4): QT += x11extras
 }
 
 exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri):isEmpty(rnd_x) {
-    message("+ adding cumbia-random module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
-}
-exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri):!isEmpty(rnd_in) {
     message("+ adding cumbia-random module under $${INSTALL_ROOT}")
 	include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
 }
 
 exists($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri):isEmpty(ws_x)  {
     message("+ adding cumbia-websocket module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
-}
-exists($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri):!isEmpty(ws_in)  {
-    message("+ adding cumbia-websocket module under $${INSTALL_ROOT}")
 	include($${INSTALL_ROOT}/include/cumbia-websocket/cumbia-websocket.pri)
 }
 
 exists($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri):isEmpty(http_x)  {
-    message("+ adding cumbia-http module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri)
-}
-exists($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri):!isEmpty(http_in)  {
     message("+ adding cumbia-http module under $${INSTALL_ROOT}")
 	include($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri)
 }
