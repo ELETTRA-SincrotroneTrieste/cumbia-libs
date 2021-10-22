@@ -37,13 +37,16 @@ void CuApplicationLauncherExtension::start() {
         m_loadCumbiaPlugin();
 
     if(d->qudbusctrl_i) {
+        printf("CuApplicationLauncherExtension::start d->qudbusctrl_i is not null, OK\n");
         QStringList full_args = QStringList() << d->program;
         full_args += d->args;
         QList<QuAppInfo> ail = d->qudbusctrl_i->findApps(full_args);
         if(ail.size() > 0) {
             d->qudbusctrl_i->raise(ail.first());
+            printf("CuApplicationLauncherExtension::start d->qudbusctrl_i->rais %s %s\n");
         }
         else {
+            printf("CuApplicationLauncherExtension::start QProcess.startDetached %s %s\n", qstoc(d->program), qstoc(d->args.join(" ")));
             QProcess::startDetached(d->program, d->args);
         }
     }
