@@ -982,7 +982,8 @@ bool CuVariant::isInteger() const
     return _d->type == Short || _d->type == UShort
             || _d->type ==  Int|| _d->type ==  UInt ||
             _d->type == LongInt || _d->type ==  LongUInt ||
-            _d->type == LongLongInt;
+	        _d->type == LongLongInt || _d->type == UChar
+	        || _d->type == Char;
 }
 
 /*! \brief returns true if the stored data is a floating point number

@@ -137,12 +137,10 @@ wasm-emscripten {
         packagesExist(qwt){
             PKGCONFIG += qwt
             QWT_PKGCONFIG = qwt
-            message("cumbia-qtcontrols.pri: using pkg-config to configure qwt includes and libraries")
         }
         else:packagesExist(Qt5Qwt6){
             PKGCONFIG += Qt5Qwt6
             QWT_PKGCONFIG = Qt5Qwt6
-            message("cumbia-qtcontrols.pri: using pkg-config to configure qwt includes and libraries (Qt5Qwt6)")
         } else {
             warning("cumbia-qtcontrols.pri: no pkg-config file found for either qwt or Qt5Qwt6")
             warning("cumbia-qtcontrols.pri: export PKG_CONFIG_PATH=/usr/path/to/qwt/lib/pkgconfig if you want to enable pkg-config for qwt")

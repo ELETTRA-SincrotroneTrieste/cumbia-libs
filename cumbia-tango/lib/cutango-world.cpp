@@ -513,7 +513,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
             }
         }
         else if(p_da->get_type() == Tango::DEV_UCHAR)
-        {
+		{
             std::vector<unsigned char> v;
             p_da->extract_read(v);
             if(f == Tango::SCALAR)

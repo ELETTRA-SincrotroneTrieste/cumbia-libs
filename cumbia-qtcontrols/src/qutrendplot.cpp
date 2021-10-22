@@ -173,7 +173,7 @@ void QuTrendPlot::update(const CuData &da)
     // set the curve state
     d->read_ok ? crv->setState(QuPlotCurve::Normal) : crv->setState(QuPlotCurve::Invalid);
 
-    double x, y;
+    double x, y = 0.0;
     if(da.containsKey("timestamp_ms") && crv) {
         CuVariant ts = da["timestamp_ms"];
         ts.getType() == CuVariant::LongInt ? x = static_cast<qint64>(ts.toLongInt()) : x = ts.toDouble();

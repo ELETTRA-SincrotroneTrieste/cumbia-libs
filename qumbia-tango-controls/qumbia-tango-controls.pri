@@ -88,12 +88,10 @@ linux|freebsd|openbsd{
     packagesExist(qwt){
         PKGCONFIG += qwt
         QWT_PKGCONFIG = qwt
-        message("Qwt: using pkg-config to configure qwt includes and libraries")
     }
     else:packagesExist(Qt5Qwt6){
         PKGCONFIG += Qt5Qwt6
         QWT_PKGCONFIG = Qt5Qwt6
-        message("Qwt: using pkg-config to configure qwt includes and libraries (Qt5Qwt6)")
     } else {
         warning("Qwt: no pkg-config file found")
         warning("Qwt: export PKG_CONFIG_PATH=/usr/path/to/qwt/lib/pkgconfig if you want to enable pkg-config for qwt")

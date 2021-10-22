@@ -45,7 +45,12 @@ template<typename T> bool CuVariant::to(T &val) const
         case UInt:
             val = static_cast<T>(*(static_cast<unsigned int *>(_d->val)));
             break;
-
+		case Char:
+			val = static_cast<T>(*(static_cast<char *>(_d->val)));
+			break;
+		case UChar:
+			val = static_cast<T>(*(static_cast<unsigned char *>(_d->val)));
+			break;
         case LongInt:
             val = static_cast<T>(*(static_cast<long int *>(_d->val)));
             break;
@@ -123,6 +128,16 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
             for(i = 0; i < vus.size(); i++)
                 v.push_back(static_cast<T>(vus[i]));
         }
+		else if(_d->type == UChar) {
+			std::vector<unsigned char> vuc = toUCharVector();
+			for(i = 0; i < vuc.size(); i++)
+				v.push_back(static_cast<T>(vuc[i]));
+		}
+		else if(_d->type == Char) {
+			std::vector<char> vc = toCharVector();
+			for(i = 0; i < vc.size(); i++)
+				v.push_back(static_cast<T>(vc[i]));
+		}
         else if(_d->type == Int) {
             std::vector<int> vi = toIntVector();
             for(i = 0; i < vi.size(); i++)
@@ -138,11 +153,16 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
             for(i = 0; i < vli.size(); i++)
                 v.push_back(static_cast<T>(vli[i]));
         }
+		else if(_d->type == LongLongInt) {
+			std::vector<long long int> vlli = toLongLongIntVector();
+			for(i = 0; i < vlli.size(); i++)
+				v.push_back(static_cast<T>(vlli[i]));
+		}
         else if(_d->type == LongUInt) {
             std::vector<long unsigned int> vlui = toULongIntVector();
             for(i = 0; i < vlui.size(); i++)
                 v.push_back(static_cast<T>(vlui[i]));
-        }
+		}
         else if(_d->type == Float) {
             std::vector<float> vf = toFloatVector();
             for(i = 0; i < vf.size(); i++)

@@ -293,7 +293,7 @@ QString CuControlsUtils::msg(const CuData &da, const QString& date_time_fmt) con
         da["timestamp_ms"].to<long int>(ts);
         if(ts > 0)
             m += QDateTime::fromMSecsSinceEpoch(ts).toString(date_time_fmt);
-    } else if(da.containsKey("timestamp_ms")) {
+    } else if(da.containsKey("timestamp_us")) {
         double tsd = 0.0;
         da["timestamp_us"].to<double>(tsd);  // secs.usecs in a double
         if(tsd > 0)
