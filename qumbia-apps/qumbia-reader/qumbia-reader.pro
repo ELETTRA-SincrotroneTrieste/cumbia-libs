@@ -42,7 +42,7 @@ DEFINES += DOC_PATH=\"\\\"$${DOCDIR}\\\"\"
 # CONFIG+=declarative_debug
 
 
-DEFINES -= QT_NO_DEBUG_OUTPUT
+# DEFINES -= QT_NO_DEBUG_OUTPUT
 
 OBJECTS_DIR = objects
 
