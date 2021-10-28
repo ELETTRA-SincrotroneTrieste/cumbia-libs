@@ -23,6 +23,7 @@ TDevice::TDevice(const std::string &name)
     {
         string dname = name;
         d->dev = new Tango::DeviceProxy(dname);
+        printf("TDevice::TDevice\e[1;32m+ \e[0m new device proxy %s\n", name.c_str());
         time_t tp;
         time(&tp);
         d->message = "connect: device defined in Tango db: " + std::string(ctime(&tp));
@@ -37,6 +38,7 @@ TDevice::TDevice(const std::string &name)
 TDevice::~TDevice()
 {
     if(d->dev) {
+        printf("TDevice::TDevice\e[1;31m- \e[0m deleting device proxy %s\n", d->name.c_str());
         delete d->dev;
         d->dev = nullptr;
     }
