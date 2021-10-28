@@ -1,4 +1,3 @@
-android-arm-build/config.h
 src/lib/cuactivity.cpp
 src/lib/cuactivity.h
 src/lib/cuactivityevent.cpp
@@ -9,9 +8,13 @@ src/lib/cudata.cpp
 src/lib/cudata.h
 src/lib/cudatalistener.cpp
 src/lib/cudatalistener.h
+src/lib/cudataquality.cpp
+src/lib/cudataquality.h
 src/lib/cuisolatedactivity.cpp
 src/lib/cuisolatedactivity.h
 src/lib/cumacros.h
+src/lib/cumatrix.cpp
+src/lib/cumatrix.h
 src/lib/cumbia.cpp
 src/lib/cumbia.h
 src/lib/cumbiapool.cpp

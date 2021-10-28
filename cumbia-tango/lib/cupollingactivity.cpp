@@ -414,6 +414,7 @@ void CuPollingActivity::execute()
         d->successfulExecCnt++;
     }
     else if(dev) {
+        printf("CuPollingActivity::execute: error in read: " + tangoworld.getLastMessage() + " dev " + d->tdev->getName());
         decreasePolling();
     }
     else { // device not defined into database
