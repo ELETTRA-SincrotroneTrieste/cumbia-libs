@@ -54,6 +54,10 @@ DEFINES += INCLUDE_PATH=\"\\\"$${DEFINES_INCLUDEDIR}\\\"\"
 
 DEFINES -= QT_NO_DEBUG_OUTPUT
 
+exists($${DEFINES_INCLUDEDIR}/cumbia-qtcontrols/cuepalette.h):exists($${SHAREDIR}/cuepalette/qumbiaprojectwizard-palette-snippet.h) {
+    DEFINES += PALETTE_SNIPPET_FILE=\"\\\"$${SHAREDIR}/cuepalette/qumbiaprojectwizard-palette-snippet.h\\\"\"
+}
+
 QT       += core gui xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -64,6 +68,7 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         qumbiaprojectwizard.cpp \
+    src/cuepaletteprocess.cpp \
     src/qtango/qtangoimport.cpp \
     src/qtango/main2cu.cpp \
     src/qtango/findreplace.cpp \
@@ -83,6 +88,7 @@ SOURCES += main.cpp\
     src/qtango/cppinstantiationexpand.cpp
 
 HEADERS  += qumbiaprojectwizard.h \
+    src/cuepaletteprocess.h \
     src/qtango/qtangoimport.h \
     src/qtango/main2cu.h \
     src/qtango/findreplace.h \
