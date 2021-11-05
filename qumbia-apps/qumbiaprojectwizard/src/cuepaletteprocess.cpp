@@ -23,7 +23,7 @@ bool CuEPaletteProcess::process(const QString &fname, QString &contents, QWidget
             // find where include <quapplication.h> is and add #include <cuepalette>
             QString inc_in_re = "#include\\s+<quapplication.h>";
             QString inc_out = "#include <quapplication.h>\n#include <cuepalette.h>";
-            contents.replace(QRegularExpression("//\\s+palette"), s);
+            contents.replace(QRegularExpression("//\\s+\\$palette\\$"), s);
             contents.replace(QRegularExpression(inc_in_re), inc_out);
             palettesnip.close();
         }

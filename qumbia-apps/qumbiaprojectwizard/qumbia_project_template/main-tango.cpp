@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     qu_app.setProperty("office", "$AU_OFFICE$");
     qu_app.setProperty("hwReferent", "$HW_REFERENT$"); /* name of the referent that provides the device server */
     
-    // palette
+    // $palette$
 
 
     // instantiate CumbiaTango
