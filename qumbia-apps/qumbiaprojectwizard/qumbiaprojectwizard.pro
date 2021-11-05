@@ -39,6 +39,7 @@ CONFIG += debug
 # define templates destination install dir
 # using INSTALL_ROOT
 SHAREDIR=$${INSTALL_ROOT}/share
+INCDIR=$${INSTALL_ROOT}/include
 DOCDIR=$${SHAREDIR}/doc/qumbiaprojectwizard
 TEMPLATES_INSTALLDIR=$${SHAREDIR}/qumbiaprojectwizard
 
@@ -54,7 +55,7 @@ DEFINES += INCLUDE_PATH=\"\\\"$${DEFINES_INCLUDEDIR}\\\"\"
 
 DEFINES -= QT_NO_DEBUG_OUTPUT
 
-exists($${DEFINES_INCLUDEDIR}/cumbia-qtcontrols/cuepalette.h):exists($${SHAREDIR}/cuepalette/qumbiaprojectwizard-palette-snippet.h) {
+exists($${INCDIR}/cumbia-qtcontrols/cuepalette.h):exists($${SHAREDIR}/cuepalette/qumbiaprojectwizard-palette-snippet.h) {
     DEFINES += PALETTE_SNIPPET_FILE=\"\\\"$${SHAREDIR}/cuepalette/qumbiaprojectwizard-palette-snippet.h\\\"\"
 }
 
