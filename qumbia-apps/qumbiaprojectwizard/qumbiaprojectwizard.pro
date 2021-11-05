@@ -56,7 +56,7 @@ DEFINES += INCLUDE_PATH=\"\\\"$${DEFINES_INCLUDEDIR}\\\"\"
 DEFINES -= QT_NO_DEBUG_OUTPUT
 
 exists($${INCDIR}/cumbia-qtcontrols/cuepalette.h):exists($${SHAREDIR}/cuepalette/qumbiaprojectwizard-palette-snippet.h) {
-    DEFINES += PALETTE_SNIPPET_FILE=\"\\\"$${SHAREDIR}/cuepalette/qumbiaprojectwizard-palette-snippet.h\\\"\"
+    DEFINES += PALETTE_SNIPPET_FILE=\"\\\"$${DEFINES_SHAREDIR}/cuepalette/qumbiaprojectwizard-palette-snippet.h\\\"\"
 }
 
 QT       += core gui xml
