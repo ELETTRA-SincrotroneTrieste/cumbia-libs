@@ -21,7 +21,8 @@ int main(int argc, char *argv[])
     qu_app.setProperty("phone", "$AU_PHONE$");
     qu_app.setProperty("office", "$AU_OFFICE$");
     qu_app.setProperty("hwReferent", "$HW_REFERENT$"); /* name of the referent that provides the device server */
-    
+
+    // $palette$
 
     CumbiaPool *cu_p = new CumbiaPool();
     $MAINCLASS$ *w = new $MAINCLASS$(cu_p, NULL);

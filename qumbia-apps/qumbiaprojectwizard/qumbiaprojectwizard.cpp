@@ -20,6 +20,8 @@
 #include "src/qtango/conversiondialog.h"
 #include "src/qtango/qtangoimport.h"
 #include "projectbackup.h"
+#include "src/cuepaletteprocess.h"
+
 
 MyFileInfo::MyFileInfo(const QString &templateFileNam, const QString &newFileNam, const QString &subdirnam)
 {
@@ -253,9 +255,7 @@ void QumbiaProjectWizard::create()
             QFile f(template_path + fname);
             qDebug() << __FUNCTION__ << "reading from file template " << fname;
             QString contents;
-            if(f.open(QIODevice::ReadOnly|QIODevice::Text))
-
-            {
+            if(f.open(QIODevice::ReadOnly|QIODevice::Text)) {
                 contents = QString(f.readAll());
                 contents.replace("$INCLUDE_DIR$", INCLUDE_PATH);
 
@@ -293,7 +293,7 @@ void QumbiaProjectWizard::create()
                     QRegExp re("contains\\(ANDROID_TARGET_ARCH,armeabi-v7a\\)\\s*\\{.*\\}");
                     if(contents.contains(re)) {
                         contents.replace(re, QString("contains(ANDROID_TARGET_ARCH,armeabi-v7a)"
-                            " {\n\tANDROID_EXTRA_LIBS = \\\n%1}").arg(m_formatAndroidLibs()));
+                                                     " {\n\tANDROID_EXTRA_LIBS = \\\n%1}").arg(m_formatAndroidLibs()));
                     }
                     // $UI_FORMFILE_H$ in the section HEADERS += adds the ui_*.h file
                     // to the HEADERS in oreder to ensure that a changed ui file is rebuilt after
@@ -303,6 +303,20 @@ void QumbiaProjectWizard::create()
                         form_base.remove(".ui");
                     contents.replace("$UI_FORMFILE_H$", "ui_" + form_base + ".h");
                 }
+
+
+
+#ifdef PALETTE_SNIPPET_FILE
+                // cupalette
+                if(fname.contains(QRegExp(".*main.*.cpp"))) {
+                    CuEPaletteProcess pp;
+                    if(!pp.process(PALETTE_SNIPPET_FILE, contents, ui->gbPalette))
+                        QMessageBox::critical(this, "Error opening palette snippet file",
+                                              QString("Error opening file %1:\n%2").arg(PALETTE_SNIPPET_FILE)
+                                              .arg(pp.message()));
+                }
+
+#endif
 
                 subdirname = fi.subDirName;
                 outdirname = newDir.absolutePath() + "/" + subdirname;
@@ -317,7 +331,7 @@ void QumbiaProjectWizard::create()
                     subdirOk = newDir.mkdir(subdirname);
                 if(!subdirOk) {
                     QMessageBox::critical(this, "Error creating directory", "Error creating subdirectory \'" + subdirname + "\"\n"
-                           "under \"" + newDir.path() + "\"");
+                                                                                                                            "under \"" + newDir.path() + "\"");
                 }
                 else
                 {
