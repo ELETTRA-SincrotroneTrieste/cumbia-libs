@@ -146,6 +146,12 @@ QMap<QString, SrcData> CuHttpSrcMan::takeTgts() const {
     return tgtd;
 }
 
+QMap<QString, SrcData> CuHttpSrcMan::takeSrcs() const {
+    QMap<QString, SrcData> srcd = std::move(d->srcd);
+    d->srcd.clear();
+    return srcd;
+}
+
 void CuHttpSrcMan::onDequeueTimeout() {
     bool empty = d->srcq.isEmpty();
     while(!d->srcq.isEmpty()) {

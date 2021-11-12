@@ -126,6 +126,7 @@ private:
     bool m_data_is_auth_req(const CuData& da) const;
     void m_auth_request(const CuData& da);
     void m_lis_update(const CuData& da);
+    CuData m_make_server_err(const QMap<QString, QString> &revmap, const QString& r, const CuData& in) const;
 
     CumbiaHttpPrivate *d;
 
@@ -136,6 +137,7 @@ public:
     // CuHttpBundledSrcReqListener interface
 public:
     void onSrcBundleReplyReady(const QByteArray &json);
+    void onSrcBundleReplyError(const CuData &errd);
 
     // CuHttpAuthManListener interface
 public:

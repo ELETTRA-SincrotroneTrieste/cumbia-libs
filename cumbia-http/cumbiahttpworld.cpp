@@ -29,6 +29,46 @@ bool CumbiaHTTPWorld::json_decode(const QJsonValue &v, CuData &out) const {
     return !v.isNull();
 }
 
+bool CumbiaHTTPWorld::json_simple_decode(const QByteArray &jba, CuData &out) const
+{
+    QJsonParseError pe;
+    QJsonDocument json = QJsonDocument::fromJson(jba, &pe);
+    if(pe.error != QJsonParseError::NoError) {
+        perr("CumbiaHTTPWorld::json_simple_decode: parse error: %s", qstoc(pe.errorString()));
+    }
+    else if(json.isObject()) {
+        const QJsonObject o = json.object();
+        if(!o.isEmpty()) {
+            foreach(const QString& k, o.keys())
+                out[k.toStdString()] = o.value(k).toString().toStdString();
+        }
+    }
+    return !json.isNull();
+}
+
+bool CumbiaHTTPWorld::request_reverse_eng(const QString &json, QMap<QString, QString>& map, QString& channel) const
+{
+    QJsonParseError pe;
+    QJsonDocument jd = QJsonDocument::fromJson(json.toLatin1(), &pe);
+    bool ok = (pe.error == QJsonParseError::NoError);
+    if(!ok) {
+        perr("CumbiaHTTPWorld::request_reverse_eng: parse error: %s", qstoc(pe.errorString()));
+    }
+    else {
+        QJsonObject o = jd.object();
+        if(o.contains("channel"))
+            channel = o.value("channel").toString();
+        if(o.contains("srcs")) {
+            QJsonArray a = o.value("srcs").toArray();
+            for(int i = 0; i < a.size(); i++) {
+                const QJsonObject &jo = a[i].toObject();
+                map[jo.value("src").toString()] = QJsonDocument(jo).toJson(QJsonDocument::Indented);
+            }
+        }
+    }
+    return ok;
+}
+
 bool CumbiaHTTPWorld::json_decode(const QByteArray &ba, std::list<CuData> &out) const {
     QJsonParseError pe;
     QJsonDocument json = QJsonDocument::fromJson(ba, &pe);

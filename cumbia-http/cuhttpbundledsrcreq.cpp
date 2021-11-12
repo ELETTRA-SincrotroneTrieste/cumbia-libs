@@ -66,6 +66,7 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
     if(!d->channel.isEmpty()) {
         r.setRawHeader("X-Channel", d->channel);
     }
+    d->buf.clear();
     QNetworkReply *reply = nam->post(r, d->req_payload);
     reply->setProperty("payload", d->req_payload);
     connect(reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
@@ -93,7 +94,7 @@ void CuHttpBundledSrcReq::onNewData() {
     // buf complete?
     if(d->buf.length() == clen || d->buf.endsWith("\n\n") || d->buf.endsWith("\r\n\r\n")) { // buf complete
         m_on_buf_complete();
-        d->buf.clear();
+//        d->buf.clear(); buf cleared in start
     }
 }
 
@@ -118,8 +119,11 @@ void CuHttpBundledSrcReq::onSslErrors(const QList<QSslError> &errors) {
 void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError code)
 {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
-    QJsonObject eo = CumbiaHTTPWorld().make_error(r->errorString() + QString( "code %1").arg(code));
-    perr("CuHttpBundledSrcReq::onError: %s/%s", qstoc(r->errorString()), qstoc(r->property("payload").toString()));
+    CuData da("msg", r->errorString().toStdString());
+    da.set("err", true);
+    da.set("data", d->buf.toStdString());
+    da.set("payload", r->property("payload").toString().toStdString());
+    d->listener->onSrcBundleReplyError(da);
 }
 
 void CuHttpBundledSrcReq::m_on_buf_complete() {
@@ -129,6 +133,8 @@ void CuHttpBundledSrcReq::m_on_buf_complete() {
         QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
         if(jsd.isNull())
             perr("CuHttpBundledSrcReq.m_on_buf_complete: invalid json: %s\n", qstoc(json));
+        else
+            printf("CuHttpBundledSrcReq::m_on_buf_complete got a good reply %s calling onSrcBundleReplyReady\n", qstoc(jsd.toJson()));
         d->listener->onSrcBundleReplyReady(jsd.toJson());
     }
 }

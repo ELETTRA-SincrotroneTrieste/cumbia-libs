@@ -11,6 +11,7 @@ class CuHttpBundledSrcReqPrivate;
 class CuHttpBundledSrcReqListener {
 public:
     virtual void onSrcBundleReplyReady(const QByteArray& json) = 0;
+    virtual void onSrcBundleReplyError(const CuData& errd) = 0;
 };
 
 class CuHttpBundledSrcReq : public QObject

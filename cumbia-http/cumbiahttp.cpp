@@ -117,15 +117,45 @@ void CumbiaHttp::onSrcBundleReplyReady(const QByteArray &json) {
     std::list<CuData> dali;
     bool ok = w.json_decode(json, dali);
     for(std::list<CuData>::iterator it = dali.begin(); ok && it != dali.end(); ++it)
-            m_data_is_auth_req(*it) ? m_auth_request(*it) :  m_lis_update(*it);
+        m_data_is_auth_req(*it) ? m_auth_request(*it) :  m_lis_update(*it);
+}
+
+/*!
+ * \brief notify every listener of a http server/gateway general error
+ *
+ * \param errd data provided by CuHttpBundledSrcReq::onError after getting an error from an http request
+ *
+ * For each listener of a given source (or target), an error message is built and delivered.
+ * It will be made up of
+ * - the error from the http server
+ * - the "data" (web page) received by the web server
+ * - the portion of the original request for the listener, extracted from the whole request payload,
+ *   which in principle contains a JSon array of requests bundled together.
+ */
+void CumbiaHttp::onSrcBundleReplyError(const CuData &errd) {
+    QMap<QString, QString> revmap;
+    QString chan;
+    CumbiaHTTPWorld().request_reverse_eng(errd["payload"].toString().c_str(), revmap, chan);
+    const QMap<QString, SrcData> &ma = d->src_q_man->takeSrcs(), &tma = d->src_q_man->takeTgts();
+    CuData dat("err",true);
+    std::string msg = errd["msg"].toString();
+    msg += "\ndata:\"" + errd["data"].toString() + "\"";
+    dat["msg"] = msg;
+    dat.putTimestamp();
+    foreach(const QString& s, ma.keys())  { // sources
+        ma[s].lis->onUpdate(m_make_server_err(revmap, s, dat));
+    }
+    foreach(const QString& s, tma.keys())  { // targets
+        ma[s].lis->onUpdate(m_make_server_err(revmap, s, dat));
+    }
 }
 
 void CumbiaHttp::readEnqueue(const CuHTTPSrc &source, CuDataListener *l, const CuHTTPActionFactoryI& f) {
-        d->src_q_man->enqueueSrc(source, l, f.getMethod(), d->chan_recv->channel(), CuVariant(), f.options());
+    d->src_q_man->enqueueSrc(source, l, f.getMethod(), d->chan_recv->channel(), CuVariant(), f.options());
 }
 
 void CumbiaHttp::executeWrite(const CuHTTPSrc &source, CuDataListener *l, const CuHTTPActionFactoryI &f) {
-        d->src_q_man->enqueueSrc(source, l, f.getMethod(), "", f.options().value("write_val"), f.options());
+    d->src_q_man->enqueueSrc(source, l, f.getMethod(), "", f.options().value("write_val"), f.options());
 }
 
 /*!
@@ -281,4 +311,13 @@ void CumbiaHttp::m_lis_update(const CuData &da) {
             d->chan_recv->removeDataListener(srcd.lis);
         }
     }
+}
+
+CuData CumbiaHttp::m_make_server_err(const QMap<QString, QString>& revmap, const QString &src, const CuData &in) const
+{
+    CuData out(in);
+    const std::string& req = revmap.contains(src) ? "\nrequest:\"" + revmap[src].toStdString() + "\" part of a bundle of "
+            + std::to_string(revmap.size()) + " requests." : "\nrequest unavailable";
+    out["msg"] = in["msg"].toString() + req;
+    return out;
 }

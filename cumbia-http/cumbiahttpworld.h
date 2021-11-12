@@ -23,6 +23,10 @@ public:
 
     bool json_decode(const QJsonValue &v, CuData& out ) const;
 
+    bool json_simple_decode(const QByteArray& jba, CuData& out) const;
+
+    bool request_reverse_eng(const QString& json, QMap<QString, QString> &map, QString& channel) const;
+
     QJsonObject make_error(const QString& msg) const;
 
 private:
