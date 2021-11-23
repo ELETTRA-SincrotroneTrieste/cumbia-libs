@@ -49,5 +49,7 @@ int main(int argc, char *argv[])
         delete cu_p->get("epics");
     if(cu_p->get("random"))
         delete cu_p->get("random");
+    if(cu_p->get("http"))
+        delete cu_p->get("http");
     return ret;
 }

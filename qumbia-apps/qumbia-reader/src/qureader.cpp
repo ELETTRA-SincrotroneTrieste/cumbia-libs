@@ -61,7 +61,7 @@ void Qu_Reader::onUpdate(const CuData &da)
         ts = da["timestamp_ns"].toDouble();
 
     bool hdb_data = da.has("activity", "hdb");
-    if(data["err"].toBool())
+    if(data.B("err"))
         emit newError(source(), ts, QString::fromStdString(data["msg"].toString()), data);
     else if(hdb_data)
         emit newHdbData(source(), da);
@@ -84,7 +84,7 @@ void Qu_Reader::onUpdate(const CuData &da)
                 data[qstoc(p)] = m_prop[qstoc(p)];
     }
 
-    if(!hdb_data && !da["err"].toBool() && !property_only) {
+    if(!hdb_data && !da.B("err") && !property_only) {
         QString from_ty = QuString(v.dataTypeStr(v.getType()));
         // if !m_save property we can notify.
         // otherwise wait for property, merge m_prop with data and notify

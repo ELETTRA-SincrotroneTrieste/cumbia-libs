@@ -143,10 +143,10 @@ void CumbiaHttp::onSrcBundleReplyError(const CuData &errd) {
     dat["msg"] = msg;
     dat.putTimestamp();
     foreach(const QString& s, ma.keys())  { // sources
-        ma[s].lis->onUpdate(m_make_server_err(revmap, s, dat));
+        if(ma[s].lis) ma[s].lis->onUpdate(m_make_server_err(revmap, s, dat));
     }
     foreach(const QString& s, tma.keys())  { // targets
-        ma[s].lis->onUpdate(m_make_server_err(revmap, s, dat));
+        if(ma[s].lis) ma[s].lis->onUpdate(m_make_server_err(revmap, s, dat));
     }
 }
 

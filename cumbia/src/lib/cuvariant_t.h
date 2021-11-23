@@ -54,8 +54,14 @@ template<typename T> bool CuVariant::to(T &val) const
         case LongInt:
             val = static_cast<T>(*(static_cast<long int *>(_d->val)));
             break;
+        case LongLongInt:
+            val = static_cast<T>(*(static_cast<long long int *>(_d->val)));
+            break;
         case LongUInt:
             val = static_cast<T>(*(static_cast<unsigned long *>(_d->val)));
+            break;
+        case LongLongUInt:
+            val = static_cast<T>(*(static_cast<unsigned long long*>(_d->val)));
             break;
         case Float:
             val = static_cast<T>(*(static_cast<float *>(_d->val)));

@@ -133,8 +133,6 @@ void CuHttpBundledSrcReq::m_on_buf_complete() {
         QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
         if(jsd.isNull())
             perr("CuHttpBundledSrcReq.m_on_buf_complete: invalid json: %s\n", qstoc(json));
-        else
-            printf("CuHttpBundledSrcReq::m_on_buf_complete got a good reply %s calling onSrcBundleReplyReady\n", qstoc(jsd.toJson()));
         d->listener->onSrcBundleReplyReady(jsd.toJson());
     }
 }

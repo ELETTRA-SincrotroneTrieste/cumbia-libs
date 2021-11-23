@@ -70,6 +70,7 @@ bool CumbiaHTTPWorld::request_reverse_eng(const QString &json, QMap<QString, QSt
 }
 
 bool CumbiaHTTPWorld::json_decode(const QByteArray &ba, std::list<CuData> &out) const {
+    printf("\e[1;36mCumbiaHttpWorld.json_decode from %s\e[0m\n", ba.data());
     QJsonParseError pe;
     QJsonDocument json = QJsonDocument::fromJson(ba, &pe);
     if(pe.error != QJsonParseError::NoError) {
@@ -198,7 +199,7 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
                     std::vector<int> vi;
                     for(int i = 0; i < jarr.size(); i++) {
                         QJsonValue ithval = jarr.at(i);
-                        vi.push_back(static_cast<int>(ithval.toDouble()));
+                        vi.push_back(static_cast<int>(ithval.toInt()));
                     }
                     res[sk] = vi;
                 }
@@ -206,7 +207,7 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
                 case CuVariant::LongInt: {
                     std::vector<long int> vli;
                     for(int i = 0; i < jarr.size(); i++) {
-                        vli.push_back(static_cast<long int>(jarr.at(i).toDouble()));
+                        vli.push_back(static_cast<long int>(jarr.at(i).toVariant().toLongLong()));
                     }
                     res[sk] = vli;
                     break;
@@ -214,7 +215,7 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
                 case CuVariant::LongLongInt: {
                     std::vector<long long int> vlli;
                     for(int i = 0; i < jarr.size(); i++) {
-                        vlli.push_back(static_cast<long long int>(jarr.at(i).toDouble()));
+                        vlli.push_back(static_cast<long long int>(jarr.at(i).toVariant().toLongLong()));
                     }
                     res[sk] = vlli;
                     break;
@@ -222,7 +223,7 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
                 case CuVariant::LongLongUInt: {
                     std::vector<long long unsigned int> vulli;
                     for(int i = 0; i < jarr.size(); i++) {
-                        vulli.push_back(static_cast<long long unsigned int>(jarr.at(i).toDouble()));
+                        vulli.push_back(static_cast<long long unsigned int>(jarr.at(i).toVariant().toULongLong()));
                     }
                     res[sk] = vulli;
                     break;
@@ -230,7 +231,7 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
                 case CuVariant::LongUInt: {
                     std::vector<long unsigned int> vuli;
                     for(int i = 0; i < jarr.size(); i++) {
-                        vuli.push_back(static_cast<long unsigned int>(jarr.at(i).toDouble()));
+                        vuli.push_back(static_cast<long unsigned int>(jarr.at(i).toVariant().toULongLong()));
                     }
                     res[sk] = vuli;
                     break;
@@ -238,7 +239,7 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
                 case CuVariant::UInt: {
                     std::vector<unsigned int> vui;
                     for(int i = 0; i < jarr.size(); i++) {
-                        vui.push_back(static_cast<unsigned int>(jarr.at(i).toDouble()));
+                        vui.push_back(static_cast<unsigned int>(jarr.at(i).toVariant().toUInt()));
                     }
                     res[sk] = vui;
                     break;
@@ -246,7 +247,7 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
                 case CuVariant::UShort: {
                     std::vector<unsigned short> vus;
                     for(int i = 0; i < jarr.size(); i++) {
-                        vus.push_back(static_cast<unsigned short>(jarr.at(i).toDouble()));
+                        vus.push_back(static_cast<unsigned short>(jarr.at(i).toVariant().toUInt()));
                     }
                     res[sk] = vus;
                     break;
@@ -254,9 +255,25 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
                 case CuVariant::Short: {
                     std::vector<short> vus;
                     for(int i = 0; i < jarr.size(); i++) {
-                        vus.push_back(static_cast<short>(jarr.at(i).toDouble()));
+                        vus.push_back(static_cast<short>(jarr.at(i).toVariant().toInt()));
                     }
                     res[sk] = vus;
+                    break;
+                }
+                case CuVariant::Char: {
+                    std::vector<char> vc;
+                    for(int i = 0; i < jarr.size(); i++) {
+                        vc.push_back(static_cast<char>(jarr.at(i).toVariant().toChar().toLatin1()));
+                    }
+                    res[sk] = vc;
+                    break;
+                }
+                case CuVariant::UChar: {
+                    std::vector<unsigned char> vuc;
+                    for(int i = 0; i < jarr.size(); i++) {
+                        vuc.push_back(static_cast<unsigned char>(jarr.at(i).toVariant().toUInt()));
+                    }
+                    res[sk] = vuc;
                     break;
                 }
                 case CuVariant::Float: {
@@ -277,40 +294,46 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
             } // if(jarr.size() > 0 && jarr.at(0).isDouble())
         } // if(v.isArray())
         else {
-            double dv = v.toDouble();
+            QVariant qv = v.toVariant();
             switch(t) {
             case CuVariant::Double:
-                res[sk] = dv;
+                res[sk] = qv.toDouble();
                 break;
             case CuVariant::LongDouble:
-                res[sk] = static_cast<long double>(dv);
+                res[sk] = static_cast<long double>(qv.toDouble());
                 break;
             case CuVariant::Int:
-                res[sk] = static_cast<int>(dv);
+                res[sk] = static_cast<int>(qv.toInt());
                 break;
             case CuVariant::LongInt:
-                res[sk] = static_cast<long int>(dv);
+                res[sk] = static_cast<long int>(qv.toLongLong());
                 break;
             case CuVariant::LongLongInt:
-                res[sk] = static_cast<long long int>(dv);
+                res[sk] = static_cast<long long int>(qv.toLongLong());
                 break;
             case CuVariant::LongLongUInt:
-                res[sk] = static_cast<long long unsigned >(dv);
+                res[sk] = static_cast<long long unsigned >(qv.toULongLong());
                 break;
             case CuVariant::LongUInt:
-                res[sk] = static_cast<long unsigned >(dv);
+                res[sk] = static_cast<long unsigned >(qv.toULongLong());
                 break;
             case CuVariant::UInt:
-                res[sk] = static_cast<unsigned >(dv);
+                res[sk] = static_cast<unsigned >(qv.toUInt());
                 break;
             case CuVariant::UShort:
-                res[sk] = static_cast<unsigned short>(dv);
+                res[sk] = static_cast<unsigned short>(qv.toUInt());
                 break;
             case CuVariant::Short:
-                res[sk] = static_cast<short>(dv);
+                res[sk] = static_cast<short>(qv.toInt());
                 break;
             case CuVariant::Float:
-                res[sk] = static_cast<float>(dv);
+                res[sk] = static_cast<float>(qv.toFloat());
+                break;
+            case CuVariant::Char:
+                res[sk] = qv.toChar().toLatin1();
+                break;
+            case CuVariant::UChar:
+                res[sk] = static_cast<unsigned char>(qv.toUInt());
                 break;
                 // dealt with in first loop
             case CuVariant::String:

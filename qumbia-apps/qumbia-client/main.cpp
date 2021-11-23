@@ -15,12 +15,15 @@ int main(int argc, char *argv[])
 
     int ret = a.exec();
     delete w;
+
     if(cu_p->get("tango"))
         delete cu_p->get("tango");
     if(cu_p->get("epics"))
         delete cu_p->get("epics");
     if(cu_p->get("random"))
         delete cu_p->get("random");
+    if(cu_p->get("http"))
+        delete cu_p->get("http");
 
     return ret;
 }
