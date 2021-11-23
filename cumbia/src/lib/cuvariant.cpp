@@ -1644,8 +1644,13 @@ std::string CuVariant::toString(bool *ok, const char *format) const
             snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%u", static_cast<unsigned int *>(_d->val)[i]);
         else if(_d->type == LongUInt)
             snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%lu", static_cast<long unsigned int *>(_d->val)[i]);
+        else if(_d->type == LongLongUInt)
+            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%llu", static_cast<long long unsigned int *>(_d->val)[i]);
+
         else if(_d->type == LongInt)
             snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%ld", static_cast<long int *>(_d->val)[i]);
+        else if(_d->type == LongLongInt)
+            snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%lld", static_cast<long long int *>(_d->val)[i]);
         else if(_d->type == Short)
             snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%hd", static_cast<short int *>(_d->val)[i]);
         else if(_d->type == UShort)
