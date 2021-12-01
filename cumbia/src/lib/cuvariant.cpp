@@ -806,6 +806,30 @@ void CuVariant::build_from(const CuVariant& other)
         else if(_d->format == CuVariant::Matrix )
             _d->val = static_cast<CuMatrix <unsigned long int > *> (other._d->val)->clone();
     } break;
+
+
+    case CuVariant::LongLongInt:  {
+        if(_d->format == CuVariant::Scalar || _d->format == CuVariant::Vector) {
+            long long int *vi =  new long long int[_d->mSize];
+            for(size_t i = 0; i < _d->mSize; i++)
+                vi[i] = other.toLongLongIntP()[i];
+            _d->val = vi;
+        }
+        else if(_d->format == CuVariant::Matrix )
+            _d->val = static_cast<CuMatrix <long long int > *> (other._d->val)->clone();
+    } break;
+    case CuVariant::LongLongUInt:  {
+        if(_d->format == CuVariant::Scalar || _d->format == CuVariant::Vector) {
+            unsigned long long int *uli =  new unsigned long long int[_d->mSize];
+            for(size_t i = 0; i < _d->mSize; i++)
+                uli[i] = other.toULongLongIntP()[i];
+            _d->val = uli;
+        }
+        else if(_d->format == CuVariant::Matrix )
+            _d->val = static_cast<CuMatrix <unsigned long int > *> (other._d->val)->clone();
+    } break;
+
+
     case CuVariant::VoidPtr: {
         _d->val = other._d->val;
     } break;
@@ -1453,9 +1477,9 @@ unsigned long long int CuVariant::toULongLongInt(bool *ok) const
     if(can_convert && _d->type == UInt)
         i = *(static_cast<unsigned int *>(_d->val) );
     else if(can_convert && _d->type == UShort)
-        i = static_cast<unsigned long long int>( *(static_cast<unsigned short *>(_d->val)) );
+        i = static_cast<unsigned long long int>( *(static_cast<unsigned long long int *>(_d->val)) );
     else if(can_convert && _d->type == LongUInt)
-        i = static_cast<unsigned long long int>( *(static_cast<unsigned long *>(_d->val)) );
+        i = static_cast<unsigned long long int>( *(static_cast<unsigned long long int *>(_d->val)) );
     else if(can_convert && _d->type == LongLongUInt)
         i = *(static_cast<unsigned long long *>(_d->val));
     if(ok)
@@ -1969,6 +1993,12 @@ unsigned long int *CuVariant::toULongIntP() const
     if(_d->type == CuVariant::LongUInt)
         return static_cast<unsigned long int *>(_d->val);
     return NULL;
+}
+
+unsigned long long *CuVariant::toULongLongIntP() const {
+    if(_d->type == CuVariant::LongLongUInt)
+        return static_cast<unsigned long long int *>(_d->val);
+    return nullptr;
 }
 
 /** \brief Returns the pointer to the data stored as float, or NULL

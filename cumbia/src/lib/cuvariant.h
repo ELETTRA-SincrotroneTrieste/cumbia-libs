@@ -286,6 +286,7 @@ public:
     short int *toShortP() const;
     unsigned short *toUShortP() const;
     unsigned long int *toULongIntP() const;
+    unsigned long long *toULongLongIntP() const;
     float *toFloatP() const;
 	bool *toBoolP() const;
     unsigned char* toUCharP() const;
