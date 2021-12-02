@@ -127,6 +127,25 @@ CuData &CuData::merge(const CuData &other) {
     return *this;
 }
 
+CuData &CuData::remove(const std::string &key) {
+    d_p->datamap.erase(key);
+    return *this;
+}
+
+CuData CuData::remove(const std::string &key) const {
+    return CuData(*this).remove(key);
+}
+
+CuData &CuData::remove(const std::vector<std::string> &keys) {
+    for(const std::string& k : keys)
+        d_p->datamap.erase(k);
+    return *this;
+}
+
+CuData CuData::remove(const std::vector<std::string> &keys) const {
+    return CuData(*this).remove(keys);
+}
+
 /** \brief returns the number of key-value pairs stored
  *
  * @return the number of key-value pairs stored within this object

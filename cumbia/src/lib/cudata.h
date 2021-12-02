@@ -59,6 +59,14 @@ public:
 
     CuData& merge(const CuData& other);
 
+    CuData& remove(const std::string& key);
+
+    CuData remove(const std::string& key) const;
+
+    CuData& remove(const std::vector<std::string>& keys);
+
+    CuData remove(const std::vector<std::string>& keys) const;
+
     size_t size() const;
 
     CuVariant value() const;
