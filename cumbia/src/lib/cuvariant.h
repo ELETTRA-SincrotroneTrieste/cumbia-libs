@@ -203,7 +203,8 @@ public:
     size_t getSize() const;
 
     bool isInteger() const;
-
+    bool isUnsignedType() const;
+    bool isSignedType() const;
     bool isFloatingPoint() const;
 
     bool isVoidPtr() const;
