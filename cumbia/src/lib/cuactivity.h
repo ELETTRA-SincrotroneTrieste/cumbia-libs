@@ -162,7 +162,7 @@ public:
 
     virtual ~CuActivity();
 
-    enum ActivityType { Isolated = 0, Continuous, User = 100 };
+    enum ActivityType { Isolated = 0, Continuous, WorkQueue, User = 100 };
 
     void setActivityManager(CuActivityManager *am);
 
