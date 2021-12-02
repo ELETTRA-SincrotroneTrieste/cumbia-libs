@@ -25,6 +25,8 @@ src/lib/cuvariant.h
 src/lib/cuvariant_t.h
 src/lib/cuvariantprivate.cpp
 src/lib/cuvariantprivate.h
+src/lib/cuworkqueueactivity.cpp
+src/lib/cuworkqueueactivity.h
 src/lib/services/cuactivitymanager.cpp
 src/lib/services/cuactivitymanager.h
 src/lib/services/culog.cpp

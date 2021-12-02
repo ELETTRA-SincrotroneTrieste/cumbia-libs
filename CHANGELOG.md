@@ -1,5 +1,23 @@
 # News
 
+## version 1.3.2
+
+#### cumbia
+
+Fixed unsigned long long and long long int support.
+
+- Added methods isUnsignedType and isSignedType in CuVariant
+- Added *remove* methods to remove keys from CuData. const and non const versions
+
+### New features
+
+#### cumbia
+
+A new class named *CuWorkQueueActivity* is an event-based activity allowing a client to add work events
+on a queue and have a function (or a *worker subclass implementation (CuWorkQueueA_Worker)* method) invoked
+in a separate thread. The worker will be handed the list of events, process them in the separate thread and 
+finally post the results on the main thread.
+
 ## version 1.3.1
 
 ### Fixes
