@@ -9,6 +9,7 @@
 #include "cuhttpsrcman.h"
 #include "cuhttpbundledsrcreq.h"
 #include "cuhttpauthmanager.h"
+#include "cuhttpcliidman.h"
 
 class CuThreadFactoryImplI;
 class CuThreadsEventBridgeFactory_I;
@@ -91,6 +92,7 @@ class CumbiaHttpPrivate;
  */
 class CumbiaHttp : public Cumbia,
         public CuHttpBundledSrcReqListener,
+        public CuHttpCliIdManListener,
         public CuHttpSrcQueueManListener,
         public CuHttpAuthManListener
 {
@@ -127,6 +129,10 @@ private:
     void m_auth_request(const CuData& da);
     void m_lis_update(const CuData& da);
     CuData m_make_server_err(const QMap<QString, QString> &revmap, const QString& r, const CuData& in) const;
+    void m_start_bundled_src_req(const QList<SrcItem> &rsrcs, const QList<SrcItem> &wsrcs);
+    void m_dequeue_src_reqs();
+    void m_start_client_id_req();
+    bool m_need_client_id(const QList<SrcItem> &rsrcs) const;
 
     CumbiaHttpPrivate *d;
 
@@ -144,6 +150,11 @@ public:
     void onCredsReady(const QString &user, const QString &passwd);
     void onAuthReply(bool authorised, const QString &user, const QString &message, bool encrypted);
     void onAuthError(const QString &errm);
+
+    // CuHttpCliIdManListener interface
+private:
+    void onIdReady(const unsigned long long &client_id, const time_t ttl);
+    void onIdManError(const QString& err);
 };
 
 #endif // CUMBIAHTTP_H

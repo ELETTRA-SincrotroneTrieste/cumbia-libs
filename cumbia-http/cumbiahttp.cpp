@@ -27,6 +27,17 @@
 #include <QThread> // for QThread::currentThread()
 #include <qustring.h>
 
+class CuHttpSrcReqQueue {
+public:
+    void add(const QList<SrcItem>& rr, const QList<SrcItem>& wr) {
+        rreqs += rr;
+        wreqs += wr;
+    }
+    void empty_q() { wreqs.clear(); rreqs.clear(); }
+
+    QList<SrcItem> wreqs, rreqs;
+};
+
 class CumbiaHttpPrivate {
 public:
     CuThreadsEventBridgeFactory_I *m_threadsEventBridgeFactory;
@@ -40,6 +51,9 @@ public:
     CuHttpSrcMan *src_q_man;
     CuHttpWriteHelper *w_helper;
     int chan_ttl;
+    unsigned long long client_id;
+    CuHttpSrcReqQueue request_q;
+    CuHttpCliIdMan *id_man;
 };
 
 /*!
@@ -66,6 +80,8 @@ CumbiaHttp::CumbiaHttp(const QString &url,
     d->chan_recv->start();
     d->src_q_man = new CuHttpSrcMan(this);
     d->w_helper = nullptr;
+    d->client_id = 0;
+    d->id_man = new CuHttpCliIdMan(d->url + "/bu/tok", d->qnam, this);
     cuprintf("CumbiaHttp: instantiated with url %s\n", qstoc(url));
     m_init();
 }
@@ -91,6 +107,7 @@ CumbiaHttp::~CumbiaHttp()
         delete sh;
     d->src_helpers.clear();
     d->m_repl_wildcards_i.clear();
+    delete d->id_man;
     delete d;
 }
 
@@ -100,9 +117,24 @@ void CumbiaHttp::m_init()
                                           new CuHTTPActionFactoryService());
 }
 
+// if there is a src item among rsrcs that needs the client id and we don't have it yet, request
+// the client id first, and then process the list of SrcItem. "s" and "u" are requests submitted
+// to the async client and need client ID
+//
 void CumbiaHttp::onSrcBundleReqReady(const QList<SrcItem> &rsrcs, const QList<SrcItem> &wsrcs) {
+    if(d->client_id > 0 || !m_need_client_id(rsrcs))
+        m_start_bundled_src_req(rsrcs, wsrcs);
+    else {
+        printf("CumbiaHttp::onSrcBundleReqReady\e[1;36m client id is 0: queueing requests while getting ID...\e[0m\n");
+        d->request_q.add(rsrcs, wsrcs);
+        m_start_client_id_req();
+    }
+}
+
+void CumbiaHttp::m_start_bundled_src_req(const QList<SrcItem> &rsrcs, const QList<SrcItem> &wsrcs)
+{
     if(rsrcs.size() > 0) {
-        CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(rsrcs, this);
+        CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(rsrcs, this, d->client_id);
         r->setBlocking(d->chan_recv->exiting()); // destruction in progress
         r->start(d->url + "/bu/src-bundle", d->qnam);
     }
@@ -320,4 +352,33 @@ CuData CumbiaHttp::m_make_server_err(const QMap<QString, QString>& revmap, const
             + std::to_string(revmap.size()) + " requests." : "\nrequest unavailable";
     out["msg"] = in["msg"].toString() + req;
     return out;
+}
+void CumbiaHttp::m_dequeue_src_reqs() {
+    m_start_bundled_src_req(d->request_q.rreqs, d->request_q.wreqs);
+    d->request_q.empty_q();
+}
+
+void CumbiaHttp::m_start_client_id_req() {
+    d->id_man->start();
+}
+
+bool CumbiaHttp::m_need_client_id(const QList<SrcItem> &rsrcs) const
+{
+    bool needs_id = false;
+    QListIterator<SrcItem> it(rsrcs);
+    while(!needs_id && it.hasNext()) {
+        const SrcItem &i = it.next();
+        needs_id = i.method == "s" || i.method == "u";
+    }
+    return needs_id;
+}
+
+void CumbiaHttp::onIdReady(const unsigned long long &client_id, const time_t ttl) {
+    d->client_id = client_id;
+    printf("CumbiaHttp.onIdReady: got client id \e[1;32m%llu\e[0m, ttl %ld calling m_dequeue_src_reqs\n", client_id, ttl);
+    m_dequeue_src_reqs(); // process requests waiting for client_id
+}
+
+void CumbiaHttp::onIdManError(const QString &err) {
+    perr("CumbiaHttp.onIdManError: client id manager error: %s", qstoc(err));
 }

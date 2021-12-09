@@ -32,18 +32,32 @@ bool CumbiaHTTPWorld::json_decode(const QJsonValue &v, CuData &out) const {
 bool CumbiaHTTPWorld::json_simple_decode(const QByteArray &jba, CuData &out) const
 {
     QJsonParseError pe;
+    QJsonObject o;
+    printf("CumbiaHTTPWorld::json_simple_decode decoding \"\e[1;34m%s\e[0m\"\n", jba.data());
     QJsonDocument json = QJsonDocument::fromJson(jba, &pe);
     if(pe.error != QJsonParseError::NoError) {
-        perr("CumbiaHTTPWorld::json_simple_decode: parse error: %s", qstoc(pe.errorString()));
+        out["err"] = true;
+        out["msg"] = "CumbiaHTTPWorld::json_simple_decode: parse error: " + pe.errorString().toStdString() + " in \"" + jba.data() + "\"";
+        perr("%s", out.s("msg").c_str());
     }
-    else if(json.isObject()) {
-        const QJsonObject o = json.object();
+    else {
+        if(json.isObject()) o = json.object();
+        else if(json.isArray() && json.array().size() > 0) o = json.array().first().toObject();
         if(!o.isEmpty()) {
-            foreach(const QString& k, o.keys())
-                out[k.toStdString()] = o.value(k).toString().toStdString();
+            foreach(const QString& k, o.keys()) {
+                const QJsonValue& v = o.value(k);
+                if(v.isBool()) out[k.toStdString()] = v.toBool(false);
+                else if(v.isDouble()) out[k.toStdString()] = v.toDouble();
+                else if(v.isString()) out[k.toStdString()] = o.value(k).toString().toStdString();
+            }
+        }
+        else {
+            out["err"] = true;
+            out["msg"] = "CumbiaHTTPWorld::json_simple_decode: json \"" + std::string(jba.data()) + " is not an object";
+            perr("%s", out.s("msg").c_str());
         }
     }
-    return !json.isNull();
+    return !o.isEmpty();
 }
 
 bool CumbiaHTTPWorld::request_reverse_eng(const QString &json, QMap<QString, QString>& map, QString& channel) const
@@ -357,5 +371,15 @@ QJsonObject CumbiaHTTPWorld::make_error(const QString &msg) const
     o["timestamp_ms"] =  tv.tv_sec * 1000 + tv.tv_usec / 1000.0;
     o["timestamp_us"] = static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6;
     return o;
+}
+
+QByteArray CumbiaHTTPWorld::get_http_payload(const QByteArray &buf) const
+{
+    int i = buf.indexOf("\\r\\n\\r\\n");
+    if(i > -1)
+        return buf.mid(i+4);
+    else if((i = buf.indexOf("\\n\\n")) > -1)
+        return buf.mid(i + 2);
+    return QByteArray();
 }
 

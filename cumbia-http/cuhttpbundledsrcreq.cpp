@@ -13,8 +13,8 @@
 
 class CuHttpBundledSrcReqPrivate {
 public:
-    CuHttpBundledSrcReqPrivate(const QList<SrcItem>& srcs) {
-        req_payload = m_json_pack(srcs);
+    CuHttpBundledSrcReqPrivate(const QList<SrcItem>& srcs, unsigned long long cli_id) {
+        req_payload = m_json_pack(srcs, cli_id);
         blocking = false;
     }
 
@@ -28,20 +28,20 @@ public:
             else if(channel != sd.channel.toLatin1())
                 perr("CuHttpBundledSrcReqPrivate: cannot mix channels in the same request: load balanced service instances may misbehave");
         }
-        req_payload = m_json_pack(il);
+        req_payload = m_json_pack(il, 0);
     }
 
     QByteArray buf;
     QByteArray req_payload, cookie, channel;
-    QByteArray m_json_pack(const QList<SrcItem>& srcs);
+    QByteArray m_json_pack(const QList<SrcItem>& srcs, unsigned long long client_id);
     CuHttpBundledSrcReqListener *listener;
     bool blocking;
 };
 
 CuHttpBundledSrcReq::CuHttpBundledSrcReq(const QList<SrcItem> &srcs,
-                                         CuHttpBundledSrcReqListener *l,
+                                         CuHttpBundledSrcReqListener *l, unsigned long long client_id,
                                          QObject *parent) : QObject(parent) {
-    d = new CuHttpBundledSrcReqPrivate(srcs);
+    d = new CuHttpBundledSrcReqPrivate(srcs, client_id);
     d->listener = l;
 }
 
@@ -142,7 +142,7 @@ bool CuHttpBundledSrcReq::m_likely_valid(const QByteArray &ba) const {
     return !ba.startsWith(": hi\n");
 }
 
-QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs)
+QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs, unsigned long long client_id)
 {
     QJsonObject root_o;
     QJsonArray sa;
@@ -180,6 +180,8 @@ QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs)
     // hopefully an app uses a single channel
     if(channel.size())
         root_o["channel"] = QString(channel);
+    if(client_id > 0)
+        root_o["id"] = QString::number(client_id);
     root_o["srcs"] = sa;
     QJsonDocument doc(root_o);
     return doc.toJson(QJsonDocument::Compact);

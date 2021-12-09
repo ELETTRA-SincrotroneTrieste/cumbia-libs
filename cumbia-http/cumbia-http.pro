@@ -71,6 +71,7 @@ SOURCES += \
     cuhttpauthmanagertools.cpp \
     cuhttpbundledsrcreq.cpp \
     cuhttpchannelreceiver.cpp \
+    cuhttpcliidman.cpp \
     cuhttpcontrolsreader.cpp \
     cuhttpcontrolswriter.cpp \
     cuhttpregisterengine.cpp \
@@ -95,6 +96,7 @@ HEADERS += \
     cuhttpauthmanagertools.h \
     cuhttpbundledsrcreq.h \
     cuhttpchannelreceiver.h \
+    cuhttpcliidman.h \
     cuhttpcontrolsreader.h \
     cuhttpcontrolswriter.h \
     cuhttpregisterengine.h \

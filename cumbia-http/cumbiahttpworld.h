@@ -29,6 +29,8 @@ public:
 
     QJsonObject make_error(const QString& msg) const;
 
+    QByteArray get_http_payload(const QByteArray& buf) const;
+
 private:
     std::vector<std::string> m_src_patterns;
 

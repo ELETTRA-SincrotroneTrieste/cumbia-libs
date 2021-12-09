@@ -1,6 +1,6 @@
 # News
 
-## version 1.3.2
+## version 1.4.0
 
 #### cumbia
 
@@ -17,6 +17,8 @@ A new class named *CuWorkQueueActivity* is an event-based activity allowing a cl
 on a queue and have a function (or a *worker subclass implementation (CuWorkQueueA_Worker)* method) invoked
 in a separate thread. The worker will be handed the list of events, process them in the separate thread and 
 finally post the results on the main thread.
+
+It is now possible to *remove* keys from CuData. Both const and non const methods are provided.
 
 ## version 1.3.1
 

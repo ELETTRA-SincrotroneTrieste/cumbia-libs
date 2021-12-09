@@ -20,6 +20,7 @@ class CuHttpBundledSrcReq : public QObject
 public:
     explicit CuHttpBundledSrcReq(const QList<SrcItem>& srcs,
                                  CuHttpBundledSrcReqListener *l,
+                                 unsigned long long client_id = 0,
                                  QObject *parent = nullptr);
     explicit CuHttpBundledSrcReq(const QMap<QString, SrcData>& targetmap,
                                  CuHttpBundledSrcReqListener *l,

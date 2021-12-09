@@ -7,8 +7,9 @@
 class CuWorkQueueActivityPrivate;
 
 class CuWorkQueueAEvent {
-    enum Type { CuWQActivityDefaultEventType = 1 };
 public:
+    enum Type { CuWQActivityDefaultEventType = 1 };
+
     CuWorkQueueAEvent();
     CuWorkQueueAEvent(const CuData& userdata);
     virtual ~CuWorkQueueAEvent() {}

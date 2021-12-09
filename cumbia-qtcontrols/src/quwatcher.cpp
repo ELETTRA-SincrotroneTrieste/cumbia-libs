@@ -118,7 +118,6 @@ void QuWatcher::onUpdate(const CuData &data)
     bool is_config = data.has("type", "property");
     std::string msg = data["msg"].toString();
     !ok ? d->context->getLinkStats()->addError(msg) : d->context->getLinkStats()->addOperation();
-pu
     if(is_config) {
         configure(data); // Qumbiaizer virtual configure method
     }
