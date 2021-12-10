@@ -89,7 +89,7 @@ CuHttpControlsReader::CuHttpControlsReader(Cumbia *cumbia, CuDataListener *tl)
 
 CuHttpControlsReader::~CuHttpControlsReader() {
     pdelete("CuHttpControlsReader %p %s", this, qstoc(d->s));
-    unsetSource();
+  //  unsetSource();
     delete d;
 }
 

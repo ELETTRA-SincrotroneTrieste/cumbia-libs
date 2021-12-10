@@ -8,6 +8,7 @@
 #include <QNetworkRequest>
 #include <cudata.h>
 #include <QTimer>
+#include <QEventLoop>
 
 class CuHttpCliIdManPrivate {
 public:
@@ -40,6 +41,22 @@ void CuHttpCliIdMan::start()
     QNetworkReply *reply = d->nam->post(r, QByteArray());
     reply->setProperty("type", "id_request");
     m_reply_connect(reply);
+}
+
+void CuHttpCliIdMan::unsubscribe(bool blocking) {
+    printf("CuHttpCliIdMan::unsubscribe: requesting unsubscribe for app id %llu \"%s\"... ", d->id, m_json_unsub().data());
+    QNetworkRequest r(d->url);
+    m_make_network_request(&r);
+    // curl http://woody.elettra.eu:8001/bu/tok
+    QNetworkReply *reply = d->nam->post(r, m_json_unsub());
+    m_reply_connect(reply);
+    if(blocking) {
+        QEventLoop loop;
+        connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
+        loop.exec();
+    }
+    const QByteArray &a = reply->readAll();
+    printf(" --> \"%s\"\n", a.data());
 }
 
 QString CuHttpCliIdMan::error() const {
@@ -111,6 +128,15 @@ QByteArray CuHttpCliIdMan::m_json(unsigned long long id) const {
     //  curl http://woody.elettra.eu:8001/bu/tok -d $'{"id":"30"}'
     QJsonObject root_o;
     root_o["id"] = QString::number(id);
+    QJsonDocument doc(root_o);
+    return doc.toJson(QJsonDocument::Compact);
+}
+
+QByteArray CuHttpCliIdMan::m_json_unsub() const {
+    //  curl http://woody.elettra.eu:8001/bu/tok -d $'{"id":"30"}'
+    QJsonObject root_o;
+    root_o["id"] = QString::number(d->id);
+    root_o["method"] = "u";
     QJsonDocument doc(root_o);
     return doc.toJson(QJsonDocument::Compact);
 }

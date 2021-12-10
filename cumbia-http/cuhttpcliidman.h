@@ -22,6 +22,7 @@ public:
 
     void start();
     void renew();
+    void unsubscribe(bool blocking);
 
     QString error() const;
 
@@ -37,6 +38,7 @@ protected slots:
 private:
     CuHttpCliIdManPrivate* d;
     QByteArray m_json(unsigned long long id) const;
+    QByteArray m_json_unsub() const;
     bool m_get_id_and_ttl();
     void m_start_keepalive();
     void m_reply_connect(QNetworkReply *reply);

@@ -164,6 +164,11 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
 			for(i = 0; i < vlli.size(); i++)
 				v.push_back(static_cast<T>(vlli[i]));
 		}
+        else if(_d->type == LongLongUInt) {
+            std::vector<unsigned long long int> vlli = toLongLongUIntVector();
+            for(i = 0; i < vlli.size(); i++)
+                v.push_back(static_cast<T>(vlli[i]));
+        }
         else if(_d->type == LongUInt) {
             std::vector<long unsigned int> vlui = toULongIntVector();
             for(i = 0; i < vlui.size(); i++)

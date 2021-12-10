@@ -94,6 +94,7 @@ CumbiaHttp::~CumbiaHttp()
     QList<SrcItem> ri, wi;
     d->src_q_man->dequeueItems(ri, wi);
     onSrcBundleReqReady(ri, wi);
+    d->id_man->unsubscribe(true); // true: block
     /* all registered services are unregistered and deleted by cumbia destructor after threads have joined */
     if(d->m_threadsEventBridgeFactory)
         delete d->m_threadsEventBridgeFactory;

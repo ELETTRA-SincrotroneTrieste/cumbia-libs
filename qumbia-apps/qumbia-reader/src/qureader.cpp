@@ -173,7 +173,7 @@ QString Qu_Reader::source() const
 void Qu_Reader::stop()
 {
     if(CuControlsReaderA* r = m_context->getReader())
-        r->unsetSource();
+        delete r;
 }
 
 void Qu_Reader::setPeriod(int ms)
