@@ -431,3 +431,52 @@ bool CuData::B(const std::string& key) const {
     return b;
 }
 
+std::vector<double> CuData::DV(const std::string &key) const {
+    std::vector<double>  dv;
+    if(containsKey(key))
+        this->operator[](key).toVector<double>(dv);
+    return dv;
+}
+
+std::vector<int>  CuData::IV(const std::string &key) const {
+    std::vector<int>  vi;
+    if(containsKey(key))
+        this->operator[](key).toVector<int>(vi);
+    return vi;
+}
+
+std::vector<long long> CuData::LLV(const std::string &key) const {
+    std::vector< long long int>  lliv;
+    if(containsKey(key))
+        this->operator[](key).toVector< long long int>(lliv);
+    return lliv;
+}
+
+std::vector<unsigned int>  CuData::UV(const std::string &key) const {
+    std::vector<unsigned int>  uiv;
+    if(containsKey(key))
+        this->operator[](key).toVector<unsigned int>(uiv);
+    return uiv;
+}
+
+std::vector<unsigned long> CuData::ULV(const std::string &key) const {
+    std::vector<unsigned long int>  uliv;
+    if(containsKey(key))
+        this->operator[](key).toVector<unsigned long int>(uliv);
+    return uliv;
+}
+
+std::vector<unsigned long long> CuData::ULLV(const std::string &key) const {
+    std::vector<unsigned long long int>  ulliv;
+    if(containsKey(key))
+        this->operator[](key).toVector<unsigned long long int>(ulliv);
+    return ulliv;
+}
+
+std::vector<bool> CuData::BV(const std::string &key) const {
+    std::vector<bool>  bv;
+    if(containsKey(key))
+        this->operator[](key).toVector<bool>(bv);
+    return bv;
+}
+

@@ -108,8 +108,16 @@ public:
     double D(const std::string& key) const;
     int I(const std::string& key) const;
     unsigned int U(const std::string& key) const;
-
     bool B(const std::string& key) const;
+
+    // toVector<T> version shortcuts
+    std::vector<double> DV(const std::string& key) const;
+    std::vector<int>  IV(const std::string& key) const;
+    std::vector<long long> LLV(const std::string &key) const;
+    std::vector<unsigned int> UV(const std::string& key) const;
+    std::vector<unsigned long int> ULV(const std::string& key) const;
+    std::vector<unsigned long long int> ULLV(const std::string& key) const;
+    std::vector<bool>    BV(const std::string& key) const;
 
 private:
     CuDataPrivate *d_p;
