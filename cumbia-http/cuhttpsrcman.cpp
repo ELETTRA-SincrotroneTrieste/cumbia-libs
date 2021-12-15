@@ -66,22 +66,17 @@ void CuHttpSrcMan::enqueueSrc(const CuHTTPSrc &httpsrc,
 }
 
 /*!
- * \brief cancel a previously set source
+ * \brief cancel a request that may be on the way
  *
  * There are two possibile situations:
  * \li src enqueued for set source. Remove src from the queue so that the operation is canceled
  * \li src waiting for the http sync reply: remove src from the wait map so that the reply will
  *     not update l
  */
-void CuHttpSrcMan::cancelSrc(const CuHTTPSrc &httpsrc, const std::string& method, CuDataListener *l, const QString& chan) {
+void CuHttpSrcMan::cancelSrc(const CuHTTPSrc &httpsrc, const std::string& method, CuDataListener *l, const QString& ) {
     bool rem = m_queue_remove(httpsrc.prepare(), method, l);
-    if(!rem) { // if rem, src was still in queue, no request sent
-        rem = m_wait_map_remove(httpsrc.prepare(), method, l);
-        // if not in queue, request could have been sent: send "u" unsubscribe req
-        if(method == "s") {
-            enqueueSrc(httpsrc, l, "u", chan, CuVariant(), CuData());
-        }
-    }
+    if(!rem) // if rem, src was still in queue, no request sent
+        m_wait_map_remove(httpsrc.prepare(), method, l);
 }
 
 bool CuHttpSrcMan::m_queue_remove(const string &src, const std::string& method, CuDataListener *l) {

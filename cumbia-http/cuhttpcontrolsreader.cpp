@@ -47,6 +47,9 @@ CuHTTPReaderFactory::~CuHTTPReaderFactory()
  * The options are reset (to an empty CuData) after  CuTControlsReader
  * creation and initialization. This avoids applying the same options to subsequent create calls
  * on the same factory
+ *
+ * \par Important reading
+ * Please see also the unsetSource documentation.
  */
 CuControlsReaderA *CuHTTPReaderFactory::create(Cumbia *c, CuDataListener *l) const
 {
@@ -88,9 +91,11 @@ CuHttpControlsReader::CuHttpControlsReader(Cumbia *cumbia, CuDataListener *tl)
 }
 
 CuHttpControlsReader::~CuHttpControlsReader() {
-    pdelete("CuHttpControlsReader %p %s", this, qstoc(d->s));
-  //  unsetSource();
-    delete d;
+    pdelete("CuHttpControlsReader %p %s calling unlink listener without sending \"u\" \n", this, qstoc(d->s));
+    // since 1.3.1 the destructor will not send an "unsubscribe" request to the server
+    // assuming that ~CuHttpControlsReader is invoked upon application close, when CumbiaHttp
+    // unregisters the client globally without sending an unsubscribe request for each reader
+    d->cu_http->unlinkListener(CuHTTPSrc(d->s.toStdString(), d->cu_http->getSrcHelpers()), d->method.toStdString(), d->dlis);    delete d;
 }
 
 /*!
@@ -140,8 +145,33 @@ QString CuHttpControlsReader::source() const {
     return d->s;
 }
 
+
+/*! \brief unlink the listener and, if the source is "subscribed", send an "unsubscribe" request
+ *
+ *  unsetSource will send an unsubscribe request if the method for this source is "s" (the source
+ *  is monitored on a channel).
+ *
+ *  \par Important note
+ *  If you are deleting the reader explicitly from the application, call unsetSource and then delete
+ *  the reader.
+ *  *Deleting the reader without calling unsetSource first will not send an unsubscribe request to the client*.
+ *
+ *  On the other hand, the class destructor alone will not send an unsubscribe request, to avoid flooding
+ *  the server with unsubscribe requests at application shutdown. In this case, a *global unsubscribe* request
+ *  is sent by CumbiaHttp for the entire client application
+ *
+ *  The implementation somehow differs from the other cumbia engines (for example *cumbia-tango*, where
+ *  the destructor actually performs a thorough disconnection from the Tango device) but ensures a
+ *  consistent and simple *unsetSource* interface across the engines.
+ */
 void CuHttpControlsReader::unsetSource() {
-    d->cu_http->unlinkListener(CuHTTPSrc(d->s.toStdString(), d->cu_http->getSrcHelpers()), d->method.toStdString(), d->dlis);
+    const CuHTTPSrc s(d->s.toStdString(), d->cu_http->getSrcHelpers());
+    d->cu_http->unlinkListener(s, d->method.toStdString(), d->dlis);
+    if(d->method == "s") {
+        printf("CuHttpControlsReader::unsetSource \e[1;36msends unsubscribe request for src %s method %s \e[0m\n",
+               qstoc(d->s), qstoc(d->method));
+        d->cu_http->unsubscribeEnqueue(s, d->dlis);
+    }
     d->s = QString();
 }
 

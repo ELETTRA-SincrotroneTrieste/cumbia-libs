@@ -93,7 +93,9 @@ CumbiaHttp::~CumbiaHttp()
     // deleted CuHttpControlsReaders will have enqueued their unsubscribe requests
     QList<SrcItem> ri, wi;
     d->src_q_man->dequeueItems(ri, wi);
+    printf("~CumbiaHttp: calling onSrcBundleReqReady *blocking* with sizes %d write %d\n", ri.size(), wi.size());
     onSrcBundleReqReady(ri, wi);
+    printf("~CumbiaHttp: calling d->id_man->unsubscribe *blocking* ");
     d->id_man->unsubscribe(true); // true: block
     /* all registered services are unregistered and deleted by cumbia destructor after threads have joined */
     if(d->m_threadsEventBridgeFactory)
@@ -187,6 +189,10 @@ void CumbiaHttp::readEnqueue(const CuHTTPSrc &source, CuDataListener *l, const C
     d->src_q_man->enqueueSrc(source, l, f.getMethod(), d->chan_recv->channel(), CuVariant(), f.options());
 }
 
+void CumbiaHttp::unsubscribeEnqueue(const CuHTTPSrc &httpsrc, CuDataListener *l) {
+        d->src_q_man->enqueueSrc(httpsrc, l, "u", d->chan_recv->channel(), CuVariant(), CuData());
+}
+
 void CumbiaHttp::executeWrite(const CuHTTPSrc &source, CuDataListener *l, const CuHTTPActionFactoryI &f) {
     d->src_q_man->enqueueSrc(source, l, f.getMethod(), "", f.options().value("write_val"), f.options());
 }
@@ -199,9 +205,13 @@ void CumbiaHttp::executeWrite(const CuHTTPSrc &source, CuDataListener *l, const 
  * \note
  * Disconnect the listener both from a pending sync reply (onSrcBundleReplyReady) and
  * the channel receiver
+ *
+ * \note
+ * called by CuHttpControlsR
  */
 void CumbiaHttp::unlinkListener(const CuHTTPSrc &source, const std::string& method, CuDataListener *l) {
     if(CumbiaHTTPWorld().source_valid(source.getName())) {
+        // cancelSrc never sends "unsubscribe"
         d->src_q_man->cancelSrc(source, method, l, d->chan_recv->channel());
         d->chan_recv->removeDataListener(l);
     }

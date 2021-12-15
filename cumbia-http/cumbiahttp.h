@@ -109,6 +109,7 @@ public:
     virtual int getType() const;
 
     void readEnqueue(const CuHTTPSrc &source, CuDataListener *l, const CuHTTPActionFactoryI &f);
+    void unsubscribeEnqueue(const CuHTTPSrc &httpsrc, CuDataListener *l);
     void executeWrite(const CuHTTPSrc &source, CuDataListener *l, const CuHTTPActionFactoryI &f);
 
     void unlinkListener(const CuHTTPSrc &source, const std::string& method, CuDataListener *l);
