@@ -41,6 +41,7 @@ private:
     QByteArray m_json_unsub() const;
     bool m_get_id_and_ttl();
     void m_start_keepalive();
+    void m_stop_keepalive();
     void m_reply_connect(QNetworkReply *reply);
     void m_make_network_request(QNetworkRequest *r) const;
     void m_notify_err(bool is_id_req);

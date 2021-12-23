@@ -44,6 +44,7 @@ void CuHttpCliIdMan::start()
 }
 
 void CuHttpCliIdMan::unsubscribe(bool blocking) {
+    m_stop_keepalive();
     printf("CuHttpCliIdMan::unsubscribe: requesting unsubscribe for app id %llu \"%s\"... ", d->id, m_json_unsub().data());
     QNetworkRequest r(d->url);
     m_make_network_request(&r);
@@ -94,7 +95,6 @@ void CuHttpCliIdMan::onReplyFinished() {
 }
 
 void CuHttpCliIdMan::onReplyDestroyed(QObject *o) {
-    printf("CuHttpCliIdMan::onReplyDestroyed: reply deleted %p\n", o);
 }
 
 void CuHttpCliIdMan::onSslErrors(const QList<QSslError> &errors) {
@@ -133,7 +133,7 @@ QByteArray CuHttpCliIdMan::m_json(unsigned long long id) const {
 }
 
 QByteArray CuHttpCliIdMan::m_json_unsub() const {
-    //  curl http://woody.elettra.eu:8001/bu/tok -d $'{"id":"30"}'
+    //  curl http://woody.elettra.eu:8001/bu/tok -d $'{"id":"30", "method":"u" }'
     QJsonObject root_o;
     root_o["id"] = QString::number(d->id);
     root_o["method"] = "u";
@@ -165,6 +165,11 @@ void CuHttpCliIdMan::m_start_keepalive() {
         connect(t, SIGNAL(timeout()), this, SLOT(send_keepalive()));
         t->start();
     }
+}
+
+void CuHttpCliIdMan::m_stop_keepalive() {
+    QTimer *t = findChild<QTimer*> ("keepalive_tmr");
+    if(t) t->stop();
 }
 
 void CuHttpCliIdMan::m_reply_connect(QNetworkReply *reply) {

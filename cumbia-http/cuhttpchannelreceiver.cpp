@@ -95,6 +95,17 @@ void CuHttpChannelReceiver::stop() {
     stopRequest();
 }
 
+/*!
+ * \brief CuHttpChannelReceiver::decodeMessage decodes the json array passed as QJsonValue
+ *        and updates the listeners of the involved sources.
+ * \param v Json array.
+ *
+ * Invoked by CuHTTPActionA.
+ *
+ * \note  To avoid receiving older messages which were published before subscribing to channel,
+ *        use the directive *nchan_subscriber_first_message newest; * in the *sub* section of
+ *        *nginx.conf*
+ */
 void CuHttpChannelReceiver::decodeMessage(const QJsonValue &v) {
     const QJsonArray a = v.toArray(); // data arrives within an array
     if(a.size() == 1) {

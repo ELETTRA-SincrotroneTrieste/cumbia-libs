@@ -116,8 +116,7 @@ void CuHttpBundledSrcReq::onSslErrors(const QList<QSslError> &errors) {
     perr("CuHttpBundledSrcReq::onSslErrors: errors: %s", qstoc(msg));
 }
 
-void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError code)
-{
+void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError code) {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
     CuData da("msg", r->errorString().toStdString());
     da.set("err", true);
