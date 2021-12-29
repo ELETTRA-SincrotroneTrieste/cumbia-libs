@@ -292,7 +292,26 @@ void Cumbia::postEvent(CuActivity *a, CuActivityEvent *e)
 {
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     CuThreadInterface *thread = static_cast<CuThreadInterface *>(activityManager->getThread(a));
+    printf("Cumbia::postEvent calling postEvent  to act %s evt typ%d\n",
+           datos(a->getToken()), e->getType());
     thread->postEvent(a, e);
+}
+
+/*! call the CuActivit::event method directly in the same thread.
+ *
+ *  \param a the activity to be notified
+ *  \param e the event
+ *
+ *  Some activities may implement a custom *event-and-notification*
+ *  system using a condition variable to unlock a loop within the
+ *  execute method to process events on a queue. In this context,
+ *  the Cumbia::postEvent method above wouldn't work because the
+ *  activity execute method is waiting on a lock. In these cases,
+ *  notify calls CuActivity::event directly, and such activities
+ *  shall wake the loop and process the event
+ */
+void Cumbia::notify(CuActivity *a, CuActivityEvent *e) {
+    a->event(e);
 }
 
 /*!

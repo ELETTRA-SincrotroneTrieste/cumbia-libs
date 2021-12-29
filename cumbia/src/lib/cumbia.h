@@ -221,6 +221,8 @@ public:
 
     void postEvent(CuActivity *a, CuActivityEvent *e);
 
+    void notify(CuActivity *a, CuActivityEvent *e);
+
     void finish();
 
     virtual int getType() const;
