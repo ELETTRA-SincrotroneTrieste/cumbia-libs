@@ -130,7 +130,9 @@ private:
     void m_auth_request(const CuData& da);
     void m_lis_update(const CuData& da);
     CuData m_make_server_err(const QMap<QString, QString> &revmap, const QString& r, const CuData& in) const;
-    void m_start_bundled_src_req(const QList<SrcItem> &rsrcs, const QList<SrcItem> &wsrcs);
+    void m_start_bundled_src_req(const QList<SrcItem> &rsrcs,
+                                 const QList<SrcItem> &wsrcs,
+                                 const QList<SrcItem> &unsubsrcs);
     void m_dequeue_src_reqs();
     void m_start_client_id_req();
     bool m_need_client_id(const QList<SrcItem> &rsrcs) const;
@@ -139,7 +141,7 @@ private:
 
     // CuHttpSrcQueueManListener interface
 public:
-    void onSrcBundleReqReady(const QList<SrcItem>& rsrcs, const QList<SrcItem>& wsrcs);
+    void onSrcBundleReqReady(const QList<SrcItem>& rsrcs, const QList<SrcItem>& wsrcs, const QList<SrcItem>& unsubsrcs);
 
     // CuHttpBundledSrcReqListener interface
 public:

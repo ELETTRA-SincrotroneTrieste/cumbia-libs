@@ -14,7 +14,7 @@ public:
     QQueue<SrcItem> srcq;
     QMultiMap<QString, SrcData> srcd;
     QMap<QString, SrcData> tgtd;
-    QList<SrcItem> r_items, w_items;
+    QList<SrcItem> r_items, w_items, u_items;
     CuHttpSrcQueueManListener *lis;
     CuData options;
 };
@@ -22,7 +22,7 @@ public:
 SrcItem::SrcItem(const std::string &s, CuDataListener *li, const std::string &metho,
                  const QString &chan, const CuVariant &w_val, const CuData &opts) :
     src(s), l(li), method(metho),
-    channel(metho == "s" || metho == "u" ? chan : ""), wr_val(w_val), options(opts) {
+    channel(metho == "s" || metho == "S" || metho == "u" ? chan : ""), wr_val(w_val), options(opts) {
 }
 
 SrcItem::SrcItem() : l(nullptr) { }
@@ -118,13 +118,15 @@ QList<SrcData> CuHttpSrcMan::takeSrcs(const QString &src) const {
     return srcd;
 }
 
-int CuHttpSrcMan::dequeueItems(QList<SrcItem> &read_i, QList<SrcItem> &write_i) {
-    read_i.clear(); write_i.clear();
+int CuHttpSrcMan::dequeueItems(QList<SrcItem> &read_i, QList<SrcItem> &write_i, QList<SrcItem> &unsu_i) {
+    read_i.clear(); write_i.clear(); unsu_i.clear();
     while(!d->srcq.isEmpty()) {
         const SrcItem& i = d->srcq.dequeue();
-        i.method != "write" ?  read_i.append(i) : write_i.append(i);
+        if(i.method == "write") write_i.append(i);
+        else if(i.method == "u") unsu_i.append(i);
+        else read_i.append(i);
     }
-    return read_i.size() + write_i.size();
+    return read_i.size() + write_i.size() + unsu_i.size();
 }
 
 const QMap<QString, SrcData>& CuHttpSrcMan::targetMap() const {
@@ -153,10 +155,13 @@ void CuHttpSrcMan::onDequeueTimeout() {
         const SrcItem& i = d->srcq.dequeue();
         i.method != "write" ?  d->srcd.insert(QString::fromStdString(i.src), SrcData(i.l, i.method, i.channel, i.options))
                              : d->tgtd.insert(QString::fromStdString(i.src), SrcData(i.l, i.method, i.channel, i.options, i.wr_val));
-        i.method != "write" ?  d->r_items.append(i) : d->w_items.append(i);
+
+        if(i.method == "u") d->u_items.append(i);
+        else if(i.method == "write") d->w_items.append(i);
+        else  d->r_items.append(i);
     }
     if(d->r_items.size() || d->w_items.size()) {
-        d->lis->onSrcBundleReqReady(d->r_items, d->w_items);
+        d->lis->onSrcBundleReqReady(d->r_items, d->w_items, d->u_items);
         d->r_items.clear();
         d->w_items.clear();
     }

@@ -107,6 +107,7 @@ void CuHttpChannelReceiver::stop() {
  *        *nginx.conf*
  */
 void CuHttpChannelReceiver::decodeMessage(const QJsonValue &v) {
+    printf("CuHttpChannelReceiver.decodeMessage: got a new message\n");
     const QJsonArray a = v.toArray(); // data arrives within an array
     if(a.size() == 1) {
         const QString& src = a.at(0)["src"].toString();

@@ -17,7 +17,7 @@ class CuHttpCliIdMan : public QObject
 {
     Q_OBJECT
 public:
-    explicit CuHttpCliIdMan(const QString& url, QNetworkAccessManager *nm, CuHttpCliIdManListener *li);
+    explicit CuHttpCliIdMan(const QString& sub_u, const QString& unsub_u, QNetworkAccessManager *nm, CuHttpCliIdManListener *li);
     ~CuHttpCliIdMan();
 
     void start();

@@ -43,7 +43,8 @@ public:
 
 class CuHttpSrcQueueManListener {
 public:
-    virtual void onSrcBundleReqReady(const QList<SrcItem>& rsrcs, const QList<SrcItem>& wsrcs) = 0;
+    virtual void onSrcBundleReqReady(const QList<SrcItem>& rsrcs, const QList<SrcItem>& wsrcs,
+                                     const QList<SrcItem>& unsubsrcs) = 0;
 };
 
 /*!
@@ -60,7 +61,7 @@ public:
     void cancelSrc(const CuHTTPSrc &httpsrc, const std::string& method, CuDataListener *l, const QString&);
     bool queue_contains(const std::string& src, CuDataListener* l) const;
     QList<SrcData> takeSrcs(const QString& src) const;
-    int dequeueItems(QList<SrcItem> &read_i, QList<SrcItem> &write_i);
+    int dequeueItems(QList<SrcItem> &read_i, QList<SrcItem> &write_i, QList<SrcItem> &unsu_i);
     QMap<QString, SrcData> takeTgts() const;
     QMap<QString, SrcData> takeSrcs() const;
     const QMap<QString, SrcData> &targetMap() const;

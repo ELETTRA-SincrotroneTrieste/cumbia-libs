@@ -12,10 +12,10 @@
 
 class CuHttpCliIdManPrivate {
 public:
-    CuHttpCliIdManPrivate(QNetworkAccessManager *nm, const QString& u, CuHttpCliIdManListener *l)
-        : nam(nm), url(u), id(0), ttl(0), lis(l) {}
+    CuHttpCliIdManPrivate(QNetworkAccessManager *nm, const QString& sub_u, const QString& unsub_u, CuHttpCliIdManListener *l)
+        : nam(nm), suburl(sub_u), unsuburl(unsub_u), id(0), ttl(0), lis(l) {}
     QNetworkAccessManager* nam;
-    const QString url;
+    const QString suburl, unsuburl;
     unsigned long long id;
     unsigned long ttl;
     QByteArray bufs[2];
@@ -23,9 +23,9 @@ public:
     CuHttpCliIdManListener* lis;
 };
 
-CuHttpCliIdMan::CuHttpCliIdMan(const QString& url, QNetworkAccessManager *nm, CuHttpCliIdManListener *li)
+CuHttpCliIdMan::CuHttpCliIdMan(const QString& sub_u, const QString& unsub_u, QNetworkAccessManager *nm, CuHttpCliIdManListener *li)
     : QObject{nullptr} {
-    d = new CuHttpCliIdManPrivate(nm, url, li);
+    d = new CuHttpCliIdManPrivate(nm, sub_u, unsub_u, li);
 }
 
 CuHttpCliIdMan::~CuHttpCliIdMan() {
@@ -35,9 +35,9 @@ CuHttpCliIdMan::~CuHttpCliIdMan() {
 void CuHttpCliIdMan::start()
 {
     d->bufs[0].clear();
-    QNetworkRequest r(d->url);
+    QNetworkRequest r(d->suburl);
     m_make_network_request(&r);
-    // curl http://woody.elettra.eu:8001/bu/tok
+    // curl http://woody.elettra.eu:8001/tok
     QNetworkReply *reply = d->nam->post(r, QByteArray());
     reply->setProperty("type", "id_request");
     m_reply_connect(reply);
@@ -46,9 +46,9 @@ void CuHttpCliIdMan::start()
 void CuHttpCliIdMan::unsubscribe(bool blocking) {
     m_stop_keepalive();
     printf("CuHttpCliIdMan::unsubscribe: requesting unsubscribe for app id %llu \"%s\"... ", d->id, m_json_unsub().data());
-    QNetworkRequest r(d->url);
+    QNetworkRequest r(d->unsuburl);
     m_make_network_request(&r);
-    // curl http://woody.elettra.eu:8001/bu/tok
+    // curl http://woody.elettra.eu:8001/u/tok
     QNetworkReply *reply = d->nam->post(r, m_json_unsub());
     m_reply_connect(reply);
     if(blocking) {
@@ -70,10 +70,12 @@ void CuHttpCliIdMan::onNewData()
     int clen = r->header(QNetworkRequest::ContentLengthHeader).toInt();
     qint64 bytes_avail = r->bytesAvailable();
     QByteArray ba = r->read(bytes_avail);
+    printf("CuHttpCliIdMan.onNewdata: got data %s\n", ba.data());
     if(r->property("type").toString() == "id_request") {
         d->bufs[0] += ba;
         // buf complete?
         if(d->bufs[0].length() == clen) { // buf complete
+            printf("CuHttpCliIdMan.onNewdata: buf complete %s\n", d->bufs[0].data());
             bool ok = m_get_id_and_ttl() && d->id > 0 && d->ttl > 0; // needs d->buf. d->buf cleared in start
             d->lis->onIdReady(d->id, d->ttl);
             if(ok) {
@@ -115,9 +117,9 @@ void CuHttpCliIdMan::onError(QNetworkReply::NetworkError ) {
 
 void CuHttpCliIdMan::send_keepalive() {
     d->bufs[1].clear();
-    QNetworkRequest r(d->url);
+    QNetworkRequest r(d->suburl);
     m_make_network_request(&r);
-    // curl http://woody.elettra.eu:8001/bu/tok
+    // curl http://woody.elettra.eu:8001/tok
     printf("CuHttpCliIdMan::send_keepalive: Sending keepalive id %llu\n", d->id);
     QNetworkReply *reply = d->nam->post(r, m_json(d->id));
     reply->setProperty("type", "id_renew");
