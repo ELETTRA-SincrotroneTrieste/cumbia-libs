@@ -91,10 +91,27 @@ bool CumbiaHTTPWorld::json_decode(const QByteArray &ba, std::list<CuData> &out) 
     }
     else {
         const QJsonArray a = json.array();
-        for(int i = 0; i < a.size(); i++) {
-            CuData r;
-            m_json_decode(a.at(i), r);
-            out.push_back(r);
+        if(a.size() >= 1 && a.at(0).isArray()) {
+            QJsonValue jv = a.at(0);
+            if(jv.isArray()) {
+                QJsonArray a0 = jv.toArray();
+                for(int i = 0; i < a0.size(); i++) {
+                    CuData r;
+                    m_json_decode(a0.at(i), r);
+                    out.push_back(r);
+                }
+
+            }
+            if(a.size() > 1 && a.at(1).isArray()) {
+                QJsonValue jv1 = a.at(1);
+                QJsonArray a1 = jv1.toArray();
+                for(int i = 0; i < a1.size(); i++) {
+                    CuData r;
+                    m_json_decode(a1.at(i), r);
+                    out.push_back(r);
+                    printf("\e[1;35m data from array 1 (async) is %s\e[0m\n", datos(r));
+                }
+            }
         }
     }
     return !json.isNull();
