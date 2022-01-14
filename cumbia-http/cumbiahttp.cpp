@@ -82,7 +82,6 @@ CumbiaHttp::CumbiaHttp(const QString &url,
     d->w_helper = nullptr;
     d->client_id = 0;
     d->id_man = new CuHttpCliIdMan(d->url + "/bu/tok", d->qnam, this);
-    cuprintf("CumbiaHttp: instantiated with url %s\n", qstoc(url));
     m_init();
 }
 
@@ -93,9 +92,7 @@ CumbiaHttp::~CumbiaHttp()
     // deleted CuHttpControlsReaders will have enqueued their unsubscribe requests
     QList<SrcItem> ri, wi;
     d->src_q_man->dequeueItems(ri, wi);
-    printf("~CumbiaHttp: calling onSrcBundleReqReady *blocking* with sizes %d write %d\n", ri.size(), wi.size());
     onSrcBundleReqReady(ri, wi);
-    printf("~CumbiaHttp: calling d->id_man->unsubscribe *blocking* ");
     d->id_man->unsubscribe(true); // true: block
     /* all registered services are unregistered and deleted by cumbia destructor after threads have joined */
     if(d->m_threadsEventBridgeFactory)
@@ -128,7 +125,6 @@ void CumbiaHttp::onSrcBundleReqReady(const QList<SrcItem> &rsrcs, const QList<Sr
     if(d->client_id > 0 || !m_need_client_id(rsrcs))
         m_start_bundled_src_req(rsrcs, wsrcs);
     else {
-        printf("CumbiaHttp::onSrcBundleReqReady\e[1;36m client id is 0: queueing requests while getting ID...\e[0m\n");
         d->request_q.add(rsrcs, wsrcs);
         m_start_client_id_req();
     }
@@ -386,7 +382,6 @@ bool CumbiaHttp::m_need_client_id(const QList<SrcItem> &rsrcs) const
 
 void CumbiaHttp::onIdReady(const unsigned long long &client_id, const time_t ttl) {
     d->client_id = client_id;
-    printf("CumbiaHttp.onIdReady: got client id \e[1;32m%llu\e[0m, ttl %ld calling m_dequeue_src_reqs\n", client_id, ttl);
     m_dequeue_src_reqs(); // process requests waiting for client_id
 }
 

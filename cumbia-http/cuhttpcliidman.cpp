@@ -45,7 +45,6 @@ void CuHttpCliIdMan::start()
 
 void CuHttpCliIdMan::unsubscribe(bool blocking) {
     m_stop_keepalive();
-    printf("CuHttpCliIdMan::unsubscribe: requesting unsubscribe for app id %llu \"%s\"... ", d->id, m_json_unsub().data());
     QNetworkRequest r(d->url);
     m_make_network_request(&r);
     // curl http://woody.elettra.eu:8001/bu/tok
@@ -56,8 +55,7 @@ void CuHttpCliIdMan::unsubscribe(bool blocking) {
         connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
         loop.exec();
     }
-    const QByteArray &a = reply->readAll();
-    printf(" --> \"%s\"\n", a.data());
+    printf("CuHttpCliIdMan::unsubscribe --> \"%s\"\n", reply->readAll().data());
 }
 
 QString CuHttpCliIdMan::error() const {
@@ -77,7 +75,6 @@ void CuHttpCliIdMan::onNewData()
             bool ok = m_get_id_and_ttl() && d->id > 0 && d->ttl > 0; // needs d->buf. d->buf cleared in start
             d->lis->onIdReady(d->id, d->ttl);
             if(ok) {
-                printf("CuHttpCliIdMan::onNewData: \e[1;32m ID %llu ttl %lu\e[0m: starting keepalive...\n", d->id, d->ttl);
                 m_start_keepalive();
             }
             else
@@ -85,8 +82,8 @@ void CuHttpCliIdMan::onNewData()
         }
     }
     else { // result from keepalive request
-        d->bufs[1] += ba;
-        printf("CuHttpCliIdMan::onNewData: \e[0;32m keepalive reply: \e[0;33m%s\e[0m\n", d->bufs[1].data());
+//        d->bufs[1] += ba;
+//        printf("CuHttpCliIdMan::onNewData: \e[0;32m keepalive reply: \e[0;33m%s\e[0m\n", d->bufs[1].data());
     }
 }
 
