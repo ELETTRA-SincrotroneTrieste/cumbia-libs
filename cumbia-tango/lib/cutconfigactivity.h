@@ -2,9 +2,11 @@
 #define CUATTCONFIGACTIVITY_H
 
 #include <cuisolatedactivity.h>
+#include <cutconfigactivityfactory.h>
 
 class CuTAttConfigActivityPrivate;
 class CuDeviceFactoryService;
+
 
 /*!
  * \brief Activity to get attribute configuration or command info. Optionally, it can perform a one
@@ -35,6 +37,12 @@ protected:
 
 private:
     CuTAttConfigActivityPrivate *d;
+};
+
+class CuTConfigActivityFactoryDefault : public CuTConfigActivityFactory {
+    // CuTConfigActivityFactory interface
+public:
+    CuActivity *create(const CuData &tok, CuDeviceFactoryService *df, int type, const CuData& options) const;
 };
 
 #endif // CUATTCONFIGACTIVITY_H

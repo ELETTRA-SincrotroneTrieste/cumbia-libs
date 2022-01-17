@@ -27,10 +27,11 @@ public:
     std::set<CuDataListener *> listeners;
     const TSource tsrc;
     CumbiaTango *cumbia_t;
-    CuTConfigActivity *activity;
+    CuActivity *activity;
     bool exiting; // set to true by stop()
     CuData options, tag;
     const CuTangoActionI::Type type;
+    const CuTConfigActivityFactory *config_a_factory;
 };
 
 CuTConfiguration::CuTConfiguration(const TSource& src,
@@ -41,10 +42,12 @@ CuTConfiguration::CuTConfiguration(const TSource& src,
     d = new CuTAttConfigurationPrivate(src, ct, t, options, tag); // src, t are const
     d->cumbia_t = ct;
     d->exiting = false;
+    d->config_a_factory = new CuTConfigActivityFactoryDefault();
 }
 
 CuTConfiguration::~CuTConfiguration() {
     pdelete("~CuTConfiguration: %p [%s]", this, d->tsrc.getName().c_str());
+    delete d->config_a_factory;
     delete d;
 }
 
@@ -58,6 +61,10 @@ void CuTConfiguration::setOptions(const CuData &options) {
 
 void CuTConfiguration::setTag(const CuData &tag) {
     d->tag = tag;
+}
+
+void CuTConfiguration::setConfigActivityFactory(const CuTConfigActivityFactory *caf) {
+    d->config_a_factory = caf;
 }
 
 void CuTConfiguration::onProgress(int , int , const CuData &) { }
@@ -137,8 +144,7 @@ void CuTConfiguration::start() {
     CuTConfigActivity::Type t;
     d->type == CuTangoActionI::ReaderConfig ? t = CuTConfigActivity::CuReaderConfigActivityType :
             t = CuTConfigActivity::CuWriterConfigActivityType;
-    d->activity = new CuTConfigActivity(at, df, t);
-    d->activity->setOptions(d->options);
+    d->activity =  d->config_a_factory->create(at, df, t, d->options);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
     d->cumbia_t->registerActivity(d->activity, this, tt, fi, bf);

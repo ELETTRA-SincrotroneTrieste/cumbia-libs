@@ -4,6 +4,7 @@
 #include "cutangoactioni.h"
 
 class CuTAttConfigurationPrivate;
+class CuTConfigActivityFactory;
 
 /*!
  * \brief Get command or attribute configuration from the Tango database.
@@ -38,6 +39,7 @@ public:
     void setDesiredAttributeProperties(const std::vector<std::string> props);
     void setOptions(const CuData& options);
     void setTag(const CuData& tag);
+    void setConfigActivityFactory(const CuTConfigActivityFactory* caf);
 
     // CuThreadListener interface
 public:

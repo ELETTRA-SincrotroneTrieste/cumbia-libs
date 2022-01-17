@@ -7,6 +7,7 @@
 #include <cutreader.h>
 
 class CumbiaTango;
+class CuDeviceFactoryService;
 
 class CuTangoReaderFactory : public CuTangoActionFactoryI
 {

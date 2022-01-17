@@ -137,3 +137,10 @@ void CuTConfigActivity::execute()
 }
 
 void CuTConfigActivity::onExit() { }
+
+
+CuActivity *CuTConfigActivityFactoryDefault::create(const CuData &tok, CuDeviceFactoryService *df, int type, const CuData &options) const {
+    CuTConfigActivity *a = new CuTConfigActivity(tok, df, static_cast<CuTConfigActivity::Type>(type));
+    a->setOptions(options);
+    return a;
+}
