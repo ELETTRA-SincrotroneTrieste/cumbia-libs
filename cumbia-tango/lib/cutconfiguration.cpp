@@ -48,8 +48,7 @@ CuTConfiguration::CuTConfiguration(const TSource& src,
 
 CuTConfiguration::~CuTConfiguration() {
     pdelete("~CuTConfiguration: %p [%s]", this, d->tsrc.getName().c_str());
-    delete d->c_xecutor;
-    delete d;
+    delete d; // d->c_xecutor deleted by activity
 }
 
 void CuTConfiguration::setDesiredAttributeProperties(const std::vector<string> props) {
