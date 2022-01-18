@@ -41,7 +41,7 @@ headers = [
 'lib/cutadbactivity.h',
 'lib/cutangoopt_builder.h',
 'lib/cutconfigactivity.h',
-'lib/cutconfigactivityfactory.h',
+'lib/cutconfigactivity_executor_i.h',
 'lib/cutdbpropertyreader.h',
 'lib/cugettdbpropactivity.h',
 'lib/cutthreadtokengen.h'

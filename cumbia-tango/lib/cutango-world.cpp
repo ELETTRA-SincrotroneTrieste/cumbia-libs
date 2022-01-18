@@ -3,6 +3,7 @@
 #include "tsource.h"
 #include <unordered_map>
 #include <cumacros.h>
+#include <chrono>
 #include <regex>
 
 class CuTangoWorldPrivate
@@ -904,8 +905,13 @@ bool CuTangoWorld::get_att_config(Tango::DeviceProxy *dev, const string &attribu
     d->message = "";
     /* first read attribute to get the value */
     bool attr_read_ok = true;
-    if(!skip_read_att)
+    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+    if(!skip_read_att) {
         attr_read_ok = read_att(dev, attribute, dres);
+        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+        printf("CuTConfigActivity.execute: get_att_config: \e[1;34mread_attribute\e[0m took \e[1;34m%ld us\e[0m\n",
+               std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+    }
     //
     // read attribute may fail, (example: device server is online but read
     // generates an internal exception). get_attribute_config may be successful
@@ -914,6 +920,9 @@ bool CuTangoWorld::get_att_config(Tango::DeviceProxy *dev, const string &attribu
     Tango::AttributeInfoEx aiex;
     try {
         aiex = dev->get_attribute_config(attribute);
+        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+        printf("CuTConfigActivity.execute: get_att_config: \e[1;32mget_attribute_config\e[0m took \e[1;32m%ld us\e[0m\n",
+               std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
         fillFromAttributeConfig(aiex, dres);
     }
     catch(Tango::DevFailed &e) {

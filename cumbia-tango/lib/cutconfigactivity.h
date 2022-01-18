@@ -2,7 +2,7 @@
 #define CUATTCONFIGACTIVITY_H
 
 #include <cuisolatedactivity.h>
-#include <cutconfigactivityfactory.h>
+#include <cutconfigactivity_executor_i.h>
 
 class CuTAttConfigActivityPrivate;
 class CuDeviceFactoryService;
@@ -17,8 +17,7 @@ class CuTConfigActivity : public CuActivity
 public:
     enum Type { CuReaderConfigActivityType = CuActivity::User + 5,  CuWriterConfigActivityType };
 
-    CuTConfigActivity(const CuData& tok, CuDeviceFactoryService *df, Type t);
-
+    CuTConfigActivity(const CuData& tok, CuDeviceFactoryService *df, Type t, const CuTConfigActivityExecutor_I *tx);
     virtual ~CuTConfigActivity();
 
     void setOptions(const CuData& o);
@@ -39,10 +38,12 @@ private:
     CuTAttConfigActivityPrivate *d;
 };
 
-class CuTConfigActivityFactoryDefault : public CuTConfigActivityFactory {
-    // CuTConfigActivityFactory interface
+class CuTConfigActivityExecutor_Default : public CuTConfigActivityExecutor_I {
 public:
-    CuActivity *create(const CuData &tok, CuDeviceFactoryService *df, int type, const CuData& options) const;
+    virtual ~CuTConfigActivityExecutor_Default() {}
+    bool get_command_info(Tango::DeviceProxy *dev, const std::string& cmd, CuData &cmd_info) const;
+    bool get_att_config(Tango::DeviceProxy *dev, const std::string &attribute, CuData &dres, bool skip_read_att) const;
 };
+
 
 #endif // CUATTCONFIGACTIVITY_H

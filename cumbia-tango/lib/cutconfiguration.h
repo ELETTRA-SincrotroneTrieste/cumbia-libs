@@ -4,7 +4,7 @@
 #include "cutangoactioni.h"
 
 class CuTAttConfigurationPrivate;
-class CuTConfigActivityFactory;
+class CuTConfigActivityExecutor_I;
 
 /*!
  * \brief Get command or attribute configuration from the Tango database.
@@ -32,14 +32,14 @@ public:
                      CumbiaTango *ct,
                      CuTangoActionI::Type t,
                      const CuData &options,
-                     const CuData &tag);
+                     const CuData &tag,
+                     const CuTConfigActivityExecutor_I* cx);
 
     virtual ~CuTConfiguration();
 
     void setDesiredAttributeProperties(const std::vector<std::string> props);
     void setOptions(const CuData& options);
     void setTag(const CuData& tag);
-    void setConfigActivityFactory(const CuTConfigActivityFactory* caf);
 
     // CuThreadListener interface
 public:

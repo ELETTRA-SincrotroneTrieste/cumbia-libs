@@ -33,7 +33,7 @@ lib/cutangoopt_builder.cpp
 lib/cutangoopt_builder.h
 lib/cutconfigactivity.cpp
 lib/cutconfigactivity.h
-lib/cutconfigactivityfactory.h
+lib/cutconfigactivity_executor_i.h
 lib/cutconfiguration.cpp
 lib/cutconfiguration.h
 lib/cutdbpropertyreader.cpp

@@ -20,6 +20,11 @@ finally post the results on the main thread.
 
 It is now possible to *remove* keys from CuData. Both const and non const methods are provided.
 
+#### cumbia-tango
+
+A new interface named CuTConfigActivityExecutor_I allows customizing attribute and command configuration fetch
+from CuTConfigActivity
+
 ## version 1.3.1
 
 ### Fixes

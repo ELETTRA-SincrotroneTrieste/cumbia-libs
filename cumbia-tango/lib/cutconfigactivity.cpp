@@ -17,9 +17,10 @@ public:
     int repeat, try_cnt;
     CuTConfigActivity::Type type;
     CuData options;
+    const CuTConfigActivityExecutor_I *tcexecutor;
 };
 
-CuTConfigActivity::CuTConfigActivity(const CuData &tok, CuDeviceFactoryService *df, Type t) : CuActivity(tok)
+CuTConfigActivity::CuTConfigActivity(const CuData &tok, CuDeviceFactoryService *df, Type t, const CuTConfigActivityExecutor_I *tx) : CuActivity(tok)
 {
     d = new CuTAttConfigActivityPrivate;
     d->device_service = df;
@@ -30,6 +31,7 @@ CuTConfigActivity::CuTConfigActivity(const CuData &tok, CuDeviceFactoryService *
     d->exiting = false;
     d->repeat = -1;
     d->try_cnt = 0;
+    d->tcexecutor = tx;
     setFlag(CuActivity::CuAUnregisterAfterExec, true);
     setFlag(CuActivity::CuADeleteOnExit, true);
 }
@@ -37,6 +39,7 @@ CuTConfigActivity::CuTConfigActivity(const CuData &tok, CuDeviceFactoryService *
 CuTConfigActivity::~CuTConfigActivity()
 {
     pdelete("CuTAttConfigActivity %p [%s]", this, vtoc2(getToken(), "src"));
+    delete d->tcexecutor;
     delete d;
 }
 
@@ -94,7 +97,7 @@ void CuTConfigActivity::execute()
         CuTangoWorld tw;
         if(dev && cmd)
         {
-            success = tw.get_command_info(dev, point, at);
+            success = d->tcexecutor->get_command_info(dev, point, at);
             if(success && d->type == CuReaderConfigActivityType && !skip_read) {
                 success = tw.cmd_inout(dev, point, at);
             } else if(success) { // successful get_command_info but no cmd_inout
@@ -102,7 +105,7 @@ void CuTConfigActivity::execute()
             }
         }
         else if(dev)  {
-            value_only ? success = tw.read_att(dev, point, at)  : success = tw.get_att_config(dev, point, at, skip_read);
+            value_only ? success = tw.read_att(dev, point, at)  : success = d->tcexecutor->get_att_config(dev, point, at, skip_read);
         }
         else
             d->msg = d->tdev->getMessage();
@@ -138,9 +141,14 @@ void CuTConfigActivity::execute()
 
 void CuTConfigActivity::onExit() { }
 
+bool CuTConfigActivityExecutor_Default::get_command_info(Tango::DeviceProxy *dev, const std::string &cmd, CuData &cmd_info) const
+{
+    CuTangoWorld w;
+    return w.get_command_info(dev, cmd, cmd_info);
+}
 
-CuActivity *CuTConfigActivityFactoryDefault::create(const CuData &tok, CuDeviceFactoryService *df, int type, const CuData &options) const {
-    CuTConfigActivity *a = new CuTConfigActivity(tok, df, static_cast<CuTConfigActivity::Type>(type));
-    a->setOptions(options);
-    return a;
+bool CuTConfigActivityExecutor_Default::get_att_config(Tango::DeviceProxy *dev, const string &attribute, CuData &dres, bool skip_read_att) const
+{
+    CuTangoWorld w;
+    return w.get_att_config(dev, attribute, dres, skip_read_att);
 }
