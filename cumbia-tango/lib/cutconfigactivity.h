@@ -42,7 +42,11 @@ class CuTConfigActivityExecutor_Default : public CuTConfigActivityExecutor_I {
 public:
     virtual ~CuTConfigActivityExecutor_Default() {}
     bool get_command_info(Tango::DeviceProxy *dev, const std::string& cmd, CuData &cmd_info) const;
-    bool get_att_config(Tango::DeviceProxy *dev, const std::string &attribute, CuData &dres, bool skip_read_att) const;
+    bool get_att_config(Tango::DeviceProxy *dev,
+                        const std::string &attribute,
+                        CuData &dres,
+                        bool skip_read_att,
+                        const std::string &devnam) const;
 };
 
 

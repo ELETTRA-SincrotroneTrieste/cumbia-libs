@@ -105,7 +105,7 @@ void CuTConfigActivity::execute()
             }
         }
         else if(dev)  {
-            value_only ? success = tw.read_att(dev, point, at)  : success = d->tcexecutor->get_att_config(dev, point, at, skip_read);
+            value_only ? success = tw.read_att(dev, point, at)  : success = d->tcexecutor->get_att_config(dev, point, at, skip_read, d->tdev->getName());
         }
         else
             d->msg = d->tdev->getMessage();
@@ -147,7 +147,11 @@ bool CuTConfigActivityExecutor_Default::get_command_info(Tango::DeviceProxy *dev
     return w.get_command_info(dev, cmd, cmd_info);
 }
 
-bool CuTConfigActivityExecutor_Default::get_att_config(Tango::DeviceProxy *dev, const string &attribute, CuData &dres, bool skip_read_att) const
+bool CuTConfigActivityExecutor_Default::get_att_config(Tango::DeviceProxy *dev,
+                                                       const std::string &attribute,
+                                                       CuData &dres,
+                                                       bool skip_read_att,
+                                                       const std::string& devnam) const
 {
     CuTangoWorld w;
     return w.get_att_config(dev, attribute, dres, skip_read_att);

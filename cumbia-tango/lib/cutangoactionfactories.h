@@ -73,7 +73,6 @@ class CuTReaderConfFactory : public CuTConfFactoryBase
 {
 public:
     CuTangoActionI *create(const std::string &s, CumbiaTango *ct) const;
-    CuTangoActionI *create(const std::string &s, CumbiaTango *ct, CuTConfigActivityExecutor_I *cf = nullptr) const;
     CuTangoActionI::Type getType() const;
 };
 
@@ -81,7 +80,6 @@ class CuTWriterConfFactory : public CuTConfFactoryBase
 {
 public:
     CuTangoActionI *create(const std::string &s, CumbiaTango *ct) const;
-    CuTangoActionI *create(const std::string &s, CumbiaTango *ct, CuTConfigActivityExecutor_I *cf = nullptr) const;
     CuTangoActionI::Type getType() const;
 };
 

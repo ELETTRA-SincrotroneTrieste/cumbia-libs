@@ -10,6 +10,7 @@ public:
     Tango::DeviceProxy *dev;
     string message;
     string name;
+    string fullname;
     int refCnt;
 };
 
@@ -27,6 +28,8 @@ TDevice::TDevice(const std::string &name)
         time(&tp);
         d->message = "connect: device defined in Tango db: " + std::string(ctime(&tp));
         d->message.pop_back();
+        d->fullname = d->dev->dev_name();
+        printf("\e[1;34mTDevice.TDevice: FULL NAME %s\e[0m\n", d->fullname.c_str());
     }
     catch(Tango::DevFailed &e)
     {
