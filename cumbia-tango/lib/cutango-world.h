@@ -81,6 +81,9 @@ public:
     std::string dateTimeToStr(time_t *tp) const;
     CuDataQuality toCuQuality(Tango::AttrQuality q) const;
 
+    std::string make_fqdn_src(const std::string& src) const;
+    std::string prepend_tgproto(const std::string& src) const;
+
 private:
     CuTangoWorldPrivate *d;
 };
