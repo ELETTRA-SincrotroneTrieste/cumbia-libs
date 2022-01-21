@@ -6,6 +6,11 @@
 #include <chrono>
 #include <regex>
 
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+
+
 class CuTangoWorldPrivate
 {
 public:
@@ -514,7 +519,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
             }
         }
         else if(p_da->get_type() == Tango::DEV_UCHAR)
-		{
+        {
             std::vector<unsigned char> v;
             p_da->extract_read(v);
             if(f == Tango::SCALAR)
@@ -905,11 +910,11 @@ bool CuTangoWorld::get_att_config(Tango::DeviceProxy *dev, const string &attribu
     d->message = "";
     /* first read attribute to get the value */
     bool attr_read_ok = true;
-    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     if(!skip_read_att) {
+        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
         attr_read_ok = read_att(dev, attribute, dres);
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-        printf("CuTConfigActivity.execute: get_att_config: \e[1;34mread_attribute\e[0m took \e[1;34m%ld us\e[0m\n",
+        printf("CuTangoWorld::get_att_config: \e[1;34mread_attribute\e[0m took \e[1;34m%ld us\e[0m\n",
                std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
     }
     //
@@ -919,9 +924,10 @@ bool CuTangoWorld::get_att_config(Tango::DeviceProxy *dev, const string &attribu
     //
     Tango::AttributeInfoEx aiex;
     try {
+        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
         aiex = dev->get_attribute_config(attribute);
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-        printf("CuTConfigActivity.execute: get_att_config: \e[1;32mget_attribute_config\e[0m took \e[1;32m%ld us\e[0m\n",
+        printf("CuTangoWorld::get_att_config: dev->get_attribute_config: \e[1;32mget_attribute_config\e[0m took \e[1;32m%ld us\e[0m\n",
                std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
         fillFromAttributeConfig(aiex, dres);
     }
@@ -2106,4 +2112,40 @@ CuDataQuality CuTangoWorld::toCuQuality(Tango::AttrQuality q) const
     }
 }
 
+std::string CuTangoWorld::make_fqdn_src(const std::string& src) {
+    string::size_type	end1 = src.find(".");
+    string fusrc = src; // full source
+    if (end1 == string::npos) {
+        //get host name without tango://
+        string::size_type	start = src.find("tango://");
+        if (start == string::npos)
+            start = 0;
+        else
+            start = 8;	//tango:// len
+        string::size_type	end2 = src.find(":", start);
+        string th = src.substr(start, end2);
+        struct addrinfo hints;
+        memset(&hints, 0, sizeof hints);
+        hints.ai_family = AF_UNSPEC; /*either IPV4 or IPV6*/
+        hints.ai_socktype = SOCK_STREAM;
+        hints.ai_flags = AI_CANONNAME;
+        struct addrinfo *result;
+        int ret = getaddrinfo(th.c_str(), NULL, &hints, &result);
+        if (ret != 0)
+            d->message = std::string(__func__) + ": getaddrinfo: " + th + ": " + std::string(gai_strerror(ret));
+        else if(result == nullptr)
+            d->message = std::string(__func__) + ": getaddrinfo: " + th + ": no info";
+        else if (result->ai_canonname == NULL)
+            d->message = std::string(__func__) + ": getaddrinfo: " + th + ": no info";
+        else
+            fusrc = string(result->ai_canonname) + src.substr(end2);
+        //cout << __func__ <<": found domain -> " << with_domain<<endl;
+        if(ret == 0 && result != nullptr)
+            freeaddrinfo(result); // all done with this structure
+    }
+    return fusrc;
+}
 
+std::string CuTangoWorld::prepend_tgproto(const std::string& s) {
+    return s.find("tango://") != 0 ? "tango://" + s : s;
+}
