@@ -93,7 +93,8 @@ CumbiaHttp::~CumbiaHttp()
     QList<SrcItem> ri, wi;
     d->src_q_man->dequeueItems(ri, wi);
     onSrcBundleReqReady(ri, wi);
-    d->id_man->unsubscribe(true); // true: block
+    if(d->client_id > -1)
+        d->id_man->unsubscribe(true); // true: block
     /* all registered services are unregistered and deleted by cumbia destructor after threads have joined */
     if(d->m_threadsEventBridgeFactory)
         delete d->m_threadsEventBridgeFactory;
@@ -375,7 +376,7 @@ bool CumbiaHttp::m_need_client_id(const QList<SrcItem> &rsrcs) const
     QListIterator<SrcItem> it(rsrcs);
     while(!needs_id && it.hasNext()) {
         const SrcItem &i = it.next();
-        needs_id = i.method == "s" || i.method == "u";
+        needs_id = i.method == "s" || i.method == "u" || i.method == "S";
     }
     return needs_id;
 }
