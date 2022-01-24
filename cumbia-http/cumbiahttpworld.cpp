@@ -33,7 +33,6 @@ bool CumbiaHTTPWorld::json_simple_decode(const QByteArray &jba, CuData &out) con
 {
     QJsonParseError pe;
     QJsonObject o;
-    printf("CumbiaHTTPWorld::json_simple_decode decoding \"\e[1;34m%s\e[0m\"\n", jba.data());
     QJsonDocument json = QJsonDocument::fromJson(jba, &pe);
     if(pe.error != QJsonParseError::NoError) {
         out["err"] = true;

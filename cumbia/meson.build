@@ -90,7 +90,7 @@ sources = [
 
 includedirs = include_directories('src/lib', 'src/lib/threads', 'src/lib/services')
 
-cpp_arguments = [ '-DCUMBIA_DEBUG_OUTPUT=1' , '-DCU_VERSION=1.3.1' ]
+cpp_arguments = [ '-DCUMBIA_DEBUG_OUTPUT=1' , '-DCU_VERSION=1.4.0' ]
 
 # cpp_arguments = []
 

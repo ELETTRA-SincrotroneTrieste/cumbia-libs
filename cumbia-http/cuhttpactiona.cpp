@@ -115,14 +115,10 @@ void CuHTTPActionA::onNewData() {
 
 void CuHTTPActionA::onReplyFinished() {
     reqs_ended++;
-    cuprintf("\e[0;32m + \e[0mCuHTTPActionA::onReplyFinished: this is %p reply is %p src %s \e[1;32mREQS STARTED %d ENDED %d\e[0m\n", this, d->reply, qstoc(getSourceName()),
-             reqs_started, reqs_ended);
-    qDebug() << __PRETTY_FUNCTION__ << this << getType() << "deleting reply " << d->reply << " later";
     d->reply->deleteLater();
 }
 
 void CuHTTPActionA::onReplyDestroyed(QObject *) {
-    qDebug() << __PRETTY_FUNCTION__<< this  << getType() << "reply destroyed exiting ? " << exiting() << "REPLY DELETED WAS " << d->reply;
     if(exiting())
         notifyActionFinished();
     d->reply = nullptr;

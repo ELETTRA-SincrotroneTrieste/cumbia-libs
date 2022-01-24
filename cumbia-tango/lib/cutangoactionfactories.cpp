@@ -109,7 +109,7 @@ CuData  CuTConfFactoryBase::tag() const {
 
 // Configuration: Reader
 CuTangoActionI *CuTReaderConfFactory::create(const std::string &s, CumbiaTango *ct) const {
-    return new CuTConfiguration(s, ct, CuTangoActionI::ReaderConfig, opts, dtag);
+    return new CuTConfiguration(s, ct, CuTangoActionI::ReaderConfig, opts, dtag, nullptr);
 }
 
 CuTangoActionI::Type CuTReaderConfFactory::getType() const {
@@ -118,7 +118,7 @@ CuTangoActionI::Type CuTReaderConfFactory::getType() const {
 
 // Configuration: Writer
 CuTangoActionI *CuTWriterConfFactory::create(const string &s, CumbiaTango *ct) const {
-    CuTConfiguration *w = new CuTConfiguration(s, ct, CuTangoActionI::WriterConfig, opts, dtag);
+    CuTConfiguration *w = new CuTConfiguration(s, ct, CuTangoActionI::WriterConfig, opts, dtag, nullptr);
     if(opts.containsKey("fetch_props"))
         w->setDesiredAttributeProperties(opts["fetch_props"].toStringVector());
     return w;

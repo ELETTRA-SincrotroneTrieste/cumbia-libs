@@ -11,7 +11,7 @@
 #include "cutconfigactivity.h"
 #include "cuactionfactoryservice.h"
 #include "cudatalistener.h"
-
+#include "cutconfigactivity_executor_i.h"
 
 class CuTAttConfigurationPrivate
 {
@@ -20,8 +20,9 @@ public:
                                CumbiaTango *ct,
                                CuTangoActionI::Type t,
                                const CuData& op,
-                               const CuData& ta) :
-        tsrc(t_src), cumbia_t(ct), type(t), options(op), tag(ta) {
+                               const CuData& ta,
+                               const CuTConfigActivityExecutor_I* cx) :
+        tsrc(t_src), cumbia_t(ct), type(t), options(op), tag(ta), c_xecutor(cx) {
     }
 
     std::set<CuDataListener *> listeners;
@@ -31,21 +32,23 @@ public:
     bool exiting; // set to true by stop()
     CuData options, tag;
     const CuTangoActionI::Type type;
+    const CuTConfigActivityExecutor_I *c_xecutor;
 };
 
 CuTConfiguration::CuTConfiguration(const TSource& src,
                                    CumbiaTango *ct,
                                    CuTangoActionI::Type t,
                                    const CuData& options,
-                                   const CuData& tag) {
-    d = new CuTAttConfigurationPrivate(src, ct, t, options, tag); // src, t are const
-    d->cumbia_t = ct;
+                                   const CuData& tag,
+                                   const CuTConfigActivityExecutor_I* cx) {
+    d = new CuTAttConfigurationPrivate(src, ct, t, options, tag,
+                                       cx != nullptr ? cx : new CuTConfigActivityExecutor_Default); // src, t are const
     d->exiting = false;
 }
 
 CuTConfiguration::~CuTConfiguration() {
     pdelete("~CuTConfiguration: %p [%s]", this, d->tsrc.getName().c_str());
-    delete d;
+    delete d; // d->c_xecutor deleted by activity
 }
 
 void CuTConfiguration::setDesiredAttributeProperties(const std::vector<string> props) {
@@ -137,7 +140,7 @@ void CuTConfiguration::start() {
     CuTConfigActivity::Type t;
     d->type == CuTangoActionI::ReaderConfig ? t = CuTConfigActivity::CuReaderConfigActivityType :
             t = CuTConfigActivity::CuWriterConfigActivityType;
-    d->activity = new CuTConfigActivity(at, df, t);
+    d->activity =  new CuTConfigActivity(at, df, t, d->c_xecutor);
     d->activity->setOptions(d->options);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());

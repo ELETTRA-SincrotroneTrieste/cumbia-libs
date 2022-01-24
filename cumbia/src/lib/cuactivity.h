@@ -176,17 +176,13 @@ public:
     virtual void event(CuActivityEvent *e) = 0;
 
     virtual int getFlags() const;
-
     int getStateFlags() const;
-
     void setFlags(int f);
-
     void setFlag(Flags f, bool on);
 
     virtual bool matches(const CuData& token) const = 0;
 
     virtual void dispose(bool disposable = true);
-
     virtual bool isDisposable() const;
 
     /*! \brief must return the interval of time, in milliseconds, before the next CuActivity::execute call,
@@ -198,19 +194,14 @@ public:
     virtual int repeat() const = 0;
 
     void publishResult(const CuData &data);
-
     void publishProgress(int step, int total, const CuData& data);
-
     void publishExitResult(const CuData* data);
-
     void publishResult(const std::vector<CuData> *datalist);
 
     CuActivityManager *getActivityManager() const;
 
     CuData getToken() const;
-
     void setThreadToken(const CuData &tt);
-
     const CuData& threadToken() const;
 
     /* template method: sets state and calls init */
@@ -223,11 +214,8 @@ public:
     void exitOnThreadQuit();
 
 protected:
-
     virtual void init() = 0;
-
     virtual void execute() = 0;
-
     virtual void onExit() = 0;
 
 private:

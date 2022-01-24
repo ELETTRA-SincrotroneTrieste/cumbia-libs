@@ -4,6 +4,7 @@
 #include "cutangoactioni.h"
 
 class CuTAttConfigurationPrivate;
+class CuTConfigActivityExecutor_I;
 
 /*!
  * \brief Get command or attribute configuration from the Tango database.
@@ -31,7 +32,8 @@ public:
                      CumbiaTango *ct,
                      CuTangoActionI::Type t,
                      const CuData &options,
-                     const CuData &tag);
+                     const CuData &tag,
+                     const CuTConfigActivityExecutor_I* cx);
 
     virtual ~CuTConfiguration();
 

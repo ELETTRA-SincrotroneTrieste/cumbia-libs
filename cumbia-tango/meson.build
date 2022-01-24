@@ -1,4 +1,4 @@
-project('cumbia-tango', 'cpp', version : '1.3.1',
+project('cumbia-tango', 'cpp', version : '1.4.0',
     default_options : ['c_std=c17', 'cpp_std=c++17'])
 
 project_description = 'C++ library based on cumbia and the Tango control system'
@@ -41,6 +41,7 @@ headers = [
 'lib/cutadbactivity.h',
 'lib/cutangoopt_builder.h',
 'lib/cutconfigactivity.h',
+'lib/cutconfigactivity_executor_i.h',
 'lib/cutdbpropertyreader.h',
 'lib/cugettdbpropactivity.h',
 'lib/cutthreadtokengen.h'
