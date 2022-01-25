@@ -49,13 +49,20 @@ void CuHttpCliIdMan::unsubscribe(bool blocking) {
     m_make_network_request(&r);
     // curl http://woody.elettra.eu:8001/bu/tok
     QNetworkReply *reply = d->nam->post(r, m_json_unsub());
-    m_reply_connect(reply);
     if(blocking) {
+        // do not m_reply_connect(reply): we block and then
+        // query error conditions and read reply
         QEventLoop loop;
         connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
         loop.exec();
+        QNetworkReply::NetworkError err = reply->error();
+        if(err != QNetworkReply::NoError)
+            perr("cuhttp-cli-id-man: network reply error: %s", qstoc(reply->errorString()));
+        QByteArray ba = reply->readAll();
+        printf("cuhttp-cli-id-man:unsubscribe --> \"%s\"\n", ba.data());
     }
-    printf("CuHttpCliIdMan::unsubscribe --> \"%s\"\n", reply->readAll().data());
+    else
+        m_reply_connect(reply);
 }
 
 QString CuHttpCliIdMan::error() const {
