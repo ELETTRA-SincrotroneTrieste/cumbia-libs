@@ -81,10 +81,12 @@ CuTimer *CuTimerService::registerListener(CuTimerListener *timer_listener, int t
             std::pair<int, CuTimer *> new_tmr(timeout, timer);
             d->ti_map.insert(new_tmr);  // timeout -> timer  map
         }
-        timer->addListener(timer_listener);
         std::pair<CuTimerListener *, CuTimer *> ltp(timer_listener, timer);
         d->ti_cache.insert(ltp); // listeners -> timer cache
+
+        printf("CuTimerService.registerListener: \e[1;34mthe timer created %p has loop_service %p and timer listener %p\e[0m\n", timer, loop_service, timer_listener);
     }
+    timer->addListener(timer_listener);
     return timer;
 }
 
@@ -107,6 +109,8 @@ void CuTimerService::unregisterListener(CuTimerListener *tl, int timeout)
         if(t->listeners().size() == 0) {
             m_removeFromMaps(t);
             t->stop();
+            printf("\e[1;31mCuTimerService::unregisterListener: deleting timer %p had timeout %d\e[0m\n",
+                   t, t->timeout());
             delete t;
         }
     }
@@ -241,7 +245,7 @@ CuTimer* CuTimerService::m_findReusableTimer(int timeout) const {
     std::pair<std::multimap<int, CuTimer *>::const_iterator, std::multimap<int, CuTimer *>::const_iterator > ret;
     ret = d->ti_map.equal_range(timeout); // find all timers with desired timeout
     for(std::multimap<int, CuTimer *>::const_iterator it = ret.first; it != ret.second; ++it) {
-        std::list<CuTimerListener *> tm_lis = it->second->listeners();
+        std::set<CuTimerListener *> tm_lis = it->second->listeners();
         int listeners_cnt = tm_lis.size();
         if(min < 0) { // first time
             min = listeners_cnt;
@@ -287,7 +291,7 @@ std::list<CuTimer *> CuTimerService::getTimers()
  * \param t the timer whose listeners the caller is seeking for
  * \return the list of listeners of the timer t
  */
-std::list<CuTimerListener *> CuTimerService::getListeners(CuTimer *t) const {
+std::set<CuTimerListener *> CuTimerService::getListeners(CuTimer *t) const {
     return t->m_listeners;
 }
 

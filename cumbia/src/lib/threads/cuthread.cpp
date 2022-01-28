@@ -120,10 +120,31 @@ void CuThread::m_unregisterFromService()
  *
  * Must be called from the CuThread's thread (no lock guards)
  */
-void CuThread::m_tmr_registered(CuActivity *a, CuTimer *t)
-{
-    cuprintf("CuThread.m_tmr_registered: activity %p timer %p timeout is %d\n", a, t, t->timeout());
+void CuThread::m_tmr_registered(CuActivity *a, CuTimer *t) {
     d->tmr_act_map[a] = t;
+}
+
+void CuThread::m_tmr_remove(CuTimer *t) {
+    std::map<CuActivity *, const CuTimer *>::iterator it = d->tmr_act_map.begin();
+    while(it != d->tmr_act_map.end()) {
+        if(it->second == t) it = d->tmr_act_map.erase(it);
+        else   ++it;
+    }
+}
+
+size_t CuThread::m_tmr_remove(CuActivity *a) {
+    size_t e = 0;
+    if(d->tmr_act_map.find(a) != d->tmr_act_map.end())
+        e = d->tmr_act_map.erase(a);
+    return e;
+}
+
+size_t CuThread::m_activity_cnt(CuTimer *t) const  {
+    size_t s = 0;
+    for(std::map<CuActivity *, const CuTimer *>::iterator it = d->tmr_act_map.begin(); it != d->tmr_act_map.end(); ++it)
+        if(it->second == t)
+            s++;
+    return s;
 }
 
 /** \brief Register a new activity on this thread.
@@ -188,7 +209,7 @@ void CuThread::unregisterActivity(CuActivity *l)
  * \par note
  * The association between *activities*, *threads* and *CuThreadListener* objects is
  * defined by Cumbia::registerActivity. Please read Cumbia::registerActivity documentation
- * for more details. 
+ * for more details.
  *
  */
 void CuThread::onEventPosted(CuEventI *event)
@@ -211,9 +232,6 @@ void CuThread::onEventPosted(CuEventI *event)
                 tl->onResult(vd_ref);
             }
             else {
-//                const CuData& da = re->getData();
-//                printf("CuThread.onEventPosted: calling on result \e[0;33m%s\e[0m %s { err %s}\n", vtoc2(da, "src"), da["value"].toString().c_str(),
-//                        da["err"].toBool() ? "true" : "false");
                 tl->onResult(re->getData());
             }
         }
@@ -377,32 +395,35 @@ void CuThread::run() {
             // service will restart it after execution.
             // tmr is single-shot and needs restart to prevent
             // queueing multiple timeout events caused by slow activities
-            int timeo_restart = -1;
             CuThreadTimerEvent *tev = static_cast<CuThreadTimerEvent *>(te);
             CuTimer *timer = tev->getTimer();
             std::list<CuActivity *> a_for_t = m_activitiesForTimer(timer); // no locks
-            for(std::list<CuActivity *>:: const_iterator it = a_for_t.begin(); it != a_for_t.end(); ++it) {
-                CuActivity *a = (*it);
-                if(a->repeat() > 0) {
+            for(CuActivity *a : a_for_t) {
+                if(a->repeat() > 0) { // periodic activity
                     a->doExecute(); // first
                     if(a->repeat() != timer->timeout()) { // in case of timeut change
-                        cuprintf("CuThread.run: activity %p [%s]: requires a \e[1;32mtimeout change\e[0m %d-->%d\n",
-                               a, a->getToken().toString().c_str(), timer->timeout(), a->repeat());
-                        CuTimer *t = timer_s->changeTimeout(this, timer->timeout(), a->repeat());
-                        m_tmr_registered(a, t);
-                        timer_s->restart(t, a->repeat());
+                        m_tmr_remove(a); // remove the old activity - old timer entry
+                        int o_timeo = timer->timeout(); // changeTimeout may unregister (delete) timer
+                        CuTimer *tmr = timer_s->registerListener(this, a->repeat()); // may reuse timers
+                        m_tmr_registered(a, tmr);
+                        printf("CuThread %p pthread 0x%lx activity %p tok %s tmr \e[1;32mCHANGED %p\e[0m\n",
+                               this, pthread_self(), a, datos(a->getToken()), tmr);
+                        if(m_activity_cnt(timer) == 0) {
+                            printf("\e[1;35mCuThread.run: no more activities with timer %p timeo %d: unregister listener calling!\e[0m\n",
+                                   timer, o_timeo);
+                            timer_s->unregisterListener(this, o_timeo);
+                            timer = nullptr; // prevent restart below
+                        }
                     }
-                    else { // normally
-                        timeo_restart = timer->timeout();
-                    }
+                    if(timer)
+                        timer_s->restart(timer, timer->timeout());
+                    printf("\e[1;36mCuThread %p pthread 0x%lx activity %p tok %s tmr %p\e[0m\n",
+                           this, pthread_self(), a, datos(a->getToken()), timer);
                 }
                 else if(a->repeat() < 0 && a->getFlags() & CuActivity::CuAUnregisterAfterExec) {
                     unregisterActivity(a);
                 }
             } // for activity iter
-            if(timeo_restart > 0) {
-                timer_s->restart(timer, timeo_restart);
-            }
         }
         else if(te->getType() == ThreadEvent::PostEventToActivity)
         {
@@ -459,20 +480,15 @@ bool CuThread::isRunning()
 /*! @private
  * called from CuThread::run()
 */
-void CuThread::mActivityInit(CuActivity *a)
-{
-    int repeat_timeout;
+void CuThread::mActivityInit(CuActivity *a) {
     d->activity_set.insert(a);
     a->setThreadToken(d->token);
     a->doInit();
     a->doExecute();
-
     CuTimer *timer = nullptr;
-    repeat_timeout = a->repeat();
-    if(repeat_timeout > 0)
-    {
+    if(a->repeat() > 0)  {
         CuTimerService *t_service = static_cast<CuTimerService *>(d->serviceProvider->get(CuServices::Timer));
-        timer = t_service->registerListener(this, repeat_timeout); // checks for duplicates
+        timer = t_service->registerListener(this, a->repeat()); // checks for duplicates
         m_tmr_registered(a, timer);
     }
     else if(a->getFlags() & CuActivity::CuAUnregisterAfterExec)
@@ -551,18 +567,16 @@ void CuThread::mRemoveActivityTimer(CuActivity *a)
     }
     if(can_unregister) {
         CuTimerService *t_service = static_cast<CuTimerService *>(d->serviceProvider->get(CuServices::Timer));
-        cuprintf("CuThread.mRemoveActivityTimer. activity %s %p timeo %d\n", datos(a->getToken()), a, timeout);
+        printf("CuThread.mRemoveActivityTimer. activity %s %p timeo %d\n", datos(a->getToken()), a, timeout);
         t_service->unregisterListener(this, timeout);
     }
 }
 
 /*! @private */
-const CuTimer *CuThread::mFindTimer(CuActivity *a) const
-{
-    std::map<CuActivity *, const CuTimer *>::iterator it;
-    for(it = d->tmr_act_map.begin(); it != d->tmr_act_map.end(); ++it)
-        if(it->first == a)
-            return it->second;
+const CuTimer *CuThread::m_tmr_find(CuActivity *a) const {
+    std::map<CuActivity *, const CuTimer *>::iterator it = d->tmr_act_map.find(a);
+    if(it != d->tmr_act_map.end())
+        return it->second;
     return nullptr;
 }
 

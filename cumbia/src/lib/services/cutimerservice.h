@@ -3,6 +3,7 @@
 
 #include <cuservicei.h>
 #include <list>
+#include <set>
 
 class CuTimerServicePrivate;
 class CuTimerListener;
@@ -39,7 +40,7 @@ public:
     ~CuTimerService();
     CuTimer* registerListener(CuTimerListener *timer_listener, int timeout, CuEventLoopService *loop_service = nullptr);
     std::list<CuTimer *> getTimers();
-    std::list<CuTimerListener *>getListeners(CuTimer *t) const;
+    std::set<CuTimerListener *> getListeners(CuTimer *t) const;
     void unregisterListener(CuTimerListener *th, int timeout);
     CuTimer *changeTimeout(CuTimerListener *th, int from_timeo, int to_timeo);
     bool isRegistered(CuTimerListener *th, int timeout);

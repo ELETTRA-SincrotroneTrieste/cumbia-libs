@@ -103,7 +103,10 @@ private:
     void m_exit(bool auto_destroy);
     void m_unregisterFromService();
     void m_tmr_registered(CuActivity *a, CuTimer *t);
-    const CuTimer *mFindTimer(CuActivity *a) const;
+    void m_tmr_remove(CuTimer *t);
+    size_t m_tmr_remove(CuActivity *a);
+    size_t m_activity_cnt(CuTimer *t) const;
+    const CuTimer *m_tmr_find(CuActivity *a) const;
     std::list<CuActivity *> m_activitiesForTimer(const CuTimer *t) const;
 
     // CuThreadsEventBridgeListener interface

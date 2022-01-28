@@ -20,6 +20,7 @@
 // plugin
 #include <cupluginloader.h>
 #include <cuformulaplugininterface.h>
+#include <cutthreadtokengen.h>
 
 #ifdef HAS_CUHDB
 #include <cuhistoricaldbplugin_i.h>
@@ -64,6 +65,13 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
         engines << "historical database";
     }
 #endif
+    CuTThreadTokenGen *tango_tk_gen = new CuTThreadTokenGen(1, "thread_");
+
+        Cumbia *cu = cumbia_pool->get("tango");
+        if(cu) {
+            printf("SeqLauncher: installing tango thread token generator hw concurrency %d\n", std::thread::hardware_concurrency());
+            cu->setThreadTokenGenerator(tango_tk_gen);
+        }
 
     m_props_map[Low] = QStringList() << "min" << "min_alarm" << "min_warning" << "max_warning" <<
                                         "max_alarm" << "max" << "dfs" << "display_unit"
