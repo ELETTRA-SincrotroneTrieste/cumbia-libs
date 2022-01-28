@@ -6,7 +6,7 @@
 #include <mutex>
 #include <shared_mutex>
 #include <condition_variable>
-#include <list>
+#include <set>
 #include <chrono>
 #include <atomic>
 
@@ -56,7 +56,7 @@ protected:
     void run();
 
 private:
-    std::list<CuTimerListener *> m_listeners;
+    std::set<CuTimerListener *> m_listeners;
     std::chrono::time_point<std::chrono::steady_clock> m_last_start_pt, m_first_start_pt;
     bool m_quit, m_pause, m_exited;
 
@@ -71,7 +71,7 @@ private:
 
     void addListener(CuTimerListener *l);
     void removeListener(CuTimerListener *l);
-    std::list<CuTimerListener *> listeners();
+    std::set<CuTimerListener *> listeners();
 
     void reset();
     void start(int millis);

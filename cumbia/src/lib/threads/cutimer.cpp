@@ -132,27 +132,21 @@ void CuTimer::stop()
         m_listeners.clear();
         m_wait.notify_one();
     }
-    pgreen("CuTimer.stop called m_wait.notify_one...");
+    printf("CuTimer.stop called m_wait.notify_one... is joinable ? %s\n", m_thread->joinable() ? "YES" : "NO");
     if(m_thread->joinable()) {
         m_thread->join();
     }
-    pbblue("CuTimer.stop joined this %p\n", this);
+    printf("CuTimer.stop joined this %p\n", this);
     m_exited = true;
     delete m_thread;
     m_thread = nullptr;
 }
 
 void CuTimer::m_notify() {
-    std::list<CuTimerListener *>::const_iterator it;
+    std::set<CuTimerListener *>::const_iterator it;
     for(it = m_listeners.begin(); it != m_listeners.end(); ++it) {
-//        printf("CuTimer.onEvent [thread 0x%lx] -> on timeout on %p\n", pthread_self(), (*it) );
         (*it)->onTimeout(this);
     }
-//                auto t1 = std::chrono::steady_clock::now();
-//                long int delta_first_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_first_start_pt).count();
-//                long int delta_last_ms = std::chrono::duration_cast<std::chrono::microseconds>(t1 - m_last_start_pt).count();
-//                printf("\e[0;32mCuTimer.run: notified timeout after %ld ms instead of %ldus\e[0m\t\t\t(\e[1;31mdelay %ldus\e[0m)  THREAD 0x%ld\n",
-//                       delta_first_ms, delta_last_ms, -delta_last_ms+delta_first_ms, pthread_self());
 }
 
 /*! \brief implements CuEventLoopListener interface.
@@ -170,7 +164,7 @@ void CuTimer::onEvent(CuEventI *e) {
  */
 void CuTimer::addListener(CuTimerListener *l) {
     std::unique_lock<std::mutex> lock(m_mutex);
-    m_listeners.push_back(l);
+    m_listeners.insert(l);
 }
 
 /*!
@@ -181,7 +175,7 @@ void CuTimer::addListener(CuTimerListener *l) {
  */
 void CuTimer::removeListener(CuTimerListener *l) {
     std::unique_lock<std::mutex> lock(m_mutex);
-    m_listeners.remove(l);
+    m_listeners.erase(l);
 }
 
 /*!
@@ -191,7 +185,7 @@ void CuTimer::removeListener(CuTimerListener *l) {
  *
  * This method can be accessed from several different threads
  */
-std::list<CuTimerListener *> CuTimer::listeners() {
+std::set<CuTimerListener *> CuTimer::listeners() {
     std::unique_lock<std::mutex> lock(m_mutex);
     return m_listeners;
 }
