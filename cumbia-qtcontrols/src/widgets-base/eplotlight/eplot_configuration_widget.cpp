@@ -15,21 +15,6 @@
 #include "quplotcurve.h"
 #include <quplot_base.h>
 
-Q_PROPERTY(bool xAxisAutoscale READ xAxisAutoscaleEnabled WRITE setXAxisAutoscaleEnabled)
-Q_PROPERTY(bool yAxisAutoscale READ yAxisAutoscaleEnabled WRITE setYAxisAutoscaleEnabled)
-Q_PROPERTY(double yUpperBound READ yUpperBound WRITE setYUpperBound)
-Q_PROPERTY(double yLowerBound READ yLowerBound WRITE setYLowerBound)
-Q_PROPERTY(double xUpperBound READ xUpperBound WRITE setXUpperBound)
-Q_PROPERTY(double xLowerBound READ xLowerBound WRITE setXLowerBound)
-Q_PROPERTY(double xAutoscaleMargin READ xAutoscaleMargin WRITE setXAutoscaleMargin)
-Q_PROPERTY(double yAutoscaleAdjustment READ yAutoscaleAdjustment WRITE setYAutoscaleAdjustment)
-Q_PROPERTY(bool titleOnCanvasEnabled  READ titleOnCanvasEnabled WRITE setTitleOnCanvasEnabled)
-Q_PROPERTY(bool yAxisLogScale READ yAxisLogScale WRITE setYAxisLogScale)
-Q_PROPERTY(bool zoomDisabled READ zoomDisabled WRITE setZoomDisabled)
-Q_PROPERTY(int dataBufferSize READ dataBufferSize WRITE setDataBufferSize)
-Q_PROPERTY(int refreshTimeout READ refreshTimeout WRITE setRefreshTimeout)
-
-
 EPlotConfigurationWidget::EPlotConfigurationWidget(QWidget *parent) : QWidget(parent)
 {
     ui = new Ui::EPlotConfigurationWidget();
