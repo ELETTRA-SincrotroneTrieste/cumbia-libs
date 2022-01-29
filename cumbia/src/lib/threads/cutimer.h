@@ -6,7 +6,7 @@
 #include <mutex>
 #include <shared_mutex>
 #include <condition_variable>
-#include <set>
+#include <map>
 #include <chrono>
 #include <atomic>
 
@@ -44,7 +44,6 @@ public:
 
     void setTimeout(int millis);
     void setSingleShot(bool single);
-    void setEventLoop(CuEventLoopService *loop_sr);
     int timeout() const;
     bool isSingleShot() const;
 
@@ -56,7 +55,7 @@ protected:
     void run();
 
 private:
-    std::set<CuTimerListener *> m_listeners;
+    std::map<CuTimerListener *, CuEventLoopService *> m_lis_map;
     std::chrono::time_point<std::chrono::steady_clock> m_last_start_pt, m_first_start_pt;
     bool m_quit, m_pause, m_exited;
 
@@ -67,11 +66,10 @@ private:
     std::thread *m_thread;
     std::mutex m_mutex;
     std::condition_variable m_wait;
-    CuEventLoopService *m_loop_service;
 
-    void addListener(CuTimerListener *l);
+    void addListener(CuTimerListener *l, CuEventLoopService *ls);
     void removeListener(CuTimerListener *l);
-    std::set<CuTimerListener *> listeners();
+    std::map<CuTimerListener *, CuEventLoopService *> listenersMap();
 
     void reset();
     void start(int millis);

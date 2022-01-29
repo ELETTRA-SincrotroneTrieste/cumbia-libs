@@ -60,7 +60,9 @@ CuTimerService::~CuTimerService()
  * @see timerMaxCount
  * @see setTimerMaxCount
  */
-CuTimer *CuTimerService::registerListener(CuTimerListener *timer_listener, int timeout, CuEventLoopService *loop_service)
+CuTimer *CuTimerService::registerListener(CuTimerListener *timer_listener,
+                                          int timeout,
+                                          CuEventLoopService *loop_service)
 {
     std::unique_lock lock(d->shared_mutex);
     CuTimer *timer = m_findTimer(timer_listener, timeout);
@@ -68,15 +70,14 @@ CuTimer *CuTimerService::registerListener(CuTimerListener *timer_listener, int t
         if(d->ti_map.count(timeout) >= static_cast<size_t>(d->timer_max_count)) {
             // we have one or more timers with this timeout: reuse the one with less listeners
             timer = m_findReusableTimer(timeout); // const, no map modification
-            timer->setEventLoop(loop_service); // update loop_service
             pgreen("CuTimerService::registerListener timers count for timeout %d is %ld >= max timers %d: \e[0;32mreusing timer %p\e[0m] that has now %ld listeners\e[0m\n",
-                   timeout, d->ti_map.count(timeout), d->timer_max_count, timer, timer->listeners().size());
+                   timeout, d->ti_map.count(timeout), d->timer_max_count, timer, timer->listenersMap().size());
         }
         else {
             timer = new CuTimer(loop_service);
             timer->setTimeout(timeout);
             pgreen("CuTimerService::registerListener timers count for timeout %d is %ld > max timers %d: \e[1;32mcreating NEW timer %p\e[0m] that has now %ld listeners\e[0m\n",
-                   timeout, d->ti_map.count(timeout), d->timer_max_count, timer, timer->listeners().size());
+                   timeout, d->ti_map.count(timeout), d->timer_max_count, timer, timer->listenersMap().size());
             timer->start(timeout);
             std::pair<int, CuTimer *> new_tmr(timeout, timer);
             d->ti_map.insert(new_tmr);  // timeout -> timer  map
@@ -86,7 +87,7 @@ CuTimer *CuTimerService::registerListener(CuTimerListener *timer_listener, int t
 
         printf("CuTimerService.registerListener: \e[1;34mthe timer created %p has loop_service %p and timer listener %p\e[0m\n", timer, loop_service, timer_listener);
     }
-    timer->addListener(timer_listener);
+    timer->addListener(timer_listener, loop_service);
     return timer;
 }
 
@@ -106,7 +107,7 @@ void CuTimerService::unregisterListener(CuTimerListener *tl, int timeout)
         perr("CuTimerService.unregisterListener: no listener %p registered with timeout %d", tl, timeout);
     else {
         t->removeListener(tl); // CuTimer lock guards its listeners list
-        if(t->listeners().size() == 0) {
+        if(t->listenersMap().size() == 0) {
             m_removeFromMaps(t);
             t->stop();
             printf("\e[1;31mCuTimerService::unregisterListener: deleting timer %p had timeout %d\e[0m\n",
@@ -245,8 +246,8 @@ CuTimer* CuTimerService::m_findReusableTimer(int timeout) const {
     std::pair<std::multimap<int, CuTimer *>::const_iterator, std::multimap<int, CuTimer *>::const_iterator > ret;
     ret = d->ti_map.equal_range(timeout); // find all timers with desired timeout
     for(std::multimap<int, CuTimer *>::const_iterator it = ret.first; it != ret.second; ++it) {
-        std::set<CuTimerListener *> tm_lis = it->second->listeners();
-        int listeners_cnt = tm_lis.size();
+        const std::map<CuTimerListener *, CuEventLoopService *> &lma = it->second->listenersMap();
+        int listeners_cnt = lma.size();
         if(min < 0) { // first time
             min = listeners_cnt;
             reuse = it->second;
@@ -292,6 +293,9 @@ std::list<CuTimer *> CuTimerService::getTimers()
  * \return the list of listeners of the timer t
  */
 std::set<CuTimerListener *> CuTimerService::getListeners(CuTimer *t) const {
-    return t->m_listeners;
+    std::set<CuTimerListener *> l;
+    for(auto i = t->m_lis_map.begin(); i != t->m_lis_map.end(); ++i)
+        l.insert(i->first);
+    return l;
 }
 
