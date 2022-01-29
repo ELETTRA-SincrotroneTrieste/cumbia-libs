@@ -216,7 +216,7 @@ QuPlotAxesComponent::ScaleMode QuPlotAxesComponent::scaleMode(int axisId) const
 
 void QuPlotAxesComponent::setAutoscale(int axisId, bool a)
 {
-    d->scale_mode_map[axisId] = AutoScale;
+    d->scale_mode_map[axisId] = a ? AutoScale : Manual;
 }
 
 double QuPlotAxesComponent::autoscaleMargin(int axisId) const
