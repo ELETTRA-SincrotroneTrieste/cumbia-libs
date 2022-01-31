@@ -544,17 +544,20 @@ void CuThread::mExitActivity(CuActivity *a, bool onThreadQuit)
 }
 
 /*! @private */
-void CuThread::mRemoveActivityTimer(CuActivity *a)
-{
-    bool u = true; // unregister
-    d->tmr_act_map.erase(d->tmr_act_map.find(a)); // removes if exists
-    for(std::map<CuActivity *, CuTimer *>::iterator it = d->tmr_act_map.begin(); it != d->tmr_act_map.end() && u; ++it) {
-        u &= it->second->timeout() != a->repeat(); // see if we have no timers left with a->repeat timeout
+void CuThread::mRemoveActivityTimer(CuActivity *a) {
+    int timeo = -1; // timeout
+    std::map<CuActivity *, CuTimer *>::iterator it = d->tmr_act_map.find(a);
+    bool u = it != d->tmr_act_map.end(); // initialize u
+    if(u) { // test u: end() iterator (valid, but not dereferenceable) cannot be used as key search.
+        // get timeout from timer not from a, because a->repeat shall return -1 if exiting
+        timeo = it->second->timeout();
+        d->tmr_act_map.erase(d->tmr_act_map.find(a)); // removes if exists
+    }
+    for(std::map<CuActivity *, CuTimer *>::iterator it = d->tmr_act_map.begin(); it != d->tmr_act_map.end() && u; ++it)
+        u &= it->second->timeout() != timeo; // no timers left with timeo timeout?
     if(u) {
-        printf("CuThread::mRemoveActivityTimer \e[1;33mcan unregister: calling unregister listener on timer service timeo %d this %p activity %p\e[0m\n",
-               a->repeat(), this, a);
         CuTimerService *t_service = static_cast<CuTimerService *>(d->serviceProvider->get(CuServices::Timer));
-        t_service->unregisterListener(this, a->repeat());
+        t_service->unregisterListener(this, timeo);
     }
 }
 
