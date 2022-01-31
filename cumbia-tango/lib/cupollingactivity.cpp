@@ -520,8 +520,7 @@ void CuPollingActivity::event(CuActivityEvent *e) {
  *
  * @return the CuPollingActivityType value defined in the Type enum
  */
-int CuPollingActivity::getType() const
-{
+int CuPollingActivity::getType() const {
     return CuPollingActivityType;
 }
 
@@ -532,5 +531,6 @@ int CuPollingActivity::getType() const
  * @implements CuActivity::repeat
  */
 int CuPollingActivity::repeat() const {
+    assert(d->my_thread_id == pthread_self());
     return d->repeat;
 }
