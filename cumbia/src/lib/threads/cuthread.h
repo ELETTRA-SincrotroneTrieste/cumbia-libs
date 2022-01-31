@@ -13,6 +13,7 @@ class CuThreadPrivate;
 class CuEventLoopService;
 class CuServiceProvider;
 class CuActivityEvent;
+class CuTimerService;
 
 /*! \brief *cumbia thread* implementation
  *
@@ -102,6 +103,7 @@ private:
     void mRemoveActivityTimer(CuActivity *a);
     void m_exit(bool auto_destroy);
     void m_unregisterFromService();
+    CuTimer* m_a_new_timeout(CuActivity *a, int timeo, CuTimerService *timer_s, CuTimer *old_t);
     void m_tmr_registered(CuActivity *a, CuTimer *t);
     void m_tmr_remove(CuTimer *t);
     size_t m_tmr_remove(CuActivity *a);
