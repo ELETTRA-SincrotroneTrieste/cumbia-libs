@@ -532,5 +532,7 @@ int CuPollingActivity::getType() const {
  */
 int CuPollingActivity::repeat() const {
     assert(d->my_thread_id == pthread_self());
-    return d->repeat;
+    int ret;
+    isDisposable() ? ret = -1 : ret = d->repeat;
+    return ret;
 }
