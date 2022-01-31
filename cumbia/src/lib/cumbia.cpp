@@ -222,7 +222,7 @@ void Cumbia::unregisterActivity(CuActivity *activity)
  * @return a *non disposable* CuActivity whose token matches token
  *
  * \par Note
- * This is a convenience shortcut to CuActivityManager::findMatching
+ * This is a convenience shortcut to CuActivityManager::find
  */
 CuActivity *Cumbia::findActivity(const CuData &token) const
 {
