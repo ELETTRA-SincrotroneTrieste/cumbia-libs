@@ -103,13 +103,12 @@ bool CuEventActivity::matches(const CuData &token) const
 
 /*! \brief returns 0. CuEventActivity's execute is called only once.
  *
- * @return the integer 0
+ * @return the integer -1
  *
  * @see CuActivity::repeat
  */
-int CuEventActivity::repeat() const
-{
-    return 0;
+int CuEventActivity::repeat() const {
+    return -1;
 }
 
 /*! \brief the implementation of the CuActivity::init hook
