@@ -44,6 +44,7 @@ Cumbia::Cumbia()
     d->serviceProvider->registerService(CuServices::ActivityManager, new CuActivityManager());
     d->serviceProvider->registerService(CuServices::Timer, new CuTimerService());
     d->threadTokenGenerator = nullptr;
+    printf("cumbia version \e[1;32m1.4.0\e[0m [ \e[1;33mTEST\e[0m ]\n");
 }
 
 /*! \brief called from the class destructor, cleans up the Cumbia object
@@ -236,7 +237,7 @@ CuActivity *Cumbia::findActivity(const CuData &token) const
  *
  * \par Implementation
  * Through the activity manager service, the thread associated to the activity is
- * fetched and to it a CuTimeoutChangeEvent is forwarded.
+ * fetched and a CuTimeoutChangeEvent is posted.
  */
 void Cumbia::setActivityPeriod(CuActivity *a, int timeout)
 {
