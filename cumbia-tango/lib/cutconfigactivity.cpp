@@ -63,8 +63,7 @@ bool CuTConfigActivity::matches(const CuData &token) const
     return token["src"] == mytok["src"] && mytok["activity"] == token["activity"];
 }
 
-int CuTConfigActivity::repeat() const
-{
+int CuTConfigActivity::repeat() const {
     return -1;
 }
 
