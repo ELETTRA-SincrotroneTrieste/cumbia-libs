@@ -429,7 +429,6 @@ void CuThread::run() {
             CuPostEventToActivity *tce = static_cast<CuPostEventToActivity *>(te);
             CuActivity *a = tce->getActivity();
             CuActivityEvent* ae = tce->getEvent();
-            CuTimerService *timer_service = static_cast<CuTimerService *>(d->serviceProvider->get(CuServices::Timer));
             // timeout change: m_a_new_timeout:
             // 1. unregister and delete old timer (d->tmr_act_map.find(a))
             // 2. create a new timer and start it with the required timeout

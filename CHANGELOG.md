@@ -9,6 +9,12 @@ Fixed unsigned long long and long long int support.
 - Added methods isUnsignedType and isSignedType in CuVariant
 - Added *remove* methods to remove keys from CuData. const and non const versions
 
+Important fix:
+
+- after periodic activity timeout changes updates may be lost: fixed timer management
+- CuTimerService: when asking for a new timer, always reuse an existing one if the required timeout is the same
+
+
 ### New features
 
 #### cumbia
