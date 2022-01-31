@@ -546,30 +546,15 @@ void CuThread::mExitActivity(CuActivity *a, bool onThreadQuit)
 /*! @private */
 void CuThread::mRemoveActivityTimer(CuActivity *a)
 {
-    int timeout = -1;
-
-    // find the timeout of the activity timer
-    std::map<CuActivity *, CuTimer *>::iterator it = d->tmr_act_map.begin();
-    while(it != d->tmr_act_map.end()) {
-        if(it->first == a)  {
-            if(it->second != nullptr) {
-                timeout = it->second->timeout();
-            }
-            it = d->tmr_act_map.erase(it);
-        }
-        else
-            ++it;
-    }
-    // no more timers with that timeout needed for this thread?
-    bool can_unregister = timeout > 0;
-    for(it = d->tmr_act_map.begin(); can_unregister && it != d->tmr_act_map.end(); ++it) {
-        if(it->second->timeout() == timeout) {
-            can_unregister = false;
-        }
-    }
-    if(can_unregister) {
+    bool u = true; // unregister
+    d->tmr_act_map.erase(d->tmr_act_map.find(a)); // removes if exists
+    for(std::map<CuActivity *, CuTimer *>::iterator it = d->tmr_act_map.begin(); it != d->tmr_act_map.end() && u; ++it) {
+        u &= it->second->timeout() != a->repeat(); // see if we have no timers left with a->repeat timeout
+    if(u) {
+        printf("CuThread::mRemoveActivityTimer \e[1;33mcan unregister: calling unregister listener on timer service timeo %d this %p activity %p\e[0m\n",
+               a->repeat(), this, a);
         CuTimerService *t_service = static_cast<CuTimerService *>(d->serviceProvider->get(CuServices::Timer));
-        t_service->unregisterListener(this, timeout);
+        t_service->unregisterListener(this, a->repeat());
     }
 }
 
