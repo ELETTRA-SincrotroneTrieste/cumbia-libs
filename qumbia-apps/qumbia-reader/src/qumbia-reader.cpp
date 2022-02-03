@@ -83,14 +83,6 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
         perr("-q (property) and -m (monitor) or -r X, X > 1 are not compatible\n");
     }
     else {
-
-#ifdef QUMBIA_TANGO_CONTROLS_VERSION
-        Cumbia *cuta = cu_pool->get("tango");
-        if(cuta && m_conf.max_timers > 0) {
-            CuTimerService *ts = static_cast<CuTimerService *>(cuta->getServiceProvider()->get(CuServices::Timer));
-            ts->setTimerMaxCount(m_conf.max_timers);
-        }
-#endif
         if(m_conf.list_options)
             cmdo.list_options();
 #ifdef HAS_CUHDB

@@ -81,7 +81,6 @@ void CuTimer::reset() {
  */
 void CuTimer::start(int millis)
 {
-//    printf("CuTimer.start [thread 0x%lx] ->  timeout  %d\n", pthread_self(), millis );
     std::unique_lock<std::mutex> lock(m_mutex);
     m_quit = m_pause = false;
     m_timeout = millis;
@@ -115,21 +114,18 @@ void CuTimer::stop()
         m_lis_map.clear();
         m_wait.notify_one();
     }
-    printf("CuTimer.stop called m_wait.notify_one... is joinable ? %s\n", m_thread->joinable() ? "YES" : "NO");
     if(m_thread->joinable()) {
         m_thread->join();
     }
-    printf("CuTimer.stop joined this %p\n", this);
     m_exited = true;
     delete m_thread;
     m_thread = nullptr;
 }
 
 void CuTimer::m_notify() {
-    std::map<CuTimerListener *, CuEventLoopService *>::const_iterator it;
-    for(it = m_lis_map.begin(); it != m_lis_map.end(); ++it) {
-        it->second == nullptr ? it->first->onTimeout(this)
-                              : it->second->postEvent(this, new CuTimerEvent());;
+    int timeout = m_timeout;
+    for(std::map<CuTimerListener *, CuEventLoopService *>::const_iterator it = m_lis_map.begin(); it != m_lis_map.end(); ++it) {
+        it->first->onTimeout(this);
     }
 }
 
@@ -199,8 +195,12 @@ void CuTimer::run()
             m_pause ?  timeout = ULONG_MAX : timeout = m_timeout;
             // issues with wasm: erratically expected timeout status is no_timeout
             (void ) status;
-            if(/*status == std::cv_status::timeout && */!m_quit && !m_pause) /* if m_exit: m_listener must be NULL */ {
-                m_notify();
+            if(/*status == std::cv_status::timeout && */!m_quit && !m_pause) {
+                for(std::map<CuTimerListener *, CuEventLoopService *>::const_iterator it = m_lis_map.begin(); it != m_lis_map.end(); ++it) {
+                    it->second != nullptr ?
+                                it->second->postEvent(this, new CuTimerEvent())
+                              : it->first->onTimeout(this);
+                }
             }
             m_pending = 0;
             if(!m_quit) { // wait for next start()
