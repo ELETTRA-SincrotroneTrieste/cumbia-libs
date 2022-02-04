@@ -2145,7 +2145,7 @@ std::string CuTangoWorld::make_fqdn_src(const string &src) const {
         // ai_canonname field of the first of the addrinfo structures in the
         // returned list is set to point to the official name of the host.
         hints.ai_flags = AI_CANONNAME;
-        struct addrinfo *result;
+        struct addrinfo *result, *rp;
         getai_ok = getaddrinfo(tgho.c_str(), NULL, &hints, &result);
         if(getai_ok != 0) {
             d->message = __func__ + std::string(": getaddrinfo error resolving: ") + tgho + ": " + gai_strerror(getai_ok);
@@ -2153,10 +2153,12 @@ std::string CuTangoWorld::make_fqdn_src(const string &src) const {
         else if(result == nullptr) {
             d->message  = __func__ + std::string(": getaddrinfo did not return domain information for ") + tgho + ": " + gai_strerror(getai_ok);
         }
-        else if(result->ai_canonname == NULL)
-            d->message  = __func__ + std::string(": getaddrinfo did not return domain information for ") + tgho + ": " + gai_strerror(getai_ok);
-        else
-            fusrc = string(result->ai_canonname) + src.substr(end2); // [tango://]full.host.name:PORT/tg/dev/nam/attribute
+        for (rp = result; rp != NULL; rp = rp->ai_next) {
+            if(rp->ai_canonname != nullptr) {
+                printf("--- \e[1;36mCuTangoWorld.make_fqdn_src found %s\e[0m\n", rp->ai_canonname);
+                fusrc = string(rp->ai_canonname) + src.substr(end2); // [tango://]full.host.name:PORT/tg/dev/nam/attribute
+            }
+        }
         if(getai_ok == 0 && result) {
             freeaddrinfo(result);
         }
