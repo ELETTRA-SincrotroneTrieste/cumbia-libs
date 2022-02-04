@@ -917,11 +917,7 @@ bool CuTangoWorld::get_att_config(Tango::DeviceProxy *dev, const string &attribu
         std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
         attr_read_ok = read_att(dev, attribute, dres);
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-<<<<<<< HEAD
-        printf("CuTangoWorld::get_att_config:  \e[1;34mread_attribute\e[0m took \e[1;34m%ld us\e[0m\n",
-=======
         printf("CuTangoWorld::get_att_config: \e[1;34mread_attribute\e[0m took \e[1;34m%ld us\e[0m\n",
->>>>>>> 61d176830de42f01d085b90c0309aa88a0fc2114
                std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
     }
     //
@@ -934,11 +930,7 @@ bool CuTangoWorld::get_att_config(Tango::DeviceProxy *dev, const string &attribu
         std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
         aiex = dev->get_attribute_config(attribute);
         std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-<<<<<<< HEAD
-        printf("CuTangoWorld::get_att_config: \e[1;32mget_attribute_config\e[0m took \e[1;32m%ld us\e[0m\n",
-=======
         printf("CuTangoWorld::get_att_config: dev->get_attribute_config: \e[1;32mget_attribute_config\e[0m took \e[1;32m%ld us\e[0m\n",
->>>>>>> 61d176830de42f01d085b90c0309aa88a0fc2114
                std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
         fillFromAttributeConfig(aiex, dres);
     }
