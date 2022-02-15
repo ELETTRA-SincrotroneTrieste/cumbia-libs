@@ -103,6 +103,8 @@ public:
     CumbiaHttp(const QString& url, const QString &channel, CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb);
     ~CumbiaHttp();
 
+    void setTag(const QString& tag);
+
     CuThreadFactoryImplI* getThreadFactoryImpl() const;
     CuThreadsEventBridgeFactory_I* getThreadEventsBridgeFactory() const;
     QString url() const;

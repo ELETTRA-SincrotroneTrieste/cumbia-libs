@@ -54,6 +54,12 @@ public:
     unsigned long long client_id;
     CuHttpSrcReqQueue request_q;
     CuHttpCliIdMan *id_man;
+
+    ///
+    /// TEST
+    ///
+    QString tag;
+    unsigned reqcnt;
 };
 
 /*!
@@ -83,6 +89,9 @@ CumbiaHttp::CumbiaHttp(const QString &url,
     d->client_id = 0;
     d->id_man = new CuHttpCliIdMan(d->url + "/bu/tok", d->qnam, this);
     m_init();
+
+    /// TEST
+    d->reqcnt = 0;
 }
 
 CumbiaHttp::~CumbiaHttp()
@@ -112,6 +121,11 @@ CumbiaHttp::~CumbiaHttp()
     delete d;
 }
 
+void CumbiaHttp::setTag(const QString &tag)
+{
+    d->tag = tag;
+}
+
 void CumbiaHttp::m_init()
 {
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuHTTPActionFactoryService::CuHTTPActionFactoryServiceType),
@@ -135,6 +149,7 @@ void CumbiaHttp::m_start_bundled_src_req(const QList<SrcItem> &rsrcs, const QLis
 {
     if(rsrcs.size() > 0) {
         CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(rsrcs, this, d->client_id);
+        r->setObjectName(QString("%1-req-%2").arg(d->tag).arg(++d->reqcnt));
         r->setBlocking(d->chan_recv->exiting()); // destruction in progress
         r->start(d->url + "/bu/src-bundle", d->qnam);
     }
