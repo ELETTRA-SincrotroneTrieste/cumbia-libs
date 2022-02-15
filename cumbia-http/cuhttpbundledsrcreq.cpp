@@ -92,10 +92,19 @@ void CuHttpBundledSrcReq::onNewData() {
     QByteArray ba = r->read(bytes_avail);
     d->buf += ba;
     // buf complete?
+
+    fflush(stdout);
     if(d->buf.length() == clen || d->buf.endsWith("\n\n") || d->buf.endsWith("\r\n\r\n")) { // buf complete
         m_on_buf_complete();
+        printf("CuHttpBundledSrcReq::onNewData %p\e[1;34m: content length %d chunk len %d total %d missing %d\e[0m ...\t[\e[1;32m COMPLETE \e[0m]\n",
+               this, clen, ba.size(), d->buf.size(), clen - d->buf.size());
+        printf("\"\e[1;34m%s\e[0m\"\n", d->buf.data());
 //        d->buf.clear(); buf cleared in start
     }
+    else
+        printf("CuHttpBundledSrcReq::onNewData %p\e[1;34m: content length %d chunk len %d total %d missing %d\e[0m "
+               "...\t[\e[1;31m INCOMPLETE \e[0m]\n",
+               this, clen, ba.size(), d->buf.size(), clen - d->buf.size());
 }
 
 void CuHttpBundledSrcReq::onReplyFinished()
