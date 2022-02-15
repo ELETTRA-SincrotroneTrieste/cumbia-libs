@@ -152,7 +152,7 @@ bool CuHttpCliIdMan::m_get_id_and_ttl() {
         // [{"exp":1638978149,"id":35,"ttl":10}]
         out["id"].to<unsigned long long>(d->id);
         out["ttl"].to<unsigned long>(d->ttl);
-        d->ttl *= 1000; // ttl from server is in seconds
+        d->ttl *= 1000 * 0.95; // ttl from server is in seconds
     }
     return ok;
 }
