@@ -76,6 +76,7 @@ void CuHttpCliIdMan::onNewData()
         d->bufs[0] += ba;
         // buf complete?
         if(d->bufs[0].length() == clen) { // buf complete
+            printf("\e[1;32mCuHttpCliIdMan.onNewData: received buf %s\e[0m\n", d->bufs[0].data());
             bool ok = m_get_id_and_ttl() && d->id > 0 && d->ttl > 0; // needs d->buf. d->buf cleared in start
             d->lis->onIdReady(d->id, d->ttl);
             if(ok) {
@@ -162,7 +163,7 @@ void CuHttpCliIdMan::m_start_keepalive() {
     if(!t) {
         t = new QTimer(this);
         t->setObjectName("keepalive_tmr");
-        t->setInterval(0.95 * d->ttl);
+        t->setInterval(d->ttl); // interval in seconds from m_get_id_and_ttl
         connect(t, SIGNAL(timeout()), this, SLOT(send_keepalive()));
         t->start();
     }
