@@ -141,7 +141,7 @@ CuActivity *CuActivityManager::find(const CuData &token)
         if(a->matches(token) && !a->isDisposable())
             return it->second;
     }
-    return NULL;
+    return nullptr;
 }
 
 /*! \brief returns the CuThreadInterface that executes the given activity
