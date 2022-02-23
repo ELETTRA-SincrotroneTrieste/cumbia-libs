@@ -146,7 +146,7 @@ void CuTimer::addListener(CuTimerListener *l, CuEventLoopService *ls) {
     std::unique_lock<std::mutex> lock(m_mutex);
     m_lis_map[l] = ls;
     if(ls)
-        ls->addCuEventLoopListener(this);
+        ls->addCuEventLoopListener(this); // inserts into set
 }
 
 /*!
