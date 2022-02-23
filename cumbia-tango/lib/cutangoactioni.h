@@ -31,7 +31,7 @@ public:
 
     /*! \brief virtual destructor, to make compilers happy
      */
-    virtual ~CuTangoActionI() {}
+    virtual ~CuTangoActionI();
 
     /*! \brief list of types of actions
      *
