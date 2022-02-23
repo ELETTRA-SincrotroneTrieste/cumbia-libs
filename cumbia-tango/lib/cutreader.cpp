@@ -53,9 +53,7 @@ CuTReader::CuTReader(const TSource& src, CumbiaTango *ct, const CuData &op, cons
     setOptions(op);
 }
 
-CuTReader::~CuTReader()
-{
-    pdelete("~CuTReader %p", this);
+CuTReader::~CuTReader() {
     delete d;
 }
 
