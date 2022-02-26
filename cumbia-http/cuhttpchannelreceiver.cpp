@@ -130,7 +130,11 @@ void CuHttpChannelReceiver::decodeMessage(const QJsonValue &v) {
             perr("CuHttpChannelReceiver::decodeMessage: source \"%s\" data is too old: %lds > %lds",
                  qstoc(src), diff_t, d->data_exp_t);
         }
+    //    else if(a.at(0)["type"].toString() == "heartbeat") {
+    // process heartbeat ?
+      //  }
     }
+
 }
 
 QNetworkRequest CuHttpChannelReceiver::prepareRequest(const QUrl &url) const

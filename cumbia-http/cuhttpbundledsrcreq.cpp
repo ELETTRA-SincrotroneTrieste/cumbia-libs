@@ -130,14 +130,9 @@ void CuHttpBundledSrcReq::onReplyFinished()
 {
     qDebug() << __PRETTY_FUNCTION__ << this << "deleting reply " << sender() << " later";
     if(d->buf.length() < 300) {
-        printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p short reply: \"\e[1;31m%s\e[0m\" (rq. use cnt: %d)\n"
+        printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p short reply: \"\e[1;31m%s\"\e[0m to request \e[1;32m\"%s\e[0m\" (rq. use cnt: %d)\n"
                , qstoc(objectName()),
-               this, d->req_payload.toStdString().c_str(), d->usecnt);
-
-        printf("\nHEADER\n-----------------------------------");
-        foreach(const QByteArray& ba, d->reply->rawHeaderList() )
-            printf("%s\n", ba.data());
-        printf("\n--------------------------------------------\n");
+               this, qstoc(d->buf), d->req_payload.toStdString().c_str(), d->usecnt);
     }
     *d->out << "REP. " << objectName() << this << ":\n" << d->buf << "\n";
     sender()->deleteLater();
