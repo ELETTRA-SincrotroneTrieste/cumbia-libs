@@ -1,0 +1,1 @@
+option('gprof_enable', type: 'boolean', value : false, description : 'adds -pg to cpp and linker arguments for profiling with gprof')
