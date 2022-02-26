@@ -25,7 +25,10 @@ class CuTimerService : public CuServiceI
 public:
     CuTimerService();
     ~CuTimerService();
-    CuTimer* registerListener(CuTimerListener *timer_listener, int timeout, CuEventLoopService *loop_service = nullptr);
+    CuTimer* registerListener(CuTimerListener *timer_listener,
+                              int timeout,
+                              CuEventLoopService *loop_service = nullptr,
+                              const std::string &tmrname = std::string());
     std::list<CuTimer *> getTimers();
     std::set<CuTimerListener *> getListeners(CuTimer *t) const;
     void unregisterListener(CuTimerListener *th, int timeout);
