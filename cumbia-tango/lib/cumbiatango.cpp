@@ -17,12 +17,11 @@
 
 class CumbiaTangoPrivate {
 public:
-    CumbiaTangoPrivate(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb, CumbiaTango::Options o) :
-        th_factory_i(tfi), th_eve_b_factory(teb), options(o) {}
+    CumbiaTangoPrivate(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb) :
+        th_factory_i(tfi), th_eve_b_factory(teb) {}
 
     CuThreadFactoryImplI *th_factory_i;
     CuThreadsEventBridgeFactory_I *th_eve_b_factory;
-    CumbiaTango::Options options;
 };
 
 /** \brief CumbiaTango two parameters constructor
@@ -41,18 +40,11 @@ public:
  *
  */
 CumbiaTango::CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb) {
-    d = new CumbiaTangoPrivate(tfi, teb, CumbiaTango::OptionActionFactorySrvcThreadSafe);
+    d = new CumbiaTangoPrivate(tfi, teb);
     m_init();
 }
 
-CumbiaTango::CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb, Options o)
-{
-    d = new CumbiaTangoPrivate(tfi, teb, o);
-    m_init();
-}
-
-void CumbiaTango::m_init()
-{
+void CumbiaTango::m_init() {
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType), new CuActionFactoryService());
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType), new CuDeviceFactoryService());
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType), new CuPollingService());
@@ -74,17 +66,21 @@ CumbiaTango::~CumbiaTango()
 
 void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTangoActionFactoryI& f) {
     CuTangoWorld w;
+    bool isnew;
     const std::string& src = source.getName();
+    std::chrono::high_resolution_clock::time_point t1, t2;
+    t1 = t2 = std::chrono::high_resolution_clock::now();
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
-    CuTangoActionI *a = af->find(src, f.getType());
-    if(!a) {
-        a = af->registerAction(src, f, this);
+    CuTangoActionI *a = af->registerAction(src, f, this, &isnew);
+    if(isnew)
         a->start();
-    }
     else
-        cuprintf("CumbiaTango.addAction: action \e[0;33malready found\e[0m for src \e[0;33m%s\e[0m type %d %p\n", src.c_str(), f.getType(), a);
+        printf("CumbiaTango::addAction activity %p %s \e[0;32malready running\e[0m\n", a, source.getName().c_str());
     a->addDataListener(l);
+    t2 = std::chrono::high_resolution_clock::now();
+    printf("CumbiaTango.addAction took  %ld us\n",
+           std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count());
 }
 
 void CumbiaTango::removeAction(const string &source, CuTangoActionI::Type t) {
@@ -144,5 +140,14 @@ int CumbiaTango::getType() const {
     return CumbiaTangoType;
 }
 
-
-
+/*!
+ * \brief cumbia tango reserves chunk items in containers
+ * \param chunk number of items to reserve when using containers
+ *
+ * Applications that need a lot of connections can call this function to optimize
+ */
+void CumbiaTango::reserve(int chunk) {
+    CuActionFactoryService *af =
+            static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
+    af->reserve(chunk);
+}

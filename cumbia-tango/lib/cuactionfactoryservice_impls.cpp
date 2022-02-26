@@ -5,12 +5,18 @@
 #include <shared_mutex>
 #include <mutex>
 #include <cumacros.h>
+#include <unordered_map>
+
+#include <chrono>
 
 /*! @private
  */
 class CuActionFactoryServiceImplBasePrivate {
 public:
-    std::list<CuTangoActionI * > actions;
+    CuActionFactoryServiceImplBasePrivate() : reserve(0) {}
+    // multimap: to the same src can be associated CuTangoActionI of different types
+    std::unordered_multimap<std::string, CuTangoActionI * > actions;
+    unsigned reserve;
 };
 
 /*! @private
@@ -28,26 +34,28 @@ CuActionFactoryServiceImpl_Base::~CuActionFactoryServiceImpl_Base() {
     delete d;
 }
 
-
-CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct) {
-    CuTangoActionI* action = NULL;
-    std::list<CuTangoActionI *>::const_iterator it;
-    for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src /*&& !(*it)->exiting()*/ ) {
-            break;
+CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct, bool *isnew) {
+    if(d->reserve > 0 && d->actions.size() % d->reserve == 0)
+        d->actions.reserve((d->actions.size()/d->reserve + 1) * d->reserve);
+    CuTangoActionI* action = nullptr;
+    auto range = d->actions.equal_range(src);
+    for(auto it = range.first; action == nullptr && it != range.second; ++it)
+        if(it->second->getType() == f.getType() /*&& !(*it)->exiting()*/ ) {
+            action = it->second;
         }
-    if(it == d->actions.end()) {
+    *isnew = action == nullptr;
+    if(*isnew) {
         action = f.create(src, ct);
-        d->actions.push_back(action);
+        d->actions.insert(std::pair<std::string, CuTangoActionI *>{src, action});
     }
     return action;
 }
 
 CuTangoActionI *CuActionFactoryServiceImpl_Base::find(const string &name, CuTangoActionI::Type at) {
-    std::list<CuTangoActionI *>::const_iterator it;
-    for(it = d->actions.begin(); it != d->actions.end(); ++it) {
-        if((*it)->getType() == at && (*it)->getSource().getName() == name/* && !(*it)->exiting()*/)
-            return (*it);
+    auto range = d->actions.equal_range(name);
+    for(auto it = range.first; it != range.second; ++it) {
+        if(it->second->getType() == at /*&& !(*it)->exiting()*/ )
+            return it->second;
     }
     return nullptr;
 }
@@ -57,18 +65,22 @@ size_t CuActionFactoryServiceImpl_Base::count() const {
 }
 
 void CuActionFactoryServiceImpl_Base::unregisterAction(const string &src, CuTangoActionI::Type at) {
-    std::list<CuTangoActionI *>::iterator it;
-    it = d->actions.begin();
-    while( it != d->actions.end())
-        ( (*it)->getType() == at && (*it)->getSource().getName() == src ) ? it = d->actions.erase(it) : ++it;
+    std::unordered_multimap<std::string, CuTangoActionI * >::iterator it = d->actions.begin();
+    while(it != d->actions.end()) {
+        it->second->getSource().getName() == src && it->second->getType() == at ? it = d->actions.erase(it) : ++it;
+    }
 }
 
 void CuActionFactoryServiceImpl_Base::cleanup() {
-    std::list<CuTangoActionI *>::iterator it = d->actions.begin();
+    std::unordered_multimap<std::string, CuTangoActionI * >::iterator it = d->actions.begin();
     while(it != d->actions.end()) {
-        delete (*it);
+        delete (it->second);
         it = d->actions.erase(it);
     }
+}
+
+void CuActionFactoryServiceImpl_Base::reserve(int chunks) {
+    d->reserve = chunks;
 }
 
 CuActionFactoryServiceImpl::CuActionFactoryServiceImpl() {
@@ -80,9 +92,9 @@ CuActionFactoryServiceImpl::~CuActionFactoryServiceImpl() {
     delete d;
 }
 
-CuTangoActionI *CuActionFactoryServiceImpl::registerAction(const string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct) {
+CuTangoActionI *CuActionFactoryServiceImpl::registerAction(const string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct, bool *isnew) {
 //    assert(d->creation_thread == pthread_self());
-    return CuActionFactoryServiceImpl_Base::registerAction(src, f, ct);
+    return CuActionFactoryServiceImpl_Base::registerAction(src, f, ct, isnew);
 }
 
 CuTangoActionI *CuActionFactoryServiceImpl::find(const string &name, CuTangoActionI::Type at) {
@@ -103,4 +115,8 @@ void CuActionFactoryServiceImpl::unregisterAction(const string &src, CuTangoActi
 void CuActionFactoryServiceImpl::cleanup() {
 //    assert(d->creation_thread == pthread_self());
     CuActionFactoryServiceImpl_Base::cleanup();
+}
+
+void CuActionFactoryServiceImpl::reserve(int chunks) {
+    CuActionFactoryServiceImpl_Base::reserve(chunks);
 }

@@ -25,7 +25,7 @@ public:
     int period;
     CuData token;
 //    bool deliveringResults; // true if inside the onResult method
-//    std::list<CuTangoActionI *> to_remove_actionlist;
+    std::list<CuTangoActionI *> to_remove_actionlist;
 
     pthread_t my_thread;
 };
@@ -39,7 +39,6 @@ CuPoller::CuPoller(CumbiaTango *cu_t, int period)
     d->token["class"] = "CuPoller";
     d->token["activity_count"] = 0;
 //    d->deliveringResults = false;
-
     d->my_thread = pthread_self();
 }
 
@@ -106,7 +105,9 @@ void CuPoller::unregisterAction(CuTangoActionI *a) {
     assert(d->my_thread == pthread_self());
 //    if(!d->deliveringResults) {
 //        printf("CuPoller::unregisterAction: calling m_do_unregisterAction for %p\n", a);
+
         m_do_unregisterAction(a);
+
 //    }
 //    else{
 //        printf("CuPoller::unregisterAction:  adding %p to the to_remove list\n", a);
@@ -115,7 +116,6 @@ void CuPoller::unregisterAction(CuTangoActionI *a) {
 }
 
 bool CuPoller::actionRegistered(const std::string& src) const {
-    assert(d->my_thread == pthread_self());
     return d->actions_map.find(src) != d->actions_map.end();
 }
 
@@ -187,7 +187,6 @@ void CuPoller::m_do_unregisterAction(CuTangoActionI *a)
         CuActivity *activity = am->find(at); // polling activities compare device period and "activity"
         // post remove to activity's thread
         if(activity) {
-            printf("CuPoller::m_do_unregisterAction: action %p \n", a);
             // CuPollingActivity will unregister itself if this is the last action
             d->cumbia_t->postEvent(  activity, new CuRemovePollActionEvent(a->getSource()));
         }

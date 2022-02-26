@@ -15,11 +15,12 @@ public:
     CuActionFactoryServiceImpl_Base();
     virtual ~CuActionFactoryServiceImpl_Base();
 
-    virtual CuTangoActionI* registerAction(const std::string& src, const CuTangoActionFactoryI& f, CumbiaTango *ct);
+    virtual CuTangoActionI* registerAction(const std::string& src, const CuTangoActionFactoryI& f, CumbiaTango *ct, bool *isnew);
     virtual CuTangoActionI *find(const std::string &name, CuTangoActionI::Type at);
     virtual size_t count() const;
     virtual void unregisterAction(const std::string& src, CuTangoActionI::Type at);
     virtual void cleanup();
+    virtual void reserve(int chunks);
 
 protected:
     CuActionFactoryServiceImplBasePrivate *d;
@@ -36,11 +37,12 @@ public:
     CuActionFactoryServiceImpl();
     virtual ~CuActionFactoryServiceImpl();
 
-    virtual CuTangoActionI* registerAction(const std::string& src, const CuTangoActionFactoryI& f, CumbiaTango *ct);
+    virtual CuTangoActionI* registerAction(const std::string& src, const CuTangoActionFactoryI& f, CumbiaTango *ct, bool *isnew);
     virtual CuTangoActionI *find(const std::string &name, CuTangoActionI::Type at);
     virtual size_t count() const;
     virtual void unregisterAction(const std::string& src, CuTangoActionI::Type at);
     virtual void cleanup();
+    virtual void reserve(int chunks);
 
 private:
     CuActionFactoryServiceImplPrivate *d;

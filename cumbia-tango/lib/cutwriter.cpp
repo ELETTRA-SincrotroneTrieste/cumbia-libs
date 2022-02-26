@@ -28,7 +28,7 @@ public:
                      const CuData &conf,
                      const CuData &opts,
                      const CuData &_tag)
-        : tsrc(src), cumbia_t(ct), db_conf(conf), options(opts), tag(_tag), exit(false) { }
+        : tsrc(src), cumbia_t(ct), activity(nullptr), db_conf(conf), options(opts), tag(_tag), exit(false) { }
 
     std::set<CuDataListener *> listeners;
     TSource tsrc;
@@ -199,6 +199,10 @@ void CuTWriter::stop() {
 
 bool CuTWriter::exiting() const {
     return d->exit;
+}
+
+bool CuTWriter::is_running() const {
+    return d->activity != nullptr;
 }
 
 void CuTWriter::sendData(const CuData& ) {

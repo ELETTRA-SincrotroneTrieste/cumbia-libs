@@ -137,6 +137,8 @@ public:
      */
     virtual bool exiting() const = 0;
 
+    virtual bool is_running() const = 0;
+
 };
 
 #endif // CUTANGOACTIONI_H

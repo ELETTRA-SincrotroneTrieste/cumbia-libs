@@ -32,6 +32,28 @@ class CuActivity;
  * \par Important
  * As a consequence of the note above, activities *must not exit before CuTReader::stop is called*.
  * The proper way to stop the activity associated to the reader is through CuTReader::stop.
+ *
+ * \par Update policy
+ * \since 1.4.0
+ *
+ * options can be used to provide update hints to the reader.
+ * In case of *polled* sources, one of the CuActivity::UpdatePolicyHint can be specified in order to
+ * avoid updates when data does not change. In case of complex applications, this may save a lot of
+ * cpu.
+ * The *update-hint* key can be given one integer value among
+ * - CuActivity::UpdateAlways: the data listener shall always be updated
+ * - CuActivity::CuOnUnchangedUpdateTimestamps: the data listener shall always be updated with a
+ *   minimal CuData with *timestamp_us* and *timestamp_ms* if data does not change
+ * - CuActivity::CuOnUnchangedNoUpdate: the data listener shall *not* be updated as long as
+ *   read data remains unchanged.
+ *
+ * \note
+ * Update policy hint applies to *polled sources* only.
+ *
+ * Data is considered to have changed if:
+ * - the value (read or Tango set point) has changed from to the previous reading
+ * - an error condition changes
+ * - the attribute *data quality* changes
  */
 class CuTReader: public CuTangoActionI /* CuTangoActionI implements CuThreadListener */
 {
@@ -83,6 +105,7 @@ public:
     void removeDataListener(CuDataListener *l);
     size_t dataListenersCount();
     bool exiting() const;
+    bool is_running() const;
 
 private:
     CuTReaderPrivate *d;
@@ -94,6 +117,7 @@ private:
     void m_unregisterEventActivity();
     void m_update_options(const CuData newo);
     void m_destroy_self();
+    void m_save_data(const CuData& d);
     CuActivity *m_find_Activity();
 };
 

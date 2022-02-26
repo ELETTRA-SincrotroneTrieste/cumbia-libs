@@ -22,7 +22,7 @@ public:
                                const CuData& op,
                                const CuData& ta,
                                const CuTConfigActivityExecutor_I* cx) :
-        tsrc(t_src), cumbia_t(ct), type(t), options(op), tag(ta), c_xecutor(cx) {
+        tsrc(t_src), cumbia_t(ct), activity(nullptr), type(t), options(op), tag(ta), c_xecutor(cx) {
     }
 
     std::set<CuDataListener *> listeners;
@@ -165,4 +165,8 @@ void CuTConfiguration::stop()
 bool CuTConfiguration::exiting() const
 {
     return d->exiting;
+}
+
+bool CuTConfiguration::is_running() const {
+    return d->activity != nullptr;
 }

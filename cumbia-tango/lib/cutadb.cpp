@@ -16,7 +16,7 @@
 class CuTaDbPrivate {
 public:
     CuTaDbPrivate(const TSource& t_src, CumbiaTango *ct, const CuData &_options, const CuData &_tag)
-        : tsrc(t_src), cumbia_t(ct), options(_options), tag(_tag), xit(false) {
+        : tsrc(t_src), cumbia_t(ct), activity(nullptr), options(_options), tag(_tag), xit(false) {
     }
 
     std::list<CuDataListener *> listeners;
@@ -144,4 +144,8 @@ void CuTaDb::stop() {
  */
 bool CuTaDb::exiting() const {
     return d->xit;
+}
+
+bool CuTaDb::is_running() const {
+    return d->activity != nullptr;
 }

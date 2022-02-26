@@ -50,3 +50,4 @@ lib/tdevice.cpp
 lib/tdevice.h
 lib/tsource.cpp
 lib/tsource.h
+meson_options.txt
