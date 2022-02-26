@@ -156,6 +156,29 @@ public:
 
     enum StateFlags { CuAStateInit = 0x01, CuAStateExecute = 0x02, CuAStateOnExit = 0x04 };
 
+    /*!
+     * \brief Hints to optimize the update event delivery to the listener.
+     *
+     * When data does not change, applications may not be interested in updates. In such cases, the only
+     * field to change may be the timestamp, for example. UpdatePolicy::CuTaReadOnUnchangedUpdateTimestamp sends the
+     * timestamp only on the data value, while UpdatePolicy::CuTaReadOnUnchangedNoUpdate does not update the
+     * listener as long as data does not effectively change.
+     *
+     * \note
+     * The hints are activity implementation dependent. For example, if we are monitoring a value over time
+     * data may be considered changed if any of the following conditions happen:
+     * - a change in the read value
+     * - a change in the message or an error condition.
+     *
+     * The default value is CuUpdateAlways
+     */
+    enum UpdatePolicyHint { CuUpdateAlways = 0x0001, /**< always update listener */
+                            CuOnUnchangedUpdateTimestamp = 0x2,  /**< when data doesn't change, send only the new timestamp */
+                            CuOnUnchangedNoUpdate = 0x4, /**< do not update the listener as long as data doesn't change */
+                            CuUpdateHintUser = 0x100 /**< start of user defined hints for custom implementations */
+                          };
+
+
     CuActivity(CuActivityManager *activityManager, const CuData& token);
 
     CuActivity(const CuData& token);
@@ -212,6 +235,9 @@ public:
     void doOnExit();
 
     void exitOnThreadQuit();
+
+    void setUpdatePolicyHints(int hints);
+    int updatePolicyHints() const;
 
 protected:
     virtual void init() = 0;

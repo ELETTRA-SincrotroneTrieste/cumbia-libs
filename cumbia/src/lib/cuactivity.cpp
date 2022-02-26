@@ -15,6 +15,8 @@ public:
     {
         dispose = false;
         activityManager = NULL;
+        upd_p_hints = CuActivity::CuUpdateAlways;
+        flags = stateFlags = 0;
     }
 
     CuActivityManager *activityManager;
@@ -22,13 +24,13 @@ public:
     bool onExit;
     CuData token, thread_tok;
     int flags, stateFlags;
+    int upd_p_hints;
 };
 
 CuActivity::CuActivity(CuActivityManager *activityManager, const CuData &token)
 {
     d = new CuActivityPrivate(token);
     d->activityManager = activityManager;
-    d->flags = d->stateFlags = 0;
 }
 
 CuActivity::CuActivity(const CuData &token)
@@ -98,6 +100,14 @@ void CuActivity::exitOnThreadQuit()
 {
     d->stateFlags |= CuActivity::CuAStateOnExit;
     onExit();
+}
+
+void CuActivity::setUpdatePolicyHints(int hints) {
+    d->upd_p_hints = hints;
+}
+
+int CuActivity::updatePolicyHints() const {
+    return d->upd_p_hints;
 }
 
 /*! \brief returns the activity flags
