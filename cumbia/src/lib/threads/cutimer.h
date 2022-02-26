@@ -12,6 +12,28 @@
 
 class CuTimerListener;
 
+// definition here in .h because friend class CuTimerService needs it
+//
+class CuTimerPrivate {
+public:
+    CuTimerPrivate() : m_quit(false), m_pause(false), m_exited(false), m_pending(false), m_skip(false),
+        m_timeout(1000), m_thread(nullptr) {}
+
+    std::map<CuTimerListener *, CuEventLoopService *> m_lis_map;
+    std::chrono::time_point<std::chrono::steady_clock> m_last_start_pt, m_first_start_pt;
+    bool m_quit, m_pause, m_exited;
+
+    std::atomic_int m_pending;
+    std::atomic_bool m_skip;
+    std::atomic_int m_timeout;
+
+    std::thread *m_thread;
+    std::mutex m_mutex;
+    std::condition_variable m_wait;
+
+    int m_id;
+    std::string m_name;
+};
 /*! \brief a timer used by CuThread for periodic execution of an *activity*
  *
  * This class is used internally by the cumbia library.
@@ -42,6 +64,9 @@ public:
 
     ~CuTimer();
 
+    void setName(const std::string& name);
+    std::string name() const;
+    int id() const;
     void setTimeout(int millis);
     void setSingleShot(bool single);
     int timeout() const;
@@ -55,17 +80,6 @@ protected:
     void run();
 
 private:
-    std::map<CuTimerListener *, CuEventLoopService *> m_lis_map;
-    std::chrono::time_point<std::chrono::steady_clock> m_last_start_pt, m_first_start_pt;
-    bool m_quit, m_pause, m_exited;
-
-    std::atomic_int m_pending;
-    std::atomic_bool m_skip;
-    std::atomic_int m_timeout;
-
-    std::thread *m_thread;
-    std::mutex m_mutex;
-    std::condition_variable m_wait;
 
     void addListener(CuTimerListener *l, CuEventLoopService *ls);
     void removeListener(CuTimerListener *l);
@@ -77,6 +91,7 @@ private:
 
     void m_notify();
 
+    CuTimerPrivate *d;
 };
 
 #endif // CUTIMER_H
