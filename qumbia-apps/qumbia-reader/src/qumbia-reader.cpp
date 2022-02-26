@@ -669,6 +669,9 @@ void QumbiaReader::m_createReaders(const QStringList &srcs)  {
         if(m_conf.no_properties)
             reader_ctx_options["no-properties"] = true;
         r->setContextOptions(reader_ctx_options);
+
+        printf("\e[1;32mQumbiaReader: setting source %s\e[0m\n", qstoc(a));
+
         r->setSource(a);
         m_readers.append(r);
         m_refreshCntMap[a] = 0;

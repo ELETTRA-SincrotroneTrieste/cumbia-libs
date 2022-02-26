@@ -50,6 +50,7 @@ void Qu_Reader::setContextOptions(const CuData &options) {
 //
 void Qu_Reader::onUpdate(const CuData &da)
 {
+    printf("Qu_Reader.onUpdate: %p %s\e[0m\n", this, datos(da));
     bool property_only = m_property_only || da.has("activity", "cutadb");
     CuData data(da);
     const CuVariant&  v = data["value"];
