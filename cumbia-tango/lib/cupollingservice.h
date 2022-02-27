@@ -13,8 +13,8 @@ class CuData;
 class CuPollingService : public CuServiceI
 {
 public:
-
     enum Type { CuPollingServiceType = CuServices::User + 26 };
+    enum UpdatePolicy { UpdateAlways, OnUnchangedDataUpdateTimestampOnly
 
     CuPollingService();
 
