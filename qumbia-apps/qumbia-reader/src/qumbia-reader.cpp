@@ -17,6 +17,8 @@
 #include <QDateTime>
 #include <QtDebug>
 
+#include <cupollingservice.h>
+
 // plugin
 #include <cupluginloader.h>
 #include <cuformulaplugininterface.h>
@@ -67,10 +69,16 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
 #endif
     CuTThreadTokenGen *tango_tk_gen = new CuTThreadTokenGen(1, "thread_");
 
-        Cumbia *cu = cumbia_pool->get("tango");
-        if(cu) {
+        Cumbia *cu_t = cumbia_pool->get("tango");
+        if(cu_t) {
             printf("SeqLauncher: installing tango thread token generator hw concurrency %d\n", std::thread::hardware_concurrency());
-            cu->setThreadTokenGenerator(tango_tk_gen);
+            cu_t->setThreadTokenGenerator(tango_tk_gen);
+            // always, timestamp, none
+            CuPollingService *ps = static_cast<CuPollingService *>(cu_t->getServiceProvider()->get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
+            if(m_conf.unchanged_upd_mode == "timestamp")
+                ps->setDataUpdatePolicy(CuPollDataUpdatePolicy::OnUnchangedTimestampOnly);
+            else if(m_conf.unchanged_upd_mode == "none")
+                ps->setDataUpdatePolicy(CuPollDataUpdatePolicy::OnUnchangedNothing);
         }
 
     m_props_map[Low] = QStringList() << "min" << "min_alarm" << "min_warning" << "max_warning" <<
@@ -465,8 +473,6 @@ void QumbiaReader::onNewUShortVector(const QString &src, double ts, const QVecto
     m_checkRefreshCnt(sender());
 }
 
-
-
 void QumbiaReader::onPropertyReady(const QString &src, double ts,const CuData &pr)
 {
     m_refreshCntMap[src]++;
@@ -488,6 +494,10 @@ void QumbiaReader::onPropertyReady(const QString &src, double ts,const CuData &p
 
     if(m_conf.verbosity == Debug)
         printf("\n\e[0;35m-l debug\e[0m: \e[1;35m{\e[0m %s \e[1;35m}\e[0m\n", pr.toString().c_str());
+}
+
+void QumbiaReader::onNewUnchanged(const QString &src, double ts) {
+    printf("\e[0;35m * \e[0m [%s]: \"%s\" \e[0;35munchanged\e[0m\n", qstoc(makeTimestamp(ts)), qstoc(src));
 }
 
 void QumbiaReader::onError(const QString &src, double ts, const QString &msg, const CuData& da)
@@ -654,6 +664,7 @@ void QumbiaReader::m_createReaders(const QStringList &srcs)  {
         connect(r, SIGNAL(newStringMatrix(const QString&, double, const CuMatrix<std::string>&, const CuData& ) ), this,
                 SLOT(onNewStringMatrix(const QString&,  double, const CuMatrix<std::string>&, const CuData& )));
 
+        connect(r, SIGNAL(newUnchanged(QString, double)), this, SLOT(onNewUnchanged(QString, double)));
         connect(r, SIGNAL(newError(QString,double,QString, const CuData&)),
                 this, SLOT(onError(QString,double,QString, const CuData&)));
 
@@ -669,9 +680,6 @@ void QumbiaReader::m_createReaders(const QStringList &srcs)  {
         if(m_conf.no_properties)
             reader_ctx_options["no-properties"] = true;
         r->setContextOptions(reader_ctx_options);
-
-        printf("\e[1;32mQumbiaReader: setting source %s\e[0m\n", qstoc(a));
-
         r->setSource(a);
         m_readers.append(r);
         m_refreshCntMap[a] = 0;

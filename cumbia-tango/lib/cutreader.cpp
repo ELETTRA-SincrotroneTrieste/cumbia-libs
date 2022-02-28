@@ -20,45 +20,6 @@
 
 class TSource;
 
-// Attribute data fields that are relevant to determine
-// whether data has changed
-class AttData {
-public:
-    AttData() : err(false), quality(-1), msg(std::string()), v(CuVariant()), wv(v) {}
-
-    AttData(const CuVariant &va, const CuVariant& wrv, const std::string& m, bool e, int q) :
-        v(va), wv(wrv), msg(m), err(e), quality(q) {}
-
-    const inline bool operator ==(const AttData& o) const {
-        return msg == o.msg && err == o.err && v == o.v && o.quality == quality;
-    }
-
-    inline bool equals(const CuData &da) const {
-        return da.B("err") == err && da.s("msg") == msg && da.I("quality") == quality
-                && da["value"] == v && da["w_value"] == wv;
-    }
-
-    inline bool isEmpty() const { return quality == -1 && v.isNull() && wv.isWNull(); }
-
-    void repr() const {
-        printf("AttData { err: %s | v %s | wv %s | quality %d | msg '%s'\n", err ? "true" : "false", v.toString().c_str(),
-               wv.toString().c_str(), quality, msg.c_str());
-    }
-
-    inline void from(const CuData &da) {
-        err = da.B("err");
-        msg = da.s("msg");
-        quality = da.I("quality");
-        v = da["value"];
-        wv = da["w_value"];
-    }
-
-    std::string msg;
-    bool err;
-    int quality;
-    CuVariant v, wv;
-};
-
 class CuTReaderPrivate
 {
 public:
@@ -72,9 +33,7 @@ public:
           polling_fallback(false),
           started(false),
           manual_mode_period( 1000 * 3600 * 24 * 10),
-          tag(_tag),
-          update_hint(CuActivity::CuUpdateAlways)
-    {  }
+          tag(_tag)    {  }
 
     std::set<CuDataListener *> listeners;
     TSource tsrc;
@@ -87,9 +46,7 @@ public:
     CuTReader::RefreshMode refresh_mode;
     bool polling_fallback, started;
     int manual_mode_period;
-    int update_hint;
     CuData options, tag;
-    AttData prevd;
 };
 
 CuTReader::CuTReader(const TSource& src, CumbiaTango *ct, const CuData &op, const CuData &tag) : CuTangoActionI() {
@@ -133,40 +90,7 @@ void CuTReader::onResult(const CuData &data) {
     bool event_subscribe_fail = err && data["E"].toString() == "subscribe";
     // if it's just subscribe_event failure, do not notify listeners
     for(it = lis_copy.begin(); !event_subscribe_fail && it != lis_copy.end();   ++it) {
-        // always update in case of error or if we are using events
-        if(err || d->update_hint == CuActivity::CuUpdateAlways || d->event_activity != nullptr) {
-            (*it)->onUpdate(data);
-        } else if(d->update_hint == CuActivity::CuOnUnchangedUpdateTimestamp) {
-            if(d->prevd.equals(data)) {
-                (*it)->onUpdate(CuData("timestamp_ms", data["timestamp_ms"]).set("timestamp_us", data["timestamp_us"])
-                        .set("src", data.s("src")));
-                printf("\e[1;32;3mCuTReader::onResult UPDATING timestamp only because value hasn't changed!!\e[0;35m\n");
-                d->prevd.repr();
-                printf("\e[0;36m");
-                d->prevd.from(data);
-                d->prevd.repr();
-                printf("\e[0m");
-            }
-            else {
-                d->prevd.from(data);
-                (*it)->onUpdate(data);
-            }
-        }
-        else if(d->update_hint == CuActivity::CuOnUnchangedNoUpdate) {
-            if(d->prevd.equals(data)) {
-                printf("\e[1;33;3mCuTReader::onResult NOT UPDATING listener because value hasn't changed!!\e[0;35m\n");
-                d->prevd.repr();
-                printf("\e[0;36m");
-                d->prevd.from(data);
-                d->prevd.repr();
-                printf("\e[0m");
-            }
-            else {
-                d->prevd.from(data);
-                (*it)->onUpdate(data);
-            }
-        }
-
+        (*it)->onUpdate(data);
     }
     if(err) {
         if(data.containsKey("ev_except") && data.B("ev_except")) {
@@ -262,8 +186,6 @@ void CuTReader::setOptions(const CuData &options) {
                 setRefreshMode(static_cast<CuTReader::RefreshMode>(rm));
         }
     }
-    if(options.containsKey("update-hint"))
-        d->update_hint = options.I("update-hint");
 }
 
 void CuTReader::setTag(const CuData &tag) {
@@ -284,8 +206,6 @@ void CuTReader::m_update_options(const CuData newo) {
         d->options["refresh_mode"] = rm;
     if(rm == CuTReader::Manual)
         d->options["period"] = d->manual_mode_period;
-    if(newo.containsKey("update-hint"))
-        d->update_hint = newo.I("update-hint");
 }
 
 void CuTReader::m_destroy_self() {

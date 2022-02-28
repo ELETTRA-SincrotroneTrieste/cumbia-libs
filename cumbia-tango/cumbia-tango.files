@@ -10,6 +10,7 @@ lib/cugettdbpropactivity.cpp
 lib/cugettdbpropactivity.h
 lib/cumbiatango.cpp
 lib/cumbiatango.h
+lib/cupolldataupdatepolicy_enum.h
 lib/cupoller.cpp
 lib/cupoller.h
 lib/cupollingactivity.cpp

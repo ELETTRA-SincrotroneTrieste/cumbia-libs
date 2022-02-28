@@ -15,6 +15,7 @@ public:
 
     void setPropertyOnly();
     QString format;
+    QString unchanged_upd_mode; // always, timestamp, none
     QString db_profile, db_output_file; // if historical db plugin available
 
     // websocket

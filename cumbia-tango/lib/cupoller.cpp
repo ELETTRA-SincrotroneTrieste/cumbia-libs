@@ -53,7 +53,11 @@ int CuPoller::period() const
     return d->period;
 }
 
-void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a, const CuData& options, const CuData& tag)
+void CuPoller::registerAction(const TSource& tsrc,
+                              CuTangoActionI *a,
+                              const CuData& options,
+                              const CuData& tag,
+                              CuPollDataUpdatePolicy updpo)
 {
     assert(d->my_thread == pthread_self());
     // insert in this thread
@@ -75,7 +79,7 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a, const CuDa
         CuData tt;
         options.containsKey("thread_token") ? tt = options : tt = CuData("device", tsrc.getDeviceName());
         at["period"] = d->period; // make sure at contains the new period
-        activity = new CuPollingActivity(at, df, options, tag);
+        activity = new CuPollingActivity(at, df, options, tag, updpo);
         const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
         const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
         d->cumbia_t->registerActivity(activity, this, tt, fi, bf);

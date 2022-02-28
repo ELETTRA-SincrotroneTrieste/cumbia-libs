@@ -263,6 +263,9 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
     }
 }
 
+// extract data from DeviceAttribute to CuData
+// NOTE: d->message shall be empty if d->error remains false
+//
 void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
 {
     d->error = false;
@@ -761,29 +764,34 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
     res["color"] = d->t_world_conf.successColor(!d->error);
 
     /// TEST
-     auto t3 = std::chrono::steady_clock::now();
-     printf("CuTangoWorld::\e[1;36mread_att\e[0m took %ldus, extract data took %ldus (%s)\n",
-            std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count(),
-            std::chrono::duration_cast<std::chrono::microseconds>(t3-t2).count(), res.s("src").c_str());
+    auto t3 = std::chrono::steady_clock::now();
+    printf("CuTangoWorld::\e[1;36mread_att\e[0m took %ldus, extract data took %ldus (%s)\n",
+           std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count(),
+           std::chrono::duration_cast<std::chrono::microseconds>(t3-t2).count(), res.s("src").c_str());
     ///
     return !d->error;
 }
 
+// dev: pointer to device proxy
+// p_v_p: pointer to vector with data about the attribute name and an optional cached value
+//        from an earlier reading (depending on update policy updpo)
+// reslist: vector of results where data from read_attributes shall be appended
+// updpo: update policy: always update, update timestamp only or do nothing when data doesn't change
+//
 bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
-                             std::vector<std::string> &attnamlist,
-                             std::vector<CuData>& att_datalist,
+                             std::vector<std::string>* p_v_an, // att names
+                             std::vector<CuData>* p_v_a,  // att cache, ordered same as att names
                              std::vector<CuData> *reslist,
-                             int results_offset)
+                             CuPollDataUpdatePolicy updpo)
 {
     d->error = false;
     d->message = "";
-    Tango::DeviceAttribute *p_da;
-    std::vector<Tango::DeviceAttribute> *devattr = NULL;
 
     /// TEST
     auto t1 = std::chrono::steady_clock::now();
     std::chrono::steady_clock::time_point t2;
-
+    std::vector<CuData> &va = *p_v_a;
+    size_t offset = reslist->size();
     try
     {
         // read_attributes
@@ -794,47 +802,99 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         //         we enter the catch clause, where the results have to be manually populated
         //         with data reporting the error.
         //         In that case, the poller must be slowed down
-        devattr = dev->read_attributes(attnamlist);
+        std::vector<Tango::DeviceAttribute> *devattr = dev->read_attributes(*p_v_an);
+
         /// TEST
         t2 = std::chrono::steady_clock::now();
         ///
-        for(size_t i = 0; i < devattr->size(); i++) {
-            (*reslist)[results_offset] = std::move(att_datalist[i]);
-            p_da = &(*devattr)[i];
-            p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
-            extractData(p_da, (*reslist)[results_offset]);
-            (*reslist)[results_offset]["err"] = d->error;
-            if(d->message.length() > 0)
-                (*reslist)[results_offset]["msg"] = d->message;
-            (*reslist)[results_offset]["color"] = d->t_world_conf.successColor(!d->error);
-            results_offset++;
-        }
 
-        /// TEST
-        auto t3 = std::chrono::steady_clock::now();
-        printf("CuTangoWorld::\e[0;33mread_attributes\e[0m took %ldus, extract data took %ldus fpr %ld atts\n",
-               std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count(),
-               std::chrono::duration_cast<std::chrono::microseconds>(t3-t2).count(), devattr->size());
-       ///
-       ///
+        for(size_t i = 0; i < devattr->size(); i++) {
+            Tango::DeviceAttribute *p_da = &(*devattr)[i];
+            p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
+
+            if(updpo == CuPollDataUpdatePolicy::UpdateAlways) {
+                reslist->push_back(va[i]);
+                extractData(p_da,  (*reslist)[offset]);
+                (*reslist)[offset]["err"] = d->error;
+                if(d->message.length() > 0)
+                    (*reslist)[offset]["msg"] = d->message;
+                (*reslist)[offset]["color"] = d->t_world_conf.successColor(!d->error);
+                offset++;
+            }
+            else {
+                CuData rv;
+                extractData(p_da, rv);
+                // note that if !d->error, d->message is empty
+                // m_cache_upd compares new value rv with cached (or first time empty)
+                // va[i] (value, w_value, err, quality). If changed, returns true and
+                // updateds va[i], that will cache the new data for the next time
+                bool changed = m_cache_upd(va[i], rv) && !d->error;
+                if(changed) { // update exactly as above
+                    (*reslist).push_back(va[i]);
+                    (*reslist)[offset]["err"] = d->error;
+                    if(d->message.length() > 0)
+                        (*reslist)[offset]["msg"] = d->message;
+                    (*reslist)[offset]["color"] = d->t_world_conf.successColor(!d->error);
+                    offset++;
+                }
+                else if(updpo == CuPollDataUpdatePolicy::OnUnchangedTimestampOnly) {
+                    (*reslist).push_back(CuData("timestamp_ms", rv["timestamp_ms"]));
+                    (*reslist)[offset]["timestamp_us"] = rv["timestamp_us"];
+                    (*reslist)[offset]["src"] = va[i]["src"];
+                    offset++;
+                }
+                else if(updpo == CuPollDataUpdatePolicy::OnUnchangedNothing) {
+                    // do nothing
+                }
+            }
+
+            /// TEST
+            auto t3 = std::chrono::steady_clock::now();
+            printf("CuTangoWorld::\e[0;33mread_attributes\e[0m took %ldus, extract data took %ldus fpr %ld atts\n",
+                   std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count(),
+                   std::chrono::duration_cast<std::chrono::microseconds>(t3-t2).count(), devattr->size());
+            ///
+            ///
+        }
         delete devattr;
     }
     catch(Tango::DevFailed &e)
     {
         d->error = true;
         d->message = strerror(e);
-        for(size_t i = 0; i < attnamlist.size(); i++) {
-            (*reslist)[results_offset] = std::move(att_datalist[i]);
-            (*reslist)[results_offset]["err"] = d->error;
+        for(size_t i = 0; i < p_v_an->size(); i++) {
+            reslist->push_back(std::move(va[i]));
+            (*reslist)[offset]["err"] = d->error;
             if(d->message.length() > 0)
-                (*reslist)[results_offset]["msg"] = d->message;
-            (*reslist)[results_offset]["color"] = d->t_world_conf.successColor(!d->error);
-            (*reslist)[results_offset].putTimestamp();
-            results_offset++;
+                (*reslist)[offset]["msg"] = d->message;
+            (*reslist)[offset]["color"] = d->t_world_conf.successColor(!d->error);
+            (*reslist)[offset].putTimestamp();
+            offset++;
         }
-        //            perr("CuTangoWorld.read_atts: %s", d->message.c_str());
     }
     return !d->error;
+}
+
+bool CuTangoWorld::m_cache_upd(CuData &cache_d, const CuData &nd) const {
+    const char keys[5][8] = { "value", "err", "msg", "q", "w_value" };
+    short i, changed = 0;
+    const char *key;
+    for(i = 0; i < 5; i++) {
+        key = keys[i];
+        if(cache_d[key] != nd[key]) {  // changed: update cache_d
+            cache_d[key] = nd[key];
+            changed++;
+        }
+    }
+    if(!changed) {
+        printf("CuTangoWorld::m_cache_upd: cached value \e[1;33mUNCHANGED\e[0m:\t");
+        for(const std::string& s : std::vector<std::string>{"value", "err", "msg", "q", "w_value"} )
+            printf("%s %s=%s | ", s.c_str(), cache_d[s].toString().c_str(), nd[s].toString().c_str());
+        printf("\n");
+    } else {
+        printf("CuTangoWorld::m_cache_upd: cached value \e[1;32mCHANGED\e[0m:\n");
+    }
+    return changed > 0;
 }
 
 // cmd_inout version 2: from the data argument, guess input DeviceData

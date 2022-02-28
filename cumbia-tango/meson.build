@@ -31,6 +31,7 @@ headers = [
 'lib/cuactionfactoryservice.h',
 'lib/cuactionfactoryservice_impls.h',
 'lib/cueventactivity.h',
+'lib/cupolldataupdatepolicy_enum.h',
 'lib/cupollingactivity.h',
 'lib/cupoller.h',
 'lib/cupollingservice.h',

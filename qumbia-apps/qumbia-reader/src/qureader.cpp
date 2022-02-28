@@ -84,6 +84,8 @@ void Qu_Reader::onUpdate(const CuData &da)
             if(m_prop[qstoc(p)].isValid())
                 data[qstoc(p)] = m_prop[qstoc(p)];
     }
+    if(!da.B("err") && ts > 0 && !da.containsKey("value") && !da.containsKey("w_value") && da.containsKey("src"))
+        emit newUnchanged(source(), ts);
 
     if(!hdb_data && !da.B("err") && !property_only) {
         QString from_ty = QuString(v.dataTypeStr(v.getType()));

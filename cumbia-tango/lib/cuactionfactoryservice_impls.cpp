@@ -35,8 +35,6 @@ CuActionFactoryServiceImpl_Base::~CuActionFactoryServiceImpl_Base() {
 }
 
 CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct, bool *isnew) {
-    if(d->reserve > 0 && d->actions.size() % d->reserve == 0)
-        d->actions.reserve((d->actions.size()/d->reserve + 1) * d->reserve);
     CuTangoActionI* action = nullptr;
     auto range = d->actions.equal_range(src);
     for(auto it = range.first; action == nullptr && it != range.second; ++it)
