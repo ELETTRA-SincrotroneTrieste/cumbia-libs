@@ -738,8 +738,8 @@ void CuTangoWorld::fillFromCommandInfo(const Tango::CommandInfo &ci, CuData &d)
 bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, CuData &res)
 {
     /// TEST
-    auto t1 = std::chrono::steady_clock::now();
-    std::chrono::steady_clock::time_point t2;
+//    auto t1 = std::chrono::steady_clock::now();
+//    std::chrono::steady_clock::time_point t2;
     ///
     ///
     d->error = false;
@@ -749,7 +749,7 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
         Tango::DeviceAttribute da = dev->read_attribute(att);
 
         /// TEST
-        t2 = std::chrono::steady_clock::now();
+//        t2 = std::chrono::steady_clock::now();
         ///
         extractData(&da, res);
     }
@@ -764,10 +764,10 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
     res["color"] = d->t_world_conf.successColor(!d->error);
 
     /// TEST
-    auto t3 = std::chrono::steady_clock::now();
-    printf("CuTangoWorld::\e[1;36mread_att\e[0m took %ldus, extract data took %ldus (%s)\n",
-           std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count(),
-           std::chrono::duration_cast<std::chrono::microseconds>(t3-t2).count(), res.s("src").c_str());
+//    auto t3 = std::chrono::steady_clock::now();
+//    printf("CuTangoWorld::\e[1;36mread_att\e[0m took %ldus, extract data took %ldus (%s)\n",
+//           std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count(),
+//           std::chrono::duration_cast<std::chrono::microseconds>(t3-t2).count(), res.s("src").c_str());
     ///
     return !d->error;
 }
@@ -786,10 +786,6 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
 {
     d->error = false;
     d->message = "";
-
-    /// TEST
-    auto t1 = std::chrono::steady_clock::now();
-    std::chrono::steady_clock::time_point t2;
     std::vector<CuData> &va = *p_v_a;
     size_t offset = reslist->size();
     try
@@ -803,11 +799,6 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         //         with data reporting the error.
         //         In that case, the poller must be slowed down
         std::vector<Tango::DeviceAttribute> *devattr = dev->read_attributes(*p_v_an);
-
-        /// TEST
-        t2 = std::chrono::steady_clock::now();
-        ///
-
         for(size_t i = 0; i < devattr->size(); i++) {
             Tango::DeviceAttribute *p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
@@ -847,14 +838,6 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                     // do nothing
                 }
             }
-
-            /// TEST
-            auto t3 = std::chrono::steady_clock::now();
-            printf("CuTangoWorld::\e[0;33mread_attributes\e[0m took %ldus, extract data took %ldus fpr %ld atts\n",
-                   std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count(),
-                   std::chrono::duration_cast<std::chrono::microseconds>(t3-t2).count(), devattr->size());
-            ///
-            ///
         }
         delete devattr;
     }
