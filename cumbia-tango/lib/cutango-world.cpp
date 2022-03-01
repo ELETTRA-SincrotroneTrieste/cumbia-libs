@@ -5,6 +5,9 @@
 #include <cumacros.h>
 #include <chrono>
 #include <regex>
+#include <sys/types.h> // getaddrinfo
+#include <sys/socket.h> // getaddrinfo
+#include <netdb.h> // getaddrinfo
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -2112,40 +2115,72 @@ CuDataQuality CuTangoWorld::toCuQuality(Tango::AttrQuality q) const
     }
 }
 
-std::string CuTangoWorld::make_fqdn_src(const std::string& src) {
-    string::size_type	end1 = src.find(".");
-    string fusrc = src; // full source
-    if (end1 == string::npos) {
+/*!
+ * \brief given a source, replace the tango host section with its FQDN name
+ * \param src any source
+ * \return a string with the FQDN tango host name
+ *
+ * if
+ * - no tango host is found in src
+ * - the detected tango host may be already a FQDN name (one or more `.'s are found)
+ * then the method returns a string equal to the input string
+ *
+ * The returned string will leave intact the "tango://" protocol prefix in the source,
+ * if present.
+ */
+std::string CuTangoWorld::make_fqdn_src(const string &src) const {
+    int getai_ok = 0;
+    std::string fusrc(src), tgho;
+    d->message.clear();
+    // tango host regex: capture between optional tango:// and ":PORT"
+    std::regex tghre("(?:tango://){0,1}(.*):\\d+/.*");
+    std::smatch hma; // host match
+    bool ma = std::regex_search(src, hma, tghre);
+    if(ma && hma.size() > 1)
+        tgho = hma[1].str();
+    string::size_type end1 = tgho.find("."), end2;
+    if(tgho.length() > 0 /*&& end1 == string::npos*/) { // exclude a possibly already FQDN name
+        end2 = src.rfind(":"); // find last ':', to avoid matching semicolon in tango://
         //get host name without tango://
-        string::size_type	start = src.find("tango://");
-        if (start == string::npos)
-            start = 0;
-        else
-            start = 8;	//tango:// len
-        string::size_type	end2 = src.find(":", start);
-        string th = src.substr(start, end2);
         struct addrinfo hints;
         memset(&hints, 0, sizeof hints);
-        hints.ai_family = AF_UNSPEC; /*either IPV4 or IPV6*/
+        hints.ai_family = AF_UNSPEC;     /* Allow IPv4 or IPv6 */
         hints.ai_socktype = SOCK_STREAM;
+        // If hints.ai_flags includes the AI_CANONNAME flag, then the
+        // ai_canonname field of the first of the addrinfo structures in the
+        // returned list is set to point to the official name of the host.
         hints.ai_flags = AI_CANONNAME;
-        struct addrinfo *result;
-        int ret = getaddrinfo(th.c_str(), NULL, &hints, &result);
-        if (ret != 0)
-            d->message = std::string(__func__) + ": getaddrinfo: " + th + ": " + std::string(gai_strerror(ret));
-        else if(result == nullptr)
-            d->message = std::string(__func__) + ": getaddrinfo: " + th + ": no info";
-        else if (result->ai_canonname == NULL)
-            d->message = std::string(__func__) + ": getaddrinfo: " + th + ": no info";
-        else
-            fusrc = string(result->ai_canonname) + src.substr(end2);
-        //cout << __func__ <<": found domain -> " << with_domain<<endl;
-        if(ret == 0 && result != nullptr)
-            freeaddrinfo(result); // all done with this structure
+        struct addrinfo *result, *rp;
+        getai_ok = getaddrinfo(tgho.c_str(), NULL, &hints, &result);
+        if(getai_ok != 0) {
+            d->message = __func__ + std::string(": getaddrinfo error resolving: ") + tgho + ": " + gai_strerror(getai_ok);
+        }
+        else if(result == nullptr) {
+            d->message  = __func__ + std::string(": getaddrinfo did not return domain information for ") + tgho + ": " + gai_strerror(getai_ok);
+        }
+        for (rp = result; rp != NULL; rp = rp->ai_next) {
+            if(rp->ai_canonname != nullptr) {
+                printf("--- \e[1;36mCuTangoWorld.make_fqdn_src found %s\e[0m\n", rp->ai_canonname);
+                fusrc = string(rp->ai_canonname) + src.substr(end2); // [tango://]full.host.name:PORT/tg/dev/nam/attribute
+            }
+        }
+        if(getai_ok == 0 && result) {
+            freeaddrinfo(result);
+        }
     }
-    return fusrc;
+    else if(tgho.length() == 0)
+        d->message = __func__ + std::string(" no tango host in source ") + src;
+    else if(end1 != std::string::npos)
+        d->message = __func__ + std::string(" possibly already FQDN name ") + tgho;
+    d->error = getai_ok != 0;
+    return src.find("tango://") == 0 ? "tango://" + fusrc : fusrc;
 }
 
-std::string CuTangoWorld::prepend_tgproto(const std::string& s) {
-    return s.find("tango://") != 0 ? "tango://" + s : s;
+/*!
+ * \brief prepend "tango://" protocol string to src if not already specified
+ * \param src the input source
+ * \return "tango://" + src, unless src already contains "tango://" at some point
+ */
+std::string CuTangoWorld::prepend_tgproto(const string &src) const {
+    return src.find("tango://") == std::string::npos ? "tango://" + src : src;
 }

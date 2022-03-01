@@ -156,9 +156,9 @@ public:
 
     enum StateFlags { CuAStateInit = 0x01, CuAStateExecute = 0x02, CuAStateOnExit = 0x04 };
 
-    CuActivity(CuActivityManager *activityManager, const CuData& token = CuData());
+    CuActivity(CuActivityManager *activityManager, const CuData& token);
 
-    CuActivity(const CuData& token = CuData());
+    CuActivity(const CuData& token);
 
     virtual ~CuActivity();
 
