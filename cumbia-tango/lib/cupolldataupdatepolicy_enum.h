@@ -24,6 +24,7 @@
 * - an error condition changes
 * - the attribute *data quality* changes
 *
+* @see CuPollingService
 */
 enum class CuPollDataUpdatePolicy {
     UpdateAlways, OnUnchangedTimestampOnly, OnUnchangedNothing
