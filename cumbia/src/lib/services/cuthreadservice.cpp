@@ -59,15 +59,15 @@ CuThreadInterface *CuThreadService::getThread(const std::string& token,
 {
     CuThreadInterface *thread;
     std::list<CuThreadInterface *>::const_iterator it;
-    for(it = mThreads.begin(); it != mThreads.end(); ++it)
-    {
-        if((*it)->isEquivalent(token))
+    for(it = mThreads.begin(); it != mThreads.end(); ++it) {
+        if((*it)->isEquivalent(token)) {
             return (*it);
+        }
+
     }
     thread = thread_factory_impl.createThread(token, eventsBridgeFactory.createEventBridge(service_provider), service_provider);
     std::unique_lock lock(m_shared_mutex);
     mThreads.push_back(thread);
-    printf(">>>>>>>>>>>>>> CuThreadService::getThread returning thread  %p count %d for token %s\n", thread, ++thcnt, token.c_str());
     return thread;
 }
 
