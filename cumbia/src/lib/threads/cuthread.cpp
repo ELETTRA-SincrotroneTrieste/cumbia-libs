@@ -30,7 +30,7 @@ class CuThreadPrivate
 {
 public:
     std::queue <ThreadEvent *> eventQueue;
-    CuData token;
+    std::string token;
     const CuServiceProvider *serviceProvider;
     CuEventLoopService *cuEventLoop;
     std::shared_mutex shared_mutex;
@@ -58,7 +58,7 @@ public:
  * thread with that token is reused for the new activity, otherwise a new
  * thread is dedicated to run the new activity.
  */
-CuThread::CuThread(const CuData &token,
+CuThread::CuThread(const std::string &token,
                    CuThreadsEventBridge_I *teb,
                    const CuServiceProvider *serviceProvider)
 {
@@ -171,6 +171,7 @@ size_t CuThread::m_activity_cnt(CuTimer *t) const  {
  */
 void CuThread::registerActivity(CuActivity *l)
 {
+    l->setThreadToken(d->token);
     ThreadEvent *registerEvent = new RegisterActivityEvent(l);
     /* need to protect event queue because this method is called from the main thread while
      * the queue is dequeued in the secondary thread
@@ -329,9 +330,9 @@ void CuThread::publishExitEvent(CuActivity *a)
  *
  * See also getToken
  */
-bool CuThread::isEquivalent(const CuData &other_thread_token) const
+bool CuThread::isEquivalent(const std::string &other_thtok) const
 {
-    return this->d->token == other_thread_token;
+    return this->d->token == other_thtok;
 }
 
 /*! \brief returns the thread token that was specified at construction time
@@ -340,7 +341,7 @@ bool CuThread::isEquivalent(const CuData &other_thread_token) const
  *
  * @see CuThread::CuThread
  */
-CuData CuThread::getToken() const {
+std::string CuThread::getToken() const {
     return d->token;
 }
 
@@ -483,7 +484,6 @@ bool CuThread::isRunning()
 */
 void CuThread::mActivityInit(CuActivity *a) {
     d->activity_set.insert(a);
-    a->setThreadToken(d->token);
     a->doInit();
     a->doExecute();
     CuTimer *timer = nullptr;

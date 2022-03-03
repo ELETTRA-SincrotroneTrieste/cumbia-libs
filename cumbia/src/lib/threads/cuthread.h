@@ -64,7 +64,7 @@ class CuTimerService;
 class CuThread : public CuThreadInterface, public CuTimerListener
 {
 public:
-    CuThread(const CuData &token, CuThreadsEventBridge_I *threadEventsBridge,
+    CuThread(const std::string &token, CuThreadsEventBridge_I *threadEventsBridge,
              const CuServiceProvider* service_provider);
 
     virtual ~CuThread();
@@ -78,8 +78,8 @@ public:
     void publishResult(const CuActivity *activity, const std::vector<CuData> *data_list);
 
     void publishExitEvent(CuActivity *a);
-    bool isEquivalent(const CuData &other_thread_token) const;
-    CuData getToken() const;
+    bool isEquivalent(const std::string &other_thtok) const;
+    std::string getToken() const;
     void cleanup();
     int type() const;
     void start();
