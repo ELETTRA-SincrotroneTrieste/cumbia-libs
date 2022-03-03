@@ -58,8 +58,6 @@ public:
     virtual void unregisterAction(const std::string& src, CuTangoActionI::Type at);
     virtual void cleanup();
 
-    void reserve(unsigned chunks);
-
     // CuServiceI interface
 public:
     std::string getName() const;
