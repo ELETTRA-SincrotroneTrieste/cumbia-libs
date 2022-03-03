@@ -802,7 +802,6 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         for(size_t i = 0; i < devattr->size(); i++) {
             Tango::DeviceAttribute *p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
-
             if(updpo == CuPollDataUpdatePolicy::UpdateAlways) {
                 reslist->push_back(va[i]);
                 extractData(p_da,  (*reslist)[offset]);
@@ -934,7 +933,7 @@ bool CuTangoWorld::write_att(Tango::DeviceProxy *dev,
                              const CuData& point_info,
                              CuData &data)
 {
-    assert(dev != NULL);
+    // assert(dev != NULL);
     try
     {
         Tango::DeviceAttribute da = toDeviceAttribute(attnam, argins, point_info);
