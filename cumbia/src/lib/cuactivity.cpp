@@ -21,7 +21,8 @@ public:
     CuActivityManager *activityManager;
     bool dispose;
     bool onExit;
-    CuData token, thread_tok;
+    std::string thread_tok;
+    CuData token;
     int flags, stateFlags;
 };
 
@@ -207,16 +208,15 @@ CuActivityManager *CuActivity::getActivityManager() const
  * \li CuActivity introductive documentation
  *
  */
-CuData CuActivity::getToken() const
-{
+CuData CuActivity::getToken() const {
     return d->token;
 }
 
-void CuActivity::setThreadToken(const CuData &tt) {
+void CuActivity::setThreadToken(const std::string &tt) {
     d->thread_tok = tt;
 }
 
-const CuData &CuActivity::threadToken() const {
+const std::string CuActivity::threadToken() const {
     return d->thread_tok;
 }
 

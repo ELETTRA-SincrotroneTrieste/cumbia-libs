@@ -201,8 +201,8 @@ public:
     CuActivityManager *getActivityManager() const;
 
     CuData getToken() const;
-    void setThreadToken(const CuData &tt);
-    const CuData& threadToken() const;
+    void setThreadToken(const std::string &tt);
+    const std::string threadToken() const;
 
     /* template method: sets state and calls init */
     void doInit();
