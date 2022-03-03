@@ -72,14 +72,11 @@ void CuPoller::registerAction(const TSource& tsrc,
     CuData at("device", tsrc.getDeviceName()); /* activity token */
     at["activity"] = "poller";
     at["period"] = d->period;
-
     CuActivity *activity = am->find(at); // polling activities compare device period and "activity"
     if(!activity) {
         // thread token. CuTReader.setOptions can customize thread grouping behaviour
-        CuData tt;
-        options.containsKey("thread_token") ? tt = options : tt = CuData("device", tsrc.getDeviceName());
-        at["period"] = d->period; // make sure at contains the new period
-        activity = new CuPollingActivity(at, df, options, tag, updpo);
+        const std::string& tt = options.containsKey("thread_token") ? options.s("thread_token") : tsrc.getDeviceName();
+        activity = new CuPollingActivity(tsrc, df, options, tag, updpo, d->period);
         const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
         const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
         d->cumbia_t->registerActivity(activity, this, tt, fi, bf);
