@@ -115,11 +115,9 @@ size_t CuTaDb::dataListenersCount() {
 void CuTaDb::start()
 {
     CuData at("src", d->tsrc.getName()); /* activity token */
-    CuData tt("thread_token", "tangodb"); // same thread for all db accesses
     at["activity"] = "cutadb";
     at.merge(d->options);
-    if(d->options.containsKey("thread_token"))
-        tt["thread_token"] = d->options["thread_token"];
+    const std::string& tt = d->options.containsKey("thread_token") ? d->options.s("thread_token") : "cutadb";
     d->activity = new CuTaDbActivity(at, d->tsrc, d->tag);
     d->activity->setOptions(d->options);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
