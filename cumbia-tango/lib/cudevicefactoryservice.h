@@ -11,13 +11,10 @@ class TDevice;
 
 class TDevData {
 public:
-    TDevData(TDevice *td, const CuData& tk) {
-        tdevice = td;
-        thread_token = tk;
-    }
+    TDevData(TDevice *td, const std::string& tk) : tdevice(td), thread_token(tk) { }
 
     TDevice *tdevice;
-    CuData thread_token;
+    const std::string thread_token;
 };
 
 /*! \brief implements CuServiceI interface and provides a service to create and store Tango
@@ -52,12 +49,12 @@ public:
 
     virtual ~CuDeviceFactoryService();
 
-    TDevice *getDevice(const std::string &name, const CuData &thread_tok);
+    TDevice *getDevice(const std::string &name, const std::string &thread_tok);
 
-    TDevice *findDevice(const std::string &name, const CuData &thread_tok);
+    TDevice *findDevice(const std::string &name, const std::string &thread_tok);
 
-    void addRef(const std::string& devname, const CuData &thread_tok);
-    int removeRef(const std::string& devname, const CuData &thread_tok);
+    void addRef(const std::string& devname, const std::string &thread_tok);
+    int removeRef(const std::string& devname, const std::string &thread_tok);
 
 
     // CuServiceI interface

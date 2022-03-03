@@ -29,7 +29,7 @@ CuDeviceFactoryService::~CuDeviceFactoryService()
  * @see TDevice::isValid
  * @see TDevice::getError
  */
-TDevice *CuDeviceFactoryService::getDevice(const std::string &name, const CuData &thread_tok)
+TDevice *CuDeviceFactoryService::getDevice(const std::string &name, const std::string &thread_tok)
 {
     pr_thread();
     TDevice *td = NULL;
@@ -60,7 +60,7 @@ TDevice *CuDeviceFactoryService::getDevice(const std::string &name, const CuData
  *
  * @see getDevice
  */
-TDevice *CuDeviceFactoryService::findDevice(const std::string &name, const CuData& thread_tok)
+TDevice *CuDeviceFactoryService::findDevice(const std::string &name, const std::string &thread_tok)
 {
     std::shared_lock lock(m_shared_mutex);
     std::pair<std::multimap <std::string, TDevData>::const_iterator, std::multimap <std::string, TDevData>::iterator > ret;
@@ -72,7 +72,7 @@ TDevice *CuDeviceFactoryService::findDevice(const std::string &name, const CuDat
     return NULL;
 }
 
-void CuDeviceFactoryService::addRef(const string &devname, const CuData &thread_tok)
+void CuDeviceFactoryService::addRef(const string &devname, const std::string &thread_tok)
 {
     std::unique_lock lock(m_shared_mutex); // modifies TDevice in list
     std::pair<std::multimap <std::string, TDevData>::const_iterator, std::multimap <std::string, TDevData>::iterator > ret;
@@ -85,7 +85,7 @@ void CuDeviceFactoryService::addRef(const string &devname, const CuData &thread_
     }
 }
 
-int CuDeviceFactoryService::removeRef(const string &devname, const CuData &thread_tok)
+int CuDeviceFactoryService::removeRef(const string &devname, const std::string &thread_tok)
 {
     std::unique_lock lock(m_shared_mutex); // modifies TDevice in list
     int refcnt = -1;
