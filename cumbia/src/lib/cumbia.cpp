@@ -175,7 +175,7 @@ CuServiceProvider *Cumbia::getServiceProvider() const
  */
 void Cumbia::registerActivity(CuActivity *activity,
                               CuThreadListener *dataListener,
-                              const CuData& thread_token,
+                              const std::string& thread_token,
                               const CuThreadFactoryImplI& thread_factory_impl,
                               const CuThreadsEventBridgeFactory_I &eventsBridgeFactoryImpl)
 {
@@ -353,14 +353,13 @@ CuThreadTokenGenI *Cumbia::getThreadTokenGenerator() const {
  *
  * \return a thread token (CuData)
  */
-CuData Cumbia::threadToken(const CuData &options) const
+const std::string Cumbia::threadToken(const std::string& in) const
 {
-    CuData ret;
+    std::string ret;
     if(d->threadTokenGenerator)
-        ret = d->threadTokenGenerator->generate(options);
-    else if(!options.containsKey("thread_token"))
-        ret = options;
+        ret = d->threadTokenGenerator->generate(in);
     else
-        ret =  CuData("thread_token", options["thread_token"]);
+        ret = in;
+    printf("\e[1;33mCumbia.threadToken: returning \"%s\" as thread token\e[0m\n", ret.c_str());
     return ret;
 }

@@ -5,33 +5,89 @@
 #include <sys/time.h>
 #include <unordered_map>
 #include <map>
+#include <atomic>
+
+std::atomic<int> dacnt = 0; // data counter
+std::atomic<int>  pcnt = 0; // private data counter
+std::atomic<int>  wpcnt = 0; // private data counter that would be without sharing
+std::atomic<int>  cp = 0; // copy counter
+std::atomic<int>  wcp = 0; // would copy without sharing
+std::atomic<int>  detachcnt = 0;
 
 /*! @private */
 class CuDataPrivate
 {
 public:
-    std::map<std::string, CuVariant> datamap;
+    CuDataPrivate(const CuDataPrivate& other) {
+        pcnt++;
+        datamap = other.datamap;
+        cp++; // TEST: increment copy count
+        _r.store(1);
+        printf("CuDataPrivate %p \e[1;35;4mHAS MADE A FULL COPY OF A MAP SIZED %ld\e[0m\n"
+               "\e[1;35m TOTAL COPIES UNTIL NOW %d WOULD HAVE BEEN %d\e[0m\n",
+               this, datamap.size(), cp.load(), wcp.load());
+    }
 
+    CuDataPrivate() {
+        pcnt++;
+        _r.store(1);
+    }
+    ~CuDataPrivate() {
+        pcnt--;
+        printf("\e[1;31mx\e[0m ~CuDataPrivate %p ref was %d pcnt is now %d\e[0m\n", this, _r.load(), pcnt.load());
+    }
+
+
+    std::map<std::string, CuVariant> datamap;
     CuVariant emptyVariant;
+
+    int ref() {
+        return _r.fetch_add(1);
+    }
+    int unref() {
+        return _r.fetch_sub(1);
+    }
+    int exchange(int desired) {
+        return _r.exchange(desired);
+    }
+    int load() const {
+        return _r.load();
+    }
+
+private:
+    std::atomic<int> _r;
+
 };
 
 /*! \brief the class destructor
  *
  * CuData class destructor
  */
-CuData::~CuData()
-{
-    if(d_p)
-        delete d_p;
+CuData::~CuData() {
+    dacnt--;
+    if(d_p) {
+        int r = d_p->unref();
+        if(r == 1) {
+            printf("\e[1;31mX ~CuData %p deleting d_p %p cuz refcnt==1 (data cnt %d d_p %d would be %d)\n", this, d_p, dacnt.load(), pcnt.load() -1, wpcnt.load());
+            delete d_p;
+        }
+        else
+            printf("\e[1;32mX ~CuData %p not deleting d_p %p cause ref %d\e[0m (data cnt %d d_p %d would be %d)\n", this, d_p, r, dacnt.load(), pcnt.load(), wpcnt.load());
+    }
+    else
+        printf("\e[1;32mX ~CuData %p not deleting d_p cause null, probably \e[1;35mafter a move\e[0m\e[0m (data cnt %d pcnt %d would be %d)\n", this, dacnt.load(), pcnt.load(), wpcnt.load());
+    printf("\e[1;31mX\e[0m ~CuData \e[1;36mcopy counter %d would have copied %d - detach() called %d times\e[0m\n", cp.load(), wcp.load(), detachcnt.load());
 }
 
 /*! \brief constructor of an empty CuData
  *
  * builds a CuData with no key/value
  */
-CuData::CuData()
-{
+CuData::CuData() {
     d_p = new CuDataPrivate();
+    dacnt++;
+    wpcnt++; // there is and there would be a new private data obj
+    printf("\e[1;32m+ \e[0m%p d_p %p tot data %d tot d_p %d would be %d\n", this, d_p, dacnt.load(), pcnt.load(), wpcnt.load());
 }
 
 /*! \brief constructor of a CuData initialised with one value (key: emtpy string)
@@ -46,6 +102,10 @@ CuData::CuData(const CuVariant &v)
 {
     d_p = new CuDataPrivate();
     d_p->datamap[""] = v;
+    dacnt++;
+    wpcnt++; // there is and there would be a new private data obj
+    printf("\e[1;32m+ \e[0mCuData(const CuVariant &v %s) %p d_p %p tot data %d tot d_p %d would be %d\n", vtoc(v),
+           this, d_p, dacnt.load(), pcnt.load(), wpcnt.load());
 }
 
 /*! \brief constructor initialising a CuData with one key-value pair
@@ -59,6 +119,10 @@ CuData::CuData(const std::string& key, const CuVariant &v)
 {
     d_p = new CuDataPrivate();
     d_p->datamap[key] = v;
+    dacnt++;
+    wpcnt++; // there is and there would be a new private data obj
+    printf("\e[1;32m+ \e[0mCuData(%s, %s) %p d_p %p tot data %d tot d_p %d would be %d\n",
+           key.c_str(), v.toString().c_str(), this, d_p, dacnt.load(), pcnt.load(), wpcnt.load());
 }
 
 /*! \brief the copy constructor
@@ -70,8 +134,18 @@ CuData::CuData(const std::string& key, const CuVariant &v)
  */
 CuData::CuData(const CuData &other)
 {
-    d_p = new CuDataPrivate();
-    mCopyData(other);
+    dacnt++;
+    //    d_p = new CuDataPrivate();
+    wpcnt++;
+
+    d_p = other.d_p;
+    int  r =  d_p->ref(); // increment ref counter
+    printf("\e[1;32mCuData::CuData(const CuData &other) new CuData constr %p reusing d_p %p has refcnt %d\e[0m "
+           "tot data %d tot d_p %d would be %d \e[1;36mcopy counter %d would have copied %d \e[1;3;32;4mSAVED ONE COPY\e[0m\n",
+           this, d_p, r, dacnt.load(), pcnt.load(), wpcnt.load(), cp.load(), wcp.load());
+    //    mCopyData(other);
+    wcp++;
+    //  ^^ would have copied
 }
 
 /*! \brief c++11 *move constructor*
@@ -83,7 +157,11 @@ CuData::CuData(const CuData &other)
 CuData::CuData(CuData &&other)
 {
     d_p = other.d_p; /* no d = new here */
-    other.d_p = NULL; /* avoid deletion! */
+    int r = d_p->load();
+    dacnt++;
+    printf("\e[1;32mCuData::CuData [MOVE] this %p reusing d_p %p (other.d_p %p --> null) has refcnt %d\e[0m tot data %d tot d_p %d would be %d\n",
+           this, d_p, other.d_p, r, dacnt.load(), pcnt.load(), wpcnt.load());
+    other.d_p = nullptr; /* avoid deletion! */
 }
 
 /*! \brief assignment operator, copies data from another source
@@ -93,9 +171,26 @@ CuData::CuData(CuData &&other)
 CuData &CuData::operator=(const CuData &other)
 {
     if(this != &other) {
-        d_p->datamap.clear();
-        mCopyData(other);
+        other.d_p->ref();
+        int r = this->d_p->unref();
+        if(r == 1) {
+            // without sharing we would NOT delete
+            printf("\e[1;35mCuData::operator= CuData %p assignment from other %p deletes reference %p\e[0m\n",
+                   this, &other, d_p);
+            delete d_p;
+        }
+        d_p = other.d_p;
+
+        //        d_p->datamap.clear();
+        //        mCopyData(other);
+        wcp++;
+        // ^^ // would have copied
+
+        printf("\e[1;32mCuData::operator= %p reusing d_p %p has refcnt %d\e[0m "
+               "tot data %d tot d_p %d would be %d \e[1;36mcopy counter %d would have copied %d \e[1;3;32;4mSAVED ONE COPY\e[0m\n",
+               this, d_p, d_p->load(), dacnt.load(), pcnt.load(), wpcnt.load(), cp.load(), wcp.load());
     }
+
     return *this;
 }
 
@@ -107,27 +202,59 @@ CuData &CuData::operator=(CuData &&other)
 {
     if (this!=&other)
     {
-        if(d_p)
-            delete d_p;
+        if(d_p) {
+            int r = d_p->unref();
+            if(r == 1) {
+                printf("CuData::operator= [\e[1;35mMOVE\e[0m] this %p deleting d_p %p\n", this, d_p);
+                delete d_p;
+            }
+        }
         d_p = other.d_p;
-        other.d_p = NULL; /* avoid deletion! */
+
+        printf("\e[1;32mCuData::operator= [MOVE ASSIGNMENT] this %p d_p %p (other.d_p %p will be set to null in order not to delete) has refcnt %d\e[0m tot data %d tot d_p %d would be %d\n",
+               this, d_p, other.d_p, d_p->load(), dacnt.load(), pcnt.load(), wpcnt.load());
+
+        other.d_p = nullptr; /* avoid deletion! */
+
     }
     return *this;
 }
 
-CuData &CuData::set(const std::string &key, const CuVariant &value)
-{
+CuData &CuData::set(const std::string &key, const CuVariant &value) {
+    detach();
     d_p->datamap[key] = value;
+    printf("\e[1;33m$$\e[0m CuData::set this %p key %s val %s \e[1;36mcopy counter %d would have copied %d\e[0m\n",
+           this, key.c_str(), value.toString().c_str(), cp.load(), wcp.load());
     return *this;
 }
 
+CuData &CuData::merge(const CuData &&other) {
+    detach();
+    for(const std::string& key : other.keys())
+        (*this).set(key, std::move(other.value(key)));
+    printf("\e[1;33m$$\e[0m CuData::merge this %p  \e[1;36mcopy counter %d would have copied %d\e[0m\n", this, cp.load(), wcp.load());
+    return *this;
+}
+
+/*! \brief clone this data, without sharing
+ *
+ *  \return a clone of this data, bypassing the copy-on-write share
+ */
+CuData CuData::clone() const {
+    CuData d;
+    d.d_p = new CuDataPrivate(*d_p);
+    return d;
+}
+
 CuData &CuData::merge(const CuData &other) {
+    detach();
     for(const std::string& key : other.keys())
         (*this).set(key, other.value(key));
     return *this;
 }
 
 CuData &CuData::remove(const std::string &key) {
+    detach();
     d_p->datamap.erase(key);
     return *this;
 }
@@ -137,6 +264,7 @@ CuData CuData::remove(const std::string &key) const {
 }
 
 CuData &CuData::remove(const std::vector<std::string> &keys) {
+    detach();
     for(const std::string& k : keys)
         d_p->datamap.erase(k);
     return *this;
@@ -166,8 +294,7 @@ size_t CuData::size() const
  * If there's no value associated to an *empty key* (i.e. an *emtpy string*, ""), an
  * *invalid and null* CuVariant is returned. See CuVariant::isValid and CuVariant::isNull
  */
-CuVariant CuData::value() const
-{
+CuVariant CuData::value() const {
     /* search the empty key */
     if(d_p->datamap.count("") > 0)
         return d_p->datamap.at("");
@@ -185,6 +312,7 @@ CuVariant CuData::value() const
  */
 CuVariant CuData::value(const std::string & key) const
 {
+    printf("CuData value() const this %p d_p %p key %s\n", this, d_p, key.c_str());
     if(d_p->datamap.count(key) > 0)
         return d_p->datamap[key];
     return CuVariant();
@@ -199,6 +327,9 @@ CuVariant CuData::value(const std::string & key) const
  */
 void CuData::add(const std::string & key, const CuVariant &value)
 {
+    detach();
+    printf("\e[1;33m$$\e[0m CuData::add this %p key %s val %s  \e[1;36mcopy counter %d would have copied %d\e[0m\n",
+           this, key.c_str(), value.toString().c_str(), cp.load(), wcp.load());
     d_p->datamap[key] = value;
 }
 
@@ -239,8 +370,11 @@ bool CuData::has(const std::string &key, const std::string &value) const
     at["err"] = false; // bool
  * \endcode
  */
-CuVariant &CuData::operator [](const std::string &key)
-{
+CuVariant &CuData::operator [](const std::string &key) {
+    printf("\e[1;33m$$\e[0m CuData::operator [] (non const) this %p key %s\n", this, key.c_str());
+    detach();
+    printf("\e[1;33m$$\e[0m CuData::add this %p key %s  \e[1;36mcopy counter %d would have copied %d\e[0m\n",
+           this, key.c_str(), cp.load(), wcp.load());
     return d_p->datamap[key];
 }
 
@@ -357,10 +491,14 @@ std::string CuData::toString() const
  */
 void CuData::putTimestamp()
 {
+    printf("\e[1;33m$$\e[0m CuData::putTimestamp this %p\n", this);
+    detach();
     struct timeval tv;
     gettimeofday(&tv, NULL);
     add("timestamp_ms",  tv.tv_sec * 1000 + tv.tv_usec / 1000);
     add("timestamp_us", static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6);
+    printf("\e[1;33m$$\e[0m CuData::putTimestamp this %p \e[1;36mcopy counter %d would have copied %d\e[0m\n",
+           this,  cp.load(), wcp.load());
 }
 
 std::vector<std::string> CuData::keys() const
@@ -371,11 +509,28 @@ std::vector<std::string> CuData::keys() const
     return ks;
 }
 
-void CuData::mCopyData(const CuData& other)
-{
-    std::map<std::string, CuVariant>::const_iterator it;
-    for (it = other.d_p->datamap.begin(); it != other.d_p->datamap.end(); ++it)
-        d_p->datamap[it->first] = other.d_p->datamap[it->first];
+//void CuData::mCopyData(const CuData& other)
+//{
+//    std::map<std::string, CuVariant>::const_iterator it;
+//    for (it = other.d_p->datamap.begin(); it != other.d_p->datamap.end(); ++it)
+//        d_p->datamap[it->first] = other.d_p->datamap[it->first];
+//}
+
+void CuData::detach() {
+    detachcnt++;
+    int r = d_p->load();
+    if(r > 1) {
+        printf("CuData::\e[0;32mdetach:\e[0m: this %p old_dp %p need new d_p because cur ref %d\n", this, d_p, r);
+        d_p->unref();
+        d_p = new CuDataPrivate(*d_p); // sets ref=1
+        // in test, new CuDataPrivate increments cp copy counter. In fact the constructor MAKES a COPY
+        printf(" -> new d_p %p \e[1;36mcopy counter %d would have copied %d detach call count %d\e[0m\n", d_p, cp.load(), wcp.load(), detachcnt.load());
+    }
+    else {
+        printf("CuData::\e[0;35mdetach:\e[0m: this %p do not need new d_p (remains %p) because cur "
+               "ref %d\e[1;36mcopy counter %d would have copied %d detach() called %d times\e[0m\n",
+               this, d_p, r, cp.load(), wcp.load(), detachcnt.load());
+    }
 }
 
 std::string CuData::s(const std::string& key) const {
@@ -391,7 +546,7 @@ int CuData::i(const std::string& key) const {
 }
 
 unsigned int CuData::u(const std::string &key) const {
-        return this->operator[](key).u();
+    return this->operator[](key).u();
 }
 
 bool CuData::b(const std::string& key) const {

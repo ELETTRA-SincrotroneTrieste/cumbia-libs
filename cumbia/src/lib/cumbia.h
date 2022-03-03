@@ -12,6 +12,8 @@ class CuContinuousActivity;
 class CuActivityEvent;
 class CuThreadTokenGenI;
 
+#include <string>
+
 #define CUMBIA_VERSION CU_VERSION
 
 /** \mainpage
@@ -203,7 +205,7 @@ public:
 
     void registerActivity(CuActivity *activity,
                           CuThreadListener *dataListener,
-                          const CuData& thread_token,
+                          const std::string &thread_token,
                           const CuThreadFactoryImplI& thread_factory_impl,
                           const CuThreadsEventBridgeFactory_I& eventsBridgeFactoryImpl);
 
@@ -231,7 +233,7 @@ public:
 
     CuThreadTokenGenI *getThreadTokenGenerator() const;
 
-    CuData threadToken(const CuData &options) const;
+    const std::string threadToken(const std::string &in) const;
 
 private:
     CumbiaPrivate *d;
