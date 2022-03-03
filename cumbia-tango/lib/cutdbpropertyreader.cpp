@@ -112,10 +112,11 @@ CuTDbPropertyReader::~CuTDbPropertyReader()
 void CuTDbPropertyReader::get(const std::vector<CuData> &in_data)
 {
     CuData thread_tok("id", d->id);
+    const std::string& thto = "cutdbprop_r:" + d->id;
     d->activity = new CuGetTDbPropActivity(in_data);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
-    d->cumbia_t->registerActivity(d->activity, this, thread_tok, fi, bf);
+    d->cumbia_t->registerActivity(d->activity, this, thto, fi, bf);
 }
 
 /*!

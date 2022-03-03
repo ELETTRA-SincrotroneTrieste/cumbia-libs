@@ -184,9 +184,7 @@ void CuTWriter::start() {
     at["write_value"] = d->write_val;
     at["cmd"] = (d->tsrc.getType() == TSource::SrcCmd);
     at.merge(d->options);
-    CuData thtok = CuData("device", d->tsrc.getDeviceName()); /* thread token */
-    if(d->options.containsKey("thread_token"))
-        thtok["thread_token"] = d->options["thread_token"];
+    const std::string & thtok = d->options.containsKey("thread_token") ? d->options.s("thread_token") : d->tsrc.getDeviceName(); /* thread token */
     d->activity = new CuWriteActivity(at, df, d->db_conf, d->tag);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
