@@ -20,7 +20,6 @@ public:
     virtual size_t count() const;
     virtual void unregisterAction(const std::string& src, CuTangoActionI::Type at);
     virtual void cleanup();
-    virtual void reserve(int chunks);
 
 protected:
     CuActionFactoryServiceImplBasePrivate *d;
@@ -42,7 +41,6 @@ public:
     virtual size_t count() const;
     virtual void unregisterAction(const std::string& src, CuTangoActionI::Type at);
     virtual void cleanup();
-    virtual void reserve(int chunks);
 
 private:
     CuActionFactoryServiceImplPrivate *d;
