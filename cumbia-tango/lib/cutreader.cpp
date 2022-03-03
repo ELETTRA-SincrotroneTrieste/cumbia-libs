@@ -72,8 +72,7 @@ public:
           polling_fallback(false),
           started(false),
           manual_mode_period( 1000 * 3600 * 24 * 10),
-          tag(_tag),
-          update_hint(CuActivity::CuUpdateAlways)
+          tag(_tag)
     {  }
 
     std::set<CuDataListener *> listeners;
@@ -134,39 +133,7 @@ void CuTReader::onResult(const CuData &data) {
     // if it's just subscribe_event failure, do not notify listeners
     for(it = lis_copy.begin(); !event_subscribe_fail && it != lis_copy.end();   ++it) {
         // always update in case of error or if we are using events
-        if(err || d->update_hint == CuActivity::CuUpdateAlways || d->event_activity != nullptr) {
             (*it)->onUpdate(data);
-        } else if(d->update_hint == CuActivity::CuOnUnchangedUpdateTimestamp) {
-            if(d->prevd.equals(data)) {
-                (*it)->onUpdate(CuData("timestamp_ms", data["timestamp_ms"]).set("timestamp_us", data["timestamp_us"])
-                        .set("src", data.s("src")));
-                printf("\e[1;32;3mCuTReader::onResult UPDATING timestamp only because value hasn't changed!!\e[0;35m\n");
-                d->prevd.repr();
-                printf("\e[0;36m");
-                d->prevd.from(data);
-                d->prevd.repr();
-                printf("\e[0m");
-            }
-            else {
-                d->prevd.from(data);
-                (*it)->onUpdate(data);
-            }
-        }
-        else if(d->update_hint == CuActivity::CuOnUnchangedNoUpdate) {
-            if(d->prevd.equals(data)) {
-                printf("\e[1;33;3mCuTReader::onResult NOT UPDATING listener because value hasn't changed!!\e[0;35m\n");
-                d->prevd.repr();
-                printf("\e[0;36m");
-                d->prevd.from(data);
-                d->prevd.repr();
-                printf("\e[0m");
-            }
-            else {
-                d->prevd.from(data);
-                (*it)->onUpdate(data);
-            }
-        }
-
     }
     if(err) {
         if(data.containsKey("ev_except") && data.B("ev_except")) {
