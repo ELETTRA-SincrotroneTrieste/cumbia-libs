@@ -82,10 +82,6 @@ void CuActionFactoryService::cleanup() {
     impl->cleanup();
 }
 
-void CuActionFactoryService::reserve(unsigned chunks) {
-    impl->reserve(chunks);
-}
-
 /*! \brief returns the service name
  *
  * @return the constant string "*ActionFactoryService" identifying this type of service.
