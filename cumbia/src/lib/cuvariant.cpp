@@ -10,15 +10,6 @@
 #include "cumacros.h"
 #include <atomic>
 
-
-std::atomic<int> vdacnt = 0; // data counter
-std::atomic<int>  vpcnt = 0; // private data counter
-std::atomic<int>  vwvpcnt = 0; // private data counter that would be without sharing
-std::atomic<int>  vcp = 0; // copy counter
-std::atomic<int>  vwcp = 0; // would copy without sharing
-std::atomic<int>  vdetachcnt = 0;
-
-
 CuVariantPrivate::CuVariantPrivate(const CuVariantPrivate &other) {
     format  = other.format;
     type = other.type;
@@ -27,11 +18,6 @@ CuVariantPrivate::CuVariantPrivate(const CuVariantPrivate &other) {
     mIsNull = other.mIsNull;
     _r.store(1);
 
-    // TEST: increment copy counter
-    vcp++;
-
-    //    printf("\e[0;36mCuVariant::build_from: %s %p copy from %p this->d: %p: format %d size %ld\e[0m \n", other.toString().c_str(), this, &other, d,
-    //          d->format,  d->mSize);
     switch(type) {
     case CuVariant::Double: {
         if(format == CuVariant::Scalar || format == CuVariant::Vector) {
@@ -209,14 +195,11 @@ CuVariantPrivate::CuVariantPrivate()
     mIsValid = false;
     mIsNull = true;
     mSize = 0;
-    vpcnt++;
     _r.store(1);
-    printf("CuVariantPrivate %p: total count %d would copy counter %d\n", this, vpcnt.load(), vwcp.load());
 }
 
 CuVariantPrivate::~CuVariantPrivate() {
-    printf("\e[0;31mXX \e[0m~CuVariant %p\n", this);
-    vpcnt--;
+
 }
 
 /*! \brief deletes read data
@@ -293,22 +276,9 @@ void CuVariant::m_cleanup()
 }
 
 void CuVariant::m_detach() {
-    vdetachcnt++;
-    int r = _d->load();
-    if(r > 1) {
-        printf("\e[0;35mD\e[0m \e[0;32mCuVariant::m_detach:\e[0m: this %p old _d %p need new _d because cur ref %d\n", this, _d, r);
+    if(_d->load() > 1) {
         _d->unref();
         _d = new CuVariantPrivate(*_d); // sets ref=1  TEST: increases vcp
-
-        // copies
-        // in test, new CuVariantPrivate increments cp copy counter. In fact the constructor MAKES a COPY
-        printf(" -> \e[1;33mCuVariant.m_detach: this %p A COPY HAS BEEN MADE\e[0m \e[0;36mcopy counter %d would have copied %d detach call count %d\e[0m\n",
-               _d, vcp.load(), vwcp.load(), vdetachcnt.load());
-    }
-    else {
-        printf("\e[0;35mD\e[0m CuVariant::\e[0;35mdetach:\e[0m: this %p do not need new d_p (remains %p) because cur "
-               "ref %d\e[1;36mcopy counter %d would have copied %d detach() called %d times\e[0m\n",
-               this, _d, r, vcp.load(), vwcp.load(), vdetachcnt.load());
     }
 }
 
@@ -317,17 +287,10 @@ void CuVariant::m_detach() {
  * calls cleanup to free all resources used by the object
  */
 CuVariant::~CuVariant() {
-    printf("\e[0;31mXX \e[0m~CuVariant %p\e[0m\n", this);
-    vdacnt--;
     if(_d && _d->unref() == 1) {
         // pdelete("~CuVariant: cleaning up %p", this);
         m_cleanup(); // deletes d
     }
-
-    printf("\e[1;31mX\e[0m~CuVariant::\e[0;35mdestructor %s:\e[0m: this %p _d %p"
-           "\e[1;36mcopy counter %d would have copied %d detach() called %d times refcnt %d (1 = deleted)\e[0m\n",
-           _d ? "\e[1;33mNOT DELETED" : "\e[1;31mDELETED", this, _d,  vcp.load(), vwcp.load(), vdetachcnt.load(),
-           _d ? _d->load() : 1);
 }
 
 /*! \brief builds a CuVariant holding the specified short integer
@@ -825,14 +788,7 @@ CuVariant::CuVariant() {
 CuVariant::CuVariant(const CuVariant &other) {
     _d = other._d;
     _d->ref();
-
-    printf("\e[0;32mCuVariant::CuVariant [COPY CONSTRUCTOR]: \e[1;33mSHARING\e[0m!!!! this %p reusing d_p %p (other.d_p %p --> null)"
-           " has refcnt %d\e[0m tot \e[0;36mcopy counter %d would have copied %d\e[0m\n",
-           this, _d, other._d, _d->load(),  vcp.load(), vwcp.load());
-// would copy with build_from!
-    vwcp++;
-// >>>>    build_from(other);
-    printf("CuVariant %p [copy constructor] copied %d would have copied %d\n", this, vcp.load(),  vwcp.load());
+//  build_from(other); // before shared data
 }
 
 /*! \brief move constructor
@@ -841,15 +797,9 @@ CuVariant::CuVariant(const CuVariant &other) {
  *
  * C++ 11 move constructor for CuVariant
  */
-CuVariant::CuVariant(CuVariant &&other)
-{
+CuVariant::CuVariant(CuVariant &&other) {
     /* no new d here! */
     _d = other._d;
-
-    printf("\e[0;32mCuVariant::CuVariant [MOVE] this %p reusing d_p %p (other.d_p %p --> null)"
-           " has refcnt %d\e[0m tot \e[0;36mcopy counter %d would have copied %d\e[0m\n",
-           this, _d, other._d, _d->load(),  vcp.load(), vwcp.load());
-
     other._d = nullptr; /* don't delete */
 }
 
@@ -857,25 +807,15 @@ CuVariant::CuVariant(CuVariant &&other)
  *
  * @param other CuVariant to assign from
  */
-CuVariant & CuVariant::operator=(const CuVariant& other)
-{
+CuVariant & CuVariant::operator=(const CuVariant& other) {
     if(this != &other)
     {
         other._d->ref();
-        int r = this->_d->unref();
-        if(r == 1) {
-            printf("\e[0;35mCuVariant::operator= this %p assignment from other %p deletes %p\e[0m\n",
-                   this, &other, _d);
+        if(this->_d->unref() == 1) {
             m_cleanup();
         }
         _d = other._d; // share
-
-        // would have copied!
-        vwcp++;
-        // >> build_from(other);
-
-        printf("CuVariant %p [\e[0;35massign operator\e[0m] copied %d would have copied %d\n", this, vcp.load(),  vwcp.load());
-
+        // >> build_from(other); // before shared data
     }
     return *this;
 }
@@ -891,10 +831,6 @@ CuVariant &CuVariant::operator=(CuVariant &&other)
         if(_d && _d->unref() == 1) {
             m_cleanup();
         }
-
-        // TEST (after cleanup() _d is set to nullptr )
-        printf("CuVariant [\e[0;36mASSIGN MOVE OPERATOR\e[0m] this %p %s private _d %p because ref==1 copied %d would have copied %d\n",
-               this, _d ? "DID NOT DELETE" : "\e[1;31mDELETED\e[0m", _d, vcp.load(),  vwcp.load());
         _d = other._d;
         other._d = NULL; /* don't delete */
     }
@@ -1799,7 +1735,7 @@ std::string CuVariant::toString(bool *ok, const char *format) const {
             snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
         }break;
         case String: {
-            printf("CuVariant.toString: Matrix, std::string\n");
+            cuprintf("CuVariant.toString: Matrix, std::string\n");
             CuMatrix<std::string> *m = static_cast<CuMatrix <std::string> * >(_d->val);
             snprintf(converted, MAXLEN, "%s", m->repr().c_str() );
         }break;
