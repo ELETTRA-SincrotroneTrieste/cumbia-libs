@@ -169,9 +169,6 @@ public:
 
     virtual int getType() const;
 
-    // optimizations
-    void reserve(int chunk);
-
 private:
 
     void m_init();

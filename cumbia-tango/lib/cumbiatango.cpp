@@ -136,15 +136,3 @@ CuThreadsEventBridgeFactory_I *CumbiaTango::getThreadEventsBridgeFactory() const
 int CumbiaTango::getType() const {
     return CumbiaTangoType;
 }
-
-/*!
- * \brief cumbia tango reserves chunk items in containers
- * \param chunk number of items to reserve when using containers
- *
- * Applications that need a lot of connections can call this function to optimize
- */
-void CumbiaTango::reserve(int chunk) {
-    CuActionFactoryService *af =
-            static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
-    af->reserve(chunk);
-}
