@@ -353,13 +353,8 @@ CuThreadTokenGenI *Cumbia::getThreadTokenGenerator() const {
  *
  * \return a thread token (CuData)
  */
-const std::string Cumbia::threadToken(const std::string& in) const
-{
-    std::string ret;
+const std::string Cumbia::threadToken(const std::string& in) const {
     if(d->threadTokenGenerator)
-        ret = d->threadTokenGenerator->generate(in);
-    else
-        ret = in;
-    printf("\e[1;33mCumbia.threadToken: returning \"%s\" as thread token\e[0m\n", ret.c_str());
-    return ret;
+        return d->threadTokenGenerator->generate(in);
+    return in;
 }
