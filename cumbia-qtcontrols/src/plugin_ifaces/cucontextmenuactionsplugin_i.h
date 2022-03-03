@@ -10,11 +10,8 @@ class CuContextMenuActionsPlugin_I
 {
 public:
     virtual ~CuContextMenuActionsPlugin_I() {}
-
     virtual int order() const = 0;
-
     virtual void setup(QWidget *widget, const CuContext* cuctx) = 0;
-
     virtual QList<QAction* >getActions() const = 0;
 };
 

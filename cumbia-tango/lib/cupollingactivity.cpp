@@ -408,7 +408,9 @@ void CuPollingActivity::execute()
         results->push_back(dev_err);
     }
 
-    publishResult(results);
+    printf("CuPollingActivity.publishResult: publishing %ld results\n", results->size());
+    if(results->size() > 0)
+        publishResult(results);
 }
 
 /*! \brief the implementation of the CuActivity::onExit hook

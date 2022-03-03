@@ -83,7 +83,6 @@ void CuTConfigActivity::init()
     /* get a TDevice */
     const std::string& tok = threadToken();
     d->tdev = d->device_service->getDevice(dnam, tok);
-    printf("CuTCONFIGACTIVITY.init: thread token %s dnam %s from tdev %s\n", tok.c_str(), dnam.c_str(), d->tdev->getName().c_str());
     // thread safe: since cumbia 1.1.0 no thread per device guaranteed
     d->device_service->addRef(dnam, tok);
 }
@@ -91,8 +90,8 @@ void CuTConfigActivity::init()
 void CuTConfigActivity::execute()
 {
     d->err = !d->tdev->isValid();
-    bool value_only = d->options.containsKey("value-only") && d->options.B("value-only");
-    bool skip_read =  d->options.containsKey("no-value") && d->options.B("no-value");
+//    bool value_only = d->options.containsKey("value-only") && d->options.B("value-only");
+//    bool skip_read =  d->options.containsKey("no-value") && d->options.B("no-value");
     const std::string& point = d->ts.getPoint();
     CuData at("src", d->ts.getName());
     at["device"] = d->ts.getDeviceName();
@@ -103,11 +102,14 @@ void CuTConfigActivity::execute()
     at["properties"] = std::vector<std::string>();
     at["type"] = "property";
 
+    bool value_only = false, skip_read = false;
+        d->options["value-only"].to<bool>(value_only);
+        d->options["no-value"].to<bool>(skip_read);
+
     d->try_cnt++;
     bool success = false;
     if(d->tdev->isValid()) {
         Tango::DeviceProxy *dev = d->tdev->getDevice();
-        printf("CUTCONFIGACTIVITY at %s dev nam %s\n", datos(at), d->tdev->getName().c_str());
         CuTangoWorld tw;
         if(dev && d->ts.getType() == TSource::SrcCmd)
         {

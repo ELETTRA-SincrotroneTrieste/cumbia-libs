@@ -23,8 +23,8 @@ public:
     const TSource tsrc;
     CumbiaTango *cumbia_t;
     CuTaDbActivity *activity;
-    bool xit; // set to true by stop()
     CuData options, tag;
+    bool xit; // set to true by stop()
 };
 
 CuTaDb::CuTaDb(const TSource& src, CumbiaTango *ct, const CuData &options, const CuData &tag) {

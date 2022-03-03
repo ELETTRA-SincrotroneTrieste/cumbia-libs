@@ -73,7 +73,6 @@ void CuTConfiguration::onResult(const CuData &data) {
     // removeDataListener in this same thread by the client from onUpdate
     std::set<CuDataListener *> ls = d->listeners;
     for(it =  ls.begin(); it !=  ls.end(); ++it) {
-        printf("CuTConfiguration.onResult calling on update with %s\n", datos(data));
         (*it)->onUpdate(data);
     }
     d->exiting = true; // for action factory to unregisterAction, exiting must return true
@@ -130,8 +129,6 @@ void CuTConfiguration::start() {
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
     const std::string tt =d->options.containsKey("thread_token") ? // d->tsrc will be moved: no string reference
                 d->options.s("thread_token") : d->tsrc.getDeviceName();
-
-    printf("\e[1;33mCuTConfiguration.start: tt %s\n", tt.c_str());
     CuTConfigActivity::Type t;
     d->type == CuTangoActionI::ReaderConfig ? t = CuTConfigActivity::CuReaderConfigActivityType :
             t = CuTConfigActivity::CuWriterConfigActivityType;
