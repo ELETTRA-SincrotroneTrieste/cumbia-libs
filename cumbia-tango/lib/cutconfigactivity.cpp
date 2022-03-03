@@ -1,26 +1,36 @@
 #include "cutconfigactivity.h"
 #include <tango.h>
 #include <cumacros.h>
+#include <functional>
 #include "cudevicefactoryservice.h"
 #include "tdevice.h"
 #include "cutango-world.h"
+#include "tsource.h"
 
 class CuTAttConfigActivityPrivate
 {
 public:
     CuDeviceFactoryService *device_service;
     TDevice *tdev;
+    TSource ts;
     std::string msg;
     bool err;
     pthread_t my_thread_id, other_thread_id;
     bool exiting;
     int repeat, try_cnt;
     CuTConfigActivity::Type type;
-    CuData options;
+    CuData options, tag;
     const CuTConfigActivityExecutor_I *tcexecutor;
 };
 
-CuTConfigActivity::CuTConfigActivity(const CuData &tok, CuDeviceFactoryService *df, Type t, const CuTConfigActivityExecutor_I *tx) : CuActivity(tok)
+// initialize CuActivity token with the keys relevant to the matches method
+CuTConfigActivity::CuTConfigActivity(const TSource& ts,
+                                     CuDeviceFactoryService *df,
+                                     Type t,
+                                     const CuTConfigActivityExecutor_I *tx,
+                                     const CuData& o,
+                                     const CuData& tag)
+    : CuActivity(CuData("activity", "property").set("src", ts.getName()))
 {
     d = new CuTAttConfigActivityPrivate;
     d->device_service = df;
@@ -32,13 +42,15 @@ CuTConfigActivity::CuTConfigActivity(const CuData &tok, CuDeviceFactoryService *
     d->repeat = -1;
     d->try_cnt = 0;
     d->tcexecutor = tx;
+    d->tag = std::move(tag);
+    d->options = std::move(o);
+    d->ts = std::move(ts);
     setFlag(CuActivity::CuAUnregisterAfterExec, true);
     setFlag(CuActivity::CuADeleteOnExit, true);
 }
 
 CuTConfigActivity::~CuTConfigActivity()
 {
-    pdelete("CuTAttConfigActivity %p [%s]", this, vtoc2(getToken(), "src"));
     delete d->tcexecutor;
     delete d;
 }
@@ -57,10 +69,8 @@ void CuTConfigActivity::event(CuActivityEvent *e)
     (void )e;
 }
 
-bool CuTConfigActivity::matches(const CuData &token) const
-{
-    const CuData& mytok = getToken();
-    return token["src"] == mytok["src"] && mytok["activity"] == token["activity"];
+bool CuTConfigActivity::matches(const CuData &token) const {
+    return token.s("src") == d->ts.getName() && "property" == token.s("activity");
 }
 
 int CuTConfigActivity::repeat() const {
@@ -69,32 +79,37 @@ int CuTConfigActivity::repeat() const {
 
 void CuTConfigActivity::init()
 {
-    const std::string& dnam = getToken()["device"].toString();
+    const std::string& dnam = d->ts.getDeviceName();
     /* get a TDevice */
-    d->tdev = d->device_service->getDevice(dnam, threadToken());
+    const std::string& tok = threadToken();
+    d->tdev = d->device_service->getDevice(dnam, tok);
+    printf("CuTCONFIGACTIVITY.init: thread token %s dnam %s from tdev %s\n", tok.c_str(), dnam.c_str(), d->tdev->getName().c_str());
     // thread safe: since cumbia 1.1.0 no thread per device guaranteed
-    d->device_service->addRef(dnam, threadToken());
+    d->device_service->addRef(dnam, tok);
 }
 
 void CuTConfigActivity::execute()
 {
-    CuData at = getToken(); /* activity token */
     d->err = !d->tdev->isValid();
-    std::string point = at["point"].toString();
-    bool cmd = at["is_command"].toBool();
+    bool value_only = d->options.containsKey("value-only") && d->options.B("value-only");
+    bool skip_read =  d->options.containsKey("no-value") && d->options.B("no-value");
+    const std::string& point = d->ts.getPoint();
+    CuData at("src", d->ts.getName());
+    at["device"] = d->ts.getDeviceName();
+    at["point"] = point;
+    at["argins"] = d->ts.getArgs();
+    at["activity"] = "property";
+    at["is_command"] = d->ts.getType() == TSource::SrcCmd;
     at["properties"] = std::vector<std::string>();
     at["type"] = "property";
-    bool value_only = false, skip_read = false;
-    d->options["value-only"].to<bool>(value_only);
-    d->options["no-value"].to<bool>(skip_read);
 
     d->try_cnt++;
     bool success = false;
-
     if(d->tdev->isValid()) {
         Tango::DeviceProxy *dev = d->tdev->getDevice();
+        printf("CUTCONFIGACTIVITY at %s dev nam %s\n", datos(at), d->tdev->getName().c_str());
         CuTangoWorld tw;
-        if(dev && cmd)
+        if(dev && d->ts.getType() == TSource::SrcCmd)
         {
             success = d->tcexecutor->get_command_info(dev, point, at);
             if(success && d->type == CuReaderConfigActivityType && !skip_read) {
@@ -121,6 +136,8 @@ void CuTConfigActivity::execute()
         at["data"] = true;
         at["msg"] = "CuTConfigActivity.execute (1): " + tw.getLastMessage();
         at["err"] = tw.error();
+        at.merge(std::move(d->options));
+        at.merge(std::move(d->tag)); // tag is carried along in results
         d->err = !success || tw.error();
         d->msg = tw.getLastMessage();
 

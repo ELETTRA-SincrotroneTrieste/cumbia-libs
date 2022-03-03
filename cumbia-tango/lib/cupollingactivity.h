@@ -99,11 +99,12 @@ public:
      */
     enum Type { CuPollingActivityType = CuActivity::User + 3 };
 
-    CuPollingActivity(const CuData& token,
+    CuPollingActivity(const TSource& tsrc,
                       CuDeviceFactoryService *df,
                       const CuData& options,
                       const CuData& tag,
-                      CuPollDataUpdatePolicy updpo);
+                      CuPollDataUpdatePolicy updpo,
+                      int interval);
     ~CuPollingActivity();
 
     void setArgins(const CuVariant &argins);
@@ -132,7 +133,7 @@ private:
     void m_registerAction(const TSource &ts);
     void m_unregisterAction(const TSource &ts);
     void m_edit_args(const TSource& src, const std::vector<std::string> &args);
-    inline void m_v_attd_remove(const std::string& src);
+    inline void m_v_attd_remove(const std::string& src, const std::string& attna);
     inline void m_cmd_remove(const std::string& src);
 
 };

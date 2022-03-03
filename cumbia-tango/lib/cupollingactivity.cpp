@@ -124,16 +124,17 @@ public:
  * \li CuAUnregisterAfterExec is disabled because if the Tango device is not defined into the database
  *     the poller is not started and the activity is suspended (repeat will return -1).
  */
-CuPollingActivity::CuPollingActivity(const CuData &token,
-                                     CuDeviceFactoryService *df, const CuData &options, const CuData &tag,
-                                     CuPollDataUpdatePolicy updpo)
-    : CuContinuousActivity(token)
+CuPollingActivity::CuPollingActivity(const TSource &tsrc,
+                                     CuDeviceFactoryService *df,
+                                     const CuData &options,
+                                     const CuData &tag,
+                                     CuPollDataUpdatePolicy updpo,
+                                     int interval)
+    : CuContinuousActivity(CuData("device", tsrc.getDeviceName()).set("period", interval).set("activity", "poller"))
 {
     d = new CuPollingActivityPrivate(df, options, tag, updpo);
     d->other_thread_id = pthread_self();
-    int period = 1000;
-    if(token.containsKey("period"))
-        token["period"].to<int>(period);
+    int period = interval > 0 ? interval : 1000;
     d->repeat = d->period = period;
     setInterval(period);
     //  flag CuActivity::CuADeleteOnExit is true
@@ -433,6 +434,7 @@ void CuPollingActivity::onExit()
 }
 
 void CuPollingActivity::m_registerAction(const TSource& ts) {
+    assert(d->my_thread_id == pthread_self());
     bool is_command = ts.getType() == TSource::SrcCmd;
     if(is_command)
         d->cmds.push_back(ts);
@@ -443,8 +445,9 @@ void CuPollingActivity::m_registerAction(const TSource& ts) {
 }
 
 void CuPollingActivity::m_unregisterAction(const TSource &ts) {
+    assert(d->my_thread_id == pthread_self());
     m_cmd_remove(ts.getName());
-    m_v_attd_remove(ts.getName());
+    m_v_attd_remove(ts.getName(), ts.getPoint());
     if(d->cmds.size() == 0 && d->v_attd.size() == 0) {
         dispose(); // do not use this activity since now
         // unregister this from the thread
@@ -463,20 +466,20 @@ void CuPollingActivity::m_edit_args(const TSource &src, const std::vector<string
     }
 }
 
-void CuPollingActivity::m_v_attd_remove(const string &src) {
-    printf("CuPollingActivity::m_v_attd_remove: before : size %ld\n", d->v_attd.size());
+void CuPollingActivity::m_v_attd_remove(const std::string &src, const std::string& attna) {
+    printf("CuPollingActivity::m_v_attd_remove: before : attd size %ld attn siz %ld\n", d->v_attd.size(), d->v_attn.size());
     for(const CuData& d : d->v_attd)
         printf("- %s\n", datos(d));
 
     d->v_attd.erase(std::find_if(d->v_attd.begin(), d->v_attd.end(), [src](const CuData& da) {  return da.s("src") == src; }) );
-    d->v_attn.erase(std::find(d->v_attn.begin(), d->v_attn.end(), src));
+    d->v_attn.erase(std::find(d->v_attn.begin(), d->v_attn.end(), attna));
 
-    printf("CuPollingActivity::m_v_attd_remove: after lambda:\n");
+    printf("CuPollingActivity::m_v_attd_remove: after lambda attd siz %ld attn siz %ld:\n", d->v_attd.size(), d->v_attn.size());
     for(const CuData& d : d->v_attd)
         printf("- %s\n", datos(d));
 }
 
-void CuPollingActivity::m_cmd_remove(const string &src) {
+void CuPollingActivity::m_cmd_remove(const std::string &src) {
     std::vector<TSource>::iterator it = d->cmds.begin();
     while(it != d->cmds.end()) {
         if(it->getName() == src) {

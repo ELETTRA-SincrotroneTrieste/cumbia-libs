@@ -1,6 +1,7 @@
 #include "cueventactivity.h"
 #include "tdevice.h"
 #include "cutango-world.h"
+#include "tsource.h"
 #include "cudevicefactoryservice.h"
 #include <cumacros.h>
 #include <tango.h>
@@ -16,12 +17,13 @@ CuActivityEvent::Type CuTAStopEvent::getType() const
 class CuEventActivityPrivate
 {
 public:
-    CuData s; // extra settings (point, device, rmode)
-    CuData tag; // tagged is carried along results
+    CuData tag, atok; // tag is carried along results, activity token initialized in constructor
     CuDeviceFactoryService *device_srvc;
     TDevice *tdev;
+    TSource tsrc;
     int event_id;
     pthread_t my_thread_id, other_thread_id;
+    std::string refreshmo;
     omni_thread::ensure_self *se;
 };
 
@@ -38,7 +40,8 @@ public:
  *     Instead, it keeps living within an event loop that delivers Tango events over time
  * \li CuActivity::CuADeleteOnExit: *true* lets the activity be deleted after onExit
  */
-CuEventActivity::CuEventActivity(const CuData &token, CuDeviceFactoryService *df, const CuData& extras, const CuData &tag) : CuActivity(token)
+CuEventActivity::CuEventActivity(const TSource &ts, CuDeviceFactoryService *df, const string &refreshmo, const CuData &tag)
+    : CuActivity(CuData("activity", "event").set("src", ts.getName())) // token with keys relevant to matches()
 {
     d = new CuEventActivityPrivate;
     setFlag(CuActivity::CuAUnregisterAfterExec, false);
@@ -48,8 +51,10 @@ CuEventActivity::CuEventActivity(const CuData &token, CuDeviceFactoryService *df
     d->event_id = -1;
     d->other_thread_id = pthread_self();
     d->se = NULL;
-    d->s = extras;
+    d->tsrc = ts;
+    d->refreshmo = refreshmo;
     d->tag = tag;
+    d->atok = getToken();
 }
 
 /*! \brief the class destructor
@@ -129,16 +134,14 @@ int CuEventActivity::repeat() const {
  */
 void CuEventActivity::init()
 {
+    d->my_thread_id = pthread_self();
+    assert(d->other_thread_id != d->my_thread_id);
     // hack to FIX event failure if subscribing to more than one device
     // in the same application
     d->se = new omni_thread::ensure_self;
-
-    d->my_thread_id = pthread_self();
-    assert(d->other_thread_id != d->my_thread_id);
-    CuData tk = getToken();
     /* get a reference to a TDevice, new or existing one */
-    d->tdev = d->device_srvc->getDevice(d->s["device"].toString(), threadToken());
-    d->device_srvc->addRef(d->s["device"].toString(), threadToken());
+    d->tdev = d->device_srvc->getDevice(d->tsrc.getDeviceName(), threadToken());
+    d->device_srvc->addRef(d->tsrc.getDeviceName(), threadToken());
     // since v1.2.0, do not publishResult upon connection
 }
 
@@ -185,14 +188,12 @@ void CuEventActivity::execute()
 {
     assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
-    CuData at = getToken(); /* activity token */
-    std::string att = d->s["point"].toString();
-    const std::string ref_mode_str = d->s["rmode"].toString();
+    CuData at("activity", "event"); /* activity token */
+    std::string att = d->tsrc.getPoint();
+    const std::string ref_mode_str = d->refreshmo;
     Tango::DeviceProxy *dev = d->tdev->getDevice();
+    at.set("src", d->tsrc.getName()).set("mode", "E").set("E", "subscribe").putTimestamp();
     at["err"] = !d->tdev->isValid();
-    at["mode"] = "E";
-    at["E"] = "subscribe";
-    at.putTimestamp();
     if(dev) {
         try {
             d->event_id = dev->subscribe_event(att, m_tevent_type_from_string(ref_mode_str), this);
