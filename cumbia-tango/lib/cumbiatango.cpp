@@ -18,10 +18,11 @@
 class CumbiaTangoPrivate {
 public:
     CumbiaTangoPrivate(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb) :
-        th_factory_i(tfi), th_eve_b_factory(teb) {}
+        th_factory_i(tfi), th_eve_b_factory(teb), updpo(CuDataUpdatePolicy::PollUpdateAlways) {}
 
     CuThreadFactoryImplI *th_factory_i;
     CuThreadsEventBridgeFactory_I *th_eve_b_factory;
+    int updpo;
 };
 
 /** \brief CumbiaTango two parameters constructor
@@ -131,6 +132,26 @@ CuThreadFactoryImplI *CumbiaTango::getThreadFactoryImpl() const {
 
 CuThreadsEventBridgeFactory_I *CumbiaTango::getThreadEventsBridgeFactory() const {
     return d->th_eve_b_factory;
+}
+
+/*! Suggest a policy for read updates
+ *
+ *  @param p a valid combination of values from the enum CuDataUpdatePolicy
+ *  *OnPoll* options can be *or*-ed with *SkipFirstReadUpdate*
+ *
+ *  @see CuDataUpdatePolicy
+ *  @see CuPollingActivity
+ */
+void CumbiaTango::setReadUpdatePolicy(int p) {
+    d->updpo = p;
+}
+
+/*! Returns the update policy in use
+ *
+ * Default: CuDataUpdatePolicy::PollUpdateAlways
+ */
+int CumbiaTango::readUpdatePolicy() const {
+    return d->updpo;
 }
 
 int CumbiaTango::getType() const {

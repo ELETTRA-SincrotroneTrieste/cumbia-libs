@@ -7,6 +7,7 @@ class CuDataListener;
 #include <cumbia.h>
 #include <cutangoactioni.h>
 #include<string>
+#include <cudataupdatepolicy_enum.h>
 
 class CumbiaTangoPrivate;
 
@@ -156,6 +157,13 @@ public:
 
     enum Type { CumbiaTangoType = Cumbia::CumbiaUserType + 1 };
 
+    enum UpdateOptions { OnPollUpdateAlways = 0x1,
+                         OnPollUnchangedUpdateTimestamp = 0x2,
+                         OnPollUnchangedNoUpdate = 0x4,
+                         SkipFirstReadUpdate = 0x8,
+                         EndUpdateOptions = 0x20 };
+
+
     CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb);
     ~CumbiaTango();
 
@@ -166,6 +174,9 @@ public:
 
     CuThreadFactoryImplI* getThreadFactoryImpl() const;
     CuThreadsEventBridgeFactory_I* getThreadEventsBridgeFactory() const;
+
+    void setReadUpdatePolicy(int p);
+    int readUpdatePolicy() const;
 
     virtual int getType() const;
 

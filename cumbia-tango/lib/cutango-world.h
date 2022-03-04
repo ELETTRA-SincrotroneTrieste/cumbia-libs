@@ -5,7 +5,7 @@
 #include <cudata.h>
 #include <cudataquality.h>
 #include <tango.h>
-#include <cupolldataupdatepolicy_enum.h>
+#include <cudataupdatepolicy_enum.h>
 
 class CuTangoWorldPrivate;
 class CuActivity;
@@ -51,7 +51,7 @@ public:
                    std::vector<string> *p_v_an, // attribute names
                    std::vector<CuData>* v_a, // attribute cache (same order as names above)
                    std::vector<CuData> *reslist,
-                   CuPollDataUpdatePolicy updpo);
+                   int da_updpo);
 
     bool write_att(Tango::DeviceProxy *dev,
                    const string &attnam,

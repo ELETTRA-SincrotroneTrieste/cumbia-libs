@@ -46,8 +46,6 @@ public:
     QTimer *timer;
     QNetworkReply *reply;
     unsigned usecnt = 0;
-    QFile *f;
-    QTextStream *out;
 };
 
 CuHttpBundledSrcReq::CuHttpBundledSrcReq(const QList<SrcItem> &srcs,
@@ -103,10 +101,6 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
     d->reply = reply;
     printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p started: (rq. use cnt: %d)\n", qstoc(objectName()),
            this, /*d->req_payload.toStdString().c_str(),*/ d->usecnt);
-    d->f = new QFile("/tmp/sequencer/" + objectName() + ".log", this);
-    d->f->open(QIODevice::Text|QIODevice::WriteOnly);
-    d->out = new QTextStream (d->f);
-    *d->out << "REQ. " << objectName() << this << ":\n" << d->req_payload << "\n";
 }
 
 void CuHttpBundledSrcReq::setBlocking(bool b) {
@@ -134,7 +128,6 @@ void CuHttpBundledSrcReq::onReplyFinished()
                , qstoc(objectName()),
                this, qstoc(d->buf), d->req_payload.toStdString().c_str(), d->usecnt);
     }
-    *d->out << "REP. " << objectName() << this << ":\n" << d->buf << "\n";
     sender()->deleteLater();
     d->reply = nullptr;
 }
@@ -160,8 +153,6 @@ void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError code) {
     d->listener->onSrcBundleReplyError(da);
     printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p \e[1;31mCuHttpBundledSrcReq::onError: %s request was \e[0;31m%s\e[0m\n",
            qstoc(objectName()), this, qstoc(r->errorString()), qstoc(r->property("payload").toString()));
-
-    *d->out << "ERR REP. " << objectName() << this << ": buf\n" << d->buf << "\n err: " << r->errorString();
 }
 
 void CuHttpBundledSrcReq::m_test_check_reply() {
@@ -176,9 +167,6 @@ void CuHttpBundledSrcReq::m_test_check_reply() {
             printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p quite a short reply len %ld: >>> \e[1;35m%s\e[0m <<<\n", qstoc(objectName()), this,
                    strlen(d->buf.data()), d->buf.data());
         d->timer->stop();
-        delete d->out;
-        d->f->close();
-        delete d->f;
     }
 }
 

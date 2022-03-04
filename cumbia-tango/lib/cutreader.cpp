@@ -17,6 +17,7 @@
 #include "cupoller.h"
 #include <culog.h>
 #include <tango.h>
+#include <cumbiatango.h>
 
 class TSource;
 
@@ -463,7 +464,7 @@ void CuTReader::m_startEventActivity()
     // thread token: by default device name, but can be tuned
     // through the "thread_token" option (setOptions)
     std::string thtok = d->o.containsKey("thread_token") ? d->o.s("thread_token") : d->tsrc.getDeviceName();
-    d->event_activity = new CuEventActivity(d->tsrc, df, refreshModeStr(), d->tag);
+    d->event_activity = new CuEventActivity(d->tsrc, df, refreshModeStr(), d->tag, d->cumbia_t->readUpdatePolicy());
     d->refresh_mode = ChangeEventRefresh; // update refresh mode
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());

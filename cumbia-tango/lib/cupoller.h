@@ -18,7 +18,7 @@ public:
     virtual ~CuPoller();
 
     int period() const;
-    void registerAction(const TSource &tsrc, CuTangoActionI *a, const CuData &options, const CuData &tag, CuPollDataUpdatePolicy updpo);
+    void registerAction(const TSource &tsrc, CuTangoActionI *a, const CuData &options, const CuData &tag, int updpo);
     void unregisterAction(CuTangoActionI *a);
     bool actionRegistered(const std::string &src) const;
     size_t count() const;

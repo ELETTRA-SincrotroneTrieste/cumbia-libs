@@ -5,7 +5,7 @@
 #include <cuactivityevent.h>
 #include <list>
 #include <cutangoactioni.h>
-#include <cupolldataupdatepolicy_enum.h>
+#include <cudataupdatepolicy_enum.h>
 #include <tsource.h>
 #include <map>
 
@@ -103,7 +103,7 @@ public:
                       CuDeviceFactoryService *df,
                       const CuData& options,
                       const CuData& tag,
-                      CuPollDataUpdatePolicy updpo,
+                      int dataupdpo,
                       int interval);
     ~CuPollingActivity();
 

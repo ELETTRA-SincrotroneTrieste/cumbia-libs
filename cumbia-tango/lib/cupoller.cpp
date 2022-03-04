@@ -57,7 +57,7 @@ void CuPoller::registerAction(const TSource& tsrc,
                               CuTangoActionI *a,
                               const CuData& options,
                               const CuData& tag,
-                              CuPollDataUpdatePolicy updpo)
+                              int dataupdpo)
 {
     assert(d->my_thread == pthread_self());
     // insert in this thread
@@ -76,7 +76,7 @@ void CuPoller::registerAction(const TSource& tsrc,
     if(!activity) {
         // thread token. CuTReader.setOptions can customize thread grouping behaviour
         const std::string& tt = options.containsKey("thread_token") ? options.s("thread_token") : tsrc.getDeviceName();
-        activity = new CuPollingActivity(tsrc, df, options, tag, updpo, d->period);
+        activity = new CuPollingActivity(tsrc, df, options, tag, dataupdpo, d->period);
         const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
         const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
         d->cumbia_t->registerActivity(activity, this, tt, fi, bf);

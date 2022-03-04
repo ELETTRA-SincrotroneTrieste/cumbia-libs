@@ -7,10 +7,8 @@
 
 class CuPollingServicePrivate {
 public:
-    CuPollingServicePrivate() : updpo(CuPollDataUpdatePolicy::UpdateAlways) {}
-
+    CuPollingServicePrivate() {}
     std::map<int, CuPoller *> pollers_map;
-    CuPollDataUpdatePolicy updpo;
 };
 
 CuPollingService::CuPollingService() {
@@ -38,7 +36,7 @@ void CuPollingService::registerAction(CumbiaTango *ct,
                                       const CuData& options,
                                       const CuData& tag) {
     CuPoller *poller = getPoller(ct, period);
-    poller->registerAction(tsrc, action, options, tag, d->updpo);
+    poller->registerAction(tsrc, action, options, tag, ct->readUpdatePolicy());
 }
 
 void CuPollingService::unregisterAction(int period, CuTangoActionI *action) {
@@ -59,15 +57,6 @@ bool CuPollingService::actionRegistered(CuTangoActionI *ac, int period) {
     }
     return false;
 }
-
-void CuPollingService::setDataUpdatePolicy(CuPollDataUpdatePolicy p) {
-    d->updpo = p;
-}
-
-CuPollDataUpdatePolicy CuPollingService::dataUpdatePolicy() const {
-    return d->updpo;
-}
-
 
 std::string CuPollingService::getName() const {
     return "CuPollingService";

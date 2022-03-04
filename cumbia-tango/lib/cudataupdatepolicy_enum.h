@@ -26,8 +26,9 @@
 *
 * @see CuPollingService
 */
-enum class CuPollDataUpdatePolicy {
-    UpdateAlways, OnUnchangedTimestampOnly, OnUnchangedNothing
+enum CuDataUpdatePolicy {
+    PollUpdateAlways = 0x1, OnPollUnchangedTimestampOnly = 0x2, OnPollUnchangedNoUpdate = 0x4,
+    SkipFirstReadUpdate = 0x8, EndOptions = 0x20
 };
 
 #endif // DATAUPDPOLICY_ENUM_H

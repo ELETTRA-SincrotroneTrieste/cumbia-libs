@@ -78,8 +78,8 @@ CuActivityEvent::Type CuArgsChangeEvent::getType() const {
 class CuPollingActivityPrivate
 {
 public:
-    CuPollingActivityPrivate(CuDeviceFactoryService *df, const CuData &opt, const CuData &ta, CuPollDataUpdatePolicy upd_po)
-        : device_srvc(df), consecutiveErrCnt{0},  successfulExecCnt{0}, options(opt), tag(ta), updpo{upd_po} {}
+    CuPollingActivityPrivate(CuDeviceFactoryService *df, const CuData &opt, const CuData &ta, int data_upd_po)
+        : device_srvc(df), consecutiveErrCnt{0},  successfulExecCnt{0}, options(opt), tag(ta), data_updpo{data_upd_po} {}
 
     CuDeviceFactoryService *device_srvc;
     TDevice *tdev;
@@ -98,7 +98,8 @@ public:
     // use two coupled vectors to avoid another wrapping class or map associating attribute
     // names with their respective data. When we add/remove to/from v_attd, do the same on v_attn
     std::vector<CuData> v_attd; // cache attribute values to optimize updates, if required
-    std::vector<std::string> v_attn; // attribute names, coupled with v_attd
+    std::vector<std::string> v_attn; // attribute names, coupled with v_attd and v_skip
+    std::vector<bool> v_skip; // skip read of nth attribute, coupled with v_attd and v_attn
 
     // cache for tango command_inout argins
     // multimap because argins may differ
@@ -106,7 +107,7 @@ public:
     CmdData emptyCmdData;
     // maps consecutive error count to slowed down polling duration in millis
     std::map<int, int> slowDownRate;
-    CuPollDataUpdatePolicy updpo;
+    int data_updpo;
 };
 
 /*! \brief the class constructor that sets up a Tango polling activity
@@ -128,11 +129,11 @@ CuPollingActivity::CuPollingActivity(const TSource &tsrc,
                                      CuDeviceFactoryService *df,
                                      const CuData &options,
                                      const CuData &tag,
-                                     CuPollDataUpdatePolicy updpo,
+                                     int dataupdpo,
                                      int interval)
     : CuContinuousActivity(CuData("device", tsrc.getDeviceName()).set("period", interval).set("activity", "poller"))
 {
-    d = new CuPollingActivityPrivate(df, options, tag, updpo);
+    d = new CuPollingActivityPrivate(df, options, tag, dataupdpo);
     d->other_thread_id = pthread_self();
     int period = interval > 0 ? interval : 1000;
     d->repeat = d->period = period;
@@ -377,7 +378,16 @@ void CuPollingActivity::execute()
             res_offset++;
         } // end cmds
         for(size_t i = 0; att_idx >= 0 && i < d->v_attd.size(); i++) { // attributes
-            success = tangoworld.read_atts(d->tdev->getDevice(), &d->v_attn, &d->v_attd, results, d->updpo);
+            if(!d->v_skip[i]) {
+                success = tangoworld.read_atts(d->tdev->getDevice(), &d->v_attn, &d->v_attd, results, d->data_updpo);
+//                printf("CuPollingActivity. \e[0;32mreading attribute %s\e[0m cuz d->v_skip %s\n", d->v_attn[i].c_str(),
+//                       d->v_skip[i] ? "TRUE" : "FALSE");
+            }
+            else {
+                printf("CuPollingActivity. \e[1;36mskipping first read of attribute %s\e[0m cuz d->v_skip %s\n", d->v_attn[i].c_str(),
+                       d->v_skip[i] ? "TRUE" : "FALSE");
+                d->v_skip[i] = false;
+            }
             if(!success) {
                 d->consecutiveErrCnt++;
             }
@@ -408,7 +418,7 @@ void CuPollingActivity::execute()
         results->push_back(dev_err);
     }
 
-    printf("CuPollingActivity.publishResult: publishing %ld results\n", results->size());
+//    printf("CuPollingActivity.publishResult: publishing %ld results\n", results->size());
     if(results->size() > 0)
         publishResult(results);
 }
@@ -443,6 +453,7 @@ void CuPollingActivity::m_registerAction(const TSource& ts) {
     else {
         d->v_attd.push_back(d->tag.set("src", ts.getName()).set("mode", "P").set("period", d->period));
         d->v_attn.push_back(ts.getPoint());
+        d->v_skip.push_back(d->data_updpo & CuDataUpdatePolicy::SkipFirstReadUpdate);
     }
 }
 
@@ -469,16 +480,10 @@ void CuPollingActivity::m_edit_args(const TSource &src, const std::vector<string
 }
 
 void CuPollingActivity::m_v_attd_remove(const std::string &src, const std::string& attna) {
-    printf("CuPollingActivity::m_v_attd_remove: before : attd size %ld attn siz %ld\n", d->v_attd.size(), d->v_attn.size());
-    for(const CuData& d : d->v_attd)
-        printf("- %s\n", datos(d));
-
     d->v_attd.erase(std::find_if(d->v_attd.begin(), d->v_attd.end(), [src](const CuData& da) {  return da.s("src") == src; }) );
-    d->v_attn.erase(std::find(d->v_attn.begin(), d->v_attn.end(), attna));
-
-    printf("CuPollingActivity::m_v_attd_remove: after lambda attd siz %ld attn siz %ld:\n", d->v_attd.size(), d->v_attn.size());
-    for(const CuData& d : d->v_attd)
-        printf("- %s\n", datos(d));
+    std::vector<std::string>::iterator it = std::find(d->v_attn.begin(), d->v_attn.end(), attna);
+    d->v_skip.erase(d->v_skip.begin() + std::distance(d->v_attn.begin(), it)); // erase from d->skip at position attna
+    d->v_attn.erase(it);
 }
 
 void CuPollingActivity::m_cmd_remove(const std::string &src) {

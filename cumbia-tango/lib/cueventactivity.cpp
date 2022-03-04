@@ -22,6 +22,7 @@ public:
     TDevice *tdev;
     TSource tsrc;
     int event_id;
+    int64_t ucnt; // update counter
     pthread_t my_thread_id, other_thread_id;
     std::string refreshmo;
     omni_thread::ensure_self *se;
@@ -40,7 +41,7 @@ public:
  *     Instead, it keeps living within an event loop that delivers Tango events over time
  * \li CuActivity::CuADeleteOnExit: *true* lets the activity be deleted after onExit
  */
-CuEventActivity::CuEventActivity(const TSource &ts, CuDeviceFactoryService *df, const string &refreshmo, const CuData &tag)
+CuEventActivity::CuEventActivity(const TSource &ts, CuDeviceFactoryService *df, const string &refreshmo, const CuData &tag, int update_policy)
     : CuActivity(CuData("activity", "event").set("src", ts.getName())) // token with keys relevant to matches()
 {
     d = new CuEventActivityPrivate;
@@ -55,6 +56,7 @@ CuEventActivity::CuEventActivity(const TSource &ts, CuDeviceFactoryService *df, 
     d->refreshmo = refreshmo;
     d->tag = tag;
     d->atok = getToken();
+    d->ucnt = (update_policy & CuDataUpdatePolicy::SkipFirstReadUpdate) ? -1 : 0;
 }
 
 /*! \brief the class destructor
@@ -269,26 +271,36 @@ void CuEventActivity::onExit() {
  *     pairs that result from attribute or command read operations.
  */
 void CuEventActivity::push_event(Tango::EventData *e) {
+    d->ucnt++;
     // in d, copy only src from token
-    CuData d("src", getToken()["src"].toString());
-    d.merge(this->d->tag);
+    CuData da("src", getToken()["src"].toString());
+    da.merge(this->d->tag);
     CuTangoWorld utils;
-    d["mode"] = "E";
-    d["E"] = e->event;
-    Tango::DeviceAttribute *da = e->attr_value;
+    da["mode"] = "E";
+    da["E"] = e->event;
+    Tango::DeviceAttribute *dat = e->attr_value;
     if(!e->err)  {
-        utils.extractData(da, d);
-        d["err"] = utils.error(); // no "msg" if no err
-        if(d.b("err")) d["msg"] = utils.getLastMessage();
+        utils.extractData(dat, da);
+        da["err"] = utils.error(); // no "msg" if no err
+        if(da.b("err")) da["msg"] = utils.getLastMessage();
+        if(d->ucnt > 0) // if -1, skip first (successful) data update
+        {
+//            printf("CuEventActivity. \e[0;32;4mpublish update of \e[1;32mEVENT\e[1;36m attribute %s ucnt %ld\e[0m\n",
+//                   da.s("src").c_str(), d->ucnt);
+            publishResult(da);
+        }
+        else {
+            printf("CuEventActivity. \e[0;36;4mmskipping event first update of \e[1;32mEVENT\e[1;36m attribute %s ucnt %ld\e[0m\n", da.s("src").c_str(), d->ucnt);
+        }
     }
     else  {
         // CuTReader must distinguish between push_event exception
         // and another error, like attribute quality invalid
-        d["ev_except"] = true;
-        d["err"] = true;
-        d["msg"] = utils.strerror(e->errors);
-        d.putTimestamp();
+        da["ev_except"] = true;
+        da["err"] = true;
+        da["msg"] = utils.strerror(e->errors);
+        da.putTimestamp();
+        publishResult(da); // publish in case of event subscription failure
     }
-    publishResult(d);
 }
 

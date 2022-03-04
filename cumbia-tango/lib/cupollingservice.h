@@ -2,7 +2,7 @@
 #define CUPOLLINGSERVICE_H
 
 #include <cuservicei.h>
-#include "cupolldataupdatepolicy_enum.h"
+#include "cudataupdatepolicy_enum.h"
 
 class CuPoller;
 class CuPollingServicePrivate;
@@ -31,6 +31,9 @@ class CuData;
  *  The update policy shall be specified using setDataUpdatePolicy
  *
  *  @see CuPollDataUpdatePolicy
+ *  @see CumbiaTango::setUpdatePolicy
+ *
+ *  \note Setting the update policy can be done directly from CumbiaTango
 */
 class CuPollingService : public CuServiceI
 {
@@ -45,9 +48,6 @@ public:
     void registerAction(CumbiaTango* ct, const TSource& tsrc, int period, CuTangoActionI *action, const CuData &options, const CuData &tag);
     void unregisterAction(int period, CuTangoActionI *action);
     bool actionRegistered(CuTangoActionI *ac, int period);
-
-    void setDataUpdatePolicy(CuPollDataUpdatePolicy p);
-    CuPollDataUpdatePolicy dataUpdatePolicy() const;
 
     // CuServiceI interface
     virtual std::string getName() const;

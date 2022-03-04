@@ -89,7 +89,7 @@ bool CuHTTPActionA::m_likely_valid(const QByteArray &ba) const {
 }
 
 void CuHTTPActionA::m_on_buf_complete() {
-    printf("\e[1;36mCuHTTPActionA::m_on_buf_complete: %s\e[0m\n", d->buf.data());
+//    printf("\e[1;36mCuHTTPActionA::m_on_buf_complete: %s\e[0m\n", d->buf.data());
     if(m_likely_valid(d->buf)) {  // discard hi:
         QJsonParseError jpe;
         QList<QByteArray> jsonli = m_extract_data(d->buf);

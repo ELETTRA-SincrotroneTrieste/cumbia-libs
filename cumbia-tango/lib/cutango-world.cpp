@@ -777,12 +777,13 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
 //        from an earlier reading (depending on update policy updpo)
 // reslist: vector of results where data from read_attributes shall be appended
 // updpo: update policy: always update, update timestamp only or do nothing when data doesn't change
+//        OR combination of CuDataUpdatePolicy enum values
 //
 bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                              std::vector<std::string>* p_v_an, // att names
                              std::vector<CuData>* p_v_a,  // att cache, ordered same as att names
                              std::vector<CuData> *reslist,
-                             CuPollDataUpdatePolicy updpo)
+                             int updpo)
 {
     d->error = false;
     d->message = "";
@@ -802,7 +803,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         for(size_t i = 0; i < devattr->size(); i++) {
             Tango::DeviceAttribute *p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
-            if(updpo == CuPollDataUpdatePolicy::UpdateAlways) {
+            if(updpo == CuDataUpdatePolicy::PollUpdateAlways) {
                 reslist->push_back(va[i]);
                 extractData(p_da,  (*reslist)[offset]);
                 (*reslist)[offset]["err"] = d->error;
@@ -827,15 +828,13 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                     (*reslist)[offset]["color"] = d->t_world_conf.successColor(!d->error);
                     offset++;
                 }
-                else if(updpo == CuPollDataUpdatePolicy::OnUnchangedTimestampOnly) {
+                else if(updpo == CuDataUpdatePolicy::OnPollUnchangedTimestampOnly) {
                     (*reslist).push_back(CuData("timestamp_ms", rv["timestamp_ms"]));
                     (*reslist)[offset]["timestamp_us"] = rv["timestamp_us"];
                     (*reslist)[offset]["src"] = va[i]["src"];
                     offset++;
                 }
-                else if(updpo == CuPollDataUpdatePolicy::OnUnchangedNothing) {
-                    printf("cutango-world.read_atts: %ld atts unchanged over %ld. There are %ld results\n",
-                           devattr->size() - reslist->size(), devattr->size(), reslist->size());
+                else if(updpo == CuDataUpdatePolicy::OnPollUnchangedNoUpdate) {
                     // do nothing
                 }
             }

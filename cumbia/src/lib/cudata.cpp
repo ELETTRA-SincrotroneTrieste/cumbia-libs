@@ -49,7 +49,6 @@ private:
 CuData::~CuData() {
     if(d_p && d_p->unref() == 1)
         delete d_p;
-
 }
 
 /*! \brief constructor of an empty CuData
@@ -114,11 +113,14 @@ CuData::CuData(CuData &&other) {
  * @param other another CuData which values will be copied into this
  */
 CuData &CuData::operator=(const CuData &other) {
+    if(other.d_p == nullptr) {
+        printf("\e[1;31mCuData::operator= this [ ASSIGN ] %p - other d_p is nullL!\e[0m\n", this);
+        abort();
+    }
     if(this != &other) {
         other.d_p->ref();
         if(d_p->unref() == 1)
             delete d_p; // with no sharing we would not delete
-
         d_p = other.d_p;
         //        mCopyData(other); // before implicit sharing
     }
@@ -130,6 +132,10 @@ CuData &CuData::operator=(const CuData &other) {
  * @param other another CuData which values will be moved into this
  */
 CuData &CuData::operator=(CuData &&other) {
+    if(other.d_p == nullptr) {
+        printf("\e[1;31mCuData::operator=(CuData &&other) [ASSIGN MOVE] this %p - other d_p is nullL!\e[0m\n", this);
+        abort();
+    }
     if (this!=&other) {
         if(d_p && d_p->unref() == 1)
              delete d_p;
@@ -421,9 +427,28 @@ std::vector<std::string> CuData::keys() const
 //        d_p->datamap[it->first] = other.d_p->datamap[it->first];
 //}
 
+// have a look at qt implementation qtbase/src/gui/image/qimage.cpp
+// NOTE:
+// 1. checks for d != null
+//
+// void QImage::detach() {
+//    if (d) {
+//        if (d->is_cached && d->ref.loadRelaxed() == 1)
+//            QImagePixmapCleanupHooks::executeImageHooks(cacheKey());
+
+//        if (d->ref.loadRelaxed() != 1 || d->ro_data)
+//            *this = copy();
+
+//        if (d)
+//            ++d->detach_no;
+//    }
+//}
 void CuData::detach() {
-    if(d_p->load() > 1) {
-        d_p->unref();
+    if(d_p == nullptr) {
+        printf("\e[1;31mCuData::detach this %p - other d_p is nullL!\e[0m\n", this);
+        abort();
+    }
+    if(d_p && d_p->load() > 1) {
         d_p = new CuDataPrivate(*d_p); // sets ref=1
     }
 }
