@@ -143,8 +143,7 @@ void CuTConfiguration::start() {
  * - sets the exiting flag to true
  * - calls Cumbia::unregisterActivity
  */
-void CuTConfiguration::stop()
-{
+void CuTConfiguration::stop() {
     if(!d->exiting) {
         d->exiting = true;
         d->cumbia_t->unregisterActivity(d->activity);
@@ -153,8 +152,7 @@ void CuTConfiguration::stop()
 
 /*! \brief CuActionFactory relies on this returning true to unregister the action
  */
-bool CuTConfiguration::exiting() const
-{
+bool CuTConfiguration::exiting() const {
     return d->exiting;
 }
 

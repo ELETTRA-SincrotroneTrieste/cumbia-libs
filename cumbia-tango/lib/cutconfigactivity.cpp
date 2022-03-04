@@ -42,6 +42,7 @@ CuTConfigActivity::CuTConfigActivity(const TSource& ts,
     d->repeat = -1;
     d->try_cnt = 0;
     d->tcexecutor = tx;
+    // d->tag, d->options will be available until execute
     d->tag = std::move(tag);
     d->options = std::move(o);
     d->ts = std::move(ts);
@@ -90,8 +91,8 @@ void CuTConfigActivity::init()
 void CuTConfigActivity::execute()
 {
     d->err = !d->tdev->isValid();
-//    bool value_only = d->options.containsKey("value-only") && d->options.B("value-only");
-//    bool skip_read =  d->options.containsKey("no-value") && d->options.B("no-value");
+    //    bool value_only = d->options.containsKey("value-only") && d->options.B("value-only");
+    //    bool skip_read =  d->options.containsKey("no-value") && d->options.B("no-value");
     const std::string& point = d->ts.getPoint();
     CuData at("src", d->ts.getName());
     at["device"] = d->ts.getDeviceName();
@@ -103,8 +104,8 @@ void CuTConfigActivity::execute()
     at["type"] = "property";
 
     bool value_only = false, skip_read = false;
-        d->options["value-only"].to<bool>(value_only);
-        d->options["no-value"].to<bool>(skip_read);
+    d->options["value-only"].to<bool>(value_only);
+    d->options["no-value"].to<bool>(skip_read);
 
     d->try_cnt++;
     bool success = false;
@@ -138,8 +139,6 @@ void CuTConfigActivity::execute()
         at["data"] = true;
         at["msg"] = "CuTConfigActivity.execute (1): " + tw.getLastMessage();
         at["err"] = tw.error();
-        at.merge(std::move(d->options));
-        at.merge(std::move(d->tag)); // tag is carried along in results
         d->err = !success || tw.error();
         d->msg = tw.getLastMessage();
 
@@ -153,6 +152,9 @@ void CuTConfigActivity::execute()
     }
     d->exiting = true;
     d->device_service->removeRef(at["device"].toString(), threadToken());
+    // at last, move options and tag into at. options will no longer be available
+    at.merge(std::move(d->options));
+    at.merge(std::move(d->tag)); // tag is carried along in results
 
     publishResult(at);
 }
