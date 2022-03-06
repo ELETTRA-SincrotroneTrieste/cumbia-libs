@@ -19,6 +19,7 @@ public:
         _r.store(1);
     }
     ~CuDataPrivate() {
+//        printf("[0x%lx] %p d ~\e[0;31mX_P\e[0m\n", pthread_self(), this);
     }
 
     std::map<std::string, CuVariant> datamap;
@@ -37,16 +38,42 @@ public:
         return _r.load();
     }
 
+    /// TEST
+    pthread_t mythread;
+    std::string set_where;
+    CuData built_from;
+
 private:
     std::atomic<int> _r;
 
+
 };
+
+void CuData::thset(const char *func, const CuData &built_from) {
+    d_p->mythread = pthread_self();
+    d_p->set_where = std::string(func);
+    if(!built_from.isEmpty())
+        d_p->built_from = built_from;
+}
+
+void CuData::thcheck(const char* func, const CuData& other) const {
+    if(d_p->mythread != pthread_self()) {
+        printf("%s: my != this thread: [ \e[1;32m0x%lx\e[0m ] ! [ \e[0;35m0x%lx \e[0m ]\n "
+           "{ \e[0;31m%s\e[0m }\n\n", func, d_p->mythread, pthread_self(), this->toString().c_str());
+        printf("( data was built in %s from %s )\n", d_p->set_where.c_str(),
+               d_p->built_from.isEmpty() ? "()" : d_p->built_from.toString().c_str());
+        if(!other.isEmpty())
+            printf("\e[1;33m[info]\e[0m: operation tried to assign/copy/move from %s\n", other.toString().c_str());
+        abort();
+    }
+}
 
 /*! \brief the class destructor
  *
  * CuData class destructor
  */
 CuData::~CuData() {
+    thcheck(__func__);
     if(d_p && d_p->unref() == 1)
         delete d_p;
 }
@@ -56,6 +83,7 @@ CuData::~CuData() {
  * builds a CuData with no key/value
  */
 CuData::CuData() {
+    thset(__func__);
     d_p = new CuDataPrivate();
 }
 
@@ -68,6 +96,7 @@ CuData::CuData() {
  * to an empty key
  */
 CuData::CuData(const CuVariant &v) {
+    thset(__func__);
     d_p = new CuDataPrivate();
     d_p->datamap[""] = v;
 }
@@ -80,6 +109,7 @@ CuData::CuData(const CuVariant &v) {
  * The new CuData will be initialised with a key/v pair
  */
 CuData::CuData(const std::string& key, const CuVariant &v) {
+    thset(__func__);
     d_p = new CuDataPrivate();
     d_p->datamap[key] = v;
 }
@@ -92,8 +122,11 @@ CuData::CuData(const std::string& key, const CuVariant &v) {
  * new object
  */
 CuData::CuData(const CuData &other) {
+    thset(__func__, other);
     d_p = other.d_p;
-    d_p->ref(); // increment ref counter
+    d_p->ref();  // increment ref counter
+//    printf("[0x%lx] {%s} %p d %p\e[0;32mCuData (copy constructor)\e[0m\n",
+//           pthread_self(), s("name").c_str(), this, d_p);
     //    mCopyData(other); // before implicit sharing
 }
 
@@ -104,6 +137,8 @@ CuData::CuData(const CuData &other) {
  * Contents of *other* are moved into *this* CuData
  */
 CuData::CuData(CuData &&other) {
+    thset(std::string(std::string(__func__) + " [ move constructor ]").c_str(), other);
+    CuDataPrivate *old_p = d_p;
     d_p = other.d_p; /* no d = new here */
     other.d_p = nullptr; /* avoid deletion! */
 }
@@ -113,15 +148,21 @@ CuData::CuData(CuData &&other) {
  * @param other another CuData which values will be copied into this
  */
 CuData &CuData::operator=(const CuData &other) {
+    thcheck(__func__, other);
     if(other.d_p == nullptr) {
         printf("\e[1;31mCuData::operator= this [ ASSIGN ] %p - other d_p is nullL!\e[0m\n", this);
         abort();
     }
     if(this != &other) {
         other.d_p->ref();
+        CuDataPrivate *old_p = d_p;
         if(d_p->unref() == 1)
             delete d_p; // with no sharing we would not delete
+
+
         d_p = other.d_p;
+//        printf("[0x%lx]  {%s} %p d %p -> %p \e[1;32m= (shared)\e[0m\n",
+//               pthread_self(), s("name").c_str(), this, old_p, d_p);
         //        mCopyData(other); // before implicit sharing
     }
     return *this;
@@ -132,26 +173,34 @@ CuData &CuData::operator=(const CuData &other) {
  * @param other another CuData which values will be moved into this
  */
 CuData &CuData::operator=(CuData &&other) {
+    thcheck(std::string(std::string(__func__) + " [ move assignment ] ").c_str(), other);
     if(other.d_p == nullptr) {
         printf("\e[1;31mCuData::operator=(CuData &&other) [ASSIGN MOVE] this %p - other d_p is nullL!\e[0m\n", this);
         abort();
     }
     if (this!=&other) {
+        CuDataPrivate *old_p = d_p;
         if(d_p && d_p->unref() == 1)
              delete d_p;
+
         d_p = other.d_p;
+//        printf("[0x%lx] {%s} %p d %p -> %p \e[1;36m= (move)\e[0m\n",
+//               pthread_self(), s("name").c_str(), this, old_p, d_p);
+
         other.d_p = nullptr; /* avoid deletion! */
     }
     return *this;
 }
 
 CuData &CuData::set(const std::string &key, const CuVariant &value) {
+    thcheck(__func__, CuData("CuData::set:from_variant", value));
     detach();
     d_p->datamap[key] = value;
     return *this;
 }
 
 CuData &CuData::merge(const CuData &&other) {
+    thcheck(std::string(std::string(__func__) + " [ merge move version ] ").c_str(), other);
     detach();
     for(const std::string& key : other.keys())
         (*this).set(key, std::move(other.value(key)));
@@ -169,6 +218,7 @@ CuData CuData::clone() const {
 }
 
 CuData &CuData::merge(const CuData &other) {
+    thcheck(__func__, other);
     detach();
     for(const std::string& key : other.keys())
         (*this).set(key, other.value(key));
@@ -176,16 +226,19 @@ CuData &CuData::merge(const CuData &other) {
 }
 
 CuData &CuData::remove(const std::string &key) {
+    thcheck(std::string(std::string(__func__) + " [ remove key non const ] ").c_str(), CuData("CuData::remove:key:nonconst", key));
     detach();
     d_p->datamap.erase(key);
     return *this;
 }
 
 CuData CuData::remove(const std::string &key) const {
+    thcheck(__func__,  CuData("CuData::remove:key:const", key));
     return CuData(*this).remove(key);
 }
 
 CuData &CuData::remove(const std::vector<std::string> &keys) {
+    thcheck(__func__,  CuData("CuData::remove:keys:nonconst", keys));
     detach();
     for(const std::string& k : keys)
         d_p->datamap.erase(k);
@@ -193,6 +246,7 @@ CuData &CuData::remove(const std::vector<std::string> &keys) {
 }
 
 CuData CuData::remove(const std::vector<std::string> &keys) const {
+    thcheck(__func__,  CuData("CuData::remove:keys:const", keys));
     return CuData(*this).remove(keys);
 }
 
@@ -202,8 +256,8 @@ CuData CuData::remove(const std::vector<std::string> &keys) const {
  *
  * @see isEmpty
  */
-size_t CuData::size() const
-{
+size_t CuData::size() const {
+    thcheck(__func__);
     return d_p->datamap.size();
 }
 
@@ -217,6 +271,7 @@ size_t CuData::size() const
  * *invalid and null* CuVariant is returned. See CuVariant::isValid and CuVariant::isNull
  */
 CuVariant CuData::value() const {
+    thcheck(__func__);
     /* search the empty key */
     if(d_p->datamap.count("") > 0)
         return d_p->datamap.at("");
@@ -233,6 +288,7 @@ CuVariant CuData::value() const {
  * See also CuData::operator [](const std::string &key) const
  */
 CuVariant CuData::value(const std::string & key) const {
+    thcheck(__func__, CuData("CuData::value.key.const", key));
     if(d_p->datamap.count(key) > 0)
         return d_p->datamap[key];
     return CuVariant();
@@ -246,6 +302,7 @@ CuVariant CuData::value(const std::string & key) const {
  * \note The effect is exactly the same as using the operator [] (const std::string& key)
  */
 void CuData::add(const std::string & key, const CuVariant &value) {
+    thcheck(__func__, CuData("CuData::add.key.const", key));
     detach();
     d_p->datamap[key] = value;
 }
@@ -255,8 +312,8 @@ void CuData::add(const std::string & key, const CuVariant &value) {
  * @param key the key to be searched, std::string
  * @return true if the bundle contains the given key, false otherwise
  */
-bool CuData::containsKey(const std::string &key) const
-{
+bool CuData::containsKey(const std::string &key) const {
+    thcheck(__func__, CuData("CuData::containsKey.key.const", key));
     return d_p->datamap.count(key) > 0;
 }
 
@@ -270,6 +327,7 @@ bool CuData::containsKey(const std::string &key) const
  */
 bool CuData::has(const std::string &key, const std::string &value) const
 {
+    thcheck(__func__, CuData("CuData::has.key.const", key).set("CuData::has.value.const", value));
     bool ok;
     return d_p->datamap.count(key) > 0 && d_p->datamap.at(key).toString(&ok) == value && ok;
 }
@@ -288,7 +346,11 @@ bool CuData::has(const std::string &key, const std::string &value) const
  * \endcode
  */
 CuVariant &CuData::operator [](const std::string &key) {
+    thcheck(__func__, CuData("CuData::[].key.nonconst", key));
+    CuDataPrivate *old_p = d_p;
     detach();
+//    printf("[0x%lx] {%s} %p d %p -> %p {after detach \e[1;33m[]\e[0m\n",
+//           pthread_self(), s("name").c_str(), this, old_p, d_p);
     return d_p->datamap[key];
 }
 
@@ -299,8 +361,8 @@ CuVariant &CuData::operator [](const std::string &key) {
  *         *empty* CuVariant if the key is not found.
  * \note An *empty* CuVariant::isValid method returns false and CuVariant::isNull returns true
  */
-const CuVariant &CuData::operator [](const std::string &key) const
-{
+const CuVariant &CuData::operator [](const std::string &key) const {
+    thcheck(__func__, CuData("CuData::[].key.const", key));
     if(d_p->datamap.count(key) > 0)
         return d_p->datamap[key];
     return d_p->emptyVariant;
@@ -315,8 +377,8 @@ const CuVariant &CuData::operator [](const std::string &key) const
  *
  * the *inequality* operator is also defined
  */
-bool CuData::operator ==(const CuData &other) const
-{
+bool CuData::operator ==(const CuData &other) const {
+    thcheck(__func__,  other);
     if(other.d_p->datamap.size() != d_p->datamap.size())
         return false;
     std::map<std::string, CuVariant>::const_iterator i;
@@ -337,8 +399,8 @@ bool CuData::operator ==(const CuData &other) const
  *         returns false, false otherwise
  *
  */
-bool CuData::operator !=(const CuData &other) const
-{
+bool CuData::operator !=(const CuData &other) const {
+    thcheck(__func__,  other);
     return !operator ==(other);
 }
 
@@ -349,8 +411,8 @@ bool CuData::operator !=(const CuData &other) const
  *
  * @see size
  */
-bool CuData::isEmpty() const
-{
+bool CuData::isEmpty() const {
+    thcheck(__func__);
     return d_p->datamap.size() == 0;
 }
 
@@ -381,6 +443,7 @@ void CuData::print() const
  */
 std::string CuData::toString() const
 {
+    thcheck(__func__);
     std::string r = "CuData { ";
     std::map<std::string, CuVariant>::const_iterator i;
     char siz[16], empty[16];
@@ -404,6 +467,7 @@ std::string CuData::toString() const
  * \li "timestamp_us" timestamp in microseconds, convert with CuVariant::toLongInt
  */
 void CuData::putTimestamp() {
+    thcheck(__func__);
     detach();
     struct timeval tv;
     gettimeofday(&tv, NULL);
@@ -413,6 +477,7 @@ void CuData::putTimestamp() {
 
 std::vector<std::string> CuData::keys() const
 {
+    thcheck(__func__);
     std::vector<std::string> ks;
     for(std::map<std::string, CuVariant>::const_iterator it = d_p->datamap.begin(); it != d_p->datamap.end(); ++it)
         ks.push_back(it->first);
@@ -444,32 +509,39 @@ std::vector<std::string> CuData::keys() const
 //    }
 //}
 void CuData::detach() {
+    thcheck(__func__);
     if(d_p == nullptr) {
         printf("\e[1;31mCuData::detach this %p - other d_p is nullL!\e[0m\n", this);
         abort();
     }
-    if(d_p && d_p->load() > 1) {
+    // if(d_p && d_p->load() > 1) {
+    if(d_p->load() > 1) {
         d_p = new CuDataPrivate(*d_p); // sets ref=1
     }
 }
 
 std::string CuData::s(const std::string& key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     return this->operator[](key).s();
 }
 
 double CuData::d(const std::string& key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     return this->operator[](key).d();
 }
 
 int CuData::i(const std::string& key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     return this->operator[](key).i();
 }
 
 unsigned int CuData::u(const std::string &key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     return this->operator[](key).u();
 }
 
 bool CuData::b(const std::string& key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     if(containsKey(key))
         return this->operator[](key).d();
     return false;
@@ -479,6 +551,7 @@ bool CuData::b(const std::string& key) const {
 
 
 double CuData::D(const std::string& key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     double v = 0.0;
     if(containsKey(key))
         this->operator[](key).to<double>(v);
@@ -486,6 +559,7 @@ double CuData::D(const std::string& key) const {
 }
 
 int CuData::I(const std::string& key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     int i = 0.0;
     if(containsKey(key))
         this->operator[](key).to<int>(i);
@@ -493,6 +567,7 @@ int CuData::I(const std::string& key) const {
 }
 
 unsigned int CuData::U(const std::string &key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     unsigned int i = 0.0;
     if(containsKey(key))
         this->operator[](key).to<unsigned int>(i);
@@ -500,6 +575,7 @@ unsigned int CuData::U(const std::string &key) const {
 }
 
 bool CuData::B(const std::string& key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     bool b = false;
     if(containsKey(key))
         this->operator[](key).to<bool>(b);
@@ -507,6 +583,7 @@ bool CuData::B(const std::string& key) const {
 }
 
 std::vector<double> CuData::DV(const std::string &key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     std::vector<double>  dv;
     if(containsKey(key))
         this->operator[](key).toVector<double>(dv);
@@ -514,6 +591,7 @@ std::vector<double> CuData::DV(const std::string &key) const {
 }
 
 std::vector<int>  CuData::IV(const std::string &key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     std::vector<int>  vi;
     if(containsKey(key))
         this->operator[](key).toVector<int>(vi);
@@ -521,6 +599,7 @@ std::vector<int>  CuData::IV(const std::string &key) const {
 }
 
 std::vector<long long> CuData::LLV(const std::string &key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     std::vector< long long int>  lliv;
     if(containsKey(key))
         this->operator[](key).toVector< long long int>(lliv);
@@ -528,6 +607,7 @@ std::vector<long long> CuData::LLV(const std::string &key) const {
 }
 
 std::vector<unsigned int>  CuData::UV(const std::string &key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     std::vector<unsigned int>  uiv;
     if(containsKey(key))
         this->operator[](key).toVector<unsigned int>(uiv);
@@ -535,6 +615,7 @@ std::vector<unsigned int>  CuData::UV(const std::string &key) const {
 }
 
 std::vector<unsigned long> CuData::ULV(const std::string &key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     std::vector<unsigned long int>  uliv;
     if(containsKey(key))
         this->operator[](key).toVector<unsigned long int>(uliv);
@@ -542,6 +623,7 @@ std::vector<unsigned long> CuData::ULV(const std::string &key) const {
 }
 
 std::vector<unsigned long long> CuData::ULLV(const std::string &key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     std::vector<unsigned long long int>  ulliv;
     if(containsKey(key))
         this->operator[](key).toVector<unsigned long long int>(ulliv);
@@ -549,6 +631,7 @@ std::vector<unsigned long long> CuData::ULLV(const std::string &key) const {
 }
 
 std::vector<bool> CuData::BV(const std::string &key) const {
+    thcheck(__func__, CuData("CuData::X[conversion shortcut].key", key));
     std::vector<bool>  bv;
     if(containsKey(key))
         this->operator[](key).toVector<bool>(bv);
