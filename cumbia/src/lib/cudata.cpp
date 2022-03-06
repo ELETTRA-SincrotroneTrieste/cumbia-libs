@@ -41,7 +41,6 @@ public:
     /// TEST
     pthread_t mythread;
     std::string set_where;
-    CuData built_from;
 
 private:
     std::atomic<int> _r;
