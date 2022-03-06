@@ -247,7 +247,6 @@ CuData CuData::remove(const std::vector<std::string> &keys) const {
  * @see isEmpty
  */
 size_t CuData::size() const {
-    thcheck(__func__);
     return d_p->datamap.size();
 }
 
@@ -436,7 +435,7 @@ std::string CuData::toString() const
     std::string r = "CuData { ";
     std::map<std::string, CuVariant>::const_iterator i;
     char siz[16], empty[16];
-    snprintf(siz, 16, "%ld", size());
+    snprintf(siz, 16, "%ld", d_p->datamap.size());
     snprintf(empty, 16, "%d", isEmpty());
     for(i = d_p->datamap.begin(); i != d_p->datamap.end(); ++i)
     {
