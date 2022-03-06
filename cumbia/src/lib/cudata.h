@@ -132,8 +132,8 @@ public:
 
     /// TEST
     ///
-    void thcheck(const char *func, const CuData &other = CuData()) const; // verify pthread_self == mythread
-    void thset(const char* func, const CuData& built_from = CuData()); // set mythread = pthread_self
+    void thcheck(const char *func) const; // verify pthread_self == mythread
+    void thset(const char* func); // set mythread = pthread_self
     ///
     ///
 private:
