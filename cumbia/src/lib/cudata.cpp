@@ -433,7 +433,6 @@ void CuData::print() const
  */
 std::string CuData::toString() const
 {
-    thcheck(__func__);
     std::string r = "CuData { ";
     std::map<std::string, CuVariant>::const_iterator i;
     char siz[16], empty[16];
