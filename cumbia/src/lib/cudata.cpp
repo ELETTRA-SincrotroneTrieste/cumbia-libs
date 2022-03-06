@@ -55,7 +55,7 @@ void CuData::thset(const char *func) {
 
 void CuData::thcheck(const char* func) const {
     if(d_p && d_p->mythread != pthread_self()) {
-        printf("%s: my != this thread: [ \e[1;32m0x%lx\e[0m ] ! [ \e[0;35m0x%lx \e[0m ]\n "
+        printf("%s: my != pthread_self: [ my:\e[1;32m0x%lx\e[0m ] ! [ self:\e[0;35m0x%lx \e[0m ]\n "
            "{ \e[0;31m%s\e[0m }\n\n", func, d_p->mythread, pthread_self(), this->toString().c_str());
         printf("( data was built in %s)\n", d_p->set_where.c_str());
         abort();
