@@ -436,7 +436,7 @@ std::string CuData::toString() const
     std::map<std::string, CuVariant>::const_iterator i;
     char siz[16], empty[16];
     snprintf(siz, 16, "%ld", d_p->datamap.size());
-    snprintf(empty, 16, "%d", isEmpty());
+    snprintf(empty, 16, "%d", d_p->datamap.size() == 0);
     for(i = d_p->datamap.begin(); i != d_p->datamap.end(); ++i)
     {
         r += "[\"" + i->first + "\" -> " + i->second.toString() + "], ";
