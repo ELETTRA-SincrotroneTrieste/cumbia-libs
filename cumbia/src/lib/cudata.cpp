@@ -52,8 +52,6 @@ private:
 void CuData::thset(const char *func, const CuData &built_from) {
     d_p->mythread = pthread_self();
     d_p->set_where = std::string(func);
-    if(!built_from.isEmpty())
-        d_p->built_from = built_from;
 }
 
 void CuData::thcheck(const char* func, const CuData& other) const {
