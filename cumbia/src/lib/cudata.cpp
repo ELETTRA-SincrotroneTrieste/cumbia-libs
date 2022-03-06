@@ -83,8 +83,8 @@ CuData::~CuData() {
  * builds a CuData with no key/value
  */
 CuData::CuData() {
-    thset(__func__);
     d_p = new CuDataPrivate();
+    thset(__func__);
 }
 
 /*! \brief constructor of a CuData initialised with one value (key: emtpy string)
@@ -96,9 +96,9 @@ CuData::CuData() {
  * to an empty key
  */
 CuData::CuData(const CuVariant &v) {
-    thset(__func__);
     d_p = new CuDataPrivate();
     d_p->datamap[""] = v;
+    thset(__func__);
 }
 
 /*! \brief constructor initialising a CuData with one key-value pair
@@ -109,9 +109,9 @@ CuData::CuData(const CuVariant &v) {
  * The new CuData will be initialised with a key/v pair
  */
 CuData::CuData(const std::string& key, const CuVariant &v) {
-    thset(__func__);
     d_p = new CuDataPrivate();
     d_p->datamap[key] = v;
+    thset(__func__);
 }
 
 /*! \brief the copy constructor
@@ -122,12 +122,12 @@ CuData::CuData(const std::string& key, const CuVariant &v) {
  * new object
  */
 CuData::CuData(const CuData &other) {
-    thset(__func__, other);
     d_p = other.d_p;
     d_p->ref();  // increment ref counter
 //    printf("[0x%lx] {%s} %p d %p\e[0;32mCuData (copy constructor)\e[0m\n",
 //           pthread_self(), s("name").c_str(), this, d_p);
     //    mCopyData(other); // before implicit sharing
+    thset(__func__, other);
 }
 
 /*! \brief c++11 *move constructor*
@@ -137,10 +137,10 @@ CuData::CuData(const CuData &other) {
  * Contents of *other* are moved into *this* CuData
  */
 CuData::CuData(CuData &&other) {
-    thset(std::string(std::string(__func__) + " [ move constructor ]").c_str(), other);
     CuDataPrivate *old_p = d_p;
     d_p = other.d_p; /* no d = new here */
     other.d_p = nullptr; /* avoid deletion! */
+    thset(std::string(std::string(__func__) + " [ move constructor ]").c_str(), other);
 }
 
 /*! \brief assignment operator, copies data from another source
@@ -149,10 +149,6 @@ CuData::CuData(CuData &&other) {
  */
 CuData &CuData::operator=(const CuData &other) {
     thcheck(__func__, other);
-    if(other.d_p == nullptr) {
-        printf("\e[1;31mCuData::operator= this [ ASSIGN ] %p - other d_p is nullL!\e[0m\n", this);
-        abort();
-    }
     if(this != &other) {
         other.d_p->ref();
         CuDataPrivate *old_p = d_p;
