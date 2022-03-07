@@ -13,7 +13,7 @@
  *
  *
  */
-CuThreadInterface *CuThreadFactoryImpl::createThread(const CuData &thread_token ,
+CuThreadInterface *CuThreadFactoryImpl::createThread(const std::string &thread_token ,
                                                      CuThreadsEventBridge_I *eventsBridge,
                                                      const CuServiceProvider *service_provider) const
 {

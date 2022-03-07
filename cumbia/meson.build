@@ -89,8 +89,18 @@ sources = [
 includedirs = include_directories('src/lib', 'src/lib/threads', 'src/lib/services')
 
 cpp_arguments = [ '-DCUMBIA_DEBUG_OUTPUT=1' , '-DCU_VERSION=1.4.0' ]
+link_arguments = []
 
-# cpp_arguments = []
+
+# profiling with gprof
+#  gprof -q -b executable  > analysis.txt
+#  gprof -p -b executable  > analysis.txt
+#
+if(get_option('gprof_enable'))
+    message('\033[1;33m*\033[0m compiling with \033[1;31m-pg\033[0m for profiling \033[1;33m*\033[0m')
+    cpp_arguments += [ '-pg' ]
+    link_arguments += [ '-pg' ]
+endif
 
 deps = [ dependency('threads') ]
 
@@ -99,7 +109,8 @@ cumbialib = shared_library('cumbia', sources,
         include_directories : includedirs,
         cpp_args : cpp_arguments,
         dependencies : deps ,
-        install : true)
+        install : true,
+        link_args  : link_arguments)
 
 pkg = import('pkgconfig')
 pkg.generate(version : meson.project_version(),

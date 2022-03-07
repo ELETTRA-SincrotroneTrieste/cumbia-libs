@@ -9,21 +9,59 @@ Fixed unsigned long long and long long int support.
 - Added methods isUnsignedType and isSignedType in CuVariant
 - Added *remove* methods to remove keys from CuData. const and non const versions
 
+Important fix:
+
+- after periodic activity timeout changes updates may be lost: fixed timer management
+- CuTimerService: when asking for a new timer, always reuse an existing one if the required timeout is the same
+
+
 ### New features
 
 #### cumbia
 
-A new class named *CuWorkQueueActivity* is an event-based activity allowing a client to add work events
-on a queue and have a function (or a *worker subclass implementation (CuWorkQueueA_Worker)* method) invoked
-in a separate thread. The worker will be handed the list of events, process them in the separate thread and 
-finally post the results on the main thread.
+##### CuData and CuVariant copy on write (implicit sharing)
 
+CuData implements *copy on write*, reducing the internal data copies significantly.
+
+Data is implicitly shared, enabling *copy on write*. Atomic reference counters make the class
+reentrant, meaning that methods can be called from multiple threads, but only if each invocation
+uses its own data. Atomic reference counting is used to ensure the integrity of the shared data.
+Since cumbia 1.4.0, CuData uses implicit sharing as well.
+
+
+##### Remove from CuData
 It is now possible to *remove* keys from CuData. Both const and non const methods are provided.
+
+##### Optimizations
+
+The cumbia library hasu undergone several *memory and speed* optimizations.
 
 #### cumbia-tango
 
 A new interface named CuTConfigActivityExecutor_I allows customizing attribute and command configuration fetch
 from CuTConfigActivity
+
+##### Internal classes and activities optimization
+
+cumbia-tango classes and activities have been optimized for memory and speed, exploiting the *CuData and CuVariant
+new implicit sharing*.
+
+##### Update policy on constant polled data
+
+*Poller* can now avoid publishing results when data does not change. This can save a lot of time to applications
+reading from several *polled sources*.
+
+Three types of *update policy* are available for *polled sources*:
+
+1. Always update, even though the data does not change (default usual behaviour)
+2. Update the timestamp only as long as data does not change;
+3. Do not perform any update as long as data does not change. Updates are not sent
+   at the *activity* level. This means event posting on the application thread is
+   completely skipped, ensuring maximum performance.
+   
+Changes in error flags, messages or Tango data quality are always notified.
+
+The update policy shall be suggested to the CuPollingService. See also CuPollDataUpdatePolicy.
 
 ## version 1.3.1
 

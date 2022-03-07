@@ -49,7 +49,7 @@ class CuThreadService : public CuServiceI
 public:
     CuThreadService();
 
-    CuThreadInterface *getThread(const CuData& token,
+    CuThreadInterface *getThread(const std::string &token,
                                  const CuThreadsEventBridgeFactory_I &eventsBridgeFactory,
                                  const CuServiceProvider *service_provider,
                                  const CuThreadFactoryImplI &thread_factory_impl);

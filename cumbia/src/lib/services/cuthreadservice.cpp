@@ -49,17 +49,21 @@ CuThreadService::CuThreadService()
  * Qt applications.
  *
  */
-CuThreadInterface *CuThreadService::getThread(const CuData& token,
+
+int thcnt = 0;
+
+CuThreadInterface *CuThreadService::getThread(const std::string& token,
                                               const CuThreadsEventBridgeFactory_I &eventsBridgeFactory,
                                               const CuServiceProvider *service_provider,
                                               const CuThreadFactoryImplI &thread_factory_impl)
 {
     CuThreadInterface *thread;
     std::list<CuThreadInterface *>::const_iterator it;
-    for(it = mThreads.begin(); it != mThreads.end(); ++it)
-    {
-        if((*it)->isEquivalent(token))
+    for(it = mThreads.begin(); it != mThreads.end(); ++it) {
+        if((*it)->isEquivalent(token)) {
             return (*it);
+        }
+
     }
     thread = thread_factory_impl.createThread(token, eventsBridgeFactory.createEventBridge(service_provider), service_provider);
     std::unique_lock lock(m_shared_mutex);

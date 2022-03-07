@@ -17,6 +17,7 @@
 #include "cupoller.h"
 #include <culog.h>
 #include <tango.h>
+#include <cumbiatango.h>
 
 class TSource;
 
@@ -31,8 +32,9 @@ public:
           period(1000),
           refresh_mode(CuTReader::ChangeEventRefresh),
           polling_fallback(false),
+          started(false),
           manual_mode_period( 1000 * 3600 * 24 * 10),
-          tag(_tag) {  }
+          tag(_tag)    {  }
 
     std::set<CuDataListener *> listeners;
     TSource tsrc;
@@ -43,9 +45,10 @@ public:
     CuData property_d, value_d;
     int period;
     CuTReader::RefreshMode refresh_mode;
-    bool polling_fallback;
+    bool polling_fallback, started;
     int manual_mode_period;
-    CuData options, tag;
+    // keep a copy of options and tag in case refresh mode changes (no std::move when passing them to activities)
+    CuData o, tag;
 };
 
 CuTReader::CuTReader(const TSource& src, CumbiaTango *ct, const CuData &op, const CuData &tag) : CuTangoActionI() {
@@ -53,9 +56,7 @@ CuTReader::CuTReader(const TSource& src, CumbiaTango *ct, const CuData &op, cons
     setOptions(op);
 }
 
-CuTReader::~CuTReader()
-{
-    pdelete("~CuTReader %p", this);
+CuTReader::~CuTReader() {
     delete d;
 }
 
@@ -85,19 +86,16 @@ void CuTReader::onResult(const std::vector<CuData> &datalist) {
  */
 void CuTReader::onResult(const CuData &data) {
     bool err = data["err"].toBool();
-//    if(d->tag.containsKey("polling-failure-fallback"))
-//        printf("CuTReader.onResult after polling fallback EVENT Failure: %s [%s]\n", vtoc2(data, "src"), vtoc2(data, "value"));
     // iterator can be invalidated if listener's onUpdate unsets source: use a copy
     std::set<CuDataListener *> lis_copy = d->listeners;
     std::set<CuDataListener *>::iterator it;
     bool event_subscribe_fail = err && data["E"].toString() == "subscribe";
     // if it's just subscribe_event failure, do not notify listeners
-    for(it = lis_copy.begin();
-        !event_subscribe_fail && it != lis_copy.end();   ++it) {
+    for(it = lis_copy.begin(); !event_subscribe_fail && it != lis_copy.end();   ++it) {
         (*it)->onUpdate(data);
     }
     if(err) {
-        if(data.containsKey("ev_except") && data["ev_except"].toBool()) {
+        if(data.containsKey("ev_except") && data.B("ev_except")) {
             if(!event_subscribe_fail) // DEBUG PRINT only if !event_subs_fail
                 perr("CuTReader.onResult: polling fallback after event failure: src %s msg %s", vtoc2(data, "src"), vtoc2(data, "msg"));
             m_polling_fallback();
@@ -173,7 +171,7 @@ void CuTReader::getData(CuData &ino) const {
  *
  */
 void CuTReader::setOptions(const CuData &options) {
-    d->options = options;
+    d->o = options;
     if(options.containsKey("manual") && options["manual"].toBool())
         setRefreshMode(CuTReader::Manual);
     else {
@@ -199,7 +197,7 @@ void CuTReader::setTag(const CuData &tag) {
 void CuTReader::m_update_options(const CuData newo) {
     int rm = -1, p = -1;
     if(newo.containsKey("manual")) {
-        d->options["manual"] = newo["manual"];
+        d->o["manual"] = newo["manual"];
         rm = CuTReader::Manual;
     }
     if(newo.containsKey("refresh_mode"))
@@ -207,9 +205,9 @@ void CuTReader::m_update_options(const CuData newo) {
     if(newo.containsKey("period"))
         newo["period"].to<int>(p);
     if(rm >= CuTReader::PolledRefresh && rm <= CuTReader::Manual)
-        d->options["refresh_mode"] = rm;
+        d->o["refresh_mode"] = rm;
     if(rm == CuTReader::Manual)
-        d->options["period"] = d->manual_mode_period;
+        d->o["period"] = d->manual_mode_period;
 }
 
 void CuTReader::m_destroy_self() {
@@ -218,6 +216,8 @@ void CuTReader::m_destroy_self() {
     am->removeConnection(this);
     delete this;
 }
+
+
 
 /** \brief Send data with parameters to configure the reader.
  *
@@ -326,7 +326,7 @@ void CuTReader::setRefreshMode(CuTReader::RefreshMode rm, int period) {
             }
             if(d->refresh_mode != rm) {
                 d->polling_fallback = false;
-                printf("CuTReader::setRefreshMode calling m_registerToPoller d->period %d options %s\n", d->period, datos(d->options));
+                printf("CuTReader::setRefreshMode calling m_registerToPoller d->period %d options %s\n", d->period, datos(d->o));
                 m_registerToPoller();
             }
         }
@@ -401,6 +401,10 @@ bool CuTReader::exiting() const {
     return false;
 }
 
+bool CuTReader::is_running() const {
+    return d->started;
+}
+
 void CuTReader::m_polling_fallback() {
     CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
@@ -449,6 +453,7 @@ void CuTReader::start()
         d->polling_fallback = false;
         m_registerToPoller();
     }
+    d->started = true;
 }
 
 void CuTReader::m_startEventActivity()
@@ -456,15 +461,10 @@ void CuTReader::m_startEventActivity()
     CuDeviceFactoryService *df =
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
-
-    CuData at("src", d->tsrc.getName()); /* activity token */
     // thread token: by default device name, but can be tuned
     // through the "thread_token" option (setOptions)
-    CuData thtok= CuData("device", d->tsrc.getDeviceName());
-    if(d->options.containsKey("thread_token"))
-        thtok["thread_token"] = d->options["thread_token"];
-    d->options.set("device", d->tsrc.getDeviceName()).set("point", d->tsrc.getPoint()).set("rmode", refreshModeStr());
-    d->event_activity = new CuEventActivity(at.set("activity", "event"), df, d->options, d->tag);
+    std::string thtok = d->o.containsKey("thread_token") ? d->o.s("thread_token") : d->tsrc.getDeviceName();
+    d->event_activity = new CuEventActivity(d->tsrc, df, refreshModeStr(), d->tag, d->cumbia_t->readUpdatePolicy());
     d->refresh_mode = ChangeEventRefresh; // update refresh mode
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
@@ -474,7 +474,7 @@ void CuTReader::m_startEventActivity()
 void CuTReader::m_registerToPoller() {
     CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
-    polling_service->registerAction(d->cumbia_t, d->tsrc, d->period, this, d->options, d->tag);
+    polling_service->registerAction(d->cumbia_t, d->tsrc, d->period, this, d->o, d->tag);
 }
 
 void CuTReader::m_unregisterFromPoller() {

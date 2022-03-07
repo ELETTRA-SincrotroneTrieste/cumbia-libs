@@ -35,6 +35,14 @@ class CuDataPrivate;
  *
  * \par The CuVariant variant type
  * Please read the CuVariant documentation to understand the *cumbia* CuVariant type.
+ *
+ * \par Implicit sharing
+ * \since 1.4.0
+ *
+ * Data is implicitly shared, enabling *copy on write*. Atomic reference counters make the class
+ * reentrant, meaning that methods can be called from multiple threads, but only if each invocation
+ * uses its own data. Atomic reference counting is used to ensure the integrity of the shared data.
+ * Since cumbia 1.4.0, CuData uses implicit sharing as well.
  */
 class CuData
 {
@@ -58,6 +66,9 @@ public:
     CuData& set(const std::string& key, const CuVariant& value);
 
     CuData& merge(const CuData& other);
+    CuData &merge(const CuData &&other);
+
+    CuData clone() const;
 
     CuData& remove(const std::string& key);
 
@@ -119,10 +130,18 @@ public:
     std::vector<unsigned long long int> ULLV(const std::string& key) const;
     std::vector<bool>    BV(const std::string& key) const;
 
+    /// TEST
+    ///
+    void thcheck(const char *func) const; // verify pthread_self == mythread
+    void thset(const char* func); // set mythread = pthread_self
+    ///
+    ///
 private:
     CuDataPrivate *d_p;
 
-    void mCopyData(const CuData &other);
+//    void mCopyData(const CuData &other);
+
+    void detach();
 };
 
 #endif // CUDATA_H

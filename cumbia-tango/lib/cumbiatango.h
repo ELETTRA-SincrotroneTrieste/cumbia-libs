@@ -7,6 +7,7 @@ class CuDataListener;
 #include <cumbia.h>
 #include <cutangoactioni.h>
 #include<string>
+#include <cudataupdatepolicy_enum.h>
 
 class CumbiaTangoPrivate;
 
@@ -154,15 +155,16 @@ class CumbiaTango : public Cumbia
 {
 public:
 
-    enum Options  {
-        OptionActionFactorySrvcSimple = 0x1, ///< the default, good for most simple cases
-        OptionActionFactorySrvcThreadSafe = 0x2, ///< for complex apps: add, find and remove actions from different threads
-        EndOptions = 512
-    };
     enum Type { CumbiaTangoType = Cumbia::CumbiaUserType + 1 };
 
+    enum UpdateOptions { OnPollUpdateAlways = 0x1,
+                         OnPollUnchangedUpdateTimestamp = 0x2,
+                         OnPollUnchangedNoUpdate = 0x4,
+                         SkipFirstReadUpdate = 0x8,
+                         EndUpdateOptions = 0x20 };
+
+
     CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb);
-    CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb, Options o);
     ~CumbiaTango();
 
     void addAction(const TSource &source, CuDataListener *l, const CuTangoActionFactoryI &f);
@@ -172,6 +174,9 @@ public:
 
     CuThreadFactoryImplI* getThreadFactoryImpl() const;
     CuThreadsEventBridgeFactory_I* getThreadEventsBridgeFactory() const;
+
+    void setReadUpdatePolicy(int p);
+    int readUpdatePolicy() const;
 
     virtual int getType() const;
 

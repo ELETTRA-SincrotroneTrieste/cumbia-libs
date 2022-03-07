@@ -9,6 +9,7 @@ class CuThreadService;
 
 #include "cuthreadseventbridge_i.h"
 #include <vector>
+#include <string>
 
 /*! \brief interface to write thread implementations that can be used with the *cumbia*
  *         library
@@ -123,7 +124,7 @@ public:
      * For example, a string representing a network URL can be a key to determine if the same thread
      * can be reused for the same connection.
      */
-    virtual bool isEquivalent(const CuData& other_thread_token) const = 0;
+    virtual bool isEquivalent(const std::string& other_thread_token) const = 0;
 
     /*! \brief perform clean operations on the class members
      *

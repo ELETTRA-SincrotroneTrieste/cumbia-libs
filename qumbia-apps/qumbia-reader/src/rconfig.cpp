@@ -11,6 +11,7 @@ RConfig::RConfig()
     period = 1000;
     format = QString();
     property = help = no_properties = false;
+    unchanged_upd_mode = "always";
 }
 
 

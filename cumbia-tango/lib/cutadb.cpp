@@ -16,15 +16,15 @@
 class CuTaDbPrivate {
 public:
     CuTaDbPrivate(const TSource& t_src, CumbiaTango *ct, const CuData &_options, const CuData &_tag)
-        : tsrc(t_src), cumbia_t(ct), options(_options), tag(_tag), xit(false) {
+        : tsrc(t_src), cumbia_t(ct), activity(nullptr), options(_options), tag(_tag), xit(false) {
     }
 
     std::list<CuDataListener *> listeners;
     const TSource tsrc;
     CumbiaTango *cumbia_t;
     CuTaDbActivity *activity;
-    bool xit; // set to true by stop()
     CuData options, tag;
+    bool xit; // set to true by stop()
 };
 
 CuTaDb::CuTaDb(const TSource& src, CumbiaTango *ct, const CuData &options, const CuData &tag) {
@@ -115,11 +115,9 @@ size_t CuTaDb::dataListenersCount() {
 void CuTaDb::start()
 {
     CuData at("src", d->tsrc.getName()); /* activity token */
-    CuData tt("thread_token", "tangodb"); // same thread for all db accesses
     at["activity"] = "cutadb";
     at.merge(d->options);
-    if(d->options.containsKey("thread_token"))
-        tt["thread_token"] = d->options["thread_token"];
+    const std::string& tt = d->options.containsKey("thread_token") ? d->options.s("thread_token") : "cutadb";
     d->activity = new CuTaDbActivity(at, d->tsrc, d->tag);
     d->activity->setOptions(d->options);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
@@ -144,4 +142,8 @@ void CuTaDb::stop() {
  */
 bool CuTaDb::exiting() const {
     return d->xit;
+}
+
+bool CuTaDb::is_running() const {
+    return d->activity != nullptr;
 }

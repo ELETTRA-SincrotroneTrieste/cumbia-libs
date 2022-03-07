@@ -44,6 +44,7 @@ Cumbia::Cumbia()
     d->serviceProvider->registerService(CuServices::ActivityManager, new CuActivityManager());
     d->serviceProvider->registerService(CuServices::Timer, new CuTimerService());
     d->threadTokenGenerator = nullptr;
+    printf("cumbia version \e[1;32m1.4.0\e[0m [ \e[1;33mTEST\e[0m ]\n");
 }
 
 /*! \brief called from the class destructor, cleans up the Cumbia object
@@ -174,7 +175,7 @@ CuServiceProvider *Cumbia::getServiceProvider() const
  */
 void Cumbia::registerActivity(CuActivity *activity,
                               CuThreadListener *dataListener,
-                              const CuData& thread_token,
+                              const std::string& thread_token,
                               const CuThreadFactoryImplI& thread_factory_impl,
                               const CuThreadsEventBridgeFactory_I &eventsBridgeFactoryImpl)
 {
@@ -221,7 +222,7 @@ void Cumbia::unregisterActivity(CuActivity *activity)
  * @return a *non disposable* CuActivity whose token matches token
  *
  * \par Note
- * This is a convenience shortcut to CuActivityManager::findMatching
+ * This is a convenience shortcut to CuActivityManager::find
  */
 CuActivity *Cumbia::findActivity(const CuData &token) const
 {
@@ -236,7 +237,7 @@ CuActivity *Cumbia::findActivity(const CuData &token) const
  *
  * \par Implementation
  * Through the activity manager service, the thread associated to the activity is
- * fetched and to it a CuTimeoutChangeEvent is forwarded.
+ * fetched and a CuTimeoutChangeEvent is posted.
  */
 void Cumbia::setActivityPeriod(CuActivity *a, int timeout)
 {
@@ -352,14 +353,8 @@ CuThreadTokenGenI *Cumbia::getThreadTokenGenerator() const {
  *
  * \return a thread token (CuData)
  */
-CuData Cumbia::threadToken(const CuData &options) const
-{
-    CuData ret;
+const std::string Cumbia::threadToken(const std::string& in) const {
     if(d->threadTokenGenerator)
-        ret = d->threadTokenGenerator->generate(options);
-    else if(!options.containsKey("thread_token"))
-        ret = options;
-    else
-        ret =  CuData("thread_token", options["thread_token"]);
-    return ret;
+        return d->threadTokenGenerator->generate(in);
+    return in;
 }

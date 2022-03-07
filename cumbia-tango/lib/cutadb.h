@@ -39,6 +39,7 @@ public:
     void start();
     void stop();
     bool exiting() const;
+    bool is_running() const;
 
 private:
     CuTaDbPrivate *d;

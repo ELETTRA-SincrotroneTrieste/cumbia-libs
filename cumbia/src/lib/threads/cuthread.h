@@ -13,6 +13,7 @@ class CuThreadPrivate;
 class CuEventLoopService;
 class CuServiceProvider;
 class CuActivityEvent;
+class CuTimerService;
 
 /*! \brief *cumbia thread* implementation
  *
@@ -63,7 +64,7 @@ class CuActivityEvent;
 class CuThread : public CuThreadInterface, public CuTimerListener
 {
 public:
-    CuThread(const CuData &token, CuThreadsEventBridge_I *threadEventsBridge,
+    CuThread(const std::string &token, CuThreadsEventBridge_I *threadEventsBridge,
              const CuServiceProvider* service_provider);
 
     virtual ~CuThread();
@@ -77,8 +78,8 @@ public:
     void publishResult(const CuActivity *activity, const std::vector<CuData> *data_list);
 
     void publishExitEvent(CuActivity *a);
-    bool isEquivalent(const CuData &other_thread_token) const;
-    CuData getToken() const;
+    bool isEquivalent(const std::string &other_thtok) const;
+    std::string getToken() const;
     void cleanup();
     int type() const;
     void start();
@@ -102,8 +103,12 @@ private:
     void mRemoveActivityTimer(CuActivity *a);
     void m_exit(bool auto_destroy);
     void m_unregisterFromService();
+    CuTimer* m_a_new_timeout(CuActivity *a, int timeo, CuTimerService *timer_s, CuTimer *old_t);
     void m_tmr_registered(CuActivity *a, CuTimer *t);
-    const CuTimer *mFindTimer(CuActivity *a) const;
+    void m_tmr_remove(CuTimer *t);
+    size_t m_tmr_remove(CuActivity *a);
+    size_t m_activity_cnt(CuTimer *t) const;
+    const CuTimer *m_tmr_find(CuActivity *a) const;
     std::list<CuActivity *> m_activitiesForTimer(const CuTimer *t) const;
 
     // CuThreadsEventBridgeListener interface

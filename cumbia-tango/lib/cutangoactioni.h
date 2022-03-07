@@ -31,7 +31,7 @@ public:
 
     /*! \brief virtual destructor, to make compilers happy
      */
-    virtual ~CuTangoActionI() {}
+    virtual ~CuTangoActionI();
 
     /*! \brief list of types of actions
      *
@@ -136,6 +136,8 @@ public:
      * still running before unregistering.
      */
     virtual bool exiting() const = 0;
+
+    virtual bool is_running() const = 0;
 
 };
 

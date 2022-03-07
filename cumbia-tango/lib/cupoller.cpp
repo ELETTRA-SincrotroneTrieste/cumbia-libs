@@ -12,6 +12,7 @@
 #include <cudevicefactoryservice.h>
 #include <cuthreadevents.h>
 #include <cutreader.h>
+#include <assert.h>
 
 class CuPollerPrivate
 {
@@ -23,8 +24,10 @@ public:
     std::map<std::string, CuPollingActivity *> activity_map;
     int period;
     CuData token;
-    bool deliveringResults; // true if inside the onResult method
+//    bool deliveringResults; // true if inside the onResult method
     std::list<CuTangoActionI *> to_remove_actionlist;
+
+    pthread_t my_thread;
 };
 
 CuPoller::CuPoller(CumbiaTango *cu_t, int period)
@@ -35,7 +38,8 @@ CuPoller::CuPoller(CumbiaTango *cu_t, int period)
     d->token = CuData("period", period);
     d->token["class"] = "CuPoller";
     d->token["activity_count"] = 0;
-    d->deliveringResults = false;
+//    d->deliveringResults = false;
+    d->my_thread = pthread_self();
 }
 
 CuPoller::~CuPoller()
@@ -49,8 +53,13 @@ int CuPoller::period() const
     return d->period;
 }
 
-void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a, const CuData& options, const CuData& tag)
+void CuPoller::registerAction(const TSource& tsrc,
+                              CuTangoActionI *a,
+                              const CuData& options,
+                              const CuData& tag,
+                              int dataupdpo)
 {
+    assert(d->my_thread == pthread_self());
     // insert in this thread
     d->actions_map[tsrc.getName()] = a;
     pgreen(" + CuPoller.registerAction: added %s - %p to poller - period %d\n", tsrc.getName().c_str(), a, d->period);
@@ -63,14 +72,11 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a, const CuDa
     CuData at("device", tsrc.getDeviceName()); /* activity token */
     at["activity"] = "poller";
     at["period"] = d->period;
-
     CuActivity *activity = am->find(at); // polling activities compare device period and "activity"
     if(!activity) {
         // thread token. CuTReader.setOptions can customize thread grouping behaviour
-        CuData tt;
-        options.containsKey("thread_token") ? tt = options : tt = CuData("device", tsrc.getDeviceName());
-        at["period"] = d->period; // make sure at contains the new period
-        activity = new CuPollingActivity(at, df, options, tag);
+        const std::string& tt = options.containsKey("thread_token") ? options.s("thread_token") : tsrc.getDeviceName();
+        activity = new CuPollingActivity(tsrc, df, options, tag, dataupdpo, d->period);
         const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
         const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
         d->cumbia_t->registerActivity(activity, this, tt, fi, bf);
@@ -97,8 +103,17 @@ void CuPoller::registerAction(const TSource& tsrc, CuTangoActionI *a, const CuDa
  *
  */
 void CuPoller::unregisterAction(CuTangoActionI *a) {
-    if(!d->deliveringResults) m_do_unregisterAction(a);
-    else d->to_remove_actionlist.push_back(a);
+    assert(d->my_thread == pthread_self());
+//    if(!d->deliveringResults) {
+//        printf("CuPoller::unregisterAction: calling m_do_unregisterAction for %p\n", a);
+
+        m_do_unregisterAction(a);
+
+//    }
+//    else{
+//        printf("CuPoller::unregisterAction:  adding %p to the to_remove list\n", a);
+//        d->to_remove_actionlist.push_back(a);
+//    }
 }
 
 bool CuPoller::actionRegistered(const std::string& src) const {
@@ -110,6 +125,7 @@ bool CuPoller::actionRegistered(const std::string& src) const {
  * \return the number of actions
  */
 size_t CuPoller::count() const {
+    assert(d->my_thread == pthread_self());
     return d->actions_map.size();
 }
 
@@ -119,7 +135,8 @@ void CuPoller::onResult(const CuData &) { }
 
 void CuPoller::onResult(const std::vector<CuData> &datalist)
 {
-    d->deliveringResults = true;
+    assert(d->my_thread == pthread_self());
+//    d->deliveringResults = true;
     // for each CuData, get the point and find the associated CuTangoActionI's, if still there's one or more
     //
     for(size_t i = 0; i < datalist.size(); i++) {
@@ -127,11 +144,12 @@ void CuPoller::onResult(const std::vector<CuData> &datalist)
         CuTangoActionI *a = m_find_a(src);
         if(a) a->onResult(datalist[i]);
     }
-    d->deliveringResults = false;
-    for(std::list<CuTangoActionI*>::iterator it = d->to_remove_actionlist.begin(); it != d->to_remove_actionlist.end(); ++it) {
-        m_do_unregisterAction(*it);
-    }
-    d->to_remove_actionlist.clear();
+//    d->deliveringResults = false;
+//    for(std::list<CuTangoActionI*>::iterator it = d->to_remove_actionlist.begin(); it != d->to_remove_actionlist.end(); ++it) {
+//        printf("CuPoller::onResult calling m_do_unregisterAction for %p\n", *it);
+//        m_do_unregisterAction(*it);
+//    }
+//    d->to_remove_actionlist.clear();
 }
 
 CuData CuPoller::getToken() const
@@ -154,6 +172,7 @@ CuData CuPoller::getToken() const
 //
 void CuPoller::m_do_unregisterAction(CuTangoActionI *a)
 {
+    assert(d->my_thread == pthread_self());
     // remove in this thread
     const std::string& s = a->getSource().getName();
     if(d->actions_map.find(s) != d->actions_map.end()) {
@@ -170,12 +189,13 @@ void CuPoller::m_do_unregisterAction(CuTangoActionI *a)
         // post remove to activity's thread
         if(activity) {
             // CuPollingActivity will unregister itself if this is the last action
-            d->cumbia_t->postEvent(activity, new CuRemovePollActionEvent(a->getSource()));
+            d->cumbia_t->postEvent(  activity, new CuRemovePollActionEvent(a->getSource()));
         }
     }
 }
 
 CuTangoActionI *CuPoller::m_find_a(const string &src) const {
+    assert(d->my_thread == pthread_self());
     std::map<const std::string, CuTangoActionI *>::const_iterator it = d->actions_map.find(src);
     return it != d->actions_map.end() ? it->second : nullptr;
 }

@@ -49,13 +49,17 @@ void CuHttpCliIdMan::unsubscribe(bool blocking) {
     m_make_network_request(&r);
     // curl http://woody.elettra.eu:8001/bu/tok
     QNetworkReply *reply = d->nam->post(r, m_json_unsub());
-    m_reply_connect(reply);
     if(blocking) {
         QEventLoop loop;
         connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
         loop.exec();
+        if(reply->error() != QNetworkReply::NoError)
+            perr("cuhttpcliidman.unsubscribe: error: %s", qstoc(reply->errorString()));
+        printf("CuHttpCliIdMan::unsubscribe --> \"%s\"\n", reply->readAll().data());
     }
-    printf("CuHttpCliIdMan::unsubscribe --> \"%s\"\n", reply->readAll().data());
+    else
+        m_reply_connect(reply);
+
 }
 
 QString CuHttpCliIdMan::error() const {
@@ -72,6 +76,7 @@ void CuHttpCliIdMan::onNewData()
         d->bufs[0] += ba;
         // buf complete?
         if(d->bufs[0].length() == clen) { // buf complete
+            printf("\e[1;32mCuHttpCliIdMan.onNewData: received buf %s\e[0m\n", d->bufs[0].data());
             bool ok = m_get_id_and_ttl() && d->id > 0 && d->ttl > 0; // needs d->buf. d->buf cleared in start
             d->lis->onIdReady(d->id, d->ttl);
             if(ok) {
@@ -115,7 +120,7 @@ void CuHttpCliIdMan::send_keepalive() {
     QNetworkRequest r(d->url);
     m_make_network_request(&r);
     // curl http://woody.elettra.eu:8001/bu/tok
-    printf("CuHttpCliIdMan::send_keepalive: Sending keepalive id %llu\n", d->id);
+    printf("CuHttpCliIdMan::send_keepalive: Sending keepalive id %llu\e[1;32mdisabled\e[0m\n", d->id);
     QNetworkReply *reply = d->nam->post(r, m_json(d->id));
     reply->setProperty("type", "id_renew");
     m_reply_connect(reply);
@@ -148,7 +153,7 @@ bool CuHttpCliIdMan::m_get_id_and_ttl() {
         // [{"exp":1638978149,"id":35,"ttl":10}]
         out["id"].to<unsigned long long>(d->id);
         out["ttl"].to<unsigned long>(d->ttl);
-        d->ttl *= 1000; // ttl from server is in seconds
+        d->ttl *= 1000 * 0.95; // ttl from server is in seconds
     }
     return ok;
 }
@@ -158,7 +163,7 @@ void CuHttpCliIdMan::m_start_keepalive() {
     if(!t) {
         t = new QTimer(this);
         t->setObjectName("keepalive_tmr");
-        t->setInterval(0.95 * d->ttl);
+        t->setInterval(d->ttl); // interval in seconds from m_get_id_and_ttl
         connect(t, SIGNAL(timeout()), this, SLOT(send_keepalive()));
         t->start();
     }

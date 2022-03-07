@@ -6,7 +6,7 @@
 
 class CuTAttConfigActivityPrivate;
 class CuDeviceFactoryService;
-
+class TSource;
 
 /*!
  * \brief Activity to get attribute configuration or command info. Optionally, it can perform a one
@@ -17,7 +17,12 @@ class CuTConfigActivity : public CuActivity
 public:
     enum Type { CuReaderConfigActivityType = CuActivity::User + 5,  CuWriterConfigActivityType };
 
-    CuTConfigActivity(const CuData& tok, CuDeviceFactoryService *df, Type t, const CuTConfigActivityExecutor_I *tx);
+    CuTConfigActivity(const TSource &ts,
+                      CuDeviceFactoryService *df,
+                      Type t,
+                      const CuTConfigActivityExecutor_I *tx,
+                      const CuData &o,
+                      const CuData &tag);
     virtual ~CuTConfigActivity();
 
     void setOptions(const CuData& o);

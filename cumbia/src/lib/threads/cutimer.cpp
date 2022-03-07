@@ -5,7 +5,6 @@
 #include <limits.h>
 
 
-
 /*! \brief create the timer and install the listener
  *
  * @param loos a pointer to a CuEventLoopService
@@ -18,15 +17,8 @@
  * By default, the timeout is set to 1000 milliseconds, and the single shot
  * property is true.
  */
-CuTimer::CuTimer(CuEventLoopService *loos)
-{
-    m_quit = m_pause = m_exited = m_skip = false;
-    m_pending = 0;
-    m_timeout = 1000;
-    m_thread = NULL;
-    m_loop_service = loos;
-    if(loos)
-        m_loop_service->addCuEventLoopListener(this);
+CuTimer::CuTimer(CuEventLoopService *loos) {
+    d = new CuTimerPrivate();
 }
 
 /*! \brief class destructor
@@ -36,9 +28,22 @@ CuTimer::CuTimer(CuEventLoopService *loos)
  */
 CuTimer::~CuTimer()
 {
-    pdelete("CuTimer %p m_quit %d", this, m_quit);
-    if(!m_quit)
+    pdelete("CuTimer %p d->m_quit %d", this, d->m_quit);
+    if(!d->m_quit)
         stop();
+    delete d;
+}
+
+void CuTimer::setName(const std::string &name) {
+    d->m_name = name;
+}
+
+std::string CuTimer::name() const {
+    return d->m_name;
+}
+
+int CuTimer::id() const {
+    return d->m_id;
 }
 
 /*!
@@ -47,22 +52,8 @@ CuTimer::~CuTimer()
  */
 void CuTimer::setTimeout(int millis)
 {
-    m_timeout = millis;
-    m_wait.notify_one();
-}
-
-/*!
- * \brief set or update the reference to the event loop service
- * \param loop_sr pointer to a CuEventLoopService
- * \since 1.3.0
- *
- * \note If null, the listeners will be notified *in the timer's thread*.
- */
-void CuTimer::setEventLoop(CuEventLoopService *loop_sr) {
-    if(loop_sr != m_loop_service) {
-        m_loop_service = loop_sr;
-        m_loop_service->addCuEventLoopListener(this);
-    }
+    d->m_timeout = millis;
+    d->m_wait.notify_one();
 }
 
 /*!
@@ -71,7 +62,7 @@ void CuTimer::setEventLoop(CuEventLoopService *loop_sr) {
  */
 int CuTimer::timeout() const
 {
-    return m_timeout;
+    return d->m_timeout;
 }
 
 /*!
@@ -85,8 +76,8 @@ int CuTimer::timeout() const
  * Not lock guarded
  */
 void CuTimer::reset() {
-    m_skip = true;
-    m_wait.notify_one();
+    d->m_skip = true;
+    d->m_wait.notify_one();
 }
 
 /*! \brief start the timer with the given interval in milliseconds
@@ -98,23 +89,22 @@ void CuTimer::reset() {
  */
 void CuTimer::start(int millis)
 {
-//    printf("CuTimer.start [thread 0x%lx] ->  timeout  %d\n", pthread_self(), millis );
-    std::unique_lock<std::mutex> lock(m_mutex);
-    m_quit = m_pause = false;
-    m_timeout = millis;
-    if(!m_thread) { // first time start is called or after stop
-        m_thread = new std::thread(&CuTimer::run, this);
+    std::unique_lock<std::mutex> lock(d->m_mutex);
+    d->m_quit = d->m_pause = false;
+    d->m_timeout = millis;
+    if(!d->m_thread) { // first time start is called or after stop
+        d->m_thread = new std::thread(&CuTimer::run, this);
     }
     else {
-        if(m_pending > 0) {
+        if(d->m_pending > 0) {
             reset();
-//            m_last_start_pt = std::chrono::steady_clock::now();
+//            d->m_last_start_pt = std::chrono::steady_clock::now();
         }
         else {
-//            m_first_start_pt = m_last_start_pt = std::chrono::steady_clock::now();
+//            d->m_first_start_pt = d->m_last_start_pt = std::chrono::steady_clock::now();
         }
-        m_pending++;
-        m_wait.notify_one();
+        d->m_pending++;
+        d->m_wait.notify_one();
     }
 }
 
@@ -124,28 +114,25 @@ void CuTimer::start(int millis)
  */
 void CuTimer::stop()
 {
-    if(m_exited)
+    if(d->m_exited)
         return; /* already quit */
     {
-        std::unique_lock<std::mutex> lock(m_mutex);
-        m_quit = true;
-        m_listeners.clear();
-        m_wait.notify_one();
+        std::unique_lock<std::mutex> lock(d->m_mutex);
+        d->m_quit = true;
+        d->m_lis_map.clear();
+        d->m_wait.notify_one();
     }
-    printf("CuTimer.stop called m_wait.notify_one... is joinable ? %s\n", m_thread->joinable() ? "YES" : "NO");
-    if(m_thread->joinable()) {
-        m_thread->join();
+    if(d->m_thread->joinable()) {
+        d->m_thread->join();
     }
-    printf("CuTimer.stop joined this %p\n", this);
-    m_exited = true;
-    delete m_thread;
-    m_thread = nullptr;
+    d->m_exited = true;
+    delete d->m_thread;
+    d->m_thread = nullptr;
 }
 
 void CuTimer::m_notify() {
-    std::set<CuTimerListener *>::const_iterator it;
-    for(it = m_listeners.begin(); it != m_listeners.end(); ++it) {
-        (*it)->onTimeout(this);
+    for(std::map<CuTimerListener *, CuEventLoopService *>::const_iterator it = d->m_lis_map.begin(); it != d->m_lis_map.end(); ++it) {
+        it->first->onTimeout(this);
     }
 }
 
@@ -162,9 +149,11 @@ void CuTimer::onEvent(CuEventI *e) {
  *
  * This method can be accessed from several different threads
  */
-void CuTimer::addListener(CuTimerListener *l) {
-    std::unique_lock<std::mutex> lock(m_mutex);
-    m_listeners.insert(l);
+void CuTimer::addListener(CuTimerListener *l, CuEventLoopService *ls) {
+    std::unique_lock<std::mutex> lock(d->m_mutex);
+    d->m_lis_map[l] = ls;
+    if(ls)
+        ls->addCuEventLoopListener(this); // inserts into set
 }
 
 /*!
@@ -174,8 +163,8 @@ void CuTimer::addListener(CuTimerListener *l) {
  * This method can be accessed from several different threads
  */
 void CuTimer::removeListener(CuTimerListener *l) {
-    std::unique_lock<std::mutex> lock(m_mutex);
-    m_listeners.erase(l);
+    std::unique_lock<std::mutex> lock(d->m_mutex);
+    d->m_lis_map.erase(l);
 }
 
 /*!
@@ -185,9 +174,9 @@ void CuTimer::removeListener(CuTimerListener *l) {
  *
  * This method can be accessed from several different threads
  */
-std::set<CuTimerListener *> CuTimer::listeners() {
-    std::unique_lock<std::mutex> lock(m_mutex);
-    return m_listeners;
+std::map<CuTimerListener *, CuEventLoopService *> CuTimer::listenersMap()  {
+    std::unique_lock<std::mutex> lock(d->m_mutex);
+    return d->m_lis_map;
 }
 
 /*! \brief the timer loop
@@ -199,32 +188,32 @@ std::set<CuTimerListener *> CuTimer::listeners() {
  */
 void CuTimer::run()
 {
-    std::unique_lock<std::mutex> lock(m_mutex);
-    unsigned long timeout = m_timeout;
-    while (!m_quit) {
-        timeout = m_timeout;
+    std::unique_lock<std::mutex> lock(d->m_mutex);
+    unsigned long timeout = d->m_timeout;
+    while (!d->m_quit) {
+        timeout = d->m_timeout;
         std::cv_status status;
         std::chrono::milliseconds ms{timeout};
-        status = m_wait.wait_for(lock, ms);
-        if(m_skip && !m_quit) {
-            m_skip = false;
+        status = d->m_wait.wait_for(lock, ms);
+        if(d->m_skip && !d->m_quit) {
+            d->m_skip = false;
         }
         else {
-            m_pause ?  timeout = ULONG_MAX : timeout = m_timeout;
+            d->m_pause ?  timeout = ULONG_MAX : timeout = d->m_timeout;
             // issues with wasm: erratically expected timeout status is no_timeout
             (void ) status;
-            if(/*status == std::cv_status::timeout && */!m_quit && !m_pause) /* if m_exit: m_listener must be NULL */ {
-                if(m_loop_service) {
-                    m_loop_service->postEvent(this, new CuTimerEvent());
+            if(/*status == std::cv_status::timeout && */!d->m_quit && !d->m_pause) {
+                for(std::map<CuTimerListener *, CuEventLoopService *>::const_iterator it = d->m_lis_map.begin(); it != d->m_lis_map.end(); ++it) {
+                    it->second != nullptr ?
+                                it->second->postEvent(this, new CuTimerEvent())
+                              : it->first->onTimeout(this);
                 }
-                else
-                    m_notify();
             }
-            m_pending = 0;
-            if(!m_quit) { // wait for next start()
-                m_wait.wait(lock);
+            d->m_pending = 0;
+            if(!d->m_quit) { // wait for next start()
+                d->m_wait.wait(lock);
             }
-        } // !m_skip
+        } // !d->m_skip
     }
 }
 

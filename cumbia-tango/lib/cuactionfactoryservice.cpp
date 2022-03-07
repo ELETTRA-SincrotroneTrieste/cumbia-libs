@@ -33,8 +33,9 @@ CuActionFactoryService::~CuActionFactoryService()
  */
 CuTangoActionI* CuActionFactoryService::registerAction(const std::string& src,
                                                        const CuTangoActionFactoryI& f,
-                                                       CumbiaTango* ct) {
-    return impl->registerAction(src, f, ct);
+                                                       CumbiaTango* ct,
+                                                       bool *isnew) {
+    return impl->registerAction(src, f, ct, isnew);
 }
 
 /*! \brief find an action given the source name and the action type

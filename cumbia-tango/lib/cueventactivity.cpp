@@ -1,6 +1,7 @@
 #include "cueventactivity.h"
 #include "tdevice.h"
 #include "cutango-world.h"
+#include "tsource.h"
 #include "cudevicefactoryservice.h"
 #include <cumacros.h>
 #include <tango.h>
@@ -16,12 +17,14 @@ CuActivityEvent::Type CuTAStopEvent::getType() const
 class CuEventActivityPrivate
 {
 public:
-    CuData s; // extra settings (point, device, rmode)
-    CuData tag; // tagged is carried along results
+    CuData tag, atok; // tag is carried along results, activity token initialized in constructor
     CuDeviceFactoryService *device_srvc;
     TDevice *tdev;
+    TSource tsrc;
     int event_id;
+    int64_t ucnt; // update counter
     pthread_t my_thread_id, other_thread_id;
+    std::string refreshmo;
     omni_thread::ensure_self *se;
 };
 
@@ -38,7 +41,8 @@ public:
  *     Instead, it keeps living within an event loop that delivers Tango events over time
  * \li CuActivity::CuADeleteOnExit: *true* lets the activity be deleted after onExit
  */
-CuEventActivity::CuEventActivity(const CuData &token, CuDeviceFactoryService *df, const CuData& extras, const CuData &tag) : CuActivity(token)
+CuEventActivity::CuEventActivity(const TSource &ts, CuDeviceFactoryService *df, const string &refreshmo, const CuData &tag, int update_policy)
+    : CuActivity(CuData("activity", "event").set("src", ts.getName())) // token with keys relevant to matches()
 {
     d = new CuEventActivityPrivate;
     setFlag(CuActivity::CuAUnregisterAfterExec, false);
@@ -48,8 +52,11 @@ CuEventActivity::CuEventActivity(const CuData &token, CuDeviceFactoryService *df
     d->event_id = -1;
     d->other_thread_id = pthread_self();
     d->se = NULL;
-    d->s = extras;
+    d->tsrc = ts;
+    d->refreshmo = refreshmo;
     d->tag = tag;
+    d->atok = getToken();
+    d->ucnt = (update_policy & CuDataUpdatePolicy::SkipFirstReadUpdate) ? -1 : 0;
 }
 
 /*! \brief the class destructor
@@ -103,13 +110,12 @@ bool CuEventActivity::matches(const CuData &token) const
 
 /*! \brief returns 0. CuEventActivity's execute is called only once.
  *
- * @return the integer 0
+ * @return the integer -1
  *
  * @see CuActivity::repeat
  */
-int CuEventActivity::repeat() const
-{
-    return 0;
+int CuEventActivity::repeat() const {
+    return -1;
 }
 
 /*! \brief the implementation of the CuActivity::init hook
@@ -130,16 +136,14 @@ int CuEventActivity::repeat() const
  */
 void CuEventActivity::init()
 {
+    d->my_thread_id = pthread_self();
+    assert(d->other_thread_id != d->my_thread_id);
     // hack to FIX event failure if subscribing to more than one device
     // in the same application
     d->se = new omni_thread::ensure_self;
-
-    d->my_thread_id = pthread_self();
-    assert(d->other_thread_id != d->my_thread_id);
-    CuData tk = getToken();
     /* get a reference to a TDevice, new or existing one */
-    d->tdev = d->device_srvc->getDevice(d->s["device"].toString(), threadToken());
-    d->device_srvc->addRef(d->s["device"].toString(), threadToken());
+    d->tdev = d->device_srvc->getDevice(d->tsrc.getDeviceName(), threadToken());
+    d->device_srvc->addRef(d->tsrc.getDeviceName(), threadToken());
     // since v1.2.0, do not publishResult upon connection
 }
 
@@ -186,14 +190,12 @@ void CuEventActivity::execute()
 {
     assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
-    CuData at = getToken(); /* activity token */
-    std::string att = d->s["point"].toString();
-    const std::string ref_mode_str = d->s["rmode"].toString();
+    CuData at("activity", "event"); /* activity token */
+    std::string att = d->tsrc.getPoint();
+    const std::string ref_mode_str = d->refreshmo;
     Tango::DeviceProxy *dev = d->tdev->getDevice();
+    at.set("src", d->tsrc.getName()).set("mode", "E").set("E", "subscribe").putTimestamp();
     at["err"] = !d->tdev->isValid();
-    at["mode"] = "E";
-    at["E"] = "subscribe";
-    at.putTimestamp();
     if(dev) {
         try {
             d->event_id = dev->subscribe_event(att, m_tevent_type_from_string(ref_mode_str), this);
@@ -269,26 +271,36 @@ void CuEventActivity::onExit() {
  *     pairs that result from attribute or command read operations.
  */
 void CuEventActivity::push_event(Tango::EventData *e) {
+    d->ucnt++;
     // in d, copy only src from token
-    CuData d("src", getToken()["src"].toString());
-    d.merge(this->d->tag);
+    CuData da("src", getToken()["src"].toString());
+    da.merge(this->d->tag);
     CuTangoWorld utils;
-    d["mode"] = "E";
-    d["E"] = e->event;
-    Tango::DeviceAttribute *da = e->attr_value;
+    da["mode"] = "E";
+    da["E"] = e->event;
+    Tango::DeviceAttribute *dat = e->attr_value;
     if(!e->err)  {
-        utils.extractData(da, d);
-        d["err"] = utils.error(); // no "msg" if no err
-        if(d.b("err")) d["msg"] = utils.getLastMessage();
+        utils.extractData(dat, da);
+        da["err"] = utils.error(); // no "msg" if no err
+        if(da.b("err")) da["msg"] = utils.getLastMessage();
+        if(d->ucnt > 0) // if -1, skip first (successful) data update
+        {
+//            printf("CuEventActivity. \e[0;32;4mpublish update of \e[1;32mEVENT\e[1;36m attribute %s ucnt %ld\e[0m\n",
+//                   da.s("src").c_str(), d->ucnt);
+            publishResult(da);
+        }
+        else {
+            printf("CuEventActivity. \e[0;36;4mmskipping event first update of \e[1;32mEVENT\e[1;36m attribute %s ucnt %ld\e[0m\n", da.s("src").c_str(), d->ucnt);
+        }
     }
     else  {
         // CuTReader must distinguish between push_event exception
         // and another error, like attribute quality invalid
-        d["ev_except"] = true;
-        d["err"] = true;
-        d["msg"] = utils.strerror(e->errors);
-        d.putTimestamp();
+        da["ev_except"] = true;
+        da["err"] = true;
+        da["msg"] = utils.strerror(e->errors);
+        da.putTimestamp();
+        publishResult(da); // publish in case of event subscription failure
     }
-    publishResult(d);
 }
 

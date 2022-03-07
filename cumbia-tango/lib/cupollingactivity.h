@@ -5,6 +5,7 @@
 #include <cuactivityevent.h>
 #include <list>
 #include <cutangoactioni.h>
+#include <cudataupdatepolicy_enum.h>
 #include <tsource.h>
 #include <map>
 
@@ -56,14 +57,6 @@ public:
     virtual Type getType() const;
 };
 
-class ActionData {
-public:
-    ActionData(const TSource& ts, CuTangoActionI *a_ptr) : tsrc(ts), action(a_ptr) {}
-    ActionData() { action = nullptr; }
-    TSource tsrc;
-    CuTangoActionI *action;
-};
-
 /*! \brief an activity to periodically read from Tango. Implements CuContinuousActivity
  *
  * Implementing CuActivity, the work is done in the background by the three methods
@@ -106,7 +99,12 @@ public:
      */
     enum Type { CuPollingActivityType = CuActivity::User + 3 };
 
-    CuPollingActivity(const CuData& token, CuDeviceFactoryService *df, const CuData& options, const CuData& tag);
+    CuPollingActivity(const TSource& tsrc,
+                      CuDeviceFactoryService *df,
+                      const CuData& options,
+                      const CuData& tag,
+                      int dataupdpo,
+                      int interval);
     ~CuPollingActivity();
 
     void setArgins(const CuVariant &argins);
@@ -118,11 +116,11 @@ public:
     int successfulExecCnt() const;
     int consecutiveErrCnt() const;
 
-    const std::multimap<const std::string, ActionData > actionsMap() const;
-
     // CuActivity interface
-public:
     bool matches(const CuData &token) const;
+    void event(CuActivityEvent *e);
+    int getType() const;
+    int repeat() const;
 
 protected:
     void init();
@@ -132,17 +130,12 @@ protected:
 private:
     CuPollingActivityPrivate *d;
 
-    void m_registerAction(const TSource &ts, CuTangoActionI *a);
+    void m_registerAction(const TSource &ts);
     void m_unregisterAction(const TSource &ts);
     void m_edit_args(const TSource& src, const std::vector<std::string> &args);
+    inline void m_v_attd_remove(const std::string& src, const std::string& attna);
+    inline void m_cmd_remove(const std::string& src);
 
-    // CuActivity interface
-public:
-    void event(CuActivityEvent *e);
-
-    int getType() const;
-
-    int repeat() const;
 };
 
 #endif // CUPOLLINGACTIVITY_H

@@ -12,6 +12,8 @@ class CuContinuousActivity;
 class CuActivityEvent;
 class CuThreadTokenGenI;
 
+#include <string>
+
 #define CUMBIA_VERSION CU_VERSION
 
 /** \mainpage
@@ -196,42 +198,27 @@ public:
               };
 
     Cumbia();
-
     CuServiceProvider *getServiceProvider() const;
-
     virtual ~Cumbia();
 
     void registerActivity(CuActivity *activity,
                           CuThreadListener *dataListener,
-                          const CuData& thread_token,
+                          const std::string &thread_token,
                           const CuThreadFactoryImplI& thread_factory_impl,
                           const CuThreadsEventBridgeFactory_I& eventsBridgeFactoryImpl);
-
     void unregisterActivity(CuActivity *activity);
-
     CuActivity *findActivity(const CuData& token) const;
-
     void setActivityPeriod(CuActivity *a, int timeout);
-
     unsigned long getActivityPeriod(CuActivity *a) const;
-
     void pauseActivity(CuActivity *a);
-
     void resumeActivity(CuActivity *a);
-
     void postEvent(CuActivity *a, CuActivityEvent *e);
-
     void finish();
-
     virtual int getType() const;
-
     void setThreadTokenGenerator(CuThreadTokenGenI *tg);
-
     void removeThreadTokenGenerator();
-
     CuThreadTokenGenI *getThreadTokenGenerator() const;
-
-    CuData threadToken(const CuData &options) const;
+    const std::string threadToken(const std::string &in) const;
 
 private:
     CumbiaPrivate *d;

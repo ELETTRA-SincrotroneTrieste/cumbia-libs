@@ -5,12 +5,21 @@
 #include <shared_mutex>
 #include <mutex>
 #include <cumacros.h>
+#include <unordered_map>
+
+#include <chrono>
+
+//static unsigned long tottime = 0;
+//static unsigned long reginvokecnt = 0, unreginvokecnt = 0;
 
 /*! @private
  */
 class CuActionFactoryServiceImplBasePrivate {
 public:
-    std::list<CuTangoActionI * > actions;
+    CuActionFactoryServiceImplBasePrivate() : reserve(0) {}
+    // multimap: to the same src can be associated CuTangoActionI of different types
+    std::unordered_multimap<std::string, CuTangoActionI * > actions;
+    unsigned reserve;
 };
 
 /*! @private
@@ -28,26 +37,32 @@ CuActionFactoryServiceImpl_Base::~CuActionFactoryServiceImpl_Base() {
     delete d;
 }
 
+CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct, bool *isnew) {
 
-CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct) {
-    CuTangoActionI* action = NULL;
-    std::list<CuTangoActionI *>::const_iterator it;
-    for(it = d->actions.begin(); it != d->actions.end(); ++it)
-        if((*it)->getType() == f.getType() && (*it)->getSource().getName() == src /*&& !(*it)->exiting()*/ ) {
-            break;
+//    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+    CuTangoActionI* action = nullptr;
+    auto range = d->actions.equal_range(src);
+    for(auto it = range.first; action == nullptr && it != range.second; ++it)
+        if(it->second->getType() == f.getType() /*&& !(*it)->exiting()*/ ) {
+            action = it->second;
         }
-    if(it == d->actions.end()) {
+    *isnew = action == nullptr;
+    if(*isnew) {
         action = f.create(src, ct);
-        d->actions.push_back(action);
+        d->actions.insert(std::pair<std::string, CuTangoActionI *>{src, action});
     }
+//    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+//    tottime += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+//    printf("CuActionFactoryServiceImpl_Base::registerAction (multimap version) total time spent register/unreg %luus (reg.%luu unreg. %luu)\n",
+//           tottime, ++reginvokecnt, unreginvokecnt);
     return action;
 }
 
 CuTangoActionI *CuActionFactoryServiceImpl_Base::find(const string &name, CuTangoActionI::Type at) {
-    std::list<CuTangoActionI *>::const_iterator it;
-    for(it = d->actions.begin(); it != d->actions.end(); ++it) {
-        if((*it)->getType() == at && (*it)->getSource().getName() == name/* && !(*it)->exiting()*/)
-            return (*it);
+    auto range = d->actions.equal_range(name);
+    for(auto it = range.first; it != range.second; ++it) {
+        if(it->second->getType() == at /*&& !(*it)->exiting()*/ )
+            return it->second;
     }
     return nullptr;
 }
@@ -57,16 +72,20 @@ size_t CuActionFactoryServiceImpl_Base::count() const {
 }
 
 void CuActionFactoryServiceImpl_Base::unregisterAction(const string &src, CuTangoActionI::Type at) {
-    std::list<CuTangoActionI *>::iterator it;
-    it = d->actions.begin();
-    while( it != d->actions.end())
-        ( (*it)->getType() == at && (*it)->getSource().getName() == src ) ? it = d->actions.erase(it) : ++it;
+//    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+//    ++unreginvokecnt;
+    std::unordered_multimap<std::string, CuTangoActionI * >::iterator it = d->actions.begin();
+    while(it != d->actions.end()) {
+        it->second->getSource().getName() == src && it->second->getType() == at ? it = d->actions.erase(it) : ++it;
+    }
+//    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+//    tottime += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 }
 
 void CuActionFactoryServiceImpl_Base::cleanup() {
-    std::list<CuTangoActionI *>::iterator it = d->actions.begin();
+    std::unordered_multimap<std::string, CuTangoActionI * >::iterator it = d->actions.begin();
     while(it != d->actions.end()) {
-        delete (*it);
+        delete (it->second);
         it = d->actions.erase(it);
     }
 }
@@ -80,9 +99,9 @@ CuActionFactoryServiceImpl::~CuActionFactoryServiceImpl() {
     delete d;
 }
 
-CuTangoActionI *CuActionFactoryServiceImpl::registerAction(const string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct) {
+CuTangoActionI *CuActionFactoryServiceImpl::registerAction(const string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct, bool *isnew) {
 //    assert(d->creation_thread == pthread_self());
-    return CuActionFactoryServiceImpl_Base::registerAction(src, f, ct);
+    return CuActionFactoryServiceImpl_Base::registerAction(src, f, ct, isnew);
 }
 
 CuTangoActionI *CuActionFactoryServiceImpl::find(const string &name, CuTangoActionI::Type at) {
