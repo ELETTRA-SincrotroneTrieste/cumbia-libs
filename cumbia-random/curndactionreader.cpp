@@ -286,8 +286,8 @@ void CuRNDActionReader::m_startRandomGenActivity()
     at["period"] = d->period;
     if(d->options.containsKey("label"))
         at["label"] = d->options["label"].toString();
-    CuData tt; // thread token
-    d->options.containsKey("thread_token") ? tt["thtok"] = d->options["thread_token"] : tt["thtok"] = d->tsrc.getName();
+    std::string tt; // thread token
+    d->options.containsKey("thread_token") ? tt = "rndtok_" + d->options.s("thread_token") : "rndtok_" + d->tsrc.getName();
     d->randomgen_a = new CuRandomGenActivity(at);
     double min, max; int siz = 1, period = 1000;
     d->options["min"].to<double>(min);

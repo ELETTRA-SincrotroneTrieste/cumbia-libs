@@ -75,7 +75,7 @@ public:
     void unregisterActivity(CuActivity *l);
     void publishProgress(const CuActivity *activity, int step, int total, const CuData &data);
     void publishResult(const CuActivity *activity, const CuData &data);
-    void publishResult(const CuActivity *activity, const std::vector<CuData> *data_list);
+    void publishResult(const CuActivity *activity, const std::vector<CuData> &data_list);
 
     void publishExitEvent(CuActivity *a);
     bool isEquivalent(const std::string &other_thtok) const;
@@ -101,7 +101,7 @@ private:
     void mOnActivityExited(CuActivity *a);
     void mExitActivity(CuActivity *a, bool onThreadQuit);
     void mRemoveActivityTimer(CuActivity *a);
-    void m_exit(bool auto_destroy);
+    void m_zero_activities();
     void m_unregisterFromService();
     CuTimer* m_a_new_timeout(CuActivity *a, int timeo, CuTimerService *timer_s, CuTimer *old_t);
     void m_tmr_registered(CuActivity *a, CuTimer *t);

@@ -67,19 +67,18 @@ QumbiaReader::QumbiaReader(CumbiaPool *cumbia_pool, QWidget *parent) :
         engines << "historical database";
     }
 #endif
-    CuTThreadTokenGen *tango_tk_gen = new CuTThreadTokenGen(1, "thread_");
+//    CuTThreadTokenGen *tango_tk_gen = new CuTThreadTokenGen(1, "thread_");
 
-        Cumbia *cu_t = cumbia_pool->get("tango");
-        if(cu_t) {
-            printf("SeqLauncher: installing tango thread token generator hw concurrency %d\n", std::thread::hardware_concurrency());
-            cu_t->setThreadTokenGenerator(tango_tk_gen);
-            // always, timestamp, none
-            CuPollingService *ps = static_cast<CuPollingService *>(cu_t->getServiceProvider()->get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
-            if(m_conf.unchanged_upd_mode == "timestamp")
-                ps->setDataUpdatePolicy(CuPollDataUpdatePolicy::OnUnchangedTimestampOnly);
-            else if(m_conf.unchanged_upd_mode == "none")
-                ps->setDataUpdatePolicy(CuPollDataUpdatePolicy::OnUnchangedNothing);
-        }
+//        Cumbia *cu_t = cumbia_pool->get("tango");
+//        if(cu_t) {
+//            printf("cumbia-reader: installing tango thread token generator (hw concurrency) %d [for testing]\n", std::thread::hardware_concurrency());
+//            cu_t->setThreadTokenGenerator(tango_tk_gen);
+//            // always, timestamp, none
+//            if(m_conf.unchanged_upd_mode == "timestamp")
+//                static_cast<CumbiaTango *>(cu_t)->setReadUpdatePolicy(CuDataUpdatePolicy::OnPollUnchangedTimestampOnly);
+//            else if(m_conf.unchanged_upd_mode == "none")
+//                static_cast<CumbiaTango *>(cu_t)->setReadUpdatePolicy(CuDataUpdatePolicy::OnPollUnchangedNoUpdate);
+//        }
 
     m_props_map[Low] = QStringList() << "min" << "min_alarm" << "min_warning" << "max_warning" <<
                                         "max_alarm" << "max" << "dfs" << "display_unit"

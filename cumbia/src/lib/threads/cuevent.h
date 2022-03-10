@@ -68,16 +68,11 @@ class CuThreadAutoDestroyEvent : public CuEventI {
 class CuResultEventPrivate
 {
 public:
-    CuResultEventPrivate(const CuData &d);
-
-    CuResultEventPrivate(const std::vector<CuData> *dli);
-
+    CuResultEventPrivate();
     ~CuResultEventPrivate();
 
     CuEventI::CuEventType type;
-    const CuData data;
     const CuActivity *activity;
-    const std::vector<CuData>* data_list;
     int step, total;
     bool is_list;
 };
@@ -98,13 +93,13 @@ class CuResultEvent : public CuEventI
 {
 public:
     CuResultEvent(const CuActivity* sender, const CuData &data, CuEventType t = Result);
-
-    CuResultEvent(const CuActivity* sender, const std::vector<CuData> *data_list, CuEventType t = Result);
-
+    CuResultEvent(const CuActivity* sender, const std::vector<CuData> &dali, CuEventType t = Result);
     CuResultEvent(const CuActivity* sender, int step, int total, const CuData &data);
 
-
     virtual ~CuResultEvent();
+
+    CuData data;
+    std::vector<CuData> datalist;
 
     // CuResultEventI interface
 public:
@@ -112,10 +107,8 @@ public:
     CuEventType getType() const;
     int getStep() const;
     int getTotal() const;
-    const CuData& getData() const;
     const CuActivity *getActivity() const;
     bool isList() const;
-    const std::vector<CuData> *getDataList() const;
 
 protected:
     CuResultEventPrivate *d_p;
@@ -129,8 +122,7 @@ protected:
  * \li CuThread::onEventPosted
  * \li CuThread::publishExitEvent
  */
-class CuActivityExitEvent : public CuEventI
-{
+class CuActivityExitEvent : public CuEventI {
 public:
     CuActivityExitEvent(CuActivity *sender);
     CuEventType getType() const;
@@ -138,7 +130,6 @@ public:
 
 private:
     CuActivity *m_activity;
-
 };
 
 class CuTimerEvent : public CuEventI {

@@ -37,6 +37,7 @@ TDevice::TDevice(const std::string &name)
 TDevice::~TDevice()
 {
     if(d->dev) {
+        printf("~TDevice %p %s deleted\n", this, d->name.c_str());
         delete d->dev;
         d->dev = nullptr;
     }

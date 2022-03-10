@@ -96,6 +96,7 @@ int CuDeviceFactoryService::removeRef(const string &devname, const std::string &
             TDevice *d = it->second.tdevice;
             refcnt = d->removeRef();
             if(refcnt == 0) { // no more references for that device in that thread
+                printf("[0x%lx] CuDeviceFactoryService::removeRef: deleting %p %s\n", pthread_self(), d, devname.c_str());
                 delete d;
                 it = m_devmap.erase(it);
             }

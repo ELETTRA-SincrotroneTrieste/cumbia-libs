@@ -11,9 +11,16 @@ class CuTimer;
 /*! @private */
 class ThreadEvent
 {
-  public:
+public:
 
-    enum Type { RegisterActivity, UnregisterActivity, ThreadExit, TimerExpired, PostEventToActivity, DisposeActivity };
+    enum Type { RegisterActivity,
+                UnregisterActivity,
+                ZeroActivities,
+                ThreadExit,
+                TimerExpired,
+                PostToActivity,
+                DisposeActivity,
+                ThreadAutoDestroy };
 
     ThreadEvent() {}
 
@@ -24,28 +31,26 @@ class ThreadEvent
 private:
 };
 
-/*! @private */
-class ExitThreadEvent : public ThreadEvent
-{
+/*! @private */ // will not auto destroy
+class CuThreadExitEv : public ThreadEvent {
 public:
-    ExitThreadEvent(bool autodes = false);
-
     ThreadEvent::Type getType() const;
+};
 
-    bool autodestroy; /// < auto destroy thread after leaving run
+/*! @private */ // zero activities left - will auto destroy
+class CuThZeroA_Ev  : public ThreadEvent{
+public:
+    ThreadEvent::Type getType() const;
 };
 
 /*! @private */
-class CuPostEventToActivity : public ThreadEvent
+class CuThRun_Ev : public ThreadEvent
 {
 public:
-
-    CuPostEventToActivity(CuActivity* activity, CuActivityEvent *event);
-
-    virtual ~CuPostEventToActivity();
+    CuThRun_Ev(CuActivity* activity, CuActivityEvent *event);
+    virtual ~CuThRun_Ev();
 
     CuActivity *getActivity() const;
-
     CuActivityEvent *getEvent() const;
 
 private:
@@ -58,54 +63,38 @@ public:
 };
 
 /*! @private */
-class RegisterActivityEvent : public ThreadEvent
-{
+class CuThRegisterA_Ev : public ThreadEvent {
 public:
-
-    RegisterActivityEvent(CuActivity *a);
-
+    CuThRegisterA_Ev(CuActivity *a);
     CuActivity *activity;
-
-    virtual ~RegisterActivityEvent() {}
-
+    virtual ~CuThRegisterA_Ev() {}
     // ThreadEvent interface
 public:
     ThreadEvent::Type getType() const;
 };
 
 /*! @private */
-class UnRegisterActivityEvent : public ThreadEvent
-{
+class CuThUnregisterA_Ev : public ThreadEvent {
 public:
-
-    UnRegisterActivityEvent(CuActivity *a);
-
-    virtual ~UnRegisterActivityEvent() {}
-
+    CuThUnregisterA_Ev(CuActivity *a);
+    virtual ~CuThUnregisterA_Ev() {}
     CuActivity *activity;
-
-
     // ThreadEvent interface
 public:
     ThreadEvent::Type getType() const;
 };
 
 /*! @private */
-class CuThreadTimerEvent : public ThreadEvent
-{
+class CuThreadTimer_Ev : public ThreadEvent {
 public:
-    CuThreadTimerEvent(CuTimer *t);
-
+    CuThreadTimer_Ev(CuTimer *t);
     ThreadEvent::Type getType() const;
-
     CuTimer* getTimer() const;
-
     int getTimeout() const;
 
 private:
     CuTimer* m_sender;
     int m_timeout;
 };
-
 
 #endif // CUEVENT_INTERFACE_H

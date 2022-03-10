@@ -3,7 +3,7 @@
 
 class CuThread_Qt;
 class CuActivityPrivate;
-class CuActivityManager;
+class CuThreadInterface;
 class CuActivityEvent;
 
 #include <cudata.h>
@@ -156,7 +156,7 @@ public:
 
     enum StateFlags { CuAStateInit = 0x01, CuAStateExecute = 0x02, CuAStateOnExit = 0x04 };
 
-    CuActivity(CuActivityManager *activityManager, const CuData& token);
+    CuActivity(CuThreadInterface *activityManager, const CuData& token);
 
     CuActivity(const CuData& token);
 
@@ -164,7 +164,7 @@ public:
 
     enum ActivityType { Isolated = 0, Continuous, WorkQueue, User = 100 };
 
-    void setActivityManager(CuActivityManager *am);
+    void setThread(CuThreadInterface *thread);
 
     virtual int getType() const = 0;
 
@@ -196,9 +196,7 @@ public:
     void publishResult(const CuData &data);
     void publishProgress(int step, int total, const CuData& data);
     void publishExitResult(const CuData* data);
-    void publishResult(const std::vector<CuData> *datalist);
-
-    CuActivityManager *getActivityManager() const;
+    void publishResult(const std::vector<CuData> &datalist);
 
     CuData getToken() const;
     void setThreadToken(const std::string &tt);

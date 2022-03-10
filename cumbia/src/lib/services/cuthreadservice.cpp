@@ -57,17 +57,22 @@ CuThreadInterface *CuThreadService::getThread(const std::string& token,
                                               const CuServiceProvider *service_provider,
                                               const CuThreadFactoryImplI &thread_factory_impl)
 {
+
+    printf("[0x%lx] CuThreadService::getThread creating new  thread for tok %s\n", pthread_self(), token.c_str());
     CuThreadInterface *thread;
     std::list<CuThreadInterface *>::const_iterator it;
     for(it = mThreads.begin(); it != mThreads.end(); ++it) {
         if((*it)->isEquivalent(token)) {
+            printf("CuThreadService::getThread returning  thread %p equivalent to %s \n", *it, token.c_str());
             return (*it);
         }
 
     }
     thread = thread_factory_impl.createThread(token, eventsBridgeFactory.createEventBridge(service_provider), service_provider);
+    printf("[0x%lx] CuThreadService::getThread creating new  thread %p \n", pthread_self(), thread);
     std::unique_lock lock(m_shared_mutex);
     mThreads.push_back(thread);
+    printf("[0x%lx] CuThreadService::getThread creating new  thread %p <<< OUT\n", pthread_self(), thread);
     return thread;
 }
 
@@ -101,11 +106,13 @@ int CuThreadService::count()
  */
 void CuThreadService::removeThread(CuThreadInterface *thread)
 {
+    printf("[0x%lx] CuThreadService::removeThread thread %p <<< IN \n", pthread_self(), thread);
     // this method is accessed from the run method of different threads
     std::unique_lock lock(m_shared_mutex);
     std::list<CuThreadInterface *>::iterator it = std::find(mThreads.begin(), mThreads.end(), thread);
     if(it != mThreads.end())
         mThreads.erase(it);
+    printf("[0x%lx] CuThreadService::removeThread thread %p >>> OUT \n", pthread_self(), thread);
 }
 
 /*! \brief returns the list of CuThreadInterface recorded in the service

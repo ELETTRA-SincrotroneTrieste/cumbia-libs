@@ -291,6 +291,7 @@ void CuPollingActivity::init()
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
+    printf("[0x%lx] CuPollingActivity.init: getting device from service %s thtok %s\n", pthread_self(), tk["device"].toString().c_str(), threadToken().c_str());
     d->tdev = d->device_srvc->getDevice(tk["device"].toString(), threadToken());
     d->device_srvc->addRef(d->tdev->getName(), threadToken());
     tk["conn"] = d->tdev->isValid();
@@ -338,48 +339,48 @@ void CuPollingActivity::execute()
     assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
     CuTangoWorld tangoworld;
-    std::vector<CuData> *results = new std::vector<CuData>();
+    std::vector<CuData> results;
     Tango::DeviceProxy *dev = d->tdev->getDevice();
     bool success = (dev != nullptr);
     size_t att_idx = 0;
     size_t res_offset = 0;
     if(dev) { // dev is not null
-        results->reserve(d->cmds.size() + d->v_attd.size());
+        results.reserve(d->cmds.size() + d->v_attd.size());
         // 1. commands (d->cmdmap)
         for(size_t i = 0; i <  d->cmds.size(); i++) {
             const TSource &tsrc = d->cmds[i];
             const std::string& srcnam = tsrc.getName();
             const std::string& point = tsrc.getPoint();
-            results->push_back(d->tag);
-            (*results)[i]["mode"] = "P";
-            (*results)[i]["period"] = getTimeout();
-            (*results)[i]["src"] = tsrc.getName();
+            results.push_back(d->tag);
+            results[i]["mode"] = "P";
+            results[i]["period"] = getTimeout();
+            results[i]["src"] = tsrc.getName();
             CmdData& cmd_data = d->din_cache[srcnam];
             if(dev && cmd_data.is_empty) {
-                success = tangoworld.get_command_info(dev, point, (*results)[i]);
+                success = tangoworld.get_command_info(dev, point, results[i]);
                 if(success) {
                     const std::vector<std::string> &argins = tsrc.getArgs();
-                    d->din_cache[srcnam] = CmdData((*results)[i], tangoworld.toDeviceData(argins, (*results)[i]), argins);
+                    d->din_cache[srcnam] = CmdData(results[i], tangoworld.toDeviceData(argins, results[i]), argins);
                 }
             }
             if(dev && success) {  // do not try command_inout if no success so far
                 // there is no multi-command_inout version
                 CmdData& cmdd = d->din_cache[srcnam];
                 bool has_argout = cmdd.getCmdInfoRef()["out_type"].toLongInt() != Tango::DEV_VOID;
-                (*results)[i]["err"] = !success;
+                results[i]["err"] = !success;
                 if(!success) {
-                    (*results)[i]["msg"] = std::string("CuPollingActivity.execute: get_command_info failed for \"") + tsrc.getName() + std::string("\"");
+                    results[i]["msg"] = std::string("CuPollingActivity.execute: get_command_info failed for \"") + tsrc.getName() + std::string("\"");
                     d->consecutiveErrCnt++;
                 }
                 else {
-                    tangoworld.cmd_inout(dev, point, cmdd.din, has_argout, (*results)[i]);
+                    tangoworld.cmd_inout(dev, point, cmdd.din, has_argout, results[i]);
                 }
             }
             res_offset++;
         } // end cmds
         for(size_t i = 0; att_idx >= 0 && i < d->v_attd.size(); i++) { // attributes
             if(!d->v_skip[i]) {
-                success = tangoworld.read_atts(d->tdev->getDevice(), &d->v_attn, &d->v_attd, results, d->data_updpo);
+                success = tangoworld.read_atts(d->tdev->getDevice(), d->v_attn, d->v_attd, results, d->data_updpo);
 //                printf("CuPollingActivity. \e[0;32mreading attribute %s\e[0m cuz d->v_skip %s\n", d->v_attn[i].c_str(),
 //                       d->v_skip[i] ? "TRUE" : "FALSE");
             }
@@ -415,11 +416,11 @@ void CuPollingActivity::execute()
         dev_err["err"] = true;
         dev_err["name"] = d->tdev->getName();
         dev_err.putTimestamp();
-        results->push_back(dev_err);
+        results.push_back(dev_err);
     }
 
-//    printf("CuPollingActivity.publishResult: publishing %ld results\n", results->size());
-    if(results->size() > 0)
+//    printf("CuPollingActivity.publishResult: publishing %ld results\n", results.size());
+    if(results.size() > 0)
         publishResult(results);
 }
 
@@ -446,12 +447,13 @@ void CuPollingActivity::onExit()
 }
 
 void CuPollingActivity::m_registerAction(const TSource& ts) {
+    CuData tag(d->tag); // thread local copy
     assert(d->my_thread_id == pthread_self());
     bool is_command = ts.getType() == TSource::SrcCmd;
     if(is_command)
         d->cmds.push_back(ts);
     else {
-        d->v_attd.push_back(d->tag.set("src", ts.getName()).set("mode", "P").set("period", d->period));
+        d->v_attd.push_back(tag.set("src", ts.getName()).set("mode", "P").set("period", d->period));
         d->v_attn.push_back(ts.getPoint());
         d->v_skip.push_back(d->data_updpo & CuDataUpdatePolicy::SkipFirstReadUpdate);
     }
@@ -464,6 +466,7 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts) {
     if(d->cmds.size() == 0 && d->v_attd.size() == 0) {
         dispose(); // do not use this activity since now
         // unregister this from the thread
+        printf("[0x%lx] CuPollingActivity::m_unregisterAction: getting thread for %s\n", pthread_self(), ts.getName().c_str());
         CuThreadInterface *thread = getActivityManager()->getThread(this);
         /* CuActivityManager.removeConnection is invoked by the thread in order to ensure all scheduled events are processed */
         if(thread)

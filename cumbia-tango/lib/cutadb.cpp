@@ -53,6 +53,7 @@ void CuTaDb::onProgress(int step, int total, const CuData &data) {
 
 void CuTaDb::onResult(const CuData &data)
 {
+    const std::string& src = data.s("src");
     // do not update configuration data if exit
     std::list <CuDataListener *> listeners = d->listeners;
     std::list<CuDataListener *>::iterator it;
@@ -62,6 +63,14 @@ void CuTaDb::onResult(const CuData &data)
     d->xit = true; // for action factory to unregisterAction, exiting must return true
     CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
                                                                         ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
+
+    /// TEST
+    ///
+    if(src.find("beamdump_s*") != std::string::npos) {
+        printf("CuTaDb.onResult: data arrived. unregistering  %s type %d\n", src.c_str(), getType());
+    }
+    //
+
     af->unregisterAction(d->tsrc.getName(), getType());
     d->listeners.clear();
     delete this;
@@ -112,14 +121,9 @@ size_t CuTaDb::dataListenersCount() {
     return d->listeners.size();
 }
 
-void CuTaDb::start()
-{
-    CuData at("src", d->tsrc.getName()); /* activity token */
-    at["activity"] = "cutadb";
-    at.merge(d->options);
+void CuTaDb::start() {
     const std::string& tt = d->options.containsKey("thread_token") ? d->options.s("thread_token") : "cutadb";
-    d->activity = new CuTaDbActivity(at, d->tsrc, d->tag);
-    d->activity->setOptions(d->options);
+    d->activity = new CuTaDbActivity(d->tsrc, d->options, d->tag);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
     d->cumbia_t->registerActivity(d->activity, this, tt, fi, bf);

@@ -48,9 +48,9 @@ public:
     bool read_att(Tango::DeviceProxy *dev, const string &attribute, CuData &res);
 
     bool read_atts(Tango::DeviceProxy *dev,
-                   std::vector<string> *p_v_an, // attribute names
-                   std::vector<CuData>* v_a, // attribute cache (same order as names above)
-                   std::vector<CuData> *reslist,
+                   std::vector<string>& p_v_an, // attribute names
+                   std::vector<CuData>& v_a, // attribute cache (same order as names above)
+                   std::vector<CuData>& reslist,
                    int da_updpo);
 
     bool write_att(Tango::DeviceProxy *dev,
@@ -83,8 +83,8 @@ public:
     std::string dateTimeToStr(time_t *tp) const;
     CuDataQuality toCuQuality(Tango::AttrQuality q) const;
 
-    std::string make_fqdn_src(const std::string &src);
-    std::string prepend_tgproto(const std::string &s);
+    std::string make_fqdn_src(const std::string &src) const;
+    std::string prepend_tgproto(const std::string &s) const;
 
 private:
     CuTangoWorldPrivate *d;

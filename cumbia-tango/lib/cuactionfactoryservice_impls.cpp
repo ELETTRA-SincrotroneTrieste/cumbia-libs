@@ -20,17 +20,18 @@ public:
     // multimap: to the same src can be associated CuTangoActionI of different types
     std::unordered_multimap<std::string, CuTangoActionI * > actions;
     unsigned reserve;
+    pthread_t creation_thread;
 };
 
 /*! @private
  */
 class CuActionFactoryServiceImplPrivate {
 public:
-    pthread_t creation_thread;
 };
 
 CuActionFactoryServiceImpl_Base::CuActionFactoryServiceImpl_Base() {
     d = new CuActionFactoryServiceImplBasePrivate;
+    d->creation_thread = pthread_self();
 }
 
 CuActionFactoryServiceImpl_Base::~CuActionFactoryServiceImpl_Base() {
@@ -39,6 +40,7 @@ CuActionFactoryServiceImpl_Base::~CuActionFactoryServiceImpl_Base() {
 
 CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct, bool *isnew) {
 
+    assert(pthread_self() == d->creation_thread);
 //    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     CuTangoActionI* action = nullptr;
     auto range = d->actions.equal_range(src);
@@ -59,6 +61,8 @@ CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const string &sr
 }
 
 CuTangoActionI *CuActionFactoryServiceImpl_Base::find(const string &name, CuTangoActionI::Type at) {
+    assert(pthread_self() == d->creation_thread);
+
     auto range = d->actions.equal_range(name);
     for(auto it = range.first; it != range.second; ++it) {
         if(it->second->getType() == at /*&& !(*it)->exiting()*/ )
@@ -68,16 +72,26 @@ CuTangoActionI *CuActionFactoryServiceImpl_Base::find(const string &name, CuTang
 }
 
 size_t CuActionFactoryServiceImpl_Base::count() const {
+    assert(pthread_self() == d->creation_thread);
     return d->actions.size();
 }
 
 void CuActionFactoryServiceImpl_Base::unregisterAction(const string &src, CuTangoActionI::Type at) {
+    assert(pthread_self() == d->creation_thread);
 //    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 //    ++unreginvokecnt;
+    bool found = false;
     std::unordered_multimap<std::string, CuTangoActionI * >::iterator it = d->actions.begin();
     while(it != d->actions.end()) {
-        it->second->getSource().getName() == src && it->second->getType() == at ? it = d->actions.erase(it) : ++it;
+        if(it->second->getSource().getName() == src && it->second->getType() == at) {
+            found = true;
+            it = d->actions.erase(it);
+        }
+        else
+            ++it;
     }
+    if(!found)
+        printf("\e[1;31mCuActionFactoryServiceImpl_Base::unregisterAction could not find action %s type %d\e[0m\n", src.c_str(), at);
 //    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 //    tottime += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 }
@@ -92,7 +106,6 @@ void CuActionFactoryServiceImpl_Base::cleanup() {
 
 CuActionFactoryServiceImpl::CuActionFactoryServiceImpl() {
     d = new CuActionFactoryServiceImplPrivate;
-    d->creation_thread = pthread_self();
 }
 
 CuActionFactoryServiceImpl::~CuActionFactoryServiceImpl() {

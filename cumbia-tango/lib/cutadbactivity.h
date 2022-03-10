@@ -18,7 +18,7 @@ public:
     const char *opnames[EndOpts + 1] = { "OpNoop", "OpGetDoma", "OpGetFam", "OpGetMem",
                                      "OpGetAtts", "OpGetCmds", "OpGetAProp", "OpGetCmdI", "EndOpts" };
 
-    CuTaDbActivity(const CuData& tok, const TSource& tsrc, const CuData& tag);
+    CuTaDbActivity(const TSource& tsrc, const CuData& options, const CuData& tag);
 
     virtual ~CuTaDbActivity();
 

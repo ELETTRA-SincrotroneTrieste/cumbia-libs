@@ -130,12 +130,6 @@ public:
     std::vector<unsigned long long int> ULLV(const std::string& key) const;
     std::vector<bool>    BV(const std::string& key) const;
 
-    /// TEST
-    ///
-    void thcheck(const char *func) const; // verify pthread_self == mythread
-    void thset(const char* func); // set mythread = pthread_self
-    ///
-    ///
 private:
     CuDataPrivate *d_p;
 

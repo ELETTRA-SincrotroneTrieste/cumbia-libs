@@ -14,22 +14,22 @@ public:
     CuActivityPrivate(const CuData& tok) : token(tok)
     {
         dispose = false;
-        activityManager = NULL;
-        flags = stateFlags = 0;
+        thread = NULL;
+        flags = 0;
     }
 
-    CuActivityManager *activityManager;
+    CuThreadInterface *thread;
     bool dispose;
     bool onExit;
     std::string thread_tok;
     CuData token;
-    int flags, stateFlags;
+    int flags;
 };
 
-CuActivity::CuActivity(CuActivityManager *activityManager, const CuData &token)
+CuActivity::CuActivity(CuThreadInterface *activityManager, const CuData &token)
 {
     d = new CuActivityPrivate(token);
-    d->activityManager = activityManager;
+    d->thread = activityManager;
 }
 
 CuActivity::CuActivity(const CuData &token)
@@ -37,13 +37,11 @@ CuActivity::CuActivity(const CuData &token)
     d = new CuActivityPrivate(token);
 }
 
-void CuActivity::dispose(bool disposable)
-{
+void CuActivity::dispose(bool disposable) {
     d->dispose = disposable;
 }
 
-bool CuActivity::isDisposable() const
-{
+bool CuActivity::isDisposable() const {
     return d->dispose;
 }
 
@@ -53,20 +51,15 @@ CuActivity::~CuActivity()
     delete d;
 }
 
-void CuActivity::setActivityManager(CuActivityManager *am)
-{
-    d->activityManager = am;
+void CuActivity::setThread(CuThreadInterface *thread) {
+    d->thread = thread;
 }
 
-void CuActivity::doInit()
-{
-    d->stateFlags = CuActivity::CuAStateInit;
+void CuActivity::doInit() {
     init();
 }
 
-void CuActivity::doExecute()
-{
-    d->stateFlags |= CuActivity::CuAStateExecute;
+void CuActivity::doExecute() {
     execute();
 }
 
@@ -81,13 +74,10 @@ void CuActivity::doExecute()
  * \li call CuActivityManager::getThread to get the thread associated to this activity
  * \li call CuThreadInterface::publishExitEvent on the CuActivity's thread
  */
-void CuActivity::doOnExit()
-{
-    d->stateFlags |= CuActivity::CuAStateOnExit;
+void CuActivity::doOnExit() {
     onExit();
-    CuThreadInterface *thread = d->activityManager->getThread(this);
-    if(thread) /* may be removed while activity is in execute() */
-        thread->publishExitEvent(this);
+    if(d->thread)
+        d->thread->publishExitEvent(this);
 }
 
 /*! \brief template method. Calls onExit only, without publishing exit event,
@@ -95,9 +85,7 @@ void CuActivity::doOnExit()
  *
  * \note Used internally
 */
-void CuActivity::exitOnThreadQuit()
-{
-    d->stateFlags |= CuActivity::CuAStateOnExit;
+void CuActivity::exitOnThreadQuit() {
     onExit();
 }
 
@@ -108,19 +96,8 @@ void CuActivity::exitOnThreadQuit()
  * @see setFlags
  *
  */
-int CuActivity::getFlags() const
-{
+int CuActivity::getFlags() const {
     return d->flags;
-}
-
-/*! \brief returns the activity *state* flags
- *
- * @return the activity state flags, a combination of values defined in
- *         CuActivity::StateFlags
- */
-int CuActivity::getStateFlags() const
-{
-    return d->stateFlags;
 }
 
 /*! \brief set the flags on the activity
@@ -151,11 +128,9 @@ void CuActivity::setFlag(CuActivity::Flags f, bool on)
  *  1. Find the thread in charge of this activity.
  *  2. If still there, ask it to post an event on the main thread with the data.
  */
-void CuActivity::publishResult(const CuData &data)
-{
-    CuThreadInterface *thread = d->activityManager->getThread(this);
-    if(thread) /* may be removed while activity is in execute() */
-        thread->publishResult(this, data);
+void CuActivity::publishResult(const CuData &data) {
+    if(d->thread)
+        d->thread->publishResult(this, data);
 }
 
 
@@ -165,11 +140,9 @@ void CuActivity::publishResult(const CuData &data)
  *
  * \note datalist is deleted by the library when no more needed.
  */
-void CuActivity::publishResult(const std::vector<CuData> *datalist)
-{
-    CuThreadInterface *thread = d->activityManager->getThread(this);
-    if(thread) /* may be removed while activity is in execute() */
-        thread->publishResult(this, datalist);
+void CuActivity::publishResult(const std::vector<CuData> &datalist) {
+    if(d->thread) /* may be removed while activity is in execute() */
+        d->thread->publishResult(this, datalist);
 }
 
 /** \brief Publish a progress from the activity thread (whence the method is called) to the
@@ -177,12 +150,10 @@ void CuActivity::publishResult(const std::vector<CuData> *datalist)
  *
  * @see publishResult
  */
-void CuActivity::publishProgress(int step, int total, const CuData &data)
-{
-    CuThreadInterface *thread = d->activityManager->getThread(this);
+void CuActivity::publishProgress(int step, int total, const CuData &data) {
     cuprintf("\e[1;33mcalling publishProgress on thread %p from this thread 0x%lx\e[0m\n", thread, pthread_self());
-    if(thread)
-        thread->publishProgress(this, step, total, data);
+    if(d->thread)
+        d->thread->publishProgress(this, step, total, data);
 }
 
 /*!
@@ -191,7 +162,7 @@ void CuActivity::publishProgress(int step, int total, const CuData &data)
  */
 CuActivityManager *CuActivity::getActivityManager() const
 {
-    return d->activityManager;
+    return d->thread;
 }
 
 /*! \brief return the activity token

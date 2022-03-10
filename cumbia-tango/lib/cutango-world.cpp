@@ -783,15 +783,14 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
 //        OR combination of CuDataUpdatePolicy enum values
 //
 bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
-                             std::vector<std::string>* p_v_an, // att names
-                             std::vector<CuData>* p_v_a,  // att cache, ordered same as att names
-                             std::vector<CuData> *reslist,
+                             std::vector<std::string>& p_v_an, // att names
+                             std::vector<CuData>& va,  // att cache, ordered same as att names
+                             std::vector<CuData> &reslist,
                              int updpo)
 {
     d->error = false;
     d->message = "";
-    std::vector<CuData> &va = *p_v_a;
-    size_t offset = reslist->size();
+    size_t offset = reslist.size();
     try
     {
         // read_attributes
@@ -802,17 +801,17 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         //         we enter the catch clause, where the results have to be manually populated
         //         with data reporting the error.
         //         In that case, the poller must be slowed down
-        std::vector<Tango::DeviceAttribute> *devattr = dev->read_attributes(*p_v_an);
+        std::vector<Tango::DeviceAttribute> *devattr = dev->read_attributes(p_v_an);
         for(size_t i = 0; i < devattr->size(); i++) {
             Tango::DeviceAttribute *p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
             if(updpo == CuDataUpdatePolicy::PollUpdateAlways) {
-                reslist->push_back(va[i]);
-                extractData(p_da,  (*reslist)[offset]);
-                (*reslist)[offset]["err"] = d->error;
+                reslist.push_back(va[i]);
+                extractData(p_da,  reslist[offset]);
+                reslist[offset]["err"] = d->error;
                 if(d->message.length() > 0)
-                    (*reslist)[offset]["msg"] = d->message;
-                (*reslist)[offset]["color"] = d->t_world_conf.successColor(!d->error);
+                    reslist[offset]["msg"] = d->message;
+                reslist[offset]["color"] = d->t_world_conf.successColor(!d->error);
                 offset++;
             }
             else {
@@ -824,17 +823,17 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                 // updateds va[i], that will cache the new data for the next time
                 bool changed = m_cache_upd(va[i], rv) && !d->error;
                 if(changed) { // update exactly as above
-                    (*reslist).push_back(va[i]);
-                    (*reslist)[offset]["err"] = d->error;
+                    reslist.push_back(va[i]);
+                    reslist[offset]["err"] = d->error;
                     if(d->message.length() > 0)
-                        (*reslist)[offset]["msg"] = d->message;
-                    (*reslist)[offset]["color"] = d->t_world_conf.successColor(!d->error);
+                        reslist[offset]["msg"] = d->message;
+                    reslist[offset]["color"] = d->t_world_conf.successColor(!d->error);
                     offset++;
                 }
                 else if(updpo == CuDataUpdatePolicy::OnPollUnchangedTimestampOnly) {
-                    (*reslist).push_back(CuData("timestamp_ms", rv["timestamp_ms"]));
-                    (*reslist)[offset]["timestamp_us"] = rv["timestamp_us"];
-                    (*reslist)[offset]["src"] = va[i]["src"];
+                    reslist.push_back(CuData("timestamp_ms", rv["timestamp_ms"]));
+                    reslist[offset]["timestamp_us"] = rv["timestamp_us"];
+                    reslist[offset]["src"] = va[i]["src"];
                     offset++;
                 }
                 else if(updpo == CuDataUpdatePolicy::OnPollUnchangedNoUpdate) {
@@ -848,13 +847,13 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
     {
         d->error = true;
         d->message = strerror(e);
-        for(size_t i = 0; i < p_v_an->size(); i++) {
-            reslist->push_back(std::move(va[i]));
-            (*reslist)[offset]["err"] = d->error;
+        for(size_t i = 0; i < p_v_an.size(); i++) {
+            reslist.push_back(std::move(va[i]));
+            reslist[offset]["err"] = d->error;
             if(d->message.length() > 0)
-                (*reslist)[offset]["msg"] = d->message;
-            (*reslist)[offset]["color"] = d->t_world_conf.successColor(!d->error);
-            (*reslist)[offset].putTimestamp();
+                reslist[offset]["msg"] = d->message;
+            reslist[offset]["color"] = d->t_world_conf.successColor(!d->error);
+            reslist[offset].putTimestamp();
             offset++;
         }
     }
@@ -2256,6 +2255,6 @@ std::string CuTangoWorld::make_fqdn_src(const string &src) const {
  * \param src the input source
  * \return "tango://" + src, unless src already contains "tango://" at some point
  */
-std::string CuTangoWorld::prepend_tgproto(const string &src) const {
+std::string CuTangoWorld::prepend_tgproto(const std::string &src) const {
     return src.find("tango://") == std::string::npos ? "tango://" + src : src;
 }

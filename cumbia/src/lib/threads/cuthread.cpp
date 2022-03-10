@@ -92,26 +92,31 @@ CuThread::~CuThread()
  *
  * an ExitThreadEvent is queued to the event queue to exit the thread
  */
-void CuThread::exit()
-{
-    m_exit(false);
-}
-
-void CuThread::m_exit(bool auto_destroy)
-{
-    if(d->thread)
-    {
-        ThreadEvent *exitEvent = new ExitThreadEvent(auto_destroy);
+void CuThread::exit() {
+    if(d->thread) {
+        ThreadEvent *exitEvent = new CuThreadExitEv; // no auto destroy
         std::unique_lock lk(d->shared_mutex);
         d->eventQueue.push(exitEvent);
         d->conditionvar.notify_one();
     }
 }
 
-void CuThread::m_unregisterFromService()
-{
+// a "zero activities" event can allow the thread to exit
+// unless another event is in the queue. In this case, the
+// event is discarded and the thread keeps running
+void CuThread::m_zero_activities() {
+    if(d->thread) {
+        ThreadEvent *zeroa_e = new CuThZeroA_Ev; // auto destroys
+        std::unique_lock lk(d->shared_mutex);
+        d->eventQueue.push(zeroa_e);
+        d->conditionvar.notify_one();
+    }
+}
+
+// Thread: CuThread or main
+void CuThread::m_unregisterFromService() {
     CuThreadService *ts = static_cast<CuThreadService *> (d->serviceProvider->get(CuServices::Thread));
-    ts->removeThread(this);
+    ts->removeThread(this); // th safe
 }
 
 // timeout change:
@@ -172,11 +177,17 @@ size_t CuThread::m_activity_cnt(CuTimer *t) const  {
 void CuThread::registerActivity(CuActivity *l)
 {
     l->setThreadToken(d->token);
-    ThreadEvent *registerEvent = new RegisterActivityEvent(l);
+    ThreadEvent *registerEvent = new CuThRegisterA_Ev(l);
     /* need to protect event queue because this method is called from the main thread while
      * the queue is dequeued in the secondary thread
      */
     std::unique_lock lk(d->shared_mutex);
+
+
+    if(l->getToken().s("src").find("beamdump_s*") != std::string::npos) {
+        printf("CuThread::registerActivity pushing registerEvent for %s\n", l->getToken().s("src").c_str());
+    }
+
     d->eventQueue.push(registerEvent);
     d->conditionvar.notify_one();
 }
@@ -191,15 +202,21 @@ void CuThread::registerActivity(CuActivity *l)
  * If the flag CuActivity::CuADeleteOnExit is true, the activity is
  * later deleted (back in the main thread)
  *
- * \par Called from
- * This method is called from the CuThread's thread *only if CuActivity::CuAUnregisterAfterExec is
- * set on the activity*.
- * Otherwise, activities must be unregistered through Cumbia::unregisterActivity (in that case, invocation
- * occurs from the *main* thread).
+ * Thread: main (when called from Cumbia::unregisterActivity) or CuThread's
+ *
+ * \note immediately remove this thread from the CuThreadService if l is the last
+ * activity for this thread so that Cumbia::registerActivity will not find it
  */
-void CuThread::unregisterActivity(CuActivity *l)
-{
-    ThreadEvent *unregisterEvent = new UnRegisterActivityEvent(l); // type ThreadEvent::UnregisterActivity defined in cuthreadevents.h
+void CuThread::unregisterActivity(CuActivity *l) {
+    const std::vector<CuActivity *> &va = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager))->activitiesForThread(this);
+    if(va.size() == 0 || (va.size() == 1 && va[0] == l) ) {
+        printf("[0x%lx] \e[1;35mCuThread::unregisterActivity: %s last activity for thread: immediately \e[1;32munregistering %p\e[1;35m from the thread service\e[0m\n", pthread_self(),
+               l->getToken().toString().c_str(), this);
+        m_unregisterFromService(); // th safe
+        printf("[0x%lx] done unregistered\n", pthread_self());
+    }
+
+    ThreadEvent *unregisterEvent = new CuThUnregisterA_Ev(l); // type ThreadEvent::UnregisterActivity defined in cuthreadevents.h
     /* need to protect event queue because this method is called from the main thread while
      * the queue is dequeued in the secondary thread
      */
@@ -226,9 +243,7 @@ void CuThread::unregisterActivity(CuActivity *l)
  * for more details.
  *
  */
-void CuThread::onEventPosted(CuEventI *event)
-{
-    //    pbblue("CuThread.onEventPosted: thread (should be main!) 0x%lx event type %d\n", pthread_self(), event->getType());
+void CuThread::onEventPosted(CuEventI *event) {
     CuActivityManager *activity_manager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     const CuEventI::CuEventType ty = event->getType();
     if(ty == CuEventI::Result || ty == CuEventI::Progress)
@@ -240,23 +255,22 @@ void CuThread::onEventPosted(CuEventI *event)
         {
             CuThreadListener *tl = threadListeners.at(i);
             if(re->getType() == CuEventI::Progress)
-                tl->onProgress(re->getStep(), re->getTotal(), re->getData());
+                tl->onProgress(re->getStep(), re->getTotal(), re->data);
             else if(re->isList()) { // vector will be deleted from within ~CuResultEventPrivate
-                const std::vector<CuData> &vd_ref = *re->getDataList();
+                const std::vector<CuData> &vd_ref = re->datalist;
                 tl->onResult(vd_ref);
             }
             else {
-                tl->onResult(re->getData());
+                tl->onResult(re->data);
             }
         }
     }
-
     else if(ty == CuEventI::CuActivityExitEvent) {
         mOnActivityExited(static_cast<CuActivityExitEvent *>(event)->getActivity());
     }
     else if(ty == CuEventI::ThreadAutoDestroy) {
         wait();
-        m_unregisterFromService();
+//        m_unregisterFromService(); // already done in unregisterActivity when activity count is zero
         delete this;
     }
 }
@@ -276,16 +290,18 @@ void CuThread::publishProgress(const CuActivity* activity, int step, int total, 
 
 /*! \brief invoked in CuThread's thread, posts a *result event* to main thread
  *
- * @param a: the addressee of the event
+ * @param a: the recepient of the event
  * @param data the data to be delivered with the result
  *
  * CuResultEvent is used in conjunction with CuThreadsEventBridge_I::postEvent
  */
 void CuThread::publishResult(const CuActivity* a,  const CuData &da) {
+    // da will be *moved* into a thread local data before
+    // being posted to the event loop's thread
     d->eventBridge->postEvent(new CuResultEvent(a, da));
 }
 
-void CuThread::publishResult(const CuActivity *a, const std::vector<CuData> *dalist)
+void CuThread::publishResult(const CuActivity *a, const std::vector<CuData> &dalist)
 {
     d->eventBridge->postEvent(new CuResultEvent(a, dalist));
 }
@@ -330,8 +346,7 @@ void CuThread::publishExitEvent(CuActivity *a)
  *
  * See also getToken
  */
-bool CuThread::isEquivalent(const std::string &other_thtok) const
-{
+bool CuThread::isEquivalent(const std::string &other_thtok) const {
     return this->d->token == other_thtok;
 }
 
@@ -348,16 +363,10 @@ std::string CuThread::getToken() const {
 /*! @private
  * does nothing
  */
-void CuThread::cleanup() {
+void CuThread::cleanup() { }
 
-}
-
-/*! \brief returns 0
- *
- * @return 0
- */
-int CuThread::type() const
-{
+/*! \brief returns 0 */
+int CuThread::type() const {
     return 0;
 }
 
@@ -368,7 +377,13 @@ int CuThread::type() const
  * return a new instance of std::thread
  */
 void CuThread::start() {
-    d->thread = new std::thread(&CuThread::run, this);
+    try {
+        d->thread = new std::thread(&CuThread::run, this);
+    }
+    catch(const std::system_error &se) {
+        perr("CuThread.start: failed to allocate thread resource: %s", se.what());
+        abort();
+    }
 }
 
 /*! @private
@@ -393,14 +408,14 @@ void CuThread::run() {
             te = d->eventQueue.front();
             d->eventQueue.pop();
         }
-        if(te->getType() == ThreadEvent::RegisterActivity)
-        {
-            RegisterActivityEvent *rae = static_cast<RegisterActivityEvent *>(te);
+        if(te->getType() == ThreadEvent::RegisterActivity)  {
+            CuThRegisterA_Ev *rae = static_cast<CuThRegisterA_Ev *>(te);
+            if(rae->activity->getToken().s("src").find("beamdump_s*") != std::string::npos)
+                printf("CuThread::registerActivity pushing registerEvent for %s\n", rae->activity->getToken().s("src").c_str());
             mActivityInit(rae->activity);
         }
-        else if(te->getType() == ThreadEvent::UnregisterActivity)
-        {
-            UnRegisterActivityEvent *rae = static_cast<UnRegisterActivityEvent *>(te);
+        else if(te->getType() == ThreadEvent::UnregisterActivity) {
+            CuThUnregisterA_Ev *rae = static_cast<CuThUnregisterA_Ev *>(te);
             mExitActivity(rae->activity, false);
         }
         else if(te->getType() == ThreadEvent::TimerExpired)
@@ -409,7 +424,7 @@ void CuThread::run() {
             // service will restart it after execution.
             // tmr is single-shot and needs restart to prevent
             // queueing multiple timeout events caused by slow activities
-            CuThreadTimerEvent *tev = static_cast<CuThreadTimerEvent *>(te);
+            CuThreadTimer_Ev *tev = static_cast<CuThreadTimer_Ev *>(te);
             CuTimer *timer = tev->getTimer();
             std::list<CuActivity *> a_for_t = m_activitiesForTimer(timer); // no locks
             for(CuActivity *a : a_for_t) {
@@ -421,13 +436,13 @@ void CuThread::run() {
                         timer_s->restart(timer, timer->timeout());
                 }
                 else if(a->repeat() < 0 && a->getFlags() & CuActivity::CuAUnregisterAfterExec) {
+                    printf("CuThread.run: calling unregister activity for a %s %p\n", a->getToken().toString().c_str(), a);
                     unregisterActivity(a);
                 }
             } // for activity iter
         }
-        else if(te->getType() == ThreadEvent::PostEventToActivity)
-        {
-            CuPostEventToActivity *tce = static_cast<CuPostEventToActivity *>(te);
+        else if(te->getType() == ThreadEvent::PostToActivity) {
+            CuThRun_Ev *tce = static_cast<CuThRun_Ev *>(te);
             CuActivity *a = tce->getActivity();
             CuActivityEvent* ae = tce->getEvent();
             // timeout change: m_a_new_timeout:
@@ -440,9 +455,9 @@ void CuThread::run() {
                 a->event(ae);
             delete ae;
         }
-        else if(te->getType() == ThreadEvent::ThreadExit) {
+        else if(te->getType() == ThreadEvent::ThreadExit || te->getType() == ThreadEvent::ZeroActivities) {
             // ExitThreadEvent enqueued by mOnActivityExited (foreground thread)
-            destroy = static_cast<ExitThreadEvent *>(te)->autodestroy;
+            destroy = te->getType()  == ThreadEvent::ZeroActivities;
             delete te;
             break;
         }
@@ -464,7 +479,7 @@ void CuThread::run() {
         mExitActivity(*i, true);
     am->removeConnections(this);
     m_unregisterFromService();
-    // auto destroy when back in foreground thread. bridge: send event from bacgkround to fg
+    // post destroy event so that it will be delivered in the *main thread*
     if(destroy) {
         d->eventBridge->postEvent(new CuThreadAutoDestroyEvent());
     }
@@ -474,8 +489,7 @@ void CuThread::run() {
  *
  * @return true if the thread is running
  */
-bool CuThread::isRunning()
-{
+bool CuThread::isRunning() {
     return d->thread != NULL;
 }
 
@@ -484,6 +498,8 @@ bool CuThread::isRunning()
 */
 void CuThread::mActivityInit(CuActivity *a) {
     d->activity_set.insert(a);
+    if(a->getToken().s("src").find("beamdump_s*") != std::string::npos)
+        printf("CuThread::mActivityInit calling init and doExecute! for %s\n", a->getToken().s("src").c_str());
     a->doInit();
     a->doExecute();
     CuTimer *timer = nullptr;
@@ -496,48 +512,43 @@ void CuThread::mActivityInit(CuActivity *a) {
         unregisterActivity(a); /* will enqueue and Unregister event */
 }
 
-/*! @private
- * invoked from "main" thread, by onEventPosted.
- * If CuActivity::CuADeleteOnExit is set on a, a is deleted.
- * If this thread does not manage any activity, m_exit is called.
- */
-void CuThread::mOnActivityExited(CuActivity *a)
-{
+// see mExitActivity
+/*! @private */
+void CuThread::mOnActivityExited(CuActivity *a) {
     pr_thread();
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     activityManager->removeConnection(a);
     if(a->getFlags() & CuActivity::CuADeleteOnExit)
         delete a;
     if(activityManager->countActivitiesForThread(this) == 0) {
-        m_exit(true);
+        m_zero_activities();
     }
 }
 
-/*! @private
- * - called from within CuThread run (upon ThreadEvent::UnregisterActivity event)
- * - ThreadEvent::UnregisterActivity event is posted to CuThread from
- * - CuThread's thread
+/*
+ * Thread: CuThread's - always
  *
- * When mExitActivity is called, the activity is asked to exit.
+ * The activity is usually asked to exit after ThreadEvent::UnregisterActivity (1). Another
+ * possibility is to exit activities after the CuThread::run's main loop is broken (2)
+ *
  * Whether it will be deleted or not depends on the CuActivity::CuADeleteOnExit flag on a (see
  * mOnActivityExited).
  *
- * mExitActivity is called *from the CuThread's thread*
- * The next function invoked in sequence in this class is mOnActivityExited, on the *main thread*.
+ * CuActivity::doOnExit calls thread->publishExitEvent(CuActivity *)
+ * A CuActivityExitEvent (CuEventI::CuActivityExitEvent type) will be dispatched in the main
+ * thread through CuThread::onEventPosted and mOnActivityExited call ensues.
+ * mOnActivityExited deletes the activity if the CuActivity::CuADeleteOnExit flag is set.
+ * If this thread has no more associated activities (activityManager->countActivitiesForThread(this) == 0),
+ * an ExitThreadEvent (ThreadEvent::ThreadExit type) shall be enqueued to
+ * exit the CuThread's run loop the next time (m_exit)
  */
-void CuThread::mExitActivity(CuActivity *a, bool onThreadQuit)
-{
+/*! @private */
+void CuThread::mExitActivity(CuActivity *a, bool on_quit) {
     std::set<CuActivity *>::iterator it = d->activity_set.find(a);
-    if(it == d->activity_set.end())
-        return;
-
-    mRemoveActivityTimer(a);
-    if(!(a->getStateFlags() & CuActivity::CuAStateOnExit)) {
-        // if the activity is not already doing exit
-        if(onThreadQuit)
-            a->exitOnThreadQuit(); // will not call thread->publishExitEvent
-        else
-            a->doOnExit();
+    if(it != d->activity_set.end()) {
+        mRemoveActivityTimer(a);
+        on_quit ? a->exitOnThreadQuit() :  // (2) will not call thread->publishExitEvent
+                       a->doOnExit();           // (1)
         d->activity_set.erase(it);
     }
 }
@@ -595,7 +606,7 @@ const CuTimer *CuThread::m_tmr_find(CuActivity *a) const {
  */
 void CuThread::postEvent(CuActivity *a, CuActivityEvent *e)
 {
-    ThreadEvent *event = new CuPostEventToActivity(a, e);
+    ThreadEvent *event = new CuThRun_Ev(a, e);
     /* need to protect event queue because this method is called from the main thread while
      * the queue is dequeued in the secondary thread
      */
@@ -628,7 +639,7 @@ void CuThread::onTimeout(CuTimer *sender)
 {
     // unique lock to push on the event queue
     std::unique_lock ulock(d->shared_mutex);
-    CuThreadTimerEvent *te = new CuThreadTimerEvent(sender);
+    CuThreadTimer_Ev *te = new CuThreadTimer_Ev(sender);
     d->eventQueue.push(te);
     d->conditionvar.notify_one();
 }

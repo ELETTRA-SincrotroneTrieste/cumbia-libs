@@ -42,7 +42,6 @@ CuTConfigActivity::CuTConfigActivity(const TSource& ts,
     d->repeat = -1;
     d->try_cnt = 0;
     d->tcexecutor = tx;
-    // d->tag, d->options will be available until execute
     d->tag = std::move(tag);
     d->options = std::move(o);
     d->ts = std::move(ts);
@@ -78,8 +77,7 @@ int CuTConfigActivity::repeat() const {
     return -1;
 }
 
-void CuTConfigActivity::init()
-{
+void CuTConfigActivity::init() {
     const std::string& dnam = d->ts.getDeviceName();
     /* get a TDevice */
     const std::string& tok = threadToken();
@@ -88,8 +86,9 @@ void CuTConfigActivity::init()
     d->device_service->addRef(dnam, tok);
 }
 
-void CuTConfigActivity::execute()
-{
+void CuTConfigActivity::execute() {
+    const CuData o(d->options); // thread local copy
+    const CuData tag(d->tag);    // thread local copy
     d->err = !d->tdev->isValid();
     //    bool value_only = d->options.containsKey("value-only") && d->options.B("value-only");
     //    bool skip_read =  d->options.containsKey("no-value") && d->options.B("no-value");
@@ -104,8 +103,8 @@ void CuTConfigActivity::execute()
     at["type"] = "property";
 
     bool value_only = false, skip_read = false;
-    d->options["value-only"].to<bool>(value_only);
-    d->options["no-value"].to<bool>(skip_read);
+    o["value-only"].to<bool>(value_only);
+    o["no-value"].to<bool>(skip_read);
 
     d->try_cnt++;
     bool success = false;
@@ -129,8 +128,8 @@ void CuTConfigActivity::execute()
 
         //
         // fetch attribute properties
-        if(d->options.containsKey("fetch_props")) {
-            const std::vector<std::string> &props = d->options["fetch_props"].toStringVector();
+        if(o.containsKey("fetch_props")) {
+            const std::vector<std::string> &props = o["fetch_props"].toStringVector();
             if(props.size() > 0 && success && dev)
                 success = tw.get_att_props(dev, point, at, props);
         }
@@ -152,10 +151,8 @@ void CuTConfigActivity::execute()
     }
     d->exiting = true;
     d->device_service->removeRef(at["device"].toString(), threadToken());
-    // at last, move options and tag into at. options will no longer be available
-    at.merge(std::move(d->options));
-    at.merge(std::move(d->tag)); // tag is carried along in results
-
+    at.merge(std::move(o));
+    at.merge(std::move(tag));
     publishResult(at);
 }
 

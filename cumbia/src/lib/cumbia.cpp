@@ -182,12 +182,14 @@ void Cumbia::registerActivity(CuActivity *activity,
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     CuThreadService *thread_service = static_cast<CuThreadService *>(d->serviceProvider->get(CuServices::Thread));
     CuThreadInterface *thread = NULL;
+    printf("[0x%lx] Cumbia::registerActivity calling thread_service->getThread for %s\n", pthread_self(), activity->getToken().s("src").c_str());
     thread = thread_service->getThread(threadToken(thread_token), eventsBridgeFactoryImpl, d->serviceProvider, thread_factory_impl);
     activityManager->addConnection(thread, activity, dataListener);
     activity->setActivityManager(activityManager);
     if(!thread->isRunning())
         thread->start();
     thread->registerActivity(activity);
+    printf("[0x%lx] Cumbia::registerActivity called thread->registerActivity for %s\n", pthread_self(), activity->getToken().s("src").c_str());
 }
 
 /*! \brief unregister an activity from cumbia
@@ -211,6 +213,7 @@ void Cumbia::unregisterActivity(CuActivity *activity)
     CuThreadInterface *thread = static_cast<CuThreadInterface *>(activityManager->getThread(activity));
     /* CuActivityManager.removeConnection is invoked by the thread in order to ensure all scheduled events are processed */
     if(thread) {
+        printf(" Cumbia::unregisterActivity %s %p calling thread %p -> unregisterActivity\n", activity->getToken().toString().c_str(), activity, thread);
         thread->unregisterActivity(activity);
     }
 }

@@ -142,7 +142,7 @@ void CuRandomGenActivity::init()
     assert(d->other_thread_id != d->my_thread_id);
     // simulate a configuration (property type)
     CuData res = getToken();
-    d->thread_token = threadToken()["thtok"].toString();
+    d->thread_token = threadToken();
     res["type"] = "property";
     res["mode"] = "random";
     res["type"] = "property";

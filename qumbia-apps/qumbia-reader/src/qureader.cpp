@@ -61,7 +61,6 @@ void Qu_Reader::onUpdate(const CuData &da)
     else if(!data["timestamp_ns"].isNull())
         ts = data["timestamp_ns"].toDouble();
 
-    printf("1\n");
     bool hdb_data = data.has("activity", "hdb");
     if(data.B("err"))
         emit newError(source(), ts, QString::fromStdString(da["msg"].toString()), data);
@@ -78,8 +77,6 @@ void Qu_Reader::onUpdate(const CuData &da)
             emit propertyReady(source(), ts, data);
         }
     }
-
-    printf("5\n");
     if(!hdb_data && m_save_property && !m_prop.isEmpty()) {
         // copy relevant property values into data
         foreach(QString p, QStringList() << "label" << "min" << "max" << "display_unit")

@@ -101,7 +101,7 @@ public:
      *
      * See CuThread::publishProgress for details
      */
-    virtual void publishResult(const CuActivity *activity, const std::vector<CuData> *data_list) = 0;
+    virtual void publishResult(const CuActivity *activity, const std::vector<CuData> &data_list) = 0;
 
     /*! \brief publish an exit event from the background thread to the main thread
      *
