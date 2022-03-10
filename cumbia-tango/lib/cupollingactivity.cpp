@@ -293,7 +293,6 @@ void CuPollingActivity::init()
     CuData tk = getToken();
     printf("[0x%lx] CuPollingActivity.init: getting device from service %s thtok %s\n", pthread_self(), tk["device"].toString().c_str(), threadToken().c_str());
     d->tdev = d->device_srvc->getDevice(tk["device"].toString(), threadToken());
-    d->device_srvc->addRef(d->tdev->getName(), threadToken());
     tk["conn"] = d->tdev->isValid();
     tk["err"] = !d->tdev->isValid();
     tk["msg"] = d->tdev->getMessage();
@@ -467,7 +466,7 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts) {
         dispose(); // do not use this activity since now
         // unregister this from the thread
         printf("[0x%lx] CuPollingActivity::m_unregisterAction: getting thread for %s\n", pthread_self(), ts.getName().c_str());
-        CuThreadInterface *thread = getActivityManager()->getThread(this);
+        CuThreadInterface *thread = this->thread();
         /* CuActivityManager.removeConnection is invoked by the thread in order to ensure all scheduled events are processed */
         if(thread)
             thread->unregisterActivity(this);

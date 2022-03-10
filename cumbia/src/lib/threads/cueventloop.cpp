@@ -161,7 +161,7 @@ void CuEventLoopService::run()
         // lock free section ensues
         while(!qcopy.empty()) {
             const CuEventInfo &event_i = qcopy.front();
-            if(event_i.event->getType() == CuEventI::ExitLoop)
+            if(event_i.event->getType() == CuEventI::CuExitLoopEv)
                 repeat = false;
             else if(std::find(d->eloo_liss.begin(), d->eloo_liss.end(), event_i.lis)
                     != d->eloo_liss.end()) {

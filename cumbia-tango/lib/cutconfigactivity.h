@@ -1,7 +1,7 @@
 #ifndef CUATTCONFIGACTIVITY_H
 #define CUATTCONFIGACTIVITY_H
 
-#include <cuisolatedactivity.h>
+#include <cuactivity.h>
 #include <cutconfigactivity_executor_i.h>
 
 class CuTAttConfigActivityPrivate;

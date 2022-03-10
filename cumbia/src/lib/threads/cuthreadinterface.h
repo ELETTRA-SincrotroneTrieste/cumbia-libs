@@ -67,7 +67,7 @@ public:
      *
      * See CuThread::registerActivity for details
      */
-    virtual void registerActivity(CuActivity *l) = 0;
+    virtual void registerActivity(CuActivity *l, CuThreadListener *tl) = 0;
 
     /*! \brief unregister and, if required, automatically delete an activity
      *
@@ -103,11 +103,17 @@ public:
      */
     virtual void publishResult(const CuActivity *activity, const std::vector<CuData> &data_list) = 0;
 
-    /*! \brief publish an exit event from the background thread to the main thread
-     *
-     * The activity
+    /*! \brief post an exit event from the activity thread (CuActivity::doOnExit) if the flag
+     *         CuActivity::CuAUnregisterAfterExec is set
+     *  \param a the sender
      */
-    virtual void publishExitEvent(CuActivity *a)  = 0;
+    virtual void postExitEvent(CuActivity *a)  = 0;
+
+    /*! \brief post an unregister event from the activity thread (CuActivity::doExecute) if the flag
+     *         CuActivity::CuAUnregisterAfterExec is set
+     *  \param a the sender
+     */
+    virtual void postUnregisterEvent(CuActivity *a) = 0;
 
     /** \brief Used by the thread factory, this function, given an input data,
      *         determines whether this thread is ecuivalent to another thread
@@ -124,7 +130,7 @@ public:
      * For example, a string representing a network URL can be a key to determine if the same thread
      * can be reused for the same connection.
      */
-    virtual bool isEquivalent(const std::string& other_thread_token) const = 0;
+    virtual bool matches(const std::string& other_thread_token) const = 0;
 
     /*! \brief perform clean operations on the class members
      *
@@ -163,12 +169,6 @@ public:
      * See also CuThread::exit
      */
     virtual void exit() = 0;
-
-    /*! \brief return the period of the timer running for the given activity
-     *
-     * see CuThread::getActivityTimerPeriod for a more complete description
-     */
-    virtual int getActivityTimerPeriod(CuActivity *a) const = 0;
 
     /*! \brief forward an *event* to an *activity*
      *

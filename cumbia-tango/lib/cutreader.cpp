@@ -213,7 +213,7 @@ void CuTReader::m_update_options(const CuData newo) {
 void CuTReader::m_destroy_self() {
     d->cumbia_t->removeAction(getSource().getName(), getType());
     CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->get(CuServices::ActivityManager));
-    am->removeConnection(this);
+    am->disconnect(this);
     delete this;
 }
 

@@ -13,8 +13,6 @@ src/lib/cudatalistener.cpp
 src/lib/cudatalistener.h
 src/lib/cudataquality.cpp
 src/lib/cudataquality.h
-src/lib/cuisolatedactivity.cpp
-src/lib/cuisolatedactivity.h
 src/lib/cumacros.h
 src/lib/cumatrix.cpp
 src/lib/cumatrix.h

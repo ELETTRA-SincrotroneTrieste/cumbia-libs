@@ -1,15 +1,15 @@
 #ifndef CUATTCONFIGACTIVITY_H
 #define CUATTCONFIGACTIVITY_H
 
-#include <cuisolatedactivity.h>
+#include <cuactivity.h>
 
 class CuEpConfigActivityPrivate;
 class CuEpCAService;
 
-class CuEpConfigActivity : public CuIsolatedActivity
+class CuEpConfigActivity : public CuActivity
 {
 public:
-    enum Type { CuAttConfigActivityType = CuActivity::User + 5 };
+    enum Type { CuEpConfigActivityType = CuActivity::User + 5 };
 
     CuEpConfigActivity(const CuData& tok, CuEpCAService *df);
 

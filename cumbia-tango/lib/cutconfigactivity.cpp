@@ -78,12 +78,8 @@ int CuTConfigActivity::repeat() const {
 }
 
 void CuTConfigActivity::init() {
-    const std::string& dnam = d->ts.getDeviceName();
-    /* get a TDevice */
-    const std::string& tok = threadToken();
-    d->tdev = d->device_service->getDevice(dnam, tok);
-    // thread safe: since cumbia 1.1.0 no thread per device guaranteed
-    d->device_service->addRef(dnam, tok);
+    // get device, new or recycled. getDevice increases refcnt
+    d->tdev = d->device_service->getDevice(d->ts.getDeviceName(), threadToken());
 }
 
 void CuTConfigActivity::execute() {

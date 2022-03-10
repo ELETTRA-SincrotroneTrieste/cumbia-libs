@@ -154,12 +154,7 @@ class CuActivity
 public:
     enum Flags { CuAUnregisterAfterExec = 0x01, CuADeleteOnExit = 0x02, CuAUserStartFlags = 0x0100, MaxUserFlags = 0x8000 };
 
-    enum StateFlags { CuAStateInit = 0x01, CuAStateExecute = 0x02, CuAStateOnExit = 0x04 };
-
-    CuActivity(CuThreadInterface *activityManager, const CuData& token);
-
     CuActivity(const CuData& token);
-
     virtual ~CuActivity();
 
     enum ActivityType { Isolated = 0, Continuous, WorkQueue, User = 100 };
@@ -176,7 +171,6 @@ public:
     virtual void event(CuActivityEvent *e) = 0;
 
     virtual int getFlags() const;
-    int getStateFlags() const;
     void setFlags(int f);
     void setFlag(Flags f, bool on);
 
@@ -198,7 +192,7 @@ public:
     void publishExitResult(const CuData* data);
     void publishResult(const std::vector<CuData> &datalist);
 
-    CuData getToken() const;
+    const CuData getToken() const;
     void setThreadToken(const std::string &tt);
     const std::string threadToken() const;
 
@@ -218,6 +212,8 @@ protected:
     virtual void init() = 0;
     virtual void execute() = 0;
     virtual void onExit() = 0;
+
+    virtual CuThreadInterface *thread() const;
 
 private:
 

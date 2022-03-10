@@ -13,8 +13,7 @@ public:
     bool exiting;
 };
 
-CuEpConfigActivity::CuEpConfigActivity(const CuData &tok, CuEpCAService *df) : CuIsolatedActivity(tok)
-{
+CuEpConfigActivity::CuEpConfigActivity(const CuData &tok, CuEpCAService *df) : CuActivity(tok) {
     d = new CuEpConfigActivityPrivate;
     d->ep_service = df;
     d->err = false;
@@ -36,7 +35,7 @@ CuEpConfigActivity::~CuEpConfigActivity()
 
 int CuEpConfigActivity::getType() const
 {
-    return CuAttConfigActivityType;
+    return CuEpConfigActivityType;
 }
 
 void CuEpConfigActivity::event(CuActivityEvent *e)

@@ -1,7 +1,7 @@
 #ifndef CUTADBACTIVITY_H
 #define CUTADBACTIVITY_H
 
-#include <cuisolatedactivity.h>
+#include <cuactivity.h>
 
 class TSource;
 class CuTaDbActivityPrivate;
@@ -19,7 +19,6 @@ public:
                                      "OpGetAtts", "OpGetCmds", "OpGetAProp", "OpGetCmdI", "EndOpts" };
 
     CuTaDbActivity(const TSource& tsrc, const CuData& options, const CuData& tag);
-
     virtual ~CuTaDbActivity();
 
     void setOptions(const CuData& o);

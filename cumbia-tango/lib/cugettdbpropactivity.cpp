@@ -20,6 +20,7 @@ public:
  * is accomplished.
  */
 CuGetTDbPropActivity::CuGetTDbPropActivity(const std::vector<CuData> &in_data)
+    : CuActivity(CuData("type", "get_tdbprop_a"))
 {
     d = new CuGetTDbPropActivityPrivate;
     d->in_data = in_data;
@@ -106,4 +107,12 @@ void CuGetTDbPropActivity::execute()
 void CuGetTDbPropActivity::onExit()
 {
 
+}
+
+int CuGetTDbPropActivity::getType() const {
+    return CuGetTDbPropA_Type;
+}
+
+int CuGetTDbPropActivity::repeat() const {
+    return 0;
 }

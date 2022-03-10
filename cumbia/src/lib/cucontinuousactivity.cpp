@@ -28,7 +28,7 @@ public:
  * The interval can be changed with setInterval
  */
 CuContinuousActivity::CuContinuousActivity(const CuData &token, int interval, CuActivityManager *activityManager)
-    : CuActivity(activityManager, token)
+    : CuActivity(token)
 {
     d = new CuContinuousActivityPrivate();
     d->timeout = interval;

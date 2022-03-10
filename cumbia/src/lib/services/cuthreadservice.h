@@ -13,6 +13,7 @@ class CuThread;
 class CuActivityI;
 class CuServiceProvider;
 class CuThreadsEventBridgeFactory_I;
+class CuThreadServicePrivate;
 
 /*! \brief *cumbia service* that creates threads and keeps references of the threads
  *         running within the application
@@ -48,13 +49,13 @@ class CuThreadService : public CuServiceI
 {
 public:
     CuThreadService();
+    virtual ~CuThreadService();
 
     CuThreadInterface *getThread(const std::string &token,
                                  const CuThreadsEventBridgeFactory_I &eventsBridgeFactory,
                                  const CuServiceProvider *service_provider,
                                  const CuThreadFactoryImplI &thread_factory_impl);
 
-    virtual ~CuThreadService();
 
     int count();
 
@@ -68,8 +69,7 @@ public:
     CuServices::Type getType() const;
 
 private:
-    std::list<CuThreadInterface *> mThreads;
-    std::shared_mutex m_shared_mutex;
+    CuThreadServicePrivate *d;
 };
 
 #endif // THREADSERVICE_H

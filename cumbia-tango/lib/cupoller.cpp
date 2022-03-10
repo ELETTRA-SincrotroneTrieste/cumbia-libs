@@ -184,7 +184,7 @@ void CuPoller::m_do_unregisterAction(CuTangoActionI *a)
         CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
                                                                  get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
         if(d->actions_map.size() == 0)
-            am->removeConnection(this);
+            am->disconnect(this);
         CuActivity *activity = am->find(at); // polling activities compare device period and "activity"
         // post remove to activity's thread
         if(activity) {

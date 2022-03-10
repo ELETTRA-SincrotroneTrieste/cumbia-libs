@@ -3,7 +3,7 @@
 CuResultEventPrivate::CuResultEventPrivate() {
     is_list = false;
     step = total = 0;
-    type = CuEventI::Result;
+    type = CuEventI::CuResultEv;
 }
 
 CuResultEventPrivate::~CuResultEventPrivate() {
@@ -51,7 +51,7 @@ CuResultEvent::CuResultEvent(const CuActivity* sender, int step, int total, cons
     d_p = new CuResultEventPrivate();
     d_p->step = step;
     d_p->total = total;
-    d_p->type = Progress;
+    d_p->type = CuProgressEv;
     d_p->activity = sender;
 }
 
@@ -118,36 +118,27 @@ bool CuResultEvent::isList() const
     return d_p->is_list;
 }
 
-/*! \brief an exit event for the sender activity
- *
- * @param sender the CuActivity that has to be finished
- *
- * Called by CuThread::publishExitEvent
- *
- */
-CuActivityExitEvent::CuActivityExitEvent(CuActivity *sender)
-{
-    m_activity = sender;
+CuA_ExitEv::CuA_ExitEv(CuActivity *sender) : m_activity(sender) {}
+
+CuEventI::CuEventType CuA_ExitEv::getType() const {
+    return CuEventI::CuA_ExitEvent;
 }
 
-/*! \brief returns an exit event type
- *
- * @return CuEventI::CuActivityExitEvent
- */
-CuEventI::CuEventType CuActivityExitEvent::getType() const
-{
-    return CuEventI::CuActivityExitEvent;
+CuActivity *CuA_ExitEv::getActivity() const {
+    return m_activity;
 }
 
-/*! \brief returns a pointer to the activity that sent the exit event
- *
- * @return a pointer to the CuActivity that sent the exit event
- */
-CuActivity *CuActivityExitEvent::getActivity() const
-{
+CuA_UnregisterEv::CuA_UnregisterEv(CuActivity *sender) : m_activity(sender) {}
+
+CuEventI::CuEventType CuA_UnregisterEv::getType() const {
+    return CuEventI::CuA_UnregisterEv;
+}
+
+CuActivity *CuA_UnregisterEv::getActivity() const {
     return m_activity;
 }
 
 CuEventI::CuEventType CuTimerEvent::getType() const {
-    return CuEventI::TimerEvent;
+    return CuEventI::CuTmrEv;
 }
+

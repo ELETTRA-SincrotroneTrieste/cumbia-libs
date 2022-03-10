@@ -64,21 +64,21 @@ class CuTimerService;
 class CuThread : public CuThreadInterface, public CuTimerListener
 {
 public:
-    CuThread(const std::string &token, CuThreadsEventBridge_I *threadEventsBridge,
-             const CuServiceProvider* service_provider);
+    CuThread(const std::string &token, CuThreadsEventBridge_I *threadEventsBridge, const CuServiceProvider *sp);
 
     virtual ~CuThread();
 
     // CuThreadInterface interface
 public:
-    void registerActivity(CuActivity *l);
+    void registerActivity(CuActivity *l, CuThreadListener *tl);
     void unregisterActivity(CuActivity *l);
     void publishProgress(const CuActivity *activity, int step, int total, const CuData &data);
     void publishResult(const CuActivity *activity, const CuData &data);
     void publishResult(const CuActivity *activity, const std::vector<CuData> &data_list);
 
-    void publishExitEvent(CuActivity *a);
-    bool isEquivalent(const std::string &other_thtok) const;
+    void postExitEvent(CuActivity *a);
+    void postUnregisterEvent(CuActivity *a);
+    bool matches(const std::string &other_thtok) const;
     std::string getToken() const;
     void cleanup();
     int type() const;
@@ -89,31 +89,19 @@ public:
     void exit();
 
     void postEvent(CuActivity *a, CuActivityEvent *e);
-    int getActivityTimerPeriod(CuActivity *a) const;
 
+public:
+    void onEventPosted(CuEventI *event);
 
 protected:
     virtual void run();
 
 private:
     CuThreadPrivate *d;
-    void mActivityInit(CuActivity *a);
-    void mOnActivityExited(CuActivity *a);
-    void mExitActivity(CuActivity *a, bool onThreadQuit);
-    void mRemoveActivityTimer(CuActivity *a);
-    void m_zero_activities();
-    void m_unregisterFromService();
-    CuTimer* m_a_new_timeout(CuActivity *a, int timeo, CuTimerService *timer_s, CuTimer *old_t);
-    void m_tmr_registered(CuActivity *a, CuTimer *t);
-    void m_tmr_remove(CuTimer *t);
-    size_t m_tmr_remove(CuActivity *a);
-    size_t m_activity_cnt(CuTimer *t) const;
-    const CuTimer *m_tmr_find(CuActivity *a) const;
-    std::list<CuActivity *> m_activitiesForTimer(const CuTimer *t) const;
 
-    // CuThreadsEventBridgeListener interface
-public:
-    void onEventPosted(CuEventI *event);
+    void mOnActivityExited(CuActivity *a);
+    void m_zero_activities();
+    void m_activity_disconnect(CuActivity *a);
 
 public:
 };
