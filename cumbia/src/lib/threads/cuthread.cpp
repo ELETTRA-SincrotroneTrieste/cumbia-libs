@@ -2,7 +2,6 @@
 #include "cutimer.h"
 #include "cudata.h"
 #include "cuthreadevents.h"
-#include "cuthreadservice.h"
 #include "cuactivity.h"
 #include "cumacros.h"
 #include "cuevent.h"
@@ -23,7 +22,6 @@
 #include <chrono>
 #include <assert.h>
 #include <limits>
-#include <cuactivitymanager.h>
 
 /*! @private
  *
@@ -33,8 +31,8 @@
 class CuThPP {
 public:
 
-    CuThPP(std::shared_mutex *mu,  std::queue <ThreadEvent *> *evq, std::condition_variable *condvar, const CuServiceProvider *sp)
-        : shared_mu(mu), eq(evq), cvar(condvar), tmr_s(static_cast<CuTimerService *>(sp->get(CuServices::Timer))) {
+    CuThPP(const CuServiceProvider *sp)
+        : tmr_s(static_cast<CuTimerService *>(sp->get(CuServices::Timer))) {
         mythread = pthread_self();
     }
 
@@ -56,7 +54,7 @@ public:
         return t;
     };
 
-    void activity_init(CuActivity *a, CuThread* t) {
+    void activity_run(CuActivity *a, CuThread* t) {
         activity_set.insert(a);
         a->doInit();
         a->doExecute();
@@ -65,6 +63,8 @@ public:
             timer = tmr_s->registerListener(t, a->repeat()); // checks for duplicates
             m_tmr_registered(a, timer);
         }
+        else
+            mExitActivity(a, t, false);
     };
 
     /*
@@ -161,10 +161,6 @@ public:
 
     std::map< CuActivity *, CuTimer *> tmr_amap;
     std::set<CuActivity *> activity_set;
-
-    std::shared_mutex *shared_mu;
-    std::queue <ThreadEvent *> *eq;
-    std::condition_variable *cvar;
 
     CuTimerService *tmr_s;
 
@@ -266,7 +262,8 @@ void CuThread::registerActivity(CuActivity *l, CuThreadListener *tl) {
     assert(d->mythread == pthread_self());
     l->setThreadToken(d->token);
     // add [another] listener to l
-    d->alimmap.insert(std::pair<CuActivity *, CuThreadListener *>(l, tl));
+//    printf("[0x%lx] %s registering activity %p %s th lis %p\n", pthread_self(), __PRETTY_FUNCTION__, l, datos(l->getToken()), tl);
+    d->alimmap.insert(std::pair<const CuActivity *, CuThreadListener *>(l, tl));
     ThreadEvent *registerEvent = new CuThRegisterA_Ev(l);
     /* need to protect event queue because this method is called from the main thread while
      * the queue is dequeued in the secondary thread
@@ -293,7 +290,7 @@ void CuThread::registerActivity(CuActivity *l, CuThreadListener *tl) {
  */
 void CuThread::unregisterActivity(CuActivity *l) {
     assert(d->mythread == pthread_self());
-    printf("[0x%lx] [main] %s\n", pthread_self(), __PRETTY_FUNCTION__);
+    d->alimmap.erase(l);
     ThreadEvent *unregisterEvent = new CuThUnregisterA_Ev(l); // ThreadEvent::UnregisterActivity
     std::unique_lock lk(d->shared_mutex);
     d->eq.push(unregisterEvent);
@@ -321,32 +318,37 @@ void CuThread::unregisterActivity(CuActivity *l) {
 void CuThread::onEventPosted(CuEventI *event) {
     assert(d->mythread == pthread_self());
     const CuEventI::CuEventType ty = event->getType();
-    if(ty == CuEventI::CuResultEv || ty == CuEventI::CuProgressEv)
-    {
+    if(ty == CuEventI::CuResultEv || ty == CuEventI::CuProgressEv) {
         CuResultEvent *re = static_cast<CuResultEvent *>(event);
         const CuActivity *a = re->getActivity();
-        printf("CuThread.onEventPosted: activity in activity/listeners map: %s\n", d->alimmap.find(a) != d->alimmap.end() ? "YES" : "NO");
-        auto eqr = d->alimmap.equal_range(a);
-        for(auto i = eqr.first; i != eqr.second; ++i)  {
-            if(re->getType() == CuEventI::CuProgressEv)
-                i->second->onProgress(re->getStep(), re->getTotal(), re->data);
+        // do not iterate directly on d->alimmap
+        // clients may register / unregister from within onResult (onProgress)
+        std::multimap<const CuActivity *,  CuThreadListener *> m(d->alimmap);
+        std::pair<std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator,
+                    std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator> eqr = m.equal_range(a);
+        int i = 0;
+        for(std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator it = eqr.first; it != eqr.second; ++it)  {
+            if(re->getType() == CuEventI::CuProgressEv) {
+                it->second->onProgress(re->getStep(), re->getTotal(), re->data);
+            }
             else if(re->isList()) { // vector will be deleted from within ~CuResultEventPrivate
                 const std::vector<CuData> &vd_ref = re->datalist;
-                i->second->onResult(vd_ref);
+                it->second->onResult(vd_ref);
             }
             else {
-                i->second->onResult(re->data);
+                it->second->onResult(re->data);
             }
         }
     }
     else if(ty == CuEventI::CuA_ExitEvent) {
-        printf("[0x%lx] [main] CuThread.onEventPosted: CuA_ExitEvent\n", pthread_self());
+        printf("[0x%lx] [main] CuThread.onEventPosted: CuA_ExitEvent activity %p\n", pthread_self(),
+               static_cast<CuA_ExitEv *>(event)->getActivity());
         mOnActivityExited(static_cast<CuA_ExitEv *>(event)->getActivity());
     }
     else if(ty == CuEventI::CuA_UnregisterEv) {
         m_activity_disconnect(static_cast<CuA_UnregisterEv *>(event)->getActivity());
-        printf("[0x%lx] [main] CuThread.onEventPosted: CuA_UnregisterEv\n", pthread_self());
-        unregisterActivity(static_cast<CuA_UnregisterEv *>(event)->getActivity());
+        printf("[0x%lx] [main] CuThread.onEventPosted: CuA_UnregisterEv activity %p\n", pthread_self(),
+               static_cast<CuA_UnregisterEv *>(event)->getActivity());
     }
     else if(ty == CuEventI::CuThAutoDestroyEv) {
         wait();
@@ -463,6 +465,7 @@ int CuThread::type() const {
  */
 void CuThread::start() {
     try {
+        printf("\e[1;32m[0x%lx] [main] %s\e[0m\n", pthread_self(), __PRETTY_FUNCTION__);
         d->thread = new std::thread(&CuThread::run, this);
     }
     catch(const std::system_error &se) {
@@ -477,7 +480,7 @@ void CuThread::start() {
 void CuThread::run() {
     bool destroy = false;
     ThreadEvent *te = NULL;
-    d->thpp = new CuThPP(&d->shared_mutex, &d->eq, &d->cv, d->se_p); // thread local private data and methods
+    d->thpp = new CuThPP(d->se_p); // thread local private data and methods
     while(1)  {
         te = NULL; {
             // acquire lock while dequeueing
@@ -493,9 +496,7 @@ void CuThread::run() {
         }
         if(te->getType() == ThreadEvent::RegisterActivity)  {
             CuThRegisterA_Ev *rae = static_cast<CuThRegisterA_Ev *>(te);
-            if(rae->activity->getToken().s("src").find("beamdump_s*") != std::string::npos)
-                printf("CuThread::registerActivity pushing registerEvent for %s\n", rae->activity->getToken().s("src").c_str());
-            d->thpp->activity_init(rae->activity, this);
+            d->thpp->activity_run(rae->activity, this);
         }
         else if(te->getType() == ThreadEvent::UnregisterActivity) {
             CuThUnregisterA_Ev *rae = static_cast<CuThUnregisterA_Ev *>(te);
@@ -518,6 +519,8 @@ void CuThread::run() {
                     else // reschedule the same timer
                         d->thpp->tmr_s->restart(timer, timer->timeout());
                 }
+                else
+                    d->thpp->mExitActivity(a, this, false);
             } // for activity iter
         }
         else if(te->getType() == ThreadEvent::PostToActivity) {
@@ -573,8 +576,8 @@ bool CuThread::isRunning() {
 // see mExitActivity
 /*! @private */
 void CuThread::mOnActivityExited(CuActivity *a) {
+    printf("[0x%lx] [main] \e[1;35m%s %p %s\e[0m\n", pthread_self(), __PRETTY_FUNCTION__, a, datos(a->getToken()));
     assert(d->mythread == pthread_self());
-    d->alimmap.erase(a);
     if(a->getFlags() & CuActivity::CuADeleteOnExit)
         delete a;
     if(d->alimmap.size() == 0) {
@@ -596,11 +599,8 @@ void CuThread::m_zero_activities() {
  */
 void CuThread::m_activity_disconnect(CuActivity *a) {
     assert(d->mythread == pthread_self());
-    CuActivityManager *am = static_cast<CuActivityManager *>(d->se_p->get(CuServices::ActivityManager));
-    CuThreadService *ts = static_cast<CuThreadService *> (d->se_p->get(CuServices::Thread));
-    am->disconnect(a);
-    if(am->countActivitiesForThread(this) == 0)
-        ts->removeThread(this);
+    printf("\e[0x%lx] [main] \e[1;31m%s ERASING %p %s\e[0m\n", pthread_self(), __PRETTY_FUNCTION__, a, datos(a->getToken()));
+    d->alimmap.erase(a);
 }
 
 /*! \brief sends the event e to the activity a *from the main thread

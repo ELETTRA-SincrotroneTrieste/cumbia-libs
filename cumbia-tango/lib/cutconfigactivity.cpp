@@ -45,7 +45,6 @@ CuTConfigActivity::CuTConfigActivity(const TSource& ts,
     d->tag = std::move(tag);
     d->options = std::move(o);
     d->ts = std::move(ts);
-    setFlag(CuActivity::CuAUnregisterAfterExec, true);
     setFlag(CuActivity::CuADeleteOnExit, true);
 }
 

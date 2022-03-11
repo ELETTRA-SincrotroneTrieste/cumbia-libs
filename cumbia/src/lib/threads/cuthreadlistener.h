@@ -28,7 +28,7 @@ class CuThreadListener
 {
 public:
 
-    virtual ~CuThreadListener() { }
+    virtual ~CuThreadListener() { printf("\e[1;31m~CuThreadListener %p\e[0m\n", this); }
 
     /*!
      * \brief onProgress notifies the listener's thread about the progress of the ongoing

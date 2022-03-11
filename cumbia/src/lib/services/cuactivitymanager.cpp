@@ -103,7 +103,7 @@ void CuActivityManager::removeConnections(CuThreadInterface *t) {
 
 void CuActivityManager::disconnect(CuThreadListener *l) {
     assert(d->mythread == pthread_self());
-    std::multimap<const CuActivity *, CuThreadListener *>::const_iterator lit = d->th_lis_mumap.begin();
+    std::multimap<const CuActivity *, CuThreadListener *>::iterator lit = d->th_lis_mumap.begin();
     while(lit != d->th_lis_mumap.end())
     {
         if(lit->second == l)

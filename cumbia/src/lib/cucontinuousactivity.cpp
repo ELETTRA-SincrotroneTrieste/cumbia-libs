@@ -33,7 +33,7 @@ CuContinuousActivity::CuContinuousActivity(const CuData &token, int interval, Cu
     d = new CuContinuousActivityPrivate();
     d->timeout = interval;
     d->pause = false;
-    setFlags(CuADeleteOnExit | CuAUnregisterAfterExec);
+    setFlags(CuADeleteOnExit);
 }
 
 /*! \brief the class destructor

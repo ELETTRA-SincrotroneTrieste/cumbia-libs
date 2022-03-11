@@ -152,7 +152,7 @@ class CuActivityEvent;
 class CuActivity
 {
 public:
-    enum Flags { CuAUnregisterAfterExec = 0x01, CuADeleteOnExit = 0x02, CuAUserStartFlags = 0x0100, MaxUserFlags = 0x8000 };
+    enum Flags { CuADeleteOnExit = 0x02, CuAUserStartFlags = 0x0100, MaxUserFlags = 0x8000 };
 
     CuActivity(const CuData& token);
     virtual ~CuActivity();

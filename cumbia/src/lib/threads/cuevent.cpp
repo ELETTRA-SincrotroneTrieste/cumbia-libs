@@ -118,6 +118,7 @@ bool CuResultEvent::isList() const
     return d_p->is_list;
 }
 
+
 CuA_ExitEv::CuA_ExitEv(CuActivity *sender) : m_activity(sender) {}
 
 CuEventI::CuEventType CuA_ExitEv::getType() const {

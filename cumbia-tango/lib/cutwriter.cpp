@@ -124,6 +124,7 @@ void CuTWriter::onResult(const CuData &data)
     CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
                                                                             ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
     af->unregisterAction(d->tsrc.getName(), getType());
+    d->cumbia_t->unregisterActivity(d->activity);
     d->listeners.clear();
     delete this;
 }

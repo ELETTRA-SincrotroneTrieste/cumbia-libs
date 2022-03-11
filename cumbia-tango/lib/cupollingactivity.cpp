@@ -139,7 +139,6 @@ CuPollingActivity::CuPollingActivity(const TSource &tsrc,
     d->repeat = d->period = period;
     setInterval(period);
     //  flag CuActivity::CuADeleteOnExit is true
-    setFlag(CuActivity::CuAUnregisterAfterExec, true);
     // initialize period slow down policy in case of read errors
     d->slowDownRate[1] = 3;
     d->slowDownRate[2] = 5;
@@ -291,7 +290,6 @@ void CuPollingActivity::init()
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
-    printf("[0x%lx] CuPollingActivity.init: getting device from service %s thtok %s\n", pthread_self(), tk["device"].toString().c_str(), threadToken().c_str());
     d->tdev = d->device_srvc->getDevice(tk["device"].toString(), threadToken());
     tk["conn"] = d->tdev->isValid();
     tk["err"] = !d->tdev->isValid();
@@ -465,11 +463,18 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts) {
     if(d->cmds.size() == 0 && d->v_attd.size() == 0) {
         dispose(); // do not use this activity since now
         // unregister this from the thread
-        printf("[0x%lx] CuPollingActivity::m_unregisterAction: getting thread for %s\n", pthread_self(), ts.getName().c_str());
-        CuThreadInterface *thread = this->thread();
-        /* CuActivityManager.removeConnection is invoked by the thread in order to ensure all scheduled events are processed */
-        if(thread)
-            thread->unregisterActivity(this);
+
+        printf("[0x%lx] CuPollingActivity::m_unregisterAction: after %s \e[0;35mno more atts / cmds\e[0m\n", pthread_self(), ts.getName().c_str());
+        printf("[0x%lx] \e[1;35m*\n* need to manage this\n*\n*\e[0m\n",pthread_self());
+
+//        CuData at (getToken()); /* activity token */
+//        at["exit"] = true;
+//        publishResult(at);
+
+                CuThreadInterface *thread = this->thread();
+//        /* CuActivityManager.removeConnection is invoked by the thread in order to ensure all scheduled events are processed */
+//        if(thread)
+//            thread->unregisterActivity(this);
     }
 }
 

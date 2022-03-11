@@ -72,18 +72,16 @@ CuThreadInterface *CuThreadService::getThread(const std::string& token,
                                               const CuServiceProvider *service_provider,
                                               const CuThreadFactoryImplI &thread_factory_impl) {
     assert(d->mythread == pthread_self());
-    printf("[0x%lx] CuThreadService::getThread creating new  thread for tok %s\n", pthread_self(), token.c_str());
     CuThreadInterface *thread;
     std::list<CuThreadInterface *>::const_iterator it;
     for(it = d->threads.begin(); it != d->threads.end(); ++it) {
         if((*it)->matches(token)) {
-            printf("CuThreadService::getThread returning  thread %p matches %s \n", *it, token.c_str());
+            printf("[0x%lx] CuThreadService::getThread returning  thread %p matches %s \n", pthread_self(), *it, token.c_str());
             return (*it);
         }
 
     }
     thread = thread_factory_impl.createThread(token, eventsBridgeFactory.createEventBridge(service_provider), service_provider);
-    printf("[0x%lx] CuThreadService::getThread creating new  thread %p \n", pthread_self(), thread);
     d->threads.push_back(thread);
     printf("[0x%lx] CuThreadService::getThread creating new  thread %p <<< OUT\n", pthread_self(), thread);
     return thread;

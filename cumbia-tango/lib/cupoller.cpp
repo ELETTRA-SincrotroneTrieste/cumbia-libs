@@ -104,16 +104,7 @@ void CuPoller::registerAction(const TSource& tsrc,
  */
 void CuPoller::unregisterAction(CuTangoActionI *a) {
     assert(d->my_thread == pthread_self());
-//    if(!d->deliveringResults) {
-//        printf("CuPoller::unregisterAction: calling m_do_unregisterAction for %p\n", a);
-
         m_do_unregisterAction(a);
-
-//    }
-//    else{
-//        printf("CuPoller::unregisterAction:  adding %p to the to_remove list\n", a);
-//        d->to_remove_actionlist.push_back(a);
-//    }
 }
 
 bool CuPoller::actionRegistered(const std::string& src) const {
@@ -131,25 +122,19 @@ size_t CuPoller::count() const {
 
 void CuPoller::onProgress(int , int , const CuData &) { }
 
-void CuPoller::onResult(const CuData &) { }
+void CuPoller::onResult(const CuData & da) {
+    printf("\e[1;32mCuPoller.onResult: received %s\n", datos(da));
+}
 
 void CuPoller::onResult(const std::vector<CuData> &datalist)
 {
     assert(d->my_thread == pthread_self());
-//    d->deliveringResults = true;
     // for each CuData, get the point and find the associated CuTangoActionI's, if still there's one or more
-    //
     for(size_t i = 0; i < datalist.size(); i++) {
         const std::string& src = datalist[i]["src"].toString();
         CuTangoActionI *a = m_find_a(src);
         if(a) a->onResult(datalist[i]);
     }
-//    d->deliveringResults = false;
-//    for(std::list<CuTangoActionI*>::iterator it = d->to_remove_actionlist.begin(); it != d->to_remove_actionlist.end(); ++it) {
-//        printf("CuPoller::onResult calling m_do_unregisterAction for %p\n", *it);
-//        m_do_unregisterAction(*it);
-//    }
-//    d->to_remove_actionlist.clear();
 }
 
 CuData CuPoller::getToken() const
@@ -189,8 +174,10 @@ void CuPoller::m_do_unregisterAction(CuTangoActionI *a)
         // post remove to activity's thread
         if(activity) {
             // CuPollingActivity will unregister itself if this is the last action
-            d->cumbia_t->postEvent(  activity, new CuRemovePollActionEvent(a->getSource()));
+            d->cumbia_t->postEvent(activity, new CuRemovePollActionEvent(a->getSource()));
         }
+        printf("\e[1;35m*\n*\n*CuPoller::m_do_unregisterAction: need manage unregisterActivity when\n"
+               "CuPollingActivity is empty\n*\n*\e[0m\n");
     }
 }
 

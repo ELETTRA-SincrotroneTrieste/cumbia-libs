@@ -45,6 +45,7 @@ void CuPollingService::unregisterAction(int period, CuTangoActionI *action) {
         poller->unregisterAction(action);
         if(poller->count() == 0) {
             d->pollers_map.erase(period);
+            printf("CuPollingService::unregisterAction deleting poller %p\n", poller);
             delete poller;
         }
     }

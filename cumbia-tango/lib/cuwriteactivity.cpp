@@ -29,7 +29,6 @@ CuWriteActivity::CuWriteActivity(const CuData &token,
     d->tag = tag;
     d->tdev = NULL;
     d->err = false;
-    setFlag(CuActivity::CuAUnregisterAfterExec, true);
     setFlag(CuActivity::CuADeleteOnExit, true);
     d->other_thread_id = pthread_self();
 }

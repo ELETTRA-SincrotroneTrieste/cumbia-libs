@@ -44,15 +44,18 @@ CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const string &sr
 //    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     CuTangoActionI* action = nullptr;
     auto range = d->actions.equal_range(src);
-    for(auto it = range.first; action == nullptr && it != range.second; ++it)
+    for(auto it = range.first; action == nullptr && it != range.second; ++it) {
+        printf("CuActionFactoryServiceImpl_Base::registerAction: %s a type %d f type %d\n", src.c_str(), it->second->getType(), f.getType());
         if(it->second->getType() == f.getType() /*&& !(*it)->exiting()*/ ) {
             action = it->second;
         }
-    *isnew = action == nullptr;
+    }
+    *isnew = (action == nullptr);
     if(*isnew) {
         action = f.create(src, ct);
         d->actions.insert(std::pair<std::string, CuTangoActionI *>{src, action});
     }
+    printf("CuActionFactoryServiceImpl_Base::registerAction action %s type %d is NEW ? %s\e[0m\n", src.c_str(), f.getType(), *isnew ? "YES" : "NO");
 //    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 //    tottime += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 //    printf("CuActionFactoryServiceImpl_Base::registerAction (multimap version) total time spent register/unreg %luus (reg.%luu unreg. %luu)\n",

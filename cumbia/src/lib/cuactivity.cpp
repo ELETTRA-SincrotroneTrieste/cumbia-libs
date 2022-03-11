@@ -44,7 +44,7 @@ bool CuActivity::isDisposable() const {
 
 CuActivity::~CuActivity() {
     assert(d->athread == pthread_self());
-    printf("\e[1;31m~CuActivity %p deleted\e[0m from this thread 0x%lx\n", this, pthread_self());
+    printf("\e[1;31m ~CuActivity %p deleted\e[0m from this thread 0x%lx\n", this, pthread_self());
     delete d;
 }
 
@@ -61,17 +61,16 @@ void CuActivity::doInit() {
 void CuActivity::doExecute() {
     assert(d->bthread == pthread_self());
     execute();
-    if(d->flags & CuAUnregisterAfterExec && d->thread) {
-        printf("[0x%lx] [activity's] CuActivity::doExecute \e[1;35mcalling postUnregisterEvent \e[0m %p\e[0m\n", pthread_self(), this);
-        d->thread->postUnregisterEvent(this);
-    }
 }
 
 void CuActivity::doOnExit() {
     assert(d->bthread == pthread_self());
     onExit();
-    if(d->thread)
+    if(d->thread) {
+        printf("[0x%lx] [activity's] CuActivity::doOnExit %p \e[0;35m calling postExitEvent \e[0m on thread %p\e[0m\n",
+               pthread_self(), this, d->thread);
         d->thread->postExitEvent(this);
+    }
 }
 
 void CuActivity::exitOnThreadQuit() {
