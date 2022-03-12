@@ -26,7 +26,7 @@ CuMonitorActivity::CuMonitorActivity(const CuData &token,
     : CuContinuousActivity(token)
 {
     d = new CuMonitorActivityPrivate;
-    setFlag(CuActivity::CuAUnregisterAfterExec, false);
+//    setFlag(CuActivity::CuAUnregisterAfterExec, false);
     setFlag(CuActivity::CuADeleteOnExit, true);
     d->device_srvc = ep_s;
     d->repeat = 1000;

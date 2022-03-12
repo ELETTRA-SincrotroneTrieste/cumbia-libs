@@ -17,7 +17,7 @@ CuEpConfigActivity::CuEpConfigActivity(const CuData &tok, CuEpCAService *df) : C
     d = new CuEpConfigActivityPrivate;
     d->ep_service = df;
     d->err = false;
-    setFlag(CuActivity::CuAUnregisterAfterExec, true);
+//    setFlag(CuActivity::CuAUnregisterAfterExec, true);
     setFlag(CuActivity::CuADeleteOnExit, true);
     d->other_thread_id = pthread_self();
     d->exiting = false;

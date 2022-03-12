@@ -21,7 +21,6 @@ CuTaDbActivity::CuTaDbActivity(const TSource &tsrc, const CuData &options, const
     d->tsrc = tsrc;
     d->tag = tag;
     d->options = options;
-    setFlag(CuActivity::CuAUnregisterAfterExec, true);
     setFlag(CuActivity::CuADeleteOnExit, true);
 
     if(tsrc.getName().find("beamdump_s*") != std::string::npos)

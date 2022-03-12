@@ -38,7 +38,6 @@ public:
  * \li if the "period" key is set on the token, then it is converted to int and it will be used
  *     to set up the polling period
  * \li CuADeleteOnExit is active.
- * \li CuAUnregisterAfterExec is disabled because if the Tango device is not defined into the database
  *     the poller is not started and the activity is suspended (repeat will return -1).
  */
 CuRandomGenActivity::CuRandomGenActivity(const CuData &token)
@@ -61,7 +60,7 @@ CuRandomGenActivity::CuRandomGenActivity(const CuData &token)
     d->repeat = period;
     setInterval(period);
     //  flag CuActivity::CuADeleteOnExit is true
-    setFlag(CuActivity::CuAUnregisterAfterExec, true);
+//////////////    setFlag(CuActivity::CuAUnregisterAfterExec, true);
 
     // src contains either "spectrum" or "vector": initialize size to a default value
     if(token["src"].toString().find("spectrum") != std::string::npos ||

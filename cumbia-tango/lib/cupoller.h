@@ -32,7 +32,6 @@ public:
 private:
     CuPollerPrivate *d;
 
-    void m_do_unregisterAction(CuTangoActionI *a);
     CuTangoActionI *m_find_a(const std::string& src) const;
 };
 

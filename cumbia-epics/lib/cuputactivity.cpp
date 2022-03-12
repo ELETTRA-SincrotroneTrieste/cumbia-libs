@@ -29,7 +29,7 @@ CuPutActivity::CuPutActivity(const CuData &token,
     d = new CuPutActivityPrivate;
     d->epics_service = df;
     d->err = false;
-    setFlag(CuActivity::CuAUnregisterAfterExec, true);
+//    setFlag(CuActivity::CuAUnregisterAfterExec, true);
     setFlag(CuActivity::CuADeleteOnExit, true);
     d->other_thread_id = pthread_self();
 }

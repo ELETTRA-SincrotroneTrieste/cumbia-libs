@@ -519,8 +519,11 @@ void CuThread::run() {
                     else // reschedule the same timer
                         d->thpp->tmr_s->restart(timer, timer->timeout());
                 }
-                else
+                else {
+                    printf("CuThread.run: asking activity %p %s to exit after timer expired\n",
+                           a, datos(a->getToken()));
                     d->thpp->mExitActivity(a, this, false);
+                }
             } // for activity iter
         }
         else if(te->getType() == ThreadEvent::PostToActivity) {

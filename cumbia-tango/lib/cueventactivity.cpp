@@ -45,7 +45,6 @@ CuEventActivity::CuEventActivity(const TSource &ts, CuDeviceFactoryService *df, 
     : CuActivity(CuData("activity", "event").set("src", ts.getName())) // token with keys relevant to matches()
 {
     d = new CuEventActivityPrivate;
-    setFlag(CuActivity::CuAUnregisterAfterExec, false);
     setFlag(CuActivity::CuADeleteOnExit, true);
     d->device_srvc = df;
     d->tdev = NULL;
