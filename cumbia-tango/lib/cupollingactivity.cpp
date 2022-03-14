@@ -471,7 +471,7 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts) {
 //        at["exit"] = true;
 //        publishResult(at);
 
-                CuThreadInterface *thread = this->thread();
+//                CuThreadInterface *thread = this->thread();
 //        /* CuActivityManager.removeConnection is invoked by the thread in order to ensure all scheduled events are processed */
 //        if(thread)
 //            thread->unregisterActivity(this);

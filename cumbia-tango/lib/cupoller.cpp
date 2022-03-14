@@ -35,7 +35,7 @@ CuPoller::CuPoller(CumbiaTango *cu_t, int period)
     d->token = CuData("period", period);
     d->token["class"] = "CuPoller";
     d->token["activity_count"] = 0;
-//    d->deliveringResults = false;
+    //    d->deliveringResults = false;
     d->my_thread = pthread_self();
 }
 
@@ -83,22 +83,6 @@ void CuPoller::registerAction(const TSource& tsrc,
 }
 
 /*! \brief unregister an action from the poller.
- *
- * @param a the action to unregister
- *
- * A CuTangoActionI can invoke unregisterAction from within CuTangoActionI::onResult. In this case, the
- * operation is delayed after CuPoller::onResult has finished delivering results.
- * If the method is called when CuPoller is not inside CuPoller::onResult, the action is unregistered
- * immediately.
- *
- * \li after the last action is removed, this object is removed from the CuActivityManager
- * thread listeners before next step:
- * \li a CuRemovePollActionEvent is posted to the CuPollingActivity managing the CuTangoActionI device
- * with the CuPoller::period interval
- * \li a dummy CuData with the "exit" flag is delivered through CuTangoActionI::onResult.
- * This is why unregister operations must be enqueued and performed outside result delivery taking place
- * in CuPoller::onResult
- *
  */
 void CuPoller::unregisterAction(CuTangoActionI *a) {
     assert(d->my_thread == pthread_self());
@@ -108,8 +92,7 @@ void CuPoller::unregisterAction(CuTangoActionI *a) {
         d->actions_map.erase(s);
         TSource tsrc = a->getSource();
         CuData at("device", tsrc.getDeviceName()); /* activity token */
-        at["activity"] = "poller";
-        at["period"] = d->period;
+        at.set("activity", "poller").set("period", d->period);
         CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
                                                                  get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
         if(d->actions_map.size() == 0)
@@ -117,27 +100,29 @@ void CuPoller::unregisterAction(CuTangoActionI *a) {
         CuActivity *activity = am->find(at); // polling activities compare device period and "activity"
         // post remove to activity's thread
         if(activity) {
-            // CuPollingActivity will unregister itself if this is the last action
             d->cumbia_t->postEvent(activity, new CuRemovePollActionEvent(a->getSource()));
-        }
-        printf("\e[1;35m*\n*\n*CuPoller::m_do_unregisterAction: need manage unregisterActivity when\n"
-               "CuPollingActivity is empty\n*\n*\e[0m\n");
-        CuActivity *pa = nullptr;
-        std::multimap<CuActivity *, CuTangoActionI*>::iterator it = d->pa_amap.begin();
-        while(pa == nullptr && it != d->pa_amap.end())  {
-            if(it->second == a) {
-                pa = it->first;
-                it = d->pa_amap.erase(it);
-            } else
-                ++it;
-        }
-        if(pa != nullptr && d->pa_amap.find(pa) == d->pa_amap.end()) {
-            printf("\e[1;36m CuPoller::m_do_unregisterAction: no more actions for activity %p %s:\n"
-                   "--> calling cumbia->unregisterActivity!\n\e[0m\n",
-                   pa, datos(pa->getToken()));
-            d->cumbia_t->unregisterActivity(pa);
-        }
 
+            printf("\e[1;35m*\n*\n*CuPoller::m_do_unregisterAction: need manage unregisterActivity when\n"
+                   "CuPollingActivity is empty\n*\n*\e[0m\n");
+
+            int cnt = 0;
+            auto ipair = d->pa_amap.equal_range(activity);
+            auto it = ipair.first;
+            while(it != ipair.second) {
+                if(it->second == a) {
+                    it = d->pa_amap.erase(it);
+                }
+                else {
+                    ++it; ++cnt;
+                }
+            }
+            if(cnt == 0) {
+                printf("\e[1;36m CuPoller::m_do_unregisterAction: no more actions for activity %p %s:\n"
+                       "--> calling cumbia->unregisterActivity!\n\e[0m\n",
+                       activity, datos(activity->getToken()));
+                d->cumbia_t->unregisterActivity(activity);
+            }
+        }
     }
 }
 
