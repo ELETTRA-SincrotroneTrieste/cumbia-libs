@@ -41,7 +41,7 @@ public:
  *     the poller is not started and the activity is suspended (repeat will return -1).
  */
 CuRandomGenActivity::CuRandomGenActivity(const CuData &token)
-    : CuContinuousActivity(token)
+    : CuPeriodicActivity(token)
 {
     d = new CuRandomGenActivityPrivate;
     d->repeat = 1000;
@@ -227,12 +227,12 @@ void CuRandomGenActivity::m_putInfo(CuData &res)
  *
  * @see CuActivity::event
  *
- * \note the CuActivityEvent is forwarded to CuContinuousActivity::event
+ * \note the CuActivityEvent is forwarded to CuPeriodicActivity::event
  */
 void CuRandomGenActivity::event(CuActivityEvent *e)
 {
     assert(d->my_thread_id == pthread_self());
-    CuContinuousActivity::event(e);
+    CuPeriodicActivity::event(e);
 }
 
 /*! \brief returns the type of the polling activity
