@@ -11,21 +11,16 @@
 class CuActivityPrivate
 {
 public:
-    CuActivityPrivate(const CuData& tok) : token(tok)
-    {
-        dispose = false;
+    CuActivityPrivate(const CuData& tok) : token(tok) {
         thread = nullptr;
         flags = 0;
         athread = pthread_self();
     }
 
     CuThreadInterface *thread;
-    bool dispose;
-    bool onExit;
     std::string thread_tok;
     const CuData token;
     int flags;
-
     pthread_t athread, bthread;
 };
 
@@ -34,13 +29,6 @@ CuActivity::CuActivity(const CuData &token)
     d = new CuActivityPrivate(token);
 }
 
-void CuActivity::dispose(bool disposable) {
-    d->dispose = disposable;
-}
-
-bool CuActivity::isDisposable() const {
-    return d->dispose;
-}
 
 CuActivity::~CuActivity() {
     assert(d->athread == pthread_self());
@@ -64,16 +52,6 @@ void CuActivity::doExecute() {
 }
 
 void CuActivity::doOnExit() {
-    assert(d->bthread == pthread_self());
-    onExit();
-    if(d->thread) {
-        printf("[0x%lx] [activity's] CuActivity::doOnExit %p \e[0;35m calling postExitEvent \e[0m on thread %p\e[0m\n",
-               pthread_self(), this, d->thread);
-        d->thread->postExitEvent(this);
-    }
-}
-
-void CuActivity::exitOnThreadQuit() {
     assert(d->bthread == pthread_self());
     onExit();
 }

@@ -76,8 +76,6 @@ public:
     void publishResult(const CuActivity *activity, const CuData &data);
     void publishResult(const CuActivity *activity, const std::vector<CuData> &data_list);
 
-    void postExitEvent(CuActivity *a);
-    void postUnregisterEvent(CuActivity *a);
     bool matches(const std::string &other_thtok) const;
     std::string getToken() const;
     void cleanup();

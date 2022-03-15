@@ -103,18 +103,6 @@ public:
      */
     virtual void publishResult(const CuActivity *activity, const std::vector<CuData> &data_list) = 0;
 
-    /*! \brief post an exit event from the activity thread (CuActivity::doOnExit) if the flag
-     *         CuActivity::CuAUnregisterAfterExec is set
-     *  \param a the sender
-     */
-    virtual void postExitEvent(CuActivity *a)  = 0;
-
-    /*! \brief post an unregister event from the activity thread (CuActivity::doExecute) if the flag
-     *         CuActivity::CuAUnregisterAfterExec is set
-     *  \param a the sender
-     */
-    virtual void postUnregisterEvent(CuActivity *a) = 0;
-
     /** \brief Used by the thread factory, this function, given an input data,
      *         determines whether this thread is ecuivalent to another thread
      *         of the same class for the data.

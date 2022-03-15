@@ -31,8 +31,9 @@
 class CuThPP {
 public:
 
-    CuThPP(const CuServiceProvider *sp)
-        : tmr_s(static_cast<CuTimerService *>(sp->get(CuServices::Timer))) {
+    CuThPP(const CuServiceProvider *sp, CuThreadsEventBridge_I *_eb)
+        : tmr_s(static_cast<CuTimerService *>(sp->get(CuServices::Timer))),
+        eb(_eb) {
         mythread = pthread_self();
     }
 
@@ -89,11 +90,11 @@ public:
         std::set<CuActivity *>::iterator it = activity_set.find(a);
         if(it != activity_set.end()) {
             mRemoveActivityTimer(a, t);
-            on_quit ? a->exitOnThreadQuit() :  // (2) will not call thread->publishExitEvent
-                      a->doOnExit();           // (1)
+            a->doOnExit();
+            if(!on_quit)
+                m_post_exit_event(a);
             activity_set.erase(it);
         }
-
     };
     /*! @private */
     void mRemoveActivityTimer(CuActivity *a, CuThread* th) {
@@ -110,7 +111,7 @@ public:
         if(u) {
             tmr_s->unregisterListener(th, timeo);
         }
-    };
+    }
 
     /*! @private */
     const CuTimer *m_tmr_find(CuActivity *a) const {
@@ -118,13 +119,13 @@ public:
         if(it != tmr_amap.end())
             return it->second;
         return nullptr;
-    };
+    }
 
     // inserts the pair (a,t) into d->timerActivityMap
     void m_tmr_registered(CuActivity *a, CuTimer *t) {
         assert(mythread == pthread_self());
         tmr_amap[a] = t;
-    };
+    }
 
     void m_tmr_remove(CuTimer *t) {
         assert(mythread == pthread_self());
@@ -133,14 +134,14 @@ public:
             if(it->second == t) it = tmr_amap.erase(it);
             else   ++it;
         }
-    };
+    }
 
     size_t m_tmr_remove(CuActivity *a) {
         size_t e = 0;
         if(tmr_amap.find(a) != tmr_amap.end())
             e = tmr_amap.erase(a);
         return e;
-    };
+    }
 
     size_t m_activity_cnt(CuTimer *t) const  {
         size_t s = 0;
@@ -148,7 +149,7 @@ public:
             if(it->second == t)
                 s++;
         return s;
-    };
+    }
 
     std::list<CuActivity *> m_activitiesForTimer(const CuTimer *t) const {
         std::list<CuActivity*> activities;
@@ -157,13 +158,18 @@ public:
             if(it->second == t)
                 activities.push_back(it->first);
         return activities;
-    };
+    }
+
+    void m_post_exit_event(CuActivity *a)  {
+        assert(mythread == pthread_self());
+        eb->postEvent(new CuA_ExitEv(a));
+    }
 
     std::map< CuActivity *, CuTimer *> tmr_amap;
     std::set<CuActivity *> activity_set;
 
     CuTimerService *tmr_s;
-
+    CuThreadsEventBridge_I *eb;
     pthread_t mythread;
     CuData atok; // copy of activity token for thread local use
 
@@ -387,28 +393,6 @@ void CuThread::publishResult(const CuActivity *a, const std::vector<CuData> &dal
     d->eb->postEvent(new CuResultEvent(a, dalist));
 }
 
-/*! \brief  invoked in CuThread's thread, posts an *activity exit event*
- *          to the main thread
- *
- * \note used internally
- *
- * Called from CuActivity::doOnExit (background thread), delivers an *exit
- * event* to the main thread from the background, using
- * CuThreadsEventBridge_I::postEvent with a CuA_ExitEv as parameter.
- * When the event is received and processed back in the *main thread* (in
- * CuThread::onEventPosted) the activity is deleted if the CuActivity::CuADeleteOnExit
- * flag is enabled.
- */
-void CuThread::postExitEvent(CuActivity *a) {
-    assert(d->thpp->mythread == pthread_self());
-    d->eb->postEvent(new CuA_ExitEv(a));
-}
-
-void CuThread::postUnregisterEvent(CuActivity *a) {
-    assert(d->thpp->mythread == pthread_self());
-    d->eb->postEvent(new CuA_UnregisterEv(a));
-}
-
 /*! \brief returns true if this thread token is equal to other_thread_token
  *
  * @param other_thread_token a CuData that's the token of another thread
@@ -480,7 +464,7 @@ void CuThread::start() {
 void CuThread::run() {
     bool destroy = false;
     ThreadEvent *te = NULL;
-    d->thpp = new CuThPP(d->se_p); // thread local private data and methods
+    d->thpp = new CuThPP(d->se_p, d->eb); // thread local private data and methods
     while(1)  {
         te = NULL; {
             // acquire lock while dequeueing

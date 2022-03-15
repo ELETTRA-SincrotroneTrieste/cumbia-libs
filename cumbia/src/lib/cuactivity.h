@@ -157,7 +157,7 @@ public:
     CuActivity(const CuData& token);
     virtual ~CuActivity();
 
-    enum ActivityType { Isolated = 0, Continuous, WorkQueue, User = 100 };
+    enum ActivityType { Continuous, User = 100 };
 
     void setThread(CuThreadInterface *thread);
 
@@ -176,9 +176,6 @@ public:
 
     virtual bool matches(const CuData& token) const = 0;
 
-    virtual void dispose(bool disposable = true);
-    virtual bool isDisposable() const;
-
     /*! \brief must return the interval of time, in milliseconds, before the next CuActivity::execute call,
      *         or zero or negative in order to not execute again
      *
@@ -189,7 +186,6 @@ public:
 
     void publishResult(const CuData &data);
     void publishProgress(int step, int total, const CuData& data);
-    void publishExitResult(const CuData* data);
     void publishResult(const std::vector<CuData> &datalist);
 
     const CuData getToken() const;
@@ -203,11 +199,6 @@ public:
     /* template method: sets state, calls onExit and posts an exit event on the main thread */
     void doOnExit();
 
-    void exitOnThreadQuit();
-
-    void setUpdatePolicyHints(int hints);
-    int updatePolicyHints() const;
-
 protected:
     virtual void init() = 0;
     virtual void execute() = 0;
@@ -216,11 +207,7 @@ protected:
     virtual CuThreadInterface *thread() const;
 
 private:
-
     CuActivityPrivate *d;
-
-
-
 };
 
 #endif // CUACTIVITY_H

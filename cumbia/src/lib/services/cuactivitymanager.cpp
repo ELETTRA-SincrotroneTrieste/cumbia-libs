@@ -129,7 +129,7 @@ CuActivity *CuActivityManager::find(const CuData &token) {
     std::multimap<CuThreadInterface *, CuActivity *>::const_iterator it;
     for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it) {
         const CuActivity *a = it->second;
-        if(a->matches(token) && !a->isDisposable())
+        if(a->matches(token))
             return it->second;
     }
     return nullptr;
