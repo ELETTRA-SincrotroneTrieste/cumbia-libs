@@ -6,8 +6,6 @@ src/lib/cuactivity.cpp
 src/lib/cuactivity.h
 src/lib/cuactivityevent.cpp
 src/lib/cuactivityevent.h
-src/lib/cucontinuousactivity.cpp
-src/lib/cucontinuousactivity.h
 src/lib/cudata.cpp
 src/lib/cudata.h
 src/lib/cudatalistener.cpp
@@ -21,6 +19,8 @@ src/lib/cumbia.cpp
 src/lib/cumbia.h
 src/lib/cumbiapool.cpp
 src/lib/cumbiapool.h
+src/lib/cuperiodicactivity.cpp
+src/lib/cuperiodicactivity.h
 src/lib/cuthreadfactory.cpp
 src/lib/cuvariant.cpp
 src/lib/cuvariant.h

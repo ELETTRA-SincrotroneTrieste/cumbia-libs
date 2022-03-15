@@ -9,7 +9,7 @@ class CuWriteActivityPrivate;
 class CuWriteActivity : public CuActivity
 {
 public:
-    enum Type { CuWriteA_Type = CuActivity::User + 32 };
+    enum Type { CuWriteA_Type = CuActivity::UserAType + 32 };
     CuWriteActivity(const CuData &token,
                     CuDeviceFactoryService *df,
                     const CuData &db_config,

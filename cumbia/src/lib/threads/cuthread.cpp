@@ -332,7 +332,6 @@ void CuThread::onEventPosted(CuEventI *event) {
         std::multimap<const CuActivity *,  CuThreadListener *> m(d->alimmap);
         std::pair<std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator,
                     std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator> eqr = m.equal_range(a);
-        int i = 0;
         for(std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator it = eqr.first; it != eqr.second; ++it)  {
             if(re->getType() == CuEventI::CuProgressEv) {
                 it->second->onProgress(re->getStep(), re->getTotal(), re->data);

@@ -20,7 +20,7 @@ configure_file(output : 'config.h',
 headers = [
 	'src/lib/cumbia.h',
 	'src/lib/cumacros.h',
-'src/lib/cucontinuousactivity.h',
+'src/lib/cuperiodicactivity.h',
 'src/lib/cuactivity.h',
 'src/lib/cuactivityevent.h',
 'src/lib/threads/cuthreadinterface.h',
@@ -59,7 +59,7 @@ install_headers(headers, subdir : 'cumbia') # -> include/cumbia/
 sources = [
 'src/lib/cumbia.cpp',
 'src/lib/cumbiapool.cpp',
-'src/lib/cucontinuousactivity.cpp',
+'src/lib/cuperiodicactivity.cpp',
 'src/lib/cumacros.h',
 'src/lib/cuactivity.cpp',
 'src/lib/cuactivityevent.cpp',

@@ -38,7 +38,7 @@ class CuActivityEvent;
  *
  * The *execute* method can also be called periodically. For instance, a temperature can be read
  * at regular intervals from a device through the network (see continuous activities, such as
- * CuContinuousActivity). In this case, subclasses will return a timeout in milliseconds from the
+ * CuPeriodicActivity). In this case, subclasses will return a timeout in milliseconds from the
  * CuActivity::repeat function.
  *
  * \subsection exit_hk The onExit hook
@@ -87,32 +87,32 @@ class CuActivityEvent;
  * engines, respectively.
  *
  *
- * \section cont_act Continuous activities
+ * \section cont_act Periodic activities
  *
  * In a *continuous activity* the *execute* method is called periodically by a timer. To exit
  * the timer, the activity is normally unregistered through Cumbia::unregisterActivity. An exit
  * event interrupts the timer and onExit is invoked at last.
  *
  * CuActivity::Flags can be set in order to customise the behavior of the activity.
- * CuContinuousActivity by default enables CuActivity::CuADeleteOnExit and CuActivity::CuAUnregisterAfterExec
+ * CuPeriodicActivity by default enables CuActivity::CuADeleteOnExit and CuActivity::CuAUnregisterAfterExec
  * See the section \ref isol_act above for further information about the *activity flags*.
  *
  * The period of a *continuous activity* can either be set before execution or at run time by
- * CuContinuousActivity::setInterval. The CuContinuousActivity::getTimeout returns the value of the
+ * CuPeriodicActivity::setInterval. The CuPeriodicActivity::getTimeout returns the value of the
  * period. Special events can be sent from the main thread to the background thread in order to
- * temporarily change the state of a CuContinuousActivity. A *continuous activity*
+ * temporarily change the state of a CuPeriodicActivity. A *continuous activity*
  * \li can be paused
  * \li resumed
  * \li explicitly *execute*d
  * \li allows to change its period.
- * See CuContinuousActivity::event documentation for further details.
+ * See CuPeriodicActivity::event documentation for further details.
  *
  * \section act_implementations Examples
  *
  * \subsection cumbia_tango_module Implementations in the cumbia-tango module
  *
  * \subsubsection cupollact CuPollingActivity
- * The *cumbia-tango* module implements CuContinuousActivity in its CuPollingActivity class,
+ * The *cumbia-tango* module implements CuPeriodicActivity in its CuPollingActivity class,
  * that periodically reads Tango attributes or commands.
  *
  * \subsubsection cuevact CuEventActivity
@@ -130,7 +130,7 @@ class CuActivityEvent;
  * flexibility to the clients: CuEventActivity directly derives from CuActivity and
  * determines its *one shot* nature through the *repeat* method. It could have
  * subclassed CuIsolatedActivity as well. CuPollingActivity benefits from the *periodic*
- * nature of CuContinuousActivity. Finally, CuGetTDbPropActivity is an example where only
+ * nature of CuPeriodicActivity. Finally, CuGetTDbPropActivity is an example where only
  * the *execute* method is really doing work. CuGetTDbPropActivity's *init* and *onExit*
  * have empty bodies. See the cumbia-tango module for further reading.
  *
@@ -152,12 +152,12 @@ class CuActivityEvent;
 class CuActivity
 {
 public:
-    enum Flags { CuADeleteOnExit = 0x02, CuAUserStartFlags = 0x0100, MaxUserFlags = 0x8000 };
+    enum Flags { CuADeleteOnExit = 0x02, CuAUserFlags = 0x0100, MaxUserFlags = 0x10000 };
 
     CuActivity(const CuData& token);
     virtual ~CuActivity();
 
-    enum ActivityType { Continuous, User = 100 };
+    enum ActivityType { PeriodicAType, UserAType = 100 };
 
     void setThread(CuThreadInterface *thread);
 

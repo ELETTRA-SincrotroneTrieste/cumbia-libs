@@ -5,7 +5,7 @@
 #include "cuthreadseventbridgefactory_i.h"
 #include "services/cuservices.h"
 #include "services/cuactivitymanager.h"
-#include "cucontinuousactivity.h"
+#include "cuperiodicactivity.h"
 #include "cuthreadinterface.h"
 #include "cumacros.h"
 #include "cuactivityevent.h"

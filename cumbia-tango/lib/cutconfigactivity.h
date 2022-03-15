@@ -15,7 +15,7 @@ class TSource;
 class CuTConfigActivity : public CuActivity
 {
 public:
-    enum Type { CuReaderConfigActivityType = CuActivity::User + 5,  CuWriterConfigActivityType };
+    enum Type { CuReaderConfigActivityType = CuActivity::UserAType + 5,  CuWriterConfigActivityType };
 
     CuTConfigActivity(const TSource &ts,
                       CuDeviceFactoryService *df,

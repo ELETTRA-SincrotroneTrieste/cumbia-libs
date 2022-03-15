@@ -15,7 +15,7 @@ class CuGetTDbPropActivityPrivate;
 class CuGetTDbPropActivity : public CuActivity
 {
 public:
-    enum Type { CuGetTDbPropA_Type = CuActivity::User + 22 };
+    enum Type { CuGetTDbPropA_Type = CuActivity::UserAType + 22 };
     CuGetTDbPropActivity(const std::vector<CuData> &in_data);
 
     virtual ~CuGetTDbPropActivity();

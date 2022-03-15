@@ -1,7 +1,7 @@
 #ifndef CUPOLLINGACTIVITY_H
 #define CUPOLLINGACTIVITY_H
 
-#include <cucontinuousactivity.h>
+#include <cuperiodicactivity.h>
 #include <cuactivityevent.h>
 #include <list>
 #include <cutangoactioni.h>
@@ -91,13 +91,13 @@ public:
  * @see CuTReader::stop
  *
  */
-class CuPollingActivity : public CuContinuousActivity
+class CuPollingActivity : public CuPeriodicActivity
 {
 public:
 
     /*! \brief defines the Type of the activity, returned by getType
      */
-    enum Type { CuPollingActivityType = CuActivity::User + 3 };
+    enum Type { CuPollingActivityType = CuActivity::UserAType + 3 };
 
     CuPollingActivity(const TSource& tsrc,
                       CuDeviceFactoryService *df,
