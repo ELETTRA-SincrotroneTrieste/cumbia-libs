@@ -9,7 +9,7 @@ class CuEpCAService;
 class CuEpConfigActivity : public CuActivity
 {
 public:
-    enum Type { CuEpConfigActivityType = CuActivity::User + 5 };
+    enum Type { CuEpConfigActivityType = CuActivity::UserAType + 5 };
 
     CuEpConfigActivity(const CuData& tok, CuEpCAService *df);
 

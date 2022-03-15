@@ -10,7 +10,7 @@ class CuPutActivityPrivate;
 class CuPutActivity : public CuActivity
 {
 public:
-    enum Type { CuPutActivityType = CuActivity::User + 7 };
+    enum Type { CuPutActivityType = CuActivity::UserAType + 7 };
     CuPutActivity(const CuData &token,
                     CuEpCAService *df);
 
