@@ -60,7 +60,7 @@ CuRandomGenActivity::CuRandomGenActivity(const CuData &token)
     d->repeat = period;
     setInterval(period);
     //  flag CuActivity::CuADeleteOnExit is true
-//////////////    setFlag(CuActivity::CuAUnregisterAfterExec, true);
+    // CuActivity::CuAUnregisterAfterExec unavailable since 1.4
 
     // src contains either "spectrum" or "vector": initialize size to a default value
     if(token["src"].toString().find("spectrum") != std::string::npos ||
