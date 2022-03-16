@@ -1,6 +1,4 @@
 TODO.md
-lib/cutimeprof.cpp
-lib/cutimeprof.h
 meson_options.txt
 src/lib/cuactivity.cpp
 src/lib/cuactivity.h

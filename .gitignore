@@ -24,6 +24,7 @@ pkgconfig/
 */.deps/*
 *.creator.user
 *meson.build.user
+*.tag
 
 cumbia-websocket/android/openssl-1.0.2o/
 docs/
