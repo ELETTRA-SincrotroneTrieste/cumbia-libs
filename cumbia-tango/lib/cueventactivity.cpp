@@ -42,8 +42,7 @@ public:
  * \li CuActivity::CuADeleteOnExit: *true* lets the activity be deleted after onExit
  */
 CuEventActivity::CuEventActivity(const TSource &ts, CuDeviceFactoryService *df, const string &refreshmo, const CuData &tag, int update_policy)
-    : CuActivity(CuData("activity", "event").set("src", ts.getName())) // token with keys relevant to matches()
-{
+    : CuActivity(CuData("activity", "event").set("src", ts.getName())) {  // token with keys relevant to matches()
     d = new CuEventActivityPrivate;
     setFlag(CuActivity::CuADeleteOnExit, true);
     d->device_srvc = df;
@@ -70,8 +69,7 @@ CuEventActivity::~CuEventActivity() {
  *
  * @return the constant value CuEventActivityType defined in CuEventActivity::Type
  */
-int CuEventActivity::getType() const
-{
+int CuEventActivity::getType() const {
     return CuEventActivityType;
 }
 
@@ -101,8 +99,7 @@ void CuEventActivity::event(CuActivityEvent *e) {
  * if they are both CuEventActivity and share the same source name.
  *
  */
-bool CuEventActivity::matches(const CuData &token) const
-{
+bool CuEventActivity::matches(const CuData &token) const {
     const CuData& mytok = getToken();
     return token["src"] == mytok["src"] && mytok["activity"] == token["activity"];
 }
