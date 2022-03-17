@@ -53,18 +53,9 @@ void CuActivityManager::disconnect(CuActivity *a) {
     assert(d->mythread == pthread_self());
     std::multimap< CuThreadInterface *, CuActivity *>::iterator it = d->conn_mumap.begin();
     while(it != d->conn_mumap.end()) {
-        if(it->second == a)
-            it = d->conn_mumap.erase(it);
-        else
-            ++it;
+        it->second == a ? it = d->conn_mumap.erase(it) : ++it;
     }
-    std::multimap<const CuActivity *, CuThreadListener *>::const_iterator lit = d->th_lis_mumap.begin();
-    while(lit != d->th_lis_mumap.end()) {
-        if(lit->first == a)
-            lit = d->th_lis_mumap.erase(lit);
-        else
-            ++lit;
-    }
+    d->th_lis_mumap.erase(a);
 }
 
 /** \brief Removes all links involving the CuThreadInterface passed as input
@@ -128,8 +119,7 @@ CuActivity *CuActivityManager::find(const CuData &token) {
     assert(d->mythread == pthread_self());
     std::multimap<CuThreadInterface *, CuActivity *>::const_iterator it;
     for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it) {
-        const CuActivity *a = it->second;
-        if(a->matches(token))
+        if(it->second->matches(token))
             return it->second;
     }
     return nullptr;
@@ -146,8 +136,7 @@ CuActivity *CuActivityManager::find(const CuData &token) {
 CuThreadInterface *CuActivityManager::getThread(CuActivity *activity)  {
     assert(d->mythread == pthread_self());
     std::multimap< CuThreadInterface *, CuActivity *>::const_iterator it;
-    for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it)
-    {
+    for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it) {
         if(it->second == activity)
             return it->first;
     }
@@ -170,10 +159,8 @@ std::vector<CuThreadListener *> CuActivityManager::getThreadListeners(const CuAc
 bool CuActivityManager::connectionExists(CuThreadInterface *t, CuActivity *a, CuThreadListener *threadListener) {
     assert(d->mythread == pthread_self());
     std::multimap< CuThreadInterface *, CuActivity *>::const_iterator it;
-    for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it)
-    {
-        if(it->second == a && it->first == t)
-        {
+    for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it) {
+        if(it->second == a && it->first == t) {
             std::multimap<const CuActivity *, CuThreadListener *>::const_iterator lit;
             for(lit = d->th_lis_mumap.begin(); lit != d->th_lis_mumap.end(); ++lit)
                 if(lit->first == a && lit->second == threadListener)
