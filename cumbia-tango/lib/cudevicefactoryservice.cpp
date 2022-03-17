@@ -30,8 +30,7 @@ CuDeviceFactoryService::~CuDeviceFactoryService()
  * @see TDevice::isValid
  * @see TDevice::getError
  */
-TDevice *CuDeviceFactoryService::getDevice(const std::string &name, const std::string &thread_tok)
-{
+TDevice *CuDeviceFactoryService::getDevice(const std::string &name, const std::string &thread_tok) {
     std::unique_lock lock(m_shared_mutex); // unique lock
     TDevice *td = nullptr; {   // scoped read lock
         std::pair<std::multimap <std::string, TDevData>::const_iterator, std::multimap <std::string, TDevData>::iterator > ret;
@@ -70,18 +69,15 @@ TDevice *CuDeviceFactoryService::findDevice(const std::string &name, const std::
     return NULL;
 }
 
-int CuDeviceFactoryService::removeRef(const string &devname, const std::string &thread_tok)
-{
+int CuDeviceFactoryService::removeRef(const string &devname, const std::string &thread_tok) {
     std::unique_lock lock(m_shared_mutex); // modifies TDevice in list
     int refcnt = -1;
     std::multimap< std::string, TDevData>::iterator it = m_devmap.begin();
-    while(it != m_devmap.end())
-    {
+    while(it != m_devmap.end()) {
         if(it->first == devname && it->second.thread_token == thread_tok) {
             TDevice *d = it->second.tdevice;
             refcnt = d->removeRef();
             if(refcnt == 0) { // no more references for that device in that thread
-                printf("[0x%lx] CuDeviceFactoryService::removeRef: \e[1;31mdeleting %p \e[0m %s\n", pthread_self(), d, devname.c_str());
                 delete d;
                 it = m_devmap.erase(it);
             }
