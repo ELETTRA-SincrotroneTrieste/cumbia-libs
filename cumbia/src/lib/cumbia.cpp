@@ -18,6 +18,7 @@ class CumbiaPrivate
 public:
     CuServiceProvider *serviceProvider;
     CuThreadTokenGenI *threadTokenGenerator;
+    std::vector<CuThreadInterface *> threads;
 };
 
 /*! \brief Cumbia class constructor
@@ -36,15 +37,13 @@ public:
  * Please refer to CuServiceProvider, CuThreadService and CuActivityManager documentation
  * for further information.
  */
-Cumbia::Cumbia()
-{
+Cumbia::Cumbia() {
     d = new CumbiaPrivate();
     d->serviceProvider = new CuServiceProvider();
     d->serviceProvider->registerService(CuServices::Thread, new CuThreadService());
     d->serviceProvider->registerService(CuServices::ActivityManager, new CuActivityManager());
     d->serviceProvider->registerService(CuServices::Timer, new CuTimerService());
     d->threadTokenGenerator = nullptr;
-    printf("cumbia version \e[1;32m1.4.0\e[0m [ \e[1;33mTEST\e[0m ]\n");
 }
 
 /*! \brief called from the class destructor, cleans up the Cumbia object
@@ -69,26 +68,16 @@ Cumbia::Cumbia()
 void Cumbia::finish()
 {
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
-    CuThreadService *ts = static_cast<CuThreadService *> (d->serviceProvider->get(CuServices::Thread));
-    const std::list<CuThreadInterface *> threads = ts->getThreads();
-    std::list<CuThreadInterface *>::const_iterator it;
-    for(it = threads.begin(); it != threads.end(); ++it)
-    {
-        CuThreadInterface *ti = *it;
-        /* when thread leaves its loop, invokes onExit on all activities, ensuring onExit is called in
-         * the still running thread.
-         */
-        ti->exit();
-        ti->wait();
-        /* we're now back in the main thread, whence activities are deleted */
-        ts->removeThread(ti);
-        delete ti;
-        const std::vector<CuActivity *> activities = activityManager->activitiesForThread(ti);
+    for(size_t i = 0; i < d->threads.size(); i++) {
+        d->threads[i]->exit();
+        d->threads[i]->wait();
+        const std::vector<CuActivity *> activities = activityManager->activitiesForThread(d->threads[i]);
         for(size_t ai = 0; ai < activities.size(); ai++)
         {
             activityManager->disconnect(activities[ai]);
             delete activities[ai];
         }
+        delete d->threads[i];
     }
 
     std::list<CuServiceI *> services = d->serviceProvider->getServices();
@@ -181,14 +170,12 @@ void Cumbia::registerActivity(CuActivity *activity,
     CuActivityManager *activityManager = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     CuThreadService *thread_service = static_cast<CuThreadService *>(d->serviceProvider->get(CuServices::Thread));
     CuThreadInterface *thread = NULL;
-    printf("[0x%lx] Cumbia::registerActivity calling thread_service->getThread for %s\n", pthread_self(), activity->getToken().s("src").c_str());
-    thread = thread_service->getThread(threadToken(thread_token), eventsBridgeFactoryImpl, d->serviceProvider, thread_factory_impl);
+    thread = thread_service->getThread(threadToken(thread_token), eventsBridgeFactoryImpl, d->serviceProvider, thread_factory_impl, &d->threads);
     activityManager->connect(thread, activity, dataListener);
     activity->setThread(thread);
     if(!thread->isRunning())
         thread->start();
     thread->registerActivity(activity, dataListener);
-    printf("[0x%lx] Cumbia::registerActivity called thread->registerActivity for %s\n", pthread_self(), activity->getToken().s("src").c_str());
 }
 
 /*! \brief unregister an activity from cumbia
