@@ -21,8 +21,7 @@
 
 class TSource;
 
-class CuTReaderPrivate
-{
+class CuTReaderPrivate {
 public:
     CuTReaderPrivate(const TSource& src, CumbiaTango *ct, const CuData &_tag)
         : tsrc(src),
@@ -413,7 +412,6 @@ void CuTReader::m_polling_fallback() {
         m_unregisterEventActivity();
         d->event_activity = nullptr;
     }
-
     if(!polling_service->actionRegistered(this, d->period) ) {
         d->refresh_mode = CuTReader::PolledRefresh;
         m_registerToPoller();
@@ -456,8 +454,7 @@ void CuTReader::start()
     d->started = true;
 }
 
-void CuTReader::m_startEventActivity()
-{
+void CuTReader::m_startEventActivity() {
     CuDeviceFactoryService *df =
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
