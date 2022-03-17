@@ -64,8 +64,6 @@ public:
             timer = tmr_s->registerListener(t, a->repeat()); // checks for duplicates
             m_tmr_registered(a, timer);
         }
-        else
-            mExitActivity(a, t, false);
     };
 
     /*
@@ -90,12 +88,14 @@ public:
         std::set<CuActivity *>::iterator it = activity_set.find(a);
         if(it != activity_set.end()) {
             mRemoveActivityTimer(a, t);
+            printf("[0x%lx] CuThread.mExitActivity: calling doOnExit on activity %p\n", pthread_self(), a);
             a->doOnExit();
             if(!on_quit)
                 m_post_exit_event(a);
             activity_set.erase(it);
         }
     };
+
     /*! @private */
     void mRemoveActivityTimer(CuActivity *a, CuThread* th) {
         int timeo = -1; // timeout
@@ -180,6 +180,15 @@ private:
 class CuThreadPrivate
 {
 public:
+    CuThreadPrivate(const std::string &tk,
+                    CuThreadsEventBridge_I *teb,
+                    const CuServiceProvider *sp,
+                    std::vector<CuThreadInterface *>* thv_p) :
+        token(tk), eb(teb), se_p(sp), threads_p(thv_p),  thpp(nullptr), thread(nullptr) {
+
+    }
+
+
     std::queue <ThreadEvent *> eq;
     // activity --> listeners multi map
     std::multimap<const CuActivity *, CuThreadListener *> alimmap;
@@ -189,7 +198,9 @@ public:
     std::condition_variable cv;
     CuThreadsEventBridge_I *eb;
     const CuServiceProvider *se_p;
-
+    // cumbia private list of threads
+    // used to track the full thread lifetime
+    std::vector<CuThreadInterface *>* threads_p;
     CuThPP *thpp;
     std::thread *thread;
     pthread_t mythread;
@@ -214,14 +225,11 @@ public:
  */
 CuThread::CuThread(const std::string &token,
                    CuThreadsEventBridge_I *teb,
-                   const CuServiceProvider *sp)
+                   const CuServiceProvider *sp,
+                   std::vector<CuThreadInterface *>* thv_p)
 {
-    d = new CuThreadPrivate();
-    d->token = token;
-    d->eb = teb;
-    d->thpp = nullptr;
+    d = new CuThreadPrivate(token, teb, sp, thv_p);
     d->eb->setCuThreadsEventBridgeListener(this);
-    d->se_p = sp;
     d->mythread = pthread_self();
 }
 
@@ -289,10 +297,8 @@ void CuThread::registerActivity(CuActivity *l, CuThreadListener *tl) {
  * If the flag CuActivity::CuADeleteOnExit is true, the activity is
  * later deleted (back in the main thread)
  *
- * Thread: main (when called from Cumbia::unregisterActivity) or CuThread's
+ * Thread: main
  *
- * \note immediately remove this thread from the CuThreadService if l is the last
- * activity for this thread so that Cumbia::registerActivity will not find it
  */
 void CuThread::unregisterActivity(CuActivity *l) {
     assert(d->mythread == pthread_self());
@@ -356,6 +362,10 @@ void CuThread::onEventPosted(CuEventI *event) {
                static_cast<CuA_UnregisterEv *>(event)->getActivity());
     }
     else if(ty == CuEventI::CuThAutoDestroyEv) {
+        // remove this thread from the cumbia internal thread list
+        std::vector<CuThreadInterface *>::iterator it = std::find(d->threads_p->begin(), d->threads_p->end(), this);
+        if(it != d->threads_p->end())
+            d->threads_p->erase(it);
         wait();
         delete this;
     }
@@ -447,9 +457,11 @@ int CuThread::type() const {
  * return a new instance of std::thread
  */
 void CuThread::start() {
+    assert(d->mythread == pthread_self());
     try {
         printf("\e[1;32m[0x%lx] [main] %s\e[0m\n", pthread_self(), __PRETTY_FUNCTION__);
         d->thread = new std::thread(&CuThread::run, this);
+        d->threads_p->push_back(this);
     }
     catch(const std::system_error &se) {
         perr("CuThread.start: failed to allocate thread resource: %s", se.what());
@@ -501,11 +513,6 @@ void CuThread::run() {
                         d->thpp->m_a_new_timeout(a, a->repeat(), timer, this);
                     else // reschedule the same timer
                         d->thpp->tmr_s->restart(timer, timer->timeout());
-                }
-                else {
-                    printf("CuThread.run: asking activity %p %s to exit after timer expired\n",
-                           a, datos(a->getToken()));
-                    d->thpp->mExitActivity(a, this, false);
                 }
             } // for activity iter
         }
@@ -572,6 +579,7 @@ void CuThread::mOnActivityExited(CuActivity *a) {
 };
 
 void CuThread::m_zero_activities() {
+    printf("[0x%lx] %p CuThread::m_zero_activities\n", pthread_self(), this);
     assert(d->mythread == pthread_self());
     ThreadEvent *zeroa_e = new CuThZeroA_Ev; // auto destroys
     std::unique_lock lk(d->shared_mutex);

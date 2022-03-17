@@ -10,8 +10,7 @@
 
 class CuThreadServicePrivate {
 public:
-
-    std::list<CuThreadInterface *> threads;
+    std::vector<CuThreadInterface *> threads;
     pthread_t mythread;
 };
 
@@ -70,20 +69,17 @@ int thcnt = 0;
 CuThreadInterface *CuThreadService::getThread(const std::string& token,
                                               const CuThreadsEventBridgeFactory_I &eventsBridgeFactory,
                                               const CuServiceProvider *service_provider,
-                                              const CuThreadFactoryImplI &thread_factory_impl) {
+                                              const CuThreadFactoryImplI &thread_factory_impl,
+                                              std::vector<CuThreadInterface *> *th_p) {
     assert(d->mythread == pthread_self());
     CuThreadInterface *thread;
-    std::list<CuThreadInterface *>::const_iterator it;
-    for(it = d->threads.begin(); it != d->threads.end(); ++it) {
-        if((*it)->matches(token)) {
-            printf("[0x%lx] CuThreadService::getThread returning  thread %p matches %s \n", pthread_self(), *it, token.c_str());
-            return (*it);
+    for(size_t i = 0; i < d->threads.size(); i++) {
+        if(d->threads[i]->matches(token)) {
+            return d->threads[i];
         }
-
     }
-    thread = thread_factory_impl.createThread(token, eventsBridgeFactory.createEventBridge(service_provider), service_provider);
+    thread = thread_factory_impl.createThread(token, eventsBridgeFactory.createEventBridge(service_provider), service_provider, th_p);
     d->threads.push_back(thread);
-    printf("[0x%lx] CuThreadService::getThread creating new  thread %p <<< OUT\n", pthread_self(), thread);
     return thread;
 }
 
@@ -100,14 +96,11 @@ int CuThreadService::count() {
  *
  * @param thread the CuThread to remove from the service
  *
- * \note the thread is *not deleted*. Responsibility for threads created by
- * CuThreadService::getThread is handed to the client of the service.
- *
  */
 void CuThreadService::removeThread(CuThreadInterface *thread) {
     assert(d->mythread == pthread_self());
     printf("[0x%lx] CuThreadService::removeThread thread %p <<< IN \n", pthread_self(), thread);
-    std::list<CuThreadInterface *>::iterator it = std::find(d->threads.begin(), d->threads.end(), thread);
+    std::vector<CuThreadInterface *>::iterator it = std::find(d->threads.begin(), d->threads.end(), thread);
     if(it != d->threads.end())
         d->threads.erase(it);
     printf("[0x%lx] CuThreadService::removeThread thread %p >>> OUT \n", pthread_self(), thread);
@@ -120,7 +113,7 @@ void CuThreadService::removeThread(CuThreadInterface *thread) {
  *
  * Called by Cumbia::finish
  */
-std::list<CuThreadInterface *> CuThreadService::getThreads() {
+std::vector<CuThreadInterface *> CuThreadService::getThreads() const {
     assert(d->mythread == pthread_self());
     return d->threads;
 }

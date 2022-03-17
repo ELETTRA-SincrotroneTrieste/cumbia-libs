@@ -3,8 +3,7 @@
 
 #include <cuservices.h>
 #include <cuservicei.h>
-#include <list>
-#include <shared_mutex>
+#include <vector>
 
 class CuThreadFactoryImplI;
 class CuThreadInterface;
@@ -54,14 +53,11 @@ public:
     CuThreadInterface *getThread(const std::string &token,
                                  const CuThreadsEventBridgeFactory_I &eventsBridgeFactory,
                                  const CuServiceProvider *service_provider,
-                                 const CuThreadFactoryImplI &thread_factory_impl);
-
-
+                                 const CuThreadFactoryImplI &thread_factory_impl,
+                                 std::vector<CuThreadInterface *> *th_p);
     int count();
-
     void removeThread(CuThreadInterface *thread);
-
-    std::list<CuThreadInterface *> getThreads();
+    std::vector<CuThreadInterface *> getThreads() const;
 
     // CuServiceI interface
 public:

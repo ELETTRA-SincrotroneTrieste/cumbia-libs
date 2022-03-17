@@ -35,6 +35,8 @@ src/lib/services/cuserviceprovider.h
 src/lib/services/cuservices.h
 src/lib/services/cuthreadservice.cpp
 src/lib/services/cuthreadservice.h
+src/lib/services/cuthreadservice_internal.cpp
+src/lib/services/cuthreadservice_internal.h
 src/lib/services/cutimerservice.cpp
 src/lib/services/cutimerservice.h
 src/lib/threads/cuevent.cpp

@@ -64,7 +64,7 @@ class CuTimerService;
 class CuThread : public CuThreadInterface, public CuTimerListener
 {
 public:
-    CuThread(const std::string &token, CuThreadsEventBridge_I *threadEventsBridge, const CuServiceProvider *sp);
+    CuThread(const std::string &token, CuThreadsEventBridge_I *threadEventsBridge, const CuServiceProvider *sp, std::vector<CuThreadInterface *> *thv_p);
 
     virtual ~CuThread();
 
