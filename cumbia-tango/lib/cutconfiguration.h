@@ -60,8 +60,6 @@ public:
     size_t dataListenersCount();
     void start();
     void stop();
-    bool exiting() const;
-    bool is_running() const;
 
 private:
     CuTAttConfigurationPrivate *d;

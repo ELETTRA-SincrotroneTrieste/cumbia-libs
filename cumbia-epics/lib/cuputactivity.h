@@ -1,15 +1,16 @@
 #ifndef CUWRITEACTIVITY_H
 #define CUWRITEACTIVITY_H
 
-#include <cuisolatedactivity.h>
+#include <cuactivity.h>
 #include <cadef.h>
 
 class CuEpCAService;
 class CuPutActivityPrivate;
 
-class CuPutActivity : public CuIsolatedActivity
+class CuPutActivity : public CuActivity
 {
 public:
+    enum Type { CuPutActivityType = CuActivity::UserAType + 7 };
     CuPutActivity(const CuData &token,
                     CuEpCAService *df);
 
@@ -34,6 +35,11 @@ protected:
 private:
     CuPutActivityPrivate *d;
     void m_setTokenError(const char *msg, CuData &d);
+
+    // CuActivity interface
+public:
+    int getType() const;
+    int repeat() const;
 };
 
 #endif // CUWRITEACTIVITY_H

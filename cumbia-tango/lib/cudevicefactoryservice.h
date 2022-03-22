@@ -50,12 +50,8 @@ public:
     virtual ~CuDeviceFactoryService();
 
     TDevice *getDevice(const std::string &name, const std::string &thread_tok);
-
     TDevice *findDevice(const std::string &name, const std::string &thread_tok);
-
-    void addRef(const std::string& devname, const std::string &thread_tok);
     int removeRef(const std::string& devname, const std::string &thread_tok);
-
 
     // CuServiceI interface
 public:

@@ -43,6 +43,7 @@ Writer::Writer(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool 
     }
 
     target += ")";
+    printf("Writer.Writer: \e[1;32msetTArget %s\e[0m\n", qstoc(target));
     b->setTarget(target);
     b->setToolTip(b->target());
 }

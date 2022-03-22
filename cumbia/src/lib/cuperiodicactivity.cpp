@@ -1,10 +1,9 @@
-#include "cucontinuousactivity.h"
+#include "cuperiodicactivity.h"
 #include "cuactivityevent.h"
 #include "cumacros.h"
 
 /*! @private */
-class CuContinuousActivityPrivate
-{
+class CuPeriodicActivityPrivate {
 public:
     int timeout;
     bool pause;
@@ -27,18 +26,18 @@ public:
  *
  * The interval can be changed with setInterval
  */
-CuContinuousActivity::CuContinuousActivity(const CuData &token, int interval, CuActivityManager *activityManager)
-    : CuActivity(activityManager, token)
+CuPeriodicActivity::CuPeriodicActivity(const CuData &token, int interval, CuActivityManager *activityManager)
+    : CuActivity(token)
 {
-    d = new CuContinuousActivityPrivate();
+    d = new CuPeriodicActivityPrivate();
     d->timeout = interval;
     d->pause = false;
-    setFlags(CuADeleteOnExit | CuAUnregisterAfterExec);
+    setFlags(CuADeleteOnExit);
 }
 
 /*! \brief the class destructor
  */
-CuContinuousActivity::~CuContinuousActivity()
+CuPeriodicActivity::~CuPeriodicActivity()
 {
     delete d;
 }
@@ -48,7 +47,7 @@ CuContinuousActivity::~CuContinuousActivity()
  * @param millis the interval between two CuActivity::execute calls in a continuous activity
  *        (milliseconds)
  */
-void CuContinuousActivity::setInterval(int millis)
+void CuPeriodicActivity::setInterval(int millis)
 {
     d->timeout = millis;
 }
@@ -57,7 +56,7 @@ void CuContinuousActivity::setInterval(int millis)
  *
  * @return the interval between two execute calls in a continuous activity (milliseconds)
  */
-int CuContinuousActivity::getTimeout() const
+int CuPeriodicActivity::interval() const
 {
     return d->timeout;
 }
@@ -68,12 +67,12 @@ int CuContinuousActivity::getTimeout() const
  * @return an integer greater than zero representing the interval, in milliseconds, before next execution
  *         or zero (or negative) to prevent CuActivity::execute to be called again
  *
- * This implementation returns the value of CuContinuousActivity::getTimeout if the activity is not
+ * This implementation returns the value of CuPeriodicActivity::getTimeout if the activity is not
  * paused, zero otherwise
  *
  * @implements CuActivity::repeat
  */
-int CuContinuousActivity::repeat() const
+int CuPeriodicActivity::repeat() const
 {
     if(!d->pause)
         return d->timeout;
@@ -82,13 +81,13 @@ int CuContinuousActivity::repeat() const
 
 /*! \brief returns the activity type
  *
- * @return the activity type: CuActivity::Continuous
+ * @return the activity type: CuActivity::Periodic
  *
  * @implements CuActivity::getType
  */
-int CuContinuousActivity::getType() const
+int CuPeriodicActivity::getType() const
 {
-    return CuActivity::Continuous;
+    return CuActivity::PeriodicAType;
 }
 
 /*! \brief received in the CuActivity thread from the main thread, it can change the
@@ -105,9 +104,9 @@ int CuContinuousActivity::getType() const
  * @implements CuActivity::event
  *
  */
-void CuContinuousActivity::event(CuActivityEvent *e)
+void CuPeriodicActivity::event(CuActivityEvent *e)
 {
-    cuprintf("CuContinuousActivity.event type %d (pause %d resume %d exec %d timeout change %d)\n",
+    cuprintf("CuPeriodicActivity.event type %d (pause %d resume %d exec %d timeout change %d)\n",
            e->getType(), CuActivityEvent::Pause, CuActivityEvent::Resume, CuActivityEvent::Execute,
            CuActivityEvent::TimeoutChange);
     if(e->getType() == CuActivityEvent::TimeoutChange)

@@ -16,7 +16,7 @@ CuDeviceFactoryService::~CuDeviceFactoryService()
     pdelete("~CuDeviceFactoryService deleted %p", this);
 }
 
-/** \brief Get a device for the given name.
+/** \brief Get a device for the given name. Increase reference counter
  *
  * @param name the name of the device to find or create
  * @return a pointer to the device with the given name.
@@ -24,17 +24,15 @@ CuDeviceFactoryService::~CuDeviceFactoryService()
  * If a device with the given name already exists, it is returned. If a device with that name
  * does not exist yet, then a new one is created and returned.
  * TDevice tries to create a Tango::DeviceProxy: check for TDevice::isValid to test for Tango errors.
+ * Reference counter is automatically increased.
  *
  * @see findDevice
  * @see TDevice::isValid
  * @see TDevice::getError
  */
-TDevice *CuDeviceFactoryService::getDevice(const std::string &name, const std::string &thread_tok)
-{
-    pr_thread();
-    TDevice *td = NULL;
-    {   // scoped read lock
-        std::shared_lock lock(m_shared_mutex);
+TDevice *CuDeviceFactoryService::getDevice(const std::string &name, const std::string &thread_tok) {
+    std::unique_lock lock(m_shared_mutex); // unique lock
+    TDevice *td = nullptr; {   // scoped read lock
         std::pair<std::multimap <std::string, TDevData>::const_iterator, std::multimap <std::string, TDevData>::iterator > ret;
         ret = m_devmap.equal_range(name);
         for(std::multimap<std::string, TDevData>::const_iterator it = ret.first; !td && it != ret.second; ++it) {
@@ -42,14 +40,13 @@ TDevice *CuDeviceFactoryService::getDevice(const std::string &name, const std::s
                 td = it->second.tdevice;
         }
     }
-    if(!td)
-    {
-        std::unique_lock lock(m_shared_mutex); // unique lock
+    if(!td) {
         td = new TDevice(name);
         TDevData devd(td, thread_tok);
         std::pair<std::string, TDevData > p(name, devd);
         m_devmap.insert(p);
     }
+    td->addRef();
     return td;
 }
 
@@ -72,31 +69,15 @@ TDevice *CuDeviceFactoryService::findDevice(const std::string &name, const std::
     return NULL;
 }
 
-void CuDeviceFactoryService::addRef(const string &devname, const std::string &thread_tok)
-{
-    std::unique_lock lock(m_shared_mutex); // modifies TDevice in list
-    std::pair<std::multimap <std::string, TDevData>::const_iterator, std::multimap <std::string, TDevData>::iterator > ret;
-    ret = m_devmap.equal_range(devname);
-    for(std::multimap<std::string, TDevData>::const_iterator it = ret.first; it != ret.second; ++it) {
-        if(it->second.thread_token == thread_tok) {
-            it->second.tdevice->addRef();
-            break;
-        }
-    }
-}
-
-int CuDeviceFactoryService::removeRef(const string &devname, const std::string &thread_tok)
-{
+int CuDeviceFactoryService::removeRef(const string &devname, const std::string &thread_tok) {
     std::unique_lock lock(m_shared_mutex); // modifies TDevice in list
     int refcnt = -1;
     std::multimap< std::string, TDevData>::iterator it = m_devmap.begin();
-    while(it != m_devmap.end())
-    {
+    while(it != m_devmap.end()) {
         if(it->first == devname && it->second.thread_token == thread_tok) {
             TDevice *d = it->second.tdevice;
             refcnt = d->removeRef();
             if(refcnt == 0) { // no more references for that device in that thread
-                printf("[0x%lx] CuDeviceFactoryService::removeRef: deleting %p %s\n", pthread_self(), d, devname.c_str());
                 delete d;
                 it = m_devmap.erase(it);
             }

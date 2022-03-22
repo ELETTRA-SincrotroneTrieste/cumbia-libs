@@ -33,6 +33,8 @@ CuTimerService::CuTimerService() {
 CuTimerService::~CuTimerService()
 {
     m_stopAll();
+    for(std::map<int, CuTimer *>::iterator it = d->ti_map.begin(); it != d->ti_map.end(); ++it)
+        delete it->second;
     d->ti_map.clear();
     d->ti_cache.clear();
     delete d;

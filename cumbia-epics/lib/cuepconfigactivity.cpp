@@ -13,12 +13,11 @@ public:
     bool exiting;
 };
 
-CuEpConfigActivity::CuEpConfigActivity(const CuData &tok, CuEpCAService *df) : CuIsolatedActivity(tok)
-{
+CuEpConfigActivity::CuEpConfigActivity(const CuData &tok, CuEpCAService *df) : CuActivity(tok) {
     d = new CuEpConfigActivityPrivate;
     d->ep_service = df;
     d->err = false;
-    setFlag(CuActivity::CuAUnregisterAfterExec, true);
+//    setFlag(CuActivity::CuAUnregisterAfterExec, true);
     setFlag(CuActivity::CuADeleteOnExit, true);
     d->other_thread_id = pthread_self();
     d->exiting = false;
@@ -36,7 +35,7 @@ CuEpConfigActivity::~CuEpConfigActivity()
 
 int CuEpConfigActivity::getType() const
 {
-    return CuAttConfigActivityType;
+    return CuEpConfigActivityType;
 }
 
 void CuEpConfigActivity::event(CuActivityEvent *e)

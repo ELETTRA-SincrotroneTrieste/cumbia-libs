@@ -8,7 +8,7 @@ class CuThreadFactoryImplI;
 class CuThreadsEventBridgeFactory_I;
 class CuData;
 class CuActivity;
-class CuContinuousActivity;
+class CuPeriodicActivity;
 class CuActivityEvent;
 class CuThreadTokenGenI;
 

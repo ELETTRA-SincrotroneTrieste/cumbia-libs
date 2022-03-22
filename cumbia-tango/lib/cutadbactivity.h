@@ -1,7 +1,7 @@
 #ifndef CUTADBACTIVITY_H
 #define CUTADBACTIVITY_H
 
-#include <cuisolatedactivity.h>
+#include <cuactivity.h>
 
 class TSource;
 class CuTaDbActivityPrivate;
@@ -12,14 +12,13 @@ class CuTaDbActivityPrivate;
 class CuTaDbActivity : public CuActivity
 {
 public:
-    enum Type { CuTaDbActivityTypeRead = CuActivity::User + 18, CuTaDbActivityTypeWrite };
+    enum Type { CuTaDbActivityTypeRead = CuActivity::UserAType + 18, CuTaDbActivityTypeWrite };
     enum OpType { OpNoop = 0, OpGetDoma, OpGetFam, OpGetMem, OpGetAtts, OpGetCmds, OpGetAProp, OpGetCmdI, EndOpts };
 
     const char *opnames[EndOpts + 1] = { "OpNoop", "OpGetDoma", "OpGetFam", "OpGetMem",
                                      "OpGetAtts", "OpGetCmds", "OpGetAProp", "OpGetCmdI", "EndOpts" };
 
     CuTaDbActivity(const TSource& tsrc, const CuData& options, const CuData& tag);
-
     virtual ~CuTaDbActivity();
 
     void setOptions(const CuData& o);

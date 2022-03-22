@@ -1,7 +1,7 @@
 #ifndef CUATTCONFIGACTIVITY_H
 #define CUATTCONFIGACTIVITY_H
 
-#include <cuisolatedactivity.h>
+#include <cuactivity.h>
 #include <cutconfigactivity_executor_i.h>
 
 class CuTAttConfigActivityPrivate;
@@ -15,7 +15,7 @@ class TSource;
 class CuTConfigActivity : public CuActivity
 {
 public:
-    enum Type { CuReaderConfigActivityType = CuActivity::User + 5,  CuWriterConfigActivityType };
+    enum Type { CuReaderConfigActivityType = CuActivity::UserAType + 5,  CuWriterConfigActivityType };
 
     CuTConfigActivity(const TSource &ts,
                       CuDeviceFactoryService *df,

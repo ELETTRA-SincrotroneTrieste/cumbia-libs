@@ -1,7 +1,7 @@
 #ifndef GETTDBPROPACTIVITY_H
 #define GETTDBPROPACTIVITY_H
 
-#include <cuisolatedactivity.h>
+#include <cuactivity.h>
 #include <vector>
 
 class CuGetTDbPropActivityPrivate;
@@ -12,9 +12,10 @@ class CuGetTDbPropActivityPrivate;
  * database. It's designed to be executed once (CuIsolatedActivity).
  *
  */
-class CuGetTDbPropActivity : public CuIsolatedActivity
+class CuGetTDbPropActivity : public CuActivity
 {
 public:
+    enum Type { CuGetTDbPropA_Type = CuActivity::UserAType + 22 };
     CuGetTDbPropActivity(const std::vector<CuData> &in_data);
 
     virtual ~CuGetTDbPropActivity();
@@ -31,6 +32,12 @@ protected:
 
 private:
     CuGetTDbPropActivityPrivate *d;
+
+    // CuActivity interface
+public:
+    int getType() const;
+    int repeat() const;
 };
+
 
 #endif // GETTDBPROPACTIVITY_H

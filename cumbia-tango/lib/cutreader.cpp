@@ -21,8 +21,7 @@
 
 class TSource;
 
-class CuTReaderPrivate
-{
+class CuTReaderPrivate {
 public:
     CuTReaderPrivate(const TSource& src, CumbiaTango *ct, const CuData &_tag)
         : tsrc(src),
@@ -213,7 +212,7 @@ void CuTReader::m_update_options(const CuData newo) {
 void CuTReader::m_destroy_self() {
     d->cumbia_t->removeAction(getSource().getName(), getType());
     CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->get(CuServices::ActivityManager));
-    am->removeConnection(this);
+    am->disconnect(this);
     delete this;
 }
 
@@ -393,18 +392,6 @@ size_t CuTReader::dataListenersCount() {
     return d->listeners.size();
 }
 
-/*!
- * \brief Always returns false
- * \return  false
- */
-bool CuTReader::exiting() const {
-    return false;
-}
-
-bool CuTReader::is_running() const {
-    return d->started;
-}
-
 void CuTReader::m_polling_fallback() {
     CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
@@ -413,7 +400,6 @@ void CuTReader::m_polling_fallback() {
         m_unregisterEventActivity();
         d->event_activity = nullptr;
     }
-
     if(!polling_service->actionRegistered(this, d->period) ) {
         d->refresh_mode = CuTReader::PolledRefresh;
         m_registerToPoller();
@@ -456,8 +442,7 @@ void CuTReader::start()
     d->started = true;
 }
 
-void CuTReader::m_startEventActivity()
-{
+void CuTReader::m_startEventActivity() {
     CuDeviceFactoryService *df =
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));

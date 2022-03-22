@@ -8,6 +8,7 @@ class CuThreadsEventBridge_I;
 
 #include <cumacros.h>
 #include <string>
+#include <vector>
 
 /** \brief an interface that requires the implementation of a method to create a thread
  *
@@ -53,7 +54,8 @@ public:
      */
     virtual CuThreadInterface *createThread(const std::string& thread_token,
                                             CuThreadsEventBridge_I *eventsBridge,
-                                            const CuServiceProvider *serviceProvider) const = 0;
+                                            const CuServiceProvider *serviceProvider,
+                                            std::vector<CuThreadInterface *>* threads) const = 0;
 };
 
 #endif // CUTHREADFACTORYIMPL_H

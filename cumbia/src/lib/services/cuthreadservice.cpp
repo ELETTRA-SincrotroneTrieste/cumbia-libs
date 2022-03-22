@@ -6,6 +6,13 @@
 #include "cuthread.h"
 #include "cumacros.h"
 #include <algorithm>
+#include <assert.h>
+
+class CuThreadServicePrivate {
+public:
+    std::vector<CuThreadInterface *> threads;
+    pthread_t mythread;
+};
 
 /*! \brief class constructor
  *
@@ -16,6 +23,13 @@
  */
 CuThreadService::CuThreadService()
 {
+    d = new CuThreadServicePrivate();
+    d->mythread = pthread_self();
+}
+
+CuThreadService::~CuThreadService() {
+    assert(d->mythread == pthread_self());
+    delete d;
 }
 
 /**
@@ -55,64 +69,39 @@ int thcnt = 0;
 CuThreadInterface *CuThreadService::getThread(const std::string& token,
                                               const CuThreadsEventBridgeFactory_I &eventsBridgeFactory,
                                               const CuServiceProvider *service_provider,
-                                              const CuThreadFactoryImplI &thread_factory_impl)
-{
-
-    printf("[0x%lx] CuThreadService::getThread creating new  thread for tok %s\n", pthread_self(), token.c_str());
+                                              const CuThreadFactoryImplI &thread_factory_impl,
+                                              std::vector<CuThreadInterface *> *th_p) {
+    assert(d->mythread == pthread_self());
     CuThreadInterface *thread;
-    std::list<CuThreadInterface *>::const_iterator it;
-    for(it = mThreads.begin(); it != mThreads.end(); ++it) {
-        if((*it)->isEquivalent(token)) {
-            printf("CuThreadService::getThread returning  thread %p equivalent to %s \n", *it, token.c_str());
-            return (*it);
+    for(size_t i = 0; i < d->threads.size(); i++) {
+        if(d->threads[i]->matches(token)) {
+            return d->threads[i];
         }
-
     }
-    thread = thread_factory_impl.createThread(token, eventsBridgeFactory.createEventBridge(service_provider), service_provider);
-    printf("[0x%lx] CuThreadService::getThread creating new  thread %p \n", pthread_self(), thread);
-    std::unique_lock lock(m_shared_mutex);
-    mThreads.push_back(thread);
-    printf("[0x%lx] CuThreadService::getThread creating new  thread %p <<< OUT\n", pthread_self(), thread);
+    thread = thread_factory_impl.createThread(token, eventsBridgeFactory.createEventBridge(service_provider), service_provider, th_p);
+    d->threads.push_back(thread);
     return thread;
-}
-
-/*! \brief the class destructor
- *
- * class destructor, empties the list of threads
- */
-CuThreadService::~CuThreadService()
-{
-    pdelete("~CuThreadService %p", this);
-    mThreads.clear();
 }
 
 /*! \brief returns the number of threads recorded by the service
  *
  * @return the number of threads the service is currently aware of.
  */
-int CuThreadService::count()
-{
-    std::shared_lock lock(m_shared_mutex);
-    return mThreads.size();
+int CuThreadService::count() {
+    assert(d->mythread == pthread_self());
+    return d->threads.size();
 }
 
 /*! \brief remove the specified thread from the service *without deleting it*
  *
  * @param thread the CuThread to remove from the service
  *
- * \note the thread is *not deleted*. Responsibility for threads created by
- * CuThreadService::getThread is handed to the client of the service.
- *
  */
-void CuThreadService::removeThread(CuThreadInterface *thread)
-{
-    printf("[0x%lx] CuThreadService::removeThread thread %p <<< IN \n", pthread_self(), thread);
-    // this method is accessed from the run method of different threads
-    std::unique_lock lock(m_shared_mutex);
-    std::list<CuThreadInterface *>::iterator it = std::find(mThreads.begin(), mThreads.end(), thread);
-    if(it != mThreads.end())
-        mThreads.erase(it);
-    printf("[0x%lx] CuThreadService::removeThread thread %p >>> OUT \n", pthread_self(), thread);
+void CuThreadService::removeThread(CuThreadInterface *thread) {
+    assert(d->mythread == pthread_self());
+    std::vector<CuThreadInterface *>::iterator it = std::find(d->threads.begin(), d->threads.end(), thread);
+    if(it != d->threads.end())
+        d->threads.erase(it);
 }
 
 /*! \brief returns the list of CuThreadInterface recorded in the service
@@ -122,10 +111,9 @@ void CuThreadService::removeThread(CuThreadInterface *thread)
  *
  * Called by Cumbia::finish
  */
-std::list<CuThreadInterface *> CuThreadService::getThreads()
-{
-    std::shared_lock lock(m_shared_mutex);
-    return mThreads;
+std::vector<CuThreadInterface *> CuThreadService::getThreads() const {
+    assert(d->mythread == pthread_self());
+    return d->threads;
 }
 
 /*! \brief returns the name of this service
@@ -136,6 +124,7 @@ std::list<CuThreadInterface *> CuThreadService::getThreads()
  */
 std::string CuThreadService::getName() const
 {
+   assert(d->mythread == pthread_self());
     return std::string("CuThreadService");
 }
 
@@ -143,7 +132,7 @@ std::string CuThreadService::getName() const
  *
  * @return the value CuServices::Thread defined in CuServices
  */
-CuServices::Type CuThreadService::getType() const
-{
+CuServices::Type CuThreadService::getType() const {
+   assert(d->mythread == pthread_self());
     return CuServices::Thread;
 }

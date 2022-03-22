@@ -1,10 +1,10 @@
-#ifndef CUCONTINUOUSACTIVITY_H
-#define CUCONTINUOUSACTIVITY_H
+#ifndef CUPERIODICACTIVITY_H
+#define CUPERIODICACTIVITY_H
 
 #include <cuactivity.h>
 
 class CuActivityManager;
-class CuContinuousActivityPrivate;
+class CuPeriodicActivityPrivate;
 
 /*! \brief an implementation of CuActivity that calls CuActivity::execute repeatedly at a
  *         certain interval of time expressed in milliseconds.
@@ -13,25 +13,23 @@ class CuContinuousActivityPrivate;
  * thread with a period expressed in milliseconds.
  * setInterval can be used to change the period, also at runtime.
  *
- * The CuContinuousActivity::repeat method can be used (i.e. reimplemented) to suspend the
+ * The CuPeriodicActivity::repeat method can be used (i.e. reimplemented) to suspend the
  * call to the CuActivity::execute method. The default implementation returns the period
  * (see setInterval, getTimeout) or zero if a CuActivityEvent::Pause event has been received
- * (see CuContinuousActivity::event)
+ * (see CuPeriodicActivity::event)
  *
- * The cumbia-tango module defines an implementation of CuContinuousActivity named CuPollingActivity
+ * The cumbia-tango module defines an implementation of CuPeriodicActivity named CuPollingActivity
  * that reads Tango attributes or commands periodically.
  */
-class CuContinuousActivity : public CuActivity
+class CuPeriodicActivity : public CuActivity
 {
 public:
-    CuContinuousActivity(const CuData& token = CuData(), int interval = 1000, CuActivityManager *activityManager = NULL);
+    CuPeriodicActivity(const CuData& token = CuData(), int interval = 1000, CuActivityManager *activityManager = NULL);
 
-    virtual ~CuContinuousActivity();
+    virtual ~CuPeriodicActivity();
 
     void setInterval(int millis);
-
-    int getTimeout() const;
-
+    int interval() const;
     int repeat() const;
 
     // CuActivity interface
@@ -39,7 +37,7 @@ public:
     int getType() const;
 
 private:
-    CuContinuousActivityPrivate *d;
+    CuPeriodicActivityPrivate *d;
 
     // CuActivity interface
 public:
@@ -47,4 +45,4 @@ public:
 
 };
 
-#endif // CUCONTINUOUSACTIVITY_H
+#endif // CUPERIODICACTIVITY_H

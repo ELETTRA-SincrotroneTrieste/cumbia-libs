@@ -69,6 +69,9 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
 
     ui->leSrcs->setPlaceholderText("Type a space separated list of sources");
 
+    /// TEST
+    ui->leSrcs->setText("test/device/1/double_scalar");
+
     resize(1000, 600);
 
     QTimer *t = new QTimer(this);
@@ -184,6 +187,7 @@ void QumbiaClient::changeRefresh()
 
 void QumbiaClient::sourcesChanged()
 {
+    printf("\e[1;33m%s entering\e[0m\n", __PRETTY_FUNCTION__);
     /* clear widgets */
     QGridLayout *lo = NULL;
     if(!ui->widget->layout())
@@ -202,8 +206,10 @@ void QumbiaClient::sourcesChanged()
     const int colSpan = m_layoutColumnCount / srcCnt;
 
     if(m_oldSrcs.size() == 0) {
-        foreach(QuLabel *l, ui->widget->findChildren<QuLabel *>())
+        foreach(QuLabel *l, ui->widget->findChildren<QuLabel *>()) {
+            printf("\e[1;31m%s deleting qulabel (1) %p\e[0m\n", __PRETTY_FUNCTION__, l);
             delete l;
+        }
     }
 
     QStringList newSrcs;
@@ -226,8 +232,10 @@ void QumbiaClient::sourcesChanged()
         foreach(QString s, remSrcs)
             if(psrcs.contains(s))
                 tr_plot->unsetSource(s);
-        if(!tr_plot->sources().count())  {
-            delete tr_plot;
+        if(!tr_plot->sources().count())  { {
+                printf("\e[1;31m%s deleting plot %p\e[0m\n", __PRETTY_FUNCTION__, tr_plot);
+                delete tr_plot;
+            }
         }
     }
 
@@ -239,13 +247,17 @@ void QumbiaClient::sourcesChanged()
             if(psrcs.contains(s))
                 sp_plot->unsetSource(s);
         }
-        if(!sp_plot->sources().count())
+        if(!sp_plot->sources().count()) {
+            printf("\e[1;31m%s deleting plot %p\e[0m\n", __PRETTY_FUNCTION__, sp_plot);
             delete sp_plot;
+        }
     }
 
     foreach(QuLabel *l, ui->widget->findChildren<QuLabel *>())
-        if(remSrcs.contains(l->source()))
+        if(remSrcs.contains(l->source())) {
+            printf("%s deleting qulabel (2) %p\n", __PRETTY_FUNCTION__, l);
             delete l;
+        }
     foreach(QuLabel *l, ui->widget->findChildren<QuLabel *>())
         lo->removeWidget(l);
 
@@ -256,6 +268,8 @@ void QumbiaClient::sourcesChanged()
 
     m_do_conf = true; /* repopulate after sources change */
 
+
+
     ui->labelTitle->setText(ui->leSrcs->text());
 
     for(int i = 0; i < newSrcs.size(); i++)
@@ -265,6 +279,7 @@ void QumbiaClient::sourcesChanged()
         l->setWordWrap(true);
         l->setMaximumLength(30); /* truncate if text is too long */
         connect(l, SIGNAL(newData(const CuData&)), this, SLOT(configure(const CuData&)));
+        printf("QumbiaClient.sourcesChanged: \e[1;32mset source %s\n", qstoc(newSrcs.at(i)));
         l->setSource(newSrcs.at(i));
         lo->addWidget(l, 0, (i + col) * colSpan, 1, colSpan);
     }
@@ -274,6 +289,7 @@ void QumbiaClient::sourcesChanged()
 
 void QumbiaClient::unsetSources()
 {
+    printf("%s \n", __PRETTY_FUNCTION__);
     foreach(QuTrendPlot *plot, ui->widget->findChildren<QuTrendPlot *>())
         plot->unsetSources();
     foreach(QuSpectrumPlot *sp, ui->widget->findChildren<QuSpectrumPlot *>())

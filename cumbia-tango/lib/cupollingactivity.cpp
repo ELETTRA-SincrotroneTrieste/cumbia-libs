@@ -131,7 +131,7 @@ CuPollingActivity::CuPollingActivity(const TSource &tsrc,
                                      const CuData &tag,
                                      int dataupdpo,
                                      int interval)
-    : CuContinuousActivity(CuData("device", tsrc.getDeviceName()).set("period", interval).set("activity", "poller"))
+    : CuPeriodicActivity(CuData("device", tsrc.getDeviceName()).set("period", interval).set("activity", "poller"))
 {
     d = new CuPollingActivityPrivate(df, options, tag, dataupdpo);
     d->other_thread_id = pthread_self();
@@ -139,7 +139,6 @@ CuPollingActivity::CuPollingActivity(const TSource &tsrc,
     d->repeat = d->period = period;
     setInterval(period);
     //  flag CuActivity::CuADeleteOnExit is true
-    setFlag(CuActivity::CuAUnregisterAfterExec, true);
     // initialize period slow down policy in case of read errors
     d->slowDownRate[1] = 3;
     d->slowDownRate[2] = 5;
@@ -291,9 +290,7 @@ void CuPollingActivity::init()
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
-    printf("[0x%lx] CuPollingActivity.init: getting device from service %s thtok %s\n", pthread_self(), tk["device"].toString().c_str(), threadToken().c_str());
     d->tdev = d->device_srvc->getDevice(tk["device"].toString(), threadToken());
-    d->device_srvc->addRef(d->tdev->getName(), threadToken());
     tk["conn"] = d->tdev->isValid();
     tk["err"] = !d->tdev->isValid();
     tk["msg"] = d->tdev->getMessage();
@@ -353,7 +350,7 @@ void CuPollingActivity::execute()
             const std::string& point = tsrc.getPoint();
             results.push_back(d->tag);
             results[i]["mode"] = "P";
-            results[i]["period"] = getTimeout();
+            results[i]["period"] = interval();
             results[i]["src"] = tsrc.getName();
             CmdData& cmd_data = d->din_cache[srcnam];
             if(dev && cmd_data.is_empty) {
@@ -438,7 +435,6 @@ void CuPollingActivity::execute()
 void CuPollingActivity::onExit()
 {
     assert(d->my_thread_id == pthread_self());
-    dispose();
     CuData at = getToken(); /* activity token */
     // thread safely remove ref and let d->device_srvc dispose TDev if no more referenced
     d->device_srvc->removeRef(at["device"].toString(), threadToken());
@@ -464,13 +460,8 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts) {
     m_cmd_remove(ts.getName());
     m_v_attd_remove(ts.getName(), ts.getPoint());
     if(d->cmds.size() == 0 && d->v_attd.size() == 0) {
-        dispose(); // do not use this activity since now
-        // unregister this from the thread
-        printf("[0x%lx] CuPollingActivity::m_unregisterAction: getting thread for %s\n", pthread_self(), ts.getName().c_str());
-        CuThreadInterface *thread = getActivityManager()->getThread(this);
-        /* CuActivityManager.removeConnection is invoked by the thread in order to ensure all scheduled events are processed */
-        if(thread)
-            thread->unregisterActivity(this);
+        printf("[0x%lx] CuPollingActivity::m_unregisterAction: after %s \e[0;35mno more atts / cmds\e[0m\n", pthread_self(), ts.getName().c_str());
+        printf("[0x%lx] \e[1;33m*\n* test if managed this\n*\n*\e[0m\n",pthread_self());
     }
 }
 
@@ -507,7 +498,7 @@ void CuPollingActivity::m_cmd_remove(const std::string &src) {
  *
  * @see CuActivity::event
  *
- * \note the CuActivityEvent is forwarded to CuContinuousActivity::event
+ * \note the CuActivityEvent is forwarded to CuPeriodicActivity::event
  */
 void CuPollingActivity::event(CuActivityEvent *e) {
     assert(d->my_thread_id == pthread_self());
@@ -521,7 +512,7 @@ void CuPollingActivity::event(CuActivityEvent *e) {
         m_edit_args(static_cast<CuArgsChangeEvent* >(e)->ts, static_cast<CuArgsChangeEvent *>(e)->args);
     }
     else
-        CuContinuousActivity::event(e);
+        CuPeriodicActivity::event(e);
 }
 
 /*! \brief returns the type of the polling activity
@@ -540,7 +531,5 @@ int CuPollingActivity::getType() const {
  */
 int CuPollingActivity::repeat() const {
     assert(d->my_thread_id == pthread_self());
-    int ret;
-    isDisposable() ? ret = -1 : ret = d->repeat;
-    return ret;
+    return d->repeat;
 }

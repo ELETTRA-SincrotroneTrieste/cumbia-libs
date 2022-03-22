@@ -1,14 +1,15 @@
 #ifndef CUWRITEACTIVITY_H
 #define CUWRITEACTIVITY_H
 
-#include <cuisolatedactivity.h>
+#include <cuactivity.h>
 
 class CuDeviceFactoryService;
 class CuWriteActivityPrivate;
 
-class CuWriteActivity : public CuIsolatedActivity
+class CuWriteActivity : public CuActivity
 {
 public:
+    enum Type { CuWriteA_Type = CuActivity::UserAType + 32 };
     CuWriteActivity(const CuData &token,
                     CuDeviceFactoryService *df,
                     const CuData &db_config,
@@ -28,6 +29,11 @@ protected:
 
 private:
     CuWriteActivityPrivate *d;
+
+    // CuActivity interface
+public:
+    int getType() const;
+    int repeat() const;
 };
 
 #endif // CUWRITEACTIVITY_H

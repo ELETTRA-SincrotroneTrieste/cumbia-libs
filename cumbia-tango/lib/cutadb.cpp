@@ -16,15 +16,13 @@
 class CuTaDbPrivate {
 public:
     CuTaDbPrivate(const TSource& t_src, CumbiaTango *ct, const CuData &_options, const CuData &_tag)
-        : tsrc(t_src), cumbia_t(ct), activity(nullptr), options(_options), tag(_tag), xit(false) {
+        : tsrc(t_src), cumbia_t(ct), activity(nullptr), options(_options), tag(_tag) {
     }
-
     std::list<CuDataListener *> listeners;
     const TSource tsrc;
     CumbiaTango *cumbia_t;
     CuTaDbActivity *activity;
     CuData options, tag;
-    bool xit; // set to true by stop()
 };
 
 CuTaDb::CuTaDb(const TSource& src, CumbiaTango *ct, const CuData &options, const CuData &tag) {
@@ -60,18 +58,8 @@ void CuTaDb::onResult(const CuData &data)
     for(it = listeners.begin(); it != listeners.end(); ++it) {
         (*it)->onUpdate(data);
     }
-    d->xit = true; // for action factory to unregisterAction, exiting must return true
-    CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
-                                                                        ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
-
-    /// TEST
-    ///
-    if(src.find("beamdump_s*") != std::string::npos) {
-        printf("CuTaDb.onResult: data arrived. unregistering  %s type %d\n", src.c_str(), getType());
-    }
-    //
-
-    af->unregisterAction(d->tsrc.getName(), getType());
+    d->cumbia_t->removeAction(d->tsrc.getName(), getType());
+    d->cumbia_t->unregisterActivity(d->activity);
     d->listeners.clear();
     delete this;
 }
@@ -135,19 +123,6 @@ void CuTaDb::start() {
  * - calls Cumbia::unregisterActivity
  */
 void CuTaDb::stop() {
-    if(!d->xit) {
-        d->xit = true;
         d->listeners.clear();
         d->cumbia_t->unregisterActivity(d->activity);
-    }
-}
-
-/*! \brief CuActionFactory relies on this returning true to unregister the action
- */
-bool CuTaDb::exiting() const {
-    return d->xit;
-}
-
-bool CuTaDb::is_running() const {
-    return d->activity != nullptr;
 }

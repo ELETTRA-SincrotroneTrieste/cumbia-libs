@@ -42,10 +42,8 @@ public:
  * \li CuActivity::CuADeleteOnExit: *true* lets the activity be deleted after onExit
  */
 CuEventActivity::CuEventActivity(const TSource &ts, CuDeviceFactoryService *df, const string &refreshmo, const CuData &tag, int update_policy)
-    : CuActivity(CuData("activity", "event").set("src", ts.getName())) // token with keys relevant to matches()
-{
+    : CuActivity(CuData("activity", "event").set("src", ts.getName())) {  // token with keys relevant to matches()
     d = new CuEventActivityPrivate;
-    setFlag(CuActivity::CuAUnregisterAfterExec, false);
     setFlag(CuActivity::CuADeleteOnExit, true);
     d->device_srvc = df;
     d->tdev = NULL;
@@ -71,8 +69,7 @@ CuEventActivity::~CuEventActivity() {
  *
  * @return the constant value CuEventActivityType defined in CuEventActivity::Type
  */
-int CuEventActivity::getType() const
-{
+int CuEventActivity::getType() const {
     return CuEventActivityType;
 }
 
@@ -102,8 +99,7 @@ void CuEventActivity::event(CuActivityEvent *e) {
  * if they are both CuEventActivity and share the same source name.
  *
  */
-bool CuEventActivity::matches(const CuData &token) const
-{
+bool CuEventActivity::matches(const CuData &token) const {
     const CuData& mytok = getToken();
     return token["src"] == mytok["src"] && mytok["activity"] == token["activity"];
 }
@@ -141,10 +137,9 @@ void CuEventActivity::init()
     // hack to FIX event failure if subscribing to more than one device
     // in the same application
     d->se = new omni_thread::ensure_self;
-    /* get a reference to a TDevice, new or existing one */
+    /* get a TDevice reference, new or existing. getDevice increases refcnt for the device */
     d->tdev = d->device_srvc->getDevice(d->tsrc.getDeviceName(), threadToken());
-    d->device_srvc->addRef(d->tsrc.getDeviceName(), threadToken());
-    // since v1.2.0, do not publishResult upon connection
+    // since v1.2.0, do not publishResult
 }
 
 Tango::EventType CuEventActivity::m_tevent_type_from_string(const std::string& set) const
