@@ -31,3 +31,15 @@ CuThread must refer to the global CuTimerService, which members shall still be l
 - Locks removed from CuActivityManager
 - Locks removed from CuThreadService
 - CuActivity holds a reference to its thread instead of the entire activity manager: no need to perform searches across the activity manager.
+
+## CuData and CuVariant copy on write (implicit sharing)
+
+CuData implements *copy on write*, reducing the internal data copies significantly.
+
+Data is implicitly shared, enabling *copy on write*. Atomic reference counters make the class
+reentrant, meaning that methods can be called from multiple threads, but only if each invocation
+uses its own data. Atomic reference counting is used to ensure the integrity of the shared data.
+Since cumbia 1.4.0, CuData uses implicit sharing as well.
+
+
+
