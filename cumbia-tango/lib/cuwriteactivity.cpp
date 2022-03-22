@@ -3,13 +3,14 @@
 #include "tdevice.h"
 #include "cutangoactioni.h"
 #include "cutango-world.h"
+#include "cutthread.h"
 
 #include <cumacros.h>
 
 class CuWriteActivityPrivate
 {
 public:
-    CuDeviceFactoryService *device_service;
+    CuDeviceFactory_I *devfa;
     TDevice *tdev;
     std::string msg;
     bool err;
@@ -19,15 +20,15 @@ public:
 };
 
 CuWriteActivity::CuWriteActivity(const CuData &token,
-                                 CuDeviceFactoryService *df,
+                                 CuDeviceFactory_I *df,
                                  const CuData& db_config, const CuData &tag)
     : CuActivity(token)
 {
     d = new CuWriteActivityPrivate;
-    d->device_service = df;
+    d->tdev = nullptr;
+    d->devfa = df;
     d->point_info = db_config;
     d->tag = tag;
-    d->tdev = NULL;
     d->err = false;
     setFlag(CuActivity::CuADeleteOnExit, true);
     d->other_thread_id = pthread_self();
@@ -56,7 +57,9 @@ void CuWriteActivity::init()
     assert(d->other_thread_id != d->my_thread_id);
     CuData tk = getToken();
     /* get a TDevice, increasing refcnt */
-    d->tdev = d->device_service->getDevice(tk["device"].toString(), threadToken());
+    if(thread()->type() == CuTThread::CuTThreadType) // upgrade to CuTThread / lock free CuTThreadDevices
+        d->devfa = static_cast<CuTThread *>(thread())->device_factory();
+    d->tdev = d->devfa->getDevice(tk["device"].toString(), threadToken());
 }
 
 void CuWriteActivity::execute()
@@ -99,7 +102,7 @@ void CuWriteActivity::execute()
             d->msg = tangoworld.getLastMessage();
             d->err = tangoworld.error();
         }
-        d->device_service->removeRef(at["device"].toString(), threadToken());
+        d->devfa->removeRef(at["device"].toString(), threadToken());
     }
     // is_result flag is checked within the listener's onUpdate
     at["err"] = d->err;

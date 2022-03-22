@@ -64,6 +64,8 @@ class CuTimerService;
 class CuThread : public CuThreadInterface, public CuTimerListener
 {
 public:
+    enum Type { CuThreadType = 0 };
+
     CuThread(const std::string &token,
              CuThreadsEventBridge_I *threadEventsBridge,
              const CuServiceProvider *sp,

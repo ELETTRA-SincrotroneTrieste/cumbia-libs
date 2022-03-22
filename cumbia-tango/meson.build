@@ -19,6 +19,9 @@ configure_file(output : 'config.h',
 
 headers = [
 'lib/cumbiatango.h',
+'lib/cutthread.h',
+'lib/cutthreaddevices.h',
+'lib/cudevicefactory_i.h',
 'lib/cutango-world.h',
 'lib/cutango-world-config.h',
 'lib/tsource.h',
@@ -52,6 +55,8 @@ install_headers(headers, subdir : 'cumbia-tango') # -> include/cumbia-tango/
 
 sources = [
 'lib/cumbiatango.cpp',
+'lib/cutthread.cpp',
+'lib/cutthreaddevices.cpp',
 'lib/cutango-world.cpp',
 'lib/cutango-world-config.cpp',
 'lib/tsource.cpp',

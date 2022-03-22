@@ -6,6 +6,7 @@
 #include <string>
 #include <shared_mutex>
 #include <cudata.h>
+#include <cudevicefactory_i.h>
 
 class TDevice;
 
@@ -42,7 +43,7 @@ public:
  * a secondary thread. Threads in *cumbia-tango* are grouped *by device*. Different devices
  * are read and written from different threads.
  */
-class CuDeviceFactoryService : public CuServiceI
+class CuDeviceFactoryService : public CuServiceI, public CuDeviceFactory_I
 {
 public:
     enum Type { CuDeviceFactoryServiceType = CuServices::User + 20 };

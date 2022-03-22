@@ -340,3 +340,7 @@ const std::string Cumbia::threadToken(const std::string& in) const {
         return d->threadTokenGenerator->generate(in);
     return in;
 }
+
+std::vector<CuThreadInterface *> *Cumbia::threads() const {
+    return &d->threads;
+}

@@ -1,6 +1,6 @@
 #include "cutangoregisterengine.h"
 #include "cutcontrolswriter.h"
-#include <cuthreadfactoryimpl.h>
+#include <cutthread.h>
 #include <qthreadseventbridge.h>
 #include <cutcontrolsreader.h>
 #include <cutango-world.h>
@@ -19,7 +19,7 @@ CuTangoRegisterEngine::~CuTangoRegisterEngine() {
 }
 
 CumbiaTango *CuTangoRegisterEngine::registerWithDefaults(CumbiaPool *cu_pool, CuControlsFactoryPool &fpoo) {
-    CumbiaTango *cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    CumbiaTango *cuta = new CumbiaTango(new CuTThreadFactoryImpl(), new QThreadsEventBridgeFactory());
     cu_pool->registerCumbiaImpl("tango", cuta);
     fpoo.registerImpl("tango", CuTReaderFactory());
     fpoo.registerImpl("tango", CuTWriterFactory());

@@ -6,7 +6,7 @@
 #include <tango.h>
 
 class CuEventActivityPrivate;
-class CuDeviceFactoryService;
+class CuDeviceFactory_I;
 class TSource;
 
 /*! @private
@@ -52,7 +52,7 @@ class CuEventActivity : public CuActivity, public Tango::CallBack
 public:
     enum Type { CuEventActivityType = CuActivity::UserAType + 2 };
 
-    CuEventActivity(const TSource& tso, CuDeviceFactoryService *df, const std::string &refreshmo, const CuData& tag, int update_policy);
+    CuEventActivity(const TSource& tso, CuDeviceFactory_I *df, const std::string &refreshmo, const CuData& tag, int update_policy);
     ~CuEventActivity();
 
     // CuActivity interface

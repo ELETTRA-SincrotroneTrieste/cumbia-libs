@@ -2,23 +2,22 @@
 #include "tdevice.h"
 #include "cutango-world.h"
 #include "tsource.h"
-#include "cudevicefactoryservice.h"
+#include "cutthread.h"
+#include "cudevicefactory_i.h"
 #include <cumacros.h>
 #include <tango.h>
 
 /*! @private */
-CuActivityEvent::Type CuTAStopEvent::getType() const
-{
+CuActivityEvent::Type CuTAStopEvent::getType() const {
     return static_cast<CuActivityEvent::Type>(CuActivityEvent::User + 10);
 }
 
 /*! @private
  */
-class CuEventActivityPrivate
-{
+class CuEventActivityPrivate {
 public:
     CuData tag, atok; // tag is carried along results, activity token initialized in constructor
-    CuDeviceFactoryService *device_srvc;
+    CuDeviceFactory_I *devfa;
     TDevice *tdev;
     TSource tsrc;
     int event_id;
@@ -41,11 +40,11 @@ public:
  *     Instead, it keeps living within an event loop that delivers Tango events over time
  * \li CuActivity::CuADeleteOnExit: *true* lets the activity be deleted after onExit
  */
-CuEventActivity::CuEventActivity(const TSource &ts, CuDeviceFactoryService *df, const string &refreshmo, const CuData &tag, int update_policy)
+CuEventActivity::CuEventActivity(const TSource &ts, CuDeviceFactory_I *df, const string &refreshmo, const CuData &tag, int update_policy)
     : CuActivity(CuData("activity", "event").set("src", ts.getName())) {  // token with keys relevant to matches()
     d = new CuEventActivityPrivate;
     setFlag(CuActivity::CuADeleteOnExit, true);
-    d->device_srvc = df;
+    d->devfa = df;
     d->tdev = NULL;
     d->event_id = -1;
     d->other_thread_id = pthread_self();
@@ -138,7 +137,9 @@ void CuEventActivity::init()
     // in the same application
     d->se = new omni_thread::ensure_self;
     /* get a TDevice reference, new or existing. getDevice increases refcnt for the device */
-    d->tdev = d->device_srvc->getDevice(d->tsrc.getDeviceName(), threadToken());
+    if(thread()->type() == CuTThread::CuTThreadType) // upgrade to CuTThread / lock free CuTThreadDevices
+        d->devfa = static_cast<CuTThread *>(thread())->device_factory();
+    d->tdev = d->devfa->getDevice(d->tsrc.getDeviceName(), threadToken());
     // since v1.2.0, do not publishResult
 }
 
@@ -238,7 +239,7 @@ void CuEventActivity::onExit() {
     }
     // removes reference (lock guarded) and deletes TDev if no more necessary
     // Lock guarded because since 1.1.0 one thread per device is not a rule.
-    refcnt = d->device_srvc->removeRef(d->tdev->getName().c_str(), threadToken());
+    refcnt = d->devfa->removeRef(d->tdev->getName().c_str(), threadToken());
     if(refcnt == 0)
         d->tdev = nullptr;
 

@@ -6,6 +6,7 @@
 #include "cuthreadinterface.h"
 #include "cutango-world.h"
 #include "cutangoactioni.h"
+#include "cutthread.h"
 #include <tango.h>
 #include <cumacros.h>
 #include <vector>
@@ -78,10 +79,10 @@ CuActivityEvent::Type CuArgsChangeEvent::getType() const {
 class CuPollingActivityPrivate
 {
 public:
-    CuPollingActivityPrivate(CuDeviceFactoryService *df, const CuData &opt, const CuData &ta, int data_upd_po)
-        : device_srvc(df), consecutiveErrCnt{0},  successfulExecCnt{0}, options(opt), tag(ta), data_updpo{data_upd_po} {}
+    CuPollingActivityPrivate(CuDeviceFactory_I *df, const CuData &opt, const CuData &ta, int data_upd_po)
+        : devfa(df), consecutiveErrCnt{0},  successfulExecCnt{0}, options(opt), tag(ta), data_updpo{data_upd_po} {}
 
-    CuDeviceFactoryService *device_srvc;
+    CuDeviceFactory_I *devfa;
     TDevice *tdev;
     int repeat, period;
     int consecutiveErrCnt; // consecutive error counter
@@ -126,7 +127,7 @@ public:
  *     the poller is not started and the activity is suspended (repeat will return -1).
  */
 CuPollingActivity::CuPollingActivity(const TSource &tsrc,
-                                     CuDeviceFactoryService *df,
+                                     CuDeviceFactory_I *df,
                                      const CuData &options,
                                      const CuData &tag,
                                      int dataupdpo,
@@ -289,8 +290,10 @@ void CuPollingActivity::init()
 {
     d->my_thread_id = pthread_self();
     assert(d->other_thread_id != d->my_thread_id);
+    if(thread()->type() == CuTThread::CuTThreadType) // upgrade to CuTThread / lock free CuTThreadDevices
+        d->devfa = static_cast<CuTThread *>(thread())->device_factory();
     CuData tk = getToken();
-    d->tdev = d->device_srvc->getDevice(tk["device"].toString(), threadToken());
+    d->tdev = d->devfa->getDevice(tk["device"].toString(), threadToken());
     tk["conn"] = d->tdev->isValid();
     tk["err"] = !d->tdev->isValid();
     tk["msg"] = d->tdev->getMessage();
@@ -437,7 +440,7 @@ void CuPollingActivity::onExit()
     assert(d->my_thread_id == pthread_self());
     CuData at = getToken(); /* activity token */
     // thread safely remove ref and let d->device_srvc dispose TDev if no more referenced
-    d->device_srvc->removeRef(at["device"].toString(), threadToken());
+    d->devfa->removeRef(at["device"].toString(), threadToken());
     // do not publishResult because CuPoller (which is our listener) may be deleted by CuPollingService
     // from the main thread when its action list is empty (see CuPollingService::unregisterAction)
 }

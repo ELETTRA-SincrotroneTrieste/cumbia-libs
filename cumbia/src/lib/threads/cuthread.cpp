@@ -421,7 +421,7 @@ void CuThread::cleanup() { }
 
 /*! \brief returns 0 */
 int CuThread::type() const {
-    return 0;
+    return CuThreadType;
 }
 
 /*! \brief internally used, allocates a new std::thread

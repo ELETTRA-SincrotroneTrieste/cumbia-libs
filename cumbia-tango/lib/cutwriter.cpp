@@ -28,13 +28,12 @@ public:
                      const CuData &conf,
                      const CuData &opts,
                      const CuData &_tag)
-        : tsrc(src), cumbia_t(ct), activity(nullptr), db_conf(conf), options(opts), tag(_tag), exit(false) { }
+        : tsrc(src), cumbia_t(ct), activity(nullptr), db_conf(conf), options(opts), tag(_tag) { }
 
     std::set<CuDataListener *> listeners;
     TSource tsrc;
     CumbiaTango *cumbia_t;
     CuActivity *activity;
-    bool exit;
     CuConLogImpl li;
     CuLog log;
     CuVariant write_val;
@@ -120,7 +119,6 @@ void CuTWriter::onResult(const CuData &data)
     std::set<CuDataListener *>::iterator it;
     for(it = set_copy.begin(); it != set_copy.end(); ++it)
         (*it)->onUpdate(data);
-    d->exit = true;
     d->cumbia_t->removeAction(d->tsrc.getName(), getType());
     d->cumbia_t->unregisterActivity(d->activity);
     d->listeners.clear();
@@ -191,7 +189,6 @@ void CuTWriter::start() {
 }
 
 void CuTWriter::stop() {
-    d->exit = true;
 }
 
 void CuTWriter::sendData(const CuData& ) {

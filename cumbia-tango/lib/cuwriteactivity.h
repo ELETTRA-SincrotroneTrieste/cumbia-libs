@@ -3,7 +3,7 @@
 
 #include <cuactivity.h>
 
-class CuDeviceFactoryService;
+class CuDeviceFactory_I;
 class CuWriteActivityPrivate;
 
 class CuWriteActivity : public CuActivity
@@ -11,7 +11,7 @@ class CuWriteActivity : public CuActivity
 public:
     enum Type { CuWriteA_Type = CuActivity::UserAType + 32 };
     CuWriteActivity(const CuData &token,
-                    CuDeviceFactoryService *df,
+                    CuDeviceFactory_I *df,
                     const CuData &db_config,
                     const CuData& tag);
 

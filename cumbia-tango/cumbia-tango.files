@@ -3,6 +3,7 @@ lib/cuactionfactoryservice.h
 lib/cuactionfactoryservice_impls.cpp
 lib/cuactionfactoryservice_impls.h
 lib/cudataupdatepolicy_enum.h
+lib/cudevicefactory_i.h
 lib/cudevicefactoryservice.cpp
 lib/cudevicefactoryservice.h
 lib/cueventactivity.cpp
@@ -41,6 +42,10 @@ lib/cutdbpropertyreader.cpp
 lib/cutdbpropertyreader.h
 lib/cutreader.cpp
 lib/cutreader.h
+lib/cutthread.cpp
+lib/cutthread.h
+lib/cutthreaddevices.cpp
+lib/cutthreaddevices.h
 lib/cutthreadtokengen.cpp
 lib/cutthreadtokengen.h
 lib/cutwriter.cpp

@@ -6,11 +6,12 @@
 #include "tdevice.h"
 #include "cutango-world.h"
 #include "tsource.h"
+#include "cutthread.h"
 
 class CuTAttConfigActivityPrivate
 {
 public:
-    CuDeviceFactoryService *device_service;
+    CuDeviceFactory_I *devfa;
     TDevice *tdev;
     TSource ts;
     std::string msg;
@@ -25,7 +26,7 @@ public:
 
 // initialize CuActivity token with the keys relevant to the matches method
 CuTConfigActivity::CuTConfigActivity(const TSource& ts,
-                                     CuDeviceFactoryService *df,
+                                     CuDeviceFactory_I *df,
                                      Type t,
                                      const CuTConfigActivityExecutor_I *tx,
                                      const CuData& o,
@@ -33,7 +34,7 @@ CuTConfigActivity::CuTConfigActivity(const TSource& ts,
     : CuActivity(CuData("activity", "property").set("src", ts.getName()))
 {
     d = new CuTAttConfigActivityPrivate;
-    d->device_service = df;
+    d->devfa = df;
     d->type = t;
     d->tdev = NULL;
     d->err = false;
@@ -78,7 +79,10 @@ int CuTConfigActivity::repeat() const {
 
 void CuTConfigActivity::init() {
     // get device, new or recycled. getDevice increases refcnt
-    d->tdev = d->device_service->getDevice(d->ts.getDeviceName(), threadToken());
+    // after register activity, we have been assigned to a thread
+    if(thread()->type() == CuTThread::CuTThreadType) // upgrade to CuTThread / lock free CuTThreadDevices
+        d->devfa = static_cast<CuTThread *>(thread())->device_factory();
+    d->tdev = d->devfa->getDevice(d->ts.getDeviceName(), threadToken());
 }
 
 void CuTConfigActivity::execute() {
@@ -145,7 +149,7 @@ void CuTConfigActivity::execute() {
         at.putTimestamp();
     }
     d->exiting = true;
-    d->device_service->removeRef(at["device"].toString(), threadToken());
+    d->devfa->removeRef(at["device"].toString(), threadToken());
     at.merge(std::move(o));
     at.merge(std::move(tag));
     publishResult(at);

@@ -11,8 +11,10 @@ class CuActivity;
 class CuPeriodicActivity;
 class CuActivityEvent;
 class CuThreadTokenGenI;
+class CuThreadInterface;
 
 #include <string>
+#include <vector>
 
 #define CUMBIA_VERSION CU_VERSION
 
@@ -219,6 +221,7 @@ public:
     void removeThreadTokenGenerator();
     CuThreadTokenGenI *getThreadTokenGenerator() const;
     const std::string threadToken(const std::string &in) const;
+    std::vector<CuThreadInterface *> *threads() const;
 
 private:
     CumbiaPrivate *d;

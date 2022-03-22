@@ -32,9 +32,11 @@ Since cumbia 1.4.0, CuData uses implicit sharing as well.
 ##### Remove from CuData
 It is now possible to *remove* keys from CuData. Both const and non const methods are provided.
 
-##### Optimizations
+### Optimizations
 
-The cumbia library hasu undergone several *memory and speed* optimizations.
+*memory and speed* optimizations characterize release 1.4
+
+#### cumbia
 
 #### cumbia-tango
 
@@ -62,6 +64,12 @@ Three types of *update policy* are available for *polled sources*:
 Changes in error flags, messages or Tango data quality are always notified.
 
 The update policy shall be suggested to the CuPollingService. See also CuPollDataUpdatePolicy.
+
+##### Per thread device factory
+
+*CuTThread* is a CuThread specialization employed in *cumbia-tango* since 1.4.0. Instead of using the shared CuDeviceFactoryService,
+which is a global service shared across multiple threads, *CuTThread* owns a dedicated *CuTThreadDevices*, that does not need any
+lock to provide shared Tango *DeviceProxy* instances.
 
 ## version 1.3.1
 

@@ -11,7 +11,7 @@
 
 class CuData;
 class CuPollingActivityPrivate;
-class CuDeviceFactoryService;
+class CuDeviceFactory_I;
 class CmdData;
 
 class CuAddPollActionEvent : public CuActivityEvent
@@ -100,7 +100,7 @@ public:
     enum Type { CuPollingActivityType = CuActivity::UserAType + 3 };
 
     CuPollingActivity(const TSource& tsrc,
-                      CuDeviceFactoryService *df,
+                      CuDeviceFactory_I *df,
                       const CuData& options,
                       const CuData& tag,
                       int dataupdpo,
