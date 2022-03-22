@@ -83,8 +83,6 @@ public:
     void addDataListener(CuDataListener *l);
     void removeDataListener(CuDataListener *l);
     size_t dataListenersCount();
-    bool exiting() const;
-    bool is_running() const;
 
 private:
     CuTReaderPrivate *d;

@@ -22,9 +22,6 @@ CuTaDbActivity::CuTaDbActivity(const TSource &tsrc, const CuData &options, const
     d->tag = tag;
     d->options = options;
     setFlag(CuActivity::CuADeleteOnExit, true);
-
-    if(tsrc.getName().find("beamdump_s*") != std::string::npos)
-        printf("CuTaDbActivity::CuTaDbActivity %s\n", tsrc.getName().c_str());
 }
 
 CuTaDbActivity::~CuTaDbActivity()
@@ -49,7 +46,6 @@ void CuTaDbActivity::event(CuActivityEvent *e)
 
 bool CuTaDbActivity::matches(const CuData &token) const
 {
-    printf("CuTaDbActivity.\e[0;33mmatches: %s vs mytok %s\e[0m\n", datos(getToken()), datos(token));
     const CuData& mytok = getToken();
     return token["src"] == mytok["src"] && mytok["activity"] == token["activity"];
 }
@@ -64,8 +60,6 @@ void CuTaDbActivity::init() {
 }
 
 void CuTaDbActivity::execute() {
-    if(d->tsrc.getName().find("beamdump_s*") != std::string::npos)
-        printf("\e[0;36mCuTaDbActivity.execute: ENTERING %s\e[0m\n", d->tsrc.getName().c_str());
     TSource::Type ty = d->tsrc.getType();
     CuData at("src", d->tsrc.getName()); /* activity token */
     at.merge(CuData(d->options));

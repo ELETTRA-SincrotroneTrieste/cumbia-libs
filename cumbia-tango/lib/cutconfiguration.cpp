@@ -29,7 +29,6 @@ public:
     const TSource tsrc;
     CumbiaTango *cumbia_t;
     CuTConfigActivity *activity;
-    bool exiting; // set to true by stop()
     const CuTangoActionI::Type type;
     CuData options, tag;
     const CuTConfigActivityExecutor_I *c_xecutor;
@@ -43,7 +42,6 @@ CuTConfiguration::CuTConfiguration(const TSource& src,
                                    const CuTConfigActivityExecutor_I* cx) {
     d = new CuTAttConfigurationPrivate(src, ct, t, options, tag,
                                        cx != nullptr ? cx : new CuTConfigActivityExecutor_Default); // src, t are const
-    d->exiting = false;
 }
 
 CuTConfiguration::~CuTConfiguration() {
@@ -75,7 +73,6 @@ void CuTConfiguration::onResult(const CuData &data) {
     for(it =  ls.begin(); it !=  ls.end(); ++it) {
         (*it)->onUpdate(data);
     }
-    d->exiting = true; // for action factory to unregisterAction, exiting must return true
     CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
                                                                        ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
     af->unregisterAction(d->tsrc.getName(), getType());
@@ -145,18 +142,6 @@ void CuTConfiguration::start() {
  * - calls Cumbia::unregisterActivity
  */
 void CuTConfiguration::stop() {
-    if(!d->exiting) {
-        d->exiting = true;
         d->cumbia_t->unregisterActivity(d->activity);
-    }
 }
 
-/*! \brief CuActionFactory relies on this returning true to unregister the action
- */
-bool CuTConfiguration::exiting() const {
-    return d->exiting;
-}
-
-bool CuTConfiguration::is_running() const {
-    return d->activity != nullptr;
-}

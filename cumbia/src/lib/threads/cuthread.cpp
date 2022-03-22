@@ -66,29 +66,11 @@ public:
         }
     };
 
-    /*
-     * Thread: CuThread's - always
-     *
-     * The activity is usually asked to exit after ThreadEvent::UnregisterActivity (1). Another
-     * possibility is to exit activities after the CuThread::run's main loop is broken (2)
-     *
-     * Whether it will be deleted or not depends on the CuActivity::CuADeleteOnExit flag on a (see
-     * mOnActivityExited).
-     *
-     * CuActivity::doOnExit calls thread->publishExitEvent(CuActivity *)
-     * A CuA_ExitEv (CuEventI::CuA_ExitEv type) will be dispatched in the main
-     * thread through CuThread::onEventPosted and mOnActivityExited call ensues.
-     * mOnActivityExited deletes the activity if the CuActivity::CuADeleteOnExit flag is set.
-     * If this thread has no more associated activities (activityManager->countActivitiesForThread(this) == 0),
-     * an ExitThreadEvent (ThreadEvent::ThreadExit type) shall be enqueued to
-     * exit the CuThread's run loop the next time (m_exit)
-     */
     /*! @private */
     void mExitActivity(CuActivity *a, CuThread* t, bool on_quit) {
         std::set<CuActivity *>::iterator it = activity_set.find(a);
         if(it != activity_set.end()) {
             mRemoveActivityTimer(a, t);
-            printf("[0x%lx] CuThread.mExitActivity: calling doOnExit on activity %p\n", pthread_self(), a);
             a->doOnExit();
             if(!on_quit)
                 m_post_exit_event(a);
@@ -188,13 +170,11 @@ public:
 
     }
 
-
     std::queue <ThreadEvent *> eq;
     // activity --> listeners multi map
     std::multimap<const CuActivity *, CuThreadListener *> alimmap;
     std::string token;
-    std::shared_mutex shared_mutex;
-    std::mutex condition_var_mut;
+    std::mutex mu;
     std::condition_variable cv;
     CuThreadsEventBridge_I *eb;
     const CuServiceProvider *se_p;
@@ -239,7 +219,6 @@ CuThread::CuThread(const std::string &token,
  * event bridge
  */
 CuThread::~CuThread() {
-    printf("[0x%lx] [main] %s \e[1;31mX \e[0m %p\e[0m\n", pthread_self(), __PRETTY_FUNCTION__, this);
     assert(d->mythread == pthread_self());
     if(d->thread)
         perr("CuThread::~CuThread(): thread destroyed while still running!\e[0m\n");
@@ -257,7 +236,7 @@ void CuThread::exit() {
     assert(d->mythread == pthread_self());
     if(d->thpp) {
         ThreadEvent *exitEvent = new CuThreadExitEv; // no auto destroy
-        std::unique_lock lk(d->shared_mutex);
+        std::unique_lock lk(d->mu);
         d->eq.push(exitEvent);
         d->cv.notify_one();
     }
@@ -276,13 +255,12 @@ void CuThread::registerActivity(CuActivity *l, CuThreadListener *tl) {
     assert(d->mythread == pthread_self());
     l->setThreadToken(d->token);
     // add [another] listener to l
-//    printf("[0x%lx] %s registering activity %p %s th lis %p\n", pthread_self(), __PRETTY_FUNCTION__, l, datos(l->getToken()), tl);
     d->alimmap.insert(std::pair<const CuActivity *, CuThreadListener *>(l, tl));
     ThreadEvent *registerEvent = new CuThRegisterA_Ev(l);
     /* need to protect event queue because this method is called from the main thread while
      * the queue is dequeued in the secondary thread
      */
-    std::unique_lock lk(d->shared_mutex);
+    std::unique_lock lk(d->mu);
     d->eq.push(registerEvent);
     d->cv.notify_one();
 }
@@ -304,7 +282,7 @@ void CuThread::unregisterActivity(CuActivity *l) {
     assert(d->mythread == pthread_self());
     d->alimmap.erase(l);
     ThreadEvent *unregisterEvent = new CuThUnregisterA_Ev(l); // ThreadEvent::UnregisterActivity
-    std::unique_lock lk(d->shared_mutex);
+    std::unique_lock lk(d->mu);
     d->eq.push(unregisterEvent);
     d->cv.notify_one();
 }
@@ -352,14 +330,10 @@ void CuThread::onEventPosted(CuEventI *event) {
         }
     }
     else if(ty == CuEventI::CuA_ExitEvent) {
-        printf("[0x%lx] [main] CuThread.onEventPosted: CuA_ExitEvent activity %p\n", pthread_self(),
-               static_cast<CuA_ExitEv *>(event)->getActivity());
         mOnActivityExited(static_cast<CuA_ExitEv *>(event)->getActivity());
     }
     else if(ty == CuEventI::CuA_UnregisterEv) {
         m_activity_disconnect(static_cast<CuA_UnregisterEv *>(event)->getActivity());
-        printf("[0x%lx] [main] CuThread.onEventPosted: CuA_UnregisterEv activity %p\n", pthread_self(),
-               static_cast<CuA_UnregisterEv *>(event)->getActivity());
     }
     else if(ty == CuEventI::CuThAutoDestroyEv) {
         // remove this thread from the cumbia internal thread list
@@ -459,7 +433,6 @@ int CuThread::type() const {
 void CuThread::start() {
     assert(d->mythread == pthread_self());
     try {
-        printf("\e[1;32m[0x%lx] [main] %s\e[0m\n", pthread_self(), __PRETTY_FUNCTION__);
         d->thread = new std::thread(&CuThread::run, this);
         d->threads_p->push_back(this);
     }
@@ -479,7 +452,7 @@ void CuThread::run() {
     while(1)  {
         te = NULL; {
             // acquire lock while dequeueing
-            std::unique_lock<std::mutex> condvar_lock(d->condition_var_mut);
+            std::unique_lock<std::mutex> condvar_lock(d->mu);
             while(d->eq.empty()) {
                 d->cv.wait(condvar_lock);
             }
@@ -543,6 +516,9 @@ void CuThread::run() {
     /* empty and delete queued events */
     while(!d->eq.empty()) {
         ThreadEvent *qte = d->eq.front();
+        if(qte->getType() == ThreadEvent::RegisterActivity) {
+            printf("thread %s \e[1;31m exits with a register event for activity %s\e[0m\n", d->token.c_str(), datos(static_cast<CuThRegisterA_Ev *>(te)->activity->getToken()));
+        }
         d->eq.pop();
         delete qte;
     }
@@ -551,7 +527,6 @@ void CuThread::run() {
     for(i = acopy.begin(); i != acopy.end(); ++i)
         d->thpp->mExitActivity(*i, this, true);
     // post destroy event so that it will be delivered in the *main thread*
-    printf("[0x%lx] [cuthread's]: %s leaving run: auto destroy %s\n", pthread_self(), __PRETTY_FUNCTION__, destroy ? "YES" : "NO");
     if(destroy) {
         d->eb->postEvent(new CuThreadAutoDestroyEvent());
     }
@@ -569,7 +544,7 @@ bool CuThread::isRunning() {
 // see mExitActivity
 /*! @private */
 void CuThread::mOnActivityExited(CuActivity *a) {
-    printf("[0x%lx] [main] \e[1;35m%s %p %s\e[0m\n", pthread_self(), __PRETTY_FUNCTION__, a, datos(a->getToken()));
+//    printf("[0x%lx] [main] \e[1;35m%s %p %s\e[0m\n", pthread_self(), __PRETTY_FUNCTION__, a, datos(a->getToken()));
     assert(d->mythread == pthread_self());
     if(a->getFlags() & CuActivity::CuADeleteOnExit)
         delete a;
@@ -579,10 +554,9 @@ void CuThread::mOnActivityExited(CuActivity *a) {
 };
 
 void CuThread::m_zero_activities() {
-    printf("[0x%lx] %p CuThread::m_zero_activities\n", pthread_self(), this);
     assert(d->mythread == pthread_self());
     ThreadEvent *zeroa_e = new CuThZeroA_Ev; // auto destroys
-    std::unique_lock lk(d->shared_mutex);
+    std::unique_lock lk(d->mu);
     d->eq.push(zeroa_e);
     d->cv.notify_one();
 };
@@ -593,7 +567,6 @@ void CuThread::m_zero_activities() {
  */
 void CuThread::m_activity_disconnect(CuActivity *a) {
     assert(d->mythread == pthread_self());
-    printf("\e[0x%lx] [main] \e[1;31m%s ERASING %p %s\e[0m\n", pthread_self(), __PRETTY_FUNCTION__, a, datos(a->getToken()));
     d->alimmap.erase(a);
 }
 
@@ -622,22 +595,20 @@ void CuThread::m_activity_disconnect(CuActivity *a) {
  * by clients of this library.
  *
  */
-void CuThread::postEvent(CuActivity *a, CuActivityEvent *e)
-{
+void CuThread::postEvent(CuActivity *a, CuActivityEvent *e) {
     ThreadEvent *event = new CuThRun_Ev(a, e);
     /* need to protect event queue because this method is called from the main thread while
      * the queue is dequeued in the secondary thread
      */
-    std::unique_lock lk(d->shared_mutex);
+    std::unique_lock lk(d->mu);
     d->eq.push(event);
     d->cv.notify_one();
 }
 
 /*! @private */
-void CuThread::onTimeout(CuTimer *sender)
-{
+void CuThread::onTimeout(CuTimer *sender) {
     // unique lock to push on the event queue
-    std::unique_lock ulock(d->shared_mutex);
+    std::unique_lock ulock(d->mu);
     CuThreadTimer_Ev *te = new CuThreadTimer_Ev(sender);
     d->eq.push(te);
     d->cv.notify_one();

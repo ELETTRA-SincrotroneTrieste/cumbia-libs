@@ -99,11 +99,9 @@ int CuThreadService::count() {
  */
 void CuThreadService::removeThread(CuThreadInterface *thread) {
     assert(d->mythread == pthread_self());
-    printf("[0x%lx] CuThreadService::removeThread thread %p <<< IN \n", pthread_self(), thread);
     std::vector<CuThreadInterface *>::iterator it = std::find(d->threads.begin(), d->threads.end(), thread);
     if(it != d->threads.end())
         d->threads.erase(it);
-    printf("[0x%lx] CuThreadService::removeThread thread %p >>> OUT \n", pthread_self(), thread);
 }
 
 /*! \brief returns the list of CuThreadInterface recorded in the service

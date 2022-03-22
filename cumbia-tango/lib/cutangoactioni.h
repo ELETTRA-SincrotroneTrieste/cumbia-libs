@@ -127,18 +127,6 @@ public:
      * a specific request and treated accordingly.
      */
     virtual void getData(CuData& d_inout) const = 0;
-
-    /*! \brief returns true if the action has been stopped and it's exiting
-     *
-     * @return true if the action is exiting (normally, stop has been called), false otherwise
-     *
-     * Used by CuActionFactoryService::unregisterAction to check whether the action is
-     * still running before unregistering.
-     */
-    virtual bool exiting() const = 0;
-
-    virtual bool is_running() const = 0;
-
 };
 
 #endif // CUTANGOACTIONI_H

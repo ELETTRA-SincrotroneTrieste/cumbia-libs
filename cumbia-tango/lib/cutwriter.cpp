@@ -121,9 +121,7 @@ void CuTWriter::onResult(const CuData &data)
     for(it = set_copy.begin(); it != set_copy.end(); ++it)
         (*it)->onUpdate(data);
     d->exit = true;
-    CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
-                                                                            ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
-    af->unregisterAction(d->tsrc.getName(), getType());
+    d->cumbia_t->removeAction(d->tsrc.getName(), getType());
     d->cumbia_t->unregisterActivity(d->activity);
     d->listeners.clear();
     delete this;
@@ -194,14 +192,6 @@ void CuTWriter::start() {
 
 void CuTWriter::stop() {
     d->exit = true;
-}
-
-bool CuTWriter::exiting() const {
-    return d->exit;
-}
-
-bool CuTWriter::is_running() const {
-    return d->activity != nullptr;
 }
 
 void CuTWriter::sendData(const CuData& ) {

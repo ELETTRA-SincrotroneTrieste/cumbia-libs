@@ -37,9 +37,6 @@ public:
     int unref() {
         return _r.fetch_sub(1);
     }
-    int exchange(int desired) {
-        return _r.exchange(desired);
-    }
     int load() const {
         return _r.load();
     }
@@ -417,8 +414,8 @@ std::vector<std::string> CuData::keys() const {
 //}
 
 void CuData::detach() {
-    // if(d_p && d_p->load() > 1) {
-    if(d_p->load() > 1) {
+    if(d_p && d_p->load() > 1) {
+        d_p->unref();
         d_p = new CuDataPrivate(*d_p); // sets ref=1
     }
 }

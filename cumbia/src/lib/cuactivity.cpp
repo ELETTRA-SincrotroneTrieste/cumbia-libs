@@ -8,8 +8,7 @@
 #include <assert.h>
 
 /*! @private */
-class CuActivityPrivate
-{
+class CuActivityPrivate {
 public:
     CuActivityPrivate(const CuData& tok) : token(tok) {
         thread = nullptr;
@@ -24,15 +23,13 @@ public:
     pthread_t athread, bthread;
 };
 
-CuActivity::CuActivity(const CuData &token)
-{
+CuActivity::CuActivity(const CuData &token) {
     d = new CuActivityPrivate(token);
 }
 
 
 CuActivity::~CuActivity() {
     assert(d->athread == pthread_self());
-    printf("\e[1;31m ~CuActivity %p deleted\e[0m from this thread 0x%lx\n", this, pthread_self());
     delete d;
 }
 

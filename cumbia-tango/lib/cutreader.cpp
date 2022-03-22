@@ -392,18 +392,6 @@ size_t CuTReader::dataListenersCount() {
     return d->listeners.size();
 }
 
-/*!
- * \brief Always returns false
- * \return  false
- */
-bool CuTReader::exiting() const {
-    return false;
-}
-
-bool CuTReader::is_running() const {
-    return d->started;
-}
-
 void CuTReader::m_polling_fallback() {
     CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));

@@ -45,8 +45,7 @@ CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const string &sr
     CuTangoActionI* action = nullptr;
     auto range = d->actions.equal_range(src);
     for(auto it = range.first; action == nullptr && it != range.second; ++it) {
-        printf("CuActionFactoryServiceImpl_Base::registerAction: %s a type %d f type %d\n", src.c_str(), it->second->getType(), f.getType());
-        if(it->second->getType() == f.getType() /*&& !(*it)->exiting()*/ ) {
+        if(it->second->getType() == f.getType()) {
             action = it->second;
         }
     }
@@ -55,7 +54,6 @@ CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const string &sr
         action = f.create(src, ct);
         d->actions.insert(std::pair<std::string, CuTangoActionI *>{src, action});
     }
-    printf("CuActionFactoryServiceImpl_Base::registerAction action %s type %d is NEW ? %s\e[0m\n", src.c_str(), f.getType(), *isnew ? "YES" : "NO");
 //    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 //    tottime += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 //    printf("CuActionFactoryServiceImpl_Base::registerAction (multimap version) total time spent register/unreg %luus (reg.%luu unreg. %luu)\n",
@@ -93,8 +91,6 @@ void CuActionFactoryServiceImpl_Base::unregisterAction(const string &src, CuTang
         else
             ++it;
     }
-    if(!found)
-        printf("\e[1;31mCuActionFactoryServiceImpl_Base::unregisterAction could not find action %s type %d\e[0m\n", src.c_str(), at);
 //    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
 //    tottime += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 }
@@ -116,26 +112,21 @@ CuActionFactoryServiceImpl::~CuActionFactoryServiceImpl() {
 }
 
 CuTangoActionI *CuActionFactoryServiceImpl::registerAction(const string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct, bool *isnew) {
-//    assert(d->creation_thread == pthread_self());
     return CuActionFactoryServiceImpl_Base::registerAction(src, f, ct, isnew);
 }
 
 CuTangoActionI *CuActionFactoryServiceImpl::find(const string &name, CuTangoActionI::Type at) {
-//    assert(d->creation_thread == pthread_self());
     return CuActionFactoryServiceImpl_Base::find(name, at);
 }
 
 size_t CuActionFactoryServiceImpl::count() const {
-//    assert(d->creation_thread == pthread_self());
     return CuActionFactoryServiceImpl_Base::count();
 }
 
 void CuActionFactoryServiceImpl::unregisterAction(const string &src, CuTangoActionI::Type at) {
-//    assert(d->creation_thread == pthread_self());
     return CuActionFactoryServiceImpl_Base::unregisterAction(src, at);
 }
 
 void CuActionFactoryServiceImpl::cleanup() {
-//    assert(d->creation_thread == pthread_self());
     CuActionFactoryServiceImpl_Base::cleanup();
 }

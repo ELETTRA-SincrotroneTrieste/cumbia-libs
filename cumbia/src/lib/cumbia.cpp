@@ -18,6 +18,14 @@ class CumbiaPrivate
 public:
     CuServiceProvider *serviceProvider;
     CuThreadTokenGenI *threadTokenGenerator;
+
+    // passed to CuThread so that the list stores
+    // all references to currently alive threads
+    // CuThreadService does not store threads across
+    // their entire lifetime. When cumbia is destroyed
+    // cleanup() needs to wait for threads that are still
+    // alive (and may have already been removed from
+    // CuThreadService
     std::vector<CuThreadInterface *> threads;
 };
 
@@ -72,8 +80,7 @@ void Cumbia::finish()
         d->threads[i]->exit();
         d->threads[i]->wait();
         const std::vector<CuActivity *> activities = activityManager->activitiesForThread(d->threads[i]);
-        for(size_t ai = 0; ai < activities.size(); ai++)
-        {
+        for(size_t ai = 0; ai < activities.size(); ai++) {
             activityManager->disconnect(activities[ai]);
             delete activities[ai];
         }
@@ -192,7 +199,6 @@ void Cumbia::registerActivity(CuActivity *activity,
  *
  */
 void Cumbia::unregisterActivity(CuActivity *a) {
-    printf("[0x%lx] %s : unregisterActivity %p\n", pthread_self(), __PRETTY_FUNCTION__, a);
     CuActivityManager *am = static_cast<CuActivityManager *>(d->serviceProvider->get(CuServices::ActivityManager));
     CuThreadInterface *t = static_cast<CuThreadInterface *>(am->getThread(a));
     if(t)
@@ -200,7 +206,6 @@ void Cumbia::unregisterActivity(CuActivity *a) {
     am->disconnect(a);
     CuThreadService *ths = static_cast<CuThreadService *>(d->serviceProvider->get(CuServices::Thread));
     if(am->countActivitiesForThread(t) == 0) {
-        printf("[0x%lx] %s : no more activities for thread %p (activity tok %s): removing\n", pthread_self(), __PRETTY_FUNCTION__, t, datos(a->getToken()));
         ths->removeThread(t);
     }
 }
