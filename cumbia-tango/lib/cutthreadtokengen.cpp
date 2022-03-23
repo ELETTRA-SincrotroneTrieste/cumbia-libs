@@ -75,7 +75,7 @@ std::string CuTThreadTokenGen::generate(const std::string &dev) {
                 d->tkmap[dev] = thr_no;
             }
         }
-        return std::string("th_tok") + d->thread_tok_prefix + std::to_string(thr_no);
+        return d->thread_tok_prefix + std::to_string(thr_no);
     }
     return std::string();
 }
