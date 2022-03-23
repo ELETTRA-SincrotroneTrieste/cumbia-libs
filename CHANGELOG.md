@@ -2,6 +2,9 @@
 
 ## version 1.4.0
 
+Refer to [cumbia CHANGES-1.4.md](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs/blob/master/cumbia/CHANGES-1.4.md)
+and [cumbia-tango CHANGES-1.4.md](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs/blob/master/cumbia-tango/CHANGES-1.4.md)
+
 #### cumbia
 
 Fixed unsigned long long and long long int support.
