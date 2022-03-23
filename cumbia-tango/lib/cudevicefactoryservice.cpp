@@ -31,7 +31,6 @@ CuDeviceFactoryService::~CuDeviceFactoryService()
  * @see TDevice::getError
  */
 TDevice *CuDeviceFactoryService::getDevice(const std::string &name, const std::string &thread_tok) {
-    printf("CuDeviceFactoryService::getDevice: \e[1;35mLOCKED OLD VERSION \e[1;36m:(\e[0m %s %s\n", name.c_str(), thread_tok.c_str());
     std::unique_lock lock(m_shared_mutex); // unique lock
     TDevice *td = nullptr; {   // scoped read lock
         std::pair<std::multimap <std::string, TDevData>::const_iterator, std::multimap <std::string, TDevData>::iterator > ret;
@@ -71,7 +70,6 @@ TDevice *CuDeviceFactoryService::findDevice(const std::string &name, const std::
 }
 
 int CuDeviceFactoryService::removeRef(const string &devname, const std::string &thread_tok) {
-    printf("CuDeviceFactoryService::removeRef: \e[0;35mLOCKED OLD VERSION \e[1;36m:(\e[0m %s %s\n", devname.c_str(), thread_tok.c_str());
     std::unique_lock lock(m_shared_mutex); // modifies TDevice in list
     int refcnt = -1;
     std::multimap< std::string, TDevData>::iterator it = m_devmap.begin();
