@@ -1,5 +1,7 @@
 #include "cutthreadtokengen.h"
 #include <map>
+#include <stdexcept>
+#include <cumacros.h>
 
 class CuTThreadTokenGenPrivate {
 public:
@@ -38,7 +40,7 @@ CuTThreadTokenGen::~CuTThreadTokenGen() {
 
 /*!
  * \brief This function implements the CuThreadTokenI::generate method and is invoked by Cumbia::threadToken
- *        function to provide a token (in the form of CuData) to be used to group threads together.
+ *        function to provide a token (in the form of std::string) to be used to group threads together.
  *
  * \par User defined mapping
  * If a user defined map has been defined by calling CuTThreadTokenGen::map, it is used to group threads accordingly.
@@ -50,18 +52,17 @@ CuTThreadTokenGen::~CuTThreadTokenGen() {
  * \li sources with the same device belong to the same thread
  * \li the total number of threads is at most threadPoolSize.
  *
- * If the *in* parameter does not contain the "device" key, it is returned as is.
+ * If the *in* parameter is null, then an empty string is returned.
+ *
  * If the *device* value in the input argument is not in the user map (i.e. the user
- * only partially defines the device/thread association), the input data is returned as is. This
- * can result in an additional thread, since threadPoolSize is ignored when the user map size
- * is greater than zero.
+ * only partially defines the device/thread association), then the generation will
+ * be hybrid.
  *
  * \param in
  * \return
  */
-CuData CuTThreadTokenGen::generate(const CuData &in) {
-    if(in.containsKey("device") && d->pool_siz > 0) {
-        const std::string dev = in["device"].toString();
+std::string CuTThreadTokenGen::generate(const std::string &dev) {
+    if(dev.length() > 0 && d->pool_siz > 0) {
         int thr_no;
         if(d->user_map.count(dev) > 0) {
             thr_no = d->user_map[dev];
@@ -74,9 +75,9 @@ CuData CuTThreadTokenGen::generate(const CuData &in) {
                 d->tkmap[dev] = thr_no;
             }
         }
-        return CuData("th_tok", d->thread_tok_prefix + std::to_string(thr_no));
+        return d->thread_tok_prefix + std::to_string(thr_no);
     }
-    return in;
+    return std::string();
 }
 
 /*!

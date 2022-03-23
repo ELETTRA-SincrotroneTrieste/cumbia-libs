@@ -22,16 +22,15 @@ public:
                                const CuData& op,
                                const CuData& ta,
                                const CuTConfigActivityExecutor_I* cx) :
-        tsrc(t_src), cumbia_t(ct), type(t), options(op), tag(ta), c_xecutor(cx) {
+        tsrc(t_src), cumbia_t(ct), activity(nullptr), type(t), options(op), tag(ta), c_xecutor(cx) {
     }
 
     std::set<CuDataListener *> listeners;
     const TSource tsrc;
     CumbiaTango *cumbia_t;
     CuTConfigActivity *activity;
-    bool exiting; // set to true by stop()
-    CuData options, tag;
     const CuTangoActionI::Type type;
+    CuData options, tag;
     const CuTConfigActivityExecutor_I *c_xecutor;
 };
 
@@ -43,7 +42,6 @@ CuTConfiguration::CuTConfiguration(const TSource& src,
                                    const CuTConfigActivityExecutor_I* cx) {
     d = new CuTAttConfigurationPrivate(src, ct, t, options, tag,
                                        cx != nullptr ? cx : new CuTConfigActivityExecutor_Default); // src, t are const
-    d->exiting = false;
 }
 
 CuTConfiguration::~CuTConfiguration() {
@@ -68,15 +66,17 @@ void CuTConfiguration::onProgress(int , int , const CuData &) { }
 void CuTConfiguration::onResult(const CuData &data) {
     // activity publishes only once from execute
     // we can clean everything after listeners update
-    std::set<CuDataListener *> listeners = d->listeners;
     std::set<CuDataListener *>::iterator it;
-    for(it = listeners.begin(); it != listeners.end(); ++it) {
+    // need a local copy of d->listeners because the iterator may be invalidated by
+    // removeDataListener in this same thread by the client from onUpdate
+    std::set<CuDataListener *> ls = d->listeners;
+    for(it =  ls.begin(); it !=  ls.end(); ++it) {
         (*it)->onUpdate(data);
     }
-    d->exiting = true; // for action factory to unregisterAction, exiting must return true
     CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
-                                                                        ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
+                                                                       ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
     af->unregisterAction(d->tsrc.getName(), getType());
+    d->cumbia_t->unregisterActivity(d->activity);
     d->listeners.clear();
     delete this;
 }
@@ -125,23 +125,12 @@ void CuTConfiguration::start() {
     CuDeviceFactoryService *df =
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
-    CuData at("src", d->tsrc.getName()); /* activity token */
-    at["device"] = d->tsrc.getDeviceName();
-    at["point"] = d->tsrc.getPoint();
-    at["argins"] = d->tsrc.getArgs();
-    at["activity"] = "property";
-    at["is_command"] = d->tsrc.getType() == TSource::SrcCmd;
-    at.merge(d->options);
-    at.merge(d->tag); // tag is carried along in results
-
-    CuData tt = CuData("device", d->tsrc.getDeviceName());
-    if(d->options.containsKey("thread_token"))
-        tt["thread_token"] = d->options["thread_token"];
+    const std::string tt =d->options.containsKey("thread_token") ? // d->tsrc will be moved: no string reference
+                d->options.s("thread_token") : d->tsrc.getDeviceName();
     CuTConfigActivity::Type t;
     d->type == CuTangoActionI::ReaderConfig ? t = CuTConfigActivity::CuReaderConfigActivityType :
             t = CuTConfigActivity::CuWriterConfigActivityType;
-    d->activity =  new CuTConfigActivity(at, df, t, d->c_xecutor);
-    d->activity->setOptions(d->options);
+    d->activity =  new CuTConfigActivity(std::move(d->tsrc), df, t, d->c_xecutor, std::move(d->options), std::move(d->tag));
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
     d->cumbia_t->registerActivity(d->activity, this, tt, fi, bf);
@@ -152,17 +141,7 @@ void CuTConfiguration::start() {
  * - sets the exiting flag to true
  * - calls Cumbia::unregisterActivity
  */
-void CuTConfiguration::stop()
-{
-    if(!d->exiting) {
-        d->exiting = true;
+void CuTConfiguration::stop() {
         d->cumbia_t->unregisterActivity(d->activity);
-    }
 }
 
-/*! \brief CuActionFactory relies on this returning true to unregister the action
- */
-bool CuTConfiguration::exiting() const
-{
-    return d->exiting;
-}

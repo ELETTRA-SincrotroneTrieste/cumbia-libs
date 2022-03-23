@@ -199,7 +199,7 @@ void CuMonitor::m_startMonitorActivity()
     at["is_pv"] = (d->tsrc.getType() == EpSource::PV);
     at["period"] = d->period;
 
-    CuData tt("activity_thread", "epics_monitor"); /* thread token */
+    std::string tt("epics_monitor"); /* thread token */
     d->current_activity = new CuMonitorActivity(at, df, d->tsrc.getArgs());
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_e->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_e->getThreadFactoryImpl());

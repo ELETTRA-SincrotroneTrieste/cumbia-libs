@@ -38,11 +38,10 @@ public:
  * \li if the "period" key is set on the token, then it is converted to int and it will be used
  *     to set up the polling period
  * \li CuADeleteOnExit is active.
- * \li CuAUnregisterAfterExec is disabled because if the Tango device is not defined into the database
  *     the poller is not started and the activity is suspended (repeat will return -1).
  */
 CuRandomGenActivity::CuRandomGenActivity(const CuData &token)
-    : CuContinuousActivity(token)
+    : CuPeriodicActivity(token)
 {
     d = new CuRandomGenActivityPrivate;
     d->repeat = 1000;
@@ -61,7 +60,7 @@ CuRandomGenActivity::CuRandomGenActivity(const CuData &token)
     d->repeat = period;
     setInterval(period);
     //  flag CuActivity::CuADeleteOnExit is true
-    setFlag(CuActivity::CuAUnregisterAfterExec, true);
+    // CuActivity::CuAUnregisterAfterExec unavailable since 1.4
 
     // src contains either "spectrum" or "vector": initialize size to a default value
     if(token["src"].toString().find("spectrum") != std::string::npos ||
@@ -142,7 +141,7 @@ void CuRandomGenActivity::init()
     assert(d->other_thread_id != d->my_thread_id);
     // simulate a configuration (property type)
     CuData res = getToken();
-    d->thread_token = threadToken()["thtok"].toString();
+    d->thread_token = threadToken();
     res["type"] = "property";
     res["mode"] = "random";
     res["type"] = "property";
@@ -228,12 +227,12 @@ void CuRandomGenActivity::m_putInfo(CuData &res)
  *
  * @see CuActivity::event
  *
- * \note the CuActivityEvent is forwarded to CuContinuousActivity::event
+ * \note the CuActivityEvent is forwarded to CuPeriodicActivity::event
  */
 void CuRandomGenActivity::event(CuActivityEvent *e)
 {
     assert(d->my_thread_id == pthread_self());
-    CuContinuousActivity::event(e);
+    CuPeriodicActivity::event(e);
 }
 
 /*! \brief returns the type of the polling activity

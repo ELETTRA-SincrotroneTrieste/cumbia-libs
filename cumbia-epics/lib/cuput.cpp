@@ -122,7 +122,7 @@ void CuPut::start()
     at["pv"] = d->ep_src.getPV();
     at["activity"] = "writer";
     at["write_value"] = d->write_val;
-    CuData tt("pv", d->ep_src.getPV()); /* thread token */
+    std::string tt("pv" + d->ep_src.getPV()); /* thread token */
     d->activity = new CuPutActivity(at, df);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_ep->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_ep->getThreadFactoryImpl());

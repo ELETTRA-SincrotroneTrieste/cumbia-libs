@@ -5,6 +5,7 @@
 #include <cudata.h>
 #include <cudataquality.h>
 #include <tango.h>
+#include <cudataupdatepolicy_enum.h>
 
 class CuTangoWorldPrivate;
 class CuActivity;
@@ -47,9 +48,10 @@ public:
     bool read_att(Tango::DeviceProxy *dev, const string &attribute, CuData &res);
 
     bool read_atts(Tango::DeviceProxy *dev,
-                   std::vector<string> &attnamlist, // <- not const because of Tango read_attributes
-                   std::vector<CuData> &att_datalist,
-                   std::vector<CuData> *reslist, int results_offset);
+                   std::vector<string>& p_v_an, // attribute names
+                   std::vector<CuData>& v_a, // attribute cache (same order as names above)
+                   std::vector<CuData>& reslist,
+                   int da_updpo);
 
     bool write_att(Tango::DeviceProxy *dev,
                    const string &attnam,
@@ -81,10 +83,13 @@ public:
     std::string dateTimeToStr(time_t *tp) const;
     CuDataQuality toCuQuality(Tango::AttrQuality q) const;
 
-    std::string make_fqdn_src(const std::string &src);
-    std::string prepend_tgproto(const std::string &s);
+    std::string make_fqdn_src(const std::string &src) const;
+    std::string prepend_tgproto(const std::string &s) const;
+
 private:
     CuTangoWorldPrivate *d;
+
+    bool m_cache_upd(CuData &od, const CuData &nd) const;
 };
 
 #endif // UTILS_H

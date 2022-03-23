@@ -8,7 +8,9 @@
 
 // debug
 #include <QEventLoop>
+#include <QFile>
 #include <QtDebug>
+#include <qtimer.h>
 #include <qustringlist.h>
 
 class CuHttpBundledSrcReqPrivate {
@@ -36,6 +38,14 @@ public:
     QByteArray m_json_pack(const QList<SrcItem>& srcs, unsigned long long client_id);
     CuHttpBundledSrcReqListener *listener;
     bool blocking;
+
+
+    ///
+    /// TEST
+    ///
+    QTimer *timer;
+    QNetworkReply *reply;
+    unsigned usecnt = 0;
 };
 
 CuHttpBundledSrcReq::CuHttpBundledSrcReq(const QList<SrcItem> &srcs,
@@ -67,6 +77,7 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
         r.setRawHeader("X-Channel", d->channel);
     }
     d->buf.clear();
+    d->usecnt++;
     QNetworkReply *reply = nam->post(r, d->req_payload);
     reply->setProperty("payload", d->req_payload);
     connect(reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
@@ -79,6 +90,17 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
         connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
         loop.exec();
     }
+
+    d->timer = new QTimer(this);
+    d->timer->setInterval(2000);
+    connect(d->timer, SIGNAL(timeout()), this, SLOT(m_test_check_reply()));
+    d->timer->start();
+
+    /// TEST
+    ///
+    d->reply = reply;
+    printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p started: (rq. use cnt: %d)\n", qstoc(objectName()),
+           this, /*d->req_payload.toStdString().c_str(),*/ d->usecnt);
 }
 
 void CuHttpBundledSrcReq::setBlocking(bool b) {
@@ -101,7 +123,13 @@ void CuHttpBundledSrcReq::onNewData() {
 void CuHttpBundledSrcReq::onReplyFinished()
 {
     qDebug() << __PRETTY_FUNCTION__ << this << "deleting reply " << sender() << " later";
+    if(d->buf.length() < 300) {
+        printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p short reply: \"\e[1;31m%s\"\e[0m to request \e[1;32m\"%s\e[0m\" (rq. use cnt: %d)\n"
+               , qstoc(objectName()),
+               this, qstoc(d->buf), d->req_payload.toStdString().c_str(), d->usecnt);
+    }
     sender()->deleteLater();
+    d->reply = nullptr;
 }
 
 void CuHttpBundledSrcReq::onReplyDestroyed(QObject *o)
@@ -123,6 +151,23 @@ void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError code) {
     da.set("data", d->buf.toStdString());
     da.set("payload", r->property("payload").toString().toStdString());
     d->listener->onSrcBundleReplyError(da);
+    printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p \e[1;31mCuHttpBundledSrcReq::onError: %s request was \e[0;31m%s\e[0m\n",
+           qstoc(objectName()), this, qstoc(r->errorString()), qstoc(r->property("payload").toString()));
+}
+
+void CuHttpBundledSrcReq::m_test_check_reply() {
+    if(d->reply)
+        printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p: \e[1;35mstill waiting for reply\e[0m (req use cnt: %d)\n",
+               qstoc(objectName()),
+               this, d->usecnt);
+    else  {
+        printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p finished (req use cnt: %d)\n",
+               qstoc(objectName()), this, d->usecnt);
+        if(strlen(d->buf.data()) < 300)
+            printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p quite a short reply len %ld: >>> \e[1;35m%s\e[0m <<<\n", qstoc(objectName()), this,
+                   strlen(d->buf.data()), d->buf.data());
+        d->timer->stop();
+    }
 }
 
 void CuHttpBundledSrcReq::m_on_buf_complete() {

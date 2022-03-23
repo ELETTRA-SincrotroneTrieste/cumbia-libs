@@ -7,7 +7,7 @@
 #include <thread>
 #include <assert.h>
 #include <cumacros.h>
-#include <list>
+#include <set>
 #include <algorithm> // for std::find
 
 class CuEventInfo {
@@ -27,7 +27,7 @@ public:
     std::queue<CuEventInfo> queue;
     std::mutex m_mutex;
     std::condition_variable m_evloop_cv;
-    std::list<CuEventLoopListener* > eloo_liss;
+    std::set<CuEventLoopListener* > eloo_liss;
     std::thread *thread;
 };
 
@@ -39,7 +39,7 @@ CuEventLoopService::CuEventLoopService(CuEventLoopListener *l)
 {
     d = new CuEventLoopPrivate;
     d->thread = nullptr;
-    if(l) d->eloo_liss.push_back(l);
+    if(l) d->eloo_liss.insert(l);
 }
 
 /*! \brief the class destructor
@@ -93,11 +93,11 @@ void CuEventLoopService::postEvent(CuEventLoopListener *lis, CuEventI *e)
  * @param l a CuEventLoopListener that will receive events from the event loop
  */
 void CuEventLoopService::addCuEventLoopListener(CuEventLoopListener *l) {
-    d->eloo_liss.push_back(l);
+    d->eloo_liss.insert(l);
 }
 
 void CuEventLoopService::removeCuEventLoopListener(CuEventLoopListener *l) {
-    d->eloo_liss.remove(l);
+    d->eloo_liss.erase(l);
 }
 
 /*! \brief exit the event loop cleanly
@@ -160,8 +160,8 @@ void CuEventLoopService::run()
         }
         // lock free section ensues
         while(!qcopy.empty()) {
-            const CuEventInfo &event_i = qcopy.front();
-            if(event_i.event->getType() == CuEventI::ExitLoop)
+            const CuEventInfo event_i = qcopy.front();
+            if(event_i.event->getType() == CuEventI::CuExitLoopEv)
                 repeat = false;
             else if(std::find(d->eloo_liss.begin(), d->eloo_liss.end(), event_i.lis)
                     != d->eloo_liss.end()) {

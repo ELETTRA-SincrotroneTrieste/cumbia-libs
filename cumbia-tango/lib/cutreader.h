@@ -32,6 +32,7 @@ class CuActivity;
  * \par Important
  * As a consequence of the note above, activities *must not exit before CuTReader::stop is called*.
  * The proper way to stop the activity associated to the reader is through CuTReader::stop.
+ *
  */
 class CuTReader: public CuTangoActionI /* CuTangoActionI implements CuThreadListener */
 {
@@ -82,7 +83,6 @@ public:
     void addDataListener(CuDataListener *l);
     void removeDataListener(CuDataListener *l);
     size_t dataListenersCount();
-    bool exiting() const;
 
 private:
     CuTReaderPrivate *d;
@@ -94,6 +94,7 @@ private:
     void m_unregisterEventActivity();
     void m_update_options(const CuData newo);
     void m_destroy_self();
+    void m_save_data(const CuData& d);
     CuActivity *m_find_Activity();
 };
 

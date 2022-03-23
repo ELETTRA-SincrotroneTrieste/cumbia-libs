@@ -13,13 +13,14 @@ public:
     TSource tsrc;
 };
 
-CuTaDbActivity::CuTaDbActivity(const CuData &tok, const TSource &tsrc, const CuData &tag) : CuActivity(tok)
+CuTaDbActivity::CuTaDbActivity(const TSource &tsrc, const CuData &options, const CuData &tag)
+    : CuActivity(CuData("activity", "cutadb").set("src", tsrc.getName()))
 {
     d = new CuTaDbActivityPrivate;
     d->exiting = false;
     d->tsrc = tsrc;
     d->tag = tag;
-    setFlag(CuActivity::CuAUnregisterAfterExec, true);
+    d->options = options;
     setFlag(CuActivity::CuADeleteOnExit, true);
 }
 
@@ -58,17 +59,18 @@ void CuTaDbActivity::init() {
 
 }
 
-void CuTaDbActivity::execute()
-{
-    CuData at = getToken(); /* activity token */
+void CuTaDbActivity::execute() {
     TSource::Type ty = d->tsrc.getType();
+    CuData at("src", d->tsrc.getName()); /* activity token */
+    at.merge(CuData(d->options));
     at["type"] = "property";
     at["op"] = d->tsrc.getTypeName(ty);
-    at.merge(d->tag);
-//    at.merge(d->options);
+    at.merge(CuData(d->tag));
     CuTangoWorld w;
     w.db_get(d->tsrc, at);
     d->exiting = true;
+    if(d->tsrc.getName().find("beamdump_s*") != std::string::npos)
+        printf("\e[0;36mCuTaDbActivity.execute: publishing result for %s\e[0m\n", d->tsrc.getName().c_str());
     publishResult(at);
 }
 

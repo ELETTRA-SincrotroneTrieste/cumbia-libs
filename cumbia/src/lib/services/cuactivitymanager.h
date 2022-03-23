@@ -23,13 +23,13 @@ public:
 
     virtual ~CuActivityManager();
 
-    void addConnection(CuThreadInterface *t, CuActivity *a, CuThreadListener *threadListener);
+    void connect(CuThreadInterface *t, CuActivity *a, CuThreadListener *threadListener);
 
-    void removeConnection(CuActivity *a);
+    void disconnect(CuActivity *a);
 
     void removeConnections(CuThreadInterface *t);
 
-    void removeConnection(CuThreadListener *l);
+    void disconnect(CuThreadListener *l);
 
     CuActivity *find(const CuData &token) ;
 

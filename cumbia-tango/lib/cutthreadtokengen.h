@@ -38,7 +38,7 @@ public:
     ~CuTThreadTokenGen();
 
     // CuThreadTokenGenI interface
-    CuData generate(const CuData &in);
+    std::string generate(const std::string& dev);
 
     void map(const std::string &device, int which);
 

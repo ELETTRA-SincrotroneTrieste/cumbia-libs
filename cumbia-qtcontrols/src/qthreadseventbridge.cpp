@@ -79,7 +79,7 @@ void QThreadsEventBridge::setCuThreadsEventBridgeListener(CuThreadsEventBridgeLi
 }
 
 /*! \brief posts an event through QApplication::postEvent, normally *from
- *         the background thread to the foreground*
+ *         the CuThread's thread to the event loop's*
  *
  * @param e a CuEventI
  *

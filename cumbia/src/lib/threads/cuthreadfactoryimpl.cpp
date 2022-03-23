@@ -13,9 +13,9 @@
  *
  *
  */
-CuThreadInterface *CuThreadFactoryImpl::createThread(const CuData &thread_token ,
+CuThreadInterface *CuThreadFactoryImpl::createThread(const std::string &thread_token ,
                                                      CuThreadsEventBridge_I *eventsBridge,
-                                                     const CuServiceProvider *service_provider) const
-{
-    return new CuThread(thread_token, eventsBridge, service_provider);
+                                                     const CuServiceProvider *service_provider,
+                                                     std::vector<CuThreadInterface *> *threads) const {
+    return new CuThread(thread_token, eventsBridge, service_provider, threads);
 }

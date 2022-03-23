@@ -17,9 +17,10 @@ class CuThreadFactoryImpl : public CuThreadFactoryImplI
 {
     // CuThreadFactoryImplI interface
 public:
-    CuThreadInterface *createThread(const CuData &thread_token,
+    CuThreadInterface *createThread(const std::string &thread_token,
                                     CuThreadsEventBridge_I *eventsBridge,
-                                    const CuServiceProvider *service_provider) const;
+                                    const CuServiceProvider *service_provider,
+                                    std::vector<CuThreadInterface *> *threads) const;
 };
 
 #endif // CUTHREADFACTORYIMPL_H

@@ -70,7 +70,7 @@ signals:
     void newULongMatrix(const QString& src, double timestamp_us, const CuMatrix<unsigned long>& m, const CuData& da);
     void newLongMatrix(const QString& src, double timestamp_us, const CuMatrix<long int>& m, const CuData& da);
 
-
+    void newUnchanged(const QString& src, double timestamp_us);
 
     void newError(const QString& src, double timestamp_us, const QString& msg, const CuData& da);
 

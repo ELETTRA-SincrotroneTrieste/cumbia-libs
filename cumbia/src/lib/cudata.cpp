@@ -5,23 +5,52 @@
 #include <sys/time.h>
 #include <unordered_map>
 #include <map>
+#include <atomic>
 
 /*! @private */
 class CuDataPrivate
 {
 public:
-    std::map<std::string, CuVariant> datamap;
+    CuDataPrivate(const CuDataPrivate& other) {
+        datamap = other.datamap;
+        _r.store(1);
+    }
+    CuDataPrivate() {
+        _r.store(1);
+    }
+    ~CuDataPrivate() {
+        //        printf("[0x%lx] %p d ~\e[0;31mX_P\e[0m\n", pthread_self(), this);
+    }
+    CuDataPrivate &operator=(const CuDataPrivate &other) {
+        if(this != &other) {
+            datamap = other.datamap;
+        }
+        return *this;
+    }
 
+    std::map<std::string, CuVariant> datamap;
     CuVariant emptyVariant;
+
+    int ref() {
+        return _r.fetch_add(1);
+    }
+    int unref() {
+        return _r.fetch_sub(1);
+    }
+    int load() const {
+        return _r.load();
+    }
+
+private:
+    std::atomic<int> _r;
 };
 
 /*! \brief the class destructor
  *
  * CuData class destructor
  */
-CuData::~CuData()
-{
-    if(d_p)
+CuData::~CuData() {
+    if(d_p && d_p->unref() == 1)
         delete d_p;
 }
 
@@ -29,8 +58,7 @@ CuData::~CuData()
  *
  * builds a CuData with no key/value
  */
-CuData::CuData()
-{
+CuData::CuData() {
     d_p = new CuDataPrivate();
 }
 
@@ -42,8 +70,7 @@ CuData::CuData()
  * The parameter-less of CuData::value can be used to get the value associated
  * to an empty key
  */
-CuData::CuData(const CuVariant &v)
-{
+CuData::CuData(const CuVariant &v) {
     d_p = new CuDataPrivate();
     d_p->datamap[""] = v;
 }
@@ -55,8 +82,7 @@ CuData::CuData(const CuVariant &v)
  *
  * The new CuData will be initialised with a key/v pair
  */
-CuData::CuData(const std::string& key, const CuVariant &v)
-{
+CuData::CuData(const std::string& key, const CuVariant &v) {
     d_p = new CuDataPrivate();
     d_p->datamap[key] = v;
 }
@@ -68,10 +94,10 @@ CuData::CuData(const std::string& key, const CuVariant &v)
  * copies all the contents from the *other* CuData into the
  * new object
  */
-CuData::CuData(const CuData &other)
-{
-    d_p = new CuDataPrivate();
-    mCopyData(other);
+CuData::CuData(const CuData &other) {
+    d_p = other.d_p;
+    d_p->ref();  // increment ref counter
+    //    mCopyData(other); // before implicit sharing
 }
 
 /*! \brief c++11 *move constructor*
@@ -80,21 +106,22 @@ CuData::CuData(const CuData &other)
  *
  * Contents of *other* are moved into *this* CuData
  */
-CuData::CuData(CuData &&other)
-{
+CuData::CuData(CuData &&other) {
     d_p = other.d_p; /* no d = new here */
-    other.d_p = NULL; /* avoid deletion! */
+    other.d_p = nullptr; /* avoid deletion! */
 }
 
 /*! \brief assignment operator, copies data from another source
  *
  * @param other another CuData which values will be copied into this
  */
-CuData &CuData::operator=(const CuData &other)
-{
+CuData &CuData::operator=(const CuData &other) {
     if(this != &other) {
-        d_p->datamap.clear();
-        mCopyData(other);
+        other.d_p->ref();
+        if(d_p->unref() == 1)
+            delete d_p; // with no sharing we would not delete
+        d_p = other.d_p;
+        //        mCopyData(other); // before implicit sharing
     }
     return *this;
 }
@@ -103,31 +130,48 @@ CuData &CuData::operator=(const CuData &other)
  *
  * @param other another CuData which values will be moved into this
  */
-CuData &CuData::operator=(CuData &&other)
-{
-    if (this!=&other)
-    {
-        if(d_p)
+CuData &CuData::operator=(CuData &&other) {
+    if (this!=&other) {
+        if(d_p && d_p->unref() == 1)
             delete d_p;
         d_p = other.d_p;
-        other.d_p = NULL; /* avoid deletion! */
+        other.d_p = nullptr; /* avoid deletion! */
     }
     return *this;
 }
 
-CuData &CuData::set(const std::string &key, const CuVariant &value)
-{
+CuData &CuData::set(const std::string &key, const CuVariant &value) {
+    detach();
     d_p->datamap[key] = value;
     return *this;
 }
 
+CuData &CuData::merge(const CuData &&other) {
+    detach();
+    for(const std::string& key : other.keys())
+        (*this).set(key, std::move(other.value(key)));
+    return *this;
+}
+
+/*! \brief clone this data, without sharing
+ *
+ *  \return a clone of this data, bypassing the copy-on-write share
+ */
+CuData CuData::clone() const {
+    CuData d;
+    d.d_p = new CuDataPrivate(*d_p);
+    return d;
+}
+
 CuData &CuData::merge(const CuData &other) {
+    detach();
     for(const std::string& key : other.keys())
         (*this).set(key, other.value(key));
     return *this;
 }
 
 CuData &CuData::remove(const std::string &key) {
+    detach();
     d_p->datamap.erase(key);
     return *this;
 }
@@ -137,6 +181,7 @@ CuData CuData::remove(const std::string &key) const {
 }
 
 CuData &CuData::remove(const std::vector<std::string> &keys) {
+    detach();
     for(const std::string& k : keys)
         d_p->datamap.erase(k);
     return *this;
@@ -152,8 +197,7 @@ CuData CuData::remove(const std::vector<std::string> &keys) const {
  *
  * @see isEmpty
  */
-size_t CuData::size() const
-{
+size_t CuData::size() const {
     return d_p->datamap.size();
 }
 
@@ -166,8 +210,7 @@ size_t CuData::size() const
  * If there's no value associated to an *empty key* (i.e. an *emtpy string*, ""), an
  * *invalid and null* CuVariant is returned. See CuVariant::isValid and CuVariant::isNull
  */
-CuVariant CuData::value() const
-{
+CuVariant CuData::value() const {
     /* search the empty key */
     if(d_p->datamap.count("") > 0)
         return d_p->datamap.at("");
@@ -183,8 +226,7 @@ CuVariant CuData::value() const
  *
  * See also CuData::operator [](const std::string &key) const
  */
-CuVariant CuData::value(const std::string & key) const
-{
+CuVariant CuData::value(const std::string & key) const {
     if(d_p->datamap.count(key) > 0)
         return d_p->datamap[key];
     return CuVariant();
@@ -197,8 +239,8 @@ CuVariant CuData::value(const std::string & key) const
  *
  * \note The effect is exactly the same as using the operator [] (const std::string& key)
  */
-void CuData::add(const std::string & key, const CuVariant &value)
-{
+void CuData::add(const std::string & key, const CuVariant &value) {
+    detach();
     d_p->datamap[key] = value;
 }
 
@@ -207,8 +249,7 @@ void CuData::add(const std::string & key, const CuVariant &value)
  * @param key the key to be searched, std::string
  * @return true if the bundle contains the given key, false otherwise
  */
-bool CuData::containsKey(const std::string &key) const
-{
+bool CuData::containsKey(const std::string &key) const {
     return d_p->datamap.count(key) > 0;
 }
 
@@ -220,8 +261,7 @@ bool CuData::containsKey(const std::string &key) const
  * @param value the value *as string*
  * @return true if *data[key].toString() == value* false otherwise
  */
-bool CuData::has(const std::string &key, const std::string &value) const
-{
+bool CuData::has(const std::string &key, const std::string &value) const {
     bool ok;
     return d_p->datamap.count(key) > 0 && d_p->datamap.at(key).toString(&ok) == value && ok;
 }
@@ -239,8 +279,8 @@ bool CuData::has(const std::string &key, const std::string &value) const
     at["err"] = false; // bool
  * \endcode
  */
-CuVariant &CuData::operator [](const std::string &key)
-{
+CuVariant &CuData::operator [](const std::string &key) {
+    detach();
     return d_p->datamap[key];
 }
 
@@ -251,8 +291,7 @@ CuVariant &CuData::operator [](const std::string &key)
  *         *empty* CuVariant if the key is not found.
  * \note An *empty* CuVariant::isValid method returns false and CuVariant::isNull returns true
  */
-const CuVariant &CuData::operator [](const std::string &key) const
-{
+const CuVariant &CuData::operator [](const std::string &key) const {
     if(d_p->datamap.count(key) > 0)
         return d_p->datamap[key];
     return d_p->emptyVariant;
@@ -267,8 +306,7 @@ const CuVariant &CuData::operator [](const std::string &key) const
  *
  * the *inequality* operator is also defined
  */
-bool CuData::operator ==(const CuData &other) const
-{
+bool CuData::operator ==(const CuData &other) const {
     if(other.d_p->datamap.size() != d_p->datamap.size())
         return false;
     std::map<std::string, CuVariant>::const_iterator i;
@@ -289,8 +327,7 @@ bool CuData::operator ==(const CuData &other) const
  *         returns false, false otherwise
  *
  */
-bool CuData::operator !=(const CuData &other) const
-{
+bool CuData::operator !=(const CuData &other) const {
     return !operator ==(other);
 }
 
@@ -301,8 +338,7 @@ bool CuData::operator !=(const CuData &other) const
  *
  * @see size
  */
-bool CuData::isEmpty() const
-{
+bool CuData::isEmpty() const {
     return d_p->datamap.size() == 0;
 }
 
@@ -314,8 +350,7 @@ bool CuData::isEmpty() const
  *
  * @see toString
  */
-void CuData::print() const
-{
+void CuData::print() const {
     printf("%s\n", toString().c_str());
 }
 
@@ -336,8 +371,8 @@ std::string CuData::toString() const
     std::string r = "CuData { ";
     std::map<std::string, CuVariant>::const_iterator i;
     char siz[16], empty[16];
-    snprintf(siz, 16, "%ld", size());
-    snprintf(empty, 16, "%d", isEmpty());
+    snprintf(siz, 16, "%ld", d_p->datamap.size());
+    snprintf(empty, 16, "%d", d_p->datamap.size() == 0);
     for(i = d_p->datamap.begin(); i != d_p->datamap.end(); ++i)
     {
         r += "[\"" + i->first + "\" -> " + i->second.toString() + "], ";
@@ -355,27 +390,34 @@ std::string CuData::toString() const
  * \li "timestamp_ms" timestamp in milliseconds, convert with CuVariant::toLongInt
  * \li "timestamp_us" timestamp in microseconds, convert with CuVariant::toLongInt
  */
-void CuData::putTimestamp()
-{
+void CuData::putTimestamp() {
+    detach();
     struct timeval tv;
     gettimeofday(&tv, NULL);
     add("timestamp_ms",  tv.tv_sec * 1000 + tv.tv_usec / 1000);
     add("timestamp_us", static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6);
 }
 
-std::vector<std::string> CuData::keys() const
-{
+std::vector<std::string> CuData::keys() const {
     std::vector<std::string> ks;
     for(std::map<std::string, CuVariant>::const_iterator it = d_p->datamap.begin(); it != d_p->datamap.end(); ++it)
         ks.push_back(it->first);
     return ks;
 }
 
-void CuData::mCopyData(const CuData& other)
-{
-    std::map<std::string, CuVariant>::const_iterator it;
-    for (it = other.d_p->datamap.begin(); it != other.d_p->datamap.end(); ++it)
-        d_p->datamap[it->first] = other.d_p->datamap[it->first];
+// this was used before implicit sharing
+//void CuData::mCopyData(const CuData& other)
+//{
+//    std::map<std::string, CuVariant>::const_iterator it;
+//    for (it = other.d_p->datamap.begin(); it != other.d_p->datamap.end(); ++it)
+//        d_p->datamap[it->first] = other.d_p->datamap[it->first];
+//}
+
+void CuData::detach() {
+    if(d_p && d_p->load() > 1) {
+        d_p->unref();
+        d_p = new CuDataPrivate(*d_p); // sets ref=1
+    }
 }
 
 std::string CuData::s(const std::string& key) const {
@@ -391,7 +433,7 @@ int CuData::i(const std::string& key) const {
 }
 
 unsigned int CuData::u(const std::string &key) const {
-        return this->operator[](key).u();
+    return this->operator[](key).u();
 }
 
 bool CuData::b(const std::string& key) const {
@@ -479,4 +521,3 @@ std::vector<bool> CuData::BV(const std::string &key) const {
         this->operator[](key).toVector<bool>(bv);
     return bv;
 }
-

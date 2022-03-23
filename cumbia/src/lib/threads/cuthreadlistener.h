@@ -28,7 +28,7 @@ class CuThreadListener
 {
 public:
 
-    virtual ~CuThreadListener() { }
+    virtual ~CuThreadListener() {  }
 
     /*!
      * \brief onProgress notifies the listener's thread about the progress of the ongoing

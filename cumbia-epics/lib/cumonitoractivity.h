@@ -1,7 +1,7 @@
 #ifndef CUPOLLINGACTIVITY_H
 #define CUPOLLINGACTIVITY_H
 
-#include <cucontinuousactivity.h>
+#include <cuperiodicactivity.h>
 #include <list>
 #include <cadef.h>
 
@@ -9,10 +9,10 @@ class CuData;
 class CuMonitorActivityPrivate;
 class CuEpCAService;
 
-class CuMonitorActivity : public CuContinuousActivity
+class CuMonitorActivity : public CuPeriodicActivity
 {
 public:
-    enum Type { CuMonitorActivityType = CuActivity::User + 16 };
+    enum Type { CuMonitorActivityType = CuActivity::UserAType + 16 };
 
     CuMonitorActivity(const CuData& token, CuEpCAService *ep_s, const CuVariant &argins =
             std::vector<std::string>());

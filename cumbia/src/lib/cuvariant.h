@@ -27,6 +27,14 @@ class CuVariantPrivate;
  * For each supported data type and format, appropriate constructors
  * and toXXX() methods are provided to extract the stored value.
  *
+ * \par Implicit sharing
+ * \since 1.4.0
+ *
+ * Data is implicitly shared, enabling *copy on write*. Atomic reference counters make the class
+ * reentrant, meaning that methods can be called from multiple threads, but only if each invocation
+ * uses its own data. Atomic reference counting is used to ensure the integrity of the shared data.
+ * Since cumbia 1.4.0, CuData uses implicit sharing as well.
+ *
  * \par Example
  * \code
  * unsigned int in = 1, out;
@@ -111,39 +119,25 @@ public:
     CuVariant(const size_t size, DataFormat df,
              DataType dt);
 
+    virtual ~CuVariant();
+
     /* scalars */
     CuVariant(char c);
-
     CuVariant(unsigned char uc);
-
     CuVariant(short int i);
-
     CuVariant(short unsigned int u);
-
     CuVariant(int i);
-
     CuVariant(unsigned int ui);
-
     CuVariant(long int li);
-
     CuVariant(long long int li);
-
     CuVariant(unsigned long int lui);
-
     CuVariant(unsigned long long int ului);
-
     CuVariant(float d);
-
     CuVariant(double d);
-
     CuVariant(long double ld);
-
     CuVariant(bool b);
-
     CuVariant(const std::string &s);
-
     CuVariant(const char *s);
-
     CuVariant(void *ptr);
 
     /* matrix, since 1.2.5 */
@@ -180,33 +174,23 @@ public:
     CuVariant(const std::vector<bool> &vd);
     CuVariant(const std::vector<std::string > &vd);
     CuVariant(const std::vector<void *> &vptr);
-
     CuVariant(const CuVariant &other);
     CuVariant(CuVariant && other);
-
     CuVariant();
 
     CuVariant & operator=(const CuVariant& other);
-
     CuVariant & operator=(CuVariant&& other);
-
     bool operator ==(const CuVariant &other) const;
-
     bool operator !=(const CuVariant &other) const;
 
-    virtual ~CuVariant();
-
     DataFormat getFormat() const;
-
     DataType getType() const;
-
     size_t getSize() const;
 
     bool isInteger() const;
     bool isUnsignedType() const;
     bool isSignedType() const;
     bool isFloatingPoint() const;
-
     bool isVoidPtr() const;
 
 	bool isValid() const;
@@ -302,38 +286,24 @@ public:
     template<typename T> bool toVector(std::vector<T> &v) const;
 
     void append(const CuVariant& other);
-
     CuVariant &toVector();
 
     std::string dataFormatStr(int f) const;
-
     std::string dataTypeStr(int t) const;
 
 private:
 
     void build_from(const CuVariant& other);
-
-    void cleanup();
-
-    void data_reserve(size_t size);
-
-    template<typename T>void from(T value);
-
-    template<typename T> void from(const std::vector<T> &v);
-
-    template<typename T> void v_to_matrix(const std::vector<T> &v, size_t dimx, size_t dim_y);
-    void v_to_string_matrix(const std::vector<std::string> &vs, size_t dimx, size_t dim_y);
-
-    void from(const std::vector<std::string > & s);
-
-    void from_std_string(const std::string & s);
-
-
-    void init(DataFormat df, DataType dt);
-
-    void delete_rdata();
-
-private:
+    void m_cleanup();
+    template<typename T>void m_from(T value);
+    template<typename T> void m_from(const std::vector<T> &v);
+    template<typename T> void m_v_to_matrix(const std::vector<T> &v, size_t dimx, size_t dim_y);
+    void m_v_to_string_matrix(const std::vector<std::string> &vs, size_t dimx, size_t dim_y);
+    void m_from(const std::vector<std::string > & s);
+    void m_from_std_string(const std::string & s);
+    void m_init(DataFormat df, DataType dt);
+    void m_delete_rdata();
+    void m_detach();
 
     CuVariantPrivate *_d;
 };

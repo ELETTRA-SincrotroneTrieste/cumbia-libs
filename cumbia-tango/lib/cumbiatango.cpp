@@ -17,12 +17,12 @@
 
 class CumbiaTangoPrivate {
 public:
-    CumbiaTangoPrivate(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb, CumbiaTango::Options o) :
-        th_factory_i(tfi), th_eve_b_factory(teb), options(o) {}
+    CumbiaTangoPrivate(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb) :
+        th_factory_i(tfi), th_eve_b_factory(teb), updpo(CuDataUpdatePolicy::PollUpdateAlways) {}
 
     CuThreadFactoryImplI *th_factory_i;
     CuThreadsEventBridgeFactory_I *th_eve_b_factory;
-    CumbiaTango::Options options;
+    int updpo;
 };
 
 /** \brief CumbiaTango two parameters constructor
@@ -41,18 +41,11 @@ public:
  *
  */
 CumbiaTango::CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb) {
-    d = new CumbiaTangoPrivate(tfi, teb, CumbiaTango::OptionActionFactorySrvcThreadSafe);
+    d = new CumbiaTangoPrivate(tfi, teb);
     m_init();
 }
 
-CumbiaTango::CumbiaTango(CuThreadFactoryImplI *tfi, CuThreadsEventBridgeFactory_I *teb, Options o)
-{
-    d = new CumbiaTangoPrivate(tfi, teb, o);
-    m_init();
-}
-
-void CumbiaTango::m_init()
-{
+void CumbiaTango::m_init() {
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType), new CuActionFactoryService());
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType), new CuDeviceFactoryService());
     getServiceProvider()->registerService(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType), new CuPollingService());
@@ -74,17 +67,18 @@ CumbiaTango::~CumbiaTango()
 
 void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTangoActionFactoryI& f) {
     CuTangoWorld w;
+    bool isnew;
     const std::string& src = source.getName();
+//    t1 = t2 = std::chrono::high_resolution_clock::now();
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
-    CuTangoActionI *a = af->find(src, f.getType());
-    if(!a) {
-        a = af->registerAction(src, f, this);
+    CuTangoActionI *a = af->registerAction(src, f, this, &isnew);
+    if(isnew)
         a->start();
-    }
-    else
-        cuprintf("CumbiaTango.addAction: action \e[0;33malready found\e[0m for src \e[0;33m%s\e[0m type %d %p\n", src.c_str(), f.getType(), a);
     a->addDataListener(l);
+//    t2 = std::chrono::high_resolution_clock::now();
+//    printf("CumbiaTango.addAction took  %ld us\n",
+//           std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count());
 }
 
 void CumbiaTango::removeAction(const string &source, CuTangoActionI::Type t) {
@@ -140,9 +134,26 @@ CuThreadsEventBridgeFactory_I *CumbiaTango::getThreadEventsBridgeFactory() const
     return d->th_eve_b_factory;
 }
 
+/*! Suggest a policy for read updates
+ *
+ *  @param p a valid combination of values from the enum CuDataUpdatePolicy
+ *  *OnPoll* options can be *or*-ed with *SkipFirstReadUpdate*
+ *
+ *  @see CuDataUpdatePolicy
+ *  @see CuPollingActivity
+ */
+void CumbiaTango::setReadUpdatePolicy(int p) {
+    d->updpo = p;
+}
+
+/*! Returns the update policy in use
+ *
+ * Default: CuDataUpdatePolicy::PollUpdateAlways
+ */
+int CumbiaTango::readUpdatePolicy() const {
+    return d->updpo;
+}
+
 int CumbiaTango::getType() const {
     return CumbiaTangoType;
 }
-
-
-

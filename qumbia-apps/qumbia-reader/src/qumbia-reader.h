@@ -223,6 +223,8 @@ public slots:
     void onNewLongMatrix(const QString& src, double timestamp_us, const CuMatrix<long int>& m, const CuData& da);
 
     void onPropertyReady(const QString& src, double ts, const CuData& p);
+
+    void onNewUnchanged(const QString& src, double ts);
     void onError(const QString& src, double ts, const QString& msg, const CuData& da);
 
 private slots:

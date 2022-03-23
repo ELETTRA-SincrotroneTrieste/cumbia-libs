@@ -1,77 +1,74 @@
 #include "cuthreadevents.h"
 
-RegisterActivityEvent::RegisterActivityEvent(CuActivity *a) : ThreadEvent()
+CuThRegisterA_Ev::CuThRegisterA_Ev(CuActivity *a) : ThreadEvent()
 {
     activity = a;
 }
 
-ThreadEvent::Type RegisterActivityEvent::getType() const
+ThreadEvent::Type CuThRegisterA_Ev::getType() const
 {
     return ThreadEvent::RegisterActivity;
 }
 
-UnRegisterActivityEvent::UnRegisterActivityEvent(CuActivity *a)
+CuThUnregisterA_Ev::CuThUnregisterA_Ev(CuActivity *a)
 {
     activity = a;
 }
 
-ThreadEvent::Type UnRegisterActivityEvent::getType() const
+ThreadEvent::Type CuThUnregisterA_Ev::getType() const
 {
     return ThreadEvent::UnregisterActivity;
 }
 
-ExitThreadEvent::ExitThreadEvent(bool autodes)
-{
-    autodestroy = autodes;
+ThreadEvent::Type CuThZeroA_Ev::getType() const {
+    return ThreadEvent::ZeroActivities;
 }
 
-ThreadEvent::Type ExitThreadEvent::getType() const
-{
+ThreadEvent::Type CuThreadExitEv::getType() const {
     return ThreadExit;
 }
 
-CuThreadTimerEvent::CuThreadTimerEvent(CuTimer *t)
-{
+CuThreadTimer_Ev::CuThreadTimer_Ev(CuTimer *t) {
     m_sender = t;
 }
 
-ThreadEvent::Type CuThreadTimerEvent::getType() const
+ThreadEvent::Type CuThreadTimer_Ev::getType() const
 {
     return TimerExpired;
 }
 
-CuTimer *CuThreadTimerEvent::getTimer() const
+CuTimer *CuThreadTimer_Ev::getTimer() const
 {
     return m_sender;
 }
 
-int CuThreadTimerEvent::getTimeout() const
+int CuThreadTimer_Ev::getTimeout() const
 {
     return m_timeout;
 }
 
-CuPostEventToActivity::CuPostEventToActivity(CuActivity *activity, CuActivityEvent *e)
+CuThRun_Ev::CuThRun_Ev(CuActivity *activity, CuActivityEvent *e)
 {
     mEvent = e;
     mActivity = activity;
 }
 
-CuPostEventToActivity::~CuPostEventToActivity()
+CuThRun_Ev::~CuThRun_Ev()
 {
 
 }
 
-ThreadEvent::Type CuPostEventToActivity::getType() const
+ThreadEvent::Type CuThRun_Ev::getType() const
 {
-    return ThreadEvent::PostEventToActivity;
+    return ThreadEvent::PostToActivity;
 }
 
-CuActivity *CuPostEventToActivity::getActivity() const
+CuActivity *CuThRun_Ev::getActivity() const
 {
     return mActivity;
 }
 
-CuActivityEvent *CuPostEventToActivity::getEvent() const
+CuActivityEvent *CuThRun_Ev::getEvent() const
 {
     return mEvent;
 }

@@ -50,39 +50,41 @@ void Qu_Reader::setContextOptions(const CuData &options) {
 //
 void Qu_Reader::onUpdate(const CuData &da)
 {
+    printf("Qu_Reader.onUpdate: %p %s\e[0m\n", this, datos(da));
     bool property_only = m_property_only || da.has("activity", "cutadb");
-    CuData data(da);
-    const CuVariant&  v = data["value"];
+    CuData data = da.clone();
+    const CuVariant&  v = da["value"];
     double ts = -1.0;
-    if(!da["timestamp_us"].isNull()) {
-        ts = da["timestamp_us"].toDouble();
+    if(!data["timestamp_us"].isNull()) {
+        ts = data["timestamp_us"].toDouble();
     }
-    else if(!da["timestamp_ns"].isNull())
-        ts = da["timestamp_ns"].toDouble();
+    else if(!data["timestamp_ns"].isNull())
+        ts = data["timestamp_ns"].toDouble();
 
-    bool hdb_data = da.has("activity", "hdb");
+    bool hdb_data = data.has("activity", "hdb");
     if(data.B("err"))
-        emit newError(source(), ts, QString::fromStdString(data["msg"].toString()), data);
+        emit newError(source(), ts, QString::fromStdString(da["msg"].toString()), data);
     else if(hdb_data)
-        emit newHdbData(source(), da);
+        emit newHdbData(source(), data);
     else if(m_tg_property_list.size() > 0 && data.containsKey("list")) {
         // use propertyReady: receiver will use the "list" key to print values
         emit propertyReady(source(), ts, data);
     }
-    else if(data.has("type", "property"))  {
+    else if(da.has("type", "property"))  {
         if(m_save_property)
             m_prop = data;
         if(property_only) {
             emit propertyReady(source(), ts, data);
         }
     }
-
     if(!hdb_data && m_save_property && !m_prop.isEmpty()) {
         // copy relevant property values into data
         foreach(QString p, QStringList() << "label" << "min" << "max" << "display_unit")
             if(m_prop[qstoc(p)].isValid())
                 data[qstoc(p)] = m_prop[qstoc(p)];
     }
+    if(!da.B("err") && ts > 0 && !da.containsKey("value") && !da.containsKey("w_value") && da.containsKey("src"))
+        emit newUnchanged(source(), ts);
 
     if(!hdb_data && !da.B("err") && !property_only) {
         QString from_ty = QuString(v.dataTypeStr(v.getType()));

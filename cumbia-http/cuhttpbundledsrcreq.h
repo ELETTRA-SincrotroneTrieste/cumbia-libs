@@ -39,6 +39,8 @@ protected slots:
     virtual void onSslErrors(const QList<QSslError> &errors);
     virtual void onError(QNetworkReply::NetworkError code);
 
+    void m_test_check_reply();
+
 private:
     CuHttpBundledSrcReqPrivate* d;
 

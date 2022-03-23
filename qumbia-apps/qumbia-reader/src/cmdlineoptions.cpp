@@ -54,6 +54,11 @@ RConfig CmdLineOptions::parse(const QStringList &args)
     QCommandLineOption help2O(QStringList() << "i" << "help-topic", "help topic specific help [--help-tango|--help-epics|--help-random]", "topic");
     QCommandLineOption listOptsO(QStringList() << "o" << "list-options", "list application options");
     QCommandLineOption noPropO(QStringList() << "N" << "no-properties", "skip configuration phase");
+    QCommandLineOption updTimestampOnUnchanged(QStringList() << "T" << "update-timestamp-only-on-unchanged-data",
+                                               "as long as data does not change, send timestamp-only updates");
+    QCommandLineOption noUpdOnUnchanged(QStringList() << "S" << "no-updates-on-unchanged-data",
+                                               "as long as data does not change, keep silent");
+
 
 #if defined (HAS_CUHDB)
     QCommandLineOption dbProO(QStringList() << "d" << "db-profile", "set the db profile to <profile>", "profile");
@@ -87,6 +92,8 @@ RConfig CmdLineOptions::parse(const QStringList &args)
     m_parser.addOption(help2O);
     m_parser.addOption(listOptsO);
     m_parser.addOption(noPropO);
+    m_parser.addOption(updTimestampOnUnchanged);
+    m_parser.addOption(noUpdOnUnchanged);
     m_parser.parse(args);
 
     bool ok;
@@ -98,7 +105,6 @@ RConfig CmdLineOptions::parse(const QStringList &args)
     if(m_parser.isSet(truncO) && m_parser.value(truncO).toInt(&ok) > 0 && ok) o.truncate = m_parser.value(truncO).toInt();
     if(m_parser.isSet(maxTimersO) && m_parser.value(maxTimersO).toInt(&ok) > 0 && ok) o.max_timers = m_parser.value(maxTimersO).toInt();
     if(m_parser.isSet(noPropO)) o.no_properties = true;
-
 
     if(m_parser.isSet(propertyO)) {
         o.refresh_limit = 1;
@@ -129,6 +135,11 @@ RConfig CmdLineOptions::parse(const QStringList &args)
         o.usage = true;
         help(args.first(), m_parser.value(help2O));
     }
+    if(m_parser.isSet(updTimestampOnUnchanged))
+        o.unchanged_upd_mode = "timestamp";
+    else if(m_parser.isSet(noUpdOnUnchanged))
+        o.unchanged_upd_mode = "none";
+    else o.unchanged_upd_mode = "always";
 
     o.help = m_parser.isSet(helpO);
 

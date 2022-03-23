@@ -24,12 +24,12 @@ public:
 
 CuPutActivity::CuPutActivity(const CuData &token,
                              CuEpCAService *df)
-    : CuIsolatedActivity(token)
+    : CuActivity(token)
 {
     d = new CuPutActivityPrivate;
     d->epics_service = df;
     d->err = false;
-    setFlag(CuActivity::CuAUnregisterAfterExec, true);
+//    setFlag(CuActivity::CuAUnregisterAfterExec, true);
     setFlag(CuActivity::CuADeleteOnExit, true);
     d->other_thread_id = pthread_self();
 }
@@ -38,6 +38,14 @@ CuPutActivity::~CuPutActivity()
 {
     pdelete("~CuWriteActivity %p", this);
     delete d;
+}
+
+int CuPutActivity::getType() const {
+    return CuPutActivityType;
+}
+
+int CuPutActivity::repeat() const {
+    return 0;
 }
 
 void CuPutActivity::exception_handler_cb(exception_handler_args excargs)

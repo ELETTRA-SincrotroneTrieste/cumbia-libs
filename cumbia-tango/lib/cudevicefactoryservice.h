@@ -6,18 +6,16 @@
 #include <string>
 #include <shared_mutex>
 #include <cudata.h>
+#include <cudevicefactory_i.h>
 
 class TDevice;
 
 class TDevData {
 public:
-    TDevData(TDevice *td, const CuData& tk) {
-        tdevice = td;
-        thread_token = tk;
-    }
+    TDevData(TDevice *td, const std::string& tk) : tdevice(td), thread_token(tk) { }
 
     TDevice *tdevice;
-    CuData thread_token;
+    const std::string thread_token;
 };
 
 /*! \brief implements CuServiceI interface and provides a service to create and store Tango
@@ -45,20 +43,16 @@ public:
  * a secondary thread. Threads in *cumbia-tango* are grouped *by device*. Different devices
  * are read and written from different threads.
  */
-class CuDeviceFactoryService : public CuServiceI
+class CuDeviceFactoryService : public CuServiceI, public CuDeviceFactory_I
 {
 public:
     enum Type { CuDeviceFactoryServiceType = CuServices::User + 20 };
 
     virtual ~CuDeviceFactoryService();
 
-    TDevice *getDevice(const std::string &name, const CuData &thread_tok);
-
-    TDevice *findDevice(const std::string &name, const CuData &thread_tok);
-
-    void addRef(const std::string& devname, const CuData &thread_tok);
-    int removeRef(const std::string& devname, const CuData &thread_tok);
-
+    TDevice *getDevice(const std::string &name, const std::string &thread_tok);
+    TDevice *findDevice(const std::string &name, const std::string &thread_tok);
+    int removeRef(const std::string& devname, const std::string &thread_tok);
 
     // CuServiceI interface
 public:

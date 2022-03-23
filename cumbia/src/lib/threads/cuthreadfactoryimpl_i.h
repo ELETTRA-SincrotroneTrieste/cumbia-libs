@@ -7,6 +7,8 @@ class CuServiceProvider;
 class CuThreadsEventBridge_I;
 
 #include <cumacros.h>
+#include <string>
+#include <vector>
 
 /** \brief an interface that requires the implementation of a method to create a thread
  *
@@ -50,9 +52,10 @@ public:
      * \li QThreadsEventBridge: Qt bridge that relies on QApplication and QApplication::postEvent.
      *     This is the first choice when developing Qt applications (cumbia-qtcontrols module)
      */
-    virtual CuThreadInterface *createThread(const CuData& thread_token,
+    virtual CuThreadInterface *createThread(const std::string& thread_token,
                                             CuThreadsEventBridge_I *eventsBridge,
-                                            const CuServiceProvider *serviceProvider) const = 0;
+                                            const CuServiceProvider *serviceProvider,
+                                            std::vector<CuThreadInterface *>* threads) const = 0;
 };
 
 #endif // CUTHREADFACTORYIMPL_H

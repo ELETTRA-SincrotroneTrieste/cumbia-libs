@@ -9,3 +9,6 @@ void CuTangoActionI::stop()
 {
     stop();
 }
+
+CuTangoActionI::~CuTangoActionI() {
+}

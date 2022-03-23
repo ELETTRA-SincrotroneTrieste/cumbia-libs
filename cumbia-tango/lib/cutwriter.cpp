@@ -28,13 +28,12 @@ public:
                      const CuData &conf,
                      const CuData &opts,
                      const CuData &_tag)
-        : tsrc(src), cumbia_t(ct), db_conf(conf), options(opts), tag(_tag), exit(false) { }
+        : tsrc(src), cumbia_t(ct), activity(nullptr), db_conf(conf), options(opts), tag(_tag) { }
 
     std::set<CuDataListener *> listeners;
     TSource tsrc;
     CumbiaTango *cumbia_t;
     CuActivity *activity;
-    bool exit;
     CuConLogImpl li;
     CuLog log;
     CuVariant write_val;
@@ -120,10 +119,8 @@ void CuTWriter::onResult(const CuData &data)
     std::set<CuDataListener *>::iterator it;
     for(it = set_copy.begin(); it != set_copy.end(); ++it)
         (*it)->onUpdate(data);
-    d->exit = true;
-    CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
-                                                                            ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
-    af->unregisterAction(d->tsrc.getName(), getType());
+    d->cumbia_t->removeAction(d->tsrc.getName(), getType());
+    d->cumbia_t->unregisterActivity(d->activity);
     d->listeners.clear();
     delete this;
 }
@@ -184,9 +181,7 @@ void CuTWriter::start() {
     at["write_value"] = d->write_val;
     at["cmd"] = (d->tsrc.getType() == TSource::SrcCmd);
     at.merge(d->options);
-    CuData thtok = CuData("device", d->tsrc.getDeviceName()); /* thread token */
-    if(d->options.containsKey("thread_token"))
-        thtok["thread_token"] = d->options["thread_token"];
+    const std::string & thtok = d->options.containsKey("thread_token") ? d->options.s("thread_token") : d->tsrc.getDeviceName(); /* thread token */
     d->activity = new CuWriteActivity(at, df, d->db_conf, d->tag);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_t->getThreadEventsBridgeFactory());
     const CuThreadFactoryImplI &fi = *(d->cumbia_t->getThreadFactoryImpl());
@@ -194,11 +189,6 @@ void CuTWriter::start() {
 }
 
 void CuTWriter::stop() {
-    d->exit = true;
-}
-
-bool CuTWriter::exiting() const {
-    return d->exit;
 }
 
 void CuTWriter::sendData(const CuData& ) {

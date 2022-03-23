@@ -8,126 +8,67 @@
 #include <assert.h>
 
 /*! @private */
-class CuActivityPrivate
-{
+class CuActivityPrivate {
 public:
-    CuActivityPrivate(const CuData& tok) : token(tok)
-    {
-        dispose = false;
-        activityManager = NULL;
+    CuActivityPrivate(const CuData& tok) : token(tok) {
+        thread = nullptr;
+        flags = 0;
+        athread = pthread_self();
     }
 
-    CuActivityManager *activityManager;
-    bool dispose;
-    bool onExit;
-    CuData token, thread_tok;
-    int flags, stateFlags;
+    CuThreadInterface *thread;
+    std::string thread_tok;
+    const CuData token;
+    int flags;
+    pthread_t athread, bthread;
 };
 
-CuActivity::CuActivity(CuActivityManager *activityManager, const CuData &token)
-{
-    d = new CuActivityPrivate(token);
-    d->activityManager = activityManager;
-    d->flags = d->stateFlags = 0;
-}
-
-CuActivity::CuActivity(const CuData &token)
-{
+CuActivity::CuActivity(const CuData &token) {
     d = new CuActivityPrivate(token);
 }
 
-void CuActivity::dispose(bool disposable)
-{
-    d->dispose = disposable;
-}
 
-bool CuActivity::isDisposable() const
-{
-    return d->dispose;
-}
-
-CuActivity::~CuActivity()
-{
-    pdelete("~CuActivity %p deleted from this thread 0x%lx", this, pthread_self());
+CuActivity::~CuActivity() {
+    assert(d->athread == pthread_self());
     delete d;
 }
 
-void CuActivity::setActivityManager(CuActivityManager *am)
-{
-    d->activityManager = am;
+void CuActivity::setThread(CuThreadInterface *thread) {
+    assert(d->athread == pthread_self());
+    d->thread = thread;
 }
 
-void CuActivity::doInit()
-{
-    d->stateFlags = CuActivity::CuAStateInit;
+void CuActivity::doInit() {
+    d->bthread = pthread_self();
     init();
 }
 
-void CuActivity::doExecute()
-{
-    d->stateFlags |= CuActivity::CuAStateExecute;
+void CuActivity::doExecute() {
+    assert(d->bthread == pthread_self());
     execute();
 }
 
-/*! \brief calls the pure virtual method onExit, gets the thread it belongs
- *         and calls CuThreadInterface::publishExitEvent
- *
- * \note called from the background thread.
- * \note Used internally.
- *
- * \li set the state flags to CuActivity::CuAStateOnExit
- * \li call CuActivity::onExit, implemented in subclasses
- * \li call CuActivityManager::getThread to get the thread associated to this activity
- * \li call CuThreadInterface::publishExitEvent on the CuActivity's thread
- */
-void CuActivity::doOnExit()
-{
-    d->stateFlags |= CuActivity::CuAStateOnExit;
+void CuActivity::doOnExit() {
+    assert(d->bthread == pthread_self());
     onExit();
-    CuThreadInterface *thread = d->activityManager->getThread(this);
-    if(thread) /* may be removed while activity is in execute() */
-        thread->publishExitEvent(this);
 }
 
-/*! \brief template method. Calls onExit only, without publishing exit event,
- *         because the thread is leaving its loop.
- *
- * \note Used internally
-*/
-void CuActivity::exitOnThreadQuit()
-{
-    d->stateFlags |= CuActivity::CuAStateOnExit;
-    onExit();
+CuThreadInterface* CuActivity::thread() const {
+    return d->thread;
 }
 
 /*! \brief returns the activity flags
- *
  * @return the activity flags, a combination of values from CuActivity::Flags
- *
  * @see setFlags
- *
  */
-int CuActivity::getFlags() const
-{
+int CuActivity::getFlags() const {
     return d->flags;
 }
 
-/*! \brief returns the activity *state* flags
- *
- * @return the activity state flags, a combination of values defined in
- *         CuActivity::StateFlags
- */
-int CuActivity::getStateFlags() const
-{
-    return d->stateFlags;
-}
-
 /*! \brief set the flags on the activity
- *
  * @param f a combination of CuActivity::Flags <strong>or</strong>ed together.
  */
-void CuActivity::setFlags(int f)
-{
+void CuActivity::setFlags(int f) {
     d->flags = f;
 }
 
@@ -136,39 +77,31 @@ void CuActivity::setFlags(int f)
  * @param f a flag from CuActivity::Flags
  * @param on true or false to enable/disable a flag
  */
-void CuActivity::setFlag(CuActivity::Flags f, bool on)
-{
-    if(!on)
-        d->flags = d->flags & (~f);
-    else
-        d->flags = d->flags | f;
+void CuActivity::setFlag(CuActivity::Flags f, bool on) {
+    !on ? d->flags = d->flags & (~f) : d->flags = d->flags | f;
 }
 
 /** \brief Publish a result from the activity thread (whence the method is called) to
  *         the main thread.
- *
- *  1. Find the thread in charge of this activity.
- *  2. If still there, ask it to post an event on the main thread with the data.
+ *  \note this method may be called even from a thread different from activity's execute.
+ *        In fact, data is delivered through the event bridge / event loop.
+ *        An example is cumbia-tango CuEventActivity, where publishResult is invoked from
+ *        the Tango push_event callback's thread, different from the activity's.
  */
-void CuActivity::publishResult(const CuData &data)
-{
-    CuThreadInterface *thread = d->activityManager->getThread(this);
-    if(thread) /* may be removed while activity is in execute() */
-        thread->publishResult(this, data);
+void CuActivity::publishResult(const CuData &data) {
+    if(d->thread)
+        d->thread->publishResult(this, data);
 }
-
 
 /*!
  * \brief Publish a result from the activity to the main thread. Datalist version
- * \param datalist a *heap allocated* vector of CuData
+ * \param datalist a const reference vector of CuData
  *
- * \note datalist is deleted by the library when no more needed.
+ * \note see note in publishResult above
  */
-void CuActivity::publishResult(const std::vector<CuData> *datalist)
-{
-    CuThreadInterface *thread = d->activityManager->getThread(this);
-    if(thread) /* may be removed while activity is in execute() */
-        thread->publishResult(this, datalist);
+void CuActivity::publishResult(const std::vector<CuData> &datalist) {
+    if(d->thread) /* may be removed while activity is in execute() */
+        d->thread->publishResult(this, datalist);
 }
 
 /** \brief Publish a progress from the activity thread (whence the method is called) to the
@@ -176,47 +109,38 @@ void CuActivity::publishResult(const std::vector<CuData> *datalist)
  *
  * @see publishResult
  */
-void CuActivity::publishProgress(int step, int total, const CuData &data)
-{
-    CuThreadInterface *thread = d->activityManager->getThread(this);
-    cuprintf("\e[1;33mcalling publishProgress on thread %p from this thread 0x%lx\e[0m\n", thread, pthread_self());
-    if(thread)
-        thread->publishProgress(this, step, total, data);
-}
-
-/*!
- * \brief Returns the reference to the activity manager
- * \return a pointer to the CuActivityManager used by this instance
- */
-CuActivityManager *CuActivity::getActivityManager() const
-{
-    return d->activityManager;
+void CuActivity::publishProgress(int step, int total, const CuData &data) {
+    if(d->thread)
+        d->thread->publishProgress(this, step, total, data);
 }
 
 /*! \brief return the activity token
  *
- * The activity token can be used to identify an activity or to gather
- * its characteristics together in a CuData bundle.
+ * The activity token can be used to identify or characterize an activity through a CuData bundle.
  * This *must not be confused with the thread token*, which is used to decide
  * whether a new activity is started in a new thread or an existing thread
  * with the same token is used.
  *
  * For that usage, see
- * \li CuThread::isEquivalent
+ * \li CuThread::matches
  * \li \ref md_src_tutorial_cuactivity
  * \li CuActivity introductive documentation
  *
+ * Activity token is const and set once in the class constructor, though this
+ * method is lock free and safe to access from different threads
+ *
  */
-CuData CuActivity::getToken() const
-{
+const CuData CuActivity::getToken() const {
     return d->token;
 }
 
-void CuActivity::setThreadToken(const CuData &tt) {
+void CuActivity::setThreadToken(const std::string &tt) {
+    assert(d->athread == pthread_self());
     d->thread_tok = tt;
 }
 
-const CuData &CuActivity::threadToken() const {
+const std::string CuActivity::threadToken() const {
+    assert(d->bthread == pthread_self());
     return d->thread_tok;
 }
 

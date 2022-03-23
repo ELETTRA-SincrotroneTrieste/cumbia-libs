@@ -1,24 +1,12 @@
 #include "cuevent.h"
 
-CuResultEventPrivate::CuResultEventPrivate(const CuData &d) : data(d), data_list(NULL)
-{
+CuResultEventPrivate::CuResultEventPrivate() {
     is_list = false;
     step = total = 0;
-    type = CuEventI::Result;
+    type = CuEventI::CuResultEv;
 }
 
-CuResultEventPrivate::CuResultEventPrivate(const std::vector<CuData> *dli) : data_list(dli)
-{
-    step = total = 0;
-    type = CuEventI::Result;
-    is_list = true;
-}
-
-CuResultEventPrivate::~CuResultEventPrivate()
-{
-    if(data_list) {
-        delete data_list;
-    }
+CuResultEventPrivate::~CuResultEventPrivate() {
 }
 
 
@@ -27,10 +15,11 @@ CuResultEventPrivate::~CuResultEventPrivate()
  * \param sender the CuActivity that originates the event
  * \param data the data to be delivered
  * \param t the type of event
+ *
+ * CuResultEvent makes a copy of data before delivering it to the event loop thread.
  */
-CuResultEvent::CuResultEvent(const CuActivity* sender, const CuData &data, CuEventI::CuEventType t)
-{
-    d_p = new CuResultEventPrivate(data);
+CuResultEvent::CuResultEvent(const CuActivity* sender, const CuData &da, CuEventI::CuEventType t) : data(da) {
+    d_p = new CuResultEventPrivate();
     d_p->type = t;
     d_p->activity = sender;
 }
@@ -41,12 +30,14 @@ CuResultEvent::CuResultEvent(const CuActivity* sender, const CuData &data, CuEve
  * \param sender the CuActivity that originates the event
  * \param data_list a vector of data to be delivered
  * \param t the type of event
+ *
+ * data_list contents will be *moved* into a local copy to be used by the receiving thread
  */
-CuResultEvent::CuResultEvent(const CuActivity* sender, const std::vector<CuData> *data_list, CuEventType t)
-{
-    d_p = new CuResultEventPrivate(data_list);
+CuResultEvent::CuResultEvent(const CuActivity* sender, const std::vector<CuData> &dali, CuEventType t) : datalist(std::move(dali) ){
+    d_p = new CuResultEventPrivate();
     d_p->type = t;
     d_p->activity = sender;
+    d_p->is_list = true;
 }
 
 /*!
@@ -56,12 +47,11 @@ CuResultEvent::CuResultEvent(const CuActivity* sender, const std::vector<CuData>
  * \param total the total steps of a multi-step data processing
  * \param data the data to be delivered
  */
-CuResultEvent::CuResultEvent(const CuActivity* sender, int step, int total, const CuData &data)
-{
-    d_p = new CuResultEventPrivate(data);
+CuResultEvent::CuResultEvent(const CuActivity* sender, int step, int total, const CuData &da) : data(da) {
+    d_p = new CuResultEventPrivate();
     d_p->step = step;
     d_p->total = total;
-    d_p->type = Progress;
+    d_p->type = CuProgressEv;
     d_p->activity = sender;
 }
 
@@ -114,15 +104,6 @@ int CuResultEvent::getTotal() const
     return d_p->total;
 }
 
-/*! \brief returns the CuData stored in the event
- *
- * @return CuData bundle carrying the event data
- */
-const CuData &CuResultEvent::getData() const
-{
-    return d_p->data;
-}
-
 /*! \brief returns a pointer to the CuActivity that generated the event
  *
  * @return a pointer to the CuActivity that generated the event
@@ -137,41 +118,28 @@ bool CuResultEvent::isList() const
     return d_p->is_list;
 }
 
-const std::vector<CuData> *CuResultEvent::getDataList() const
-{
-    return d_p->data_list;
+
+CuA_ExitEv::CuA_ExitEv(CuActivity *sender) : m_activity(sender) {}
+
+CuEventI::CuEventType CuA_ExitEv::getType() const {
+    return CuEventI::CuA_ExitEvent;
 }
 
-/*! \brief an exit event for the sender activity
- *
- * @param sender the CuActivity that has to be finished
- *
- * Called by CuThread::publishExitEvent
- *
- */
-CuActivityExitEvent::CuActivityExitEvent(CuActivity *sender)
-{
-    m_activity = sender;
+CuActivity *CuA_ExitEv::getActivity() const {
+    return m_activity;
 }
 
-/*! \brief returns an exit event type
- *
- * @return CuEventI::CuActivityExitEvent
- */
-CuEventI::CuEventType CuActivityExitEvent::getType() const
-{
-    return CuEventI::CuActivityExitEvent;
+CuA_UnregisterEv::CuA_UnregisterEv(CuActivity *sender) : m_activity(sender) {}
+
+CuEventI::CuEventType CuA_UnregisterEv::getType() const {
+    return CuEventI::CuA_UnregisterEv;
 }
 
-/*! \brief returns a pointer to the activity that sent the exit event
- *
- * @return a pointer to the CuActivity that sent the exit event
- */
-CuActivity *CuActivityExitEvent::getActivity() const
-{
+CuActivity *CuA_UnregisterEv::getActivity() const {
     return m_activity;
 }
 
 CuEventI::CuEventType CuTimerEvent::getType() const {
-    return CuEventI::TimerEvent;
+    return CuEventI::CuTmrEv;
 }
+

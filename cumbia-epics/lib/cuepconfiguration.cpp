@@ -128,7 +128,7 @@ void CuEpConfiguration::start() {
     at["pv"] = d->tsrc.getPV();
     at["activity"] = "property";
     at["is_pv"] = d->tsrc.getType() == EpSource::PV;
-    CuData tt("pv", d->tsrc.getPV()); /* thread token */
+    std::string tt("pv_conf" + d->tsrc.getPV()); /* thread token */
     d->activity = new CuEpConfigActivity(at, df);
     static_cast<CuEpConfigActivity *>(d->activity)->setDesiredAttributeProperties(d->desired_props);
     const CuThreadsEventBridgeFactory_I &bf = *(d->cumbia_epics->getThreadEventsBridgeFactory());

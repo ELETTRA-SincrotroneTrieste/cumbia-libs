@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cuactivitymanager.h>
+#include <assert.h>
 
 class CuMonitorActivityPrivate
 {
@@ -23,10 +24,10 @@ public:
 CuMonitorActivity::CuMonitorActivity(const CuData &token,
                                      CuEpCAService *ep_s,
                                      const CuVariant & argins)
-    : CuContinuousActivity(token)
+    : CuPeriodicActivity(token)
 {
     d = new CuMonitorActivityPrivate;
-    setFlag(CuActivity::CuAUnregisterAfterExec, false);
+//    setFlag(CuActivity::CuAUnregisterAfterExec, false);
     setFlag(CuActivity::CuADeleteOnExit, true);
     d->device_srvc = ep_s;
     d->repeat = 1000;
@@ -247,7 +248,7 @@ void CuMonitorActivity::exception_handler(exception_handler_args excargs)
 void CuMonitorActivity::event(CuActivityEvent *e)
 {
     assert(d->my_thread_id == pthread_self());
-    CuContinuousActivity::event(e);
+    CuPeriodicActivity::event(e);
 }
 
 int CuMonitorActivity::getType() const

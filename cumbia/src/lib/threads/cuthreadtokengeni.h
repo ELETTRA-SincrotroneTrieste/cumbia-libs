@@ -1,7 +1,7 @@
 #ifndef CUTHREADTOKENGENI_H
 #define CUTHREADTOKENGENI_H
 
-#include <cudata.h>
+#include <string>
 
 /*!
  * \brief The CuThreadTokenGenI is an interface for custom thread token generators
@@ -17,7 +17,7 @@ class CuThreadTokenGenI
 public:
     virtual ~CuThreadTokenGenI() {}
 
-    virtual CuData generate(const CuData& in) = 0;
+    virtual std::string generate(const std::string& in) = 0;
 };
 
 #endif // CUTHREADTOKENGENI_H

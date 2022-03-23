@@ -1,7 +1,7 @@
 #ifndef CURANDOMGENACTIVITY_H
 #define CURANDOMGENACTIVITY_H
 
-#include <cucontinuousactivity.h>
+#include <cuperiodicactivity.h>
 #include <cuactivityevent.h>
 #include <list>
 #include <curndactioni.h>
@@ -40,7 +40,7 @@ public:
 public:
     virtual Type getType() const;
 };
-/*! \brief an activity to periodically read from Tango. Implements CuContinuousActivity
+/*! \brief an activity to periodically read from Tango. Implements CuPeriodicActivity
  *
  * Implementing CuActivity, the work is done in the background by the three methods
  *
@@ -62,7 +62,7 @@ public:
  * CuRandomGenActivity *must stay in execution (must not exit)* until CuTReader is stopped (CuTReader::stop).
  * For this reason, CuAUnregisterAfterExec is set to false. When the Tango device is not defined into the
  * database (in CuRandomGenActivity::execute the Tango::DeviceProxy is NULL) the repeat time is set to a negative
- * number. This suspends the continuous activity without exiting. It will be asked to exit from CuTReader::stop
+ * number. This suspends the Periodic activity without exiting. It will be asked to exit from CuTReader::stop
  * through Cumbia::unregisterActivity.
  *
  * CuADeleteOnExit is left to true in order to let the activity be deleted by CuThread after onExit.
@@ -74,13 +74,13 @@ public:
  * @see CuTReader::stop
  *
  */
-class CuRandomGenActivity : public CuContinuousActivity
+class CuRandomGenActivity : public CuPeriodicActivity
 {
 public:
 
     /*! \brief defines the Type of the activity, returned by getType
      */
-    enum Type { CuRandomGenActivityType = CuActivity::User + 3 };
+    enum Type { CuRandomGenActivityType = CuActivity::UserAType + 3 };
 
     CuRandomGenActivity(const CuData& token);
 

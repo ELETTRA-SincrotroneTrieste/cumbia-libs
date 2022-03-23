@@ -1,12 +1,12 @@
 #ifndef CUATTCONFIGACTIVITY_H
 #define CUATTCONFIGACTIVITY_H
 
-#include <cuisolatedactivity.h>
+#include <cuactivity.h>
 #include <cutconfigactivity_executor_i.h>
 
 class CuTAttConfigActivityPrivate;
-class CuDeviceFactoryService;
-
+class CuDeviceFactory_I;
+class TSource;
 
 /*!
  * \brief Activity to get attribute configuration or command info. Optionally, it can perform a one
@@ -15,9 +15,14 @@ class CuDeviceFactoryService;
 class CuTConfigActivity : public CuActivity
 {
 public:
-    enum Type { CuReaderConfigActivityType = CuActivity::User + 5,  CuWriterConfigActivityType };
+    enum Type { CuReaderConfigActivityType = CuActivity::UserAType + 5,  CuWriterConfigActivityType };
 
-    CuTConfigActivity(const CuData& tok, CuDeviceFactoryService *df, Type t, const CuTConfigActivityExecutor_I *tx);
+    CuTConfigActivity(const TSource &ts,
+                      CuDeviceFactory_I *df,
+                      Type t,
+                      const CuTConfigActivityExecutor_I *tx,
+                      const CuData &o,
+                      const CuData &tag);
     virtual ~CuTConfigActivity();
 
     void setOptions(const CuData& o);
