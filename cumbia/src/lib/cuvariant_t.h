@@ -45,12 +45,12 @@ template<typename T> bool CuVariant::to(T &val) const
         case UInt:
             val = static_cast<T>(*(static_cast<unsigned int *>(_d->val)));
             break;
-		case Char:
-			val = static_cast<T>(*(static_cast<char *>(_d->val)));
-			break;
-		case UChar:
-			val = static_cast<T>(*(static_cast<unsigned char *>(_d->val)));
-			break;
+        case Char:
+            val = static_cast<T>(*(static_cast<char *>(_d->val)));
+            break;
+        case UChar:
+            val = static_cast<T>(*(static_cast<unsigned char *>(_d->val)));
+            break;
         case LongInt:
             val = static_cast<T>(*(static_cast<long int *>(_d->val)));
             break;
@@ -75,22 +75,24 @@ template<typename T> bool CuVariant::to(T &val) const
         case Boolean:
             val = static_cast<T>(*(static_cast<bool *>(_d->val)));
             break;
-        case String:
-            try {
-                const std::string& s = toString();
-                if(s == "true") val = static_cast<T>(1);
-                else if(s == "false") val = static_cast<T>(0);
-                else // try converting to long double
+        case String: {
+            const std::string& s = toString();
+            if(s == "true") val = static_cast<T>(1);
+            else if(s == "false") val = static_cast<T>(0);
+            else { // try converting to long double
+                try {
                     val = static_cast<T>( std::stold(s));
+                }
+                catch(const std::invalid_argument& ) {
+                    pwarn("CuVariant.to: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
+                    valid = false;
+                }
+                catch(const std::out_of_range& ) {
+                    pwarn("CuVariant.to: string \"%s\" to number conversion failed: out of range", toString().c_str());
+                    valid = false;
+                }
             }
-            catch(const std::invalid_argument& ) {
-                pwarn("CuVariant.to: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
-                valid = false;
-            }
-            catch(const std::out_of_range& ) {
-                pwarn("CuVariant.to: string \"%s\" to number conversion failed: out of range", toString().c_str());
-                valid = false;
-            }
+        }
             break;
         default:
             valid = false;
@@ -98,7 +100,7 @@ template<typename T> bool CuVariant::to(T &val) const
         }
         if(!valid)
             pwarn("CuVariant.to: unsupported scalar conversion from type %s and format %s", dataTypeStr(_d->type).c_str(),
-                 dataFormatStr(_d->format).c_str());
+                  dataFormatStr(_d->format).c_str());
     }
     return valid;
 }
@@ -134,16 +136,16 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
             for(i = 0; i < vus.size(); i++)
                 v.push_back(static_cast<T>(vus[i]));
         }
-		else if(_d->type == UChar) {
-			std::vector<unsigned char> vuc = toUCharVector();
-			for(i = 0; i < vuc.size(); i++)
-				v.push_back(static_cast<T>(vuc[i]));
-		}
-		else if(_d->type == Char) {
-			std::vector<char> vc = toCharVector();
-			for(i = 0; i < vc.size(); i++)
-				v.push_back(static_cast<T>(vc[i]));
-		}
+        else if(_d->type == UChar) {
+            std::vector<unsigned char> vuc = toUCharVector();
+            for(i = 0; i < vuc.size(); i++)
+                v.push_back(static_cast<T>(vuc[i]));
+        }
+        else if(_d->type == Char) {
+            std::vector<char> vc = toCharVector();
+            for(i = 0; i < vc.size(); i++)
+                v.push_back(static_cast<T>(vc[i]));
+        }
         else if(_d->type == Int) {
             std::vector<int> vi = toIntVector();
             for(i = 0; i < vi.size(); i++)
@@ -159,11 +161,11 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
             for(i = 0; i < vli.size(); i++)
                 v.push_back(static_cast<T>(vli[i]));
         }
-		else if(_d->type == LongLongInt) {
-			std::vector<long long int> vlli = toLongLongIntVector();
-			for(i = 0; i < vlli.size(); i++)
-				v.push_back(static_cast<T>(vlli[i]));
-		}
+        else if(_d->type == LongLongInt) {
+            std::vector<long long int> vlli = toLongLongIntVector();
+            for(i = 0; i < vlli.size(); i++)
+                v.push_back(static_cast<T>(vlli[i]));
+        }
         else if(_d->type == LongLongUInt) {
             std::vector<unsigned long long int> vlli = toLongLongUIntVector();
             for(i = 0; i < vlli.size(); i++)
@@ -173,7 +175,7 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
             std::vector<long unsigned int> vlui = toULongIntVector();
             for(i = 0; i < vlui.size(); i++)
                 v.push_back(static_cast<T>(vlui[i]));
-		}
+        }
         else if(_d->type == Float) {
             std::vector<float> vf = toFloatVector();
             for(i = 0; i < vf.size(); i++)
