@@ -464,7 +464,6 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts) {
     m_v_attd_remove(ts.getName(), ts.getPoint());
     if(d->cmds.size() == 0 && d->v_attd.size() == 0) {
         printf("[0x%lx] CuPollingActivity::m_unregisterAction: after %s \e[0;35mno more atts / cmds\e[0m\n", pthread_self(), ts.getName().c_str());
-        printf("[0x%lx] \e[1;33m*\n* test if managed this\n*\n*\e[0m\n",pthread_self());
     }
 }
 
