@@ -101,10 +101,6 @@ void CuPoller::unregisterAction(CuTangoActionI *a) {
         // post remove to activity's thread
         if(activity) {
             d->cumbia_t->postEvent(activity, new CuRemovePollActionEvent(a->getSource()));
-
-            printf("\e[1;35m*\n*\n*CuPoller::m_do_unregisterAction: need manage unregisterActivity when\n"
-                   "CuPollingActivity is empty\n*\n*\e[0m\n");
-
             int cnt = 0;
             auto ipair = d->pa_amap.equal_range(activity);
             auto it = ipair.first;
@@ -116,10 +112,8 @@ void CuPoller::unregisterAction(CuTangoActionI *a) {
                     ++it; ++cnt;
                 }
             }
+            printf("\e[1;36m CuPoller::m_do_unregisterAction: %d actions for activity %p %s: %s\e[0m\n", cnt, activity, datos(activity->getToken()), cnt ==0 ? "\e[1;32munregistering\e[0m" : "\e[1;35mnot unregistering yet\e[0m");
             if(cnt == 0) {
-                printf("\e[1;36m CuPoller::m_do_unregisterAction: no more actions for activity %p %s:\n"
-                       "--> calling cumbia->unregisterActivity!\n\e[0m\n",
-                       activity, datos(activity->getToken()));
                 d->cumbia_t->unregisterActivity(activity);
             }
         }
