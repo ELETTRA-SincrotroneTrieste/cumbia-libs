@@ -15,6 +15,9 @@ This implies:
 #### CuActivity
 - CuActivity holds a reference to the owning thread instead of the whole activity manager. This is possible because one activity
   belongs to one thread only.
+  
+- CuAUnregisterAfterExec flag has been removed! Users of activities shall call Cumbia::unregisterActivity explicitly.
+  This greatly simplifies CuThread code and activity management.
  
 #### CuThread
 - CuThread has no references to neither CuThreadService nor CuActivityManager
@@ -23,7 +26,8 @@ This implies:
 
 ##### Notes
 Timer based CuThreads with the same period shall use one instance of the same timer.
-CuThread must refer to the global CuTimerService, which members shall still be lock protected.
+CuThread must refer to the global CuTimerService, which members shall still be lock protected. Please note that once a CuThread is 
+added to a CuTimer as a *CuTimerListener*, timeout events are delivered to the thread *without passing through the CuTimerService*.
 
   
 ### Benefits
