@@ -19,6 +19,7 @@
 #include <condition_variable>
 #include <vector>
 #include <map>
+#include <sys/time.h>
 #include <chrono>
 #include <assert.h>
 #include <limits>
@@ -456,9 +457,8 @@ void CuThread::run() {
             while(d->eq.empty()) {
                 d->cv.wait(condvar_lock);
             }
-            if(d->eq.empty())
+            if(d->eq.empty()) // spurious wake up
                 continue;
-
             te = d->eq.front();
             d->eq.pop();
         }
