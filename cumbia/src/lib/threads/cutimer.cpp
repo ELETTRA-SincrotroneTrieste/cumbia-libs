@@ -71,14 +71,11 @@ void CuTimer::restart(int millis) {
     std::unique_lock<std::mutex> lock(d->m_mutex);
     d->m_quit = d->m_pause = false;
     d->m_timeout = millis;
-    if(!d->m_thread) { // first time start is called or after stop
+    if(!d->m_thread) { // restart is called or after stop
         d->m_thread = new std::thread(&CuTimer::run, this);
     }
     else {
-        if(d->m_pending > 0)
-            d->m_skip = true;
-        else
-            d->m_pending++;
+        d->m_pending > 0 ? d->m_skip = true : d->m_pending++;
         d->m_wait.notify_one();
     }
 }
@@ -90,7 +87,7 @@ void CuTimer::start(int millis) {
         std::unique_lock<std::mutex> lock(d->m_mutex);
         d->m_quit = d->m_pause = false;
         d->m_timeout = millis;
-        if(!d->m_thread) { // first time start is called or after stop
+        if(!d->m_thread) { // start is called or after stop
             d->m_thread = new std::thread(&CuTimer::run, this);
         }
         d->m_skip = false;
