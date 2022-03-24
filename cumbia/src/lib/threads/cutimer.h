@@ -16,12 +16,12 @@ class CuTimerListener;
 //
 class CuTimerPrivate {
 public:
-    CuTimerPrivate() : m_quit(false), m_pause(false), m_exited(false), m_pending(false), m_skip(false),
+    CuTimerPrivate() : m_quit(false), m_pause(false), m_pending(false), m_skip(false),
         m_timeout(1000), m_thread(nullptr) {}
 
     std::map<CuTimerListener *, CuEventLoopService *> m_lis_map;
     std::chrono::time_point<std::chrono::steady_clock> m_last_start_pt, m_first_start_pt;
-    bool m_quit, m_pause, m_exited;
+    bool m_quit, m_pause;
 
     std::atomic_int m_pending;
     std::atomic_bool m_skip;
@@ -86,6 +86,7 @@ private:
     std::map<CuTimerListener *, CuEventLoopService *> listenersMap();
 
     void reset();
+    void restart(int millis);
     void start(int millis);
     void stop();
 

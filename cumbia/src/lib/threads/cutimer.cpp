@@ -80,14 +80,10 @@ void CuTimer::reset() {
     d->m_wait.notify_one();
 }
 
-/*! \brief start the timer with the given interval in milliseconds
- *
- * @param millis the desired timeout
- *
- * If the timer is still running, CuTimer waits for it to finish before starting
- * another one
- */
-void CuTimer::start(int millis)
+// restart the timer with the given interval in milliseconds
+// the timer is restarted (if pending, it  is rescheduled
+//
+void CuTimer::restart(int millis)
 {
     std::unique_lock<std::mutex> lock(d->m_mutex);
     d->m_quit = d->m_pause = false;
@@ -108,13 +104,29 @@ void CuTimer::start(int millis)
     }
 }
 
+// start the timer if not already pending
+//
+void CuTimer::start(int millis) {
+    std::unique_lock<std::mutex> lock(d->m_mutex);
+    d->m_quit = d->m_pause = false;
+    d->m_timeout = millis;
+    if(!d->m_thread) { // first time start is called or after stop
+        d->m_thread = new std::thread(&CuTimer::run, this);
+    }
+    else if(!d->m_pending) {
+        d->m_skip = false;
+        d->m_pending++;
+        d->m_wait.notify_one();
+    }
+}
+
 /*! \brief stops the timer, if active
  *
  * stops the timer, joins the timer thread and deletes it
  */
 void CuTimer::stop()
 {
-    if(d->m_exited)
+    if(!d->m_thread)
         return; /* already quit */
     {
         std::unique_lock<std::mutex> lock(d->m_mutex);
@@ -125,7 +137,6 @@ void CuTimer::stop()
     if(d->m_thread->joinable()) {
         d->m_thread->join();
     }
-    d->m_exited = true;
     delete d->m_thread;
     d->m_thread = nullptr;
 }
