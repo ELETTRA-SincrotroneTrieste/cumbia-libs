@@ -7,8 +7,8 @@
 #include <shared_mutex>
 #include <condition_variable>
 #include <map>
-#include <chrono>
 #include <atomic>
+#include <chrono>
 
 class CuTimerListener;
 
@@ -20,12 +20,11 @@ public:
         m_timeout(1000), m_thread(nullptr) {}
 
     std::map<CuTimerListener *, CuEventLoopService *> m_lis_map;
-    std::chrono::time_point<std::chrono::steady_clock> m_last_start_pt, m_first_start_pt;
     bool m_quit, m_pause;
 
     std::atomic_int m_pending;
-    std::atomic_bool m_skip;
-    std::atomic_int m_timeout;
+    bool m_skip;
+    int m_timeout;
 
     std::thread *m_thread;
     std::mutex m_mutex;
@@ -33,6 +32,8 @@ public:
 
     int m_id;
     std::string m_name;
+
+//    std::chrono::time_point<std::chrono::high_resolution_clock> m_last_start_pt, m_start_pt;
 };
 /*! \brief a timer used by CuThread for periodic execution of an *activity*
  *
@@ -85,7 +86,6 @@ private:
     void removeListener(CuTimerListener *l);
     std::map<CuTimerListener *, CuEventLoopService *> listenersMap();
 
-    void reset();
     void restart(int millis);
     void start(int millis);
     void stop();
