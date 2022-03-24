@@ -278,23 +278,6 @@ void Cumbia::postEvent(CuActivity *a, CuActivityEvent *e)
     thread->postEvent(a, e);
 }
 
-/*! call the CuActivit::event method directly in the same thread.
- *
- *  \param a the activity to be notified
- *  \param e the event
- *
- *  Some activities may implement a custom *event-and-notification*
- *  system using a condition variable to unlock a loop within the
- *  execute method to process events on a queue. In this context,
- *  the Cumbia::postEvent method above wouldn't work because the
- *  activity execute method is waiting on a lock. In these cases,
- *  notify calls CuActivity::event directly, and such activities
- *  shall wake the loop and process the event
- */
-void Cumbia::notify(CuActivity *a, CuActivityEvent *e) {
-    a->event(e);
-}
-
 /*!
  * \brief Cumbia::setThreadTokenGenerator install athread token generator that deals
  *        with grouping activities into separate threads according to the specific engine implementation
