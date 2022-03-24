@@ -95,8 +95,7 @@ void CuTimerService::unregisterListener(CuTimerListener *tl, int timeout)
     std::unique_lock lock(d->shmu);
     CuTimer *t = m_findTimer(tl, timeout); // does not acquire lock
     if(!t) {
-        perr("CuTimerService.unregisterListener: no listener %p registered with timeout %d", tl, timeout);
-        abort();
+        pfatal("CuTimerService.unregisterListener: no listener %p registered with timeout %d", tl, timeout);
     }
     else {
         t->removeListener(tl); // CuTimer lock guards its listeners list
