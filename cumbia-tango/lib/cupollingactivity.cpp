@@ -381,12 +381,12 @@ void CuPollingActivity::execute()
         for(size_t i = 0; att_idx >= 0 && i < d->v_attd.size(); i++) { // attributes
             if(!d->v_skip[i]) {
                 success = tangoworld.read_atts(d->tdev->getDevice(), d->v_attn, d->v_attd, results, d->data_updpo);
-//                printf("CuPollingActivity. \e[0;32mreading attribute %s\e[0m cuz d->v_skip %s\n", d->v_attn[i].c_str(),
+//                printf("[0x%lx] CuPollingActivity. \e[0;32mreading attribute %s/%s\e[0m cuz d->v_skip %s\n", pthread_self(),  d->tdev->getName().c_str(), d->v_attn[i].c_str(),
 //                       d->v_skip[i] ? "TRUE" : "FALSE");
             }
             else {
-                printf("CuPollingActivity. \e[1;36mskipping first read of attribute %s\e[0m cuz d->v_skip %s\n", d->v_attn[i].c_str(),
-                       d->v_skip[i] ? "TRUE" : "FALSE");
+//                printf("[0x%lx] CuPollingActivity. \e[1;36mskipping first read of attribute %s/%s\e[0m cuz d->v_skip %s\n", pthread_self(), d->tdev->getName().c_str(), d->v_attn[i].c_str(),
+//                       d->v_skip[i] ? "TRUE" : "FALSE");
                 d->v_skip[i] = false;
             }
             if(!success) {
@@ -418,8 +418,6 @@ void CuPollingActivity::execute()
         dev_err.putTimestamp();
         results.push_back(dev_err);
     }
-
-//    printf("CuPollingActivity.publishResult: publishing %ld results\n", results.size());
     if(results.size() > 0)
         publishResult(results);
 }
@@ -443,6 +441,7 @@ void CuPollingActivity::onExit()
     d->devfa->removeRef(at["device"].toString(), threadToken());
     // do not publishResult because CuPoller (which is our listener) may be deleted by CuPollingService
     // from the main thread when its action list is empty (see CuPollingService::unregisterAction)
+
 }
 
 void CuPollingActivity::m_registerAction(const TSource& ts) {
