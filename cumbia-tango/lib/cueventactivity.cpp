@@ -280,14 +280,7 @@ void CuEventActivity::push_event(Tango::EventData *e) {
         da["err"] = utils.error(); // no "msg" if no err
         if(da.b("err")) da["msg"] = utils.getLastMessage();
         if(d->ucnt > 0) // if -1, skip first (successful) data update
-        {
-//            printf("CuEventActivity. \e[0;32;4mpublish update of \e[1;32mEVENT\e[1;36m attribute %s ucnt %ld\e[0m\n",
-//                   da.s("src").c_str(), d->ucnt);
             publishResult(da);
-        }
-        else {
-            printf("CuEventActivity. \e[0;36;4mmskipping event first update of \e[1;32mEVENT\e[1;36m attribute %s ucnt %ld\e[0m\n", da.s("src").c_str(), d->ucnt);
-        }
     }
     else  {
         // CuTReader must distinguish between push_event exception
