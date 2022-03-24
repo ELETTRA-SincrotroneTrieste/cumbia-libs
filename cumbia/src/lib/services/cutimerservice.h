@@ -35,6 +35,7 @@ public:
     CuTimer *changeTimeout(CuTimerListener *th, int from_timeo, int to_timeo);
     bool isRegistered(CuTimerListener *th, int timeout);
     void restart(CuTimer *t, int millis);
+    void start(CuTimer *t, int millis);
 
     // CuServiceI interface
 public:
