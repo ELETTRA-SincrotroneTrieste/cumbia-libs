@@ -215,6 +215,7 @@ public:
     void pauseActivity(CuActivity *a);
     void resumeActivity(CuActivity *a);
     void postEvent(CuActivity *a, CuActivityEvent *e);
+
     void finish();
     virtual int getType() const;
     void setThreadTokenGenerator(CuThreadTokenGenI *tg);
