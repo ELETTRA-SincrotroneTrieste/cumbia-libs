@@ -11,11 +11,10 @@
 class CuTimerServicePrivate {
 public:
     // timeout --> [listeners (threads) --> timer map]
-    std::map<int, CuTimer *> ti_map;
+    std::unordered_map<int, CuTimer *> ti_map;
     // for fast listener --> timer search
-    std::map<const CuTimerListener *, CuTimer *> ti_cache;
+    std::unordered_map<const CuTimerListener *, CuTimer *> ti_cache;
     std::shared_mutex shmu;
-    std::list<CuTimerListener *>restart_queue;
     int timer_max_count;
     int tmrcnt;
 };
@@ -33,7 +32,7 @@ CuTimerService::CuTimerService() {
 CuTimerService::~CuTimerService()
 {
     m_stopAll();
-    for(std::map<int, CuTimer *>::iterator it = d->ti_map.begin(); it != d->ti_map.end(); ++it)
+    for(std::unordered_map<int, CuTimer *>::iterator it = d->ti_map.begin(); it != d->ti_map.end(); ++it)
         delete it->second;
     d->ti_map.clear();
     d->ti_cache.clear();
@@ -139,7 +138,7 @@ CuTimer *CuTimerService::changeTimeout(CuTimerListener *tl, int from_timeo, int 
  */
 bool CuTimerService::isRegistered(CuTimerListener *tlis, int timeout) {
     std::shared_lock lock(d->shmu);
-    std::map<const CuTimerListener*, CuTimer *>::const_iterator it = d->ti_cache.find(tlis);
+    std::unordered_map<const CuTimerListener*, CuTimer *>::const_iterator it = d->ti_cache.find(tlis);
     if(it != d->ti_cache.end() && timeout == it->second->timeout())
         return true;
     return false;
@@ -187,7 +186,7 @@ CuServices::Type CuTimerService::getType() const {
 void CuTimerService::m_stopAll()
 {
     std::unique_lock lock(d->shmu);
-    for(std::map<int, CuTimer *>::iterator it = d->ti_map.begin(); it != d->ti_map.end(); ++it) {
+    for(std::unordered_map<int, CuTimer *>::iterator it = d->ti_map.begin(); it != d->ti_map.end(); ++it) {
         CuTimer *timer = it->second;
         timer->stop(); // stops and joins
     }
@@ -195,12 +194,12 @@ void CuTimerService::m_stopAll()
 
 void CuTimerService::m_removeFromMaps(CuTimer *t) {
     // 1. find the timers connected to this listener (may be more than one)
-    std::multimap<int, CuTimer *>::iterator iter;
+    std::unordered_map<int, CuTimer *>::iterator iter;
     for(iter = d->ti_map.begin(); iter != d->ti_map.end(); ) {
         if(iter->second == t)  iter = d->ti_map.erase(iter);
         else ++iter;
     }
-    std::multimap<const CuTimerListener*, CuTimer *>::iterator cacheiter = d->ti_cache.begin();
+    std::unordered_map<const CuTimerListener*, CuTimer *>::iterator cacheiter = d->ti_cache.begin();
     while(cacheiter != d->ti_cache.end()) {
         if(cacheiter->second == t) cacheiter = d->ti_cache.erase(cacheiter);
         else ++cacheiter;
@@ -212,7 +211,7 @@ void CuTimerService::m_removeFromMaps(CuTimer *t) {
  * does not lock guard. Lock must be acquired by the caller
  */
 CuTimer* CuTimerService::m_tmr_find(int timeout) const {
-    std::map<int, CuTimer *>::const_iterator it = d->ti_map.find(timeout);
+    std::unordered_map<int, CuTimer *>::const_iterator it = d->ti_map.find(timeout);
     return it != d->ti_map.end() ? it->second : nullptr;
 }
 
@@ -222,7 +221,7 @@ CuTimer* CuTimerService::m_tmr_find(int timeout) const {
  */
 CuTimer *CuTimerService::m_findTimer(const CuTimerListener *th, int timeout)
 {
-    std::multimap<const CuTimerListener *, CuTimer*>::const_iterator it;
+    std::unordered_map<const CuTimerListener *, CuTimer*>::const_iterator it;
     for(it = d->ti_cache.begin(); it != d->ti_cache.end(); ++it) {
         if(it->first == th && (timeout < 0 || it->second->timeout() == timeout))
             return it->second;
@@ -238,7 +237,7 @@ std::list<CuTimer *> CuTimerService::getTimers()
 {
     std::list<CuTimer *>timers;
     std::shared_lock lock(d->shmu);
-    for(std::map<int, CuTimer *>::const_iterator it = d->ti_map.begin(); it != d->ti_map.end(); ++it)
+    for(std::unordered_map<int, CuTimer *>::const_iterator it = d->ti_map.begin(); it != d->ti_map.end(); ++it)
         timers.push_back(it->second);
     return timers;
 }

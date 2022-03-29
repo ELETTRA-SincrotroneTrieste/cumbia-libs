@@ -7,6 +7,7 @@
 #include <cutangoactioni.h>
 #include <cudataupdatepolicy_enum.h>
 #include <tsource.h>
+#include <unordered_map>
 #include <map>
 
 class CuData;

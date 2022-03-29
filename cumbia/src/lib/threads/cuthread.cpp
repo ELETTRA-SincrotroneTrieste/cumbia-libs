@@ -81,14 +81,14 @@ public:
     /*! @private */
     void mRemoveActivityTimer(CuActivity *a, CuThread* th) {
         int timeo = -1; // timeout
-        std::map<CuActivity *, CuTimer *>::iterator it = tmr_amap.find(a);
+        std::unordered_map<CuActivity *, CuTimer *>::iterator it = tmr_amap.find(a);
         bool u = it != tmr_amap.end(); // initialize u
         if(u) { // test u: end() iterator (valid, but not dereferenceable) cannot be used as key search.
             // get timeout from timer not from a, because a->repeat shall return -1 if exiting
             timeo = it->second->timeout();
             tmr_amap.erase(tmr_amap.find(a)); // removes if exists
         }
-        for(std::map<CuActivity *, CuTimer *>::iterator it = tmr_amap.begin(); it != tmr_amap.end() && u; ++it)
+        for(std::unordered_map<CuActivity *, CuTimer *>::iterator it = tmr_amap.begin(); it != tmr_amap.end() && u; ++it)
             u &= it->second->timeout() != timeo; // no timers left with timeo timeout?
         if(u) {
             tmr_s->unregisterListener(th, timeo);
@@ -97,7 +97,7 @@ public:
 
     /*! @private */
     const CuTimer *m_tmr_find(CuActivity *a) const {
-        std::map<CuActivity *, CuTimer *>::const_iterator it = tmr_amap.find(a);
+        std::unordered_map<CuActivity *, CuTimer *>::const_iterator it = tmr_amap.find(a);
         if(it != tmr_amap.end())
             return it->second;
         return nullptr;
@@ -111,7 +111,7 @@ public:
 
     void m_tmr_remove(CuTimer *t) {
         assert(mythread == pthread_self());
-        std::map<CuActivity *, CuTimer *>::iterator it = tmr_amap.begin();
+        std::unordered_map<CuActivity *, CuTimer *>::iterator it = tmr_amap.begin();
         while(it != tmr_amap.end()) {
             if(it->second == t) it = tmr_amap.erase(it);
             else   ++it;
@@ -127,7 +127,7 @@ public:
 
     size_t m_activity_cnt(CuTimer *t) const  {
         size_t s = 0;
-        for(std::map<CuActivity *, CuTimer *>::const_iterator it = tmr_amap.begin(); it != tmr_amap.end(); ++it)
+        for(std::unordered_map<CuActivity *, CuTimer *>::const_iterator it = tmr_amap.begin(); it != tmr_amap.end(); ++it)
             if(it->second == t)
                 s++;
         return s;
@@ -135,7 +135,7 @@ public:
 
     std::list<CuActivity *> m_activitiesForTimer(const CuTimer *t) const {
         std::list<CuActivity*> activities;
-        std::map<CuActivity *, CuTimer *>::const_iterator it;
+        std::unordered_map<CuActivity *, CuTimer *>::const_iterator it;
         for(it = tmr_amap.begin(); it != tmr_amap.end(); ++it)
             if(it->second == t)
                 activities.push_back(it->first);
@@ -147,7 +147,7 @@ public:
         eb->postEvent(new CuA_ExitEv(a));
     }
 
-    std::map< CuActivity *, CuTimer *> tmr_amap;
+    std::unordered_map< CuActivity *, CuTimer *> tmr_amap;
     std::set<CuActivity *> activity_set;
 
     CuTimerService *tmr_s;

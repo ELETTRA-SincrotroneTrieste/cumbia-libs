@@ -117,7 +117,7 @@ void CuTimer::stop()
 }
 
 void CuTimer::m_notify() {
-    for(std::map<CuTimerListener *, CuEventLoopService *>::const_iterator it = d->m_lis_map.begin(); it != d->m_lis_map.end(); ++it) {
+    for(std::unordered_map<CuTimerListener *, CuEventLoopService *>::const_iterator it = d->m_lis_map.begin(); it != d->m_lis_map.end(); ++it) {
         it->first->onTimeout(this);
     }
 }
@@ -160,7 +160,7 @@ void CuTimer::removeListener(CuTimerListener *l) {
  *
  * This method can be accessed from several different threads
  */
-std::map<CuTimerListener *, CuEventLoopService *> CuTimer::listenersMap()  {
+std::unordered_map<CuTimerListener *, CuEventLoopService *> CuTimer::listenersMap()  {
     std::unique_lock<std::mutex> lock(d->m_mutex);
     return d->m_lis_map;
 }
@@ -185,7 +185,7 @@ void CuTimer::run() {
             // issues with wasm: erratically expected timeout status is no_timeout
             // status == std::cv_status::timeout was once checked alongside m_pause and m_quit
             (void ) status;
-            std::map<CuTimerListener *, CuEventLoopService *>::const_iterator it;
+            std::unordered_map<CuTimerListener *, CuEventLoopService *>::const_iterator it;
             for(it = d->m_lis_map.begin(); !d->m_quit && !d->m_pause && it != d->m_lis_map.end(); ++it)
                 it->second != nullptr ?  it->second->postEvent(this, new CuTimerEvent())  : it->first->onTimeout(this);
 

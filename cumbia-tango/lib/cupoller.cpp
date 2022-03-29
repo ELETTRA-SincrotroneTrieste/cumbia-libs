@@ -1,6 +1,6 @@
 #include "cupoller.h"
 #include <cudata.h>
-#include <map>
+#include <unordered_map>
 #include <cutangoactioni.h>
 #include <cupollingactivity.h>
 #include <cupollingactivity.h>
@@ -18,8 +18,8 @@ class CuPollerPrivate
 {
 public:
     CumbiaTango *cumbia_t;
-    std::map<const std::string, CuTangoActionI*> actions_map;
-    std::multimap<CuActivity*, CuTangoActionI*> pa_amap; // polling a -> actions
+    std::unordered_map<std::string, CuTangoActionI*> actions_map;
+    std::unordered_multimap<CuActivity*, CuTangoActionI*> pa_amap; // polling a -> actions
     int period;
     CuData token;
     std::list<CuTangoActionI *> to_remove_actionlist;
@@ -155,7 +155,7 @@ CuData CuPoller::getToken() const {
 
 CuTangoActionI *CuPoller::m_find_a(const string &src) const {
     assert(d->my_thread == pthread_self());
-    std::map<const std::string, CuTangoActionI *>::const_iterator it = d->actions_map.find(src);
+    std::unordered_map<const std::string, CuTangoActionI *>::const_iterator it = d->actions_map.find(src);
     return it != d->actions_map.end() ? it->second : nullptr;
 }
 

@@ -3,12 +3,12 @@
 #include <cumbiatango.h>
 #include <cuservices.h>
 #include "cupoller.h"
-#include <map>
+#include <unordered_map>
 
 class CuPollingServicePrivate {
 public:
     CuPollingServicePrivate() {}
-    std::map<int, CuPoller *> pollers_map;
+    std::unordered_map<int, CuPoller *> pollers_map;
 };
 
 CuPollingService::CuPollingService() {

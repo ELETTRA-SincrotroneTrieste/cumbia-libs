@@ -6,7 +6,7 @@
 #include <mutex>
 #include <shared_mutex>
 #include <condition_variable>
-#include <map>
+#include <unordered_map>
 #include <atomic>
 #include <chrono>
 
@@ -19,7 +19,7 @@ public:
     CuTimerPrivate() : m_quit(false), m_pause(false), m_pending(false), m_skip(false),
         m_timeout(1000), m_thread(nullptr) {}
 
-    std::map<CuTimerListener *, CuEventLoopService *> m_lis_map;
+    std::unordered_map<CuTimerListener *, CuEventLoopService *> m_lis_map;
     bool m_quit, m_pause;
 
     std::atomic_int m_pending;
@@ -84,7 +84,7 @@ private:
 
     void addListener(CuTimerListener *l, CuEventLoopService *ls);
     void removeListener(CuTimerListener *l);
-    std::map<CuTimerListener *, CuEventLoopService *> listenersMap();
+    std::unordered_map<CuTimerListener *, CuEventLoopService *> listenersMap();
 
     void restart(int millis);
     void start(int millis);
