@@ -192,11 +192,9 @@ QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs, u
     QJsonArray sa;
     foreach(const SrcItem& i, srcs) {
         QJsonObject so;
-        QJsonArray options;
         const std::vector<std::string> &o = i.options.keys();
         for(const std::string& s : o) {
             QJsonArray v_ops;
-            options.append(s.c_str());
             const CuVariant &v = i.options[s];
             if(v.getFormat() == CuVariant::Vector) { // option is a vector
                 const std::vector<std::string> &vs = i.options[s].toStringVector();
@@ -207,8 +205,6 @@ QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs, u
             else // scalar option
                 so[s.c_str()] = i.options[s].toString().c_str();
         }
-
-        so["options"] = options;
         so["method"] = QString::fromStdString(i.method);
         i.method != "write" ? so["src"] = QString::fromStdString(i.src) :
                 so["src"] = QString("%1(%2)").arg(i.src.c_str()).arg(i.wr_val.toString().c_str());
