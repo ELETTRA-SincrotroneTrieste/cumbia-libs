@@ -376,6 +376,10 @@ void CuThread::publishResult(const CuActivity *a, const std::vector<CuData> &dal
     d->eb->postEvent(new CuResultEvent(a, dalist));
 }
 
+void CuThread::publishResult(const CuActivity *a, const CuUserData *u) {
+    d->eb->postEvent(new CuResultEvent(a, u));
+}
+
 /*! \brief returns true if this thread token is equal to other_thread_token
  *
  * @param other_thread_token a CuData that's the token of another thread

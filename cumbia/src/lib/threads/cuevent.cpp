@@ -18,7 +18,8 @@ CuResultEventPrivate::~CuResultEventPrivate() {
  *
  * CuResultEvent makes a copy of data before delivering it to the event loop thread.
  */
-CuResultEvent::CuResultEvent(const CuActivity* sender, const CuData &da, CuEventI::CuEventType t) : data(da) {
+CuResultEvent::CuResultEvent(const CuActivity* sender, const CuData &da, CuEventI::CuEventType t)
+    : data(da), u_data(nullptr) {
     d_p = new CuResultEventPrivate();
     d_p->type = t;
     d_p->activity = sender;
@@ -33,7 +34,8 @@ CuResultEvent::CuResultEvent(const CuActivity* sender, const CuData &da, CuEvent
  *
  * data_list contents will be *moved* into a local copy to be used by the receiving thread
  */
-CuResultEvent::CuResultEvent(const CuActivity* sender, const std::vector<CuData> &dali, CuEventType t) : datalist(std::move(dali) ){
+CuResultEvent::CuResultEvent(const CuActivity* sender, const std::vector<CuData> &dali, CuEventType t)
+    : datalist(std::move(dali)), u_data(nullptr) {
     d_p = new CuResultEventPrivate();
     d_p->type = t;
     d_p->activity = sender;
@@ -47,12 +49,19 @@ CuResultEvent::CuResultEvent(const CuActivity* sender, const std::vector<CuData>
  * \param total the total steps of a multi-step data processing
  * \param data the data to be delivered
  */
-CuResultEvent::CuResultEvent(const CuActivity* sender, int step, int total, const CuData &da) : data(da) {
+CuResultEvent::CuResultEvent(const CuActivity* sender, int step, int total, const CuData &da)
+    : data(da), u_data(nullptr){
     d_p = new CuResultEventPrivate();
     d_p->step = step;
     d_p->total = total;
     d_p->type = CuProgressEv;
     d_p->activity = sender;
+}
+
+CuResultEvent::CuResultEvent(const CuActivity *sender, const CuUserData *data, CuEventType t) : u_data(data) {
+    d_p = new CuResultEventPrivate();
+    d_p->activity = sender;
+    d_p->type = t;
 }
 
 /*! \brief the class destructor
@@ -113,11 +122,13 @@ const CuActivity *CuResultEvent::getActivity() const
     return d_p->activity;
 }
 
-bool CuResultEvent::isList() const
-{
+bool CuResultEvent::isList() const {
     return d_p->is_list;
 }
 
+bool CuResultEvent::has_user_data() const {
+    return u_data != nullptr;
+}
 
 CuA_ExitEv::CuA_ExitEv(CuActivity *sender) : m_activity(sender) {}
 

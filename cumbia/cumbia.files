@@ -20,6 +20,7 @@ src/lib/cumbiapool.h
 src/lib/cuperiodicactivity.cpp
 src/lib/cuperiodicactivity.h
 src/lib/cuthreadfactory.cpp
+src/lib/cuuserdata.h
 src/lib/cuvariant.cpp
 src/lib/cuvariant.h
 src/lib/cuvariant_t.h
