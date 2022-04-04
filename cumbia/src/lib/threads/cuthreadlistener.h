@@ -3,6 +3,8 @@
 
 #include <cudata.h>
 
+class CuUserData;
+
 /*! \brief interface for a listener that is notified when progress is done in the background
  *         and data is ready
  *
@@ -55,6 +57,16 @@ public:
      * \param datalist a std::vector of CuData bundle storing a list of results computed in the background *activity*
      */
     virtual void onResult(const std::vector<CuData>& datalist) = 0;
+
+    /*!
+     * \brief custom user-data flavor of the above
+     *
+     * \param pointer to user defined CuUserData data
+     *
+     * \note This method does nothing by default and does not need to be implemented
+     * by subclasses
+     */
+    virtual void onResult(const CuUserData* u) { (void) u; };
 
     /*!
      * \brief getToken returns a token characterizing the listener

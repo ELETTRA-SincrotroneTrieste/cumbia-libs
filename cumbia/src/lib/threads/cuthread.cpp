@@ -324,6 +324,9 @@ void CuThread::onEventPosted(CuEventI *event) {
                 const std::vector<CuData> &vd_ref = re->datalist;
                 it->second->onResult(vd_ref);
             }
+            else if(re->u_data) {
+                it->second->onResult(re->u_data);
+            }
             else {
                 it->second->onResult(re->data);
             }

@@ -45,5 +45,11 @@ reentrant, meaning that methods can be called from multiple threads, but only if
 uses its own data. Atomic reference counting is used to ensure the integrity of the shared data.
 Since cumbia 1.4.0, CuData uses implicit sharing as well.
 
+## CuUserData as result
+
+A user defined extension of the CuUserData interface can be used to exchange custom data between 
+activities and their clients. This implies passing a pointer instead of a copy of CuData, when 
+performance is the highest priority. Activities publishing data through this new interface shall
+guarantee the object is not modified or deleted after publishResult.
 
 

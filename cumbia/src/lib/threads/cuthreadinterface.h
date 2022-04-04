@@ -103,6 +103,11 @@ public:
      */
     virtual void publishResult(const CuActivity *activity, const std::vector<CuData> &data_list) = 0;
 
+    /*! \brief post a custom user event data to the specified activity
+     *
+     *  \param activity the recipient
+     *  \param u a custom CuUserData derived data
+     */
     virtual void publishResult(const CuActivity *activity, const CuUserData *u) = 0;
 
     /** \brief Used by the thread factory, this function, given an input data,

@@ -35,6 +35,12 @@ Since cumbia 1.4.0, CuData uses implicit sharing as well.
 ##### Remove from CuData
 It is now possible to *remove* keys from CuData. Both const and non const methods are provided.
 
+##### CuUserData
+
+A user defined extension of the CuUserData interface can be used to exchange custom data between 
+activities and their clients. This implies passing a pointer instead of a copy of CuData, when 
+performance is the highest priority.
+
 ### Optimizations
 
 *memory and speed* optimizations characterize release 1.4

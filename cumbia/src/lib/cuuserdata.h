@@ -3,6 +3,7 @@
 
 class CuUserData {
 public:
+    virtual ~CuUserData() {}
     virtual int type() const = 0;
 };
 
