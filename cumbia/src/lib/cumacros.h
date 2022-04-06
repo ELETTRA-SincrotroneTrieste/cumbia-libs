@@ -9,9 +9,9 @@
 
 #define stoc(x) x.c_str()
 
-#define pretty_pri(x, args...) do {  fprintf(stdout, " [thread \e[1;36m0x%lx\e[0m] [this %p] [%s]: ", pthread_self(), this, __PRETTY_FUNCTION__); printf(x, ##args); printf("\n"); }while(0)
+#define pretty_pri(x, args...) do {  fprintf(stdout, "\e[0;32m%s\e[0m: [thread \e[1;36m0x%lx\e[0m] [this \e[0;34m%p\e[0m]: ", __PRETTY_FUNCTION__, pthread_self(), this); printf(x, ##args); printf("\n"); }while(0)
 
-#define pfatal(x, args...) do {  fprintf(stdout, "\e[1;31;4mfatal\e[0m: [thread \e[1;36m0x%lx\e[0m] [this %p] [%s]:", pthread_self(), this, __PRETTY_FUNCTION__); printf(x, ##args); printf("\n"); abort(); }while(0)
+#define pfatal(x, args...) do {  fprintf(stdout, "\e[0;31m%s\e[0m: \e[1;31;4mfatal\e[0m: [thread \e[1;36m0x%lx\e[0m] [this %p]:", __PRETTY_FUNCTION__, pthread_self(), this); printf(x, ##args); printf("\n"); abort(); }while(0)
 
 
 // CuVariant when it's a string type

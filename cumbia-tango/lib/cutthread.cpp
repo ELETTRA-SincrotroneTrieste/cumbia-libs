@@ -6,6 +6,7 @@ CuThreadInterface *CuTThreadFactoryImpl::createThread(const std::string &thread_
                                                      CuThreadsEventBridge_I *eventsBridge,
                                                      const CuServiceProvider *service_provider,
                                                      std::vector<CuThreadInterface *> *threads) const {
+    pretty_pri("new thread %s", thread_token.c_str());
     return new CuTThread(thread_token, eventsBridge, service_provider, threads);
 }
 
