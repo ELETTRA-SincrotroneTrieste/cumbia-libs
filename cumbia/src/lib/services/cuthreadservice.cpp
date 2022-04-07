@@ -75,13 +75,11 @@ CuThreadInterface *CuThreadService::getThread(const std::string& token,
     CuThreadInterface *thread;
     for(size_t i = 0; i < d->threads.size(); i++) {
         if(d->threads[i]->matches(token)) {
-            pretty_pri("\e[1;32mREUSING THREAD for %s: \e[0mthreads size in service %ld", token.c_str(), d->threads.size());
             return d->threads[i];
         }
     }
     thread = thread_factory_impl.createThread(token, eventsBridgeFactory.createEventBridge(service_provider), service_provider, th_p);
     d->threads.push_back(thread);
-    pretty_pri("\e[1;31mHAD TO CREATE THREAD FOR %s\e[0m: threads size in service %ld", token.c_str(), d->threads.size());
     return thread;
 }
 

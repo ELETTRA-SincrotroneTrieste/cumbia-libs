@@ -487,14 +487,16 @@ void CuThread::run() {
             for(CuActivity *a : a_for_t) {
                 if(a->repeat() > 0) { // periodic activity
                     a->doExecute(); // first
-                    if(a->repeat() != timer->timeout()) // reschedule with new timeout
+                    if(a->repeat() != timer->timeout()) { // reschedule with new timeout
                         d->thpp->m_a_new_timeout(a, a->repeat(), timer, this);
+                    }
                     else if(!tmr_restart) // reschedule the same timer
                         tmr_restart = true;
                 }
             } // for activity iter
-            if(tmr_restart) // restart timer if at least one activity needs it
+            if(tmr_restart) { // restart timer if at least one activity needs it
                 d->thpp->tmr_s->restart(timer);
+            }
         }
         else if(te->getType() == ThreadEvent::PostToActivity) {
             CuThRun_Ev *tce = static_cast<CuThRun_Ev *>(te);
