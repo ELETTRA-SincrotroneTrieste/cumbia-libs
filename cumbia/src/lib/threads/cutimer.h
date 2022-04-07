@@ -86,8 +86,8 @@ private:
     void removeListener(CuTimerListener *l);
     std::unordered_map<CuTimerListener *, CuEventLoopService *> listenersMap();
 
-    void restart(int millis);
-    void start(int millis);
+    void restart();
+    void start(int millis = 0);
     void stop();
 
     void m_notify();

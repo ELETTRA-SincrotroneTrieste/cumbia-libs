@@ -67,10 +67,9 @@ int CuTimer::timeout() const {
 // restart the timer with the given interval in milliseconds
 // the timer is restarted (if pending, it  is rescheduled
 //
-void CuTimer::restart(int millis) {
+void CuTimer::restart() {
     std::unique_lock<std::mutex> lock(d->m_mutex);
     d->m_quit = d->m_pause = false;
-    d->m_timeout = millis;
     if(!d->m_thread) { // restart is called or after stop
         d->m_thread = new std::thread(&CuTimer::run, this);
     }
@@ -86,7 +85,8 @@ void CuTimer::start(int millis) {
     if(d->m_pending.fetch_add(1) == 0) {
         std::unique_lock<std::mutex> lock(d->m_mutex);
         d->m_quit = d->m_pause = false;
-        d->m_timeout = millis;
+        if(millis > 0)
+            d->m_timeout = millis;
         if(!d->m_thread) { // start is called or after stop
             d->m_thread = new std::thread(&CuTimer::run, this);
         }

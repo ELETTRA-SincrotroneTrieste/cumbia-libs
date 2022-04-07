@@ -29,13 +29,10 @@ public:
                               int timeout,
                               CuEventLoopService *loop_service = nullptr,
                               const std::string &tmrname = std::string());
-    std::list<CuTimer *> getTimers();
-    std::set<CuTimerListener *> getListeners(CuTimer *t) const;
     void unregisterListener(CuTimerListener *th, int timeout);
     CuTimer *changeTimeout(CuTimerListener *th, int from_timeo, int to_timeo);
-    bool isRegistered(CuTimerListener *th, int timeout);
-    void restart(CuTimer *t, int millis);
-    void start(CuTimer *t, int millis);
+    void restart(CuTimer *t);
+    void start(CuTimer *t);
 
     // CuServiceI interface
 public:

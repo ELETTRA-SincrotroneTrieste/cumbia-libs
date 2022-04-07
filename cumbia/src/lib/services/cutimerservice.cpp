@@ -13,7 +13,7 @@ public:
     // timeout --> [listeners (threads) --> timer map]
     std::unordered_map<int, CuTimer *> ti_map;
     // for fast listener --> timer search
-    std::unordered_map<const CuTimerListener *, CuTimer *> ti_cache;
+    std::unordered_multimap<const CuTimerListener *, CuTimer *> ti_cache;
     std::shared_mutex shmu;
     int timer_max_count;
     int tmrcnt;
@@ -77,7 +77,7 @@ CuTimer *CuTimerService::registerListener(CuTimerListener *tl,
         timer->d->m_name = tmrname;
     timer->start(timeout); // if pending, timeout is unaffected
     timer->addListener(tl, loo_s);
-    d->ti_cache[tl] = timer; // listeners -> timer cache
+    d->ti_cache.insert(std::pair<CuTimerListener *, CuTimer *>{tl, timer}); // listeners -> timer cache
     return timer;
 }
 
@@ -131,28 +131,14 @@ CuTimer *CuTimerService::changeTimeout(CuTimerListener *tl, int from_timeo, int 
 }
 
 /*!
- * \brief CuTimerService::isRegistered returns true if a timer is registered for the given listener and timeout
- * \param tlis the CuTimerListener
- * \param timeout the timeout
- * \return true if there is a timer registered for the given listener and timeout, false otherwise
- */
-bool CuTimerService::isRegistered(CuTimerListener *tlis, int timeout) {
-    std::shared_lock lock(d->shmu);
-    std::unordered_map<const CuTimerListener*, CuTimer *>::const_iterator it = d->ti_cache.find(tlis);
-    if(it != d->ti_cache.end() && timeout == it->second->timeout())
-        return true;
-    return false;
-}
-
-/*!
  * \brief restart the timer t with interval millis
  * \param t the timer to restart
  * \param millis the desired interval
  *
  * The timer is *rescheduled* if a timeout is already pending
  */
-void CuTimerService::restart(CuTimer *t , int millis) {
-    t->restart(millis);
+void CuTimerService::restart(CuTimer *t ) {
+    t->restart();
 }
 
 /*!
@@ -163,8 +149,8 @@ void CuTimerService::restart(CuTimer *t , int millis) {
  * if the timer is pending, nothing is done. Timer is started
  * otherwise.
  */
-void CuTimerService::start(CuTimer *t, int millis) {
-    t->start(millis);
+void CuTimerService::start(CuTimer *t) {
+    t->start();
 }
 
 /*!
@@ -199,7 +185,7 @@ void CuTimerService::m_removeFromMaps(CuTimer *t) {
         if(iter->second == t)  iter = d->ti_map.erase(iter);
         else ++iter;
     }
-    std::unordered_map<const CuTimerListener*, CuTimer *>::iterator cacheiter = d->ti_cache.begin();
+    std::unordered_multimap<const CuTimerListener*, CuTimer *>::iterator cacheiter = d->ti_cache.begin();
     while(cacheiter != d->ti_cache.end()) {
         if(cacheiter->second == t) cacheiter = d->ti_cache.erase(cacheiter);
         else ++cacheiter;
@@ -221,36 +207,10 @@ CuTimer* CuTimerService::m_tmr_find(int timeout) const {
  */
 CuTimer *CuTimerService::m_findTimer(const CuTimerListener *th, int timeout)
 {
-    std::unordered_map<const CuTimerListener *, CuTimer*>::const_iterator it;
-    for(it = d->ti_cache.begin(); it != d->ti_cache.end(); ++it) {
-        if(it->first == th && (timeout < 0 || it->second->timeout() == timeout))
-            return it->second;
-    }
+    auto ir = d->ti_cache.equal_range(th);
+    for(auto i = ir.first; i != ir.second; i++)
+        if(i->second->timeout() == timeout || timeout < 0)
+            return i->second;
     return nullptr;
-}
-
-/*!
- * \brief returns all the timers managed by the service
- * \return  a list of the registered CuTimer instances
- */
-std::list<CuTimer *> CuTimerService::getTimers()
-{
-    std::list<CuTimer *>timers;
-    std::shared_lock lock(d->shmu);
-    for(std::unordered_map<int, CuTimer *>::const_iterator it = d->ti_map.begin(); it != d->ti_map.end(); ++it)
-        timers.push_back(it->second);
-    return timers;
-}
-
-/*!
- * \brief Returns the list of CuTimerListener registered to the timer t
- * \param t the timer whose listeners the caller is seeking for
- * \return the list of listeners of the timer t
- */
-std::set<CuTimerListener *> CuTimerService::getListeners(CuTimer *t) const {
-    std::set<CuTimerListener *> l;
-    for(auto i = t->d->m_lis_map.begin(); i != t->d->m_lis_map.end(); ++i)
-        l.insert(i->first);
-    return l;
 }
 
