@@ -51,7 +51,7 @@ void CuHttpCliIdMan::unsubscribe(bool blocking) {
     QNetworkReply *reply = d->nam->post(r, m_json_unsub());
     if(blocking) {
         // do not m_reply_connect(reply): we block and then
-        // query error conditions and read reply
+        /// query error conditions and read reply
         QEventLoop loop;
         connect(reply, SIGNAL(finished()), &loop, SLOT(quit()));
         loop.exec();
@@ -116,6 +116,8 @@ void CuHttpCliIdMan::onError(QNetworkReply::NetworkError ) {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
     d->error = r->errorString();
     m_notify_err(r->property("type").toString() == "id_request");
+        printf("CuHttpCliIdMan::onError: error: \e[1;31m%s\e[0m\n", r->readAll().data());
+
 }
 
 void CuHttpCliIdMan::send_keepalive() {

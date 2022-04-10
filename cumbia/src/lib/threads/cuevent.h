@@ -5,6 +5,7 @@
 #include "cudata.h"
 
 class CuActivity;
+class CuUserData;
 
 /*! \brief interface for a generic *cumbia event* designed to be
  *         generated in a secondary thread (CuActivity's thread - CuThread)
@@ -95,11 +96,13 @@ public:
     CuResultEvent(const CuActivity* sender, const CuData &data, CuEventType t = CuResultEv);
     CuResultEvent(const CuActivity* sender, const std::vector<CuData> &dali, CuEventType t = CuResultEv);
     CuResultEvent(const CuActivity* sender, int step, int total, const CuData &data);
+    CuResultEvent(const CuActivity *sender, const CuUserData* data, CuEventType t = CuResultEv);
 
     virtual ~CuResultEvent();
 
     CuData data;
     std::vector<CuData> datalist;
+    const CuUserData *u_data;
 
     // CuResultEventI interface
 public:
@@ -109,6 +112,7 @@ public:
     int getTotal() const;
     const CuActivity *getActivity() const;
     bool isList() const;
+    bool has_user_data() const;
 
 protected:
     CuResultEventPrivate *d_p;

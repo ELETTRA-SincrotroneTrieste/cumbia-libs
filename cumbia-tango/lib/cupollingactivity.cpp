@@ -10,7 +10,6 @@
 #include <tango.h>
 #include <cumacros.h>
 #include <vector>
-#include <map>
 
 class CmdData { // define here in .cpp: needs tango.h
 public:
@@ -104,7 +103,7 @@ public:
 
     // cache for tango command_inout argins
     // multimap because argins may differ
-    std::map<const std::string, CmdData> din_cache;
+    std::unordered_map<std::string, CmdData> din_cache;
     CmdData emptyCmdData;
     // maps consecutive error count to slowed down polling duration in millis
     std::map<int, int> slowDownRate;
@@ -467,7 +466,7 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts) {
 }
 
 void CuPollingActivity::m_edit_args(const TSource &src, const std::vector<string> &args) {
-    std::map<std::string, CmdData>::iterator it = d->din_cache.find(src.getName());
+    std::unordered_map<std::string, CmdData>::iterator it = d->din_cache.find(src.getName());
     if(it != d->din_cache.end()) {
         it->second.argins = args;
         it->second.din = CuTangoWorld().toDeviceData(args, it->second.cmdinfo);

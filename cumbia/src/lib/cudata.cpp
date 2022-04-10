@@ -4,7 +4,6 @@
 #include <string.h>
 #include <sys/time.h>
 #include <unordered_map>
-#include <map>
 #include <atomic>
 
 /*! @private */
@@ -28,7 +27,7 @@ public:
         return *this;
     }
 
-    std::map<std::string, CuVariant> datamap;
+    std::unordered_map<std::string, CuVariant> datamap;
     CuVariant emptyVariant;
 
     int ref() {
@@ -307,17 +306,18 @@ const CuVariant &CuData::operator [](const std::string &key) const {
  * the *inequality* operator is also defined
  */
 bool CuData::operator ==(const CuData &other) const {
-    if(other.d_p->datamap.size() != d_p->datamap.size())
-        return false;
-    std::map<std::string, CuVariant>::const_iterator i;
-    for(i = d_p->datamap.begin(); i != d_p->datamap.end(); ++i)
-    {
-        if(!other.containsKey(i->first))
-            return false;
-        if(other[i->first] != i->second)
-            return false;
-    }
-    return true;
+//    if(other.d_p->datamap.size() != d_p->datamap.size())
+//        return false;
+    return other.d_p->datamap == d_p->datamap;
+//    std::unordered_map<std::string, CuVariant>::const_iterator i;
+//    for(i = d_p->datamap.begin(); i != d_p->datamap.end(); ++i)
+//    {
+//        if(!other.containsKey(i->first))
+//            return false;
+//        if(other[i->first] != i->second)
+//            return false;
+//    }
+//    return true;
 }
 
 /*! \brief *inequality* relational operator. Returns true if the
@@ -369,7 +369,7 @@ void CuData::print() const {
 std::string CuData::toString() const
 {
     std::string r = "CuData { ";
-    std::map<std::string, CuVariant>::const_iterator i;
+    std::unordered_map<std::string, CuVariant>::const_iterator i;
     char siz[16], empty[16];
     snprintf(siz, 16, "%ld", d_p->datamap.size());
     snprintf(empty, 16, "%d", d_p->datamap.size() == 0);
@@ -400,7 +400,7 @@ void CuData::putTimestamp() {
 
 std::vector<std::string> CuData::keys() const {
     std::vector<std::string> ks;
-    for(std::map<std::string, CuVariant>::const_iterator it = d_p->datamap.begin(); it != d_p->datamap.end(); ++it)
+    for(std::unordered_map<std::string, CuVariant>::const_iterator it = d_p->datamap.begin(); it != d_p->datamap.end(); ++it)
         ks.push_back(it->first);
     return ks;
 }

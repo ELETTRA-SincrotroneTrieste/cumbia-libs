@@ -60,46 +60,22 @@ void CuTimer::setTimeout(int millis)
  * \brief return the timeout in milliseconds
  * \return the timeout in milliseconds
  */
-int CuTimer::timeout() const
-{
+int CuTimer::timeout() const {
     return d->m_timeout;
-}
-
-/*!
- * \brief cancels current scheduled timeout.
- *
- * \note
- * start must be called after reset if you want to schedule
- * the next timeout
- *
- * \note
- * Not lock guarded
- */
-void CuTimer::reset() {
-    d->m_skip = true;
-    d->m_wait.notify_one();
 }
 
 // restart the timer with the given interval in milliseconds
 // the timer is restarted (if pending, it  is rescheduled
 //
-void CuTimer::restart(int millis)
-{
+void CuTimer::restart(int millis) {
     std::unique_lock<std::mutex> lock(d->m_mutex);
     d->m_quit = d->m_pause = false;
     d->m_timeout = millis;
-    if(!d->m_thread) { // first time start is called or after stop
+    if(!d->m_thread) { // restart is called or after stop
         d->m_thread = new std::thread(&CuTimer::run, this);
     }
     else {
-        if(d->m_pending > 0) {
-            reset();
-//            d->m_last_start_pt = std::chrono::steady_clock::now();
-        }
-        else {
-//            d->m_first_start_pt = d->m_last_start_pt = std::chrono::steady_clock::now();
-        }
-        d->m_pending++;
+        d->m_pending > 0 ? d->m_skip = true : d->m_pending++;
         d->m_wait.notify_one();
     }
 }
@@ -107,15 +83,14 @@ void CuTimer::restart(int millis)
 // start the timer if not already pending
 //
 void CuTimer::start(int millis) {
-    std::unique_lock<std::mutex> lock(d->m_mutex);
-    d->m_quit = d->m_pause = false;
-    d->m_timeout = millis;
-    if(!d->m_thread) { // first time start is called or after stop
-        d->m_thread = new std::thread(&CuTimer::run, this);
-    }
-    else if(!d->m_pending) {
+    if(d->m_pending.fetch_add(1) == 0) {
+        std::unique_lock<std::mutex> lock(d->m_mutex);
+        d->m_quit = d->m_pause = false;
+        d->m_timeout = millis;
+        if(!d->m_thread) { // start is called or after stop
+            d->m_thread = new std::thread(&CuTimer::run, this);
+        }
         d->m_skip = false;
-        d->m_pending++;
         d->m_wait.notify_one();
     }
 }
@@ -142,7 +117,7 @@ void CuTimer::stop()
 }
 
 void CuTimer::m_notify() {
-    for(std::map<CuTimerListener *, CuEventLoopService *>::const_iterator it = d->m_lis_map.begin(); it != d->m_lis_map.end(); ++it) {
+    for(std::unordered_map<CuTimerListener *, CuEventLoopService *>::const_iterator it = d->m_lis_map.begin(); it != d->m_lis_map.end(); ++it) {
         it->first->onTimeout(this);
     }
 }
@@ -185,7 +160,7 @@ void CuTimer::removeListener(CuTimerListener *l) {
  *
  * This method can be accessed from several different threads
  */
-std::map<CuTimerListener *, CuEventLoopService *> CuTimer::listenersMap()  {
+std::unordered_map<CuTimerListener *, CuEventLoopService *> CuTimer::listenersMap()  {
     std::unique_lock<std::mutex> lock(d->m_mutex);
     return d->m_lis_map;
 }
@@ -197,8 +172,7 @@ std::map<CuTimerListener *, CuEventLoopService *> CuTimer::listenersMap()  {
  * The timer loop waits for the timeout to expire before quitting (if single shot)
  * or waiting again
  */
-void CuTimer::run()
-{
+void CuTimer::run() {
     std::unique_lock<std::mutex> lock(d->m_mutex);
     unsigned long timeout = d->m_timeout;
     while (!d->m_quit) {
@@ -206,25 +180,23 @@ void CuTimer::run()
         std::cv_status status;
         std::chrono::milliseconds ms{timeout};
         status = d->m_wait.wait_for(lock, ms);
-        if(d->m_skip && !d->m_quit) {
-            d->m_skip = false;
-        }
-        else {
+        if(!d->m_skip) {
             d->m_pause ?  timeout = ULONG_MAX : timeout = d->m_timeout;
             // issues with wasm: erratically expected timeout status is no_timeout
+            // status == std::cv_status::timeout was once checked alongside m_pause and m_quit
             (void ) status;
-            if(/*status == std::cv_status::timeout && */!d->m_quit && !d->m_pause) {
-                for(std::map<CuTimerListener *, CuEventLoopService *>::const_iterator it = d->m_lis_map.begin(); it != d->m_lis_map.end(); ++it) {
-                    it->second != nullptr ?
-                                it->second->postEvent(this, new CuTimerEvent())
-                              : it->first->onTimeout(this);
-                }
-            }
+            std::unordered_map<CuTimerListener *, CuEventLoopService *>::const_iterator it;
+            for(it = d->m_lis_map.begin(); !d->m_quit && !d->m_pause && it != d->m_lis_map.end(); ++it)
+                it->second != nullptr ?  it->second->postEvent(this, new CuTimerEvent())  : it->first->onTimeout(this);
+
             d->m_pending = 0;
             if(!d->m_quit) { // wait for next start()
                 d->m_wait.wait(lock);
             }
         } // !d->m_skip
+        else { // skip true: restart has been called: simply wait for next timeout
+            d->m_skip = false;
+        }
     }
 }
 

@@ -6,6 +6,7 @@ class CuActivityEvent;
 class CuThreadListener;
 class CuData;
 class CuThreadService;
+class CuUserData;
 
 #include "cuthreadseventbridge_i.h"
 #include <vector>
@@ -93,7 +94,6 @@ public:
      */
     virtual void publishResult(const CuActivity* activity,  const CuData& d) = 0;
 
-
     /*! \brief post a *result* event from the background thread to the main thread
      *
      * This lets you send events to the main thread that account for a
@@ -102,6 +102,8 @@ public:
      * See CuThread::publishProgress for details
      */
     virtual void publishResult(const CuActivity *activity, const std::vector<CuData> &data_list) = 0;
+
+    virtual void publishResult(const CuActivity *activity, const CuUserData *u) = 0;
 
     /** \brief Used by the thread factory, this function, given an input data,
      *         determines whether this thread is ecuivalent to another thread

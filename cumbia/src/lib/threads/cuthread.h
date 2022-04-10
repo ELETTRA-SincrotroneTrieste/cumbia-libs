@@ -80,6 +80,7 @@ public:
     void publishProgress(const CuActivity *activity, int step, int total, const CuData &data);
     void publishResult(const CuActivity *activity, const CuData &data);
     void publishResult(const CuActivity *activity, const std::vector<CuData> &data_list);
+    void publishResult(const CuActivity *activity, const CuUserData *u);
 
     bool matches(const std::string &other_thtok) const;
     std::string getToken() const;
