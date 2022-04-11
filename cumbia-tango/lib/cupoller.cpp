@@ -155,7 +155,7 @@ CuData CuPoller::getToken() const {
 
 CuTangoActionI *CuPoller::m_find_a(const string &src) const {
     assert(d->my_thread == pthread_self());
-    std::unordered_map<const std::string, CuTangoActionI *>::const_iterator it = d->actions_map.find(src);
+    std::unordered_map<std::string, CuTangoActionI *>::const_iterator it = d->actions_map.find(src);
     return it != d->actions_map.end() ? it->second : nullptr;
 }
 
