@@ -80,6 +80,25 @@ The update policy shall be suggested to the CuPollingService. See also CuPollDat
 which is a global service shared across multiple threads, *CuTThread* owns a dedicated *CuTThreadDevices*, that does not need any
 lock to provide shared Tango *DeviceProxy* instances.
 
+#### cumbia-http
+
+The *CuHttpCliIdMan* (client ID manager) has been introduced in order to comply with the new
+version and [architecture of caserver](https://gitlab.elettra.eu/puma/server/caserver-proxy) (1.3.5).
+
+The code of the module is now leaner and the CuHTTPActionA, originally base class of other components,
+has been removed and the code integrated into CuHTTPChannelReceiver, the only user.
+
+##### Known bug
+
+*nginx* loglevel *info* complains about
+
+``` 
+client prematurely closed connection, client: a.b.c.d, server: x.y.eu, request: "GET /sub/chan_name"
+```
+
+A [github issue](https://github.com/slact/nchan/issues/638) has been opened in order to find a 
+possible fix.
+
 ## version 1.3.1
 
 ### Fixes

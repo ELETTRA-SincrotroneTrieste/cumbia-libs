@@ -7,6 +7,7 @@
 #include <QJsonArray>
 #include <QMultiMap>
 #include <QNetworkAccessManager>
+#include <QEventLoop>
 #include <cudata.h>
 
 static int reqs_started = 0, reqs_ended = 0;
@@ -32,7 +33,7 @@ QString CuHttpChannelReceiver::channel() const {
     return d->chan;
 }
 
-QString CuHttpChannelReceiver::chan() const {
+QString CuHttpChannelReceiver::url() const {
     QString channel = d->url + "/sub/" + d->chan;
     return channel;
 }
@@ -60,6 +61,7 @@ void CuHttpChannelReceiver::start() {
     QNetworkRequest r = prepareRequest(url);
     if(!d->reply) {
         d->reply = d->nam->get(r);
+        d->reply->setProperty("name", "subscribe reply");
         reqs_started++;
         connect(d->reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
         connect(d->reply, SIGNAL(finished()), this, SLOT(onReplyFinished()));
@@ -127,12 +129,11 @@ QNetworkRequest CuHttpChannelReceiver::prepareRequest(const QUrl &url) const {
     QNetworkRequest r(url);
     r.setRawHeader("Accept", "text/event-stream");
     r.setRawHeader("Accept-Encoding", "gzip, deflate");
-    r.setRawHeader("Connection", "keep-alive");
-    r.setRawHeader("Pragma", "no-cache");
-    r.setRawHeader("Cache-Control", "no-cache");
+//    r.setRawHeader("Pragma", "no-cache");
+//    r.setRawHeader("Cache-Control", "no-cache");
 
-    r.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
-    r.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork); // Events shouldn't be cached
+//    r.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+//    r.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork); // Events shouldn't be cached
     return r;
 }
 

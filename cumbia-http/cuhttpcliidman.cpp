@@ -190,6 +190,7 @@ void CuHttpCliIdMan::m_reply_connect(QNetworkReply *reply) {
 void CuHttpCliIdMan::m_make_network_request(QNetworkRequest *r) const {
     r->setRawHeader("Accept", "application/json");
     r->setRawHeader("Content-Type", "application/json");
+    r->setRawHeader("Connection", "Close");
     r->setHeader(QNetworkRequest::UserAgentHeader, QByteArray("cumbia-http ") + QByteArray(CUMBIA_HTTP_VERSION_STR));
 }
 

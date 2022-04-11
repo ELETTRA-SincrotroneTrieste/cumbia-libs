@@ -25,7 +25,7 @@ public:
     void registerReader(const QString& src, CuHTTPActionReader *r);
     void unregisterReader(const QString& src);
 
-    QString chan() const;
+    QString url() const;
     void addDataListener(const QString& src, CuDataListener *l);
     void removeDataListener(CuDataListener *l);
     size_t dataListenersCount();
