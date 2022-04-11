@@ -7,7 +7,7 @@ class CuHttpAuthManager;
 class QString;
 
 #include <string>
-#include <cuhttpactiona.h>
+#include <cudata.h>
 
 /** \brief Factory to instantiate CuTangoActionI implementations, such as readers, writers and
  *         attribute configuration actions.

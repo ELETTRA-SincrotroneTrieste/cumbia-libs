@@ -1,6 +1,5 @@
 #include "cuhttpactionfactories.h"
 #include "cuhttpwritehelper.h"
-#include "cuhttpactionconf.h"
 #include "cumbiahttp.h"
 #include "cuhttpchannelreceiver.h"
 

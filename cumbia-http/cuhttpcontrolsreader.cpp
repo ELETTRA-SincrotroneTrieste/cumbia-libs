@@ -1,7 +1,6 @@
 #include "cuhttpcontrolsreader.h"
 #include "cumbiahttp.h"
 #include "cuhttpcontrolsreader.h"
-#include "cuhttpactionconf.h"
 #include "cuhttpactionfactories.h"
 #include <cudatalistener.h>
 #include <qureplacewildcards_i.h>

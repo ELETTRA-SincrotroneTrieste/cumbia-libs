@@ -1,15 +1,21 @@
 #ifndef CUHTTPCHANNELRECEIVER_H
 #define CUHTTPCHANNELRECEIVER_H
 
-#include "cuhttpactiona.h"
+#include <QString>
+#include <QObject>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QSslError>
 
 class CuHttpChannelReceiverPrivate;
 class CuHTTPActionReader;
+class QNetworkAccessManager;
+class CuDataListener;
 
 /*!
  * \brief Receive messages on the channel and distributes them
  */
-class CuHttpChannelReceiver : public CuHTTPActionA
+class CuHttpChannelReceiver : public QObject
 {
     Q_OBJECT
 public:
@@ -18,29 +24,31 @@ public:
     QString channel() const;
     void registerReader(const QString& src, CuHTTPActionReader *r);
     void unregisterReader(const QString& src);
-    void setDataExpireSecs(time_t secs);
-    time_t dataExpiresSecs() const;
 
-signals:
-
-    // CuHTTPActionA interface
-public:
-    QString getSourceName() const;
-    Type getType() const;
+    QString chan() const;
     void addDataListener(const QString& src, CuDataListener *l);
-    void addDataListener( CuDataListener *l);
     void removeDataListener(CuDataListener *l);
     size_t dataListenersCount();
     void start();
-    bool exiting() const;
     void stop();
     void decodeMessage(const QJsonValue &json);
     QNetworkRequest prepareRequest(const QUrl& url) const;
 
-private:
-    CuHttpChannelReceiverPrivate *d;
+protected slots:
+    virtual void onNewData();
+    virtual void onReplyFinished();
+    virtual void onReplyDestroyed(QObject *);
+    virtual void onSslErrors(const QList<QSslError> &errors);
+    virtual void onError(QNetworkReply::NetworkError code);
+    virtual void cancelRequest();
 
-    bool m_data_fresh(const double timestamp_ms, time_t *diff_t) const;
+private:
+
+    void m_on_buf_complete();
+    QList<QByteArray>  m_extract_data(const QByteArray& in) const;
+    bool m_likely_valid(const QByteArray& ba) const;
+
+    CuHttpChannelReceiverPrivate *d;
 };
 
 #endif // CUHTTPCHANNELRECEIVER_H

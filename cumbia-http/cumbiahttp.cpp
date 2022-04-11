@@ -10,7 +10,7 @@
 #include <cudatalistener.h>
 #include <cuserviceprovider.h>
 #include <cumbiahttpworld.h>
-#include <cuhttpactionfactoryservice.h>
+// #include <cuhttpactionfactoryservice.h>
 #include <cuhttpactionfactoryi.h>
 #include <QtDebug>
 #include <QUrl>
@@ -50,7 +50,6 @@ public:
     CuHttpAuthManager *auth_man;
     CuHttpSrcMan *src_q_man;
     CuHttpWriteHelper *w_helper;
-    int chan_ttl;
     unsigned long long client_id;
     CuHttpSrcReqQueue request_q;
     CuHttpCliIdMan *id_man;
@@ -78,10 +77,8 @@ CumbiaHttp::CumbiaHttp(const QString &url,
     d->m_threadsEventBridgeFactory = teb;
     d->m_threadFactoryImplI = tfi;
     d->url = url;
-    d->chan_ttl = 5;
     d->qnam = new QNetworkAccessManager(nullptr);
     d->chan_recv = new CuHttpChannelReceiver(d->url, channel, d->qnam);
-    d->chan_recv->setDataExpireSecs(static_cast<time_t>(d->chan_ttl));
     d->auth_man = new CuHttpAuthManager(d->qnam, this);
     d->chan_recv->start();
     d->src_q_man = new CuHttpSrcMan(this);
@@ -101,7 +98,7 @@ CumbiaHttp::~CumbiaHttp()
     // deleted CuHttpControlsReaders will have enqueued their unsubscribe requests
     QList<SrcItem> ri, wi;
     d->src_q_man->dequeueItems(ri, wi);
-    onSrcBundleReqReady(ri, wi);
+//    onSrcBundleReqReady(ri, wi); <-- 1.4: why if we are exiting ?
     if(d->client_id > 0)
         d->id_man->unsubscribe(true); // true: block
     /* all registered services are unregistered and deleted by cumbia destructor after threads have joined */
@@ -128,8 +125,8 @@ void CumbiaHttp::setTag(const QString &tag)
 
 void CumbiaHttp::m_init()
 {
-    getServiceProvider()->registerService(static_cast<CuServices::Type> (CuHTTPActionFactoryService::CuHTTPActionFactoryServiceType),
-                                          new CuHTTPActionFactoryService());
+//    getServiceProvider()->registerService(static_cast<CuServices::Type> (CuHTTPActionFactoryService::CuHTTPActionFactoryServiceType),
+//                                          new CuHTTPActionFactoryService());
 }
 
 // if there is a src item among rsrcs that needs the client id and we don't have it yet, request
@@ -150,7 +147,7 @@ void CumbiaHttp::m_start_bundled_src_req(const QList<SrcItem> &rsrcs, const QLis
     if(rsrcs.size() > 0) {
         CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(rsrcs, this, d->client_id);
         r->setObjectName(QString("%1-req-%2").arg(d->tag).arg(++d->reqcnt));
-        r->setBlocking(d->chan_recv->exiting()); // destruction in progress
+//        r->setBlocking(d->chan_recv->exiting()); // destruction in progress
         r->start(d->url + "/bu/src-bundle", d->qnam);
     }
     if(wsrcs.size() > 0) {
@@ -189,10 +186,11 @@ void CumbiaHttp::onSrcBundleReplyError(const CuData &errd) {
     msg += "\ndata:\"" + errd["data"].toString() + "\"";
     dat["msg"] = msg;
     dat.putTimestamp();
-    foreach(const QString& s, ma.keys())  { // sources
+    const QStringList& keys = ma.keys(), &tkeys = tma.keys();
+    foreach(const QString& s, keys)  { // sources
         if(ma[s].lis) ma[s].lis->onUpdate(m_make_server_err(revmap, s, dat));
     }
-    foreach(const QString& s, tma.keys())  { // targets
+    foreach(const QString& s, tkeys)  { // targets
         if(ma[s].lis) ma[s].lis->onUpdate(m_make_server_err(revmap, s, dat));
     }
 }
@@ -257,28 +255,6 @@ QList<CuHttpSrcHelper_I *> CumbiaHttp::getSrcHelpers() const {
     return d->src_helpers;
 }
 
-/*!
- * \brief Change the message time to live on the channel
- * \param secs number of seconds
- * @see chanMsgTtl
- */
-void CumbiaHttp::setChanMsgTtl(int secs) {
-    return d->chan_recv->setDataExpireSecs(static_cast<time_t>(secs));
-}
-
-/*!
- * \brief Messages received from the channel that are older than this value in seconds are discarded
- *
- * \par Default value
- * DEFAULT_CHAN_MSG_TTL value configured in cumbia-http.pro (seconds)
- * \par Command line argument
- * --ttl=X or --chan-msgs-ttl=X are recognized by CuHttpRegisterEngine and allow tuning the value
- * at startup.
- */
-int CumbiaHttp::chanMsgTtl() const {
-    return static_cast<time_t>(d->chan_recv->dataExpiresSecs());
-}
-
 CuThreadFactoryImplI *CumbiaHttp::getThreadFactoryImpl() const
 {
     return d->m_threadFactoryImplI;
@@ -306,7 +282,8 @@ void CumbiaHttp::onCredsReady(const QString &user, const QString &passwd) {
         // unrecoverable, notify listeners and remove targets from src_q_man
         CuData err = d->w_helper->makeErrData("invalid user name").set("is_result", true);
         const QMap<QString, SrcData> &tm = d->src_q_man->takeTgts();
-        foreach(const QString& src, tm.keys()) {
+        const QStringList &keys = tm.keys();
+        foreach(const QString& src, keys) {
             qDebug() << __PRETTY_FUNCTION__ << "tgt" << src << "msg" << "invalid user nam";
             if(tm[src].lis) tm[src].lis->onUpdate(err.set("src", src.toStdString()));
         }
@@ -326,7 +303,8 @@ void CumbiaHttp::onAuthReply(bool authorised, const QString &user, const QString
     else {
         CuData err = d->w_helper->makeErrData(message).set("is_result", true).set("user", user.toStdString());
         const QMap<QString, SrcData>& tamap = d->src_q_man->takeTgts();
-        foreach(const QString& src, tamap.keys()) {
+        const QStringList& ks = tamap.keys();
+        foreach(const QString& src, ks) {
             qDebug() << __PRETTY_FUNCTION__ << "tgt" << src << "msg" << message;
             if(tamap[src].lis) tamap[src].lis->onUpdate(err.set("src", src.toStdString()));
         }
@@ -337,7 +315,8 @@ void CumbiaHttp::onAuthError(const QString &errm) {
     qDebug() << __PRETTY_FUNCTION__ << errm;
     CuData err = d->w_helper->makeErrData(errm).set("is_result", true);
     const QMap<QString, SrcData> &tm = d->src_q_man->takeTgts();
-    foreach(const QString& src, tm.keys()) {
+    const QStringList& ks = tm.keys();
+    foreach(const QString& src, ks) {
         if(tm[src].lis) tm[src].lis->onUpdate(err.set("src", src.toStdString()));
     }
 }
@@ -352,7 +331,8 @@ void CumbiaHttp::m_lis_update(const CuData &da) {
     const std::string &src = da.value("src").toString();
     QList<SrcData> tgtli;
     const QMap<QString, SrcData> &mp = d->src_q_man->takeTgts();
-    foreach(const QString& tgt, mp.keys()) {
+    const QStringList& ks = mp.keys();
+    foreach(const QString& tgt, ks) {
         tgtli.push_back(mp.value(tgt));
     }
     const QList<SrcData> &dali = d->src_q_man->takeSrcs(QString::fromStdString(src)) + tgtli;
@@ -396,7 +376,7 @@ bool CumbiaHttp::m_need_client_id(const QList<SrcItem> &rsrcs) const
     return needs_id;
 }
 
-void CumbiaHttp::onIdReady(const unsigned long long &client_id, const time_t ttl) {
+void CumbiaHttp::onIdReady(const unsigned long long &client_id, const time_t ) {
     d->client_id = client_id;
     m_dequeue_src_reqs(); // process requests waiting for client_id
 }

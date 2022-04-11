@@ -45,14 +45,12 @@ public:
         assert(mythread == pthread_self());
         m_tmr_remove(a); // remove the old activity - old timer entry
         if(m_activity_cnt(old_t) == 0) {
-            printf("\e[1;35mCuThread.m_a_new_timeout: no more activities with timer %p timeo %d: unregister listener calling!\e[0m\n",
-                   old_t, old_t->timeout());
+            printf("\e[1;35mCuThread.m_a_new_timeout: no more activities with timer %p timeo %d: unregister listener %p calling!\e[0m\n",
+                   old_t, old_t->timeout(), static_cast<CuTimerListener *>(th));
             tmr_s->unregisterListener(th, old_t->timeout());
         }
         CuTimer * t = tmr_s->registerListener(th, timeo); // may reuse timers
         m_tmr_registered(a, t);
-        printf("CuThread.m_a_new_timeout %p pthread 0x%lx activity %p tok %s tmr \e[1;32mCHANGED %p\e[0m\n",
-               this, pthread_self(), a, datos(atok), t);
         return t;
     };
 
@@ -324,6 +322,9 @@ void CuThread::onEventPosted(CuEventI *event) {
                 const std::vector<CuData> &vd_ref = re->datalist;
                 it->second->onResult(vd_ref);
             }
+            else if(re->u_data) {
+                it->second->onResult(re->u_data);
+            }
             else {
                 it->second->onResult(re->data);
             }
@@ -486,14 +487,16 @@ void CuThread::run() {
             for(CuActivity *a : a_for_t) {
                 if(a->repeat() > 0) { // periodic activity
                     a->doExecute(); // first
-                    if(a->repeat() != timer->timeout()) // reschedule with new timeout
+                    if(a->repeat() != timer->timeout()) { // reschedule with new timeout
                         d->thpp->m_a_new_timeout(a, a->repeat(), timer, this);
+                    }
                     else if(!tmr_restart) // reschedule the same timer
                         tmr_restart = true;
                 }
             } // for activity iter
-            if(tmr_restart) // restart timer if at least one activity needs it
-                d->thpp->tmr_s->restart(timer, timer->timeout());
+            if(tmr_restart) { // restart timer if at least one activity needs it
+                d->thpp->tmr_s->restart(timer);
+            }
         }
         else if(te->getType() == ThreadEvent::PostToActivity) {
             CuThRun_Ev *tce = static_cast<CuThRun_Ev *>(te);
@@ -530,8 +533,9 @@ void CuThread::run() {
     }
     std::set acopy(d->thpp->activity_set);
     std::set<CuActivity *>::iterator i;
-    for(i = acopy.begin(); i != acopy.end(); ++i)
+    for(i = acopy.begin(); i != acopy.end(); ++i) {
         d->thpp->mExitActivity(*i, this, true);
+    }
     // post destroy event so that it will be delivered in the *main thread*
     if(destroy) {
         d->eb->postEvent(new CuThreadAutoDestroyEvent());

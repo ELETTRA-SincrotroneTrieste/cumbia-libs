@@ -104,6 +104,10 @@ void CuActivity::publishResult(const std::vector<CuData> &datalist) {
         d->thread->publishResult(this, datalist);
 }
 
+void CuActivity::publishResult(const CuUserData *data) {
+    if(d->thread) d->thread->publishResult(this, data);
+}
+
 /** \brief Publish a progress from the activity thread (whence the method is called) to the
  *         main thread.
  *

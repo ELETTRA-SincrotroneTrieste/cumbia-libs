@@ -10,17 +10,12 @@ static int reqs_started = 0, reqs_ended = 0;
 
 class CuHTTPActionAPrivate {
 public:
-    QNetworkAccessManager *nam;
-    QNetworkReply *reply;
-    CuHTTPActionListener *listener;
-    QByteArray buf;
 };
 
 CuHTTPActionA::CuHTTPActionA(QNetworkAccessManager *nam) {
     d = new CuHTTPActionAPrivate;
     d->nam = nam;
     d->reply = nullptr;
-    d->listener = nullptr;
 }
 
 CuHTTPActionA::~CuHTTPActionA() {
@@ -28,35 +23,8 @@ CuHTTPActionA::~CuHTTPActionA() {
     delete d;
 }
 
-void CuHTTPActionA::setHttpActionListener(CuHTTPActionListener *l) {
-    d->listener = l;
-}
-
-CuHTTPActionListener *CuHTTPActionA::getHttpActionListener() const {
-    return d->listener;
-}
-
 QNetworkAccessManager *CuHTTPActionA::getNetworkAccessManager() const {
     return d->nam;
-}
-
-QNetworkRequest CuHTTPActionA::prepareRequest(const QUrl &url) const {
-    QNetworkRequest r(url);
-    r.setRawHeader("Accept", "application/json");
-    r.setHeader(QNetworkRequest::UserAgentHeader, QByteArray("cumbia-http ") + QByteArray(CUMBIA_HTTP_VERSION_STR));
-    return r;
-}
-
-/*!
- * \brief the default implementation calls onActionFinished on the registered CuHttpListener
- *
- * This is normally called from onReplyDestroyed, but CuHttpActionWriter can call this
- * method to unregister the action after the authentication fails.
- * CuHttpActionReader calls this when the unsubscribe reply is destroyed
- */
-void CuHTTPActionA::notifyActionFinished() {
-    if(!d->reply) // otherwise must wait for reply destroyed
-        d->listener->onActionFinished(getSourceName().toStdString(), getType());
 }
 
 // data from event source has a combination of fields, one per line
@@ -75,12 +43,6 @@ QList<QByteArray> CuHTTPActionA::m_extract_data(const QByteArray &in) const {
         }
     }
     return jdl;
-}
-
-// totally incomplete
-CuHTTPActionA::MsgFmt CuHTTPActionA::m_likely_format(const QByteArray &ba) const {
-    if(ba.startsWith("<html>")) return FmtHtml;
-    return FmtJson;
 }
 
 // discard hello message
@@ -120,8 +82,6 @@ void CuHTTPActionA::onReplyFinished() {
 }
 
 void CuHTTPActionA::onReplyDestroyed(QObject *) {
-    if(exiting())
-        notifyActionFinished();
     d->reply = nullptr;
 }
 
@@ -173,4 +133,3 @@ void CuHTTPActionA::cancelRequest() {
         d->reply->abort();
     }
 }
-

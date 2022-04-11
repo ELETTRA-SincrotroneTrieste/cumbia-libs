@@ -48,9 +48,7 @@ void Qu_Reader::setContextOptions(const CuData &options) {
 // manages property data and merges it with value data if necessary
 // before notification (EPICS configuration arrives after first data)
 //
-void Qu_Reader::onUpdate(const CuData &da)
-{
-    printf("Qu_Reader.onUpdate: %p %s\e[0m\n", this, datos(da));
+void Qu_Reader::onUpdate(const CuData &da) {
     bool property_only = m_property_only || da.has("activity", "cutadb");
     CuData data = da.clone();
     const CuVariant&  v = da["value"];

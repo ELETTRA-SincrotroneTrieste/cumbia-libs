@@ -122,9 +122,6 @@ public:
     QList<QuReplaceWildcards_I *> getReplaceWildcard_Ifaces() const;
     QList<CuHttpSrcHelper_I *>getSrcHelpers() const;
 
-    void setChanMsgTtl(int secs);
-    int chanMsgTtl() const;
-
 private:
 
     void m_init();
@@ -156,7 +153,7 @@ public:
 
     // CuHttpCliIdManListener interface
 private:
-    void onIdReady(const unsigned long long &client_id, const time_t ttl);
+    void onIdReady(const unsigned long long &client_id, const time_t);
     void onIdManError(const QString& err);
 };
 
