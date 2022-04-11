@@ -16,11 +16,6 @@ public:
 
     void mergeOptions(const CuData &o);
     // CuTangoActionFactoryI interface
-    CuHTTPActionA *create(const CuHTTPSrc &s,
-                          QNetworkAccessManager *nam,
-                          const QString& http_addr,
-                          CuHttpAuthManager *authman,
-                          CuHttpChannelReceiver *cr) const;
     std::string getMethod() const;
     CuHTTPActionFactoryI* clone() const;
     CuData options() const;
@@ -35,13 +30,6 @@ public:
 
     void setConfiguration(const CuData &conf);
     void setWriteValue(const CuVariant &write_val);
-
-    // CuTangoActionFactoryI interface
-    CuHTTPActionA *create(const CuHTTPSrc &s,
-                          QNetworkAccessManager *qnam,
-                          const QString& http_addr,
-                          CuHttpAuthManager *authman,
-                          CuHttpChannelReceiver * cr= nullptr) const;
     std::string getMethod() const;
     CuHTTPActionFactoryI* clone() const;
     CuData options() const;
@@ -58,11 +46,6 @@ public:
     virtual ~CuHTTPActionConfFactory();
 
     // CuTangoActionFactoryI interface
-    CuHTTPActionA *create(const CuHTTPSrc &s,
-                          QNetworkAccessManager *qnam,
-                          const QString& http_addr,
-                          CuHttpAuthManager *authman,
-                          CuHttpChannelReceiver *cr = nullptr) const;
     std::string getMethod() const;
     CuHTTPActionFactoryI* clone() const;
     CuData options() const;
@@ -77,12 +60,6 @@ public:
     void setOptions(const CuData &o);
     virtual ~CuHTTPActionEditFactory();
 
-    // CuTangoActionFactoryI interface
-    CuHTTPActionA *create(const CuHTTPSrc &s,
-                          QNetworkAccessManager *qnam,
-                          const QString& http_addr,
-                          CuHttpAuthManager *authman,
-                          CuHttpChannelReceiver *cr = nullptr) const;
     std::string getMethod() const;
     CuHTTPActionFactoryI* clone() const;
     CuData options() const;

@@ -1,69 +1,45 @@
 #include "cuhttpchannelreceiver.h"
+#include <cumacros.h>
 #include "cumbiahttpworld.h"
 #include <cudatalistener.h>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QMultiMap>
+#include <QNetworkAccessManager>
+#include <cudata.h>
+
+static int reqs_started = 0, reqs_ended = 0;
 
 class CuHttpChannelReceiverPrivate {
 public:
+    CuHttpChannelReceiverPrivate(const QString &_url,  const QString &_chan, QNetworkAccessManager *_nam) :
+        url(_url), chan(_chan), nam(_nam), reply(nullptr) {}
+
     QMultiMap<QString, CuDataListener *> rmap;
     QString url, chan;
-    time_t data_exp_t;
-    bool exit;
+
+    QNetworkAccessManager *nam;
+    QNetworkReply *reply;
+    QByteArray buf;
 };
 
-CuHttpChannelReceiver::CuHttpChannelReceiver(const QString &url,
-                                             const QString &chan,
-                                             QNetworkAccessManager *nam) : CuHTTPActionA(nam) {
-    d = new CuHttpChannelReceiverPrivate;
-    d->url = url;
-    d->chan = chan;
-    d->data_exp_t = DEFAULT_CHAN_MSG_TTL; // after these seconds data is old
-    d->exit = false;
+CuHttpChannelReceiver::CuHttpChannelReceiver(const QString &url, const QString &chan, QNetworkAccessManager *nam) {
+    d = new CuHttpChannelReceiverPrivate(url, chan, nam);
 }
 
 QString CuHttpChannelReceiver::channel() const {
     return d->chan;
 }
 
-/*!
- * \brief set the number of seconds after which data from the channel is considered old and discarded
- *
- * \par Note
- * The timestamp stored in the received data is compared to the current system time in order to
- * determine whether it is expired or still valid.
- *
- * \par Default value
- * DEFAULT_CHAN_MSG_TTL value configured in cumbia-http.pro (seconds)
- */
-void CuHttpChannelReceiver::setDataExpireSecs(time_t secs) {
-    d->data_exp_t = secs;
-}
-
-/*!
- * \brief returns the number of seconds after which data received from the channel is discarded
- * \
- * @see setDataExpireSecs
- */
-time_t CuHttpChannelReceiver::dataExpiresSecs() const {
-    return d->data_exp_t;
-}
-
-QString CuHttpChannelReceiver::getSourceName() const {
+QString CuHttpChannelReceiver::chan() const {
     QString channel = d->url + "/sub/" + d->chan;
     return channel;
-}
-
-CuHTTPActionA::Type CuHttpChannelReceiver::getType() const {
-    return CuHTTPActionA::ChannelReceiver;
 }
 
 void CuHttpChannelReceiver::addDataListener(const QString &src, CuDataListener *l) {
     d->rmap.insert(src, l);
 }
-
-void CuHttpChannelReceiver::addDataListener(CuDataListener *l) { }
 
 void CuHttpChannelReceiver::removeDataListener(CuDataListener *l) {
     QMutableMapIterator<QString, CuDataListener* > it(d->rmap);
@@ -80,19 +56,30 @@ size_t CuHttpChannelReceiver::dataListenersCount() {
 }
 
 void CuHttpChannelReceiver::start() {
-    QString chan = d->url + "/sub/" + d->chan;
-    cuprintf("CuHttpChannelReceiver.start: listening on channel \e[0;32m%s\e[0m\n", qstoc(chan));
-    startRequest(chan);
-}
-
-bool CuHttpChannelReceiver::exiting() const {
-    return d->exit;
+    const QString& url(d->url + "/sub/" + d->chan);
+    QNetworkRequest r = prepareRequest(url);
+    if(!d->reply) {
+        d->reply = d->nam->get(r);
+        reqs_started++;
+        connect(d->reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
+        connect(d->reply, SIGNAL(finished()), this, SLOT(onReplyFinished()));
+        connect(d->reply, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(onSslErrors(QList<QSslError>)));
+        connect(d->reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(onError(QNetworkReply::NetworkError)));
+        connect(d->reply, SIGNAL(destroyed(QObject*)), this, SLOT(onReplyDestroyed(QObject*)));
+    }
+    else {
+        perr("%s: error { already in progress }", __PRETTY_FUNCTION__);
+    }
 }
 
 void CuHttpChannelReceiver::stop() {
-    cuprintf("CuHttpChannelReceiver::stop: \e[1;31mcheck me!\e[0m\n");
-    d->exit = true;
-    stopRequest();
+    qDebug() << __PRETTY_FUNCTION__ << "stop request : d->reply" << d->reply;
+    if(d->reply) {
+        disconnect(d->reply, SIGNAL(error(QNetworkReply::NetworkError)), this, nullptr);
+        disconnect(d->reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, nullptr);
+        if(d->reply->isOpen())
+            d->reply->close();
+    }
 }
 
 /*!
@@ -110,12 +97,7 @@ void CuHttpChannelReceiver::decodeMessage(const QJsonValue &v) {
     const QJsonArray a = v.toArray(); // data arrives within an array
     if(a.size() == 1) {
         const QString& src = a.at(0)["src"].toString();
-//        double t_ms = a.at(0)["timestamp_ms"].toDouble();
-        time_t diff_t;
-//        bool data_fresh = m_data_fresh(t_ms, &diff_t);
-        bool data_fresh = true;
-
-        if(d->rmap.contains(src) && data_fresh) {
+        if(d->rmap.contains(src)) {
             CuData res("src", src.toStdString());
             CumbiaHTTPWorld httpw;
             httpw.json_decode(a.at(0), res);
@@ -123,22 +105,10 @@ void CuHttpChannelReceiver::decodeMessage(const QJsonValue &v) {
                 l->onUpdate(res);
             }
         }
-        else if(!data_fresh) {
-            CuData res("src", src.toStdString());
-            CumbiaHTTPWorld httpw;
-            httpw.json_decode(a.at(0), res);
-            perr("CuHttpChannelReceiver::decodeMessage: source \"%s\" data is too old: %lds > %lds",
-                 qstoc(src), diff_t, d->data_exp_t);
-        }
-    //    else if(a.at(0)["type"].toString() == "heartbeat") {
-    // process heartbeat ?
-      //  }
     }
-
 }
 
-QNetworkRequest CuHttpChannelReceiver::prepareRequest(const QUrl &url) const
-{
+QNetworkRequest CuHttpChannelReceiver::prepareRequest(const QUrl &url) const {
     /*
      * -- sniffed from JS EventSource -- tcpdump -vvvs 1024 -l -A -i lo port 8001 -n
      * .^...^..GET /sub/subscribe/hokuto:20000/test/device/1/double_scalar HTTP/1.1
@@ -154,8 +124,7 @@ QNetworkRequest CuHttpChannelReceiver::prepareRequest(const QUrl &url) const
         Pragma: no-cache
         Cache-Control: no-cache
     */
-    QNetworkRequest r (url);
-    r = CuHTTPActionA::prepareRequest(url);
+    QNetworkRequest r(url);
     r.setRawHeader("Accept", "text/event-stream");
     r.setRawHeader("Accept-Encoding", "gzip, deflate");
     r.setRawHeader("Connection", "keep-alive");
@@ -167,19 +136,82 @@ QNetworkRequest CuHttpChannelReceiver::prepareRequest(const QUrl &url) const
     return r;
 }
 
-bool CuHttpChannelReceiver::m_data_fresh(const double timestamp_ms, time_t* diff_t) const {
-    long ts_sec = static_cast<long>(timestamp_ms / 1000.0);
-    time_t now;
-    time(&now);
-    char _now[256], _then[256];
-    strcpy(_now, ctime(&now));
-    strcpy(_then, ctime(&ts_sec));
-    *diff_t = now - ts_sec;
-//        printf("CaCuTangoEImpl data ts %s, data now %s now -ts_sec %ld < %ld? %s\n",
-//               _then, _now, now - ts_sec, d->data_exp_t, (*diff_t < d->data_exp_t) ? "\e[1;32myes\e[0m" : "\e[1;31mno\e[0m");
-//        if(*diff_t >= d->data_exp_t)
-//            cuprintf("CaCuTangoEImpl.m_data_valid \n\e[1;35m%ld %s -  %ld %s < 3 sec ? %ld\e[0m\n",
-//                      now, _now, ts_sec, _then, *diff_t);
-    return *diff_t < d->data_exp_t;
+
+// data from event source has a combination of fields, one per line
+// (event, id, retry, data)
+// https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
+// Here we extract data
+//
+QList<QByteArray> CuHttpChannelReceiver::m_extract_data(const QByteArray &in) const {
+    QList<QByteArray> jdl; // json data list
+    QList<QByteArray> dl = in.split('\n');
+    foreach(QByteArray bai, dl) {
+        int idx = bai.lastIndexOf("data: ");
+        if(idx >= 0) {
+            bai.replace(0, idx + strlen("data: "), "");
+            jdl << bai;
+        }
+    }
+    return jdl;
 }
 
+// discard hello message
+bool CuHttpChannelReceiver::m_likely_valid(const QByteArray &ba) const {
+    return !ba.startsWith(": hi\n");
+}
+
+void CuHttpChannelReceiver::m_on_buf_complete() {
+//    printf("\e[1;36mCuHTTPActionA::m_on_buf_complete: %s\e[0m\n", d->buf.data());
+    if(m_likely_valid(d->buf)) {  // discard hi:
+        QJsonParseError jpe;
+        QList<QByteArray> jsonli = m_extract_data(d->buf);
+        foreach(const QByteArray &json, jsonli) {
+            QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
+            if(jsd.isNull())
+                perr("%s: invalid json: %s\n", __PRETTY_FUNCTION__, qstoc(json));
+            else {
+                decodeMessage(jsd.array());
+            }
+        }
+    }
+}
+
+void CuHttpChannelReceiver::onNewData() {
+    QByteArray ba = d->reply->readAll();
+    d->buf += ba;
+    // buf complete?
+    if(d->buf.endsWith("\n\n") || d->buf.endsWith("\r\n\r\n")) { // buf complete
+        m_on_buf_complete();
+        d->buf.clear();
+    }
+}
+
+void CuHttpChannelReceiver::onReplyFinished() {
+    reqs_ended++;
+    d->reply->deleteLater();
+}
+
+void CuHttpChannelReceiver::onReplyDestroyed(QObject *) {
+    d->reply = nullptr;
+}
+
+void CuHttpChannelReceiver::onSslErrors(const QList<QSslError> &errors) {
+    QString msg;
+    foreach(const QSslError &e, errors)
+        msg += e.errorString() + "\n";
+    decodeMessage(CumbiaHTTPWorld().make_error(msg));
+}
+
+void CuHttpChannelReceiver::onError(QNetworkReply::NetworkError code) {
+    decodeMessage(CumbiaHTTPWorld().make_error(d->reply->errorString() + QString( "code %1").arg(code)));
+}
+
+void CuHttpChannelReceiver::cancelRequest() {
+    if(d->reply && !d->reply->isFinished()) {
+        disconnect(d->reply, SIGNAL(error(QNetworkReply::NetworkError)), this, nullptr);
+        disconnect(d->reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, nullptr);
+        disconnect(d->reply, SIGNAL(readyRead()), this, nullptr);
+        pretty_pri("cancelling request { %s }\e[0m\n", qstoc(d->reply->request().url().toString()));
+        d->reply->abort();
+    }
+}

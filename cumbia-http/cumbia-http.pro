@@ -63,9 +63,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     cuhttp_source.cpp \
-    cuhttpactiona.cpp \
     cuhttpactionfactories.cpp \
-    cuhttpactionfactoryservice.cpp \
     cuhttpauthcookiestore.cpp \
     cuhttpauthmanager.cpp \
     cuhttpauthmanagertools.cpp \
@@ -87,10 +85,8 @@ SOURCES += \
 
 HEADERS += \
     cuhttp_source.h \
-    cuhttpactiona.h \
     cuhttpactionfactories.h \
     cuhttpactionfactoryi.h \
-    cuhttpactionfactoryservice.h \
     cuhttpauthcookiestore.h \
     cuhttpauthmanager.h \
     cuhttpauthmanagertools.h \

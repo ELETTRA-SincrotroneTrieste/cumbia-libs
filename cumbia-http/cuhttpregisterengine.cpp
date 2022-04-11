@@ -54,7 +54,6 @@ CumbiaHttp *CuHttpRegisterEngine::registerWithDefaults(CumbiaPool *cu_pool, CuCo
     // for the HTTP requests
     CumbiaHTTPWorld httpw;
     CumbiaHttp* cuhttp = new CumbiaHttp(url(), channel(), new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    cuhttp->setChanMsgTtl(ttl());
     cu_pool->registerCumbiaImpl("http", cuhttp);
     fpoo.registerImpl("http", CuHTTPReaderFactory());
     fpoo.registerImpl("http", CuHttpControlsWriterFactory());
@@ -93,38 +92,12 @@ void CuHttpRegisterEngine::setChannel(const QString &chan) {
     d->chan = chan;
 }
 
-/*!
- * \brief change the period, in seconds, after that a message on the channel is discarded
- * \param ttl number of seconds
- *
- * When a source subscribes to a channel, it may receive messages that are discarded if older
- * than ttl.
- *
- * @see ttl
- *
- * \par Note
- * The --ttl command line argument can be used to tune this value
- * The default value is 5 seconds.
- */
-void CuHttpRegisterEngine::setTtl(int ttl) {
-    d->ttl = ttl;
-}
-
 QString CuHttpRegisterEngine::url() const {
     return d->url;
 }
 
 QString CuHttpRegisterEngine::channel() const {
     return d->chan;
-}
-
-/*!
- * \brief Time to live of the messages on the channel
- * \return an integer representing the seconds after which a message on the channel is discarded
- * @see setTtl
- */
-int CuHttpRegisterEngine::ttl() const {
-    return d->ttl;
 }
 
 bool CuHttpRegisterEngine::hasCmdOption(const QStringList &args) const {
