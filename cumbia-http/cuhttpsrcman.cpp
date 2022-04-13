@@ -17,6 +17,7 @@ public:
     QList<SrcItem> r_items, w_items;
     CuHttpSrcQueueManListener *lis;
     CuData options;
+    int dequ_chunk_siz;
 };
 
 SrcItem::SrcItem(const std::string &s, CuDataListener *li, const std::string &metho,
@@ -36,11 +37,12 @@ bool SrcData::isEmpty() const {
 
 SrcData::SrcData() : lis(nullptr) { }
 
-CuHttpSrcMan::CuHttpSrcMan(CuHttpSrcQueueManListener* l, QObject *parent) : QObject(parent) {
+CuHttpSrcMan::CuHttpSrcMan(CuHttpSrcQueueManListener* l, int deq_chunksiz, QObject *parent) : QObject(parent) {
     d = new SrcQueueManagerPrivate;
     d->lis = l;
     d->timer = new QTimer(this);
     d->timer->setInterval(TMR_DEQUEUE_INTERVAL);
+    d->dequ_chunk_siz = deq_chunksiz; // dequeue deq_chunksiz items then sleep for TMR_DEQUEUE_INTERVAL
     connect(d->timer, SIGNAL(timeout()), this, SLOT(onDequeueTimeout()));
 }
 
@@ -148,8 +150,9 @@ QMap<QString, SrcData> CuHttpSrcMan::takeSrcs() const {
 }
 
 void CuHttpSrcMan::onDequeueTimeout() {
+    int x = 0;
     bool empty = d->srcq.isEmpty();
-    while(!d->srcq.isEmpty()) {
+    while(!d->srcq.isEmpty() && x++ < d->dequ_chunk_siz) {
         const SrcItem& i = d->srcq.dequeue();
         i.method != "write" ?  d->srcd.insert(QString::fromStdString(i.src), SrcData(i.l, i.method, i.channel, i.options))
                              : d->tgtd.insert(QString::fromStdString(i.src), SrcData(i.l, i.method, i.channel, i.options, i.wr_val));

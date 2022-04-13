@@ -48,12 +48,14 @@ public:
 
 /*!
  * \brief Http source queue and data manager
+ *
+ * enqueued sources are dequeued in chunks periodically to split big requests into smaller ones
  */
 class CuHttpSrcMan : public QObject
 {
     Q_OBJECT
 public:
-    explicit CuHttpSrcMan(CuHttpSrcQueueManListener* l, QObject *parent = nullptr);
+    explicit CuHttpSrcMan(CuHttpSrcQueueManListener* l, int src_dequeue_chunk_siz = 100, QObject *parent = nullptr);
     virtual ~CuHttpSrcMan();
     void setQueueManListener(CuHttpSrcQueueManListener* l);
     void enqueueSrc(const CuHTTPSrc & httpsrc, CuDataListener *l, const std::string& method, const QString &chan, const CuVariant &w_val, const CuData &options);
