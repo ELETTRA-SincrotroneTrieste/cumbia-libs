@@ -29,6 +29,7 @@ public:
     std::condition_variable m_evloop_cv;
     std::set<CuEventLoopListener* > eloo_liss;
     std::thread *thread;
+    pthread_t mythread;
 };
 
 /*! The class constructor
@@ -38,6 +39,7 @@ public:
 CuEventLoopService::CuEventLoopService(CuEventLoopListener *l)
 {
     d = new CuEventLoopPrivate;
+    d->mythread = pthread_self();
     d->thread = nullptr;
     if(l) d->eloo_liss.insert(l);
 }
@@ -61,18 +63,8 @@ CuEventLoopService::~CuEventLoopService()
  *        thread, false if CuEventLoopService::run has to be run in the caller's same
  *        thread.
  */
-void CuEventLoopService::exec(bool threaded)
-{
-    if(threaded)
-    {
-        pblue("CuEventLoop.exec: will run the event loop in a separate thread from this: 0x%lx...", pthread_self());
-        if(!d->thread)
-            d->thread = new std::thread(&CuEventLoopService::run, this);
-        else
-            perr("CuEventLoopService::exec: event loop in a separate thread already running");
-    }
-    else
-        run();
+void CuEventLoopService::exec() {
+    run();
 }
 
 /*! \brief post an event to the internal thread event queue
@@ -93,10 +85,12 @@ void CuEventLoopService::postEvent(CuEventLoopListener *lis, CuEventI *e)
  * @param l a CuEventLoopListener that will receive events from the event loop
  */
 void CuEventLoopService::addCuEventLoopListener(CuEventLoopListener *l) {
+    assert(d->mythread == pthread_self());
     d->eloo_liss.insert(l);
 }
 
 void CuEventLoopService::removeCuEventLoopListener(CuEventLoopListener *l) {
+    assert(d->mythread == pthread_self());
     d->eloo_liss.erase(l);
 }
 
@@ -141,6 +135,7 @@ void CuEventLoopService::wait()
  */
 void CuEventLoopService::run()
 {
+    assert(d->mythread == pthread_self());
     bool repeat = true;
     while (repeat)  {
         std::queue<CuEventInfo> qcopy;

@@ -55,12 +55,9 @@ public:
 
     virtual ~CuEventLoopService();
 
-    void exec(bool threaded = false);
-
+    void exec();
     void postEvent(CuEventLoopListener *l, CuEventI* e);
-
     void addCuEventLoopListener(CuEventLoopListener *l);
-
     void removeCuEventLoopListener(CuEventLoopListener *l);
 
     void exit();
