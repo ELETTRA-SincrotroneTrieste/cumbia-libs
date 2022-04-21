@@ -340,8 +340,9 @@ void CumbiaHttp::m_lis_update(const CuData &da) {
     foreach(const SrcData& srcd, dali) {
         // update listener but not if method is "u": at this time it will have been deleted
         if(srcd.lis && srcd.method != "u") srcd.lis->onUpdate(da);
-        if(srcd.method == "s")
+        if(srcd.method == "s" || srcd.method == "S") {
             d->chan_recv->addDataListener(QString::fromStdString(src), srcd.lis);
+        }
         else if(srcd.method == "u") {
             d->chan_recv->removeDataListener(srcd.lis);
         }

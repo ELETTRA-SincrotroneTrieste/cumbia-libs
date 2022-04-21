@@ -125,7 +125,6 @@ void CuHttpCliIdMan::send_keepalive() {
     QNetworkRequest r(d->url);
     m_make_network_request(&r);
     // curl http://woody.elettra.eu:8001/bu/tok
-    printf("CuHttpCliIdMan::send_keepalive: Sending keepalive id %llu\e[1;32mdisabled\e[0m\n", d->id);
     QNetworkReply *reply = d->nam->post(r, m_json(d->id));
     reply->setProperty("type", "id_renew");
     m_reply_connect(reply);

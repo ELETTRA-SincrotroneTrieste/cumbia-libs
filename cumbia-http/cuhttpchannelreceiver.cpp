@@ -129,6 +129,7 @@ QNetworkRequest CuHttpChannelReceiver::prepareRequest(const QUrl &url) const {
     QNetworkRequest r(url);
     r.setRawHeader("Accept", "text/event-stream");
     r.setRawHeader("Accept-Encoding", "gzip, deflate");
+//    r.setRawHeader("Connection", "keep-alive");
 //    r.setRawHeader("Pragma", "no-cache");
 //    r.setRawHeader("Cache-Control", "no-cache");
 
@@ -162,7 +163,6 @@ bool CuHttpChannelReceiver::m_likely_valid(const QByteArray &ba) const {
 }
 
 void CuHttpChannelReceiver::m_on_buf_complete() {
-//    printf("\e[1;36mCuHTTPActionA::m_on_buf_complete: %s\e[0m\n", d->buf.data());
     if(m_likely_valid(d->buf)) {  // discard hi:
         QJsonParseError jpe;
         QList<QByteArray> jsonli = m_extract_data(d->buf);
@@ -205,6 +205,7 @@ void CuHttpChannelReceiver::onSslErrors(const QList<QSslError> &errors) {
 
 void CuHttpChannelReceiver::onError(QNetworkReply::NetworkError code) {
     decodeMessage(CumbiaHTTPWorld().make_error(d->reply->errorString() + QString( "code %1").arg(code)));
+    perr("CuHttpChannelReceiver::onError: %s", qstoc(d->reply->errorString()));
 }
 
 void CuHttpChannelReceiver::cancelRequest() {
