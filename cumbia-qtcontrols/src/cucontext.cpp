@@ -177,7 +177,6 @@ void CuContext::disposeReader(const std::string &src)
         if(r->source().toStdString() == src || src == std::string())
         {
             removed = r;
-            printf("CuContext::disposeReader: deleting reader for %s\n", src.c_str());
             r->unsetSource();
             delete r;
         }
