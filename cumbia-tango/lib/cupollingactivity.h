@@ -134,8 +134,8 @@ private:
     void m_registerAction(const TSource &ts);
     void m_unregisterAction(const TSource &ts);
     void m_edit_args(const TSource& src, const std::vector<std::string> &args);
-    inline void m_v_attd_remove(const std::string& src, const std::string& attna);
-    inline void m_cmd_remove(const std::string& src);
+    inline int m_v_attd_remove(const std::string& src, const std::string& attna);
+    inline int m_cmd_remove(const std::string& src);
 
 };
 

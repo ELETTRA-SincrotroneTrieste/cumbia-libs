@@ -380,8 +380,12 @@ void CuPollingActivity::execute()
         for(size_t i = 0; att_idx >= 0 && i < d->v_attd.size(); i++) { // attributes
             if(!d->v_skip[i]) {
                 success = tangoworld.read_atts(d->tdev->getDevice(), d->v_attn, d->v_attd, results, d->data_updpo);
+                //                printf("[0x%lx] CuPollingActivity. \e[0;32mreading attribute %s/%s\e[0m cuz d->v_skip %s\n", pthread_self(),  d->tdev->getName().c_str(), d->v_attn[i].c_str(),
+                //                       d->v_skip[i] ? "TRUE" : "FALSE");
             }
             else {
+                //                printf("[0x%lx] CuPollingActivity. \e[1;36mskipping first read of attribute %s/%s\e[0m cuz d->v_skip %s\n", pthread_self(), d->tdev->getName().c_str(), d->v_attn[i].c_str(),
+                //                       d->v_skip[i] ? "TRUE" : "FALSE");
                 d->v_skip[i] = false;
             }
             if(!success) {
@@ -454,8 +458,9 @@ void CuPollingActivity::m_registerAction(const TSource& ts) {
 
 void CuPollingActivity::m_unregisterAction(const TSource &ts) {
     assert(d->my_thread_id == pthread_self());
-    m_cmd_remove(ts.getName());
-    m_v_attd_remove(ts.getName(), ts.getPoint());
+    int r = m_cmd_remove(ts.getName());
+    if(r == 0) // if cmd removed, do not try remove att
+        m_v_attd_remove(ts.getName(), ts.getPoint());
 }
 
 void CuPollingActivity::m_edit_args(const TSource &src, const std::vector<string> &args) {
@@ -466,14 +471,22 @@ void CuPollingActivity::m_edit_args(const TSource &src, const std::vector<string
     }
 }
 
-void CuPollingActivity::m_v_attd_remove(const std::string &src, const std::string& attna) {
-    d->v_attd.erase(std::find_if(d->v_attd.begin(), d->v_attd.end(), [src](const CuData& da) {  return da.s("src") == src; }) );
+int CuPollingActivity::m_v_attd_remove(const std::string &src, const std::string& attna) {
+    std::vector<CuData>::iterator fi = std::find_if(d->v_attd.begin(), d->v_attd.end(), [src](const CuData& da) {  return da.s("src") == src; }) ;
+    if(fi != d->v_attd.end()) {
+        d->v_attd.erase(fi);
+    }
+
     std::vector<std::string>::iterator it = std::find(d->v_attn.begin(), d->v_attn.end(), attna);
-    d->v_skip.erase(d->v_skip.begin() + std::distance(d->v_attn.begin(), it)); // erase from d->skip at position attna
-    d->v_attn.erase(it);
+    if(it != d->v_attn.end()) {
+        d->v_skip.erase(d->v_skip.begin() + std::distance(d->v_attn.begin(), it)); // erase from d->skip at position attna
+        d->v_attn.erase(it);
+    }
+    return fi != d->v_attd.end() && it != d->v_attn.end() ? 1 : 0;
 }
 
-void CuPollingActivity::m_cmd_remove(const std::string &src) {
+int CuPollingActivity::m_cmd_remove(const std::string &src) {
+    size_t s = d->cmds.size();
     std::vector<TSource>::iterator it = d->cmds.begin();
     while(it != d->cmds.end()) {
         if(it->getName() == src) {
@@ -482,6 +495,7 @@ void CuPollingActivity::m_cmd_remove(const std::string &src) {
         else
             ++it;
     }
+    return s - d->cmds.size();
 }
 
 /** \brief Receive events *from the main thread to the CuActivity thread*.
