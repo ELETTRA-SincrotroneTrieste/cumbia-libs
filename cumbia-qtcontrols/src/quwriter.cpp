@@ -67,10 +67,7 @@ void QuWriter::attach(QObject *executor,  const char *signal,
     extractCode(method);
     if(inTypeOfMethod(qstoc(method), executor, in_type))
     {
-        printf("\e[1;32mQuWriter::attach: detected in_type \"%s\" method \"%s\" obj \"%s\"\e[0m\n",
-               in_type, qstoc(method), qstoc(executor->objectName()));
         bool connectOk = false;
-
         if(strlen(in_type) == 0)
             connectOk = connect(executor, signal, this, SLOT(execute()));
         else  if(strcmp(in_type, "QStringList") == 0)
@@ -115,11 +112,8 @@ void QuWriter::attach(QObject *executor,  const char *signal,
 
 }
 
-void QuWriter::postExecute()
-{
-    if(quizer_ptr->autoDestroy)
-    {
-        printf("auto destroying QuWriter for \"%s\"", qstoc(target()));
+void QuWriter::postExecute() {
+    if(quizer_ptr->autoDestroy) {
         QTimer::singleShot(2000, this, SLOT(deleteLater()));
     }
 }
@@ -140,19 +134,15 @@ QString QuWriter::target() const
     return ""; // empty string otherwise
 }
 
-void QuWriter::execute(int i)
-{
+void QuWriter::execute(int i) {
     CuControlsWriterA *w = d->context->getWriter();
     if(!w || !d->configured)
         quizer_ptr->setExecuteOnConnection(true, CuVariant(i));
-    else
-    {
+    else {
         w->setArgs(CuVariant(i));
         w->execute();
         postExecute();
     }
-    printf("\e[1;36mexecute int i=%d: writer %p args %s configured %d\e[0m\n",
-           i, w, CuVariant(i).toString().c_str(), d->configured);
 }
 
 void QuWriter::execute(short s)
@@ -234,8 +224,6 @@ void QuWriter::execute()
     CuControlsUtils cu;
     CuVariant args = cu.getArgs(target(), this);
     CuControlsWriterA *w = d->context->getWriter();
-    printf("QuWriter.execute... %s CuControlsWriterA %p args %s\n", qstoc(target()),
-           w, args.toString().c_str());
     if(!w || !d->configured)
         quizer_ptr->setExecuteOnConnection(true, args);
     else
