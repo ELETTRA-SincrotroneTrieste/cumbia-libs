@@ -380,12 +380,8 @@ void CuPollingActivity::execute()
         for(size_t i = 0; att_idx >= 0 && i < d->v_attd.size(); i++) { // attributes
             if(!d->v_skip[i]) {
                 success = tangoworld.read_atts(d->tdev->getDevice(), d->v_attn, d->v_attd, results, d->data_updpo);
-//                printf("[0x%lx] CuPollingActivity. \e[0;32mreading attribute %s/%s\e[0m cuz d->v_skip %s\n", pthread_self(),  d->tdev->getName().c_str(), d->v_attn[i].c_str(),
-//                       d->v_skip[i] ? "TRUE" : "FALSE");
             }
             else {
-//                printf("[0x%lx] CuPollingActivity. \e[1;36mskipping first read of attribute %s/%s\e[0m cuz d->v_skip %s\n", pthread_self(), d->tdev->getName().c_str(), d->v_attn[i].c_str(),
-//                       d->v_skip[i] ? "TRUE" : "FALSE");
                 d->v_skip[i] = false;
             }
             if(!success) {
@@ -460,9 +456,6 @@ void CuPollingActivity::m_unregisterAction(const TSource &ts) {
     assert(d->my_thread_id == pthread_self());
     m_cmd_remove(ts.getName());
     m_v_attd_remove(ts.getName(), ts.getPoint());
-    if(d->cmds.size() == 0 && d->v_attd.size() == 0) {
-        printf("[0x%lx] CuPollingActivity::m_unregisterAction: after %s \e[0;35mno more atts / cmds\e[0m\n", pthread_self(), ts.getName().c_str());
-    }
 }
 
 void CuPollingActivity::m_edit_args(const TSource &src, const std::vector<string> &args) {
@@ -484,7 +477,6 @@ void CuPollingActivity::m_cmd_remove(const std::string &src) {
     std::vector<TSource>::iterator it = d->cmds.begin();
     while(it != d->cmds.end()) {
         if(it->getName() == src) {
-            printf("\e[1;35mm_cmds_remove removed command %s\e[0m\n", it->getName().c_str());
             it = d->cmds.erase(it);
         }
         else

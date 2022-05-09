@@ -69,16 +69,12 @@ void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTa
     CuTangoWorld w;
     bool isnew;
     const std::string& src = source.getName();
-//    t1 = t2 = std::chrono::high_resolution_clock::now();
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
     CuTangoActionI *a = af->registerAction(src, f, this, &isnew);
     if(isnew)
         a->start();
     a->addDataListener(l);
-//    t2 = std::chrono::high_resolution_clock::now();
-//    printf("CumbiaTango.addAction took  %ld us\n",
-//           std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count());
 }
 
 void CumbiaTango::removeAction(const string &source, CuTangoActionI::Type t) {

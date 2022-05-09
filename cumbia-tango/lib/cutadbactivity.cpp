@@ -69,8 +69,6 @@ void CuTaDbActivity::execute() {
     CuTangoWorld w;
     w.db_get(d->tsrc, at);
     d->exiting = true;
-    if(d->tsrc.getName().find("beamdump_s*") != std::string::npos)
-        printf("\e[0;36mCuTaDbActivity.execute: publishing result for %s\e[0m\n", d->tsrc.getName().c_str());
     publishResult(at);
 }
 
