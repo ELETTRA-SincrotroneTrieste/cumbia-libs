@@ -18,7 +18,6 @@ public:
         _r.store(1);
     }
     ~CuDataPrivate() {
-        //        printf("[0x%lx] %p d ~\e[0;31mX_P\e[0m\n", pthread_self(), this);
     }
     CuDataPrivate &operator=(const CuDataPrivate &other) {
         if(this != &other) {

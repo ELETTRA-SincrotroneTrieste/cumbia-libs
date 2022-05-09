@@ -45,8 +45,6 @@ public:
         assert(mythread == pthread_self());
         m_tmr_remove(a); // remove the old activity - old timer entry
         if(m_activity_cnt(old_t) == 0) {
-            printf("\e[1;35mCuThread.m_a_new_timeout: no more activities with timer %p timeo %d: unregister listener %p calling!\e[0m\n",
-                   old_t, old_t->timeout(), static_cast<CuTimerListener *>(th));
             tmr_s->unregisterListener(th, old_t->timeout());
         }
         CuTimer * t = tmr_s->registerListener(th, timeo); // may reuse timers
@@ -525,8 +523,9 @@ void CuThread::run() {
     /* empty and delete queued events */
     while(!d->eq.empty()) {
         ThreadEvent *qte = d->eq.front();
+        // this shall be checked in the future. do we need it?
         if(qte->getType() == ThreadEvent::RegisterActivity) {
-            printf("thread %s \e[1;31m exits with a register event for activity %s\e[0m\n", d->token.c_str(), datos(static_cast<CuThRegisterA_Ev *>(te)->activity->getToken()));
+            perr("thread %s exits with a still queued register event for activity %s", d->token.c_str(), datos(static_cast<CuThRegisterA_Ev *>(qte)->activity->getToken()));
         }
         d->eq.pop();
         delete qte;
