@@ -112,7 +112,6 @@ void CuPoller::unregisterAction(CuTangoActionI *a) {
                     ++it; ++cnt;
                 }
             }
-            printf("\e[1;36m CuPoller::m_do_unregisterAction: %d actions for activity %p %s: %s\e[0m\n", cnt, activity, datos(activity->getToken()), cnt ==0 ? "\e[1;32munregistering\e[0m" : "\e[1;35mnot unregistering yet\e[0m");
             if(cnt == 0) {
                 d->cumbia_t->unregisterActivity(activity);
             }
@@ -135,9 +134,7 @@ size_t CuPoller::count() const {
 
 void CuPoller::onProgress(int , int , const CuData &) { }
 
-void CuPoller::onResult(const CuData & da) {
-    printf("\e[1;32mCuPoller.onResult: received %s\n", datos(da));
-}
+void CuPoller::onResult(const CuData & da) { }
 
 void CuPoller::onResult(const std::vector<CuData> &datalist) {
     assert(d->my_thread == pthread_self());
