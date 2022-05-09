@@ -276,14 +276,10 @@ void QuComboBox::onUpdate(const CuData &da)
 void QuComboBox::m_onIndexChanged(int i) {
     d->animation.setPenColor(QColor(Qt::gray));
     d->animation.loop(QuAnimation::RayOfLight);
-
-    printf("\e[1;31mQuComboBox.m_onIndexChanged: new index %d \e[0m\n", i);
     if(d->index_mode) {
-        printf("\e[0;31mWILL WRITE BY INDEX: %d\e[0m\n", i);
         write(i);
     }
     else {
-        printf("\e[0;33mWILL WRITE BY text: %s\e[0m\n", qstoc(currentText()));
         write(currentText());
     }
 }

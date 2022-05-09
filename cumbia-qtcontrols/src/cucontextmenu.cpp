@@ -65,8 +65,6 @@ void CuContextMenu::prepare(const CuContext *ctx) {
                 if(w_std_menu_actions_plugin) {
                     w_std_menu_actions_plugin->setup(parentWidget(), ctx);
                     QList<QAction *> pl_actions = w_std_menu_actions_plugin->getActions();
-                    printf("\e[1;32m*\e[0m CuContextMenu: loaded plugin \e[1;32m%s\e[0m that provides %d actions\n",
-                           qstoc(pluginPaths[i]), pl_actions.size());
                     actions_map.insert(w_std_menu_actions_plugin->order(), pl_actions);
                 }
             }
