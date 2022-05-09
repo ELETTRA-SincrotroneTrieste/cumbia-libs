@@ -91,16 +91,17 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
         loop.exec();
     }
 
-    d->timer = new QTimer(this);
-    d->timer->setInterval(2000);
-    connect(d->timer, SIGNAL(timeout()), this, SLOT(m_test_check_reply()));
-    d->timer->start();
-
     /// TEST
     ///
+//    d->timer = new QTimer(this);
+//    d->timer->setInterval(2000);
+//    connect(d->timer, SIGNAL(timeout()), this, SLOT(m_test_check_reply()));
+//    d->timer->start();
+
+
     d->reply = reply;
-    printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p started: (rq. use cnt: %d)\n", qstoc(objectName()),
-           this, /*d->req_payload.toStdString().c_str(),*/ d->usecnt);
+//    printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p started: (rq. use cnt: %d)\n", qstoc(objectName()),
+//           this, /*d->req_payload.toStdString().c_str(),*/ d->usecnt);
 }
 
 void CuHttpBundledSrcReq::setBlocking(bool b) {
@@ -146,10 +147,14 @@ void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError code) {
     da.set("data", d->buf.toStdString());
     da.set("payload", r->property("payload").toString().toStdString());
     d->listener->onSrcBundleReplyError(da);
-    printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p \e[1;31mCuHttpBundledSrcReq::onError: %s request was \e[0;31m%s\e[0m\n",
-           qstoc(objectName()), this, qstoc(r->errorString()), qstoc(r->property("payload").toString()));
+//    printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p \e[1;31mCuHttpBundledSrcReq::onError: %s request was \e[0;31m%s\e[0m\n",
+//           qstoc(objectName()), this, qstoc(r->errorString()), qstoc(r->property("payload").toString()));
 }
 
+// * TEST *
+// CuHttpBundledSrcReq::start sets up a timer that periodically invokes this
+// When not in test, timer setup is commented
+//
 void CuHttpBundledSrcReq::m_test_check_reply() {
     if(d->reply)
         printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p: \e[1;35mstill waiting for reply\e[0m (req use cnt: %d)\n",

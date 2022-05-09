@@ -59,7 +59,7 @@ void CuHttpCliIdMan::unsubscribe(bool blocking) {
         if(err != QNetworkReply::NoError)
             perr("cuhttp-cli-id-man: network reply error: %s", qstoc(reply->errorString()));
         QByteArray ba = reply->readAll();
-        printf("cuhttp-cli-id-man:unsubscribe --> \"%s\"\n", ba.data());
+        cuprintf("cuhttp-cli-id-man:unsubscribe --> \"%s\"\n", ba.data());
     }
     else
         m_reply_connect(reply);
@@ -79,7 +79,7 @@ void CuHttpCliIdMan::onNewData()
         d->bufs[0] += ba;
         // buf complete?
         if(d->bufs[0].length() == clen) { // buf complete
-            printf("\e[1;32mCuHttpCliIdMan.onNewData: received buf %s\e[0m\n", d->bufs[0].data());
+            cuprintf("\e[1;32mCuHttpCliIdMan.onNewData: received buf %s\e[0m\n", d->bufs[0].data());
             bool ok = m_get_id_and_ttl() && d->id > 0 && d->ttl > 0; // needs d->buf. d->buf cleared in start
             d->lis->onIdReady(d->id, d->ttl);
             if(ok) {
@@ -90,8 +90,8 @@ void CuHttpCliIdMan::onNewData()
         }
     }
     else { // result from keepalive request
-//        d->bufs[1] += ba;
-//        printf("CuHttpCliIdMan::onNewData: \e[0;32m keepalive reply: \e[0;33m%s\e[0m\n", d->bufs[1].data());
+        //        d->bufs[1] += ba;
+        //        printf("CuHttpCliIdMan::onNewData: \e[0;32m keepalive reply: \e[0;33m%s\e[0m\n", d->bufs[1].data());
     }
 }
 
@@ -112,12 +112,11 @@ void CuHttpCliIdMan::onSslErrors(const QList<QSslError> &errors) {
 }
 
 void CuHttpCliIdMan::onError(QNetworkReply::NetworkError ) {
-    perr("CuHttpCliIdMan::onError: error: %s", qstoc(d->error));
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
     d->error = r->errorString();
     m_notify_err(r->property("type").toString() == "id_request");
-        printf("CuHttpCliIdMan::onError: error: \e[1;31m%s\e[0m\n", r->readAll().data());
-
+    QByteArray b = r->readAll();
+    perr("CuHttpCliIdMan::onError: error: %s: data: %s", qstoc(d->error), b.data());
 }
 
 void CuHttpCliIdMan::send_keepalive() {
