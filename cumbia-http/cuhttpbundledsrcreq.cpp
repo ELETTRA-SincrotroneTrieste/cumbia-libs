@@ -156,14 +156,15 @@ void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError code) {
 // When not in test, timer setup is commented
 //
 void CuHttpBundledSrcReq::m_test_check_reply() {
-    if(d->reply)
-        printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p: \e[1;35mstill waiting for reply\e[0m (req use cnt: %d)\n",
-               qstoc(objectName()),
-               this, d->usecnt);
+    if(d->reply) {
+//        printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p: \e[1;35mstill waiting for reply\e[0m (req use cnt: %d)\n",
+//               qstoc(objectName()),
+//               this, d->usecnt);
+    }
     else  {
-        printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p finished (req use cnt: %d)\n",
-               qstoc(objectName()), this, d->usecnt);
-        d->timer->stop();
+//        printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p finished (req use cnt: %d)\n",
+//               qstoc(objectName()), this, d->usecnt);
+//        d->timer->stop();
     }
 }
 
