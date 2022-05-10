@@ -35,6 +35,7 @@ Cumparsita::Cumparsita(QWidget *parent) :
         QMessageBox::critical(this, "Error opening file", "Error opening file " + ui_file + " in read mode:\n" +
                               file.errorString());
     }
+    resize(640, 480);
 }
 
 QObject *Cumparsita::get_cumbia_customWidgetCollectionInterface() const
