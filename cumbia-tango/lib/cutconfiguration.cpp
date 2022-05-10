@@ -73,12 +73,7 @@ void CuTConfiguration::onResult(const CuData &data) {
     for(it =  ls.begin(); it !=  ls.end(); ++it) {
         (*it)->onUpdate(data);
     }
-    CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
-                                                                       ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
-    af->unregisterAction(d->tsrc.getName(), getType());
-    d->cumbia_t->unregisterActivity(d->activity);
-    d->listeners.clear();
-    delete this;
+    stop();
 }
 
 /*! \brief unused. Complies with CuThreadListener interface
@@ -141,7 +136,11 @@ void CuTConfiguration::start() {
  * - sets the exiting flag to true
  * - calls Cumbia::unregisterActivity
  */
-void CuTConfiguration::stop() {
+void CuTConfiguration::stop() {        
+        CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
+                                                                           ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
+        af->unregisterAction(d->tsrc.getName(), getType());
         d->cumbia_t->unregisterActivity(d->activity);
+        delete this;
 }
 
