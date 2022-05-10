@@ -29,6 +29,8 @@
     #include <cuepcontrolswriter.h>
 #endif
 
+#include <quapps.h>
+
 #include <cumbiatango.h>
 #include <cumacros.h>
 #include <cuthreadfactoryimpl.h>
@@ -136,23 +138,18 @@ bool DropEventFilter::eventFilter(QObject *obj, QEvent *event)
 
 CuCustomWidgetInterface::CuCustomWidgetInterface(QObject *parent,
                                              CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p)
-    : QObject(parent)
-{
+    : QObject(parent) {
     d_isInitialized = false;
     cumbia_pool = cumbia_p;
     ctrl_factory_pool = ctrl_factory_p;
 }
 
-CuCustomWidgetInterface::~CuCustomWidgetInterface()
-{
-
+CuCustomWidgetInterface::~CuCustomWidgetInterface() {
 }
 
-void CuCustomWidgetInterface::initialize(QDesignerFormEditorInterface *formEditor)
-{
+void CuCustomWidgetInterface::initialize(QDesignerFormEditorInterface *formEditor) {
     if (d_isInitialized)
         return;
-
     QExtensionManager *manager = formEditor->extensionManager();
     if (manager)
         manager->registerExtensions(new TaskMenuFactory(manager), Q_TYPEID(QDesignerTaskMenuExtension));
@@ -162,39 +159,9 @@ void CuCustomWidgetInterface::initialize(QDesignerFormEditorInterface *formEdito
 
 CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *parent): QObject(parent)
 {
-    printf("\e[1;32mo \e[0m CuCustomWidgetCollectionInterface %p\n", this);
     cumbia_pool = new CumbiaPool();
-    printf("\e[1;32m+ \e[0m cumbia_pool %p created\n", cumbia_pool);
 
-#ifdef QUMBIA_EPICS_CONTROLS
-    CumbiaEpics* cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    printf("\e[1;32m+ \e[0m cumbia_epics %p created\n", cuep);
-    cumbia_pool->registerCumbiaImpl("epics", cuep);
-    m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
-    m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
-    CuEpicsWorld ew;
-    m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
-    cumbia_pool->setSrcPatterns("epics", ew.srcPatterns());
-    CuServiceProvider *cuepsp = cuep->getServiceProvider();
-    cuepsp->registerService(CuServices::Log, new CuLog(new QuLogImpl()));
-#endif
-
-    CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    printf("\e[1;32m+ \e[0m cumbia_tango %p created\n", cuta);
-
-    cumbia_pool->registerCumbiaImpl("tango", cuta);
-    m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
-    m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
-    printf("\e[1;32m+-o\e[0m registered \"tango\" and \"epics\" implementations in the cumbia_pool %p\n", cumbia_pool);
-
-
-    CuTangoWorld tw;
-    m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
-    cumbia_pool->setSrcPatterns("tango", tw.srcPatterns());
-
-    CuServiceProvider* cutangosp = cuta->getServiceProvider();
-    cutangosp->registerService(CuServices::Log, new CuLog(new QuLogImpl()));
-
+    CuModuleLoader mloader(cumbia_pool, &m_ctrl_factory_pool, &m_log_impl);
     CuPluginLoader plulo;
     QString plupath = plulo.getPluginAbsoluteFilePath(CUMBIA_QTCONTROLS_PLUGIN_DIR, "cuformula-plugin.so");
     QPluginLoader pluginLoader(plupath);
@@ -226,8 +193,7 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
     d_plugins.append(new QuInputOutputInterface(this, cumbia_pool, m_ctrl_factory_pool));
 }
 
-CuCustomWidgetCollectionInterface::~CuCustomWidgetCollectionInterface()
-{
+CuCustomWidgetCollectionInterface::~CuCustomWidgetCollectionInterface() {
     printf("\e[1;31mo\e[0m ~CuCustomWidgetCollectionInterface %p\n", this);
     printf("\e[1;31m-\e[0m  not releasing cumbia tango resources:\n");
     printf("\e[1;31m-\e[0m  https://github.com/tango-controls/cppTango/issues/540 \n");
@@ -251,8 +217,7 @@ QList<QDesignerCustomWidgetInterface*> CuCustomWidgetCollectionInterface::custom
  * *before* ~CuCustomWidgetCollectionInterface is invoked.
  *
  */
-void CuCustomWidgetCollectionInterface::cumbia_tango_free()
-{
+void CuCustomWidgetCollectionInterface::cumbia_tango_free() {
     Cumbia* c = cumbia_pool->get("tango");
     if(c) {
         printf("\e[1;31m-\e[0m ~cumbia_tango %p\n", c);
@@ -260,23 +225,10 @@ void CuCustomWidgetCollectionInterface::cumbia_tango_free()
     }
 }
 
-void CuCustomWidgetCollectionInterface::cumbia_free()
-{
-#ifdef CUMBIA_EPICS
-    Cumbia* c = cumbia_pool->get("epics");
-    if(c)
-    {
-        printf("\e[1;31m-\e[0m ~cumbia_epics %p\n", c);
-        cumbia_pool->unregisterCumbiaImpl("epics");
-        delete c;
-    }
-#endif
-
+void CuCustomWidgetCollectionInterface::cumbia_free() {
     // plugins are destroyed
     // cumbia-formula is destroyed by the cuformula plugin destructor
-    if(cumbia_pool)
-    {
-        printf("\e[1;31m-\e[0m ~cumbia_pool %p\n", cumbia_pool);
+    if(cumbia_pool) {
         delete cumbia_pool;
     }
 }
@@ -459,12 +411,9 @@ void TaskMenuExtension::editConnection()
             QDesignerFormWindowInterface *formWindow = 0;
             formWindow = QDesignerFormWindowInterface::findFormWindow(d_widget);
             if(editSourceDialog->isMultiSource()) {
-                printf("\e[1;35mCuControlsPlugin: sources multiple %s\e[0m\n", editSourceDialog->sources().join(" -- ").toStdString().c_str());
                 formWindow->cursor()->setProperty("sources", editSourceDialog->sources());
             }
             else {
-                printf("\e[0;35mCuControlsPlugin: source %s IS NOT MULTI\e[0m\n", editSourceDialog->source().toStdString().c_str());
-
                 formWindow->cursor()->setProperty("source", editSourceDialog->source());
             }
         }

@@ -12,6 +12,7 @@
 
 #include <QDesignerTaskMenuExtension>
 #include <QExtensionFactory>
+#include <qulogimpl.h>
 
 #include "editsourcedialog.h"
 #include "edittargetdialog.h"
@@ -111,6 +112,7 @@ private:
 
     CumbiaPool *cumbia_pool;
     CuControlsFactoryPool m_ctrl_factory_pool;
+    QuLogImpl m_log_impl;
 };
 
 class QuLabelInterface : public CuCustomWidgetInterface

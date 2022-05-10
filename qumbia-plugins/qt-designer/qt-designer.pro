@@ -1,19 +1,10 @@
 include(../qumbia-plugins.pri)
 
-exists($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
-    message("including support for qumbia-epics-controls module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
+isEmpty(CUMBIA_ROOT) {
+    CUMBIA_ROOT=/usr/local/cumbia-libs
 }
+include($${CUMBIA_ROOT}/include/quapps/quapps.pri)
 
-exists($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
-    message("including support for qumbia-tango-controls module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
-}
-
-exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {
-    message("including support for cumbia-random module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri)
-}
 
 QT += qml
 
