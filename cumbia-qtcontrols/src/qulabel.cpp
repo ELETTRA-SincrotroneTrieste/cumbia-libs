@@ -196,8 +196,7 @@ QuPalette QuLabel::quPalette() const {
  * @see QuContext::setOptions
  * @see source
  */
-void QuLabel::setSource(const QString &s)
-{
+void QuLabel::setSource(const QString &s) {
     CuControlsReaderA * r = d->context->replace_reader(s.toStdString(), this);
     if(r)
         r->setSource(s);
