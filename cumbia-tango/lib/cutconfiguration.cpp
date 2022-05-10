@@ -73,7 +73,10 @@ void CuTConfiguration::onResult(const CuData &data) {
     for(it =  ls.begin(); it !=  ls.end(); ++it) {
         (*it)->onUpdate(data);
     }
+//    pretty_pri("stopping from onResult %s", d->tsrc.getName().c_str());
     stop();
+
+    delete this;
 }
 
 /*! \brief unused. Complies with CuThreadListener interface
@@ -103,8 +106,10 @@ void CuTConfiguration::addDataListener(CuDataListener *l) {
 
 void CuTConfiguration::removeDataListener(CuDataListener *l) {
     d->listeners.erase(l);
-    if(!d->listeners.size())
+    if(!d->listeners.size()) {
+//        pretty_pri("stopping from removeDataListener %s", d->tsrc.getName().c_str());
         stop();
+    }
 }
 
 void CuTConfiguration::sendData(const CuData &) {
@@ -141,6 +146,6 @@ void CuTConfiguration::stop() {
                                                                            ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
         af->unregisterAction(d->tsrc.getName(), getType());
         d->cumbia_t->unregisterActivity(d->activity);
-        delete this;
+//        pretty_pri("stop ends for %s", d->tsrc.getName().c_str());
 }
 
