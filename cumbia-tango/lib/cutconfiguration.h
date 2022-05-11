@@ -6,24 +6,6 @@
 class CuTAttConfigurationPrivate;
 class CuTConfigActivityExecutor_I;
 
-/*!
- * \brief Get command or attribute configuration from the Tango database.
- *
- * This action performs attribute info and command info database fetch.
- * Optionally, if configured with the option *value-only*, either a *one shot*
- * read attribute or command inout are performed, with no database access.
- *
- * Once the operation completes, both the associated activity and CuTConfiguration
- * instances are deleted.
- *
- * \par Configuration options
- * \li *fetch_props* (vector of std::string): executes Tango database *get_device_attribute_property* for the list
- *     of supplied properties
- * \li *value-only* do not actually neither call *get_attribute_config* on the Tango Device nor *command_query*.
- *     Instead, just read the attribute value or get the output from *command_inout*
- *
- *
- */
 class CuTConfiguration : public CuTangoActionI
 {
 public:
