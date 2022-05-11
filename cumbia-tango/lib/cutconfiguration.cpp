@@ -43,12 +43,10 @@ CuTConfiguration::CuTConfiguration(const TSource& src,
                                    const CuTConfigActivityExecutor_I* cx) {
     d = new CuTAttConfigurationPrivate(src, ct, t, options, tag,
                                        cx != nullptr ? cx : new CuTConfigActivityExecutor_Default); // src, t are const
-    printf("\e[1;32m+ \e[0mCuTConfiguration %p\n", this);
 }
 
 CuTConfiguration::~CuTConfiguration() {
     pdelete("~CuTConfiguration: %p [%s]", this, d->tsrc.getName().c_str());
-    printf("\e[1;31m- \e[0mCuTConfiguration %p\n", this);
     delete d; // d->c_xecutor deleted by activity
 }
 
