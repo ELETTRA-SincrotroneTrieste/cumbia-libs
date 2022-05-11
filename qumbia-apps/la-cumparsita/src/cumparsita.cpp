@@ -14,12 +14,10 @@
 #include <QtDebug>
 #include <QtUiPlugin/QDesignerCustomWidgetCollectionInterface>
 #include <QDir>
-#include <QTime>
 
 Cumparsita::Cumparsita(QWidget *parent) :
     QWidget(parent)
 {
-    QTime t;
     QUiLoader *cumLoader= new QUiLoader(this);
     QString ui_file = qApp->arguments().at(1);
     QFile file(ui_file);

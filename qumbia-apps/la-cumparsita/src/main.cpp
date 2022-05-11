@@ -9,8 +9,15 @@
 #define CVSVERSION "$Name:  $"
 
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
+    // Qt bug: source is set twice because of double setProperty invocation (type QString):
+    // https://bugreports.qt.io/browse/QTBUG-48104
+    //
+    printf(" +------------------------ %s ------------------------+\n\n", argv[0]);
+    printf(" + \e[1;31;4mWARNING\e[0m: string properties from UI files are set twice. \e[0;4msource\e[0m included. "
+           "This poses performance issues\n");
+    printf(" + Watch \e[1;31;4mhttps://bugreports.qt.io/browse/QTBUG-48104\e[0m for resolution\n\n");
+    //
     int ret;
     QuApplication *qu_app = new QuApplication( argc, argv );
     qu_app->setOrganizationName("elettra");
@@ -28,7 +35,6 @@ int main(int argc, char *argv[])
         ret = EXIT_SUCCESS;
     }
     else {
-
         Cumparsita *w = new Cumparsita(nullptr);
         //
         // get reference to cumbia designer plugin to invoke cumbia_tango_free at the proper
