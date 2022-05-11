@@ -14,11 +14,12 @@
 #include <QtDebug>
 #include <QtUiPlugin/QDesignerCustomWidgetCollectionInterface>
 #include <QDir>
-
+#include <QTime>
 
 Cumparsita::Cumparsita(QWidget *parent) :
     QWidget(parent)
 {
+    QTime t;
     QUiLoader *cumLoader= new QUiLoader(this);
     QString ui_file = qApp->arguments().at(1);
     QFile file(ui_file);
@@ -35,7 +36,7 @@ Cumparsita::Cumparsita(QWidget *parent) :
         QMessageBox::critical(this, "Error opening file", "Error opening file " + ui_file + " in read mode:\n" +
                               file.errorString());
     }
-    resize(640, 480);
+    resize(320, 240);
 }
 
 QObject *Cumparsita::get_cumbia_customWidgetCollectionInterface() const
