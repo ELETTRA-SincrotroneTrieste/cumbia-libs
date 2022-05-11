@@ -159,16 +159,17 @@ QString CuTControlsReader::source() const
  *      Calls CumbiaTango::unlinkListener for  CuTangoActionI::ReaderConfig and CuTangoActionI::Reader action types
  *      in a row.
  */
-void CuTControlsReader::unsetSource()
-{
-    TSource tsrc(d->source.toStdString());
-    if(d->is_db_op) {
-        d->cumbia_tango->unlinkListener(d->source.toStdString(), CuTangoActionI::TaDb, d->tlistener);
-    } else {
-        d->cumbia_tango->unlinkListener(d->source.toStdString(), CuTangoActionI::ReaderConfig, d->tlistener);
-        d->cumbia_tango->unlinkListener(d->source.toStdString(), CuTangoActionI::Reader, d->tlistener);
+void CuTControlsReader::unsetSource() {
+    if(!d->source.isEmpty()) {
+        TSource tsrc(d->source.toStdString());
+        if(d->is_db_op) {
+            d->cumbia_tango->unlinkListener(d->source.toStdString(), CuTangoActionI::TaDb, d->tlistener);
+        } else {
+            d->cumbia_tango->unlinkListener(d->source.toStdString(), CuTangoActionI::ReaderConfig, d->tlistener);
+            d->cumbia_tango->unlinkListener(d->source.toStdString(), CuTangoActionI::Reader, d->tlistener);
+        }
+        d->source = QString();
     }
-    d->source = QString();
 }
 
 /*! \brief configures the reader through the options passed as parameter
