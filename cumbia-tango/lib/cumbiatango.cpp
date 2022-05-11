@@ -65,6 +65,9 @@ CumbiaTango::~CumbiaTango()
     delete d;
 }
 
+// invoked by CuTControlsReader::setSource
+// f creates a new CuTangoActionI (CuTReader, CuTaDb, CuTConfiguration, CuTWriter) (cutangoactionfactories.cpp)
+// a->start registers the related activity
 void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTangoActionFactoryI& f) {
     CuTangoWorld w;
     bool isnew;
@@ -83,36 +86,25 @@ void CumbiaTango::removeAction(const string &source, CuTangoActionI::Type t) {
     af->unregisterAction(source, t);
 }
 
-/** \brief Removes a listener from the action(s) with the given source name and type
+/** \brief Removes a listener from the action with the given source and type
  *
  * @param source the source of the action
- * @param t the CuTangoActionI::Type type (Reader, Writer, MultiReader, MultiWriter, AttConfig...)
+ * @param t the CuTangoActionI::Type type (Reader, Writer, ReaderConfig, WriterConfig, TaDb)
  * @param l the CuDataListener to be removed from the action identified by source and t
  *
  * \note Examples of CuDataListener are objects from the cumbia-qtcontrols module, such as QuLabel,
  *       QuTrendPlot, QuLed and the like.
  *
- * \note Examples of CuTangoActionI are CuTReader CuTWriter and CuTAttConfiguration
+ * \note Examples of CuTangoActionI are CuTReader CuTWriter and CuTConfiguration
  *
- * \note This call does not necessarily remove the CuActionI from cumbia. A CuActionI is removed when
- *       there are no linked CuDataListener anymore.
- *
- * \note There may be multiple actions with the given source and type. CuTangoActionI::removeDataListener(l)
- *       is called for each of them. Please see CuActionFactoryService::find for more details
- *
- * @see CuTangoActionI::Type
- * @see CuDataListener
- * @see CuTReader::removeDataListener
- * @see CuTAttConfiguration::removeDataListener
- *
- * @see CuTangoActionI::removeDataListener
+ * \note An action is removed from cumbia when no more listeners reference it
  */
 void CumbiaTango::unlinkListener(const string &source, CuTangoActionI::Type t, CuDataListener *l) {
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
     CuTangoActionI * a = af->find(source, t);
     if(a)
-        a->removeDataListener(l); /* when no more listeners, a stops itself */
+        a->removeDataListener(l); /* when no more listeners, a stops */
 }
 
 CuTangoActionI *CumbiaTango::findAction(const std::string &source, CuTangoActionI::Type t) const {
