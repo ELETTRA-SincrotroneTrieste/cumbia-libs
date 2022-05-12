@@ -167,8 +167,6 @@ void CuHttpControlsReader::unsetSource() {
     const CuHTTPSrc s(d->s.toStdString(), d->cu_http->getSrcHelpers());
     d->cu_http->unlinkListener(s, d->method.toStdString(), d->dlis);
     if(d->method == "s") {
-        printf("CuHttpControlsReader::unsetSource \e[1;36msends unsubscribe request for src %s method %s \e[0m\n",
-               qstoc(d->s), qstoc(d->method));
         d->cu_http->unsubscribeEnqueue(s, d->dlis);
     }
     d->s = QString();
