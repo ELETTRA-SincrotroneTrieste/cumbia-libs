@@ -22,14 +22,12 @@
 #include <cuformulaplugininterface.h>
 
 #ifdef QUMBIA_EPICS_CONTROLS
-    #include <cuepics-world.h>
-    #include <cumbiaepics.h>
-    #include <cuepactionfactories.h>
-    #include <cuepcontrolsreader.h>
-    #include <cuepcontrolswriter.h>
+#include <cuepics-world.h>
+#include <cumbiaepics.h>
+#include <cuepactionfactories.h>
+#include <cuepcontrolsreader.h>
+#include <cuepcontrolswriter.h>
 #endif
-
-#include <quapps.h>
 
 #include <cumbiatango.h>
 #include <cumacros.h>
@@ -137,7 +135,7 @@ bool DropEventFilter::eventFilter(QObject *obj, QEvent *event)
 }
 
 CuCustomWidgetInterface::CuCustomWidgetInterface(QObject *parent,
-                                             CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p)
+                                                 CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p)
     : QObject(parent) {
     d_isInitialized = false;
     cumbia_pool = cumbia_p;
@@ -159,9 +157,46 @@ void CuCustomWidgetInterface::initialize(QDesignerFormEditorInterface *formEdito
 
 CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *parent): QObject(parent)
 {
+    // The http engine source method may return a string that includes the
+    // tango host/port combination prefix before the source name, that is
+    // an unwanted side effect in the context of the Qt designer.
+    //
+    // Avoid including the http engine support (more generally, CuModuleLoader)
+    //
     cumbia_pool = new CumbiaPool();
+#ifdef QUMBIA_EPICS_CONTROLS
+    CumbiaEpics* cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    printf("\e[1;32m+ \e[0m cumbia_epics %p created\n", cuep);
+    cumbia_pool->registerCumbiaImpl("epics", cuep);
+    m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
+    m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
+    CuEpicsWorld ew;
+    m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
+    cumbia_pool->setSrcPatterns("epics", ew.srcPatterns());
+    CuServiceProvider *cuepsp = cuep->getServiceProvider();
+    cuepsp->registerService(CuServices::Log, new CuLog(new QuLogImpl()));
+    CuEpicsWorld ew;
+    m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
+    cumbia_pool->setSrcPatterns("epics", ew.srcPatterns());
+    CuServiceProvider *cuepsp = cuep->getServiceProvider();
+    cuepsp->registerService(CuServices::Log, new CuLog(new QuLogImpl()));
+#endif
 
-    CuModuleLoader mloader(cumbia_pool, &m_ctrl_factory_pool, &m_log_impl);
+    CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
+    printf("\e[1;32m+ \e[0m cumbia_tango %p created\n", cuta);
+
+    cumbia_pool->registerCumbiaImpl("tango", cuta);
+    m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
+    m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
+    printf("\e[1;32m+-o\e[0m registered \"tango\" and \"epics\" implementations in the cumbia_pool %p\n", cumbia_pool);
+
+
+    CuTangoWorld tw;
+    m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
+    cumbia_pool->setSrcPatterns("tango", tw.srcPatterns());
+
+    CuServiceProvider* cutangosp = cuta->getServiceProvider();
+    cutangosp->registerService(CuServices::Log, new CuLog(new QuLogImpl()));
     CuPluginLoader plulo;
     QString plupath = plulo.getPluginAbsoluteFilePath(CUMBIA_QTCONTROLS_PLUGIN_DIR, "cuformula-plugin.so");
     QPluginLoader pluginLoader(plupath);
@@ -183,7 +218,7 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
     d_plugins.append(new QuCircularGaugeInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuLinearGaugeInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuComboBoxInterface(this, cumbia_pool, m_ctrl_factory_pool));
- //   d_plugins.append(new QuLineEditInterface(this, cumbia_pool, m_ctrl_factory_pool));
+    //   d_plugins.append(new QuLineEditInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuTableInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuTrendPlotInterface(this, cumbia_pool, m_ctrl_factory_pool));
     d_plugins.append(new QuSpectrumPlotInterface(this, cumbia_pool, m_ctrl_factory_pool));
@@ -271,14 +306,14 @@ QList<QAction *> TaskMenuExtension::taskActions() const
     QString cname(d_widget->metaObject()->className());
     /* 1. edit connection action */
     if (cname == "QuLabel" || cname == "QuLed"
-        || cname == "QuButton" || cname == "QuTable" || cname == "QuTrendPlot"
+            || cname == "QuButton" || cname == "QuTable" || cname == "QuTrendPlot"
             || cname == "QuSpectrumPlot" || cname == "QuApplyNumeric"
-             || cname == "QuCheckBox" || cname == "QuInputOutput" || cname == "QuLinearGauge"
+            || cname == "QuCheckBox" || cname == "QuInputOutput" || cname == "QuLinearGauge"
             || cname == "QuCircularGauge"  || cname == "QuComboBox" )
         list.append(d_editConnectionAction);
     /* 2. edit action */
     if ((cname == "QuLabel") || (cname == "QuLed") || cname == "QuTable")
-         list.append(d_editAction);
+        list.append(d_editAction);
     return list;
 }
 
@@ -527,7 +562,7 @@ QuButtonInterface::QuButtonInterface(QObject *parent, CumbiaPool *cumbia_p, cons
 QWidget *QuButtonInterface::createWidget(QWidget *parent)
 {
     QuButton * button = new QuButton(parent, cumbia_pool, ctrl_factory_pool);
-   // label->setDesignerMode(true);
+    // label->setDesignerMode(true);
     DropEventFilter *dropEventFilter = new DropEventFilter(button);
     button->installEventFilter(dropEventFilter);
     return button;
@@ -555,7 +590,7 @@ QuApplyNumericInterface::QuApplyNumericInterface(QObject* parent, CumbiaPool *cu
 QWidget* QuApplyNumericInterface::createWidget(QWidget* parent)
 {
     QuApplyNumeric * an = new QuApplyNumeric(parent, cumbia_pool, ctrl_factory_pool);
-   // label->setDesignerMode(true);
+    // label->setDesignerMode(true);
     DropEventFilter *dropEventFilter = new DropEventFilter(an);
     an->installEventFilter(dropEventFilter);
     return an;
@@ -778,7 +813,7 @@ QWidget *QuCheckBoxInterface::createWidget(QWidget *parent)
 }
 
 QuInputOutputInterface::QuInputOutputInterface(QObject *parent, CumbiaPool *cumbia_p, const CuControlsFactoryPool &ctrl_factory_p)
- : CuCustomWidgetInterface(parent, cumbia_p ,ctrl_factory_p)
+    : CuCustomWidgetInterface(parent, cumbia_p ,ctrl_factory_p)
 {
     d_name = "QuInputOutput";
     d_include = "quinputoutput.h";
@@ -827,7 +862,7 @@ QuComboBoxInterface::QuComboBoxInterface(QObject *parent, CumbiaPool *cumbia_p, 
 QWidget *QuComboBoxInterface::createWidget(QWidget *parent)
 {
     QuComboBox * combobox = new QuComboBox(parent, cumbia_pool, ctrl_factory_pool);
-   // label->setDesignerMode(true);
+    // label->setDesignerMode(true);
     DropEventFilter *dropEventFilter = new DropEventFilter(combobox);
     combobox->installEventFilter(dropEventFilter);
     return combobox;
