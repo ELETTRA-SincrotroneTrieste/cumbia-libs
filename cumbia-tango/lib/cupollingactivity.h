@@ -136,7 +136,7 @@ private:
     void m_edit_args(const TSource& src, const std::vector<std::string> &args);
     inline int m_v_attd_remove(const std::string& src, const std::string& attna);
     inline int m_cmd_remove(const std::string& src);
-
+    void m_add_scheduled();
 };
 
 #endif // CUPOLLINGACTIVITY_H
