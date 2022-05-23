@@ -99,8 +99,11 @@ public:
     // names with their respective data. When we add/remove to/from v_attd, do the same on v_attn
     std::vector<CuData> v_attd; // cache attribute values to optimize updates, if required
     std::vector<std::string> v_attn; // attribute names, coupled with v_attd and v_skip
-    std::vector<bool> v_skip; // skip read of nth attribute, coupled with v_attd and v_attn
-
+    // the following two maps allow delaying execution of registered attributes
+    // the key shall specify at what update count value the attributes polling shall start
+    //
+    std::unordered_multimap<unsigned long long int, CuData> m_attd_future;
+    std::unordered_multimap<unsigned long long int, std::string> m_attn_future;
     // cache for tango command_inout argins
     // multimap because argins may differ
     std::unordered_map<std::string, CmdData> din_cache;
@@ -108,6 +111,7 @@ public:
     // maps consecutive error count to slowed down polling duration in millis
     std::map<int, int> slowDownRate;
     int data_updpo;
+    unsigned long long updcnt;
 };
 
 /*! \brief the class constructor that sets up a Tango polling activity
@@ -137,6 +141,7 @@ CuPollingActivity::CuPollingActivity(const TSource &tsrc,
     d->other_thread_id = pthread_self();
     int period = interval > 0 ? interval : 1000;
     d->repeat = d->period = period;
+    d->updcnt = 0;
     setInterval(period);
     //  flag CuActivity::CuADeleteOnExit is true
     // initialize period slow down policy in case of read errors
@@ -337,12 +342,15 @@ void CuPollingActivity::execute()
 {
     assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
+    d->updcnt++;
     CuTangoWorld tangoworld;
     std::vector<CuData> results;
     Tango::DeviceProxy *dev = d->tdev->getDevice();
     bool success = (dev != nullptr);
-    size_t att_idx = 0;
     size_t res_offset = 0;
+    // time to execute for delayed attributes in future maps?
+    m_add_scheduled();
+
     if(dev) { // dev is not null
         results.reserve(d->cmds.size() + d->v_attd.size());
         // 1. commands (d->cmdmap)
@@ -377,20 +385,10 @@ void CuPollingActivity::execute()
             }
             res_offset++;
         } // end cmds
-        for(size_t i = 0; att_idx >= 0 && i < d->v_attd.size(); i++) { // attributes
-            if(!d->v_skip[i]) {
-                success = tangoworld.read_atts(d->tdev->getDevice(), d->v_attn, d->v_attd, results, d->data_updpo);
-                //                printf("[0x%lx] CuPollingActivity. \e[0;32mreading attribute %s/%s\e[0m cuz d->v_skip %s\n", pthread_self(),  d->tdev->getName().c_str(), d->v_attn[i].c_str(),
-                //                       d->v_skip[i] ? "TRUE" : "FALSE");
-            }
-            else {
-                //                printf("[0x%lx] CuPollingActivity. \e[1;36mskipping first read of attribute %s/%s\e[0m cuz d->v_skip %s\n", pthread_self(), d->tdev->getName().c_str(), d->v_attn[i].c_str(),
-                //                       d->v_skip[i] ? "TRUE" : "FALSE");
-                d->v_skip[i] = false;
-            }
-            if(!success) {
+        if(dev && d->v_attn.size() > 0) {
+            success = tangoworld.read_atts(d->tdev->getDevice(), d->v_attn, d->v_attd, results, d->data_updpo);
+            if(!success)
                 d->consecutiveErrCnt++;
-            }
         }
     }
 
@@ -450,9 +448,16 @@ void CuPollingActivity::m_registerAction(const TSource& ts) {
     if(is_command)
         d->cmds.push_back(ts);
     else {
-        d->v_attd.push_back(tag.set("src", ts.getName()).set("mode", "P").set("period", d->period));
-        d->v_attn.push_back(ts.getPoint());
-        d->v_skip.push_back(d->data_updpo & CuDataUpdatePolicy::SkipFirstReadUpdate);
+        tag.set("src", ts.getName()).set("mode", "P").set("period", d->period);
+        if(d->data_updpo & CuDataUpdatePolicy::SkipFirstReadUpdate) {
+            // start polling the next next execute
+            d->m_attd_future.insert(std::pair<unsigned long long int, CuData>(d->updcnt + 2, tag));
+            d->m_attn_future.insert(std::pair<unsigned long long int, std::string>(d->updcnt + 2, ts.getPoint()));
+        }
+        else {
+            d->v_attd.push_back(tag);
+            d->v_attn.push_back(ts.getPoint());
+        }
     }
 }
 
@@ -477,11 +482,23 @@ int CuPollingActivity::m_v_attd_remove(const std::string &src, const std::string
         d->v_attd.erase(fi);
     }
 
+
     std::vector<std::string>::iterator it = std::find(d->v_attn.begin(), d->v_attn.end(), attna);
     if(it != d->v_attn.end()) {
-        d->v_skip.erase(d->v_skip.begin() + std::distance(d->v_attn.begin(), it)); // erase from d->skip at position attna
         d->v_attn.erase(it);
     }
+
+    // make sure src is removed from 'future' maps for next-execute scheduled attributes
+    // in case register / unregister may are called before execute
+    std::unordered_multimap<unsigned long long, CuData>::iterator mfi = d->m_attd_future.begin();
+    while(mfi != d->m_attd_future.end()) {
+        mfi->second.s("src") == src ? mfi = d->m_attd_future.erase(mfi) : ++mfi;
+    }
+    std::unordered_map<unsigned long long, std::string>::iterator mni = d->m_attn_future.begin();
+    while(mni != d->m_attn_future.end()) {
+        mni->second == attna ? mni = d->m_attn_future.erase(mni) : ++mni;
+    }
+
     return fi != d->v_attd.end() && it != d->v_attn.end() ? 1 : 0;
 }
 
@@ -496,6 +513,20 @@ int CuPollingActivity::m_cmd_remove(const std::string &src) {
             ++it;
     }
     return s - d->cmds.size();
+}
+
+void CuPollingActivity::m_add_scheduled() {
+    // from future maps to v_attn and v_attd if d->updcnt matches
+    // desired execution count (key in future maps)
+    auto in = d->m_attn_future.equal_range(d->updcnt);
+    for(auto i1 = in.first; i1 != in.second; ++i1)
+        d->v_attn.push_back(i1->second);
+    auto iv = d->m_attd_future.equal_range(d->updcnt);
+    for(auto i2 = iv.first; i2 != iv.second; ++i2)
+        d->v_attd.push_back(i2->second);
+    // remove from future maps
+    d->m_attn_future.erase(d->updcnt);
+    d->m_attd_future.equal_range(d->updcnt);
 }
 
 /** \brief Receive events *from the main thread to the CuActivity thread*.
