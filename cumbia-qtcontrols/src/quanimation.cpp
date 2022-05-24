@@ -84,11 +84,8 @@ void QuAnimation::loop(Type t, int duration)
  *
  * If the animation is already running, it is stopped and the started over again
  */
-void QuAnimation::start()
-{
-    if(!d->installed)
-        perr("QuAnimation::start: animation not installed");
-    else {
+void QuAnimation::start() {
+    if(d->installed) {
         if(d->qv_anim.state() != QAbstractAnimation::Stopped ) {
             d->qv_anim.stop();
             if(d->qv_anim.loopCount() < 0)
