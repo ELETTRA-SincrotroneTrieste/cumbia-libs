@@ -64,7 +64,6 @@ EngString::EngString(QString s , const QString& format, const QVariant &value) :
   else if(format.isEmpty())
   {
 	bool ok;
-	pwarn("EngString format is empty to represent variant \"%s\"", qstoc(value.toString()));
 	if(value.toDouble(&ok) && ok)
 	  setNum(value.toDouble());
 	else
@@ -73,9 +72,6 @@ EngString::EngString(QString s , const QString& format, const QVariant &value) :
 	  append(value.toString());
 	}
   }
-	
-//   else
-// 	printf("format\e[1;36m \"%s\"\e[0m does not contain \e[1;32meng\e[0m\n", qstoc(format));
 }
 
 int EngString::extractSignificantDigits(const QString &fmt)
