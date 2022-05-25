@@ -198,8 +198,8 @@ void QumbiaClient::sourcesChanged()
     int period = ui->sbPeriod->value();
     int refmode = ui->cbRefMode->currentIndex() == 0 ? CuTReader::PolledRefresh : CuTReader::ChangeEventRefresh;
     CuData options;
-    options["period"] = period;
-    options["refresh_mode"] = refmode;
+//    options["period"] = period;
+//    options["refresh_mode"] = refmode;
 
     QStringList srcs = ui->leSrcs->text().split(QRegExp("\\s+"), QString::SkipEmptyParts);
     const int srcCnt = srcs.size() > 0 ? srcs.size() : 1;

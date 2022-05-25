@@ -825,6 +825,8 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                 bool changed = m_cache_upd(va[i], rv) && !d->error;
                 if(changed) { // update exactly as above
                     reslist.push_back(va[i]);
+                    reslist[offset]["timestamp_ms"] = rv["timestamp_ms"];
+                    reslist[offset]["timestamp_us"] = rv["timestamp_us"];
                     reslist[offset]["err"] = d->error;
                     if(d->message.length() > 0)
                         reslist[offset]["msg"] = d->message;
