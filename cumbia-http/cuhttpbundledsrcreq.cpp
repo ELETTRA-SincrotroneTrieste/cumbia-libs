@@ -176,7 +176,6 @@ void CuHttpBundledSrcReq::m_on_buf_complete() {
         if(jsd.isNull())
             perr("CuHttpBundledSrcReq.m_on_buf_complete: invalid json: %s\n", qstoc(json));
         d->listener->onSrcBundleReplyReady(jsd.toJson());
-        printf("\e[1;33mCuHttpBundledSrcReq::m_on_buf_complete %s\e[0m\n", qstoc(json));
     }
 }
 
@@ -227,6 +226,5 @@ QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs, u
         root_o["id"] = QString::number(client_id);
     root_o["srcs"] = sa;
     QJsonDocument doc(root_o);
-    printf("request %s\n", doc.toJson(QJsonDocument::Compact).data());
     return doc.toJson(QJsonDocument::Compact);
 }

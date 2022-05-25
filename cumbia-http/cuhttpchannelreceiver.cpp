@@ -171,7 +171,6 @@ void CuHttpChannelReceiver::m_on_buf_complete() {
             if(jsd.isNull())
                 perr("%s: invalid json: %s\n", __PRETTY_FUNCTION__, qstoc(json));
             else {
-                printf("CuHttpChannelReceiver::m_on_buf_complete received from channel \e[0;32m%s\e[0m\n", d->buf.data());
                 decodeMessage(jsd.array());
             }
         }
