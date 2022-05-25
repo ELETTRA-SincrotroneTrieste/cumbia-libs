@@ -6,7 +6,7 @@
 
 include(cumbia-qtcontrols.pri)
 
-CONFIG += debug
+CONFIG += release
 
 
 CONFIG += silent

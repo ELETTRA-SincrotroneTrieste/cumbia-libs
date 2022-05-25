@@ -86,7 +86,14 @@ sources = [
 includedirs = include_directories('lib')
 
 cpp_arguments = ['-DCUMBIA_DEBUG_OUTPUT=1 -DCU_TANGO_VERSION=' + cu_version, ]
-link_arguments = []
+link_arguments = [ ]
+
+# profiling with gperftools
+#
+if(get_option('gperf_enable'))
+    message('\033[1;33m*\033[0m compiling with \033[1;31m-lprofiler\033[0m for gperftools profiling \033[1;33m*\033[0m')
+    link_arguments += [ '-lprofiler' ]
+endif
 
 # profiling with gprof
 #  gprof -q -b executable  > analysis.txt
