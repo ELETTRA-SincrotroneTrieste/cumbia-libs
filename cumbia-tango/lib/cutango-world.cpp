@@ -572,6 +572,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
         }
         else if(p_da->get_type() == Tango::DEV_FLOAT)
         {
+            printf("CuTangoWorld::extractData:  Dev_FLOAT\n");
             std::vector<float>  v;
             p_da->extract_read(v);
             if(f == Tango::SCALAR)
