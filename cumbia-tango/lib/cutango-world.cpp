@@ -288,6 +288,9 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
     dat["qs"] = cuq.name();
     dat["dfs"] = formatToStr(f);
 
+    printf("CuTangoWorld::extractData: quality %d type %d (double is %d float is %d) fmt %d\n",
+           quality, p_da->get_type(), Tango::DEV_DOUBLE, Tango::DEV_FLOAT, f);
+
     try{
         if(quality == Tango::ATTR_INVALID)
         {

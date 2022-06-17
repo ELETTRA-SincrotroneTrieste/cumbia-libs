@@ -1658,8 +1658,10 @@ std::string CuVariant::toString(bool *ok, const char *format) const {
             snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%d", static_cast<char *>(_d->val)[i]);
         else if(_d->type == UChar)
             snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%d", static_cast<unsigned char *>(_d->val)[i]);
-        else if(_d->type == Float)
+        else if(_d->type == Float) {
             snprintf(converted, MAXLEN, strlen(format) > 0 ? format : "%g", static_cast<float *>(_d->val)[i]);
+            printf("CuVariant.toString: converting float format %s val %f\n", format, static_cast<float *>(_d->val)[i]);
+        }
         else if(_d->type == Boolean)
             static_cast<bool *>(_d->val)[i] ? sprintf(converted, "true") : sprintf(converted, "false");
         else if(_d->type == VoidPtr)
