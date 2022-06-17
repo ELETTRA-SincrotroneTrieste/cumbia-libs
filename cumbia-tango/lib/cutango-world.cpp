@@ -590,7 +590,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 else if (f == Tango::IMAGE)
                     dat["w_value"] = CuVariant(v, p_da->get_written_dim_x(), p_da->get_written_dim_y());
             }
-            printf("CuTangoWorld::extractData:  Dev_FLOAT dat %s\n", datos(dat));
+            printf("CuTangoWorld::extractData:  Dev_FLOAT dat %s v.size %ld\n", datos(dat), v.size());
 
         }
         else if(p_da->get_type() == Tango::DEV_BOOLEAN)
