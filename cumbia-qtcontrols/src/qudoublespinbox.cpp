@@ -120,10 +120,17 @@ QString QuDoubleSpinBox::target() const
  *
  * Refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */
-void QuDoubleSpinBox::setTarget(const QString &targets)
-{
+void QuDoubleSpinBox::setTarget(const QString &targets, CuContext *ctx) {
+    if(ctx) {
+        delete d->context;
+        d->context = ctx;
+    }
     CuControlsWriterA* w = d->context->replace_writer(targets.toStdString(), this);
     if(w) w->setTarget(targets);
+}
+
+void QuDoubleSpinBox::clearTarget() {
+    d->context->disposeWriter();
 }
 
 void QuDoubleSpinBox::m_init()

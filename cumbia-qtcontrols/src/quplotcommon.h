@@ -35,6 +35,7 @@ public:
     QColor pick_color(int i);
 
     void setSources(const QStringList &l, CuDataListener *data_listener);
+    void setSources(const QStringList &l, CuDataListener *data_listener, CuContext *ctx);
 
     void addSource(const QString& s, CuDataListener *dl);
 

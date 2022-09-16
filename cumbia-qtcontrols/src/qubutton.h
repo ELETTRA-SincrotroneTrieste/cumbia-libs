@@ -44,7 +44,8 @@ public:
 public slots:
     virtual void execute();
 
-    void setTarget(const QString& target);
+    void setTarget(const QString& target, CuContext* ctx = nullptr);
+    void clearTarget();
 
     void onAnimationValueChanged(const QVariant& v);
 

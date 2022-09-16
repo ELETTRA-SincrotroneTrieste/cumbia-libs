@@ -98,7 +98,7 @@ QStringList QuTrendPlot::sources() const
  */
 void QuTrendPlot::setSource(const QString &s)
 {
-    QStringList sl = s.split(";", QString::SkipEmptyParts);
+    QStringList sl = s.split(";", Qt::SkipEmptyParts);
     unsetSources();
     setSources(sl);
 }
@@ -111,6 +111,17 @@ void QuTrendPlot::setSources(const QStringList &l)
 {
     unsetSources();
     d->plot_common->setSources(l, this);
+}
+
+void QuTrendPlot::setSource(const QString &s, CuContext *ctx) {
+    unsetSources();
+    d->plot_common->setSources(s.split(";", Qt::SkipEmptyParts), this, ctx);
+
+}
+
+void QuTrendPlot::setSources(const QStringList &l, CuContext *ctx) {
+    unsetSources();
+    d->plot_common->setSources(l, this, ctx);
 }
 
 void QuTrendPlot::addSource(const QString &s)

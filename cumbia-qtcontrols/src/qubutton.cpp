@@ -99,10 +99,17 @@ void QuButton::execute()
  *
  * Refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */
-void QuButton::setTarget(const QString &target)
-{
+void QuButton::setTarget(const QString &target, CuContext *ctx) {
+    if(ctx) {
+        delete d->context;
+        d->context = ctx;
+    }
     CuControlsWriterA * w = d->context->replace_writer(target.toStdString(), this);
     if(w) w->setTarget(target);
+}
+
+void QuButton::clearTarget() {
+    d->context->disposeWriter();
 }
 
 /*! \brief This slot is invoked by QuAnimation when the animation value changes. Calls *update*

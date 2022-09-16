@@ -202,6 +202,13 @@ void QuLabel::setSource(const QString &s) {
         r->setSource(s);
 }
 
+void QuLabel::setSource(const QString &s, CuContext *ctx) {
+    delete d->context;
+    printf("QuLabel.setSource with context \n");
+    d->context = ctx;
+    setSource(s);
+}
+
 void QuLabel::unsetSource()
 {
     d->context->disposeReader();

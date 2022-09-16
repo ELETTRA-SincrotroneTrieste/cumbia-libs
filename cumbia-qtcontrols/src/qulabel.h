@@ -66,6 +66,7 @@ public:
 
 public slots:
     void setSource(const QString& s);
+    void setSource(const QString& s, CuContext *ctx);
 
     void unsetSource();
 

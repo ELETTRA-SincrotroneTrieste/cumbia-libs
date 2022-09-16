@@ -69,11 +69,11 @@ public:
 public slots:
 
     void setSource(const QString& s);
-
     void setSources(const QStringList& l);
+    void setSource(const QString& s, CuContext *ctx);
+    void setSources(const QStringList& l, CuContext *ctx);
 
     void addSource(const QString& s);
-
     void unsetSource(const QString& s);
 
     void unsetSources();

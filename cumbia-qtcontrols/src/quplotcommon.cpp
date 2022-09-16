@@ -85,6 +85,12 @@ void QuPlotCommon::setSources(const QStringList &l,
     }
 }
 
+void QuPlotCommon::setSources(const QStringList &l, CuDataListener *data_listener, CuContext *ctx) {
+    if(d->context) delete d->context;
+    d->context = ctx;
+    setSources(l, data_listener);
+}
+
 void QuPlotCommon::addSource(const QString &s, CuDataListener *dl)
 {
     CuControlsReaderA* r = d->context->add_reader(s.toStdString(), dl);

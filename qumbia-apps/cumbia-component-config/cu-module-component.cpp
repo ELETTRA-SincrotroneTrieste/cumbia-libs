@@ -6,15 +6,16 @@
 
 CuModuleComponent::CuModuleComponent(const std::string &cnfdir) : ConfigComponent_A(cnfdir) {
     m_load_file();
+    m_upgrade_conf_file();
 }
 
 std::string CuModuleComponent::update(const char *value) {
     Mode mode; // detect mode from value
     std::string(value).find("://") != std::string::npos ? mode = Url : mode = Generic;
-
+    if(mode == Url)
+        m_url = std::string(value);
     if(!m_lines.size()) {
-        mode == Url ? m_lines.push_back("url:" + std::string(value))
-                    : m_lines.push_back(std::string(value));
+        m_lines.push_back(std::string(value));
         return std::string(value);
     }
 
@@ -24,7 +25,7 @@ std::string CuModuleComponent::update(const char *value) {
             for(int i = Generic; i < EndModes; i++ ) {
                 const char *kw = keywords[i];
                 if(l.find(kw) != std::string::npos) {
-                    if(mode == Url) l = std::string(keywords[Url]) + std::string(value);
+                    if(mode == Url) l = std::string(keywords[Url]);
                     else if(mode == Generic) l = std::string(value);
                     return std::string(value);
                 }
@@ -39,6 +40,7 @@ std::string CuModuleComponent::process(int o) {
     if(o <= 0)
         return upd_line;
 
+    m_url.clear();
     std::vector<const char*> prots = { "https://", "http://", "wss://", "ws://"   };
     std::vector<const char*> msgs = { "http secure server URL: \e[1;33;4mhttps://",
                                       "http server URL: \e[1;32mhttp://",
@@ -46,11 +48,12 @@ std::string CuModuleComponent::process(int o) {
                                       "websocket server URL: \e[1;36;4mws://" };
     if(o >= 1 && o <= 4) {
         char url[512];
-        strcpy(url, prots[o-1]);
+        strncpy(url, prots[o-1], 512);
         printf("  %s", msgs[o-1]);
         scanf("%s", url + strlen(url));
         printf("\e[0m");
         upd_line = update(url);
+        m_url = std::string(url);
     }
     else if(o == 5) {
         upd_line = update("native");
@@ -66,6 +69,15 @@ bool CuModuleComponent::save()
         for(const std::string& s : m_lines)
             ofile << s << std::endl;
         ofile.close();
+        if(!m_url.empty()) {
+            std::ofstream urlfile(confdir() + "url");
+            if(urlfile.is_open()) {
+                urlfile << m_url;
+                urlfile.close();
+            }
+            else
+                m_error = "cu-module-component: failed to open file \"" + confdir() + "/url\" in write mode";
+        }
     }
     else {
         m_error = "cuenv: main.cpp failed to open file \"" + filenam() + "\" in write mode";
@@ -120,16 +132,49 @@ bool CuModuleComponent::m_load_file()
     return false;
 }
 
+std::string CuModuleComponent::m_url_from_file() const {
+    std::string url;
+    std::ifstream urlsf(confdir() + "url");
+    if(urlsf.is_open()) {
+        std::string line;
+        // load contents
+        while (getline (urlsf, line) ) {
+            if(line.find("http") == 0)
+                url = line;
+        }
+        urlsf.close();
+    }
+    return url;
+}
+
+void CuModuleComponent::m_upgrade_conf_file() {
+    bool migrate = false;
+    for(size_t i = 0; i < m_lines.size(); i++) {
+        std::string& l = m_lines[i];
+        if(l.find("url:") != std::string::npos) {
+            m_url = l.substr(l.find("url:") + 4);
+            l = "http";
+            printf("\n--\ncumbia apps module default: \033[1;35mmigrating configuration file from cumbia version < 1.5.0\033[0m:\n");
+            printf("1. url --> http in %s\n", filenam().c_str());
+            printf("2. %s in %s\n", m_url.c_str(), (confdir() + "url").c_str());
+            printf("--\n\n");
+            migrate = true;
+        }
+    }
+    if(migrate)
+        save();
+
+}
 
 void CuModuleComponent::print()
 {
     printf("\n%-30s\e[1;37;4m%s\e[0m\n", "configuration component:", name().c_str());
+    std::string url = m_url_from_file();
     for(std::string l : m_lines) {
         if(l.length() > 0 && l[0] != '#') {
-            if(l.find("url:") != std::string::npos) {
-                std::string url = l.substr(l.find("url:") + 4);
-                std::string prot = url.substr(0, l.find("://") + 3);
-
+            printf("printing for line '%s'\n", l.c_str());
+            if(l.find("http") == 0) {
+                std::string prot = url.substr(0, url.find("://") + 3);
                 if(prot.find("http") == 0)
                     printf("%-30s\e[1;37;4m%s\e[0m%-6s\e[0m", "cumbia apps default module:", "http", "");
                 else if(prot.find("ws") == 0)
@@ -137,8 +182,13 @@ void CuModuleComponent::print()
                 prot.find("wss") == 0 || prot.find("https") == 0 ? printf("[ \e[1;33mencrypted\e[0m ]\n") : printf("\n");
                 printf("%-30s%s\n", "server URL:", url.c_str());
             }
-            else
+            else {
                 printf("module: \e[1;37;4mnative\e[0m\n");
+                if(!url.empty()) {
+                    printf("\nURL: '%s' [\e[1;31m¹\e[0m]\n", url.c_str());
+                    printf("[\033[1;31m¹\033[0m] used by apps when URL not specified in the command line\n");
+                }
+            }
         }
     }
     if(m_lines.size() == 0) {

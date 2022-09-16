@@ -126,7 +126,7 @@ public:
         Cumbia *cuhttp = nullptr;
         if(!d->modules.contains("websocket")) {
             CuHttpRegisterEngine httpre;
-            if(httpre.hasCmdOption(qApp->arguments())) {
+            if(httpre.load(qApp->arguments())) {
                 cuhttp = httpre.registerWithDefaults(cu_pool, *ctrl_f_pool);
                 cuhttp->getServiceProvider()->registerSharedService(CuServices::Log, d->log);
                 d->modules << "http";

@@ -23,14 +23,16 @@ public:
     void setChannel(const QString& chan);
     QString url() const;
     QString channel() const;
-    bool hasCmdOption(const QStringList& args) const;
+    bool load(const QStringList& args, bool force_load = false) const;
 
-    QString urlFromConfig() const;
+    QString urlDefault(bool oldv = false) const;
+    bool httpModeDefault(bool *oldv) const;
 
 
 private:
     CuHttpRegisterEnginePrivate *d;
     QByteArray m_make_hash(const QStringList& args) const;
+    void print_upgrade() const;
 };
 
 #endif // CUHTTPREGISTERENGINE_H

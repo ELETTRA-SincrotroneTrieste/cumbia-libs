@@ -147,11 +147,18 @@ QString QuComboBox::getData() const
  * @see QuContext::setOptions
  * @see source
  */
-void QuComboBox::setTarget(const QString &target)
-{
+void QuComboBox::setTarget(const QString &target, CuContext *ctx) {
+    if(ctx) {
+        delete d->context;
+        d->context = ctx;
+    }
     CuControlsWriterA* w = d->context->replace_writer(target.toStdString(), this);
     if(w)
         w->setTarget(target);
+}
+
+void QuComboBox::clearTarget() {
+    d->context->disposeWriter();
 }
 
 void QuComboBox::contextMenuEvent(QContextMenuEvent *e)

@@ -45,8 +45,9 @@ std::string History::pick_entry()
     else
         printf("\n\e[1;33m* \e[0mhistory is still empty\n\n");
 
-    if(idx >= 0 && idx < (int) entries.size())
+    if(idx >= 0 && idx < (int) entries.size()) {
         return entries[idx];
+    }
     return "";
 }
 

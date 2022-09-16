@@ -224,6 +224,7 @@ void QuInputOutput::unsetSource()
     if(!res)
         perr("QuInputOutput: method unsetSource is not available in %s (class: %s)", qstoc(objectName()),
              w->metaObject()->className());
+    findChild<QuButton *>()->clearTarget();
 }
 
 /// @private
