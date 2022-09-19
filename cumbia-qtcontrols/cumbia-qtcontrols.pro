@@ -45,6 +45,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += cumbiaqtcontrols.cpp \
+    cuengine_hot_switch.cpp \
     src/qubutton.cpp \
     src/qulabel.cpp \
     src/qupalette.cpp \
@@ -98,6 +99,7 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/cupluginloader.cpp
 
 HEADERS += cumbiaqtcontrols.h\
+    cuengine_hot_switch.h \
     cumbia-qtcontrols_global.h \
     src/plugin_ifaces/cumbiaintrospectionplugin_i.h \
     src/qubutton.h \
@@ -284,18 +286,22 @@ DOXYGEN_BIN = $$system(which doxygen)
 isEmpty(DOXYGEN_BIN) {
     message("cumbia-qtcontrols.pro: doxygen not found")
 } else {
-    message("Doxygen found")
+    message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    message("---------------------------- DOCS DISABLED ----------------------")
+    message("")
+    message("")
+#    message("Doxygen found")
 
-    doc.commands = \
-    doxygen \
-    Doxyfile;
+#    doc.commands = \
+#    doxygen \
+#    Doxyfile;
 
-    doc.files = doc/*
-    doc.path = $${CUMBIA_QTCONTROLS_DOCDIR}
-    QMAKE_EXTRA_TARGETS += doc
-    !android-g++ {
-        INSTALLS += doc
-    }
+#    doc.files = doc/*
+#    doc.path = $${CUMBIA_QTCONTROLS_DOCDIR}
+#    QMAKE_EXTRA_TARGETS += doc
+#    !android-g++ {
+#        INSTALLS += doc
+#    }
 }
     inc.files = $${HEADERS}
     inc.path = $${CUMBIA_QTCONTROLS_INCLUDES}

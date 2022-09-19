@@ -17,6 +17,7 @@
 #include <QtDebug>
 #include <QPaintEvent>
 #include <QPainter>
+#include <cuengine_hot_switch.h>
 
 /// @private
 class QuButtonPrivate
@@ -99,13 +100,14 @@ void QuButton::execute()
  *
  * Refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */
-void QuButton::setTarget(const QString &target, CuContext *ctx) {
-    if(ctx) {
-        delete d->context;
-        d->context = ctx;
-    }
+void QuButton::setTarget(const QString &target) {
     CuControlsWriterA * w = d->context->replace_writer(target.toStdString(), this);
     if(w) w->setTarget(target);
+}
+
+void QuButton::ctxSwitch(CumbiaPool *cp, const CuControlsFactoryPool &fpool) {
+    CuEngineHotSwitch ehs;
+    d->context = ehs.hot_switch(this, d->context, cp, fpool);
 }
 
 void QuButton::clearTarget() {
@@ -137,11 +139,9 @@ void QuButton::paintEvent(QPaintEvent *pe)
  *
  * @return the target name, or an empty string if setTarget hasn't been called yet.
  */
-QString QuButton::target() const
-{
-    if(d->context->getWriter())
-        return d->context->getWriter()->target();
-    return "";
+QString QuButton::target() const {
+    return d->context && d->context->getWriter() ?
+                d->context->getWriter()->target() : QString();
 }
 
 /** \brief the onUpdate method implementation for QuButton that can be overridden

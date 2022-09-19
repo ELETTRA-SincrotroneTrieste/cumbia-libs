@@ -13,6 +13,11 @@ exists($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
     include($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
 }
 
+exists($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri) {
+    message("including support for cumbia-http module under $${INSTALL_ROOT}")
+    include($${INSTALL_ROOT}/include/cumbia-http/cumbia-http.pri)
+}
+
 include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 
 QT       += core gui
@@ -21,7 +26,7 @@ TARGET = actions-extension-plugin
 TEMPLATE = lib
 CONFIG += plugin debug
 
-CONFIG += silent
+# CONFIG += silent
 
 SOURCES += \
     actionextensions.cpp \

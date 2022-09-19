@@ -113,15 +113,10 @@ void QuTrendPlot::setSources(const QStringList &l)
     d->plot_common->setSources(l, this);
 }
 
-void QuTrendPlot::setSource(const QString &s, CuContext *ctx) {
-    unsetSources();
-    d->plot_common->setSources(s.split(";", Qt::SkipEmptyParts), this, ctx);
-
-}
-
-void QuTrendPlot::setSources(const QStringList &l, CuContext *ctx) {
-    unsetSources();
-    d->plot_common->setSources(l, this, ctx);
+void QuTrendPlot::ctxSwitch(CumbiaPool *cu_p, const CuControlsFactoryPool &fpool) {
+    const QStringList& srcs = d->plot_common->sources();
+    d->plot_common->unsetSources();
+    d->plot_common->setSources(srcs, this, new CuContext(cu_p, fpool));
 }
 
 void QuTrendPlot::addSource(const QString &s)

@@ -99,14 +99,11 @@ void QuSpectrumPlot::setSources(const QStringList &l)
     d->plot_common->setSources(l, this);
 }
 
-void QuSpectrumPlot::setSource(const QString &s, CuContext *ctx) {
-    unsetSources();
-    d->plot_common->setSources(s.split(";", Qt::SkipEmptyParts), this, ctx);
-}
-
-void QuSpectrumPlot::setSources(const QStringList &l, CuContext *ctx) {
-    unsetSources();
-    d->plot_common->setSources(l, this, ctx);
+void QuSpectrumPlot::ctxSwitch(CumbiaPool *cp, const CuControlsFactoryPool& fp) {
+    const QStringList &l = d->plot_common->sources();
+    d->plot_common->unsetSources();
+//    unsetSources();
+    d->plot_common->setSources(l, this, new CuContext(cp, fp));
 }
 
 void QuSpectrumPlot::addSource(const QString &s)

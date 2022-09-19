@@ -39,6 +39,9 @@
 #include <cuformulaplugininterface.h>
 #include <cupluginloader.h>
 #include <QPluginLoader>
+#include <QRadioButton>
+#include <cumbiatango.h>
+#include <cumbiahttp.h>
 
 class CuInfoDialogPrivate
 {
@@ -219,6 +222,13 @@ void CuInfoDialog::showAppDetails(bool show)
     }
 }
 
+QObject *root_obj(QObject *leaf) {
+    QObject *root = leaf;
+    while(root->parent())
+        root = root->parent();
+    return root != leaf ? root : nullptr;
+}
+
 void CuInfoDialog::exec(const CuData& in, const CuContext* ctx)
 {
     d->ctx = ctx;
@@ -255,8 +265,8 @@ void CuInfoDialog::exec(const CuData& in, const CuContext* ctx)
     leType->setFont(f);
     leName->setFont(f);
 
-//    QGroupBox *appDetGb = new QGroupBox(this); // app details group box
-//    appDetGb->setObjectName("appDetailsGroupBox");
+    //    QGroupBox *appDetGb = new QGroupBox(this); // app details group box
+    //    appDetGb->setObjectName("appDetailsGroupBox");
 
     // button to toggle app details visibility
     QPushButton *pbShowAppDetails = new QPushButton("More...", this);
@@ -410,6 +420,49 @@ void CuInfoDialog::exec(const CuData& in, const CuContext* ctx)
         connect(cb, SIGNAL(toggled(bool)), this, SLOT(liveReadCbToggled(bool)));
         lo->addWidget(cb, row, 0, 1, d->layout_col_cnt);
         row++;
+    }
+
+
+    //
+    // engine hot switch (since 1.5.0)
+    //
+    QObject *root = root_obj(sender);
+    printf("\e[1;32mCuInfoDialog::exec: root is %s (%s) from leaf %s (%s)\e[0m\n", root != nullptr ? qstoc(root->objectName())
+                                                                                                   : "nullptr", root != nullptr ? root->metaObject()->className() : "-", qstoc(sender->objectName()), sender->metaObject()->className());
+    // get current engine in use
+    Cumbia *c = nullptr;
+    if(ctx) {
+        if(ctx->getReader())
+            c = ctx->getReader()->getCumbia();
+        else {
+            if(ctx->getWriter())
+                c = ctx->getWriter()->getCumbia();
+        }
+        if(c) {
+            QGroupBox *gb = new QGroupBox("Engine hot switch", this);
+            QHBoxLayout *hlo = new QHBoxLayout(gb);
+#ifdef QUMBIA_TANGO_CONTROLS_VERSION
+            QRadioButton *rbn = new QRadioButton("native", gb);
+            rbn->setObjectName("rbn");
+#endif
+#ifdef CUMBIA_HTTP_VERSION
+            QRadioButton *rbh = new QRadioButton("http", gb);
+            rbh->setObjectName("rbh");
+#endif
+            if(c->getType() == CumbiaTango::CumbiaTangoType && gb->findChild<QRadioButton *>("rbn"))
+                gb->findChild<QRadioButton *>("rbn")->setChecked(true);
+            else if(c->getType() == CumbiaHttp::CumbiaHTTPType && gb->findChild<QRadioButton *>("rbh"))
+                gb->findChild<QRadioButton *>("rbh")->setChecked(true);
+
+            // add radios to layout
+            if(gb->findChild<QRadioButton *>("rbn"))
+                hlo->addWidget(gb->findChild<QRadioButton *>("rbn"));
+            if(gb->findChild<QRadioButton *>("rbh"))
+                hlo->addWidget(gb->findChild<QRadioButton *>("rbh"));
+
+            lo->addWidget(gb, ++row, 0, 2, lo->columnCount());
+        }
+
     }
 
     m_resizeToMinimumSizeHint();

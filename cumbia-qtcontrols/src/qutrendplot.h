@@ -70,8 +70,7 @@ public slots:
 
     void setSource(const QString& s);
     void setSources(const QStringList& l);
-    void setSource(const QString& s, CuContext *ctx);
-    void setSources(const QStringList& l, CuContext *ctx);
+    void ctxSwitch(CumbiaPool *cu_p, const CuControlsFactoryPool &fpool);
 
     void addSource(const QString& s);
     void unsetSource(const QString& s);
