@@ -88,7 +88,7 @@ QStringList QuSpectrumPlot::sources() const
 
 void QuSpectrumPlot::setSource(const QString &s)
 {
-    QStringList sl = s.split(";", Qt::SkipEmptyParts);
+    QStringList sl = s.split(";", QString::SkipEmptyParts);
     unsetSources();
     setSources(sl);
 }
