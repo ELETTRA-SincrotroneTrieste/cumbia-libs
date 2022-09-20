@@ -24,6 +24,7 @@ public:
     QString url() const;
     QString channel() const;
     bool load(const QStringList& args, bool force_load = false) const;
+    bool hasCmdOption(const QStringList &args) const; // < 1.5.0 compat
 
     QString urlDefault(bool oldv = false) const;
     bool httpModeDefault(bool *oldv) const;

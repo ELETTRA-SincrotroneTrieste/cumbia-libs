@@ -170,7 +170,6 @@ void QuTrendPlot::update(const CuData &da)
     if(d->read_ok && d->auto_configure && da["type"].toString() == "property")
         configure(da);
 
-
     QuPlotCurve *crv = curve(src);
     if(!crv) {
         addCurve(src, crv = new QuPlotCurve(src));

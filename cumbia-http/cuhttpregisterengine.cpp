@@ -161,6 +161,12 @@ bool CuHttpRegisterEngine::load(const QStringList &args, bool force_load) const 
     return http_mod;
 }
 
+/*! for cumbia < 1.5.0 compatibility. calls load(args)
+ */
+bool CuHttpRegisterEngine::hasCmdOption(const QStringList &args) const {
+    return load(args, false);
+}
+
 bool CuHttpRegisterEngine::httpModeDefault(bool *oldv) const {
     QString l;
     QString cfgf = QDir::homePath() + QString("/%1/modules").arg(CUMBIA_USER_CONFIG_DIR);
