@@ -172,7 +172,6 @@ void CuModuleComponent::print()
     std::string url = m_url_from_file();
     for(std::string l : m_lines) {
         if(l.length() > 0 && l[0] != '#') {
-            printf("printing for line '%s'\n", l.c_str());
             if(l.find("http") == 0) {
                 std::string prot = url.substr(0, url.find("://") + 3);
                 if(prot.find("http") == 0)
