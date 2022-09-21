@@ -98,7 +98,7 @@ QStringList QuTrendPlot::sources() const
  */
 void QuTrendPlot::setSource(const QString &s)
 {
-    QStringList sl = s.split(";", Qt::SkipEmptyParts);
+    QStringList sl = s.split(";");
     unsetSources();
     setSources(sl);
 }

@@ -78,7 +78,7 @@ void QuPlotCommon::setSources(const QStringList &l,
     QStringList srcs = sources();
     foreach(QString s, l)
     {
-        if(!srcs.contains(s)) {
+        if(!s.isEmpty() && !srcs.contains(s)) {
             CuControlsReaderA* r = d->context->add_reader(s.toStdString(), data_listener);
             if(r) r->setSource(s);
         }
