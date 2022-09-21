@@ -96,9 +96,12 @@ QStringList QuTrendPlot::sources() const
  * @see setSources
  *
  */
-void QuTrendPlot::setSource(const QString &s)
-{
-    QStringList sl = s.split(";", QString::SkipEmptyParts);
+void QuTrendPlot::setSource(const QString &s) {
+#if QT_VERSION < QT_VERSION_CHECK(5,15,0)
+           QStringList sl = s.split(";", QString::SkipEmptyParts);
+#else
+            QStringList sl =s.split(";", Qt::SkipEmptyParts);
+#endif
     unsetSources();
     setSources(sl);
 }

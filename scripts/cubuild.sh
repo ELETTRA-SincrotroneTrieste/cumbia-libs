@@ -604,7 +604,7 @@ for x in "${meson_p[@]}" ; do
                         exit 1
                     fi
                fi
-               meson configure -Dprefix=$build_dir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja
+               meson configure -Dprefix=$build_dir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja -j5 -v
                #    ninja install
                meson configure -Dprefix=$build_dir -Dlibdir=$lib_dir -Dbuildtype=$build_type && ninja install
 
@@ -664,7 +664,7 @@ for x in "${qmake_p[@]}"; do
                 ##
                 ## build and install under build_dir
                 ##
-                qmake "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make 
+                qmake "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make  -j5
 		if [ $? -ne 0 ]; then
 			exit 1
 		fi
@@ -753,7 +753,7 @@ for x in "${qmake_subdir_p[@]}"; do
 			#
                         if [ $build -eq 1 ]; then
                                 echo -e "\e[1;32m\n*\n* BUILD project ${sd}...\n*\e[0m"
-                                qmake "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make  && make install
+                                qmake "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make -j5  && make install
                                 if [ $? -ne 0 ]; then
                                         exit 1
                                 else

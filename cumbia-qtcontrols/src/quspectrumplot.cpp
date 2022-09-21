@@ -86,9 +86,12 @@ QStringList QuSpectrumPlot::sources() const
     return d->plot_common->sources();
 }
 
-void QuSpectrumPlot::setSource(const QString &s)
-{
-    QStringList sl = s.split(";", QString::SkipEmptyParts);
+void QuSpectrumPlot::setSource(const QString &s) {
+#if QT_VERSION < QT_VERSION_CHECK(5,15,0)
+    QStringList sl = s.split(";",    QString::SkipEmptyParts);
+#else
+    QStringList sl = s.split(";",      Qt::SkipEmptyParts);
+#endif
     unsetSources();
     setSources(sl);
 }
