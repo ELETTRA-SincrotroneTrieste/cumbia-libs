@@ -73,7 +73,7 @@ void QuTrendPlot::m_init()
     setUpperBoundExtra(QwtPlot::xBottom, 0.1);
     setUpperBoundExtra(QwtPlot::xTop, 0.1);
     d->directPainter = new QwtPlotDirectPainter( this );
-    setContextMenuStrategy(new QuPlotContextMenuStrategy(getContext()));
+    setContextMenuStrategy(new QuPlotContextMenuStrategy(this));
     if ( QwtPainter::isX11GraphicsSystem() )
         canvas()->setAttribute( Qt::WA_PaintOnScreen, true );
 }

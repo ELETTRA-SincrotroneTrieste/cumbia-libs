@@ -259,7 +259,7 @@ void QuTable::contextMenuEvent(QContextMenuEvent *e)
     CuContextMenu* m = findChild<CuContextMenu *>();
     if(!m)
         m = new CuContextMenu(this);
-    m->popup(e->globalPos(), d->context);
+    m->popup(e->globalPos(), this);
 }
 
 

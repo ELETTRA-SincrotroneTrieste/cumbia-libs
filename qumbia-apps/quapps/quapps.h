@@ -190,7 +190,37 @@ public:
         return d->error;
     }
 
+    bool switch_engine(int engine, CumbiaPool *cu_pool, CuControlsFactoryPool &m_ctrl_factory_pool, QList<QObject *>&objs) {
+        std::vector<Cumbia *> cumbias;
+        bool ok = m_prepare_switch(engine, cu_pool, m_ctrl_factory_pool, cumbias);
+        if(ok) {
+            ok = m_apply_switch(objs, cu_pool, m_ctrl_factory_pool) > 0;
+            if(!ok) {
+                d->error = true;
+                d->msg = "no suitable objects found";
+            }
+        }
+        if(ok)
+            m_delete_cumbias(cumbias);
+         return ok;
+    }
+
     bool switch_engine(int engine, CumbiaPool *cu_pool, CuControlsFactoryPool &m_ctrl_factory_pool, QObject *root) {
+        std::vector<Cumbia *> cumbias;
+        bool ok = m_prepare_switch(engine, cu_pool, m_ctrl_factory_pool, cumbias);
+        if(ok) {
+            ok = m_apply_switch(root->findChildren<QObject *>(), cu_pool, m_ctrl_factory_pool) > 0;
+            if(!ok) {
+                d->error = true;
+                d->msg = "no suitable objects found";
+            }
+        }
+        if(ok)
+            m_delete_cumbias(cumbias);
+         return ok;
+    }
+
+    bool m_prepare_switch(int engine, CumbiaPool *cu_pool, CuControlsFactoryPool &m_ctrl_factory_pool, std::vector<Cumbia *>& cumbias) {
 #if !defined(CUMBIA_HTTP_VERSION) && !defined(QUMBIA_TANGO_CONTROLS_VERSION)
         d->error = true;
         d->msg = "neither Tango nor Http modules are compiled into the library";
@@ -207,7 +237,6 @@ public:
                 d->msg = "trying to switch to the same engine";
             }
             else { // switch to the new engine
-                std::vector<Cumbia *> cclear;
                 // save the log instance
                 // when engine switching, we suppose there is only one Cumbia in the pool
                 // because interchangeable engines are mutually exclusive (see cclear.size() == 1 below)
@@ -216,18 +245,18 @@ public:
                 Cumbia *cu = nullptr; // new cumbia
                 if(engine == CumbiaTango::CumbiaTangoType) {
                     CuTangoRegisterEngine tare;
-                    cclear = m_clear_cumbia(cu_pool, m_ctrl_factory_pool);
-                    if(cclear.size() == 1 && cclear[0]->getServiceProvider()) // recycle log
-                        log = static_cast<CuLog *>(cclear[0]->getServiceProvider()->get(CuServices::Log));
+                    cumbias = m_clear_cumbia(cu_pool, m_ctrl_factory_pool);
+                    if(cumbias.size() == 1 && cumbias[0]->getServiceProvider()) // recycle log
+                        log = static_cast<CuLog *>(cumbias[0]->getServiceProvider()->get(CuServices::Log));
                     cu = tare.registerWithDefaults(cu_pool,  m_ctrl_factory_pool);
                 }
                 else if(engine == CumbiaHttp::CumbiaHTTPType) {
                     CuHttpRegisterEngine httpre;
                     d->error = !httpre.load(qApp->arguments(), true); // true: try loading also without -u in args
                     if(!d->error) {
-                        cclear = m_clear_cumbia(cu_pool, m_ctrl_factory_pool);
-                        if(cclear.size() == 1 && cclear[0]->getServiceProvider()) // recycle log
-                            log = static_cast<CuLog *>(cclear[0]->getServiceProvider()->get(CuServices::Log));
+                        cumbias = m_clear_cumbia(cu_pool, m_ctrl_factory_pool);
+                        if(cumbias.size() == 1 && cumbias[0]->getServiceProvider()) // recycle log
+                            log = static_cast<CuLog *>(cumbias[0]->getServiceProvider()->get(CuServices::Log));
                         cu = httpre.registerWithDefaults(cu_pool, m_ctrl_factory_pool);
                     }
                     else
@@ -242,28 +271,35 @@ public:
                     cu->getServiceProvider()->registerSharedService(CuServices::Log, log);
                 else
                     pretty_pri("\033[1;33m*\033[0m: no log service installed in new cumbia: no log service found in older instance");
-
-                int i = 0;
-                foreach(QObject *o, root->findChildren<QObject *>()) {
-                    if(o->metaObject()->indexOfProperty("source") > 0 || o->metaObject()->indexOfProperty("target") > -1) {
-                        printf("%d. \e[1;32mobject %s type %s\e[0m\n", ++i, qstoc(o->objectName()), o->metaObject()->className());
-                        printf(" source: '%s' target '%s' \e[1;35mchild of %s \e[0;35m(%s)\e[0m\n", qstoc(o->property("source").toString()), qstoc(o->property("target").toString()),
-                               o->parent() != nullptr ? qstoc(o->parent()->objectName()) : "(null)",
-                               o->parent() != nullptr ? o->parent()->metaObject()->className() : "-");
-                        if(!QMetaObject::invokeMethod(o, "ctxSwitch", Q_ARG(CumbiaPool*, cu_pool), Q_ARG(CuControlsFactoryPool, m_ctrl_factory_pool)))
-                            perr("error invoking method ctxSwitch on object %s type %s", qstoc(o->objectName()), o->metaObject()->className());
-                    }
-                }
-                for(Cumbia *c : cclear) {
-                    c->getServiceProvider()->unregisterService(CuServices::Log); // uninstall
-                    delete c;
-                }
             } // !d->error trying to switch to the same engine
         }  // ! error unsupported target engine
         return !d->error;
     }
 
-    int engine_type(CuContext *ctx) const {
+    int m_apply_switch(const QList<QObject *> objs, CumbiaPool *cu_pool, const CuControlsFactoryPool &m_ctrl_factory_pool) {
+        int i = 0;
+        foreach(QObject *o, objs) {
+            i++;
+            if(o->metaObject()->indexOfProperty("source") > 0 || o->metaObject()->indexOfProperty("target") > -1) {
+                printf("%d. \e[1;32mobject %s type %s\e[0m\n", i, qstoc(o->objectName()), o->metaObject()->className());
+                printf(" source: '%s' target '%s' \e[1;35mchild of %s \e[0;35m(%s)\e[0m\n", qstoc(o->property("source").toString()), qstoc(o->property("target").toString()),
+                       o->parent() != nullptr ? qstoc(o->parent()->objectName()) : "(null)",
+                       o->parent() != nullptr ? o->parent()->metaObject()->className() : "-");
+                if(!QMetaObject::invokeMethod(o, "ctxSwitch", Q_ARG(CumbiaPool*, cu_pool), Q_ARG(CuControlsFactoryPool, m_ctrl_factory_pool)))
+                    perr("error invoking method ctxSwitch on object %s type %s", qstoc(o->objectName()), o->metaObject()->className());
+            }
+        }
+        return i;
+    }
+
+    int m_delete_cumbias(const std::vector<Cumbia *>& vc) {
+        for(Cumbia *c : vc) {
+            c->getServiceProvider()->unregisterService(CuServices::Log); // uninstall
+            delete c;
+        }
+    }
+
+    int engine_type(const CuContext *ctx) const {
         // get current engine in use
         Cumbia *c = nullptr;
         d->error = (ctx == nullptr);

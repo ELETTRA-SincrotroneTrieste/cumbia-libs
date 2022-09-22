@@ -5,7 +5,6 @@
 #include <QtDebug>
 #include <QDateTime>
 
-#include "qupalette.h"
 #include "cucontrolsfactories_i.h"
 #include "cucontrolsreader_abs.h"
 #include "quwidgetupdatestrategy_i.h"
@@ -73,7 +72,7 @@ void QuSpectrumPlot::m_init()
 {
     d->auto_configure = true;
     d->read_ok = false;
-    setContextMenuStrategy(new QuPlotContextMenuStrategy(getContext()));
+    setContextMenuStrategy(new QuPlotContextMenuStrategy(this));
 }
 
 QString QuSpectrumPlot::source() const

@@ -42,12 +42,13 @@
 #include <QRadioButton>
 #include <cumbiatango.h>
 #include <cumbiahttp.h>
+#include <quapps.h>
 
 class CuInfoDialogPrivate
 {
 public:
     CuInfoDialogPrivate() {}
-    const CuContext *ctx;
+    const CuContextI *ctxi;
     Cumbia *cumbia;
     CumbiaPool *cu_pool;
     CuControlsFactoryPool f_pool;
@@ -61,7 +62,8 @@ CuInfoDialog::CuInfoDialog(QWidget *parent)
     d = new CuInfoDialogPrivate();
     d->r_fac = NULL; // pointer copied. object not cloned
     d->cu_pool = NULL;
-    d->ctx = nullptr;
+    d->ctxi = nullptr;
+    m_owner = nullptr;
     setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
@@ -157,8 +159,8 @@ void CuInfoDialog::liveReadCbToggled(bool start)
             delete findChild<QScrollArea *>("liveScrollArea");
         m_resizeToMinimumSizeHint();
     }
-    else {
-        QList<CuControlsReaderA *> readers = d->ctx->readers();
+    else if(d->ctxi->getContext() != nullptr) {
+        QList<CuControlsReaderA *> readers = d->ctxi->getContext()->readers();
         QGridLayout *mainLo = findChild<QGridLayout *>("mainGridLayout");
         int row = mainLo->rowCount();
         QScrollArea *scrollArea = new QScrollArea(this);
@@ -183,12 +185,13 @@ void CuInfoDialog::liveReadCbToggled(bool start)
             gb->setObjectName(src + "_live");
             QVBoxLayout * gblilo = new QVBoxLayout(gb);
             QuLabel *llive = NULL;
-            if(d->ctx->cumbia() && d->ctx->getReaderFactoryI())
-                llive = new QuLabel(liveF, d->ctx->cumbia(), *d->ctx->getReaderFactoryI());
-            else if(d->ctx->cumbiaPool())
-                llive = new QuLabel(liveF, d->ctx->cumbiaPool(), d->ctx->getControlsFactoryPool());
+            if(d->ctxi->getContext()->cumbia() && d->ctxi->getContext()->getReaderFactoryI())
+                llive = new QuLabel(liveF, d->ctxi->getContext()->cumbia(), *d->ctxi->getContext()->getReaderFactoryI());
+            else if(d->ctxi->getContext()->cumbiaPool())
+                llive = new QuLabel(liveF, d->ctxi->getContext()->cumbiaPool(), d->ctxi->getContext()->getControlsFactoryPool());
             if(llive)
             {
+                llive->setObjectName("qullive");
                 connect(llive, SIGNAL(newData(CuData)), this, SLOT(newLiveData(CuData)));
                 llive->setSource(r->source());
                 llive->setMaximumLength(80);
@@ -229,250 +232,208 @@ QObject *root_obj(QObject *leaf) {
     return root != leaf ? root : nullptr;
 }
 
-void CuInfoDialog::exec(const CuData& in, const CuContext* ctx)
+void CuInfoDialog::exec(const CuData& in, const CuContextI *ctxi)
 {
-    d->ctx = ctx;
+    d->ctxi = ctxi;
     d->layout_col_cnt = 8;
     resize(700, 720);
     int row = 0;
-    QObject *sender = static_cast<QObject *>(in["sender"].toVoidP());
+    m_owner = static_cast<QObject *>(in["sender"].toVoidP());
     QFont f = font();
     f.setBold(true);
     f.setPointSize(f.pointSize() + 1);
     // update with live data
-    connect(sender, SIGNAL(newData(const CuData&)), this, SLOT(onMonitorUpdate(const CuData&)));
+    connect(m_owner, SIGNAL(newData(const CuData&)), this, SLOT(onMonitorUpdate(const CuData&)));
 
-    QString formula, src = sender->property("source").toString();
+    QString formula, src = m_owner->property("source").toString();
     if(src.isEmpty())
-        src = sender->property("target").toString();
+        src = m_owner->property("target").toString();
     src = extractSource(src, formula);
     setWindowTitle(src + " stats");
-    CuLinkStats *lis = ctx->getLinkStats();
+    if(d->ctxi->getContext() != nullptr) {
+        CuLinkStats *lis = ctxi->getContext()->getLinkStats();
 
-    QGridLayout *lo = new QGridLayout(this);
-    lo->setObjectName("mainGridLayout");
-    // use QLabel instead of group box title to use bold font
-    QLabel *lobj = new QLabel("Monitored object", this);
-    lobj->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
-    QLineEdit *leName = new QLineEdit(sender->objectName(),this);
-    leName->setReadOnly(true);
+        QGridLayout *lo = new QGridLayout(this);
+        lo->setObjectName("mainGridLayout");
+        // use QLabel instead of group box title to use bold font
+        QLabel *lobj = new QLabel("Monitored object", this);
+        lobj->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
+        QLineEdit *leName = new QLineEdit(m_owner->objectName(),this);
+        leName->setReadOnly(true);
 
-    QLabel *l_Type = new QLabel("Type", this);
-    l_Type->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
-    QLineEdit *leType = new QLineEdit(sender->metaObject()->className(), this);
-    leType->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
+        QLabel *l_Type = new QLabel("Type", this);
+        l_Type->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
+        QLineEdit *leType = new QLineEdit(m_owner->metaObject()->className(), this);
+        leType->setAlignment(Qt::AlignLeft|Qt::AlignVCenter);
 
-    leType->setFont(f);
-    leName->setFont(f);
+        leType->setFont(f);
+        leName->setFont(f);
 
-    //    QGroupBox *appDetGb = new QGroupBox(this); // app details group box
-    //    appDetGb->setObjectName("appDetailsGroupBox");
+        //    QGroupBox *appDetGb = new QGroupBox(this); // app details group box
+        //    appDetGb->setObjectName("appDetailsGroupBox");
 
-    // button to toggle app details visibility
-    QPushButton *pbShowAppDetails = new QPushButton("More...", this);
-    pbShowAppDetails->setCheckable(true);
-    pbShowAppDetails->setChecked(false);
-    connect(pbShowAppDetails, SIGNAL(toggled(bool)), this, SLOT(showAppDetails(bool)));
+        // button to toggle app details visibility
+        QPushButton *pbShowAppDetails = new QPushButton("More...", this);
+        pbShowAppDetails->setCheckable(true);
+        pbShowAppDetails->setChecked(false);
+        connect(pbShowAppDetails, SIGNAL(toggled(bool)), this, SLOT(showAppDetails(bool)));
 
-    foreach(QLabel *l, QList<QLabel*> () << lobj << l_Type )
-        l->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-
-
-    lo->addWidget(lobj, row, 0, 1, 1);
-    lo->addWidget(leName, row, 1, 1, 3);
-    lo->addWidget(l_Type, row, 4, 1, 1);
-    lo->addWidget(leType, row, 5, 1, 2);
-    lo->addWidget(pbShowAppDetails, row, 7, 1, 1);
-
-    row++;
-    mAppDetailsLayoutRow = row;
-    row += m_appPropMap().size() / 2;
-
-    // operation count
-    QLabel *lopcnt = new QLabel("Operation count:", this);
-    QLineEdit *leopcnt = new QLineEdit(this);
-    leopcnt->setObjectName("leopcnt");
-    leopcnt->setReadOnly(true);
-    leopcnt->setText(QString::number(lis->opCnt()));
-    lo->addWidget(lopcnt, row, 0, 1, 1);
-    lo->addWidget(leopcnt, row, 1, 1, 3);
-
-    // error count
-    QLabel *lerrcnt = new QLabel("Error count:", this);
-    lerrcnt->setAlignment(Qt::AlignRight);
-    QLineEdit *leerrcnt = new QLineEdit(this);
-    leerrcnt->setObjectName("leerrcnt");
-    leerrcnt->setReadOnly(true);
-    leerrcnt->setText(QString::number(lis->errorCnt()));
-    lo->addWidget(lerrcnt, row, 4, 1, 1);
-    lo->addWidget(leerrcnt, row, 5, 1, 3);
-
-    row++;
-
-    if(lis->errorCnt() >= 0)
-    {
-        QLabel *l_lasterr = new QLabel("Last err", this);
-        l_lasterr->setAlignment(Qt::AlignRight);
-        lo->addWidget(l_lasterr, row, 0, 1, 1);
-        QLineEdit *te_lasterr = new QLineEdit(this);
-        te_lasterr->setReadOnly(true);
-        te_lasterr->setObjectName("te_lasterr");
-        lo->addWidget(te_lasterr, row, 1, 1, d->layout_col_cnt - 3);
-        te_lasterr->setText(lis->last_error_msg.c_str());
-        te_lasterr->setToolTip(te_lasterr->text());
-    }
-
-    row += 1;
-
-    // Health
-    HealthWidget *healthWidget = new HealthWidget(this);
-    healthWidget->setData(lis->errorCnt(), lis->opCnt());
-    lo->addWidget(healthWidget, row, 0, 1, d->layout_col_cnt);
-    row++;
-
-    int monrow = 0;
-    QFrame *monitorF = new QFrame(this);
-    monitorF->setObjectName("monitorF");
-    QGridLayout *molo = new QGridLayout(monitorF);
-    molo->setObjectName(monitorF->objectName() + "_layout");
-
-    QList<CuControlsWriterA *> writers = ctx->writers();
-    foreach (CuControlsWriterA* w, writers) {
-        QGroupBox *gb = new QGroupBox("", monitorF);
-        gb->setObjectName(w->target() + "_write_monitor");
-        QVBoxLayout* gblo = new QVBoxLayout(gb);
-        gblo->setObjectName(gb->objectName() + "_gridLayout");
-        molo->addWidget(gb, monrow, 0, 1, d->layout_col_cnt);
-        monrow++;
-        // label with bold font indicating the source
-        QLabel *slabel = new QLabel(gb);
-        slabel->setObjectName("l_source_name");
-        slabel->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
-        slabel->setStyleSheet("QLabel { background-color : white; color:DodgerBlue; margin:5px; padding:5px; "
-                              " border: 1px solid DodgerBlue; border-radius:5px;  }");
-        gblo->addWidget(slabel);
-        // bold font on target name label
-        QFont fo = slabel->font();
-        fo.setBold(true);
-        slabel->setFont(fo);
-        slabel->setText(w->target());
+        foreach(QLabel *l, QList<QLabel*> () << lobj << l_Type )
+            l->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
 
-        CuData confd = w->getConfiguration();
-        if(!confd.isEmpty()) {
-            QTextBrowser *teconf = new QTextBrowser(gb);
-            teconf->setObjectName("tb_properties");
-            teconf->setReadOnly(true);
-            QString html = m_makeHtml(confd, "Properties");
-            teconf->setHtml(html);
-            gblo->addWidget(teconf);
-        }
-    }
+        lo->addWidget(lobj, row, 0, 1, 1);
+        lo->addWidget(leName, row, 1, 1, 3);
+        lo->addWidget(l_Type, row, 4, 1, 1);
+        lo->addWidget(leType, row, 5, 1, 2);
+        lo->addWidget(pbShowAppDetails, row, 7, 1, 1);
 
-    QList<CuControlsReaderA *> readers = ctx->readers();
-    // create a set of GroupBoxes that will contain monitor widgets
-    foreach(CuControlsReaderA *r, readers)
-    {
-        QString formula, src;
-        src = extractSource(r->source(), formula);
-        QGroupBox *gb = new QGroupBox("", monitorF);
-        gb->setObjectName(src + "_monitor");
-        QVBoxLayout* gblo = new QVBoxLayout(gb);
-        gblo->setObjectName(gb->objectName() + "_gridLayout");
-        molo->addWidget(gb, monrow, 0, 1, d->layout_col_cnt);
-        monrow++;
-        // label with bold font indicating the source
-        QLabel *slabel = new QLabel(gb);
-        slabel->setObjectName("l_source_name");
-        slabel->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
-        slabel->setStyleSheet("QLabel { background-color : white; color:DodgerBlue; margin:5px; padding:5px; "
-                              " border: 1px solid DodgerBlue; border-radius:5px;  }");
-        QFont fo = slabel->font();
-        fo.setBold(true);
-        slabel->setFont(fo);
-        slabel->setText(r->source());
-        gblo->addWidget(slabel);
-
-        // place a label saying "wait for next refresh"
-        QLabel *label = new QLabel(gb);
-        label->setObjectName("l_waitupdate");
-        label->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
-        label->setText("waiting for next update...");
-        gblo->addWidget(label);
-    }
-    // add the group boxes to the layout
-    QSizePolicy monSp;
-    // no readers: monitorF can take up more vertical space. There's readers: size policy needs
-    // to be fixed otherwise no space for live frame
-    readers.size() > 0 ? monSp = QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed) :
-            monSp = QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    monitorF->setSizePolicy(monSp);
-    lo->addWidget(monitorF, row, 0, 1, d->layout_col_cnt); // below QLabel wit src
-    row++;
-
-    // live stuff
-    // Live Frame
-    if(readers.size() > 0) {
-
-        QCheckBox *cb = new QCheckBox("Start a live reader", this);
-        cb->setFont(f);
-        cb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        connect(cb, SIGNAL(toggled(bool)), this, SLOT(liveReadCbToggled(bool)));
-        lo->addWidget(cb, row, 0, 1, d->layout_col_cnt);
         row++;
-    }
+        mAppDetailsLayoutRow = row;
+        row += m_appPropMap().size() / 2;
 
+        // operation count
+        QLabel *lopcnt = new QLabel("Operation count:", this);
+        QLineEdit *leopcnt = new QLineEdit(this);
+        leopcnt->setObjectName("leopcnt");
+        leopcnt->setReadOnly(true);
+        leopcnt->setText(QString::number(lis->opCnt()));
+        lo->addWidget(lopcnt, row, 0, 1, 1);
+        lo->addWidget(leopcnt, row, 1, 1, 3);
 
-    //
-    // engine hot switch (since 1.5.0)
-    //
-    QObject *root = root_obj(sender);
-    printf("\e[1;32mCuInfoDialog::exec: root is %s (%s) from leaf %s (%s)\e[0m\n", root != nullptr ? qstoc(root->objectName())
-                                                                                                   : "nullptr", root != nullptr ? root->metaObject()->className() : "-", qstoc(sender->objectName()), sender->metaObject()->className());
-    // get current engine in use
-    Cumbia *c = nullptr;
-    if(ctx) {
-        if(ctx->getReader())
-            c = ctx->getReader()->getCumbia();
-        else {
-            if(ctx->getWriter())
-                c = ctx->getWriter()->getCumbia();
-        }
-        if(c) {
-            QGroupBox *gb = new QGroupBox("Engine hot switch", this);
-            QHBoxLayout *hlo = new QHBoxLayout(gb);
-#ifdef QUMBIA_TANGO_CONTROLS_VERSION
-            QRadioButton *rbn = new QRadioButton("native", gb);
-            rbn->setObjectName("rbn");
-#endif
-#ifdef CUMBIA_HTTP_VERSION
-            QRadioButton *rbh = new QRadioButton("http", gb);
-            rbh->setObjectName("rbh");
-#endif
-            if(c->getType() == CumbiaTango::CumbiaTangoType && gb->findChild<QRadioButton *>("rbn"))
-                gb->findChild<QRadioButton *>("rbn")->setChecked(true);
-            else if(c->getType() == CumbiaHttp::CumbiaHTTPType && gb->findChild<QRadioButton *>("rbh"))
-                gb->findChild<QRadioButton *>("rbh")->setChecked(true);
+        // error count
+        QLabel *lerrcnt = new QLabel("Error count:", this);
+        lerrcnt->setAlignment(Qt::AlignRight);
+        QLineEdit *leerrcnt = new QLineEdit(this);
+        leerrcnt->setObjectName("leerrcnt");
+        leerrcnt->setReadOnly(true);
+        leerrcnt->setText(QString::number(lis->errorCnt()));
+        lo->addWidget(lerrcnt, row, 4, 1, 1);
+        lo->addWidget(leerrcnt, row, 5, 1, 3);
 
-            // add radios to layout
-            if(gb->findChild<QRadioButton *>("rbn"))
-                hlo->addWidget(gb->findChild<QRadioButton *>("rbn"));
-            if(gb->findChild<QRadioButton *>("rbh"))
-                hlo->addWidget(gb->findChild<QRadioButton *>("rbh"));
+        row++;
 
-            lo->addWidget(gb, ++row, 0, 2, lo->columnCount());
+        if(lis->errorCnt() >= 0)
+        {
+            QLabel *l_lasterr = new QLabel("Last err", this);
+            l_lasterr->setAlignment(Qt::AlignRight);
+            lo->addWidget(l_lasterr, row, 0, 1, 1);
+            QLineEdit *te_lasterr = new QLineEdit(this);
+            te_lasterr->setReadOnly(true);
+            te_lasterr->setObjectName("te_lasterr");
+            lo->addWidget(te_lasterr, row, 1, 1, d->layout_col_cnt - 3);
+            te_lasterr->setText(lis->last_error_msg.c_str());
+            te_lasterr->setToolTip(te_lasterr->text());
         }
 
-    }
+        row += 1;
 
+        // Health
+        HealthWidget *healthWidget = new HealthWidget(this);
+        healthWidget->setData(lis->errorCnt(), lis->opCnt());
+        lo->addWidget(healthWidget, row, 0, 1, d->layout_col_cnt);
+        row++;
+
+        int monrow = 0;
+        QFrame *monitorF = new QFrame(this);
+        monitorF->setObjectName("monitorF");
+        QGridLayout *molo = new QGridLayout(monitorF);
+        molo->setObjectName(monitorF->objectName() + "_layout");
+
+        QList<CuControlsWriterA *> writers = ctxi->getContext()->writers();
+        foreach (CuControlsWriterA* w, writers) {
+            QGroupBox *gb = new QGroupBox("", monitorF);
+            gb->setObjectName(w->target() + "_write_monitor");
+            QVBoxLayout* gblo = new QVBoxLayout(gb);
+            gblo->setObjectName(gb->objectName() + "_gridLayout");
+            molo->addWidget(gb, monrow, 0, 1, d->layout_col_cnt);
+            monrow++;
+            // label with bold font indicating the source
+            QLabel *slabel = new QLabel(gb);
+            slabel->setObjectName("l_source_name");
+            slabel->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+            slabel->setStyleSheet("QLabel { background-color : white; color:DodgerBlue; margin:5px; padding:5px; "
+                                  " border: 1px solid DodgerBlue; border-radius:5px;  }");
+            gblo->addWidget(slabel);
+            // bold font on target name label
+            QFont fo = slabel->font();
+            fo.setBold(true);
+            slabel->setFont(fo);
+            slabel->setText(w->target());
+
+
+            CuData confd = w->getConfiguration();
+            if(!confd.isEmpty()) {
+                QTextBrowser *teconf = new QTextBrowser(gb);
+                teconf->setObjectName("tb_properties");
+                teconf->setReadOnly(true);
+                QString html = m_makeHtml(confd, "Properties");
+                teconf->setHtml(html);
+                gblo->addWidget(teconf);
+            }
+        }
+
+        QList<CuControlsReaderA *> readers = ctxi->getContext()->readers();
+        // create a set of GroupBoxes that will contain monitor widgets
+        foreach(CuControlsReaderA *r, readers)
+        {
+            QString formula, src;
+            src = extractSource(r->source(), formula);
+            QGroupBox *gb = new QGroupBox("", monitorF);
+            gb->setObjectName(src + "_monitor");
+            QVBoxLayout* gblo = new QVBoxLayout(gb);
+            gblo->setObjectName(gb->objectName() + "_gridLayout");
+            molo->addWidget(gb, monrow, 0, 1, d->layout_col_cnt);
+            monrow++;
+            // label with bold font indicating the source
+            QLabel *slabel = new QLabel(gb);
+            slabel->setObjectName("l_source_name");
+            slabel->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+            slabel->setStyleSheet("QLabel { background-color : white; color:DodgerBlue; margin:5px; padding:5px; "
+                                  " border: 1px solid DodgerBlue; border-radius:5px;  }");
+            QFont fo = slabel->font();
+            fo.setBold(true);
+            slabel->setFont(fo);
+            slabel->setText(r->source());
+            gblo->addWidget(slabel);
+
+            // place a label saying "wait for next refresh"
+            QLabel *label = new QLabel(gb);
+            label->setObjectName("l_waitupdate");
+            label->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+            label->setText("waiting for next update...");
+            gblo->addWidget(label);
+        }
+        // add the group boxes to the layout
+        QSizePolicy monSp;
+        // no readers: monitorF can take up more vertical space. There's readers: size policy needs
+        // to be fixed otherwise no space for live frame
+        readers.size() > 0 ? monSp = QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed) :
+                monSp = QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        monitorF->setSizePolicy(monSp);
+        lo->addWidget(monitorF, row, 0, 1, d->layout_col_cnt); // below QLabel wit src
+        row++;
+
+        // live stuff
+        // Live Frame
+        if(readers.size() > 0) {
+
+            QCheckBox *cb = new QCheckBox("Start a live reader", this);
+            cb->setFont(f);
+            cb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+            connect(cb, SIGNAL(toggled(bool)), this, SLOT(liveReadCbToggled(bool)));
+            lo->addWidget(cb, row, 0, 1, d->layout_col_cnt);
+            row++;
+        }
+
+    } // d->ctxi->getContext() != nullptr
     m_resizeToMinimumSizeHint();
     show();
 }
 
-void CuInfoDialog::onMonitorUpdate(const CuData &da)
-{
+void CuInfoDialog::onMonitorUpdate(const CuData &da) {
     double x;
-    CuLinkStats *lis = d->ctx->getLinkStats();
+    CuLinkStats *lis = d->ctxi->getContext()->getLinkStats();
     findChild<QLineEdit *>("leopcnt")->setText(QString::number(lis->opCnt()));
     findChild<QLineEdit *>("leerrcnt")->setText(QString::number(lis->errorCnt()));
     findChild<QLineEdit *>("te_lasterr")->setText(lis->last_error_msg.c_str());
@@ -659,10 +620,10 @@ div { width=80%; } \
      QuSpectrumPlot *splot = findChild<QuSpectrumPlot *>("trplot_" + src);
      if(liveTabW) {
          if(!trplot && !splot) {
-             Cumbia *cumbia = d->ctx->cumbia();
-             CuControlsReaderFactoryI *rfac = d->ctx->getReaderFactoryI();
-             CumbiaPool *cu_pool = d->ctx->cumbiaPool();
-             CuControlsFactoryPool fpool = d->ctx->getControlsFactoryPool();
+             Cumbia *cumbia = d->ctxi->getContext()->cumbia();
+             CuControlsReaderFactoryI *rfac = d->ctxi->getContext()->getReaderFactoryI();
+             CumbiaPool *cu_pool = d->ctxi->getContext()->cumbiaPool();
+             CuControlsFactoryPool fpool = d->ctxi->getContext()->getControlsFactoryPool();
 
              if(format == "scalar")
              {
@@ -749,6 +710,7 @@ div { width=80%; } \
          perr("CuInfoDialog::newLiveData: expected container %s_live not found", qstoc(src));
      }
  }
+
 
  HealthWidget::HealthWidget(QWidget *parent) : QLabel(parent) {
      setAlignment(Qt::AlignHCenter);

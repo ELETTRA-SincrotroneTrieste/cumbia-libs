@@ -7,7 +7,7 @@
 class QuActionExtensionPluginInterface;
 class WidgetStdContextMenuActionsPrivate;
 class CuData;
-class CuContext;
+class CuContextI;
 
 /*! \mainpage
  *
@@ -48,7 +48,7 @@ public:
 
     virtual ~WidgetStdContextMenuActions();
 
-    virtual void setup(QWidget *widget, const CuContext* ctx);
+    virtual void setup(QWidget *widget, const CuContextI *ctxi);
 
     // CuContextMenuActionsPlugin_I interface
     QList<QAction *> getActions() const;
@@ -61,6 +61,7 @@ private slots:
     void onInfoActionTriggered();
     void onHelperAActionTriggered();
     void onDataReady(const CuData& da);
+    void onEngineSwitchAction();
 
 private:
     WidgetStdContextMenuActionsPrivate *d;

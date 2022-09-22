@@ -138,8 +138,7 @@ QString QuInputOutput::source() const
  *
  * @see getOutputContext
  */
-CuContext *QuInputOutput::getContext() const
-{
+CuContext *QuInputOutput::getContext() const {
     return getOutputContext();
 }
 

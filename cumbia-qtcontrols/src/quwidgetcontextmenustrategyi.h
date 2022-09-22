@@ -3,7 +3,7 @@
 
 class QMenu;
 class QWidget;
-class CuContext;
+class CuContextI;
 
 /**
  * @brief The QuWidgetContextMenuStrategyI class provides a menu that is shown within

@@ -8,7 +8,7 @@ class QuPlotContextMenuStrategyPrivate;
 class QuPlotContextMenuStrategy : public QuPlotBaseContextMenuStrategy
 {
 public:
-    QuPlotContextMenuStrategy(CuContext *ctx);
+    QuPlotContextMenuStrategy(CuContextI *ctxi);
 
     // QuWidgetContextMenuStrategyI interface
 public:

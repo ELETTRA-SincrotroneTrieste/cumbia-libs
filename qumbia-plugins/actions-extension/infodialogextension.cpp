@@ -5,15 +5,15 @@
 
 class InfoDialogExtensionPrivate {
 public:
-    InfoDialogExtensionPrivate(const CuContext *cctx) : ctx(cctx) {}
+    InfoDialogExtensionPrivate(const CuContextI *cctx) : ctx(cctx) {}
     std::string msg;
     bool err;
-    const CuContext *ctx;
+    const CuContextI *ctx;
 };
 
-InfoDialogExtension::InfoDialogExtension(const CuContext *ctx, QObject *parent) : QObject(parent)
+InfoDialogExtension::InfoDialogExtension(const CuContextI *ctxi, QObject *parent) : QObject(parent)
 {
-    d = new InfoDialogExtensionPrivate(ctx);
+    d = new InfoDialogExtensionPrivate(ctxi);
     d->err = false;
 }
 
@@ -22,23 +22,22 @@ InfoDialogExtension::~InfoDialogExtension()
     delete d;
 }
 
-QString InfoDialogExtension::getName() const
-{
+QString InfoDialogExtension::getName() const {
     return "InfoDialogExtension";
 }
 
-CuData InfoDialogExtension::execute(const CuData &in, const CuContext *ctx)
+CuData InfoDialogExtension::execute(const CuData &in, const CuContextI *ctxI)
 {
 #ifdef CUMBIAQTCONTROLS_HAS_QWT
     // WA_DeleteOnClose attribute is set
     CuInfoDialog* dlg = new CuInfoDialog(nullptr);
-    dlg->exec(in, ctx);
+    dlg->exec(in, ctxI);
 #else
 #endif
     return CuData();
 }
 
-std::vector<CuData> InfoDialogExtension::execute(const std::vector<CuData>&, const CuContext *ctx)
+std::vector<CuData> InfoDialogExtension::execute(const std::vector<CuData>&, const CuContextI *)
 {
     return std::vector<CuData>();
 }
@@ -48,7 +47,7 @@ QObject *InfoDialogExtension::get_qobject()
     return this;
 }
 
-const CuContext *InfoDialogExtension::getContext() const {
+const CuContextI *InfoDialogExtension::getContextI() const {
     return d->ctx;
 }
 

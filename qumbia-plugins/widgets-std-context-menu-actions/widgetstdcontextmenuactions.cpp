@@ -1,9 +1,10 @@
 #include "widgetstdcontextmenuactions.h"
+#include "cucontext.h"
 #include <quaction-extension-plugininterface.h>  // defined in cumbia-qtcontrols
 #include <cucontrolsfactories_i.h>
 #include <cucontrolsreader_abs.h>
 #include <cucontrolswriter_abs.h>
-#include <cucontext.h>
+#include <cucontexti.h>
 
 #include <cudata.h>
 #include <cumacros.h>
@@ -22,7 +23,7 @@ public:
     QuActionExtensionPluginInterface *m_action_extensions;
     QList<QAction *>m_actions;
     QWidget *m_widget;
-    const CuContext *m_ctx;
+    const CuContextI *m_ctxi;
     std::string m_msg;
     bool m_err;
 };
@@ -31,9 +32,9 @@ WidgetStdContextMenuActions::WidgetStdContextMenuActions(QObject *parent) :
     QObject(parent)
 {
     d = new WidgetStdContextMenuActionsPrivate;
-    d->m_action_extensions = NULL;
-    d->m_ctx = NULL;
-    d->m_widget = NULL;
+    d->m_action_extensions = nullptr;
+    d->m_ctxi = nullptr;
+    d->m_widget = nullptr;
     d->m_err = false;
 }
 
@@ -43,11 +44,11 @@ WidgetStdContextMenuActions::~WidgetStdContextMenuActions()
     delete d;
 }
 
-void WidgetStdContextMenuActions::setup(QWidget *widget, const CuContext *ctx)
+void WidgetStdContextMenuActions::setup(QWidget *widget, const CuContextI *ctx)
 {
     qDebug () << __PRETTY_FUNCTION__ << widget << ctx;
     const char* extensions_plugin_name = "libactions-extension-plugin.so";
-    d->m_ctx = ctx;
+    d->m_ctxi = ctx;
     d->m_widget = widget;
     d->m_actions.clear();
 
@@ -88,6 +89,20 @@ void WidgetStdContextMenuActions::setup(QWidget *widget, const CuContext *ctx)
                     }
                     d->m_actions << a;
                 }
+                // 3. engine switch
+                QuActionExtensionI* engineswe = ae_fac->create("EngineSwitchDialogExtension", ctx);
+                if(engineswe) {
+                    QAction *a = findChild<QAction *>("engineChangeA");
+                    if(!a) {
+                        printf("\e[1;31mWidgetStdContextMenuActions::setup: action engineChangeA not found, creating and connectin'\e[0m\n");
+                        d->m_action_extensions->registerExtension("EngineSwitchDialogExtension", tango_db_ex);
+                        a = new QAction("Engine hot switch", this);
+                        a->setObjectName("engineChangeA");
+//                        connect(engineswe->get_qobject(), SIGNAL(onDataReady(const CuData&)), this, SLOT(onDataReady(const CuData&)));
+                        connect(a, SIGNAL(triggered(bool)), this, SLOT(onEngineSwitchAction()));
+                    }
+                    d->m_actions << a;
+                }
             }
         }
     }
@@ -112,7 +127,7 @@ void WidgetStdContextMenuActions::onHelperAActionTriggered(const QString &source
         CuData din("device", tsrc.getDeviceName());
         din["name"] = std::string("helperApplication");
         in_datalist.push_back(din);
-        tango_db_ex->execute(in_datalist, d->m_ctx);
+        tango_db_ex->execute(in_datalist, d->m_ctxi);
     }
 }
 
@@ -121,15 +136,15 @@ void WidgetStdContextMenuActions::onInfoActionTriggered()
     QuActionExtensionI* infodlg_ex = d->m_action_extensions->getExtension("InfoDialogExtension");
     qDebug() << __PRETTY_FUNCTION__ << "info dialog extension " << infodlg_ex << "widget" << d->m_widget;
     CuData in_par("sender", d->m_widget);
-    infodlg_ex->execute(in_par, d->m_ctx);
+    infodlg_ex->execute(in_par, d->m_ctxi);
 }
 
 void WidgetStdContextMenuActions::onHelperAActionTriggered()
 {
-    if(d->m_action_extensions) {
+    if(d->m_action_extensions && d->m_ctxi->getContext()) {
         QString source;
-        CuControlsReaderA *reader = d->m_ctx->getReader();
-        CuControlsWriterA *writer = d->m_ctx->getWriter();
+        CuControlsReaderA *reader = d->m_ctxi->getContext()->getReader();
+        CuControlsWriterA *writer = d->m_ctxi->getContext()->getWriter();
         if(reader)
             source = reader->source();
         else if(writer)
@@ -163,14 +178,14 @@ void WidgetStdContextMenuActions::onDataReady(const CuData &da)
                         d->m_action_extensions->
                                 registerExtension(applauncher_ext,
                                                   (app_launcher = d->m_action_extensions->getExtensionFactory()->
-                                create(applauncher_ext, d->m_ctx)));
+                                create(applauncher_ext, d->m_ctxi)));
                     }
                     if(app_launcher) {
                         std::string dev = prop.substr(0, prop.find(":helperApplication"));
                         if(dev.length()  > 0)
                             app += std::string(" ") + dev;
                         CuData in("command", app);
-                        app_launcher->execute(in, d->m_ctx);
+                        app_launcher->execute(in, d->m_ctxi);
                     }
                     else
                         perr("WidgetStdContextMenuActions::onDataReady: no CuApplicationLauncherExtension found in "
@@ -179,6 +194,13 @@ void WidgetStdContextMenuActions::onDataReady(const CuData &da)
             }
         }
     }
+}
+
+void WidgetStdContextMenuActions::onEngineSwitchAction() {
+    QuActionExtensionI* eng_switch_dlg_ex = d->m_action_extensions->getExtension("EngineSwitchDialogExtension");
+    qDebug() << __PRETTY_FUNCTION__ << "engine switch dialog extension " << eng_switch_dlg_ex << "widget" << d->m_widget;
+    CuData in_par("sender", d->m_widget);
+    eng_switch_dlg_ex->execute(in_par, d->m_ctxi);
 }
 
 #if QT_VERSION < 0x050000

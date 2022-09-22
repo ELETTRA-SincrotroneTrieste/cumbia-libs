@@ -73,15 +73,16 @@ protected:
 public slots:
     void liveReadCbToggled(bool start);
     void showAppDetails(bool show);
-    void exec(const CuData& in, const CuContext *ctx);
+    void exec(const CuData& in, const CuContextI *ctxi);
 
 private slots:
     void onMonitorUpdate(const CuData& da);
     void newLiveData(const CuData &d);
+    void switchEngine(bool checked);
 
 private:
     CuContextI* m_ctxwi;
-    QWidget *m_senderw;
+    QObject *m_owner;
 
     void m_makeMonitor(QFrame *monitorF);
 
