@@ -71,7 +71,7 @@ void CurveData::insert(double *x, double *y, int count, double default_y)
         j++;
     }
     append(x + y_start, yarr, y_dim);
-    delete yarr;
+    delete [] yarr;
 }
 
 int CurveData::count() const

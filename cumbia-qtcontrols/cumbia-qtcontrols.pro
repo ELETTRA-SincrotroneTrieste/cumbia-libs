@@ -45,7 +45,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += cumbiaqtcontrols.cpp \
-    cuengine_hot_switch.cpp \
     src/qubutton.cpp \
     src/qulabel.cpp \
     src/qupalette.cpp \
@@ -96,10 +95,10 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/widgets-base/qulineargaugebase.cpp \
     src/quanimation.cpp \
     src/widgets-base/qulabelbase.cpp \
-    src/cupluginloader.cpp
+    src/cupluginloader.cpp \
+    src/cuengine_hot_switch.cpp
 
 HEADERS += cumbiaqtcontrols.h\
-    cuengine_hot_switch.h \
     cumbia-qtcontrols_global.h \
     src/plugin_ifaces/cumbiaintrospectionplugin_i.h \
     src/qubutton.h \
@@ -189,7 +188,9 @@ HEADERS += cumbiaqtcontrols.h\
     src/plugin_ifaces/cucontextmenuactionsplugin_i.h \
     src/cupluginloader.h \
     src/plugin_ifaces/cuformulaplugininterface.h \
-    src/plugin_ifaces/cuhistoricaldbplugin_i.h
+    src/plugin_ifaces/cuhistoricaldbplugin_i.h    \
+    cuengine_hot_switch.h
+
 
 unix:!android-g++ {
 

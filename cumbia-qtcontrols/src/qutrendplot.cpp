@@ -189,14 +189,15 @@ void QuTrendPlot::update(const CuData &da)
     const CuVariant &v = da["value"];
     if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Scalar)
     {
-        v.to(y);
+        v.to<double>(y);
         appendData(src, x, y);
     }
     else if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Vector) {
         if(da.containsKey("time_scale_us")) {
-            std::vector <double> timestamps = da["time_scale_us"].toDoubleVector();
+            std::vector <double> timestamps = da["time_scale_us"].toDoubleVector(), y;
             us_to_ms(timestamps);
-            insertData(src, timestamps.data(), v.toDoubleP(), v.getSize());
+            v.toVector<double>(y);
+            insertData(src, timestamps.data(), y.data(), v.getSize());
         }
         else {
             double *xvals = new double[v.getSize()];
