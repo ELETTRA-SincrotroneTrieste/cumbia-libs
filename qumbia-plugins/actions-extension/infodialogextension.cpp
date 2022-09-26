@@ -19,7 +19,9 @@ InfoDialogExtension::InfoDialogExtension(const CuContextI *ctxi, QObject *parent
 
 InfoDialogExtension::~InfoDialogExtension()
 {
+    printf("deleting InfoDialogExtension\n");
     delete d;
+    printf("deleted\n");
 }
 
 QString InfoDialogExtension::getName() const {

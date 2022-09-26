@@ -44,6 +44,35 @@
 #include <cumbiahttp.h>
 #include <quapps.h>
 
+
+class CuInfoDEventFilterPrivate {
+public:
+    CuInfoDEventFilterPrivate(CuInfoDEventListener *_l) : l(_l) {}
+    CuInfoDEventListener *l;
+};
+
+CuInfoDEventFilter::CuInfoDEventFilter(QObject *parent, CuInfoDEventListener *el) : QObject(parent) {
+    d = new CuInfoDEventFilterPrivate(el);
+}
+
+CuInfoDEventFilter::~CuInfoDEventFilter() {
+    delete d;
+}
+
+bool CuInfoDEventFilter::eventFilter(QObject *obj, QEvent *event) {
+    printf("event filter %p --> %s\e[0m\n", obj, qstoc(obj->objectName()));
+    if(event->type() == QEvent::Enter) {
+        CuContextI *ci = dynamic_cast<CuContextI *>(obj);
+        if(ci) {
+            d->l->onObjectChanged(obj, ci->getContext());
+        }
+        printf("\e[1;32menter event on object %p --> %s\e[0m\n", obj, qstoc(obj->objectName()));
+    } else if (event->type() == QEvent::Leave) {
+        printf("\e[1;35mleave event on object %p --> %s\e[0m\n", obj, qstoc(obj->objectName()));
+    }
+    return event->type() == QEvent::Enter || event->type() == QEvent::Leave;
+}
+
 class CuInfoDialogPrivate
 {
 public:
@@ -69,9 +98,11 @@ CuInfoDialog::CuInfoDialog(QWidget *parent)
 
 CuInfoDialog::~CuInfoDialog()
 {
+    printf("deleting CuInfoDialog\n");
     // do not delete d->rfac because the reference has been
     // copied, not cloned
     delete d;
+    printf("deleted\n");
 }
 
 /**
@@ -147,65 +178,6 @@ QStringList CuInfoDialog::extractSources(const QString &expression, QString& for
 QString CuInfoDialog::extractSource(const QString &expression, QString &formula)
 {
     return extractSources(expression, formula).join(",");
-}
-
-void CuInfoDialog::liveReadCbToggled(bool start)
-{
-    if(!start) {
-        // liveFrame becomes a child of scrollArea
-        // it will be deleted alongside all liveFrame's children
-        //
-        if(findChild<QScrollArea *>("liveScrollArea"))
-            delete findChild<QScrollArea *>("liveScrollArea");
-        m_resizeToMinimumSizeHint();
-    }
-    else if(d->ctxi->getContext() != nullptr) {
-        QList<CuControlsReaderA *> readers = d->ctxi->getContext()->readers();
-        QGridLayout *mainLo = findChild<QGridLayout *>("mainGridLayout");
-        int row = mainLo->rowCount();
-        QScrollArea *scrollArea = new QScrollArea(this);
-        scrollArea->setObjectName("liveScrollArea");
-        scrollArea->setWidgetResizable(true);
-        QFrame *liveF = new QFrame(this);
-        liveF->setObjectName("liveF");
-        // add the live scroll area with the labels+plots frame inside
-        scrollArea->setWidget(liveF);
-        scrollArea->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding));
-        mainLo->addWidget(scrollArea, row, 0, 10, d->layout_col_cnt); // below monitorF
-        QGridLayout *lilo = new QGridLayout(liveF);
-        QFont f = font();
-        f.setPointSize(f.pointSize() + 1);
-        f.setBold(true);
-        foreach(CuControlsReaderA *r, readers)
-        {
-            QString formula, src = extractSource(r->source(), formula);
-            QGroupBox *gb = new QGroupBox(src, liveF);
-            gb->setFont(f);
-            lilo->addWidget(gb, row, 0, 1, d->layout_col_cnt);
-            gb->setObjectName(src + "_live");
-            QVBoxLayout * gblilo = new QVBoxLayout(gb);
-            QuLabel *llive = NULL;
-            if(d->ctxi->getContext()->cumbia() && d->ctxi->getContext()->getReaderFactoryI())
-                llive = new QuLabel(liveF, d->ctxi->getContext()->cumbia(), *d->ctxi->getContext()->getReaderFactoryI());
-            else if(d->ctxi->getContext()->cumbiaPool())
-                llive = new QuLabel(liveF, d->ctxi->getContext()->cumbiaPool(), d->ctxi->getContext()->getControlsFactoryPool());
-            if(llive)
-            {
-                llive->setObjectName("qullive");
-                connect(llive, SIGNAL(newData(CuData)), this, SLOT(newLiveData(CuData)));
-                llive->setSource(r->source());
-                llive->setMaximumLength(80);
-                gblilo->addWidget(llive);
-                QTabWidget *liveTabW = new QTabWidget(liveF);
-                liveTabW->setObjectName(src + "liveTabW");
-                liveTabW->addTab(new QWidget(liveF), "Introspect");
-                gblilo->addWidget(liveTabW);
-                // add a layout to the tab widget's first widget
-                new QGridLayout(liveTabW->widget(0));
-            }
-            row++;
-        }
-    }
 }
 
 void CuInfoDialog::showAppDetails(bool show)
@@ -414,19 +386,17 @@ void CuInfoDialog::exec(const CuData& in, const CuContextI *ctxi)
         lo->addWidget(monitorF, row, 0, 1, d->layout_col_cnt); // below QLabel wit src
         row++;
 
-        // live stuff
-        // Live Frame
-        if(readers.size() > 0) {
 
-            QCheckBox *cb = new QCheckBox("Start a live reader", this);
-            cb->setFont(f);
-            cb->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-            connect(cb, SIGNAL(toggled(bool)), this, SLOT(liveReadCbToggled(bool)));
-            lo->addWidget(cb, row, 0, 1, d->layout_col_cnt);
-            row++;
-        }
 
     } // d->ctxi->getContext() != nullptr
+    CuInfoDEventFilter *efi = new CuInfoDEventFilter(this, this);
+    QList<QWidget *> o = root_obj(m_owner)->findChildren<QWidget *>();
+    foreach(QWidget *w, o) {
+        printf("seeing if %p-->%s has source slot\n", w,qstoc(w->objectName()));
+        if(w->metaObject()->indexOfProperty("source") > -1 || w->metaObject()->indexOfProperty("target") > -1) {
+            w->installEventFilter(efi);
+        }
+    }
     m_resizeToMinimumSizeHint();
     show();
 }
@@ -734,4 +704,13 @@ div { width=80%; } \
      float health = 100 - errcnt / (float) opcnt * 100.0;
      setText(QString("Health: %1%").arg(health, 0, 'f', 1));
      setProperty("health", health);
+ }
+
+ void CuInfoDialog::onObjectChanged(QObject *obj, CuContext *ctx) {
+     pretty_pri("obj %s class %s", qstoc(obj->objectName()), obj->metaObject()->className());
+     if(ctx->getReader())
+         printf("source %s\n", qstoc(ctx->getReader()->source()));
+     else if(ctx->getWriter()) {
+         printf("source %s\n", qstoc(ctx->getWriter()->target()));
+     }
  }

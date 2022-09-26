@@ -29,7 +29,11 @@ CuApplicationLauncherExtension::CuApplicationLauncherExtension(const CuContextI 
 
 CuApplicationLauncherExtension::~CuApplicationLauncherExtension() {
     // do not delete plugin instances
+    printf("deleting CuApplicationLauncherExtension\n");
+
     delete d;
+    printf("deleted\n");
+
 }
 
 void CuApplicationLauncherExtension::start() {

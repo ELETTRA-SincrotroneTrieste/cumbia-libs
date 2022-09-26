@@ -95,7 +95,7 @@ void WidgetStdContextMenuActions::setup(QWidget *widget, const CuContextI *ctx)
                     QAction *a = findChild<QAction *>("engineChangeA");
                     if(!a) {
                         printf("\e[1;31mWidgetStdContextMenuActions::setup: action engineChangeA not found, creating and connectin'\e[0m\n");
-                        d->m_action_extensions->registerExtension("EngineSwitchDialogExtension", tango_db_ex);
+                        d->m_action_extensions->registerExtension("EngineSwitchDialogExtension", engineswe);
                         a = new QAction("Engine hot switch", this);
                         a->setObjectName("engineChangeA");
 //                        connect(engineswe->get_qobject(), SIGNAL(onDataReady(const CuData&)), this, SLOT(onDataReady(const CuData&)));

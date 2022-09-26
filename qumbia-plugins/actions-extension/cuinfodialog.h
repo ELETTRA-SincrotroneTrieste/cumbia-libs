@@ -16,15 +16,30 @@ class CuContext;
 class CuInfoDialogPrivate;
 
 /** @private */
-class HealthWidget : public QLabel
-{
+class HealthWidget : public QLabel {
     Q_OBJECT
 public:
     HealthWidget(QWidget *parent);
-
     void paintEvent(QPaintEvent *e);
-
     void setData(int errcnt, int opcnt);
+};
+
+class CuInfoDEventListener {
+public:
+    virtual void onObjectChanged(QObject *obj, CuContext *ctx) = 0;
+};
+
+class CuInfoDEventFilterPrivate;
+
+class CuInfoDEventFilter : public QObject {
+public:
+    CuInfoDEventFilter(QObject *parent, CuInfoDEventListener *el);
+    ~CuInfoDEventFilter();
+
+    bool eventFilter(QObject *obj, QEvent *event);
+
+private:
+    class CuInfoDEventFilterPrivate *d;
 };
 
 /** \brief a QDialog used by cumbia-qtcontrols to display statistics and link
@@ -56,7 +71,7 @@ public:
  * See QuLabel::contextMenuEvent for an example.
  *
  */
-class CuInfoDialog : public QDialog
+class CuInfoDialog : public QDialog, public CuInfoDEventListener
 {
     Q_OBJECT
 public:
@@ -71,7 +86,6 @@ public:
 protected:
 
 public slots:
-    void liveReadCbToggled(bool start);
     void showAppDetails(bool show);
     void exec(const CuData& in, const CuContextI *ctxi);
 
@@ -96,6 +110,10 @@ private:
     QMap<QString, QString> m_appPropMap() const;
 
     int mAppDetailsLayoutRow;
+
+    // CuInfoDEventListener interface
+public:
+    void onObjectChanged(QObject *obj, CuContext *ctx);
 };
 
 #endif // CUINFODIALOG_H

@@ -14,7 +14,9 @@ EngineSwitchDialogExtension::EngineSwitchDialogExtension(const CuContextI *ctx_i
 }
 
 EngineSwitchDialogExtension::~EngineSwitchDialogExtension() {
+    printf("deleting EngineSwitchDialogExtension\n");
     delete d;
+    printf("deleted\n");
 }
 
 QString EngineSwitchDialogExtension::getName() const {
