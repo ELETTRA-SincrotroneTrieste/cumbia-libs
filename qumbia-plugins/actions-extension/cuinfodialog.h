@@ -12,6 +12,7 @@ class CuControlsReaderFactoryI;
 class CuControlsFactoryPool;
 class QFrame;
 class CuContext;
+class QTextBrowser;
 
 class CuInfoDialogPrivate;
 
@@ -26,7 +27,7 @@ public:
 
 class CuInfoDEventListener {
 public:
-    virtual void onObjectChanged(QObject *obj, CuContext *ctx) = 0;
+    virtual void onObjectChanged(QObject *obj, const CuContextI *ctx) = 0;
 };
 
 class CuInfoDEventFilterPrivate;
@@ -75,6 +76,8 @@ class CuInfoDialog : public QDialog, public CuInfoDEventListener
 {
     Q_OBJECT
 public:
+    enum ContentType { Data, Conf };
+
     CuInfoDialog(QWidget *parent);
 
     virtual ~CuInfoDialog();
@@ -91,7 +94,6 @@ public slots:
 
 private slots:
     void onMonitorUpdate(const CuData& da);
-    void newLiveData(const CuData &d);
     void switchEngine(bool checked);
 
 private:
@@ -99,9 +101,6 @@ private:
     QObject *m_owner;
 
     void m_makeMonitor(QFrame *monitorF);
-
-    void m_makeLive(QFrame *liveF,  Cumbia* cumbia, const CuControlsReaderFactoryI &r_fac);
-    void m_makeLive(QFrame *liveF,  CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
 
     CuInfoDialogPrivate* d;
     QString m_makeHtml(const CuData &da, const QString &heading);
@@ -111,9 +110,13 @@ private:
 
     int mAppDetailsLayoutRow;
 
+    QWidget *m_make_tab_widget(QWidget *parent, const char *type, const QString& link);
+    QTextBrowser *m_find_text_browser(ContentType ct, const std::string& src) const;
+    void m_one_time_read(const QString& src, const CuContext *ctx);
+
     // CuInfoDEventListener interface
 public:
-    void onObjectChanged(QObject *obj, CuContext *ctx);
+    void onObjectChanged(QObject *obj, const CuContextI *ctxi);
 };
 
 #endif // CUINFODIALOG_H

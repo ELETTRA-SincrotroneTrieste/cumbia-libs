@@ -153,6 +153,7 @@ class Qu1TWatcher : public QuWatcher {
     Q_OBJECT
 public:
     Qu1TWatcher(QObject *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    Qu1TWatcher(QObject *parent, Cumbia *cumbia, const CuControlsReaderFactoryI &r_factory);
     ~Qu1TWatcher();
 };
 

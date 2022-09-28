@@ -43,12 +43,19 @@
 #include <cumbiatango.h>
 #include <cumbiahttp.h>
 #include <quapps.h>
+#include <QTabWidget>
+#include <algorithm>
+#include <QRegularExpressionMatch>
+#include <QMultiMap>
+#include <quwatcher.h>
 
 
 class CuInfoDEventFilterPrivate {
 public:
-    CuInfoDEventFilterPrivate(CuInfoDEventListener *_l) : l(_l) {}
+    CuInfoDEventFilterPrivate(CuInfoDEventListener *_l) : l(_l), cur_obj(nullptr), cur_ctxi(nullptr) {}
     CuInfoDEventListener *l;
+    QObject *cur_obj;
+    CuContextI *cur_ctxi;
 };
 
 CuInfoDEventFilter::CuInfoDEventFilter(QObject *parent, CuInfoDEventListener *el) : QObject(parent) {
@@ -56,15 +63,17 @@ CuInfoDEventFilter::CuInfoDEventFilter(QObject *parent, CuInfoDEventListener *el
 }
 
 CuInfoDEventFilter::~CuInfoDEventFilter() {
+    printf("\e[1;31m~\e[0m deleting CuInfoDEventFilter %p\n", this);
     delete d;
 }
 
 bool CuInfoDEventFilter::eventFilter(QObject *obj, QEvent *event) {
-    printf("event filter %p --> %s\e[0m\n", obj, qstoc(obj->objectName()));
     if(event->type() == QEvent::Enter) {
         CuContextI *ci = dynamic_cast<CuContextI *>(obj);
-        if(ci) {
-            d->l->onObjectChanged(obj, ci->getContext());
+        if(ci && ci != d->cur_ctxi && obj != d->cur_obj) {
+            d->cur_ctxi = ci;
+            d->cur_obj = obj;
+            d->l->onObjectChanged(obj, ci);
         }
         printf("\e[1;32menter event on object %p --> %s\e[0m\n", obj, qstoc(obj->objectName()));
     } else if (event->type() == QEvent::Leave) {
@@ -215,7 +224,27 @@ void CuInfoDialog::exec(const CuData& in, const CuContextI *ctxi)
     f.setBold(true);
     f.setPointSize(f.pointSize() + 1);
     // update with live data
-    connect(m_owner, SIGNAL(newData(const CuData&)), this, SLOT(onMonitorUpdate(const CuData&)));
+    onObjectChanged(m_owner, ctxi);
+    //    m_resizeToMinimumSizeHint();
+    show();
+
+    CuInfoDEventFilter *efi = new CuInfoDEventFilter(this, this);
+    QList<QWidget *> o = root_obj(m_owner)->findChildren<QWidget *>();
+    foreach(QWidget *w, o) {
+        printf("seeing if %p-->%s has source slot\n", w,qstoc(w->objectName()));
+        if(w->metaObject()->indexOfProperty("source") > -1 || w->metaObject()->indexOfProperty("target") > -1) {
+            w->installEventFilter(efi);
+        }
+    }
+
+    /// OCCHIO QUI
+    ///
+    ///
+    return;
+    ///
+    ///
+    ///
+
 
     QString formula, src = m_owner->property("source").toString();
     if(src.isEmpty())
@@ -333,16 +362,6 @@ void CuInfoDialog::exec(const CuData& in, const CuContextI *ctxi)
             slabel->setFont(fo);
             slabel->setText(w->target());
 
-
-            CuData confd = w->getConfiguration();
-            if(!confd.isEmpty()) {
-                QTextBrowser *teconf = new QTextBrowser(gb);
-                teconf->setObjectName("tb_properties");
-                teconf->setReadOnly(true);
-                QString html = m_makeHtml(confd, "Properties");
-                teconf->setHtml(html);
-                gblo->addWidget(teconf);
-            }
         }
 
         QList<CuControlsReaderA *> readers = ctxi->getContext()->readers();
@@ -353,6 +372,7 @@ void CuInfoDialog::exec(const CuData& in, const CuContextI *ctxi)
             src = extractSource(r->source(), formula);
             QGroupBox *gb = new QGroupBox("", monitorF);
             gb->setObjectName(src + "_monitor");
+            printf("\e[1;32mcreated GroupBox with name '%s'\e[0m\n", qstoc(gb->objectName()));
             QVBoxLayout* gblo = new QVBoxLayout(gb);
             gblo->setObjectName(gb->objectName() + "_gridLayout");
             molo->addWidget(gb, monrow, 0, 1, d->layout_col_cnt);
@@ -389,19 +409,37 @@ void CuInfoDialog::exec(const CuData& in, const CuContextI *ctxi)
 
 
     } // d->ctxi->getContext() != nullptr
-    CuInfoDEventFilter *efi = new CuInfoDEventFilter(this, this);
-    QList<QWidget *> o = root_obj(m_owner)->findChildren<QWidget *>();
-    foreach(QWidget *w, o) {
-        printf("seeing if %p-->%s has source slot\n", w,qstoc(w->objectName()));
-        if(w->metaObject()->indexOfProperty("source") > -1 || w->metaObject()->indexOfProperty("target") > -1) {
-            w->installEventFilter(efi);
-        }
-    }
-    m_resizeToMinimumSizeHint();
-    show();
+
 }
 
 void CuInfoDialog::onMonitorUpdate(const CuData &da) {
+    int scrollbarPos;
+    bool live = sender()->objectName() == "1Twatcher";
+    printf("on monitor update data %s LIVE ? %s\n", datos(da), live ? "YES" : "NO");
+    QTextBrowser *tb = nullptr;
+    if(da.has("type", "property")) {
+        tb =  m_find_text_browser(CuInfoDialog::Conf, da.s("src"));
+        if(tb) {
+            scrollbarPos = tb->verticalScrollBar()->value();
+            tb->setHtml(m_makeHtml(da, "PROPERTIES"));
+            tb->verticalScrollBar()->setValue(scrollbarPos);
+        }
+        else
+            printf("ttype property but browser not found\n");
+    }
+    else {
+        tb = m_find_text_browser(CuInfoDialog::Data, da.s("src"));
+        if(tb) {
+            scrollbarPos = tb->verticalScrollBar()->value();
+            tb->setHtml(m_makeHtml(da, live ? "DATA (live)" : QString("DATA from object %1").arg(m_owner->objectName())));
+            tb->verticalScrollBar()->setValue(scrollbarPos);
+        }
+    }
+    ////////
+    return;
+    /////////
+    ///
+    ///
     double x;
     CuLinkStats *lis = d->ctxi->getContext()->getLinkStats();
     findChild<QLineEdit *>("leopcnt")->setText(QString::number(lis->opCnt()));
@@ -430,9 +468,6 @@ void CuInfoDialog::onMonitorUpdate(const CuData &da) {
                 te->setObjectName("tb_monitor_update");
                 glo->addWidget(te);
             }
-            int scrollbarPos = te->verticalScrollBar()->value();
-            te->setHtml(m_makeHtml(da, "DATA"));
-            te->verticalScrollBar()->setValue(scrollbarPos);
         }
     }
     else {
@@ -480,24 +515,25 @@ div { width=80%; } \
  html += "<div id=\"tablesdiv\">\n";
 
 
- QString values_s;
- QStringList valueKeys = QStringList() << "value" << "w_value" << "write_value";
- foreach(QString vk, valueKeys) {
-     if(da.containsKey(vk.toStdString()))
-         values_s += "<tr><td>" + vk + "</td><td>" +
-                 QString::fromStdString(da[vk.toStdString()].toString()) + "</td></tr>";
+ if(!heading.contains("PROPERTIES")) {
+     QString values_s;
+     QStringList valueKeys = QStringList() << "value" << "w_value" << "write_value";
+     foreach(QString vk, valueKeys) {
+         if(da.containsKey(vk.toStdString()))
+             values_s += "<tr><td>" + vk + "</td><td>" +
+                     QString::fromStdString(da[vk.toStdString()].toString()) + "</td></tr>";
+     }
+
+     if(x > 0 || values_s.length() > 0) { // valid date and time or at least one of valueKeys found
+
+         html += "<table>\n<tr><th colspan=\"2\"><cite>value</cite></th></tr>";
+         if(x > 0)
+             html += "<tr><td>date/time</td><td>" + datetime + "</td></tr>";
+         html += values_s;
+         html += "</table>\n\n\n";
+     }
+
  }
-
- if(x > 0 || values_s.length() > 0) { // valid date and time or at least one of valueKeys found
-
-     html += "<table>\n<tr><th colspan=\"2\"><cite>value</cite></th></tr>";
-     if(x > 0)
-         html += "<tr><td>date/time</td><td>" + datetime + "</td></tr>";
-     html += values_s;
-     html += "</table>\n\n\n";
- }
-
-
  QStringList priorityKeys = QStringList() << "src" << "device" << "point" <<
                                              "mode" << "err" << "msg" << "period" <<
                                              "dfs";
@@ -524,7 +560,6 @@ div { width=80%; } \
  html += "</div> <!-- tablesdiv -->\n\n";
  html += "</body>\n</html>\n";
 
- //    printf("OUT\n\n%s\n", qstoc(html.remove("\n")));
  return html;
  }
 
@@ -549,6 +584,53 @@ div { width=80%; } \
              i.remove();
      }
      return app_p;
+ }
+
+ QWidget *CuInfoDialog::m_make_tab_widget(QWidget *parent, const char* type, const QString &link)  {
+     pretty_pri("\e[1;36mmaking a new tab widget.......................\e[0m\n");
+     QWidget *w = new QWidget(parent);
+     QGridLayout *lo = new QGridLayout(w);
+     QTextBrowser *te = new QTextBrowser(w);
+     te->setObjectName(QString("tb_data_%1").arg(findChild<QTabWidget *>("maintabw")->count()));
+     te->setProperty(type, link);
+     QTextBrowser *teco = new QTextBrowser(w);
+     teco->setObjectName(QString("tb_conf_%1").arg(findChild<QTabWidget *>("maintabw")->count()));
+     teco->setProperty(type, link); // "source" or "target" type, link either src or tgt
+     lo->addWidget(te, 0, 0, 10, 6);
+     lo->addWidget(teco, 10, 0, 6, 6);
+     te->setReadOnly(true);
+     teco->setReadOnly(true);
+     return w;
+ }
+
+ QTextBrowser *CuInfoDialog::m_find_text_browser(ContentType ct, const std::string &src) const {
+     QRegularExpression re( (ct == CuInfoDialog::Data) ? QString("tb_data.*") : QString("tb_conf.*"));
+     QList<QTextBrowser *> tblist = findChildren<QTextBrowser *>(re);
+     printf("finding text browser with regex %s\n", qstoc(re.pattern()));
+     foreach(QTextBrowser *tb, tblist) {
+         if(tb->property("source").toString().toStdString() == src || tb->property("target").toString().toStdString() == src) {
+             printf("\e[1;32mfound text browser %s with source %s\e[0m\n", qstoc(tb->objectName()), src.c_str());
+             return tb;
+         }
+     }
+     return nullptr;
+ }
+
+ void CuInfoDialog::m_one_time_read(const QString &src, const CuContext *ctx) {
+     CumbiaPool *p = ctx->cumbiaPool();
+     Cumbia *c = ctx->cumbia();
+     CuControlsReaderFactoryI* rfi = ctx->getReaderFactoryI();
+     Qu1TWatcher *w = nullptr;
+     if(p)
+         w  = new Qu1TWatcher(this, ctx->cumbiaPool(), ctx->getControlsFactoryPool());
+     else if(c && rfi) {
+         w = new Qu1TWatcher(this, c, *rfi->clone());
+     }
+     if(w) {
+         w->setObjectName("1Twatcher");
+         connect(w, SIGNAL(newData(CuData)), this, SLOT(onMonitorUpdate(CuData)));
+         w->setSource(src);
+     }
  }
 
  int CuInfoDialog::m_populateAppDetails(QWidget *container)
@@ -580,108 +662,6 @@ div { width=80%; } \
      resize(qRound(minimumSizeHint().width() * 1.5), minimumSizeHint().height());
  }
 
- void CuInfoDialog::newLiveData(const CuData &data)
- {
-     QString src = QString::fromStdString(data["src"].toString());
-     std::string format = data["dfs"].toString();
-     QWidget *plotw = NULL;
-     QTabWidget *liveTabW = findChild<QTabWidget *>(src + "liveTabW");
-     QuTrendPlot *trplot = findChild<QuTrendPlot *>("trplot_" + src);
-     QuSpectrumPlot *splot = findChild<QuSpectrumPlot *>("trplot_" + src);
-     if(liveTabW) {
-         if(!trplot && !splot) {
-             Cumbia *cumbia = d->ctxi->getContext()->cumbia();
-             CuControlsReaderFactoryI *rfac = d->ctxi->getContext()->getReaderFactoryI();
-             CumbiaPool *cu_pool = d->ctxi->getContext()->cumbiaPool();
-             CuControlsFactoryPool fpool = d->ctxi->getContext()->getControlsFactoryPool();
-
-             if(format == "scalar")
-             {
-                 if(!trplot)
-                 {
-                     // add the trend plot.
-                     // if the data is vector, the trend plot will be replaced by a spectrum plot
-                     if(cumbia && rfac)
-                         trplot = new QuTrendPlot(findChild<QFrame *>("liveF"), cumbia, *rfac);
-                     else if(cu_pool)
-                         trplot = new QuTrendPlot(findChild<QFrame *>("liveF"), cu_pool, fpool);
-                     if(trplot)
-                         plotw = trplot;
-                 }
-             }
-             else if(format == "vector")
-             {
-
-                 if(!splot)
-                 {
-                     if(cumbia)
-                         splot = new QuSpectrumPlot(findChild<QFrame *>("liveF"), cumbia, *rfac);
-                     else if(d->cu_pool)
-                         splot = new QuSpectrumPlot(findChild<QFrame *>("liveF"),  cu_pool, fpool);
-                     if(splot)
-                         plotw = splot;
-                 }
-             }
-             if(plotw)
-             {
-                 plotw->setObjectName("trplot_" + src);
-                 QStringList srcs;
-                 if(data.containsKey("formula") && data.containsKey("srcs")) {
-                     std::string formula_src;
-                     std::string srclist;
-                     std::vector<std::string> vsrcs = data["srcs"].toStringVector();
-                     std::string fname = data["src"].toString(); // formula name [in square brackets]
-                     for(size_t i = 0; i < vsrcs.size(); i++) {
-                         i < vsrcs.size() - 1 ? srclist += vsrcs[i] + "," : srclist += vsrcs[i];
-                         srcs << QString::fromStdString(vsrcs[i]);
-                     }
-                     formula_src = "formula://";
-                     if(fname.length() > 0)
-                         formula_src += "[" + fname + "]";
-                     formula_src += "{" + srclist + "}" + data["formula"].toString();
-                     srcs << QString::fromStdString(formula_src);
-                 }
-                 else {
-                     srcs << src;
-                 }
-
-                 qDebug() << __PRETTY_FUNCTION__ << "setting sources srcs " << srcs;
-                 plotw->setProperty("sources", srcs);
-                 liveTabW->addTab(plotw, "Plot");
-             }
-         }
-
-         if(data["type"].toString() == "property") {
-             QString html = m_makeHtml(data, "properties of \"" + src + "\"");
-             QTextBrowser *tbp = findChild<QFrame *>("liveF")->findChild<QTextBrowser *>("tb_live_properties");
-             if(!tbp) {
-                 tbp = new QTextBrowser(findChild<QFrame *>("liveF"));
-                 tbp->setReadOnly(true);
-                 tbp->setObjectName("tb_live_properties");
-                 QGridLayout *glo = qobject_cast<QGridLayout*>(liveTabW->widget(0)->layout());
-                 glo->addWidget(tbp, 0, 0, 4, 4);
-             }
-             tbp->setHtml(html);
-         }
-         else {
-             QString html = m_makeHtml(data, "data from \"" + src + "\"");
-             QTextBrowser *tbpdata = findChild<QFrame *>("liveF")->findChild<QTextBrowser *>("tb_live_data");
-             if(!tbpdata) {
-                 tbpdata = new QTextBrowser(findChild<QFrame *>("liveF"));
-                 tbpdata->setReadOnly(true);
-                 tbpdata->setObjectName("tb_live_data");
-                 QGridLayout *glo = qobject_cast<QGridLayout*>(liveTabW->widget(0)->layout());
-                 glo->addWidget(tbpdata, 0, 4, 4, 4);
-             }
-             tbpdata->setHtml(html);
-         }
-     }
-     else {
-         perr("CuInfoDialog::newLiveData: expected container %s_live not found", qstoc(src));
-     }
- }
-
-
  HealthWidget::HealthWidget(QWidget *parent) : QLabel(parent) {
      setAlignment(Qt::AlignHCenter);
      setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
@@ -706,11 +686,94 @@ div { width=80%; } \
      setProperty("health", health);
  }
 
- void CuInfoDialog::onObjectChanged(QObject *obj, CuContext *ctx) {
+ void CuInfoDialog::onObjectChanged(QObject *obj, const CuContextI *ctxi) {
      pretty_pri("obj %s class %s", qstoc(obj->objectName()), obj->metaObject()->className());
-     if(ctx->getReader())
-         printf("source %s\n", qstoc(ctx->getReader()->source()));
-     else if(ctx->getWriter()) {
-         printf("source %s\n", qstoc(ctx->getWriter()->target()));
+     if(ctxi && ctxi->getContext() && ctxi->getContext()->getReader())
+         printf("source %s\n", qstoc(ctxi->getContext() ->getReader()->source()));
+     else if(ctxi && ctxi->getContext() && ctxi->getContext() ->getWriter()) {
+         printf("source %s\n", qstoc(ctxi->getContext() ->getWriter()->target()));
      }
+
+     disconnect(m_owner, SIGNAL(newData(CuData)), this, SLOT(onMonitorUpdate(CuData)));
+     m_owner = obj;
+     QFont f = font();
+     f.setBold(true);
+     f.setPointSize(f.pointSize() + 1);
+     // update with live data
+     connect(m_owner, SIGNAL(newData(const CuData&)), this, SLOT(onMonitorUpdate(const CuData&)));
+     d->ctxi = ctxi;
+
+     if(!ctxi || !ctxi->getContext())
+         return;
+     CuContext *ctx = ctxi->getContext();
+
+     QTabWidget *tabw = findChild<QTabWidget *>();
+     QGridLayout *lo = findChild<QGridLayout *>();
+     if(!tabw) {
+         tabw = new QTabWidget(this);
+         tabw->setObjectName("maintabw");
+         lo = new QGridLayout(this);
+         lo->addWidget(tabw, 0, 0, 10, 10);
+     }
+
+
+     int rcnt = ctx->readers().size();
+     int wcnt = ctx->writers().size();
+     int i;
+     QStringList vsrcs, vtgts;
+     for(CuControlsReaderA *r : ctx->readers())
+         vsrcs.push_back(r->source());
+     for(CuControlsWriterA *w : ctx->writers())
+         vtgts.push_back(w->target());
+
+     // remove unused tabs
+     for(int i = tabw->count() - 1; i >= 0; i--) {
+         QWidget *w = tabw->widget(i);
+         if(!vsrcs.contains(w->property("source").toString()) && !vtgts.contains(w->property("target").toString())) {
+             delete tabw->widget(i); // removeTab does not delete the widget
+             tabw->removeTab(i);
+         }
+     }
+
+     for(CuControlsReaderA * r : ctx->readers()) {
+         const QString& s = r->source();
+         for(i = 0; i < tabw->count(); i++) {
+             if(tabw->widget(i)->property("source").toString() == s)
+                 break;
+         }
+         if(i == tabw->count()) { // not found
+             QWidget *wt = m_make_tab_widget(tabw, "source", s);
+             wt->setObjectName(QString("wt%1").arg(tabw->count() + 1));
+             wt->setProperty("source", s);
+             tabw->addTab(wt, QString("%1 [R]").arg(s));
+             tabw->setTabToolTip(i, s);
+         }
+         // starts one watcher for first reading.
+         m_one_time_read(s, ctx);
+     }
+     for(CuControlsWriterA * w : ctx->writers()) {
+         for(i = 0; i < tabw->count(); i++) {
+             if(tabw->widget(i)->property("target").toString() == w->target())
+                 break;
+         }
+         if(i == tabw->count()) { // not found
+             QWidget *wt =  m_make_tab_widget(tabw,"target",  w->target());
+             wt->setObjectName(QString("wt%1").arg(tabw->count()+ 1));
+             wt->setProperty("target", w->target());
+             tabw->addTab(wt, QString("%1 [W]").arg(w->target()));
+             tabw->setTabToolTip(i, w->target());
+
+
+             CuData confd = w->getConfiguration();
+             if(!confd.isEmpty()) {
+                 QTextBrowser *teconf = m_find_text_browser(CuInfoDialog::Conf, w->target().toStdString());
+                 QString html = m_makeHtml(confd, "Properties");
+                 printf("\e[1;33mconf %s\e[0m\n", qstoc(html));
+                 teconf->setHtml(html);
+             }
+         }
+     }
+
+
+
  }
