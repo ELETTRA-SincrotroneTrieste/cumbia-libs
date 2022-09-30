@@ -5,10 +5,11 @@
 
 class InfoDialogExtensionPrivate {
 public:
-    InfoDialogExtensionPrivate(const CuContextI *cctx) : ctx(cctx) {}
+    InfoDialogExtensionPrivate(const CuContextI *cctx) : ctx(cctx), dialog(nullptr) {}
     std::string msg;
     bool err;
     const CuContextI *ctx;
+    CuInfoDialog* dialog;
 };
 
 InfoDialogExtension::InfoDialogExtension(const CuContextI *ctxi, QObject *parent) : QObject(parent)
@@ -32,8 +33,16 @@ CuData InfoDialogExtension::execute(const CuData &in, const CuContextI *ctxI)
 {
 #ifdef CUMBIAQTCONTROLS_HAS_QWT
     // WA_DeleteOnClose attribute is set
-    CuInfoDialog* dlg = new CuInfoDialog(nullptr);
-    dlg->exec(in, ctxI);
+    if(!d->dialog) {
+        printf("InfoDialogExtension %p creating dialog\n", this);
+        d->dialog = new CuInfoDialog(nullptr);
+        connect(d->dialog, SIGNAL(destroyed(QObject *)), this, SLOT(m_dialog_destroyed(QObject *)));
+        d->dialog->exec(in, ctxI);
+    }
+    else {
+        printf("\e[1;33mInfoDialogExtension: raising an existing dialog\e[0m\n");
+        d->dialog->raise();
+    }
 #else
 #endif
     return CuData();
@@ -60,4 +69,8 @@ std::string InfoDialogExtension::message() const{
 
 bool InfoDialogExtension::error() const {
     return d->err;
+}
+
+void InfoDialogExtension::m_dialog_destroyed(QObject *o) {
+    d->dialog = nullptr;
 }

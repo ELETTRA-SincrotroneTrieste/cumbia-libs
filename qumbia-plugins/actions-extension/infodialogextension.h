@@ -32,6 +32,8 @@ public:
 private:
     InfoDialogExtensionPrivate *d;
 
+private slots:
+    void m_dialog_destroyed(QObject *o);
 };
 
 #endif // INFODIALOGEXTENSION_H

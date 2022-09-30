@@ -3,9 +3,10 @@
 
 class EngineSwitchDialogExtensionPrivate {
 public:
-    EngineSwitchDialogExtensionPrivate(const CuContextI* ci) : ctxi(ci) {}
+    EngineSwitchDialogExtensionPrivate(const CuContextI* ci) : ctxi(ci), dialog(nullptr) {}
     const CuContextI * ctxi;
     std::string msg;
+    CuEngineSwitchDialog *dialog;
 };
 
 EngineSwitchDialogExtension::EngineSwitchDialogExtension(const CuContextI *ctx_i, QWidget* parent )
@@ -24,13 +25,18 @@ QString EngineSwitchDialogExtension::getName() const {
 }
 
 CuData EngineSwitchDialogExtension::execute(const CuData &in, const CuContextI *ctxI) {
-//#if defined QUMBIA_TANGO_CONTROLS_VERSION && defined CUMBIA_HTTP_VERSION
+    //#if defined QUMBIA_TANGO_CONTROLS_VERSION && defined CUMBIA_HTTP_VERSION
     // WA_DeleteOnClose attribute is set
-    printf("\e[1;32;3mexecuting exec CuEngineSwitchDialog\e[0m\n\n\n");
-    CuEngineSwitchDialog* dlg = new CuEngineSwitchDialog(nullptr);
-    dlg->exec(in, ctxI);
-//#else
-//#endif
+    if(!d->dialog) {
+        d->dialog = new CuEngineSwitchDialog(nullptr);
+        connect(d->dialog, SIGNAL(destroyed(QObject *)), this, SLOT(m_dialog_destroyed(QObject *)));
+        d->dialog->exec(in, ctxI);
+    }
+    else {
+        d->dialog->raise();
+    }
+    //#else
+    //#endif
     return CuData();
 }
 
@@ -52,4 +58,8 @@ std::string EngineSwitchDialogExtension::message() const {
 
 bool EngineSwitchDialogExtension::error() const {
     return d->msg.size() > 0;
+}
+
+void EngineSwitchDialogExtension::m_dialog_destroyed(QObject *) {
+    d->dialog = nullptr;
 }

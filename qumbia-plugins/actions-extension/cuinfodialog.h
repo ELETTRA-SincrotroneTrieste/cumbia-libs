@@ -13,6 +13,7 @@ class CuControlsFactoryPool;
 class QFrame;
 class CuContext;
 class QTextBrowser;
+class QTreeWidgetItem;
 
 class CuInfoDialogPrivate;
 
@@ -33,11 +34,15 @@ public:
 class CuInfoDEventFilterPrivate;
 
 class CuInfoDEventFilter : public QObject {
+    Q_OBJECT
 public:
     CuInfoDEventFilter(QObject *parent, CuInfoDEventListener *el);
     ~CuInfoDEventFilter();
 
     bool eventFilter(QObject *obj, QEvent *event);
+
+private slots:
+    void notify();
 
 private:
     class CuInfoDEventFilterPrivate *d;
@@ -103,18 +108,42 @@ private:
     void m_makeMonitor(QFrame *monitorF);
 
     CuInfoDialogPrivate* d;
-    QString m_makeHtml(const CuData &da, const QString &heading);
     int m_populateAppDetails(QWidget *container);
     void m_resizeToMinimumSizeHint();
+
     QMap<QString, QString> m_appPropMap() const;
 
     int mAppDetailsLayoutRow;
 
-    QWidget *m_make_tab_widget(QWidget *parent, const char *type, const QString& link);
-    QTextBrowser *m_find_text_browser(ContentType ct, const std::string& src) const;
     void m_one_time_read(const QString& src, const CuContext *ctx);
 
     // CuInfoDEventListener interface
+    QTreeWidgetItem *m_readers_root() const;
+    QTreeWidgetItem *m_writers_root() const;
+
+    QList<QTreeWidgetItem *> m_reader_items() const;
+    QList<QTreeWidgetItem *> m_writer_items() const;
+
+    QTreeWidgetItem *m_find_reader(const QString& src) const;
+    QTreeWidgetItem *m_find_writer(const QString &tgt) const;
+    QTreeWidgetItem *m_get_reader_key(const QString &src, const QString& key) const;
+    QTreeWidgetItem *m_get_writer_key(const QString &tgt, const QString& key) const;
+    QTreeWidgetItem *m_find_child(const QTreeWidgetItem* parent, const QString& key) const;
+
+    QTreeWidgetItem *m_add_reader(const QString& src);
+    QTreeWidgetItem *m_add_writer(const QString& tgt);
+
+
+    QTreeWidgetItem *m_update_reader_key(const QString& src, const QString& key, const QString& value, int column);
+    QTreeWidgetItem *m_update_writer_key(const QString& tgt, const QString& key, const QString& value, int column);
+
+    int m_readers_count() const;
+    int m_writers_count() const;
+
+    void m_update_props(const CuData& da, bool writer);
+    void m_update_value(const CuData& da, bool live);
+    void m_update_stats(const QString &src);
+
 public:
     void onObjectChanged(QObject *obj, const CuContextI *ctxi);
 };

@@ -28,6 +28,9 @@ public:
 
 private:
     EngineSwitchDialogExtensionPrivate *d;
+
+private slots:
+    void m_dialog_destroyed(QObject *o);
 };
 
 #endif // ENGINESWITCHDIALOGEXTENSION_H

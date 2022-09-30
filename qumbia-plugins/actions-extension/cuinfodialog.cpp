@@ -2,7 +2,6 @@
 #include <cudata.h>
 #include <QMetaObject>
 #include <QMetaMethod>
-#include <QGroupBox>
 #include <QtDebug>
 #include <cumacros.h>
 #include <egauge.h>
@@ -12,22 +11,14 @@
 #include <qutrendplot.h>
 #include <QLineEdit>
 #include <QLabel>
-#include <QTextBrowser>
-#include <QComboBox>
-#include <QCheckBox>
-#include <QScrollArea>
 #include <QGridLayout>
-#include <QFrame>
 #include <QPaintEvent>
 #include <QScrollBar>
 #include <QPainter>
 #include <QMap>
 #include <QMutableMapIterator>
-#include <QPushButton>
 #include <QApplication>
-#include <quledbase.h>
 #include <cumacros.h>
-#include <qulabel.h>
 #include <quspectrumplot.h>
 #include <cumbia.h>
 #include <cumbiapool.h>
@@ -38,24 +29,31 @@
 #include <cucontext.h>
 #include <cuformulaplugininterface.h>
 #include <cupluginloader.h>
-#include <QPluginLoader>
-#include <QRadioButton>
 #include <cumbiatango.h>
 #include <cumbiahttp.h>
 #include <quapps.h>
-#include <QTabWidget>
 #include <algorithm>
 #include <QRegularExpressionMatch>
 #include <QMultiMap>
 #include <quwatcher.h>
-
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
+#include <QPushButton>
+#include <QGroupBox>
+#include <QHeaderView>
+#include <qustring.h>
+#include <QTimer>
+#include <cucontrolsutils.h>
+#include <qupalette.h>
 
 class CuInfoDEventFilterPrivate {
 public:
-    CuInfoDEventFilterPrivate(CuInfoDEventListener *_l) : l(_l), cur_obj(nullptr), cur_ctxi(nullptr) {}
+    CuInfoDEventFilterPrivate(CuInfoDEventListener *_l) : l(_l), cur_obj(nullptr), next_obj(nullptr), cur_ctxi(nullptr),
+        next_ctxi(nullptr), tmr(nullptr) {}
     CuInfoDEventListener *l;
-    QObject *cur_obj;
-    CuContextI *cur_ctxi;
+    QObject *cur_obj, *next_obj;
+    CuContextI *cur_ctxi, *next_ctxi;
+    QTimer *tmr;
 };
 
 CuInfoDEventFilter::CuInfoDEventFilter(QObject *parent, CuInfoDEventListener *el) : QObject(parent) {
@@ -71,15 +69,31 @@ bool CuInfoDEventFilter::eventFilter(QObject *obj, QEvent *event) {
     if(event->type() == QEvent::Enter) {
         CuContextI *ci = dynamic_cast<CuContextI *>(obj);
         if(ci && ci != d->cur_ctxi && obj != d->cur_obj) {
-            d->cur_ctxi = ci;
-            d->cur_obj = obj;
-            d->l->onObjectChanged(obj, ci);
+            d->next_ctxi = ci;
+            d->next_obj = obj;
+            if(!d->tmr) {
+                d->tmr = new QTimer(this);
+                d->tmr->setSingleShot(true);
+                d->tmr->setInterval(1000);
+                connect(d->tmr, SIGNAL(timeout()), this, SLOT(notify()));
+            }
+            d->tmr->start();
         }
         printf("\e[1;32menter event on object %p --> %s\e[0m\n", obj, qstoc(obj->objectName()));
     } else if (event->type() == QEvent::Leave) {
+        d->next_obj = nullptr;
+        d->next_ctxi = nullptr;
         printf("\e[1;35mleave event on object %p --> %s\e[0m\n", obj, qstoc(obj->objectName()));
     }
     return event->type() == QEvent::Enter || event->type() == QEvent::Leave;
+}
+
+void CuInfoDEventFilter::notify() {
+    if(d->next_ctxi && d->next_obj) {
+        d->cur_ctxi = d->next_ctxi;
+        d->cur_obj = d->next_obj;
+        if(d->l) d->l->onObjectChanged(d->cur_obj, d->cur_ctxi);
+    }
 }
 
 class CuInfoDialogPrivate
@@ -92,26 +106,31 @@ public:
     CuControlsFactoryPool f_pool;
     const CuControlsReaderFactoryI *r_fac;
     int layout_col_cnt;
+    QTreeWidget* tree;
+    QMultiMap<QString, QString> categories;
 };
 
 CuInfoDialog::CuInfoDialog(QWidget *parent)
-    : QDialog(parent)
-{
+    : QDialog(parent) {
     d = new CuInfoDialogPrivate();
     d->r_fac = NULL; // pointer copied. object not cloned
     d->cu_pool = NULL;
     d->ctxi = nullptr;
     m_owner = nullptr;
+    foreach(const QString& s, QStringList() << "value" << "w_value" << "write_value" << "date and time" << "err" << "msg")
+        d->categories.insert("reader", s);
+    QMap<QString, QString> apropmap = m_appPropMap();
+    foreach(const QString& s, apropmap.keys())
+        d->categories.insert("app", s);
+    foreach(const QString& s, QStringList() << "operation count" << "error count" << "last error")
+        d->categories.insert("stats", s);
     setAttribute(Qt::WA_DeleteOnClose, true);
 }
 
-CuInfoDialog::~CuInfoDialog()
-{
-    printf("deleting CuInfoDialog\n");
+CuInfoDialog::~CuInfoDialog() {
     // do not delete d->rfac because the reference has been
     // copied, not cloned
     delete d;
-    printf("deleted\n");
 }
 
 /**
@@ -191,19 +210,19 @@ QString CuInfoDialog::extractSource(const QString &expression, QString &formula)
 
 void CuInfoDialog::showAppDetails(bool show)
 {
-    if(show) {
-        QGroupBox *appDetGb = new QGroupBox(this); // app details group box
-        appDetGb->setObjectName("appDetailsGroupBox");
-        int rowcnt = m_populateAppDetails(appDetGb);
-        findChild<QGridLayout *>("mainGridLayout")->addWidget(appDetGb, mAppDetailsLayoutRow, 0, rowcnt, d->layout_col_cnt);
-    }
-    else {
-        QGroupBox *appDetGb = findChild<QGroupBox *>("appDetailsGroupBox");
-        if(appDetGb) {
-            delete appDetGb;
-            m_resizeToMinimumSizeHint();
-        }
-    }
+    //    if(show) {
+    //        QGroupBox *appDetGb = new QGroupBox(this); // app details group box
+    //        appDetGb->setObjectName("appDetailsGroupBox");
+    //        int rowcnt = m_populateAppDetails(appDetGb);
+    //        findChild<QGridLayout *>("mainGridLayout")->addWidget(appDetGb, mAppDetailsLayoutRow, 0, rowcnt, d->layout_col_cnt);
+    //    }
+    //    else {
+    //        QGroupBox *appDetGb = findChild<QGroupBox *>("appDetailsGroupBox");
+    //        if(appDetGb) {
+    //            delete appDetGb;
+    //            m_resizeToMinimumSizeHint();
+    //        }
+    //    }
 }
 
 QObject *root_obj(QObject *leaf) {
@@ -223,6 +242,12 @@ void CuInfoDialog::exec(const CuData& in, const CuContextI *ctxi)
     QFont f = font();
     f.setBold(true);
     f.setPointSize(f.pointSize() + 1);
+    QGridLayout * lo = new QGridLayout(this);
+    d->tree = new QTreeWidget(this);
+    d->tree->setColumnCount(3);
+    d->tree->setHeaderHidden(true);
+    d->tree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    lo->addWidget(d->tree, 0, 0, 10, 10);
     // update with live data
     onObjectChanged(m_owner, ctxi);
     //    m_resizeToMinimumSizeHint();
@@ -237,6 +262,12 @@ void CuInfoDialog::exec(const CuData& in, const CuContextI *ctxi)
         }
     }
 
+    QString formula, src = m_owner->property("source").toString();
+    if(src.isEmpty())
+        src = m_owner->property("target").toString();
+    src = extractSource(src, formula);
+    setWindowTitle(src + " stats");
+
     /// OCCHIO QUI
     ///
     ///
@@ -246,11 +277,7 @@ void CuInfoDialog::exec(const CuData& in, const CuContextI *ctxi)
     ///
 
 
-    QString formula, src = m_owner->property("source").toString();
-    if(src.isEmpty())
-        src = m_owner->property("target").toString();
-    src = extractSource(src, formula);
-    setWindowTitle(src + " stats");
+
     if(d->ctxi->getContext() != nullptr) {
         CuLinkStats *lis = ctxi->getContext()->getLinkStats();
 
@@ -413,367 +440,368 @@ void CuInfoDialog::exec(const CuData& in, const CuContextI *ctxi)
 }
 
 void CuInfoDialog::onMonitorUpdate(const CuData &da) {
-    int scrollbarPos;
+    int scrollbarPos = d->tree->verticalScrollBar()->value();
     bool live = sender()->objectName() == "1Twatcher";
-    printf("on monitor update data %s LIVE ? %s\n", datos(da), live ? "YES" : "NO");
     QTextBrowser *tb = nullptr;
     if(da.has("type", "property")) {
-        tb =  m_find_text_browser(CuInfoDialog::Conf, da.s("src"));
-        if(tb) {
-            scrollbarPos = tb->verticalScrollBar()->value();
-            tb->setHtml(m_makeHtml(da, "PROPERTIES"));
-            tb->verticalScrollBar()->setValue(scrollbarPos);
-        }
-        else
-            printf("ttype property but browser not found\n");
+        m_update_props(da, false);
     }
-    else {
-        tb = m_find_text_browser(CuInfoDialog::Data, da.s("src"));
-        if(tb) {
-            scrollbarPos = tb->verticalScrollBar()->value();
-            tb->setHtml(m_makeHtml(da, live ? "DATA (live)" : QString("DATA from object %1").arg(m_owner->objectName())));
-            tb->verticalScrollBar()->setValue(scrollbarPos);
-        }
+    if(!da.has("type", "property") || live) {
+        m_update_value(da, live);
     }
+    m_update_stats(QuString(da.s("src")));
+    d->tree->verticalScrollBar()->setValue(scrollbarPos); // restore scroll bar position
     ////////
     return;
     /////////
     ///
     ///
-    double x;
-    CuLinkStats *lis = d->ctxi->getContext()->getLinkStats();
-    findChild<QLineEdit *>("leopcnt")->setText(QString::number(lis->opCnt()));
-    findChild<QLineEdit *>("leerrcnt")->setText(QString::number(lis->errorCnt()));
-    findChild<QLineEdit *>("te_lasterr")->setText(lis->last_error_msg.c_str());
-    HealthWidget *healthw  = findChild<HealthWidget *>();
-    healthw->setData(lis->errorCnt(), lis->opCnt());
+}
 
-    QString src = QString(da["src"].toString().c_str());
-    QGroupBox *container = findChild<QGroupBox *>(src + "_monitor");
-    if(!container) // try if it is write
-        container = findChild<QGroupBox *>(src + "_write_monitor");
-    if(container) {
-        QVBoxLayout *glo = qobject_cast<QVBoxLayout *>(container->layout());
-        da["timestamp_ms"].to<double>(x);
-        if(container)
-        {
-            QLabel* update_wait_l = container->findChild<QLabel *>("l_waitupdate");
-            if(update_wait_l)
-                delete update_wait_l;
-
-            QTextBrowser *te = container->findChild<QTextBrowser *>("tb_monitor_update");
-            if(!te) {
-                te = new QTextBrowser(container);
-                te->setReadOnly(true);
-                te->setObjectName("tb_monitor_update");
-                glo->addWidget(te);
-            }
-        }
+void CuInfoDialog::m_one_time_read(const QString &src, const CuContext *ctx) {
+    CumbiaPool *p = ctx->cumbiaPool();
+    Cumbia *c = ctx->cumbia();
+    CuControlsReaderFactoryI* rfi = ctx->getReaderFactoryI();
+    Qu1TWatcher *w = nullptr;
+    if(p)
+        w  = new Qu1TWatcher(this, ctx->cumbiaPool(), ctx->getControlsFactoryPool());
+    else if(c && rfi) {
+        w = new Qu1TWatcher(this, c, *rfi->clone());
     }
-    else {
-        perr("CuInfoDialog::onMonitorUpdate: either expected container %s_monitor or %s_write_monitor not found",
-             qstoc(src),qstoc(src));
+    if(w) {
+        w->setObjectName("1Twatcher");
+        connect(w, SIGNAL(newData(CuData)), this, SLOT(onMonitorUpdate(CuData)));
+        w->setSource(src);
     }
 }
 
-QString CuInfoDialog::m_makeHtml(const CuData& da, const QString& heading) {
-    double x;
-    da["timestamp_ms"].to<double>(x);
-    QString datetime = QDateTime::fromMSecsSinceEpoch(x).toString();
+int CuInfoDialog::m_populateAppDetails(QWidget *container)
+{
+    QGridLayout *lo = new QGridLayout(container);
+    QStringList orderedKeys = QStringList() << "App name" <<"Version"  <<"Platform" <<"Author" << "e-mail" << "Phone"
+                                            <<"Office" << "Hardware referent" << "PID" << "App";
+    QMap<QString, QString> app_p = m_appPropMap(); // app properties
+    int r = 0;
+    int c = 0;
+    foreach(QString k, orderedKeys) {
+        if(app_p[k].length() > 0 && !app_p[k].contains("$")) {
+            if(c >= 8)
+                c = 0;
+            QLabel *l = new QLabel(k, this);
+            l->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
+            QLineEdit *ln = new QLineEdit(app_p[k], this);
+            ln->setReadOnly(true);
+            lo->addWidget(l, r / 2, c, 1, 1);
+            lo->addWidget(ln, r / 2, c + 1, 1, 3);
+            c += 4;
+            r++;
+        }
+    }
+    return r / 4;
+}
 
-    QString html = "<html>\n";
-    html += "<head>\n";
-    html += "<style>\n";
-    html += QString("table, th, td {  \
-                    border-style: groove; \
-            border-color: DodgerBlue; \
-    border-width: 1px; \
-    border-collapse: collapse; \
-margin:0.3em; \
-} \
-\
-th { \
-    background-color: #4CAF50; \
-color: white; \
-} \
-\
-div { padding:0.1em; margin: 0.2em; } \
-table { margin:3.5em; padding:2.4em; border-collapse: collapse; \
-    cellspacing:0.2em \
-    cellpadding:0.2em \
-    width:80%; \
-      } \
-td { \
-    width=50%; \
-} \
-div { width=80%; } \
-\n");
- html += "</style>\n";
- html += "</head>\n";
- html += "<body>\n";
- html += "<h4 align=\"center\">" + heading + "</h4>\n";
- html += "<div id=\"tablesdiv\">\n";
+void CuInfoDialog::m_resizeToMinimumSizeHint() {
+    resize(qRound(minimumSizeHint().width() * 1.5), minimumSizeHint().height());
+}
 
+HealthWidget::HealthWidget(QWidget *parent) : QLabel(parent) {
+    setAlignment(Qt::AlignHCenter);
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+}
 
- if(!heading.contains("PROPERTIES")) {
-     QString values_s;
-     QStringList valueKeys = QStringList() << "value" << "w_value" << "write_value";
-     foreach(QString vk, valueKeys) {
-         if(da.containsKey(vk.toStdString()))
-             values_s += "<tr><td>" + vk + "</td><td>" +
-                     QString::fromStdString(da[vk.toStdString()].toString()) + "</td></tr>";
-     }
+void HealthWidget::paintEvent(QPaintEvent *e)
+{
+    QColor good = QColor(Qt::green);
+    QColor err = QColor(Qt::red);
+    float perc = property("health").toFloat();
+    QPainter p(this);
+    int x =qRound( width() * perc / 100.0);
+    p.fillRect(0, 0, x, height(), good);
+    p.fillRect(x + 1, 0, width() - x, height(), err);
+    QLabel::paintEvent(e);
+}
 
-     if(x > 0 || values_s.length() > 0) { // valid date and time or at least one of valueKeys found
+void HealthWidget::setData(int errcnt, int opcnt)
+{
+    float health = 100 - errcnt / (float) opcnt * 100.0;
+    setText(QString("Health: %1%").arg(health, 0, 'f', 1));
+    setProperty("health", health);
+}
 
-         html += "<table>\n<tr><th colspan=\"2\"><cite>value</cite></th></tr>";
-         if(x > 0)
-             html += "<tr><td>date/time</td><td>" + datetime + "</td></tr>";
-         html += values_s;
-         html += "</table>\n\n\n";
-     }
+QTreeWidgetItem *CuInfoDialog::m_readers_root() const {
+    for(int i = 0; i < d->tree->topLevelItemCount(); i++)
+        if(d->tree->topLevelItem(i)->text(0) == "readers")
+            return d->tree->topLevelItem(i);
+    return nullptr;
+}
 
- }
- QStringList priorityKeys = QStringList() << "src" << "device" << "point" <<
-                                             "mode" << "err" << "msg" << "period" <<
-                                             "dfs";
+QTreeWidgetItem *CuInfoDialog::m_writers_root() const {
+    for(int i = 0; i < d->tree->topLevelItemCount(); i++)
+        if(d->tree->topLevelItem(i)->text(0) == "writers")
+            return d->tree->topLevelItem(i);
+    return nullptr;
+}
 
- // 1. information table
- html += "<table>\n<tr><th colspan=\"2\"><cite>information</cite></th></tr>";
- foreach(QString pk, priorityKeys) {
-     if(da.containsKey(pk.toStdString()))
-         html += "<tr><td>" + pk + "</td><td>" +
-                 QString::fromStdString(da[pk.toStdString()].toString()) + "</td></tr>";
- }
- html += "</table>\n\n";
+QList<QTreeWidgetItem *> CuInfoDialog::m_reader_items() const {
+    QTreeWidgetItem *it = m_readers_root();
+    QList<QTreeWidgetItem *> ri;
+    if(it == nullptr) {
+        for(int i = 0; i < d->tree->topLevelItemCount(); i++)
+            ri << d->tree->topLevelItem(i);
+    } else {
+        for(int i = 0; i < it->childCount(); i++)
+            ri << it->child(i);
+    }
+    return ri;
+}
 
- // 2. advanced table
- const std::vector<std::string> &dkeys = da.keys();
- html += "<table>\n<tr><th colspan=\"2\"><cite>advanced</cite></th></tr>";
- for(size_t i = 0; i < dkeys.size(); i++) {
-     const std::string& s = dkeys[i];
-     if(!priorityKeys.contains(QString::fromStdString(s)))
-         html += "<tr><td>" + QString::fromStdString(s) + "</td><td>" +
-                 QString::fromStdString(da[dkeys[i]].toString()) + "</td></tr>";
- }
- html += "</table>\n\n";
- html += "</div> <!-- tablesdiv -->\n\n";
- html += "</body>\n</html>\n";
+QList<QTreeWidgetItem *> CuInfoDialog::m_writer_items() const {
+    QTreeWidgetItem *it = m_writers_root();
+    QList<QTreeWidgetItem *> wi;
+    if(it == nullptr) {
+        for(int i = 0; i < d->tree->topLevelItemCount(); i++)
+            wi << d->tree->topLevelItem(i);
+    } else {
+        for(int i = 0; i < it->childCount(); i++)
+            wi << it->child(i);
+    }
+    return wi;
+}
 
- return html;
- }
+QTreeWidgetItem *CuInfoDialog::m_find_reader(const QString &src) const {
+    foreach(QTreeWidgetItem *it, m_reader_items())
+        if(it->text(0) == src)
+            return it;
+    return nullptr;
+}
 
- QMap<QString, QString> CuInfoDialog::m_appPropMap() const
- {
-     QMap<QString, QString> app_p; // app properties
-     app_p["App name"] = qApp->applicationName();
-     app_p["Version"] = qApp->applicationVersion();
-     app_p["Platform"] = qApp->platformName();
-     app_p["Author"] = qApp->property("author").toString();
-     app_p["e-mail"] = qApp->property("mail").toString();
-     app_p["Phone"]  = qApp->property("phone").toString();
-     app_p["Office"]  = qApp->property("office").toString();
-     app_p["Hardware referent"]  = qApp->property("hwReferent").toString();
-     app_p["Organization name"] = qApp->organizationName();
-     app_p["PID"] =  QString::number(qApp->applicationPid());
-     app_p["App"] = qApp->applicationFilePath();
-     QMutableMapIterator<QString, QString> i(app_p);
-     while(i.hasNext()) {
-         i.next();
-         if(i.value().isEmpty() || i.value().contains("$"))
-             i.remove();
-     }
-     return app_p;
- }
+QTreeWidgetItem *CuInfoDialog::m_find_writer(const QString &tgt) const {
+    foreach(QTreeWidgetItem *it, m_writer_items())
+        if(it->text(0) == tgt)
+            return it;
+    return nullptr;
+}
 
- QWidget *CuInfoDialog::m_make_tab_widget(QWidget *parent, const char* type, const QString &link)  {
-     pretty_pri("\e[1;36mmaking a new tab widget.......................\e[0m\n");
-     QWidget *w = new QWidget(parent);
-     QGridLayout *lo = new QGridLayout(w);
-     QTextBrowser *te = new QTextBrowser(w);
-     te->setObjectName(QString("tb_data_%1").arg(findChild<QTabWidget *>("maintabw")->count()));
-     te->setProperty(type, link);
-     QTextBrowser *teco = new QTextBrowser(w);
-     teco->setObjectName(QString("tb_conf_%1").arg(findChild<QTabWidget *>("maintabw")->count()));
-     teco->setProperty(type, link); // "source" or "target" type, link either src or tgt
-     lo->addWidget(te, 0, 0, 10, 6);
-     lo->addWidget(teco, 10, 0, 6, 6);
-     te->setReadOnly(true);
-     teco->setReadOnly(true);
-     return w;
- }
+QTreeWidgetItem *CuInfoDialog::m_get_reader_key(const QString &src, const QString &key) const {
+    QTreeWidgetItem *it = m_find_reader(src);
+    QTreeWidgetItem *category_it = it;
+    if(it) {
+        QString category = d->categories.key(key, "property"); // "value", "app", the others are "property"
+        category_it = m_find_child(it, category);
+        if(!category_it) {
+            category_it = new QTreeWidgetItem(it, QStringList() << category);
+            if(category == "reader") category_it->setExpanded(true);
+        }
+        // children of the src if "value" category or children of either "property" or "app"
+        QTreeWidgetItem *key_it = m_find_child(category_it, key);
+        if(key_it) {
+            return key_it;
+        }
+        else if(category_it)  { // child key not found: add a new entry
+            return new QTreeWidgetItem(category_it, QStringList() << key << "-");
+        }
+    } // src item exists
+    return nullptr;
+}
 
- QTextBrowser *CuInfoDialog::m_find_text_browser(ContentType ct, const std::string &src) const {
-     QRegularExpression re( (ct == CuInfoDialog::Data) ? QString("tb_data.*") : QString("tb_conf.*"));
-     QList<QTextBrowser *> tblist = findChildren<QTextBrowser *>(re);
-     printf("finding text browser with regex %s\n", qstoc(re.pattern()));
-     foreach(QTextBrowser *tb, tblist) {
-         if(tb->property("source").toString().toStdString() == src || tb->property("target").toString().toStdString() == src) {
-             printf("\e[1;32mfound text browser %s with source %s\e[0m\n", qstoc(tb->objectName()), src.c_str());
-             return tb;
-         }
-     }
-     return nullptr;
- }
+QTreeWidgetItem *CuInfoDialog::m_get_writer_key(const QString &tgt, const QString &key) const {
+    QTreeWidgetItem *it = m_find_writer(tgt);
+    if(it) {
+        QString category = d->categories.key(key, "property"); // "value", "app", the others are "property"
+        if(category == "app") {
+            it = m_find_child(it, category);
+            if(!it)
+                it = new QTreeWidgetItem(it, QStringList() << category);
+        }
+        // children of the src if "value" category or children of either "property" or "app"
+        QTreeWidgetItem *key_it = m_find_child(it, key);
+        if(key_it)
+            return key_it;
+        else if(it) // child key not found: add a new entry
+            return new QTreeWidgetItem(it, QStringList() << key << "-");
+    } // src item exists
+    return nullptr;
+}
 
- void CuInfoDialog::m_one_time_read(const QString &src, const CuContext *ctx) {
-     CumbiaPool *p = ctx->cumbiaPool();
-     Cumbia *c = ctx->cumbia();
-     CuControlsReaderFactoryI* rfi = ctx->getReaderFactoryI();
-     Qu1TWatcher *w = nullptr;
-     if(p)
-         w  = new Qu1TWatcher(this, ctx->cumbiaPool(), ctx->getControlsFactoryPool());
-     else if(c && rfi) {
-         w = new Qu1TWatcher(this, c, *rfi->clone());
-     }
-     if(w) {
-         w->setObjectName("1Twatcher");
-         connect(w, SIGNAL(newData(CuData)), this, SLOT(onMonitorUpdate(CuData)));
-         w->setSource(src);
-     }
- }
+QTreeWidgetItem *CuInfoDialog::m_find_child(const QTreeWidgetItem *parent, const QString &key) const {
+    for(int i = 0; parent != nullptr && i < parent->childCount(); i++)
+        if(parent->child(i)->text(0) == key)
+            return parent->child(i);
+    return nullptr;
+}
 
- int CuInfoDialog::m_populateAppDetails(QWidget *container)
- {
-     QGridLayout *lo = new QGridLayout(container);
-     QStringList orderedKeys = QStringList() << "App name" <<"Version"  <<"Platform" <<"Author" << "e-mail" << "Phone"
-                                             <<"Office" << "Hardware referent" << "PID" << "App";
-     QMap<QString, QString> app_p = m_appPropMap(); // app properties
-     int r = 0;
-     int c = 0;
-     foreach(QString k, orderedKeys) {
-         if(app_p[k].length() > 0 && !app_p[k].contains("$")) {
-             if(c >= 8)
-                 c = 0;
-             QLabel *l = new QLabel(k, this);
-             l->setAlignment(Qt::AlignRight|Qt::AlignVCenter);
-             QLineEdit *ln = new QLineEdit(app_p[k], this);
-             ln->setReadOnly(true);
-             lo->addWidget(l, r / 2, c, 1, 1);
-             lo->addWidget(ln, r / 2, c + 1, 1, 3);
-             c += 4;
-             r++;
-         }
-     }
-     return r / 4;
- }
+QTreeWidgetItem *CuInfoDialog::m_add_reader(const QString &src) {
+    return !m_readers_root() ? new QTreeWidgetItem(d->tree, QStringList() << src) : new QTreeWidgetItem(m_readers_root(), QStringList() << src);
+}
 
- void CuInfoDialog::m_resizeToMinimumSizeHint() {
-     resize(qRound(minimumSizeHint().width() * 1.5), minimumSizeHint().height());
- }
+QTreeWidgetItem *CuInfoDialog::m_add_writer(const QString &tgt) {
+    return !m_writers_root() ? new QTreeWidgetItem(d->tree, QStringList() << tgt) : new QTreeWidgetItem(m_writers_root(), QStringList() << tgt);
+}
 
- HealthWidget::HealthWidget(QWidget *parent) : QLabel(parent) {
-     setAlignment(Qt::AlignHCenter);
-     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
- }
+QTreeWidgetItem *CuInfoDialog::m_update_reader_key(const QString &src, const QString &key, const QString &value, int column) {
+    QTreeWidgetItem *it = m_get_reader_key(src, key);
+    //    if(it)
+    it->setText(column, value);
+    return it;
+}
 
- void HealthWidget::paintEvent(QPaintEvent *e)
- {
-     QColor good = QColor(Qt::green);
-     QColor err = QColor(Qt::red);
-     float perc = property("health").toFloat();
-     QPainter p(this);
-     int x =qRound( width() * perc / 100.0);
-     p.fillRect(0, 0, x, height(), good);
-     p.fillRect(x + 1, 0, width() - x, height(), err);
-     QLabel::paintEvent(e);
- }
+QTreeWidgetItem *CuInfoDialog::m_update_writer_key(const QString &tgt, const QString &key, const QString &value, int column) {
+    QTreeWidgetItem *it = m_get_writer_key(tgt, key);
+    //    if(it)
+    it->setText(column, value);
+    return it;
+}
 
- void HealthWidget::setData(int errcnt, int opcnt)
- {
-     float health = 100 - errcnt / (float) opcnt * 100.0;
-     setText(QString("Health: %1%").arg(health, 0, 'f', 1));
-     setProperty("health", health);
- }
+int CuInfoDialog::m_readers_count() const {
+    return m_reader_items().size();
+}
 
- void CuInfoDialog::onObjectChanged(QObject *obj, const CuContextI *ctxi) {
-     pretty_pri("obj %s class %s", qstoc(obj->objectName()), obj->metaObject()->className());
-     if(ctxi && ctxi->getContext() && ctxi->getContext()->getReader())
-         printf("source %s\n", qstoc(ctxi->getContext() ->getReader()->source()));
-     else if(ctxi && ctxi->getContext() && ctxi->getContext() ->getWriter()) {
-         printf("source %s\n", qstoc(ctxi->getContext() ->getWriter()->target()));
-     }
+int CuInfoDialog::m_writers_count() const {
+    return m_writer_items().size();
+}
 
-     disconnect(m_owner, SIGNAL(newData(CuData)), this, SLOT(onMonitorUpdate(CuData)));
-     m_owner = obj;
-     QFont f = font();
-     f.setBold(true);
-     f.setPointSize(f.pointSize() + 1);
-     // update with live data
-     connect(m_owner, SIGNAL(newData(const CuData&)), this, SLOT(onMonitorUpdate(const CuData&)));
-     d->ctxi = ctxi;
+void CuInfoDialog::m_update_props(const CuData &da, bool writer) {
+    QuString src(da.s("src"));
+    if(da.has("type", "property")) {
+        QStringList noprop_keys { "value", "w_value" , "write_value"};
+        std::vector<std::string> dkeys = da.keys();
+        std::sort(dkeys.begin(), dkeys.end());
+        for(size_t i = 0; i < dkeys.size(); i++) {
+            const QuString& s (dkeys[i]);
+            if(!noprop_keys.contains(s)) {
+                !writer ? m_update_reader_key(src, s, QuString(da[dkeys[i]]), 1) : m_update_writer_key(src, s, QuString(da[dkeys[i]]), 1);
+                //                !writer ? m_update_reader_key(src, s, QuString(da[dkeys[i]]), 2) : m_update_writer_key(src, s, QuString(da[dkeys[i]]), 2);
+            }
+        }
+    }
+}
 
-     if(!ctxi || !ctxi->getContext())
-         return;
-     CuContext *ctx = ctxi->getContext();
+void CuInfoDialog::m_update_value(const CuData &da, bool live) {
+    QuPalette pale;
+    const QuString& s(da.s("src"));
+    QTreeWidgetItem *it = m_find_reader(s);
+    if(it) {
+        double x;
+        da["timestamp_ms"].to<double>(x);
+        QString datetime = QDateTime::fromMSecsSinceEpoch(x).toString();
+        QString values_s, html;
+        QStringList valueKeys = QStringList() << "value" << "w_value" << "write_value";
+        QTreeWidgetItem * i = m_get_reader_key(s, "date and time");
+        i->setText(1, datetime);
+        i->setText(2, (live ?  "value from a temporary reader" : "value from " + m_owner->objectName()));
+        foreach(QString vk, valueKeys) {
+            if(da.containsKey(vk.toStdString())) {
+                i = m_get_reader_key(s, vk);
+                i->setText(1, QuString(da[vk.toStdString()]));
+                if(vk == "value") {
+                    QFont f = i->font(1); f.setBold(true); i->setFont(1, f);
+                    da.containsKey("qc") && da.s("qc") != "white" ? i->setForeground(1, pale.value(da.s("qc").c_str()))
+                                                                  : i->setForeground(1, QColor(Qt::black));
+                }
+            }
+        }
+    }
+}
 
-     QTabWidget *tabw = findChild<QTabWidget *>();
-     QGridLayout *lo = findChild<QGridLayout *>();
-     if(!tabw) {
-         tabw = new QTabWidget(this);
-         tabw->setObjectName("maintabw");
-         lo = new QGridLayout(this);
-         lo->addWidget(tabw, 0, 0, 10, 10);
-     }
+void CuInfoDialog::m_update_stats(const QString& src) {
+    if(!src.isEmpty()) {
+        CuLinkStats *lis = d->ctxi->getContext()->getLinkStats();
+        m_update_reader_key(src, "operation count", QString::number(lis->opCnt()), 1);
+        m_update_reader_key(src, "error count", QString::number(lis->errorCnt()), 1);
+        m_update_reader_key(src, "last error", lis->last_error_msg.c_str(), 1);
+        //    HealthWidget *healthw  = findChild<HealthWidget *>();
+        //    healthw->setData(lis->errorCnt(), lis->opCnt());
+    }
+}
 
+void CuInfoDialog::onObjectChanged(QObject *obj, const CuContextI *ctxi) {
+    pretty_pri("obj %s class %s", qstoc(obj->objectName()), obj->metaObject()->className());
+    if(ctxi && ctxi->getContext() && ctxi->getContext()->getReader())
+        printf("source %s\n", qstoc(ctxi->getContext() ->getReader()->source()));
+    else if(ctxi && ctxi->getContext() && ctxi->getContext() ->getWriter()) {
+        printf("source %s\n", qstoc(ctxi->getContext() ->getWriter()->target()));
+    }
 
-     int rcnt = ctx->readers().size();
-     int wcnt = ctx->writers().size();
-     int i;
-     QStringList vsrcs, vtgts;
-     for(CuControlsReaderA *r : ctx->readers())
-         vsrcs.push_back(r->source());
-     for(CuControlsWriterA *w : ctx->writers())
-         vtgts.push_back(w->target());
+    disconnect(m_owner, SIGNAL(newData(CuData)), this, SLOT(onMonitorUpdate(CuData)));
+    m_owner = obj;
+    QFont f = font();
+    f.setBold(true);
+    f.setPointSize(f.pointSize() + 1);
+    // update with live data
+    connect(m_owner, SIGNAL(newData(const CuData&)), this, SLOT(onMonitorUpdate(const CuData&)));
+    d->ctxi = ctxi;
 
-     // remove unused tabs
-     for(int i = tabw->count() - 1; i >= 0; i--) {
-         QWidget *w = tabw->widget(i);
-         if(!vsrcs.contains(w->property("source").toString()) && !vtgts.contains(w->property("target").toString())) {
-             delete tabw->widget(i); // removeTab does not delete the widget
-             tabw->removeTab(i);
-         }
-     }
+    if(!ctxi || !ctxi->getContext())
+        return;
+    CuContext *ctx = ctxi->getContext();
+    int i;
+    QStringList vsrcs, vtgts;
+    for(CuControlsReaderA *r : ctx->readers())
+        vsrcs.push_back(r->source());
+    for(CuControlsWriterA *w : ctx->writers())
+        vtgts.push_back(w->target());
 
-     for(CuControlsReaderA * r : ctx->readers()) {
-         const QString& s = r->source();
-         for(i = 0; i < tabw->count(); i++) {
-             if(tabw->widget(i)->property("source").toString() == s)
-                 break;
-         }
-         if(i == tabw->count()) { // not found
-             QWidget *wt = m_make_tab_widget(tabw, "source", s);
-             wt->setObjectName(QString("wt%1").arg(tabw->count() + 1));
-             wt->setProperty("source", s);
-             tabw->addTab(wt, QString("%1 [R]").arg(s));
-             tabw->setTabToolTip(i, s);
-         }
-         // starts one watcher for first reading.
-         m_one_time_read(s, ctx);
-     }
-     for(CuControlsWriterA * w : ctx->writers()) {
-         for(i = 0; i < tabw->count(); i++) {
-             if(tabw->widget(i)->property("target").toString() == w->target())
-                 break;
-         }
-         if(i == tabw->count()) { // not found
-             QWidget *wt =  m_make_tab_widget(tabw,"target",  w->target());
-             wt->setObjectName(QString("wt%1").arg(tabw->count()+ 1));
-             wt->setProperty("target", w->target());
-             tabw->addTab(wt, QString("%1 [W]").arg(w->target()));
-             tabw->setTabToolTip(i, w->target());
+    // remove unused items
+    QList<QTreeWidgetItem *> its = m_reader_items();
+    foreach(QTreeWidgetItem *it, its)
+        if(!vsrcs.contains(it->text(0)))
+            delete it;
+    its = m_writer_items();
+    foreach(QTreeWidgetItem *it, its)
+        if(!vtgts.contains(it->text(0)))
+            delete it;
 
+    // create a "readers" and a "writers" item only if there are readers *and* writers
+    // in the same context
+    //
+    if(ctx->readers().size() > 0 && ctx->writers().size() > 0) {
+        QTreeWidgetItem *root = m_readers_root();
+        if(!root)
+            root = new QTreeWidgetItem(d->tree, QStringList() << "readers");
+        root = m_writers_root();
+        if(!root)
+            root = new QTreeWidgetItem(d->tree, QStringList() << "writers");
+        if(root)
+            root->setExpanded(true);
+    }
+    for(CuControlsReaderA * r : ctx->readers()) {
+        QTreeWidgetItem *it = m_find_reader(r->source());
+        if(!it) {
+            it = m_add_reader(r->source());
+            it->setExpanded(true);
+            // starts one watcher for first reading.
+            m_one_time_read(r->source(), ctx);
+        }
+    }
+    for(CuControlsWriterA * w : ctx->writers()) {
+        QTreeWidgetItem *it = m_find_writer(w->target());
+        if(!it) {
+            it = m_add_writer(w->target());
+            it->setExpanded(true);
+            m_update_props(w->getConfiguration(), true); // true: from a writer
+        }
+    }
+}
 
-             CuData confd = w->getConfiguration();
-             if(!confd.isEmpty()) {
-                 QTextBrowser *teconf = m_find_text_browser(CuInfoDialog::Conf, w->target().toStdString());
-                 QString html = m_makeHtml(confd, "Properties");
-                 printf("\e[1;33mconf %s\e[0m\n", qstoc(html));
-                 teconf->setHtml(html);
-             }
-         }
-     }
-
-
-
- }
+QMap<QString, QString> CuInfoDialog::m_appPropMap() const
+{
+    QMap<QString, QString> app_p; // app properties
+    app_p["App name"] = qApp->applicationName();
+    app_p["Version"] = qApp->applicationVersion();
+    app_p["Platform"] = qApp->platformName();
+    app_p["Author"] = qApp->property("author").toString();
+    app_p["e-mail"] = qApp->property("mail").toString();
+    app_p["Phone"]  = qApp->property("phone").toString();
+    app_p["Office"]  = qApp->property("office").toString();
+    app_p["Hardware referent"]  = qApp->property("hwReferent").toString();
+    app_p["Organization name"] = qApp->organizationName();
+    app_p["PID"] =  QString::number(qApp->applicationPid());
+    app_p["App"] = qApp->applicationFilePath();
+    QMutableMapIterator<QString, QString> i(app_p);
+    while(i.hasNext()) {
+        i.next();
+        if(i.value().isEmpty() || i.value().contains("$"))
+            i.remove();
+    }
+    return app_p;
+}
