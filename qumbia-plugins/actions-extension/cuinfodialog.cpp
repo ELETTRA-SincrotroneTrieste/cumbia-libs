@@ -681,12 +681,13 @@ void CuInfoDialog::m_update_value(const CuData &da, bool live) {
     const QuString& s(da.s("src"));
     QTreeWidgetItem *it = m_find_reader(s);
     if(it) {
-        double x;
+        double x = 0;
+        QTreeWidgetItem * i = m_get_reader_key(s, "date and time");
         da["timestamp_ms"].to<double>(x);
         QString datetime = QDateTime::fromMSecsSinceEpoch(x).toString();
-        QString values_s, html;
-        QStringList valueKeys = QStringList() << "value" << "w_value" << "write_value";
-        QTreeWidgetItem * i = m_get_reader_key(s, "date and time");
+        QStringList valueKeys = QStringList() << "value" << "w_value" << "write_value" << "err";
+        if(da.containsKey("msg")) valueKeys << "msg";
+        else delete m_get_reader_key(s, "msg"); // remove "msg" item for source s
         i->setText(1, datetime);
         i->setText(2, (live ?  "value from a temporary reader" : "value from " + m_owner->objectName()));
         foreach(QString vk, valueKeys) {
@@ -697,6 +698,8 @@ void CuInfoDialog::m_update_value(const CuData &da, bool live) {
                     QFont f = i->font(1); f.setBold(true); i->setFont(1, f);
                     da.containsKey("qc") && da.s("qc") != "white" ? i->setForeground(1, pale.value(da.s("qc").c_str()))
                                                                   : i->setForeground(1, QColor(Qt::black));
+                } else if(vk == "err") {
+                    i->setForeground(1, da.B("err") ? QColor("red") : QColor("black"));
                 }
             }
         }
