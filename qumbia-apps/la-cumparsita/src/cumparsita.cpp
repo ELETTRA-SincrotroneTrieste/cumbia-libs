@@ -26,7 +26,7 @@ Cumparsita::Cumparsita(QWidget *parent) :
         file.close();
         QVBoxLayout * vblo = new QVBoxLayout;
         vblo->addWidget(widget);
-        qDebug() << __PRETTY_FUNCTION__ << this << widget << widget->children().size();
+        qDebug() << __PRETTY_FUNCTION__ << this << widget << "children count" << widget->findChildren<QWidget *>().size();
         setLayout(vblo);
         setWindowTitle(widget->windowTitle() + QString(" - %1").arg(qApp->applicationName()));
     }
