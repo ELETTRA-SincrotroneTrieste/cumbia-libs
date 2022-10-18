@@ -309,7 +309,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
             else if(f == Tango::SPECTRUM)
                 dat["value"] = v;
             else if(f == Tango::IMAGE)
-                dat.set("value", CuVariant(v, p_da->get_dim_x(), p_da->get_dim_y()));
+                dat.set("value", CuVariant(v, p_da->get_dim_y(), p_da->get_dim_x()));
             if(w)
             {
                 p_da->extract_set(v);
@@ -318,7 +318,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 else if(f == Tango::SPECTRUM)
                     dat["w_value"] = v;
                 else if(f == Tango::IMAGE)
-                    dat.set("w_value", CuVariant(v, p_da->get_written_dim_x(), p_da->get_written_dim_y()));
+                    dat.set("w_value", CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x()));
             }
         }
         else if(p_da->get_type() == Tango::DEV_LONG)
@@ -334,7 +334,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 if(f == Tango::SPECTRUM)
                     dat["value"] = vlo;
                 else if(f == Tango::IMAGE)
-                    dat["value"] = CuVariant(vlo, p_da->get_dim_x(), p_da->get_dim_y());
+                    dat["value"] = CuVariant(vlo, p_da->get_dim_y(), p_da->get_dim_x());
             }
             if(w)
             {
@@ -348,7 +348,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     if(f == Tango::SPECTRUM)
                         dat["w_value"] = vlo;
                     else if(f == Tango::IMAGE)
-                        dat["w_value"] = CuVariant(vlo, p_da->get_written_dim_x(), p_da->get_written_dim_y());
+                        dat["w_value"] = CuVariant(vlo, p_da->get_written_dim_y(), p_da->get_written_dim_x());
                 }
             }
         }
@@ -361,7 +361,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
             else if(f == Tango::SPECTRUM)
                 dat["value"] = v;
             else if(f == Tango::IMAGE)
-                dat.set("value", CuVariant(v, p_da->get_dim_x(), p_da->get_dim_y()));
+                dat.set("value", CuVariant(v, p_da->get_dim_y(), p_da->get_dim_x()));
             if(w) {
                 p_da->extract_set(v);
                 if(f == Tango::SCALAR)
@@ -369,7 +369,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 else if(f == Tango::SPECTRUM)
                     dat["w_value"] = v;
                 else if(f == Tango::IMAGE)
-                    dat.set("w_value", CuVariant(v, p_da->get_written_dim_x(), p_da->get_written_dim_y()));
+                    dat.set("w_value", CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x()));
             }
         }
         else if(p_da->get_type() == Tango::DEV_STATE)
@@ -401,9 +401,9 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     dat["s"] = tempi;
                     dat["sc"] = state_colors;
                 } else {
-                    dat["value"] = CuVariant(temp, p_da->get_dim_x(), p_da->get_dim_y());
-                    dat["s"] = CuVariant(tempi, p_da->get_dim_x(), p_da->get_dim_y());
-                    dat["sc"] = CuVariant(state_colors, p_da->get_dim_x(), p_da->get_dim_y());
+                    dat["value"] = CuVariant(temp, p_da->get_dim_y(), p_da->get_dim_x());
+                    dat["s"] = CuVariant(tempi, p_da->get_dim_y(), p_da->get_dim_x());
+                    dat["sc"] = CuVariant(state_colors, p_da->get_dim_y(), p_da->get_dim_x());
                 }
             }
             if(w)
@@ -434,9 +434,9 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                         dat["w_state"] = temp;
                         dat["w_state_color"] = state_colors;
                     } else if (f == Tango::IMAGE) {
-                        dat["w_value"] = CuVariant(temp, p_da->get_written_dim_x(), p_da->get_written_dim_y());
-                        dat["w_state"] = CuVariant(tempi, p_da->get_written_dim_x(), p_da->get_written_dim_y());
-                        dat["w_state_color"] = CuVariant(state_colors, p_da->get_written_dim_x(), p_da->get_written_dim_y());
+                        dat["w_value"] = CuVariant(temp, p_da->get_written_dim_y(), p_da->get_written_dim_x());
+                        dat["w_state"] = CuVariant(tempi, p_da->get_written_dim_y(), p_da->get_written_dim_x());
+                        dat["w_state_color"] = CuVariant(state_colors, p_da->get_written_dim_y(), p_da->get_written_dim_x());
                     }
                 }
             }
@@ -450,7 +450,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
             else if(f == Tango::SPECTRUM)
                 dat["value"] = v;
             else if (f == Tango::IMAGE)
-                dat["value"] = CuVariant(v, p_da->get_dim_x(), p_da->get_dim_y());
+                dat["value"] = CuVariant(v, p_da->get_dim_y(), p_da->get_dim_x());
             if(w)
             {
                 p_da->extract_set(v);
@@ -459,7 +459,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 else if(f == Tango::SPECTRUM)
                     dat["w_value"] = v;
                 else if (f == Tango::IMAGE)
-                    dat["w_value"] = CuVariant(v, p_da->get_written_dim_x(), p_da->get_written_dim_y());
+                    dat["w_value"] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
         else if(p_da->get_type() == Tango::DEV_ULONG64) {
@@ -470,7 +470,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
             else if(f == Tango::SPECTRUM)
                 dat["value"] = v;
             else if (f == Tango::IMAGE)
-                dat["value"] = CuVariant(v, p_da->get_dim_x(), p_da->get_dim_y());
+                dat["value"] = CuVariant(v, p_da->get_dim_y(), p_da->get_dim_x());
             if(w)
             {
                 p_da->extract_set(v);
@@ -479,7 +479,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 else if(f == Tango::SPECTRUM)
                     dat["w_value"] = v;
                 else if (f == Tango::IMAGE)
-                    dat["w_value"] = CuVariant(v, p_da->get_written_dim_x(), p_da->get_written_dim_y());
+                    dat["w_value"] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
         else if(p_da->get_type() == Tango::DEV_SHORT || p_da->get_type() == 100) /* 100! bug */
@@ -491,7 +491,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
             else if(f == Tango::SPECTRUM)
                 dat["value"] = v;
             else if (f == Tango::IMAGE)
-                dat["value"] = CuVariant(v, p_da->get_dim_x(), p_da->get_dim_y());
+                dat["value"] = CuVariant(v, p_da->get_dim_y(), p_da->get_dim_x());
             if(w)
             {
                 p_da->extract_set(v);
@@ -500,7 +500,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 else if(f == Tango::SPECTRUM)
                     dat["w_value"] = v;
                 else if (f == Tango::IMAGE)
-                    dat["w_value"] = CuVariant(v, p_da->get_written_dim_x(), p_da->get_written_dim_y());
+                    dat["w_value"] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
         else if(p_da->get_type() == Tango::DEV_USHORT)
@@ -512,7 +512,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
             else if(f == Tango::SPECTRUM)
                 dat["value"] = v;
             else if (f == Tango::IMAGE)
-                dat["value"] = CuVariant(v, p_da->get_dim_x(), p_da->get_dim_y());
+                dat["value"] = CuVariant(v, p_da->get_dim_y(), p_da->get_dim_x());
             if(w)
             {
                 p_da->extract_set(v);
@@ -521,7 +521,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 else if(f == Tango::SPECTRUM)
                     dat["w_value"] = v;
                 else if (f == Tango::IMAGE)
-                    dat["w_value"] = CuVariant(v, p_da->get_written_dim_x(), p_da->get_written_dim_y());
+                    dat["w_value"] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
         else if(p_da->get_type() == Tango::DEV_UCHAR)
@@ -533,7 +533,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
             else if(f == Tango::SPECTRUM)
                 dat["value"] = v;
             else if (f == Tango::IMAGE) {
-                dat["value"] = CuVariant(v, p_da->get_dim_x(), p_da->get_dim_y());
+                dat["value"] = CuVariant(v, p_da->get_dim_y(), p_da->get_dim_x());
             }
             if(w)
             {
@@ -543,7 +543,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 else if(f == Tango::SPECTRUM)
                     dat["w_value"] = v;
                 else if (f == Tango::IMAGE)
-                    dat["w_value"] = CuVariant(v, p_da->get_written_dim_x(), p_da->get_written_dim_y());
+                    dat["w_value"] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
         else if(p_da->get_type() == Tango::DEV_INT)
@@ -555,7 +555,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
             else if(f == Tango::SPECTRUM)
                 dat["value"] = v;
             else if (f == Tango::IMAGE)
-                dat["value"] = CuVariant(v, p_da->get_dim_x(), p_da->get_dim_y());
+                dat["value"] = CuVariant(v, p_da->get_dim_y(), p_da->get_dim_x());
             if(w)
             {
                 p_da->extract_set(v);
@@ -564,7 +564,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 else if(f == Tango::SPECTRUM)
                     dat["w_value"] = v;
                 else if (f == Tango::IMAGE)
-                    dat["w_value"] = CuVariant(v, p_da->get_written_dim_x(), p_da->get_written_dim_y());
+                    dat["w_value"] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
         else if(p_da->get_type() == Tango::DEV_FLOAT)
@@ -576,7 +576,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
             else if(f == Tango::SPECTRUM)
                 dat["value"] = v;
             else if (f == Tango::IMAGE)
-                dat["value"] = CuVariant(v, p_da->get_dim_x(), p_da->get_dim_y());
+                dat["value"] = CuVariant(v, p_da->get_dim_y(), p_da->get_dim_x());
             if(w)
             {
                 p_da->extract_set(v);
@@ -585,7 +585,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 else if(f == Tango::SPECTRUM)
                     dat["w_value"] = v;
                 else if (f == Tango::IMAGE)
-                    dat["w_value"] = CuVariant(v, p_da->get_written_dim_x(), p_da->get_written_dim_y());
+                    dat["w_value"] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
         else if(p_da->get_type() == Tango::DEV_BOOLEAN)
@@ -600,7 +600,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
             else if(f == Tango::SPECTRUM)
                 dat["value"] = vboo;
             else if (f == Tango::IMAGE)
-                dat["value"] = CuVariant(vboo, p_da->get_dim_x(), p_da->get_dim_y());
+                dat["value"] = CuVariant(vboo, p_da->get_dim_y(), p_da->get_dim_x());
 
             if(w)
             {
@@ -613,7 +613,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 else if(f == Tango::SPECTRUM)
                     dat["w_value"] = vboo;
                 else if (f == Tango::IMAGE)
-                    dat["w_value"] = CuVariant(vboo, p_da->get_written_dim_x(), p_da->get_written_dim_y());
+                    dat["w_value"] = CuVariant(vboo, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
         else if(p_da->get_type() == Tango::DEV_STRING)
@@ -625,7 +625,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
             else if(f == Tango::SPECTRUM)
                 dat["value"] = vs;
             else if (f == Tango::IMAGE)
-                dat["value"] = CuVariant(vs, p_da->get_dim_x(), p_da->get_dim_y());
+                dat["value"] = CuVariant(vs, p_da->get_dim_y(), p_da->get_dim_x());
             if(w)
             {
                 p_da->extract_set(vs);
@@ -634,7 +634,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 else if(f == Tango::SPECTRUM)
                     dat["w_value"] = vs;
                 else if (f == Tango::IMAGE)
-                    dat["w_value"] = CuVariant(vs, p_da->get_written_dim_x(), p_da->get_written_dim_y());
+                    dat["w_value"] = CuVariant(vs, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
         else
