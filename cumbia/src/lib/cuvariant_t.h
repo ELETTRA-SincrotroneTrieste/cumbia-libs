@@ -24,56 +24,54 @@
  */
 template<typename T> bool CuVariant::to(T &val) const
 {
-
-    bool valid = (_d->format == Scalar && !_d->mIsNull && _d->mIsValid);
+    bool valid = ((_d->format == Scalar || (_d->format == Vector && _d->mSize > 0)) && !_d->mIsNull && _d->mIsValid);
     if(!valid) {
         val = static_cast<T> (0ULL);
     }
-    else
-    {
+    else if(_d->format == Scalar || _d->format == Vector) {
         switch(_d->type)
         {
         case Short:
-            val = static_cast<T>(*(static_cast<short *>(_d->val)));
+            val = static_cast<T>(static_cast<short *>(_d->val)[0]);
             break;
         case UShort:
-            val = static_cast<T>(*(static_cast<unsigned short *>(_d->val)));
+            val = static_cast<T>(static_cast<unsigned short *>(_d->val)[0]);
             break;
         case Int:
-            val = static_cast<T>(*(static_cast<int *>(_d->val)));
+            val = static_cast<T>(static_cast<int *>(_d->val)[0]);
             break;
         case UInt:
-            val = static_cast<T>(*(static_cast<unsigned int *>(_d->val)));
+            val = static_cast<T>(static_cast<unsigned int *>(_d->val)[0]);
             break;
         case Char:
-            val = static_cast<T>(*(static_cast<char *>(_d->val)));
+            val = static_cast<T>(static_cast<char *>(_d->val)[0]);
             break;
         case UChar:
-            val = static_cast<T>(*(static_cast<unsigned char *>(_d->val)));
+            val = static_cast<T>(static_cast<unsigned char *>(_d->val)[0]);
             break;
         case LongInt:
-            val = static_cast<T>(*(static_cast<long int *>(_d->val)));
+            val = static_cast<T>(static_cast<long int *>(_d->val)[0]);
             break;
         case LongLongInt:
-            val = static_cast<T>(*(static_cast<long long int *>(_d->val)));
+            val = static_cast<T>(static_cast<long long int *>(_d->val)[0]);
             break;
         case LongUInt:
-            val = static_cast<T>(*(static_cast<unsigned long *>(_d->val)));
+            val = static_cast<T>(static_cast<unsigned long *>(_d->val)[0]);
             break;
         case LongLongUInt:
-            val = static_cast<T>(*(static_cast<unsigned long long*>(_d->val)));
+            val = static_cast<T>(static_cast<unsigned long long*>(_d->val)[0]);
             break;
         case Float:
-            val = static_cast<T>(*(static_cast<float *>(_d->val)));
+            val = static_cast<T>(static_cast<float *>(_d->val)[0]);
             break;
         case Double:
-            val = static_cast<T>(*(static_cast<double *>(_d->val)));
+            val = static_cast<T>(static_cast<double *>(_d->val)[0]);
             break;
         case LongDouble:
-            val = static_cast<T>(*(static_cast<long double *>(_d->val)));
+            val = static_cast<T>(static_cast<long double *>(_d->val)[0]);
             break;
         case Boolean:
-            val = static_cast<T>(*(static_cast<bool *>(_d->val)));
+            val = static_cast<T>(static_cast<bool *>(_d->val)[0]);
             break;
         case String: {
             const std::string& s = toString();
@@ -84,11 +82,11 @@ template<typename T> bool CuVariant::to(T &val) const
                     val = static_cast<T>( std::stold(s));
                 }
                 catch(const std::invalid_argument& ) {
-                    pwarn("CuVariant.to: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
+                    perr("CuVariant.to: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
                     valid = false;
                 }
                 catch(const std::out_of_range& ) {
-                    pwarn("CuVariant.to: string \"%s\" to number conversion failed: out of range", toString().c_str());
+                    perr("CuVariant.to: string \"%s\" to number conversion failed: out of range", toString().c_str());
                     valid = false;
                 }
             }
@@ -99,8 +97,8 @@ template<typename T> bool CuVariant::to(T &val) const
             break;
         }
         if(!valid)
-            pwarn("CuVariant.to: unsupported scalar conversion from type %s and format %s", dataTypeStr(_d->type).c_str(),
-                  dataFormatStr(_d->format).c_str());
+            perr("%s CuVariant.to: unsupported scalar conversion from type %s and format %s",
+                 __PRETTY_FUNCTION__, dataTypeStr(_d->type).c_str(), dataFormatStr(_d->format).c_str());
     }
     return valid;
 }
