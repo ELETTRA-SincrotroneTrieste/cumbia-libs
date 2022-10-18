@@ -100,12 +100,13 @@ void EInputOutputWidget::setOutputWidget(QWidget *outputw)
  */
 void EInputOutputWidget::setInputWidget(QWidget *inputw)
 {
-    if(d->input_w == NULL)
-    {
+    if(d->input_w == nullptr) {
         d->input_w = inputw;
         d->input_w->setObjectName(objectName() + "_inputWidget");
         inputw->setParent(d->w_container);
         m_editToggled(false);
+        printf("EInputOutputWidget::setInputWidget (1) property set indexMode? %s\n", d->input_w->property("indexMode").toBool() ? "TRUE" : "FALSE");
+
         QHBoxLayout *hlo = static_cast<QHBoxLayout *>(d->w_container->layout());
         hlo->insertWidget(0, d->input_w, 5);
         //    updateGeometry();
@@ -117,6 +118,15 @@ void EInputOutputWidget::setInputWidget(QWidget *inputw)
         QFontMetrics fm(font());
         d->pbApply->setMinimumWidth(fm.width(d->pbApply->text()) * 1.4);
         connect(d->pbApply, SIGNAL(clicked()), this, SLOT(m_applyClicked()));
+        for(int i = 0; i < d->input_w->metaObject()->propertyCount(); i++)
+            printf("%s --> %s\n", d->input_w->metaObject()->className(), d->input_w->metaObject()->property(i).name());
+
+        printf("================= in original input w =================\n");
+        for(int i = 0; i < inputw->metaObject()->propertyCount(); i++)
+            printf("%s --> %s\n", inputw->metaObject()->className(), inputw->metaObject()->property(i).name());
+
+        printf("EInputOutputWidget::setInputWidget (2) property set indexMode? %s\n", d->input_w->property("indexMode").toBool() ? "TRUE" : "FALSE");
+
     }
     else
         perr("EInputOutputWidget.setInputWidget: this method can be called only once in \"%s\"", qstoc(objectName()));

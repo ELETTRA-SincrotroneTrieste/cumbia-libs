@@ -68,13 +68,15 @@ QString CuControlsUtils::findInput(const QString &objectName, const QObject *lea
     // and our Numeric
     if(o && o->metaObject()->indexOfProperty("data") > -1)
         ret = o->property("data").toString();
+    else if(o && o->property("indexMode").toBool() && o->metaObject()->indexOfProperty("currentIndex") >= 0)
+        ret = QString("%1").arg(o->property("currentIndex").toInt() + o->property("indexOffset").toInt());
     else if(o && o->metaObject()->indexOfProperty("text") > -1)
         ret = o->property("text").toString();
     else if(o && o->metaObject()->indexOfProperty("value") > -1)
         ret = o->property("value").toString();
     else if(o && o->metaObject()->indexOfProperty("currentText") > -1)
         ret = o->property("currentText").toString();
-
+    printf("%s returning ret %s\n",  __PRETTY_FUNCTION__, qstoc(ret));
     return ret;
 }
 
