@@ -15,13 +15,13 @@ template<typename T>
 class CuMatrix {
 public:
     CuMatrix(const std::vector<T> &v, size_t dimx, size_t dimy)
-        : nr(dimy), nc(dimx) {
+        : nr(dimx), nc(dimy) {
 		p = new T[nr * nc];
 		std::copy(v.begin(), v.end(), p);
 	}
 
     CuMatrix(T *v, size_t dimx, size_t dimy)
-        : nr(dimy), nc(dimx) {
+        : nr(dimx), nc(dimy) {
 		p = new T[nr * nc];
 		memcpy(p, v, nr * nc * sizeof(T));
 	}
