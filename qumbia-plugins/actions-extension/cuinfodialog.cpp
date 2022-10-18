@@ -698,6 +698,7 @@ void CuInfoDialog::m_update_value(const CuData &da, bool live) {
                     QFont f = i->font(1); f.setBold(true); i->setFont(1, f);
                     da.containsKey("qc") && da.s("qc") != "white" ? i->setForeground(1, pale.value(da.s("qc").c_str()))
                                                                   : i->setForeground(1, QColor(Qt::black));
+
                 } else if(vk == "err") {
                     i->setForeground(1, da.B("err") ? QColor("red") : QColor("black"));
                 }
