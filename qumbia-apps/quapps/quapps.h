@@ -293,10 +293,12 @@ public:
     }
 
     int m_delete_cumbias(const std::vector<Cumbia *>& vc) {
-        for(Cumbia *c : vc) {
-            c->getServiceProvider()->unregisterService(CuServices::Log); // uninstall
-            delete c;
+        size_t i = 0;
+        for(size_t i = 0; i < vc.size(); i++) {
+            vc[i]->getServiceProvider()->unregisterService(CuServices::Log); // uninstall
+            delete vc[i];
         }
+        return i;
     }
 
     int engine_type(const CuContext *ctx) const {
