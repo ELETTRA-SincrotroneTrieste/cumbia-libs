@@ -118,7 +118,6 @@ CuHttpControlsReader::~CuHttpControlsReader() {
  * fetched.
  */
 void CuHttpControlsReader::setSource(const QString &s) {
-    printf("\e[1;36m* \e[0mCuHttpControlsReader: set source %s on http engine URL '%s'\n", qstoc(s), qstoc(d->cu_http->url()));
     d->s = s;
     if(!s.isEmpty() && CumbiaHTTPWorld().source_valid(s.toStdString())) {
         QList<QuReplaceWildcards_I *>rwis = d->cu_http->getReplaceWildcard_Ifaces();
