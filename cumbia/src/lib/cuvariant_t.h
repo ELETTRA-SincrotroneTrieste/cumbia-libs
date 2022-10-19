@@ -82,11 +82,11 @@ template<typename T> bool CuVariant::to(T &val) const
                     val = static_cast<T>( std::stold(s));
                 }
                 catch(const std::invalid_argument& ) {
-                    perr("CuVariant.to: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
+                    pwarn("CuVariant.to: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
                     valid = false;
                 }
                 catch(const std::out_of_range& ) {
-                    perr("CuVariant.to: string \"%s\" to number conversion failed: out of range", toString().c_str());
+                    pwarn("CuVariant.to: string \"%s\" to number conversion failed: out of range", toString().c_str());
                     valid = false;
                 }
             }

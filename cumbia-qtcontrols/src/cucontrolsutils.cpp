@@ -76,7 +76,6 @@ QString CuControlsUtils::findInput(const QString &objectName, const QObject *lea
         ret = o->property("value").toString();
     else if(o && o->metaObject()->indexOfProperty("currentText") > -1)
         ret = o->property("currentText").toString();
-    printf("%s returning ret %s\n",  __PRETTY_FUNCTION__, qstoc(ret));
     return ret;
 }
 

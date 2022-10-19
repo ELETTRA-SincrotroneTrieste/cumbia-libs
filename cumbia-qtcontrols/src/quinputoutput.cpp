@@ -11,10 +11,12 @@
 #include <QComboBox>
 #include <QLineEdit>
 #include <cucontext.h>
+#include <qustring.h>
 
 class QuInputOutputPrivate
 {
 public:
+    QuInputOutputPrivate() : auto_configure(true), index_mode(false), index_offset(0), w_type(QuInputOutput::None) {}
     bool auto_configure;
     bool read_ok, index_mode;
     int index_offset;
@@ -31,10 +33,6 @@ QuInputOutput::QuInputOutput(QWidget *parent, Cumbia* cumbia,
     : EInputOutputWidget(parent)
 {
     d = new QuInputOutputPrivate;
-    d->w_type = None;
-    d->auto_configure = true;
-    d->index_mode = false;
-    d->index_offset = 0;
     CuControlsReaderFactoryI *rf = r_fac.clone();
     // we need the
     CuData options;
@@ -59,7 +57,6 @@ QuInputOutput::QuInputOutput(QWidget *parent, CumbiaPool *cu_poo, const CuContro
     : EInputOutputWidget(parent)
 {
     d = new QuInputOutputPrivate;
-    d->w_type = None;
     QuLabel *label = new QuLabel(this, cu_poo, f_poo);
     label->setDrawInternalBorder(false);
     setOutputWidget(label);
@@ -243,7 +240,6 @@ void QuInputOutput::unsetSource()
 }
 
 void QuInputOutput::setIndexMode(bool m) {
-    printf("QuInputOutput.setIndexMode setting index mode to %s\n", m ? "TRUE" : "FALSE");
     d->index_mode = m; // save if property set before input widget
     if(d->w_type == ComboBox && inputWidget()) // set if input widget created after property set
         inputWidget()->setProperty("indexMode", m);
@@ -265,13 +261,11 @@ void QuInputOutput::onNewData(const CuData &da) {
 }
 
 /// @private
-void QuInputOutput::m_configure(const CuData &da)
-{
-    printf("QuInputOutput::m_configure: data %s\n", datos(da));
+void QuInputOutput::m_configure(const CuData &da) {
     std::string target = da["src"].toString();
     if(da["dfs"].toString() == "scalar" && da["writable"].toInt() > 0)
     {
-        CuVariant v = da["value"];
+        CuVariant v = da["value"], wv = da["w_value"];
         if(d->w_type == None && da["values"].isValid())
             setWriterType(ComboBox);
         else if(d->w_type == None && !v.isNull() && (v.isFloatingPoint()  || v.isInteger()) )
@@ -279,30 +273,21 @@ void QuInputOutput::m_configure(const CuData &da)
         else if(d->w_type == None && !v.isNull() && v.getType() == CuVariant::String)
             setWriterType(LineEdit);
 
-        if(d->w_type == ComboBox && da["values"].isValid())
-        {
+        if(d->w_type == ComboBox && da["values"].isValid()) {
             QComboBox *c = static_cast<QComboBox* >(inputWidget());
             c->clear();
-            c->setCurrentText(QString::fromStdString(v.toString()));
-            if(da["values"].isValid())
-            {
+            if(da["values"].isValid()) {
+                bool imode = c->property("indexMode").toBool(); // combo index mode
                 std::vector<std::string> values = da["values"].toStringVector();
                 for(size_t i = 0; i < values.size(); i++)
                     c->insertItem(i, QString::fromStdString(values[i]));
-                if(v.isInteger()) {
-                    printf("v is integer and value is %s\n", v.toString().c_str());
-                    c->setCurrentIndex(QString::fromStdString(v.toString()).toInt());
-                }
-                else
-                    printf("v is not integer rather %s\n", v.dataTypeStr(v.getType()).c_str());
+                c->setCurrentIndex(imode ? QuString(wv.toString()).toInt() : c->findText(QuString(wv.toString())));
             }
         }
-        else if(d->w_type == LineEdit)
-        {
-            static_cast<QLineEdit *>(inputWidget())->setText(QString::fromStdString(v.toString()));
+        else if(d->w_type == LineEdit) {
+            static_cast<QLineEdit *>(inputWidget())->setText(QString::fromStdString(wv.toString()));
         }
-        else
-        {
+        else {
             QString desc;
             // get minimum and maximum from properties, if possible
             CuVariant m, M;
