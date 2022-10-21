@@ -74,7 +74,7 @@ private slots:
 private:
 
     SrcQueueManagerPrivate *d;
-    bool m_queue_remove(const std::string& src, const string &method, CuDataListener* l);
+    bool m_add_queue_remove(const std::string& src, const string &method, CuDataListener* l);
     bool m_wait_map_remove(const std::string& src, const string &method, CuDataListener* l);
     void m_do_enqueue(const CuHTTPSrc & httpsrc, CuDataListener *l, const std::string& method, const QString &chan, const CuVariant &w_val, const CuData &options);
 };
