@@ -96,8 +96,8 @@ CumbiaHttp::~CumbiaHttp()
     pdelete("~CumbiaHttp %p", this);
     d->chan_recv->stop();
     // deleted CuHttpControlsReaders will have enqueued their unsubscribe requests
-    QList<SrcItem> ri, wi;
-    d->src_q_man->dequeueItems(ri, wi);
+//    QList<SrcItem> ri, wi; // we don't use ri, wi, so...  v.1.5
+//    d->src_q_man->dequeueItems(ri, wi); // .. do not call dequeueItems  v1.5
 //    onSrcBundleReqReady(ri, wi); <-- 1.4: why if we are exiting ?
     if(d->client_id > 0)
         d->id_man->unsubscribe(true); // true: block

@@ -139,7 +139,7 @@ int CuHttpSrcMan::dequeueItems(QList<SrcItem> &read_i, QList<SrcItem> &write_i) 
     }
     while(!d->srcq_rem.isEmpty()) { // contains unsubscribes
         const SrcItem& i = d->srcq_rem.dequeue();
-        printf("CuHttpSrcMan::onDequeueTimeout from srcq_rem: %s method %s options %s\n", i.src.c_str(), i.method.c_str(), datos(i.options));
+        printf("CuHttpSrcMan::dequeueItems from srcq_rem: %s method %s options %s\n", i.src.c_str(), i.method.c_str(), datos(i.options));
         read_i.append(i);
     }
 
