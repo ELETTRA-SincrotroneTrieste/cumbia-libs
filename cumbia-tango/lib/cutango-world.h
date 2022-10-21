@@ -4,7 +4,7 @@
 #include <string>
 #include <cudata.h>
 #include <cudataquality.h>
-#include <tango.h>
+#include <tango/tango.h>
 #include <cudataupdatepolicy_enum.h>
 
 class CuTangoWorldPrivate;
@@ -30,7 +30,7 @@ public:
     Tango::DeviceData toDeviceData(const std::vector<std::string> &argins, const CuData &cmdinfo);
 
     Tango::DeviceAttribute toDeviceAttribute(const std::string& name, const CuVariant &argin, const CuData &attinfo);
-    Tango::DeviceAttribute toDeviceAttribute(const string& aname, const std::vector<std::string> &argins, const CuData &attinfo);
+    Tango::DeviceAttribute toDeviceAttribute(const std::string& aname, const std::vector<std::string> &argins, const CuData &attinfo);
 
     void fillFromAttributeConfig(const Tango::AttributeInfoEx &ai, CuData& d);
     void fillFromCommandInfo(const Tango::CommandInfo &cu, CuData& d);
@@ -45,24 +45,24 @@ public:
               const std::string& cmd,
               CuData& data);
 
-    bool read_att(Tango::DeviceProxy *dev, const string &attribute, CuData &res);
+    bool read_att(Tango::DeviceProxy *dev, const std::string &attribute, CuData &res);
 
     bool read_atts(Tango::DeviceProxy *dev,
-                   std::vector<string>& p_v_an, // attribute names
+                   std::vector<std::string>& p_v_an, // attribute names
                    std::vector<CuData>& v_a, // attribute cache (same order as names above)
                    std::vector<CuData>& reslist,
                    int da_updpo);
 
     bool write_att(Tango::DeviceProxy *dev,
-                   const string &attnam,
+                   const std::string &attnam,
                    const CuVariant& argins,
                    const CuData &point_info,
                    CuData &data);
 
-    bool get_att_config(Tango::DeviceProxy *dev, const string &attribute, CuData& res, bool skip_read_att = false);
-    bool get_command_info(Tango::DeviceProxy *dev, const string &cmd, CuData& cmd_info);
-    bool get_att_props(Tango::DeviceProxy *dev, const string &attribute, CuData& res, const std::vector<std::string> props);
-    bool get_properties(const std::vector<CuData> &in_list, CuData& res, const string &dbhost = "");
+    bool get_att_config(Tango::DeviceProxy *dev, const std::string &attribute, CuData& res, bool skip_read_att = false);
+    bool get_command_info(Tango::DeviceProxy *dev, const std::string &cmd, CuData& cmd_info);
+    bool get_att_props(Tango::DeviceProxy *dev, const std::string &attribute, CuData& res, const std::vector<std::string> props);
+    bool get_properties(const std::vector<CuData> &in_list, CuData& res, const std::string &dbhost = "");
     bool db_get(const TSource& tsrc, CuData& res);
 
     bool source_valid(const std::string& src);
@@ -77,7 +77,7 @@ public:
     void setSrcPatterns(const std::vector<std::string> &pat_regex);
     std::vector<std::string> srcPatterns() const;
 
-    Tango::Database *getTangoDb(const string &dbhost);
+    Tango::Database *getTangoDb(const std::string &dbhost);
 
     void putDateTime(const Tango::TimeVal& ttv, CuData& data);
     std::string dateTimeToStr(time_t *tp) const;

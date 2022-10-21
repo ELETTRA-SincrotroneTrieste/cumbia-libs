@@ -4,7 +4,7 @@
 #include "cutconfiguration.h"
 #include "cutadb.h"
 #include <cumacros.h>
-#include <tango.h>
+#include <tango/tango.h>
 
 /*! \brief set the options on the reader factory in order to configure the actual reader
  *  within create.

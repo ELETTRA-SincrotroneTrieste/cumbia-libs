@@ -3,7 +3,7 @@
 
 #include <cuactivity.h>
 #include <cuactivityevent.h>
-#include <tango.h>
+#include <tango/tango.h>
 
 class CuEventActivityPrivate;
 class CuDeviceFactory_I;

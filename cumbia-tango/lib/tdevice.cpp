@@ -1,6 +1,6 @@
 #include "tdevice.h"
 #include "cutango-world.h"
-#include <tango.h>
+#include <tango/tango.h>
 #include <time.h>
 #include <cumacros.h>
 
@@ -8,8 +8,8 @@ class TDevicePrivate
 {
 public:
     Tango::DeviceProxy *dev;
-    string message;
-    string name;
+    std::string message;
+    std::string name;
     int refCnt;
 };
 
@@ -21,7 +21,7 @@ TDevice::TDevice(const std::string &name)
     d->dev = nullptr;
     try
     {
-        string dname = name;
+	std::string dname = name;
         d->dev = new Tango::DeviceProxy(dname);
         time_t tp;
         time(&tp);
@@ -48,7 +48,7 @@ Tango::DeviceProxy *TDevice::getDevice() const
     return d->dev;
 }
 
-string TDevice::getMessage() const
+std::string TDevice::getMessage() const
 {
     return d->message;
 }
@@ -63,7 +63,7 @@ bool TDevice::operator ==(const TDevice &other) const
     return other.d->name == d->name;
 }
 
-string TDevice::getName() const
+std::string TDevice::getName() const
 {
     return d->name;
 }

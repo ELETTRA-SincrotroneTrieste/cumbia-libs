@@ -78,7 +78,7 @@ void CuTangoWorldConfig::initQualityColorsAndStrings()
     d->qualityColors[Tango::ATTR_WARNING] = "orange";
 }
 
-void CuTangoWorldConfig::setStateColors(const std::vector<string> &v)
+void CuTangoWorldConfig::setStateColors(const std::vector<std::string> &v)
 {
     for(int i = 0; i < v.size(); i++)
     {
@@ -87,7 +87,7 @@ void CuTangoWorldConfig::setStateColors(const std::vector<string> &v)
     }
 }
 
-const string CuTangoWorldConfig::qualityColor(Tango::AttrQuality q) const
+const std::string CuTangoWorldConfig::qualityColor(Tango::AttrQuality q) const
 {
     if(d->qualityColors.find(q) != d->qualityColors.end())
         return d->qualityColors[q];
@@ -116,32 +116,32 @@ std::string CuTangoWorldConfig::qualityString(Tango::AttrQuality q) const
     return "UNDEFINED QUALITY";
 }
 
-std::map<Tango::DevState, string> CuTangoWorldConfig::stateStrings()
+std::map<Tango::DevState, std::string> CuTangoWorldConfig::stateStrings()
 {
     return d->stateStrings;
 }
 
-std::map<Tango::DevState, string> CuTangoWorldConfig::stateColorNames()
+std::map<Tango::DevState, std::string> CuTangoWorldConfig::stateColorNames()
 {
     return d->stateColors;
 }
 
-std::map<Tango::AttrQuality, string> CuTangoWorldConfig::qualityStrings()
+std::map<Tango::AttrQuality, std::string> CuTangoWorldConfig::qualityStrings()
 {
     return d->qualityStrings;
 }
 
-std::map<Tango::AttrQuality, string> CuTangoWorldConfig::qualityColorNames()
+std::map<Tango::AttrQuality, std::string> CuTangoWorldConfig::qualityColorNames()
 {
     return d->qualityColors;
 }
 
-void CuTangoWorldConfig::setOverrideValuesAttributePropertyName(const string &name)
+void CuTangoWorldConfig::setOverrideValuesAttributePropertyName(const std::string &name)
 {
     d->valueAttrPropName = name;
 }
 
-string CuTangoWorldConfig::valuesAttributePropertyName()
+std::string CuTangoWorldConfig::valuesAttributePropertyName()
 {
     return d->valueAttrPropName;
 }
@@ -168,12 +168,12 @@ const std::string CuTangoWorldConfig::stateString(Tango::DevState s) const
     return "UNDEFINED STATE";
 }
 
-string CuTangoWorldConfig::successColor(bool success) const
+std::string CuTangoWorldConfig::successColor(bool success) const
 {
     return d->successColors[success];
 }
 
-void CuTangoWorldConfig::setSuccessColor(bool success, const string &colorname)
+void CuTangoWorldConfig::setSuccessColor(bool success, const std::string &colorname)
 {
     d->successColors[success] = colorname;
 }
