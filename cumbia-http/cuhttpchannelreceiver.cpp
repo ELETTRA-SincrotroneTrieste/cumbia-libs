@@ -8,7 +8,11 @@
 #include <QMultiMap>
 #include <QNetworkAccessManager>
 #include <QEventLoop>
+
+#include <QWebSocket>
+#include <QAbstractSocket>
 #include <cudata.h>
+#include <cudataserializer.h>
 
 static int reqs_started = 0, reqs_ended = 0;
 
@@ -23,6 +27,9 @@ public:
     QNetworkAccessManager *nam;
     QNetworkReply *reply;
     QByteArray buf;
+
+    // web socket
+    QWebSocket ws;
 };
 
 CuHttpChannelReceiver::CuHttpChannelReceiver(const QString &url, const QString &chan, QNetworkAccessManager *nam) {
@@ -36,6 +43,13 @@ QString CuHttpChannelReceiver::channel() const {
 QString CuHttpChannelReceiver::url() const {
     QString channel = d->url + "/sub/" + d->chan;
     return channel;
+}
+
+QString CuHttpChannelReceiver::ws_url() const {
+    QString u(d->url);
+    u.replace("https://", "wss://");
+    u.replace("http://", "ws://");
+    return u + "/sub/" + d->chan + "/ws";
 }
 
 void CuHttpChannelReceiver::addDataListener(const QString &src, CuDataListener *l) {
@@ -72,6 +86,13 @@ void CuHttpChannelReceiver::start() {
     else {
         perr("%s: error { already in progress }", __PRETTY_FUNCTION__);
     }
+    // setup web socket
+    connect(&d->ws, &QWebSocket::connected, this, &CuHttpChannelReceiver::onWsConnected);
+    connect(&d->ws, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onWsError(QAbstractSocket::SocketError)));
+    connect(&d->ws, QOverload<const QList<QSslError>&>::of(&QWebSocket::sslErrors),
+            this, &CuHttpChannelReceiver::onSslErrors);
+    printf("opening websocket url %s\n", qstoc(ws_url()));
+    d->ws.open(QUrl(ws_url()));
 }
 
 void CuHttpChannelReceiver::stop() {
@@ -82,6 +103,8 @@ void CuHttpChannelReceiver::stop() {
         if(d->reply->isOpen())
             d->reply->close();
     }
+    if(d->ws.isValid())
+        d->ws.close();
 }
 
 /*!
@@ -129,12 +152,12 @@ QNetworkRequest CuHttpChannelReceiver::prepareRequest(const QUrl &url) const {
     QNetworkRequest r(url);
     r.setRawHeader("Accept", "text/event-stream");
     r.setRawHeader("Accept-Encoding", "gzip, deflate");
-//    r.setRawHeader("Connection", "keep-alive");
-//    r.setRawHeader("Pragma", "no-cache");
-//    r.setRawHeader("Cache-Control", "no-cache");
+    //    r.setRawHeader("Connection", "keep-alive");
+    //    r.setRawHeader("Pragma", "no-cache");
+    //    r.setRawHeader("Cache-Control", "no-cache");
 
-//    r.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
-//    r.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork); // Events shouldn't be cached
+    //    r.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+    //    r.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork); // Events shouldn't be cached
     return r;
 }
 
@@ -187,6 +210,20 @@ void CuHttpChannelReceiver::onNewData() {
     }
 }
 
+void CuHttpChannelReceiver::onWsMessageReceived(const QString &m) {
+    printf("[ \e[1;32mWS\e[0m ]: %s\n", qstoc(m));
+}
+
+void CuHttpChannelReceiver::onWsBinaryMessageReceived(const QByteArray &ba) {
+    CuDataSerializer s;
+    uint32_t siz = s.size(ba.data());
+    size_t sizex = 0;
+    CuData da = s.deserialize(ba.data(), sizex);
+    const CuVariant& v = da["value"];
+    printf("[ \e[1;36mWS\e[0m ]: BINARY MESSAGE len \e[1;35m%d\e[0m \e[1;37;3m%s\e[0m (type %s fmt %s len %ld)\n", siz, datos(da), v.dataTypeStr(v.getType()).c_str(),
+           v.dataFormatStr(v.getFormat()).c_str(), v.getSize());
+}
+
 void CuHttpChannelReceiver::onReplyFinished() {
     reqs_ended++;
     d->reply->deleteLater();
@@ -197,9 +234,29 @@ void CuHttpChannelReceiver::onReplyDestroyed(QObject *) {
 }
 
 void CuHttpChannelReceiver::onSslErrors(const QList<QSslError> &errors) {
-    QString msg;
+    QString msg("ssl error while connecting to " + d->url);
     foreach(const QSslError &e, errors)
         msg += e.errorString() + "\n";
+    decodeMessage(CumbiaHTTPWorld().make_error(msg));
+}
+
+void CuHttpChannelReceiver::onWsConnected() {
+    pretty_pri("ws connected");
+    connect(&d->ws, &QWebSocket::textMessageReceived, this, &CuHttpChannelReceiver::onWsMessageReceived);
+    connect(&d->ws, &QWebSocket::binaryMessageReceived, this, &CuHttpChannelReceiver::onWsBinaryMessageReceived);
+}
+
+void CuHttpChannelReceiver::onWsSslErrors(const QList<QSslError> &errors) {
+    QString msg("ssl error while connecting websocket to " + d->url);
+    foreach(const QSslError &e, errors)
+        msg += e.errorString() + "\n";
+    perr("%s", qstoc(msg));
+    decodeMessage(CumbiaHTTPWorld().make_error(msg));
+}
+
+void CuHttpChannelReceiver::onWsError(QAbstractSocket::SocketError socketError) {
+    QString msg = QString("error opening websocket: %1: %2").arg(socketError).arg(qobject_cast<QWebSocket *>(sender())->errorString());
+    perr("%s", qstoc(msg));
     decodeMessage(CumbiaHTTPWorld().make_error(msg));
 }
 

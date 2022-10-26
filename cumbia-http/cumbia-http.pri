@@ -6,7 +6,7 @@ exists(../cumbia-qt.prf) {
 }
 
 
-QT += network
+QT += network websockets
 
 # + ----------------------------------------------------------------- +
 #
@@ -60,6 +60,7 @@ android-g++|wasm-emscripten {
     PKGCONFIG += cumbia
     PKGCONFIG += cumbia-qtcontrols
     PKGCONFIG += cumbia-http
+    PKGCONFIG += cumbia-serialization
 }
 
 android-g++ {

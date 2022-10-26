@@ -26,6 +26,7 @@ public:
     void unregisterReader(const QString& src);
 
     QString url() const;
+    QString ws_url() const;
     void addDataListener(const QString& src, CuDataListener *l);
     void removeDataListener(CuDataListener *l);
     size_t dataListenersCount();
@@ -36,9 +37,14 @@ public:
 
 protected slots:
     virtual void onNewData();
+    virtual void onWsMessageReceived(const QString& m);
+    virtual void onWsBinaryMessageReceived(const QByteArray& ba);
     virtual void onReplyFinished();
     virtual void onReplyDestroyed(QObject *);
     virtual void onSslErrors(const QList<QSslError> &errors);
+    virtual void onWsConnected();
+    virtual void onWsSslErrors(const QList<QSslError> &errors);
+    virtual void onWsError(QAbstractSocket::SocketError socketError);
     virtual void onError(QNetworkReply::NetworkError code);
     virtual void cancelRequest();
 
