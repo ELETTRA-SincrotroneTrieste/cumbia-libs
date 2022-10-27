@@ -192,9 +192,10 @@ void CuHttpChannelReceiver::m_on_buf_complete() {
         foreach(const QByteArray &json, jsonli) {
             QJsonDocument jsd = QJsonDocument::fromJson(json, &jpe);
             if(jsd.isNull())
-                perr("%s: invalid json: %s\n", __PRETTY_FUNCTION__, qstoc(json));
+                perr("%s: invalid json: %s: %s\n", __PRETTY_FUNCTION__, qstoc(json), qstoc(jpe.errorString()));
             else {
                 decodeMessage(jsd.array());
+                printf("json is \e[1;35m%s\e[0m\n", d->buf.data());
             }
         }
     }
@@ -217,11 +218,17 @@ void CuHttpChannelReceiver::onWsMessageReceived(const QString &m) {
 void CuHttpChannelReceiver::onWsBinaryMessageReceived(const QByteArray &ba) {
     CuDataSerializer s;
     uint32_t siz = s.size(ba.data());
-    size_t sizex = 0;
-    CuData da = s.deserialize(ba.data(), sizex);
-    const CuVariant& v = da["value"];
+    CuData da = s.deserialize(ba.data());
+    ///
+    /// TEST
+    const CuVariant &v = da["value"];
     printf("[ \e[1;36mWS\e[0m ]: BINARY MESSAGE len \e[1;35m%d\e[0m \e[1;37;3m%s\e[0m (type %s fmt %s len %ld)\n", siz, datos(da), v.dataTypeStr(v.getType()).c_str(),
            v.dataFormatStr(v.getFormat()).c_str(), v.getSize());
+    /// end test
+    ///
+    foreach(CuDataListener *l, d->rmap.values(da.s("src").c_str())) {
+        l->onUpdate(da);
+    }
 }
 
 void CuHttpChannelReceiver::onReplyFinished() {

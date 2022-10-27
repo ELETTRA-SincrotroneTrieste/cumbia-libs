@@ -178,6 +178,9 @@ public:
     CuVariant(CuVariant && other);
     CuVariant();
 
+    /* pointer */
+    template <typename T> CuVariant(const T* p, size_t siz, DataFormat f, DataType t);
+
     CuVariant & operator=(const CuVariant& other);
     CuVariant & operator=(CuVariant&& other);
     bool operator ==(const CuVariant &other) const;

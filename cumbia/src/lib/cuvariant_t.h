@@ -7,6 +7,19 @@
 #include <stdexcept>
 #include <stdlib.h>
 
+template<typename T>
+CuVariant::CuVariant(const T *p, size_t siz, DataFormat f, DataType t) {
+    _d = new CuVariantPrivate(); // _d->val is nullptr
+    m_init(f, t); // sets _d->mIsNull and !_d->mIsValid
+    _d->mIsNull = (p == nullptr || siz == 0);
+    _d->mIsValid = !_d->mIsNull;
+    if(_d->mIsValid) {
+        _d->mSize = siz;
+        _d->val = new T[siz];
+        memcpy(_d->val, p, siz * sizeof(T));
+    }
+}
+
 /** \brief convert the current *scalar* CuVariant into a variable of type T.
  *
  * @param val a reference to a variable of type T
