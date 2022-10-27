@@ -756,8 +756,7 @@ CuVariant::CuVariant(const std::vector<std::string> &vs, size_t dimx, size_t dim
  *
  * Specific conversion method: CuVariant::toFloatVector
  */
-CuVariant::CuVariant(const std::vector<void *> &vptr)
-{
+CuVariant::CuVariant(const std::vector<void *> &vptr) {
     _d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     m_init(Vector, VoidPtr);
     m_from(vptr);
@@ -786,7 +785,6 @@ CuVariant::CuVariant() {
  *
  */
 CuVariant::CuVariant(const CuVariant &other) {
-    printf("CuVariant copy source %s\n", datos(other));
     _d = other._d;
     _d->ref();
     //  build_from(other); // before shared data
@@ -799,7 +797,6 @@ CuVariant::CuVariant(const CuVariant &other) {
  * C++ 11 move constructor for CuVariant
  */
 CuVariant::CuVariant(CuVariant &&other) {
-    printf("CuVariant move source %s\n", datos(other));
     /* no new d here! */
     _d = other._d;
     other._d = nullptr; /* don't delete */
@@ -810,8 +807,6 @@ CuVariant::CuVariant(CuVariant &&other) {
  * @param other CuVariant to assign from
  */
 CuVariant & CuVariant::operator=(const CuVariant& other) {
-    printf("CuVariant = source %s\n", datos(other));
-
     if(this != &other)
     {
         other._d->ref();
@@ -828,10 +823,7 @@ CuVariant & CuVariant::operator=(const CuVariant& other) {
  *
  * @param other CuVariant to move from
  */
-CuVariant &CuVariant::operator=(CuVariant &&other)
-{
-    printf("CuVariant move operator equals = source %s\n", datos(other));
-
+CuVariant &CuVariant::operator=(CuVariant &&other) {
     if(this != &other)
     {
         if(_d && _d->unref() == 1) {
