@@ -65,8 +65,9 @@ public:
 
 private:
     template <typename T> char *data_init_t(struct repr *re, size_t datalen, size_t msglen) const;
+    char *data_s_init(struct repr *re, char **p, size_t len, size_t msglen) const;
     template <typename T> char* serialize_t(char *buf, struct repr *re, T *p) const;
-    char *serialize_string(repr *re, char **p, size_t len) const;
+    char *serialize_string(char *buf, repr *re, char **p, size_t len) const;
     template <typename T> CuVariant deserialize_data_t(const char *data, size_t siz, CuVariant::DataType t, CuVariant::DataFormat f) const;
     CuVariant deserialize_string(const char *buf, size_t siz, CuVariant::DataFormat f) const;
 };

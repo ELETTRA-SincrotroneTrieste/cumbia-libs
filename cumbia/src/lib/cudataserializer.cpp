@@ -99,8 +99,8 @@ char *CuDataSerializer::serialize(const CuData &da) const {
             buf = serialize_t<bool>(buf, &re, v.toBoolP());
             break;
         case CuVariant::String:
-#error (need to serialize string properly and alloc)
-            buf = serialize_string(buf, &re, v.to_C_charP());
+            buf = data_s_init(&re, v.to_C_charP(), v.getSize(), msg.length());
+            buf = serialize_string(buf, &re, v.to_C_charP(), v.getSize());
             break;
         case CuVariant::VoidPtr:
         default:
@@ -282,7 +282,6 @@ CuData CuDataSerializer::deserialize(const char *data, size_t len) const {
     return d;
 }
 
-
 template<typename T>
 char *CuDataSerializer::data_init_t(repr *re, size_t datalen, size_t msglen) const {
     char *databuf = nullptr;
@@ -294,7 +293,6 @@ char *CuDataSerializer::data_init_t(repr *re, size_t datalen, size_t msglen) con
     return databuf;
 }
 
-
 template<typename T>
 char *CuDataSerializer::serialize_t(char *databuf, struct repr *re, T *p) const {
     memcpy(databuf + sizeof(struct repr), p, re->datasiz);
@@ -302,16 +300,19 @@ char *CuDataSerializer::serialize_t(char *databuf, struct repr *re, T *p) const 
     return databuf;
 }
 
-char *CuDataSerializer::serialize_string(struct repr *re, char **p, size_t len) const {
+char *CuDataSerializer::data_s_init(repr *re, char **p, size_t len, size_t msglen) const {
     char *databuf = nullptr;
     re->datasiz = 0;
     // calculate necessary size
-    for(size_t i = 0; i < len; i++) {
+    for(size_t i = 0; i < len; i++)
         re->datasiz += (strlen(p[i]) + 1) * sizeof(char);
-    }
-    re->size = sizeof(struct repr) + re->datasiz;
-    databuf = (char *) malloc(sizeof(struct repr) + re->datasiz);
+    re->msgsiz = msglen * sizeof(char);
+    re->size = sizeof(struct repr) + re->datasiz + re->msgsiz;
     memcpy(databuf, re, sizeof(struct repr));
+    return databuf;
+}
+
+char *CuDataSerializer::serialize_string(char *databuf, struct repr *re, char **p, size_t len) const {
     size_t j = 0;
     char *datap = databuf + sizeof(struct repr);
     memset(datap, 0, re->datasiz);
