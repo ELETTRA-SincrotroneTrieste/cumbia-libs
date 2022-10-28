@@ -57,7 +57,7 @@ public:
 
     const char *data_ptr(const char *data) const;
     const char *src(const char *data) const;
-    const char *msg_ptr(const char *data) const;
+    char *msg_ptr(const char *data) const;
     std::string message(const char *data) const;
     uint32_t msg_len(const char *data) const;
 

@@ -113,8 +113,12 @@ char *CuDataSerializer::serialize(const CuData &da) const {
             break;
         }
     } // if(da.containsKey("value"))
-    if(!buf) { // no value key
+    if(!buf) // no value key, buf not initialized yet
         buf = data_init_t<double>(&re, 0, msg.length());
+
+    if(msg.length() > 0) {
+        char *som = msg_ptr(buf);
+        strncpy(som, msg.c_str(), msg.length());
     }
     return buf;
 }
@@ -139,9 +143,9 @@ const char *CuDataSerializer::src(const char *data) const {
     return data + roffsets.src;
 }
 
-const char *CuDataSerializer::msg_ptr(const char *data) const {
+char *CuDataSerializer::msg_ptr(const char *data) const {
     return (this->size(data) > sizeof(struct repr) + sizeof(char) * data_size(data) ) ?
-                data + sizeof(struct repr) + sizeof(char) * data_size(data) : nullptr;
+                data + sizeof(struct repr) + data_size(data) : nullptr;
 }
 
 std::string CuDataSerializer::message(const char *data) const {
