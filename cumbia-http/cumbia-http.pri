@@ -60,7 +60,6 @@ android-g++|wasm-emscripten {
     PKGCONFIG += cumbia
     PKGCONFIG += cumbia-qtcontrols
     PKGCONFIG += cumbia-http
-    PKGCONFIG += cumbia-serialization
 }
 
 android-g++ {
