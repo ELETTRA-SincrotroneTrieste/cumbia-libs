@@ -117,8 +117,9 @@ char *CuDataSerializer::serialize(const CuData &da) const {
         buf = data_init_t<double>(&re, 0, msg.length());
 
     if(msg.length() > 0) {
-        char *som = msg_ptr(buf);
+        char *som = buf + sizeof(struct repr) + data_size(buf);
         strncpy(som, msg.c_str(), msg.length());
+
     }
     return buf;
 }
@@ -143,7 +144,7 @@ const char *CuDataSerializer::src(const char *data) const {
     return data + roffsets.src;
 }
 
-char *CuDataSerializer::msg_ptr(const char *data) const {
+const char *CuDataSerializer::msg_ptr(const char *data) const {
     return (this->size(data) > sizeof(struct repr) + sizeof(char) * data_size(data) ) ?
                 data + sizeof(struct repr) + data_size(data) : nullptr;
 }
@@ -313,6 +314,7 @@ char *CuDataSerializer::data_s_init(repr *re, char **p, size_t len, size_t msgle
         re->datasiz += (strlen(p[i]) + 1) * sizeof(char);
     re->msgsiz = msglen * sizeof(char);
     re->size = sizeof(struct repr) + re->datasiz + re->msgsiz;
+    databuf = (char *) malloc(re->size);
     memcpy(databuf, re, sizeof(struct repr));
     return databuf;
 }
