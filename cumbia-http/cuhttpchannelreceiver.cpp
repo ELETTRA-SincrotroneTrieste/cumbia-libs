@@ -218,7 +218,7 @@ void CuHttpChannelReceiver::onWsMessageReceived(const QString &m) {
 void CuHttpChannelReceiver::onWsBinaryMessageReceived(const QByteArray &ba) {
     CuDataSerializer s;
     uint32_t siz = s.size(ba.data());
-    CuData da = s.deserialize(ba.data());
+    CuData da = s.deserialize(ba.data(), siz); // siz for preliminary data len checks
     ///
     /// TEST
     const CuVariant &v = da["value"];

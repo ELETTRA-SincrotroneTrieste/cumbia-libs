@@ -9,6 +9,8 @@
 
 // #pragma pack(1)
 
+
+
 struct repr {
     uint32_t size;
 
@@ -55,11 +57,15 @@ public:
 
     const char *data_ptr(const char *data) const;
     const char *src(const char *data) const;
+    const char *msg_ptr(const char *data) const;
+    std::string message(const char *data) const;
+    uint32_t msg_len(const char *data) const;
 
-    CuData deserialize(const char *data) const;
+    CuData deserialize(const char *data, size_t len) const;
 
 private:
-    template <typename T> char* serialize_t(struct repr *re, T *p, size_t len) const;
+    template <typename T> char *data_init_t(struct repr *re, size_t datalen, size_t msglen) const;
+    template <typename T> char* serialize_t(char *buf, struct repr *re, T *p) const;
     char *serialize_string(repr *re, char **p, size_t len) const;
     template <typename T> CuVariant deserialize_data_t(const char *data, size_t siz, CuVariant::DataType t, CuVariant::DataFormat f) const;
     CuVariant deserialize_string(const char *buf, size_t siz, CuVariant::DataFormat f) const;
