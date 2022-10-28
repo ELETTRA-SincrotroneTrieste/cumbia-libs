@@ -260,13 +260,14 @@ CuData CuDataSerializer::deserialize(const char *data, size_t len) const {
                     perr("%s", d.s("msg").c_str());
                     break;
                 }
-                if(msg_ptr(data) != nullptr) {
-                    d["msg"] = message(data);
-                }
             }
-            else {
+            else if(*p_dsiz > 0) {
                 d.set("err", true).set("msg", std::string("CuDataSerializer::deserialize: buffer size ") + std::to_string(siz) + " < " + std::to_string(sizeof(struct repr)) + " (metadata size) + " + std::to_string(*p_dsiz) + " (expected bytes of data)");
                 perr("%s", d.s("msg").c_str());
+            }
+
+            if(msg_ptr(data) != nullptr) {
+                d["msg"] = message(data);
             }
         }
         else {
