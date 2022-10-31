@@ -806,8 +806,6 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                 // va[i] (value, w_value, err, quality). If changed, returns true and
                 // updateds va[i], that will cache the new data for the next time
                 bool changed = d->error || m_cache_upd(va[i], rv);
-                printf("\e[0;35mread_atts: changed?  %s error flag %s\e[0m\n",
-                       changed ? "TRUE" : "FALSE", d->error ? "TRUE" : "FALSE");
                 if(changed) { // update exactly as above
                     reslist.push_back(va[i]);
                     reslist[offset]["timestamp_ms"] = rv["timestamp_ms"];
@@ -825,7 +823,6 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                     offset++;
                 }
                 else if(updpo == CuDataUpdatePolicy::OnPollUnchangedNoUpdate) {
-                    printf("\e[0;35mread_atts: doing nothing\e[0m\n");
                     // do nothing
                 }
             }
@@ -858,23 +855,21 @@ bool CuTangoWorld::m_cache_upd(CuData &cache_d, const CuData &nd) const {
     for(i = 0; i < 5; i++) {
         key = keys[i];
         if(cache_d[key] != nd[key]) {  // changed: update cache_d
-            printf("cached value for key %s is %s != %s\n", key, cache_d[key].toString().c_str(), nd[key].toString().c_str());
-
             cache_d[key] = nd[key];
             changed++;
         }
     }
 
-    for(const std::string& s : std::vector<std::string>{"value", "err", "msg", "q", "w_value"} )
-        printf("%s %s=%s | ", s.c_str(), cache_d[s].toString().c_str(), nd[s].toString().c_str());
-    printf("\n");
+//    for(const std::string& s : std::vector<std::string>{"value", "err", "msg", "q", "w_value"} )
+//        printf("%s %s=%s | ", s.c_str(), cache_d[s].toString().c_str(), nd[s].toString().c_str());
+//    printf("\n");
 
-    if(!changed) {
-        printf("CuTangoWorld::m_cache_upd: cached value \e[1;33mUNCHANGED\e[0m:\t");
+//    if(!changed) {
+//        printf("CuTangoWorld::m_cache_upd: cached value \e[1;33mUNCHANGED\e[0m:\t");
 
-    } else {
-        printf("CuTangoWorld::m_cache_upd: cached value \e[1;32mCHANGED\e[0m:\n");
-    }
+//    } else {
+//        printf("CuTangoWorld::m_cache_upd: cached value \e[1;32mCHANGED\e[0m:\n");
+//    }
     return changed > 0;
 }
 
