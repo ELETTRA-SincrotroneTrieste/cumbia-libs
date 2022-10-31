@@ -788,6 +788,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         for(size_t i = 0; i < devattr->size(); i++) {
             Tango::DeviceAttribute *p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
+            printf("\e[0;35mread_atts: %s\e[0m\n", p_da->name.c_str());
             if(updpo == CuDataUpdatePolicy::PollUpdateAlways) {
                 reslist.push_back(va[i]);
                 extractData(p_da,  reslist[offset]);
@@ -805,6 +806,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                 // va[i] (value, w_value, err, quality). If changed, returns true and
                 // updateds va[i], that will cache the new data for the next time
                 bool changed = m_cache_upd(va[i], rv) && !d->error;
+                printf("\e[0;35mread_atts: changed?  %s\e[0m\n", changed ? "TRUE" : "FALSE");
                 if(changed) { // update exactly as above
                     reslist.push_back(va[i]);
                     reslist[offset]["timestamp_ms"] = rv["timestamp_ms"];
@@ -822,6 +824,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                     offset++;
                 }
                 else if(updpo == CuDataUpdatePolicy::OnPollUnchangedNoUpdate) {
+                    printf("\e[0;35mread_atts: doing nothing\e[0m\n");
                     // do nothing
                 }
             }

@@ -204,14 +204,14 @@ CuData CuDataSerializer::deserialize(const char *data, size_t len) const {
             d["src"] = std::string(re->src);
             d["dt"] = re->type;
             d["df"] = re->format;
-            d["err"] = re->stat & 0x1;
+            if(re->stat & 0x1) d["err"] = true;
             re->stat & 0x2 ? d["E"] = "event" : d["mode"] = "P";
             double ts;
             memcpy(&ts, &re->timestamp, sizeof(re->timestamp));
             d["timestamp_us"] = ts; // timestamp is seconds.microseconds
             d["timestamp_ms"] = ts * 1000.0; // so we want milliseconds.microsecs
             uint32_t *p_dsiz = (uint32_t *) (data + roffsets.datasiz); // data size in bytes
-            if(*p_dsiz > 0 && siz == sizeof(struct repr) + (*p_dsiz) ) {
+            if(*p_dsiz > 0 && siz >= sizeof(struct repr) + (*p_dsiz) ) {
                 CuVariant::DataType t = static_cast<CuVariant::DataType>(re->type);
                 CuVariant::DataFormat f = static_cast<CuVariant::DataFormat>(re->format);
                 switch(t) {
