@@ -805,7 +805,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                 // m_cache_upd compares new value rv with cached (or first time empty)
                 // va[i] (value, w_value, err, quality). If changed, returns true and
                 // updateds va[i], that will cache the new data for the next time
-                bool changed = m_cache_upd(va[i], rv) && !d->error;
+                bool changed = d->error || m_cache_upd(va[i], rv);
                 printf("\e[0;35mread_atts: changed?  %s\e[0m\n", changed ? "TRUE" : "FALSE");
                 if(changed) { // update exactly as above
                     reslist.push_back(va[i]);
@@ -848,6 +848,8 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
     return !d->error;
 }
 
+// returns true if one of { "value", "err", "msg", "q", "w_value" } key values changed
+//
 bool CuTangoWorld::m_cache_upd(CuData &cache_d, const CuData &nd) const {
     const char keys[5][8] = { "value", "err", "msg", "q", "w_value" };
     short i, changed = 0;
