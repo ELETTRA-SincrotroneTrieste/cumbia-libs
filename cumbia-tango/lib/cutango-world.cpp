@@ -788,7 +788,6 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         for(size_t i = 0; i < devattr->size(); i++) {
             Tango::DeviceAttribute *p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
-            printf("\e[0;35mread_atts: %s\e[0m\n", p_da->name.c_str());
             if(updpo == CuDataUpdatePolicy::PollUpdateAlways) {
                 reslist.push_back(va[i]);
                 extractData(p_da,  reslist[offset]);
