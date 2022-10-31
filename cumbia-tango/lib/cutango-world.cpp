@@ -861,14 +861,17 @@ bool CuTangoWorld::m_cache_upd(CuData &cache_d, const CuData &nd) const {
             changed++;
         }
     }
-//    if(!changed) {
-//        printf("CuTangoWorld::m_cache_upd: cached value \e[1;33mUNCHANGED\e[0m:\t");
-//        for(const std::string& s : std::vector<std::string>{"value", "err", "msg", "q", "w_value"} )
-//            printf("%s %s=%s | ", s.c_str(), cache_d[s].toString().c_str(), nd[s].toString().c_str());
-//        printf("\n");
-//    } else {
-//        printf("CuTangoWorld::m_cache_upd: cached value \e[1;32mCHANGED\e[0m:\n");
-//    }
+
+    for(const std::string& s : std::vector<std::string>{"value", "err", "msg", "q", "w_value"} )
+        printf("%s %s=%s | ", s.c_str(), cache_d[s].toString().c_str(), nd[s].toString().c_str());
+    printf("\n");
+
+    if(!changed) {
+        printf("CuTangoWorld::m_cache_upd: cached value \e[1;33mUNCHANGED\e[0m:\t");
+
+    } else {
+        printf("CuTangoWorld::m_cache_upd: cached value \e[1;32mCHANGED\e[0m:\n");
+    }
     return changed > 0;
 }
 
