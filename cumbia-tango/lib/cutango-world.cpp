@@ -738,22 +738,12 @@ void CuTangoWorld::fillFromCommandInfo(const Tango::CommandInfo &ci, CuData &d)
     };
 }
 
-bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, CuData &res)
-{
-    /// TEST
-//    auto t1 = std::chrono::steady_clock::now();
-//    std::chrono::steady_clock::time_point t2;
-    ///
-    ///
+bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, CuData &res) {
     d->error = false;
     d->message = "";
     try {
         std::string att(attribute);
         Tango::DeviceAttribute da = dev->read_attribute(att);
-
-        /// TEST
-//        t2 = std::chrono::steady_clock::now();
-        ///
         extractData(&da, res);
     }
     catch(Tango::DevFailed &e) {
@@ -765,14 +755,6 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
     if(d->message.length() > 0)
         res["msg"] = d->message;
     res["color"] = d->t_world_conf.successColor(!d->error);
-
-    /// TEST
-//    auto t3 = std::chrono::steady_clock::now();
-//    printf("CuTangoWorld::read_att, read_attribute, %s, %ld, us, extract data, %ld, us\n",
-//           res.s("src").c_str(),
-//           std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count(),
-//           std::chrono::duration_cast<std::chrono::microseconds>(t3-t2).count());
-    ///
     return !d->error;
 }
 

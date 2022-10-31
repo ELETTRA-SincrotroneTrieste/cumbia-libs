@@ -3,5 +3,6 @@ lib
 /usr/local/tango-9.4.0/include/tango/
 /usr/local/cumbia-libs/include/cumbia
 /usr/local/tango-9.4.0/include/tango/
+/usr/local/tango-9.4.0/include
 /usr/local/omniorb-4.2.3/include/
 /usr/local/omniorb-4.3.0/include

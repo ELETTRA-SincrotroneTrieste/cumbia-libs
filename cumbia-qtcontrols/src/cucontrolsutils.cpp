@@ -280,6 +280,18 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
  */
 QString CuControlsUtils::msg(const CuData &da, const QString& date_time_fmt) const {
     QString m = QuString(da, "src");
+    // timestamp
+    if(da.containsKey("timestamp_ms")) {
+        long int ts = 0;
+        da["timestamp_ms"].to<long int>(ts);
+        if(ts > 0)
+            m += " " + QDateTime::fromMSecsSinceEpoch(ts).toString(date_time_fmt);
+    } else if(da.containsKey("timestamp_us")) {
+        double tsd = 0.0;
+        da["timestamp_us"].to<double>(tsd);  // secs.usecs in a double
+        if(tsd > 0)
+            m += " " + QDateTime::fromMSecsSinceEpoch(static_cast<long int>(tsd * 1000)).toString(date_time_fmt);
+    }
     const QuString& msg = QuString(da, "msg");
     if(!msg.isEmpty())
         return m + ": " + msg;
@@ -288,18 +300,7 @@ QString CuControlsUtils::msg(const CuData &da, const QString& date_time_fmt) con
         m += (" [" + QuString(da, "mode") + "] ");
     else
         m += (" [" + QuString(da, "activity") + "] ");
-    // timestamp
-    if(da.containsKey("timestamp_ms")) {
-        long int ts = 0;
-        da["timestamp_ms"].to<long int>(ts);
-        if(ts > 0)
-            m += QDateTime::fromMSecsSinceEpoch(ts).toString(date_time_fmt);
-    } else if(da.containsKey("timestamp_us")) {
-        double tsd = 0.0;
-        da["timestamp_us"].to<double>(tsd);  // secs.usecs in a double
-        if(tsd > 0)
-            m += QDateTime::fromMSecsSinceEpoch(static_cast<long int>(tsd * 1000)).toString(date_time_fmt);
-    }
+
     return m;
 }
 
