@@ -806,7 +806,8 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                 // va[i] (value, w_value, err, quality). If changed, returns true and
                 // updateds va[i], that will cache the new data for the next time
                 bool changed = d->error || m_cache_upd(va[i], rv);
-                printf("\e[0;35mread_atts: changed?  %s\e[0m\n", changed ? "TRUE" : "FALSE");
+                printf("\e[0;35mread_atts: changed?  %s error flag %s\e[0m\n",
+                       changed ? "TRUE" : "FALSE", d->error ? "TRUE" : "FALSE");
                 if(changed) { // update exactly as above
                     reslist.push_back(va[i]);
                     reslist[offset]["timestamp_ms"] = rv["timestamp_ms"];
