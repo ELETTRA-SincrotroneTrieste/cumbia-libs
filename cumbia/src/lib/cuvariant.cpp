@@ -874,8 +874,12 @@ bool CuVariant::operator ==(const CuVariant &other) const
         return memcmp(other._d->val,  this->_d->val, sizeof(unsigned int) * _d->mSize) == 0;
     case LongInt:
         return memcmp(other._d->val,  this->_d->val, sizeof(long int) * _d->mSize) == 0;
+    case LongLongInt:
+        return memcmp(other._d->val,  this->_d->val, sizeof(long long int) * _d->mSize) == 0;
     case LongUInt:
         return memcmp(other._d->val,  this->_d->val, sizeof(long unsigned int) * _d->mSize) == 0;
+    case LongLongUInt:
+        return memcmp(other._d->val,  this->_d->val, sizeof(long long unsigned int) * _d->mSize) == 0;
     case Float:
         return memcmp(other._d->val,  this->_d->val, sizeof(float) * _d->mSize) == 0;
     case Double:
@@ -884,6 +888,11 @@ bool CuVariant::operator ==(const CuVariant &other) const
         return memcmp(other._d->val,  this->_d->val, sizeof(long double) * _d->mSize) == 0;
     case Boolean:
         return memcmp(other._d->val,  this->_d->val, sizeof(bool) * _d->mSize) == 0;
+    case UChar:
+        return memcmp(other._d->val,  this->_d->val, sizeof(unsigned char) * _d->mSize) == 0;
+    case Char:
+        return memcmp(other._d->val,  this->_d->val, sizeof(char) * _d->mSize) == 0;
+
     case String:
         v_str = static_cast<char **>(_d->val);
         other_v_str = static_cast<char **>(other._d->val);
