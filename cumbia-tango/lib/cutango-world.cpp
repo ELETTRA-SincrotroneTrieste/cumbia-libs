@@ -858,8 +858,9 @@ bool CuTangoWorld::m_cache_upd(CuData &cache_d, const CuData &nd) const {
     for(i = 0; i < 5; i++) {
         key = keys[i];
         if(cache_d[key] != nd[key]) {  // changed: update cache_d
-            cache_d[key] = nd[key];
             printf("cached value for key %s is %s != %s\n", key, cache_d[key].toString().c_str(), nd[key].toString().c_str());
+
+            cache_d[key] = nd[key];
             changed++;
         }
     }
