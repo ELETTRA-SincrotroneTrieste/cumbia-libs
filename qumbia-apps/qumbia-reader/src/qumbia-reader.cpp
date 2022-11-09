@@ -320,6 +320,7 @@ void QumbiaReader::onStringListConversion(const QString &src, const QString &fro
 
 void QumbiaReader::onNewHdbData(const QString &src, const CuData &hdbd)
 {
+//    printf("\e[1;33m%s --> %s\e[0m\n", qstoc(src), datos(hdbd));
     m_hdbHelper.mergeResult(src, hdbd);
     if(m_hdbHelper.allComplete()) {
         m_refreshCntMap[qobject_cast<Qu_Reader *>(sender())->source()]++;

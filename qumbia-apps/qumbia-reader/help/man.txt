@@ -165,6 +165,9 @@
     Install hdbextractor library from https://github.com/ELETTRA-SincrotroneTrieste/hdbextractor
     Install the cumbia-historicaldb module from https://github.com/ELETTRA-SincrotroneTrieste/cumbia-historicaldb
 
+    Execute the 'hdb-db-profile-manager' utility to set up the default database connection profile, or use another
+    profile with the -d (--db-profile) option followed by the profile name.
+
     Display data from the database
         $ cumbia read "hdb://tango_host:20000/a/power_supply/ps_a/current(2019-11-18 16:00:59,2019-11-20 16:00:59)"
     Note 1: the quotation marks are required due to parentheses enclosing the time interval.
@@ -178,6 +181,16 @@
       data format (scalar, vector) and the specified date/time interval
     - for each timestamp, a comma separated row in the form "yyyy-MM-dd hh:mm:ss,value[0],value[1], ..., value[N].
       For scalar data, the row is reduced to the form "yyyy-MM-dd hh:mm:ss,value"
+
+    Search through sources archived into the database: use a source starting with "hdb://find/"
+    followed by the desired pattern:
+           $ cumbia read  "hdb://find/kg07/mod/llrf"
+    Internally a "SELECT att_name from att_conf WHERE att_name like '%kg07/mod/llrf%' " is performed.
+    Note that the search string is wrapped within the sql wildcard character '%'
+
+    Perform a custom query into the historical database: use a source starting with "hdb://query/"
+           $cumbia read "hdb://query/SELECT att_name from att_conf WHERE att_conf_id in (1827,1811,1830)"
+
 
 
 ### cumbia-random sources
@@ -249,4 +262,4 @@
 
     http and websocket modules can thus be set as default in environments where native engines are not installed or unreachable.
 
-(C) 2020 Giacomo Strangolino
+(C) 2022 Giacomo Strangolino

@@ -78,6 +78,8 @@ QList<CuData> QuR_HdbHelper::takeAll()
     return dl;
 }
 
+#define HAS_CUHDB 1
+
 void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filenam, bool color)
 {
 #ifdef HAS_CUHDB
@@ -113,7 +115,24 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
         std::vector<std::string> notes = d["notes"].toStringVector();
         const CuVariant &v = d["value"];
         std::string d1 = d["start_date"].toString(), d2 = d["stop_date"].toString();
-        if(v.isValid() && d.containsKey("data_type_str")) {
+        if(d.containsKey("query")) { // query
+            fprintf(fp, "%s%s%s\n", c[Cyan], d.s("query").c_str(), c[Default]);
+            const std::vector<std::string> &results = d["results"].toStringVector();
+            for(const std::string& r : results)
+                fprintf(fp, "%s\n", r.c_str());
+            if(results.size() == 0)
+                fprintf(fp, "[ no results ]\n");
+        }
+        else if(d.containsKey("find_pattern")) {
+            // search was performed
+            fprintf(fp, "search_pattern,%s%s%s\n", c[Blue], d.s("find_pattern").c_str(), c[Default]);
+            const std::vector<std::string>& srcs = d["sources"].toStringVector();
+            for(const std::string& s : srcs)
+                fprintf(fp, "%s\n", s.c_str());
+            if(srcs.size() == 0)
+                fprintf(fp, "[ 0 results ]\n");
+        }
+        else if(v.isValid() && d.containsKey("data_type_str")) {
             fprintf(fp, "%s%s%s", c[Cyan], d["src"].toString().c_str(), c[Default]);
             if(on_file) {
                 // write data type and write type on file
