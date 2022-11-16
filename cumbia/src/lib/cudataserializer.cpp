@@ -29,6 +29,7 @@ static uint8_t be = aint.c[0];
 */
 
 char *CuDataSerializer::serialize(const CuData &da) const {
+    printf("serializing %s data type %s\n", datos(da), da["value"].dataTypeStr(da["value"].getType()).c_str());
     char *buf = nullptr;
     struct repr re { 0 };
     re.version = VERSION;
@@ -44,63 +45,76 @@ char *CuDataSerializer::serialize(const CuData &da) const {
         const CuVariant& v = da["value"];
         re.type = static_cast<uint8_t>(v.getType());
         re.format = static_cast<uint8_t>(v.getFormat());
-
         switch(re.type) {
         case CuVariant::Double:
-            buf = data_init_t<double>(&re, v.getSize(), msg.length());
+            // matrix_ptr returns a static casted pointer to the matrix of the given type.
+            buf = data_init_t<double>(&re, v.getSize(), msg.length(), v.get_dim_x());
             buf = serialize_t<double>(buf, &re, v.toDoubleP());
             break;
         case CuVariant::LongDouble:
-            buf = data_init_t<long double>(&re, v.getSize(), msg.length());
+            buf = data_init_t<long double>(&re, v.getSize(), msg.length(), v.get_dim_x());
             buf = serialize_t<long double>(buf, &re, v.toLongDoubleP());
             break;
         case CuVariant::Float:
-            buf = data_init_t<float>(&re, v.getSize(), msg.length());
+            buf = data_init_t<float>(&re, v.getSize(), msg.length(), v.get_dim_x());
             buf = serialize_t<float>(buf, &re, v.toFloatP());
             break;
         case CuVariant::Short:
-            buf = data_init_t<short>(&re, v.getSize(), msg.length());
+            buf = data_init_t<short>(&re, v.getSize(), msg.length(), v.get_dim_x());
             buf = serialize_t<short>(buf, &re, v.toShortP());
             break;
         case CuVariant::UShort:
-            buf = data_init_t<unsigned short>(&re, v.getSize(), msg.length());
+            buf = data_init_t<unsigned short>(&re, v.getSize(), msg.length(), v.get_dim_x());
             buf = serialize_t<unsigned short>(buf, &re, v.toUShortP());
             break;
         case CuVariant::Int:
-            buf = data_init_t<int>(&re, v.getSize(), msg.length());
+            buf = data_init_t<int>(&re, v.getSize(), msg.length(), v.get_dim_x());
             buf = serialize_t<int>(buf, &re, v.toIntP());
             break;
+        case CuVariant::UInt:
+            buf = data_init_t<unsigned int>(&re, v.getSize(), msg.length(), v.get_dim_x());
+            buf = serialize_t<unsigned int>(buf, &re, v.toUIntP());
+            break;
         case CuVariant::LongInt:
-            buf = data_init_t<long int>(&re, v.getSize(), msg.length());
+            buf = data_init_t<long int>(&re, v.getSize(), msg.length(), v.get_dim_x());
             buf = serialize_t<long int>(buf, &re, v.toLongIntP());
             break;
         case CuVariant::LongUInt:
-            buf = data_init_t<long unsigned int>(&re, v.getSize(), msg.length());
+            printf("Serializing long unsigned int\n");
+            buf = data_init_t<long unsigned int>(&re, v.getSize(), msg.length(), v.get_dim_x());
             buf = serialize_t<long unsigned int>(buf, &re, v.toULongIntP());
             break;
         case CuVariant::LongLongInt:
-            buf = data_init_t<long long int>(&re, v.getSize(), msg.length());
+            buf = data_init_t<long long int>(&re, v.getSize(), msg.length(), v.get_dim_x());
             buf = serialize_t<long long int>(buf, &re, v.toLongLongIntP());
             break;
         case CuVariant::LongLongUInt:
-            buf = data_init_t<unsigned long long int>(&re, v.getSize(), msg.length());
-            buf = serialize_t<unsigned long long int>(buf, &re, v.toULongLongIntP());
+            buf = data_init_t<unsigned long long int>(&re, v.getSize(), msg.length(), v.get_dim_x());
+            buf = serialize_t<unsigned long long int>(buf, &re,  v.toULongLongIntP());
             break;
         case CuVariant::Char:
-            buf = data_init_t<char>(&re, v.getSize(), msg.length());
+            buf = data_init_t<char>(&re, v.getSize(), msg.length(), v.get_dim_x());
             buf = serialize_t<char>(buf, &re, v.toCharP());
             break;
         case CuVariant::UChar:
-            buf = data_init_t<unsigned char>(&re, v.getSize(), msg.length());
+            buf = data_init_t<unsigned char>(&re, v.getSize(), msg.length(), v.get_dim_x());
             buf = serialize_t<unsigned char>(buf, &re, v.toUCharP());
             break;
         case CuVariant::Boolean:
-            buf = data_init_t<bool>(&re, v.getSize(), msg.length());
+            buf = data_init_t<bool>(&re, v.getSize(), msg.length(), v.get_dim_x());
             buf = serialize_t<bool>(buf, &re, v.toBoolP());
             break;
         case CuVariant::String:
-            buf = data_s_init(&re, v.to_C_charP(), v.getSize(), msg.length());
-            buf = serialize_string(buf, &re, v.to_C_charP(), v.getSize());
+            if(re.format != CuVariant::Matrix) {
+                buf = data_s_init(&re, v.to_C_charP(), v.getSize(), msg.length(), v.get_dim_x());
+                buf = serialize_string(buf, &re, v.to_C_charP(), v.getSize());
+            }
+            else {
+                char **m2char_v = std_string_matrix_to_char_p(v);
+                buf = data_s_init(&re, m2char_v, v.getSize(), msg.length(), v.get_dim_x());
+                buf = serialize_string(buf, &re, m2char_v, v.getSize());
+                delete [] m2char_v;
+            }
             break;
         case CuVariant::VoidPtr:
         default:
@@ -130,6 +144,10 @@ uint32_t CuDataSerializer::size(const char *data) const {
 
 uint32_t CuDataSerializer::data_size(const char *data) const {
     return ((uint32_t *) (data + roffsets.datasiz))[0];
+}
+
+uint32_t CuDataSerializer::rows(const char *data) const {
+    return ((uint32_t*) (data + roffsets.rows))[0];
 }
 
 uint8_t CuDataSerializer::version(const char *data) const {
@@ -211,54 +229,58 @@ CuData CuDataSerializer::deserialize(const char *data, size_t len) const {
             d["timestamp_us"] = ts; // timestamp is seconds.microseconds
             d["timestamp_ms"] = ts * 1000.0; // so we want milliseconds.microsecs
             uint32_t *p_dsiz = (uint32_t *) (data + roffsets.datasiz); // data size in bytes
+            uint32_t *p_rows = (uint32_t *) (data + roffsets.rows);
             if(*p_dsiz > 0 && siz >= sizeof(struct repr) + (*p_dsiz) ) {
                 CuVariant::DataType t = static_cast<CuVariant::DataType>(re->type);
                 CuVariant::DataFormat f = static_cast<CuVariant::DataFormat>(re->format);
                 switch(t) {
                 case CuVariant::Double:
-                    d["value"] = deserialize_data_t<double>(data_ptr(data), *p_dsiz, t, f);
+                    d["value"] = deserialize_data_t<double>(data_ptr(data), *p_dsiz, t, f, *p_rows);
                     break;
                 case CuVariant::LongDouble:
-                    d["value"] = deserialize_data_t<long double>(data_ptr(data), *p_dsiz, t, f);
+                    d["value"] = deserialize_data_t<long double>(data_ptr(data), *p_dsiz, t, f, *p_rows);
                     break;
                 case CuVariant::Float:
-                    d["value"] = deserialize_data_t<float>(data_ptr(data), *p_dsiz, t, f);
+                    d["value"] = deserialize_data_t<float>(data_ptr(data), *p_dsiz, t, f, *p_rows);
                     break;
                 case CuVariant::Short:
-                    d["value"] = deserialize_data_t<short>(data_ptr(data), *p_dsiz, t, f);
+                    d["value"] = deserialize_data_t<short>(data_ptr(data), *p_dsiz, t, f, *p_rows);
                     break;
                 case CuVariant::UShort:
-                    d["value"] = deserialize_data_t<unsigned short>(data_ptr(data), *p_dsiz, t, f);
+                    d["value"] = deserialize_data_t<unsigned short>(data_ptr(data), *p_dsiz, t, f, *p_rows);
                     break;
                 case CuVariant::Int:
-                    d["value"] = deserialize_data_t<int>(data_ptr(data), *p_dsiz, t, f);
+                    d["value"] = deserialize_data_t<int>(data_ptr(data), *p_dsiz, t, f, *p_rows);
+                    break;
+                case CuVariant::UInt:
+                    d["value"] = deserialize_data_t<unsigned int>(data_ptr(data), *p_dsiz, t, f, *p_rows);
                     break;
                 case CuVariant::LongInt:
-                    d["value"] = deserialize_data_t<long int>(data_ptr(data), *p_dsiz, t, f);
+                    d["value"] = deserialize_data_t<long int>(data_ptr(data), *p_dsiz, t, f, *p_rows);
                     break;
                 case CuVariant::LongUInt:
-                    d["value"] = deserialize_data_t<unsigned long>(data_ptr(data), *p_dsiz, t, f);
+                    d["value"] = deserialize_data_t<unsigned long>(data_ptr(data), *p_dsiz, t, f, *p_rows);
                     break;
                 case CuVariant::LongLongInt:
-                    d["value"] = deserialize_data_t<long long int>(data_ptr(data), *p_dsiz, t, f);
+                    d["value"] = deserialize_data_t<long long int>(data_ptr(data), *p_dsiz, t, f, *p_rows);
                     break;
                 case CuVariant::LongLongUInt:
-                    d["value"] = deserialize_data_t<unsigned long long>(data_ptr(data), *p_dsiz, t, f);
+                    d["value"] = deserialize_data_t<unsigned long long>(data_ptr(data), *p_dsiz, t, f, *p_rows);
                     break;
                 case CuVariant::Char:
-                    d["value"] = deserialize_data_t<char>(data_ptr(data), *p_dsiz, t, f);
+                    d["value"] = deserialize_data_t<char>(data_ptr(data), *p_dsiz, t, f, *p_rows);
                     break;
                 case CuVariant::UChar:
-                    d["value"] = deserialize_data_t<unsigned char>(data_ptr(data), *p_dsiz, t, f);
+                    d["value"] = deserialize_data_t<unsigned char>(data_ptr(data), *p_dsiz, t, f, *p_rows);
                     break;
                 case CuVariant::Boolean:
-                    d["value"] = deserialize_data_t<unsigned char>(data_ptr(data), *p_dsiz, t, f);
+                    d["value"] = deserialize_data_t<unsigned char>(data_ptr(data), *p_dsiz, t, f, *p_rows);
                     break;
                 case CuVariant::String:
-                    d["value"] = deserialize_string(data_ptr(data), *p_dsiz, f);
+                    d["value"] = deserialize_string(data_ptr(data), *p_dsiz, f, *p_rows);
                     break;
                 case CuVariant::VoidPtr:
-                    d["value"] = deserialize_data_t<void *>(data_ptr(data), *p_dsiz, t, f);
+                    d["value"] = deserialize_data_t<void *>(data_ptr(data), *p_dsiz, t, f, *p_rows);
                     break;
                 default:
                     d.set("err", true).set("msg", std::string("CuDataSerializer::deserialize unsupported data type " + std::to_string(re->type)));
@@ -289,10 +311,11 @@ CuData CuDataSerializer::deserialize(const char *data, size_t len) const {
 }
 
 template<typename T>
-char *CuDataSerializer::data_init_t(repr *re, size_t datalen, size_t msglen) const {
+char *CuDataSerializer::data_init_t(repr *re, size_t datalen, size_t msglen, size_t nrows) const {
     char *databuf = nullptr;
     re->datasiz = datalen * sizeof(T);
     re->msgsiz = msglen * sizeof(char);
+    re->rows = nrows;
     re->size = sizeof(struct repr) + re->datasiz + re->msgsiz;
     databuf = (char *) malloc(re->size);
     memcpy(databuf, re, sizeof(struct repr));
@@ -306,9 +329,10 @@ char *CuDataSerializer::serialize_t(char *databuf, struct repr *re, T *p) const 
     return databuf;
 }
 
-char *CuDataSerializer::data_s_init(repr *re, char **p, size_t len, size_t msglen) const {
+char *CuDataSerializer::data_s_init(repr *re, char **p, size_t len, size_t msglen, size_t nrows) const {
     char *databuf = nullptr;
     re->datasiz = 0;
+    re->rows = nrows;
     // calculate necessary size
     for(size_t i = 0; i < len; i++)
         re->datasiz += (strlen(p[i]) + 1) * sizeof(char);
@@ -334,19 +358,19 @@ char *CuDataSerializer::serialize_string(char *databuf, struct repr *re, char **
 // datasiz: size of the actual data, in bytes
 // t, f CuVariant DataType and Format to build the returned CuVariant
 template<typename T>
-CuVariant CuDataSerializer::deserialize_data_t(const char *data_ptr, size_t datasiz, CuVariant::DataType t, CuVariant::DataFormat f) const {
+CuVariant CuDataSerializer::deserialize_data_t(const char *data_ptr, size_t datasiz, CuVariant::DataType t, CuVariant::DataFormat f, size_t rows) const {
     size_t len = datasiz / sizeof(T); // length of vector (will be 1 if scalar)
     const T *pv = (const T *) data_ptr;
-    return CuVariant(pv, len, f, t); // cumbia v1.5 constructor from raw data buffer and len (plus CuVariant DataType and Format)
+    return CuVariant(pv, len, f, t, rows); // cumbia v1.5 constructor from raw data buffer and len (plus CuVariant DataType and Format)
 }
 
-CuVariant CuDataSerializer::deserialize_string(const char *dataptr, size_t datasiz, CuVariant::DataFormat f) const {
+CuVariant CuDataSerializer::deserialize_string(const char *dataptr, size_t datasiz, CuVariant::DataFormat f, size_t rows) const {
     if(f == CuVariant::Scalar) {
         printf("deserializing string scalar len %ld (expected 1)\n", datasiz);
         std::string s(dataptr, datasiz);
         return CuVariant(s);
     }
-    else if(f == CuVariant::Vector) {
+    else if(f == CuVariant::Vector || f == CuVariant::Matrix) {
         std::vector<std::string> vs;
         const char *s = dataptr;
         printf("deserializing string VECTOR data siz %ld \n", datasiz);
@@ -354,16 +378,32 @@ CuVariant CuDataSerializer::deserialize_string(const char *dataptr, size_t datas
         for(size_t i = 0; i < datasiz; i++) {
             if(s[j++] == '\0') {
                 vs.push_back(std::string(s));
-                printf("\e[1;33m\nsaving `%s`\e[0m\n", s);
                 s = dataptr + i + 1;
                 j = 0;
             }
         }
-        printf("deserializing string vector siz %ld obtained vector of %ld strings\n", datasiz, vs.size());
+        printf("deserializing string vector [ \033[1;32mor matrix\033[0m ] siz %ld obtained vector of %ld strings\n", datasiz, vs.size());
         for(size_t i = 0; i < vs.size(); i++)
             printf("'%s'\n", vs[i].c_str());
 
-        return CuVariant(vs);
+        return f == CuVariant::Vector ? CuVariant(vs) : CuVariant(vs, rows, vs.size() / rows);
     }
     return CuVariant();
+}
+
+// put the rows of a matrix of strings one after another
+char **CuDataSerializer::std_string_matrix_to_char_p(const CuVariant &v) const {
+    size_t siz, i = 0;
+    char **p = new char *[v.getSize()]; // v.getSize = rows x cols
+    CuMatrix<std::string> m = v.toMatrix<std::string>();
+    for(size_t r = 0; r < m.nrows(); r++) {
+        for(size_t c = 0; c < m.ncols(); c++) {
+            siz = m[r][c].length() + 1;
+            p[i] = new char[siz];
+            memset(p[i], 0, sizeof(siz));
+            strncpy(p[i], m[r][c].c_str(), siz);
+            i++;
+        }
+    }
+    return p;
 }

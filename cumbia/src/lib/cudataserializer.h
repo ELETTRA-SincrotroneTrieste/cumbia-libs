@@ -4,7 +4,7 @@
 #include <cudata.h>
 #include <list>
 
-#define  VERSION 0x0001
+#define  VERSION 0x0002
 #define CUDATASER_MAXSRCLEN 128 // 32 bytes aligned!
 
 // #pragma pack(1)
@@ -33,6 +33,7 @@ struct repr {
 
     uint64_t timestamp;
     uint32_t datasiz;
+    uint32_t rows;
     uint32_t msgsiz;
 };
 
@@ -48,10 +49,11 @@ struct repr_offsets {
     int timestamp = src + sizeof(char) * CUDATASER_MAXSRCLEN;
 
     int datasiz = timestamp + sizeof(uint64_t);
-    int msgsiz = datasiz + sizeof(uint32_t);
+    int rows = datasiz + sizeof(uint32_t);
+    int msgsiz = rows + sizeof(uint32_t);
 
     int totlen = msgsiz + sizeof(uint32_t);
-} ;
+};
 
 static struct repr_offsets roffsets;
 
@@ -63,6 +65,7 @@ public:
 
     uint32_t size(const char *data) const;
     uint32_t data_size(const char *data) const;
+    uint32_t rows(const char *data) const;
     uint8_t version(const char *data) const;
 
     const char *data_ptr(const char *data) const;
@@ -74,12 +77,13 @@ public:
     CuData deserialize(const char *data, size_t len) const;
 
 private:
-    template <typename T> char *data_init_t(struct repr *re, size_t datalen, size_t msglen) const;
-    char *data_s_init(struct repr *re, char **p, size_t len, size_t msglen) const;
+    template <typename T> char *data_init_t(struct repr *re, size_t datalen, size_t msglen, size_t rows = 1) const;
+    char *data_s_init(struct repr *re, char **p, size_t len, size_t msglen, size_t nrows = 1) const;
     template <typename T> char* serialize_t(char *buf, struct repr *re, T *p) const;
     char *serialize_string(char *buf, repr *re, char **p, size_t len) const;
-    template <typename T> CuVariant deserialize_data_t(const char *data, size_t siz, CuVariant::DataType t, CuVariant::DataFormat f) const;
-    CuVariant deserialize_string(const char *buf, size_t siz, CuVariant::DataFormat f) const;
+    template <typename T> CuVariant deserialize_data_t(const char *data, size_t siz, CuVariant::DataType t, CuVariant::DataFormat f, size_t rows = 1) const;
+    CuVariant deserialize_string(const char *buf, size_t siz, CuVariant::DataFormat f, size_t rows) const;
+    char **std_string_matrix_to_char_p(const CuVariant& v) const;
 };
 
 
