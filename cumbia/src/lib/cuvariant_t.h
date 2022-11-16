@@ -8,13 +8,19 @@
 #include <stdlib.h>
 
 template<typename T>
-CuVariant::CuVariant(const T *p, size_t siz, DataFormat f, DataType t) {
+CuVariant::CuVariant(const T *p, size_t siz, DataFormat f, DataType t, int rows) {
     _d = new CuVariantPrivate(); // _d->val is nullptr
     m_init(f, t); // sets _d->mIsNull and !_d->mIsValid
     _d->mIsNull = (p == nullptr || siz == 0);
     _d->mIsValid = !_d->mIsNull;
-    if(_d->mIsValid) {
+    if(_d->mIsValid && f == DataFormat::Matrix && rows > 0) {
         _d->mSize = siz;
+        _d->nrows = rows;
+        _d->ncols = siz / rows;
+        _d->val = new CuMatrix<T>(p, rows, siz / rows);
+    }
+    else if(_d->mIsValid) {
+        _d->mSize = _d->nrows = siz;
         _d->val = new T[siz];
         memcpy(_d->val, p, siz * sizeof(T));
     }
@@ -283,6 +289,11 @@ CuMatrix<T> CuVariant::toMatrix() const {
         return *(static_cast<CuMatrix <T> * >(_d->val));
     }
     return CuMatrix<T>();
+}
+
+template<typename T>
+CuMatrix<T> *CuVariant::matrix_ptr() const {
+    return static_cast<CuMatrix <T> * > (_d->val);
 }
 
 #endif // CUVARIANT_T_H
