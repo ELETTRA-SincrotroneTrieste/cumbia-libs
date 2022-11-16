@@ -864,7 +864,7 @@ bool CuTangoWorld::m_cache_upd(CuData &cache_d, const CuData &nd) const {
 //    printf("\n");
 
 //    if(!changed) {
-//        printf("CuTangoWorld::m_cache_upd: cached value \e[1;33mUNCHANGED\e[0m:\t");
+//        printf("CuTangoWorld::m_cache_upd: %s cached value \e[1;33mUNCHANGED\e[0m:\n", datos(nd));
 
 //    } else {
 //        printf("CuTangoWorld::m_cache_upd: cached value \e[1;32mCHANGED\e[0m:\n");
