@@ -26,6 +26,14 @@ public:
 		memcpy(p, v, nr * nc * sizeof(T));
 	}
 
+    /*! \brief Matrix constructor accepting pointer and sizes. const version
+     */
+    CuMatrix(const T *v, size_t dimx, size_t dimy)
+        : nr(dimx), nc(dimy) {
+        p = new T[nr * nc];
+        memcpy(p, v, nr * nc * sizeof(T));
+    }
+
 	CuMatrix(const CuMatrix<T>& other) {
 		m_from_other(other);
 	}
