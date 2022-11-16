@@ -14,6 +14,8 @@ CuVariantPrivate::CuVariantPrivate(const CuVariantPrivate &other) {
     format  = other.format;
     type = other.type;
     mSize = other.mSize;
+    nrows = other.nrows;
+    ncols = other.ncols;
     mIsValid = other.mIsValid;
     mIsNull = other.mIsNull;
     _r.store(1);
@@ -194,7 +196,7 @@ CuVariantPrivate::CuVariantPrivate()
     val = 0; // NULL
     mIsValid = false;
     mIsNull = true;
-    mSize = 0;
+    mSize = nrows = ncols = 0;
     _r.store(1);
 }
 
@@ -210,7 +212,7 @@ CuVariantPrivate::~CuVariantPrivate() {
  */
 void CuVariant::m_delete_rdata()
 {
-    if(_d->val != NULL)
+    if(_d->val != NULL && _d->format != Matrix)
     {
         /*
          * num DataType { TypeInvalid = -1, Short, UShort, Int, UInt,
@@ -250,6 +252,56 @@ void CuVariant::m_delete_rdata()
         //        cuprintf("delete_rdata: CuVariant %p deleted d %p d->val %p type %d\n", this, d, d->val, d->dataType);
         _d->val = NULL;
     }
+    else if(_d->val != nullptr) {
+        switch(_d->type) {
+        case Double:
+            delete matrix_ptr<double>();
+            break;
+        case LongDouble:
+            delete matrix_ptr<long double>();
+            break;
+        case Float:
+            delete matrix_ptr<float>();
+            break;
+        case Short:
+            delete matrix_ptr<short>();
+            break;
+        case UShort:
+            delete matrix_ptr<unsigned short>();
+            break;
+        case Int:
+            delete matrix_ptr<int>();
+            break;
+        case UInt:
+            delete matrix_ptr<unsigned int>();
+            break;
+        case LongInt:
+            delete matrix_ptr<long int>();
+            break;
+        case LongUInt:
+            delete matrix_ptr<long unsigned int>();
+            break;
+        case LongLongInt:
+            delete matrix_ptr<long long int>();
+            break;
+        case LongLongUInt:
+            delete matrix_ptr<unsigned long long int>();
+            break;
+        case Char:
+            delete matrix_ptr<char>();
+            break;
+        case UChar:
+            delete matrix_ptr< unsigned char>();
+            break;
+        case String:
+            delete matrix_ptr<std::string>();
+            break;
+        case Boolean:
+            delete matrix_ptr<bool>();
+            break;
+        }
+
+    }
 }
 
 /*! \brief deletes internal data
@@ -260,7 +312,7 @@ void CuVariant::m_cleanup()
 {
     if(_d != NULL)
     {
-        if(_d->mSize > 0 && _d->type == String && _d->val != NULL)
+        if(_d->mSize > 0 && _d->type == String && _d->val != nullptr && _d->format != Matrix)
         {
             char **ssi = (char **) _d->val;
             for(size_t i = 0; i < _d->mSize; i++)
@@ -481,7 +533,7 @@ CuVariant::CuVariant(const char *s) {
 CuVariant::CuVariant(void *ptr) {
     _d = new CuVariantPrivate();
     m_init(Scalar, VoidPtr);
-    _d->mSize = 1;
+    _d->mSize = _d->nrows = 1;
     _d->mIsNull = false;
     _d->mIsValid = true;
     _d->val = ptr;
@@ -659,93 +711,94 @@ CuVariant::CuVariant(const std::vector<float> &vf) {
 
 CuVariant::CuVariant(const std::vector<unsigned char> &m, size_t dimx, size_t dimy) {
     _d = new CuVariantPrivate();
-    m_init(Matrix, UChar);
+    m_init(Matrix, UChar, dimx, dimy);
     m_v_to_matrix(m, dimx, dimy);
 }
 
 CuVariant::CuVariant(const std::vector<char> &m, size_t dimx, size_t dimy) {
     _d = new CuVariantPrivate();
-    m_init(Matrix, Char);
+    m_init(Matrix, Char, dimx, dimy);
     m_v_to_matrix(m, dimx, dimy);
 }
 
 CuVariant::CuVariant(const std::vector<short> &i, size_t dimx, size_t dimy) {
     _d = new CuVariantPrivate();
-    m_init(Matrix, Short);
+    m_init(Matrix, Short, dimx, dimy);
     m_v_to_matrix(i, dimx, dimy);
 }
 
 CuVariant::CuVariant(const std::vector<unsigned short> &si, size_t dimx, size_t dimy) {
     _d = new CuVariantPrivate();
-    m_init(Matrix, UShort);
+    m_init(Matrix, UShort, dimx, dimy);
     m_v_to_matrix(si, dimx, dimy);
 }
 
 CuVariant::CuVariant(const std::vector<int> &vi, size_t dimx, size_t dimy) {
     _d = new CuVariantPrivate();
-    m_init(Matrix, Int);
+    m_init(Matrix, Int, dimx, dimy);
     m_v_to_matrix(vi, dimx, dimy);
 }
 
 CuVariant::CuVariant(const std::vector<unsigned int> &ui, size_t dimx, size_t dimy){
     _d = new CuVariantPrivate();
-    m_init(Matrix, UInt);
+    m_init(Matrix, UInt, dimx, dimy);
     m_v_to_matrix(ui, dimx, dimy);
 }
 
 CuVariant::CuVariant(const std::vector<long> &li, size_t dimx, size_t dimy) {
     _d = new CuVariantPrivate();
-    m_init(Matrix, LongInt);
+    m_init(Matrix, LongInt, dimx, dimy);
     m_v_to_matrix(li, dimx, dimy);
 }
 
 CuVariant::CuVariant(const std::vector<long long> &lli, size_t dimx, size_t dimy) {
     _d = new CuVariantPrivate();
-    m_init(Matrix, LongLongInt);
+    m_init(Matrix, LongLongInt, dimx, dimy);
     m_v_to_matrix(lli, dimx, dimy);
 }
 
 CuVariant::CuVariant(const std::vector<unsigned long> &lui, size_t dimx, size_t dimy) {
     _d = new CuVariantPrivate();
-    m_init(Matrix, LongUInt);
+    m_init(Matrix, LongUInt, dimx, dimy);
     m_v_to_matrix(lui, dimx, dimy);
 }
 
 CuVariant::CuVariant(const std::vector<unsigned long long> &llui, size_t dimx, size_t dimy) {
     _d = new CuVariantPrivate();
-    m_init(Matrix, LongLongUInt);
+    m_init(Matrix, LongLongUInt, dimx, dimy);
     m_v_to_matrix(llui, dimx, dimy);
 }
 
 CuVariant::CuVariant(const std::vector<float> &vf, size_t dimx, size_t dimy)
 {
     _d = new CuVariantPrivate();
-    m_init(Matrix, Float);
+    m_init(Matrix, Float, dimx, dimy);
     m_v_to_matrix(vf, dimx, dimy);
 }
 
 CuVariant::CuVariant(const std::vector<double> &vd, size_t dimx, size_t dimy)
 {
     _d = new CuVariantPrivate();
-    m_init(Matrix, Double);
+    m_init(Matrix, Double, dimx, dimy);
     m_v_to_matrix(vd, dimx, dimy);
 }
 
 CuVariant::CuVariant(const std::vector<long double> &vld, size_t dimx, size_t dimy) {
     _d = new CuVariantPrivate();
-    m_init(Matrix, LongDouble);
+    m_init(Matrix, LongDouble, dimx, dimy);
     m_v_to_matrix(vld, dimx, dimy);
 }
 
 CuVariant::CuVariant(const std::vector<bool> &vb, size_t dimx, size_t dimy) {
     _d = new CuVariantPrivate();
-    m_init(Matrix, Boolean);
+    m_init(Matrix, Boolean, dimx, dimy);
     m_v_to_matrix(vb, dimx, dimy);
 }
 
 CuVariant::CuVariant(const std::vector<std::string> &vs, size_t dimx, size_t dimy) {
     _d = new CuVariantPrivate();
-    m_init(Matrix, String);
+    pretty_pri("initializing matrix from string vector size %ld dimx %ld dimy %ld", vs.size(), dimx, dimy);
+    m_init(Matrix, String, dimx, dimy);
     m_v_to_string_matrix(vs, dimx, dimy);
 }
 
@@ -849,7 +902,8 @@ bool CuVariant::operator ==(const CuVariant &other) const
 {
     if(! (other.getFormat() ==  this->getFormat() && other.getSize() ==  this->getSize() &&
           other.getType() ==  this->getType() && other.isNull() ==  this->isNull() &&
-          other.isValid() ==  this->isValid() ) )
+          other.isValid() ==  this->isValid() && this->_d->nrows == other._d->nrows &&
+          this->_d->ncols == other._d->ncols) )
         return false;
     /* one d->val is null and the other not */
     if( (other._d->val == nullptr &&  this->_d->val != nullptr) || (other._d->val != nullptr &&  this->_d->val == nullptr) )
@@ -865,33 +919,47 @@ bool CuVariant::operator ==(const CuVariant &other) const
     */
     switch (_d->type) {
     case Short:
-        return memcmp(other._d->val,  this->_d->val, sizeof(short) * _d->mSize) == 0;
+        return _d->format == CuVariant::Matrix ? *matrix_ptr<short>() == *other.matrix_ptr<short>() :
+                                                 memcmp(other._d->val,  this->_d->val, sizeof(short) * _d->mSize) == 0;
     case UShort:
-        return memcmp(other._d->val,  this->_d->val, sizeof(unsigned short) * _d->mSize) == 0;
+        return _d->format == CuVariant::Matrix ? *matrix_ptr<unsigned short>() == *other.matrix_ptr<unsigned short>() :
+                                                 memcmp(other._d->val,  this->_d->val, sizeof(unsigned short) * _d->mSize) == 0;
     case Int:
-        return memcmp(other._d->val,  this->_d->val, sizeof(int) * _d->mSize) == 0;
+        return _d->format == CuVariant::Matrix ? *matrix_ptr<int>() == *other.matrix_ptr<int>() :
+                                                 memcmp(other._d->val,  this->_d->val, sizeof(int) * _d->mSize) == 0;
     case UInt:
-        return memcmp(other._d->val,  this->_d->val, sizeof(unsigned int) * _d->mSize) == 0;
+        return _d->format == CuVariant::Matrix ? *matrix_ptr<unsigned int>() == *other.matrix_ptr<unsigned int>() :
+                                                 memcmp(other._d->val,  this->_d->val, sizeof(unsigned int) * _d->mSize) == 0;
     case LongInt:
-        return memcmp(other._d->val,  this->_d->val, sizeof(long int) * _d->mSize) == 0;
+        return _d->format == CuVariant::Matrix ? *matrix_ptr<long int>() == *other.matrix_ptr<long int>() :
+                                                 memcmp(other._d->val,  this->_d->val, sizeof(long int) * _d->mSize) == 0;
     case LongLongInt:
-        return memcmp(other._d->val,  this->_d->val, sizeof(long long int) * _d->mSize) == 0;
+        return _d->format == CuVariant::Matrix ? *matrix_ptr<long long int>() == *other.matrix_ptr<long long int>() :
+                                                 memcmp(other._d->val,  this->_d->val, sizeof(long long int) * _d->mSize) == 0;
     case LongUInt:
-        return memcmp(other._d->val,  this->_d->val, sizeof(long unsigned int) * _d->mSize) == 0;
+        return _d->format == CuVariant::Matrix ? *matrix_ptr<long unsigned int>() == *other.matrix_ptr<long unsigned int>() :
+                                                 memcmp(other._d->val,  this->_d->val, sizeof(long unsigned int) * _d->mSize) == 0;
     case LongLongUInt:
-        return memcmp(other._d->val,  this->_d->val, sizeof(long long unsigned int) * _d->mSize) == 0;
+        return _d->format == CuVariant::Matrix ? *matrix_ptr<long long unsigned int>() == *other.matrix_ptr<long long unsigned int>() :
+                                                 memcmp(other._d->val,  this->_d->val, sizeof(long long unsigned int) * _d->mSize) == 0;
     case Float:
-        return memcmp(other._d->val,  this->_d->val, sizeof(float) * _d->mSize) == 0;
+        return  _d->format == CuVariant::Matrix ? *matrix_ptr<float>() == *other.matrix_ptr<float>() :
+                                                  memcmp(other._d->val,  this->_d->val, sizeof(float) * _d->mSize) == 0;
     case Double:
-        return memcmp(other._d->val,  this->_d->val, sizeof(double) * _d->mSize) == 0;
+        return  _d->format == CuVariant::Matrix ? *matrix_ptr<double>() == *other.matrix_ptr<double>() :
+                                                  memcmp(other._d->val,  this->_d->val, sizeof(double) * _d->mSize) == 0;
     case LongDouble:
-        return memcmp(other._d->val,  this->_d->val, sizeof(long double) * _d->mSize) == 0;
+        return _d->format == CuVariant::Matrix ? *matrix_ptr<long double>() == *other.matrix_ptr<long double>() :
+                                                 memcmp(other._d->val,  this->_d->val, sizeof(long double) * _d->mSize) == 0;
     case Boolean:
-        return memcmp(other._d->val,  this->_d->val, sizeof(bool) * _d->mSize) == 0;
+        return  _d->format == CuVariant::Matrix ? *matrix_ptr<bool>() == *other.matrix_ptr<bool>() :
+                                                  memcmp(other._d->val,  this->_d->val, sizeof(bool) * _d->mSize) == 0;
     case UChar:
-        return memcmp(other._d->val,  this->_d->val, sizeof(unsigned char) * _d->mSize) == 0;
+        return _d->format == CuVariant::Matrix ? *matrix_ptr<unsigned char>() == *other.matrix_ptr<unsigned char>()
+                                               : memcmp(other._d->val,  this->_d->val, sizeof(unsigned char) * _d->mSize) == 0;
     case Char:
-        return memcmp(other._d->val,  this->_d->val, sizeof(char) * _d->mSize) == 0;
+        return _d->format == CuVariant::Matrix ? *matrix_ptr<char>() == *other.matrix_ptr<char>() :
+                                                 memcmp(other._d->val,  this->_d->val, sizeof(char) * _d->mSize) == 0;
 
     case String:
         v_str = static_cast<char **>(_d->val);
@@ -994,6 +1062,14 @@ size_t CuVariant::getSize() const
     return _d->mSize;
 }
 
+size_t CuVariant::get_dim_x() const {
+    return _d->nrows;
+}
+
+size_t CuVariant::get_dim_y() const {
+    return _d->ncols;
+}
+
 /*! \brief returns true if the stored data is an integer number
  *
  * @return true if the data type is an integer, false otherwise
@@ -1055,9 +1131,11 @@ bool CuVariant::isVoidPtr() const
  * - isNull property is set to true
  * - isValid property is set to true if format and data type are valid
  */
-void CuVariant::m_init(DataFormat df, DataType dt) {
+void CuVariant::m_init(DataFormat df, DataType dt, size_t n_rows, size_t n_cols) {
     _d->mIsValid = (dt > TypeInvalid && dt < EndDataTypes) && (df > FormatInvalid && df < EndFormatTypes);
-    _d->mSize = 0;
+    _d->mSize = n_rows * n_cols;
+    _d->nrows = n_rows;
+    _d->ncols = n_cols;
     _d->format = df;
     _d->type = dt;
     _d->mIsNull = true;
@@ -1071,6 +1149,8 @@ void CuVariant::m_from(const std::vector<T> &v) {
     else  {
         _d->val = NULL;
         _d->mSize = v.size();
+        _d->nrows = 1;
+        _d->ncols = 0;
         
         _d->val = (T *) new T[_d->mSize];
         for(size_t i = 0; i < _d->mSize; i++)
@@ -1087,6 +1167,7 @@ void CuVariant::m_v_to_matrix(const std::vector<T> &v, size_t dimx, size_t dim_y
     else {
         CuMatrix<T> *m = new CuMatrix<T>(v, dimx, dim_y);
         _d->val = m ; // static_cast<CuMatrix <T>* >(m);
+        _d->mSize = dimx * dim_y;
     }
 }
 
@@ -1110,6 +1191,7 @@ void CuVariant::m_from(const std::vector<std::string> &s) {
     else /* strings need alloc and strcpy */
     {
         _d->mSize = s.size();
+        _d->nrows = 1;
         char **str_array = new char*[_d->mSize];
         for(size_t i = 0; i < _d->mSize; i++)
         {
@@ -1127,7 +1209,7 @@ void CuVariant::m_from(const std::vector<std::string> &s) {
  * - isNull is set to false
  */
 void CuVariant::m_from_std_string(const std::string &s) {
-    _d->mSize = 1;
+    _d->mSize = _d->nrows = 1;
     size_t size = strlen(s.c_str()) + 1;
     char **str = new char*[_d->mSize];
     str[0] = new char[size];
@@ -1147,7 +1229,7 @@ void CuVariant::m_from(T value) {
         perr("CuVariant::from <T>: invalid data type or format. Have you called init first??");
     else
     {
-        _d->mSize = 1;
+        _d->mSize = _d->nrows = 1;
         _d->val = (T *) new T[_d->mSize];
         *(static_cast<T *> (_d->val) ) = (T) value;
         _d->mIsNull = false;
@@ -1868,8 +1950,10 @@ std::vector<std::string> CuVariant::sv(const char *fmt, bool *ok) const {
  *
  */
 double *CuVariant::toDoubleP() const {
-    if(_d->type == CuVariant::Double)
+    if(_d->type == CuVariant::Double && _d->format != CuVariant::Matrix)
         return static_cast<double *> (_d->val);
+    else if(_d->type  == CuVariant::Double)
+        return matrix_ptr<double>()->raw_data();
     return NULL;
 }
 
@@ -1886,8 +1970,10 @@ double *CuVariant::toDoubleP() const {
  * @see getData
  */
 long double *CuVariant::toLongDoubleP() const {
-    if(_d->type == CuVariant::LongDouble)
+    if(_d->type == CuVariant::LongDouble && _d->format != CuVariant::Matrix)
         return static_cast<long double *> (_d->val);
+    else if(_d->type == CuVariant::LongDouble)
+        return matrix_ptr<long double>()->raw_data();
     return NULL;
 }
 
@@ -1904,7 +1990,8 @@ long double *CuVariant::toLongDoubleP() const {
  * @see getData
  */
 unsigned int *CuVariant::toUIntP() const {
-    if(_d->type == CuVariant::UInt) return static_cast<unsigned int *>( _d->val );
+    if(_d->type == CuVariant::UInt && _d->format != CuVariant::Matrix) return static_cast<unsigned int *>( _d->val );
+    else if(_d->type == CuVariant::UInt) return matrix_ptr<unsigned int>()->raw_data();
     return NULL;
 }
 
@@ -1921,7 +2008,8 @@ unsigned int *CuVariant::toUIntP() const {
  * @see getData
  */
 int *CuVariant::toIntP() const {
-    if(_d->type == CuVariant::Int) return static_cast<int *>( _d->val );
+    if(_d->type == CuVariant::Int && _d->format != CuVariant::Matrix) return static_cast<int *>( _d->val );
+    else if(_d->type == CuVariant::Int) return matrix_ptr<int>()->raw_data();
     return NULL;
 }
 
@@ -1938,14 +2026,14 @@ int *CuVariant::toIntP() const {
  * @see getData
  */
 long int *CuVariant::toLongIntP() const {
-    if(_d->type == CuVariant::LongInt)
-        return static_cast<long int *>(_d->val);
+    if(_d->type == CuVariant::LongInt && _d->format != CuVariant::Matrix)  return static_cast<long int *>(_d->val);
+    else if(_d->type == CuVariant::LongInt) return matrix_ptr<long int>()->raw_data();
     return NULL;
 }
 
 long long int *CuVariant::toLongLongIntP() const {
-    if(_d->type == CuVariant::LongLongInt)
-        return static_cast<long long int *>(_d->val);
+    if(_d->type == CuVariant::LongLongInt && _d->format != CuVariant::Matrix) return static_cast<long long int *>(_d->val);
+    else if(_d->type == CuVariant::LongLongInt) return matrix_ptr<long long int>()->raw_data();
     return NULL;
 }
 
@@ -1962,14 +2050,14 @@ long long int *CuVariant::toLongLongIntP() const {
  * @see getData
  */
 unsigned long int *CuVariant::toULongIntP() const {
-    if(_d->type == CuVariant::LongUInt)
-        return static_cast<unsigned long int *>(_d->val);
+    if(_d->type == CuVariant::LongUInt && _d->format != CuVariant::Matrix) return static_cast<unsigned long int *>(_d->val);
+    else if(_d->type == CuVariant::LongUInt) return matrix_ptr<unsigned long int>()->raw_data();
     return NULL;
 }
 
 unsigned long long *CuVariant::toULongLongIntP() const {
-    if(_d->type == CuVariant::LongLongUInt)
-        return static_cast<unsigned long long int *>(_d->val);
+    if(_d->type == CuVariant::LongLongUInt && _d->format != CuVariant::Matrix)  return static_cast<unsigned long long int *>(_d->val);
+    else if(_d->type == CuVariant::LongLongUInt) return matrix_ptr<unsigned long long int>()->raw_data();
     return nullptr;
 }
 
@@ -1986,8 +2074,8 @@ unsigned long long *CuVariant::toULongLongIntP() const {
  * @see getData
  */
 float *CuVariant::toFloatP() const {
-    if(_d->type == CuVariant::Float)
-        return static_cast<float *>(_d->val);
+    if(_d->type == CuVariant::Float && _d->format != CuVariant::Matrix)  return static_cast<float *>(_d->val);
+    else if(_d->type == CuVariant::Float) return matrix_ptr<float>()->raw_data();
     return NULL;
 }
 
@@ -2004,8 +2092,8 @@ float *CuVariant::toFloatP() const {
  * @see getData
  */
 short *CuVariant::toShortP() const {
-    if(_d->type == CuVariant::Short)
-        return static_cast<short int *>(_d->val);
+    if(_d->type == CuVariant::Short && _d->format != CuVariant::Matrix) return static_cast<short int *>(_d->val);
+    else if(_d->type == CuVariant::Short) return matrix_ptr<short int>()->raw_data();
     return NULL;
 }
 
@@ -2022,8 +2110,8 @@ short *CuVariant::toShortP() const {
  * @see getData
  */
 unsigned short *CuVariant::toUShortP() const {
-    if(_d->type == CuVariant::UShort)
-        return static_cast<unsigned short *>(_d->val);
+    if(_d->type == CuVariant::UShort && _d->format != CuVariant::Matrix) return static_cast<unsigned short *>(_d->val);
+    else if(_d->type == CuVariant::UShort) return matrix_ptr<unsigned short>()->raw_data();
     return NULL;
 }
 
@@ -2040,8 +2128,8 @@ unsigned short *CuVariant::toUShortP() const {
  * @see getData
  */
 bool *CuVariant::toBoolP() const {
-    if(_d->type == CuVariant::Boolean)
-        return static_cast<bool *> (_d->val );
+    if(_d->type == CuVariant::Boolean && _d->format != CuVariant::Matrix) return static_cast<bool *> (_d->val );
+    else if (_d->type == CuVariant::Boolean) return matrix_ptr<bool>()->raw_data();
     return NULL;
 }
 
@@ -2058,21 +2146,25 @@ bool *CuVariant::toBoolP() const {
  * @see getData
  */
 char **CuVariant::to_C_charP() const {
-    if(_d->type == CuVariant::String)
+    if(_d->type == CuVariant::String && _d->format != CuVariant::Matrix)
         return (char **) _d->val ;
+    else if (_d->type == CuVariant::String)
+        return matrix_ptr<char*>()->raw_data();
     return NULL;
 }
 
 
 char *CuVariant::toCharP() const {
-    if(_d->type == CuVariant::Char)
+    if(_d->type == CuVariant::Char && _d->format != CuVariant::Matrix)
         return (char *) _d->val ;
+    else if(_d->type == CuVariant::Char)
+        return matrix_ptr<char>()->raw_data();
     return nullptr;
 }
 
 unsigned char *CuVariant::toUCharP() const {
-    if(_d->type == CuVariant::UChar)
-        return (unsigned char *) _d->val ;
+    if(_d->type == CuVariant::UChar && _d->format != CuVariant::Matrix) return (unsigned char *) _d->val;
+    else if(_d->type == CuVariant::UChar) return matrix_ptr<unsigned char>()->raw_data();
     return nullptr;
 }
 
