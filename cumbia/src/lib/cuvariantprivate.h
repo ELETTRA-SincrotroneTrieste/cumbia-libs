@@ -12,7 +12,7 @@ public:
     CuVariantPrivate(const CuVariantPrivate &other);
     CuVariantPrivate();
     ~CuVariantPrivate();
-    size_t mSize;
+    size_t mSize, nrows, ncols;
     int format; // DataFormat
     int type; // DataType
     bool mIsValid;
