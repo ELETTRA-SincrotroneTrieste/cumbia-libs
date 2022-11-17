@@ -12,10 +12,15 @@ This is possible, with one caveat: only running sources and targets can be *hot 
 setTargets at runtime at a later moment still have a reference to the original engine, that presently
 is not replaced by the procedure.
 
+An application under *quapps/test/engine-switch* is also available for testing.
+
 2. Improved matrix support
 
-Matrices have been improved and further tested. Their interface and integration with CuVariant has 
+Matrices have been improved, fixed and further tested. Their interface and integration with CuVariant has 
 evolved to support *serialization* (see below).
+
+Please update the [https://github.com/ELETTRA-SincrotroneTrieste/cumbia-image-plugin](cumbia-image-plugin)
+to get support for more data types for images.
 
 3. Data serialization
 
@@ -28,6 +33,14 @@ Data serialization is exploited by the *cumbia http* module in conjunction with 
 [https://gitlab.elettra.eu/puma/server/caserver](PUMA caserver) versions (>=1.5.0) that switch to 
 binary mode over *Websocket* to transmit a big  amount of data at a higher rate.
 
+##### Documentation
+
+Refer to the CuDataSerializer class documentation for furter information.
+
+4. More flexible data format conversion methods
+
+The *CuVariant* template method *to<T>* now allows a Vector data format to be *to-ed* into a scalar.
+
 #### cumbia-http
 
 The *cumbia-http* module exploits cumbia *data serialization* and binary messages over Websocket
@@ -35,6 +48,20 @@ to speed up data transfer for large vectors or images at a high transmission rat
 This works in conjunction with the versions of [https://gitlab.elettra.eu/puma/server/caserver](PUMA caserver)
 starting from 1.5.0.
 
+
+#### cumbia-tango
+
+Support Tango 9.4.0 and provide backward compatibility.
+
+
+#### cumbia-qtcontrols
+
+Fixed *QuInputOutput* misbehaviour when a QComboBox is used as writer in *index mode*.
+
+##### Information dialog redesigned
+
+The *Link stats* information dialog has been completely redesigned to offer a cleaner look
+and a leaner user interaction. A tree model is now in use.
 
 ## version 1.4.0
 
