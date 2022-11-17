@@ -1,5 +1,41 @@
 # News
 
+## version 1.5.0
+
+#### cumbia
+
+1. Engine hot switch
+
+Right clicking on any cumbia widget opens a dialog that allows switching from one engine to another.
+For example, you can switch from the native *Tango + CORBA* engine to the *http module*.
+This is possible, with one caveat: only running sources and targets can be *hot switched*. setSource or
+setTargets at runtime at a later moment still have a reference to the original engine, that presently
+is not replaced by the procedure.
+
+2. Improved matrix support
+
+Matrices have been improved and further tested. Their interface and integration with CuVariant has 
+evolved to support *serialization* (see below).
+
+3. Data serialization
+
+A new class, *CuDataSerializer*, can encode and decode CuData in order to be sent over the network.
+The current implementation assumes both sender and receiver's endiannes is the same. A flag
+in the header of the binary message can be checked by the receiver in order to convert the byte order
+if necessary.
+
+Data serialization is exploited by the *cumbia http* module in conjunction with the most recent
+[https://gitlab.elettra.eu/puma/server/caserver](PUMA caserver) versions (>=1.5.0) that switch to 
+binary mode over *Websocket* to transmit a big  amount of data at a higher rate.
+
+#### cumbia-http
+
+The *cumbia-http* module exploits cumbia *data serialization* and binary messages over Websocket
+to speed up data transfer for large vectors or images at a high transmission rate. 
+This works in conjunction with the versions of [https://gitlab.elettra.eu/puma/server/caserver](PUMA caserver)
+starting from 1.5.0.
+
+
 ## version 1.4.0
 
 Refer to [cumbia CHANGES-1.4.md](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs/blob/master/cumbia/CHANGES-1.4.md)

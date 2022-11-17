@@ -83,8 +83,6 @@ sources = [
 'lib/cutthreadtokengen.cpp'
 ]
 
-includedirs = include_directories('lib')
-
 cpp_arguments = ['-DCUMBIA_DEBUG_OUTPUT=1 -DCU_TANGO_VERSION=' + cu_version, ]
 link_arguments = [ ]
 
@@ -105,8 +103,18 @@ if(get_option('gprof_enable'))
     link_arguments += [ '-pg' ]
 endif
 
+tgdep = dependency('tango', method: 'pkg-config')
 
-deps = [ dependency('threads'), dependency('cumbia'), dependency('tango', method: 'pkg-config') ]
+# tango 9.4.0 requires #include <tango/tango.h>.
+# older versions would not find includes. So let's define a tginc
+# storing the include directories without trailing /tango:
+#
+tginc = tgdep.get_pkgconfig_variable('includedir')
+
+# add tginc to include dirs
+includedirs = [ include_directories('lib'), include_directories(tginc) ]
+
+deps = [ dependency('threads'), dependency('cumbia'), tgdep ]
 
 cumbiatangolib = shared_library('cumbia-tango', sources,
         version : meson.project_version(),
