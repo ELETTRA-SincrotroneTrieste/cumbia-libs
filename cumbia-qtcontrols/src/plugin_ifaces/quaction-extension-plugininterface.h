@@ -12,7 +12,7 @@ class CuControlsReaderFactoryI;
 class CuControlsFactoryPool;
 class QString;
 class QStringList;
-class CuContext;
+class CuContextI;
 
 class QuActionExtensionI {
   public:
@@ -21,13 +21,13 @@ class QuActionExtensionI {
 
     virtual QString getName() const = 0;
 
-    virtual CuData execute(const CuData& in, const CuContext* ctx) = 0;
+    virtual CuData execute(const CuData& in, const CuContextI* ctx) = 0;
 
-    virtual std::vector<CuData> execute(const std::vector<CuData>& in_list, const CuContext* ctx) = 0;
+    virtual std::vector<CuData> execute(const std::vector<CuData>& in_list, const CuContextI* ctx) = 0;
 
     virtual QObject* get_qobject() = 0;
 
-    virtual const CuContext *getContext() const = 0;
+    virtual const CuContextI *getContextI() const = 0;
 
     virtual std::string message() const = 0;
 
@@ -39,7 +39,7 @@ class QuActionExtensionFactoryI
 public:
     virtual ~QuActionExtensionFactoryI() {}
 
-    virtual QuActionExtensionI *create(const QString& name, const CuContext *ctx) = 0;
+    virtual QuActionExtensionI *create(const QString& name, const CuContextI *ctx) = 0;
 };
 
 /** \brief Interface for a plugin

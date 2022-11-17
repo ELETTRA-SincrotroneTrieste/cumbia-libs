@@ -16,6 +16,7 @@
 #include "culinkstats.h"
 #include "cucontextmenu.h"
 #include "cucontext.h"
+#include "cuengine_hot_switch.h"
 
 /** @private */
 class QuLabelPrivate
@@ -105,11 +106,9 @@ QuLabel::~QuLabel()
     delete d;
 }
 
-QString QuLabel::source() const
-{
-    if(CuControlsReaderA* r = d->context->getReader())
-        return r->source();
-    return "";
+QString QuLabel::source() const {
+    return d->context && d->context->getReader() ?
+                d->context->getReader()->source() : QString();
 }
 
 /** \brief returns the pointer to the CuContext
@@ -216,12 +215,16 @@ void QuLabel::setDisplayUnitEnabled(bool en)
     d->display_u_enabled = en;
 }
 
+void QuLabel::ctxSwitch(CumbiaPool *c_p, const CuControlsFactoryPool &fpool) {
+    d->context = CuEngineHotSwitch().hot_switch(this, d->context, c_p, fpool);
+}
+
 void QuLabel::contextMenuEvent(QContextMenuEvent *e)
 {
     CuContextMenu* m = findChild<CuContextMenu *>();
     if(!m)
         m = new CuContextMenu(this);
-    m->popup(e->globalPos(), d->context);
+    m->popup(e->globalPos(), this);
 }
 
 void QuLabel::onUpdate(const CuData &da)

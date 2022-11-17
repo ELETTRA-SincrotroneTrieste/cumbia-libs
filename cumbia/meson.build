@@ -1,4 +1,4 @@
-project('cumbia', 'cpp', version : '1.4.0',
+project('cumbia', 'cpp', version : '1.5.0',
     default_options : ['c_std=c17', 'cpp_std=c++17'])
 
 project_description = 'library that offers a carefree approach to multi thread application design and implementation'
@@ -52,7 +52,8 @@ headers = [
 'src/lib/threads/cuthreadseventbridge.h',
 'src/lib/threads/cuthreadseventbridgefactory_i.h' ,
 'src/lib/threads/cuthreadtokengeni.h',
-'src/lib/cuuserdata.h'
+'src/lib/cuuserdata.h',
+'src/lib/cudataserializer.h'
 ]
 
 install_headers(headers, subdir : 'cumbia') # -> include/cumbia/
@@ -81,13 +82,13 @@ sources = [
 'src/lib/threads/cueventloop.cpp',
 'src/lib/services/cuactivitymanager.cpp',
 'src/lib/threads/cuevent.cpp',
-'src/lib/threads/cuthreadseventbridge.cpp'
-
+'src/lib/threads/cuthreadseventbridge.cpp',
+'src/lib/cudataserializer.cpp'
 ]
 
 includedirs = include_directories('src/lib', 'src/lib/threads', 'src/lib/services')
 
-cpp_arguments = [ '-DCUMBIA_DEBUG_OUTPUT=1' , '-DCU_VERSION=1.4.0' ]
+cpp_arguments = [ '-DCUMBIA_DEBUG_OUTPUT=1' , '-DCU_VERSION=1.5.0' ]
 link_arguments = [  ]
 
 # profiling with gperftools
@@ -160,8 +161,8 @@ else
   doxydata.set('HAVE_DOT', 'NO')
 endif
 
-
-  subdir('doc')
+message('no doc generated / install')
+#  subdir('doc')
 
 endif
 

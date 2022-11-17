@@ -6,7 +6,7 @@
 
 include(cumbia-qtcontrols.pri)
 
-CONFIG += release
+CONFIG += debug
 
 
 CONFIG += silent
@@ -95,7 +95,8 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/widgets-base/qulineargaugebase.cpp \
     src/quanimation.cpp \
     src/widgets-base/qulabelbase.cpp \
-    src/cupluginloader.cpp
+    src/cupluginloader.cpp \
+    src/cuengine_hot_switch.cpp
 
 HEADERS += cumbiaqtcontrols.h\
     cumbia-qtcontrols_global.h \
@@ -187,7 +188,9 @@ HEADERS += cumbiaqtcontrols.h\
     src/plugin_ifaces/cucontextmenuactionsplugin_i.h \
     src/cupluginloader.h \
     src/plugin_ifaces/cuformulaplugininterface.h \
-    src/plugin_ifaces/cuhistoricaldbplugin_i.h
+    src/plugin_ifaces/cuhistoricaldbplugin_i.h    \
+    cuengine_hot_switch.h
+
 
 unix:!android-g++ {
 
@@ -284,18 +287,22 @@ DOXYGEN_BIN = $$system(which doxygen)
 isEmpty(DOXYGEN_BIN) {
     message("cumbia-qtcontrols.pro: doxygen not found")
 } else {
-    message("Doxygen found")
+    message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    message("---------------------------- DOCS DISABLED ----------------------")
+    message("")
+    message("")
+#    message("Doxygen found")
 
-    doc.commands = \
-    doxygen \
-    Doxyfile;
+#    doc.commands = \
+#    doxygen \
+#    Doxyfile;
 
-    doc.files = doc/*
-    doc.path = $${CUMBIA_QTCONTROLS_DOCDIR}
-    QMAKE_EXTRA_TARGETS += doc
-    !android-g++ {
-        INSTALLS += doc
-    }
+#    doc.files = doc/*
+#    doc.path = $${CUMBIA_QTCONTROLS_DOCDIR}
+#    QMAKE_EXTRA_TARGETS += doc
+#    !android-g++ {
+#        INSTALLS += doc
+#    }
 }
     inc.files = $${HEADERS}
     inc.path = $${CUMBIA_QTCONTROLS_INCLUDES}

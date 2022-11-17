@@ -178,6 +178,9 @@ public:
     CuVariant(CuVariant && other);
     CuVariant();
 
+    /* pointer */
+    template <typename T> CuVariant(const T* p, size_t siz, DataFormat f, DataType t, int rows = 1);
+
     CuVariant & operator=(const CuVariant& other);
     CuVariant & operator=(CuVariant&& other);
     bool operator ==(const CuVariant &other) const;
@@ -186,6 +189,9 @@ public:
     DataFormat getFormat() const;
     DataType getType() const;
     size_t getSize() const;
+    size_t get_dim_x() const;
+    size_t get_dim_y() const;
+
 
     bool isInteger() const;
     bool isUnsignedType() const;
@@ -281,6 +287,7 @@ public:
     void *toVoidP() const;
 
     template<typename T> CuMatrix<T> toMatrix() const;
+    template<typename T> CuMatrix<T> *matrix_ptr() const;
 
     template<typename T> bool to(T &val) const;
     template<typename T> bool toVector(std::vector<T> &v) const;
@@ -301,7 +308,7 @@ private:
     void m_v_to_string_matrix(const std::vector<std::string> &vs, size_t dimx, size_t dim_y);
     void m_from(const std::vector<std::string > & s);
     void m_from_std_string(const std::string & s);
-    void m_init(DataFormat df, DataType dt);
+    void m_init(DataFormat df, DataType dt, size_t n_rows = 1, size_t n_cols = 0);
     void m_delete_rdata();
     void m_detach();
 

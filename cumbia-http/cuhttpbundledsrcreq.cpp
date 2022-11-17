@@ -100,8 +100,8 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
 
 
     d->reply = reply;
-//    printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p started: (rq. use cnt: %d)\n", qstoc(objectName()),
-//           this, /*d->req_payload.toStdString().c_str(),*/ d->usecnt);
+//    printf("\e[1;31m*\e[0m %s CuHttpBundledSrcReq %p started: \e[1;33m%s\e[0m (rq. use cnt: %d)\n", qstoc(objectName()),
+//           this, d->req_payload.toStdString().c_str(), d->usecnt);
 }
 
 void CuHttpBundledSrcReq::setBlocking(bool b) {

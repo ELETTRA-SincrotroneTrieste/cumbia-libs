@@ -45,6 +45,8 @@ class QuInputOutput : public EInputOutputWidget, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)
+    Q_PROPERTY(bool indexMode READ indexMode WRITE setIndexMode DESIGNABLE true)
+    Q_PROPERTY(int indexOffset READ indexOffset WRITE setIndexOffset DESIGNABLE true)
 
 public:
     /** \brief this enum describes the type of available writers
@@ -77,12 +79,17 @@ public:
 
     void setObjectName(const QString& name);
 
+    bool indexMode() const;
+    int indexOffset() const;
+
 public slots:
     virtual void onNewData(const CuData& d);
 
     void setSource(const QString& s);
-
     void unsetSource();
+
+    void setIndexMode(bool m);
+    void setIndexOffset(int o);
 
 private:
     QuInputOutputPrivate *d;

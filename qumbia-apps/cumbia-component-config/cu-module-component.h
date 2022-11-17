@@ -14,7 +14,7 @@ public:
     CuModuleComponent(const std::string &cnfdir);
 
     enum Mode { Generic, Url, EndModes };
-    const char *keywords[32] = { "native", "url:" };
+    const char *keywords[32] = { "native", "http" };
     std::string update(const char* value);
     std::string process(int option);
     bool save();
@@ -27,10 +27,14 @@ public:
 
 private:
     char m_option;
+    std::string m_url;
     std::vector<std::string> m_lines;
     std::string m_error;
 
     bool m_load_file();
+    std::string m_url_from_file() const;
+    // check if configuration file is version < 1.5.0 and upgrade if so
+    void m_upgrade_conf_file();
 };
 
 #endif // MODSETTER_H

@@ -33,8 +33,8 @@ public:
     QString target() const;
 
 public slots:
-    void setTarget(const QString &targets);
-
+    void setTarget(const QString &targets, CuContext *ctx = nullptr);
+    void clearTarget();
 private:
     QuSpinBoxPrivate *d;
 

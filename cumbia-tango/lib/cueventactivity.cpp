@@ -5,7 +5,7 @@
 #include "cutthread.h"
 #include "cudevicefactory_i.h"
 #include <cumacros.h>
-#include <tango.h>
+#include <tango/tango.h>
 
 /*! @private */
 CuActivityEvent::Type CuTAStopEvent::getType() const {

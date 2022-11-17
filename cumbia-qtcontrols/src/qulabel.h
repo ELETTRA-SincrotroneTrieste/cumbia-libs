@@ -66,10 +66,10 @@ public:
 
 public slots:
     void setSource(const QString& s);
-
     void unsetSource();
 
     void setDisplayUnitEnabled(bool en);
+    void ctxSwitch(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
 
 signals:
     void newData(const CuData&);

@@ -33,6 +33,10 @@ public:
         return d->fpath.at(d->fpath.length() - 1) == '/' ? d->fpath + name() : d->fpath + "/" + name();
     }
 
+    virtual std::string confdir() const {
+        return d->fpath.at(d->fpath.length() - 1) == '/' ? d->fpath : d->fpath + "/";
+    }
+
     /*!
      * \brief processes the option obtained from menu_get_option
      * \param option result obtained from a previous call to menu_get_option

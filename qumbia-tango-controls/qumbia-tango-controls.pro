@@ -87,6 +87,7 @@ unix {
     QMAKE_PKGCONFIG_INCDIR = $${inc.path}
     QMAKE_PKGCONFIG_VERSION = $${VERSION}
     QMAKE_PKGCONFIG_DESTDIR = pkgconfig
+    QMAKE_PKGCONFIG_REQUIRES = cumbia-tango cumbia-qtcontrols
 }
 
 # remove ourselves (added in .pri)

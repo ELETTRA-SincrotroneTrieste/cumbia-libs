@@ -1,4 +1,4 @@
-project('cumbia-tango', 'cpp', version : '1.4.0',
+project('cumbia-tango', 'cpp', version : '1.5.0',
     default_options : ['c_std=c17', 'cpp_std=c++17'])
 
 project_description = 'C++ library based on cumbia and the Tango control system'
@@ -131,6 +131,7 @@ pkgg.generate(
     version : meson.project_version(),
     name : 'libcumbia-tango',
     filebase : 'cumbia-tango',
+    requires: [ 'cumbia', 'tango' ],
     install_dir : 'lib/pkgconfig',
     description : project_description )
 

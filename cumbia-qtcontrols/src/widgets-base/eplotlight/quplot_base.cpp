@@ -213,6 +213,7 @@ void QuPlotBase::configure(const CuData &da)
     bool okl, oku;  // toDouble ok for lower and upper bound
     double lb, ub;  // double for lower and upper bound
     double current_def_lb, current_def_ub;
+    QwtPlot::Axis axisId = (da.s("yaxis") == "left" ? QwtPlot::yLeft : QwtPlot::yRight);
     QString min = QString::fromStdString(m.toString()); // min is of type string
     QString max = QString::fromStdString(M.toString()); // max is of type string
     lb = min.toDouble(&okl);  // string to double, see if ok
@@ -221,8 +222,8 @@ void QuPlotBase::configure(const CuData &da)
     if(okl && oku && lb != ub)
     {
         // get current default lower and upper bounds
-        current_def_lb = defaultLowerBound(QwtPlot::yLeft);
-        current_def_ub = defaultUpperBound(QwtPlot::yLeft);
+        current_def_lb = defaultLowerBound(axisId);
+        current_def_ub = defaultUpperBound(axisId);
         // if the minimum saved into lb is smaller than the current lower bound
         if(current_def_lb > lb)
             current_def_lb = lb;
@@ -232,12 +233,12 @@ void QuPlotBase::configure(const CuData &da)
     else {
 
         // initialised (to 0 and 1000) in QuPlotAxesComponent's constructor
-        current_def_lb = axes_c->lowerBoundFromCurves(QwtPlot::yLeft);
-        current_def_ub  = axes_c->upperBoundFromCurves(QwtPlot::yLeft);
+        current_def_lb = axes_c->lowerBoundFromCurves(axisId);
+        current_def_ub  = axes_c->upperBoundFromCurves(axisId);
     }
-    setDefaultBounds(current_def_lb, current_def_ub, QwtPlot::yLeft);
-    if(axes_c->scaleMode(QwtPlot::yLeft) == QuPlotAxesComponent::SemiAutoScale) {
-        setAxisScale(QwtPlot::yLeft, current_def_lb, current_def_ub);
+    setDefaultBounds(current_def_lb, current_def_ub, axisId);
+    if(axes_c->scaleMode(axisId) == QuPlotAxesComponent::SemiAutoScale) {
+        setAxisScale(axisId, current_def_lb, current_def_ub);
     }
     // if configuration happens after data, need replot
     replot();
@@ -647,14 +648,14 @@ void QuPlotBase::setCurveStyle(const QString &name, QwtPlotCurve::CurveStyle sty
 
 bool QuPlotBase::titleOnCanvasEnabled() { return d->titleOnCanvasEnabled; }
 
-bool QuPlotBase::xAxisAutoscaleEnabled() {
+bool QuPlotBase::xAxisAutoscaleEnabled(QwtPlot::Axis axis) {
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    return axes_c->autoscale(QwtPlot::xBottom);
+    return axes_c->autoscale(axis);
 }
 
-bool QuPlotBase::yAxisAutoscaleEnabled() {
+bool QuPlotBase::yAxisAutoscaleEnabled(QwtPlot::Axis axis) {
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    return axes_c->autoscale(QwtPlot::yLeft);
+    return axes_c->autoscale(axis);
 }
 
 void QuPlotBase::setDataBufferSize(int s)
@@ -666,21 +667,21 @@ int QuPlotBase::dataBufferSize() {
     return d->bufSiz;
 }
 
-void QuPlotBase::setXAxisAutoscaleEnabled(bool autoscale)
+void QuPlotBase::setXAxisAutoscaleEnabled(bool autoscale, QwtPlot::Axis axis)
 {
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    axes_c->setAutoscale(QwtPlot::xBottom, autoscale);
+    axes_c->setAutoscale(axis, autoscale);
     if(!autoscale)
-        axes_c->setBounds(this, QwtPlot::xBottom, axisScaleDiv(QwtPlot::xBottom).lowerBound(), axisScaleDiv(QwtPlot::xBottom).upperBound());
+        axes_c->setBounds(this, axis, axisScaleDiv(axis).lowerBound(), axisScaleDiv(axis).upperBound());
     replot();
 }
 
-void QuPlotBase::setYAxisAutoscaleEnabled(bool autoscale)
+void QuPlotBase::setYAxisAutoscaleEnabled(bool autoscale, QwtPlot::Axis axis)
 {
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    axes_c->setAutoscale(QwtPlot::yLeft, autoscale);
+    axes_c->setAutoscale(axis, autoscale);
     if(!autoscale)
-        axes_c->setBounds(this, QwtPlot::yLeft, axisScaleDiv(QwtPlot::yLeft).lowerBound(), axisScaleDiv(QwtPlot::yLeft).upperBound());
+        axes_c->setBounds(this, axis, axisScaleDiv(axis).lowerBound(), axisScaleDiv(axis).upperBound());
     replot();
 }
 
@@ -700,14 +701,14 @@ void QuPlotBase::setYRightAxisAutoscaleEnabled(bool autoscale) {
     replot();
 }
 
-double QuPlotBase::yUpperBound()
+double QuPlotBase::yUpperBound(QwtPlot::Axis axis)
 {
-    return axisScaleDiv(QwtPlot::yLeft).upperBound();
+    return axisScaleDiv(axis).upperBound();
 }
 
-double QuPlotBase::yLowerBound()
+double QuPlotBase::yLowerBound(QwtPlot::Axis axis)
 {
-    return axisScaleDiv(QwtPlot::yLeft).lowerBound();
+    return axisScaleDiv(axis).lowerBound();
 }
 
 /*
@@ -730,14 +731,14 @@ void QuPlotBase::setYUpperBound(double u)
     refresh();
 }
 
-double QuPlotBase::xUpperBound()
+double QuPlotBase::xUpperBound(QwtPlot::Axis axis)
 {
-    return axisScaleDiv(QwtPlot::xBottom).upperBound();
+    return axisScaleDiv(axis).upperBound();
 }
 
-double QuPlotBase::xLowerBound()
+double QuPlotBase::xLowerBound(QwtPlot::Axis axis)
 {
-    return axisScaleDiv(QwtPlot::xBottom).lowerBound();
+    return axisScaleDiv(axis).lowerBound();
 }
 
 /*
@@ -801,34 +802,34 @@ double QuPlotBase::yAutoscaleAdjustment()
     return axes_c->autoscaleMargin(QwtPlot::yLeft);
 }
 
-bool QuPlotBase::xAxisLogScale()
+bool QuPlotBase::xAxisLogScale(QwtPlot::Axis axis)
 {
-    if(dynamic_cast<QwtLogScaleEngine *>(axisScaleEngine(QwtPlot::xBottom)))
+    if(dynamic_cast<QwtLogScaleEngine *>(axisScaleEngine(axis)))
         return true;
     return false;
 }
 
-bool QuPlotBase::yAxisLogScale()
+bool QuPlotBase::yAxisLogScale(QwtPlot::Axis axis)
 {
-    if(dynamic_cast<QwtLogScaleEngine *>(axisScaleEngine(QwtPlot::yLeft)))
+    if(dynamic_cast<QwtLogScaleEngine *>(axisScaleEngine(axis)))
         return true;
     return false;
 }
 
-void QuPlotBase::setXAxisLogScale(bool l)
+void QuPlotBase::setXAxisLogScale(bool l, QwtPlot::Axis axis)
 {
     if(l)
-        setAxisScaleEngine(QwtPlot::xBottom, new QwtLogScaleEngine());
+        setAxisScaleEngine(axis, new QwtLogScaleEngine());
     else
-        setAxisScaleEngine(QwtPlot::xBottom, new QwtLinearScaleEngine());
+        setAxisScaleEngine(axis, new QwtLinearScaleEngine());
 }
 
-void QuPlotBase::setYAxisLogScale(bool l)
+void QuPlotBase::setYAxisLogScale(bool l, QwtPlot::Axis axis)
 {
     if(l)
-        setAxisScaleEngine(QwtPlot::yLeft, new QwtLogScaleEngine());
+        setAxisScaleEngine(axis, new QwtLogScaleEngine());
     else
-        setAxisScaleEngine(QwtPlot::yLeft, new QwtLinearScaleEngine());
+        setAxisScaleEngine(axis, new QwtLinearScaleEngine());
 }
 
 void QuPlotBase::displayZoomHint()
@@ -957,11 +958,15 @@ void QuPlotBase::moveCurveToYRight(QwtPlotCurve *c, bool yr)
     if(yAxis == QwtPlot::yLeft && yr)
     {
         printf("moving to --->\n");
+        if(!axisEnabled(QwtPlot::yRight))
+            enableAxis(QwtPlot::yRight, true);
         c->setAxes(c->xAxis(), QwtPlot::yRight);
     }
     else if(yAxis == QwtPlot::yRight && !yr)
     {
         printf("<---- moving to\n");
+        if(!axisEnabled(QwtPlot::yLeft))
+            enableAxis(QwtPlot::yLeft, true);
         c->setAxes(c->xAxis(), QwtPlot::yLeft);
     }
 }

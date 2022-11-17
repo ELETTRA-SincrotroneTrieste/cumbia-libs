@@ -5,7 +5,7 @@
 #include <quaction-extension-plugininterface.h>
 #include <cudatalistener.h>
 
-class CuContext;
+class CuContextI;
 
 class GetTDbPropertyExtensionPrivate;
 
@@ -14,7 +14,7 @@ class GetTDbPropertyExtension : public QObject, public QuActionExtensionI, publi
     Q_OBJECT
 public:
 
-    GetTDbPropertyExtension(const CuContext *ctx, QObject* parent = NULL);
+    GetTDbPropertyExtension(const CuContextI *ctx, QObject* parent = NULL);
 
     virtual ~GetTDbPropertyExtension();
 
@@ -22,11 +22,11 @@ public:
 public:
     QString getName() const;
 
-    CuData execute(const CuData &in, const CuContext *ctx);
-    std::vector<CuData> execute(const std::vector<CuData>& in_list, const CuContext *ctx);
+    CuData execute(const CuData &in, const CuContextI *ctx);
+    std::vector<CuData> execute(const std::vector<CuData>& in_list, const CuContextI *ctxi);
 
     QObject* get_qobject();
-    virtual const CuContext *getContext() const;
+    virtual const CuContextI *getContextI() const;
     std::string message() const;
     bool error() const;
 

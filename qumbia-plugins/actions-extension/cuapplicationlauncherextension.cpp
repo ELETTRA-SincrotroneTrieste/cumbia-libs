@@ -10,26 +10,30 @@ public:
     QString program;
     QStringList args;
     QuAppDBusControllerInterface *qudbusctrl_i;
-    const CuContext*  ctx;
+    const CuContextI*  ctxi;
     std::string msg;
     bool err;
 };
 
 /** \brief the class constructor
  *
- * @param ctx a pointer to CuContext. The default is NULL, the parameter is not used
+ * @param ctx a pointer to CuContextI. The default is NULL, the parameter is not used
  * by this class.
  */
-CuApplicationLauncherExtension::CuApplicationLauncherExtension(const CuContext *ctx) {
+CuApplicationLauncherExtension::CuApplicationLauncherExtension(const CuContextI *ctx) {
     d = new CuApplicationLauncherPrivate;
     d->qudbusctrl_i = NULL;
-    d->ctx = ctx;
+    d->ctxi = ctx;
     d->err = false;
 }
 
 CuApplicationLauncherExtension::~CuApplicationLauncherExtension() {
     // do not delete plugin instances
+    printf("deleting CuApplicationLauncherExtension\n");
+
     delete d;
+    printf("deleted\n");
+
 }
 
 void CuApplicationLauncherExtension::start() {
@@ -75,8 +79,8 @@ QString CuApplicationLauncherExtension::getName() const {
     return "CuApplicationLauncherExtension";
 }
 
-CuData CuApplicationLauncherExtension::execute(const CuData &in, const CuContext *ctx) {
-    d->ctx = ctx;
+CuData CuApplicationLauncherExtension::execute(const CuData &in, const CuContextI *ctx) {
+    d->ctxi = ctx;
     QString cmd = QString::fromStdString(in["command"].toString());
     QStringList ar = cmd.split(QRegExp("\\s+"));
     if(ar.size() > 0) {
@@ -91,12 +95,12 @@ QObject *CuApplicationLauncherExtension::get_qobject() {
     return NULL;
 }
 
-const CuContext *CuApplicationLauncherExtension::getContext() const {
-    return d->ctx;
+const CuContextI *CuApplicationLauncherExtension::getContextI() const {
+    return d->ctxi;
 }
 
 
-std::vector<CuData> CuApplicationLauncherExtension::execute(const std::vector<CuData>& , const CuContext *) {
+std::vector<CuData> CuApplicationLauncherExtension::execute(const std::vector<CuData>& , const CuContextI *) {
     return std::vector<CuData>();
 }
 

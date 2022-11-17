@@ -3,13 +3,13 @@
 
 class QuPlotContextMenuStrategyPrivate {
 public:
-    CuContext *context;
+    CuContextI *contexti;
 };
 
-QuPlotContextMenuStrategy::QuPlotContextMenuStrategy(CuContext *ctx)
+QuPlotContextMenuStrategy::QuPlotContextMenuStrategy(CuContextI *ctxi)
 {
     d = new QuPlotContextMenuStrategyPrivate;
-    d->context = ctx;
+    d->contexti = ctxi;
 }
 
 QMenu *QuPlotContextMenuStrategy::createMenu(QWidget *w)
@@ -17,7 +17,7 @@ QMenu *QuPlotContextMenuStrategy::createMenu(QWidget *w)
     QMenu *m = QuPlotBaseContextMenuStrategy::createMenu(w);
     CuContextMenu *cm = new CuContextMenu(w);
     cm->setTitle("More...");
-    cm->prepare(d->context);
+    cm->prepare(d->contexti);
     m->addMenu(cm);
     return m;
 }

@@ -6,7 +6,7 @@ exists(../cumbia-qt.prf) {
 }
 
 
-QT += network
+QT += network websockets
 
 # + ----------------------------------------------------------------- +
 #
@@ -74,8 +74,8 @@ wasm-emscripten {
 
 DEFINES += CUMBIA_PRINTINFO
 
-VERSION_HEX = 0x010400
-VERSION = 1.4.0
+VERSION_HEX = 0x010500
+VERSION = 1.5.0
 
 DEFINES += CUMBIA_HTTP_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
     CUMBIA_HTTP_VERSION=$${VERSION_HEX}

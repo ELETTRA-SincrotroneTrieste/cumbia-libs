@@ -80,7 +80,7 @@ private:
 };
 
 
-#include <tango.h>
+#include <tango/tango.h>
 
 class CuCustomWidgetCollectionInterface:
         public QObject,

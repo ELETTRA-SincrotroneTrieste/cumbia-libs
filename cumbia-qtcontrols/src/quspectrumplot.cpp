@@ -5,7 +5,6 @@
 #include <QtDebug>
 #include <QDateTime>
 
-#include "qupalette.h"
 #include "cucontrolsfactories_i.h"
 #include "cucontrolsreader_abs.h"
 #include "quwidgetupdatestrategy_i.h"
@@ -73,7 +72,7 @@ void QuSpectrumPlot::m_init()
 {
     d->auto_configure = true;
     d->read_ok = false;
-    setContextMenuStrategy(new QuPlotContextMenuStrategy(getContext()));
+    setContextMenuStrategy(new QuPlotContextMenuStrategy(this));
 }
 
 QString QuSpectrumPlot::source() const
@@ -87,11 +86,7 @@ QStringList QuSpectrumPlot::sources() const
 }
 
 void QuSpectrumPlot::setSource(const QString &s) {
-#if QT_VERSION < QT_VERSION_CHECK(5,15,0)
-    QStringList sl = s.split(";",    QString::SkipEmptyParts);
-#else
-    QStringList sl = s.split(";",      Qt::SkipEmptyParts);
-#endif
+    QStringList sl = s.split(";");
     unsetSources();
     setSources(sl);
 }
@@ -100,6 +95,13 @@ void QuSpectrumPlot::setSources(const QStringList &l)
 {
     unsetSources();
     d->plot_common->setSources(l, this);
+}
+
+void QuSpectrumPlot::ctxSwitch(CumbiaPool *cp, const CuControlsFactoryPool& fp) {
+    const QStringList &l = d->plot_common->sources();
+    d->plot_common->unsetSources();
+//    unsetSources();
+    d->plot_common->setSources(l, this, new CuContext(cp, fp));
 }
 
 void QuSpectrumPlot::addSource(const QString &s)

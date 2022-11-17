@@ -48,6 +48,8 @@ void CuHttpCliIdMan::unsubscribe(bool blocking) {
     QNetworkRequest r(d->url);
     m_make_network_request(&r);
     // curl http://woody.elettra.eu:8001/bu/tok
+    printf("CuHttpCliIdMan.unsubscribe: posting \e[1;35m%s\e[0m to \e[1;32m%s\e[0m\n",
+           m_json_unsub().data(), qstoc(d->url));
     QNetworkReply *reply = d->nam->post(r, m_json_unsub());
     if(blocking) {
         // do not m_reply_connect(reply): we block and then

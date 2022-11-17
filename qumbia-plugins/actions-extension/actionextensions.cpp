@@ -23,6 +23,7 @@ ActionExtensions::~ActionExtensions()
     if(d->ae_factory)
         delete d->ae_factory;
     foreach(QuActionExtensionI *ex, d->extensions.values()) {
+        printf("~ActionExtensions: deleting %s\n", qstoc(ex->getName()));
         delete ex;
     }
     delete d;

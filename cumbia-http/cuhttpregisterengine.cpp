@@ -100,7 +100,16 @@ QString CuHttpRegisterEngine::channel() const {
     return d->chan;
 }
 
-bool CuHttpRegisterEngine::hasCmdOption(const QStringList &args) const {
+/*!
+ * \brief load the http engine: parse the arguments and set the URL, channel, ttl, if possible either from args or
+ *        cumbia module-default user settings
+ * \param args the command line arguments
+ * \param force_load if true, try to load the engine also if args does not contain "-u" (for example, if an URL
+ *        is configured by `cumbia module-default` and we are hot switching the engine to http at runtime)
+ * \return true if loading is successful ('-u' or force_load *and* it was possible to get an URL from either '-u'
+ *         option or the user settings)
+ */
+bool CuHttpRegisterEngine::load(const QStringList &args, bool force_load) const {
     QCommandLineOption http_url_o(QStringList() << "u" << "http-url", "URL to http server/channel or URL only if -c [--channel] is provided", "url");
     QCommandLineOption chan_o(QStringList() << "c" << "channel", "Server Sent Events channel name", "chan");
     QCommandLineOption native_o(QStringList()  << "n" << "native", "Prefer native module");
@@ -129,8 +138,20 @@ bool CuHttpRegisterEngine::hasCmdOption(const QStringList &args) const {
             printf("\e[1;33m*\e[0m CuHttpRegisterEngine: channel not detected in URL: required form: \"%s/\e[1;33mchannel_name\e[0m\"\n",
                    qstoc(d->url));
     }
-    if(url.isEmpty()) // d->chan is set only if specified in -c option at this point
-        url = urlFromConfig();
+
+    if(url.isEmpty()) { // d->chan is set only if specified in -c option at this point
+        bool oldv, http_def = httpModeDefault(&oldv); // oldv true: old file format (< 1.5.0)
+        if(oldv) {
+            print_upgrade();
+        }
+        pretty_pri("url is empty so getting from urldefault");
+        if(http_def)
+            url = urlDefault(oldv);
+        else if((force_load || d->parser.isSet(http_url_o)) && !oldv) // -u set without URL: OK in >= 1.5.0
+            url = urlDefault(false);
+        pretty_pri("url is now %s", qstoc(url));
+
+    }
     if(!url.isEmpty()) {
         d->url = url;
         if(d->chan.isEmpty())   // hash of app name and cmd line args
@@ -140,10 +161,35 @@ bool CuHttpRegisterEngine::hasCmdOption(const QStringList &args) const {
     return http_mod;
 }
 
-QString CuHttpRegisterEngine::urlFromConfig() const
+/*! for cumbia < 1.5.0 compatibility. calls load(args)
+ */
+bool CuHttpRegisterEngine::hasCmdOption(const QStringList &args) const {
+    return load(args, false);
+}
+
+bool CuHttpRegisterEngine::httpModeDefault(bool *oldv) const {
+    QString l;
+    QString cfgf = QDir::homePath() + QString("/%1/modules").arg(CUMBIA_USER_CONFIG_DIR);
+    QFile f(cfgf);
+    if(f.open(QIODevice::ReadOnly)) {
+        QTextStream in(&f);
+        while(!in.atEnd() && (!l.startsWith("url:") && l != "http")) {
+            l = in.readLine();
+        }
+        f.close();
+    }
+    // url: support old style
+    // http: since 1.5.0
+    if(oldv)
+        *oldv = l.startsWith("url:");
+    return l.contains("url:") || l == "http";
+}
+
+QString CuHttpRegisterEngine::urlDefault(bool oldv) const
 {
     QString url;
-    QString cfgf = QDir::homePath() + QString("/%1/modules").arg(CUMBIA_USER_CONFIG_DIR);
+    QString fnam = oldv ? "modules" : "url";
+    QString cfgf = QDir::homePath() + QString("/%1/%2").arg(CUMBIA_USER_CONFIG_DIR).arg(fnam);
     QFile f(cfgf);
     if(f.open(QIODevice::ReadOnly)) {
         QTextStream in(&f);
@@ -151,6 +197,8 @@ QString CuHttpRegisterEngine::urlFromConfig() const
             QString l = in.readLine();
             if(l.startsWith("url:"))
                 url = l.remove("url:");
+            else if(l.startsWith("http"))
+                url = l;
         }
         f.close();
     }
@@ -163,4 +211,10 @@ QByteArray CuHttpRegisterEngine::m_make_hash(const QStringList &args) const
     for(int i = 1; i < args.size(); i++)
         cryha.addData(args[i].toLocal8Bit());
     return args[0].section('/', -1).toLocal8Bit() + '-' + cryha.result().toHex();
+}
+
+void CuHttpRegisterEngine::print_upgrade() const {
+    printf("\n\033[1;33m*\n*\033[1;31m old cumbia 'module-default' configuration file detected:\n");
+    printf("\033[1;33m*\033[1;31m please execute\n   \033[0m cumbia apps module default [set]\n");
+    printf("\033[1;33m*\033[1;31m on the command line\033[1;33m*\033[0m\n\n");
 }

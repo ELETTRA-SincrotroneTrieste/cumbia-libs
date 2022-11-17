@@ -33,7 +33,7 @@ DEFINES += \
 
 QT       += core gui
 
-CONFIG += silent
+CONFIG += debug
 
 TARGET = widgets-std-context-menu-actions
 TEMPLATE = lib

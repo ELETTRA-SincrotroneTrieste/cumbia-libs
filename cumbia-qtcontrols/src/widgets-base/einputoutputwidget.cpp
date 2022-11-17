@@ -100,8 +100,7 @@ void EInputOutputWidget::setOutputWidget(QWidget *outputw)
  */
 void EInputOutputWidget::setInputWidget(QWidget *inputw)
 {
-    if(d->input_w == NULL)
-    {
+    if(d->input_w == nullptr) {
         d->input_w = inputw;
         d->input_w->setObjectName(objectName() + "_inputWidget");
         inputw->setParent(d->w_container);

@@ -249,6 +249,7 @@ void CuTControlsReader::getData(CuData &d_ino) const
  */
 void CuTControlsReader::setSource(const QString &s)
 {
+    printf("\e[1;32m* \e[0mCuTControlsReader: set source %s on Tango native engine\n", qstoc(s));
     CuTControlsUtils tcu;
     d->source = tcu.replaceWildcards(s, qApp->arguments());
     TSource tsrc(d->source.toStdString());

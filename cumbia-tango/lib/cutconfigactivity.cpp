@@ -1,5 +1,5 @@
 #include "cutconfigactivity.h"
-#include <tango.h>
+#include <tango/tango.h>
 #include <cumacros.h>
 #include <functional>
 #include "cudevicefactoryservice.h"
@@ -135,7 +135,7 @@ void CuTConfigActivity::execute() {
         //
 
         at["data"] = true;
-        at["msg"] = "CuTConfigActivity.execute (1): " + tw.getLastMessage();
+        at["msg"] = "configured " + tw.getLastMessage();
         at["err"] = tw.error();
         d->err = !success || tw.error();
         d->msg = tw.getLastMessage();

@@ -70,8 +70,7 @@ void CuWriteActivity::execute()
     at.merge(d->tag);
     d->err = !d->tdev->isValid();
 
-    if(d->tdev->isValid())
-    {
+    if(d->tdev->isValid())  {  // isValid if DeviceProxy != nullptr
         Tango::DeviceProxy *dev = d->tdev->getDevice();
         CuTangoWorld tangoworld;
         bool success = !d->point_info.isEmpty();
@@ -94,15 +93,14 @@ void CuWriteActivity::execute()
             if(success)
                 success = tangoworld.write_att(dev, at["point"].toString(), at["write_value"], d->point_info, at);
         }
-        else {
-            d->msg = d->tdev->getMessage();
-            d->err = true;
-        }
-        if(dev) {
-            d->msg = tangoworld.getLastMessage();
-            d->err = tangoworld.error();
-        }
+        d->msg = tangoworld.getLastMessage();
+        d->err = tangoworld.error();
         d->devfa->removeRef(at["device"].toString(), threadToken());
+    }
+    else {
+        printf("\e[1;31mCuWriteActivity dev is null getting message from d->tdev\e[0m\n");
+        d->msg = d->tdev->getMessage();
+        d->err = true;
     }
     // is_result flag is checked within the listener's onUpdate
     at["err"] = d->err;

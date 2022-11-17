@@ -1,4 +1,5 @@
 #include "gettdbpropertyextension.h"
+#include <cucontexti.h>
 #include <cucontext.h>
 #include <cumacros.h>
 #include <cumbia.h>
@@ -9,13 +10,13 @@
 
 class GetTDbPropertyExtensionPrivate {
 public:
-    GetTDbPropertyExtensionPrivate(const CuContext *cctx) : context(cctx) {}
+    GetTDbPropertyExtensionPrivate(const CuContextI *cctx) : contexti(cctx) {}
     bool err;
     std::string msg;
-    const CuContext *context;
+    const CuContextI *contexti;
 };
 
-GetTDbPropertyExtension::GetTDbPropertyExtension(const CuContext *ctx, QObject *parent)
+GetTDbPropertyExtension::GetTDbPropertyExtension(const CuContextI *ctx, QObject *parent)
     : QObject(parent)
 {
     d = new GetTDbPropertyExtensionPrivate(ctx);
@@ -28,6 +29,7 @@ GetTDbPropertyExtension::~GetTDbPropertyExtension()
     // do not delete context, it's just a reference to an object
     // managed by someone else
     delete d;
+    printf("deleted\n");
 }
 
 QString GetTDbPropertyExtension::getName() const
@@ -35,10 +37,10 @@ QString GetTDbPropertyExtension::getName() const
     return "GetTDbPropertyExtension";
 }
 
-CuData GetTDbPropertyExtension::execute(const CuData &in, const CuContext *ctx)
+CuData GetTDbPropertyExtension::execute(const CuData &in, const CuContextI *ctx)
 {
     qDebug() << __PRETTY_FUNCTION__ << in.toString().c_str() << ctx;
-    d->context = ctx;
+    d->contexti = ctx;
     CuData da;
     std::vector<CuData> in_list, out_list;
     in_list.push_back(in);
@@ -48,17 +50,17 @@ CuData GetTDbPropertyExtension::execute(const CuData &in, const CuContext *ctx)
     return da;
 }
 
-std::vector<CuData> GetTDbPropertyExtension::execute(const std::vector<CuData> &in_list, const CuContext *ctx)
+std::vector<CuData> GetTDbPropertyExtension::execute(const std::vector<CuData> &in_list, const CuContextI *ctxi)
 {
-    qDebug() << __PRETTY_FUNCTION__ << ctx;
+    qDebug() << __PRETTY_FUNCTION__ << ctxi;
 
-    d->context = ctx;
+    d->contexti = ctxi;
     std::vector<CuData> out;
     out.push_back(CuData("msg", "property fetch in progress..."));
     CumbiaTango *cu_t = NULL;
     CumbiaPool *cu_poo = NULL;
-    Cumbia *cu = d->context->cumbia();
-    if(!cu && (cu_poo = d->context->cumbiaPool())) {
+    Cumbia *cu = d->contexti->getContext()->cumbia();
+    if(!cu && (cu_poo = d->contexti->getContext()->cumbiaPool())) {
         cu = cu_poo->get("tango");
     }
     if(cu && cu->getType() == CumbiaTango::CumbiaTangoType)
@@ -76,9 +78,9 @@ QObject *GetTDbPropertyExtension::get_qobject()
     return this;
 }
 
-const CuContext *GetTDbPropertyExtension::getContext() const
+const CuContextI *GetTDbPropertyExtension::getContextI() const
 {
-    return d->context;
+    return d->contexti;
 }
 
 void GetTDbPropertyExtension::onUpdate(const CuData &data)

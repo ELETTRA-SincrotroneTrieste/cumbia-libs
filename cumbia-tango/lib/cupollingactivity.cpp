@@ -7,7 +7,7 @@
 #include "cutango-world.h"
 #include "cutangoactioni.h"
 #include "cutthread.h"
-#include <tango.h>
+#include <tango/tango.h>
 #include <cumacros.h>
 #include <vector>
 

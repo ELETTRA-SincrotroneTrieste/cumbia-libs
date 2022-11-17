@@ -14,17 +14,25 @@
 template<typename T>
 class CuMatrix {
 public:
-	CuMatrix(const std::vector<T> &v, size_t _nr, size_t _nc)
-	    : nr(_nr), nc(_nc) {
+    CuMatrix(const std::vector<T> &v, size_t dimx, size_t dimy)
+        : nr(dimx), nc(dimy) {
 		p = new T[nr * nc];
 		std::copy(v.begin(), v.end(), p);
 	}
 
-	CuMatrix(T *v, size_t _nr, size_t _nc)
-	    : nr(_nr), nc(_nc) {
+    CuMatrix(T *v, size_t dimx, size_t dimy)
+        : nr(dimx), nc(dimy) {
 		p = new T[nr * nc];
 		memcpy(p, v, nr * nc * sizeof(T));
 	}
+
+    /*! \brief Matrix constructor accepting pointer and sizes. const version
+     */
+    CuMatrix(const T *v, size_t dimx, size_t dimy)
+        : nr(dimx), nc(dimy) {
+        p = new T[nr * nc];
+        memcpy(p, v, nr * nc * sizeof(T));
+    }
 
 	CuMatrix(const CuMatrix<T>& other) {
 		m_from_other(other);
@@ -47,11 +55,11 @@ public:
 	}
 
 	T* operator [] (size_t idx) {
-		return p + (idx * nc);
+        return p + (idx * nc);
 	}
 
 	const T* operator [] (size_t idx) const {
-		return p + (idx * nc);
+        return p + (idx * nc);
 	}
 
 	bool operator ==(const CuMatrix<T> &other) const {

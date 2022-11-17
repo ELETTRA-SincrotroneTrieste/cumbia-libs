@@ -14,7 +14,7 @@
 #include <cuactivitymanager.h>
 #include <culog.h>
 
-#include <tango.h>
+#include <tango/tango.h>
 
 class TSource;
 

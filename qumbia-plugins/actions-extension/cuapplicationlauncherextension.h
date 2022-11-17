@@ -38,7 +38,7 @@ class CuApplicationLauncherPrivate;
 class CuApplicationLauncherExtension : public QuActionExtensionI
 {
 public:
-    CuApplicationLauncherExtension(const CuContext *ctx = nullptr);
+    CuApplicationLauncherExtension(const CuContextI *ctx = nullptr);
     ~CuApplicationLauncherExtension();
 
     void start();
@@ -50,10 +50,10 @@ private:
     // QuActionExtensionI interface
 public:
     QString getName() const;
-    CuData execute(const CuData &in, const CuContext *ctx);
-    std::vector<CuData> execute(const std::vector<CuData>& , const CuContext *ctx);
+    CuData execute(const CuData &in, const CuContextI *ctx);
+    std::vector<CuData> execute(const std::vector<CuData>& , const CuContextI *ctx);
     QObject *get_qobject();
-    const CuContext *getContext() const;
+    const CuContextI *getContextI() const;
     std::string message() const;
     bool error() const;
 };

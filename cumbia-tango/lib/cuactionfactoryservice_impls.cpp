@@ -1,9 +1,7 @@
 #include "cuactionfactoryservice_impls.h"
 
-#include <tango.h>
+#include <tango/tango.h>
 #include <map>
-#include <shared_mutex>
-#include <mutex>
 #include <cumacros.h>
 #include <unordered_map>
 

@@ -1,6 +1,7 @@
 #include "cucontextmenu.h"
 #include <cumacros.h>
 #include <cucontext.h>
+#include <cucontexti.h>
 #include "plugin_ifaces/quaction-extension-plugininterface.h"
 #include "plugin_ifaces/cucontextmenuactionsplugin_i.h"
 #include "cupluginloader.h"
@@ -49,7 +50,7 @@ CuContextMenu::~CuContextMenu() {
     delete d;
 }
 
-void CuContextMenu::prepare(const CuContext *ctx) {
+void CuContextMenu::prepare(const CuContextI *ctxi) {
     if(!d->plugin) {
         unsigned loaded_p_cnt = 0;
         QMultiMap<int, QList<QAction *> > actions_map;
@@ -59,11 +60,11 @@ void CuContextMenu::prepare(const CuContext *ctx) {
             CuContextMenuActionsPlugin_I *w_std_menu_actions_plugin = NULL;
             QPluginLoader pluginLoader(pluginPaths[i]);
             d->plugin = pluginLoader.instance();
-            if (d->plugin){
+            if (d->plugin && ctxi){
                 loaded_p_cnt++;
                 w_std_menu_actions_plugin = qobject_cast<CuContextMenuActionsPlugin_I *> (d->plugin);
                 if(w_std_menu_actions_plugin) {
-                    w_std_menu_actions_plugin->setup(parentWidget(), ctx);
+                    w_std_menu_actions_plugin->setup(parentWidget(), ctxi);
                     QList<QAction *> pl_actions = w_std_menu_actions_plugin->getActions();
                     actions_map.insert(w_std_menu_actions_plugin->order(), pl_actions);
                 }
@@ -85,12 +86,12 @@ void CuContextMenu::prepare(const CuContext *ctx) {
         }
     }
     else if(d->plugin && qobject_cast<CuContextMenuActionsPlugin_I *> (d->plugin)) {
-        qobject_cast<CuContextMenuActionsPlugin_I *> (d->plugin)->setup(parentWidget(), ctx);
+        qobject_cast<CuContextMenuActionsPlugin_I *> (d->plugin)->setup(parentWidget(), ctxi);
     }
 }
 
-void CuContextMenu::popup(const QPoint &pos, const CuContext *ctx) {
-    prepare(ctx);
+void CuContextMenu::popup(const QPoint &pos, const CuContextI *ctxi) {
+    prepare(ctxi);
     QMenu::popup(pos);
 }
 

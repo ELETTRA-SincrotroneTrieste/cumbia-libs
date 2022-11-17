@@ -61,3 +61,5 @@ src/lib/threads/cuthreadtokengeni.h
 src/lib/threads/cutimer.cpp
 src/lib/threads/cutimer.h
 src/lib/threads/cutimerlistener.h
+src/lib/cudataserializer.h
+src/lib/cudataserializer.cpp

@@ -51,5 +51,8 @@ int main(int argc, char *argv[])
         delete cu_p->get("random");
     if(cu_p->get("http"))
         delete cu_p->get("http");
+    if(cu_p->get("hdb"))
+        delete cu_p->get("hdb");
+
     return ret;
 }

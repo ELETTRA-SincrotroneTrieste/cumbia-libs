@@ -152,6 +152,12 @@ Qu1TWatcher::Qu1TWatcher(QObject *parent, CumbiaPool *cumbia_pool, const CuContr
     setAutoDestroy(true);
 }
 
+Qu1TWatcher::Qu1TWatcher(QObject *parent, Cumbia *cumbia, const CuControlsReaderFactoryI &r_factory) :
+    QuWatcher(parent, cumbia, r_factory) {
+    setSingleShot(true);
+    setAutoDestroy(true);
+}
+
 Qu1TWatcher::~Qu1TWatcher() {
 
 }

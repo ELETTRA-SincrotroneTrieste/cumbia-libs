@@ -7,6 +7,25 @@
 #include <stdexcept>
 #include <stdlib.h>
 
+template<typename T>
+CuVariant::CuVariant(const T *p, size_t siz, DataFormat f, DataType t, int rows) {
+    _d = new CuVariantPrivate(); // _d->val is nullptr
+    m_init(f, t); // sets _d->mIsNull and !_d->mIsValid
+    _d->mIsNull = (p == nullptr || siz == 0);
+    _d->mIsValid = !_d->mIsNull;
+    if(_d->mIsValid && f == DataFormat::Matrix && rows > 0) {
+        _d->mSize = siz;
+        _d->nrows = rows;
+        _d->ncols = siz / rows;
+        _d->val = new CuMatrix<T>(p, rows, siz / rows);
+    }
+    else if(_d->mIsValid) {
+        _d->mSize = _d->nrows = siz;
+        _d->val = new T[siz];
+        memcpy(_d->val, p, siz * sizeof(T));
+    }
+}
+
 /** \brief convert the current *scalar* CuVariant into a variable of type T.
  *
  * @param val a reference to a variable of type T
@@ -24,56 +43,54 @@
  */
 template<typename T> bool CuVariant::to(T &val) const
 {
-
-    bool valid = (_d->format == Scalar && !_d->mIsNull && _d->mIsValid);
+    bool valid = ((_d->format == Scalar || (_d->format == Vector && _d->mSize > 0)) && !_d->mIsNull && _d->mIsValid);
     if(!valid) {
         val = static_cast<T> (0ULL);
     }
-    else
-    {
+    else if(_d->format == Scalar || _d->format == Vector) {
         switch(_d->type)
         {
         case Short:
-            val = static_cast<T>(*(static_cast<short *>(_d->val)));
+            val = static_cast<T>(static_cast<short *>(_d->val)[0]);
             break;
         case UShort:
-            val = static_cast<T>(*(static_cast<unsigned short *>(_d->val)));
+            val = static_cast<T>(static_cast<unsigned short *>(_d->val)[0]);
             break;
         case Int:
-            val = static_cast<T>(*(static_cast<int *>(_d->val)));
+            val = static_cast<T>(static_cast<int *>(_d->val)[0]);
             break;
         case UInt:
-            val = static_cast<T>(*(static_cast<unsigned int *>(_d->val)));
+            val = static_cast<T>(static_cast<unsigned int *>(_d->val)[0]);
             break;
         case Char:
-            val = static_cast<T>(*(static_cast<char *>(_d->val)));
+            val = static_cast<T>(static_cast<char *>(_d->val)[0]);
             break;
         case UChar:
-            val = static_cast<T>(*(static_cast<unsigned char *>(_d->val)));
+            val = static_cast<T>(static_cast<unsigned char *>(_d->val)[0]);
             break;
         case LongInt:
-            val = static_cast<T>(*(static_cast<long int *>(_d->val)));
+            val = static_cast<T>(static_cast<long int *>(_d->val)[0]);
             break;
         case LongLongInt:
-            val = static_cast<T>(*(static_cast<long long int *>(_d->val)));
+            val = static_cast<T>(static_cast<long long int *>(_d->val)[0]);
             break;
         case LongUInt:
-            val = static_cast<T>(*(static_cast<unsigned long *>(_d->val)));
+            val = static_cast<T>(static_cast<unsigned long *>(_d->val)[0]);
             break;
         case LongLongUInt:
-            val = static_cast<T>(*(static_cast<unsigned long long*>(_d->val)));
+            val = static_cast<T>(static_cast<unsigned long long*>(_d->val)[0]);
             break;
         case Float:
-            val = static_cast<T>(*(static_cast<float *>(_d->val)));
+            val = static_cast<T>(static_cast<float *>(_d->val)[0]);
             break;
         case Double:
-            val = static_cast<T>(*(static_cast<double *>(_d->val)));
+            val = static_cast<T>(static_cast<double *>(_d->val)[0]);
             break;
         case LongDouble:
-            val = static_cast<T>(*(static_cast<long double *>(_d->val)));
+            val = static_cast<T>(static_cast<long double *>(_d->val)[0]);
             break;
         case Boolean:
-            val = static_cast<T>(*(static_cast<bool *>(_d->val)));
+            val = static_cast<T>(static_cast<bool *>(_d->val)[0]);
             break;
         case String: {
             const std::string& s = toString();
@@ -99,8 +116,8 @@ template<typename T> bool CuVariant::to(T &val) const
             break;
         }
         if(!valid)
-            pwarn("CuVariant.to: unsupported scalar conversion from type %s and format %s", dataTypeStr(_d->type).c_str(),
-                  dataFormatStr(_d->format).c_str());
+            perr("%s CuVariant.to: unsupported scalar conversion from type %s and format %s",
+                 __PRETTY_FUNCTION__, dataTypeStr(_d->type).c_str(), dataFormatStr(_d->format).c_str());
     }
     return valid;
 }
@@ -272,6 +289,11 @@ CuMatrix<T> CuVariant::toMatrix() const {
         return *(static_cast<CuMatrix <T> * >(_d->val));
     }
     return CuMatrix<T>();
+}
+
+template<typename T>
+CuMatrix<T> *CuVariant::matrix_ptr() const {
+    return static_cast<CuMatrix <T> * > (_d->val);
 }
 
 #endif // CUVARIANT_T_H

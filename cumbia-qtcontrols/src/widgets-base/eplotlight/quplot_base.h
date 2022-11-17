@@ -132,20 +132,23 @@ public:
 
     bool titleOnCanvasEnabled();
 
-    bool xAxisAutoscaleEnabled();
-    bool yAxisAutoscaleEnabled();
+    bool xAxisAutoscaleEnabled(QwtPlot::Axis axis = QwtPlot::xBottom);
+    bool yAxisAutoscaleEnabled(QwtPlot::Axis axis = QwtPlot::yLeft);
     
-    double yUpperBound();
-    double yLowerBound();
+    double yUpperBound(QwtPlot::Axis axis = QwtPlot::yLeft);
+    double yLowerBound(QwtPlot::Axis axis = QwtPlot::yLeft);
+    double xUpperBound(QwtPlot::Axis axis = QwtPlot::xBottom);
+    double xLowerBound(QwtPlot::Axis axis = QwtPlot::xBottom);
 
-    bool xAxisLogScale();
-    bool yAxisLogScale();
+    double defaultLowerBound(QwtPlot::Axis axisId = QwtPlot::yLeft) const;
+    double defaultUpperBound(QwtPlot::Axis axisId = QwtPlot::yLeft) const;
 
-    void setXAxisLogScale(bool l);
-    void setYAxisLogScale(bool l);
+    bool xAxisLogScale(QwtPlot::Axis axis = QwtPlot::xBottom);
+    bool yAxisLogScale(QwtPlot::Axis axis = QwtPlot::yLeft);
 
-    double xUpperBound();
-    double xLowerBound();
+    void setXAxisLogScale(bool l, QwtPlot::Axis axis = QwtPlot::xBottom);
+    void setYAxisLogScale(bool l, QwtPlot::Axis axis = QwtPlot::yLeft);
+
 
     /** \brief returns false if the zoom is enabled (the default), true otherwise.
       *
@@ -176,10 +179,6 @@ public:
     void appendData(const QString &curveName, double *x, double *y, int size);
 
     int refreshTimeout() const;
-
-    double defaultLowerBound(QwtPlot::Axis axisId = QwtPlot::yLeft) const;
-
-    double defaultUpperBound(QwtPlot::Axis axisId = QwtPlot::yLeft) const;
 
     // QuWidgetInterface interface
     void update(const CuData &);
@@ -213,19 +212,16 @@ public:
 public slots:
     virtual void refresh();
 
-    void setXAxisAutoscaleEnabled(bool en);
-    
-    void setYAxisAutoscaleEnabled(bool en);
+    void setXAxisAutoscaleEnabled(bool en, QwtPlot::Axis axis = QwtPlot::xBottom);
+    void setYAxisAutoscaleEnabled(bool en, QwtPlot::Axis axis = QwtPlot::yLeft);
 
     void setXTopAxisAutoscaleEnabled(bool autoscale);
     void setYRightAxisAutoscaleEnabled(bool autoscale);
 
     void setYLowerBound(double l);
-
     void setYUpperBound(double u);
 
     void setXLowerBound(double l);
-
     void setXUpperBound(double u);
 
     void setXAutoscaleMargin(double d);

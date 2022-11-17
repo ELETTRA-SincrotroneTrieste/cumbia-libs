@@ -1,16 +1,7 @@
-include(../qumbia-plugins.pri)
+include(../qumbia-plugins.pri)s
 
-# configuration files must be found by the application when the script
-# installs everything at destination
-#
-exists($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri) {
-    message("including support for qumbia-epics-controls module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/qumbia-epics-controls/qumbia-epics-controls.pri)
-}
-
-exists($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
-    message("including support for qumbia-tango-controls module under $${INSTALL_ROOT}")
-    include($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
+exists($${INSTALL_ROOT}/include/quapps/quapps.pri) {
+    include($${INSTALL_ROOT}/include/quapps/quapps.pri)
 }
 
 include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
@@ -21,23 +12,27 @@ TARGET = actions-extension-plugin
 TEMPLATE = lib
 CONFIG += plugin debug
 
-CONFIG += silent
+# CONFIG += silent
 
 SOURCES += \
     actionextensions.cpp \
+    cuengineswitchdialog.cpp \
     gettdbpropertyextension.cpp \
     actionextensionfactory.cpp \
     infodialogextension.cpp \
     cuinfodialog.cpp \
-    cuapplicationlauncherextension.cpp
+    cuapplicationlauncherextension.cpp \
+    engineswitchdialogextension.cpp
 
 HEADERS += \
     actionextensions.h \
+    cuengineswitchdialog.h \
     gettdbpropertyextension.h \
     actionextensionfactory.h \
     infodialogextension.h \
     cuinfodialog.h \
-    cuapplicationlauncherextension.h
+    cuapplicationlauncherextension.h \
+    engineswitchdialogextension.h
 DISTFILES += actions-extension.json 
 
 inc.files += $${HEADERS}

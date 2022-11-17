@@ -1,7 +1,7 @@
 #ifndef QUTCONFIG_H
 #define QUTCONFIG_H
 
-#include <tango.h>
+#include <tango/tango.h>
 #include <string>
 #include <vector>
 #include <map>

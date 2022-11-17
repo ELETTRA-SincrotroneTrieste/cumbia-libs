@@ -3,7 +3,7 @@
 
 #include <QMenu>
 
-class CuContext;
+class CuContextI;
 class CuContextMenuPrivate;
 class CuData;
 
@@ -24,8 +24,8 @@ public:
 
     ~CuContextMenu();
 
-    void popup(const QPoint &pos, const CuContext *ctx);
-    void prepare(const CuContext *ctx);
+    void popup(const QPoint &pos, const CuContextI *ctxi);
+    void prepare(const CuContextI *ctxi);
 private slots:
     void popup_noplugin_msg();
 
