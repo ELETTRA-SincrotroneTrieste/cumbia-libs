@@ -1,4 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,136,32"/>
-<area shape="rect" id="node2" href="$classCuHttpControlsWriter.html" title="implements CuControlsWriterA abstract class and provides an interface to connect a Tango writer to a ..." alt="" coords="184,5,331,32"/>
+<area shape="rect" id="node1" href="$classCuHttpAuthManListener.html" title=" " alt="" coords="25,5,203,31"/>
+<area shape="rect" id="node2" href="$classCumbiaHttp.html" title=" " alt="" coords="271,104,371,129"/>
+<area shape="rect" id="node3" href="$classCuHttpBundledSrcReqListener.html" title=" " alt="" coords="5,55,223,80"/>
+<area shape="rect" id="node4" href="$classCuHttpCliIdManListener.html" title=" " alt="" coords="26,104,202,129"/>
+<area shape="rect" id="node5" href="$classCuHttpSrcQueueManListener.html" title=" " alt="" coords="9,153,219,179"/>
+<area shape="rect" id="node6" title=" " alt="" coords="78,203,150,228"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="cuepics&#45;world&#45;config.h" name="cuepics&#45;world&#45;config.h">
-<area shape="rect" id="node1" title=" " alt="" coords="86,5,238,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,71,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="95,80,149,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="174,80,233,107"/>
-<area shape="rect" id="node5" title=" " alt="" coords="257,80,304,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="87,5,255,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,79,75,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="99,79,157,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="182,79,245,104"/>
+<area shape="rect" id="node5" title=" " alt="" coords="269,79,320,104"/>
 </map>

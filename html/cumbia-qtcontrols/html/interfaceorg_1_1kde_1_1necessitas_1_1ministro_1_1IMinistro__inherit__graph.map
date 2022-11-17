@@ -1,6 +1,5 @@
 <map id="org.kde.necessitas.ministro.IMinistro" name="org.kde.necessitas.ministro.IMinistro">
-<area shape="rect" id="node1" title=" " alt="" coords="76,80,283,121"/>
-<area shape="rect" id="node4" href="$classorg_1_1kde_1_1necessitas_1_1ministro_1_1IMinistro_1_1Stub.html" title=" " alt="" coords="76,169,283,211"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,169,32"/>
-<area shape="rect" id="node3" title=" " alt="" coords="193,5,349,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,79,212,119"/>
+<area shape="rect" id="node3" href="$classorg_1_1kde_1_1necessitas_1_1ministro_1_1IMinistro_1_1Stub.html" title=" " alt="" coords="5,167,212,207"/>
+<area shape="rect" id="node2" title=" " alt="" coords="27,5,191,31"/>
 </map>

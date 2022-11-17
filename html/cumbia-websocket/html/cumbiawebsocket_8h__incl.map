@@ -1,20 +1,20 @@
 <map id="cumbiawebsocket.h" name="cumbiawebsocket.h">
-<area shape="rect" id="node1" title=" " alt="" coords="384,5,523,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,80,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="254,379,309,405"/>
-<area shape="rect" id="node4" href="$cuwsactionreader_8h.html" title=" " alt="" coords="386,80,521,107"/>
-<area shape="rect" id="node10" href="$cuwsactionfactoryi_8h.html" title=" " alt="" coords="155,155,298,181"/>
-<area shape="rect" id="node13" href="$cumbia-websocket__global_8h.html" title=" " alt="" coords="715,80,898,107"/>
-<area shape="rect" id="node15" href="$cuwsclient_8h.html" title=" " alt="" coords="597,80,691,107"/>
-<area shape="rect" id="node18" title=" " alt="" coords="923,80,989,107"/>
-<area shape="rect" id="node5" title=" " alt="" coords="373,304,499,331"/>
-<area shape="rect" id="node6" href="$cuwsactioni_8h.html" title=" " alt="" coords="427,229,530,256"/>
-<area shape="rect" id="node7" href="$ws__source_8h.html" title=" " alt="" coords="523,304,619,331"/>
-<area shape="rect" id="node11" title=" " alt="" coords="609,155,679,181"/>
-<area shape="rect" id="node12" title=" " alt="" coords="425,155,482,181"/>
-<area shape="rect" id="node8" title=" " alt="" coords="507,379,546,405"/>
-<area shape="rect" id="node9" title=" " alt="" coords="570,379,657,405"/>
-<area shape="rect" id="node14" title=" " alt="" coords="923,155,1043,181"/>
-<area shape="rect" id="node16" title=" " alt="" coords="704,155,803,181"/>
-<area shape="rect" id="node17" title=" " alt="" coords="827,155,898,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="401,5,551,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,79,88,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="269,372,328,397"/>
+<area shape="rect" id="node4" href="$cuwsactionreader_8h.html" title=" " alt="" coords="402,79,550,104"/>
+<area shape="rect" id="node10" href="$cuwsactionfactoryi_8h.html" title=" " alt="" coords="163,152,320,177"/>
+<area shape="rect" id="node13" href="$cumbia-websocket__global_8h.html" title=" " alt="" coords="745,79,948,104"/>
+<area shape="rect" id="node15" href="$cuwsclient_8h.html" title=" " alt="" coords="618,79,721,104"/>
+<area shape="rect" id="node18" title=" " alt="" coords="973,79,1043,104"/>
+<area shape="rect" id="node5" title=" " alt="" coords="387,299,525,324"/>
+<area shape="rect" id="node6" href="$cuwsactioni_8h.html" title=" " alt="" coords="446,225,557,251"/>
+<area shape="rect" id="node7" href="$ws__source_8h.html" title=" " alt="" coords="550,299,653,324"/>
+<area shape="rect" id="node11" title=" " alt="" coords="632,152,707,177"/>
+<area shape="rect" id="node12" title=" " alt="" coords="446,152,506,177"/>
+<area shape="rect" id="node8" title=" " alt="" coords="533,372,576,397"/>
+<area shape="rect" id="node9" title=" " alt="" coords="601,372,695,397"/>
+<area shape="rect" id="node14" title=" " alt="" coords="957,152,1088,177"/>
+<area shape="rect" id="node16" title=" " alt="" coords="731,152,834,177"/>
+<area shape="rect" id="node17" title=" " alt="" coords="859,152,933,177"/>
 </map>

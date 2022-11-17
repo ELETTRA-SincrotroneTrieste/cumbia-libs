@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['cumbia_5fversion_1029',['CUMBIA_VERSION',['../cumbia_8h.html#af066fde05dfa85faeed3ce155aa6741b',1,'cumbia.h']]],
-  ['cuprintf_1030',['cuprintf',['../cumacros_8h.html#ada414d70bad931bb2fea6abc8acaefbc',1,'cumacros.h']]]
+  ['byte_5fto_5fbinary_0',['BYTE_TO_BINARY',['../cudataserializer_8h.html#aa28480bfa03957b4f284c13e800ca8b0',1,'cudataserializer.h']]],
+  ['byte_5fto_5fbinary_5fpattern_1',['BYTE_TO_BINARY_PATTERN',['../cudataserializer_8h.html#ae8b243fdac3715a3da7c98b9a380eaa5',1,'cudataserializer.h']]]
 ];

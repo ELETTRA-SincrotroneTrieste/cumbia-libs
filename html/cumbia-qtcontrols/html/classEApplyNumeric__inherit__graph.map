@@ -1,7 +1,7 @@
 <map id="EApplyNumeric" name="EApplyNumeric">
-<area shape="rect" id="node1" title="a widget to set a value and write it" alt="" coords="41,155,155,181"/>
-<area shape="rect" id="node5" href="$classQuApplyNumeric.html" title="A widget to input a number and write it to a target linked to a control system engine." alt="" coords="37,229,159,256"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,79,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="103,80,205,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="94,5,214,32"/>
+<area shape="rect" id="node1" title="a widget to set a value and write it" alt="" coords="43,152,166,177"/>
+<area shape="rect" id="node5" href="$classQuApplyNumeric.html" title="A widget to input a number and write it to a target linked to a control system engine." alt="" coords="39,225,171,251"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,79,84,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="109,79,223,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="99,5,233,31"/>
 </map>

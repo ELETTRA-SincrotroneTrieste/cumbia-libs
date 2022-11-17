@@ -1,12 +1,12 @@
 <map id="cutangoopt_builder.h" name="cutangoopt_builder.h">
-<area shape="rect" id="node1" title=" " alt="" coords="311,5,454,32"/>
-<area shape="rect" id="node2" href="$cutreader_8h.html" title=" " alt="" coords="205,80,291,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="281,304,335,331"/>
-<area shape="rect" id="node9" title=" " alt="" coords="387,80,445,107"/>
-<area shape="rect" id="node10" title=" " alt="" coords="469,80,541,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,229,131,256"/>
-<area shape="rect" id="node5" href="$tsource_8h.html" title=" " alt="" coords="175,229,251,256"/>
-<area shape="rect" id="node8" href="$cutangoactioni_8h.html" title=" " alt="" coords="93,155,211,181"/>
-<area shape="rect" id="node6" title=" " alt="" coords="107,304,146,331"/>
-<area shape="rect" id="node7" title=" " alt="" coords="170,304,257,331"/>
+<area shape="rect" id="node1" title=" " alt="" coords="326,5,485,31"/>
+<area shape="rect" id="node2" href="$cutreader_8h.html" title=" " alt="" coords="222,79,317,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="303,299,361,324"/>
+<area shape="rect" id="node9" title=" " alt="" coords="409,79,471,104"/>
+<area shape="rect" id="node10" title=" " alt="" coords="495,79,574,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,225,144,251"/>
+<area shape="rect" id="node5" href="$tsource_8h.html" title=" " alt="" coords="189,225,272,251"/>
+<area shape="rect" id="node8" href="$cutangoactioni_8h.html" title=" " alt="" coords="101,152,232,177"/>
+<area shape="rect" id="node6" title=" " alt="" coords="116,299,159,324"/>
+<area shape="rect" id="node7" title=" " alt="" coords="183,299,278,324"/>
 </map>

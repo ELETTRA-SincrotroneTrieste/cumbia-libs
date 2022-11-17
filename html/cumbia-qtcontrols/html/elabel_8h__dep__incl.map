@@ -1,8 +1,8 @@
 <map id="elabel.h" name="elabel.h">
-<area shape="rect" id="node1" title=" " alt="" coords="132,5,199,32"/>
-<area shape="rect" id="node2" href="$eflag_8h.html" title=" " alt="" coords="87,80,148,107"/>
-<area shape="rect" id="node6" href="$elabel_8cpp.html" title=" " alt="" coords="173,80,254,107"/>
-<area shape="rect" id="node3" href="$qutable_8h.html" title=" " alt="" coords="5,155,80,181"/>
-<area shape="rect" id="node4" href="$qutable_8cpp.html" title=" " alt="" coords="35,229,125,256"/>
-<area shape="rect" id="node5" href="$eflag_8cpp.html" title=" " alt="" coords="155,155,229,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="138,5,213,31"/>
+<area shape="rect" id="node2" href="$eflag_8h.html" title=" " alt="" coords="91,79,158,104"/>
+<area shape="rect" id="node6" href="$elabel_8cpp.html" title=" " alt="" coords="183,79,272,104"/>
+<area shape="rect" id="node3" href="$eflag_8cpp.html" title=" " alt="" coords="5,152,87,177"/>
+<area shape="rect" id="node4" href="$qutable_8cpp.html" title=" " alt="" coords="114,225,213,251"/>
+<area shape="rect" id="node5" href="$qutable_8h.html" title=" " alt="" coords="162,152,245,177"/>
 </map>

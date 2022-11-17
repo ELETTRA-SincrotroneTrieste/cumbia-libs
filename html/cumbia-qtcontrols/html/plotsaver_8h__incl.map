@@ -1,9 +1,9 @@
 <map id="plotsaver.h" name="plotsaver.h">
-<area shape="rect" id="node1" title=" " alt="" coords="90,5,177,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,59,107"/>
-<area shape="rect" id="node3" href="$quplotcurve_8h.html" title=" " alt="" coords="83,80,183,107"/>
-<area shape="rect" id="node7" title=" " alt="" coords="208,80,277,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="6,155,127,181"/>
-<area shape="rect" id="node5" href="$ecurvedata_8h.html" title=" " alt="" coords="151,155,249,181"/>
-<area shape="rect" id="node6" title=" " alt="" coords="165,229,235,256"/>
+<area shape="rect" id="node1" title=" " alt="" coords="97,5,191,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="10,79,65,104"/>
+<area shape="rect" id="node3" href="$quplotcurve_8h.html" title=" " alt="" coords="89,79,199,104"/>
+<area shape="rect" id="node7" title=" " alt="" coords="224,79,299,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="5,152,139,177"/>
+<area shape="rect" id="node5" href="$ecurvedata_8h.html" title=" " alt="" coords="163,152,269,177"/>
+<area shape="rect" id="node6" title=" " alt="" coords="179,225,253,251"/>
 </map>

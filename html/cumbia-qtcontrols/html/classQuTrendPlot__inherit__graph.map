@@ -1,8 +1,8 @@
 <map id="QuTrendPlot" name="QuTrendPlot">
-<area shape="rect" id="node1" title="Draw a line for each data source over time." alt="" coords="181,155,275,181"/>
-<area shape="rect" id="node2" href="$classQuPlotBase.html" title="A simple plot with zooming and scrolling capabilities." alt="" coords="55,80,147,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,5,75,32"/>
-<area shape="rect" id="node4" href="$classQuWidgetInterface.html" title="an interface to let subclasses provide an update strategy and a context menu strategy" alt="" coords="99,5,229,32"/>
-<area shape="rect" id="node5" title=" " alt="" coords="171,80,285,107"/>
-<area shape="rect" id="node6" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="309,80,398,107"/>
+<area shape="rect" id="node1" title="Draw a line for each data source over time." alt="" coords="193,152,293,177"/>
+<area shape="rect" id="node2" href="$classQuPlotBase.html" title="A simple plot with zooming and scrolling capabilities." alt="" coords="60,79,157,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,5,79,31"/>
+<area shape="rect" id="node4" href="$classQuWidgetInterface.html" title="an interface to let subclasses provide an update strategy and a context menu strategy" alt="" coords="103,5,247,31"/>
+<area shape="rect" id="node5" title=" " alt="" coords="182,79,305,104"/>
+<area shape="rect" id="node6" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="329,79,424,104"/>
 </map>

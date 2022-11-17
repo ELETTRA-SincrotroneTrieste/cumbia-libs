@@ -1,52 +1,52 @@
 <map id="cutangoqtcontrolsplugin.cpp" name="cutangoqtcontrolsplugin.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="2603,5,2787,32"/>
-<area shape="rect" id="node2" href="$cutangoqtcontrolsplugin_8h.html" title=" " alt="" coords="504,87,675,114"/>
-<area shape="rect" id="node21" title=" " alt="" coords="1495,87,1569,114"/>
-<area shape="rect" id="node22" title=" " alt="" coords="1593,87,1676,114"/>
-<area shape="rect" id="node23" title=" " alt="" coords="1700,87,1764,114"/>
-<area shape="rect" id="node24" title=" " alt="" coords="1788,87,1876,114"/>
-<area shape="rect" id="node25" title=" " alt="" coords="1900,87,1975,114"/>
-<area shape="rect" id="node26" href="$tlabelbooleditor_8h.html" title=" " alt="" coords="1184,169,1341,196"/>
-<area shape="rect" id="node29" href="$tledbooleditor_8h.html" title=" " alt="" coords="1365,169,1512,196"/>
-<area shape="rect" id="node31" href="$ttablebooleditor_8h.html" title=" " alt="" coords="1537,169,1695,196"/>
-<area shape="rect" id="node33" title=" " alt="" coords="1999,87,2105,114"/>
-<area shape="rect" id="node34" title=" " alt="" coords="2129,87,2220,114"/>
-<area shape="rect" id="node35" title=" " alt="" coords="2244,87,2391,114"/>
-<area shape="rect" id="node36" title=" " alt="" coords="2415,87,2604,114"/>
-<area shape="rect" id="node37" title=" " alt="" coords="2628,87,2761,114"/>
-<area shape="rect" id="node38" title=" " alt="" coords="2786,87,2915,114"/>
-<area shape="rect" id="node39" title=" " alt="" coords="2939,87,3103,114"/>
-<area shape="rect" id="node40" title=" " alt="" coords="3128,87,3192,114"/>
-<area shape="rect" id="node41" title=" " alt="" coords="3216,87,3304,114"/>
-<area shape="rect" id="node42" title=" " alt="" coords="3328,87,3424,114"/>
-<area shape="rect" id="node43" title=" " alt="" coords="3449,87,3583,114"/>
-<area shape="rect" id="node44" title=" " alt="" coords="3608,87,3733,114"/>
-<area shape="rect" id="node45" title=" " alt="" coords="3758,87,3853,114"/>
-<area shape="rect" id="node46" title=" " alt="" coords="3877,87,4089,114"/>
-<area shape="rect" id="node47" title=" " alt="" coords="4112,80,4312,121"/>
-<area shape="rect" id="node48" title=" " alt="" coords="4335,87,4534,114"/>
-<area shape="rect" id="node49" title=" " alt="" coords="4558,87,4698,114"/>
-<area shape="rect" id="node50" title=" " alt="" coords="4722,87,4814,114"/>
-<area shape="rect" id="node3" title=" " alt="" coords="466,169,539,196"/>
-<area shape="rect" id="node4" title=" " alt="" coords="563,169,786,196"/>
-<area shape="rect" id="node5" title=" " alt="" coords="811,169,1013,196"/>
-<area shape="rect" id="node6" title=" " alt="" coords="157,169,291,196"/>
-<area shape="rect" id="node7" href="$editsourcedialog_8h.html" title=" " alt="" coords="315,169,442,196"/>
-<area shape="rect" id="node16" href="$edittargetdialog_8h.html" title=" " alt="" coords="1038,169,1159,196"/>
-<area shape="rect" id="node18" href="$pointeditor_8h.html" title=" " alt="" coords="39,169,132,196"/>
-<area shape="rect" id="node8" href="$ui__editsourcedialog_8h.html" title=" " alt="" coords="880,244,1024,271"/>
-<area shape="rect" id="node9" title=" " alt="" coords="1529,319,1647,345"/>
-<area shape="rect" id="node10" title=" " alt="" coords="1671,319,1806,345"/>
-<area shape="rect" id="node11" title=" " alt="" coords="612,319,775,345"/>
-<area shape="rect" id="node12" title=" " alt="" coords="799,319,969,345"/>
-<area shape="rect" id="node13" title=" " alt="" coords="994,319,1129,345"/>
-<area shape="rect" id="node14" title=" " alt="" coords="1153,319,1309,345"/>
-<area shape="rect" id="node15" title=" " alt="" coords="1333,319,1504,345"/>
-<area shape="rect" id="node17" href="$estringlisteditor_8h.html" title=" " alt="" coords="1049,244,1170,271"/>
-<area shape="rect" id="node19" title=" " alt="" coords="5,244,75,271"/>
-<area shape="rect" id="node20" title=" " alt="" coords="99,244,162,271"/>
-<area shape="rect" id="node27" href="$ui__tlabelbooleditor_8h.html" title=" " alt="" coords="1194,244,1331,271"/>
-<area shape="rect" id="node28" title=" " alt="" coords="1830,319,1991,345"/>
-<area shape="rect" id="node30" href="$ui__tledbooleditor_8h.html" title=" " alt="" coords="1355,244,1482,271"/>
-<area shape="rect" id="node32" href="$ui__ttablebooleditor_8h.html" title=" " alt="" coords="1507,244,1645,271"/>
+<area shape="rect" id="node1" title=" " alt="" coords="2825,5,3031,31"/>
+<area shape="rect" id="node2" href="$cutangoqtcontrolsplugin_8h.html" title=" " alt="" coords="537,86,727,111"/>
+<area shape="rect" id="node21" title=" " alt="" coords="1613,86,1696,111"/>
+<area shape="rect" id="node22" title=" " alt="" coords="1721,86,1813,111"/>
+<area shape="rect" id="node23" title=" " alt="" coords="1837,86,1907,111"/>
+<area shape="rect" id="node24" title=" " alt="" coords="1932,86,2031,111"/>
+<area shape="rect" id="node25" title=" " alt="" coords="2055,86,2137,111"/>
+<area shape="rect" id="node26" href="$tlabelbooleditor_8h.html" title=" " alt="" coords="1276,167,1455,192"/>
+<area shape="rect" id="node29" href="$tledbooleditor_8h.html" title=" " alt="" coords="1479,167,1646,192"/>
+<area shape="rect" id="node31" href="$ttablebooleditor_8h.html" title=" " alt="" coords="1671,167,1849,192"/>
+<area shape="rect" id="node33" title=" " alt="" coords="2162,86,2281,111"/>
+<area shape="rect" id="node34" title=" " alt="" coords="2305,86,2402,111"/>
+<area shape="rect" id="node35" title=" " alt="" coords="2426,86,2593,111"/>
+<area shape="rect" id="node36" title=" " alt="" coords="2617,86,2831,111"/>
+<area shape="rect" id="node37" title=" " alt="" coords="2855,86,3001,111"/>
+<area shape="rect" id="node38" title=" " alt="" coords="3026,86,3169,111"/>
+<area shape="rect" id="node39" title=" " alt="" coords="3193,86,3375,111"/>
+<area shape="rect" id="node40" title=" " alt="" coords="3400,86,3469,111"/>
+<area shape="rect" id="node41" title=" " alt="" coords="3493,86,3592,111"/>
+<area shape="rect" id="node42" title=" " alt="" coords="3617,86,3719,111"/>
+<area shape="rect" id="node43" title=" " alt="" coords="3744,86,3893,111"/>
+<area shape="rect" id="node44" title=" " alt="" coords="3918,86,4053,111"/>
+<area shape="rect" id="node45" title=" " alt="" coords="4077,86,4177,111"/>
+<area shape="rect" id="node46" title=" " alt="" coords="4201,86,4434,111"/>
+<area shape="rect" id="node47" title=" " alt="" coords="4458,79,4675,119"/>
+<area shape="rect" id="node48" title=" " alt="" coords="4700,86,4919,111"/>
+<area shape="rect" id="node49" title=" " alt="" coords="4943,86,5097,111"/>
+<area shape="rect" id="node50" title=" " alt="" coords="5121,86,5221,111"/>
+<area shape="rect" id="node3" title=" " alt="" coords="499,167,578,192"/>
+<area shape="rect" id="node4" title=" " alt="" coords="602,167,846,192"/>
+<area shape="rect" id="node5" title=" " alt="" coords="871,167,1089,192"/>
+<area shape="rect" id="node6" title=" " alt="" coords="166,167,309,192"/>
+<area shape="rect" id="node7" href="$editsourcedialog_8h.html" title=" " alt="" coords="333,167,475,192"/>
+<area shape="rect" id="node16" href="$edittargetdialog_8h.html" title=" " alt="" coords="1113,167,1252,192"/>
+<area shape="rect" id="node18" href="$pointeditor_8h.html" title=" " alt="" coords="37,167,141,192"/>
+<area shape="rect" id="node8" href="$ui__editsourcedialog_8h.html" title=" " alt="" coords="942,240,1103,265"/>
+<area shape="rect" id="node9" title=" " alt="" coords="1654,313,1781,339"/>
+<area shape="rect" id="node10" title=" " alt="" coords="1805,313,1950,339"/>
+<area shape="rect" id="node11" title=" " alt="" coords="671,313,849,339"/>
+<area shape="rect" id="node12" title=" " alt="" coords="873,313,1060,339"/>
+<area shape="rect" id="node13" title=" " alt="" coords="1084,313,1231,339"/>
+<area shape="rect" id="node14" title=" " alt="" coords="1255,313,1423,339"/>
+<area shape="rect" id="node15" title=" " alt="" coords="1447,313,1630,339"/>
+<area shape="rect" id="node17" href="$estringlisteditor_8h.html" title=" " alt="" coords="1128,240,1264,265"/>
+<area shape="rect" id="node19" title=" " alt="" coords="5,240,80,265"/>
+<area shape="rect" id="node20" title=" " alt="" coords="104,240,171,265"/>
+<area shape="rect" id="node27" href="$ui__tlabelbooleditor_8h.html" title=" " alt="" coords="1288,240,1443,265"/>
+<area shape="rect" id="node28" title=" " alt="" coords="1974,313,2149,339"/>
+<area shape="rect" id="node30" href="$ui__tledbooleditor_8h.html" title=" " alt="" coords="1467,240,1610,265"/>
+<area shape="rect" id="node32" href="$ui__ttablebooleditor_8h.html" title=" " alt="" coords="1634,240,1790,265"/>
 </map>

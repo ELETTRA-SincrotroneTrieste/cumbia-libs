@@ -1,4 +1,4 @@
 <map id="QuConnectionSettingsWidget" name="QuConnectionSettingsWidget">
-<area shape="rect" id="node1" title="a QWidget that emits a settingsChanged signal when tango connection settings are changed." alt="" coords="5,80,200,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="66,5,139,32"/>
+<area shape="rect" id="node1" title="a QWidget that emits a settingsChanged signal when tango connection settings are changed." alt="" coords="5,79,217,104"/>
+<area shape="rect" id="node2" title=" " alt="" coords="72,5,151,31"/>
 </map>

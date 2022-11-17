@@ -1,4 +1,5 @@
 <map id="CuDeviceFactoryService" name="CuDeviceFactoryService">
-<area shape="rect" id="node1" title="implements CuServiceI interface and provides a service to create and store Tango devices (wrapped by ..." alt="" coords="5,80,173,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="46,5,133,32"/>
+<area shape="rect" id="node1" title="implements CuServiceI interface and provides a service to create and store Tango devices (wrapped by ..." alt="" coords="32,79,211,104"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,96,31"/>
+<area shape="rect" id="node3" href="$classCuDeviceFactory__I.html" title=" " alt="" coords="121,5,263,31"/>
 </map>

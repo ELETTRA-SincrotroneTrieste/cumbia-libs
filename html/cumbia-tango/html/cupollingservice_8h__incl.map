@@ -1,4 +1,5 @@
 <map id="cupollingservice.h" name="cupollingservice.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,132,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="23,80,115,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="60,5,200,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,86,105,111"/>
+<area shape="rect" id="node3" href="$cudataupdatepolicy__enum_8h.html" title=" " alt="" coords="129,79,280,119"/>
 </map>

@@ -1,12 +1,12 @@
 <map id="quvaluefilter.h" name="quvaluefilter.h">
-<area shape="rect" id="node1" title=" " alt="" coords="165,5,268,32"/>
-<area shape="rect" id="node2" href="$qumbiaizer_8h.html" title=" " alt="" coords="169,80,265,107"/>
-<area shape="rect" id="node3" href="$qumbiaizer_8cpp.html" title=" " alt="" coords="5,229,116,256"/>
-<area shape="rect" id="node10" href="$quvaluefilter_8cpp.html" title=" " alt="" coords="289,80,406,107"/>
-<area shape="rect" id="node4" href="$qumbiaizerprivate_8h.html" title=" " alt="" coords="149,155,284,181"/>
-<area shape="rect" id="node7" href="$quwatcher_8h.html" title=" " alt="" coords="427,155,521,181"/>
-<area shape="rect" id="node9" href="$quwriter_8h.html" title=" " alt="" coords="315,155,393,181"/>
-<area shape="rect" id="node5" href="$qumbiaizerprivate_8cpp.html" title=" " alt="" coords="141,229,290,256"/>
-<area shape="rect" id="node6" href="$quwriter_8cpp.html" title=" " alt="" coords="314,229,407,256"/>
-<area shape="rect" id="node8" href="$quwatcher_8cpp.html" title=" " alt="" coords="431,229,538,256"/>
+<area shape="rect" id="node1" title=" " alt="" coords="178,5,293,31"/>
+<area shape="rect" id="node2" href="$qumbiaizer_8cpp.html" title=" " alt="" coords="5,225,127,251"/>
+<area shape="rect" id="node3" href="$qumbiaizer_8h.html" title=" " alt="" coords="182,79,289,104"/>
+<area shape="rect" id="node10" href="$quvaluefilter_8cpp.html" title=" " alt="" coords="313,79,443,104"/>
+<area shape="rect" id="node4" href="$qumbiaizerprivate_8h.html" title=" " alt="" coords="159,152,312,177"/>
+<area shape="rect" id="node7" href="$quwatcher_8h.html" title=" " alt="" coords="466,152,567,177"/>
+<area shape="rect" id="node9" href="$quwriter_8h.html" title=" " alt="" coords="344,152,431,177"/>
+<area shape="rect" id="node5" href="$qumbiaizerprivate_8cpp.html" title=" " alt="" coords="151,225,319,251"/>
+<area shape="rect" id="node6" href="$quwriter_8cpp.html" title=" " alt="" coords="344,225,447,251"/>
+<area shape="rect" id="node8" href="$quwatcher_8cpp.html" title=" " alt="" coords="471,225,587,251"/>
 </map>

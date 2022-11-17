@@ -1,5 +1,8 @@
 <map id="cupoller.h" name="cupoller.h">
-<area shape="rect" id="node1" title=" " alt="" coords="94,5,173,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,131,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="155,80,245,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="196,5,281,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,79,144,104"/>
+<area shape="rect" id="node3" href="$cupollingservice_8h.html" title=" " alt="" coords="169,79,309,104"/>
+<area shape="rect" id="node6" title=" " alt="" coords="333,79,429,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="114,159,214,185"/>
+<area shape="rect" id="node5" href="$cudataupdatepolicy__enum_8h.html" title=" " alt="" coords="238,152,389,192"/>
 </map>

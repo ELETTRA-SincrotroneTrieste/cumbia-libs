@@ -1,8 +1,8 @@
 <map id="QuWatcher" name="QuWatcher">
-<area shape="rect" id="node1" title="Manage readings of various type of objects in a different thread." alt="" coords="131,155,218,181"/>
-<area shape="rect" id="node6" href="$classQu1TWatcher.html" title=" " alt="" coords="123,229,226,256"/>
-<area shape="rect" id="node2" href="$classQumbiaizer.html" title="QTangoizes anything (not really anything, but...)" alt="" coords="5,80,93,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="14,5,85,32"/>
-<area shape="rect" id="node4" title=" " alt="" coords="118,80,231,107"/>
-<area shape="rect" id="node5" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="255,80,345,107"/>
+<area shape="rect" id="node1" title="Manage readings of various type of objects in a different thread." alt="" coords="142,152,235,177"/>
+<area shape="rect" id="node6" href="$classQu1TWatcher.html" title=" " alt="" coords="134,225,243,251"/>
+<area shape="rect" id="node2" href="$classQumbiaizer.html" title="QTangoizes anything (not really anything, but...)" alt="" coords="5,79,103,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="17,5,91,31"/>
+<area shape="rect" id="node4" title=" " alt="" coords="127,79,250,104"/>
+<area shape="rect" id="node5" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="275,79,369,104"/>
 </map>

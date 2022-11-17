@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['timestamplen_1095',['TIMESTAMPLEN',['../cuvariant_8h.html#a6eb3bc36623bc3d26813b12d8fd06ba5',1,'cuvariant.h']]]
+  ['srclen_0',['SRCLEN',['../cuvariant_8h.html#ae098e25543ad7257780c7257750902d0',1,'cuvariant.h']]],
+  ['stoc_1',['stoc',['../cumacros_8h.html#acd534b7281c2661a9b1a32e0dcb19a3a',1,'cumacros.h']]]
 ];

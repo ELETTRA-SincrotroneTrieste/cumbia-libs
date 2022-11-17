@@ -1,17 +1,17 @@
 <map id="cucontrolsutils.cpp" name="cucontrolsutils.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="535,5,666,32"/>
-<area shape="rect" id="node2" href="$cucontrolsutils_8h.html" title=" " alt="" coords="18,80,135,107"/>
-<area shape="rect" id="node5" href="$qustring_8h.html" title=" " alt="" coords="160,80,239,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="218,155,285,181"/>
-<area shape="rect" id="node7" title=" " alt="" coords="314,80,386,107"/>
-<area shape="rect" id="node8" title=" " alt="" coords="411,80,484,107"/>
-<area shape="rect" id="node9" title=" " alt="" coords="509,80,583,107"/>
-<area shape="rect" id="node10" title=" " alt="" coords="607,80,703,107"/>
-<area shape="rect" id="node11" title=" " alt="" coords="728,80,839,107"/>
-<area shape="rect" id="node12" title=" " alt="" coords="863,80,917,107"/>
-<area shape="rect" id="node13" title=" " alt="" coords="942,80,1033,107"/>
-<area shape="rect" id="node14" title=" " alt="" coords="1057,80,1129,107"/>
-<area shape="rect" id="node15" title=" " alt="" coords="1153,80,1243,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,155,92,181"/>
-<area shape="rect" id="node4" title=" " alt="" coords="117,155,170,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="561,5,705,31"/>
+<area shape="rect" id="node2" href="$cucontrolsutils_8h.html" title=" " alt="" coords="15,79,144,104"/>
+<area shape="rect" id="node5" href="$qustring_8h.html" title=" " alt="" coords="168,79,255,104"/>
+<area shape="rect" id="node6" title=" " alt="" coords="229,152,300,177"/>
+<area shape="rect" id="node7" title=" " alt="" coords="331,79,409,104"/>
+<area shape="rect" id="node8" title=" " alt="" coords="433,79,512,104"/>
+<area shape="rect" id="node9" title=" " alt="" coords="536,79,615,104"/>
+<area shape="rect" id="node10" title=" " alt="" coords="639,79,744,104"/>
+<area shape="rect" id="node11" title=" " alt="" coords="769,79,889,104"/>
+<area shape="rect" id="node12" title=" " alt="" coords="913,79,971,104"/>
+<area shape="rect" id="node13" title=" " alt="" coords="996,79,1093,104"/>
+<area shape="rect" id="node14" title=" " alt="" coords="1117,79,1196,104"/>
+<area shape="rect" id="node15" title=" " alt="" coords="1221,79,1317,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,152,100,177"/>
+<area shape="rect" id="node4" title=" " alt="" coords="124,152,179,177"/>
 </map>

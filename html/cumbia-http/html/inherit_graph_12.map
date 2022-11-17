@@ -1,3 +1,10 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuHttpSrcHelper__I.html" title="The CuHttpSrcHelper_I interface defines a helper for a CuHttpSource that is unaware of what engine li..." alt="" coords="5,5,139,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,153,80,179"/>
+<area shape="rect" id="node2" href="$classCuHttpAuthInputFactory.html" title=" " alt="" coords="128,5,305,31"/>
+<area shape="rect" id="node3" href="$classCuHttpAuthManager.html" title=" " alt="" coords="139,55,294,80"/>
+<area shape="rect" id="node4" href="$classCuHttpBundledSrcReq.html" title=" " alt="" coords="134,104,299,129"/>
+<area shape="rect" id="node5" href="$classCuHttpChannelReceiver.html" title="Receive messages on the channel and distributes them." alt="" coords="128,153,305,179"/>
+<area shape="rect" id="node6" href="$classCuHttpCliIdMan.html" title=" " alt="" coords="155,203,279,228"/>
+<area shape="rect" id="node7" href="$classCuHttpSrcMan.html" title="Http source queue and data manager." alt="" coords="159,252,274,277"/>
+<area shape="rect" id="node8" href="$classCuHttpWriteHelper.html" title=" " alt="" coords="144,301,289,327"/>
 </map>

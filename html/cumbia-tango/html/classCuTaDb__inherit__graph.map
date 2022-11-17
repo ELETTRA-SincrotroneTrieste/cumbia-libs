@@ -1,5 +1,5 @@
 <map id="CuTaDb" name="CuTaDb">
-<area shape="rect" id="node1" title="Get data from the Tango database." alt="" coords="33,155,103,181"/>
-<area shape="rect" id="node2" href="$classCuTangoActionI.html" title="an interface for a Tango action, typically a reader or a writer are implementors" alt="" coords="11,80,125,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,5,131,32"/>
+<area shape="rect" id="node1" title="Get data from the Tango database." alt="" coords="38,152,109,177"/>
+<area shape="rect" id="node2" href="$classCuTangoActionI.html" title="an interface for a Tango action, typically a reader or a writer are implementors" alt="" coords="12,79,135,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,5,141,31"/>
 </map>

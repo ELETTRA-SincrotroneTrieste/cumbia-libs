@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['srclen_1093',['SRCLEN',['../cuvariant_8h.html#ae098e25543ad7257780c7257750902d0',1,'cuvariant.h']]],
-  ['stoc_1094',['stoc',['../cumacros_8h.html#acd534b7281c2661a9b1a32e0dcb19a3a',1,'cumacros.h']]]
+  ['qobjinfo_0',['qobjinfo',['../cumacros_8h.html#a22166b48145c760514384122f0944fc9',1,'cumacros.h']]],
+  ['qobjname_1',['qobjname',['../cumacros_8h.html#ade229e426fdc3192097eb3e004b92241',1,'cumacros.h']]]
 ];

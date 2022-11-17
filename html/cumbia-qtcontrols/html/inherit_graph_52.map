@@ -1,4 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,116,32"/>
-<area shape="rect" id="node2" href="$classQuPlotCurve.html" title="QwtPlot derived curve used in QuPlotBase." alt="" coords="164,5,267,32"/>
+<area shape="rect" id="node1" href="$classQuPlotCommon.html" title="common object owned by cumbia plots used to link and configure a plot." alt="" coords="5,5,129,31"/>
 </map>

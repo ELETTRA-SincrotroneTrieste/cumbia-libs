@@ -1,8 +1,8 @@
 <map id="widget&#45;epics.h" name="widget&#45;epics.h">
-<area shape="rect" id="node1" title=" " alt="" coords="234,5,341,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,79,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="103,80,191,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="216,80,359,107"/>
-<area shape="rect" id="node5" title=" " alt="" coords="383,80,522,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="546,80,653,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="253,5,370,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,79,84,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="109,79,207,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="232,79,391,104"/>
+<area shape="rect" id="node5" title=" " alt="" coords="415,79,570,104"/>
+<area shape="rect" id="node6" title=" " alt="" coords="595,79,711,104"/>
 </map>

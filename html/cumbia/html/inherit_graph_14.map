@@ -1,3 +1,8 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuServiceProviderPrivate.html" title=" " alt="" coords="5,5,177,32"/>
+<area shape="rect" id="node1" href="$classCuServiceI.html" title="interface to write cumbia services that can be registered and fetched through the cumbia service prov..." alt="" coords="5,104,96,129"/>
+<area shape="rect" id="node2" href="$classCuActivityManager.html" title="This service stores the links between threads, activities and thread listeners." alt="" coords="148,5,295,31"/>
+<area shape="rect" id="node3" href="$classCuEventLoopService.html" title="service that implements a simple event loop for cumbia applications." alt="" coords="144,55,299,80"/>
+<area shape="rect" id="node4" href="$classCuLog.html" title="a cumbia service providing an interface for logging facilities" alt="" coords="190,104,253,129"/>
+<area shape="rect" id="node5" href="$classCuThreadService.html" title="cumbia service that creates threads and keeps references of the threads running within the applicatio..." alt="" coords="155,153,287,179"/>
+<area shape="rect" id="node6" href="$classCuTimerService.html" title="The CuTimerService class provides access to cumbia timers. It is normally used internally by the libr..." alt="" coords="159,203,284,228"/>
 </map>

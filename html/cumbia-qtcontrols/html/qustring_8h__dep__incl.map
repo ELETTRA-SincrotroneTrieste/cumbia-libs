@@ -1,8 +1,9 @@
 <map id="qustring.h" name="qustring.h">
-<area shape="rect" id="node1" title=" " alt="" coords="311,5,390,32"/>
-<area shape="rect" id="node2" href="$cucontrolsutils_8cpp.html" title=" " alt="" coords="5,80,136,107"/>
-<area shape="rect" id="node3" href="$qucombobox_8cpp.html" title=" " alt="" coords="161,80,282,107"/>
-<area shape="rect" id="node4" href="$qulabel_8cpp.html" title=" " alt="" coords="307,80,395,107"/>
-<area shape="rect" id="node5" href="$qustring_8cpp.html" title=" " alt="" coords="419,80,512,107"/>
-<area shape="rect" id="node6" href="$qutrendplot_8cpp.html" title=" " alt="" coords="537,80,647,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="429,5,515,31"/>
+<area shape="rect" id="node2" href="$cucontrolsutils_8cpp.html" title=" " alt="" coords="5,79,149,104"/>
+<area shape="rect" id="node3" href="$qucombobox_8cpp.html" title=" " alt="" coords="173,79,307,104"/>
+<area shape="rect" id="node4" href="$quinputoutput_8cpp.html" title=" " alt="" coords="331,79,471,104"/>
+<area shape="rect" id="node5" href="$qulabel_8cpp.html" title=" " alt="" coords="495,79,593,104"/>
+<area shape="rect" id="node6" href="$qustring_8cpp.html" title=" " alt="" coords="617,79,719,104"/>
+<area shape="rect" id="node7" href="$qutrendplot_8cpp.html" title=" " alt="" coords="743,79,867,104"/>
 </map>

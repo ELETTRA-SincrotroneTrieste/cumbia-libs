@@ -1,4 +1,4 @@
 <map id="CuTimer" name="CuTimer">
-<area shape="rect" id="node1" title="a timer used by CuThread for periodic execution of an activity" alt="" coords="43,80,115,107"/>
-<area shape="rect" id="node2" href="$classCuEventLoopListener.html" title="listens for the events from the CuEventLoopService" alt="" coords="5,5,152,32"/>
+<area shape="rect" id="node1" title="a timer used by CuThread for periodic execution of an activity" alt="" coords="46,79,123,104"/>
+<area shape="rect" id="node2" href="$classCuEventLoopListener.html" title="listens for the events from the CuEventLoopService" alt="" coords="5,5,164,31"/>
 </map>

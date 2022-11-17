@@ -1,4 +1,4 @@
 <map id="CuTaDbFactory" name="CuTaDbFactory">
-<area shape="rect" id="node1" title=" " alt="" coords="27,80,142,107"/>
-<area shape="rect" id="node2" href="$classCuTangoActionFactoryI.html" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="5,5,164,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="31,79,149,104"/>
+<area shape="rect" id="node2" href="$classCuTangoActionFactoryI.html" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="5,5,175,31"/>
 </map>

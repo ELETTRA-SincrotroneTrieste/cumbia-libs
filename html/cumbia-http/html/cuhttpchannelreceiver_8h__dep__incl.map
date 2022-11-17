@@ -1,7 +1,6 @@
 <map id="cuhttpchannelreceiver.h" name="cuhttpchannelreceiver.h">
-<area shape="rect" id="node1" title=" " alt="" coords="323,5,483,32"/>
-<area shape="rect" id="node2" href="$cuhttpactionfactories_8cpp.html" title=" " alt="" coords="5,80,173,107"/>
-<area shape="rect" id="node3" href="$cuhttpactionfactoryservice_8cpp.html" title=" " alt="" coords="197,80,397,107"/>
-<area shape="rect" id="node4" href="$cuhttpchannelreceiver_8cpp.html" title=" " alt="" coords="422,80,597,107"/>
-<area shape="rect" id="node5" href="$cumbiahttp_8cpp.html" title=" " alt="" coords="621,80,731,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="224,5,403,31"/>
+<area shape="rect" id="node2" href="$cuhttpactionfactories_8cpp.html" title=" " alt="" coords="5,79,192,104"/>
+<area shape="rect" id="node3" href="$cuhttpchannelreceiver_8cpp.html" title=" " alt="" coords="217,79,410,104"/>
+<area shape="rect" id="node4" href="$cumbiahttp_8cpp.html" title=" " alt="" coords="435,79,557,104"/>
 </map>

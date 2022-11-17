@@ -1,5 +1,4 @@
 <map id="CuActivity" name="CuActivity">
-<area shape="rect" id="node1" title="a class with hook functions where work can be done in a separate thread and wherefrom results are pub..." alt="" coords="120,5,203,32"/>
-<area shape="rect" id="node2" href="$classCuContinuousActivity.html" title="an implementation of CuActivity that calls CuActivity::execute repeatedly at a certain interval of ti..." alt="" coords="5,80,155,107"/>
-<area shape="rect" id="node3" href="$classCuIsolatedActivity.html" title="A convenient CuActivity designed to be executed only once." alt="" coords="179,80,309,107"/>
+<area shape="rect" id="node1" title="a class with hook functions where work can be done in a separate thread and wherefrom results are pub..." alt="" coords="31,5,121,31"/>
+<area shape="rect" id="node2" href="$classCuPeriodicActivity.html" title="an implementation of CuActivity that calls CuActivity::execute repeatedly at a certain interval of ti..." alt="" coords="5,79,147,104"/>
 </map>

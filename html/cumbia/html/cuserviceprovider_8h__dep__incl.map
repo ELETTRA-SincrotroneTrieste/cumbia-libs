@@ -1,7 +1,7 @@
 <map id="cuserviceprovider.h" name="cuserviceprovider.h">
-<area shape="rect" id="node1" title=" " alt="" coords="200,5,335,32"/>
-<area shape="rect" id="node2" href="$cumbia_8cpp.html" title=" " alt="" coords="5,80,95,107"/>
-<area shape="rect" id="node3" href="$cuserviceprovider_8cpp.html" title=" " alt="" coords="119,80,269,107"/>
-<area shape="rect" id="node4" href="$cuthread_8cpp.html" title=" " alt="" coords="293,80,391,107"/>
-<area shape="rect" id="node5" href="$cuthreadseventbridge_8cpp.html" title=" " alt="" coords="415,80,586,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="214,5,363,31"/>
+<area shape="rect" id="node2" href="$cumbia_8cpp.html" title=" " alt="" coords="5,79,103,104"/>
+<area shape="rect" id="node3" href="$cuserviceprovider_8cpp.html" title=" " alt="" coords="127,79,291,104"/>
+<area shape="rect" id="node4" href="$cuthread_8cpp.html" title=" " alt="" coords="315,79,422,104"/>
+<area shape="rect" id="node5" href="$cuthreadseventbridge_8cpp.html" title=" " alt="" coords="447,79,637,104"/>
 </map>

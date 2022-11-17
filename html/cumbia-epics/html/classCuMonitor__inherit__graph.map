@@ -1,5 +1,5 @@
 <map id="CuMonitor" name="CuMonitor">
-<area shape="rect" id="node1" title=" " alt="" coords="27,155,109,181"/>
-<area shape="rect" id="node2" href="$classCuEpicsActionI.html" title="an interface for an EPICS action, as a reader (implemented) or a writer (not yet implemented)" alt="" coords="11,80,125,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,5,131,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="29,152,118,177"/>
+<area shape="rect" id="node2" href="$classCuEpicsActionI.html" title="an interface for an EPICS action, as a reader (implemented) or a writer (not yet implemented)" alt="" coords="14,79,133,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,5,141,31"/>
 </map>

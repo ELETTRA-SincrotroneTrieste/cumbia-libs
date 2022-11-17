@@ -1,0 +1,6 @@
+<map id="$MAINCLASS$" name="$MAINCLASS$">
+<area shape="rect" id="node1" title="$MAINCLASS$ is a reader that uses $SUPERCLASS$ to display values." alt="" coords="156,79,271,104"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,128,31"/>
+<area shape="rect" id="node3" title=" " alt="" coords="152,5,275,31"/>
+<area shape="rect" id="node4" title=" " alt="" coords="299,5,394,31"/>
+</map>

@@ -1,4 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuThreadFactoryImplI.html" title="an interface that requires the implementation of a method to create a thread" alt="" coords="5,5,157,32"/>
-<area shape="rect" id="node2" href="$classCuThreadFactoryImpl.html" title="implementation of CuThreadFactoryImplI used to instantiate and return a new CuThread" alt="" coords="205,5,353,32"/>
+<area shape="rect" id="node1" href="$classCuServiceProviderPrivate.html" title=" " alt="" coords="5,5,192,31"/>
 </map>

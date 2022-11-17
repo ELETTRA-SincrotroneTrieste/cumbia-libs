@@ -1,7 +1,7 @@
 <map id="cuactivityevent.h" name="cuactivityevent.h">
-<area shape="rect" id="node1" title=" " alt="" coords="263,5,384,32"/>
-<area shape="rect" id="node2" href="$cuactivityevent_8cpp.html" title=" " alt="" coords="5,80,140,107"/>
-<area shape="rect" id="node3" href="$cucontinuousactivity_8cpp.html" title=" " alt="" coords="165,80,330,107"/>
-<area shape="rect" id="node4" href="$cumbia_8cpp.html" title=" " alt="" coords="355,80,444,107"/>
-<area shape="rect" id="node5" href="$cuthread_8cpp.html" title=" " alt="" coords="468,80,565,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="239,5,373,31"/>
+<area shape="rect" id="node2" href="$cuactivityevent_8cpp.html" title=" " alt="" coords="5,79,156,104"/>
+<area shape="rect" id="node3" href="$cumbia_8cpp.html" title=" " alt="" coords="180,79,277,104"/>
+<area shape="rect" id="node4" href="$cuperiodicactivity_8cpp.html" title=" " alt="" coords="302,79,465,104"/>
+<area shape="rect" id="node5" href="$cuthread_8cpp.html" title=" " alt="" coords="489,79,595,104"/>
 </map>

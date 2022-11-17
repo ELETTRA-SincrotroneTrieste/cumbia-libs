@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['vtoc_1096',['vtoc',['../cumacros_8h.html#a3b4803b8e261926666ee88211c194e17',1,'cumacros.h']]],
-  ['vtoc2_1097',['vtoc2',['../cumacros_8h.html#a276e702cb7c675524add2a255142cd5e',1,'cumacros.h']]]
+  ['timestamplen_0',['TIMESTAMPLEN',['../cuvariant_8h.html#a6eb3bc36623bc3d26813b12d8fd06ba5',1,'cuvariant.h']]]
 ];

@@ -1,4 +1,4 @@
 <map id="CuHTTPActionEditFactory" name="CuHTTPActionEditFactory">
-<area shape="rect" id="node1" title=" " alt="" coords="5,80,183,107"/>
-<area shape="rect" id="node2" href="$classCuHTTPActionFactoryI.html" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="15,5,173,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,79,191,104"/>
+<area shape="rect" id="node2" href="$classCuHTTPActionFactoryI.html" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="16,5,180,31"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="CuEpConfiguration" name="CuEpConfiguration">
-<area shape="rect" id="node1" title=" " alt="" coords="5,155,137,181"/>
-<area shape="rect" id="node2" href="$classCuEpicsActionI.html" title="an interface for an EPICS action, as a reader (implemented) or a writer (not yet implemented)" alt="" coords="15,80,128,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="9,5,134,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,152,148,177"/>
+<area shape="rect" id="node2" href="$classCuEpicsActionI.html" title="an interface for an EPICS action, as a reader (implemented) or a writer (not yet implemented)" alt="" coords="17,79,136,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="9,5,145,31"/>
 </map>

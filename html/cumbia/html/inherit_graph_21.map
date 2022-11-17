@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuThreadTokenGenI.html" title="The CuThreadTokenGenI is an interface for custom thread token generators." alt="" coords="5,5,148,32"/>
+<area shape="rect" id="node1" href="$classCuThreadsEventBridgeFactory__I.html" title="interface for a factory to create a bridge binding a thread to an event loop" alt="" coords="5,5,233,31"/>
+<area shape="rect" id="node2" href="$classCuThreadsEventBridgeFactory.html" title="an implementation of CuThreadsEventBridgeFactory_I for cumbia" alt="" coords="281,5,499,31"/>
 </map>

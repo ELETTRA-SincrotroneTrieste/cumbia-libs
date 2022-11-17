@@ -1,4 +1,4 @@
 <map id="CuThreadFactoryImpl" name="CuThreadFactoryImpl">
-<area shape="rect" id="node1" title="implementation of CuThreadFactoryImplI used to instantiate and return a new CuThread" alt="" coords="7,80,155,107"/>
-<area shape="rect" id="node2" href="$classCuThreadFactoryImplI.html" title="an interface that requires the implementation of a method to create a thread" alt="" coords="5,5,157,32"/>
+<area shape="rect" id="node1" title="implementation of CuThreadFactoryImplI used to instantiate and return a new CuThread" alt="" coords="7,79,167,104"/>
+<area shape="rect" id="node2" href="$classCuThreadFactoryImplI.html" title="an interface that requires the implementation of a method to create a thread" alt="" coords="5,5,169,31"/>
 </map>

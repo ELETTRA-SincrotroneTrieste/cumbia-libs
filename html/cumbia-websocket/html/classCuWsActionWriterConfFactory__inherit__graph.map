@@ -1,5 +1,5 @@
 <map id="CuWsActionWriterConfFactory" name="CuWsActionWriterConfFactory">
-<area shape="rect" id="node1" title=" " alt="" coords="5,155,208,181"/>
-<area shape="rect" id="node2" href="$classCuWSActionConfFactory.html" title=" " alt="" coords="21,80,192,107"/>
-<area shape="rect" id="node3" href="$classCuWSActionFactoryI.html" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="33,5,180,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,152,223,177"/>
+<area shape="rect" id="node2" href="$classCuWSActionConfFactory.html" title=" " alt="" coords="25,79,203,104"/>
+<area shape="rect" id="node3" href="$classCuWSActionFactoryI.html" title="Factory to instantiate CuTangoActionI implementations, such as readers, writers and attribute configu..." alt="" coords="37,5,191,31"/>
 </map>

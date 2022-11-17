@@ -1,8 +1,6 @@
 <map id="org.kde.necessitas.ministro.IMinistro.Stub" name="org.kde.necessitas.ministro.IMinistro.Stub">
-<area shape="rect" id="node1" title=" " alt="" coords="174,169,381,211"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,87,149,114"/>
-<area shape="rect" id="node3" href="$interfaceorg_1_1kde_1_1necessitas_1_1ministro_1_1IMinistro.html" title=" " alt="" coords="174,80,381,121"/>
-<area shape="rect" id="node4" title=" " alt="" coords="103,5,267,32"/>
-<area shape="rect" id="node5" title=" " alt="" coords="291,5,447,32"/>
-<area shape="rect" id="node6" title=" " alt="" coords="405,87,541,114"/>
+<area shape="rect" id="node1" title=" " alt="" coords="74,167,281,207"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,86,149,111"/>
+<area shape="rect" id="node3" href="$interfaceorg_1_1kde_1_1necessitas_1_1ministro_1_1IMinistro.html" title=" " alt="" coords="174,79,381,119"/>
+<area shape="rect" id="node4" title=" " alt="" coords="195,5,359,31"/>
 </map>

@@ -1,27 +1,28 @@
 <map id="cutadb.cpp" name="cutadb.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="784,5,871,32"/>
-<area shape="rect" id="node2" href="$cutadb_8h.html" title=" " alt="" coords="269,80,341,107"/>
-<area shape="rect" id="node4" href="$tsource_8h.html" title=" " alt="" coords="95,229,171,256"/>
-<area shape="rect" id="node9" title=" " alt="" coords="745,80,809,107"/>
-<area shape="rect" id="node10" title=" " alt="" coords="833,80,923,107"/>
-<area shape="rect" id="node11" title=" " alt="" coords="948,80,1083,107"/>
-<area shape="rect" id="node12" title=" " alt="" coords="1107,80,1195,107"/>
-<area shape="rect" id="node13" title=" " alt="" coords="1220,80,1299,107"/>
-<area shape="rect" id="node14" title=" " alt="" coords="1323,80,1438,107"/>
-<area shape="rect" id="node15" href="$cumbiatango_8h.html" title=" " alt="" coords="138,80,245,107"/>
-<area shape="rect" id="node17" href="$cudevicefactoryservice_8h.html" title=" " alt="" coords="553,80,720,107"/>
-<area shape="rect" id="node22" href="$cutadbactivity_8h.html" title=" " alt="" coords="1463,80,1576,107"/>
-<area shape="rect" id="node24" href="$cuactionfactoryservice_8h.html" title=" " alt="" coords="365,80,529,107"/>
-<area shape="rect" id="node3" href="$cutangoactioni_8h.html" title=" " alt="" coords="246,155,363,181"/>
-<area shape="rect" id="node8" title=" " alt="" coords="246,229,371,256"/>
-<area shape="rect" id="node5" title=" " alt="" coords="181,304,236,331"/>
-<area shape="rect" id="node6" title=" " alt="" coords="116,304,155,331"/>
-<area shape="rect" id="node7" title=" " alt="" coords="5,304,92,331"/>
-<area shape="rect" id="node16" title=" " alt="" coords="97,155,171,181"/>
-<area shape="rect" id="node18" title=" " alt="" coords="471,155,563,181"/>
-<area shape="rect" id="node19" title=" " alt="" coords="587,155,633,181"/>
-<area shape="rect" id="node20" title=" " alt="" coords="658,155,762,181"/>
-<area shape="rect" id="node21" title=" " alt="" coords="786,155,858,181"/>
-<area shape="rect" id="node23" title=" " alt="" coords="1453,155,1586,181"/>
-<area shape="rect" id="node25" title=" " alt="" coords="387,155,446,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="947,5,1040,31"/>
+<area shape="rect" id="node2" href="$cutadb_8h.html" title=" " alt="" coords="386,79,465,104"/>
+<area shape="rect" id="node4" href="$tsource_8h.html" title=" " alt="" coords="203,240,286,265"/>
+<area shape="rect" id="node9" title=" " alt="" coords="906,79,975,104"/>
+<area shape="rect" id="node10" title=" " alt="" coords="1000,79,1097,104"/>
+<area shape="rect" id="node11" title=" " alt="" coords="1122,79,1271,104"/>
+<area shape="rect" id="node12" title=" " alt="" coords="1311,159,1407,185"/>
+<area shape="rect" id="node13" title=" " alt="" coords="1496,79,1582,104"/>
+<area shape="rect" id="node14" title=" " alt="" coords="1606,79,1733,104"/>
+<area shape="rect" id="node15" href="$cumbiatango_8h.html" title=" " alt="" coords="244,79,362,104"/>
+<area shape="rect" id="node18" href="$cudevicefactoryservice_8h.html" title=" " alt="" coords="696,79,881,104"/>
+<area shape="rect" id="node24" href="$cutadbactivity_8h.html" title=" " alt="" coords="1346,79,1471,104"/>
+<area shape="rect" id="node25" href="$cuactionfactoryservice_8h.html" title=" " alt="" coords="489,79,672,104"/>
+<area shape="rect" id="node3" href="$cutangoactioni_8h.html" title=" " alt="" coords="360,159,491,185"/>
+<area shape="rect" id="node8" title=" " alt="" coords="360,240,499,265"/>
+<area shape="rect" id="node5" title=" " alt="" coords="524,313,583,339"/>
+<area shape="rect" id="node6" title=" " alt="" coords="272,313,315,339"/>
+<area shape="rect" id="node7" title=" " alt="" coords="153,313,248,339"/>
+<area shape="rect" id="node16" title=" " alt="" coords="27,159,110,185"/>
+<area shape="rect" id="node17" href="$cudataupdatepolicy__enum_8h.html" title=" " alt="" coords="134,152,285,192"/>
+<area shape="rect" id="node19" title=" " alt="" coords="602,159,702,185"/>
+<area shape="rect" id="node20" title=" " alt="" coords="1020,159,1071,185"/>
+<area shape="rect" id="node21" title=" " alt="" coords="778,159,892,185"/>
+<area shape="rect" id="node22" title=" " alt="" coords="917,159,996,185"/>
+<area shape="rect" id="node23" href="$cudevicefactory__i_8h.html" title=" " alt="" coords="906,240,1055,265"/>
+<area shape="rect" id="node26" title=" " alt="" coords="516,159,578,185"/>
 </map>

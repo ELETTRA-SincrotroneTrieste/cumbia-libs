@@ -4,5 +4,6 @@ var classCuThreadListener =
     [ "getToken", "classCuThreadListener.html#a5a825fb8fc7ffcdfe3b0dae1048419ac", null ],
     [ "onProgress", "classCuThreadListener.html#a4feb7802a8844232a2d9cea98f2554c7", null ],
     [ "onResult", "classCuThreadListener.html#a8195c9a446ac1dabb4cea737de770c4c", null ],
+    [ "onResult", "classCuThreadListener.html#a61a972c713ae873a9780bc6097967f3b", null ],
     [ "onResult", "classCuThreadListener.html#a9cfbec87672a39b62093b6ae283f7d40", null ]
 ];

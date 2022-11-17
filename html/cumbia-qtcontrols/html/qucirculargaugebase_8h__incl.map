@@ -1,8 +1,8 @@
 <map id="qucirculargaugebase.h" name="qucirculargaugebase.h">
-<area shape="rect" id="node1" title=" " alt="" coords="26,5,178,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,79,107"/>
-<area shape="rect" id="node3" href="$qugaugeconfig_8h.html" title=" " alt="" coords="103,80,221,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="20,155,107,181"/>
-<area shape="rect" id="node5" title=" " alt="" coords="131,155,193,181"/>
-<area shape="rect" id="node6" title=" " alt="" coords="217,155,272,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="24,5,193,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,79,84,104"/>
+<area shape="rect" id="node3" href="$qugaugeconfig_8h.html" title=" " alt="" coords="108,79,237,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="22,152,115,177"/>
+<area shape="rect" id="node5" title=" " alt="" coords="139,152,206,177"/>
+<area shape="rect" id="node6" title=" " alt="" coords="230,152,286,177"/>
 </map>

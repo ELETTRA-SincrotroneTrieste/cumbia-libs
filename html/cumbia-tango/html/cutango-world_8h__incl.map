@@ -1,7 +1,8 @@
 <map id="cutango&#45;world.h" name="cutango&#45;world.h">
-<area shape="rect" id="node1" title=" " alt="" coords="121,5,235,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,60,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="85,80,157,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="181,80,290,107"/>
-<area shape="rect" id="node5" title=" " alt="" coords="315,80,380,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="189,5,315,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,86,64,111"/>
+<area shape="rect" id="node3" title=" " alt="" coords="89,86,167,111"/>
+<area shape="rect" id="node4" title=" " alt="" coords="191,86,313,111"/>
+<area shape="rect" id="node5" title=" " alt="" coords="337,86,449,111"/>
+<area shape="rect" id="node6" href="$cudataupdatepolicy__enum_8h.html" title=" " alt="" coords="474,79,625,119"/>
 </map>
