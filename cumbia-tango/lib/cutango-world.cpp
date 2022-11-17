@@ -788,7 +788,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         for(size_t i = 0; i < devattr->size(); i++) {
             Tango::DeviceAttribute *p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
-            if(updpo == CuDataUpdatePolicy::PollUpdateAlways) {
+            if(updpo & CuDataUpdatePolicy::PollUpdateAlways) {
                 reslist.push_back(va[i]);
                 extractData(p_da,  reslist[offset]);
                 reslist[offset]["err"] = d->error;
@@ -815,13 +815,13 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                     reslist[offset]["color"] = d->t_world_conf.successColor(!d->error);
                     offset++;
                 }
-                else if(updpo == CuDataUpdatePolicy::OnPollUnchangedTimestampOnly) {
+                else if(updpo & CuDataUpdatePolicy::OnPollUnchangedTimestampOnly) {
                     reslist.push_back(CuData("timestamp_ms", rv["timestamp_ms"]));
                     reslist[offset]["timestamp_us"] = rv["timestamp_us"];
                     reslist[offset]["src"] = va[i]["src"];
                     offset++;
                 }
-                else if(updpo == CuDataUpdatePolicy::OnPollUnchangedNoUpdate) {
+                else if(updpo & CuDataUpdatePolicy::OnPollUnchangedNoUpdate) {
                     // do nothing
                 }
             }

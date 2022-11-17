@@ -57,7 +57,8 @@ struct repr_offsets {
 
 static struct repr_offsets roffsets;
 
-
+/*! \brief serialize CuData to send it over the network or save it into a file
+ */
 class CuDataSerializer
 {
 public:

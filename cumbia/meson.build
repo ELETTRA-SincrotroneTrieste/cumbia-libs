@@ -161,8 +161,8 @@ else
   doxydata.set('HAVE_DOT', 'NO')
 endif
 
-message('no doc generated / install')
-#  subdir('doc')
+# message('no doc generated / install')
+subdir('doc')
 
 endif
 

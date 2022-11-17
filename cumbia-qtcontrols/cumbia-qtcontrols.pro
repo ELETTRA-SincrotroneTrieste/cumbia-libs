@@ -287,22 +287,22 @@ DOXYGEN_BIN = $$system(which doxygen)
 isEmpty(DOXYGEN_BIN) {
     message("cumbia-qtcontrols.pro: doxygen not found")
 } else {
-    message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    message("---------------------------- DOCS DISABLED ----------------------")
+ #   message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+#    message("---------------------------- DOCS DISABLED ----------------------")
     message("")
     message("")
-#    message("Doxygen found")
+    message("Doxygen found")
 
-#    doc.commands = \
-#    doxygen \
-#    Doxyfile;
+    doc.commands = \
+    doxygen \
+    Doxyfile;
 
-#    doc.files = doc/*
-#    doc.path = $${CUMBIA_QTCONTROLS_DOCDIR}
-#    QMAKE_EXTRA_TARGETS += doc
-#    !android-g++ {
-#        INSTALLS += doc
-#    }
+    doc.files = doc/*
+    doc.path = $${CUMBIA_QTCONTROLS_DOCDIR}
+    QMAKE_EXTRA_TARGETS += doc
+    !android-g++ {
+        INSTALLS += doc
+    }
 }
     inc.files = $${HEADERS}
     inc.path = $${CUMBIA_QTCONTROLS_INCLUDES}
