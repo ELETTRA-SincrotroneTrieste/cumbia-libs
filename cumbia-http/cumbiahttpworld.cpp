@@ -6,6 +6,7 @@
 #include <QJsonArray>
 #include <QtDebug>
 #include <math.h>
+#include <QElapsedTimer>
 #include <sys/time.h>
 
 CumbiaHTTPWorld::CumbiaHTTPWorld() {
@@ -83,6 +84,7 @@ bool CumbiaHTTPWorld::request_reverse_eng(const QString &json, QMap<QString, QSt
 }
 
 bool CumbiaHTTPWorld::json_decode(const QByteArray &ba, std::list<CuData> &out) const {
+//    printf("\e[1;32mCumbiaHTTPWorld::m_json_decode\n%s\e[0m\n", ba.data());
     QJsonParseError pe;
     QJsonDocument json = QJsonDocument::fromJson(ba, &pe);
     if(pe.error != QJsonParseError::NoError) {
@@ -101,24 +103,58 @@ bool CumbiaHTTPWorld::json_decode(const QByteArray &ba, std::list<CuData> &out) 
 
 void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
 {
-    QJsonObject data_o = data_v.toObject();
-    QStringList keys = data_o.keys();
-    // value keys must be converted to the original type: Json converts all numbers to double
-    // value_type key stores the CuVariant data type to facilitate conversion
-    QStringList value_keys = QStringList() << "value" << "w_value";
-
+    QElapsedTimer elapt;
+    elapt.start();
+    const QJsonObject &data_o = data_v.toObject();
+    const QStringList &value_keys { "value", "w_value" };
+    QStringList no_value_keys = data_o.keys(); // all keys except value and w_value
+    foreach(const QString& vk, value_keys)
+        no_value_keys.removeAll(vk);
     // NOTE
     // these are the keys storing values that necessary need to be converted to int
     QStringList i_keys = QStringList() << "s" << "q" << "writable" << "dt" << "df";
-    QStringList special_keys = QStringList() << "timestamp" << "timestamp_us" << "timestamp_ms" << "err" << "error";
 
-    foreach(const QString &k, keys + special_keys ) {
+    // timestamp management
+    char *endptr;
+    double ts_us = -1.0f;
+    if(data_o.contains("timestamp"))
+        ts_us = strtod(data_o["timestamp"].toString().toStdString().c_str(), &endptr);
+    else if(data_o.contains("timestamp_us"))
+        ts_us = data_o["timestamp_us"].toDouble();
+    if(ts_us > 0)
+        res["timestamp_us"] = ts_us;
+
+    // timestamp millis
+    if(data_o.contains("timestamp_ms")) // timestamp_ms converted to long int
+        res["timestamp_ms"] = data_o["timestamp_ms"].toDouble();
+    else if(ts_us >= 0)
+        res["timestamp_ms"] = floor(ts_us) * 1000.0 + (ts_us - floor(ts_us)) * 10e6 / 1000.0;
+
+    // error management: err flag and message
+    if(data_o.contains("err")) {
+        res["err"] = data_o["err"].toBool();
+    }
+    else if(data_o.contains("error"))
+        res["err"] = data_o["error"].toBool();
+    if(data_o.contains("msg"))
+        res["msg"] = data_o["msg"].toString().toStdString();
+    //
+    // i_keys, integer keys, to int
+    foreach(const QString& k, i_keys)
+        if(data_o.contains(k))
+            res[k.toStdString()] = data_o[k].toInt();
+
+    // matrix data type ? will have dim_x and dim_y
+    int dimx = data_o["dim_x"].toInt(0), dimy = data_o["dim_y"].toInt(0);
+    bool matrix = dimx > 0 && dimy > 0;
+
+    foreach(const QString &k, no_value_keys) {
         const QJsonValue &v = data_o[k]; // const version, data_o is const
         const std::string &c = k.toStdString();
         if(!i_keys.contains(k) && v.isArray()) {
             QJsonArray jarr = v.toArray();
             // decide type
-            if(jarr.size() > 0 && jarr.at(0).isDouble() && !value_keys.contains(k)) {
+            if(jarr.size() > 0 && jarr.at(0).isDouble()) {
                 // all type of ints are saved as double in Json
                 std::vector<double> vd;
                 for(int i = 0; i < jarr.size(); i++) {
@@ -154,31 +190,6 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
         }
     }
 
-    // timestamp
-    char *endptr;
-    double ts_us = -1.0f;
-    if(data_o.contains("timestamp"))
-        ts_us = strtod(data_o["timestamp"].toString().toStdString().c_str(), &endptr);
-    else if(data_o.contains("timestamp_us"))
-        ts_us = data_o["timestamp_us"].toDouble();
-    if(ts_us > 0)
-        res["timestamp_us"] = ts_us;
-
-    // timestamp millis
-    if(data_o.contains("timestamp_ms")) // timestamp_ms converted to long int
-        res["timestamp_ms"] = data_o["timestamp_ms"].toDouble();
-    else if(ts_us >= 0)
-        res["timestamp_ms"] = floor(ts_us) * 1000.0 + (ts_us - floor(ts_us)) * 10e6 / 1000.0;
-
-    res["err"] = data_o["err"].toBool();
-    if(data_o.contains("msg"))
-        res["msg"] = data_o["msg"].toString().toStdString();
-    //
-    // to int
-    foreach(const QString& k, i_keys)
-        if(data_o.contains(k))
-            res[k.toStdString()] = data_o[k].toInt();
-
     // value, w_value vt: value type
     CuVariant::DataType t = static_cast<CuVariant::DataType>(data_o["vt"].toDouble());
     foreach(const QString &k, value_keys) {
@@ -187,7 +198,7 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
         if(v.isArray()) {
             QJsonArray jarr = v.toArray();
             // decide type
-            if(jarr.size() > 0 && jarr.at(0).isDouble()) {
+            if(jarr.size() > 0) {
                 // all type of ints are saved as double in Json
                 switch(t) {
                 case CuVariant::Double: {
@@ -196,110 +207,125 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
                         QJsonValue ithval = jarr.at(i);
                         vd.push_back(ithval.toDouble());
                     }
-                    res[sk] = vd;
-                }
-                    break;
+                    if(!matrix) res[sk] = vd;
+                    else res[sk] = CuVariant(vd, dimx, dimy);
+                } break;
                 case CuVariant::LongDouble: {
-                    std::vector<long double> vd;
+                    std::vector<long double> vld;
                     for(int i = 0; i < jarr.size(); i++) {
-                        vd.push_back(static_cast<long double>(jarr.at(i).toDouble()));
+                        vld.push_back(static_cast<long double>(jarr.at(i).toDouble()));
                     }
-                    res[sk] = vd;
-                }
-                    break;
+                    if(!matrix) res[sk] = vld;
+                    else res[sk] = CuVariant(vld, dimx, dimy);
+                }  break;
                 case CuVariant::Int: {
                     std::vector<int> vi;
                     for(int i = 0; i < jarr.size(); i++) {
                         QJsonValue ithval = jarr.at(i);
                         vi.push_back(static_cast<int>(ithval.toInt()));
                     }
-                    res[sk] = vi;
-                }
-                    break;
+                    if(!matrix) res[sk] = vi;
+                    else res[sk] = CuVariant(vi, dimx, dimy);
+                } break;
                 case CuVariant::LongInt: {
                     std::vector<long int> vli;
                     for(int i = 0; i < jarr.size(); i++) {
                         vli.push_back(static_cast<long int>(jarr.at(i).toVariant().toLongLong()));
                     }
-                    res[sk] = vli;
-                    break;
-                }
+                    if(!matrix) res[sk] = vli;
+                    else res[sk] = CuVariant(vli, dimx, dimy);
+                }  break;
                 case CuVariant::LongLongInt: {
                     std::vector<long long int> vlli;
                     for(int i = 0; i < jarr.size(); i++) {
                         vlli.push_back(static_cast<long long int>(jarr.at(i).toVariant().toLongLong()));
-                    }
-                    res[sk] = vlli;
-                    break;
-                }
+                    }                    
+                    if(!matrix) res[sk] = vlli;
+                    else res[sk] = CuVariant(vlli, dimx, dimy);
+                } break;
                 case CuVariant::LongLongUInt: {
                     std::vector<long long unsigned int> vulli;
                     for(int i = 0; i < jarr.size(); i++) {
                         vulli.push_back(static_cast<long long unsigned int>(jarr.at(i).toVariant().toULongLong()));
                     }
-                    res[sk] = vulli;
-                    break;
-                }
+                    if(!matrix) res[sk] = vulli;
+                    else res[sk] = CuVariant(vulli, dimx, dimy);
+                } break;
                 case CuVariant::LongUInt: {
                     std::vector<long unsigned int> vuli;
                     for(int i = 0; i < jarr.size(); i++) {
                         vuli.push_back(static_cast<long unsigned int>(jarr.at(i).toVariant().toULongLong()));
                     }
-                    res[sk] = vuli;
-                    break;
-                }
+                    if(!matrix) res[sk] = vuli;
+                    else res[sk] = CuVariant(vuli, dimx, dimy);
+                } break;
                 case CuVariant::UInt: {
                     std::vector<unsigned int> vui;
                     for(int i = 0; i < jarr.size(); i++) {
                         vui.push_back(static_cast<unsigned int>(jarr.at(i).toVariant().toUInt()));
                     }
-                    res[sk] = vui;
-                    break;
-                }
+                    if(!matrix) res[sk] = vui;
+                    else res[sk] = CuVariant(vui, dimx, dimy);
+                }  break;
                 case CuVariant::UShort: {
                     std::vector<unsigned short> vus;
                     for(int i = 0; i < jarr.size(); i++) {
                         vus.push_back(static_cast<unsigned short>(jarr.at(i).toVariant().toUInt()));
                     }
-                    res[sk] = vus;
-                    break;
-                }
+                    if(!matrix) res[sk] = vus;
+                    else res[sk] = CuVariant(vus, dimx, dimy);
+                }  break;
                 case CuVariant::Short: {
-                    std::vector<short> vus;
+                    std::vector<short> vs;
                     for(int i = 0; i < jarr.size(); i++) {
-                        vus.push_back(static_cast<short>(jarr.at(i).toVariant().toInt()));
+                        vs.push_back(static_cast<short>(jarr.at(i).toVariant().toInt()));
                     }
-                    res[sk] = vus;
-                    break;
-                }
+                    if(!matrix) res[sk] = vs;
+                    else res[sk] = CuVariant(vs, dimx, dimy);
+                } break;
                 case CuVariant::Char: {
                     std::vector<char> vc;
                     for(int i = 0; i < jarr.size(); i++) {
                         vc.push_back(static_cast<char>(jarr.at(i).toVariant().toChar().toLatin1()));
                     }
-                    res[sk] = vc;
-                    break;
-                }
+                    if(!matrix) res[sk] = vc;
+                    else res[sk] = CuVariant(vc, dimx, dimy);
+                } break;
                 case CuVariant::UChar: {
                     std::vector<unsigned char> vuc;
                     for(int i = 0; i < jarr.size(); i++) {
                         vuc.push_back(static_cast<unsigned char>(jarr.at(i).toVariant().toUInt()));
                     }
-                    res[sk] = vuc;
-                    break;
-                }
+                    if(!matrix) res[sk] = vuc;
+                    else res[sk] = CuVariant(vuc, dimx, dimy);
+                } break;
                 case CuVariant::Float: {
                     std::vector<float> vf;
                     for(int i = 0; i < jarr.size(); i++) {
                         vf.push_back(static_cast<float>(jarr.at(i).toDouble()));
                     }
-                    res[sk] = vf;
-                    break;
-                }
-                case CuVariant::String:
+                    if(!matrix) res[sk] = vf;
+                    else res[sk] = CuVariant(vf, dimx, dimy);
+                } break;
+                case CuVariant::String: {
+                    std::vector<std::string> vs;
+                    for(int i = 0; i < jarr.size(); i++) {
+                        vs.push_back(jarr.at(i).toString().toStdString());
+                    }
+                    if(!matrix) res[sk] = vs;
+                    else res[sk] = CuVariant(vs, dimx, dimy);
+                } break;
                 case CuVariant::TypeInvalid:
-                case CuVariant::Boolean:
+                case CuVariant::Boolean: {
+                    std::vector<bool> vb;
+                    for(int i = 0; i < jarr.size(); i++) {
+                        vb.push_back(static_cast<bool>(jarr.at(i).toBool()));
+                    }
+                    if(!matrix) res[sk] = vb;
+                    else res[sk] = CuVariant(vb, dimx, dimy);
+                } break;
                 case CuVariant::VoidPtr:
+                case CuVariant::EndVariantTypes:
                 case CuVariant::EndDataTypes:
                     break;
                 }
@@ -349,14 +375,20 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
                 break;
                 // dealt with in first loop
             case CuVariant::String:
-            case CuVariant::TypeInvalid:
+                res[sk] = qv.toString().toStdString();
+                break;
             case CuVariant::Boolean:
+                res[sk] = qv.toBool();
+                break;
+            case CuVariant::TypeInvalid:
             case CuVariant::VoidPtr:
+            case CuVariant::EndVariantTypes:
             case CuVariant::EndDataTypes:
                 break;
             }
         }
     } // foreach(const QString &k, value_keys)
+    printf("%s \e[1;36mtook %lldms\e[0m to decode %s\n", __PRETTY_FUNCTION__, elapt.elapsed(), datos(res));
 }
 
 QJsonObject CumbiaHTTPWorld::make_error(const QString &msg) const

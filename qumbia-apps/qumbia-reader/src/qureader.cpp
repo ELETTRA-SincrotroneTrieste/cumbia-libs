@@ -137,10 +137,8 @@ void Qu_Reader::onUpdate(const CuData &da) {
                 emit newFloatMatrix(source(),  ts, v.toMatrix<float>(), data);
             else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::Boolean)
                 emit newBoolMatrix(source(),  ts, v.toMatrix<bool>(), data);
-            else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::UChar) {
-                printf("UfuckinCHar\n");
+            else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::UChar)
                 emit newUCharMatrix(source(),ts, v.toMatrix<unsigned char>(), data);
-            }
             else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::Char)
                 emit newCharMatrix(source(),ts, v.toMatrix< char>(), data);
             else if(v.getFormat() == CuVariant::Matrix && v.getType() == CuVariant::Short)

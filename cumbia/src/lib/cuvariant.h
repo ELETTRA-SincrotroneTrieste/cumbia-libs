@@ -113,6 +113,7 @@ public:
                     VoidPtr, ///< generic void*
 		            Char,
 		            UChar,
+                    EndVariantTypes,
                     EndDataTypes = 64 ///< defines an upper bound of the enumeration
                   };
 
