@@ -48,6 +48,8 @@ to speed up data transfer for large vectors or images at a high transmission rat
 This works in conjunction with the versions of [https://gitlab.elettra.eu/puma/server/caserver](PUMA caserver)
 starting from 1.5.0.
 
+JSON decoding in cumbia-http supports *matrices*, that are received from the *synchronous PUMA server (caserver-sync)*
+
 
 #### cumbia-tango
 
