@@ -253,7 +253,7 @@ void QuWriter::execute(const QStringList& sl)
 
 void QuWriter::execute(const QVector<int>& iv)
 {
-    std::vector <int> v = iv.toStdVector();
+    std::vector <int> v(iv.begin(), iv.end());
     CuControlsWriterA *w = d->context->getWriter();
     CuVariant vv(v);
     if(!w || !d->configured)
@@ -268,7 +268,7 @@ void QuWriter::execute(const QVector<int>& iv)
 
 void QuWriter::execute(const QVector<double>& dv)
 {
-    std::vector <double> v = dv.toStdVector();
+    std::vector <double> v(dv.begin(), dv.end());
     CuControlsWriterA *w = d->context->getWriter();
     CuVariant vv(v);
     if(!w || !d->configured)
@@ -281,9 +281,8 @@ void QuWriter::execute(const QVector<double>& dv)
     }
 }
 
-void QuWriter::execute(const QVector<bool>& bv)
-{
-    std::vector <bool> v = bv.toStdVector();
+void QuWriter::execute(const QVector<bool>& bv) {
+    std::vector <bool> v(bv.begin(), bv.end());
     CuControlsWriterA *w = d->context->getWriter();
     CuVariant vv(v);
     if(!w || !d->configured)

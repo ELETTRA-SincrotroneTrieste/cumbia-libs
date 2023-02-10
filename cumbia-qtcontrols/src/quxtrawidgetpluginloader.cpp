@@ -35,7 +35,7 @@ QuXtraWidgetPluginI *QuXtraWidgetPluginLoader::getPlugin(const QString &classnam
 {
     CuPluginLoader plo;
     const char* xw_pattern = "(?:e){0,1}x(?:tra){0,1}widget[-]{0,1}plugin.*\\.so";
-    QStringList plpaths = plo.getPluginAbsoluteFilePaths(QString(), QRegExp(xw_pattern));
+    QStringList plpaths = plo.getPluginAbsoluteFilePaths(QString(), QRegularExpression(xw_pattern));
     foreach(QString pluginFilePath, plpaths) {
         printf("trying to load plugin %s\n",  qstoc(pluginFilePath));
         QPluginLoader pluginLoader(pluginFilePath);

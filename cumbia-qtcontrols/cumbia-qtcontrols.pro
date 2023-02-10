@@ -9,7 +9,7 @@ include(cumbia-qtcontrols.pri)
 CONFIG += debug
 
 
-CONFIG += silent
+# CONFIG += silent
 
 # remove ourselves (defined in .pri)
 PKGCONFIG -= cumbia-qtcontrols$${QTVER_SUFFIX}
@@ -25,7 +25,7 @@ DEFINES += QT_NO_DEBUG_OUTPUT
 android-g++|wasm-emscripten {
 
 } else {
-QT += x11extras
+# QT += x11extras
 }
 
 wasm-emscripten {
@@ -189,7 +189,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/cupluginloader.h \
     src/plugin_ifaces/cuformulaplugininterface.h \
     src/plugin_ifaces/cuhistoricaldbplugin_i.h    \
-    cuengine_hot_switch.h
+    src/cuengine_hot_switch.h
 
 
 unix:!android-g++ {
@@ -289,8 +289,8 @@ isEmpty(DOXYGEN_BIN) {
 } else {
  #   message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 #    message("---------------------------- DOCS DISABLED ----------------------")
-    message("")
-    message("")
+    message("-")
+    message("-")
     message("Doxygen found")
 
     doc.commands = \

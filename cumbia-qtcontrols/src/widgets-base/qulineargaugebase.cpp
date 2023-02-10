@@ -1053,18 +1053,18 @@ void QuLinearGaugeBase::updateLabelsFontSize() {
         maxh = p_a.height()/2.0;
     else
         maxh = gaugeRect(p_a).height() - getTickLen(p_a);
-    const double rw = ( qMax(p_a.width(), p_a.height()) - fm.width(d->cache.longestLabel)) / (g_config->ticksCount + 2);
-    while(fm.width(d->cache.longestLabel) < rw && fm.height() < maxh) {
+    const double rw = ( qMax(p_a.width(), p_a.height()) - fm.horizontalAdvance(d->cache.longestLabel)) / (g_config->ticksCount + 2);
+    while(fm.horizontalAdvance(d->cache.longestLabel) < rw && fm.height() < maxh) {
         f.setPointSizeF(f.pointSizeF() + 0.5);
         fm = QFontMetrics(f);
     }
-    while((fm.width(d->cache.longestLabel) > rw || fm.height() > maxh) && f.pointSizeF() > 4) {
+    while((fm.horizontalAdvance(d->cache.longestLabel) > rw || fm.height() > maxh) && f.pointSizeF() > 4) {
         f.setPointSizeF(f.pointSizeF() - 0.5);
         fm = QFontMetrics(f);
     }
     d->cache.labelPointSize = f.pointSizeF();
     fm = QFontMetrics(f);
-    d->cache.labelSize = QSize(fm.width(d->cache.longestLabel), fm.height());
+    d->cache.labelSize = QSize(fm.horizontalAdvance(d->cache.longestLabel), fm.height());
 }
 
 QRectF QuLinearGaugeBase::paintArea() {
@@ -1079,7 +1079,7 @@ double QuLinearGaugeBase::m_getMarginW(double radius)
     QFont fo = font();
     fo.setPointSizeF(d->cache.labelPointSize);
     QFontMetrics fme(fo);
-    double margin_w = fme.width(d->cache.longestLabel) / 2;
+    double margin_w = fme.horizontalAdvance(d->cache.longestLabel) / 2;
 
     return margin_w;
 }
@@ -1493,7 +1493,7 @@ void QuLinearGaugeBase::drawLabel(const QRectF &rect, QPainter& p)
     else
         txt = d->label;
 
-    int w = fm.width(txt);
+    int w = fm.horizontalAdvance(txt);
     double x, y;
     switch (d->labelPosition) {
     case West:
@@ -1538,7 +1538,7 @@ QSize QuLinearGaugeBase::minimumSizeHint() const
     QFont f = font();
     f.setPointSizeF(g_config->minFontSize);
     QFontMetrics fm(f);
-    int txtmaxwid = fm.width(d->cache.longestLabel);
+    int txtmaxwid = fm.horizontalAdvance(d->cache.longestLabel);
     int txtmaxhei = fm.height();
     int label_space;
     if(d->labelPosition != NoLabel) {

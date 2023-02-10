@@ -10,7 +10,6 @@
 class QString;
 class Cumbia;
 class CuDataListener;
-class QStringList;
 
 /*! @private */
 class CuControlsWriterAbstractPrivate

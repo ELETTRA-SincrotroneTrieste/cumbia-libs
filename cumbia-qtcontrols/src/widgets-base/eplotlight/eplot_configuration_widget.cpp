@@ -69,7 +69,7 @@ void EPlotConfigurationWidget::init()
 
 
     /* initialize spin boxes with their values */
-    foreach(QLineEdit *le, findChildren<QLineEdit *>(QRegExp("\\b(x|y).*")))
+    foreach(QLineEdit *le, findChildren<QLineEdit *>(QRegularExpression("\\b(x|y).*")))
     {
         le->setText(QString("%1").arg(getPropertyAsDouble(le->objectName())));
     }
@@ -146,14 +146,14 @@ void EPlotConfigurationWidget::init()
     connect(ui->yAxisLogScale, SIGNAL(toggled(bool)), this, SLOT(propertyChanged()));
     connect(ui->pbYScaleDefault, SIGNAL(clicked()), this, SLOT(restoreYScaleDefault()));
 
-    foreach(QLineEdit *le, findChildren<QLineEdit *>(QRegExp("\\b(x|y).*")))
+    foreach(QLineEdit *le, findChildren<QLineEdit *>(QRegularExpression("\\b(x|y).*")))
     {
         le->setValidator(doubleValidator);
         connect(le, SIGNAL(textChanged(const QString&)), this, SLOT(propertyChanged()));
     }
-    foreach(QDoubleSpinBox *sb, findChildren<QDoubleSpinBox *>(QRegExp("\\b(x|y).*")))
+    foreach(QDoubleSpinBox *sb, findChildren<QDoubleSpinBox *>(QRegularExpression("\\b(x|y).*")))
         connect(sb, SIGNAL(valueChanged(double)), this, SLOT(propertyChanged()));
-    foreach(QCheckBox *cb, findChildren<QCheckBox *>(QRegExp("\\b(x|y|setPointEnabled|colouredBackground|titleOnCanvasEnabled|syncRefresh).*")))
+    foreach(QCheckBox *cb, findChildren<QCheckBox *>(QRegularExpression("\\b(x|y|setPointEnabled|colouredBackground|titleOnCanvasEnabled|syncRefresh).*")))
         connect(cb, SIGNAL(toggled(bool)), this, SLOT(propertyChanged()));
     connect(ui->pbApply, SIGNAL(clicked()), this, SLOT(apply()));
     connect(ui->cbBufferUnlimited, SIGNAL(toggled(bool)), ui->sbBufferSize, SLOT(setDisabled(bool)));
@@ -179,26 +179,26 @@ void EPlotConfigurationWidget::initAppearenceSettings()
 
 void EPlotConfigurationWidget::xAdjustmentChanged()
 {
-    foreach(QLineEdit *w, findChildren<QLineEdit *>(QRegExp("\\b(xL|xU).*")))
+    foreach(QLineEdit *w, findChildren<QLineEdit *>(QRegularExpression("\\b(xL|xU).*")))
         w->setEnabled(ui->rbXManual->isChecked());
     ui->xAutoscaleAdjustEnabled->setEnabled(ui->rbXAuto->isChecked());
     ui->xAutoscaleAdjustment->setEnabled(ui->rbXAuto->isChecked() && ui->xAutoscaleAdjustEnabled->isChecked());
-    foreach(QDoubleSpinBox *sb, ui->gbX->findChildren<QDoubleSpinBox *>(QRegExp("\\bx.*")))
+    foreach(QDoubleSpinBox *sb, ui->gbX->findChildren<QDoubleSpinBox *>(QRegularExpression("\\bx.*")))
         sb->setValue(getPropertyAsDouble(sb->objectName()));
-    foreach(QLineEdit *le, ui->gbX->findChildren<QLineEdit *>(QRegExp("\\bx.*")))
+    foreach(QLineEdit *le, ui->gbX->findChildren<QLineEdit *>(QRegularExpression("\\bx.*")))
         le->setText(QString("%1").arg(getPropertyAsDouble(le->objectName())));
 }
 
 void EPlotConfigurationWidget::yAdjustmentChanged()
 {
-    foreach(QLineEdit *w, ui->gbY->findChildren<QLineEdit *>(QRegExp("\\b(yU|yL).*")))
+    foreach(QLineEdit *w, ui->gbY->findChildren<QLineEdit *>(QRegularExpression("\\b(yU|yL).*")))
         w->setEnabled(ui->rbYManual->isChecked());
     ui->yAutoscaleAdjustEnabled->setEnabled(ui->rbYAuto->isChecked());
     ui->yAutoscaleAdjustment->setEnabled(ui->rbYAuto->isChecked() && ui->yAutoscaleAdjustEnabled->isChecked());
 
-    foreach(QLineEdit *le, ui->gbY->findChildren<QLineEdit *>(QRegExp("\\by.*")))
+    foreach(QLineEdit *le, ui->gbY->findChildren<QLineEdit *>(QRegularExpression("\\by.*")))
         le->setText(QString("%1").arg(getPropertyAsDouble(le->objectName())));
-    foreach(QDoubleSpinBox *sb, ui->gbY->findChildren<QDoubleSpinBox *>(QRegExp("\\by.*")))
+    foreach(QDoubleSpinBox *sb, ui->gbY->findChildren<QDoubleSpinBox *>(QRegularExpression("\\by.*")))
         sb->setValue(getPropertyAsDouble(sb->objectName()));
 }
 
@@ -275,7 +275,7 @@ void EPlotConfigurationWidget::curveStyleChanged()
    * which does not contain argins.
    */
     QuPlotCurve *crv = NULL;
-    QwtPlotCurve *qwt_crv = d_plot->curve(ui->cbCurves->currentText()/*.remove(QRegExp("\\(.*\\)"))*/);
+    QwtPlotCurve *qwt_crv = d_plot->curve(ui->cbCurves->currentText()/*.remove(QRegularExpression("\\(.*\\)"))*/);
     if(qwt_crv && qwt_crv->rtti() == QwtPlotItem::Rtti_PlotUserItem + RTTI_CURVE_OFFSET)
         crv = static_cast<QuPlotCurve *>(qwt_crv);
     if(crv)
@@ -302,7 +302,7 @@ void EPlotConfigurationWidget::saveStyles()
         id = QString("%1_EPLOTLIGHT_CURVE_%2").arg(QCoreApplication::instance()->applicationName()).arg(curveTitle);
 
         QuPlotCurve *crv = NULL;
-        QwtPlotCurve *qwt_crv = d_plot->curve(ui->cbCurves->currentText()/*.remove(QRegExp("\\(.*\\)"))*/);
+        QwtPlotCurve *qwt_crv = d_plot->curve(ui->cbCurves->currentText()/*.remove(QRegularExpression("\\(.*\\)"))*/);
         if(qwt_crv && qwt_crv->rtti() == QwtPlotItem::Rtti_PlotUserItem + RTTI_CURVE_OFFSET)
             crv = static_cast<QuPlotCurve *>(qwt_crv);
         if(crv)

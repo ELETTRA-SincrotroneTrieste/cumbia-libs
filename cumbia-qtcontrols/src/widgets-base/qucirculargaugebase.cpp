@@ -966,7 +966,7 @@ void QuCircularGaugeBase::updateLabelsCache()
     double val = g_config->min;
     while(g_config->min != g_config->max && step > 0 && val <= g_config->max) {
         QString lab = formatLabel(val, getAppliedFormat());
-        if(fm.width(lab) > fm.width(d->cache.longestLabel))
+        if(fm.horizontalAdvance(lab) > fm.horizontalAdvance(d->cache.longestLabel))
             d->cache.longestLabel = lab;
         // fill labels cache
         d->cache.labels << lab;
@@ -988,7 +988,7 @@ void QuCircularGaugeBase::regenerateCache()
 void QuCircularGaugeBase::updateLabelsFontSize() {
     QFont f = font();
     QFontMetrics fm(f);
-    double w = fm.width(d->cache.longestLabel), rw;
+    double w = fm.horizontalAdvance(d->cache.longestLabel), rw;
     QList<int> ld = d->cache.labelsDistrib;
 
     if(ld.size() == 4) {
@@ -998,17 +998,17 @@ void QuCircularGaugeBase::updateLabelsFontSize() {
         rw = qMin(qRound(p_a.height()), qRound(p_a.width())) / 2 / qMax(maxlw_lower, maxlw_upper);
         while( w < rw && f.pointSizeF() > 4) {
             f.setPointSizeF(f.pointSizeF() + 0.5);
-            w = QFontMetrics(f).width(d->cache.longestLabel);
+            w = QFontMetrics(f).horizontalAdvance(d->cache.longestLabel);
         }
         while(w > rw && f.pointSizeF() > 4) {
             f.setPointSizeF(f.pointSizeF() - 0.5);
-            w = QFontMetrics(f).width(d->cache.longestLabel);
+            w = QFontMetrics(f).horizontalAdvance(d->cache.longestLabel);
         }
     }
 
     d->cache.labelPtSiz = f.pointSizeF();
     fm = QFontMetrics(f);
-    d->cache.labelSize = QSize(fm.width(d->cache.longestLabel), fm.height());
+    d->cache.labelSize = QSize(fm.horizontalAdvance(d->cache.longestLabel), fm.height());
 }
 
 void QuCircularGaugeBase::setLabelErrorText(QString labelErrorText) {
@@ -1075,7 +1075,7 @@ double QuCircularGaugeBase::m_getMarginW(double radius)
     QFont fo = font();
     fo.setPointSizeF(d->cache.labelPtSiz);
     QFontMetrics fme(fo);
-    double margin_w = fme.width(d->cache.longestLabel) / 2;
+    double margin_w = fme.horizontalAdvance(d->cache.longestLabel) / 2;
     margin_w = qMax(margin_w, radius * g_config->pivotRadius);
     return margin_w;
 }
@@ -1127,9 +1127,7 @@ bool QuCircularGaugeBase::inErrorRange(double val) const
  * \param val the value
  * \return  the associated color, according to warning and error ranges.
  */
-QColor QuCircularGaugeBase::valueColor(double val) const
-{
-    QColor c;
+QColor QuCircularGaugeBase::valueColor(double val) const {
     if(inWarningRange(val)) return g_config->warningColor;
     else if(inErrorRange(val)) return g_config->errorColor;
     else return g_config->normalColor;
@@ -1417,7 +1415,7 @@ void QuCircularGaugeBase::drawLabel(const QRectF &rect, QPainter& p)
         f.setPointSizeF(labelFontSize());
         QFontMetrics fm(f);
         //  decrease if either wider than wid or taller than gauge text labels' height
-        while(f.pointSizeF() > 3.0 && (fm.width(txt) > wid || f.pointSizeF() > labelFontSize()) ) {
+        while(f.pointSizeF() > 3.0 && (fm.horizontalAdvance(txt) > wid || f.pointSizeF() > labelFontSize()) ) {
             f.setPointSizeF(f.pointSizeF() - 0.5);
             fm = QFontMetrics(f);
         }
@@ -1436,7 +1434,7 @@ void QuCircularGaugeBase::drawLabel(const QRectF &rect, QPainter& p)
 
     p.setFont(f);
     QFontMetrics fm(f);
-    int w = fm.width(txt);
+    int w = fm.horizontalAdvance(txt);
     int h = fm.height();
     double radius = rect.width() / 2.0;
     double cx = rect.center().x();
@@ -1489,7 +1487,7 @@ QSize QuCircularGaugeBase::sizeHint() const
 QSize QuCircularGaugeBase::minimumSizeHint() const
 {
     QFontMetrics fm(font());
-    int labwid = fm.width(d->cache.longestLabel);
+    int labwid = fm.horizontalAdvance(d->cache.longestLabel);
     int labhei = fm.height();
     const double wfactor = 1.4;
     double w0, h0;

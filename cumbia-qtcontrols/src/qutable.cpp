@@ -204,7 +204,7 @@ void QuTable::configure (const CuData& da) {
                 EFlag::setFalseStrings(fs.replace(",", ";"));
             }
             else {
-                perr("QuTable::configure: table \"%s\" connected to \"%s\" has inconsistent true and false strings size: %d/%d",
+                perr("QuTable::configure: table \"%s\" connected to \"%s\" has inconsistent true and false strings size: %lld/%lld",
                      qstoc(objectName()), qstoc(source()), ts.count(","), fs.count(",") );
             }
         }
@@ -214,15 +214,15 @@ void QuTable::configure (const CuData& da) {
             if(tc.count(",") == tc.count(",")) {
                 QList<QColor> trueColors;
                 QList<QColor> falseColors;
-                foreach(QString s, tc.split(",", QString::SkipEmptyParts))
+                foreach(QString s, tc.split(",", Qt::SkipEmptyParts))
                     trueColors << QColor(s);
-                foreach(QString s, fc.split(",", QString::SkipEmptyParts))
+                foreach(QString s, fc.split(",", Qt::SkipEmptyParts))
                     falseColors << QColor(s);
                 EFlag::setTrueColorList(trueColors);
                 EFlag::setFalseColorList(falseColors);
             }
             else {
-                perr("QuTable::configure: table \"%s\" connected to \"%s\" has inconsistent true and false color size: %d/%d",
+                perr("QuTable::configure: table \"%s\" connected to \"%s\" has inconsistent true and false color size: %lld/%lld",
                      qstoc(objectName()), qstoc(source()), tc.count(","), fc.count(",") );
             }
         }

@@ -5,6 +5,7 @@
 #include <QtDebug>
 #include <math.h>
 #include <cumacros.h>
+#include <QMatrix4x4>
 
 /** @private */
 class QuLedBasePrivate
@@ -65,7 +66,7 @@ void QuLedBase::paintEvent(QPaintEvent *)
 {
     QPainter	painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
-    QMatrix m;
+    QMatrix4x4 m;
     int ledWidth, ledHeight;
     d_ptr->scaleContents ? ledWidth = width() - 2 : ledWidth = d_ptr->width;
     d_ptr->scaleContents ? ledHeight = height() - 2: ledHeight = d_ptr->height;
@@ -108,10 +109,9 @@ void QuLedBase::paintEvent(QPaintEvent *)
         painter.setBrush(b);
     }
 
-    m.translate(center.x(), center.y());
-    m.rotate(d_ptr->angleDeg);
-    m.translate(-center.x(), -center.y());
-    painter.setWorldMatrix(m, true);
+    painter.translate(center.rx(), center.ry());
+    painter.rotate(d_ptr->angleDeg);
+    painter.translate(-center.x(), -center.y());
     painter.setPen(d_ptr->borderColor);
 
     if(d_ptr->rectangular)
