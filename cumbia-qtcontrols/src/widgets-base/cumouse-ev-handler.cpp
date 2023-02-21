@@ -6,15 +6,15 @@
 
 class CuMouseEvHandler_P {
 public:
+    CuMouseEvHandler_P() : plugin(nullptr) {}
     QObject *plugin;
 };
 
-CuMouseEvHandler::CuMouseEvHandler()
-{
+CuMouseEvHandler::CuMouseEvHandler() {
     d = new CuMouseEvHandler_P;
     if(!d->plugin) {
         CuPluginLoader cupl;
-        QStringList pluginPaths = cupl.getPluginAbsoluteFilePaths(CUMBIA_QTCONTROLS_PLUGIN_DIR, QRegularExpression(".*mouse-ev-handler\\.so"));
+        QStringList pluginPaths = cupl.getPluginAbsoluteFilePaths(CUMBIA_QTCONTROLS_PLUGIN_DIR, QRegularExpression(".*mouse-event-plugin\\.so"));
         for(int i = 0; i < pluginPaths.size(); i++) {
             CuMouseEvHandlerPlugin_I *mousevhplugin = NULL;
             QPluginLoader pluginLoader(pluginPaths[i]);
@@ -22,7 +22,7 @@ CuMouseEvHandler::CuMouseEvHandler()
             if (d->plugin){
                 mousevhplugin = qobject_cast<CuMouseEvHandlerPlugin_I *> (d->plugin);
                 if(mousevhplugin) {
-
+                    printf("CuMouseEvHandler: \e[1;32mplugin loaded\e[0m\n");
                 }
             }
             if(!d->plugin || !mousevhplugin){
@@ -34,7 +34,7 @@ CuMouseEvHandler::CuMouseEvHandler()
 
     }
     else if(d->plugin && qobject_cast<CuMouseEvHandlerPlugin_I *> (d->plugin)) {
-        // setup operations ?
+        printf("CuMouseEvHandler: plugin already loaded\n");
     }
 }
 

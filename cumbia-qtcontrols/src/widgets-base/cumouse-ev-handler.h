@@ -1,13 +1,13 @@
 #ifndef CUMOUSE_EV_HANDLER_H
 #define CUMOUSE_EV_HANDLER_H
 
+
 class QWidget;
 class QMouseEvent;
 class CuMouseEvHandler_P;
 class CuContextI;
 
-class CuMouseEvHandler
-{
+class CuMouseEvHandler {
 public:
     CuMouseEvHandler();
     ~CuMouseEvHandler();

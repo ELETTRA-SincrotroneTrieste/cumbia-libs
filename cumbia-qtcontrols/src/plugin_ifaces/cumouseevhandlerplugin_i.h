@@ -7,6 +7,7 @@ class CuContextI;
 
 class CuMouseEvHandlerPlugin_I {
 public:
+    virtual ~CuMouseEvHandlerPlugin_I() {}
     virtual void pressed(QMouseEvent *e, QWidget *w, CuContextI *ctx) = 0;
     virtual void released(QMouseEvent *e, QWidget *w, CuContextI *ctx) = 0;
     virtual void moved(QMouseEvent *e, QWidget *w, CuContextI *ctx) = 0;
