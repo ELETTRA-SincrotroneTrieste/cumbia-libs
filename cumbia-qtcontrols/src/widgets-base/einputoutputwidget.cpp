@@ -114,7 +114,8 @@ void EInputOutputWidget::setInputWidget(QWidget *inputw)
         hlo->addWidget(d->pbApply, 1);
         // Adjust pbApply geometry
         QFontMetrics fm(font());
-        d->pbApply->setMinimumWidth(fm.width(d->pbApply->text()) * 1.4);
+
+        d->pbApply->setMinimumWidth(fm.horizontalAdvance(d->pbApply->text()) * 1.4);
         connect(d->pbApply, SIGNAL(clicked()), this, SLOT(m_applyClicked()));
     }
     else
@@ -129,16 +130,17 @@ void EInputOutputWidget::setInputWidget(QWidget *inputw)
  */
 QSize EInputOutputWidget::minimumSizeHint() const
 {
-    int width, height;
+    int width, height, lo_leftm, lo_topm, lo_rightm, lo_botm;
+    layout()->getContentsMargins(&lo_leftm, &lo_topm, &lo_rightm, &lo_botm);
     if(d->input_w) // suppose that d->pbApply width is the same as d->pbEdit's
         width = d->input_w->minimumSizeHint().width() + d->pbEdit->minimumSizeHint().width();
     else
         width = d->output_w->minimumSizeHint().width();
     height = qMax(d->output_w->minimumSizeHint().height(), d->pbEdit->minimumSize().height() + 12);
     width += contentsMargins().left() + contentsMargins().right() +
-            (lineWidth() + midLineWidth() + frameWidth() + layout()->margin() + layout()->spacing() );
+            (lineWidth() + midLineWidth() + frameWidth() + lo_leftm + lo_rightm + layout()->spacing() );
     height += contentsMargins().top() + contentsMargins().bottom() +
-            (lineWidth() + midLineWidth() + frameWidth() + layout()->margin() + layout()->spacing() );
+            (lineWidth() + midLineWidth() + frameWidth() + lo_topm + lo_botm + layout()->spacing() );
     return QSize(width, height);
 }
 
@@ -383,13 +385,12 @@ void EInputOutputWidget::m_init(QWidget *outputw)
     lo->addWidget(d->pbEdit);
     lo->setStretch(0, 10);
     lo->setStretch(1, 1);
-    lo->setMargin(2);
     lo->setSpacing(2);
     new QHBoxLayout(d->w_container);
     connect(d->w_container, SIGNAL(visibilityChanged(bool)), d->pbEdit, SLOT(setChecked(bool)));
     // Adjust pbEdit geometry
     QFontMetrics fm(font());
-    d->pbEdit->setMinimumWidth(fm.width(d->pbEdit->text()) * 1.8);
+    d->pbEdit->setMinimumWidth(fm.horizontalAdvance(d->pbEdit->text()) * 1.8);
     d->pbEdit->setDisabled(true);
 
     connect(d->pbEdit, SIGNAL(toggled(bool)), this, SLOT(m_editToggled(bool)));

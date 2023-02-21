@@ -2,7 +2,7 @@
 #define QUEXTRAWIDGETPLUGININTERFACE_H
 
 #include <QWidget>
-#include <QString>
+#include <QStringList>
 #include <cudata.h>
 #include <vector>
 
@@ -11,8 +11,6 @@ class CumbiaPool;
 class CuControlsReaderFactoryI;
 class CuControlsWriterFactoryI;
 class CuControlsFactoryPool;
-class QString;
-class QStringList;
 class CuContext;
 
 /*!

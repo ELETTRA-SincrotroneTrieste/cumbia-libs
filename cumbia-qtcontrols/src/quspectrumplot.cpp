@@ -201,7 +201,7 @@ void QuSpectrumPlot::update(const CuData &da)
     {
         std::vector<double> out;
         v.toVector<double>(out);
-        QVector<double> y = QVector<double>::fromStdVector(out);
+        QVector<double> y(out.begin(), out.end());
         if(y.size() != d->x_data.size()) {
             d->fill_x_data(y.size());
         }

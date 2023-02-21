@@ -88,7 +88,7 @@ public:
      */
     QString exename() const {
         if(d.m_argv0.contains("/"))
-            return d.m_argv0.split("/",QString::SkipEmptyParts).last();
+            return d.m_argv0.split("/", Qt::SkipEmptyParts).last();
         return d.m_argv0;
     }
 

@@ -10,9 +10,12 @@
 #include <string>
 #include <cumacros.h>
 #include <cudata.h>
+#include <QRegularExpression>
 
 #include <QDateTime>
 #include <QtDebug>
+
+QRegularExpression re;
 
 /*! find the input argument from an object and return it in the shape of a string.
  *
@@ -97,32 +100,30 @@ CuVariant CuControlsUtils::getArgs(const QString &target, const QObject *leaf) c
     QString oName;
     QString val;
     cuprintf("\e[1;34mgetArgs finding args in %s\e[0m\n\n", qstoc(target));
-    QRegExp re("\\((.*)\\)");
-    int pos = re.indexIn(target);
-    if(pos < 0)
-        return CuVariant();
-    QString argums = re.cap(1);
-
-    QStringList args = argums.split(",", QString::SkipEmptyParts);
-    foreach(QString a, args)
-    {
-        if(a.startsWith("&"))
+    re.setPattern("\\((.*)\\)");
+    QRegularExpressionMatch match = re.match(target);
+    if(match.captured().size() > 0) {
+        QString argums = match.captured(1);
+        QStringList args = argums.split(",", Qt::SkipEmptyParts);
+        foreach(QString a, args)
         {
-            oName = a.remove(0, 1);
-            val = findInput(oName, leaf);
-            if(!val.isEmpty())
-                argins.push_back(val.toStdString());
+            if(a.startsWith("&"))
+            {
+                oName = a.remove(0, 1);
+                val = findInput(oName, leaf);
+                if(!val.isEmpty())
+                    argins.push_back(val.toStdString());
+                else
+                    perr("CuControlsUtils.getArgs: no object named \"%s\" found", qstoc(oName));
+            }
             else
-                perr("CuControlsUtils.getArgs: no object named \"%s\" found", qstoc(oName));
+                argins.push_back(a.toStdString());
         }
-        else
-            argins.push_back(a.toStdString());
+        if(args.size() > 1)
+            return CuVariant(argins);
+        else if(args.size() == 1 && argins.size() > 0)
+            return CuVariant(argins.at(0));
     }
-    if(args.size() > 1)
-        return CuVariant(argins);
-    else if(args.size() == 1 && argins.size() > 0)
-        return CuVariant(argins.at(0));
-
     return CuVariant();
 }
 
@@ -161,20 +162,18 @@ QList<QObject *> CuControlsUtils::findObjects(const QString& target, const QObje
     QList<QObject *> objects;
     QString oName;
     cuprintf("\e[1;34mgetArgs finding args in %s\e[0m\n\n", qstoc(target));
-    QRegExp re("\\((.*)\\)");
-    int pos = re.indexIn(target);
-    if(pos < 0)
-        return objects;
-    QString argums = re.cap(1);
-    QStringList args = argums.split(",", QString::SkipEmptyParts);
-    foreach(QString a, args)
-    {
-        if(a.startsWith("&"))
-        {
-            oName = a.remove(0, 1);
-            QObject* o = findObject(oName, leaf);
-            if(o)
-                objects << o;
+    re.setPattern("\\((.*)\\)");
+    QRegularExpressionMatch ma = re.match(target);
+    if(ma.captured().size() > 0)  {
+        QString argums = ma.captured(1);
+        QStringList args = argums.split(",", Qt::SkipEmptyParts);
+        foreach(QString a, args) {
+            if(a.startsWith("&")) {
+                oName = a.remove(0, 1);
+                QObject* o = findObject(oName, leaf);
+                if(o)
+                    objects << o;
+            }
         }
     }
     return objects;
@@ -196,7 +195,7 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
     double min = -1, max = -1;
     int data_siz = -1;
     CuControlsUtils cu;
-    QVariant::Type vtype;
+    int vtype;
     std::string value_as_str;
     std::vector<std::string> values_str;
     const CuVariant& val = data[value_key];
@@ -236,14 +235,16 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
                 }
                 else if((idx = mo->indexOfProperty("value") ) > -1 && mo->property(idx).isWritable()) {
                     try {
+                        // QVariant.typeId: returns the storage type of the value stored in the variant.
+                        // This is the same as metaType().id().
                         vtype = mo->property(idx).type();
-                        if(vtype == QVariant::Double)
+                        if(vtype == QMetaType::Double)
                             ret =o->setProperty("value", strtod(vs.c_str(), NULL));
-                        else if(vtype == QVariant::Int)
+                        else if(vtype == QMetaType::Int)
                             ret =o->setProperty("value", strtoll(vs.c_str(), NULL, 10));
-                        else if(vtype == QVariant::UInt)
+                        else if(vtype == QMetaType::UInt)
                             ret =o->setProperty("value", static_cast<unsigned int>(strtoul(vs.c_str(), NULL, 10)));
-                        else if(vtype == QVariant::Bool)
+                        else if(vtype == QMetaType::Bool)
                             ret =o->setProperty("value", vs != "0" && strcasecmp(vs.c_str(), "false") != 0);
                         else {
                             printf("\e[1;31m cannot set prop value cuz type %d not supported\e[0m\n", vtype);

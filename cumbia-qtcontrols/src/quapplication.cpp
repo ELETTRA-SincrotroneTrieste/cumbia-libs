@@ -14,6 +14,9 @@
 #include <QtX11Extras/QX11Info>
 #endif
 
+// avoid creating temporary QRegularExpression within the code
+QRegularExpression rege;
+
 class QuApplicationPrivate
 {
 public:
@@ -138,9 +141,10 @@ QStringList QuApplication::cmdOpt() const
 QString QuApplication::display_host() const
 {
     QString disp = QString(getenv("DISPLAY"));
-    QRegExp re("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
-    if(re.indexIn(disp) > -1 && re.capturedTexts().size() > 1) {
-        return re.capturedTexts().at(1);
+    rege.setPattern("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
+    QRegularExpressionMatch ma = rege.match(disp);
+    if(ma.hasMatch() && ma.captured().size() > 0) {
+        return ma.captured(1);
     }
     return "";
 }
@@ -148,9 +152,10 @@ QString QuApplication::display_host() const
 int QuApplication::display_number() const
 {
     QString disp = QString(getenv("DISPLAY"));
-    QRegExp re("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
-    if(re.indexIn(disp) > -1 && re.capturedTexts().size() > 2) {
-        return re.capturedTexts().at(2).toInt();
+    rege.setPattern("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
+    QRegularExpressionMatch ma = rege.match(disp);
+    if(ma.hasMatch() && ma.captured().size() > 1) {
+        return ma.captured(2).toInt();
     }
     return 0;
 }
@@ -158,9 +163,10 @@ int QuApplication::display_number() const
 int QuApplication::screen_number() const
 {
     QString disp = QString(getenv("DISPLAY"));
-    QRegExp re("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
-    if(re.indexIn(disp) > -1 && re.capturedTexts().size() > 3) {
-        return re.capturedTexts().at(3).toInt();
+    rege.setPattern("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
+    QRegularExpressionMatch ma = rege.match(disp);
+    if(ma.hasMatch() && ma.captured().size() > 3 ) {
+        return ma.captured(3).toInt();
     }
     return 0;
 }
@@ -211,13 +217,13 @@ void QuApplication::m_get_display_info(QString *host, int *d_num, int *screen_nu
 {
     *host = ""; *d_num = *screen_num = 0;
     QString disp = QString(getenv("DISPLAY"));
-    QRegExp re("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
-    const int pos = re.indexIn(disp);
-    const QStringList& caps = re.capturedTexts();
-    if(pos > -1 && caps.size() > 1)
+    rege.setPattern("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
+    QRegularExpressionMatch ma = rege.match(disp);
+    const QStringList& caps = ma.capturedTexts();
+    if(ma.hasMatch()  && caps.size() > 1)
         *host = caps[1];
-    if(pos > -1 && caps.size() > 2)
+    if(ma.hasMatch() && caps.size() > 2)
         *d_num = caps[2].toInt();
-    if(pos > -1 && caps.size() > 3)
+    if(ma.hasMatch() && caps.size() > 3)
         *screen_num = caps[3].toInt();
 }

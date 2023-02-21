@@ -2,7 +2,7 @@
 #define QUACTIONEXTENSIONPLUGININTERFACE_H
 
 #include <QObject>
-#include <QString>
+#include <QStringList>
 #include <cudata.h>
 #include <vector>
 
@@ -10,8 +10,6 @@ class Cumbia;
 class CumbiaPool;
 class CuControlsReaderFactoryI;
 class CuControlsFactoryPool;
-class QString;
-class QStringList;
 class CuContextI;
 
 class QuActionExtensionI {

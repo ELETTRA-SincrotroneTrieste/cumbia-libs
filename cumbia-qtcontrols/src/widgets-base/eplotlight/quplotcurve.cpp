@@ -177,14 +177,14 @@ void QuPlotCurve::drawCurve(QPainter *p, int style,
         QString errMsg = "Invalid data or read error on one (or more) curves.";
         QPointF bottomRight = canvasRect.bottomRight();
         QFontMetrics fm(f);
-        QRect errMsgRect(QPoint(bottomRight.x() - fm.width(errMsg),
-                                bottomRight.y() - 2 * fm.height()), QSize(fm.width(errMsg), fm.height()));
+        QRect errMsgRect(QPoint(bottomRight.x() - fm.horizontalAdvance(errMsg),
+                                bottomRight.y() - 2 * fm.height()), QSize(fm.horizontalAdvance(errMsg), fm.height()));
         p->setPen(errPen);
         QwtPainter::fillRect(p, errMsgRect, Qt::white);
         QwtPainter::drawText(p, errMsgRect, Qt::AlignHCenter|Qt::AlignCenter, errMsg);
         QString errMsg2 = "Right click and select \"Info...\" for details.";
         errMsgRect.moveTop(errMsgRect.top() + fm.height());
-        errMsgRect.setWidth(fm.width(errMsg2));
+        errMsgRect.setWidth(fm.horizontalAdvance(errMsg2));
         QwtPainter::fillRect(p, errMsgRect, Qt::white);
         QwtPainter::drawText(p, errMsgRect, Qt::AlignHCenter|Qt::AlignCenter, errMsg2);
 

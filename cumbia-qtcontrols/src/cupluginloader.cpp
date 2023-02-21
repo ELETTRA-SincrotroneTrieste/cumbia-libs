@@ -1,11 +1,11 @@
 #include "cupluginloader.h"
 #include <QProcessEnvironment>
 #include <QDir>
+#include <QRegularExpression>
 
-CuPluginLoader::CuPluginLoader()
-{
+QRegularExpression regu;
 
-}
+CuPluginLoader::CuPluginLoader() { }
 
 /*! \brief get the absolute file path of the plugin with name *name*.
  *
@@ -23,11 +23,11 @@ CuPluginLoader::CuPluginLoader()
  */
 QString CuPluginLoader::getPluginAbsoluteFilePath(const QString& default_plugin_path, const QString& name) {
     QStringList list;
-    QRegExp re(name);
+    regu.setPattern(name);
     QString default_plupa(default_plugin_path);
     if(default_plupa.isEmpty())
         default_plupa = QString(CUMBIA_QTCONTROLS_PLUGIN_DIR);
-    list = getPluginAbsoluteFilePaths(default_plupa, re);
+    list = getPluginAbsoluteFilePaths(default_plupa, regu);
     if(list.size() > 0)
         return list.first();
     return QString();
@@ -63,13 +63,13 @@ QString CuPluginLoader::getDefaultPluginPath() const
  *
  * @see getPluginAbsoluteFilePath
  */
-QStringList CuPluginLoader::getPluginAbsoluteFilePaths(const QString& default_plugin_path, const QRegExp &match)
+QStringList CuPluginLoader::getPluginAbsoluteFilePaths(const QString& default_plugin_path, const QRegularExpression &match)
 {
     QStringList sl;
     QString default_plupa(default_plugin_path);
     QProcessEnvironment pe = QProcessEnvironment::systemEnvironment();
     QString custom_plugin_dir = pe.value("CUMBIA_PLUGIN_PATH", "");
-    QStringList plugin_dirs = custom_plugin_dir.split(":", QString::SkipEmptyParts);
+    QStringList plugin_dirs = custom_plugin_dir.split(":", Qt::SkipEmptyParts);
     QStringList plugin_names; // do not return duplicate plugins (with the same file name)
     if(default_plupa.isEmpty()) {
         default_plupa = QString(CUMBIA_QTCONTROLS_PLUGIN_DIR);

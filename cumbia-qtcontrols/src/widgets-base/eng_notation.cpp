@@ -1,9 +1,10 @@
 #include "eng_notation.h"
 #include <stdio.h>
 #include <math.h>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStringList>
 #include <cumacros.h>
+#include <string.h>
 
 EngString::EngString(QString s , const QString& format, const QVariant &value) : QString(s)
 {
@@ -47,9 +48,9 @@ EngString::EngString(QString s , const QString& format, const QVariant &value) :
 // 	  printf("looking for suffix at pos %d (value to double %f)\n", (expof10 - d_prefixStart)/3, d);
 	  if(/*numeric || */(expof10 < d_prefixStart) ||    
                     (expof10 > d_prefixEnd))
-        sprintf("%.*fe%d", digits - 1, absVal, expof10); 
+        asprintf("%.*fe%d", digits - 1, absVal, expof10);
       else
-        sprintf("%.*f %s", digits - 1, absVal, 
+        asprintf("%.*f %s", digits - 1, absVal,
           qstoc(suffixes[(expof10 - d_prefixStart)/3]));
 	  if(d < 0.0)
 		prepend("-");
@@ -58,7 +59,7 @@ EngString::EngString(QString s , const QString& format, const QVariant &value) :
 	{
 	  QString format;
 	  digits > 0 ? format = QString("%.%1f").arg(digits - 1) : format = "%.1f";
-	  sprintf(qstoc(format), 0.0);
+      asprintf(qstoc(format), 0.0);
 	}
   }
   else if(format.isEmpty())
@@ -81,12 +82,11 @@ int EngString::extractSignificantDigits(const QString &fmt)
   {
 	/* not escaped pattern %(\d+)(?:.{0,1}\d*)eng */
 	QString pattern = QString("%(\\d+)(?:.{0,1}\\d*)%1").arg(ENGFMT);
-	QRegExp re(pattern);
-	int pos = re.indexIn(fmt);
+    QRegularExpression re(pattern);
+    QRegularExpressionMatch match = re.match(fmt);
 // 	printf("looking for pattern \"%s\" in \"%s\" : pos %d\n", qstoc(pattern), qstoc(fmt), pos);
-	if(pos > -1)
-	{
-	  QStringList captures = re.capturedTexts();
+    if(match.hasMatch()) {
+      QStringList captures = match.capturedTexts();
 	  if(captures.size() > 1)
 		sigDigits = captures.at(1).toInt();
 	}

@@ -1,6 +1,7 @@
 #include "qumbiaizerprivate.h"
 #include <QMetaMethod>
 #include <cumacros.h>
+#include <QRegularExpression>
 
 #define TYPELEN 64
 
@@ -73,7 +74,7 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
             ret &= dataptr != NULL;
             if(dataptr)
                 ret &= QMetaObject::invokeMethod(object,
-                    qstoc(methodName.remove(QRegExp("\\(.*\\)"))),
+                    qstoc(methodName.remove(QRegularExpression("\\(.*\\)"))),
                     connType, QGenericArgument(in_type, dataptr));
             else
                 perr("QTangoizerPrivate::autoConfigure: unsupported data type \"%s\"", in_type);
@@ -101,7 +102,7 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
             ret &= dataptr != NULL;
             if(dataptr)
                 ret &= QMetaObject::invokeMethod(object,
-                   qstoc(methodName.remove(QRegExp("\\(.*\\)"))), connType,
+                   qstoc(methodName.remove(QRegularExpression("\\(.*\\)"))), connType,
                    QGenericArgument(in_type, dataptr));
             else
                 perr("QTangoizerPrivate::autoConfigure: unsupported data type \"%s\"", in_type);

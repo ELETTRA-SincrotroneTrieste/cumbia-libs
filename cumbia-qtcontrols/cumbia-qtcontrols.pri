@@ -10,7 +10,11 @@ exists(../cumbia-qt.prf) {
     include(../cumbia-qt.prf)
 }
 
-QT       += widgets opengl
+QT       += widgets
+
+equals(QT_VERSION, 6) {
+    QT   += openglwidgets
+}
 
 wasm-emscripten {
 # library is compiled statically
@@ -138,10 +142,15 @@ wasm-emscripten {
             PKGCONFIG += qwt
             QWT_PKGCONFIG = qwt
         }
+        # qwt for qt6
+        else:packagesExist(Qt6Qwt6){
+            PKGCONFIG += Qt6Qwt6
+            QWT_PKGCONFIG = Qt6Qwt6
+        }
         else:packagesExist(Qt5Qwt6){
             PKGCONFIG += Qt5Qwt6
             QWT_PKGCONFIG = Qt5Qwt6
-        } else {
+        }  else {
             warning("cumbia-qtcontrols.pri: no pkg-config file found for either qwt or Qt5Qwt6")
             warning("cumbia-qtcontrols.pri: export PKG_CONFIG_PATH=/usr/path/to/qwt/lib/pkgconfig if you want to enable pkg-config for qwt")
             warning("cumbia-qtcontrols.pri: if you build and install qwt from sources, be sure to uncomment/enable ")

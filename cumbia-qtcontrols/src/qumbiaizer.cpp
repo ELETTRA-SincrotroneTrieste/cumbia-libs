@@ -3,6 +3,7 @@
 #include <cumacros.h>
 #include "qumbiaizerprivate.h"
 #include <cudata.h>
+#include <QRegularExpression>
 #include <QWidget> /* to set tooltips on attached object, if it inherits QWidget */
 
 Qumbiaizer::Qumbiaizer(QObject *parent) : QObject(parent)
@@ -116,12 +117,12 @@ void Qumbiaizer::attach(QObject *refreshee,  const char *slot,
         quizer_ptr->data = refreshee;
         quizer_ptr->slot = method;
         /* save in method name only the name, without the parameter list */
-        quizer_ptr->methodName = method.remove(QRegExp("\\(.*\\)"));
+        quizer_ptr->methodName = method.remove(QRegularExpression("\\(.*\\)"));
         quizer_ptr->connType = connType;
         if(!setPtSlot.isEmpty())
         {
             quizer_ptr->setPointSlot = setPtSlot;
-            quizer_ptr->setPointMethodName = setPtSlot.remove(QRegExp("\\(.*\\)"));
+            quizer_ptr->setPointMethodName = setPtSlot.remove(QRegularExpression("\\(.*\\)"));
         }
     }
     else
@@ -275,21 +276,15 @@ void Qumbiaizer::installRefreshFilter(QuValueFilter *filter)
     quizer_ptr->refreshFilter = filter;
 }
 
-QuValueFilter *Qumbiaizer::refreshFilter() const
-{
-    Q_D(const Qumbiaizer);
+QuValueFilter *Qumbiaizer::refreshFilter() const {
     return quizer_ptr->refreshFilter;
 }
 
-void Qumbiaizer::setToolTipsDisabled(bool disable)
-{
-
+void Qumbiaizer::setToolTipsDisabled(bool disable) {
     quizer_ptr->toolTipsDisabled = disable;
 }
 
-bool Qumbiaizer::toolTipsDisabled() const
-{
-    Q_D(const Qumbiaizer);
+bool Qumbiaizer::toolTipsDisabled() const {
     return quizer_ptr->toolTipsDisabled;
 }
 
@@ -553,7 +548,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
         {
             std::vector<bool> stdbv;
             val.toVector<bool>(stdbv);
-            QVector<bool> boolvect = QVector<bool>::fromStdVector(stdbv);
+            QVector<bool> boolvect(stdbv.begin(), stdbv.end());
             if(quizer_ptr->refreshFilter)
                 quizer_ptr->refreshFilter->filter(v, boolvect, read, updateState);
             if(object)
@@ -573,7 +568,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
         {
             std::vector<double> stddv;
             val.toVector<double>(stddv);
-            QVector<double> dblvect = QVector<double>::fromStdVector(stddv);
+            QVector<double> dblvect(stddv.begin(), stddv.end());
             if(quizer_ptr->refreshFilter)
                 quizer_ptr->refreshFilter->filter(v, dblvect, read, updateState);
             if(object)
@@ -593,7 +588,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
         {
             std::vector<int> stdiv;
             val.toVector<int>(stdiv);
-            QVector<int> intvect = QVector<int>::fromStdVector(stdiv);
+            QVector<int> intvect(stdiv.begin(), stdiv.end());
             if(quizer_ptr->refreshFilter)
                 quizer_ptr->refreshFilter->filter(v, intvect, read, updateState);
             if(object)

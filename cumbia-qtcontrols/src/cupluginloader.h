@@ -2,7 +2,7 @@
 #define CUPLUGINLOADER_H
 
 #include <QStringList>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QPluginLoader>
 #include <QObject>
 
@@ -24,7 +24,7 @@ class CuPluginLoader
 public:
     CuPluginLoader();
 
-    QStringList getPluginAbsoluteFilePaths(const QString &default_plugin_path, const QRegExp& match= QRegExp(".*"));
+    QStringList getPluginAbsoluteFilePaths(const QString &default_plugin_path, const QRegularExpression& match= QRegularExpression(".*"));
 
     QString getPluginAbsoluteFilePath(const QString &default_plugin_path, const QString &name);
     QString getPluginPath() const;

@@ -83,10 +83,10 @@ void QuErrorDialog::add(const QuLogEntry &l)
     switch(i->data(0, Qt::UserRole).toInt())
     {
     case QuLogImpl::Error:
-        i->setTextColor(0, QColor(Qt::red));
+        i->setForeground(0, QColor(Qt::red));
         break;
     case QuLogImpl::Warn:
-        i->setTextColor(0, QColor(Qt::yellow));
+        i->setForeground(0, QColor(Qt::yellow));
         break;
     default:
         break;

@@ -9,7 +9,6 @@ class QString;
 class Cumbia;
 class CuData;
 class CuDataListener;
-class QStringList;
 
 /*! \brief abstract class defining an interface for cumbia-qtcontrols readers
  *

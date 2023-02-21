@@ -95,7 +95,7 @@
 #define pstepl2(...) do {  if(getenv("CUMBIA_PRINT")) {  printf("I: "); printf("    \e[1;37m[thread:0x%lx] \e[0;37m-\e[0m ", pthread_self()), printf(__VA_ARGS__), printf("\n"); } }while(0)
 
 #define pgreen(...) do {  if(getenv("CUMBIA_PRINT")) {  printf("I: "); printf("\e[0;32m[thread:0x%lx] \e[1;32m", pthread_self()), printf(__VA_ARGS__), printf("\e[0m\n"); } }while(0)
-#define pred(...) do {  if(getenv("CUMBIA_PRINT")) {  printf("I: "); printf("\e[0;32m[thread:0x%lx] \e[1;32m", pthread_self()), printf(__VA_ARGS__), printf("\e[0m\n"); } }while(0)
+
 #define pyellow(...) do {  if(getenv("CUMBIA_PRINT")) {  printf("I: "); printf("\e[0;32m[thread:0x%lx] \e[1;33m", pthread_self()), printf(__VA_ARGS__), printf("\e[0m\n"); } }while(0)
 #define pblue(...) do {  if(getenv("CUMBIA_PRINT")) {  printf("I: "); printf("\e[0;32m[thread:0x%lx] \e[1;34m", pthread_self()), printf(__VA_ARGS__), printf("\e[0m\n"); } }while(0)
 #define pviolet(...) do {  if(getenv("CUMBIA_PRINT")) {  printf("I: "); printf("\e[0;32m[thread:0x%lx] \e[1;35m", pthread_self()), printf(__VA_ARGS__), printf("\e[0m\n"); } }while(0)
@@ -166,7 +166,7 @@
         #define pr_thread() do {}while(0)
 
         #define pgreen(...) do {}while(0)
-        #define pred(...) do {}while(0)
+        #define pbred(...) do {}while(0)
         #define pyellow(...) do {}while(0)
         #define pblue(...) do {}while(0)
         #define pviolet(...) do {}while(0)
@@ -179,7 +179,6 @@
         #define plblue2(...) do {}while(0)
 
         #define pbgreen(...) do {}while(0)
-        #define pbred(...) do {}while(0)
         #define pbyellow(...) do {   } while(0)
         #define pbblue(...) do {   }while(0)
         #define pbviolet(...) do {   } while(0)

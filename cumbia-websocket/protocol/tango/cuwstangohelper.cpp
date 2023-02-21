@@ -108,7 +108,7 @@ std::string CuWsTangoHelper::dataTypeToStr(int dt) const
 
 int CuWsTangoHelper::dataTypeStrToInt(const std::string &) const
 {
-    pred("TangoHelper.dataTypeToInt: unimplemented\n");
+    pbred("TangoHelper.dataTypeToInt: unimplemented\n");
     return -1;
 }
 
