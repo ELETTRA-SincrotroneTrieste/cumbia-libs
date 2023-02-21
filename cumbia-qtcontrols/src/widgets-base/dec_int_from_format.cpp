@@ -4,7 +4,7 @@
 #include <QStringList>
 #include <cumacros.h>
 
-QRegularExpression re;
+QRegularExpression fmtre;
 QRegularExpression flRe1("%\\.{1,1}([0-9]+)f\\b");
 QRegularExpression flRe2("%([0-9]+)\\.{1,1}([0-9]+)f\\b");
 
@@ -22,8 +22,8 @@ bool DecIntFromFormat::decode() {
     int pos = - 1;
 //    printf("\e[1;36mDecIntFromFormat::decode() format %s\e[0m\n", qstoc(d_format));
     /* add ' in [0-9] to recognize "%'d" */
-    re.setPattern("%(\\d+)d\\b");
-    QRegularExpressionMatch ma = re.match(d_format);
+    fmtre.setPattern("%(\\d+)d\\b");
+    QRegularExpressionMatch ma = fmtre.match(d_format);
     if(ma.hasMatch()) /* integer */
     {
         d_decDefaults = false;
@@ -38,19 +38,19 @@ bool DecIntFromFormat::decode() {
     else {
         if(d_format == "%f")
             return true;
-        re.setPattern("%[0-9]*\\.{1,1}[0-9]+f\\b");
-        ma = re.match(d_format);
+        fmtre.setPattern("%[0-9]*\\.{1,1}[0-9]+f\\b");
+        ma = fmtre.match(d_format);
         if(ma.hasMatch()) {
             /* type %.3f  decimal digits only */
             /* type %2.3f integer and decimal digits */
             QRegularExpressionMatch re1m = flRe1.match(d_format);
-            if(re1m.hasMatch() && re1m.hasCaptured(1)) {
+            if(re1m.hasMatch() && re1m.captured().size() > 1) {
                 d_decDigits = re1m.captured(1).toInt();
                 d_decDefaults = false;
             }
             else { // %x.yf
                 QRegularExpressionMatch re2m = flRe2.match(d_format);
-                if(re2m.hasMatch() && re2m.hasCaptured(2)) {
+                if(re2m.hasMatch() && re2m.captured().size() > 2) {
                     d_decDefaults = false;
                     d_decDigits = re2m.captured(2).toInt();
                     d_intDigits = re2m.captured(1).toInt() - d_decDigits - ( d_decDigits > 0 ? 1 : 0);

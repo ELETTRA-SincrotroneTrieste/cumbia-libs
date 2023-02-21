@@ -10,7 +10,11 @@ exists(../cumbia-qt.prf) {
     include(../cumbia-qt.prf)
 }
 
-QT       += widgets openglwidgets
+QT       += widgets
+
+equals(QT_VERSION, 6) {
+    QT   += openglwidgets
+}
 
 wasm-emscripten {
 # library is compiled statically

@@ -3,7 +3,7 @@
 #include <QDir>
 #include <QRegularExpression>
 
-QRegularExpression re;
+QRegularExpression regu;
 
 CuPluginLoader::CuPluginLoader() { }
 
@@ -23,11 +23,11 @@ CuPluginLoader::CuPluginLoader() { }
  */
 QString CuPluginLoader::getPluginAbsoluteFilePath(const QString& default_plugin_path, const QString& name) {
     QStringList list;
-    re.setPattern(name);
+    regu.setPattern(name);
     QString default_plupa(default_plugin_path);
     if(default_plupa.isEmpty())
         default_plupa = QString(CUMBIA_QTCONTROLS_PLUGIN_DIR);
-    list = getPluginAbsoluteFilePaths(default_plupa, re);
+    list = getPluginAbsoluteFilePaths(default_plupa, regu);
     if(list.size() > 0)
         return list.first();
     return QString();

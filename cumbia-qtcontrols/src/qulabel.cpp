@@ -17,6 +17,7 @@
 #include "cucontextmenu.h"
 #include "cucontext.h"
 #include "cuengine_hot_switch.h"
+#include "cumouse-ev-handler.h"
 
 /** @private */
 class QuLabelPrivate
@@ -30,6 +31,7 @@ public:
     int max_len;
     CuContext *context;
     CuControlsUtils u;
+    CuMouseEvHandler mouseh;
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
@@ -219,14 +221,6 @@ void QuLabel::ctxSwitch(CumbiaPool *c_p, const CuControlsFactoryPool &fpool) {
     d->context = CuEngineHotSwitch().hot_switch(this, d->context, c_p, fpool);
 }
 
-void QuLabel::contextMenuEvent(QContextMenuEvent *e)
-{
-    CuContextMenu* m = findChild<CuContextMenu *>();
-    if(!m)
-        m = new CuContextMenu(this);
-    m->popup(e->globalPos(), this);
-}
-
 void QuLabel::onUpdate(const CuData &da)
 {
     bool background_modified = false;
@@ -276,4 +270,28 @@ void QuLabel::onUpdate(const CuData &da)
     }
 
     emit newData(da);
+}
+
+void QuLabel::contextMenuEvent(QContextMenuEvent *e)
+{
+    CuContextMenu* m = findChild<CuContextMenu *>();
+    if(!m)
+        m = new CuContextMenu(this);
+    m->popup(e->globalPos(), this);
+}
+
+void QuLabel::mousePressEvent(QMouseEvent *e) {
+    d->mouseh.pressed(e, this, this);
+}
+
+void QuLabel::mouseReleaseEvent(QMouseEvent *e){
+    d->mouseh.released(e, this, this);
+}
+
+void QuLabel::mouseMoveEvent(QMouseEvent *e) {
+    d->mouseh.moved(e, this, this);
+}
+
+void QuLabel::mouseDoubleClickEvent(QMouseEvent *e) {
+    d->mouseh.doubleClicked(e, this, this);
 }

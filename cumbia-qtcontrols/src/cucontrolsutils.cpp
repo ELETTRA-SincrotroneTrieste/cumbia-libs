@@ -102,7 +102,7 @@ CuVariant CuControlsUtils::getArgs(const QString &target, const QObject *leaf) c
     cuprintf("\e[1;34mgetArgs finding args in %s\e[0m\n\n", qstoc(target));
     re.setPattern("\\((.*)\\)");
     QRegularExpressionMatch match = re.match(target);
-    if(match.hasCaptured(1)) {
+    if(match.captured().size() > 0) {
         QString argums = match.captured(1);
         QStringList args = argums.split(",", Qt::SkipEmptyParts);
         foreach(QString a, args)
@@ -164,7 +164,7 @@ QList<QObject *> CuControlsUtils::findObjects(const QString& target, const QObje
     cuprintf("\e[1;34mgetArgs finding args in %s\e[0m\n\n", qstoc(target));
     re.setPattern("\\((.*)\\)");
     QRegularExpressionMatch ma = re.match(target);
-    if(ma.hasCaptured(1))  {
+    if(ma.captured().size() > 0)  {
         QString argums = ma.captured(1);
         QStringList args = argums.split(",", Qt::SkipEmptyParts);
         foreach(QString a, args) {
@@ -237,7 +237,7 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
                     try {
                         // QVariant.typeId: returns the storage type of the value stored in the variant.
                         // This is the same as metaType().id().
-                        vtype = mo->property(idx).typeId();
+                        vtype = mo->property(idx).type();
                         if(vtype == QMetaType::Double)
                             ret =o->setProperty("value", strtod(vs.c_str(), NULL));
                         else if(vtype == QMetaType::Int)

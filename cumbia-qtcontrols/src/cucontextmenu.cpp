@@ -55,7 +55,7 @@ void CuContextMenu::prepare(const CuContextI *ctxi) {
         unsigned loaded_p_cnt = 0;
         QMultiMap<int, QList<QAction *> > actions_map;
         CuPluginLoader cupl;
-        QStringList pluginPaths = cupl.getPluginAbsoluteFilePaths(CUMBIA_QTCONTROLS_PLUGIN_DIR, QRegExp(".*context-menu-actions\\.so"));
+        QStringList pluginPaths = cupl.getPluginAbsoluteFilePaths(CUMBIA_QTCONTROLS_PLUGIN_DIR, QRegularExpression(".*context-menu-actions\\.so"));
         for(int i = 0; i < pluginPaths.size(); i++) {
             CuContextMenuActionsPlugin_I *w_std_menu_actions_plugin = NULL;
             QPluginLoader pluginLoader(pluginPaths[i]);

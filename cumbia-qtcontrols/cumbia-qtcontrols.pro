@@ -60,6 +60,7 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/qutable.cpp \
     src/quplotcommon.cpp \
     src/quxtrawidgetpluginloader.cpp \
+    src/widgets-base/cumouse-ev-handler.cpp \
     src/widgets-base/eplotlight/quplotcontextmenustrategy.cpp \
     src/widgets-base/number_delegate.cpp \
     src/widgets-base/eng_notation.cpp \
@@ -101,6 +102,7 @@ SOURCES += cumbiaqtcontrols.cpp \
 HEADERS += cumbiaqtcontrols.h\
     cumbia-qtcontrols_global.h \
     src/plugin_ifaces/cumbiaintrospectionplugin_i.h \
+    src/plugin_ifaces/cumouseevhandlerplugin_i.h \
     src/qubutton.h \
     src/qulabel.h \
     src/cucontrolsreader_abs.h \
@@ -121,6 +123,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/quvector.h \
     src/plugin_ifaces/quxtrawidgetplugininterface.h \
     src/quxtrawidgetpluginloader.h \
+    src/widgets-base/cumouse-ev-handler.h \
     src/widgets-base/eplotlight/quplotcontextmenustrategy.h \
     src/widgets-base/string_delegate.h \
     src/widgets-base/number_delegate.h \

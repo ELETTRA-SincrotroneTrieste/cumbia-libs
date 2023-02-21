@@ -166,7 +166,7 @@
         #define pr_thread() do {}while(0)
 
         #define pgreen(...) do {}while(0)
-        #define pred(...) do {}while(0)
+        #define pbred(...) do {}while(0)
         #define pyellow(...) do {}while(0)
         #define pblue(...) do {}while(0)
         #define pviolet(...) do {}while(0)
@@ -179,7 +179,6 @@
         #define plblue2(...) do {}while(0)
 
         #define pbgreen(...) do {}while(0)
-        #define pbred(...) do {}while(0)
         #define pbyellow(...) do {   } while(0)
         #define pbblue(...) do {   }while(0)
         #define pbviolet(...) do {   } while(0)

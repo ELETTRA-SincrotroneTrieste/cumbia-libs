@@ -80,6 +80,10 @@ signals:
 
 protected:
     void contextMenuEvent(QContextMenuEvent* e);
+    void mousePressEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
+    void mouseDoubleClickEvent(QMouseEvent *e);
 
 private:
     QuLabelPrivate *d;

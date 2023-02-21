@@ -15,7 +15,7 @@
 #endif
 
 // avoid creating temporary QRegularExpression within the code
-QRegularExpression re;
+QRegularExpression rege;
 
 class QuApplicationPrivate
 {
@@ -141,9 +141,9 @@ QStringList QuApplication::cmdOpt() const
 QString QuApplication::display_host() const
 {
     QString disp = QString(getenv("DISPLAY"));
-    re.setPattern("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
-    QRegularExpressionMatch ma = re.match(disp);
-    if(ma.hasMatch() && ma.hasCaptured(1)) {
+    rege.setPattern("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
+    QRegularExpressionMatch ma = rege.match(disp);
+    if(ma.hasMatch() && ma.captured().size() > 0) {
         return ma.captured(1);
     }
     return "";
@@ -152,9 +152,9 @@ QString QuApplication::display_host() const
 int QuApplication::display_number() const
 {
     QString disp = QString(getenv("DISPLAY"));
-    re.setPattern("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
-    QRegularExpressionMatch ma = re.match(disp);
-    if(ma.hasMatch() && ma.hasCaptured(2)) {
+    rege.setPattern("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
+    QRegularExpressionMatch ma = rege.match(disp);
+    if(ma.hasMatch() && ma.captured().size() > 1) {
         return ma.captured(2).toInt();
     }
     return 0;
@@ -163,9 +163,9 @@ int QuApplication::display_number() const
 int QuApplication::screen_number() const
 {
     QString disp = QString(getenv("DISPLAY"));
-    re.setPattern("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
-    QRegularExpressionMatch ma = re.match(disp);
-    if(ma.hasMatch() && ma.hasCaptured(3)) {
+    rege.setPattern("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
+    QRegularExpressionMatch ma = rege.match(disp);
+    if(ma.hasMatch() && ma.captured().size() > 3 ) {
         return ma.captured(3).toInt();
     }
     return 0;
@@ -217,8 +217,8 @@ void QuApplication::m_get_display_info(QString *host, int *d_num, int *screen_nu
 {
     *host = ""; *d_num = *screen_num = 0;
     QString disp = QString(getenv("DISPLAY"));
-    re.setPattern("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
-    QRegularExpressionMatch ma = re.match(disp);
+    rege.setPattern("([A-Za-z_0-9\\.\\-]*):(\\d*)[\\.]{0,1}(\\d*)");
+    QRegularExpressionMatch ma = rege.match(disp);
     const QStringList& caps = ma.capturedTexts();
     if(ma.hasMatch()  && caps.size() > 1)
         *host = caps[1];
