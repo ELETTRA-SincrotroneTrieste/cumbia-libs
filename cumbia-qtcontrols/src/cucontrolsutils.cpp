@@ -99,12 +99,11 @@ CuVariant CuControlsUtils::getArgs(const QString &target, const QObject *leaf) c
     std::vector<std::string> argins;
     QString oName;
     QString val;
-    cuprintf("\e[1;34mgetArgs finding args in %s\e[0m\n\n", qstoc(target));
     re.setPattern("\\((.*)\\)");
     QRegularExpressionMatch match = re.match(target);
     if(match.captured().size() > 0) {
         QString argums = match.captured(1);
-        QStringList args = argums.split(",", Qt::SkipEmptyParts);
+        QStringList args = argums.split("," /* , Qt::SkipEmptyParts */);
         foreach(QString a, args)
         {
             if(a.startsWith("&"))
@@ -166,7 +165,7 @@ QList<QObject *> CuControlsUtils::findObjects(const QString& target, const QObje
     QRegularExpressionMatch ma = re.match(target);
     if(ma.captured().size() > 0)  {
         QString argums = ma.captured(1);
-        QStringList args = argums.split(",", Qt::SkipEmptyParts);
+        QStringList args = argums.split("," /* , Qt::SkipEmptyParts */);
         foreach(QString a, args) {
             if(a.startsWith("&")) {
                 oName = a.remove(0, 1);
