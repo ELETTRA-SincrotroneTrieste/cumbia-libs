@@ -214,9 +214,9 @@ void QuTable::configure (const CuData& da) {
             if(tc.count(",") == tc.count(",")) {
                 QList<QColor> trueColors;
                 QList<QColor> falseColors;
-                foreach(QString s, tc.split(",", Qt::SkipEmptyParts))
+                foreach(QString s, tc.split("," /* , Qt::SkipEmptyParts*/))
                     trueColors << QColor(s);
-                foreach(QString s, fc.split(",", Qt::SkipEmptyParts))
+                foreach(QString s, fc.split(","/*, Qt::SkipEmptyParts*/))
                     falseColors << QColor(s);
                 EFlag::setTrueColorList(trueColors);
                 EFlag::setFalseColorList(falseColors);
