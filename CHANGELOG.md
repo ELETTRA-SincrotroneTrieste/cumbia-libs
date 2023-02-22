@@ -65,6 +65,17 @@ Fixed *QuInputOutput* misbehaviour when a QComboBox is used as writer in *index 
 The *Link stats* information dialog has been completely redesigned to offer a cleaner look
 and a leaner user interaction. A tree model is now in use.
 
+
+##### Support for mouse event plugins
+
+A new *plugin interface* has been introduced so that plugins whose name matches
+* *mouse-event-plugin.so* can be loaded in order to process mouse events (press,
+release, move, double click).
+
+The [https://github.com/ELETTRA-SincrotroneTrieste/cumbia-mouse-event-plugin](cumbia-mouse-event-plugin)
+implements the *drag event* providing a copy action containing the *source or target* 
+set on the cumbia-qtcontrols widget.
+
 ## version 1.4.0
 
 Refer to [cumbia CHANGES-1.4.md](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs/blob/master/cumbia/CHANGES-1.4.md)
