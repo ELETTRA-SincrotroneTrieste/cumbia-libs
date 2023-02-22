@@ -69,7 +69,7 @@ QStringList CuPluginLoader::getPluginAbsoluteFilePaths(const QString& default_pl
     QString default_plupa(default_plugin_path);
     QProcessEnvironment pe = QProcessEnvironment::systemEnvironment();
     QString custom_plugin_dir = pe.value("CUMBIA_PLUGIN_PATH", "");
-    QStringList plugin_dirs = custom_plugin_dir.split(":", Qt::SkipEmptyParts);
+    QStringList plugin_dirs = custom_plugin_dir.split(":"/*, Qt::SkipEmptyParts*/);
     QStringList plugin_names; // do not return duplicate plugins (with the same file name)
     if(default_plupa.isEmpty()) {
         default_plupa = QString(CUMBIA_QTCONTROLS_PLUGIN_DIR);
