@@ -201,7 +201,12 @@ void QuSpectrumPlot::update(const CuData &da)
     {
         std::vector<double> out;
         v.toVector<double>(out);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
         QVector<double> y(out.begin(), out.end());
+#else
+        QVector<double> y = QVector<double>::fromStdVector(out);
+#endif
         if(y.size() != d->x_data.size()) {
             d->fill_x_data(y.size());
         }
