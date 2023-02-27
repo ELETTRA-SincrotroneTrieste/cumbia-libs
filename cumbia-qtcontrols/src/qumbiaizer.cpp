@@ -548,7 +548,11 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
         {
             std::vector<bool> stdbv;
             val.toVector<bool>(stdbv);
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
             QVector<bool> boolvect(stdbv.begin(), stdbv.end());
+#else
+            QVector<bool> boolvect = QVector<bool>::fromStdVector(stdbv);
+#endif
             if(quizer_ptr->refreshFilter)
                 quizer_ptr->refreshFilter->filter(v, boolvect, read, updateState);
             if(object)
@@ -568,7 +572,11 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
         {
             std::vector<double> stddv;
             val.toVector<double>(stddv);
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
             QVector<double> dblvect(stddv.begin(), stddv.end());
+#else
+            QVector<double> dblvect = QVector<double>::fromStdVector(stddv);
+#endif
             if(quizer_ptr->refreshFilter)
                 quizer_ptr->refreshFilter->filter(v, dblvect, read, updateState);
             if(object)
@@ -588,7 +596,12 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
         {
             std::vector<int> stdiv;
             val.toVector<int>(stdiv);
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
             QVector<int> intvect(stdiv.begin(), stdiv.end());
+#else
+            QVector<int> intvect = QVector<int>::fromStdVector(stdiv);
+#endif
+
             if(quizer_ptr->refreshFilter)
                 quizer_ptr->refreshFilter->filter(v, intvect, read, updateState);
             if(object)
