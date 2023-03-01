@@ -1,3 +1,5 @@
+#ifndef CUMBIA_QTCONTROLS_NO_OPENGL
+
 #include "eimagegl.h"
 #include <QtDebug>
 
@@ -41,3 +43,5 @@ void ImageGL::paintEvent(QPaintEvent *e)
 {
     paint(e, this);
 }
+
+#endif

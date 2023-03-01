@@ -1,6 +1,5 @@
 #include "eimagewidgetbase.h"
 #include <QPaintEvent>
-#include <QGLWidget>
 #include <QPainter>
 #include <QMouseEvent>
 #include <QtDebug>

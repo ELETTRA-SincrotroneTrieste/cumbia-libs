@@ -12,10 +12,6 @@ exists(../cumbia-qt.prf) {
 
 QT       += widgets
 
-equals(QT_VERSION, 6) {
-    QT   += openglwidgets
-}
-
 wasm-emscripten {
 # library is compiled statically
 # qwt needs QSvgRenderer symbols
@@ -60,6 +56,16 @@ isEmpty(INSTALL_ROOT) {
 #
 isEmpty(prefix) {
     prefix = $${INSTALL_ROOT}
+}
+
+isEmpty(no-opengl) {
+
+equals(QT_VERSION, 6) {
+    QT   += openglwidgets
+}
+
+} else  {
+    DEFINES += CUMBIA_QTCONTROLS_NO_OPENGL
 }
 
 #

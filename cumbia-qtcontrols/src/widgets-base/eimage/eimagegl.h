@@ -1,6 +1,8 @@
 #ifndef IMAGEGL_H
 #define IMAGEGL_H
 
+#ifndef CUMBIA_QTCONTROLS_NO_OPENGL
+
 #include "eimagewidgetbase.h"
 
 /*! \brief A QGLWidget to display two dimensional arrays as an image.
@@ -39,5 +41,7 @@ protected:
 private:
     
 };
+
+#endif  // CUMBIA_QTCONTROLS_NO_OPENGL
 
 #endif // IMAGEGL_H
