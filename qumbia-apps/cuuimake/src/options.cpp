@@ -10,7 +10,7 @@
 #include <termios.h>
 
 // --param-name=param,list regexp: \-\-[A-Za-z_\.\-]+=[A-Za-z_0-9,\.\-]+
-#define LIST_PARAM_RE "\\-\\-[A-Za-z_\\.\\-]+=[A-Za-z_0-9,\\.\\-]+"
+#define LIST_PARAM_RE "\\-\\-[A-Za-z_\\.\\-]+=[A-Za-z_0-9,\\.\\-/]+"
 
 Options::Options(const QStringList& args)
 {
@@ -27,6 +27,7 @@ Options::Options(const QStringList& args)
     m_helpMap.insert("--clean", "execute make clean and remove ui_*.h files and exit.");
     m_helpMap.insert("--pre-clean", "like \"--clean\" but do not exit.");
     m_helpMap.insert("--plain-text-output", "disable colored output.");
+    m_helpMap.insert("--config-file=path/to/cuuimake-cumbiq-qtcontrols.xml", QString("specify a config file different from %1/cuuimake-cumbia-qtcontrols.xml").arg(CONFDIR));
     m_helpMap.insert("--debug", "additional information is printed while operations are performed");
 
     // options with --option=something
@@ -80,7 +81,6 @@ Options::Options(const QStringList& args)
             list = a.split("=");
             key = list.first().remove("--");
             m_map.insert(key, list.last());
-
         }
         else if(a.startsWith("--"))
             m_map.insert(a.remove("--"), true);
@@ -94,8 +94,6 @@ Options::Options(const QStringList& args)
             m_error = true;
             m_lastError = "Options.Options: invalid command line parameter: \"" + a + "\"";
         }
-
-
     }
 }
 

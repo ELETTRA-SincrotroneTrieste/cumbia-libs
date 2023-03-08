@@ -99,7 +99,11 @@ bool CuUiMake::make()
     int removed_ui_cnt = -1;
     Defs defs;
     defs.setDebug(m_debug);
-    QString fname (CONFDIR + QString("/cuuimake-cumbia-qtcontrols.xml"));
+    // custom configuration file?
+    if(m_options->getopt("config-file").isValid())
+        print(Analysis, false, plain_text, "using configuration from \"%s\"\n", qstoc(m_options->getopt("config-file").toString()));
+    QString fname (m_options->getopt("config-file").isValid() ?
+                       m_options->getopt("config-file").toString() : CONFDIR + QString("/cuuimake-cumbia-qtcontrols.xml"));
 
     QString localfname = m_findLocalConfFile();
     bool success = defs.loadConf(fname, localfname);
