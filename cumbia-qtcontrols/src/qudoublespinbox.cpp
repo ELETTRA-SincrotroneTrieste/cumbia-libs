@@ -6,7 +6,6 @@
 
 #include "cucontrolswriter_abs.h"
 #include "cucontrolsfactories_i.h"
-#include "cucontrolsutils.h"
 #include "cumbiapool.h"
 #include "cucontext.h"
 #include "qulogimpl.h"
@@ -19,7 +18,7 @@ public:
 };
 
 QuDoubleSpinBox::QuDoubleSpinBox(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac)
-    : QSpinBox(parent)
+    : QDoubleSpinBox(parent)
 {
     d = new QuDoubleSpinBoxPrivate;
     d->context = new CuContext(cumbia, w_fac);
@@ -27,7 +26,7 @@ QuDoubleSpinBox::QuDoubleSpinBox(QWidget *parent, Cumbia *cumbia, const CuContro
 }
 
 QuDoubleSpinBox::QuDoubleSpinBox(QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
-    : QSpinBox(parent)
+    : QDoubleSpinBox(parent)
 {
     d = new QuDoubleSpinBoxPrivate;
     d->context = new CuContext(cumbia_pool, fpool);

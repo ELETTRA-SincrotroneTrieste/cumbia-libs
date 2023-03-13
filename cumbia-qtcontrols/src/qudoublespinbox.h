@@ -1,7 +1,7 @@
 #ifndef QuDoubleSpinBox_H
 #define QuDoubleSpinBox_H
 
-#include <QSpinBox>
+#include <QDoubleSpinBox>
 #include <cudatalistener.h>
 #include <cucontexti.h>
 
@@ -12,7 +12,7 @@ class CuControlsWriterFactoryI;
 
 class QuDoubleSpinBoxPrivate;
 
-class QuDoubleSpinBox : public QSpinBox, public CuDataListener, public CuContextI
+class QuDoubleSpinBox : public QDoubleSpinBox, public CuDataListener, public CuContextI
 {
     Q_OBJECT
     Q_PROPERTY(QString target READ target WRITE setTarget DESIGNABLE true)
