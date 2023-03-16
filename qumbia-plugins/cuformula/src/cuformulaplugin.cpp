@@ -36,7 +36,7 @@ CuFormulaPlugin::~CuFormulaPlugin()
 
 QString CuFormulaPlugin::getName() const
 {
-    return "CuFormulasPlugin";
+    return "CuFormulaPlugin";
 }
 
 Cumbia *CuFormulaPlugin::getCumbia() const

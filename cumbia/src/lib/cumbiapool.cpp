@@ -100,9 +100,9 @@ Cumbia *CumbiaPool::getBySrc(const std::string &src) const
 
     if(!cu) {
         perr("CumbiaPool.getBySrc: could not guess domain from \"%s\"", src.c_str());
-        m_print_registered_domain_info();
-    }
 
+    }
+    m_print_registered_domain_info();
     return cu;
 }
 
@@ -116,7 +116,6 @@ Cumbia *CumbiaPool::guessBySrc(const std::string &src) const
 {
     if(m_map.size() == 0)
         return NULL;
-
     std::map<std::string, std::vector<std::string> >::const_iterator it;
     for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it)
     {
@@ -150,10 +149,7 @@ void CumbiaPool::m_print_registered_domain_info() const
 {
     int i = 0;
     std::map<std::string, std::vector<std::string> >::const_iterator it;
-    printf("   CumbiaPool: registered domains and patterns:\n");
-    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it)
-    {
-        printf("      - domain\t%d: %s -> ", ++i, it->first.c_str());
+    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it) {
         const std::vector<std::string> &patterns = it->second;
         for(size_t i = 0; i < patterns.size(); i++)
             i < patterns.size() - 1 ? printf("%s, ", patterns[i].c_str()) : printf("%s\n", patterns[i].c_str());
