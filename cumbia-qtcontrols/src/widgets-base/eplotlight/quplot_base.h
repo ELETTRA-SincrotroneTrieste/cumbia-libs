@@ -212,8 +212,8 @@ public:
 public slots:
     virtual void refresh();
 
-    void setXAxisAutoscaleEnabled(bool en, QwtPlot::Axis axis = QwtPlot::xBottom);
-    void setYAxisAutoscaleEnabled(bool en, QwtPlot::Axis axis = QwtPlot::yLeft);
+    void setXAxisAutoscaleEnabled(bool en, QwtPlot::Axis axis);
+    void setYAxisAutoscaleEnabled(bool en, QwtPlot::Axis axis);
 
     void setXTopAxisAutoscaleEnabled(bool autoscale);
     void setYRightAxisAutoscaleEnabled(bool autoscale);
@@ -262,6 +262,8 @@ public slots:
 
     void setAxisScaleDefaultEnabled(bool en, Axis axisId = QwtPlot::yLeft);
 
+    void setXAxisAutoscaleEnabled(bool autoscale);
+    void setYAxisAutoscaleEnabled(bool autoscale);
 protected:
 
     /** \brief returns the plot title.

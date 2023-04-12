@@ -667,6 +667,8 @@ int QuPlotBase::dataBufferSize() {
     return d->bufSiz;
 }
 
+
+
 void QuPlotBase::setXAxisAutoscaleEnabled(bool autoscale, QwtPlot::Axis axis)
 {
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
@@ -684,6 +686,17 @@ void QuPlotBase::setYAxisAutoscaleEnabled(bool autoscale, QwtPlot::Axis axis)
         axes_c->setBounds(this, axis, axisScaleDiv(axis).lowerBound(), axisScaleDiv(axis).upperBound());
     replot();
 }
+
+void QuPlotBase::setXAxisAutoscaleEnabled(bool autoscale)
+{
+    setXAxisAutoscaleEnabled(autoscale, QwtPlot::xBottom);
+}
+
+void QuPlotBase::setYAxisAutoscaleEnabled(bool autoscale)
+{
+    setYAxisAutoscaleEnabled(autoscale, QwtPlot::yLeft);
+}
+
 
 void QuPlotBase::setXTopAxisAutoscaleEnabled(bool autoscale) {
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
