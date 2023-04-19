@@ -21,9 +21,6 @@ CuMouseEvHandler::CuMouseEvHandler() {
             d->plugin = pluginLoader.instance();
             if (d->plugin){
                 mousevhplugin = qobject_cast<CuMouseEvHandlerPlugin_I *> (d->plugin);
-                if(mousevhplugin) {
-                    printf("CuMouseEvHandler: \e[1;32mplugin loaded\e[0m\n");
-                }
             }
             if(!d->plugin || !mousevhplugin){
                 perr("CuMouseEvHandler failed to load plugin \"%s\" under \"%s\"",
