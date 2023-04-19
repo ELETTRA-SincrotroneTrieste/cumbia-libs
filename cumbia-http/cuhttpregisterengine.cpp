@@ -144,13 +144,10 @@ bool CuHttpRegisterEngine::load(const QStringList &args, bool force_load) const 
         if(oldv) {
             print_upgrade();
         }
-        pretty_pri("url is empty so getting from urldefault");
         if(http_def)
             url = urlDefault(oldv);
         else if((force_load || d->parser.isSet(http_url_o)) && !oldv) // -u set without URL: OK in >= 1.5.0
             url = urlDefault(false);
-        pretty_pri("url is now %s", qstoc(url));
-
     }
     if(!url.isEmpty()) {
         d->url = url;
