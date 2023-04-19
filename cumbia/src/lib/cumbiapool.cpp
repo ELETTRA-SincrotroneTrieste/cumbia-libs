@@ -102,7 +102,6 @@ Cumbia *CumbiaPool::getBySrc(const std::string &src) const
         perr("CumbiaPool.getBySrc: could not guess domain from \"%s\"", src.c_str());
 
     }
-    m_print_registered_domain_info();
     return cu;
 }
 
