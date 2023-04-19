@@ -60,7 +60,8 @@ public:
     QString getData() const;
 
 public slots:
-    void setTarget(const QString& target, CuContext *ctx = nullptr);
+    void setTarget(const QString& target);
+    void setTarget(const QString& target, CuContext *ctx);
     void clearTarget();
 
     void write(int i);

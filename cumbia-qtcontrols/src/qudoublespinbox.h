@@ -33,7 +33,8 @@ public:
     QString target() const;
 
 public slots:
-    void setTarget(const QString &targets, CuContext *ctx = nullptr);
+    void setTarget(const QString &t);
+    void setTarget(const QString &t, CuContext *ctx);
     void clearTarget();
 
 private:

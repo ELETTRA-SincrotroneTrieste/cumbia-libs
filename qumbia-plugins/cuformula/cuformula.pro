@@ -17,6 +17,7 @@ SOURCES += \
     src/cuformulaplugin.cpp \
     src/cuformula.cpp \
     src/cuformulaparser.cpp \
+    src/cuformulautils.cpp \
     src/simpleformulaeval.cpp
 
 HEADERS += \
@@ -24,6 +25,7 @@ HEADERS += \
     src/cuformulaplugin.h \
     src/cuformula.h \
     src/cuformulaparser.h \
+    src/cuformulautils.h \
     src/simpleformulaeval.h
 DISTFILES += \ 
     cuformulasplugin.json

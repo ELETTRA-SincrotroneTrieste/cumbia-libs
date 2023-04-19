@@ -118,17 +118,21 @@ QString QuSpinBox::target() const
     return "";
 }
 
+void QuSpinBox::setTarget(const QString &tgt) {
+    setTarget(tgt, nullptr);
+}
+
 /** \brief Set the name of the target that will be executed.
  *
  * Refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */
-void QuSpinBox::setTarget(const QString &targets, CuContext *ctx) {
+void QuSpinBox::setTarget(const QString &t, CuContext *ctx) {
     if(ctx) {
         delete d->context;
         d->context = ctx;
     }
-    CuControlsWriterA* w = d->context->replace_writer(targets.toStdString(), this);
-    if(w) w->setTarget(targets);
+    CuControlsWriterA* w = d->context->replace_writer(t.toStdString(), this);
+    if(w) w->setTarget(t);
 }
 
 void QuSpinBox::clearTarget() {
