@@ -139,10 +139,6 @@ QString QuComboBox::getData() const
     return currentText();
 }
 
-void QuComboBox::setTarget(const QString &target) {
-    setTarget(target, nullptr);
-}
-
 /** \brief Connect the reader to the specified source.
  *
  * If a reader with a different source is configured, it is deleted.
