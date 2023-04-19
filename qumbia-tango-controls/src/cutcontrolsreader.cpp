@@ -247,9 +247,7 @@ void CuTControlsReader::getData(CuData &d_ino) const
  * actual reader. The configuration step is exploited by graphical elements to set
  * minimum, maximum, alarm values, units and so on.
  */
-void CuTControlsReader::setSource(const QString &s)
-{
-    printf("\e[1;32m* \e[0mCuTControlsReader: set source %s on Tango native engine\n", qstoc(s));
+void CuTControlsReader::setSource(const QString &s) {
     CuTControlsUtils tcu;
     d->source = tcu.replaceWildcards(s, qApp->arguments());
     TSource tsrc(d->source.toStdString());
