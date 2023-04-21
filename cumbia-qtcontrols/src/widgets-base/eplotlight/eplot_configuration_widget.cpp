@@ -1,4 +1,5 @@
 #include "eplot_configuration_widget.h"
+#include "quplotconfigurator.h"
 #include "ui_configuration.h"
 
 #include <QMetaObject>
@@ -295,22 +296,11 @@ void EPlotConfigurationWidget::curveStyleChanged()
 void EPlotConfigurationWidget::saveStyles()
 {
     QString id;
-    QSettings s;
-    for(int i = 0; i < ui->cbCurves->count(); i++)
-    {
-        QString curveTitle = ui->cbCurves->itemText(i);
-        id = QString("%1_EPLOTLIGHT_CURVE_%2").arg(QCoreApplication::instance()->applicationName()).arg(curveTitle);
-
-        QuPlotCurve *crv = NULL;
+    QuPlotConfigurator pco;
+    for(int i = 0; i < ui->cbCurves->count(); i++) {
         QwtPlotCurve *qwt_crv = d_plot->curve(ui->cbCurves->currentText()/*.remove(QRegularExpression("\\(.*\\)"))*/);
-        if(qwt_crv && qwt_crv->rtti() == QwtPlotItem::Rtti_PlotUserItem + RTTI_CURVE_OFFSET)
-            crv = static_cast<QuPlotCurve *>(qwt_crv);
-        if(crv)
-        {
-            s.setValue(id + "_COLOR", crv->pen().color());
-            s.setValue(id + "_COLOR_ALPHA", crv->pen().color().alpha());
-            s.setValue(id + "_STYLE", crv->style());
-            s.setValue(id + "_WIDTH", crv->pen().width());
+        if(qwt_crv && qwt_crv->rtti() == QwtPlotItem::Rtti_PlotUserItem + RTTI_CURVE_OFFSET) {
+            pco.save(static_cast<QuPlotCurve *>(qwt_crv));
         }
     }
 }
