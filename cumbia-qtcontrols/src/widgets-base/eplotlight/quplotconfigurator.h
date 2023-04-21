@@ -12,7 +12,7 @@ public:
 
     bool hasCustomConf(const QuPlotCurve *c) const;
     void save(const QuPlotCurve *c);
-    void configure(QuPlotCurve *c);
+    void configure(QuPlotCurve *c, int curves_cnt);
 
 private:
     QString m_get_id(const QuPlotCurve *c) const;

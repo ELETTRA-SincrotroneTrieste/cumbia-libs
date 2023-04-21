@@ -3,6 +3,8 @@
 #include <QCoreApplication>
 #include <QSettings>
 #include <quplotcurve.h>
+#include <qupalette.h>
+#include <cumacros.h>
 
 QuPlotConfigurator::QuPlotConfigurator()
 {
@@ -25,11 +27,12 @@ void QuPlotConfigurator::save(const QuPlotCurve *c)
     s.setValue(id + "/width", c->pen().width());
 }
 
-void QuPlotConfigurator::configure(QuPlotCurve *c)
+void QuPlotConfigurator::configure(QuPlotCurve *c, int curves_cnt)
 {
     QSettings s;
     const QString& id = m_get_id(c);
     if(s.contains(id)) {
+        printf("\e[1,33m loading from settings %s\e[0m\n", qstoc(id));
         /* choose a nice curve color or load it from QSettings, if defined for the application name and
          * curve name.
          */
@@ -44,6 +47,18 @@ void QuPlotConfigurator::configure(QuPlotCurve *c)
         c->setStyle((QwtPlotCurve::CurveStyle) curveStyle);
         c->setPen(curvePen);
 //        c->setProperty("showYValuesEnabled", displayYValues);
+    }
+    else {
+        printf("\e[1,31m settings %s UNFOUND\e[0m\n", qstoc(id));
+
+        QuPalette palette;
+        QStringList colors = QStringList() << "dark_green" << "blue" << "violet"
+                                           << "red" << "black" << "light_gray" << "yellow" <<  "green" << "gray"
+                                           << "orange" << "pink" << "dark_red";
+        QString color_nam = colors.at(curves_cnt % colors.size());
+        QColor curveColor = palette.value(color_nam);
+        QPen curvePen(curveColor);
+        c->setPen(curvePen);
     }
 }
 

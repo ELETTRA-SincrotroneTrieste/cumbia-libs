@@ -67,6 +67,8 @@ class EPlotConfigurationWidget : public QWidget
 	void propertyChanged();
 	void saveStyles();
 	void apply();
+    void saveSettings();
+    void clearSettings();
     void restoreYScaleDefault();
 };
 

@@ -1,4 +1,5 @@
 #include "quplot_base.h"
+#include "quplotconfigurator.h"
 #include "quplotcurve.h"
 
 #include <cumacros.h>
@@ -16,8 +17,6 @@
 #include <qwt_date_scale_draw.h>
 #include <qwt_date_scale_engine.h>
 #include <qwt_picker_machine.h>
-#include <qupalette.h>
-
 
 // plot components
 #include "quplotzoomcomponent.h"
@@ -468,16 +467,11 @@ void QuPlotBase::addCurve(const QString &curveName)
 
 void QuPlotBase::addCurve(const QString& title, QuPlotCurve *curve)
 {
+    QuPlotConfigurator pco;
     if(d->curvesMap.contains(title)) // remove existing curve
         delete d->curvesMap[title];
-    QuPalette palette;
-    QStringList colors = QStringList() << "dark_green" << "blue" << "violet"
-                                       << "red" << "black" << "light_gray" << "yellow" <<  "green" << "gray"
-                                       << "orange" << "pink" << "dark_red";
-    QString color_nam = colors.at(d->curvesMap.size() % colors.size());
-    QColor curveColor = palette.value(color_nam);
-    QPen curvePen(curveColor);
-    curve->setPen(curvePen);
+    // either load from saved settings or pick from a palette
+    pco.configure(curve, d->curvesMap.size());
     d->curvesMap.insert(title, curve);
     curve->attach(this);
     emit curveAdded(curve);
