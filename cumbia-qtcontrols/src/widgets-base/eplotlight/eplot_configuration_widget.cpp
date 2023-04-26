@@ -342,22 +342,27 @@ void EPlotConfigurationWidget::apply()
         if(d_changedProperties.contains("yLowerBound") && ui->yLowerBound->text().toDouble(&ok) && ok) {
             writeProperty("yLowerBound", ui->yLowerBound->text().toDouble());
             d_plot->updateAxes(); // need this if we need to set yUpperBound below
+            emit yLowerBound(ui->yLowerBound->text().toDouble());
         }
         if(d_changedProperties.contains("yUpperBound") && ui->yUpperBound->text().toDouble(&ok) && ok) {
             writeProperty("yUpperBound", ui->yUpperBound->text().toDouble());
             d_plot->updateAxes();
+            emit yUpperBound(ui->yUpperBound->text().toDouble());
         }
     }
     /* auto scale adjustment */
-    if(d_changedProperties.contains("yAutoscaleAdjustEnabled"))
+    if(d_changedProperties.contains("yAutoscaleAdjustEnabled")) {
         writeProperty("yAutoscaleAdjustment",
                       !ui->yAutoscaleAdjustEnabled->isChecked() ? 0.0f : ui->yAutoscaleAdjustment->value());
+    }
     else if(d_changedProperties.contains("yAutoscaleAdjustment"))
         writeProperty("yAutoscaleAdjustment", ui->yAutoscaleAdjustment->value());
 
     /* X section */
-    if(ui->rbXAuto->isChecked())
+    if(ui->rbXAuto->isChecked()) {
         d_plot->setXAxisAutoscaleEnabled(true);
+        emit xAxisAutoscaleEnabled(true);
+    }
     else if(ui->rbXManual->isChecked())
     {
         d_plot->setXAxisAutoscaleEnabled(false);

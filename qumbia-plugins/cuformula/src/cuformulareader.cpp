@@ -2,6 +2,7 @@
 #include "cuformula.h"
 #include "cuformulaparser.h"
 #include "simpleformulaeval.h"
+#include "cuformulautils.h"
 
 #include <cucontrolsfactorypool.h>
 #include <cumbiapool.h>
@@ -170,12 +171,13 @@ CuFormulaReader::~CuFormulaReader()
  */
 void CuFormulaReader::setSource(const QString &s)
 {
-    d->source = s;
+    CuFormulaUtils fu;
+    d->source = fu.replaceWildcards(s, qApp->arguments());
     d->values.clear();
     d->qualities.clear();
     d->errors.clear();
     d->messages.clear();
-    d->formula_parser.parse(s);
+    d->formula_parser.parse(d->source);
 
     /*if(d->formula_parser.error())
         m_notifyFormulaError();
