@@ -19,13 +19,13 @@ DecIntFromFormat::DecIntFromFormat(QString f)
 }
 
 bool DecIntFromFormat::decode() {
-    int pos = - 1;
+    bool ok = false;
 //    printf("\e[1;36mDecIntFromFormat::decode() format %s\e[0m\n", qstoc(d_format));
     /* add ' in [0-9] to recognize "%'d" */
     fmtre.setPattern("%(\\d+)d\\b");
     QRegularExpressionMatch ma = fmtre.match(d_format);
-    if(ma.hasMatch()) /* integer */
-    {
+    ok = ma.hasMatch();
+    if(ok) /* integer */ {
         d_decDefaults = false;
         d_decDigits = 0;
         d_intDefaults = ma.capturedTexts().size() == 0;
@@ -40,7 +40,8 @@ bool DecIntFromFormat::decode() {
             return true;
         fmtre.setPattern("%[0-9]*\\.{1,1}[0-9]+f\\b");
         ma = fmtre.match(d_format);
-        if(ma.hasMatch()) {
+        ok = ma.hasMatch();
+        if(ok) {
             /* type %.3f  decimal digits only */
             /* type %2.3f integer and decimal digits */
             QRegularExpressionMatch re1m = flRe1.match(d_format);
@@ -59,9 +60,9 @@ bool DecIntFromFormat::decode() {
             }
         }
     }
-    if(pos < 0)
+    if(!ok)
         perr("DecIntFromFormat::decode(): error or unsupported format \"%s\"", qstoc(d_format));
-    return pos >= 0;
+    return ok;
 }
 
 
