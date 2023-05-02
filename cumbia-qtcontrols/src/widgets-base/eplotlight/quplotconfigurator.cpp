@@ -57,7 +57,6 @@ void QuPlotConfigurator::save(const QString& plot_name, const QuPlotCurve *c)
     QSettings s("elettra.eu", qApp->applicationName());
     const QString& id = m_get_id(plot_name, c);
     s.beginGroup(id);
-    pretty_pri("\e[1;32msaving for ID `%s`\e[0m", qstoc(id));
     s.setValue("pen/color", c->pen().color());
     s.setValue("pen/color/alpha", c->pen().color().alpha());
     s.setValue("style", c->style());
@@ -69,7 +68,6 @@ void QuPlotConfigurator::configure_curve(const QuPlotBase *plot, QuPlotCurve *c,
 {
     QSettings s("elettra.eu", qApp->applicationName());
     const QString& id = m_get_id(plot->objectName(), c);
-    pretty_pri("see if settings contain id %s", qstoc(id));
     QStringList groups = s.childGroups();
     int idx = groups.indexOf(id);
     if(c != nullptr && idx >= 0) {
@@ -92,8 +90,6 @@ void QuPlotConfigurator::configure_curve(const QuPlotBase *plot, QuPlotCurve *c,
         s.endGroup();
     }
     else if(c != nullptr) {
-        pretty_pri("\e[1,31m settings %s UNFOUND\e[0m\n", qstoc(id));
-
         QuPalette palette;
         QStringList colors = QStringList() << "dark_green" << "blue" << "violet"
                                            << "red" << "black" << "light_gray" << "yellow" <<  "green" << "gray"
@@ -114,20 +110,12 @@ void QuPlotConfigurator::configure(QuPlotBase *plot) {
         QSettings s("elettra.eu", qApp->applicationName());
         const QString& id = m_get_id(plot->objectName(), nullptr);
         s.beginGroup(id);
-        if(s.value("axes/xbot/autoscale", true).toBool() != plot->xAxisAutoscaleEnabled(QwtPlot::xBottom))
-            plot->setXAxisAutoscaleEnabled(s.value("axes/xbot/autoscale", true).toBool(), QwtPlot::xBottom);
         // set x scale bounds if not autoscale mode
         QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(plot->getComponent("axes"));
-        if(!plot->xAxisAutoscaleEnabled(QwtPlot::xBottom)) {
+        if(s.value("axes/xbot/autoscale", true).toBool() != plot->xAxisAutoscaleEnabled(QwtPlot::xBottom)) {
             double xl = s.value("axes/bounds/xbot/xlow", 0.0).toDouble();
             double xu = s.value("axes/bounds/xbot/xup", 0.0).toDouble();
-            pretty_pri("setting X lb to %f and ub to %f", xl, xu);
-            if(xl != plot->xLowerBound()) {
-                axes_c->setManualBounds(plot, QwtPlot::xBottom, xl, plot->axisScaleDiv(QwtPlot::xBottom).upperBound());
-            }
-            if(xu != plot->xUpperBound()) {
-                // do not use plot->axisScaleDiv(QwtPlot::xBottom).lowerBound() because it only works after plot->replot
-                // use xl instead
+            if(xl != plot->xLowerBound() || xu != plot->xUpperBound()) {
                 axes_c->setManualBounds(plot, QwtPlot::xBottom, xl, xu);
             }
         }
@@ -138,11 +126,7 @@ void QuPlotConfigurator::configure(QuPlotBase *plot) {
         if(!plot->yAxisAutoscaleEnabled(QwtPlot::yLeft)) {
             double l = s.value("axes/bounds/yleft/ylow", 0.0).toDouble();
             double u = s.value("axes/bounds/yleft/yup", 0.0).toDouble() ;
-            if(l != plot->yLowerBound()) {
-                axes_c->setManualBounds(plot, QwtPlot::yLeft, l, plot->axisScaleDiv(QwtPlot::yLeft).upperBound());
-            }
-            if(u != plot->yUpperBound()) {
-                // use l and not plot->axisScaleDiv(QwtPlot::yLeft).lowerBound for the motivation discussed above
+            if(l != plot->yLowerBound() || u != plot->yUpperBound()) {
                 axes_c->setManualBounds(plot, QwtPlot::yLeft, l, u);
             }
         }
@@ -163,9 +147,23 @@ void QuPlotConfigurator::configure(QuPlotBase *plot) {
     }
 }
 
+void QuPlotConfigurator::clearSettings(QuPlotBase *plot) const {
+    QSettings s("elettra.eu", qApp->applicationName());
+    QString plotnam = plot->objectName().length() > 0 ? plot->objectName() : "plot";
+    foreach(const QString& g, s.childGroups()) {
+        if(g.startsWith(qApp->applicationName() + "." + plotnam)) {
+            pretty_pri("removing group '%s' from settings", qstoc(g));
+            s.remove(g);
+        }
+    }
+//    s.remove()
+//    const QString& id = m_get_id(plot->objectName(), nullptr);
+//    s.remove(id);
+}
+
 QString QuPlotConfigurator::m_get_id(const QString& plot_name, const QuPlotCurve *c) const {
-    QString s = QString("%1.%2.curves").arg(QCoreApplication::instance()->applicationName()).arg(plot_name);
-    if(c)  s += "." + c->title().text();
+    QString s = QString("%1.%2").arg(QCoreApplication::instance()->applicationName()).arg(plot_name.length() > 0 ? plot_name : "plot");
+    if(c)  s += ".curves." + c->title().text();
     s.replace('/', '.');
     return s;
 }
