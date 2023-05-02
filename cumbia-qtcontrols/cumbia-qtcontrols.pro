@@ -19,7 +19,7 @@ TEMPLATE = lib
 
 DEFINES += CUMBIAQTCONTROLS_LIBRARY
 
-DEFINES += QT_NO_DEBUG_OUTPUT
+DEFINES -= QT_NO_DEBUG_OUTPUT
 
 
 android-g++|wasm-emscripten {
@@ -292,19 +292,19 @@ DOXYGEN_BIN = $$system(which doxygen)
 isEmpty(DOXYGEN_BIN) {
     message("cumbia-qtcontrols.pro: doxygen not found")
 } else {
- #   message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-#    message("---------------------------- DOCS DISABLED ----------------------")
+    message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    message("---------------------------- DOCS DISABLED ----------------------")
     message("-")
     message("-")
     message("Doxygen found")
 
-    doc.commands = \
-    doxygen \
-    Doxyfile;
+ #   doc.commands = \
+   # doxygen \
+  #  Doxyfile;
 
-    doc.files = doc/*
-    doc.path = $${CUMBIA_QTCONTROLS_DOCDIR}
-    QMAKE_EXTRA_TARGETS += doc
+    #doc.files = doc/*
+   # doc.path = $${CUMBIA_QTCONTROLS_DOCDIR}
+   # QMAKE_EXTRA_TARGETS += doc
     !android-g++ {
         INSTALLS += doc
     }
