@@ -116,7 +116,7 @@ template<typename T> bool CuVariant::to(T &val) const
             break;
         }
         if(!valid)
-            perr("%s CuVariant.to: unsupported scalar conversion from type %s and format %s",
+            pwarn("%s CuVariant.to: unsupported scalar conversion from type %s and format %s",
                  __PRETTY_FUNCTION__, dataTypeStr(_d->type).c_str(), dataFormatStr(_d->format).c_str());
     }
     return valid;

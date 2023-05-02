@@ -19,7 +19,7 @@ TEMPLATE = lib
 
 DEFINES += CUMBIAQTCONTROLS_LIBRARY
 
-DEFINES += QT_NO_DEBUG_OUTPUT
+DEFINES -= QT_NO_DEBUG_OUTPUT
 
 
 android-g++|wasm-emscripten {
@@ -61,6 +61,7 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/quplotcommon.cpp \
     src/quxtrawidgetpluginloader.cpp \
     src/widgets-base/cumouse-ev-handler.cpp \
+    src/widgets-base/eplotlight/quplotconfigurator.cpp \
     src/widgets-base/eplotlight/quplotcontextmenustrategy.cpp \
     src/widgets-base/number_delegate.cpp \
     src/widgets-base/eng_notation.cpp \
@@ -124,6 +125,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/plugin_ifaces/quxtrawidgetplugininterface.h \
     src/quxtrawidgetpluginloader.h \
     src/widgets-base/cumouse-ev-handler.h \
+    src/widgets-base/eplotlight/quplotconfigurator.h \
     src/widgets-base/eplotlight/quplotcontextmenustrategy.h \
     src/widgets-base/string_delegate.h \
     src/widgets-base/number_delegate.h \
@@ -290,19 +292,19 @@ DOXYGEN_BIN = $$system(which doxygen)
 isEmpty(DOXYGEN_BIN) {
     message("cumbia-qtcontrols.pro: doxygen not found")
 } else {
- #   message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-#    message("---------------------------- DOCS DISABLED ----------------------")
+    message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    message("---------------------------- DOCS DISABLED ----------------------")
     message("-")
     message("-")
     message("Doxygen found")
 
-    doc.commands = \
-    doxygen \
-    Doxyfile;
+ #   doc.commands = \
+   # doxygen \
+  #  Doxyfile;
 
-    doc.files = doc/*
-    doc.path = $${CUMBIA_QTCONTROLS_DOCDIR}
-    QMAKE_EXTRA_TARGETS += doc
+    #doc.files = doc/*
+   # doc.path = $${CUMBIA_QTCONTROLS_DOCDIR}
+   # QMAKE_EXTRA_TARGETS += doc
     !android-g++ {
         INSTALLS += doc
     }

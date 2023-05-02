@@ -1,4 +1,5 @@
 #include "eplot_configuration_widget.h"
+#include "quplotconfigurator.h"
 #include "ui_configuration.h"
 
 #include <QMetaObject>
@@ -156,12 +157,11 @@ void EPlotConfigurationWidget::init()
     foreach(QCheckBox *cb, findChildren<QCheckBox *>(QRegularExpression("\\b(x|y|setPointEnabled|colouredBackground|titleOnCanvasEnabled|syncRefresh).*")))
         connect(cb, SIGNAL(toggled(bool)), this, SLOT(propertyChanged()));
     connect(ui->pbApply, SIGNAL(clicked()), this, SLOT(apply()));
+    connect(ui->pbSaveSettings, SIGNAL(clicked()), this, SLOT(saveSettings()));
+    connect(ui->pbClearSettings, SIGNAL(clicked()), this, SLOT(clearSettings()));
     connect(ui->cbBufferUnlimited, SIGNAL(toggled(bool)), ui->sbBufferSize, SLOT(setDisabled(bool)));
     connect(ui->xAutoscaleAdjustEnabled, SIGNAL(toggled(bool)), ui->xAutoscaleAdjustment, SLOT(setEnabled(bool)));
     connect(ui->yAutoscaleAdjustEnabled, SIGNAL(toggled(bool)), ui->yAutoscaleAdjustment, SLOT(setEnabled(bool)));
-
-    ui->pbRememberAppearanceSettings->setVisible(false);
-    connect(ui->pbRememberAppearanceSettings, SIGNAL(clicked()), this, SLOT(saveStyles()));
 
     idx = getIndexOfProperty("dataBufferSize");
     ui->cbBufferUnlimited->setChecked(mo->property(idx).read(d_plot).toInt() == -1);
@@ -294,23 +294,11 @@ void EPlotConfigurationWidget::curveStyleChanged()
 
 void EPlotConfigurationWidget::saveStyles()
 {
-    QString id;
-    QSettings s;
-    for(int i = 0; i < ui->cbCurves->count(); i++)
-    {
-        QString curveTitle = ui->cbCurves->itemText(i);
-        id = QString("%1_EPLOTLIGHT_CURVE_%2").arg(QCoreApplication::instance()->applicationName()).arg(curveTitle);
-
-        QuPlotCurve *crv = NULL;
+    QuPlotConfigurator pco;
+    for(int i = 0; i < ui->cbCurves->count(); i++) {
         QwtPlotCurve *qwt_crv = d_plot->curve(ui->cbCurves->currentText()/*.remove(QRegularExpression("\\(.*\\)"))*/);
-        if(qwt_crv && qwt_crv->rtti() == QwtPlotItem::Rtti_PlotUserItem + RTTI_CURVE_OFFSET)
-            crv = static_cast<QuPlotCurve *>(qwt_crv);
-        if(crv)
-        {
-            s.setValue(id + "_COLOR", crv->pen().color());
-            s.setValue(id + "_COLOR_ALPHA", crv->pen().color().alpha());
-            s.setValue(id + "_STYLE", crv->style());
-            s.setValue(id + "_WIDTH", crv->pen().width());
+        if(qwt_crv && qwt_crv->rtti() == QwtPlotItem::Rtti_PlotUserItem + RTTI_CURVE_OFFSET) {
+            pco.save(static_cast<QuPlotCurve *>(qwt_crv));
         }
     }
 }
@@ -414,6 +402,15 @@ void EPlotConfigurationWidget::apply()
         d_plot->setDataBufferSize(-1);
 
     d_changedProperties.clear();
+}
+
+void EPlotConfigurationWidget::saveSettings() {
+    saveStyles();
+}
+
+void EPlotConfigurationWidget::clearSettings()
+{
+
 }
 
 void EPlotConfigurationWidget::restoreYScaleDefault()
