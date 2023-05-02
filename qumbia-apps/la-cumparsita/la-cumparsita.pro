@@ -44,6 +44,7 @@ DEFINES += CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${prefix}/lib/qumbia-plugins\\\"\
 # qt debug output
 DEFINES += QT_NO_DEBUG_OUTPUT
 
+
 CONFIG+=link_pkgconfig
 PKGCONFIG += x11
 

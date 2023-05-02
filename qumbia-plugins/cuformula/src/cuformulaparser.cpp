@@ -1,5 +1,7 @@
 #include "cuformulaparser.h"
+#include "cuformulautils.h"
 #include <QRegularExpression>
+#include <QCoreApplication> // for cuformulautils
 #include <cumacros.h>
 
 class CuFormulaParserPrivate {
@@ -44,7 +46,6 @@ bool CuFormulaParser::parse(const QString &expr)
     e.remove("\n");
     QRegularExpressionMatch match = re.match(e);
     mat = match.hasMatch() && match.capturedTexts().size() > 4;
-  //  printf("\e[1;25mDETECTED CAPTURES %d from expression \"%s\"\e[0m\n\n\n", match.capturedTexts().size(), qstoc(e));
     if(mat) {
         int i = 0;
         // four captures
@@ -80,7 +81,6 @@ bool CuFormulaParser::parse(const QString &expr)
             // 5
             QString functionBody = match.captured(++i);
             d->formula = QString("function(%1) %2").arg(params).arg(functionBody);
-            printf("\e[1;32mcorrectly detected formyula %s\e[0m\n", qstoc(d->formula));
         }
     }
     else {
@@ -141,10 +141,9 @@ std::string CuFormulaParser::source(size_t i) const
  */
 void CuFormulaParser::updateSource(size_t i, const std::string &s)
 {
-    printf("\e[1;35mCuFormulaParser:updateSource replacing source at idx %zu setting to %s srcs size %zu\e[0m\n",
-           i, s.c_str(), d->srcs.size());
+    CuFormulaUtils le_fu;
     if(i < d->srcs.size())
-        d->srcs[i] = s;
+        d->srcs[i] = le_fu.replaceWildcards(QString(s.c_str()), qApp->arguments()).toStdString();
 }
 
 long int CuFormulaParser::indexOf(const std::string &src) const
@@ -178,7 +177,6 @@ QString CuFormulaParser::m_makePreparedFormula() const
     QRegularExpressionMatch match = re.match(em);
     if(!match.hasMatch())
         em = "(" + em + ")";
-    printf("CuFormulaParser::m_makePreparedFormula() MADE PREPARED FORMULA %s\n", qstoc(em));
     return em;
 }
 

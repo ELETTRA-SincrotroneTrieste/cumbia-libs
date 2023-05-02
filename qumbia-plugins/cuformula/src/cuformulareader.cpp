@@ -1,5 +1,4 @@
 #include "cuformulareader.h"
-#include "cuformula.h"
 #include "cuformulaparser.h"
 #include "simpleformulaeval.h"
 #include "cuformulautils.h"
@@ -120,9 +119,7 @@ SetSrcFailedEvent::SetSrcFailedEvent(const QString &src, const QString &msg) :
     message = msg;
 }
 
-SetSrcFailedEvent::~SetSrcFailedEvent()
-{
-    printf("\e[1;31mDELETING ~SetSrcFailedEvent!!\e[0m\n");
+SetSrcFailedEvent::~SetSrcFailedEvent() {
 }
 
 /**
@@ -246,9 +243,7 @@ void CuFormulaReader::setOptions(const CuData &opt)
     d->options = opt;
 }
 
-void CuFormulaReader::onNewData(const CuData &da)
-{
-//    printf("\e[0;34mCuFromulaRader onNewData: data %s\e[0m\n", da.toString().c_str());
+void CuFormulaReader::onNewData(const CuData &da) {
     d->error = false;
     d->message.clear();
     std::string src = da["src"].toString();
@@ -302,7 +297,6 @@ void CuFormulaReader::onNewData(const CuData &da)
                 else {
                     QScriptValue result;
                     QString formula = d->formula_parser.preparedFormula();
-                  //  printf("preparing to evaluate formula pretty %s\e[0m\n", qstoc(formula));
                     QScriptValue sval = d->scriptEngine.evaluate(formula);
                     err = !sval.isFunction();
                     if(err) {
@@ -344,10 +338,6 @@ void CuFormulaReader::onNewData(const CuData &da)
                         }
                         else
                             msg = d->message.toStdString(); // set by m_fromScriptValue
-
-
-                        //                        printf("\e[1;32m1. \e[0mCuFormulaReader.onNewData: evaluating \e[1;36m%s makes %s\e[0m\n\n",
-                        //                               qstoc(d->formula_parser.formula()), resvar.toString().c_str());
                     }
                     else {
                         msg = "failed to call function " + d->formula_parser.formula().toStdString();

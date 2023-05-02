@@ -48,8 +48,8 @@ QObject *Cumparsita::get_cumbia_customWidgetCollectionInterface() const
         foreach(QString file, files) {
             QPluginLoader loader(path + "/" + file);
             object = (loader.instance());
-            QString nsig = object->metaObject()->normalizedSignature("cumbia_free()");
-            if(object && object->metaObject()->indexOfSlot(qstoc(nsig)) > -1)
+            QString nsig = object != nullptr ? (object->metaObject()->normalizedSignature("cumbia_free()")) : "";
+            if(nsig.length() > 0 && object->metaObject()->indexOfSlot(qstoc(nsig)) > -1)
                 return object;
         }
     }

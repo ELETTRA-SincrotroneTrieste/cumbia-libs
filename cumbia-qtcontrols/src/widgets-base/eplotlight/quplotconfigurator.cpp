@@ -152,13 +152,9 @@ void QuPlotConfigurator::clearSettings(QuPlotBase *plot) const {
     QString plotnam = plot->objectName().length() > 0 ? plot->objectName() : "plot";
     foreach(const QString& g, s.childGroups()) {
         if(g.startsWith(qApp->applicationName() + "." + plotnam)) {
-            pretty_pri("removing group '%s' from settings", qstoc(g));
             s.remove(g);
         }
     }
-//    s.remove()
-//    const QString& id = m_get_id(plot->objectName(), nullptr);
-//    s.remove(id);
 }
 
 QString QuPlotConfigurator::m_get_id(const QString& plot_name, const QuPlotCurve *c) const {
