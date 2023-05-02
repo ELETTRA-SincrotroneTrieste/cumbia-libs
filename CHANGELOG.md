@@ -1,5 +1,15 @@
 # News
 
+## version 1.5.1
+
+1. Plot configuration can be saved.
+
+The plot configuration dialog now allows to save changes  to  axes and curve styles.
+
+2. Formula device wildcard replacement
+
+Formulas accept now "$1" wildcards in source names, that are replaced at runtime.
+
 ## version 1.5.0
 
 #### cumbia
