@@ -8,7 +8,6 @@ QString CuFormulaUtils::replaceWildcards(const QString &s, const QStringList &ar
     QString ret(s);
     QStringList devs;
     for (int i = 1; i < args.size(); i++) {
-        pretty_pri("matching %s with '%s'...", DEVICE_REGEXP, qstoc(args[i]));
         if(QRegExp(DEVICE_REGEXP).exactMatch(args[i])) {
             devs << (args[i]);
         }
