@@ -136,6 +136,9 @@ void QuPlotBase::init()
     ctx_menu->connectToPlot(this);
     d->components_map.insert(ctx_menu->name(), ctx_menu);
 
+    QuPlotConfigurator pco;
+    pco.configure(this);
+
     QwtPlot::replot(); /* do not need QuPlotBase::replot() here */
 }
 
@@ -369,15 +372,16 @@ bool QuPlotBase::updateScales()
     QList<int> autoScaleAxisIds; // will contain only axes that need autoscaling
     QList<int> axisIds = QList<int>()<< QwtPlot::yLeft << QwtPlot::yRight << QwtPlot::xBottom << QwtPlot::xTop; // 0, 1, 2, 3
     foreach(int axisId, axisIds) {
-        if((axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop) && axes_c->autoscale(axisId)) {
+        if(((axisId == QwtPlot::xBottom && axisEnabled(QwtPlot::xBottom) ) || (axisId == QwtPlot::xTop && axisEnabled(QwtPlot::xTop))) && axes_c->autoscale(axisId)) {
             autoScaleAxisIds << axisId;
             need_xbounds = true;
         }
-        else if((axisId == QwtPlot::yLeft || axisId == QwtPlot::yRight) && axes_c->autoscale(axisId)) {
+        else if(((axisId == QwtPlot::yLeft && axisEnabled(QwtPlot::yLeft)) || (axisId == QwtPlot::yRight && axisEnabled(QwtPlot::yRight)) ) && axes_c->autoscale(axisId)) {
             autoScaleAxisIds << axisId;
             need_ybounds = true;
         }
     }
+    pretty_pri("need_xbounds %s need_ybounds %s", need_xbounds ? "YES" : "NO", need_ybounds ? "YES" : "NO");
     if(need_xbounds || need_ybounds) // get the bounds for the needed axes
         axes_c->getBoundsFromCurves(this, &xm, &xM, &ym, &yM, need_xbounds, need_ybounds);
 
@@ -385,6 +389,7 @@ bool QuPlotBase::updateScales()
         old_lb = axes_c->lowerBoundFromCurves(axisId);
         old_ub = axes_c->upperBoundFromCurves(axisId);
         if(need_xbounds && (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop)) {
+            pretty_pri("calling setBoundsFromCurves: %f - %f", xm, xM);
             axes_c->setBoundsFromCurves(xm, xM, axisId);
         }
         else if(need_ybounds && (axisId == QwtPlot::yRight || axisId == QwtPlot::yLeft))
@@ -396,6 +401,7 @@ bool QuPlotBase::updateScales()
             zoomer->changeRect(axisId, axes_c->lowerBoundFromCurves(axisId) - old_lb,
                                axes_c->upperBoundFromCurves(axisId) - old_ub);
     }
+    pretty_pri("zoomer. inZoom? %s boundsChanged %s", zoomer->inZoom() ? "YES" : "NO", boundsChanged ? "YES" : "NO");
     return boundsChanged;
 }
 
@@ -471,7 +477,7 @@ void QuPlotBase::addCurve(const QString& title, QuPlotCurve *curve)
     if(d->curvesMap.contains(title)) // remove existing curve
         delete d->curvesMap[title];
     // either load from saved settings or pick from a palette
-    pco.configure(curve, d->curvesMap.size());
+    pco.configure_curve(this, curve, d->curvesMap.size());
     d->curvesMap.insert(title, curve);
     curve->attach(this);
     emit curveAdded(curve);
@@ -661,14 +667,13 @@ int QuPlotBase::dataBufferSize() {
     return d->bufSiz;
 }
 
-
-
 void QuPlotBase::setXAxisAutoscaleEnabled(bool autoscale, QwtPlot::Axis axis)
 {
     QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
     axes_c->setAutoscale(axis, autoscale);
-    if(!autoscale)
+    if(!autoscale) {
         axes_c->setBounds(this, axis, axisScaleDiv(axis).lowerBound(), axisScaleDiv(axis).upperBound());
+    }
     replot();
 }
 

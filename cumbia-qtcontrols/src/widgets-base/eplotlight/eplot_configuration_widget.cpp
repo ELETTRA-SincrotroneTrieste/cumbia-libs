@@ -82,16 +82,14 @@ void EPlotConfigurationWidget::init()
     ui->yAutoscaleAdjustEnabled->setToolTip(autoscaleToolTip);
 
     /* x autoscale adjustment */
-    idx = getIndexOfProperty("xAutoscaleAdjustEnabled");
-    ui->xAutoscaleAdjustEnabled->setChecked(mo->property(idx).read(d_plot).toBool());
     idx = getIndexOfProperty("xAutoscaleAdjustment");
     ui->xAutoscaleAdjustment->setValue(mo->property(idx).read(d_plot).toDouble());
+    ui->xAutoscaleAdjustEnabled->setChecked(d_plot->property("xAutoscaleAdjustment").toDouble() != 0.0);
 
     /* y autoscale adjustment */
-    idx = getIndexOfProperty("yAutoscaleAdjustEnabled");
-    ui->yAutoscaleAdjustEnabled->setChecked(mo->property(idx).read(d_plot).toBool());
     idx = getIndexOfProperty("yAutoscaleAdjustment");
     ui->yAutoscaleAdjustment->setValue(mo->property(idx).read(d_plot).toDouble());
+    ui->yAutoscaleAdjustEnabled->setChecked(d_plot->yAutoscaleAdjustment() != 0.0);
 
     idx = getIndexOfProperty("xAxisLogScale");
     ui->xAxisLogScale->setChecked(mo->property(idx).read(d_plot).toBool());
@@ -147,6 +145,9 @@ void EPlotConfigurationWidget::init()
     connect(ui->yAxisLogScale, SIGNAL(toggled(bool)), this, SLOT(propertyChanged()));
     connect(ui->pbYScaleDefault, SIGNAL(clicked()), this, SLOT(restoreYScaleDefault()));
 
+//    foreach(QRadioButton *rb, QList<QRadioButton *>()<<ui->rbXManual << ui->rbXAuto << ui->rbYAuto << ui->rbYManual)
+//        connect(rb, SIGNAL(toggled(bool)), this, SLOT(propertyChanged()));
+
     foreach(QLineEdit *le, findChildren<QLineEdit *>(QRegularExpression("\\b(x|y).*")))
     {
         le->setValidator(doubleValidator);
@@ -166,6 +167,8 @@ void EPlotConfigurationWidget::init()
     idx = getIndexOfProperty("dataBufferSize");
     ui->cbBufferUnlimited->setChecked(mo->property(idx).read(d_plot).toInt() == -1);
     ui->sbBufferSize->setValue(mo->property(idx).read(d_plot).toInt());
+    ui->pbSaveSettings->setDisabled(true);
+
 }
 
 void EPlotConfigurationWidget::initAppearenceSettings()
@@ -297,10 +300,16 @@ void EPlotConfigurationWidget::saveStyles()
     QuPlotConfigurator pco;
     for(int i = 0; i < ui->cbCurves->count(); i++) {
         QwtPlotCurve *qwt_crv = d_plot->curve(ui->cbCurves->currentText()/*.remove(QRegularExpression("\\(.*\\)"))*/);
+        pretty_pri("curve found? %p searched %s", qwt_crv, qstoc(ui->cbCurves->currentText()));
         if(qwt_crv && qwt_crv->rtti() == QwtPlotItem::Rtti_PlotUserItem + RTTI_CURVE_OFFSET) {
-            pco.save(static_cast<QuPlotCurve *>(qwt_crv));
+            pco.save(d_plot->objectName(), static_cast<QuPlotCurve *>(qwt_crv));
         }
     }
+}
+
+void EPlotConfigurationWidget::savePlotConf() {
+    QuPlotConfigurator pco;
+    pco.save(d_plot);
 }
 
 void EPlotConfigurationWidget::editCurveColor()
@@ -316,10 +325,12 @@ void EPlotConfigurationWidget::editCurveColor()
 
 void EPlotConfigurationWidget::propertyChanged() {
     d_changedProperties.insert(sender()->objectName());
+    ui->pbSaveSettings->setDisabled(true);
 }
 
 void EPlotConfigurationWidget::apply()
 {
+    qDebug() << __PRETTY_FUNCTION__ << d_changedProperties;
     bool ok;
     /* Y section */
     if(ui->rbYAuto->isChecked())
@@ -344,8 +355,10 @@ void EPlotConfigurationWidget::apply()
         writeProperty("yAutoscaleAdjustment", ui->yAutoscaleAdjustment->value());
 
     /* X section */
-    if(ui->rbXAuto->isChecked())
+    if(ui->rbXAuto->isChecked()) {
+        pretty_pri("setting x axis autoscale enabled to TRUE");
         d_plot->setXAxisAutoscaleEnabled(true);
+    }
     else if(ui->rbXManual->isChecked())
     {
         d_plot->setXAxisAutoscaleEnabled(false);
@@ -397,10 +410,14 @@ void EPlotConfigurationWidget::apply()
         d_plot->setDataBufferSize(-1);
 
     d_changedProperties.clear();
+    // enable save settings after click
+    ui->pbSaveSettings->setDisabled(false);
+
 }
 
 void EPlotConfigurationWidget::saveSettings() {
     saveStyles();
+    savePlotConf();
 }
 
 void EPlotConfigurationWidget::clearSettings()
