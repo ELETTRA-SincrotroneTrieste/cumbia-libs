@@ -66,6 +66,7 @@ class EPlotConfigurationWidget : public QWidget
 	void editCurveColor();
 	void propertyChanged();
 	void saveStyles();
+    void savePlotConf();
 	void apply();
     void saveSettings();
     void clearSettings();

@@ -106,9 +106,7 @@ void QuPlotAxesComponent::restoreDefaultBounds(QuPlotBase *plot, int axisId)
  *
  * Returns true if the axis scale has changed, false otherwise
  */
-bool QuPlotAxesComponent::applyScaleFromCurveBounds(QuPlotBase *plot, int axisId)
-{
-
+bool QuPlotAxesComponent::applyScaleFromCurveBounds(QuPlotBase *plot, int axisId) {
     QPair<double, double> &bounds = d->bounds_from_curves[axisId];
     double lb = plot->axisScaleDiv(axisId).lowerBound();
     double ub = plot->axisScaleDiv(axisId).upperBound();
@@ -207,18 +205,20 @@ bool QuPlotAxesComponent::getBoundsFromCurves(const QuPlotBase *plot,
     return *xmin <= *xmax && *ymin <= *ymax;
 }
 
-bool QuPlotAxesComponent::autoscale(int axisId) const
-{
+bool QuPlotAxesComponent::autoscale(int axisId) const {
+    pretty_pri("scale mode for axis id %d is %d: autoscale ? %s", axisId, d->scale_mode_map[axisId], d->scale_mode_map[axisId] == AutoScale ? "YES" : "NO");
     return d->scale_mode_map[axisId] == AutoScale;
 }
 
 QuPlotAxesComponent::ScaleMode QuPlotAxesComponent::scaleMode(int axisId) const
 {
+    pretty_pri("scale mode for axis id %d is %d", axisId, d->scale_mode_map[axisId]);
     return d->scale_mode_map[axisId];
 }
 
 void QuPlotAxesComponent::setAutoscale(int axisId, bool a)
 {
+    pretty_pri("axis id %d autoscale %s", axisId, a ? "TRUE" : "FALSE");
     d->scale_mode_map[axisId] = a ? AutoScale : Manual;
 }
 

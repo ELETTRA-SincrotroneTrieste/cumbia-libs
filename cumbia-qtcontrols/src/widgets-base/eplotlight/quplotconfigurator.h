@@ -2,6 +2,7 @@
 #define QUPLOTCONFIGURATOR_H
 
 class QuPlotCurve;
+class QuPlotBase;
 
 #include <QString>
 
@@ -10,12 +11,14 @@ class QuPlotConfigurator
 public:
     QuPlotConfigurator();
 
-    bool hasCustomConf(const QuPlotCurve *c) const;
-    void save(const QuPlotCurve *c);
-    void configure(QuPlotCurve *c, int curves_cnt);
+    bool hasCustomConf(const QString &plotnam, const QuPlotCurve *c) const;
+    void save(const QString &plot_name, const QuPlotCurve *c);
+    void save( QuPlotBase *plot);
+    void configure_curve(const QuPlotBase *plot, QuPlotCurve *c, int curves_cnt);
+    void configure( QuPlotBase *plot);
 
 private:
-    QString m_get_id(const QuPlotCurve *c) const;
+    QString m_get_id(const QString &plot_name, const QuPlotCurve *c) const;
 };
 
 #endif // QUPLOTCONFIGURATOR_H
