@@ -381,7 +381,6 @@ bool QuPlotBase::updateScales()
             need_ybounds = true;
         }
     }
-    pretty_pri("need_xbounds %s need_ybounds %s", need_xbounds ? "YES" : "NO", need_ybounds ? "YES" : "NO");
     if(need_xbounds || need_ybounds) // get the bounds for the needed axes
         axes_c->getBoundsFromCurves(this, &xm, &xM, &ym, &yM, need_xbounds, need_ybounds);
 
@@ -389,7 +388,6 @@ bool QuPlotBase::updateScales()
         old_lb = axes_c->lowerBoundFromCurves(axisId);
         old_ub = axes_c->upperBoundFromCurves(axisId);
         if(need_xbounds && (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop)) {
-            pretty_pri("calling setBoundsFromCurves: %f - %f", xm, xM);
             axes_c->setBoundsFromCurves(xm, xM, axisId);
         }
         else if(need_ybounds && (axisId == QwtPlot::yRight || axisId == QwtPlot::yLeft))
@@ -401,7 +399,6 @@ bool QuPlotBase::updateScales()
             zoomer->changeRect(axisId, axes_c->lowerBoundFromCurves(axisId) - old_lb,
                                axes_c->upperBoundFromCurves(axisId) - old_ub);
     }
-    pretty_pri("zoomer. inZoom? %s boundsChanged %s", zoomer->inZoom() ? "YES" : "NO", boundsChanged ? "YES" : "NO");
     return boundsChanged;
 }
 

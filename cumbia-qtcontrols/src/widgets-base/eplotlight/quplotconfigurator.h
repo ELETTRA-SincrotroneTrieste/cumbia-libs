@@ -16,6 +16,7 @@ public:
     void save( QuPlotBase *plot);
     void configure_curve(const QuPlotBase *plot, QuPlotCurve *c, int curves_cnt);
     void configure( QuPlotBase *plot);
+    void clearSettings(QuPlotBase *plot) const;
 
 private:
     QString m_get_id(const QString &plot_name, const QuPlotCurve *c) const;

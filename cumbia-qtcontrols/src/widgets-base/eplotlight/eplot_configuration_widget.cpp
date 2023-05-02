@@ -300,7 +300,6 @@ void EPlotConfigurationWidget::saveStyles()
     QuPlotConfigurator pco;
     for(int i = 0; i < ui->cbCurves->count(); i++) {
         QwtPlotCurve *qwt_crv = d_plot->curve(ui->cbCurves->currentText()/*.remove(QRegularExpression("\\(.*\\)"))*/);
-        pretty_pri("curve found? %p searched %s", qwt_crv, qstoc(ui->cbCurves->currentText()));
         if(qwt_crv && qwt_crv->rtti() == QwtPlotItem::Rtti_PlotUserItem + RTTI_CURVE_OFFSET) {
             pco.save(d_plot->objectName(), static_cast<QuPlotCurve *>(qwt_crv));
         }
@@ -328,9 +327,7 @@ void EPlotConfigurationWidget::propertyChanged() {
     ui->pbSaveSettings->setDisabled(true);
 }
 
-void EPlotConfigurationWidget::apply()
-{
-    qDebug() << __PRETTY_FUNCTION__ << d_changedProperties;
+void EPlotConfigurationWidget::apply() {
     bool ok;
     /* Y section */
     if(ui->rbYAuto->isChecked())
@@ -356,7 +353,6 @@ void EPlotConfigurationWidget::apply()
 
     /* X section */
     if(ui->rbXAuto->isChecked()) {
-        pretty_pri("setting x axis autoscale enabled to TRUE");
         d_plot->setXAxisAutoscaleEnabled(true);
     }
     else if(ui->rbXManual->isChecked())
@@ -420,9 +416,9 @@ void EPlotConfigurationWidget::saveSettings() {
     savePlotConf();
 }
 
-void EPlotConfigurationWidget::clearSettings()
-{
-
+void EPlotConfigurationWidget::clearSettings() {
+    QuPlotConfigurator pc;
+    pc.clearSettings(d_plot);
 }
 
 void EPlotConfigurationWidget::restoreYScaleDefault()
