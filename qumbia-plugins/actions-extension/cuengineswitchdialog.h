@@ -11,9 +11,9 @@ class CuEngineSwitchDialog : public QDialog
 {
     Q_OBJECT
 public:
-    CuEngineSwitchDialog(QWidget *parent);
+    CuEngineSwitchDialog(QWidget *parent, const CuContextI *ctxi);
     virtual ~CuEngineSwitchDialog();
-    void exec(const CuData& in, const CuContextI *ctxi);
+    void exec(const CuData& in,  const CuContextI *ctxi);
     QObject *root_obj(QObject *leaf);
 public slots:
     void switchEngine(bool checked);

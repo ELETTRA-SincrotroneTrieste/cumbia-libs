@@ -28,7 +28,7 @@ CuData EngineSwitchDialogExtension::execute(const CuData &in, const CuContextI *
     //#if defined QUMBIA_TANGO_CONTROLS_VERSION && defined CUMBIA_HTTP_VERSION
     // WA_DeleteOnClose attribute is set
     if(!d->dialog) {
-        d->dialog = new CuEngineSwitchDialog(nullptr);
+        d->dialog = new CuEngineSwitchDialog(nullptr, ctxI);
         connect(d->dialog, SIGNAL(destroyed(QObject *)), this, SLOT(m_dialog_destroyed(QObject *)));
         d->dialog->exec(in, ctxI);
     }

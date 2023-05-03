@@ -47,6 +47,7 @@ CuHttpSrcMan::CuHttpSrcMan(CuHttpSrcQueueManListener* l, int deq_chunksiz, QObje
 }
 
 CuHttpSrcMan::~CuHttpSrcMan() {
+    d->timer->stop();
     delete d;
 }
 

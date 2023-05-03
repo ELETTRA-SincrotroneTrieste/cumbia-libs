@@ -10,12 +10,13 @@
 class CuEngineSwitchDialogPrivate {
 public:
     QObject *owner;
-    CuContextI *ctxi;
+    const CuContextI *ctxi;
 };
 
-CuEngineSwitchDialog::CuEngineSwitchDialog(QWidget *parent) : QDialog(parent)
+CuEngineSwitchDialog::CuEngineSwitchDialog(QWidget *parent, const CuContextI *ctxi) : QDialog(parent)
 {
     d = new CuEngineSwitchDialogPrivate;
+    d->ctxi = ctxi;
 }
 
 CuEngineSwitchDialog::~CuEngineSwitchDialog()
@@ -30,6 +31,7 @@ void CuEngineSwitchDialog::m_resizeToMinimumSizeHint() {
 void CuEngineSwitchDialog::exec(const CuData &in, const CuContextI *ctxi)
 {
     d->owner = static_cast<QObject *>(in["sender"].toVoidP());
+    printf("ctxi %p  d->ctxi %p\n", ctxi, d->ctxi);
     //
     // engine hot switch (since 1.5.0)
     //
@@ -70,7 +72,7 @@ void CuEngineSwitchDialog::exec(const CuData &in, const CuContextI *ctxi)
         }
     }
     m_resizeToMinimumSizeHint();
-     show();
+    show();
 }
 
 void CuEngineSwitchDialog::switchEngine(bool checked) {
@@ -78,10 +80,16 @@ void CuEngineSwitchDialog::switchEngine(bool checked) {
         QObject *root = root_obj(d->owner);
         CuModuleLoader ml;
         CuControlsFactoryPool fp;
-        CumbiaPool *cu_pool = d->ctxi->getContext()->cumbiaPool();
+        pretty_pri("d->ctxi %p", d->ctxi);
+        pretty_pri("d->ctxi->getContext %p", d->ctxi->getContext());
+        CumbiaPool *cu_pool = d->ctxi-> getContext()-> cumbiaPool();
+
+        pretty_pri("cu_pool is %p, root obj is %s (%s)", cu_pool, root->metaObject()->className(), qstoc(root->objectName()));
+
         if(cu_pool && root) {
             fp = d->ctxi->getContext()->getControlsFactoryPool();
-            int engine = sender()->objectName() == "rbn" ? CumbiaTango::CumbiaTangoType : CumbiaHttp::CumbiaHTTPType;
+            int engine = (sender()->objectName() == "rbn" ? static_cast<int>(CumbiaTango::CumbiaTangoType)
+                                                          : static_cast<int>(CumbiaHttp::CumbiaHTTPType));
             bool ok = ml.switch_engine(engine, cu_pool, fp, root);
             if(!ok) {
                 findChild<QLabel *>("labswitch")->setWordWrap(true);

@@ -99,6 +99,7 @@ CumbiaHttp::~CumbiaHttp()
 //    QList<SrcItem> ri, wi; // we don't use ri, wi, so...  v.1.5
 //    d->src_q_man->dequeueItems(ri, wi); // .. do not call dequeueItems  v1.5
 //    onSrcBundleReqReady(ri, wi); <-- 1.4: why if we are exiting ?
+    delete d->src_q_man;
     if(d->client_id > 0)
         d->id_man->unsubscribe(true); // true: block
     /* all registered services are unregistered and deleted by cumbia destructor after threads have joined */

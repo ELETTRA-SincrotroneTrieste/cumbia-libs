@@ -58,7 +58,7 @@ CuContext *CuEngineHotSwitch::hot_switch(CuDataListener *l, CuContext *ctx, Cumb
             r->setSource(src);
         }
     }
-    else if(!d->error && (w = ctx->getWriter()) != nullptr) {
+    else if(ctx && !d->error && (w = ctx->getWriter()) != nullptr) {
         const QString& t = w->target();
         if(!t.isEmpty()) {
             pretty_pri("disposing writer of old context %p", ctx);
