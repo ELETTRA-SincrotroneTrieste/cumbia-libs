@@ -91,7 +91,6 @@ void CuHttpChannelReceiver::start() {
     connect(&d->ws, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onWsError(QAbstractSocket::SocketError)));
     connect(&d->ws, QOverload<const QList<QSslError>&>::of(&QWebSocket::sslErrors),
             this, &CuHttpChannelReceiver::onSslErrors);
-    printf("opening websocket url %s\n", qstoc(ws_url()));
     d->ws.open(QUrl(ws_url()));
 }
 
