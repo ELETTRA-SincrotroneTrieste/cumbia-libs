@@ -48,6 +48,7 @@
 #include <cuthreadfactoryimpl.h>
 #include <qthreadseventbridgefactory.h>
 #include <quapps.h>
+#include <cuengineaccessor.h>
 
 QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     QWidget(parent),
@@ -55,14 +56,12 @@ QumbiaClient::QumbiaClient(CumbiaPool *cumbia_pool, QWidget *parent) :
     m_layoutColumnCount(10)
 {
     QStringList engines;
-    Cumbia *cuws = nullptr, *cuta = nullptr, *cuhttp = nullptr;
-    Cumbia *cuep, *curnd;
     cu_pool = cumbia_pool;
     m_switchCnt = 0;
 
     CuModuleLoader mloader(cumbia_pool, &m_ctrl_factory_pool, &m_log_impl);
-
     ui->setupUi(this);
+    new CuEngineAccessor(this, &cu_pool, &m_ctrl_factory_pool);
     connect(ui->pbSetSources, SIGNAL(clicked()), this, SLOT(sourcesChanged()));
     connect(ui->pbApplyRefresh, SIGNAL(clicked()), this, SLOT(changeRefresh()));
     connect(ui->pbUnsetSrc, SIGNAL(clicked()), this, SLOT(unsetSources()));

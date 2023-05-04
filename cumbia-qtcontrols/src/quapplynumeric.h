@@ -33,11 +33,9 @@ public:
     QString target() const;
 
 public slots:
-
     void setTarget(const QString& target);
-
     virtual void execute(double val);
-
+    virtual bool ctxSwap(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
     void onAnimationValueChanged(const QVariant &v);
 
 protected:

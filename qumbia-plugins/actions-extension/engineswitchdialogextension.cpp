@@ -29,6 +29,7 @@ CuData EngineSwitchDialogExtension::execute(const CuData &in, const CuContextI *
     // WA_DeleteOnClose attribute is set
     if(!d->dialog) {
         d->dialog = new CuEngineSwitchDialog(nullptr, ctxI);
+        connect(d->dialog, SIGNAL(finished(int)), d->dialog, SLOT(deleteLater()));
         connect(d->dialog, SIGNAL(destroyed(QObject *)), this, SLOT(m_dialog_destroyed(QObject *)));
         d->dialog->exec(in, ctxI);
     }

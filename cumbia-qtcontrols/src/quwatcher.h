@@ -133,6 +133,7 @@ public:
 public slots:
     void setSource(const QString &s);
     void unsetSource();
+    virtual bool ctxSwap(CumbiaPool *cu_p, const CuControlsFactoryPool &fpool);
 
 private:
     QuWatcherPrivate *d;

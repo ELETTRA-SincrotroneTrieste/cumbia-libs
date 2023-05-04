@@ -46,6 +46,7 @@ public slots:
     void setSource(const QString& s);
     void unsetSource();
     void setValue(bool v);
+    virtual bool ctxSwap(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
 
 signals:
     void newData(const CuData&);

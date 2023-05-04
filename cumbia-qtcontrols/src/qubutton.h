@@ -45,7 +45,7 @@ public slots:
     virtual void execute();
 
     void setTarget(const QString& target);
-    void ctxSwitch(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    virtual bool ctxSwap(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
     void clearTarget();
 
     void onAnimationValueChanged(const QVariant& v);

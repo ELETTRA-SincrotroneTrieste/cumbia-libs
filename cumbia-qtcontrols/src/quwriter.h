@@ -77,6 +77,8 @@ public slots:
 
     void setTarget(const QString& target);
 
+    virtual bool ctxSwap(CumbiaPool *cu_p, const CuControlsFactoryPool &fpool);
+
     /** \brief the execute method tailored for integer values
       *
       * The execute method can be reimplemented in subclasses to specialize its behaviour.
@@ -145,10 +147,8 @@ public slots:
       */
     virtual void execute(const QVector<bool>&);
 
-
     // CuDataListener interface
     void onUpdate(const CuData &data);
-
 private:
     QuWriterPrivate *d;
 

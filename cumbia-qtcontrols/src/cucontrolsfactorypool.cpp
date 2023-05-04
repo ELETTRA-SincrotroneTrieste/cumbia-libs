@@ -75,8 +75,7 @@ void CuControlsFactoryPool::clearSrcPatterns(const std::string &domain)
  * @return the CuControlsReaderFactoryI implementation corresponding to the given domain, or
  *         NULL if the domain wasn't registered.
  */
-CuControlsReaderFactoryI *CuControlsFactoryPool::getReadFactory(const std::string &domain) const
-{
+CuControlsReaderFactoryI *CuControlsFactoryPool::getReadFactory(const std::string &domain) const {
     std::map<std::string, CuControlsReaderFactoryI *>::const_iterator it = m_rmap.find(domain);
     if(it != m_rmap.end()) {
         return it->second;
@@ -219,5 +218,16 @@ std::vector<std::string> CuControlsFactoryPool::getSrcPatterns(const std::string
         }
     }
     return patterns;
+}
+
+void CuControlsFactoryPool::m_print() const {
+    printf("CuControlsFactoryPool: domains and patterns:\n");
+    std::map<std::string, std::vector<std::string> >::const_iterator it;
+    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it) {
+        printf("'%s' -> patterns {", it->first.c_str());
+        for(size_t i = 0; i < it->second.size(); i++)
+            printf("'%s',", it->second[i].c_str());
+        printf("\n");
+    }
 }
 

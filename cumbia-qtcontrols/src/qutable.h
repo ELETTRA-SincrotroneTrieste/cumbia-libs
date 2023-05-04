@@ -45,8 +45,8 @@ public:
 
 public slots:
     void setSource(const QString& s);
-
     void unsetSource();
+    bool ctxSwap(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
 
 signals:
     void linkStatsRequest(QWidget *myself, CuContextI *myself_as_cwi);

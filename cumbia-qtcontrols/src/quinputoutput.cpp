@@ -239,6 +239,16 @@ void QuInputOutput::unsetSource()
     findChild<QuButton *>()->clearTarget();
 }
 
+bool QuInputOutput::ctxSwap(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) {
+    QWidget *w = outputWidget();
+    bool res = w->metaObject()->indexOfProperty("source") > -1 && w->metaObject()->indexOfMethod("ctxSwap") >= 0;
+    if(res)
+        res = QMetaObject::invokeMethod(w, "ctxSwap", Q_RETURN_ARG(bool, res), Q_ARG(CumbiaPool*, cumbia_pool), Q_ARG(CuControlsFactoryPool, fpool));
+    if(res)
+        res = findChild<QuButton *>()->ctxSwap(cumbia_pool, fpool);
+    return res;
+}
+
 void QuInputOutput::setIndexMode(bool m) {
     d->index_mode = m; // save if property set before input widget
     if(d->w_type == ComboBox && inputWidget()) // set if input widget created after property set
@@ -345,6 +355,4 @@ void QuInputOutput::m_configure(const CuData &da) {
 
     if(inputWidget())
         inputWidget()->setObjectName("inputWidget");
-
-    qDebug() << __FUNCTION__ << findChild<QWidget *>("inputWidget");
 }

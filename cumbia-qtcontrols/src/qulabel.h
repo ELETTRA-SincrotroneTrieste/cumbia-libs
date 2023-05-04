@@ -69,7 +69,7 @@ public slots:
     void unsetSource();
 
     void setDisplayUnitEnabled(bool en);
-    void ctxSwitch(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    virtual bool ctxSwap(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
 
 signals:
     void newData(const CuData&);

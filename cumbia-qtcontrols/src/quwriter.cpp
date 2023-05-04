@@ -11,6 +11,7 @@
 #include "cumbiapool.h"
 #include "cucontext.h"
 #include "qulogimpl.h"
+#include "cuctx_swap.h"
 
 #include <QTimer>
 
@@ -132,6 +133,12 @@ QString QuWriter::target() const
     if(w != NULL)
         return w->target(); // if the writer is configured
     return ""; // empty string otherwise
+}
+
+bool QuWriter::ctxSwap(CumbiaPool *cu_p, const CuControlsFactoryPool &fpool) {
+    CuCtxSwap csw;
+    d->context = csw.replace(this, d->context, cu_p, fpool);
+    return csw.ok();
 }
 
 void QuWriter::execute(int i) {

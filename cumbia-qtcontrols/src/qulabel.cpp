@@ -16,7 +16,7 @@
 #include "culinkstats.h"
 #include "cucontextmenu.h"
 #include "cucontext.h"
-#include "cuengine_hot_switch.h"
+#include "cuctx_swap.h"
 #include "cumouse-ev-handler.h"
 
 /** @private */
@@ -217,14 +217,15 @@ void QuLabel::setDisplayUnitEnabled(bool en)
     d->display_u_enabled = en;
 }
 
-void QuLabel::ctxSwitch(CumbiaPool *c_p, const CuControlsFactoryPool &fpool) {
-    d->context = CuEngineHotSwitch().hot_switch(this, d->context, c_p, fpool);
+bool QuLabel::ctxSwap(CumbiaPool *c_p, const CuControlsFactoryPool &fpool) {
+    CuCtxSwap csw;
+    d->context = csw.replace(this, d->context, c_p, fpool);
+    return csw.ok();
 }
 
 void QuLabel::onUpdate(const CuData &da)
 {
     bool background_modified = false;
-    QString txt;
     QColor background, border;
     d->read_ok = !da["err"].toBool();
 

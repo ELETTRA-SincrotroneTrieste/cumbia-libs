@@ -13,6 +13,7 @@
 #include "culinkstats.h"
 #include "cucontextmenu.h"
 #include "cucontext.h"
+#include "cuctx_swap.h"
 
 /** @private */
 class QuLinearGaugePrivate
@@ -97,6 +98,10 @@ void QuLinearGauge::setSource(const QString &s)
 void QuLinearGauge::unsetSource()
 {
     d->context->disposeReader();
+}
+
+void QuLinearGauge::ctxSwap(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) {
+    d->context = CuCtxSwap().replace(this, d->context, cumbia_pool, fpool);
 }
 
 void QuLinearGauge::contextMenuEvent(QContextMenuEvent *e)

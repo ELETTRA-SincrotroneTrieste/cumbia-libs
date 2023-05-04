@@ -35,6 +35,7 @@ public:
 public slots:
     void setTarget(const QString &targets, CuContext *ctx = nullptr);
     void clearTarget();
+    bool ctxSwap(CumbiaPool *cu_p, const CuControlsFactoryPool &fpool);
 private:
     QuSpinBoxPrivate *d;
 

@@ -62,6 +62,7 @@ public:
 public slots:
     void setTarget(const QString& target, CuContext *ctx = nullptr);
     void clearTarget();
+    virtual bool ctxSwap(CumbiaPool *cu_p, const CuControlsFactoryPool &fpool);
 
     void write(int i);
 

@@ -10,6 +10,7 @@
 #include "cumbiapool.h"
 #include "cucontext.h"
 #include "qulogimpl.h"
+#include "cuctx_swap.h"
 
 class QuSpinBoxPrivate
 {
@@ -133,6 +134,12 @@ void QuSpinBox::setTarget(const QString &targets, CuContext *ctx) {
 
 void QuSpinBox::clearTarget() {
     d->context->disposeWriter();
+}
+
+bool QuSpinBox::ctxSwap(CumbiaPool *cu_p, const CuControlsFactoryPool &fpool) {
+    CuCtxSwap csw;
+    d->context = csw.replace(this, d->context, cu_p, fpool);
+    return csw.ok();
 }
 
 void QuSpinBox::m_init()

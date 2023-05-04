@@ -7,8 +7,11 @@
 #include <cucontext.h>
 #include <cucontrolsreader_abs.h>
 #include <cucontrolswriter_abs.h>
+#include <cuengineaccessor.h>
 
 #include <QStringList>
+#include <QMetaProperty>
+#include <QMetaMethod>
 
 #ifdef QUMBIA_EPICS_CONTROLS_VERSION
 #include <cuepregisterengine.h>
@@ -190,34 +193,54 @@ public:
         return d->error;
     }
 
-    bool switch_engine(int engine, CumbiaPool *cu_pool, CuControlsFactoryPool &m_ctrl_factory_pool, QList<QObject *>&objs) {
-        std::vector<Cumbia *> cumbias;
-        bool ok = m_prepare_switch(engine, cu_pool, m_ctrl_factory_pool, cumbias);
-        if(ok) {
-            ok = m_apply_switch(objs, cu_pool, m_ctrl_factory_pool) > 0;
-            if(!ok) {
-                d->error = true;
-                d->msg = "no suitable objects found";
-            }
-        }
-        if(ok)
-            m_delete_cumbias(cumbias);
-         return ok;
-    }
-
+    /*!
+     * \brief switch the current engine to the specified new one
+     *
+     * cumbia-tango and cumbia-http engines only are supported.
+     * \param engine the engine identifier, either CumbiaHttp::CumbiaHTTPType && engine != CumbiaTango::CumbiaTangoType
+     * \param cu_pool
+     * \param m_ctrl_factory_pool
+     * \param root
+     * \return
+     */
     bool switch_engine(int engine, CumbiaPool *cu_pool, CuControlsFactoryPool &m_ctrl_factory_pool, QObject *root) {
+        printf("try \e[1;32mswitch to engine %d\e[0m\n", engine);
         std::vector<Cumbia *> cumbias;
-        bool ok = m_prepare_switch(engine, cu_pool, m_ctrl_factory_pool, cumbias);
+        bool ok;
+        CuEngineAccessor *accessor = root->findChild<CuEngineAccessor *>();
+        ok = (accessor != nullptr);
+        d->error = !ok;
+        QString ocl, onam;
+        if(d->error)
+            d->msg = QString("root object '%1' class '%2' does not have a CuEngineAccessor installed").arg(root->objectName()).arg(root->metaObject()->className());
         if(ok) {
-            ok = m_apply_switch(root->findChildren<QObject *>(), cu_pool, m_ctrl_factory_pool) > 0;
-            if(!ok) {
-                d->error = true;
-                d->msg = "no suitable objects found";
+            ok = m_check_objs_have_ctx_swap(root, &ocl, &onam);
+            if(ok) {
+                ok = m_prepare_switch(engine, cu_pool, m_ctrl_factory_pool, cumbias);
+                if(ok) {
+                    printf("switch_engine: \e[1;33mprepare switch: \e[1;32mSUCCESS\e[0m\n\n\n");
+                    ok = m_apply_switch(root, cu_pool, m_ctrl_factory_pool) > 0;
+                    if(!ok) {
+                        d->msg = "error swapping context:\n" + d->msg;
+                    }
+                    else {
+                        pretty_pri("using accessor to overwrite cumbia pool and factory pool");
+                        accessor->engine_swap(cu_pool, m_ctrl_factory_pool);
+                    }
+                }
+            }
+            else {
+                d->msg = QString("object \"%1\" of class \"%2\" does not implement \"ctxSwap\" method").arg(root->objectName()).arg(root->metaObject()->className());;
             }
         }
+        ok &= !d->error;
+        if(ok)
+            printf("switch_engine: \e[1;32mSUCCESS\e[0m\n\n\n");
         if(ok)
             m_delete_cumbias(cumbias);
-         return ok;
+        else
+            perr("quapps.switch_engine: %s", qstoc(d->msg));
+        return ok;
     }
 
     bool m_prepare_switch(int engine, CumbiaPool *cu_pool, CuControlsFactoryPool &m_ctrl_factory_pool, std::vector<Cumbia *>& cumbias) {
@@ -245,7 +268,7 @@ public:
                 Cumbia *cu = nullptr; // new cumbia
                 if(engine == CumbiaTango::CumbiaTangoType) {
                     CuTangoRegisterEngine tare;
-                    cumbias = m_clear_cumbia(cu_pool, m_ctrl_factory_pool);
+                    cumbias = m_clear_cumbia(cu_pool, m_ctrl_factory_pool); // unregister cumbia impls, clear src patterns
                     if(cumbias.size() == 1 && cumbias[0]->getServiceProvider()) // recycle log
                         log = static_cast<CuLog *>(cumbias[0]->getServiceProvider()->get(CuServices::Log));
                     cu = tare.registerWithDefaults(cu_pool,  m_ctrl_factory_pool);
@@ -274,83 +297,6 @@ public:
             } // !d->error trying to switch to the same engine
         }  // ! error unsupported target engine
         return !d->error;
-    }
-
-    int m_apply_switch(const QList<QObject *> objs, CumbiaPool *cu_pool, const CuControlsFactoryPool &m_ctrl_factory_pool) {
-        int i = 0;
-        foreach(QObject *o, objs) {
-            i++;
-            if(o->metaObject()->indexOfProperty("source") > 0 || o->metaObject()->indexOfProperty("target") > -1) {
-                printf("%d. \e[1;32mobject %s type %s\e[0m\n", i, qstoc(o->objectName()), o->metaObject()->className());
-                printf(" source: '%s' target '%s' \e[1;35mchild of %s \e[0;35m(%s)\e[0m\n", qstoc(o->property("source").toString()), qstoc(o->property("target").toString()),
-                       o->parent() != nullptr ? qstoc(o->parent()->objectName()) : "(null)",
-                       o->parent() != nullptr ? o->parent()->metaObject()->className() : "-");
-                if(!QMetaObject::invokeMethod(o, "ctxSwitch", Q_ARG(CumbiaPool*, cu_pool), Q_ARG(CuControlsFactoryPool, m_ctrl_factory_pool)))
-                    perr("error invoking method ctxSwitch on object %s type %s", qstoc(o->objectName()), o->metaObject()->className());
-            }
-        }
-        return i;
-    }
-
-    int m_delete_cumbias(const std::vector<Cumbia *>& vc) {
-        size_t i = 0;
-        for(size_t i = 0; i < vc.size(); i++) {
-            vc[i]->getServiceProvider()->unregisterService(CuServices::Log); // uninstall
-            delete vc[i];
-        }
-        return i;
-    }
-
-    int engine_type(const CuContext *ctx) const {
-        // get current engine in use
-        Cumbia *c = nullptr;
-        d->error = (ctx == nullptr);
-        if(!d->error) {
-            if(ctx->getReader())
-                c = ctx->getReader()->getCumbia();
-            else if(ctx->getWriter())
-                c = ctx->getWriter()->getCumbia();
-            else {
-                d->error = true;
-                d->msg = "no reader nor writer found in context";
-            }
-        }
-        if(!d->error && !c) {
-            d->error = true;
-            d->msg = QString("no cumbia found in the given %1").arg(ctx->getReader() ? "reader" : "writer");
-        }
-        return  c == nullptr ? -1 : c->getType();
-    }
-
-    bool same_engine(CumbiaPool *cu_pool, int engine) const {
-        bool err = false;
-        for(size_t i = 0; i < cu_pool->names().size() && !err; i++) {
-            const std::string n = cu_pool->names().at(i);
-            if(cu_pool->get(n))
-                err = (cu_pool->get(n)->getType() == engine);
-        }
-        return err;
-    }
-
-    std::vector<Cumbia*> m_clear_cumbia(CumbiaPool* cu_pool, CuControlsFactoryPool &fp) {
-        d->error = false;
-        std::vector<Cumbia*> vc;
-        // clear the pool
-        for(size_t i = 0; i < cu_pool->names().size() && !d->error; i++) {
-            const std::string n = cu_pool->names().at(i);
-            d->error = !cu_pool->get(n);
-            if(!d->error) {
-                printf("unregistering cumbia impl '%s'\n", n.c_str());
-                vc.push_back(cu_pool->get(n));
-                cu_pool->unregisterCumbiaImpl(n);
-                cu_pool->clearSrcPatterns(n);
-            }
-            else
-                d->msg = QString("error getting cumbia instance for \"%1\"").arg(n.c_str());
-        }
-        if(!d->error)
-            fp = CuControlsFactoryPool();
-        return vc;
     }
 };
 

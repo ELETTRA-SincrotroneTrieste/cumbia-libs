@@ -1,5 +1,6 @@
 #include "qucombobox.h"
 #include "cucontrolswriter_abs.h"
+#include "cuctx_swap.h"
 #include <cumacros.h>
 #include <cumbiapool.h>
 #include <cudata.h>
@@ -159,6 +160,12 @@ void QuComboBox::setTarget(const QString &target, CuContext *ctx) {
 
 void QuComboBox::clearTarget() {
     d->context->disposeWriter();
+}
+
+bool QuComboBox::ctxSwap(CumbiaPool *cu_p, const CuControlsFactoryPool &fpool) {
+    CuCtxSwap csw;
+    d->context = csw.replace(this, d->context, cu_p, fpool);
+    return csw.ok();
 }
 
 void QuComboBox::contextMenuEvent(QContextMenuEvent *e)

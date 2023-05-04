@@ -87,6 +87,7 @@ public slots:
 
     void setSource(const QString& s);
     void unsetSource();
+    virtual bool ctxSwap(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
 
     void setIndexMode(bool m);
     void setIndexOffset(int o);

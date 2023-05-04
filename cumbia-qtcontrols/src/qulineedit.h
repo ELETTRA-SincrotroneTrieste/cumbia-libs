@@ -34,6 +34,7 @@ public:
 
 public slots:
     void setTarget(const QString &targets);
+    virtual bool ctxSwap(CumbiaPool *cu_p, const CuControlsFactoryPool &fpool);
 
 private:
     QuLineEditPrivate *d;

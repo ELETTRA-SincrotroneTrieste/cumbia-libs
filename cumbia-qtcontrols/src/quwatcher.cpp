@@ -1,18 +1,15 @@
 #include "quwatcher.h"
 #include <cumacros.h>
-#include "qulabel.h"
 #include "cucontrolsreader_abs.h"
 #include <cumacros.h>
 #include <cumbiapool.h>
 #include <cudata.h>
 #include <QTimer>
-
-#include "qupalette.h"
 #include "cucontrolsfactories_i.h"
 #include "cucontrolsfactorypool.h"
 #include "culinkstats.h"
-#include "cucontextmenu.h"
 #include "cucontext.h"
+#include "cuctx_swap.h"
 
 class QuWatcherPrivate
 {
@@ -88,8 +85,13 @@ void QuWatcher::unsetSource()
         deleteLater();
 }
 
-CuContext *QuWatcher::getContext() const
-{
+bool QuWatcher::ctxSwap(CumbiaPool *cu_p, const CuControlsFactoryPool &fpool) {
+    CuCtxSwap csw;
+    d->context = csw.replace(this, d->context, cu_p, fpool);
+    return csw.ok();
+}
+
+CuContext *QuWatcher::getContext() const {
     return d->context;
 }
 

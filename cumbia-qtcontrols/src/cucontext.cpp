@@ -390,6 +390,7 @@ CuLinkStats *CuContext::getLinkStats() const
 
 QList<CuControlsReaderA *> CuContext::readers() const
 {
+    pretty_pri("readers size from context %p is %d", this, d->readers.size());
     return d->readers;
 }
 

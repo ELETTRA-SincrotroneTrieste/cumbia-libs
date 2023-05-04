@@ -9,6 +9,7 @@
 #include "cucontext.h"
 #include "culinkstats.h"
 #include "cucontextmenu.h"
+#include "cuctx_swap.h"
 #include <QVector>
 #include <QContextMenuEvent>
 #include <QtDebug>
@@ -103,6 +104,12 @@ void QuTable::setSource(const QString &s)
 void QuTable::unsetSource()
 {
     d->context->disposeReader();
+}
+
+bool QuTable::ctxSwap(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) {
+    CuCtxSwap csw;
+    d->context = csw.replace(this, d->context, cumbia_pool, fpool);
+    return csw.ok();
 }
 
 void QuTable::onUpdate(const CuData& da)

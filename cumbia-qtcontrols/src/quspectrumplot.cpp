@@ -97,7 +97,7 @@ void QuSpectrumPlot::setSources(const QStringList &l)
     d->plot_common->setSources(l, this);
 }
 
-void QuSpectrumPlot::ctxSwitch(CumbiaPool *cp, const CuControlsFactoryPool& fp) {
+void QuSpectrumPlot::ctxSwap(CumbiaPool *cp, const CuControlsFactoryPool& fp) {
     const QStringList &l = d->plot_common->sources();
     d->plot_common->unsetSources();
 //    unsetSources();
@@ -226,8 +226,7 @@ void QuSpectrumPlot::requestLinkStats()
     emit linkStatsRequest(this, this);
 }
 
-CuContext *QuSpectrumPlot::getContext() const
-{
+CuContext *QuSpectrumPlot::getContext() const {
     return d->plot_common->getContext();
 }
 

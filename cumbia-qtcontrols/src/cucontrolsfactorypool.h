@@ -78,6 +78,8 @@ private:
 
     std::map<std::string, std::vector<std::string> >m_dom_patterns;
 
+    void m_print() const;
+
 };
 
 #endif // CUMBIAPOOL_H

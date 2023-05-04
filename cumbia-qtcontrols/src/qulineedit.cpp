@@ -10,6 +10,7 @@
 #include "cumbiapool.h"
 #include "cucontext.h"
 #include "qulogimpl.h"
+#include "cuctx_swap.h"
 
 class QuLineEditPrivate
 {
@@ -101,6 +102,12 @@ void QuLineEdit::setTarget(const QString &targets)
 {
     CuControlsWriterA* w = d->context->replace_writer(targets.toStdString(), this);
     if(w) w->setTarget(targets);
+}
+
+bool QuLineEdit::ctxSwap(CumbiaPool *cu_p, const CuControlsFactoryPool &fpool) {
+    CuCtxSwap csw;
+    d->context = csw.replace(this, d->context, cu_p, fpool);
+    return csw.ok();
 }
 
 void QuLineEdit::m_init()
