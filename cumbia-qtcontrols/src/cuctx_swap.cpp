@@ -5,6 +5,7 @@
 #include <cumbiapool.h>
 #include <cucontrolsfactorypool.h>
 #include <cucontrolsreader_abs.h>
+#include <cucontrolswriter_abs.h>
 #include <cuserviceprovider.h>
 #include <cuservicei.h>
 #include <QMetaObject>
