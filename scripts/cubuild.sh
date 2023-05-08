@@ -15,6 +15,7 @@ http=0
 pull=0
 srcupdate=0
 sudocmd=sudo
+interactive=1
 
 ## declare operations array
 declare -a operations
@@ -86,6 +87,9 @@ then
 	echo -e " srcupdate - update cumbia sources choosing from the available tags in git (or origin/master). Please note that"
         echo -e "             the copy of the sources managed with srcupdates is not intended to be modified and committed to git."
         echo -e "             This option is normally used by the \e[0;4mcumbia upgrade\e[0m command."
+        echo -e " --no-interactive - disable confirmation prompts and assume the answers to the questions are always 'yes'."
+        echo -e "                    This option applies to the clean, build and install options."
+        echo -e "                    NOTE: this option is used by the Makefile."
 	echo ""
         echo -e "\e[1;32mEXAMPLES\e[0m\n1. $0 pull clean install tango epics random - git pull sources, execute make clean, build and install cumbia, cumbia-qtcontrols, apps, plugins, the tango, EPICS and random modules"
         echo -e "2. $0 install - install the library built with command 1."
@@ -169,6 +173,16 @@ then
 	operations+=(srcupdate)
 fi
 
+
+if [[ $@ == **--no-interactive** ]]
+then
+        interactive=0
+fi
+
+if [[ $@ == **interactive** ]]
+then
+        interactive=1
+fi
 
 if [[ $@ == **install** ]]
 then
@@ -268,7 +282,6 @@ if [[ $random -eq 1 ]]; then
         qmake_p+=(cumbia-random)
 fi
 
-
 if [ ${#operations[@]} -eq 0 ]; then
 	operations+=(build)
 	build=1
@@ -342,7 +355,11 @@ echo -e "-----------------------------------------------------------------------
 echo ""
 echo -n -e "Do you want to continue? [y|n] [y] "
 
+if [ $interactive -eq 1 ]; then
 read  -s -n 1  cont
+else
+    cont="yes"
+fi
 
 if [ "$cont" != "y" ]  && [ "$cont" != "yes" ] && [ "$cont" != "" ]; then
 	echo -e "\n  You may execute $0 --help"
@@ -359,7 +376,9 @@ if [ ! -r $srcupdate_conf_f ] && [ $make_install -eq 1 ]; then
 	echo -e "  - this source tree is not removed from this directory (\"$topdir\")"
 	echo -e "  - this source tree is not intended for development, i.e. will not be modified and committed to git"
 	echo -e -n "\n Press any key to continue "
-	read -s -n 1 akey
+        if [ $interactive -eq 1 ]; then
+            read  -s -n 1  akey
+        fi
 fi
 
 if [ $pull -eq 1 ]; then
@@ -861,7 +880,13 @@ if [ $make_install -eq 1 ] && [ -r $build_dir ] &&  [ "$(ls -A $build_dir)" ]; t
         if [ ! -r $install_prefix ]; then
             echo -e "\n The installation directory \"$install_prefix\" does not exist. "
             echo -n  -e " Do you want to create it (the operation may require administrative privileges - sudo) [y|n]?  [y] "
-            read  -s -n 1 createdir
+
+            if [ $interactive -eq 1 ]; then
+                read  -s -n 1  createdir
+            else
+                createdir="y"
+            fi
+
             if [ "$createdir" != "y" ]  && [ "$reply" != "createdir" ] && [ "$createdir" != "" ]; then
                         exit 1
             fi
@@ -929,7 +954,13 @@ if [ $make_install -eq 1 ] && [ -r $build_dir ] &&  [ "$(ls -A $build_dir)" ]; t
                 echo -e ""
 		echo -e "\e[0;33m*\n* INSTALL \e[1;33mWARNING \e[0mDo you want to add $libprefix to ld.so.conf paths by adding a file \e[0m"
 		echo -e "\e[0;33m                  \e[0;4mcumbia.conf\e[0m under "/etc/ld.so.conf.d/"  [y|n] ? [n] \e[0m"
-		read  -s -n 1 addconf
+
+                if [ $interactive -eq 1 ]; then
+                    read  -s -n 1  addconf
+                else
+                    addconf="no"
+                fi
+
 		if [ "$addconf" == "y" ]; then
 				if [ ! -z $sudocmd ]; then
 					echo -e  "\e[1;32msudo\e[0m authentication required:"
@@ -959,7 +990,12 @@ if [ $make_install -eq 1 ] && [ -r $build_dir ] &&  [ "$(ls -A $build_dir)" ]; t
                echo -e "\e[0;33m*\e[0;33m*\e[0m                  PATH through a new file named \"cumbia-bin-path.sh\" under "
                echo -e "\e[0;33m*\e[0;33m*\e[0m                  \e[0;34m/etc/profile.d\e[0m [y|n] ?"
 
-               read  -s -n 1 addbinpath
+                if [ $interactive -eq 1 ]; then
+                    read  -s -n 1  addbinpath
+                else
+                    addbinpath="no"
+                fi
+
                if [ "$addbinpath" == "y" ]; then
                       if [ ! -z $sudocmd ]; then
                           echo -e  "\e[1;32msudo\e[0m authentication required:"
