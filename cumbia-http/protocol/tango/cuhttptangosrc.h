@@ -44,6 +44,7 @@ public:
     std::string remove_tgproto(const std::string& src) const;
     std::string remove_tghost(const std::string& src) const;
     std::string rem_tghostproto(const std::string& src) const;
+    std::string rem_args(const std::string &src) const;
 
     const char* getTypeName(Type t) const;
     Type getType() const;
