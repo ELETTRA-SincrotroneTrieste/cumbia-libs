@@ -44,7 +44,7 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
     // host regexp
     std::regex host_re("([A-Z-a-z0-9\\-_\\.\\+~]+:\\d+)");
     std::string s = rem_tghostproto(src);
-
+    s = rem_args(s);
     int sep = std::count(s.begin(), s.end(), '/');
     bool ewc = s.size() > 1 && s[s.size()-1] == '*'; // ends with wildcard
     bool ewsep = s.size() > 1 && s[s.size()-1] == '/'; // ends with slash
@@ -313,6 +313,12 @@ string TSource::rem_tghostproto(const string &src) const
     std::string s = remove_tgproto(src);
     s = remove_tghost(s);
     return s;
+}
+
+string TSource::rem_args(const string &src) const {
+    // capture everything within (\(.*\)), not minimal
+    std::regex args_re("(\\(.*\\))");
+    return std::regex_replace(src, args_re, "");
 }
 
 const char *TSource::getTypeName(Type t) const {
