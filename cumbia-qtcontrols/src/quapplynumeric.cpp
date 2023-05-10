@@ -12,7 +12,7 @@
 #include "culinkstats.h"
 #include "qulogimpl.h"
 #include "quanimation.h"
-#include "cuctx_swap.h"
+#include "cuengine_swap.h"
 
 #include <QPainter>
 #include <QPaintEvent>
@@ -105,7 +105,7 @@ void QuApplyNumeric::execute(double val)
 }
 
 bool QuApplyNumeric::ctxSwap(CumbiaPool *cp, const CuControlsFactoryPool &fpool) {
-    CuCtxSwap ehs;
+    CuEngineSwap ehs;
     d->context = ehs.replace(this, d->context, cp, fpool);
     return ehs.ok();
 }

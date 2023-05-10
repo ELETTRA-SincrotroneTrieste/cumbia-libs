@@ -38,3 +38,11 @@ void CuEngineAccessor::engine_swap(CumbiaPool *cu_p, const CuControlsFactoryPool
     else
         perr("CuEngineAccessor: same cumbia pool reference");
 }
+
+CumbiaPool *CuEngineAccessor::cu_pool() const {
+    return *d->cu_p_p;
+}
+
+CuControlsFactoryPool *CuEngineAccessor::f_pool() const {
+    return d->fp_p;
+}

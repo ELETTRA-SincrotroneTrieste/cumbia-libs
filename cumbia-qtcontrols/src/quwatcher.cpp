@@ -9,7 +9,7 @@
 #include "cucontrolsfactorypool.h"
 #include "culinkstats.h"
 #include "cucontext.h"
-#include "cuctx_swap.h"
+#include "cuengine_swap.h"
 
 class QuWatcherPrivate
 {
@@ -86,7 +86,7 @@ void QuWatcher::unsetSource()
 }
 
 bool QuWatcher::ctxSwap(CumbiaPool *cu_p, const CuControlsFactoryPool &fpool) {
-    CuCtxSwap csw;
+    CuEngineSwap csw;
     d->context = csw.replace(this, d->context, cu_p, fpool);
     return csw.ok();
 }

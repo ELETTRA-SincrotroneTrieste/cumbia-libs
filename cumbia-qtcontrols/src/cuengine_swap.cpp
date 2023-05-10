@@ -1,4 +1,6 @@
-#include "cuctx_swap.h"
+#include "cuengine_swap.h"
+#include "cuengineaccessor.h"
+#include "culog.h"
 #include <QObject>
 #include <cucontext.h>
 #include <cumbia.h>
@@ -11,20 +13,18 @@
 #include <QMetaObject>
 #include <QMetaProperty>
 
-class CuEngineHotSwitchPrivate {
+class CuEngineSwap_P {
 public:
-    CuEngineHotSwitchPrivate() : error(false) {}
-
-    const char m_engines[6][16] = { "no engine", "tango", "epics", "http", "random", "websocket" };
+    CuEngineSwap_P() : error(false) {}
     bool error;
     QString msg;
 };
 
-CuCtxSwap::CuCtxSwap() {
-    d = new CuEngineHotSwitchPrivate;
+CuEngineSwap::CuEngineSwap() {
+    d = new CuEngineSwap_P;
 }
 
-CuCtxSwap::~CuCtxSwap() {
+CuEngineSwap::~CuEngineSwap() {
     delete d;
 }
 
@@ -44,7 +44,7 @@ CuCtxSwap::~CuCtxSwap() {
  *
  *
  */
-CuContext *CuCtxSwap::replace(CuDataListener *l, CuContext *ctx, CumbiaPool *p, const CuControlsFactoryPool &fpoo)
+CuContext *CuEngineSwap::replace(CuDataListener *l, CuContext *ctx, CumbiaPool *p, const CuControlsFactoryPool &fpoo)
 {
     CuControlsReaderA *r = nullptr;
     CuControlsWriterA *w = nullptr;
@@ -76,7 +76,7 @@ CuContext *CuCtxSwap::replace(CuDataListener *l, CuContext *ctx, CumbiaPool *p, 
         d->msg = "no reader nor writer in the given context";
     }
     if(d->error) {
-        perr("CuCtxSwap.replace: %s", qstoc(d->msg));
+        perr("CuEngineSwap.replace: %s", qstoc(d->msg));
         c = ctx;
     }
     else
@@ -84,17 +84,7 @@ CuContext *CuCtxSwap::replace(CuDataListener *l, CuContext *ctx, CumbiaPool *p, 
     return c;
 }
 
-
-/*!
- * \brief returns the engine name corresponding to the input value from the CuEngineHotSwitch::Engines enum
- * \param engine one value in the CuEngineHotSwitch::Engines enum
- * \return the name of the engine or nullptr if the input argument exceeds CuEngineHotSwitch::MaxEngines
- */
-const char *CuCtxSwap::engine_name(int engine) const {
-    return engine < MaxEngines ? d->m_engines[engine] : nullptr;
-}
-
-bool CuCtxSwap::check_objs_have_ctx_swap(const QObject *root, QString *oclass, QString *onam) const {
+bool CuEngineSwap::check_objs_have_ctx_swap(const QObject *root, QString *oclass, QString *onam) const {
     bool ok = true;
     QList<QObject *> objs = root->findChildren<QObject *>();
     for(int i = 0; i < objs.size() && ok; i++) {
@@ -121,7 +111,22 @@ bool CuCtxSwap::check_objs_have_ctx_swap(const QObject *root, QString *oclass, Q
     return ok;
 }
 
-int CuCtxSwap::swap(const QObject *root, CumbiaPool *cu_pool, const CuControlsFactoryPool &m_ctrl_factory_pool) {
+bool CuEngineSwap::check_root_has_engine_accessor(const QObject *root) const {
+    return root->findChild<CuEngineAccessor *>() != nullptr;
+}
+
+/*! \brief swap engine on all children of root having either a source or target property and implementing
+ *         the ctxSwap *qt slot*
+ *
+ * @param root the parent object used to find children having either a source or target property
+ * @param cu_pool a pointer to the CumbiaPool with the target engine
+ * @param m_ctrl_factory_pool a const reference to a factory pool with the target engine configured
+ *
+ * @return the number of objects whose engine has been successfully replaced
+ *
+ * You may want to check for error and msg for diagnostic purposes
+ */
+int CuEngineSwap::ctx_swap(const QObject *root, CumbiaPool *cu_pool, const CuControlsFactoryPool &m_ctrl_factory_pool) {
     d->msg.clear();
     bool ok;
     int i = 0;
@@ -143,7 +148,19 @@ int CuCtxSwap::swap(const QObject *root, CumbiaPool *cu_pool, const CuControlsFa
     return i;
 }
 
-int CuCtxSwap::engine_type(const CuContext *ctx) const {
+bool CuEngineSwap::app_engine_swap(const QObject *root, CumbiaPool *cu_pool, const CuControlsFactoryPool &fp) {
+    CuEngineAccessor *ea = root->findChild<CuEngineAccessor *>();
+    d->error = !ea;
+    if(!ea) {
+        d->error = true;
+        d->msg = QString("object %1 class %2 does not have an engine accessor").arg(root->objectName()).arg(root->metaObject()->className());
+    } else {
+        ea->engine_swap(cu_pool, fp);
+    }
+    return !d->error;
+}
+
+int CuEngineSwap::engine_type(const CuContext *ctx) const {
     // get current engine in use
     Cumbia *c = nullptr;
     d->error = (ctx == nullptr);
@@ -165,7 +182,7 @@ int CuCtxSwap::engine_type(const CuContext *ctx) const {
     return  c == nullptr ? -1 : c->getType();
 }
 
-bool CuCtxSwap::same_engine(CumbiaPool *cu_pool, int engine) const {
+bool CuEngineSwap::same_engine(CumbiaPool *cu_pool, int engine) const {
     bool err = false;
     for(size_t i = 0; i < cu_pool->names().size() && !err; i++) {
         const std::string n = cu_pool->names().at(i);
@@ -176,24 +193,31 @@ bool CuCtxSwap::same_engine(CumbiaPool *cu_pool, int engine) const {
     return err;
 }
 
-bool CuCtxSwap::error() const {
-    return d->error;
+bool CuEngineSwap::log_move(const std::vector<Cumbia *>& vc, CumbiaPool *new_p) const {
+    Cumbia *c = nullptr;
+    if(vc.size() == 1 && vc[0]->getServiceProvider()) {
+        CuLog * log = static_cast<CuLog *>(vc[0]->getServiceProvider()->get(CuServices::Log));
+        if(log) {
+            for(const std::string& n : new_p->names()) {
+                c = new_p->get(n);
+                if(c) c->getServiceProvider()->registerSharedService(CuServices::Log, log);
+            }
+        }
+    }
+    return c != nullptr;
 }
 
-const QString &CuCtxSwap::msg() const {
-    return d->msg;
-}
-
-int CuCtxSwap::m_delete_cumbias(const std::vector<Cumbia *> &vc) {
+int CuEngineSwap::cumbias_delete(const std::vector<Cumbia *> &vc) {
     size_t i = 0;
     for(size_t i = 0; i < vc.size(); i++) {
         vc[i]->getServiceProvider()->unregisterService(CuServices::Log); // uninstall
+        pretty_pri("deleting \e[1;31mcumbia %p: type %d \e[0m", vc[i], vc[i]->getType());
         delete vc[i];
     }
     return i;
 }
 
-std::vector<Cumbia *> CuCtxSwap::m_clear_cumbia(CumbiaPool *cu_pool, CuControlsFactoryPool &fp) {
+std::vector<Cumbia *> CuEngineSwap::cumbia_clear(CumbiaPool *cu_pool, CuControlsFactoryPool &fp) {
     d->msg.clear();
     d->error = false;
     std::vector<Cumbia*> vc;
@@ -213,13 +237,12 @@ std::vector<Cumbia *> CuCtxSwap::m_clear_cumbia(CumbiaPool *cu_pool, CuControlsF
         }
         fp = CuControlsFactoryPool();
     }
-
-
-    pretty_pri("m_clear_cumbia: error? %s msg %s", d->error ? "YES" : "NO", qstoc(d->msg));
+    pretty_pri("m_clear_cumbia: error? %s msg %s cumbias found %ld", d->error ? "YES" : "NO", qstoc(d->msg),
+               vc.size());
     return vc;
 }
 
-Cumbia *CuCtxSwap::m_cumbia_get_from_r(const CuContext *ctx) const {
+Cumbia *CuEngineSwap::m_cumbia_get_from_r(const CuContext *ctx) const {
     Cumbia *c = nullptr;
     const int t0 = ctx->readers().at(0)->getCumbia()->getType();
     pretty_pri("getting cumbia from %d readers", ctx->readers().size());
@@ -234,7 +257,7 @@ Cumbia *CuCtxSwap::m_cumbia_get_from_r(const CuContext *ctx) const {
     return c;
 }
 
-Cumbia *CuCtxSwap::m_cumbia_get_from_w(const CuContext *ctx) const {
+Cumbia *CuEngineSwap::m_cumbia_get_from_w(const CuContext *ctx) const {
     Cumbia *c = nullptr;
     const int t0 = ctx->writers().at(0)->getCumbia()->getType();
     int i = 0, t{t0}; // all writers must have the same cumbia type
@@ -248,6 +271,14 @@ Cumbia *CuCtxSwap::m_cumbia_get_from_w(const CuContext *ctx) const {
     return c;
 }
 
-bool CuCtxSwap::ok() const {
+bool CuEngineSwap::ok() const {
     return !d->error;
+}
+
+bool CuEngineSwap::error() const {
+    return d->error;
+}
+
+const QString &CuEngineSwap::msg() const {
+    return d->msg;
 }

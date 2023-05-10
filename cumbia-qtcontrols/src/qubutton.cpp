@@ -17,7 +17,7 @@
 #include <QtDebug>
 #include <QPaintEvent>
 #include <QPainter>
-#include <cuctx_swap.h>
+#include <cuengine_swap.h>
 
 /// @private
 class QuButtonPrivate
@@ -106,7 +106,7 @@ void QuButton::setTarget(const QString &target) {
 }
 
 bool QuButton::ctxSwap(CumbiaPool *cp, const CuControlsFactoryPool &fpool) {
-    CuCtxSwap ehs;
+    CuEngineSwap ehs;
     d->context = ehs.replace(this, d->context, cp, fpool);
     return ehs.ok();
 }

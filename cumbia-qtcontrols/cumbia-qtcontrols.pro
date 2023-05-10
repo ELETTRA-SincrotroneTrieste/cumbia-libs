@@ -45,7 +45,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += cumbiaqtcontrols.cpp \
-    src/cuctx_swap.cpp \
+    src/cuengine_swap.cpp \
     src/cuengineaccessor.cpp \
     src/qubutton.cpp \
     src/qulabel.cpp \
@@ -103,7 +103,7 @@ SOURCES += cumbiaqtcontrols.cpp \
 
 HEADERS += cumbiaqtcontrols.h\
     cumbia-qtcontrols_global.h \
-    src/cuctx_swap.h \
+    src/cuengine_swap.h \
     src/cuengineaccessor.h \
     src/plugin_ifaces/cumbiaintrospectionplugin_i.h \
     src/plugin_ifaces/cumouseevhandlerplugin_i.h \

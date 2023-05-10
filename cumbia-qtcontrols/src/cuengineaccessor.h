@@ -17,6 +17,9 @@ public:
     virtual ~CuEngineAccessor();
 
     virtual void engine_swap(CumbiaPool *cu_p, const CuControlsFactoryPool &fp);
+    CumbiaPool *cu_pool() const;
+    CuControlsFactoryPool *f_pool() const;
+
 signals:
     void engineSwapped();
     void engineChanged(const QStringList &from, const QStringList& to);

@@ -11,7 +11,7 @@
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
 #include "cucontextmenu.h"
-#include "cuctx_swap.h"
+#include "cuengine_swap.h"
 
 /** @private */
 class QuLedPrivate
@@ -95,7 +95,7 @@ void QuLed::setValue(bool v) {
 }
 
 bool QuLed::ctxSwap(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) {
-    CuCtxSwap csw;
+    CuEngineSwap csw;
     d->context = csw.replace(this, d->context, cumbia_pool, fpool);
     return csw.ok();
 }

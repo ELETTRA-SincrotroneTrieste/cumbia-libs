@@ -16,7 +16,7 @@
 #include "culinkstats.h"
 #include "cucontextmenu.h"
 #include "cucontext.h"
-#include "cuctx_swap.h"
+#include "cuengine_swap.h"
 #include "cumouse-ev-handler.h"
 
 /** @private */
@@ -218,7 +218,7 @@ void QuLabel::setDisplayUnitEnabled(bool en)
 }
 
 bool QuLabel::ctxSwap(CumbiaPool *c_p, const CuControlsFactoryPool &fpool) {
-    CuCtxSwap csw;
+    CuEngineSwap csw;
     d->context = csw.replace(this, d->context, c_p, fpool);
     return csw.ok();
 }
