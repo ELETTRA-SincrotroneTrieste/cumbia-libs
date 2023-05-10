@@ -7,6 +7,7 @@
 #include <quapps.h>
 #include <cucontexti.h>
 #include <cucontext.h>
+#include <cuengine_swap.h>
 
 class CuEngineSwitchDialogPrivate {
 public:
@@ -29,6 +30,11 @@ void CuEngineSwitchDialog::m_resizeToMinimumSizeHint() {
     resize(qRound(minimumSizeHint().width() * 1.5), minimumSizeHint().height());
 }
 
+void CuEngineSwitchDialog::m_err_notify(const QString &msg) const {
+    findChild<QLabel *>("labswitch")->setWordWrap(true);
+    findChild<QLabel *>("labswitch")->setText(msg);
+}
+
 void CuEngineSwitchDialog::onEngineChanged(const QStringList &from, const QStringList &to) {
     QString txt = QString("swapped engine <i>cumbia-%1</i> with <i>cumbia-%2</i>").arg(from.join(',')).arg(to.join(','));
     QLabel *l = findChild<QLabel *>("lEngChanged");
@@ -41,6 +47,10 @@ void CuEngineSwitchDialog::onEngineChanged(const QStringList &from, const QStrin
     l->setText(txt);
 }
 
+void CuEngineSwitchDialog::m_owner_destroyed(QObject *) {
+    this->close();
+}
+
 void CuEngineSwitchDialog::exec(const CuData &in, const CuContextI *ctxi)
 {
     d->owner = static_cast<QObject *>(in["sender"].toVoidP());
@@ -49,6 +59,7 @@ void CuEngineSwitchDialog::exec(const CuData &in, const CuContextI *ctxi)
     // engine hot switch (since 1.5.0)
     //
     QObject *root = root_obj(d->owner);
+    connect(d->owner, SIGNAL(destroyed(QObject *)), this, SLOT(m_owner_destroyed(QObject*)));
     CuEngineAccessor *ea = root->findChild<CuEngineAccessor *>();
     if(!ea) {
         QMessageBox::information(this, "Error: unsupported", "This application does not support engine hot switch");
@@ -56,8 +67,8 @@ void CuEngineSwitchDialog::exec(const CuData &in, const CuContextI *ctxi)
     else {
         connect(ea, SIGNAL(engineChanged(QStringList, QStringList)), this, SLOT(onEngineChanged(QStringList, QStringList)));
         // get current engine in use
-        CuModuleLoader ml;
-        int engine = ml.engine_type(ctxi->getContext());
+        CuEngineSwap ctxsw;
+        int engine = ctxsw.engine_type(ctxi->getContext());
         QGridLayout *gblo = new QGridLayout(this);
         gblo->setObjectName("main_lo");
         if(engine == CumbiaTango::CumbiaTangoType || engine == CumbiaHttp::CumbiaHTTPType) {
@@ -100,9 +111,6 @@ void CuEngineSwitchDialog::exec(const CuData &in, const CuContextI *ctxi)
         }
         m_resizeToMinimumSizeHint();
         show();
-        printf("dialog shown\n");
-        foreach(QWidget *w, findChildren<QWidget *>())
-            printf("dialog w %s\n", qstoc(w->objectName()), w->metaObject()->className());
     }
 }
 
@@ -110,22 +118,61 @@ void CuEngineSwitchDialog::switchEngine(bool checked) {
     if(checked) {
         QObject *root = root_obj(d->owner);
         CuModuleLoader ml;
-        CuControlsFactoryPool fp;
+        CuEngineSwap ctxsw;
         pretty_pri("d->ctxi %p", d->ctxi);
         pretty_pri("d->ctxi->getContext %p", d->ctxi->getContext());
-        CumbiaPool *cu_pool = d->ctxi->getContext()->cumbiaPool();
+        CumbiaPool *old_pool = d->ctxi->getContext()->cumbiaPool();
 
-        pretty_pri("cu_pool is %p, root obj is %s (%s)", cu_pool, root->metaObject()->className(), qstoc(root->objectName()));
+        pretty_pri("cu_pool is %p, root obj is %s (%s)", old_pool, root->metaObject()->className(), qstoc(root->objectName()));
 
-        if(cu_pool && root) {
-            fp = d->ctxi->getContext()->getControlsFactoryPool();
+        if(old_pool && root) {
+            CuControlsFactoryPool old_fap = d->ctxi->getContext()->getControlsFactoryPool();
+            CuControlsFactoryPool new_fap;
             int engine = (sender()->objectName() == "rbn" ? static_cast<int>(CumbiaTango::CumbiaTangoType)
                                                           : static_cast<int>(CumbiaHttp::CumbiaHTTPType));
-            bool ok = ml.switch_engine(engine, cu_pool, fp, root);
+            bool ok = !ctxsw.same_engine(old_pool, engine); // engine must be different from current
             if(!ok) {
-                findChild<QLabel *>("labswitch")->setWordWrap(true);
-                findChild<QLabel *>("labswitch")->setText(ml.msg());
-                perr("%s", qstoc(ml.msg()));
+                m_err_notify(ctxsw.msg());
+            }
+            else {
+                ok = ctxsw.check_root_has_engine_accessor(root);
+                if(!ok) {
+                    m_err_notify(QString("object '%1' class '%2' does not have an engine accessor")
+                                 .arg(root->objectName()).arg(root->metaObject()->className()));
+                }
+                else {
+                    QString oclass, oname;
+                    // all objects with either source or target shall have the ctx swap dedicated method
+                    bool ok = ctxsw.check_objs_have_ctx_swap(root, &oclass, &oname);
+                    if(!ok) {
+                        m_err_notify(ctxsw.msg());
+                    }
+                    else {
+                        // allocate new_pool and populate new_fap with the desired engine
+                        CumbiaPool *new_pool = ml.prepare_engine(engine, &new_fap);
+                        if(!new_pool) {
+                            m_err_notify(ml.msg());
+                            perr("%s", qstoc(ml.msg()));
+                        }
+                        // gather old Cumbias. old_fap is cleared although not a reference
+                        // unregister cumbias from the old_pool
+                        std::vector<Cumbia *> old_cums = ctxsw.cumbia_clear(old_pool, old_fap);
+                        // if CuLog is installed in current cumbias, move it to the new ones
+                        // discard ok: if false it may simply indicate log instance was not
+                        // installed in cumbias
+                        ok = ctxsw.log_move(old_cums, new_pool);
+                        // swap context on objects
+                        ctxsw.ctx_swap(root, new_pool, new_fap);
+                        // swap engine within the whole application
+                        ok = ctxsw.app_engine_swap(root, new_pool, new_fap);
+                        if(!ok)
+                            m_err_notify(ctxsw.msg());
+                        else {
+                            // delete old cumbias
+                            ctxsw.cumbias_delete(old_cums);
+                        }
+                    }
+                }
             }
         }
     }
@@ -133,7 +180,10 @@ void CuEngineSwitchDialog::switchEngine(bool checked) {
 
 QObject *CuEngineSwitchDialog::root_obj(QObject *leaf) {
     QObject *root = leaf;
-    while(root->parent())
+    while(root && root->parent()) {
+        printf(" ---+---- %p\n", root);
+        printf("          %s %s\n", qstoc(root->objectName()), root->metaObject()->className());
         root = root->parent();
+    }
     return root != leaf ? root : nullptr;
 }
