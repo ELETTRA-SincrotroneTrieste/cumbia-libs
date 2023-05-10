@@ -599,7 +599,7 @@ void QumbiaReader::m_createReaders(const QStringList &srcs)  {
         a = QString("%1%2").arg(save_dom).arg(a);
         QRegularExpressionMatch match = squarebrackets_src.match(a);
         if(match.hasMatch()) {
-            a.replace('[', '(').replace(']', ')');
+            a.replace("[[", "(").replace("]]", ")");
         }
         Qu_Reader *r = new Qu_Reader(this, cu_pool, m_ctrl_factory_pool);
         if(m_conf.verbosity > Low && !m_conf.no_properties)
