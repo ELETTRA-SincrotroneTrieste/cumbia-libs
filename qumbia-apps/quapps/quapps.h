@@ -194,56 +194,18 @@ public:
     }
 
     /*!
-     * \brief switch the current engine to the specified new one
+     * \brief prepare a new CumbiaPool and a CuControlsFactoryPool with the requested engine
      *
      * cumbia-tango and cumbia-http engines only are supported.
      * \param engine the engine identifier, either CumbiaHttp::CumbiaHTTPType && engine != CumbiaTango::CumbiaTangoType
-     * \param cu_pool
-     * \param m_ctrl_factory_pool
-     * \param root
-     * \return
+     * \param m_ctrl_factory_pool a reference to a CuControlsFactoryPool that will be initialized
+     *
+     * \return a *new* CumbiaPool with the required new engine or nullptr in case of error
+     *
+     * Check for nullptr return type and get the error message with the msg method.
      */
-    bool switch_engine(int engine, CumbiaPool *cu_pool, CuControlsFactoryPool &m_ctrl_factory_pool, QObject *root) {
-        printf("try \e[1;32mswitch to engine %d\e[0m\n", engine);
-        std::vector<Cumbia *> cumbias;
-        bool ok;
-        CuEngineAccessor *accessor = root->findChild<CuEngineAccessor *>();
-        ok = (accessor != nullptr);
-        d->error = !ok;
-        QString ocl, onam;
-        if(d->error)
-            d->msg = QString("root object '%1' class '%2' does not have a CuEngineAccessor installed").arg(root->objectName()).arg(root->metaObject()->className());
-        if(ok) {
-            ok = m_check_objs_have_ctx_swap(root, &ocl, &onam);
-            if(ok) {
-                ok = m_prepare_switch(engine, cu_pool, m_ctrl_factory_pool, cumbias);
-                if(ok) {
-                    printf("switch_engine: \e[1;33mprepare switch: \e[1;32mSUCCESS\e[0m\n\n\n");
-                    ok = m_apply_switch(root, cu_pool, m_ctrl_factory_pool) > 0;
-                    if(!ok) {
-                        d->msg = "error swapping context:\n" + d->msg;
-                    }
-                    else {
-                        pretty_pri("using accessor to overwrite cumbia pool and factory pool");
-                        accessor->engine_swap(cu_pool, m_ctrl_factory_pool);
-                    }
-                }
-            }
-            else {
-                d->msg = QString("object \"%1\" of class \"%2\" does not implement \"ctxSwap\" method").arg(root->objectName()).arg(root->metaObject()->className());;
-            }
-        }
-        ok &= !d->error;
-        if(ok)
-            printf("switch_engine: \e[1;32mSUCCESS\e[0m\n\n\n");
-        if(ok)
-            m_delete_cumbias(cumbias);
-        else
-            perr("quapps.switch_engine: %s", qstoc(d->msg));
-        return ok;
-    }
-
-    bool m_prepare_switch(int engine, CumbiaPool *cu_pool, CuControlsFactoryPool &m_ctrl_factory_pool, std::vector<Cumbia *>& cumbias) {
+    CumbiaPool* prepare_engine(int engine, CuControlsFactoryPool *m_ctrl_factory_pool) {
+        CumbiaPool *cu_pool = nullptr;
 #if !defined(CUMBIA_HTTP_VERSION) && !defined(QUMBIA_TANGO_CONTROLS_VERSION)
         d->error = true;
         d->msg = "neither Tango nor Http modules are compiled into the library";
@@ -254,52 +216,35 @@ public:
         d->error = (engine != CumbiaHttp::CumbiaHTTPType && engine != CumbiaTango::CumbiaTangoType);
         if(d->error)
             d->msg = "engine hot switch supports the Tango and Http engines only";
-        else {
-            d->error = same_engine(cu_pool, engine);
-            if(d->error) {
-                d->msg = "trying to switch to the same engine";
+        else { // switch to the new engine
+            // save the log instance
+            // when engine switching, we suppose there is only one Cumbia in the pool
+            // because interchangeable engines are mutually exclusive (see cclear.size() == 1 below)
+            //
+            if(engine == CumbiaTango::CumbiaTangoType) {
+                cu_pool = new CumbiaPool();
+                CuTangoRegisterEngine tare;
+                tare.registerWithDefaults(cu_pool,  *m_ctrl_factory_pool);
             }
-            else { // switch to the new engine
-                // save the log instance
-                // when engine switching, we suppose there is only one Cumbia in the pool
-                // because interchangeable engines are mutually exclusive (see cclear.size() == 1 below)
-                //
-                CuLog *log = nullptr;
-                Cumbia *cu = nullptr; // new cumbia
-                if(engine == CumbiaTango::CumbiaTangoType) {
-                    CuTangoRegisterEngine tare;
-                    cumbias = m_clear_cumbia(cu_pool, m_ctrl_factory_pool); // unregister cumbia impls, clear src patterns
-                    if(cumbias.size() == 1 && cumbias[0]->getServiceProvider()) // recycle log
-                        log = static_cast<CuLog *>(cumbias[0]->getServiceProvider()->get(CuServices::Log));
-                    cu = tare.registerWithDefaults(cu_pool,  m_ctrl_factory_pool);
+            else if(engine == CumbiaHttp::CumbiaHTTPType) {
+                CuHttpRegisterEngine httpre;
+                d->error = !httpre.load(qApp->arguments(), true); // true: try loading also without -u in args
+                if(!d->error) {
+                    cu_pool = new CumbiaPool();
+                    httpre.registerWithDefaults(cu_pool, *m_ctrl_factory_pool);
                 }
-                else if(engine == CumbiaHttp::CumbiaHTTPType) {
-                    CuHttpRegisterEngine httpre;
-                    d->error = !httpre.load(qApp->arguments(), true); // true: try loading also without -u in args
-                    if(!d->error) {
-                        cumbias = m_clear_cumbia(cu_pool, m_ctrl_factory_pool);
-                        if(cumbias.size() == 1 && cumbias[0]->getServiceProvider()) // recycle log
-                            log = static_cast<CuLog *>(cumbias[0]->getServiceProvider()->get(CuServices::Log));
-                        cu = httpre.registerWithDefaults(cu_pool, m_ctrl_factory_pool);
-                    }
-                    else
-                        d->msg = "error registering http module: valid URL '" + httpre.url() + "' ?";
-                }
-                for(const std::string &n : cu_pool->names()) {
-                    printf("+ cumbia registered %s -> %p type %d\n", n.c_str(), cu_pool->get(n), cu_pool->get(n)->getType());
-                }
-
-                // install log instance saved from earlier cumbia
-                if(cu && log)
-                    cu->getServiceProvider()->registerSharedService(CuServices::Log, log);
                 else
-                    pretty_pri("\033[1;33m*\033[0m: no log service installed in new cumbia: no log service found in older instance");
-            } // !d->error trying to switch to the same engine
+                    d->msg = "error registering http module: valid URL '" + httpre.url() + "' ?";
+            }
+            for(size_t i = 0; cu_pool != nullptr && i < cu_pool->names().size(); i++) {
+                const std::string n = cu_pool->names().at(i);
+                printf("+ [quapps]: cumbia registered \e[1;32m%s\e[0m type \e[0;36m%s\e[0m\n", n.c_str(),
+                       cu_pool->get(n)->getType() == CumbiaTango::CumbiaTangoType ? "tango native" : "http");
+            }
         }  // ! error unsupported target engine
-        return !d->error;
+        return cu_pool;
     }
+
 };
-
-
 
 #endif // QUAPPS_H
