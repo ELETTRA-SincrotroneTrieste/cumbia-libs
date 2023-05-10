@@ -8,5 +8,5 @@ build-param1:
 build-param2: build-param1
 	./scripts/cubuild.sh build tango random http --no-interactive
 
-build-param3: build-param2
+install:
 	./scripts/cubuild.sh install  --no-interactive
