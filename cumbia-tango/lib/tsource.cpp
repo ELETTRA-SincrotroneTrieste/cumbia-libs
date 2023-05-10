@@ -44,12 +44,12 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
     // host regexp
     std::regex host_re("([A-Z-a-z0-9\\-_\\.\\+~]+:\\d+)");
     std::string s = rem_tghostproto(src);
-    s = rem_args(s);
+    s = rem_args(s); // remove arguments between from s
+    const std::vector<string> props = getPropNames();
+    bool hasprops = props.size() > 0; // has {arg1,arg2,...}
     int sep = std::count(s.begin(), s.end(), '/');
     bool ewc = s.size() > 1 && s[s.size()-1] == '*'; // ends with wildcard
     bool ewsep = s.size() > 1 && s[s.size()-1] == '/'; // ends with slash
-    const std::vector<string> props = getPropNames();
-    bool hasprops = props.size() > 0; // has {arg1,arg2,...}
     bool arg_wildcard = props.size() == 1 && props[0] == "*";
     bool swht = s.length() > 1 && s[0] == '#'; // starts with hash tag: free prop
     size_t ai = s.find("->"); // arrow index
@@ -144,25 +144,49 @@ string TSource::getPoint() const {
 }
 
 /*!
- * \brief Finds and returns the  comma separated arguments within parentheses, if present
- * \param curly_b_delim if true, search args between {}. Default: false
+ * \brief Finds and returns the comma separated arguments within parentheses, if present
+ *
+ *  List of options to individuate and interpret arguments can be specified between square
+ *  brackets immediately after the opening parenthesis in the source string:
+ *  - a/b/c->Get([sep(;)]arg1, arg2, arg3)
  * \return vector of the detected arguments, as string
  */
 std::vector<string> TSource::getArgs() const {
     std::string a;
-    std::string delim = ",";
-    std::regex re(delim);
+    std::string delim;
     std::vector<std::string> ret;
     std::string s(d->m_s);
-//    s.erase(std::remove(s.begin() + s.find('('), s.begin() + s.find(')') + 1, ' '), s.end()); // remove spaces
-    size_t pos = d->m_s.find('(');
-    if(pos != string::npos)
-        a = d->m_s.substr(pos + 1, d->m_s.rfind(')') - pos - 1);
-    std::sregex_token_iterator iter(a.begin(), a.end(), re, -1);
-    std::sregex_token_iterator end;
-    for ( ; iter != end; ++iter)
-        if((*iter).length() > 0)
-            ret.push_back((*iter));
+    size_t arg_start = 0, arg_end = 0;
+    const std::string& arg_ops = getArgOptions(&arg_start, &arg_end);
+    //    s.erase(std::remove(s.begin() + s.find('('), s.begin() + s.find(')') + 1, ' '), s.end()); // remove spaces
+    // take an argument delimited by "" as a single parameter
+    size_t pos = d->m_s.find("(\"");
+    if(pos != string::npos) {
+        a = d->m_s.substr(pos + 2, d->m_s.rfind("\")") - pos - 2);
+        ret.push_back(a);
+    }
+    else {
+        pos = d->m_s.find('(');
+        if(pos != string::npos) {
+            a = d->m_s.substr(pos + 1, d->m_s.rfind(')') - pos - 1);
+            if(a.length() > 0) {
+                delim = arg_end > 0 ? m_get_args_delim(arg_ops) : ",";
+                if(arg_end > 0) // recalculate a as substr from arg_end + 1
+                    a = d->m_s.substr(arg_end + 1);
+                printf("regexp '%s' arg optios are '%s'\n", delim.c_str(), arg_ops.c_str());
+                std::regex re(delim);
+                std::sregex_token_iterator iter(a.begin(), a.end(), re, -1);
+                std::sregex_token_iterator end;
+                for ( ; iter != end; ++iter)
+                    if((*iter).length() > 0)
+                        ret.push_back((*iter));
+            }
+        }
+    }
+    printf("\e[1;31mTSource::getArgs: arg options \e[1;32m%s\e[1;31m args: ", arg_ops.c_str());
+    for(const std::string& a : ret)
+        printf("\e[0;31m%s\e[1;31m, ", a.c_str());
+    printf("\e[0m\n");
     return ret;
 }
 
@@ -255,6 +279,36 @@ string TSource::getExportedDevSearchPattern() const {
 }
 
 /*!
+ * \since 1.5.2
+ * \brief some keyword:value fields can be used at the beginning of the argument
+ *        section to customize the interpretation of the arguments
+ *
+ *        The keyword:value list shall be enclosed between square brackets at the
+ *        beginning of the arguments section
+ *
+ * \par  Example
+ *       test/device/1/double_spectrum([sep(;)]10;20;30)
+ *
+ * \return a string with the options
+ */
+std::string TSource::getArgOptions(size_t *pos_start, size_t *pos_end) const {
+    arg_options ao;
+    // capture special directives to interpret args
+    // example a/b/c/d([sep(;)]arg1;arg2) sep: args separator
+    std::regex re("\\(\\[\\s*(.*)\\s*\\]\\s*.*\\)");  // \(\[\s*(.*)\s*\]\s*.*\)
+    const std::string &s = d->m_s;
+    std::smatch sm;
+    bool found = std::regex_search(s, sm, re);
+    if(found) {
+        *pos_start = sm.position(1);
+        *pos_end = *pos_start + sm.length(1);
+    }
+    printf("getArgOptions: sm size %ld pos start %ld end %ld src '%s' siz %ld\n",
+           sm.size(), *pos_start, *pos_end, s.c_str(), s.length());
+    return found && sm.size() == 2 ? sm[1] : std::string();
+}
+
+/*!
  * \brief if the type is one of the database search methods, the search pattern
  *
  * \return
@@ -326,3 +380,13 @@ const char *TSource::getTypeName(Type t) const {
         return tynames[t];
     return tynames[0]; // "SrcInvalid"
 }
+
+std::string TSource::m_get_args_delim(const string &arg_options) const {
+    // find a custom separator, if specified at the beginning of the args section
+    //  sep\((.*)\)
+    // example: a/b/c-D([sep(:)]arg1:arg2:arg3)
+    std::regex sepre("sep\\((.*)\\)");
+    std::smatch sm;
+    return std::regex_search(arg_options, sm, sepre) && sm.size() == 2 ? sm[1] : std::string(",");
+}
+

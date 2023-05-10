@@ -139,19 +139,40 @@ string CuHttpTangoSrc::getPoint() const {
  */
 std::vector<string> CuHttpTangoSrc::getArgs() const {
     std::string a;
-    std::string delim = ",";
-    std::regex re(delim);
+    std::string delim;
     std::vector<std::string> ret;
     std::string s(m_s);
-//    s.erase(std::remove(s.begin() + s.find('('), s.begin() + s.find(')') + 1, ' '), s.end()); // remove spaces
-    size_t pos = m_s.find('(');
-    if(pos != string::npos)
-        a = m_s.substr(pos + 1, m_s.rfind(')') - pos - 1);
-    std::sregex_token_iterator iter(a.begin(), a.end(), re, -1);
-    std::sregex_token_iterator end;
-    for ( ; iter != end; ++iter)
-        if((*iter).length() > 0)
-            ret.push_back((*iter));
+    size_t arg_start = 0, arg_end = 0;
+    const std::string& arg_ops = getArgOptions(&arg_start, &arg_end);
+    //    s.erase(std::remove(s.begin() + s.find('('), s.begin() + s.find(')') + 1, ' '), s.end()); // remove spaces
+    // take an argument delimited by "" as a single parameter
+    size_t pos = m_s.find("(\"");
+    if(pos != string::npos) {
+        a = m_s.substr(pos + 2, m_s.rfind("\")") - pos - 2);
+        ret.push_back(a);
+    }
+    else {
+        pos = m_s.find('(');
+        if(pos != string::npos) {
+            a = m_s.substr(pos + 1, m_s.rfind(')') - pos - 1);
+            if(a.length() > 0) {
+                delim = arg_end > 0 ? m_get_args_delim(arg_ops) : ",";
+                if(arg_end > 0) // recalculate a as substr from arg_end + 1
+                    a = m_s.substr(arg_end + 1);
+                printf("CuHttpTangoSrc regexp '%s' arg options are '%s'\n", delim.c_str(), arg_ops.c_str());
+                std::regex re(delim);
+                std::sregex_token_iterator iter(a.begin(), a.end(), re, -1);
+                std::sregex_token_iterator end;
+                for ( ; iter != end; ++iter)
+                    if((*iter).length() > 0)
+                        ret.push_back((*iter));
+            }
+        }
+    }
+    printf("\e[1;31mCuHttpTangoSrc::getArgs: arg options \e[1;32m%s\e[1;31m args: ", arg_ops.c_str());
+    for(const std::string& a : ret)
+        printf("\e[0;31m%s\e[1;31m, ", a.c_str());
+    printf("\e[0m\n");
     return ret;
 }
 
@@ -232,6 +253,35 @@ string CuHttpTangoSrc::getPropClassNam() const {
             p = s.substr(0, i);
     }
     return p;
+}
+
+/*!
+ * \since 1.5.2
+ * \brief some keyword:value fields can be used at the beginning of the argument
+ *        section to customize the interpretation of the arguments
+ *
+ *        The keyword:value list shall be enclosed between square brackets at the
+ *        beginning of the arguments section
+ *
+ * \par  Example
+ *       test/device/1/double_spectrum([sep(;)]10;20;30)
+ *
+ * \return a string with the options
+ */
+std::string CuHttpTangoSrc::getArgOptions(size_t *pos_start, size_t *pos_end) const {
+    // capture special directives to interpret args
+    // example a/b/c/d([sep(;)]arg1;arg2) sep: args separator
+    std::regex re("\\(\\[\\s*(.*)\\s*\\]\\s*.*\\)");  // \(\[\s*(.*)\s*\]\s*.*\)
+    const std::string &s = m_s;
+    std::smatch sm;
+    bool found = std::regex_search(s, sm, re);
+    if(found) {
+        *pos_start = sm.position(1);
+        *pos_end = *pos_start + sm.length(1);
+    }
+    printf("getArgOptions: sm size %ld pos start %ld end %ld src '%s' siz %ld\n",
+           sm.size(), *pos_start, *pos_end, s.c_str(), s.length());
+    return found && sm.size() == 2 ? sm[1] : std::string();
 }
 
 /*!

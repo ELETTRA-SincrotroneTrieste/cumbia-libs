@@ -33,6 +33,7 @@ public:
     std::string getFreePropObj() const;
     std::string getSearchPattern() const;
     std::string getPropClassNam() const;
+    std::string getArgOptions(size_t *pos_start, size_t *pos_end) const;
 
     bool isDbOp() const;
 
@@ -59,6 +60,7 @@ private:
     Type m_ty;
 
     CuHttpTangoSrc::Type m_get_ty(const std::string &src) const;
+    std::string m_get_args_delim(const std::string& args) const;
 };
 
 
