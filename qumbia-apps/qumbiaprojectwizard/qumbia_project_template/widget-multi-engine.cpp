@@ -16,6 +16,8 @@ $MAINCLASS$::$MAINCLASS$(CumbiaPool *cumbia_pool, QWidget *parent) :
     cu_pool = cumbia_pool;
     ui = new Ui::$UIFORMCLASS$;
     ui->setupUi(this, cu_pool, m_ctrl_factory_pool);
+    // provide access to the engine in case of runtime swap
+    new CuEngineAccessor(this, &cu_pool, &m_ctrl_factory_pool);
 
     // mloader.modules() to get the list of loaded modules
     // cumbia

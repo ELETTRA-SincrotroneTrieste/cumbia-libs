@@ -1,4 +1,5 @@
 #include <quapplication.h>
+#include "cuengineaccessor.h"
 #include "$HFILE$"
 
 // cumbia
@@ -30,6 +31,10 @@ int main(int argc, char *argv[])
     // exec application loop
     int ret = qu_app.exec();
     // delete resources and return
+    // make sure to be operating on a valid cu_p in case of engine swap at runtime
+    CuEngineAccessor *c = w->findChild<CuEngineAccessor *>();
+    if(c)
+        cu_p = c->cu_pool();
     delete w;
 
     for(std::string n : cu_p->names())
