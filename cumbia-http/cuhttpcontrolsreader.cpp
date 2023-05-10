@@ -90,11 +90,13 @@ CuHttpControlsReader::CuHttpControlsReader(Cumbia *cumbia, CuDataListener *tl)
 }
 
 CuHttpControlsReader::~CuHttpControlsReader() {
-    pdelete("CuHttpControlsReader %p %s calling unlink listener without sending \"u\" \n", this, qstoc(d->s));
+    pdelete("CuHttpControlsReader %p src '%s' calling unlink listener without sending \"u\" \n", this, qstoc(d->s));
     // since 1.3.1 the destructor will not send an "unsubscribe" request to the server
     // assuming that ~CuHttpControlsReader is invoked upon application close, when CumbiaHttp
     // unregisters the client globally without sending an unsubscribe request for each reader
-    d->cu_http->unlinkListener(CuHTTPSrc(d->s.toStdString(), d->cu_http->getSrcHelpers()), d->method.toStdString(), d->dlis);    delete d;
+    // since 1.5.2 unlink listener is called with the listener only
+    d->cu_http->unlinkListener(d->dlis);
+    delete d;
 }
 
 /*!
@@ -164,8 +166,10 @@ QString CuHttpControlsReader::source() const {
  *  consistent and simple *unsetSource* interface across the engines.
  */
 void CuHttpControlsReader::unsetSource() {
+    pretty_pri("unsetting source listener %p src %s meth %s", d->dlis, qstoc(d->s), qstoc(d->method));
     const CuHTTPSrc s(d->s.toStdString(), d->cu_http->getSrcHelpers());
-    d->cu_http->unlinkListener(s, d->method.toStdString(), d->dlis);
+    // 1.5.2: fix: use unlinkListener only from destructor
+    // d->cu_http->unlinkListener(s, d->method.toStdString(), d->dlis);
     if(d->method == "s") {
         d->cu_http->unsubscribeEnqueue(s, d->dlis);
     }

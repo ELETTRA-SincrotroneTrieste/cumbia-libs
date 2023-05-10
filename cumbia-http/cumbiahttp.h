@@ -114,7 +114,7 @@ public:
     void unsubscribeEnqueue(const CuHTTPSrc &httpsrc, CuDataListener *l);
     void executeWrite(const CuHTTPSrc &source, CuDataListener *l, const CuHTTPActionFactoryI &f);
 
-    void unlinkListener(const CuHTTPSrc &source, const std::string& method, CuDataListener *l);
+    void unlinkListener(CuDataListener *l);
 
     void addReplaceWildcardI(QuReplaceWildcards_I *rwi);
     void addSrcHelper(CuHttpSrcHelper_I *srch);

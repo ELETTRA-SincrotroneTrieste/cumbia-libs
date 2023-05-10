@@ -62,6 +62,12 @@ CuHttpBundledSrcReq::CuHttpBundledSrcReq(const QMap<QString, SrcData> &targetmap
 }
 
 CuHttpBundledSrcReq::~CuHttpBundledSrcReq() {
+    if(d->reply) {
+        if(d->reply->isRunning())
+            d->reply->abort();
+        d->reply->disconnect();
+        d->reply->deleteLater();
+    }
     delete d;
 }
 

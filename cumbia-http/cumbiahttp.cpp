@@ -53,6 +53,7 @@ public:
     unsigned long long client_id;
     CuHttpSrcReqQueue request_q;
     CuHttpCliIdMan *id_man;
+    CuHttpBundledSrcReq *r_httpsrcreq, *w_httpsrcreq;
 
     ///
     /// TEST
@@ -85,6 +86,7 @@ CumbiaHttp::CumbiaHttp(const QString &url,
     d->w_helper = nullptr;
     d->client_id = 0;
     d->id_man = new CuHttpCliIdMan(d->url + "/bu/tok", d->qnam, this);
+    d->w_httpsrcreq = d->r_httpsrcreq = nullptr;
     m_init();
 
     /// TEST
@@ -96,9 +98,13 @@ CumbiaHttp::~CumbiaHttp()
     pdelete("~CumbiaHttp %p", this);
     d->chan_recv->stop();
     // deleted CuHttpControlsReaders will have enqueued their unsubscribe requests
-//    QList<SrcItem> ri, wi; // we don't use ri, wi, so...  v.1.5
-//    d->src_q_man->dequeueItems(ri, wi); // .. do not call dequeueItems  v1.5
-//    onSrcBundleReqReady(ri, wi); <-- 1.4: why if we are exiting ?
+    //    QList<SrcItem> ri, wi; // we don't use ri, wi, so...  v.1.5
+    //    d->src_q_man->dequeueItems(ri, wi); // .. do not call dequeueItems  v1.5
+    //    onSrcBundleReqReady(ri, wi); <-- 1.4: why if we are exiting ?
+    if(d->w_httpsrcreq)
+        delete d->w_httpsrcreq;
+    if(d->r_httpsrcreq)
+        delete d->r_httpsrcreq;
     delete d->src_q_man;
     if(d->client_id > 0)
         d->id_man->unsubscribe(true); // true: block
@@ -126,8 +132,8 @@ void CumbiaHttp::setTag(const QString &tag)
 
 void CumbiaHttp::m_init()
 {
-//    getServiceProvider()->registerService(static_cast<CuServices::Type> (CuHTTPActionFactoryService::CuHTTPActionFactoryServiceType),
-//                                          new CuHTTPActionFactoryService());
+    //    getServiceProvider()->registerService(static_cast<CuServices::Type> (CuHTTPActionFactoryService::CuHTTPActionFactoryServiceType),
+    //                                          new CuHTTPActionFactoryService());
 }
 
 // if there is a src item among rsrcs that needs the client id and we don't have it yet, request
@@ -146,14 +152,14 @@ void CumbiaHttp::onSrcBundleReqReady(const QList<SrcItem> &rsrcs, const QList<Sr
 void CumbiaHttp::m_start_bundled_src_req(const QList<SrcItem> &rsrcs, const QList<SrcItem> &wsrcs)
 {
     if(rsrcs.size() > 0) {
-        CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(rsrcs, this, d->client_id);
-        r->setObjectName(QString("%1-req-%2").arg(d->tag).arg(++d->reqcnt));
-//        r->setBlocking(d->chan_recv->exiting()); // destruction in progress
-        r->start(d->url + "/bu/src-bundle", d->qnam);
+        d->r_httpsrcreq = new CuHttpBundledSrcReq(rsrcs, this, d->client_id);
+        d->r_httpsrcreq->setObjectName(QString("%1-req-%2").arg(d->tag).arg(++d->reqcnt));
+        //        r->setBlocking(d->chan_recv->exiting()); // destruction in progress
+        d->r_httpsrcreq->start(d->url + "/bu/src-bundle", d->qnam);
     }
     if(wsrcs.size() > 0) {
-        CuHttpBundledSrcReq * r = new CuHttpBundledSrcReq(wsrcs, this);
-        r->start(d->url + "/bu/xec-bundle", d->qnam);
+        d->w_httpsrcreq = new CuHttpBundledSrcReq(wsrcs, this);
+        d->w_httpsrcreq->start(d->url + "/bu/xec-bundle", d->qnam);
     }
 }
 
@@ -189,19 +195,23 @@ void CumbiaHttp::onSrcBundleReplyError(const CuData &errd) {
     dat.putTimestamp();
     const QStringList& keys = ma.keys(), &tkeys = tma.keys();
     foreach(const QString& s, keys)  { // sources
-        if(ma[s].lis) ma[s].lis->onUpdate(m_make_server_err(revmap, s, dat));
+        if(ma[s].lis) // may be null after unlinkListener
+            ma[s].lis->onUpdate(m_make_server_err(revmap, s, dat));
     }
     foreach(const QString& s, tkeys)  { // targets
-        if(ma[s].lis) ma[s].lis->onUpdate(m_make_server_err(revmap, s, dat));
+        if(ma[s].lis)
+            ma[s].lis->onUpdate(m_make_server_err(revmap, s, dat));
     }
 }
 
 void CumbiaHttp::readEnqueue(const CuHTTPSrc &source, CuDataListener *l, const CuHTTPActionFactoryI& f) {
+    pretty_pri("enqueueing for subscribe %s listener %p", source.toString().c_str(), l);
     d->src_q_man->enqueueSrc(source, l, f.getMethod(), d->chan_recv->channel(), CuVariant(), f.options());
 }
 
 void CumbiaHttp::unsubscribeEnqueue(const CuHTTPSrc &httpsrc, CuDataListener *l) {
-        d->src_q_man->enqueueSrc(httpsrc, l, "u", d->chan_recv->channel(), CuVariant(), CuData());
+    pretty_pri("enqueueing for unsubscribe %s listener %p", httpsrc.toString().c_str(), l);
+    d->src_q_man->enqueueSrc(httpsrc, l, "u", d->chan_recv->channel(), CuVariant(), CuData());
 }
 
 void CumbiaHttp::executeWrite(const CuHTTPSrc &source, CuDataListener *l, const CuHTTPActionFactoryI &f) {
@@ -214,18 +224,16 @@ void CumbiaHttp::executeWrite(const CuHTTPSrc &source, CuDataListener *l, const 
  * \param l the CuDataListener to disconnect
  *
  * \note
- * Disconnect the listener both from a pending sync reply (onSrcBundleReplyReady) and
- * the channel receiver
+ * Disconnect the listener from a pending sync reply (onSrcBundleReplyReady), a pending error
+ * (onSrcBundleReplyError) and the channel receiver
  *
  * \note
  * called by CuHttpControlsR
  */
-void CumbiaHttp::unlinkListener(const CuHTTPSrc &source, const std::string& method, CuDataListener *l) {
-    if(CumbiaHTTPWorld().source_valid(source.getName())) {
-        // cancelSrc never sends "unsubscribe"
-        d->src_q_man->cancelSrc(source, method, l, d->chan_recv->channel());
-        d->chan_recv->removeDataListener(l);
-    }
+void CumbiaHttp::unlinkListener(CuDataListener *l) {
+    // cancelSrc never sends "unsubscribe"
+    d->src_q_man->unlinkListener(l);
+    d->chan_recv->removeDataListener(l);
 }
 
 /*!
@@ -354,7 +362,7 @@ CuData CumbiaHttp::m_make_server_err(const QMap<QString, QString>& revmap, const
 {
     CuData out(in);
     const std::string& req = revmap.contains(src) ? "\nrequest:\"" + revmap[src].toStdString() + "\" part of a bundle of "
-            + std::to_string(revmap.size()) + " requests." : "\nrequest unavailable";
+                                                    + std::to_string(revmap.size()) + " requests." : "\nrequest unavailable";
     out["msg"] = in["msg"].toString() + req;
     return out;
 }

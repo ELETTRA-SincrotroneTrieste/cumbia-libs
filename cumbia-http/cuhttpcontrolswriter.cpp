@@ -102,9 +102,8 @@ CuHttpControlsWriter::CuHttpControlsWriter(Cumbia *cu_http, CuDataListener *tl)
 
 /*! \brief the class destructor calls clearTarget
  */
-CuHttpControlsWriter::~CuHttpControlsWriter()
-{
-    clearTarget();
+CuHttpControlsWriter::~CuHttpControlsWriter() {
+    d->cu_http->unlinkListener(d->tlistener);
     delete d;
 }
 
@@ -138,11 +137,7 @@ QString CuHttpControlsWriter::target() const
  * \li unlinks the writer listener
  *
  */
-void CuHttpControlsWriter::clearTarget()
-{
-    const CuHTTPSrc hs(d->target.toStdString(), d->cu_http->getSrcHelpers());
-    d->cu_http->unlinkListener(hs, "conf", d->tlistener);
-    d->cu_http->unlinkListener(hs, "write", d->tlistener);
+void CuHttpControlsWriter::clearTarget() {
     d->target = QString();
 }
 
