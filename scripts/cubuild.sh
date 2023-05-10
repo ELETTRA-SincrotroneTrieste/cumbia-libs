@@ -179,11 +179,6 @@ then
         interactive=0
 fi
 
-if [[ $@ == **interactive** ]]
-then
-        interactive=1
-fi
-
 if [[ $@ == **install** ]]
 then
     if  [[ ! -r $build_dir ]] || [[ $clean -eq 1 ]] ;  then
@@ -354,9 +349,10 @@ echo -e "-----------------------------------------------------------------------
 
 echo ""
 echo -n -e "Do you want to continue? [y|n] [y] "
+echo " interactive is $interactive"
 
 if [ $interactive -eq 1 ]; then
-read  -s -n 1  cont
+    read  -s -n 1  cont
 else
     cont="yes"
 fi
