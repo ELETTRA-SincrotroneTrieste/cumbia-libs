@@ -20,8 +20,11 @@ public slots:
 private:
     CuEngineSwitchDialogPrivate * d;
     void m_resizeToMinimumSizeHint();
+    void m_err_notify(const QString& msg) const;
 private slots:
     void onEngineChanged(const QStringList& from, const QStringList &to);
+    void m_owner_destroyed(QObject*);
+
 };
 
 #endif // CUENGINESWITCHDIALOG_H
