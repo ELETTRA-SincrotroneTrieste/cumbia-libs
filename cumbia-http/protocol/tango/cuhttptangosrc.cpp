@@ -360,3 +360,13 @@ const char *CuHttpTangoSrc::getTypeName(Type t) const {
         return tynames[t];
     return tynames[0]; // "SrcInvalid"
 }
+
+std::string CuHttpTangoSrc::m_get_args_delim(const string &arg_options) const
+{
+    // find a custom separator, if specified at the beginning of the args section
+    //  sep\((.*)\)
+    // example: a/b/c-D([sep(:)]arg1:arg2:arg3)
+    std::regex sepre("sep\\((.*)\\)");
+    std::smatch sm;
+    return std::regex_search(arg_options, sm, sepre) && sm.size() == 2 ? sm[1] : std::string(",");
+}
