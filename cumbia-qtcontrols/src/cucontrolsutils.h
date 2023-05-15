@@ -21,7 +21,7 @@ class CuData;
 class CuControlsUtils
 {
 public:
-    QString findInput(const QString& objectName, const QObject* leaf) const;
+    QString findInput(const QString& objectName, const QObject* leaf, bool *found) const;
     QObject *findObject(const QString& objectName, const QObject* leaf) const;
     CuVariant getArgs(const QString& target, const QObject *leaf) const;
     QList<QObject *> findObjects(const QString &target, const QObject *leaf);

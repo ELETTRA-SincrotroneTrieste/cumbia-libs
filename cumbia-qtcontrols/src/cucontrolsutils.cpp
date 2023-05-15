@@ -40,7 +40,7 @@ QRegularExpression re;
  * a numerical index or a text), make sure to provide a *data* property that can be converted to QString
  * regardless of the internal storage type.
  */
-QString CuControlsUtils::findInput(const QString &objectName, const QObject *leaf) const
+QString CuControlsUtils::findInput(const QString &objectName, const QObject *leaf, bool *found) const
 {
     QString ret;
     QObject *parent = leaf->parent();
@@ -69,15 +69,15 @@ QString CuControlsUtils::findInput(const QString &objectName, const QObject *lea
     }
     // let cumbia-qtcontrols findInput deal with labels, line edits, combo boxes (currentText), spin boxes
     // and our Numeric
-    if(o && o->metaObject()->indexOfProperty("data") > -1)
+    if((*found = (o && o->metaObject()->indexOfProperty("data") > -1)))
         ret = o->property("data").toString();
-    else if(o && o->property("indexMode").toBool() && o->metaObject()->indexOfProperty("currentIndex") >= 0)
+    else if((*found = (o && o->property("indexMode").toBool() && o->metaObject()->indexOfProperty("currentIndex") >= 0)))
         ret = QString("%1").arg(o->property("currentIndex").toInt() + o->property("indexOffset").toInt());
-    else if(o && o->metaObject()->indexOfProperty("text") > -1)
+    else if((*found = (o && o->metaObject()->indexOfProperty("text") > -1)))
         ret = o->property("text").toString();
-    else if(o && o->metaObject()->indexOfProperty("value") > -1)
+    else if((*found = (o && o->metaObject()->indexOfProperty("value") > -1)))
         ret = o->property("value").toString();
-    else if(o && o->metaObject()->indexOfProperty("currentText") > -1)
+    else if((*found = (o && o->metaObject()->indexOfProperty("currentText") > -1)))
         ret = o->property("currentText").toString();
     return ret;
 }
@@ -113,10 +113,13 @@ CuVariant CuControlsUtils::getArgs(const QString &target, const QObject *leaf) c
         {
             if(a.startsWith("&"))
             {
+                bool found;
                 oName = a.remove(0, 1);
-                val = findInput(oName, leaf);
-                if(!val.isEmpty())
+                val = findInput(oName, leaf, &found);
+                if(found) {
+                    printf("CuControlsUtils::getArgs found. Adding argin %s\n", qstoc(val));
                     argins.push_back(val.toStdString());
+                }
                 else
                     perr("CuControlsUtils.getArgs: no object named \"%s\" found", qstoc(oName));
             }
