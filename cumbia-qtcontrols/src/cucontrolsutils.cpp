@@ -109,10 +109,8 @@ CuVariant CuControlsUtils::getArgs(const QString &target, const QObject *leaf) c
 #else
         QStringList args = argums.split(",", QString::SkipEmptyParts);
 #endif
-        foreach(QString a, args)
-        {
-            if(a.startsWith("&"))
-            {
+        foreach(QString a, args) {
+            if(a.startsWith("&"))  {
                 bool found;
                 oName = a.remove(0, 1);
                 val = findInput(oName, leaf, &found);
