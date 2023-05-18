@@ -141,14 +141,12 @@ QObject *CuControlsUtils::findObject(const QString &objectName, const QObject *l
         qDebug() << __FUNCTION__ << "parent " << parent << " o " << o;
         if(parent->objectName() == objectName)
             o = parent;
-        else
-        {
+        else {
             o = parent->findChild<QObject *>(objectName);
             qDebug() << "findind child " << objectName << " under " << parent << "AMONGST" << " FOUND " << o;
             foreach(QObject *c, parent->findChildren<QObject *>())
                 qDebug() << "---" << c << c->objectName();
         }
-
         parent = parent->parent();
     }
     if(!o) /* last resort: search among all qApplication objects */
