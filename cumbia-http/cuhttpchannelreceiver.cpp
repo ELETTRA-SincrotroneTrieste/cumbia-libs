@@ -194,7 +194,6 @@ void CuHttpChannelReceiver::m_on_buf_complete() {
                 perr("%s: invalid json: %s: %s\n", __PRETTY_FUNCTION__, qstoc(json), qstoc(jpe.errorString()));
             else {
                 decodeMessage(jsd.array());
-                printf("json is \e[1;35m%s\e[0m\n", d->buf.data());
             }
         }
     }

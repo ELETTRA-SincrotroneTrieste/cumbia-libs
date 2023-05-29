@@ -135,6 +135,13 @@ public:
       * @see filter(const CuData& variant, int &strValue, bool read, State updateState)
       */
     virtual void filter(const CuData& variant, QStringList &stringList, bool read, State updateState);
+
+
+    /** \brief The same as above, but for string lists.
+      *
+      * @see filter(const CuData& variant, int &strValue, bool read, State updateState)
+      */
+    virtual void filter(const CuData& in_d, CuData &out_d, bool read, State updateState);
 };
 
 #endif // QTREFRESHFILTER_H

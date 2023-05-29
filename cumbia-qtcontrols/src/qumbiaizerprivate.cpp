@@ -37,6 +37,7 @@ bool QumbiaizerPrivate::inTypeOfMethod(const QString &method, QObject *obj, char
         if(parTypes.size() == 1)
         {
             strncpy(in_type, parTypes.first().constData(), TYPELEN - 1);
+            printf("QumbiaizerPrivate.inType of method in_type %s\n", in_type);
             return true;
         }
         else if(parTypes.size() == 0) /* void */

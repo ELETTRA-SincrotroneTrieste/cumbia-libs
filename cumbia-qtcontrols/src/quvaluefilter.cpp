@@ -56,3 +56,7 @@ void QuValueFilter::filter(const CuData& , QStringList &, bool , State )
 {
 
 }
+
+void QuValueFilter::filter(const CuData &in_d, CuData &out_d, bool read, State updateState) {
+    Q_UNUSED(in_d); Q_UNUSED(out_d); Q_UNUSED(read); Q_UNUSED(updateState);
+}

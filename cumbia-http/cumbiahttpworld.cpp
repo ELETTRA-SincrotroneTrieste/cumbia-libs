@@ -388,7 +388,7 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
             }
         }
     } // foreach(const QString &k, value_keys)
-    printf("%s \e[1;36mtook %lldms\e[0m to decode %s\n", __PRETTY_FUNCTION__, elapt.elapsed(), datos(res));
+//    printf("%s \e[1;36mtook %lldms\e[0m to decode %s\n", __PRETTY_FUNCTION__, elapt.elapsed(), datos(res));
 }
 
 QJsonObject CumbiaHTTPWorld::make_error(const QString &msg) const

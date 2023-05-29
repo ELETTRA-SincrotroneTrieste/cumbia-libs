@@ -19,7 +19,7 @@ class Qumbiaizer : public QObject
 public:
     /* Compatible parent object types supported */
     enum Type { Invalid = -1, Void, Int, Double, UInt, Short, String, Bool,
-                BoolVector, DoubleVector, StringVector, IntVector };
+                BoolVector, DoubleVector, StringVector, IntVector, Cu_Data };
 
     /** \brief Supported auto configuration parameters with which you can invoke slots on the
   * attached refreshee
@@ -61,6 +61,8 @@ public:
     void attach( QVector<int> *vi);
 
     void attach( QVector<bool> *vb);
+
+    void attach(CuData *da);
 
     Type type() const;
 
