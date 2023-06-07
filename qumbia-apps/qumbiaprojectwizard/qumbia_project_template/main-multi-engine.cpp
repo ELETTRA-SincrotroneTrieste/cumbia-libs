@@ -1,5 +1,5 @@
 #include <quapplication.h>
-#include "cuengineaccessor.h"
+#include <cuengineaccessor.h>
 #include "$HFILE$"
 
 // cumbia
