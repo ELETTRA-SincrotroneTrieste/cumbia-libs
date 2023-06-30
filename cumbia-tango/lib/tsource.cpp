@@ -173,7 +173,6 @@ std::vector<string> TSource::getArgs() const {
                 delim = arg_end > 0 ? m_get_args_delim(arg_ops) : ",";
                 if(arg_end > 0) // recalculate a as substr from arg_end + 1
                     a = d->m_s.substr(arg_end + 1);
-                printf("regexp '%s' arg optios are '%s'\n", delim.c_str(), arg_ops.c_str());
                 std::regex re(delim);
                 std::sregex_token_iterator iter(a.begin(), a.end(), re, -1);
                 std::sregex_token_iterator end;
@@ -183,10 +182,6 @@ std::vector<string> TSource::getArgs() const {
             }
         }
     }
-    printf("\e[1;31mTSource::getArgs: arg options \e[1;32m%s\e[1;31m args: ", arg_ops.c_str());
-    for(const std::string& a : ret)
-        printf("\e[0;31m%s\e[1;31m, ", a.c_str());
-    printf("\e[0m\n");
     return ret;
 }
 
@@ -303,8 +298,8 @@ std::string TSource::getArgOptions(size_t *pos_start, size_t *pos_end) const {
         *pos_start = sm.position(1);
         *pos_end = *pos_start + sm.length(1);
     }
-    printf("getArgOptions: sm size %ld pos start %ld end %ld src '%s' siz %ld\n",
-           sm.size(), *pos_start, *pos_end, s.c_str(), s.length());
+    //printf("getArgOptions: sm size %ld pos start %ld end %ld src '%s' siz %ld\n",
+      //     sm.size(), *pos_start, *pos_end, s.c_str(), s.length());
     return found && sm.size() == 2 ? sm[1] : std::string();
 }
 
