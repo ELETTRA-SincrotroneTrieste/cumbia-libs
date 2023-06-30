@@ -12,6 +12,13 @@
 // ((?:tango://){0,1}(?:[A-Z-a-z0-9\-_\.\+~]+:\d*/){0,1}[A-Z-a-z0-9\-_\.\+~]+/[A-Z-a-z0-9\-_\.\+~]+/[A-Z-a-z0-9\-_\.\+~]+)
 #define TG_DEV_RE "((?:tango://){0,1}(?:[A-Z-a-z0-9\\-_\\.\\+~]+:\\d*/){0,1}[A-Z-a-z0-9\\-_\\.\\+~]+/[A-Z-a-z0-9\\-_\\.\\+~]+/[A-Z-a-z0-9\\-_\\.\\+~]+)"
 
+std::regex dev_re(TG_DEV_RE);
+std::regex host_re(TGHOST_RE);
+std::regex freeprop_re("#(.*)#");  // #(.*)#
+std::regex argopts_re("\\(\\[\\s*(.*)\\s*\\]\\s*.*\\)");  // \(\[\s*(.*)\s*\]\s*.*\)
+std::regex args_re("(\\(.*\\))");
+std::regex separ_re("sep\\((.*)\\)");
+
 class TSourcePrivate {
 public:
     string m_s;
@@ -42,7 +49,7 @@ TSource::~TSource() {
 
 TSource::Type TSource::m_get_ty(const std::string& src) const {
     // host regexp
-    std::regex host_re("([A-Z-a-z0-9\\-_\\.\\+~]+:\\d+)");
+
     std::string s = rem_tghostproto(src);
     s = rem_args(s); // remove arguments between from s
     const std::vector<string> props = getPropNames();
@@ -104,9 +111,8 @@ string TSource::getDeviceName() const {
             dev = d->m_s.substr(0, d->m_s.rfind('/'));
         else {
             // need regex
-            std::regex dre(TG_DEV_RE);
             std::smatch sm;
-            if(std::regex_search(d->m_s, sm, dre) && sm.size() == 2)
+            if(std::regex_search(d->m_s, sm, dev_re) && sm.size() == 2)
                 dev = sm[1];
         }
     }
@@ -202,7 +208,6 @@ std::string TSource::getName() const {
 }
 
 std::string TSource::getTangoHost() const {
-    std::regex host_re(TGHOST_RE);
     std::smatch sm;
     if(std::regex_search(d->m_s, sm, host_re) && sm.size() > 1)
         return sm[1];
@@ -242,9 +247,8 @@ std::string TSource::getFreePropNam() const {
  * - #Sequencer#TestList getFreePropObj returns Sequencer while getPropNam returns TestList
  */
 string TSource::getFreePropObj() const {
-    std::regex re("#(.*)#");  // #(.*)#
     std::smatch sm;
-    if(std::regex_search(d->m_s, sm, re) && sm.size() > 1)
+    if(std::regex_search(d->m_s, sm, freeprop_re) && sm.size() > 1)
         return sm[1];
     return std::string();
 }
@@ -290,10 +294,9 @@ std::string TSource::getArgOptions(size_t *pos_start, size_t *pos_end) const {
     arg_options ao;
     // capture special directives to interpret args
     // example a/b/c/d([sep(;)]arg1;arg2) sep: args separator
-    std::regex re("\\(\\[\\s*(.*)\\s*\\]\\s*.*\\)");  // \(\[\s*(.*)\s*\]\s*.*\)
     const std::string &s = d->m_s;
     std::smatch sm;
-    bool found = std::regex_search(s, sm, re);
+    bool found = std::regex_search(s, sm, argopts_re);
     if(found) {
         *pos_start = sm.position(1);
         *pos_end = *pos_start + sm.length(1);
@@ -352,7 +355,6 @@ string TSource::remove_tgproto(const string &src) const {
 }
 
 string TSource::remove_tghost(const string &src) const {
-    std::regex host_re("([A-Z-a-z0-9\\-_\\.\\+~]+:\\d+[/#])");
     std::string s = std::regex_replace(src, host_re, "");
     return s;
 }
@@ -366,7 +368,6 @@ string TSource::rem_tghostproto(const string &src) const
 
 string TSource::rem_args(const string &src) const {
     // capture everything within (\(.*\)), not minimal
-    std::regex args_re("(\\(.*\\))");
     return std::regex_replace(src, args_re, "");
 }
 
@@ -380,8 +381,7 @@ std::string TSource::m_get_args_delim(const string &arg_options) const {
     // find a custom separator, if specified at the beginning of the args section
     //  sep\((.*)\)
     // example: a/b/c-D([sep(:)]arg1:arg2:arg3)
-    std::regex sepre("sep\\((.*)\\)");
     std::smatch sm;
-    return std::regex_search(arg_options, sm, sepre) && sm.size() == 2 ? sm[1] : std::string(",");
+    return std::regex_search(arg_options, sm, separ_re) && sm.size() == 2 ? sm[1] : std::string(",");
 }
 
