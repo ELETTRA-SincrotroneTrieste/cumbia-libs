@@ -4,10 +4,28 @@
 #include <string>
 #include <list>
 #include <cuvariant.h>
+#include <regex>
+#include <stdio.h>
 
 using namespace std;
 
 class TSourcePrivate;
+
+// tghost:PORT regex ([A-Z-a-z0-9\-_\.\+~]+:\d+)
+#define TGHOST_RE "([A-Z-a-z0-9\\-_\\.\\+~]+:\\d+)"
+
+// tango device name regex
+// used only if the source is not a command and the number of '/' is not 3
+// otherwise string substr + find is enough
+// ((?:tango://){0,1}(?:[A-Z-a-z0-9\-_\.\+~]+:\d*/){0,1}[A-Z-a-z0-9\-_\.\+~]+/[A-Z-a-z0-9\-_\.\+~]+/[A-Z-a-z0-9\-_\.\+~]+)
+#define TG_DEV_RE "((?:tango://){0,1}(?:[A-Z-a-z0-9\\-_\\.\\+~]+:\\d*/){0,1}[A-Z-a-z0-9\\-_\\.\\+~]+/[A-Z-a-z0-9\\-_\\.\\+~]+/[A-Z-a-z0-9\\-_\\.\\+~]+)"
+
+std::regex dev_re(TG_DEV_RE);
+std::regex host_re(TGHOST_RE);
+std::regex freeprop_re("#(.*)#");  // #(.*)#
+std::regex argopts_re("\\(\\[\\s*(.*)\\s*\\]\\s*.*\\)");  // \(\[\s*(.*)\s*\]\s*.*\)
+std::regex args_re("(\\(.*\\))");
+std::regex separ_re("sep\\((.*)\\)");
 
 struct arg_options {
     std::string separator;
