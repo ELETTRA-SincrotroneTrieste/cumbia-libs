@@ -188,12 +188,13 @@ void CuEventActivity::execute()
     assert(d->my_thread_id == pthread_self());
     CuData at("activity", "event"); /* activity token */
     std::string att = d->tsrc.getPoint();
-    const std::string ref_mode_str = d->refreshmo;
+    const std::string& ref_mode_str = d->refreshmo;
     Tango::DeviceProxy *dev = d->tdev->getDevice();
     at.set("src", d->tsrc.getName()).set("mode", "E").set("E", "subscribe").putTimestamp();
     at["err"] = !d->tdev->isValid();
     if(dev) {
         try {
+
             d->event_id = dev->subscribe_event(att, m_tevent_type_from_string(ref_mode_str), this);
             at["msg"] = "subscribe to: " + ref_mode_str;
         }
