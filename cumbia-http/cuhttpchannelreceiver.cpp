@@ -194,7 +194,6 @@ void CuHttpChannelReceiver::m_on_buf_complete() {
                 perr("%s: invalid json: %s: %s\n", __PRETTY_FUNCTION__, qstoc(json), qstoc(jpe.errorString()));
             else {
                 decodeMessage(jsd.array());
-                printf("json is \e[1;35m%s\e[0m\n", d->buf.data());
             }
         }
     }
@@ -220,9 +219,9 @@ void CuHttpChannelReceiver::onWsBinaryMessageReceived(const QByteArray &ba) {
     CuData da = s.deserialize(ba.data(), siz); // siz for preliminary data len checks
     ///
     /// TEST
-    const CuVariant &v = da["value"];
-    printf("[ \e[1;36mWS\e[0m ]: BINARY MESSAGE len \e[1;35m%d\e[0m \e[1;37;3m%s\e[0m (type %s fmt %s len %ld)\n", siz, datos(da), v.dataTypeStr(v.getType()).c_str(),
-           v.dataFormatStr(v.getFormat()).c_str(), v.getSize());
+//    const CuVariant &v = da["value"];
+//    printf("[ \e[1;36mWS\e[0m ]: BINARY MESSAGE len \e[1;35m%d\e[0m \e[1;37;3m%s\e[0m (type %s fmt %s len %ld)\n", siz, datos(da), v.dataTypeStr(v.getType()).c_str(),
+//           v.dataFormatStr(v.getFormat()).c_str(), v.getSize());
     /// end test
     ///
     foreach(CuDataListener *l, d->rmap.values(da.s("src").c_str())) {
@@ -247,7 +246,7 @@ void CuHttpChannelReceiver::onSslErrors(const QList<QSslError> &errors) {
 }
 
 void CuHttpChannelReceiver::onWsConnected() {
-    pretty_pri("ws connected");
+    pretty_pri("ws connected for binary messages");
     connect(&d->ws, &QWebSocket::textMessageReceived, this, &CuHttpChannelReceiver::onWsMessageReceived);
     connect(&d->ws, &QWebSocket::binaryMessageReceived, this, &CuHttpChannelReceiver::onWsBinaryMessageReceived);
 }
