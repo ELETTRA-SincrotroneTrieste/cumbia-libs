@@ -6,7 +6,8 @@
 
 include(cumbia-qtcontrols.pri)
 
-CONFIG += debug
+CONFIG += release
+
 
 
 # CONFIG += silent
@@ -62,7 +63,6 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/qutable.cpp \
     src/quplotcommon.cpp \
     src/quxtrawidgetpluginloader.cpp \
-    src/widgets-base/cumouse-ev-handler.cpp \
     src/widgets-base/eplotlight/quplotconfigurator.cpp \
     src/widgets-base/eplotlight/quplotcontextmenustrategy.cpp \
     src/widgets-base/number_delegate.cpp \
@@ -99,6 +99,7 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/widgets-base/qulineargaugebase.cpp \
     src/quanimation.cpp \
     src/widgets-base/qulabelbase.cpp \
+    src/widgets-base/cumouse-ev-handler.cpp \
     src/cupluginloader.cpp
 
 HEADERS += cumbiaqtcontrols.h\
@@ -127,7 +128,6 @@ HEADERS += cumbiaqtcontrols.h\
     src/quvector.h \
     src/plugin_ifaces/quxtrawidgetplugininterface.h \
     src/quxtrawidgetpluginloader.h \
-    src/widgets-base/cumouse-ev-handler.h \
     src/widgets-base/eplotlight/quplotconfigurator.h \
     src/widgets-base/eplotlight/quplotcontextmenustrategy.h \
     src/widgets-base/string_delegate.h \
@@ -196,7 +196,8 @@ HEADERS += cumbiaqtcontrols.h\
     src/plugin_ifaces/cucontextmenuactionsplugin_i.h \
     src/cupluginloader.h \
     src/plugin_ifaces/cuformulaplugininterface.h \
-    src/plugin_ifaces/cuhistoricaldbplugin_i.h
+    src/plugin_ifaces/cuhistoricaldbplugin_i.hp \
+    src/widgets-base/cumouse-ev-handler.h
 
 
 unix:!android-g++ {
