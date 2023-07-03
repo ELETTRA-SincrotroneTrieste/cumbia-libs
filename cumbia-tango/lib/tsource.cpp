@@ -291,7 +291,7 @@ std::string TSource::getFreePropNam() const {
  */
 string TSource::getFreePropObj() const {
     std::smatch sm; // std::regex_search only if d->ms starts with '#'
-    if(d->m_s.length() > 0 && d->m_s[0] == '#' && std::regex_search(d->m_s, sm, tsrc_regexps.get_freeprop_re()) && sm.size() > 1)
+    if(d->m_s.length() > 0 && d->m_s.find('#') != std::string::npos && std::regex_search(d->m_s, sm, tsrc_regexps.get_freeprop_re()) && sm.size() > 1)
         return sm[1];
     return std::string();
 }
