@@ -4,6 +4,17 @@
 #include <QCoreApplication> // for cuformulautils
 #include <cumacros.h>
 
+
+// see comments within cuformulareader.cpp
+//
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+Q_GLOBAL_STATIC_WITH_ARGS(QRegularExpression, normalized_pa_re, (FORMULA_RE));
+Q_GLOBAL_STATIC_WITH_ARGS(QRegularExpression, prepared_formula_re, ("^\\(.+\\)$", QRegularExpression::DotMatchesEverythingOption));
+#else // Q_GLOBAL_STATIC_WITH_ARGS deprecated
+Q_GLOBAL_STATIC(QRegularExpression, normalized_pa_re, FORMULA_RE);
+Q_GLOBAL_STATIC(QRegularExpression, prepared_formula_re, ("^\\(.+\\)$", QRegularExpression::DotMatchesEverythingOption));
+#endif
+
 class CuFormulaParserPrivate {
 public:
     std::vector<std::string> srcs;
@@ -40,11 +51,10 @@ bool CuFormulaParser::parse(const QString &expr)
     d->message = QString();
     d->error = false;
     bool mat;
-    QRegularExpression re(d->normalized_pattern);
     QString e(d->expression);
     e.remove("formula://");
     e.remove("\n");
-    QRegularExpressionMatch match = re.match(e);
+    QRegularExpressionMatch match = normalized_pa_re->match(e);
     mat = match.hasMatch() && match.capturedTexts().size() > 4;
     if(mat) {
         int i = 0;
@@ -87,7 +97,7 @@ bool CuFormulaParser::parse(const QString &expr)
         d->formula = e;
         d->error = true;
         d->message = QString("CuFormulaParser.parse: expression \"%1\" did not match regexp \"%2\"")
-                .arg(expr).arg(re.pattern());
+                .arg(expr).arg(normalized_pa_re->pattern());
     }
 
 //    if(!d->error)
@@ -173,8 +183,7 @@ QString CuFormulaParser::m_makePreparedFormula() const
 {
     QString em(d->formula.trimmed());
     // ^\(.+\)$
-    QRegularExpression re("^\\(.+\\)$", QRegularExpression::DotMatchesEverythingOption);
-    QRegularExpressionMatch match = re.match(em);
+    const QRegularExpressionMatch& match = prepared_formula_re->match(em);
     if(!match.hasMatch())
         em = "(" + em + ")";
     return em;
@@ -202,8 +211,7 @@ QString CuFormulaParser::normalizedFormulaPattern() const
 
 bool CuFormulaParser::isNormalized(const QString &expr) const
 {
-    QRegularExpression re(d->normalized_pattern);
-    QRegularExpressionMatch match = re.match(expr);
+    QRegularExpressionMatch match = normalized_pa_re->match(expr);
     return match.hasMatch();
 }
 

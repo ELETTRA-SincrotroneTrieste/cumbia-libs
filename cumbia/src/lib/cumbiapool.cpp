@@ -1,6 +1,5 @@
 #include "cumbiapool.h"
 #include <cumacros.h>
-#include <regex>
 
 /*! \brief the class constructor
  *
@@ -11,8 +10,7 @@
  * a multi engine environment for a cumbia/Qt application.
  * cumbia-qtcontrols CuControlsFactoryPool documentation is a recommended reading.
  */
-CumbiaPool::CumbiaPool()
-{
+CumbiaPool::CumbiaPool() {
 
 }
 
@@ -37,9 +35,11 @@ void CumbiaPool::registerCumbiaImpl(const std::string &domain, Cumbia *cumbia)
  * \endcode
  *
  */
-void CumbiaPool::setSrcPatterns(const std::string &domain, const std::vector<std::string> &regexps)
-{
-    m_dom_patterns[domain] = regexps;
+void CumbiaPool::setSrcPatterns(const std::string &domain, const std::vector<std::string> &regexps) {
+    std::vector<std::regex> rexps;
+    for(const std::string& r : regexps)
+        rexps.push_back(std::regex(r));
+    m_dom_rexps[domain] = rexps;
 }
 
 /*! \brief remove the source patterns for the given domain
@@ -48,7 +48,7 @@ void CumbiaPool::setSrcPatterns(const std::string &domain, const std::vector<std
  */
 void CumbiaPool::clearSrcPatterns(const std::string &name)
 {
-    m_dom_patterns.erase(name);
+    m_dom_rexps.erase(name);
 }
 
 /*! \brief remove the domain from the list of the registered ones.
@@ -115,13 +115,11 @@ Cumbia *CumbiaPool::guessBySrc(const std::string &src) const
 {
     if(m_map.size() == 0)
         return NULL;
-    std::map<std::string, std::vector<std::string> >::const_iterator it;
-    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it)
-    {
-        const std::vector<std::string> &patterns = it->second;
-        for(size_t i = 0; i < patterns.size(); i++)
-        {
-            if(std::regex_match(src, std::regex(patterns.at(i))))
+    std::map<std::string, std::vector<std::regex> >::const_iterator it;
+    for(it = m_dom_rexps.begin(); it != m_dom_rexps.end(); ++it)  {
+        const std::vector<std::regex> &rexs = it->second;
+        for(size_t i = 0; i < rexs.size(); i++) {
+            if(std::regex_match(src, rexs.at(i)))
                 return get(it->first); // get by domain name
         }
     }
@@ -143,16 +141,3 @@ const std::vector<std::string> CumbiaPool::names() const {
         n.push_back(it.first);
     return n;
 }
-
-void CumbiaPool::m_print_registered_domain_info() const
-{
-    int i = 0;
-    std::map<std::string, std::vector<std::string> >::const_iterator it;
-    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it) {
-        const std::vector<std::string> &patterns = it->second;
-        for(size_t i = 0; i < patterns.size(); i++)
-            i < patterns.size() - 1 ? printf("%s, ", patterns[i].c_str()) : printf("%s\n", patterns[i].c_str());
-    }
-}
-
-

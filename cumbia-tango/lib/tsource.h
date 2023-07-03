@@ -20,12 +20,36 @@ class TSourcePrivate;
 // ((?:tango://){0,1}(?:[A-Z-a-z0-9\-_\.\+~]+:\d*/){0,1}[A-Z-a-z0-9\-_\.\+~]+/[A-Z-a-z0-9\-_\.\+~]+/[A-Z-a-z0-9\-_\.\+~]+)
 #define TG_DEV_RE "((?:tango://){0,1}(?:[A-Z-a-z0-9\\-_\\.\\+~]+:\\d*/){0,1}[A-Z-a-z0-9\\-_\\.\\+~]+/[A-Z-a-z0-9\\-_\\.\\+~]+/[A-Z-a-z0-9\\-_\\.\\+~]+)"
 
-std::regex dev_re(TG_DEV_RE);
-std::regex host_re(TGHOST_RE);
-std::regex freeprop_re("#(.*)#");  // #(.*)#
-std::regex argopts_re("\\(\\[\\s*(.*)\\s*\\]\\s*.*\\)");  // \(\[\s*(.*)\s*\]\s*.*\)
-std::regex args_re("(\\(.*\\))");
-std::regex separ_re("sep\\((.*)\\)");
+class myregex : public std::regex {
+public:
+    myregex() : std::regex() {}
+    myregex(const std::string& pattern ) : std::regex(pattern) {
+        printf("instantiated regex with pattern %s\n", pattern.c_str());
+    }
+};
+
+class regexps {
+public:
+    regexps() : dre(false), hre(false), fre(false),
+        are(false), sre(false) {};
+
+    std::regex& get_dev_re();
+    std::regex& get_host_re();
+    std::regex& get_freeprop_re();
+    std::regex& get_args_re();
+    std::regex& get_separ_re();
+
+    // flags true if corresponding regex has been initialized
+    bool dre, hre, fre, are, sre;
+
+private:
+    std::regex dev_re;
+    std::regex host_re;
+    std::regex freeprop_re;  // #(.*)#
+    std::regex argopts_re;  // \(\[\s*(.*)\s*\]\s*.*\)
+    std::regex args_re;
+    std::regex separ_re;
+};
 
 struct arg_options {
     std::string separator;

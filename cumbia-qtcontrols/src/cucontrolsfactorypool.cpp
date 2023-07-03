@@ -1,7 +1,6 @@
 #include "cucontrolsfactorypool.h"
 #include "cucontrolsfactories_i.h"
 #include <cumacros.h>
-#include <regex>
 
 /*! the class constructor
  *
@@ -19,8 +18,7 @@
         CuControlsFactoryPool m_ctrl_factory_pool;
  * \endcode
  */
-CuControlsFactoryPool::CuControlsFactoryPool()
-{
+CuControlsFactoryPool::CuControlsFactoryPool() {
 
 }
 
@@ -55,8 +53,9 @@ void CuControlsFactoryPool::registerImpl(const std::string &domain, const CuCont
  *        match and assign sources to engines.
  */
 void CuControlsFactoryPool::setSrcPatterns(const std::string &domain,
-                                              const std::vector<std::string> &regex_patt)
-{
+                                           const std::vector<std::string> &regex_patt) {
+    for(const std::string& r : regex_patt)
+        m_dom_rexs[domain].push_back(std::regex(r));
     m_dom_patterns[domain] = regex_patt;
 }
 
@@ -64,8 +63,8 @@ void CuControlsFactoryPool::setSrcPatterns(const std::string &domain,
  *
  * @param domain a string with the domain name whose patterns are to be removed
  */
-void CuControlsFactoryPool::clearSrcPatterns(const std::string &domain)
-{
+void CuControlsFactoryPool::clearSrcPatterns(const std::string &domain) {
+    m_dom_rexs.erase(domain);
     m_dom_patterns.erase(domain);
 }
 
@@ -176,13 +175,12 @@ CuControlsWriterFactoryI *CuControlsFactoryPool::getWFactoryBySrc(const std::str
  */
 std::string CuControlsFactoryPool::guessDomainBySrc(const std::string &src) const
 {
-    std::map<std::string, std::vector<std::string> >::const_iterator it;
-    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it)
+    std::map<std::string, std::vector<std::regex> >::const_iterator it;
+    for(it = m_dom_rexs.begin(); it != m_dom_rexs.end(); ++it)
     {
-        const std::vector<std::string> &patterns = it->second;
-        for(size_t i = 0; i < patterns.size(); i++)
-        {
-            if(std::regex_match(src, std::regex(patterns.at(i))))
+        const std::vector<std::regex> &rexs = it->second;
+        for(const std::regex& re : rexs) {
+            if(std::regex_match(src, re))
                 return it->first; // get by domain name
         }
     }
@@ -201,23 +199,15 @@ bool CuControlsFactoryPool::isEmpty() const
 std::vector<std::string> CuControlsFactoryPool::getSrcPatternDomains() const
 {
     std::vector<std::string> domains;
-    std::map<std::string, std::vector<std::string> >::const_iterator it;
-    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it)
+    std::map<std::string, std::vector<std::regex> >::const_iterator it;
+    for(it = m_dom_rexs.begin(); it != m_dom_rexs.end(); ++it)
         domains.push_back(it->first);
     return domains;
 }
 
-std::vector<std::string> CuControlsFactoryPool::getSrcPatterns(const std::string &domain) const
-{
-    std::vector<std::string> patterns;
-    std::map<std::string, std::vector<std::string> >::const_iterator it;
-    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it) {
-        if(it->first == domain) {
-            for(size_t i = 0; i < it->second.size(); i++)
-                patterns.push_back(it->second[i]);
-        }
-    }
-    return patterns;
+std::vector<std::string> CuControlsFactoryPool::getSrcPatterns(const std::string &domain) const {
+    std::map<std::string, std::vector<std::string> >::const_iterator it = m_dom_patterns.find(domain);
+    return it != m_dom_patterns.end() ? it->second : std::vector<std::string>();
 }
 
 void CuControlsFactoryPool::m_print() const {
@@ -230,4 +220,3 @@ void CuControlsFactoryPool::m_print() const {
         printf("\n");
     }
 }
-

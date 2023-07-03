@@ -6,6 +6,7 @@
 #include <map>
 
 #include <cumbia.h>
+#include <regex>
 
 /*! \brief used in combination with CuControlsFactoryPool, the class can be used to create applications
  *         that can connect to sources or targets belonging to different control system frameworks
@@ -86,10 +87,7 @@ public:
 
 private:
     std::map<std::string, Cumbia *> m_map;
-
-    std::map<std::string, std::vector<std::string> >m_dom_patterns;
-
-    void m_print_registered_domain_info() const;
+    std::map<std::string, std::vector<std::regex> >m_dom_rexps;
 };
 
 #endif // CUMBIAPOOL_H

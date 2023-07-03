@@ -7,6 +7,7 @@ class CuControlsWriterFactoryI;
 #include <string>
 #include <vector>
 #include <map>
+#include <regex>
 
 /*! \brief this class, used in conjunction with CumbiaPool allows to connect to
  *         different control system frameworks within the same application.
@@ -68,14 +69,14 @@ public:
     bool isEmpty() const;
 
     std::vector<std::string> getSrcPatternDomains() const;
-
-    std::vector<std::string>  getSrcPatterns(const std::string& domain) const;
+    std::vector<std::string> getSrcPatterns(const std::string& domain) const;
 
 private:
     std::map<std::string, CuControlsReaderFactoryI *> m_rmap;
 
     std::map<std::string, CuControlsWriterFactoryI *> m_wmap;
 
+    std::map<std::string, std::vector<std::regex> >m_dom_rexs;
     std::map<std::string, std::vector<std::string> >m_dom_patterns;
 
     void m_print() const;

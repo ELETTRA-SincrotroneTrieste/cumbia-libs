@@ -17,6 +17,33 @@
 #include <QRegularExpression>
 #include <QCoreApplication>
 
+/*
+ * https://doc.qt.io/qt-5/qglobalstatic.html#Q_GLOBAL_STATIC
+ *
+ * The Q_GLOBAL_STATIC macro creates a type that is necessarily static,
+ * at the global scope. It is not possible to place the Q_GLOBAL_STATIC
+ * macro inside a function (doing so will result in compilation errors).
+ * More importantly, this macro should be placed in source files, never
+ * in headers. Since the resulting object is has static linkage, if the
+ * macro is placed in a header and included by multiple source files,
+ * the object will be defined multiple times and will not cause linking
+ * errors. Instead, each translation unit will refer to a different object,
+ * which could lead to subtle and hard-to-track errors.
+ * The Q_GLOBAL_STATIC macro creates an object that initializes itself on
+ * first use in a thread-safe manner: if multiple threads attempt to initialize
+ * the object at the same time, only one thread will proceed to initialize,
+ * while all other threads wait for completion.
+ *
+ * If the object is created, it will be destroyed at exit-time, similar to
+ * the C atexit function. On most systems, in fact, the destructor will also
+ * be called if the library or plugin is unloaded from memory before exit.
+ */
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+Q_GLOBAL_STATIC_WITH_ARGS(QRegularExpression, formula_re, (QString("formula://%1").arg(FORMULA_RE)));
+#else // deprecated in qt6
+Q_GLOBAL_STATIC(QRegularExpression, formula_re, (QString("formula://%1").arg(FORMULA_RE)));
+#endif
+
 class CuFormulaReaderFactoryPrivate {
 public:
     CuData options;
@@ -586,9 +613,7 @@ void CuFormulaReader::m_srcReplaceWildcards()
     for(size_t i = 0; i < cnt; i++) {
         i < cnt - 1 ? srcs += d->formula_parser.source(i) + "," : srcs += d->formula_parser.source(i);
     }
-    QString pattern = QString("formula://%1").arg(FORMULA_RE);
-    QRegularExpression re(pattern, QRegularExpression::DotMatchesEverythingOption);
-    QRegularExpressionMatch match = re.match(d->source);
+    QRegularExpressionMatch match = formula_re->match(d->source);
     if(match.hasMatch() && match.capturedTexts().size() == FORMULA_RE_CAPTURES_CNT) {
         d->source.replace(match.captured(2), QString::fromStdString(srcs));
     }
