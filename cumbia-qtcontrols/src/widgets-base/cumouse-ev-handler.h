@@ -7,6 +7,13 @@ class QMouseEvent;
 class CuMouseEvHandler_P;
 class CuContextI;
 
+/*!
+ * \brief mouse event handler for cumbia qtcontrols widgets
+ *
+ * The CuMouseEvHandler instantiates a CuMouseEvHandlerPlugin_I plugin instance on demand.
+ * No plugin is loaded unless any of the pressed, released, moved or doubleClicked methods
+ * are called.
+ */
 class CuMouseEvHandler {
 public:
     CuMouseEvHandler();
