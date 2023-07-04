@@ -9,6 +9,8 @@ class CuControlsWriterFactoryI;
 #include <map>
 #include <regex>
 
+class CuControlsFactoryPool_P;
+
 /*! \brief this class, used in conjunction with CumbiaPool allows to connect to
  *         different control system frameworks within the same application.
  *
@@ -77,7 +79,7 @@ private:
 
     std::map<std::string, CuControlsWriterFactoryI *> m_wmap;
 
-    std::map<std::string, std::vector<std::string> >m_dom_patterns;
+    CuControlsFactoryPool_P *d;
 
     void m_print() const;
 
