@@ -124,8 +124,9 @@ void CuHttpControlsReader::setSource(const QString &s) {
     if(!s.isEmpty() && CumbiaHTTPWorld().source_valid(s.toStdString())) {
         QList<QuReplaceWildcards_I *>rwis = d->cu_http->getReplaceWildcard_Ifaces();
         // d->source is equal to 's' if no replacement is made
-        for(int i = 0; i < rwis.size() && d->s == s; i++) // leave loop if s != d->source (=replacement made)
+        for(int i = 0; i < rwis.size() && d->s == s; i++) { // leave loop if s != d->source (=replacement made)
             d->s = rwis[i]->replaceWildcards(s, qApp->arguments());
+        }
 
         const CuHTTPSrc hs(d->s.toStdString(), d->cu_http->getSrcHelpers());
         // d->s must store the complete src, including tango host

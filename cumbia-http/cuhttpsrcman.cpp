@@ -78,7 +78,6 @@ void CuHttpSrcMan::unlinkListener(CuDataListener *l) {
     if(!rem) { // if rem, src was still in queue, no request sent
         t1 = std::chrono::steady_clock::now();
         rem = m_wait_map_remove(l);
-        pretty_pri("after m_wait_map_remove: d->srcd.size %d", d->srcd.size());
         t2 = std::chrono::steady_clock::now();
         if(rem)
             printf("CuHttpSrcMan::cancelSrc m_wait_map_remove took %ld ms from map siz %d to remove %p\n", std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count(), d->srcd.size(), l);
@@ -94,11 +93,11 @@ bool CuHttpSrcMan::m_queue_remove(CuDataListener *l) {
         mi.next();
         if(mi.value().l == l) {
             mi.value().l = nullptr;
-            pretty_pri("d->srcq ====> \e[1;35mnullified\e[0m src %s listener %p method %s",
-                       mi.value().src.c_str(),  l,  mi.value().method.c_str());
+//            pretty_pri("d->srcq ====> \e[1;35mnullified\e[0m src %s listener %p method %s",
+//                       mi.value().src.c_str(),  l,  mi.value().method.c_str());
         }
-        else
-            pretty_pri("\e[1;31mNOT FOUND\e[0m\n");
+//        else
+//            pretty_pri("\e[1;31mNOT FOUND\e[0m\n");
     }
 
     return siz != d->srcq.size();

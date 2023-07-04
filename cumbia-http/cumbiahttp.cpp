@@ -205,7 +205,6 @@ void CumbiaHttp::onSrcBundleReplyError(const CuData &errd) {
 }
 
 void CumbiaHttp::readEnqueue(const CuHTTPSrc &source, CuDataListener *l, const CuHTTPActionFactoryI& f) {
-    pretty_pri("enqueueing for subscribe %s listener %p", source.toString().c_str(), l);
     d->src_q_man->enqueueSrc(source, l, f.getMethod(), d->chan_recv->channel(), CuVariant(), f.options());
 }
 

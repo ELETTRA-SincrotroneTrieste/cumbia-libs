@@ -7,7 +7,6 @@ class CuControlsWriterFactoryI;
 #include <string>
 #include <vector>
 #include <map>
-#include <regex>
 
 /*! \brief this class, used in conjunction with CumbiaPool allows to connect to
  *         different control system frameworks within the same application.

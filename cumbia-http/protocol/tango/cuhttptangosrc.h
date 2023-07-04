@@ -4,8 +4,32 @@
 #include <string>
 #include <list>
 #include <cuvariant.h>
+#include <regex>
 
 using namespace std;
+
+class regexps {
+public:
+    regexps() : dre(false), hre(false), fre(false),
+        are(false), sre(false) {};
+
+    std::regex& get_dev_re();
+    std::regex& get_host_re();
+    std::regex& get_freeprop_re();
+    std::regex& get_args_re();
+    std::regex& get_separ_re();
+
+    // flags true if corresponding regex has been initialized
+    bool dre, hre, fre, are, sre;
+
+private:
+    std::regex dev_re;
+    std::regex host_re;
+    std::regex freeprop_re;  // #(.*)#
+    std::regex argopts_re;  // \(\[\s*(.*)\s*\]\s*.*\)
+    std::regex args_re;
+    std::regex separ_re;
+};
 
 class CuHttpTangoSrc
 {
@@ -42,9 +66,8 @@ public:
     std::vector<std::string> getPropNames() const;
 
     string toString() const;
-    std::string remove_tgproto(const std::string& src) const;
-    std::string remove_tghost(const std::string& src) const;
-    std::string rem_tghostproto(const std::string& src) const;
+    std::string rem_tghost(const std::string& src) const;
+    std::string rem_httpproto(const std::string& src) const;
     std::string rem_args(const std::string &src) const;
 
     const char* getTypeName(Type t) const;

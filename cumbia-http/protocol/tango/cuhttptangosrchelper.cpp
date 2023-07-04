@@ -54,9 +54,12 @@ std::string CuHttpTangoSrcHelper::prepare(const std::string& in) const {
     std::string s(in);
     CuHttpTangoSrc ts(in);
     if(in.length() > 0 && d.operations & PrependHost && ts.getTangoHost().size() == 0) {
-        std::string th = std::string(getenv("TANGO_HOST"));
-        std::string notgprot = ts.remove_tgproto(in);
-        notgprot.size() == in.size() ? s = th + "/" + s : s = "tango://" + th + "/" + notgprot;
+        const char *tgh = getenv("TANGO_HOST");
+        if(tgh != nullptr) {
+            std::string th = std::string(tgh);
+            // there shall not be tango:// in source for http sources
+            s = th + "/" + s;
+        }
     }
     return s;
 }

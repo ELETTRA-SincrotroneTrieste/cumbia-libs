@@ -16,7 +16,7 @@ std::regex& regexps::get_dev_re() {
     if(!dre) {
         dre = true;
         printf("regexps::get_dev_re: compiling dev regex\n");
-        dev_re = std::move(std::regex(TG_DEV_RE));
+        dev_re = std::regex(TG_DEV_RE);
     }
     return dev_re;
 }
@@ -25,7 +25,7 @@ std::regex& regexps::get_host_re() {
     if(!hre) {
         hre = true;
         printf("regexps::get_host_re: compiling host regex\n");
-        host_re = std::move(std::regex(TGHOST_RE));
+        host_re = std::regex(TGHOST_RE);
     }
     return host_re;
 }
@@ -34,7 +34,7 @@ regex &regexps::get_freeprop_re() {
     if(!fre) {
         fre = true;
         printf("regexps::get_freeprop_re: compiling free prop regex\n");
-        freeprop_re = std::move(std::regex("#(.*)#"));
+        freeprop_re = std::regex("#(.*)#");
     }
     return freeprop_re;
 }
@@ -43,7 +43,7 @@ regex &regexps::get_args_re() {
     if(!are) {
         are = true;   // \(\[\s*(.*)\s*\]\s*.*\)
         printf("regexps::get_args_re: compiling args regex\n");
-        args_re = std::move(std::regex("\\(\\[\\s*(.*)\\s*\\]\\s*.*\\)"));
+        args_re =std::regex("\\(\\[\\s*(.*)\\s*\\]\\s*.*\\)");
     }
     return args_re;
 }
@@ -53,7 +53,7 @@ regex &regexps::get_separ_re()
     if(!sre) {
         sre = true;
         printf("regexps::get_separ_re: compiling separator regex\n");
-        separ_re = std::move("sep\\((.*)\\)");
+        separ_re = std::regex("sep\\((.*)\\)");
     }
     return separ_re;
 }
@@ -401,7 +401,7 @@ string TSource::remove_tghost(const string &src) const {
     std::string s(src);
     /*int pos = src.find(':'); */// use regex only if host:PORT pattern is found
 //    if(pos != std::string::npos && pos > 0 && src.length() > pos + 1 && std::isdigit(src[pos+1]))
-        s = std::regex_replace(src, tsrc_regexps.get_host_re(), "");
+    s = std::regex_replace(src, tsrc_regexps.get_host_re(), "");
     return s;
 }
 

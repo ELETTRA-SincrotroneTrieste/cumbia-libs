@@ -20,14 +20,6 @@ class TSourcePrivate;
 // ((?:tango://){0,1}(?:[A-Z-a-z0-9\-_\.\+~]+:\d*/){0,1}[A-Z-a-z0-9\-_\.\+~]+/[A-Z-a-z0-9\-_\.\+~]+/[A-Z-a-z0-9\-_\.\+~]+)
 #define TG_DEV_RE "((?:tango://){0,1}(?:[A-Z-a-z0-9\\-_\\.\\+~]+:\\d*/){0,1}[A-Z-a-z0-9\\-_\\.\\+~]+/[A-Z-a-z0-9\\-_\\.\\+~]+/[A-Z-a-z0-9\\-_\\.\\+~]+)"
 
-class myregex : public std::regex {
-public:
-    myregex() : std::regex() {}
-    myregex(const std::string& pattern ) : std::regex(pattern) {
-        printf("instantiated regex with pattern %s\n", pattern.c_str());
-    }
-};
-
 class regexps {
 public:
     regexps() : dre(false), hre(false), fre(false),

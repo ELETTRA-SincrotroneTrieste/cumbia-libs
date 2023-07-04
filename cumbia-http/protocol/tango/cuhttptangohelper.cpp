@@ -117,25 +117,26 @@ std::vector<std::string> CuHttpTangoHelper::srcPatterns() const {
     src_patterns.push_back("[A-Za-z0-9_\\-\\.\\$]+/.+");
     src_patterns.push_back("[A-Za-z0-9_\\-\\.\\$]+->.+");
 
+    // 1.5.1: remove tango:// from patterns: it would be a protocol (cumbia module) selector
+    // for the native engine
 
     // support class property syntax, such as: hokuto:20000/TangoTest(ProjectTitle,Description),
     // hokuto:20000/TangoTest(*)
-    // (?:tango://){0,1}(?:[A-Za-z0-9_\-\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\]+(?:[\(A-Za-z0-9_\-,\)\s*]+)
-    src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\]+(?:[\\(A-Za-z0-9_\\-,\\)\\s*]+)");
+    // (?:[A-Za-z0-9_\-\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\]+(?:[\(A-Za-z0-9_\-,\)\s*]+)
+    src_patterns.push_back("(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\]+(?:[\\(A-Za-z0-9_\\-,\\)\\s*]+)");
     // tango domain search [tango://]hokuto:20000/ or [tango://]hokuto:20000/*
-    src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){1}[*]{0,1}");
+    src_patterns.push_back("(?:[A-Za-z0-9_\\-\\.:]+/){1}[*]{0,1}");
 
     // support tango://host:PORT/a/b/c/d and tango://host:PORT/a/b/c->e
     // when CumbiaPool.guessBySrc needs to be used
     // with the two above only, sources like "tango://hokuto:20000/test/device/1/double_scalar"
     // or "hokuto:20000/test/device/1/double_scalar" are not identified
-    src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\$]+/.+");
-    src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\$]+->.+");
+    src_patterns.push_back("(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\$]+/.+");
+    src_patterns.push_back("(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\$]+->.+");
     // tango://ken:20000/#Sequencer#TestList
-    src_patterns.push_back("(?:tango://){1,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\$#]+");
-    src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){1,1}[A-Za-z0-9_\\-\\.\\$#]+");
+    src_patterns.push_back("(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\$#]+");
     // tango domain search [tango://]hokuto:20000/ or [tango://]hokuto:20000/*
-    src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){1}[*]{0,1}");
+    src_patterns.push_back("(?:[A-Za-z0-9_\\-\\.:]+/){1}[*]{0,1}");
 
     return src_patterns;
 }
