@@ -69,15 +69,16 @@ public:
     bool isEmpty() const;
 
     std::vector<std::string> getSrcPatternDomains() const;
-    std::vector<std::string> getSrcPatterns(const std::string& domain) const;
+
+    std::vector<std::string>  getSrcPatterns(const std::string& domain) const;
 
 private:
     std::map<std::string, CuControlsReaderFactoryI *> m_rmap;
 
     std::map<std::string, CuControlsWriterFactoryI *> m_wmap;
 
-    std::map<std::string, std::vector<std::regex> >m_dom_rexs;
     std::map<std::string, std::vector<std::string> >m_dom_patterns;
+    std::map<std::string, std::vector<std::regex> >m_remap;
 
     void m_print() const;
 

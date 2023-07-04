@@ -1,6 +1,16 @@
 #include "cucontrolsfactorypool.h"
 #include "cucontrolsfactories_i.h"
 #include <cumacros.h>
+#include <regex>
+#include <QString>
+#include <map>
+
+class CuCFPoolRegexCache {
+public:
+    std::map<std::string, std::vector<std::regex> > map;
+};
+
+Q_GLOBAL_STATIC(CuCFPoolRegexCache, re_cache);
 
 /*! the class constructor
  *
@@ -55,7 +65,7 @@ void CuControlsFactoryPool::registerImpl(const std::string &domain, const CuCont
 void CuControlsFactoryPool::setSrcPatterns(const std::string &domain,
                                            const std::vector<std::string> &regex_patt) {
     for(const std::string& r : regex_patt)
-        m_dom_rexs[domain].push_back(std::regex(r));
+        re_cache->map[domain].push_back(std::regex(r));
     m_dom_patterns[domain] = regex_patt;
 }
 
@@ -64,7 +74,7 @@ void CuControlsFactoryPool::setSrcPatterns(const std::string &domain,
  * @param domain a string with the domain name whose patterns are to be removed
  */
 void CuControlsFactoryPool::clearSrcPatterns(const std::string &domain) {
-    m_dom_rexs.erase(domain);
+    re_cache->map.erase(domain);
     m_dom_patterns.erase(domain);
 }
 
@@ -147,8 +157,7 @@ CuControlsReaderFactoryI *CuControlsFactoryPool::getRFactoryBySrc(const std::str
  * (the first stored in the std::map).
  *
  */
-CuControlsWriterFactoryI *CuControlsFactoryPool::getWFactoryBySrc(const std::string &src) const
-{
+CuControlsWriterFactoryI *CuControlsFactoryPool::getWFactoryBySrc(const std::string &src) const {
     CuControlsWriterFactoryI *wf = NULL;
     if(m_wmap.size() == 0)
         return wf;
@@ -173,13 +182,10 @@ CuControlsWriterFactoryI *CuControlsFactoryPool::getWFactoryBySrc(const std::str
  * @param src the source name
  * @return a string with the guessed domain or an empty string if no regexp match has been found.
  */
-std::string CuControlsFactoryPool::guessDomainBySrc(const std::string &src) const
-{
+std::string CuControlsFactoryPool::guessDomainBySrc(const std::string &src) const {
     std::map<std::string, std::vector<std::regex> >::const_iterator it;
-    for(it = m_dom_rexs.begin(); it != m_dom_rexs.end(); ++it)
-    {
-        const std::vector<std::regex> &rexs = it->second;
-        for(const std::regex& re : rexs) {
+    for(it = re_cache->map.begin(); it != re_cache->map.end(); ++it) {
+        for(const std::regex& re : it->second) {
             if(std::regex_match(src, re))
                 return it->first; // get by domain name
         }
@@ -191,16 +197,14 @@ std::string CuControlsFactoryPool::guessDomainBySrc(const std::string &src) cons
  *
  * @return  true if both the reader factory map and the writer factory map are empty, false otherwise.
  */
-bool CuControlsFactoryPool::isEmpty() const
-{
+bool CuControlsFactoryPool::isEmpty() const {
     return m_rmap.size() == 0 && m_wmap.size() == 0;
 }
 
-std::vector<std::string> CuControlsFactoryPool::getSrcPatternDomains() const
-{
+std::vector<std::string> CuControlsFactoryPool::getSrcPatternDomains() const {
     std::vector<std::string> domains;
-    std::map<std::string, std::vector<std::regex> >::const_iterator it;
-    for(it = m_dom_rexs.begin(); it != m_dom_rexs.end(); ++it)
+    std::map<std::string, std::vector<std::string> >::const_iterator it;
+    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it)
         domains.push_back(it->first);
     return domains;
 }
