@@ -78,7 +78,6 @@ private:
     std::map<std::string, CuControlsWriterFactoryI *> m_wmap;
 
     std::map<std::string, std::vector<std::string> >m_dom_patterns;
-    std::map<std::string, std::vector<std::regex> >m_remap;
 
     void m_print() const;
 
