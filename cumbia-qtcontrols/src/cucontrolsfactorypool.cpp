@@ -5,12 +5,6 @@
 #include <QString>
 #include <map>
 
-class CuControlsFactoryPool_P {
-public:
-    std::map<std::string, std::vector<std::regex> > map;
-    std::map<std::string, std::vector<std::string> >m_dom_patterns;
-};
-
 class CuCFPoolRegexCache {
 public:
     std::map<std::string, std::vector<std::regex> > map;
@@ -35,7 +29,7 @@ Q_GLOBAL_STATIC(CuCFPoolRegexCache, re_cache);
  * \endcode
  */
 CuControlsFactoryPool::CuControlsFactoryPool() {
-    d = new CuControlsFactoryPool_P;
+
 }
 
 /*! \brief register a reader factory for a domain:
@@ -72,7 +66,7 @@ void CuControlsFactoryPool::setSrcPatterns(const std::string &domain,
                                            const std::vector<std::string> &regex_patt) {
     for(const std::string& r : regex_patt)
         re_cache->map[domain].push_back(std::regex(r));
-    d->m_dom_patterns[domain] = regex_patt;
+    m_dom_patterns[domain] = regex_patt;
 }
 
 /*! \brief remove patterns for the given domain
@@ -81,7 +75,7 @@ void CuControlsFactoryPool::setSrcPatterns(const std::string &domain,
  */
 void CuControlsFactoryPool::clearSrcPatterns(const std::string &domain) {
     re_cache->map.erase(domain);
-    d->m_dom_patterns.erase(domain);
+    m_dom_patterns.erase(domain);
 }
 
 /*! \brief returns the reader factory that was registered with the given domain
@@ -210,20 +204,20 @@ bool CuControlsFactoryPool::isEmpty() const {
 std::vector<std::string> CuControlsFactoryPool::getSrcPatternDomains() const {
     std::vector<std::string> domains;
     std::map<std::string, std::vector<std::string> >::const_iterator it;
-    for(it = d->m_dom_patterns.begin(); it != d->m_dom_patterns.end(); ++it)
+    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it)
         domains.push_back(it->first);
     return domains;
 }
 
 std::vector<std::string> CuControlsFactoryPool::getSrcPatterns(const std::string &domain) const {
-    std::map<std::string, std::vector<std::string> >::const_iterator it = d->m_dom_patterns.find(domain);
-    return it != d->m_dom_patterns.end() ? it->second : std::vector<std::string>();
+    std::map<std::string, std::vector<std::string> >::const_iterator it = m_dom_patterns.find(domain);
+    return it != m_dom_patterns.end() ? it->second : std::vector<std::string>();
 }
 
 void CuControlsFactoryPool::m_print() const {
     printf("CuControlsFactoryPool: domains and patterns:\n");
     std::map<std::string, std::vector<std::string> >::const_iterator it;
-    for(it = d->m_dom_patterns.begin(); it != d->m_dom_patterns.end(); ++it) {
+    for(it = m_dom_patterns.begin(); it != m_dom_patterns.end(); ++it) {
         printf("'%s' -> patterns {", it->first.c_str());
         for(size_t i = 0; i < it->second.size(); i++)
             printf("'%s',", it->second[i].c_str());

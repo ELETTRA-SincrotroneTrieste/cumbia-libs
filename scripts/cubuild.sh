@@ -349,7 +349,6 @@ echo -e "-----------------------------------------------------------------------
 
 echo ""
 echo -n -e "Do you want to continue? [y|n] [y] "
-echo " interactive is $interactive"
 
 if [ $interactive -eq 1 ]; then
     read  -s -n 1  cont
