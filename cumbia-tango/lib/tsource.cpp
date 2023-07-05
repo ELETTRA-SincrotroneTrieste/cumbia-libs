@@ -250,8 +250,8 @@ std::string TSource::getName() const {
 
 std::string TSource::getTangoHost() const {
     std::smatch sm;
-    /*int pos = d->m_s.find(':');*/ // use regex only if :N is found (: plus digit, like tom:20000)
-    if(/*pos != std::string::npos && pos > 0 && d->m_s.length() > pos + 1 && std::isdigit(d->m_s[pos+1]) &&*/
+    int pos = d->m_s.find(':'); // use regex only if :N is found (: plus digit, like tom:20000)
+    if(pos != std::string::npos && pos > 0 && d->m_s.length() > pos + 1 && std::isdigit(d->m_s[pos+1]) &&
         std::regex_search(d->m_s, sm, tsrc_regexps.get_host_re()) && sm.size() > 1)
         return sm[1];
     return std::string();
@@ -291,7 +291,7 @@ std::string TSource::getFreePropNam() const {
  */
 string TSource::getFreePropObj() const {
     std::smatch sm; // std::regex_search only if d->ms starts with '#'
-    if(/*d->m_s.length() > 0 && d->m_s.find('#') != std::string::npos &&*/ std::regex_search(d->m_s, sm, tsrc_regexps.get_freeprop_re()) && sm.size() > 1)
+    if(d->m_s.length() > 0 && d->m_s.find('#') != std::string::npos && std::regex_search(d->m_s, sm, tsrc_regexps.get_freeprop_re()) && sm.size() > 1)
         return sm[1];
     return std::string();
 }
@@ -399,9 +399,9 @@ string TSource::remove_tgproto(const string &src) const {
 
 string TSource::remove_tghost(const string &src) const {
     std::string s(src);
-    /*int pos = src.find(':'); */// use regex only if host:PORT pattern is found
-//    if(pos != std::string::npos && pos > 0 && src.length() > pos + 1 && std::isdigit(src[pos+1]))
-    s = std::regex_replace(src, tsrc_regexps.get_host_re(), "");
+    int pos = src.find(':'); // use regex only if host:PORT pattern is found
+    if(pos != std::string::npos && pos > 0 && src.length() > pos + 1 && std::isdigit(src[pos+1]))
+        s = std::regex_replace(src, tsrc_regexps.get_host_re(), "");
     return s;
 }
 
