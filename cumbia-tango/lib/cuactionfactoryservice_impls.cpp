@@ -79,11 +79,9 @@ void CuActionFactoryServiceImpl_Base::unregisterAction(const string &src, CuTang
     assert(pthread_self() == d->creation_thread);
 //    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 //    ++unreginvokecnt;
-    bool found = false;
     std::unordered_multimap<std::string, CuTangoActionI * >::iterator it = d->actions.begin();
     while(it != d->actions.end()) {
         if(it->second->getSource().getName() == src && it->second->getType() == at) {
-            found = true;
             it = d->actions.erase(it);
         }
         else
