@@ -13,43 +13,21 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
+static  CuTangoWorldConfig t_world_conf;
 
 class CuTangoWorldPrivate
 {
 public:
     bool error;
     std::string message;
-    CuTangoWorldConfig t_world_conf;
     // this is used in source_valid
     //  [A-Za-z_0-9_\-\.\,\*/\+\:\(\)>#{}]+
     char src_valid_pattern[128] = "[A-Za-z_0-9_\\-\\.\\,\\*/\\+\\:&\\(\\)>#{}]+";
     std::vector <std::string> src_patterns;
 };
 
-CuTangoWorld::CuTangoWorld()
-{
+CuTangoWorld::CuTangoWorld() {
     d = new CuTangoWorldPrivate();
-    d->src_patterns.push_back("[A-Za-z0-9_\\-\\.\\$]+/.+");
-    d->src_patterns.push_back("[A-Za-z0-9_\\-\\.\\$]+->.+");
-
-    // support class property syntax, such as: hokuto:20000/TangoTest(ProjectTitle,Description),
-    // hokuto:20000/TangoTest(*)
-    d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\]+(?:[\\(A-Za-z0-9_\\-,\\)\\s*]+)");
-
-    // free properties and device exported
-    // tango://ken:20000/#Sequencer#TestList
-    // ken:20000/#test/de*/*(*)
-//    d->src_patterns.push_back("(?:tango://){1,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\$#\\*/]+(?:\\(\\*\\)){0,1}");
-    d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\$#\\*/]+(?:\\(\\*\\)){0,1}");
-    // tango domain search [tango://]hokuto:20000/ or [tango://]hokuto:20000/*
-    d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){1}[*]{0,1}");
-
-    // support tango://host:PORT/a/b/c/d and tango://host:PORT/a/b/c->e
-    // when CumbiaPool.guessBySrc needs to be used
-    // with the two above only, sources like "tango://hokuto:20000/test/device/1/double_scalar"
-    // or "hokuto:20000/test/device/1/double_scalar" are not identified
-    d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\$]+/.+");
-    d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\$]+->.+");
 }
 
 CuTangoWorld::~CuTangoWorld()
@@ -754,7 +732,7 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, Cu
     res["err"] = d->error;
     if(d->message.length() > 0)
         res["msg"] = d->message;
-    res["color"] = d->t_world_conf.successColor(!d->error);
+    res["color"] = t_world_conf.successColor(!d->error);
     return !d->error;
 }
 
@@ -794,7 +772,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                 reslist[offset]["err"] = d->error;
                 if(d->message.length() > 0)
                     reslist[offset]["msg"] = d->message;
-                reslist[offset]["color"] = d->t_world_conf.successColor(!d->error);
+                reslist[offset]["color"] = t_world_conf.successColor(!d->error);
                 offset++;
             }
             else {
@@ -812,7 +790,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                     reslist[offset]["err"] = d->error;
                     if(d->message.length() > 0)
                         reslist[offset]["msg"] = d->message;
-                    reslist[offset]["color"] = d->t_world_conf.successColor(!d->error);
+                    reslist[offset]["color"] = t_world_conf.successColor(!d->error);
                     offset++;
                 }
                 else if(updpo & CuDataUpdatePolicy::OnPollUnchangedTimestampOnly) {
@@ -837,7 +815,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
             reslist[offset]["err"] = d->error;
             if(d->message.length() > 0)
                 reslist[offset]["msg"] = d->message;
-            reslist[offset]["color"] = d->t_world_conf.successColor(!d->error);
+            reslist[offset]["color"] = t_world_conf.successColor(!d->error);
             reslist[offset].putTimestamp();
             offset++;
         }
@@ -916,7 +894,7 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
     data.putTimestamp();
     data["err"] = d->error;
     if(d->message.length() > 0) data["msg"] = d->message;
-    //  data["color"] = d->t_world_conf.successColor(!d->error);
+    //  data["color"] = t_world_conf.successColor(!d->error);
     return !d->error;
 }
 
@@ -1003,7 +981,7 @@ bool CuTangoWorld::get_att_config(Tango::DeviceProxy *dev, const string &attribu
         d->message = strerror(e);
     }
     dres["err"] = d->error;
-    dres["color"] = d->t_world_conf.successColor(!d->error);
+    dres["color"] = t_world_conf.successColor(!d->error);
     return !d->error;
 }
 
@@ -1060,7 +1038,7 @@ bool CuTangoWorld::get_att_props(Tango::DeviceProxy *dev,
             d->message = strerror(e);
         }
     }
-    dres["color"] = d->t_world_conf.successColor(!d->error);
+    dres["color"] = t_world_conf.successColor(!d->error);
     return !d->error;
 }
 
@@ -1542,8 +1520,34 @@ void CuTangoWorld::setSrcPatterns(const std::vector<string> &pat_regex)
     d->src_patterns = pat_regex;
 }
 
-std::vector<string> CuTangoWorld::srcPatterns() const
-{
+/*!
+ * \brief return the source patterns associated to the tango domain
+ * \return  a vector of strings with the source regex patterns
+ */
+std::vector<string> CuTangoWorld::srcPatterns() const {
+    if(d->src_patterns.size() == 0) {
+        d->src_patterns.push_back("[A-Za-z0-9_\\-\\.\\$]+/.+");
+        d->src_patterns.push_back("[A-Za-z0-9_\\-\\.\\$]+->.+");
+
+        // support class property syntax, such as: hokuto:20000/TangoTest(ProjectTitle,Description),
+        // hokuto:20000/TangoTest(*)
+        d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\]+(?:[\\(A-Za-z0-9_\\-,\\)\\s*]+)");
+
+        // free properties and device exported
+        // tango://ken:20000/#Sequencer#TestList
+        // ken:20000/#test/de*/*(*)
+        //    d->src_patterns.push_back("(?:tango://){1,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\$#\\*/]+(?:\\(\\*\\)){0,1}");
+        d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\-\\.\\$#\\*/]+(?:\\(\\*\\)){0,1}");
+        // tango domain search [tango://]hokuto:20000/ or [tango://]hokuto:20000/*
+        d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){1}[*]{0,1}");
+
+        // support tango://host:PORT/a/b/c/d and tango://host:PORT/a/b/c->e
+        // when CumbiaPool.guessBySrc needs to be used
+        // with the two above only, sources like "tango://hokuto:20000/test/device/1/double_scalar"
+        // or "hokuto:20000/test/device/1/double_scalar" are not identified
+        d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\$]+/.+");
+        d->src_patterns.push_back("(?:tango://){0,1}(?:[A-Za-z0-9_\\-\\.:]+/){0,1}[A-Za-z0-9_\\\\-\\\\.\\\\$]+->.+");
+    }
     return d->src_patterns;
 }
 
