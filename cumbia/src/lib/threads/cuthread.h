@@ -81,6 +81,7 @@ public:
     void publishResult(const CuActivity *activity, const CuData &data);
     void publishResult(const CuActivity *activity, const std::vector<CuData> &data_list);
     void publishResult(const CuActivity *activity, const CuUserData *u);
+    unsigned activityCount() const;
 
     bool matches(const std::string &other_thtok) const;
     std::string getToken() const;

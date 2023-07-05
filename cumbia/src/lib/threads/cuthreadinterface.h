@@ -172,6 +172,8 @@ public:
      */
     virtual void postEvent(CuActivity *, CuActivityEvent* ) = 0;
 
+    virtual unsigned activityCount() const = 0;
+
 
     // CuThreadsEventBridgeListener interface
 public:

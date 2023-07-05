@@ -6,6 +6,7 @@
 #include <mutex> // for unique_lock
 #include <shared_mutex>
 #include <assert.h>
+#include <cuthreadinterface.h>
 
 class CuActivityManagerPrivate {
 public:
@@ -169,12 +170,7 @@ std::vector<CuActivity *> CuActivityManager::activitiesForThread(const CuThreadI
 
 int CuActivityManager::countActivitiesForThread(const CuThreadInterface *ti) {
     assert(d->mythread == pthread_self());
-    int count = 0;
-    std::unordered_multimap<CuActivity *,  CuThreadInterface *>::iterator it;
-    for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it)
-        if(it->second == ti)
-            count++;
-    return count;
+    return ti->activityCount();
 }
 
 std::string CuActivityManager::getName() const {
