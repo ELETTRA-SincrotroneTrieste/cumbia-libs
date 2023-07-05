@@ -289,12 +289,11 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
 QString CuControlsUtils::msg(const CuData &da, const QString& date_time_fmt) const {
     QString m = QuString(da, "src");
     // timestamp
-    if(da.containsKey("timestamp_ms")) {
         long int ts = 0;
         da["timestamp_ms"].to<long int>(ts);
         if(ts > 0)
             m += " " + QDateTime::fromMSecsSinceEpoch(ts).toString(date_time_fmt);
-    } else if(da.containsKey("timestamp_us")) {
+    if(ts == 0) {
         double tsd = 0.0;
         da["timestamp_us"].to<double>(tsd);  // secs.usecs in a double
         if(tsd > 0)
@@ -304,8 +303,9 @@ QString CuControlsUtils::msg(const CuData &da, const QString& date_time_fmt) con
     if(!msg.isEmpty())
         return m + ": " + msg;
     // pick mode or activity name
-    if(da.containsKey("mode"))
-        m += (" [" + QuString(da, "mode") + "] ");
+    const std::string& _mode = da.s("mode");
+    if(_mode.length() > 0)
+        m += (" [" + QuString(_mode) + "] ");
     else
         m += (" [" + QuString(da, "activity") + "] ");
 
