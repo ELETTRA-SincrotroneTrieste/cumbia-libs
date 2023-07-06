@@ -9,9 +9,6 @@ include(cumbia-qtcontrols.pri)
 CONFIG += release
 
 
-
-# CONFIG += silent
-
 # remove ourselves (defined in .pri)
 PKGCONFIG -= cumbia-qtcontrols$${QTVER_SUFFIX}
 
@@ -71,6 +68,7 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/qthreadseventbridge.cpp \
     src/qthreadseventbridgefactory.cpp \
     src/cuevent_qt.cpp \
+    src/cucontrolsfactorypool_p.cpp \
     src/cucontrolsfactorypool.cpp \
     src/quapplynumeric.cpp \
     src/widgets-base/einputoutputwidget.cpp \
@@ -113,6 +111,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/cucontrolsreader_abs.h \
     src/cucontrolswriter_abs.h \
     src/cucontrolsfactories_i.h \
+    src/cucontrolsfactorypool_p.h \
     src/cucontrolsfactorypool.h \
     src/qupalette.h \
     src/cucontrolsutils.h \
@@ -196,7 +195,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/plugin_ifaces/cucontextmenuactionsplugin_i.h \
     src/cupluginloader.h \
     src/plugin_ifaces/cuformulaplugininterface.h \
-    src/plugin_ifaces/cuhistoricaldbplugin_i.hp \
+    src/plugin_ifaces/cuhistoricaldbplugin_i.h \
     src/widgets-base/cumouse-ev-handler.h
 
 

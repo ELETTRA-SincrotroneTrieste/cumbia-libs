@@ -3,8 +3,8 @@
 old_version="1\.5\.1"
 old_version_hex="0x010501"
 
-new_version="1.5.2"
-new_version_hex="0x010502"
+new_version="2.0.0"
+new_version_hex="0x020000"
 
 echo -e " Will replace version $old_version with $new_version and $old_version_hex with $new_version_hex in all .pri and meson.build files"
 echo -n  -e " Do you want to continue [y|n]?  [y] "

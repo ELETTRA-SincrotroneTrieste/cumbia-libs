@@ -10,6 +10,30 @@ The plot configuration dialog now allows to save changes  to  axes and curve sty
 
 Formulas accept now "$1" wildcards in source names, that are replaced at runtime.
 
+### Performance 
+
+Perf tools have been intensively exploited to find performance issues, especially at application
+startup with numerous sources (more than 2000).
+Regular expression declarations have become static, so that regex compilation takes place only
+once.
+
+#### cumbia
+
+CumbiaPool: if only one cumbia instance has been registered src has no "protocol" prefix, a pointer to that
+instance is returned without any regexp matching (since 1.5.1)
+
+#### cumbia-tango
+
+world config has been made static and default src_patterns are added from srcPatterns() 
+rather than in CuTangoWorld constructor, which is often called for simple operations
+
+#### cumbia-qtcontrols
+
+CuControlsFactoryPool does not perform regex match if only one factory is registered, simply
+returning the sole instance.
+
+Mouse event handler allocates the plugin only at first actual mouse event.
+
 ## version 1.5.0
 
 #### cumbia

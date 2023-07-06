@@ -28,6 +28,10 @@ class CuFormulasPluginPrivate;
  * "formula://" domain in CumbiaPool and CuControlsFactoryPool, by calling CumbiaPool::registerImpl
  * and CuControlsFactoryPool::setSrcPatterns
  *
+ * The CuFormulaPlugin::initialize shall be called *before any source setup* inside the application and
+ * *after all other modules* (tango,epics,http,...) have been registered to the *pools*.
+ * In this way, all sources can use the formula plugin and the sources used by the formula plugin can use
+ * the cumbia engines available in the application.
  *
  * \code
 

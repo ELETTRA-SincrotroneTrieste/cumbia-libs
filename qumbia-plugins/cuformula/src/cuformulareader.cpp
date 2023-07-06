@@ -61,6 +61,7 @@ CuFormulaReaderFactory::CuFormulaReaderFactory(CumbiaPool *cu_poo, const CuContr
     d = new CuFormulaReaderFactoryPrivate;
     d->cu_poo = cu_poo;
     d->fpool = fpool;
+    printf("\e[1;33mCuFormulaReaderFactory created with fpool with %ld domains\e[0m\n", fpool.getSrcPatternDomains().size());
 }
 
 CuFormulaReaderFactory::~CuFormulaReaderFactory()

@@ -242,9 +242,8 @@ std::string CuHttpTangoSrc::getName() const {
 }
 
 std::string CuHttpTangoSrc::getTangoHost() const {
-    std::regex host_re(TGHOST_RE);
     std::smatch sm;
-    if(std::regex_search(m_s, sm, host_re) && sm.size() > 1)
+    if(std::regex_search(m_s, sm, _regexps.get_host_re()) && sm.size() > 1)
         return sm[1];
     return std::string();
 }
@@ -282,9 +281,8 @@ std::string CuHttpTangoSrc::getFreePropNam() const {
  * - #Sequencer#TestList getFreePropObj returns Sequencer while getPropNam returns TestList
  */
 string CuHttpTangoSrc::getFreePropObj() const {
-    std::regex re("#(.*)#");  // #(.*)#
     std::smatch sm;
-    if(std::regex_search(m_s, sm, re) && sm.size() > 1)
+    if(std::regex_search(m_s, sm, _regexps.get_freeprop_re()) && sm.size() > 1)
         return sm[1];
     return std::string();
 }

@@ -14,12 +14,13 @@
 #include <QCoreApplication>
 #include <cumbiahttpworld.h>
 #include <qustringlist.h>
-#include <qregularexpression.h>
+#include <QRegularExpression>
+
+Q_GLOBAL_STATIC_WITH_ARGS(const QRegularExpression, args_re, ("\\(.*\\)"));
 
 class CuHTTPReaderFactoryPrivate {
 public:
     CuData options;
-
 };
 
 CuHTTPReaderFactory::CuHTTPReaderFactory()
@@ -207,8 +208,8 @@ CuData CuHttpControlsReader::getOptions() const {
 void CuHttpControlsReader::sendData(const CuData &data) {
     bool a = data.containsKey("read") || data.containsKey("args");
     if(d->o["manual"].toBool() && a) {
-        if(data.containsKey("args") && d->s.contains(QRegularExpression("\\(.*\\)"))) {
-            d->s.replace(QRegularExpression("\\(.*\\)"), "(" + QuStringList(data["args"]).join(',') + ')');
+        if(data.containsKey("args") && d->s.contains(*args_re)) {
+            d->s.replace(*args_re, "(" + QuStringList(data["args"]).join(',') + ')');
         }
         if(data.containsKey("read"))
             setSource(d->s);

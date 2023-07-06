@@ -78,7 +78,6 @@ CuControlsReaderA *CuContext::m_make_reader(const std::string &s, CuDataListener
 {
     Cumbia *cumbia = NULL;
     CuControlsReaderFactoryI *r_fa;
-
     if(d->cu_pool && !d->ctrl_factory_pool.isEmpty()) /* pick Cumbia impl */  {
         // pick a cumbia and reader factory implementation from the pool
         cumbia = d->cu_pool->getBySrc(s);
