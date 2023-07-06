@@ -204,7 +204,7 @@ std::vector<string> TSource::getArgs() const {
     std::vector<std::string> ret;
     std::string s(d->m_s);
     size_t arg_start = 0, arg_end = 0;
-    const std::string& arg_ops = getArgOptions(&arg_start, &arg_end);
+    const std::string& arg_ops = s.find('[') != std::string::npos ? getArgOptions(&arg_start, &arg_end) : std::string();
     //    s.erase(std::remove(s.begin() + s.find('('), s.begin() + s.find(')') + 1, ' '), s.end()); // remove spaces
     // take an argument delimited by "" as a single parameter
     size_t pos = d->m_s.find("(\"");
