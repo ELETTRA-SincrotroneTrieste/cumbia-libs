@@ -79,10 +79,15 @@ Cumbia *CumbiaPool::get(const std::string &domain) const
     return nullptr;
 }
 
-/** \brief Calls get with the domain extracted from the full source name "src"
+/** \brief returns a pointer to a registered Cumbia instance, matching identification patterns
+ *         if either specified or in case of multiple registered instances.
  *
- * @param src the name of the data source. Must begin with the <em>domain name</em>
- *        followed by <em>://</em>, for example <strong><cite>epics://</cite>foo:bar</strong>
+ * @param source name
+ *
+ * if a "protocol" prefix is specified, like tango:// or http://, it is used to match (or verify) a
+ * correspondingly registered Cumbia instance.
+ * If only one cumbia instance has been registered src has no "protocol" prefix, a pointer to that
+ * instance is returned without any regexp matching (since 1.5.1)
  *
  */
 Cumbia *CumbiaPool::getBySrc(const std::string &src) const
@@ -94,13 +99,13 @@ Cumbia *CumbiaPool::getBySrc(const std::string &src) const
     size_t pos = src.find("://");
     if(pos != std::string::npos)
         cu = get(src.substr(0, pos));
-
-    if(!cu)
+    else if(m_map.size() == 1)
+        cu = m_map.begin()->second;
+    else
         cu = guessBySrc(src);
 
     if(!cu) {
         perr("CumbiaPool.getBySrc: could not guess domain from \"%s\"", src.c_str());
-
     }
     return cu;
 }
