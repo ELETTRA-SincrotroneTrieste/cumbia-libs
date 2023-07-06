@@ -101,11 +101,11 @@ public:
     void setQualityString(Tango::AttrQuality, std::string);
     std::string qualityString(Tango::AttrQuality) const;
 
-    std::map<Tango::DevState, std::string> stateStrings();
-    std::map<Tango::DevState, std::string>  stateColorNames();
+    std::map<Tango::DevState, std::string> stateStrings() const;
+    std::map<Tango::DevState, std::string>  stateColorNames() const;
 
-    std::map<Tango::AttrQuality, std::string> qualityStrings();
-    std::map<Tango::AttrQuality, std::string> qualityColorNames();
+    std::map<Tango::AttrQuality, std::string> qualityStrings() const;
+    std::map<Tango::AttrQuality, std::string> qualityColorNames() const;
 
 
 
@@ -117,7 +117,7 @@ public:
          */
     void setOverrideValuesAttributePropertyName(const std::string& name);
 
-    std::string valuesAttributePropertyName();
+    std::string valuesAttributePropertyName() const;
 
 protected:
     
