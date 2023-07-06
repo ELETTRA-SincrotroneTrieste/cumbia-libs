@@ -10,8 +10,9 @@
 
 class CuActivityManagerPrivate {
 public:
-    std::unordered_multimap< CuActivity *, CuThreadInterface *> conn_mumap;
-    std::unordered_multimap<const CuActivity *, CuThreadListener *> th_lis_mumap;
+    std::unordered_map< CuActivity *, CuThreadInterface *> conn_map;
+    std::unordered_multimap<const CuActivity *, CuThreadListener *> th_lis_mmap;
+    std::unordered_map<const CuThreadInterface *, int> th_acnt_map; // count activities per thread
     pthread_t mythread;
 };
 
@@ -36,9 +37,10 @@ CuActivityManager::~CuActivityManager() {
 void CuActivityManager::connect(CuThreadInterface *t, CuActivity *a, CuThreadListener *threadListener) {
     assert(d->mythread == pthread_self());
     std::pair<CuActivity *, CuThreadInterface *> p(a, t);
-    std::pair<CuActivity *, CuThreadListener *> pl(a, threadListener);
-    d->conn_mumap.insert(p);
-    d->th_lis_mumap.insert(pl);
+    std::pair<CuActivity *, CuThreadListener *>  pl(a, threadListener);
+    d->conn_map.insert(p);
+    d->th_lis_mmap.insert(pl);
+    d->th_acnt_map.find(t) == d->th_acnt_map.end() ? d->th_acnt_map[t] = 1 : d->th_acnt_map[t]++;
 }
 
 /** \brief Removes all links where a is involved
@@ -52,8 +54,12 @@ void CuActivityManager::connect(CuThreadInterface *t, CuActivity *a, CuThreadLis
  */
 void CuActivityManager::disconnect(CuActivity *a) {
     assert(d->mythread == pthread_self());
-    d->conn_mumap.erase(a);
-    d->th_lis_mumap.erase(a);
+    std::unordered_map<CuActivity*, CuThreadInterface *>::const_iterator it = d->conn_map.find(a);
+    if(it != d->conn_map.end()) // if a is found, its associated thread is in th_acnt_map
+        d->th_acnt_map[it->second]--;
+    d->conn_map.erase(a);
+    d->th_lis_mmap.erase(a);
+
 }
 
 /** \brief Removes all links involving the CuThreadInterface passed as input
@@ -71,11 +77,12 @@ void CuActivityManager::removeConnections(CuThreadInterface *t) {
     assert(d->mythread == pthread_self());
     std::unordered_multimap< CuActivity *, CuThreadInterface *>::iterator it;
     std::unordered_multimap<const CuActivity *, CuThreadListener *>::const_iterator lit;
-    it = d->conn_mumap.begin();
-    while(it != d->conn_mumap.end())  {
+    it = d->conn_map.begin();
+    while(it != d->conn_map.end())  {
         if(it->second == t) {
-            d->th_lis_mumap.erase(it->first);
-            it = d->conn_mumap.erase(it);
+            d->th_lis_mmap.erase(it->first);
+            d->th_acnt_map[it->second]--;
+            it = d->conn_map.erase(it);
         }
         else
             it++;
@@ -84,11 +91,11 @@ void CuActivityManager::removeConnections(CuThreadInterface *t) {
 
 void CuActivityManager::disconnect(CuThreadListener *l) {
     assert(d->mythread == pthread_self());
-    std::unordered_multimap<const CuActivity *, CuThreadListener *>::iterator lit = d->th_lis_mumap.begin();
-    while(lit != d->th_lis_mumap.end())
+    std::unordered_multimap<const CuActivity *, CuThreadListener *>::iterator lit = d->th_lis_mmap.begin();
+    while(lit != d->th_lis_mmap.end())
     {
         if(lit->second == l)
-            lit = d->th_lis_mumap.erase(lit);
+            lit = d->th_lis_mmap.erase(lit);
         else
             lit++;
     }
@@ -108,7 +115,7 @@ void CuActivityManager::disconnect(CuThreadListener *l) {
 CuActivity *CuActivityManager::find(const CuData &token) {
     assert(d->mythread == pthread_self());
     std::unordered_multimap<CuActivity *, CuThreadInterface * >::const_iterator it;
-    for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it) {
+    for(it = d->conn_map.begin(); it != d->conn_map.end(); ++it) {
         if(it->first->matches(token))
             return it->first;
     }
@@ -125,17 +132,17 @@ CuActivity *CuActivityManager::find(const CuData &token) {
  */
 CuThreadInterface *CuActivityManager::getThread(CuActivity *activity)  {
     assert(d->mythread == pthread_self());
-    std::unordered_multimap<CuActivity *, CuThreadInterface * >::const_iterator it = d->conn_mumap.find(activity);
-    return (it != d->conn_mumap.end()) ? it->second : nullptr;
+    std::unordered_multimap<CuActivity *, CuThreadInterface * >::const_iterator it = d->conn_map.find(activity);
+    return (it != d->conn_map.end()) ? it->second : nullptr;
 }
 
 std::vector<CuThreadListener *> CuActivityManager::getThreadListeners(const CuActivity *activity) {
     assert(d->mythread == pthread_self());
     std::vector< CuThreadListener *> listeners;
-    std::unordered_multimap<const CuActivity *,  CuThreadListener *>::const_iterator lit = d->th_lis_mumap.find(activity);
+    std::unordered_multimap<const CuActivity *,  CuThreadListener *>::const_iterator lit = d->th_lis_mmap.find(activity);
     std::pair<std::unordered_multimap<const CuActivity *,  CuThreadListener *>::const_iterator,
             std::unordered_multimap<const CuActivity *,  CuThreadListener *>::const_iterator> ret;
-    ret = d->th_lis_mumap.equal_range(activity);
+    ret = d->th_lis_mmap.equal_range(activity);
     for(std::unordered_multimap<const CuActivity *,  CuThreadListener *>::const_iterator it = ret.first; it != ret.second; ++it)
         listeners.push_back(lit->second);
 
@@ -145,10 +152,10 @@ std::vector<CuThreadListener *> CuActivityManager::getThreadListeners(const CuAc
 bool CuActivityManager::connectionExists(CuThreadInterface *t, CuActivity *a, CuThreadListener *threadListener) {
     assert(d->mythread == pthread_self());
     std::unordered_multimap<CuActivity *, CuThreadInterface *>::const_iterator it;
-    for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it) {
+    for(it = d->conn_map.begin(); it != d->conn_map.end(); ++it) {
         if(it->first == a && it->second == t) {
             std::unordered_multimap<const CuActivity *, CuThreadListener *>::const_iterator lit;
-            for(lit = d->th_lis_mumap.begin(); lit != d->th_lis_mumap.end(); ++lit)
+            for(lit = d->th_lis_mmap.begin(); lit != d->th_lis_mmap.end(); ++lit)
                 if(lit->first == a && lit->second == threadListener)
                     return true;
         }
@@ -161,7 +168,7 @@ std::vector<CuActivity *> CuActivityManager::activitiesForThread(const CuThreadI
     assert(d->mythread == pthread_self());
     std::vector<CuActivity *> v;
     std::unordered_multimap<CuActivity *,  CuThreadInterface *>::iterator it;
-    for(it = d->conn_mumap.begin(); it != d->conn_mumap.end(); ++it)  {
+    for(it = d->conn_map.begin(); it != d->conn_map.end(); ++it)  {
         if(it->second == ti)
             v.push_back(it->first);
     }
@@ -170,7 +177,7 @@ std::vector<CuActivity *> CuActivityManager::activitiesForThread(const CuThreadI
 
 int CuActivityManager::countActivitiesForThread(const CuThreadInterface *ti) {
     assert(d->mythread == pthread_self());
-    return ti->activityCount();
+    return d->th_acnt_map.count(ti) > 0 ? d->th_acnt_map[ti] : 0;
 }
 
 std::string CuActivityManager::getName() const {
