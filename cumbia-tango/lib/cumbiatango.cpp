@@ -74,7 +74,7 @@ void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTa
     const std::string& src = source.getName();
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
-    CuTangoActionI *a = af->registerAction(src, f, this, &isnew);
+    CuTangoActionI *a = af->registerAction(src, f, this, &isnew); // must be called with src = source.getName
     if(isnew)
         a->start();
     a->addDataListener(l);
