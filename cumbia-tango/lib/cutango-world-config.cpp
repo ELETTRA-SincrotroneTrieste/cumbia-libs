@@ -17,6 +17,7 @@ public:
 
 CuTangoWorldConfig::CuTangoWorldConfig()
 {
+    printf("\e[1;31mCuTangoWorldConfig INITIALIZED\e[0m\n");
     d = new CuTangoWorldConfigPrivate;
     initStateColorsAndStrings();
     initQualityColorsAndStrings();
@@ -116,22 +117,22 @@ std::string CuTangoWorldConfig::qualityString(Tango::AttrQuality q) const
     return "UNDEFINED QUALITY";
 }
 
-std::map<Tango::DevState, std::string> CuTangoWorldConfig::stateStrings()
+std::map<Tango::DevState, std::string> CuTangoWorldConfig::stateStrings() const
 {
     return d->stateStrings;
 }
 
-std::map<Tango::DevState, std::string> CuTangoWorldConfig::stateColorNames()
+std::map<Tango::DevState, std::string> CuTangoWorldConfig::stateColorNames()   const
 {
     return d->stateColors;
 }
 
-std::map<Tango::AttrQuality, std::string> CuTangoWorldConfig::qualityStrings()
+std::map<Tango::AttrQuality, std::string> CuTangoWorldConfig::qualityStrings() const
 {
     return d->qualityStrings;
 }
 
-std::map<Tango::AttrQuality, std::string> CuTangoWorldConfig::qualityColorNames()
+std::map<Tango::AttrQuality, std::string> CuTangoWorldConfig::qualityColorNames() const
 {
     return d->qualityColors;
 }
@@ -141,7 +142,7 @@ void CuTangoWorldConfig::setOverrideValuesAttributePropertyName(const std::strin
     d->valueAttrPropName = name;
 }
 
-std::string CuTangoWorldConfig::valuesAttributePropertyName()
+std::string CuTangoWorldConfig::valuesAttributePropertyName() const
 {
     return d->valueAttrPropName;
 }
