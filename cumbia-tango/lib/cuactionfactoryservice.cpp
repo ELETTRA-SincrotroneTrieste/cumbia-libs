@@ -23,6 +23,7 @@ CuActionFactoryService::~CuActionFactoryService()
 }
 
 /** \brief Create and register a new action if an action with the same source and type is not already running.
+ * @param src source must be the same used in unregisterAction
  *
  * \par Rules
  *  \li same source, different CuTangoActionI type: two distinct actions.
