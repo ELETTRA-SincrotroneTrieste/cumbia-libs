@@ -32,6 +32,8 @@ headers = [
 'src/lib/cumatrix.h',
 'src/lib/cuvariantprivate.h',
 'src/lib/cudata.h',
+'src/lib/cudatatypes.h',
+'src/lib/cudatatypes_ex.h',
 'src/lib/cudataquality.h',
 'src/lib/cumbiapool.h',
 'src/lib/cudatalistener.h',

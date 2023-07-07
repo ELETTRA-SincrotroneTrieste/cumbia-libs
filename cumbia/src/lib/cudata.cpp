@@ -1,33 +1,42 @@
 #include "cudata.h"
 #include "cumacros.h"
+#include "cudatatypes.h"
+#include "cudatatypes_ex.h"
 #include <string>
 #include <string.h>
 #include <sys/time.h>
 #include <unordered_map>
 #include <atomic>
+#include <assert.h>
+#include <map>
 
 /*! @private */
 class CuDataPrivate
 {
 public:
     CuDataPrivate(const CuDataPrivate& other) {
-        datamap = other.datamap;
+        m_copy_from(other);
         _r.store(1);
     }
+
     CuDataPrivate() {
         _r.store(1);
     }
+
     ~CuDataPrivate() {
     }
+
     CuDataPrivate &operator=(const CuDataPrivate &other) {
         if(this != &other) {
-            datamap = other.datamap;
+            m_copy_from(other);
         }
         return *this;
     }
 
     std::unordered_map<std::string, CuVariant> datamap;
     CuVariant emptyVariant;
+
+    CuVariant data[CuDType::MaxDataKey];
 
     int ref() {
         return _r.fetch_add(1);
@@ -37,6 +46,15 @@ public:
     }
     int load() const {
         return _r.load();
+    }
+
+    void m_copy_from(const CuDataPrivate &other) {
+        datamap = other.datamap;
+        for(size_t i = 0; i < CuDType::MaxDataKey; i++) {
+            if(data[i].isValid()) { // copy CuVariant if set at pos i
+                data[i] = other.data[i];
+            }
+        }
     }
 
 private:
@@ -85,6 +103,11 @@ CuData::CuData(const std::string& key, const CuVariant &v) {
     d_p->datamap[key] = v;
 }
 
+CuData::CuData(const size_t key, const CuVariant &v) {
+    d_p = new CuDataPrivate();
+    d_p->data[key] = v;
+}
+
 /*! \brief the copy constructor
  *
  * @param other another CuData used as the source of the copy
@@ -94,8 +117,7 @@ CuData::CuData(const std::string& key, const CuVariant &v) {
  */
 CuData::CuData(const CuData &other) {
     d_p = other.d_p;
-    d_p->ref();  // increment ref counter
-    //    mCopyData(other); // before implicit sharing
+    d_p->ref();  // increment ref counter (impl. sharing)
 }
 
 /*! \brief c++11 *move constructor*
@@ -138,16 +160,34 @@ CuData &CuData::operator=(CuData &&other) {
     return *this;
 }
 
+CuData &CuData::set(const CuDType::Key &key, const CuVariant &value) {
+    detach();
+    d_p->data[key] = value;
+    return *this;
+}
+
 CuData &CuData::set(const std::string &key, const CuVariant &value) {
     detach();
     d_p->datamap[key] = value;
     return *this;
 }
 
+/*!
+ * \brief merge other data into this data, moving contents from other
+ * \param other another CuData whose contents will be merged into this data with a *move* operation
+ * \return this CuData with values *merged* with other CuData
+ *
+ * \note the *other* CuData contents are *moved* into this data.
+ */
 CuData &CuData::merge(const CuData &&other) {
     detach();
     for(const std::string& key : other.keys())
         (*this).set(key, std::move(other.value(key)));
+    for(size_t i = 0; i < CuDType::MaxDataKey; i++) {
+        if(other.d_p->data[i].isValid())
+            d_p->data[i] = std::move(other.d_p->data[i]);
+
+    }
     return *this;
 }
 
@@ -174,6 +214,18 @@ CuData &CuData::remove(const std::string &key) {
     return *this;
 }
 
+CuData &CuData::remove(const CuDType::Key &key)
+{
+    detach();
+    if(key < CuDType::MaxDataKey)
+        d_p->data[key] = CuVariant();
+    return *this;
+}
+
+CuData CuData::remove(const CuDType::Key &key) const {
+    return CuData(*this).remove(key);
+}
+
 CuData CuData::remove(const std::string &key) const {
     return CuData(*this).remove(key);
 }
@@ -183,6 +235,17 @@ CuData &CuData::remove(const std::vector<std::string> &keys) {
     for(const std::string& k : keys)
         d_p->datamap.erase(k);
     return *this;
+}
+
+CuData &CuData::remove(const std::vector<size_t> &keys) {
+    detach();
+    for(const size_t& k : keys)
+        d_p->data[k] = CuVariant();
+    return *this;
+}
+
+CuData CuData::remove(const std::vector<size_t> &keys) const {
+    return CuData(*this).remove(keys);
 }
 
 CuData CuData::remove(const std::vector<std::string> &keys) const {
@@ -196,7 +259,11 @@ CuData CuData::remove(const std::vector<std::string> &keys) const {
  * @see isEmpty
  */
 size_t CuData::size() const {
-    return d_p->datamap.size();
+    int s = 0;
+    for(size_t i = 0; i < CuDType::MaxDataKey; i++)
+        if(d_p->data[i].isValid())
+            s++;
+    return s + d_p->datamap.size();
 }
 
 /*! \brief return the value associated to the empty key
@@ -230,6 +297,15 @@ CuVariant CuData::value(const std::string & key) const {
     return CuVariant();
 }
 
+CuVariant CuData::value(const CuDType::Key &key) const {
+    return key < CuDType::MaxDataKey ? d_p->data[key] : CuVariant();
+}
+
+void CuData::add(const CuDType::Key &key, const CuVariant &value) {
+    if(key < CuDType::MaxDataKey)
+        d_p->data[key] = value;
+}
+
 /*! \brief insert the key/value into the bundle
  *
  * @param key the new key, as a std::string
@@ -249,6 +325,14 @@ void CuData::add(const std::string & key, const CuVariant &value) {
  */
 bool CuData::containsKey(const std::string &key) const {
     return d_p->datamap.count(key) > 0;
+}
+
+bool CuData::containsKey(const CuDType::Key &key) const {
+    return key < CuDType::MaxDataKey && d_p->data[key].isValid();
+}
+
+bool CuData::has(const CuDType::Key &key, const size_t &value) const {
+    return key < CuDType::MaxDataKey && key == value && d_p->data[key].isValid();
 }
 
 /*! \brief returns true if the specified key has the given string value
@@ -282,6 +366,11 @@ CuVariant &CuData::operator [](const std::string &key) {
     return d_p->datamap[key];
 }
 
+CuVariant &CuData::operator [](const CuDType::Key &key) {
+    detach();
+    return d_p->data[key];
+}
+
 /*! \brief array subscript read operator: get a reference to a value given the key
  *
  * @param key the key to search for
@@ -295,6 +384,15 @@ const CuVariant &CuData::operator [](const std::string &key) const {
     return d_p->emptyVariant;
 }
 
+/*!
+ * \brief CuData::operator [] with index
+ * \param key index
+ * \return the CuVariant at the index position
+ */
+const CuVariant &CuData::operator [](const CuDType::Key &key) const {
+    return d_p->data[key]; // const: do not detach
+}
+
 /*! \brief *equality* relational operator. Returns true if *this* CuData
  *         equals another
  *
@@ -305,18 +403,10 @@ const CuVariant &CuData::operator [](const std::string &key) const {
  * the *inequality* operator is also defined
  */
 bool CuData::operator ==(const CuData &other) const {
-//    if(other.d_p->datamap.size() != d_p->datamap.size())
-//        return false;
+    for(size_t i = 0; i < CuDType::MaxDataKey; i++)
+        if(other.d_p->data[i] != this->d_p->data[i])
+            return false;
     return other.d_p->datamap == d_p->datamap;
-//    std::unordered_map<std::string, CuVariant>::const_iterator i;
-//    for(i = d_p->datamap.begin(); i != d_p->datamap.end(); ++i)
-//    {
-//        if(!other.containsKey(i->first))
-//            return false;
-//        if(other[i->first] != i->second)
-//            return false;
-//    }
-//    return true;
 }
 
 /*! \brief *inequality* relational operator. Returns true if the
@@ -338,6 +428,9 @@ bool CuData::operator !=(const CuData &other) const {
  * @see size
  */
 bool CuData::isEmpty() const {
+    for(size_t i = 0; i < CuDType::MaxDataKey; i++)
+        if(d_p->data[i].isValid())
+            return false; // at least one is set
     return d_p->datamap.size() == 0;
 }
 
@@ -367,17 +460,35 @@ void CuData::print() const {
  */
 std::string CuData::toString() const
 {
+    CuXDTypeUtils dt;
     std::string r = "CuData { ";
     std::unordered_map<std::string, CuVariant>::const_iterator i;
-    char siz[16], empty[16];
+    char siz[16];
     snprintf(siz, 16, "%ld", d_p->datamap.size());
-    snprintf(empty, 16, "%d", d_p->datamap.size() == 0);
     for(i = d_p->datamap.begin(); i != d_p->datamap.end(); ++i)
     {
         r += "[\"" + i->first + "\" -> " + i->second.toString() + "], ";
     }
     r.replace(r.length() - 2, 2, "");
-    r += " } (size: " + std::string(siz) + " isEmpty: " + std::string(empty) + ")";
+    r += " } (str size map: " + std::string(siz) + ") ";
+
+    int kc = 0;
+    std::map<std::string, std::string> valmap; // want a lexicographically ordered print of key name/values
+    for(size_t i = 0; i < CuDType::MaxDataKey; i++) {
+        valmap[dt.keyName(static_cast<CuDType::Key>(i))] = operator [](static_cast<CuDType::Key>(i)).toString();
+        if(d_p->data[i].isValid())
+            kc++;
+    }
+    r += ("*int-keys* { ");
+    for(std::map<std::string, std::string>::const_iterator it = valmap.begin(); it != valmap.end(); ++it) {
+        r += "[" + it->first + ": \"" + it->second + "\"], ";
+    }
+    r.replace(r.length() - 2, 2, "");
+
+
+    r += " } (int key count: " + std::to_string(kc) + " isEmpty: " + std::string(((d_p->datamap.size() + kc) == 0) ? "YES" : "NO") +
+         " total size: " + std::to_string(kc + d_p->datamap.size()) + ")";
+
     return r;
 }
 
@@ -393,8 +504,8 @@ void CuData::putTimestamp() {
     detach();
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    add("timestamp_ms",  tv.tv_sec * 1000 + tv.tv_usec / 1000);
-    add("timestamp_us", static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6);
+    add(CuDType::Time_ms,  tv.tv_sec * 1000 + tv.tv_usec / 1000);
+    add(CuDType::Time_us, static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6);
 }
 
 std::vector<std::string> CuData::keys() const {
@@ -404,14 +515,13 @@ std::vector<std::string> CuData::keys() const {
     return ks;
 }
 
-// this was used before implicit sharing
-//void CuData::mCopyData(const CuData& other)
-//{
-//    std::map<std::string, CuVariant>::const_iterator it;
-//    for (it = other.d_p->datamap.begin(); it != other.d_p->datamap.end(); ++it)
-//        d_p->datamap[it->first] = other.d_p->datamap[it->first];
-//}
-
+std::vector<size_t> CuData::idx_keys() const {
+    std::vector<size_t> k;
+    for(size_t i = 0; i < CuDType::MaxDataKey; i++)
+        if(d_p->data[i].isValid())
+            k.push_back(i);
+    return k;
+}
 void CuData::detach() {
     if(d_p && d_p->load() > 1) {
         d_p->unref();
@@ -419,20 +529,41 @@ void CuData::detach() {
     }
 }
 
+
+std::string CuData::s(const CuDType::Key &key) const {
+    return d_p->data[key].s();
+}
+
 std::string CuData::s(const std::string& key) const {
     return this->operator[](key).s();
+}
+
+double CuData::d(const CuDType::Key &key) const {
+    return d_p->data[key].d();
 }
 
 double CuData::d(const std::string& key) const {
     return this->operator[](key).d();
 }
 
+int CuData::i(const CuDType::Key &key) const {
+    return d_p->data[key].i();
+}
+
 int CuData::i(const std::string& key) const {
     return this->operator[](key).i();
 }
 
+unsigned int CuData::u(const CuDType::Key &key) const {
+    return d_p->data[key].u();
+}
+
 unsigned int CuData::u(const std::string &key) const {
     return this->operator[](key).u();
+}
+
+bool CuData::b(const CuDType::Key &key) const {
+    return d_p->data[key].isValid() && d_p->data[key].b();
 }
 
 bool CuData::b(const std::string& key) const {
@@ -443,12 +574,23 @@ bool CuData::b(const std::string& key) const {
 
 // to<T> version shortcuts
 
+double CuData::D(const CuDType::Key &key) const {
+    double v;
+    d_p->data[key].to<double>(v);
+    return v;
+}
 
 double CuData::D(const std::string& key) const {
     double v = 0.0;
     if(containsKey(key))
         this->operator[](key).to<double>(v);
     return v;
+}
+
+int CuData::I(const CuDType::Key &key) const {
+    int i;
+    d_p->data[key].to<int>(i);
+    return i;
 }
 
 int CuData::I(const std::string& key) const {
@@ -458,11 +600,23 @@ int CuData::I(const std::string& key) const {
     return i;
 }
 
+unsigned int CuData::U(const CuDType::Key &key) const {
+    unsigned int ui;
+    d_p->data[key].to<unsigned int>(ui);
+    return ui;
+}
+
 unsigned int CuData::U(const std::string &key) const {
     unsigned int i = 0.0;
     if(containsKey(key))
         this->operator[](key).to<unsigned int>(i);
     return i;
+}
+
+bool CuData::B(const CuDType::Key &key) const {
+    bool b;
+    d_p->data[key].to<bool>(b);
+    return b;
 }
 
 bool CuData::B(const std::string& key) const {
@@ -472,11 +626,23 @@ bool CuData::B(const std::string& key) const {
     return b;
 }
 
+std::vector<double> CuData::DV(const CuDType::Key &key) const {
+    std::vector<double>  dv;
+    d_p->data[key].toVector<double>(dv);
+    return dv;
+}
+
 std::vector<double> CuData::DV(const std::string &key) const {
     std::vector<double>  dv;
     if(containsKey(key))
         this->operator[](key).toVector<double>(dv);
     return dv;
+}
+
+std::vector<int> CuData::IV(const CuDType::Key &key) const {
+    std::vector<int>  iv;
+    d_p->data[key].toVector<int>(iv);
+    return iv;
 }
 
 std::vector<int>  CuData::IV(const std::string &key) const {
@@ -486,11 +652,23 @@ std::vector<int>  CuData::IV(const std::string &key) const {
     return vi;
 }
 
+std::vector<long long> CuData::LLV(const CuDType::Key &key) const {
+    std::vector<long long>  llv;
+    d_p->data[key].toVector<long long>(llv);
+    return llv;
+}
+
 std::vector<long long> CuData::LLV(const std::string &key) const {
     std::vector< long long int>  lliv;
     if(containsKey(key))
         this->operator[](key).toVector< long long int>(lliv);
     return lliv;
+}
+
+std::vector<unsigned int> CuData::UV(const CuDType::Key &key) const {
+    std::vector<unsigned int>  uv;
+    d_p->data[key].toVector<unsigned int>(uv);
+    return uv;
 }
 
 std::vector<unsigned int>  CuData::UV(const std::string &key) const {
@@ -500,11 +678,23 @@ std::vector<unsigned int>  CuData::UV(const std::string &key) const {
     return uiv;
 }
 
+std::vector<unsigned long> CuData::ULV(const CuDType::Key &key) const {
+    std::vector<unsigned long>  ulv;
+    d_p->data[key].toVector<unsigned long>(ulv);
+    return ulv;
+}
+
 std::vector<unsigned long> CuData::ULV(const std::string &key) const {
     std::vector<unsigned long int>  uliv;
     if(containsKey(key))
         this->operator[](key).toVector<unsigned long int>(uliv);
     return uliv;
+}
+
+std::vector<unsigned long long> CuData::ULLV(const CuDType::Key &key) const {
+    std::vector<unsigned long long>  ullv;
+    d_p->data[key].toVector<unsigned long long>(ullv);
+    return ullv;
 }
 
 std::vector<unsigned long long> CuData::ULLV(const std::string &key) const {
@@ -514,9 +704,16 @@ std::vector<unsigned long long> CuData::ULLV(const std::string &key) const {
     return ulliv;
 }
 
+std::vector<bool> CuData::BV(const CuDType::Key &key) const {
+    std::vector<bool>  boov;
+    d_p->data[key].toVector<bool>(boov);
+    return boov;
+}
+
 std::vector<bool> CuData::BV(const std::string &key) const {
     std::vector<bool>  bv;
     if(containsKey(key))
         this->operator[](key).toVector<bool>(bv);
     return bv;
 }
+

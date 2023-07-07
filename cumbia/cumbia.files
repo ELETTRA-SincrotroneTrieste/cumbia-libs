@@ -4,6 +4,8 @@ src/lib/cuactivityevent.cpp
 src/lib/cuactivityevent.h
 src/lib/cudata.cpp
 src/lib/cudata.h
+src/lib/cudatatypes.h
+src/lib/cudatatypes_ex.h
 src/lib/cudatalistener.cpp
 src/lib/cudatalistener.h
 src/lib/cudataquality.cpp
