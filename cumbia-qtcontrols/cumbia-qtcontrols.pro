@@ -6,7 +6,17 @@
 
 include(cumbia-qtcontrols.pri)
 
-CONFIG += release
+isEmpty(buildtype) {
+        buildtype = release
+} else {
+    equals(buildtype, debug) {
+        message("")
+        message("debug build")
+        message("")
+    }
+}
+
+CONFIG += $${buildtype}
 
 
 # remove ourselves (defined in .pri)
