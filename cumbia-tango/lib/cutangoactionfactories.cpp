@@ -10,7 +10,7 @@
  *  within create.
  *
  * @param o a CuData compiled with the following options:
- * \li "period" an integer, in milliseconds, for the polling period. Converted with: CuVariant::toInt
+ * \li CuDType::Period an integer, in milliseconds, for the polling period. Converted with: CuVariant::toInt
  * \li "refresh_mode": an integer defining the Tango refresh mode. Converted with: CuVariant::toInt
  *
  * \par note
@@ -40,7 +40,7 @@ CuTangoReaderFactory::~CuTangoReaderFactory() { }
  *
  * \par options
  * The recognised options are:
- * \li "period" an integer, in milliseconds, for the polling period. Converted with: CuVariant::toInt
+ * \li CuDType::Period an integer, in milliseconds, for the polling period. Converted with: CuVariant::toInt
  * \li "refresh_mode": an integer defining the Tango refresh mode. Converted with: CuVariant::toInt
  *
  * \par note

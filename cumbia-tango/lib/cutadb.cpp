@@ -51,7 +51,7 @@ void CuTaDb::onProgress(int step, int total, const CuData &data) {
 
 void CuTaDb::onResult(const CuData &data)
 {
-    const std::string& src = data.s("src");
+    const std::string& src = data.s(CuDType::Src);
     // do not update configuration data if exit
     std::list <CuDataListener *> listeners = d->listeners;
     std::list<CuDataListener *>::iterator it;

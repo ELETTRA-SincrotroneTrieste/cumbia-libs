@@ -66,7 +66,7 @@ void CuTWriter::setWriteValue(const CuVariant &write_val)
 
 /*!
  * \brief Set database configuration
- * \param db_conf data of type "property" obtained from a
+ * \param db_conf data of type CuDType::Property obtained from a
  */
 void CuTWriter::setConfiguration(const CuData& db_conf) {
     d->db_conf = db_conf;
@@ -174,9 +174,9 @@ void CuTWriter::start() {
     CuDeviceFactoryService *df =
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
-    CuData at("src", d->tsrc.getName()); /* activity token */
-    at["device"] = d->tsrc.getDeviceName();
-    at["point"] = d->tsrc.getPoint();
+    CuData at(CuDType::Src, d->tsrc.getName()); /* activity token */
+    at[CuDType::Device] = d->tsrc.getDeviceName();
+    at[CuDType::Point] = d->tsrc.getPoint();
     at["activity"] = "writer";
     at["write_value"] = d->write_val;
     at["cmd"] = (d->tsrc.getType() == TSource::SrcCmd);

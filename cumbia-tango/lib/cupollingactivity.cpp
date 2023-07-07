@@ -123,7 +123,7 @@ public:
  *
  * \par notes
  * \li the default polling period is 1000 milliseconds
- * \li if the "period" key is set on the token, then it is converted to int and it will be used
+ * \li if the CuDType::Period key is set on the token, then it is converted to int and it will be used
  *     to set up the polling period
  * \li CuADeleteOnExit is active.
  * \li CuAUnregisterAfterExec is disabled because if the Tango device is not defined into the database
@@ -135,7 +135,7 @@ CuPollingActivity::CuPollingActivity(const TSource &tsrc,
                                      const CuData &tag,
                                      int dataupdpo,
                                      int interval)
-    : CuPeriodicActivity(CuData("device", tsrc.getDeviceName()).set("period", interval).set("activity", "poller"))
+    : CuPeriodicActivity(CuData(CuDType::Device, tsrc.getDeviceName()).set(CuDType::Period, interval).set("activity", "poller"))
 {
     d = new CuPollingActivityPrivate(df, options, tag, dataupdpo);
     d->other_thread_id = pthread_self();
@@ -261,8 +261,8 @@ int CuPollingActivity::consecutiveErrCnt() const {
  *         *device* and *activity* and *period* values.
  *
  * @param token a CuData containg key/value pairs of another activity's token
- * @return true if the input token's "period" *device* and *activity* values match this token's
- * "period" *device* and *activity* values
+ * @return true if the input token's CuDType::Period *device* and *activity* values match this token's
+ * CuDType::Period *device* and *activity* values
  *
  * Two CuPollingActivity match if they refer to the same device and have the same period.
  *
@@ -271,8 +271,8 @@ int CuPollingActivity::consecutiveErrCnt() const {
 bool CuPollingActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
-    return token["device"] == mytok["device"] && mytok["activity"] == token["activity"]
-            && token["period"] == mytok["period"];
+    return token[CuDType::Device] == mytok[CuDType::Device] && mytok["activity"] == token["activity"]
+            && token[CuDType::Period] == mytok[CuDType::Period];
 }
 
 /*! \brief the implementation of the CuActivity::init hook
@@ -297,10 +297,10 @@ void CuPollingActivity::init()
     if(thread()->type() == CuTThread::CuTThreadType) // upgrade to CuTThread / lock free CuTThreadDevices
         d->devfa = static_cast<CuTThread *>(thread())->device_factory();
     CuData tk = getToken();
-    d->tdev = d->devfa->getDevice(tk["device"].toString(), threadToken());
-    tk["conn"] = d->tdev->isValid();
-    tk["err"] = !d->tdev->isValid();
-    tk["msg"] = d->tdev->getMessage();
+    d->tdev = d->devfa->getDevice(tk[CuDType::Device].toString(), threadToken());
+    tk[CuDType::Connected] = d->tdev->isValid();
+    tk[CuDType::Err] = !d->tdev->isValid();
+    tk[CuDType::Message] = d->tdev->getMessage();
     tk.putTimestamp();
 }
 
@@ -326,10 +326,10 @@ void CuPollingActivity::init()
  *
  * \par contents of the CuData delivered by publishResult ("key": value)
  * \li "is_command": bool: true if the source is a command, false if it is an attribute (CuVariant::toBool)
- * \li "err": bool: true if an error occurred, false otherwise
+ * \li CuDType::Err: bool: true if an error occurred, false otherwise
  * \li "mode": string: the read mode: "E" or "P" ("P" in this case)
- * \li "period": integer: the polling period, in milliseconds (CuVariant::toInt)
- * \li "msg": string: a message describing a read error upon failure. Not set in case of success (since: 1.3.0)
+ * \li CuDType::Period: integer: the polling period, in milliseconds (CuVariant::toInt)
+ * \li CuDType::Message: string: a message describing a read error upon failure. Not set in case of success (since: 1.3.0)
  * \li refer to \ref md_lib_cudata_for_tango for a complete description of the CuData key/value
  *     pairs that result from attribute or command read operations.
  *
@@ -360,8 +360,8 @@ void CuPollingActivity::execute()
             const std::string& point = tsrc.getPoint();
             results.push_back(d->tag);
             results[i]["mode"] = "P";
-            results[i]["period"] = interval();
-            results[i]["src"] = tsrc.getName();
+            results[i][CuDType::Period] = interval();
+            results[i][CuDType::Src] = tsrc.getName();
             CmdData& cmd_data = d->din_cache[srcnam];
             if(dev && cmd_data.is_empty) {
                 success = tangoworld.get_command_info(dev, point, results[i]);
@@ -374,9 +374,9 @@ void CuPollingActivity::execute()
                 // there is no multi-command_inout version
                 CmdData& cmdd = d->din_cache[srcnam];
                 bool has_argout = cmdd.getCmdInfoRef()["out_type"].toLongInt() != Tango::DEV_VOID;
-                results[i]["err"] = !success;
+                results[i][CuDType::Err] = !success;
                 if(!success) {
-                    results[i]["msg"] = std::string("CuPollingActivity.execute: get_command_info failed for \"") + tsrc.getName() + std::string("\"");
+                    results[i][CuDType::Message] = std::string("CuPollingActivity.execute: get_command_info failed for \"") + tsrc.getName() + std::string("\"");
                     d->consecutiveErrCnt++;
                 }
                 else {
@@ -408,10 +408,10 @@ void CuPollingActivity::execute()
     if(!success) {
         // dev is null or some other error (device not defined in database)
         CuData dev_err;
-        !dev ? dev_err["msg"] =  d->tdev->getMessage() :
-                dev_err["msg"] = "CuPollingActivity: read failed (last err: " + d->message + ")";
-        dev_err["err"] = true;
-        dev_err["name"] = d->tdev->getName();
+        !dev ? dev_err[CuDType::Message] =  d->tdev->getMessage() :
+                dev_err[CuDType::Message] = "CuPollingActivity: read failed (last err: " + d->message + ")";
+        dev_err[CuDType::Err] = true;
+        dev_err[CuDType::name] = d->tdev->getName();
         dev_err.putTimestamp();
         results.push_back(dev_err);
     }
@@ -435,7 +435,7 @@ void CuPollingActivity::onExit()
     assert(d->my_thread_id == pthread_self());
     CuData at = getToken(); /* activity token */
     // thread safely remove ref and let d->device_srvc dispose TDev if no more referenced
-    d->devfa->removeRef(at["device"].toString(), threadToken());
+    d->devfa->removeRef(at[CuDType::Device].toString(), threadToken());
     // do not publishResult because CuPoller (which is our listener) may be deleted by CuPollingService
     // from the main thread when its action list is empty (see CuPollingService::unregisterAction)
 
@@ -448,7 +448,7 @@ void CuPollingActivity::m_registerAction(const TSource& ts) {
     if(is_command)
         d->cmds.push_back(ts);
     else {
-        tag.set("src", ts.getName()).set("mode", "P").set("period", d->period);
+        tag.set(CuDType::Src, ts.getName()).set("mode", "P").set(CuDType::Period, d->period);
         if(d->data_updpo & CuDataUpdatePolicy::SkipFirstReadUpdate) {
             // start polling the next next execute
             d->m_attd_future.insert(std::pair<unsigned long long int, CuData>(d->updcnt + 2, tag));
@@ -477,7 +477,7 @@ void CuPollingActivity::m_edit_args(const TSource &src, const std::vector<string
 }
 
 int CuPollingActivity::m_v_attd_remove(const std::string &src, const std::string& attna) {
-    std::vector<CuData>::iterator fi = std::find_if(d->v_attd.begin(), d->v_attd.end(), [src](const CuData& da) {  return da.s("src") == src; }) ;
+    std::vector<CuData>::iterator fi = std::find_if(d->v_attd.begin(), d->v_attd.end(), [src](const CuData& da) {  return da.s(CuDType::Src) == src; }) ;
     if(fi != d->v_attd.end()) {
         d->v_attd.erase(fi);
     }
@@ -492,7 +492,7 @@ int CuPollingActivity::m_v_attd_remove(const std::string &src, const std::string
     // in case register / unregister may are called before execute
     std::unordered_multimap<unsigned long long, CuData>::iterator mfi = d->m_attd_future.begin();
     while(mfi != d->m_attd_future.end()) {
-        mfi->second.s("src") == src ? mfi = d->m_attd_future.erase(mfi) : ++mfi;
+        mfi->second.s(CuDType::Src) == src ? mfi = d->m_attd_future.erase(mfi) : ++mfi;
     }
     std::unordered_map<unsigned long long, std::string>::iterator mni = d->m_attn_future.begin();
     while(mni != d->m_attn_future.end()) {

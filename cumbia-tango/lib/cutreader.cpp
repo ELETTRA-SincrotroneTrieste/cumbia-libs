@@ -84,12 +84,12 @@ void CuTReader::onResult(const std::vector<CuData> &datalist) {
  * and the error *is not* notified to the listener(s)
  */
 void CuTReader::onResult(const CuData &data) {
-    bool err = data["err"].toBool();
+    bool err = data[CuDType::Err].toBool();
     bool event_subscribe_fail = err && data["E"].toString() == "subscribe";
     if(err) {
         if(data.containsKey("ev_except") && data.B("ev_except")) {
             if(!event_subscribe_fail) // DEBUG PRINT only if !event_subs_fail
-                perr("CuTReader.onResult: polling fallback after event failure: src %s msg %s", vtoc2(data, "src"), vtoc2(data, "msg"));
+                perr("CuTReader.onResult: polling fallback after event failure: src %s msg %s", vtoc2(data, CuDType::Src), vtoc2(data, CuDType::Message));
             m_polling_fallback();
             if(!event_subscribe_fail)
                 d->tag.set("polling-failure-fallback", true);
@@ -244,7 +244,7 @@ CuActivity *CuTReader::m_find_Activity() {
     CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
                                                              get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
     CuData at = getToken(); // activity manager needs device period activity
-    at.set("device", d->tsrc.getDeviceName()).set("period", d->period).set("activity", "poller");
+    at.set(CuDType::Device, d->tsrc.getDeviceName()).set(CuDType::Period, d->period).set("activity", "poller");
     CuActivity *activity = am->find(at);
     if(activity && activity->getType() == CuPollingActivity::CuPollingActivityType)
         return activity;
@@ -259,12 +259,12 @@ void CuTReader::m_update_options(const CuData newo) {
     }
     if(newo.containsKey("refresh_mode"))
         newo["refresh_mode"].to<int>(rm);
-    if(newo.containsKey("period"))
-        newo["period"].to<int>(p);
+    if(newo.containsKey(CuDType::Period))
+        newo[CuDType::Period].to<int>(p);
     if(rm >= CuTReader::PolledRefresh && rm <= CuTReader::Manual)
         d->o["refresh_mode"] = rm;
     if(rm == CuTReader::Manual)
-        d->o["period"] = d->manual_mode_period;
+        d->o[CuDType::Period] = d->manual_mode_period;
 }
 
 
@@ -275,15 +275,15 @@ void CuTReader::m_update_options(const CuData newo) {
  *        Unrecognized keys are ignored.
  *
  * \par Valid keys
- * \li "period": returns an int with the polling period
+ * \li CuDType::Period: returns an int with the polling period
  * \li "refresh_mode": returns a CuTReader::RefreshMode that can be converted to int
  * \li "mode": returns a string representation of the CuTReader::RefreshMode
  *
  * @see sendData
  */
 void CuTReader::getData(CuData &ino) const {
-    if(ino.containsKey("period"))
-        ino["period"] = d->period;
+    if(ino.containsKey(CuDType::Period))
+        ino[CuDType::Period] = d->period;
     if(ino.containsKey("refresh_mode"))
         ino["refresh_mode"] = d->refresh_mode;
     if(ino.containsKey("mode"))
@@ -312,9 +312,9 @@ void CuTReader::setOptions(const CuData &options) {
     if(options.containsKey("manual") && options["manual"].toBool())
         setRefreshMode(CuTReader::Manual);
     else {
-        if(options.containsKey("period")) {
+        if(options.containsKey(CuDType::Period)) {
             int p = 1000;
-            options["period"].to<int>(p);
+            options[CuDType::Period].to<int>(p);
             if(p > 0 )
                 setPeriod(p);
         }
@@ -336,11 +336,11 @@ void CuTReader::setTag(const CuData &tag) {
  * @param data a CuData bundle with the settings to apply to the reader.
  *
  * \par Valid keys
- * \li "period": integer. Change the polling period. Does not imply a change in refresh mode
+ * \li CuDType::Period: integer. Change the polling period. Does not imply a change in refresh mode
  * \li "refresh_mode". A CuTReader::RefreshMode value to change the current refresh mode.
  * \li "manual" Equivalent to *refresh_mode* set to CuTReader::Manual, but more "engine unaware", recommended
  * \li "read" [any value, *empty* included]: ask an immediate reading
- * \li "args" [std::vector<std::string>]: change the arguments of an ongoing reading (applies to commands with
+ * \li CuDType::Args [std::vector<std::string>]: change the arguments of an ongoing reading (applies to commands with
  *     argins)
  *
  * \note *period, manual and refresh_mode* update internal *options*.
@@ -352,15 +352,15 @@ void CuTReader::sendData(const CuData &data) {
     m_update_options(data);
     bool do_read = data.containsKey("read");
     bool has_payload = data.containsKey("payload");
-    bool has_args = data.containsKey("args");
+    bool has_args = data.containsKey(CuDType::Args);
     int rm = -1, period = -1;
     if(data.containsKey("manual"))
         rm = CuTReader::Manual;
     else if(data.containsKey("refresh_mode"))
         data["refresh_mode"].to<int>(rm);
 
-    if(data.containsKey("period"))
-        data["period"].to<int>(period);
+    if(data.containsKey(CuDType::Period))
+        data[CuDType::Period].to<int>(period);
 
     if(rm > -1 && rm != d->refresh_mode) { // refresh mode changed
         setRefreshMode(static_cast<CuTReader::RefreshMode>(rm), period);
@@ -382,14 +382,14 @@ void CuTReader::sendData(const CuData &data) {
     }
     else if(do_read && isEventRefresh(d->refresh_mode) && d->event_activity) {
         CuData errdat(getToken());
-        errdat.set("err", true).set("msg", "CuTReader.sendData: \"read\" request cannot be forwarded to an event type activity");
+        errdat.set(CuDType::Err, true).set(CuDType::Message, "CuTReader.sendData: \"read\" request cannot be forwarded to an event type activity");
         perr("CuTReader.sendData: error %s (posted to event activity %p)\n", errdat.toString().c_str(), d->event_activity);
         d->cumbia_t->postEvent(d->event_activity, new CuDataEvent(errdat));
     }
     if(has_args || has_payload) {
         CuActivity *activity = m_find_Activity();
         if(activity && has_payload)  d->cumbia_t->postEvent(activity, new CuDataEvent(data));
-        else if(activity) d->cumbia_t->postEvent(activity, new CuArgsChangeEvent(d->tsrc, data["args"].toStringVector()));
+        else if(activity) d->cumbia_t->postEvent(activity, new CuArgsChangeEvent(d->tsrc, data[CuDType::Args].toStringVector()));
     }
 
 }
