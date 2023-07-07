@@ -36,6 +36,12 @@ CuControlsFactoryPool::CuControlsFactoryPool(const CuControlsFactoryPool &other)
     }
 }
 
+bool CuControlsFactoryPool::operator ==(const CuControlsFactoryPool &other) const {
+    // d->re_map is not used in comparison because there's no == between regex. yet we check patterns
+    return d != nullptr && other.d != nullptr && other.d->default_domain == d->default_domain && other.d->m_dom_patterns == d->m_dom_patterns &&
+           other.d->rmap == d->rmap && other.d->wmap == d->wmap;
+}
+
 CuControlsFactoryPool::CuControlsFactoryPool(CuControlsFactoryPool &&other) : d(other.d) {
     //    printf("CuControlsFactoryPool \e[0;32m move constructor from other %p other.d %p \e[0m\n", &other, other.d);
     other.d = nullptr;
@@ -51,12 +57,6 @@ CuControlsFactoryPool &CuControlsFactoryPool::operator=(const CuControlsFactoryP
         //        printf("CuControlsFactoryPool \e[1;35m assignment operator = from other %p other.d %p  // SHARED among %d\e[0m\n", &other, other.d, rcnt);
     }
     return *this;
-}
-
-bool CuControlsFactoryPool::operator ==(const CuControlsFactoryPool &other) const {
-    // d->re_map is not used in comparison because there's no == between regex. yet we check patterns
-    return d != nullptr && other.d != nullptr && other.d->default_domain == d->default_domain && other.d->m_dom_patterns == d->m_dom_patterns &&
-           other.d->rmap == d->rmap && other.d->wmap == d->wmap;
 }
 
 CuControlsFactoryPool &CuControlsFactoryPool::operator=(CuControlsFactoryPool &&other) {
@@ -77,7 +77,7 @@ void CuControlsFactoryPool::m_detach() {
         d = new CuControlsFactoryPool_P(*d);
     }
     else if(!d)
-        d = new CuControlsFactoryPool_P(*d);
+        d = new CuControlsFactoryPool_P;
 }
 
 CuControlsFactoryPool::~CuControlsFactoryPool() {
@@ -87,14 +87,7 @@ CuControlsFactoryPool::~CuControlsFactoryPool() {
         delete d;
         d = nullptr;
     }
-    //    else
-    //        printf("~CuControlsFactoryPool \e[0;35m%p not deleting d ptr %p: possibly moved or refcnt %d > 1\e[0m\n", this, d, rcnt);
-    //    if(d)
-    //        printf("~CuControlsFactoryPool after processing refcnt %d\n", d->load());
-
 }
-
-CuControlsReaderFactoryI *defaultfa = nullptr;
 
 /*! \brief register a reader factory for a domain:
  *
@@ -106,8 +99,6 @@ CuControlsReaderFactoryI *defaultfa = nullptr;
 void CuControlsFactoryPool::registerImpl(const std::string &domain, const CuControlsReaderFactoryI &rf) {
     m_detach();
     d->rmap[domain] = rf.clone();
-    if(domain == "tango")
-        defaultfa = d->rmap[domain];
 }
 
 /*! \brief register a writer factory for a domain:
@@ -210,7 +201,6 @@ CuControlsReaderFactoryI *CuControlsFactoryPool::getRFactoryBySrc(const std::str
     size_t pos = src.find("://");
     if(pos != std::string::npos) {
         domain = src.substr(0, pos);
-        //        printf("CuControlsFactoryPool %p::getRFactoryBySrc: (%s) \e[0;36mdomain with prefix '%s'\e[0m registered: no regex matching\n", this, src.c_str(), domain.c_str());
     }
     else if(d->rmap.size() == 1) {
         //        printf("CuControlsFactoryPool %p::getRFactoryBySrc: (%s) only one \e[0;32mREADER FACTORY\e[0m registered (%s): no regex matching\n", this, src.c_str(), d->rmap.begin()->first.c_str());
@@ -220,9 +210,9 @@ CuControlsReaderFactoryI *CuControlsFactoryPool::getRFactoryBySrc(const std::str
         //        printf("CuControlsFactoryPool %p::getRFactoryBySrc: (%s) \e[1;35m%ld READER FACTORIES\e[0m registered: needs regex matching\n",
         //               this, src.c_str(), d->rmap.size());
 
-        //        domain = guessDomainBySrc(src);
+        domain = guessDomainBySrc(src);
 
-        return defaultfa;
+//        return defaultfa;
     }
     if(domain.length())
         return getReadFactory(domain);
@@ -322,11 +312,6 @@ void CuControlsFactoryPool::setDefaultDomain(const std::string &dom) {
 std::string CuControlsFactoryPool::defaultDomain() const {
     return (d != nullptr) ? d->default_domain : std::string();
 }
-
-
-//CuControlsFactoryPool::CuControlsFactoryPool(const CuControlsFactoryPool &other) {
-
-//}
 
 void CuControlsFactoryPool::m_print() const {
     printf("CuControlsFactoryPool: domains and patterns:\n");
