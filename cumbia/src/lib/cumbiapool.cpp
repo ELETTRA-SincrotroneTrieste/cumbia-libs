@@ -14,18 +14,13 @@ CumbiaPool::CumbiaPool() {
 
 }
 
-Cumbia *cudefault = nullptr;
-
 /*! \brief register a cumbia implementation with a given domain
  *
  * @param domain a string identifying a domain name, e.g. "tango" or "epics"
  * @param cumbia, an instance of a Cumbia implementation, such as CumbiaEpics or CumbiaTango.
  */
-void CumbiaPool::registerCumbiaImpl(const std::string &domain, Cumbia *cumbia)
-{
+void CumbiaPool::registerCumbiaImpl(const std::string &domain, Cumbia *cumbia) {
     m_map[domain] = cumbia;
-    if(domain == "tango")
-        cudefault = cumbia;
 }
 
 /*! \brief associate to a domain name a list of regular expressions describing the source syntax
@@ -103,19 +98,12 @@ Cumbia *CumbiaPool::getBySrc(const std::string &src) const
     size_t pos = src.find("://");
     if(pos != std::string::npos) {
         cu = get(src.substr(0, pos));
-//        printf("CumbiaPool %p::getBySrc: (%s) \e[0;36mdomain with prefix '%s'\e[0m registered: no regex matching\n", this, src.c_str(), src.substr(0, pos).c_str());
     }
     else if(m_map.size() == 1) {
-//        printf("CumbiaPool %p::getBySrc: \e[1;32msrc %s map size 1\e[0m no regex match\n", this, src.c_str());
         cu = m_map.begin()->second;
     }
     else {
-//        printf("CumbiaPool %p::getBySrc: \e[1;35msrc %s map size %ld\e[0m \e[1;31mregex match\e[0m: (", this, src.c_str(), m_map.size());
-//        for(auto& it : m_map)
-//            printf(" - %s, ", it.first.c_str());
-//        printf(")\n");
-//        cu = guessBySrc(src);
-        cu = cudefault;
+        cu = guessBySrc(src);
     }
 
     if(!cu) {
