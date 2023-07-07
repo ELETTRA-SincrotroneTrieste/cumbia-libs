@@ -162,13 +162,16 @@ public:
                     CuThreadsEventBridge_I *teb,
                     const CuServiceProvider *sp,
                     std::vector<CuThreadInterface *>* thv_p) :
-        token(tk), eb(teb), se_p(sp), threads_p(thv_p),  thpp(nullptr), thread(nullptr) {
+        alimmap_locked(false), token(tk), eb(teb), se_p(sp), threads_p(thv_p),  thpp(nullptr), thread(nullptr) {
 
     }
 
     std::queue <ThreadEvent *> eq;
     // activity --> listeners multi map
     std::multimap<const CuActivity *, CuThreadListener *> alimmap;
+    bool alimmap_locked; // lock alimmap (same thread)
+    // activities to remove while alimmap_locked shall be placed here
+    std::list<CuActivity *> arem_list;
     std::string token;
     std::mutex mu;
     std::condition_variable cv;
@@ -276,7 +279,12 @@ void CuThread::registerActivity(CuActivity *l, CuThreadListener *tl) {
  */
 void CuThread::unregisterActivity(CuActivity *l) {
     assert(d->mythread == pthread_self());
-    d->alimmap.erase(l);
+    if(!d->alimmap_locked)
+        d->alimmap.erase(l);
+    else {
+        d->arem_list.push_back(l); // onEventPosted later removes from d->alimmap
+//        printf("CuThread::unregisterActivity: \e[1;35mactivity / thread listeners map is currently locked\e[0m\n");
+    }
     ThreadEvent *unregisterEvent = new CuThUnregisterA_Ev(l); // ThreadEvent::UnregisterActivity
     std::unique_lock lk(d->mu);
     d->eq.push(unregisterEvent);
@@ -309,7 +317,8 @@ void CuThread::onEventPosted(CuEventI *event) {
         const CuActivity *a = re->getActivity();
         // do not iterate directly on d->alimmap
         // clients may register / unregister from within onResult (onProgress)
-        std::multimap<const CuActivity *,  CuThreadListener *> m(d->alimmap);
+        d->alimmap_locked = true; // prevent onResult to call unregisterActivity
+        const std::multimap<const CuActivity *,  CuThreadListener *>& m = (d->alimmap);
         std::pair<std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator,
                     std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator> eqr = m.equal_range(a);
         for(std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator it = eqr.first; it != eqr.second; ++it)  {
@@ -327,6 +336,12 @@ void CuThread::onEventPosted(CuEventI *event) {
                 it->second->onResult(re->data);
             }
         }
+//        if(d->arem_list.size() > 0)
+//            printf("CuThread::onEventPosted \e[1;32m erasing now %ld unregistered activities...\e[0m\n", d->arem_list.size());
+        for(std::list<CuActivity *>::const_iterator it = d->arem_list.begin(); it != d->arem_list.end(); ++it)
+            d->alimmap.erase(*it);
+        d->arem_list.clear();
+        d->alimmap_locked = false;
     }
     else if(ty == CuEventI::CuA_ExitEvent) {
         mOnActivityExited(static_cast<CuA_ExitEv *>(event)->getActivity());
