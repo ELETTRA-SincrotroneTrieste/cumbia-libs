@@ -89,6 +89,10 @@ Options::Options(const QStringList& args)
             m_map.insert("makej", a);
             m_map.insert("make", true);
         }
+        else if(a == "--check-cudata")
+            m_map.insert("check-cudata", true);
+        else if(a == "--port-cudata")
+            m_map.insert("port-cudata", true);
         else
         {
             m_error = true;

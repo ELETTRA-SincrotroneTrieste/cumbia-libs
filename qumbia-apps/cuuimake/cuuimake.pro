@@ -70,6 +70,7 @@ DEFINES += QT_NO_DEBUG_OUTPUT
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 HEADERS += \
+    src/cudatachecker.h \
     src/defs.h \
     src/cuuimake.h \
     src/conf.h \
@@ -80,6 +81,7 @@ HEADERS += \
     src/xmakeprocess.h
 
 SOURCES += src/main.cpp \
+    src/cudatachecker.cpp \
     src/defs.cpp \
     src/cuuimake.cpp \
     src/conf.cpp \
