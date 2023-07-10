@@ -134,18 +134,21 @@ bool CuUiMake::make()
         if(check_cudata) {
             CuDataChecker cuch;
             bool cudata_ok = cuch.check();
-            if(!cudata_ok) {
+            if(!cudata_ok && cuch.msg.isEmpty())
                 print(Analysis, true, plain_text, "%serror%s: incompatible cumbia 1.0 CuData string based keys detected\n", color, white);
-            }
+            else if(!cudata_ok)
+                print(Analysis, true, plain_text, "%serror%s: %s", color, white, cuch.msg.toStdString().c_str());
             else {
                 print(Analysis, false, plain_text, "%ssuccessfully%s checked cudata keys used in cumbia v2.0\n", color, white);
             }
         } else if(update_cudata) {
             CuDataChecker cuch;
             bool cudata_ok = cuch.update();
-            if(!cudata_ok) {
+            if(!cudata_ok && cuch.msg.isEmpty()) {
                 print(Analysis, true, plain_text, "%serror%s: failed to port 1.0 CuData string based keys to index based\n", color, white);
             }
+            else if(!cudata_ok)
+                print(Analysis, true, plain_text, "%serror%s: %s", color, white, cuch.msg.toStdString().c_str());
             else {
                 print(Analysis, false, plain_text, "%ssuccessfully%s ported cudata keys to indexes used in cumbia v2.0\n", color, white);
             }
@@ -182,10 +185,12 @@ bool CuUiMake::make()
             {
                 CuDataChecker cuch;
                 success = cuch.check();
-                if(!success) {
+                if(!success && cuch.msg.isEmpty()) {
                     print(Analysis, true, plain_text, "%serror%s: incompatible cumbia 1.0 CuData string based keys detected\n", color, white);
                     print(Analysis, true, plain_text, "%serror%s: re-run cuuimake with `--port-cudata-keys' option\n", color, white);
                 }
+                else if(!success) // error opening file
+                    print(Analysis, true, plain_text, "%serror%s: %s", color, white, cuch.msg.toStdString().c_str());
                 if(success) {
                     SearchDirInfoSet searchDirInfoSet = defs.srcDirsInfo();
                     Substitutions substitutions;

@@ -30,11 +30,13 @@ DOCDIR = $${SHAREDIR}/doc/cuuimake
 
 DEFINES_SHAREDIR = $${prefix}/share
 DEFINES_DOCDIR = $${DEFINES_SHAREDIR}/doc/cuuimake
+DEFINES_CUMBIA_INCLUDEDIR = $${prefix}/include/cumbia
 #
 # where config files are found by the application at runtime: use prefix
 #
 DEFINES += CONFDIR=\"\\\"$${DEFINES_SHAREDIR}/cuuimake\"\\\"
 DEFINES += CUUIMAKE_DOCDIR=\"\\\"$${DEFINES_DOCDIR}\"\\\"
+DEFINES += CUMBIA_INCLUDES=\"\\\"$${DEFINES_CUMBIA_INCLUDEDIR}\"\\\"
 
 # version
 CUUIMAKE_VERSION_HEX = 0x010000
@@ -60,7 +62,7 @@ CONFIG += silent
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
-DEFINES += QT_NO_DEBUG_OUTPUT
+DEFINES -= QT_NO_DEBUG_OUTPUT
 
 
 
