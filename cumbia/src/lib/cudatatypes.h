@@ -43,41 +43,41 @@ public:
         OutTypeStr,  ///< output argument type  (int, float, double, bool). Was "out_type_str"
         WriteValue, ///< a *set point* value (Tango write value, was "w_value")
         InputValue, ///< the input value to write to a target
-        Properties, ///< list of properties
-        Property, ///< a property
+        Properties, ///< list of properties, was "properties"
+        Property, ///< a property, was "property"
         IsCommand,  ///< true if data represents a command (e.g. Tango, was "is_command")
         Args,  ///< some arguments, was "args"
         RefreshMode,  ///< a refresh (aka *read*) mode (polling, monitor,..., was "refresh_mode")
-        RefreshModeStr, ///< refresh mode as string
-        Pv,  ///< Epics process variable
+        RefreshModeStr, ///< refresh mode as string, was "refresh_mode_str"
+        Pv,  ///< Epics process variable, was "pv"
         DataType, ///< data type (int, float, double, bool)  (was "dt")
         Writable,   ///< read only or read/write,
         DataFormat, ///< data format (vector, scalar, matrix, was "df")
         DataTypeStr, ///< data type as string (was "dts")
         DataFormatStr, ///< data format as string ("double", "int", ... ) (was "dfs")
-        Description,  ///< a description
-        InTypeDesc,  ///< input argument type description
-        OutTypeDesc,  ///< output argument type description
-        Status,    ///<
-        Device,    ///<
-        Attribute,    ///<
-        Class,  ///<
+        Description,  ///< a description, was "description"
+        InTypeDesc,  ///< input argument type description, was "in_type_desc"
+        OutTypeDesc,  ///< output argument type description, was "out_type_desc"
+        Status,    ///< was "status"
+        Device,    ///< was "device"
+        Attribute,    ///< was "attribute"
+        Class,  ///< was "class"
         Pattern, ///< a pattern to search something (was: "pattern")
-        Point,    ///<
-        Max, ///<
-        Min, ///<
-        Keys, ///<
-        Connected, ///< connection flag
-        Period,   ///< period or timeout of  a timer (polling)
+        Point,    ///< typically, a Tango attribute or command name, such as double_scalar, was "point"
+        Max, ///< max value, was "max"
+        Min, ///< min value, was "min"
+        Keys, ///< list of keys, was "keys"
+        Connected, ///< connection flag, was "conn"
+        Period,   ///< period or timeout of  a timer (polling), was "period"
         Timeout,  ///< a timeout for something (e.g. Epics ca_timeout)
-        NumberFormat, ///< "%.2f", "%d", "%s"...
+        NumberFormat, ///< %.2f, %d, %s... (was "format")
         Label, ///< a label associated to a source, was "label"
         DimX, ///<  vector x dimension, was "dim_x"
         DimY, ///<  vector y dimension, was "dim_y"
-        MaxDimX,
-        MaxDimY,
+        MaxDimX, ///< maximum dimension of X, was "max_dim_x" (used in Tango spectrum)
+        MaxDimY, ///< maximum dimension of Y, was "max_dim_y" (used in Tango image)
         CmdName,///<  was "cmd"
-        Activity,
+        Activity, ///<  cumbia activity, was "activity"
         MaxDataKey = 64 };
 };
 
