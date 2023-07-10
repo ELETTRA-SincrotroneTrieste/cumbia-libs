@@ -411,7 +411,7 @@ void CuPollingActivity::execute()
         !dev ? dev_err[CuDType::Message] =  d->tdev->getMessage() :
                 dev_err[CuDType::Message] = "CuPollingActivity: read failed (last err: " + d->message + ")";
         dev_err[CuDType::Err] = true;
-        dev_err[CuDType::name] = d->tdev->getName();
+        dev_err[CuDType::Device] = d->tdev->getName();
         dev_err.putTimestamp();
         results.push_back(dev_err);
     }

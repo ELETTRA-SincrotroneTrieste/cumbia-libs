@@ -8,13 +8,18 @@
 class CuDType {
 public:
 
+    // each key defined here shall have a comment in the form ///<
+    // followed by any text and the name of the corresponding string
+    // key used in cumbia 1.x between "quotation marks", so that
+    // cumbia 1.x - 2.x conversion utilities can parse the line
+    // and map string keys to the new enum values
     enum Key {
         Time_us,  ///< timestamp microsecs ("timestamp_us")
         Time_ms,   ///< timestamp millis ("timestamp_ms")
         Value, ///< the value, (was "value")
         Src,  ///< source name (was "src")
         Err,  ///< error flag ("err")
-        SuccessColor,   ///< a color used to represent the successful or not outcome of an operation
+        SuccessColor,   ///< a color used to represent the successful or not outcome of an operation (was "sc")
         StateColor, ///< a color associated to a state (was "sc")
         State, ///< a state (was "s")
         Quality,  ///< quality value (was "q")
@@ -23,30 +28,30 @@ public:
         Time,  ///< timestamp
         Color, ///< color, was "color"
         WValue, ///< 'write' value (Tango set point, was "w_value")
-        Thread,  ///< thread (e.g. for thread token)
-        Name, ///< some name
-        Time_ns,  ///< timestamp nanoseconds
-        Timestamp_Str, ///< timestamp as string
-        Message, ///< a message
-        Mode,  ///< a mode
-        Type,  ///< some type
-        Exit,  ///< exit flag
-        Ptr,  ///< pointer to something (void* is supported by CuVariant)
-        InType,  ///< input argument type  (int, float, double, bool)
-        OutType,  ///< output argument type  (int, float, double, bool)
-        InTypeStr,  ///< input argument type  (int, float, double, bool)
-        OutTypeStr,  ///< output argument type  (int, float, double, bool)
-        WriteValue, ///< a *set point* value
+        Thread,  ///< thread (e.g. for thread token, was "thread")
+        Name, ///< some name ("name")
+        Time_ns,  ///< timestamp nanoseconds ("timestamp_ns")
+        Timestamp_Str, ///< timestamp as string ("timestamp_str")
+        Message, ///< a message (was "msg")
+        Mode,  ///< a mode (was "mode")
+        Type,  ///< some type (was "type")
+        Exit,  ///< exit flag (was "exit")
+        Ptr,  ///< pointer to something (void* is supported by CuVariant). Was "ptr"
+        InType,  ///< input argument type  (int, float, double, bool). Was "in_type"
+        OutType,  ///< output argument type  (int, float, double, bool). Was "out_type"
+        InTypeStr,  ///< input argument type  (int, float, double, bool). Was "in_type_str"
+        OutTypeStr,  ///< output argument type  (int, float, double, bool). Was "out_type_str"
+        WriteValue, ///< a *set point* value (Tango write value, was "w_value")
         InputValue, ///< the input value to write to a target
         Properties, ///< list of properties
         Property, ///< a property
         IsCommand,  ///< true if data represents a command (e.g. Tango, was "is_command")
-        Args,  ///< some arguments
-        RefreshMode,  ///< a refresh (aka *read*) mode (polling, monitor,...)
+        Args,  ///< some arguments, was "args"
+        RefreshMode,  ///< a refresh (aka *read*) mode (polling, monitor,..., was "refresh_mode")
         RefreshModeStr, ///< refresh mode as string
         Pv,  ///< Epics process variable
         DataType, ///< data type (int, float, double, bool)  (was "dt")
-        Writable,   ///< read only or read/write ?
+        Writable,   ///< read only or read/write,
         DataFormat, ///< data format (vector, scalar, matrix, was "df")
         DataTypeStr, ///< data type as string (was "dts")
         DataFormatStr, ///< data format as string ("double", "int", ... ) (was "dfs")

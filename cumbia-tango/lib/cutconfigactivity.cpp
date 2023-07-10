@@ -70,7 +70,7 @@ void CuTConfigActivity::event(CuActivityEvent *e)
 }
 
 bool CuTConfigActivity::matches(const CuData &token) const {
-    return token.s(CuDType::Src) == d->ts.getName() && CuDType::Property == token.s("activity");
+    return token.s(CuDType::Src) == d->ts.getName() && token.s(CuDType::Activity) == "property";
 }
 
 int CuTConfigActivity::repeat() const {
