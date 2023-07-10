@@ -8,15 +8,15 @@
 class CuDataChecker
 {
 public:
-    CuDataChecker();
-    bool check();
-    bool update();
+    CuDataChecker(bool debug);
+    int check();
+    int update();
 
     QMap<QString, QString> subs; // substitutions
     QString msg;
 
 private:
-    bool m_process(bool rw);
+    int m_process(bool rw);
 
     /*
      * class CuDType {
@@ -31,6 +31,7 @@ private:
     QRegularExpression m_keys_re; // \s*([A-Za-z0-9_]+),\s*///<.*"(.*)".*
     QRegularExpression m_comment_re;
     QList<QRegularExpression> m_key_patterns;
+    bool m_debug;
 };
 
 #endif // CUDATACHECKER_H

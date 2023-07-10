@@ -97,7 +97,7 @@ bool CuUiMake::make()
     plain_text ? strcpy(white, "") : strcpy(white, "\e[0m");
 
     bool check_cudata = m_options->getopt("check-cudata").toBool();
-    bool update_cudata = m_options->getopt("port-cudata").toBool();
+    bool update_cudata = m_options->getopt("update-cudata").toBool();
 
     // load configuration files
     int removed_ui_cnt = -1;
@@ -132,25 +132,27 @@ bool CuUiMake::make()
         bool refresh = m_options->getopt("refresh").toBool();
 
         if(check_cudata) {
-            CuDataChecker cuch;
-            bool cudata_ok = cuch.check();
-            if(!cudata_ok && cuch.msg.isEmpty())
-                print(Analysis, true, plain_text, "%serror%s: incompatible cumbia 1.0 CuData string based keys detected\n", color, white);
-            else if(!cudata_ok)
+            CuDataChecker cuch(m_debug);
+            int p = cuch.check();
+            if(p > 0)
+                print(Analysis, true, plain_text,
+                      "%serror%s: found %d incompatible cumbia 1.0 CuData string based keys detected\n",
+                      color, white, p);
+            else if(p < 0)
                 print(Analysis, true, plain_text, "%serror%s: %s", color, white, cuch.msg.toStdString().c_str());
             else {
                 print(Analysis, false, plain_text, "%ssuccessfully%s checked cudata keys used in cumbia v2.0\n", color, white);
             }
         } else if(update_cudata) {
-            CuDataChecker cuch;
-            bool cudata_ok = cuch.update();
-            if(!cudata_ok && cuch.msg.isEmpty()) {
+            CuDataChecker cuch(m_debug);
+            int p = cuch.update();
+            if(p < 0 && cuch.msg.isEmpty()) {
                 print(Analysis, true, plain_text, "%serror%s: failed to port 1.0 CuData string based keys to index based\n", color, white);
             }
-            else if(!cudata_ok)
+            else if(p < 0)
                 print(Analysis, true, plain_text, "%serror%s: %s", color, white, cuch.msg.toStdString().c_str());
             else {
-                print(Analysis, false, plain_text, "%ssuccessfully%s ported cudata keys to indexes used in cumbia v2.0\n", color, white);
+                print(Analysis, false, plain_text, "%ssuccessfully%s ported %d cudata keys to indexes used in cumbia v2.0\n", color, white, p);
             }
         }
 
@@ -183,13 +185,14 @@ bool CuUiMake::make()
 
             if(success)
             {
-                CuDataChecker cuch;
-                success = cuch.check();
-                if(!success && cuch.msg.isEmpty()) {
+                CuDataChecker cuch(m_debug);
+                int p = cuch.check();
+                success = (p == 0); // 0 1.0 string keys found
+                if(p != 0 && cuch.msg.isEmpty()) {
                     print(Analysis, true, plain_text, "%serror%s: incompatible cumbia 1.0 CuData string based keys detected\n", color, white);
-                    print(Analysis, true, plain_text, "%serror%s: re-run cuuimake with `--port-cudata-keys' option\n", color, white);
+                    print(Analysis, true, plain_text, "%serror%s: re-run cuuimake with `--update-cudata' option\n", color, white);
                 }
-                else if(!success) // error opening file
+                else if(p < 0) // error opening file
                     print(Analysis, true, plain_text, "%serror%s: %s", color, white, cuch.msg.toStdString().c_str());
                 if(success) {
                     SearchDirInfoSet searchDirInfoSet = defs.srcDirsInfo();
