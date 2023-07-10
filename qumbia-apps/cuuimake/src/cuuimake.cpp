@@ -136,7 +136,7 @@ bool CuUiMake::make()
             int p = cuch.check();
             if(p > 0)
                 print(Analysis, true, plain_text,
-                      "%serror%s: found %d incompatible cumbia 1.0 CuData string based keys detected\n",
+                      "%serror%s: %d incompatible cumbia 1.0 CuData string based keys detected\n",
                       color, white, p);
             else if(p < 0)
                 print(Analysis, true, plain_text, "%serror%s: %s", color, white, cuch.msg.toStdString().c_str());
@@ -189,7 +189,8 @@ bool CuUiMake::make()
                 int p = cuch.check();
                 success = (p == 0); // 0 1.0 string keys found
                 if(p != 0 && cuch.msg.isEmpty()) {
-                    print(Analysis, true, plain_text, "%serror%s: incompatible cumbia 1.0 CuData string based keys detected\n", color, white);
+                    print(Analysis, true, plain_text, "%serror%s: %d incompatible cumbia 1.0 CuData string based keys detected\n",
+                          color, white, p);
                     print(Analysis, true, plain_text, "%serror%s: re-run cuuimake with `--update-cudata' option\n", color, white);
                 }
                 else if(p < 0) // error opening file
