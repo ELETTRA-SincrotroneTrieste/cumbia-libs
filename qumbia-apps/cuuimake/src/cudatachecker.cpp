@@ -40,6 +40,9 @@ CuDataChecker::CuDataChecker(bool debug)
 {
     m_key_patterns[0].setPatternOptions(QRegularExpression::InvertedGreedinessOption);
     m_key_patterns[1].setPatternOptions(QRegularExpression::InvertedGreedinessOption);
+    m_key_patterns[2].setPatternOptions(QRegularExpression::InvertedGreedinessOption);
+    m_key_patterns[3].setPatternOptions(QRegularExpression::InvertedGreedinessOption);
+    m_key_patterns[4].setPatternOptions(QRegularExpression::InvertedGreedinessOption);
     QFile f(QString(CUMBIA_INCLUDES + QString("/cudatatypes.h")));
     if(!f.open(QIODevice::Text|QIODevice::ReadOnly))
         msg = f.errorString();
