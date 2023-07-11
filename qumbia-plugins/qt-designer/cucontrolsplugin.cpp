@@ -175,11 +175,6 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
     cumbia_pool->setSrcPatterns("epics", ew.srcPatterns());
     CuServiceProvider *cuepsp = cuep->getServiceProvider();
     cuepsp->registerService(CuServices::Log, new CuLog(new QuLogImpl()));
-    CuEpicsWorld ew;
-    m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
-    cumbia_pool->setSrcPatterns("epics", ew.srcPatterns());
-    CuServiceProvider *cuepsp = cuep->getServiceProvider();
-    cuepsp->registerService(CuServices::Log, new CuLog(new QuLogImpl()));
 #endif
 
     CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());

@@ -1,10 +1,6 @@
 include(../qumbia-plugins.pri)
 
-isEmpty(CUMBIA_ROOT) {
-    CUMBIA_ROOT=/usr/local/cumbia-libs
-}
-include($${CUMBIA_ROOT}/include/quapps/quapps.pri)
-
+include ($${INSTALL_ROOT}/include/quapps/quapps.pri)
 
 QT += qml
 
