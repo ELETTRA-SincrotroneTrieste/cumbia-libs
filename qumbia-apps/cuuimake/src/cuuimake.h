@@ -4,6 +4,7 @@
 #include <QString>
 
 class Options;
+class CuDataChecker;
 
 /*! \mainpage
  *
@@ -94,6 +95,8 @@ private:
     Options *m_options;
 
     QString m_findLocalConfFile()  const;
+
+    void m_print_cudatacheck_result(const CuDataChecker &ch, bool ro);
 };
 
 #endif // CUUIMAKE_H

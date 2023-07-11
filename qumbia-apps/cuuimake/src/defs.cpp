@@ -22,14 +22,14 @@ bool Defs::loadConf(const QString &default_conf, const QString& localfname)
         success = guessFromSources();
     if(success && !localfname.isEmpty())
         success = loadLocalConf(localfname);
-    if(m_debug)
-    {
-        foreach(Search s, m_searchlist)
-            printf("Search analysis parameters: %s\n", s.toString().toStdString().c_str());
+//    if(m_debug)
+//    {
+//        foreach(Search s, m_searchlist)
+//            printf("Search analysis parameters: %s\n", s.toString().toStdString().c_str());
 
-        foreach(QString s, m_objectmap.keys())
-            printf("%s:\n%s\n", s.toStdString().c_str(), m_objectmap[s].toString().toStdString().c_str());
-    }
+//        foreach(QString s, m_objectmap.keys())
+//            printf("%s:\n%s\n", s.toStdString().c_str(), m_objectmap[s].toString().toStdString().c_str());
+//    }
 
     return success;
 }
