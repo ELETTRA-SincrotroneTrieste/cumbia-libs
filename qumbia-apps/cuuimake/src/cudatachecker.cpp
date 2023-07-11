@@ -27,8 +27,9 @@ CuDataChecker::CuDataChecker(bool debug)
                    <<  QRegularExpression("[a-zA-Z0-9_\\-\\.]+\\s*\\[\\\"([a-zA-Z0-9_\\-\\.]+)\\\"\\]")
                    // 2. ("src", "a/b/c/d") --> set\(\"src\", .*\).*
                    // like da.set("value", 10);
+                     << QRegularExpression("CuData\\s+[A-Za-z0-9_]+\\(\\\"([A-Za-z0-9_]+)\\\", .*\\)")
                    // or CuData da("df", 1);
-                   << QRegularExpression("\\(\\\"([a-zA-Z0-9_\\-\\.]+)\\\", .*\\).*")
+                   << QRegularExpression("(?:set|has|add)\\(\\\"([a-zA-Z0-9_\\-\\.]+)\\\", .*\\).*")
                    // std::string s = da.s("value") --> match da.s("value") --> [A-Za-z0-9_]+\.[A-Za-z_0-9]+\(\"(.*)\"\)
                    << QRegularExpression("[A-Za-z0-9_]+\\.[A-Za-z_0-9]+\\(\\\"([a-zA-Z0-9_\\-\\.]+)\\\"\\)")),
     m_debug(debug)
