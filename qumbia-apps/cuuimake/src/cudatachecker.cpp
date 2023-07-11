@@ -132,7 +132,6 @@ int CuDataChecker::m_process(bool rw) {
                 if(!newf.isEmpty() && rw && !f.open(QIODevice::WriteOnly|QIODevice::Text))
                     msg = "error opening file in write mode: "  + f.errorString();
                 else if(!newf.isEmpty() && rw) {
-                    printf("saving new contents on file %s\n", f.fileName().toStdString().c_str());
                     QTextStream out(&f);
                     out << newf;
                     f.close();
