@@ -15,6 +15,10 @@ public:
     QMap<QString, QString> subs; // substitutions
     QString msg;
 
+    QStringList str_keys_invalid, str_keys_unmapped;
+
+    int result;
+
 private:
     int m_process(bool rw);
 

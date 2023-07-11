@@ -133,27 +133,12 @@ bool CuUiMake::make()
 
         if(check_cudata) {
             CuDataChecker cuch(m_debug);
-            int p = cuch.check();
-            if(p > 0)
-                print(Analysis, true, plain_text,
-                      "%serror%s: %d incompatible cumbia 1.0 CuData string based keys detected\n",
-                      color, white, p);
-            else if(p < 0)
-                print(Analysis, true, plain_text, "%serror%s: %s", color, white, cuch.msg.toStdString().c_str());
-            else {
-                print(Analysis, false, plain_text, "%ssuccessfully%s checked cudata keys used in cumbia v2.0\n", color, white);
-            }
+            cuch.check();
+            m_print_cudatacheck_result(cuch, true);
         } else if(update_cudata) {
             CuDataChecker cuch(m_debug);
-            int p = cuch.update();
-            if(p < 0 && cuch.msg.isEmpty()) {
-                print(Analysis, true, plain_text, "%serror%s: failed to port 1.0 CuData string based keys to index based\n", color, white);
-            }
-            else if(p < 0)
-                print(Analysis, true, plain_text, "%serror%s: %s", color, white, cuch.msg.toStdString().c_str());
-            else {
-                print(Analysis, false, plain_text, "%ssuccessfully%s ported %d cudata keys to indexes used in cumbia v2.0\n", color, white, p);
-            }
+            cuch.update();
+            m_print_cudatacheck_result(cuch, false);
         }
 
         if(!check_cudata && !update_cudata) {
@@ -188,13 +173,7 @@ bool CuUiMake::make()
                 CuDataChecker cuch(m_debug);
                 int p = cuch.check();
                 success = (p == 0); // 0 1.0 string keys found
-                if(p != 0 && cuch.msg.isEmpty()) {
-                    print(Analysis, true, plain_text, "%serror%s: %d incompatible cumbia 1.0 CuData string based keys detected\n",
-                          color, white, p);
-                    print(Analysis, true, plain_text, "%serror%s: re-run cuuimake with `--update-cudata' option\n", color, white);
-                }
-                else if(p < 0) // error opening file
-                    print(Analysis, true, plain_text, "%serror%s: %s", color, white, cuch.msg.toStdString().c_str());
+                m_print_cudatacheck_result(cuch, true);
                 if(success) {
                     SearchDirInfoSet searchDirInfoSet = defs.srcDirsInfo();
                     Substitutions substitutions;
@@ -281,4 +260,43 @@ QString CuUiMake::m_findLocalConfFile() const
     if(idx >= 0)
         return files.at(idx);
     return "";
+}
+
+// ro: true: check only, false: "rw" = update
+void CuUiMake::m_print_cudatacheck_result(const CuDataChecker &cuch, bool ro) {
+    bool plain_text = m_options->getopt("plain-text-output").toBool();
+    char color[16], white[16];
+    plain_text ? strcpy(color, "") : strcpy(color, "\e[1;35m");
+    plain_text ? strcpy(white, "") : strcpy(white, "\e[0m");
+    if(cuch.result < 0)
+        print(Analysis, true, plain_text, "%serror%s: failed to port 1.0 CuData string based keys to index based keys: %s", color, white, cuch.msg.toStdString().c_str());
+    else {
+        if(cuch.str_keys_unmapped.size() > 0) {
+            print(Analysis, false, plain_text, "%sinfo%s: %d CuData string keys are not required to be changed into index keys\n", color, white, cuch.str_keys_unmapped.size());
+            if(m_debug)
+                print(Analysis, false, plain_text, "%sinfo%s: string keys not required to be updated: %s\n", color, white, cuch.str_keys_unmapped.join(',').toStdString().c_str());
+        }
+        if(cuch.result > 0) {
+            if(ro) {
+                print(Analysis, true, plain_text, "%serror%s: %d incompatible cumbia 1.0 CuData string based keys detected\n",
+                      color, white, cuch.result);
+                if(m_debug) {
+                    print(Analysis, true, plain_text, "%serror%s: invalid string keys in v2.0: %s\n", color, white, cuch.str_keys_invalid.join(',').toStdString().c_str());
+                }
+                print(Analysis, true, plain_text, "%serror%s: re-run cuuimake with `--update-cudata' [--debug] option\n", color, white);
+            }
+            else {
+                print(Analysis, false, plain_text, "%ssuccessfully%s ported %d cudata keys to indexes used in cumbia v2.0\n", color, white, cuch.result);
+            }
+        }
+        else {
+            // !ro --> update
+            if(!ro)
+                print(Analysis, false, plain_text, "no need to port any cudata key to cumbia v2.0 indexes\n");
+            else
+                print(Analysis, false, plain_text, "no string keys need to be ported\n");
+        }
+        if(!m_debug && (cuch.str_keys_invalid.size() > 0 || cuch.str_keys_unmapped.size() > 0))
+            print(Analysis, false, plain_text, "re run with --debug for more details\n");
+    }
 }
