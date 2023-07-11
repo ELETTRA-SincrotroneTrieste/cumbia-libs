@@ -70,7 +70,6 @@ int CuDataChecker::update() {
 int CuDataChecker::m_process(bool rw) {
     int found = 0;
     if(msg.length() == 0) { // file open ok
-        QString newf;
         const QString& cwd = QDir::currentPath();
         QDirIterator it(cwd, QStringList() << "*.cpp" << "*.h" ,  QDir::Files, QDirIterator::Subdirectories);
         while (it.hasNext()) {
@@ -83,12 +82,15 @@ int CuDataChecker::m_process(bool rw) {
                 msg = f.errorString();
             }
             else {
+                QString newf;
                 QRegularExpressionMatch ma;
                 QTextStream in(&f);
                 while(!in.atEnd()) {
                     QString l = f.readLine();
                     QString lnonl(l);
-                    lnonl.remove("\n");
+                    bool hasnl = l.endsWith("\n");
+                    if(hasnl)
+                        lnonl.remove("\n");
                     QString updated_line(lnonl);
                     lcnt++;
                     QStringList matches_in_line, full_matches_in_line;
@@ -115,25 +117,27 @@ int CuDataChecker::m_process(bool rw) {
                                 }
                             }
                         } // after all reg exps applied to a line
-                        if(rw) {
-                            if(updated_line != lnonl) {
-                                updated_line += "  // " + full_matches_in_line.join(", ");
-                            }
-                            newf += updated_line + "\n";
-
-                        }
                     }
+                    if(rw) {
+                        if(updated_line != lnonl) {
+                            updated_line += "  // " + full_matches_in_line.join(", ");
+                        }
+                        newf += updated_line + (hasnl ?  "\n" : "");
+
+                    }
+                    // read next line
+                } // in.atEnd()
+                f.close();
+                if(!newf.isEmpty() && rw && !f.open(QIODevice::WriteOnly|QIODevice::Text))
+                    msg = "error opening file in write mode: "  + f.errorString();
+                else if(!newf.isEmpty() && rw) {
+                    printf("saving new contents on file %s\n", f.fileName().toStdString().c_str());
+                    QTextStream out(&f);
+                    out << newf;
+                    f.close();
                 }
             }
-            f.close();
-            if(rw && !f.open(QIODevice::WriteOnly|QIODevice::Text))
-                msg = "error opening file in write mode: "  + f.errorString();
-            else if(rw) {
-                QTextStream out(&f);
-                out << newf;
-                f.close();
-            }
-        }
+        } // iterator next file
     }
 
     return msg.isEmpty() ? found : -1;
