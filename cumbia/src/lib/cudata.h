@@ -95,7 +95,7 @@ public:
     bool containsKey(const std::string & key) const;
     bool containsKey(const CuDType::Key &key) const;
 
-    bool has(const CuDType::Key &key, const size_t &value) const;
+    bool has(const CuDType::Key &key, const std::string& value) const;
     bool has(const std::string &key, const std::string& value) const;
 
     CuVariant& operator [] (const CuDType::Key &key);

@@ -115,8 +115,8 @@ void QuLinearGauge::contextMenuEvent(QContextMenuEvent *e)
 void QuLinearGauge::m_configure(const CuData& da)
 {
     QMap<QString, const char*> threshs;
-    threshs["min"] = "minValue";
-    threshs["max"] = "maxValue";
+    threshs["min"] = "minValue"; // !cudata
+    threshs["max"] = "maxValue"; // !cudata
     threshs["min_warning"] = "lowWarning";
     threshs["max_warning"] = "highWarning";
     threshs["max_alarm"] = "highError";
@@ -162,20 +162,20 @@ void QuLinearGauge::m_set_value(const CuVariant &val)
 
 void QuLinearGauge::onUpdate(const CuData &da)
 {
-    d->read_ok = !da["err"].toBool();
+    d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
     setReadError(!d->read_ok);
-    setToolTip(da["msg"].toString().c_str());
+    setToolTip(da[CuDType::Message].toString().c_str());  // da["msg"]
 
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
-        d->context->getLinkStats()->addError(da["msg"].toString());
+        d->context->getLinkStats()->addError(da[CuDType::Message].toString());  // da["msg"]
 
-    if(d->read_ok && d->auto_configure && da["type"].toString() == "property") {
+    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {  // da["type"]
         m_configure(da);
     }
-    if(d->read_ok && da["value"].isValid()) {
-        m_set_value(da["value"]);
+    if(d->read_ok && da[CuDType::Value].isValid()) {  // da["value"]
+        m_set_value(da[CuDType::Value]);  // da["value"]
     }
     emit newData(da);
 }

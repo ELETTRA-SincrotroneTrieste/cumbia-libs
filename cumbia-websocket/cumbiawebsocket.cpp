@@ -178,7 +178,7 @@ void CumbiaWebSocket::onUpdate(const QString &message) {
     QJsonParseError jpe;
     QJsonDocument jsd = QJsonDocument::fromJson(message.toUtf8(), &jpe);
     std::string src;
-    jsd["E"].toString().length() > 0 ? src = jsd["E"].toString().toStdString() : src = jsd["src"].toString().toStdString();
+    jsd[CuDType::Event].toString().length() > 0 ? src = jsd[CuDType::Event].toString().toStdString() : src = jsd[CuDType::Src].toString().toStdString();  // jsd["E"], jsd["E"], jsd["src"]
     // 2. find action amongst readers
     QString atype = jsd["atype"].toString();
     CuWSActionI::Type t = CuWSActionI::Reader;

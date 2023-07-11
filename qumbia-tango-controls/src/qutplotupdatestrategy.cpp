@@ -52,15 +52,15 @@ void QuTPlotUpdateStrategy::update(const CuData &da, QWidget *widget)
 {
     QColor background, border;
     QuPalette palette;
-    if(da.containsKey("qc"))
-        background = palette[QString::fromStdString(da["qc"].toString())];
-    if(da.containsKey("color"))
-        border = palette[QString::fromStdString(da["color"].toString())];
+    if(da.containsKey(CuDType::QualityColor))  // da.containsKey("qc")
+        background = palette[QString::fromStdString(da[CuDType::QualityColor].toString())];  // da["qc"]
+    if(da.containsKey(CuDType::Color))  // da.containsKey("color")
+        border = palette[QString::fromStdString(da[CuDType::Color].toString())];  // da["color"]
 
-    bool read_ok = !da["err"].toBool();
+    bool read_ok = !da[CuDType::Err].toBool();  // da["err"]
 
-    if(read_ok && d->auto_configure && da.containsKey("type")
-            && da["type"].toString() == "property")
+    if(read_ok && d->auto_configure && da.containsKey(CuDType::Type)  // da.containsKey("type")
+            && da[CuDType::Type].toString() == "property")  // da["type"]
     {
         m_configure(da, widget);
     }

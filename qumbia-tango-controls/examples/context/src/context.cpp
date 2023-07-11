@@ -149,9 +149,9 @@ Context::~Context()
 }
 
 void Context::setMode() {
-    CuData options("refresh_mode", static_cast<int>(m_getRefreshMode()));
-    if(options["refresh_mode"].toInt() == CuTReader::PolledRefresh)
-        options["period"] = findChild<QSpinBox *>()->value();
+    CuData options(CuDType::RefreshMode, static_cast<int>(m_getRefreshMode()));  // CuData options("refresh_mode", static_cast<int>(m_getRefreshMode()
+    if(options[CuDType::RefreshMode].toInt() == CuTReader::PolledRefresh)  // options["refresh_mode"]
+        options[CuDType::Period] = findChild<QSpinBox *>()->value();  // options["period"]
     findChild<QuInputOutput *>()->getOutputContext()->sendData(options);
 }
 
@@ -190,12 +190,12 @@ void Context::runModified()
 void Context::onNewData(const CuData &d)
 {
     QLineEdit *le = findChild<QLineEdit *>("leRefreshInfo");
-    if(d["mode"].isValid()) {
-        le->setText(QString::fromStdString(d["mode"].toString()));
+    if(d[CuDType::Mode].isValid()) {  // d["mode"]
+        le->setText(QString::fromStdString(d[CuDType::Mode].toString()));  // d["mode"]
         findChild<QSpinBox *>()->setEnabled(le->text().compare("EVENT", Qt::CaseInsensitive) != 0);
     }
-    if(d["period"].isValid())
-        le->setText(le->text() + ": " + QString::fromStdString(d["period"].toString()) + "ms");
+    if(d[CuDType::Period].isValid())  // d["period"]
+        le->setText(le->text() + ": " + QString::fromStdString(d[CuDType::Period].toString()) + "ms");  // d["period"]
 }
 
 void Context::getData()

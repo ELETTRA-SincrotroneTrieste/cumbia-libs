@@ -100,7 +100,7 @@ void CuEventActivity::event(CuActivityEvent *e) {
  */
 bool CuEventActivity::matches(const CuData &token) const {
     const CuData& mytok = getToken();
-    return token[CuDType::Src] == mytok[CuDType::Src] && mytok["activity"] == token["activity"];
+    return token[CuDType::Src] == mytok[CuDType::Src] && mytok[CuDType::Activity] == token[CuDType::Activity];  // mytok["activity"], token["activity"]
 }
 
 /*! \brief returns 0. CuEventActivity's execute is called only once.
@@ -177,7 +177,7 @@ Tango::EventType CuEventActivity::m_tevent_type_from_string(const std::string& s
  *
  * \par note
  * In the CuEventActivity::push_event callback, CuData "E" value is copied from
- * Tango::EventData::event. Here data["E"] is set to "subscribe" to identify the
+ * Tango::EventData::event. Here data[CuDType::Event] is set to "subscribe" to identify the  // data["E"]
  * *subscribe_event* phase (CuTReader looks for this not to issue an error if subscription fails).
  *
  *
@@ -186,11 +186,11 @@ void CuEventActivity::execute()
 {
     assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
-    CuData at("activity", "event"); /* activity token */
+    CuData at(CuDType::Activity, "event"); /* activity token */  // CuData at("activity", "event")
     std::string att = d->tsrc.getPoint();
     const std::string& ref_mode_str = d->refreshmo;
     Tango::DeviceProxy *dev = d->tdev->getDevice();
-    at.set(CuDType::Src, d->tsrc.getName()).set("mode", "E").set("E", "subscribe").putTimestamp();
+    at.set(CuDType::Src, d->tsrc.getName()).set(CuDType::Mode, "E").set("E", "subscribe").putTimestamp();  // set("mode", "E")
     at[CuDType::Err] = !d->tdev->isValid();
     if(dev) {
         try {
@@ -273,8 +273,8 @@ void CuEventActivity::push_event(Tango::EventData *e) {
     CuData da(CuDType::Src, getToken()[CuDType::Src].toString());
     da.merge(this->d->tag);
     CuTangoWorld utils;
-    da["mode"] = "E";
-    da["E"] = e->event;
+    da[CuDType::Mode] = "E";  // da["mode"]
+    da[CuDType::Event] = e->event;  // da["E"]
     Tango::DeviceAttribute *dat = e->attr_value;
     if(!e->err)  {
         utils.extractData(dat, da);

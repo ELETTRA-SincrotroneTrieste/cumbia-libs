@@ -204,12 +204,12 @@ bool Defs::loadXmlConf(const QString &fname)
         for(int i = 0; i < srcnodes.size(); i++)
         {
             srcel = srcnodes.at(i).toElement();
-            if(!srcel.isNull() && srcel.tagName() == "srcdir" && srcel.hasAttribute("name") && srcel.hasAttribute("filters"))
-                m_srcd_infoset.add(srcel.attribute("name"), srcel.attribute("filters"), SearchDirInfoSet::Source);
-            else if(!srcel.isNull() &&  srcel.tagName() == "uidir" && srcel.hasAttribute("name") && srcel.hasAttribute("filters"))
-                m_srcd_infoset.add(srcel.attribute("name"), srcel.attribute("filters"), SearchDirInfoSet::Ui);
-            else if(!srcel.isNull() &&  srcel.tagName() == "uihdir" && srcel.hasAttribute("name") && srcel.hasAttribute("filters"))
-                m_srcd_infoset.add(srcel.attribute("name"), srcel.attribute("filters"), SearchDirInfoSet::Ui_H);
+            if(!srcel.isNull() && srcel.tagName() == "srcdir" && srcel.hasAttribute("name") && srcel.hasAttribute("filters"))  // !cudata
+                m_srcd_infoset.add(srcel.attribute("name"), srcel.attribute("filters"), SearchDirInfoSet::Source);  // !cudata
+            else if(!srcel.isNull() &&  srcel.tagName() == "uidir" && srcel.hasAttribute("name") && srcel.hasAttribute("filters"))  // !cudata
+                m_srcd_infoset.add(srcel.attribute("name"), srcel.attribute("filters"), SearchDirInfoSet::Ui);  // !cudata
+            else if(!srcel.isNull() &&  srcel.tagName() == "uihdir" && srcel.hasAttribute("name") && srcel.hasAttribute("filters"))  // !cudata
+                m_srcd_infoset.add(srcel.attribute("name"), srcel.attribute("filters"), SearchDirInfoSet::Ui_H);  // !cudata
             else if(!srcel.isNull())
             {
                 m_error = true;
@@ -239,9 +239,9 @@ bool Defs::loadXmlConf(const QString &fname)
     {
         QDomNode node = factories.at(i);
         QDomElement factory = node.toElement();
-        if(!factory.isNull() && factory.tagName() == "factory" && factory.hasAttribute("name"))
+        if(!factory.isNull() && factory.tagName() == "factory" && factory.hasAttribute("name"))  //  !cudata
         {
-            Search s(factory.attribute("name"));
+            Search s(factory.attribute("name"));  //  !cudata
             QDomNodeList findnl = factory.elementsByTagName("find");
             for(int j = 0; j < findnl.size(); j++)
             {
@@ -275,9 +275,9 @@ bool Defs::loadXmlConf(const QString &fname)
             {
                 QDomElement widget = widgetlist.at(w).toElement();
 
-                if(!widget.isNull() && widget.hasAttribute("class"))
+                if(!widget.isNull() && widget.hasAttribute("class"))  //  !cudata
                 {
-                    QString nam = widget.attribute("class");
+                    QString nam = widget.attribute("class");  // !cudata
                     Params custom_pars;
                     m_getParams(widget, custom_pars);
                     if(m_error)
@@ -309,9 +309,9 @@ bool Defs::loadXmlConf(const QString &fname)
             for(int i = 0; i < methods_el.childNodes().count(); i++)
             {
                 QDomElement method = methods_el.childNodes().at(i).toElement();
-                if(!method.isNull() && method.hasAttribute("name"))
+                if(!method.isNull() && method.hasAttribute("name"))  // !cudata
                 {
-                    QString methodnam = method.attribute("name");
+                    QString methodnam = method.attribute("name");  // !cudata
                     Params methodParams;
                     m_getParams(method, methodParams);
                     if(m_error)

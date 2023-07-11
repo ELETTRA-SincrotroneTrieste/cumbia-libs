@@ -631,14 +631,14 @@ void CuTangoWorld::fillFromAttributeConfig(const Tango::AttributeInfoEx &ai, CuD
 {
     d->error = false;
     d->message = "";
-    dat["type"] = CuDType::Property;
+    dat[CuDType::Type] = "property";  // dat["type"]
     dat[CuDType::DataFormat] = ai.data_format;
     dat[CuDType::DataFormatStr] = formatToStr(ai.data_format); /* as string */
     dat[CuDType::DataType] = ai.data_type;
     dat[CuDType::Description] = ai.description;
     ai.display_unit != std::string("No display unit") ? dat["display_unit"] = ai.display_unit : dat["display_unit"] = "";
     dat[CuDType::NumberFormat] = ai.format;
-    dat["label"] = ai.label;
+    dat[CuDType::Label] = ai.label;  // dat["label"]
     dat["max_alarm"] = ai.max_alarm;
     dat[CuDType::MaxDimX] = ai.max_dim_x;
     dat[CuDType::MaxDimY] = ai.max_dim_y;
@@ -679,12 +679,12 @@ void CuTangoWorld::fillFromAttributeConfig(const Tango::AttributeInfoEx &ai, CuD
 
 void CuTangoWorld::fillFromCommandInfo(const Tango::CommandInfo &ci, CuData &d)
 {
-    d["type"] = CuDType::Property;
+    d[CuDType::Type] = "property";  // d["type"]
     d["cmd_name"] = ci.cmd_name;
-    d["in_type"] = ci.in_type;
-    d["out_type"] = ci.out_type;
-    d["in_type_desc"] = ci.in_type_desc;
-    d["out_type_desc"] = ci.out_type_desc;
+    d[CuDType::InType] = ci.in_type;  // d["in_type"]
+    d[CuDType::OutType] = ci.out_type;  // d["out_type"]
+    d[CuDType::InTypeDesc] = ci.in_type_desc;  // d["in_type_desc"]
+    d[CuDType::OutTypeDesc] = ci.out_type_desc;  // d["out_type_desc"]
     d["display_level"] = ci.disp_level;
     d[CuDType::DataType] = ci.out_type;
 
@@ -856,7 +856,7 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
                              const std::string& cmd,
                              CuData& data)
 {
-    bool has_argout = data["out_type"].toLongInt() != Tango::DEV_VOID;
+    bool has_argout = data[CuDType::OutType].toLongInt() != Tango::DEV_VOID;  // data["out_type"]
     Tango::DeviceData din = toDeviceData(data[CuDType::Args], data);
     return cmd_inout(dev, cmd, din, has_argout, data);
 }
@@ -1246,7 +1246,7 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
     std::string dnam_nhnp = tsrc.getDeviceNameOnly(); // dnam no host no proto
     Tango::Database *db = getTangoDb(tgh);
     if(db != nullptr) {
-        res["pattern"] = p;
+        res[CuDType::Pattern] = p;  // res["pattern"]
         if(dnam.length() > 0)
             res[CuDType::Device] = dnam;
         if(tgh.length() > 0)
@@ -1557,7 +1557,7 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const CuVariant &arg,
     bool type_match = false;
     d->error = false;
     d->message = "";
-    long in_type = info["in_type"].toLongInt();
+    long in_type = info[CuDType::InType].toLongInt();  // info["in_type"]
     Tango::DeviceData dd;
     if((arg.isNull() || arg.getFormat() < 0) && in_type == static_cast<Tango::CmdArgType>(Tango::DEV_VOID))
     {
@@ -1655,7 +1655,7 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const std::vector<std::string> &arg
 {
     d->error = false;
     d->message = "";
-    long in_type = cmdinfo["in_type"].toLongInt();
+    long in_type = cmdinfo[CuDType::InType].toLongInt();  // cmdinfo["in_type"]
     Tango::DeviceData dd;
     if(argins.size() == 0) {
         return dd;

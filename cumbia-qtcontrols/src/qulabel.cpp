@@ -86,7 +86,7 @@ void QuLabel::m_initCtx()
 void QuLabel::m_configure(const CuData &da)
 {
     d->display_u = QString::fromStdString(da["display_unit"].toString());
-    QString fmt = QString::fromStdString(da["format"].toString());
+    QString fmt = QString::fromStdString(da[CuDType::NumberFormat].toString());  // da["format"]
     if(format().isEmpty() && !fmt.isEmpty())
         setFormat(fmt);
     // get colors and strings, if available
@@ -227,12 +227,12 @@ void QuLabel::onUpdate(const CuData &da)
 {
     bool background_modified = false;
     QColor background, border;
-    d->read_ok = !da["err"].toBool();
+    d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
 
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
-        d->context->getLinkStats()->addError(da["msg"].toString());
+        d->context->getLinkStats()->addError(da[CuDType::Message].toString());  // da["msg"]
 
     d->read_ok ? border = d->palette["dark_green"] : border = d->palette["dark_red"];
 
@@ -242,21 +242,21 @@ void QuLabel::onUpdate(const CuData &da)
     if(!d->read_ok)
         setText("####");
     else {
-        if(d->read_ok && d->auto_configure && da["type"].toString() == "property") {
+        if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {  // da["type"]
             m_configure(da);
             emit propertyReady(da);
         }
-        if(da.containsKey("value"))
+        if(da.containsKey(CuDType::Value))  // da.containsKey("value")
         {
-            CuVariant val = da["value"];
+            CuVariant val = da[CuDType::Value];  // da["value"]
             QuLabelBase::setValue(val, &background_modified);
             if(d->display_u_enabled && !d->display_u.isEmpty())
                 setText(text() + " [" + d->display_u + "]");
         }
     }
 
-    if(da.containsKey("sc")) {
-        CuVariant v = da["sc"];
+    if(da.containsKey(CuDType::StateColor)) {  // da.containsKey("sc")
+        CuVariant v = da[CuDType::StateColor];  // da["sc"]
         background = d->palette[QString::fromStdString(v.toString())];
         if(background.isValid())
             setBackground(background);
@@ -265,8 +265,8 @@ void QuLabel::onUpdate(const CuData &da)
         // background has not already been set by QuLabelBase::setValue (this happens if either a
         // boolean display or enum display have been configured)
         // if so, use the "qc" as a background
-        if(da.containsKey("qc"))
-            background = d->palette[QString::fromStdString(da["qc"].toString())];
+        if(da.containsKey(CuDType::QualityColor))  // da.containsKey("qc")
+            background = d->palette[QString::fromStdString(da[CuDType::QualityColor].toString())];  // da["qc"]
         setBackground(background); // checks if background is valid
     }
 

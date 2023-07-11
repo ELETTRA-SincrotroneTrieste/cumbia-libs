@@ -116,14 +116,14 @@ CuContext *QuWatcher::getContext() const {
  */
 void QuWatcher::onUpdate(const CuData &data)
 {
-    bool ok = !data["err"].toBool();
-    bool is_config = data.has("type", "property");
-    std::string msg = data["msg"].toString();
+    bool ok = !data[CuDType::Err].toBool();  // data["err"]
+    bool is_config = data.has(CuDType::Type, "property");  // has("type", "property")
+    std::string msg = data[CuDType::Message].toString();  // data["msg"]
     !ok ? d->context->getLinkStats()->addError(msg) : d->context->getLinkStats()->addOperation();
     if(is_config) {
         configure(data); // Qumbiaizer virtual configure method
     }
-    if(data.containsKey("value")) {
+    if(data.containsKey(CuDType::Value)) {  // data.containsKey("value")
         updateValue(data);
         if(singleShot()) {
             unsetSource();

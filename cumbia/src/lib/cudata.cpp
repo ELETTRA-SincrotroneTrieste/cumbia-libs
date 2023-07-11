@@ -331,8 +331,8 @@ bool CuData::containsKey(const CuDType::Key &key) const {
     return key < CuDType::MaxDataKey && d_p->data[key].isValid();
 }
 
-bool CuData::has(const CuDType::Key &key, const size_t &value) const {
-    return key < CuDType::MaxDataKey && key == value && d_p->data[key].isValid();
+bool CuData::has(const CuDType::Key &key, const std::string &value) const {
+    return d_p->data[key].isValid() && d_p->data[key].s() == value ;
 }
 
 /*! \brief returns true if the specified key has the given string value
@@ -475,9 +475,10 @@ std::string CuData::toString() const
     int kc = 0;
     std::map<std::string, std::string> valmap; // want a lexicographically ordered print of key name/values
     for(size_t i = 0; i < CuDType::MaxDataKey; i++) {
-        valmap[dt.keyName(static_cast<CuDType::Key>(i))] = operator [](static_cast<CuDType::Key>(i)).toString();
-        if(d_p->data[i].isValid())
+        if(d_p->data[i].isValid()) {
+            valmap[dt.keyName(static_cast<CuDType::Key>(i))] = d_p->data[i].toString();
             kc++;
+        }
     }
     r += ("*int-keys* { ");
     for(std::map<std::string, std::string>::const_iterator it = valmap.begin(); it != valmap.end(); ++it) {

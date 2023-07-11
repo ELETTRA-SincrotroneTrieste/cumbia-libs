@@ -206,10 +206,10 @@ CuData CuHttpControlsReader::getOptions() const {
  * then a new read is requested through http, which should be quite safe.
  */
 void CuHttpControlsReader::sendData(const CuData &data) {
-    bool a = data.containsKey("read") || data.containsKey("args");
+    bool a = data.containsKey("read") || data.containsKey(CuDType::Args);  // data.containsKey("args")
     if(d->o["manual"].toBool() && a) {
-        if(data.containsKey("args") && d->s.contains(*args_re)) {
-            d->s.replace(*args_re, "(" + QuStringList(data["args"]).join(',') + ')');
+        if(data.containsKey(CuDType::Args) && d->s.contains(*args_re)) {  // data.containsKey("args")
+            d->s.replace(*args_re, "(" + QuStringList(data[CuDType::Args]).join(',') + ')');  // data["args"]
         }
         if(data.containsKey("read"))
             setSource(d->s);

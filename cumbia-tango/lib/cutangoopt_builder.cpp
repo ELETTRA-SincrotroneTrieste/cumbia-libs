@@ -3,7 +3,7 @@
 
 CuTangoOptBuilder::CuTangoOptBuilder()
 {
-    m_options.add("refresh_mode", CuTReader::ChangeEventRefresh);
+    m_options.add(CuDType::RefreshMode, CuTReader::ChangeEventRefresh);  // add("refresh_mode", CuTReader::ChangeEventRefresh)
     m_options.add("fetch_history", false);
     m_options.add(CuDType::Period, 1000);
     m_options.add("fetch_props", std::vector<std::string>());
@@ -55,7 +55,7 @@ CuTangoOptBuilder & CuTangoOptBuilder::setPeriod(int millis)
 
 CuTangoOptBuilder & CuTangoOptBuilder::setRefreshMode(CuTReader::RefreshMode mode)
 {
-    m_options.add("refresh_mode", mode);
+    m_options.add(CuDType::RefreshMode, mode);  // add("refresh_mode", mode)
     return *this;
 }
 
@@ -71,7 +71,7 @@ int CuTangoOptBuilder::period() const
 
 CuTReader::RefreshMode CuTangoOptBuilder::mode() const
 {
-    return static_cast<CuTReader::RefreshMode>(m_options.value("refresh_mode").toInt());
+    return static_cast<CuTReader::RefreshMode>(m_options.value(CuDType::RefreshMode).toInt());  // m_options.value("refresh_mode")
 }
 
 std::vector<string> CuTangoOptBuilder::fetchProps() const

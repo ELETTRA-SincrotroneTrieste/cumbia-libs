@@ -150,8 +150,8 @@ void QuSpectrumPlot::setPeriod(int p)
 int QuSpectrumPlot::period() const
 {
     const CuData& options = d->plot_common->getContext()->options();
-    if(options.containsKey("period"))
-        return options["period"].toInt();
+    if(options.containsKey(CuDType::Period))  // options.containsKey("period")
+        return options[CuDType::Period].toInt();  // options["period"]
     return 1000;
 }
 
@@ -173,9 +173,9 @@ void QuSpectrumPlot::onUpdate(const CuData &da)
 
 void QuSpectrumPlot::update(const CuData &da)
 {
-    d->read_ok = !da["err"].toBool();
-    const CuVariant &v = da["value"];
-    const QString &src = QString::fromStdString(da["src"].toString());
+    d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
+    const CuVariant &v = da[CuDType::Value];  // da["value"]
+    const QString &src = QString::fromStdString(da[CuDType::Src].toString());  // da["src"]
     const QString& msg = d->u.msg(da);
 
     // update link statistics
@@ -187,7 +187,7 @@ void QuSpectrumPlot::update(const CuData &da)
 
     // configure triggers replot at the end but should not be too expensive
     // to do it once here at configuration time and once more from appendData
-    if(d->read_ok && d->auto_configure && da["type"].toString() == std::string("property")) {
+    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == std::string("property")) {  // da["type"]
         configure(da);
     }
 

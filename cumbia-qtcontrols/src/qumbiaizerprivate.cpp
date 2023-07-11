@@ -49,7 +49,7 @@ bool QumbiaizerPrivate::inTypeOfMethod(const QString &method, QObject *obj, char
 
 bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
 {
-    if(da["type"].toString() != "property")
+    if(da[CuDType::Type].toString() != "property")  // da["type"]
         return false;
 
     Q_Q(Qumbiaizer);
@@ -59,8 +59,8 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
     void *dataptr;
     QString u, methodName;
     /* minimum */
-    bool has_min = da.containsKey("min");
-    bool has_max = da.containsKey("max");
+    bool has_min = da.containsKey(CuDType::Min);  // da.containsKey("min")
+    bool has_max = da.containsKey(CuDType::Max);  // da.containsKey("max")
     double v;
     double min, max;
     if(has_min && autoConfSlotsHash.contains(q->Min))
@@ -85,7 +85,7 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
     }
     else if(has_min && object->metaObject()->indexOfProperty("minimum") > -1)
     {
-        da["min"].to<double>(min);
+        da[CuDType::Min].to<double>(min);  // da["min"]
         object->setProperty("minimum", min);
     }
 
@@ -113,7 +113,7 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
     }
     else if(has_max && object->metaObject()->indexOfProperty("maximum") > -1)
     {
-        da["max"].to<double>(min);
+        da[CuDType::Max].to<double>(min);  // da["max"]
         object->setProperty("maximum", min);
     }
 
@@ -227,13 +227,13 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
                                              QGenericArgument(in_type, &u));
         }
     }
-    if(da.containsKey("label") &&autoConfSlotsHash.contains(q->Label))
+    if(da.containsKey(CuDType::Label) &&autoConfSlotsHash.contains(q->Label))  // da.containsKey("label")
     {
         methodName = autoConfSlotsHash.value(q->Label);
         extractCode(methodName);
         if(inTypeOfMethod(methodName, object, in_type))
         {
-            u = QString::fromStdString(da["label"].toString());
+            u = QString::fromStdString(da[CuDType::Label].toString());  // da["label"]
             ret &= QMetaObject::invokeMethod(object, qstoc(autoConfSlotsHash.value(q->Label)), connType,
                                              QGenericArgument(in_type, &u));
         }

@@ -22,6 +22,7 @@ public:
 CuDataChecker::CuDataChecker(bool debug)
     : m_keys_re("\\s*([A-Za-z0-9_]+),\\s*///<.*\"(.*)\".*"),
     m_comment_re ("\\s*//\\s+"),
+    m_no_cudata_marker_re("//\\s*.*(?:!cudata)"), //   matches a comment containing the !cudata token
     m_key_patterns (QList<QRegularExpression>()
                    // 1. da["src"] = "a/b/c/d"  // \[\"src\"\]
                    <<  QRegularExpression("[a-zA-Z0-9_\\-\\.]+\\s*\\[\\\"([a-zA-Z0-9_\\-\\.]+)\\\"\\]")
@@ -103,7 +104,7 @@ int CuDataChecker::m_process(bool rw) {
                     lcnt++;
                     QStringList matches_in_line, full_matches_in_line;
                     ma = m_comment_re.match(l);
-                    if(!ma.hasMatch()) {
+                    if(!ma.hasMatch() && !m_no_cudata_marker_re.match(l).hasMatch()) {
                         foreach(const QRegularExpression &re, m_key_patterns) {
                             QRegularExpressionMatchIterator i = re.globalMatch(l);
                             while (i.hasNext()) {

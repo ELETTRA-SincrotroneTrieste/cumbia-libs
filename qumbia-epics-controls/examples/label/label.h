@@ -47,15 +47,15 @@ public:
     // CuDataListener interface
 public:
     void onUpdate(const CuData &data) {
-        bool read_ok = !data["err"].toBool();
+        bool read_ok = !data[CuDType::Err].toBool();  // data["err"]
         setEnabled(read_ok);
         // tooltip with message from Tango
-        setToolTip(data["msg"].toString().c_str());
+        setToolTip(data[CuDType::Message].toString().c_str());  // data["msg"]
 
         if(!read_ok)
             setText("####");
-        else if(data.containsKey("value"))  {
-            CuVariant val = data["value"];
+        else if(data.containsKey(CuDType::Value))  {  // data.containsKey("value")
+            CuVariant val = data[CuDType::Value];  // data["value"]
             QString txt = QString::fromStdString(val.toString());
             setText(txt);
         }

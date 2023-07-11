@@ -85,7 +85,7 @@ void CuTReader::onResult(const std::vector<CuData> &datalist) {
  */
 void CuTReader::onResult(const CuData &data) {
     bool err = data[CuDType::Err].toBool();
-    bool event_subscribe_fail = err && data["E"].toString() == "subscribe";
+    bool event_subscribe_fail = err && data[CuDType::Event].toString() == "subscribe";  // data["E"]
     if(err) {
         if(data.containsKey("ev_except") && data.B("ev_except")) {
             if(!event_subscribe_fail) // DEBUG PRINT only if !event_subs_fail
@@ -114,7 +114,7 @@ void CuTReader::onResult(const CuData &data) {
  */
 CuData CuTReader::getToken() const {
     CuData da("source", d->tsrc.getName());
-    da["type"] = std::string("reader");
+    da[CuDType::Type] = std::string("reader");  // da["type"]
     return da;
 }
 
@@ -244,7 +244,7 @@ CuActivity *CuTReader::m_find_Activity() {
     CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
                                                              get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
     CuData at = getToken(); // activity manager needs device period activity
-    at.set(CuDType::Device, d->tsrc.getDeviceName()).set(CuDType::Period, d->period).set("activity", "poller");
+    at.set(CuDType::Device, d->tsrc.getDeviceName()).set(CuDType::Period, d->period).set(CuDType::Activity, "poller");  // set("activity", "poller")
     CuActivity *activity = am->find(at);
     if(activity && activity->getType() == CuPollingActivity::CuPollingActivityType)
         return activity;
@@ -257,12 +257,12 @@ void CuTReader::m_update_options(const CuData newo) {
         d->o["manual"] = newo["manual"];
         rm = CuTReader::Manual;
     }
-    if(newo.containsKey("refresh_mode"))
-        newo["refresh_mode"].to<int>(rm);
+    if(newo.containsKey(CuDType::RefreshMode))  // newo.containsKey("refresh_mode")
+        newo[CuDType::RefreshMode].to<int>(rm);  // newo["refresh_mode"]
     if(newo.containsKey(CuDType::Period))
         newo[CuDType::Period].to<int>(p);
     if(rm >= CuTReader::PolledRefresh && rm <= CuTReader::Manual)
-        d->o["refresh_mode"] = rm;
+        d->o[CuDType::RefreshMode] = rm;  // o["refresh_mode"]
     if(rm == CuTReader::Manual)
         d->o[CuDType::Period] = d->manual_mode_period;
 }
@@ -284,10 +284,10 @@ void CuTReader::m_update_options(const CuData newo) {
 void CuTReader::getData(CuData &ino) const {
     if(ino.containsKey(CuDType::Period))
         ino[CuDType::Period] = d->period;
-    if(ino.containsKey("refresh_mode"))
-        ino["refresh_mode"] = d->refresh_mode;
-    if(ino.containsKey("mode"))
-        ino["mode"] = refreshModeStr();
+    if(ino.containsKey(CuDType::RefreshMode))  // ino.containsKey("refresh_mode")
+        ino[CuDType::RefreshMode] = d->refresh_mode;  // ino["refresh_mode"]
+    if(ino.containsKey(CuDType::Mode))  // ino.containsKey("mode")
+        ino[CuDType::Mode] = refreshModeStr();  // ino["mode"]
 }
 
 /*!
@@ -318,9 +318,9 @@ void CuTReader::setOptions(const CuData &options) {
             if(p > 0 )
                 setPeriod(p);
         }
-        if(options.containsKey("refresh_mode")) {
+        if(options.containsKey(CuDType::RefreshMode)) {  // options.containsKey("refresh_mode")
             int rm = CuTReader::PolledRefresh;
-            options["refresh_mode"].to<int>(rm);
+            options[CuDType::RefreshMode].to<int>(rm);  // options["refresh_mode"]
             if(rm >= PolledRefresh && rm <= Manual)
                 setRefreshMode(static_cast<CuTReader::RefreshMode>(rm));
         }
@@ -356,8 +356,8 @@ void CuTReader::sendData(const CuData &data) {
     int rm = -1, period = -1;
     if(data.containsKey("manual"))
         rm = CuTReader::Manual;
-    else if(data.containsKey("refresh_mode"))
-        data["refresh_mode"].to<int>(rm);
+    else if(data.containsKey(CuDType::RefreshMode))  // data.containsKey("refresh_mode")
+        data[CuDType::RefreshMode].to<int>(rm);  // data["refresh_mode"]
 
     if(data.containsKey(CuDType::Period))
         data[CuDType::Period].to<int>(period);

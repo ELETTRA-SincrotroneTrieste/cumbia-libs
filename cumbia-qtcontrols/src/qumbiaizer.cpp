@@ -363,7 +363,7 @@ void Qumbiaizer::configure(const CuData &data)
     }
 
     emit configured(data);
-    emit connectionOk(!data["err"].toBool());
+    emit connectionOk(!data[CuDType::Err].toBool());  // data["err"]
 }
 
 bool Qumbiaizer::inTypeOfMethod(const QString &method, QObject *obj, char* in_type)
@@ -396,21 +396,21 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
 {
     QString methName;
     QString message = quizer_ptr->cucu.msg(v);
-    bool ok = !v["err"].toBool();
+    bool ok = !v[CuDType::Err].toBool();  // v["err"]
 
     if(customMethod != NULL)
         methName = QString(customMethod);
     else
         methName = methodName();
 
-    if(ok && (v.containsKey("value") || v.containsKey("w_value")))
+    if(ok && (v.containsKey(CuDType::Value) || v.containsKey(CuDType::WriteValue)))  // v.containsKey("value"), v.containsKey("w_value")
     {
         QObject *object = NULL;
         if(!slot().isEmpty())
             object = static_cast<QObject *>(data()); /* QObject and slot were provided */
 
         CuVariant val;
-        read ? val = v["value"] : val = v["w_value"];
+        read ? val = v[CuDType::Value] : val = v[CuDType::WriteValue];  // v["value"], v["w_value"]
         if(type() == Qumbiaizer::Int && val.getFormat() == CuVariant::Scalar)
         {
             int intVal;

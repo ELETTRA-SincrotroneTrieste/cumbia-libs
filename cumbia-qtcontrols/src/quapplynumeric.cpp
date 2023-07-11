@@ -126,28 +126,28 @@ void QuApplyNumeric::m_init()
  */
 void QuApplyNumeric::onUpdate(const CuData &da)
 {
-    bool is_config = da["type"].toString() == std::string("property");
+    bool is_config = da[CuDType::Type].toString() == std::string("property");  // da["type"]
     if(!da["is_result"].toBool() && !is_config)
         return;
 
-    d->write_ok = !da["err"].toBool();
+    d->write_ok = !da[CuDType::Err].toBool();  // da["err"]
     // update link statistics
     d->context->getLinkStats()->addOperation();
     const QString& msg = d->u.msg(da);
     if(!d->write_ok)
     {
         perr("QuApplyNumeric [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
-             da["src"].toString().c_str(), msg.toStdString().c_str(),
-                da["dfs"].toString().c_str(), da["writable"].toInt());
+             da[CuDType::Src].toString().c_str(), msg.toStdString().c_str(),  // da["src"]
+                da[CuDType::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
 
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->context->cumbiaPool()->getBySrc(da["src"].toString());
+            cumbia = d->context->cumbiaPool()->getBySrc(da[CuDType::Src].toString());  // da["src"]
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
             log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), msg.toStdString(), CuLog::LevelError, CuLog::CategoryWrite);
         else if(!cumbia) {
-            perr("QuApplyNumeric.onUpdate: cannot get a reference to cumbia either from context or CumbiaPool with target \"%s\"", da["src"].toString().c_str());
+            perr("QuApplyNumeric.onUpdate: cannot get a reference to cumbia either from context or CumbiaPool with target \"%s\"", da[CuDType::Src].toString().c_str());  // da["src"]
         }
 
         d->context->getLinkStats()->addError(msg.toStdString());
@@ -155,13 +155,13 @@ void QuApplyNumeric::onUpdate(const CuData &da)
     else if(d->auto_configure && is_config)
     {
         QString desc = "";
-        if(da["dfs"] == "scalar" && da["writable"].toInt() > 0)
+        if(da[CuDType::DataFormatStr] == "scalar" && da["writable"].toInt() > 0)  // da["dfs"]
         {
             /* first apply format, if - correctly - specified */
             CuVariant m, M;
-            m = da["min"];
-            M = da["max"];
-            std::string print_format = da["format"].toString();
+            m = da[CuDType::Min];  // da["min"]
+            M = da[CuDType::Max];  // da["max"]
+            std::string print_format = da[CuDType::NumberFormat].toString();  // da["format"]
             double min, max;
             bool ok;
             ok = m.to<double>(min);
@@ -189,14 +189,14 @@ void QuApplyNumeric::onUpdate(const CuData &da)
 
             /* can set current values instead */
             double val;
-            bool can_be_double = da["w_value"].to<double>(val);
+            bool can_be_double = da[CuDType::WriteValue].to<double>(val);  // da["w_value"]
             if (can_be_double)
             {
                 setValue(val);
                 clearModified();
             }
-            if(!da["description"].isNull()) {
-                desc.prepend(QString::fromStdString(da["description"].toString()));
+            if(!da[CuDType::Description].isNull()) {  // da["description"]
+                desc.prepend(QString::fromStdString(da[CuDType::Description].toString()));  // da["description"]
             }
             setWhatsThis(desc);
             // save fetching configuration at every execute
@@ -207,7 +207,7 @@ void QuApplyNumeric::onUpdate(const CuData &da)
         }
         else
             perr("QuApplyNumeric [%s]: invalid data format \"%s\" or read only source (writable: %d)", qstoc(objectName()),
-                 da["dfs"].toString().c_str(), da["writable"].toInt());
+                 da[CuDType::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
 
     }
     setToolTip(msg);

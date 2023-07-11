@@ -33,7 +33,7 @@ private:
     */
 
     QRegularExpression m_keys_re; // \s*([A-Za-z0-9_]+),\s*///<.*"(.*)".*
-    QRegularExpression m_comment_re;
+    QRegularExpression m_comment_re, m_no_cudata_marker_re;
     QList<QRegularExpression> m_key_patterns;
     bool m_debug;
 };

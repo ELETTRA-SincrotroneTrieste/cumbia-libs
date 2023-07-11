@@ -1,4 +1,4 @@
-﻿#include "qutplotcontextmenustrategy.h"
+#include "qutplotcontextmenustrategy.h"
 #include "quconnectionsettingswidget.h"
 #include "qutrealtimeplot.h"
 #include "rtconfwidget.h"

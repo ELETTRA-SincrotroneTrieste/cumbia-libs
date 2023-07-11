@@ -477,15 +477,15 @@ void QumbiaReader::onPropertyReady(const QString &src, double ts,const CuData &p
 {
     m_refreshCntMap[src]++;
     printf("\n \e[1;36m*\e[0m ");
-    if(m_conf.verbosity > Low && pr.containsKey("thread"))
-        printf("[\e[1;36m%s\e[0m] ", pr["thread"].toString().c_str());
+    if(m_conf.verbosity > Low && pr.containsKey(CuDType::Thread))  // pr.containsKey("thread")
+        printf("[\e[1;36m%s\e[0m] ", pr[CuDType::Thread].toString().c_str());  // pr["thread"]
     // src and timestamp
     printf("%s [%s] ", qstoc(src), qstoc(makeTimestamp(ts)));
 
     printf("\n - \e[1;32m%s\e[0m\n", vtoc2(pr, "device"));
 
 
-    if(pr.containsKey("keys"))
+    if(pr.containsKey(CuDType::Keys))  // pr.containsKey("keys")
         m_print_list_props(pr);
     else
         m_print_property(pr);
@@ -526,21 +526,21 @@ void QumbiaReader::m_print_extra1(const CuData &da)
     }
 
     // label
-    if(da.containsKey("label")) {
-        printf("\e[1;32;4m%s\e[0m: ", da["label"].toString().c_str());
+    if(da.containsKey(CuDType::Label)) {  // da.containsKey("label")
+        printf("\e[1;32;4m%s\e[0m: ", da[CuDType::Label].toString().c_str());  // da["label"]
     }
     else {
-        printf("\e[1;32;4m%s\e[0m: ", da["src"].toString().c_str());
+        printf("\e[1;32;4m%s\e[0m: ", da[CuDType::Src].toString().c_str());  // da["src"]
     }
 
     if(m_conf.verbosity >= High) {
-        if(da.containsKey("thread"))
-            printf("[\e[1;36m%s\e[0m] ", da["thread"].toString().c_str());
+        if(da.containsKey(CuDType::Thread))  // da.containsKey("thread")
+            printf("[\e[1;36m%s\e[0m] ", da[CuDType::Thread].toString().c_str());  // da["thread"]
     }
     if(m_conf.verbosity >= Medium) {
-        if(da.containsKey("min")) {
+        if(da.containsKey(CuDType::Min)) {  // da.containsKey("min")
             double min;
-            da["min"].to<double>(min);
+            da[CuDType::Min].to<double>(min);  // da["min"]
             printf("\e[1;31m%s\e[1;35m < \e[0m", qstoc(m_format<double>(min, "%.2f")));
         }
     }
@@ -548,14 +548,14 @@ void QumbiaReader::m_print_extra1(const CuData &da)
 
 void QumbiaReader::m_print_extra2(const CuData &da)
 {
-    if(da.containsKey("label") && m_conf.verbosity >= Medium) {
+    if(da.containsKey(CuDType::Label) && m_conf.verbosity >= Medium) {  // da.containsKey("label")
         // print full source name
-        printf(" [\e[1;36m%s\e[0m]", da["src"].toString().c_str());
+        printf(" [\e[1;36m%s\e[0m]", da[CuDType::Src].toString().c_str());  // da["src"]
     }
     if(m_conf.verbosity >= Medium) {
-        if(da.containsKey("min")) {
+        if(da.containsKey(CuDType::Min)) {  // da.containsKey("min")
             double max;
-            da["max"].to<double>(max);
+            da[CuDType::Max].to<double>(max);  // da["max"]
             printf("\e[1;35m < \e[1;31m%s \e[0m", qstoc(m_format<double>(max, "%.2f")));
         }
         if(da["display_unit"].toString().size() > 0)
@@ -674,9 +674,9 @@ void QumbiaReader::m_createReaders(const QStringList &srcs)  {
 
         if(m_conf.refresh_limit == 1)
             reader_ctx_options["single-shot"] = true;
-        reader_ctx_options["period"] = m_conf.period;
+        reader_ctx_options[CuDType::Period] = m_conf.period;  // reader_ctx_options["period"]
         if(m_conf.property)
-            reader_ctx_options["property"] = true;
+            reader_ctx_options[CuDType::Property] = true;  // reader_ctx_options["property"]
         if(m_conf.no_properties)
             reader_ctx_options["no-properties"] = true;
         r->setContextOptions(reader_ctx_options);
@@ -689,7 +689,7 @@ void QumbiaReader::m_createReaders(const QStringList &srcs)  {
 
 void QumbiaReader::m_print_list_props(const CuData &pr)
 {
-    const CuVariant &plist = pr["keys"];
+    const CuVariant &plist = pr[CuDType::Keys];  // pr["keys"]
     const std::vector<std::string> vp = plist.toStringVector();
 
     foreach(QuString p, vp) {
@@ -701,9 +701,9 @@ void QumbiaReader::m_print_list_props(const CuData &pr)
 
 void QumbiaReader::m_print_property(const CuData &pr)
 {
-    if(pr.containsKey("class")) printf(" - class: %s\n", vtoc2(pr, "class"));
-    if(pr.containsKey("pattern")) printf(" - pattern: \"%s\"\n", vtoc2(pr, "pattern"));
-    if(pr.containsKey("value")) printf(" - value: %s\n", vtoc2(pr, "value"));
+    if(pr.containsKey(CuDType::Class)) printf(" - class: %s\n", vtoc2(pr, CuDType::Class));  // pr.containsKey("class")
+    if(pr.containsKey(CuDType::Pattern)) printf(" - pattern: \"%s\"\n", vtoc2(pr, CuDType::Pattern));  // pr.containsKey("pattern")
+    if(pr.containsKey(CuDType::Value)) printf(" - value: %s\n", vtoc2(pr, CuDType::Value));  // pr.containsKey("value")
     if(pr.containsKey("tango_host")) printf(" - tango host: %s\n", vtoc2(pr, "tango_host"));
 
     QStringList outputted_props;

@@ -36,9 +36,9 @@ bool CumbiaHTTPWorld::json_simple_decode(const QByteArray &jba, CuData &out) con
     QJsonObject o;
     QJsonDocument json = QJsonDocument::fromJson(jba, &pe);
     if(pe.error != QJsonParseError::NoError) {
-        out["err"] = true;
-        out["msg"] = "CumbiaHTTPWorld::json_simple_decode: parse error: " + pe.errorString().toStdString() + " in \"" + jba.data() + "\"";
-        perr("%s", out.s("msg").c_str());
+        out[CuDType::Err] = true;  // out["err"]
+        out[CuDType::Message] = "CumbiaHTTPWorld::json_simple_decode: parse error: " + pe.errorString().toStdString() + " in \"" + jba.data() + "\"";  // out["msg"]
+        perr("%s", out.s(CuDType::Message).c_str());  // out.s("msg")
     }
     else {
         if(json.isObject()) o = json.object();
@@ -52,9 +52,9 @@ bool CumbiaHTTPWorld::json_simple_decode(const QByteArray &jba, CuData &out) con
             }
         }
         else {
-            out["err"] = true;
-            out["msg"] = "CumbiaHTTPWorld::json_simple_decode: json \"" + std::string(jba.data()) + " is not an object";
-            perr("%s", out.s("msg").c_str());
+            out[CuDType::Err] = true;  // out["err"]
+            out[CuDType::Message] = "CumbiaHTTPWorld::json_simple_decode: json \"" + std::string(jba.data()) + " is not an object";  // out["msg"]
+            perr("%s", out.s(CuDType::Message).c_str());  // out.s("msg")
         }
     }
     return !o.isEmpty();
@@ -76,7 +76,7 @@ bool CumbiaHTTPWorld::request_reverse_eng(const QString &json, QMap<QString, QSt
             QJsonArray a = o.value("srcs").toArray();
             for(int i = 0; i < a.size(); i++) {
                 const QJsonObject &jo = a[i].toObject();
-                map[jo.value("src").toString()] = QJsonDocument(jo).toJson(QJsonDocument::Indented);
+                map[jo.value("src").toString()] = QJsonDocument(jo).toJson(QJsonDocument::Indented);  // !cudata
             }
         }
     }
@@ -119,25 +119,25 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
     double ts_us = -1.0f;
     if(data_o.contains("timestamp"))
         ts_us = strtod(data_o["timestamp"].toString().toStdString().c_str(), &endptr);
-    else if(data_o.contains("timestamp_us"))
-        ts_us = data_o["timestamp_us"].toDouble();
+    else if(data_o.contains("timestamp_us"))  // !cudata
+        ts_us = data_o["timestamp_us"].toDouble();  // !cudata
     if(ts_us > 0)
-        res["timestamp_us"] = ts_us;
+        res[CuDType::Time_us] = ts_us;  // res["timestamp_us"]
 
     // timestamp millis
     if(data_o.contains("timestamp_ms")) // timestamp_ms converted to long int
-        res["timestamp_ms"] = data_o["timestamp_ms"].toDouble();
+        res[CuDType::Time_ms] = data_o["timestamp_ms"].toDouble();  // !cudata
     else if(ts_us >= 0)
-        res["timestamp_ms"] = floor(ts_us) * 1000.0 + (ts_us - floor(ts_us)) * 10e6 / 1000.0;
+        res[CuDType::Time_ms] = floor(ts_us) * 1000.0 + (ts_us - floor(ts_us)) * 10e6 / 1000.0;  // res["timestamp_ms"]
 
     // error management: err flag and message
-    if(data_o.contains("err")) {
-        res["err"] = data_o["err"].toBool();
+    if(data_o.contains("err")) {  // data_o.contains("err") !cudata
+        res[CuDType::Err] = data_o["err"].toBool();  // res["err"], data_o["err"] !cudata
     }
     else if(data_o.contains("error"))
-        res["err"] = data_o["error"].toBool();
-    if(data_o.contains("msg"))
-        res["msg"] = data_o["msg"].toString().toStdString();
+        res[CuDType::Err] = data_o["error"].toBool();  // res["err"] !cudata
+    if(data_o.contains("msg"))  // data_o.contains("msg")
+        res[CuDType::Message] = data_o["msg"].toString().toStdString();  // res["msg"], data_o["msg"] !cudata
     //
     // i_keys, integer keys, to int
     foreach(const QString& k, i_keys)
@@ -145,7 +145,7 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
             res[k.toStdString()] = data_o[k].toInt();
 
     // matrix data type ? will have dim_x and dim_y
-    int dimx = data_o["dim_x"].toInt(0), dimy = data_o["dim_y"].toInt(0);
+    int dimx = data_o["dim_x"].toInt(0), dimy = data_o["dim_y"].toInt(0);  // data_o["dim_x"], data_o["dim_y"]
     bool matrix = dimx > 0 && dimy > 0;
 
     foreach(const QString &k, no_value_keys) {
@@ -394,13 +394,13 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
 QJsonObject CumbiaHTTPWorld::make_error(const QString &msg) const
 {
     QJsonObject o;
-    o["msg"] = msg;
-    o["err"] = true;
+    o["msg"] = msg;  // o["msg"]
+    o["err"] = true;  // o["err"]
     // timestamp
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    o["timestamp_ms"] =  tv.tv_sec * 1000 + tv.tv_usec / 1000.0;
-    o["timestamp_us"] = static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6;
+    o["timestamp_ms"] =  tv.tv_sec * 1000 + tv.tv_usec / 1000.0;  // o["timestamp_ms"] !cudata
+    o["timestamp_us"] = static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6;  // o["timestamp_us"] !cudata
     return o;
 }
 

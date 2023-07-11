@@ -128,7 +128,7 @@ void CuTWriter::onResult(const CuData &data)
 CuData CuTWriter::getToken() const
 {
     CuData da("source", d->tsrc.getName());
-    da["type"] = std::string("writer");
+    da[CuDType::Type] = std::string("writer");  // da["type"]
     return da;
 }
 
@@ -177,9 +177,9 @@ void CuTWriter::start() {
     CuData at(CuDType::Src, d->tsrc.getName()); /* activity token */
     at[CuDType::Device] = d->tsrc.getDeviceName();
     at[CuDType::Point] = d->tsrc.getPoint();
-    at["activity"] = "writer";
+    at[CuDType::Activity] = "writer";  // at["activity"]
     at["write_value"] = d->write_val;
-    at["cmd"] = (d->tsrc.getType() == TSource::SrcCmd);
+    at[CuDType::CmdName] = (d->tsrc.getType() == TSource::SrcCmd);  // at["cmd"]
     at.merge(d->options);
     const std::string & thtok = d->options.containsKey("thread_token") ? d->options.s("thread_token") : d->tsrc.getDeviceName(); /* thread token */
     d->activity = new CuWriteActivity(at, df, d->db_conf, d->tag);

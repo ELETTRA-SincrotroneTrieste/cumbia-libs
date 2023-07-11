@@ -1,4 +1,4 @@
-﻿#include "cupollingactivity.h"
+#include "cupollingactivity.h"
 #include "cudevicefactoryservice.h"
 #include "tdevice.h"
 #include "tsource.h"
@@ -135,7 +135,7 @@ CuPollingActivity::CuPollingActivity(const TSource &tsrc,
                                      const CuData &tag,
                                      int dataupdpo,
                                      int interval)
-    : CuPeriodicActivity(CuData(CuDType::Device, tsrc.getDeviceName()).set(CuDType::Period, interval).set("activity", "poller"))
+    : CuPeriodicActivity(CuData(CuDType::Device, tsrc.getDeviceName()).set(CuDType::Period, interval).set(CuDType::Activity, "poller"))  // set("activity", "poller")
 {
     d = new CuPollingActivityPrivate(df, options, tag, dataupdpo);
     d->other_thread_id = pthread_self();
@@ -271,7 +271,7 @@ int CuPollingActivity::consecutiveErrCnt() const {
 bool CuPollingActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
-    return token[CuDType::Device] == mytok[CuDType::Device] && mytok["activity"] == token["activity"]
+    return token[CuDType::Device] == mytok[CuDType::Device] && mytok[CuDType::Activity] == token[CuDType::Activity]  // mytok["activity"], token["activity"]
             && token[CuDType::Period] == mytok[CuDType::Period];
 }
 
@@ -448,7 +448,7 @@ void CuPollingActivity::m_registerAction(const TSource& ts) {
     if(is_command)
         d->cmds.push_back(ts);
     else {
-        tag.set(CuDType::Src, ts.getName()).set("mode", "P").set(CuDType::Period, d->period);
+        tag.set(CuDType::Src, ts.getName()).set(CuDType::Mode, "P").set(CuDType::Period, d->period);  // set("mode", "P")
         if(d->data_updpo & CuDataUpdatePolicy::SkipFirstReadUpdate) {
             // start polling the next next execute
             d->m_attd_future.insert(std::pair<unsigned long long int, CuData>(d->updcnt + 2, tag));

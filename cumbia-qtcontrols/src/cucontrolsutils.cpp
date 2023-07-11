@@ -1,4 +1,4 @@
-﻿#include "cucontrolsutils.h"
+#include "cucontrolsutils.h"
 #include "qustring.h"
 
 #include <QVariant>
@@ -210,9 +210,9 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
     if(val.isValid())
         data_siz = static_cast<int>(val.getSize());
     // min, max
-    if(data["max"].isValid() && data["min"].isValid()) {
-        data["max"].to<double>(max);
-        data["min"].to<double>(min);
+    if(data[CuDType::Max].isValid() && data[CuDType::Min].isValid()) {  // data["max"], data["min"]
+        data[CuDType::Max].to<double>(max);  // data["max"]
+        data[CuDType::Min].to<double>(min);  // data["min"]
     }
     QList<QObject *> inputobjs = cu.findObjects(target, leaf);
     CuVariant::DataFormat fmt = val.getFormat();
@@ -282,15 +282,15 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
  * \param da CuData
  * \param date_time_fmt a custom timestamp date / time format. Default: "yyyy-MM-dd HH:mm:ss.zzz"
  *
- * \return the message stored in da["msg"] if da["err"] evaluates to true or
- *  a new message with the source name, the value of da["mode"] (or da["activity"], if "mode" is empty) and the timestamp.
- *  da["timestamp_ms"] or da["timestamp_us"] are used to provide a date /time in the format "yyyy-MM-dd HH:mm:ss.zzz".
+ * \return the message stored in da[CuDType::Message] if da[CuDType::Err] evaluates to true or  // da["msg"], da["err"]
+ *  a new message with the source name, the value of da[CuDType::Mode] (or da[CuDType::Activity], if CuDType::Mode is empty) and the timestamp.  // da["mode"], da["activity"]
+ *  da[CuDType::Time_ms] or da[CuDType::Time_us] are used to provide a date /time in the format "yyyy-MM-dd HH:mm:ss.zzz".  // da["timestamp_ms"], da["timestamp_us"]
  */
 QString CuControlsUtils::msg(const CuData &da, const QString& date_time_fmt) const {
     QString m = QuString(da, "src");
     // timestamp
         long int ts = 0;
-        da["timestamp_ms"].to<long int>(ts);
+        da[CuDType::Time_ms].to<long int>(ts);  // da["timestamp_ms"]
         if(ts > 0)
             m += " " + QDateTime::fromMSecsSinceEpoch(ts).toString(date_time_fmt);
     if(ts == 0) {
@@ -303,7 +303,7 @@ QString CuControlsUtils::msg(const CuData &da, const QString& date_time_fmt) con
     if(!msg.isEmpty())
         return m + ": " + msg;
     // pick mode or activity name
-    const std::string& _mode = da.s("mode");
+    const std::string& _mode = da.s(CuDType::Mode);  // da.s("mode")
     if(_mode.length() > 0)
         m += (" [" + QuString(_mode) + "] ");
     else

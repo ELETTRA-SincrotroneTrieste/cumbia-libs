@@ -196,10 +196,7 @@ bool CuUiMake::make()
                         print(Analysis, true, plain_text, "\n");
                         print(Analysis, true, plain_text, "You can use the cumbia project wizard to create a project\n\n");
                     }
-                    else
-                    {
-
-
+                    else  {
                         print(Analysis, false, plain_text, "substitutions: %s\n", qstoc(substitutions.toString()));
                         print(Expand, false, plain_text, "processing ui_h file[s]...\n", qstoc(substitutions.toString()));
                         Processor processor;
@@ -284,6 +281,9 @@ void CuUiMake::m_print_cudatacheck_result(const CuDataChecker &cuch, bool ro) {
                     print(Analysis, true, plain_text, "%serror%s: invalid string keys in v2.0: %s\n", color, white, cuch.str_keys_invalid.join(',').toStdString().c_str());
                 }
                 print(Analysis, true, plain_text, "%serror%s: re-run cuuimake with `--update-cudata' [--debug] option\n", color, white);
+                print(Analysis, true, plain_text, "%serror%s: make sure to add a comment // !cudata on the lines that\n", color, white);
+                print(Analysis, true, plain_text, "%serror%s: shall not be altered by `--update-cudata', for example\n", color, white);
+                print(Analysis, true, plain_text, "%serror%s: if m[\"key\"] = value; // !cudata (m is a std::map) \\n", color, white);
             }
             else {
                 print(Analysis, false, plain_text, "%ssuccessfully%s ported %d cudata keys to indexes used in cumbia v2.0\n", color, white, cuch.result);

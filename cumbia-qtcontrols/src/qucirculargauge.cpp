@@ -114,8 +114,8 @@ void QuCircularGauge::contextMenuEvent(QContextMenuEvent *e)
 void QuCircularGauge::m_configure(const CuData& da)
 {
     QMap<QString, const char*> threshs;
-    threshs["min"] = "minValue";
-    threshs["max"] = "maxValue";
+    threshs["min"] = "minValue";  // threshs["min"]
+    threshs["min"] = "maxValue";  // threshs["max"]
     threshs["min_warning"] = "lowWarning";
     threshs["max_warning"] = "highWarning";
     threshs["max_alarm"] = "highError";
@@ -140,8 +140,8 @@ void QuCircularGauge::m_configure(const CuData& da)
     }
     if(da["display_unit"].toString().length() > 0)
         setUnit(QString::fromStdString(da["display_unit"].toString()));
-    if(da["format"].toString().length() > 0)
-        setFormatProperty(QString::fromStdString(da["format"].toString()));
+    if(da[CuDType::NumberFormat].toString().length() > 0)  // da["format"]
+        setFormatProperty(QString::fromStdString(da[CuDType::NumberFormat].toString()));  // da["format"]
     setCacheRegenerationDisabled(false);
     regenerateCache();
 }
@@ -167,7 +167,7 @@ void QuCircularGauge::m_set_value(const CuVariant &val)
 void QuCircularGauge::onUpdate(const CuData &da)
 {
     const QString& msg = d->u.msg(da);
-    d->read_ok = !da["err"].toBool();
+    d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
     setReadError(!d->read_ok);
     d->read_ok ? setLabel("") : setLabel(labelErrorText());
     setToolTip(msg);
@@ -177,11 +177,11 @@ void QuCircularGauge::onUpdate(const CuData &da)
     if(!d->read_ok)
         d->context->getLinkStats()->addError(msg.toStdString());
 
-    if(d->read_ok && d->auto_configure && da["type"].toString() == "property") {
+    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {  // da["type"]
         m_configure(da);
     }
-    if(d->read_ok && da["value"].isValid()) {
-        m_set_value(da["value"]);
+    if(d->read_ok && da[CuDType::Value].isValid()) {  // da["value"]
+        m_set_value(da[CuDType::Value]);  // da["value"]
     }
     emit newData(da);
 }

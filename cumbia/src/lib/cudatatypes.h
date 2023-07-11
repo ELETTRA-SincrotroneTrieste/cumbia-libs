@@ -25,7 +25,7 @@ public:
         Quality,  ///< quality value (was "q")
         QualityColor,  ///< a color associated to a quality value (was "qc")
         QualityString,  ///< a string associated to a quality value (was "qs")
-        Time,  ///< timestamp
+        Event,  ///< event type, was "E"
         Color, ///< color, was "color"
         WValue, ///< 'write' value (Tango set point, was "w_value")
         Thread,  ///< thread (e.g. for thread token, was "thread")
@@ -89,39 +89,72 @@ public:
 
     virtual std::string keyName(int k) const {
         switch(k){
-        case CuDType::Activity:
-            return "Activity";
-        case CuDType::Thread:
-            return "Thread";
-        case CuDType::Value:
-            return std::string("value");
-        case CuDType::Src:
-            return std::string("src");
-        case CuDType::Err:
-            return std::string("err");
-        case CuDType::Ptr:
-            return std::string("ptr");
-        case CuDType::Time:
-            return std::string("timestamp");
-        case CuDType::Time_ms:
-            return std::string("timestamp_ms");
-        case CuDType::Time_us:
-            return std::string("timestamp_us");
-        case CuDType::Time_ns:
-            return std::string("timestamp_ns");
-
-        case CuDType::Message:
-            return std::string("msg");
-        case CuDType::Mode:
-            return std::string("Mode");
-        case CuDType::Type:
-            return std::string("Type");
-        case CuDType::Exit:
-            return std::string("Exit");
-        case CuDType::MaxDataKey:
-            return std::string("MaxDataKey");
-        default:
-            return std::string("Unknown_key ") + std::to_string(k);
+        case CuDType::Time_us: return "Time_us";
+        case CuDType::Time_ms: return "Time_ms";
+        case CuDType::Value: return "Value";
+        case CuDType::Src: return "Src";
+        case CuDType::Err: return "Err";
+        case CuDType::State: return "State";
+        case CuDType::SuccessColor: return "SuccessColor";
+        case CuDType::StateColor: return "StateColor";
+        case CuDType::Quality: return "Quality";
+        case CuDType::QualityColor: return "QualityColor";
+        case CuDType::QualityString: return "QualityString";
+        case CuDType::Event: return "Event";
+        case CuDType::Color: return "Color";
+        case CuDType::WValue: return "WValue";
+        case CuDType::Thread: return "Thread";
+        case CuDType::Name: return "Name";
+        case CuDType::Time_ns: return "Time_ns";
+        case CuDType::Timestamp_Str: return "Timestamp_Str";
+        case CuDType::Message: return "Message";
+        case CuDType::Mode: return "Mode";
+        case CuDType::Type: return "Type";
+        case CuDType::Exit: return "Exit";
+        case CuDType::Ptr: return "Ptr";
+        case CuDType::InType: return "InType";
+        case CuDType::OutType: return "OutType";
+        case CuDType::InTypeStr: return "InTypeStr";
+        case CuDType::OutTypeStr: return "OutTypeStr";
+        case CuDType::WriteValue: return "WriteValue";
+        case CuDType::InputValue: return "InputValue";
+        case CuDType::Properties: return "Properties";
+        case CuDType::Property: return "Property";
+        case CuDType::IsCommand: return "IsCommand";
+        case CuDType::Args: return "Args";
+        case CuDType::RefreshMode: return "RefreshMode";
+        case CuDType::RefreshModeStr: return "RefreshModeStr";
+        case CuDType::Pv: return "Pv";
+        case CuDType::DataType: return "DataType";
+        case CuDType::Writable: return "Writable";
+        case CuDType::DataFormat: return "DataFormat";
+        case CuDType::DataTypeStr: return "DataTypeStr";
+        case CuDType::DataFormatStr: return "DataFormatStr";
+        case CuDType::Description: return "Description";
+        case CuDType::InTypeDesc: return "InTypeDesc";
+        case CuDType::OutTypeDesc: return "OutTypeDesc";
+        case CuDType::Status: return "Status";
+        case CuDType::Device: return "Device";
+        case CuDType::Attribute: return "Attribute";
+        case CuDType::Class: return "Class";
+        case CuDType::Pattern: return "Pattern";
+        case CuDType::Point: return "Point";
+        case CuDType::Max: return "Max";
+        case CuDType::Min: return "Min";
+        case CuDType::Keys: return "Keys";
+        case CuDType::Connected: return "Connected";
+        case CuDType::Period: return "Period";
+        case CuDType::Timeout: return "Timeout";
+        case CuDType::NumberFormat: return "NumberFormat";
+        case CuDType::Label: return "Label";
+        case CuDType::DimX: return "DimX";
+        case CuDType::DimY: return "DimY";
+        case CuDType::MaxDimX: return "MaxDimX";
+        case CuDType::MaxDimY: return "MaxDimY";
+        case CuDType::CmdName: return "CmdName";
+        case CuDType::Activity: return "Activity";
+        case CuDType::MaxDataKey: return "MaxDataKey";
+        default: return "InvalidKey";
         }
     }
 };

@@ -113,7 +113,7 @@ void $MAINCLASS$::m_configure(const CuData& da)
     M = da["max"];  // max value
 
     unit = QString::fromStdString(da["display_unit"].toString());
-    label = QString::fromStdString(da["label"].toString());
+    label = QString::fromStdString(da[CuDType::Label].toString());  // da["label"]
 
     // 1.
     // if this class has minimum / maximum properties:
@@ -160,7 +160,7 @@ void $MAINCLASS$::m_configure(const CuData& da)
     // ---------------------------------
 
 
-    description = QString::fromStdString(da["description"].toString());
+    description = QString::fromStdString(da[CuDType::Description].toString());  // da["description"]
     setProperty("description", description);
     setProperty("unit", unit);
 
@@ -183,8 +183,8 @@ void $MAINCLASS$::m_configure(const CuData& da)
 
 void $MAINCLASS$::onUpdate(const CuData &da)
 {
-    QString message = QString::fromStdString(da["msg"].toString());
-    d->read_ok = !da["err"].toBool();
+    QString message = QString::fromStdString(da[CuDType::Message].toString());  // da["msg"]
+    d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
 
     setEnabled(d->read_ok);
     setToolTip(message);
@@ -192,16 +192,16 @@ void $MAINCLASS$::onUpdate(const CuData &da)
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
-        d->context->getLinkStats()->addError(da["msg"].toString());
+        d->context->getLinkStats()->addError(da[CuDType::Message].toString());  // da["msg"]
 
     // configure object if the type of received data is "property"
-    if(d->read_ok && d->auto_configure && da["type"].toString() == "property") {
+    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {  // da["type"]
         m_configure(da);
     }
 
     // set value, if available
 
-    CuVariant val = da["value"];
+    CuVariant val = da[CuDType::Value];  // da["value"]
 
 
     if(d->read_ok && val.isValid()) {

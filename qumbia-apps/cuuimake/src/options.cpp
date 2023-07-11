@@ -33,7 +33,6 @@ Options::Options(const QStringList& args)
                                        "updated to version 2.0 indexes, as defined in cudatatypes.h");
     m_helpMap.insert("--debug", "additional information is printed while operations are performed");
 
-
     // options with --option=something
     // m_helpMap.insert("--add-params=par1,par2,...", "skip analysis and just add the specified parameters to the cumbia widgets at construction time");
 

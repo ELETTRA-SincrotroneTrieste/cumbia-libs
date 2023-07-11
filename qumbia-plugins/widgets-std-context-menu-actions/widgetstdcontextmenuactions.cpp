@@ -124,8 +124,8 @@ void WidgetStdContextMenuActions::onHelperAActionTriggered(const QString &source
     if(tango_db_ex) {
         std::vector<CuData> in_datalist;
         TSource tsrc(source.toStdString());
-        CuData din("device", tsrc.getDeviceName());
-        din["name"] = std::string("helperApplication");
+        CuData din(CuDType::Device, tsrc.getDeviceName());  // CuData din("device", tsrc.getDeviceName()
+        din[CuDType::Name] = std::string("helperApplication");  // din["name"]
         in_datalist.push_back(din);
         tango_db_ex->execute(in_datalist, d->m_ctxi);
     }
@@ -158,8 +158,8 @@ void WidgetStdContextMenuActions::onHelperAActionTriggered()
 void WidgetStdContextMenuActions::onDataReady(const CuData &da)
 {
     printf("Data received %s\n", da.toString().c_str());
-    d->m_msg = da["msg"].toString();
-    d->m_err = da["err"].toBool();
+    d->m_msg = da[CuDType::Message].toString();  // da["msg"]
+    d->m_err = da[CuDType::Err].toBool();  // da["err"]
     if(d->m_err) {
 
     }

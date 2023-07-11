@@ -67,7 +67,7 @@ void CuPoller::registerAction(const TSource& tsrc,
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
     CuData at(CuDType::Device, tsrc.getDeviceName()); /* activity token */
-    at["activity"] = "poller";
+    at[CuDType::Activity] = "poller";  // at["activity"]
     at[CuDType::Period] = d->period;
     CuActivity *activity = am->find(at); // polling activities compare device period and "activity"
     if(!activity) {
@@ -92,7 +92,7 @@ void CuPoller::unregisterAction(CuTangoActionI *a) {
         d->actions_map.erase(s);
         TSource tsrc = a->getSource();
         CuData at(CuDType::Device, tsrc.getDeviceName()); /* activity token */
-        at.set("activity", "poller").set(CuDType::Period, d->period);
+        at.set(CuDType::Activity, "poller").set(CuDType::Period, d->period);  // set("activity", "poller")
         CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
                                                                  get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
         if(d->actions_map.size() == 0)

@@ -185,7 +185,7 @@ void QuComboBox::paintEvent(QPaintEvent *pe)
 
 void QuComboBox::m_configure(const CuData& da)
 {
-    d->ok = !da["err"].toBool();
+    d->ok = !da[CuDType::Err].toBool();  // da["err"]
 
     CuControlsUtils u;
     setDisabled(!d->ok);
@@ -209,17 +209,17 @@ void QuComboBox::m_configure(const CuData& da)
 
         // initialise the object with the "write" value (also called "set point"), if available:
         //
-        if(da.containsKey("w_value")) {
+        if(da.containsKey(CuDType::WriteValue)) {  // da.containsKey("w_value")
             bool ok;
             int index = -1;
             if(d->index_mode) {
-                ok = da["w_value"].to<int>(index);
+                ok = da[CuDType::WriteValue].to<int>(index);  // da["w_value"]
                 if(ok && index > -1) { // conversion successful
                     setCurrentIndex(index);
                 }
             }
             else {
-                std::string as_s = da["w_value"].toString(&ok);
+                std::string as_s = da[CuDType::WriteValue].toString(&ok);  // da["w_value"]
                 if(ok) {
                     index = findText(QuString(as_s));
                     if(index > -1)
@@ -249,7 +249,7 @@ void QuComboBox::m_configure(const CuData& da)
 
 void QuComboBox::onUpdate(const CuData &da)
 {
-    d->ok = !da["err"].toBool();
+    d->ok = !da[CuDType::Err].toBool();  // da["err"]
     QString mes(d->u.msg(da));
     // update link statistics
     d->context->getLinkStats()->addOperation();
@@ -258,12 +258,12 @@ void QuComboBox::onUpdate(const CuData &da)
 
     if(!d->ok) {
         perr("QuComboBox [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
-             da["src"].toString().c_str(), mes.toStdString().c_str(),
-                da["dfs"].toString().c_str(), da["writable"].toInt());
+             da[CuDType::Src].toString().c_str(), mes.toStdString().c_str(),  // da["src"]
+                da[CuDType::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
 
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->context->cumbiaPool()->getBySrc(da["src"].toString());
+            cumbia = d->context->cumbiaPool()->getBySrc(da[CuDType::Src].toString());  // da["src"]
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
@@ -271,7 +271,7 @@ void QuComboBox::onUpdate(const CuData &da)
             log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), mes.toStdString(), CuLog::LevelError, CuLog::CategoryWrite);
         }
     }
-    else if(d->auto_configure &&  da.has("type", "property")) {
+    else if(d->auto_configure &&  da.has(CuDType::Type, "property")) {  // has("type", "property")
         //
         // --------------------------------------------------------------------------------------------
         // You may want to check data format and write type and issue a warning or avoid configuration

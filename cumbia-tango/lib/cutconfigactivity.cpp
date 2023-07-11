@@ -96,10 +96,10 @@ void CuTConfigActivity::execute() {
     at[CuDType::Device] = d->ts.getDeviceName();
     at[CuDType::Point] = point;
     at[CuDType::Args] = d->ts.getArgs();
-    at["activity"] = CuDType::Property;
-    at["is_command"] = d->ts.getType() == TSource::SrcCmd;
+    at[CuDType::Activity] = CuDType::Property;  // at["activity"]
+    at[CuDType::IsCommand] = d->ts.getType() == TSource::SrcCmd;  // at["is_command"]
     at[CuDType::Properties] = std::vector<std::string>();
-    at["type"] = CuDType::Property;
+    at[CuDType::Type] = CuDType::Property;  // at["type"]
 
     bool value_only = false, skip_read = false;
     o["value-only"].to<bool>(value_only);

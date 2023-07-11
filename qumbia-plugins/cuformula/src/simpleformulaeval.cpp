@@ -27,24 +27,24 @@ void SimpleFormulaEval::run()
     QScriptValue sval = sen.evaluate(d->formula);
     bool err = sval.isError() || !sval.isValid();
     CuDataQuality dq(CuDataQuality::Undefined);
-    d->result["src"] = d->formula.toStdString();
-    d->result["err"] = err;
+    d->result[CuDType::Src] = d->formula.toStdString();  // result["src"]
+    d->result[CuDType::Err] = err;  // result["err"]
     if(err) {
-        d->result["msg"] = QString("SimpleFormulaEval: evaluation error: %1").arg(d->formula).toStdString();
+        d->result[CuDType::Message] = QString("SimpleFormulaEval: evaluation error: %1").arg(d->formula).toStdString();  // result["msg"]
         dq.set(CuDataQuality::Invalid);
     }
     d->result["formula"] = d->formula.toStdString();
-    d->result["timestamp_ms"] = static_cast<long int>(QDateTime::currentMSecsSinceEpoch());
+    d->result[CuDType::Time_ms] = static_cast<long int>(QDateTime::currentMSecsSinceEpoch());  // result["timestamp_ms"]
     if(sval.isValid()) {
         CuVariant val = qobject_cast<CuFormulaReader *>(parent())->fromScriptValue(sval);
-        val.getFormat() == CuVariant::Scalar ? d->result["dfs"] = "scalar" :
-                d->result["dfs"] = "vector";
-        d->result["value"] = val;
+        val.getFormat() == CuVariant::Scalar ? d->result[CuDType::DataFormatStr] = "scalar" :  // result["dfs"]
+                d->result[CuDType::DataFormatStr] = "vector";  // result["dfs"]
+        d->result[CuDType::Value] = val;  // result["value"]
         dq.set(CuDataQuality::Valid);
     }
-    d->result["q"] = dq.toInt();
-    d->result["qc"] = dq.color();
-    d->result["qs"] = dq.name();
+    d->result[CuDType::Quality] = dq.toInt();  // result["q"]
+    d->result[CuDType::QualityColor] = dq.color();  // result["qc"]
+    d->result[CuDType::QualityString] = dq.name();  // result["qs"]
 }
 
 void SimpleFormulaEval::publishResult()
