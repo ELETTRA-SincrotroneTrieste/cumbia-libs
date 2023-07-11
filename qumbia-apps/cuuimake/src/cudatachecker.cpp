@@ -29,9 +29,13 @@ CuDataChecker::CuDataChecker(bool debug)
                    // like da.set("value", 10);
                      << QRegularExpression("CuData\\s+[A-Za-z0-9_]+\\(\\\"([A-Za-z0-9_]+)\\\", .*\\)")
                    // or CuData da("df", 1);
-                   << QRegularExpression("(?:set|has|add)\\(\\\"([a-zA-Z0-9_\\-\\.]+)\\\", .*\\).*")
+                   << QRegularExpression("(?:set|has|add)\\(\\\"([a-zA-Z0-9_\\-\\.]+)\\\",.*\\)")
                    // std::string s = da.s("value") --> match da.s("value") --> [A-Za-z0-9_]+\.[A-Za-z_0-9]+\(\"(.*)\"\)
-                   << QRegularExpression("[A-Za-z0-9_]+\\.[A-Za-z_0-9]+\\(\\\"([a-zA-Z0-9_\\-\\.]+)\\\"\\)")),
+                   << QRegularExpression("[A-Za-z0-9_]+\\.[A-Za-z_0-9]+\\(\\\"([a-zA-Z0-9_\\-\\.]+)\\\"\\)")
+                    // CuData da1("value", 1), da2("dt", 1), da3("df", 2);  <-- match the da2 and da3
+                    // ,\s*[A-Za-z0-9_]+\(\"([A-Za-z0-9\-\._]+)\",.*\)
+                     << QRegularExpression(",\\s*[A-Za-z0-9_]+\\(\\\"([A-Za-z0-9\\-\\._]+)\\\",.*\\)")),
+
     m_debug(debug)
 {
     m_key_patterns[0].setPatternOptions(QRegularExpression::InvertedGreedinessOption);
