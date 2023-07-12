@@ -49,7 +49,6 @@ void Qu_Reader::setContextOptions(const CuData &options) {
 // before notification (EPICS configuration arrives after first data)
 //
 void Qu_Reader::onUpdate(const CuData &da) {
-    printf("QuReader.\e[1;32monUpdate\e[0m: %s\n", datos(da));
     bool property_only = m_property_only || da.has(CuDType::Activity, "cutadb");  // has("activity", "cutadb")
     CuData data = da.clone();
     const CuVariant&  v = da[CuDType::Value];  // da["value"]
@@ -85,15 +84,12 @@ void Qu_Reader::onUpdate(const CuData &da) {
     if(!da.B(CuDType::Err) && ts > 0 && !da.containsKey(CuDType::Value) && !da.containsKey(CuDType::WriteValue) && da.containsKey(CuDType::Src))  // da.B("err"), da.containsKey("value"), da.containsKey("w_value"), da.containsKey("src")
         emit newUnchanged(source(), ts);
 
-    printf("QuReader.onUpdate: hdb_data %d err %d prop only %d\n", hdb_data, da.B(CuDType::Err), property_only);
     if(!hdb_data && !da.B(CuDType::Err) && !property_only) {  // da.B("err")
         QString from_ty = QuString(v.dataTypeStr(v.getType()));
         // if !m_save property we can notify.
         // otherwise wait for property, merge m_prop with data and notify
         // (epics properties are not guaranteed to be delivered first)
-        printf("QuReader.onUpdate: m_save_property %d m_prop.isEmpty %d\n", m_save_property, m_prop.isEmpty());
         if(!m_save_property || (m_save_property && !m_prop.isEmpty()) ) {
-            printf("QuReader.onUpdate: format %d type %d\n", v.getFormat(), v.getType());
             if(v.getFormat() == CuVariant::Scalar && v.getType() == CuVariant::Double)
                 emit newDouble(source(), ts, v.toDouble(), data);
             else if(v.getFormat() == CuVariant::Scalar && v.getType() == CuVariant::Float)

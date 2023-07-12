@@ -196,8 +196,8 @@ CuVariantPrivate::CuVariantPrivate() {
     mIsValid = false;
     mIsNull = true;
     mSize = nrows = ncols = 0;
-    format = FormatInvalid;
-    type = TypeInvalid;
+    format = CuVariant::FormatInvalid;
+    type = CuVariant::TypeInvalid;
     _r.store(1);
 }
 
@@ -336,7 +336,7 @@ void CuVariant::m_detach() {
         _d = new CuVariantPrivate(*_d); // sets ref=1  TEST: increases vcp
     }
     else if(!_d)
-        d = new CuVariantPrivate;
+        _d = new CuVariantPrivate;
 }
 
 /*! \brief the class destructor
@@ -874,12 +874,12 @@ CuVariant::CuVariant(CuVariant &&other) {
  */
 CuVariant & CuVariant::operator=(const CuVariant& other) {
     if(this != &other) {
-        other._d->ref();
+        if(other._d)
+            other._d->ref();
         if(_d && _d->unref() == 1) {
             m_cleanup();
         }
         _d = other._d; // share
-        // >> build_from(other); // before shared data
     }
     return *this;
 }
@@ -1056,7 +1056,7 @@ bool CuVariant::isValid() const {
  *
  */
 bool CuVariant::isNull() const {
-    return d == nullptr || _d->mIsNull;
+    return _d == nullptr || _d->mIsNull;
 }
 
 /** \brief Returns the size of the data stored by the CuVariant
@@ -1890,7 +1890,6 @@ std::vector<std::string> CuVariant::toStringVector(const char *fmt) const {
  *
  */
 std::vector<std::string> CuVariant::toStringVector(const char *fmt, bool *ok) const {
-    std::vector<std::string> ret;
     bool success = true;
     std::vector<std::string> ret;
     bool native_type = _d && (_d->type == String && (_d->format == Vector || _d->format == Scalar) ); // check _d!
@@ -1899,14 +1898,11 @@ std::vector<std::string> CuVariant::toStringVector(const char *fmt, bool *ok) co
         for(size_t i = 0; i < _d->mSize; i++)
             ret.push_back(std::string(str_array[i]));
     }
-    else if(_d && _d->format == Vector || _d->format == Scalar) {
+    else if(_d && (_d->format == Vector || _d->format == Scalar)) {
         const size_t MAXLEN = 128;
         char converted[MAXLEN + 1];
-        
-        for(size_t i = 0; i < _d->mSize && success; i++) // while success is true
-        {
+        for(size_t i = 0; i < _d->mSize && success; i++) { // while success is true
             memset(converted, 0, sizeof(char) * (MAXLEN + 1));  // clear string
-            
             if(_d->type == String) // directly push back the native data
                 ret.push_back(std::string(static_cast<char **>(_d->val)[i]));
             else if(_d->type == Double)
@@ -2343,6 +2339,7 @@ void CuVariant::append(const CuVariant &other) {
                     perr("CuVariant.append: cannot cat two invalid CuVariants");
                 break;
             case EndDataTypes:
+            case EndVariantTypes:
                 break;
             }
         }

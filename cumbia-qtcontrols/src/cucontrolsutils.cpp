@@ -13,9 +13,11 @@
 #include <QRegularExpression>
 
 #include <QDateTime>
+#include <QStringBuilder>
+#include <QStringLiteral>
 #include <QtDebug>
 
-QRegularExpression re;
+QRegularExpression re("\\((.*)\\)");
 
 /*! find the input argument from an object and return it in the shape of a string.
  *
@@ -99,8 +101,6 @@ CuVariant CuControlsUtils::getArgs(const QString &target, const QObject *leaf) c
     std::vector<std::string> argins;
     QString oName;
     QString val;
-    cuprintf("\e[1;34mgetArgs finding args in %s\e[0m\n\n", qstoc(target));
-    re.setPattern("\\((.*)\\)");
     QRegularExpressionMatch match = re.match(target);
     if(match.captured().size() > 0) {
         QString argums = match.captured(1);
@@ -115,7 +115,6 @@ CuVariant CuControlsUtils::getArgs(const QString &target, const QObject *leaf) c
                 oName = a.remove(0, 1);
                 val = findInput(oName, leaf, &found);
                 if(found) {
-                    printf("CuControlsUtils::getArgs found. Adding argin %s\n", qstoc(val));
                     argins.push_back(val.toStdString());
                 }
                 else
@@ -164,8 +163,6 @@ QList<QObject *> CuControlsUtils::findObjects(const QString& target, const QObje
 {
     QList<QObject *> objects;
     QString oName;
-    cuprintf("\e[1;34mgetArgs finding args in %s\e[0m\n\n", qstoc(target));
-    re.setPattern("\\((.*)\\)");
     QRegularExpressionMatch ma = re.match(target);
     if(ma.captured().size() > 0)  {
         QString argums = ma.captured(1);
@@ -210,9 +207,9 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
     if(val.isValid())
         data_siz = static_cast<int>(val.getSize());
     // min, max
-    if(data[CuDType::Max].isValid() && data[CuDType::Min].isValid()) {  // data["max"], data["min"]
-        data[CuDType::Max].to<double>(max);  // data["max"]
-        data[CuDType::Min].to<double>(min);  // data["min"]
+    if(data[CuDType::Max].isValid() && data[CuDType::Min].isValid()) {
+        data[CuDType::Max].to<double>(max);
+        data[CuDType::Min].to<double>(min);
     }
     QList<QObject *> inputobjs = cu.findObjects(target, leaf);
     CuVariant::DataFormat fmt = val.getFormat();
@@ -231,7 +228,7 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
 
             // min, max, before value
             if( (min != max) &&  (idx = mo->indexOfProperty("minimum")) > -1 && mo->property(idx).isWritable() &&
-                    (idx = mo->indexOfProperty("maximum")) > -1 && mo->property(idx).isWritable()) {
+                (idx = mo->indexOfProperty("maximum")) > -1 && mo->property(idx).isWritable()) {
                 ret = o->setProperty("minimum", min) && o->setProperty("maximum", max);
             }
 
@@ -254,7 +251,7 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
                         else if(vtype == QMetaType::Bool)
                             ret =o->setProperty("value", vs != "0" && strcasecmp(vs.c_str(), "false") != 0);
                         else {
-                            printf("\e[1;31m cannot set prop value cuz type %d not supported\e[0m\n", vtype);
+                            perr("cannot set prop value cuz type %d not supported", vtype);
                         }
                     }
                     catch(const std::invalid_argument &ia) {
@@ -287,27 +284,39 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
  *  da[CuDType::Time_ms] or da[CuDType::Time_us] are used to provide a date /time in the format "yyyy-MM-dd HH:mm:ss.zzz".  // da["timestamp_ms"], da["timestamp_us"]
  */
 QString CuControlsUtils::msg(const CuData &da, const QString& date_time_fmt) const {
-    QString m = QuString(da, "src");
+    QString m;
+    const std::string& src = da.s(CuDType::Src); // determines the str len mostly
+    const std::string& msg = da.s(CuDType::Message);
+    const int reservesiz = !da.B(CuDType::Err) ? src.length() + msg.length() + 30 : msg.length() + src.length() + 30;
+    m.reserve(reservesiz);
+    m = src.c_str();
     // timestamp
-        long int ts = 0;
-        da[CuDType::Time_ms].to<long int>(ts);  // da["timestamp_ms"]
-        if(ts > 0)
-            m += " " + QDateTime::fromMSecsSinceEpoch(ts).toString(date_time_fmt);
+    long int ts = 0;
+
+    da[CuDType::Time_ms].to<long int>(ts);
+    if(ts > 0)
+        m += " " + QDateTime::fromMSecsSinceEpoch(ts).toString(date_time_fmt);
     if(ts == 0) {
         double tsd = 0.0;
-        da["timestamp_us"].to<double>(tsd);  // secs.usecs in a double
+        da[CuDType::Time_us].to<double>(tsd);  // secs.usecs in a double
         if(tsd > 0)
             m += " " + QDateTime::fromMSecsSinceEpoch(static_cast<long int>(tsd * 1000)).toString(date_time_fmt);
     }
-    const QuString& msg = QuString(da, "msg");
-    if(!msg.isEmpty())
-        return m + ": " + msg;
-    // pick mode or activity name
-    const std::string& _mode = da.s(CuDType::Mode);  // da.s("mode")
-    if(_mode.length() > 0)
-        m += (" [" + QuString(_mode) + "] ");
-    else
-        m += (" [" + QuString(da, "activity") + "] ");
+
+    if(msg.length() > 0) {
+        m += QStringLiteral(": ") + msg.c_str();
+    }
+    else {
+        // pick mode or activity name
+        const std::string& _mode = da.s(CuDType::Mode);
+        if(_mode.length() > 0)
+            m += (" [" + QuString(_mode) + "] ");
+        else
+            m += (" [" + QuString(da, CuDType::Activity) + "] ");
+    }
+
+    if(m.length() > reservesiz)
+        printf("CuControlsUtils::msg: reserved size was \e[1;32m%d\e[0m, actual string len is \e[0;32m%d\e[0m\t\e[1;31m REALLOC NEEDED\e[0m\n", reservesiz, m.length());
 
     return m;
 }

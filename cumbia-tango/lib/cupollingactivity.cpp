@@ -297,6 +297,7 @@ void CuPollingActivity::init()
     if(thread()->type() == CuTThread::CuTThreadType) // upgrade to CuTThread / lock free CuTThreadDevices
         d->devfa = static_cast<CuTThread *>(thread())->device_factory();
     CuData tk = getToken();
+    const CuVariant& v = tk[CuDType::Device];
     d->tdev = d->devfa->getDevice(tk[CuDType::Device].toString(), threadToken());
     tk[CuDType::Connected] = d->tdev->isValid();
     tk[CuDType::Err] = !d->tdev->isValid();
@@ -359,7 +360,7 @@ void CuPollingActivity::execute()
             const std::string& srcnam = tsrc.getName();
             const std::string& point = tsrc.getPoint();
             results.push_back(d->tag);
-            results[i]["mode"] = "P";
+            results[i][CuDType::Mode] = "P";
             results[i][CuDType::Period] = interval();
             results[i][CuDType::Src] = tsrc.getName();
             CmdData& cmd_data = d->din_cache[srcnam];

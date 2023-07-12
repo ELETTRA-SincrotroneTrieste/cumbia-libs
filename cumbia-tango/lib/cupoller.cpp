@@ -67,7 +67,7 @@ void CuPoller::registerAction(const TSource& tsrc,
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
     CuData at(CuDType::Device, tsrc.getDeviceName()); /* activity token */
-    at[CuDType::Activity] = "poller";  // at["activity"]
+    at[CuDType::Activity] = "poller";
     at[CuDType::Period] = d->period;
     CuActivity *activity = am->find(at); // polling activities compare device period and "activity"
     if(!activity) {

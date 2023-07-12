@@ -112,7 +112,7 @@ public:
 
     void print() const;
 
-    std::string toString() const;
+    std::string toString(bool color = true) const;
 
     void putTimestamp();
 

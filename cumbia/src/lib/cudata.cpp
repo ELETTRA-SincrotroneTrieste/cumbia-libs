@@ -51,7 +51,7 @@ public:
     void m_copy_from(const CuDataPrivate &other) {
         datamap = other.datamap;
         for(size_t i = 0; i < CuDType::MaxDataKey; i++) {
-            if(data[i].isValid()) { // copy CuVariant if set at pos i
+            if(other.data[i].isValid()) { // copy CuVariant if set at pos i
                 data[i] = other.data[i];
             }
         }
@@ -458,19 +458,17 @@ void CuData::print() const {
  * @see print
  *
  */
-std::string CuData::toString() const
+std::string CuData::toString(bool color) const
 {
     CuXDTypeUtils dt;
-    std::string r = "CuData { ";
+    const std::string& green = color ? "\e[1;32m" : "";
+    const std::string& blue = color ? "\033[1;34m" : "";
+    const std::string& cyan = color ? "\033[1;36m" : "";
+    const std::string& magenta = color ? "\033[1;35m" : "";
+    const std::string& white = "\e[0m";
     std::unordered_map<std::string, CuVariant>::const_iterator i;
     char siz[16];
-    snprintf(siz, 16, "%ld", d_p->datamap.size());
-    for(i = d_p->datamap.begin(); i != d_p->datamap.end(); ++i)
-    {
-        r += "[\"" + i->first + "\" -> " + i->second.toString() + "], ";
-    }
-    r.replace(r.length() - 2, 2, "");
-    r += " } (str size map: " + std::string(siz) + ") ";
+    std::string r = "CuData";
 
     int kc = 0;
     std::map<std::string, std::string> valmap; // want a lexicographically ordered print of key name/values
@@ -482,7 +480,7 @@ std::string CuData::toString() const
     }
     r += ("*int-keys* { ");
     for(std::map<std::string, std::string>::const_iterator it = valmap.begin(); it != valmap.end(); ++it) {
-        r += "[" + it->first + ": \"" + it->second + "\"], ";
+        r += "[" + green + it->first + white + ": \"" + it->second + "\"], ";
     }
     r.replace(r.length() - 2, 2, "");
 
@@ -490,6 +488,16 @@ std::string CuData::toString() const
     r += " } (int key count: " + std::to_string(kc) + " isEmpty: " + std::string(((d_p->datamap.size() + kc) == 0) ? "YES" : "NO") +
          " total size: " + std::to_string(kc + d_p->datamap.size()) + ")";
 
+    if(d_p->datamap.size() > 0) {
+        r  += "* str-keys * { ";
+        snprintf(siz, 16, "%ld", d_p->datamap.size());
+        for(i = d_p->datamap.begin(); i != d_p->datamap.end(); ++i)
+        {
+            r += "[\"" + magenta + i->first + white + "\" -> " + i->second.toString() + "], ";
+        }
+        r.replace(r.length() - 2, 2, "");
+        r += " } (str size map: " + std::string(siz) + ") ";
+    }
     return r;
 }
 
