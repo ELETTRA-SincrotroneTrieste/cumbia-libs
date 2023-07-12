@@ -295,24 +295,24 @@ QString CuControlsUtils::msg(const CuData &da, const QString& date_time_fmt) con
 
     da[CuDType::Time_ms].to<long int>(ts);
     if(ts > 0)
-        m += " " + QDateTime::fromMSecsSinceEpoch(ts).toString(date_time_fmt);
+        m = m % QStringLiteral(": ") %  QDateTime::fromMSecsSinceEpoch(ts).toString(date_time_fmt);
     if(ts == 0) {
         double tsd = 0.0;
         da[CuDType::Time_us].to<double>(tsd);  // secs.usecs in a double
         if(tsd > 0)
-            m += " " + QDateTime::fromMSecsSinceEpoch(static_cast<long int>(tsd * 1000)).toString(date_time_fmt);
+            m = m % QStringLiteral(": ") %  QDateTime::fromMSecsSinceEpoch(static_cast<long int>(tsd * 1000)).toString(date_time_fmt);
     }
 
     if(msg.length() > 0) {
-        m += QStringLiteral(": ") + msg.c_str();
+        m += QStringLiteral(": ") % msg.c_str();
     }
     else {
         // pick mode or activity name
         const std::string& _mode = da.s(CuDType::Mode);
         if(_mode.length() > 0)
-            m += (" [" + QuString(_mode) + "] ");
+            m += ("[ " %  QString(_mode.c_str()) % "] ");
         else
-            m += (" [" + QuString(da, CuDType::Activity) + "] ");
+            m += (" [" % QString(da.s(CuDType::Activity).c_str()) % "] ");
     }
 
     if(m.length() > reservesiz)
