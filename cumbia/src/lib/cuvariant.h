@@ -300,8 +300,6 @@ public:
     std::string dataTypeStr(int t) const;
 
 private:
-
-    void build_from(const CuVariant& other);
     void m_cleanup();
     template<typename T>void m_from(T value);
     template<typename T> void m_from(const std::vector<T> &v);
