@@ -190,7 +190,7 @@ void CuEventActivity::execute()
     std::string att = d->tsrc.getPoint();
     const std::string& ref_mode_str = d->refreshmo;
     Tango::DeviceProxy *dev = d->tdev->getDevice();
-    at.set(CuDType::Src, d->tsrc.getName()).set(CuDType::Mode, "E").set("E", "subscribe").putTimestamp();  // set("mode", "E")
+    at.set(CuDType::Src, d->tsrc.getName()).set(CuDType::Mode, "E").set(CuDType::Event, "subscribe").putTimestamp();  // set("mode", "E")
     at[CuDType::Err] = !d->tdev->isValid();
     if(dev) {
         try {
