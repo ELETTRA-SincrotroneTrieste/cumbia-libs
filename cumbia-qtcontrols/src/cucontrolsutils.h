@@ -1,7 +1,7 @@
 #ifndef CUCONTROLSUTILS_H
 #define CUCONTROLSUTILS_H
 
-#include <cuvariant.h>
+#include <cuvariant.h> // defines also TIMESTAMPLEN used here
 #include <QList>
 
 class QString;
@@ -26,7 +26,10 @@ public:
     CuVariant getArgs(const QString& target, const QObject *leaf) const;
     QList<QObject *> findObjects(const QString &target, const QObject *leaf);
     bool initObjects(const QString& target, const QObject* leaf, const CuData &data, const char *value_key);
-    QString msg(const CuData& da, const QString& date_time_fmt = "yyyy-MM-dd HH:mm:ss.zzz") const;
+    QString msg(const CuData& da) const;
+
+    inline void ts_to_s(const long int &millis, char dt[TIMESTAMPLEN]) const; // TIMESTAMPLEN from cuvariant.h
+    inline void ts_to_s(const double &ts, char dt[TIMESTAMPLEN]) const; //
 };
 
 #endif // CUCONTROLSUTILS_H

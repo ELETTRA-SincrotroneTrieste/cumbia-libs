@@ -16,6 +16,7 @@
 #include <QStringBuilder>
 #include <QStringLiteral>
 #include <QtDebug>
+#include <chrono>
 
 QRegularExpression re("\\((.*)\\)");
 
@@ -283,41 +284,69 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
  *  a new message with the source name, the value of da[CuDType::Mode] (or da[CuDType::Activity], if CuDType::Mode is empty) and the timestamp.  // da["mode"], da["activity"]
  *  da[CuDType::Time_ms] or da[CuDType::Time_us] are used to provide a date /time in the format "yyyy-MM-dd HH:mm:ss.zzz".  // da["timestamp_ms"], da["timestamp_us"]
  */
-QString CuControlsUtils::msg(const CuData &da, const QString& date_time_fmt) const {
+QString CuControlsUtils::msg(const CuData &da) const {
+
+    const char *src = da.c_str(CuDType::Src);
+    const char* msg = da.c_str(CuDType::Message);
+    /*
+     * QStringBuilder uses expression templates and reimplements the '%' operator
+     * so that when you use '%' for string concatenation instead of '+', multiple
+     * substring concatenations will be postponed until the final result is about
+     * to be assigned to a QString. At this point, the amount of memory required
+     * for the final result is known. The memory allocator is then called once to
+     * get the required space, and the substrings are copied into it one by one.
+     *
+     * // for this, we do not m.reserve()
+     */
     QString m;
-    const std::string& src = da.s(CuDType::Src); // determines the str len mostly
-    const std::string& msg = da.s(CuDType::Message);
-    const int reservesiz = !da.B(CuDType::Err) ? src.length() + msg.length() + 30 : msg.length() + src.length() + 30;
-    m.reserve(reservesiz);
-    m = src.c_str();
     // timestamp
     long int ts = 0;
 
     da[CuDType::Time_ms].to<long int>(ts);
-    if(ts > 0)
-        m = m % QStringLiteral(": ") %  QDateTime::fromMSecsSinceEpoch(ts).toString(date_time_fmt);
+    char dt[TIMESTAMPLEN];
+    if(ts > 0) {
+        ts_to_s(ts, dt);
+    }
     if(ts == 0) {
         double tsd = 0.0;
         da[CuDType::Time_us].to<double>(tsd);  // secs.usecs in a double
-        if(tsd > 0)
-            m = m % QStringLiteral(": ") %  QDateTime::fromMSecsSinceEpoch(static_cast<long int>(tsd * 1000)).toString(date_time_fmt);
+        if(tsd > 0) {
+            ts_to_s(tsd, dt);
+        }
     }
 
-    if(msg.length() > 0) {
-        m += QStringLiteral(": ") % msg.c_str();
+    if(msg && strlen(msg) > 0) {
+        m = src % QStringLiteral(" ") % static_cast<const char *>(dt) % QStringLiteral(": ") % msg;
     }
     else {
         // pick mode or activity name
-        const std::string& _mode = da.s(CuDType::Mode);
-        if(_mode.length() > 0)
-            m += ("[ " %  QString(_mode.c_str()) % "] ");
+        const char* _mode = da.c_str(CuDType::Mode);
+        if(_mode && strlen(_mode) > 0) {
+            m = src % QStringLiteral(" ") % static_cast<const char *>(dt) % QStringLiteral(" [") %  _mode % QStringLiteral("]");
+        }
         else
-            m += (" [" % QString(da.s(CuDType::Activity).c_str()) % "] ");
+            m = src % QStringLiteral(" ") % static_cast<const char *>(dt) % QStringLiteral(" [") % da.c_str(CuDType::Activity) % QStringLiteral("]");
     }
-
-    if(m.length() > reservesiz)
-        printf("CuControlsUtils::msg: reserved size was \e[1;32m%d\e[0m, actual string len is \e[0;32m%d\e[0m\t\e[1;31m REALLOC NEEDED\e[0m\n", reservesiz, m.length());
-
     return m;
+}
+
+inline void CuControlsUtils::ts_to_s(const long &millis, char dt[TIMESTAMPLEN]) const {
+    time_t rawTime = millis / 1000;
+    struct tm* timeInfo;
+    timeInfo = localtime(&rawTime);
+    strftime(dt, TIMESTAMPLEN, "%Y-%m-%d %H:%M:%S", timeInfo);
+    int milliseconds = millis % 1000;
+    sprintf(dt + 19, ".%03d", milliseconds);
+}
+
+inline void CuControlsUtils::ts_to_s(const double &ts, char dt[TIMESTAMPLEN]) const {
+    time_t rawTime = static_cast<time_t>(ts);
+    struct tm* timeInfo;
+
+    timeInfo = localtime(&rawTime);
+    strftime(dt, TIMESTAMPLEN, "%Y-%m-%d %H:%M:%S.", timeInfo);
+
+    int microseconds = static_cast<int>((ts - rawTime) * 1000000);
+    sprintf(dt + 20, "%06d", microseconds);
 }
 
