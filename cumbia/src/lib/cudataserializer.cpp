@@ -34,11 +34,10 @@ char *CuDataSerializer::serialize(const CuData &da) const {
     struct repr re { 0 };
     re.version = VERSION;
     re.stat = be;
-    strncpy(re.src, da.s(CuDType::Src).c_str(), 127);  // da.s("src")
+    strncpy(re.src, da.c_str(CuDType::Src), 127);  // da.s("src")
     if(da.B(CuDType::Err)) re.stat |= 0x1;  // da.B("err")
     if(da.containsKey(CuDType::Event)) re.stat |= 0x2;  // da.containsKey("E")
-    std::string msg;
-    if(da.containsKey(CuDType::Message)) msg = da.s(CuDType::Message);  // da.containsKey("msg"), da.s("msg")
+    std::string msg = da.containsKey(CuDType::Message) ? da.c_str(CuDType::Message) : "";
     double ts = da[CuDType::Time_us].toDouble();  // da["timestamp_us"]
     memcpy(&re.timestamp, &ts, sizeof(uint64_t));
     if(da.containsKey(CuDType::Value)) {  // da.containsKey("value")
@@ -212,14 +211,14 @@ uint32_t CuDataSerializer::msg_len(const char *data) const {
 CuData CuDataSerializer::deserialize(const char *data, size_t len) const {
     CuData d;
     if(len < sizeof(uint32_t) + sizeof(uint8_t)) {
-        d.set(CuDType::Err, true).set(CuDType::Message, std::string("CuDataSerializer::deserialize length of data ") + std::to_string(len) + " is too short. serializer version: " + std::to_string(VERSION));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize length of data ")
+        d.set(CuDType::Err, true).set(CuDType::Message, CuVariant("CuDataSerializer::deserialize length of data " + std::to_string(len) + " is too short. serializer version: " + std::to_string(VERSION)));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize length of data ")
         perr("%s", d.s(CuDType::Message).c_str());  // d.s("msg")
     }
     else if(version(data) == VERSION) {
         uint32_t siz = this->size(data);
         if(siz >= sizeof(struct repr)) {
             struct repr *re = (struct repr *) data;
-            d[CuDType::Src] = std::string(re->src);  // d["src"]
+            d[CuDType::Src] = CuVariant(re->src);  // d["src"]
             d[CuDType::DataType] = re->type;  // d["dt"]
             d[CuDType::DataFormat] = re->format;  // d["df"]
             if(re->stat & 0x1) d[CuDType::Err] = true;  // d["err"]
@@ -283,27 +282,27 @@ CuData CuDataSerializer::deserialize(const char *data, size_t len) const {
                     d[CuDType::Value] = deserialize_data_t<void *>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 default:
-                    d.set(CuDType::Err, true).set(CuDType::Message, std::string("CuDataSerializer::deserialize unsupported data type " + std::to_string(re->type)));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize unsupported data type " + std::to_string(re->type)
+                    d.set(CuDType::Err, true).set(CuDType::Message, CuVariant(std::string("CuDataSerializer::deserialize unsupported data type " + std::to_string(re->type))));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize unsupported data type " + std::to_string(re->type)
                     perr("%s", d.s(CuDType::Message).c_str());  // d.s("msg")
                     break;
                 }
             }
             else if(*p_dsiz > 0) {
-                d.set(CuDType::Err, true).set(CuDType::Message, std::string("CuDataSerializer::deserialize: buffer size ") + std::to_string(siz) + " < " + std::to_string(sizeof(struct repr)) + " (metadata size) + " + std::to_string(*p_dsiz) + " (expected bytes of data)");  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize: buffer size ")
-                perr("%s", d.s(CuDType::Message).c_str());  // d.s("msg")
+                d.set(CuDType::Err, true).set(CuDType::Message, CuVariant(std::string("CuDataSerializer::deserialize: buffer size ") + std::to_string(siz) + " < " + std::to_string(sizeof(struct repr)) + " (metadata size) + " + std::to_string(*p_dsiz) + " (expected bytes of data)"));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize: buffer size ")
+                perr("%s", d.s(CuDType::Message).c_str());
             }
 
             if(msg_ptr(data) != nullptr) {
-                d[CuDType::Message] = message(data);  // d["msg"]
+                d[CuDType::Message] = CuVariant(message(data));
             }
         }
         else {
-            d.set(CuDType::Err, true).set(CuDType::Message, std::string("CuDataSerializer::deserialize: received bytes " + std::to_string(siz) + " < medatadata size " + std::to_string(sizeof(struct repr)) ));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize: received bytes " + std::to_string(siz)
+            d.set(CuDType::Err, true).set(CuDType::Message, CuVariant(std::string("CuDataSerializer::deserialize: received bytes " + std::to_string(siz) + " < medatadata size " + std::to_string(sizeof(struct repr)) )));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize: received bytes " + std::to_string(siz)
             perr("%s", d.s(CuDType::Message).c_str());  // d.s("msg")
         }
     } // version mismatch
     else {
-        d.set(CuDType::Err, true).set(CuDType::Message, std::string("CuDataSerializer::deserialize version mismatch: ") + std::to_string(version(data)) + " expected " + std::to_string(VERSION));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize version mismatch: ")
+        d.set(CuDType::Err, true).set(CuDType::Message, CuVariant(std::string("CuDataSerializer::deserialize version mismatch: ") + std::to_string(version(data)) + " expected " + std::to_string(VERSION)));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize version mismatch: ")
         perr("%s", d.s(CuDType::Message).c_str());  // d.s("msg")
     }
 
