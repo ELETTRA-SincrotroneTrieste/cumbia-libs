@@ -15,7 +15,7 @@ public:
     QMap<long int, QPair<QString, QColor> >enum_d;
     QString format;
     int max_len;
-    int size_scale;
+    float size_scale;
     bool draw_internal_border;
 };
 
@@ -121,8 +121,9 @@ void QuLabelBase::setDecoration(const QColor & background, const QColor &border)
         d_ptr->result_border_color = border;
     if(bg_update)
         setBackground(background); // calls setPalette: no need for update
-   else if(border_update)
+    else if(border_update) {
         update();
+    }
 }
 
 /*! \brief returns the width, in pixels, of the colored border that is
@@ -231,7 +232,7 @@ void QuLabelBase::setEnumDisplay(int val, const QString &text, const QColor &c)
 
 void QuLabelBase::setFormat(const QString &fmt)
 {
-    d_ptr->format = fmt;
+    d_ptr->format =  fmt;
 }
 
 /*! \brief reimplements QLabel::minimumSizeHint to ensure there is enough space to draw
