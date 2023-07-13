@@ -514,16 +514,18 @@ CuVariant::CuVariant(const std::string&  s) {
     m_from_std_string(s);
 }
 
-/*! \brief builds a CuVariant holding the specified constant char string
+/*! \brief builds a CuVariant from a plain C string
  *
- * @param s the value that will be stored by the object as string
+ * @param s a pointer to a *null terminated* C string
  *
- * Specific conversion method: CuVariant::toString
+ * Specific conversion method: CuVariant::toString or CuVariant::c_str
+ *
+ * \since 2.0
  */
 CuVariant::CuVariant(const char *s) {
     _d = new CuVariantPrivate(); /* allocates CuVariantDataInfo */
     m_init(Scalar, String);
-    m_from_std_string(std::string(s));
+    m_from_char_ptr(s);
 }
 
 /*! \brief builds a CuVariant storing the void * pointer passed as argument
@@ -932,6 +934,17 @@ bool CuVariant::operator ==(const CuVariant &other) const {
                     LongDouble, Boolean, String, VoidPtr, EndDataTypes };
     */
         switch (_d->type) {
+        case String:
+            v_str = static_cast<char **>(_d->val);
+            other_v_str = static_cast<char **>(other._d->val);
+            if(_d->mSize == 1)
+                return strcmp(v_str[0], other_v_str[0]) == 0;
+            else
+            {
+                printf(">>> CuVariant::operator ==\e[1;31mWARNING WARNING WARNING!!! STRING VECTOR COMPARISON TO BE IMPLEMENTED IN OPERATOR ==\e[0m\n");
+                printf(">>> CuVariant::operator ==\e[1;31mWARNING WARNING WARNING   RETURNING FALSE\e[0m\n");
+            }
+            return false;
         case Short:
             return _d->format == CuVariant::Matrix ? *matrix_ptr<short>() == *other.matrix_ptr<short>() :
                        memcmp(other._d->val,  this->_d->val, sizeof(short) * _d->mSize) == 0;
@@ -974,20 +987,6 @@ bool CuVariant::operator ==(const CuVariant &other) const {
         case Char:
             return _d->format == CuVariant::Matrix ? *matrix_ptr<char>() == *other.matrix_ptr<char>() :
                        memcmp(other._d->val,  this->_d->val, sizeof(char) * _d->mSize) == 0;
-
-        case String:
-            v_str = static_cast<char **>(_d->val);
-            other_v_str = static_cast<char **>(other._d->val);
-            if(_d->mSize == 1)
-            {
-                return strcmp(v_str[0], other_v_str[0]) == 0;
-            }
-            else
-            {
-                cuprintf(">>> CuVariant::operator ==\e[1;31mWARNING WARNING WARNING!!! STRING VECTOR COMPARISON TO BE IMPLEMENTED IN OPERATOR ==\e[0m\n");
-                cuprintf(">>> CuVariant::operator ==\e[1;31mWARNING WARNING WARNING   RETURNING FALSE\e[0m\n");
-            }
-            return false;
         case VoidPtr:
             return _d->val == other._d->val;
             break;
@@ -1207,11 +1206,26 @@ void CuVariant::m_from(const std::vector<std::string> &s) {
  * - isNull is set to false
  */
 void CuVariant::m_from_std_string(const std::string &s) {
+    printf("CuVariant using \e[1,35mstring \e[0m constructor '%s'\n", s.c_str());
     _d->mSize = _d->nrows = 1;
     size_t size = strlen(s.c_str()) + 1;
     char **str = new char*[_d->mSize];
     str[0] = new char[size];
     strncpy(str[0], s.c_str(), sizeof(char) * size);
+    _d->mIsNull = false;
+    _d->val = str;
+}
+
+// builds a variant from a C string
+// that must be null terminated
+void CuVariant::m_from_char_ptr(const char *s) {
+    printf("CuVariant using \e[1,32ms const char * \e[0m constructor '%s'\n", s);
+
+    _d->mSize = _d->nrows = 1;
+    size_t size = strlen(s) + 1;
+    char **str = new char*[_d->mSize];
+    str[0] = new char[size];
+    strncpy(str[0], s, sizeof(char) * size);
     _d->mIsNull = false;
     _d->val = str;
 }
@@ -1868,6 +1882,10 @@ std::string CuVariant::toString(bool *ok, const char *format) const {
 std::string CuVariant::s() const { return toString(nullptr); }
 
 std::string CuVariant::s(const char *fmt, bool *ok) const { return toString(ok, fmt); }
+
+const char *CuVariant::c_str() const {
+    return _d ? static_cast<char **>(_d->val)[0] : nullptr;
+}
 
 std::vector<std::string> CuVariant::toStringVector(bool *ok) const {
     return toStringVector(nullptr, ok);

@@ -547,6 +547,40 @@ std::string CuData::s(const std::string& key) const {
     return this->operator[](key).s();
 }
 
+/*!
+ * \brief interprets and returns the value stored at position key into a const char pointer
+ * \param key the key
+ * \return a const char pointer to the C string stored at position key or nullptr
+ *         if the corresponding value at position key is invalid
+ *
+ * This method, introduced in v2.0, provides the fastest conversion possible
+ * for strings, and does not perform any check on the internal data type
+ * other than non null.
+ *
+ * \note call this conversion method *only when absolutely sure* that the
+ * native type stored is a scalar string. Call CuData::s or CuData::toString() otherwise.
+ *
+ * \note
+ * Alyays check for non null return value before operating on the returned char pointer
+ *
+ * \see s
+ * \see toString
+ */
+const char *CuData::c_str(const CuDType::Key &key) const {
+    return d_p->data[key].c_str();
+}
+
+/*!
+ * \brief interprets and returns the value stored at position key into a const char pointer
+ * \param key, the key as string
+ * \return const char * (plain C string)
+ *
+ * \see c_str(const CuDType::Key &key)
+ */
+const char *CuData::c_str(const std::string &key) const {
+    return this->operator[](key).c_str();
+}
+
 double CuData::d(const CuDType::Key &key) const {
     return d_p->data[key].d();
 }

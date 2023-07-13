@@ -122,6 +122,8 @@ public:
     // shortcuts to extract data
     std::string s(const CuDType::Key &key) const;
     std::string s(const std::string& key) const;
+    const char *c_str(const CuDType::Key &key) const;
+    const char *c_str(const std::string &key) const;
     double d(const CuDType::Key &key) const;
     double d(const std::string& key) const;
     int i(const CuDType::Key& key) const;
