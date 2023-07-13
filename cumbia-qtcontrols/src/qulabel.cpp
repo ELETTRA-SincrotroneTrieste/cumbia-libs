@@ -225,6 +225,7 @@ bool QuLabel::ctxSwap(CumbiaPool *c_p, const CuControlsFactoryPool &fpool) {
 
 void QuLabel::onUpdate(const CuData &da)
 {
+    char msg[MSGLEN]; // MSGLEN defined in cucontrolsutils.h
     bool background_modified = false;
     const bool& ok = !da[CuDType::Err].toBool();  // da["err"]
     QColor background;
@@ -240,7 +241,8 @@ void QuLabel::onUpdate(const CuData &da)
         d->read_ok = ok;
     }
 
-    setToolTip(d->u.msg(da));
+    d->u.msg_short(da, msg);
+    setToolTip(msg);
 
     if(!ok)
         setText("####");

@@ -17,6 +17,17 @@
 #include <QStringLiteral>
 #include <QtDebug>
 #include <chrono>
+#include <unistd.h>
+
+#define SHORT_TSLEN 20
+
+class CuControlsUtils_P {
+public:
+    CuControlsUtils_P() : ts_us(0.0), ts_ms(0.0) {}
+
+    double ts_us;
+    long int ts_ms;
+};
 
 QRegularExpression re("\\((.*)\\)");
 
@@ -43,6 +54,15 @@ QRegularExpression re("\\((.*)\\)");
  * a numerical index or a text), make sure to provide a *data* property that can be converted to QString
  * regardless of the internal storage type.
  */
+CuControlsUtils::CuControlsUtils() : d(nullptr) {
+
+}
+
+CuControlsUtils::~CuControlsUtils() {
+    if(d)
+        delete d;
+}
+
 QString CuControlsUtils::findInput(const QString &objectName, const QObject *leaf, bool *found) const
 {
     QString ret;
@@ -288,17 +308,6 @@ QString CuControlsUtils::msg(const CuData &da) const {
 
     const char *src = da.c_str(CuDType::Src);
     const char* msg = da.c_str(CuDType::Message);
-    /*
-     * QStringBuilder uses expression templates and reimplements the '%' operator
-     * so that when you use '%' for string concatenation instead of '+', multiple
-     * substring concatenations will be postponed until the final result is about
-     * to be assigned to a QString. At this point, the amount of memory required
-     * for the final result is known. The memory allocator is then called once to
-     * get the required space, and the substrings are copied into it one by one.
-     *
-     * // for this, we do not m.reserve()
-     */
-    QString m;
     // timestamp
     long int ts = 0;
 
@@ -316,21 +325,85 @@ QString CuControlsUtils::msg(const CuData &da) const {
     }
 
     if(msg && strlen(msg) > 0) {
-//        m = src % QStringLiteral(" ") % static_cast<const char *>(dt) % QStringLiteral(": ") % msg;
         return QString("%1 %2: %3").arg(src, dt, msg);
     }
     else {
         // pick mode or activity name
         const char* _mode = da.c_str(CuDType::Mode);
-        if(_mode && strlen(_mode) > 0) {
+        if(_mode && strlen(_mode) > 0)
             return QString("%1 %2 [ %3 ]").arg(src, dt, _mode);
-//            m = src % QStringLiteral(" ") % static_cast<const char *>(dt) % QStringLiteral(" [") %  _mode % QStringLiteral("]");
-        }
         else
             return QString("%1 %2 [ %3 ]").arg(src, dt, da.c_str(CuDType::Activity));
-//            m = src % QStringLiteral(" ") % static_cast<const char *>(dt) % QStringLiteral(" [") % da.c_str(CuDType::Activity) % QStringLiteral("]");
     }
-    return m;
+}
+
+/*!
+ * \brief msg_short is intended to fill the provided buffer long at most MSGLEN as quickly as possible
+ * \param da a const reference to data
+ * \param buf a buffer allocated by the caller
+ *
+ * Unlike msg, there is no timestamp to date/time string conversion. Instead, the current time is
+ * taken (which has a lower cost) and a difference (in ms, secs or mins) with the previous
+ * timestamp is given instead.
+ */
+void CuControlsUtils::msg_short(const CuData &da, char buf[MSGLEN]) {
+//    memset(buf, 0, sizeof(char) * MSGLEN);
+    snprintf(buf, MSGLEN-1, "%s ", da.c_str(CuDType::Src));
+    int p = strlen(buf);
+    const char* msg = da.c_str(CuDType::Message);
+    // timestamp
+    long int ts = 0;
+
+    da[CuDType::Time_ms].to<long int>(ts);
+    if(ts > 0) {
+        m_elapsed(ts, buf, p );
+        p = strlen(buf);
+    }
+    if(ts == 0) {
+        double tsd = 0.0;
+        da[CuDType::Time_us].to<double>(tsd);  // secs.usecs in a double
+        if(tsd > 0) {
+//            auto start = std::chrono::high_resolution_clock::now();
+
+            m_elapsed(tsd, buf, p);
+            p = strlen(buf);
+
+//            auto end = std::chrono::high_resolution_clock::now();
+
+            // Calculate the elapsed time in microseconds
+//            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+//            std::cout << "Elapsed time for short timestamp duration: " << duration.count() << " microseconds" << std::endl;
+
+        }
+    }
+
+    int siz, len = msg ? strlen(msg) : 0;
+    if(len > 0) {
+        siz = MSGLEN - 1 - p - len;
+        if(siz > 0) {
+            snprintf(buf + p, siz, "[%s]", msg);
+        }
+    }
+    else {
+        // pick mode or activity name
+        const char* _mode = da.c_str(CuDType::Mode);
+        len = _mode ? strlen(_mode) : 0;
+        if(len > 0) {
+            siz = MSGLEN - 1 - p - len;
+            if(siz > 0)
+                snprintf(buf + p, siz, "[%s]", _mode);
+        }
+        else {
+            const char* a = da.c_str(CuDType::Activity);
+            len = a ? strlen(a) : 0;
+            if(len > 0) {
+                siz = MSGLEN - 1 - p - len;
+                if(siz > 0)
+                    snprintf(buf + p, siz, "[%s]", a);
+            }
+        }
+    }
 }
 
 inline void CuControlsUtils::ts_to_s(const long &millis, char dt[TIMESTAMPLEN]) const {
@@ -351,5 +424,39 @@ inline void CuControlsUtils::ts_to_s(const double &ts, char dt[TIMESTAMPLEN]) co
 
     int microseconds = static_cast<int>((ts - rawTime) * 1000000);
     sprintf(dt + 20, "%06d", microseconds);
+}
+
+void CuControlsUtils::m_elapsed(time_t secs, const long &millis, char buf[MSGLEN], int offset) const {
+    if(offset + SHORT_TSLEN < MSGLEN -1) {
+        char s[SHORT_TSLEN];
+        struct timespec t;
+        clock_gettime(CLOCK_REALTIME, &t);
+        time_t dsec = t.tv_sec - secs;
+        if(dsec > 3600 * 10)
+            snprintf(s, SHORT_TSLEN, "> 10 hours ago");
+        else if(dsec < 1) {
+            snprintf(s, 16, "%ldms ago", t.tv_nsec / 1000000 - millis);
+        }
+        else if(dsec >= 1 && dsec < 60)
+            snprintf(s, SHORT_TSLEN, "%2lds %2ldms ago", dsec, millis);
+        else if(dsec < 3600)
+            snprintf(s, SHORT_TSLEN, "%2ldm %2lds %3ld ago", dsec / 60, dsec % 60, millis);
+        else if(dsec < 3600 * 10) {
+            time_t h = dsec / 3600;
+            time_t m = (dsec % 3600) / 60;
+            time_t sec = (dsec % 3600) % 60;
+            snprintf(s, SHORT_TSLEN, "%2ldh %2ldm %2lus ago", h, m, sec);
+        }
+        else
+            snprintf(s, SHORT_TSLEN, "> 10 hours ago");
+        sprintf(buf + offset, "%s ", s);
+    }
+}
+
+void CuControlsUtils::m_elapsed(const double &us, char buf[MSGLEN], int offset) const {
+    const time_t &tss = static_cast<time_t>(us);
+    const long int& millis = static_cast<int>((us - tss) * 1000);
+//    printf("timestamp is %f secs is %ld millis is %ld\n", us, tss, millis);
+    m_elapsed(tss, millis, buf, offset);
 }
 
