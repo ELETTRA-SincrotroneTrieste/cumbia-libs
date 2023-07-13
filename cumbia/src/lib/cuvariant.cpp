@@ -1206,7 +1206,6 @@ void CuVariant::m_from(const std::vector<std::string> &s) {
  * - isNull is set to false
  */
 void CuVariant::m_from_std_string(const std::string &s) {
-    printf("CuVariant using \e[1,35mstring \e[0m constructor '%s'\n", s.c_str());
     _d->mSize = _d->nrows = 1;
     size_t size = strlen(s.c_str()) + 1;
     char **str = new char*[_d->mSize];
@@ -1219,8 +1218,6 @@ void CuVariant::m_from_std_string(const std::string &s) {
 // builds a variant from a C string
 // that must be null terminated
 void CuVariant::m_from_char_ptr(const char *s) {
-    printf("CuVariant using \e[1,32ms const char * \e[0m constructor '%s'\n", s);
-
     _d->mSize = _d->nrows = 1;
     size_t size = strlen(s) + 1;
     char **str = new char*[_d->mSize];
