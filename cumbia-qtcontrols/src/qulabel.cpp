@@ -226,18 +226,20 @@ bool QuLabel::ctxSwap(CumbiaPool *c_p, const CuControlsFactoryPool &fpool) {
 void QuLabel::onUpdate(const CuData &da)
 {
     bool background_modified = false;
-    QColor background, border;
-    d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
-
+    const bool& ok = !da[CuDType::Err].toBool();  // da["err"]
+    QColor background;
     // update link statistics
     d->context->getLinkStats()->addOperation();
-    if(!d->read_ok)
+    if(!ok)
         d->context->getLinkStats()->addError(da[CuDType::Message].toString());  // da["msg"]
 
-    d->read_ok ? border = d->palette["dark_green"] : border = d->palette["dark_red"];
+    if(ok != d->read_ok) {
+        QColor border;
+        ok ? border = d->palette["dark_green"] : border = d->palette["dark_red"];
+        setBorderColor(border);
+    }
 
     setToolTip(d->u.msg(da));
-    setBorderColor(border);
 
     if(!d->read_ok)
         setText("####");
@@ -246,18 +248,18 @@ void QuLabel::onUpdate(const CuData &da)
             m_configure(da);
             emit propertyReady(da);
         }
-        if(da.containsKey(CuDType::Value))  // da.containsKey("value")
+        if(da.containsKey(CuDType::Value))
         {
-            CuVariant val = da[CuDType::Value];  // da["value"]
+            CuVariant val = da[CuDType::Value];
             QuLabelBase::setValue(val, &background_modified);
             if(d->display_u_enabled && !d->display_u.isEmpty())
                 setText(text() + " [" + d->display_u + "]");
         }
     }
 
-    if(da.containsKey(CuDType::StateColor)) {  // da.containsKey("sc")
-        CuVariant v = da[CuDType::StateColor];  // da["sc"]
-        background = d->palette[QString::fromStdString(v.toString())];
+    if(da.containsKey(CuDType::StateColor)) {
+        const char* sc = da[CuDType::StateColor].c_str();
+        background = d->palette[sc];
         if(background.isValid())
             setBackground(background);
     }
@@ -265,8 +267,8 @@ void QuLabel::onUpdate(const CuData &da)
         // background has not already been set by QuLabelBase::setValue (this happens if either a
         // boolean display or enum display have been configured)
         // if so, use the "qc" as a background
-        if(da.containsKey(CuDType::QualityColor))  // da.containsKey("qc")
-            background = d->palette[QString::fromStdString(da[CuDType::QualityColor].toString())];  // da["qc"]
+        if(da.containsKey(CuDType::QualityColor))
+            background = d->palette[da[CuDType::QualityColor].c_str()];
         setBackground(background); // checks if background is valid
     }
 

@@ -81,13 +81,12 @@ void QuLabelBase::setMaximumLength(int len)
  *
  * @see setDecoration
  */
-void QuLabelBase::setBackground(const QColor &background)
-{
-    d_ptr->backgroundColor = background;
-    if(background.isValid()) {
+void QuLabelBase::setBackground(const QColor &background) {
+    if(d_ptr->backgroundColor != background && background.isValid()) {
         QPalette p = palette();
-        p.setColor(QPalette::Background, background);
+        p.setColor(QPalette::Window, background);
         setPalette(p);
+        d_ptr->backgroundColor = background;
     }
 }
 
