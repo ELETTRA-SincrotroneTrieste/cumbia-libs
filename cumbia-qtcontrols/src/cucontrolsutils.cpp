@@ -316,16 +316,19 @@ QString CuControlsUtils::msg(const CuData &da) const {
     }
 
     if(msg && strlen(msg) > 0) {
-        m = src % QStringLiteral(" ") % static_cast<const char *>(dt) % QStringLiteral(": ") % msg;
+//        m = src % QStringLiteral(" ") % static_cast<const char *>(dt) % QStringLiteral(": ") % msg;
+        return QString("%1 %2: %3").arg(src, dt, msg);
     }
     else {
         // pick mode or activity name
         const char* _mode = da.c_str(CuDType::Mode);
         if(_mode && strlen(_mode) > 0) {
-            m = src % QStringLiteral(" ") % static_cast<const char *>(dt) % QStringLiteral(" [") %  _mode % QStringLiteral("]");
+            return QString("%1 %2 [ %3 ]").arg(src, dt, _mode);
+//            m = src % QStringLiteral(" ") % static_cast<const char *>(dt) % QStringLiteral(" [") %  _mode % QStringLiteral("]");
         }
         else
-            m = src % QStringLiteral(" ") % static_cast<const char *>(dt) % QStringLiteral(" [") % da.c_str(CuDType::Activity) % QStringLiteral("]");
+            return QString("%1 %2 [ %3 ]").arg(src, dt, da.c_str(CuDType::Activity));
+//            m = src % QStringLiteral(" ") % static_cast<const char *>(dt) % QStringLiteral(" [") % da.c_str(CuDType::Activity) % QStringLiteral("]");
     }
     return m;
 }
