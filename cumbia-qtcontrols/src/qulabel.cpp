@@ -237,11 +237,12 @@ void QuLabel::onUpdate(const CuData &da)
         QColor border;
         ok ? border = d->palette["dark_green"] : border = d->palette["dark_red"];
         setBorderColor(border);
+        d->read_ok = ok;
     }
 
     setToolTip(d->u.msg(da));
 
-    if(!d->read_ok)
+    if(!ok)
         setText("####");
     else {
         if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {  // da["type"]
