@@ -9,7 +9,7 @@
 #include <atomic>
 #include <assert.h>
 #include <map>
-
+#include <chrono>
 /*! @private */
 class CuDataPrivate
 {
@@ -49,12 +49,18 @@ public:
     }
 
     void m_copy_from(const CuDataPrivate &other) {
-        datamap = other.datamap;
+        auto start = std::chrono::high_resolution_clock::now();
+        if(other.datamap.size() > 0)
+            datamap = other.datamap;
         for(size_t i = 0; i < CuDType::MaxDataKey; i++) {
             if(other.data[i].isValid()) { // copy CuVariant if set at pos i
                 data[i] = other.data[i];
             }
         }
+        auto end = std::chrono::high_resolution_clock::now();
+
+        auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        std::cout << "CuDataPrivate m_copy_from took: " << duration.count() << " microseconds" << std::endl;
     }
 
 private:
@@ -116,6 +122,7 @@ CuData::CuData(const size_t key, const CuVariant &v) {
  * new object
  */
 CuData::CuData(const CuData &other) {
+    pretty_pri("%s", datos(other));
     d_p = other.d_p;
     d_p->ref();  // increment ref counter (impl. sharing)
 }
@@ -127,6 +134,7 @@ CuData::CuData(const CuData &other) {
  * Contents of *other* are moved into *this* CuData
  */
 CuData::CuData(CuData &&other) {
+    pretty_pri("");
     d_p = other.d_p; /* no d = new here */
     other.d_p = nullptr; /* avoid deletion! */
 }
@@ -136,13 +144,19 @@ CuData::CuData(CuData &&other) {
  * @param other another CuData which values will be copied into this
  */
 CuData &CuData::operator=(const CuData &other) {
+    pretty_pri("this %p other %p", this, &other);
+    auto start = std::chrono::high_resolution_clock::now();
+
     if(this != &other) {
         other.d_p->ref();
         if(d_p->unref() == 1)
             delete d_p; // with no sharing we would not delete
         d_p = other.d_p;
-        //        mCopyData(other); // before implicit sharing
     }
+    auto end = std::chrono::high_resolution_clock::now();
+
+    auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "CuData::operator= " << duration.count() << " microseconds" << std::endl;
     return *this;
 }
 
@@ -151,6 +165,7 @@ CuData &CuData::operator=(const CuData &other) {
  * @param other another CuData which values will be moved into this
  */
 CuData &CuData::operator=(CuData &&other) {
+    pretty_pri("move assignment");
     if (this!=&other) {
         if(d_p && d_p->unref() == 1)
             delete d_p;
