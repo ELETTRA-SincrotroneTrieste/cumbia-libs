@@ -716,12 +716,11 @@ void CuTangoWorld::fillFromCommandInfo(const Tango::CommandInfo &ci, CuData &d)
     };
 }
 
-bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const string &attribute, CuData &res) {
+bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const std::string &attribute, CuData &res) {
     d->error = false;
     d->message = "";
     try {
-        std::string att(attribute);
-        Tango::DeviceAttribute da = dev->read_attribute(att);
+        Tango::DeviceAttribute da = dev->read_attribute(attribute.c_str());
         extractData(&da, res);
     }
     catch(Tango::DevFailed &e) {
