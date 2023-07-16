@@ -75,6 +75,10 @@ void CuTReader::onResult(const std::vector<CuData> &datalist) {
     (void) datalist;
 }
 
+void CuTReader::onResult(const std::vector<CuData> *datalist) {
+    (void) datalist;
+}
+
 /*!
  * \brief receives on the main thread the result of a task executed in background.
  *

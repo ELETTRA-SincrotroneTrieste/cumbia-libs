@@ -103,6 +103,18 @@ public:
      */
     virtual void publishResult(const CuActivity *activity, const std::vector<CuData> &data_list) = 0;
 
+
+    /*! \brief post a *result* event from the background thread to the main thread
+     *
+     * Send events to the main thread, pointer to vector version
+     *
+     * \since 2.0
+     *
+     * See CuThread::publishProgress for details
+     */
+    virtual void publishResult(const CuActivity *activity, const std::vector<CuData> *data_list) = 0;
+
+
     /*! \brief post a custom user event data to the specified activity
      *
      *  \param activity the recipient

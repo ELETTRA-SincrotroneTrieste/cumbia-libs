@@ -745,12 +745,13 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const std::string &attribut
 bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                              std::vector<std::string>& p_v_an, // att names
                              std::vector<CuData>& va,  // att cache, ordered same as att names
-                             std::vector<CuData> &reslist,
+                             std::vector<CuData> *reslist,
                              int updpo)
 {
     d->error = false;
     d->message = "";
-    size_t offset = reslist.size();
+    size_t offset = reslist->size();
+    CuData& ri = (*reslist)[offset];
     try
     {
         // read_attributes
@@ -767,12 +768,12 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
             if(updpo & CuDataUpdatePolicy::PollUpdateAlways) { // check flags
                 pretty_pri("push back va[i]");
-                reslist.push_back(va[i]);
-                extractData(p_da,  reslist[offset]);
-                reslist[offset][CuDType::Err] = d->error;
+                reslist->push_back(va[i]);
+                extractData(p_da,  ri);
+                ri[CuDType::Err] = d->error;
                 if(d->message.length() > 0)
-                    reslist[offset][CuDType::Message] = d->message;
-                reslist[offset][CuDType::Color] = t_world_conf.successColor(!d->error);
+                    ri[CuDType::Message] = d->message;
+                ri[CuDType::Color] = t_world_conf.successColor(!d->error);
                 offset++;
             }
             else {
@@ -784,18 +785,18 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                 // updateds va[i], that will cache the new data for the next time
                 bool changed = d->error || m_cache_upd(va[i], rv);
                 if(changed) { // update exactly as above
-                    reslist.push_back(va[i]);
-                    reslist[offset][CuDType::Time_us] = rv[CuDType::Time_us];
-                    reslist[offset][CuDType::Time_us] = rv[CuDType::Time_us];
-                    reslist[offset][CuDType::Err] = d->error;
+                    reslist->push_back(va[i]);
+                    ri[CuDType::Time_us] = rv[CuDType::Time_us];
+                    ri[CuDType::Time_us] = rv[CuDType::Time_us];
+                    ri[CuDType::Err] = d->error;
                     if(d->message.length() > 0)
-                        reslist[offset][CuDType::Message] = d->message;
-                    reslist[offset][CuDType::Color] = t_world_conf.successColor(!d->error);
+                        ri[CuDType::Message] = d->message;
+                    ri[CuDType::Color] = t_world_conf.successColor(!d->error);
                     offset++;
                 }
                 else if(updpo & CuDataUpdatePolicy::OnPollUnchangedTimestampOnly) {
-                    reslist.push_back(CuData(CuDType::Time_us, rv[CuDType::Time_us]));
-                    reslist[offset][CuDType::Src] = va[i][CuDType::Src];
+                    reslist->push_back(CuData(CuDType::Time_us, rv[CuDType::Time_us]));
+                    ri[CuDType::Src] = va[i][CuDType::Src];
                     offset++;
                 }
                 else if(updpo & CuDataUpdatePolicy::OnPollUnchangedNoUpdate) {
@@ -810,12 +811,12 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         d->error = true;
         d->message = strerror(e);
         for(size_t i = 0; i < p_v_an.size(); i++) {
-            reslist.push_back(va[i]);
-            reslist[offset][CuDType::Err] = d->error;
+            reslist->push_back(va[i]);
+            ri[CuDType::Err] = d->error;
             if(d->message.length() > 0)
-                reslist[offset][CuDType::Message] = d->message;
-            reslist[offset][CuDType::Color] = t_world_conf.successColor(!d->error);
-            reslist[offset].putTimestamp();
+                ri[CuDType::Message] = d->message;
+            ri[CuDType::Color] = t_world_conf.successColor(!d->error);
+            ri.putTimestamp();
             offset++;
         }
     }

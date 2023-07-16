@@ -95,6 +95,7 @@ class CuResultEvent : public CuEventI
 public:
     CuResultEvent(const CuActivity* sender, const CuData &data, CuEventType t = CuResultEv);
     CuResultEvent(const CuActivity* sender, const std::vector<CuData> &dali, CuEventType t = CuResultEv);
+    CuResultEvent(const CuActivity* sender, const std::vector<CuData> *p_v_da, CuEventType t = CuResultEv);
     CuResultEvent(const CuActivity* sender, int step, int total, const CuData &data);
     CuResultEvent(const CuActivity *sender, const CuUserData* data, CuEventType t = CuResultEv);
 
@@ -102,6 +103,7 @@ public:
 
     CuData data;
     std::vector<CuData> datalist;
+    const std::vector<CuData> *p_dv;
     const CuUserData *u_data;
 
     // CuResultEventI interface

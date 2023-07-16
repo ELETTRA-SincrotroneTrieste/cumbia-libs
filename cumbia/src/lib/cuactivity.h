@@ -187,6 +187,7 @@ public:
 
     void publishResult(const CuData &data);
     void publishProgress(int step, int total, const CuData& data);
+    void publishResult(const std::vector<CuData> *datalist);
     void publishResult(const std::vector<CuData> &datalist);
     void publishResult(const CuUserData *data);
 

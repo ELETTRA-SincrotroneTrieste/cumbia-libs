@@ -104,6 +104,20 @@ void CuActivity::publishResult(const std::vector<CuData> &datalist) {
         d->thread->publishResult(this, datalist);
 }
 
+/*!
+ * \brief pointer to vector of data flavour.
+ * \param pvd pointer to a vector of CuData
+ *
+ * This flavour has been introduced in v2.0 to provide the best
+ * performance
+ *
+ * \since 2.0
+ */
+void CuActivity::publishResult(const std::vector<CuData> *pvd) {
+    if(d->thread) /* may be removed while activity is in execute() */
+        d->thread->publishResult(this, pvd);
+}
+
 void CuActivity::publishResult(const CuUserData *data) {
     if(d->thread) d->thread->publishResult(this, data);
 }

@@ -71,6 +71,10 @@ void CuTaDb::onResult(const std::vector<CuData> &datalist)
     (void) datalist;
 }
 
+void CuTaDb::onResult(const std::vector<CuData> *datalist) {
+    (void) datalist;
+}
+
 CuData CuTaDb::getToken() const
 {
     CuData da("source", d->tsrc.getName());

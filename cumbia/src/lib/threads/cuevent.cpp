@@ -19,7 +19,7 @@ CuResultEventPrivate::~CuResultEventPrivate() {
  * CuResultEvent makes a copy of data before delivering it to the event loop thread.
  */
 CuResultEvent::CuResultEvent(const CuActivity* sender, const CuData &da, CuEventI::CuEventType t)
-    : data(da), u_data(nullptr) {
+    : data(da), u_data(nullptr), p_dv(nullptr) {
     d_p = new CuResultEventPrivate();
     d_p->type = t;
     d_p->activity = sender;
@@ -35,11 +35,19 @@ CuResultEvent::CuResultEvent(const CuActivity* sender, const CuData &da, CuEvent
  * data_list contents will be *moved* into a local copy to be used by the receiving thread
  */
 CuResultEvent::CuResultEvent(const CuActivity* sender, const std::vector<CuData> &dali, CuEventType t)
-    : datalist(std::move(dali)), u_data(nullptr) {
+    : datalist(std::move(dali)), u_data(nullptr), p_dv(nullptr) {
     d_p = new CuResultEventPrivate();
     d_p->type = t;
     d_p->activity = sender;
     d_p->is_list = true;
+}
+
+CuResultEvent::CuResultEvent(const CuActivity *sender, const std::vector<CuData> *p_v_da, CuEventType t)
+    : p_dv(p_v_da) {
+    d_p = new CuResultEventPrivate();
+    d_p->activity = sender;
+    d_p->is_list = true;
+    d_p->type = t;
 }
 
 /*!
@@ -50,7 +58,7 @@ CuResultEvent::CuResultEvent(const CuActivity* sender, const std::vector<CuData>
  * \param data the data to be delivered
  */
 CuResultEvent::CuResultEvent(const CuActivity* sender, int step, int total, const CuData &da)
-    : data(da), u_data(nullptr){
+    : data(da), u_data(nullptr), p_dv(nullptr) {
     d_p = new CuResultEventPrivate();
     d_p->step = step;
     d_p->total = total;

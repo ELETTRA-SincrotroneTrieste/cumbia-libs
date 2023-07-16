@@ -347,7 +347,7 @@ void CuPollingActivity::execute()
     assert(d->my_thread_id == pthread_self());
     d->updcnt++;
     CuTangoWorld tangoworld;
-    std::vector<CuData> results;
+    std::vector<CuData> *results = nullptr;
     Tango::DeviceProxy *dev = d->tdev->getDevice();
     bool success = (dev != nullptr);
     size_t res_offset = 0;
@@ -355,35 +355,36 @@ void CuPollingActivity::execute()
     m_add_scheduled();
 
     if(dev) { // dev is not null
-        results.reserve(d->cmds.size() + d->v_attd.size());
+        results = new std::vector<CuData>[d->cmds.size() + d->v_attd.size()];
         // 1. commands (d->cmdmap)
         for(size_t i = 0; i <  d->cmds.size(); i++) {
             const TSource &tsrc = d->cmds[i];
             const std::string& srcnam = tsrc.getName();
             const std::string& point = tsrc.getPoint();
-            results.push_back(d->tag);
-            results[i][CuDType::Mode] = "P";
-            results[i][CuDType::Period] = interval();
-            results[i][CuDType::Src] = tsrc.getName();
+            results->push_back(d->tag);
+            CuData &ri = (*results)[i];
+            ri[CuDType::Mode] = "P";
+            ri[CuDType::Period] = interval();
+            ri[CuDType::Src] = tsrc.getName();
             CmdData& cmd_data = d->din_cache[srcnam];
             if(dev && cmd_data.is_empty) {
-                success = tangoworld.get_command_info(dev, point, results[i]);
+                success = tangoworld.get_command_info(dev, point, ri);
                 if(success) {
                     const std::vector<std::string> &argins = tsrc.getArgs();
-                    d->din_cache[srcnam] = CmdData(results[i], tangoworld.toDeviceData(argins, results[i]), argins);
+                    d->din_cache[srcnam] = CmdData((*results)[i], tangoworld.toDeviceData(argins, ri), argins);
                 }
             }
             if(dev && success) {  // do not try command_inout if no success so far
                 // there is no multi-command_inout version
                 CmdData& cmdd = d->din_cache[srcnam];
                 bool has_argout = cmdd.getCmdInfoRef()["out_type"].toLongInt() != Tango::DEV_VOID;
-                results[i][CuDType::Err] = !success;
+                ri[CuDType::Err] = !success;
                 if(!success) {
-                    results[i][CuDType::Message] = std::string("CuPollingActivity.execute: get_command_info failed for \"") + tsrc.getName() + std::string("\"");
+                    ri[CuDType::Message] = std::string("CuPollingActivity.execute: get_command_info failed for \"") + tsrc.getName() + std::string("\"");
                     d->consecutiveErrCnt++;
                 }
                 else {
-                    tangoworld.cmd_inout(dev, point, cmdd.din, has_argout, results[i]);
+                    tangoworld.cmd_inout(dev, point, cmdd.din, has_argout, ri);
                 }
             }
             res_offset++;
@@ -418,10 +419,10 @@ void CuPollingActivity::execute()
         dev_err[CuDType::Err] = true;
         dev_err[CuDType::Device] = d->tdev->getName();
         dev_err.putTimestamp();
-        results.push_back(dev_err);
+        results->push_back(dev_err);
     }
     pretty_pri("before publish results\n");
-    if(results.size() > 0)
+    if(results->size() > 0)
         publishResult(results);
 
     pretty_pri("after publish results, leaving <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< out");

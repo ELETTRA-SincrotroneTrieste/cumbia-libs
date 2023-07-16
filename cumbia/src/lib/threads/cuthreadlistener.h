@@ -51,6 +51,15 @@ public:
     virtual void onResult(const CuData& data) = 0;
 
     /*!
+     * \brief pointer to vector of data flavour, for best performance
+     *
+     * \param datalist a pointer to a std::vector of CuData
+     *
+     * \since 2.0
+     */
+    virtual void onResult(const std::vector<CuData>* datalist) = 0;
+
+    /*!
      * \brief onResult delivers to the listener's thread the results of the work
      *        performed by the *activity*'s background thread
      *

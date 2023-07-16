@@ -322,7 +322,10 @@ void CuThread::onEventPosted(CuEventI *event) {
         std::pair<std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator,
                     std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator> eqr = m.equal_range(a);
         for(std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator it = eqr.first; it != eqr.second; ++it)  {
-            if(re->getType() == CuEventI::CuProgressEv) {
+            if(re->p_dv) { // 2.0 pointer to vector version
+                it->second->onResult(re->p_dv);
+            }
+            else if(re->getType() == CuEventI::CuProgressEv) {
                 it->second->onProgress(re->getStep(), re->getTotal(), re->data);
             }
             else if(re->isList()) { // vector will be deleted from within ~CuResultEventPrivate
@@ -342,6 +345,8 @@ void CuThread::onEventPosted(CuEventI *event) {
             d->alimmap.erase(*it);
         d->arem_list.clear();
         d->alimmap_locked = false;
+        if(re->p_dv)
+            delete [] re->p_dv;
     }
     else if(ty == CuEventI::CuA_ExitEvent) {
         mOnActivityExited(static_cast<CuA_ExitEv *>(event)->getActivity());
@@ -386,6 +391,11 @@ void CuThread::publishResult(const CuActivity* a,  const CuData &da) {
 }
 
 void CuThread::publishResult(const CuActivity *a, const std::vector<CuData> &dalist)
+{
+    d->eb->postEvent(new CuResultEvent(a, dalist));
+}
+
+void CuThread::publishResult(const CuActivity *a, const std::vector<CuData> *dalist)
 {
     d->eb->postEvent(new CuResultEvent(a, dalist));
 }

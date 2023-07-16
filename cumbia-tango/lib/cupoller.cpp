@@ -138,12 +138,18 @@ void CuPoller::onResult(const CuData & da) { }
 
 void CuPoller::onResult(const std::vector<CuData> &datalist) {
     assert(d->my_thread == pthread_self());
+}
+
+void CuPoller::onResult(const std::vector<CuData> *datalist) {
+    assert(d->my_thread == pthread_self());
     // for each CuData, get the point and find the associated CuTangoActionI's, if still there's one or more
-    for(size_t i = 0; i < datalist.size(); i++) {
-        const std::string& src = datalist[i][CuDType::Src].toString();
+    for(size_t i = 0; i < datalist->size(); i++) {
+        const CuData& da = (*datalist)[i];
+        const std::string& src = da[CuDType::Src].toString();
         CuTangoActionI *a = m_find_a(src);
-        if(a) a->onResult(datalist[i]);
+        if(a) a->onResult(da);
     }
+    // datalist deleted by calling CuThread::onEventPosted
 }
 
 CuData CuPoller::getToken() const {
