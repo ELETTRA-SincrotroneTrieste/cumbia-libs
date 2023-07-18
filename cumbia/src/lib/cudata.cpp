@@ -134,7 +134,6 @@ CuData::CuData(const CuData &other) {
  * Contents of *other* are moved into *this* CuData
  */
 CuData::CuData(CuData &&other) {
-//    pretty_pri("");
     d_p = other.d_p; /* no d = new here */
     other.d_p = nullptr; /* avoid deletion! */
 }
@@ -144,9 +143,7 @@ CuData::CuData(CuData &&other) {
  * @param other another CuData which values will be copied into this
  */
 CuData &CuData::operator=(const CuData &other) {
-//    pretty_pri("this %p other %p", this, &other);
 //    auto start = std::chrono::high_resolution_clock::now();
-
     if(this != &other) {
         other.d_p->ref();
         if(d_p->unref() == 1)
@@ -165,7 +162,6 @@ CuData &CuData::operator=(const CuData &other) {
  * @param other another CuData which values will be moved into this
  */
 CuData &CuData::operator=(CuData &&other) {
-//    pretty_pri("move assignment");
     if (this!=&other) {
         if(d_p && d_p->unref() == 1)
             delete d_p;
@@ -633,7 +629,7 @@ bool CuData::b(const std::string& key) const {
 // to<T> version shortcuts
 
 double CuData::D(const CuDType::Key &key) const {
-    double v = 0.0;
+    double v;
     d_p->data[key].to<double>(v);
     return v;
 }
@@ -646,20 +642,20 @@ double CuData::D(const std::string& key) const {
 }
 
 int CuData::I(const CuDType::Key &key) const {
-    int i = 0;
+    int i;
     d_p->data[key].to<int>(i);
     return i;
 }
 
 int CuData::I(const std::string& key) const {
-    int i = 0;
+    int i = 0.0;
     if(containsKey(key))
         this->operator[](key).to<int>(i);
     return i;
 }
 
 unsigned int CuData::U(const CuDType::Key &key) const {
-    unsigned int ui = 0;
+    unsigned int ui;
     d_p->data[key].to<unsigned int>(ui);
     return ui;
 }
@@ -775,14 +771,3 @@ std::vector<bool> CuData::BV(const std::string &key) const {
     return bv;
 }
 
-
-size_t CuData::Hash::operator()(const CuData &obj) const {
-    std::string s;
-    for(int i = 0; i < CuDType::MaxDataKey; i++)
-        if(obj.d_p->data[i].isValid())
-            s += obj.d_p->data[i].toString();
-    for(std::unordered_map<std::string, CuVariant>::const_iterator it = obj.d_p->datamap.begin(); it != obj.d_p->datamap.end(); ++it)  {
-            s += it->first + it->second.toString();
-    }
-    return std::hash<std::string>()(s);
-}

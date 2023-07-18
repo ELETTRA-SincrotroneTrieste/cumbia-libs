@@ -194,8 +194,8 @@ CuData CuTDbPropertyReader::getToken() const
     return CuData("id", d->id);
 }
 
-void CuTDbPropertyReader::onResult(const CuData *p, int siz)
+void CuTDbPropertyReader::onResult(const std::vector<CuData> &datalist)
 {
-    (void) p; (void) siz;
+    (void) datalist;
 }
 

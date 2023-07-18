@@ -63,8 +63,12 @@ void CuTaDb::onResult(const CuData &data)
     delete this;
 }
 
-void CuTaDb::onResult(const CuData *, int ) {
-
+/*! \brief unused. Complies with CuThreadListener interface
+ *
+ */
+void CuTaDb::onResult(const std::vector<CuData> &datalist)
+{
+    (void) datalist;
 }
 
 CuData CuTaDb::getToken() const

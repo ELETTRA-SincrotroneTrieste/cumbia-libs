@@ -186,13 +186,13 @@ public:
     virtual int repeat() const = 0;
 
     void publishResult(const CuData &data);
-    void publishResult(const CuData *p, int siz);
     void publishProgress(int step, int total, const CuData& data);
+    void publishResult(const std::vector<CuData> &datalist);
     void publishResult(const CuUserData *data);
 
-    const CuData& getToken() const;
+    const CuData getToken() const;
     void setThreadToken(const std::string &tt);
-    const std::string &threadToken() const;
+    const std::string threadToken() const;
 
     /* template method: sets state and calls init */
     void doInit();

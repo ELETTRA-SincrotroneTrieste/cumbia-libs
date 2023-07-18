@@ -79,10 +79,8 @@ public:
     void unregisterActivity(CuActivity *l);
     void publishProgress(const CuActivity *activity, int step, int total, const CuData &data);
     void publishResult(const CuActivity *activity, const CuData &data);
-    void publishResult(const CuActivity *activity, const CuData* p_d, int siz);
+    void publishResult(const CuActivity *activity, const std::vector<CuData> &data_list);
     void publishResult(const CuActivity *activity, const CuUserData *u);
-
-
     unsigned activityCount() const;
 
     bool matches(const std::string &other_thtok) const;
@@ -94,6 +92,7 @@ public:
     void onTimeout(CuTimer *sender);
     void wait();
     void exit();
+
     void postEvent(CuActivity *a, CuActivityEvent *e);
 
 public:
@@ -108,6 +107,8 @@ private:
     void mOnActivityExited(CuActivity *a);
     void m_zero_activities();
     void m_activity_disconnect(CuActivity *a);
+
+public:
 };
 
 #endif // CUTHREAD_H

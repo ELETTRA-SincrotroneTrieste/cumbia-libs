@@ -151,5 +151,6 @@ bool CuPut::exiting() const
 }
 
 
-void CuPut::onResult(const CuData *, int) {
+void CuPut::onResult(const std::vector<CuData> &datalist)
+{
 }

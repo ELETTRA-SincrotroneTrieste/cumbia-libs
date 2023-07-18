@@ -232,7 +232,6 @@ bool QuLabel::ctxSwap(CumbiaPool *c_p, const CuControlsFactoryPool &fpool) {
 
 void QuLabel::onUpdate(const CuData &da)
 {
-//    printf("QuLabel.onUpdate in>> \n");
 //    auto start = std::chrono::high_resolution_clock::now();
     const bool& ok = !da[CuDType::Err].toBool();
     const char *mode = da[CuDType::Mode].c_str();

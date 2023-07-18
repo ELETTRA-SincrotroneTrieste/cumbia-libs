@@ -339,57 +339,54 @@ void CuPollingActivity::init()
  *
  * @implements CuActivity::execute
  */
-void CuPollingActivity::execute()
-{
+void CuPollingActivity::execute() {
     assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
     d->updcnt++;
     CuTangoWorld tangoworld;
-    CuData *results = nullptr;
-    size_t siz = d->cmds.size() + d->v_attd.size();
+    std::vector<CuData> results;
     Tango::DeviceProxy *dev = d->tdev->getDevice();
     bool success = (dev != nullptr);
-    size_t res_offset = 0, i = 0;
+    size_t res_offset = 0;
     // time to execute for delayed attributes in future maps?
     m_add_scheduled();
 
     if(dev) { // dev is not null
-        results = new CuData[siz];
+        results.reserve(d->cmds.size() + d->v_attd.size());
         // 1. commands (d->cmdmap)
-        for(i = 0; i <  d->cmds.size(); i++) {
+        for(size_t i = 0; i <  d->cmds.size(); i++) {
             const TSource &tsrc = d->cmds[i];
             const std::string& srcnam = tsrc.getName();
             const std::string& point = tsrc.getPoint();
-            results[i] = d->tag;
-            CuData &ri = results[i];
-            ri[CuDType::Mode] = "P";
-            ri[CuDType::Period] = interval();
-            ri[CuDType::Src] = tsrc.getName();
+            results.push_back(d->tag);
+            results[i][CuDType::Mode] = "P";
+            results[i][CuDType::Period] = interval();
+            results[i][CuDType::Src] = tsrc.getName();
             CmdData& cmd_data = d->din_cache[srcnam];
             if(dev && cmd_data.is_empty) {
-                success = tangoworld.get_command_info(dev, point, ri);
+                success = tangoworld.get_command_info(dev, point, results[i]);
                 if(success) {
                     const std::vector<std::string> &argins = tsrc.getArgs();
-                    d->din_cache[srcnam] = CmdData(results[i], tangoworld.toDeviceData(argins, ri), argins);
+                    d->din_cache[srcnam] = CmdData(results[i], tangoworld.toDeviceData(argins, results[i]), argins);
                 }
             }
             if(dev && success) {  // do not try command_inout if no success so far
                 // there is no multi-command_inout version
                 CmdData& cmdd = d->din_cache[srcnam];
                 bool has_argout = cmdd.getCmdInfoRef()["out_type"].toLongInt() != Tango::DEV_VOID;
-                ri[CuDType::Err] = !success;
+                results[i][CuDType::Err] = !success;
                 if(!success) {
-                    ri[CuDType::Message] = std::string("CuPollingActivity.execute: get_command_info failed for \"") + tsrc.getName() + std::string("\"");
+                    results[i][CuDType::Message] = std::string("CuPollingActivity.execute: get_command_info failed for \"") + tsrc.getName() + std::string("\"");
                     d->consecutiveErrCnt++;
                 }
                 else {
-                    tangoworld.cmd_inout(dev, point, cmdd.din, has_argout, ri);
+                    tangoworld.cmd_inout(dev, point, cmdd.din, has_argout, results[i]);
                 }
             }
             res_offset++;
         } // end cmds
         if(dev && d->v_attn.size() > 0) {
-            success = tangoworld.read_atts(d->tdev->getDevice(), d->v_attn, d->v_attd, results, i, d->data_updpo);
+            success = tangoworld.read_atts(d->tdev->getDevice(), d->v_attn, d->v_attd, results, d->data_updpo);
             if(!success)
                 d->consecutiveErrCnt++;
         }
@@ -416,22 +413,10 @@ void CuPollingActivity::execute()
         dev_err[CuDType::Err] = true;
         dev_err[CuDType::Device] = d->tdev->getName();
         dev_err.putTimestamp();
-        if(i >= siz) { // need to realloc
-//            pretty_pri("\e[1;35m need to reallocate data after an error occurred: from %ld to %ld", siz, siz + 1);
-            CuData *reall = new CuData [++siz];
-            for(size_t j = 0; j < siz - 1; j++)
-                reall[j] = results[j];
-            delete [] results; // free old data
-            results = reall;
-        }
-        results[i] = dev_err; // i points to next location, was results->push_back(dev_err);
+        results.push_back(dev_err);
     }
-//    pretty_pri("before publish results of siz %ld\n", siz);
-    if(siz > 0)
-        publishResult(results, siz);
-
-//    pretty_pri("after publish results, leaving <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< out");
-
+    if(results.size() > 0)
+        publishResult(results);
 }
 
 /*! \brief the implementation of the CuActivity::onExit hook

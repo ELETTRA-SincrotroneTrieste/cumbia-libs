@@ -144,7 +144,6 @@ bool CuEpConfiguration::exiting() const {
     return d->exit;
 }
 
-void CuEpConfiguration::onResult(const CuData* , int ) {
-
+void CuEpConfiguration::onResult(const std::vector<CuData> &datalist) {
+    (void) datalist;
 }
-

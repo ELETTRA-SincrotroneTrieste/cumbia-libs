@@ -26,7 +26,7 @@ public:
     // CuThreadListener interface
     virtual void onProgress(int step, int total, const CuData &data);
     virtual void onResult(const CuData &data);
-    virtual void onResult(const CuData *p, int siz);
+    virtual void onResult(const std::vector<CuData> &datalist);
     virtual CuData getToken() const;
 
 private:

@@ -745,13 +745,12 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const std::string &attribut
 bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                              std::vector<std::string>& p_v_an, // att names
                              std::vector<CuData>& va,  // att cache, ordered same as att names
-                             CuData *reslist,
-                             size_t offset,
+                             std::vector<CuData> &reslist,
                              int updpo)
 {
     d->error = false;
     d->message = "";
-    size_t i;
+    size_t offset = reslist.size();
     try
     {
         // read_attributes
@@ -763,18 +762,17 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         //         with data reporting the error.
         //         In that case, the poller must be slowed down
         std::vector<Tango::DeviceAttribute> *devattr = dev->read_attributes(p_v_an);
-        for(i = 0; i < devattr->size(); i++) {
-            CuData &ri = reslist[i + offset];
+        for(size_t i = 0; i < devattr->size(); i++) {
             Tango::DeviceAttribute *p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
             if(updpo & CuDataUpdatePolicy::PollUpdateAlways) { // check flags
-//                pretty_pri("push back va[i]");
-                ri = va[i];
-                extractData(p_da,  ri);
-                ri[CuDType::Err] = d->error;
+                reslist.push_back(va[i]);
+                extractData(p_da,  reslist[offset]);
+                reslist[offset][CuDType::Err] = d->error;
                 if(d->message.length() > 0)
-                    ri[CuDType::Message] = d->message;
-                ri[CuDType::Color] = t_world_conf.successColor(!d->error);
+                    reslist[offset][CuDType::Message] = d->message;
+                reslist[offset][CuDType::Color] = t_world_conf.successColor(!d->error);
+                offset++;
             }
             else {
                 CuData rv;
@@ -785,17 +783,19 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                 // updateds va[i], that will cache the new data for the next time
                 bool changed = d->error || m_cache_upd(va[i], rv);
                 if(changed) { // update exactly as above
-                    ri = va[i];
-                    ri[CuDType::Time_us] = rv[CuDType::Time_us];
-                    ri[CuDType::Time_us] = rv[CuDType::Time_us];
-                    ri[CuDType::Err] = d->error;
+                    reslist.push_back(va[i]);
+                    reslist[offset][CuDType::Time_us] = rv[CuDType::Time_us];
+                    reslist[offset][CuDType::Time_us] = rv[CuDType::Time_us];
+                    reslist[offset][CuDType::Err] = d->error;
                     if(d->message.length() > 0)
-                        ri[CuDType::Message] = d->message;
-                    ri[CuDType::Color] = t_world_conf.successColor(!d->error);
+                        reslist[offset][CuDType::Message] = d->message;
+                    reslist[offset][CuDType::Color] = t_world_conf.successColor(!d->error);
+                    offset++;
                 }
                 else if(updpo & CuDataUpdatePolicy::OnPollUnchangedTimestampOnly) {
-                    ri = (CuData(CuDType::Time_us, rv[CuDType::Time_us]));
-                    ri[CuDType::Src] = va[i][CuDType::Src];
+                    reslist.push_back(CuData(CuDType::Time_us, rv[CuDType::Time_us]));
+                    reslist[offset][CuDType::Src] = va[i][CuDType::Src];
+                    offset++;
                 }
                 else if(updpo & CuDataUpdatePolicy::OnPollUnchangedNoUpdate) {
                     // do nothing
@@ -809,13 +809,13 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         d->error = true;
         d->message = strerror(e);
         for(size_t i = 0; i < p_v_an.size(); i++) {
-            CuData &ri = reslist[i + offset];
-            ri = va[i];
-            ri[CuDType::Err] = d->error;
+            reslist.push_back(va[i]);
+            reslist[offset][CuDType::Err] = d->error;
             if(d->message.length() > 0)
-                ri[CuDType::Message] = d->message;
-            ri[CuDType::Color] = t_world_conf.successColor(!d->error);
-            ri.putTimestamp();
+                reslist[offset][CuDType::Message] = d->message;
+            reslist[offset][CuDType::Color] = t_world_conf.successColor(!d->error);
+            reslist[offset].putTimestamp();
+            offset++;
         }
     }
     return !d->error;

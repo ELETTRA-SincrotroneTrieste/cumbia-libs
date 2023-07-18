@@ -84,8 +84,11 @@ void CuTConfiguration::onResult(const CuData &data) {
     delete this;
 }
 
-void CuTConfiguration::onResult(const CuData *p, int siz) {
-    (void) p; (void) siz;
+/*! \brief unused. Complies with CuThreadListener interface
+ *
+ */
+void CuTConfiguration::onResult(const std::vector<CuData> &datalist) {
+    (void) datalist;
 }
 
 CuData CuTConfiguration::getToken() const {

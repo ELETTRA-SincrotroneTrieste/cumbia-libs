@@ -159,11 +159,6 @@ public:
     std::vector<bool>    BV(const CuDType::Key& key) const;
     std::vector<bool>    BV(const std::string& key) const;
 
-    // Define the hash function
-    struct Hash {
-        size_t operator()(const CuData& obj) const;
-    };
-
 private:
     CuDataPrivate *d_p;
 

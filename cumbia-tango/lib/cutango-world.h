@@ -50,7 +50,7 @@ public:
     bool read_atts(Tango::DeviceProxy *dev,
                    std::vector<std::string>& p_v_an, // attribute names
                    std::vector<CuData>& v_a, // attribute cache (same order as names above)
-                   CuData *reslist, size_t offset,
+                   std::vector<CuData>& reslist,
                    int da_updpo);
 
     bool write_att(Tango::DeviceProxy *dev,

@@ -17,7 +17,6 @@ public:
 public:
     void onProgress(int step, int total, const CuData &data);
     void onResult(const CuData &data);
-    virtual void onResult(const CuData* datalist, int);
     CuData getToken() const;
 
     // CuEpicsActionI interface
@@ -37,6 +36,11 @@ public:
 
 private:
     CuEpWriterPrivate *d;
+
+
+    // CuThreadListener interface
+public:
+    virtual void onResult(const std::vector<CuData> &datalist);
 };
 
 #endif // CUTWRITER_H

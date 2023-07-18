@@ -20,7 +20,6 @@ public:
 public:
     void onProgress(int, int, const CuData &);
     void onResult(const CuData &data);
-    void onResult(const CuData* p, int siz);
     CuData getToken() const;
 
     // CuEpicsActionI interface
@@ -37,6 +36,10 @@ public:
     bool exiting() const;
 private:
     CuEpConfigurationPrivate *d;
+
+    // CuThreadListener interface
+public:
+    virtual void onResult(const std::vector<CuData> &datalist);
 };
 
 #endif // CUTATTCONFIGURATION_H

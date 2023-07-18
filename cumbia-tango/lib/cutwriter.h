@@ -24,7 +24,7 @@ public:
 public:
     void onProgress(int step, int total, const CuData &data);
     void onResult(const CuData &data);
-    void onResult(const CuData *datalist, int siz);
+    void onResult(const std::vector<CuData> &datalist);
     CuData getToken() const;
 
     // CuTangoActionI interface

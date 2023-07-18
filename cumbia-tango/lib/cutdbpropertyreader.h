@@ -45,7 +45,6 @@ public:
     // CuThreadListener interface
 public:
     void onProgress(int step, int total, const CuData &data);
-    void onResult(const CuData* p, int siz);
     void onResult(const CuData &data);
     CuData getToken() const;
 
@@ -55,6 +54,7 @@ private:
 
     // CuThreadListener interface
 public:
+    void onResult(const std::vector<CuData> &datalist);
 };
 
 #endif // CUTDBPROPERTYREADER_H
