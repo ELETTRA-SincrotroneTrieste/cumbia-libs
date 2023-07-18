@@ -12,7 +12,7 @@ using namespace std;
 class TSourcePrivate;
 
 // tghost:PORT regex ([A-Z-a-z0-9\-_\.\+~]+:\d+)
-#define TGHOST_RE "([A-Z-a-z0-9\\-_\\.\\+~]+:\\d+)"
+#define TGHOST_RE "([A-Z-a-z0-9\\-_\\.\\+~]+:\\d+)/"
 
 // tango device name regex
 // used only if the source is not a command and the number of '/' is not 3
