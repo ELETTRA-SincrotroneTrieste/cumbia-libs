@@ -96,11 +96,7 @@ void CuTWriter::onProgress(int step, int total, const CuData &data)
  *
  * @see onResult(const CuData &data)
  */
-void CuTWriter::onResult(const std::vector<CuData> &datalist) {
-    (void) datalist;
-}
-
-void CuTWriter::onResult(const std::vector<CuData> *datalist) {
+void CuTWriter::onResult(const CuData *datalist, int siz) {
     (void) datalist;
 }
 

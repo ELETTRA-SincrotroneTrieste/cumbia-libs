@@ -71,12 +71,8 @@ void CuTReader::onProgress(int step, int total, const CuData &data) {
     (void) step;  (void) total;  (void) data;
 }
 
-void CuTReader::onResult(const std::vector<CuData> &datalist) {
-    (void) datalist;
-}
-
-void CuTReader::onResult(const std::vector<CuData> *datalist) {
-    (void) datalist;
+void CuTReader::onResult(const CuData *p, int siz) {
+    (void) p;
 }
 
 /*!

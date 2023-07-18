@@ -51,21 +51,17 @@ public:
     virtual void onResult(const CuData& data) = 0;
 
     /*!
-     * \brief pointer to vector of data flavour, for best performance
+     * \brief pointer to vector of data version, for best performance
      *
-     * \param datalist a pointer to a std::vector of CuData
+     * \param p a pointer to a vector of data of size siz allocated by the user
+     * \param siz size of data pointed by p
      *
      * \since 2.0
-     */
-    virtual void onResult(const std::vector<CuData>* datalist) = 0;
-
-    /*!
-     * \brief onResult delivers to the listener's thread the results of the work
-     *        performed by the *activity*'s background thread
      *
-     * \param datalist a std::vector of CuData bundle storing a list of results computed in the background *activity*
+     * \note this flavor replaces cumbia 1.x onResult(const std::vector<CuData>&), avoiding a
+     * copy of the entire vector of data that such implementation involved.
      */
-    virtual void onResult(const std::vector<CuData>& datalist) = 0;
+    virtual void onResult(const CuData* p, int siz) = 0;
 
     /*!
      * \brief custom user-data flavor of the above

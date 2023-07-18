@@ -49,7 +49,7 @@ public:
     }
 
     void m_copy_from(const CuDataPrivate &other) {
-        auto start = std::chrono::high_resolution_clock::now();
+//        auto start = std::chrono::high_resolution_clock::now();
         if(other.datamap.size() > 0)
             datamap = other.datamap;
         for(size_t i = 0; i < CuDType::MaxDataKey; i++) {
@@ -57,10 +57,10 @@ public:
                 data[i] = other.data[i];
             }
         }
-        auto end = std::chrono::high_resolution_clock::now();
+//        auto end = std::chrono::high_resolution_clock::now();
 
-        auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        std::cout << "CuDataPrivate m_copy_from took: " << duration.count() << " microseconds" << std::endl;
+//        auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+//        std::cout << "CuDataPrivate m_copy_from took: " << duration.count() << " microseconds" << std::endl;
     }
 
 private:
@@ -122,7 +122,7 @@ CuData::CuData(const size_t key, const CuVariant &v) {
  * new object
  */
 CuData::CuData(const CuData &other) {
-    pretty_pri("%s", datos(other));
+//    pretty_pri("%s", datos(other));
     d_p = other.d_p;
     d_p->ref();  // increment ref counter (impl. sharing)
 }
@@ -134,7 +134,7 @@ CuData::CuData(const CuData &other) {
  * Contents of *other* are moved into *this* CuData
  */
 CuData::CuData(CuData &&other) {
-    pretty_pri("");
+//    pretty_pri("");
     d_p = other.d_p; /* no d = new here */
     other.d_p = nullptr; /* avoid deletion! */
 }
@@ -144,8 +144,8 @@ CuData::CuData(CuData &&other) {
  * @param other another CuData which values will be copied into this
  */
 CuData &CuData::operator=(const CuData &other) {
-    pretty_pri("this %p other %p", this, &other);
-    auto start = std::chrono::high_resolution_clock::now();
+//    pretty_pri("this %p other %p", this, &other);
+//    auto start = std::chrono::high_resolution_clock::now();
 
     if(this != &other) {
         other.d_p->ref();
@@ -153,10 +153,10 @@ CuData &CuData::operator=(const CuData &other) {
             delete d_p; // with no sharing we would not delete
         d_p = other.d_p;
     }
-    auto end = std::chrono::high_resolution_clock::now();
+//    auto end = std::chrono::high_resolution_clock::now();
 
-    auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "CuData::operator= " << duration.count() << " microseconds" << std::endl;
+//    auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+//    std::cout << "CuData::operator= " << duration.count() << " microseconds" << std::endl;
     return *this;
 }
 
@@ -165,7 +165,7 @@ CuData &CuData::operator=(const CuData &other) {
  * @param other another CuData which values will be moved into this
  */
 CuData &CuData::operator=(CuData &&other) {
-    pretty_pri("move assignment");
+//    pretty_pri("move assignment");
     if (this!=&other) {
         if(d_p && d_p->unref() == 1)
             delete d_p;
@@ -633,7 +633,7 @@ bool CuData::b(const std::string& key) const {
 // to<T> version shortcuts
 
 double CuData::D(const CuDType::Key &key) const {
-    double v;
+    double v = 0.0;
     d_p->data[key].to<double>(v);
     return v;
 }
@@ -646,20 +646,20 @@ double CuData::D(const std::string& key) const {
 }
 
 int CuData::I(const CuDType::Key &key) const {
-    int i;
+    int i = 0;
     d_p->data[key].to<int>(i);
     return i;
 }
 
 int CuData::I(const std::string& key) const {
-    int i = 0.0;
+    int i = 0;
     if(containsKey(key))
         this->operator[](key).to<int>(i);
     return i;
 }
 
 unsigned int CuData::U(const CuDType::Key &key) const {
-    unsigned int ui;
+    unsigned int ui = 0;
     d_p->data[key].to<unsigned int>(ui);
     return ui;
 }
@@ -775,3 +775,14 @@ std::vector<bool> CuData::BV(const std::string &key) const {
     return bv;
 }
 
+
+size_t CuData::Hash::operator()(const CuData &obj) const {
+    std::string s;
+    for(int i = 0; i < CuDType::MaxDataKey; i++)
+        if(obj.d_p->data[i].isValid())
+            s += obj.d_p->data[i].toString();
+    for(std::unordered_map<std::string, CuVariant>::const_iterator it = obj.d_p->datamap.begin(); it != obj.d_p->datamap.end(); ++it)  {
+            s += it->first + it->second.toString();
+    }
+    return std::hash<std::string>()(s);
+}

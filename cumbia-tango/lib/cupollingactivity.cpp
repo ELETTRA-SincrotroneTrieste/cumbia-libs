@@ -341,28 +341,27 @@ void CuPollingActivity::init()
  */
 void CuPollingActivity::execute()
 {
-    pretty_pri(" >>>>>>>>>>>>>>>>>>>>>>>");
-
     assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
     d->updcnt++;
     CuTangoWorld tangoworld;
-    std::vector<CuData> *results = nullptr;
+    CuData *results = nullptr;
+    size_t siz = d->cmds.size() + d->v_attd.size();
     Tango::DeviceProxy *dev = d->tdev->getDevice();
     bool success = (dev != nullptr);
-    size_t res_offset = 0;
+    size_t res_offset = 0, i = 0;
     // time to execute for delayed attributes in future maps?
     m_add_scheduled();
 
     if(dev) { // dev is not null
-        results = new std::vector<CuData>[d->cmds.size() + d->v_attd.size()];
+        results = new CuData[siz];
         // 1. commands (d->cmdmap)
-        for(size_t i = 0; i <  d->cmds.size(); i++) {
+        for(i = 0; i <  d->cmds.size(); i++) {
             const TSource &tsrc = d->cmds[i];
             const std::string& srcnam = tsrc.getName();
             const std::string& point = tsrc.getPoint();
-            results->push_back(d->tag);
-            CuData &ri = (*results)[i];
+            results[i] = d->tag;
+            CuData &ri = results[i];
             ri[CuDType::Mode] = "P";
             ri[CuDType::Period] = interval();
             ri[CuDType::Src] = tsrc.getName();
@@ -371,7 +370,7 @@ void CuPollingActivity::execute()
                 success = tangoworld.get_command_info(dev, point, ri);
                 if(success) {
                     const std::vector<std::string> &argins = tsrc.getArgs();
-                    d->din_cache[srcnam] = CmdData((*results)[i], tangoworld.toDeviceData(argins, ri), argins);
+                    d->din_cache[srcnam] = CmdData(results[i], tangoworld.toDeviceData(argins, ri), argins);
                 }
             }
             if(dev && success) {  // do not try command_inout if no success so far
@@ -390,9 +389,7 @@ void CuPollingActivity::execute()
             res_offset++;
         } // end cmds
         if(dev && d->v_attn.size() > 0) {
-            pretty_pri(" >>>>>>>>>>>>>>>>>>>>>>>");
-
-            success = tangoworld.read_atts(d->tdev->getDevice(), d->v_attn, d->v_attd, results, d->data_updpo);
+            success = tangoworld.read_atts(d->tdev->getDevice(), d->v_attn, d->v_attd, results, i, d->data_updpo);
             if(!success)
                 d->consecutiveErrCnt++;
         }
@@ -419,13 +416,21 @@ void CuPollingActivity::execute()
         dev_err[CuDType::Err] = true;
         dev_err[CuDType::Device] = d->tdev->getName();
         dev_err.putTimestamp();
-        results->push_back(dev_err);
+        if(i >= siz) { // need to realloc
+//            pretty_pri("\e[1;35m need to reallocate data after an error occurred: from %ld to %ld", siz, siz + 1);
+            CuData *reall = new CuData [++siz];
+            for(size_t j = 0; j < siz - 1; j++)
+                reall[j] = results[j];
+            delete [] results; // free old data
+            results = reall;
+        }
+        results[i] = dev_err; // i points to next location, was results->push_back(dev_err);
     }
-    pretty_pri("before publish results\n");
-    if(results->size() > 0)
-        publishResult(results);
+//    pretty_pri("before publish results of siz %ld\n", siz);
+    if(siz > 0)
+        publishResult(results, siz);
 
-    pretty_pri("after publish results, leaving <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< out");
+//    pretty_pri("after publish results, leaving <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< out");
 
 }
 

@@ -79,9 +79,9 @@ public:
     void unregisterActivity(CuActivity *l);
     void publishProgress(const CuActivity *activity, int step, int total, const CuData &data);
     void publishResult(const CuActivity *activity, const CuData &data);
-    void publishResult(const CuActivity *activity, const std::vector<CuData> &data_list);
+    void publishResult(const CuActivity *activity, const CuData* p_d, int siz);
     void publishResult(const CuActivity *activity, const CuUserData *u);
-    void publishResult(const CuActivity *a, const std::vector<CuData> *dalist);
+
 
     unsigned activityCount() const;
 

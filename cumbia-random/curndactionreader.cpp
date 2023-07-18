@@ -62,8 +62,8 @@ void CuRNDActionReader::onProgress(int step, int total, const CuData &data) {
     (void) step;  (void) total;  (void) data;
 }
 
-void CuRNDActionReader::onResult(const std::vector<CuData> &datalist) {
-    (void) datalist;
+void CuRNDActionReader::onResult(const CuData *p, int ) {
+    (void) p;
 }
 
 void CuRNDActionReader::setOptions(const CuData &options) {

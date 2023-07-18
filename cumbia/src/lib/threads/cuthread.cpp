@@ -322,15 +322,11 @@ void CuThread::onEventPosted(CuEventI *event) {
         std::pair<std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator,
                     std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator> eqr = m.equal_range(a);
         for(std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator it = eqr.first; it != eqr.second; ++it)  {
-            if(re->p_dv) { // 2.0 pointer to vector version
-                it->second->onResult(re->p_dv);
+            if(re->p_d) { // 2.0 pointer to vector version
+                it->second->onResult(re->p_d, re->p_dsiz);
             }
             else if(re->getType() == CuEventI::CuProgressEv) {
                 it->second->onProgress(re->getStep(), re->getTotal(), re->data);
-            }
-            else if(re->isList()) { // vector will be deleted from within ~CuResultEventPrivate
-                const std::vector<CuData> &vd_ref = re->datalist;
-                it->second->onResult(vd_ref);
             }
             else if(re->u_data) {
                 it->second->onResult(re->u_data);
@@ -339,14 +335,12 @@ void CuThread::onEventPosted(CuEventI *event) {
                 it->second->onResult(re->data);
             }
         }
-//        if(d->arem_list.size() > 0)
-//            printf("CuThread::onEventPosted \e[1;32m erasing now %ld unregistered activities...\e[0m\n", d->arem_list.size());
         for(std::list<CuActivity *>::const_iterator it = d->arem_list.begin(); it != d->arem_list.end(); ++it)
             d->alimmap.erase(*it);
         d->arem_list.clear();
         d->alimmap_locked = false;
-        if(re->p_dv)
-            delete [] re->p_dv;
+        if(re->p_d)
+            delete [] re->p_d;
     }
     else if(ty == CuEventI::CuA_ExitEvent) {
         mOnActivityExited(static_cast<CuA_ExitEv *>(event)->getActivity());
@@ -390,14 +384,8 @@ void CuThread::publishResult(const CuActivity* a,  const CuData &da) {
     d->eb->postEvent(new CuResultEvent(a, da));
 }
 
-void CuThread::publishResult(const CuActivity *a, const std::vector<CuData> &dalist)
-{
-    d->eb->postEvent(new CuResultEvent(a, dalist));
-}
-
-void CuThread::publishResult(const CuActivity *a, const std::vector<CuData> *dalist)
-{
-    d->eb->postEvent(new CuResultEvent(a, dalist));
+void CuThread::publishResult(const CuActivity *a, const CuData *p_d, int siz) {
+    d->eb->postEvent(new CuResultEvent(a, p_d, siz));
 }
 
 void CuThread::publishResult(const CuActivity *a, const CuUserData *u) {

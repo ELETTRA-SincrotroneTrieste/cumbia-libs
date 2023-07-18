@@ -1,7 +1,6 @@
 #include "cuevent.h"
 
 CuResultEventPrivate::CuResultEventPrivate() {
-    is_list = false;
     step = total = 0;
     type = CuEventI::CuResultEv;
 }
@@ -19,7 +18,7 @@ CuResultEventPrivate::~CuResultEventPrivate() {
  * CuResultEvent makes a copy of data before delivering it to the event loop thread.
  */
 CuResultEvent::CuResultEvent(const CuActivity* sender, const CuData &da, CuEventI::CuEventType t)
-    : data(da), u_data(nullptr), p_dv(nullptr) {
+    : data(da), p_d(nullptr), p_dsiz(0), u_data(nullptr) {
     d_p = new CuResultEventPrivate();
     d_p->type = t;
     d_p->activity = sender;
@@ -34,20 +33,11 @@ CuResultEvent::CuResultEvent(const CuActivity* sender, const CuData &da, CuEvent
  *
  * data_list contents will be *moved* into a local copy to be used by the receiving thread
  */
-CuResultEvent::CuResultEvent(const CuActivity* sender, const std::vector<CuData> &dali, CuEventType t)
-    : datalist(std::move(dali)), u_data(nullptr), p_dv(nullptr) {
+CuResultEvent::CuResultEvent(const CuActivity* sender, const CuData *p_da, int size, CuEventType t)
+    : p_d(p_da), p_dsiz(size), u_data(nullptr) {
     d_p = new CuResultEventPrivate();
     d_p->type = t;
     d_p->activity = sender;
-    d_p->is_list = true;
-}
-
-CuResultEvent::CuResultEvent(const CuActivity *sender, const std::vector<CuData> *p_v_da, CuEventType t)
-    : p_dv(p_v_da) {
-    d_p = new CuResultEventPrivate();
-    d_p->activity = sender;
-    d_p->is_list = true;
-    d_p->type = t;
 }
 
 /*!
@@ -58,7 +48,7 @@ CuResultEvent::CuResultEvent(const CuActivity *sender, const std::vector<CuData>
  * \param data the data to be delivered
  */
 CuResultEvent::CuResultEvent(const CuActivity* sender, int step, int total, const CuData &da)
-    : data(da), u_data(nullptr), p_dv(nullptr) {
+    : data(da), p_d(nullptr), p_dsiz(0), u_data(nullptr) {
     d_p = new CuResultEventPrivate();
     d_p->step = step;
     d_p->total = total;
@@ -66,7 +56,8 @@ CuResultEvent::CuResultEvent(const CuActivity* sender, int step, int total, cons
     d_p->activity = sender;
 }
 
-CuResultEvent::CuResultEvent(const CuActivity *sender, const CuUserData *data, CuEventType t) : u_data(data) {
+CuResultEvent::CuResultEvent(const CuActivity *sender, const CuUserData *data, CuEventType t)
+    :  p_dsiz(0), u_data(data), d_p(nullptr) {
     d_p = new CuResultEventPrivate();
     d_p->activity = sender;
     d_p->type = t;
@@ -131,7 +122,7 @@ const CuActivity *CuResultEvent::getActivity() const
 }
 
 bool CuResultEvent::isList() const {
-    return d_p->is_list;
+    return p_dsiz > 0;
 }
 
 bool CuResultEvent::has_user_data() const {

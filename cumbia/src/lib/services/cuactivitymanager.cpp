@@ -13,6 +13,7 @@ public:
     std::unordered_map< CuActivity *, CuThreadInterface *> conn_map;
     std::unordered_multimap<const CuActivity *, CuThreadListener *> th_lis_mmap;
     std::unordered_map<const CuThreadInterface *, int> th_acnt_map; // count activities per thread
+    std::unordered_map<CuData, CuActivity *, CuData::Hash> tokmap; // make find faster (v.2.0)
     pthread_t mythread;
 };
 
@@ -40,6 +41,7 @@ void CuActivityManager::connect(CuThreadInterface *t, CuActivity *a, CuThreadLis
     std::pair<CuActivity *, CuThreadListener *>  pl(a, threadListener);
     d->conn_map.insert(p);
     d->th_lis_mmap.insert(pl);
+    d->tokmap[a->getToken()] = a;
     d->th_acnt_map.find(t) == d->th_acnt_map.end() ? d->th_acnt_map[t] = 1 : d->th_acnt_map[t]++;
 }
 
@@ -57,9 +59,9 @@ void CuActivityManager::disconnect(CuActivity *a) {
     std::unordered_map<CuActivity*, CuThreadInterface *>::const_iterator it = d->conn_map.find(a);
     if(it != d->conn_map.end()) // if a is found, its associated thread is in th_acnt_map
         d->th_acnt_map[it->second]--;
+    d->tokmap.erase(a->getToken());
     d->conn_map.erase(a);
     d->th_lis_mmap.erase(a);
-
 }
 
 /** \brief Removes all links involving the CuThreadInterface passed as input
@@ -82,6 +84,7 @@ void CuActivityManager::removeConnections(CuThreadInterface *t) {
         if(it->second == t) {
             d->th_lis_mmap.erase(it->first);
             d->th_acnt_map[it->second]--;
+            d->tokmap.erase(it->first->getToken());
             it = d->conn_map.erase(it);
         }
         else
@@ -111,14 +114,36 @@ void CuActivityManager::disconnect(CuThreadListener *l) {
  * \par Disposable activities
  * Cumbia::unregisterActivity marks an activity disposable when it must be considered useless because
  * on its way to destruction.
+ *
+ * Since cumbia v.2.0 an additional map has been introduced for a faster find
  */
 CuActivity *CuActivityManager::find(const CuData &token) {
     assert(d->mythread == pthread_self());
-    std::unordered_multimap<CuActivity *, CuThreadInterface * >::const_iterator it;
+//    pretty_pri("searching among %ld activities tokmap keys count %ld", d->conn_map.size(), d->tokmap.size());
+//    auto start = std::chrono::high_resolution_clock::now();
+//    std::unordered_multimap<CuData, CuActivity * >::const_iterator it = d->tokmap.find(token);
+//    if(it != d->tokmap.end()) {
+////        auto end = std::chrono::high_resolution_clock::now();
+////        auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+////        std::cout << "Elapsed time find: " << duration.count() << " microseconds" << std::endl;
+//        return it->second;
+//    }
+
+
+    // Old version
+    std::unordered_map< CuActivity *, CuThreadInterface *>::const_iterator it;
     for(it = d->conn_map.begin(); it != d->conn_map.end(); ++it) {
-        if(it->first->matches(token))
+        if(it->first->matches(token)) {
+//            auto end = std::chrono::high_resolution_clock::now();
+//            auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+//            std::cout << "Elapsed time find (\e[1;33mold version\e[0m) after " << cnt << " iters: " << duration.count() << " microseconds" << std::endl;
             return it->first;
+        }
     }
+
+//    auto end = std::chrono::high_resolution_clock::now();
+//    auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+//    std::cout << "Elapsed time find: \e[1;31mAND NOT FOUND\e[0m" << duration.count() << " microseconds" << std::endl;
     return nullptr;
 }
 

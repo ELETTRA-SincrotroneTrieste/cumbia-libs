@@ -22,8 +22,8 @@ public:
 
     // CuThreadListener interface
     void onProgress(int step, int total, const CuData &data);
-
     void onResult(const CuData &data);
+    virtual void onResult(const CuData* p, int siz);
 
     CuData getToken() const;
 
@@ -62,9 +62,6 @@ private:
 
     void m_startMonitorActivity();
 
-    // CuThreadListener interface
-public:
-    virtual void onResult(const std::vector<CuData> &datalist);
 };
 
 

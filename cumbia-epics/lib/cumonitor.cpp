@@ -214,6 +214,5 @@ bool CuMonitor::exiting() const
 }
 
 
-void CuMonitor::onResult(const std::vector<CuData> &datalist)
-{
+void CuMonitor::onResult(const CuData *, int ) {
 }

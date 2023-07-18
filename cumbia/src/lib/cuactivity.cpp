@@ -82,11 +82,13 @@ void CuActivity::setFlag(CuActivity::Flags f, bool on) {
 }
 
 /** \brief Publish a result from the activity thread (whence the method is called) to
- *         the main thread.
+ *         the main thread. Single (scalar) data version
  *  \note this method may be called even from a thread different from activity's execute.
  *        In fact, data is delivered through the event bridge / event loop.
  *        An example is cumbia-tango CuEventActivity, where publishResult is invoked from
  *        the Tango push_event callback's thread, different from the activity's.
+ *
+ *  \see CuActivity::publishResult(const CuData *p, int siz)
  */
 void CuActivity::publishResult(const CuData &data) {
     if(d->thread)
@@ -94,30 +96,30 @@ void CuActivity::publishResult(const CuData &data) {
 }
 
 /*!
- * \brief Publish a result from the activity to the main thread. Datalist version
- * \param datalist a const reference vector of CuData
+ * \brief publish a result as a vector of data
+ * \param p pointer to a *malloc'd* vector of CuData of size siz
+ * \param siz the size of data
  *
- * \note see note in publishResult above
- */
-void CuActivity::publishResult(const std::vector<CuData> &datalist) {
-    if(d->thread) /* may be removed while activity is in execute() */
-        d->thread->publishResult(this, datalist);
-}
-
-/*!
- * \brief pointer to vector of data flavour.
- * \param pvd pointer to a vector of CuData
+ * This version replaces cumbia 1.x *publishResult(const std::vector<CuData> &)*
+ * to improve performance.
+ * Where before an entire vector copy was involved, now a sole pointer
+ * is exchanged between threads.
  *
- * This flavour has been introduced in v2.0 to provide the best
- * performance
+ * \par Important
+ * The data pointed by p shall be allocated by the user. The memory is freed by
+ * the library after data is delivered to the listeners (CuThread::onEventPosted)
  *
  * \since 2.0
  */
-void CuActivity::publishResult(const std::vector<CuData> *pvd) {
+void CuActivity::publishResult(const CuData *p, int siz) {
     if(d->thread) /* may be removed while activity is in execute() */
-        d->thread->publishResult(this, pvd);
+        d->thread->publishResult(this, p, siz);
 }
 
+/*!
+ * \brief publish result, custom data version
+ * \param custom data derived from CuUserData
+ */
 void CuActivity::publishResult(const CuUserData *data) {
     if(d->thread) d->thread->publishResult(this, data);
 }
@@ -148,7 +150,7 @@ void CuActivity::publishProgress(int step, int total, const CuData &data) {
  * method is lock free and safe to access from different threads
  *
  */
-const CuData CuActivity::getToken() const {
+const CuData &CuActivity::getToken() const {
     return d->token;
 }
 
@@ -157,7 +159,7 @@ void CuActivity::setThreadToken(const std::string &tt) {
     d->thread_tok = tt;
 }
 
-const std::string CuActivity::threadToken() const {
+const std::string& CuActivity::threadToken() const {
     assert(d->bthread == pthread_self());
     return d->thread_tok;
 }

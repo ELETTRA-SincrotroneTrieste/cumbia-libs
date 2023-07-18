@@ -23,8 +23,7 @@ public:
 public:
     void onProgress(int, int, const CuData &);
     void onResult(const CuData &data);
-    void onResult(const std::vector<CuData> &datalist);
-    void onResult(const std::vector<CuData> *datalist);
+    void onResult(const CuData *p, int siz);
 
     CuData getToken() const;
 

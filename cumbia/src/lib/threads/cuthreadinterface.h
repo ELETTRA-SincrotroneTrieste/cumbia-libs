@@ -96,24 +96,12 @@ public:
 
     /*! \brief post a *result* event from the background thread to the main thread
      *
-     * This lets you send events to the main thread that account for a
-     * list of results computed in the background
+     * post an event to the main thread with data as vector of the given size pointed by p
      *
-     * See CuThread::publishProgress for details
+     * \param p a pointer to *malloc'd* CuData vector of size size
+     * \param size the size of p
      */
-    virtual void publishResult(const CuActivity *activity, const std::vector<CuData> &data_list) = 0;
-
-
-    /*! \brief post a *result* event from the background thread to the main thread
-     *
-     * Send events to the main thread, pointer to vector version
-     *
-     * \since 2.0
-     *
-     * See CuThread::publishProgress for details
-     */
-    virtual void publishResult(const CuActivity *activity, const std::vector<CuData> *data_list) = 0;
-
+    virtual void publishResult(const CuActivity *activity, const CuData *p, int size) = 0;
 
     /*! \brief post a custom user event data to the specified activity
      *

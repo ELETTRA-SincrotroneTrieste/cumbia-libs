@@ -1,5 +1,14 @@
 # News
 
+## version 2.0.0
+
+The main motivation for a major release is a dramatic improvement in performance.
+
+
+## Important changes
+
+Please refer to 2.0-CHANGES.md
+
 ## version 1.5.1
 
 1. Plot configuration can be saved.
