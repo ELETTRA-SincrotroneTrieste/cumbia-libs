@@ -346,9 +346,7 @@ void Qumbiaizer::configure(const CuData &data)
     emit connectionOk(!data[CuDType::Err].toBool());  // data["err"]
 }
 
-bool Qumbiaizer::inTypeOfMethod(const QString &method, QObject *obj, char* in_type)
-{
-
+bool Qumbiaizer::inTypeOfMethod(const QString &method, QObject *obj, char* in_type) {
     return quizer_ptr->inTypeOfMethod(method, obj, in_type);
 }
 
@@ -375,23 +373,15 @@ int Qumbiaizer::extractCode(QString& method)
 void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMethod, QuValueFilter::State updateState)
 {
     quizer_ptr->message.clear();
-    QString methName;
+    const QString & methName = customMethod != NULL ? customMethod : methodName();
     bool ok = !v[CuDType::Err].toBool();
 
-    if(customMethod != NULL)
-        methName = QString(customMethod);
-    else
-        methName = methodName();
-
-    if(ok && (v.containsKey(CuDType::Value) || v.containsKey(CuDType::WriteValue)))  // v.containsKey("value"), v.containsKey("w_value")
-    {
+    if(ok && (v.containsKey(CuDType::Value) || v.containsKey(CuDType::WriteValue)))  {
         QObject *object = NULL;
-        if(!slot().isEmpty())
-            object = static_cast<QObject *>(data()); /* QObject and slot were provided */
-
+        if(!quizer_ptr->slot.isEmpty())
+            object = static_cast<QObject *>(quizer_ptr->data); /* QObject and slot were provided */
 
         const CuVariant &val = read ? v[CuDType::Value] : v[CuDType::WriteValue];
-
         if(type() == Qumbiaizer::Cu_Data) { // since 1.5.3
             CuData out(v); // inexpensive move operation
             if(quizer_ptr->refreshFilter) {
@@ -421,7 +411,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                     ok = QMetaObject::invokeMethod(object, qstoc(methName), connectionType(), Q_ARG(int, intVal));
                     if(!ok)
                         quizer_ptr->message += " [error invoking method \"" + slot() + "\" on \"" + object->objectName()
-                                   + "\". ]";
+                                               + "\". ]";
                 }
                 else
                     *static_cast<int *>(data()) = intVal;
@@ -443,7 +433,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                     ok = QMetaObject::invokeMethod(object, qstoc(methName), connectionType(), Q_ARG(short, shval));
                     if(!ok)
                         quizer_ptr->message += " [error invoking method \"" + slot() + "\" on \"" + object->objectName()
-                                   + "\". ]";
+                                               + "\". ]";
                 }
                 else
                     *static_cast<int *>(data()) = shval;
@@ -468,7 +458,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                     ok = QMetaObject::invokeMethod(object, qstoc(methName), connectionType(), Q_ARG(unsigned int, uintVal));
                     if(!ok)
                         quizer_ptr->message += " [error invoking method \"" + slot() + "\" on \"" + object->objectName()
-                                   + "\". ]";
+                                               + "\". ]";
                 }
                 else
                     *static_cast<unsigned int *>(data()) = uintVal;
@@ -492,7 +482,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                     ok = QMetaObject::invokeMethod(object, qstoc(methName), connectionType(), Q_ARG(double, doubleVal));
                     if(!ok)
                         quizer_ptr->message += " [error invoking method \"" + slot() + "\" on \"" + object->objectName()
-                                   + "\". ]";
+                                               + "\". ]";
                 }
                 else
                     *static_cast<double *>(data()) = doubleVal;
@@ -515,7 +505,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                     ok = QMetaObject::invokeMethod(object, qstoc(methName), connectionType(), Q_ARG(QString, str));
                     if(!ok)
                         quizer_ptr->message += " [error invoking method \"" + slot() + "\" on \"" + object->objectName()
-                                   + "\". ]";
+                                               + "\". ]";
                 }
                 else
                     *static_cast<QString *>(data()) = str;
@@ -539,7 +529,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                     ok = QMetaObject::invokeMethod(object, qstoc(methName), connectionType(), Q_ARG(bool, abool));
                     if(!ok)
                         quizer_ptr->message += " [error invoking method \"" + slot() + "\" on \"" + object->objectName()
-                                   + "\". ]";
+                                               + "\". ]";
                 }
                 else
                     *static_cast<bool *>(data()) = abool;
@@ -566,7 +556,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                 ok = QMetaObject::invokeMethod(object, qstoc(methName), connectionType(), Q_ARG(QVector<bool>, boolvect));
                 if(!ok)
                     quizer_ptr->message += " [error invoking method \"" + slot() + "\" on \"" + object->objectName()
-                               + "\". ]";
+                                           + "\". ]";
             }
             else
                 *static_cast<QVector<bool> *>(data()) = boolvect;
@@ -590,7 +580,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                 ok = QMetaObject::invokeMethod(object, qstoc(methName), connectionType(), Q_ARG(QVector<double>, dblvect));
                 if(!ok)
                     quizer_ptr->message += " [error invoking method \"" + slot() + "\" on \"" + object->objectName()
-                               + "\". ]";
+                                           + "\". ]";
             }
             else
                 *static_cast<QVector<double> *>(data()) = dblvect;
@@ -615,7 +605,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                 ok = QMetaObject::invokeMethod(object, qstoc(methName), connectionType(), Q_ARG(QVector<int>, intvect));
                 if(!ok)
                     quizer_ptr->message += " [error invoking method \"" + slot() + "\" on \"" + object->objectName()
-                               + "\". ]";
+                                           + "\". ]";
             }
             else
                 *static_cast<QVector<int> *>(data()) = intvect;
@@ -636,7 +626,7 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
                     ok = QMetaObject::invokeMethod(object, qstoc(methName), connectionType(), Q_ARG(QStringList, strvect));
                     if(!ok)
                         quizer_ptr->message += " [error invoking method \"" + slot() + "\" on \"" + object->objectName()
-                                   + "\". ]";
+                                               + "\". ]";
                 }
                 else
                     *static_cast<QStringList *>(data()) = strvect;
@@ -650,13 +640,13 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
         {
             ok = false;
             quizer_ptr->message = QString(" [ invalid Type %1 [%2] (CuVariant type  %3 [%4]) specified ]").arg(type()).arg(type_str(type())).
-                      arg(val.getType()).arg(val.dataTypeStr(val.getType()).c_str());
+                                  arg(val.getType()).arg(val.dataTypeStr(val.getType()).c_str());
         }
 
         if(object && !ok)
             perr("Qumbiaizer.updateValue: failed to invoke method \"%s\" on \"%s\": \"%s\"", qstoc(methName),
                  qstoc(object->objectName()), qstoc(quizer_ptr->message));
-    } // if(ok && (v.containsKey("value") || v.containsKey("w_value")))
     }
+}
 
 

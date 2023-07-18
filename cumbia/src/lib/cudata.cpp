@@ -24,6 +24,7 @@ public:
     }
 
     ~CuDataPrivate() {
+        datamap.clear();
     }
 
     CuDataPrivate &operator=(const CuDataPrivate &other) {

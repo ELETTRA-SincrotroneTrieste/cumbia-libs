@@ -190,9 +190,9 @@ public:
     void publishResult(const std::vector<CuData> &datalist);
     void publishResult(const CuUserData *data);
 
-    const CuData getToken() const;
+    const CuData& getToken() const;
     void setThreadToken(const std::string &tt);
-    const std::string threadToken() const;
+    const std::string& threadToken() const;
 
     /* template method: sets state and calls init */
     void doInit();

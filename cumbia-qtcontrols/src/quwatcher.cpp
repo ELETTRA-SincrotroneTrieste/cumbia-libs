@@ -118,8 +118,8 @@ void QuWatcher::onUpdate(const CuData &data)
 {
     bool ok = !data[CuDType::Err].toBool();  // data["err"]
     bool is_config = data.has(CuDType::Type, "property");  // has("type", "property")
-    std::string msg = data[CuDType::Message].toString();  // data["msg"]
-    !ok ? d->context->getLinkStats()->addError(msg) : d->context->getLinkStats()->addOperation();
+    const char *msg = data[CuDType::Message].c_str();  // data["msg"]
+//    !ok ? d->context->getLinkStats()->addError(msg) : d->context->getLinkStats()->addOperation();
     if(is_config) {
         configure(data); // Qumbiaizer virtual configure method
     }
@@ -133,7 +133,8 @@ void QuWatcher::onUpdate(const CuData &data)
     // are emitted from Qumbiaizer::updateValue
     // generic newData signal is emitted here
     emit readOk(ok);
-    emit refreshMessage(QString::fromStdString(msg));
+    if(msg != nullptr)
+        emit refreshMessage(msg);
     emit newData(data);
 }
 

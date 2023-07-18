@@ -185,7 +185,7 @@ bool QuLabelBase::decode(const CuVariant& v, QColor &background) const
             strncpy(d_data->text, v.toString().c_str(), QULABEL_MAXLEN);
         const QVariant& tcp = property("trueColor"), &fcp = property("falseColor");
         if(tcp.isValid() && fcp.isValid()) {
-            background = bv ? tcp.value<QColor>() : tcp.value<QColor>();
+            background = bv ? tcp.value<QColor>() : fcp.value<QColor>();
         }
     }
     else if(v.isInteger() && v.getFormat() == CuVariant::Scalar) {

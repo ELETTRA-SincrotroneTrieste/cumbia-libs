@@ -232,7 +232,7 @@ bool QuLabel::ctxSwap(CumbiaPool *c_p, const CuControlsFactoryPool &fpool) {
 
 void QuLabel::onUpdate(const CuData &da)
 {
-//    auto start = std::chrono::high_resolution_clock::now();
+    //    auto start = std::chrono::high_resolution_clock::now();
     const bool& ok = !da[CuDType::Err].toBool();
     const char *mode = da[CuDType::Mode].c_str();
     bool event = mode != nullptr && strcmp(mode, "E") == 0;
@@ -244,13 +244,13 @@ void QuLabel::onUpdate(const CuData &da)
         update = !ok || d->last_d[CuDType::Value] != da[CuDType::Value];
         // onUpdate measures better with d->last_d = da; than with d->last_d = da.clone()
         // even though measured alone the clone version performs better
-//        d->last_d = da.clone(); // clone does a copy, then contents moved into last_d
+        //        d->last_d = da.clone(); // clone does a copy, then contents moved into last_d
         d->last_d = da;
         if(strlen(d->msg) > 0)
             d->msg[0] = 0; // clear msg
     }
     else { // "event" mode
-//        printf("QuLabel.onUpdate: event driven, always updating and preparing tooltip msg, never saving data\n");
+        //        printf("QuLabel.onUpdate: event driven, always updating and preparing tooltip msg, never saving data\n");
         d->u.msg_short(da, d->msg);
     }
     if(update) {
@@ -283,29 +283,37 @@ void QuLabel::onUpdate(const CuData &da)
                 setText(d_data->text);
             }
         }
-
-        // check for state color string change before accessing palette
-        const char* statc = da.c_str(CuDType::StateColor);
-        const char* laststatc = d->last_d.c_str(CuDType::StateColor);
-        if(statc && laststatc && !strcmp(statc, laststatc)) {
-            background = d->palette[statc];
-            if(background.isValid())
-                setBackground(background);
+        if(background.isValid()) { // from QuLabelBase.decode
+            setBackground(background);
         }
-        else if(!background.isValid()) {
-            const char *qc = da.c_str(CuDType::QualityColor);
-            const char *lastqc = d->last_d.c_str(CuDType::QualityColor);
-            // background has not already been set by QuLabelBase::setValue (this happens if either a
-            // boolean display or enum display have been configured)
-            // if so, use the "qc" as a background
-            if(qc && lastqc && !strcmp(qc,lastqc)) // quality color changed
-                background = d->palette[da[CuDType::QualityColor].c_str()];
-            setBackground(background); // checks if background is valid
+        else {
+
+            // check for state color string change before accessing palette
+            const char* statc = da.c_str(CuDType::StateColor);
+            const char* laststatc = d->last_d.c_str(CuDType::StateColor);
+            if((statc && !laststatc) || (statc && laststatc && strcmp(statc, laststatc) != 0)) {
+                background = d->palette[statc];
+                if(background.isValid()) {
+                    setBackground(background);
+                }
+            }
+            else if(!background.isValid()) {
+                const char *qc = da.c_str(CuDType::QualityColor);
+                const char *lastqc = d->last_d.c_str(CuDType::QualityColor);
+                // background has not already been set by QuLabelBase::setValue (this happens if either a
+                // boolean display or enum display have been configured)
+                // if so, use the "qc" as a background
+                if((qc && !lastqc) || ( qc && lastqc && strcmp(qc,lastqc) != 0)) { // quality color changed
+                    const QColor &bg = d->palette[qc];
+                    if(bg.isValid())
+                        setBackground(bg); // checks if background is valid
+                }
+            }
         }
     }
-//    auto end = std::chrono::high_resolution_clock::now();
-//    auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-//    std::cout << "Elapsed time QuLabel.update: " << duration.count() << " microseconds" << std::endl;
+    //    auto end = std::chrono::high_resolution_clock::now();
+    //    auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    //    std::cout << "Elapsed time QuLabel.update: " << duration.count() << " microseconds" << std::endl;
 
     emit newData(da);
 
