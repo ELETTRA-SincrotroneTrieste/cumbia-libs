@@ -231,8 +231,8 @@ bool QuLabel::ctxSwap(CumbiaPool *c_p, const CuControlsFactoryPool &fpool) {
 
 void QuLabel::onUpdate(const CuData &da)
 {
-    printf("QuLabel.onUpdate in>> \n");
-    auto start = std::chrono::high_resolution_clock::now();
+//    printf("QuLabel.onUpdate in>> \n");
+//    auto start = std::chrono::high_resolution_clock::now();
     const bool& ok = !da[CuDType::Err].toBool();
     const char *mode = da[CuDType::Mode].c_str();
     bool event = mode != nullptr && strcmp(mode, "E") == 0;
@@ -303,9 +303,9 @@ void QuLabel::onUpdate(const CuData &da)
             setBackground(background); // checks if background is valid
         }
     }
-    auto end = std::chrono::high_resolution_clock::now();
-    auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::cout << "Elapsed time QuLabel.update: " << duration.count() << " microseconds" << std::endl;
+//    auto end = std::chrono::high_resolution_clock::now();
+//    auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+//    std::cout << "Elapsed time QuLabel.update: " << duration.count() << " microseconds" << std::endl;
 
     emit newData(da);
 

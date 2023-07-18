@@ -339,10 +339,7 @@ void CuPollingActivity::init()
  *
  * @implements CuActivity::execute
  */
-void CuPollingActivity::execute()
-{
-    pretty_pri(" >>>>>>>>>>>>>>>>>>>>>>>");
-
+void CuPollingActivity::execute() {
     assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
     d->updcnt++;
@@ -389,8 +386,6 @@ void CuPollingActivity::execute()
             res_offset++;
         } // end cmds
         if(dev && d->v_attn.size() > 0) {
-            pretty_pri(" >>>>>>>>>>>>>>>>>>>>>>>");
-
             success = tangoworld.read_atts(d->tdev->getDevice(), d->v_attn, d->v_attd, results, d->data_updpo);
             if(!success)
                 d->consecutiveErrCnt++;
@@ -420,12 +415,8 @@ void CuPollingActivity::execute()
         dev_err.putTimestamp();
         results.push_back(dev_err);
     }
-    pretty_pri("before publish results\n");
     if(results.size() > 0)
         publishResult(results);
-
-    pretty_pri("after publish results, leaving <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< out");
-
 }
 
 /*! \brief the implementation of the CuActivity::onExit hook

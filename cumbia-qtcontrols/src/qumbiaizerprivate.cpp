@@ -13,6 +13,7 @@ QumbiaizerPrivate::QumbiaizerPrivate()
     m_executeOnConnection = false;
     toolTipsDisabled = false;
     error = false;
+    msg[0] = '\0';
 }
 
 QumbiaizerPrivate::~QumbiaizerPrivate()
@@ -83,13 +84,11 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
                 m_DeleteDataPtr(in_type, dataptr);
         }
     }
-    else if(has_min && object->metaObject()->indexOfProperty("minimum") > -1)
-    {
+    else if(has_min && object->metaObject()->indexOfProperty("minimum") > -1) {
         da[CuDType::Min].to<double>(min);  // da["min"]
         object->setProperty("minimum", min);
     }
 
- ///   printf("cp->minIsSet %d autoconf contains min %d \n", cp->minIsSet(), autoConfSlotsHash.contains(q->Min));
     /* maximum */
     if(has_max && autoConfSlotsHash.contains(q->Max))
     {

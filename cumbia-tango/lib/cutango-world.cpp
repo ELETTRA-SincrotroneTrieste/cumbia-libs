@@ -766,7 +766,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
             Tango::DeviceAttribute *p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
             if(updpo & CuDataUpdatePolicy::PollUpdateAlways) { // check flags
-                pretty_pri("push back va[i]");
+//                pretty_pri("push back va[i]");
                 reslist.push_back(va[i]);
                 extractData(p_da,  reslist[offset]);
                 reslist[offset][CuDType::Err] = d->error;
