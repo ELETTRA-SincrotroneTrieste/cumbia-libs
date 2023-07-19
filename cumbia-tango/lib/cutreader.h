@@ -62,7 +62,7 @@ public:
     void onResult(const std::vector<CuData> &datalist);
 
     CuData getToken() const;
-    TSource getSource() const;
+    const TSource& getSource() const;
     CuTangoActionI::Type getType() const;
 
     void sendData(const CuData& data);

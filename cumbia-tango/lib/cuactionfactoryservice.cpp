@@ -32,7 +32,7 @@ CuActionFactoryService::~CuActionFactoryService()
  * @see findAction
  * @see unregisterAction
  */
-CuTangoActionI* CuActionFactoryService::registerAction(const std::string& src,
+CuTangoActionI* CuActionFactoryService::registerAction(const TSource&  src,
                                                        const CuTangoActionFactoryI& f,
                                                        CumbiaTango* ct,
                                                        bool *isnew) {
@@ -68,7 +68,7 @@ size_t CuActionFactoryService::count() const {
  * The action is <strong>not deleted</strong>.
  * CuTReader and CuTWriter auto delete themselves
  */
-void CuActionFactoryService::unregisterAction(const string &src, CuTangoActionI::Type at) {
+void CuActionFactoryService::unregisterAction(const TSource &src, CuTangoActionI::Type at) {
     return impl->unregisterAction(src, at);
 }
 

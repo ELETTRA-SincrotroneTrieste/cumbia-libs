@@ -122,7 +122,7 @@ CuData CuTReader::getToken() const {
  *
  * @return a TSource object that describes the Tango source
  */
-TSource CuTReader::getSource() const {
+const TSource &CuTReader::getSource() const {
     return d->tsrc;
 }
 
@@ -131,7 +131,7 @@ CuTangoActionI::Type CuTReader::getType() const {
 }
 
 void CuTReader::m_destroy_self() {
-    d->cumbia_t->removeAction(getSource().getName(), getType());
+    d->cumbia_t->removeAction(d->tsrc.getName(), CuTangoActionI::Reader);
     CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->get(CuServices::ActivityManager));
     am->disconnect(this);
     delete this;

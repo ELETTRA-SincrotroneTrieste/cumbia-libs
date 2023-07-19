@@ -48,7 +48,7 @@ CuTangoReaderFactory::~CuTangoReaderFactory() { }
  *
  * @see CuTangoOptBuilder
  */
-CuTangoActionI *CuTangoReaderFactory::create(const std::string &s, CumbiaTango *ct) const {
+CuTangoActionI *CuTangoReaderFactory::create(const TSource& s, CumbiaTango *ct) const {
     CuTReader* reader = new CuTReader(s, ct, options, tag);
     return reader;
 }
@@ -75,7 +75,7 @@ void CuTangoWriterFactory::setConfiguration(const CuData &configuration) {
     m_configuration = configuration;
 }
 
-CuTangoActionI *CuTangoWriterFactory::create(const std::string &s, CumbiaTango *ct) const {
+CuTangoActionI *CuTangoWriterFactory::create(const TSource& s, CumbiaTango *ct) const {
     CuTWriter *w = new CuTWriter(s, ct, m_configuration, options, m_tag);
     w->setWriteValue(m_write_val);
     return w;
@@ -108,7 +108,7 @@ CuData  CuTConfFactoryBase::tag() const {
 }
 
 // Configuration: Reader
-CuTangoActionI *CuTReaderConfFactory::create(const std::string &s, CumbiaTango *ct) const {
+CuTangoActionI *CuTReaderConfFactory::create(const TSource &s, CumbiaTango *ct) const {
     return new CuTConfiguration(s, ct, CuTangoActionI::ReaderConfig, opts, dtag, nullptr);
 }
 
@@ -117,7 +117,7 @@ CuTangoActionI::Type CuTReaderConfFactory::getType() const {
 }
 
 // Configuration: Writer
-CuTangoActionI *CuTWriterConfFactory::create(const string &s, CumbiaTango *ct) const {
+CuTangoActionI *CuTWriterConfFactory::create(const TSource& s, CumbiaTango *ct) const {
     CuTConfiguration *w = new CuTConfiguration(s, ct, CuTangoActionI::WriterConfig, opts, dtag, nullptr);
     if(opts.containsKey("fetch_props"))
         w->setDesiredAttributeProperties(opts["fetch_props"].toStringVector());
@@ -141,7 +141,7 @@ CuTaDbFactory::~CuTaDbFactory() {
     delete d;
 }
 
-CuTangoActionI *CuTaDbFactory::create(const string &s, CumbiaTango *ct) const {
+CuTangoActionI *CuTaDbFactory::create(const TSource &s, CumbiaTango *ct) const {
     return new CuTaDb(s, ct, d->o, d->tag);
 }
 

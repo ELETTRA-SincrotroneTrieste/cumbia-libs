@@ -169,7 +169,7 @@ public:
 
     void addAction(const TSource &source, CuDataListener *l, const CuTangoActionFactoryI &f);
     void unlinkListener(const std::string& source, CuTangoActionI::Type t, CuDataListener *l);
-    void removeAction(const std::string& source, CuTangoActionI::Type t);
+    void removeAction(const TSource &source, CuTangoActionI::Type t);
     CuTangoActionI *findAction(const std::string& source, CuTangoActionI::Type t) const;
 
     CuThreadFactoryImplI* getThreadFactoryImpl() const;

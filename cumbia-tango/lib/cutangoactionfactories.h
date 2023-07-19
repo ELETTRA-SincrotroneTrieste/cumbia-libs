@@ -7,6 +7,7 @@
 #include <cutreader.h>
 
 class CumbiaTango;
+class TSource;
 class CuDeviceFactoryService;
 class CuTConfigActivityExecutor_I;
 
@@ -19,7 +20,7 @@ public:
 
     // CuTangoActionFactoryI interface
 public:
-    CuTangoActionI *create(const std::string &s, CumbiaTango *ct) const;
+    CuTangoActionI *create(const TSource &s, CumbiaTango *ct) const;
     CuTangoActionI::Type getType() const;
     bool isShareable() const;
 
@@ -47,7 +48,7 @@ public:
 
     // CuTangoActionFactoryI interface
 public:
-    CuTangoActionI *create(const std::string &s, CumbiaTango *ct) const;
+    CuTangoActionI *create(const TSource &s, CumbiaTango *ct) const;
     CuTangoActionI::Type getType() const;
     bool isShareable() const;
 private:
@@ -72,14 +73,14 @@ private:
 class CuTReaderConfFactory : public CuTConfFactoryBase
 {
 public:
-    CuTangoActionI *create(const std::string &s, CumbiaTango *ct) const;
+    CuTangoActionI *create(const TSource& s, CumbiaTango *ct) const;
     CuTangoActionI::Type getType() const;
 };
 
 class CuTWriterConfFactory : public CuTConfFactoryBase
 {
 public:
-    CuTangoActionI *create(const std::string &s, CumbiaTango *ct) const;
+    CuTangoActionI *create(const TSource &s, CumbiaTango *ct) const;
     CuTangoActionI::Type getType() const;
 };
 
@@ -91,7 +92,7 @@ public:
     CuTaDbFactory();
     ~CuTaDbFactory();
 
-    CuTangoActionI *create(const std::string &s, CumbiaTango *ct) const;
+    CuTangoActionI *create(const TSource& s, CumbiaTango *ct) const;
     CuTangoActionI::Type getType() const;
     void setOptions(const CuData &o);
     void setTag(const CuData& t);

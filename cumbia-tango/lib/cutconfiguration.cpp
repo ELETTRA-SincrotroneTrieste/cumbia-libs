@@ -97,7 +97,7 @@ CuData CuTConfiguration::getToken() const {
     return da;
 }
 
-TSource CuTConfiguration::getSource() const {
+const TSource &CuTConfiguration::getSource() const {
     return d->tsrc;
 }
 

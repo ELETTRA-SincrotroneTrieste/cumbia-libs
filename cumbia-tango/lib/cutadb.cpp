@@ -78,8 +78,7 @@ CuData CuTaDb::getToken() const
     return da;
 }
 
-TSource CuTaDb::getSource() const
-{
+const TSource &CuTaDb::getSource() const {
     return d->tsrc;
 }
 

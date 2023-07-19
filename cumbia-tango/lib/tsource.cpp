@@ -3,89 +3,48 @@
 #include <algorithm>
 #include <regex>
 
-/*
-    std::regex dev_re(TG_DEV_RE);
-    std::regex host_re(TGHOST_RE);
-    std::regex freeprop_re("#(.*)#");  // #(.*)#
-    std::regex argopts_re("\\(\\[\\s*(.*)\\s*\\]\\s*.*\\)");  // \(\[\s*(.*)\s*\]\s*.*\)
-    std::regex args_re("(\\(.*\\))");
-    std::regex separ_re("sep\\((.*)\\)");
-*/
-
-std::regex& regexps::get_dev_re() {
-    if(!dre) {
-        dre = true;
-        dev_re = std::regex(TG_DEV_RE);
-    }
-    return dev_re;
-}
-
-std::regex& regexps::get_host_re() {
-    if(!hre) {
-        hre = true;
-        host_re = std::regex(TGHOST_RE);
-    }
-    return host_re;
-}
-
-regex &regexps::get_freeprop_re() {
-    if(!fre) {
-        fre = true;
-        freeprop_re = std::regex("#(.*)#");
-    }
-    return freeprop_re;
-}
-
-regex &regexps::get_args_re() {
-    if(!are) {
-        are = true;   // \(\[\s*(.*)\s*\]\s*.*\)
-        args_re =std::regex("\\(\\[\\s*(.*)\\s*\\]\\s*.*\\)");
-    }
-    return args_re;
-}
-
-regex &regexps::get_separ_re()
-{
-    if(!sre) {
-        sre = true;
-        separ_re = std::regex("sep\\((.*)\\)");
-    }
-    return separ_re;
-}
-
-static regexps tsrc_regexps;
-
 class TSourcePrivate {
 public:
+    TSourcePrivate(const std::string& s) : m_s(s) {}
     string m_s;
     TSource::Type m_ty;
 };
 
 TSource::TSource() {
-    d = new TSourcePrivate;
+    pretty_pri("empty constructor");
+    d = new TSourcePrivate(std::string());
     d->m_ty = SrcInvalid;
 }
 
 TSource::TSource(const string s)
 {
-    d = new TSourcePrivate;
-    d->m_s = s;
+    pretty_pri("string constructor %s", s.c_str());
+    d = new TSourcePrivate(s);
     d->m_ty = m_get_ty(s);
 }
 
 TSource::TSource(const TSource &other) {
-    d = new TSourcePrivate;
-    this->d->m_s = other.d->m_s;
+    pretty_pri("copy constructor from other %s", other.d->m_s.c_str());
+    d = new TSourcePrivate(other.d->m_s);
     this->d->m_ty = other.d->m_ty;
 }
 
+TSource::TSource(TSource &&other) {
+    /* no new d here! */
+    pretty_pri("\e[1;32mMOVE\e[0m");
+    d = other.d;
+    other.d = nullptr; /* don't delete */
+}
+
 TSource::~TSource() {
-    delete d;
+    if(d)
+        delete d;
 }
 
 TSource::Type TSource::m_get_ty(const std::string& src) const {
     // host regexp
-
+    if(d->m_ty != SrcInvalid)
+        return d->m_ty; // there is no way to change m_s
     std::string s = rem_tghostproto(src);
     s = rem_args(s); // remove arguments between from s
     const std::vector<string> props = getPropNames();
@@ -148,7 +107,7 @@ string TSource::getDeviceName() const {
         else {
             // need regex
             std::smatch sm;
-            if(std::regex_search(d->m_s, sm, tsrc_regexps.get_dev_re()) && sm.size() == 2)
+            if(std::regex_search(d->m_s, sm, regexps::get_dev_re()) && sm.size() == 2)
                 dev = sm[1];
         }
     }
@@ -247,7 +206,7 @@ std::string TSource::getTangoHost() const {
     std::smatch sm;
     int pos = d->m_s.find(':'); // use regex only if :N is found (: plus digit, like tom:20000)
     if(pos != std::string::npos && pos > 0 && d->m_s.length() > pos + 1 && std::isdigit(d->m_s[pos+1]) &&
-        std::regex_search(d->m_s, sm, tsrc_regexps.get_host_re()) && sm.size() > 1)
+        std::regex_search(d->m_s, sm, regexps::get_host_re()) && sm.size() > 1)
         return sm[1];
     return std::string();
 }
@@ -286,7 +245,7 @@ std::string TSource::getFreePropNam() const {
  */
 string TSource::getFreePropObj() const {
     std::smatch sm; // std::regex_search only if d->ms starts with '#'
-    if(d->m_s.length() > 0 && d->m_s.find('#') != std::string::npos && std::regex_search(d->m_s, sm, tsrc_regexps.get_freeprop_re()) && sm.size() > 1)
+    if(d->m_s.length() > 0 && d->m_s.find('#') != std::string::npos && std::regex_search(d->m_s, sm, regexps::get_freeprop_re()) && sm.size() > 1)
         return sm[1];
     return std::string();
 }
@@ -334,7 +293,7 @@ std::string TSource::getArgOptions(size_t *pos_start, size_t *pos_end) const {
     // example a/b/c/d([sep(;)]arg1;arg2) sep: args separator
     const std::string &s = d->m_s;
     std::smatch sm;
-    bool found = /*s.find('(') != std::string::npos &&*/ std::regex_search(s, sm, tsrc_regexps.get_args_re());
+    bool found = /*s.find('(') != std::string::npos &&*/ std::regex_search(s, sm, regexps::get_args_re());
     if(found) {
         *pos_start = sm.position(1);
         *pos_end = *pos_start + sm.length(1);
@@ -396,9 +355,9 @@ string TSource::remove_tghost(const string &src) const {
     std::string s(src);
     int pos = src.find(':'); // use regex only if host:PORT pattern is found
     if(pos != std::string::npos && pos > 0 && src.length() > pos + 1 && std::isdigit(src[pos+1])) {
-        s = std::regex_replace(src, tsrc_regexps.get_host_re(), "");
-        if(s.length() > 0 && s[s.length() - 1] == '/')
-            s.pop_back();
+        s = std::regex_replace(src, regexps::get_host_re(), "");
+        if(s.length() > 0 && s[0] == '/')
+            s.erase();
     }
     return s;
 }
@@ -412,7 +371,7 @@ string TSource::rem_tghostproto(const string &src) const
 
 string TSource::rem_args(const string &src) const {
     // capture everything within (\(.*\)), not minimal. check for '(' before using regex
-    return src.find('(') != std::string::npos ? std::regex_replace(src, tsrc_regexps.get_args_re(), "") : src;
+    return src.find('(') != std::string::npos ? std::regex_replace(src, regexps::get_args_re(), "") : src;
 }
 
 const char *TSource::getTypeName(Type t) const {
@@ -426,6 +385,6 @@ std::string TSource::m_get_args_delim(const string &arg_options) const {
     //  sep\((.*)\)
     // example: a/b/c-D([sep(:)]arg1:arg2:arg3)
     std::smatch sm;
-    return arg_options.find("sep") != std::string::npos && std::regex_search(arg_options, sm, tsrc_regexps.get_separ_re()) && sm.size() == 2 ? sm[1] : std::string(",");
+    return arg_options.find("sep") != std::string::npos && std::regex_search(arg_options, sm, regexps::get_separ_re()) && sm.size() == 2 ? sm[1] : std::string(",");
 }
 

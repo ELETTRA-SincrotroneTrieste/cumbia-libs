@@ -90,7 +90,7 @@ void CuPoller::unregisterAction(CuTangoActionI *a) {
     const std::string& s = a->getSource().getName();
     if(d->actions_map.find(s) != d->actions_map.end()) {
         d->actions_map.erase(s);
-        TSource tsrc = a->getSource();
+        const TSource &tsrc = a->getSource();
         CuData at(CuDType::Device, tsrc.getDeviceName()); /* activity token */
         at.set(CuDType::Activity, "poller").set(CuDType::Period, d->period);  // set("activity", "poller")
         CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->

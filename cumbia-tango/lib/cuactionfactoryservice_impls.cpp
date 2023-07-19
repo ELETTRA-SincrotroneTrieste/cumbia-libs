@@ -36,11 +36,11 @@ CuActionFactoryServiceImpl_Base::~CuActionFactoryServiceImpl_Base() {
     delete d;
 }
 
-CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const std::string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct, bool *isnew) {
+CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const TSource& src, const CuTangoActionFactoryI &f, CumbiaTango *ct, bool *isnew) {
 
     assert(pthread_self() == d->creation_thread);
     CuTangoActionI* action = nullptr;
-    auto range = d->actions.equal_range(src);
+    auto range = d->actions.equal_range(src.getName());
     for(auto it = range.first; action == nullptr && it != range.second; ++it) {
         if(it->second->getType() == f.getType()) {
             action = it->second;
@@ -48,8 +48,9 @@ CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const std::strin
     }
     *isnew = (action == nullptr);
     if(*isnew) {
+        std::string s = src.getName();
         action = f.create(src, ct);
-        d->actions.insert(std::pair<std::string, CuTangoActionI *>{src, action});
+        d->actions.insert(std::pair<std::string, CuTangoActionI *>{s, action});
     }
     return action;
 }
@@ -69,9 +70,9 @@ size_t CuActionFactoryServiceImpl_Base::count() const {
     return d->actions.size();
 }
 
-void CuActionFactoryServiceImpl_Base::unregisterAction(const string &src, CuTangoActionI::Type at) {
+void CuActionFactoryServiceImpl_Base::unregisterAction(const TSource &src, CuTangoActionI::Type at) {
     assert(pthread_self() == d->creation_thread);
-    auto range = d->actions.equal_range(src);
+    auto range = d->actions.equal_range(src.getName());
     auto it = range.first;
     while(it != range.second) {
         if(it->second->getType() == at) {

@@ -132,7 +132,7 @@ CuData CuTWriter::getToken() const
     return da;
 }
 
-TSource CuTWriter::getSource() const {
+const TSource &CuTWriter::getSource() const {
     return d->tsrc;
 }
 

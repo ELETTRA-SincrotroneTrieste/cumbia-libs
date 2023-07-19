@@ -5,64 +5,6 @@
 #include <algorithm>
 #include <regex>
 
-// tghost:PORT regex ([A-Z-a-z0-9\-_\.\+~]+:\d+)
-#define TGHOST_RE "([A-Z-a-z0-9\\-_\\.\\+~]+:\\d+)"
-
-// tango device name regex
-// used only if the source is not a command and the number of '/' is not 3
-// otherwise string substr + find is enough
-// ((?:tango://){0,1}(?:[A-Z-a-z0-9\-_\.\+~]+:\d*/){0,1}[A-Z-a-z0-9\-_\.\+~]+/[A-Z-a-z0-9\-_\.\+~]+/[A-Z-a-z0-9\-_\.\+~]+)
-#define TG_DEV_RE "((?:tango://){0,1}(?:[A-Z-a-z0-9\\-_\\.\\+~]+:\\d*/){0,1}[A-Z-a-z0-9\\-_\\.\\+~]+/[A-Z-a-z0-9\\-_\\.\\+~]+/[A-Z-a-z0-9\\-_\\.\\+~]+)"
-
-
-std::regex& regexps::get_dev_re() {
-    if(!dre) {
-        dre = true;
-        printf("regexps::get_dev_re: compiling dev regex\n");
-        dev_re = std::regex(TG_DEV_RE);
-    }
-    return dev_re;
-}
-
-std::regex& regexps::get_host_re() {
-    if(!hre) {
-        hre = true;
-        printf("regexps::get_host_re: compiling host regex\n");
-        host_re = std::regex(TGHOST_RE);
-    }
-    return host_re;
-}
-
-regex &regexps::get_freeprop_re() {
-    if(!fre) {
-        fre = true;
-        printf("regexps::get_freeprop_re: compiling free prop regex\n");
-        freeprop_re = std::regex("#(.*)#");
-    }
-    return freeprop_re;
-}
-
-regex &regexps::get_args_re() {
-    if(!are) {
-        are = true;   // \(\[\s*(.*)\s*\]\s*.*\)
-        printf("regexps::get_args_re: compiling args regex\n");
-        args_re = std::regex("\\(\\[\\s*(.*)\\s*\\]\\s*.*\\)");
-    }
-    return args_re;
-}
-
-regex &regexps::get_separ_re()
-{
-    if(!sre) {
-        sre = true;
-        printf("regexps::get_separ_re: compiling separator regex\n");
-        separ_re = std::regex("sep\\((.*)\\)");
-    }
-    return separ_re;
-}
-
-static regexps _regexps;
-
 CuHttpTangoSrc::CuHttpTangoSrc() {
     m_ty = SrcInvalid;
 }
@@ -82,7 +24,7 @@ CuHttpTangoSrc::CuHttpTangoSrc(const CuHttpTangoSrc &other)
 CuHttpTangoSrc::Type CuHttpTangoSrc::m_get_ty(const std::string& src) const {
     // host regexp
     // remove host and http://
-    std::string s = rem_httpproto(m_s);
+    std::string s = rem_httpproto(src);
     s = rem_tghost(s);
     s = rem_args(s); // remove arguments between '()'
     int sep = std::count(s.begin(), s.end(), '/');
@@ -243,7 +185,7 @@ std::string CuHttpTangoSrc::getName() const {
 
 std::string CuHttpTangoSrc::getTangoHost() const {
     std::smatch sm;
-    if(std::regex_search(m_s, sm, _regexps.get_host_re()) && sm.size() > 1)
+    if(std::regex_search(m_s, sm, http_tg_regexps::get_host_re()) && sm.size() > 1)
         return sm[1];
     return std::string();
 }
@@ -282,7 +224,7 @@ std::string CuHttpTangoSrc::getFreePropNam() const {
  */
 string CuHttpTangoSrc::getFreePropObj() const {
     std::smatch sm;
-    if(std::regex_search(m_s, sm, _regexps.get_freeprop_re()) && sm.size() > 1)
+    if(std::regex_search(m_s, sm, http_tg_regexps::get_freeprop_re()) && sm.size() > 1)
         return sm[1];
     return std::string();
 }
@@ -321,7 +263,7 @@ std::string CuHttpTangoSrc::getArgOptions(size_t *pos_start, size_t *pos_end) co
     // example a/b/c/d([sep(;)]arg1;arg2) sep: args separator
     const std::string &s = m_s;
     std::smatch sm;
-    bool found = std::regex_search(s, sm, _regexps.get_args_re());
+    bool found = std::regex_search(s, sm, http_tg_regexps::get_args_re());
     if(found) {
         *pos_start = sm.position(1);
         *pos_end = *pos_start + sm.length(1);
@@ -383,13 +325,13 @@ string CuHttpTangoSrc::rem_httpproto(const string &src) const {
 }
 
 string CuHttpTangoSrc::rem_tghost(const string &src) const {
-    std::string s = std::regex_replace(src, _regexps.get_host_re(), "");
+    std::string s = std::regex_replace(src, http_tg_regexps::get_host_re(), "");
     return s;
 }
 
 std::string CuHttpTangoSrc::rem_args(const std::string& src) const {
     // capture everything within (\(.*\)), not minimal
-    return std::regex_replace(src, _regexps.get_args_re(), "");
+    return std::regex_replace(src, http_tg_regexps::get_args_re(), "");
 }
 
 const char *CuHttpTangoSrc::getTypeName(Type t) const {
@@ -404,5 +346,5 @@ std::string CuHttpTangoSrc::m_get_args_delim(const string &arg_options) const
     //  sep\((.*)\)
     // example: a/b/c-D([sep(:)]arg1:arg2:arg3)
     std::smatch sm;
-    return std::regex_search(arg_options, sm, _regexps.get_separ_re()) && sm.size() == 2 ? sm[1] : std::string(",");
+    return std::regex_search(arg_options, sm, http_tg_regexps::get_separ_re()) && sm.size() == 2 ? sm[1] : std::string(",");
 }

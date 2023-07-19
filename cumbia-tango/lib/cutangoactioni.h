@@ -43,7 +43,7 @@ public:
      *
      * @return TSource, an object storing information on the Tango source
      */
-    virtual TSource getSource() const  = 0;
+    virtual const TSource& getSource() const  = 0;
 
     /*! \brief returns the type of CuTangoActionI implemented
      *
