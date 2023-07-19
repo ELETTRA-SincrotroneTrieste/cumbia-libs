@@ -45,6 +45,7 @@ regex &regexps::get_args_re() {
         are = true; // \((?:\[\s*(.*)\s*\]\s*){0,1}.*\)  [separator] is optional
         printf("regexps::get_args_re: compiling args regex\n");
         args_re =std::regex("\\((?:\\[\\s*(.*)\\s*\\]\\s*){0,1}.*\\)");
+        args_pattern = "\((?:\[\\s*(.*)\\s*\\]\\s*){0,1}.*\\)";
     }
     printf("returning args_re pattern '%s'\n", "\\((?:\\[\\s*(.*)\\s*\\]\\s*){0,1}.*\\)");
     return args_re;
@@ -422,7 +423,7 @@ string TSource::rem_tghostproto(const string &src) const
 string TSource::rem_args(const string &src) const {
     // capture everything within (\(.*\)), not minimal. check for '(' before using regex
     if(src.find('(') != std::string::npos) {
-        printf("TSource rem_args removeing args from '%s' args regex calling......\n", src.c_str());
+        printf("TSource rem_args removeing args from '%s' args regex calling with pattern '%s'......\n", src.c_str(), tsrc_regexps.args_pattern.c_str());
         return std::regex_replace(src, tsrc_regexps.get_args_re(), "");
     }
     return src;

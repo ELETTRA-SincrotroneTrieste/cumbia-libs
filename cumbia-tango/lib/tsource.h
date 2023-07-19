@@ -33,6 +33,7 @@ public:
 
     // flags true if corresponding regex has been initialized
     bool dre, hre, fre, are, sre;
+    std::string args_pattern;
 
 private:
     std::regex dev_re;
@@ -41,6 +42,7 @@ private:
     std::regex argopts_re;  // \(\[\s*(.*)\s*\]\s*.*\)
     std::regex args_re;
     std::regex separ_re;
+
 };
 
 struct arg_options {
