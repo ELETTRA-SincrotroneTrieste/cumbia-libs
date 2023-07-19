@@ -8,27 +8,37 @@
 
 using namespace std;
 
-class regexps {
+// tghost:PORT regex ([A-Z-a-z0-9\-_\.\+~]+:\d+)
+#define TGHOST_RE "([A-Z-a-z0-9\\-_\\.\\+~]+:\\d+)"
+
+// tango device name regex
+// used only if the source is not a command and the number of '/' is not 3
+// otherwise string substr + find is enough
+// ((?:tango://){0,1}(?:[A-Z-a-z0-9\-_\.\+~]+:\d*/){0,1}[A-Z-a-z0-9\-_\.\+~]+/[A-Z-a-z0-9\-_\.\+~]+/[A-Z-a-z0-9\-_\.\+~]+)
+#define TG_DEV_RE "((?:tango://){0,1}(?:[A-Z-a-z0-9\\-_\\.\\+~]+:\\d*/){0,1}[A-Z-a-z0-9\\-_\\.\\+~]+/[A-Z-a-z0-9\\-_\\.\\+~]+/[A-Z-a-z0-9\\-_\\.\\+~]+)"
+
+class http_tg_regexps {
 public:
-    regexps() : dre(false), hre(false), fre(false),
-        are(false), sre(false) {};
-
-    std::regex& get_dev_re();
-    std::regex& get_host_re();
-    std::regex& get_freeprop_re();
-    std::regex& get_args_re();
-    std::regex& get_separ_re();
-
-    // flags true if corresponding regex has been initialized
-    bool dre, hre, fre, are, sre;
-
-private:
-    std::regex dev_re;
-    std::regex host_re;
-    std::regex freeprop_re;  // #(.*)#
-    std::regex argopts_re;  // \(\[\s*(.*)\s*\]\s*.*\)
-    std::regex args_re;
-    std::regex separ_re;
+    static std::regex& get_dev_re() {
+        static std::regex dev_re(TG_DEV_RE);
+        return dev_re;
+    }
+    static std::regex& get_host_re() {
+        static std::regex host_re(TGHOST_RE);
+        return host_re;
+    }
+    static std::regex& get_freeprop_re() {
+        static std::regex freeprop_re = std::regex("#(.*)#");;
+        return freeprop_re;
+    }
+    static std::regex& get_args_re() {
+        static std::regex args_re =std::regex("\\((?:\\[\\s*(.*)\\s*\\]\\s*){0,1}.*\\)");
+        return args_re;
+    }
+    static std::regex& get_separ_re() {
+        static std::regex separ_re = std::regex("sep\\((.*)\\)");
+        return separ_re;
+    }
 };
 
 class CuHttpTangoSrc
