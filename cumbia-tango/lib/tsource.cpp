@@ -402,8 +402,8 @@ string TSource::remove_tghost(const string &src) const {
     int pos = src.find(':'); // use regex only if host:PORT pattern is found
     if(pos != std::string::npos && pos > 0 && src.length() > pos + 1 && std::isdigit(src[pos+1])) {
         s = std::regex_replace(src, tsrc_regexps.get_host_re(), "");
-	if(s.length() > 0 && s[s.length() - 1] == '/')
-            s.pop_back();
+    if(s.length() > 0 && s[0] == '/')
+            s.erase(0, 1);
     }
     return s;
 }
