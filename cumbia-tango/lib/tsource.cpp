@@ -423,8 +423,9 @@ string TSource::rem_tghostproto(const string &src) const
 string TSource::rem_args(const string &src) const {
     // capture everything within (\(.*\)), not minimal. check for '(' before using regex
     if(src.find('(') != std::string::npos) {
+    const std::regex &re = tsrc_regexps.get_args_re();
         printf("TSource rem_args removeing args from '%s' args regex calling with pattern '%s'......\n", src.c_str(), tsrc_regexps.args_pattern.c_str());
-        return std::regex_replace(src, tsrc_regexps.get_args_re(), "");
+        return std::regex_replace(src, re, "");
     }
     return src;
 }
