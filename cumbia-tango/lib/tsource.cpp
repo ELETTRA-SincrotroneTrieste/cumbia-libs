@@ -137,6 +137,8 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
         t = SrcAttr;
     else if(sep == 2 && hasa) // te/de/1->GetV
         t = SrcCmd;
+    printf("TSource.m_get_ty type detected %d source with no args '%s'\n",
+           t, s.c_str());
     return t;
 }
 
