@@ -22,27 +22,26 @@ class TSourcePrivate;
 
 class regexps {
 public:
-    regexps() : dre(false), hre(false), fre(false),
-        are(false), sre(false) {};
-
-    std::regex& get_dev_re();
-    std::regex& get_host_re();
-    std::regex& get_freeprop_re();
-    std::regex& get_args_re();
-    std::regex& get_separ_re();
-
-    // flags true if corresponding regex has been initialized
-    bool dre, hre, fre, are, sre;
-    std::string args_pattern;
-
-private:
-    std::regex dev_re;
-    std::regex host_re;
-    std::regex freeprop_re;  // #(.*)#
-    std::regex argopts_re;  // \(\[\s*(.*)\s*\]\s*.*\)
-    std::regex args_re;
-    std::regex separ_re;
-
+    static std::regex& get_dev_re() {
+        static std::regex dev_re(TG_DEV_RE);
+        return dev_re;
+    }
+    static std::regex& get_host_re() {
+       static std::regex host_re(TGHOST_RE);
+       return host_re;
+    }
+    static std::regex& get_freeprop_re() {
+       static std::regex freeprop_re = std::regex("#(.*)#");;
+       return freeprop_re;
+    }
+    static std::regex& get_args_re() {
+       static std::regex args_re =std::regex("\\((?:\\[\\s*(.*)\\s*\\]\\s*){0,1}.*\\)");
+       return args_re;
+    }
+    static std::regex& get_separ_re() {
+       static std::regex separ_re = std::regex("sep\\((.*)\\)");
+       return separ_re;
+    }
 };
 
 struct arg_options {
