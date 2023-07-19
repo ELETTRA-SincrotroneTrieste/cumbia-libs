@@ -43,8 +43,6 @@ regex &regexps::get_args_re() {
     if(!are) {
         are = true; // \((?:\[\s*(.*)\s*\]\s*){0,1}.*\)  [separator] is optional
         printf("regexps::get_args_re: compiling args regex\n");
-
-
         args_re =std::regex("\\((?:\\[\\s*(.*)\\s*\\]\\s*){0,1}.*\\)");
     }
     printf("returning args_re pattern '%s'\n", "\\((?:\\[\\s*(.*)\\s*\\]\\s*){0,1}.*\\)");
@@ -422,9 +420,11 @@ string TSource::rem_tghostproto(const string &src) const
 
 string TSource::rem_args(const string &src) const {
     // capture everything within (\(.*\)), not minimal. check for '(' before using regex
-    if(src.find('(') != std::string::npos)
+    if(src.find('(') != std::string::npos) {
         printf("TSource rem_args removeing args from '%s'\n", src.c_str());
-    return src.find('(') != std::string::npos ? std::regex_replace(src, tsrc_regexps.get_args_re(), "") : src;
+        return std::regex_replace(src, tsrc_regexps.get_args_re(), "");
+    }
+    return src;
 }
 
 const char *TSource::getTypeName(Type t) const {
