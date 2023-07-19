@@ -43,8 +43,11 @@ regex &regexps::get_args_re() {
     if(!are) {
         are = true; // \((?:\[\s*(.*)\s*\]\s*){0,1}.*\)  [separator] is optional
         printf("regexps::get_args_re: compiling args regex\n");
+
+
         args_re =std::regex("\\((?:\\[\\s*(.*)\\s*\\]\\s*){0,1}.*\\)");
     }
+    printf("returning args_re pattern '%s'\n", "\\((?:\\[\\s*(.*)\\s*\\]\\s*){0,1}.*\\)");
     return args_re;
 }
 
