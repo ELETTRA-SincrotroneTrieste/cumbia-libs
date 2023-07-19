@@ -40,6 +40,7 @@ regex &regexps::get_freeprop_re() {
 }
 
 regex &regexps::get_args_re() {
+    pretty_pri("are is %s", are ? "TRUE" : "FALSE");
     if(!are) {
         are = true; // \((?:\[\s*(.*)\s*\]\s*){0,1}.*\)  [separator] is optional
         printf("regexps::get_args_re: compiling args regex\n");
