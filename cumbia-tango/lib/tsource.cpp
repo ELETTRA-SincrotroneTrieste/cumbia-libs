@@ -41,9 +41,9 @@ regex &regexps::get_freeprop_re() {
 
 regex &regexps::get_args_re() {
     if(!are) {
-        are = true;   // \(\[\s*(.*)\s*\]\s*.*\)
+        are = true; // \((?:\[\s*(.*)\s*\]\s*){0,1}.*\)  [separator] is optional
         printf("regexps::get_args_re: compiling args regex\n");
-        args_re =std::regex("\\(\\[\\s*(.*)\\s*\\]\\s*.*\\)");
+        args_re =std::regex("\\((?:\\[\\s*(.*)\\s*\\]\\s*){0,1}.*\\)");
     }
     return args_re;
 }
