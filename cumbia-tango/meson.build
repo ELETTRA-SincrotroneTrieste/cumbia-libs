@@ -111,6 +111,16 @@ tgdep = dependency('tango', method: 'pkg-config')
 #
 tginc = tgdep.get_pkgconfig_variable('includedir')
 
+libdir='lib'
+
+message('** tg include dirs before ' + tginc)
+
+if not tginc.endswith('tango')
+    tginc += '/tango'
+endif
+
+message('** tg include dirs ' + tginc)
+
 # add tginc to include dirs
 includedirs = [ include_directories('lib'), include_directories(tginc) ]
 
