@@ -182,6 +182,7 @@ void CuHttpBundledSrcReq::m_on_buf_complete() {
         if(jsd.isNull())
             perr("CuHttpBundledSrcReq.m_on_buf_complete: invalid json: %s\n", qstoc(json));
         d->listener->onSrcBundleReplyReady(jsd.toJson());
+        pretty_pri("%s", json.data());
     }
 }
 

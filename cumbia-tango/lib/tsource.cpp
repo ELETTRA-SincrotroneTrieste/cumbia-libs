@@ -91,6 +91,7 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
         t = SrcAttr;
     else if(sep == 2 && hasa) // te/de/1->GetV
         t = SrcCmd;
+    pretty_pri("got type %d from '%s'", t, s.c_str());
     return t;
 }
 
@@ -357,7 +358,7 @@ string TSource::remove_tghost(const string &src) const {
     if(pos != std::string::npos && pos > 0 && src.length() > pos + 1 && std::isdigit(src[pos+1])) {
         s = std::regex_replace(src, regexps::get_host_re(), "");
         if(s.length() > 0 && s[0] == '/')
-            s.erase();
+            s.erase(0, 1);
     }
     return s;
 }

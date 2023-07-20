@@ -1,8 +1,6 @@
 #include "cutreader.h"
 #include "cumbiatango.h"
-#include "tdevice.h"
 #include "cudevicefactoryservice.h"
-#include "cuactionfactoryservice.h"
 #include "cupollingservice.h"
 
 #include <cudatalistener.h>
@@ -16,7 +14,7 @@
 #include "cupollingactivity.h" // for CuPollingActivity::Type
 #include "cupoller.h"
 #include <culog.h>
-#include <tango/tango.h>
+#include <tango.h>
 #include <cumbiatango.h>
 
 class TSource;

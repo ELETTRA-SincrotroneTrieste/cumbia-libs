@@ -2,6 +2,7 @@
 #define CUDATATYPES_H
 
 #include <string>
+#include <string.h>
 
 #define DATA2CHUNK 32 // before including cudatatypes
 
@@ -19,7 +20,6 @@ public:
         Value, ///< the value, (was "value")
         Src,  ///< source name (was "src")
         Err,  ///< error flag ("err")
-        SuccessColor,   ///< a color used to represent the successful or not outcome of an operation (was "sc")
         StateColor, ///< a color associated to a state (was "sc")
         State, ///< a state (was "s")
         Quality,  ///< quality value (was "q")
@@ -27,10 +27,8 @@ public:
         QualityString,  ///< a string associated to a quality value (was "qs")
         Event,  ///< event type, was "E"
         Color, ///< color, was "color"
-        WValue, ///< 'write' value (Tango set point, was "w_value")
         Thread,  ///< thread (e.g. for thread token, was "thread")
         Name, ///< some name ("name")
-        Time_ns,  ///< timestamp nanoseconds ("timestamp_ns")
         Timestamp_Str, ///< timestamp as string ("timestamp_str")
         Message, ///< a message (was "msg")
         Mode,  ///< a mode (was "mode")
@@ -42,7 +40,6 @@ public:
         InTypeStr,  ///< input argument type  (int, float, double, bool). Was "in_type_str"
         OutTypeStr,  ///< output argument type  (int, float, double, bool). Was "out_type_str"
         WriteValue, ///< a *set point* value (Tango write value, was "w_value")
-        InputValue, ///< the input value to write to a target
         Properties, ///< list of properties, was "properties"
         Property, ///< a property, was "property"
         IsCommand,  ///< true if data represents a command (e.g. Tango, was "is_command")
@@ -50,10 +47,10 @@ public:
         RefreshMode,  ///< a refresh (aka *read*) mode (polling, monitor,..., was "refresh_mode")
         RefreshModeStr, ///< refresh mode as string, was "refresh_mode_str"
         Pv,  ///< Epics process variable, was "pv"
+        Time_ns,   ///< timestamp millis ("timestamp_ns")
         DataType, ///< data type (int, float, double, bool)  (was "dt")
         Writable,   ///< read only or read/write,
         DataFormat, ///< data format (vector, scalar, matrix, was "df")
-        DataTypeStr, ///< data type as string (was "dts")
         DataFormatStr, ///< data format as string ("double", "int", ... ) (was "dfs")
         Description,  ///< a description, was "description"
         InTypeDesc,  ///< input argument type description, was "in_type_desc"
@@ -89,73 +86,130 @@ public:
 
     virtual std::string keyName(int k) const {
         switch(k){
-        case CuDType::Time_us: return "Time_us";
-        case CuDType::Time_ms: return "Time_ms";
-        case CuDType::Value: return "Value";
-        case CuDType::Src: return "Src";
-        case CuDType::Err: return "Err";
-        case CuDType::State: return "State";
-        case CuDType::SuccessColor: return "SuccessColor";
-        case CuDType::StateColor: return "StateColor";
-        case CuDType::Quality: return "Quality";
-        case CuDType::QualityColor: return "QualityColor";
-        case CuDType::QualityString: return "QualityString";
-        case CuDType::Event: return "Event";
-        case CuDType::Color: return "Color";
-        case CuDType::WValue: return "WValue";
-        case CuDType::Thread: return "Thread";
-        case CuDType::Name: return "Name";
-        case CuDType::Time_ns: return "Time_ns";
-        case CuDType::Timestamp_Str: return "Timestamp_Str";
-        case CuDType::Message: return "Message";
-        case CuDType::Mode: return "Mode";
-        case CuDType::Type: return "Type";
-        case CuDType::Exit: return "Exit";
-        case CuDType::Ptr: return "Ptr";
-        case CuDType::InType: return "InType";
-        case CuDType::OutType: return "OutType";
-        case CuDType::InTypeStr: return "InTypeStr";
-        case CuDType::OutTypeStr: return "OutTypeStr";
-        case CuDType::WriteValue: return "WriteValue";
-        case CuDType::InputValue: return "InputValue";
-        case CuDType::Properties: return "Properties";
-        case CuDType::Property: return "Property";
-        case CuDType::IsCommand: return "IsCommand";
-        case CuDType::Args: return "Args";
-        case CuDType::RefreshMode: return "RefreshMode";
-        case CuDType::RefreshModeStr: return "RefreshModeStr";
-        case CuDType::Pv: return "Pv";
-        case CuDType::DataType: return "DataType";
-        case CuDType::Writable: return "Writable";
-        case CuDType::DataFormat: return "DataFormat";
-        case CuDType::DataTypeStr: return "DataTypeStr";
-        case CuDType::DataFormatStr: return "DataFormatStr";
-        case CuDType::Description: return "Description";
-        case CuDType::InTypeDesc: return "InTypeDesc";
-        case CuDType::OutTypeDesc: return "OutTypeDesc";
-        case CuDType::Status: return "Status";
-        case CuDType::Device: return "Device";
-        case CuDType::Attribute: return "Attribute";
-        case CuDType::Class: return "Class";
-        case CuDType::Pattern: return "Pattern";
-        case CuDType::Point: return "Point";
-        case CuDType::Max: return "Max";
-        case CuDType::Min: return "Min";
-        case CuDType::Keys: return "Keys";
-        case CuDType::Connected: return "Connected";
-        case CuDType::Period: return "Period";
-        case CuDType::Timeout: return "Timeout";
-        case CuDType::NumberFormat: return "NumberFormat";
-        case CuDType::Label: return "Label";
-        case CuDType::DimX: return "DimX";
-        case CuDType::DimY: return "DimY";
-        case CuDType::MaxDimX: return "MaxDimX";
-        case CuDType::MaxDimY: return "MaxDimY";
-        case CuDType::CmdName: return "CmdName";
-        case CuDType::Activity: return "Activity";
+        case CuDType::Time_us: return "timestamp_us";
+        case CuDType::Time_ms: return "timestamp_ms";
+        case CuDType::Value: return "value";
+        case CuDType::Src: return "src";
+        case CuDType::Err: return "err";
+        case CuDType::State: return "state";
+        case CuDType::StateColor: return "sc";
+        case CuDType::Quality: return "q";
+        case CuDType::QualityColor: return "qc";
+        case CuDType::QualityString: return "qs";
+        case CuDType::Event: return "event";
+        case CuDType::Color: return "color";
+        case CuDType::Thread: return "thread";
+        case CuDType::Name: return "name";
+        case CuDType::Message: return "msg";
+        case CuDType::Mode: return "mode";
+        case CuDType::Type: return "type";
+        case CuDType::Exit: return "exit";
+        case CuDType::Ptr: return "ptr";
+        case CuDType::InType: return "in_type";
+        case CuDType::OutType: return "out_type";
+        case CuDType::InTypeStr: return "in_type_str";
+        case CuDType::OutTypeStr: return "out_type_str";
+        case CuDType::WriteValue: return "w_value";
+        case CuDType::Properties: return "properties";
+        case CuDType::Property: return "property";
+        case CuDType::IsCommand: return "is_command";
+        case CuDType::Args: return "args";
+        case CuDType::RefreshMode: return "refresh_mode";
+        case CuDType::Pv: return "pv";
+        case CuDType::Time_ns: return "timestamp_ns";
+        case CuDType::DataType: return "dt";
+        case CuDType::Writable: return "writable";
+        case CuDType::DataFormat: return "df";
+        case CuDType::DataFormatStr: return "dfs";
+        case CuDType::Description: return "description";
+        case CuDType::InTypeDesc: return "in_type_desc";
+        case CuDType::OutTypeDesc: return "out_type_desc";
+        case CuDType::Status: return "status";
+        case CuDType::Device: return "device";
+        case CuDType::Attribute: return "attribute";
+        case CuDType::Class: return "class";
+        case CuDType::Pattern: return "pattern";
+        case CuDType::Point: return "point";
+        case CuDType::Max: return "max";
+        case CuDType::Min: return "min";
+        case CuDType::Keys: return "keys";
+        case CuDType::Connected: return "connected";
+        case CuDType::Period: return "period";
+        case CuDType::NumberFormat: return "format";
+        case CuDType::Label: return "label";
+        case CuDType::DimX: return "dim_x";
+        case CuDType::DimY: return "dim_y";
+        case CuDType::MaxDimX: return "max_dim_x";
+        case CuDType::MaxDimY: return "max_dim_y";
+        case CuDType::CmdName: return "cmd";
+        case CuDType::Activity: return "activity";
         case CuDType::MaxDataKey: return "MaxDataKey";
         default: return "InvalidKey";
         }
+    }
+
+    virtual CuDType::Key idx(const char *s) const {
+        if(!strcmp(s, "timestamp_us")) return  CuDType::Time_us;
+        else if(!strcmp(s, "timestamp_ms")) return  CuDType::Time_ms;
+        else if(!strcmp(s, "value")) return  CuDType::Value;
+        else if(!strcmp(s, "src")) return  CuDType::Src;
+        else if(!strcmp(s, "err")) return  CuDType::Err;
+        else if(!strcmp(s, "state")) return  CuDType::State;
+        else if(!strcmp(s, "sc")) return  CuDType::StateColor;
+        else if(!strcmp(s, "q")) return  CuDType::Quality;
+        else if(!strcmp(s, "qc")) return  CuDType::QualityColor;
+        else if(!strcmp(s, "sc")) return  CuDType::StateColor;
+        else if(!strcmp(s, "qs")) return  CuDType::QualityString;
+        else if(!strcmp(s, "qc")) return  CuDType::QualityColor;
+        else if(!strcmp(s, "E")) return  CuDType::Event;
+        else if(!strcmp(s, "color")) return  CuDType::Color;
+        else if(!strcmp(s, "w_value")) return  CuDType::WriteValue;
+        else if(!strcmp(s, "thread")) return  CuDType::Thread;
+        else if(!strcmp(s, "name")) return  CuDType::Name;
+        else if(!strcmp(s, "msg")) return  CuDType::Message;
+        else if(!strcmp(s, "mode")) return  CuDType::Mode;
+        else if(!strcmp(s, "type")) return  CuDType::Type;
+        else if(!strcmp(s, "exit")) return  CuDType::Exit;
+        else if(!strcmp(s, "ptr")) return  CuDType::Ptr;
+        else if(!strcmp(s, "in_type")) return  CuDType::InType;
+        else if(!strcmp(s, "out_type")) return  CuDType::OutType;
+        else if(!strcmp(s, "in_type_str")) return  CuDType::InTypeStr;
+        else if(!strcmp(s, "out_type_str")) return  CuDType::OutTypeStr;
+        else if(!strcmp(s, "property")) return  CuDType::Property;
+        else if(!strcmp(s, "properties")) return  CuDType::Properties;
+        else if(!strcmp(s, "is_command")) return  CuDType::IsCommand;
+        else if(!strcmp(s, "args")) return  CuDType::Args;
+        else if(!strcmp(s, "refresh_mode")) return  CuDType::RefreshMode;
+        else if(!strcmp(s, "pv")) return  CuDType::Pv;
+        else if(!strcmp(s, "timestamp_ns")) return  CuDType::Time_ns;
+        else if(!strcmp(s, "dt")) return  CuDType::DataType;
+        else if(!strcmp(s, "writable")) return  CuDType::Writable;
+        else if(!strcmp(s, "df")) return  CuDType::DataFormat;
+        else if(!strcmp(s, "dfs")) return  CuDType::DataFormatStr;
+        else if(!strcmp(s, "writable")) return  CuDType::Writable;
+        else if(!strcmp(s, "description")) return  CuDType::Description;
+        else if(!strcmp(s, "in_type_desc")) return  CuDType::InTypeDesc;
+        else if(!strcmp(s, "out_type_desc")) return  CuDType::OutTypeDesc;
+        else if(!strcmp(s, "status")) return  CuDType::Status;
+        else if(!strcmp(s, "device")) return  CuDType::Device;
+        else if(!strcmp(s, "attribute")) return  CuDType::Attribute;
+        else if(!strcmp(s, "class")) return  CuDType::Class;
+        else if(!strcmp(s, "pattern")) return  CuDType::Pattern;
+        else if(!strcmp(s, "point")) return  CuDType::Point;
+        else if(!strcmp(s, "max")) return  CuDType::Max;
+        else if(!strcmp(s, "min")) return  CuDType::Min;
+        else if(!strcmp(s, "keys")) return  CuDType::Keys;
+        else if(!strcmp(s, "connected")) return  CuDType::Connected;
+        else if(!strcmp(s, "period")) return  CuDType::Period;
+        else if(!strcmp(s, "format")) return  CuDType::NumberFormat;
+        else if(!strcmp(s, "label")) return  CuDType::Label;
+        else if(!strcmp(s, "dim_x")) return  CuDType::DimX;
+        else if(!strcmp(s, "dim_y")) return  CuDType::DimY;
+        else if(!strcmp(s, "max_dim_x")) return  CuDType::MaxDimX;
+        else if(!strcmp(s, "max_dim_y")) return  CuDType::MaxDimY;
+        else if(!strcmp(s, "cmd")) return  CuDType::CmdName;
+        else if(!strcmp(s, "activity")) return  CuDType::Activity;
+        else return CuDType::MaxDataKey;
     }
 };
 

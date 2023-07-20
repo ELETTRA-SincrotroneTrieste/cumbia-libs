@@ -1,5 +1,5 @@
 #include "cutconfigactivity.h"
-#include <tango/tango.h>
+#include <tango.h>
 #include <cumacros.h>
 #include <functional>
 #include "cudevicefactoryservice.h"

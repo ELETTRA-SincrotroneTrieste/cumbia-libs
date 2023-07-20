@@ -1,6 +1,6 @@
 #include "tdevice.h"
 #include "cutango-world.h"
-#include <tango/tango.h>
+#include <tango.h>
 #include <time.h>
 #include <cumacros.h>
 

@@ -86,6 +86,8 @@ sources = [
 cpp_arguments = ['-DCUMBIA_DEBUG_OUTPUT=1 -DCU_TANGO_VERSION=' + cu_version, ]
 link_arguments = [ ]
 
+libdir='lib'
+
 # profiling with gperftools
 #
 if(get_option('gperf_enable'))
@@ -110,11 +112,6 @@ tgdep = dependency('tango', method: 'pkg-config')
 # storing the include directories without trailing /tango:
 #
 tginc = tgdep.get_pkgconfig_variable('includedir')
-
-libdir='lib'
-if not tginc.endswith('tango')
-    tginc += '/tango'
-endif
 
 # add tginc to include dirs
 includedirs = [ include_directories('lib'), include_directories(tginc) ]

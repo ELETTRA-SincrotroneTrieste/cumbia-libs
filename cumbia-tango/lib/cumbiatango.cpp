@@ -10,7 +10,6 @@
 #include "cutangoactionfactoryi.h"
 #include "cupollingservice.h"
 #include "cutango-world.h"
-#include "cutreader.h"
 
 #include <cuthreadfactoryimpl.h>
 #include <cuthreadseventbridgefactory_i.h>

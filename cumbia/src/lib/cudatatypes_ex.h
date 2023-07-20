@@ -77,8 +77,6 @@ public:
                 return std::string("InType");
             case CuXDType::OutType:
                 return std::string("OutType");
-            case CuXDType::InputValue:
-                return std::string("InputValue");
             case CuXDType::WriteValue:
                 return std::string("WriteValue");
             case CuXDType::Properties:
@@ -91,8 +89,6 @@ public:
                 return std::string("Pv");
             case CuXDType::Writable:
                 return std::string("Writable");
-            case CuXDType::SuccessColor:
-                return std::string("SuccessColor");
             case CuXDType::QualityColor:
                 return std::string("QualityColor");
             case CuXDType::Quality:
@@ -127,8 +123,6 @@ public:
                 return std::string("Timeout");
             case CuXDType::DataFormat:
                 return std::string("DataFormat");
-            case CuXDType::DataTypeStr:
-                return std::string("DataTypeStr");
             case CuXDType::DataFormatStr:
                 return std::string("DataFormatStr");
             case CuXDType::NumberFormat:

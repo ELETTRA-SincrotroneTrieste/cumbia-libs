@@ -283,7 +283,7 @@ void CuUiMake::m_print_cudatacheck_result(const CuDataChecker &cuch, bool ro) {
                 print(Analysis, true, plain_text, "%serror%s: re-run cuuimake with `--update-cudata' [--debug] option\n", color, white);
                 print(Analysis, true, plain_text, "%serror%s: make sure to add a comment // !cudata on the lines that\n", color, white);
                 print(Analysis, true, plain_text, "%serror%s: shall not be altered by `--update-cudata', for example\n", color, white);
-                print(Analysis, true, plain_text, "%serror%s: if m[\"key\"] = value; // !cudata (m is a std::map) \\n", color, white);
+                print(Analysis, true, plain_text, "%serror%s: if m[\"key\"] = value; // !cudata (m is a std::map)\n", color, white);
             }
             else {
                 print(Analysis, false, plain_text, "%ssuccessfully%s ported %d cudata keys to indexes used in cumbia v2.0\n", color, white, cuch.result);
