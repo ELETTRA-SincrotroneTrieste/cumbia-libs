@@ -1,5 +1,5 @@
 #include "cutadbactivity.h"
-#include <tango/tango.h>
+#include <tango.h>
 #include <cumacros.h>
 #include <algorithm>
 #include "cutango-world.h"

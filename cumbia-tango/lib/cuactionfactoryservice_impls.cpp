@@ -1,11 +1,9 @@
 #include "cuactionfactoryservice_impls.h"
 
-#include <tango/tango.h>
 #include <map>
 #include <cumacros.h>
 #include <unordered_map>
-
-#include <chrono>
+#include <assert.h>
 
 //static unsigned long tottime = 0;
 //static unsigned long reginvokecnt = 0, unreginvokecnt = 0;

@@ -16,7 +16,6 @@
 #include "cupollingactivity.h" // for CuPollingActivity::Type
 #include "cupoller.h"
 #include <culog.h>
-#include <tango/tango.h>
 #include <cumbiatango.h>
 
 class TSource;

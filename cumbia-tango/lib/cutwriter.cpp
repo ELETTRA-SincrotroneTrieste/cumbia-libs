@@ -1,10 +1,8 @@
 #include "cutwriter.h"
 #include "cumbiatango.h"
-#include "tdevice.h"
 #include "cuwriteactivity.h"
 #include "cudevicefactoryservice.h"
-#include "cuactionfactoryservice.h"
-
+#include <set>
 #include <cudatalistener.h>
 #include <cuserviceprovider.h>
 #include <cumacros.h>
@@ -13,8 +11,6 @@
 #include <cuthreadseventbridgefactory_i.h>
 #include <cuactivitymanager.h>
 #include <culog.h>
-
-#include <tango/tango.h>
 
 class TSource;
 
