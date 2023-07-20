@@ -147,7 +147,7 @@ void CuTConfiguration::start() {
 void CuTConfiguration::stop() {        
         CuActionFactoryService * af = static_cast<CuActionFactoryService *>(d->cumbia_t->getServiceProvider()
                                                                            ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
-        af->unregisterAction(d->tsrc.getName(), getType());
+        af->unregisterAction(d->tsrc, getType());
         d->cumbia_t->unregisterActivity(d->activity);
         if(!d->on_result) // either delete this from onResult or here
             delete this;

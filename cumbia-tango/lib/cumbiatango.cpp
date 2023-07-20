@@ -69,21 +69,14 @@ CumbiaTango::~CumbiaTango()
 // f creates a new CuTangoActionI (CuTReader, CuTaDb, CuTConfiguration, CuTWriter) (cutangoactionfactories.cpp)
 // a->start registers the related activity
 void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTangoActionFactoryI& f) {
-
-    pretty_pri("entering add action");
     CuTangoWorld w;
     bool isnew;
-    pretty_pri("1 add action");
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
     CuTangoActionI *a = af->registerAction(source, f, this, &isnew); // must be called with src = source.getName
-
-    pretty_pri("2 add action");
     if(isnew)
         a->start();
-    pretty_pri("3 add action");
     a->addDataListener(l);
-    pretty_pri("leaving add action");
 }
 
 void CumbiaTango::removeAction(const TSource &source, CuTangoActionI::Type t) {
