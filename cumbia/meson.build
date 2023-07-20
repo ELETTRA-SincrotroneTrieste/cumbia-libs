@@ -16,6 +16,8 @@ conf.set_quoted('VERSION', cu_version)
 configure_file(output : 'config.h',
                configuration : conf)
 
+# let default libdir be 'lib'
+libdir = 'lib'
 
 headers = [
 	'src/lib/cumbia.h',

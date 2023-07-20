@@ -4,7 +4,7 @@
 #include <string>
 #include <cudata.h>
 #include <cudataquality.h>
-#include <tango/tango.h>
+#include <tango.h>
 #include <cudataupdatepolicy_enum.h>
 
 class CuTangoWorldPrivate;
