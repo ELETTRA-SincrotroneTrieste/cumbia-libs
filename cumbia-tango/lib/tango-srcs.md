@@ -1,4 +1,4 @@
-# Tango source options and syntax
+# Tango source options and syntax {#tango-srcs.md}
 
 ### Read an attribute
 
