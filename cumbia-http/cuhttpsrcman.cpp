@@ -69,18 +69,10 @@ void CuHttpSrcMan::enqueueSrc(const CuHTTPSrc &httpsrc,
 }
 
 void CuHttpSrcMan::unlinkListener(CuDataListener *l) {
-    auto t1 = std::chrono::steady_clock::now();
     // set listener to nullptr src queue
     bool rem = m_queue_remove(l);
-    auto t2 = std::chrono::steady_clock::now();
-    if(rem)
-        printf("CuHttpSrcMan::cancelSrc m_queue_remove took %ld ms from q siz %d to remove %p\n", std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count(), d->srcq.size(), l);
     if(!rem) { // if rem, src was still in queue, no request sent
-        t1 = std::chrono::steady_clock::now();
         rem = m_wait_map_remove(l);
-        t2 = std::chrono::steady_clock::now();
-        if(rem)
-            printf("CuHttpSrcMan::cancelSrc m_wait_map_remove took %ld ms from map siz %d to remove %p\n", std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count(), d->srcd.size(), l);
     }
 }
 
@@ -93,13 +85,8 @@ bool CuHttpSrcMan::m_queue_remove(CuDataListener *l) {
         mi.next();
         if(mi.value().l == l) {
             mi.value().l = nullptr;
-//            pretty_pri("d->srcq ====> \e[1;35mnullified\e[0m src %s listener %p method %s",
-//                       mi.value().src.c_str(),  l,  mi.value().method.c_str());
         }
-//        else
-//            pretty_pri("\e[1;31mNOT FOUND\e[0m\n");
     }
-
     return siz != d->srcq.size();
 }
 
@@ -109,8 +96,6 @@ bool CuHttpSrcMan::m_wait_map_remove(CuDataListener* l) {
     while(mi.hasNext()) {
         mi.next();
         if(mi.value().lis == l) {
-            pretty_pri("d->srcd ====> \e[1;35mnullified\e[0m chan '%s' listener %p method %s",
-                       qstoc(mi.value().channel),  l,  mi.value().method.c_str());
             mi.value().lis = nullptr;
             r = true;
         }
@@ -119,8 +104,6 @@ bool CuHttpSrcMan::m_wait_map_remove(CuDataListener* l) {
     while(tgtmi.hasNext()) {
         tgtmi.next();
         if(tgtmi.value().lis == l  || tgtmi.value().lis == nullptr) {
-            pretty_pri("d->tgtd ====> \e[1;35mnullified\e[0m chan '%s' listener %p method %s",
-                       qstoc(mi.value().channel),  l,  mi.value().method.c_str());
             tgtmi.value().lis = nullptr;
             r = true;
         }

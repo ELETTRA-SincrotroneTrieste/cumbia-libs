@@ -60,7 +60,7 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
         t = SrcDbDevProps;
     else if(hasprops && sep == 2 && !hasa)  //  a/tg/dev(devprop1,devprop2,...)
         t = SrcDbDevProp;
-    else if(s.size() == 0 || s == "*") // domai*
+    else if(sep == 0 && s.size() > 0 && s[s.length() - 1] == '*') // domai*
         t = SrcDbDoma;
     else if(sep == 1 && (ewsep || ewc)) // dom/  or  dom/fa*
         t = SrcDbFam;
@@ -150,7 +150,6 @@ std::vector<string> TSource::getArgs() const {
     std::string s(d->m_s);
     size_t arg_start = 0, arg_end = 0;
     const std::string& arg_ops = s.find('[') != std::string::npos ? getArgOptions(&arg_start, &arg_end) : std::string();
-    //    s.erase(std::remove(s.begin() + s.find('('), s.begin() + s.find(')') + 1, ' '), s.end()); // remove spaces
     // take an argument delimited by "" as a single parameter
     size_t pos = d->m_s.find("(\"");
     if(pos != string::npos) {
@@ -168,9 +167,10 @@ std::vector<string> TSource::getArgs() const {
                 std::regex re(delim);
                 std::sregex_token_iterator iter(a.begin(), a.end(), re, -1);
                 std::sregex_token_iterator end;
-                for ( ; iter != end; ++iter)
+                for ( ; iter != end; ++iter) {
                     if((*iter).length() > 0)
                         ret.push_back((*iter));
+                }
             }
         }
     }
@@ -289,8 +289,6 @@ std::string TSource::getArgOptions(size_t *pos_start, size_t *pos_end) const {
         *pos_start = sm.position(1);
         *pos_end = *pos_start + sm.length(1);
     }
-    //printf("getArgOptions: sm size %ld pos start %ld end %ld src '%s' siz %ld\n",
-      //     sm.size(), *pos_start, *pos_end, s.c_str(), s.length());
     return found && sm.size() == 2 ? sm[1] : std::string();
 }
 
@@ -364,7 +362,6 @@ string TSource::rem_args(const string &src) const {
     // capture everything within (\(.*\)), not minimal. check for '(' before using regex
     if(src.find('(') != std::string::npos) {
     const std::regex &re = regexps::get_args_re();
-        printf("TSource rem_args removeing args from '%s' args regex calling ......\n", src.c_str());
         return std::regex_replace(src, re, "");
     }
     return src;

@@ -15,9 +15,7 @@ public:
     std::string valueAttrPropName;
 };
 
-CuTangoWorldConfig::CuTangoWorldConfig()
-{
-    printf("\e[1;31mCuTangoWorldConfig INITIALIZED\e[0m\n");
+CuTangoWorldConfig::CuTangoWorldConfig() {
     d = new CuTangoWorldConfigPrivate;
     initStateColorsAndStrings();
     initQualityColorsAndStrings();

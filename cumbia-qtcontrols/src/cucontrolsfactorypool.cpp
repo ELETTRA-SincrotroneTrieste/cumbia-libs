@@ -65,7 +65,6 @@ void CuControlsFactoryPool::setSrcPatterns(const std::string &domain,
                                            const std::vector<std::string> &regex_patt) {
     for(const std::string& r : regex_patt) {
         re_cache->map[domain].push_back(std::regex(r));
-        printf("CuControlsFactoryPool::setSrcPatterns -> \e[1;32m%s\e[1;33m %s\e[0m\n", domain.c_str(), r.c_str());
     }
     m_dom_patterns[domain] = regex_patt;
 }
@@ -139,7 +138,6 @@ CuControlsReaderFactoryI *CuControlsFactoryPool::getRFactoryBySrc(const std::str
     if(domain.length())
         return getReadFactory(domain);
     perr("CuControlsFactoryPool.getRFactoryBySrc: could not guess domain from \"%s\"" , src.c_str());
-    m_print();
     return nullptr;
 }
 
