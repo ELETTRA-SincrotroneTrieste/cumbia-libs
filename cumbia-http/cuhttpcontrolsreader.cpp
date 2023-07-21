@@ -167,7 +167,6 @@ QString CuHttpControlsReader::source() const {
  *  consistent and simple *unsetSource* interface across the engines.
  */
 void CuHttpControlsReader::unsetSource() {
-    pretty_pri("unsetting source listener %p src %s meth %s", d->dlis, qstoc(d->s), qstoc(d->method));
     const CuHTTPSrc s(d->s.toStdString(), d->cu_http->getSrcHelpers());
     // 1.5.2: fix: use unlinkListener only from destructor
     // d->cu_http->unlinkListener(s, d->method.toStdString(), d->dlis);

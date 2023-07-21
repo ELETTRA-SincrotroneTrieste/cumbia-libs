@@ -79,7 +79,6 @@ void CuHttpSrcMan::unlinkListener(CuDataListener *l) {
 // remove from all queues where listener equals l
 bool CuHttpSrcMan::m_queue_remove(CuDataListener *l) {
     const int siz = d->srcq.size();
-    pretty_pri("finding listener %p srcq size %d", l, d->srcq.size());
     QMutableListIterator<SrcItem> mi(d->srcq);
     while(mi.hasNext()) {
         mi.next();

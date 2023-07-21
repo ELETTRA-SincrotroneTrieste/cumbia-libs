@@ -22,16 +22,15 @@ CuHttpTangoSrc::CuHttpTangoSrc(const CuHttpTangoSrc &other)
 }
 
 CuHttpTangoSrc::Type CuHttpTangoSrc::m_get_ty(const std::string& src) const {
-    // host regexp
     // remove host and http://
-    std::string s = rem_httpproto(m_s);
+    std::string s = rem_httpproto(src);
     s = rem_tghost(s);
     s = rem_args(s); // remove arguments between '()'
+    const std::vector<string> props = getPropNames();
+    bool hasprops = props.size() > 0; // has {arg1,arg2,...}
     int sep = std::count(s.begin(), s.end(), '/');
     bool ewc = s.size() > 1 && s[s.size()-1] == '*'; // ends with wildcard
     bool ewsep = s.size() > 1 && s[s.size()-1] == '/'; // ends with slash
-    const std::vector<string> props = getPropNames();
-    bool hasprops = props.size() > 0; // has {arg1,arg2,...}
     bool arg_wildcard = props.size() == 1 && props[0] == "*";
     bool swht = s.length() > 1 && s[0] == '#'; // starts with hash tag: free prop
     size_t ai = s.find("->"); // arrow index
@@ -41,6 +40,8 @@ CuHttpTangoSrc::Type CuHttpTangoSrc::m_get_ty(const std::string& src) const {
     Type t = SrcInvalid;
     if(swht && std::count(s.begin(), s.end(), '#') == 2) // free prop:  #MyObj#MyFreeProp
         t= SrcDbFreeProp;
+    else if(arg_wildcard && std::count(s.begin(), s.end(), '*') > 1) // at least 2 (one shall be within (*) )
+        t = SrcExportedDevs;
     else if(arg_wildcard && sep == 0) // class(*))
         t = SrcDbClassProps;
     else if(hasprops && sep == 0) // class{prop1,prop2,..}
@@ -49,7 +50,7 @@ CuHttpTangoSrc::Type CuHttpTangoSrc::m_get_ty(const std::string& src) const {
         t = SrcDbDevProps;
     else if(hasprops && sep == 2 && !hasa)  //  a/tg/dev(devprop1,devprop2,...)
         t = SrcDbDevProp;
-    else if( s == "/" || s == "/*") // domai*
+    else if(sep == 0 && s.size() > 0 && s[s.length() - 1] == '*') // domai*
         t = SrcDbDoma;
     else if(sep == 1 && (ewsep || ewc)) // dom/  or  dom/fa*
         t = SrcDbFam;
@@ -69,7 +70,8 @@ CuHttpTangoSrc::Type CuHttpTangoSrc::m_get_ty(const std::string& src) const {
         t = SrcAttr;
     else if(sep == 2 && hasa) // te/de/1->GetV
         t = SrcCmd;
-
+//    printf("CuHttpTangoSrc.m_get_ty type detected %d source with no args '%s'\n",
+//               t, s.c_str());
     return t;
 }
 
@@ -139,8 +141,7 @@ std::vector<string> CuHttpTangoSrc::getArgs() const {
     std::vector<std::string> ret;
     std::string s(m_s);
     size_t arg_start = 0, arg_end = 0;
-    const std::string& arg_ops = getArgOptions(&arg_start, &arg_end);
-    //    s.erase(std::remove(s.begin() + s.find('('), s.begin() + s.find(')') + 1, ' '), s.end()); // remove spaces
+    const std::string& arg_ops = s.find('[') != std::string::npos ? getArgOptions(&arg_start, &arg_end) : std::string();
     // take an argument delimited by "" as a single parameter
     size_t pos = m_s.find("(\"");
     if(pos != string::npos) {
@@ -158,9 +159,10 @@ std::vector<string> CuHttpTangoSrc::getArgs() const {
                 std::regex re(delim);
                 std::sregex_token_iterator iter(a.begin(), a.end(), re, -1);
                 std::sregex_token_iterator end;
-                for ( ; iter != end; ++iter)
+                for ( ; iter != end; ++iter) {
                     if((*iter).length() > 0)
                         ret.push_back((*iter));
+                }
             }
         }
     }
@@ -265,12 +267,12 @@ std::string CuHttpTangoSrc::getArgOptions(size_t *pos_start, size_t *pos_end) co
     // example a/b/c/d([sep(;)]arg1;arg2) sep: args separator
     const std::string &s = m_s;
     std::smatch sm;
-    bool found = std::regex_search(s, sm, http_tg_regexps::get_args_re());
+    bool found = std::regex_search(s, sm, tg_http_regexps::get_args_re());
     if(found) {
         *pos_start = sm.position(1);
         *pos_end = *pos_start + sm.length(1);
     }
-    return found && sm.size() == 2 ? sm[1] : std::string();
+    return found && sm.size() == 2 ? sm[1] : std::string();  
 }
 
 /*!
@@ -327,13 +329,13 @@ string CuHttpTangoSrc::rem_httpproto(const string &src) const {
 }
 
 string CuHttpTangoSrc::rem_tghost(const string &src) const {
-    std::string s = std::regex_replace(src, http_tg_regexps::get_host_re(), "");
+    std::string s = std::regex_replace(src, tg_http_regexps::get_host_re(), "");
     return s;
 }
 
 std::string CuHttpTangoSrc::rem_args(const std::string& src) const {
     // capture everything within (\(.*\)), not minimal
-    return std::regex_replace(src, http_tg_regexps::get_args_re(), "");
+    return std::regex_replace(src, tg_http_regexps::get_args_re(), "");
 }
 
 const char *CuHttpTangoSrc::getTypeName(Type t) const {
@@ -348,5 +350,5 @@ std::string CuHttpTangoSrc::m_get_args_delim(const string &arg_options) const
     //  sep\((.*)\)
     // example: a/b/c-D([sep(:)]arg1:arg2:arg3)
     std::smatch sm;
-    return std::regex_search(arg_options, sm, http_tg_regexps::get_separ_re()) && sm.size() == 2 ? sm[1] : std::string(",");
+    return std::regex_search(arg_options, sm, tg_http_regexps::get_separ_re()) && sm.size() == 2 ? sm[1] : std::string(",");
 }

@@ -38,8 +38,6 @@ TSource::~TSource() {
 }
 
 TSource::Type TSource::m_get_ty(const std::string& src) const {
-    // host regexp
-
     std::string s = rem_tghostproto(src);
     s = rem_args(s); // remove arguments between from s
     const std::vector<string> props = getPropNames();
