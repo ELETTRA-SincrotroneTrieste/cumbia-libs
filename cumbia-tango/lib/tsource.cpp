@@ -18,7 +18,7 @@ TSource::TSource() {
 /*!
  * \brief represents a tango source
  *
- * Please read [the dedicated Tango source page](tango-srcs.md)
+ * Please read \ref md_tango_srcs
  */
 TSource::TSource(const string s)
 {
