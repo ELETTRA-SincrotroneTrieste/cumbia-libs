@@ -8,6 +8,7 @@
 #include <QPaintEvent>
 #include <QtDebug>
 #include <cucontrolsutils.h>
+#include <QToolTip>
 
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
@@ -25,6 +26,8 @@ public:
     CuContext *context;
     CuVariant prev_val;
     CuControlsUtils u;
+    char msg[MSGLEN];
+    CuData last_d;
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
@@ -55,6 +58,7 @@ void QuCircularGauge::m_init()
     d->context = NULL;
     d->auto_configure = true;
     d->read_ok = false;
+    d->msg[0] = '\0';
 }
 
 QuCircularGauge::~QuCircularGauge()
@@ -114,8 +118,6 @@ void QuCircularGauge::contextMenuEvent(QContextMenuEvent *e)
 void QuCircularGauge::m_configure(const CuData& da)
 {
     QMap<QString, const char*> threshs;
-    threshs["min"] = "minValue";  // threshs["min"]
-    threshs["min"] = "maxValue";  // threshs["max"]
     threshs["min_warning"] = "lowWarning";
     threshs["max_warning"] = "highWarning";
     threshs["max_alarm"] = "highError";
@@ -125,9 +127,19 @@ void QuCircularGauge::m_configure(const CuData& da)
     double val;
     // avoid cache regeneration at every property change
     setCacheRegenerationDisabled(true);
+
+    double m;
+    if(da.containsKey(CuDType::Min)) {
+        da[CuDType::Min].to<double>(m);
+        setProperty("minValue", m);
+    }
+    if(da.containsKey(CuDType::Max)) {
+        da[CuDType::Max].to<double>(m);
+        setProperty("maxValue", m);
+    }
+
     // map keys are not ordered!
-    QStringList props = QStringList() << "min" << "max" << "max_alarm" << "min_alarm"
-                                      << "min_warning" << "max_warning";
+    QStringList props = QStringList() << "max_alarm" << "min_alarm" << "min_warning" << "max_warning";
     foreach(QString thnam, props) {
         const std::string name = thnam.toStdString();
         if(da.containsKey(name)) {
@@ -142,6 +154,7 @@ void QuCircularGauge::m_configure(const CuData& da)
         setUnit(QString::fromStdString(da["display_unit"].toString()));
     if(da[CuDType::NumberFormat].toString().length() > 0)  // da["format"]
         setFormatProperty(QString::fromStdString(da[CuDType::NumberFormat].toString()));  // da["format"]
+
     setCacheRegenerationDisabled(false);
     regenerateCache();
 }
@@ -166,22 +179,51 @@ void QuCircularGauge::m_set_value(const CuVariant &val)
 
 void QuCircularGauge::onUpdate(const CuData &da)
 {
-    const QString& msg = d->u.msg(da);
-    d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
+    d->read_ok = !da[CuDType::Err].toBool();
+
+    const char *mode = da[CuDType::Mode].c_str();
+    bool event = mode != nullptr && strcmp(mode, "E") == 0;
+    bool update = event; // if data is delivered by an event, always refresh
+    if(!event) { // data generated periodically by a poller or by something else
+        // update label if value changed
+        update = !d->read_ok || d->last_d[CuDType::Value] != da[CuDType::Value];
+        // onUpdate measures better with d->last_d = da; than with d->last_d = da.clone()
+        // even though measured alone the clone version performs better
+        //        d->last_d = da.clone(); // clone does a copy, then contents moved into last_d
+        d->last_d = da;
+        if(strlen(d->msg) > 0)
+            d->msg[0] = 0; // clear msg
+    }
+    else { // "event" mode
+        d->u.msg_short(da, d->msg);
+    }
+
     setReadError(!d->read_ok);
     d->read_ok ? setLabel("") : setLabel(labelErrorText());
-    setToolTip(msg);
 
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
-        d->context->getLinkStats()->addError(msg.toStdString());
+        d->context->getLinkStats()->addError(da.c_str(CuDType::Message));
 
-    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {  // da["type"]
+    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {
         m_configure(da);
     }
-    if(d->read_ok && da[CuDType::Value].isValid()) {  // da["value"]
+    if(/*update && */d->read_ok && da[CuDType::Value].isValid()) {  // da["value"]
         m_set_value(da[CuDType::Value]);  // da["value"]
     }
     emit newData(da);
 }
+
+bool QuCircularGauge::event(QEvent *e) {
+    if(e->type() == QEvent::ToolTip) {
+        if(strlen(d->msg) == 0) {
+            d->u.msg_short(d->last_d, d->msg);
+            pretty_pri("buildging msg_short '%s' last data %s", d->msg, datos(d->last_d));
+        }
+        QToolTip::showText(static_cast<QHelpEvent *>(e)->globalPos(), d->msg);
+        return true;
+    }
+    return QuCircularGaugeBase::event(e);
+}
+

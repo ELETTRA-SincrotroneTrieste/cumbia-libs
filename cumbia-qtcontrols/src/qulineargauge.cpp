@@ -6,6 +6,8 @@
 #include <QContextMenuEvent>
 #include <QPainter>
 #include <QPaintEvent>
+#include <cucontrolsutils.h>
+#include <QToolTip>
 
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
@@ -22,6 +24,9 @@ public:
     bool auto_configure;
     bool read_ok;
     CuContext *context;
+    CuData last_d; // save redrawing when possible
+    char msg[MSGLEN];
+    CuControlsUtils u;
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
@@ -52,6 +57,7 @@ void QuLinearGauge::m_init()
     d->context = NULL;
     d->auto_configure = true;
     d->read_ok = false;
+    d->msg[0] = '\0';
 }
 
 QuLinearGauge::~QuLinearGauge()
@@ -115,14 +121,12 @@ void QuLinearGauge::contextMenuEvent(QContextMenuEvent *e)
 void QuLinearGauge::m_configure(const CuData& da)
 {
     QMap<QString, const char*> threshs;
-    threshs["min"] = "minValue"; // !cudata
-    threshs["max"] = "maxValue"; // !cudata
     threshs["min_warning"] = "lowWarning";
     threshs["max_warning"] = "highWarning";
     threshs["max_alarm"] = "highError";
     threshs["min_alarm"] = "lowError";
     // map keys are not ordered!
-    QStringList props = QStringList() << "min" << "max" << "max_alarm" << "min_alarm"
+    QStringList props = QStringList() << "max_alarm" << "min_alarm"
                                       << "min_warning" << "max_warning";
     foreach(QString thnam, props) {
         const char *name = thnam.toStdString().c_str();
@@ -141,6 +145,15 @@ void QuLinearGauge::m_configure(const CuData& da)
     }
     if(da["display_unit"].toString().length() > 0)
         setUnit(QString::fromStdString(da["display_unit"].toString()));
+    double m;
+    if(da.containsKey(CuDType::Min)) {
+        da[CuDType::Min].to<double>(m);
+        setProperty("minValue", m);
+    }
+    if(da.containsKey(CuDType::Max)) {
+        da[CuDType::Max].to<double>(m);
+        setProperty("maxValue", m);
+    }
 }
 
 void QuLinearGauge::m_set_value(const CuVariant &val)
@@ -163,19 +176,46 @@ void QuLinearGauge::m_set_value(const CuVariant &val)
 void QuLinearGauge::onUpdate(const CuData &da)
 {
     d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
+    const char *mode = da[CuDType::Mode].c_str();
+    bool event = mode != nullptr && strcmp(mode, "E") == 0;
+    bool update = event; // if data is delivered by an event, always refresh
+    if(!event) { // data generated periodically by a poller or by something else
+        // update label if value changed
+        update = !d->read_ok || d->last_d[CuDType::Value] != da[CuDType::Value];
+        // onUpdate measures better with d->last_d = da; than with d->last_d = da.clone()
+        // even though measured alone the clone version performs better
+        //        d->last_d = da.clone(); // clone does a copy, then contents moved into last_d
+        d->last_d = da;
+        if(strlen(d->msg) > 0)
+            d->msg[0] = 0; // clear msg
+    }
+    else { // "event" mode
+        //        printf("QuLabel.onUpdate: event driven, always updating and preparing tooltip msg, never saving data\n");
+        d->u.msg_short(da, d->msg);
+    }
+
     setReadError(!d->read_ok);
-    setToolTip(da[CuDType::Message].toString().c_str());  // da["msg"]
 
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
-        d->context->getLinkStats()->addError(da[CuDType::Message].toString());  // da["msg"]
-
-    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {  // da["type"]
+        d->context->getLinkStats()->addError(da[CuDType::Message].toString());
+    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {
         m_configure(da);
     }
-    if(d->read_ok && da[CuDType::Value].isValid()) {  // da["value"]
+    if(update && d->read_ok && da[CuDType::Value].isValid()) {  // da["value"]
         m_set_value(da[CuDType::Value]);  // da["value"]
     }
     emit newData(da);
+}
+
+bool QuLinearGauge::event(QEvent *e) {
+    if(e->type() == QEvent::ToolTip) {
+        if(strlen(d->msg) == 0) {
+            d->u.msg_short(d->last_d, d->msg);
+        }
+        QToolTip::showText(static_cast<QHelpEvent *>(e)->globalPos(), d->msg);
+        return true;
+    }
+    return QuLinearGaugeBase::event(e);
 }

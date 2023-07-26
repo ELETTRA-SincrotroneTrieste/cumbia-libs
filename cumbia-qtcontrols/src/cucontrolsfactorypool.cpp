@@ -31,8 +31,7 @@ CuControlsFactoryPool::CuControlsFactoryPool() : d(nullptr) {
 CuControlsFactoryPool::CuControlsFactoryPool(const CuControlsFactoryPool &other) {
     d = other.d;
     if(d) {
-        int rcnt = d->ref();
-        //    printf("CuControlsFactoryPool \e[0;35m copy constructor = from other %p other.d %p // SHARED among %d\e[0m\n", &other, other.d, rcnt);
+        d->ref();
     }
 }
 
@@ -49,18 +48,16 @@ CuControlsFactoryPool::CuControlsFactoryPool(CuControlsFactoryPool &&other) : d(
 
 CuControlsFactoryPool &CuControlsFactoryPool::operator=(const CuControlsFactoryPool &other) {
     if(this != &other) {
-        int rcnt = other.d->ref();
+        other.d->ref();
         if(this->d && this->d->unref() == 1) {
             delete d;
         }
         d = other.d; // share
-        //        printf("CuControlsFactoryPool \e[1;35m assignment operator = from other %p other.d %p  // SHARED among %d\e[0m\n", &other, other.d, rcnt);
     }
     return *this;
 }
 
 CuControlsFactoryPool &CuControlsFactoryPool::operator=(CuControlsFactoryPool &&other) {
-    //    printf("CuControlsFactoryPool \e[1;32m move assign operator from other %p other.d %p \e[0m\n", &other, other.d);
     if(this != &other) {
         if(d && d->unref() == 1) {
             delete d;
@@ -81,9 +78,7 @@ void CuControlsFactoryPool::m_detach() {
 }
 
 CuControlsFactoryPool::~CuControlsFactoryPool() {
-    int rcnt = -1;
-    if(d && (rcnt = d->unref()) == 1) {
-        printf("\e[0;31mX\e[0m ~CuControlsFactoryPool %p cuz refcnt is %d\n", this, rcnt);
+    if(d && d->unref() == 1) {
         delete d;
         d = nullptr;
     }
