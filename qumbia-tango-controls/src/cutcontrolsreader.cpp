@@ -249,29 +249,23 @@ void CuTControlsReader::getData(CuData &d_ino) const
 void CuTControlsReader::setSource(const QString &s) {
     CuTControlsUtils tcu;
     d->source = tcu.replaceWildcards(s, qApp->arguments());
-    pretty_pri("creating tsource");
     TSource tsrc(d->source.toStdString());
-    pretty_pri("created");
     d->is_db_op = tsrc.isDbOp();
     if(d->is_db_op) {
         CuTaDbFactory dbf;
         dbf.setOptions(d->ta_options);
-        pretty_pri("CuTaDbFactory");
         d->cumbia_tango->addAction(tsrc, d->tlistener, dbf);
     }
     else {
         if(!d->ta_options.value("no-properties").toBool() || d->ta_options.value("single-shot").toBool()) {
             CuTReaderConfFactory acf;
             acf.setOptions(d->ta_options);
-            pretty_pri("CuTReaderConfFactory");
             d->cumbia_tango->addAction(tsrc, d->tlistener, acf);
         }
         if(!d->ta_options.value("properties-only").toBool() && !d->ta_options.value("single-shot").toBool()) {
             CuTangoReaderFactory readf;
             readf.setOptions(d->ta_options);
-            pretty_pri("CuTangoReaderFactory");
             d->cumbia_tango->addAction(tsrc, d->tlistener, readf);
         }
     }
-    pretty_pri("leaving");
 }
