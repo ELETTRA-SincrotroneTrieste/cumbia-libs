@@ -378,31 +378,31 @@ void CuControlsUtils::msg_short(const CuData &da, char buf[MSGLEN]) {
         }
     }
 
+    const char *m = nullptr;
     int siz, len = msg ? strlen(msg) : 0;
     if(len > 0) {
-        siz = MSGLEN - 1 - p - len;
-        if(siz > 0) {
-            snprintf(buf + p, siz, "[%s]", msg);
-        }
+        m = msg;
     }
     else {
         // pick mode or activity name
         const char* _mode = da.c_str(CuDType::Mode);
         len = _mode ? strlen(_mode) : 0;
         if(len > 0) {
-            siz = MSGLEN - 1 - p - len;
-            if(siz > 0)
-                snprintf(buf + p, siz, "[%s]", _mode);
+            m = _mode;
         }
         else {
             const char* a = da.c_str(CuDType::Activity);
             len = a ? strlen(a) : 0;
             if(len > 0) {
-                siz = MSGLEN - 1 - p - len;
-                if(siz > 0)
-                    snprintf(buf + p, siz, "[%s]", a);
+                m = a;
             }
         }
+    }
+    if(m) {
+        if(len > MSGLEN -1 - p)
+            len = MSGLEN -1 - p;
+        pretty_pri("siz %ld len %ld offset p %d", siz, len, p);
+        snprintf(buf + p, len, "[%s]", m);
     }
 }
 
