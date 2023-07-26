@@ -5,33 +5,27 @@
 
 class TSourcePrivate {
 public:
-    TSourcePrivate(const std::string& s) : m_s(s) {}
+    TSourcePrivate(const std::string& s) : m_s(s), m_ty(TSource::SrcInvalid) {}
     string m_s;
     TSource::Type m_ty;
 };
 
 TSource::TSource() {
-    pretty_pri("empty constructor");
     d = new TSourcePrivate(std::string());
-    d->m_ty = SrcInvalid;
 }
 
-TSource::TSource(const string s)
-{
-    pretty_pri("string constructor %s", s.c_str());
+TSource::TSource(const string s) {
     d = new TSourcePrivate(s);
     d->m_ty = m_get_ty(s);
 }
 
 TSource::TSource(const TSource &other) {
-    pretty_pri("copy constructor from other %s", other.d->m_s.c_str());
     d = new TSourcePrivate(other.d->m_s);
     this->d->m_ty = other.d->m_ty;
 }
 
 TSource::TSource(TSource &&other) {
     /* no new d here! */
-    pretty_pri("\e[1;32mMOVE\e[0m");
     d = other.d;
     other.d = nullptr; /* don't delete */
 }
@@ -91,7 +85,6 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
         t = SrcAttr;
     else if(sep == 2 && hasa) // te/de/1->GetV
         t = SrcCmd;
-    pretty_pri("got type %d from '%s'", t, s.c_str());
     return t;
 }
 
