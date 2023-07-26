@@ -120,6 +120,14 @@ void QuLinearGauge::contextMenuEvent(QContextMenuEvent *e)
 
 void QuLinearGauge::m_configure(const CuData& da)
 {
+    double m;
+    const CuVariant& min = da.containsKey(CuDType::Min) ? da[CuDType::Min] : CuVariant();
+    const CuVariant& max = da.containsKey(CuDType::Max) ? da[CuDType::Max] : CuVariant();
+    if(min.isValid() && min.to<double>(m))
+        setProperty("minValue", m);
+    if(max.isValid() && max.to<double>(m))
+        setProperty("maxValue", m);
+
     QMap<QString, const char*> threshs;
     threshs["min_warning"] = "lowWarning";
     threshs["max_warning"] = "highWarning";
@@ -145,15 +153,6 @@ void QuLinearGauge::m_configure(const CuData& da)
     }
     if(da["display_unit"].toString().length() > 0)
         setUnit(QString::fromStdString(da["display_unit"].toString()));
-    double m;
-    if(da.containsKey(CuDType::Min)) {
-        da[CuDType::Min].to<double>(m);
-        setProperty("minValue", m);
-    }
-    if(da.containsKey(CuDType::Max)) {
-        da[CuDType::Max].to<double>(m);
-        setProperty("maxValue", m);
-    }
 }
 
 void QuLinearGauge::m_set_value(const CuVariant &val)

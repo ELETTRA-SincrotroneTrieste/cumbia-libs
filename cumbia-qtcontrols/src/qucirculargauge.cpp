@@ -129,14 +129,13 @@ void QuCircularGauge::m_configure(const CuData& da)
     setCacheRegenerationDisabled(true);
 
     double m;
-    if(da.containsKey(CuDType::Min)) {
-        da[CuDType::Min].to<double>(m);
+    const CuVariant& min = da.containsKey(CuDType::Min) ? da[CuDType::Min] : CuVariant();
+    const CuVariant& max = da.containsKey(CuDType::Max) ? da[CuDType::Max] : CuVariant();
+    if(min.isValid() && min.to<double>(m))
         setProperty("minValue", m);
-    }
-    if(da.containsKey(CuDType::Max)) {
-        da[CuDType::Max].to<double>(m);
+    if(max.isValid() && max.to<double>(m))
         setProperty("maxValue", m);
-    }
+
 
     // map keys are not ordered!
     QStringList props = QStringList() << "max_alarm" << "min_alarm" << "min_warning" << "max_warning";
