@@ -379,7 +379,7 @@ void CuControlsUtils::msg_short(const CuData &da, char buf[MSGLEN]) {
     }
 
     const char *m = nullptr;
-    int siz, len = msg ? strlen(msg) : 0;
+    int len = msg ? strlen(msg) : 0;
     if(len > 0) {
         m = msg;
     }
@@ -399,10 +399,12 @@ void CuControlsUtils::msg_short(const CuData &da, char buf[MSGLEN]) {
         }
     }
     if(m) {
-        if(len > MSGLEN -1 - p)
-            len = MSGLEN -1 - p;
-        pretty_pri("siz %ld len %ld offset p %d", siz, len, p);
-        snprintf(buf + p, len, "[%s]", m);
+        if(len > MSGLEN -3 - p)
+            len = MSGLEN -3 - p;
+        // The functions snprintf() and vsnprintf() write at most size bytes
+        // ** including the terminating null byte ('\0') ** to str.
+        pretty_pri("strlen(buf) %d len %ld offset p %d m '%s'", strlen(buf), len, p, m);
+        snprintf(buf + p, len + 3, "[%s]", m);
     }
 }
 
