@@ -98,12 +98,11 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
         {
         case Tango::DEV_STATE:
         {
-            CuTangoWorldConfig wc;
             Tango::DevState temp;
             *data >> temp;
-            da[CuDType::Value] = wc.stateString(temp);
+            da[CuDType::Value] = t_world_conf.stateString(temp);
             da[CuDType::State] = static_cast<long int>(temp);
-            da[CuDType::StateColor] = wc.stateColorName(temp);
+            da[CuDType::StateColor] = t_world_conf.stateColorName(temp);
             break;
         }
         case Tango::DEV_BOOLEAN:
@@ -352,14 +351,13 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
         }
         else if(p_da->get_type() == Tango::DEV_STATE)
         {
-            CuTangoWorldConfig wc;
             if(f == Tango::SCALAR)
             {
                 Tango::DevState state;
                 *p_da >> state;
-                dat[CuDType::Value] = wc.stateString(state);
+                dat[CuDType::Value] = t_world_conf.stateString(state);
                 dat[CuDType::State] = static_cast<long int>(state);
-                dat[CuDType::StateColor] = wc.stateColorName(state);
+                dat[CuDType::StateColor] = t_world_conf.stateColorName(state);
             }
             else if(f == Tango::SPECTRUM || f == Tango::IMAGE)
             {
@@ -370,9 +368,9 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 p_da->extract_read(v);
                 for(size_t i = 0; i < v.size(); i++)
                 {
-                    temp.push_back(wc.stateString(v.at(i)));
+                    temp.push_back(t_world_conf.stateString(v.at(i)));
                     tempi.push_back(v[i]);
-                    state_colors.push_back(wc.stateColorName(v.at(i)));
+                    state_colors.push_back(t_world_conf.stateColorName(v.at(i)));
                 }
                 if(f == Tango::SPECTRUM) {
                     dat[CuDType::Value] = temp;
@@ -390,8 +388,8 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 {
                     Tango::DevState state;
                     *p_da >> state;
-                    dat[CuDType::WriteValue] = wc.stateString(state);
-                    dat[CuDType::StateColor] = wc.stateColorName(state);
+                    dat[CuDType::WriteValue] = t_world_conf.stateString(state);
+                    dat[CuDType::StateColor] = t_world_conf.stateColorName(state);
                     dat["w_state"] = static_cast<long int>(state);
                 }
                 else if(f == Tango::SPECTRUM || f == Tango::IMAGE)
@@ -403,9 +401,9 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     p_da->extract_set(v);
                     for(size_t i = 0; i < v.size(); i++)
                     {
-                        temp.push_back(wc.stateString(v.at(i)));
+                        temp.push_back(t_world_conf.stateString(v.at(i)));
                         tempi.push_back(static_cast<long int>(v.at(i)));
-                        state_colors.push_back(wc.stateColorName(v.at(i)));
+                        state_colors.push_back(t_world_conf.stateColorName(v.at(i)));
                     }
                     if(f == Tango::SPECTRUM) {
                         dat[CuDType::WriteValue] = temp;
