@@ -63,7 +63,7 @@ void CuTaDbActivity::execute() {
     TSource::Type ty = d->tsrc.getType();
     CuData at(CuDType::Src, d->tsrc.getName()); /* activity token */
     at.merge(CuData(d->options));
-    at[CuDType::Type] = CuDType::Property;  // at["type"]
+    at[CuDType::Type] = "property";  // !cudata
     at["op"] = d->tsrc.getTypeName(ty);
     at.merge(CuData(d->tag));
     CuTangoWorld w;

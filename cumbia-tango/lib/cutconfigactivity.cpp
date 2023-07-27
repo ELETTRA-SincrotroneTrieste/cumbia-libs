@@ -31,7 +31,7 @@ CuTConfigActivity::CuTConfigActivity(const TSource& ts,
                                      const CuTConfigActivityExecutor_I *tx,
                                      const CuData& o,
                                      const CuData& tag)
-    : CuActivity(CuData("activity", CuDType::Property).set(CuDType::Src, ts.getName()))
+    : CuActivity(CuData("activity", "property").set(CuDType::Src, ts.getName()))
 {
     d = new CuTAttConfigActivityPrivate;
     d->devfa = df;
@@ -96,10 +96,10 @@ void CuTConfigActivity::execute() {
     at[CuDType::Device] = d->ts.getDeviceName();
     at[CuDType::Point] = point;
     at[CuDType::Args] = d->ts.getArgs();
-    at[CuDType::Activity] = CuDType::Property;  // at["activity"]
+    at[CuDType::Activity] = "property";  // // !cudata
     at[CuDType::IsCommand] = d->ts.getType() == TSource::SrcCmd;  // at["is_command"]
     at[CuDType::Properties] = std::vector<std::string>();
-    at[CuDType::Type] = CuDType::Property;  // at["type"]
+    at[CuDType::Type] = "property";  // !cudata
 
     bool value_only = false, skip_read = false;
     o["value-only"].to<bool>(value_only);
