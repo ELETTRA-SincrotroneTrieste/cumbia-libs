@@ -2390,6 +2390,30 @@ std::string CuVariant::dataTypeStr(int t) const
     return std::string(" OutOfRange");
 }
 
+/*!
+ * \brief same as int param version, operates on its type
+ * \return string representation of self type
+ */
+std::string CuVariant::dataTypeStr() const {
+    return dataTypeStr(_d->type);
+}
+
+/*!
+ * \brief abbreviated return string version of dataTypeStr
+ * \param t the data type
+ * \return
+ */
+std::string CuVariant::data_type_short_str() const {
+    const char *v[] = {
+        "INVALID", "S", "US", "I", "UI",
+        "LI", "LLI", "LUI", "LLUI", "F", "D",
+        "LD", "B", "STR", "VOIDPTR", "C", "UC", "EndDataTypes"
+    };
+    if(_d->type >= 0 && _d->type < EndDataTypes)
+        return std::string(v[_d->type]);
+    return std::string(" OutOfRange");
+}
+
 /*! \brief string representation of CuVariant::DataFormat
  *
  * @param f a value from the CuVariant::DataFormat enum

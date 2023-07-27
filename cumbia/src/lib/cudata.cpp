@@ -484,15 +484,20 @@ std::string CuData::toString(bool color) const
 
     int kc = 0;
     std::map<std::string, std::string> valmap; // want a lexicographically ordered print of key name/values
+    std::map<std::string, std::string> typemap;
     for(size_t i = 0; i < CuDType::MaxDataKey; i++) {
         if(d_p->data[i].isValid()) {
             valmap[dt.keyName(static_cast<CuDType::Key>(i))] = d_p->data[i].toString();
+            typemap[dt.keyName(static_cast<CuDType::Key>(i))] = d_p->data[i].data_type_short_str();
             kc++;
         }
     }
     r += ("*int-keys* { ");
     for(std::map<std::string, std::string>::const_iterator it = valmap.begin(); it != valmap.end(); ++it) {
-        r += "[" + green + it->first + white + ": \"" + it->second + "\"], ";
+        r += typemap[it->first] == "STR" ?
+            "[" + green + it->first + white + "-> \"" + it->second + "\"], "
+                                            :  "[" + green + it->first + white + "-> " + it->second + "," + typemap[it->first]
+            + "], ";
     }
     r.replace(r.length() - 2, 2, "");
 
@@ -503,9 +508,11 @@ std::string CuData::toString(bool color) const
     if(d_p->datamap.size() > 0) {
         r  += "* str-keys * { ";
         snprintf(siz, 16, "%ld", d_p->datamap.size());
-        for(i = d_p->datamap.begin(); i != d_p->datamap.end(); ++i)
-        {
-            r += "[\"" + magenta + i->first + white + "\" -> " + i->second.toString() + "], ";
+        for(i = d_p->datamap.begin(); i != d_p->datamap.end(); ++i) {
+            const CuVariant &v = i->second;
+            const std::string& dt = v.data_type_short_str();
+            dt == "STR" ? r += "[\"" + magenta + i->first + white + "\" -> \"" + i->second.toString() + "\"], "
+                 : r+= "[\"" + magenta + i->first + white + "\" -> " + i->second.toString() + "," + dt + "], ";
         }
         r.replace(r.length() - 2, 2, "");
         r += " } (str size map: " + std::string(siz) + ") ";

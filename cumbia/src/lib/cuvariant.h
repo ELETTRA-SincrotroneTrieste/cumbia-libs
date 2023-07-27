@@ -299,7 +299,8 @@ public:
 
     std::string dataFormatStr(int f) const;
     std::string dataTypeStr(int t) const;
-
+    std::string dataTypeStr() const;
+    std::string data_type_short_str() const;
 private:
     void m_cleanup();
     template<typename T>void m_from(T value);
