@@ -507,6 +507,7 @@ void QumbiaReader::onError(const QString &src, double ts, const QString &msg, co
     perr("[%s]: \"\e[1;31m%s\e[0m\"\n", qstoc(makeTimestamp(ts)), qstoc(msg));
     m_print_extra2(da);
     m_checkRefreshCnt(sender());
+    printf("DATA: %s\n", datos(da));
 }
 
 void QumbiaReader::onReaderDestroyed(QObject *o)
