@@ -246,7 +246,6 @@ void CuHttpChannelReceiver::onSslErrors(const QList<QSslError> &errors) {
 }
 
 void CuHttpChannelReceiver::onWsConnected() {
-    pretty_pri("ws connected");
     connect(&d->ws, &QWebSocket::textMessageReceived, this, &CuHttpChannelReceiver::onWsMessageReceived);
     connect(&d->ws, &QWebSocket::binaryMessageReceived, this, &CuHttpChannelReceiver::onWsBinaryMessageReceived);
 }

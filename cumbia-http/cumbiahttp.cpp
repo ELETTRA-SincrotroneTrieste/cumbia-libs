@@ -336,7 +336,7 @@ void CumbiaHttp::m_auth_request(const CuData &da) {
 }
 
 void CumbiaHttp::m_lis_update(const CuData &da) {
-    const std::string &src = da.value(CuDType::Src).toString();  // da.value("src")
+    const std::string &src = da.value(CuDType::Src).toString();
     QList<SrcData> tgtli;
     const QMap<QString, SrcData> &mp = d->src_q_man->takeTgts();
     const QStringList& ks = mp.keys();

@@ -22,7 +22,7 @@ public:
 
     CuHttpBundledSrcReqPrivate(const QMap<QString, SrcData>& srcs) {
         QList<SrcItem> il;
-        foreach(QString s, srcs.keys()) {
+        foreach(const QString &s, srcs.keys()) {
             const SrcData& sd = srcs[s];
             il.append(SrcItem(s.toStdString(), sd.lis, sd.method, sd.channel, sd.wr_val, sd.options));
             if(channel.isEmpty() && !sd.channel.isEmpty())
@@ -146,7 +146,7 @@ void CuHttpBundledSrcReq::onSslErrors(const QList<QSslError> &errors) {
     perr("CuHttpBundledSrcReq::onSslErrors: errors: %s", qstoc(msg));
 }
 
-void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError code) {
+void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError ) {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
     CuData da(CuDType::Message, r->errorString().toStdString());  // CuData da("msg", r->errorString()
     da.set(CuDType::Err, true);  // set("err", true)
@@ -182,7 +182,6 @@ void CuHttpBundledSrcReq::m_on_buf_complete() {
         if(jsd.isNull())
             perr("CuHttpBundledSrcReq.m_on_buf_complete: invalid json: %s\n", qstoc(json));
         d->listener->onSrcBundleReplyReady(jsd.toJson());
-        pretty_pri("%s", json.data());
     }
 }
 
