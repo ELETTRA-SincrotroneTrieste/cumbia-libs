@@ -13,6 +13,7 @@ CuHttpTangoSrc::CuHttpTangoSrc(const string s)
 {
     m_s = s;
     m_ty = m_get_ty(s);
+    pretty_pri("'%s' -> type %d", s.c_str(),  m_ty);
 }
 
 CuHttpTangoSrc::CuHttpTangoSrc(const CuHttpTangoSrc &other)
@@ -69,7 +70,6 @@ CuHttpTangoSrc::Type CuHttpTangoSrc::m_get_ty(const std::string& src) const {
         t = SrcAttr;
     else if(sep == 2 && hasa) // te/de/1->GetV
         t = SrcCmd;
-
     return t;
 }
 
@@ -325,7 +325,13 @@ string CuHttpTangoSrc::rem_httpproto(const string &src) const {
 }
 
 string CuHttpTangoSrc::rem_tghost(const string &src) const {
-    std::string s = std::regex_replace(src, http_tg_regexps::get_host_re(), "");
+    std::string s(src);
+    size_t pos = src.find(':'); // use regex only if host:PORT pattern is found
+    if(pos != std::string::npos && pos > 0 && src.length() > pos + 1 && std::isdigit(src[pos+1])) {
+        s = std::regex_replace(src, http_tg_regexps::get_host_re(), "");
+        if(s.length() > 0 && s[0] == '/')
+            s.erase(0, 1);
+    }
     return s;
 }
 
