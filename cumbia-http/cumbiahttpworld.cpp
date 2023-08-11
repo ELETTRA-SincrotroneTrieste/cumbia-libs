@@ -84,6 +84,7 @@ bool CumbiaHTTPWorld::request_reverse_eng(const QString &json, QMap<QString, QSt
 }
 
 bool CumbiaHTTPWorld::json_decode(const QByteArray &ba, std::list<CuData> &out) const {
+    pretty_pri("data %s", ba.data());
     QJsonParseError pe;
     QJsonDocument json = QJsonDocument::fromJson(ba, &pe);
     if(pe.error != QJsonParseError::NoError) {

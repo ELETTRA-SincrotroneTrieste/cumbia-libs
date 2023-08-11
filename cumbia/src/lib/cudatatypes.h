@@ -32,7 +32,7 @@ public:
         Timestamp_Str, ///< timestamp as string ("timestamp_str")
         Message, ///< a message (was "msg")
         Mode,  ///< a mode (was "mode")
-        Type,  ///< some type (was "type")
+        Type,  ///< type (was "type"), for example 'property'
         Exit,  ///< exit flag (was "exit")
         Ptr,  ///< pointer to something (void* is supported by CuVariant). Was "ptr"
         InType,  ///< input argument type  (int, float, double, bool). Was "in_type"
