@@ -255,7 +255,6 @@ void QuLabel::onUpdate(const CuData &da)
     }
     if(update) {
         QColor background;
-        printf("QuLabel.onUpdate data %s\n", datos(da));
         if(!ok)
             d->context->getLinkStats()->addError(da.c_str(CuDType::Message));
 
