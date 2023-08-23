@@ -37,6 +37,15 @@ QuStringList::QuStringList(const CuData &da, const char *key) : QStringList() {
     }
 }
 
+QuStringList::QuStringList(const CuData &da, CuDType::Key key) : QStringList() {
+    if(da.containsKey(key)) {
+        bool ok;
+        std::vector<std::string> vs = da[key].toStringVector(&ok);
+        for(size_t i = 0; i < vs.size() && ok; i++)
+            append(QString::fromStdString(vs[i]));
+    }
+}
+
 /*! \brief build a QuStringList from a CuVariant
  *
  * @param va a CuVariant known to store a vector of std::string elements

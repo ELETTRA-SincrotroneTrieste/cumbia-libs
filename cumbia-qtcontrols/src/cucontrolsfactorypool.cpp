@@ -48,7 +48,8 @@ CuControlsFactoryPool::CuControlsFactoryPool(CuControlsFactoryPool &&other) : d(
 
 CuControlsFactoryPool &CuControlsFactoryPool::operator=(const CuControlsFactoryPool &other) {
     if(this != &other) {
-        other.d->ref();
+        if(other.d)
+            other.d->ref();
         if(this->d && this->d->unref() == 1) {
             delete d;
         }
