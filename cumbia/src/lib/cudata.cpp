@@ -474,8 +474,6 @@ std::string CuData::toString(bool color) const
 {
     CuXDTypeUtils dt;
     const std::string& green = color ? "\e[1;32m" : "";
-    const std::string& blue = color ? "\033[1;34m" : "";
-    const std::string& cyan = color ? "\033[1;36m" : "";
     const std::string& magenta = color ? "\033[1;35m" : "";
     const std::string& white = "\e[0m";
     std::unordered_map<std::string, CuVariant>::const_iterator i;
@@ -504,7 +502,7 @@ std::string CuData::toString(bool color) const
 
     r += " } (int key count: " + std::to_string(kc) + " isEmpty: " + std::string(((d_p->datamap.size() + kc) == 0) ? "YES" : "NO") +
          " total size: " + std::to_string(kc + d_p->datamap.size()) + ")";
-
+    printf("checking for datamap size is %d until now '\e[1;35m%s\e[0m'\n", d_p->datamap.size(), r.c_str());
     if(d_p->datamap.size() > 0) {
         r  += "* str-keys * { ";
         snprintf(siz, 16, "%ld", d_p->datamap.size());

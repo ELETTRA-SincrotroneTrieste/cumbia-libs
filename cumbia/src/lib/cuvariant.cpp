@@ -2409,7 +2409,7 @@ std::string CuVariant::data_type_short_str() const {
         "LI", "LLI", "LUI", "LLUI", "F", "D",
         "LD", "B", "STR", "VOIDPTR", "C", "UC", "EndDataTypes"
     };
-    if(_d->type >= 0 && _d->type < EndDataTypes)
+    if(_d && _d->type >= 0 && _d->type < EndDataTypes)
         return std::string(v[_d->type]);
     return std::string(" OutOfRange");
 }
