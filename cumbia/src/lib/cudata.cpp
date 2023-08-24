@@ -502,7 +502,7 @@ std::string CuData::toString(bool color) const
 
     r += " } (int key count: " + std::to_string(kc) + " isEmpty: " + std::string(((d_p->datamap.size() + kc) == 0) ? "YES" : "NO") +
          " total size: " + std::to_string(kc + d_p->datamap.size()) + ")";
-    printf("checking for datamap size is %d until now '\e[1;35m%s\e[0m'\n", d_p->datamap.size(), r.c_str());
+//    printf("checking for datamap size is %d until now '\e[1;35m%s\e[0m'\n", d_p->datamap.size(), r.c_str());
     if(d_p->datamap.size() > 0) {
         r  += "* str-keys * { ";
         snprintf(siz, 16, "%ld", d_p->datamap.size());
