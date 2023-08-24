@@ -9,11 +9,9 @@ CuHttpTangoSrc::CuHttpTangoSrc() {
     m_ty = SrcInvalid;
 }
 
-CuHttpTangoSrc::CuHttpTangoSrc(const string s)
-{
+CuHttpTangoSrc::CuHttpTangoSrc(const string s) {
     m_s = s;
     m_ty = m_get_ty(s);
-    pretty_pri("'%s' -> type %d", s.c_str(),  m_ty);
 }
 
 CuHttpTangoSrc::CuHttpTangoSrc(const CuHttpTangoSrc &other)
@@ -139,8 +137,8 @@ std::vector<string> CuHttpTangoSrc::getArgs() const {
     std::vector<std::string> ret;
     std::string s(m_s);
     size_t arg_start = 0, arg_end = 0;
-    const std::string& arg_ops = getArgOptions(&arg_start, &arg_end);
-    //    s.erase(std::remove(s.begin() + s.find('('), s.begin() + s.find(')') + 1, ' '), s.end()); // remove spaces
+    const std::string& arg_ops = s.find('[') != std::string::npos ? getArgOptions(&arg_start, &arg_end) : std::string();
+        //    s.erase(std::remove(s.begin() + s.find('('), s.begin() + s.find(')') + 1, ' '), s.end()); // remove spaces
     // take an argument delimited by "" as a single parameter
     size_t pos = m_s.find("(\"");
     if(pos != string::npos) {
@@ -149,7 +147,7 @@ std::vector<string> CuHttpTangoSrc::getArgs() const {
     }
     else {
         pos = m_s.find('(');
-        if(pos != string::npos) {
+        if(pos != string::npos) {            
             a = m_s.substr(pos + 1, m_s.rfind(')') - pos - 1);
             if(a.length() > 0) {
                 delim = arg_end > 0 ? m_get_args_delim(arg_ops) : ",";
