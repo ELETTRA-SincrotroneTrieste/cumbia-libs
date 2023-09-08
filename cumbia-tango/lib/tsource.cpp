@@ -198,7 +198,7 @@ std::string TSource::getName() const {
 
 std::string TSource::getTangoHost() const {
     std::smatch sm;
-    int pos = d->m_s.find(':'); // use regex only if :N is found (: plus digit, like tom:20000)
+    size_t pos = d->m_s.find(':'); // use regex only if :N is found (: plus digit, like tom:20000)
     if(pos != std::string::npos && pos > 0 && d->m_s.length() > pos + 1 && std::isdigit(d->m_s[pos+1]) &&
         std::regex_search(d->m_s, sm, regexps::get_host_re()) && sm.size() > 1)
         return sm[1];
@@ -270,7 +270,9 @@ string TSource::getExportedDevSearchPattern() const {
 
 /*!
  * \since 1.5.2
- * \brief some keyword:value fields can be used at the beginning of the argument
+ * \brief get *options* that can affect the interpretation of the arguments
+ *
+ *        some keyword:value fields can be used at the beginning of the argument
  *        section to customize the interpretation of the arguments
  *
  *        The keyword:value list shall be enclosed between square brackets at the
@@ -287,13 +289,14 @@ std::string TSource::getArgOptions(size_t *pos_start, size_t *pos_end) const {
     // example a/b/c/d([sep(;)]arg1;arg2) sep: args separator
     const std::string &s = d->m_s;
     std::smatch sm;
-    bool found = /*s.find('(') != std::string::npos &&*/ std::regex_search(s, sm, regexps::get_args_re());
+    bool found = /*s.find('(') != std::string::npos &&*/ std::regex_search(s, sm, regexps::get_args_re())
+                 && sm.length(1) > 0; // must have captured something
     if(found) {
         *pos_start = sm.position(1);
         *pos_end = *pos_start + sm.length(1);
     }
-    //printf("getArgOptions: sm size %ld pos start %ld end %ld src '%s' siz %ld\n",
-      //     sm.size(), *pos_start, *pos_end, s.c_str(), s.length());
+//    printf("getArgOptions: sm size %ld pos start %ld end %ld src '%s' siz %ld options '%s'\n",
+//           sm.size(), *pos_start, *pos_end, s.c_str(), s.length(), sm[1].length() ? sm[1].str().c_str() : "[]");
     return found && sm.size() == 2 ? sm[1] : std::string();
 }
 

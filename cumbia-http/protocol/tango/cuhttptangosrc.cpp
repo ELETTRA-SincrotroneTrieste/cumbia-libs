@@ -261,7 +261,8 @@ std::string CuHttpTangoSrc::getArgOptions(size_t *pos_start, size_t *pos_end) co
     // example a/b/c/d([sep(;)]arg1;arg2) sep: args separator
     const std::string &s = m_s;
     std::smatch sm;
-    bool found = std::regex_search(s, sm, http_tg_regexps::get_args_re());
+    bool found = std::regex_search(s, sm, http_tg_regexps::get_args_re())
+        && sm.length(1) > 0; // must have captured something;
     if(found) {
         *pos_start = sm.position(1);
         *pos_end = *pos_start + sm.length(1);
