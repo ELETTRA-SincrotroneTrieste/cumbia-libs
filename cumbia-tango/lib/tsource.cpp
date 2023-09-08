@@ -288,7 +288,8 @@ std::string TSource::getArgOptions(size_t *pos_start, size_t *pos_end) const {
     // example a/b/c/d([sep(;)]arg1;arg2) sep: args separator
     const std::string &s = d->m_s;
     std::smatch sm;
-    bool found = /*s.find('(') != std::string::npos &&*/ std::regex_search(s, sm, regexps::get_args_re());
+    bool found = /*s.find('(') != std::string::npos &&*/ std::regex_search(s, sm, regexps::get_args_re())
+        && sm.length(1) > 0; // must have captured something;
     if(found) {
         *pos_start = sm.position(1);
         *pos_end = *pos_start + sm.length(1);
