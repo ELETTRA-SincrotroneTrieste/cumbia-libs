@@ -1403,7 +1403,6 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
             }
                 break;
             case TSource::SrcDbDevProp: {
-                std::string p;
                 std::vector<std::string> keys, v, prs = tsrc.getPropNames();
                 for(std::string p : prs)
                     db_data.push_back(Tango::DbDatum(p));
