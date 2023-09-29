@@ -130,15 +130,17 @@ void EInputOutputWidget::setInputWidget(QWidget *inputw)
  */
 QSize EInputOutputWidget::minimumSizeHint() const
 {
-    int width, height, lo_leftm, lo_topm, lo_rightm, lo_botm;
+    int inwidth = 0, outwidth, width, height, lo_leftm, lo_topm, lo_rightm, lo_botm;
     layout()->getContentsMargins(&lo_leftm, &lo_topm, &lo_rightm, &lo_botm);
-    if(d->input_w) // suppose that d->pbApply width is the same as d->pbEdit's
-        width = d->input_w->minimumSizeHint().width() + d->pbEdit->minimumSizeHint().width();
-    else
-        width = d->output_w->minimumSizeHint().width();
-    height = qMax(d->output_w->minimumSizeHint().height(), d->pbEdit->minimumSize().height() + 12);
-    width += contentsMargins().left() + contentsMargins().right() +
-            (lineWidth() + midLineWidth() + frameWidth() + lo_leftm + lo_rightm + layout()->spacing() );
+    d->input_w && d->pbApply ? // suppose that d->pbApply width is the same as d->pbEdit's
+        inwidth = d->input_w->minimumSizeHint().width() + d->pbApply->minimumSizeHint().width() : 0;
+    QFontMetrics fm(font());
+    // QLabel minimum size hint  + space for button text
+    outwidth = d->output_w->minimumSizeHint().width() +
+               (fm.horizontalAdvance(d->pbEdit->text()) * 1.8);
+    width = qMax(inwidth, outwidth);
+    height = qMax(d->output_w ? d->output_w->minimumSizeHint().height() : 0, d->pbEdit ? d->pbEdit->minimumSizeHint().height() + 12 : 0 );
+    width += (lineWidth() + midLineWidth() + frameWidth() + lo_leftm + lo_rightm + layout()->spacing() );
     height += contentsMargins().top() + contentsMargins().bottom() +
             (lineWidth() + midLineWidth() + frameWidth() + lo_topm + lo_botm + layout()->spacing() );
     return QSize(width, height);
@@ -385,7 +387,8 @@ void EInputOutputWidget::m_init(QWidget *outputw)
     lo->addWidget(d->pbEdit);
     lo->setStretch(0, 10);
     lo->setStretch(1, 1);
-    lo->setSpacing(2);
+    lo->setSpacing(1);
+    lo->setMargin(2);
     new QHBoxLayout(d->w_container);
     connect(d->w_container, SIGNAL(visibilityChanged(bool)), d->pbEdit, SLOT(setChecked(bool)));
     // Adjust pbEdit geometry

@@ -1,5 +1,10 @@
 # News
 
+## version 1.5.4
+
+### cumbia-qtcontrols
+Fixed minimum size hint in quinputoutput
+
 ## version 1.5.2
 
 Version 1.5.2 brings the *cumbia* libraries to a superior performance level.
