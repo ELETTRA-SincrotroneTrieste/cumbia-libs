@@ -218,11 +218,6 @@ unix:INCLUDEPATH += \
     $${CUMBIA_QTCONTROLS_INCLUDES} \
 
 
-unix {
-    INCLUDEPATH += $${QWT_INCLUDES} \
-    $${QWT_INCLUDES_USR}
-}
-
 unix:LIBS +=  \
     -L$${CUMBIA_QTCONTROLS_LIBDIR} -l$${cumbia_qtcontrols_LIB}
 
