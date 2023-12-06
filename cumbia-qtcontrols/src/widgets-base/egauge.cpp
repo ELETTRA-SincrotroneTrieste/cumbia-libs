@@ -270,7 +270,7 @@ void EAbstractGauge::configure()
 //#else
                 d_logarithmicScale ? representedValue  = pow(val, 10) : representedValue  = val;
 //#endif
-        EngString engString(QString().sprintf(qstoc(m_valueFormat), representedValue), m_valueFormat, representedValue);
+                EngString engString(QString::asprintf(qstoc(m_valueFormat), representedValue), m_valueFormat, representedValue);
 // 		QString s = QString::number(representedValue);
 		if ((longestLabelIndex == -1) || engString.length() > labels[longestLabelIndex].length())
 			longestLabelIndex = i;
@@ -375,7 +375,7 @@ void ELinearGauge::paintEvent(QPaintEvent *)
 	QFontMetrics fm(painter.font());
 	
 	h = fm.height()+2;
-	w = fm.width(labels[longestLabelIndex])+2;
+    w = fm.horizontalAdvance(labels[longestLabelIndex])+2;
 	
 	if (m_orientation == Qt::Horizontal)
 		size = qMin((int)(width()*totalSize/100.0), height());
@@ -406,7 +406,7 @@ void ELinearGauge::paintEvent(QPaintEvent *)
 	
 	if (!isEnabled())
 	{
-		QColor c = palette().color(QPalette::Background);
+        QColor c = palette().color(QPalette::Window);
 		c.setAlpha(200);
 		painter.fillRect(painter.window(), c);
 	}
@@ -483,7 +483,7 @@ void ELinearGauge::drawColorBar(QPainter *p)
 		v1 = (m_value-m_minValue)/(m_maxValue-m_minValue);
 	
 		p->setPen(Qt::black);
-		p->setBrush(palette().background());
+        p->setBrush(palette().window());
 		if (m_fillMode == FROM_MIN)
 		{
 			max = v1;
@@ -619,7 +619,7 @@ void ELinearGauge::drawLabels(QPainter *p)
 	QFont f = p->font();
 	QFontMetrics fm(f);
 	h = fm.height();
-	w = fm.width(labels[longestLabelIndex]);
+    w = fm.horizontalAdvance(labels[longestLabelIndex]);
 			
 	if (m_orientation == Qt::Horizontal)
         {
@@ -627,7 +627,7 @@ void ELinearGauge::drawLabels(QPainter *p)
 		h = labelsSize;
 		while (check)
 		{
-			if ((p->fontMetrics().width(labels[longestLabelIndex]) > (p->window().width()/m_numMajorTicks)))
+            if ((p->fontMetrics().horizontalAdvance(labels[longestLabelIndex]) > (p->window().width()/m_numMajorTicks)))
 			{
 				f.setPointSize(f.pointSize()-1);
 				p->setFont(f);
@@ -647,7 +647,7 @@ void ELinearGauge::drawLabels(QPainter *p)
 		w = labelsSize;
 		while (check)
 		{
-			if (((p->fontMetrics().height()>(p->window().height()/m_numMajorTicks))||p->fontMetrics().width(labels[longestLabelIndex])>labelsSize)) 
+            if (((p->fontMetrics().height()>(p->window().height()/m_numMajorTicks))||p->fontMetrics().horizontalAdvance(labels[longestLabelIndex])>labelsSize))
 			{
 				f.setPointSize(f.pointSize()-1);
 				p->setFont(f);
@@ -741,7 +741,7 @@ void ECircularGauge::paintEvent(QPaintEvent *)
 	
 	if (!isEnabled())
 	{
-		QColor c = palette().color(QPalette::Background);
+        QColor c = palette().color(QPalette::Window);
 		c.setAlpha(200);
 		painter.fillRect(painter.window(), c);
 	}
@@ -776,7 +776,7 @@ void ECircularGauge::drawColorBar(QPainter *p)
 		p->setBrush(v_c[0]);
 		p->drawPie(-m_outerRadius,-m_outerRadius,m_outerRadius*2,m_outerRadius*2, (int)(m_startAngle*16), (int)-(m_arcLength*16));
 	}
-	p->setBrush(palette().background());
+    p->setBrush(palette().window());
 	p->drawEllipse(-m_innerRadius,-m_innerRadius,m_innerRadius*2,m_innerRadius*2);
 }
 
@@ -902,7 +902,7 @@ void ECircularGauge::drawValue(QPainter *p)
 	QString s;
 	if (isEnabled())
 	{
-      EngString engString(QString().sprintf(qstoc(m_valueFormat), d_naturalValue), m_valueFormat, d_naturalValue);
+        EngString engString(QString::asprintf(qstoc(m_valueFormat), d_naturalValue), m_valueFormat, d_naturalValue);
 	  s = engString;
 	}
 	else
@@ -922,7 +922,7 @@ void ECircularGauge::drawValue(QPainter *p)
 	bool check = true;
 	while (check)
 	{
-		if ((p->fontMetrics().width(s) > (w-2)))
+        if ((p->fontMetrics().horizontalAdvance(s) > (w-2)))
 		{
 			f.setPointSizeF(f.pointSizeF()-.5);
 			p->setFont(f);
@@ -940,7 +940,7 @@ void ECircularGauge::drawValue(QPainter *p)
 	check = true;
 	while (check)
 	{
-		if ((p->fontMetrics().width(m_label) > (38)))
+        if ((p->fontMetrics().horizontalAdvance(m_label) > (38)))
 		{
 			f.setPointSizeF(f.pointSizeF()-.5);
 			p->setFont(f);

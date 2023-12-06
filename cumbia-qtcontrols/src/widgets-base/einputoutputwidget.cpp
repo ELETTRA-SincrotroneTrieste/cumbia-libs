@@ -388,7 +388,7 @@ void EInputOutputWidget::m_init(QWidget *outputw)
     lo->setStretch(0, 10);
     lo->setStretch(1, 1);
     lo->setSpacing(1);
-    lo->setMargin(2);
+    lo->setContentsMargins(2,2,2,2);
     new QHBoxLayout(d->w_container);
     connect(d->w_container, SIGNAL(visibilityChanged(bool)), d->pbEdit, SLOT(setChecked(bool)));
     // Adjust pbEdit geometry

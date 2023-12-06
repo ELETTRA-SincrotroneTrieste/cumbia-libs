@@ -23,7 +23,7 @@ linux-g++ {
         message("- adding Tango support under $${INSTALL_ROOT}")
         include ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
     }
-    greaterThan(QT_MAJOR_VERSION, 4): QT += x11extras
+    greaterThan(QT_MAJOR_VERSION, 4): QT += 
 } else {
     # include cumbia-qtcontrols for necessary qt engine-unaware dependency (widgets, qwt, ...)
     include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)

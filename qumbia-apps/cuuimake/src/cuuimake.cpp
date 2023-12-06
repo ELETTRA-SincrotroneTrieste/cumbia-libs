@@ -253,7 +253,7 @@ QString CuUiMake::m_findLocalConfFile() const
 {
     QDir wd;
     QStringList files = wd.entryList(QDir::Files);
-    int idx = files.indexOf(QRegExp("cuuimake.*.conf"));
+    int idx = files.indexOf(QRegularExpression("cuuimake.*.conf"));
     if(idx >= 0)
         return files.at(idx);
     return "";

@@ -12,7 +12,7 @@
 # $${INSTALL_ROOT}/include/cumbia and $${INSTALL_ROOT}/lib/wasm respectively
 #
 isEmpty(INSTALL_ROOT) {
-        INSTALL_ROOT = /usr/local/cumbia-libs
+        INSTALL_ROOT = /usr/local/cumbia-libs/qt6
 }
 
 # INSTALL_ROOT is used to install the target

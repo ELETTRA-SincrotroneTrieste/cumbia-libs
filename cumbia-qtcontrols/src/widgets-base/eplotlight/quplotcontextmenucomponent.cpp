@@ -5,6 +5,7 @@
 #include <QMenu>
 #include <QMessageBox>
 
+#include <QRegularExpression>
 #include <quplot_base.h>
 #include <qwt_plot_renderer.h>
 
@@ -56,7 +57,7 @@ void QuPlotContextMenuComponent::print(QuPlotBase *p)
     QString docName = p->title().text();
     if (docName.isEmpty() )
     {
-        docName.replace (QRegExp ("\n"), "--");
+        docName.replace (QRegularExpression("\n"), "--");
         printer.setDocName (docName);
     }
     printer.setCreator("QuPlot");

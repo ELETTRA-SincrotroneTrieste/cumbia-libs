@@ -33,7 +33,7 @@ DEFINES += QT_NO_DEBUG_OUTPUT
 android-g++|wasm-emscripten {
 
 } else {
-# QT += x11extras
+# QT += 
 }
 
 wasm-emscripten {

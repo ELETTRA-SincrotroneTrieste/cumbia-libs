@@ -139,11 +139,11 @@ Type the *hostname:port* couple and continue.
 
 Install the qt5 libraries for graphical applications, the *qt designer* and the *qt creator* ide
 
-> sudo apt-get install qt5-default qtcreator libqt5x11extras5-dev qttools5-dev qtscript5-dev
+> sudo apt-get install qt5-default qtcreator libqt55-dev qttools5-dev qtscript5-dev
 
 Qt version *5.12* and *qtcreator* version *4.8.2* will be installed.
 
-- libqt5x11extras5-dev provides the QT module *x11extras*, needed by the qumbia-plugins/qt-designer
+- libqt55-dev provides the QT module **, needed by the qumbia-plugins/qt-designer
 - qttools5-dev provides the QT module *designer*, needed by the qumbia-plugins/qt-designer
 
 In order to build the qml module, the following installation is necessary

@@ -16,9 +16,7 @@
 #include <QDateTime>
 #include <QTextEdit>
 #include <QFile>
-
 #include <qwt_text.h>
-
 
 OptionsDialog::OptionsDialog(QWidget *parent, double xSam, double ySam) : QDialog(parent)
 {
@@ -116,12 +114,12 @@ void OptionsDialog::updateXExample(const QString& format)
     if(mDateTimeFormat)
         findChild<QLabel *>("xFormatLabel")->setText(timestampToDateTimeString(xSample, format));
     else
-        findChild<QLabel *>("xFormatLabel")->setText(QString().sprintf(qstoc(format), xSample));
+        findChild<QLabel *>("xFormatLabel")->setText(QString::asprintf(qstoc(format), xSample));
 }
 
 void OptionsDialog::updateYExample(const QString& format)
 {
-    findChild<QLabel *>("yFormatLabel")->setText(QString().sprintf(qstoc(format), ySample));
+    findChild<QLabel *>("yFormatLabel")->setText(QString::asprintf(qstoc(format), ySample));
 }
 
 void OptionsDialog::setDateTimeFormatEnabled(bool en)
@@ -161,7 +159,7 @@ QString OptionsDialog::timestampToDateTimeString(double x, const QString& format
     /* tango timestamp has microseconds */
     double usecs = (x - floor(x)) * 1e6;
     int msecs = qRound(usecs/1000.0);
-    dt.setTime_t(floor(x));
+    dt.setSecsSinceEpoch(floor(x));
     dt = dt.addMSecs(msecs);
     return dt.toString(qstoc(format));
 }
@@ -183,7 +181,7 @@ bool PlotSaver::save(const QList<QwtPlotCurve *>curves)
         QwtPlotCurve *firstCurve = curves.first();
         int dataSize = firstCurve->dataSize();
         /* choose a random value inside the first curve to provide a sample value for the options dialog */
-        int index = floor(qrand() / (float) RAND_MAX * dataSize);
+        int index = floor(rand() / (float) RAND_MAX * dataSize);
         QString xFormat = "%f", yFormat = "%g";
         bool dateTimeFormat = false; /* the default, as ever in qtango */
         QString header, line;
@@ -239,9 +237,9 @@ bool PlotSaver::save(const QList<QwtPlotCurve *>curves)
                                 if(dateTimeFormat)
                                     xVal = optionsDialog.timestampToDateTimeString(x, xFormat);
                                 else
-                                    xVal.sprintf(qstoc(xFormat), x);
+                                    xVal = QString::asprintf(qstoc(xFormat), x);
 
-                                yVal.sprintf(qstoc(yFormat), jthCurve->data()->sample(i).y());
+                                yVal = QString::asprintf(qstoc(yFormat), jthCurve->data()->sample(i).y());
                                 line += QString("%1,%2,").arg(xVal).arg(yVal);
                             }
                             else

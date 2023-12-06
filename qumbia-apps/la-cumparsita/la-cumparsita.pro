@@ -37,7 +37,7 @@ QT +=  core gui uitools
 
 DOCDIR = $${INSTALL_ROOT}/share/doc/la-cumparsita
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets x11extras
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets 
 
 
 DEFINES += CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${prefix}/lib/qumbia-plugins\\\"\"

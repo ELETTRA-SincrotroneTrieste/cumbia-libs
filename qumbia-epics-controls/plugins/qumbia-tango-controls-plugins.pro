@@ -3,7 +3,7 @@ include(../qumbia-tango-controls.pri)
 DESIGNER_PLUGIN_DIR=$${INSTALL_ROOT}/lib/qumbia-tango-controls/plugins/designer
 
 greaterThan(QT_MAJOR_VERSION, 4) {
-    QT += widgets x11extras printsupport
+    QT += widgets  printsupport
     QT += designer
 } else {
     CONFIG += plugin

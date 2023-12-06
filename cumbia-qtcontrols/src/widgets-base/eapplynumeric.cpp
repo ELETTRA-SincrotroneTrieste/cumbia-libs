@@ -25,7 +25,7 @@ void EApplyNumeric::init()
 	else if (buttonPos == Qt::Vertical)
 		box = new QVBoxLayout(this);
 
-	box->setMargin(0);
+    box->setContentsMargins(0,0,0,0);
 	box->setSpacing(3);
 
 	if (!data)

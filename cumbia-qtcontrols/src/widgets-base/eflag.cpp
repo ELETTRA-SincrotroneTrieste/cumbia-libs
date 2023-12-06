@@ -13,7 +13,7 @@ EFlag::EFlag(QWidget *parent) : QWidget(parent)
 	
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	grid = new QGridLayout(this);
-	grid->setMargin(0);
+    grid->setContentsMargins(0,0,0,0);
 	grid->setSpacing(0);
 	arrangeCells();
 	mask.clear();
@@ -24,7 +24,7 @@ void EFlag::setDisplayMask(QString slist)
 	unsigned int tmp;
 	bool ok;
 	QList <unsigned int> uilist;
-	QStringList stringlist = slist.split(",", QString::SkipEmptyParts);
+    QStringList stringlist = slist.split(",", Qt::SkipEmptyParts);
 	foreach(QString s, stringlist)
 	{
 		tmp = s.toUInt(&ok);
@@ -151,8 +151,7 @@ void EFlag::setValue(QVariant v, bool ref)
 
 	last_val = v;
 
-	if (v.type() == QVariant::List)
-	{
+    if (v.typeId() == QMetaType::QVariantList) {
 		/* In this first case (a list is passed) we suppose
 		 * that the elements in the list are consistent with
 		 * the kind of data stored, e.g. all booleans
@@ -162,11 +161,9 @@ void EFlag::setValue(QVariant v, bool ref)
 		/* data is QList<QVariant> */		
 		data.clear();
 		int i = 0;	
-		for(i = 0; i < mask.size(); i++ )
-		{
-			qSort(mask[i].begin(), mask[i].end() );
-			for(int j = 0; j < mask[i].size(); j++)
-			{
+        for(i = 0; i < mask.size(); i++ ) {
+            std::sort(mask[i].begin(), mask[i].end() );
+            for(int j = 0; j < mask[i].size(); j++) {
 				data << temp.value(mask[i][j]);
 			}
 		}
@@ -176,7 +173,7 @@ void EFlag::setValue(QVariant v, bool ref)
 				data << v;
 		}
 	}
-	else if (v.canConvert(QVariant::UInt)) /* an unsigned int is passed */
+    else if (v.canConvert(QMetaType(QMetaType::UInt))) /* an unsigned int is passed */
 	{
 		qDebug() << "uint";
 		unsigned int temp = v.toUInt();
@@ -197,7 +194,7 @@ void EFlag::setValue(QVariant v, bool ref)
 			 */
 
 		     	/* Let's sort each submask */
-			qSort(mask[i].begin(), mask[i].end() );
+            std::sort(mask[i].begin(), mask[i].end() );
 
 			value = 0;
 			int j;
@@ -274,7 +271,7 @@ QString EFlag::trueStrings()
 
 void EFlag::setFalseStrings(QString s)
 {
-	m_falseStrings = s.split(";",QString::SkipEmptyParts);
+    m_falseStrings = s.split(";",Qt::SkipEmptyParts);
 	configureCells();
 }
 
@@ -286,7 +283,7 @@ QString EFlag::falseStrings()
 void EFlag::setTrueColors(QString c)
 {
 	m_trueColors.clear();
-	QStringList l = c.split(";",QString::SkipEmptyParts);
+    QStringList l = c.split(";",Qt::SkipEmptyParts);
 	foreach(QString s, l)
 		m_trueColors << QVariant(QColor(s.toUInt()));
 	configureCells();
@@ -303,7 +300,7 @@ QString EFlag::trueColors()
 void EFlag::setFalseColors(QString c)
 {
 	m_falseColors.clear();
-	QStringList l = c.split(";",QString::SkipEmptyParts);
+    QStringList l = c.split(";",Qt::SkipEmptyParts);
 	foreach(QString s, l)
 		m_falseColors << QVariant(QColor(s.toUInt()));
 	configureCells(); 

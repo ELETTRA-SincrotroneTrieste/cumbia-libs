@@ -6,7 +6,7 @@
 #include <QDir>
 #include <QTextStream>
 #include <QCoreApplication>
-#include <QRegExp>
+#include <QRegularExpression>
 
 UicProc::UicProc()
 {
@@ -51,15 +51,15 @@ QString UicProc::getUicCmd(const QString &ui_h_fname, const SearchDirInfoSet &di
     }
     QString binpath;
     QTextStream in(&mkf);
-    QRegExp re("QMAKE\\s*=\\s*([A-Za-z_0-9\\.\\-/]*)/qmake");
+    QRegularExpression re("QMAKE\\s*=\\s*([A-Za-z_0-9\\.\\-/]*)/qmake");
     while(!in.atEnd())
     {
         QStringList list;
         QString line = in.readLine();
-        int pos = re.indexIn(line);
-        if(pos > -1)
+        QRegularExpressionMatch ma = re.match(line);
+        if(ma.hasMatch())
         {
-            list = re.capturedTexts();
+            list = ma.capturedTexts();
             if(list.size() == 2)
                 binpath = list.last();
             break;
@@ -92,7 +92,7 @@ bool UicProc::run(const QString &cmd)
 {
     QProcess p;
     QString program;
-    QStringList params = cmd.split(QRegExp("\\s+"));
+    QStringList params = cmd.split(QRegularExpression("\\s+"));
     program = params.first();
     params.removeAt(0);
     p.start(program, params);

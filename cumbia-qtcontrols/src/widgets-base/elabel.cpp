@@ -137,7 +137,7 @@ bool ELabel::enumDisplayConfigured()
 void ELabel::display()
 {
      QColor background;
-    if (d_ptr->val.type() == QVariant::Bool)
+    if (d_ptr->val.typeId() == QMetaType::Bool)
     {
         qDebug() << __FUNCTION__ << "ELabel boolean " << d_ptr->val.toBool() <<"("
                  << d_ptr->trueColor << ")" << d_ptr->trueString << d_ptr->falseString <<"(" << d_ptr->falseColor << ")" ;
@@ -160,7 +160,8 @@ void ELabel::display()
         setDecoration(background, QColor());
     }
     //else if (d_ptr->val.type() == QVariant::UInt)
-    else if (d_ptr->val.canConvert(QVariant::UInt) && (v_colors.size()) && (!d_ptr->val.toString().contains("###")))
+    else if (d_ptr->val.canConvert(QMetaType(QMetaType::UInt))
+             && (v_colors.size()) && (!d_ptr->val.toString().contains("###")))
     {
         /* Look for the value `d_ptr->val' inside the v_values
          * vector, to see if a string and a color were
@@ -171,7 +172,7 @@ void ELabel::display()
         {
             if(background !=  v_colors[index])
             {
-                background == v_colors[index];
+                background = v_colors[index];
                 setDecoration(background, QColor());
             }
             setText(v_strings[index]);

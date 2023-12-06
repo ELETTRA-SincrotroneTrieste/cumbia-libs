@@ -293,7 +293,7 @@ and
 
 \code
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += x11extras
+greaterThan(QT_MAJOR_VERSION, 4): QT += 
 
 \endcode
 
@@ -350,7 +350,7 @@ include (/usr/local/include/qumbia-tango-controls/qumbia-tango-controls.pri)
 
 # 2. add this only if main.cpp registers the application to the X window manager
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += x11extras
+greaterThan(QT_MAJOR_VERSION, 4): QT += 
 PKGCONFIG += x11
 
 # cuuimake runs uic

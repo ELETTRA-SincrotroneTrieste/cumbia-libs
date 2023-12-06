@@ -1,7 +1,7 @@
 | Fresh Ubuntu 19.10 on Gnome Boxes |  2020.03.13   |
 +---------------------------------------------------+
 
-sudo apt-get install build-essential ninja-build meson git doxygen graphviz libtango-dev libtango-tools tango-test  qt5-default qtcreator libqt5x11extras5-dev qttools5-dev qtscript5-dev libqt5x11extras5-dev qttools5-dev  qml-module-qtcharts qml-module-qtquick-controls2 qml-module-qtquick-dialogs qml-module-qtquick-extras qml-module-qtquick-scene2d qml-module-qtquick-scene3d qml-module-qtquick-templates2 qtdeclarative5-dev libqt5charts5-dev qtcharts5-examples qtcharts5-doc-html
+sudo apt-get install build-essential ninja-build meson git doxygen graphviz libtango-dev libtango-tools tango-test  qt5-default qtcreator libqt55-dev qttools5-dev qtscript5-dev libqt55-dev qttools5-dev  qml-module-qtcharts qml-module-qtquick-controls2 qml-module-qtquick-dialogs qml-module-qtquick-extras qml-module-qtquick-scene2d qml-module-qtquick-scene3d qml-module-qtquick-templates2 qtdeclarative5-dev libqt5charts5-dev qtcharts5-examples qtcharts5-doc-html
 
 sudo apt-get install vim
 

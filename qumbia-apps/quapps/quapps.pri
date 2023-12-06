@@ -49,7 +49,7 @@ linux-g++|linux-clang|freebsd-clang|freebsd-g++|openbsd {
 	    message("+ adding Tango module under $${INSTALL_ROOT}")
 		include ($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
 		}
-		greaterThan(QT_MAJOR_VERSION, 4): QT += x11extras
+		greaterThan(QT_MAJOR_VERSION, 4): QT += 
 }
 
 exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri):isEmpty(rnd_x) {

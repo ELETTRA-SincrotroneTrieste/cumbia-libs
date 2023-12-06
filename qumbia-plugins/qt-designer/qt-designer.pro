@@ -29,7 +29,7 @@ DESIGNER_PLUGIN_INSTALL_DIR=$${PLUGIN_LIB_DIR}/designer
 DEFINES += CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${prefix}/lib/qumbia-plugins\\\"\"
 
 greaterThan(QT_MAJOR_VERSION, 4) {
-    QT += widgets x11extras printsupport uiplugin
+    QT += widgets  printsupport uiplugin
     QT += designer
 } else {
     CONFIG += designer

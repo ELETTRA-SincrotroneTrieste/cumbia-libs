@@ -143,8 +143,8 @@ linux-g++ {
 }
 ```
 
-Dependencies from qtx11extras should be removed or moved within the linux-g++ scope.
-Removing qtx11extras support implies removing or conditionally include sections of code
+Dependencies from qt should be removed or moved within the linux-g++ scope.
+Removing qt support implies removing or conditionally include sections of code
 related to X, like for example those using QX11Info, calling XSetCommand and so on.
 
 
@@ -408,7 +408,7 @@ Qt and cumbia libraries have been tested with chromium browser, the Emscripten v
 
 #### init-repository excluding some modules:
 
-> ./init-repository --module-subset=all,-qtwayland,-qtx11extras,-qtwebengine,-qtpim,-qtquick3d,-qtmacextras
+> ./init-repository --module-subset=all,-qtwayland,-qt,-qtwebengine,-qtpim,-qtquick3d,-qtmacextras
 
 Set the environment for *emscripten*
 
