@@ -2,6 +2,7 @@
 #define CUTANGOACTIONFACTORYI_H
 
 class CumbiaTango;
+class TSource;
 
 #include <string>
 #include <cutangoactioni.h>
@@ -28,7 +29,7 @@ public:
      * @param source a string identifying a source to connect to
      * @param ct a pointer to a CumbiaTango instance
      */
-    virtual CuTangoActionI *create(const std::string& source, CumbiaTango *ct) const = 0;
+    virtual CuTangoActionI *create(const TSource& source, CumbiaTango *ct) const = 0;
 
     /** \brief Return the type of action that the factory creates
      *

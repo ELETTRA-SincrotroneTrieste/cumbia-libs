@@ -8,7 +8,7 @@ DEFINES -= QT_NO_DEBUG_OUTPUT
 
 TARGET = cuformula-plugin
 TEMPLATE = lib
-CONFIG += plugin debug
+CONFIG += plugin release
 
 # CONFIG += silent
 

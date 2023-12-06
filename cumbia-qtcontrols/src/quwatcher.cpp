@@ -116,24 +116,23 @@ CuContext *QuWatcher::getContext() const {
  */
 void QuWatcher::onUpdate(const CuData &data)
 {
-    bool ok = !data["err"].toBool();
-    bool is_config = data.has("type", "property");
-    std::string msg = data["msg"].toString();
-    !ok ? d->context->getLinkStats()->addError(msg) : d->context->getLinkStats()->addOperation();
+    bool ok = !data[CuDType::Err].toBool();
+    bool is_config = data.has(CuDType::Type, "property");
+    const char *msg = data[CuDType::Message].c_str();
     if(is_config) {
         configure(data); // Qumbiaizer virtual configure method
     }
-    if(data.containsKey("value")) {
+    if(data.containsKey(CuDType::Value))
         updateValue(data);
-        if(singleShot()) {
-            unsetSource();
-        }
-    }
+    if(singleShot())
+        unsetSource();
+
     // newData flavored signals
     // are emitted from Qumbiaizer::updateValue
     // generic newData signal is emitted here
     emit readOk(ok);
-    emit refreshMessage(QString::fromStdString(msg));
+    if(msg != nullptr)
+        emit refreshMessage(msg);
     emit newData(data);
 }
 

@@ -33,7 +33,7 @@ public:
 
     // CuTangoActionI interface
 public:
-    TSource getSource() const;
+    const TSource& getSource() const;
     Type getType() const;
     void addDataListener(CuDataListener *l);
     void removeDataListener(CuDataListener *l);

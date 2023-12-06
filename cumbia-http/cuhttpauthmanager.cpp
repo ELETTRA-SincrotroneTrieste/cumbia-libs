@@ -130,8 +130,8 @@ void CuHttpAuthManager::onCredsReady(const QString &user, const QString &passwd)
 }
 
 CuData CuHttpAuthManager::m_make_error_data(const QString &msg) const {
-    CuData ed("err", true);
-    ed.set("msg", msg.toStdString()).set("src", "auth_manager").putTimestamp();
+    CuData ed(CuDType::Err, true);  // CuData ed("err", true)
+    ed.set(CuDType::Message, msg.toStdString()).set(CuDType::Src, "auth_manager").putTimestamp();  // set("msg", msg.toStdString(), set("src", "auth_manager")
     if(d->reply)
         ed.set("encrypted", d->reply->property("ssl").toBool());
     return ed;

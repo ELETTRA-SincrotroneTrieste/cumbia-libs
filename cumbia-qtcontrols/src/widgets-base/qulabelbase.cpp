@@ -7,41 +7,30 @@
 #include <QMap>
 #include <QPair>
 
-class QuLabelBasePrivate
-{
-public:
-    QColor result_border_color, backgroundColor;
-    float borderWidth;
-    QMap<long int, QPair<QString, QColor> >enum_d;
-    QString format;
-    int max_len;
-    int size_scale;
-    bool draw_internal_border;
-};
 
 QuLabelBase::QuLabelBase(QWidget *parent) : QLabel(parent)
 {
-    d_ptr = new QuLabelBasePrivate;
-    d_ptr->borderWidth = 1.0;
-    d_ptr->format = "";
-    d_ptr->max_len = -1;
-    d_ptr->size_scale = 1.12;
-    d_ptr->draw_internal_border = true;
+    d_data = new QuLabelBaseData;
+    d_data->borderWidth = 1.0;
+    d_data->format = "";
+    d_data->max_len = -1;
+    d_data->size_scale = 1.12;
+    d_data->draw_internal_border = true;
     setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     setAutoFillBackground(true);
 }
 
 QuLabelBase::QuLabelBase(const QString& text, QWidget *parent) : QLabel(text, parent)
 {
-    d_ptr = new QuLabelBasePrivate;
-    d_ptr->borderWidth = 1.0;
+    d_data = new QuLabelBaseData;
+    d_data->borderWidth = 1.0;
     setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     setAutoFillBackground(true);
 }
 
 QuLabelBase::~QuLabelBase()
 {
-    delete d_ptr;
+    delete d_data;
 }
 
 /*! \brief returns the maximum length of the displayed string
@@ -52,7 +41,7 @@ QuLabelBase::~QuLabelBase()
  */
 int QuLabelBase::maximumLength() const
 {
-    return d_ptr->max_len;
+    return d_data->max_len;
 }
 
 /*! \brief if the data shown is a string, truncate it to the given length
@@ -67,7 +56,7 @@ int QuLabelBase::maximumLength() const
  */
 void QuLabelBase::setMaximumLength(int len)
 {
-    d_ptr->max_len = len;
+    d_data->max_len = len;
 }
 
 /*! \brief set the background color of the label
@@ -81,13 +70,12 @@ void QuLabelBase::setMaximumLength(int len)
  *
  * @see setDecoration
  */
-void QuLabelBase::setBackground(const QColor &background)
-{
-    d_ptr->backgroundColor = background;
-    if(background.isValid()) {
+void QuLabelBase::setBackground(const QColor &background) {
+    if(d_data->backgroundColor != background && background.isValid()) {
         QPalette p = palette();
-        p.setColor(QPalette::Background, background);
+        p.setColor(QPalette::Window, background);
         setPalette(p);
+        d_data->backgroundColor = background;
     }
 }
 
@@ -100,8 +88,8 @@ void QuLabelBase::setBackground(const QColor &background)
  * nothing is done.
  */
 void QuLabelBase::setBorderColor(const QColor &border) {
-    if(border.isValid() && d_ptr->result_border_color != border) {
-        d_ptr->result_border_color = border;
+    if(border.isValid() && d_data->result_border_color != border) {
+        d_data->result_border_color = border;
     }
 }
 
@@ -116,14 +104,15 @@ void QuLabelBase::setBorderColor(const QColor &border) {
  */
 void QuLabelBase::setDecoration(const QColor & background, const QColor &border)
 {
-    const bool bg_update = background.isValid() && d_ptr->backgroundColor != background;
-    const bool border_update = d_ptr->result_border_color != border;
+    const bool bg_update = background.isValid() && d_data->backgroundColor != background;
+    const bool border_update = d_data->result_border_color != border;
     if(border_update)
-        d_ptr->result_border_color = border;
+        d_data->result_border_color = border;
     if(bg_update)
         setBackground(background); // calls setPalette: no need for update
-   else if(border_update)
+    else if(border_update) {
         update();
+    }
 }
 
 /*! \brief returns the width, in pixels, of the colored border that is
@@ -133,7 +122,7 @@ void QuLabelBase::setDecoration(const QColor & background, const QColor &border)
  */
 double QuLabelBase::borderWidth() const
 {
-    return d_ptr->borderWidth;
+    return d_data->borderWidth;
 }
 
 /*! \brief sets the width of the border(s) drawn with the chosen color
@@ -150,13 +139,13 @@ double QuLabelBase::borderWidth() const
  */
 void QuLabelBase::setBorderWidth(double w)
 {
-    d_ptr->borderWidth = w;
+    d_data->borderWidth = w;
     update();
     updateGeometry();
 }
 
 void QuLabelBase::setDrawInternalBorder(bool draw) {
-    d_ptr->draw_internal_border = draw;
+    d_data->draw_internal_border = draw;
 }
 
 /*! \brief set the value to display on the label. Optionally check if the background
@@ -179,47 +168,41 @@ void QuLabelBase::setDrawInternalBorder(bool draw) {
  * See CuVariant::toString for further details.
  *
  */
-void QuLabelBase::setValue(const CuVariant& v, bool *background_modified)
+bool QuLabelBase::decode(const CuVariant& v, QColor &background) const
 {
-    bool bg_modified = false;
-    QString txt;
-    if(v.getType() == CuVariant::String) {
-        txt = QString::fromStdString(v.toString());
+    if(v.getType() == CuVariant::String && v.getFormat() == CuVariant::Scalar) {
+        strncpy(d_data->text, v.c_str(), QULABEL_MAXLEN);
     }
+    else if(v.getType() == CuVariant::String)
+        strncpy(d_data->text, v.toString().c_str(), QULABEL_MAXLEN);
     else if(v.getType() == CuVariant::Boolean) {
-        bool bv = v.toBool();
-        txt = (bv ? property("trueString").toString() : property("falseString").toString());
-        if(txt.isEmpty())
-            txt = QString::fromStdString(v.toString());
-        QColor background = bv ? property("trueColor").value<QColor>() : property("falseColor").value<QColor>();
-        bg_modified = background.isValid();
-        if(bg_modified) // valid
-            setBackground(background);
+        const bool &bv = v.toBool();
+        const QVariant& ts = property("trueString"), &fs = property("falseString");
+        if(ts.isValid() && fs.isValid())
+            strncpy(d_data->text, (bv ? ts.toString().toStdString().c_str() :
+                                       fs.toString().toStdString().c_str()), QULABEL_MAXLEN);
+        else
+            strncpy(d_data->text, v.toString().c_str(), QULABEL_MAXLEN);
+        const QVariant& tcp = property("trueColor"), &fcp = property("falseColor");
+        if(tcp.isValid() && fcp.isValid()) {
+            background = bv ? tcp.value<QColor>() : fcp.value<QColor>();
+        }
     }
     else if(v.isInteger() && v.getFormat() == CuVariant::Scalar) {
         long int li;
         v.to<long int>(li);
-        if(d_ptr->enum_d.contains(li)) {
-            txt = d_ptr->enum_d[li].first;
-            setBackground(d_ptr->enum_d[li].second);
-            bg_modified = d_ptr->enum_d[li].second.isValid();
+        if(d_data->enum_d.contains(li)) {
+            strncpy(d_data->text, d_data->enum_d[li].first.toStdString().c_str(), QULABEL_MAXLEN);
+            background = (d_data->enum_d[li].second);
         }
         else {
-            txt = QString::fromStdString(v.toString(NULL, d_ptr->format.toStdString().c_str()));
+            strncpy(d_data->text, v.toString(nullptr, d_data->format.toStdString().c_str()).c_str(), QULABEL_MAXLEN);
         }
     }
     else {
-        txt = QString::fromStdString(v.toString(NULL, d_ptr->format.toStdString().c_str()));
+        strncpy(d_data->text, v.toString(nullptr, d_data->format.toStdString().c_str()).c_str(), QULABEL_MAXLEN);
     }
-    if(d_ptr->max_len > -1 && txt.length() > d_ptr->max_len) {
-        setToolTip(toolTip() + "\n\n" + txt);
-        txt.truncate(d_ptr->max_len - strlen(" [...]"));
-        txt += " [...]";
-    }
-    QLabel::setText(txt);
-
-    if(background_modified)
-        *background_modified = bg_modified;
+    return true;
 }
 
 void QuLabelBase::setEnumDisplay(int val, const QString &text, const QColor &c)
@@ -227,12 +210,12 @@ void QuLabelBase::setEnumDisplay(int val, const QString &text, const QColor &c)
     QPair <QString, QColor> p;
     p.first = text;
     p.second = c;
-    d_ptr->enum_d[val] = p;
+    d_data->enum_d[val] = p;
 }
 
 void QuLabelBase::setFormat(const QString &fmt)
 {
-    d_ptr->format = fmt;
+    d_data->format =  fmt;
 }
 
 /*! \brief reimplements QLabel::minimumSizeHint to ensure there is enough space to draw
@@ -243,24 +226,24 @@ void QuLabelBase::setFormat(const QString &fmt)
 QSize QuLabelBase::minimumSizeHint() const
 {
     QSize s = QLabel::minimumSizeHint();
-    float extra = (d_ptr->borderWidth + 2) * 4;
-    s = QSize(s.width() + extra, s.height() + extra) * d_ptr->size_scale;
+    float extra = (d_data->borderWidth + 2) * 4;
+    s = QSize(s.width() + extra, s.height() + extra) * d_data->size_scale;
     return s;
 }
 
 QSize QuLabelBase::sizeHint() const
 {
     QSize s = QLabel::sizeHint();
-    float extra =  (d_ptr->borderWidth + 2) * 4;
-    s=  QSize(s.width() + extra, s.height() + extra) * d_ptr->size_scale;
+    float extra =  (d_data->borderWidth + 2) * 4;
+    s=  QSize(s.width() + extra, s.height() + extra) * d_data->size_scale;
     return s;
 }
 
 int QuLabelBase::heightForWidth(int w) const
 {
-    float extra =  (d_ptr->borderWidth + 2) * 4;
+    float extra =  (d_data->borderWidth + 2) * 4;
     int h = QLabel::heightForWidth(w + extra);
-    h *= d_ptr->size_scale;
+    h *= d_data->size_scale;
     return h;
 }
 
@@ -283,7 +266,7 @@ bool QuLabelBase::hasHeightForWidth() const
  */
 bool QuLabelBase::drawInternalBorder() const
 {
-    return d_ptr->draw_internal_border;
+    return d_data->draw_internal_border;
 }
 
 /*! \brief returns the format used to represent a number, or an empty string if
@@ -298,7 +281,7 @@ bool QuLabelBase::drawInternalBorder() const
  */
 QString QuLabelBase::format() const
 {
-    return d_ptr->format;
+    return d_data->format;
 }
 
 /*! \brief Reimplements QLabel::paintEvent
@@ -316,11 +299,11 @@ void QuLabelBase::paintEvent(QPaintEvent *pe)
 {
     QLabel::paintEvent(pe);
 
-    double pwidth = d_ptr->borderWidth;
+    double pwidth = d_data->borderWidth;
     const QRectF &r = rect().adjusted(0, 0, -1, -1);
 
     QColor bor;
-    d_ptr->result_border_color.isValid() ? bor = d_ptr->result_border_color : bor = QColor(Qt::lightGray);
+    d_data->result_border_color.isValid() ? bor = d_data->result_border_color : bor = QColor(Qt::lightGray);
 
     QPainter p(this);
     QPen pen(bor);
@@ -328,7 +311,7 @@ void QuLabelBase::paintEvent(QPaintEvent *pe)
 
     const QRectF intBorderR = r.adjusted(2 + pwidth/2.0, 2 + pwidth/2.0, -1-pwidth/2.0, -1-pwidth/2.0);
 
-    if(d_ptr->draw_internal_border) {
+    if(d_data->draw_internal_border) {
         pen.setColor(QColor(Qt::lightGray));
         p.setPen(pen);
         p.drawRect(r);
@@ -343,7 +326,7 @@ void QuLabelBase::paintEvent(QPaintEvent *pe)
         p.drawRect(intBorderR); // draw gray border (external)
     }
     else { // draw only result border color, external
-        pen.setWidthF(d_ptr->borderWidth);
+        pen.setWidthF(d_data->borderWidth);
         p.setPen(pen);
         // p.drawRect(r.adjusted(1.0 + pen.widthF()/2.0, 1.0+pen.widthF()/2, -pen.widthF()/2.0, -pen.widthF()/2.0));
         p.drawRect(rect());

@@ -192,7 +192,6 @@ void CuHttpControlsWriter::setTarget(const QString &s) {
     t = t.substr(0, t.find("("));
     CuHTTPSrc ht(t, d->cu_http->getSrcHelpers());
     d->target = QString::fromStdString(ht.prepare() + a); // (*) restore args in d->target
-    cuprintf("\e[1;35mCuHttpControlsWriter::setTarget %s options %s\e[0m\n", qstoc(d->target), datos(cf.options()));
     CuHttpTangoSrc ts(d->target.toStdString());
     if(ts.getType() == CuHttpTangoSrc::SrcAttr)
         cf.mergeOptions(CuData("read-value", true));

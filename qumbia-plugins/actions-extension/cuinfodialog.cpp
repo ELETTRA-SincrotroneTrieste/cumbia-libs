@@ -443,13 +443,13 @@ void CuInfoDialog::onMonitorUpdate(const CuData &da) {
     int scrollbarPos = d->tree->verticalScrollBar()->value();
     bool live = sender()->objectName() == "1Twatcher";
     QTextBrowser *tb = nullptr;
-    if(da.has("type", "property")) {
+    if(da.has(CuDType::Type, "property")) {  // has("type", "property")
         m_update_props(da, false);
     }
-    if(!da.has("type", "property") || live) {
+    if(!da.has(CuDType::Type, "property") || live) {  // has("type", "property")
         m_update_value(da, live);
     }
-    m_update_stats(QuString(da.s("src")));
+    m_update_stats(QuString(da.s(CuDType::Src)));  // da.s("src")
     d->tree->verticalScrollBar()->setValue(scrollbarPos); // restore scroll bar position
     ////////
     return;
@@ -661,8 +661,8 @@ int CuInfoDialog::m_writers_count() const {
 }
 
 void CuInfoDialog::m_update_props(const CuData &da, bool writer) {
-    QuString src(da.s("src"));
-    if(da.has("type", "property")) {
+    QuString src(da.s(CuDType::Src));  // da.s("src")
+    if(da.has(CuDType::Type, "property")) {  // has("type", "property")
         QStringList noprop_keys { "value", "w_value" , "write_value"};
         std::vector<std::string> dkeys = da.keys();
         std::sort(dkeys.begin(), dkeys.end());
@@ -678,15 +678,15 @@ void CuInfoDialog::m_update_props(const CuData &da, bool writer) {
 
 void CuInfoDialog::m_update_value(const CuData &da, bool live) {
     QuPalette pale;
-    const QuString& s(da.s("src"));
+    const QuString& s(da.s(CuDType::Src));  // da.s("src")
     QTreeWidgetItem *it = m_find_reader(s);
     if(it) {
         double x = 0;
         QTreeWidgetItem * i = m_get_reader_key(s, "date and time");
-        da["timestamp_ms"].to<double>(x);
+        da[CuDType::Time_ms].to<double>(x);  // da["timestamp_ms"]
         QString datetime = QDateTime::fromMSecsSinceEpoch(x).toString();
         QStringList valueKeys = QStringList() << "value" << "w_value" << "write_value" << "err";
-        if(da.containsKey("msg")) valueKeys << "msg";
+        if(da.containsKey(CuDType::Message)) valueKeys << "msg";  // da.containsKey("msg")
         else delete m_get_reader_key(s, "msg"); // remove "msg" item for source s
         i->setText(1, datetime);
         i->setText(2, (live ?  "value from a temporary reader" : "value from " + m_owner->objectName()));
@@ -696,11 +696,11 @@ void CuInfoDialog::m_update_value(const CuData &da, bool live) {
                 i->setText(1, QuString(da[vk.toStdString()]));
                 if(vk == "value") {
                     QFont f = i->font(1); f.setBold(true); i->setFont(1, f);
-                    da.containsKey("qc") && da.s("qc") != "white" ? i->setForeground(1, pale.value(da.s("qc").c_str()))
+                    da.containsKey(CuDType::QualityColor) && da.s(CuDType::QualityColor) != "white" ? i->setForeground(1, pale.value(da.s(CuDType::QualityColor).c_str()))  // da.containsKey("qc"), da.s("qc"), da.s("qc")
                                                                   : i->setForeground(1, QColor(Qt::black));
 
                 } else if(vk == "err") {
-                    i->setForeground(1, da.B("err") ? QColor("red") : QColor("black"));
+                    i->setForeground(1, da.B(CuDType::Err) ? QColor("red") : QColor("black"));  // da.B("err")
                 }
             }
         }

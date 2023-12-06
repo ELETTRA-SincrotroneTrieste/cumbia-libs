@@ -261,10 +261,10 @@ void CumbiaTango::write_double_scalar1(Tango::WAttribute &attr)
 	Tango::DevDouble	w_val;
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CumbiaTango::write_double_scalar1) ENABLED START -----*/
-    CuData in("device", "test/device/1");
+    CuData in(CuDType::Device, "test/device/1");  // CuData in("device", "test/device/1")
     in["double_scalar"] = w_val;
     WriteActivity *wa = new WriteActivity(in);
-    registerActivity(wa, new CuTangoThreadListener(this, CuData("name", "write_double_scalar_1_listener")));
+    registerActivity(wa, new CuTangoThreadListener(this, CuData(CuDType::Name, "write_double_scalar_1_listener")));  // , CuData("name", "write_double_scalar_1_listener")
 	
 	/*----- PROTECTED REGION END -----*/	//	CumbiaTango::write_double_scalar1
 }
@@ -346,12 +346,12 @@ void CumbiaTango::add_dynamic_commands()
 void CumbiaTango::onProgress(int step, int total, const CuData& data)
 {
     printf("CumbiaTango.onProgress: step %d total %d data as string \e[1;32m%s\e[0m]..................this thread \e[1;31m0x%lx\e[0m...........\n",
-           step, total,data["device"].toString().c_str(),  pthread_self());
+           step, total,data[CuDType::Device].toString().c_str(),  pthread_self());  // data["device"]
 }
 
 void CumbiaTango::onResult(const CuData& data)
 {
-    std::string dev = data["device"].toString();
+    std::string dev = data[CuDType::Device].toString();  // data["device"]
     Tango::DevDouble d = data["double_scalar"].toDouble();
     if(dev == "test/device/1")
         *attr_double_scalar1_read = d;
@@ -359,7 +359,7 @@ void CumbiaTango::onResult(const CuData& data)
         *attr_double_scalar2_read = d;
     if(!data["error"].isNull())
         perr("CumbiaTango.onResult: error reading data from %s: %s\n",
-             data["device"].toString().c_str(),  data["error"].toString().c_str() );
+             data[CuDType::Device].toString().c_str(),  data["error"].toString().c_str() );  // data["device"]
 }
 
 CuData CumbiaTango::getToken() const

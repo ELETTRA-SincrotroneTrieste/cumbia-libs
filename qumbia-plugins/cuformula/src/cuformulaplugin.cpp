@@ -44,6 +44,21 @@ Cumbia *CuFormulaPlugin::getCumbia() const
     return d->cu_f;
 }
 
+/*!
+ * \brief plugin is initialized with application wide CumbiaPool and CuControlsFactoryPool
+ * \param cu_poo the application wide pointer to CumbiaPool
+ * \param fpool the application wide (non const) reference to CuControlFactoryPool
+ *
+ * After plugin initialization, both pools will have the *formula* domain registered with the *cuformula*
+ * patterns (formula:// prefix).
+ *
+ * \par Important note 1
+ * CuFormulaPlugin::initialize shall be called before any source setup, so that the application wide
+ * pools will contain the *formula* domain with the necessary factories.
+ *
+ * \par Important note 2
+ * cu_poo and fpool *shall be initialized with all other desired engines before* this call.
+ */
 void CuFormulaPlugin::initialize(CumbiaPool *cu_poo, CuControlsFactoryPool &fpool)
 {
     d->reader_f = new CuFormulaReaderFactory(cu_poo, fpool);

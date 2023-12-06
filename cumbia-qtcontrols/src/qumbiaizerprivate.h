@@ -64,6 +64,8 @@ public:
     QString message;
     void setError(bool err);
     CuControlsUtils cucu;
+    CuData last_d;
+    char msg[MSGLEN];
 
 private:
     Qumbiaizer *q_ptr;

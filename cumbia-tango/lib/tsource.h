@@ -27,21 +27,22 @@ public:
         return dev_re;
     }
     static std::regex& get_host_re() {
-       static std::regex host_re(TGHOST_RE);
-       return host_re;
+        static std::regex host_re(TGHOST_RE);
+        return host_re;
     }
     static std::regex& get_freeprop_re() {
-       static std::regex freeprop_re = std::regex("#(.*)#");;
-       return freeprop_re;
+        static std::regex freeprop_re = std::regex("#(.*)#");;
+        return freeprop_re;
     }
     static std::regex& get_args_re() {
-       static std::regex args_re =std::regex("\\((?:\\[\\s*(.*)\\s*\\]\\s*){0,1}.*\\)");
-       return args_re;
+        static std::regex args_re =std::regex("\\((?:\\[\\s*(.*)\\s*\\]\\s*){0,1}.*\\)");
+        return args_re;
     }
     static std::regex& get_separ_re() {
-       static std::regex separ_re = std::regex("sep\\((.*)\\)");
-       return separ_re;
+        static std::regex separ_re = std::regex("sep\\((.*)\\)");
+        return separ_re;
     }
+
 };
 
 struct arg_options {
@@ -58,12 +59,13 @@ public:
                 SrcDbAProp, SrcDbGetCmdI, SrcDbClassProp, SrcDbDevProp, SrcDbFreeProp, SrcExportedDevs, SrcEndTypes };
 
     const char *tynames[SrcEndTypes + 1] = { "SrcInvalid", "SrcCmd", "SrcAttr", "SrcDbDoma", "SrcDbFam", "SrcDbMem",
-                                             "SrcDbAtts","SrcDbClassProps",  "SrcDbCmds", "SrcDbAProps",  "SrcDbDevProps",
-                                             "SrcDbAProp",  "SrcDbGetCmdI",  "SrcDbClassProp", "SrcDbDevProp", "SrcDbFreeProp", "SrcExportedDevs" "SrcEndTypes" };
+                                            "SrcDbAtts","SrcDbClassProps",  "SrcDbCmds", "SrcDbAProps",  "SrcDbDevProps",
+                                            "SrcDbAProp",  "SrcDbGetCmdI",  "SrcDbClassProp", "SrcDbDevProp", "SrcDbFreeProp", "SrcExportedDevs" "SrcEndTypes" };
 
     TSource();
     TSource(const std::string s);
     TSource(const TSource& other);
+    TSource(TSource &&other);
     ~TSource();
 
     std::string getDeviceName() const;

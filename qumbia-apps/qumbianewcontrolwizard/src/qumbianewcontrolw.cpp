@@ -25,7 +25,7 @@ Widget::Widget(QWidget *parent) :
 
     QDir current;
     ui->leOutDir->setText(current.absolutePath());
-    if(current.exists("src")) {
+    if(current.exists("src")) {  // current.exists("src") !cudata
         ui->leOutDir->setText(ui->leOutDir->text() + "/src");
         ui->leProUnder->setText("src");
         ui->cbAddToPro->setChecked(true);

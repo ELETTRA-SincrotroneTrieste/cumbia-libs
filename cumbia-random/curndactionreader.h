@@ -61,7 +61,7 @@ public:
 
     void onResult(const CuData &data);
 
-    void onResult(const std::vector<CuData> &datalist);
+    void onResult(const CuData *p, int siz);
 
     void setOptions(const CuData& options);
 

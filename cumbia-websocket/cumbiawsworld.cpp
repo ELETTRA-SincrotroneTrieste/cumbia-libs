@@ -30,8 +30,8 @@ bool CumbiaWSWorld::source_valid(const std::string &)
 bool CumbiaWSWorld::json_decode(const QJsonDocument &json, CuData &res)
 {
     if(json.isNull()) {
-        res["err"] = true;
-        res["msg"] = "CuWSActionReader.decodeMessage: invalid json document";
+        res[CuDType::Err] = true;  // res["err"]
+        res[CuDType::Message] = "CuWSActionReader.decodeMessage: invalid json document";  // res["msg"]
     }
     else {
         const QJsonObject data_o = json["data"].toObject();
@@ -89,25 +89,30 @@ bool CumbiaWSWorld::json_decode(const QJsonDocument &json, CuData &res)
             char *endptr;
             double ts_us = -1.0f;
             if(data_o.contains("timestamp"))
-                ts_us = strtod(data_o["timestamp"].toString().toStdString().c_str(), &endptr);
-            else if(data_o.contains("timestamp_us"))
-                ts_us = data_o["timestamp_us"].toDouble();
+                ts_us = strtod(data_o["timestamp"].toString().toStdString().c_str(), &endptr); // !cudata
+            else if(data_o.contains("timestamp_us"))  // !cudata
+                ts_us = data_o["timestamp_us"].toDouble(); // !cudata
             if(ts_us >= 0)
-                res["timestamp_us"] = ts_us;
+                res[CuDType::Time_us] = ts_us;  // res["timestamp_us"]
 
             // timestamp millis
             if(data_o.contains("timestamp_ms")) // timestamp_ms converted to long int
-                res["timestamp_ms"] = data_o["timestamp_ms"].toDouble();
+                res[CuDType::Time_ms] =
+                    data_o["timestamp_ms"].toDouble();  // !cudata
             else if(ts_us >= 0)
-                res["timestamp_ms"] = floor(ts_us) * 1000.0 + (ts_us - floor(ts_us)) * 10e6 / 1000.0;
+                res[CuDType::Time_ms] = floor(ts_us) * 1000.0 + (ts_us - floor(ts_us)) * 10e6 / 1000.0;
 
             if(data_o.contains("error")) {
-                res["msg"] = data_o["error"].toString().toStdString();
-                res["err"] = data_o["error"].toString().size() > 0;
+                res[CuDType::Message] =
+                    data_o["error"].toString().toStdString();  // !cudata
+                res[CuDType::Err] =
+                    data_o["error"].toString().size() > 0;  // !cudata
             }
             else {
-                res["err"] = data_o["err"].toBool();
-                res["msg"] = data_o["msg"].toString().toStdString();
+                res[CuDType::Err] =
+                    data_o["err"].toBool();  // !cudata
+                res[CuDType::Message] =
+                    data_o["msg"].toString().toStdString();  // !cudata
             }
 
             //

@@ -1,73 +1,13 @@
 # News
 
-## version 1.5.4
+## version 2.0.0
 
-### cumbia-qtcontrols
-Fixed minimum size hint in quinputoutput
-
-## version 1.5.2
-
-Version 1.5.2 brings the *cumbia* libraries to a superior performance level.
-The startup time of rich applications may result several times faster than before.
-The optimization process continues in the upcoming *2.0* version, which will not
-be compatible with the current *1.x*. In most cases, rebuilding the application
-will be enough. In all other cases, the *cuuimake* tool will help port
-your application to version *2.0*.
-
-A Makefile is provided for convenience. *make clean, make,* and * make install*
-are *non interactive* shortcuts to the corresponding options offered by 
-*scripts/cubuild.sh*. 
-The Makefile helps build the library with classic commands.
-
-### Enhanced source parsing and configuration
-
-removed *tango://* from *src patterns* in *protocol/tango/cuhttptangohelper*.
-The prefix is used to select an engine in the controls factory pool (a 
-protocol / engine selector).
-
-Optimized regex search in source parsing.
-
-It is now possible to employ a custom separator for args
-and a single-arg can be enclosed between double quotes if 
-special characters such as a *comma* are used.
-
-### regex optimizations
-
-The majority of regex objects have become static, thus regular expression
-compilation takes place only once and only if they are actually used. This
-gives a relevant performance advantage, especially at application startup,
-upon source connection.
-
-### engine hot switch
-
-Engine switch at runtime has been improved and completed, though it has to
-be considered yet experimental. To benefit from the new implementation, 
-applications shall instantiate a *new CuEngineAccessor*, that provides access
-to the hot switch capabilities.
-The wizard that creates new cumbia projects has been updated to do that.
-
-#### cumbia
-
-CuActivityManager is now faster thanks to an additional map allowing for
-quicker lookups when creating and unlinking connections.
-
-#### cumbia-tango
-
-Include directives have been restored to *#include <tango.h>* instead of 
-*#include <tango/tango.h>* to avoid problems with Tango releases before
-9.4.0.
-
-#### cumbia-qtcontrols
-
-Mouse event handler allocates resources on demand.
-
-*QuWatcher*: added an *attach* method with a const reference to CuData as
-parameter. Users can receive updates through a complete CuData more easily.
+The main motivation for a major release is a dramatic improvement in performance.
 
 
-#### cumbia-http
- 
-Fixes including an issue when the http response contained an error.
+## Important changes
+
+Please refer to 2.0-CHANGES.md
 
 ## version 1.5.1
 
@@ -78,6 +18,30 @@ The plot configuration dialog now allows to save changes  to  axes and curve sty
 2. Formula device wildcard replacement
 
 Formulas accept now "$1" wildcards in source names, that are replaced at runtime.
+
+### Performance 
+
+Perf tools have been intensively exploited to find performance issues, especially at application
+startup with numerous sources (more than 2000).
+Regular expression declarations have become static, so that regex compilation takes place only
+once.
+
+#### cumbia
+
+CumbiaPool: if only one cumbia instance has been registered src has no "protocol" prefix, a pointer to that
+instance is returned without any regexp matching (since 1.5.1)
+
+#### cumbia-tango
+
+world config has been made static and default src_patterns are added from srcPatterns() 
+rather than in CuTangoWorld constructor, which is often called for simple operations
+
+#### cumbia-qtcontrols
+
+CuControlsFactoryPool does not perform regex match if only one factory is registered, simply
+returning the sole instance.
+
+Mouse event handler allocates the plugin only at first actual mouse event.
 
 ## version 1.5.0
 

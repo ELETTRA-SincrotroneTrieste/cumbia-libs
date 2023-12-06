@@ -229,7 +229,7 @@ signals:
     * @param success true if read was successful, false otherwise
     *
     * \par Note
-    * success contains the value of \code !data["err"].toBool() \endcode
+    * success contains the value of \code !data[CuDType::Err].toBool() \endcode  // data["err"]
     *
     */
     void readOk(bool success);
@@ -242,7 +242,7 @@ signals:
      * The source must provide this precise data type
      *
      * \par Note 2
-     * The method extracts data["value"] and converts it to short
+     * The method extracts data[CuDType::Value] and converts it to short  // data["value"]
      */
     void newData(short s);
 
@@ -254,7 +254,7 @@ signals:
      * The source must provide this precise data type
      *
      * \par Note 2
-     * The method extracts data["value"] and converts it to int
+     * The method extracts data[CuDType::Value] and converts it to int  // data["value"]
      */
     void newData(int i);
 
@@ -266,7 +266,7 @@ signals:
      * The source must provide this precise data type
      *
      * \par Note 2
-     * The method extracts data["value"] and converts it to double
+     * The method extracts data[CuDType::Value] and converts it to double  // data["value"]
      */
     void newData(double d);
 
@@ -278,7 +278,7 @@ signals:
      * The source must provide this precise data type
      *
      * \par Note 2
-     * The method extracts data["value"] and converts it to string
+     * The method extracts data[CuDType::Value] and converts it to string  // data["value"]
      */
     void newData(const QString& s);
 
@@ -292,7 +292,7 @@ signals:
      * The source must provide this precise data type
      *
      * \par Note 2
-     * The method extracts data["value"] and converts it to unsigned int
+     * The method extracts data[CuDType::Value] and converts it to unsigned int  // data["value"]
      */
     void newData(unsigned int ui);
 
@@ -304,7 +304,7 @@ signals:
      * The source must provide this precise data type
      *
      * \par Note 2
-     * The method extracts data["value"] and converts it to unsigned short
+     * The method extracts data[CuDType::Value] and converts it to unsigned short  // data["value"]
      */
     void newData(unsigned short us);
 
@@ -316,7 +316,7 @@ signals:
      * The source must provide this precise data type
      *
      * \par Note 2
-     * The method extracts data["value"] and converts it to bool
+     * The method extracts data[CuDType::Value] and converts it to bool  // data["value"]
      */
     void newData(bool b);
 
@@ -328,7 +328,7 @@ signals:
      * The source must provide this precise data type
      *
      * \par Note 2
-     * The method extracts data["value"] and converts it to a vector of double
+     * The method extracts data[CuDType::Value] and converts it to a vector of double  // data["value"]
      */
     void newData(const QVector<double> &);
 
@@ -340,7 +340,7 @@ signals:
      * The source must provide this precise data type
      *
      * \par Note 2
-     * The method extracts data["value"] and converts it to a vector of int
+     * The method extracts data[CuDType::Value] and converts it to a vector of int  // data["value"]
      */
     void newData(const QVector<int> &vi);
 
@@ -352,7 +352,7 @@ signals:
      * The source must provide this precise data type
      *
      * \par Note 2
-     * The method extracts data["value"] and converts it to a vector of bool
+     * The method extracts data[CuDType::Value] and converts it to a vector of bool  // data["value"]
      */
     void newData(const QVector<bool> & bv);
 
@@ -364,7 +364,7 @@ signals:
      * The source must provide this precise data type
      *
      * \par Note 2
-     * The method extracts data["value"] and converts it to a list of strings
+     * The method extracts data[CuDType::Value] and converts it to a list of strings  // data["value"]
      */
     void newData(const QStringList & slv);
 

@@ -1,4 +1,4 @@
-project('cumbia', 'cpp', version : '1.5.4',
+project('cumbia', 'cpp', version : '2.0.0',
     default_options : ['c_std=c17', 'cpp_std=c++17'])
 
 project_description = 'library that offers a carefree approach to multi thread application design and implementation'
@@ -16,8 +16,8 @@ conf.set_quoted('VERSION', cu_version)
 configure_file(output : 'config.h',
                configuration : conf)
 
-# let default libdir be 'lib'
-libdir = 'lib'
+# set libdir to lib
+libdir='lib'
 
 headers = [
 	'src/lib/cumbia.h',
@@ -34,6 +34,8 @@ headers = [
 'src/lib/cumatrix.h',
 'src/lib/cuvariantprivate.h',
 'src/lib/cudata.h',
+'src/lib/cudatatypes.h',
+'src/lib/cudatatypes_ex.h',
 'src/lib/cudataquality.h',
 'src/lib/cumbiapool.h',
 'src/lib/cudatalistener.h',
@@ -90,7 +92,7 @@ sources = [
 
 includedirs = include_directories('src/lib', 'src/lib/threads', 'src/lib/services')
 
-cpp_arguments = [ '-DCUMBIA_DEBUG_OUTPUT=1' , '-DCU_VERSION=1.5.4' ]
+cpp_arguments = [ '-DCUMBIA_DEBUG_OUTPUT=1' , '-DCU_VERSION=2.0.0' ]
 link_arguments = [  ]
 
 # profiling with gperftools

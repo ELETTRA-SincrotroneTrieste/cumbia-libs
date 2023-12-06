@@ -84,6 +84,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *e);
     void mouseMoveEvent(QMouseEvent *e);
     void mouseDoubleClickEvent(QMouseEvent *e);
+    bool event(QEvent *e);
 
 private:
     QuLabelPrivate *d;

@@ -2,6 +2,7 @@ include(../qumbia-plugins.pri)
 
 include ($${INSTALL_ROOT}/include/quapps/quapps.pri)
 
+
 QT += qml
 
 # The application will be installed under INSTALL_ROOT (i.e. prefix)

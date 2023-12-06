@@ -154,12 +154,12 @@ QString QuButton::target() const {
  */
 void QuButton::onUpdate(const CuData &data)
 {
-    bool is_config = data.has("type", "property");
+    bool is_config = data.has(CuDType::Type, "property");  // has("type", "property")
     if(!data["is_result"].toBool() && !is_config)
         return;
 
     const QString& msg = d->u.msg(data);
-    d->write_ok = !data["err"].toBool();
+    d->write_ok = !data[CuDType::Err].toBool();  // data["err"]
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->write_ok)
@@ -169,18 +169,18 @@ void QuButton::onUpdate(const CuData &data)
     {
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->context->cumbiaPool()->getBySrc(data["src"].toString());
+            cumbia = d->context->cumbiaPool()->getBySrc(data[CuDType::Src].toString());  // data["src"]
         if(cumbia) {
             CuLog *log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log));
             if(log)
                 log->write(QString("QuButton [" + objectName() + "]").toStdString(), msg.toStdString(), CuLog::LevelError, CuLog::CategoryWrite);
         }
         else {
-            perr("QuButton.onUpdate: cannot get a reference to cumbia either from context or CumbiaPool with target \"%s\"", data["src"].toString().c_str());
+            perr("QuButton.onUpdate: cannot get a reference to cumbia either from context or CumbiaPool with target \"%s\"", data[CuDType::Src].toString().c_str());  // data["src"]
         }
     }
     else if(is_config) {
-        if(data.containsKey("w_value")) {
+        if(data.containsKey(CuDType::WriteValue)) {  // data.containsKey("w_value")
             CuControlsUtils cu;
             cu.initObjects(target(), this, data, "w_value");
         }

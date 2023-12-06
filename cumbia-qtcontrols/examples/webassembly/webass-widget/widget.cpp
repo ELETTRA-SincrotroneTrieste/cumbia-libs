@@ -43,7 +43,7 @@ void Widget::onProgress(int step, int total, const CuData &data)
 
 void Widget::onResult(const CuData &data)
 {
-    ui->lineEdit->setText(data["value"].toString().c_str());
+    ui->lineEdit->setText(data[CuDType::Value].toString().c_str());  // data["value"]
 }
 
 void Widget::onResult(const std::vector<CuData> &datalist)

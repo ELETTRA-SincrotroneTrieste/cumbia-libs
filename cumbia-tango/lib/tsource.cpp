@@ -5,39 +5,40 @@
 
 class TSourcePrivate {
 public:
+    TSourcePrivate(const std::string& s) : m_s(s), m_ty(TSource::SrcInvalid) {}
     string m_s;
     TSource::Type m_ty;
 };
 
 TSource::TSource() {
-    d = new TSourcePrivate;
-    d->m_ty = SrcInvalid;
+    d = new TSourcePrivate(std::string());
 }
 
-
-/*!
- * \brief represents a tango source
- *
- * Please read \ref md_tango_srcs
- */
-TSource::TSource(const string s)
-{
-    d = new TSourcePrivate;
-    d->m_s = s;
+TSource::TSource(const string s) {
+    d = new TSourcePrivate(s);
     d->m_ty = m_get_ty(s);
 }
 
 TSource::TSource(const TSource &other) {
-    d = new TSourcePrivate;
-    this->d->m_s = other.d->m_s;
+    d = new TSourcePrivate(other.d->m_s);
     this->d->m_ty = other.d->m_ty;
 }
 
+TSource::TSource(TSource &&other) {
+    /* no new d here! */
+    d = other.d;
+    other.d = nullptr; /* don't delete */
+}
+
 TSource::~TSource() {
-    delete d;
+    if(d)
+        delete d;
 }
 
 TSource::Type TSource::m_get_ty(const std::string& src) const {
+    // host regexp
+    if(d->m_ty != SrcInvalid)
+        return d->m_ty; // there is no way to change m_s
     std::string s = rem_tghostproto(src);
     s = rem_args(s); // remove arguments between from s
     const std::vector<string> props = getPropNames();
@@ -64,7 +65,7 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
         t = SrcDbDevProps;
     else if(hasprops && sep == 2 && !hasa)  //  a/tg/dev(devprop1,devprop2,...)
         t = SrcDbDevProp;
-    else if(sep == 0 && s.size() > 0 && s[s.length() - 1] == '*') // domai*
+    else if(s.size() == 0 || s == "*") // domai*
         t = SrcDbDoma;
     else if(sep == 1 && (ewsep || ewc)) // dom/  or  dom/fa*
         t = SrcDbFam;
@@ -84,8 +85,6 @@ TSource::Type TSource::m_get_ty(const std::string& src) const {
         t = SrcAttr;
     else if(sep == 2 && hasa) // te/de/1->GetV
         t = SrcCmd;
-//    printf("TSource.m_get_ty type detected %d source with no args '%s'\n",
-//           t, s.c_str());
     return t;
 }
 
@@ -154,6 +153,7 @@ std::vector<string> TSource::getArgs() const {
     std::string s(d->m_s);
     size_t arg_start = 0, arg_end = 0;
     const std::string& arg_ops = s.find('[') != std::string::npos ? getArgOptions(&arg_start, &arg_end) : std::string();
+    //    s.erase(std::remove(s.begin() + s.find('('), s.begin() + s.find(')') + 1, ' '), s.end()); // remove spaces
     // take an argument delimited by "" as a single parameter
     size_t pos = d->m_s.find("(\"");
     if(pos != string::npos) {
@@ -171,10 +171,9 @@ std::vector<string> TSource::getArgs() const {
                 std::regex re(delim);
                 std::sregex_token_iterator iter(a.begin(), a.end(), re, -1);
                 std::sregex_token_iterator end;
-                for ( ; iter != end; ++iter) {
+                for ( ; iter != end; ++iter)
                     if((*iter).length() > 0)
                         ret.push_back((*iter));
-                }
             }
         }
     }
@@ -199,7 +198,7 @@ std::string TSource::getName() const {
 
 std::string TSource::getTangoHost() const {
     std::smatch sm;
-    int pos = d->m_s.find(':'); // use regex only if :N is found (: plus digit, like tom:20000)
+    size_t pos = d->m_s.find(':'); // use regex only if :N is found (: plus digit, like tom:20000)
     if(pos != std::string::npos && pos > 0 && d->m_s.length() > pos + 1 && std::isdigit(d->m_s[pos+1]) &&
         std::regex_search(d->m_s, sm, regexps::get_host_re()) && sm.size() > 1)
         return sm[1];
@@ -271,7 +270,9 @@ string TSource::getExportedDevSearchPattern() const {
 
 /*!
  * \since 1.5.2
- * \brief some keyword:value fields can be used at the beginning of the argument
+ * \brief get *options* that can affect the interpretation of the arguments
+ *
+ *        some keyword:value fields can be used at the beginning of the argument
  *        section to customize the interpretation of the arguments
  *
  *        The keyword:value list shall be enclosed between square brackets at the
@@ -289,11 +290,13 @@ std::string TSource::getArgOptions(size_t *pos_start, size_t *pos_end) const {
     const std::string &s = d->m_s;
     std::smatch sm;
     bool found = /*s.find('(') != std::string::npos &&*/ std::regex_search(s, sm, regexps::get_args_re())
-        && sm.length(1) > 0; // must have captured something;
+                 && sm.length(1) > 0; // must have captured something
     if(found) {
         *pos_start = sm.position(1);
         *pos_end = *pos_start + sm.length(1);
     }
+//    printf("getArgOptions: sm size %ld pos start %ld end %ld src '%s' siz %ld options '%s'\n",
+//           sm.size(), *pos_start, *pos_end, s.c_str(), s.length(), sm[1].length() ? sm[1].str().c_str() : "[]");
     return found && sm.size() == 2 ? sm[1] : std::string();
 }
 
@@ -347,10 +350,10 @@ string TSource::remove_tgproto(const string &src) const {
 
 string TSource::remove_tghost(const string &src) const {
     std::string s(src);
-    int pos = src.find(':'); // use regex only if host:PORT pattern is found
+    size_t pos = src.find(':'); // use regex only if host:PORT pattern is found
     if(pos != std::string::npos && pos > 0 && src.length() > pos + 1 && std::isdigit(src[pos+1])) {
         s = std::regex_replace(src, regexps::get_host_re(), "");
-    if(s.length() > 0 && s[0] == '/')
+        if(s.length() > 0 && s[0] == '/')
             s.erase(0, 1);
     }
     return s;
@@ -365,11 +368,7 @@ string TSource::rem_tghostproto(const string &src) const
 
 string TSource::rem_args(const string &src) const {
     // capture everything within (\(.*\)), not minimal. check for '(' before using regex
-    if(src.find('(') != std::string::npos) {
-    const std::regex &re = regexps::get_args_re();
-        return std::regex_replace(src, re, "");
-    }
-    return src;
+    return src.find('(') != std::string::npos ? std::regex_replace(src, regexps::get_args_re(), "") : src;
 }
 
 const char *TSource::getTypeName(Type t) const {

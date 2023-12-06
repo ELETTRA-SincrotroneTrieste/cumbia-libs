@@ -134,7 +134,7 @@ void CuActivity::publishProgress(int step, int total, const CuData &data) {
  * method is lock free and safe to access from different threads
  *
  */
-const CuData CuActivity::getToken() const {
+const CuData &CuActivity::getToken() const {
     return d->token;
 }
 
@@ -143,7 +143,7 @@ void CuActivity::setThreadToken(const std::string &tt) {
     d->thread_tok = tt;
 }
 
-const std::string CuActivity::threadToken() const {
+const std::string& CuActivity::threadToken() const {
     assert(d->bthread == pthread_self());
     return d->thread_tok;
 }

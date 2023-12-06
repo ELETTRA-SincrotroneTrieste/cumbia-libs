@@ -29,6 +29,9 @@ Options::Options(const QStringList& args)
     m_helpMap.insert("--plain-text-output", "disable colored output.");
     m_helpMap.insert("--config-file=path/to/cuuimake-cumbiq-qtcontrols.xml", QString("specify a config file different from %1/cuuimake-cumbia-qtcontrols.xml").arg(CONFDIR));
     m_helpMap.insert("--debug", "additional information is printed while operations are performed");
+    m_helpMap.insert("--check-cudata", "check CuData for old cumbia 1.x string keys which shall be"
+                                       "updated to version 2.0 indexes, as defined in cudatatypes.h");
+    m_helpMap.insert("--debug", "additional information is printed while operations are performed");
 
     // options with --option=something
     // m_helpMap.insert("--add-params=par1,par2,...", "skip analysis and just add the specified parameters to the cumbia widgets at construction time");
@@ -89,6 +92,10 @@ Options::Options(const QStringList& args)
             m_map.insert("makej", a);
             m_map.insert("make", true);
         }
+        else if(a == "--check-cudata")
+            m_map.insert("check-cudata", true);
+        else if(a == "--update-cudata")
+            m_map.insert("port-cudata", true);
         else
         {
             m_error = true;

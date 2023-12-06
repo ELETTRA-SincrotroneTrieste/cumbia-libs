@@ -103,29 +103,29 @@ bool QuLed::ctxSwap(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
 void QuLed::onUpdate(const CuData &da)
 {
     QColor background, border;
-    d->read_ok = !da["err"].toBool();
+    d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
 
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
-        d->context->getLinkStats()->addError(da["msg"].toString());
+        d->context->getLinkStats()->addError(da[CuDType::Message].toString());  // da["msg"]
 
-    if(da.containsKey("qc"))
-        background = d->palette[QString::fromStdString(da["qc"].toString())];
-    if(da.containsKey("color"))
-        border = d->palette[QString::fromStdString(da["color"].toString())];
+    if(da.containsKey(CuDType::QualityColor))  // da.containsKey("qc")
+        background = d->palette[QString::fromStdString(da[CuDType::QualityColor].toString())];  // da["qc"]
+    if(da.containsKey(CuDType::Color))  // da.containsKey("color")
+        border = d->palette[QString::fromStdString(da[CuDType::Color].toString())];  // da["color"]
 
-    setToolTip(da["msg"].toString().c_str());
+    setToolTip(da[CuDType::Message].toString().c_str());  // da["msg"]
 
-    setDisabled(da["err"].toBool() );
-    if(d->read_ok && da.containsKey("sc"))
+    setDisabled(da[CuDType::Err].toBool() );  // da["err"]
+    if(d->read_ok && da.containsKey(CuDType::StateColor))  // da.containsKey("sc")
     {
-        CuVariant v = da["sc"];
+        CuVariant v = da[CuDType::StateColor];  // da["sc"]
         setColor(d->palette[QString::fromStdString(v.toString())]);
     }
-    else if(d->read_ok && da.containsKey("value"))
+    else if(d->read_ok && da.containsKey(CuDType::Value))  // da.containsKey("value")
     {
-        CuVariant v = da["value"];
+        CuVariant v = da[CuDType::Value];  // da["value"]
         switch (v.getType()) {
         case CuVariant::Boolean:
             setValue(v.b());
@@ -137,8 +137,8 @@ void QuLed::onUpdate(const CuData &da)
     else if(!d->read_ok)
         setColor(QColor(Qt::gray));
 
-    if(da.containsKey("color"))
-        setBorderColor(d->palette[QString::fromStdString(da["color"].toString())]);
+    if(da.containsKey(CuDType::Color))  // da.containsKey("color")
+        setBorderColor(d->palette[QString::fromStdString(da[CuDType::Color].toString())]);  // da["color"]
 
     emit newData(da);
 }

@@ -55,16 +55,16 @@ CuRandomGenActivity::CuRandomGenActivity(const CuData &token)
     d->f_generator = nullptr;
 
     int period = 5;
-    if(token.containsKey("period"))
-        period = token["period"].toInt();
+    if(token.containsKey(CuDType::Period))  // token.containsKey("period")
+        period = token[CuDType::Period].toInt();  // token["period"]
     d->repeat = period;
     setInterval(period);
     //  flag CuActivity::CuADeleteOnExit is true
     // CuActivity::CuAUnregisterAfterExec unavailable since 1.4
 
     // src contains either "spectrum" or "vector": initialize size to a default value
-    if(token["src"].toString().find("spectrum") != std::string::npos ||
-            token["src"].toString().find("vector") != std::string::npos)
+    if(token[CuDType::Src].toString().find("spectrum") != std::string::npos ||  // token["src"]
+            token[CuDType::Src].toString().find("vector") != std::string::npos)  // token["src"]
         d->size = 1000;
     else
         d->size = 1;
@@ -96,7 +96,7 @@ CuRandomGenActivity::~CuRandomGenActivity()
 bool CuRandomGenActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
-    return token["src"] == mytok["src"];
+    return token[CuDType::Src] == mytok[CuDType::Src];  // token["src"], mytok["src"]
 }
 
 void CuRandomGenActivity::setBounds(double min, double max) {
@@ -142,15 +142,15 @@ void CuRandomGenActivity::init()
     // simulate a configuration (property type)
     CuData res = getToken();
     d->thread_token = threadToken();
-    res["type"] = "property";
-    res["mode"] = "random";
-    res["type"] = "property";
-    res["mode"] = "random";
-    res["min"] = d->min;
-    res["max"] = d->max;
-    res["period"] = d->repeat;
+    res[CuDType::Type] = "property";  // res["type"]
+    res[CuDType::Mode] = "random";  // res["mode"]
+    res[CuDType::Type] = "property";  // res["type"]
+    res[CuDType::Mode] = "random";  // res["mode"]
+    res[CuDType::Min] = d->min;  // res["min"]
+    res[CuDType::Max] = d->max;  // res["max"]
+    res[CuDType::Period] = d->repeat;  // res["period"]
     res["size"] = d->size;
-    d->size > 1 ? res["dfs"] = "vector" : res["dfs"] = "scalar";
+    d->size > 1 ? res[CuDType::DataFormatStr] = "vector" : res[CuDType::DataFormatStr] = "scalar";  // res["dfs"], res["dfs"]
     if(!d->f_generator)
         d->f_generator = new CuRndRandomFunctionGen();
     // 1. configure
@@ -204,7 +204,7 @@ void CuRandomGenActivity::onExit()
     assert(d->my_thread_id == pthread_self());
     d->exiting = true;
     CuData at = getToken(); /* activity token */
-    at["exit"] = true;
+    at[CuDType::Exit] = true;  // at["exit"]
     // do not publishResult because CuPoller (which is our listener) may be deleted by CuPollingService
     // from the main thread when its action list is empty (see CuPollingService::unregisterAction)
     publishResult(at);
@@ -212,12 +212,12 @@ void CuRandomGenActivity::onExit()
 
 void CuRandomGenActivity::m_putInfo(CuData &res)
 {
-    res["mode"] = "random";
-    res["period"] = d->repeat;
-    res["thread"] = d->thread_token;
+    res[CuDType::Mode] = "random";  // res["mode"]
+    res[CuDType::Period] = d->repeat;  // res["period"]
+    res[CuDType::Thread] = d->thread_token;  // res["thread"]
     const CuData& atok = getToken();
-    if(atok.containsKey("label"))
-        res["label"] = atok["label"];
+    if(atok.containsKey(CuDType::Label))  // atok.containsKey("label")
+        res[CuDType::Label] = atok[CuDType::Label];  // res["label"], atok["label"]
     res.putTimestamp(); // timestamp_ms and timestamp_us
 }
 

@@ -104,7 +104,7 @@ void CuWsActionConf::stop() {
 }
 
 void CuWsActionConf::decodeMessage(const QJsonDocument &json) {
-    CuData res("src", d->wsconf_src.getName());
+    CuData res(CuDType::Src, d->wsconf_src.getName());  // CuData res("src", d->wsconf_src.getName()
     CumbiaWSWorld wsw;
     wsw.json_decode(json, res);
     d->exit = true;

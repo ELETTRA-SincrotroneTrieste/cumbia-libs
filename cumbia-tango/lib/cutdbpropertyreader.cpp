@@ -57,24 +57,24 @@ CuTDbPropertyReader::~CuTDbPropertyReader()
  * \subsection Device properties
  *
  * To get a device property you must put into the CuData bundle the following key/value pairs:
- * \li "device" --> "tango/device/name"
- * \li "name" --> "property_name"
+ * \li CuDType::Device --> "tango/device/name"
+ * \li CuDType::name --> "property_name"
  *
  * \subsection Attribute properties
  *
  *  The three following key/values must be set:
- * \li "device"  --> "tango/device/name"
- * \li "attribute" --> "attribute_name"
- * \li "name" --> "property_name"
+ * \li CuDType::Device  --> "tango/device/name"
+ * \li CuDType::Attribute --> "attribute_name"
+ * \li CuDType::name --> "property_name"
  *
- * \note If no "name" is provided, all the device attribute properties and their values are retrieved.
+ * \note If no CuDType::name is provided, all the device attribute properties and their values are retrieved.
  *
  * \subsection Class properties.
  *
  * CuData must be configured as follows:
  *
- * \li "class" --> "class_name"
- * \li "name" --> "property_name"
+ * \li CuDType::Class --> "class_name"
+ * \li CuDType::name --> "property_name"
  *
  * \subsection Tutorial
  *
@@ -87,17 +87,17 @@ CuTDbPropertyReader::~CuTDbPropertyReader()
  * \code
  * std::list<CuData> in_data;
  * // device property
- * CuData devpd("device", "test/device/1");
- * devpd["name"] = "description";
+ * CuData devpd(CuDType::Device, "test/device/1");
+ * devpd[CuDType::name] = CuDType::Description;
  * in_data.push_back(devpd);
  * // attribute property values from the "double_scalar" attribute
- * CuData apd("device", "test/device/2");
- * apd["attribute"] = "double_scalar";
- * apd["name"] = "values";
+ * CuData apd(CuDType::Device, "test/device/2");
+ * apd[CuDType::Attribute] = "double_scalar";
+ * apd[CuDType::name] = "values";
  * in_data.push_back(apd);
  * // class property
- * CuData cld("class", "TangoTest");
- * cld["name"] = "ProjectTitle";
+ * CuData cld(CuDType::Class, "TangoTest");
+ * cld[CuDType::name] = "ProjectTitle";
  * in_data.push_back(cld);
  *
  * // m_ct is a reference to a CumbiaTango object properly instantiated before.
