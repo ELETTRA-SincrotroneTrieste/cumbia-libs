@@ -19,12 +19,13 @@ QString MainWidgetHProcessCmd::process(const QString &input)
     //     Ui::Danfisik9000 *ui;
     //
     QString out = input;
-    QRegExp uidefRe(QString("\\n(\\s*Ui::%1\\s+([A-Za-z0-9_]+);)").arg(m_formclassnam));
-    if(uidefRe.indexIn(out) > -1) {
-        QString def = uidefRe.cap(1);
-        QString uinam = uidefRe.cap(2);
+    QRegularExpression uidefRe(QString("\\n(\\s*Ui::%1\\s+([A-Za-z0-9_]+);)").arg(m_formclassnam));
+    QRegularExpressionMatch ma = uidefRe.match(out);
+    if(ma.hasMatch() && ma.capturedTexts().size() > 2) {
+        QString def = ma.captured(1);
+        QString uinam = ma.captured(2);
         QString heapdef = def.replace(uinam, "* " + uinam);
-        out.replace(uidefRe.cap(1), "// " + uidefRe.cap(1) + "\n" + heapdef + "\n");
+        out.replace(ma.captured(1), "// " + ma.captured(1) + "\n" + heapdef + "\n");
     }
 
     // 2 expand constructor
@@ -32,14 +33,14 @@ QString MainWidgetHProcessCmd::process(const QString &input)
     QString constructorArgs;
     // capture the constructor declaration and expand;
     // \n*(\s*Danfisik9000\(([QWidget|QMainWindow][\s*\*\s*=A-Za-z0-9_]+)\);)
-    QRegExp constrRe(QString("\\n*(\\s*%1\\(([QWidget|QMainWindow][\\s*\\*\\s*=A-Za-z0-9_]+)\\);)").arg(m_mainwnam));
-    int pos = constrRe.indexIn(out);
-    if(pos > -1 ) {
-        QString constructorDecl = constrRe.cap(1);
-        constructorArgs = constrRe.cap(2);
+    QRegularExpression constrRe(QString("\\n*(\\s*%1\\(([QWidget|QMainWindow][\\s*\\*\\s*=A-Za-z0-9_]+)\\);)").arg(m_mainwnam));
+    ma = constrRe.match(out);
+    if(ma.hasMatch() && ma.capturedTexts().size() > 2) {
+        QString constructorDecl = ma.captured(1);
+        constructorArgs = ma.captured(2);
         if(!constructorDecl.isEmpty() && !constructorArgs.isEmpty()) {
             constructorDecl.replace(constructorArgs, "CumbiaPool *cu_p, " + constructorArgs);
-            out.replace(constrRe.cap(1), constructorDecl);
+            out.replace(ma.captured(1), constructorDecl);
         }
     }
     return out;

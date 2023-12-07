@@ -57,16 +57,15 @@ QString CppInstantiationExpand::process(const QString &input)
                 // process input
                 //
                 foreach (Subst s, substs) {
-                    QRegExp inre(s.m_in);
-                    int pos;
+                    QRegularExpression inre(s.m_in);
+                    QRegularExpressionMatch ma = inre.match(out);
                     int lineno;
                     qDebug() << __FUNCTION__ << "EXPANSIONL FINDING " << s.m_in << "BAZAN ";
-                    pos = inre.indexIn(out);
-                    if(pos > -1) {
-                        qDebug() << __FUNCTION__ << "EXPANSION REPLACEING" << inre.cap(1) << " WIT " << s.getFirstOutOption();
-                        out.replace(inre.cap(1), s.getFirstOutOption());
+                    if(ma.hasMatch()) {
+                        qDebug() << __FUNCTION__ << "EXPANSION REPLACEING" << ma.captured(1) << " WIT " << s.getFirstOutOption();
+                        out.replace(ma.captured(1), s.getFirstOutOption());
                         lineno = input.section(inre, 0, 0).count("\n") + 1;
-                        m_log.append(OpQuality(s.typeStr(), inre.cap(1), s.getFirstOutOption(), filename(), s.m_comment,
+                        m_log.append(OpQuality(s.typeStr(), ma.captured(1), s.getFirstOutOption(), filename(), s.m_comment,
                                                Quality::Ok, lineno));
                     }
                 }

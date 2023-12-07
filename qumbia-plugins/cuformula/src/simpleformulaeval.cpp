@@ -1,7 +1,7 @@
 #include "simpleformulaeval.h"
 #include <cudata.h>
-#include <QScriptValue>
-#include <QScriptEngine>
+#include <QJSValue>
+#include <QJSEngine>
 #include <cuformulareader.h>
 #include <cudataquality.h>
 #include <QDateTime>
@@ -15,7 +15,7 @@ public:
 
 SimpleFormulaEval::SimpleFormulaEval(QObject *parent, const QString &formula) : QThread(parent)
 {
-    QScriptEngine sen;
+    QJSEngine sen;
     d = new SimpleFormulaEvalPrivate;
     d->formula = formula;
     connect(this, SIGNAL(finished()), this, SLOT(publishResult()));
@@ -23,9 +23,9 @@ SimpleFormulaEval::SimpleFormulaEval(QObject *parent, const QString &formula) : 
 
 void SimpleFormulaEval::run()
 {
-    QScriptEngine sen;
-    QScriptValue sval = sen.evaluate(d->formula);
-    bool err = sval.isError() || !sval.isValid();
+    QJSEngine sen;
+    QJSValue sval = sen.evaluate(d->formula);
+    bool err = sval.isError();
     CuDataQuality dq(CuDataQuality::Undefined);
     d->result[CuDType::Src] = d->formula.toStdString();  // result["src"]
     d->result[CuDType::Err] = err;  // result["err"]
@@ -35,7 +35,7 @@ void SimpleFormulaEval::run()
     }
     d->result["formula"] = d->formula.toStdString();
     d->result[CuDType::Time_ms] = static_cast<long int>(QDateTime::currentMSecsSinceEpoch());  // result["timestamp_ms"]
-    if(sval.isValid()) {
+    if(!err) {
         CuVariant val = qobject_cast<CuFormulaReader *>(parent())->fromScriptValue(sval);
         val.getFormat() == CuVariant::Scalar ? d->result[CuDType::DataFormatStr] = "scalar" :  // result["dfs"]
                 d->result[CuDType::DataFormatStr] = "vector";  // result["dfs"]

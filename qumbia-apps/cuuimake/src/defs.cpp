@@ -8,7 +8,6 @@
 #include <QString>
 #include <QTextStream>
 #include <QRegularExpression>
-#include "conf.h"
 
 Defs::Defs()
 {
@@ -39,7 +38,6 @@ bool Defs::guessFromSources()
 {
     int pos;
     bool ok = true;
-    int clpos;
     Expand ex;
     QString re_pattern, classnam;
     CustomClass cc;
@@ -59,7 +57,6 @@ bool Defs::guessFromSources()
                     if(ex.autoDetect()) {
                         re_pattern = ex.autoDetectRegexp();
                         QRegularExpressionMatch ma = classnam_re.match(s);
-                        clpos = ma.capturedStart(s);
                         if(ma.hasMatch() && ma.capturedTexts().size() > 1) {
                             classnam = ma.capturedTexts().at(1);
                             // regexp pattern in xml contains %1 placeholder

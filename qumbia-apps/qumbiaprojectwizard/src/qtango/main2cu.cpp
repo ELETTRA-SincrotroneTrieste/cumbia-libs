@@ -1,6 +1,4 @@
 #include "main2cu.h"
-#include "findreplace.h"
-#include "conversionhealth.h"
 #include <QTextStream>
 #include <QFileInfo>
 #include <QtDebug>
@@ -40,23 +38,25 @@ bool Main2Cu::findMainWidget(const QString &classnam)
     m_error = !file.open(QIODevice::Text|QIODevice::ReadOnly);
     if(!m_error) {
         /* \s*MyWidget\s+([a-zA-Z0-9_]*); */
-        QRegExp re1(QString("\\s*%1\\s+([a-zA-Z0-9_]*);").arg(classnam));
+        QRegularExpression re1(QString("\\s*%1\\s+([a-zA-Z0-9_]*);").arg(classnam));
         /* allocated with new operator
          * \s*MyWidget\s*\*\s*([a-zA-Z0-9_]*)\s*=\s*new\s+MyWidget\s*\(
          */
-        QRegExp re2(QString("\\s*%1\\s*\\*\\s*([a-zA-Z0-9_]*)\\s*=\\s*new\\s+%1\\s*\\(").arg(classnam));
+        QRegularExpression re2(QString("\\s*%1\\s*\\*\\s*([a-zA-Z0-9_]*)\\s*=\\s*new\\s+%1\\s*\\(").arg(classnam));
         QTextStream in(&file);
         QString maincpp = in.readAll();
-        int pos = re1.indexIn(maincpp);
-        if(pos > -1) {
-            m_mainwidget_varname = re1.cap(1);
+        QRegularExpressionMatch ma = re1.match(maincpp);
+        if(ma.hasMatch() && ma.capturedTexts().length() > 1) {
+            m_mainwidget_varname = ma.capturedTexts().at(1);
             m_w_inHeap = false;
         }
-        else if((pos = re2.indexIn(maincpp)) > -1) {
-            m_mainwidget_varname = re1.cap(1);
-            m_w_inHeap = true;
+        else {
+            ma = re2.match(maincpp);
+            if(ma.hasMatch() && ma.capturedTexts().length() > 1) {
+                m_mainwidget_varname = ma.capturedTexts().at(1);
+                m_w_inHeap = true;
+            }
         }
-        qDebug() << __FUNCTION__ << "pos" << pos << " in " << maincpp;
         file.close();
     }
     else
@@ -85,25 +85,25 @@ QMap<QString, QString> Main2Cu::parseProps()
     if(!m_error) {
         QTextStream in(&file);
         QString maincpp = in.readAll();
-        int pos;
+        QRegularExpressionMatch ma;
         // 1. organization name
-        QRegExp re("setOrganizationName\\(\"(.*)\"\\)");
-        re.setMinimal(true);
-        pos = re.indexIn(maincpp);
-        if(pos > -1)
-            props["orgname"] = re.cap(1);
+        QRegularExpression re("setOrganizationName\\(\"(.*)\"\\)");
+        re.setPatternOptions(QRegularExpression::InvertedGreedinessOption);
+        ma = re.match(maincpp);
+        if(ma.hasMatch() && ma.capturedTexts().size() > 1)
+            props["orgname"] = ma.capturedTexts().at(1);
         // 2. application name
         re.setPattern("setApplicationName\\(\"(.*)\"\\)");
-        pos = re.indexIn(maincpp);
-        if(pos > -1)
-            props["appname"] = re.cap(1);
+        ma = re.match(maincpp);
+        if(ma.hasMatch() &&  ma.capturedTexts().size() > 1)
+            props["appname"] =  ma.capturedTexts().at(1);
         // 3. properties: example: setProperty\(\s*"author"\s*,\s*"(.*)"\s*\)\s*;
         QStringList properties = QStringList() << "author" << "mail" << "phone" << "office" << "hwReferent";
         foreach (QString p, properties) {
             re.setPattern(QString("setProperty\\(\\s*\"%1\"\\s*,\\s*\"(.*)\"\\s*\\)\\s*;").arg(p));
-            pos = re.indexIn(maincpp);
-            if(pos > -1)
-                props[p] = re.cap(1);
+            ma = re.match(maincpp);
+            if(ma.hasMatch() && ma.capturedTexts().size() > 1)
+                props[p] = ma.capturedTexts().at(1);
         }
         qDebug() << __FUNCTION__ << "map" << props;
         file.close();

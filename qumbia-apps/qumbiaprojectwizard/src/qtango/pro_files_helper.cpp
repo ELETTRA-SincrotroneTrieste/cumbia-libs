@@ -4,6 +4,7 @@
 #include <QFileInfoList>
 #include <QDomDocument>
 #include <QDir>
+#include <QRegularExpression>
 
 
 ProjectFilesHelper::ProjectFilesHelper() {
@@ -83,7 +84,7 @@ bool ProjectFilesHelper::findMainWidgetProps(const QDir& wdir)
                 qDebug() << __FUNCTION__ << "processing main: " + maincpp.fileName() + " + ui: " + f.fileName();
                 if (dom.setContent(&f, &dom_err)) {
                     QDomElement uiEl = dom.firstChildElement("ui");
-                    if(!uiEl.isNull() && uiEl.attribute("version").contains(QRegExp("4\\.[\\d]+"))) {
+                    if(!uiEl.isNull() && uiEl.attribute("version").contains(QRegularExpression("4\\.[\\d]+"))) {
                         QDomElement classEl = uiEl.firstChildElement("class");  // uiEl.firstChildElement("class") !cudata
                         qDebug() << classEl.tagName() << "<<--- class el" << dom.documentElement().tagName() << dom.childNodes().count();
                         if(!classEl.isNull()) {
@@ -119,11 +120,11 @@ bool ProjectFilesHelper::findMainWidgetProps(const QDir& wdir)
 bool ProjectFilesHelper::findMainProjectFiles(const QDir &wdir)
 {
     QFileInfoList fil = findFiles(wdir, "*.cpp");
-    QRegExp cppre(QString("%1::%1\\s*\\(").arg(this->m_mainwclassnam)); // find class constructor implementation in cpp
+    QRegularExpression cppre(QString("%1::%1\\s*\\(").arg(this->m_mainwclassnam)); // find class constructor implementation in cpp
     foreach(QFileInfo cf, fil){
         QFile f(cf.absoluteFilePath());
         if(f.open(QIODevice::ReadOnly|QIODevice::Text)) {
-            if(cf.fileName().contains(QRegExp("main.cpp"))) {
+            if(cf.fileName().contains(QRegularExpression("main.cpp"))) {
                 m_proFiles["main"] = "main.cpp";
                 continue;
             }
@@ -141,9 +142,9 @@ bool ProjectFilesHelper::findMainProjectFiles(const QDir &wdir)
         }
     }
     fil = findFiles(wdir, "*.h");
-    QRegExp hre(QString("class\\s+%1\\s*\\n*:\\s*public\\s+").arg(this->m_mainwclassnam)); // find class constructor declaration in h
+    QRegularExpression hre(QString("class\\s+%1\\s*\\n*:\\s*public\\s+").arg(this->m_mainwclassnam)); // find class constructor declaration in h
     foreach(QFileInfo cf, fil){
-        if(cf.fileName().contains(QRegExp("ui_.*.h")))
+        if(cf.fileName().contains(QRegularExpression("ui_.*.h")))
             continue;
 
         QFile f(cf.absoluteFilePath());
@@ -182,7 +183,7 @@ QFileInfoList ProjectFilesHelper::findFiles(QDir wdir, const QString& filter, co
     }
     QFileInfoList outfi;
     foreach (QFileInfo fi, uifil) {
-        if(exclude_regexp.isEmpty() || !fi.fileName().contains(QRegExp(exclude_regexp)))
+        if(exclude_regexp.isEmpty() || !fi.fileName().contains(QRegularExpression(exclude_regexp)))
             outfi << fi;
     }
     return outfi;
@@ -221,10 +222,10 @@ QString ProjectFilesHelper::m_findWidgetClassName(const QString &filenam)
     if(!m_err) {
         QTextStream in(&f);
         QString contents = in.readAll();
-        QRegExp classDefRe("\\s*class ([A-Za-z0-9_]+)\\s*:\\s*public\\s+(?:QWidget|QMainWindow)");
-        int pos = classDefRe.indexIn(contents);
-        if(pos > -1)
-            classn = classDefRe.cap(1);
+        QRegularExpression classDefRe("\\s*class ([A-Za-z0-9_]+)\\s*:\\s*public\\s+(?:QWidget|QMainWindow)");
+        QRegularExpressionMatch ma = classDefRe.match(contents);
+        if(ma.hasMatch() && ma.capturedTexts().size() > 1)
+            classn =  ma.capturedTexts().at(1);
         f.close();
     }
     else

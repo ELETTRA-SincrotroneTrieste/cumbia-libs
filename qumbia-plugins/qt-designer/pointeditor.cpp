@@ -60,7 +60,7 @@ void PointEditor::comboChanged(int i)
         QString wildcard = cb->currentText();
         QString point = le->text();
         QStringList parts;
-        point.contains("->") ? (parts = point.split("->", QString::SkipEmptyParts)) : (parts = point.split("/", QString::SkipEmptyParts));
+        point.contains("->") ? (parts = point.split("->", Qt::SkipEmptyParts)) : (parts = point.split("/", Qt::SkipEmptyParts));
         QString entity;
         if(parts.size() > 1)
             entity = parts.last();

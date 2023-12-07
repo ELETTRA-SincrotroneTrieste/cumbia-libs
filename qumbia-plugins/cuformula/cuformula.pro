@@ -2,7 +2,7 @@ include(../qumbia-plugins.pri)
 
 include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 
-QT       += core gui script
+QT       += core gui qml
 
 DEFINES -= QT_NO_DEBUG_OUTPUT
 

@@ -8,6 +8,7 @@
 #include <QMultiMap>
 #include <QNetworkAccessManager>
 #include <QEventLoop>
+#include <QString>
 
 #include <QWebSocket>
 #include <QAbstractSocket>
@@ -57,7 +58,7 @@ void CuHttpChannelReceiver::addDataListener(const QString &src, CuDataListener *
 }
 
 void CuHttpChannelReceiver::removeDataListener(CuDataListener *l) {
-    QMutableMapIterator<QString, CuDataListener* > it(d->rmap);
+    QMutableMultiMapIterator<QString, CuDataListener* > it(d->rmap);
     while(it.hasNext()) {
         it.next();
         if(it.value() == l) {

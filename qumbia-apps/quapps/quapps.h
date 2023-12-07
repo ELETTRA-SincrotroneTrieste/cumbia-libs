@@ -206,14 +206,21 @@ public:
      */
     CumbiaPool* prepare_engine(int engine, CuControlsFactoryPool *m_ctrl_factory_pool) {
         CumbiaPool *cu_pool = nullptr;
-#if !defined(CUMBIA_HTTP_VERSION) && !defined(QUMBIA_TANGO_CONTROLS_VERSION)
+        QString engine_name;
         d->error = true;
-        d->msg = "neither Tango nor Http modules are compiled into the library";
-#else
-        d->error = false;
+#ifdef CUMBIA_HTTP_VERSION
+        if(engine == CumbiaHttp::CumbiaHTTPType) {
+            d->error = false;
+            engine_name = "http";
+        }
+#endif
+#ifdef QUMBIA_TANGO_CONTROLS_VERSION
+        if(engine == CumbiaTango::CumbiaTangoType) {
+            d->error = false;
+            engine_name = "tango native";
+        }
 #endif
         // supported engines: Tango and Http
-        d->error = (engine != CumbiaHttp::CumbiaHTTPType && engine != CumbiaTango::CumbiaTangoType);
         if(d->error)
             d->msg = "engine hot switch supports the Tango and Http engines only";
         else { // switch to the new engine
@@ -221,12 +228,15 @@ public:
             // when engine switching, we suppose there is only one Cumbia in the pool
             // because interchangeable engines are mutually exclusive (see cclear.size() == 1 below)
             //
+#ifdef QUMBIA_TANGO_CONTROLS_VERSION
             if(engine == CumbiaTango::CumbiaTangoType) {
                 cu_pool = new CumbiaPool();
                 CuTangoRegisterEngine tare;
                 tare.registerWithDefaults(cu_pool,  *m_ctrl_factory_pool);
             }
-            else if(engine == CumbiaHttp::CumbiaHTTPType) {
+#endif
+#ifdef CUMBIA_HTTP_VERSION
+            if(engine == CumbiaHttp::CumbiaHTTPType) {
                 CuHttpRegisterEngine httpre;
                 d->error = !httpre.load(qApp->arguments(), true); // true: try loading also without -u in args
                 if(!d->error) {
@@ -236,10 +246,10 @@ public:
                 else
                     d->msg = "error registering http module: valid URL '" + httpre.url() + "' ?";
             }
+#endif
             for(size_t i = 0; cu_pool != nullptr && i < cu_pool->names().size(); i++) {
                 const std::string n = cu_pool->names().at(i);
-                printf("+ [quapps]: cumbia registered \e[1;32m%s\e[0m type \e[0;36m%s\e[0m\n", n.c_str(),
-                       cu_pool->get(n)->getType() == CumbiaTango::CumbiaTangoType ? "tango native" : "http");
+                printf("+ [quapps]: cumbia registered \e[1;32m%s\e[0m type \e[0;36m%s\e[0m\n", n.c_str(), qstoc(engine_name));
             }
         }  // ! error unsupported target engine
         return cu_pool;

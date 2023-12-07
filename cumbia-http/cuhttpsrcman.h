@@ -64,7 +64,7 @@ public:
     QList<SrcData> takeSrcs(const QString& src) const;
     int dequeueItems(QList<SrcItem> &read_i, QList<SrcItem> &write_i);
     QMap<QString, SrcData> takeTgts() const;
-    QMap<QString, SrcData> takeSrcs() const;
+    QMultiMap<QString, SrcData> takeSrcs() const;
     const QMap<QString, SrcData> &targetMap() const;
     void process_queue();
 

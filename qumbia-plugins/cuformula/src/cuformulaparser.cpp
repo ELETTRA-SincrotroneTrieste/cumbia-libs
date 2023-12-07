@@ -10,9 +10,14 @@
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 Q_GLOBAL_STATIC_WITH_ARGS(QRegularExpression, normalized_pa_re, (FORMULA_RE));
 Q_GLOBAL_STATIC_WITH_ARGS(QRegularExpression, prepared_formula_re, ("^\\(.+\\)$", QRegularExpression::DotMatchesEverythingOption));
+Q_GLOBAL_STATIC_WITH_ARGS(QRegularExpression, comma_sep_re, ("[\\s*,\\s*]") )
+Q_GLOBAL_STATIC_WITH_ARGS(QRegularExpression, spaces_re, ("\\s*") )
+
 #else // Q_GLOBAL_STATIC_WITH_ARGS deprecated
 Q_GLOBAL_STATIC(QRegularExpression, normalized_pa_re, FORMULA_RE);
-Q_GLOBAL_STATIC(QRegularExpression, prepared_formula_re, ("^\\(.+\\)$", QRegularExpression::DotMatchesEverythingOption));
+Q_GLOBAL_STATIC(QRegularExpression, prepared_formula_re, "^\\(.+\\)$", QRegularExpression::DotMatchesEverythingOption);
+Q_GLOBAL_STATIC(QRegularExpression, comma_sep_re, "[\\s*,\\s*]" )
+Q_GLOBAL_STATIC(QRegularExpression, spaces_re, "\\s*" )
 #endif
 
 class CuFormulaParserPrivate {
@@ -75,12 +80,12 @@ bool CuFormulaParser::parse(const QString &expr)
             function_word = "function";
         QStringList slist;
         // split sources by space or comma
-        sources.contains(QRegExp("[\\s*,\\s*]")) ?  slist = sources.split(QRegExp("[\\s*,\\s*]"), QString::SkipEmptyParts) :
-                slist = sources.split(" ", QString::SkipEmptyParts);
+        sources.contains(*comma_sep_re) ?  slist = sources.split(*comma_sep_re, Qt::SkipEmptyParts) :
+                slist = sources.split(" ", Qt::SkipEmptyParts);
         foreach(QString s, slist)
                 d->srcs.push_back(s.toStdString());
         // 4
-        QString params = match.captured(++i).remove(QRegExp("\\s*"));
+        QString params = match.captured(++i).remove(*spaces_re);
         QStringList paramList = params.split(",");
         d->error = (paramList.size() != static_cast<int>(d->srcs.size()));
         if(d->error)

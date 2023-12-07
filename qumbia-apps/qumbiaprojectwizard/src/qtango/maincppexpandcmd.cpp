@@ -14,19 +14,20 @@ MainCppExpandCmd::MainCppExpandCmd(const QString &fnam, const QString &mainwnam)
 QString MainCppExpandCmd::process(const QString &input)
 {
     QString out = input;
-    QRegExp cupoolRe ("CumbiaPool\\s*\\*\\s*([A-Za-z0-9_]*)\\s*=\\s*new\\s+CumbiaPool");
-    m_err = cupoolRe.indexIn(out) < 0;
+    QRegularExpression cupoolRe ("CumbiaPool\\s*\\*\\s*([A-Za-z0-9_]*)\\s*=\\s*new\\s+CumbiaPool");
+    QRegularExpressionMatch ma = cupoolRe.match(out);
+    m_err = !ma.hasMatch();
     if(!m_err) {
-        QString cuta = cupoolRe.cap(1);
-        QRegExp mainwRe(QString("%1\\s*\\*w\\s*=\\s*new\\s*%1(\\(([0|NULL|nullptr])\\));").arg(m_mainwclass));
-        int pos = mainwRe.indexIn(out);
-        if(pos > -1) {
-            QString params = mainwRe.cap(1);
-            QString param = mainwRe.cap(2);
-            QString mainw = mainwRe.cap(0);
+        QString cuta = ma.captured(1);
+        QRegularExpression mainwRe(QString("%1\\s*\\*w\\s*=\\s*new\\s*%1(\\(([0|NULL|nullptr])\\));").arg(m_mainwclass));
+        ma = mainwRe.match(out);
+        if(ma.hasMatch()) {
+            QString params = ma.captured(1);
+            QString param = ma.captured(2);
+            QString mainw = ma.captured(0);
             mainw.replace(params, "(" + cuta + ", " + param + ")");
-            out.replace(mainwRe.cap(0), mainw);
-            m_log.append(OpQuality("main.cpp expand", mainwRe.cap(0), mainw, filename(),
+            out.replace(ma.captured(0), mainw);
+            m_log.append(OpQuality("main.cpp expand", ma.captured(0), mainw, filename(),
                                    "expanded main widget constructor", Quality::Ok, -1));
         }
     }

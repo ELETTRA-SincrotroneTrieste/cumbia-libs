@@ -187,7 +187,8 @@ void CumbiaHttp::onSrcBundleReplyError(const CuData &errd) {
     QMap<QString, QString> revmap;
     QString chan;
     CumbiaHTTPWorld().request_reverse_eng(errd["payload"].toString().c_str(), revmap, chan);
-    const QMap<QString, SrcData> &ma = d->src_q_man->takeSrcs(), &tma = d->src_q_man->takeTgts();
+    const QMultiMap<QString, SrcData> &ma = d->src_q_man->takeSrcs();
+    const QMap<QString, SrcData> &tma = d->src_q_man->takeTgts();
     CuData dat("err",true);
     std::string msg = errd[CuDType::Message].toString();  // errd["msg"]
     msg += "\ndata:\"" + errd["data"].toString() + "\"";
@@ -195,12 +196,13 @@ void CumbiaHttp::onSrcBundleReplyError(const CuData &errd) {
     dat.putTimestamp();
     const QStringList& keys = ma.keys(), &tkeys = tma.keys();
     foreach(const QString& s, keys)  { // sources
-        if(ma[s].lis) // may be null after unlinkListener
-            ma[s].lis->onUpdate(m_make_server_err(revmap, s, dat));
+        foreach(const SrcData &da, ma.values(s))
+            if(da.lis)
+                da.lis->onUpdate(m_make_server_err(revmap, s, dat));
     }
     foreach(const QString& s, tkeys)  { // targets
-        if(ma[s].lis)
-            ma[s].lis->onUpdate(m_make_server_err(revmap, s, dat));
+        if(tma[s].lis)
+            tma[s].lis->onUpdate(m_make_server_err(revmap, s, dat));
     }
 }
 

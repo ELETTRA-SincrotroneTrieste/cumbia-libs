@@ -167,7 +167,7 @@ void ConversionDialog::slotOkClicked()
 
 bool ConversionDialog::m_setProblemWidgetsVisible(bool v)
 {
-    foreach(QWidget* w, findChildren<QWidget*>(QRegExp("problems.*")))
+    foreach(QWidget* w, findChildren<QWidget*>(QRegularExpression("problems.*")))
         w->setVisible(v);
     return true;
 }

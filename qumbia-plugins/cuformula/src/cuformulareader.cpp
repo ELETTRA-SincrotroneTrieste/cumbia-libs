@@ -11,7 +11,7 @@
 #include <limits.h>
 #include <cucontext.h>
 #include <QVector>
-#include <QScriptEngine>
+#include <QJSEngine>
 #include <QtDebug>
 #include <QDateTime>
 #include <QRegularExpression>
@@ -130,7 +130,7 @@ public:
     std::vector<std::string> messages;
     std::string display_unit;
     bool single_display_unit;
-    QScriptEngine scriptEngine;
+    QJSEngine jsEngine;
     CuData options;
 };
 
@@ -322,20 +322,21 @@ void CuFormulaReader::onNewData(const CuData &da) {
                     //
                 }
                 else {
-                    QScriptValue result;
+                    QJSValue result;
                     QString formula = d->formula_parser.preparedFormula();
-                    QScriptValue sval = d->scriptEngine.evaluate(formula);
-                    err = !sval.isFunction();
+                    QJSValue sval = d->jsEngine.evaluate(formula);
+                    // Returns true if this QJSValue is a function, otherwise returns false.
+                    err = !sval.isCallable();
                     if(err) {
                         msg = QString("CuFormulaReader.onNewData: formula \"%1\" is not a function")
                                 .arg(formula).toStdString();
                     }
                     else {
-                        QScriptValueList valuelist;
+                        QJSValueList valuelist;
                         for(size_t i = 0; i< d->values.size() && !d->error; i++) {
                             const CuVariant& val = d->values[i];
                             const CuVariant::DataFormat dfo = val.getFormat();
-                            QScriptValue v;
+                            QJSValue v;
                             if(dfo == CuVariant::Scalar) {
                                 v = m_getScalarVal(val);
                             }
@@ -348,12 +349,24 @@ void CuFormulaReader::onNewData(const CuData &da) {
                             }
                             valuelist << v;
                         }
-                        if(!err) {
-                            result = sval.call(QScriptValue(), valuelist);
+                        if(!err) { // QJSValue::call see below
+                            result = sval.call(valuelist);
                         }
                     }
-
-                    err = !result.isValid() && !result.isError();
+                    /* QJSValue::call
+                     * Calls this QJSValue as a function, passing args as arguments
+                     * to the function, and using the globalObject() as the
+                     * "this"-object. Returns the value returned from the
+                     * function. If this QJSValue is not callable, call()
+                     *  does nothing and returns an undefined QJSValue.
+                     *  Calling call() can cause an exception to occur in the script
+                     *  engine; in that case, call() returns the value that
+                     *  was thrown (typically an Error object). You can call
+                     *  isError() on the return value to determine whether an exception
+                     *  occurred.
+                     */
+                    err = !result.isUndefined() // QJSValue not callable
+                          && !result.isError(); // exception in the engine
 
                     if(!err) {
                         CuVariant resvar = fromScriptValue(result);
@@ -493,56 +506,57 @@ void CuFormulaReader::m_disposeWatchers()
         delete w;
 }
 
-QScriptValue CuFormulaReader::m_getScalarVal(const CuVariant &v)
+QJSValue CuFormulaReader::m_getScalarVal(const CuVariant &v)
 {
     const CuVariant::DataType dty = v.getType();
     if(dty == CuVariant::Boolean)
-        return QScriptValue(v.toBool());
+        return QJSValue(v.toBool());
     else if(dty == CuVariant::String)
-        return QScriptValue(QString::fromStdString(v.toString()));
+        return QJSValue(QString::fromStdString(v.toString()));
     else if(v.isInteger() || v.isFloatingPoint()) {
         double dou;
         v.to<double>(dou);
-        return QScriptValue(dou);
+        return QJSValue(dou);
     }
-    return QScriptValue();
+    return QJSValue();
 }
 
-QScriptValue CuFormulaReader::m_getVectorVal(const CuVariant &v)
+QJSValue CuFormulaReader::m_getVectorVal(const CuVariant &v)
 {
-    QScriptValue arrayv = d->scriptEngine.newArray(static_cast<uint>(v.getSize()));
+    QJSValue arrayv = d->jsEngine.newArray(static_cast<uint>(v.getSize()));
     const CuVariant::DataType dty = v.getType();
     if(dty == CuVariant::Boolean) {
         std::vector<bool> bv = v.toBoolVector();
         for(quint32 i = 0; i < bv.size(); i++)
-            arrayv.setProperty(i, QScriptValue(bv[i]));
+            arrayv.setProperty(i, QJSValue(bv[i]));
     }
     else if(dty == CuVariant::String) {
         std::vector<std::string> sv = v.toStringVector();
         for(quint32 i = 0; i < sv.size(); i++)
-            arrayv.setProperty(i, QScriptValue(QString::fromStdString(sv[i])));
+            arrayv.setProperty(i, QJSValue(QString::fromStdString(sv[i])));
     }
     else if(v.isInteger() || v.isFloatingPoint()) {
         std::vector<double> douve;
         v.toVector<double>(douve);
         for(quint32 i = 0; i < douve.size(); i++) {
-            arrayv.setProperty(i, QScriptValue(douve[i]));
+            arrayv.setProperty(i, QJSValue(douve[i]));
         }
     }
     return arrayv;
 }
 
-CuVariant CuFormulaReader::fromScriptValue(const QScriptValue &v)
+CuVariant CuFormulaReader::fromScriptValue(const QJSValue &v)
 {
     d->error = false;
     if(v.isArray()) {
         CuVariant::DataType dt = CuVariant::TypeInvalid;
-        quint32 len = v.property("length").toUInt32();
+        // quint32 	toUInt(): was toUInt32() in qtscript
+        quint32 len = v.property("length").toUInt(); //
         std::vector<bool> bv;
         std::vector<std::string> sv;
         std::vector<double> dv;
         for(quint32 i = 0; i < len && !d->error; i++) {
-            QScriptValue ith_v = v.property(i);
+            QJSValue ith_v = v.property(i);
             if(i == 0) // determine data type from first item
                 dt = getScriptValueType(ith_v);
 
@@ -582,7 +596,7 @@ CuVariant CuFormulaReader::fromScriptValue(const QScriptValue &v)
     return CuVariant();
 }
 
-CuVariant::DataType CuFormulaReader::getScriptValueType(const QScriptValue &v) const
+CuVariant::DataType CuFormulaReader::getScriptValueType(const QJSValue &v) const
 {
     CuVariant::DataType dt = CuVariant::TypeInvalid;
     if(v.isBool())

@@ -109,7 +109,7 @@ QStringList EditSourceDialog::sources() const
 void EditSourceDialog::setMultiSource(bool multisource)
 {
     m_multiSource = multisource;
-    foreach(QPushButton *pb, findChildren<QPushButton *>(QRegExp("pbSrc.+")))
+    foreach(QPushButton *pb, findChildren<QPushButton *>(QRegularExpression("pbSrc.+")))
         pb->setVisible(multisource);
     if(multisource) {
         ui.tabWidget->setTabText(0, "Source 1");

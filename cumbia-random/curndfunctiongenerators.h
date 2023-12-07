@@ -3,7 +3,9 @@
 
 #include <curndfunctiongena.h>
 #include <QString>
-#include <QScriptValue>
+#include <QJSValue>
+
+class QJSEngine;
 
 class CuRndRandomFunctionGen : public CuRndFunctionGenA
 {
@@ -48,10 +50,10 @@ public:
 private:
     QString m_jscode, m_error, m_filenam;
     CuData m_options;
-    QScriptValue m_last_result;
+    QJSValue m_last_result;
     unsigned m_call_cnt;
 
-    QScriptEngine *m_jse;
+    QJSEngine *m_jse;
 };
 
 

@@ -76,7 +76,7 @@ bool DropEventFilter::eventFilter(QObject *obj, QEvent *event)
         const QMimeData *mimeData = dropEvent->mimeData();
         QString point = mimeData->text();
 
-        if(point.contains(QRegExp(SOURCE_REGEXP)) )
+        if(point.contains(QRegularExpression(SOURCE_REGEXP)) )
         {
             QDesignerFormWindowInterface *formWindow = 0;
             formWindow = QDesignerFormWindowInterface::findFormWindow(obj);
@@ -349,7 +349,7 @@ void TaskMenuExtension::setupSourceTargetDialog(QWidget *cb_widget)
     /* Creating target dialog */
     wint->ui.okButton->setHidden(true);
     wint->ui.cancelButton->setHidden(true);
-    wint->ui.listWidget->addItems(target.split(";",QString::SkipEmptyParts));
+    wint->ui.listWidget->addItems(target.split(";",Qt::SkipEmptyParts));
 
     grid->setRowStretch(0, 2);
     grid->addWidget(tw, 0, 0, 1, 2);

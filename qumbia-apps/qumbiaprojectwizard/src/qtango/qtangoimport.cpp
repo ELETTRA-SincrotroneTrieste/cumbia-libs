@@ -3,7 +3,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QTextStream>
 #include <QDomDocument>
 #include <QDomElement>
@@ -192,20 +192,23 @@ bool QTangoImport::findFilesRelPath()
     }
     else {
         QString filename, relpath;
-        QRegExp srcre("([A-Za-z0-9_\\./\\-]+)");
+        QRegularExpression srcre("([A-Za-z0-9_\\./\\-]+)");
         int pos;
         QStringList files_sections = QStringList() << "SOURCES" << "HEADERS" << "FORMS";
         foreach(QString section, files_sections) {
-            QString filelist = pe.get(section).remove(QRegExp(section + "\\s*\\+="));
+            QString filelist = pe.get(section).remove(QRegularExpression(section + "\\s*\\+="));
             qDebug() << __FUNCTION__ << "searching sources within " << filelist ;
             // capture sources now
             pos = 0;
-            while( (pos = srcre.indexIn(filelist, pos)) != -1) {
-                filename = srcre.cap(1).section('/', -1);
-                relpath = srcre.cap(1).section('/', 0, srcre.cap(1).count('/') - 1);
+            QRegularExpressionMatch ma = srcre.match(filelist, pos);
+            // was while( (pos = srcre.indexIn(filelist, pos)) != -1)
+            while( ma.hasMatch()) {
+                const QStringList& cap = ma.capturedTexts();
+                filename = cap.at(1).section('/', -1);
+                relpath = cap.at(1).section('/', 0, cap.at(1).count('/') - 1);
                 m_outFileRelPaths[filename] = relpath;
-                pos += srcre.matchedLength();
-                qDebug() << __FUNCTION__ << "found " << filename << relpath;
+                pos = ma.capturedEnd(0);
+                ma = srcre.match(filelist, pos);
             }
         }
         m_outFileRelPaths[QFileInfo(m_pro_file_path).fileName()] = "";
@@ -272,7 +275,7 @@ bool QTangoImport::m_checkPro(QFile &f) {
     if(f.open(QIODevice::ReadOnly|QIODevice::Text) ) {
         QTextStream in(&f);
         QString pro = in.readAll();
-        QRegExp qtango_inc_re("include\\s*\\(.*/qtango[3-6]/qtango.pri\\)");
+        QRegularExpression qtango_inc_re("include\\s*\\(.*/qtango[3-6]/qtango.pri\\)");
         m_err = !pro.contains(qtango_inc_re);
         if(m_err)
             m_errMsg = "QTangoImport.m_checkPro: file " + f.fileName() + " is not a qtango project file";
@@ -284,12 +287,12 @@ bool QTangoImport::m_checkPro(QFile &f) {
     return !m_err;
 }
 
-bool QTangoImport::m_checkCpp(const QString &f) {
-
+bool QTangoImport::m_checkCpp(const QString &) {
+    return true;
 }
 
-bool QTangoImport::m_checkH(const QString &h) {
-
+bool QTangoImport::m_checkH(const QString &) {
+    return true;
 }
 
 QString QTangoImport::m_get_file_contents(const QString& filepath)

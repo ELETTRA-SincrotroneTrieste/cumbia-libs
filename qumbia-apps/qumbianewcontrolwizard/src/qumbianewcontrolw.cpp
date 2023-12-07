@@ -2,7 +2,7 @@
 #include "ui_qumbianewcontrolw.h"
 
 #include <QDir>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QValidator>
@@ -42,11 +42,11 @@ Widget::Widget(QWidget *parent) :
     m_genIncludeMap();
 
     foreach(QString classnam, m_includeMap.keys()) {
-        if(classnam.startsWith("Qu") || classnam.contains(QRegExp("\\bE[A-Z]")))
+        if(classnam.startsWith("Qu") || classnam.contains(QRegularExpression("\\bE[A-Z]")))
             ui->cbParent->insertItem(ui->cbParent->count(), classnam);
     }
 
-    ui->leName->setValidator(new QRegExpValidator(QRegExp("[A-Za-z0-9_]+")));
+    ui->leName->setValidator(new QRegularExpressionValidator(QRegularExpression("[A-Za-z0-9_]+")));
 
     ui->pteBrief->setProperty("current_superclass", ui->cbParent->currentText());
     updateBrief();
@@ -82,18 +82,18 @@ void Widget::updateBrief() {
         s = ui->pteBrief->toPlainText();
         QString curclass = ui->pteBrief->property("current_classnam").toString();
         if(!curclass.isEmpty())
-            s.replace(QRegExp("\\b" + curclass + "\\b"), "$MAINCLASS$");
+            s.replace(QRegularExpression("\\b" + curclass + "\\b"), "$MAINCLASS$");
         QString super =  ui->pteBrief->property("current_superclass").toString();
         if(!super.isEmpty())
-            s.replace(QRegExp("\\b" + super + "\\b"), "$SUPERCLASS$");
+            s.replace(QRegularExpression("\\b" + super + "\\b"), "$SUPERCLASS$");
     }
     else {
         QString htemplate = m_getTemplateContents(ui->leH);
-        QRegExp rebrief("\\\\brief\\s+(.*)\\n");
-        rebrief.setMinimal(true);
-        int pos = rebrief.indexIn(htemplate);
-        if(pos > -1 ) {
-            s = rebrief.cap(1);
+        QRegularExpression rebrief("\\\\brief\\s+(.*)\\n");
+        rebrief.setPatternOptions(QRegularExpression::InvertedGreedinessOption);
+        QRegularExpressionMatch ma = rebrief.match(htemplate);
+        if(ma.hasMatch()) {
+            s = ma.captured(1);
         }
     }
     qDebug() << __FUNCTION__ <<" replacing from " << s;
@@ -122,8 +122,8 @@ QString Widget::m_replace_from_template(const QString &templ)
     out.replace("$INCLUDE$", ui->leH->text());
     out.replace("$DOCDIR$", DOC_PATH);
 
-    QRegExp classdocRe("/\\*\\*\\s+\\\\brief\\s+(.*) \\*/\\nclass\\s+");
-    classdocRe.setMinimal(true);
+    QRegularExpression classdocRe("/\\*\\*\\s+\\\\brief\\s+(.*) \\*/\\nclass\\s+");
+    classdocRe.setPatternOptions(QRegularExpression::InvertedGreedinessOption);
     QString brief = ui->pteBrief->toPlainText();
     brief.replace("\n", "\n * ");
     QString desc = ui->pteDesc->toPlainText();
@@ -212,17 +212,16 @@ void Widget::m_genIncludeMap()
 {
     QString incpath = QString(INCLUDE_PATH);
     QDir incdir(incpath);
-    int pos;
     foreach(QFileInfo fi, incdir.entryInfoList(QStringList() << "*.h", QDir::Files)) {
         QFile f(fi.absoluteFilePath());
         if(f.open(QIODevice::ReadOnly|QIODevice::Text)) {
             QTextStream in(&f);
             QString s = in.readAll();
-            QRegExp classre("class\\s+([A-Za-z0-9_]+)\\s*:\\s*public\\s+Q");
-            pos = classre.indexIn(s);
-            if(pos > -1) {
-                qDebug() << __FUNCTION__ << fi.fileName() << " <---> " << classre.cap(1);
-                m_includeMap[classre.cap(1)] = fi.fileName();
+            QRegularExpression classre("class\\s+([A-Za-z0-9_]+)\\s*:\\s*public\\s+Q");
+            QRegularExpressionMatch ma = classre.match(s);
+            if(ma.hasMatch()) {
+                qDebug() << __FUNCTION__ << fi.fileName() << " <---> " << ma.captured(1);
+                m_includeMap[ma.captured(1)] = fi.fileName();
             }
             f.close();
         }
@@ -238,9 +237,7 @@ void Widget::m_add_to_pro()
     QFile prof(ui->leProFile->text());
     if(prof.open(QIODevice::ReadOnly|QIODevice::Text))
     {
-        int pos;
-        QRegExp srcsre("(\\bSOURCES\\s*[\\+]*=\\s*[a-zA-Z0-9/\\s\\\\\\.\\$_]*)(\\n|\\n*$|\\n\\b[A-Za-z0-9]*)");
-        QRegExp hre("(\\bHEADERS\\s*[\\+]*=\\s*[a-zA-Z0-9/\\s\\\\\\.\\$_]*)(\\n|\\n*$|\\n\\b[A-Za-z0-9]*)");
+        QRegularExpression srcsre("(\\bSOURCES\\s*[\\+]*=\\s*[a-zA-Z0-9/\\s\\\\\\.\\$_]*)(\\n|\\n*$|\\n\\b[A-Za-z0-9]*)");
         QTextStream in(&prof);
         QString cap, orig;
         QString pros = in.readAll();
@@ -249,9 +246,9 @@ void Widget::m_add_to_pro()
         prefix.endsWith('/') ? hfile = prefix + ui->leH->text() : hfile = prefix + "/" + ui->leH->text();
         prefix.endsWith('/') ? cppfile = prefix + ui->leCpp->text() : cppfile = prefix + "/" + ui->leCpp->text();
         // 1. cpp
-        pos = srcsre.indexIn(pros);
-        if(pos > -1) {
-            orig = srcsre.cap(1);
+        QRegularExpressionMatch ma = srcsre.match(pros);
+        if(ma.hasMatch()) {
+            orig = ma.captured(1);
             cap = orig;
             if(!cap.contains(cppfile)) {
                 cap = orig.trimmed() + " \\ \n\t" + cppfile + "\n";
@@ -263,9 +260,10 @@ void Widget::m_add_to_pro()
             QMessageBox::critical(this, "Error modifying pro file", "SOURCES section not detected in " + prof.fileName());
 
         // 2. h
-        pos = hre.indexIn(pros);
-        if(pos > -1) {
-            orig = hre.cap(1);
+        QRegularExpression hre("(\\bHEADERS\\s*[\\+]*=\\s*[a-zA-Z0-9/\\s\\\\\\.\\$_]*)(\\n|\\n*$|\\n\\b[A-Za-z0-9]*)");
+        ma = hre.match(pros);
+        if(ma.hasMatch()) {
+            orig = ma.captured(1);
             cap = orig;
             if(!cap.contains(hfile)) {
                 cap = orig.trimmed() + " \\ \n\t" + hfile + "\n";
