@@ -2,6 +2,7 @@
 #include <QTextStream>
 #include <QFileInfo>
 #include <QtDebug>
+#include <QRegularExpression>
 
 Main2Cu::Main2Cu(const QString &fname)
 {
