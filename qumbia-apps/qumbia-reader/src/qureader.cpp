@@ -138,31 +138,60 @@ void Qu_Reader::onUpdate(const CuData &da) {
             }
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::Double) {
                 const std::vector<double> &vd = v.toDoubleVector();
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
                 emit newDoubleVector(source(), ts, QVector<double>(vd.begin(), vd.end()), data);
+#else
+                emit newDoubleVector(source(), ts, QVector<double>::fromStdVector(vd), data);
+#endif
             }
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::Float) {
                 const std::vector<float> &vf = v.toFloatVector();
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
                 emit newFloatVector(source(), ts, QVector<float>(vf.begin(), vf.end()), data);
+#else
+                emit newFloatVector(source(), ts, QVector<float>::fromStdVector(vd), data);
+#endif
             }
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::Boolean) {
                 const std::vector<bool> &vb = v.toBoolVector();
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
                 emit newBoolVector(source(), ts, QVector<bool>(vb.begin(), vb.end()), data);
+#else
+                emit newBoolVector(source(), ts, QVector<bool>::fromStdVector(vb), data);
+#endif
             }
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::LongUInt) {
                 const std::vector<unsigned long> &vlu = v.toULongIntVector();
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
                 emit newULongVector(source(), ts, QVector<unsigned long>(vlu.begin(), vlu.end()), data);
+#else
+                emit newULongVector(source(), ts, QVector<unsigned long>::fromStdVector(vlu), data);
+#endif
             }
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::Short) {
                 const std::vector<short> &vsu = v.toShortVector();
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
                 emit newShortVector(source(), ts, QVector<short>(vsu.begin(), vsu.end()), data);
+#else
+                emit newShortVector(source(), ts, QVector<short>::fromStdVector(vsu), data);
+#endif
             }
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::UShort) {
                 const std::vector<unsigned short> &vsu = v.toUShortVector();
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
                 emit newUShortVector(source(), ts, QVector<unsigned short>(vsu.begin(), vsu.end()), data);
+#else
+                emit newUShortVector(source(), ts, QVector<unsigned short>::fromStdVector(vsu), data);
+#endif
             }
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::LongInt) {
                 const std::vector<long int> &vli = v.toLongIntVector();
-                emit newLongVector(source(), ts, QVector<long>(vli.begin(), vli.end()), data);
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
+                emit newLongVector(source(), ts, QVector<long int>(vli.begin(), vli.end()), data);
+#else
+                emit newLongVector(source(), ts, QVector<long int>::fromStdVector(vli), data);
+#endif
+
             }
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::String) {
                 emit newStringList(source(), ts, QuStringList(v.toStringVector()), data);
