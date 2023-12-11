@@ -72,6 +72,15 @@ PKG_CONFIG_PATH includes the relevant dependencies required by cumbia. For examp
 
 shows the list of the required packages to build all the modules in cumbia-libs: omniorb, tango, zeromq, epics qwt...
 
+#### Qt5 or Qt6
+
+Starting from december 2023, a new branch named *qt-6* is intended to port the
+libraries to qt-6.
+Apart from the Qt libraries, *qwt* needs to be built with qt-6.
+Then, the pkg config path shall be updated.
+Any reference to other installations of *qt-5* based *cumbia-libs* or *qwt* 
+shall be removed from the PKG_CONFIG_PATH.
+
 ### Prepare an ubuntu system for cumbia installation (time: 5 - 8 minutes)
 
 If you are interested in using ubuntu, please refer to the instructions in <a href="README.UBUNTU.md">README.UBUNTU.md</a> file.
