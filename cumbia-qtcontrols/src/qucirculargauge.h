@@ -57,6 +57,7 @@ signals:
 
 protected:
     void contextMenuEvent(QContextMenuEvent* e);
+    bool event(QEvent *e);
 
 private:
     QuCircularGaugePrivate *d;

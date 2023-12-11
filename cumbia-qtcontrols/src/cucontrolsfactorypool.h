@@ -1,8 +1,7 @@
 #ifndef CUCONTROLSFACTORYPOOL_H
 #define CUCONTROLSFACTORYPOOL_H
 
-class CuControlsReaderFactoryI;
-class CuControlsWriterFactoryI;
+#include "cucontrolsfactorypool_p.h"
 
 #include <string>
 #include <vector>
@@ -46,21 +45,16 @@ public:
     enum Type { Reader = 0, Writer };
 
     CuControlsFactoryPool();
+    virtual ~CuControlsFactoryPool();
 
     void registerImpl(const std::string &domain, const CuControlsReaderFactoryI &rf);
-
     void registerImpl(const std::string &domain, const CuControlsWriterFactoryI &wf);
-
     void setSrcPatterns(const std::string& domain, const std::vector<std::string> &regexps);
-
     void clearSrcPatterns(const std::string& domain);
 
     CuControlsReaderFactoryI *getReadFactory(const std::string& domain) const;
-
     CuControlsWriterFactoryI *getWriteFactory(const std::string& domain) const;
-
-    CuControlsReaderFactoryI * getRFactoryBySrc(const std::string& src) const;
-
+    CuControlsReaderFactoryI *getRFactoryBySrc(const std::string& src) const;
     CuControlsWriterFactoryI *getWFactoryBySrc(const std::string& src) const;
 
     std::string guessDomainBySrc(const std::string& src) const;
@@ -68,18 +62,25 @@ public:
     bool isEmpty() const;
 
     std::vector<std::string> getSrcPatternDomains() const;
-
     std::vector<std::string>  getSrcPatterns(const std::string& domain) const;
 
+    void setDefaultDomain(const std::string& dom);
+    std::string defaultDomain() const;
+
+    CuControlsFactoryPool(const CuControlsFactoryPool &other);
+    CuControlsFactoryPool(CuControlsFactoryPool && other);
+
+    CuControlsFactoryPool & operator=(const CuControlsFactoryPool& other);
+    CuControlsFactoryPool & operator=(CuControlsFactoryPool&& other);
+    bool operator ==(const CuControlsFactoryPool &other) const;
+    bool operator !=(const CuControlsFactoryPool &other) const;
+
 private:
-    std::map<std::string, CuControlsReaderFactoryI *> m_rmap;
-
-    std::map<std::string, CuControlsWriterFactoryI *> m_wmap;
-
-    std::map<std::string, std::vector<std::string> >m_dom_patterns;
+    CuControlsFactoryPool_P  *d;
 
     void m_print() const;
 
+    void m_detach();
 };
 
 #endif // CUMBIAPOOL_H

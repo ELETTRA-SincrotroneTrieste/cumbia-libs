@@ -147,8 +147,8 @@ void QmlWriterBackend::m_configure(const CuData& da)
     printf("QmlWriterBackend.m_configure: da: %s\n", da.toString().c_str());
     // unit, label, description
     unit = QString::fromStdString(da["display_unit"].toString());
-    label = QString::fromStdString(da["label"].toString());
-    description = QString::fromStdString(da["description"].toString());
+    label = QString::fromStdString(da[CuDType::Label].toString());  // da["label"]
+    description = QString::fromStdString(da[CuDType::Description].toString());  // da["description"]
     if(unit != d->unit) {
         d->unit = unit;
         emit unitChanged();
@@ -164,14 +164,14 @@ void QmlWriterBackend::m_configure(const CuData& da)
 
     // min, max
     try {
-        if(da.containsKey("min"))
-            v = QVariant(strtod(da["min"].toString().c_str(), NULL));
+        if(da.containsKey(CuDType::Min))  // da.containsKey("min")
+            v = QVariant(strtod(da[CuDType::Min].toString().c_str(), NULL));  // da["min"]
         if(d->min != v) {
             d->min = v;
             emit minChanged();
         }
-        if(da.containsKey("max"))
-            v = QVariant(strtod(da["max"].toString().c_str(), NULL));
+        if(da.containsKey(CuDType::Max))  // da.containsKey("max")
+            v = QVariant(strtod(da[CuDType::Max].toString().c_str(), NULL));  // da["max"]
         if(d->max != v) {
             d->max = v;
             emit maxChanged();
@@ -183,8 +183,8 @@ void QmlWriterBackend::m_configure(const CuData& da)
     }
     // initialise the object with the "write" value (also called "set point"), if available:
     //
-    if(d->ok && da.containsKey("w_value")) {
-        CuVariant var = da["w_value"];
+    if(d->ok && da.containsKey(CuDType::WriteValue)) {  // da.containsKey("w_value")
+        CuVariant var = da[CuDType::WriteValue];  // da["w_value"]
         if(var.getFormat() == CuVariant::Scalar) {
             if(var.isFloatingPoint() || var.isInteger()) {
                 double dval;
@@ -208,7 +208,7 @@ void QmlWriterBackend::m_configure(const CuData& da)
 
 void QmlWriterBackend::onUpdate(const CuData &da)
 {
-    bool ok = !da["err"].toBool();
+    bool ok = !da[CuDType::Err].toBool();  // da["err"]
     if(d->ok != ok) {
         d->ok = ok;
         emit okChanged();
@@ -216,20 +216,20 @@ void QmlWriterBackend::onUpdate(const CuData &da)
 
     if(!d->ok) {
         perr("QmlWriterBackend [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
-             da["src"].toString().c_str(), da["msg"].toString().c_str(),
-                da["dfs"].toString().c_str(), da["writable"].toInt());
+             da[CuDType::Src].toString().c_str(), da[CuDType::Message].toString().c_str(),  // da["src"], da["msg"]
+                da[CuDType::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
 
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->context->cumbiaPool()->getBySrc(da["src"].toString());
+            cumbia = d->context->cumbiaPool()->getBySrc(da[CuDType::Src].toString());  // da["src"]
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::CategoryWrite, true);
-            log->write(QString("QmlWriterBackend [" + objectName() + "]").toStdString(), da["msg"].toString(), CuLog::LevelError, CuLog::CategoryWrite);
+            log->write(QString("QmlWriterBackend [" + objectName() + "]").toStdString(), da[CuDType::Message].toString(), CuLog::LevelError, CuLog::CategoryWrite);  // da["msg"]
         }
     }
-    else if(d->auto_configure && da["type"].toString() == "property") {
+    else if(d->auto_configure && da[CuDType::Type].toString() == "property") {  // da["type"]
         //
         // --------------------------------------------------------------------------------------------
         // You may want to check data format and write type and issue a warning or avoid configuration

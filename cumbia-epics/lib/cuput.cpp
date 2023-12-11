@@ -61,7 +61,7 @@ void CuPut::onProgress(int step, int total, const CuData &data)
 
 void CuPut::onResult(const CuData &data)
 {
-    d->exiting = data["exit"].toBool();
+    d->exiting = data[CuDType::Exit].toBool();  // data["exit"]
     std::list<CuDataListener *>::iterator it;
     for(it = d->listeners.begin(); it != d->listeners.end(); ++it)
         (*it)->onUpdate(data);
@@ -80,7 +80,7 @@ void CuPut::onResult(const CuData &data)
 CuData CuPut::getToken() const
 {
     CuData da("source", d->ep_src.getName());
-    da["type"] = std::string("writer");
+    da[CuDType::Type] = std::string("writer");  // da["type"]
     return da;
 }
 
@@ -118,9 +118,9 @@ void CuPut::start()
     CuEpCAService *df =
             static_cast<CuEpCAService *>(d->cumbia_ep->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType)));
-    CuData at("src", d->ep_src.getName()); /* activity token */
-    at["pv"] = d->ep_src.getPV();
-    at["activity"] = "writer";
+    CuData at(CuDType::Src, d->ep_src.getName()); /* activity token */  // CuData at("src", d->ep_src.getName()
+    at[CuDType::Pv] = d->ep_src.getPV();  // at["pv"]
+    at[CuDType::Activity] = "writer";  // at["activity"]
     at["write_value"] = d->write_val;
     std::string tt("pv" + d->ep_src.getPV()); /* thread token */
     d->activity = new CuPutActivity(at, df);

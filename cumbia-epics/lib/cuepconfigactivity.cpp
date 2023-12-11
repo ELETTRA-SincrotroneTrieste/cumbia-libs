@@ -46,7 +46,7 @@ void CuEpConfigActivity::event(CuActivityEvent *e)
 bool CuEpConfigActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
-    return token["src"] == mytok["src"] && mytok["activity"] == token["activity"];
+    return token[CuDType::Src] == mytok[CuDType::Src] && mytok[CuDType::Activity] == token[CuDType::Activity];  // token["src"], mytok["src"], mytok["activity"], token["activity"]
 }
 
 int CuEpConfigActivity::repeat() const
@@ -68,13 +68,13 @@ void CuEpConfigActivity::execute()
     cuprintf("CuEpConfigActivity::execute: enter\n");
     assert(d->my_thread_id == pthread_self());
     CuData ctrl_data = getToken(); /* activity token */
-    ctrl_data["properties"] = std::vector<std::string>();
-    ctrl_data["mode"] = "caget";
+    ctrl_data[CuDType::Properties] = std::vector<std::string>();  // ctrl_data["properties"]
+    ctrl_data[CuDType::Mode] = "caget";  // ctrl_data["mode"]
     CuEpicsWorld utils;
     utils.fillThreadInfo(ctrl_data, this); /* put thread and activity addresses as info */
     // utils.caget will call caget two times: one with DbrTime and the other with DbrCtrl
     // the result will be merged into the ctrl_data passed as reference
-    utils.caget(ctrl_data["pv"].toString(), ctrl_data);
+    utils.caget(ctrl_data[CuDType::Pv].toString(), ctrl_data);  // ctrl_data["pv"]
     publishResult(ctrl_data);
 }
 
@@ -89,9 +89,9 @@ void CuEpConfigActivity::onExit()
     }
     int refcnt = -1;
     CuData at = getToken(); /* activity token */
-    at["msg"] = d->msg;
-    at["mode"] = "ATTCONF";
-    at["err"] = d->err;
+    at[CuDType::Message] = d->msg;  // at["msg"]
+    at[CuDType::Mode] = "ATTCONF";  // at["mode"]
+    at[CuDType::Err] = d->err;  // at["err"]
     CuEpicsWorld utils;
     utils.fillThreadInfo(at, this); /* put thread and activity addresses as info */
     /* remove ref */
@@ -100,6 +100,6 @@ void CuEpConfigActivity::onExit()
     {
         //  d->device_service->removeDevice(at["device"].toString());
     }
-    at["exit"] = true;
+    at[CuDType::Exit] = true;  // at["exit"]
     publishResult(at);
 }

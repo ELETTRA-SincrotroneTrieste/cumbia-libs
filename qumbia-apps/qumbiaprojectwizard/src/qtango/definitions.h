@@ -38,7 +38,7 @@ public:
 
     Subst(const QJsonObject& jo) {
 
-        QString t = jo.value("type").toString();
+        QString t = jo.value("type").toString();  // jo.value("type") !cudata
         if(t == "replace include") m_type = ReplaceInclude;
         else if (t == "map class") m_type = MapClass;
         else if (t == "replace expr") m_type = ReplaceExpr;

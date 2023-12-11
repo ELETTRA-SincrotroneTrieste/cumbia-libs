@@ -5,10 +5,13 @@
 #include <cudata.h>
 #include <qustringlist.h>
 #include <qustring.h>
+#include <QStringBuilder>
 #include <QContextMenuEvent>
 #include <QPainter>
 #include <QPaintEvent>
 #include <cucontrolsutils.h>
+#include <QToolTip>
+#include <QHelpEvent>
 
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
@@ -26,12 +29,15 @@ public:
     bool auto_configure;
     bool read_ok;
     bool display_u_enabled;
-    QString display_u;
     QuPalette palette;
     int max_len;
     CuContext *context;
     CuControlsUtils u;
     CuMouseEvHandler mouseh;
+    char display_u[16];
+    char msg[MSGLEN];
+
+    CuData last_d;
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
@@ -73,6 +79,8 @@ void QuLabel::m_init()
     QColor background = d->palette["white"];
     QColor border = d->palette["gray"];
     setDecoration(background, border);
+    d->msg[0] = '\0';
+    d->display_u[0] = '\0';
 }
 
 void QuLabel::m_initCtx()
@@ -85,13 +93,12 @@ void QuLabel::m_initCtx()
 
 void QuLabel::m_configure(const CuData &da)
 {
-    d->display_u = QString::fromStdString(da["display_unit"].toString());
-    QString fmt = QString::fromStdString(da["format"].toString());
-    if(format().isEmpty() && !fmt.isEmpty())
-        setFormat(fmt);
+    const char* u = da["display_unit"].c_str(), *fm = da[CuDType::NumberFormat].c_str();
+    u != nullptr && strlen(u) > 0 ? snprintf(d->display_u, 16, " [%s]", u) : d->display_u[0] = '\0';
+    if(format().isEmpty() && fm != nullptr)
+        setFormat(fm);
     // get colors and strings, if available
     QColor c;
-    QString s;
     // colors and labels will be empty if "colors" and "labels" are not found
     QuStringList colors(da, "colors"), labels(da, "values");
 
@@ -110,7 +117,7 @@ QuLabel::~QuLabel()
 
 QString QuLabel::source() const {
     return d->context && d->context->getReader() ?
-                d->context->getReader()->source() : QString();
+               d->context->getReader()->source() : QString();
 }
 
 /** \brief returns the pointer to the CuContext
@@ -225,52 +232,91 @@ bool QuLabel::ctxSwap(CumbiaPool *c_p, const CuControlsFactoryPool &fpool) {
 
 void QuLabel::onUpdate(const CuData &da)
 {
-    bool background_modified = false;
-    QColor background, border;
-    d->read_ok = !da["err"].toBool();
-
+    //    auto start = std::chrono::high_resolution_clock::now();
+    const bool& ok = !da[CuDType::Err].toBool();
+    const char *mode = da[CuDType::Mode].c_str();
+    bool event = mode != nullptr && strcmp(mode, "E") == 0;
+    bool update = event; // if data is delivered by an event, always refresh
     // update link statistics
     d->context->getLinkStats()->addOperation();
-    if(!d->read_ok)
-        d->context->getLinkStats()->addError(da["msg"].toString());
-
-    d->read_ok ? border = d->palette["dark_green"] : border = d->palette["dark_red"];
-
-    setToolTip(d->u.msg(da));
-    setBorderColor(border);
-
-    if(!d->read_ok)
-        setText("####");
-    else {
-        if(d->read_ok && d->auto_configure && da["type"].toString() == "property") {
-            m_configure(da);
-            emit propertyReady(da);
-        }
-        if(da.containsKey("value"))
-        {
-            CuVariant val = da["value"];
-            QuLabelBase::setValue(val, &background_modified);
-            if(d->display_u_enabled && !d->display_u.isEmpty())
-                setText(text() + " [" + d->display_u + "]");
-        }
+    if(!event) { // data generated periodically by a poller or by something else
+        // update label if value changed
+        update = !ok || d->last_d[CuDType::Value] != da[CuDType::Value];
+        // onUpdate measures better with d->last_d = da; than with d->last_d = da.clone()
+        // even though measured alone the clone version performs better
+        //        d->last_d = da.clone(); // clone does a copy, then contents moved into last_d
+        d->last_d = da;
+        if(strlen(d->msg) > 0)
+            d->msg[0] = 0; // clear msg
     }
+    else { // "event" mode
+        //        printf("QuLabel.onUpdate: event driven, always updating and preparing tooltip msg, never saving data\n");
+        d->u.msg_short(da, d->msg);
+    }
+    if(update) {
+        QColor background;
+        if(!ok)
+            d->context->getLinkStats()->addError(da.c_str(CuDType::Message));
 
-    if(da.containsKey("sc")) {
-        CuVariant v = da["sc"];
-        background = d->palette[QString::fromStdString(v.toString())];
-        if(background.isValid())
+        if(ok != d->read_ok) {
+            QColor border;
+            ok ? border = d->palette["dark_green"] : border = d->palette["dark_red"];
+            setBorderColor(border);
+            d->read_ok = ok;
+        }
+
+        if(!ok) {
+            setText("####");
+        }
+        else {
+            if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {
+                m_configure(da);
+                emit propertyReady(da);
+            }
+            if(da.containsKey(CuDType::Value))  {
+                const CuVariant& val = da[CuDType::Value];
+                QuLabelBase::decode(val, background);
+                if(d->display_u_enabled && strlen(d->display_u) > 0 &&
+                    strlen(d_data->text) + strlen(d->display_u) + 1 < QULABEL_MAXLEN) {
+                    strncat(d_data->text, d->display_u, 16);
+                }
+                setText(d_data->text);
+            }
+        }
+        if(background.isValid()) { // from QuLabelBase.decode
             setBackground(background);
+        }
+        else {
+
+            // check for state color string change before accessing palette
+            const char* statc = da.c_str(CuDType::StateColor);
+            const char* laststatc = d->last_d.c_str(CuDType::StateColor);
+            if((statc && !laststatc) || (statc && laststatc && strcmp(statc, laststatc) != 0)) {
+                background = d->palette[statc];
+                if(background.isValid()) {
+                    setBackground(background);
+                }
+            }
+            else if(!background.isValid()) {
+                const char *qc = da.c_str(CuDType::QualityColor);
+                const char *lastqc = d->last_d.c_str(CuDType::QualityColor);
+                // background has not already been set by QuLabelBase::setValue (this happens if either a
+                // boolean display or enum display have been configured)
+                // if so, use the "qc" as a background
+                if((qc && !lastqc) || ( qc && lastqc && strcmp(qc,lastqc) != 0)) { // quality color changed
+                    const QColor &bg = d->palette[qc];
+                    if(bg.isValid())
+                        setBackground(bg); // checks if background is valid
+                }
+            }
+        }
     }
-    else if(!background_modified) {
-        // background has not already been set by QuLabelBase::setValue (this happens if either a
-        // boolean display or enum display have been configured)
-        // if so, use the "qc" as a background
-        if(da.containsKey("qc"))
-            background = d->palette[QString::fromStdString(da["qc"].toString())];
-        setBackground(background); // checks if background is valid
-    }
+    //    auto end = std::chrono::high_resolution_clock::now();
+    //    auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    //    std::cout << "Elapsed time QuLabel.update: " << duration.count() << " microseconds" << std::endl;
 
     emit newData(da);
+
 }
 
 void QuLabel::contextMenuEvent(QContextMenuEvent *e)
@@ -295,4 +341,17 @@ void QuLabel::mouseMoveEvent(QMouseEvent *e) {
 
 void QuLabel::mouseDoubleClickEvent(QMouseEvent *e) {
     d->mouseh.doubleClicked(e, this, this);
+}
+
+bool QuLabel::event(QEvent *e) {
+    if(e->type() == QEvent::ToolTip) {
+        printf("QuLabel::event \e[1;32mToolTip event!!!\e[0m\n");
+        if(strlen(d->msg) == 0) {
+            printf("QuLabel::event generating msg on the fly\n ");
+            d->u.msg_short(d->last_d, d->msg);
+        }
+        QToolTip::showText(static_cast<QHelpEvent *>(e)->globalPos(), d->msg);
+        return true;
+    }
+    return QLabel::event(e);
 }

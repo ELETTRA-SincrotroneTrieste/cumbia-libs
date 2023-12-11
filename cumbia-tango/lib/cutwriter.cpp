@@ -2,7 +2,6 @@
 #include "cumbiatango.h"
 #include "cuwriteactivity.h"
 #include "cudevicefactoryservice.h"
-#include <set>
 #include <cudatalistener.h>
 #include <cuserviceprovider.h>
 #include <cumacros.h>
@@ -11,6 +10,7 @@
 #include <cuthreadseventbridgefactory_i.h>
 #include <cuactivitymanager.h>
 #include <culog.h>
+#include <tango.h>
 
 class TSource;
 
@@ -62,7 +62,7 @@ void CuTWriter::setWriteValue(const CuVariant &write_val)
 
 /*!
  * \brief Set database configuration
- * \param db_conf data of type "property" obtained from a
+ * \param db_conf data of type CuDType::Property obtained from a
  */
 void CuTWriter::setConfiguration(const CuData& db_conf) {
     d->db_conf = db_conf;
@@ -124,11 +124,11 @@ void CuTWriter::onResult(const CuData &data)
 CuData CuTWriter::getToken() const
 {
     CuData da("source", d->tsrc.getName());
-    da["type"] = std::string("writer");
+    da[CuDType::Type] = std::string("writer");  // da["type"]
     return da;
 }
 
-TSource CuTWriter::getSource() const {
+const TSource &CuTWriter::getSource() const {
     return d->tsrc;
 }
 
@@ -170,12 +170,12 @@ void CuTWriter::start() {
     CuDeviceFactoryService *df =
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
-    CuData at("src", d->tsrc.getName()); /* activity token */
-    at["device"] = d->tsrc.getDeviceName();
-    at["point"] = d->tsrc.getPoint();
-    at["activity"] = "writer";
+    CuData at(CuDType::Src, d->tsrc.getName()); /* activity token */
+    at[CuDType::Device] = d->tsrc.getDeviceName();
+    at[CuDType::Point] = d->tsrc.getPoint();
+    at[CuDType::Activity] = "writer";  // at["activity"]
     at["write_value"] = d->write_val;
-    at["cmd"] = (d->tsrc.getType() == TSource::SrcCmd);
+    at[CuDType::CmdName] = (d->tsrc.getType() == TSource::SrcCmd);  // at["cmd"]
     at.merge(d->options);
     const std::string & thtok = d->options.containsKey("thread_token") ? d->options.s("thread_token") : d->tsrc.getDeviceName(); /* thread token */
     d->activity = new CuWriteActivity(at, df, d->db_conf, d->tag);

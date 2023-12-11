@@ -17,7 +17,7 @@ CuHttpWriteHelper::~CuHttpWriteHelper() {
 }
 
 CuData CuHttpWriteHelper::makeErrData(const QString &msg) {
-    CuData da("msg", msg.toStdString());
-    da.set("err", true).putTimestamp();
+    CuData da(CuDType::Message, msg.toStdString());  // CuData da("msg", msg.toStdString()
+    da.set(CuDType::Err, true).putTimestamp();  // set("err", true)
     return da;
 }

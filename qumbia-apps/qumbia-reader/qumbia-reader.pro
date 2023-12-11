@@ -19,6 +19,7 @@ packagesExist(cumbia-hdb) {
     PKGCONFIG += cumbia-hdb
     message("- adding cumbia-hdb module support")
 }   else {
+    DEFINES -= cumbia-hdb
     message("---")
     message("--> cumbia-hdb module not found: install the hdbextractor and cumbia-hdb modules from github if you want to")
     message("--> display or save to file historical data")
@@ -42,7 +43,7 @@ DEFINES += DOC_PATH=\"\\\"$${DOCDIR}\\\"\"
 # CONFIG+=declarative_debug
 
 
-# DEFINES -= QT_NO_DEBUG_OUTPUT
+#DEFINES -= QT_NO_DEBUG_OUTPUT
 
 OBJECTS_DIR = objects
 

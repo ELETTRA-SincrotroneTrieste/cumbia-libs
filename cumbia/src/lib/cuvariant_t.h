@@ -43,7 +43,7 @@ CuVariant::CuVariant(const T *p, size_t siz, DataFormat f, DataType t, int rows)
  */
 template<typename T> bool CuVariant::to(T &val) const
 {
-    bool valid = ((_d->format == Scalar || (_d->format == Vector && _d->mSize > 0)) && !_d->mIsNull && _d->mIsValid);
+    bool valid = _d && ((_d->format == Scalar || (_d->format == Vector && _d->mSize > 0)) && !_d->mIsNull && _d->mIsValid);
     if(!valid) {
         val = static_cast<T> (0ULL);
     }
@@ -138,10 +138,9 @@ template<typename T> bool CuVariant::to(T &val) const
  */
 template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
 {
-    bool valid = true;
+    bool valid = (_d != nullptr);
     size_t i;
-    if(_d->format == Vector)
-    {
+    if(_d && _d->format == Vector) {
         if(_d->type == Short)
         {
             std::vector<short> vs = toShortVector();
@@ -237,8 +236,7 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
         else
             valid = false;
     }
-    else if(_d->format == Scalar)
-    {
+    else if(_d && _d->format == Scalar) {
         if(_d->type == Short)
             v.push_back(static_cast<T>(toShortInt()));
         else if(_d->type == UShort)
@@ -285,7 +283,7 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
 
 template<typename T>
 CuMatrix<T> CuVariant::toMatrix() const {
-    if(_d->format == Matrix) {
+    if(_d && _d->format == Matrix) {
         return *(static_cast<CuMatrix <T> * >(_d->val));
     }
     return CuMatrix<T>();
@@ -293,7 +291,7 @@ CuMatrix<T> CuVariant::toMatrix() const {
 
 template<typename T>
 CuMatrix<T> *CuVariant::matrix_ptr() const {
-    return static_cast<CuMatrix <T> * > (_d->val);
+    return _d ? static_cast<CuMatrix <T> * > (_d->val) : nullptr;
 }
 
 #endif // CUVARIANT_T_H

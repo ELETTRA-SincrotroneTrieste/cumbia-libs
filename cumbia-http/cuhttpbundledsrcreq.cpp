@@ -22,7 +22,7 @@ public:
 
     CuHttpBundledSrcReqPrivate(const QMap<QString, SrcData>& srcs) {
         QList<SrcItem> il;
-        foreach(QString s, srcs.keys()) {
+        foreach(const QString &s, srcs.keys()) {
             const SrcData& sd = srcs[s];
             il.append(SrcItem(s.toStdString(), sd.lis, sd.method, sd.channel, sd.wr_val, sd.options));
             if(channel.isEmpty() && !sd.channel.isEmpty())
@@ -146,10 +146,10 @@ void CuHttpBundledSrcReq::onSslErrors(const QList<QSslError> &errors) {
     perr("CuHttpBundledSrcReq::onSslErrors: errors: %s", qstoc(msg));
 }
 
-void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError code) {
+void CuHttpBundledSrcReq::onError(QNetworkReply::NetworkError ) {
     QNetworkReply *r = qobject_cast<QNetworkReply *>(sender());
-    CuData da("msg", r->errorString().toStdString());
-    da.set("err", true);
+    CuData da(CuDType::Message, r->errorString().toStdString());  // CuData da("msg", r->errorString()
+    da.set(CuDType::Err, true);  // set("err", true)
     da.set("data", d->buf.toStdString());
     da.set("payload", r->property("payload").toString().toStdString());
     d->listener->onSrcBundleReplyError(da);
@@ -214,8 +214,8 @@ QByteArray CuHttpBundledSrcReqPrivate::m_json_pack(const QList<SrcItem> &srcs, u
 
         so["options"] = options;
         so["method"] = QString::fromStdString(i.method);
-        i.method != "write" ? so["src"] = QString::fromStdString(i.src) :
-                so["src"] = QString("%1(%2)").arg(i.src.c_str()).arg(i.wr_val.toString().c_str());
+        i.method != "write" ? so["src"] = QString::fromStdString(i.src) :  // !cudata
+                so["src"] = QString("%1(%2)").arg(i.src.c_str()).arg(i.wr_val.toString().c_str());  // !cudata
         if(channel.size() == 0 && !i.channel.isEmpty())
             channel = i.channel.toLatin1();
         else if(!i.channel.isEmpty() && channel != i.channel) {

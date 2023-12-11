@@ -31,7 +31,7 @@ public:
     void onProgress(int step, int total, const CuData &data)
     {
         printf("CuTangoThreadListener.onResult: calling onResult on cumbiaDev [%d/%d/%s]...................this thread \e[1;31m0x%lx\e[0m...........\n",
-               step, total, data["value"].toString().c_str(),
+               step, total, data[CuDType::Value].toString().c_str(),
                pthread_self());
         Tango::AutoTangoMonitor synch(d->cumbiaDev);
         d->cumbiaDev->onProgress(step, total, data);

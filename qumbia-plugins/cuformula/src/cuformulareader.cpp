@@ -273,8 +273,8 @@ void CuFormulaReader::setOptions(const CuData &opt)
 void CuFormulaReader::onNewData(const CuData &da) {
     d->error = false;
     d->message.clear();
-    std::string src = da["src"].toString();
-    bool err = da["err"].toBool();
+    std::string src = da[CuDType::Src].toString();  // da["src"]
+    bool err = da[CuDType::Err].toBool();  // da["err"]
     bool all_read_once = false;
     if(src.size() == 0) { // will not call onUpdate on listener
         d->error = true;
@@ -283,12 +283,12 @@ void CuFormulaReader::onNewData(const CuData &da) {
     else if(d->formula_parser.sourcesCount() > 0) {
         CuData dat;
 
-        dat["timestamp_ms"] = da["timestamp_ms"];
-        dat["timestamp_us"] = da["timestamp_us"];
+        dat[CuDType::Time_ms] = da[CuDType::Time_ms];  // dat["timestamp_ms"], da["timestamp_ms"]
+        dat[CuDType::Time_us] = da[CuDType::Time_us];  // dat["timestamp_us"], da["timestamp_us"]
         dat["srcs"] = d->formula_parser.sources();
 
         dat["formula"] = d->formula_parser.formula().toStdString();
-        std::string msg = da["msg"].toString();
+        std::string msg = da[CuDType::Message].toString();  // da["msg"]
         long idx = d->formula_parser.indexOf(src);
         if(idx < 0) {
             err = true;
@@ -298,12 +298,12 @@ void CuFormulaReader::onNewData(const CuData &da) {
             d->errors[static_cast<size_t>(idx)] = err;
             d->messages[static_cast<size_t>(idx)] = msg;
         }
-        else if(!err && da.containsKey("value")) {
+        else if(!err && da.containsKey(CuDType::Value)) {  // da.containsKey("value")
             size_t index = static_cast<size_t>(idx);
             if(!err) {
                 // refresh mode
-                d->modes[index] = m_getRefreshMode(da["mode"].toString());
-                d->values[index] = da["value"];
+                d->modes[index] = m_getRefreshMode(da[CuDType::Mode].toString());  // da["mode"]
+                d->values[index] = da[CuDType::Value];  // da["value"]
                 // display unit is stored if homogeneous (or there is a single source)
                 if(da.containsKey("display_unit"))
                     m_checkDisplayUnit(da["display_unit"]);
@@ -359,9 +359,9 @@ void CuFormulaReader::onNewData(const CuData &da) {
                         CuVariant resvar = fromScriptValue(result);
                         err = !resvar.isValid();
                         if(!err) {
-                            dat["value"] = resvar;
-                            resvar.getFormat() == CuVariant::Vector ? dat["dfs"] = "vector"
-                                    : dat["dfs"] = "scalar";
+                            dat[CuDType::Value] = resvar;  // dat["value"]
+                            resvar.getFormat() == CuVariant::Vector ? dat[CuDType::DataFormatStr] = "vector"  // dat["dfs"]
+                                    : dat[CuDType::DataFormatStr] = "scalar";  // dat["dfs"]
                         }
                         else
                             msg = d->message.toStdString(); // set by m_fromScriptValue
@@ -373,31 +373,31 @@ void CuFormulaReader::onNewData(const CuData &da) {
             } // if ! err
             else {
                 d->values[index] = CuVariant(); // invalidate
-                dat["err"] = true;
+                dat[CuDType::Err] = true;  // dat["err"]
             }
             d->errors[index] = err;
             d->messages[index] = msg;
 
             // update quality for index idx: in case of error, Invalid quality
-            !err ? d->qualities[index] = da["q"].toInt() :
+            !err ? d->qualities[index] = da[CuDType::Quality].toInt() :  // da["q"]
                    d->qualities[index] = CuDataQuality(CuDataQuality::Invalid);
 
         } // if(!err && idx > -1 && da.containsKey("value"))
 
         // now combine all qualities together
         CuDataQuality cuq = combinedQuality();
-        dat["q"] = cuq.toInt();
-        dat["qc"] = cuq.color();
-        dat["qs"] = cuq.name();
-        dat["msg"] = combinedMessage();
-        dat["mode"] = combinedModes();
+        dat[CuDType::Quality] = cuq.toInt();  // dat["q"]
+        dat[CuDType::QualityColor] = cuq.color();  // dat["qc"]
+        dat[CuDType::QualityString] = cuq.name();  // dat["qs"]
+        dat[CuDType::Message] = combinedMessage();  // dat["msg"]
+        dat[CuDType::Mode] = combinedModes();  // dat["mode"]
         if(d->values.size() == 1) // single source
-            dat["raw_value"] = da["value"];
+            dat["raw_value"] = da[CuDType::Value];  // da["value"]
 
         // if formula has a name, put it in src
-        !d->formula_parser.name().isEmpty() ? dat["src"] = d->formula_parser.name().toStdString() :
-                dat["src"] = combinedSources();
-        dat["err"] = err;
+        !d->formula_parser.name().isEmpty() ? dat[CuDType::Src] = d->formula_parser.name().toStdString() :  // dat["src"]
+                dat[CuDType::Src] = combinedSources();  // dat["src"]
+        dat[CuDType::Err] = err;  // dat["err"]
 
         // notify with onUpdate if
         // - error condition (we provide combined quality and combined message)
@@ -419,9 +419,9 @@ bool CuFormulaReader::event(QEvent *e)
     if(e->type() == static_cast<int>(SetSrcFailedEvent::SetSrcFailedType)) {
         SetSrcFailedEvent *srcfe = static_cast<SetSrcFailedEvent *>(e);
         // build a CuData with an error
-        CuData err("err", true);
-        err["src"] = srcfe->source.toStdString();
-        err["msg"] = srcfe->message.toStdString();
+        CuData err(CuDType::Err, true);  // CuData err("err", true)
+        err[CuDType::Src] = srcfe->source.toStdString();  // err["src"]
+        err[CuDType::Message] = srcfe->message.toStdString();  // err["msg"]
         onNewData(err);
         e->setAccepted(true);
     }
@@ -599,10 +599,10 @@ void CuFormulaReader::m_notifyFormulaError()
     CuData da;
     QString m = "CuFormulaReader: formula error: \"" + d->formula_parser.expression() +"\": " +
             d->formula_parser.message();
-    da["err"] = true;
-    da["msg"] = m.toStdString();
-    da["src"] = d->source.toStdString();
-    da["timestamp_ms"] = QDateTime::currentMSecsSinceEpoch();
+    da[CuDType::Err] = true;  // da["err"]
+    da[CuDType::Message] = m.toStdString();  // da["msg"]
+    da[CuDType::Src] = d->source.toStdString();  // da["src"]
+    da[CuDType::Time_ms] = QDateTime::currentMSecsSinceEpoch();  // da["timestamp_ms"]
     d->listener->onUpdate(da);
 }
 

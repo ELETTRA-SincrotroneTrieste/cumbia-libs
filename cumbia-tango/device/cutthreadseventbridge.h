@@ -33,7 +33,7 @@ public:
         {
             CuResultEvent *re = static_cast<CuResultEvent *>(e);
             printf("CuTThreadsEventBridge.postEvent: posting event. this thread 0x%lx.................---->\n", pthread_self());
-            printf("===\nDATA from activity %p: %s\n", re->getActivity(), re->getData()["value"].toString().c_str());
+            printf("===\nDATA from activity %p: %s\n", re->getActivity(), re->getData()[CuDType::Value].toString().c_str());
         }
         m_event_loop->postEvent(e);
     }

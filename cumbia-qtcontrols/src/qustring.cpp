@@ -25,8 +25,15 @@ QuString::QuString(const std::string &stds) : QString(QString::fromStdString(std
  * representation. If conversion fails, the resulting QuString will be empty.
  *
  */
-QuString::QuString(const CuData &da, const char *key) : QString()
-{
+QuString::QuString(const CuData &da, const char *key) : QString() {
+    if(da.containsKey(key)) {
+        bool ok;
+        std::string s = da[key].toString(&ok);
+        if(ok) append(QString::fromStdString(s));
+    }
+}
+
+QuString::QuString(const CuData &da, const CuDType::Key key) : QString() {
     if(da.containsKey(key)) {
         bool ok;
         std::string s = da[key].toString(&ok);

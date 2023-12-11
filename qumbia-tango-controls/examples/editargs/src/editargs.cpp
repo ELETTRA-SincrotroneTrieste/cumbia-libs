@@ -65,7 +65,7 @@ void Editargs::onSbValueChanged(double v) {
         sbs << findChild<QDoubleSpinBox *>(QString("sb_%1_%2").arg(idx).arg(j));
     foreach(const QDoubleSpinBox* sb, sbs)
         args.push_back(QString::number(sb->value()).toStdString());
-    CuData a("args", args);
+    CuData a(CuDType::Args, args);  // CuData a("args", args)
     printf("Editargs.onSbValueChanged: sending data %s on context %p\n", datos(a), ui->plot->getContext());
 
     QList<CuControlsReaderA *> readers = ui->plot->getContext()->readers();

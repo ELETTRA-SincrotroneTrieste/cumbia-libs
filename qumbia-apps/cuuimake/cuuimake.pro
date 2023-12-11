@@ -30,11 +30,13 @@ DOCDIR = $${SHAREDIR}/doc/cuuimake
 
 DEFINES_SHAREDIR = $${prefix}/share
 DEFINES_DOCDIR = $${DEFINES_SHAREDIR}/doc/cuuimake
+DEFINES_CUMBIA_INCLUDEDIR = $${prefix}/include/cumbia
 #
 # where config files are found by the application at runtime: use prefix
 #
 DEFINES += CONFDIR=\"\\\"$${DEFINES_SHAREDIR}/cuuimake\"\\\"
 DEFINES += CUUIMAKE_DOCDIR=\"\\\"$${DEFINES_DOCDIR}\"\\\"
+DEFINES += CUMBIA_INCLUDES=\"\\\"$${DEFINES_CUMBIA_INCLUDEDIR}\"\\\"
 
 # version
 CUUIMAKE_VERSION_HEX = 0x010000
@@ -70,6 +72,7 @@ DEFINES += QT_NO_DEBUG_OUTPUT
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 HEADERS += \
+    src/cudatachecker.h \
     src/defs.h \
     src/cuuimake.h \
     src/conf.h \
@@ -80,6 +83,7 @@ HEADERS += \
     src/xmakeprocess.h
 
 SOURCES += src/main.cpp \
+    src/cudatachecker.cpp \
     src/defs.cpp \
     src/cuuimake.cpp \
     src/conf.cpp \

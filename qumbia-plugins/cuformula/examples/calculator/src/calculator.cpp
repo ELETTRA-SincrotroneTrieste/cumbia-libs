@@ -101,18 +101,18 @@ int Calculator::code() const
 
 void Calculator::onUpdate(const CuData &data)
 {
-    bool err = data["err"].toBool();
+    bool err = data[CuDType::Err].toBool();  // data["err"]
     err ? printf("\e[1;31m") : printf("\e[0;m");
     if(err)
-        printf("%s", data["msg"].toString().c_str());
+        printf("%s", data[CuDType::Message].toString().c_str());  // data["msg"]
 
     if(m_verbose)
         printf("[\e[1;34mfull data\e[0m]: %s\n", data.toString().c_str());
 
     if(!err)
         printf("\n[\e[0;36m%s\e[0m  -->  \e[1;32m%s\e[0m ]\n\n",
-               qstoc(QDateTime::fromMSecsSinceEpoch(data["timestamp_ms"].toLongInt()).toString("yyyy.MM.dd hh.mm.ss")),
-               data["value"].toString().c_str());
+               qstoc(QDateTime::fromMSecsSinceEpoch(data[CuDType::Time_ms].toLongInt()).toString("yyyy.MM.dd hh.mm.ss")),  // data["timestamp_ms"]
+               data[CuDType::Value].toString().c_str());  // data["value"]
 
     emit finished();
     m_finished = true;

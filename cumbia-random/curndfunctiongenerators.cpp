@@ -24,13 +24,13 @@ void CuRndRandomFunctionGen::generate(CuData &res)
         for(int i = 0; i < data->size; i++) {
             vd.push_back(data->min + rg->generateDouble() * (data->max - data->min));
         }
-        res["value"] = vd;
+        res[CuDType::Value] = vd;  // res["value"]
     }
     else {
-        res["value"] = data->min + rg->generateDouble() * (data->max - data->min);
+        res[CuDType::Value] = data->min + rg->generateDouble() * (data->max - data->min);  // res["value"]
     }
-    res["err"] = false;
-    res["msg"] = "successfully generated " + std::to_string(data->size) + " random number(s)";
+    res[CuDType::Err] = false;  // res["err"]
+    res[CuDType::Message] = "successfully generated " + std::to_string(data->size) + " random number(s)";  // res["msg"]
 }
 
 CuRndFunctionGenA::Type CuRndRandomFunctionGen::getType() const
@@ -53,8 +53,8 @@ void CuRndSinFunctionGen::generate(CuData &res) {
     angle = 2 * M_PI * angle / 360.0;
     res["function"] = "random_sin";
     if(data->size == 1) {
-        res["value"] = amplitude * sin(angle);
-        res["msg"] = "generated a random amplitude sin with a random angle between 0 and 360 degrees";
+        res[CuDType::Value] = amplitude * sin(angle);  // res["value"]
+        res[CuDType::Message] = "generated a random amplitude sin with a random angle between 0 and 360 degrees";  // res["msg"]
     }
     else {
         bool ok = false;
@@ -67,11 +67,11 @@ void CuRndSinFunctionGen::generate(CuData &res) {
         for(int i = 0; i < data->size; i++) {
             vd.push_back(amplitude * sin(step * i));
         }
-        res["value"] = vd;
-        res["msg"] = "generated a " + std::to_string(data->size) + " points sin spectrum with step " +
+        res[CuDType::Value] = vd;  // res["value"]
+        res[CuDType::Message] = "generated a " + std::to_string(data->size) + " points sin spectrum with step " +  // res["msg"]
                 std::to_string(step);
     }
-    res["err"] = false;
+    res[CuDType::Err] = false;  // res["err"]
 }
 
 CuRndFunctionGenA::Type CuRndSinFunctionGen::getType() const
@@ -126,28 +126,28 @@ void CuRndJsFunctionGen::generate(CuData &res) {
     if(m_error.isEmpty()) {
         double min, max;
         int size, period;
-        m_options["min"].to<double>(min);
-        m_options["max"].to<double>(max);
+        m_options[CuDType::Min].to<double>(min);  // m_options["min"]
+        m_options[CuDType::Max].to<double>(max);  // m_options["max"]
         m_options["size"].to<int>(size);
-        m_options["period"].to<int>(period);
+        m_options[CuDType::Period].to<int>(period);  // m_options["period"]
         ++m_call_cnt;
         QScriptValue val;
         QScriptValue callable = m_jse->evaluate(m_jscode, m_filenam);
-        res["err"] = callable.isError();
+        res[CuDType::Err] = callable.isError();  // res["err"]
         if(callable.isError() || !callable.isFunction()) {
-            res["msg"] = std::string("CuRndJsFunctionGen::generate: error evaluating JS function or not callable: line ")
+            res[CuDType::Message] = std::string("CuRndJsFunctionGen::generate: error evaluating JS function or not callable: line ")  // res["msg"]
                     + "file: " + callable.property("fileName").toString().toStdString() +
                     ": " + std::to_string(callable.property("lineNumber").toInt32()) + ": " +
                     callable.toString().toStdString();
-            res["err"] = true;
+            res[CuDType::Err] = true;  // res["err"]
         }
         else {
             QScriptValueList args;
             args << size << min << max << period << m_call_cnt;
             val = callable.call(QScriptValue(), args);
-            res["err"] = val.isError();
+            res[CuDType::Err] = val.isError();  // res["err"]
             if(val.isError()) {
-                res["msg"] = std::string("CuRndJsFunctionGen::generate: error calling JS function: \"" +
+                res[CuDType::Message] = std::string("CuRndJsFunctionGen::generate: error calling JS function: \"" +  // res["msg"]
                                          val.toString().toStdString() +
                                          "\" file \"" + val.property("fileName").toString().toStdString() +
                                          "\" line " + std::to_string(val.property("lineNumber").toInt32()));
@@ -170,31 +170,31 @@ void CuRndJsFunctionGen::generate(CuData &res) {
                     else array_type_error = true;
                 }
                 if(len == 0)
-                    res["value"] = vd;
+                    res[CuDType::Value] = vd;  // res["value"]
                 else if(vd.size() > 0)
-                    res["value"] = vd;
+                    res[CuDType::Value] = vd;  // res["value"]
                 else if(vs.size() > 0)
-                    res["value"] = vs;
+                    res[CuDType::Value] = vs;  // res["value"]
                 else if(vb.size() > 0)
-                    res["value"] = vb;
+                    res[CuDType::Value] = vb;  // res["value"]
             }
             else if(val.isBool())
-                res["value"] = val.toBool();
+                res[CuDType::Value] = val.toBool();  // res["value"]
             else if(val.isNumber())
-                res["value"] = val.toNumber();
+                res[CuDType::Value] = val.toNumber();  // res["value"]
             else if(val.isString())
-                res["value"] = val.toString().toStdString();
+                res[CuDType::Value] = val.toString().toStdString();  // res["value"]
             else {
-                res["err"] = true;
-                res["msg"] = "CuRndJsFunctionGen::generate js value \"" + val.toString().toStdString() + "\" returned from the function "                                                                                                                                   " nor a type string";
+                res[CuDType::Err] = true;  // res["err"]
+                res[CuDType::Message] = "CuRndJsFunctionGen::generate js value \"" + val.toString().toStdString() + "\" returned from the function "                                                                                                                                   " nor a type string";  // res["msg"]
             }
         }
-        if(!res["err"].toBool())
+        if(!res[CuDType::Err].toBool())  // res["err"]
             m_last_result = val;
     }
     else {
-        res["err"] = true;
-        res["msg"] = std::string("error opening file: \"") + m_filenam.toStdString() +
+        res[CuDType::Err] = true;  // res["err"]
+        res[CuDType::Message] = std::string("error opening file: \"") + m_filenam.toStdString() +  // res["msg"]
                 "\":" + m_error.toStdString();
     }
 }

@@ -15,10 +15,10 @@ public:
     CuActionFactoryServiceImpl_Base();
     virtual ~CuActionFactoryServiceImpl_Base();
 
-    virtual CuTangoActionI* registerAction(const std::string& src, const CuTangoActionFactoryI& f, CumbiaTango *ct, bool *isnew);
+    virtual CuTangoActionI* registerAction(const TSource& src, const CuTangoActionFactoryI& f, CumbiaTango *ct, bool *isnew);
     virtual CuTangoActionI *find(const std::string &name, CuTangoActionI::Type at);
     virtual size_t count() const;
-    virtual void unregisterAction(const std::string& src, CuTangoActionI::Type at);
+    virtual void unregisterAction(const TSource& src, CuTangoActionI::Type at);
     virtual void cleanup();
 
 protected:

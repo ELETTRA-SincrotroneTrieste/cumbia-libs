@@ -6,11 +6,18 @@
 
 include(cumbia-qtcontrols.pri)
 
-CONFIG += release
+isEmpty(buildtype) {
+        buildtype = release
+} else {
+    equals(buildtype, debug) {
+        message("")
+        message("debug build")
+        message("")
+    }
+}
 
+CONFIG += $${buildtype}
 
-
-# CONFIG += silent
 
 # remove ourselves (defined in .pri)
 PKGCONFIG -= cumbia-qtcontrols$${QTVER_SUFFIX}
@@ -71,6 +78,7 @@ SOURCES += cumbiaqtcontrols.cpp \
     src/qthreadseventbridge.cpp \
     src/qthreadseventbridgefactory.cpp \
     src/cuevent_qt.cpp \
+    src/cucontrolsfactorypool_p.cpp \
     src/cucontrolsfactorypool.cpp \
     src/quapplynumeric.cpp \
     src/widgets-base/einputoutputwidget.cpp \
@@ -113,6 +121,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/cucontrolsreader_abs.h \
     src/cucontrolswriter_abs.h \
     src/cucontrolsfactories_i.h \
+    src/cucontrolsfactorypool_p.h \
     src/cucontrolsfactorypool.h \
     src/qupalette.h \
     src/cucontrolsutils.h \
@@ -196,7 +205,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/plugin_ifaces/cucontextmenuactionsplugin_i.h \
     src/cupluginloader.h \
     src/plugin_ifaces/cuformulaplugininterface.h \
-    src/plugin_ifaces/cuhistoricaldbplugin_i.hp \
+    src/plugin_ifaces/cuhistoricaldbplugin_i.h \
     src/widgets-base/cumouse-ev-handler.h
 
 
@@ -295,19 +304,19 @@ DOXYGEN_BIN = $$system(which doxygen)
 isEmpty(DOXYGEN_BIN) {
     message("cumbia-qtcontrols.pro: doxygen not found")
 } else {
-   # message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-   # message("---------------------------- DOCS DISABLED ----------------------")
-   # message("-")
-   # message("-")
+    message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    message("---------------------------- DOCS DISABLED ----------------------")
+    message("-")
+    message("-")
     message("Doxygen found")
 
-    doc.commands = \
-    doxygen \
-    Doxyfile;
+ #   doc.commands = \
+   # doxygen \
+  #  Doxyfile;
 
-    doc.files = doc/*
-    doc.path = $${CUMBIA_QTCONTROLS_DOCDIR}
-    QMAKE_EXTRA_TARGETS += doc
+    #doc.files = doc/*
+   # doc.path = $${CUMBIA_QTCONTROLS_DOCDIR}
+   # QMAKE_EXTRA_TARGETS += doc
     !android-g++ {
         INSTALLS += doc
     }

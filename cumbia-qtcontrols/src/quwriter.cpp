@@ -305,9 +305,9 @@ void QuWriter::execute(const QVector<bool>& bv) {
 void QuWriter::onUpdate(const CuData &data)
 {
     d->configured = true;
-    quizer_ptr->error = data["err"].toBool();
-    quizer_ptr->message = QString::fromStdString(data["msg"].toString());
-    if(data["type"].toString() == "property" && d->auto_configure) {
+    quizer_ptr->error = data[CuDType::Err].toBool();  // data["err"]
+    quizer_ptr->message = QString::fromStdString(data[CuDType::Message].toString());  // data["msg"]
+    if(data[CuDType::Type].toString() == "property" && d->auto_configure) {  // data["type"]
         Qumbiaizer::configure(data); // emits configured and connectionOk
         CuControlsWriterA *w = d->context->getWriter();
         if(quizer_ptr->executeOnConnection() && w) {

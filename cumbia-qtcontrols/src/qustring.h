@@ -2,8 +2,8 @@
 #define QUSTRING_H
 
 #include <QString>
+#include <cudata.h>
 
-class CuData;
 class CuVariant;
 
 /*! \brief convenience class to build a Qt QString from an std::string or from a value stored in CuData
@@ -22,6 +22,7 @@ public:
 
     QuString(const std::string &stds);
     QuString(const CuData &da, const char *key);
+    QuString(const CuData &da, const CuDType::Key key);
     QuString(const CuVariant &va);
 };
 

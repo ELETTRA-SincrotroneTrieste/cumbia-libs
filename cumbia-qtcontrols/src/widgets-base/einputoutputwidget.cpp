@@ -142,7 +142,7 @@ QSize EInputOutputWidget::minimumSizeHint() const
     height = qMax(d->output_w ? d->output_w->minimumSizeHint().height() : 0, d->pbEdit ? d->pbEdit->minimumSizeHint().height() + 12 : 0 );
     width += (lineWidth() + midLineWidth() + frameWidth() + lo_leftm + lo_rightm + layout()->spacing() );
     height += contentsMargins().top() + contentsMargins().bottom() +
-            (lineWidth() + midLineWidth() + frameWidth() + lo_topm + lo_botm + layout()->spacing() );
+              (lineWidth() + midLineWidth() + frameWidth() + lo_topm + lo_botm + layout()->spacing() );
     return QSize(width, height);
 }
 

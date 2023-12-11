@@ -30,7 +30,7 @@ class CuEventI;
  * \par Example
  * \code
     m_cumbia = new Cumbia();
-    CuData thread_token("thread", "athread");
+    CuData thread_token(CuDType::Thread, "athread");  // CuData thread_token("thread", "athread")
     Activity *a = new Activity(CuData("name", "my_activity"));
     m_cumbia->registerActivity(a, this, thread_token,
                                CuThreadFactoryImpl(),

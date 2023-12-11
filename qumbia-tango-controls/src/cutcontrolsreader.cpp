@@ -161,7 +161,6 @@ QString CuTControlsReader::source() const
  */
 void CuTControlsReader::unsetSource() {
     if(!d->source.isEmpty()) {
-        TSource tsrc(d->source.toStdString());
         if(d->is_db_op) {
             d->cumbia_tango->unlinkListener(d->source.toStdString(), CuTangoActionI::TaDb, d->tlistener);
         } else {
@@ -255,18 +254,18 @@ void CuTControlsReader::setSource(const QString &s) {
     if(d->is_db_op) {
         CuTaDbFactory dbf;
         dbf.setOptions(d->ta_options);
-        d->cumbia_tango->addAction(tsrc.getName(), d->tlistener, dbf);
+        d->cumbia_tango->addAction(tsrc, d->tlistener, dbf);
     }
     else {
         if(!d->ta_options.value("no-properties").toBool() || d->ta_options.value("single-shot").toBool()) {
             CuTReaderConfFactory acf;
             acf.setOptions(d->ta_options);
-            d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, acf);
+            d->cumbia_tango->addAction(tsrc, d->tlistener, acf);
         }
         if(!d->ta_options.value("properties-only").toBool() && !d->ta_options.value("single-shot").toBool()) {
             CuTangoReaderFactory readf;
             readf.setOptions(d->ta_options);
-            d->cumbia_tango->addAction(d->source.toStdString(), d->tlistener, readf);
+            d->cumbia_tango->addAction(tsrc, d->tlistener, readf);
         }
     }
 }

@@ -6,7 +6,7 @@ QT       += widgets
 CONFIG += release
 
 # silent
-CONFIG += silent
+# CONFIG += silent
 
 PKGCONFIG -= qumbia-tango-controls$${QTVER_SUFFIX}
 

@@ -560,7 +560,7 @@ void QumbiaProjectWizard::addProperties(QString &uixml)
                     QString type = qobject_cast<QComboBox *>(ui->twProperties->itemWidget(it, 2))->currentText();
                     if(pName != "-" && pVal != "-")
                     {
-                        QDomElement propEl = doc.createElement("property");
+                        QDomElement propEl = doc.createElement("property");  // doc.createElement("property") is !cudata
                         propEl.setAttribute("name", pName);
                         propEl.setAttribute("stdset", "0");
                         widget.appendChild(propEl);

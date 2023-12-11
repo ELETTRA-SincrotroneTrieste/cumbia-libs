@@ -4,6 +4,7 @@
 #include <QStringList>
 #include <vector>
 #include <string>
+#include <cudatatypes.h>
 
 class CuData;
 class CuVariant;
@@ -23,6 +24,7 @@ public:
     QuStringList();
     QuStringList(const std::vector<std::string> &stdvs);
     QuStringList(const CuData &da, const char *key);
+    QuStringList(const CuData &da, CuDType::Key key);
     QuStringList(const CuVariant &va);
 };
 

@@ -55,14 +55,14 @@ class CuVariantPrivate;
   // QuLabel inherits from QLabel. Text is changed with *setText*
   void QuLabel::onUpdate(const CuData &da)
   {
-    bool read_ok = !da["err"].toBool();
-    if(da.containsKey("value")) {
-      CuVariant val = da["value"];
+    bool read_ok = !da[CuDType::Err].toBool();  // da["err"]
+    if(da.containsKey(CuDType::Value)) {  // da.containsKey("value")
+      CuVariant val = da[CuDType::Value];  // da["value"]
       if(val.getType() == CuVariant::Boolean) {
             txt = (val.toBool() ? "OK" : "ERROR" );
         }
         else {
-            txt = QString::fromStdString(da["value"].toString());
+            txt = QString::fromStdString(da[CuDType::Value].toString());  // da["value"]
         }
         setText(txt);
     }
@@ -262,6 +262,7 @@ public:
     std::string toString(bool *ok = nullptr, const char *format = "") const;
     std::string s() const;
     std::string s(const char *fmt, bool *ok = nullptr) const;
+    const char* c_str() const;
 
     std::vector<std::string> toStringVector(bool *ok = nullptr) const;
     std::vector<std::string> toStringVector( const char *fmt) const;
@@ -298,10 +299,9 @@ public:
 
     std::string dataFormatStr(int f) const;
     std::string dataTypeStr(int t) const;
-
+    std::string dataTypeStr() const;
+    std::string data_type_short_str() const;
 private:
-
-    void build_from(const CuVariant& other);
     void m_cleanup();
     template<typename T>void m_from(T value);
     template<typename T> void m_from(const std::vector<T> &v);
@@ -309,6 +309,7 @@ private:
     void m_v_to_string_matrix(const std::vector<std::string> &vs, size_t dimx, size_t dim_y);
     void m_from(const std::vector<std::string > & s);
     void m_from_std_string(const std::string & s);
+    void m_from_char_ptr(const char *s);
     void m_init(DataFormat df, DataType dt, size_t n_rows = 1, size_t n_cols = 0);
     void m_delete_rdata();
     void m_detach();

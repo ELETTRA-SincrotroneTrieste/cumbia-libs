@@ -19,7 +19,7 @@ ProjectFilesHelper::ProjectFilesHelper(const QString& projnam)
 /*
  * <?xml version="1.0" encoding="UTF-8"?>
  *   <ui version="4.0"> <-- document.firstChildElement("ui")
- *   <class>Danfisik9000</class> <-- ui.firstChildElement("class")
+ *   <class>Danfisik9000</class> <-- ui.firstChildElement(CuDType::Class)  // ui.firstChildElement("class")
  *   <widget class="QWidget" name="Danfisik9000">
  */
 bool ProjectFilesHelper::findMainWidgetProps(const QDir& wdir)
@@ -84,7 +84,7 @@ bool ProjectFilesHelper::findMainWidgetProps(const QDir& wdir)
                 if (dom.setContent(&f, &dom_err)) {
                     QDomElement uiEl = dom.firstChildElement("ui");
                     if(!uiEl.isNull() && uiEl.attribute("version").contains(QRegExp("4\\.[\\d]+"))) {
-                        QDomElement classEl = uiEl.firstChildElement("class");
+                        QDomElement classEl = uiEl.firstChildElement("class");  // uiEl.firstChildElement("class") !cudata
                         qDebug() << classEl.tagName() << "<<--- class el" << dom.documentElement().tagName() << dom.childNodes().count();
                         if(!classEl.isNull()) {
                             m_uiclassnam = classEl.text();
@@ -170,7 +170,7 @@ bool ProjectFilesHelper::findMainProjectFiles(const QDir &wdir)
 QFileInfoList ProjectFilesHelper::findFiles(QDir wdir, const QString& filter, const QString& exclude_regexp) const
 {
     QFileInfoList uifil = wdir.entryInfoList(QStringList() << filter, QDir::Files);
-    if(wdir.cd("src")) {
+    if(wdir.cd("src")) {  // wdir.cd("src") !cudata
         uifil << wdir.entryInfoList(QStringList() << filter, QDir::Files);
         qDebug() << __FUNCTION__ << "found ui under " << wdir.absolutePath() << uifil.size();
         wdir.cdUp();

@@ -818,7 +818,7 @@ void QuCircularGaugeBase::setMaxValue(double max)
 void QuCircularGaugeBase::setLabel(const QString &l)
 {
     d->label = l;
-    regenerateCache();
+//    regenerateCache();
     update();
 }
 
@@ -1484,8 +1484,7 @@ QSize QuCircularGaugeBase::sizeHint() const
     return QWidget::sizeHint();
 }
 
-QSize QuCircularGaugeBase::minimumSizeHint() const
-{
+QSize QuCircularGaugeBase::minimumSizeHint() const {
     QFontMetrics fm(font());
     int labwid = fm.horizontalAdvance(d->cache.longestLabel);
     int labhei = fm.height();

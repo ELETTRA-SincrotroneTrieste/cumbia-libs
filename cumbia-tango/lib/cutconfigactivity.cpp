@@ -31,7 +31,7 @@ CuTConfigActivity::CuTConfigActivity(const TSource& ts,
                                      const CuTConfigActivityExecutor_I *tx,
                                      const CuData& o,
                                      const CuData& tag)
-    : CuActivity(CuData("activity", "property").set("src", ts.getName()))
+    : CuActivity(CuData("activity", "property").set(CuDType::Src, ts.getName()))
 {
     d = new CuTAttConfigActivityPrivate;
     d->devfa = df;
@@ -70,7 +70,7 @@ void CuTConfigActivity::event(CuActivityEvent *e)
 }
 
 bool CuTConfigActivity::matches(const CuData &token) const {
-    return token.s("src") == d->ts.getName() && "property" == token.s("activity");
+    return token.s(CuDType::Src) == d->ts.getName() && token.s(CuDType::Activity) == "property";
 }
 
 int CuTConfigActivity::repeat() const {
@@ -92,14 +92,14 @@ void CuTConfigActivity::execute() {
     //    bool value_only = d->options.containsKey("value-only") && d->options.B("value-only");
     //    bool skip_read =  d->options.containsKey("no-value") && d->options.B("no-value");
     const std::string& point = d->ts.getPoint();
-    CuData at("src", d->ts.getName());
-    at["device"] = d->ts.getDeviceName();
-    at["point"] = point;
-    at["argins"] = d->ts.getArgs();
-    at["activity"] = "property";
-    at["is_command"] = d->ts.getType() == TSource::SrcCmd;
-    at["properties"] = std::vector<std::string>();
-    at["type"] = "property";
+    CuData at(CuDType::Src, d->ts.getName());
+    at[CuDType::Device] = d->ts.getDeviceName();
+    at[CuDType::Point] = point;
+    at[CuDType::Args] = d->ts.getArgs();
+    at[CuDType::Activity] = "property";  // // !cudata
+    at[CuDType::IsCommand] = d->ts.getType() == TSource::SrcCmd;  // at["is_command"]
+    at[CuDType::Properties] = std::vector<std::string>();
+    at[CuDType::Type] = "property";  // !cudata
 
     bool value_only = false, skip_read = false;
     o["value-only"].to<bool>(value_only);
@@ -135,8 +135,8 @@ void CuTConfigActivity::execute() {
         //
 
         at["data"] = true;
-        at["msg"] = "configured " + tw.getLastMessage();
-        at["err"] = tw.error();
+        at[CuDType::Message] = "configured " + tw.getLastMessage();
+        at[CuDType::Err] = tw.error();
         d->err = !success || tw.error();
         d->msg = tw.getLastMessage();
 
@@ -144,12 +144,12 @@ void CuTConfigActivity::execute() {
         d->err ?  d->repeat = 2000 * d->try_cnt : d->repeat = -1;
     }
     else {
-        at["msg"] = "CuTConfigActivity.execute (2): " + d->tdev->getMessage();
-        at["err"] = true;
+        at[CuDType::Message] = "CuTConfigActivity.execute (2): " + d->tdev->getMessage();
+        at[CuDType::Err] = true;
         at.putTimestamp();
     }
     d->exiting = true;
-    d->devfa->removeRef(at["device"].toString(), threadToken());
+    d->devfa->removeRef(at[CuDType::Device].toString(), threadToken());
     at.merge(std::move(o));
     at.merge(std::move(tag));
     publishResult(at);

@@ -40,7 +40,7 @@ public:
  * \li CuActivity::CuADeleteOnExit: *true* lets the activity be deleted after onExit
  */
 CuEventActivity::CuEventActivity(const TSource &ts, CuDeviceFactory_I *df, const string &refreshmo, const CuData &tag, int update_policy)
-    : CuActivity(CuData("activity", "event").set("src", ts.getName())) {  // token with keys relevant to matches()
+    : CuActivity(CuData("activity", "event").set(CuDType::Src, ts.getName())) {  // token with keys relevant to matches()
     d = new CuEventActivityPrivate;
     setFlag(CuActivity::CuADeleteOnExit, true);
     d->devfa = df;
@@ -89,17 +89,17 @@ void CuEventActivity::event(CuActivityEvent *e) {
  *         *src* and *activity* values.
  *
  * @param token a CuData containg key/value pairs of another activity's token
- * @return true if the input token's "src" and "activity" values match this token's "src" and "activity"
+ * @return true if the input token's CuDType::Src and "activity" values match this token's CuDType::Src and "activity"
  *         values
  *
- * Two CuEventActivities match if the "src" and the "activity" names match.
+ * Two CuEventActivities match if the CuDType::Src and the "activity" names match.
  * CuEventActivity "activity" key is set to the "E" value by CuTReader, so two activities match
  * if they are both CuEventActivity and share the same source name.
  *
  */
 bool CuEventActivity::matches(const CuData &token) const {
     const CuData& mytok = getToken();
-    return token["src"] == mytok["src"] && mytok["activity"] == token["activity"];
+    return token[CuDType::Src] == mytok[CuDType::Src] && mytok[CuDType::Activity] == token[CuDType::Activity];  // mytok["activity"], token["activity"]
 }
 
 /*! \brief returns 0. CuEventActivity's execute is called only once.
@@ -176,7 +176,7 @@ Tango::EventType CuEventActivity::m_tevent_type_from_string(const std::string& s
  *
  * \par note
  * In the CuEventActivity::push_event callback, CuData "E" value is copied from
- * Tango::EventData::event. Here data["E"] is set to "subscribe" to identify the
+ * Tango::EventData::event. Here data[CuDType::Event] is set to "subscribe" to identify the  // data["E"]
  * *subscribe_event* phase (CuTReader looks for this not to issue an error if subscription fails).
  *
  *
@@ -185,28 +185,28 @@ void CuEventActivity::execute()
 {
     assert(d->tdev != NULL);
     assert(d->my_thread_id == pthread_self());
-    CuData at("activity", "event"); /* activity token */
+    CuData at(CuDType::Activity, "event"); /* activity token */  // CuData at("activity", "event")
     std::string att = d->tsrc.getPoint();
     const std::string& ref_mode_str = d->refreshmo;
     Tango::DeviceProxy *dev = d->tdev->getDevice();
-    at.set("src", d->tsrc.getName()).set("mode", "E").set("E", "subscribe").putTimestamp();
-    at["err"] = !d->tdev->isValid();
+    at.set(CuDType::Src, d->tsrc.getName()).set(CuDType::Mode, "E").set(CuDType::Event, "subscribe").putTimestamp();  // set("mode", "E")
+    at[CuDType::Err] = !d->tdev->isValid();
     if(dev) {
         try {
 
             d->event_id = dev->subscribe_event(att, m_tevent_type_from_string(ref_mode_str), this);
-            at["msg"] = "subscribe to: " + ref_mode_str;
+            at[CuDType::Message] = "subscribe to: " + ref_mode_str;
         }
         catch(Tango::DevFailed &e) {
             d->event_id = -1;
-            at["err"] = true;
-            at["msg"] = CuTangoWorld().strerror(e);
+            at[CuDType::Err] = true;
+            at[CuDType::Message] = CuTangoWorld().strerror(e);
             at["ev_except"] = true;
             publishResult(at);
         }
     }
     else
-        at["msg"] = d->tdev->getMessage();
+        at[CuDType::Message] = d->tdev->getMessage();
     /* do not publish result if subscription is successful because push_event with the first result is invoked immediately */
 }
 
@@ -229,7 +229,7 @@ void CuEventActivity::onExit() {
     if(d->tdev->getDevice() && d->event_id != -1) {
         try {
             d->tdev->getDevice()->unsubscribe_event(d->event_id);
-            cuprintf("CuEventActivity.onExit: \e[1;35munsubscribed id %d for \e[1;32m%s! OK!\e[0m\n", d->event_id, vtoc2(getToken(), "src"));
+            cuprintf("CuEventActivity.onExit: \e[1;35munsubscribed id %d for \e[1;32m%s! OK!\e[0m\n", d->event_id, vtoc2(getToken(), CuDType::Src));
         }
         catch(Tango::DevFailed &e) {
             CuTangoWorld tw;
@@ -258,9 +258,9 @@ void CuEventActivity::onExit() {
  *
  * \par contents of the CuData delivered by publishResult ("key": value)
  * \li "is_command": bool: true if the source is a command, false if it is an attribute (CuVariant::toBool)
- * \li "err": bool: true if an error occurred, false otherwise
+ * \li CuDType::Err: bool: true if an error occurred, false otherwise
  * \li "mode": string: the read mode: "E" or "P" ("E" in this case)
- * \li "msg": string: in case of error, the error message is reported
+ * \li CuDType::Message: string: in case of error, the error message is reported
  * \li "E": string: a copy of the value of Tango::EventData::event string
  *      (documented as *the event name* in lib/cpp/client/event.h)
  * \li refer to \ref md_lib_cudata_for_tango for a complete description of the CuData key/value
@@ -269,16 +269,16 @@ void CuEventActivity::onExit() {
 void CuEventActivity::push_event(Tango::EventData *e) {
     d->ucnt++;
     // in d, copy only src from token
-    CuData da("src", getToken()["src"].toString());
+    CuData da(CuDType::Src, getToken()[CuDType::Src].toString());
     da.merge(this->d->tag);
     CuTangoWorld utils;
-    da["mode"] = "E";
-    da["E"] = e->event;
+    da[CuDType::Mode] = "E";  // da["mode"]
+    da[CuDType::Event] = e->event;  // da["E"]
     Tango::DeviceAttribute *dat = e->attr_value;
     if(!e->err)  {
         utils.extractData(dat, da);
-        da["err"] = utils.error(); // no "msg" if no err
-        if(da.b("err")) da["msg"] = utils.getLastMessage();
+        da[CuDType::Err] = utils.error(); // no CuDType::Message if no err
+        if(da.b(CuDType::Err)) da[CuDType::Message] = utils.getLastMessage();
         if(d->ucnt > 0) // if -1, skip first (successful) data update
             publishResult(da);
     }
@@ -286,8 +286,8 @@ void CuEventActivity::push_event(Tango::EventData *e) {
         // CuTReader must distinguish between push_event exception
         // and another error, like attribute quality invalid
         da["ev_except"] = true;
-        da["err"] = true;
-        da["msg"] = utils.strerror(e->errors);
+        da[CuDType::Err] = true;
+        da[CuDType::Message] = utils.strerror(e->errors);
         da.putTimestamp();
         publishResult(da); // publish in case of event subscription failure
     }

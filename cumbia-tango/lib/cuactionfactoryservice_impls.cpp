@@ -1,12 +1,10 @@
 #include "cuactionfactoryservice_impls.h"
 
+#include <tango.h>
 #include <map>
 #include <cumacros.h>
 #include <unordered_map>
 #include <assert.h>
-
-//static unsigned long tottime = 0;
-//static unsigned long reginvokecnt = 0, unreginvokecnt = 0;
 
 /*! @private
  */
@@ -34,12 +32,11 @@ CuActionFactoryServiceImpl_Base::~CuActionFactoryServiceImpl_Base() {
     delete d;
 }
 
-CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const std::string &src, const CuTangoActionFactoryI &f, CumbiaTango *ct, bool *isnew) {
+CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const TSource& src, const CuTangoActionFactoryI &f, CumbiaTango *ct, bool *isnew) {
 
     assert(pthread_self() == d->creation_thread);
-//    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     CuTangoActionI* action = nullptr;
-    auto range = d->actions.equal_range(src);
+    auto range = d->actions.equal_range(src.getName());
     for(auto it = range.first; action == nullptr && it != range.second; ++it) {
         if(it->second->getType() == f.getType()) {
             action = it->second;
@@ -47,13 +44,10 @@ CuTangoActionI *CuActionFactoryServiceImpl_Base::registerAction(const std::strin
     }
     *isnew = (action == nullptr);
     if(*isnew) {
+        std::string s = src.getName();
         action = f.create(src, ct);
-        d->actions.insert(std::pair<std::string, CuTangoActionI *>{src, action});
+        d->actions.insert(std::pair<std::string, CuTangoActionI *>{s, action});
     }
-//    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-//    tottime += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
-//    printf("CuActionFactoryServiceImpl_Base::registerAction (multimap version) total time spent register/unreg %luus (reg.%luu unreg. %luu)\n",
-//           tottime, ++reginvokecnt, unreginvokecnt);
     return action;
 }
 
@@ -72,36 +66,18 @@ size_t CuActionFactoryServiceImpl_Base::count() const {
     return d->actions.size();
 }
 
-void CuActionFactoryServiceImpl_Base::unregisterAction(const string &src, CuTangoActionI::Type at) {
+void CuActionFactoryServiceImpl_Base::unregisterAction(const TSource &src, CuTangoActionI::Type at) {
     assert(pthread_self() == d->creation_thread);
-//    std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-//    ++unreginvokecnt;
-    auto range = d->actions.equal_range(src);
+    auto range = d->actions.equal_range(src.getName());
     auto it = range.first;
     while(it != range.second) {
-//        printf("\e[1;36munregisterAction processing src %s [=%s] type %d\e[0m\n", src.c_str(), it->second->getSource().getName().c_str(), it->second->getType());
         if(it->second->getType() == at) {
-//            pretty_pri("removed %s type %d", src.c_str(), at);
             it = d->actions.erase(it);
         }
         else {
-//            pretty_pri("\e[1;35mNOT \e[0m removed %s type %d != %d", src.c_str(), at, it->second->getType());
             ++it;
         }
-        // it->second->getType() == at ? it = d->actions.erase(it) : ++it;
     }
-
-
-//    std::unordered_multimap<std::string, CuTangoActionI * >::iterator it = d->actions.begin();
-//    while(it != d->actions.end()) {
-//        if(it->second->getSource().getName() == src && it->second->getType() == at) {
-//            it = d->actions.erase(it);
-//        }
-//        else
-//            ++it;
-//    }
-//    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-//    tottime += std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
 }
 
 void CuActionFactoryServiceImpl_Base::cleanup() {

@@ -1,2 +1,3 @@
 option('gprof_enable', type: 'boolean', value : false, description : 'adds -pg to cpp and linker arguments for profiling with gprof')
 option('gperf_enable', type: 'boolean', value : false, description : 'adds -lprofiler to the linker arguments for profiling with gperftools')
+

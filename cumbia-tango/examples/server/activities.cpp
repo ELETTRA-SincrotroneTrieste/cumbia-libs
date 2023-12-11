@@ -22,7 +22,7 @@ void CuTActivity::execute()
     CuData d;
     std::string val(this->getToken()["activity"].toString());
     std::string device = getToken()["device"].toString();
-    d["device"] = device;
+    d[CuDType::Device] = device;  // d["device"]
     try{
         Tango::DeviceProxy *dev = new Tango::DeviceProxy(device);
         Tango::DeviceAttribute da = dev->read_attribute("double_scalar");
@@ -67,7 +67,7 @@ void WriteActivity::execute()
 {
     pbgreen2("WriteActivity.execute IN >>>>>>>>>>>>>>>>>>>>>");
     CuData in = getToken();
-    std::string device = in["device"].toString();
+    std::string device = in[CuDType::Device].toString();  // in["device"]
     double val = in["double_scalar"].toDouble();
     try{
         Tango::DeviceProxy *dev = new Tango::DeviceProxy(device);

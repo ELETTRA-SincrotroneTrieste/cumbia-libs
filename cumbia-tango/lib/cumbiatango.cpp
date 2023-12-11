@@ -10,7 +10,6 @@
 #include "cutangoactionfactoryi.h"
 #include "cupollingservice.h"
 #include "cutango-world.h"
-#include "cutreader.h"
 
 #include <cuthreadfactoryimpl.h>
 #include <cuthreadseventbridgefactory_i.h>
@@ -71,16 +70,15 @@ CumbiaTango::~CumbiaTango()
 void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTangoActionFactoryI& f) {
     CuTangoWorld w;
     bool isnew;
-    const std::string& src = source.getName();
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
-    CuTangoActionI *a = af->registerAction(src, f, this, &isnew); // must be called with src = source.getName
+    CuTangoActionI *a = af->registerAction(source, f, this, &isnew); // must be called with src = source.getName
     if(isnew)
         a->start();
     a->addDataListener(l);
 }
 
-void CumbiaTango::removeAction(const string &source, CuTangoActionI::Type t) {
+void CumbiaTango::removeAction(const TSource &source, CuTangoActionI::Type t) {
     CuActionFactoryService * af = static_cast<CuActionFactoryService *>(getServiceProvider()
                                                                         ->get(static_cast<CuServices::Type>(CuActionFactoryService::CuActionFactoryServiceType)));
     af->unregisterAction(source, t);

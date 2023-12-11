@@ -19,8 +19,7 @@ CumbiaPool::CumbiaPool() {
  * @param domain a string identifying a domain name, e.g. "tango" or "epics"
  * @param cumbia, an instance of a Cumbia implementation, such as CumbiaEpics or CumbiaTango.
  */
-void CumbiaPool::registerCumbiaImpl(const std::string &domain, Cumbia *cumbia)
-{
+void CumbiaPool::registerCumbiaImpl(const std::string &domain, Cumbia *cumbia) {
     m_map[domain] = cumbia;
 }
 
@@ -97,12 +96,15 @@ Cumbia *CumbiaPool::getBySrc(const std::string &src) const
         return cu;
 
     size_t pos = src.find("://");
-    if(pos != std::string::npos)
+    if(pos != std::string::npos) {
         cu = get(src.substr(0, pos));
-    else if(m_map.size() == 1)
+    }
+    else if(m_map.size() == 1) {
         cu = m_map.begin()->second;
-    else
+    }
+    else {
         cu = guessBySrc(src);
+    }
 
     if(!cu) {
         perr("CumbiaPool.getBySrc: could not guess domain from \"%s\"", src.c_str());
