@@ -5,7 +5,6 @@
 #include <QStringList>
 #include <cudata.h>
 #include <vector>
-
 class Cumbia;
 class CumbiaPool;
 class CuControlsReaderFactoryI;
