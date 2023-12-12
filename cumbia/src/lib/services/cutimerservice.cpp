@@ -154,6 +154,29 @@ void CuTimerService::start(CuTimer *t) {
 }
 
 /*!
+ * \brief returns the list of timers
+ * \return std::list with all the currently registered timers
+ */
+std::list<CuTimer *> CuTimerService::getTimers() const {
+    std::list<CuTimer *> tmrs;
+    std::unique_lock lock(d->shmu);
+    for(std::unordered_map<int, CuTimer *>::const_iterator it = d->ti_map.begin();
+         it != d->ti_map.end(); ++it)
+        tmrs.push_back(it->second);
+    return tmrs;
+}
+
+std::list<const CuTimerListener *> CuTimerService::getListeners(const CuTimer *t) const {
+    std::list<const CuTimerListener *> ll;
+    std::unique_lock lock(d->shmu);
+    for(std::unordered_multimap<const CuTimerListener *, CuTimer *>::const_iterator it = d->ti_cache.begin();
+         it != d->ti_cache.end(); ++it)
+        if(it->second == t)
+            ll.push_back(it->first);
+    return ll;
+}
+
+/*!
  * \brief Returns the name of the service
  * \return "CuTimerService"
  */
