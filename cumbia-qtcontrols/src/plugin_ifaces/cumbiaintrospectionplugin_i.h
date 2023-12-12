@@ -70,7 +70,7 @@ public:
 
     virtual ~CumbiaIntrospectionPlugin_I() {}
 
-    virtual void init(Cumbia *cumbia, const QStringList& name_search_keys) = 0;
+    virtual void init(Cumbia *cumbia) = 0;
 
     virtual int getThreadCount() const = 0;
 
@@ -80,22 +80,6 @@ public:
      * \brief update the whole introspection data
      */
     virtual void update() = 0;
-
-    /*!
-     * \brief Find a value among a data bundle to be used as name for the thread.
-     *
-     * Search for *search_keys* keys within th_tok. The first that is found is returned as *primary key*
-     *
-     * \param data_tok CuData where to search for *search_keys*
-     *
-     * The init method sets a list of search_keys strings used to search amongst the keys of data_tok
-     *
-     * @see init
-     *
-     * \return the value associated to the first search_keys element found in the data_tok keys.
-     *         An empty string if no key is found.
-     */
-    virtual QString findName(const CuData &data_tok) const = 0;
 
     /*!
      * \brief getThreadInfo returns a map associating the *name* found in the thread token to the thread info.
