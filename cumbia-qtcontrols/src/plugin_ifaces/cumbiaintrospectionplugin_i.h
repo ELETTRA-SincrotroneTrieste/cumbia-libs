@@ -62,6 +62,7 @@ public:
     virtual QString dialogHeading() const = 0;
 };
 
+
 class CumbiaIntrospectionPlugin_I
 {
 public:
