@@ -1,6 +1,8 @@
 #ifndef CUMBIAINTROSPECTIONPLUGIN_I_H
 #define CUMBIAINTROSPECTIONPLUGIN_I_H
 
+// test 1
+
 #include <cudata.h>
 #include <QStringList>
 #include <QMap>
@@ -61,7 +63,6 @@ public:
 
     virtual QString dialogHeading() const = 0;
 };
-
 
 class CumbiaIntrospectionPlugin_I
 {
