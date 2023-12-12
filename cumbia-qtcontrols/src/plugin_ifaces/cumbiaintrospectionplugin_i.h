@@ -24,7 +24,7 @@ public:
 
 class ThreadInfo {
 public:
-    CuData token;
+    std::string token;
     QStringList devices;
     std::vector<CuActivity *> activities; // activities for thread
 };
