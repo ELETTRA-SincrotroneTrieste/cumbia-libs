@@ -91,8 +91,6 @@ public:
     CuVariant argins;
     CuData point_info;
     CuData options, tag;
-    // map src name --> ActionData: actions are of
-    // reader type only (no need for multimap)
     std::vector<TSource > cmds;
 
     // use two coupled vectors to avoid another wrapping class or map associating attribute
