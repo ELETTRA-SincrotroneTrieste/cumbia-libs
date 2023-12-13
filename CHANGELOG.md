@@ -1,5 +1,43 @@
 # News
 
+## version 2.1.0
+
+Support for Qt6 has been introduced.
+
+Make sure to build qwt libraries with Qt6.
+A convenience script named *setenv-qt6.sh* is provided to set up an 
+adequate environment for the *qt6* build.
+Please inspect the file and *source* it before building for *qt-6*.
+
+Double check
+
+- QWT_ROOT
+- CUMBIA_ROOT
+
+so that they match the qwt intallation path and the desired cumbia installation
+prefix.
+
+As an alternative, take into account the 
+[cumbia-world super project](https://gitlab.elettra.eu/cs/gui/cumbia-world)
+described below for a more thorough and simplified installation
+procedure.
+
+Mind bug [Generated pkgconfig file for Qt6 requires Qt5 libs](https://sourceforge.net/p/qwt/bugs/353/ ).
+Until solved, you need to fix the *Qt6Qwt6.pc* file under *qwt-source/lib/pkgconfig*
+Export an updated PKG_CONFIG_PATH, without any reference to older cumbia installation
+paths and qt-5, and build with *qmake6*.
+
+### cumbia-world super repository
+
+Under the [Elettra gitlab gui section](https://gitlab.elettra.eu/cs/gui) a 
+[cumbia-world](https://gitlab.elettra.eu/cs/gui/cumbia-world) super repository
+contains *cumbia-libs* and all the other modules that make part of the 
+cumbia world. Please still refer to the 
+[github.com ELETTRA-SincrotroneTrieste](https://github.com/ELETTRA-SincrotroneTrieste)
+page for the software sources.
+The *cumbia-world* project contains a configuration file and a script to build the
+desired modules. The modules sources are git *submodules*.
+
 ## version 2.0.0
 
 The main motivation for a major release is a dramatic improvement in performance.
