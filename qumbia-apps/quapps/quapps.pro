@@ -68,9 +68,8 @@ QMAKE_EXTRA_TARGETS += doc
 
 inst.files = $${HEADERS} $${DISTFILES}
 inst.path = $${INSTALL_ROOT}/include/quapps
-target.path = /tmp
 
-INSTALLS += inst doc target
+INSTALLS += inst doc
 
 
 
