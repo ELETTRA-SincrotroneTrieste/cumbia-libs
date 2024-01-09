@@ -316,9 +316,9 @@ void CuTReader::setOptions(const CuData &options) {
             if(p > 0 )
                 setPeriod(p);
         }
-        if(options.containsKey(CuDType::RefreshMode)) {  // options.containsKey("refresh_mode")
+        if(options.containsKey(CuDType::RefreshMode)) {
             int rm = CuTReader::PolledRefresh;
-            options[CuDType::RefreshMode].to<int>(rm);  // options["refresh_mode"]
+            options[CuDType::RefreshMode].to<int>(rm);
             if(rm >= PolledRefresh && rm <= Manual)
                 setRefreshMode(static_cast<CuTReader::RefreshMode>(rm));
         }

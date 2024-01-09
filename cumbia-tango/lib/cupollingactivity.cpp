@@ -11,6 +11,13 @@
 #include <cumacros.h>
 #include <vector>
 
+class CmdSrc {
+public:
+    CmdSrc(const TSource& tsrc, const CuData& _tag) : tsource(tsrc), tag(_tag) {}
+    TSource tsource;
+    CuData tag;
+};
+
 class CmdData { // define here in .cpp: needs tango.h
 public:
     CmdData() {
@@ -46,16 +53,17 @@ public:
         return argins.size() == 0;
     }
 
-    CuData cmdinfo;
+    CuData cmdinfo, tag;
     Tango::DeviceData din;
     bool is_empty;
     std::vector<std::string> argins;
 };
 
-CuAddPollActionEvent::CuAddPollActionEvent(const TSource &t, CuTangoActionI* a)
+CuAddPollActionEvent::CuAddPollActionEvent(const TSource &t, CuTangoActionI* a, const CuData &_tag)
 {
     tsource = t;
     action = a;
+    tag = _tag;
 }
 
 CuActivityEvent::Type CuAddPollActionEvent::getType() const {
@@ -78,8 +86,8 @@ CuActivityEvent::Type CuArgsChangeEvent::getType() const {
 class CuPollingActivityPrivate
 {
 public:
-    CuPollingActivityPrivate(CuDeviceFactory_I *df, const CuData &opt, const CuData &ta, int data_upd_po)
-        : devfa(df), consecutiveErrCnt{0},  successfulExecCnt{0}, options(opt), tag(ta), data_updpo{data_upd_po} {}
+    CuPollingActivityPrivate(CuDeviceFactory_I *df, const CuData &opt, int data_upd_po)
+        : devfa(df), consecutiveErrCnt{0},  successfulExecCnt{0}, options(opt), data_updpo{data_upd_po} {}
 
     CuDeviceFactory_I *devfa;
     TDevice *tdev;
@@ -90,8 +98,8 @@ public:
     pthread_t my_thread_id, other_thread_id;
     CuVariant argins;
     CuData point_info;
-    CuData options, tag;
-    std::vector<TSource > cmds;
+    CuData options;
+    std::vector<CmdSrc > cmds; // TSource + tag
 
     // use two coupled vectors to avoid another wrapping class or map associating attribute
     // names with their respective data. When we add/remove to/from v_attd, do the same on v_attn
@@ -130,12 +138,11 @@ public:
 CuPollingActivity::CuPollingActivity(const TSource &tsrc,
                                      CuDeviceFactory_I *df,
                                      const CuData &options,
-                                     const CuData &tag,
                                      int dataupdpo,
                                      int interval)
     : CuPeriodicActivity(CuData(CuDType::Device, tsrc.getDeviceName()).set(CuDType::Period, interval).set(CuDType::Activity, "poller"))  // set("activity", "poller")
 {
-    d = new CuPollingActivityPrivate(df, options, tag, dataupdpo);
+    d = new CuPollingActivityPrivate(df, options, dataupdpo);
     d->other_thread_id = pthread_self();
     int period = interval > 0 ? interval : 1000;
     d->repeat = d->period = period;
@@ -353,10 +360,10 @@ void CuPollingActivity::execute() {
         results.reserve(d->cmds.size() + d->v_attd.size());
         // 1. commands (d->cmdmap)
         for(size_t i = 0; i <  d->cmds.size(); i++) {
-            const TSource &tsrc = d->cmds[i];
+            const TSource &tsrc = d->cmds[i].tsource;
             const std::string& srcnam = tsrc.getName();
             const std::string& point = tsrc.getPoint();
-            results.push_back(d->tag);
+            results.push_back(d->cmds[i].tag);
             results[i][CuDType::Mode] = "P";
             results[i][CuDType::Period] = interval();
             results[i][CuDType::Src] = tsrc.getName();
@@ -439,12 +446,12 @@ void CuPollingActivity::onExit()
 
 }
 
-void CuPollingActivity::m_registerAction(const TSource& ts) {
-    CuData tag(d->tag); // thread local copy
+void CuPollingActivity::m_registerAction(const TSource& ts, const CuData& _tag) {
+    CuData tag(_tag); // thread local copy
     assert(d->my_thread_id == pthread_self());
     bool is_command = ts.getType() == TSource::SrcCmd;
     if(is_command)
-        d->cmds.push_back(ts);
+        d->cmds.push_back(CmdSrc(ts, _tag));
     else {
         tag.set(CuDType::Src, ts.getName()).set(CuDType::Mode, "P").set(CuDType::Period, d->period);  // set("mode", "P")
         if(d->data_updpo & CuDataUpdatePolicy::SkipFirstReadUpdate) {
@@ -502,9 +509,9 @@ int CuPollingActivity::m_v_attd_remove(const std::string &src, const std::string
 
 int CuPollingActivity::m_cmd_remove(const std::string &src) {
     size_t s = d->cmds.size();
-    std::vector<TSource>::iterator it = d->cmds.begin();
+    std::vector<CmdSrc>::iterator it = d->cmds.begin();
     while(it != d->cmds.end()) {
-        if(it->getName() == src) {
+        if(it->tsource.getName() == src) {
             it = d->cmds.erase(it);
         }
         else
@@ -538,7 +545,8 @@ void CuPollingActivity::m_add_scheduled() {
 void CuPollingActivity::event(CuActivityEvent *e) {
     assert(d->my_thread_id == pthread_self());
     if(e->getType() == static_cast<int>(CuAddPollActionEvent::AddPollAction)) {
-        m_registerAction(static_cast<CuAddPollActionEvent *>(e)->tsource);
+        CuAddPollActionEvent *addp = static_cast<CuAddPollActionEvent *>(e);
+        m_registerAction(addp->tsource, addp->tag);
     }
     else if(e->getType() == static_cast<int>(CuRemovePollActionEvent::RemovePollAction)) {
         m_unregisterAction(static_cast<CuRemovePollActionEvent *>(e)->tsource);
