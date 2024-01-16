@@ -106,25 +106,46 @@ public:
 	 *
 	 * \note maxlen is an *indication* of the maximum desired length: the last row in output is not truncated.
 	 */
-	std::string repr(size_t maxlen = -1) const {
-		std::stringstream sst;
-		sst << "(" << nr << "x" << nc << ") [ ";
+    std::string repr_str(size_t maxlen = -1) const {
+        std::string s;
+        s = "(" + std::to_string( nr) + "x"  + std::to_string(nc) + ") [ ";
 		for(size_t r = 0; r < nr; r++) {
-			sst << " [";
+            s += " [";
 			for(size_t c = 0; c < nc; c++) {
-				sst << this->operator[](r)[c];
-				if(c < nc - 1) sst << std::string(",");
+                s +=  this->operator[](r)[c] + ((c < nc - 1) ? "," : "");
 			}
-			sst << "]";
-			if(sst.str().length() > maxlen)
-				break;
+            s +=  "]";
+            if(s.length() > maxlen)
+                break;
 		}
-		if(maxlen > 4 && sst.str().length() > maxlen - 4)
-			sst << "...";
-		sst << " ]";
-		return sst.str();
+        if(maxlen > 4 &&s.length() > maxlen - 4)
+            s += "...";
+        s += " ]";
+        return s;
 	}
 
+    std::string repr(size_t maxlen = -1) const {
+        std::string s;
+        int res = nr * nc * 6;
+        s.reserve(res);
+        s = "(" + std::to_string( nr) + "x"  + std::to_string(nc) + ") [ ";
+        for(size_t r = 0; r < nr; r++) {
+            s += " [";
+            for(size_t c = 0; c < nc; c++) {
+                s+=  std::to_string(this->operator[](r)[c]);
+                if(c < nc - 1) s+= std::string(",");
+            }
+            s += "]";
+            if(s.length() > maxlen)
+                break;
+        }
+        if(maxlen > 4 && s.length() > maxlen - 4)
+            s += "...";
+        s += " ]";
+        printf("CuMatrix.repr estimated len %d actual %ld\n", res, s.size());
+        s.shrink_to_fit();
+        return s;
+    }
 
 private:
 	void m_from_other(const CuMatrix<T> &other) {
