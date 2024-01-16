@@ -14,6 +14,15 @@ class TSource;
 class CuTangoWorld
 {
 public:
+    /*!
+     * \brief The ExtractDataFlags enum shall be specified in the CuData *options* to customize the level
+     *        of detail to extract from the readings
+     */
+    enum ExtractDataFlags { ExtractValueOnly = 0x1, ///< extract value only
+                            ExtractMinimal = 0x2, ///< extract value, timestamp and quality. Exception message if quality invalid
+                            ExtractExtras = 0x4, ///< state color, state string, quality color, quality string
+                            ExtractDefault = ExtractValueOnly|ExtractMinimal|ExtractExtras };
+
     CuTangoWorld();
 
     virtual ~CuTangoWorld();

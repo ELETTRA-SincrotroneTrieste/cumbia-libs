@@ -757,8 +757,8 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
     d->error = false;
     d->message = "";
     size_t offset = reslist.size();
-    auto t1 = std::chrono::high_resolution_clock::now();
-    std::string atts;
+    // auto t1 = std::chrono::high_resolution_clock::now();
+    // std::string atts;
     try
     {
         // read_attributes

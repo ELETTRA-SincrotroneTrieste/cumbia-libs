@@ -87,7 +87,8 @@ class CuPollingActivityPrivate
 {
 public:
     CuPollingActivityPrivate(CuDeviceFactory_I *df, const CuData &opt, int data_upd_po)
-        : devfa(df), consecutiveErrCnt{0},  successfulExecCnt{0}, options(opt), data_updpo{data_upd_po} {}
+        : devfa(df), consecutiveErrCnt{0},  successfulExecCnt{0}, options(opt), data_updpo{data_upd_po},
+        extract_flags(CuTangoWorld::ExtractDefault)    {}
 
     CuDeviceFactory_I *devfa;
     TDevice *tdev;
@@ -118,6 +119,7 @@ public:
     std::map<int, int> slowDownRate;
     int data_updpo;
     unsigned long long updcnt;
+    CuTangoWorld::ExtractDataFlags extract_flags;
 };
 
 /*! \brief the class constructor that sets up a Tango polling activity
