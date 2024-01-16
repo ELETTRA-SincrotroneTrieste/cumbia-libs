@@ -264,7 +264,6 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
     dat[CuDType::QualityColor] = cuq.color();
     dat[CuDType::QualityString] = cuq.name();
     dat[CuDType::DataFormatStr] = formatToStr(f);
-
     try{
         if(quality == Tango::ATTR_INVALID)
         {
@@ -521,6 +520,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 else if (f == Tango::IMAGE)
                     dat[CuDType::WriteValue] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
+
         }
         else if(p_da->get_type() == Tango::DEV_INT)
         {
@@ -743,12 +743,13 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const std::string &attribut
 bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                              std::vector<std::string>& p_v_an, // att names
                              std::vector<CuData>& va,  // att cache, ordered same as att names
-                             std::vector<CuData> &reslist,
+                             std::vector<CuData> &reslist, // reserve()d by caller (CuPollingActivity)
                              int updpo)
 {
     d->error = false;
     d->message = "";
     size_t offset = reslist.size();
+    // auto t1 = std::chrono::high_resolution_clock::now();
     try
     {
         // read_attributes
@@ -759,6 +760,9 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         //         we enter the catch clause, where the results have to be manually populated
         //         with data reporting the error.
         //         In that case, the poller must be slowed down
+
+
+
         std::vector<Tango::DeviceAttribute> *devattr = dev->read_attributes(p_v_an);
         for(size_t i = 0; i < devattr->size(); i++) {
             Tango::DeviceAttribute *p_da = &(*devattr)[i];
@@ -816,6 +820,15 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
             offset++;
         }
     }
+
+    // auto t2 = std::chrono::high_resolution_clock::now();
+    // std::string atts;
+
+    // for(int i = 0; i < p_v_an.size(); i++)
+    //     atts += p_v_an[i] + ",";
+    // printf("[thread: 0x%lx] CuTangoWorld::read_attributes %s (%s) took %.1fms\n",
+    //        pthread_self(),  dev->name().c_str(), atts.c_str(), std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count()/1000.0);
+
     return !d->error;
 }
 
@@ -2126,7 +2139,7 @@ void CuTangoWorld::putDateTime(const Tango::TimeVal &ttv, CuData &data)
     struct timeval tv;
     tv.tv_sec = ttv.tv_sec;    // _must_ copy from Tango::TimeVal to struct timeval!
     tv.tv_usec = ttv.tv_usec;
-    data[CuDType::Time_us] = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+    data[CuDType::Time_ms] = tv.tv_sec * 1000 + tv.tv_usec / 1000;
     data[CuDType::Time_us] = static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6;
 }
 
@@ -2223,7 +2236,6 @@ std::string CuTangoWorld::make_fqdn_src(const string &src) const {
         }
         for (rp = result; rp != NULL; rp = rp->ai_next) {
             if(rp->ai_canonname != nullptr) {
-                printf("--- \e[1;36mCuTangoWorld.make_fqdn_src found %s\e[0m\n", rp->ai_canonname);
                 fusrc = string(rp->ai_canonname) + src.substr(end2); // [tango://]full.host.name:PORT/tg/dev/nam/attribute
             }
         }
