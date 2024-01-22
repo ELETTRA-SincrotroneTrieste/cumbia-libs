@@ -16,7 +16,7 @@ class CuTimerListener;
 //
 class CuTimerPrivate {
 public:
-    CuTimerPrivate() : m_quit(false), m_pause(false), m_pending(false), m_skip(false),
+    CuTimerPrivate() : m_quit(false), m_pause(false), m_pending(false), /*m_skip(false),*/
         m_timeout(1000), m_thread(nullptr) {}
 
     ~CuTimerPrivate() {}
@@ -25,7 +25,7 @@ public:
     bool m_quit, m_pause;
 
     std::atomic_int m_pending;
-    bool m_skip;
+    // bool m_skip;
     int m_timeout;
 
     std::thread *m_thread;
@@ -71,6 +71,7 @@ public:
 
     void setName(const std::string& name);
     std::string name() const;
+    bool pending() const;
     int id() const;
     void setTimeout(int millis);
     void setSingleShot(bool single);

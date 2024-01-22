@@ -17,7 +17,7 @@ public:
     CuMatrix(const std::vector<T> &v, size_t dimx, size_t dimy)
         : nr(dimx), nc(dimy) {
 		p = new T[nr * nc];
-		std::copy(v.begin(), v.end(), p);
+        std::copy(v.begin(), v.end(), p);
 	}
 
     CuMatrix(T *v, size_t dimx, size_t dimy)

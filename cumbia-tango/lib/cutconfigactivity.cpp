@@ -100,6 +100,9 @@ void CuTConfigActivity::execute() {
     at[CuDType::IsCommand] = d->ts.getType() == TSource::SrcCmd;  // at["is_command"]
     at[CuDType::Properties] = std::vector<std::string>();
     at[CuDType::Type] = "property";  // !cudata
+    int xtract_flags = d->options.containsKey(CuDType::ExtractDataFlags)
+                           ? d->options.I(CuDType::ExtractDataFlags) :
+                           CuTangoWorld::ExtractDefault;
 
     bool value_only = false, skip_read = false;
     o["value-only"].to<bool>(value_only);
@@ -120,7 +123,8 @@ void CuTConfigActivity::execute() {
             }
         }
         else if(dev)  {
-            value_only ? success = tw.read_att(dev, point, at)  : success = d->tcexecutor->get_att_config(dev, point, at, skip_read, d->tdev->getName());
+            value_only ? success = tw.read_att(dev, point, at, xtract_flags)
+                       : success = d->tcexecutor->get_att_config(dev, point, at, skip_read, d->tdev->getName());
         }
         else
             d->msg = d->tdev->getMessage();

@@ -31,6 +31,7 @@ public:
                               const std::string &tmrname = std::string());
     void unregisterListener(CuTimerListener *th, int timeout);
     CuTimer *changeTimeout(CuTimerListener *th, int from_timeo, int to_timeo);
+    void schedule(CuTimer *t);
     void restart(CuTimer *t);
     void start(CuTimer *t);
     std::list<CuTimer *> getTimers() const;

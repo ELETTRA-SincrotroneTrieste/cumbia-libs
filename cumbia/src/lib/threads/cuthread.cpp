@@ -102,7 +102,7 @@ public:
     // inserts the pair (a,t) into d->timerActivityMap
     void m_tmr_registered(CuActivity *a, CuTimer *t) {
         assert(mythread == pthread_self());
-        tmr_amap[a] = t;
+        tmr_amap.insert(std::pair<CuActivity *, CuTimer *>(a, t));
     }
 
     void m_tmr_remove(CuTimer *t) {
@@ -115,6 +115,8 @@ public:
     }
 
     size_t m_tmr_remove(CuActivity *a) {
+        pretty_pri("CuThread.m_tmr_remove\e[0;31mremoving activity %p from tmr_amap\e[0m\n", a);
+
         size_t e = 0;
         if(tmr_amap.find(a) != tmr_amap.end())
             e = tmr_amap.erase(a);
@@ -132,9 +134,10 @@ public:
     std::list<CuActivity *> m_activitiesForTimer(const CuTimer *t) const {
         std::list<CuActivity*> activities;
         std::unordered_map<CuActivity *, CuTimer *>::const_iterator it;
-        for(it = tmr_amap.begin(); it != tmr_amap.end(); ++it)
+        for(it = tmr_amap.begin(); it != tmr_amap.end(); ++it) {
             if(it->second == t)
                 activities.push_back(it->first);
+        }
         return activities;
     }
 
@@ -502,10 +505,11 @@ void CuThread::run() {
             CuTimer *timer = tev->getTimer();
             std::list<CuActivity *> a_for_t = d->thpp->m_activitiesForTimer(timer); // no locks
             for(CuActivity *a : a_for_t) {
-                if(a->repeat() > 0) { // periodic activity
+                const int& repeat = a->repeat();
+                if(repeat > 0) { // periodic activity
                     a->doExecute(); // first
-                    if(a->repeat() != timer->timeout()) { // reschedule with new timeout
-                        d->thpp->m_a_new_timeout(a, a->repeat(), timer, this);
+                    if(repeat != timer->timeout()) { // reschedule with new timeout
+                        d->thpp->m_a_new_timeout(a, repeat, timer, this);
                     }
                     else if(!tmr_restart) // reschedule the same timer
                         tmr_restart = true;

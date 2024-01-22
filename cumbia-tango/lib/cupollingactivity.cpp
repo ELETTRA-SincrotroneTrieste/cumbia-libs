@@ -119,7 +119,7 @@ public:
     std::map<int, int> slowDownRate;
     int data_updpo;
     unsigned long long updcnt;
-    CuTangoWorld::ExtractDataFlags extract_flags;
+    int extract_flags;
 };
 
 /*! \brief the class constructor that sets up a Tango polling activity
@@ -155,6 +155,8 @@ CuPollingActivity::CuPollingActivity(const TSource &tsrc,
     d->slowDownRate[1] = 3;
     d->slowDownRate[2] = 5;
     d->slowDownRate[4] = 10;
+    if(options.containsKey(CuDType::ExtractDataFlags))
+        d->extract_flags = options.i(CuDType::ExtractDataFlags);
 }
 
 /*! \brief the class destructor
@@ -351,6 +353,8 @@ void CuPollingActivity::execute() {
     assert(d->my_thread_id == pthread_self());
     d->updcnt++;
     CuTangoWorld tangoworld;
+    // results: function (and thread) local
+    // publishResult will std::move
     std::vector<CuData> results;
     Tango::DeviceProxy *dev = d->tdev->getDevice();
     bool success = (dev != nullptr);
@@ -359,7 +363,7 @@ void CuPollingActivity::execute() {
     m_add_scheduled();
 
     if(dev) { // dev is not null
-        results.reserve(d->cmds.size() + d->v_attd.size());
+        results.resize(d->cmds.size() + d->v_attd.size());
         // 1. commands (d->cmdmap)
         for(size_t i = 0; i <  d->cmds.size(); i++) {
             const TSource &tsrc = d->cmds[i].tsource;
@@ -393,7 +397,7 @@ void CuPollingActivity::execute() {
             res_offset++;
         } // end cmds
         if(dev && d->v_attn.size() > 0) {
-            success = tangoworld.read_atts(d->tdev->getDevice(), d->v_attn, d->v_attd, results, d->data_updpo);
+            success = tangoworld.read_atts(d->tdev->getDevice(), d->v_attn, d->v_attd, results, d->data_updpo, d->extract_flags);
             if(!success)
                 d->consecutiveErrCnt++;
         }
@@ -455,7 +459,9 @@ void CuPollingActivity::m_registerAction(const TSource& ts, const CuData& _tag) 
     if(is_command)
         d->cmds.push_back(CmdSrc(ts, _tag));
     else {
-        tag.set(CuDType::Src, ts.getName()).set(CuDType::Mode, "P").set(CuDType::Period, d->period);  // set("mode", "P")
+        tag.set(CuDType::Src, ts.getName());
+        if(d->extract_flags > CuTangoWorld::ExtractMinimal)
+            tag.set(CuDType::Mode, "P").set(CuDType::Period, d->period);  // set("mode", "P")
         if(d->data_updpo & CuDataUpdatePolicy::SkipFirstReadUpdate) {
             // start polling the next next execute
             d->m_attd_future.insert(std::pair<unsigned long long int, CuData>(d->updcnt + 2, tag));

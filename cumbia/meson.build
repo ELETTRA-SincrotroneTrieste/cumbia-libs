@@ -56,6 +56,7 @@ headers = [
 'src/lib/threads/cuthreadseventbridge.h',
 'src/lib/threads/cuthreadseventbridgefactory_i.h' ,
 'src/lib/threads/cuthreadtokengeni.h',
+'src/lib/threads/cuhltimer.h',
 'src/lib/cuuserdata.h',
 'src/lib/cudataserializer.h'
 ]
@@ -87,6 +88,7 @@ sources = [
 'src/lib/services/cuactivitymanager.cpp',
 'src/lib/threads/cuevent.cpp',
 'src/lib/threads/cuthreadseventbridge.cpp',
+'src/lib/threads/cuhltimer.cpp',
 'src/lib/cudataserializer.cpp'
 ]
 

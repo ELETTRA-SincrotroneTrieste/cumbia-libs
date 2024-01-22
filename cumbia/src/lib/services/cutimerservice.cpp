@@ -130,6 +130,10 @@ CuTimer *CuTimerService::changeTimeout(CuTimerListener *tl, int from_timeo, int 
     return t;
 }
 
+void CuTimerService::schedule(CuTimer *t) {
+
+}
+
 /*!
  * \brief restart the timer t with interval millis
  * \param t the timer to restart

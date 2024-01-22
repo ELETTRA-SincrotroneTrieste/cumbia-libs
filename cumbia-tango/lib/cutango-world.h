@@ -17,8 +17,10 @@ public:
     /*!
      * \brief The ExtractDataFlags enum shall be specified in the CuData *options* to customize the level
      *        of detail to extract from the readings
+     *
+     * \note These are just hints to the level of detail to be extracted by the library
      */
-    enum ExtractDataFlags { ExtractValueOnly = 0x1, ///< extract value only
+    enum ExtractDataFlags { ExtractValueOnly = 0x1, ///< extract source, error flag and value only
                             ExtractMinimal = 0x2, ///< extract value, timestamp and quality. Exception message if quality invalid
                             ExtractExtras = 0x4, ///< state color, state string, quality color, quality string
                             ExtractDefault = ExtractValueOnly|ExtractMinimal|ExtractExtras };
@@ -32,7 +34,7 @@ public:
 
     void fillThreadInfo(CuData &d, const CuActivity *a);
 
-    void extractData(Tango::DeviceAttribute *p_da, CuData &d);
+    void extractData(Tango::DeviceAttribute *p_da, CuData &d, int xflags);
     void extractData(Tango::DeviceData *dd, CuData& d);
 
     Tango::DeviceData toDeviceData(const CuVariant &argins, const CuData& cmdinfo);
@@ -54,13 +56,14 @@ public:
               const std::string& cmd,
               CuData& data);
 
-    bool read_att(Tango::DeviceProxy *dev, const std::string &attribute, CuData &res);
+    bool read_att(Tango::DeviceProxy *dev, const std::string &attribute, CuData &res, int xtractflags);
 
     bool read_atts(Tango::DeviceProxy *dev,
                    std::vector<std::string>& p_v_an, // attribute names
                    std::vector<CuData>& v_a, // attribute cache (same order as names above)
                    std::vector<CuData>& reslist,
-                   int da_updpo);
+                   int da_updpo,
+                   int xtract_flags);
 
     bool write_att(Tango::DeviceProxy *dev,
                    const std::string &attnam,
@@ -68,7 +71,7 @@ public:
                    const CuData &point_info,
                    CuData &data);
 
-    bool get_att_config(Tango::DeviceProxy *dev, const std::string &attribute, CuData& res, bool skip_read_att = false);
+    bool get_att_config(Tango::DeviceProxy *dev, const std::string &attribute, CuData& res, bool skip_read_att = false, int extract_flags = ExtractDefault);
     bool get_command_info(Tango::DeviceProxy *dev, const std::string &cmd, CuData& cmd_info);
     bool get_att_props(Tango::DeviceProxy *dev, const std::string &attribute, CuData& res, const std::vector<std::string> props);
     bool get_properties(const std::vector<CuData> &in_list, CuData& res, const std::string &dbhost = "");

@@ -24,6 +24,7 @@ public:
     pthread_t my_thread_id, other_thread_id;
     std::string refreshmo;
     omni_thread::ensure_self *se;
+    int extract_policy;
 };
 
 /*! \brief the class constructor that configures the activity event flags
@@ -39,7 +40,11 @@ public:
  *     Instead, it keeps living within an event loop that delivers Tango events over time
  * \li CuActivity::CuADeleteOnExit: *true* lets the activity be deleted after onExit
  */
-CuEventActivity::CuEventActivity(const TSource &ts, CuDeviceFactory_I *df, const string &refreshmo, const CuData &tag, int update_policy)
+CuEventActivity::CuEventActivity(const TSource &ts,
+                                 CuDeviceFactory_I *df,
+                                 const string &refreshmo,
+                                 const CuData &tag,
+                                 int update_policy)
     : CuActivity(CuData("activity", "event").set(CuDType::Src, ts.getName())) {  // token with keys relevant to matches()
     d = new CuEventActivityPrivate;
     setFlag(CuActivity::CuADeleteOnExit, true);
@@ -53,6 +58,7 @@ CuEventActivity::CuEventActivity(const TSource &ts, CuDeviceFactory_I *df, const
     d->tag = tag;
     d->atok = getToken();
     d->ucnt = (update_policy & CuDataUpdatePolicy::SkipFirstReadUpdate) ? -1 : 0;
+    d->extract_policy = CuTangoWorld::ExtractDefault;
 }
 
 /*! \brief the class destructor
@@ -276,7 +282,7 @@ void CuEventActivity::push_event(Tango::EventData *e) {
     da[CuDType::Event] = e->event;  // da["E"]
     Tango::DeviceAttribute *dat = e->attr_value;
     if(!e->err)  {
-        utils.extractData(dat, da);
+        utils.extractData(dat, da, d->extract_policy);
         da[CuDType::Err] = utils.error(); // no CuDType::Message if no err
         if(da.b(CuDType::Err)) da[CuDType::Message] = utils.getLastMessage();
         if(d->ucnt > 0) // if -1, skip first (successful) data update

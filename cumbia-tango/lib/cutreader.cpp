@@ -296,11 +296,9 @@ void CuTReader::getData(CuData &ino) const {
  * \list
  * \li manual [bool]: manual mode: the caller will not receive updates
  * \li refresh_mode [int, one of CuTReader::RefreshMode] set the refresh mode to mode
- * \li period set the period that will be used to refresh the source if the mode is polled
- *
- * \note If the current mode is not CuTReader::PolledRefresh, setting the *period* is not
- *       enough to change the refresh mode. On the other hand, setting a *period* will
- *       save the value shall the refresh mode change to polling
+ * \li period set the period that will be used to refresh the source.
+ *     If CuDType::Period is specified with a valid positive period, the poller is started
+ *     and the refresh mode is set to CuTReader::PolledRefresh
  *
  * @see sendData
  *
@@ -313,8 +311,10 @@ void CuTReader::setOptions(const CuData &options) {
         if(options.containsKey(CuDType::Period)) {
             int p = 1000;
             options[CuDType::Period].to<int>(p);
-            if(p > 0 )
+            if(p > 0 ) {
                 setPeriod(p);
+                setRefreshMode(CuTReader::PolledRefresh);
+            }
         }
         if(options.containsKey(CuDType::RefreshMode)) {
             int rm = CuTReader::PolledRefresh;
