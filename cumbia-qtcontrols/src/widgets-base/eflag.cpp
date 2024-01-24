@@ -153,14 +153,13 @@ void EFlag::setValue(QVariant v, bool ref)
 #if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
     if (v.typeId() == QMetaType::QVariantList)
 #else
-    if (d_ptr->val.type() == QVariant::List)
+    if (v.type() == QVariant::List)
 #endif
     {
 		/* In this first case (a list is passed) we suppose
 		 * that the elements in the list are consistent with
 		 * the kind of data stored, e.g. all booleans
 		 */
-		qDebug() << "lista" << "mask size: " << mask.size();
 		QList<QVariant> temp = v.toList();
 		/* data is QList<QVariant> */		
 		data.clear();
@@ -171,26 +170,22 @@ void EFlag::setValue(QVariant v, bool ref)
 				data << temp.value(mask[i][j]);
 			}
 		}
-		if(mask.size() == 0) /* no mask specified but list not empty, so reading something */
-		{
+        if(mask.size() == 0) { /* no mask specified but list not empty, so reading something */
 			foreach(QVariant v, temp)
 				data << v;
 		}
 	}
     else if (v.canConvert(QMetaType(QMetaType::UInt))) /* an unsigned int is passed */
 	{
-		qDebug() << "uint";
 		unsigned int temp = v.toUInt();
 		unsigned int tmpmask = 0, value, abool = 0;
-		if (data.size() != mask.size())
-		{
+        if (data.size() != mask.size()) {
 			data.clear();
 			for (int i = 0; i < mask.size(); i++)
 				data << QVariant(false);
 		}
 		/* Iterate over the sub lists */
-		for (int i = 0; i < mask.size(); i++)
-		{
+        for (int i = 0; i < mask.size(); i++) {
 			/* See the desired bits and create the mask and 
 			 * mask the value.
 			 * <3,4>, <14,15,16>, <18,20> are examples of
