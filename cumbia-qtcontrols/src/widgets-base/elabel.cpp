@@ -12,12 +12,7 @@ public:
     QVariant val;
 };
 
-ELabel::ELabel(QWidget *parent) : QuLabelBase(parent)
-{
-
-    //	setFrameShape(QFrame::WinPanel);
-    //	setFrameShadow(QFrame::Sunken);
-    //	setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+ELabel::ELabel(QWidget *parent) : QuLabelBase(parent) {
     d_ptr = new ELabelPrivate();
     d_ptr->falseColor = EColor(Elettra::red);
     d_ptr->trueColor = EColor(Elettra::green);
@@ -137,7 +132,11 @@ bool ELabel::enumDisplayConfigured()
 void ELabel::display()
 {
      QColor background;
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
     if (d_ptr->val.typeId() == QMetaType::Bool)
+#else
+    if (d_ptr->val.type() == QVariant::Bool)
+#endif
     {
         qDebug() << __FUNCTION__ << "ELabel boolean " << d_ptr->val.toBool() <<"("
                  << d_ptr->trueColor << ")" << d_ptr->trueString << d_ptr->falseString <<"(" << d_ptr->falseColor << ")" ;
