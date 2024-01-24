@@ -258,9 +258,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat, int xf
     if(xflags > ExtractValueOnly) {
         w = (p_da->get_nb_written() > 0);
         Tango::TimeVal tv = p_da->get_date();
-        printf("CuTangoWorld.extractData: calling putDateTime: xflags %d dat %s\n", xflags, datos(dat));
         putDateTime(tv, dat);
-
         CuDataQuality cuq = toCuQuality(quality);
         dat[CuDType::Quality] = cuq.toInt();
         if(xflags > ExtractMinimal) {

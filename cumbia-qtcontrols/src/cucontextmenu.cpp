@@ -47,6 +47,7 @@ CuContextMenu::CuContextMenu(QWidget *parent) :
 }
 
 CuContextMenu::~CuContextMenu() {
+    printf("\e[1;31mX\e[0m deleting CuContextMenu\n");
     delete d;
 }
 
@@ -92,7 +93,8 @@ void CuContextMenu::prepare(const CuContextI *ctxi) {
 
 void CuContextMenu::popup(const QPoint &pos, const CuContextI *ctxi) {
     prepare(ctxi);
-    QMenu::popup(pos);
+    exec(pos);
+    deleteLater();
 }
 
 void CuContextMenu::popup_noplugin_msg()
