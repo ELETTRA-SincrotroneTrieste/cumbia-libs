@@ -1893,12 +1893,12 @@ std::vector<std::string> CuVariant::toStringVector(const char *fmt) const {
 std::vector<std::string> CuVariant::toStringVector(const char *fmt, bool *ok) const {
     bool success = true;
     std::vector<std::string> ret;
-    ret.reserve(_d->mSize);
     bool native_type = _d && (_d->type == String && (_d->format == Vector || _d->format == Scalar) ); // check _d!
     if(native_type)  {
+        ret.resize(_d->mSize);
         char **str_array = static_cast<char **>(_d->val);
         for(size_t i = 0; i < _d->mSize; i++)
-            ret.push_back(std::string(str_array[i]));
+            ret[i] = std::string(str_array[i]);
     }
     else if(_d && (_d->format == Vector || _d->format == Scalar)) {
         const size_t MAXLEN = 128;
