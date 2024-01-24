@@ -158,8 +158,12 @@ void ELabel::display()
         }
         setDecoration(background, QColor());
     }
-    //else if (d_ptr->val.type() == QVariant::UInt)
+
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
     else if (d_ptr->val.canConvert(QMetaType(QMetaType::UInt))
+#else
+    else if (d_ptr->val.type() == QVariant::UInt)
+#endif
              && (v_colors.size()) && (!d_ptr->val.toString().contains("###")))
     {
         /* Look for the value `d_ptr->val' inside the v_values
