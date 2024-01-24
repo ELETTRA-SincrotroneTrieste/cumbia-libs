@@ -162,7 +162,7 @@ void ELabel::display()
 #if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
     else if (d_ptr->val.canConvert(QMetaType(QMetaType::UInt) ) && (v_colors.size()) && (!d_ptr->val.toString().contains("###")))
 #else
-    else if (d_ptr->val.type() == QVariant::UInt) && (v_colors.size()) && (!d_ptr->val.toString().contains("###")))
+    else if (d_ptr->val.type() == QVariant::UInt && (v_colors.size()) && (!d_ptr->val.toString().contains("###")))
 #endif
     {
         /* Look for the value `d_ptr->val' inside the v_values
