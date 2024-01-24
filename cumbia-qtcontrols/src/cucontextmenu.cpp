@@ -93,8 +93,8 @@ void CuContextMenu::prepare(const CuContextI *ctxi) {
 
 void CuContextMenu::popup(const QPoint &pos, const CuContextI *ctxi) {
     prepare(ctxi);
-    exec(pos);
-    deleteLater();
+    exec(pos); // synchronous exec
+    deleteLater(); // release
 }
 
 void CuContextMenu::popup_noplugin_msg()

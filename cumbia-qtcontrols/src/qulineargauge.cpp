@@ -110,12 +110,9 @@ void QuLinearGauge::ctxSwap(CumbiaPool *cumbia_pool, const CuControlsFactoryPool
     d->context = CuEngineSwap().replace(this, d->context, cumbia_pool, fpool);
 }
 
-void QuLinearGauge::contextMenuEvent(QContextMenuEvent *e)
-{
-    CuContextMenu* m = findChild<CuContextMenu *>();
-    if(!m)
-        m = new CuContextMenu(this);
-    m->popup(e->globalPos(), this);
+void QuLinearGauge::contextMenuEvent(QContextMenuEvent *e) {
+    CuContextMenu* m = new CuContextMenu(this);
+    m->popup(e->globalPos(), this); // menu auto deletes after exec
 }
 
 void QuLinearGauge::m_configure(const CuData& da)

@@ -168,10 +168,7 @@ QuPalette QuLed::quPalette() const {
     return d->palette;
 }
 
-void QuLed::contextMenuEvent(QContextMenuEvent *e)
-{
-    CuContextMenu* m = findChild<CuContextMenu *>();
-    if(!m)
-        m = new CuContextMenu(this);
-    m->popup(e->globalPos(), this);
+void QuLed::contextMenuEvent(QContextMenuEvent *e) {
+    CuContextMenu* m = new CuContextMenu(this);
+    m->popup(e->globalPos(), this); // menu auto deletes after exec
 }
