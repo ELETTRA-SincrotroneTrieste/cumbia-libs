@@ -1,6 +1,19 @@
 #include "myactivity.h"
 #include <thread>
 
+ThreadTokGen::ThreadTokGen(int limit) : m_limit(limit) {
+
+}
+
+std::string ThreadTokGen::generate(const std::string &in) {
+    std::string out = in.substr(strlen("a_"));
+    int i = std::stoi(out);
+    if(m_limit > 0)
+        out = "th_" + std::to_string(i % m_limit);
+    printf("ThreadTokGen: token %s -> %s\n", in.c_str(), out.c_str());
+    return out;
+}
+
 MyActivity::MyActivity(int idx, bool verbose, int sleep_ms) {
     m_idx = idx;
     m_verbose = verbose;
@@ -25,3 +38,4 @@ void MyActivity::execute() {
 void MyActivity::onExit() {
     pretty_pri("activity %d exited after executing %d times", m_idx, m_step);
 }
+

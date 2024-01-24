@@ -24,10 +24,11 @@ int main(int argc, char *argv[]) {
     int period = 0;
     int stats_period = 5000;
     int sleep_ms = 0;
+    int thlim = 0;
     bool verbose = false;
     int len = 0, count = 0;
     bool err = false;
-    while ((opt = getopt(argc, argv, "s:t:p:l:c:v")) != -1) {
+    while ((opt = getopt(argc, argv, "s:t:p:l:c:n:v")) != -1) {
         switch (opt) {
         case 's':
             sleep_ms = atoi(optarg);
@@ -37,6 +38,9 @@ int main(int argc, char *argv[]) {
             break;
         case 't':
             stats_period = atoi(optarg);
+            break;
+        case 'n':
+            thlim = atoi(optarg);
             break;
         case 'l':
             len = atoi(optarg);
@@ -115,6 +119,11 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
     Cumbia *c = new Cumbia();
+    printf("thread limit is %d\n", thlim);
+    if(thlim > 0) {
+        ThreadTokGen *ttg = new ThreadTokGen(thlim);
+        c->setThreadTokenGenerator(ttg);
+    }
     CuEventLoopService *loos = new CuEventLoopService();
     c->getServiceProvider()->registerService(CuServices::EventLoop, loos);
     CuHLTimer *stats_timer = new CuHLTimer(c);

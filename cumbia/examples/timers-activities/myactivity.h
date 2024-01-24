@@ -3,10 +3,19 @@
 
 #include <cudatalistener.h>
 #include <cuperiodicactivity.h>
+#include <cuthreadtokengeni.h>
 
 // activity data
-class AData {
-    int cnt;
+class ThreadTokGen : public CuThreadTokenGenI {
+public:
+    ThreadTokGen(int limit);
+
+    // CuThreadTokenGenI interface
+public:
+    std::string generate(const std::string &in);
+
+private:
+    int m_limit;
 };
 
 class MyActivity : public CuPeriodicActivity
