@@ -24,9 +24,8 @@ void EFlag::setDisplayMask(QString slist)
 	unsigned int tmp;
 	bool ok;
 	QList <unsigned int> uilist;
-    QStringList stringlist = slist.split(",", Qt::SkipEmptyParts);
-	foreach(QString s, stringlist)
-	{
+    QStringList stringlist = slist.split(",");
+    foreach(QString s, stringlist) {
 		tmp = s.toUInt(&ok);
 		if(ok )
 			uilist.push_back(tmp );
@@ -258,9 +257,7 @@ void EFlag::setMouseTracking(bool en)
 
 void EFlag::setTrueStrings(QString s)
 { 
-	//m_trueStrings = s.split(";",QString::SkipEmptyParts);
 	m_trueStrings = s.split(";");
-    qDebug() << __FUNCTION__ << "EFLAG" << m_trueStrings;
 	configureCells();
 }
 
@@ -271,7 +268,7 @@ QString EFlag::trueStrings()
 
 void EFlag::setFalseStrings(QString s)
 {
-    m_falseStrings = s.split(";",Qt::SkipEmptyParts);
+    m_falseStrings = s.split(";");
 	configureCells();
 }
 
@@ -283,7 +280,7 @@ QString EFlag::falseStrings()
 void EFlag::setTrueColors(QString c)
 {
 	m_trueColors.clear();
-    QStringList l = c.split(";",Qt::SkipEmptyParts);
+    QStringList l = c.split(";");
 	foreach(QString s, l)
 		m_trueColors << QVariant(QColor(s.toUInt()));
 	configureCells();
@@ -300,7 +297,7 @@ QString EFlag::trueColors()
 void EFlag::setFalseColors(QString c)
 {
 	m_falseColors.clear();
-    QStringList l = c.split(";",Qt::SkipEmptyParts);
+    QStringList l = c.split(";");
 	foreach(QString s, l)
 		m_falseColors << QVariant(QColor(s.toUInt()));
 	configureCells(); 
