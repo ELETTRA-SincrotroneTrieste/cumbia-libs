@@ -150,7 +150,12 @@ void EFlag::setValue(QVariant v, bool ref)
 
 	last_val = v;
 
-    if (v.typeId() == QMetaType::QVariantList) {
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+    if (v.typeId() == QMetaType::QVariantList)
+#else
+    if (d_ptr->val.type() == QVariant::List)
+#endif
+    {
 		/* In this first case (a list is passed) we suppose
 		 * that the elements in the list are consistent with
 		 * the kind of data stored, e.g. all booleans
