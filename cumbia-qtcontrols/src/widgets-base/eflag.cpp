@@ -175,7 +175,11 @@ void EFlag::setValue(QVariant v, bool ref)
 				data << v;
 		}
 	}
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
     else if (v.canConvert(QMetaType(QMetaType::UInt))) /* an unsigned int is passed */
+#else
+     else if (v.canConvert(QVariant::UInt))
+#endif
 	{
 		unsigned int temp = v.toUInt();
 		unsigned int tmpmask = 0, value, abool = 0;
