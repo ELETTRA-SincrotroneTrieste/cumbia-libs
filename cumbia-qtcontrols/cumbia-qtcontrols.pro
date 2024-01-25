@@ -114,7 +114,6 @@ HEADERS += cumbiaqtcontrols.h\
     cumbia-qtcontrols_global.h \
     src/cuengine_swap.h \
     src/cuengineaccessor.h \
-    src/plugin_ifaces/cumbiaintrospectionplugin_i.h \
     src/plugin_ifaces/cumouseevhandlerplugin_i.h \
     src/qubutton.h \
     src/qulabel.h \
