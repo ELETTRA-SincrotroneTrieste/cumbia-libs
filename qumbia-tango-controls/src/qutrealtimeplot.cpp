@@ -125,7 +125,7 @@ void QuTRealtimePlot::setSource(const QString &srcs)
     QString sources = srcs;
     QStringList srcList;
     if(sources.contains(";"))
-        srcList = sources.split(";", Qt::SkipEmptyParts);
+        srcList = sources.split(";");
     else
         srcList << sources;
 
