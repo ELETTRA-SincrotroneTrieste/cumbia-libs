@@ -69,18 +69,18 @@ void CuHttpSrcMan::enqueueSrc(const CuHTTPSrc &httpsrc,
 }
 
 void CuHttpSrcMan::unlinkListener(CuDataListener *l) {
-    auto t1 = std::chrono::steady_clock::now();
+    // auto t1 = std::chrono::steady_clock::now();
     // set listener to nullptr src queue
     bool rem = m_queue_remove(l);
-    auto t2 = std::chrono::steady_clock::now();
-    if(rem)
-        printf("CuHttpSrcMan::cancelSrc m_queue_remove took %ld ms from q siz %lld to remove %p\n", std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count(), d->srcq.size(), l);
+    // auto t2 = std::chrono::steady_clock::now();
+    // if(rem)
+        // printf("CuHttpSrcMan::cancelSrc m_queue_remove took %ld ms from q siz %lld to remove %p\n", std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count(), d->srcq.size(), l);
     if(!rem) { // if rem, src was still in queue, no request sent
-        t1 = std::chrono::steady_clock::now();
+        // t1 = std::chrono::steady_clock::now();
         rem = m_wait_map_remove(l);
-        t2 = std::chrono::steady_clock::now();
-        if(rem)
-            printf("CuHttpSrcMan::cancelSrc m_wait_map_remove took %ld ms from map siz %lld to remove %p\n", std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count(), d->srcd.size(), l);
+        // t2 = std::chrono::steady_clock::now();
+        // if(rem)
+            // printf("CuHttpSrcMan::cancelSrc m_wait_map_remove took %ld ms from map siz %lld to remove %p\n", std::chrono::duration_cast<std::chrono::milliseconds>(t2-t1).count(), d->srcd.size(), l);
     }
 }
 
@@ -104,7 +104,12 @@ bool CuHttpSrcMan::m_queue_remove(CuDataListener *l) {
 
 bool CuHttpSrcMan::m_wait_map_remove(CuDataListener* l) {
     bool r = false;
-    QMutableMultiMapIterator<QString, SrcData> mi(d->srcd);
+
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+    QMutableMapIterator<QString, SrcData>  mi(d->srcd);
+#else
+    QMutableMultiMapIterator<QString, SrcData>  mi(d->srcd);
+#endif
     while(mi.hasNext()) {
         mi.next();
         if(mi.value().lis == l) {

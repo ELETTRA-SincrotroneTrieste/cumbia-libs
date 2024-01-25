@@ -58,7 +58,11 @@ void CuHttpChannelReceiver::addDataListener(const QString &src, CuDataListener *
 }
 
 void CuHttpChannelReceiver::removeDataListener(CuDataListener *l) {
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+    QMutableMapIterator<QString, CuDataListener* > it(d->rmap);
+#else
     QMutableMultiMapIterator<QString, CuDataListener* > it(d->rmap);
+#endif
     while(it.hasNext()) {
         it.next();
         if(it.value() == l) {
