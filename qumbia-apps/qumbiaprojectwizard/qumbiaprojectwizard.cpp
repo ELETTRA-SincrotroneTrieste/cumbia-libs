@@ -808,7 +808,11 @@ void QumbiaProjectWizard::m_launchApps(const QString& path)
     {
         if(le->isEnabled() && !le->text().isEmpty())
         {
+#if QT_VERSION >= QT_VERSION_CHECK(5,15,0)
             QStringList cmdline = le->text().split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+#else
+            QStringList cmdline = le->text().split(QRegularExpression("\\s+"), QString::SkipEmptyParts);
+#endif
             QStringList args(cmdline);
 
             if(cmdline.size() > 1)
