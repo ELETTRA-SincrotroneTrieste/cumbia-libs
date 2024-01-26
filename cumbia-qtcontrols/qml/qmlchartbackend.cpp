@@ -324,7 +324,7 @@ bool QmlChartBackend::m_find_absolute_bounds_and_notify()
 
 void QmlChartBackend::setSources(const QString &sl)
 {
-    QStringList l = sl.split(";", QString::SkipEmptyParts);
+    QStringList l = sl.split(";");
     d->sources = l;
 }
 

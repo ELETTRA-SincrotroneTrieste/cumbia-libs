@@ -349,7 +349,7 @@ void TaskMenuExtension::setupSourceTargetDialog(QWidget *cb_widget)
     /* Creating target dialog */
     wint->ui.okButton->setHidden(true);
     wint->ui.cancelButton->setHidden(true);
-#if QT_VERSION >= QT_VERSION_CHECK(5.15.0)
+#if QT_VERSION >= QT_VERSION_CHECK(5,15,0)
     wint->ui.listWidget->addItems(target.split(";",Qt::SkipEmptyParts));
 #else
     wint->ui.listWidget->addItems(target.split(";",QString::SkipEmptyParts));
