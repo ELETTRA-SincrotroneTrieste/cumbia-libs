@@ -200,7 +200,7 @@ void QumbiaClient::sourcesChanged()
     options[CuDType::Period] = period;  // options["period"]
     options[CuDType::RefreshMode] = refmode;  // options["refresh_mode"]
 
-    QStringList srcs = ui->leSrcs->text().split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+    QStringList srcs = ui->leSrcs->text().split(QRegularExpression("\\s+"));
     const int srcCnt = srcs.size() > 0 ? srcs.size() : 1;
     const int colSpan = m_layoutColumnCount / srcCnt;
 

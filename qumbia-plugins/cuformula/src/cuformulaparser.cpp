@@ -80,8 +80,8 @@ bool CuFormulaParser::parse(const QString &expr)
             function_word = "function";
         QStringList slist;
         // split sources by space or comma
-        sources.contains(*comma_sep_re) ?  slist = sources.split(*comma_sep_re, Qt::SkipEmptyParts) :
-                slist = sources.split(" ", Qt::SkipEmptyParts);
+        sources.contains(*comma_sep_re) ?  slist = sources.split(*comma_sep_re) :
+                slist = sources.split(" ");
         foreach(QString s, slist)
                 d->srcs.push_back(s.toStdString());
         // 4
