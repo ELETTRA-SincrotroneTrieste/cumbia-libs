@@ -2,6 +2,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QtDebug>
+#include <QRegularExpression>
 
 CodeInjector::CodeInjector(const QString &filename, const QString &mainwidclass, const QString &mainwidvar, const QString &formclassnam) {
     m_filename = filename;
