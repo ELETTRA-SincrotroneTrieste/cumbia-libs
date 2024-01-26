@@ -4,6 +4,7 @@
 #include <QProcess>
 #include <qudbusplugininterface.h>
 #include <cumacros.h>
+#include <QRegularExpression>
 
 class CuApplicationLauncherPrivate {
 public:
