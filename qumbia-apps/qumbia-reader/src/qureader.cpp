@@ -149,7 +149,7 @@ void Qu_Reader::onUpdate(const CuData &da) {
 #if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
                 emit newFloatVector(source(), ts, QVector<float>(vf.begin(), vf.end()), data);
 #else
-                emit newFloatVector(source(), ts, QVector<float>::fromStdVector(vd), data);
+                emit newFloatVector(source(), ts, QVector<float>::fromStdVector(vf), data);
 #endif
             }
             else if(v.getFormat() == CuVariant::Vector && v.getType() == CuVariant::Boolean) {
