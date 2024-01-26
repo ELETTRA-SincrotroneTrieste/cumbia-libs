@@ -1,5 +1,6 @@
 #include "codeextractors.h"
 #include <QtDebug>
+#include <QRegularExpression>
 
 //
 // regexp
