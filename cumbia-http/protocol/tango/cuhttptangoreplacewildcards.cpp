@@ -6,8 +6,11 @@
 #define DEVICE_REGEXP "(http[s]{0,1}://){0,1}(tango://){0,1}([A-Za-z_0-9\\-\\.]*[:]{1}[0-9]+[/]){0,1}[A-Za-z_0-9\\-\\.]+/[A-Za-z_0-9\\-\\.]+/[A-Za-z_0-9\\-\\.]+"
 
 // anchoredPattern: exact match
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
 Q_GLOBAL_STATIC_WITH_ARGS(QRegularExpression, device_re, (QRegularExpression::anchoredPattern(DEVICE_REGEXP)))
-
+#else
+Q_GLOBAL_STATIC_WITH_ARGS(QRegularExpression, device_re, (QRegularExpression(DEVICE_REGEXP)))
+#endif
 class CuHttpTangoReplaceWildcardsPrivate {
 public:
     QStringList args;
