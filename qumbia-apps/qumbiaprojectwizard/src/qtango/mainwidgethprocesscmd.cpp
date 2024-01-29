@@ -1,4 +1,5 @@
 #include "mainwidgethprocesscmd.h"
+#include <QRegularExpression>
 #include <QtDebug>
 
 MainWidgetHProcessCmd::MainWidgetHProcessCmd(const QString& fnam, const QString& mainwnam,
