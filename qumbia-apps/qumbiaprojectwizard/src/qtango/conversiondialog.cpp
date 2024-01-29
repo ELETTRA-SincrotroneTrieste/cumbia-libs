@@ -11,6 +11,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QCheckBox>
+#include <QRegularExpression>
 
 #include "definitions.h"
 #include "fileprocessor_a.h"

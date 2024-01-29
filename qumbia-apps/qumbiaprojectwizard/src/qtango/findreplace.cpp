@@ -1,5 +1,6 @@
 #include "findreplace.h"
 #include <QTextStream>
+#include <QRegularExpression>
 #include <QFile>
 #include <QtDebug>
 

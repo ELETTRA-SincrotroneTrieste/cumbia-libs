@@ -3,6 +3,7 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QJsonArray>
+#include <QRegularExpression>
 #include "definitions.h"
 #include <QtDebug>
 

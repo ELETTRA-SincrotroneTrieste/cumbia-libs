@@ -1,4 +1,5 @@
 #include "maincppexpandcmd.h"
+#include <QRegularExpression>
 
 MainCppExpandCmd::MainCppExpandCmd(const QString &fnam, const QString &mainwnam)
     : FileCmd(fnam)
