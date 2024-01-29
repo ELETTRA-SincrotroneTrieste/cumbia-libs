@@ -1,6 +1,7 @@
 #include "proconvertcmd.h"
 #include <QFile>
 #include <QTextStream>
+#include <QRegularExpression>
 #include <QtDebug>
 
 ProConvertCmd::ProConvertCmd(const QString& filenam) : FileCmd(filenam)
