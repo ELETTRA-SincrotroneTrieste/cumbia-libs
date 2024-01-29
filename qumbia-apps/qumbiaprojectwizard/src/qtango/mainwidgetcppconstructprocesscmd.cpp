@@ -1,4 +1,5 @@
 #include "mainwidgetcppconstructprocesscmd.h"
+#include <QRegularExpression>
 #include <QtDebug>
 
 MainWidgetCppConstructProcessCmd::MainWidgetCppConstructProcessCmd(const QString& fnam, const QString &mainwclass)
