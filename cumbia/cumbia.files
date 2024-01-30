@@ -1,3 +1,4 @@
+CMakeLists.txt
 src/lib/cuactivity.cpp
 src/lib/cuactivity.h
 src/lib/cuactivityevent.cpp
