@@ -1,5 +1,6 @@
 #include "codeextractors.h"
 #include <QtDebug>
+#include <QRegularExpression>
 
 //
 // regexp
@@ -9,16 +10,21 @@
 QList<Section> ExtractorHelper::extractCumbiaPoolSections(const QString& s)
 {
     QList<Section>  sections;
-    QRegExp re1("(//\\s+cumbia\\s*\\n*(.*:?)// cumbia\\s*\\n*)");
-    re1.setMinimal(true);
-
+    QRegularExpression re1("(//\\s+cumbia\\s*\\n*(.*:?)// cumbia\\s*\\n*)");
+    re1.setPatternOptions(QRegularExpression::InvertedGreedinessOption);
     int pos = 0; // where we are in the string
+    QRegularExpressionMatch ma;
+    // capturedStart returns the offset inside the subject string corresponding to the
+    // starting position of the substring captured by the nth capturing
+    // group. If the nth capturing group did not capture a string or doesn't
+    // exist, returns -1.
     while(pos >= 0) {
-        pos = re1.indexIn(s, pos);
+        ma = re1.match(s, pos);
+        pos = ma.capturedStart();
         if(pos >=0) {
-            qDebug() << __PRETTY_FUNCTION__ << "pos" << pos << re1.cap(1);
-            sections << Section(newline_wrap(re1.cap(1)), Section::NoSection);
-            pos += re1.cap(1).length();
+            qDebug() << __PRETTY_FUNCTION__ << "pos" << pos << ma.capturedTexts().at(1);
+            sections << Section(newline_wrap(ma.capturedTexts().at(1)), Section::NoSection);
+            pos += ma.capturedLength();
         }
     }
     return sections;
@@ -42,7 +48,7 @@ QList<Section> MainCppCodeExtractor::extract(Type t)
 
     foreach(QString l, s.split("\n")) {
         // CumbiaPool *cu_t = new CumbiaPool();
-        if(l.contains(QRegExp("new\\s+CumbiaPool")))
+        if(l.contains(QRegularExpression("new\\s+CumbiaPool")))
             sections.push_back(Section(ExtractorHelper().newline_wrap(l), Section::MainCppBeforeNewWidget));
     }
 
@@ -61,13 +67,10 @@ QList<Section> MainCppCodeExtractor::extract(Type t)
         // delete cu_t;
         // return ret;
         // }
-        QRegExp qapp_exec_re("(// exec application loop\\n*\\s*.*)\\}");
-        int pos = qapp_exec_re.indexIn(s);
-
-        qDebug() << __PRETTY_FUNCTION__ << "MainCppCodeExtractor pos" << pos << "captureth" <<  qapp_exec_re.cap(1);
-        if(pos > -1) {
-            sections.push_back(Section(ExtractorHelper().newline_wrap(qapp_exec_re.cap(1)), Section::EndOfMain));
-
+        QRegularExpression qapp_exec_re("(// exec application loop\\n*\\s*.*)\\}");
+        QRegularExpressionMatch ma = qapp_exec_re.match(s);
+        if(ma.hasMatch()) {
+            sections.push_back(Section(ExtractorHelper().newline_wrap(ma.capturedTexts().at(1)), Section::EndOfMain));
         }
     }
     else

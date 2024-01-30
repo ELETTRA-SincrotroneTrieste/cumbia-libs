@@ -70,7 +70,11 @@ QString QuAppDBus::getServiceName(QuApplication* app) const
     params.removeFirst();
     appname = app->arguments().at(0);
     if(appname.contains("/"))
-        appname = appname.split("/", QString::SkipEmptyParts).last();
+#if QT_VERSION >= QT_VERSION_CHECK(5,15,0)
+        appname = appname.split("/", Qt::SkipEmptyParts).last();
+#else
+    appname = appname.split("/", QString::SkipEmptyParts).last();
+#endif
 
     if(gethostname(hostname, 256))
         perr("QuAppDBus.getServiceName: hostname unavailable");
@@ -79,7 +83,7 @@ QString QuAppDBus::getServiceName(QuApplication* app) const
     if(!display)
         printf("QuAppDBus.getServiceName: DISPLAY env variable unavailable");
     else
-        qsdisplay = QString(display).remove(QRegExp("\\.\\d*")).remove(":");
+        qsdisplay = QString(display).remove(QRegularExpression("\\.\\d*")).remove(":");
     dbus_servicenam = "eu.elettra." + QString(hostname) + ".display" + qsdisplay  +
              ".quapplication.pid" + QString::number(getpid()) + "."  + appname ;
 

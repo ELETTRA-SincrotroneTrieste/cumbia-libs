@@ -46,7 +46,7 @@ It locates all configuration and cache files inside the SDK dir so that multiple
 
 #### init-repository excluding some modules:
 
-> ./init-repository --module-subset=all,-qtwayland,-qtx11extras,-qtwebengine,-qtpim,-qtquick3d,-qtmacextras
+> ./init-repository --module-subset=all,-qtwayland,-qt,-qtwebengine,-qtpim,-qtquick3d,-qtmacextras
 
 Set the environment for *emscripten*
 

@@ -1,5 +1,5 @@
 #include "qutrealtimeplot.h"
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QMenu>
 #include <cumacros.h>
 
@@ -10,6 +10,9 @@
  */
 #define ARGIN_CAPTURE_REGEXP		"\\((\\d+),(\\d+)(?:,(\\d+))?(?:,(\\d+))?(?:,(\\d+))?\\)"
 
+Q_GLOBAL_STATIC_WITH_ARGS(QRegularExpression, rtcommand_argin_re, (RTCOMMAND_ARGIN_REGEXP))
+Q_GLOBAL_STATIC_WITH_ARGS(QRegularExpression, argin_re, (ARGIN_REGEXP))
+Q_GLOBAL_STATIC_WITH_ARGS(QRegularExpression, argin_capture_re, (ARGIN_CAPTURE_REGEXP))
 QuTRealtimePlot::QuTRealtimePlot(QWidget *parent,
                                  Cumbia *cumbia,
                                  const CuControlsReaderFactoryI &r_fac)
@@ -36,9 +39,8 @@ bool QuTRealtimePlot::extractDefaultArginFromSourcesList(const QStringList &sour
    * _last_ source containing an argin directive, so we start the cycle from
    * sources.size() -1
    */
-    for(int i = sources.size() - 1; i >= 0; i--)
-    {
-        pstep("QuTRealtimePlot \"%s\": processing source \"%s\" (%d/%d)", qstoc(objectName()), qstoc(sources.at(i)),
+    for(int i = sources.size() - 1; i >= 0; i--) {
+        pstep("QuTRealtimePlot \"%s\": processing source \"%s\" (%d/%ld)", qstoc(objectName()), qstoc(sources.at(i)),
               i, sources.size());
         QString s = sources.at(i);
         /* regexp: ".*->.+(\(\d+,\d+(,\d+){0,3}\))"
@@ -47,13 +49,10 @@ bool QuTRealtimePlot::extractDefaultArginFromSourcesList(const QStringList &sour
      * (should check first argument included in [0;2] and number of arguments should
      * 2 or 5 (in timestamp mode)
      */
-        QRegExp re(RTCOMMAND_ARGIN_REGEXP); /* escaped */
-        int pos = re.indexIn(s);
-        if(pos > -1)
-        {
-            QStringList caps = re.capturedTexts();
-            if(caps.size() > 1)
-            {
+        QRegularExpressionMatch ma = rtcommand_argin_re->match(s);
+        if(ma.hasMatch()) {
+            const QStringList & caps = ma.capturedTexts();
+            if(caps.size() > 1) {
                 pstep("QuTRealtimePlot \"%s\": choosing default argin \"%s\"", qstoc(objectName()), qstoc(caps.at(1)));
                 d_defaultArgin = caps.at(1);
                 updatePropertiesFromArgin();
@@ -69,10 +68,10 @@ void QuTRealtimePlot::clearArginsFromSourcesList(QStringList &srcs)
     QStringList cleared;
     foreach(QString s, srcs)
     {
-        if(s.contains(QRegExp(ARGIN_REGEXP)))
+        if(s.contains(*argin_re))
         {
             QString orig = s;
-            s.remove(QRegExp(ARGIN_REGEXP));
+            s.remove(QRegularExpression(*argin_re));
             pstep("QuTRealtimePlot \"%s\": removing argin from \"%s\": will become \"%s\"", qstoc(objectName()),
                   qstoc(orig), qstoc(s));
         }
@@ -126,22 +125,19 @@ void QuTRealtimePlot::setSource(const QString &srcs)
     QString sources = srcs;
     QStringList srcList;
     if(sources.contains(";"))
-        srcList = sources.split(";", QString::SkipEmptyParts);
+        srcList = sources.split(";");
     else
         srcList << sources;
 
     setSources(srcList);
 }
 
-void QuTRealtimePlot::updatePropertiesFromArgin()
-{
-    QRegExp re(ARGIN_CAPTURE_REGEXP);
-    int pos = re.indexIn(d_defaultArgin);
+void QuTRealtimePlot::updatePropertiesFromArgin() {
+    QRegularExpressionMatch ma = argin_capture_re->match(d_defaultArgin);
     bool ok;
-    if(pos > -1)
-    {
+    if(ma.hasMatch()) {
         pok("ok processing argin \"%s\" to update properties", qstoc(d_defaultArgin));
-        QStringList caps = re.capturedTexts();
+        QStringList caps = ma.capturedTexts();
         caps.removeAll(QString()); /* remove empty strings */
         qslisttoc(caps);
         if(caps.size() == 3) /* (0,NSamples) (+ captured string (see capturedTexts() doc!) ) */
@@ -176,10 +172,10 @@ void QuTRealtimePlot::updatePropertiesFromArgin()
                 pinfo("QuTRealtimePlot \"%s\": detected mode 1 and bunches from %d to %d", qstoc(objectName()),
                       caps.at(2).toInt(), caps.at(3).toInt());
                 d_mode = 2;
-                d_date1 = QDateTime::fromTime_t(caps.at(2).toUInt());
-                d_date1.addMSecs(caps.at(3).toUInt());
-                d_date2 = QDateTime::fromTime_t(caps.at(4).toUInt());
-                d_date2.addMSecs(caps.at(5).toUInt());
+                d_date1 = QDateTime::fromSecsSinceEpoch(caps.at(2).toUInt());
+                d_date1 = d_date1.addMSecs(caps.at(3).toUInt());
+                d_date2 = QDateTime::fromSecsSinceEpoch(caps.at(4).toUInt());
+                d_date2 = d_date2.addMSecs(caps.at(5).toUInt());
             }
         }
         else
@@ -288,8 +284,8 @@ void QuTRealtimePlot::updateParams()
         d_defaultArgin = QString("(1,%1,%2)").arg(d_b1).arg(d_b2);
         break;
     case 2:
-        tstamp1 = d_date1.toTime_t();
-        tstamp2 = d_date2.toTime_t();
+        tstamp1 = d_date1.toSecsSinceEpoch();
+        tstamp2 = d_date2.toSecsSinceEpoch();
         time1 = d_date1.time();
         time2 = d_date2.time();
         d_defaultArgin = QString("(2,%1,%2,%3,%4)").arg(tstamp1).arg(time1.msec()).arg(tstamp2).arg(time2.msec());

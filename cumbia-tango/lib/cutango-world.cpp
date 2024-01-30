@@ -8,6 +8,7 @@
 #include <sys/types.h> // getaddrinfo
 #include <sys/socket.h> // getaddrinfo
 #include <netdb.h> // getaddrinfo
+#include <type_traits> // std::is_same (Tango::DevLong, int)
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -79,7 +80,7 @@ void CuTangoWorld::fillThreadInfo(CuData &dat, const CuActivity* a)
 void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
 {
     d->error = false;
-    d->message = "";
+    if(d->message.length() > 0)  d->message.clear();
     int t = (Tango::CmdArgType) data->get_type();
     da[CuDType::DataFormatStr] = cmdArgTypeToDataFormat(static_cast<Tango::CmdArgType>(t));
     da[CuDType::DataType] = t;
@@ -197,9 +198,10 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
             vector<Tango::DevLong> temp;
             vector<long int> li; // !! Tango DevLong
             *data >> temp;
-            li.reserve(temp.size());
-            for(size_t i = 0; i < temp.size(); i++)
-                li.push_back(static_cast<long int>(temp[i]));
+            const size_t & siz = temp.size();
+            li.resize(siz);
+            for(size_t i = 0; i < siz; i++)
+                li[i] = static_cast<long int>(temp[i]);
             da[CuDType::Value] = li;
             break;
         }
@@ -246,39 +248,36 @@ void CuTangoWorld::extractData(Tango::DeviceData *data, CuData& da)
 // extract data from DeviceAttribute to CuData
 // NOTE: d->message shall be empty if d->error remains false
 //
-void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
-{
+void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat, int xflags) {
     d->error = false;
-    d->message = "";
-    Tango::TimeVal tv = p_da->get_date();
-    struct timeval tiv;
+    if(d->message.length() > 0)  d->message.clear();
     const Tango::AttrQuality quality = p_da->get_quality();
     const Tango::AttrDataFormat f = p_da->get_data_format();
-    const bool w = (p_da->get_nb_written() > 0);
-    tiv.tv_sec = tv.tv_sec;
-    tiv.tv_usec = tv.tv_usec;
-    putDateTime(tv, dat);
-
-    CuDataQuality cuq = toCuQuality(quality);
-    dat[CuDType::Quality] = cuq.toInt();
-    dat[CuDType::QualityColor] = cuq.color();
-    dat[CuDType::QualityString] = cuq.name();
-    dat[CuDType::DataFormatStr] = formatToStr(f);
-
+    const int &tt = p_da->get_type();
+    bool w = false;
+    if(xflags > ExtractValueOnly) {
+        w = (p_da->get_nb_written() > 0);
+        Tango::TimeVal tv = p_da->get_date();
+        putDateTime(tv, dat);
+        CuDataQuality cuq = toCuQuality(quality);
+        dat[CuDType::Quality] = cuq.toInt();
+        if(xflags > ExtractMinimal) {
+            dat[CuDType::QualityColor] = cuq.color();
+            dat[CuDType::QualityString] = cuq.name();
+            dat[CuDType::DataFormatStr] = formatToStr(f);
+        }
+    }
     try{
-        if(quality == Tango::ATTR_INVALID)
-        {
+        if(quality == Tango::ATTR_INVALID) {
             d->message = "CuTangoWorld.extractData: attribute quality invalid - ";
             d->message += strerror(p_da->get_err_stack());
             d->error = true;
         }
-        else if(p_da->is_empty())
-        {
+        else if(p_da->is_empty())  {
             d->message = "CuTangoWorld.extractData: attribute " + p_da->get_name() + " is empty";
             d->error = true;
         }
-        else if(p_da->get_type() == Tango::DEV_DOUBLE)
-        {
+        else if(tt == Tango::DEV_DOUBLE) {
             std::vector<double> v;
             p_da->extract_read(v);
             if(f == Tango::SCALAR)
@@ -287,8 +286,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 dat[CuDType::Value] = v;
             else if(f == Tango::IMAGE)
                 dat.set(CuDType::Value, CuVariant(v, p_da->get_dim_y(), p_da->get_dim_x()));
-            if(w)
-            {
+            if(w) {
                 p_da->extract_set(v);
                 if(f == Tango::SCALAR)
                     dat[CuDType::WriteValue] = v.at(0);
@@ -298,34 +296,44 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     dat.set(CuDType::WriteValue, CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x()));
             }
         }
-        else if(p_da->get_type() == Tango::DEV_LONG)
-        {
-            std::vector<Tango::DevLong> v;
-            p_da->extract_read(v);
-            if(f == Tango::SCALAR && v.size())
-                dat[CuDType::Value] = static_cast<long int>(v.at(0));
-            else if(f == Tango::SPECTRUM || f == Tango::IMAGE)  {
-                std::vector<long int> vlo;
-                for(size_t i = 0; i < v.size(); i++)
-                    vlo.push_back(static_cast<long int>(v.at(i)));
-                if(f == Tango::SPECTRUM)
-                    dat[CuDType::Value] = vlo;
-                else if(f == Tango::IMAGE)
-                    dat[CuDType::Value] = CuVariant(vlo, p_da->get_dim_y(), p_da->get_dim_x());
-            }
-            if(w)
-            {
-                p_da->extract_set(v);
+        else if(tt == Tango::DEV_LONG) {
+            if(std::is_same<Tango::DevLong, long int>::value) {
+                std::vector<long int> v;
+                p_da->extract_read(v);
                 if(f == Tango::SCALAR)
-                    dat[CuDType::WriteValue] = v.at(0);
-                else {
-                    std::vector<long int> vlo;
-                    for(size_t i = 0; i < v.size(); i++)
-                        vlo.push_back(static_cast<long int>(v.at(i)));
-                    if(f == Tango::SPECTRUM)
-                        dat[CuDType::WriteValue] = vlo;
+                    dat[CuDType::Value] = v[0];
+                else if(f == Tango::SPECTRUM)
+                    dat[CuDType::Value] = v;
+                else if(f == Tango::IMAGE)
+                    dat[CuDType::Value] = CuVariant(v, p_da->get_dim_y(), p_da->get_dim_x());
+                if(w) {
+                    p_da->extract_set(v);
+                    if(f == Tango::SCALAR)
+                        dat[CuDType::WriteValue] = v[0];
+                    else if(f == Tango::SPECTRUM)
+                        dat[CuDType::WriteValue] = v;
                     else if(f == Tango::IMAGE)
-                        dat[CuDType::WriteValue] = CuVariant(vlo, p_da->get_written_dim_y(), p_da->get_written_dim_x());
+                        dat[CuDType::WriteValue] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
+                }
+            }
+            // Tango::DevLong is long int
+            else if(std::is_same<Tango::DevLong, int>::value) {
+                std::vector<int> v;
+                p_da->extract_read(v);
+                if(f == Tango::SCALAR)
+                    dat[CuDType::Value] = v[0];
+                else if(f == Tango::SPECTRUM)
+                    dat[CuDType::Value] = v;
+                else if(f == Tango::IMAGE)
+                    dat[CuDType::Value] = CuVariant(v, p_da->get_dim_y(), p_da->get_dim_x());
+                if(w) {
+                    p_da->extract_set(v);
+                    if(f == Tango::SCALAR)
+                        dat[CuDType::WriteValue] = v[0];
+                    else if(f == Tango::SPECTRUM)
+                        dat[CuDType::WriteValue] = v;
+                    else if(f == Tango::IMAGE)
+                        dat[CuDType::WriteValue] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
                 }
             }
         }
@@ -349,28 +357,28 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     dat.set(CuDType::WriteValue, CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x()));
             }
         }
-        else if(p_da->get_type() == Tango::DEV_STATE)
-        {
-            if(f == Tango::SCALAR)
-            {
+        else if(tt == Tango::DEV_STATE) {
+            if(f == Tango::SCALAR)   {
                 Tango::DevState state;
                 *p_da >> state;
                 dat[CuDType::Value] = t_world_conf.stateString(state);
                 dat[CuDType::State] = static_cast<long int>(state);
                 dat[CuDType::StateColor] = t_world_conf.stateColorName(state);
             }
-            else if(f == Tango::SPECTRUM || f == Tango::IMAGE)
-            {
+            else if(f == Tango::SPECTRUM || f == Tango::IMAGE) {
                 std::vector<Tango::DevState> v;
                 std::vector<std::string> temp;
                 std::vector<std::string> state_colors;
                 std::vector<long int>tempi;
                 p_da->extract_read(v);
-                for(size_t i = 0; i < v.size(); i++)
-                {
-                    temp.push_back(t_world_conf.stateString(v.at(i)));
-                    tempi.push_back(v[i]);
-                    state_colors.push_back(t_world_conf.stateColorName(v.at(i)));
+                const size_t& siz = v.size();
+                tempi.resize(siz);
+                temp.resize(siz);
+                state_colors.resize(siz);
+                for(size_t i = 0; i < siz; i++) {
+                    temp[i] = t_world_conf.stateString(v[i]);
+                    tempi[i] = v[i];
+                    state_colors[i] = t_world_conf.stateColorName(v[i]);
                 }
                 if(f == Tango::SPECTRUM) {
                     dat[CuDType::Value] = temp;
@@ -382,10 +390,8 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     dat[CuDType::StateColor] = CuVariant(state_colors, p_da->get_dim_y(), p_da->get_dim_x());
                 }
             }
-            if(w)
-            {
-                if(f == Tango::SCALAR)
-                {
+            if(w) {
+                if(f == Tango::SCALAR) {
                     Tango::DevState state;
                     *p_da >> state;
                     dat[CuDType::WriteValue] = t_world_conf.stateString(state);
@@ -399,8 +405,8 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     std::vector<std::string> temp;
                     std::vector<std::string> state_colors;
                     p_da->extract_set(v);
-                    for(size_t i = 0; i < v.size(); i++)
-                    {
+                    const size_t &siz = v.size();
+                    for(size_t i = 0; i < siz; i++) {
                         temp.push_back(t_world_conf.stateString(v.at(i)));
                         tempi.push_back(static_cast<long int>(v.at(i)));
                         state_colors.push_back(t_world_conf.stateColorName(v.at(i)));
@@ -417,7 +423,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 }
             }
         }
-        else if(p_da->get_type() == Tango::DEV_ULONG)
+        else if(tt == Tango::DEV_ULONG)
         {
             std::vector<Tango::DevULong> v;
             p_da->extract_read(v);
@@ -438,7 +444,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     dat[CuDType::WriteValue] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
-        else if(p_da->get_type() == Tango::DEV_ULONG64) {
+        else if(tt == Tango::DEV_ULONG64) {
             std::vector<Tango::DevULong64> v;
             p_da->extract_read(v);
             if(f == Tango::SCALAR)
@@ -458,7 +464,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     dat[CuDType::WriteValue] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
-        else if(p_da->get_type() == Tango::DEV_SHORT || p_da->get_type() == 100) /* 100! bug */
+        else if(tt == Tango::DEV_SHORT || tt == 100) /* 100! bug */
         {
             std::vector<short> v;
             p_da->extract_read(v);
@@ -479,7 +485,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     dat[CuDType::WriteValue] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
-        else if(p_da->get_type() == Tango::DEV_USHORT)
+        else if(tt == Tango::DEV_USHORT)
         {
             std::vector<unsigned short> v;
             p_da->extract_read(v);
@@ -500,7 +506,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     dat[CuDType::WriteValue] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
-        else if(p_da->get_type() == Tango::DEV_UCHAR)
+        else if(tt == Tango::DEV_UCHAR)
         {
             std::vector<unsigned char> v;
             p_da->extract_read(v);
@@ -521,9 +527,9 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 else if (f == Tango::IMAGE)
                     dat[CuDType::WriteValue] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
+
         }
-        else if(p_da->get_type() == Tango::DEV_INT)
-        {
+        else if(tt == Tango::DEV_INT) {
             std::vector<int>  v;
             p_da->extract_read(v);
             if(f == Tango::SCALAR)
@@ -543,8 +549,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     dat[CuDType::WriteValue] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
-        else if(p_da->get_type() == Tango::DEV_FLOAT)
-        {
+        else if(tt == Tango::DEV_FLOAT)  {
             std::vector<float>  v;
             p_da->extract_read(v);
             if(f == Tango::SCALAR)
@@ -564,8 +569,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     dat[CuDType::WriteValue] = CuVariant(v, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
-        else if(p_da->get_type() == Tango::DEV_BOOLEAN)
-        {
+        else if(tt == Tango::DEV_BOOLEAN) {
             std::vector<bool> vboo;
             p_da->extract_read(vboo);
             if(f == Tango::SCALAR)
@@ -592,8 +596,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                     dat[CuDType::WriteValue] = CuVariant(vboo, p_da->get_written_dim_y(), p_da->get_written_dim_x());
             }
         }
-        else if(p_da->get_type() == Tango::DEV_STRING)
-        {
+        else if(tt == Tango::DEV_STRING) {
             std::vector<std::string> vs;
             p_da->extract_read(vs);
             if(f == Tango::SCALAR)
@@ -602,8 +605,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
                 dat[CuDType::Value] = vs;
             else if (f == Tango::IMAGE)
                 dat[CuDType::Value] = CuVariant(vs, p_da->get_dim_y(), p_da->get_dim_x());
-            if(w)
-            {
+            if(w) {
                 p_da->extract_set(vs);
                 if(f == Tango::SCALAR)
                     dat[CuDType::WriteValue] = vs.at(0);
@@ -628,7 +630,7 @@ void CuTangoWorld::extractData(Tango::DeviceAttribute *p_da, CuData &dat)
 void CuTangoWorld::fillFromAttributeConfig(const Tango::AttributeInfoEx &ai, CuData &dat)
 {
     d->error = false;
-    d->message = "";
+    if(d->message.length() > 0)  d->message.clear();
     dat[CuDType::Type] = "property";  // dat["type"]
     dat[CuDType::DataFormat] = ai.data_format;
     dat[CuDType::DataFormatStr] = formatToStr(ai.data_format); /* as string */
@@ -714,12 +716,12 @@ void CuTangoWorld::fillFromCommandInfo(const Tango::CommandInfo &ci, CuData &d)
     };
 }
 
-bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const std::string &attribute, CuData &res) {
+bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const std::string &attribute, CuData &res, int xtractflags) {
     d->error = false;
-    d->message = "";
+    if(d->message.length() > 0)  d->message.clear();
     try {
         Tango::DeviceAttribute da = dev->read_attribute(attribute.c_str());
-        extractData(&da, res);
+        extractData(&da, res, xtractflags);
     }
     catch(Tango::DevFailed &e) {
         d->error = true;
@@ -743,12 +745,14 @@ bool CuTangoWorld::read_att(Tango::DeviceProxy *dev, const std::string &attribut
 bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                              std::vector<std::string>& p_v_an, // att names
                              std::vector<CuData>& va,  // att cache, ordered same as att names
-                             std::vector<CuData> &reslist,
-                             int updpo)
+                             std::vector<CuData> &reslist, // reserve()d by caller (CuPollingActivity)
+                             int updpo, int xtract_flags)
 {
     d->error = false;
-    d->message = "";
+    if(d->message.length() > 0)  d->message.clear();
     size_t offset = reslist.size();
+    // auto t1 = std::chrono::high_resolution_clock::now();
+    // std::string atts;
     try
     {
         // read_attributes
@@ -759,22 +763,34 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         //         we enter the catch clause, where the results have to be manually populated
         //         with data reporting the error.
         //         In that case, the poller must be slowed down
+
+
         std::vector<Tango::DeviceAttribute> *devattr = dev->read_attributes(p_v_an);
+
+        // auto t2 = std::chrono::high_resolution_clock::now();
+        // for(int i = 0; i < p_v_an.size(); i++)
+        //     atts += p_v_an[i] + ",";
+        // printf("[thread: 0x%lx] CuTangoWorld::read_atts  %s (%s) dev->read_attributes took %.1fms\n",
+        //        pthread_self(),  dev->name().c_str(), atts.c_str(), std::chrono::duration_cast<std::chrono::microseconds>(t2-t1).count()/1000.0);
+
         for(size_t i = 0; i < devattr->size(); i++) {
             Tango::DeviceAttribute *p_da = &(*devattr)[i];
             p_da->set_exceptions(Tango::DeviceAttribute::failed_flag);
             if(updpo & CuDataUpdatePolicy::PollUpdateAlways) { // check flags
                 reslist.push_back(va[i]);
-                extractData(p_da,  reslist[offset]);
+                extractData(p_da,  reslist[offset], xtract_flags);
                 reslist[offset][CuDType::Err] = d->error;
-                if(d->message.length() > 0)
-                    reslist[offset][CuDType::Message] = d->message;
-                reslist[offset][CuDType::Color] = t_world_conf.successColor(!d->error);
+                if(d->message.length() > 0 ) {
+                    if(xtract_flags > ExtractMinimal || (d->error && xtract_flags > ExtractValueOnly))
+                        reslist[offset][CuDType::Message] = d->message;
+                }
+                if(xtract_flags > ExtractMinimal)
+                    reslist[offset][CuDType::Color] = t_world_conf.successColor(!d->error);
                 offset++;
             }
             else {
                 CuData rv;
-                extractData(p_da, rv);
+                extractData(p_da, rv, xtract_flags);
                 // note that if !d->error, d->message is empty
                 // m_cache_upd compares new value rv with cached (or first time empty)
                 // va[i] (value, w_value, err, quality). If changed, returns true and
@@ -782,16 +798,23 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                 bool changed = d->error || m_cache_upd(va[i], rv);
                 if(changed) { // update exactly as above
                     reslist.push_back(va[i]);
-                    reslist[offset][CuDType::Time_us] = rv[CuDType::Time_us];
-                    reslist[offset][CuDType::Time_us] = rv[CuDType::Time_us];
-                    reslist[offset][CuDType::Err] = d->error;
-                    if(d->message.length() > 0)
-                        reslist[offset][CuDType::Message] = d->message;
-                    reslist[offset][CuDType::Color] = t_world_conf.successColor(!d->error);
+                    reslist[offset][CuDType::Err] = d->error; // error flag, always
+                    if(xtract_flags > ExtractMinimal) { // timestamp, if flags > ExtractMinimal
+                        reslist[offset][CuDType::Time_ms] = rv[CuDType::Time_ms];
+                        reslist[offset][CuDType::Time_us] = rv[CuDType::Time_us];
+                    }
+                    if(d->message.length() > 0) {
+                        if(xtract_flags > ExtractMinimal || (d->error && xtract_flags > ExtractValueOnly))
+                            reslist[offset][CuDType::Message] = d->message;
+                    }
+                    if(xtract_flags > ExtractMinimal)
+                        reslist[offset][CuDType::Color] = t_world_conf.successColor(!d->error);
                     offset++;
                 }
                 else if(updpo & CuDataUpdatePolicy::OnPollUnchangedTimestampOnly) {
+                    // it makes sense to place timestamp here even if xtract_policy is minimal
                     reslist.push_back(CuData(CuDType::Time_us, rv[CuDType::Time_us]));
+                    reslist.push_back(CuData(CuDType::Time_ms, rv[CuDType::Time_ms]));
                     reslist[offset][CuDType::Src] = va[i][CuDType::Src];
                     offset++;
                 }
@@ -800,6 +823,15 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
                 }
             }
         }
+
+        // auto t3 = std::chrono::high_resolution_clock::now();
+
+        // printf("[thread: 0x%lx] CuTangoWorld  extract data %s (%s) took %.1fms\n",
+        //        pthread_self(),  dev->name().c_str(), atts.c_str(), std::chrono::duration_cast<std::chrono::microseconds>(t3-t2).count()/1000.0);
+
+        // printf("[thread: 0x%lx] \e[1;36mCuTangoWorld read attrributes + extract %s (%s) took %.1fms\e[0m\n",
+        //        pthread_self(),  dev->name().c_str(), atts.c_str(), std::chrono::duration_cast<std::chrono::microseconds>(t3-t1).count()/1000.0);
+
         delete devattr;
     }
     catch(Tango::DevFailed &e)
@@ -833,16 +865,16 @@ bool CuTangoWorld::m_cache_upd(CuData &cache_d, const CuData &nd) const {
         }
     }
 
-//    for(const std::string& s : std::vector<std::string>{CuDType::Value, CuDType::Err, CuDType::Message, CuDType::Quality, CuDType::WriteValue} )
-//        printf("%s %s=%s | ", s.c_str(), cache_d[s].toString().c_str(), nd[s].toString().c_str());
-//    printf("\n");
+    //    for(const std::string& s : std::vector<std::string>{CuDType::Value, CuDType::Err, CuDType::Message, CuDType::Quality, CuDType::WriteValue} )
+    //        printf("%s %s=%s | ", s.c_str(), cache_d[s].toString().c_str(), nd[s].toString().c_str());
+    //    printf("\n");
 
-//    if(!changed) {
-//        printf("CuTangoWorld::m_cache_upd: %s cached value \e[1;33mUNCHANGED\e[0m:\n", datos(nd));
+    //    if(!changed) {
+    //        printf("CuTangoWorld::m_cache_upd: %s cached value \e[1;33mUNCHANGED\e[0m:\n", datos(nd));
 
-//    } else {
-//        printf("CuTangoWorld::m_cache_upd: cached value \e[1;32mCHANGED\e[0m:\n");
-//    }
+    //    } else {
+    //        printf("CuTangoWorld::m_cache_upd: cached value \e[1;32mCHANGED\e[0m:\n");
+    //    }
     return changed > 0;
 }
 
@@ -864,7 +896,7 @@ bool CuTangoWorld::cmd_inout(Tango::DeviceProxy *dev,
                              CuData& data)
 {
     d->error = false;
-    d->message = "";
+    if(d->message.length() > 0)  d->message.clear();
     try
     {
         std::string cmdnam(cmd);
@@ -931,7 +963,7 @@ bool CuTangoWorld::write_att(Tango::DeviceProxy *dev,
 bool CuTangoWorld::get_command_info(Tango::DeviceProxy *dev, const std::string& cmd, CuData &cmd_info)
 {
     d->error = false;
-    d->message = "";
+    if(d->message.length() > 0)  d->message.clear();
     try
     {
         Tango::CommandInfo ci = dev->command_query(cmd);
@@ -945,18 +977,21 @@ bool CuTangoWorld::get_command_info(Tango::DeviceProxy *dev, const std::string& 
     return !d->error;
 }
 
-bool CuTangoWorld::get_att_config(Tango::DeviceProxy *dev, const string &attribute, CuData &dres, bool skip_read_att)
+bool CuTangoWorld::get_att_config(Tango::DeviceProxy *dev,
+                                  const string &attribute,
+                                  CuData &dres,
+                                  bool skip_read_att,
+                                  int extract_flags)
 {
     d->error = false;
-    d->message = "";
+    if(d->message.length() > 0)  d->message.clear();
     /* first read attribute to get the value */
-    bool attr_read_ok = true;
     if(!skip_read_att) {
-//        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-        attr_read_ok = read_att(dev, attribute, dres);
-//        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-//        printf("CuTangoWorld::get_att_config, read_attribute, %s, %ld, us\n",
-//              dres.s(CuDType::Src).c_str(), std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+        //        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+        read_att(dev, attribute, dres, extract_flags);
+        //        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+        //        printf("CuTangoWorld::get_att_config, read_attribute, %s, %ld, us\n",
+        //              dres.s(CuDType::Src).c_str(), std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
     }
     //
     // read attribute may fail, (example: device server is online but read
@@ -965,11 +1000,11 @@ bool CuTangoWorld::get_att_config(Tango::DeviceProxy *dev, const string &attribu
     //
     Tango::AttributeInfoEx aiex;
     try {
-//        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+        //        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
         aiex = dev->get_attribute_config(attribute);
-//        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-//        printf("CuTangoWorld::get_att_config, get_attribute_config, %s, %ld, us\n",
-//               dres.s(CuDType::Src).c_str(), std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
+        //        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+        //        printf("CuTangoWorld::get_att_config, get_attribute_config, %s, %ld, us\n",
+        //               dres.s(CuDType::Src).c_str(), std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count());
         fillFromAttributeConfig(aiex, dres);
     }
     catch(Tango::DevFailed &e) {
@@ -977,7 +1012,8 @@ bool CuTangoWorld::get_att_config(Tango::DeviceProxy *dev, const string &attribu
         d->message = strerror(e);
     }
     dres[CuDType::Err] = d->error;
-    dres[CuDType::Color] = t_world_conf.successColor(!d->error);
+    if(extract_flags > ExtractMinimal)
+        dres[CuDType::Color] = t_world_conf.successColor(!d->error);
     return !d->error;
 }
 
@@ -987,7 +1023,7 @@ bool CuTangoWorld::get_att_props(Tango::DeviceProxy *dev,
                                  const std::vector<string> props)
 {
     d->error = false;
-    d->message = "";
+    if(d->message.length() > 0)  d->message.clear();
     Tango::Database db(dev->get_db_host(), dev->get_db_port_num());
     Tango::DbData db_data;
     db_data.push_back(Tango::DbDatum(attribute_name.c_str()));
@@ -1011,7 +1047,7 @@ bool CuTangoWorld::get_att_props(Tango::DeviceProxy *dev,
                 {
                     std::string &prop_name = db_data[i].name;
                     if(strcasecmp(attribute_name.c_str(), attname.c_str()) == 0 &&
-                            strcasecmp(prop_name.c_str(), prop.c_str()) == 0 && !db_data[i].is_empty())
+                        strcasecmp(prop_name.c_str(), prop.c_str()) == 0 && !db_data[i].is_empty())
                     {
                         db_data[i] >> vs;
                     }
@@ -1102,7 +1138,7 @@ bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &re
     Tango::Database *db = getTangoDb(dbhost);
     d->error = (db == nullptr);
     if(!d->error) {
-        d->message = "";
+        if(d->message.length() > 0)  d->message.clear();
         std::string attnam;
         std::vector<std::string> vs;
 
@@ -1227,8 +1263,7 @@ bool CuTangoWorld::get_properties(const std::vector<CuData> &in_list, CuData &re
 
 bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
     d->error = false;
-    d->message.clear();
-    bool res_ismap = false;
+    if(d->message.length() > 0)  d->message.clear();
     const TSource::Type t = tsrc.getType();
     Tango::DbData db_data;
     Tango::DbDatum dbd;
@@ -1289,7 +1324,7 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                 Tango::DbDatum devs_dbd = db->get_device_exported(pattern);
                 devs_dbd >> r;
             }
-                break;
+            break;
             case TSource::SrcDbAtts: {
                 dev = new Tango::DeviceProxy(dnam);
                 std::vector<std::string> *al = dev->get_attribute_list();
@@ -1298,7 +1333,7 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                     delete al;
                 }
             }
-                break;
+            break;
             case TSource::SrcDbCmds: {
                 dev = new Tango::DeviceProxy(dnam);
                 Tango::CommandInfoList *cil = dev->command_list_query();
@@ -1308,7 +1343,7 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                     delete cil;
                 }
             }
-                break;
+            break;
             case TSource::SrcDbAttInfo: {
                 Tango::DbData db_data;
                 std::vector<std::string> p_values;
@@ -1331,12 +1366,12 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                 }
 
             }
-                break;
+            break;
             case TSource::SrcDbDevProps: {  //  test/device/1/double_scalar/
                 dev = new Tango::DeviceProxy(dnam);
                 dev->get_property_list("*", r);
             }
-                break;
+            break;
             case  TSource::SrcDbGetCmdI: { // "tango://test/device/1->get/"
                 dev = new Tango::DeviceProxy(dnam);
                 Tango::CommandInfo ci = dev->command_query(tsrc.getPoint());
@@ -1347,16 +1382,15 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                 res["cmd_in_desc"] = ci.in_type_desc;
                 res["cmd_out_desc"] = ci.out_type_desc;
                 r = std::vector<std::string> { "cmd_in_type", "cmd_out_type", "cmd_in_type_str",
-                        "cmd_out_type_str", "cmd_in_desc", "cmd_out_desc" };
-                res_ismap = true;
+                                             "cmd_out_type_str", "cmd_in_desc", "cmd_out_desc" };
             }
-                break;
+            break;
             case TSource::SrcDbClassProps: { //  tango://class(*), tango://hokuto:20000/class(*)
                 std::string cl = tsrc.getPropClassNam();
                 dbd = db->get_class_property_list(cl);
                 dbd >> r;
             }
-                break;
+            break;
 
             case TSource::SrcDbAProp: {   // tango://hokuto:20000/test/device/1/double_scalar#values
                 std::vector<std::string> props = tsrc.getPropNames();
@@ -1365,7 +1399,6 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                 std::string prop;
                 // use device name without tango:// and host:port/
                 db->get_device_attribute_property(dnam_nhnp, db_data);
-                res_ismap = true;
                 if(props.size() > 0) prop = props[0];
                 for (size_t i=0; i < db_data.size(); i++)  {
                     long nb_prop;
@@ -1383,7 +1416,7 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                 }
                 res[CuDType::Keys] = keys;
             }
-                break;
+            break;
             case TSource::SrcDbClassProp: { // tango://hokuto:20000/class(pr1,pr2,..)
                 std::string c = tsrc.getPropClassNam();
                 std::vector<std::string> keys, v, prs = tsrc.getPropNames();
@@ -1399,9 +1432,8 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                     }
                 }
                 res[CuDType::Keys] = keys;
-                res_ismap = true;
             }
-                break;
+            break;
             case TSource::SrcDbDevProp: {
                 std::vector<std::string> keys, v, prs = tsrc.getPropNames();
                 for(std::string p : prs)
@@ -1417,9 +1449,8 @@ bool CuTangoWorld::db_get(const TSource &tsrc, CuData &res) {
                     }
                 }
                 res[CuDType::Keys] = keys;
-                res_ismap = true;
             }
-                break;
+            break;
             }
             res[CuDType::Value] = r;
             d->error |= !r.size();
@@ -1551,7 +1582,7 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const CuVariant &arg,
 {
     bool type_match = false;
     d->error = false;
-    d->message = "";
+    if(d->message.length() > 0)  d->message.clear();
     long in_type = info[CuDType::InType].toLongInt();  // info["in_type"]
     Tango::DeviceData dd;
     if((arg.isNull() || arg.getFormat() < 0) && in_type == static_cast<Tango::CmdArgType>(Tango::DEV_VOID))
@@ -1649,7 +1680,7 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const std::vector<std::string> &arg
                                              const CuData &cmdinfo)
 {
     d->error = false;
-    d->message = "";
+    if(d->message.length() > 0)  d->message.clear();
     long in_type = cmdinfo[CuDType::InType].toLongInt();  // cmdinfo["in_type"]
     Tango::DeviceData dd;
     if(argins.size() == 0) {
@@ -1771,14 +1802,14 @@ Tango::DeviceData CuTangoWorld::toDeviceData(const std::vector<std::string> &arg
     {
         d->error = true;
         d->message = "CuTangoWorld.toDeviceData: cannot convert argins \"" + v + "\" to type " +
-                std::to_string(in_type) + ": invalid argument: " + ia.what();
+                     std::to_string(in_type) + ": invalid argument: " + ia.what();
         perr("%s", d->message.c_str());
     }
     catch(const std::out_of_range& ore)
     {
         d->error = true;
         d->message = "CuTangoWorld.toDeviceData: cannot convert argins \"" + v + "\" to type " +
-                std::to_string(in_type) + ": invalid argument: " + ore.what();
+                     std::to_string(in_type) + ": invalid argument: " + ore.what();
         perr("%s", d->message.c_str());
     }
     return dd;
@@ -1789,7 +1820,7 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &name,
                                                        const CuData &attinfo)
 {
     d->error = false;
-    d->message = "";
+    if(d->message.length() > 0)  d->message.clear();
     bool ok;
     std::string attname = name;
     Tango::DeviceAttribute da;
@@ -1962,7 +1993,7 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &aname,
                                                        const CuData &attinfo)
 {
     d->error = false;
-    d->message = "";
+    if(d->message.length() > 0)  d->message.clear();
     int tango_type = attinfo[CuDType::DataType].toLongInt();
     Tango::AttrDataFormat tango_fmt = static_cast<Tango::AttrDataFormat>(attinfo[CuDType::DataFormat].toInt());
     Tango::DeviceAttribute da;
@@ -2107,14 +2138,14 @@ Tango::DeviceAttribute CuTangoWorld::toDeviceAttribute(const string &aname,
     {
         d->error = true;
         d->message = "CuTangoWorld.toDeviceAttribute: cannot convert argins to type " +
-                std::to_string(tango_type) + ": invalid argument: " + ia.what();
+                     std::to_string(tango_type) + ": invalid argument: " + ia.what();
         perr("%s", d->message.c_str());
     }
     catch(const std::out_of_range& ore)
     {
         d->error = true;
         d->message = "CuTangoWorld.toDeviceAttribute: cannot convert argins to type " +
-                std::to_string(tango_type) + ": invalid argument: " + ore.what();
+                     std::to_string(tango_type) + ": invalid argument: " + ore.what();
         perr("%s", d->message.c_str());
     }
 
@@ -2126,7 +2157,7 @@ void CuTangoWorld::putDateTime(const Tango::TimeVal &ttv, CuData &data)
     struct timeval tv;
     tv.tv_sec = ttv.tv_sec;    // _must_ copy from Tango::TimeVal to struct timeval!
     tv.tv_usec = ttv.tv_usec;
-    data[CuDType::Time_us] = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+    data[CuDType::Time_ms] = tv.tv_sec * 1000 + tv.tv_usec / 1000;
     data[CuDType::Time_us] = static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6;
 }
 
@@ -2194,7 +2225,7 @@ CuDataQuality CuTangoWorld::toCuQuality(Tango::AttrQuality q) const
 std::string CuTangoWorld::make_fqdn_src(const string &src) const {
     int getai_ok = 0;
     std::string fusrc(src), tgho;
-    d->message.clear();
+    if(d->message.length() > 0)  d->message.clear();
     // tango host regex: capture between optional tango:// and ":PORT"
     std::regex tghre("(?:tango://){0,1}(.*):\\d+/.*");
     std::smatch hma; // host match
@@ -2223,7 +2254,6 @@ std::string CuTangoWorld::make_fqdn_src(const string &src) const {
         }
         for (rp = result; rp != NULL; rp = rp->ai_next) {
             if(rp->ai_canonname != nullptr) {
-                printf("--- \e[1;36mCuTangoWorld.make_fqdn_src found %s\e[0m\n", rp->ai_canonname);
                 fusrc = string(rp->ai_canonname) + src.substr(end2); // [tango://]full.host.name:PORT/tg/dev/nam/attribute
             }
         }

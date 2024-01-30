@@ -80,11 +80,6 @@ VERSION = 2.0.0
 DEFINES += CUMBIA_HTTP_VERSION_STR=\"\\\"$${VERSION}\\\"\" \
     CUMBIA_HTTP_VERSION=$${VERSION_HEX}
 
-
-QMAKE_CXXFLAGS += -std=c++11 -Wall
-
-CONFIG += c++11
-
 MOC_DIR = moc
 
 QMAKE_CLEAN = moc \

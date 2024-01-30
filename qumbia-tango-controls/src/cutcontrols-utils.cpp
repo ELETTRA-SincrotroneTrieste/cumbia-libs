@@ -1,9 +1,11 @@
 #include "cutcontrols-utils.h"
+#include <QRegularExpression>
 #include <cumacros.h>
 
 // (tango://){0,1}([A-Za-z_0-9\-\.]*[:]{1}[0-9]+[/]){0,1}[A-Za-z_0-9\-\.]+/[A-Za-z_0-9\-\.]+/[A-Za-z_0-9\-\.]+
 #define DEVICE_REGEXP "(tango://){0,1}([A-Za-z_0-9\\-\\.]*[:]{1}[0-9]+[/]){0,1}[A-Za-z_0-9\\-\\.]+/[A-Za-z_0-9\\-\\.]+/[A-Za-z_0-9\\-\\.]+"
 
+Q_GLOBAL_STATIC_WITH_ARGS(QRegularExpression, device_re, (DEVICE_REGEXP))
 
 /*! \brief class constructor
  *
@@ -29,10 +31,9 @@ QString CuTControlsUtils::replaceWildcards(const QString &s, const QStringList &
 {
     QString ret(s);
     QStringList devs;
-    for (int i = 1; i < args.size(); i++)
-    {
-       if(QRegExp(DEVICE_REGEXP).exactMatch(args[i]))
-       {
+    for (int i = 1; i < args.size(); i++) {
+        QRegularExpressionMatch ma = device_re->match(args[i]);
+       if(ma.hasMatch()) {
             devs << (args[i]);
        }
     }

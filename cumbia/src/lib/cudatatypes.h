@@ -75,6 +75,7 @@ public:
         MaxDimY, ///< maximum dimension of Y, was "max_dim_y" (used in Tango image)
         CmdName,///<  was "cmd"
         Activity, ///<  cumbia activity, was "activity"
+        ExtractDataFlags, ///< flags to tell the engine the desired level of details to extract data
         MaxDataKey = 64 };
 };
 

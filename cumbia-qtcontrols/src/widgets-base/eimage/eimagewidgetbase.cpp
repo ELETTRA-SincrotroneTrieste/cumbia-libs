@@ -111,7 +111,7 @@ void EImageWidgetBase::mouseRelease(QMouseEvent *ev)
 
 void EImageWidgetBase::wheelEvent(QWheelEvent *event)
 {
-    int delta = event->delta();
+    int delta = event->angleDelta().y();
     if(delta > 0)
         d->zoom = d->zoom * delta/100.0;
     else
@@ -169,7 +169,7 @@ void EImageWidgetBase::paint(QPaintEvent *e, QWidget *paintDevice)
         {
             float fl = sqrt(pow(p2x - p1x, 2) + pow(p2y - p1y, 2));
             QString val = QString("%1").arg(fl, 0, 'f', 2);
-            p.fillRect(QRectF(d->mP1.x(), d->mP1.y(), fm.width(val), fm.height()), bg);
+            p.fillRect(QRectF(d->mP1.x(), d->mP1.y(), fm.horizontalAdvance(val), fm.height()), bg);
             /* first draw line */
             p.drawLine(d->mP1, d->mP2);
             /* then text */
@@ -185,7 +185,7 @@ void EImageWidgetBase::paint(QPaintEvent *e, QWidget *paintDevice)
             /* then text */
             QString val = QString("%1,%2 %3x%4").arg(p1x).arg(p1y).arg(fabs(p2x - p1x)).
                     arg(fabs(p2y - p1y));
-            p.fillRect(QRectF(d->mP1.x(), d->mP1.y(), fm.width(val), fm.height()), bg);
+            p.fillRect(QRectF(d->mP1.x(), d->mP1.y(), fm.horizontalAdvance(val), fm.height()), bg);
             pen.setColor(Qt::black);
             p.setPen(pen);
             p.drawText(QPointF(d->mP1.x(), d->mP1.y() + fm.height()), val);

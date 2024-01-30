@@ -1,3 +1,8 @@
+# to regenerate docs
+# move to top level cumbia-tango/builddir
+# rm -rf doc/html
+# ninja doc/html
+
 doxydata.set('TOP_SRCDIR', meson.source_root())
 doxydata.set('TOP_BUILDDIR', meson.build_root())
 

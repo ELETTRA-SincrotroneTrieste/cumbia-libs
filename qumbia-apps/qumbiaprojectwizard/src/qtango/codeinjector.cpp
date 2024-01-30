@@ -2,6 +2,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QtDebug>
+#include <QRegularExpression>
 
 CodeInjector::CodeInjector(const QString &filename, const QString &mainwidclass, const QString &mainwidvar, const QString &formclassnam) {
     m_filename = filename;
@@ -42,12 +43,13 @@ QString CodeInjector::inject(const QString &input, const QList<Section> &section
         se.text.replace("$MAINCLASS$", m_mainwclass);
         se.text.replace("$UIFORMCLASS$", m_formclassnam);
         if(se.where == Section::EndOfCppConstructor) {
-            QRegExp endOfCppConstructorRe(QString("(%1::%1[a-zA-Z0-9\\s\\(\\)\\*\\:,]*\\{(?:\\{.*\\}|[^\\{])*\\})")
+            QRegularExpression endOfCppConstructorRe(QString("(%1::%1[a-zA-Z0-9\\s\\(\\)\\*\\:,]*\\{(?:\\{.*\\}|[^\\{])*\\})")
                                           .arg(m_mainwclass));
+            QRegularExpressionMatch ma = endOfCppConstructorRe.match(output);
             qDebug() << __FUNCTION__ << "Section::EndOfCppConstructor";
-            pos = endOfCppConstructorRe.indexIn(output);
+            pos = ma.capturedStart();
             if(pos > -1) {
-                orig = endOfCppConstructorRe.cap(1);
+                orig = ma.captured(1);
                 block = orig;
                 block.insert(block.length() - 2, se.text);
                 output.replace(endOfCppConstructorRe, block);
@@ -56,10 +58,11 @@ QString CodeInjector::inject(const QString &input, const QList<Section> &section
         }
         // (int\s+main[a-zA-Z0-9\s\(\)\*,\[\]]*\{(?:\{.*\}|[^\{])*\})
         else if(se.where == Section::EndOfMain) {
-            QRegExp endOfMainRe("(int\\s+main[a-zA-Z0-9\\s\\(\\)\\*,\\[\\]]*\\{(?:\\{.*\\}|[^\\{])*\\})");
-            pos = endOfMainRe.indexIn(output);
+            QRegularExpression endOfMainRe("(int\\s+main[a-zA-Z0-9\\s\\(\\)\\*,\\[\\]]*\\{(?:\\{.*\\}|[^\\{])*\\})");
+            QRegularExpressionMatch ma = endOfMainRe.match(output);
+            pos = ma.capturedStart();
             if(pos > -1) {
-                orig = endOfMainRe.cap(1);
+                orig = ma.captured(1);
                 block = orig;
                 block.insert(block.length() - 2, se.text);
                 output.replace(endOfMainRe, block);
@@ -67,22 +70,24 @@ QString CodeInjector::inject(const QString &input, const QList<Section> &section
             }
         }
         else if(se.where == Section::StartOfCppConstructor) {
-            QRegExp startOfCppConstructorRe(QString("(%1::%1[a-zA-Z0-9\\s\\(\\)\\*\\:,]*\\{)")
+            QRegularExpression startOfCppConstructorRe(QString("(%1::%1[a-zA-Z0-9\\s\\(\\)\\*\\:,]*\\{)")
                                             .arg(m_mainwclass));
-            pos = startOfCppConstructorRe.indexIn(output);
+            QRegularExpressionMatch ma = startOfCppConstructorRe.match(output);
+            pos = ma.capturedStart();
             if(pos > -1) {
-                orig = startOfCppConstructorRe.cap(1);
+                orig = ma.captured(1);
                 block = orig + "\n" + se.text + "\n";
                 output.replace(startOfCppConstructorRe, block);
                 lineno = input.section(orig, 0, 0).count("\n") + 1;
             }
         }
         else if(se.where == Section::EndOfHConstructor) {
-            QRegExp endOfHClassDefRe(QString("(class\\s+%1[a-zA-Z0-9\\s\\(\\)\\*\\:,]*\\{(?:\\{.*\\}|[^\\{])*\\})")
+            QRegularExpression endOfHClassDefRe(QString("(class\\s+%1[a-zA-Z0-9\\s\\(\\)\\*\\:,]*\\{(?:\\{.*\\}|[^\\{])*\\})")
                                    .arg(m_mainwclass));
-            pos = endOfHClassDefRe.indexIn(output);
+            QRegularExpressionMatch ma = endOfHClassDefRe.match(output);
+            pos = ma.capturedStart();
             if(pos > -1) {
-                orig = endOfHClassDefRe.cap(1);
+                orig = ma.captured(1);
                 block = orig;
                 block.insert(block.length() - 2, se.text);
                 output.replace(endOfHClassDefRe, block);
@@ -94,26 +99,28 @@ QString CodeInjector::inject(const QString &input, const QList<Section> &section
             // (\n#include\s*[\"<>A-Za-z0-9_/\.]+\s*)
             qDebug() << __FUNCTION__ << "file is " << m_filename;
 
-            QRegExp firstIncludeRe("(\\n#include\\s*[\\\"<>A-Za-z0-9_/\\.]+\\s*)");
-            pos = firstIncludeRe.indexIn(output);
+            QRegularExpression firstIncludeRe("(\\n#include\\s*[\\\"<>A-Za-z0-9_/\\.]+\\s*)");
+            QRegularExpressionMatch ma = firstIncludeRe.match(output);
+            pos = ma.capturedStart();
             if(pos > -1) {
-                orig = firstIncludeRe.cap(1);
+                orig = ma.captured(1);
                 block = orig;
                 block.insert(0, se.text);
-                output.replace(firstIncludeRe.cap(1), block);
+                output.replace(ma.captured(1), block);
                 lineno = input.section(firstIncludeRe, 0, 0).count("\n") + 1;
             }
         }
         else if(se.where == Section::MainCppBeforeNewWidget) {
             // find where the new widget is declared
             // (Danfisik9000\s*\*[A-Za-z0-9_]+\s*=\s*new\s+Danfisik9000)
-            QRegExp widDeclRe(QString("(\\s*%1\\s*\\*[A-Za-z0-9_]+\\s*=\\s*new\\s+%1)").arg(m_mainwclass));
-            pos = widDeclRe.indexIn(output);
+            QRegularExpression widDeclRe(QString("(\\s*%1\\s*\\*[A-Za-z0-9_]+\\s*=\\s*new\\s+%1)").arg(m_mainwclass));
+            QRegularExpressionMatch ma = widDeclRe.match(output);
+            pos = ma.capturedStart();
             if(pos > -1) {
-                block = widDeclRe.cap(1);
+                block = ma.captured(1);
                 block.insert(0, "\n" + se.text + "\n");
                 output.replace(widDeclRe, block);
-                lineno = input.section(widDeclRe.cap(1), 0, 0).count("\n") + 1;
+                lineno = input.section(ma.captured(1), 0, 0).count("\n") + 1;
             }
         }
         else if(se.where == Section::ElseWhere) {

@@ -4,7 +4,7 @@
 #include <QFile>
 #include <QList>
 #include <QTextStream>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QtDebug>
 
 Parser::Parser(const QString& force_mode)
@@ -137,23 +137,20 @@ bool Parser::find_match(const QString &contents, const QString &classname, QStri
     int index = 1;
     // first version with "new" find varname = new classname(params...);
     // ([A-Za-z_0-9]*)\s*=\s*new\s+(CumbiaPool)\s*\(.*\);
-    QRegExp re;
-    if(classname.contains(QRegExp("[A-Za-z_0-9]*\\s*\\*")))
+    QRegularExpression re;
+    if(classname.contains(QRegularExpression("[A-Za-z_0-9]*\\s*\\*")))
         re.setPattern(QString("([A-Za-z_0-9]*)\\s*=\\s*new\\s+(%1)\\s*\\(.*\\);").arg(classname));
     else // second version: stack declaration
     {
         re.setPattern(QString("(%1)\\s+([A-Za-z_0-9]*);").arg(classname));
         index = 2;
     }
-
-    re.setMinimal(true);
-    if(contents.contains(re))
-    {
-        int pos = re.indexIn(contents);
-        if(pos > -1 && re.capturedTexts().count() == 3)
-        {
-            qDebug() << __FUNCTION__ << "CAPTURED" << re.capturedTexts();
-            varname = re.capturedTexts().at(index);
+    // QRegExp.setMinimal --> QRegularExpression InvertedGreedinessOption
+    re.setPatternOptions(QRegularExpression::InvertedGreedinessOption);
+    if(contents.contains(re)) {
+        QRegularExpressionMatch ma = re.match(contents);
+        if(ma.hasMatch() && ma.capturedTexts().size() == 3) {
+            varname = ma.capturedTexts().at(index);
         }
     }
     return varname != QString();

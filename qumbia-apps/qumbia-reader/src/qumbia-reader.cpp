@@ -401,7 +401,7 @@ void QumbiaReader::onNewStringMatrix(const QString& src, double timestamp_us, co
     m_refreshCntMap[src]++;
     m_print_extra1(da);
     printf("[%s] [\e[1;33mstring\e[0m,matrix] \n{ %s ",
-           qstoc(makeTimestamp(timestamp_us)), m.repr(m_conf.truncate).c_str());
+           qstoc(makeTimestamp(timestamp_us)), m.repr_str(m_conf.truncate).c_str());
     printf("}\n");
     m_print_extra2(da);
     m_checkRefreshCnt(sender());
@@ -691,9 +691,9 @@ void QumbiaReader::m_createReaders(const QStringList &srcs)  {
 void QumbiaReader::m_print_list_props(const CuData &pr)
 {
     const CuVariant &plist = pr[CuDType::Keys];  // pr["keys"]
-    const std::vector<std::string> vp = plist.toStringVector();
+    const QuStringList& vp = plist.toStringVector();
 
-    foreach(QuString p, vp) {
+    foreach(const QString p, vp) {
         printf("   \e[1;32m%-25s\e[0m --> \e[1;3m%s\e[0m\n", qstoc(p),
                pr[p.toStdString()].toString().c_str());
     }

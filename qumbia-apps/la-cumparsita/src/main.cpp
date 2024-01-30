@@ -3,11 +3,7 @@
 #include <QtDebug>
 
 #include <X11/Xlib.h>
-#include <QX11Info>
 #include <QMessageBox>
-
-#define CVSVERSION "$Name:  $"
-
 
 int main(int argc, char *argv[]) {
     // Qt bug: source is set twice because of double setProperty invocation (type QString):
@@ -22,8 +18,6 @@ int main(int argc, char *argv[]) {
     QuApplication *qu_app = new QuApplication( argc, argv );
     qu_app->setOrganizationName("elettra");
     qu_app->setApplicationName("cumparsita");
-    QString version(CVSVERSION);
-    qu_app->setApplicationVersion(version);
     qu_app->setProperty("author", "Giacomo");
     qu_app->setProperty("mail", "giacomo.strangolino@elettra.eu");
     qu_app->setProperty("phone", "0403758073");
@@ -46,10 +40,11 @@ int main(int argc, char *argv[]) {
         w->show();
 
         /* register to window manager */
-        if(QX11Info::isPlatformX11()) {
-            Display *disp = QX11Info::display();
+        Display *display = XOpenDisplay(nullptr);
+        if(display) {
+            // Display *disp = QX11Info::display();
             Window root_win = (Window) w->winId();
-            XSetCommand(disp, root_win, argv, argc);
+            XSetCommand(display, root_win, argv, argc);
         }
 
         ret = qu_app->exec();

@@ -7,7 +7,7 @@
 #include <QtDebug>
 #include <QString>
 #include <QTextStream>
-#include "conf.h"
+#include <QRegularExpression>
 
 Defs::Defs()
 {
@@ -38,12 +38,11 @@ bool Defs::guessFromSources()
 {
     int pos;
     bool ok = true;
-    int clpos;
     Expand ex;
     QString re_pattern, classnam;
     CustomClass cc;
     QStringList customC = QStringList() << "reader" << "writer" << "pool";
-    QRegExp classnam_re("class\\s+([A-Za-z0-9_]+)\\s*:\\s*public\\s+");
+    QRegularExpression classnam_re("class\\s+([A-Za-z0-9_]+)\\s*:\\s*public\\s+");
     QList<SearchDirInfo> sdi = m_srcd_infoset.getDirInfoList(SearchDirInfoSet::Source);
     foreach(SearchDirInfo s, sdi)
     {
@@ -57,15 +56,15 @@ bool Defs::guessFromSources()
                     ex = m_objectmap.value(cust);
                     if(ex.autoDetect()) {
                         re_pattern = ex.autoDetectRegexp();
-                        clpos = classnam_re.indexIn(s);
-                        if(clpos > -1) {
-                            classnam = classnam_re.cap(1);
+                        QRegularExpressionMatch ma = classnam_re.match(s);
+                        if(ma.hasMatch() && ma.capturedTexts().size() > 1) {
+                            classnam = ma.capturedTexts().at(1);
                             // regexp pattern in xml contains %1 placeholder
                             // example: "(%1)\(.*(Cumbia\s*\*).*(CuControlsWriterFactoryI).*\);"
-                            QRegExp re(QString(re_pattern).arg(classnam));
-                            pos = re.indexIn(s);
+                            QRegularExpression re(QString(re_pattern).arg(classnam));
+                            ma = re.match(s);
                             qDebug() << __FUNCTION__ << "auto detect: searching custom classes " << classnam << "in " << fi.fileName() << "pos:" << pos;
-                            if(pos > -1) {
+                            if(ma.hasMatch()) {
                                 ex.object = classnam;
                                 ok = !m_objectmap.contains(classnam);
                                 if(ok)
@@ -350,7 +349,7 @@ bool Defs::loadLocalConf(const QString &fname)
         line = line.trimmed();
         if(!line.startsWith("#"))
         {
-            QStringList parts = line.split(QRegExp("\\s*,\\s*"));
+            QStringList parts = line.split(QRegularExpression("\\s*,\\s*"));
             if(parts.size() > 2)
             {
                 QString facname = parts.at(1);

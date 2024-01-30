@@ -14,6 +14,7 @@
 #include <QTimer>
 #include <QtDebug>
 #include <QApplication>
+#include <QRegularExpression>
 
 #define MARGIN 0.1
 #define MIN_MARGIN 1
@@ -51,7 +52,7 @@ QSize ENumeric::minimumSizeHint() const
 int ENumeric::neededWidth() const
 {
     QFontMetrics fm(font());
-    return fm.width('X') * digits + 4 + fm.width("+") + fm.width(".") + 4;
+    return fm.horizontalAdvance('X') * digits + 4 + fm.horizontalAdvance("+") + fm.horizontalAdvance(".") + 4;
 }
 
 int ENumeric::neededHeight() const
@@ -65,7 +66,7 @@ void ENumeric::clearContainers()
     if (box)
     {
         labels.clear();
-        foreach(QWidget *child, this->findChildren<QWidget *>(QRegExp("layoutmember*")))
+        foreach(QWidget *child, this->findChildren<QWidget *>(QRegularExpression("layoutmember*")))
             delete child;
         delete box;
     }
@@ -82,7 +83,7 @@ void ENumeric::init()
 
     box = new QGridLayout(this);
     box->setSpacing(0);
-    box->setMargin(1);
+    box->setContentsMargins(1,1,1,1);
     bup = new QButtonGroup(this);
     bdown = new QButtonGroup(this);
     for (int i = 0; i < digits; i++)
@@ -312,7 +313,7 @@ void ENumeric::resizeEvent(QResizeEvent *e)
     if (temp)
     {
         QPixmap pix(temp->size());
-        pix.fill(palette().color(QPalette::Background));
+        pix.fill(palette().color(QPalette::Window));
         QPainter p(&pix);
         p.setRenderHint(QPainter::Antialiasing);
         hmargin = (int) (pix.width() * MARGIN);
@@ -327,7 +328,7 @@ void ENumeric::resizeEvent(QResizeEvent *e)
         poly.setPoint(1, w - hmargin, h - vmargin);
         poly.setPoint(2, hmargin, h - vmargin);
         QPen	pen;
-        pen.setColor(palette().color(QPalette::Foreground));
+        pen.setColor(palette().color(QPalette::Text)); // was Foreground in Qt5
         p.setPen(pen);
         QLinearGradient linearGradient(0, 0, w, h);
         linearGradient.setColorAt(0.0, palette().color(QPalette::Light));
@@ -346,7 +347,7 @@ void ENumeric::resizeEvent(QResizeEvent *e)
             }
         }
         //QPixmap pix2 = pix.transformed(QMatrix().rotate(180)).transformed(QMatrix().translate(-20,-20));
-        QPixmap pix2 = pix.transformed(QMatrix().rotate(-180));
+        QPixmap pix2 = pix.transformed(QTransform().rotate(-180));
         foreach (QAbstractButton* but, bdown->buttons())
         {
             temp = qobject_cast<QPushButton *>(but);
@@ -399,8 +400,7 @@ void ENumeric::setDisabled(bool b)
     update();
 }
 
-void ENumeric::showEvent(QShowEvent *e)
-{
+void ENumeric::showEvent(QShowEvent *) {
     QTimer::singleShot(200, this, SLOT(valueUpdated()));
 }
 

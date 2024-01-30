@@ -7,6 +7,7 @@
 #include <QMap>
 #include <QMultiMap>
 #include <QtDebug>
+#include <QRegularExpression>
 
 #define qstoc(x) 			 	x.toStdString().c_str()
 
@@ -199,7 +200,7 @@ public:
     SearchDirInfo(const QString& dirnam, const QString& filters)
     {
         m_name = dirnam;
-        m_filters = filters.split(QRegExp("\\s+"));
+        m_filters = filters.split(QRegularExpression("\\s+"));
     }
 
     QString name() const { return m_name; }

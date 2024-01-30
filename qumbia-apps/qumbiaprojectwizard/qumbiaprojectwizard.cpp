@@ -290,7 +290,7 @@ void QumbiaProjectWizard::create()
                 if(fname.endsWith(".ui"))
                     addProperties(contents);
                 if(fname.endsWith(".pro")) {
-                    QRegExp re("contains\\(ANDROID_TARGET_ARCH,armeabi-v7a\\)\\s*\\{.*\\}");
+                    QRegularExpression re("contains\\(ANDROID_TARGET_ARCH,armeabi-v7a\\)\\s*\\{.*\\}");
                     if(contents.contains(re)) {
                         contents.replace(re, QString("contains(ANDROID_TARGET_ARCH,armeabi-v7a)"
                                                      " {\n\tANDROID_EXTRA_LIBS = \\\n%1}").arg(m_formatAndroidLibs()));
@@ -308,7 +308,7 @@ void QumbiaProjectWizard::create()
 
 #ifdef PALETTE_SNIPPET_FILE
                 // cupalette
-                if(fname.contains(QRegExp(".*main.*.cpp"))) {
+                if(fname.contains(QRegularExpression(".*main.*.cpp"))) {
                     CuEPaletteProcess pp;
                     if(!pp.process(PALETTE_SNIPPET_FILE, contents, ui->gbPalette))
                         QMessageBox::critical(this, "Error opening palette snippet file",
@@ -360,9 +360,7 @@ void QumbiaProjectWizard::create()
                 break;
             }
         }
-
         m_launchApps(project_path);
-
         if(ui->cbCloseAfterCreate->isChecked())
             close();
     }
@@ -376,7 +374,7 @@ void QumbiaProjectWizard::checkText(const QString &txt)
     bool valid = true;
     QString checkType = sender()->property("checkContents").toString();
     if(checkType == "project_name")
-        valid = !txt.isEmpty() && !txt.contains(QRegExp("\\s+"));
+        valid = !txt.isEmpty() && !txt.contains(QRegularExpression("\\s+"));
     else if(checkType == "not_empty")
         valid = !txt.isEmpty();
     else if(checkType == "email")
@@ -810,7 +808,11 @@ void QumbiaProjectWizard::m_launchApps(const QString& path)
     {
         if(le->isEnabled() && !le->text().isEmpty())
         {
-            QStringList cmdline = le->text().split(QRegExp("\\s+"), QString::SkipEmptyParts);
+#if QT_VERSION >= QT_VERSION_CHECK(5,15,0)
+            QStringList cmdline = le->text().split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
+#else
+            QStringList cmdline = le->text().split(QRegularExpression("\\s+"), QString::SkipEmptyParts);
+#endif
             QStringList args(cmdline);
 
             if(cmdline.size() > 1)

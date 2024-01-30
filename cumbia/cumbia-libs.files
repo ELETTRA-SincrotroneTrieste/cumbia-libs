@@ -1,5 +1,7 @@
 src/lib/cuactivity.cpp
 src/lib/cuactivity.h
+src/lib/cuperiodicactivity.cpp
+src/lib/cuperiodicactivity.h
 src/lib/cuactivityevent.cpp
 src/lib/cuactivityevent.h
 src/lib/cucontinuousactivity.cpp

@@ -519,7 +519,7 @@ if [ $clean -eq 1 ]; then
     for x in "${qmake_p[@]}"; do
         cd $DIR/../${x}
         echo -e "\e[1;33m\n*\n* CLEAN project ${x}...\n*\e[0m"
-        qmake "INSTALL_ROOT=$build_dir" "prefix=$install_prefix"  && make distclean
+        qmake6 "INSTALL_ROOT=$build_dir" "prefix=$install_prefix"  && make distclean
 
         ## Back to topdir!
         cd $topdir
@@ -539,7 +539,7 @@ if [ $clean -eq 1 ]; then
                 # a .pro file exists
                 if [ -f $pro_file ]; then
                         echo -e "\e[1;33m\n*\n* CLEAN project ${sd}...\n*\e[0m"
-                        qmake "INSTALL_ROOT=$build_dir" "prefix=$install_prefix"  && make distclean
+                        qmake6 "INSTALL_ROOT=$build_dir" "prefix=$install_prefix"  && make distclean
 
                 fi # -f $pro_file
                 cd ..
@@ -678,7 +678,7 @@ for x in "${qmake_p[@]}"; do
                 ##
                 ## build and install under build_dir
                 ##
-                qmake "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make  -j5
+                qmake6 "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make  -j5
 		if [ $? -ne 0 ]; then
 			exit 1
 		fi
@@ -706,7 +706,7 @@ for x in "${qmake_p[@]}"; do
 		if [ -d doc ]; then
 			rm -rf doc
 		fi
-                qmake "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make doc
+                qmake6 "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make doc
 		if [ $? -ne 0 ]; then
 			echo -e "\e[1;36m\n*\n* BUILD DOCS project ${x} has no \"doc\" target...\n*\e[0m\n"
 		fi
@@ -767,7 +767,7 @@ for x in "${qmake_subdir_p[@]}"; do
 			#
                         if [ $build -eq 1 ]; then
                                 echo -e "\e[1;32m\n*\n* BUILD project ${sd}...\n*\e[0m"
-                                qmake "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make -j5  && make install
+                                qmake6 "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make -j5  && make install
                                 if [ $? -ne 0 ]; then
                                         exit 1
                                 else
@@ -782,7 +782,7 @@ for x in "${qmake_subdir_p[@]}"; do
 					rm -rf doc
 				fi
 			
-                                qmake "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make doc
+                                qmake6 "INSTALL_ROOT=$build_dir"  "prefix=$install_prefix"  && make doc
 				if [ $? -ne 0 ]; then
 					echo -e "\e[1;36m\n*\n* BUILD DOCS project ${sd} has no \"doc\" target...\n*\e[0m\n"
 				else

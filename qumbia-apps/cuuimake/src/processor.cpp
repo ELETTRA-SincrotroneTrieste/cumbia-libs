@@ -33,7 +33,6 @@ bool Processor::expand(const Substitutions& subs, const QMap<QString,
     }
 
     QTextStream in(&f);
-    int pos = -1;
     QStringList list;
     QString line;
     QString expanded_ui_h;
@@ -43,6 +42,7 @@ bool Processor::expand(const Substitutions& subs, const QMap<QString,
     QString class_name;
     QString comment;
     int i;
+    QRegularExpressionMatch ma;
     while (!in.atEnd())
     {
         // The returned line has no trailing end-of-line characters ("\n" or "\r\n")
@@ -51,22 +51,21 @@ bool Processor::expand(const Substitutions& subs, const QMap<QString,
         {
             bool isSetupUi = false;
             // match and capture "new QuLabel(parentname);" \s*=\s*new\s+QuLabel\(([A-Za-z_0-9]+)\)
-            QRegExp re(QString("\\s*=\\s*new\\s+%1\\(([A-Za-z_0-9]+)\\);").arg(objectnam));
-            re.setMinimal(true);
-            pos = re.indexIn(line);
-            if(pos < 0)
-            {
+            QRegularExpression re(QString("\\s*=\\s*new\\s+%1\\(([A-Za-z_0-9]+)\\);").arg(objectnam));
+            re.setPatternOptions(QRegularExpression::InvertedGreedinessOption);
+            ma = re.match(line);
+            if(!ma.hasMatch()) {
                 // expand setupUi
                 re.setPattern(QString("\\s*void\\s*%1\\(([A-Za-z_0-9\\s\\*]*)\\)").arg(objectnam));
-                pos = re.indexIn(line);
-                isSetupUi = pos > -1;
-                if(pos > -1)
+                ma = re.match(line);
+                isSetupUi = ma.hasMatch();
+                if(ma.hasMatch())
                     qDebug() << __FUNCTION__ << "DETECTED setupUI regex";
             }
 
-            if( pos > -1 && !line.contains("//") )
+            if( ma.hasMatch() && !line.contains("//") )
             {
-                list = re.capturedTexts();
+                list = ma.capturedTexts();
                 if(list.size() == 2) // full match [0] and capture [1]
                 {
                     expanded_params = list.at(1);
@@ -110,7 +109,7 @@ bool Processor::expand(const Substitutions& subs, const QMap<QString,
                     qDebug() << __FUNCTION__ << "regexp matches " << list.size() << "(should be 2)";
             }
         }
-        if(pos < 0)
+        if( ! ma.hasMatch())
             expanded_ui_h += line + "\n";
 
     } // while (!in.atEnd)
@@ -172,7 +171,7 @@ QMap<QString, bool> Processor::findUI_H(const SearchDirInfoSet &dirInfoSet)
         QFileInfoList ui_hfinfol = wd2.entryInfoList(di.filters(), QDir::Files);
         foreach(QFileInfo fi, ui_hfinfol)
         {
-            if(fi.fileName().contains(QRegExp("ui_[A-Za-z_0-9]+\\.h")))
+            if(fi.fileName().contains(QRegularExpression("ui_[A-Za-z_0-9]+\\.h")))
             {
                 ui_h_files << fi.fileName();
                 if(!oldest_ui_h_modified.isValid() || fi.lastModified() < oldest_ui_h_modified)
@@ -213,7 +212,7 @@ int Processor::remove_UI_H(const SearchDirInfoSet &dirInfoSet)
         QFileInfoList ui_hfinfol = wd2.entryInfoList(di.filters(), QDir::Files);
         foreach(QFileInfo fi, ui_hfinfol)
         {
-            if(fi.fileName().contains(QRegExp("ui_[A-Za-z_0-9]+\\.h")))
+            if(fi.fileName().contains(QRegularExpression("ui_[A-Za-z_0-9]+\\.h")))
             {
                 bool ok = wd2.remove(fi.fileName());
                 if(ok) remcnt++;

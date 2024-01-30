@@ -45,8 +45,8 @@ Options::Options(const QStringList& args)
 
     // Settings from QSettings
     QSettings s;
-    QRegExp make_j_re("\\-j[0-9]{1,2}");
-    QRegExp re(LIST_PARAM_RE);
+    QRegularExpression make_j_re("\\-j[0-9]{1,2}");
+    QRegularExpression re(LIST_PARAM_RE);
     foreach(QString hk, helpKeys)
     {
         if(hk.startsWith("--") && hk.contains(re)) {
@@ -79,7 +79,7 @@ Options::Options(const QStringList& args)
     // command line arguments override QSettings
     foreach(QString a, params)
     {
-        if(a.startsWith("--") && a.contains(QRegExp(LIST_PARAM_RE)))
+        if(a.startsWith("--") && a.contains(QRegularExpression(LIST_PARAM_RE)))
         {
             list = a.split("=");
             key = list.first().remove("--");
@@ -152,8 +152,8 @@ void Options::printOptions(const CuUiMake &cm, const QStringList &theseOptions) 
 {
     bool plain_text = m_map["plain-text-output"].toBool();
     cm.print(CuUiMake::Conf, false, plain_text, "%s options:\n", qstoc(qApp->applicationName()));
-    QRegExp re(LIST_PARAM_RE);
-    QRegExp make_j_re("\\-j[0-9]{1,2}");
+    QRegularExpression re(LIST_PARAM_RE);
+    QRegularExpression make_j_re("\\-j[0-9]{1,2}");
 
     QStringList optionNames;
     if(!theseOptions.isEmpty())

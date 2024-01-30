@@ -287,6 +287,7 @@ public:
 
 	char **to_C_charP() const;
     void *toVoidP() const;
+    void *data() const;
 
     template<typename T> CuMatrix<T> toMatrix() const;
     template<typename T> CuMatrix<T> *matrix_ptr() const;

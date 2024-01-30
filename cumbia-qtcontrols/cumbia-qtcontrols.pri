@@ -12,6 +12,10 @@ exists(../cumbia-qt.prf) {
 
 QT       += widgets
 
+greaterThan(QT_VERSION, 6) {
+    QT +=  openglwidgets
+}
+
 wasm-emscripten {
 # library is compiled statically
 # qwt needs QSvgRenderer symbols
@@ -151,6 +155,7 @@ wasm-emscripten {
         # qwt for qt6
         else:packagesExist(Qt6Qwt6){
             PKGCONFIG += Qt6Qwt6
+		message("qwt6 for QT6")
             QWT_PKGCONFIG = Qt6Qwt6
         }
         else:packagesExist(Qt5Qwt6){
@@ -217,11 +222,6 @@ SHAREDIR = $${INSTALL_ROOT}/share
 unix:INCLUDEPATH += \
     $${CUMBIA_QTCONTROLS_INCLUDES} \
 
-
-unix {
-    INCLUDEPATH += $${QWT_INCLUDES} \
-    $${QWT_INCLUDES_USR}
-}
 
 unix:LIBS +=  \
     -L$${CUMBIA_QTCONTROLS_LIBDIR} -l$${cumbia_qtcontrols_LIB}

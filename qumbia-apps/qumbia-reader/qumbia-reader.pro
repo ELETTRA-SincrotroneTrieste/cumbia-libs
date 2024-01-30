@@ -8,7 +8,6 @@ exists ($${INSTALL_ROOT}/include/quapps/quapps.pri) {
     error("file $${INSTALL_ROOT}/include/quapps/quapps.pri not found")
 }
 
-
 CONFIG += debug
 
 CONFIG+=link_pkgconfig

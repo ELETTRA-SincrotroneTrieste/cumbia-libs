@@ -1,8 +1,8 @@
 #include "cutangoregisterengine.h"
 #include "cutcontrolswriter.h"
+#include "cutcontrolsreader.h"
 #include <cutthread.h>
 #include <qthreadseventbridge.h>
-#include <cutcontrolsreader.h>
 #include <cutango-world.h>
 #include <qthreadseventbridgefactory.h>
 

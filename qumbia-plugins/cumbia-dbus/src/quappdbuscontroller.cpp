@@ -38,7 +38,11 @@ QStringList QuAppDBusController::args_noPath(const QStringList &args) const
     {
         QString exe = args.first();
         if(exe.count('/') > 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5,15,0)
+            exe = exe.split('/', Qt::SkipEmptyParts).last();
+#else
             exe = exe.split('/', QString::SkipEmptyParts).last();
+#endif
         ret << exe;
     }
     for(int i = 1; i < args.size(); i++)

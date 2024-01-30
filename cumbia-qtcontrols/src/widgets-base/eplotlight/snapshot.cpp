@@ -10,7 +10,7 @@
 bool PlotSnapshot::grab(QWidget *w)
 {
   bool ret = true;
-  QPixmap pix = QPixmap::grabWidget(w);
+  QPixmap pix = w->grab();
   if(!pix.isNull())
   {
 	QString fileName = QFileDialog::getSaveFileName(w, "Save picture as...", QDir::homePath(), "Images (*.png *.xpm *.jpg)");
@@ -26,7 +26,7 @@ bool PlotSnapshot::grab(QWidget *w)
 
 void PlotSnapshot::copy(QWidget *w)
 {
-  QPixmap pix = QPixmap::grabWidget(w);
+  QPixmap pix = w->grab();
   if(!pix.isNull())
   {
 	QClipboard *clipboard = QApplication::clipboard();

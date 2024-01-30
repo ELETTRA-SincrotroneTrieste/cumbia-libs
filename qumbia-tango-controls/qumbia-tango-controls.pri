@@ -89,6 +89,10 @@ linux|freebsd|openbsd{
         PKGCONFIG += qwt
         QWT_PKGCONFIG = qwt
     }
+    else:packagesExist(Qt6Qwt6){
+        PKGCONFIG += Qt6Qwt6
+        QWT_PKGCONFIG = Qt6Qwt6
+    }
     else:packagesExist(Qt5Qwt6){
         PKGCONFIG += Qt5Qwt6
         QWT_PKGCONFIG = Qt5Qwt6

@@ -20,10 +20,11 @@ class CuAddPollActionEvent : public CuActivityEvent
 public:
     enum MyType { AddPollAction = CuActivityEvent::User + 9 };
 
-    CuAddPollActionEvent(const TSource &t, CuTangoActionI * a);
+    CuAddPollActionEvent(const TSource &t, CuTangoActionI * a, const CuData& _tag);
 
     TSource tsource;
     CuTangoActionI *action;
+    CuData tag;
 
     // CuActivityEvent interface
 public:
@@ -103,7 +104,6 @@ public:
     CuPollingActivity(const TSource& tsrc,
                       CuDeviceFactory_I *df,
                       const CuData& options,
-                      const CuData& tag,
                       int dataupdpo,
                       int interval);
     ~CuPollingActivity();
@@ -131,7 +131,7 @@ protected:
 private:
     CuPollingActivityPrivate *d;
 
-    void m_registerAction(const TSource &ts);
+    void m_registerAction(const TSource &ts, const CuData &tag);
     void m_unregisterAction(const TSource &ts);
     void m_edit_args(const TSource& src, const std::vector<std::string> &args);
     inline int m_v_attd_remove(const std::string& src, const std::string& attna);

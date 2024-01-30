@@ -4,6 +4,7 @@
 #include <QProcess>
 #include <qudbusplugininterface.h>
 #include <cumacros.h>
+#include <QRegularExpression>
 
 class CuApplicationLauncherPrivate {
 public:
@@ -82,7 +83,7 @@ QString CuApplicationLauncherExtension::getName() const {
 CuData CuApplicationLauncherExtension::execute(const CuData &in, const CuContextI *ctx) {
     d->ctxi = ctx;
     QString cmd = QString::fromStdString(in["command"].toString());
-    QStringList ar = cmd.split(QRegExp("\\s+"));
+    QStringList ar = cmd.split(QRegularExpression("\\s+"));
     if(ar.size() > 0) {
         d->program  = ar.takeFirst();
         d->args = ar;

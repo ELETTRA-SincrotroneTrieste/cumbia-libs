@@ -16,14 +16,16 @@ class CuTimerListener;
 //
 class CuTimerPrivate {
 public:
-    CuTimerPrivate() : m_quit(false), m_pause(false), m_pending(false), m_skip(false),
+    CuTimerPrivate() : m_quit(false), m_pause(false), m_pending(false), /*m_skip(false),*/
         m_timeout(1000), m_thread(nullptr) {}
+
+    ~CuTimerPrivate() {}
 
     std::unordered_map<CuTimerListener *, CuEventLoopService *> m_lis_map;
     bool m_quit, m_pause;
 
     std::atomic_int m_pending;
-    bool m_skip;
+    // bool m_skip;
     int m_timeout;
 
     std::thread *m_thread;
@@ -33,6 +35,8 @@ public:
     int m_id;
     std::string m_name;
 
+private:
+    CuTimerPrivate(const CuTimerPrivate& other) {}
 //    std::chrono::time_point<std::chrono::high_resolution_clock> m_last_start_pt, m_start_pt;
 };
 /*! \brief a timer used by CuThread for periodic execution of an *activity*
@@ -67,6 +71,7 @@ public:
 
     void setName(const std::string& name);
     std::string name() const;
+    bool pending() const;
     int id() const;
     void setTimeout(int millis);
     void setSingleShot(bool single);

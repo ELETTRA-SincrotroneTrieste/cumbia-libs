@@ -5,8 +5,8 @@
 #include <math.h>
 #include <QTextStream>
 #include <QFile>
-#include <QScriptEngine>
-#include <QScriptValue>
+#include <QJSEngine>
+#include <QJSValue>
 #include <QRandomGenerator>
 #include <QtDebug>
 
@@ -47,9 +47,9 @@ void CuRndSinFunctionGen::configure(const CuData &opts)
 void CuRndSinFunctionGen::generate(CuData &res) {
     time_t tp;
     time(&tp);
-    qsrand(tp);
-    double amplitude = static_cast<double>(data->min + qrand() % qRound(data->max));
-    double angle = qrand() % 360;
+    srand(tp);
+    double amplitude = static_cast<double>(data->min + rand() % qRound(data->max));
+    double angle = rand() % 360;
     angle = 2 * M_PI * angle / 360.0;
     res["function"] = "random_sin";
     if(data->size == 1) {
@@ -90,7 +90,7 @@ CuRndJsFunctionGen::CuRndJsFunctionGen(const QString &filenam) {
     }
     else
         m_error = jsf.errorString();
-    m_jse = new QScriptEngine();
+    m_jse = new QJSEngine();
     m_last_result = m_jse->newObject();
 }
 
@@ -131,26 +131,26 @@ void CuRndJsFunctionGen::generate(CuData &res) {
         m_options["size"].to<int>(size);
         m_options[CuDType::Period].to<int>(period);  // m_options["period"]
         ++m_call_cnt;
-        QScriptValue val;
-        QScriptValue callable = m_jse->evaluate(m_jscode, m_filenam);
+        QJSValue val;
+        QJSValue callable = m_jse->evaluate(m_jscode, m_filenam);
         res[CuDType::Err] = callable.isError();  // res["err"]
-        if(callable.isError() || !callable.isFunction()) {
+        if(callable.isError() || !callable.isCallable()) {
             res[CuDType::Message] = std::string("CuRndJsFunctionGen::generate: error evaluating JS function or not callable: line ")  // res["msg"]
                     + "file: " + callable.property("fileName").toString().toStdString() +
-                    ": " + std::to_string(callable.property("lineNumber").toInt32()) + ": " +
+                    ": " + std::to_string(callable.property("lineNumber").toInt()) + ": " +
                     callable.toString().toStdString();
             res[CuDType::Err] = true;  // res["err"]
         }
         else {
-            QScriptValueList args;
+            QJSValueList args;
             args << size << min << max << period << m_call_cnt;
-            val = callable.call(QScriptValue(), args);
+            val = callable.call(args);
             res[CuDType::Err] = val.isError();  // res["err"]
             if(val.isError()) {
                 res[CuDType::Message] = std::string("CuRndJsFunctionGen::generate: error calling JS function: \"" +  // res["msg"]
                                          val.toString().toStdString() +
                                          "\" file \"" + val.property("fileName").toString().toStdString() +
-                                         "\" line " + std::to_string(val.property("lineNumber").toInt32()));
+                                         "\" line " + std::to_string(val.property("lineNumber").toInt()));
             }
             // extract value
             else if(val.isArray()) {
@@ -158,9 +158,9 @@ void CuRndJsFunctionGen::generate(CuData &res) {
                 std::vector<double> vd;
                 std::vector<std::string> vs;
                 std::vector<bool> vb;
-                quint32 len = val.property("length").toUInt32(); // toInt returns quint32!
+                quint32 len = val.property("length").toUInt(); // toInt returns quint32!
                 for(quint32 i = 0; i < len && !array_type_error; i++) {
-                    QScriptValue v = val.property(i);
+                    QJSValue v = val.property(i);
                     if(v.isBool())
                         vb.push_back(v.toBool());
                     if(v.isNumber())

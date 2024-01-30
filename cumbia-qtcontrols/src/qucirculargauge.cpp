@@ -107,12 +107,9 @@ void QuCircularGauge::unsetSource()
     d->context->disposeReader();
 }
 
-void QuCircularGauge::contextMenuEvent(QContextMenuEvent *e)
-{
-    CuContextMenu* m = findChild<CuContextMenu *>();
-    if(!m)
-        m = new CuContextMenu(this);
-    m->popup(e->globalPos(), this);
+void QuCircularGauge::contextMenuEvent(QContextMenuEvent *e) {
+    CuContextMenu* m = new CuContextMenu(this);
+    m->popup(e->globalPos(), this); // menu auto deletes after exec
 }
 
 void QuCircularGauge::m_configure(const CuData& da)

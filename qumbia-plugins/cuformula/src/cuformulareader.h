@@ -6,9 +6,9 @@
 #include <cucontrolsfactories_i.h>
 #include <cudata.h>
 #include <cudataquality.h>
-#include <QScriptValue>
 #include <QEvent>
 #include <QThread>
+#include <QJSValue>
 
 class CuFormulaReaderFactoryPrivate;
 class CumbiaPool;
@@ -73,7 +73,7 @@ public:
 
     std::vector<bool> errors() const;
 
-    CuVariant fromScriptValue(const QScriptValue &v);
+    CuVariant fromScriptValue(const QJSValue &v);
 
     // CuControlsReaderA interface
 public:
@@ -97,10 +97,10 @@ private:
 
     void m_disposeWatchers();
 
-    QScriptValue m_getScalarVal(const CuVariant& v);
-    QScriptValue m_getVectorVal(const CuVariant& v);
+    QJSValue m_getScalarVal(const CuVariant& v);
+    QJSValue m_getVectorVal(const CuVariant& v);
 
-    CuVariant::DataType getScriptValueType(const QScriptValue& v) const;
+    CuVariant::DataType getScriptValueType(const QJSValue& v) const;
 
     void m_notifyFormulaError();
 

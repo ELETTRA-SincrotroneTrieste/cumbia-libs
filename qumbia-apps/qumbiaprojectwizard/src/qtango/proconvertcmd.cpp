@@ -1,6 +1,7 @@
 #include "proconvertcmd.h"
 #include <QFile>
 #include <QTextStream>
+#include <QRegularExpression>
 #include <QtDebug>
 
 ProConvertCmd::ProConvertCmd(const QString& filenam) : FileCmd(filenam)
@@ -30,29 +31,31 @@ QString ProConvertCmd::process(const QString &input)
     QStringList replacements =
             QStringList() << "SOURCES" << "HEADERS"  << "TARGET" << "FORMS";
     foreach(QString r, replacements) {
-        QRegExp in_re(QString("(\\b%1\\s*[\\+]*=\\s*[a-zA-Z0-9/\\s\\\\\\.\\$_]*)(\\n|\\n*$|\\n\\b[A-Za-z0-9]*)").arg(r));
-        QRegExp template_re;
+        QRegularExpression in_re(QString("(\\b%1\\s*[\\+]*=\\s*[a-zA-Z0-9/\\s\\\\\\.\\$_]*)(\\n|\\n*$|\\n\\b[A-Za-z0-9]*)").arg(r));
+        QRegularExpression template_re;
         // template has commented FORMS section: # FORMS    = src/$FORMFILE$
         if(r == "FORMS")
             template_re.setPattern("(# FORMS\\s*[\\+]*=\\s*src/\\$FORMFILE\\$)");
         else
             template_re.setPattern(in_re.pattern());
-        in_pos = in_re.indexIn(input);
-        out_pos = template_re.indexIn(pro_out);
+        QRegularExpressionMatch in_match = in_re.match(input);
+        QRegularExpressionMatch template_re_match = template_re.match(pro_out);
+        in_pos = in_match.capturedStart();
+        out_pos = template_re_match.capturedStart();
         int lineno = pro_out.section(in_re, 0, 0).count("\n") + 1;
 
         qDebug() << __FUNCTION__ << "replacing section " << input << "\n\n\n" << pro_out << "\n\n";
         qDebug() << __FUNCTION__ << "replacing section " << r << in_pos << out_pos;
         m_err = (in_pos < 0 || out_pos < 0);
         if(!m_err) {
-            rep = in_re.cap(1);
+            rep = in_match.captured(1);
             if(r == "FORMS") {
                 rep = m_comment_lines(rep);
                 m_add_ui_h_to_headers(rep, pro_out);
             } else if(r == "TARGET") {
                 rep.remove("bin/"); // template has bin/
             }
-            pro_out.replace(template_re.cap(1), rep);
+            pro_out.replace(template_re_match.captured(1), rep);
             m_log.append(OpQuality("pro file", r, r == "FORMS" ? "# " + r : r, filename(), "replaced", Quality::Ok, lineno));
         }
         if (in_pos < 0)
@@ -98,13 +101,16 @@ QString ProConvertCmd::m_comment_lines(const QString &s)
 }
 
 void ProConvertCmd::m_add_ui_h_to_headers(const QString& forms_block, QString& pro) {
-    QRegExp re("#\\s*FORMS\\s*=\\s*(.*.ui)\\s+");
+    QRegularExpression re("#\\s*FORMS\\s*=\\s*(.*.ui)\\s+");
+    QRegularExpressionMatch ma;
     QString headers =  "HEADERS += \\\n";
     QStringList ui_forms;
-    int pos = 0;
-    while(( pos = re.indexIn(forms_block, pos)) != -1) {
-        ui_forms << re.cap(1);
-        pos += re.matchedLength();
+    ma = re.match(forms_block, 0);
+    int pos = ma.capturedStart();
+    while(pos != -1) {
+        ui_forms << ma.captured(1);
+        ma = re.match(forms_block, ma.capturedEnd());
+        pos = ma.capturedStart();
     }
     QString uih;
     for(int i = 0; i < ui_forms.size(); i++) {
@@ -125,10 +131,10 @@ void ProConvertCmd::m_add_ui_h_to_headers(const QString& forms_block, QString& p
 QString ProConvertCmd::m_remove_comments(const QString &s)
 {
     QString out;
-    QRegExp commentRe("^\\s*(#)+");
+    QRegularExpression commentRe("^\\s*(#)+");
     foreach(QString line, s.split("\n")) {
-        commentRe.indexIn(line);
-        if(commentRe.cap(1).isEmpty())
+        QRegularExpressionMatch ma = commentRe.match(line);
+        if(ma.captured(1).isEmpty())
             out += line + "\n";
     }
     return out;

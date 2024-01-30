@@ -1,5 +1,6 @@
 #include "findreplace.h"
 #include <QTextStream>
+#include <QRegularExpression>
 #include <QFile>
 #include <QtDebug>
 
@@ -11,9 +12,6 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include <QTextEdit>
-
-#include "conversionhealth.h"
-
 
 FindReplace::FindReplace(const QString &id) : FileCmd(id)
 {
@@ -42,22 +40,22 @@ QString FindReplace::process(const QString& input)
         // skip commented lines ^\s+<!\-\-.*\-\->|^<!\-\-.*\-\->|^\s+/\*.*\*/\s*|^/\*.*\*/\s*|^\s+//.*|^//.*
         // "//" "/*" "<!--" first chars in line or
         // ^[spaces only] "//" "/*" "<!--"
-        QRegExp full_line_commentRe("^\\s+<!\\-\\-.*\\-\\->|^<!\\-\\-.*\\-\\->|^\\s+/\\*.*\\*/\\s*|^/\\*.*\\*/\\s*|^\\s+//.*|^//.*");
-
-        if(full_line_commentRe.indexIn(l) >= 0)
+        QRegularExpression full_line_commentRe("^\\s+<!\\-\\-.*\\-\\->|^<!\\-\\-.*\\-\\->|^\\s+/\\*.*\\*/\\s*|^/\\*.*\\*/\\s*|^\\s+//.*|^//.*");
+        QRegularExpressionMatch ma = full_line_commentRe.match(l);
+        if(ma.hasMatch())
             continue;
 
         foreach(Subst su, subs) {
             if(su.m_type == Subst::ReplaceInclude) {
                 QString oldinc = su.m_in;
                 // find and replace qtango include with cumbia include
-                QRegExp oldincre;
+                QRegularExpression oldincre;
                 if(!is_xml)
                     oldincre.setPattern(QString("#include\\s*<(%1)>").arg(oldinc));
                 else
                     oldincre.setPattern(QString("<header>(%1)</header>").arg(oldinc));
-                pos = oldincre.indexIn(l);
-                if(pos > -1) {
+                ma = oldincre.match(l);
+                if(ma.hasMatch()) {
                     Quality::Level q = su.quality;
                     QString message = su.m_comment;
                     out +=  m_comment_line(l, is_xml) + "\n"; // comment the old line
@@ -72,19 +70,19 @@ QString FindReplace::process(const QString& input)
                        newline += m_comment_add(su.m_comment, is_xml);
                     }
                     else
-                        newline = m_comment_line("no cumbia include replacement found for " + oldincre.cap(1), is_xml);
+                        newline = m_comment_line("no cumbia include replacement found for " + ma.captured(1), is_xml);
                     // write new include or comment
                     out += newline + "\n";
-                    m_log.append(OpQuality("replace include", oldincre.cap(0),
+                    m_log.append(OpQuality("replace include", ma.captured(0),
                                            newline, filename(), message, q, lineno));
                 }
             }
             else if(su.m_type == Subst::MapClass) {
                 QString oldclass = su.m_in;
                 // find and replace qtango include with cumbia include
-                QRegExp oldclre(QString("(%1)\\b").arg(oldclass));
-                pos = oldclre.indexIn(l);
-                if(pos > -1) {
+                QRegularExpression oldclre(QString("(%1)\\b").arg(oldclass));
+                QRegularExpressionMatch ma = oldclre.match(l);
+                if(ma.hasMatch()) {
                     Quality::Level q = su.quality;
                     QString message = su.m_comment;
                     out += m_comment_line(l, is_xml) + "\n"; // comment the old line
@@ -96,22 +94,22 @@ QString FindReplace::process(const QString& input)
                         newline += m_comment_add(su.m_comment, is_xml);
                     }
                     else // leave newline empty so that it's left unchanged. Add a comment
-                        out += m_comment_add("no cumbia class replacement found for QTango " + oldclre.cap(1), is_xml) + "\n";
+                        out += m_comment_add("no cumbia class replacement found for QTango " + ma.captured(1), is_xml) + "\n";
 
                     // write new line
                     if(su.m_include.length() > 0 && q != Subst::Critical)
                         out += newline + "\n";
-                    m_log.append(OpQuality("map class", oldclre.cap(1), replace, filename(), message, q, lineno));
+                    m_log.append(OpQuality("map class", ma.captured(1), replace, filename(), message, q, lineno));
                 }
             }
             else if(su.m_type == Subst::ReplaceLine || su.m_type == Subst::ReplaceExpr) {
                 if(filename() == su.m_file || su.m_file == "*") {
-                    QRegExp re(su.m_in);
-                    re.setMinimal(true);
+                    QRegularExpression re(su.m_in);
+                    re.setPatternOptions(QRegularExpression::InvertedGreedinessOption);
                     Quality::Level q = su.quality;
                     QString message = su.m_comment;
-                    pos = re.indexIn(l);
-                    if(pos > -1) {
+                    QRegularExpressionMatch ma = re.match(l);
+                    if(ma.hasMatch()) {
                         out += m_comment_line(l, is_xml) + "\n"; // comment the old line
                         replace = get_option(su.m_comment, l, su.m_out_options);
                         if(q != Subst::Critical && su.m_type == Subst::ReplaceLine)
@@ -124,7 +122,7 @@ QString FindReplace::process(const QString& input)
 //                                       replace.toStdString().c_str(),
 //                                      re.pattern().toStdString().c_str());
 
-                            newline = oldline.replace(re.cap(1), replace);
+                            newline = oldline.replace(ma.captured(1), replace);
                         }
                         if(q != Subst::Critical)
                             newline += m_comment_add(su.m_comment, is_xml);
@@ -135,7 +133,7 @@ QString FindReplace::process(const QString& input)
                             m_log.append(OpQuality(su.typeStr(), l, newline, filename(), message, q, lineno));
                         }
                         else { // leave newline empty so that it's left unchanged. Add a comment
-                            out += m_comment_add("cannot replace QTango specific line: " + re.cap(1), is_xml) + "\n";
+                            out += m_comment_add("cannot replace QTango specific line: " + ma.captured(1), is_xml) + "\n";
                             m_log.append(OpQuality(su.typeStr(), l, newline, filename(), message, q, lineno));
                         }
                     }
