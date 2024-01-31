@@ -42,7 +42,7 @@ install(
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
 
-export(TARGETS cumbia NAMESPACE cumbia:: FILE cumbiaTargets.cmake)
+export(TARGETS cumbia FILE cumbiaTargets.cmake)
 
 set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
 export(PACKAGE cumbia)

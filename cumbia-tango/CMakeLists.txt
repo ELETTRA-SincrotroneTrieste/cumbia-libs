@@ -56,7 +56,7 @@ install(
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
 
-export(TARGETS cumbia-tango NAMESPACE cumbia-tango:: FILE cumbia-tangoTargets.cmake)
+export(TARGETS cumbia-tango FILE cumbia-tangoTargets.cmake)
 
 set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
 export(PACKAGE cumbia-tango)
