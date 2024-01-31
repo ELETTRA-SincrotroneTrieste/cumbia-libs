@@ -23,7 +23,7 @@ file(GLOB_RECURSE HEADERS lib/*.h)
 
 add_library(cumbia-tango SHARED  ${SOURCES} ${HEADERS})
 
-target_link_libraries(cumbia-tango PRIVATE cumbia::cumbia)
+target_link_libraries(cumbia-tango PRIVATE cumbia)
 target_link_libraries(cumbia-tango PRIVATE tango)
 
 # in order to have lib and symlinks
