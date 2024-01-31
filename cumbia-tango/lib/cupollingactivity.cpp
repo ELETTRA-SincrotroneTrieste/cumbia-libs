@@ -410,7 +410,7 @@ void CuPollingActivity::execute() {
         d->successfulExecCnt++;
     }
     else if(dev) {
-        perr("%s", std::string("cupollingactivity::execute: read error: " + tangoworld.getLastMessage() + " dev " + d->tdev->getName()).c_str());
+        // perr("%s", std::string("cupollingactivity::execute: read error: " + tangoworld.getLastMessage() + " dev " + d->tdev->getName()).c_str());
         decreasePolling();
     }
     else { // device not defined into database

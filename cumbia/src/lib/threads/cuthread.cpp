@@ -115,8 +115,6 @@ public:
     }
 
     size_t m_tmr_remove(CuActivity *a) {
-        pretty_pri("CuThread.m_tmr_remove\e[0;31mremoving activity %p from tmr_amap\e[0m\n", a);
-
         size_t e = 0;
         if(tmr_amap.find(a) != tmr_amap.end())
             e = tmr_amap.erase(a);
