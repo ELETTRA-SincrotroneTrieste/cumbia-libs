@@ -1,0 +1,9 @@
+# Config.cmake.in
+
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/cumbiaTargets.cmake")
+
+# Set variables specific to your library
+set(MYLIBRARY_INCLUDE_DIRS "@MYLIBRARY_INCLUDE_DIRS@")
+
