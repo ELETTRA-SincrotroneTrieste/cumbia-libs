@@ -6,24 +6,6 @@
 #include <map>
 #include <atomic>
 
-
-
-/*! the class constructor
- *
- * \par example
- * Header file
- * \code
-  class GenericClient : public QWidget
-  {
-    Q_OBJECT
-    public:
-        // ...
-
-    private:
-        CumbiaPool *cu_pool; // to use in combination with CuControlsFactoryPool
-        CuControlsFactoryPool m_ctrl_factory_pool;
- * \endcode
- */
 CuControlsFactoryPool::CuControlsFactoryPool() : d(nullptr) {
 
 }

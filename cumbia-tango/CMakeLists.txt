@@ -24,11 +24,16 @@ file(GLOB_RECURSE HEADERS lib/*.h)
 add_library(cumbia-tango SHARED  ${SOURCES} ${HEADERS})
 
 target_link_libraries(cumbia-tango PRIVATE cumbia)
-target_link_libraries(cumbia-tango PRIVATE tango)
+target_link_libraries(cumbia-tango PRIVATE ${TANGO_DEPENDENCY})
 
 # in order to have lib and symlinks
 set_target_properties(cumbia-tango PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(cumbia-tango PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+set_target_properties(cumbia-tango
+    PROPERTIES
+    PUBLIC_HEADER "${HEADERS}"
+)
 
 target_compile_features(cumbia-tango PUBLIC cxx_std_17)
 
@@ -46,9 +51,7 @@ configure_file(lib/cumbia-tango.pc.cmake.in cumbia-tango.pc @ONLY)
 
 install(TARGETS cumbia-tango EXPORT cumbia-tangoTargets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-
-install(FILES ${HEADERS} DESTINATION include/cumbia-tango)
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/cumbia-tango)
 
 # install pkgconfig file
 install(
