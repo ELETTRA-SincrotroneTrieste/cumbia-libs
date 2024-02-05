@@ -188,6 +188,7 @@ HEADERS += cumbiaqtcontrols.h\
     src/widgets-base/eapplynumeric.h \
     src/widgets-base/earrow.h \
     src/widgets-base/eflag.h \
+    src/widgets-base/eabstractgauge.h \
     src/widgets-base/egauge.h \
     src/widgets-base/elabel.h \
     src/widgets-base/elettracolors.h \
@@ -276,6 +277,7 @@ SOURCES += \
     src/widgets-base/eapplynumeric.cpp \
     src/widgets-base/earrow.cpp \
     src/widgets-base/eflag.cpp \
+    src/widgets-base/eabstractgauge.cpp \
     src/widgets-base/egauge.cpp \
     src/widgets-base/elabel.cpp \
     src/widgets-base/elettracolors.cpp \
