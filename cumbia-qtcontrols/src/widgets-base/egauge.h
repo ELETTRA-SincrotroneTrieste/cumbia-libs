@@ -1,7 +1,7 @@
 #ifndef _EGAUGE_H
 #define _EGAUGE_H
 
-#include "eabstractgauge.h"
+#include <eabstractgauge.h>
 #include <math.h>
 #include <QWidget>
 
