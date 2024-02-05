@@ -24,7 +24,7 @@ file(GLOB_RECURSE HEADERS lib/*.h)
 add_library(cumbia-tango SHARED  ${SOURCES} ${HEADERS})
 
 target_link_libraries(cumbia-tango PUBLIC cumbia)
-target_link_libraries(cumbia-tango PUBLIC ${TANGO_DEPENDENCY})
+target_link_libraries(cumbia-tango PUBLIC Tango::Tango)
 
 # in order to have lib and symlinks
 set_target_properties(cumbia-tango PROPERTIES VERSION ${PROJECT_VERSION})
