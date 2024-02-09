@@ -16,6 +16,7 @@ class CuTThreadDevicesPrivate {
 public:
     CuTThreadDevicesPrivate() : mythread(0) {}
     ~CuTThreadDevicesPrivate() {
+        printf("\e[1;31mX\e[0m ~CuTThreadDevicesPrivate\n");
         int refcnt = -1;
         for(std::unordered_map<std::string, TThDevData>::iterator it = m_devmap.begin(); it != m_devmap.end(); ++it) {
             refcnt = it->second.tdevice->removeRef();
@@ -39,6 +40,7 @@ CuTThreadDevices::CuTThreadDevices() {
 }
 
 CuTThreadDevices::~CuTThreadDevices() {
+    printf("\e[1;31mX\e[0m ~CuTThreadDevices\n");
     delete d;
 }
 
