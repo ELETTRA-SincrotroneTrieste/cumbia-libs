@@ -18,13 +18,13 @@ public:
     ~CuTThreadDevicesPrivate() {
         int refcnt = -1;
         for(std::unordered_map<std::string, TThDevData>::iterator it = m_devmap.begin(); it != m_devmap.end(); ++it) {
-            refcnt = it->second->tdevice->removeRef();
+            refcnt = it->second.tdevice->removeRef();
             if(refcnt == 0) {
                 printf("\e[1;31mXXX \e[0m~CuTThreadDevicesPrivate: deleting dev for %s\n", it->first.c_str());
-                delete it->second->tdevice;
+                delete it->second.tdevice;
             }
             else {
-                 printf("\e[0;35mXXX  still %d references to %s\n", it->first.c_str());
+                 printf("\e[0;35mXXX  still %d references to %s\n",  refcnt, it->first.c_str());
             }
         }
     }
