@@ -49,8 +49,8 @@ CuTConfigActivity::CuTConfigActivity(const TSource& ts,
     setFlag(CuActivity::CuADeleteOnExit, true);
 }
 
-CuTConfigActivity::~CuTConfigActivity()
-{
+CuTConfigActivity::~CuTConfigActivity() {
+    pdelete("CuTConfigActivity %p", this);
     delete d->tcexecutor;
     delete d;
 }

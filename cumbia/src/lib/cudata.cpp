@@ -123,7 +123,6 @@ CuData::CuData(const size_t key, const CuVariant &v) {
  * new object
  */
 CuData::CuData(const CuData &other) {
-//    pretty_pri("%s", datos(other));
     d_p = other.d_p;
     d_p->ref();  // increment ref counter (impl. sharing)
 }
@@ -144,17 +143,12 @@ CuData::CuData(CuData &&other) {
  * @param other another CuData which values will be copied into this
  */
 CuData &CuData::operator=(const CuData &other) {
-//    auto start = std::chrono::high_resolution_clock::now();
     if(this != &other) {
         other.d_p->ref();
         if(d_p->unref() == 1)
             delete d_p; // with no sharing we would not delete
         d_p = other.d_p;
     }
-//    auto end = std::chrono::high_resolution_clock::now();
-
-//    auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-//    std::cout << "CuData::operator= " << duration.count() << " microseconds" << std::endl;
     return *this;
 }
 
@@ -548,13 +542,13 @@ std::vector<size_t> CuData::idx_keys() const {
             k.push_back(i);
     return k;
 }
+
 void CuData::detach() {
     if(d_p && d_p->load() > 1) {
         d_p->unref();
         d_p = new CuDataPrivate(*d_p); // sets ref=1
     }
 }
-
 
 std::string CuData::s(const CuDType::Key &key) const {
     return d_p->data[key].s();
