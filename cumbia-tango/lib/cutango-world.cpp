@@ -764,7 +764,7 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         //         with data reporting the error.
         //         In that case, the poller must be slowed down
 
-
+        char * leak = new char[1024];
         std::vector<Tango::DeviceAttribute> *devattr = dev->read_attributes(p_v_an);
 
         // auto t2 = std::chrono::high_resolution_clock::now();
@@ -2279,6 +2279,5 @@ std::string CuTangoWorld::prepend_tgproto(const std::string &src) const {
 }
 
 void CuTangoWorld::orb_cleanup() const {
-    printf("\e[1;35mCuTangoWorld.orb_cleanup: calling ApiUtil::cleanup\e[0m\n");
     Tango::ApiUtil::cleanup();
 }
