@@ -2279,5 +2279,6 @@ std::string CuTangoWorld::prepend_tgproto(const std::string &src) const {
 }
 
 void CuTangoWorld::orb_cleanup() const {
+    printf("\e[1;35mCuTangoWorld.orb_cleanup: calling ApiUtil::cleanup\e[0m\n");
     Tango::ApiUtil::cleanup();
 }
