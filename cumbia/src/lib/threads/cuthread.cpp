@@ -535,7 +535,8 @@ void CuThread::run() {
         }
         else if(te->getType() == ThreadEvent::ThreadExit || te->getType() == ThreadEvent::ZeroActivities) {
             // ExitThreadEvent enqueued by mOnActivityExited (foreground thread)
-            destroy = te->getType()  == ThreadEvent::ZeroActivities;
+            destroy = (te->getType()  == ThreadEvent::ZeroActivities);
+            printf("CuThread.run: thread event type %d: deleting thread event\n", te->getType());
             delete te;
             break;
         }
@@ -560,6 +561,7 @@ void CuThread::run() {
     }
     // post destroy event so that it will be delivered in the *main thread*
     if(destroy) {
+        printf("CuThread.run: posting auto destroy event\e[0m\n");
         d->eb->postEvent(new CuThreadAutoDestroyEvent());
     }
 }
@@ -587,6 +589,7 @@ void CuThread::mOnActivityExited(CuActivity *a) {
 void CuThread::m_zero_activities() {
     assert(d->mythread == pthread_self());
     ThreadEvent *zeroa_e = new CuThZeroA_Ev; // auto destroys
+    printf("CuThread.m_zero_activities: pushing event\e[0m\n");
     std::unique_lock lk(d->mu);
     d->eq.push(zeroa_e);
     d->cv.notify_one();
