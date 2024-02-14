@@ -98,6 +98,8 @@ public:
     std::string make_fqdn_src(const std::string &src) const;
     std::string prepend_tgproto(const std::string &s) const;
 
+    void orb_cleanup() const;
+
 private:
     CuTangoWorldPrivate *d;
 

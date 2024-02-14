@@ -2277,3 +2277,7 @@ std::string CuTangoWorld::make_fqdn_src(const string &src) const {
 std::string CuTangoWorld::prepend_tgproto(const std::string &src) const {
     return src.find("tango://") == std::string::npos ? "tango://" + src : src;
 }
+
+void CuTangoWorld::orb_cleanup() const {
+    Tango::ApiUtil::cleanup();
+}

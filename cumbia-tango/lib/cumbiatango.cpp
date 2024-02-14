@@ -61,6 +61,8 @@ CumbiaTango::~CumbiaTango()
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
     af->cleanup();
+    // call ApiUtil::cleanup to shutdown the ORB
+    CuTangoWorld().orb_cleanup();
     delete d;
 }
 
@@ -68,7 +70,6 @@ CumbiaTango::~CumbiaTango()
 // f creates a new CuTangoActionI (CuTReader, CuTaDb, CuTConfiguration, CuTWriter) (cutangoactionfactories.cpp)
 // a->start registers the related activity
 void CumbiaTango::addAction(const TSource &source, CuDataListener *l, const CuTangoActionFactoryI& f) {
-    CuTangoWorld w;
     bool isnew;
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
