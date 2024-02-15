@@ -115,8 +115,6 @@ public:
     }
 
     size_t m_tmr_remove(CuActivity *a) {
-        pretty_pri("CuThread.m_tmr_remove\e[0;31mremoving activity %p from tmr_amap\e[0m\n", a);
-
         size_t e = 0;
         if(tmr_amap.find(a) != tmr_amap.end())
             e = tmr_amap.erase(a);
@@ -165,7 +163,8 @@ public:
                     CuThreadsEventBridge_I *teb,
                     const CuServiceProvider *sp,
                     std::vector<CuThreadInterface *>* thv_p) :
-        alimmap_locked(false), token(tk), eb(teb), se_p(sp), threads_p(thv_p),  thpp(nullptr), thread(nullptr) {
+        alimmap_locked(false), token(tk), eb(teb), se_p(sp), threads_p(thv_p),
+        thpp(nullptr), thread(nullptr), exiting(false) {
 
     }
 
@@ -186,7 +185,7 @@ public:
     CuThPP *thpp;
     std::thread *thread;
     pthread_t mythread;
-
+    bool exiting;
 };
 
 /*! \brief builds a new CuThread
@@ -536,8 +535,6 @@ void CuThread::run() {
         else if(te->getType() == ThreadEvent::ThreadExit || te->getType() == ThreadEvent::ZeroActivities) {
             // ExitThreadEvent enqueued by mOnActivityExited (foreground thread)
             destroy = (te->getType()  == ThreadEvent::ZeroActivities);
-            pretty_pri("CuThread.run: thread event type %d (zero activities is %d): deleting thread event\n",
-                       te->getType(), ThreadEvent::ZeroActivities);
             delete te;
             break;
         }
@@ -562,7 +559,6 @@ void CuThread::run() {
     }
     // post destroy event so that it will be delivered in the *main thread*
     if(destroy) {
-        pretty_pri("CuThread.run: posting auto destroy event\e[0m\n");
         d->eb->postEvent(new CuThreadAutoDestroyEvent());
     }
 }
@@ -589,11 +585,13 @@ void CuThread::mOnActivityExited(CuActivity *a) {
 
 void CuThread::m_zero_activities() {
     assert(d->mythread == pthread_self());
-    ThreadEvent *zeroa_e = new CuThZeroA_Ev; // auto destroys
-    pretty_pri("CuThread.m_zero_activities: pushing event\e[0m\n");
-    std::unique_lock lk(d->mu);
-    d->eq.push(zeroa_e);
-    d->cv.notify_one();
+    if(!d->exiting) {
+        d->exiting = true;
+        ThreadEvent *zeroa_e = new CuThZeroA_Ev; // auto destroys
+        std::unique_lock lk(d->mu);
+        d->eq.push(zeroa_e);
+        d->cv.notify_one();
+    }
 };
 
 /*! @private

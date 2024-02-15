@@ -22,7 +22,7 @@ TDevice::TDevice(const std::string &name)
     try
     {
 	std::string dname = name;
-        printf("\e[1;32m+ DeviceProxy:\e[0m %s\n", dname.c_str());
+        printf("\e[1;32m+ DeviceProxy:\e[0m %s tdevice %p\n", dname.c_str(), this);
         d->dev = new Tango::DeviceProxy(dname);
         time_t tp;
         time(&tp);
@@ -38,7 +38,7 @@ TDevice::TDevice(const std::string &name)
 TDevice::~TDevice()
 {
     if(d->dev) {
-        printf("\e[1;31m- DeviceProxy:\e[0m %s\n", d->name.c_str());
+        printf("\e[1;31m- DeviceProxy:\e[0m %s TDevice %p\n", d->name.c_str(), this);
         delete d->dev;
         d->dev = nullptr;
     }
