@@ -91,9 +91,15 @@ void Cumbia::finish()
     for(std::list<CuServiceI *>::const_iterator it = services.begin(); it != services.end(); ++it)
     {
         CuServiceI *s = (*it);
+        pretty_pri("\e[1;35munregistering service %p type %d '%s'\e[0m", s, s->getType(), s->getName().c_str());
         d->serviceProvider->unregisterService(s->getType());
-        if(!d->serviceProvider->isShared(s->getType()))
+        if(!d->serviceProvider->isShared(s->getType())) {
+            pretty_pri("\e[1;31mdeleting service %p type %d '%s'\e[0m", s, s->getType(), s->getName().c_str());
             delete s;
+        }
+        else
+            pretty_pri("\e[0;35m NOT deleting service %p type %d '%s'\e[0m (\e[1;36mshared\e[0m)", s, s->getType(), s->getName().c_str());
+
     }
     if(d->threadTokenGenerator)
         delete d->threadTokenGenerator;
