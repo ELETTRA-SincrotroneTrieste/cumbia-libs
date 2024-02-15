@@ -93,6 +93,7 @@ CuActionFactoryServiceImpl::CuActionFactoryServiceImpl() {
 }
 
 CuActionFactoryServiceImpl::~CuActionFactoryServiceImpl() {
+    pdelete("CuActionFactoryServiceImpl %p", this);
     delete d;
 }
 
