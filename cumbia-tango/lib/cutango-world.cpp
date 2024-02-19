@@ -763,8 +763,6 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
         //         we enter the catch clause, where the results have to be manually populated
         //         with data reporting the error.
         //         In that case, the poller must be slowed down
-
-        char * leak = new char[1024];
         std::vector<Tango::DeviceAttribute> *devattr = dev->read_attributes(p_v_an);
 
         // auto t2 = std::chrono::high_resolution_clock::now();
