@@ -91,6 +91,7 @@ void QuButton::execute()
     CuVariant args = cu.getArgs(target(), this);
     CuControlsWriterA *w = d->context->getWriter();
     if(w) {
+	pretty_pri("Executing target %s", qstoc(w->target()));
         w->setArgs(args);
         w->execute();
     }
@@ -154,6 +155,7 @@ QString QuButton::target() const {
  */
 void QuButton::onUpdate(const CuData &data)
 {
+	pretty_pri("data: %s", datos(data));
     bool is_config = data.has(CuDType::Type, "property");  // has("type", "property")
     if(!data["is_result"].toBool() && !is_config)
         return;
