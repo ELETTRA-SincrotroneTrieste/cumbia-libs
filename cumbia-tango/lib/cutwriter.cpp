@@ -113,8 +113,10 @@ void CuTWriter::onResult(const CuData &data)
     // iterator can be invalidated if listener's onUpdate unsets source: use a copy
     std::set<CuDataListener *> set_copy = d->listeners;
     std::set<CuDataListener *>::iterator it;
-    for(it = set_copy.begin(); it != set_copy.end(); ++it)
+    for(it = set_copy.begin(); it != set_copy.end(); ++it) {
+        printf("CuTWriter.onResult %s calling onUpdate on %p\n", data.s(CuDType::Src).c_str() , *it);
         (*it)->onUpdate(data);
+    }
     d->cumbia_t->removeAction(d->tsrc.getName(), getType());
     d->cumbia_t->unregisterActivity(d->activity);
     d->listeners.clear();
