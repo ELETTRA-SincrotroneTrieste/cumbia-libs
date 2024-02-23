@@ -156,6 +156,7 @@ void CuTConfigActivity::execute() {
     d->devfa->removeRef(at[CuDType::Device].toString(), threadToken());
     at.merge(std::move(o));
     at.merge(std::move(tag));
+    pretty_pri("publishing result %s\n", datos(at));
     publishResult(at);
 }
 
