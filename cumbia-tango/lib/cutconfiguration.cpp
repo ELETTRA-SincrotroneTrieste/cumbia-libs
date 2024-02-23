@@ -78,8 +78,12 @@ void CuTConfiguration::onResult(const CuData &data) {
     // need a local copy of d->listeners because the iterator may be invalidated by
     // removeDataListener in this same thread by the client from onUpdate
     std::set<CuDataListener *> ls = d->listeners;
-    for(it =  ls.begin(); it !=  ls.end(); ++it)
+    for(it =  ls.begin(); it !=  ls.end(); ++it) {
+        printf("CuTConfiguration::onResult calling onUpdate on %p data %s\n",
+               *it, datos(data));
         (*it)->onUpdate(data);
+        printf("CuTConfiguration::onResult called  onUpdate on %p\n", *it);
+    }
     stop();
     delete this;
 }

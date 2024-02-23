@@ -116,6 +116,7 @@ void CuTWriter::onResult(const CuData &data)
     for(it = set_copy.begin(); it != set_copy.end(); ++it) {
         printf("CuTWriter.onResult %s calling onUpdate on %p\n", data.s(CuDType::Src).c_str() , *it);
         (*it)->onUpdate(data);
+        printf("---- onUpdate called\n");
     }
     d->cumbia_t->removeAction(d->tsrc.getName(), getType());
     d->cumbia_t->unregisterActivity(d->activity);
