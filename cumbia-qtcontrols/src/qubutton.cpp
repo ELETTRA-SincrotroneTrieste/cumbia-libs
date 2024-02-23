@@ -155,7 +155,8 @@ QString QuButton::target() const {
  */
 void QuButton::onUpdate(const CuData &data)
 {
-	pretty_pri("data: %s", datos(data));
+    pretty_pri("\e[1;36m%s target %s\e[0m data: %s", qstoc(objectName()),
+               qstoc(target()), datos(data));
     bool is_config = data.has(CuDType::Type, "property");  // has("type", "property")
     if(!data["is_result"].toBool() && !is_config)
         return;
