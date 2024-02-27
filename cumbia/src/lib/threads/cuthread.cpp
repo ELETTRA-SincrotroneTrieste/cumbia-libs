@@ -171,9 +171,12 @@ public:
     std::queue <ThreadEvent *> eq;
     // activity --> listeners multi map
     std::multimap<const CuActivity *, CuThreadListener *> alimmap;
+    // store new pairs added while inside onEventPosted (while alimmap_locked)
+    // clients may call registerActivity from onEventPosted
+    std::multimap<const CuActivity *, CuThreadListener *> new_alimmap;
     bool alimmap_locked; // lock alimmap (same thread)
     // activities to remove while alimmap_locked shall be placed here
-    std::list<CuActivity *> arem_list;
+    std::list<CuActivity *> arem_list, areg_list;
     std::string token;
     std::mutex mu;
     std::condition_variable cv;
@@ -256,7 +259,11 @@ void CuThread::registerActivity(CuActivity *l, CuThreadListener *tl) {
     assert(d->mythread == pthread_self());
     l->setThreadToken(d->token);
     // add [another] listener to l
-    d->alimmap.insert(std::pair<const CuActivity *, CuThreadListener *>(l, tl));
+    if(!d->alimmap_locked)
+        d->alimmap.insert(std::pair<const CuActivity *, CuThreadListener *>(l, tl));
+    else // save into new_alimmap.
+        d->new_alimmap.insert(std::pair<const CuActivity *, CuThreadListener *>(l, tl)); // onEventPosted later removes from d->alimmap
+
     ThreadEvent *registerEvent = new CuThRegisterA_Ev(l);
     /* need to protect event queue because this method is called from the main thread while
      * the queue is dequeued in the secondary thread
@@ -283,10 +290,8 @@ void CuThread::unregisterActivity(CuActivity *l) {
     assert(d->mythread == pthread_self());
     if(!d->alimmap_locked)
         d->alimmap.erase(l);
-    else {
+    else
         d->arem_list.push_back(l); // onEventPosted later removes from d->alimmap
-//        printf("CuThread::unregisterActivity: \e[1;35mactivity / thread listeners map is currently locked\e[0m\n");
-    }
     ThreadEvent *unregisterEvent = new CuThUnregisterA_Ev(l); // ThreadEvent::UnregisterActivity
     std::unique_lock lk(d->mu);
     d->eq.push(unregisterEvent);
@@ -321,9 +326,11 @@ void CuThread::onEventPosted(CuEventI *event) {
         // clients may register / unregister from within onResult (onProgress)
         d->alimmap_locked = true; // prevent onResult to call unregisterActivity
         const std::multimap<const CuActivity *,  CuThreadListener *>& m = (d->alimmap);
-        std::pair<std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator,
+        const std::pair<std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator,
                     std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator> eqr = m.equal_range(a);
+        int count = 0;
         for(std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator it = eqr.first; it != eqr.second; ++it)  {
+            count++;
             if(re->getType() == CuEventI::CuProgressEv) {
                 it->second->onProgress(re->getStep(), re->getTotal(), re->data);
             }
@@ -331,18 +338,19 @@ void CuThread::onEventPosted(CuEventI *event) {
                 const std::vector<CuData> &vd_ref = re->datalist;
                 it->second->onResult(vd_ref);
             }
-            else if(re->u_data) {
+            else if(re->u_data)
                 it->second->onResult(re->u_data);
-            }
-            else {
-                it->second->onResult(re->data);
-            }
+            else
+                it->second->onResult(re->data);          
         }
 //        if(d->arem_list.size() > 0)
 //            printf("CuThread::onEventPosted \e[1;32m erasing now %ld unregistered activities...\e[0m\n", d->arem_list.size());
         for(std::list<CuActivity *>::const_iterator it = d->arem_list.begin(); it != d->arem_list.end(); ++it)
             d->alimmap.erase(*it);
+        for(std::multimap<const CuActivity *,  CuThreadListener *>::const_iterator it = d->new_alimmap.begin(); it != d->new_alimmap.end(); ++it)
+            d->alimmap.insert(*it);
         d->arem_list.clear();
+        d->new_alimmap.clear();
         d->alimmap_locked = false;
     }
     else if(ty == CuEventI::CuA_ExitEvent) {
