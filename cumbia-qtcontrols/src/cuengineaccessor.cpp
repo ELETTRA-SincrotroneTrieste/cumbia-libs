@@ -13,7 +13,6 @@ public:
 
 CuEngineAccessor::CuEngineAccessor(QObject *parent, CumbiaPool **cu_p_p, CuControlsFactoryPool *fp_p)
     : QObject{parent}, d(new CuEngineAccessorP(cu_p_p, fp_p)) {
-    pretty_pri("cumbia pool %p names %s", *(d->cu_p_p), qstoc(QuStringList((*(d->cu_p_p))->names()).join(",")));
 }
 
 CuEngineAccessor::~CuEngineAccessor() {
