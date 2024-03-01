@@ -49,7 +49,6 @@ void Qu_Reader::setContextOptions(const CuData &options) {
 // before notification (EPICS configuration arrives after first data)
 //
 void Qu_Reader::onUpdate(const CuData &da) {
-    pretty_pri("data:-> %s", datos(da));
     bool signaled = false;
     bool property_only = m_property_only || da.has(CuDType::Activity, "cutadb");  // has("activity", "cutadb")
     CuData data = da.clone();
