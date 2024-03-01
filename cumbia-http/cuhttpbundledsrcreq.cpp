@@ -89,7 +89,11 @@ void CuHttpBundledSrcReq::start(const QUrl &url, QNetworkAccessManager *nam)
     connect(reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
     connect(reply, SIGNAL(finished()), this, SLOT(onReplyFinished()));
     connect(reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, SLOT(onSslErrors(const QList<QSslError> &)));
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+    connect(reply, SIGNAL(errorOccurred(QNetworkReply::NetworkError)), this, SLOT(onError(QNetworkReply::NetworkError)));
+#else
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(onError(QNetworkReply::NetworkError)));
+#endif
     connect(reply, SIGNAL(destroyed(QObject *)), this, SLOT(onReplyDestroyed(QObject *)));
     if(d->blocking) {
         QEventLoop loop;

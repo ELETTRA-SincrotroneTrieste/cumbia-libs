@@ -85,7 +85,12 @@ void CuHttpChannelReceiver::start() {
         connect(d->reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
         connect(d->reply, SIGNAL(finished()), this, SLOT(onReplyFinished()));
         connect(d->reply, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(onSslErrors(QList<QSslError>)));
+
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+        connect(d->reply, SIGNAL(errorOccurred(QNetworkReply::NetworkError)), this, SLOT(onError(QNetworkReply::NetworkError)));
+#else
         connect(d->reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(onError(QNetworkReply::NetworkError)));
+#endif
         connect(d->reply, SIGNAL(destroyed(QObject*)), this, SLOT(onReplyDestroyed(QObject*)));
     }
     else {
@@ -102,7 +107,11 @@ void CuHttpChannelReceiver::start() {
 void CuHttpChannelReceiver::stop() {
     qDebug() << __PRETTY_FUNCTION__ << "stop request : d->reply" << d->reply;
     if(d->reply) {
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+        disconnect(d->reply, SIGNAL(errorOccurred(QNetworkReply::NetworkError)), this, nullptr);
+#else
         disconnect(d->reply, SIGNAL(error(QNetworkReply::NetworkError)), this, nullptr);
+#endif
         disconnect(d->reply, SIGNAL(sslErrors(const QList<QSslError> &)), this, nullptr);
         if(d->reply->isOpen())
             d->reply->close();
