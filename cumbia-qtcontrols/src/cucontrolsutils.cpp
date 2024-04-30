@@ -403,7 +403,6 @@ void CuControlsUtils::msg_short(const CuData &da, char buf[MSGLEN]) {
             len = MSGLEN -3 - p;
         // The functions snprintf() and vsnprintf() write at most size bytes
         // ** including the terminating null byte ('\0') ** to str.
-        pretty_pri("strlen(buf) %d len %ld offset p %d m '%s'", strlen(buf), len, p, m);
         snprintf(buf + p, len + 3, "[%s]", m);
     }
 }
