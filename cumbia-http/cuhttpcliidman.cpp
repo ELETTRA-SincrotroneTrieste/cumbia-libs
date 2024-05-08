@@ -183,7 +183,11 @@ void CuHttpCliIdMan::m_reply_connect(QNetworkReply *reply) {
     connect(reply, SIGNAL(readyRead()), this, SLOT(onNewData()));
     connect(reply, SIGNAL(finished()), this, SLOT(onReplyFinished()));
     connect(reply, SIGNAL(sslErrors(QList<QSslError>)), this, SLOT(onSslErrors(QList<QSslError>)));
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    connect(reply, SIGNAL(errorOccurred(QNetworkReply::NetworkError)), this, SLOT(onError(QNetworkReply::NetworkError)));
+#else
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(onError(QNetworkReply::NetworkError)));
+#endif
     connect(reply, SIGNAL(destroyed(QObject*)), this, SLOT(onReplyDestroyed(QObject*)));
 }
 
