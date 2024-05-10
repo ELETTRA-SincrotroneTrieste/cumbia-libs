@@ -852,27 +852,15 @@ bool CuTangoWorld::read_atts(Tango::DeviceProxy *dev,
 // returns true if one of { CuDType::Value, CuDType::Err, CuDType::Message, CuDType::Quality, CuDType::WriteValue } key values changed
 //
 bool CuTangoWorld::m_cache_upd(CuData &cache_d, const CuData &nd) const {
-    const char keys[5][8] = { CuDType::Value, CuDType::Err, CuDType::Message, CuDType::Quality, CuDType::WriteValue };
+    const CuDType::Key keys[5] = { CuDType::Value, CuDType::Err, CuDType::Message, CuDType::Quality, CuDType::WriteValue };
     short i, changed = 0;
-    const char *key;
     for(i = 0; i < 5; i++) {
-        key = keys[i];
+        const CuDType::Key &key = keys[i];
         if(cache_d[key] != nd[key]) {  // changed: update cache_d
             cache_d[key] = nd[key];
             changed++;
         }
     }
-
-    //    for(const std::string& s : std::vector<std::string>{CuDType::Value, CuDType::Err, CuDType::Message, CuDType::Quality, CuDType::WriteValue} )
-    //        printf("%s %s=%s | ", s.c_str(), cache_d[s].toString().c_str(), nd[s].toString().c_str());
-    //    printf("\n");
-
-    //    if(!changed) {
-    //        printf("CuTangoWorld::m_cache_upd: %s cached value \e[1;33mUNCHANGED\e[0m:\n", datos(nd));
-
-    //    } else {
-    //        printf("CuTangoWorld::m_cache_upd: cached value \e[1;32mCHANGED\e[0m:\n");
-    //    }
     return changed > 0;
 }
 
