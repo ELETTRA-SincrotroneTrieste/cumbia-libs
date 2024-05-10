@@ -361,7 +361,6 @@ void CuPollingActivity::execute() {
     size_t res_offset = 0;
     // time to execute for delayed attributes in future maps?
     m_add_scheduled();
-
     if(dev) { // dev is not null
         results.resize(d->cmds.size() + d->v_attd.size());
         // 1. commands (d->cmdmap)
@@ -461,7 +460,7 @@ void CuPollingActivity::m_registerAction(const TSource& ts, const CuData& _tag) 
     else {
         tag.set(CuDType::Src, ts.getName());
         if(d->extract_flags > CuTangoWorld::ExtractMinimal)
-            tag.set(CuDType::Mode, "P").set(CuDType::Period, d->period);  // set("mode", "P")
+            tag.set(CuDType::Mode, "P").set(CuDType::Period, d->period);
         if(d->data_updpo & CuDataUpdatePolicy::SkipFirstReadUpdate) {
             // start polling the next next execute
             d->m_attd_future.insert(std::pair<unsigned long long int, CuData>(d->updcnt + 2, tag));
@@ -539,7 +538,7 @@ void CuPollingActivity::m_add_scheduled() {
         d->v_attd.push_back(i2->second);
     // remove from future maps
     d->m_attn_future.erase(d->updcnt);
-    d->m_attd_future.equal_range(d->updcnt);
+    d->m_attd_future.erase(d->updcnt);
 }
 
 /** \brief Receive events *from the main thread to the CuActivity thread*.
