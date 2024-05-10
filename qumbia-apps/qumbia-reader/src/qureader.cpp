@@ -52,16 +52,16 @@ void Qu_Reader::onUpdate(const CuData &da) {
     bool signaled = false;
     bool property_only = m_property_only || da.has(CuDType::Activity, "cutadb");  // has("activity", "cutadb")
     CuData data = da.clone();
-    const CuVariant&  v = da[CuDType::Value];  // da["value"]
+    const CuVariant&  v = da[CuDType::Value];
     double ts = -1.0;
-    if(!data[CuDType::Time_us].isNull()) {  // data["timestamp_us"]
-        ts = data[CuDType::Time_us].toDouble();  // data["timestamp_us"]
+    if(!data[CuDType::Time_us].isNull()) {
+        ts = data[CuDType::Time_us].toDouble();
     }
-    else if(!data[CuDType::Time_ns].isNull())  // data["timestamp_ns"]
-        ts = data[CuDType::Time_ns].toDouble();  // data["timestamp_ns"]
+    else if(!data[CuDType::Time_ns].isNull())
+        ts = data[CuDType::Time_ns].toDouble();
 
-    bool hdb_data = data.has(CuDType::Activity, "hdb");  // has("activity", "hdb")
-    if(data.B(CuDType::Err)) { // data.B("err")
+    bool hdb_data = data.has(CuDType::Activity, "hdb");
+    if(data.B(CuDType::Err)) {
         emit newError(source(), ts, QString::fromStdString(da[CuDType::Message].toString()), data);  // da["msg"]
         signaled = true;
     }
