@@ -674,9 +674,9 @@ void QumbiaReader::m_createReaders(const QStringList &srcs)  {
 
         if(m_conf.refresh_limit == 1)
             reader_ctx_options["single-shot"] = true;
-        reader_ctx_options[CuDType::Period] = m_conf.period;  // reader_ctx_options["period"]
+        reader_ctx_options[CuDType::Period] = m_conf.period;
         if(m_conf.property)
-            reader_ctx_options[CuDType::Property] = true;  // reader_ctx_options["property"]
+            reader_ctx_options[CuDType::Property] = true;
         if(m_conf.no_properties)
             reader_ctx_options["no-properties"] = true;
         r->setContextOptions(reader_ctx_options);
