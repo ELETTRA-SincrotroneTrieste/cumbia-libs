@@ -104,7 +104,7 @@ void QuLabel::m_configure(const CuData &da)
 
     for(int i = 0; i < qMax(colors.size(), labels.size()); i++) {
         setEnumDisplay(i, i < labels.size() ? labels[i] : "-",
-                       i < colors.size() ? c = d->palette[colors[i]] : c = QColor(colors[i]));
+                       i < colors.size() ? c = d->palette[colors[i]] : c = QColor(Qt::white));
     }
 }
 
