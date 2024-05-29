@@ -12,6 +12,7 @@
 #include <cucontrolsutils.h>
 #include <QToolTip>
 #include <QHelpEvent>
+#include <cuengineaccessor.h>
 
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
@@ -62,6 +63,16 @@ QuLabel::QuLabel(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPoo
     m_init();
     d->context = new CuContext(cumbia_pool, fpool);
     m_initCtx();
+}
+
+QuLabel::QuLabel(QWidget *w) : QuLabelBase(w), CuDataListener() {
+    CuEngineAccessor *a = w->findChild<CuEngineAccessor *>();
+    if(a) {
+        m_init();
+        d->context = new CuContext(a->cu_pool(), *a->f_pool());
+        m_initCtx();
+    }
+
 }
 
 void QuLabel::m_init()

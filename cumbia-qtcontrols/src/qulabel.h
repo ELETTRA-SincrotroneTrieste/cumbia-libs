@@ -50,8 +50,8 @@ class QuLabel : public QuLabelBase, public CuDataListener, public CuContextI
 
 public:
     QuLabel(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
-
     QuLabel(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    QuLabel(QWidget *w);
 
     virtual ~QuLabel();
 
