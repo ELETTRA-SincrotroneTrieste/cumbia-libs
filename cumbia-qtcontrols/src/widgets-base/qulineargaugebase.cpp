@@ -1254,6 +1254,7 @@ void QuLinearGaugeBase::paintEvent(QPaintEvent *pe)
     if(needle_pos >= 0) {
         drawNeedle(needle_pos, r, p);
     }
+
     if(height() > width())
         p.restore();
 }
@@ -1535,13 +1536,13 @@ QSize QuLinearGaugeBase::sizeHint() const
 
 QSize QuLinearGaugeBase::minimumSizeHint() const
 {
+    int label_space;
     QFont f = font();
     f.setPointSizeF(g_config->minFontSize);
     QFontMetrics fm(f);
-    int txtmaxwid = fm.horizontalAdvance(d->cache.longestLabel);
-    int txtmaxhei = fm.height();
-    int label_space;
-    if(d->labelPosition != NoLabel) {
+    int txtmaxwid = g_config->drawText ? fm.horizontalAdvance(d->cache.longestLabel) : 0;
+    int txtmaxhei = g_config->drawText ?fm.height() : 0;
+    if(d->labelPosition != NoLabel && g_config->drawText) {
         f.setPointSizeF(f.pointSize() * d->labelFontScale);
         fm = QFontMetrics(f);
         label_space = fm.height() * 1.2;
@@ -1549,8 +1550,8 @@ QSize QuLinearGaugeBase::minimumSizeHint() const
     else
         label_space = 0;
     const double wfactor = 1.1;
-    const int w = txtmaxwid * g_config->ticksCount * wfactor;
-    const int h = 2 * txtmaxhei + label_space;
+    const int w = qMax((txtmaxwid * g_config->ticksCount * wfactor), 80.0);
+    const int h = qMax((2 * txtmaxhei + label_space), 20);
     QSize siz;
     orientation() == Qt::Horizontal ? siz = QSize(w, h) : siz = QSize(h, w);
     return siz;
