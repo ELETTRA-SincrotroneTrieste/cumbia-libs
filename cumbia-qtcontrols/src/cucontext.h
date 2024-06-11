@@ -3,6 +3,7 @@
 
 class Cumbia;
 class CumbiaPool;
+class CuEngineAccessor;
 class CuControlsReaderFactoryI;
 class CuControlsWriterFactoryI;
 class CuControlsReaderA;
@@ -49,6 +50,7 @@ public:
     CuContext(Cumbia *cumbia, const CuControlsReaderFactoryI &r_factory);
     CuContext(Cumbia *cumbia, const CuControlsWriterFactoryI &w_factory);
     CuContext(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    CuContext(CuEngineAccessor *a);
 
     virtual ~CuContext();
 

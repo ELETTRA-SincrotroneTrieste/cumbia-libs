@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>169</width>
-    <height>105</height>
+    <width>401</width>
+    <height>307</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,6 +19,55 @@
      <property name="source">
       <string>test/device/1/double_scalar</string>
      </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Tab 1</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QuLabel" name="quLabel_3">
+         <property name="source">
+          <string>$1/long_scalar</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QuLabel" name="quLabel_4">
+         <property name="source">
+          <string>$1/short_scalar</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Tab 2</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QuLabel" name="quLabel_5">
+         <property name="source">
+          <string>$1/boolean_scalar</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QuLabel" name="quLabel_6">
+         <property name="source">
+          <string>$1/double_spectrum_ro</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
    <item>

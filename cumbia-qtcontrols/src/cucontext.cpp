@@ -9,6 +9,7 @@
 #include "culinkstats.h"
 
 #include <QtDebug>
+#include <cuengineaccessor.h>
 
 class CuContextPrivate
 {
@@ -30,8 +31,8 @@ CuContext::CuContext(Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac)
     d->link_stats = new CuLinkStats(10);
     d->cu = cumbia;
     d->r_factory = r_fac.clone();
-    d->w_factory = NULL;
-    d->cu_pool = NULL;
+    d->w_factory = nullptr;
+    d->cu_pool = nullptr;
 }
 
 CuContext::CuContext(Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac)
@@ -40,8 +41,8 @@ CuContext::CuContext(Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac)
     d->link_stats = new CuLinkStats(10);
     d->cu = cumbia;
     d->w_factory = w_fac.clone();
-    d->r_factory = NULL;
-    d->cu_pool = NULL;
+    d->r_factory = nullptr;
+    d->cu_pool = nullptr;
 }
 
 CuContext::CuContext(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
@@ -50,9 +51,20 @@ CuContext::CuContext(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool
     d->link_stats = new CuLinkStats(10);
     d->ctrl_factory_pool = fpool;
     d->cu_pool = cumbia_pool;
-    d->cu = NULL;
-    d->r_factory = NULL;
-    d->w_factory = NULL;
+    d->cu = nullptr;
+    d->r_factory = nullptr;
+    d->w_factory = nullptr;
+}
+
+CuContext::CuContext(CuEngineAccessor *a) {
+    d = new CuContextPrivate;
+    d->link_stats = new CuLinkStats(10);
+    if(a)
+        d->ctrl_factory_pool = *a->f_pool();
+    d->cu_pool = a ? a->cu_pool() : nullptr;
+    d->cu = nullptr;
+    d->r_factory = nullptr;
+    d->w_factory = nullptr;
 }
 
 CuContext::~CuContext()
@@ -71,12 +83,12 @@ CuContext::~CuContext()
 
 bool CuContext::isAuto() const
 {
-    return d->cu_pool != NULL;
+    return d->cu_pool != nullptr;
 }
 
 CuControlsReaderA *CuContext::m_make_reader(const std::string &s, CuDataListener *datal) const
 {
-    Cumbia *cumbia = NULL;
+    Cumbia *cumbia = nullptr;
     CuControlsReaderFactoryI *r_fa;
     if(d->cu_pool && !d->ctrl_factory_pool.isEmpty()) /* pick Cumbia impl */  {
         // pick a cumbia and reader factory implementation from the pool
@@ -90,7 +102,7 @@ CuControlsReaderA *CuContext::m_make_reader(const std::string &s, CuDataListener
     }
 
     if(!cumbia || !r_fa)
-        return NULL;
+        return nullptr;
     if(!d->options.isEmpty()) { // otherwise use options from r_factory
         r_fa->setOptions(d->options);
     }
@@ -99,8 +111,8 @@ CuControlsReaderA *CuContext::m_make_reader(const std::string &s, CuDataListener
 
 CuControlsWriterA *CuContext::m_make_writer(const std::string &s, CuDataListener *datal) const
 {
-    CuControlsWriterA *writer = NULL;
-    Cumbia *cumbia = NULL;
+    CuControlsWriterA *writer = nullptr;
+    Cumbia *cumbia = nullptr;
     CuControlsWriterFactoryI *w_fa;
 
     if(d->cu_pool && !d->ctrl_factory_pool.isEmpty()) /* pick Cumbia impl */
@@ -117,7 +129,7 @@ CuControlsWriterA *CuContext::m_make_writer(const std::string &s, CuDataListener
     }
 
     if(!cumbia || !w_fa)
-        return NULL;
+        return nullptr;
     if(!d->options.isEmpty())
         w_fa->setOptions(d->options);
     writer = w_fa->create(cumbia, datal);
@@ -168,7 +180,7 @@ CuControlsPropertyReaderA *CuContext::get_property_reader(const std::string &, C
 
 void CuContext::disposeReader(const std::string &src)
 {
-    CuControlsReaderA *removed = NULL;
+    CuControlsReaderA *removed = nullptr;
     foreach(CuControlsReaderA *r, d->readers)
     {
         if(r->source().toStdString() == src || src == std::string())
@@ -186,7 +198,7 @@ void CuContext::disposeReader(const std::string &src)
 
 void CuContext::disposeWriter(const std::string &src)
 {
-    CuControlsWriterA *removed = NULL;
+    CuControlsWriterA *removed = nullptr;
     foreach(CuControlsWriterA *w, d->writers)
     {
         if(w->target().toStdString() == src || src == std::string())
@@ -364,14 +376,14 @@ CuControlsReaderA *CuContext::getReader() const
 {
     if(d->readers.size()  == 1)
         return d->readers.first();
-    return NULL;
+    return nullptr;
 }
 
 CuControlsWriterA *CuContext::getWriter() const
 {
     if(d->writers.size()  == 1)
         return d->writers.first();
-    return NULL;
+    return nullptr;
 }
 
 CuControlsReaderA *CuContext::findReader(const std::string &srcnam)
@@ -379,7 +391,7 @@ CuControlsReaderA *CuContext::findReader(const std::string &srcnam)
     foreach(CuControlsReaderA* r, d->readers)
         if(r->source().toStdString() == srcnam)
             return r;
-    return NULL;
+    return nullptr;
 }
 
 CuLinkStats *CuContext::getLinkStats() const
@@ -411,13 +423,13 @@ CuControlsWriterA *CuContext::findWriter(const std::string &targetnam)
     foreach(CuControlsWriterA* w, d->writers)
         if(w->target().toStdString() == targetnam)
             return w;
-    return NULL;
+    return nullptr;
 }
 
-/*! \brief returns a pointer to the CuControlsReaderFactoryI or NULL if the context is not a reader
+/*! \brief returns a pointer to the CuControlsReaderFactoryI or nullptr if the context is not a reader
  *         context
  *
- * @return a pointer to CuControlsReaderFactoryI * if the context refers to a reader, NULL otherwise
+ * @return a pointer to CuControlsReaderFactoryI * if the context refers to a reader, nullptr otherwise
  *
  */
 CuControlsReaderFactoryI *CuContext::getReaderFactoryI() const
@@ -425,10 +437,10 @@ CuControlsReaderFactoryI *CuContext::getReaderFactoryI() const
     return d->r_factory;
 }
 
-/*! \brief returns a pointer to the CuControlsWriterFactoryI or NULL if the context is not a writer
+/*! \brief returns a pointer to the CuControlsWriterFactoryI or nullptr if the context is not a writer
  *         context
  *
- * @return a pointer to CuControlsWriterFactoryI * if the context refers to a writer, NULL otherwise
+ * @return a pointer to CuControlsWriterFactoryI * if the context refers to a writer, nullptr otherwise
  *
  */
 CuControlsWriterFactoryI *CuContext::getWriterFactoryI() const

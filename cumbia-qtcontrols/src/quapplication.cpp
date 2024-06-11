@@ -1,4 +1,5 @@
 #include "quapplication.h"
+#include <cuengineaccessor.h>
 #include "plugin_ifaces/qudbusplugininterface.h"
 #include <QDir>
 #include <QPluginLoader>
@@ -17,11 +18,17 @@
 // avoid creating temporary QRegularExpression within the code
 QRegularExpression rege;
 
-class QuApplicationPrivate
-{
+class QuApplicationPrivate {
 public:
+    QuApplicationPrivate(CumbiaPool *cup = nullptr, CuControlsFactoryPool *fp = nullptr)
+        : dbus_i(nullptr), cumbia_dbus_plugin("QuDBusPluginInterface"), cu_p(cup), fpoo(fp) {
+
+    }
+
     QuAppDBusInterface *dbus_i;
     QString cumbia_dbus_plugin;
+    CumbiaPool *cu_p;
+    CuControlsFactoryPool *fpoo;
 };
 
 /** \brief The class constructor.
@@ -30,12 +37,15 @@ public:
  * Just replace QApplication with QuApplication in your main.cpp
  *
  */
-QuApplication::QuApplication(int & argc, char **argv) : QApplication(argc, argv)
-{
-    d = new QuApplicationPrivate;
-    d->dbus_i = NULL;
-    d->cumbia_dbus_plugin = "QuDBusPluginInterface";
+QuApplication::QuApplication(int & argc, char **argv)
+    : QApplication(argc, argv), d(new QuApplicationPrivate()) {
     m_loadPlugin();
+}
+
+QuApplication::QuApplication(int &argc, char **argv, CumbiaPool *cu_p, CuControlsFactoryPool *fp)
+    : QApplication(argc, argv), d(new QuApplicationPrivate(cu_p, fp)) {
+    m_loadPlugin();
+    new CuEngineAccessor(this, &cu_p, fp);
 }
 
 /** \brief calls exec on QApplication after registering with the DBus session bus
@@ -70,6 +80,14 @@ int QuApplication::exec()
         delete d->dbus_i;
     }
     return ret;
+}
+
+CumbiaPool *QuApplication::cumbiaPool() const {
+    return d->cu_p;
+}
+
+CuControlsFactoryPool *QuApplication::fpool() const {
+    return d->fpoo;
 }
 
 /** \brief raises the top level windows

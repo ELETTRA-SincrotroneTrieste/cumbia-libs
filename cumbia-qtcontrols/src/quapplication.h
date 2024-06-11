@@ -5,6 +5,8 @@
 #include <qudbusplugininterface.h>
 
 class QuApplicationPrivate;
+class CumbiaPool;
+class CuControlsFactoryPool;
 
 /** \brief A QApplication with additional functions, such as to register with dbus, minimize and raise the main widget.
  *
@@ -30,28 +32,25 @@ class QuApplication : public QApplication
     Q_OBJECT
 public:
     QuApplication(int & argc, char **argv);
+    QuApplication(int &argc, char** argv, CumbiaPool *cu_p, CuControlsFactoryPool *fp);
 
     int exec();
 
+    CumbiaPool *cumbiaPool() const;
+    CuControlsFactoryPool *fpool() const;
+
 public slots:
     void raise();
-
     void minimize();
-
     void quit();
 
     QStringList arguments() const;
-
     QString exename() const;
-
     QStringList cmdOpt() const;
-
     QString display_host() const;
 
     int display_number() const;
-
     int screen_number() const;
-
     bool isPlatformX11() const;
 
 signals:

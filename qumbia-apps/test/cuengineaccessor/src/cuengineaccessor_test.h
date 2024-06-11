@@ -25,9 +25,7 @@ private:
     Ui::Cuengineaccessor *ui;
 
     // cumbia
-    CumbiaPool *cu_pool;
     QuLogImpl m_log_impl;
-    CuControlsFactoryPool m_ctrl_factory_pool;
     // cumbia
 };
 

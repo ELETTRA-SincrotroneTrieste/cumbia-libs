@@ -6,21 +6,17 @@
 #include <cuserviceprovider.h>
 #include <cumacros.h>
 #include <quapps.h>
+#include <quapplication.h>
 // cumbia
 
 CuengineaccessorTest::CuengineaccessorTest(QWidget *parent) :
     QWidget(parent) {
-    cu_pool = new CumbiaPool();
-    new CuEngineAccessor(this, &cu_pool, &m_ctrl_factory_pool);
-    CuModuleLoader mloader(cu_pool, &m_ctrl_factory_pool, &m_log_impl);
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    CuModuleLoader mloader(a->cumbiaPool(), a->fpool(), &m_log_impl);
     ui = new Ui::Cuengineaccessor;
     ui->setupUi(this);
 }
 
-CuengineaccessorTest::~CuengineaccessorTest()
-{
-    printf("deleting UI...\n");
+CuengineaccessorTest::~CuengineaccessorTest() {
     delete ui;
-    printf("done deleting UI\n\n");
-
 }

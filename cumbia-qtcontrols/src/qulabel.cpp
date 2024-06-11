@@ -66,13 +66,15 @@ QuLabel::QuLabel(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPoo
 }
 
 QuLabel::QuLabel(QWidget *w) : QuLabelBase(w), CuDataListener() {
-    CuEngineAccessor *a = w->findChild<CuEngineAccessor *>();
+    CuEngineAccessor *a = QCoreApplication::instance()->findChild<CuEngineAccessor *>();
+    printf("\e[1;32mQuLabel %p\e[0m\n", this);
+    foreach(QObject *child, QCoreApplication::instance()->findChildren<QObject *>())
+        printf("child %s class %s -- %p\n", qstoc(child->objectName()), child->metaObject()->className(), child);
     if(a) {
         m_init();
-        d->context = new CuContext(a->cu_pool(), *a->f_pool());
+        d->context = new CuContext(a);
         m_initCtx();
     }
-
 }
 
 void QuLabel::m_init()

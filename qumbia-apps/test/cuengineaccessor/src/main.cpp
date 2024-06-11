@@ -10,8 +10,7 @@
 
 #define VERSION "1.0"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QuApplication qu_app( argc, argv );
     qu_app.setOrganizationName("Elettra");
     qu_app.setApplicationName("CuengineaccessorTest");
@@ -23,12 +22,15 @@ int main(int argc, char *argv[])
     qu_app.setProperty("office", "T2PT025");
     qu_app.setProperty("hwReferent", "$HW_REFERENT$"); /* name of the referent that provides the device server */
 
+    // initialize cumbia
+    CumbiaPool *p = new CumbiaPool();
+    CuControlsFactoryPool fpool;
+    CuEngineAccessor *a = new CuEngineAccessor(&qu_app, &p, &fpool);
     CuengineaccessorTest *w = new CuengineaccessorTest(nullptr);
     w->show();
     // exec application loop
     int ret = qu_app.exec();
     CumbiaPool *cu_pool = nullptr;
-    CuEngineAccessor *a = w->findChild<CuEngineAccessor *>();
     if(a)
         cu_pool = a->cu_pool();
     delete w;
