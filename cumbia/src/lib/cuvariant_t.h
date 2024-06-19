@@ -140,88 +140,87 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
 {
     bool valid = (_d != nullptr);
     size_t i;
+    if(v.size() != _d->mSize)
+        v.resize(_d->mSize);
     if(_d && _d->format == Vector) {
-        if(_d->type == Short)
-        {
-            std::vector<short> vs = toShortVector();
-            for(i = 0; i < vs.size(); i++)
-                v.push_back(static_cast<T>(vs[i]));
+        if(_d->type == Short) {
+            short *v_s = static_cast<short *>(_d->val);
+            for(i = 0; i < _d->mSize; i++)
+                v[i] = (static_cast<T>(v_s[i]));
         }
         else if(_d->type == UShort) {
-            std::vector<unsigned short> vus = toUShortVector();
-            for(i = 0; i < vus.size(); i++)
-                v.push_back(static_cast<T>(vus[i]));
+            unsigned short* vus = static_cast<unsigned short *>(_d->val);
+            for(i = 0; i < _d->mSize; i++)
+                v[i] = (static_cast<T>(vus[i]));
         }
         else if(_d->type == UChar) {
-            std::vector<unsigned char> vuc = toUCharVector();
-            for(i = 0; i < vuc.size(); i++)
-                v.push_back(static_cast<T>(vuc[i]));
+            unsigned char* vuc = static_cast<unsigned char *>(_d->val);
+            for(i = 0; i < _d->mSize; i++)
+                v[i] = (static_cast<T>(vuc[i]));
         }
         else if(_d->type == Char) {
-            std::vector<char> vc = toCharVector();
-            for(i = 0; i < vc.size(); i++)
-                v.push_back(static_cast<T>(vc[i]));
+            char* vc = static_cast<char *>(_d->val);
+            for(i = 0; i < _d->mSize; i++)
+                v[i] = (static_cast<T>(vc[i]));
         }
         else if(_d->type == Int) {
-            std::vector<int> vi = toIntVector();
-            for(i = 0; i < vi.size(); i++)
-                v.push_back(static_cast<T>(vi[i]));
+            int* vi = static_cast<int *>(_d->val);
+            for(i = 0; i < _d->mSize; i++)
+                v[i] = (static_cast<T>(vi[i]));
         }
         else if(_d->type == UInt) {
-            std::vector<unsigned int> vui = toUIntVector();
-            for(i = 0; i < vui.size(); i++)
-                v.push_back(static_cast<T>(vui[i]));
+            unsigned int* vi = static_cast<unsigned int *>(_d->val);
+            for(i = 0; i < _d->mSize; i++)
+                v[i] = (static_cast<T>(vi[i]));
         }
         else if(_d->type == LongInt) {
-            std::vector<long int> vli = toLongIntVector();
-            for(i = 0; i < vli.size(); i++)
-                v.push_back(static_cast<T>(vli[i]));
+            long int* vli = static_cast<long int *>(_d->val);
+            for(i = 0; i < _d->mSize; i++)
+                v[i] = (static_cast<T>(vli[i]));
         }
         else if(_d->type == LongLongInt) {
-            std::vector<long long int> vlli = toLongLongIntVector();
-            for(i = 0; i < vlli.size(); i++)
-                v.push_back(static_cast<T>(vlli[i]));
+            long long int* vlli = static_cast<long long int *>(_d->val);
+            for(i = 0; i < _d->mSize; i++)
+                v[i] = (static_cast<T>(vlli[i]));
         }
         else if(_d->type == LongLongUInt) {
-            std::vector<unsigned long long int> vlli = toLongLongUIntVector();
-            for(i = 0; i < vlli.size(); i++)
-                v.push_back(static_cast<T>(vlli[i]));
+            long long unsigned int* vulli = static_cast<long long unsigned int *>(_d->val);
+            for(i = 0; i < _d->mSize; i++)
+                v[i] = (static_cast<T>(vulli[i]));
         }
         else if(_d->type == LongUInt) {
-            std::vector<long unsigned int> vlui = toULongIntVector();
-            for(i = 0; i < vlui.size(); i++)
-                v.push_back(static_cast<T>(vlui[i]));
+            long unsigned int* vuli = static_cast<long unsigned int *>(_d->val);
+            for(i = 0; i < _d->mSize; i++)
+                v[i] = (static_cast<T>(vuli[i]));
         }
         else if(_d->type == Float) {
-            std::vector<float> vf = toFloatVector();
-            for(i = 0; i < vf.size(); i++)
-                v.push_back(static_cast<T>(vf[i]));
+            float* vf = static_cast<float *>(_d->val);
+            for(i = 0; i < _d->mSize; i++)
+                v[i] = (static_cast<T>(vf[i]));
         }
         else if(_d->type == Double) {
-            std::vector<double> df = toDoubleVector();
-            for(i = 0; i < df.size(); i++)
-                v.push_back(static_cast<T>(df[i]));
+            double* vd = static_cast<double *>(_d->val);
+            for(i = 0; i < _d->mSize; i++)
+                v[i] = (static_cast<T>(vd[i]));
         }
         else if(_d->type == LongDouble) {
-            std::vector<long double> ldv = toLongDoubleVector();
-            for(i = 0; i < ldv.size(); i++)
-                v.push_back(static_cast<T>(ldv[i]));
+            long double* vld = static_cast<long double *>(_d->val);
+            for(i = 0; i < _d->mSize; i++)
+                v[i] = (static_cast<T>(vld[i]));
         }
         else if(_d->type == Boolean) {
-            std::vector<bool> bv = toBoolVector();
-            for(i = 0; i < bv.size(); i++)
-                v.push_back(static_cast<T>(bv[i]));
+            bool* b = static_cast<bool *>(_d->val);
+            for(i = 0; i < _d->mSize; i++)
+                v[i] = (static_cast<T>(b[i]));
         }
         else if(_d->type == String) {
             long double ld;
             std::vector<std::string> sv = toStringVector();
-            for(i = 0; i < sv.size() && valid; i++)
-            {
-                try
-                {
+            for(i = 0; i < sv.size() && valid; i++) {
+                try {
                     // try converting to long double
                     ld = std::stold(sv[i]);
-                    v.push_back(static_cast<T>(ld));
+                    v[i] = static_cast<T>(ld);
                 }
                 catch(const std::invalid_argument& ) {
                     pwarn("CuVariant.toVector: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
@@ -238,32 +237,32 @@ template<typename T> bool CuVariant::toVector(std::vector<T> &v) const
     }
     else if(_d && _d->format == Scalar) {
         if(_d->type == Short)
-            v.push_back(static_cast<T>(toShortInt()));
+            v[0] = (static_cast<T>(toShortInt()));
         else if(_d->type == UShort)
-            v.push_back(static_cast<T>(toUShortInt()));
+            v[0] = (static_cast<T>(toUShortInt()));
         else if(_d->type == Int)
-            v.push_back(static_cast<T>(toInt()));
+            v[0] = (static_cast<T>(toInt()));
         else if(_d->type == UInt)
-            v.push_back(static_cast<T>(toUInt()));
+            v[0] = (static_cast<T>(toUInt()));
         else if(_d->type == LongInt)
-            v.push_back(static_cast<T>(toLongInt()));
+            v[0] = (static_cast<T>(toLongInt()));
         else if(_d->type == LongUInt)
-            v.push_back(static_cast<T>(toULongInt()));
+            v[0] = (static_cast<T>(toULongInt()));
         else if(_d->type == Float)
-            v.push_back(static_cast<T>(toFloat()));
+            v[0] = (static_cast<T>(toFloat()));
         else if(_d->type == Double)
-            v.push_back(static_cast<T>(toDouble()));
+            v[0] = (static_cast<T>(toDouble()));
         else if(_d->type == LongDouble)
-            v.push_back(static_cast<T>(toLongDouble()));
+            v[0] = (static_cast<T>(toLongDouble()));
         else if(_d->type == Boolean)
-            v.push_back(static_cast<T>(toBool()));
+            v[0] = (static_cast<T>(toBool()));
         else if(_d->type == String)
         {
             try
             {
                 // try converting to long double
                 long double ld = std::stold(toString());
-                v.push_back(static_cast<T>(ld));
+                v[0] = (static_cast<T>(ld));
             }
             catch(const std::invalid_argument &) {
                 pwarn("CuVariant.toVector: string \"%s\" to number conversion failed: invalid argument", toString().c_str());
