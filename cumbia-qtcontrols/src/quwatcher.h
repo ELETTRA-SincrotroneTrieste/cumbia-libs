@@ -107,8 +107,8 @@ class QuWatcherPrivate;
   * A variety of type specific signals are emitted after the value is successfully extracted from a reading.
   * A *newData* signal containing the full CuData bundle is emitted as well.
   *
-  * Please note that *only data[CuDType::Value]* is extracted, converted to the given type and sent through the *newData* signal.  // data["value"]
-  * Control system engines supporting *set point (or write) values* will provide *data[CuDType::WriteValue]* when available.  // data["w_value"]
+  * Please note that *only data[TTT::Value]* is extracted, converted to the given type and sent through the *newData* signal.  // data["value"]
+  * Control system engines supporting *set point (or write) values* will provide *data[TTT::WriteValue]* when available.  // data["w_value"]
   * It is handled by QuWatcher for simple *auto configuration* tasks as aforementioned but the extracted value is not
   * propagated through *newData*.
   *
@@ -116,7 +116,7 @@ class QuWatcherPrivate;
   */
 class QuWatcher : public Qumbiaizer, public CuDataListener, public CuContextI
 {
-Q_OBJECT
+    Q_OBJECT
     Q_PROPERTY(QString source READ source WRITE setSource)
 
 public:
@@ -125,8 +125,14 @@ public:
      * @see Qumbiaizer class documentation.
      */
     QuWatcher(QObject *parent, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
-
     QuWatcher(QObject *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    QuWatcher(QObject *parent,
+              const QString& source = QString(),
+              QObject *target = nullptr,
+              const char *slot = nullptr,
+              const CuData &options = CuData(),
+              const char *setPointSlot = nullptr,
+              Qt::ConnectionType connType = Qt::AutoConnection);
 
     virtual ~QuWatcher();
 
@@ -138,7 +144,6 @@ public slots:
 private:
     QuWatcherPrivate *d;
 
-
     // CuContextI interface
 public:
     CuContext *getContext() const;
@@ -147,7 +152,6 @@ public:
 public:
     void onUpdate(const CuData &data);
     QString source() const;
-
 };
 
 class Qu1TWatcher : public QuWatcher {

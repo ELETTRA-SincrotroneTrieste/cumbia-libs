@@ -37,7 +37,7 @@ public:
     std::unordered_map<std::string, CuVariant> datamap;
     CuVariant emptyVariant;
 
-    CuVariant data[CuDType::MaxDataKey];
+    CuVariant data[TTT::MaxDataKey];
 
     int ref() {
         return _r.fetch_add(1);
@@ -53,7 +53,7 @@ public:
 //        auto start = std::chrono::high_resolution_clock::now();
         if(other.datamap.size() > 0)
             datamap = other.datamap;
-        for(size_t i = 0; i < CuDType::MaxDataKey; i++) {
+        for(size_t i = 0; i < TTT::MaxDataKey; i++) {
             if(other.data[i].isValid()) { // copy CuVariant if set at pos i
                 data[i] = other.data[i];
             }
@@ -166,7 +166,7 @@ CuData &CuData::operator=(CuData &&other) {
     return *this;
 }
 
-CuData &CuData::set(const CuDType::Key &key, const CuVariant &value) {
+CuData &CuData::set(const TTT::Key &key, const CuVariant &value) {
     detach();
     d_p->data[key] = value;
     return *this;
@@ -189,7 +189,7 @@ CuData &CuData::merge(const CuData &&other) {
     detach();
     for(const std::string& key : other.keys())
         (*this).set(key, std::move(other.value(key)));
-    for(size_t i = 0; i < CuDType::MaxDataKey; i++) {
+    for(size_t i = 0; i < TTT::MaxDataKey; i++) {
         if(other.d_p->data[i].isValid())
             d_p->data[i] = std::move(other.d_p->data[i]);
 
@@ -220,15 +220,15 @@ CuData &CuData::remove(const std::string &key) {
     return *this;
 }
 
-CuData &CuData::remove(const CuDType::Key &key)
+CuData &CuData::remove(const TTT::Key &key)
 {
     detach();
-    if(key < CuDType::MaxDataKey)
+    if(key < TTT::MaxDataKey)
         d_p->data[key] = CuVariant();
     return *this;
 }
 
-CuData CuData::remove(const CuDType::Key &key) const {
+CuData CuData::remove(const TTT::Key &key) const {
     return CuData(*this).remove(key);
 }
 
@@ -266,7 +266,7 @@ CuData CuData::remove(const std::vector<std::string> &keys) const {
  */
 size_t CuData::size() const {
     int s = 0;
-    for(size_t i = 0; i < CuDType::MaxDataKey; i++)
+    for(size_t i = 0; i < TTT::MaxDataKey; i++)
         if(d_p->data[i].isValid())
             s++;
     return s + d_p->datamap.size();
@@ -303,12 +303,12 @@ CuVariant CuData::value(const std::string & key) const {
     return CuVariant();
 }
 
-CuVariant CuData::value(const CuDType::Key &key) const {
-    return key < CuDType::MaxDataKey ? d_p->data[key] : CuVariant();
+CuVariant CuData::value(const TTT::Key &key) const {
+    return key < TTT::MaxDataKey ? d_p->data[key] : CuVariant();
 }
 
-void CuData::add(const CuDType::Key &key, const CuVariant &value) {
-    if(key < CuDType::MaxDataKey)
+void CuData::add(const TTT::Key &key, const CuVariant &value) {
+    if(key < TTT::MaxDataKey)
         d_p->data[key] = value;
 }
 
@@ -333,11 +333,11 @@ bool CuData::containsKey(const std::string &key) const {
     return d_p->datamap.count(key) > 0;
 }
 
-bool CuData::containsKey(const CuDType::Key &key) const {
-    return key < CuDType::MaxDataKey && d_p->data[key].isValid();
+bool CuData::containsKey(const TTT::Key &key) const {
+    return key < TTT::MaxDataKey && d_p->data[key].isValid();
 }
 
-bool CuData::has(const CuDType::Key &key, const std::string &value) const {
+bool CuData::has(const TTT::Key &key, const std::string &value) const {
     return d_p->data[key].isValid() && d_p->data[key].s() == value ;
 }
 
@@ -372,7 +372,7 @@ CuVariant &CuData::operator [](const std::string &key) {
     return d_p->datamap[key];
 }
 
-CuVariant &CuData::operator [](const CuDType::Key &key) {
+CuVariant &CuData::operator [](const TTT::Key &key) {
     detach();
     return d_p->data[key];
 }
@@ -395,7 +395,7 @@ const CuVariant &CuData::operator [](const std::string &key) const {
  * \param key index
  * \return the CuVariant at the index position
  */
-const CuVariant &CuData::operator [](const CuDType::Key &key) const {
+const CuVariant &CuData::operator [](const TTT::Key &key) const {
     return d_p->data[key]; // const: do not detach
 }
 
@@ -409,7 +409,7 @@ const CuVariant &CuData::operator [](const CuDType::Key &key) const {
  * the *inequality* operator is also defined
  */
 bool CuData::operator ==(const CuData &other) const {
-    for(size_t i = 0; i < CuDType::MaxDataKey; i++)
+    for(size_t i = 0; i < TTT::MaxDataKey; i++)
         if(other.d_p->data[i] != this->d_p->data[i])
             return false;
     return other.d_p->datamap == d_p->datamap;
@@ -434,7 +434,7 @@ bool CuData::operator !=(const CuData &other) const {
  * @see size
  */
 bool CuData::isEmpty() const {
-    for(size_t i = 0; i < CuDType::MaxDataKey; i++)
+    for(size_t i = 0; i < TTT::MaxDataKey; i++)
         if(d_p->data[i].isValid())
             return false; // at least one is set
     return d_p->datamap.size() == 0;
@@ -477,10 +477,10 @@ std::string CuData::toString(bool color) const
     int kc = 0;
     std::map<std::string, std::string> valmap; // want a lexicographically ordered print of key name/values
     std::map<std::string, std::string> typemap;
-    for(size_t i = 0; i < CuDType::MaxDataKey; i++) {
+    for(size_t i = 0; i < TTT::MaxDataKey; i++) {
         if(d_p->data[i].isValid()) {
-            valmap[dt.keyName(static_cast<CuDType::Key>(i))] = d_p->data[i].toString();
-            typemap[dt.keyName(static_cast<CuDType::Key>(i))] = d_p->data[i].data_type_short_str();
+            valmap[dt.keyName(static_cast<TTT::Key>(i))] = d_p->data[i].toString();
+            typemap[dt.keyName(static_cast<TTT::Key>(i))] = d_p->data[i].data_type_short_str();
             kc++;
         }
     }
@@ -524,8 +524,8 @@ void CuData::putTimestamp() {
     detach();
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    add(CuDType::Time_ms,  tv.tv_sec * 1000 + tv.tv_usec / 1000);
-    add(CuDType::Time_us, static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6);
+    add(TTT::Time_ms,  tv.tv_sec * 1000 + tv.tv_usec / 1000);
+    add(TTT::Time_us, static_cast<double>(tv.tv_sec) + static_cast<double>(tv.tv_usec) * 1e-6);
 }
 
 std::vector<std::string> CuData::keys() const {
@@ -537,7 +537,7 @@ std::vector<std::string> CuData::keys() const {
 
 std::vector<size_t> CuData::idx_keys() const {
     std::vector<size_t> k;
-    for(size_t i = 0; i < CuDType::MaxDataKey; i++)
+    for(size_t i = 0; i < TTT::MaxDataKey; i++)
         if(d_p->data[i].isValid())
             k.push_back(i);
     return k;
@@ -550,7 +550,7 @@ void CuData::detach() {
     }
 }
 
-std::string CuData::s(const CuDType::Key &key) const {
+std::string CuData::s(const TTT::Key &key) const {
     return d_p->data[key].s();
 }
 
@@ -577,7 +577,7 @@ std::string CuData::s(const std::string& key) const {
  * \see s
  * \see toString
  */
-const char *CuData::c_str(const CuDType::Key &key) const {
+const char *CuData::c_str(const TTT::Key &key) const {
     return d_p->data[key].c_str();
 }
 
@@ -586,13 +586,13 @@ const char *CuData::c_str(const CuDType::Key &key) const {
  * \param key, the key as string
  * \return const char * (plain C string)
  *
- * \see c_str(const CuDType::Key &key)
+ * \see c_str(const TTT::Key &key)
  */
 const char *CuData::c_str(const std::string &key) const {
     return this->operator[](key).c_str();
 }
 
-double CuData::d(const CuDType::Key &key) const {
+double CuData::d(const TTT::Key &key) const {
     return d_p->data[key].d();
 }
 
@@ -600,7 +600,7 @@ double CuData::d(const std::string& key) const {
     return this->operator[](key).d();
 }
 
-int CuData::i(const CuDType::Key &key) const {
+int CuData::i(const TTT::Key &key) const {
     return d_p->data[key].i();
 }
 
@@ -608,7 +608,7 @@ int CuData::i(const std::string& key) const {
     return this->operator[](key).i();
 }
 
-unsigned int CuData::u(const CuDType::Key &key) const {
+unsigned int CuData::u(const TTT::Key &key) const {
     return d_p->data[key].u();
 }
 
@@ -616,7 +616,7 @@ unsigned int CuData::u(const std::string &key) const {
     return this->operator[](key).u();
 }
 
-bool CuData::b(const CuDType::Key &key) const {
+bool CuData::b(const TTT::Key &key) const {
     return d_p->data[key].isValid() && d_p->data[key].b();
 }
 
@@ -628,7 +628,7 @@ bool CuData::b(const std::string& key) const {
 
 // to<T> version shortcuts
 
-double CuData::D(const CuDType::Key &key) const {
+double CuData::D(const TTT::Key &key) const {
     double v;
     d_p->data[key].to<double>(v);
     return v;
@@ -641,7 +641,7 @@ double CuData::D(const std::string& key) const {
     return v;
 }
 
-int CuData::I(const CuDType::Key &key) const {
+int CuData::I(const TTT::Key &key) const {
     int i;
     d_p->data[key].to<int>(i);
     return i;
@@ -654,7 +654,7 @@ int CuData::I(const std::string& key) const {
     return i;
 }
 
-unsigned int CuData::U(const CuDType::Key &key) const {
+unsigned int CuData::U(const TTT::Key &key) const {
     unsigned int ui;
     d_p->data[key].to<unsigned int>(ui);
     return ui;
@@ -667,7 +667,7 @@ unsigned int CuData::U(const std::string &key) const {
     return i;
 }
 
-bool CuData::B(const CuDType::Key &key) const {
+bool CuData::B(const TTT::Key &key) const {
     bool b;
     d_p->data[key].to<bool>(b);
     return b;
@@ -680,7 +680,7 @@ bool CuData::B(const std::string& key) const {
     return b;
 }
 
-std::vector<double> CuData::DV(const CuDType::Key &key) const {
+std::vector<double> CuData::DV(const TTT::Key &key) const {
     std::vector<double>  dv;
     d_p->data[key].toVector<double>(dv);
     return dv;
@@ -693,7 +693,7 @@ std::vector<double> CuData::DV(const std::string &key) const {
     return dv;
 }
 
-std::vector<int> CuData::IV(const CuDType::Key &key) const {
+std::vector<int> CuData::IV(const TTT::Key &key) const {
     std::vector<int>  iv;
     d_p->data[key].toVector<int>(iv);
     return iv;
@@ -706,7 +706,7 @@ std::vector<int>  CuData::IV(const std::string &key) const {
     return vi;
 }
 
-std::vector<long long> CuData::LLV(const CuDType::Key &key) const {
+std::vector<long long> CuData::LLV(const TTT::Key &key) const {
     std::vector<long long>  llv;
     d_p->data[key].toVector<long long>(llv);
     return llv;
@@ -719,7 +719,7 @@ std::vector<long long> CuData::LLV(const std::string &key) const {
     return lliv;
 }
 
-std::vector<unsigned int> CuData::UV(const CuDType::Key &key) const {
+std::vector<unsigned int> CuData::UV(const TTT::Key &key) const {
     std::vector<unsigned int>  uv;
     d_p->data[key].toVector<unsigned int>(uv);
     return uv;
@@ -732,7 +732,7 @@ std::vector<unsigned int>  CuData::UV(const std::string &key) const {
     return uiv;
 }
 
-std::vector<unsigned long> CuData::ULV(const CuDType::Key &key) const {
+std::vector<unsigned long> CuData::ULV(const TTT::Key &key) const {
     std::vector<unsigned long>  ulv;
     d_p->data[key].toVector<unsigned long>(ulv);
     return ulv;
@@ -745,7 +745,7 @@ std::vector<unsigned long> CuData::ULV(const std::string &key) const {
     return uliv;
 }
 
-std::vector<unsigned long long> CuData::ULLV(const CuDType::Key &key) const {
+std::vector<unsigned long long> CuData::ULLV(const TTT::Key &key) const {
     std::vector<unsigned long long>  ullv;
     d_p->data[key].toVector<unsigned long long>(ullv);
     return ullv;
@@ -758,7 +758,7 @@ std::vector<unsigned long long> CuData::ULLV(const std::string &key) const {
     return ulliv;
 }
 
-std::vector<bool> CuData::BV(const CuDType::Key &key) const {
+std::vector<bool> CuData::BV(const TTT::Key &key) const {
     std::vector<bool>  boov;
     d_p->data[key].toVector<bool>(boov);
     return boov;

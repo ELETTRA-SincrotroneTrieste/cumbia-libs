@@ -93,6 +93,6 @@ QString WsClient::m_getSrc(const QByteArray &jsba)
     QString src;
     QJsonDocument d = QJsonDocument::fromJson(jsba);
     if(!d.isNull())
-        src = d[CuDType::Event].toString();  // d["E"]
+        src = d[TTT::Event].toString();  // d["E"]
     return src;
 }

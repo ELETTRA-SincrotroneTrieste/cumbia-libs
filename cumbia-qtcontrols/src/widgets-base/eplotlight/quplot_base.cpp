@@ -17,6 +17,7 @@
 #include <qwt_date_scale_draw.h>
 #include <qwt_date_scale_engine.h>
 #include <qwt_picker_machine.h>
+#include <qwt_plot_canvas.h>
 
 // plot components
 #include "quplotzoomcomponent.h"
@@ -34,6 +35,9 @@
 
 using namespace std; /* std::isnan issue across different compilers/compiling standards */
 
+#ifndef QWT_NO_OPENGL
+#include <QwtPlotOpenGLCanvas>
+#endif
 
 class QuPlotBasePrivate
 {
@@ -50,6 +54,10 @@ public:
     // for marker
 
     QwtPlotPicker* picker;
+    QuPlotMarkerComponent *marker;
+    QuPlotAxesComponent *axes;
+    QuPlotCanvasPainterComponent *canvas_painter;
+    QuPlotZoomComponent *zoom;
 };
 
 bool ShiftClickEater::eventFilter(QObject *obj, QEvent *event)
@@ -63,14 +71,14 @@ bool ShiftClickEater::eventFilter(QObject *obj, QEvent *event)
     return QObject::eventFilter(obj, event);
 }
 
-QuPlotBase::QuPlotBase(QWidget *parent) : QwtPlot(parent)
+QuPlotBase::QuPlotBase(QWidget *parent, bool openGL) : QwtPlot(parent)
 {
-    QuPlotBase::init();
+    QuPlotBase::init(openGL);
 }
 
-QuPlotBase::QuPlotBase(const QwtText &title, QWidget *parent) : QwtPlot(title, parent)
+QuPlotBase::QuPlotBase(const QwtText &title, QWidget *parent, bool openGL) : QwtPlot(title, parent)
 {
-    QuPlotBase::init();
+    QuPlotBase::init(openGL);
 }
 
 QuPlotBase::~QuPlotBase()
@@ -79,17 +87,13 @@ QuPlotBase::~QuPlotBase()
         delete d->updateStrategy;
     if(d->ctxMenuStrategy)
         delete d->ctxMenuStrategy;
-
-    foreach(QuPlotComponent *c, d->components_map.values())
-        delete c;
-    d->components_map.clear();
     delete d;
 }
 
 /* QwtPlot xAxis autoscale is disabled and axis autoscale is managed internally 
  * through the refresh() method.
  */
-void QuPlotBase::init()
+void QuPlotBase::init(bool opengl)
 {
     d = new QuPlotBasePrivate;
     d->bufSiz = -1;
@@ -99,16 +103,33 @@ void QuPlotBase::init()
     d->titleOnCanvasEnabled = false;
     d->displayZoomHint = false;
     d->curvesStyle = Lines;
-    setFrameStyle(QFrame::NoFrame);
 
-    plotLayout()->setAlignCanvasToScales(true);
-    plotLayout()->setCanvasMargin(0, QwtPlot::yLeft);
-    plotLayout()->setCanvasMargin(0, QwtPlot::yRight);
-
-    /* white background */
-    setCanvasBackground(Qt::white);
     /* disable qwt auto replot */
     setAutoReplot(false);
+
+    QWidget* pcanvas = createCanvas(opengl);
+    m_canvas_conf(pcanvas);
+    setCanvas(pcanvas);
+
+    m_align_scales(); // 2.1, inspired by refreshtest example
+    m_install_components();
+
+    QwtPlot::replot(); /* do not need QuPlotBase::replot() here */
+}
+
+void QuPlotBase::m_align_scales() { // taken from Qwt examples' refreshtest
+    for ( int axisPos = 0; axisPos < QwtAxis::AxisPositions; axisPos++ ) {
+        QwtScaleWidget* scaleWidget = axisWidget( axisPos );
+        if ( scaleWidget )
+            scaleWidget->setMargin( 0 );
+        QwtScaleDraw* scaleDraw = axisScaleDraw( axisPos );
+        if ( scaleDraw )
+            scaleDraw->enableComponent( QwtAbstractScaleDraw::Backbone, false );
+    }
+    plotLayout()->setAlignCanvasToScales( true );
+}
+
+void QuPlotBase::m_install_components() {
     /* grid */
     QwtPlotGrid* plotgrid = new QwtPlotGrid;
     plotgrid->setPen(QPen(QColor(230,230,248)));
@@ -116,20 +137,21 @@ void QuPlotBase::init()
     plotgrid->enableX(true);
     plotgrid->enableY(true);
     setAxisLabelAlignment(QwtPlot::xBottom, Qt::AlignLeft | Qt::AlignBottom);
+
     setZoomDisabled(false);
 
-    QuPlotMarkerComponent *marker_c = new QuPlotMarkerComponent(this);
-    marker_c->attachToPlot(this);
-    marker_c->connectToPlot(this);
-    d->components_map.insert(marker_c->name(), marker_c);
+    d->marker = new QuPlotMarkerComponent(this);
+    d->marker->attachToPlot(this);
+    d->marker->connectToPlot(this);
+    d->components_map.insert(d->marker->name(), d->marker);
 
     /* draws canvas. No need to attach or connect */
-    QuPlotCanvasPainterComponent *painter_c = new QuPlotCanvasPainterComponent();
-    d->components_map.insert(painter_c->name(), painter_c);
+    d->canvas_painter = new QuPlotCanvasPainterComponent();
+    d->components_map.insert(d->canvas_painter->name(), d->canvas_painter);
 
     /* manages axes */
-    QuPlotAxesComponent *axes_c = new QuPlotAxesComponent(this);
-    d->components_map.insert(axes_c->name(), axes_c);
+    d->axes = new QuPlotAxesComponent(this);
+    d->components_map.insert(d->axes->name(), d->axes);
 
     QuPlotContextMenuComponent *ctx_menu = new QuPlotContextMenuComponent();
     ctx_menu->attachToPlot(this);
@@ -138,8 +160,6 @@ void QuPlotBase::init()
 
     QuPlotConfigurator pco;
     pco.configure(this);
-
-    QwtPlot::replot(); /* do not need QuPlotBase::replot() here */
 }
 
 /*! \brief sets or replaces the update strategy (see the strategy design pattern)
@@ -205,17 +225,19 @@ void QuPlotBase::update(const CuData &)
  * \note
  * CuData must contain valid std::string minimum and maximum values that can be
  * converted to double. The required keys are "min" and "max", respectively.
+ *
+ * \note
+ * The method does not call *replot*
  */
 void QuPlotBase::configure(const CuData &da)
 {
     CuVariant m, M;
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    m = da["min"];  // min value
-    M = da["max"];  // max value
+    m = da[TTT::Min];  // min value
+    M = da[TTT::Max];  // max value
     bool okl, oku;  // toDouble ok for lower and upper bound
     double lb, ub;  // double for lower and upper bound
     double current_def_lb, current_def_ub;
-    QwtPlot::Axis axisId = (da.s("yaxis") == "left" ? QwtPlot::yLeft : QwtPlot::yRight);
+    QwtPlot::Axis axisId = da.s("yaxis") == "right" ? QwtPlot::yRight : QwtPlot::yLeft;
     QString min = QString::fromStdString(m.toString()); // min is of type string
     QString max = QString::fromStdString(M.toString()); // max is of type string
     lb = min.toDouble(&okl);  // string to double, see if ok
@@ -235,15 +257,17 @@ void QuPlotBase::configure(const CuData &da)
     else {
 
         // initialised (to 0 and 1000) in QuPlotAxesComponent's constructor
-        current_def_lb = axes_c->lowerBoundFromCurves(axisId);
-        current_def_ub  = axes_c->upperBoundFromCurves(axisId);
+        current_def_lb = d->axes->lowerBoundFromCurves(axisId);
+        current_def_ub  = d->axes->upperBoundFromCurves(axisId);
     }
+    pretty_pri("\e[1;36mconfigure\e[0m: lb %f ub %f okl %d oku %d", lb, ub, okl, oku);
+    pretty_pri("\e[1;36mconfigure\e[0m: default %f,%f scale mode %d", current_def_lb, current_def_ub, d->axes->scaleMode(axisId));
     setDefaultBounds(current_def_lb, current_def_ub, axisId);
-    if(axes_c->scaleMode(axisId) == QuPlotAxesComponent::SemiAutoScale) {
+    if(d->axes->scaleMode(axisId) == QuPlotAxesComponent::SemiAutoScale) {
         setAxisScale(axisId, current_def_lb, current_def_ub);
+        replot();
+        pretty_pri("set axis scale ID %d from %f to %f", axisId, yLowerBound(), yUpperBound());
     }
-    // if configuration happens after data, need replot
-    replot();
 }
 
 /**
@@ -260,9 +284,8 @@ void QuPlotBase::configure(const CuData &da)
  * The ownership of the context menu strategy is taken by QuPlotBase and destroyed within the class
  * destructor.
  */
-void QuPlotBase::contextMenuEvent(QContextMenuEvent *)
-{
-    static_cast<QuPlotContextMenuComponent *>(d->components_map["context_menu"])->execute(this, d->ctxMenuStrategy, QCursor::pos());
+void QuPlotBase::contextMenuEvent(QContextMenuEvent *) {
+    static_cast<QuPlotContextMenuComponent *>(d->components_map.value("context_menu"))->execute(this, d->ctxMenuStrategy, QCursor::pos());
 }
 
 /*!
@@ -281,22 +304,16 @@ int QuPlotBase::refreshTimeout() const
     return d->refresh_timeo;
 }
 
-double QuPlotBase::defaultLowerBound(QwtPlot::Axis axisId) const
-{
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    return axes_c->defaultLowerBound(axisId);
+double QuPlotBase::defaultLowerBound(QwtPlot::Axis axisId) const {
+    return d->axes->defaultLowerBound(axisId);
 }
 
-double QuPlotBase::defaultUpperBound(QwtPlot::Axis axisId) const
-{
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    return axes_c->defaultUpperBound(axisId);
+double QuPlotBase::defaultUpperBound(QwtPlot::Axis axisId) const {
+    return d->axes->defaultUpperBound(axisId);
 }
 
-bool QuPlotBase::inZoom() const
-{
-    QuPlotZoomComponent* z = static_cast<QuPlotZoomComponent *>(d->components_map.value("zoom"));
-    return z && z->inZoom();
+bool QuPlotBase::inZoom() const {
+    return d->zoom && d->zoom->inZoom();
 }
 
 /*! \brief returns the QuPlotComponent corresponding to the given *name*, nullptr if *name* is not valid
@@ -318,6 +335,11 @@ QuPlotComponent *QuPlotBase::getComponent(const QString &name) const
 
 void QuPlotBase::registerComponent(QuPlotComponent *c, const QString &name) {
     d->components_map[name] = c;
+    // shortcuts
+    if(name == "zoom") d->zoom = static_cast<QuPlotZoomComponent *>(c);
+    else if(name == "marker" ) d->marker = static_cast<QuPlotMarkerComponent *>(c);
+    else if(name == "axes") d->axes = static_cast<QuPlotAxesComponent *>(c);
+    else if(name == "canvas_painter") d->canvas_painter = static_cast<QuPlotCanvasPainterComponent *>(c);
 }
 
 /*!
@@ -327,9 +349,17 @@ void QuPlotBase::registerComponent(QuPlotComponent *c, const QString &name) {
  *         The returned pointer can be used to delete the component.
  */
 QuPlotComponent *QuPlotBase::unregisterComponent(const QString &name) {
-    QuPlotComponent *co = d->components_map[name];
+    if(name == d->zoom->name()) d->zoom = nullptr;
+    else if(name == d->marker->name() ) d->marker = nullptr;
+    else if(name == d->axes->name()) d->axes = nullptr;
+    else if(name == d->canvas_painter->name()) d->canvas_painter = nullptr;
+    QuPlotComponent *co = d->components_map.value(name);
     d->components_map.remove(name);
     return co;
+}
+
+bool QuPlotBase::isOpenGL() const {
+    return qobject_cast<const QwtPlotOpenGLCanvas *>(canvas()) != nullptr;
 }
 
 /** \brief updates the marker, if visible, and returns true if it's visible, false otherwise
@@ -337,17 +367,14 @@ QuPlotComponent *QuPlotBase::unregisterComponent(const QString &name) {
  * @see refresh
  * @see updateScales
  */
-bool QuPlotBase::updateMarker()
-{
+bool QuPlotBase::updateMarker() {
     bool updated = false;
-    QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
-    if(marker->isVisible()) {
-        updated = marker->update(this);
-        if(updated) {
-            double x = marker->currentClosestCurve()->data()->sample(marker->currentClosestPoint()).x();
-            double y = marker->currentClosestCurve()->data()->sample(marker->currentClosestPoint()).y();
-            emit markerTextChanged(marker->yLabel(), marker->xLabel(), x, y);
-        }
+    updated = d->marker->update(this);
+    if(updated) {
+        double x = d->marker->currentClosestCurve()->data()->sample(d->marker->currentClosestPoint()).x();
+        double y = d->marker->currentClosestCurve()->data()->sample(d->marker->currentClosestPoint()).y();
+        emit markerTextChanged(d->marker->yLabel(), d->marker->xLabel(), x, y);
+
     }
     return updated;
 }
@@ -363,51 +390,53 @@ bool QuPlotBase::updateMarker()
 bool QuPlotBase::updateScales()
 {
     bool boundsChanged = false;
-    QuPlotZoomComponent* zoomer = static_cast<QuPlotZoomComponent *>(d->components_map.value("zoom"));
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-
     double old_lb, old_ub;
     double xm, xM, ym, yM;
     bool need_xbounds = false, need_ybounds = false;
     QList<int> autoScaleAxisIds; // will contain only axes that need autoscaling
     QList<int> axisIds = QList<int>()<< QwtPlot::yLeft << QwtPlot::yRight << QwtPlot::xBottom << QwtPlot::xTop; // 0, 1, 2, 3
     foreach(int axisId, axisIds) {
-        if(((axisId == QwtPlot::xBottom && axisEnabled(QwtPlot::xBottom) ) || (axisId == QwtPlot::xTop && axisEnabled(QwtPlot::xTop))) && axes_c->autoscale(axisId)) {
+        if(((axisId == QwtPlot::xBottom && axisEnabled(QwtPlot::xBottom) ) || (axisId == QwtPlot::xTop && axisEnabled(QwtPlot::xTop))) && d->axes->autoscale(axisId)) {
             autoScaleAxisIds << axisId;
             need_xbounds = true;
         }
-        else if(((axisId == QwtPlot::yLeft && axisEnabled(QwtPlot::yLeft)) || (axisId == QwtPlot::yRight && axisEnabled(QwtPlot::yRight)) ) && axes_c->autoscale(axisId)) {
+        else if(((axisId == QwtPlot::yLeft && axisEnabled(QwtPlot::yLeft)) || (axisId == QwtPlot::yRight && axisEnabled(QwtPlot::yRight)) ) && d->axes->autoscale(axisId)) {
             autoScaleAxisIds << axisId;
             need_ybounds = true;
         }
     }
-    if(need_xbounds || need_ybounds) // get the bounds for the needed axes
-        axes_c->getBoundsFromCurves(this, &xm, &xM, &ym, &yM, need_xbounds, need_ybounds);
+    if(need_xbounds || need_ybounds) { // get the bounds for the needed axes
+        pretty_pri("need getting bounds for x: %s y %s", need_xbounds ? "YES" : "NO", need_ybounds ? "YES" : "NO");
+        d->axes->getBoundsFromCurves(this, &xm, &xM, &ym, &yM, need_xbounds, need_ybounds);
+        pretty_pri("got xm %f xM %f ym %f yM %f", xm, xM, ym, yM);
+    }
 
     foreach(int axisId, autoScaleAxisIds) {
-        old_lb = axes_c->lowerBoundFromCurves(axisId);
-        old_ub = axes_c->upperBoundFromCurves(axisId);
+        old_lb = d->axes->lowerBoundFromCurves(axisId);
+        old_ub = d->axes->upperBoundFromCurves(axisId);
         if(need_xbounds && (axisId == QwtPlot::xBottom || axisId == QwtPlot::xTop)) {
-            axes_c->setBoundsFromCurves(xm, xM, axisId);
+            pretty_pri("setting bounds %f %f on axis id %d", xm, xM, axisId);
+            d->axes->setBoundsFromCurves(xm, xM, axisId);
         }
         else if(need_ybounds && (axisId == QwtPlot::yRight || axisId == QwtPlot::yLeft))
-            axes_c->setBoundsFromCurves(ym, yM, axisId);
+            d->axes->setBoundsFromCurves(ym, yM, axisId);
 
-        if(zoomer && !zoomer->inZoom())
-            boundsChanged |= axes_c->applyScaleFromCurveBounds(this, axisId); // no updates until replot
-        else if(zoomer)
-            zoomer->changeRect(axisId, axes_c->lowerBoundFromCurves(axisId) - old_lb,
-                               axes_c->upperBoundFromCurves(axisId) - old_ub);
+        if(d->zoom && !d->zoom->inZoom())
+            boundsChanged |= d->axes->applyScaleFromCurveBounds(this, axisId); // no updates until replot
+        else if(d->zoom)
+            d->zoom->changeRect(axisId, d->axes->lowerBoundFromCurves(axisId) - old_lb,
+                                d->axes->upperBoundFromCurves(axisId) - old_ub);
     }
+    pretty_pri("returning bounds changed %s", boundsChanged ? "TRUE" : "FALSE");
     return boundsChanged;
 }
 
 void QuPlotBase::resetZoom()
 {
-    QuPlotZoomComponent* zoomer = static_cast<QuPlotZoomComponent *>(d->components_map.value("zoom"));
-    if(zoomer && !zoomer->inZoom())
-        zoomer->setZoomBase(false);
+    if(d->zoom && !d->zoom->inZoom())
+        d->zoom->setZoomBase(false);
 }
+
 /** \brief Calls updateMarkers, updateScales and replot, resetting the zoom base in the end.
  *
  * \note reimplement in subclasses to customise the behaviour (for example, to perform an
@@ -417,25 +446,27 @@ void QuPlotBase::resetZoom()
  * @see updateMarkers
  * @see updateScales
  */
-void QuPlotBase::refresh()
-{
-    updateMarker();
-    updateScales();
-    replot();
-    resetZoom();
+void QuPlotBase::refresh() {
+    bool scales_changed = false;
+    if(d->marker && d->marker->isVisible())
+        updateMarker();
+    if(d->axes)
+        scales_changed = updateScales();
+    scales_changed ? replot() : static_cast<QwtPlotCanvas *>(canvas())->replot();
+    if(d->zoom && !d->zoom->inZoom())
+        d->zoom->setZoomBase(false);
 }
 
 void QuPlotBase::drawCanvas(QPainter *p)
 {
     QwtPlot::drawCanvas(p);
-
-    CuData options;
-    QuPlotCanvasPainterComponent *painter_c =
-            static_cast<QuPlotCanvasPainterComponent *>(d->components_map.value("canvas_painter"));
-    options["show_title"] = titleOnCanvasEnabled();
-    options["show_zoom_hint"] = d->displayZoomHint;
-    options["zoom_disabled"] = zoomDisabled();
-    painter_c->update(p, this,  curves(), options);
+    if(d->canvas_painter) {
+        CuData options;
+        options["show_title"] = titleOnCanvasEnabled();
+        options["show_zoom_hint"] = d->displayZoomHint;
+        options["zoom_disabled"] = zoomDisabled();
+        d->canvas_painter->update(p, this,  curves(), options);
+    }
 }
 
 void QuPlotBase::setTitleOnCanvasEnabled(bool en)
@@ -450,7 +481,7 @@ QList<QwtPlotCurve *> QuPlotBase::curves() const
     foreach(QwtPlotItem* i, itemList())
     {
         if(i->rtti() == QwtPlotItem::Rtti_PlotCurve ||
-                i->rtti() == QuPlotCurve::Rtti_PlotUserItem + RTTI_CURVE_OFFSET)
+            i->rtti() == QuPlotCurve::Rtti_PlotUserItem + RTTI_CURVE_OFFSET)
             curves.push_back(static_cast<QwtPlotCurve* >(i));
     }
     return curves;
@@ -551,10 +582,8 @@ void QuPlotBase::setRefreshTimeout(int millis)
     }
 }
 
-void QuPlotBase::setDefaultBounds(double lb, double ub, QwtPlot::Axis axisId)
-{
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    axes_c->setDefaultBounds(this, axisId, lb, ub);
+void QuPlotBase::setDefaultBounds(double lb, double ub, QwtPlot::Axis axisId) {
+     d->axes->setDefaultBounds(this, axisId, lb, ub);
 }
 
 /*! \brief restores the bounds set with setDefaultBounds
@@ -568,8 +597,7 @@ void QuPlotBase::setDefaultBounds(double lb, double ub, QwtPlot::Axis axisId)
  */
 void QuPlotBase::restoreDefaultBounds(QwtPlot::Axis axisId)
 {
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    axes_c->restoreDefaultBounds(this, axisId);
+    d->axes->restoreDefaultBounds(this, axisId);
     replot();
 }
 
@@ -585,10 +613,8 @@ void QuPlotBase::restoreDefaultBounds(QwtPlot::Axis axisId)
  */
 void QuPlotBase::setAxisScaleDefaultEnabled(bool en, QwtPlot::Axis axisId)
 {
-    if(en)
-    {
-        QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-        axes_c->setAutoscale(axisId, false);
+    if(en) {
+        d->axes->setAutoscale(axisId, false);
         restoreDefaultBounds(); // QuPlotAxesComponent::ScaleMode is set to SemiAutomatic
     }
 }
@@ -596,6 +622,7 @@ void QuPlotBase::setAxisScaleDefaultEnabled(bool en, QwtPlot::Axis axisId)
 void QuPlotBase::appendData(const QString& curveName, double *x, double *y, int size)
 {
     QuPlotCurve* curve = this->curve(curveName);
+    pretty_pri("curve: %p searcjed wotj ma,e %s", curve, qstoc(curveName));
     if(!curve)
         return;
     int bufSiz = dataBufferSize();
@@ -646,13 +673,11 @@ void QuPlotBase::setCurveStyle(const QString &name, QwtPlotCurve::CurveStyle sty
 bool QuPlotBase::titleOnCanvasEnabled() { return d->titleOnCanvasEnabled; }
 
 bool QuPlotBase::xAxisAutoscaleEnabled(QwtPlot::Axis axis) {
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    return axes_c->autoscale(axis);
+    return d->axes->autoscale(axis);
 }
 
 bool QuPlotBase::yAxisAutoscaleEnabled(QwtPlot::Axis axis) {
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    return axes_c->autoscale(axis);
+    return d->axes->autoscale(axis);
 }
 
 void QuPlotBase::setDataBufferSize(int s)
@@ -666,20 +691,18 @@ int QuPlotBase::dataBufferSize() {
 
 void QuPlotBase::setXAxisAutoscaleEnabled(bool autoscale, QwtPlot::Axis axis)
 {
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    axes_c->setAutoscale(axis, autoscale);
+    d->axes->setAutoscale(axis, autoscale);
     if(!autoscale) {
-        axes_c->setBounds(this, axis, axisScaleDiv(axis).lowerBound(), axisScaleDiv(axis).upperBound());
+        d->axes->setBounds(this, axis, axisScaleDiv(axis).lowerBound(), axisScaleDiv(axis).upperBound());
     }
     replot();
 }
 
 void QuPlotBase::setYAxisAutoscaleEnabled(bool autoscale, QwtPlot::Axis axis)
 {
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    axes_c->setAutoscale(axis, autoscale);
+    d->axes->setAutoscale(axis, autoscale);
     if(!autoscale)
-        axes_c->setBounds(this, axis, axisScaleDiv(axis).lowerBound(), axisScaleDiv(axis).upperBound());
+        d->axes->setBounds(this, axis, axisScaleDiv(axis).lowerBound(), axisScaleDiv(axis).upperBound());
     replot();
 }
 
@@ -693,20 +716,65 @@ void QuPlotBase::setYAxisAutoscaleEnabled(bool autoscale)
     setYAxisAutoscaleEnabled(autoscale, QwtPlot::yLeft);
 }
 
+QWidget* QuPlotBase::createCanvas(bool opengl) {
+    QWidget *ca = nullptr;
+#ifndef QWT_NO_OPENGL
+    if (opengl) {
+        ca = qobject_cast< QwtPlotOpenGLCanvas* >( canvas() );
+        if (ca == nullptr) {
+            pretty_pri("switching to \e[1;32mopenGL\e[0m canvas");
+            ca = new QwtPlotOpenGLCanvas();
+        }
+    }
+    else
+#endif   // ifndef QWT_NO_OPENGL
+    {
+        ca = qobject_cast< QwtPlotCanvas* >( canvas() );
+        if (ca == nullptr) {
+            pretty_pri("disabling \033[1;33mopenGL\e[0m");
+            ca = new QwtPlotCanvas();
+        }
+    }
+    return ca;
+}
+
+void QuPlotBase::setOpenGL(bool openGL) {
+    if(openGL != isOpenGL()) {
+        QWidget* pcanvas = createCanvas(openGL);
+        m_canvas_conf(pcanvas);
+        setCanvas(pcanvas);
+        m_align_scales(); // 2.1, inspired by refreshtest example
+        QuPlotZoomComponent* z = static_cast<QuPlotZoomComponent *>(d->components_map.value("zoom"));
+        if(z)
+            z->canvasChanged(this);
+    }
+}
+
+void QuPlotBase::m_canvas_conf(QWidget* canvasw) {
+    QwtPlotCanvas *ca = qobject_cast<QwtPlotCanvas *>(canvasw);
+    QwtPlotOpenGLCanvas *oca = nullptr;
+    if(ca) {
+        ca->setFrameStyle( QFrame::Box | QFrame::Plain );
+        ca->setLineWidth( 1 );
+        ca->setPalette( Qt::white );
+    } else if((oca = qobject_cast<QwtPlotOpenGLCanvas *>(canvasw)) != nullptr) {
+        oca->setFrameStyle( QFrame::Box | QFrame::Plain );
+        oca->setLineWidth( 1 );
+        oca->setPalette( QColor("WhiteSmoke"));
+    }
+}
 
 void QuPlotBase::setXTopAxisAutoscaleEnabled(bool autoscale) {
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    axes_c->setAutoscale(QwtPlot::xTop, autoscale);
+    d->axes->setAutoscale(QwtPlot::xTop, autoscale);
     if(!autoscale)
-        axes_c->setBounds(this, QwtPlot::xTop, axisScaleDiv(QwtPlot::xTop).lowerBound(), axisScaleDiv(QwtPlot::xTop).upperBound());
+        d->axes->setBounds(this, QwtPlot::xTop, axisScaleDiv(QwtPlot::xTop).lowerBound(), axisScaleDiv(QwtPlot::xTop).upperBound());
     replot();
 }
 
 void QuPlotBase::setYRightAxisAutoscaleEnabled(bool autoscale) {
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    axes_c->setAutoscale(QwtPlot::yRight, autoscale);
+    d->axes->setAutoscale(QwtPlot::yRight, autoscale);
     if(!autoscale)
-        axes_c->setBounds(this, QwtPlot::yRight, axisScaleDiv(QwtPlot::yRight).lowerBound(), axisScaleDiv(QwtPlot::yRight).upperBound());
+        d->axes->setBounds(this, QwtPlot::yRight, axisScaleDiv(QwtPlot::yRight).lowerBound(), axisScaleDiv(QwtPlot::yRight).upperBound());
     replot();
 }
 
@@ -723,20 +791,16 @@ double QuPlotBase::yLowerBound(QwtPlot::Axis axis)
 /*
  * \brief Disable autoscale and set y lower bound
  */
-void QuPlotBase::setYLowerBound(double l)
-{
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    axes_c->setManualBounds(this, QwtPlot::yLeft, l, axisScaleDiv(QwtPlot::yLeft).upperBound());
+void QuPlotBase::setYLowerBound(double l) {
+    d->axes->setManualBounds(this, QwtPlot::yLeft, l, axisScaleDiv(QwtPlot::yLeft).upperBound());
     refresh();
 }
 
 /*
  * \brief Disable autoscale and set x upper bound
  */
-void QuPlotBase::setYUpperBound(double u)
-{
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    axes_c->setManualBounds(this, QwtPlot::yLeft, axisScaleDiv(QwtPlot::yLeft).lowerBound(), u);
+void QuPlotBase::setYUpperBound(double u) {
+    d->axes->setManualBounds(this, QwtPlot::yLeft, axisScaleDiv(QwtPlot::yLeft).lowerBound(), u);
     refresh();
 }
 
@@ -753,27 +817,21 @@ double QuPlotBase::xLowerBound(QwtPlot::Axis axis)
 /*
  * \brief Disable autoscale and set x lower bound
  */
-void QuPlotBase::setXLowerBound(double l)
-{
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    axes_c->setManualBounds(this, QwtPlot::xBottom, l, axisScaleDiv(QwtPlot::xBottom).upperBound());
+void QuPlotBase::setXLowerBound(double l) {
+    d->axes->setManualBounds(this, QwtPlot::xBottom, l, axisScaleDiv(QwtPlot::xBottom).upperBound());
     replot();
 }
 
 /*
  * \brief Disable autoscale and set x upper bound
  */
-void QuPlotBase::setXUpperBound(double u)
-{
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    axes_c->setManualBounds(this, QwtPlot::xBottom, axisScaleDiv(QwtPlot::xBottom).lowerBound(), u);
+void QuPlotBase::setXUpperBound(double u) {
+    d->axes->setManualBounds(this, QwtPlot::xBottom, axisScaleDiv(QwtPlot::xBottom).lowerBound(), u);
     replot();
 }
 
-void QuPlotBase::setXAutoscaleMargin(double adj)
-{
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    axes_c->setAutoscaleMargin(QwtPlot::xBottom, adj);
+void QuPlotBase::setXAutoscaleMargin(double adj) {
+    d->axes->setAutoscaleMargin(QwtPlot::xBottom, adj);
 }
 
 /*! \brief add some extra upper bound to the specified axis to optimize replot operations when the
@@ -782,33 +840,24 @@ void QuPlotBase::setXAutoscaleMargin(double adj)
  * @param axisId the axis id, one of QwtPlot::xBottom, QwtPlot::xTop, QwtPlot::yLeft, QwtPlot::yRight
  * @param e the extra bound to add to the scale, percentage expressed from 0 to 1
  */
-void QuPlotBase::setUpperBoundExtra(int axisId, double e)
-{
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    axes_c->setUpperBoundExtra(axisId, e);
+void QuPlotBase::setUpperBoundExtra(int axisId, double e){
+    d->axes->setUpperBoundExtra(axisId, e);
 }
 
-double QuPlotBase::upperBoundExtra(int axisId) const
-{
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    return axes_c->upperBoundExtra(axisId);
+double QuPlotBase::upperBoundExtra(int axisId) const {
+    return d->axes->upperBoundExtra(axisId);
 }
 
 double QuPlotBase::xAutoscaleMargin() {
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    return axes_c->autoscaleMargin(QwtPlot::xBottom);
+    return d->axes->autoscaleMargin(QwtPlot::xBottom);
 }
 
-void QuPlotBase::setYAutoscaleAdjustment(double a)
-{
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    axes_c->setAutoscaleMargin(QwtPlot::yLeft, a);
+void QuPlotBase::setYAutoscaleAdjustment(double a) {
+    d->axes->setAutoscaleMargin(QwtPlot::yLeft, a);
 }
 
-double QuPlotBase::yAutoscaleAdjustment()
-{
-    QuPlotAxesComponent *axes_c = static_cast<QuPlotAxesComponent *>(d->components_map.value("axes"));
-    return axes_c->autoscaleMargin(QwtPlot::yLeft);
+double QuPlotBase::yAutoscaleAdjustment() {
+    return d->axes->autoscaleMargin(QwtPlot::yLeft);
 }
 
 bool QuPlotBase::xAxisLogScale(QwtPlot::Axis axis)
@@ -872,15 +921,17 @@ void QuPlotBase::setZoomDisabled(bool disable)
         canvas()->removeEventFilter(shiftClickEater);
         delete shiftClickEater;
     }
-    QuPlotZoomComponent *zoom_c = static_cast<QuPlotZoomComponent *>(d->components_map["zoom"]);
+    QuPlotZoomComponent *zoom_c = static_cast<QuPlotZoomComponent *>(d->components_map.value("zoom"));
     if(!disable && !zoom_c) {
         zoom_c = new QuPlotZoomComponent(this);
         zoom_c->attachToPlot(this);
         zoom_c->connectToPlot(this);
         d->components_map.insert(zoom_c->name(), zoom_c);
+        d->zoom = zoom_c;
     }
     else if(zoom_c) {
         d->components_map.remove("zoom");
+        d->zoom = nullptr;
         delete zoom_c;
     }
 }
@@ -895,7 +946,7 @@ int QuPlotBase::findClosestPoint(QPoint p, QwtPlotCurve **closestCrv)
     *closestCrv = nullptr;
     foreach(QwtPlotItem* i, itemList()) {
         if(i->rtti() == QwtPlotItem::Rtti_PlotUserItem + RTTI_CURVE_OFFSET ||
-                i->rtti() == QwtPlotItem::Rtti_PlotCurve)
+            i->rtti() == QwtPlotItem::Rtti_PlotCurve)
         {
             QwtPlotCurve *c = static_cast<QwtPlotCurve* >(i);
             if(c->isVisible())
@@ -923,8 +974,10 @@ int QuPlotBase::findClosestPoint(QPoint p, QwtPlotCurve **closestCrv)
 
 void QuPlotBase::hideMarker()
 {
-    static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"))->hide();
-    replot();
+    if(d->marker) {
+        d->marker->hide();
+        replot();
+    }
 }
 
 void QuPlotBase::mouseReleaseEvent(QMouseEvent *ev)
@@ -952,10 +1005,8 @@ void QuPlotBase::keyPressEvent(QKeyEvent *ke)
         QwtPlot::keyPressEvent(ke);
 }
 
-void QuPlotBase::plotZoomed(const QRectF&)
-{
-    QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
-    if(marker->isVisible()) {
+void QuPlotBase::plotZoomed(const QRectF&) {
+    if(d->marker && d->marker->isVisible()) {
         hideMarker();
         emit markerVisibilityChanged(false);
     }
@@ -982,6 +1033,7 @@ void QuPlotBase::moveCurveToYRight(QwtPlotCurve *c, bool yr)
 
 void QuPlotBase::showMarker(const QPolygon &p)
 {
+    pretty_pri("show marker called");
     int closestPoint;
     QwtPlotCurve *closestCurve = nullptr;
     double x = 0.0, y = 0.0;
@@ -1007,30 +1059,29 @@ void QuPlotBase::showMarker(const QPolygon &p)
 
 void QuPlotBase::m_updateLabel(QwtPlotCurve *closestCurve, int closestPointIdx)
 {
-    QuPlotMarkerComponent *marker = static_cast<QuPlotMarkerComponent *>(d->components_map.value("marker"));
-    if(closestCurve && closestPointIdx > -1 && marker->isVisible()) {
-        marker->update(this, closestCurve, closestPointIdx);
+    if(d->marker && closestCurve && closestPointIdx > -1 && d->marker->isVisible()) {
+        d->marker->update(this, closestCurve, closestPointIdx);
     }
 }
 
 void QuPlotBase::print() {
-    static_cast<QuPlotContextMenuComponent *>(d->components_map["context_menu"])->print(this);
+    static_cast<QuPlotContextMenuComponent *>(d->components_map.value("context_menu"))->print(this);
 }
 
 void QuPlotBase::snapshot(){
-    static_cast<QuPlotContextMenuComponent *>(d->components_map["context_menu"])->snapshot(this);
+    static_cast<QuPlotContextMenuComponent *>(d->components_map.value("context_menu"))->snapshot(this);
 }
 
 void QuPlotBase::copyImage(){
-    static_cast<QuPlotContextMenuComponent *>(d->components_map["context_menu"])->copyImage(this);
+    static_cast<QuPlotContextMenuComponent *>(d->components_map.value("context_menu"))->copyImage(this);
 }
 
 void QuPlotBase::saveData(){
-    static_cast<QuPlotContextMenuComponent *>(d->components_map["context_menu"])->saveData(this);
+    static_cast<QuPlotContextMenuComponent *>(d->components_map.value("context_menu"))->saveData(this);
 }
 
 void QuPlotBase::configurePlot(){
-    static_cast<QuPlotContextMenuComponent *>(d->components_map["context_menu"])->configurePlot(this);
+    static_cast<QuPlotContextMenuComponent *>(d->components_map.value("context_menu"))->configurePlot(this);
 }
 
 QDialog *QuPlotBase::createConfigureDialog()

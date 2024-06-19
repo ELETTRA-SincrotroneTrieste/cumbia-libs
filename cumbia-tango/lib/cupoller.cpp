@@ -32,8 +32,8 @@ CuPoller::CuPoller(CumbiaTango *cu_t, int period)
     d = new CuPollerPrivate;
     d->period = period;
     d->cumbia_t = cu_t;
-    d->token = CuData(CuDType::Period, period);
-    d->token[CuDType::Class] = "CuPoller";
+    d->token = CuData(TTT::Period, period);
+    d->token[TTT::Class] = "CuPoller";
     d->token["activity_count"] = 0;
     //    d->deliveringResults = false;
     d->my_thread = pthread_self();
@@ -66,9 +66,9 @@ void CuPoller::registerAction(const TSource& tsrc,
     CuDeviceFactoryService *df =
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
-    CuData at(CuDType::Device, tsrc.getDeviceName()); /* activity token */
-    at[CuDType::Activity] = "poller";
-    at[CuDType::Period] = d->period;
+    CuData at(TTT::Device, tsrc.getDeviceName()); /* activity token */
+    at[TTT::Activity] = "poller";
+    at[TTT::Period] = d->period;
     CuActivity *activity = am->find(at); // polling activities compare device period and "activity"
     if(!activity) {
         // thread token. CuTReader.setOptions can customize thread grouping behaviour
@@ -91,8 +91,8 @@ void CuPoller::unregisterAction(CuTangoActionI *a) {
     if(d->actions_map.find(s) != d->actions_map.end()) {
         d->actions_map.erase(s);
         const TSource &tsrc = a->getSource();
-        CuData at(CuDType::Device, tsrc.getDeviceName()); /* activity token */
-        at.set(CuDType::Activity, "poller").set(CuDType::Period, d->period);  // set("activity", "poller")
+        CuData at(TTT::Device, tsrc.getDeviceName()); /* activity token */
+        at.set(TTT::Activity, "poller").set(TTT::Period, d->period);  // set("activity", "poller")
         CuActivityManager *am = static_cast<CuActivityManager *>(d->cumbia_t->getServiceProvider()->
                                                                  get(static_cast<CuServices::Type> (CuServices::ActivityManager)));
         if(d->actions_map.size() == 0)
@@ -140,7 +140,7 @@ void CuPoller::onResult(const std::vector<CuData> &datalist) {
     assert(d->my_thread == pthread_self());
     // for each CuData, get the point and find the associated CuTangoActionI's, if still there's one or more
     for(size_t i = 0; i < datalist.size(); i++) {
-        const std::string& src = datalist[i][CuDType::Src].toString();
+        const std::string& src = datalist[i][TTT::Src].toString();
         CuTangoActionI *a = m_find_a(src);
         if(a) a->onResult(datalist[i]);
     }

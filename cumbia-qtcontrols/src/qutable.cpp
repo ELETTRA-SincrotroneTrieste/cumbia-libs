@@ -4,6 +4,7 @@
 #include <cumacros.h>
 #include <cudata.h>
 #include <cucontrolsutils.h>
+#include <quapplication.h>
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
 #include "cucontext.h"
@@ -42,10 +43,19 @@ QuTable::QuTable(QWidget *parent, Cumbia *cumbia, const CuControlsReaderFactoryI
  *   Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */
 QuTable::QuTable(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) :
-    EFlag(w), CuDataListener()
-{
+    EFlag(w), CuDataListener() {
     m_init();
     d->context = new CuContext(cumbia_pool, fpool);
+    m_initCtx();
+}
+
+/*! \brief classical constructor with parent widget.
+ *  \note *QuApplication* is mandatory.
+ */
+QuTable::QuTable(QWidget *parent) : EFlag(parent) {
+    m_init();
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    d->context = new CuContext(a->cumbiaPool(), *a->fpool());
     m_initCtx();
 }
 
@@ -116,10 +126,10 @@ void QuTable::onUpdate(const CuData& da)
 {
     QColor background, border;
     const QString& msg = d->u.msg(da);
-    d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
+    d->read_ok = !da[TTT::Err].toBool();  // da["err"]
     setEnabled(d->read_ok);
 
-    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property")  // da["type"]
+    if(d->read_ok && d->auto_configure && da[TTT::Type].toString() == "property")  // da["type"]
         configure(da);
 
     // update link statistics
@@ -127,18 +137,18 @@ void QuTable::onUpdate(const CuData& da)
     if(!d->read_ok)
         d->context->getLinkStats()->addError(msg.toStdString());
 
-    if(da.containsKey(CuDType::QualityColor))  // da.containsKey("qc")
-        border = d->palette[QString::fromStdString(da[CuDType::QualityColor].toString())];  // da["qc"]
+    if(da.containsKey(TTT::QualityColor))  // da.containsKey("qc")
+        border = d->palette[QString::fromStdString(da[TTT::QualityColor].toString())];  // da["qc"]
 
     setToolTip(msg);
 
-    if(da[CuDType::Err].toBool() ) {  // da["err"]
+    if(da[TTT::Err].toBool() ) {  // da["err"]
         foreach(ELabel *l, cells)
             l->setText("####");
     }
-    else if(da.containsKey(CuDType::Value))  // da.containsKey("value")
+    else if(da.containsKey(TTT::Value))  // da.containsKey("value")
     {
-        CuVariant val = da[CuDType::Value];  // da["value"]
+        CuVariant val = da[TTT::Value];  // da["value"]
         if(val.getType() == CuVariant::UInt && val.getFormat() == CuVariant::Scalar)
             EFlag::setValue(QVariant(val.toUInt()));
         else if(val.getType() == CuVariant::UShort && val.getFormat() == CuVariant::Scalar)
@@ -171,8 +181,8 @@ void QuTable::onUpdate(const CuData& da)
             setToolTip(QString("Wrong data type %1 format %2").arg(val.getType()).arg(val.getFormat()));
         }
     }
-    if(da.containsKey(CuDType::StateColor)) {  // da.containsKey("sc")
-        CuVariant v = da[CuDType::StateColor];  // da["sc"]
+    if(da.containsKey(TTT::StateColor)) {  // da.containsKey("sc")
+        CuVariant v = da[TTT::StateColor];  // da["sc"]
         background = d->palette[QString::fromStdString(v.toString())];
     }
 
@@ -183,8 +193,8 @@ void QuTable::onUpdate(const CuData& da)
 }
 
 void QuTable::configure (const CuData& da) {
-    if(da.containsKey(CuDType::Description))  // da.containsKey("description")
-        setWhatsThis(da[CuDType::Description].toString().c_str());  // da["description"]
+    if(da.containsKey(TTT::Description))  // da.containsKey("description")
+        setWhatsThis(da[TTT::Description].toString().c_str());  // da["description"]
 
     try
     {

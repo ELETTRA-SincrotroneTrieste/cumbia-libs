@@ -3,6 +3,7 @@
 #include <cudata.h>
 #include <cumbia.h>
 #include <cuserviceprovider.h>
+#include <quapplication.h>
 
 #include "cucontrolswriter_abs.h"
 #include "cucontrolsfactories_i.h"
@@ -15,25 +16,31 @@
 class QuSpinBoxPrivate
 {
 public:
+    QuSpinBoxPrivate() : context(nullptr), auto_configure(true) {}
     CuContext *context;
     bool auto_configure;
     CuControlsUtils u;
 };
 
 QuSpinBox::QuSpinBox(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac)
-    : QSpinBox(parent)
-{
+    : QSpinBox(parent) {
     d = new QuSpinBoxPrivate;
     d->context = new CuContext(cumbia, w_fac);
-    d->auto_configure = true;
 }
 
 QuSpinBox::QuSpinBox(QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
-    : QSpinBox(parent)
-{
+    : QSpinBox(parent) {
     d = new QuSpinBoxPrivate;
     d->context = new CuContext(cumbia_pool, fpool);
-    d->auto_configure = true;
+}
+
+/*! \brief classical constructor with parent widget.
+ *  \note *QuApplication* is mandatory.
+ */
+QuSpinBox::QuSpinBox(QWidget *parent) : QSpinBox(parent) {
+    d = new QuSpinBoxPrivate;
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    d->context = new CuContext(a->cumbiaPool(), *a->fpool());
 }
 
 QuSpinBox::~QuSpinBox()
@@ -50,15 +57,14 @@ CuContext *QuSpinBox::getContext() const
 void QuSpinBox::onUpdate(const CuData &da)
 {
     const QString& msg = d->u.msg(da);
-    if(da[CuDType::Err].toBool())  // da["err"]
+    if(da[TTT::Err].toBool())  // da["err"]
     {
         perr("QuSpinBox [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
-             da[CuDType::Src].toString().c_str(), qstoc(msg),  // da["src"]
-                da[CuDType::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
-
+             da[TTT::Src].toString().c_str(), qstoc(msg),
+             da[TTT::DataFormatStr].toString().c_str(), da[TTT::Writable].toInt());
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->context->cumbiaPool()->getBySrc(da[CuDType::Src].toString());  // da["src"]
+            cumbia = d->context->cumbiaPool()->getBySrc(da[TTT::Src].toString());
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
@@ -66,15 +72,15 @@ void QuSpinBox::onUpdate(const CuData &da)
             log->write(QString("QuSpinBox [" + objectName() + "]").toStdString(), msg.toStdString(), CuLog::LevelError, CuLog::CategoryWrite);
         }
     }
-    else if(d->auto_configure && da[CuDType::Type].toString() == "property")  // da["type"]
+    else if(d->auto_configure && da[TTT::Type].toString() == "property")
     {
         QString desc = "";
-        if(da[CuDType::DataFormatStr] == "scalar" && da["writable"].toInt() > 0)  // da["dfs"]
+        if(da[TTT::DataFormatStr] == "scalar" && da[TTT::Writable].toInt() > 0)
         {
             /* first apply format, if - correctly - specified */
             CuVariant m, M;
-            m = da[CuDType::Min];  // da["min"]
-            M = da[CuDType::Max];  // da["max"]
+            m = da[TTT::Min];
+            M = da[TTT::Max];
             int min, max;
             bool ok;
             ok = m.to<int>(min);
@@ -90,17 +96,17 @@ void QuSpinBox::onUpdate(const CuData &da)
 
             /* can set current values instead */
             int val;
-            bool can_be_int = da[CuDType::WriteValue].to<int>(val);  // da["w_value"]
+            bool can_be_int = da[TTT::WriteValue].to<int>(val);
             if (can_be_int)
                 setValue(val);
-            if(!da[CuDType::Description].isNull()) {  // da["description"]
-                desc.prepend(QString::fromStdString(da[CuDType::Description].toString()));  // da["description"]
+            if(!da[TTT::Description].isNull()) {
+                desc.prepend(QString::fromStdString(da[TTT::Description].toString()));
             }
             setWhatsThis(desc);
         }
         else
             perr("QuSpinBox [%s]: invalid data format \"%s\" or read only source (writable: %d)", qstoc(objectName()),
-                 da[CuDType::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
+                 da[TTT::DataFormatStr].toString().c_str(), da[TTT::Writable].toInt());
 
     }
 }

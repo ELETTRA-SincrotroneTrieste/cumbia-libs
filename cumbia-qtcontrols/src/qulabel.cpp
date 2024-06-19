@@ -13,6 +13,7 @@
 #include <QToolTip>
 #include <QHelpEvent>
 #include <cuengineaccessor.h>
+#include <quapplication.h>
 
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
@@ -65,16 +66,21 @@ QuLabel::QuLabel(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPoo
     m_initCtx();
 }
 
+/*!
+ * \brief Classical, single parent-widget constructor. *QuApplication* properly initialized with
+ *        cumbia engine objects is compulsory.
+ *
+ * \param parent widget
+ * \par Important note: cumbia engine references are obtained from the QuApplication instance.
+ *      For best performance, static cast of QCoreApplication::instance() to QuApplication is
+ *      used.
+ * \since cumbia 2.1
+ */
 QuLabel::QuLabel(QWidget *w) : QuLabelBase(w), CuDataListener() {
-    CuEngineAccessor *a = QCoreApplication::instance()->findChild<CuEngineAccessor *>();
-    printf("\e[1;32mQuLabel %p\e[0m\n", this);
-    foreach(QObject *child, QCoreApplication::instance()->findChildren<QObject *>())
-        printf("child %s class %s -- %p\n", qstoc(child->objectName()), child->metaObject()->className(), child);
-    if(a) {
-        m_init();
-        d->context = new CuContext(a);
-        m_initCtx();
-    }
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    m_init();
+    d->context = new CuContext(a->cumbiaPool(), *a->fpool());
+    m_initCtx();
 }
 
 void QuLabel::m_init()
@@ -106,7 +112,7 @@ void QuLabel::m_initCtx()
 
 void QuLabel::m_configure(const CuData &da)
 {
-    const char* u = da["display_unit"].c_str(), *fm = da[CuDType::NumberFormat].c_str();
+    const char* u = da["display_unit"].c_str(), *fm = da[TTT::NumberFormat].c_str();
     u != nullptr && strlen(u) > 0 ? snprintf(d->display_u, 16, " [%s]", u) : d->display_u[0] = '\0';
     if(format().isEmpty() && fm != nullptr)
         setFormat(fm);
@@ -246,15 +252,15 @@ bool QuLabel::ctxSwap(CumbiaPool *c_p, const CuControlsFactoryPool &fpool) {
 void QuLabel::onUpdate(const CuData &da)
 {
     //    auto start = std::chrono::high_resolution_clock::now();
-    const bool& ok = !da[CuDType::Err].toBool();
-    const char *mode = da[CuDType::Mode].c_str();
+    const bool& ok = !da[TTT::Err].toBool();
+    const char *mode = da[TTT::Mode].c_str();
     bool event = mode != nullptr && strcmp(mode, "E") == 0;
     bool update = event; // if data is delivered by an event, always refresh
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!event) { // data generated periodically by a poller or by something else
         // update label if value changed
-        update = !ok || d->last_d[CuDType::Value] != da[CuDType::Value];
+        update = !ok || d->last_d[TTT::Value] != da[TTT::Value];
         // onUpdate measures better with d->last_d = da; than with d->last_d = da.clone()
         // even though measured alone the clone version performs better
         //        d->last_d = da.clone(); // clone does a copy, then contents moved into last_d
@@ -269,7 +275,7 @@ void QuLabel::onUpdate(const CuData &da)
     if(update) {
         QColor background;
         if(!ok)
-            d->context->getLinkStats()->addError(da.c_str(CuDType::Message));
+            d->context->getLinkStats()->addError(da.c_str(TTT::Message));
 
         if(ok != d->read_ok) {
             QColor border;
@@ -282,12 +288,12 @@ void QuLabel::onUpdate(const CuData &da)
             setText("####");
         }
         else {
-            if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {
+            if(d->read_ok && d->auto_configure && da[TTT::Type].toString() == "property") {
                 m_configure(da);
                 emit propertyReady(da);
             }
-            if(da.containsKey(CuDType::Value))  {
-                const CuVariant& val = da[CuDType::Value];
+            if(da.containsKey(TTT::Value))  {
+                const CuVariant& val = da[TTT::Value];
                 QuLabelBase::decode(val, background);
                 if(d->display_u_enabled && strlen(d->display_u) > 0 &&
                     strlen(d_data->text) + strlen(d->display_u) + 1 < QULABEL_MAXLEN) {
@@ -302,8 +308,8 @@ void QuLabel::onUpdate(const CuData &da)
         else {
 
             // check for state color string change before accessing palette
-            const char* statc = da.c_str(CuDType::StateColor);
-            const char* laststatc = d->last_d.c_str(CuDType::StateColor);
+            const char* statc = da.c_str(TTT::StateColor);
+            const char* laststatc = d->last_d.c_str(TTT::StateColor);
             if((statc && !laststatc) || (statc && laststatc && strcmp(statc, laststatc) != 0)) {
                 background = d->palette[statc];
                 if(background.isValid()) {
@@ -311,8 +317,8 @@ void QuLabel::onUpdate(const CuData &da)
                 }
             }
             else if(!background.isValid()) {
-                const char *qc = da.c_str(CuDType::QualityColor);
-                const char *lastqc = d->last_d.c_str(CuDType::QualityColor);
+                const char *qc = da.c_str(TTT::QualityColor);
+                const char *lastqc = d->last_d.c_str(TTT::QualityColor);
                 // background has not already been set by QuLabelBase::setValue (this happens if either a
                 // boolean display or enum display have been configured)
                 // if so, use the "qc" as a background

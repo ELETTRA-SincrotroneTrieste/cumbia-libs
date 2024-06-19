@@ -63,7 +63,7 @@ QString EditSourceWidget::source() const
     else {
         s = ui.lineEdit->text();
     }
-    printf("\e[1;32mreturning source %s\e[0m\n", (s.toStdString().c_str()));
+    pretty_pri("returning source %s", (s.toStdString().c_str()));
     return s;
 }
 

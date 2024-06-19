@@ -11,10 +11,11 @@
 #include "culinkstats.h"
 #include "cucontext.h"
 #include "quplotcontextmenustrategy.h"
-
+#include "quplotdatabuf.h"
 #include "qutimescaledraw.h"
 #include <QImage>
 #include <cucontrolsutils.h>
+#include <quapplication.h>
 #include <quplotcurve.h>
 #include <qwt_date_scale_engine.h>
 
@@ -26,15 +27,7 @@ public:
     bool read_ok;
     QuPlotCommon *plot_common;
     QuTimeScaleDraw *timeScaleDraw;
-    QVector<double> x_data;
     CuControlsUtils u;
-
-    void fill_x_data(int c)
-    {
-        x_data.clear();
-        for(int i = 0; i < c; i++)
-            x_data << static_cast<double>(i);
-    }
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
@@ -61,6 +54,24 @@ QuSpectrumPlot::QuSpectrumPlot(QWidget *w, CumbiaPool *cumbia_pool, const CuCont
     m_init();
 }
 
+/*!
+ * \brief Classical, single parent-widget constructor. *QuApplication* properly initialized with
+ *        cumbia engine objects is compulsory.
+ *
+ * \param parent widget
+ * \par Important note: cumbia engine references are obtained from the QuApplication instance.
+ *      For best performance, static cast of QCoreApplication::instance() to QuApplication is
+ *      used.
+ *
+ * \since cumbia 2.1
+ */
+QuSpectrumPlot::QuSpectrumPlot(QWidget *parent) : QuPlotBase(parent) {
+    d = new QuSpectrumPlotPrivate;
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    d->plot_common = new QuPlotCommon(a->cumbiaPool(), *a->fpool());
+    m_init();
+}
+
 QuSpectrumPlot::~QuSpectrumPlot()
 {
     pdelete("~QuSpectrumPlot %p", this);
@@ -73,6 +84,7 @@ void QuSpectrumPlot::m_init()
     d->auto_configure = true;
     d->read_ok = false;
     setContextMenuStrategy(new QuPlotContextMenuStrategy(this));
+    setXAxisAutoscaleEnabled(false);
 }
 
 QString QuSpectrumPlot::source() const
@@ -100,7 +112,7 @@ void QuSpectrumPlot::setSources(const QStringList &l)
 void QuSpectrumPlot::ctxSwap(CumbiaPool *cp, const CuControlsFactoryPool& fp) {
     const QStringList &l = d->plot_common->sources();
     d->plot_common->unsetSources();
-//    unsetSources();
+    //    unsetSources();
     d->plot_common->setSources(l, this, new CuContext(cp, fp));
 }
 
@@ -133,8 +145,8 @@ void QuSpectrumPlot::unsetSource(const QString& src)
  */
 void QuSpectrumPlot::setPeriod(int p)
 {
-    d->plot_common->getContext()->setOptions(CuData("period", p));
-    d->plot_common->getContext()->sendData(CuData("period", p));
+    d->plot_common->getContext()->setOptions(CuData(TTT::Period, p));
+    d->plot_common->getContext()->sendData(CuData(TTT::Period, p));
 }
 
 /** \brief Get the refresh period of the sources issuing a getData on the first reader in the list.
@@ -150,8 +162,8 @@ void QuSpectrumPlot::setPeriod(int p)
 int QuSpectrumPlot::period() const
 {
     const CuData& options = d->plot_common->getContext()->options();
-    if(options.containsKey(CuDType::Period))  // options.containsKey("period")
-        return options[CuDType::Period].toInt();  // options["period"]
+    if(options.containsKey(TTT::Period))
+        return options[TTT::Period].toInt();
     return 1000;
 }
 
@@ -173,52 +185,43 @@ void QuSpectrumPlot::onUpdate(const CuData &da)
 
 void QuSpectrumPlot::update(const CuData &da)
 {
-    d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
-    const CuVariant &v = da[CuDType::Value];  // da["value"]
-    const QString &src = QString::fromStdString(da[CuDType::Src].toString());  // da["src"]
-    const QString& msg = d->u.msg(da);
-
+    d->read_ok = !da[TTT::Err].toBool();  // da["err"]
+    const CuVariant &v = da[TTT::Value];  // da["value"]
+    const QString &src = QString::fromStdString(da[TTT::Src].toString());  // da["src"]
     // update link statistics
     CuLinkStats *link_s = d->plot_common->getContext()->getLinkStats();
     link_s->addOperation();
-    if(!d->read_ok)
-        link_s->addError(msg.toStdString());
-
-
-    // configure triggers replot at the end but should not be too expensive
-    // to do it once here at configuration time and once more from appendData
-    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == std::string("property")) {  // da["type"]
-        configure(da);
+    if(!d->read_ok) {
+        link_s->addError(d->u.msg(da).toStdString());
+        setToolTip(d->u.msg(da));
     }
 
     QuPlotCurve *crv = curve(src);
     if(!crv) {
         addCurve(src, crv = new QuPlotCurve(src));
+        crv->setSamples(new QuPlotDataBuf);
     }
+    QuPlotDataBuf *dbuf = static_cast<QuPlotDataBuf *>(crv->data());
     d->read_ok ? crv->setState(QuPlotCurve::Normal) : crv->setState(QuPlotCurve::Invalid);
-
-    if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Vector)
-    {
-        std::vector<double> out;
-        v.toVector<double>(out);
-
-#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
-        QVector<double> y(out.begin(), out.end());
-#else
-        QVector<double> y = QVector<double>::fromStdVector(out);
-#endif
-        if(y.size() != d->x_data.size()) {
-            d->fill_x_data(y.size());
+    if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Vector) {
+        v.toVector<double>(dbuf->y);
+        if(dbuf->x.empty() && dbuf->y.size() > 0) {
+            dbuf->init(dbuf->y.size());
+            setXLowerBound(dbuf->x0());
+            setXUpperBound(dbuf->xN());
         }
-        setData(src, d->x_data, y);
+        // configure triggers replot at the end but should not be too expensive
+        // to do it once here at configuration time and once more from appendData
+        if(d->read_ok && d->auto_configure && da[TTT::Type].toString() == std::string("property")) {  // da["type"]
+            configure(da); // QuPlotBase configure
+            // initialize x axis data and x axis bounds
+        } // end configuration section
+        refresh();
     }
     else {
-        // appendData triggers a replot when necessary. If !d->read_ok, then there's at least
-        // one curve with an Invalid state. A replot is necessary in this case
+        // If !d->read_ok, there's at least one curve with an Invalid state: replot
         replot();
     }
-
-    setToolTip(msg);
 }
 
 void QuSpectrumPlot::requestLinkStats()

@@ -33,7 +33,7 @@ QuString::QuString(const CuData &da, const char *key) : QString() {
     }
 }
 
-QuString::QuString(const CuData &da, const CuDType::Key key) : QString() {
+QuString::QuString(const CuData &da, const TTT::Key key) : QString() {
     if(da.containsKey(key)) {
         bool ok;
         std::string s = da[key].toString(&ok);

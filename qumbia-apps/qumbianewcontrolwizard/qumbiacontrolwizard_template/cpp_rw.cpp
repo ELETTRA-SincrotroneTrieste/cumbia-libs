@@ -158,7 +158,7 @@ void $MAINCLASS$::m_configure(const CuData& da)
     M = da["max"];  // max value
 
     unit = QString::fromStdString(da["display_unit"].toString());
-    label = QString::fromStdString(da[CuDType::Label].toString());  // da["label"]
+    label = QString::fromStdString(da[TTT::Label].toString());  // da["label"]
 
     // 1.
     // if this class has minimum / maximum properties:
@@ -205,7 +205,7 @@ void $MAINCLASS$::m_configure(const CuData& da)
     // ---------------------------------
 
 
-    description = QString::fromStdString(da[CuDType::Description].toString());  // da["description"]
+    description = QString::fromStdString(da[TTT::Description].toString());  // da["description"]
     setProperty("description", description);
     setProperty("unit", unit);
 
@@ -227,8 +227,8 @@ void $MAINCLASS$::m_configure(const CuData& da)
 
     // initialise the object with the "write" value (also called "set point"), if available:
     //
-    if(d->ok && da.containsKey(CuDType::WriteValue)) {  // da.containsKey("w_value")
-        printf("$MAINCLASS$.m_configure: set point value for %s is %s\n", da[CuDType::Src].toString().c_str(), da[CuDType::WriteValue].toString().c_str());  // da["src"], da["w_value"]
+    if(d->ok && da.containsKey(TTT::WriteValue)) {  // da.containsKey("w_value")
+        printf("$MAINCLASS$.m_configure: set point value for %s is %s\n", da[TTT::Src].toString().c_str(), da[TTT::WriteValue].toString().c_str());  // da["src"], da["w_value"]
     }
 
     // if this method is also used to initialise a write value (also called "set point")
@@ -239,35 +239,35 @@ void $MAINCLASS$::m_configure(const CuData& da)
 
 void $MAINCLASS$::onUpdate(const CuData &da)
 {
-    bool write_op = da[CuDType::Activity].toString() == "writer";  // da["activity"]
-    d->ok = !da[CuDType::Err].toBool();  // da["err"]
+    bool write_op = da[TTT::Activity].toString() == "writer";  // da["activity"]
+    d->ok = !da[TTT::Err].toBool();  // da["err"]
     setEnabled(d->ok);
-    setToolTip(QString::fromStdString(da[CuDType::Message].toString()));  // da["msg"]
+    setToolTip(QString::fromStdString(da[TTT::Message].toString()));  // da["msg"]
 
     // update link statistics
     CuContext *ctx;
     write_op ? ctx = d->in_ctx : ctx = d->out_ctx;
     ctx->getLinkStats()->addOperation();
     if(!d->ok)
-        ctx->getLinkStats()->addError(da[CuDType::Message].toString());  // da["msg"]
+        ctx->getLinkStats()->addError(da[TTT::Message].toString());  // da["msg"]
 
     // if not ok, show the popup only if the failed operation is a write operation
     if(!d->ok && write_op) {
         perr("$MAINCLASS$ [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
-             da[CuDType::Src].toString().c_str(), da[CuDType::Message].toString().c_str(),  // da["src"], da["msg"]
-                da[CuDType::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
+             da[TTT::Src].toString().c_str(), da[TTT::Message].toString().c_str(),  // da["src"], da["msg"]
+                da[TTT::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
 
         Cumbia* cumbia = d->in_ctx->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->in_ctx->cumbiaPool()->getBySrc(da[CuDType::Src].toString());  // da["src"]
+            cumbia = d->in_ctx->cumbiaPool()->getBySrc(da[TTT::Src].toString());  // da["src"]
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::CategoryWrite, true);
-            log->write(QString("$MAINCLASS$ [" + objectName() + "]").toStdString(), da[CuDType::Message].toString(), CuLog::LevelError, CuLog::CategoryWrite);  // da["msg"]
+            log->write(QString("$MAINCLASS$ [" + objectName() + "]").toStdString(), da[TTT::Message].toString(), CuLog::LevelError, CuLog::CategoryWrite);  // da["msg"]
         }
     }
-    else if(d->auto_configure && da.has(CuDType::Type, "property")) {  // has("type", "property")
+    else if(d->auto_configure && da.has(TTT::Type, "property")) {  // has("type", "property")
         //
         // --------------------------------------------------------------------------------------------
         // You may want to check data format and write type and issue a warning or avoid configuration
@@ -278,8 +278,8 @@ void $MAINCLASS$::onUpdate(const CuData &da)
         m_configure(da);
     }
 
-    if(da.containsKey(CuDType::Value)) {  // da.containsKey("value")
-        m_set_value(da[CuDType::Value]);  // da["value"]
+    if(da.containsKey(TTT::Value)) {  // da.containsKey("value")
+        m_set_value(da[TTT::Value]);  // da["value"]
     }
     emit newData(da);
 }

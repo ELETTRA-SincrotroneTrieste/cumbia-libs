@@ -58,7 +58,7 @@ void Qumbiaizer::setAutoConfSlot(AutoConfType act, const char* slot)
   * the data type of the method.
   *
   */
-void Qumbiaizer::attach(QObject *refreshee,  const char *slot,
+void Qumbiaizer::attach(QObject *refreshee, const char *slot,
                         const char *setPointSlot,
                         Qt::ConnectionType connType)
 {
@@ -343,7 +343,7 @@ void Qumbiaizer::configure(const CuData &data)
     }
 
     emit configured(data);
-    emit connectionOk(!data[CuDType::Err].toBool());  // data["err"]
+    emit connectionOk(!data[TTT::Err].toBool());  // data["err"]
 }
 
 bool Qumbiaizer::inTypeOfMethod(const QString &method, QObject *obj, char* in_type) {
@@ -374,14 +374,14 @@ void Qumbiaizer::updateValue(const CuData &v, bool read, const char* customMetho
 {
     quizer_ptr->message.clear();
     const QString & methName = customMethod != NULL ? customMethod : methodName();
-    bool ok = !v[CuDType::Err].toBool();
+    bool ok = !v[TTT::Err].toBool();
 
-    if(ok && (v.containsKey(CuDType::Value) || v.containsKey(CuDType::WriteValue)))  {
+    if(ok && (v.containsKey(TTT::Value) || v.containsKey(TTT::WriteValue)))  {
         QObject *object = NULL;
         if(!quizer_ptr->slot.isEmpty())
             object = static_cast<QObject *>(quizer_ptr->data); /* QObject and slot were provided */
 
-        const CuVariant &val = read ? v[CuDType::Value] : v[CuDType::WriteValue];
+        const CuVariant &val = read ? v[TTT::Value] : v[TTT::WriteValue];
         if(type() == Qumbiaizer::Cu_Data) { // since 1.5.3
             CuData out(v); // inexpensive move operation
             if(quizer_ptr->refreshFilter) {

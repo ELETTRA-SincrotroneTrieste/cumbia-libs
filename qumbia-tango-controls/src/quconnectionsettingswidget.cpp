@@ -44,7 +44,7 @@ void QuConnectionSettingsWidget::changeRefresh()
     int period = findChild<QSpinBox *>("sbPeriod")->value();
     int refmode = findChild<QComboBox *>("cbRefreshMode")->currentIndex();
     CuData options;
-    options[CuDType::Period] = period;  // options["period"]
-    options[CuDType::RefreshMode] = refmode;  // options["refresh_mode"]
+    options[TTT::Period] = period;  // options["period"]
+    options[TTT::RefreshMode] = refmode;  // options["refresh_mode"]
     emit settingsChanged(options);
 }

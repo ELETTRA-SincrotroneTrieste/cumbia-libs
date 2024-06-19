@@ -5,6 +5,7 @@
 #include <cumbiapool.h>
 #include <cudata.h>
 #include <QTimer>
+#include <quapplication.h>
 #include "cucontrolsfactories_i.h"
 #include "cucontrolsfactorypool.h"
 #include "culinkstats.h"
@@ -18,23 +19,71 @@ public:
 };
 
 QuWatcher::QuWatcher(QObject *parent, Cumbia *cumbia, const CuControlsReaderFactoryI &r_factory) :
-    Qumbiaizer(parent)
-{
+    Qumbiaizer(parent) {
     d = new QuWatcherPrivate;
     d->context = new CuContext(cumbia, r_factory);
 
 }
 
 QuWatcher::QuWatcher(QObject *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) :
-    Qumbiaizer(parent)
-{
+    Qumbiaizer(parent) {
     d = new QuWatcherPrivate;
     d->context = new CuContext(cumbia_pool, fpool);
 }
 
-QuWatcher::~QuWatcher()
-{
-    pdelete("QuWatcher %p\n", this);
+/*!
+ * \brief Simplified constructor with parent object and optional source and options
+ * \param parent the parent object
+ * \param source the source of data
+ * \param target the target object on which the *slot* shall be invoked
+ * \param slot the *SLOT* to be invoked
+ * \param options CuContext options
+ * \param setPointSlot the slot to be invoked when the "set point" is available (engine and data dependent)
+ * \param connType the Qt connection type (default: Qt::AutoConnection)
+ *
+ * \note Requires *QuApplication*
+ *
+ * If *source, target and slot* are *all* specified, the object is connected immediately and will start calling *slot*
+ * target, slot, (and optional setPointSlot and connType) are passed to the *attach* method
+ *
+ * This constructor is a single liner that stands for
+ * \code
+ * QuWatcher *w = new QuWatcher(parent);
+ * if(target && slot && !source.isEmpty()) {
+ *      w->attach(target, slot, setPointSlot, connType);
+ *      w->getContext()->setOptions(options);
+ *      attach(target, slot, setPointSlot, connType);
+        setSource(source);
+ * }
+ * \endcode
+ *
+ * \par Example
+ * \code
+ * QuWatcher *w = new QuWatcher(this, "$1/current", this, SLOT(update(const CuData&)));
+ * \endcode
+ *
+ * \since 2.1
+ */
+QuWatcher::QuWatcher(QObject *parent,
+                     const QString& source,
+                     QObject *target,
+                     const char *slot,
+                     const CuData &options,
+                     const char *setPointSlot,
+                     Qt::ConnectionType connType)  :
+    Qumbiaizer(parent) {
+    d = new QuWatcherPrivate;
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    d->context = new CuContext(a->cumbiaPool(), *a->fpool());
+    if(!source.isEmpty() && target && slot) {
+        if(!options.isEmpty())
+            d->context->setOptions(options);
+        attach(target, slot, setPointSlot, connType);
+        setSource(source);
+    }
+}
+
+QuWatcher::~QuWatcher() {
     delete d->context;
     delete d;
 }
@@ -116,13 +165,13 @@ CuContext *QuWatcher::getContext() const {
  */
 void QuWatcher::onUpdate(const CuData &data)
 {
-    bool ok = !data[CuDType::Err].toBool();
-    bool is_config = data.has(CuDType::Type, "property");
-    const char *msg = data[CuDType::Message].c_str();
+    bool ok = !data[TTT::Err].toBool();
+    bool is_config = data.has(TTT::Type, "property");
+    const char *msg = data[TTT::Message].c_str();
     if(is_config) {
         configure(data); // Qumbiaizer virtual configure method
     }
-    if(data.containsKey(CuDType::Value))
+    if(data.containsKey(TTT::Value))
         updateValue(data);
     if(singleShot())
         unsetSource();

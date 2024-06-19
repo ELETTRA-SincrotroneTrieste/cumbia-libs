@@ -30,8 +30,8 @@ class QuLed : public QuLedBase, public CuDataListener, public CuContextI
 
 public:
     QuLed(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
-
     QuLed(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    QuLed(QWidget *w);
 
     virtual ~QuLed();
 

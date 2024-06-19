@@ -231,13 +231,11 @@ void QuPlotAxesComponent::setAutoscaleMargin(int axisId, double m)
     d->margin[axisId] = m;
 }
 
-double QuPlotAxesComponent::lowerBoundFromCurves(int axisId) const
-{
+double QuPlotAxesComponent::lowerBoundFromCurves(int axisId) const {
     return d->bounds_from_curves[axisId].first;
 }
 
-double QuPlotAxesComponent::upperBoundFromCurves(int axisId) const
-{
+double QuPlotAxesComponent::upperBoundFromCurves(int axisId) const {
     return d->bounds_from_curves[axisId].second;
 }
 

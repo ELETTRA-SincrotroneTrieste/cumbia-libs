@@ -50,7 +50,7 @@ bool QumbiaizerPrivate::inTypeOfMethod(const QString &method, QObject *obj, char
 
 bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
 {
-    if(da[CuDType::Type].toString() != "property")  // da["type"]
+    if(da[TTT::Type].toString() != "property")  // da["type"]
         return false;
 
     Q_Q(Qumbiaizer);
@@ -60,13 +60,13 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
     void *dataptr;
     QString u, methodName;
     /* minimum */
-    bool has_min = da.containsKey(CuDType::Min);  // da.containsKey("min")
-    bool has_max = da.containsKey(CuDType::Max);  // da.containsKey("max")
+    bool has_min = da.containsKey(TTT::Min);
+    bool has_max = da.containsKey(TTT::Max);
     double v;
     double min, max;
     if(has_min && autoConfSlotsHash.contains(q->Min))
     {
-        da["min"].to<double>(min); // cuvariant_t.h
+        da[TTT::Min].to<double>(min); // cuvariant_t.h
         methodName = autoConfSlotsHash.value(q->Min);
         extractCode(methodName);
         if(inTypeOfMethod(methodName, object, in_type))
@@ -85,14 +85,14 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
         }
     }
     else if(has_min && object->metaObject()->indexOfProperty("minimum") > -1) {
-        da[CuDType::Min].to<double>(min);  // da["min"]
+        da[TTT::Min].to<double>(min);
         object->setProperty("minimum", min);
     }
 
     /* maximum */
     if(has_max && autoConfSlotsHash.contains(q->Max))
     {
-        da["max"].to<double>(max); // cuvariant_t.h converts to long double
+        da[TTT::Max].to<double>(max); // cuvariant_t.h converts to long double
         methodName = autoConfSlotsHash.value(q->Max);
         extractCode(methodName);
         if(inTypeOfMethod(methodName, object, in_type))
@@ -112,8 +112,8 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
     }
     else if(has_max && object->metaObject()->indexOfProperty("maximum") > -1)
     {
-        da[CuDType::Max].to<double>(min);  // da["max"]
-        object->setProperty("maximum", min);
+        da[TTT::Max].to<double>(max);
+        object->setProperty("maximum", max);
     }
 
     /* min warning */
@@ -226,13 +226,13 @@ bool QumbiaizerPrivate::configure(const CuData &da, QObject *object)
                                              QGenericArgument(in_type, &u));
         }
     }
-    if(da.containsKey(CuDType::Label) &&autoConfSlotsHash.contains(q->Label))  // da.containsKey("label")
+    if(da.containsKey(TTT::Label) &&autoConfSlotsHash.contains(q->Label))  // da.containsKey("label")
     {
         methodName = autoConfSlotsHash.value(q->Label);
         extractCode(methodName);
         if(inTypeOfMethod(methodName, object, in_type))
         {
-            u = QString::fromStdString(da[CuDType::Label].toString());  // da["label"]
+            u = QString::fromStdString(da[TTT::Label].toString());  // da["label"]
             ret &= QMetaObject::invokeMethod(object, qstoc(autoConfSlotsHash.value(q->Label)), connType,
                                              QGenericArgument(in_type, &u));
         }

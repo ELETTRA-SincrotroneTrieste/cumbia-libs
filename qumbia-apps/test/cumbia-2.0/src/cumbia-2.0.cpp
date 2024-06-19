@@ -34,9 +34,9 @@ Cumbia2::Cumbia2(CumbiaPool *cumbia_pool, QWidget *parent) : QObject(parent)
         gettimeofday(&tday, nullptr);
         double us = tday.tv_sec + tday.tv_usec * 1e-6;
 
-        CuData da(CuDType::Time_us, us);
-        da[CuDType::Src] = "test/CuControlsUtils/msg/micro";
-        printf("current time in microseconds: %f\n", da.d(CuDType::Time_us) );
+        CuData da(TTT::Time_us, us);
+        da[TTT::Src] = "test/CuControlsUtils/msg/micro";
+        printf("current time in microseconds: %f\n", da.d(TTT::Time_us) );
         auto start = std::chrono::high_resolution_clock::now();
         cu.msg_short(da, s);
         auto end = std::chrono::high_resolution_clock::now();
@@ -58,13 +58,13 @@ Cumbia2::Cumbia2(CumbiaPool *cumbia_pool, QWidget *parent) : QObject(parent)
     {
         printf("------------------- \e[1,34m milliseconds version \e[0m-------------------\n");
 
-        CuData d(CuDType::Time_ms, QDateTime::currentMSecsSinceEpoch());
-        d[CuDType::Src] = "test/CuControlsUtils/msg/millis";
+        CuData d(TTT::Time_ms, QDateTime::currentMSecsSinceEpoch());
+        d[TTT::Src] = "test/CuControlsUtils/msg/millis";
         auto start = std::chrono::high_resolution_clock::now();
         cu.msg_short(d, s);
         auto end = std::chrono::high_resolution_clock::now();
 
-        printf("current time in milliseconds: %lld\n", d[CuDType::Time_ms].toLongLongInt() );
+        printf("current time in milliseconds: %lld\n", d[TTT::Time_ms].toLongLongInt() );
 
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
         std::cout << "1. Elapsed time for short timestamp (milliseconds ,long)  duration: "
@@ -80,7 +80,7 @@ Cumbia2::Cumbia2(CumbiaPool *cumbia_pool, QWidget *parent) : QObject(parent)
     }
 
     printf("test cudata copy\n");
-    CuData d1(CuDType::Src, "d1");
+    CuData d1(TTT::Src, "d1");
     printf("calling CuData d2 = d1\n");
     CuData d2 = d1;
     printf("called d2 = d1.\n Now cloning calling CuData d3 = d1.clone()\n");

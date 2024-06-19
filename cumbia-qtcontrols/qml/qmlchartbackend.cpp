@@ -86,12 +86,12 @@ CuContext *QmlChartBackend::getContext() const
 void QmlChartBackend::m_configure(const CuData &da)
 {
     printf("QmlChartBackend::m_configure configuring QmlChart with %s\n", da.toString().c_str());
-    QString src = QString::fromStdString(da[CuDType::Src].toString());  // da["src"]
+    QString src = QString::fromStdString(da[TTT::Src].toString());  // da["src"]
     d->data[src] = QVector<QPointF>();
 
     // spectrum or scalar trend over time?
-    if(da.containsKey(CuDType::DataFormatStr)) {  // da.containsKey("dfs")
-        bool scalar_trend = da[CuDType::DataFormatStr].toString() == "scalar";  // da["dfs"]
+    if(da.containsKey(TTT::DataFormatStr)) {  // da.containsKey("dfs")
+        bool scalar_trend = da[TTT::DataFormatStr].toString() == "scalar";  // da["dfs"]
         if(scalar_trend != d->is_scalar_trend) {
             d->is_scalar_trend = scalar_trend;
         }
@@ -102,9 +102,9 @@ void QmlChartBackend::m_configure(const CuData &da)
     char* endptr;
     double min = 0.0,  max = 0.0;
     try {
-        if(da.containsKey(CuDType::Min)) {  // da.containsKey("min")
-            printf("1: %s->%f\n", da[CuDType::Min].toString().c_str(), strtod(da[CuDType::Min].toString().c_str(),  &endptr));  // da["min"], da["min"]
-            v = QVariant(strtod(da[CuDType::Min].toString().c_str(), &endptr));  // da["min"]
+        if(da.containsKey(TTT::Min)) {  // da.containsKey("min")
+            printf("1: %s->%f\n", da[TTT::Min].toString().c_str(), strtod(da[TTT::Min].toString().c_str(),  &endptr));  // da["min"], da["min"]
+            v = QVariant(strtod(da[TTT::Min].toString().c_str(), &endptr));  // da["min"]
             min = v.toDouble();
             if(!d->configure_cnt || min < d->ym) {
                 printf("2\n");
@@ -112,9 +112,9 @@ void QmlChartBackend::m_configure(const CuData &da)
                 emit yMinChanged();
             }
         }
-        if(da.containsKey(CuDType::Max)) {  // da.containsKey("max")
-            printf("3: %s->%f\n", da[CuDType::Min].toString().c_str(), strtod(da[CuDType::Max].toString().c_str(),  &endptr));  // da["min"], da["max"]
-            v = QVariant(strtod(da[CuDType::Max].toString().c_str(),  &endptr));  // da["max"]
+        if(da.containsKey(TTT::Max)) {  // da.containsKey("max")
+            printf("3: %s->%f\n", da[TTT::Min].toString().c_str(), strtod(da[TTT::Max].toString().c_str(),  &endptr));  // da["min"], da["max"]
+            v = QVariant(strtod(da[TTT::Max].toString().c_str(),  &endptr));  // da["max"]
             max = v.toDouble();
             if(!d->configure_cnt || max > d->yM) {
                 d->yM = max;
@@ -140,7 +140,7 @@ void QmlChartBackend::m_setSources(const QStringList &l)
     d->sources = l;
     if(d->plot_common) {
         unsetSources();
-        CuData periodConf(CuDType::Period, d->period);  // CuData periodConf("period", d->period)
+        CuData periodConf(TTT::Period, d->period);  // CuData periodConf("period", d->period)
         d->plot_common->getContext()->setOptions(periodConf);
         d->plot_common->setSources(l, this);
     }
@@ -151,32 +151,32 @@ void QmlChartBackend::m_setSources(const QStringList &l)
 
 void QmlChartBackend::onUpdate(const CuData &da)
 {
-    bool readOk = !da[CuDType::Err].toBool();  // da["err"]
+    bool readOk = !da[TTT::Err].toBool();  // da["err"]
     if(readOk != d->read_ok) {
         d->read_ok = readOk;
         emit readOkChanged();
     }
-    QString src = QString::fromStdString(da[CuDType::Src].toString());  // da["src"]
+    QString src = QString::fromStdString(da[TTT::Src].toString());  // da["src"]
     QVector<QPointF> &qvd = d->data[src];
 
     // update link statistics
     CuLinkStats *link_s = d->plot_common->getContext()->getLinkStats();
     link_s->addOperation();
     if(!d->read_ok)
-        link_s->addError(da[CuDType::Message].toString());  // da["msg"]
+        link_s->addError(da[TTT::Message].toString());  // da["msg"]
 
     // configure triggers replot at the end but should not be too expensive
     // to do it once here at configuration time and once more from appendData
-    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property")  // da["type"]
+    if(d->read_ok && d->auto_configure && da[TTT::Type].toString() == "property")  // da["type"]
         m_configure(da);
 
-    const CuVariant &v = da[CuDType::Value];  // da["value"]
+    const CuVariant &v = da[TTT::Value];  // da["value"]
     if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Scalar)
     {
         qreal x, y;
-        bool time_scale = da.containsKey(CuDType::Time_ms);  // da.containsKey("timestamp_ms")
+        bool time_scale = da.containsKey(TTT::Time_ms);  // da.containsKey("timestamp_ms")
         if(time_scale) {
-            x = static_cast<long long int>(da[CuDType::Time_ms].toLongLongInt());  // da["timestamp_ms"]
+            x = static_cast<long long int>(da[TTT::Time_ms].toLongLongInt());  // da["timestamp_ms"]
             d->xM = x;
             if(d->x_autoscale && !d->t1.isValid()) {
                 d->t1 = QDateTime::fromMSecsSinceEpoch(x);

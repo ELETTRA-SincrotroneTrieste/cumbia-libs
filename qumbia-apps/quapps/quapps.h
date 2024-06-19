@@ -122,21 +122,7 @@ public:
     CuModuleLoader(CumbiaPool *cu_pool, CuControlsFactoryPool *ctrl_f_pool, CuLogImplI* log_impl) {
         d = new CuModuleLoaderPrivate;
         log_impl ? d->log = new CuLog(log_impl) : d->log = nullptr;
-        m_register(cu_pool, ctrl_f_pool);
-    }
 
-    CuModuleLoader(CuEngineAccessor *a, CuLogImplI* log_impl = nullptr) {
-        if(a && a->cu_pool() && a->f_pool()) {
-            d = new CuModuleLoaderPrivate;
-            log_impl ? d->log = new CuLog(log_impl) : d->log = nullptr;
-            m_register(a->cu_pool(), a->f_pool());
-        }
-        else {
-            perr("CuModuleLoader: either accessor or cumbia pool are invalid");
-        }
-    }
-
-    void m_register(CumbiaPool *cu_pool, CuControlsFactoryPool *ctrl_f_pool) {
         // websocket engine
 #ifdef CUMBIA_WEBSOCKET_VERSION
         Cumbia *cuws = nullptr;

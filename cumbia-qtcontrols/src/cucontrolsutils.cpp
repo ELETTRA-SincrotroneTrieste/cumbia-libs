@@ -228,9 +228,9 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
     if(val.isValid())
         data_siz = static_cast<int>(val.getSize());
     // min, max
-    if(data[CuDType::Max].isValid() && data[CuDType::Min].isValid()) {
-        data[CuDType::Max].to<double>(max);
-        data[CuDType::Min].to<double>(min);
+    if(data[TTT::Max].isValid() && data[TTT::Min].isValid()) {
+        data[TTT::Max].to<double>(max);
+        data[TTT::Min].to<double>(min);
     }
     QList<QObject *> inputobjs = cu.findObjects(target, leaf);
     CuVariant::DataFormat fmt = val.getFormat();
@@ -300,25 +300,25 @@ bool CuControlsUtils::initObjects(const QString &target, const QObject *leaf, co
  * \param da CuData
  * \param date_time_fmt a custom timestamp date / time format. Default: "yyyy-MM-dd HH:mm:ss.zzz"
  *
- * \return the message stored in da[CuDType::Message] if da[CuDType::Err] evaluates to true or  // da["msg"], da["err"]
- *  a new message with the source name, the value of da[CuDType::Mode] (or da[CuDType::Activity], if CuDType::Mode is empty) and the timestamp.  // da["mode"], da["activity"]
- *  da[CuDType::Time_ms] or da[CuDType::Time_us] are used to provide a date /time in the format "yyyy-MM-dd HH:mm:ss.zzz".  // da["timestamp_ms"], da["timestamp_us"]
+ * \return the message stored in da[TTT::Message] if da[TTT::Err] evaluates to true or  // da["msg"], da["err"]
+ *  a new message with the source name, the value of da[TTT::Mode] (or da[TTT::Activity], if TTT::Mode is empty) and the timestamp.  // da["mode"], da["activity"]
+ *  da[TTT::Time_ms] or da[TTT::Time_us] are used to provide a date /time in the format "yyyy-MM-dd HH:mm:ss.zzz".  // da["timestamp_ms"], da["timestamp_us"]
  */
 QString CuControlsUtils::msg(const CuData &da) const {
 
-    const char *src = da.c_str(CuDType::Src);
-    const char* msg = da.c_str(CuDType::Message);
+    const char *src = da.c_str(TTT::Src);
+    const char* msg = da.c_str(TTT::Message);
     // timestamp
     long int ts = 0;
 
-    da[CuDType::Time_ms].to<long int>(ts);
+    da[TTT::Time_ms].to<long int>(ts);
     char dt[TIMESTAMPLEN];
     if(ts > 0) {
         ts_to_s(ts, dt);
     }
     if(ts == 0) {
         double tsd = 0.0;
-        da[CuDType::Time_us].to<double>(tsd);  // secs.usecs in a double
+        da[TTT::Time_us].to<double>(tsd);  // secs.usecs in a double
         if(tsd > 0) {
             ts_to_s(tsd, dt);
         }
@@ -329,11 +329,11 @@ QString CuControlsUtils::msg(const CuData &da) const {
     }
     else {
         // pick mode or activity name
-        const char* _mode = da.c_str(CuDType::Mode);
+        const char* _mode = da.c_str(TTT::Mode);
         if(_mode && strlen(_mode) > 0)
             return QString("%1 %2 [ %3 ]").arg(src, dt, _mode);
         else
-            return QString("%1 %2 [ %3 ]").arg(src, dt, da.c_str(CuDType::Activity));
+            return QString("%1 %2 [ %3 ]").arg(src, dt, da.c_str(TTT::Activity));
     }
 }
 
@@ -348,20 +348,20 @@ QString CuControlsUtils::msg(const CuData &da) const {
  */
 void CuControlsUtils::msg_short(const CuData &da, char buf[MSGLEN]) {
 //    memset(buf, 0, sizeof(char) * MSGLEN);
-    snprintf(buf, MSGLEN-1, "%s ", da.c_str(CuDType::Src));
+    snprintf(buf, MSGLEN-1, "%s ", da.c_str(TTT::Src));
     int p = strlen(buf);
-    const char* msg = da.c_str(CuDType::Message);
+    const char* msg = da.c_str(TTT::Message);
     // timestamp
     long int ts = 0;
 
-    da[CuDType::Time_ms].to<long int>(ts);
+    da[TTT::Time_ms].to<long int>(ts);
     if(ts > 0) {
         m_elapsed(ts, buf, p );
         p = strlen(buf);
     }
     if(ts == 0) {
         double tsd = 0.0;
-        da[CuDType::Time_us].to<double>(tsd);  // secs.usecs in a double
+        da[TTT::Time_us].to<double>(tsd);  // secs.usecs in a double
         if(tsd > 0) {
 //            auto start = std::chrono::high_resolution_clock::now();
 
@@ -385,13 +385,13 @@ void CuControlsUtils::msg_short(const CuData &da, char buf[MSGLEN]) {
     }
     else {
         // pick mode or activity name
-        const char* _mode = da.c_str(CuDType::Mode);
+        const char* _mode = da.c_str(TTT::Mode);
         len = _mode ? strlen(_mode) : 0;
         if(len > 0) {
             m = _mode;
         }
         else {
-            const char* a = da.c_str(CuDType::Activity);
+            const char* a = da.c_str(TTT::Activity);
             len = a ? strlen(a) : 0;
             if(len > 0) {
                 m = a;

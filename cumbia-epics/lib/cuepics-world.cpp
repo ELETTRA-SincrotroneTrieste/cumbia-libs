@@ -296,23 +296,23 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
     bool error = false;
     void *val_ptr = dbr_value_ptr(pv->value, pv->dbrType);
 
-    da[CuDType::DataType] = pv->dbrType;  // da["dt"]
+    da[TTT::DataType] = pv->dbrType;  // da["dt"]
     da["data_type_str"] = dbr_type_to_text(pv->dbrType);
 
     if(pv->nElems == 1) /* scalar */
-        da[CuDType::DataFormatStr] = "scalar";  // da["dfs"]
+        da[TTT::DataFormatStr] = "scalar";  // da["dfs"]
     else if(pv->nElems > 1)
-        da[CuDType::DataFormatStr] = "vector";  // da["dfs"]
+        da[TTT::DataFormatStr] = "vector";  // da["dfs"]
     else
-        da[CuDType::DataFormatStr] = "invalid";  // da["dfs"]
+        da[TTT::DataFormatStr] = "invalid";  // da["dfs"]
 
     da["writable"] = static_cast<int>(ca_write_access(pv->ch_id));
 
     /* event type can be   (ctrl) or value update */
     if(dbr_type_is_CTRL(pv->dbrType))
     {
-        da[CuDType::Type] = "property";  // da["type"]
-        da[CuDType::DimX] = static_cast<long int>(pv->nElems);  // da["dim_x"]
+        da[TTT::Type] = "property";  // da["type"]
+        da[TTT::DimX] = static_cast<long int>(pv->nElems);  // da["dim_x"]
         /* metadata */
         switch (pv->dbrType)
         {
@@ -342,38 +342,38 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
     }
     else
     {
-        da[CuDType::Type] = "value";  // da["type"]
+        da[TTT::Type] = "value";  // da["type"]
 
         if(pv->nElems == 1) /* scalar */
         {
             switch (pv->dbrType)
             {
             case DBR_TIME_STRING:
-                da[CuDType::Value] = std::string( ((dbr_string_t *) val_ptr)[0]);  // da["value"]
+                da[TTT::Value] = std::string( ((dbr_string_t *) val_ptr)[0]);  // da["value"]
                 putTimestamp<dbr_time_string>(pv->value, da);
                 break;
             case DBR_TIME_SHORT:
-                da[CuDType::Value] = ((dbr_short_t*) val_ptr)[0];  // da["value"]
+                da[TTT::Value] = ((dbr_short_t*) val_ptr)[0];  // da["value"]
                 putTimestamp<dbr_time_short>(pv->value, da);
                 break;
             case DBR_TIME_FLOAT:
-                da[CuDType::Value] = ((dbr_float_t*) val_ptr)[0];  // da["value"]
+                da[TTT::Value] = ((dbr_float_t*) val_ptr)[0];  // da["value"]
                 putTimestamp<dbr_time_float>(pv->value, da);
                 break;
             case DBR_TIME_ENUM:
-                da[CuDType::Value] = ((dbr_enum_t *) val_ptr)[0];  // da["value"]
+                da[TTT::Value] = ((dbr_enum_t *) val_ptr)[0];  // da["value"]
                 putTimestamp<dbr_time_enum>(pv->value, da);
                 break;
             case DBR_TIME_CHAR:
-                da[CuDType::Value] = ((dbr_char_t*) val_ptr)[0];  // da["value"]
+                da[TTT::Value] = ((dbr_char_t*) val_ptr)[0];  // da["value"]
                 putTimestamp<dbr_time_char>(pv->value, da);
                 break;
             case DBR_TIME_LONG:
-                da[CuDType::Value] = ((dbr_long_t*) val_ptr)[0];  // da["value"]
+                da[TTT::Value] = ((dbr_long_t*) val_ptr)[0];  // da["value"]
                 putTimestamp<dbr_time_long>( pv->value, da);
                 break;
             case DBR_TIME_DOUBLE:
-                da[CuDType::Value] = ((dbr_double_t*) val_ptr)[0];  // da["value"]
+                da[TTT::Value] = ((dbr_double_t*) val_ptr)[0];  // da["value"]
                 putTimestamp<dbr_time_double>( pv->value, da);
                 break;
             default:
@@ -391,7 +391,7 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
                     vs.push_back(std::string(((dbr_string_t*) val_ptr)[i]));
                 }
                 putTimestamp<dbr_time_string>( pv->value, da);
-                da[CuDType::Value] = vs;  // da["value"]
+                da[TTT::Value] = vs;  // da["value"]
             }
             else if(pv->dbrType == DBR_TIME_SHORT)
             {
@@ -400,7 +400,7 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
                     vs.push_back(((dbr_short_t*) val_ptr)[i]);
                 }
                 putTimestamp<dbr_time_short>( pv->value, da);
-                da[CuDType::Value] = vs;  // da["value"]
+                da[TTT::Value] = vs;  // da["value"]
             }
             else if(pv->dbrType ==  DBR_TIME_FLOAT)
             {
@@ -409,7 +409,7 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
                     vf.push_back(((dbr_float_t*) val_ptr)[i]);
                 }
                 putTimestamp<dbr_time_float>( pv->value, da);
-                da[CuDType::Value] = vf;  // da["value"]
+                da[TTT::Value] = vf;  // da["value"]
             }
             else if(pv->dbrType ==  DBR_TIME_ENUM)
             {
@@ -418,7 +418,7 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
                     venum.push_back(((dbr_enum_t*) val_ptr)[i]);
                 }
                 putTimestamp<dbr_time_enum>(pv->value, da);
-                da[CuDType::Value] = venum;  // da["value"]
+                da[TTT::Value] = venum;  // da["value"]
             }
             else if(pv->dbrType ==  DBR_TIME_CHAR)
             {
@@ -427,7 +427,7 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
                     vch.push_back(((dbr_char_t*) val_ptr)[i]);
                 }
                 putTimestamp<dbr_time_char>(pv->value, da);
-                da[CuDType::Value] = vch;  // da["value"]
+                da[TTT::Value] = vch;  // da["value"]
             }
             else if(pv->dbrType ==  DBR_TIME_LONG)
             {
@@ -436,7 +436,7 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
                     vlo.push_back(((dbr_long_t*) val_ptr)[i]);
                 }
                 putTimestamp<dbr_time_long>(pv->value, da);
-                da[CuDType::Value] = vlo;  // da["value"]
+                da[TTT::Value] = vlo;  // da["value"]
             }
             else if(pv->dbrType ==  DBR_TIME_DOUBLE)
             {
@@ -445,7 +445,7 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
                     vdo.push_back(((dbr_double_t*) val_ptr)[i]);
                 }
                 putTimestamp<dbr_time_double>(pv->value, da);
-                da[CuDType::Value] = vdo;  // da["value"]
+                da[TTT::Value] = vdo;  // da["value"]
             }
             else
             {
@@ -456,10 +456,10 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
     }
 
     if(!error)
-        msg = da[CuDType::Src].toString() + " [" + da[CuDType::Timestamp_Str].toString() + "] STAT: " + da[CuDType::Status].toString()  // da["src"], da["timestamp_str"], da["status"]
-                + " SEV: " + da["severity"].toString() + " QUALITY: " + da[CuDType::QualityString].toString();  // da["qs"]
-    da[CuDType::Err] = error;  // da["err"]
-    da[CuDType::Message] = msg;  // da["msg"]
+        msg = da[TTT::Src].toString() + " [" + da[TTT::Timestamp_Str].toString() + "] STAT: " + da[TTT::Status].toString()  // da["src"], da["timestamp_str"], da["status"]
+                + " SEV: " + da["severity"].toString() + " QUALITY: " + da[TTT::QualityString].toString();  // da["qs"]
+    da[TTT::Err] = error;  // da["err"]
+    da[TTT::Message] = msg;  // da["msg"]
 }
 
 /** \brief fills the input CuData with exception information.
@@ -469,12 +469,12 @@ void CuEpicsWorld::extractData(const CuPV *pv, CuData &da) const
 std::string CuEpicsWorld::extractException(exception_handler_args excargs, CuData &da) const
 {
     std::string s;
-    da[CuDType::DataType] = excargs.type;  // da["dt"]
+    da[TTT::DataType] = excargs.type;  // da["dt"]
     da["data_type_str"] = dbr_type_to_text(excargs.type);
     s += "data type: " + da["data_type_str"].toString() + "[" + std::to_string(excargs.type) + "]";
 
-    da[CuDType::Status] = std::to_string(excargs.stat);  // da["status"]
-    s += "\nstatus:\t\t" + da[CuDType::Status].toString();  // da["status"]
+    da[TTT::Status] = std::to_string(excargs.stat);  // da["status"]
+    s += "\nstatus:\t\t" + da[TTT::Status].toString();  // da["status"]
 
     da["op"] = excargs.op;
     s += "\noperation:\t\t" + std::to_string(excargs.op);
@@ -515,7 +515,7 @@ bool CuEpicsWorld::m_ep_caget(CuPV *pv, CuData &res, CaGetMode cagetMode, double
         success = false;
         snprintf(msg, 256, "CuEpicsWorld.m_ep_caget error allocating %d bytes for \"%s\" value",
                  dbr_size_n(pv->dbrType, pv->nElems), pv->name);
-        res[CuDType::Message] = std::string(msg);  // res["msg"]
+        res[TTT::Message] = std::string(msg);  // res["msg"]
     }
     else { // memory alloc ok for value
 
@@ -533,16 +533,16 @@ bool CuEpicsWorld::m_ep_caget(CuPV *pv, CuData &res, CaGetMode cagetMode, double
             success = false;
             snprintf(msg, 230, "CuEpicsWorld.m_ep_caget timeout (>%f seconds) while reading \"%s\"",
                      timeout, pv->name);
-            res[CuDType::Message] = std::string(msg);  // res["msg"]
+            res[TTT::Message] = std::string(msg);  // res["msg"]
         }
 
     }
-    res[CuDType::Err] = !success;  // res["err"]
+    res[TTT::Err] = !success;  // res["err"]
     if(success) {
         time_t now;
         time(&now);
         snprintf(msg, 256, " successfully read \"%s\"", pv->name);
-        res[CuDType::Message] = m_get_timestamp() + std::string(msg);  // res["msg"]
+        res[TTT::Message] = m_get_timestamp() + std::string(msg);  // res["msg"]
     }
     return true;
 }
@@ -559,7 +559,7 @@ CuDataQuality CuEpicsWorld::m_setQuality(int sev, const CuData &dat) const
 {
     CuDataQuality q;;
     // invalid quality if error
-    if(dat[CuDType::Err].toBool())  // dat["err"]
+    if(dat[TTT::Err].toBool())  // dat["err"]
         return CuDataQuality(CuDataQuality::Invalid);
 
     if(sev == epicsSevMinor) {
@@ -611,7 +611,7 @@ void CuEpicsWorld::caget(const std::string& src, CuData &prop_res,  double timeo
                 if(success) {
                     extractData(&pv, prop_res);
                     if(ca_write_access(pv.ch_id)) {
-                        prop_res[CuDType::WriteValue] = prop_res[CuDType::Value];  // prop_res["w_value"], prop_res["value"]
+                        prop_res[TTT::WriteValue] = prop_res[TTT::Value];  // prop_res["w_value"], prop_res["value"]
                     }
                 }
             }
@@ -621,8 +621,8 @@ void CuEpicsWorld::caget(const std::string& src, CuData &prop_res,  double timeo
     }
     err = strlen(msg) > 0;
     if(err) {
-        prop_res[CuDType::Err] = value_res[CuDType::Err] = err;  // prop_res["err"], value_res["err"]
-        prop_res[CuDType::Message] = value_res[CuDType::Message] = std::string(msg);  // prop_res["msg"], value_res["msg"]
+        prop_res[TTT::Err] = value_res[TTT::Err] = err;  // prop_res["err"], value_res["err"]
+        prop_res[TTT::Message] = value_res[TTT::Message] = std::string(msg);  // prop_res["msg"], value_res["msg"]
     } // otherwise leave "err" and "msg" as compiled by extractData
 }
 
@@ -646,26 +646,26 @@ void CuEpicsWorld::putTimestamp(void* ep_data, CuData &dt) const
     long int tsms;
     epicsTimeToTimeval(&tv, &ts);
     tsms = tv.tv_sec * 1000.0 + ts.nsec / 1e6;
-    dt[CuDType::Time_ms] = tsms;  // dt["timestamp_ms"]
-    dt[CuDType::Time_ns] = static_cast<double>(tv.tv_sec) +  static_cast<double>(ts.nsec) * 1e-9;  // dt["timestamp_ns"]
+    dt[TTT::Time_ms] = tsms;  // dt["timestamp_ms"]
+    dt[TTT::Time_ns] = static_cast<double>(tv.tv_sec) +  static_cast<double>(ts.nsec) * 1e-9;  // dt["timestamp_ns"]
     epicsTimeToStrftime(timeText, TIMETEXTLEN, "%Y-%m-%d %H:%M:%S", &ts);
-    dt[CuDType::Timestamp_Str] = timeText;  // dt["timestamp_str"]
+    dt[TTT::Timestamp_Str] = timeText;  // dt["timestamp_str"]
 
     int stat = (static_cast<T *>(ep_data)->status);
     if((stat) >= 0 && (stat) <= (signed)lastEpicsAlarmCond)
-        //dt[CuDType::Status] = std::string(epicsAlarmConditionStrings[stat])  // dt["status"]
-        dt[CuDType::Status] = stat;  // dt["status"]
+        //dt[TTT::Status] = std::string(epicsAlarmConditionStrings[stat])  // dt["status"]
+        dt[TTT::Status] = stat;  // dt["status"]
     else
-        dt[CuDType::Status] = "?";  // dt["status"]
+        dt[TTT::Status] = "?";  // dt["status"]
 
     int sev = (static_cast<T *>(ep_data)->severity);
 
     // set an engine independent "q" value, depending on severity
     // and on the "err" value in dt
     CuDataQuality dq = m_setQuality(sev, dt);
-    dt[CuDType::Quality] = dq.toInt();  // dt["q"]
-    dt[CuDType::QualityColor] = dq.color();  // dt["qc"]
-    dt[CuDType::QualityString] = dq.name();  // dt["qs"]
+    dt[TTT::Quality] = dq.toInt();  // dt["q"]
+    dt[TTT::QualityColor] = dq.color();  // dt["qc"]
+    dt[TTT::QualityString] = dq.name();  // dt["qs"]
 
     if((sev) >= 0 && (sev) <= (signed)lastEpicsAlarmSev) {
         //dt["severity"] = std::string(epicsAlarmSeverityStrings[sev]);
@@ -679,8 +679,8 @@ template<class T>
 void CuEpicsWorld::putCtrlData(void *ep_data, CuData &dt) const
 {
     dt["display_unit"] = std::string(static_cast<T *>(ep_data)->units);
-    dt[CuDType::Max] = static_cast<T *>(ep_data)->upper_disp_limit;  // dt["max"]
-    dt[CuDType::Min] = static_cast<T *>(ep_data)->lower_disp_limit;  // dt["min"]
+    dt[TTT::Max] = static_cast<T *>(ep_data)->upper_disp_limit;  // dt["max"]
+    dt[TTT::Min] = static_cast<T *>(ep_data)->lower_disp_limit;  // dt["min"]
     dt["upper_alarm_limit"] = static_cast<T *>(ep_data)->upper_alarm_limit;
     dt["upper_warning_limit"] = static_cast<T *>(ep_data)->upper_warning_limit;
     dt["lower_warning_limit"] = static_cast<T *>(ep_data)->lower_warning_limit;

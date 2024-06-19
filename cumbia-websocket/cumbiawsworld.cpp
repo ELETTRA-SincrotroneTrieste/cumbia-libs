@@ -30,8 +30,8 @@ bool CumbiaWSWorld::source_valid(const std::string &)
 bool CumbiaWSWorld::json_decode(const QJsonDocument &json, CuData &res)
 {
     if(json.isNull()) {
-        res[CuDType::Err] = true;  // res["err"]
-        res[CuDType::Message] = "CuWSActionReader.decodeMessage: invalid json document";  // res["msg"]
+        res[TTT::Err] = true;  // res["err"]
+        res[TTT::Message] = "CuWSActionReader.decodeMessage: invalid json document";  // res["msg"]
     }
     else {
         const QJsonObject data_o = json["data"].toObject();
@@ -93,25 +93,25 @@ bool CumbiaWSWorld::json_decode(const QJsonDocument &json, CuData &res)
             else if(data_o.contains("timestamp_us"))  // !cudata
                 ts_us = data_o["timestamp_us"].toDouble(); // !cudata
             if(ts_us >= 0)
-                res[CuDType::Time_us] = ts_us;  // res["timestamp_us"]
+                res[TTT::Time_us] = ts_us;  // res["timestamp_us"]
 
             // timestamp millis
             if(data_o.contains("timestamp_ms")) // timestamp_ms converted to long int
-                res[CuDType::Time_ms] =
+                res[TTT::Time_ms] =
                     data_o["timestamp_ms"].toDouble();  // !cudata
             else if(ts_us >= 0)
-                res[CuDType::Time_ms] = floor(ts_us) * 1000.0 + (ts_us - floor(ts_us)) * 10e6 / 1000.0;
+                res[TTT::Time_ms] = floor(ts_us) * 1000.0 + (ts_us - floor(ts_us)) * 10e6 / 1000.0;
 
             if(data_o.contains("error")) {
-                res[CuDType::Message] =
+                res[TTT::Message] =
                     data_o["error"].toString().toStdString();  // !cudata
-                res[CuDType::Err] =
+                res[TTT::Err] =
                     data_o["error"].toString().size() > 0;  // !cudata
             }
             else {
-                res[CuDType::Err] =
+                res[TTT::Err] =
                     data_o["err"].toBool();  // !cudata
-                res[CuDType::Message] =
+                res[TTT::Message] =
                     data_o["msg"].toString().toStdString();  // !cudata
             }
 

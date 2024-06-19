@@ -47,6 +47,7 @@ ScrollZoomer::ScrollZoomer( QWidget *canvas ):
 
 ScrollZoomer::~ScrollZoomer()
 {
+    printf("\e[1;31mXXX\e[0m deleting scroll zoomer %p\n", this);
     delete d_cornerWidget;
     delete d_vScrollData;
     delete d_hScrollData;

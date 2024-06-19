@@ -19,9 +19,8 @@ class QuSpinBox : public QSpinBox, public CuDataListener, public CuContextI
 
 public:
     QuSpinBox(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac);
-
     QuSpinBox(QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
-
+    QuSpinBox(QWidget *parent);
     virtual ~QuSpinBox();
 
     // CuContextI interface

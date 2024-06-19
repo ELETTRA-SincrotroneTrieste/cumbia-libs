@@ -101,11 +101,11 @@ QumbiaClient::~QumbiaClient()
 
 void QumbiaClient::configure(const CuData &d)
 {
-    if(d[CuDType::Type].toString() == "property") {  // d["type"]
+    if(d[TTT::Type].toString() == "property") {  // d["type"]
         sender()->disconnect(this, SLOT(configure(CuData)));
         const int plotRowCnt = 5;
         int layout_row = 2;
-        std::string format = d[CuDType::DataFormatStr].toString();  // d["dfs"]
+        std::string format = d[TTT::DataFormatStr].toString();  // d["dfs"]
 
         QGridLayout *lo = qobject_cast<QGridLayout *>(ui->widget->layout());
         int data_dim = 1;
@@ -120,7 +120,7 @@ void QumbiaClient::configure(const CuData &d)
                 lo->addWidget(plot, layout_row, 0, plotRowCnt, m_layoutColumnCount);
             }
             plot->configure(d);
-            plot->addSource(d[CuDType::Src].toString().c_str());  // d["src"]
+            plot->addSource(d[TTT::Src].toString().c_str());  // d["src"]
         }
         else if(format == "vector")
         {
@@ -133,20 +133,20 @@ void QumbiaClient::configure(const CuData &d)
                 lo->addWidget(splot, layout_row, 0, plotRowCnt, m_layoutColumnCount);
             }
             splot->configure(d);
-            splot->addSource(d[CuDType::Src].toString().c_str());  // d["src"]
+            splot->addSource(d[TTT::Src].toString().c_str());  // d["src"]
 
-            data_dim = d[CuDType::DimX].toLongInt();  // d["dim_x"]
+            data_dim = d[TTT::DimX].toLongInt();  // d["dim_x"]
             if(data_dim <= 0)
-                data_dim = d[CuDType::Value].getSize();  // d["value"]
-            if(data_dim <= 0 && d.containsKey(CuDType::MaxDimX))  // d.containsKey("max_dim_x")
-                data_dim = d[CuDType::MaxDimX].toULongInt();  // d["max_dim_x"]
+                data_dim = d[TTT::Value].getSize();  // d["value"]
+            if(data_dim <= 0 && d.containsKey(TTT::MaxDimX))  // d.containsKey("max_dim_x")
+                data_dim = d[TTT::MaxDimX].toULongInt();  // d["max_dim_x"]
         }
 
         if(d["writable"].toInt() > 0)
         {
             QWidget *wi = ui->gbWriters->findChild<QScrollArea *>()->widget();
             ui->pbWrite->setChecked(true);
-            Writer *w = new Writer(wi, cu_pool, m_ctrl_factory_pool, data_dim, QString::fromStdString(d[CuDType::Src].toString()));  // d["src"]
+            Writer *w = new Writer(wi, cu_pool, m_ctrl_factory_pool, data_dim, QString::fromStdString(d[TTT::Src].toString()));  // d["src"]
             qobject_cast<QVBoxLayout *>(wi->layout())->addWidget(w);
         }
     }
@@ -171,8 +171,8 @@ void QumbiaClient::changeRefresh()
 #endif
 
     CuData options;
-    options[CuDType::Period] = period;  // options["period"]
-    options[CuDType::RefreshMode] = refmode;  // options["refresh_mode"]
+    options[TTT::Period] = period;  // options["period"]
+    options[TTT::RefreshMode] = refmode;  // options["refresh_mode"]
     QuTrendPlot *tp = findChild<QuTrendPlot *>();
     if(tp) {
         printf("sending data %s to plot \n", options.toString().c_str());
@@ -197,8 +197,8 @@ void QumbiaClient::sourcesChanged()
     int period = ui->sbPeriod->value();
     int refmode = ui->cbRefMode->currentIndex() == 0 ? CuTReader::PolledRefresh : CuTReader::ChangeEventRefresh;
     CuData options;
-    options[CuDType::Period] = period;  // options["period"]
-    options[CuDType::RefreshMode] = refmode;  // options["refresh_mode"]
+    options[TTT::Period] = period;  // options["period"]
+    options[TTT::RefreshMode] = refmode;  // options["refresh_mode"]
 
     QStringList srcs = ui->leSrcs->text().split(QRegularExpression("\\s+"));
     const int srcCnt = srcs.size() > 0 ? srcs.size() : 1;

@@ -22,7 +22,7 @@ public:
 
     QuString(const std::string &stds);
     QuString(const CuData &da, const char *key);
-    QuString(const CuData &da, const CuDType::Key key);
+    QuString(const CuData &da, const TTT::Key key);
     QuString(const CuVariant &va);
 };
 

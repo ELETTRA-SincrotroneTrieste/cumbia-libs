@@ -137,12 +137,12 @@ bool Defs::loadXmlConf(const QString &fname)
         for(int i = 0; i < srcnodes.size(); i++)
         {
             srcel = srcnodes.at(i).toElement();
-            if(!srcel.isNull() && srcel.tagName() == "srcdir" && srcel.hasAttribute(CuDType::Name) && srcel.hasAttribute("filters"))  // srcel.hasAttribute("name")
-                m_srcd_infoset.add(srcel.attribute(CuDType::Name), srcel.attribute("filters"), SearchDirInfoSet::Source);  // srcel.attribute("name")
-            else if(!srcel.isNull() &&  srcel.tagName() == "uidir" && srcel.hasAttribute(CuDType::Name) && srcel.hasAttribute("filters"))  // srcel.hasAttribute("name")
-                m_srcd_infoset.add(srcel.attribute(CuDType::Name), srcel.attribute("filters"), SearchDirInfoSet::Ui);  // srcel.attribute("name")
-            else if(!srcel.isNull() &&  srcel.tagName() == "uihdir" && srcel.hasAttribute(CuDType::Name) && srcel.hasAttribute("filters"))  // srcel.hasAttribute("name")
-                m_srcd_infoset.add(srcel.attribute(CuDType::Name), srcel.attribute("filters"), SearchDirInfoSet::Ui_H);  // srcel.attribute("name")
+            if(!srcel.isNull() && srcel.tagName() == "srcdir" && srcel.hasAttribute(TTT::Name) && srcel.hasAttribute("filters"))  // srcel.hasAttribute("name")
+                m_srcd_infoset.add(srcel.attribute(TTT::Name), srcel.attribute("filters"), SearchDirInfoSet::Source);  // srcel.attribute("name")
+            else if(!srcel.isNull() &&  srcel.tagName() == "uidir" && srcel.hasAttribute(TTT::Name) && srcel.hasAttribute("filters"))  // srcel.hasAttribute("name")
+                m_srcd_infoset.add(srcel.attribute(TTT::Name), srcel.attribute("filters"), SearchDirInfoSet::Ui);  // srcel.attribute("name")
+            else if(!srcel.isNull() &&  srcel.tagName() == "uihdir" && srcel.hasAttribute(TTT::Name) && srcel.hasAttribute("filters"))  // srcel.hasAttribute("name")
+                m_srcd_infoset.add(srcel.attribute(TTT::Name), srcel.attribute("filters"), SearchDirInfoSet::Ui_H);  // srcel.attribute("name")
             else if(!srcel.isNull())
             {
                 m_error = true;
@@ -172,9 +172,9 @@ bool Defs::loadXmlConf(const QString &fname)
     {
         QDomNode node = factories.at(i);
         QDomElement factory = node.toElement();
-        if(!factory.isNull() && factory.tagName() == "factory" && factory.hasAttribute(CuDType::Name))  // factory.hasAttribute("name")
+        if(!factory.isNull() && factory.tagName() == "factory" && factory.hasAttribute(TTT::Name))  // factory.hasAttribute("name")
         {
-            Search s(factory.attribute(CuDType::Name));  // factory.attribute("name")
+            Search s(factory.attribute(TTT::Name));  // factory.attribute("name")
             QDomNodeList findnl = factory.elementsByTagName("find");
             for(int j = 0; j < findnl.size(); j++)
             {
@@ -208,9 +208,9 @@ bool Defs::loadXmlConf(const QString &fname)
             {
                 QDomElement widget = widgetlist.at(w).toElement();
 
-                if(!widget.isNull() && widget.hasAttribute(CuDType::Class))  // widget.hasAttribute("class")
+                if(!widget.isNull() && widget.hasAttribute(TTT::Class))  // widget.hasAttribute("class")
                 {
-                    QString nam = widget.attribute(CuDType::Class);  // widget.attribute("class")
+                    QString nam = widget.attribute(TTT::Class);  // widget.attribute("class")
                     Params custom_pars;
                     m_getParams(widget, custom_pars);
                     if(m_error)
@@ -238,9 +238,9 @@ bool Defs::loadXmlConf(const QString &fname)
             for(int i = 0; i < methods_el.childNodes().count(); i++)
             {
                 QDomElement method = methods_el.childNodes().at(i).toElement();
-                if(!method.isNull() && method.hasAttribute(CuDType::Name))  // method.hasAttribute("name")
+                if(!method.isNull() && method.hasAttribute(TTT::Name))  // method.hasAttribute("name")
                 {
-                    QString methodnam = method.attribute(CuDType::Name);  // method.attribute("name")
+                    QString methodnam = method.attribute(TTT::Name);  // method.attribute("name")
                     Params methodParams;
                     m_getParams(method, methodParams);
                     if(m_error)

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-old_version="2\.0\.0"
-old_version_hex="0x020000"
+old_version="2\.0\.1"
+old_version_hex="0x020001"
 
-new_version="2.0.1"
-new_version_hex="0x020001"
+new_version="2.1.0"
+new_version_hex="0x020100"
 
 echo -e " Will replace version $old_version with $new_version and $old_version_hex with $new_version_hex in all .pri and meson.build files"
 echo -n  -e " Do you want to continue [y|n]?  [y] "

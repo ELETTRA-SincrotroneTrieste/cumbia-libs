@@ -11,7 +11,9 @@
 #define VERSION "1.0"
 
 int main(int argc, char *argv[]) {
-    QuApplication qu_app( argc, argv );
+    CumbiaPool *p = new CumbiaPool();
+    CuControlsFactoryPool fpool;
+    QuApplication qu_app( argc, argv, p, &fpool );
     qu_app.setOrganizationName("Elettra");
     qu_app.setApplicationName("CuengineaccessorTest");
     QString version(VERSION);
@@ -23,8 +25,6 @@ int main(int argc, char *argv[]) {
     qu_app.setProperty("hwReferent", "$HW_REFERENT$"); /* name of the referent that provides the device server */
 
     // initialize cumbia
-    CumbiaPool *p = new CumbiaPool();
-    CuControlsFactoryPool fpool;
     CuEngineAccessor *a = new CuEngineAccessor(&qu_app, &p, &fpool);
     CuengineaccessorTest *w = new CuengineaccessorTest(nullptr);
     w->show();

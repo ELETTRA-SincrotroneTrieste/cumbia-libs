@@ -20,6 +20,7 @@
 #include <qwt_plot_directpainter.h>
 #include <qwt_painter.h>
 #include <cucontrolsutils.h>
+#include <quapplication.h>
 
 /** @private */
 class QuTrendPlotPrivate
@@ -54,6 +55,16 @@ QuTrendPlot::QuTrendPlot(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFa
 {
     d = new QuTrendPlotPrivate;
     d->plot_common = new QuPlotCommon(cumbia_pool, fpool);
+    m_init();
+}
+
+/*! \brief classical constructor with parent widget.
+ *  \note *QuApplication* is mandatory.
+ */
+QuTrendPlot::QuTrendPlot(QWidget *parent) : QuPlotBase(parent) {
+    d = new QuTrendPlotPrivate;
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    d->plot_common = new QuPlotCommon(a->cumbiaPool(), *a->fpool());
     m_init();
 }
 
@@ -156,8 +167,8 @@ void QuTrendPlot::onUpdate(const CuData &da)
 void QuTrendPlot::update(const CuData &da)
 {
     bool need_replot = false;
-    d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
-    const QString &src = QString::fromStdString(da[CuDType::Src].toString()), &msg = d->u.msg(da);  // da["src"]
+    d->read_ok = !da[TTT::Err].toBool();  // da["err"]
+    const QString &src = QString::fromStdString(da[TTT::Src].toString()), &msg = d->u.msg(da);  // da["src"]
 
     // update link statistics
     CuLinkStats *link_s = d->plot_common->getContext()->getLinkStats();
@@ -167,7 +178,7 @@ void QuTrendPlot::update(const CuData &da)
 
     // configure triggers replot at the end but should not be too expensive
     // to do it once here at configuration time and once more from appendData
-    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property")  // da["type"]
+    if(d->read_ok && d->auto_configure && da[TTT::Type].toString() == "property")  // da["type"]
         configure(da);
 
     QuPlotCurve *crv = curve(src);
@@ -178,18 +189,20 @@ void QuTrendPlot::update(const CuData &da)
     // set the curve state
     d->read_ok ? crv->setState(QuPlotCurve::Normal) : crv->setState(QuPlotCurve::Invalid);
 
+    pretty_pri("\e[1;33m%s\e[0m", datos(da));
     double x, y = 0.0;
-    if(da.containsKey(CuDType::Time_ms) && crv) {  // da.containsKey("timestamp_ms")
-        CuVariant ts = da[CuDType::Time_ms];  // da["timestamp_ms"]
+    if(da.containsKey(TTT::Time_ms) && crv) {  // da.containsKey("timestamp_ms")
+        CuVariant ts = da[TTT::Time_ms];  // da["timestamp_ms"]
         ts.getType() == CuVariant::LongInt ? x = static_cast<qint64>(ts.toLongInt()) : x = ts.toDouble();
     }
     else
         x = crv->size() > 0 ? crv->x(crv->size() - 1) + 1 : 0;
 
-    const CuVariant &v = da[CuDType::Value];  // da["value"]
+    const CuVariant &v = da[TTT::Value];  // da["value"]
     if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Scalar)
     {
         v.to<double>(y);
+        printf("QuTrendPlot: appending %f, %f\n", x, y);
         appendData(src, x, y);
     }
     else if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Vector) {
@@ -206,7 +219,7 @@ void QuTrendPlot::update(const CuData &da)
             insertData(src, xvals, v.toDoubleP(), v.getSize());
         }
     }
-    else if(!d->read_ok && da.containsKey(CuDType::Time_ms)) {  // da.containsKey("timestamp_ms")
+    else if(!d->read_ok && da.containsKey(TTT::Time_ms)) {  // da.containsKey("timestamp_ms")
         crv->size() > 0 ? y = crv->lastValue() : y = yLowerBound();
         crv->setText(static_cast<double>(x), msg);
         appendData(src, x, y);
@@ -224,6 +237,7 @@ void QuTrendPlot::update(const CuData &da)
             crv->setText(notes_ts[i], QuString(notes[i]));
         }
     }
+    pretty_pri("need_replot? %s", need_replot ? "\e[1;32mYES NEEDS REPLOT\e[0m" : "\e[1;35mNO NEED\e[0m");
     if(need_replot)
         replot();
 
@@ -274,6 +288,7 @@ void QuTrendPlot::refresh()
 {
     bool fullReplot = (updateMarker() || curves().size() > 1);
     fullReplot |= updateScales();
+    pretty_pri("full replot %d\n", fullReplot);
     if(fullReplot) {
         QwtPlot::replot();
     }
@@ -310,7 +325,7 @@ bool QuTrendPlot::showDateOnTimeAxis() const
  * An alternative way to get the actual period used by the poller is the following
  *
  * \code
- * CuData d_inout(CuDType::Period, -1);  // CuData d_inout("period", -1)
+ * CuData d_inout(TTT::Period, -1);  // CuData d_inout("period", -1)
    int period = d->plot_common->getContext()->getData(d_inout);
  * \endcode
  *
@@ -321,8 +336,8 @@ bool QuTrendPlot::showDateOnTimeAxis() const
 int QuTrendPlot::period() const
 {
     const CuData& options = d->plot_common->getContext()->options();
-    if(options.containsKey(CuDType::Period))  // options.containsKey("period")
-        return options[CuDType::Period].toInt();  // options["period"]
+    if(options.containsKey(TTT::Period))  // options.containsKey("period")
+        return options[TTT::Period].toInt();  // options["period"]
     return 1000;
 }
 

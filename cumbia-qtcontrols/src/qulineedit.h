@@ -19,8 +19,8 @@ class QuLineEdit : public QLineEdit, public CuDataListener, public CuContextI
 
 public:
     QuLineEdit(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac);
-
     QuLineEdit(QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    QuLineEdit(QWidget *parent);
 
     virtual ~QuLineEdit();
 
@@ -38,8 +38,6 @@ public slots:
 
 private:
     QuLineEditPrivate *d;
-
-    void m_init();
 };
 
 #endif // QuLineEdit_H

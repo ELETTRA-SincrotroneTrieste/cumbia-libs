@@ -23,7 +23,7 @@
  * \par Example
  *
  * \code
-   CuData thread_tok(CuDType::Thread, "athread");  // CuData thread_tok("thread", "athread")
+   CuData thread_tok(TTT::Thread, "athread");  // CuData thread_tok("thread", "athread")
    Activity *a = new Activity(CuData("name", "activity"));
    m_cumbia->registerActivity(a, this, thread_tok,  // m_cumbia is a Cumbia* (e.g. defined as class attribute)
       CuThreadFactoryImpl(), // use CuThread

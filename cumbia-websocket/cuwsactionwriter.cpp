@@ -112,11 +112,11 @@ void CuWsActionWriter::stop() {
 }
 
 void CuWsActionWriter::decodeMessage(const QJsonDocument &json) {
-    CuData res(CuDType::Src, d->ws_target.getName());  // CuData res("src", d->ws_target.getName()
+    CuData res(TTT::Src, d->ws_target.getName());  // CuData res("src", d->ws_target.getName()
     CumbiaWSWorld wsw;
     wsw.json_decode(json, res);
     d->exit = res["is_result"].toBool();
-    if(res[CuDType::Err].toBool() || res["is_result"].toBool()) {  // res["err"]
+    if(res[TTT::Err].toBool() || res["is_result"].toBool()) {  // res["err"]
         for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it)
             (*it)->onUpdate(res);
     }

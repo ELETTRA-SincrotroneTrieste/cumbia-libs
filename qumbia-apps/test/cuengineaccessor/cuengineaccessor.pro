@@ -3,7 +3,7 @@ isEmpty(CUMBIA_ROOT) {
 }
 include($${CUMBIA_ROOT}/include/quapps/quapps.pri)
 
-# CONFIG += debug | release
+CONFIG += debug 
 
 DEFINES += QT_NO_DEBUG_OUTPUT
 

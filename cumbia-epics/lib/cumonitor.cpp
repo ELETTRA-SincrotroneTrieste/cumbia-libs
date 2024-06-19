@@ -73,7 +73,7 @@ void CuMonitor::onResult(const CuData &data)
      * activity, to avoid that old results, queued and delivered late, delete this before the current activity
      * posts its "exit" result
      */
-    if(d->exit && data[CuDType::Exit].toBool() && data[CuDType::Activity] == d->current_activity->getToken()[CuDType::Activity])  // data["exit"], data["activity"]
+    if(d->exit && data[TTT::Exit].toBool() && data[TTT::Activity] == d->current_activity->getToken()[TTT::Activity])  // data["exit"], data["activity"]
     {
         CuEpicsActionFactoryService * af = static_cast<CuEpicsActionFactoryService *>(d->cumbia_e->getServiceProvider()
                                                                             ->get(static_cast<CuServices::Type>(CuEpicsActionFactoryService::CuActionFactoryServiceType)));
@@ -86,7 +86,7 @@ void CuMonitor::onResult(const CuData &data)
 CuData CuMonitor::getToken() const
 {
     CuData da("source", d->tsrc.getName());
-    da[CuDType::Type] = std::string("reader");  // da["type"]
+    da[TTT::Type] = std::string("reader");  // da["type"]
     return da;
 }
 
@@ -102,12 +102,12 @@ CuEpicsActionI::Type CuMonitor::getType() const
 
 void CuMonitor::sendData(const CuData &data)
 {
-    if(data.containsKey(CuDType::RefreshMode))  // data.containsKey("refresh_mode")
-        d->refresh_mode = static_cast<CuMonitor::RefreshMode>(data[CuDType::RefreshMode].toInt());  // data["refresh_mode"]
-    if(data.containsKey(CuDType::Period))  // data.containsKey("period")
-        d->period = data[CuDType::Period].toInt();  // data["period"]
+    if(data.containsKey(TTT::RefreshMode))  // data.containsKey("refresh_mode")
+        d->refresh_mode = static_cast<CuMonitor::RefreshMode>(data[TTT::RefreshMode].toInt());  // data["refresh_mode"]
+    if(data.containsKey(TTT::Period))  // data.containsKey("period")
+        d->period = data[TTT::Period].toInt();  // data["period"]
 
-    if(d->current_activity && data.containsKey(CuDType::RefreshMode))  // data.containsKey("refresh_mode")
+    if(d->current_activity && data.containsKey(TTT::RefreshMode))  // data.containsKey("refresh_mode")
         setRefreshMode(d->refresh_mode);
     if(d->current_activity && d->current_activity->getType() == CuMonitorActivity::CuMonitorActivityType)
         static_cast<CuMonitorActivity *>(d->current_activity)->setInterval(d->period);
@@ -117,10 +117,10 @@ void CuMonitor::sendData(const CuData &data)
 
 void CuMonitor::getData(CuData &d_inout) const
 {
-    if(d_inout.containsKey(CuDType::Period))  // d_inout.containsKey("period")
-        d_inout[CuDType::Period] = d->period;  // d_inout["period"]
-    if(d_inout.containsKey(CuDType::RefreshMode))  // d_inout.containsKey("refresh_mode")
-        d_inout[CuDType::RefreshMode] = d->refresh_mode;  // d_inout["refresh_mode"]
+    if(d_inout.containsKey(TTT::Period))  // d_inout.containsKey("period")
+        d_inout[TTT::Period] = d->period;  // d_inout["period"]
+    if(d_inout.containsKey(TTT::RefreshMode))  // d_inout.containsKey("refresh_mode")
+        d_inout[TTT::RefreshMode] = d->refresh_mode;  // d_inout["refresh_mode"]
     if(d_inout["cache"].toString() == std::string("property"))
         d_inout = d->property_d;
     else if(d_inout["cache"].toString() == std::string("value"))
@@ -193,11 +193,11 @@ void CuMonitor::m_startMonitorActivity()
     CuEpCAService *df =
             static_cast<CuEpCAService *>(d->cumbia_e->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuEpCAService::CuEpicsChannelAccessServiceType)));
-    CuData at(CuDType::Src, d->tsrc.getName()); /* activity token */  // CuData at("src", d->tsrc.getName()
-    at[CuDType::Pv] = d->tsrc.getPV();  // at["pv"]
-    at[CuDType::Activity] = "monitor";  // at["activity"]
+    CuData at(TTT::Src, d->tsrc.getName()); /* activity token */  // CuData at("src", d->tsrc.getName()
+    at[TTT::Pv] = d->tsrc.getPV();  // at["pv"]
+    at[TTT::Activity] = "monitor";  // at["activity"]
     at["is_pv"] = (d->tsrc.getType() == EpSource::PV);
-    at[CuDType::Period] = d->period;  // at["period"]
+    at[TTT::Period] = d->period;  // at["period"]
 
     std::string tt("epics_monitor"); /* thread token */
     d->current_activity = new CuMonitorActivity(at, df, d->tsrc.getArgs());

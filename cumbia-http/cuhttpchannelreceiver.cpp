@@ -136,7 +136,7 @@ void CuHttpChannelReceiver::decodeMessage(const QJsonValue &v) {
     if(a.size() == 1) {
         const QString& src = a.at(0)["src"].toString();
         if(d->rmap.contains(src)) {
-            CuData res(CuDType::Src, src.toStdString());  // CuData res("src", src.toStdString()
+            CuData res(TTT::Src, src.toStdString());  // CuData res("src", src.toStdString()
             CumbiaHTTPWorld httpw;
             httpw.json_decode(a.at(0), res);
             foreach(CuDataListener *l, d->rmap.values(src)) {
@@ -233,12 +233,12 @@ void CuHttpChannelReceiver::onWsBinaryMessageReceived(const QByteArray &ba) {
     CuData da = s.deserialize(ba.data(), siz); // siz for preliminary data len checks
     ///
     /// TEST
-    const CuVariant &v = da[CuDType::Value];  // da["value"]
+    const CuVariant &v = da[TTT::Value];  // da["value"]
     printf("[ \e[1;36mWS\e[0m ]: BINARY MESSAGE len \e[1;35m%d\e[0m \e[1;37;3m%s\e[0m (type %s fmt %s len %ld)\n", siz, datos(da), v.dataTypeStr(v.getType()).c_str(),
            v.dataFormatStr(v.getFormat()).c_str(), v.getSize());
     /// end test
     ///
-    foreach(CuDataListener *l, d->rmap.values(da.s(CuDType::Src).c_str())) {  // da.s("src")
+    foreach(CuDataListener *l, d->rmap.values(da.s(TTT::Src).c_str())) {  // da.s("src")
         l->onUpdate(da);
     }
 }

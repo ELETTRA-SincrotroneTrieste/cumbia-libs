@@ -39,8 +39,8 @@ CuRNDActionReader::CuRNDActionReader(const RNDSource& src, CumbiaRandom *ct) : C
     d->exit = false;  // set to true by stop
     d->period = 1000;
     d->refresh_mode = RandomGenerator;
-    d->options[CuDType::Min] = 0;  // options["min"]
-    d->options[CuDType::Max] = 1000;  // options["max"]
+    d->options[TTT::Min] = 0;  // options["min"]
+    d->options[TTT::Max] = 1000;  // options["max"]
     d->options["size"] = 1;
 }
 
@@ -77,8 +77,8 @@ void CuRNDActionReader::setOptions(const CuData &options) {
  *
  * The d->exit flag is true only if the CuRNDActionReader::stop has been called. (data listener destroyed
  * or reader disconnected ("unset source") )
- * Only in this case CuRNDActionReader auto deletes itself when data[CuDType::Exit] is true.  // data["exit"]
- * data[CuDType::Exit] true is not enough to dispose CuRNDActionReader because CuRNDActionReader handles two types of  // data["exit"]
+ * Only in this case CuRNDActionReader auto deletes itself when data[TTT::Exit] is true.  // data["exit"]
+ * data[TTT::Exit] true is not enough to dispose CuRNDActionReader because CuRNDActionReader handles two types of  // data["exit"]
  * activities (polling and event).
  *
  * If the error flag is set by the CuEventActivity because subscribe_event failed, the poller is started
@@ -120,7 +120,7 @@ void CuRNDActionReader::onResult(const CuData &data)
 CuData CuRNDActionReader::getToken() const
 {
     CuData da("source", d->tsrc.getName());
-    da[CuDType::Type] = std::string("reader");  // da["type"]
+    da[TTT::Type] = std::string("reader");  // da["type"]
     return da;
 }
 
@@ -155,10 +155,10 @@ void CuRNDActionReader::sendData(const CuData &data)
 {
     printf("\e[1;35msendData sending %s\e[0m\n", data.toString().c_str());
 
-    if(data.containsKey(CuDType::RefreshMode))  // data.containsKey("refresh_mode")
-        d->refresh_mode = static_cast<CuRNDActionReader::RefreshMode>(data[CuDType::RefreshMode].toInt());  // data["refresh_mode"]
-    if(data.containsKey(CuDType::Period)) {  // data.containsKey("period")
-        int period2 = data[CuDType::Period].toInt();  // data["period"]
+    if(data.containsKey(TTT::RefreshMode))  // data.containsKey("refresh_mode")
+        d->refresh_mode = static_cast<CuRNDActionReader::RefreshMode>(data[TTT::RefreshMode].toInt());  // data["refresh_mode"]
+    if(data.containsKey(TTT::Period)) {  // data.containsKey("period")
+        int period2 = data[TTT::Period].toInt();  // data["period"]
     }
 }
 
@@ -177,12 +177,12 @@ void CuRNDActionReader::sendData(const CuData &data)
  */
 void CuRNDActionReader::getData(CuData &d_inout) const
 {
-    if(d_inout.containsKey(CuDType::Period))  // d_inout.containsKey("period")
-        d_inout[CuDType::Period] = d->period;  // d_inout["period"]
-    if(d_inout.containsKey(CuDType::RefreshMode))  // d_inout.containsKey("refresh_mode")
-        d_inout[CuDType::RefreshMode] = d->refresh_mode;  // d_inout["refresh_mode"]
-    if(d_inout.containsKey(CuDType::Mode))  // d_inout.containsKey("mode")
-        d_inout[CuDType::Mode] = refreshModeStr();  // d_inout["mode"]
+    if(d_inout.containsKey(TTT::Period))  // d_inout.containsKey("period")
+        d_inout[TTT::Period] = d->period;  // d_inout["period"]
+    if(d_inout.containsKey(TTT::RefreshMode))  // d_inout.containsKey("refresh_mode")
+        d_inout[TTT::RefreshMode] = d->refresh_mode;  // d_inout["refresh_mode"]
+    if(d_inout.containsKey(TTT::Mode))  // d_inout.containsKey("mode")
+        d_inout[TTT::Mode] = refreshModeStr();  // d_inout["mode"]
 }
 
 /*! \brief set or change the reader's refresh mode
@@ -280,20 +280,20 @@ void CuRNDActionReader::start()
 
 void CuRNDActionReader::m_startRandomGenActivity()
 {
-    CuData at(CuDType::Src, d->tsrc.getName()); /* activity token */  // CuData at("src", d->tsrc.getName()
-    at[CuDType::Activity] = "random";  // at["activity"]
+    CuData at(TTT::Src, d->tsrc.getName()); /* activity token */  // CuData at("src", d->tsrc.getName()
+    at[TTT::Activity] = "random";  // at["activity"]
     at["rmode"] = refreshModeStr();
-    at[CuDType::Period] = d->period;  // at["period"]
-    if(d->options.containsKey(CuDType::Label))  // options.containsKey("label")
-        at[CuDType::Label] = d->options[CuDType::Label].toString();  // at["label"], options["label"]
+    at[TTT::Period] = d->period;  // at["period"]
+    if(d->options.containsKey(TTT::Label))  // options.containsKey("label")
+        at[TTT::Label] = d->options[TTT::Label].toString();  // at["label"], options["label"]
     std::string tt; // thread token
     d->options.containsKey("thread_token") ? tt = "rndtok_" + d->options.s("thread_token") : "rndtok_" + d->tsrc.getName();
     d->randomgen_a = new CuRandomGenActivity(at);
     double min, max; int siz = 1, period = 1000;
-    d->options[CuDType::Min].to<double>(min);  // options["min"]
-    d->options[CuDType::Max].to<double>(max);  // options["max"]
+    d->options[TTT::Min].to<double>(min);  // options["min"]
+    d->options[TTT::Max].to<double>(max);  // options["max"]
     d->options["size"].to<int>(siz);
-    d->options[CuDType::Period].to<int>(period);  // options["period"]
+    d->options[TTT::Period].to<int>(period);  // options["period"]
     d->randomgen_a->setBounds(min, max);
     d->randomgen_a->setSize(siz);
     d->randomgen_a->setPeriod(period);

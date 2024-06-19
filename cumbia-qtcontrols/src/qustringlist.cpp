@@ -37,7 +37,7 @@ QuStringList::QuStringList(const CuData &da, const char *key) : QStringList() {
     }
 }
 
-QuStringList::QuStringList(const CuData &da, CuDType::Key key) : QStringList() {
+QuStringList::QuStringList(const CuData &da, TTT::Key key) : QStringList() {
     if(da.containsKey(key)) {
         bool ok;
         std::vector<std::string> vs = da[key].toStringVector(&ok);

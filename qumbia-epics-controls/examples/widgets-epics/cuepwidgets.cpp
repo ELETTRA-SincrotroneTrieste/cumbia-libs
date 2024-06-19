@@ -69,12 +69,12 @@ CuEpWidgets::~CuEpWidgets()
 void CuEpWidgets::configure(const CuData &d)
 {
     printf("\e[1;32mCuEpWidgets::configure enter %s\e[0m\n", d.toString().c_str());
-    if(d[CuDType::Type].toString() != "connection")  // d["type"]
+    if(d[TTT::Type].toString() != "connection")  // d["type"]
         return;
 
     const int plotRowCnt = 5;
     int layout_row = 2;
-    int format = d[CuDType::DataFormat].toInt();  // d["df"]
+    int format = d[TTT::DataFormat].toInt();  // d["df"]
 
     QGridLayout *lo = qobject_cast<QGridLayout *>(ui->widget->layout());
     QStringList srcs = ui->leSrcs->text().split(",", QString::SkipEmptyParts);
@@ -133,8 +133,8 @@ void CuEpWidgets::changeRefresh()
     int period = ui->sbPeriod->value();
     int refmode = ui->cbRefMode->currentIndex();
     CuData options;
-    options[CuDType::Period] = period;  // options["period"]
-    options[CuDType::RefreshMode] = refmode;  // options["refresh_mode"]
+    options[TTT::Period] = period;  // options["period"]
+    options[TTT::RefreshMode] = refmode;  // options["refresh_mode"]
    // QuTrendPlot *tp = findChild<QuTrendPlot *>();
    // if(tp)
     //    tp->sendData(options);

@@ -24,13 +24,13 @@ void CuRndRandomFunctionGen::generate(CuData &res)
         for(int i = 0; i < data->size; i++) {
             vd.push_back(data->min + rg->generateDouble() * (data->max - data->min));
         }
-        res[CuDType::Value] = vd;  // res["value"]
+        res[TTT::Value] = vd;  // res["value"]
     }
     else {
-        res[CuDType::Value] = data->min + rg->generateDouble() * (data->max - data->min);  // res["value"]
+        res[TTT::Value] = data->min + rg->generateDouble() * (data->max - data->min);  // res["value"]
     }
-    res[CuDType::Err] = false;  // res["err"]
-    res[CuDType::Message] = "successfully generated " + std::to_string(data->size) + " random number(s)";  // res["msg"]
+    res[TTT::Err] = false;  // res["err"]
+    res[TTT::Message] = "successfully generated " + std::to_string(data->size) + " random number(s)";  // res["msg"]
 }
 
 CuRndFunctionGenA::Type CuRndRandomFunctionGen::getType() const
@@ -53,8 +53,8 @@ void CuRndSinFunctionGen::generate(CuData &res) {
     angle = 2 * M_PI * angle / 360.0;
     res["function"] = "random_sin";
     if(data->size == 1) {
-        res[CuDType::Value] = amplitude * sin(angle);  // res["value"]
-        res[CuDType::Message] = "generated a random amplitude sin with a random angle between 0 and 360 degrees";  // res["msg"]
+        res[TTT::Value] = amplitude * sin(angle);  // res["value"]
+        res[TTT::Message] = "generated a random amplitude sin with a random angle between 0 and 360 degrees";  // res["msg"]
     }
     else {
         bool ok = false;
@@ -67,11 +67,11 @@ void CuRndSinFunctionGen::generate(CuData &res) {
         for(int i = 0; i < data->size; i++) {
             vd.push_back(amplitude * sin(step * i));
         }
-        res[CuDType::Value] = vd;  // res["value"]
-        res[CuDType::Message] = "generated a " + std::to_string(data->size) + " points sin spectrum with step " +  // res["msg"]
+        res[TTT::Value] = vd;  // res["value"]
+        res[TTT::Message] = "generated a " + std::to_string(data->size) + " points sin spectrum with step " +  // res["msg"]
                 std::to_string(step);
     }
-    res[CuDType::Err] = false;  // res["err"]
+    res[TTT::Err] = false;  // res["err"]
 }
 
 CuRndFunctionGenA::Type CuRndSinFunctionGen::getType() const
@@ -126,28 +126,28 @@ void CuRndJsFunctionGen::generate(CuData &res) {
     if(m_error.isEmpty()) {
         double min, max;
         int size, period;
-        m_options[CuDType::Min].to<double>(min);  // m_options["min"]
-        m_options[CuDType::Max].to<double>(max);  // m_options["max"]
+        m_options[TTT::Min].to<double>(min);  // m_options["min"]
+        m_options[TTT::Max].to<double>(max);  // m_options["max"]
         m_options["size"].to<int>(size);
-        m_options[CuDType::Period].to<int>(period);  // m_options["period"]
+        m_options[TTT::Period].to<int>(period);  // m_options["period"]
         ++m_call_cnt;
         QJSValue val;
         QJSValue callable = m_jse->evaluate(m_jscode, m_filenam);
-        res[CuDType::Err] = callable.isError();  // res["err"]
+        res[TTT::Err] = callable.isError();  // res["err"]
         if(callable.isError() || !callable.isCallable()) {
-            res[CuDType::Message] = std::string("CuRndJsFunctionGen::generate: error evaluating JS function or not callable: line ")  // res["msg"]
+            res[TTT::Message] = std::string("CuRndJsFunctionGen::generate: error evaluating JS function or not callable: line ")  // res["msg"]
                     + "file: " + callable.property("fileName").toString().toStdString() +
                     ": " + std::to_string(callable.property("lineNumber").toInt()) + ": " +
                     callable.toString().toStdString();
-            res[CuDType::Err] = true;  // res["err"]
+            res[TTT::Err] = true;  // res["err"]
         }
         else {
             QJSValueList args;
             args << size << min << max << period << m_call_cnt;
             val = callable.call(args);
-            res[CuDType::Err] = val.isError();  // res["err"]
+            res[TTT::Err] = val.isError();  // res["err"]
             if(val.isError()) {
-                res[CuDType::Message] = std::string("CuRndJsFunctionGen::generate: error calling JS function: \"" +  // res["msg"]
+                res[TTT::Message] = std::string("CuRndJsFunctionGen::generate: error calling JS function: \"" +  // res["msg"]
                                          val.toString().toStdString() +
                                          "\" file \"" + val.property("fileName").toString().toStdString() +
                                          "\" line " + std::to_string(val.property("lineNumber").toInt()));
@@ -170,31 +170,31 @@ void CuRndJsFunctionGen::generate(CuData &res) {
                     else array_type_error = true;
                 }
                 if(len == 0)
-                    res[CuDType::Value] = vd;  // res["value"]
+                    res[TTT::Value] = vd;  // res["value"]
                 else if(vd.size() > 0)
-                    res[CuDType::Value] = vd;  // res["value"]
+                    res[TTT::Value] = vd;  // res["value"]
                 else if(vs.size() > 0)
-                    res[CuDType::Value] = vs;  // res["value"]
+                    res[TTT::Value] = vs;  // res["value"]
                 else if(vb.size() > 0)
-                    res[CuDType::Value] = vb;  // res["value"]
+                    res[TTT::Value] = vb;  // res["value"]
             }
             else if(val.isBool())
-                res[CuDType::Value] = val.toBool();  // res["value"]
+                res[TTT::Value] = val.toBool();  // res["value"]
             else if(val.isNumber())
-                res[CuDType::Value] = val.toNumber();  // res["value"]
+                res[TTT::Value] = val.toNumber();  // res["value"]
             else if(val.isString())
-                res[CuDType::Value] = val.toString().toStdString();  // res["value"]
+                res[TTT::Value] = val.toString().toStdString();  // res["value"]
             else {
-                res[CuDType::Err] = true;  // res["err"]
-                res[CuDType::Message] = "CuRndJsFunctionGen::generate js value \"" + val.toString().toStdString() + "\" returned from the function "                                                                                                                                   " nor a type string";  // res["msg"]
+                res[TTT::Err] = true;  // res["err"]
+                res[TTT::Message] = "CuRndJsFunctionGen::generate js value \"" + val.toString().toStdString() + "\" returned from the function "                                                                                                                                   " nor a type string";  // res["msg"]
             }
         }
-        if(!res[CuDType::Err].toBool())  // res["err"]
+        if(!res[TTT::Err].toBool())  // res["err"]
             m_last_result = val;
     }
     else {
-        res[CuDType::Err] = true;  // res["err"]
-        res[CuDType::Message] = std::string("error opening file: \"") + m_filenam.toStdString() +  // res["msg"]
+        res[TTT::Err] = true;  // res["err"]
+        res[TTT::Message] = std::string("error opening file: \"") + m_filenam.toStdString() +  // res["msg"]
                 "\":" + m_error.toStdString();
     }
 }

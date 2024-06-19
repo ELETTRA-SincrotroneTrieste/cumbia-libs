@@ -190,9 +190,9 @@ void CumbiaHttp::onSrcBundleReplyError(const CuData &errd) {
     const QMultiMap<QString, SrcData> &ma = d->src_q_man->takeSrcs();
     const QMap<QString, SrcData> &tma = d->src_q_man->takeTgts();
     CuData dat("err",true);
-    std::string msg = errd[CuDType::Message].toString();  // errd["msg"]
+    std::string msg = errd[TTT::Message].toString();  // errd["msg"]
     msg += "\ndata:\"" + errd["data"].toString() + "\"";
-    dat[CuDType::Message] = msg;  // dat["msg"]
+    dat[TTT::Message] = msg;  // dat["msg"]
     dat.putTimestamp();
     const QStringList& keys = ma.keys(), &tkeys = tma.keys();
     foreach(const QString& s, keys)  { // sources
@@ -295,7 +295,7 @@ void CumbiaHttp::onCredsReady(const QString &user, const QString &passwd) {
         const QStringList &keys = tm.keys();
         foreach(const QString& src, keys) {
             qDebug() << __PRETTY_FUNCTION__ << "tgt" << src << "msg" << "invalid user nam";
-            if(tm[src].lis) tm[src].lis->onUpdate(err.set(CuDType::Src, src.toStdString()));  // set("src", src.toStdString()
+            if(tm[src].lis) tm[src].lis->onUpdate(err.set(TTT::Src, src.toStdString()));  // set("src", src.toStdString()
         }
     }
     else
@@ -316,7 +316,7 @@ void CumbiaHttp::onAuthReply(bool authorised, const QString &user, const QString
         const QStringList& ks = tamap.keys();
         foreach(const QString& src, ks) {
             qDebug() << __PRETTY_FUNCTION__ << "tgt" << src << "msg" << message;
-            if(tamap[src].lis) tamap[src].lis->onUpdate(err.set(CuDType::Src, src.toStdString()));  // set("src", src.toStdString()
+            if(tamap[src].lis) tamap[src].lis->onUpdate(err.set(TTT::Src, src.toStdString()));  // set("src", src.toStdString()
         }
     }
 }
@@ -327,7 +327,7 @@ void CumbiaHttp::onAuthError(const QString &errm) {
     const QMap<QString, SrcData> &tm = d->src_q_man->takeTgts();
     const QStringList& ks = tm.keys();
     foreach(const QString& src, ks) {
-        if(tm[src].lis) tm[src].lis->onUpdate(err.set(CuDType::Src, src.toStdString()));  // set("src", src.toStdString()
+        if(tm[src].lis) tm[src].lis->onUpdate(err.set(TTT::Src, src.toStdString()));  // set("src", src.toStdString()
     }
 }
 
@@ -338,7 +338,7 @@ void CumbiaHttp::m_auth_request(const CuData &da) {
 }
 
 void CumbiaHttp::m_lis_update(const CuData &da) {
-    const std::string &src = da.value(CuDType::Src).toString();
+    const std::string &src = da.value(TTT::Src).toString();
     QList<SrcData> tgtli;
     const QMap<QString, SrcData> &mp = d->src_q_man->takeTgts();
     const QStringList& ks = mp.keys();
@@ -364,7 +364,7 @@ CuData CumbiaHttp::m_make_server_err(const QMap<QString, QString>& revmap, const
     CuData out(in);
     const std::string& req = revmap.contains(src) ? "\nrequest:\"" + revmap[src].toStdString() + "\" part of a bundle of "
                                                     + std::to_string(revmap.size()) + " requests." : "\nrequest unavailable";
-    out[CuDType::Message] = in[CuDType::Message].toString() + req;  // out["msg"], in["msg"]
+    out[TTT::Message] = in[TTT::Message].toString() + req;  // out["msg"], in["msg"]
     return out;
 }
 void CumbiaHttp::m_dequeue_src_reqs() {

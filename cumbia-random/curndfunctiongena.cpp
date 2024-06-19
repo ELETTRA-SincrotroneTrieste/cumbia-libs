@@ -18,9 +18,9 @@ void CuRndFunctionGenA::extractConf(const CuData &res) const
         data->size = 1;
 
     // min max
-    if(res.containsKey(CuDType::Min) && res.containsKey(CuDType::Max)) {  // res.containsKey("min"), res.containsKey("max")
-        res[CuDType::Min].to<double>(data->min);  // res["min"]
-        res[CuDType::Max].to<double>(data->max);  // res["max"]
+    if(res.containsKey(TTT::Min) && res.containsKey(TTT::Max)) {  // res.containsKey("min"), res.containsKey("max")
+        res[TTT::Min].to<double>(data->min);  // res["min"]
+        res[TTT::Max].to<double>(data->max);  // res["max"]
     }
     if(data->min == data->max) {
         data->min = 0;

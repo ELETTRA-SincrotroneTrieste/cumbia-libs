@@ -290,9 +290,9 @@ void CuContext::sendData(const QList<CuData> &data)
     CuControlsWriterA *w;
     foreach(CuData d, data)
     {
-        if(d.containsKey(CuDType::Src) && (r = findReader(d[CuDType::Src].toString())))  // d["src"], d.containsKey("src")
+        if(d.containsKey(TTT::Src) && (r = findReader(d[TTT::Src].toString())))  // d["src"], d.containsKey("src")
             r->sendData(d);
-        if(d.containsKey(CuDType::Src) && (w = findWriter(d[CuDType::Src].toString())))  // d["src"], d.containsKey("src")
+        if(d.containsKey(TTT::Src) && (w = findWriter(d[TTT::Src].toString())))  // d["src"], d.containsKey("src")
             w->sendData(d);
     }
 }
@@ -336,15 +336,15 @@ void CuContext::getData(CuData &d_inout)
  *
  * \code
  * CuData p1, p2;
- * p1[CuDType::Src]  = "current:a";  // p1["src"]
+ * p1[TTT::Src]  = "current:a";  // p1["src"]
  * p1["period"] = -1; // will be set by getData
- * p2[CuDType::Src] = "current:b";  // p2["src"]
- * p2[CuDType::Period] = -1;  // p2["period"]
+ * p2[TTT::Src] = "current:b";  // p2["src"]
+ * p2[TTT::Period] = -1;  // p2["period"]
  * QList<CuData> in_dlist = QList<CuData>() << p1 << p2;
  * // suppose we have a QuTrendPlot named myTrendPlot...
  * myTrendPlot->getContext()->getData(in_dlist);
  *
- * printf("Period a: %d[ms] period b: %d[ms]\n", p1[CuDType::Period].toInt(), p2[CuDType::Period].toInt() );  // p1["period"], p2["period"]
+ * printf("Period a: %d[ms] period b: %d[ms]\n", p1[TTT::Period].toInt(), p2[TTT::Period].toInt() );  // p1["period"], p2["period"]
  *
  * \endcode
  *
@@ -356,9 +356,9 @@ void CuContext::getData(QList<CuData> &in_datalist)
     for(int i = 0; i < in_datalist.size(); i++)
     {
         CuData &d = in_datalist[i];
-        if(d.containsKey(CuDType::Src) && (r = findReader(d[CuDType::Src].toString())))  // d["src"], d.containsKey("src")
+        if(d.containsKey(TTT::Src) && (r = findReader(d[TTT::Src].toString())))  // d["src"], d.containsKey("src")
             r->getData(d);
-        if(d.containsKey(CuDType::Src) && (w = findWriter(d[CuDType::Src].toString())))  // d["src"], d.containsKey("src")
+        if(d.containsKey(TTT::Src) && (w = findWriter(d[TTT::Src].toString())))  // d["src"], d.containsKey("src")
             w->getData(d);
     }
 }

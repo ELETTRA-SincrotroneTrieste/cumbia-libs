@@ -14,6 +14,7 @@
 #include "cuengine_swap.h"
 
 #include <QTimer>
+#include <quapplication.h>
 
 class Cumbia;
 class CumbiaPool;
@@ -42,6 +43,13 @@ QuWriter::QuWriter(QObject *parent, CumbiaPool *cumbia_pool, const CuControlsFac
 {
     m_init();
     d->context = new CuContext(cumbia_pool, fpool);
+}
+
+QuWriter::QuWriter(QObject *parent)  :
+    Qumbiaizer(parent) {
+    m_init();
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    d->context = new CuContext(a->cumbiaPool(), *a->fpool());
 }
 
 QuWriter::~QuWriter()
@@ -305,9 +313,9 @@ void QuWriter::execute(const QVector<bool>& bv) {
 void QuWriter::onUpdate(const CuData &data)
 {
     d->configured = true;
-    quizer_ptr->error = data[CuDType::Err].toBool();  // data["err"]
-    quizer_ptr->message = QString::fromStdString(data[CuDType::Message].toString());  // data["msg"]
-    if(data[CuDType::Type].toString() == "property" && d->auto_configure) {  // data["type"]
+    quizer_ptr->error = data[TTT::Err].toBool();  // data["err"]
+    quizer_ptr->message = QString::fromStdString(data[TTT::Message].toString());  // data["msg"]
+    if(data[TTT::Type].toString() == "property" && d->auto_configure) {  // data["type"]
         Qumbiaizer::configure(data); // emits configured and connectionOk
         CuControlsWriterA *w = d->context->getWriter();
         if(quizer_ptr->executeOnConnection() && w) {

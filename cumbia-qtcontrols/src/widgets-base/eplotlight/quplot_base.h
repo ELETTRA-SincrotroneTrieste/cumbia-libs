@@ -117,14 +117,14 @@ public:
      * \brief The constructor of a simple plot with zooming and scrolling capabilities
      * @param parent the parent widget
      */
-    QuPlotBase(QWidget *parent);
+    QuPlotBase(QWidget *parent, bool openGL = false);
     
     /**
      * \brief The constructor of a simple plot with zooming and scrolling capabilities
      * @param parent the parent widget
      * @param title the title of the plot
      */
-    QuPlotBase(const QwtText &title, QWidget *parent);
+    QuPlotBase(const QwtText &title, QWidget *parent, bool openGL = false);
     
     virtual ~QuPlotBase();
 
@@ -209,6 +209,8 @@ public:
 
     QuPlotComponent *unregisterComponent(const QString& name);
 
+    bool isOpenGL() const;
+
 public slots:
     virtual void refresh();
 
@@ -264,6 +266,11 @@ public slots:
 
     void setXAxisAutoscaleEnabled(bool autoscale);
     void setYAxisAutoscaleEnabled(bool autoscale);
+
+    QWidget *createCanvas(bool opengl);
+
+    void setOpenGL(bool openGL);
+
 protected:
 
     /** \brief returns the plot title.
@@ -283,7 +290,7 @@ protected:
 
     void moveCurveToYRight(QwtPlotCurve *c, bool yr);
 
-    virtual void init();
+    virtual void init(bool opengl);
 
     void contextMenuEvent(QContextMenuEvent *);
 
@@ -340,6 +347,9 @@ private:
 
     int findClosestPoint(QPoint p, QwtPlotCurve **closestCrv);
     void m_updateLabel(QwtPlotCurve *closestCurve, int closestPointIdx);
+    void m_align_scales(); // 2.1
+    void m_install_components();
+    void m_canvas_conf(QWidget *canvasw);
 };
 
 #endif

@@ -26,29 +26,29 @@ void TgDbPropHelper::get(CumbiaPool *cu_p, const QStringList &props)
         CuData bu; // att property
         foreach(QString p, props) {
             if(p.count("/") > 1 && p.count(":") == 0) {
-                bu[CuDType::Device] = p.section("/", 0, 2).toStdString();  // bu["device"]
+                bu[TTT::Device] = p.section("/", 0, 2).toStdString();  // bu["device"]
             }
             if(p.count("/") == 4) { // specific attribute property
-                bu[CuDType::Attribute] = p.section("/", 3, 3).toStdString();  // bu["attribute"]
-                bu[CuDType::Name] = p.section("/", -1).toStdString();  // bu["name"]
+                bu[TTT::Attribute] = p.section("/", 3, 3).toStdString();  // bu["attribute"]
+                bu[TTT::Name] = p.section("/", -1).toStdString();  // bu["name"]
             }
             else if(p.count("/") == 3) // att props, all
             {
-                bu[CuDType::Attribute] = p.section("/", -1).toStdString();  // bu["attribute"]
+                bu[TTT::Attribute] = p.section("/", -1).toStdString();  // bu["attribute"]
             }
             else if(p.count("/") == 1) { // specific class prop
-                bu[CuDType::Class] = p.section("/", 0, 0).toStdString();  // bu["class"]
-                bu[CuDType::Name] = p.section('/', -1).toStdString();  // bu["name"]
+                bu[TTT::Class] = p.section("/", 0, 0).toStdString();  // bu["class"]
+                bu[TTT::Name] = p.section('/', -1).toStdString();  // bu["name"]
             }
             else if(p.count("/") == 0 && p.endsWith(":")) { // class name
                 // get all properties for the given class
                 // - only "class" key is specified
-                bu[CuDType::Class] = p.section(":", 0, 0).toStdString();  // bu["class"]
+                bu[TTT::Class] = p.section(":", 0, 0).toStdString();  // bu["class"]
             }
             else if(p.count(":")) { // specific device property
-                bu[CuDType::Device] = p.section(":", 0, 0).toStdString();  // bu["device"]
+                bu[TTT::Device] = p.section(":", 0, 0).toStdString();  // bu["device"]
                 if(!p.section(":", -1).isEmpty())
-                    bu[CuDType::Name] = p.section(":", -1).toStdString();  // bu["name"]
+                    bu[TTT::Name] = p.section(":", -1).toStdString();  // bu["name"]
             }
             m_dbr = new CuTDbPropertyReader(p.toStdString(), ct);
             in.push_back(bu);

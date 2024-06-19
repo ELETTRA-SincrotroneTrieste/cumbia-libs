@@ -28,8 +28,8 @@ class QuTable : public EFlag, public CuDataListener, public CuContextI
 
 public:
     QuTable(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
-
     QuTable(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    QuTable(QWidget *parent);
 
     virtual ~QuTable();
 

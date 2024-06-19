@@ -38,6 +38,46 @@ page for the software sources.
 The *cumbia-world* project contains a configuration file and a script to build the
 desired modules. The modules sources are git *submodules*.
 
+### cumbia
+
+#### CuDType enum alias
+
+The TTT alias for CuDType has been defined:
+
+```
+#define TTT CuDType
+```
+
+#### Cuvariant conversion to vector
+
+CuVariant::toVector performance improvements
+
+### cumbia-qtcontrols
+
+#### Plots
+
+Plots have undergone *dramatic* performance improvements.
+
+##### OpenGL support
+
+OpenGL support has been introduced for the plot *canvas*.
+
+##### curve data management
+
+Curve data for spectrum plots now uses a custom store 
+derived from QwtSeriesData, to avoid potential copies 
+of large data and possible inefficiencies of legacy naive 
+*setSeries (setData)* data update methods taking x and y
+arrays of data.
+
+##### replot strategy
+
+1. QuPlotBase::configure does not call *replot* any more
+2. QuPlotBase::refresh does not trigger a full *replot* any more, unless
+   scales have actually changed. Instead, a *canvas* update only is 
+   preferred
+
+
 ## version 2.0.0
 
 The main motivation for a major release is a dramatic improvement in performance.

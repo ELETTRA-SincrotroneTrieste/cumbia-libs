@@ -34,8 +34,8 @@ public:
       * @param parent the QObject which will be the parent for the QuWriter.
       */
     QuWriter(QObject *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac);
-
     QuWriter(QObject *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    QuWriter(QObject *parent);
 
     virtual ~QuWriter();
 

@@ -35,14 +35,14 @@ class CuControlsReaderFactoryI;
 class QuSpectrumPlot : public QuPlotBase, public CuDataListener, public CuContextI
 {
     Q_OBJECT
-    Q_PROPERTY(QStringList sources READ sources WRITE setSources DESIGNABLE false)
-    Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE false)
+    Q_PROPERTY(QStringList sources READ sources WRITE setSources DESIGNABLE true)
+    Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)
     Q_PROPERTY(int period READ period WRITE setPeriod DESIGNABLE true)
 
 public:
     QuSpectrumPlot(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
-
     QuSpectrumPlot(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    QuSpectrumPlot(QWidget *parent);
 
     virtual ~QuSpectrumPlot();
 
