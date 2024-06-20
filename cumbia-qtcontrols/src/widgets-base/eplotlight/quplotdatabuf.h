@@ -12,16 +12,25 @@ public:
     QuPlotDataBuf(size_t siz = 0);
     virtual ~QuPlotDataBuf();
 
-    void init(size_t siz);
+    void init(size_t bufsiz);
     double x0() const;
     double xN() const;
 
+    bool x_auto() const;
+    size_t first() const;
+
     QPointF p(size_t i) const;
+    double py(size_t i) const;
 
     size_t resize(size_t s);
+    size_t bufsize() const;
 
     void move(const std::vector<double>& y);
     void set(const std::vector<double>& y);
+    void set(const std::vector<double>& x, const std::vector<double> &y);
+
+    void append(double *xx, double *yy, size_t count);
+    void append(double *yy, size_t count);
 
     std::vector<double> x, y;
 
