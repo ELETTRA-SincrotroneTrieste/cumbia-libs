@@ -32,6 +32,10 @@ public:
     void append(double *xx, double *yy, size_t count);
     void append(double *yy, size_t count);
 
+
+    void insert(size_t idx, double *yy, size_t count);
+    void insert(size_t idx, double *xx, double *yy, size_t count);
+
     std::vector<double> x, y;
 
     // QwtSeriesData interface
