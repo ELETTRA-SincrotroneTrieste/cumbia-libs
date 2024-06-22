@@ -246,5 +246,41 @@ void QuPlotDataBuf::insert(size_t idx, double *yy, size_t count) {
 
 void QuPlotDataBuf::insert(size_t idx, double *xx, double *yy, size_t count)
 {
-
+    if(!d->x_auto) {
+        if(idx > d->datasiz) idx = d->datasiz;
+        if(idx < 0) idx = 0;
+        if(d->bufsiz >= d->datasiz + count) {
+            // there is enough space for data: use std vector insert
+            y.insert(y.begin() + idx, yy, yy + count);
+            x.insert(x.begin() + idx, xx, xx + count);
+            d->datasiz += count;
+        } else {
+            // preserve the tail: map idx
+            size_t tlen = d->datasiz - idx;
+            std::vector<double> Y(tlen), X(tlen);
+            for(size_t i = 0; i < tlen; i++) {
+                size_t j = (d->first + i + idx) % d->bufsiz;
+                Y[i] = y[j];
+                X[i] = x[j];
+            } // Y contains the tail
+            size_t next = (d->first + idx) % d->bufsiz;
+            // append yy starting from idx (datasiz)
+            for(size_t i = 0; i < count; i++ ) {
+                y[next] = yy[i];
+                x[next] = xx[i];
+                idx < d->bufsiz ? idx++ :
+                    d->first = (d->first + 1) % d->bufsiz;
+                next = (next + 1) % d->bufsiz;
+            }
+            // append saved tail
+            for(size_t i = 0; i < tlen; i++) {
+                y[next] = Y[i];
+                x[next] = xx[i];
+                idx < d->bufsiz ? idx++ :
+                    d->first = (d->first + 1) % d->bufsiz;
+                next = (next + 1) % d->bufsiz;
+            }
+            d->datasiz = idx;
+        }
+    }
 }
