@@ -32,8 +32,7 @@ double QuPlotDataBuf::x0() const {
 }
 
 double QuPlotDataBuf::xN() const {
-    const QPointF& x = p(d->datasiz - 1);
-    return x.x();
+    return d->datasiz > 0 ? p(d->datasiz - 1).x() : -1;
 }
 
 bool QuPlotDataBuf::x_auto() const {
@@ -84,17 +83,17 @@ QRectF QuPlotDataBuf::boundingRect() const {
  *
  * \return new size - old size
  */
-size_t QuPlotDataBuf::resize(size_t s) {
+size_t QuPlotDataBuf::resizebuf(size_t s) {
     size_t oldsiz(d->bufsiz);
     std::vector<double> X, Y;
     if(s >= d->bufsiz) {
         // re-arrange elements so that d->first is 0
         X.resize(d->x_auto ? 0 : d->datasiz, 0);
         Y.resize(d->datasiz, 0);
-        for(size_t i = d->first, j = 0; i < d->datasiz; i++, j++) {
+        for(size_t i = 0, j = 0; i < d->datasiz; i++, j++) {
             if(!d->x_auto)
-                X[j] = x[i % d->bufsiz];
-            Y[j] = y[i % d->bufsiz];
+                X[j] = x[d->first + i % d->bufsiz];
+            Y[j] = y[d->first + i % d->bufsiz];
         }
     }
     else { // smaller size: preserve tail
@@ -112,6 +111,10 @@ size_t QuPlotDataBuf::resize(size_t s) {
     if(!d->x_auto)
         x = std::move(X);
     y = std::move(Y);
+    if(s >= d->bufsiz) {
+        if(!d->x_auto) x.resize(s);
+        y.resize(s);
+    }
     d->bufsiz = s;
     d->first = 0;
     return d->bufsiz - oldsiz;
@@ -128,6 +131,22 @@ size_t QuPlotDataBuf::resize(size_t s) {
  */
 void QuPlotDataBuf::move(const std::vector<double> &_y) {
     y = std::move(_y);
+    if(d->datasiz != y.size())
+        d->datasiz = y.size();
+    if(d->bufsiz != d->datasiz)
+        d->bufsiz = d->datasiz;
+}
+
+void QuPlotDataBuf::move(const std::vector<double> &_x, const std::vector<double> &_y) {
+    if(_x.size() == _y.size()) {
+        x = std::move(_x);
+        if(!d->x_auto)
+            d->x_auto = true;
+        if(d->datasiz != y.size())
+            d->datasiz = y.size();
+        if(d->bufsiz != d->datasiz)
+            d->bufsiz = d->datasiz;
+    }
 }
 
 /*!
@@ -161,9 +180,9 @@ void QuPlotDataBuf::set(const std::vector<double> &xx, const std::vector<double>
     if(xx.size() == yy.size()) {
         y = yy;
         x = xx;
-        d->x_auto = false;
-        d->first = 0;
-        d->datasiz = d->bufsiz = xx.size();
+        if(!d->x_auto)  d->x_auto = false;
+        if(d->first != 0) d->first = 0;
+        d->datasiz = d->bufsiz = x.size();
     }
 }
 

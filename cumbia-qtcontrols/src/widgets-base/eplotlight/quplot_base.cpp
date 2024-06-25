@@ -9,6 +9,7 @@
 #include <qwt_legend.h>
 #include <sys/time.h>
 #include <QDateTime>
+#include <QPaintEngine>
 #include <QPainter>
 #include <QMouseEvent>
 #include <QtDebug>
@@ -45,7 +46,7 @@ public:
     QuPlotBase::CurveStyle curvesStyle;
     QuWidgetUpdateStrategyI *updateStrategy;
     QuWidgetContextMenuStrategyI* ctxMenuStrategy;
-    bool titleOnCanvasEnabled, displayZoomHint;
+    bool titleOnCanvasEnabled, displayZoomHint, open_gl;
     QMap<QString, QuPlotCurve*> curvesMap;
     int bufSiz;
     int refresh_timeo;
@@ -103,6 +104,7 @@ void QuPlotBase::init(bool opengl)
     d->titleOnCanvasEnabled = false;
     d->displayZoomHint = false;
     d->curvesStyle = Lines;
+    d->open_gl = opengl;
 
     /* disable qwt auto replot */
     setAutoReplot(false);
@@ -427,7 +429,6 @@ bool QuPlotBase::updateScales()
             d->zoom->changeRect(axisId, d->axes->lowerBoundFromCurves(axisId) - old_lb,
                                 d->axes->upperBoundFromCurves(axisId) - old_ub);
     }
-    pretty_pri("returning bounds changed %s", boundsChanged ? "TRUE" : "FALSE");
     return boundsChanged;
 }
 
@@ -450,15 +451,17 @@ void QuPlotBase::refresh() {
     bool scales_changed = false;
     if(d->marker && d->marker->isVisible())
         updateMarker();
-    if(d->axes)
+    if(d->axes) {
         scales_changed = updateScales();
-    scales_changed ? replot() : static_cast<QwtPlotCanvas *>(canvas())->replot();
+    }
+    scales_changed ? replot() :
+        (isOpenGL() ? static_cast<QwtPlotOpenGLCanvas *>(canvas())->replot() :
+                                     static_cast<QwtPlotCanvas *>(canvas())->replot());
     if(d->zoom && !d->zoom->inZoom())
         d->zoom->setZoomBase(false);
 }
 
-void QuPlotBase::drawCanvas(QPainter *p)
-{
+void QuPlotBase::drawCanvas(QPainter *p) {
     QwtPlot::drawCanvas(p);
     if(d->canvas_painter) {
         CuData options;
@@ -778,13 +781,11 @@ void QuPlotBase::setYRightAxisAutoscaleEnabled(bool autoscale) {
     replot();
 }
 
-double QuPlotBase::yUpperBound(QwtPlot::Axis axis)
-{
+double QuPlotBase::yUpperBound(QwtPlot::Axis axis) {
     return axisScaleDiv(axis).upperBound();
 }
 
-double QuPlotBase::yLowerBound(QwtPlot::Axis axis)
-{
+double QuPlotBase::yLowerBound(QwtPlot::Axis axis) {
     return axisScaleDiv(axis).lowerBound();
 }
 
@@ -793,7 +794,7 @@ double QuPlotBase::yLowerBound(QwtPlot::Axis axis)
  */
 void QuPlotBase::setYLowerBound(double l) {
     d->axes->setManualBounds(this, QwtPlot::yLeft, l, axisScaleDiv(QwtPlot::yLeft).upperBound());
-    refresh();
+    replot();
 }
 
 /*
@@ -801,7 +802,7 @@ void QuPlotBase::setYLowerBound(double l) {
  */
 void QuPlotBase::setYUpperBound(double u) {
     d->axes->setManualBounds(this, QwtPlot::yLeft, axisScaleDiv(QwtPlot::yLeft).lowerBound(), u);
-    refresh();
+    replot();
 }
 
 double QuPlotBase::xUpperBound(QwtPlot::Axis axis)
@@ -905,6 +906,10 @@ void QuPlotBase::eraseZoomHint()
 bool QuPlotBase::zoomDisabled() const
 {
     return findChild<ShiftClickEater *>("shiftClickEater") != NULL;
+}
+
+QuPlotAxesComponent *QuPlotBase::axes_c() const {
+    return d->axes;
 }
 
 void QuPlotBase::setZoomDisabled(bool disable)

@@ -99,17 +99,16 @@ std::vector<double> parse(const char* cstr) {
 void parse(const char *cstr, std::vector<double>& x, std::vector<double>& y) {
     x.clear();
     y.clear();
-    size_t pos = 0;
+    size_t pos = 0, idx;
     size_t i = 0;
     std::string token, s(cstr);
-    std::vector<double> out;
-    while ((pos = s.find(' ', pos)) != std::string::npos) {
-        token = s.substr(0, pos);
+    while ((idx = s.find(',', pos)) != std::string::npos) {
+        token = s.substr(pos, idx);
         if(i % 2 != 0)
             y.push_back(atof(token.c_str()));
         else
             x.push_back(atof(token.c_str()));
-        pos += 1;
+        pos = idx + 1;
         i += 1;
     }
 }

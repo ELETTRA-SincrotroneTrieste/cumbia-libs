@@ -40,6 +40,7 @@ class QuPlotCurve;
 class QuWidgetUpdateStrategyI;
 class QuWidgetContextMenuStrategyI;
 class QuPlotComponent;
+class QuPlotAxesComponent;
 
 /*! @private */
 class ShiftClickEater : public QObject
@@ -155,6 +156,8 @@ public:
       * @see setZoomDisabled
       */
     bool zoomDisabled() const;
+
+    QuPlotAxesComponent *axes_c() const;
     
     QList<QwtPlotCurve *>curves() const;
     

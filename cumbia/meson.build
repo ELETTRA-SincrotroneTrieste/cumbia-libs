@@ -58,7 +58,8 @@ headers = [
 'src/lib/threads/cuthreadtokengeni.h',
 'src/lib/threads/cuhltimer.h',
 'src/lib/cuuserdata.h',
-'src/lib/cudataserializer.h'
+'src/lib/cudataserializer.h',
+'src/lib/cucircularbuffer.h'
 ]
 
 install_headers(headers, subdir : 'cumbia') # -> include/cumbia/
@@ -89,7 +90,8 @@ sources = [
 'src/lib/threads/cuevent.cpp',
 'src/lib/threads/cuthreadseventbridge.cpp',
 'src/lib/threads/cuhltimer.cpp',
-'src/lib/cudataserializer.cpp'
+'src/lib/cudataserializer.cpp',
+'src/lib/cucircularbuffer.cpp'
 ]
 
 includedirs = include_directories('src/lib', 'src/lib/threads', 'src/lib/services')
