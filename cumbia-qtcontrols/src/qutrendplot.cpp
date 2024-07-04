@@ -21,6 +21,7 @@
 #include <qwt_painter.h>
 #include <cucontrolsutils.h>
 #include <quapplication.h>
+#include <quplotdatabuf.h>
 
 /** @private */
 class QuTrendPlotPrivate
@@ -184,7 +185,9 @@ void QuTrendPlot::update(const CuData &da)
     QuPlotCurve *crv = curve(src);
     if(!crv) {
         addCurve(src, crv = new QuPlotCurve(src));
+        crv->setSamples(new QuPlotDataBuf(dataBufferSize()));
     }
+    QuPlotDataBuf *buf = static_cast<QuPlotDataBuf*>(crv->data());
 
     // set the curve state
     d->read_ok ? crv->setState(QuPlotCurve::Normal) : crv->setState(QuPlotCurve::Invalid);
@@ -203,7 +206,8 @@ void QuTrendPlot::update(const CuData &da)
     {
         v.to<double>(y);
         printf("QuTrendPlot: appending %f, %f\n", x, y);
-        appendData(src, x, y);
+        buf->append(&x, &y, 1);
+        // appendData(src, x, y);
     }
     else if(d->read_ok && v.isValid() && v.getFormat() == CuVariant::Vector) {
         if(da.containsKey("time_scale_us")) {
@@ -222,7 +226,8 @@ void QuTrendPlot::update(const CuData &da)
     else if(!d->read_ok && da.containsKey(TTT::Time_ms)) {  // da.containsKey("timestamp_ms")
         crv->size() > 0 ? y = crv->lastValue() : y = yLowerBound();
         crv->setText(static_cast<double>(x), msg);
-        appendData(src, x, y);
+        // appendData(src, x, y);
+        buf->append(&x, &y, 1);
         need_replot = true;
     }
 
@@ -240,6 +245,10 @@ void QuTrendPlot::update(const CuData &da)
     pretty_pri("need_replot? %s", need_replot ? "\e[1;32mYES NEEDS REPLOT\e[0m" : "\e[1;35mNO NEED\e[0m");
     if(need_replot)
         replot();
+
+
+    refresh();
+
 
     setToolTip(msg);
 }
@@ -292,13 +301,14 @@ void QuTrendPlot::refresh()
     if(fullReplot) {
         QwtPlot::replot();
     }
-    else
-    {
-        foreach(QwtPlotCurve *c, this->curves())
-        {
+    else {
+        foreach(QwtPlotCurve *c, this->curves()) {
             QwtSeriesData<QPointF> *data = c->data();
-            if(data->size() > 1)
+            if(data->size() > 1) {
+                pretty_pri("drawing series incrementally from %ld to %ld", data->size() - 2, data->size() -1);
                 d->directPainter->drawSeries(c, data->size() - 2, data->size() -1);
+                pretty_pri("-- \e[1;33mafter direct painter drawSeries\e[0m");
+            }
         }
     }
     resetZoom();

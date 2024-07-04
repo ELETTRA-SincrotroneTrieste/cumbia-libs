@@ -97,7 +97,7 @@ QuPlotBase::~QuPlotBase()
 void QuPlotBase::init(bool opengl)
 {
     d = new QuPlotBasePrivate;
-    d->bufSiz = -1;
+    d->bufSiz = 3600 * 10;
     d->refresh_timeo = -1;
     d->updateStrategy = NULL;
     d->ctxMenuStrategy = NULL;
@@ -633,8 +633,8 @@ void QuPlotBase::appendData(const QString& curveName, double *x, double *y, int 
         curve->popFront();
     }
 
-    curve->appendData(x, y, size);
-    curve->updateRawData();
+    // curve->appendData(x, y, size);
+    // curve->updateRawData();
 
     if(d->refresh_timeo <= 0) {
         refresh();

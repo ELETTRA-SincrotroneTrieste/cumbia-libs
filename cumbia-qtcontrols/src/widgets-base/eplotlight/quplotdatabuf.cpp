@@ -3,9 +3,10 @@
 
 class QuPlotDataBufP {
 public:
-    QuPlotDataBufP() : first(0), x_auto(true) {}
+    QuPlotDataBufP() : first(0), x_auto(true), xm(0.0), xM(0.0), ym(0.0), yM(0.0) {}
     size_t bufsiz, first, datasiz;
     bool x_auto;
+    double xm, xM, ym, yM;
 };
 
 QuPlotDataBuf::QuPlotDataBuf(size_t siz) {
@@ -187,6 +188,8 @@ void QuPlotDataBuf::set(const std::vector<double> &xx, const std::vector<double>
 }
 
 void QuPlotDataBuf::append(double *xx, double *yy, size_t count) {
+    if(d->datasiz == 0)
+        x.resize(y.size());
     size_t next = (d->first + d->datasiz) % d->bufsiz;
     for(size_t i = 0; i < count; i++ ) {
         x[next] = xx[i];
