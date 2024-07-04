@@ -3,10 +3,12 @@
 
 class QuPlotDataBufP {
 public:
-    QuPlotDataBufP() : first(0), x_auto(true), xm(0.0), xM(0.0), ym(0.0), yM(0.0) {}
+    QuPlotDataBufP() : first(0),
+        xax_auto(true), xb_auto(false), yb_auto(false) {}
     size_t bufsiz, first, datasiz;
-    bool x_auto;
-    double xm, xM, ym, yM;
+    bool xax_auto; // x axis auto populate
+    bool xb_auto, yb_auto; // track x and y data bounds
+    double yb[2];
 };
 
 QuPlotDataBuf::QuPlotDataBuf(size_t siz) {
@@ -26,10 +28,11 @@ void QuPlotDataBuf::init(size_t bufsiz) {
     y.resize(bufsiz, 0);
     d->bufsiz = bufsiz;
     d->datasiz = d->first = 0;
+    d->yb[0] = 1.0; d->yb[1] = -1.0; // min > max forces initialization
 }
 
 double QuPlotDataBuf::x0() const {
-    return d->x_auto ? d->first : p(0).x();
+    return d->xax_auto ? d->first : p(0).x();
 }
 
 double QuPlotDataBuf::xN() const {
@@ -37,7 +40,7 @@ double QuPlotDataBuf::xN() const {
 }
 
 bool QuPlotDataBuf::x_auto() const {
-    return d->x_auto;
+    return d->xax_auto;
 }
 
 size_t QuPlotDataBuf::first() const {
@@ -49,7 +52,7 @@ QPointF QuPlotDataBuf::p(size_t i) const {
     if(i >= d->datasiz)
         return r;
     size_t idx = (d->first + i) % d->bufsiz;
-    return QPointF(d->x_auto ? i : x[idx], y[idx]);
+    return QPointF(d->xax_auto ? i : x[idx], y[idx]);
 }
 
 double QuPlotDataBuf::py(size_t i) const {
@@ -68,13 +71,16 @@ size_t QuPlotDataBuf::bufsize() const {
 }
 
 QPointF QuPlotDataBuf::sample(size_t i) const {
-    return d->x_auto ?  QPointF(i, py(i)) : p(i);
+    return d->xax_auto ?  QPointF(i, py(i)) : p(i);
 }
 
 QRectF QuPlotDataBuf::boundingRect() const {
-    double x = 0, y = 0, w = 100, h = 1000;
-    pretty_pri("rect (%.1f,%.1f %.1fx%.1f\n", x, y , w, h);
-    return QRectF(x, y, w, h);
+    double x0 = d->xb_auto ? (x.size() > 0 && d->datasiz > 0 ? x[0] : 0) : 0,
+        y0 = d->yb[0] == d->yb[1] ? 0 : d->yb[0],
+        w = d->xb_auto ? (x.size() > 0 && d->datasiz > 0 ? x[d->datasiz - 1] - x[0] : 1000) : 1000,
+        h = d->yb[0] == d->yb[1] ? 1000 : d->yb[1] - d->yb[0];
+    pretty_pri("rect (%.1f,%.1f %.1fx%.1f\n", x0, y0 , w, h);
+    return QRectF(x0, y0, w, h);
 }
 
 /*!
@@ -89,31 +95,31 @@ size_t QuPlotDataBuf::resizebuf(size_t s) {
     std::vector<double> X, Y;
     if(s >= d->bufsiz) {
         // re-arrange elements so that d->first is 0
-        X.resize(d->x_auto ? 0 : d->datasiz, 0);
+        X.resize(d->xax_auto ? 0 : d->datasiz, 0);
         Y.resize(d->datasiz, 0);
         for(size_t i = 0, j = 0; i < d->datasiz; i++, j++) {
-            if(!d->x_auto)
+            if(!d->xax_auto)
                 X[j] = x[d->first + i % d->bufsiz];
             Y[j] = y[d->first + i % d->bufsiz];
         }
     }
     else { // smaller size: preserve tail
-        X.resize(d->x_auto ? 0 : s, 0);
+        X.resize(d->xax_auto ? 0 : s, 0);
         Y.resize(std::min(s, d->datasiz), 0);
         // save tail into Y (X)
         for(int i = d->datasiz - 1, j = Y.size() - 1; j >= 0 && i >= 0; i--, j--) {
             const QPointF& xy = p(i);
-            if(!d->x_auto)
+            if(!d->xax_auto)
                 X[j] = xy.x();
             Y[j] = xy.y();
         }
         d->datasiz = Y.size();
     }
-    if(!d->x_auto)
+    if(!d->xax_auto)
         x = std::move(X);
     y = std::move(Y);
     if(s >= d->bufsiz) {
-        if(!d->x_auto) x.resize(s);
+        if(!d->xax_auto) x.resize(s);
         y.resize(s);
     }
     d->bufsiz = s;
@@ -136,17 +142,29 @@ void QuPlotDataBuf::move(const std::vector<double> &_y) {
         d->datasiz = y.size();
     if(d->bufsiz != d->datasiz)
         d->bufsiz = d->datasiz;
+
+    if(d->yb_auto) { // must find min and max in yy
+        auto [a, b] = std::minmax_element(y.begin(), y.end());
+        d->yb[0] = *a.base();
+        d->yb[1] = *b.base();
+    }
 }
 
 void QuPlotDataBuf::move(const std::vector<double> &_x, const std::vector<double> &_y) {
     if(_x.size() == _y.size()) {
         x = std::move(_x);
-        if(!d->x_auto)
-            d->x_auto = true;
+        if(!d->xax_auto)
+            d->xax_auto = true;
         if(d->datasiz != y.size())
             d->datasiz = y.size();
         if(d->bufsiz != d->datasiz)
             d->bufsiz = d->datasiz;
+
+        if(d->yb_auto) { // must find min and max in yy
+            auto [a, b] = std::minmax_element(y.begin(), y.end());
+            d->yb[0] = *a.base();
+            d->yb[1] = *b.base();
+        }
     }
 }
 
@@ -155,13 +173,18 @@ void QuPlotDataBuf::move(const std::vector<double> &_x, const std::vector<double
  * \param _y data to be copied
  *
  * \note  y is a public variable that can be directly set
- * \note x_auto property is set to true when explicitly setting the y array
+ * \note xax_auto property is set to true when explicitly setting the y array
  */
 void QuPlotDataBuf::set(const std::vector<double> &_y) {
     y = _y;
     d->datasiz = d->bufsiz = y.size();
     d->first = 0;
-    d->x_auto = true;
+    d->xax_auto = true;
+    if(d->yb_auto) { // must find min and max in yy
+        auto [a, b] = std::minmax_element(y.begin(), y.end());
+        d->yb[0] = *a.base();
+        d->yb[1] = *b.base();
+    }
 }
 
 /*!
@@ -169,7 +192,7 @@ void QuPlotDataBuf::set(const std::vector<double> &_y) {
  * \param xx source for the x data
  * \param yy source for the y data
  *
- * This method sets x_auto to false: xx data shall be used as custom x axis coordinates
+ * This method sets xax_auto to false: xx data shall be used as custom x axis coordinates
  * (e.g. timestamps). Resets datasiz and bufsiz to xx.size() (which shall be equal to yy.size()).
  * In case of xx and yy sizes mismatch, no operation shall be done
  *
@@ -181,9 +204,14 @@ void QuPlotDataBuf::set(const std::vector<double> &xx, const std::vector<double>
     if(xx.size() == yy.size()) {
         y = yy;
         x = xx;
-        if(!d->x_auto)  d->x_auto = false;
+        if(!d->xax_auto)  d->xax_auto = false;
         if(d->first != 0) d->first = 0;
         d->datasiz = d->bufsiz = x.size();
+        if(d->yb_auto) { // must find min and max in yy
+            auto [a, b] = std::minmax_element(yy.begin(), yy.end());
+            d->yb[0] = *a.base();
+            d->yb[1] = *b.base();
+        }
     }
 }
 
@@ -199,12 +227,22 @@ void QuPlotDataBuf::append(double *xx, double *yy, size_t count) {
         else
             d->first = (d->first + 1) % d->bufsiz;
         next = (next + 1) % d->bufsiz;
+
+        if(d->yb_auto) {
+            if(d->yb[0] > d->yb[1])
+                d->yb[0] = d->yb[1] = yy[i];
+            else if(yy[i] < d->yb[0] )
+                d->yb[0] = yy[i];
+            else if(yy[i] > d->yb[1])
+                d->yb[1] = yy[i];
+            pretty_pri("\e[1;32myb %.1f  yub %.1f\e[0m", d->yb[0], d->yb[1]);
+        }
     }
-    d->x_auto = false;
+    d->xax_auto = false;
 }
 
 void QuPlotDataBuf::append(double *yy, size_t count) {
-    if(d->x_auto) {
+    if(d->xax_auto) {
         size_t next = (d->first + d->datasiz) % d->bufsiz;
         for(size_t i = 0; i < count; i++ ) {
             y[next] = yy[i];
@@ -213,6 +251,15 @@ void QuPlotDataBuf::append(double *yy, size_t count) {
             else
                 d->first = (d->first + 1) % d->bufsiz;
             next = (next + 1) % d->bufsiz;
+            // update y bounds if necessary
+            if(d->yb_auto) {
+                if(d->yb[0] > d->yb[1])
+                    d->yb[0] = d->yb[1] = yy[i];
+                else if(yy[i] < d->yb[0] )
+                    d->yb[0] = yy[i];
+                else if(yy[i] > d->yb[1])
+                    d->yb[1] = yy[i];
+            }
         }
     }
 }
@@ -231,7 +278,7 @@ void QuPlotDataBuf::append(double *yy, size_t count) {
  * \param count number of elements in yy
  */
 void QuPlotDataBuf::insert(size_t idx, double *yy, size_t count) {
-    if(d->x_auto) {
+    if(d->xax_auto) {
         if(idx > d->datasiz) idx = d->datasiz;
         if(idx < 0) idx = 0;
         if(d->bufsiz >= d->datasiz + count) {
@@ -253,6 +300,15 @@ void QuPlotDataBuf::insert(size_t idx, double *yy, size_t count) {
                 idx < d->bufsiz ? idx++ :
                     d->first = (d->first + 1) % d->bufsiz;
                 next = (next + 1) % d->bufsiz;
+                // update y bounds if necessary
+                if(d->yb_auto) {
+                    if(d->yb[0] > d->yb[1])
+                        d->yb[0] = d->yb[1] = yy[i];
+                    else if(yy[i] < d->yb[0] )
+                        d->yb[0] = yy[i];
+                    else if(yy[i] > d->yb[1])
+                        d->yb[1] = yy[i];
+                }
             }
             // append saved tail
             for(size_t i = 0; i < tlen; i++) {
@@ -268,9 +324,8 @@ void QuPlotDataBuf::insert(size_t idx, double *yy, size_t count) {
 
 void QuPlotDataBuf::insert(size_t idx, double *xx, double *yy, size_t count)
 {
-    if(!d->x_auto) {
+    if(!d->xax_auto) {
         if(idx > d->datasiz) idx = d->datasiz;
-        if(idx < 0) idx = 0;
         if(d->bufsiz >= d->datasiz + count) {
             // there is enough space for data: use std vector insert
             y.insert(y.begin() + idx, yy, yy + count);
@@ -293,6 +348,15 @@ void QuPlotDataBuf::insert(size_t idx, double *xx, double *yy, size_t count)
                 idx < d->bufsiz ? idx++ :
                     d->first = (d->first + 1) % d->bufsiz;
                 next = (next + 1) % d->bufsiz;
+                // update y bounds if necessary
+                if(d->yb_auto) {
+                    if(d->yb[0] > d->yb[1])
+                        d->yb[0] = d->yb[1] = yy[i];
+                    else if(yy[i] < d->yb[0] )
+                        d->yb[0] = yy[i];
+                    else if(yy[i] > d->yb[1])
+                        d->yb[1] = yy[i];
+                }
             }
             // append saved tail
             for(size_t i = 0; i < tlen; i++) {
@@ -306,3 +370,21 @@ void QuPlotDataBuf::insert(size_t idx, double *xx, double *yy, size_t count)
         }
     }
 }
+
+void QuPlotDataBuf::setBoundsAuto(bool x, bool y) {
+    d->xb_auto = x;
+    d->yb_auto = y;
+    if(y) { // reset min > max to force first initialization
+        d->yb[0] = 1.0; d->yb[1] = -1.0;
+    }
+}
+
+bool QuPlotDataBuf::xBoundsAuto() {
+    return d->xb_auto;
+}
+
+bool QuPlotDataBuf::yBoundsAuto() {
+    return d->yb_auto;
+}
+
+

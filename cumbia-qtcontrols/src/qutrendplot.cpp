@@ -22,6 +22,7 @@
 #include <cucontrolsutils.h>
 #include <quapplication.h>
 #include <quplotdatabuf.h>
+#include <quplotaxescomponent.h>
 
 /** @private */
 class QuTrendPlotPrivate
@@ -184,8 +185,11 @@ void QuTrendPlot::update(const CuData &da)
 
     QuPlotCurve *crv = curve(src);
     if(!crv) {
+        QuPlotAxesComponent *ac = axes_c();
         addCurve(src, crv = new QuPlotCurve(src));
-        crv->setSamples(new QuPlotDataBuf(dataBufferSize()));
+        QuPlotDataBuf *buf = new QuPlotDataBuf(dataBufferSize());
+        buf->setBoundsAuto(true, ac->autoscale(crv->yAxis()));
+        crv->setSamples(buf);
     }
     QuPlotDataBuf *buf = static_cast<QuPlotDataBuf*>(crv->data());
 

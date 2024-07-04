@@ -36,6 +36,10 @@ public:
     void insert(size_t idx, double *yy, size_t count);
     void insert(size_t idx, double *xx, double *yy, size_t count);
 
+    void setBoundsAuto(bool x, bool y);
+    bool xBoundsAuto();
+    bool yBoundsAuto();
+
     std::vector<double> x, y;
 
     // QwtSeriesData interface

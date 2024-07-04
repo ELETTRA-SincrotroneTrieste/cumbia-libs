@@ -163,13 +163,14 @@ bool QuPlotAxesComponent::getBoundsFromCurves(const QuPlotBase *plot,
     double crvmin, crvmax;
     bool initx = true, inity = true;
     QList<QwtPlotCurve *> crvs = plot->curves();
-    foreach(QwtPlotCurve *c, crvs)
-    {
+    foreach(QwtPlotCurve *c, crvs) {
         if(c->dataSize() < 1 || !c->isVisible()) /* it is not possible  to adjust scales if the curves haven't enough data yet. */
             continue;
+
+        const QRectF &br = calc_x || calc_y ? c->boundingRect() : QRectF();
         if(calc_x) {
-            crvmin = c->minXValue();
-            crvmax = c->maxXValue();
+            crvmin = br.x();
+            crvmax = br.right();
 //            printf("QuPlotAxesComponent::getBoundsFromCurves: X min %s, X max %s\n",
 //                   qstoc(QDateTime::fromMSecsSinceEpoch(crvmin).toString()),
 //                    qstoc(QDateTime::fromMSecsSinceEpoch(crvmax).toString()));
@@ -187,8 +188,8 @@ bool QuPlotAxesComponent::getBoundsFromCurves(const QuPlotBase *plot,
         }
 
         if(calc_y) {
-            crvmin = c->minYValue();
-            crvmax = c->maxYValue();
+            crvmin = br.y();
+            crvmax = br.bottom();
             if(inity) {
                 *ymin = crvmin;
                 *ymax = crvmax;
