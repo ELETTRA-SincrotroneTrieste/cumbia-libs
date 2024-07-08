@@ -85,6 +85,7 @@ QuPlotCurve::~QuPlotCurve()
 void QuPlotCurve::setData(const QVector< double > &xData, const QVector< double > &yData)
 {
     m_setSymbol(xData.size());
+    //    d->data->set(xData, yData);
     QwtPlotCurve::setSamples(xData, yData);
 }
 

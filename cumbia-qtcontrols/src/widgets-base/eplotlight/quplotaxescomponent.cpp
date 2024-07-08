@@ -163,14 +163,13 @@ bool QuPlotAxesComponent::getBoundsFromCurves(const QuPlotBase *plot,
     double crvmin, crvmax;
     bool initx = true, inity = true;
     QList<QwtPlotCurve *> crvs = plot->curves();
-    foreach(QwtPlotCurve *c, crvs) {
+    foreach(QwtPlotCurve *c, crvs)
+    {
         if(c->dataSize() < 1 || !c->isVisible()) /* it is not possible  to adjust scales if the curves haven't enough data yet. */
             continue;
-
-        const QRectF &br = calc_x || calc_y ? c->boundingRect() : QRectF();
         if(calc_x) {
-            crvmin = br.x();
-            crvmax = br.right();
+            crvmin = c->minXValue();
+            crvmax = c->maxXValue();
 //            printf("QuPlotAxesComponent::getBoundsFromCurves: X min %s, X max %s\n",
 //                   qstoc(QDateTime::fromMSecsSinceEpoch(crvmin).toString()),
 //                    qstoc(QDateTime::fromMSecsSinceEpoch(crvmax).toString()));
@@ -188,8 +187,8 @@ bool QuPlotAxesComponent::getBoundsFromCurves(const QuPlotBase *plot,
         }
 
         if(calc_y) {
-            crvmin = br.y();
-            crvmax = br.bottom();
+            crvmin = c->minYValue();
+            crvmax = c->maxYValue();
             if(inity) {
                 *ymin = crvmin;
                 *ymax = crvmax;
@@ -232,11 +231,13 @@ void QuPlotAxesComponent::setAutoscaleMargin(int axisId, double m)
     d->margin[axisId] = m;
 }
 
-double QuPlotAxesComponent::lowerBoundFromCurves(int axisId) const {
+double QuPlotAxesComponent::lowerBoundFromCurves(int axisId) const
+{
     return d->bounds_from_curves[axisId].first;
 }
 
-double QuPlotAxesComponent::upperBoundFromCurves(int axisId) const {
+double QuPlotAxesComponent::upperBoundFromCurves(int axisId) const
+{
     return d->bounds_from_curves[axisId].second;
 }
 

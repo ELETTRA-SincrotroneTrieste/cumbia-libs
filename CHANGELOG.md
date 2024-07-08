@@ -48,35 +48,17 @@ The TTT alias for CuDType has been defined:
 #define TTT CuDType
 ```
 
-#### Cuvariant conversion to vector
+It makes it faster to type the frequently used enumeration name.
+
+#### CuVariant conversion to vector
 
 CuVariant::toVector performance improvements
 
 ### cumbia-qtcontrols
 
-#### Plots
-
-Plots have undergone *dramatic* performance improvements.
-
-##### OpenGL support
-
-OpenGL support has been introduced for the plot *canvas*.
-
-##### curve data management
-
-Curve data for spectrum plots now uses a custom store 
-derived from QwtSeriesData, to avoid potential copies 
-of large data and possible inefficiencies of legacy naive 
-*setSeries (setData)* data update methods taking x and y
-arrays of data.
-
-##### replot strategy
-
-1. QuPlotBase::configure does not call *replot* any more
-2. QuPlotBase::refresh does not trigger a full *replot* any more, unless
-   scales have actually changed. Instead, a *canvas* update only is 
-   preferred
-
+New single argument *QWidget* constructors have been made available.
+This is aimed at removing *cuuimake* pre processing.
+Applications shall compulsorily use *QuApplication*.
 
 ## version 2.0.0
 

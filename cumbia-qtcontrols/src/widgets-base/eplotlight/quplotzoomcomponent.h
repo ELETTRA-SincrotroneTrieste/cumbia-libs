@@ -31,10 +31,9 @@ public:
 
     QRectF zoomRect() const;
 
-    void canvasChanged(QuPlotBase *plot);
-
 private:
-    QuPlotBase *m_plot;
+    ScrollZoomer *m_zoomer;
+
 
     // QuPlotComponent interface
 public:

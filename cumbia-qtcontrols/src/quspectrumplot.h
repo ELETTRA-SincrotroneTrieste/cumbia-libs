@@ -35,8 +35,8 @@ class CuControlsReaderFactoryI;
 class QuSpectrumPlot : public QuPlotBase, public CuDataListener, public CuContextI
 {
     Q_OBJECT
-    Q_PROPERTY(QStringList sources READ sources WRITE setSources DESIGNABLE true)
-    Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE true)
+    Q_PROPERTY(QStringList sources READ sources WRITE setSources DESIGNABLE false)
+    Q_PROPERTY(QString source READ source WRITE setSource DESIGNABLE false)
     Q_PROPERTY(int period READ period WRITE setPeriod DESIGNABLE true)
 
 public:
@@ -47,11 +47,9 @@ public:
     virtual ~QuSpectrumPlot();
 
     QString source() const;
-
     QStringList sources() const;
 
     int period() const;
-
     CuContext *getContext() const;
 
 public slots:
@@ -61,15 +59,11 @@ public slots:
     void ctxSwap(CumbiaPool *cp, const CuControlsFactoryPool &fp);
 
     void addSource(const QString &s);
-
     void unsetSource(const QString &s);
-
     void unsetSources();
 
     void setOptions(const CuData &options);
-
     void setPeriod(int p);
-
     void requestLinkStats();
 
 signals:
