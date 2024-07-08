@@ -12,7 +12,9 @@
 
 int main(int argc, char *argv[])
 {
-    QuApplication qu_app( argc, argv );
+    CumbiaPool *p = new CumbiaPool();
+    CuControlsFactoryPool fpool;
+    QuApplication qu_app( argc, argv, p, &fpool);
     qu_app.setOrganizationName("$ORGANIZATION_NAME$");
     qu_app.setApplicationName("$APPLICATION_NAME$");
     QString version(VERSION);
@@ -23,23 +25,19 @@ int main(int argc, char *argv[])
     qu_app.setProperty("office", "$AU_OFFICE$");
     qu_app.setProperty("hwReferent", "$HW_REFERENT$"); /* name of the referent that provides the device server */
 
-    // $palette$
-
-    CumbiaPool *cu_p = new CumbiaPool();
-    $MAINCLASS$ *w = new $MAINCLASS$(cu_p, NULL);
+    CuEngineAccessor *a = new CuEngineAccessor(&qu_app, &p, &fpool);
+    $MAINCLASS$ *w = new $MAINCLASS$(nullptr);
     w->show();
     // exec application loop
     int ret = qu_app.exec();
     // delete resources and return
-    // make sure to be operating on a valid cu_p in case of engine swap at runtime
-    CuEngineAccessor *c = w->findChild<CuEngineAccessor *>();
-    if(c)
-        cu_p = c->cu_pool();
+    // make sure to be operating on a valid p in case of engine swap at runtime
+    p = a->cu_pool();
     delete w;
 
-    for(std::string n : cu_p->names())
-        if(cu_p->get(n))
-            delete cu_p->get(n);
+    for(const std::string& n : p->names())
+        if(p->get(n))
+            delete p->get(n);
 
     return ret;
 }

@@ -133,7 +133,6 @@ DISTFILES += \
     qumbia_project_template/cppinstantiationexp.json
 
 SUBDIRS += \
-    qumbia_project_template/qumbiaproject-websocket.pro \
     qumbia_project_template/qumbiaprojectqml-multi-engine.pro
 
 RESOURCES += \
