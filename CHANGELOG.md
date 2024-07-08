@@ -38,6 +38,28 @@ page for the software sources.
 The *cumbia-world* project contains a configuration file and a script to build the
 desired modules. The modules sources are git *submodules*.
 
+### cumbia
+
+#### CuDType enum alias
+
+The TTT alias for CuDType has been defined:
+
+```
+#define TTT CuDType
+```
+
+It makes it faster to type the frequently used enumeration name.
+
+#### CuVariant conversion to vector
+
+CuVariant::toVector performance improvements
+
+### cumbia-qtcontrols
+
+New single argument *QWidget* constructors have been made available.
+This is aimed at removing *cuuimake* pre processing.
+Applications shall compulsorily use *QuApplication*.
+
 ## version 2.0.0
 
 The main motivation for a major release is a dramatic improvement in performance.

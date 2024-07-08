@@ -8,6 +8,7 @@
 #include <QPaintEvent>
 #include <cucontrolsutils.h>
 #include <QToolTip>
+#include <quapplication.h>
 
 #include "qupalette.h"
 #include "cucontrolsfactories_i.h"
@@ -45,10 +46,25 @@ QuLinearGauge::QuLinearGauge(QWidget *w, Cumbia *cumbia, const CuControlsReaderF
  *   Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */
 QuLinearGauge::QuLinearGauge(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool) :
-    QuLinearGaugeBase(w), CuDataListener()
-{
+    QuLinearGaugeBase(w), CuDataListener() {
     m_init();
     d->context = new CuContext(cumbia_pool, fpool);
+}
+
+/*!
+ * \brief Classical, single parent-widget constructor. *QuApplication* properly initialized with
+ *        cumbia engine objects is compulsory.
+ *
+ * \param parent widget
+ * \par Important note: cumbia engine references are obtained from the QuApplication instance.
+ *      For best performance, static cast of QCoreApplication::instance() to QuApplication is
+ *      used.
+ * \since cumbia 2.1
+ */
+QuLinearGauge::QuLinearGauge(QWidget *w) : QuLinearGaugeBase(w), CuDataListener() {
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    m_init();
+    d->context = new CuContext(a->cumbiaPool(), *a->fpool());
 }
 
 void QuLinearGauge::m_init()
@@ -118,8 +134,8 @@ void QuLinearGauge::contextMenuEvent(QContextMenuEvent *e) {
 void QuLinearGauge::m_configure(const CuData& da)
 {
     double m;
-    const CuVariant& min = da.containsKey(CuDType::Min) ? da[CuDType::Min] : CuVariant();
-    const CuVariant& max = da.containsKey(CuDType::Max) ? da[CuDType::Max] : CuVariant();
+    const CuVariant& min = da.containsKey(TTT::Min) ? da[TTT::Min] : CuVariant();
+    const CuVariant& max = da.containsKey(TTT::Max) ? da[TTT::Max] : CuVariant();
     if(min.isValid() && min.to<double>(m))
         setProperty("minValue", m);
     if(max.isValid() && max.to<double>(m))
@@ -171,13 +187,13 @@ void QuLinearGauge::m_set_value(const CuVariant &val)
 
 void QuLinearGauge::onUpdate(const CuData &da)
 {
-    d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
-    const char *mode = da[CuDType::Mode].c_str();
+    d->read_ok = !da[TTT::Err].toBool();  // da["err"]
+    const char *mode = da[TTT::Mode].c_str();
     bool event = mode != nullptr && strcmp(mode, "E") == 0;
     bool update = event; // if data is delivered by an event, always refresh
     if(!event) { // data generated periodically by a poller or by something else
         // update label if value changed
-        update = !d->read_ok || d->last_d[CuDType::Value] != da[CuDType::Value];
+        update = !d->read_ok || d->last_d[TTT::Value] != da[TTT::Value];
         // onUpdate measures better with d->last_d = da; than with d->last_d = da.clone()
         // even though measured alone the clone version performs better
         //        d->last_d = da.clone(); // clone does a copy, then contents moved into last_d
@@ -195,12 +211,12 @@ void QuLinearGauge::onUpdate(const CuData &da)
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
-        d->context->getLinkStats()->addError(da[CuDType::Message].toString());
-    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {
+        d->context->getLinkStats()->addError(da[TTT::Message].toString());
+    if(d->read_ok && d->auto_configure && da[TTT::Type].toString() == "property") {
         m_configure(da);
     }
-    if(update && d->read_ok && da[CuDType::Value].isValid()) {  // da["value"]
-        m_set_value(da[CuDType::Value]);  // da["value"]
+    if(update && d->read_ok && da[TTT::Value].isValid()) {  // da["value"]
+        m_set_value(da[TTT::Value]);  // da["value"]
     }
     emit newData(da);
 }

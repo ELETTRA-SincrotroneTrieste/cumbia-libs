@@ -126,8 +126,8 @@ void QuCircularGauge::m_configure(const CuData& da)
     setCacheRegenerationDisabled(true);
 
     double m;
-    const CuVariant& min = da.containsKey(CuDType::Min) ? da[CuDType::Min] : CuVariant();
-    const CuVariant& max = da.containsKey(CuDType::Max) ? da[CuDType::Max] : CuVariant();
+    const CuVariant& min = da.containsKey(TTT::Min) ? da[TTT::Min] : CuVariant();
+    const CuVariant& max = da.containsKey(TTT::Max) ? da[TTT::Max] : CuVariant();
     if(min.isValid() && min.to<double>(m))
         setProperty("minValue", m);
     if(max.isValid() && max.to<double>(m))
@@ -148,8 +148,8 @@ void QuCircularGauge::m_configure(const CuData& da)
     }
     if(da["display_unit"].toString().length() > 0)
         setUnit(QString::fromStdString(da["display_unit"].toString()));
-    if(da[CuDType::NumberFormat].toString().length() > 0)  // da["format"]
-        setFormatProperty(QString::fromStdString(da[CuDType::NumberFormat].toString()));  // da["format"]
+    if(da[TTT::NumberFormat].toString().length() > 0)  // da["format"]
+        setFormatProperty(QString::fromStdString(da[TTT::NumberFormat].toString()));  // da["format"]
 
     setCacheRegenerationDisabled(false);
     regenerateCache();
@@ -175,14 +175,14 @@ void QuCircularGauge::m_set_value(const CuVariant &val)
 
 void QuCircularGauge::onUpdate(const CuData &da)
 {
-    d->read_ok = !da[CuDType::Err].toBool();
+    d->read_ok = !da[TTT::Err].toBool();
 
-    const char *mode = da[CuDType::Mode].c_str();
+    const char *mode = da[TTT::Mode].c_str();
     bool event = mode != nullptr && strcmp(mode, "E") == 0;
     bool update = event; // if data is delivered by an event, always refresh
     if(!event) { // data generated periodically by a poller or by something else
         // update label if value changed
-        update = !d->read_ok || d->last_d[CuDType::Value] != da[CuDType::Value];
+        update = !d->read_ok || d->last_d[TTT::Value] != da[TTT::Value];
         // onUpdate measures better with d->last_d = da; than with d->last_d = da.clone()
         // even though measured alone the clone version performs better
         //        d->last_d = da.clone(); // clone does a copy, then contents moved into last_d
@@ -200,13 +200,13 @@ void QuCircularGauge::onUpdate(const CuData &da)
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
-        d->context->getLinkStats()->addError(da.c_str(CuDType::Message));
+        d->context->getLinkStats()->addError(da.c_str(TTT::Message));
 
-    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {
+    if(d->read_ok && d->auto_configure && da[TTT::Type].toString() == "property") {
         m_configure(da);
     }
-    if(/*update && */d->read_ok && da[CuDType::Value].isValid()) {  // da["value"]
-        m_set_value(da[CuDType::Value]);  // da["value"]
+    if(/*update && */d->read_ok && da[TTT::Value].isValid()) {  // da["value"]
+        m_set_value(da[TTT::Value]);  // da["value"]
     }
     emit newData(da);
 }

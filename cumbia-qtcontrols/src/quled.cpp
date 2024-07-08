@@ -5,6 +5,7 @@
 #include <cudata.h>
 #include <QPainter>
 #include <QPaintEvent>
+#include <quapplication.h>
 
 #include "cucontext.h"
 #include "culinkstats.h"
@@ -42,6 +43,22 @@ QuLed::QuLed(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &f
 {
     m_init();
     d->context = new CuContext(cumbia_pool, fpool);
+}
+
+/*!
+ * \brief Classical, single parent-widget constructor. *QuApplication* properly initialized with
+ *        cumbia engine objects is compulsory.
+ *
+ * \param parent widget
+ * \par Important note: cumbia engine references are obtained from the QuApplication instance.
+ *      For best performance, static cast of QCoreApplication::instance() to QuApplication is
+ *      used.
+ * \since cumbia 2.1
+ */
+QuLed::QuLed(QWidget *w) : QuLedBase(w) {
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    m_init();
+    d->context = new CuContext(a->cumbiaPool(), *a->fpool());
 }
 
 /*! @private */
@@ -103,29 +120,29 @@ bool QuLed::ctxSwap(CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
 void QuLed::onUpdate(const CuData &da)
 {
     QColor background, border;
-    d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
+    d->read_ok = !da[TTT::Err].toBool();  // da["err"]
 
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
-        d->context->getLinkStats()->addError(da[CuDType::Message].toString());  // da["msg"]
+        d->context->getLinkStats()->addError(da[TTT::Message].toString());  // da["msg"]
 
-    if(da.containsKey(CuDType::QualityColor))  // da.containsKey("qc")
-        background = d->palette[QString::fromStdString(da[CuDType::QualityColor].toString())];  // da["qc"]
-    if(da.containsKey(CuDType::Color))  // da.containsKey("color")
-        border = d->palette[QString::fromStdString(da[CuDType::Color].toString())];  // da["color"]
+    if(da.containsKey(TTT::QualityColor))  // da.containsKey("qc")
+        background = d->palette[QString::fromStdString(da[TTT::QualityColor].toString())];  // da["qc"]
+    if(da.containsKey(TTT::Color))  // da.containsKey("color")
+        border = d->palette[QString::fromStdString(da[TTT::Color].toString())];  // da["color"]
 
-    setToolTip(da[CuDType::Message].toString().c_str());  // da["msg"]
+    setToolTip(da[TTT::Message].toString().c_str());  // da["msg"]
 
-    setDisabled(da[CuDType::Err].toBool() );  // da["err"]
-    if(d->read_ok && da.containsKey(CuDType::StateColor))  // da.containsKey("sc")
+    setDisabled(da[TTT::Err].toBool() );  // da["err"]
+    if(d->read_ok && da.containsKey(TTT::StateColor))  // da.containsKey("sc")
     {
-        CuVariant v = da[CuDType::StateColor];  // da["sc"]
+        CuVariant v = da[TTT::StateColor];  // da["sc"]
         setColor(d->palette[QString::fromStdString(v.toString())]);
     }
-    else if(d->read_ok && da.containsKey(CuDType::Value))  // da.containsKey("value")
+    else if(d->read_ok && da.containsKey(TTT::Value))  // da.containsKey("value")
     {
-        CuVariant v = da[CuDType::Value];  // da["value"]
+        CuVariant v = da[TTT::Value];  // da["value"]
         switch (v.getType()) {
         case CuVariant::Boolean:
             setValue(v.b());
@@ -137,8 +154,8 @@ void QuLed::onUpdate(const CuData &da)
     else if(!d->read_ok)
         setColor(QColor(Qt::gray));
 
-    if(da.containsKey(CuDType::Color))  // da.containsKey("color")
-        setBorderColor(d->palette[QString::fromStdString(da[CuDType::Color].toString())]);  // da["color"]
+    if(da.containsKey(TTT::Color))  // da.containsKey("color")
+        setBorderColor(d->palette[QString::fromStdString(da[TTT::Color].toString())]);  // da["color"]
 
     emit newData(da);
 }

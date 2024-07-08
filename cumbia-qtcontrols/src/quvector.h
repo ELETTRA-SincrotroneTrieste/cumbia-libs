@@ -20,7 +20,7 @@ class CuVariant;
  * \code
     void Writer::hDataReady(const CuData& v)
     {
-        QVector<double> readData = QuVector<double>(v[CuDType::Value].toDoubleVector());  // v["value"]
+        QVector<double> readData = QuVector<double>(v[TTT::Value].toDoubleVector());  // v["value"]
         // ...
     }
  * \endcode
@@ -29,7 +29,7 @@ class CuVariant;
  * \code
     void Writer::vDataReady(const CuData &v)
     {
-        QVector<double> readData = QVector<double>::fromStdVector( v[CuDType::Value].toDoubleVector())  // v["value"]
+        QVector<double> readData = QVector<double>::fromStdVector( v[TTT::Value].toDoubleVector())  // v["value"]
         // ...
     }
  * \endcode

@@ -232,19 +232,19 @@ bool QuCheckBox::textFromLabel() const
  */
 void QuCheckBox::onUpdate(const CuData &da)
 {
-    d->ok = !da[CuDType::Err].toBool();  // da["err"]
-    bool write_op = da[CuDType::Activity].toString() == "writer";  // da["activity"]
+    d->ok = !da[TTT::Err].toBool();  // da["err"]
+    bool write_op = da[TTT::Activity].toString() == "writer";  // da["activity"]
     const QString& msg = d->u.msg(da);
-    if(d->ok && d->auto_configure && da[CuDType::Type].toString() == "property" &&  // da["type"]
-            da.containsKey(CuDType::Label)) {  // da.containsKey("label")
-        setProperty("label", QString::fromStdString(da[CuDType::Label].toString()) );  // da["label"]
+    if(d->ok && d->auto_configure && da[TTT::Type].toString() == "property" &&  // da["type"]
+            da.containsKey(TTT::Label)) {  // da.containsKey("label")
+        setProperty("label", QString::fromStdString(da[TTT::Label].toString()) );  // da["label"]
         if(d->text_from_label)
             setText(property("label").toString());
     }
     if(!d->ok && write_op) {
         Cumbia* cumbia = d->in_ctx->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->in_ctx->cumbiaPool()->getBySrc(da[CuDType::Src].toString());  // da["src"]
+            cumbia = d->in_ctx->cumbiaPool()->getBySrc(da[TTT::Src].toString());  // da["src"]
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
@@ -260,9 +260,9 @@ void QuCheckBox::onUpdate(const CuData &da)
 
     if(!d->ok && !write_op)
         d->out_ctx->getLinkStats()->addError(msg.toStdString());
-    else if(da.containsKey(CuDType::Value))  // da.containsKey("value")
+    else if(da.containsKey(TTT::Value))  // da.containsKey("value")
     {
-        CuVariant val = da[CuDType::Value];  // da["value"]
+        CuVariant val = da[TTT::Value];  // da["value"]
         if(val.getType() == CuVariant::Boolean) {
             d->last_val = val.toBool();
             d->last_val ? setCheckState(Qt::Checked) : setCheckState(Qt::Unchecked);

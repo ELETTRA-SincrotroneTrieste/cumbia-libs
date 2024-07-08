@@ -3,15 +3,15 @@
 
 CuTangoOptBuilder::CuTangoOptBuilder()
 {
-    m_options.add(CuDType::RefreshMode, CuTReader::ChangeEventRefresh);  // add("refresh_mode", CuTReader::ChangeEventRefresh)
+    m_options.add(TTT::RefreshMode, CuTReader::ChangeEventRefresh);  // add("refresh_mode", CuTReader::ChangeEventRefresh)
     m_options.add("fetch_history", false);
-    m_options.add(CuDType::Period, 1000);
+    m_options.add(TTT::Period, 1000);
     m_options.add("fetch_props", std::vector<std::string>());
 }
 
 CuTangoOptBuilder::CuTangoOptBuilder(int per, CuTReader::RefreshMode mod)
 {
-    m_options.add(CuDType::Period,  per);
+    m_options.add(TTT::Period,  per);
     m_options.add("refresh_mode" , mod);
     m_options.add("fetch_history", false);
     m_options.add("fetch_props", std::vector<std::string>());
@@ -49,13 +49,13 @@ CuTangoOptBuilder & CuTangoOptBuilder::setFetchAttHistory(bool fetch)
 
 CuTangoOptBuilder & CuTangoOptBuilder::setPeriod(int millis)
 {
-    m_options.add(CuDType::Period, millis);
+    m_options.add(TTT::Period, millis);
     return *this;
 }
 
 CuTangoOptBuilder & CuTangoOptBuilder::setRefreshMode(CuTReader::RefreshMode mode)
 {
-    m_options.add(CuDType::RefreshMode, mode);  // add("refresh_mode", mode)
+    m_options.add(TTT::RefreshMode, mode);  // add("refresh_mode", mode)
     return *this;
 }
 
@@ -66,12 +66,12 @@ bool CuTangoOptBuilder::operator ==(const CuTangoOptBuilder &other) const
 
 int CuTangoOptBuilder::period() const
 {
-    return m_options.value(CuDType::Period).toInt();
+    return m_options.value(TTT::Period).toInt();
 }
 
 CuTReader::RefreshMode CuTangoOptBuilder::mode() const
 {
-    return static_cast<CuTReader::RefreshMode>(m_options.value(CuDType::RefreshMode).toInt());  // m_options.value("refresh_mode")
+    return static_cast<CuTReader::RefreshMode>(m_options.value(TTT::RefreshMode).toInt());  // m_options.value("refresh_mode")
 }
 
 std::vector<string> CuTangoOptBuilder::fetchProps() const

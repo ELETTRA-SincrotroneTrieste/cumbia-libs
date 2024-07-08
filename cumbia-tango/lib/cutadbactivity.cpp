@@ -14,7 +14,7 @@ public:
 };
 
 CuTaDbActivity::CuTaDbActivity(const TSource &tsrc, const CuData &options, const CuData &tag)
-    : CuActivity(CuData(CuDType::Activity, "cutadb").set(CuDType::Src, tsrc.getName()))
+    : CuActivity(CuData(TTT::Activity, "cutadb").set(TTT::Src, tsrc.getName()))
 {
     d = new CuTaDbActivityPrivate;
     d->exiting = false;
@@ -47,7 +47,7 @@ void CuTaDbActivity::event(CuActivityEvent *e)
 bool CuTaDbActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
-    return token[CuDType::Src] == mytok[CuDType::Src] && mytok[CuDType::Activity] == token[CuDType::Activity];  // mytok["activity"], token["activity"]
+    return token[TTT::Src] == mytok[TTT::Src] && mytok[TTT::Activity] == token[TTT::Activity];  // mytok["activity"], token["activity"]
 }
 
 int CuTaDbActivity::repeat() const
@@ -61,9 +61,9 @@ void CuTaDbActivity::init() {
 
 void CuTaDbActivity::execute() {
     TSource::Type ty = d->tsrc.getType();
-    CuData at(CuDType::Src, d->tsrc.getName()); /* activity token */
+    CuData at(TTT::Src, d->tsrc.getName()); /* activity token */
     at.merge(CuData(d->options));
-    at[CuDType::Type] = "property";  // !cudata
+    at[TTT::Type] = "property";  // !cudata
     at["op"] = d->tsrc.getTypeName(ty);
     at.merge(CuData(d->tag));
     CuTangoWorld w;

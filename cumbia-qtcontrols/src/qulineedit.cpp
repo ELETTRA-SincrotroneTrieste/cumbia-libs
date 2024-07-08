@@ -3,6 +3,7 @@
 #include <cudata.h>
 #include <cumbia.h>
 #include <cuserviceprovider.h>
+#include <quapplication.h>
 
 #include "cucontrolswriter_abs.h"
 #include "cucontrolsfactories_i.h"
@@ -15,6 +16,7 @@
 class QuLineEditPrivate
 {
 public:
+    QuLineEditPrivate() : context(nullptr), auto_configure(true) {}
     CuContext *context;
     bool auto_configure;
 };
@@ -24,7 +26,6 @@ QuLineEdit::QuLineEdit(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFa
 {
     d = new QuLineEditPrivate;
     d->context = new CuContext(cumbia, w_fac);
-    d->auto_configure = true;
 }
 
 QuLineEdit::QuLineEdit(QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
@@ -32,7 +33,22 @@ QuLineEdit::QuLineEdit(QWidget *parent, CumbiaPool *cumbia_pool, const CuControl
 {
     d = new QuLineEditPrivate;
     d->context = new CuContext(cumbia_pool, fpool);
-    d->auto_configure = true;
+}
+
+/*!
+ * \brief Classical, single parent-widget constructor. *QuApplication* properly initialized with
+ *        cumbia engine objects is compulsory.
+ *
+ * \param parent widget
+ * \par Important note: cumbia engine references are obtained from the QuApplication instance.
+ *      For best performance, static cast of QCoreApplication::instance() to QuApplication is
+ *      used.
+ * \since cumbia 2.1
+ */
+QuLineEdit::QuLineEdit(QWidget *parent) : QLineEdit(parent) {
+    d = new QuLineEditPrivate;
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    d->context = new CuContext(a->cumbiaPool(), *a->fpool());
 }
 
 QuLineEdit::~QuLineEdit()
@@ -48,35 +64,35 @@ CuContext *QuLineEdit::getContext() const
 
 void QuLineEdit::onUpdate(const CuData &da)
 {
-    if(da[CuDType::Err].toBool())  // da["err"]
+    if(da[TTT::Err].toBool())
     {
         perr("QuLineEdit [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
-             da[CuDType::Src].toString().c_str(), da[CuDType::Message].toString().c_str(),  // da["src"], da["msg"]
-                da[CuDType::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
+             da[TTT::Src].toString().c_str(), da[TTT::Message].toString().c_str(),  // da["src"], da["msg"]
+                da[TTT::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
 
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->context->cumbiaPool()->getBySrc(da[CuDType::Src].toString());  // da["src"]
+            cumbia = d->context->cumbiaPool()->getBySrc(da[TTT::Src].toString());  // da["src"]
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::CategoryWrite, true);
-            log->write(QString("QuLineEdit [" + objectName() + "]").toStdString(), da[CuDType::Message].toString(), CuLog::LevelError, CuLog::CategoryWrite);  // da["msg"]
+            log->write(QString("QuLineEdit [" + objectName() + "]").toStdString(), da[TTT::Message].toString(), CuLog::LevelError, CuLog::CategoryWrite);  // da["msg"]
         }
     }
-    else if(d->auto_configure && da[CuDType::Type].toString() == "property")  // da["type"]
+    else if(d->auto_configure && da[TTT::Type].toString() == "property")  // da["type"]
     {
         QString desc = "";
-        if(da["writable"].toInt() > 0)  {
-            setText(da[CuDType::WriteValue].toString().c_str());  // da["w_value"]
-            if(!da[CuDType::Description].isNull()) {  // da["description"]
-                desc.prepend(QString::fromStdString(da[CuDType::Description].toString()));  // da["description"]
+        if(da[TTT::Writable].toInt() > 0)  {
+            setText(da[TTT::WriteValue].toString().c_str());  // da["w_value"]
+            if(!da[TTT::Description].isNull()) {  // da["description"]
+                desc.prepend(QString::fromStdString(da[TTT::Description].toString()));  // da["description"]
             }
             setWhatsThis(desc);
         }
         else
             perr("QuLineEdit [%s]: (data format \"%s\") is read only (writable: %d)", qstoc(objectName()),
-                 da[CuDType::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
+                 da[TTT::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
     }
 }
 
@@ -110,7 +126,3 @@ bool QuLineEdit::ctxSwap(CumbiaPool *cu_p, const CuControlsFactoryPool &fpool) {
     return csw.ok();
 }
 
-void QuLineEdit::m_init()
-{
-    d->auto_configure = true;
-}

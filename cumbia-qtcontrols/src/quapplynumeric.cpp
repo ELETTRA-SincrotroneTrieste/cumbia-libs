@@ -126,28 +126,28 @@ void QuApplyNumeric::m_init()
  */
 void QuApplyNumeric::onUpdate(const CuData &da)
 {
-    bool is_config = da[CuDType::Type].toString() == std::string("property");  // da["type"]
+    bool is_config = da[TTT::Type].toString() == std::string("property");  // da["type"]
     if(!da["is_result"].toBool() && !is_config)
         return;
 
-    d->write_ok = !da[CuDType::Err].toBool();  // da["err"]
+    d->write_ok = !da[TTT::Err].toBool();  // da["err"]
     // update link statistics
     d->context->getLinkStats()->addOperation();
     const QString& msg = d->u.msg(da);
     if(!d->write_ok)
     {
         perr("QuApplyNumeric [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
-             da[CuDType::Src].toString().c_str(), msg.toStdString().c_str(),  // da["src"]
-                da[CuDType::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
+             da[TTT::Src].toString().c_str(), msg.toStdString().c_str(),  // da["src"]
+                da[TTT::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
 
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->context->cumbiaPool()->getBySrc(da[CuDType::Src].toString());  // da["src"]
+            cumbia = d->context->cumbiaPool()->getBySrc(da[TTT::Src].toString());  // da["src"]
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
             log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), msg.toStdString(), CuLog::LevelError, CuLog::CategoryWrite);
         else if(!cumbia) {
-            perr("QuApplyNumeric.onUpdate: cannot get a reference to cumbia either from context or CumbiaPool with target \"%s\"", da[CuDType::Src].toString().c_str());  // da["src"]
+            perr("QuApplyNumeric.onUpdate: cannot get a reference to cumbia either from context or CumbiaPool with target \"%s\"", da[TTT::Src].toString().c_str());  // da["src"]
         }
 
         d->context->getLinkStats()->addError(msg.toStdString());
@@ -155,13 +155,13 @@ void QuApplyNumeric::onUpdate(const CuData &da)
     else if(d->auto_configure && is_config)
     {
         QString desc = "";
-        if(da[CuDType::DataFormatStr] == "scalar" && da["writable"].toInt() > 0)  // da["dfs"]
+        if(da[TTT::DataFormatStr] == "scalar" && da["writable"].toInt() > 0)  // da["dfs"]
         {
             /* first apply format, if - correctly - specified */
             CuVariant m, M;
-            m = da[CuDType::Min];  // da["min"]
-            M = da[CuDType::Max];  // da["max"]
-            std::string print_format = da[CuDType::NumberFormat].toString();  // da["format"]
+            m = da[TTT::Min];  // da["min"]
+            M = da[TTT::Max];  // da["max"]
+            std::string print_format = da[TTT::NumberFormat].toString();  // da["format"]
             double min, max;
             bool ok;
             ok = m.to<double>(min);
@@ -189,14 +189,14 @@ void QuApplyNumeric::onUpdate(const CuData &da)
 
             /* can set current values instead */
             double val;
-            bool can_be_double = da[CuDType::WriteValue].to<double>(val);  // da["w_value"]
+            bool can_be_double = da[TTT::WriteValue].to<double>(val);  // da["w_value"]
             if (can_be_double)
             {
                 setValue(val);
                 clearModified();
             }
-            if(!da[CuDType::Description].isNull()) {  // da["description"]
-                desc.prepend(QString::fromStdString(da[CuDType::Description].toString()));  // da["description"]
+            if(!da[TTT::Description].isNull()) {  // da["description"]
+                desc.prepend(QString::fromStdString(da[TTT::Description].toString()));  // da["description"]
             }
             setWhatsThis(desc);
             // save fetching configuration at every execute
@@ -207,7 +207,7 @@ void QuApplyNumeric::onUpdate(const CuData &da)
         }
         else
             perr("QuApplyNumeric [%s]: invalid data format \"%s\" or read only source (writable: %d)", qstoc(objectName()),
-                 da[CuDType::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
+                 da[TTT::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
 
     }
     setToolTip(msg);

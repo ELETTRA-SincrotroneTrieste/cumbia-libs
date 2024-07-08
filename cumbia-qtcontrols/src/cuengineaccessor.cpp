@@ -2,6 +2,7 @@
 #include <cumacros.h>
 #include <cumbiapool.h>
 #include <qustringlist.h>
+#include <QCoreApplication>
 
 class CuEngineAccessorP {
 public:

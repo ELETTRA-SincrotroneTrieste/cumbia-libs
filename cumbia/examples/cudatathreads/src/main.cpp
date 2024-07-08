@@ -37,7 +37,7 @@ int f1(const CuData& rd, CuData cd,
 
     cd["idx"] = idx;
     CuData cp2(cd);
-    cp2[CuDType::Name] = cd.s(CuDType::Name) + "_copy";  // cp2["name"], cd.s("name")
+    cp2[TTT::Name] = cd.s(TTT::Name) + "_copy";  // cp2["name"], cd.s("name")
     cp2["idx"] = 10 * idx;
     std::vector<double> vd;
     vd.reserve(100);
@@ -55,13 +55,13 @@ int f1(const CuData& rd, CuData cd,
         CuData cp6(rd);
         cp5 = cp6;
     }
-    cp5[CuDType::Name] = "cp5";  // cp5["name"]
+    cp5[TTT::Name] = "cp5";  // cp5["name"]
     vd.clear();
     vd.reserve(100);
     for(int i = 0; i < 100; i++)
         vd.push_back(10 * idx + 2*i);
     cp4["vd"] = vd;
-    cp4[CuDType::Name] = "cp4";  // cp4["name"]
+    cp4[TTT::Name] = "cp4";  // cp4["name"]
 
     std::vector <CuData> vrefcopy = vref;
     for(int k = 0; k < 100; k++)
@@ -90,10 +90,10 @@ int main(int argc, char *argv[])
         std::vector<std::thread *> threads;
         threads.resize(n);
         for(int i = 0; i < n; i++) {
-            CuData da1(CuDType::Name, "da1." + std::to_string(cy) + "." + std::to_string(i));  // ("name", "da1." + std::to_string(cy)
-            da1.set(CuDType::Mode, "const ref").set("cycle", cy);  // ("mode", "const ref")
-            CuData da2(CuDType::Name, "da2."  + std::to_string(cy) + "." + std::to_string(i));  // ("name", "da2."  + std::to_string(cy)
-            da2.set(CuDType::Mode, "copy").set("cycle", cy);  // ("mode", "copy")
+            CuData da1(TTT::Name, "da1." + std::to_string(cy) + "." + std::to_string(i));  // ("name", "da1." + std::to_string(cy)
+            da1.set(TTT::Mode, "const ref").set("cycle", cy);  // ("mode", "const ref")
+            CuData da2(TTT::Name, "da2."  + std::to_string(cy) + "." + std::to_string(i));  // ("name", "da2."  + std::to_string(cy)
+            da2.set(TTT::Mode, "copy").set("cycle", cy);  // ("mode", "copy")
             std::vector<CuData> vv(100), vref(100);
             for(int j=0; j< 100; j++) {
                 vv[j]["j"] = j;

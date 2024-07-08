@@ -118,7 +118,7 @@ int CuDataChecker::m_process(bool rw) {
                                         str_keys_invalid << caps[1];
                                         found++;
                                         if(rw)
-                                            updated_line.replace(QString("\"%1\"").arg(caps[1]), QString("CuDType::%1").arg(subs[caps[1]]));
+                                            updated_line.replace(QString("\"%1\"").arg(caps[1]), QString("TTT::%1").arg(subs[caps[1]]));
                                     }
                                     else if(caps.size() == 2) {
                                         str_keys_unmapped << caps[1];

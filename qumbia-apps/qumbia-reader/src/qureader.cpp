@@ -50,19 +50,19 @@ void Qu_Reader::setContextOptions(const CuData &options) {
 //
 void Qu_Reader::onUpdate(const CuData &da) {
     bool signaled = false;
-    bool property_only = m_property_only || da.has(CuDType::Activity, "cutadb");  // has("activity", "cutadb")
+    bool property_only = m_property_only || da.has(TTT::Activity, "cutadb");  // has("activity", "cutadb")
     CuData data = da.clone();
-    const CuVariant&  v = da[CuDType::Value];
+    const CuVariant&  v = da[TTT::Value];
     double ts = -1.0;
-    if(!data[CuDType::Time_us].isNull()) {
-        ts = data[CuDType::Time_us].toDouble();
+    if(!data[TTT::Time_us].isNull()) {
+        ts = data[TTT::Time_us].toDouble();
     }
-    else if(!data[CuDType::Time_ns].isNull())
-        ts = data[CuDType::Time_ns].toDouble();
+    else if(!data[TTT::Time_ns].isNull())
+        ts = data[TTT::Time_ns].toDouble();
 
-    bool hdb_data = data.has(CuDType::Activity, "hdb");
-    if(data.B(CuDType::Err)) {
-        emit newError(source(), ts, QString::fromStdString(da[CuDType::Message].toString()), data);  // da["msg"]
+    bool hdb_data = data.has(TTT::Activity, "hdb");
+    if(data.B(TTT::Err)) {
+        emit newError(source(), ts, QString::fromStdString(da[TTT::Message].toString()), data);  // da["msg"]
         signaled = true;
     }
     else if(hdb_data) {
@@ -74,7 +74,7 @@ void Qu_Reader::onUpdate(const CuData &da) {
         emit propertyReady(source(), ts, data);
         signaled = true;
     }
-    else if(da.has(CuDType::Type, "property"))  {  // has("type", "property")
+    else if(da.has(TTT::Type, "property"))  {  // has("type", "property")
         if(m_save_property)
             m_prop = data;
         if(property_only) {
@@ -93,12 +93,12 @@ void Qu_Reader::onUpdate(const CuData &da) {
             if(m_prop[qstoc(p)].isValid())
                 data[qstoc(p)] = m_prop[qstoc(p)];
     }
-    if(!da.B(CuDType::Err) && ts > 0 && !da.containsKey(CuDType::Value) && !da.containsKey(CuDType::WriteValue) && da.containsKey(CuDType::Src))  { // da.B("err"), da.containsKey("value"), da.containsKey("w_value"), da.containsKey("src")
+    if(!da.B(TTT::Err) && ts > 0 && !da.containsKey(TTT::Value) && !da.containsKey(TTT::WriteValue) && da.containsKey(TTT::Src))  { // da.B("err"), da.containsKey("value"), da.containsKey("w_value"), da.containsKey("src")
         emit newUnchanged(source(), ts);
         signaled = true;
     }
 
-    if(!hdb_data && !da.B(CuDType::Err) && !property_only) {
+    if(!hdb_data && !da.B(TTT::Err) && !property_only) {
         QString from_ty = QuString(v.dataTypeStr(v.getType()));
         // if !m_save property we can notify.
         // otherwise wait for property, merge m_prop with data and notify
@@ -226,7 +226,7 @@ void Qu_Reader::onUpdate(const CuData &da) {
                 emit newStringMatrix(source(), ts, v.toMatrix<std::string>(), data);
             }
             else if(!v.isNull()) {
-                data[CuDType::Err] = true;  // data["err"]
+                data[TTT::Err] = true;  // data["err"]
                 QString msg = QString("Reader.onUpdate: unsupported data type %1 and format %2 in %3")
                                   .arg(v.dataTypeStr(v.getType()).c_str()).arg(v.dataFormatStr(v.getFormat()).c_str())
                                   .arg(data.toString().c_str());

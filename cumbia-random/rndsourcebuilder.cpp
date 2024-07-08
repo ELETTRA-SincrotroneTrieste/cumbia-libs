@@ -18,10 +18,10 @@ RndSourceBuilder::RndSourceBuilder() {
  */
 RndSourceBuilder::RndSourceBuilder(const QString &nam, int size, double min, double max, int period, const QString& label)
 {
-    options[CuDType::Period] = period;  // options["period"]
-    options[CuDType::Min] = min;  // options["min"]
-    options[CuDType::Max] = max;  // options["max"]
-    options[CuDType::Label] = label.toStdString();  // options["label"]
+    options[TTT::Period] = period;  // options["period"]
+    options[TTT::Min] = min;  // options["min"]
+    options[TTT::Max] = max;  // options["max"]
+    options[TTT::Label] = label.toStdString();  // options["label"]
     options["size"] = size;
     (nam.startsWith("random:") || nam.startsWith("random:/") || nam.startsWith("random://")) ?
                 name = nam : name = "random://" + nam;
@@ -76,11 +76,11 @@ void RndSourceBuilder::fromSource(const QString &source)
 
     if(match.hasMatch() && match.capturedTexts().size() > 4) { // and capturedTexts > 5
         options["size"] = match.captured(1).toInt();
-        options[CuDType::Min] = match.captured(2).toDouble();  // options["min"]
-        options[CuDType::Max] = match.captured(3).toDouble();  // options["max"]
-        options[CuDType::Period] = match.captured(4).toInt();  // options["period"]
+        options[TTT::Min] = match.captured(2).toDouble();  // options["min"]
+        options[TTT::Max] = match.captured(3).toDouble();  // options["max"]
+        options[TTT::Period] = match.captured(4).toInt();  // options["period"]
         if(match.capturedTexts().size() > 5 && !match.captured(5).isEmpty())
-            options[CuDType::Label] = match.captured(5).toStdString();  // options["label"]
+            options[TTT::Label] = match.captured(5).toStdString();  // options["label"]
     }
     else {
         // match with size/min/max[/label] only
@@ -91,19 +91,19 @@ void RndSourceBuilder::fromSource(const QString &source)
         match = re.match(src);
         if(match.hasMatch() && match.capturedTexts().size() > 3) {
             options["size"] = match.captured(1).toInt();
-            options[CuDType::Min] = match.captured(2).toDouble();  // options["min"]
-            options[CuDType::Max] = match.captured(3).toDouble();  // options["max"]
+            options[TTT::Min] = match.captured(2).toDouble();  // options["min"]
+            options[TTT::Max] = match.captured(3).toDouble();  // options["max"]
             if(match.capturedTexts().size() > 4 && match.captured(4).size() > 0)
-                options[CuDType::Label] = match.captured(4).toStdString();  // options["label"]
+                options[TTT::Label] = match.captured(4).toStdString();  // options["label"]
         }
     }
 
 //    qDebug() << __PRETTY_FUNCTION__ << match.capturedTexts();
     if(!match.hasMatch()) {
         options["size"] = 1;
-        options[CuDType::Min] = 0;  // options["min"]
-        options[CuDType::Max] = 1000;  // options["max"]
-        options[CuDType::Period] = 1000;  // options["period"]
+        options[TTT::Min] = 0;  // options["min"]
+        options[TTT::Max] = 1000;  // options["max"]
+        options[TTT::Period] = 1000;  // options["period"]
 
         perr("RndSourceBuilder.fromSource: pattern is ");
         perr("\"[random:|random://]name[/subname1/.../subnameN]/size/min/max[/period][/label]\"");

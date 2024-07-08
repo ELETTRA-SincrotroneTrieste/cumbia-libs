@@ -20,7 +20,7 @@ ProjectFilesHelper::ProjectFilesHelper(const QString& projnam)
 /*
  * <?xml version="1.0" encoding="UTF-8"?>
  *   <ui version="4.0"> <-- document.firstChildElement("ui")
- *   <class>Danfisik9000</class> <-- ui.firstChildElement(CuDType::Class)  // ui.firstChildElement("class")
+ *   <class>Danfisik9000</class> <-- ui.firstChildElement(TTT::Class)  // ui.firstChildElement("class")
  *   <widget class="QWidget" name="Danfisik9000">
  */
 bool ProjectFilesHelper::findMainWidgetProps(const QDir& wdir)

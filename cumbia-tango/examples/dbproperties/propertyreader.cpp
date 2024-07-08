@@ -31,15 +31,15 @@ void PropertyReader::get(const char *id, const std::vector<std::string> &props)
         size_t cpos = props[i].find(':');
         if(cnt == 2 && cpos < std::string::npos)
         {
-            CuData devpd(CuDType::Device, props[i].substr(0, cpos));  // CuData devpd("device", props[i].substr(0, cpos)
-            devpd[CuDType::Name] = props[i].substr(cpos + 1, std::string::npos);  // devpd["name"]
+            CuData devpd(TTT::Device, props[i].substr(0, cpos));  // CuData devpd("device", props[i].substr(0, cpos)
+            devpd[TTT::Name] = props[i].substr(cpos + 1, std::string::npos);  // devpd["name"]
             in_data.push_back(devpd);
         }
         else if(cnt == 3) {
-            CuData devpd(CuDType::Device, props[i].substr(0, props[i].rfind('/')));  // CuData devpd("device", props[i].substr(0, props[i].rfind('/')
+            CuData devpd(TTT::Device, props[i].substr(0, props[i].rfind('/')));  // CuData devpd("device", props[i].substr(0, props[i].rfind('/')
             if(cpos < std::string::npos) {
-                devpd[CuDType::Attribute] = props[i].substr(props[i].rfind('/') + 1, cpos - props[i].rfind('/') -1);  // devpd["attribute"]
-                devpd[CuDType::Name] = props[i].substr(cpos + 1, std::string::npos);  // devpd["name"]
+                devpd[TTT::Attribute] = props[i].substr(props[i].rfind('/') + 1, cpos - props[i].rfind('/') -1);  // devpd["attribute"]
+                devpd[TTT::Name] = props[i].substr(cpos + 1, std::string::npos);  // devpd["name"]
             }
             else
                 devpd["attribute"] = props[i].substr(props[i].rfind('/') + 1, cpos); // cpos == npos
@@ -47,8 +47,8 @@ void PropertyReader::get(const char *id, const std::vector<std::string> &props)
             in_data.push_back(devpd);
         }
         else if(cnt == 0 && cpos < std::string::npos) { // class
-            CuData cld(CuDType::Class, props[i].substr(0, cpos));  // CuData cld("class", props[i].substr(0, cpos)
-            cld[CuDType::Name] = props[i].substr(cpos + 1);  // cld["name"]
+            CuData cld(TTT::Class, props[i].substr(0, cpos));  // CuData cld("class", props[i].substr(0, cpos)
+            cld[TTT::Name] = props[i].substr(cpos + 1);  // cld["name"]
             in_data.push_back(cld);
         }
     }
@@ -69,8 +69,8 @@ void PropertyReader::exit()
 void PropertyReader::onUpdate(const CuData &data)
 {
     pr_thread();
-    if(data[CuDType::Err].toBool())  // data["err"]
-        printf("\n\033[1;31m** \033[0m error fetching properties: \033[1;31m%s\033[0m\n", data[CuDType::Message].toString().c_str());  // data["msg"]
+    if(data[TTT::Err].toBool())  // data["err"]
+        printf("\n\033[1;31m** \033[0m error fetching properties: \033[1;31m%s\033[0m\n", data[TTT::Message].toString().c_str());  // data["msg"]
     else
         printf("\n\e[1;32m** %45s     VALUES\e[0m\n", "PROPERTIES");
     std::vector<std::string> plist = data["list"].toStringVector();

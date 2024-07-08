@@ -37,8 +37,8 @@ CuMonitorActivity::CuMonitorActivity(const CuData &token,
     d->exiting = false;
 
     int period = 1000;
-    if(token.containsKey(CuDType::Period))  // token.containsKey("period")
-        period = token[CuDType::Period].toInt();  // token["period"]
+    if(token.containsKey(TTT::Period))  // token.containsKey("period")
+        period = token[TTT::Period].toInt();  // token["period"]
     d->repeat = period;
     setInterval(period);
 }
@@ -57,7 +57,7 @@ void CuMonitorActivity::setArgins(const CuVariant &argins)
 bool CuMonitorActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
-    return token[CuDType::Src] == mytok[CuDType::Src] && mytok[CuDType::Activity] == token[CuDType::Activity];  // token["src"], mytok["src"], mytok["activity"], token["activity"]
+    return token[TTT::Src] == mytok[TTT::Src] && mytok[TTT::Activity] == token[TTT::Activity];  // token["src"], mytok["src"], mytok["activity"], token["activity"]
 }
 
 void CuMonitorActivity::init()
@@ -81,7 +81,7 @@ void CuMonitorActivity::init()
     else
     {
         /* Allocate PV structure */
-        CuPV *pv = new CuPV(tk[CuDType::Src].toString().c_str());  // tk["src"]
+        CuPV *pv = new CuPV(tk[TTT::Src].toString().c_str());  // tk["src"]
 
         /* Connect channels */
         pv->monitor_activity = this;
@@ -89,7 +89,7 @@ void CuMonitorActivity::init()
         /* Create CA connections */
         int returncode = epw.create_pvs(pv, 1, connection_handler_cb);
         if ( returncode )
-            m_setTokenError(("Error creating pv " + tk[CuDType::Src].toString()).c_str(), tk);  // tk["src"]
+            m_setTokenError(("Error creating pv " + tk[TTT::Src].toString()).c_str(), tk);  // tk["src"]
 
     }
     publishResult(tk);
@@ -111,8 +111,8 @@ void CuMonitorActivity::onExit()
 
 void CuMonitorActivity::m_setTokenError(const char *msg, CuData &d)
 {
-    d[CuDType::Message] = std::string(msg);  // d["msg"]
-    d[CuDType::Err] = true;  // d["err"]
+    d[TTT::Message] = std::string(msg);  // d["msg"]
+    d[TTT::Err] = true;  // d["err"]
 }
 
 /*+**************************************************************************
@@ -165,8 +165,8 @@ void CuMonitorActivity::event_handler(evargs args)
     }
     else
     {
-        d[CuDType::Message] = "CuMonitorActivity.event_handler: status error (" + std::to_string(args.status) + ")";  // d["msg"]
-        d[CuDType::Err] = true;  // d["err"]
+        d[TTT::Message] = "CuMonitorActivity.event_handler: status error (" + std::to_string(args.status) + ")";  // d["msg"]
+        d[TTT::Err] = true;  // d["err"]
     }
     publishResult(d);
 }
@@ -175,7 +175,7 @@ void CuMonitorActivity::connection_handler(connection_handler_args args)
 {
     int nConn = 0;
     CuData d = getToken();
-    d[CuDType::Type] = "connection";  // d["type"]
+    d[TTT::Type] = "connection";  // d["type"]
     unsigned long eventMask = DBE_VALUE | DBE_ALARM;
     int floatAsString = 0;
     int enumAsNr = 0;
@@ -227,18 +227,18 @@ void CuMonitorActivity::connection_handler(connection_handler_args args)
         ppv->status = ECA_DISCONN;
     }
 
-    d[CuDType::Status] = ppv->status;  // d["status"]
+    d[TTT::Status] = ppv->status;  // d["status"]
     publishResult(d);
 }
 
 void CuMonitorActivity::exception_handler(exception_handler_args excargs)
 {
     CuData d = getToken();
-    d[CuDType::Type] = "exception";  // d["type"]
-    d[CuDType::Err] = true;  // d["err"]
+    d[TTT::Type] = "exception";  // d["type"]
+    d[TTT::Err] = true;  // d["err"]
     CuEpicsWorld ew;
     std::string msg = ew.extractException(excargs, d);
-    d[CuDType::Message] = "error: \"" + d[CuDType::Src].toString() + "\":\n" + msg;  // d["msg"], d["src"]
+    d[TTT::Message] = "error: \"" + d[TTT::Src].toString() + "\":\n" + msg;  // d["msg"], d["src"]
     ca_signal(excargs.stat, msg.c_str());
     publishResult(d);
 }

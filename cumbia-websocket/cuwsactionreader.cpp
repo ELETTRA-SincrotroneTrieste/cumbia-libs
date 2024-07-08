@@ -49,14 +49,14 @@ bool WSSourceConfiguration::isComplete() const
 CuData WSSourceConfiguration::toCuData() const
 {
     CuData res;
-    res[CuDType::Min] = m_map["min_value"].toStdString();  // res["min"]
-    res[CuDType::Max] = m_map["max_value"].toStdString();  // res["max"]
+    res[TTT::Min] = m_map["min_value"].toStdString();  // res["min"]
+    res[TTT::Max] = m_map["max_value"].toStdString();  // res["max"]
     res["display_unit"] = m_map["display_unit"].toStdString();
-    res[CuDType::NumberFormat] =
+    res[TTT::NumberFormat] =
         m_map["format"].toStdString();  // !cudata
-    res[CuDType::DataType] =
+    res[TTT::DataType] =
         m_map["dt"].toInt();  // !cudata
-    res[CuDType::DataFormat] =
+    res[TTT::DataFormat] =
         m_map["df"].toInt();  //  !cudata
     return res;
 }
@@ -129,7 +129,7 @@ CuWSActionReader::~CuWSActionReader()
  */
 CuData CuWSActionReader::getToken() const
 {
-    CuData da(CuDType::Src, d->tsrc.getName());  // CuData da("src", d->tsrc.getName()
+    CuData da(TTT::Src, d->tsrc.getName());  // CuData da("src", d->tsrc.getName()
     return da;
 }
 
@@ -205,12 +205,12 @@ void CuWSActionReader::onNetworkReplyFinished(QNetworkReply *reply)
             d->source_configuration.add(key, QString(data).remove("\""));
             if(d->source_configuration.isComplete()) {
                 CuData conf = d->source_configuration.toCuData();
-                conf[CuDType::Src] = d->tsrc.getName();  // conf["src"]
-                conf[CuDType::Err] = false; //d->source_configuration.error();  // conf["err"]
+                conf[TTT::Src] = d->tsrc.getName();  // conf["src"]
+                conf[TTT::Err] = false; //d->source_configuration.error();  // conf["err"]
                 if(d->proto_helper_i)
-                    conf[CuDType::DataFormatStr] = d->proto_helper_i->dataFormatToStr(conf[CuDType::DataFormat].toInt());  // conf["dfs"], conf["df"]
-                conf[CuDType::Message] = d->source_configuration.errorMessage().toStdString();  // conf["msg"]
-                conf[CuDType::Type] = "property";  // conf["type"]
+                    conf[TTT::DataFormatStr] = d->proto_helper_i->dataFormatToStr(conf[TTT::DataFormat].toInt());  // conf["dfs"], conf["df"]
+                conf[TTT::Message] = d->source_configuration.errorMessage().toStdString();  // conf["msg"]
+                conf[TTT::Type] = "property";  // conf["type"]
 
                 for(std::set<CuDataListener *>::iterator it = d->listeners.begin(); it != d->listeners.end(); ++it) {
                     (*it)->onUpdate(conf);
@@ -260,7 +260,7 @@ void CuWSActionReader::stop()
         d->exit = true;
 
     CuData tok = getToken();
-    QString url_s = QString::fromStdString(tok[CuDType::Src].toString());  // tok["src"]
+    QString url_s = QString::fromStdString(tok[TTT::Src].toString());  // tok["src"]
     // unsubscribe
     if(d->networkAccessManager) { // created in start if d->http_url is not empty
         QNetworkRequest unsubscribe_request;

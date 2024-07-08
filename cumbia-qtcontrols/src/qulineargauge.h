@@ -36,8 +36,8 @@ class QuLinearGauge : public QuLinearGaugeBase, public CuDataListener, public Cu
 
 public:
     QuLinearGauge(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
-
     QuLinearGauge(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    QuLinearGauge(QWidget *w);
 
     virtual ~QuLinearGauge();
 

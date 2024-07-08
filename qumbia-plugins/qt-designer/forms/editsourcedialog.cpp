@@ -58,7 +58,7 @@ QString EditSourceDialog::source() const
 {
     QString s;
     s = findChild<EditSourceWidget *>("editSrcW_0")->source();
-    printf("\e[1;32mreturning source %s\e[0m\n", (s.toStdString().c_str()));
+    pretty_pri("returning source %s\n", (s.toStdString().c_str()));
     return s;
 }
 

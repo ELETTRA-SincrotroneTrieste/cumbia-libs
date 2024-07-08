@@ -36,9 +36,9 @@ bool CumbiaHTTPWorld::json_simple_decode(const QByteArray &jba, CuData &out) con
     QJsonObject o;
     QJsonDocument json = QJsonDocument::fromJson(jba, &pe);
     if(pe.error != QJsonParseError::NoError) {
-        out[CuDType::Err] = true;  // out["err"]
-        out[CuDType::Message] = "CumbiaHTTPWorld::json_simple_decode: parse error: " + pe.errorString().toStdString() + " in \"" + jba.data() + "\"";  // out["msg"]
-        perr("%s", out.s(CuDType::Message).c_str());  // out.s("msg")
+        out[TTT::Err] = true;  // out["err"]
+        out[TTT::Message] = "CumbiaHTTPWorld::json_simple_decode: parse error: " + pe.errorString().toStdString() + " in \"" + jba.data() + "\"";  // out["msg"]
+        perr("%s", out.s(TTT::Message).c_str());  // out.s("msg")
     }
     else {
         if(json.isObject()) o = json.object();
@@ -52,9 +52,9 @@ bool CumbiaHTTPWorld::json_simple_decode(const QByteArray &jba, CuData &out) con
             }
         }
         else {
-            out[CuDType::Err] = true;  // out["err"]
-            out[CuDType::Message] = "CumbiaHTTPWorld::json_simple_decode: json \"" + std::string(jba.data()) + " is not an object";  // out["msg"]
-            perr("%s", out.s(CuDType::Message).c_str());  // out.s("msg")
+            out[TTT::Err] = true;  // out["err"]
+            out[TTT::Message] = "CumbiaHTTPWorld::json_simple_decode: json \"" + std::string(jba.data()) + " is not an object";  // out["msg"]
+            perr("%s", out.s(TTT::Message).c_str());  // out.s("msg")
         }
     }
     return !o.isEmpty();
@@ -108,12 +108,12 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
     // NOTE
     // these are the keys storing values that necessary need to be converted to int
     CuDTypeUtils dtu;
-    const int M = CuDType::MaxDataKey;
-    std::vector<CuDType::Key> idx_keys;
+    const int M = TTT::MaxDataKey;
+    std::vector<TTT::Key> idx_keys;
     std::vector<std::string> str_keys;
     for(const QString& s : data_o.keys()) {
         if(s != "value" && s != "w_value") { // they have specific types
-            CuDType::Key K = dtu.idx(s.toStdString().c_str());
+            TTT::Key K = dtu.idx(s.toStdString().c_str());
             const QJsonValue &v = data_o[s]; // const version, data_o is const
             const std::string &c = s.toStdString();
             if(v.isArray()) {
@@ -164,22 +164,22 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
     else if(data_o.contains("timestamp_us"))  // !cudata
         ts_us = data_o["timestamp_us"].toDouble();  // !cudata
     if(ts_us > 0)
-        res[CuDType::Time_us] = ts_us;  // res["timestamp_us"]
+        res[TTT::Time_us] = ts_us;  // res["timestamp_us"]
 
     // timestamp millis
     if(data_o.contains("timestamp_ms")) // timestamp_ms converted to long int
-        res[CuDType::Time_ms] = data_o["timestamp_ms"].toDouble();  // !cudata
+        res[TTT::Time_ms] = data_o["timestamp_ms"].toDouble();  // !cudata
     else if(ts_us >= 0)
-        res[CuDType::Time_ms] = floor(ts_us) * 1000.0 + (ts_us - floor(ts_us)) * 10e6 / 1000.0;  // res["timestamp_ms"]
+        res[TTT::Time_ms] = floor(ts_us) * 1000.0 + (ts_us - floor(ts_us)) * 10e6 / 1000.0;  // res["timestamp_ms"]
 
     // error management: err flag and message
     if(data_o.contains("err")) {  // data_o.contains("err") !cudata
-        res[CuDType::Err] = data_o["err"].toBool();  // res["err"], data_o["err"] !cudata
+        res[TTT::Err] = data_o["err"].toBool();  // res["err"], data_o["err"] !cudata
     }
     else if(data_o.contains("error"))
-        res[CuDType::Err] = data_o["error"].toBool();  // res["err"] !cudata
+        res[TTT::Err] = data_o["error"].toBool();  // res["err"] !cudata
     if(data_o.contains("msg"))  // data_o.contains("msg")
-        res[CuDType::Message] = data_o["msg"].toString().toStdString();  // res["msg"], data_o["msg"] !cudata
+        res[TTT::Message] = data_o["msg"].toString().toStdString();  // res["msg"], data_o["msg"] !cudata
 
 
     // matrix data type ? will have dim_x and dim_y
@@ -188,8 +188,8 @@ void CumbiaHTTPWorld::m_json_decode(const QJsonValue &data_v, CuData &res) const
 
     // value, w_value vt: value type
     CuVariant::DataType t = static_cast<CuVariant::DataType>(data_o["vt"].toDouble());
-    foreach(const CuDType::Key& K, QList<CuDType::Key>() << CuDType::Value << CuDType::WriteValue) {
-        const QJsonValue &v = data_o[K == CuDType::Value ? "value" : "w_value"];
+    foreach(const TTT::Key& K, QList<TTT::Key>() << TTT::Value << TTT::WriteValue) {
+        const QJsonValue &v = data_o[K == TTT::Value ? "value" : "w_value"];
         if(v.isArray()) {
             QJsonArray jarr = v.toArray();
             // decide type

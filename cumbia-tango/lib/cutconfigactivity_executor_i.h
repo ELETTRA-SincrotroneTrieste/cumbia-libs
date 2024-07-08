@@ -20,7 +20,7 @@ public:
      * \param dev a pointer to a Tango::DeviceProxy
      * \param attribute the name of the attribute
      * \param dres reference to CuData that will store the results
-     * \param skip_read_att if true, do not read_attribute (CuDType::Value will not be in dres)
+     * \param skip_read_att if true, do not read_attribute (TTT::Value will not be in dres)
      * \param devnam the device name, provided for convenience (to avoid call to dev->name() )
      * \return true if the call is successful, false otherwise. Results are put in dres
      */

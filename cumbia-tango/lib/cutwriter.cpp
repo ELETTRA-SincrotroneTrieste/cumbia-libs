@@ -62,7 +62,7 @@ void CuTWriter::setWriteValue(const CuVariant &write_val)
 
 /*!
  * \brief Set database configuration
- * \param db_conf data of type CuDType::Property obtained from a
+ * \param db_conf data of type TTT::Property obtained from a
  */
 void CuTWriter::setConfiguration(const CuData& db_conf) {
     d->db_conf = db_conf;
@@ -123,7 +123,7 @@ void CuTWriter::onResult(const CuData &data) {
 CuData CuTWriter::getToken() const
 {
     CuData da("source", d->tsrc.getName());
-    da[CuDType::Type] = std::string("writer");  // da["type"]
+    da[TTT::Type] = std::string("writer");  // da["type"]
     return da;
 }
 
@@ -169,12 +169,12 @@ void CuTWriter::start() {
     CuDeviceFactoryService *df =
             static_cast<CuDeviceFactoryService *>(d->cumbia_t->getServiceProvider()->
                                                   get(static_cast<CuServices::Type> (CuDeviceFactoryService::CuDeviceFactoryServiceType)));
-    CuData at(CuDType::Src, d->tsrc.getName()); /* activity token */
-    at[CuDType::Device] = d->tsrc.getDeviceName();
-    at[CuDType::Point] = d->tsrc.getPoint();
-    at[CuDType::Activity] = "writer";  // at["activity"]
+    CuData at(TTT::Src, d->tsrc.getName()); /* activity token */
+    at[TTT::Device] = d->tsrc.getDeviceName();
+    at[TTT::Point] = d->tsrc.getPoint();
+    at[TTT::Activity] = "writer";  // at["activity"]
     at["write_value"] = d->write_val;
-    at[CuDType::CmdName] = (d->tsrc.getType() == TSource::SrcCmd);  // at["cmd"]
+    at[TTT::CmdName] = (d->tsrc.getType() == TSource::SrcCmd);  // at["cmd"]
     at.merge(d->options);
     const std::string & thtok = d->options.containsKey("thread_token") ? d->options.s("thread_token") : d->tsrc.getDeviceName(); /* thread token */
     d->activity = new CuWriteActivity(at, df, d->db_conf, d->tag);

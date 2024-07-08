@@ -8,8 +8,8 @@
 
 CuEpicsReaderFactory::CuEpicsReaderFactory()
 {
-    options[CuDType::Period] = 1000;  // options["period"]
-    options[CuDType::RefreshMode] = CuMonitor::MonitorRefresh;  // options["refresh_mode"]
+    options[TTT::Period] = 1000;  // options["period"]
+    options[TTT::RefreshMode] = CuMonitor::MonitorRefresh;  // options["refresh_mode"]
 }
 
 void CuEpicsReaderFactory::setOptions(const CuData &o)
@@ -25,8 +25,8 @@ CuEpicsReaderFactory::~CuEpicsReaderFactory()
 CuEpicsActionI *CuEpicsReaderFactory::create(const std::string &s, CumbiaEpics *ct) const
 {
     CuMonitor* monitor = new CuMonitor(s, ct);
-    monitor->setPeriod(options[CuDType::Period].toInt());  // options["period"]
-    monitor->setRefreshMode(static_cast<CuMonitor::RefreshMode>(options[CuDType::RefreshMode].toInt()));  // options["refresh_mode"]
+    monitor->setPeriod(options[TTT::Period].toInt());  // options["period"]
+    monitor->setRefreshMode(static_cast<CuMonitor::RefreshMode>(options[TTT::RefreshMode].toInt()));  // options["refresh_mode"]
     return monitor;
 }
 

@@ -132,7 +132,7 @@ void $MAINCLASS$::m_configure(const CuData& da)
     M = da["max"];  // max value
 
     unit = QString::fromStdString(da["display_unit"].toString());
-    label = QString::fromStdString(da[CuDType::Label].toString());  // da["label"]
+    label = QString::fromStdString(da[TTT::Label].toString());  // da["label"]
 
     // 1.
     // if this class has minimum / maximum properties:
@@ -179,7 +179,7 @@ void $MAINCLASS$::m_configure(const CuData& da)
     // ---------------------------------
 
 
-    description = QString::fromStdString(da[CuDType::Description].toString());  // da["description"]
+    description = QString::fromStdString(da[TTT::Description].toString());  // da["description"]
     setProperty("description", description);
     setProperty("unit", unit);
 
@@ -201,8 +201,8 @@ void $MAINCLASS$::m_configure(const CuData& da)
 
     // initialise the object with the "write" value (also called "set point"), if available:
     //
-    if(d->ok && da.containsKey(CuDType::WriteValue)) {  // da.containsKey("w_value")
-        m_set_write_value(da[CuDType::WriteValue]);  // da["w_value"]
+    if(d->ok && da.containsKey(TTT::WriteValue)) {  // da.containsKey("w_value")
+        m_set_write_value(da[TTT::WriteValue]);  // da["w_value"]
     }
     // m_set_write_value could trigger a value changed signal.
     // it is important to setup signal/slot connections after
@@ -213,29 +213,29 @@ void $MAINCLASS$::m_configure(const CuData& da)
 
 void $MAINCLASS$::onUpdate(const CuData &da)
 {
-    d->ok = !da[CuDType::Err].toBool();  // da["err"]
+    d->ok = !da[TTT::Err].toBool();  // da["err"]
 
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->ok)
-        d->context->getLinkStats()->addError(da[CuDType::Message].toString());  // da["msg"]
+        d->context->getLinkStats()->addError(da[TTT::Message].toString());  // da["msg"]
     // log
     if(!d->ok) {
         perr("$MAINCLASS$ [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
-             da[CuDType::Src].toString().c_str(), da[CuDType::Message].toString().c_str(),  // da["src"], da["msg"]
-                da[CuDType::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
+             da[TTT::Src].toString().c_str(), da[TTT::Message].toString().c_str(),  // da["src"], da["msg"]
+                da[TTT::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
 
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->context->cumbiaPool()->getBySrc(da[CuDType::Src].toString());  // da["src"]
+            cumbia = d->context->cumbiaPool()->getBySrc(da[TTT::Src].toString());  // da["src"]
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::CategoryWrite, true);
-            log->write(QString("$MAINCLASS$ [" + objectName() + "]").toStdString(), da[CuDType::Message].toString(), CuLog::LevelError, CuLog::CategoryWrite);  // da["msg"]
+            log->write(QString("$MAINCLASS$ [" + objectName() + "]").toStdString(), da[TTT::Message].toString(), CuLog::LevelError, CuLog::CategoryWrite);  // da["msg"]
         }
     }
-    else if(d->auto_configure && da[CuDType::Type].toString() == "property") {  // da["type"]
+    else if(d->auto_configure && da[TTT::Type].toString() == "property") {  // da["type"]
         //
         // --------------------------------------------------------------------------------------------
         // You may want to check data format and write type and issue a warning or avoid configuration

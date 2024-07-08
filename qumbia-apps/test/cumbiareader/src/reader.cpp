@@ -19,12 +19,12 @@ Reader::~Reader()
 void Reader::onUpdate(const CuData &data)
 {
 
-    const CuVariant&  v = data[CuDType::Value];  // data["value"]
-    double ts = data[CuDType::Time_us].toDouble();  // data["timestamp_us"]
+    const CuVariant&  v = data[TTT::Value];  // data["value"]
+    double ts = data[TTT::Time_us].toDouble();  // data["timestamp_us"]
 //    printf("%s\n", data.toString().c_str());
-    QString src = QString::fromStdString(data[CuDType::Src].toString());  // data["src"]
-    if(data[CuDType::Err].toBool())  // data["err"]
-        emit newError(src, ts, QString::fromStdString(data[CuDType::Message].toString()));  // data["msg"]
+    QString src = QString::fromStdString(data[TTT::Src].toString());  // data["src"]
+    if(data[TTT::Err].toBool())  // data["err"]
+        emit newError(src, ts, QString::fromStdString(data[TTT::Message].toString()));  // data["msg"]
     else {
         if(v.getFormat() == CuVariant::Scalar && v.getType() == CuVariant::Double)
             emit newDouble(src, ts, v.toDouble());

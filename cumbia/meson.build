@@ -1,4 +1,4 @@
-project('cumbia', 'cpp', version : '2.0.1',
+project('cumbia', 'cpp', version : '2.1.0',
     default_options : ['c_std=c17', 'cpp_std=c++17'])
 
 project_description = 'library that offers a carefree approach to multi thread application design and implementation'
@@ -94,7 +94,7 @@ sources = [
 
 includedirs = include_directories('src/lib', 'src/lib/threads', 'src/lib/services')
 
-cpp_arguments = [ '-DCUMBIA_DEBUG_OUTPUT=1' , '-DCU_VERSION=2.0.1' ]
+cpp_arguments = [ '-DCUMBIA_DEBUG_OUTPUT=1' , '-DCU_VERSION=2.1.0' ]
 link_arguments = [  ]
 
 # profiling with gperftools

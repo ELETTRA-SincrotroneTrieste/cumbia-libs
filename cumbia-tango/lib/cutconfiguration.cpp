@@ -92,8 +92,8 @@ void CuTConfiguration::onResult(const std::vector<CuData> &datalist) {
 }
 
 CuData CuTConfiguration::getToken() const {
-    CuData da(CuDType::Src, d->tsrc.getName());
-    da[CuDType::Type] = std::string("property");
+    CuData da(TTT::Src, d->tsrc.getName());
+    da[TTT::Type] = std::string("property");
     return da;
 }
 

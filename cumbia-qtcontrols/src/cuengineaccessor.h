@@ -29,4 +29,9 @@ private:
 
 };
 
+class CuEngineAccessorFinder {
+public:
+    CuEngineAccessor* get(QObject *parent);
+};
+
 #endif // CUENGINEACCESSOR_H

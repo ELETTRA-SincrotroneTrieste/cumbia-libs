@@ -27,24 +27,24 @@ void SimpleFormulaEval::run()
     QJSValue sval = sen.evaluate(d->formula);
     bool err = sval.isError();
     CuDataQuality dq(CuDataQuality::Undefined);
-    d->result[CuDType::Src] = d->formula.toStdString();  // result["src"]
-    d->result[CuDType::Err] = err;  // result["err"]
+    d->result[TTT::Src] = d->formula.toStdString();  // result["src"]
+    d->result[TTT::Err] = err;  // result["err"]
     if(err) {
-        d->result[CuDType::Message] = QString("SimpleFormulaEval: evaluation error: %1").arg(d->formula).toStdString();  // result["msg"]
+        d->result[TTT::Message] = QString("SimpleFormulaEval: evaluation error: %1").arg(d->formula).toStdString();  // result["msg"]
         dq.set(CuDataQuality::Invalid);
     }
     d->result["formula"] = d->formula.toStdString();
-    d->result[CuDType::Time_ms] = static_cast<long int>(QDateTime::currentMSecsSinceEpoch());  // result["timestamp_ms"]
+    d->result[TTT::Time_ms] = static_cast<long int>(QDateTime::currentMSecsSinceEpoch());  // result["timestamp_ms"]
     if(!err) {
         CuVariant val = qobject_cast<CuFormulaReader *>(parent())->fromScriptValue(sval);
-        val.getFormat() == CuVariant::Scalar ? d->result[CuDType::DataFormatStr] = "scalar" :  // result["dfs"]
-                d->result[CuDType::DataFormatStr] = "vector";  // result["dfs"]
-        d->result[CuDType::Value] = val;  // result["value"]
+        val.getFormat() == CuVariant::Scalar ? d->result[TTT::DataFormatStr] = "scalar" :  // result["dfs"]
+                d->result[TTT::DataFormatStr] = "vector";  // result["dfs"]
+        d->result[TTT::Value] = val;  // result["value"]
         dq.set(CuDataQuality::Valid);
     }
-    d->result[CuDType::Quality] = dq.toInt();  // result["q"]
-    d->result[CuDType::QualityColor] = dq.color();  // result["qc"]
-    d->result[CuDType::QualityString] = dq.name();  // result["qs"]
+    d->result[TTT::Quality] = dq.toInt();  // result["q"]
+    d->result[TTT::QualityColor] = dq.color();  // result["qc"]
+    d->result[TTT::QualityString] = dq.name();  // result["qs"]
 }
 
 void SimpleFormulaEval::publishResult()

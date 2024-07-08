@@ -18,8 +18,8 @@ void QuR_HdbHelper::mergeResult(const QString &src, const CuData &data)
     }
     else {
         CuData &da = mMap[src];
-        if(data[CuDType::Err].toBool())  // data["err"]
-            da[CuDType::Err] = true;  // da["err"]
+        if(data[TTT::Err].toBool())  // data["err"]
+            da[TTT::Err] = true;  // da["err"]
         if(da.containsKey("time_scale_us") && data.containsKey("time_scale_us")) {
             da["time_scale_us"].append(data["time_scale_us"]);
         }
@@ -28,11 +28,11 @@ void QuR_HdbHelper::mergeResult(const QString &src, const CuData &data)
             data["progress"].to<int>(progress);
             da["progress"] = progress;
         }
-        if(da.containsKey(CuDType::Value) && data.containsKey(CuDType::Value)) {  // da.containsKey("value"), data.containsKey("value")
-            da[CuDType::Value].append(data[CuDType::Value]);  // da["value"], data["value"]
+        if(da.containsKey(TTT::Value) && data.containsKey(TTT::Value)) {  // da.containsKey("value"), data.containsKey("value")
+            da[TTT::Value].append(data[TTT::Value]);  // da["value"], data["value"]
         }
-        if(da.containsKey(CuDType::WriteValue) && data.containsKey(CuDType::WriteValue)) {  // da.containsKey("w_value"), data.containsKey("w_value")
-            da[CuDType::WriteValue].append(data[CuDType::WriteValue]);  // da["w_value"], data["w_value"]
+        if(da.containsKey(TTT::WriteValue) && data.containsKey(TTT::WriteValue)) {  // da.containsKey("w_value"), data.containsKey("w_value")
+            da[TTT::WriteValue].append(data[TTT::WriteValue]);  // da["w_value"], data["w_value"]
         }
         if(data.containsKey("notes_time_scale_us")) {
             da["notes_time_scale_us"].append(data["notes_time_scale_us"]);
@@ -40,8 +40,8 @@ void QuR_HdbHelper::mergeResult(const QString &src, const CuData &data)
         if(data.containsKey("notes"))
             da["notes"].append(data["notes"]);
 
-        if(data[CuDType::Exit].toBool())  // data["exit"]
-            da[CuDType::Exit] = true;  // da["exit"]
+        if(data[TTT::Exit].toBool())  // data["exit"]
+            da[TTT::Exit] = true;  // da["exit"]
     }
 }
 
@@ -113,7 +113,7 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
         size_t notes_idx = 0;
         std::vector<double> notes_tss = d["notes_time_scale_us"].toDoubleVector();
         std::vector<std::string> notes = d["notes"].toStringVector();
-        const CuVariant &v = d[CuDType::Value];  // d["value"]
+        const CuVariant &v = d[TTT::Value];  // d["value"]
         std::string d1 = d["start_date"].toString(), d2 = d["stop_date"].toString();
         if(d.containsKey("query")) { // query
             fprintf(fp, "%s%s%s\n", c[Cyan], d.s("query").c_str(), c[Default]);
@@ -133,11 +133,11 @@ void QuR_HdbHelper::print_all(const QList<CuData> & dl, const QString &out_filen
                 fprintf(fp, "[ 0 results ]\n");
         }
         else if(v.isValid() && d.containsKey("data_type_str")) {
-            fprintf(fp, "%s%s%s", c[Cyan], d[CuDType::Src].toString().c_str(), c[Default]);  // d["src"]
+            fprintf(fp, "%s%s%s", c[Cyan], d[TTT::Src].toString().c_str(), c[Default]);  // d["src"]
             if(on_file) {
                 // write data type and write type on file
                 fprintf(fp, ",%s,%s,%s,%s,%s\n", d["data_type_str"].toString().c_str(),
-                        d["write_mode_str"].toString().c_str(), d[CuDType::DataFormatStr].toString().c_str(),  // d["dfs"]
+                        d["write_mode_str"].toString().c_str(), d[TTT::DataFormatStr].toString().c_str(),  // d["dfs"]
                         d1.c_str(), d2.c_str());
             }
             else {

@@ -61,7 +61,7 @@ public:
 
     virtual CuData &operator =(CuData &&other);
 
-    CuData& set(const CuDType::Key &key, const CuVariant& value);
+    CuData& set(const TTT::Key &key, const CuVariant& value);
     CuData &set(const std::string &key, const CuVariant &value);
 
     CuData& merge(const CuData& other);
@@ -70,9 +70,9 @@ public:
     CuData clone() const;
 
     CuData& remove(const std::string& key);
-    CuData& remove(const CuDType::Key &key);
+    CuData& remove(const TTT::Key &key);
 
-    CuData remove(const CuDType::Key &key) const;
+    CuData remove(const TTT::Key &key) const;
     CuData remove(const std::string& key) const;
 
     CuData& remove(const std::vector<std::string>& keys);
@@ -87,19 +87,19 @@ public:
     CuVariant value() const;
 
     CuVariant value(const std::string &key) const;
-    CuVariant value(const CuDType::Key &key) const;
+    CuVariant value(const TTT::Key &key) const;
 
-    void add(const CuDType::Key &key, const CuVariant &value);
+    void add(const TTT::Key &key, const CuVariant &value);
     void add(const std::string& key, const CuVariant &value);
 
     bool containsKey(const std::string & key) const;
-    bool containsKey(const CuDType::Key &key) const;
+    bool containsKey(const TTT::Key &key) const;
 
-    bool has(const CuDType::Key &key, const std::string& value) const;
+    bool has(const TTT::Key &key, const std::string& value) const;
     bool has(const std::string &key, const std::string& value) const;
 
-    CuVariant& operator [] (const CuDType::Key &key);
-    const CuVariant& operator [] (const CuDType::Key &key) const;
+    CuVariant& operator [] (const TTT::Key &key);
+    const CuVariant& operator [] (const TTT::Key &key) const;
 
     CuVariant& operator [] (const std::string& key);
     const CuVariant& operator [] (const std::string& key) const;
@@ -120,43 +120,43 @@ public:
     std::vector<size_t> idx_keys() const;
 
     // shortcuts to extract data
-    std::string s(const CuDType::Key &key) const;
+    std::string s(const TTT::Key &key) const;
     std::string s(const std::string& key) const;
-    const char *c_str(const CuDType::Key &key) const;
+    const char *c_str(const TTT::Key &key) const;
     const char *c_str(const std::string &key) const;
-    double d(const CuDType::Key &key) const;
+    double d(const TTT::Key &key) const;
     double d(const std::string& key) const;
-    int i(const CuDType::Key& key) const;
+    int i(const TTT::Key& key) const;
     int i(const std::string& key) const;
-    unsigned int u(const CuDType::Key& key) const;
+    unsigned int u(const TTT::Key& key) const;
     unsigned int u(const std::string& key) const;
-    bool b(const CuDType::Key& key) const;
+    bool b(const TTT::Key& key) const;
     bool b(const std::string& key) const;
 
     // to<T> version shortcuts
-    double D(const CuDType::Key& key) const;
+    double D(const TTT::Key& key) const;
     double D(const std::string& key) const;
-    int I(const CuDType::Key& key) const;
+    int I(const TTT::Key& key) const;
     int I(const std::string& key) const;
-    unsigned int U(const CuDType::Key& key) const;
+    unsigned int U(const TTT::Key& key) const;
     unsigned int U(const std::string& key) const;
-    bool B(const CuDType::Key& key) const;
+    bool B(const TTT::Key& key) const;
     bool B(const std::string& key) const;
 
     // toVector<T> version shortcuts
-    std::vector<double> DV(const CuDType::Key& key) const;
+    std::vector<double> DV(const TTT::Key& key) const;
     std::vector<double> DV(const std::string& key) const;
-    std::vector<int>  IV(const CuDType::Key& key) const;
+    std::vector<int>  IV(const TTT::Key& key) const;
     std::vector<int>  IV(const std::string& key) const;
-    std::vector<long long> LLV(const CuDType::Key &key) const;
+    std::vector<long long> LLV(const TTT::Key &key) const;
     std::vector<long long> LLV(const std::string &key) const;
-    std::vector<unsigned int> UV(const CuDType::Key &key) const;
+    std::vector<unsigned int> UV(const TTT::Key &key) const;
     std::vector<unsigned int> UV(const std::string& key) const;
-    std::vector<unsigned long int> ULV(const CuDType::Key& key) const;
+    std::vector<unsigned long int> ULV(const TTT::Key& key) const;
     std::vector<unsigned long int> ULV(const std::string& key) const;
-    std::vector<unsigned long long int> ULLV(const CuDType::Key& key) const;
+    std::vector<unsigned long long int> ULLV(const TTT::Key& key) const;
     std::vector<unsigned long long int> ULLV(const std::string& key) const;
-    std::vector<bool>    BV(const CuDType::Key& key) const;
+    std::vector<bool>    BV(const TTT::Key& key) const;
     std::vector<bool>    BV(const std::string& key) const;
 
 private:

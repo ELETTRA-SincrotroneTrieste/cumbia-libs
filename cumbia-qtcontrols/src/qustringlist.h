@@ -24,7 +24,7 @@ public:
     QuStringList();
     QuStringList(const std::vector<std::string> &stdvs);
     QuStringList(const CuData &da, const char *key);
-    QuStringList(const CuData &da, CuDType::Key key);
+    QuStringList(const CuData &da, TTT::Key key);
     QuStringList(const CuVariant &va);
 };
 

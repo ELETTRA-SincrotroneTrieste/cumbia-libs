@@ -370,8 +370,9 @@ void TaskMenuExtension::setupSourceTargetDialog(QWidget *cb_widget)
         QDesignerFormWindowInterface *formWindow = 0;
         formWindow = QDesignerFormWindowInterface::findFormWindow(d_widget);
 
-        if(wins->isMultiSource())
+        if(wins->isMultiSource()) {
             formWindow->cursor()->setProperty("sources", wins->sources());
+        }
         else
             formWindow->cursor()->setProperty("source", wins->source());
 
@@ -445,7 +446,9 @@ void TaskMenuExtension::editConnection()
             QDesignerFormWindowInterface *formWindow = 0;
             formWindow = QDesignerFormWindowInterface::findFormWindow(d_widget);
             if(editSourceDialog->isMultiSource()) {
+                pretty_pri("multi source. sources `%s`", qstoc(editSourceDialog->sources().join(", ")));
                 formWindow->cursor()->setProperty("sources", editSourceDialog->sources());
+                pretty_pri("multi source set source?? `%s`", qstoc(formWindow->cursor()->selectedWidget(0)->objectName()));
             }
             else {
                 formWindow->cursor()->setProperty("source", editSourceDialog->source());

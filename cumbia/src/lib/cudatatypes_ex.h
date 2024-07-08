@@ -7,7 +7,7 @@
 
 /*! \brief extended data types
  *
- * The XKeys enum can hold up to XKeysMax - CuDType::MaxBaseDataKey values
+ * The XKeys enum can hold up to XKeysMax - TTT::MaxBaseDataKey values
  * XKeysMax is 128 if DATA2CHUNK is defined to be 32 in cudata.h
  */
 class CuXDType : public CuDType
@@ -19,7 +19,7 @@ public:
                  ///
                  /// the following one defines the size of the data array
                  /// reserved for fast access to data
-                 ArrayDataEnd = CuDType::MaxDataKey + 1, /// < reserved 64
+                 ArrayDataEnd = TTT::MaxDataKey + 1, /// < reserved 64
                  ///
 
                  ///
@@ -67,7 +67,7 @@ public:
 
     virtual std::string keyName(int k) const {
 
-        if(k <= CuDType::MaxDataKey)
+        if(k <= TTT::MaxDataKey)
             return CuDTypeUtils::keyName(k);
         else {
             switch(k){

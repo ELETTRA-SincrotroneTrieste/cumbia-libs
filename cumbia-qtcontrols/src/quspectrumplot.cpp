@@ -15,6 +15,7 @@
 #include "qutimescaledraw.h"
 #include <QImage>
 #include <cucontrolsutils.h>
+#include <quapplication.h>
 #include <quplotcurve.h>
 #include <qwt_date_scale_engine.h>
 
@@ -60,6 +61,26 @@ QuSpectrumPlot::QuSpectrumPlot(QWidget *w, CumbiaPool *cumbia_pool, const CuCont
     d->plot_common = new QuPlotCommon(cumbia_pool, fpool);
     m_init();
 }
+
+
+/*!
+ * \brief single parent-widget constructor. *QuApplication* properly initialized with
+ *        cumbia engine objects is compulsory.
+ *
+ * \param parent widget
+ * \par Important note: cumbia engine references are obtained from the QuApplication instance.
+ *      For best performance, static cast of QCoreApplication::instance() to QuApplication is
+ *      used.
+ *
+ * \since cumbia 2.1
+ */
+QuSpectrumPlot::QuSpectrumPlot(QWidget *parent) : QuPlotBase(parent) {
+    d = new QuSpectrumPlotPrivate;
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    d->plot_common = new QuPlotCommon(a->cumbiaPool(), *a->fpool());
+    m_init();
+}
+
 
 QuSpectrumPlot::~QuSpectrumPlot()
 {

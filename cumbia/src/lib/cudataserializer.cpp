@@ -29,19 +29,19 @@ static uint8_t be = aint.c[0];
 */
 
 char *CuDataSerializer::serialize(const CuData &da) const {
-    printf("serializing %s data type %s\n", datos(da), da[CuDType::Value].dataTypeStr(da[CuDType::Value].getType()).c_str());  // da["value"], da["value"]
+    printf("serializing %s data type %s\n", datos(da), da[TTT::Value].dataTypeStr(da[TTT::Value].getType()).c_str());  // da["value"], da["value"]
     char *buf = nullptr;
     struct repr re { 0 };
     re.version = VERSION;
     re.stat = be;
-    strncpy(re.src, da.c_str(CuDType::Src), 127);  // da.s("src")
-    if(da.B(CuDType::Err)) re.stat |= 0x1;  // da.B("err")
-    if(da.containsKey(CuDType::Event)) re.stat |= 0x2;  // da.containsKey("E")
-    std::string msg = da.containsKey(CuDType::Message) ? da.c_str(CuDType::Message) : "";
-    double ts = da[CuDType::Time_us].toDouble();  // da["timestamp_us"]
+    strncpy(re.src, da.c_str(TTT::Src), 127);  // da.s("src")
+    if(da.B(TTT::Err)) re.stat |= 0x1;  // da.B("err")
+    if(da.containsKey(TTT::Event)) re.stat |= 0x2;  // da.containsKey("E")
+    std::string msg = da.containsKey(TTT::Message) ? da.c_str(TTT::Message) : "";
+    double ts = da[TTT::Time_us].toDouble();  // da["timestamp_us"]
     memcpy(&re.timestamp, &ts, sizeof(uint64_t));
-    if(da.containsKey(CuDType::Value)) {  // da.containsKey("value")
-        const CuVariant& v = da[CuDType::Value];  // da["value"]
+    if(da.containsKey(TTT::Value)) {  // da.containsKey("value")
+        const CuVariant& v = da[TTT::Value];  // da["value"]
         re.type = static_cast<uint8_t>(v.getType());
         re.format = static_cast<uint8_t>(v.getFormat());
         switch(re.type) {
@@ -211,18 +211,18 @@ uint32_t CuDataSerializer::msg_len(const char *data) const {
 CuData CuDataSerializer::deserialize(const char *data, size_t len) const {
     CuData d;
     if(len < sizeof(uint32_t) + sizeof(uint8_t)) {
-        d.set(CuDType::Err, true).set(CuDType::Message, CuVariant("CuDataSerializer::deserialize length of data " + std::to_string(len) + " is too short. serializer version: " + std::to_string(VERSION)));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize length of data ")
-        perr("%s", d.s(CuDType::Message).c_str());  // d.s("msg")
+        d.set(TTT::Err, true).set(TTT::Message, CuVariant("CuDataSerializer::deserialize length of data " + std::to_string(len) + " is too short. serializer version: " + std::to_string(VERSION)));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize length of data ")
+        perr("%s", d.s(TTT::Message).c_str());  // d.s("msg")
     }
     else if(version(data) == VERSION) {
         uint32_t siz = this->size(data);
         if(siz >= sizeof(struct repr)) {
             struct repr *re = (struct repr *) data;
-            d[CuDType::Src] = CuVariant(re->src);  // d["src"]
-            d[CuDType::DataType] = re->type;  // d["dt"]
-            d[CuDType::DataFormat] = re->format;  // d["df"]
-            if(re->stat & 0x1) d[CuDType::Err] = true;  // d["err"]
-            re->stat & 0x2 ? d["E"] = "event" : d[CuDType::Mode] = "P";  // d["mode"]
+            d[TTT::Src] = CuVariant(re->src);  // d["src"]
+            d[TTT::DataType] = re->type;  // d["dt"]
+            d[TTT::DataFormat] = re->format;  // d["df"]
+            if(re->stat & 0x1) d[TTT::Err] = true;  // d["err"]
+            re->stat & 0x2 ? d["E"] = "event" : d[TTT::Mode] = "P";  // d["mode"]
             double ts;
             memcpy(&ts, &re->timestamp, sizeof(re->timestamp));
             d["timestamp_us"] = ts; // timestamp is seconds.microseconds
@@ -234,76 +234,76 @@ CuData CuDataSerializer::deserialize(const char *data, size_t len) const {
                 CuVariant::DataFormat f = static_cast<CuVariant::DataFormat>(re->format);
                 switch(t) {
                 case CuVariant::Double:
-                    d[CuDType::Value] = deserialize_data_t<double>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_data_t<double>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 case CuVariant::LongDouble:
-                    d[CuDType::Value] = deserialize_data_t<long double>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_data_t<long double>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 case CuVariant::Float:
-                    d[CuDType::Value] = deserialize_data_t<float>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_data_t<float>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 case CuVariant::Short:
-                    d[CuDType::Value] = deserialize_data_t<short>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_data_t<short>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 case CuVariant::UShort:
-                    d[CuDType::Value] = deserialize_data_t<unsigned short>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_data_t<unsigned short>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 case CuVariant::Int:
-                    d[CuDType::Value] = deserialize_data_t<int>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_data_t<int>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 case CuVariant::UInt:
-                    d[CuDType::Value] = deserialize_data_t<unsigned int>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_data_t<unsigned int>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 case CuVariant::LongInt:
-                    d[CuDType::Value] = deserialize_data_t<long int>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_data_t<long int>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 case CuVariant::LongUInt:
-                    d[CuDType::Value] = deserialize_data_t<unsigned long>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_data_t<unsigned long>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 case CuVariant::LongLongInt:
-                    d[CuDType::Value] = deserialize_data_t<long long int>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_data_t<long long int>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 case CuVariant::LongLongUInt:
-                    d[CuDType::Value] = deserialize_data_t<unsigned long long>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_data_t<unsigned long long>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 case CuVariant::Char:
-                    d[CuDType::Value] = deserialize_data_t<char>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_data_t<char>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 case CuVariant::UChar:
-                    d[CuDType::Value] = deserialize_data_t<unsigned char>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_data_t<unsigned char>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 case CuVariant::Boolean:
-                    d[CuDType::Value] = deserialize_data_t<unsigned char>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_data_t<unsigned char>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 case CuVariant::String:
-                    d[CuDType::Value] = deserialize_string(data_ptr(data), *p_dsiz, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_string(data_ptr(data), *p_dsiz, f, *p_rows);  // d["value"]
                     break;
                 case CuVariant::VoidPtr:
-                    d[CuDType::Value] = deserialize_data_t<void *>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
+                    d[TTT::Value] = deserialize_data_t<void *>(data_ptr(data), *p_dsiz, t, f, *p_rows);  // d["value"]
                     break;
                 default:
-                    d.set(CuDType::Err, true).set(CuDType::Message, CuVariant(std::string("CuDataSerializer::deserialize unsupported data type " + std::to_string(re->type))));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize unsupported data type " + std::to_string(re->type)
-                    perr("%s", d.s(CuDType::Message).c_str());  // d.s("msg")
+                    d.set(TTT::Err, true).set(TTT::Message, CuVariant(std::string("CuDataSerializer::deserialize unsupported data type " + std::to_string(re->type))));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize unsupported data type " + std::to_string(re->type)
+                    perr("%s", d.s(TTT::Message).c_str());  // d.s("msg")
                     break;
                 }
             }
             else if(*p_dsiz > 0) {
-                d.set(CuDType::Err, true).set(CuDType::Message, CuVariant(std::string("CuDataSerializer::deserialize: buffer size ") + std::to_string(siz) + " < " + std::to_string(sizeof(struct repr)) + " (metadata size) + " + std::to_string(*p_dsiz) + " (expected bytes of data)"));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize: buffer size ")
-                perr("%s", d.s(CuDType::Message).c_str());
+                d.set(TTT::Err, true).set(TTT::Message, CuVariant(std::string("CuDataSerializer::deserialize: buffer size ") + std::to_string(siz) + " < " + std::to_string(sizeof(struct repr)) + " (metadata size) + " + std::to_string(*p_dsiz) + " (expected bytes of data)"));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize: buffer size ")
+                perr("%s", d.s(TTT::Message).c_str());
             }
 
             if(msg_ptr(data) != nullptr) {
-                d[CuDType::Message] = CuVariant(message(data));
+                d[TTT::Message] = CuVariant(message(data));
             }
         }
         else {
-            d.set(CuDType::Err, true).set(CuDType::Message, CuVariant(std::string("CuDataSerializer::deserialize: received bytes " + std::to_string(siz) + " < medatadata size " + std::to_string(sizeof(struct repr)) )));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize: received bytes " + std::to_string(siz)
-            perr("%s", d.s(CuDType::Message).c_str());  // d.s("msg")
+            d.set(TTT::Err, true).set(TTT::Message, CuVariant(std::string("CuDataSerializer::deserialize: received bytes " + std::to_string(siz) + " < medatadata size " + std::to_string(sizeof(struct repr)) )));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize: received bytes " + std::to_string(siz)
+            perr("%s", d.s(TTT::Message).c_str());  // d.s("msg")
         }
     } // version mismatch
     else {
-        d.set(CuDType::Err, true).set(CuDType::Message, CuVariant(std::string("CuDataSerializer::deserialize version mismatch: ") + std::to_string(version(data)) + " expected " + std::to_string(VERSION)));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize version mismatch: ")
-        perr("%s", d.s(CuDType::Message).c_str());  // d.s("msg")
+        d.set(TTT::Err, true).set(TTT::Message, CuVariant(std::string("CuDataSerializer::deserialize version mismatch: ") + std::to_string(version(data)) + " expected " + std::to_string(VERSION)));  // set("err", true), set("msg", std::string("CuDataSerializer::deserialize version mismatch: ")
+        perr("%s", d.s(TTT::Message).c_str());  // d.s("msg")
     }
 
     return d;

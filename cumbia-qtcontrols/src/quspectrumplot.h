@@ -41,17 +41,15 @@ class QuSpectrumPlot : public QuPlotBase, public CuDataListener, public CuContex
 
 public:
     QuSpectrumPlot(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
-
     QuSpectrumPlot(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    QuSpectrumPlot(QWidget *parent);
 
     virtual ~QuSpectrumPlot();
 
     QString source() const;
-
     QStringList sources() const;
 
     int period() const;
-
     CuContext *getContext() const;
 
 public slots:
@@ -61,15 +59,11 @@ public slots:
     void ctxSwap(CumbiaPool *cp, const CuControlsFactoryPool &fp);
 
     void addSource(const QString &s);
-
     void unsetSource(const QString &s);
-
     void unsetSources();
 
     void setOptions(const CuData &options);
-
     void setPeriod(int p);
-
     void requestLinkStats();
 
 signals:

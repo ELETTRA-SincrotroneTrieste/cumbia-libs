@@ -153,7 +153,7 @@ bool CuHttpCliIdMan::m_get_id_and_ttl() {
     CuData out;
     bool ok = w.json_simple_decode(d->bufs[0], out);
     if(!ok)
-        d->error = out.s(CuDType::Message).c_str();  // out.s("msg")
+        d->error = out.s(TTT::Message).c_str();  // out.s("msg")
     else {
         // [{"exp":1638978149,"id":35,"ttl":10}]
         out["id"].to<unsigned long long>(d->id);

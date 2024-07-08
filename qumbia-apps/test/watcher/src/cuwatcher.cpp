@@ -175,23 +175,23 @@ void Watcher::displayInternalVariables()
 
 void Watcher::updateShortSetPoint(const CuData &d)
 {
-    ui.l1Set->setDisabled(d[CuDType::Err].toBool());  // d["err"]
-    if(ui.l1Set->isEnabled() && d.containsKey(CuDType::WriteValue))  // d.containsKey("w_value")
-        ui.l1Set->setText(d[CuDType::WriteValue].toString().c_str());  // d["w_value"]
+    ui.l1Set->setDisabled(d[TTT::Err].toBool());  // d["err"]
+    if(ui.l1Set->isEnabled() && d.containsKey(TTT::WriteValue))  // d.containsKey("w_value")
+        ui.l1Set->setText(d[TTT::WriteValue].toString().c_str());  // d["w_value"]
     else
         ui.l1Set->setText("####");
-    ui.l1Set->setToolTip(d[CuDType::Message].toString().c_str());  // d["msg"]
+    ui.l1Set->setToolTip(d[TTT::Message].toString().c_str());  // d["msg"]
 }
 
 void Watcher::dialConfigured(const CuData &cd)
 {
-    if(cd.containsKey(CuDType::Min) && cd.containsKey(CuDType::Max))  // cd.containsKey("min"), cd.containsKey("max")
+    if(cd.containsKey(TTT::Min) && cd.containsKey(TTT::Max))  // cd.containsKey("min"), cd.containsKey("max")
     {
         double m, M, v = 0.0;
-        cd[CuDType::Min].to<double>(m);  // cd["min"]
-        cd[CuDType::Max].to<double>(M);  // cd["max"]
-        if(cd.containsKey(CuDType::WriteValue))  // cd.containsKey("w_value")
-            cd[CuDType::WriteValue].to<double>(v);  // cd["w_value"]
+        cd[TTT::Min].to<double>(m);  // cd["min"]
+        cd[TTT::Max].to<double>(M);  // cd["max"]
+        if(cd.containsKey(TTT::WriteValue))  // cd.containsKey("w_value")
+            cd[TTT::WriteValue].to<double>(v);  // cd["w_value"]
         ui.dial->setMinimum(m);
         ui.dial->setMaximum(M);
      //   ui.dial->setValue(v);

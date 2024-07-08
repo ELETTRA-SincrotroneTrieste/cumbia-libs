@@ -147,8 +147,8 @@ void QmlWriterBackend::m_configure(const CuData& da)
     printf("QmlWriterBackend.m_configure: da: %s\n", da.toString().c_str());
     // unit, label, description
     unit = QString::fromStdString(da["display_unit"].toString());
-    label = QString::fromStdString(da[CuDType::Label].toString());  // da["label"]
-    description = QString::fromStdString(da[CuDType::Description].toString());  // da["description"]
+    label = QString::fromStdString(da[TTT::Label].toString());  // da["label"]
+    description = QString::fromStdString(da[TTT::Description].toString());  // da["description"]
     if(unit != d->unit) {
         d->unit = unit;
         emit unitChanged();
@@ -164,14 +164,14 @@ void QmlWriterBackend::m_configure(const CuData& da)
 
     // min, max
     try {
-        if(da.containsKey(CuDType::Min))  // da.containsKey("min")
-            v = QVariant(strtod(da[CuDType::Min].toString().c_str(), NULL));  // da["min"]
+        if(da.containsKey(TTT::Min))  // da.containsKey("min")
+            v = QVariant(strtod(da[TTT::Min].toString().c_str(), NULL));  // da["min"]
         if(d->min != v) {
             d->min = v;
             emit minChanged();
         }
-        if(da.containsKey(CuDType::Max))  // da.containsKey("max")
-            v = QVariant(strtod(da[CuDType::Max].toString().c_str(), NULL));  // da["max"]
+        if(da.containsKey(TTT::Max))  // da.containsKey("max")
+            v = QVariant(strtod(da[TTT::Max].toString().c_str(), NULL));  // da["max"]
         if(d->max != v) {
             d->max = v;
             emit maxChanged();
@@ -183,8 +183,8 @@ void QmlWriterBackend::m_configure(const CuData& da)
     }
     // initialise the object with the "write" value (also called "set point"), if available:
     //
-    if(d->ok && da.containsKey(CuDType::WriteValue)) {  // da.containsKey("w_value")
-        CuVariant var = da[CuDType::WriteValue];  // da["w_value"]
+    if(d->ok && da.containsKey(TTT::WriteValue)) {  // da.containsKey("w_value")
+        CuVariant var = da[TTT::WriteValue];  // da["w_value"]
         if(var.getFormat() == CuVariant::Scalar) {
             if(var.isFloatingPoint() || var.isInteger()) {
                 double dval;
@@ -208,7 +208,7 @@ void QmlWriterBackend::m_configure(const CuData& da)
 
 void QmlWriterBackend::onUpdate(const CuData &da)
 {
-    bool ok = !da[CuDType::Err].toBool();  // da["err"]
+    bool ok = !da[TTT::Err].toBool();  // da["err"]
     if(d->ok != ok) {
         d->ok = ok;
         emit okChanged();
@@ -216,20 +216,20 @@ void QmlWriterBackend::onUpdate(const CuData &da)
 
     if(!d->ok) {
         perr("QmlWriterBackend [%s]: error %s target: \"%s\" format %s (writable: %d)", qstoc(objectName()),
-             da[CuDType::Src].toString().c_str(), da[CuDType::Message].toString().c_str(),  // da["src"], da["msg"]
-                da[CuDType::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
+             da[TTT::Src].toString().c_str(), da[TTT::Message].toString().c_str(),  // da["src"], da["msg"]
+                da[TTT::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
 
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) /* pick from the CumbiaPool */
-            cumbia = d->context->cumbiaPool()->getBySrc(da[CuDType::Src].toString());  // da["src"]
+            cumbia = d->context->cumbiaPool()->getBySrc(da[TTT::Src].toString());  // da["src"]
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log))))
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::CategoryWrite, true);
-            log->write(QString("QmlWriterBackend [" + objectName() + "]").toStdString(), da[CuDType::Message].toString(), CuLog::LevelError, CuLog::CategoryWrite);  // da["msg"]
+            log->write(QString("QmlWriterBackend [" + objectName() + "]").toStdString(), da[TTT::Message].toString(), CuLog::LevelError, CuLog::CategoryWrite);  // da["msg"]
         }
     }
-    else if(d->auto_configure && da[CuDType::Type].toString() == "property") {  // da["type"]
+    else if(d->auto_configure && da[TTT::Type].toString() == "property") {  // da["type"]
         //
         // --------------------------------------------------------------------------------------------
         // You may want to check data format and write type and issue a warning or avoid configuration

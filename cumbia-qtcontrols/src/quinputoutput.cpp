@@ -263,7 +263,7 @@ void QuInputOutput::setIndexOffset(int o) {
 
 /// @private
 void QuInputOutput::onNewData(const CuData &da) {
-    if(!da[CuDType::Err].toBool() && da[CuDType::Type].toString() == "property")  // da["err"], da["type"]
+    if(!da[TTT::Err].toBool() && da[TTT::Type].toString() == "property")  // da["err"], da["type"]
     {
         m_configure(da);
         disconnect(sender(), SIGNAL(newData(const CuData&)));
@@ -272,10 +272,10 @@ void QuInputOutput::onNewData(const CuData &da) {
 
 /// @private
 void QuInputOutput::m_configure(const CuData &da) {
-    std::string target = da[CuDType::Src].toString();  // da["src"]
-    if(da[CuDType::DataFormatStr].toString() == "scalar" && da["writable"].toInt() > 0)  // da["dfs"]
+    std::string target = da[TTT::Src].toString();  // da["src"]
+    if(da[TTT::DataFormatStr].toString() == "scalar" && da["writable"].toInt() > 0)  // da["dfs"]
     {
-        CuVariant v = da[CuDType::Value], wv = da[CuDType::WriteValue];  // da["value"], da["w_value"]
+        CuVariant v = da[TTT::Value], wv = da[TTT::WriteValue];  // da["value"], da["w_value"]
         if(d->w_type == None && da["values"].isValid())
             setWriterType(ComboBox);
         else if(d->w_type == None && !v.isNull() && (v.isFloatingPoint()  || v.isInteger()) )
@@ -301,9 +301,9 @@ void QuInputOutput::m_configure(const CuData &da) {
             QString desc;
             // get minimum and maximum from properties, if possible
             CuVariant m, M;
-            m = da[CuDType::Min];  // da["min"]
-            M = da[CuDType::Max];  // da["max"]
-            std::string print_format = da[CuDType::NumberFormat].toString();  // da["format"]
+            m = da[TTT::Min];  // da["min"]
+            M = da[TTT::Max];  // da["max"]
+            std::string print_format = da[TTT::NumberFormat].toString();  // da["format"]
             double min, max;
             bool ok;
             ok = m.to<double>(min);
@@ -339,11 +339,11 @@ void QuInputOutput::m_configure(const CuData &da) {
                       "using format %s to configure integer and decimal digits", target.c_str(), qstoc(objectName()), print_format.c_str());
             /* can set current values instead */
             double val;
-            bool can_be_double = da[CuDType::WriteValue].to<double>(val);  // da["w_value"]
+            bool can_be_double = da[TTT::WriteValue].to<double>(val);  // da["w_value"]
             if (in && can_be_double)
                 in->setProperty("value", val);
-            if(!da[CuDType::Description].isNull()) {  // da["description"]
-                desc.prepend(QString::fromStdString(da[CuDType::Description].toString()));  // da["description"]
+            if(!da[TTT::Description].isNull()) {  // da["description"]
+                desc.prepend(QString::fromStdString(da[TTT::Description].toString()));  // da["description"]
             }
             if(in)
                 in->setWhatsThis(desc);
@@ -351,7 +351,7 @@ void QuInputOutput::m_configure(const CuData &da) {
     }
     else
         perr("QuInputOutput [%s]: invalid data format \"%s\" or read only source \"%s\" (writable: %d)", qstoc(objectName()),
-            da[CuDType::DataFormatStr].toString().c_str(), target.c_str(), da["writable"].toInt());  // da["dfs"]
+            da[TTT::DataFormatStr].toString().c_str(), target.c_str(), da["writable"].toInt());  // da["dfs"]
 
     if(inputWidget())
         inputWidget()->setObjectName("inputWidget");

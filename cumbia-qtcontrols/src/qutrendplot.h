@@ -49,19 +49,16 @@ class QuTrendPlot : public QuPlotBase, public CuDataListener, public CuContextI
 
 public:
     QuTrendPlot(QWidget *w, Cumbia *cumbia, const CuControlsReaderFactoryI &r_fac);
-
     QuTrendPlot(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    QuTrendPlot(QWidget *parent);
 
     virtual ~QuTrendPlot();
 
     QString source() const;
-
     QStringList sources() const;
 
     bool timeScaleDrawEnabled();
-
     bool showDateOnTimeAxis() const;
-
     int period() const;
 
     CuContext *getContext() const;
@@ -103,7 +100,6 @@ public:
 
     // QuWidgetInterface interface
     void update(const CuData &d);
-
 };
 
 #endif // QUTLABEL_H

@@ -57,24 +57,24 @@ CuTDbPropertyReader::~CuTDbPropertyReader()
  * \subsection Device properties
  *
  * To get a device property you must put into the CuData bundle the following key/value pairs:
- * \li CuDType::Device --> "tango/device/name"
- * \li CuDType::name --> "property_name"
+ * \li TTT::Device --> "tango/device/name"
+ * \li TTT::name --> "property_name"
  *
  * \subsection Attribute properties
  *
  *  The three following key/values must be set:
- * \li CuDType::Device  --> "tango/device/name"
- * \li CuDType::Attribute --> "attribute_name"
- * \li CuDType::name --> "property_name"
+ * \li TTT::Device  --> "tango/device/name"
+ * \li TTT::Attribute --> "attribute_name"
+ * \li TTT::name --> "property_name"
  *
- * \note If no CuDType::name is provided, all the device attribute properties and their values are retrieved.
+ * \note If no TTT::name is provided, all the device attribute properties and their values are retrieved.
  *
  * \subsection Class properties.
  *
  * CuData must be configured as follows:
  *
- * \li CuDType::Class --> "class_name"
- * \li CuDType::name --> "property_name"
+ * \li TTT::Class --> "class_name"
+ * \li TTT::name --> "property_name"
  *
  * \subsection Tutorial
  *
@@ -87,17 +87,17 @@ CuTDbPropertyReader::~CuTDbPropertyReader()
  * \code
  * std::list<CuData> in_data;
  * // device property
- * CuData devpd(CuDType::Device, "test/device/1");
- * devpd[CuDType::name] = CuDType::Description;
+ * CuData devpd(TTT::Device, "test/device/1");
+ * devpd[TTT::name] = TTT::Description;
  * in_data.push_back(devpd);
  * // attribute property values from the "double_scalar" attribute
- * CuData apd(CuDType::Device, "test/device/2");
- * apd[CuDType::Attribute] = "double_scalar";
- * apd[CuDType::name] = "values";
+ * CuData apd(TTT::Device, "test/device/2");
+ * apd[TTT::Attribute] = "double_scalar";
+ * apd[TTT::name] = "values";
  * in_data.push_back(apd);
  * // class property
- * CuData cld(CuDType::Class, "TangoTest");
- * cld[CuDType::name] = "ProjectTitle";
+ * CuData cld(TTT::Class, "TangoTest");
+ * cld[TTT::name] = "ProjectTitle";
  * in_data.push_back(cld);
  *
  * // m_ct is a reference to a CumbiaTango object properly instantiated before.

@@ -48,7 +48,7 @@ void CuWriteActivity::event(CuActivityEvent *)
 bool CuWriteActivity::matches(const CuData &token) const
 {
     const CuData& mytok = getToken();
-    return token[CuDType::Src] == mytok[CuDType::Src] && mytok[CuDType::Activity] == token[CuDType::Activity];  // mytok["activity"], token["activity"]
+    return token[TTT::Src] == mytok[TTT::Src] && mytok[TTT::Activity] == token[TTT::Activity];  // mytok["activity"], token["activity"]
 }
 
 void CuWriteActivity::init()
@@ -59,7 +59,7 @@ void CuWriteActivity::init()
     /* get a TDevice, increasing refcnt */
     if(thread()->type() == CuTThread::CuTThreadType) // upgrade to CuTThread / lock free CuTThreadDevices
         d->devfa = static_cast<CuTThread *>(thread())->device_factory();
-    d->tdev = d->devfa->getDevice(tk[CuDType::Device].toString(), threadToken());
+    d->tdev = d->devfa->getDevice(tk[TTT::Device].toString(), threadToken());
 }
 
 void CuWriteActivity::execute()
@@ -75,27 +75,27 @@ void CuWriteActivity::execute()
         CuTangoWorld tangoworld;
         bool success = !d->point_info.isEmpty();
         tangoworld.fillThreadInfo(at, this); /* put thread and activity addresses as info */
-        if(dev && at[CuDType::CmdName].toBool()) {  // at["cmd"]
+        if(dev && at[TTT::CmdName].toBool()) {  // at["cmd"]
             if(d->point_info.isEmpty()) {
-                success = tangoworld.get_command_info(d->tdev->getDevice(), at[CuDType::Point].toString(), d->point_info);
+                success = tangoworld.get_command_info(d->tdev->getDevice(), at[TTT::Point].toString(), d->point_info);
             }
             if(success)
             {
                 Tango::DeviceData din = tangoworld.toDeviceData(at["write_value"], d->point_info);
-                bool has_argout = d->point_info[CuDType::OutType].toLongInt() != Tango::DEV_VOID;  // point_info["out_type"]
-                success = tangoworld.cmd_inout(dev, at[CuDType::Point].toString(), din, has_argout, at);
+                bool has_argout = d->point_info[TTT::OutType].toLongInt() != Tango::DEV_VOID;  // point_info["out_type"]
+                success = tangoworld.cmd_inout(dev, at[TTT::Point].toString(), din, has_argout, at);
             }
         }
-        else if(dev && !at[CuDType::CmdName].toBool()) { /* attribute */  // at["cmd"]
+        else if(dev && !at[TTT::CmdName].toBool()) { /* attribute */  // at["cmd"]
             bool skip_read_attribute = true;
             if(d->point_info.isEmpty())
-                success = tangoworld.get_att_config(d->tdev->getDevice(), at[CuDType::Point].toString(), d->point_info, skip_read_attribute);
+                success = tangoworld.get_att_config(d->tdev->getDevice(), at[TTT::Point].toString(), d->point_info, skip_read_attribute);
             if(success)
-                success = tangoworld.write_att(dev, at[CuDType::Point].toString(), at["write_value"], d->point_info, at);
+                success = tangoworld.write_att(dev, at[TTT::Point].toString(), at["write_value"], d->point_info, at);
         }
         d->msg = tangoworld.getLastMessage();
         d->err = tangoworld.error();
-        d->devfa->removeRef(at[CuDType::Device].toString(), threadToken());
+        d->devfa->removeRef(at[TTT::Device].toString(), threadToken());
     }
     else {
         printf("\e[1;31mCuWriteActivity dev is null getting message from d->tdev\e[0m\n");
@@ -103,9 +103,9 @@ void CuWriteActivity::execute()
         d->err = true;
     }
     // is_result flag is checked within the listener's onUpdate
-    at[CuDType::Err] = d->err;
-    at[CuDType::Message] = d->msg;
-    at[CuDType::Mode] = "WRITE";  // at["mode"]
+    at[TTT::Err] = d->err;
+    at[TTT::Message] = d->msg;
+    at[TTT::Mode] = "WRITE";  // at["mode"]
     at["is_result"] = true;
     at.putTimestamp();
     publishResult(at);

@@ -448,30 +448,30 @@ protected slots:
         QString txt;
         QColor background, border;
         // check the "err" value on the CuData for errors
-        d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
+        d->read_ok = !da[TTT::Err].toBool();  // da["err"]
         setEnabled(d->read_ok); // disable widget if there's a read error
 
         // update link statistics: increment operation counter on the context's link statistics
         d->context->getLinkStats()->addOperation();
         if(!d->read_ok) // add the error on the context's link statistics
-            d->context->getLinkStats()->addError(da[CuDType::Message].toString());  // da["msg"]
+            d->context->getLinkStats()->addError(da[TTT::Message].toString());  // da["msg"]
 
         // cumbia-tango implementation provides quality_color and success_color codes.
         // we can use them to decorate the label accordingly.
-        if(da.containsKey(CuDType::QualityColor))  // da.containsKey("qc")
-            background = d->palette[QString::fromStdString(da[CuDType::QualityColor].toString())];  // da["qc"]
+        if(da.containsKey(TTT::QualityColor))  // da.containsKey("qc")
+            background = d->palette[QString::fromStdString(da[TTT::QualityColor].toString())];  // da["qc"]
         if(da.containsKey("success_color"))
             border = d->palette[QString::fromStdString(da["success_color"].toString())];
 
         // as we used to do with QTango widgets, set a tooltip with the reader's message.
-        setToolTip(da[CuDType::Message].toString().c_str());  // da["msg"]
+        setToolTip(da[TTT::Message].toString().c_str());  // da["msg"]
 
         // display '#'s a la QTango in case of error
-        if(da[CuDType::Err].toBool() )  // da["err"]
+        if(da[TTT::Err].toBool() )  // da["err"]
             setText("####");
         else if(da.containsKey("value")) // read ok
         {
-            CuVariant val = da[CuDType::Value];  // da["value"]
+            CuVariant val = da[TTT::Value];  // da["value"]
             // if the type of data is boolean, QuLabel, as QTango TLabel, can be configured to display
             // a special color for the true and false values.
             if(val.getType() == CuVariant::Boolean)
@@ -482,15 +482,15 @@ protected slots:
             else // convert everything to string.
             {
                 // CuVariant toString returns a std::string
-                txt = QString::fromStdString(da[CuDType::Value].toString());  // da["value"]
+                txt = QString::fromStdString(da[TTT::Value].toString());  // da["value"]
             }
             setText(txt);
         }
 
         // cumbia-tango provides a convenient property for the state color.
-        if(da.containsKey(CuDType::StateColor))  // da.containsKey("sc")
+        if(da.containsKey(TTT::StateColor))  // da.containsKey("sc")
         {
-            CuVariant v = da[CuDType::StateColor];  // da["sc"]
+            CuVariant v = da[TTT::StateColor];  // da["sc"]
             QuPalette p; // QuPalette associates color names to QColor
             background = p[QString::fromStdString(v.toString())]; // use color for background
         }
@@ -705,29 +705,29 @@ private:
 
 void QuApplyNumeric::onUpdate(const CuData &da)
 {
-    if(da[CuDType::Err].toBool())  // da["err"]
+    if(da[TTT::Err].toBool())  // da["err"]
     {
 
         Cumbia* cumbia = d->context->cumbia();
         if(!cumbia) // pick from the CumbiaPool
-            cumbia = d->context->cumbiaPool()->getBySrc(da[CuDType::Src].toString());  // da["src"]
+            cumbia = d->context->cumbiaPool()->getBySrc(da[TTT::Src].toString());  // da["src"]
         CuLog *log;
         if(cumbia && (log = static_cast<CuLog *>(cumbia->getServiceProvider()->get(CuServices::Log)) )
         {
             static_cast<QuLogImpl *>(log->getImpl("QuLogImpl"))->showPopupOnMessage(CuLog::Write, true);
-            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da[CuDType::Message].toString(), CuLog::Error, CuLog::Write);  // da["msg"]
+            log->write(QString("QuApplyNumeric [" + objectName() + "]").toStdString(), da[TTT::Message].toString(), CuLog::Error, CuLog::Write);  // da["msg"]
         }
     }
-    else if(d->auto_configure && da[CuDType::Type].toString() == "property")  // da["type"]
+    else if(d->auto_configure && da[TTT::Type].toString() == "property")  // da["type"]
     {
         QString desc = "";
-        if(da[CuDType::DataFormatStr] == "scalar" && da["writable"].toInt() > 0)  // da["dfs"]
+        if(da[TTT::DataFormatStr] == "scalar" && da["writable"].toInt() > 0)  // da["dfs"]
         {
 
             CuVariant m, M;
-            m = da[CuDType::Min];  // da["min"]
-            M = da[CuDType::Max];  // da["max"]
-            std::string print_format = da[CuDType::NumberFormat].toString();  // da["format"]
+            m = da[TTT::Min];  // da["min"]
+            M = da[TTT::Max];  // da["max"]
+            std::string print_format = da[TTT::NumberFormat].toString();  // da["format"]
             double min, max;
             bool ok;
             ok = m.to<double>(min);
@@ -746,20 +746,20 @@ void QuApplyNumeric::onUpdate(const CuData &da)
                 pinfo("QuApplyNumeric: maximum and minimum values not set on the tango attribute \"%s\", object \"%s\": "
                       "not setting format nor maximum/minimum", qstoc(targets()), qstoc(objectName()));
             double val;
-            bool can_be_double = da[CuDType::WriteValue].to<double>(val);  // da["w_value"]
+            bool can_be_double = da[TTT::WriteValue].to<double>(val);  // da["w_value"]
             if (can_be_double)
             {
                 setValue(val);
                 clearModified();
             }
-            if(!da[CuDType::Description].isNull()) {  // da["description"]
-                desc.prepend(QString::fromStdString(da[CuDType::Description].toString()));  // da["description"]
+            if(!da[TTT::Description].isNull()) {  // da["description"]
+                desc.prepend(QString::fromStdString(da[TTT::Description].toString()));  // da["description"]
             }
             setWhatsThis(desc);
         }
         else
             perr("QuApplyNumeric [%s]: invalid data format \"%s\" or read only source (writable: %d)", qstoc(objectName()),
-                 da[CuDType::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
+                 da[TTT::DataFormatStr].toString().c_str(), da["writable"].toInt());  // da["dfs"]
 
     }
 }

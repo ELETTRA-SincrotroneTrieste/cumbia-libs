@@ -28,17 +28,17 @@ void QuEpicsPlotUpdateStrategy::update(const CuData &da, QWidget *widget)
 {
     QColor background, border;
     QuPalette palette;
-    if(da.containsKey(CuDType::QualityColor))  // da.containsKey("qc")
-        background = palette[QString::fromStdString(da[CuDType::QualityColor].toString())];  // da["qc"]
-    if(da.containsKey(CuDType::Color))  // da.containsKey("color")
-        border = palette[QString::fromStdString(da[CuDType::Color].toString())];  // da["color"]
+    if(da.containsKey(TTT::QualityColor))  // da.containsKey("qc")
+        background = palette[QString::fromStdString(da[TTT::QualityColor].toString())];  // da["qc"]
+    if(da.containsKey(TTT::Color))  // da.containsKey("color")
+        border = palette[QString::fromStdString(da[TTT::Color].toString())];  // da["color"]
 
-    bool read_ok = !da[CuDType::Err].toBool();  // da["err"]
+    bool read_ok = !da[TTT::Err].toBool();  // da["err"]
 
 
     printf("\e[0;33m ** UPDATE PLOT %s\e[0m\n", da.toString().c_str());
 
-    if(read_ok && d->auto_configure && da[CuDType::Type].toString() == "ctrl")  // da["type"]
+    if(read_ok && d->auto_configure && da[TTT::Type].toString() == "ctrl")  // da["type"]
     {
         m_configure(da, widget);
     }

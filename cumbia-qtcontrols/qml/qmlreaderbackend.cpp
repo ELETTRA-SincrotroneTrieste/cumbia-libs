@@ -97,14 +97,14 @@ void QmlReaderBackend::m_configure(const CuData &da)
 {
     QVariant v;
     try {
-        if(da.containsKey(CuDType::Min))  // da.containsKey("min")
-            v = QVariant(strtod(da[CuDType::Min].toString().c_str(), NULL));  // da["min"]
+        if(da.containsKey(TTT::Min))  // da.containsKey("min")
+            v = QVariant(strtod(da[TTT::Min].toString().c_str(), NULL));  // da["min"]
         if(d->min != v) {
             d->min = v;
             emit minChanged();
         }
-        if(da.containsKey(CuDType::Max))  // da.containsKey("max")
-            v = QVariant(strtod(da[CuDType::Max].toString().c_str(), NULL));  // da["max"]
+        if(da.containsKey(TTT::Max))  // da.containsKey("max")
+            v = QVariant(strtod(da[TTT::Max].toString().c_str(), NULL));  // da["max"]
         if(d->max != v) {
             d->max = v;
             emit maxChanged();
@@ -137,8 +137,8 @@ void QmlReaderBackend::m_configure(const CuData &da)
         }
 
         QString label;
-        if(da.containsKey(CuDType::Label))  // da.containsKey("label")
-            label = QString::fromStdString(da[CuDType::Label].toString());  // da["label"]
+        if(da.containsKey(TTT::Label))  // da.containsKey("label")
+            label = QString::fromStdString(da[TTT::Label].toString());  // da["label"]
         if(label != d->label) {
             d->label = label;
             emit labelChanged();
@@ -217,25 +217,25 @@ void QmlReaderBackend::onUpdate(const CuData &da)
 
 //    printf("\e[1;32mdata %s\e[0m\n", da.toString().c_str());
 
-    d->read_ok = !da[CuDType::Err].toBool();  // da["err"]
+    d->read_ok = !da[TTT::Err].toBool();  // da["err"]
 
 
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
-        d->context->getLinkStats()->addError(da[CuDType::Message].toString());  // da["msg"]
+        d->context->getLinkStats()->addError(da[TTT::Message].toString());  // da["msg"]
 
-    if(d->read_ok && d->auto_configure && da[CuDType::Type].toString() == "property") {  // da["type"]
+    if(d->read_ok && d->auto_configure && da[TTT::Type].toString() == "property") {  // da["type"]
         m_configure(da);
     }
-    if(d->read_ok && da[CuDType::Value].isValid()) {  // da["value"]
-        m_set_value(da[CuDType::Value]);  // da["value"]
+    if(d->read_ok && da[TTT::Value].isValid()) {  // da["value"]
+        m_set_value(da[TTT::Value]);  // da["value"]
     }
     QString qs, sts;
-    if(d->read_ok && da[CuDType::QualityColor].isValid())  // da["qc"]
-        qs = QString::fromStdString(da[CuDType::QualityColor].toString());  // da["qc"]
-    if(d->read_ok && da[CuDType::StateColor].isValid())  // da["sc"]
-        sts = QString::fromStdString(da[CuDType::StateColor].toString());  // da["sc"]
+    if(d->read_ok && da[TTT::QualityColor].isValid())  // da["qc"]
+        qs = QString::fromStdString(da[TTT::QualityColor].toString());  // da["qc"]
+    if(d->read_ok && da[TTT::StateColor].isValid())  // da["sc"]
+        sts = QString::fromStdString(da[TTT::StateColor].toString());  // da["sc"]
 
     if(!d->read_ok) {
         m_set_value(CuVariant("####"));
