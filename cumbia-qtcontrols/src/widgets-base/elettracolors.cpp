@@ -1,4 +1,3 @@
-#include <QtDebug>
 #include <QLabel>
 #include <QLineEdit>
 #include <QGridLayout>
