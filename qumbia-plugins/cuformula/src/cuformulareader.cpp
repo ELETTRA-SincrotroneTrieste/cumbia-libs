@@ -197,10 +197,10 @@ CuFormulaReader::~CuFormulaReader()
  */
 void CuFormulaReader::setSource(const QString &s)
 {
-    printf("CuFormulaReader.setSource: \e[0;36m%s\e[0m\n", qstoc(s));
     CuFormulaUtils fu;
     const QString& src = fu.replaceWildcards(s, qApp->arguments());
     if(d->source != src) {
+        printf("CuFormulaReader.setSource: \e[0;36m%s (!= %s)\e[0m\n", qstoc(src), qstoc(d->source));
         d->source = src;
         d->values.clear();
         d->qualities.clear();
