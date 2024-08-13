@@ -175,6 +175,8 @@ CuFormulaReader::CuFormulaReader(Cumbia *c, CuDataListener *l,
 CuFormulaReader::~CuFormulaReader()
 {
     pdelete("~CuFormulaReader %p", this);
+    if(findChild<SimpleFormulaEval *>())
+        findChild<SimpleFormulaEval *>()->wait();
     m_disposeWatchers();
     delete d;
 }
@@ -195,6 +197,7 @@ CuFormulaReader::~CuFormulaReader()
  */
 void CuFormulaReader::setSource(const QString &s)
 {
+    printf("CuFormulaReader.setSource: \e[0;36m%s\e[0m\n", qstoc(s));
     CuFormulaUtils fu;
     d->source = fu.replaceWildcards(s, qApp->arguments());
     d->values.clear();

@@ -50,6 +50,5 @@ void SimpleFormulaEval::run()
 void SimpleFormulaEval::publishResult()
 {
     emit onCalcReady(d->result);
-    wait();
     deleteLater();
 }
