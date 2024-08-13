@@ -177,7 +177,8 @@ CuFormulaReader::~CuFormulaReader()
     pdelete("~CuFormulaReader %p", this);
     if(findChild<SimpleFormulaEval *>()) {
         printf("~CuFormulaReader %p: waiting for simple formula eval... ", this);
-        findChild<SimpleFormulaEval *>()->wait();
+        fflush(stdout);
+        // findChild<SimpleFormulaEval *>()->wait();
         printf(" [%p] \e[1;32mwaited\e[0m\n", this);
     }
     m_disposeWatchers();
