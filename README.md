@@ -1,7 +1,7 @@
 # cumbia-libs
 
 ## Introduction
-Cumbia is a new library that offers a carefree approach to multi-threaded application design and implementation.
+Cumbia is a library that offers a carefree approach to multi-threaded application design and implementation.
 Written from scratch, it can be seen as the evolution of the QTango library, because it offers a more flexible
 and object oriented multi-threaded programming style. Less concern about locking techniques and synchronization,
 and well defined design patterns stand for more focus on the work to be performed inside Cumbia Activities and
@@ -12,6 +12,11 @@ In conjunction with the Cumbia-Tango module, this framework serves the developer
 to the Tango control system. The integration is possible both on the client and the server side. An example of a
 TANGO device using Cumbia to do work in background has already been developed, as well as simple Qt graphical
 clients relying on the framework. An Epics module has been added to the cumbia-libs set.
+
+## Release 2.0
+
+CHANGELOG.md contains the detailed list of changes across versions. If you have a 
+cumbia 1.x background, the suggestion is to read the dedicated documentation.
 
 ## Features
 
@@ -28,7 +33,7 @@ The default installation provides some base applications ready to be used with t
 - *cumbia read* a command line reader featuring source names *auto completion* (1)
 - *cumbia monitor* a command line monitor featuring source names *auto completion* (1)
 - *cumbia client* a Qt client to read from and write to sources and targets
-- *cumbia ui make* to build cumbia Qt applications
+- *cumbia ui make* to build cumbia Qt applications (deprecated since 2.1)
 - *cumbia new application* to start writing a project
 
 The *cumbia random* module is a tool to test the behaviour and performance of the upper level modules
@@ -74,10 +79,9 @@ shows the list of the required packages to build all the modules in cumbia-libs:
 
 #### Qt5 or Qt6
 
-Starting from december 2023, a new branch named *qt-6* is intended to port the
-libraries to qt-6.
+Cumbia 2.x build under Qt version 6!
 Apart from the Qt libraries, *qwt* needs to be built with qt-6.
-Then, the pkg config path shall be updated.
+Pkg config path may need to be updated.
 Any reference to other installations of *qt-5* based *cumbia-libs* or *qwt* 
 shall be removed from the PKG_CONFIG_PATH.
 
@@ -673,9 +677,10 @@ qumbiaprojectwizard is an *essential tool* to create a project skeleton that is 
 You will have to build and install the *cuuimake* tool below in order to successfully build a cumbia Qt application
 generated with qumbiaprojectwizard and edited with the Qt designer.
 
-#### 8c. cuuimake: a tool to configure a Qt project with cumbia widgets (parses Qt designer-generated ui files and
+#### 8c. [cumbia < 2.1 ] cuuimake: a tool to configure a Qt project with cumbia widgets (parses Qt designer-generated ui files and
 expands .h and .cpp files in the project to make their constructors compatible with cumbia-qtcontrols classes
-constructors). This is an essential tool.
+constructors). This is an essential tool *prior to cumbia version 2.1*.
+Since 2.1, cuuimake is no more necessary, provided that QuApplication is used.
 
 Go into cuuimake's source directory:
 

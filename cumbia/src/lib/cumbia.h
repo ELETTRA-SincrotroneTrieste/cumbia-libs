@@ -34,10 +34,14 @@ class CuThreadInterface;
  * \subsection github.io
  * <a href="https://elettra-sincrotronetrieste.github.io/cumbia-libs/index.html">cumbia-libs</a> on github.io
  *
+ * \subsection cumbia2
+ * <a href="../../cumbia/html/cumbia_2.0.html>cumbia version 2.0</a>
+ *
  * \subsection tutorials Tutorials
  * |Tutorials                                     | Module               |
  * |-------------------------------------------------------------------|:--------------------------:|
  * |  <a href="../../cumbia/html/tutorial_cuactivity.html">Writing a *cumbia* activity</a> | <a href="../../cumbia/html/index.html">cumbia</a> |
+ * |  <a href="../../cumbia/html/cumbia_2.0.html">version 2.0 (notes and porting)</a> |  |
  * |  <a href="../../cumbia-tango/html/tutorial_activity.html">Writing an activity</a> | <a href="../../cumbia-tango/html/index.html">cumbia-tango</a> |
  * |  <a href="../../cumbia-tango/html/cudata_for_tango.html">CuData for Tango</a> | <a href="../../cumbia-tango/html/index.html">cumbia-tango</a> |
  * |  <a href="../../qumbia-tango-controls/html/tutorial_cumbiatango_widget.html">Writing a Qt widget that integrates with cumbia</a> | <a href="../../qumbia-tango-controls/html/index.html">qumbia-tango-controls</a>  |
