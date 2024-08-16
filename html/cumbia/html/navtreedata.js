@@ -38,6 +38,7 @@ var NAVTREE =
       [ "Services", "index.html#_services", null ],
       [ "Data interchange", "index.html#_data_interchange", null ]
     ] ],
+    [ "cumbia version 2.", "cumbia_2.html", null ],
     [ "Qt and cumbia for WebAssembly", "cumbia_wasm.html", null ],
     [ "Writing a simple activity", "tutorial_cuactivity.html", null ],
     [ "Classes", "annotated.html", [
@@ -69,7 +70,7 @@ var NAVTREEINDEX =
 "classCuDataQuality.html#a9986ba44d1ed670f93fea0e178f42950",
 "classCuThreadService.html#af7e0ebc46e2c96181f3d8bdd7cedfe68",
 "classCuVariant.html#ae2f7ea7413ad190eb2a351a9596c5b92",
-"cutimer_8cpp.html"
+"cuthreadtokengeni_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

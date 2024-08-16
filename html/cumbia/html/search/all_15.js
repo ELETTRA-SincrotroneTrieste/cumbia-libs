@@ -1,13 +1,13 @@
 var searchData=
 [
-  ['wait_0',['wait',['../classCuEventLoopService.html#a910ad480f11e7db17b397b43965099c7',1,'CuEventLoopService::wait()'],['../classCuThread.html#a3f45ff0c104e94e2d45fafd6e9bea60c',1,'CuThread::wait()'],['../classCuThreadInterface.html#a7852cb2231ef629bc93bf8e419fef296',1,'CuThreadInterface::wait()']]],
-  ['wait_20for_20events_20and_20execute_20callbacks_1',['Suspend the background execution of an activity: wait for events and execute callbacks',['../classCuActivity.html#cua_evloop',1,'']]],
-  ['warning_2',['Warning',['../classCuDataQuality.html#a6a78fa28ebb7b9ac9c8450bf836615a7a4465cb33097ca45f202892449120beb0',1,'CuDataQuality']]],
-  ['webassembly_3',['Qt and cumbia for WebAssembly',['../cumbia_wasm.html',1,'']]],
-  ['writable_4',['Writable',['../classCuDType.html#af65c83bb7af4b8045c5867e8eb8f8d2da807b14e868f9c6c4fb359b531012808d',1,'CuDType']]],
-  ['writableattrname_5',['WritableAttrName',['../classCuXDType.html#a67e5a4f14ca507c05437d57c10d4c0f6a99e7865b0739896d8954c1893ee101bc',1,'CuXDType']]],
-  ['write_6',['write',['../classCuLog.html#a9970722b2650a657023087530c563499',1,'CuLog::write(const std::string &amp;origin, const std::string &amp;msg, int l=LevelError, int c=CategoryGeneric)'],['../classCuLog.html#a684a54c7a740b3bfd468b065644b08dd',1,'CuLog::write(const std::string &amp;origin, int l, const char *fmt,...)'],['../classCuLog.html#a62fd0faa4395f1cb2e3b0ef4fd98bef0',1,'CuLog::write(const std::string &amp;origin, int l, int category, const char *fmt,...)'],['../classCuLogImplI.html#a62dafbf6d351a0b44ecdeea44923da34',1,'CuLogImplI::write()'],['../classCuNullLogImpl.html#afb170ee66903fc450e5b1c78ff0bc8f8',1,'CuNullLogImpl::write()'],['../classCuConLogImpl.html#aece9620562fd2ec7e1b39bdddca87b08',1,'CuConLogImpl::write()']]],
-  ['write_20a_20simple_20activity_7',['Write a simple activity',['../classCuActivity.html#write_simple_act',1,'']]],
-  ['writevalue_8',['WriteValue',['../classCuDType.html#af65c83bb7af4b8045c5867e8eb8f8d2da9db208129460d7ca5f56b5e90ab8c0a0',1,'CuDType']]],
-  ['writing_20a_20simple_20activity_9',['Writing a simple activity',['../tutorial_cuactivity.html',1,'']]]
+  ['valid_0',['Valid',['../classCuDataQuality.html#a6a78fa28ebb7b9ac9c8450bf836615a7a556ffdff5a70bd81c59d55a2f0aab868',1,'CuDataQuality']]],
+  ['value_1',['Value',['../classCuDType.html#af65c83bb7af4b8045c5867e8eb8f8d2da045b09ba7bd7a1fa6ec92274167cfc6a',1,'CuDType']]],
+  ['value_2',['value',['../classCuData.html#adfac36fe3d94c5302b086081e31e114d',1,'CuData::value() const'],['../classCuData.html#aa092884877bd0b6f3f4b93c1d331f96c',1,'CuData::value(const std::string &amp;key) const'],['../classCuData.html#a063452c749bf75b5b1c9d25e2589f99b',1,'CuData::value(const TTT::Key &amp;key) const']]],
+  ['vector_3',['Vector',['../classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a06c40110238c7bd77904234f323ddea4',1,'CuVariant']]],
+  ['version_4',['VERSION',['../cudataserializer_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf',1,'cudataserializer.h']]],
+  ['version_5',['version',['../structrepr.html#a49d93eda731268cc9be3c2caf8b40e28',1,'repr::version'],['../structrepr__offsets.html#a469e58df74f638fea69a4e69b5b54d58',1,'repr_offsets::version'],['../classCuDataSerializer.html#a18bd4766f223669a58790de872c795f1',1,'CuDataSerializer::version()']]],
+  ['version_202_6',['cumbia version 2.',['../cumbia_2.html',1,'']]],
+  ['voidptr_7',['VoidPtr',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caae540f48cd6737596cb4874e4324b942',1,'CuVariant']]],
+  ['vtoc_8',['vtoc',['../cumacros_8h.html#a3b4803b8e261926666ee88211c194e17',1,'cumacros.h']]],
+  ['vtoc2_9',['vtoc2',['../cumacros_8h.html#a276e702cb7c675524add2a255142cd5e',1,'cumacros.h']]]
 ];
