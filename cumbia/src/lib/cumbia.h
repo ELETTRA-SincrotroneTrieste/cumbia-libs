@@ -35,7 +35,7 @@ class CuThreadInterface;
  * <a href="https://elettra-sincrotronetrieste.github.io/cumbia-libs/index.html">cumbia-libs</a> on github.io
  *
  * \subsection cumbia2
- * <a href="../../cumbia/html/cumbia_2.0.html>cumbia version 2.0</a>
+ * <a href="../../cumbia/html/cumbia_2.0.html">cumbia version 2.0</a>
  *
  * \subsection tutorials Tutorials
  * |Tutorials                                     | Module               |
