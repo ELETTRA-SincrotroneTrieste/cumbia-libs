@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuVariant.html" title="CuVariant class acts like a union for the cumbia data types." alt="" coords="5,5,91,31"/>
+<area shape="rect" id="Node000000" href="$classCuThreadsEventBridgeListener.html" title="defines a method that must be written by the interface implementations in order to deal with events s..." alt="" coords="5,5,208,32"/>
+<area shape="rect" id="Node000001" href="$classCuThreadInterface.html" title="interface to write thread implementations that can be used with the cumbia library" alt="" coords="256,5,385,32"/>
+<area shape="poly" id="edge27_Node000000_Node000001" title=" " alt="" coords="223,16,255,16,255,21,223,21"/>
+<area shape="rect" id="Node000002" href="$classCuThread.html" title="cumbia thread implementation" alt="" coords="433,5,511,32"/>
+<area shape="poly" id="edge28_Node000001_Node000002" title=" " alt="" coords="400,16,432,16,432,21,400,21"/>
 </map>

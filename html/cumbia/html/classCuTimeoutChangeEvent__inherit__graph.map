@@ -1,4 +1,6 @@
 <map id="CuTimeoutChangeEvent" name="CuTimeoutChangeEvent">
-<area shape="rect" id="node1" title="this event changes the timeout of the activity&#39;s thread timer" alt="" coords="5,79,184,104"/>
-<area shape="rect" id="node2" href="$classCuActivityEvent.html" title="Generic event to pass data to an activity." alt="" coords="31,5,158,31"/>
+<area shape="rect" id="Node000001" title="this event changes the timeout of the activity&#39;s thread timer" alt="" coords="5,80,170,107"/>
+<area shape="rect" id="Node000002" href="$classCuActivityEvent.html" title="Generic event to pass data to an activity." alt="" coords="29,5,146,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,47,83,79,78,80,76,48"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="99,48,97,80,92,79,94,47"/>
 </map>

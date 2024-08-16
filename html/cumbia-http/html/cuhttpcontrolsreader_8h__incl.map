@@ -1,6 +1,9 @@
 <map id="cuhttpcontrolsreader.h" name="cuhttpcontrolsreader.h">
-<area shape="rect" id="node1" title=" " alt="" coords="101,5,269,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,76,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="100,79,269,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="294,79,467,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="96,5,246,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,71,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,35,76,75,73,70,147,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="95,80,248,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="174,33,174,64,169,64,169,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="272,80,428,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="203,30,306,71,304,76,201,35"/>
 </map>

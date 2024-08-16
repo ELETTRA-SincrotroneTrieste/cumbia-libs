@@ -1,4 +1,5 @@
 <map id="CuA_ExitEv" name="CuA_ExitEv">
-<area shape="rect" id="node1" title="exit event for the activity" alt="" coords="5,79,101,104"/>
-<area shape="rect" id="node2" href="$classCuEventI.html" title="interface for a generic cumbia event designed to be generated in a secondary thread (CuActivity&#39;s thr..." alt="" coords="13,5,93,31"/>
+<area shape="rect" id="Node000001" title="exit event for the activity" alt="" coords="5,80,99,107"/>
+<area shape="rect" id="Node000002" href="$classCuEventI.html" title="interface for a generic cumbia event designed to be generated in a secondary thread (CuActivity&#39;s thr..." alt="" coords="14,5,90,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="55,48,55,80,49,80,49,48"/>
 </map>

@@ -1,8 +1,14 @@
 <map id="CuServiceI" name="CuServiceI">
-<area shape="rect" id="node1" title="interface to write cumbia services that can be registered and fetched through the cumbia service prov..." alt="" coords="341,5,432,31"/>
-<area shape="rect" id="node2" href="$classCuActivityManager.html" title="This service stores the links between threads, activities and thread listeners." alt="" coords="5,79,152,104"/>
-<area shape="rect" id="node3" href="$classCuEventLoopService.html" title="service that implements a simple event loop for cumbia applications." alt="" coords="176,79,331,104"/>
-<area shape="rect" id="node4" href="$classCuLog.html" title="a cumbia service providing an interface for logging facilities" alt="" coords="355,79,418,104"/>
-<area shape="rect" id="node5" href="$classCuThreadService.html" title="cumbia service that creates threads and keeps references of the threads running within the applicatio..." alt="" coords="442,79,574,104"/>
-<area shape="rect" id="node6" href="$classCuTimerService.html" title="The CuTimerService class provides access to cumbia timers. It is normally used internally by the libr..." alt="" coords="599,79,724,104"/>
+<area shape="rect" id="Node000001" title="interface to write cumbia services that can be registered and fetched through the cumbia service prov..." alt="" coords="316,5,403,32"/>
+<area shape="rect" id="Node000002" href="$classCuActivityManager.html" title="This service stores the links between threads, activities and thread listeners." alt="" coords="5,80,138,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="302,37,123,82,121,77,300,32"/>
+<area shape="rect" id="Node000003" href="$classCuEventLoopService.html" title="service that implements a simple event loop for cumbia applications." alt="" coords="162,80,306,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="326,42,257,82,255,77,324,38"/>
+<area shape="rect" id="Node000004" href="$classCuLog.html" title="a cumbia service providing an interface for logging facilities" alt="" coords="330,80,389,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="353,47,355,79,350,80,348,48"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="371,48,369,80,364,79,366,47"/>
+<area shape="rect" id="Node000005" href="$classCuThreadService.html" title="cumbia service that creates threads and keeps references of the threads running within the applicatio..." alt="" coords="413,80,535,107"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="394,38,455,77,453,82,391,43"/>
+<area shape="rect" id="Node000006" href="$classCuTimerService.html" title="The CuTimerService class provides access to cumbia timers. It is normally used internally by the libr..." alt="" coords="559,80,674,107"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="418,34,572,77,571,82,417,39"/>
 </map>

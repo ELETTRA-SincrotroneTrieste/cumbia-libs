@@ -1,5 +1,7 @@
 <map id="cuhttpauthmanagertools.h" name="cuhttpauthmanagertools.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,200,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="18,79,89,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="113,79,191,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,177,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="13,80,78,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,34,64,68,59,65,81,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="102,80,173,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="101,31,124,66,119,68,97,34"/>
 </map>

@@ -1,4 +1,6 @@
 <map id="CuLog" name="CuLog">
-<area shape="rect" id="node1" title="a cumbia service providing an interface for logging facilities" alt="" coords="19,79,82,104"/>
-<area shape="rect" id="node2" href="$classCuServiceI.html" title="interface to write cumbia services that can be registered and fetched through the cumbia service prov..." alt="" coords="5,5,96,31"/>
+<area shape="rect" id="Node000001" title="a cumbia service providing an interface for logging facilities" alt="" coords="19,80,78,107"/>
+<area shape="rect" id="Node000002" href="$classCuServiceI.html" title="interface to write cumbia services that can be registered and fetched through the cumbia service prov..." alt="" coords="5,5,92,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="42,47,44,79,39,80,37,48"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="60,48,58,80,53,79,55,47"/>
 </map>

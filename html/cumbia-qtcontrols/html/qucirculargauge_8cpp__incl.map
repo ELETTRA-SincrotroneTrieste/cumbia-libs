@@ -1,5 +1,7 @@
 <map id="qucirculargauge.cpp" name="qucirculargauge.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,159,31"/>
-<area shape="rect" id="node2" href="$qucirculargauge_8h.html" title=" " alt="" coords="13,79,151,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="43,152,121,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,143,32"/>
+<area shape="rect" id="Node000002" href="$qucirculargauge_8h.html" title=" " alt="" coords="12,80,136,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,33,77,64,71,64,71,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="38,155,110,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="77,107,77,139,71,139,71,107"/>
 </map>

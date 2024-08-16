@@ -1,4 +1,5 @@
 <map id="cuuimake.h" name="cuuimake.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,103,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="19,79,89,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,94,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="17,80,82,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="52,33,52,64,47,64,47,33"/>
 </map>

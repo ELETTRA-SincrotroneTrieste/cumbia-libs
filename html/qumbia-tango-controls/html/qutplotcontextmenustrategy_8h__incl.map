@@ -1,5 +1,7 @@
 <map id="qutplotcontextmenustrategy.h" name="qutplotcontextmenustrategy.h">
-<area shape="rect" id="node1" title=" " alt="" coords="110,5,329,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,249,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="273,79,352,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="101,5,294,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,222,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,35,141,72,138,68,181,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="245,80,318,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="214,31,257,68,254,72,210,35"/>
 </map>

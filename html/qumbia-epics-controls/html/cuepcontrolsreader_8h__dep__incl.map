@@ -1,8 +1,8 @@
 <map id="cuepcontrolsreader.h" name="cuepcontrolsreader.h">
-<area shape="rect" id="node1" title=" " alt="" coords="299,5,458,31"/>
-<area shape="rect" id="node2" href="$cuepcontrolsreader_8cpp.html" title=" " alt="" coords="5,79,179,104"/>
-<area shape="rect" id="node3" href="$cuepregisterengine_8cpp.html" title=" " alt="" coords="203,79,378,104"/>
-<area shape="rect" id="node4" href="$cuepwidgets_8cpp.html" title=" " alt="" coords="403,79,533,104"/>
-<area shape="rect" id="node5" href="$label_8h.html" title=" " alt="" coords="557,79,624,104"/>
-<area shape="rect" id="node6" href="$label_2main_8cpp.html" title=" " alt="" coords="549,152,632,177"/>
+<area shape="rect" id="node1" title=" " alt="" coords="178,5,337,32"/>
+<area shape="rect" id="node2" href="$label_8h.html" title=" " alt="" coords="13,80,80,107"/>
+<area shape="rect" id="node4" href="$cuepwidgets_8cpp.html" title=" " alt="" coords="104,80,235,107"/>
+<area shape="rect" id="node5" href="$cuepcontrolsreader_8cpp.html" title=" " alt="" coords="259,80,432,107"/>
+<area shape="rect" id="node6" href="$cuepregisterengine_8cpp.html" title=" " alt="" coords="457,80,631,107"/>
+<area shape="rect" id="node3" href="$label_2main_8cpp.html" title=" " alt="" coords="5,155,88,181"/>
 </map>

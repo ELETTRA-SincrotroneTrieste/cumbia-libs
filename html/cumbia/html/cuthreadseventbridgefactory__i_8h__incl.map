@@ -1,7 +1,12 @@
 <map id="cuthreadseventbridgefactory_i.h" name="cuthreadseventbridgefactory_i.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,239,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="41,152,112,177"/>
-<area shape="rect" id="node3" href="$cumacros_8h.html" title=" " alt="" coords="119,79,216,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="137,152,203,177"/>
-<area shape="rect" id="node5" title=" " alt="" coords="228,152,312,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,212,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="34,155,98,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,33,76,140,71,139,102,32"/>
+<area shape="rect" id="Node000003" href="$cumacros_8h.html" title=" " alt="" coords="105,80,194,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="118,31,138,65,133,68,113,34"/>
+<area shape="poly" id="edge5_Node000003_Node000002" title=" " alt="" coords="137,109,94,146,90,142,133,105"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="121,155,181,181"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="153,107,153,139,148,139,147,107"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="206,155,281,181"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="168,105,217,143,214,147,164,109"/>
 </map>

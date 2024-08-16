@@ -1,4 +1,6 @@
 <map id="ComplexQTangoDemo" name="ComplexQTangoDemo">
-<area shape="rect" id="node1" title=" " alt="" coords="5,79,172,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="49,5,128,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,80,159,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="46,5,118,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,47,78,79,72,80,71,48"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="93,48,92,80,86,79,88,47"/>
 </map>

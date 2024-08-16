@@ -1,8 +1,13 @@
 <map id="cutcontrolsreader.h" name="cutcontrolsreader.h">
-<area shape="rect" id="node1" title=" " alt="" coords="201,5,347,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,76,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="100,79,163,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="187,79,361,104"/>
-<area shape="rect" id="node5" title=" " alt="" coords="385,79,555,104"/>
-<area shape="rect" id="node6" title=" " alt="" coords="579,79,657,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="188,5,320,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,71,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,35,86,79,85,74,216,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="95,80,152,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="233,35,161,74,158,70,230,30"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="176,80,332,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="257,33,257,64,251,64,251,33"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="356,80,509,107"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="286,30,388,71,386,76,284,35"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="533,80,604,107"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="312,30,518,77,517,82,311,35"/>
 </map>

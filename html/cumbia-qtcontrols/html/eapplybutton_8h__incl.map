@@ -1,4 +1,5 @@
 <map id="eapplybutton.h" name="eapplybutton.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,125,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="12,79,119,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,112,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="9,80,108,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,33,61,64,56,64,56,33"/>
 </map>

@@ -1,12 +1,21 @@
 <map id="qutplotupdatestrategy.cpp" name="qutplotupdatestrategy.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="427,5,619,31"/>
-<area shape="rect" id="node2" href="$qutplotupdatestrategy_8h.html" title=" " alt="" coords="19,79,196,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="221,79,287,104"/>
-<area shape="rect" id="node5" title=" " alt="" coords="312,79,391,104"/>
-<area shape="rect" id="node6" title=" " alt="" coords="415,79,512,104"/>
-<area shape="rect" id="node7" title=" " alt="" coords="536,79,631,104"/>
-<area shape="rect" id="node8" title=" " alt="" coords="655,79,733,104"/>
-<area shape="rect" id="node9" title=" " alt="" coords="758,79,854,104"/>
-<area shape="rect" id="node10" title=" " alt="" coords="878,79,987,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,152,209,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="394,5,565,32"/>
+<area shape="rect" id="Node000002" href="$qutplotupdatestrategy_8h.html" title=" " alt="" coords="17,80,174,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="413,35,178,79,177,74,412,30"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="198,80,260,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="437,35,276,81,274,76,435,30"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="284,80,355,107"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="453,35,362,76,360,71,451,30"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="379,80,468,107"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="472,34,444,69,440,66,468,31"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="493,80,578,107"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="491,31,519,66,515,69,487,34"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="602,80,674,107"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="508,30,598,71,595,75,506,35"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="698,80,784,107"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="526,30,684,73,682,79,524,35"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="807,80,904,107"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="547,30,793,77,792,82,546,35"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,155,186,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="98,107,98,139,93,139,93,107"/>
 </map>

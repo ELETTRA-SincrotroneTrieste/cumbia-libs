@@ -1,6 +1,10 @@
 <map id="eflag.h" name="eflag.h">
-<area shape="rect" id="node1" title=" " alt="" coords="91,5,158,31"/>
-<area shape="rect" id="node2" href="$eflag_8cpp.html" title=" " alt="" coords="5,79,87,104"/>
-<area shape="rect" id="node3" href="$qutable_8cpp.html" title=" " alt="" coords="114,152,213,177"/>
-<area shape="rect" id="node4" href="$qutable_8h.html" title=" " alt="" coords="162,79,245,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="87,5,147,32"/>
+<area shape="rect" id="Node000002" href="$eflag_8cpp.html" title=" " alt="" coords="5,80,80,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,45,57,82,54,78,92,41"/>
+<area shape="rect" id="Node000003" href="$qutable_8cpp.html" title=" " alt="" coords="110,155,199,181"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="127,46,154,154,149,155,121,48"/>
+<area shape="rect" id="Node000004" href="$qutable_8h.html" title=" " alt="" coords="155,80,229,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="143,41,181,78,177,82,139,45"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="181,122,163,155,159,153,176,119"/>
 </map>

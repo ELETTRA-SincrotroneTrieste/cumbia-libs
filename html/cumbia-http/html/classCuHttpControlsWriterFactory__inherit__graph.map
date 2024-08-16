@@ -1,4 +1,5 @@
 <map id="CuHttpControlsWriterFactory" name="CuHttpControlsWriterFactory">
-<area shape="rect" id="node1" title="implements CuControlsWriterFactoryI and creates Http writers Given a pointer to a Cumbia object and a..." alt="" coords="5,79,213,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="17,5,201,31"/>
+<area shape="rect" id="Node000001" title="implements CuControlsWriterFactoryI and creates Http writers Given a pointer to a Cumbia object and a..." alt="" coords="5,80,196,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="16,5,185,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,48,103,80,98,80,98,48"/>
 </map>

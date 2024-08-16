@@ -1,5 +1,7 @@
 <map id="QuLedBase" name="QuLedBase">
-<area shape="rect" id="node1" title="A color led." alt="" coords="5,79,100,104"/>
-<area shape="rect" id="node3" href="$classQuLed.html" title="a led that takes a color according to a value read from a source." alt="" coords="21,152,84,177"/>
-<area shape="rect" id="node2" title=" " alt="" coords="13,5,92,31"/>
+<area shape="rect" id="Node000001" title="A color led." alt="" coords="5,80,95,107"/>
+<area shape="rect" id="Node000003" href="$classQuLed.html" title="a led that takes a color according to a value read from a source." alt="" coords="20,155,80,181"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="53,122,53,154,47,154,47,122"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="14,5,86,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="53,48,53,80,47,80,47,48"/>
 </map>

@@ -1,8 +1,14 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="67,55,126,80"/>
-<area shape="rect" id="node2" href="$classTDialRead.html" title=" " alt="" coords="237,55,326,80"/>
-<area shape="rect" id="node3" href="$classTDialWrite.html" title=" " alt="" coords="236,104,327,129"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,5,188,31"/>
-<area shape="rect" id="node5" title=" " alt="" coords="8,153,185,179"/>
-<area shape="rect" id="node6" title=" " alt="" coords="9,104,184,129"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="63,56,118,83"/>
+<area shape="rect" id="Node000001" href="$classTDialRead.html" title=" " alt="" coords="224,56,307,83"/>
+<area shape="poly" id="edge12_Node000000_Node000001" title=" " alt="" coords="133,67,223,67,223,72,133,72"/>
+<area shape="rect" id="Node000004" href="$classTDialWrite.html" title=" " alt="" coords="224,107,306,133"/>
+<area shape="poly" id="edge13_Node000000_Node000004" title=" " alt="" coords="133,79,225,106,223,111,132,84"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,176,32"/>
+<area shape="poly" id="edge14_Node000002_Node000001" title=" " alt="" coords="155,34,224,55,222,60,153,40"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="9,157,172,184"/>
+<area shape="poly" id="edge15_Node000005_Node000004" title=" " alt="" coords="153,150,223,129,224,134,154,155"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="10,107,171,133"/>
+<area shape="poly" id="edge16_Node000003_Node000001" title=" " alt="" coords="153,99,222,79,224,84,155,104"/>
+<area shape="poly" id="edge17_Node000003_Node000004" title=" " alt="" coords="186,117,224,117,224,123,186,123"/>
 </map>

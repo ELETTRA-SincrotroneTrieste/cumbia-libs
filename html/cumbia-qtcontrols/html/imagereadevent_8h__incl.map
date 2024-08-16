@@ -1,6 +1,9 @@
 <map id="imagereadevent.h" name="imagereadevent.h">
-<area shape="rect" id="node1" title=" " alt="" coords="64,5,205,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,75,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="99,79,170,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="194,79,257,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="65,5,190,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,71,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,35,67,72,64,68,110,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="95,80,160,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="130,33,130,64,125,64,125,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="184,80,241,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="144,31,188,68,185,72,140,35"/>
 </map>

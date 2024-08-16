@@ -1,4 +1,5 @@
 <map id="CuActionFactoryServiceImpl" name="CuActionFactoryServiceImpl">
-<area shape="rect" id="node1" title="The CuActionFactoryServiceImpl class is the default implementation." alt="" coords="25,79,229,104"/>
-<area shape="rect" id="node2" href="$classCuActionFactoryServiceImpl__Base.html" title=" " alt="" coords="5,5,248,31"/>
+<area shape="rect" id="Node000001" title="The CuActionFactoryServiceImpl class is the default implementation." alt="" coords="24,80,212,107"/>
+<area shape="rect" id="Node000002" href="$classCuActionFactoryServiceImpl__Base.html" title=" " alt="" coords="5,5,231,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,48,121,80,115,80,115,48"/>
 </map>

@@ -1,8 +1,14 @@
 <map id="culog.h" name="culog.h">
-<area shape="rect" id="node1" title=" " alt="" coords="164,5,233,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,80,104"/>
-<area shape="rect" id="node3" href="$cuservicei_8h.html" title=" " alt="" coords="105,79,205,104"/>
-<area shape="rect" id="node5" title=" " alt="" coords="213,152,272,177"/>
-<area shape="rect" id="node6" title=" " alt="" coords="280,79,323,104"/>
-<area shape="rect" id="node4" href="$cuservices_8h.html" title=" " alt="" coords="86,152,189,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="153,5,216,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,74,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,35,80,75,77,70,158,30"/>
+<area shape="rect" id="Node000003" href="$cuservicei_8h.html" title=" " alt="" coords="98,80,189,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,34,160,68,156,65,175,31"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="200,155,253,181"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="191,32,221,139,216,140,186,33"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="263,80,301,107"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="203,30,255,69,252,73,200,35"/>
+<area shape="rect" id="Node000004" href="$cuservices_8h.html" title=" " alt="" coords="80,155,175,181"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="143,108,136,140,131,139,138,107"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="160,105,202,142,199,146,156,109"/>
 </map>

@@ -1,4 +1,6 @@
 <map id="CuThreadsEventBridge_I" name="CuThreadsEventBridge_I">
-<area shape="rect" id="node1" title="interface to a threads event bridge" alt="" coords="5,5,187,31"/>
-<area shape="rect" id="node2" href="$classCuThreadsEventBridge.html" title="cumbia basic thread event bridge" alt="" coords="11,79,181,104"/>
+<area shape="rect" id="Node000001" title="interface to a threads event bridge" alt="" coords="5,5,173,32"/>
+<area shape="rect" id="Node000002" href="$classCuThreadsEventBridge.html" title="cumbia basic thread event bridge" alt="" coords="11,80,167,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,47,85,79,79,80,78,48"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="100,48,99,80,93,79,95,47"/>
 </map>

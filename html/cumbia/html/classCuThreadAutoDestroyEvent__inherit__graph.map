@@ -1,4 +1,5 @@
 <map id="CuThreadAutoDestroyEvent" name="CuThreadAutoDestroyEvent">
-<area shape="rect" id="node1" title="at the end of the thread event loop (CuThread::run), this event is posted. When received,..." alt="" coords="5,79,208,104"/>
-<area shape="rect" id="node2" href="$classCuEventI.html" title="interface for a generic cumbia event designed to be generated in a secondary thread (CuActivity&#39;s thr..." alt="" coords="67,5,147,31"/>
+<area shape="rect" id="Node000001" title="at the end of the thread event loop (CuThread::run), this event is posted. When received,..." alt="" coords="5,80,191,107"/>
+<area shape="rect" id="Node000002" href="$classCuEventI.html" title="interface for a generic cumbia event designed to be generated in a secondary thread (CuActivity&#39;s thr..." alt="" coords="60,5,136,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,48,101,80,95,80,95,48"/>
 </map>

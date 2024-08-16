@@ -1,9 +1,15 @@
 <map id="enumeric.h" name="enumeric.h">
-<area shape="rect" id="node1" title=" " alt="" coords="259,5,354,31"/>
-<area shape="rect" id="node2" href="$eapplynumeric_8h.html" title=" " alt="" coords="96,79,227,104"/>
-<area shape="rect" id="node6" href="$enumeric_8cpp.html" title=" " alt="" coords="251,79,362,104"/>
-<area shape="rect" id="node7" href="$quinputoutput_8cpp.html" title=" " alt="" coords="386,79,526,104"/>
-<area shape="rect" id="node3" href="$eapplynumeric_8cpp.html" title=" " alt="" coords="5,152,152,177"/>
-<area shape="rect" id="node4" href="$quapplynumeric_8h.html" title=" " alt="" coords="176,152,315,177"/>
-<area shape="rect" id="node5" href="$quapplynumeric_8cpp.html" title=" " alt="" coords="168,225,323,251"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="234,5,320,32"/>
+<area shape="rect" id="Node000002" href="$eapplynumeric_8h.html" title=" " alt="" coords="87,80,203,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="243,42,170,82,167,77,240,37"/>
+<area shape="rect" id="Node000006" href="$enumeric_8cpp.html" title=" " alt="" coords="228,80,327,107"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="280,48,280,80,274,80,274,48"/>
+<area shape="rect" id="Node000007" href="$quinputoutput_8cpp.html" title=" " alt="" coords="351,80,475,107"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="316,37,391,77,388,82,313,42"/>
+<area shape="rect" id="Node000003" href="$eapplynumeric_8cpp.html" title=" " alt="" coords="5,155,136,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="123,119,85,156,82,152,120,116"/>
+<area shape="rect" id="Node000004" href="$quapplynumeric_8h.html" title=" " alt="" coords="160,155,283,181"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="171,116,210,152,206,156,167,119"/>
+<area shape="rect" id="Node000005" href="$quapplynumeric_8cpp.html" title=" " alt="" coords="152,229,290,256"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="224,197,224,229,218,229,218,197"/>
 </map>

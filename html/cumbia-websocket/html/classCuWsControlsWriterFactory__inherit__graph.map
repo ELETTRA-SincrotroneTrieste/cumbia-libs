@@ -1,4 +1,4 @@
 <map id="CuWsControlsWriterFactory" name="CuWsControlsWriterFactory">
-<area shape="rect" id="node1" title="implements CuControlsWriterFactoryI and creates Websocket writers Given a pointer to a Cumbia object ..." alt="" coords="5,79,205,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="13,5,197,31"/>
+<area shape="rect" id="node1" title="implements CuControlsWriterFactoryI and creates Websocket writers Given a pointer to a Cumbia object ..." alt="" coords="5,80,205,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="13,5,197,32"/>
 </map>

@@ -1,3 +1,15 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classTSource.html" title=" " alt="" coords="5,5,80,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,123,32"/>
+<area shape="rect" id="Node000001" href="$classCuEventActivity.html" title="an activity to subscribe and receive events from Tango. Implements CuActivity and Tango::Callback int..." alt="" coords="190,5,306,32"/>
+<area shape="poly" id="edge29_Node000000_Node000001" title=" " alt="" coords="139,16,190,16,190,21,139,21"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="23,107,105,133"/>
+<area shape="poly" id="edge30_Node000002_Node000001" title=" " alt="" coords="91,95,127,67,169,42,197,30,199,35,172,46,130,72,94,99"/>
+<area shape="rect" id="Node000003" href="$classCuGetTDbPropActivity.html" title="an activity to get properties from the Tango database" alt="" coords="171,56,326,83"/>
+<area shape="poly" id="edge31_Node000002_Node000003" title=" " alt="" coords="120,102,196,81,198,86,121,107"/>
+<area shape="rect" id="Node000004" href="$classCuTConfigActivity.html" title="Activity to get attribute configuration or command info. Optionally, it can perform a one shot attrib..." alt="" coords="184,107,312,133"/>
+<area shape="poly" id="edge32_Node000002_Node000004" title=" " alt="" coords="121,117,184,117,184,123,121,123"/>
+<area shape="rect" id="Node000005" href="$classCuTaDbActivity.html" title="Activity to get data from the Tango database." alt="" coords="192,157,305,184"/>
+<area shape="poly" id="edge33_Node000002_Node000005" title=" " alt="" coords="121,133,198,154,196,159,120,138"/>
+<area shape="rect" id="Node000006" href="$classCuWriteActivity.html" title=" " alt="" coords="192,208,304,235"/>
+<area shape="poly" id="edge34_Node000002_Node000006" title=" " alt="" coords="94,141,130,168,172,194,199,205,197,210,169,198,127,173,91,145"/>
 </map>

@@ -1,6 +1,9 @@
 <map id="QuCheckBox" name="QuCheckBox">
-<area shape="rect" id="node1" title="A check box that reads, displays and writes a boolean value." alt="" coords="136,79,241,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,103,31"/>
-<area shape="rect" id="node3" title=" " alt="" coords="127,5,250,31"/>
-<area shape="rect" id="node4" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="275,5,369,31"/>
+<area shape="rect" id="Node000001" title="A check box that reads, displays and writes a boolean value." alt="" coords="128,80,228,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,98,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,38,157,77,155,82,85,42"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="122,5,234,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="181,48,181,80,176,80,176,48"/>
+<area shape="rect" id="Node000004" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="258,5,346,32"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="269,42,201,82,199,77,267,38"/>
 </map>

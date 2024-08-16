@@ -1,3 +1,150 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuContext.html" title="CuLinkControl stores a small set of objects to help create readers and writers." alt="" coords="5,5,96,31"/>
+<area shape="rect" id="Node000000" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="230,917,318,944"/>
+<area shape="rect" id="Node000001" href="$classQmlChartBackend.html" title=" " alt="" coords="416,461,545,488"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="332,920,345,913,356,904,384,860,397,818,397,778,392,737,385,694,381,649,386,601,404,549,429,513,458,487,462,491,433,517,408,552,391,603,386,649,390,693,397,736,403,777,402,819,389,862,360,907,348,917,334,925"/>
+<area shape="rect" id="Node000003" href="$classQmlReaderBackend.html" title=" " alt="" coords="412,309,550,336"/>
+<area shape="poly" id="edge2_Node000000_Node000003" title=" " alt="" coords="332,920,345,913,356,904,368,883,377,857,385,791,385,712,380,627,375,542,375,463,383,396,391,368,404,346,417,335,421,339,408,350,396,370,388,397,380,463,380,542,385,627,390,712,390,791,382,858,373,885,360,907,348,918,334,925"/>
+<area shape="rect" id="Node000011" href="$classQmlWriterBackend.html" title="QmlWriterBackend is an object that can be used as a backend for QMLwriters." alt="" coords="416,360,546,387"/>
+<area shape="poly" id="edge3_Node000000_Node000011" title=" " alt="" coords="332,920,345,913,356,904,366,887,374,866,384,814,388,751,387,682,387,548,392,492,404,448,429,412,458,385,462,389,433,415,408,450,397,493,392,549,393,682,393,751,389,814,379,868,371,889,360,907,348,918,334,925"/>
+<area shape="rect" id="Node000016" href="$classQuApplyNumeric.html" title="A widget to input a number and write it to a target linked to a control system engine." alt="" coords="420,765,541,792"/>
+<area shape="poly" id="edge4_Node000000_Node000016" title=" " alt="" coords="332,917,356,903,367,891,374,879,380,854,386,828,393,815,404,802,422,790,425,795,408,806,397,818,391,830,385,856,379,881,372,895,360,907,334,922"/>
+<area shape="rect" id="Node000035" href="$classQuButton.html" title="A push button to write values or send commands to a target." alt="" coords="442,1069,519,1096"/>
+<area shape="poly" id="edge5_Node000000_Node000035" title=" " alt="" coords="335,939,360,954,378,978,385,1002,392,1025,408,1049,424,1061,443,1070,441,1075,422,1065,404,1053,387,1028,380,1003,374,980,356,958,332,944"/>
+<area shape="rect" id="Node000037" href="$classQuCheckBox.html" title="A check box that reads, displays and writes a boolean value." alt="" coords="431,1120,530,1147"/>
+<area shape="poly" id="edge6_Node000000_Node000037" title=" " alt="" coords="335,938,360,954,375,973,382,993,385,1032,387,1069,394,1088,408,1106,432,1121,429,1126,404,1110,389,1090,382,1070,380,1032,377,994,370,976,356,958,332,943"/>
+<area shape="rect" id="Node000021" href="$classQuCircularGauge.html" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors." alt="" coords="603,1196,725,1223"/>
+<area shape="poly" id="edge7_Node000000_Node000021" title=" " alt="" coords="334,942,359,954,375,967,384,980,393,992,407,1004,447,1022,482,1028,517,1034,536,1042,557,1055,593,1089,622,1128,659,1194,654,1197,618,1131,589,1093,554,1059,534,1047,516,1040,481,1033,446,1027,405,1009,389,996,380,983,371,970,357,958,332,947"/>
+<area shape="rect" id="Node000039" href="$classQuComboBox.html" title="QuComboBox derives from Qt QComboBox to display values. When the option is activated explicitly,..." alt="" coords="429,1171,532,1197"/>
+<area shape="poly" id="edge8_Node000000_Node000039" title=" " alt="" coords="334,937,360,954,378,980,386,1006,387,1032,385,1057,383,1082,384,1107,391,1132,408,1157,430,1172,427,1176,404,1161,386,1134,379,1108,378,1082,380,1057,382,1032,381,1007,373,982,356,958,331,942"/>
+<area shape="rect" id="Node000041" href="$classQuDoubleSpinBox.html" title=" " alt="" coords="416,1221,545,1248"/>
+<area shape="poly" id="edge9_Node000000_Node000041" title=" " alt="" coords="335,937,360,954,381,987,390,1019,390,1051,385,1083,381,1114,380,1145,388,1176,408,1208,422,1219,418,1223,404,1211,383,1178,375,1145,375,1113,380,1082,384,1051,385,1020,376,989,356,958,332,942"/>
+<area shape="rect" id="Node000057" href="$classQuInputOutput.html" title="This element is a graphical interface to integrate a reader and a writer into one single object that ..." alt="" coords="428,1475,534,1501"/>
+<area shape="poly" id="edge10_Node000000_Node000057" title=" " alt="" coords="335,937,348,944,360,954,372,974,380,999,388,1059,389,1131,385,1209,382,1286,382,1358,389,1418,397,1442,408,1461,429,1476,426,1481,404,1464,392,1444,384,1420,376,1358,376,1286,380,1209,383,1131,383,1060,375,1000,367,976,356,958,345,948,332,941"/>
+<area shape="rect" id="Node000043" href="$classQuLabel.html" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors." alt="" coords="446,1323,515,1349"/>
+<area shape="poly" id="edge11_Node000000_Node000043" title=" " alt="" coords="334,937,348,944,360,954,377,977,388,1000,397,1045,394,1089,385,1133,376,1177,373,1220,382,1264,392,1286,408,1309,425,1322,447,1330,445,1335,423,1327,404,1313,388,1289,377,1266,368,1221,371,1176,380,1132,389,1089,392,1045,383,1002,372,980,356,958,345,948,332,941"/>
+<area shape="rect" id="Node000032" href="$classQuLed.html" title="a led that takes a color according to a value read from a source." alt="" coords="451,816,510,843"/>
+<area shape="poly" id="edge12_Node000000_Node000032" title=" " alt="" coords="332,915,357,903,371,891,380,879,389,866,405,852,427,841,450,833,451,838,429,846,407,857,393,869,384,882,375,895,359,908,334,920"/>
+<area shape="rect" id="Node000047" href="$classQuLineEdit.html" title=" " alt="" coords="438,1272,523,1299"/>
+<area shape="poly" id="edge13_Node000000_Node000047" title=" " alt="" coords="334,937,360,954,385,993,394,1032,392,1070,385,1108,378,1145,377,1183,385,1220,408,1258,422,1269,438,1277,436,1282,419,1274,404,1262,380,1222,371,1183,373,1145,380,1107,387,1070,388,1033,380,995,356,958,331,941"/>
+<area shape="rect" id="Node000034" href="$classQuLinearGauge.html" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors." alt="" coords="425,867,536,893"/>
+<area shape="poly" id="edge14_Node000000_Node000034" title=" " alt="" coords="333,914,424,891,425,896,334,919"/>
+<area shape="rect" id="Node000049" href="$classQuSpectrumPlot.html" title="Draw a line for each data source over time." alt="" coords="422,563,539,589"/>
+<area shape="poly" id="edge15_Node000000_Node000049" title=" " alt="" coords="332,920,356,903,377,873,388,843,390,814,388,785,384,722,389,688,404,651,430,615,459,588,463,592,434,618,408,653,395,689,390,723,394,785,396,815,393,845,382,875,360,907,335,924"/>
+<area shape="rect" id="Node000055" href="$classQuSpinBox.html" title=" " alt="" coords="437,715,524,741"/>
+<area shape="poly" id="edge17_Node000000_Node000055" title=" " alt="" coords="332,918,356,903,370,885,377,867,380,829,382,791,389,771,404,751,419,740,435,733,437,738,421,745,408,755,394,774,387,792,385,830,382,868,375,888,360,907,335,923"/>
+<area shape="rect" id="Node000026" href="$classQuTable.html" title="A widget to organise data in a table." alt="" coords="446,968,515,995"/>
+<area shape="poly" id="edge18_Node000000_Node000026" title=" " alt="" coords="334,943,446,970,445,976,333,948"/>
+<area shape="rect" id="Node000052" href="$classQuTrendPlot.html" title="Draw a line for each data source over time." alt="" coords="434,664,528,691"/>
+<area shape="poly" id="edge19_Node000000_Node000052" title=" " alt="" coords="331,919,356,903,373,879,381,854,382,830,380,805,378,779,379,753,386,727,404,701,417,690,432,683,434,688,420,695,408,704,391,729,384,754,383,779,385,804,387,830,386,855,378,881,360,907,334,924"/>
+<area shape="rect" id="Node000013" href="$classQuWatcher.html" title="Manage readings of various type of objects in a different thread." alt="" coords="621,411,707,437"/>
+<area shape="poly" id="edge20_Node000000_Node000013" title=" " alt="" coords="334,942,387,948,446,947,476,943,504,934,530,921,553,904,571,876,581,837,587,789,590,736,592,630,595,585,601,550,626,486,652,437,657,439,631,488,606,551,600,586,597,631,595,736,593,789,587,838,575,879,557,907,533,926,506,939,477,948,447,953,387,953,333,947"/>
+<area shape="rect" id="Node000050" href="$classQuPlot.html" title=" " alt="" coords="633,563,695,589"/>
+<area shape="poly" id="edge16_Node000049_Node000050" title=" " alt="" coords="555,573,633,573,633,579,555,579"/>
+<area shape="rect" id="Node000014" href="$classQu1TWatcher.html" title=" " alt="" coords="773,411,874,437"/>
+<area shape="poly" id="edge21_Node000013_Node000014" title=" " alt="" coords="723,421,772,421,772,427,723,427"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="218,765,330,792"/>
+<area shape="poly" id="edge22_Node000002_Node000001" title=" " alt="" coords="343,762,356,752,376,721,385,692,385,662,381,632,377,601,377,570,384,538,404,505,428,486,431,491,408,508,389,540,382,571,382,601,386,631,390,662,390,692,381,724,360,755,346,766"/>
+<area shape="poly" id="edge23_Node000002_Node000003" title=" " alt="" coords="343,763,356,752,374,726,386,701,393,676,396,651,392,602,380,552,369,502,364,451,367,425,374,399,386,373,404,346,418,334,421,339,408,350,390,376,379,401,372,426,370,451,374,501,385,551,397,601,401,651,398,677,391,703,379,729,360,755,346,767"/>
+<area shape="poly" id="edge24_Node000002_Node000011" title=" " alt="" coords="343,763,356,752,372,730,383,708,392,666,390,624,382,582,373,539,370,495,378,450,389,427,404,404,427,385,430,389,408,407,393,430,384,452,376,496,379,538,387,581,395,623,398,667,388,710,376,733,360,755,346,767"/>
+<area shape="poly" id="edge25_Node000002_Node000016" title=" " alt="" coords="346,776,420,776,420,781,346,781"/>
+<area shape="poly" id="edge26_Node000002_Node000035" title=" " alt="" coords="346,791,360,802,379,827,389,852,392,876,392,900,391,950,396,977,408,1005,435,1040,463,1067,460,1071,431,1044,404,1008,391,978,386,950,386,900,387,877,383,853,374,830,356,806,343,796"/>
+<area shape="poly" id="edge27_Node000002_Node000037" title=" " alt="" coords="346,791,360,802,385,841,394,880,392,918,385,956,378,993,377,1031,385,1068,408,1106,419,1116,432,1122,429,1127,416,1120,404,1110,380,1070,371,1031,373,993,380,955,387,918,388,881,380,843,356,806,343,795"/>
+<area shape="poly" id="edge28_Node000002_Node000021" title=" " alt="" coords="343,760,356,751,367,739,373,727,378,700,384,673,391,661,405,650,445,629,482,620,519,627,557,650,573,668,587,692,611,755,630,834,643,921,659,1087,665,1195,660,1196,654,1088,638,922,624,835,606,757,583,694,569,671,554,654,517,632,483,626,447,634,407,654,395,664,389,675,383,701,378,728,371,742,360,755,346,765"/>
+<area shape="poly" id="edge29_Node000002_Node000039" title=" " alt="" coords="346,791,360,802,377,825,388,848,397,893,394,937,385,981,376,1025,373,1068,382,1112,392,1134,408,1157,430,1173,427,1177,404,1161,388,1137,377,1114,368,1069,371,1024,380,980,389,937,392,893,383,850,372,828,356,806,343,795"/>
+<area shape="poly" id="edge30_Node000002_Node000041" title=" " alt="" coords="346,791,360,802,379,829,391,855,398,881,401,906,397,957,385,1007,374,1056,370,1106,372,1131,379,1156,390,1182,408,1208,421,1219,418,1223,404,1211,386,1184,374,1158,367,1132,364,1106,369,1055,380,1005,392,956,396,906,393,882,386,857,374,831,356,806,343,795"/>
+<area shape="poly" id="edge31_Node000002_Node000043" title=" " alt="" coords="346,790,360,802,372,822,380,847,388,907,389,979,385,1057,382,1134,382,1206,389,1266,397,1290,408,1309,425,1322,446,1330,445,1335,423,1327,404,1312,392,1292,384,1268,376,1206,376,1134,380,1057,383,979,383,908,375,848,367,824,356,806,343,794"/>
+<area shape="poly" id="edge32_Node000002_Node000032" title=" " alt="" coords="346,793,451,820,450,825,345,799"/>
+<area shape="poly" id="edge33_Node000002_Node000047" title=" " alt="" coords="346,790,360,802,381,832,395,861,402,890,405,919,399,976,386,1032,372,1088,366,1144,368,1172,375,1200,388,1229,408,1258,422,1270,439,1277,436,1282,419,1274,404,1262,384,1232,370,1202,363,1173,361,1144,367,1087,380,1031,394,975,400,919,397,891,390,863,376,835,356,806,343,795"/>
+<area shape="poly" id="edge34_Node000002_Node000034" title=" " alt="" coords="346,795,359,802,375,815,384,828,393,840,407,852,430,864,427,868,405,857,389,844,380,831,371,818,357,806,344,799"/>
+<area shape="poly" id="edge35_Node000002_Node000049" title=" " alt="" coords="343,761,356,751,370,734,377,717,380,681,383,645,390,625,404,606,430,588,433,592,408,610,395,628,389,646,386,682,382,718,374,737,360,755,346,765"/>
+<area shape="poly" id="edge36_Node000002_Node000055" title=" " alt="" coords="345,759,436,736,437,741,346,764"/>
+<area shape="poly" id="edge37_Node000002_Node000026" title=" " alt="" coords="346,793,360,802,380,827,388,851,394,876,408,904,437,938,465,966,461,969,433,942,404,907,389,878,383,852,375,829,356,806,343,797"/>
+<area shape="poly" id="edge38_Node000002_Node000052" title=" " alt="" coords="344,758,357,751,371,739,380,727,389,714,405,700,432,687,434,692,407,705,393,717,384,730,375,743,359,756,346,763"/>
+<area shape="poly" id="edge39_Node000002_Node000013" title=" " alt="" coords="343,763,356,752,370,733,379,714,387,675,384,637,376,598,368,560,366,522,377,484,388,465,404,447,428,430,455,417,484,409,513,405,571,405,621,411,620,417,571,410,514,410,485,414,457,422,431,434,408,451,392,469,381,486,372,522,373,559,381,597,389,636,392,676,384,715,374,735,360,755,346,767"/>
+<area shape="rect" id="Node000015" href="$classQuWriter.html" title="A class that can be used to write values from (almost) any kind of widget or object." alt="" coords="628,309,700,336"/>
+<area shape="poly" id="edge40_Node000002_Node000015" title=" " alt="" coords="343,762,356,752,373,727,381,702,382,678,380,653,377,627,378,601,386,575,404,549,422,533,441,525,478,521,516,518,535,511,554,498,573,475,581,452,588,427,601,397,648,335,652,338,606,400,593,429,586,454,577,477,557,502,537,516,517,523,479,526,443,530,425,538,408,552,391,577,384,602,383,627,385,652,387,678,386,703,378,729,360,755,346,766"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="191,5,358,32"/>
+<area shape="rect" id="Node000009" href="$classQThreadsEventBridge.html" title="an event bridge to post a CuEventI event to a QApplication" alt="" coords="406,5,555,32"/>
+<area shape="poly" id="edge41_Node000010_Node000009" title=" " alt="" coords="374,16,406,16,406,21,374,21"/>
+<area shape="rect" id="Node000028" href="$classEImageWidgetBase.html" title="a class inherited by EImageWidget to provide common functionalities to QWidget objects drawing an ima..." alt="" coords="5,664,143,691"/>
+<area shape="rect" id="Node000027" href="$classEImageWidget.html" title="A QWidget to display two dimensional arrays as an image." alt="" coords="221,664,328,691"/>
+<area shape="poly" id="edge42_Node000028_Node000027" title=" " alt="" coords="158,675,220,675,220,680,158,680"/>
+<area shape="rect" id="Node000029" href="$classImageGL.html" title="A QGLWidget to display two dimensional arrays as an image." alt="" coords="237,613,312,640"/>
+<area shape="poly" id="edge43_Node000028_Node000029" title=" " alt="" coords="144,657,236,633,237,639,145,662"/>
+<area shape="rect" id="Node000038" title=" " alt="" coords="228,1120,320,1147"/>
+<area shape="poly" id="edge44_Node000038_Node000037" title=" " alt="" coords="336,1131,430,1131,430,1136,336,1136"/>
+<area shape="rect" id="Node000040" title=" " alt="" coords="226,1171,322,1197"/>
+<area shape="poly" id="edge45_Node000040_Node000039" title=" " alt="" coords="338,1181,428,1181,428,1187,338,1187"/>
+<area shape="rect" id="Node000042" title=" " alt="" coords="214,1221,335,1248"/>
+<area shape="poly" id="edge46_Node000042_Node000041" title=" " alt="" coords="350,1232,416,1232,416,1237,350,1237"/>
+<area shape="rect" id="Node000059" title=" " alt="" coords="40,1537,108,1564"/>
+<area shape="rect" id="Node000058" href="$classEInputOutputWidget.html" title="base class to display values through an output widget and receive input values by means of an input w..." alt="" coords="205,1563,344,1589"/>
+<area shape="poly" id="edge47_Node000059_Node000058" title=" " alt="" coords="124,1554,204,1565,204,1570,123,1559"/>
+<area shape="rect" id="Node000060" href="$classENumeric.html" title="a widget to set a value" alt="" coords="235,1512,314,1539"/>
+<area shape="poly" id="edge49_Node000059_Node000060" title=" " alt="" coords="123,1542,234,1528,234,1533,124,1547"/>
+<area shape="poly" id="edge48_Node000058_Node000057" title=" " alt="" coords="344,1554,357,1548,380,1530,405,1511,431,1499,433,1504,407,1516,384,1534,359,1553,346,1559"/>
+<area shape="rect" id="Node000030" title=" " alt="" coords="30,613,118,640"/>
+<area shape="poly" id="edge50_Node000030_Node000029" title=" " alt="" coords="134,624,237,624,237,629,134,629"/>
+<area shape="rect" id="Node000046" title=" " alt="" coords="43,1461,105,1488"/>
+<area shape="rect" id="Node000044" href="$classQuLabelBase.html" title="A QLabel that in addition decorates its border and background." alt="" coords="225,1461,324,1488"/>
+<area shape="poly" id="edge51_Node000046_Node000044" title=" " alt="" coords="121,1472,224,1472,224,1477,121,1477"/>
+<area shape="poly" id="edge53_Node000044_Node000043" title=" " alt="" coords="338,1456,357,1447,410,1402,464,1348,468,1352,413,1406,359,1452,340,1461"/>
+<area shape="rect" id="Node000045" href="$classELabel.html" title="A label that can be used to display numeric, boolean or enum values." alt="" coords="450,1576,511,1603"/>
+<area shape="poly" id="edge52_Node000044_Node000045" title=" " alt="" coords="340,1487,360,1498,376,1514,385,1531,393,1546,408,1562,428,1573,450,1581,449,1586,426,1578,404,1566,388,1550,380,1533,372,1517,356,1502,337,1492"/>
+<area shape="rect" id="Node000048" title=" " alt="" coords="235,1272,314,1299"/>
+<area shape="poly" id="edge54_Node000048_Node000047" title=" " alt="" coords="329,1283,437,1283,437,1288,329,1288"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="240,208,309,235"/>
+<area shape="poly" id="edge60_Node000004_Node000001" title=" " alt="" coords="296,246,345,316,408,397,467,459,463,463,404,400,340,319,291,249"/>
+<area shape="poly" id="edge61_Node000004_Node000003" title=" " alt="" coords="311,241,356,268,407,295,436,306,434,311,405,300,353,273,308,246"/>
+<area shape="poly" id="edge62_Node000004_Node000011" title=" " alt="" coords="298,245,345,296,375,322,407,346,431,357,428,362,405,350,372,327,341,300,294,249"/>
+<area shape="poly" id="edge59_Node000004_Node000009" title=" " alt="" coords="287,193,332,118,365,77,404,42,425,30,428,35,408,46,369,81,337,121,291,195"/>
+<area shape="rect" id="Node000005" href="$classCuAppStateManager.html" title="This class calls suspend and start on all children of a given root QObject according to the QGuiAppli..." alt="" coords="410,107,552,133"/>
+<area shape="poly" id="edge55_Node000004_Node000005" title=" " alt="" coords="308,197,353,170,405,143,434,131,436,136,407,148,356,174,311,201"/>
+<area shape="rect" id="Node000006" href="$classCuEngineAccessor.html" title=" " alt="" coords="414,157,547,184"/>
+<area shape="poly" id="edge56_Node000004_Node000006" title=" " alt="" coords="323,207,423,182,424,187,325,212"/>
+<area shape="rect" id="Node000007" href="$classCumbiaInitOptions.html" title=" " alt="" coords="416,208,545,235"/>
+<area shape="poly" id="edge57_Node000004_Node000007" title=" " alt="" coords="324,219,416,219,416,224,324,224"/>
+<area shape="rect" id="Node000008" href="$classCumbiaPool__O.html" title="Wraps CumbiaPool and CuControlsFactoryPool in a QObject that can be used to set a context property on..." alt="" coords="426,56,535,83"/>
+<area shape="poly" id="edge58_Node000004_Node000008" title=" " alt="" coords="294,194,341,143,372,116,405,92,428,81,431,86,407,97,375,120,345,147,298,198"/>
+<area shape="rect" id="Node000012" href="$classQumbiaizer.html" title="QTangoizes anything (not really anything, but...)" alt="" coords="437,259,524,285"/>
+<area shape="poly" id="edge63_Node000004_Node000012" title=" " alt="" coords="325,231,437,259,436,264,323,236"/>
+<area shape="poly" id="edge64_Node000012_Node000013" title=" " alt="" coords="540,286,557,295,601,343,654,408,650,412,597,347,554,299,537,290"/>
+<area shape="poly" id="edge65_Node000012_Node000015" title=" " alt="" coords="540,286,628,310,627,315,539,291"/>
+<area shape="rect" id="Node000036" title=" " alt="" coords="225,1069,324,1096"/>
+<area shape="poly" id="edge66_Node000036_Node000035" title=" " alt="" coords="339,1080,442,1080,442,1085,339,1085"/>
+<area shape="rect" id="Node000056" title=" " alt="" coords="234,563,314,589"/>
+<area shape="poly" id="edge67_Node000056_Node000055" title=" " alt="" coords="331,583,360,599,372,612,379,625,385,651,391,676,397,689,408,701,438,717,435,722,404,705,393,692,386,678,380,652,374,627,367,615,356,603,328,588"/>
+<area shape="rect" id="Node000053" href="$classQuWidgetInterface.html" title="an interface to let subclasses provide an update strategy and a context menu strategy" alt="" coords="9,537,139,564"/>
+<area shape="rect" id="Node000051" href="$classQuPlotBase.html" title="A simple plot with zooming and scrolling capabilities." alt="" coords="229,512,320,539"/>
+<area shape="poly" id="edge68_Node000053_Node000051" title=" " alt="" coords="154,538,228,528,229,534,155,543"/>
+<area shape="poly" id="edge69_Node000051_Node000049" title=" " alt="" coords="336,538,424,559,422,565,335,543"/>
+<area shape="poly" id="edge70_Node000051_Node000052" title=" " alt="" coords="336,537,359,548,375,560,386,572,408,600,468,662,464,665,404,603,382,575,372,564,357,553,334,542"/>
+<area shape="rect" id="Node000018" title=" " alt="" coords="38,917,110,944"/>
+<area shape="poly" id="edge80_Node000018_Node000027" title=" " alt="" coords="79,901,93,857,115,803,146,748,166,723,189,701,219,684,221,689,192,705,170,726,151,751,120,806,98,859,85,903"/>
+<area shape="rect" id="Node000019" href="$classEAbstractGauge.html" title="an abstract class used to implement widgets with a color scale" alt="" coords="216,1411,333,1437"/>
+<area shape="poly" id="edge71_Node000018_Node000019" title=" " alt="" coords="78,960,84,1037,100,1145,115,1204,134,1263,160,1320,193,1372,214,1393,240,1408,237,1412,211,1397,189,1375,156,1322,129,1265,110,1205,95,1146,78,1038,73,960"/>
+<area shape="rect" id="Node000017" href="$classEApplyNumeric.html" title="a widget to set a value and write it" alt="" coords="218,715,330,741"/>
+<area shape="poly" id="edge75_Node000018_Node000017" title=" " alt="" coords="84,902,100,868,123,827,152,786,189,751,216,737,219,742,192,755,156,790,127,830,104,870,88,904"/>
+<area shape="rect" id="Node000024" href="$classEArrow.html" title="a class that can be used to draw arrows." alt="" coords="242,968,306,995"/>
+<area shape="poly" id="edge77_Node000018_Node000024" title=" " alt="" coords="126,941,243,971,241,976,124,946"/>
+<area shape="rect" id="Node000025" href="$classEFlag.html" title="A widget composed by a matrix of ELabel." alt="" coords="247,1019,302,1045"/>
+<area shape="poly" id="edge78_Node000018_Node000025" title=" " alt="" coords="106,951,146,979,192,1004,247,1023,245,1028,190,1009,143,983,103,956"/>
+<area shape="rect" id="Node000022" href="$classQuCircularGaugeBase.html" title=" " alt="" coords="199,1335,350,1361"/>
+<area shape="poly" id="edge81_Node000018_Node000022" title=" " alt="" coords="79,959,85,1028,103,1121,117,1171,137,1220,162,1267,193,1309,208,1322,226,1332,223,1336,205,1326,189,1312,157,1270,132,1222,112,1172,98,1122,80,1029,74,960"/>
+<area shape="rect" id="Node000031" href="$classQuLedBase.html" title="A color led." alt="" coords="230,816,319,843"/>
+<area shape="poly" id="edge83_Node000018_Node000031" title=" " alt="" coords="103,906,143,878,190,852,228,838,230,843,192,857,146,883,106,910"/>
+<area shape="rect" id="Node000033" href="$classQuLinearGaugeBase.html" title=" " alt="" coords="204,867,345,893"/>
+<area shape="poly" id="edge85_Node000018_Node000033" title=" " alt="" coords="125,915,218,891,219,897,126,920"/>
+<area shape="rect" id="Node000020" href="$classECircularGauge.html" title="a tachometer like widget" alt="" coords="424,1525,537,1552"/>
+<area shape="poly" id="edge72_Node000019_Node000020" title=" " alt="" coords="349,1441,360,1447,376,1463,385,1480,393,1496,408,1511,428,1522,425,1527,404,1515,388,1499,380,1482,372,1467,356,1451,346,1445"/>
+<area shape="rect" id="Node000023" href="$classELinearGauge.html" title="a thermometer like widget" alt="" coords="429,1424,532,1451"/>
+<area shape="poly" id="edge74_Node000019_Node000023" title=" " alt="" coords="349,1426,429,1431,428,1437,349,1431"/>
+<area shape="poly" id="edge73_Node000020_Node000021" title=" " alt="" coords="549,1516,553,1511,582,1477,605,1437,623,1396,637,1353,653,1276,659,1223,665,1223,659,1277,642,1355,628,1397,610,1440,587,1480,557,1515,552,1520"/>
+<area shape="poly" id="edge76_Node000017_Node000016" title=" " alt="" coords="346,743,424,762,422,767,345,748"/>
+<area shape="poly" id="edge79_Node000025_Node000026" title=" " alt="" coords="316,1019,445,987,446,992,317,1024"/>
+<area shape="poly" id="edge82_Node000022_Node000021" title=" " alt="" coords="331,1363,381,1375,438,1381,498,1377,527,1370,554,1359,574,1346,592,1330,622,1291,643,1253,655,1222,660,1224,647,1255,626,1294,596,1333,577,1350,557,1364,529,1375,499,1382,438,1386,380,1380,330,1369"/>
+<area shape="poly" id="edge84_Node000031_Node000032" title=" " alt="" coords="335,827,451,827,451,832,335,832"/>
+<area shape="poly" id="edge86_Node000033_Node000034" title=" " alt="" coords="360,877,425,877,425,883,360,883"/>
+<area shape="rect" id="Node000054" title=" " alt="" coords="40,487,108,513"/>
+<area shape="poly" id="edge87_Node000054_Node000051" title=" " alt="" coords="124,503,229,517,228,522,123,509"/>
 </map>

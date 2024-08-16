@@ -1,9 +1,20 @@
 <map id="cutangoactionfactoryi.h" name="cutangoactionfactoryi.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,181,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="15,225,73,251"/>
-<area shape="rect" id="node3" href="$cutangoactioni_8h.html" title=" " alt="" coords="80,79,211,104"/>
-<area shape="rect" id="node4" href="$tsource_8h.html" title=" " alt="" coords="80,152,163,177"/>
-<area shape="rect" id="node7" title=" " alt="" coords="187,152,325,177"/>
-<area shape="rect" id="node5" title=" " alt="" coords="99,225,141,251"/>
-<area shape="rect" id="node6" title=" " alt="" coords="166,225,261,251"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="31,5,188,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,229,59,256"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,33,44,216,39,214,102,32"/>
+<area shape="rect" id="Node000003" href="$cutangoactioni_8h.html" title=" " alt="" coords="114,80,230,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="122,31,153,66,149,70,118,34"/>
+<area shape="rect" id="Node000004" href="$tsource_8h.html" title=" " alt="" coords="134,155,210,181"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="175,107,175,139,169,139,169,107"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="234,155,358,181"/>
+<area shape="poly" id="edge9_Node000003_Node000009" title=" " alt="" coords="195,105,263,144,260,149,192,110"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="149,184,71,224,69,219,146,180"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="82,229,121,256"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="162,184,126,220,122,216,158,180"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="144,229,229,256"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="177,181,184,214,179,215,172,182"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="253,229,307,256"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="192,180,250,218,247,222,189,184"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="331,229,392,256"/>
+<area shape="poly" id="edge8_Node000004_Node000008" title=" " alt="" coords="206,179,317,222,315,227,204,184"/>
 </map>

@@ -1,7 +1,11 @@
 <map id="EAbstractGauge" name="EAbstractGauge">
-<area shape="rect" id="node1" title="an abstract class used to implement widgets with a color scale" alt="" coords="79,79,205,104"/>
-<area shape="rect" id="node3" href="$classECircularGauge.html" title="a tachometer like widget" alt="" coords="10,152,133,177"/>
-<area shape="rect" id="node5" href="$classELinearGauge.html" title="a thermometer like widget" alt="" coords="157,152,269,177"/>
-<area shape="rect" id="node2" title=" " alt="" coords="103,5,181,31"/>
-<area shape="rect" id="node4" href="$classQuCircularGauge.html" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors." alt="" coords="5,225,137,251"/>
+<area shape="rect" id="Node000001" title="an abstract class used to implement widgets with a color scale" alt="" coords="73,80,190,107"/>
+<area shape="rect" id="Node000003" href="$classECircularGauge.html" title="a tachometer like widget" alt="" coords="9,155,123,181"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="112,120,79,156,75,152,108,116"/>
+<area shape="rect" id="Node000005" href="$classELinearGauge.html" title="a thermometer like widget" alt="" coords="146,155,250,181"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="155,116,188,152,185,156,151,120"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="95,5,168,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,48,134,80,129,80,129,48"/>
+<area shape="rect" id="Node000004" href="$classQuCircularGauge.html" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors." alt="" coords="5,229,127,256"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="69,197,69,229,63,229,63,197"/>
 </map>

@@ -1,9 +1,15 @@
 <map id="QuApplyNumeric" name="QuApplyNumeric">
-<area shape="rect" id="node1" title="A widget to input a number and write it to a target linked to a control system engine." alt="" coords="185,225,317,251"/>
-<area shape="rect" id="node2" href="$classEApplyNumeric.html" title="a widget to set a value and write it" alt="" coords="43,152,166,177"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,79,84,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="109,79,223,104"/>
-<area shape="rect" id="node5" title=" " alt="" coords="99,5,233,31"/>
-<area shape="rect" id="node6" title=" " alt="" coords="190,152,313,177"/>
-<area shape="rect" id="node7" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="337,152,432,177"/>
+<area shape="rect" id="Node000001" title="A widget to input a number and write it to a target linked to a control system engine." alt="" coords="173,229,294,256"/>
+<area shape="rect" id="Node000002" href="$classEApplyNumeric.html" title="a widget to set a value and write it" alt="" coords="41,155,154,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,187,211,226,208,231,133,191"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,80,78,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="63,117,90,153,86,156,58,121"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="102,80,205,107"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="137,121,109,156,105,153,132,117"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="94,5,213,32"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="156,48,156,80,151,80,151,48"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="177,155,290,181"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="236,197,236,229,231,229,231,197"/>
+<area shape="rect" id="Node000007" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="313,155,402,181"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="325,192,257,231,254,226,322,187"/>
 </map>

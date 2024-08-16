@@ -1,5 +1,7 @@
 <map id="codeinjector.h" name="codeinjector.h">
-<area shape="rect" id="node1" title=" " alt="" coords="105,5,218,31"/>
-<area shape="rect" id="node2" href="$codeinjector_8cpp.html" title=" " alt="" coords="5,79,133,104"/>
-<area shape="rect" id="node3" href="$cumbiacodeinjectcmd_8cpp.html" title=" " alt="" coords="157,79,349,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="96,5,199,32"/>
+<area shape="rect" id="Node000002" href="$codeinjector_8cpp.html" title=" " alt="" coords="5,80,122,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,45,80,82,76,78,120,40"/>
+<area shape="rect" id="Node000003" href="$cumbiacodeinjectcmd_8cpp.html" title=" " alt="" coords="145,80,318,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,40,219,78,215,82,172,45"/>
 </map>

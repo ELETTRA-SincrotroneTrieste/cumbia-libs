@@ -1,4 +1,4 @@
 <map id="CuRandomGenActivity" name="CuRandomGenActivity">
-<area shape="rect" id="node1" title="an activity to periodically read from Tango. Implements CuPeriodicActivity" alt="" coords="5,79,175,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="19,5,161,31"/>
+<area shape="rect" id="node1" title="an activity to periodically read from Tango. Implements CuContinuousActivity" alt="" coords="5,80,175,107"/>
+<area shape="rect" id="node2" title=" " alt="" coords="9,5,171,32"/>
 </map>

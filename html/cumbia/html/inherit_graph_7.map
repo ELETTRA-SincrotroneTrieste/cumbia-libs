@@ -1,9 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuEventI.html" title="interface for a generic cumbia event designed to be generated in a secondary thread (CuActivity&#39;s thr..." alt="" coords="5,129,85,155"/>
-<area shape="rect" id="node2" href="$classCuA__ExitEv.html" title="exit event for the activity" alt="" coords="187,5,283,31"/>
-<area shape="rect" id="node3" href="$classCuA__UnregisterEv.html" title=" " alt="" coords="165,55,304,80"/>
-<area shape="rect" id="node4" href="$classCuExitLoopEvent.html" title="This event is used by CuEventLoop service to exit the loop." alt="" coords="169,104,301,129"/>
-<area shape="rect" id="node5" href="$classCuResultEvent.html" title="The CuResultEvent class stores a result that a CuActivity (sender) wants to deliver from the backgrou..." alt="" coords="176,153,293,179"/>
-<area shape="rect" id="node6" href="$classCuThreadAutoDestroyEvent.html" title="at the end of the thread event loop (CuThread::run), this event is posted. When received,..." alt="" coords="133,203,336,228"/>
-<area shape="rect" id="node7" href="$classCuTimerEvent.html" title=" " alt="" coords="177,252,292,277"/>
+<area shape="rect" id="Node000000" href="$classCuDType.html" title=" " alt="" coords="5,5,82,32"/>
+<area shape="rect" id="Node000001" href="$classCuXDType.html" title="extended data types" alt="" coords="130,5,215,32"/>
+<area shape="poly" id="edge7_Node000000_Node000001" title=" " alt="" coords="97,16,129,16,129,21,97,21"/>
 </map>

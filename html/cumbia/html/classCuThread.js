@@ -5,6 +5,7 @@ var classCuThread =
     ] ],
     [ "CuThread", "classCuThread.html#a430044076f3c07c48d37209873dba93d", null ],
     [ "~CuThread", "classCuThread.html#a0f2874b437a9dd91dbf9dcf20a043588", null ],
+    [ "activityCount", "classCuThread.html#a66c435d21a7f7b84fe92ce311ec98f14", null ],
     [ "cleanup", "classCuThread.html#a8c3f4a8c690cd063ff0fa50ac1238e2b", null ],
     [ "exit", "classCuThread.html#a604b58acc86a6aac579e5da87a5f779a", null ],
     [ "getToken", "classCuThread.html#a50b268b3ef33619d33e5202569ef15cd", null ],

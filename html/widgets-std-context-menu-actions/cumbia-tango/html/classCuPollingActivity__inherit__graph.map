@@ -1,4 +1,0 @@
-<map id="CuPollingActivity" name="CuPollingActivity">
-<area shape="rect" id="node1" title="an activity to periodically read from Tango. Implements CuContinuousActivity" alt="" coords="18,80,139,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,152,32"/>
-</map>

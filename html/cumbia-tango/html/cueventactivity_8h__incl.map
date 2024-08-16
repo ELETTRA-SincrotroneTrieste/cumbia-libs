@@ -1,6 +1,9 @@
 <map id="cueventactivity.h" name="cueventactivity.h">
-<area shape="rect" id="node1" title=" " alt="" coords="127,5,260,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,101,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="126,79,261,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="285,79,397,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="117,5,237,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,93,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,35,86,74,83,70,153,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="117,80,237,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,33,180,64,174,64,174,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="261,80,325,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="199,30,261,69,258,74,196,35"/>
 </map>

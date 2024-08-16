@@ -1,5 +1,7 @@
 <map id="EImageWidgetBase" name="EImageWidgetBase">
-<area shape="rect" id="node1" title="a class inherited by EImageWidget to provide common functionalities to QWidget objects drawing an ima..." alt="" coords="51,5,200,31"/>
-<area shape="rect" id="node2" href="$classEImageWidget.html" title="A QWidget to display two dimensional arrays as an image." alt="" coords="5,79,123,104"/>
-<area shape="rect" id="node3" href="$classImageGL.html" title="A QGLWidget to display two dimensional arrays as an image." alt="" coords="147,79,227,104"/>
+<area shape="rect" id="Node000001" title="a class inherited by EImageWidget to provide common functionalities to QWidget objects drawing an ima..." alt="" coords="48,5,185,32"/>
+<area shape="rect" id="Node000002" href="$classEImageWidget.html" title="A QWidget to display two dimensional arrays as an image." alt="" coords="5,80,113,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,46,71,81,67,78,95,43"/>
+<area shape="rect" id="Node000003" href="$classImageGL.html" title="A QGLWidget to display two dimensional arrays as an image." alt="" coords="136,80,211,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="138,43,166,78,162,81,134,46"/>
 </map>

@@ -1,5 +1,7 @@
 <map id="cutthread.h" name="cutthread.h">
-<area shape="rect" id="node1" title=" " alt="" coords="125,5,221,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,183,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="207,79,298,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="112,5,199,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,162,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,34,108,71,105,67,141,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="186,80,269,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="170,31,206,67,203,71,166,34"/>
 </map>

@@ -1,8 +1,15 @@
 <map id="fileprocessor_a.h" name="fileprocessor_a.h">
-<area shape="rect" id="node1" title=" " alt="" coords="52,5,184,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,152,76,177"/>
-<area shape="rect" id="node3" title=" " alt="" coords="100,152,155,177"/>
-<area shape="rect" id="node4" href="$definitions_8h.html" title=" " alt="" coords="156,79,259,104"/>
-<area shape="rect" id="node5" title=" " alt="" coords="179,152,281,177"/>
-<area shape="rect" id="node6" title=" " alt="" coords="305,152,400,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="52,5,173,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,155,71,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,34,54,142,49,140,104,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="94,155,147,181"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="116,32,122,139,117,139,111,33"/>
+<area shape="rect" id="Node000004" href="$definitions_8h.html" title=" " alt="" coords="150,80,241,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="129,31,171,68,168,72,125,35"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="169,110,81,150,78,145,167,105"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="184,109,146,146,142,142,180,105"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="171,155,268,181"/>
+<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="202,106,213,139,208,141,197,108"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="292,155,382,181"/>
+<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="221,105,300,145,297,150,219,110"/>
 </map>

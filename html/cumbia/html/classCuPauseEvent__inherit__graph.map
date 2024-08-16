@@ -1,4 +1,6 @@
 <map id="CuPauseEvent" name="CuPauseEvent">
-<area shape="rect" id="node1" title="event to pause an activity&#39;s timer" alt="" coords="11,79,126,104"/>
-<area shape="rect" id="node2" href="$classCuActivityEvent.html" title="Generic event to pass data to an activity." alt="" coords="5,5,132,31"/>
+<area shape="rect" id="Node000001" title="event to pause an activity&#39;s timer" alt="" coords="9,80,118,107"/>
+<area shape="rect" id="Node000002" href="$classCuActivityEvent.html" title="Generic event to pass data to an activity." alt="" coords="5,5,122,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="57,47,59,79,54,80,52,48"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="75,48,73,80,68,79,70,47"/>
 </map>

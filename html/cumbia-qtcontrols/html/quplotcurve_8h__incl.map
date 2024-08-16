@@ -1,6 +1,9 @@
 <map id="quplotcurve.h" name="quplotcurve.h">
-<area shape="rect" id="node1" title=" " alt="" coords="89,5,199,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,139,104"/>
-<area shape="rect" id="node3" href="$ecurvedata_8h.html" title=" " alt="" coords="163,79,269,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="179,152,253,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="81,5,180,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,126,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,34,89,70,85,67,117,31"/>
+<area shape="rect" id="Node000003" href="$ecurvedata_8h.html" title=" " alt="" coords="149,80,246,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="144,31,178,67,174,70,140,34"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="163,155,232,181"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="200,107,200,139,195,139,195,107"/>
 </map>

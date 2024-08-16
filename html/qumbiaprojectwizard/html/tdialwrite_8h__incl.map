@@ -1,6 +1,9 @@
 <map id="tdialwrite.h" name="tdialwrite.h">
-<area shape="rect" id="node1" title=" " alt="" coords="116,5,212,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,64,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="89,79,239,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="264,79,419,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="109,5,193,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,60,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,35,67,74,65,69,129,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="84,80,219,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="154,33,154,64,148,64,148,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="243,80,382,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="180,30,272,71,269,76,178,35"/>
 </map>

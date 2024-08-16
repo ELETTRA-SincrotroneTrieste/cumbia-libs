@@ -1,6 +1,11 @@
 <map id="cutcontrols&#45;utils.cpp" name="cutcontrols&#45;utils.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="68,5,223,31"/>
-<area shape="rect" id="node2" href="$cutcontrols-utils_8h.html" title=" " alt="" coords="5,79,144,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="169,79,266,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="28,152,121,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="156,5,294,32"/>
+<area shape="rect" id="Node000002" href="$cutcontrols-utils_8h.html" title=" " alt="" coords="5,80,130,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,35,110,75,108,71,196,30"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="154,80,296,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="228,33,228,64,222,64,222,33"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="320,80,410,107"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="250,30,328,70,325,75,248,35"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="24,155,111,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="70,107,70,139,65,139,65,107"/>
 </map>

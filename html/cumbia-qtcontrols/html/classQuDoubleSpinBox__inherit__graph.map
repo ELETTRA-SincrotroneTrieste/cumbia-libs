@@ -1,6 +1,9 @@
 <map id="QuDoubleSpinBox" name="QuDoubleSpinBox">
-<area shape="rect" id="node1" title=" " alt="" coords="107,79,245,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,91,31"/>
-<area shape="rect" id="node3" title=" " alt="" coords="115,5,237,31"/>
-<area shape="rect" id="node4" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="262,5,357,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="143,80,272,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,127,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,37,184,77,181,82,103,42"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="151,5,264,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="210,48,210,80,205,80,205,48"/>
+<area shape="rect" id="Node000004" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="287,5,376,32"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="298,42,230,82,228,77,296,38"/>
 </map>

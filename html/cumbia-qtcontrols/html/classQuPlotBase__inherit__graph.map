@@ -1,7 +1,13 @@
 <map id="QuPlotBase" name="QuPlotBase">
-<area shape="rect" id="node1" title="A simple plot with zooming and scrolling capabilities." alt="" coords="88,79,185,104"/>
-<area shape="rect" id="node4" href="$classQuSpectrumPlot.html" title="Draw a line for each data source over time." alt="" coords="5,152,132,177"/>
-<area shape="rect" id="node5" href="$classQuTrendPlot.html" title="Draw a line for each data source over time." alt="" coords="156,152,256,177"/>
-<area shape="rect" id="node2" title=" " alt="" coords="33,5,107,31"/>
-<area shape="rect" id="node3" href="$classQuWidgetInterface.html" title="an interface to let subclasses provide an update strategy and a context menu strategy" alt="" coords="131,5,275,31"/>
+<area shape="rect" id="Node000001" title="A simple plot with zooming and scrolling capabilities." alt="" coords="82,80,174,107"/>
+<area shape="rect" id="Node000004" href="$classQuSpectrumPlot.html" title="Draw a line for each data source over time." alt="" coords="5,155,123,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="109,120,77,156,73,152,105,117"/>
+<area shape="rect" id="Node000006" href="$classQuTrendPlot.html" title="Draw a line for each data source over time." alt="" coords="146,155,240,181"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="151,116,184,152,180,156,147,120"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="32,5,101,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,42,119,78,115,81,85,46"/>
+<area shape="rect" id="Node000003" href="$classQuWidgetInterface.html" title="an interface to let subclasses provide an update strategy and a context menu strategy" alt="" coords="126,5,256,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="172,46,141,81,137,78,168,42"/>
+<area shape="rect" id="Node000005" href="$classQuPlot.html" title=" " alt="" coords="33,229,95,256"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="67,197,67,229,61,229,61,197"/>
 </map>

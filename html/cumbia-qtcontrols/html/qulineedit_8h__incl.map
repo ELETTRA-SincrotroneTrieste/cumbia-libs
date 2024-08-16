@@ -1,6 +1,9 @@
 <map id="qulineedit.h" name="qulineedit.h">
-<area shape="rect" id="node1" title=" " alt="" coords="127,5,226,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,89,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="113,79,240,104"/>
-<area shape="rect" id="node4" href="$cucontexti_8h.html" title=" " alt="" coords="264,79,367,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="121,5,208,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,84,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,35,80,74,77,69,142,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="108,80,221,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,33,167,64,162,64,162,33"/>
+<area shape="rect" id="Node000004" href="$cucontexti_8h.html" title=" " alt="" coords="245,80,337,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="188,30,257,70,255,74,185,35"/>
 </map>

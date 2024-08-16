@@ -6,6 +6,7 @@ var classCuTimer =
     [ "isSingleShot", "classCuTimer.html#a47e8cddea7aa9aa3da504d7fb5d697f6", null ],
     [ "name", "classCuTimer.html#a08681338b34b5226611732767662d844", null ],
     [ "onEvent", "classCuTimer.html#a0b4f0b2ef1e53d14cb1fc38f398deb26", null ],
+    [ "pending", "classCuTimer.html#ad9e6184ff680fd1fa28f9407ef570b8b", null ],
     [ "run", "classCuTimer.html#a86e6afdbbb0fcf0ce3dd0a601c88629d", null ],
     [ "setName", "classCuTimer.html#a65378be6a8b2bd4f204828b3283acf06", null ],
     [ "setSingleShot", "classCuTimer.html#a4bc285454e24aa5ed786090279d47cb3", null ],

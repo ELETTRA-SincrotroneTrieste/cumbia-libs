@@ -1,8 +1,13 @@
 <map id="qthreadseventbridgefactory.cpp" name="qthreadseventbridgefactory.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="125,5,353,31"/>
-<area shape="rect" id="node2" href="$qthreadseventbridgefactory_8h.html" title=" " alt="" coords="25,79,238,104"/>
-<area shape="rect" id="node4" href="$qthreadseventbridge_8h.html" title=" " alt="" coords="272,79,441,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,152,239,177"/>
-<area shape="rect" id="node5" title=" " alt="" coords="263,152,450,177"/>
-<area shape="rect" id="node6" title=" " alt="" coords="474,152,549,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="113,5,315,32"/>
+<area shape="rect" id="Node000002" href="$qthreadseventbridgefactory_8h.html" title=" " alt="" coords="24,80,212,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,35,148,73,145,68,196,30"/>
+<area shape="rect" id="Node000004" href="$qthreadseventbridge_8h.html" title=" " alt="" coords="244,80,394,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="234,30,290,69,287,73,231,35"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,155,212,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="119,108,115,140,109,139,114,107"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="236,155,402,181"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="322,107,322,139,316,139,316,107"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="426,155,495,181"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="345,105,423,145,421,150,343,110"/>
 </map>

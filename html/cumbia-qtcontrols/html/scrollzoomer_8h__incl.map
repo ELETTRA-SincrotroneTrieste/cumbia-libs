@@ -1,6 +1,9 @@
 <map id="scrollzoomer.h" name="scrollzoomer.h">
-<area shape="rect" id="node1" title=" " alt="" coords="127,5,244,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,88,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="113,79,258,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="283,79,373,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="116,5,222,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,79,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,35,79,74,76,70,145,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="103,80,234,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="171,33,171,64,166,64,166,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="259,80,340,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="193,30,264,70,262,74,190,35"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="string_delegate.h" name="string_delegate.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,140,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="37,79,108,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,126,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="33,80,98,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,33,68,64,63,64,63,33"/>
 </map>

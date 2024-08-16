@@ -1,5 +1,7 @@
 <map id="quconnectionsettingswidget.h" name="quconnectionsettingswidget.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,223,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="24,79,103,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="127,79,205,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,199,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="18,80,90,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,34,73,69,68,66,91,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="114,80,186,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="113,31,136,66,131,69,108,34"/>
 </map>

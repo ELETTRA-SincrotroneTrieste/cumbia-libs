@@ -1,5 +1,7 @@
 <map id="eimagemouseeventinterface.h" name="eimagemouseeventinterface.h">
-<area shape="rect" id="node1" title=" " alt="" coords="127,5,350,31"/>
-<area shape="rect" id="node2" href="$eimagemouseeventinterface_8cpp.html" title=" " alt="" coords="5,79,243,104"/>
-<area shape="rect" id="node3" href="$eimagewidgetbase_8cpp.html" title=" " alt="" coords="267,79,440,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="115,5,310,32"/>
+<area shape="rect" id="Node000002" href="$eimagemouseeventinterface_8cpp.html" title=" " alt="" coords="5,80,215,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,44,130,82,126,77,181,39"/>
+<area shape="rect" id="Node000003" href="$eimagewidgetbase_8cpp.html" title=" " alt="" coords="238,80,392,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="245,39,299,77,296,82,242,44"/>
 </map>

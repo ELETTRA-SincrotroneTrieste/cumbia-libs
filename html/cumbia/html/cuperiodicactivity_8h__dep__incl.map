@@ -1,5 +1,7 @@
 <map id="cuperiodicactivity.h" name="cuperiodicactivity.h">
-<area shape="rect" id="node1" title=" " alt="" coords="57,5,205,31"/>
-<area shape="rect" id="node2" href="$cumbia_8cpp.html" title=" " alt="" coords="5,79,103,104"/>
-<area shape="rect" id="node3" href="$cuperiodicactivity_8cpp.html" title=" " alt="" coords="127,79,290,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="54,5,186,32"/>
+<area shape="rect" id="Node000002" href="$cumbia_8cpp.html" title=" " alt="" coords="5,80,94,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,45,64,81,60,78,95,41"/>
+<area shape="rect" id="Node000003" href="$cuperiodicactivity_8cpp.html" title=" " alt="" coords="118,80,264,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="145,41,181,78,177,81,141,45"/>
 </map>

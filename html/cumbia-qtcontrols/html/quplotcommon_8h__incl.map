@@ -1,6 +1,9 @@
 <map id="quplotcommon.h" name="quplotcommon.h">
-<area shape="rect" id="node1" title=" " alt="" coords="71,5,203,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,79,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="103,79,170,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="194,79,285,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="71,5,188,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,75,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,35,69,72,66,68,112,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="98,80,160,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="132,33,132,64,127,64,127,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="185,80,266,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="148,30,198,68,195,73,144,35"/>
 </map>

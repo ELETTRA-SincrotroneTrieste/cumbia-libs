@@ -1,11 +1,19 @@
 <map id="FileCmd" name="FileCmd">
-<area shape="rect" id="node1" title=" " alt="" coords="5,179,80,204"/>
-<area shape="rect" id="node2" href="$classCppInstantiationExpand.html" title=" " alt="" coords="173,5,350,31"/>
-<area shape="rect" id="node3" href="$classCumbiaCodeInjectCmd.html" title=" " alt="" coords="176,55,347,80"/>
-<area shape="rect" id="node4" href="$classFindReplace.html" title=" " alt="" coords="211,104,312,129"/>
-<area shape="rect" id="node5" href="$classMainCppExpandCmd.html" title=" " alt="" coords="183,153,340,179"/>
-<area shape="rect" id="node6" href="$classMainCppPrepareCmd.html" title=" " alt="" coords="182,203,341,228"/>
-<area shape="rect" id="node7" href="$classMainWidgetCppConstructProcessCmd.html" title=" " alt="" coords="128,252,395,277"/>
-<area shape="rect" id="node8" href="$classMainWidgetHProcessCmd.html" title="If mainwidget.h class declaration contains a Ui::MainwidgetName ui, check that it is a pointer type...." alt="" coords="166,301,357,327"/>
-<area shape="rect" id="node9" href="$classProConvertCmd.html" title=" " alt="" coords="199,351,323,376"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,183,76,209"/>
+<area shape="rect" id="Node000002" href="$classCppInstantiationExpand.html" title=" " alt="" coords="167,5,328,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,167,57,137,73,103,94,70,122,42,143,30,166,22,168,27,145,35,125,46,98,73,77,106,62,139,52,168"/>
+<area shape="rect" id="Node000003" href="$classCumbiaCodeInjectCmd.html" title=" " alt="" coords="169,56,326,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="54,168,82,128,101,109,122,92,144,82,168,74,169,80,146,87,125,97,104,113,86,132,58,171"/>
+<area shape="rect" id="Node000004" href="$classFindReplace.html" title=" " alt="" coords="200,107,294,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="71,171,123,143,161,131,199,123,200,128,163,136,125,148,73,176"/>
+<area shape="rect" id="Node000005" href="$classMainCppExpandCmd.html" title=" " alt="" coords="175,157,320,184"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="91,187,174,177,175,182,91,193"/>
+<area shape="rect" id="Node000006" href="$classMainCppPrepareCmd.html" title=" " alt="" coords="174,208,320,235"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="91,199,174,210,173,215,91,205"/>
+<area shape="rect" id="Node000007" href="$classMainWidgetCppConstructProcessCmd.html" title=" " alt="" coords="124,259,371,285"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="73,216,125,244,160,255,159,261,123,249,71,221"/>
+<area shape="rect" id="Node000008" href="$classMainWidgetHProcessCmd.html" title="If mainwidget.h class declaration contains a Ui::MainwidgetName ui, check that it is a pointer type...." alt="" coords="159,309,336,336"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="58,221,86,260,104,279,125,295,160,310,158,315,122,300,101,283,82,264,54,224"/>
+<area shape="rect" id="Node000009" href="$classProConvertCmd.html" title=" " alt="" coords="190,360,305,387"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="52,224,62,253,77,286,98,319,125,346,156,361,190,369,189,374,154,366,122,350,94,322,73,289,57,255,47,225"/>
 </map>

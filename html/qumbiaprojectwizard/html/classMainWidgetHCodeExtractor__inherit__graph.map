@@ -1,4 +1,5 @@
 <map id="MainWidgetHCodeExtractor" name="MainWidgetHCodeExtractor">
-<area shape="rect" id="node1" title=" " alt="" coords="5,79,208,104"/>
-<area shape="rect" id="node2" href="$classCodeExtractorA.html" title=" " alt="" coords="45,5,168,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,80,190,107"/>
+<area shape="rect" id="Node000002" href="$classCodeExtractorA.html" title=" " alt="" coords="40,5,155,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,48,100,80,95,80,95,48"/>
 </map>

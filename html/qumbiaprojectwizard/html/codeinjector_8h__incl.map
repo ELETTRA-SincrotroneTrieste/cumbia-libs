@@ -1,10 +1,22 @@
 <map id="codeinjector.h" name="codeinjector.h">
-<area shape="rect" id="node1" title=" " alt="" coords="47,5,160,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,299,76,324"/>
-<area shape="rect" id="node3" href="$cumbiacodeinjectcmd_8h.html" title=" " alt="" coords="111,79,288,104"/>
-<area shape="rect" id="node4" href="$fileprocessor__a_8h.html" title=" " alt="" coords="149,152,281,177"/>
-<area shape="rect" id="node5" title=" " alt="" coords="345,299,400,324"/>
-<area shape="rect" id="node6" href="$definitions_8h.html" title=" " alt="" coords="180,225,283,251"/>
-<area shape="rect" id="node7" title=" " alt="" coords="101,299,202,324"/>
-<area shape="rect" id="node8" title=" " alt="" coords="227,299,321,324"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="44,5,146,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,304,71,331"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,33,46,289,41,288,90,32"/>
+<area shape="rect" id="Node000003" href="$cumbiacodeinjectcmd_8h.html" title=" " alt="" coords="108,80,266,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="113,30,161,68,158,73,110,35"/>
+<area shape="poly" id="edge11_Node000003_Node000002" title=" " alt="" coords="176,109,135,156,88,228,53,291,49,289,83,226,131,153,172,106"/>
+<area shape="rect" id="Node000004" href="$fileprocessor__a_8h.html" title=" " alt="" coords="144,155,265,181"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="193,107,201,139,196,140,188,108"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="330,304,383,331"/>
+<area shape="poly" id="edge12_Node000003_Node000005" title=" " alt="" coords="214,105,247,125,279,153,304,187,324,223,351,288,346,290,319,226,299,190,275,156,244,129,212,110"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="193,184,109,258,66,296,62,292,106,254,189,180"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="224,180,281,227,339,290,335,294,277,231,220,184"/>
+<area shape="rect" id="Node000006" href="$definitions_8h.html" title=" " alt="" coords="176,229,268,256"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="210,181,218,213,213,215,205,182"/>
+<area shape="poly" id="edge8_Node000006_Node000002" title=" " alt="" coords="191,259,85,300,83,295,189,254"/>
+<area shape="poly" id="edge7_Node000006_Node000005" title=" " alt="" coords="247,254,321,294,318,299,244,259"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="95,304,192,331"/>
+<area shape="poly" id="edge9_Node000006_Node000007" title=" " alt="" coords="210,259,170,295,166,291,206,255"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="216,304,306,331"/>
+<area shape="poly" id="edge10_Node000006_Node000008" title=" " alt="" coords="231,255,249,289,245,292,226,258"/>
 </map>

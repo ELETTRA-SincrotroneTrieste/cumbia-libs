@@ -1,6 +1,9 @@
 <map id="qugaugeconfig.h" name="qugaugeconfig.h">
-<area shape="rect" id="node1" title=" " alt="" coords="91,5,221,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,99,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="123,79,189,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="213,79,269,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="89,5,205,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,92,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,35,79,73,76,69,128,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="116,80,178,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="150,33,150,64,144,64,144,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="203,80,257,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="163,31,206,68,202,72,160,35"/>
 </map>

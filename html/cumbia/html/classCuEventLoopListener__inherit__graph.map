@@ -1,5 +1,8 @@
 <map id="CuEventLoopListener" name="CuEventLoopListener">
-<area shape="rect" id="node1" title="listens for the events from the CuEventLoopService" alt="" coords="11,5,170,31"/>
-<area shape="rect" id="node2" href="$classCuThreadsEventBridge.html" title="cumbia basic thread event bridge" alt="" coords="5,79,176,104"/>
-<area shape="rect" id="node3" href="$classCuTimer.html" title="a timer used by CuThread for periodic execution of an activity" alt="" coords="200,79,277,104"/>
+<area shape="rect" id="Node000001" title="listens for the events from the CuEventLoopService" alt="" coords="10,5,157,32"/>
+<area shape="rect" id="Node000002" href="$classCuThreadsEventBridge.html" title="cumbia basic thread event bridge" alt="" coords="5,80,162,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,47,79,79,74,80,72,48"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="95,48,93,80,88,79,90,47"/>
+<area shape="rect" id="Node000003" href="$classCuTimer.html" title="a timer used by CuThread for periodic execution of an activity" alt="" coords="185,80,256,107"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="122,37,198,77,195,82,120,42"/>
 </map>

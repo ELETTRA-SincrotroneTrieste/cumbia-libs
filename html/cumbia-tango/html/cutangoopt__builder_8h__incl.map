@@ -1,12 +1,29 @@
 <map id="cutangoopt_builder.h" name="cutangoopt_builder.h">
-<area shape="rect" id="node1" title=" " alt="" coords="326,5,485,31"/>
-<area shape="rect" id="node2" href="$cutreader_8h.html" title=" " alt="" coords="222,79,317,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="303,299,361,324"/>
-<area shape="rect" id="node9" title=" " alt="" coords="409,79,471,104"/>
-<area shape="rect" id="node10" title=" " alt="" coords="495,79,574,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,225,144,251"/>
-<area shape="rect" id="node5" href="$tsource_8h.html" title=" " alt="" coords="189,225,272,251"/>
-<area shape="rect" id="node8" href="$cutangoactioni_8h.html" title=" " alt="" coords="101,152,232,177"/>
-<area shape="rect" id="node6" title=" " alt="" coords="116,299,159,324"/>
-<area shape="rect" id="node7" title=" " alt="" coords="183,299,278,324"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="330,5,471,32"/>
+<area shape="rect" id="Node000002" href="$cutreader_8h.html" title=" " alt="" coords="223,80,309,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="378,35,304,75,302,70,376,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="339,304,393,331"/>
+<area shape="poly" id="edge14_Node000001_Node000003" title=" " alt="" coords="402,33,372,289,366,288,396,32"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="405,80,463,107"/>
+<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="409,31,424,65,419,67,404,34"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="486,80,558,107"/>
+<area shape="poly" id="edge15_Node000001_Node000012" title=" " alt="" coords="423,30,489,69,486,74,420,35"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="274,106,357,289,352,291,269,108"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="14,229,139,256"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="223,102,192,108,159,119,128,134,101,156,86,184,80,214,75,213,81,182,97,153,125,130,157,114,191,103,222,97"/>
+<area shape="rect" id="Node000005" href="$tsource_8h.html" title=" " alt="" coords="166,229,241,256"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="266,107,257,142,243,182,223,218,218,215,238,180,252,140,261,106"/>
+<area shape="rect" id="Node000010" href="$cutangoactioni_8h.html" title=" " alt="" coords="112,155,228,181"/>
+<area shape="poly" id="edge10_Node000002_Node000010" title=" " alt="" coords="251,109,200,147,197,143,248,105"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="233,254,326,295,324,300,230,259"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,304,44,331"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="173,259,59,305,57,300,171,254"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="67,304,153,331"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="189,259,139,297,136,292,185,254"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="177,304,230,331"/>
+<area shape="poly" id="edge8_Node000005_Node000008" title=" " alt="" coords="206,257,206,288,201,288,201,257"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="254,304,315,331"/>
+<area shape="poly" id="edge9_Node000005_Node000009" title=" " alt="" coords="219,255,261,292,258,296,216,259"/>
+<area shape="poly" id="edge12_Node000010_Node000004" title=" " alt="" coords="155,184,106,222,103,218,152,180"/>
+<area shape="poly" id="edge11_Node000010_Node000005" title=" " alt="" coords="178,181,194,214,189,216,173,183"/>
 </map>

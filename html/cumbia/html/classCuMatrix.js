@@ -20,5 +20,6 @@ var classCuMatrix =
     [ "operator[]", "classCuMatrix.html#a5bacbc94bebac68f7265bd1db3209ebb", null ],
     [ "raw_data", "classCuMatrix.html#aa6c891fb56495febab7801847fef308b", null ],
     [ "repr", "classCuMatrix.html#adf81bd76e16265ef199251905e7d1221", null ],
+    [ "repr_str", "classCuMatrix.html#a029808fafc6a81ec1c565a3b627ba7b9", null ],
     [ "size", "classCuMatrix.html#a42167fcfb37e4d0320fd038e971a9319", null ]
 ];

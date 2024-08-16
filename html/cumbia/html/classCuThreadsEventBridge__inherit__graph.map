@@ -1,5 +1,9 @@
 <map id="CuThreadsEventBridge" name="CuThreadsEventBridge">
-<area shape="rect" id="node1" title="cumbia basic thread event bridge" alt="" coords="108,79,279,104"/>
-<area shape="rect" id="node2" href="$classCuThreadsEventBridge__I.html" title="interface to a threads event bridge" alt="" coords="5,5,187,31"/>
-<area shape="rect" id="node3" href="$classCuEventLoopListener.html" title="listens for the events from the CuEventLoopService" alt="" coords="211,5,370,31"/>
+<area shape="rect" id="Node000001" title="cumbia basic thread event bridge" alt="" coords="102,80,258,107"/>
+<area shape="rect" id="Node000002" href="$classCuThreadsEventBridge__I.html" title="interface to a threads event bridge" alt="" coords="5,5,173,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,40,158,77,155,81,107,45"/>
+<area shape="poly" id="edge3_Node000001_Node000002" title=" " alt="" coords="126,39,173,78,169,82,123,43"/>
+<area shape="rect" id="Node000003" href="$classCuEventLoopListener.html" title="listens for the events from the CuEventLoopService" alt="" coords="197,5,344,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="237,43,190,82,187,78,233,39"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="252,45,204,81,201,77,249,40"/>
 </map>

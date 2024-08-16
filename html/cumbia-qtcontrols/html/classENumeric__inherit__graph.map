@@ -1,6 +1,9 @@
 <map id="ENumeric" name="ENumeric">
-<area shape="rect" id="node1" title="a widget to set a value" alt="" coords="58,152,143,177"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,79,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="103,79,218,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="94,5,227,31"/>
+<area shape="rect" id="Node000001" title="a widget to set a value" alt="" coords="54,155,134,181"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,74,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="60,118,87,153,83,156,56,121"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="98,80,200,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="132,121,106,156,101,153,128,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="89,5,208,32"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="152,48,152,80,146,80,146,48"/>
 </map>

@@ -1,7 +1,19 @@
 var searchData=
 [
-  ['matrix_0',['Matrix',['../classCuVariant.html#a3a05e05644e584a050e77d895c69b5e2a1418c8e6d93ea79452b6d9b304d4469e',1,'CuVariant']]],
-  ['maxqualitytype_1',['MaxQualityType',['../classCuDataQuality.html#a6a78fa28ebb7b9ac9c8450bf836615a7abcc8ed6dea0b0310c45a8b662f1ba53b',1,'CuDataQuality']]],
-  ['maxuser_2',['MaxUser',['../classCuActivityEvent.html#a3727016a1c613763a0936d426d80301aa36acc626ec3d6b87e6022658c123d1fb',1,'CuActivityEvent']]],
-  ['maxuserflags_3',['MaxUserFlags',['../classCuActivity.html#a23c71d30d18fdf76bf7b3b0ce148013da0139759378eabd86d914827123218a48',1,'CuActivity']]]
+  ['label_0',['Label',['../classCuDType.html#af65c83bb7af4b8045c5867e8eb8f8d2da47ec111d92823c8725b2d3f8958a03f6',1,'CuDType']]],
+  ['levelall_1',['LevelAll',['../classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a1e1a81ba5430cec16171a12cec914717',1,'CuLog']]],
+  ['leveldebug_2',['LevelDebug',['../classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a28b047022fbe27f18d86cd2060c17ba0',1,'CuLog']]],
+  ['levelerror_3',['LevelError',['../classCuLog.html#acd2350b2a3cfcd601126df046ed5c723ab5fbba3c0fa2aec6e11934fce4888a17',1,'CuLog']]],
+  ['levelinfo_4',['LevelInfo',['../classCuLog.html#acd2350b2a3cfcd601126df046ed5c723a13d371d1c79c025590203ac7a440732d',1,'CuLog']]],
+  ['leveluser_5',['LevelUser',['../classCuLog.html#acd2350b2a3cfcd601126df046ed5c723ae7835550aaae0fad57801e58e60a2261',1,'CuLog']]],
+  ['levelwarn_6',['LevelWarn',['../classCuLog.html#acd2350b2a3cfcd601126df046ed5c723aa4785213fa7a48955a7e9e22c4d8d4a1',1,'CuLog']]],
+  ['log_7',['Log',['../classCuServices.html#aa03cab8558f097dcdba9b49c90140c0bafe0f9b13689ac2ce980076b364b04b1e',1,'CuServices']]],
+  ['longdouble_8',['LongDouble',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca945573e6f9761cd309c931a2989a9b7a',1,'CuVariant']]],
+  ['longint_9',['LongInt',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca8daeeeaf8cc61c7fe17394ecbb75b80b',1,'CuVariant']]],
+  ['longlongint_10',['LongLongInt',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280caaa959e554a99169e7eec0b45bacc18b1',1,'CuVariant']]],
+  ['longlonguint_11',['LongLongUInt',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280cadacad3f32c618ddba203623ac899795d',1,'CuVariant']]],
+  ['longuint_12',['LongUInt',['../classCuVariant.html#abceb8a9b2638b0915066e197e9a7280ca7df23990fcabbf137adc2a193e92f596',1,'CuVariant']]],
+  ['loweralarmlimit_13',['LowerAlarmLimit',['../classCuXDType.html#a67e5a4f14ca507c05437d57c10d4c0f6a3d5b2b18ce9bc2e818312909dd5969f6',1,'CuXDType']]],
+  ['lowerctrllimit_14',['LowerCtrlLimit',['../classCuXDType.html#a67e5a4f14ca507c05437d57c10d4c0f6a5b735c19fc6d71bf2515f5d81ef268c5',1,'CuXDType']]],
+  ['lowerwarninglimit_15',['LowerWarningLimit',['../classCuXDType.html#a67e5a4f14ca507c05437d57c10d4c0f6afd7c1ef59c427f49ed607531d2c1cb16',1,'CuXDType']]]
 ];

@@ -27,6 +27,7 @@ var NAVTREE =
   [ "cumbia", "index.html", [
     [ "Related readings", "index.html#related_readings", [
       [ ".io", "index.html#github", null ],
+      [ "cumbia2", "index.html#cumbia2", null ],
       [ "Tutorials", "index.html#tutorials", null ],
       [ "Modules", "index.html#cumodules", null ],
       [ "Plugins", "index.html#cuplugins", null ],
@@ -48,7 +49,7 @@ var NAVTREE =
         [ "Variables", "functions_vars.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
         [ "Enumerator", "functions_eval.html", null ],
-        [ "Related Functions", "functions_rela.html", null ]
+        [ "Related Symbols", "functions_rela.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -65,9 +66,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"classCuMatrix.html#aa6c891fb56495febab7801847fef308b",
-"classCuVariant.html#a3c0f7fab42b4e7c5a0fc2bf6402f2a9f",
-"cumacros_8h.html#a9fa79e6965ddfcb29365b2c3282920f7"
+"classCuDataQuality.html#a9986ba44d1ed670f93fea0e178f42950",
+"classCuThreadService.html#af7e0ebc46e2c96181f3d8bdd7cedfe68",
+"classCuVariant.html#ae2f7ea7413ad190eb2a351a9596c5b92",
+"cutimer_8cpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

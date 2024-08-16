@@ -1,5 +1,7 @@
 <map id="qumbia&#45;tango&#45;controls_global.h" name="qumbia&#45;tango&#45;controls_global.h">
-<area shape="rect" id="node1" title=" " alt="" coords="13,5,184,45"/>
-<area shape="rect" id="node2" href="$qumbiatangocontrols_8h.html" title=" " alt="" coords="13,93,185,119"/>
-<area shape="rect" id="node3" href="$qumbiatangocontrols_8cpp.html" title=" " alt="" coords="5,167,192,192"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="14,5,163,48"/>
+<area shape="rect" id="Node000002" href="$qumbiatangocontrols_8h.html" title=" " alt="" coords="12,96,165,123"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,64,91,95,86,95,86,64"/>
+<area shape="rect" id="Node000003" href="$qumbiatangocontrols_8cpp.html" title=" " alt="" coords="5,171,172,197"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="91,138,91,170,86,170,86,138"/>
 </map>

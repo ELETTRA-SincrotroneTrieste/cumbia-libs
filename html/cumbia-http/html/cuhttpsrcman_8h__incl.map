@@ -1,11 +1,19 @@
 <map id="cuhttpsrcman.h" name="cuhttpsrcman.h">
-<area shape="rect" id="node1" title=" " alt="" coords="83,5,205,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,80,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="105,79,183,104"/>
-<area shape="rect" id="node4" href="$cuhttp__source_8h.html" title=" " alt="" coords="208,79,333,104"/>
-<area shape="rect" id="node5" title=" " alt="" coords="99,152,170,177"/>
-<area shape="rect" id="node6" title=" " alt="" coords="194,152,249,177"/>
-<area shape="rect" id="node7" title=" " alt="" coords="273,152,367,177"/>
-<area shape="rect" id="node8" href="$cuhttpsrchelper__i_8h.html" title=" " alt="" coords="392,152,539,177"/>
-<area shape="rect" id="node9" title=" " alt="" coords="436,225,495,251"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="79,5,190,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,75,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,35,70,73,67,68,117,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="99,80,170,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="137,33,137,64,132,64,132,33"/>
+<area shape="rect" id="Node000004" href="$cuhttp__source_8h.html" title=" " alt="" coords="195,80,309,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="156,30,220,69,217,74,154,35"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="90,155,155,181"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="231,110,160,149,157,144,228,105"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="179,155,232,181"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="246,109,224,143,219,140,242,106"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="256,155,341,181"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="262,106,285,140,280,143,258,109"/>
+<area shape="rect" id="Node000008" href="$cuhttpsrchelper__i_8h.html" title=" " alt="" coords="365,155,496,181"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="284,105,386,146,384,151,282,110"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="404,229,457,256"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="433,182,433,214,428,214,428,182"/>
 </map>

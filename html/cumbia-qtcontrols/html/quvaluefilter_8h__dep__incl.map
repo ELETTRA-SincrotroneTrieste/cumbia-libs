@@ -1,12 +1,24 @@
 <map id="quvaluefilter.h" name="quvaluefilter.h">
-<area shape="rect" id="node1" title=" " alt="" coords="178,5,293,31"/>
-<area shape="rect" id="node2" href="$qumbiaizer_8cpp.html" title=" " alt="" coords="5,225,127,251"/>
-<area shape="rect" id="node3" href="$qumbiaizer_8h.html" title=" " alt="" coords="182,79,289,104"/>
-<area shape="rect" id="node10" href="$quvaluefilter_8cpp.html" title=" " alt="" coords="313,79,443,104"/>
-<area shape="rect" id="node4" href="$qumbiaizerprivate_8h.html" title=" " alt="" coords="159,152,312,177"/>
-<area shape="rect" id="node7" href="$quwatcher_8h.html" title=" " alt="" coords="466,152,567,177"/>
-<area shape="rect" id="node9" href="$quwriter_8h.html" title=" " alt="" coords="344,152,431,177"/>
-<area shape="rect" id="node5" href="$qumbiaizerprivate_8cpp.html" title=" " alt="" coords="151,225,319,251"/>
-<area shape="rect" id="node6" href="$quwriter_8cpp.html" title=" " alt="" coords="344,225,447,251"/>
-<area shape="rect" id="node8" href="$quwatcher_8cpp.html" title=" " alt="" coords="471,225,587,251"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="164,5,266,32"/>
+<area shape="rect" id="Node000002" href="$qumbiaizer_8cpp.html" title=" " alt="" coords="5,229,115,256"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,45,157,82,128,122,102,164,68,230,63,228,97,161,123,119,153,78,188,41"/>
+<area shape="rect" id="Node000003" href="$qumbiaizer_8h.html" title=" " alt="" coords="167,80,262,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="217,48,217,80,212,80,212,48"/>
+<area shape="rect" id="Node000010" href="$quvaluefilter_8cpp.html" title=" " alt="" coords="286,80,402,107"/>
+<area shape="poly" id="edge12_Node000001_Node000010" title=" " alt="" coords="252,38,323,77,320,82,249,42"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="186,118,138,157,100,196,72,231,68,227,96,193,134,153,182,114"/>
+<area shape="rect" id="Node000004" href="$qumbiaizerprivate_8h.html" title=" " alt="" coords="148,155,282,181"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="217,122,217,154,212,154,212,122"/>
+<area shape="rect" id="Node000007" href="$quwatcher_8h.html" title=" " alt="" coords="424,155,517,181"/>
+<area shape="poly" id="edge8_Node000003_Node000007" title=" " alt="" coords="274,109,426,151,425,157,273,114"/>
+<area shape="rect" id="Node000009" href="$quwriter_8h.html" title=" " alt="" coords="312,155,390,181"/>
+<area shape="poly" id="edge10_Node000003_Node000009" title=" " alt="" coords="253,112,328,152,326,156,251,117"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="175,191,88,231,86,226,173,186"/>
+<area shape="rect" id="Node000005" href="$qumbiaizerprivate_8cpp.html" title=" " alt="" coords="139,229,288,256"/>
+<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="217,197,216,229,211,229,211,197"/>
+<area shape="rect" id="Node000006" href="$quwriter_8cpp.html" title=" " alt="" coords="311,229,404,256"/>
+<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="254,186,333,226,331,231,252,191"/>
+<area shape="rect" id="Node000008" href="$quwatcher_8cpp.html" title=" " alt="" coords="428,229,534,256"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="477,196,482,229,477,229,472,197"/>
+<area shape="poly" id="edge11_Node000009_Node000006" title=" " alt="" coords="356,197,359,229,354,229,351,197"/>
 </map>

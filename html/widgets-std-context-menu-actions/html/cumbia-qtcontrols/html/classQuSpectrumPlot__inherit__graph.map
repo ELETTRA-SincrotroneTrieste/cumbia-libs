@@ -1,8 +1,0 @@
-<map id="QuSpectrumPlot" name="QuSpectrumPlot">
-<area shape="rect" id="node1" title="Draw a line for each data source over time." alt="" coords="167,155,285,181"/>
-<area shape="rect" id="node2" href="$classQuPlotBase.html" title="A simple plot with zooming and scrolling capabilities." alt="" coords="55,80,147,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,5,73,32"/>
-<area shape="rect" id="node4" href="$classQuWidgetInterface.html" title="an interface to let subclasses provide an update strategy and a context menu strategy" alt="" coords="98,5,229,32"/>
-<area shape="rect" id="node5" title=" " alt="" coords="171,80,281,107"/>
-<area shape="rect" id="node6" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="305,80,392,107"/>
-</map>

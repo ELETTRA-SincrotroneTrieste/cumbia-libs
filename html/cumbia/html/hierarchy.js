@@ -19,6 +19,12 @@ var hierarchy =
     [ "CuDataListener", "classCuDataListener.html", null ],
     [ "CuDataQuality", "classCuDataQuality.html", null ],
     [ "CuDataSerializer", "classCuDataSerializer.html", null ],
+    [ "CuDType", "classCuDType.html", [
+      [ "CuXDType", "classCuXDType.html", null ]
+    ] ],
+    [ "CuDTypeUtils", "classCuDTypeUtils.html", [
+      [ "CuXDTypeUtils", "classCuXDTypeUtils.html", null ]
+    ] ],
     [ "CuEventI", "classCuEventI.html", [
       [ "CuA_ExitEv", "classCuA__ExitEv.html", null ],
       [ "CuA_UnregisterEv", "classCuA__UnregisterEv.html", null ],
@@ -34,6 +40,9 @@ var hierarchy =
       [ "CuThreadsEventBridge", "classCuThreadsEventBridge.html", null ],
       [ "CuTimer", "classCuTimer.html", null ]
     ] ],
+    [ "CuHLTimer", "classCuHLTimer.html", null ],
+    [ "CuHLTimer_P", "classCuHLTimer__P.html", null ],
+    [ "CuHLTimerListener", "classCuHLTimerListener.html", null ],
     [ "CuLogImplI", "classCuLogImplI.html", [
       [ "CuConLogImpl", "classCuConLogImpl.html", null ],
       [ "CuNullLogImpl", "classCuNullLogImpl.html", null ]

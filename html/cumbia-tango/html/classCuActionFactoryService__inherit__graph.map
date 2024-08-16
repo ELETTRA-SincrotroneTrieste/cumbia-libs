@@ -1,4 +1,5 @@
 <map id="CuActionFactoryService" name="CuActionFactoryService">
-<area shape="rect" id="node1" title="implements CuServiceI interface and provides a service to register, unregister and find Tango actions..." alt="" coords="5,79,180,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="47,5,138,31"/>
+<area shape="rect" id="Node000001" title="implements CuServiceI interface and provides a service to register, unregister and find Tango actions..." alt="" coords="5,80,169,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="44,5,130,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,48,90,80,84,80,84,48"/>
 </map>

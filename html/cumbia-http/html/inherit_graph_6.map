@@ -1,8 +1,13 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuHttpAuthManListener.html" title=" " alt="" coords="25,5,203,31"/>
-<area shape="rect" id="node2" href="$classCumbiaHttp.html" title=" " alt="" coords="271,104,371,129"/>
-<area shape="rect" id="node3" href="$classCuHttpBundledSrcReqListener.html" title=" " alt="" coords="5,55,223,80"/>
-<area shape="rect" id="node4" href="$classCuHttpCliIdManListener.html" title=" " alt="" coords="26,104,202,129"/>
-<area shape="rect" id="node5" href="$classCuHttpSrcQueueManListener.html" title=" " alt="" coords="9,153,219,179"/>
-<area shape="rect" id="node6" title=" " alt="" coords="78,203,150,228"/>
+<area shape="rect" id="Node000000" href="$classCuHttpAuthManListener.html" title=" " alt="" coords="25,5,186,32"/>
+<area shape="rect" id="Node000001" href="$classCumbiaHttp.html" title=" " alt="" coords="254,107,345,133"/>
+<area shape="poly" id="edge9_Node000000_Node000001" title=" " alt="" coords="192,35,207,42,253,73,287,104,283,108,249,77,204,46,190,40"/>
+<area shape="rect" id="Node000002" href="$classCuHttpBundledSrcReqListener.html" title=" " alt="" coords="5,56,206,83"/>
+<area shape="poly" id="edge10_Node000002_Node000001" title=" " alt="" coords="177,84,206,92,254,105,253,110,205,97,176,90"/>
+<area shape="rect" id="Node000003" href="$classCuHttpCliIdManListener.html" title=" " alt="" coords="25,107,186,133"/>
+<area shape="poly" id="edge11_Node000003_Node000001" title=" " alt="" coords="202,117,253,117,253,123,202,123"/>
+<area shape="rect" id="Node000004" href="$classCuHttpSrcQueueManListener.html" title=" " alt="" coords="9,157,202,184"/>
+<area shape="poly" id="edge12_Node000004_Node000001" title=" " alt="" coords="176,150,205,143,253,130,254,135,206,148,177,156"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="72,208,139,235"/>
+<area shape="poly" id="edge13_Node000005_Node000001" title=" " alt="" coords="153,211,204,194,249,163,283,132,287,136,253,167,207,198,155,216"/>
 </map>

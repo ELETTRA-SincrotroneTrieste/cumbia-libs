@@ -1,8 +1,13 @@
 <map id="cutango&#45;world&#45;config.cpp" name="cutango&#45;world&#45;config.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="120,5,307,31"/>
-<area shape="rect" id="node2" href="$cutango-world-config_8h.html" title=" " alt="" coords="128,79,299,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,152,117,177"/>
-<area shape="rect" id="node4" title=" " alt="" coords="141,152,200,177"/>
-<area shape="rect" id="node5" title=" " alt="" coords="225,152,287,177"/>
-<area shape="rect" id="node6" title=" " alt="" coords="312,152,363,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="77,5,243,32"/>
+<area shape="rect" id="Node000002" href="$cutango-world-config_8h.html" title=" " alt="" coords="84,80,236,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,33,163,64,158,64,158,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,155,70,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="140,110,74,149,71,144,137,105"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="94,155,147,181"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="156,109,137,142,132,140,151,106"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="172,155,229,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="169,106,188,140,184,142,165,109"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="253,155,299,181"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="182,105,244,144,241,148,179,109"/>
 </map>

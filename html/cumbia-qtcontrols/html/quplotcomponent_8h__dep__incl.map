@@ -1,14 +1,31 @@
 <map id="quplotcomponent.h" name="quplotcomponent.h">
-<area shape="rect" id="node1" title=" " alt="" coords="657,5,805,31"/>
-<area shape="rect" id="node2" href="$quplotaxescomponent_8h.html" title=" " alt="" coords="1061,79,1239,104"/>
-<area shape="rect" id="node5" href="$quplotcanvaspaintercomponent_8h.html" title=" " alt="" coords="111,79,351,104"/>
-<area shape="rect" id="node7" href="$quplotcontextmenucomponent_8h.html" title=" " alt="" coords="375,79,610,104"/>
-<area shape="rect" id="node9" href="$quplotmarkercomponent_8h.html" title=" " alt="" coords="634,79,829,104"/>
-<area shape="rect" id="node11" href="$quplotzoomcomponent_8h.html" title=" " alt="" coords="853,79,1037,104"/>
-<area shape="rect" id="node3" href="$quplot__base_8cpp.html" title=" " alt="" coords="558,152,686,177"/>
-<area shape="rect" id="node4" href="$quplotaxescomponent_8cpp.html" title=" " alt="" coords="1167,152,1360,177"/>
-<area shape="rect" id="node6" href="$quplotcanvaspaintercomponent_8cpp.html" title=" " alt="" coords="5,152,260,177"/>
-<area shape="rect" id="node8" href="$quplotcontextmenucomponent_8cpp.html" title=" " alt="" coords="284,152,533,177"/>
-<area shape="rect" id="node10" href="$quplotmarkercomponent_8cpp.html" title=" " alt="" coords="711,152,920,177"/>
-<area shape="rect" id="node12" href="$quplotzoomcomponent_8cpp.html" title=" " alt="" coords="944,152,1143,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="681,5,812,32"/>
+<area shape="rect" id="Node000002" href="$quplotaxescomponent_8h.html" title=" " alt="" coords="1046,80,1205,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="828,33,1059,77,1058,82,827,38"/>
+<area shape="rect" id="Node000006" href="$quplotcanvaspaintercomponent_8h.html" title=" " alt="" coords="194,80,406,107"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="666,36,378,82,378,77,665,30"/>
+<area shape="rect" id="Node000008" href="$quplotcontextmenucomponent_8h.html" title=" " alt="" coords="430,80,636,107"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="696,40,571,82,570,77,694,35"/>
+<area shape="rect" id="Node000010" href="$quplotmarkercomponent_8h.html" title=" " alt="" coords="661,80,832,107"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="749,48,749,80,744,80,744,48"/>
+<area shape="rect" id="Node000012" href="$quplotzoomcomponent_8h.html" title=" " alt="" coords="857,80,1020,107"/>
+<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="795,35,906,77,904,82,793,40"/>
+<area shape="rect" id="Node000003" href="$quplot__base_8cpp.html" title=" " alt="" coords="710,155,826,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1048,113,827,158,826,152,1047,108"/>
+<area shape="rect" id="Node000004" href="$quplotaxescomponent_8cpp.html" title=" " alt="" coords="1225,155,1398,181"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="1173,110,1280,152,1278,157,1171,115"/>
+<area shape="rect" id="Node000005" href="$quplotconfigurator_8cpp.html" title=" " alt="" coords="1052,155,1201,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="1128,122,1129,154,1124,154,1123,123"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="403,107,699,152,710,154,709,159,698,157,402,112"/>
+<area shape="rect" id="Node000007" href="$quplotcanvaspaintercomponent_8cpp.html" title=" " alt="" coords="5,155,232,181"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="255,115,151,157,149,152,253,110"/>
+<area shape="poly" id="edge9_Node000008_Node000003" title=" " alt="" coords="589,109,727,151,726,157,588,114"/>
+<area shape="rect" id="Node000009" href="$quplotcontextmenucomponent_8cpp.html" title=" " alt="" coords="256,155,477,181"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="491,116,397,156,395,152,489,111"/>
+<area shape="poly" id="edge12_Node000010_Node000003" title=" " alt="" coords="757,121,767,154,762,155,752,122"/>
+<area shape="rect" id="Node000011" href="$quplotmarkercomponent_8cpp.html" title=" " alt="" coords="500,155,686,181"/>
+<area shape="poly" id="edge13_Node000010_Node000011" title=" " alt="" coords="707,116,621,156,619,152,705,111"/>
+<area shape="poly" id="edge15_Node000012_Node000003" title=" " alt="" coords="896,116,799,156,797,152,894,111"/>
+<area shape="rect" id="Node000013" href="$quplotzoomcomponent_8cpp.html" title=" " alt="" coords="850,155,1027,181"/>
+<area shape="poly" id="edge16_Node000012_Node000013" title=" " alt="" coords="941,122,941,154,936,154,936,122"/>
 </map>

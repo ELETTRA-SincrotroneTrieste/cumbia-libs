@@ -1,4 +1,5 @@
 <map id="CuTWriterFactory" name="CuTWriterFactory">
-<area shape="rect" id="node1" title="implements CuControlsWriterFactoryI and creates Tango writers Given a pointer to a Cumbia object and ..." alt="" coords="30,79,165,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,189,31"/>
+<area shape="rect" id="Node000001" title="implements CuControlsWriterFactoryI and creates Tango writers Given a pointer to a Cumbia object and ..." alt="" coords="28,80,152,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,175,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,48,93,80,87,80,87,48"/>
 </map>

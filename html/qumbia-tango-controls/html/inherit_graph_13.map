@@ -1,5 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,31,84,56"/>
-<area shape="rect" id="node2" href="$classQuConnectionSettingsWidget.html" title="a QWidget that emits a settingsChanged signal when tango connection settings are changed." alt="" coords="132,5,344,31"/>
-<area shape="rect" id="node3" href="$classRtConfWidget.html" title="the real time plot configuration widget has not yet been made compatible with cumbia&#45;qtcontrols plots" alt="" coords="182,55,294,80"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,31,78,57"/>
+<area shape="rect" id="Node000001" href="$classQuConnectionSettingsWidget.html" title="a QWidget that emits a settingsChanged signal when tango connection settings are changed." alt="" coords="126,5,319,32"/>
+<area shape="poly" id="edge10_Node000000_Node000001" title=" " alt="" coords="93,34,125,30,126,35,94,39"/>
+<area shape="rect" id="Node000002" href="$classRtConfWidget.html" title="the real time plot configuration widget has not yet been made compatible with cumbia&#45;qtcontrols plots" alt="" coords="170,56,274,83"/>
+<area shape="poly" id="edge11_Node000000_Node000002" title=" " alt="" coords="93,48,170,59,169,65,93,54"/>
 </map>

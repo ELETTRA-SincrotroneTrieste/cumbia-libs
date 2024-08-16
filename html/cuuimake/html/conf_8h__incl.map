@@ -1,5 +1,7 @@
 <map id="conf.h" name="conf.h">
-<area shape="rect" id="node1" title=" " alt="" coords="49,5,110,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,65,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="89,79,160,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="48,5,105,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,62,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,34,51,68,46,65,66,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="86,80,152,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="86,31,106,65,102,68,81,34"/>
 </map>

@@ -1,6 +1,9 @@
 <map id="QuWriter" name="QuWriter">
-<area shape="rect" id="node1" title="A class that can be used to write values from (almost) any kind of widget or object." alt="" coords="81,152,161,177"/>
-<area shape="rect" id="node2" href="$classQumbiaizer.html" title="QTangoizes anything (not really anything, but...)" alt="" coords="5,79,103,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="17,5,91,31"/>
-<area shape="rect" id="node4" title=" " alt="" coords="127,79,250,104"/>
+<area shape="rect" id="Node000001" title="A class that can be used to write values from (almost) any kind of widget or object." alt="" coords="74,155,146,181"/>
+<area shape="rect" id="Node000002" href="$classQumbiaizer.html" title="QTangoizes anything (not really anything, but...)" alt="" coords="5,80,93,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,117,102,153,98,156,67,120"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="14,5,84,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="52,48,52,80,46,80,46,48"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="117,80,229,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="154,120,123,156,119,153,150,117"/>
 </map>

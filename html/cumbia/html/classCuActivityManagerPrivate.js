@@ -1,6 +1,7 @@
 var classCuActivityManagerPrivate =
 [
-    [ "conn_mumap", "classCuActivityManagerPrivate.html#a5e016e4186451332b948e84abbc7a264", null ],
+    [ "conn_map", "classCuActivityManagerPrivate.html#a1d1c99de992936a895db7661cc174c34", null ],
     [ "mythread", "classCuActivityManagerPrivate.html#a4171a2305357c4d6772216b132537581", null ],
-    [ "th_lis_mumap", "classCuActivityManagerPrivate.html#a0f2547a2279097486b09d8e632d5e268", null ]
+    [ "th_acnt_map", "classCuActivityManagerPrivate.html#a2e39551ee0d6ba8334fed71c72ad674e", null ],
+    [ "th_lis_mmap", "classCuActivityManagerPrivate.html#a45278fb637a9de0aaf33faa860777492", null ]
 ];

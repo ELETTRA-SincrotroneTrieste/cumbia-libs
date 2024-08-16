@@ -1,8 +1,13 @@
 <map id="dec_int_from_format.cpp" name="dec_int_from_format.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="205,5,390,31"/>
-<area shape="rect" id="node2" href="$dec__int__from__format_8h.html" title=" " alt="" coords="5,79,176,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="201,79,282,104"/>
-<area shape="rect" id="node5" title=" " alt="" coords="307,79,400,104"/>
-<area shape="rect" id="node6" title=" " alt="" coords="425,79,522,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="55,152,126,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="237,5,402,32"/>
+<area shape="rect" id="Node000002" href="$dec__int__from__format_8h.html" title=" " alt="" coords="5,80,157,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="279,35,138,78,137,72,277,30"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="181,80,322,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="310,34,276,70,272,67,306,31"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="346,80,432,107"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="334,31,368,67,365,70,330,34"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="456,80,546,107"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="352,30,456,71,454,76,350,35"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="48,155,114,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="84,107,84,139,78,139,78,107"/>
 </map>

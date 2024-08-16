@@ -1,6 +1,9 @@
 <map id="cuserviceprovider.h" name="cuserviceprovider.h">
-<area shape="rect" id="node1" title=" " alt="" coords="57,5,207,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,56,104"/>
-<area shape="rect" id="node3" href="$cuservices_8h.html" title=" " alt="" coords="81,79,183,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="208,79,251,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="56,5,190,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,52,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,35,59,73,55,68,105,30"/>
+<area shape="rect" id="Node000003" href="$cuservices_8h.html" title=" " alt="" coords="76,80,171,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="126,33,126,64,120,64,120,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="195,80,233,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="141,30,188,68,185,72,137,35"/>
 </map>

@@ -1,6 +1,9 @@
 <map id="quspinbox.h" name="quspinbox.h">
-<area shape="rect" id="node1" title=" " alt="" coords="128,5,229,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,91,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="115,79,242,104"/>
-<area shape="rect" id="node4" href="$cucontexti_8h.html" title=" " alt="" coords="266,79,369,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="121,5,212,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,86,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,35,81,74,78,69,144,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="110,80,224,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="170,33,170,64,164,64,164,33"/>
+<area shape="rect" id="Node000004" href="$cucontexti_8h.html" title=" " alt="" coords="247,80,340,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="190,30,260,70,257,74,188,35"/>
 </map>

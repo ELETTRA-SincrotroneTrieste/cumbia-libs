@@ -1,5 +1,7 @@
 <map id="quplotzoomcomponent.h" name="quplotzoomcomponent.h">
-<area shape="rect" id="node1" title=" " alt="" coords="71,5,255,31"/>
-<area shape="rect" id="node2" href="$quplot__base_8cpp.html" title=" " alt="" coords="5,79,133,104"/>
-<area shape="rect" id="node3" href="$quplotzoomcomponent_8cpp.html" title=" " alt="" coords="158,79,357,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="67,5,230,32"/>
+<area shape="rect" id="Node000002" href="$quplot__base_8cpp.html" title=" " alt="" coords="5,80,122,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,44,80,82,76,78,121,40"/>
+<area shape="rect" id="Node000003" href="$quplotzoomcomponent_8cpp.html" title=" " alt="" coords="146,80,323,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,40,221,78,218,82,173,44"/>
 </map>

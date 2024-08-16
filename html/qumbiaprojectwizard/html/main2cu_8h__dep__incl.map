@@ -1,6 +1,9 @@
 <map id="main2cu.h" name="main2cu.h">
-<area shape="rect" id="node1" title=" " alt="" coords="165,5,255,31"/>
-<area shape="rect" id="node2" href="$main2cu_8cpp.html" title=" " alt="" coords="5,79,111,104"/>
-<area shape="rect" id="node3" href="$pro__files__helper_8cpp.html" title=" " alt="" coords="135,79,285,104"/>
-<area shape="rect" id="node4" href="$qtangoimport_8cpp.html" title=" " alt="" coords="309,79,447,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="152,5,234,32"/>
+<area shape="rect" id="Node000002" href="$main2cu_8cpp.html" title=" " alt="" coords="5,80,101,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,42,79,82,76,77,154,37"/>
+<area shape="rect" id="Node000003" href="$pro__files__helper_8cpp.html" title=" " alt="" coords="124,80,262,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="196,48,196,80,190,80,190,48"/>
+<area shape="rect" id="Node000004" href="$qtangoimport_8cpp.html" title=" " alt="" coords="286,80,407,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="235,37,321,77,318,82,232,41"/>
 </map>

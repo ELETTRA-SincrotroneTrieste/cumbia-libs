@@ -1,4 +1,5 @@
 <map id="CuTConfigActivity" name="CuTConfigActivity">
-<area shape="rect" id="node1" title="Activity to get attribute configuration or command info. Optionally, it can perform a one shot attrib..." alt="" coords="5,79,143,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="29,5,119,31"/>
+<area shape="rect" id="Node000001" title="Activity to get attribute configuration or command info. Optionally, it can perform a one shot attrib..." alt="" coords="5,80,134,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="28,5,111,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,48,72,80,67,80,67,48"/>
 </map>

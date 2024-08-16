@@ -1,4 +1,5 @@
 <map id="qumbiaprojectwizard.h" name="qumbiaprojectwizard.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,176,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="51,79,130,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,157,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="45,80,117,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,33,84,64,78,64,78,33"/>
 </map>

@@ -1,13 +1,13 @@
 <map id="curndactionfactoryi.h" name="curndactionfactoryi.h">
-<area shape="rect" id="node1" title=" " alt="" coords="329,5,489,31"/>
-<area shape="rect" id="node2" href="$cumbiarandom_8cpp.html" title=" " alt="" coords="5,225,152,251"/>
-<area shape="rect" id="node3" href="$cumbiarandom_8h.html" title=" " alt="" coords="233,152,365,177"/>
-<area shape="rect" id="node8" href="$curndactionfactories_8h.html" title=" " alt="" coords="509,79,675,104"/>
-<area shape="rect" id="node10" href="$curndactionfactoryservice_8cpp.html" title=" " alt="" coords="700,79,919,104"/>
-<area shape="rect" id="node11" href="$curndactionreader_8h.html" title=" " alt="" coords="334,79,485,104"/>
-<area shape="rect" id="node4" href="$curndactionreader_8cpp.html" title=" " alt="" coords="365,225,531,251"/>
-<area shape="rect" id="node5" href="$curndreader_8cpp.html" title=" " alt="" coords="555,225,682,251"/>
-<area shape="rect" id="node6" href="$curndregisterengine_8h.html" title=" " alt="" coords="177,225,341,251"/>
-<area shape="rect" id="node7" href="$curndregisterengine_8cpp.html" title=" " alt="" coords="169,299,348,324"/>
-<area shape="rect" id="node9" href="$curndactionfactories_8cpp.html" title=" " alt="" coords="495,152,678,177"/>
+<area shape="rect" id="node1" title=" " alt="" coords="329,5,489,32"/>
+<area shape="rect" id="node2" href="$cumbiarandom_8cpp.html" title=" " alt="" coords="5,229,152,256"/>
+<area shape="rect" id="node3" href="$cumbiarandom_8h.html" title=" " alt="" coords="233,155,365,181"/>
+<area shape="rect" id="node8" href="$curndactionfactories_8h.html" title=" " alt="" coords="509,80,675,107"/>
+<area shape="rect" id="node10" href="$curndactionfactoryservice_8cpp.html" title=" " alt="" coords="700,80,919,107"/>
+<area shape="rect" id="node11" href="$curndactionreader_8h.html" title=" " alt="" coords="334,80,485,107"/>
+<area shape="rect" id="node4" href="$curndactionreader_8cpp.html" title=" " alt="" coords="365,229,531,256"/>
+<area shape="rect" id="node5" href="$curndreader_8cpp.html" title=" " alt="" coords="555,229,682,256"/>
+<area shape="rect" id="node6" href="$curndregisterengine_8h.html" title=" " alt="" coords="177,229,341,256"/>
+<area shape="rect" id="node7" href="$curndregisterengine_8cpp.html" title=" " alt="" coords="169,304,348,331"/>
+<area shape="rect" id="node9" href="$curndactionfactories_8cpp.html" title=" " alt="" coords="495,155,678,181"/>
 </map>

@@ -1,6 +1,9 @@
 <map id="demodialog.cpp" name="demodialog.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="69,5,196,31"/>
-<area shape="rect" id="node2" href="$to__cumbia_2src_2demodialog_8h.html" title=" " alt="" coords="5,79,116,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="141,79,271,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="23,152,98,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="64,5,176,32"/>
+<area shape="rect" id="Node000002" href="$to__cumbia_2src_2demodialog_8h.html" title=" " alt="" coords="5,80,104,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,34,78,70,74,67,106,31"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="128,80,243,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="133,31,166,67,162,70,129,34"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="20,155,89,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="57,107,57,139,52,139,52,107"/>
 </map>

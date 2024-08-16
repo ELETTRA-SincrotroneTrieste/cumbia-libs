@@ -1,7 +1,12 @@
 <map id="pro_files_helper.h" name="pro_files_helper.h">
-<area shape="rect" id="node1" title=" " alt="" coords="126,5,262,31"/>
-<area shape="rect" id="node2" href="$pro__files__helper_8cpp.html" title=" " alt="" coords="5,79,156,104"/>
-<area shape="rect" id="node3" href="$qtangoimport_8cpp.html" title=" " alt="" coords="125,152,263,177"/>
-<area shape="rect" id="node4" href="$qtangoimport_8h.html" title=" " alt="" coords="231,79,354,104"/>
-<area shape="rect" id="node5" href="$qumbiaprojectwizard_8cpp.html" title=" " alt="" coords="287,152,474,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="119,5,242,32"/>
+<area shape="rect" id="Node000002" href="$pro__files__helper_8cpp.html" title=" " alt="" coords="5,80,143,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,43,94,82,91,77,148,39"/>
+<area shape="rect" id="Node000003" href="$qtangoimport_8cpp.html" title=" " alt="" coords="120,155,241,181"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="183,48,183,154,178,154,178,48"/>
+<area shape="rect" id="Node000004" href="$qtangoimport_8h.html" title=" " alt="" coords="218,80,325,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="210,40,257,78,254,82,206,44"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="246,119,198,156,195,152,242,114"/>
+<area shape="rect" id="Node000005" href="$qumbiaprojectwizard_8cpp.html" title=" " alt="" coords="266,155,431,181"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="298,116,337,152,334,156,294,119"/>
 </map>

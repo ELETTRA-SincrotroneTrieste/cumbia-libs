@@ -1,4 +1,5 @@
 <map id="CuPeriodicActivity" name="CuPeriodicActivity">
-<area shape="rect" id="node1" title="an implementation of CuActivity that calls CuActivity::execute repeatedly at a certain interval of ti..." alt="" coords="5,79,147,104"/>
-<area shape="rect" id="node2" href="$classCuActivity.html" title="a class with hook functions where work can be done in a separate thread and wherefrom results are pub..." alt="" coords="31,5,121,31"/>
+<area shape="rect" id="Node000001" title="an implementation of CuActivity that calls CuActivity::execute repeatedly at a certain interval of ti..." alt="" coords="5,80,135,107"/>
+<area shape="rect" id="Node000002" href="$classCuActivity.html" title="a class with hook functions where work can be done in a separate thread and wherefrom results are pub..." alt="" coords="29,5,111,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,48,73,80,67,80,67,48"/>
 </map>

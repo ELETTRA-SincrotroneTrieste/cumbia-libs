@@ -1,6 +1,9 @@
 <map id="QuLabelBase" name="QuLabelBase">
-<area shape="rect" id="node1" title="A QLabel that in addition decorates its border and background." alt="" coords="31,79,138,104"/>
-<area shape="rect" id="node3" href="$classELabel.html" title="A label that can be used to display numeric, boolean or enum values." alt="" coords="5,152,71,177"/>
-<area shape="rect" id="node4" href="$classQuLabel.html" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors." alt="" coords="95,152,170,177"/>
-<area shape="rect" id="node2" title=" " alt="" coords="51,5,118,31"/>
+<area shape="rect" id="Node000001" title="A QLabel that in addition decorates its border and background." alt="" coords="30,80,130,107"/>
+<area shape="rect" id="Node000003" href="$classELabel.html" title="A label that can be used to display numeric, boolean or enum values." alt="" coords="5,155,67,181"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="67,122,46,156,41,153,62,119"/>
+<area shape="rect" id="Node000004" href="$classQuLabel.html" title="A label derived from Qt QLabel to display boolean values, strings, scalars and even vectors." alt="" coords="91,155,160,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="98,119,120,153,115,156,94,122"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="49,5,111,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,48,83,80,77,80,77,48"/>
 </map>

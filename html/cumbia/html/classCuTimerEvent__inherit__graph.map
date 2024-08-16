@@ -1,4 +1,5 @@
 <map id="CuTimerEvent" name="CuTimerEvent">
-<area shape="rect" id="node1" title=" " alt="" coords="5,79,120,104"/>
-<area shape="rect" id="node2" href="$classCuEventI.html" title="interface for a generic cumbia event designed to be generated in a secondary thread (CuActivity&#39;s thr..." alt="" coords="23,5,103,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,80,111,107"/>
+<area shape="rect" id="Node000002" href="$classCuEventI.html" title="interface for a generic cumbia event designed to be generated in a secondary thread (CuActivity&#39;s thr..." alt="" coords="20,5,96,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,48,61,80,55,80,55,48"/>
 </map>

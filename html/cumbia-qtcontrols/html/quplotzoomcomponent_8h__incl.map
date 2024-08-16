@@ -1,9 +1,16 @@
 <map id="quplotzoomcomponent.h" name="quplotzoomcomponent.h">
-<area shape="rect" id="node1" title=" " alt="" coords="171,5,355,31"/>
-<area shape="rect" id="node2" href="$quplotcomponent_8h.html" title=" " alt="" coords="5,79,153,104"/>
-<area shape="rect" id="node4" href="$scrollzoomer_8h.html" title=" " alt="" coords="205,79,322,104"/>
-<area shape="rect" id="node6" title=" " alt="" coords="333,152,479,177"/>
-<area shape="rect" id="node3" title=" " alt="" coords="16,152,87,177"/>
-<area shape="rect" id="node5" title=" " alt="" coords="111,152,194,177"/>
-<area shape="rect" id="node7" title=" " alt="" coords="218,152,309,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="157,5,321,32"/>
+<area shape="rect" id="Node000002" href="$quplotcomponent_8h.html" title=" " alt="" coords="5,80,137,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,35,115,76,113,71,209,30"/>
+<area shape="rect" id="Node000004" href="$scrollzoomer_8h.html" title=" " alt="" coords="186,80,292,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="242,33,242,64,236,64,236,33"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="304,155,435,181"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="256,31,306,78,355,140,351,144,302,82,252,35"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="12,155,77,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="69,108,57,141,52,139,64,106"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="101,155,174,181"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="223,109,169,147,166,143,220,105"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="263,105,335,144,332,149,260,110"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="198,155,280,181"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="242,107,242,139,236,139,236,107"/>
 </map>

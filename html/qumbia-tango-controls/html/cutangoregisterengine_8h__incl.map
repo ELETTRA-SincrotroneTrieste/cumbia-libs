@@ -1,6 +1,9 @@
 <map id="cutangoregisterengine.h" name="cutangoregisterengine.h">
-<area shape="rect" id="node1" title=" " alt="" coords="113,5,293,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,124,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="148,79,259,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="283,79,457,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="106,5,265,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,112,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,35,95,74,92,70,162,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="136,80,234,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="188,33,188,64,182,64,182,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="259,80,415,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="213,30,298,70,296,75,211,35"/>
 </map>

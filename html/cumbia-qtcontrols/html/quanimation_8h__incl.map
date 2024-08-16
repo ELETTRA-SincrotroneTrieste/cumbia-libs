@@ -1,5 +1,7 @@
 <map id="quanimation.h" name="quanimation.h">
-<area shape="rect" id="node1" title=" " alt="" coords="42,5,158,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,67,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="91,79,237,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="42,5,145,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,65,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,34,57,69,53,66,81,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="89,80,218,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="106,31,136,66,132,70,102,34"/>
 </map>

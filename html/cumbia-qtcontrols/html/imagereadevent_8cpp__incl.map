@@ -1,7 +1,11 @@
 <map id="imagereadevent.cpp" name="imagereadevent.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="57,5,213,31"/>
-<area shape="rect" id="node2" href="$imagereadevent_8h.html" title=" " alt="" coords="64,79,205,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,152,75,177"/>
-<area shape="rect" id="node4" title=" " alt="" coords="99,152,170,177"/>
-<area shape="rect" id="node5" title=" " alt="" coords="194,152,257,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="58,5,196,32"/>
+<area shape="rect" id="Node000002" href="$imagereadevent_8h.html" title=" " alt="" coords="65,80,190,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,33,130,64,125,64,125,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,155,71,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,109,67,147,64,143,110,105"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="95,155,160,181"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="130,107,130,139,125,139,125,107"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="184,155,241,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="144,105,188,143,185,147,140,109"/>
 </map>

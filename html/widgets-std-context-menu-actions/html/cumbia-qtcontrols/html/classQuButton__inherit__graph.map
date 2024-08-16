@@ -1,6 +1,0 @@
-<map id="QuButton" name="QuButton">
-<area shape="rect" id="node1" title="A push button to write values or send commands to a target." alt="" coords="146,80,223,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,105,32"/>
-<area shape="rect" id="node3" title=" " alt="" coords="129,5,240,32"/>
-<area shape="rect" id="node4" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="264,5,351,32"/>
-</map>

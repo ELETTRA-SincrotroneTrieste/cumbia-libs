@@ -1,4 +1,7 @@
 <map id="qustring.h" name="qustring.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,92,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="13,79,84,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="44,5,122,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,71,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,34,56,68,52,65,73,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="94,80,166,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="94,31,116,66,112,68,89,34"/>
 </map>

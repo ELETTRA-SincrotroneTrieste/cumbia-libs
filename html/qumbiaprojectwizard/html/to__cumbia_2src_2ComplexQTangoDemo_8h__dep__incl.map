@@ -1,5 +1,7 @@
 <map id="ComplexQTangoDemo.h" name="ComplexQTangoDemo.h">
-<area shape="rect" id="node1" title=" " alt="" coords="95,5,273,31"/>
-<area shape="rect" id="node2" href="$to__cumbia_2src_2ComplexQTangoDemo_8cpp.html" title=" " alt="" coords="5,79,200,104"/>
-<area shape="rect" id="node3" href="$demos_2qtango__porting_2complex__qtango__demo_2src_2to__cumbia_2src_2main_8cpp.html" title=" " alt="" coords="224,79,307,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="87,5,251,32"/>
+<area shape="rect" id="Node000002" href="$to__cumbia_2src_2ComplexQTangoDemo_8cpp.html" title=" " alt="" coords="5,80,184,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,45,109,82,106,78,144,41"/>
+<area shape="rect" id="Node000003" href="$demos_2qtango__porting_2complex__qtango__demo_2src_2to__cumbia_2src_2main_8cpp.html" title=" " alt="" coords="208,80,282,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="195,41,234,78,230,82,191,45"/>
 </map>

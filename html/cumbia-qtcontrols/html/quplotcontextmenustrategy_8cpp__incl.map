@@ -1,8 +1,13 @@
 <map id="quplotcontextmenustrategy.cpp" name="quplotcontextmenustrategy.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="112,5,340,31"/>
-<area shape="rect" id="node2" href="$quplotcontextmenustrategy_8h.html" title=" " alt="" coords="21,79,234,104"/>
-<area shape="rect" id="node5" href="$cucontextmenu_8h.html" title=" " alt="" coords="259,79,393,104"/>
-<area shape="rect" id="node3" href="$quplotbasecontextmenustrategy_8h.html" title=" " alt="" coords="5,152,249,177"/>
-<area shape="rect" id="node4" href="$quwidgetcontextmenustrategyi_8h.html" title=" " alt="" coords="8,225,247,251"/>
-<area shape="rect" id="node6" title=" " alt="" coords="292,152,360,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="102,5,304,32"/>
+<area shape="rect" id="Node000002" href="$quplotcontextmenustrategy_8h.html" title=" " alt="" coords="19,80,208,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,35,142,72,139,68,186,30"/>
+<area shape="rect" id="Node000005" href="$cucontextmenu_8h.html" title=" " alt="" coords="232,80,353,107"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="220,30,267,68,263,72,217,35"/>
+<area shape="rect" id="Node000003" href="$quplotbasecontextmenustrategy_8h.html" title=" " alt="" coords="5,155,222,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="116,107,116,139,111,139,111,107"/>
+<area shape="rect" id="Node000004" href="$quwidgetcontextmenustrategyi_8h.html" title=" " alt="" coords="9,229,218,256"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="116,182,116,214,111,214,111,182"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="260,155,324,181"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="295,107,295,139,290,139,290,107"/>
 </map>

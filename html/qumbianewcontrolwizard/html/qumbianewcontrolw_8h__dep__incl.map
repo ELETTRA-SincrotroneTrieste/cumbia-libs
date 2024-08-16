@@ -1,5 +1,7 @@
 <map id="qumbianewcontrolw.h" name="qumbianewcontrolw.h">
-<area shape="rect" id="node1" title=" " alt="" coords="41,5,207,31"/>
-<area shape="rect" id="node2" href="$main_8cpp.html" title=" " alt="" coords="5,79,88,104"/>
-<area shape="rect" id="node3" href="$qumbianewcontrolw_8cpp.html" title=" " alt="" coords="113,79,293,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="40,5,186,32"/>
+<area shape="rect" id="Node000002" href="$main_8cpp.html" title=" " alt="" coords="5,80,80,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,45,57,81,53,78,88,41"/>
+<area shape="rect" id="Node000003" href="$qumbianewcontrolw_8cpp.html" title=" " alt="" coords="104,80,264,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="138,41,174,78,170,81,134,45"/>
 </map>

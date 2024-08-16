@@ -1,9 +1,9 @@
 <map id="ui_estringlisteditor.h" name="ui_estringlisteditor.h">
-<area shape="rect" id="node1" title=" " alt="" coords="213,5,367,31"/>
-<area shape="rect" id="node2" href="$estringlisteditor_8h.html" title=" " alt="" coords="222,79,358,104"/>
-<area shape="rect" id="node3" href="$edittargetdialog_8h.html" title=" " alt="" coords="137,152,275,177"/>
-<area shape="rect" id="node7" href="$estringlisteditor_8cpp.html" title=" " alt="" coords="300,152,451,177"/>
-<area shape="rect" id="node4" href="$cutangoqtcontrolsplugin_8h.html" title=" " alt="" coords="13,225,204,251"/>
-<area shape="rect" id="node6" href="$edittargetdialog_8cpp.html" title=" " alt="" coords="228,225,381,251"/>
-<area shape="rect" id="node5" href="$cutangoqtcontrolsplugin_8cpp.html" title=" " alt="" coords="5,299,212,324"/>
+<area shape="rect" id="node1" title=" " alt="" coords="213,5,367,32"/>
+<area shape="rect" id="node2" href="$estringlisteditor_8h.html" title=" " alt="" coords="222,80,358,107"/>
+<area shape="rect" id="node3" href="$edittargetdialog_8h.html" title=" " alt="" coords="137,155,275,181"/>
+<area shape="rect" id="node7" href="$estringlisteditor_8cpp.html" title=" " alt="" coords="300,155,451,181"/>
+<area shape="rect" id="node4" href="$cutangoqtcontrolsplugin_8h.html" title=" " alt="" coords="13,229,204,256"/>
+<area shape="rect" id="node6" href="$edittargetdialog_8cpp.html" title=" " alt="" coords="228,229,381,256"/>
+<area shape="rect" id="node5" href="$cutangoqtcontrolsplugin_8cpp.html" title=" " alt="" coords="5,304,212,331"/>
 </map>

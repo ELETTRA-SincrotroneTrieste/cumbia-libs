@@ -1,4 +1,0 @@
-<map id="CuThreadsEventBridgeFactory" name="CuThreadsEventBridgeFactory">
-<area shape="rect" id="node1" title="an implementation of CuThreadsEventBridgeFactory_I for cumbia" alt="" coords="11,80,211,107"/>
-<area shape="rect" id="node2" href="$classCuThreadsEventBridgeFactory__I.html" title="interface for a factory to create a bridge binding a thread to an event loop" alt="" coords="5,5,216,32"/>
-</map>

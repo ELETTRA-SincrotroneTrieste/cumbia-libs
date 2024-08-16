@@ -1,5 +1,7 @@
 <map id="cumbiainitoptions.cpp" name="cumbiainitoptions.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,172,31"/>
-<area shape="rect" id="node2" href="$cumbiainitoptions_8h.html" title=" " alt="" coords="13,79,164,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="51,152,126,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,153,32"/>
+<area shape="rect" id="Node000002" href="$cumbiainitoptions_8h.html" title=" " alt="" coords="12,80,146,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,33,82,64,76,64,76,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="44,155,114,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="82,107,82,139,76,139,76,107"/>
 </map>

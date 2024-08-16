@@ -1,6 +1,9 @@
 <map id="QmlReaderBackend" name="QmlReaderBackend">
-<area shape="rect" id="node1" title=" " alt="" coords="90,79,241,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,80,31"/>
-<area shape="rect" id="node3" title=" " alt="" coords="104,5,227,31"/>
-<area shape="rect" id="node4" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="251,5,346,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="86,80,224,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,75,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,38,136,77,133,82,71,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="98,5,211,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="157,48,157,80,152,80,152,48"/>
+<area shape="rect" id="Node000004" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="234,5,323,32"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="246,42,178,82,175,77,243,38"/>
 </map>

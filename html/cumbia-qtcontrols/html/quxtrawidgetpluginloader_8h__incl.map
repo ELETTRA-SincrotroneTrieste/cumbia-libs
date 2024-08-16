@@ -1,8 +1,15 @@
 <map id="quxtrawidgetpluginloader.h" name="quxtrawidgetpluginloader.h">
-<area shape="rect" id="node1" title=" " alt="" coords="14,5,214,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,152,76,177"/>
-<area shape="rect" id="node3" href="$quxtrawidgetplugininterface_8h.html" title=" " alt="" coords="78,79,297,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="100,152,179,177"/>
-<area shape="rect" id="node5" title=" " alt="" coords="203,152,281,177"/>
-<area shape="rect" id="node6" title=" " alt="" coords="305,152,368,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="32,5,208,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="12,80,77,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,34,70,71,66,67,105,31"/>
+<area shape="rect" id="Node000003" href="$quxtrawidgetplugininterface_8h.html" title=" " alt="" coords="101,80,291,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="135,31,174,67,170,71,132,34"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,155,78,181"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="170,110,83,150,81,145,168,105"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="102,155,189,181"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="190,109,165,144,161,141,185,106"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="212,155,284,181"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="207,106,233,141,228,144,203,109"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="308,155,365,181"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="222,105,299,145,297,149,219,110"/>
 </map>

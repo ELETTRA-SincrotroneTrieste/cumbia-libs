@@ -1,6 +1,9 @@
 <map id="cuhttpcliidman.h" name="cuhttpcliidman.h">
-<area shape="rect" id="node1" title=" " alt="" coords="101,5,232,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,80,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="105,79,229,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="253,79,336,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="98,5,214,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,75,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,35,75,74,72,69,134,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="99,80,213,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="159,33,159,64,153,64,153,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="237,80,315,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="178,30,243,69,241,74,176,35"/>
 </map>

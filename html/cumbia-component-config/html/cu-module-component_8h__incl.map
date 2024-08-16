@@ -1,8 +1,15 @@
 <map id="cu&#45;module&#45;component.h" name="cu&#45;module&#45;component.h">
-<area shape="rect" id="node1" title=" " alt="" coords="130,5,311,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,79,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="103,79,183,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="259,152,318,177"/>
-<area shape="rect" id="node5" title=" " alt="" coords="359,152,421,177"/>
-<area shape="rect" id="node6" href="$configcomponent__a_8h.html" title=" " alt="" coords="259,79,420,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="123,5,284,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,71,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,35,82,76,80,71,173,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="94,80,166,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="192,34,155,71,152,67,189,31"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="239,155,293,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="209,31,218,65,232,106,251,140,247,143,228,108,213,67,203,33"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="332,155,389,181"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="285,20,317,27,348,38,378,55,402,79,408,95,405,113,386,145,382,142,400,111,402,96,397,81,374,59,346,43,315,32,283,26"/>
+<area shape="rect" id="Node000006" href="$configcomponent__a_8h.html" title=" " alt="" coords="241,80,387,107"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="224,30,284,69,281,74,221,35"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="308,109,285,143,280,140,303,106"/>
+<area shape="poly" id="edge7_Node000006_Node000005" title=" " alt="" coords="324,106,347,140,342,143,320,109"/>
 </map>

@@ -1,10 +1,17 @@
 <map id="float_delegate.h" name="float_delegate.h">
-<area shape="rect" id="node1" title=" " alt="" coords="243,5,370,31"/>
-<area shape="rect" id="node2" href="$enumeric_8h.html" title=" " alt="" coords="259,79,354,104"/>
-<area shape="rect" id="node3" href="$eapplynumeric_8h.html" title=" " alt="" coords="96,152,227,177"/>
-<area shape="rect" id="node7" href="$enumeric_8cpp.html" title=" " alt="" coords="251,152,362,177"/>
-<area shape="rect" id="node8" href="$quinputoutput_8cpp.html" title=" " alt="" coords="386,152,526,177"/>
-<area shape="rect" id="node4" href="$eapplynumeric_8cpp.html" title=" " alt="" coords="5,225,152,251"/>
-<area shape="rect" id="node5" href="$quapplynumeric_8h.html" title=" " alt="" coords="176,225,315,251"/>
-<area shape="rect" id="node6" href="$quapplynumeric_8cpp.html" title=" " alt="" coords="168,299,323,324"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="220,5,334,32"/>
+<area shape="rect" id="Node000002" href="$enumeric_8h.html" title=" " alt="" coords="234,80,320,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="280,48,280,80,274,80,274,48"/>
+<area shape="rect" id="Node000003" href="$eapplynumeric_8h.html" title=" " alt="" coords="87,155,203,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="243,117,170,156,167,152,240,112"/>
+<area shape="rect" id="Node000007" href="$enumeric_8cpp.html" title=" " alt="" coords="228,155,327,181"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="280,122,280,154,274,154,274,122"/>
+<area shape="rect" id="Node000008" href="$quinputoutput_8cpp.html" title=" " alt="" coords="351,155,475,181"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="316,112,391,152,388,156,313,117"/>
+<area shape="rect" id="Node000004" href="$eapplynumeric_8cpp.html" title=" " alt="" coords="5,229,136,256"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="123,194,85,231,82,227,120,190"/>
+<area shape="rect" id="Node000005" href="$quapplynumeric_8h.html" title=" " alt="" coords="160,229,283,256"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="171,190,210,227,206,231,167,194"/>
+<area shape="rect" id="Node000006" href="$quapplynumeric_8cpp.html" title=" " alt="" coords="152,304,290,331"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="224,272,224,304,218,304,218,272"/>
 </map>

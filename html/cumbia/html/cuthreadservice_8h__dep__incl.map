@@ -1,6 +1,9 @@
 <map id="cuthreadservice.h" name="cuthreadservice.h">
-<area shape="rect" id="node1" title=" " alt="" coords="119,5,258,31"/>
-<area shape="rect" id="node2" href="$cuactivity_8cpp.html" title=" " alt="" coords="5,79,116,104"/>
-<area shape="rect" id="node3" href="$cumbia_8cpp.html" title=" " alt="" coords="140,79,237,104"/>
-<area shape="rect" id="node4" href="$cuthreadservice_8cpp.html" title=" " alt="" coords="261,79,415,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="112,5,237,32"/>
+<area shape="rect" id="Node000002" href="$cuactivity_8cpp.html" title=" " alt="" coords="5,80,107,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,43,78,82,75,77,140,38"/>
+<area shape="rect" id="Node000003" href="$cumbia_8cpp.html" title=" " alt="" coords="130,80,219,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,48,177,80,172,80,172,48"/>
+<area shape="rect" id="Node000004" href="$cuthreadservice_8cpp.html" title=" " alt="" coords="243,80,381,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="213,37,289,77,287,82,211,42"/>
 </map>

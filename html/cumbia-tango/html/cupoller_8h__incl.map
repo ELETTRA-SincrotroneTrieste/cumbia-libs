@@ -1,8 +1,13 @@
 <map id="cupoller.h" name="cupoller.h">
-<area shape="rect" id="node1" title=" " alt="" coords="196,5,281,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,144,104"/>
-<area shape="rect" id="node3" href="$cupollingservice_8h.html" title=" " alt="" coords="169,79,309,104"/>
-<area shape="rect" id="node6" title=" " alt="" coords="333,79,429,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="114,159,214,185"/>
-<area shape="rect" id="node5" href="$cudataupdatepolicy__enum_8h.html" title=" " alt="" coords="238,152,389,192"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="178,5,256,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,130,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,35,109,75,106,70,190,30"/>
+<area shape="rect" id="Node000003" href="$cupollingservice_8h.html" title=" " alt="" coords="154,80,280,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="220,33,220,64,214,64,214,33"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="304,80,394,107"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="241,30,314,70,312,75,239,35"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="103,163,194,189"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="208,109,171,153,167,149,204,105"/>
+<area shape="rect" id="Node000005" href="$cudataupdatepolicy__enum_8h.html" title=" " alt="" coords="218,155,352,197"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="229,105,260,141,256,145,225,109"/>
 </map>

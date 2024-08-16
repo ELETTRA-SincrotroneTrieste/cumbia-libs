@@ -1,6 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,128,31"/>
-<area shape="rect" id="node2" href="$class_0bMAINCLASS_0b.html" title="$MAINCLASS$ is a reader that uses $SUPERCLASS$ to display values." alt="" coords="176,55,291,80"/>
-<area shape="rect" id="node3" title=" " alt="" coords="19,55,114,80"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,104,128,129"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,132,32"/>
+<area shape="rect" id="Node000001" href="$class_0bMAINCLASS_0b.html" title="$MAINCLASS$ is a reader that uses $SUPERCLASS$ to display values." alt="" coords="180,56,293,83"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="131,35,190,53,189,58,129,40"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="24,56,113,83"/>
+<area shape="poly" id="edge2_Node000002_Node000001" title=" " alt="" coords="129,67,179,67,179,72,129,72"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="12,107,125,133"/>
+<area shape="poly" id="edge3_Node000003_Node000001" title=" " alt="" coords="129,99,189,81,190,86,131,104"/>
 </map>

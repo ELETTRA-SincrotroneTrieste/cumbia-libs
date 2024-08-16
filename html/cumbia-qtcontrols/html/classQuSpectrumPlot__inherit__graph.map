@@ -1,8 +1,15 @@
 <map id="QuSpectrumPlot" name="QuSpectrumPlot">
-<area shape="rect" id="node1" title="Draw a line for each data source over time." alt="" coords="180,152,307,177"/>
-<area shape="rect" id="node2" href="$classQuPlotBase.html" title="A simple plot with zooming and scrolling capabilities." alt="" coords="60,79,157,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,5,79,31"/>
-<area shape="rect" id="node4" href="$classQuWidgetInterface.html" title="an interface to let subclasses provide an update strategy and a context menu strategy" alt="" coords="103,5,247,31"/>
-<area shape="rect" id="node5" title=" " alt="" coords="182,79,305,104"/>
-<area shape="rect" id="node6" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="329,79,424,104"/>
+<area shape="rect" id="Node000001" title="Draw a line for each data source over time." alt="" coords="168,155,285,181"/>
+<area shape="rect" id="Node000007" href="$classQuPlot.html" title=" " alt="" coords="196,229,257,256"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="229,197,229,229,224,229,224,197"/>
+<area shape="rect" id="Node000002" href="$classQuPlotBase.html" title="A simple plot with zooming and scrolling capabilities." alt="" coords="55,80,146,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,112,205,152,203,156,134,117"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,5,74,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="62,42,92,78,88,81,58,46"/>
+<area shape="rect" id="Node000004" href="$classQuWidgetInterface.html" title="an interface to let subclasses provide an update strategy and a context menu strategy" alt="" coords="98,5,229,32"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="145,46,114,81,110,78,141,42"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="170,80,282,107"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="229,122,229,154,224,154,224,122"/>
+<area shape="rect" id="Node000006" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="306,80,394,107"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="317,117,249,156,247,152,315,112"/>
 </map>

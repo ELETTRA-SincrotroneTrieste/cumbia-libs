@@ -1,8 +1,13 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,121,31"/>
-<area shape="rect" id="node2" href="$class_0bMAINCLASS_0b.html" title=" " alt="" coords="195,5,310,31"/>
-<area shape="rect" id="node3" title=" " alt="" coords="24,79,103,104"/>
-<area shape="rect" id="node4" href="$classComplexQTangoDemo.html" title=" " alt="" coords="169,55,336,80"/>
-<area shape="rect" id="node5" href="$classDanfisik9100.html" title=" " alt="" coords="199,104,306,129"/>
-<area shape="rect" id="node6" href="$classQumbiaProjectWizard.html" title=" " alt="" coords="171,153,334,179"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,112,32"/>
+<area shape="rect" id="Node000001" href="$class_0bMAINCLASS_0b.html" title=" " alt="" coords="180,5,293,32"/>
+<area shape="poly" id="edge21_Node000000_Node000001" title=" " alt="" coords="127,16,179,16,179,21,127,21"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="22,81,95,108"/>
+<area shape="poly" id="edge22_Node000002_Node000001" title=" " alt="" coords="97,71,159,42,189,30,191,35,161,46,99,76"/>
+<area shape="rect" id="Node000003" href="$classComplexQTangoDemo.html" title=" " alt="" coords="160,56,313,83"/>
+<area shape="poly" id="edge23_Node000002_Node000003" title=" " alt="" coords="110,85,159,78,159,83,111,90"/>
+<area shape="rect" id="Node000004" href="$classDanfisik9100.html" title=" " alt="" coords="188,107,285,133"/>
+<area shape="poly" id="edge24_Node000002_Node000004" title=" " alt="" coords="111,99,188,111,187,116,110,105"/>
+<area shape="rect" id="Node000005" href="$classQumbiaProjectWizard.html" title=" " alt="" coords="162,157,310,184"/>
+<area shape="poly" id="edge25_Node000002_Node000005" title=" " alt="" coords="99,113,161,143,191,154,189,159,159,148,97,118"/>
 </map>

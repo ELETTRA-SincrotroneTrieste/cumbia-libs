@@ -1,6 +1,9 @@
 <map id="cupollingactivity.h" name="cupollingactivity.h">
-<area shape="rect" id="node1" title=" " alt="" coords="137,5,277,31"/>
-<area shape="rect" id="node2" href="$cupoller_8cpp.html" title=" " alt="" coords="5,79,105,104"/>
-<area shape="rect" id="node3" href="$cupollingactivity_8cpp.html" title=" " alt="" coords="130,79,285,104"/>
-<area shape="rect" id="node4" href="$cutreader_8cpp.html" title=" " alt="" coords="309,79,420,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="128,5,252,32"/>
+<area shape="rect" id="Node000002" href="$cupoller_8cpp.html" title=" " alt="" coords="5,80,97,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,42,77,82,74,77,151,37"/>
+<area shape="rect" id="Node000003" href="$cupollingactivity_8cpp.html" title=" " alt="" coords="120,80,259,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="192,48,192,80,187,80,187,48"/>
+<area shape="rect" id="Node000004" href="$cutreader_8cpp.html" title=" " alt="" coords="284,80,384,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="230,37,310,77,307,82,227,42"/>
 </map>

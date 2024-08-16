@@ -1,7 +1,11 @@
 <map id="tdialread.cpp" name="tdialread.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="112,5,219,31"/>
-<area shape="rect" id="node2" href="$tdialread_8h.html" title=" " alt="" coords="119,79,211,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,152,64,177"/>
-<area shape="rect" id="node4" title=" " alt="" coords="88,152,243,177"/>
-<area shape="rect" id="node5" title=" " alt="" coords="267,152,421,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="106,5,202,32"/>
+<area shape="rect" id="Node000002" href="$tdialread_8h.html" title=" " alt="" coords="113,80,194,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,33,156,64,151,64,151,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,155,60,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="134,110,68,149,65,144,131,105"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="84,155,224,181"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="156,107,156,139,151,139,151,107"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="247,155,386,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="183,105,275,145,273,150,181,110"/>
 </map>

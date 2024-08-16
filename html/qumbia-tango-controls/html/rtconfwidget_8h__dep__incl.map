@@ -1,5 +1,7 @@
 <map id="rtconfwidget.h" name="rtconfwidget.h">
-<area shape="rect" id="node1" title=" " alt="" coords="167,5,282,31"/>
-<area shape="rect" id="node2" href="$qutplotcontextmenustrategy_8cpp.html" title=" " alt="" coords="5,79,239,104"/>
-<area shape="rect" id="node3" href="$rtconfwidget_8cpp.html" title=" " alt="" coords="263,79,394,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="149,5,252,32"/>
+<area shape="rect" id="Node000002" href="$qutplotcontextmenustrategy_8cpp.html" title=" " alt="" coords="5,80,212,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,44,126,82,123,78,171,40"/>
+<area shape="rect" id="Node000003" href="$rtconfwidget_8cpp.html" title=" " alt="" coords="235,80,352,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="230,40,279,77,276,82,227,44"/>
 </map>

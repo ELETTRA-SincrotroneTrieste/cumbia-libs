@@ -17,7 +17,7 @@ var classCuActivity =
     [ "event", "classCuActivity.html#a7d70e5d308d22c16cc4eabae25c7feb7", null ],
     [ "execute", "classCuActivity.html#a3823ea2e31f89c377760859f399c26f0", null ],
     [ "getFlags", "classCuActivity.html#a5c3147502a8740cc3961f4d079b1d508", null ],
-    [ "getToken", "classCuActivity.html#a203a20f5c3543795f869c729a7999824", null ],
+    [ "getToken", "classCuActivity.html#a07b52d2b06eafe101fed01a91ce1c792", null ],
     [ "getType", "classCuActivity.html#af08f20f517fb9358badc9f38c447401f", null ],
     [ "init", "classCuActivity.html#ac97d4e1a3ac1dfab8cad8c084e2b1d45", null ],
     [ "matches", "classCuActivity.html#a02cf68bd6c041c41355ca8a4ee8c86f9", null ],
@@ -32,5 +32,5 @@ var classCuActivity =
     [ "setThread", "classCuActivity.html#a49894b33940fbacb8ee11f7ed12fa398", null ],
     [ "setThreadToken", "classCuActivity.html#af36203870556f6f6f5c4fa058a8c9fb7", null ],
     [ "thread", "classCuActivity.html#a3c9fefefb0e89da29ba77613e2f6b6d6", null ],
-    [ "threadToken", "classCuActivity.html#ab7a2f51b7040f90576aeac1ed0c92111", null ]
+    [ "threadToken", "classCuActivity.html#ab86d4e68e0efb02d0eb2e2e5ab2f6c2d", null ]
 ];

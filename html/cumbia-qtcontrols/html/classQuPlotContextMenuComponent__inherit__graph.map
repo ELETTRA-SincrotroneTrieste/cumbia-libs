@@ -1,4 +1,5 @@
 <map id="QuPlotContextMenuComponent" name="QuPlotContextMenuComponent">
-<area shape="rect" id="node1" title="A QuPlotComponent managing the context menu for a plot." alt="" coords="5,79,232,104"/>
-<area shape="rect" id="node2" href="$classQuPlotComponent.html" title="Interface defining a plot component. Operations can be delegated to plot components." alt="" coords="49,5,189,31"/>
+<area shape="rect" id="Node000001" title="A QuPlotComponent managing the context menu for a plot." alt="" coords="5,80,212,107"/>
+<area shape="rect" id="Node000002" href="$classQuPlotComponent.html" title="Interface defining a plot component. Operations can be delegated to plot components." alt="" coords="44,5,173,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,48,111,80,106,80,106,48"/>
 </map>

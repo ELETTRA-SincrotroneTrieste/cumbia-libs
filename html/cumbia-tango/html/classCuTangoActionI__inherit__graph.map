@@ -1,8 +1,13 @@
 <map id="CuTangoActionI" name="CuTangoActionI">
-<area shape="rect" id="node1" title="an interface for a Tango action, typically a reader or a writer are implementors" alt="" coords="205,79,328,104"/>
-<area shape="rect" id="node3" href="$classCuTConfiguration.html" title=" " alt="" coords="5,152,139,177"/>
-<area shape="rect" id="node4" href="$classCuTReader.html" title="Low level class to read tango attributes and commands with output arguments." alt="" coords="163,152,256,177"/>
-<area shape="rect" id="node5" href="$classCuTWriter.html" title=" " alt="" coords="281,152,367,177"/>
-<area shape="rect" id="node6" href="$classCuTaDb.html" title="Get data from the Tango database." alt="" coords="391,152,462,177"/>
-<area shape="rect" id="node2" title=" " alt="" coords="199,5,335,31"/>
+<area shape="rect" id="Node000001" title="an interface for a Tango action, typically a reader or a writer are implementors" alt="" coords="192,80,307,107"/>
+<area shape="rect" id="Node000003" href="$classCuTConfiguration.html" title=" " alt="" coords="5,155,129,181"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="205,115,100,157,98,152,203,110"/>
+<area shape="rect" id="Node000004" href="$classCuTReader.html" title="Low level class to read tango attributes and commands with output arguments." alt="" coords="152,155,240,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="233,121,208,156,203,153,229,118"/>
+<area shape="rect" id="Node000005" href="$classCuTWriter.html" title=" " alt="" coords="264,155,344,181"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="271,118,297,153,293,156,266,121"/>
+<area shape="rect" id="Node000006" href="$classCuTaDb.html" title="Get data from the Tango database." alt="" coords="368,155,438,181"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="291,111,377,152,375,156,289,116"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="188,5,312,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="252,48,252,80,247,80,247,48"/>
 </map>

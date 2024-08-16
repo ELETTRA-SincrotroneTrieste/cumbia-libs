@@ -1,4 +1,5 @@
 <map id="number_delegate.h" name="number_delegate.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,153,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="44,79,115,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,137,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="38,80,104,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,33,74,64,68,64,68,33"/>
 </map>

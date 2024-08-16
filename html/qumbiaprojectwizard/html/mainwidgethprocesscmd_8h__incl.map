@@ -1,9 +1,17 @@
 <map id="mainwidgethprocesscmd.h" name="mainwidgethprocesscmd.h">
-<area shape="rect" id="node1" title=" " alt="" coords="19,5,217,31"/>
-<area shape="rect" id="node2" href="$fileprocessor__a_8h.html" title=" " alt="" coords="52,79,184,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,225,76,251"/>
-<area shape="rect" id="node4" title=" " alt="" coords="100,225,155,251"/>
-<area shape="rect" id="node5" href="$definitions_8h.html" title=" " alt="" coords="156,152,259,177"/>
-<area shape="rect" id="node6" title=" " alt="" coords="179,225,281,251"/>
-<area shape="rect" id="node7" title=" " alt="" coords="305,225,400,251"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="24,5,201,32"/>
+<area shape="rect" id="Node000002" href="$fileprocessor__a_8h.html" title=" " alt="" coords="52,80,173,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,33,115,64,110,64,110,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,229,71,256"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="109,108,54,217,49,214,104,106"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="94,229,147,256"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="116,107,122,214,117,214,111,107"/>
+<area shape="rect" id="Node000005" href="$definitions_8h.html" title=" " alt="" coords="150,155,241,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="129,105,171,142,168,146,125,109"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="169,184,81,225,78,220,167,179"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="184,184,146,221,142,217,180,180"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="171,229,268,256"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="202,181,213,214,208,215,197,183"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="292,229,382,256"/>
+<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="221,179,300,219,297,224,219,184"/>
 </map>

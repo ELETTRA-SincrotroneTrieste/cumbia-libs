@@ -1,4 +1,5 @@
 <map id="CuConLogImpl" name="CuConLogImpl">
-<area shape="rect" id="node1" title="console log implementation" alt="" coords="5,79,121,104"/>
-<area shape="rect" id="node2" href="$classCuLogImplI.html" title="interface for a concrete log implementation" alt="" coords="16,5,111,31"/>
+<area shape="rect" id="Node000001" title="console log implementation" alt="" coords="5,80,114,107"/>
+<area shape="rect" id="Node000002" href="$classCuLogImplI.html" title="interface for a concrete log implementation" alt="" coords="15,5,104,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,48,62,80,57,80,57,48"/>
 </map>

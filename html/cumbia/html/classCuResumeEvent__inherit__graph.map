@@ -1,4 +1,6 @@
 <map id="CuResumeEvent" name="CuResumeEvent">
-<area shape="rect" id="node1" title="event to resume an activity&#39;s timer" alt="" coords="5,79,135,104"/>
-<area shape="rect" id="node2" href="$classCuActivityEvent.html" title="Generic event to pass data to an activity." alt="" coords="7,5,133,31"/>
+<area shape="rect" id="Node000001" title="event to resume an activity&#39;s timer" alt="" coords="5,80,127,107"/>
+<area shape="rect" id="Node000002" href="$classCuActivityEvent.html" title="Generic event to pass data to an activity." alt="" coords="8,5,124,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="60,47,62,79,56,80,55,48"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="77,48,76,80,70,79,72,47"/>
 </map>

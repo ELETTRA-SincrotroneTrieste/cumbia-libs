@@ -1,8 +1,13 @@
 <map id="QuPlotComponent" name="QuPlotComponent">
-<area shape="rect" id="node1" title="Interface defining a plot component. Operations can be delegated to plot components." alt="" coords="5,104,145,129"/>
-<area shape="rect" id="node2" href="$classQuPlotAxesComponent.html" title="Plot component that manages the axes." alt="" coords="225,5,395,31"/>
-<area shape="rect" id="node3" href="$classQuPlotCanvasPainterComponent.html" title="plot canvas painting can be delegated to this object" alt="" coords="193,55,427,80"/>
-<area shape="rect" id="node4" href="$classQuPlotContextMenuComponent.html" title="A QuPlotComponent managing the context menu for a plot." alt="" coords="197,104,423,129"/>
-<area shape="rect" id="node5" href="$classQuPlotMarkerComponent.html" title="QuPlot component to draw markers on the canvas." alt="" coords="217,153,403,179"/>
-<area shape="rect" id="node6" href="$classQuPlotZoomComponent.html" title="QuPlot component to zoom the plot." alt="" coords="221,203,399,228"/>
+<area shape="rect" id="Node000001" title="Interface defining a plot component. Operations can be delegated to plot components." alt="" coords="5,107,134,133"/>
+<area shape="rect" id="Node000002" href="$classQuPlotAxesComponent.html" title="Plot component that manages the axes." alt="" coords="210,5,368,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,95,135,67,181,42,213,30,215,35,183,46,138,71,100,99"/>
+<area shape="rect" id="Node000003" href="$classQuPlotCanvasPainterComponent.html" title="plot canvas painting can be delegated to this object" alt="" coords="182,56,396,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="145,100,227,81,229,86,146,105"/>
+<area shape="rect" id="Node000004" href="$classQuPlotContextMenuComponent.html" title="A QuPlotComponent managing the context menu for a plot." alt="" coords="186,107,392,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="149,117,185,117,185,123,149,123"/>
+<area shape="rect" id="Node000005" href="$classQuPlotMarkerComponent.html" title="QuPlot component to draw markers on the canvas." alt="" coords="205,157,373,184"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="146,135,229,154,227,159,145,140"/>
+<area shape="rect" id="Node000006" href="$classQuPlotZoomComponent.html" title="QuPlot component to zoom the plot." alt="" coords="208,208,370,235"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="100,141,138,169,183,194,215,205,213,210,181,198,135,173,97,145"/>
 </map>

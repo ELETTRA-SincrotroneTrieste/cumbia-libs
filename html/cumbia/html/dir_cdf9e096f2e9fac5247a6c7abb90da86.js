@@ -4,6 +4,8 @@ var dir_cdf9e096f2e9fac5247a6c7abb90da86 =
     [ "cuevent.h", "cuevent_8h.html", "cuevent_8h" ],
     [ "cueventloop.cpp", "cueventloop_8cpp.html", "cueventloop_8cpp" ],
     [ "cueventloop.h", "cueventloop_8h.html", "cueventloop_8h" ],
+    [ "cuhltimer.cpp", "cuhltimer_8cpp.html", "cuhltimer_8cpp" ],
+    [ "cuhltimer.h", "cuhltimer_8h.html", "cuhltimer_8h" ],
     [ "cuthread.cpp", "cuthread_8cpp.html", null ],
     [ "cuthread.h", "cuthread_8h.html", "cuthread_8h" ],
     [ "cuthreadevents.cpp", "cuthreadevents_8cpp.html", null ],

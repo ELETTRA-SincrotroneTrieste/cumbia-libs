@@ -1,5 +1,7 @@
 <map id="CuHttpCredInputCLIPrompt" name="CuHttpCredInputCLIPrompt">
-<area shape="rect" id="node1" title=" " alt="" coords="15,79,212,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,83,31"/>
-<area shape="rect" id="node3" href="$classCuHttpAuthPrompt__I.html" title=" " alt="" coords="107,5,261,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="15,80,198,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,77,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,42,97,78,93,81,60,45"/>
+<area shape="rect" id="Node000003" href="$classCuHttpAuthPrompt__I.html" title=" " alt="" coords="101,5,245,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="153,45,120,81,116,78,149,42"/>
 </map>

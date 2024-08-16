@@ -1,4 +1,5 @@
 <map id="QuTPlotContextMenuStrategy" name="QuTPlotContextMenuStrategy">
-<area shape="rect" id="node1" title="strategy pattern. Provide a contextual menu for tango plots" alt="" coords="17,79,232,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,244,31"/>
+<area shape="rect" id="Node000001" title="strategy pattern. Provide a contextual menu for tango plots" alt="" coords="16,80,213,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,224,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,48,117,80,112,80,112,48"/>
 </map>

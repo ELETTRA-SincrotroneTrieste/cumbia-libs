@@ -1,6 +1,9 @@
 <map id="qucirculargaugebase.h" name="qucirculargaugebase.h">
-<area shape="rect" id="node1" title=" " alt="" coords="89,5,259,31"/>
-<area shape="rect" id="node2" href="$src_2qucirculargauge_8h.html" title=" " alt="" coords="13,79,151,104"/>
-<area shape="rect" id="node4" href="$qucirculargaugebase_8cpp.html" title=" " alt="" coords="175,79,359,104"/>
-<area shape="rect" id="node3" href="$src_2qucirculargauge_8cpp.html" title=" " alt="" coords="5,152,159,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="82,5,234,32"/>
+<area shape="rect" id="Node000002" href="$src_2qucirculargauge_8h.html" title=" " alt="" coords="12,80,136,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,45,90,82,87,78,130,40"/>
+<area shape="rect" id="Node000004" href="$qucirculargaugebase_8cpp.html" title=" " alt="" coords="159,80,325,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="186,40,229,78,226,82,183,45"/>
+<area shape="rect" id="Node000003" href="$src_2qucirculargauge_8cpp.html" title=" " alt="" coords="5,155,143,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="77,122,77,154,71,154,71,122"/>
 </map>

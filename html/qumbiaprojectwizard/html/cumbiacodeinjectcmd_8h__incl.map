@@ -1,9 +1,19 @@
 <map id="cumbiacodeinjectcmd.h" name="cumbiacodeinjectcmd.h">
-<area shape="rect" id="node1" title=" " alt="" coords="137,5,315,31"/>
-<area shape="rect" id="node2" href="$fileprocessor__a_8h.html" title=" " alt="" coords="160,79,292,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,225,76,251"/>
-<area shape="rect" id="node4" title=" " alt="" coords="345,225,400,251"/>
-<area shape="rect" id="node5" href="$definitions_8h.html" title=" " alt="" coords="175,152,277,177"/>
-<area shape="rect" id="node6" title=" " alt="" coords="101,225,202,251"/>
-<area shape="rect" id="node7" title=" " alt="" coords="227,225,321,251"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="138,5,296,32"/>
+<area shape="rect" id="Node000002" href="$fileprocessor__a_8h.html" title=" " alt="" coords="156,80,277,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,33,219,64,214,64,214,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,229,71,256"/>
+<area shape="poly" id="edge9_Node000001_Node000003" title=" " alt="" coords="200,35,174,56,147,82,93,153,54,217,50,214,89,150,143,78,170,52,197,30"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="330,229,383,256"/>
+<area shape="poly" id="edge10_Node000001_Node000004" title=" " alt="" coords="238,30,265,51,291,78,312,113,330,149,352,214,347,216,325,151,308,115,287,82,261,55,234,34"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="203,109,67,221,63,217,200,105"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="230,105,276,153,336,216,333,220,272,157,227,109"/>
+<area shape="rect" id="Node000005" href="$definitions_8h.html" title=" " alt="" coords="171,155,262,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="219,107,219,139,214,139,214,107"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="187,184,84,226,82,221,185,179"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="242,180,320,219,317,224,240,184"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="95,229,192,256"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="206,184,169,220,165,216,202,180"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="216,229,306,256"/>
+<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="227,180,247,215,243,217,222,183"/>
 </map>

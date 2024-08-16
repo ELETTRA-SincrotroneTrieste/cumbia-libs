@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classTDevData.html" title=" " alt="" coords="5,5,92,31"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,147,32"/>
+<area shape="rect" id="Node000001" href="$classCuTThreadTokenGen.html" title="Thread token generator for Tango sources." alt="" coords="195,5,340,32"/>
+<area shape="poly" id="edge28_Node000000_Node000001" title=" " alt="" coords="162,16,194,16,194,21,162,21"/>
 </map>

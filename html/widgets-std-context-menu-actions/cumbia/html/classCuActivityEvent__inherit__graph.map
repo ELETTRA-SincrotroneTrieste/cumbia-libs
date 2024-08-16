@@ -1,8 +1,0 @@
-<map id="CuActivityEvent" name="CuActivityEvent">
-<area shape="rect" id="node1" title="Generic event to pass data to an activity." alt="" coords="269,5,385,32"/>
-<area shape="rect" id="node2" href="$classCuDataEvent.html" title="An event that can be used to forward data through Cumbia::postEvent." alt="" coords="5,80,104,107"/>
-<area shape="rect" id="node3" href="$classCuExecuteEvent.html" title="triggers a call to CuActivity::execute" alt="" coords="128,80,248,107"/>
-<area shape="rect" id="node4" href="$classCuPauseEvent.html" title="event to pause an activity&#39;s timer" alt="" coords="272,80,381,107"/>
-<area shape="rect" id="node5" href="$classCuResumeEvent.html" title="event to resume an activity&#39;s timer" alt="" coords="405,80,525,107"/>
-<area shape="rect" id="node6" href="$classCuTimeoutChangeEvent.html" title="this event changes the timeout of the activity&#39;s thread timer" alt="" coords="549,80,712,107"/>
-</map>

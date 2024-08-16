@@ -1,5 +1,7 @@
 <map id="quplotmarkercomponent.h" name="quplotmarkercomponent.h">
-<area shape="rect" id="node1" title=" " alt="" coords="68,5,263,31"/>
-<area shape="rect" id="node2" href="$quplot__base_8cpp.html" title=" " alt="" coords="5,79,133,104"/>
-<area shape="rect" id="node3" href="$quplotmarkercomponent_8cpp.html" title=" " alt="" coords="158,79,367,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="64,5,236,32"/>
+<area shape="rect" id="Node000002" href="$quplot__base_8cpp.html" title=" " alt="" coords="5,80,122,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,44,80,82,77,78,122,40"/>
+<area shape="rect" id="Node000003" href="$quplotmarkercomponent_8cpp.html" title=" " alt="" coords="146,80,331,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="179,40,225,78,221,82,176,44"/>
 </map>

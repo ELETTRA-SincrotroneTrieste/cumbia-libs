@@ -1,6 +1,9 @@
 <map id="tdialread.h" name="tdialread.h">
-<area shape="rect" id="node1" title=" " alt="" coords="119,5,211,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,64,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="88,79,243,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="267,79,421,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="113,5,194,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,80,60,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,35,68,74,65,69,131,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="84,80,224,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,33,156,64,151,64,151,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="247,80,386,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="183,30,275,71,273,76,181,35"/>
 </map>

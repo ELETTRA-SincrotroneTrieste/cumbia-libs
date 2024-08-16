@@ -1,5 +1,7 @@
 <map id="cuhttpactionfactoryi.h" name="cuhttpactionfactoryi.h">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,171,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="12,79,71,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="95,79,174,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,152,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="9,80,62,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,34,53,68,49,65,69,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="87,80,158,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="88,31,109,65,105,68,84,34"/>
 </map>

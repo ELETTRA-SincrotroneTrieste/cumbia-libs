@@ -1,6 +1,15 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCuEventLoopListener.html" title="listens for the events from the CuEventLoopService" alt="" coords="17,55,175,80"/>
-<area shape="rect" id="node2" href="$classCuThreadsEventBridge.html" title="cumbia basic thread event bridge" alt="" coords="235,5,405,31"/>
-<area shape="rect" id="node3" href="$classCuTimer.html" title="a timer used by CuThread for periodic execution of an activity" alt="" coords="281,55,359,80"/>
-<area shape="rect" id="node4" href="$classCuThreadsEventBridge__I.html" title="interface to a threads event bridge" alt="" coords="5,5,187,31"/>
+<area shape="rect" id="Node000000" href="$classCuEventI.html" title="interface for a generic cumbia event designed to be generated in a secondary thread (CuActivity&#39;s thr..." alt="" coords="5,132,82,159"/>
+<area shape="rect" id="Node000001" href="$classCuA__ExitEv.html" title="exit event for the activity" alt="" coords="176,5,269,32"/>
+<area shape="poly" id="edge9_Node000000_Node000001" title=" " alt="" coords="58,117,88,78,107,58,128,42,151,31,174,23,176,28,153,35,131,46,110,62,92,82,63,120"/>
+<area shape="rect" id="Node000002" href="$classCuA__UnregisterEv.html" title=" " alt="" coords="157,56,288,83"/>
+<area shape="poly" id="edge10_Node000000_Node000002" title=" " alt="" coords="76,121,129,92,161,81,163,86,131,97,78,126"/>
+<area shape="rect" id="Node000003" href="$classCuExitLoopEvent.html" title="This event is used by CuEventLoop service to exit the loop." alt="" coords="161,107,284,133"/>
+<area shape="poly" id="edge11_Node000000_Node000003" title=" " alt="" coords="97,135,160,126,161,131,98,140"/>
+<area shape="rect" id="Node000004" href="$classCuResultEvent.html" title="The CuResultEvent class stores a result that a CuActivity (sender) wants to deliver from the backgrou..." alt="" coords="167,157,278,184"/>
+<area shape="poly" id="edge12_Node000000_Node000004" title=" " alt="" coords="97,150,167,160,166,165,96,155"/>
+<area shape="rect" id="Node000005" href="$classCuThreadAutoDestroyEvent.html" title="at the end of the thread event loop (CuThread::run), this event is posted. When received,..." alt="" coords="130,208,315,235"/>
+<area shape="poly" id="edge13_Node000000_Node000005" title=" " alt="" coords="78,165,131,194,163,205,161,210,129,198,76,170"/>
+<area shape="rect" id="Node000006" href="$classCuTimerEvent.html" title=" " alt="" coords="170,259,275,285"/>
+<area shape="poly" id="edge14_Node000000_Node000006" title=" " alt="" coords="63,170,92,209,110,228,131,244,170,261,168,266,128,249,107,232,88,213,58,174"/>
 </map>

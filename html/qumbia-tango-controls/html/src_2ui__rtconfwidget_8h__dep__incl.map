@@ -1,6 +1,9 @@
 <map id="ui_rtconfwidget.h" name="ui_rtconfwidget.h">
-<area shape="rect" id="node1" title=" " alt="" coords="157,5,292,31"/>
-<area shape="rect" id="node2" href="$rtconfwidget_8h.html" title=" " alt="" coords="167,79,282,104"/>
-<area shape="rect" id="node3" href="$qutplotcontextmenustrategy_8cpp.html" title=" " alt="" coords="5,152,239,177"/>
-<area shape="rect" id="node4" href="$rtconfwidget_8cpp.html" title=" " alt="" coords="263,152,394,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="140,5,261,32"/>
+<area shape="rect" id="Node000002" href="$rtconfwidget_8h.html" title=" " alt="" coords="149,80,252,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,48,203,80,198,80,198,48"/>
+<area shape="rect" id="Node000003" href="$qutplotcontextmenustrategy_8cpp.html" title=" " alt="" coords="5,155,212,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="174,119,126,156,123,152,171,114"/>
+<area shape="rect" id="Node000004" href="$rtconfwidget_8cpp.html" title=" " alt="" coords="235,155,352,181"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="230,114,279,152,276,156,227,119"/>
 </map>

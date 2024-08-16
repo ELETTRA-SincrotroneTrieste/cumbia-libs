@@ -1,6 +1,9 @@
 <map id="cumbiaqtcontrols.h" name="cumbiaqtcontrols.h">
-<area shape="rect" id="node1" title=" " alt="" coords="117,5,263,31"/>
-<area shape="rect" id="node2" href="$cumbia-qtcontrols__global_8h.html" title=" " alt="" coords="5,79,204,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="228,79,323,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="39,152,170,177"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="105,5,236,32"/>
+<area shape="rect" id="Node000002" href="$cumbia-qtcontrols__global_8h.html" title=" " alt="" coords="5,80,182,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,34,120,71,116,67,156,31"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="205,80,294,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="186,31,227,67,223,71,183,35"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="34,155,153,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,107,96,139,91,139,91,107"/>
 </map>

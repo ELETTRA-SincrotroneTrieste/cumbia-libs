@@ -1,6 +1,9 @@
 <map id="CodeExtractorA" name="CodeExtractorA">
-<area shape="rect" id="node1" title=" " alt="" coords="248,5,371,31"/>
-<area shape="rect" id="node2" href="$classMainCppCodeExtractor.html" title=" " alt="" coords="5,79,176,104"/>
-<area shape="rect" id="node3" href="$classMainWidgetCppCodeExtractor.html" title=" " alt="" coords="201,79,418,104"/>
-<area shape="rect" id="node4" href="$classMainWidgetHCodeExtractor.html" title=" " alt="" coords="443,79,645,104"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="228,5,342,32"/>
+<area shape="rect" id="Node000002" href="$classMainCppCodeExtractor.html" title=" " alt="" coords="5,80,163,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="237,40,120,82,118,77,235,35"/>
+<area shape="rect" id="Node000003" href="$classMainWidgetCppCodeExtractor.html" title=" " alt="" coords="186,80,384,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="288,48,288,80,283,80,283,48"/>
+<area shape="rect" id="Node000004" href="$classMainWidgetHCodeExtractor.html" title=" " alt="" coords="409,80,594,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="338,35,464,77,463,82,336,40"/>
 </map>

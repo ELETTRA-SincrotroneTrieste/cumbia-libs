@@ -1,6 +1,9 @@
 <map id="QuButton" name="QuButton">
-<area shape="rect" id="node1" title="A push button to write values or send commands to a target." alt="" coords="156,79,239,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,112,31"/>
-<area shape="rect" id="node3" title=" " alt="" coords="136,5,259,31"/>
-<area shape="rect" id="node4" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="283,5,378,31"/>
+<area shape="rect" id="Node000001" title="A push button to write values or send commands to a target." alt="" coords="146,80,222,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,105,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,38,163,77,160,82,89,42"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="128,5,240,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,48,187,80,182,80,182,48"/>
+<area shape="rect" id="Node000004" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="264,5,352,32"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="275,42,207,82,205,77,273,38"/>
 </map>

@@ -1,5 +1,7 @@
 <map id="EFlag" name="EFlag">
-<area shape="rect" id="node1" title="A widget composed by a matrix of ELabel." alt="" coords="15,79,74,104"/>
-<area shape="rect" id="node3" href="$classQuTable.html" title="A widget to organise data in a table." alt="" coords="7,152,82,177"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,84,31"/>
+<area shape="rect" id="Node000001" title="A widget composed by a matrix of ELabel." alt="" coords="14,80,69,107"/>
+<area shape="rect" id="Node000003" href="$classQuTable.html" title="A widget to organise data in a table." alt="" coords="7,155,76,181"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="44,122,44,154,39,154,39,122"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,78,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="44,48,44,80,39,80,39,48"/>
 </map>

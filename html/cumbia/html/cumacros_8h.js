@@ -49,7 +49,6 @@ var cumacros_8h =
     [ "pok", "cumacros_8h.html#af817e9a59159ac2d2c2d09fa9ce71aa1", null ],
     [ "pr_thread", "cumacros_8h.html#a71f016559ac1f91c5d538918fea9aa79", null ],
     [ "pr_thread", "cumacros_8h.html#a71f016559ac1f91c5d538918fea9aa79", null ],
-    [ "pred", "cumacros_8h.html#a48235a649a044da44d1c775fda7c4e0a", null ],
     [ "predtmp", "cumacros_8h.html#af8f74427d73ba4f93cf40360e7f55120", null ],
     [ "pretty_pri", "cumacros_8h.html#a8de1c5fa57b32d7ca8631d3685a20ea8", null ],
     [ "pstep", "cumacros_8h.html#a1c83b0eda8927bc2666d80eb22f64444", null ],

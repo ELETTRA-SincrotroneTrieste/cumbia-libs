@@ -1,4 +1,6 @@
 <map id="CuTThreadFactoryImpl" name="CuTThreadFactoryImpl">
-<area shape="rect" id="node1" title="implementation of CuThreadFactoryImplI used to instantiate and return a new CuThread" alt="" coords="5,79,173,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="7,5,171,31"/>
+<area shape="rect" id="Node000001" title="implementation of CuThreadFactoryImplI used to instantiate and return a new CuThread" alt="" coords="5,80,161,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="7,5,159,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,47,79,79,73,80,72,48"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="94,48,93,80,87,79,89,47"/>
 </map>

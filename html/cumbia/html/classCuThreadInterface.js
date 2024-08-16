@@ -1,6 +1,7 @@
 var classCuThreadInterface =
 [
     [ "~CuThreadInterface", "classCuThreadInterface.html#a82ee56387582c1f915a7b76f7a6ea0f7", null ],
+    [ "activityCount", "classCuThreadInterface.html#a851cabdbc3af7ac05b323c0fe6a8cd89", null ],
     [ "cleanup", "classCuThreadInterface.html#aeff2f7469d90d37ba25ab5ee54ea178b", null ],
     [ "exit", "classCuThreadInterface.html#a4b442dbb940e3c4a31582b0f8c96d338", null ],
     [ "isRunning", "classCuThreadInterface.html#a5fda5347ecd0605146d788077186363e", null ],

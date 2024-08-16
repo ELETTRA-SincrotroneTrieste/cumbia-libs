@@ -1,6 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classCodeExtractorA.html" title=" " alt="" coords="5,55,128,80"/>
-<area shape="rect" id="node2" href="$classMainCppCodeExtractor.html" title=" " alt="" coords="199,5,370,31"/>
-<area shape="rect" id="node3" href="$classMainWidgetCppCodeExtractor.html" title=" " alt="" coords="176,55,393,80"/>
-<area shape="rect" id="node4" href="$classMainWidgetHCodeExtractor.html" title=" " alt="" coords="183,104,386,129"/>
+<area shape="rect" id="Node000000" href="$classCodeExtractorA.html" title=" " alt="" coords="5,56,120,83"/>
+<area shape="rect" id="Node000001" href="$classMainCppCodeExtractor.html" title=" " alt="" coords="188,5,346,32"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="133,49,209,30,211,35,135,54"/>
+<area shape="rect" id="Node000002" href="$classMainWidgetCppCodeExtractor.html" title=" " alt="" coords="168,56,366,83"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="135,67,167,67,167,72,135,72"/>
+<area shape="rect" id="Node000003" href="$classMainWidgetHCodeExtractor.html" title=" " alt="" coords="175,107,359,133"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="135,84,211,103,209,109,133,90"/>
 </map>

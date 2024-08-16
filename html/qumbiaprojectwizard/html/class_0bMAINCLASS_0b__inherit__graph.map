@@ -1,5 +1,7 @@
 <map id="$MAINCLASS$" name="$MAINCLASS$">
-<area shape="rect" id="node1" title=" " alt="" coords="127,79,242,104"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,121,31"/>
-<area shape="rect" id="node3" title=" " alt="" coords="145,5,224,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="58,80,171,107"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,112,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,43,107,78,103,81,75,46"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="136,5,208,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="155,46,126,81,122,78,150,43"/>
 </map>

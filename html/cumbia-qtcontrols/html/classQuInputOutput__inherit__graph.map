@@ -1,6 +1,9 @@
 <map id="QuInputOutput" name="QuInputOutput">
-<area shape="rect" id="node1" title="This element is a graphical interface to integrate a reader and a writer into one single object that ..." alt="" coords="97,152,214,177"/>
-<area shape="rect" id="node2" href="$classEInputOutputWidget.html" title="base class to display values through an output widget and receive input values by means of an input w..." alt="" coords="5,79,159,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="45,5,119,31"/>
-<area shape="rect" id="node4" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="183,79,277,104"/>
+<area shape="rect" id="Node000001" title="This element is a graphical interface to integrate a reader and a writer into one single object that ..." alt="" coords="90,155,196,181"/>
+<area shape="rect" id="Node000002" href="$classEInputOutputWidget.html" title="base class to display values through an output widget and receive input values by means of an input w..." alt="" coords="5,80,145,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,116,133,152,129,156,95,120"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="41,5,109,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="78,48,78,80,72,80,72,48"/>
+<area shape="rect" id="Node000004" href="$classCuContextI.html" title="Interface for cumbia classes delegating to CuContext the communication link creation and management." alt="" coords="168,80,256,107"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="192,120,157,156,153,152,188,116"/>
 </map>
