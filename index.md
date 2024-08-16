@@ -1,4 +1,4 @@
-# cumbia library documentation   [<a href="news.html">news</a>]
+# cumbia library documentation
 
 ### Platform independent apps from anywhere
 cumbia targets application portability and aims at extensive integration
@@ -8,6 +8,15 @@ Server Sent Events* technologies, looking forward to such services becoming avai
 
 Applications written in any language will thus be enabled to connect to native control system engines from
 *anywhere*. Find out more <a href="html/quapps/html/quapps.html">here</a>.
+
+### Qt6 ready version 2.0
+Library version 2.0 has introduced support for *Qt 6*, added initial support for
+*cmake*, and has become part of a *cumbia-world* super project gathering together
+the main library alongside satellite libraries and plugins.
+Check out <a href="https://gitlab.elettra.eu/cs/lib/cumbia-world">cumbia-world</a>
+from gitlab.
+
+Read more about cumbia version 2 <a href="">here</a>.
 
 ### Write your own activities
 Concentrate on the task you want to run in the background and use *cumbia* base library to write custom *activities* that will be executed on a separate
@@ -87,7 +96,7 @@ Not only, *the same application* can use either a *native* or a *http/websocket*
 not even changing the *source names*. How difficult is that? As difficult as specifying a *URL* to a *http* or *websocket* service on the command line, or configure
 a *http* or *websocket* default engine in your environment.
 
-### Smart working apps
+### Remote working apps
 You can run your application relying on the native control system engine from your office or run it from home via *http*.
 Read the <a href="html/quapps/html/quapps.html">Platform independent apps from anywhere</a> chapter.
 
