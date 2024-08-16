@@ -311,13 +311,13 @@ isEmpty(DOXYGEN_BIN) {
     message("-")
     message("Doxygen found")
 
- #   doc.commands = \
-   # doxygen \
-  #  Doxyfile;
+    doc.commands = \
+    doxygen \
+    Doxyfile;
 
-    #doc.files = doc/*
-   # doc.path = $${CUMBIA_QTCONTROLS_DOCDIR}
-   # QMAKE_EXTRA_TARGETS += doc
+    doc.files = doc/*
+    doc.path = $${CUMBIA_QTCONTROLS_DOCDIR}
+   QMAKE_EXTRA_TARGETS += doc
     !android-g++ {
         INSTALLS += doc
     }
@@ -329,7 +329,7 @@ isEmpty(DOXYGEN_BIN) {
     other_inst.path = $${CUMBIA_QTCONTROLS_INCLUDES}
     # set to  either $${INSTALL_ROOT}/lib or $${INSTALL_ROOT}/lib/wasm in .pri
     target.path = $${CUMBIA_QTCONTROLS_LIBDIR}
-    INSTALLS += target inc other_inst
+    INSTALLS += target inc other_inst doc
 
 #message("=====================================")
 #message("DOC INSTALL SKIPPED!!!!!!!!!!!!!!!!")

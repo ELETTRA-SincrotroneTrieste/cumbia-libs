@@ -27,6 +27,11 @@ Until solved, you need to fix the *Qt6Qwt6.pc* file under *qwt-source/lib/pkgcon
 Export an updated PKG_CONFIG_PATH, without any reference to older cumbia installation
 paths and qt-5, and build with *qmake6*.
 
+#### cuuimake cast-off
+
+QuApplication since version 2.1 makes the *cuuimake* build step unnecessary.
+All applications *shall imperatively use QuApplication*.
+
 ### cumbia-world super repository
 
 Under the [Elettra gitlab gui section](https://gitlab.elettra.eu/cs/gui) a 
