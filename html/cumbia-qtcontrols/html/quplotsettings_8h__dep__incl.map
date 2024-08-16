@@ -1,0 +1,15 @@
+<map id="quplotsettings.h" name="quplotsettings.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="60,5,173,32"/>
+<area shape="rect" id="Node000002" href="$quplot_8cpp.html" title=" " alt="" coords="5,155,87,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,45,74,81,59,121,51,155,46,154,54,119,69,79,93,42"/>
+<area shape="rect" id="Node000003" href="$quplot_8h.html" title=" " alt="" coords="83,80,150,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="119,48,119,80,114,80,114,48"/>
+<area shape="rect" id="Node000005" href="$quplotpanel_8h.html" title=" " alt="" coords="174,80,272,107"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="149,39,206,77,203,82,146,43"/>
+<area shape="poly" id="edge4_Node000003_Node000002" title=" " alt="" coords="96,120,60,156,56,152,92,116"/>
+<area shape="rect" id="Node000004" href="$mainwindow_8cpp.html" title=" " alt="" coords="111,155,229,181"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="137,118,163,153,159,156,133,121"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="207,121,181,156,177,153,203,118"/>
+<area shape="rect" id="Node000006" href="$quplotpanel_8cpp.html" title=" " alt="" coords="252,155,365,181"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="251,115,296,152,292,156,248,119"/>
+</map>

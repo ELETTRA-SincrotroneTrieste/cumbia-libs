@@ -1,0 +1,44 @@
+<map id="quplot.h" name="quplot.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="610,5,677,32"/>
+<area shape="rect" id="Node000002" href="$quplotsettings_8h.html" title=" " alt="" coords="334,80,448,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="610,32,451,78,449,73,608,27"/>
+<area shape="rect" id="Node000005" href="$quspectrumplot_8h.html" title=" " alt="" coords="582,80,704,107"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="646,33,646,64,640,64,640,33"/>
+<area shape="rect" id="Node000021" title=" " alt="" coords="728,80,839,107"/>
+<area shape="poly" id="edge21_Node000001_Node000021" title=" " alt="" coords="669,30,746,70,744,75,666,35"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="280,155,334,181"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="378,109,335,146,331,142,375,105"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="358,155,424,181"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="394,107,394,139,388,139,388,107"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="448,155,561,181"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="620,110,544,149,541,145,618,105"/>
+<area shape="rect" id="Node000007" href="$quwidgetinterface_8h.html" title=" " alt="" coords="5,229,140,256"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="639,109,615,147,597,167,575,184,538,198,491,208,377,220,257,226,155,232,155,226,256,220,376,215,490,203,537,193,573,179,594,163,611,144,635,106"/>
+<area shape="rect" id="Node000008" href="$quplot__base_8h.html" title=" " alt="" coords="636,155,738,181"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="653,106,674,140,669,143,649,109"/>
+<area shape="rect" id="Node000018" href="$quplotbasecontextmenustrategy_8h.html" title=" " alt="" coords="763,155,979,181"/>
+<area shape="poly" id="edge18_Node000005_Node000018" title=" " alt="" coords="684,105,817,147,816,152,682,110"/>
+<area shape="rect" id="Node000020" href="$cucontexti_8h.html" title=" " alt="" coords="1004,155,1096,181"/>
+<area shape="poly" id="edge20_Node000005_Node000020" title=" " alt="" coords="705,102,989,152,988,157,704,108"/>
+<area shape="poly" id="edge17_Node000008_Node000007" title=" " alt="" coords="636,181,618,184,490,200,388,209,286,217,156,232,155,226,286,212,388,203,489,194,617,179,635,176"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="164,229,245,256"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="636,181,618,184,441,206,362,216,261,232,260,226,361,211,440,201,617,179,635,176"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="270,229,390,256"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="636,182,406,229,405,224,635,177"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="414,229,523,256"/>
+<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="650,184,522,226,520,221,648,179"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="547,229,678,256"/>
+<area shape="poly" id="edge11_Node000008_Node000012" title=" " alt="" coords="676,184,638,221,634,217,672,180"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="702,229,825,256"/>
+<area shape="poly" id="edge12_Node000008_Node000013" title=" " alt="" coords="702,180,741,217,737,221,699,184"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="848,229,985,256"/>
+<area shape="poly" id="edge13_Node000008_Node000014" title=" " alt="" coords="728,179,862,222,861,227,726,184"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="1008,229,1134,256"/>
+<area shape="poly" id="edge14_Node000008_Node000015" title=" " alt="" coords="739,176,994,224,993,229,738,182"/>
+<area shape="rect" id="Node000016" title=" " alt="" coords="1158,229,1294,256"/>
+<area shape="poly" id="edge15_Node000008_Node000016" title=" " alt="" coords="739,177,752,179,945,204,1143,226,1142,232,945,209,751,184,738,182"/>
+<area shape="rect" id="Node000017" title=" " alt="" coords="1318,229,1475,256"/>
+<area shape="poly" id="edge16_Node000008_Node000017" title=" " alt="" coords="739,177,752,179,904,196,1025,205,1147,213,1302,226,1302,232,1146,218,1025,210,904,202,751,184,738,182"/>
+<area shape="rect" id="Node000019" href="$quwidgetcontextmenustrategyi_8h.html" title=" " alt="" coords="1500,229,1709,256"/>
+<area shape="poly" id="edge19_Node000018_Node000019" title=" " alt="" coords="980,178,991,179,1485,226,1485,232,991,184,979,183"/>
+</map>

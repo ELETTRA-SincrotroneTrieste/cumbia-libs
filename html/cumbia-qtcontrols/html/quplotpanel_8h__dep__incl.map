@@ -1,0 +1,7 @@
+<map id="quplotpanel.h" name="quplotpanel.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="84,5,182,32"/>
+<area shape="rect" id="Node000002" href="$mainwindow_8cpp.html" title=" " alt="" coords="5,80,123,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,45,78,81,74,78,109,41"/>
+<area shape="rect" id="Node000003" href="$quplotpanel_8cpp.html" title=" " alt="" coords="146,80,259,107"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="158,41,193,78,189,81,154,45"/>
+</map>
