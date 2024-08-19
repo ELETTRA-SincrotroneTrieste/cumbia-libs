@@ -10,9 +10,19 @@ QT       += core gui
 
 TARGET = actions-extension-plugin
 TEMPLATE = lib
-CONFIG += plugin debug
+CONFIG += plugin
 
-# CONFIG += silent
+isEmpty(buildtype) {
+        buildtype = release
+} else {
+    equals(buildtype, debug) {
+        message("")
+        message("debug build")
+        message("")
+    }
+}
+
+CONFIG += $${buildtype}
 
 SOURCES += \
     actionextensions.cpp \

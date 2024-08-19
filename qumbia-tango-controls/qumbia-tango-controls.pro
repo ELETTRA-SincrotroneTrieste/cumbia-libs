@@ -2,8 +2,17 @@ include(qumbia-tango-controls.pri)
 
 QT       += widgets
 
-# Debug or release?
-CONFIG += release
+isEmpty(buildtype) {
+        buildtype = release
+} else {
+    equals(buildtype, debug) {
+        message("")
+        message("debug build")
+        message("")
+    }
+}
+
+CONFIG += $${buildtype}
 
 # silent
 # CONFIG += silent

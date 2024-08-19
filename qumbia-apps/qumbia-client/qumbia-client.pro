@@ -19,8 +19,17 @@ isEmpty(INSTALL_ROOT) {
     }
 }
 
-CONFIG += debug
+isEmpty(buildtype) {
+        buildtype = release
+} else {
+    equals(buildtype, debug) {
+        message("")
+        message("debug build")
+        message("")
+    }
+}
 
+CONFIG += $${buildtype}
 QT += widgets
 
 TARGET = bin/qumbia-client

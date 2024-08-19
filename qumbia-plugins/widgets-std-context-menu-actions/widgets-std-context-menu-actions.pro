@@ -38,7 +38,17 @@ DEFINES += \
 
 QT       += core gui
 
-CONFIG += debug
+isEmpty(buildtype) {
+        buildtype = release
+} else {
+    equals(buildtype, debug) {
+        message("")
+        message("debug build")
+        message("")
+    }
+}
+
+CONFIG += $${buildtype}
 
 TARGET = widgets-std-context-menu-actions
 TEMPLATE = lib

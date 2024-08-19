@@ -10,7 +10,17 @@ QT       -= gui
 
 QT += qml
 
-CONFIG += debug
+isEmpty(buildtype) {
+        buildtype = release
+} else {
+    equals(buildtype, debug) {
+        message("")
+        message("debug build")
+        message("")
+    }
+}
+
+CONFIG += $${buildtype}
 
 CONFIG +=
 

@@ -7,26 +7,25 @@
 
 Key                 |Type                           |Value          |Description                                                                                                |Notes 
 --------------------|-------------------------------|---------------|-----------------------------------------------------------------------------------------------------------|-----------------
-type                |string                         |"property"     |Identifies a configuration content within CuData                                                           |Fixed value to identify the type of CuData
-src                 |string                         |   -           |The source name as configured with setSource. Tango device / attribute                                     |*src* key always present in CuData
-value               |CuVariant                      |    -          |The attribute value that is normally fetched during the configuration.                                     |   -
-data                |bool                           |true           |A CuData with configuration data will have the "data" key always set to true                               |   -
-msg                 |string                         |    -          |A message bearing information about the success of the operation.                                          |See the *err* key below
-err                 |bool                           |    -          |true if an error occurred, false otherwise                                                                 |See the *msg* key above
-df		            |Tango::AttrDataFormat (enum)   |    -          |Tango attribute format, Scalar,Spectrum,...                                                                |convert with toInt()
-dfs			        |string                         |    -          |string representation of data_format                                                                       |   -
-data_type           |int                            |    -          |Tango data type                                                                                            |   -
-description         |string                         |    -          |Tango attribute description from AttributeInfo                                                             |   -
-display_unit        |string                         |    -          |Tango display unit from AttributeInfo                                                                      |   -
-standard_unit       |string                         |    -          |Tango standard unit from AttributeInfo                                                                     |   -
-unit                |string                         |    -          |Tango "unit" from AttributeInfo                                                                            |   -
-label               |string                         |    -          |Tango "label" from AttributeInfo                                                                           |   -
-writable            |Tango::AttrWriteType           |    -          |Tango write type (enum) { READ, READ_WITH_WRITE, WRITE, READ_WRITE, WT_UNKNOWN  }                          |convert with toInt()
-writable_attr_name  |string                         |    -          |writable_attr_name  from AttributeInfo                                                                     |   -
-max_alarm           |string                         |    -          |Tango::AttributeAlarmInfo max_alarm                                                                        |   devapi.h
-min_alarm           |string                         |    -          |Tango::AttributeAlarmInfo min_alarm                                                                        |   devapi.h
-max_warning         |string                         |    -          |Tango::AttributeAlarmInfo max_warning                                                                      |   devapi.h
-min_warning         |string                         |    -          |Tango::AttributeAlarmInfo min_warning                                                                      |   devapi.h
+TTT::Type                |string                         |"property"     |Identifies a configuration content within CuData                                                           |Fixed value to identify the type of CuData
+TTT::Src                 |string                         |   -           |The source name as configured with setSource. Tango device / attribute                                     |*src* key always present in CuData
+TTT::Value               |CuVariant                      |    -          |The attribute value that is normally fetched during the configuration.                                     |   -
+TTT::Message                 |string                         |    -          |A message bearing information about the success of the operation.                                          |See the *err* key below
+TTT::Err                 |bool                           |    -          |true if an error occurred, false otherwise                                                                 |See the *msg* key above
+TTT::DataFormat		            |Tango::AttrDataFormat (enum)   |    -          |Tango attribute format, Scalar,Spectrum,...                                                                |convert with toInt()
+TTT::DataFormatStr			        |string                         |    -          |string representation of data_format                                                                       |   -
+TTT::DataType           |int                            |    -          |Tango data type                                                                                            |   -
+TTT::Description         |string                         |    -          |Tango attribute description from AttributeInfo                                                             |   -
+"display_unit"        |string                         |    -          |Tango display unit from AttributeInfo                                                                      |   -
+"standard_unit"      |string                         |    -          |Tango standard unit from AttributeInfo                                                                     |   -
+"unit"               |string                         |    -          |Tango "unit" from AttributeInfo                                                                            |   -
+TTT::Label               |string                         |    -          |Tango "label" from AttributeInfo                                                                           |   -
+TTT::Writable            |Tango::AttrWriteType           |    -          |Tango write type (enum) { READ, READ_WITH_WRITE, WRITE, READ_WRITE, WT_UNKNOWN  }                          |convert with toInt()
+"writable_attr_name"  |string                         |    -          |writable_attr_name  from AttributeInfo                                                                     |   -
+"max_alarm"           |string                         |    -          |Tango::AttributeAlarmInfo max_alarm                                                                        |   devapi.h
+"min_alarm"           |string                         |    -          |Tango::AttributeAlarmInfo min_alarm                                                                        |   devapi.h
+"max_warning"         |string                         |    -          |Tango::AttributeAlarmInfo max_warning                                                                      |   devapi.h
+"min_warning"         |string                         |    -          |Tango::AttributeAlarmInfo min_warning                                                                      |   devapi.h
 delta_t             |string                         |    -          |Tango::AttributeAlarmInfo delta_t                                                                          |   devapi.h
 delta_val           |string                         |    -          |Tango::AttributeAlarmInfo delta_val                                                                        |   devapi.h
 archive_abs_change  |string                         |    -          |Tango::AttributeEventInfo.arch_event.archive_abs_change                                                    |   devapi.h

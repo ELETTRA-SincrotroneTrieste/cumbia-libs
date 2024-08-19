@@ -44,6 +44,17 @@ DEFINES += CUMBIA_QTCONTROLS_PLUGIN_DIR=\"\\\"$${prefix}/lib/qumbia-plugins\\\"\
 # qt debug output
 DEFINES += QT_NO_DEBUG_OUTPUT
 
+isEmpty(buildtype) {
+        buildtype = release
+} else {
+    equals(buildtype, debug) {
+        message("")
+        message("debug build")
+        message("")
+    }
+}
+
+CONFIG += $${buildtype}
 
 CONFIG+=link_pkgconfig
 PKGCONFIG += x11

@@ -4,13 +4,23 @@ include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 
 QT       += core gui qml
 
-DEFINES -= QT_NO_DEBUG_OUTPUT
+DEFINES += QT_NO_DEBUG_OUTPUT
 
 TARGET = cuformula-plugin
 TEMPLATE = lib
-CONFIG += plugin release
+CONFIG += plugin
 
-# CONFIG += silent
+isEmpty(buildtype) {
+        buildtype = release
+} else {
+    equals(buildtype, debug) {
+        message("")
+        message("debug build")
+        message("")
+    }
+}
+
+CONFIG += $${buildtype}
 
 SOURCES += \
     src/cuformulareader.cpp \

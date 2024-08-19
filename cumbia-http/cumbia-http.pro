@@ -30,9 +30,17 @@ isEmpty(qdebug) {
     DEFINES -= QT_NO_DEBUG_OUTPUT
 }
 
-CONFIG += debug
+isEmpty(buildtype) {
+        buildtype = release
+} else {
+    equals(buildtype, debug) {
+        message("")
+        message("debug build")
+        message("")
+    }
+}
 
-# CONFIG += silent
+CONFIG += $${buildtype}
 
 isEmpty(DEFAULT_CHANNEL_MSG_TTL) {
     DEFAULT_CHANNEL_MSG_TTL=15

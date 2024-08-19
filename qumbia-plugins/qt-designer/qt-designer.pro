@@ -21,6 +21,18 @@ isEmpty(prefix) {
     prefix=$${INSTALL_ROOT}
 }
 
+isEmpty(buildtype) {
+        buildtype = release
+} else {
+    equals(buildtype, debug) {
+        message("")
+        message("debug build")
+        message("")
+    }
+}
+
+CONFIG += $${buildtype}
+
 DEFINES += QT_NO_DEBUG_OUTPUT
 
 DESIGNER_PLUGIN_INSTALL_DIR=$${PLUGIN_LIB_DIR}/designer
@@ -38,7 +50,7 @@ CONFIG += plugin
 TEMPLATE = lib
 
 TARGET = designer/cumbia-qtcontrols-pool-plugin
-CONFIG	+= qt thread warn_on debug
+CONFIG	+= qt thread warn_on
 
 CONFIG +=
 

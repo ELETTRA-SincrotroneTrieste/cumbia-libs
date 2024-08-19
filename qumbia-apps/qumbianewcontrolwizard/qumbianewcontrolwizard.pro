@@ -35,9 +35,17 @@ lessThan(QT_MAJOR_VERSION, 5) {
     QTVER_SUFFIX =
 }
 
-CONFIG += debug
+isEmpty(buildtype) {
+        buildtype = release
+} else {
+    equals(buildtype, debug) {
+        message("")
+        message("debug build")
+        message("")
+    }
+}
 
-CONFIG += silent
+CONFIG += $${buildtype}
 
 # define templates destination install dir
 SHAREDIR=$${INSTALL_ROOT}/share

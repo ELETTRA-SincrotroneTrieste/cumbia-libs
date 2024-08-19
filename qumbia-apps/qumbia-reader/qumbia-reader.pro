@@ -8,7 +8,17 @@ exists ($${INSTALL_ROOT}/include/quapps/quapps.pri) {
     error("file $${INSTALL_ROOT}/include/quapps/quapps.pri not found")
 }
 
-CONFIG += debug
+isEmpty(buildtype) {
+        buildtype = release
+} else {
+    equals(buildtype, debug) {
+        message("")
+        message("debug build")
+        message("")
+    }
+}
+
+CONFIG += $${buildtype}
 
 CONFIG+=link_pkgconfig
 PKGCONFIG -= x11

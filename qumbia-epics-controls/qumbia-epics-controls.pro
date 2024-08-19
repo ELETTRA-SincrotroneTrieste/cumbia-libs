@@ -2,8 +2,17 @@ include(qumbia-epics-controls.pri)
 
 QT       += widgets
 
-# Debug or release?
-CONFIG += debug
+isEmpty(buildtype) {
+        buildtype = release
+} else {
+    equals(buildtype, debug) {
+        message("")
+        message("debug build")
+        message("")
+    }
+}
+
+CONFIG += $${buildtype}
 
 # silent compiler
 CONFIG += silent
