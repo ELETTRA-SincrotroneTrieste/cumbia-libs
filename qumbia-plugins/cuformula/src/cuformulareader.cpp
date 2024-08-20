@@ -195,9 +195,7 @@ CuFormulaReader::~CuFormulaReader()
  * \code {test/device/1/double_scalar test/device/1->DevDouble(10.1)}  ( (@0+@1) * (@1 -sqrt(@0)))
  * \endcode
  */
-void CuFormulaReader::setSource(const QString &s)
-{
-    printf("CuFormulaReader.setSource: \e[0;36m%s\e[0m\n", qstoc(s));
+void CuFormulaReader::setSource(const QString &s) {
     CuFormulaUtils fu;
     d->source = fu.replaceWildcards(s, qApp->arguments());
     d->values.clear();
