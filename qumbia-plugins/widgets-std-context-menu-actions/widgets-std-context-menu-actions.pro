@@ -7,13 +7,12 @@ include(../qumbia-plugins.pri)
 
 include ($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri)
 
-CONFIG += link_pkgconfig
-PKGCONFIG += cumbia-tango
-
-# exists($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri) {
-#     message("including support for qumbia-tango-controls module under $${INSTALL_ROOT}")
-#     include($${INSTALL_ROOT}/include/qumbia-tango-controls/qumbia-tango-controls.pri)
-# }
+exists($${INSTALL_ROOT}/include/cumbia-tango) {
+    INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia-tango
+    LIBS += -lcumbia-tango
+} else {
+    error("cumbia-tango installation not found under $${INSTALL_ROOT}")
+}
 
 # INSTALL_ROOT is used to install the target
 # prefix is used within DEFINES +=

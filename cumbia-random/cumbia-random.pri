@@ -70,18 +70,25 @@ android-g++|wasm-emscripten {
 
     OBJECTS_DIR = objects
 
-    CONFIG += link_pkgconfig
-    PKGCONFIG += cumbia
-    PKGCONFIG += cumbia-qtcontrols
-    PKGCONFIG += cumbia-random
-
-    packagesExist(cumbia):packagesExist(cumbia-qtcontrols) {
-        message("Qwt: using pkg-config to configure cumbia cumbia-qtcontrols includes and libraries")
+    exists($${INSTALL_ROOT}/include/cumbia) {
+        INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia
+        LIBS += -L$${INSTALL_ROOT}/lib -lcumbia
     } else {
-        packagesExist(cumbia):packagesExist(cumbia-qtcontrols):packagesExist(cumbia-random) {
-            message("Qwt: using pkg-config to configure cumbia cumbia-qtcontrols includes and libraries")
-        }
+        error("cumbia installation not found under $${INSTALL_ROOT}")
     }
+    # libs at this point contain -L$${INSTALL_ROOT}/lib
+
+    exists($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri) {
+        INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia-qtcontrols
+        LIBS += -lcumbia-qtcontrols
+    } else {
+        error("cumbia-qtcontrols installation not found under $${INSTALL_ROOT}")
+    }
+
+    exists($${INSTALL_ROOT}/include/cumbia-random/cumbia-random.pri) {
+        INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia-random
+        LIBS += -l$${cumbia_rnd_LIB}
+    }  # else: do not output an error here: lib build would fail
 }
 
 DEFINES += CUMBIA_PRINTINFO

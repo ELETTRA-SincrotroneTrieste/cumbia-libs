@@ -19,8 +19,8 @@ isEmpty(buildtype) {
 CONFIG += $${buildtype}
 
 
-# remove ourselves (defined in .pri)
-PKGCONFIG -= cumbia-qtcontrols$${QTVER_SUFFIX}
+# remove ourselves from -l (defined in .pri)
+LIBS -= -l$${cumbia_qtcontrols_LIB}
 
 TARGET = $${cumbia_qtcontrols_LIB}
 TEMPLATE = lib
@@ -305,11 +305,6 @@ DOXYGEN_BIN = $$system(which doxygen)
 isEmpty(DOXYGEN_BIN) {
     message("cumbia-qtcontrols.pro: doxygen not found")
 } else {
-    message("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    message("---------------------------- DOCS DISABLED ----------------------")
-    message("-")
-    message("-")
-    message("Doxygen found")
 
     doc.commands = \
     doxygen \
@@ -331,9 +326,6 @@ isEmpty(DOXYGEN_BIN) {
     target.path = $${CUMBIA_QTCONTROLS_LIBDIR}
     INSTALLS += target inc other_inst doc
 
-#message("=====================================")
-#message("DOC INSTALL SKIPPED!!!!!!!!!!!!!!!!")
-#message("=====================================")
 
 android-g++|wasm-emscripten {
 } else {

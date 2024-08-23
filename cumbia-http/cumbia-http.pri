@@ -54,14 +54,6 @@ isEmpty(INSTALL_ROOT) {
     CUMBIA_QTCONTROLS_DOCDIR=$${INSTALL_ROOT}/share/doc/cumbia-http
 #
 
-android-g++|wasm-emscripten {
-} else {
-    CONFIG += link_pkgconfig
-    PKGCONFIG += cumbia
-    PKGCONFIG += cumbia-qtcontrols
-    PKGCONFIG += cumbia-http
-}
-
 android-g++ {
     INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia-qtcontrols
     OBJECTS_DIR = obj-android
@@ -108,15 +100,24 @@ android-g++|wasm-emscripten {
     LIBS += -L$${INSTALL_ROOT}/lib/wasm -lcumbia-http -lcumbia
 } else {
     OBJECTS_DIR = objects
-    packagesExist(cumbia):packagesExist(cumbia-qtcontrols) {
-        message("cumbia-http.pri: using pkg-config to configure cumbia cumbia-qtcontrols includes and libraries")
+
+    exists($${INSTALL_ROOT}/include/cumbia) {
+        INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia
+        LIBS += -L$${INSTALL_ROOT}/lib -lcumbia
     } else {
-        packagesExist(cumbia):packagesExist(cumbia-qtcontrols):packagesExist(cumbia-http) {
-            message("cumbia-http.pri: using pkg-config to configure cumbia cumbia-qtcontrols and cumbia-http includes and libraries")
-        } else {
-            unix:INCLUDEPATH += /usr/local/include/cumbia  /usr/local/include/cumbia-http
-            unix:LIBS +=  -L/usr/local/lib -lcumbia
-            unix:LIBS += -lcumbia-http
-        }
+        error("cumbia installation not found under $${INSTALL_ROOT}")
     }
+    # libs at this point contain -L$${INSTALL_ROOT}/lib
+
+    exists($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri) {
+        INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia-qtcontrols
+        LIBS += -lcumbia-qtcontrols
+    } else {
+        error("cumbia-qtcontrols installation not found under $${INSTALL_ROOT}")
+    }
+
+    exists($${INSTALL_ROOT}/include/cumbia-http) {
+        INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia-http
+        LIBS += -l$${cumbia_http_LIB}
+    }  # else: do not output an error here: lib build would fail
 }

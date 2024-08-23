@@ -23,12 +23,14 @@ CONFIG += $${buildtype}
 CONFIG+=link_pkgconfig
 PKGCONFIG -= x11
 
-packagesExist(cumbia-hdb) {
+exists($${INSTALL_ROOT}/include/cumbia-hdb/cumbiahdb.h) {
     DEFINES += HAS_CUHDB
-    PKGCONFIG += cumbia-hdb
     message("- adding cumbia-hdb module support")
-}   else {
+    INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia-hdb
+    LIBS += -lcumbia-hdb
+}  else {
     DEFINES -= cumbia-hdb
+    DEFINES -= HAS_CUHDB
     message("---")
     message("--> cumbia-hdb module not found: install the hdbextractor and cumbia-hdb modules from github if you want to")
     message("--> display or save to file historical data")

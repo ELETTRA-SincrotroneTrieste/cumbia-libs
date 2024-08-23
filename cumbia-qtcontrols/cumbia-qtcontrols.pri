@@ -139,35 +139,43 @@ wasm-emscripten {
 } else {
     !android-g++ {
         CONFIG += link_pkgconfig
-	!packagesExist(cumbia) {
-		error("no cumbia pkgconfig file found")
-	} else {
-		PKGCONFIG += cumbia
-	}
-	packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
-	        PKGCONFIG += cumbia-qtcontrols$${QTVER_SUFFIX}
-	}
 
-        packagesExist(qwt){
-            PKGCONFIG += qwt
-            QWT_PKGCONFIG = qwt
-        }
-        # qwt for qt6
-        else:packagesExist(Qt6Qwt6){
-            PKGCONFIG += Qt6Qwt6
-		message("qwt6 for QT6")
-            QWT_PKGCONFIG = Qt6Qwt6
-        }
-        else:packagesExist(Qt5Qwt6){
-            PKGCONFIG += Qt5Qwt6
-            QWT_PKGCONFIG = Qt5Qwt6
-        }  else {
-            warning("cumbia-qtcontrols.pri: no pkg-config file found for either qwt or Qt5Qwt6")
-            warning("cumbia-qtcontrols.pri: export PKG_CONFIG_PATH=/usr/path/to/qwt/lib/pkgconfig if you want to enable pkg-config for qwt")
-            warning("cumbia-qtcontrols.pri: if you build and install qwt from sources, be sure to uncomment/enable ")
-            warning("cumbia-qtcontrols.pri: QWT_CONFIG     += QwtPkgConfig in qwtconfig.pri qwt project configuration file")
-        }
+    exists($${INSTALL_ROOT}/include/cumbia) {
+        INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia
+        LIBS += -L$${INSTALL_ROOT}/lib -lcumbia
+    } else {
+        error("cumbia installation not found under $${INSTALL_ROOT}")
     }
+    # libs at this point contain $${INSTALL_ROOT}/lib
+
+    exists($${INSTALL_ROOT}/include/cumbia-qtcontrols/cumbia-qtcontrols.pri) {
+        INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia-qtcontrols
+        LIBS += -l$${cumbia_qtcontrols_LIB}
+    } # else: no error here: cumbia-qtcontrols lib would fail otherwise
+
+    # Use pkgconfig for qwt
+
+
+    packagesExist(qwt){
+        PKGCONFIG += qwt
+        QWT_PKGCONFIG = qwt
+    }
+    # qwt for qt6
+    else:packagesExist(Qt6Qwt6){
+        PKGCONFIG += Qt6Qwt6
+            message("qwt6 for QT6")
+        QWT_PKGCONFIG = Qt6Qwt6
+    }
+    else:packagesExist(Qt5Qwt6){
+        PKGCONFIG += Qt5Qwt6
+        QWT_PKGCONFIG = Qt5Qwt6
+    }  else {
+        warning("cumbia-qtcontrols.pri: no pkg-config file found for either qwt or Qt5Qwt6")
+        warning("cumbia-qtcontrols.pri: export PKG_CONFIG_PATH=/usr/path/to/qwt/lib/pkgconfig if you want to enable pkg-config for qwt")
+        warning("cumbia-qtcontrols.pri: if you build and install qwt from sources, be sure to uncomment/enable ")
+        warning("cumbia-qtcontrols.pri: QWT_CONFIG     += QwtPkgConfig in qwtconfig.pri qwt project configuration file")
+    }
+}
 }
 
 #

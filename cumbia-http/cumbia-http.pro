@@ -48,8 +48,6 @@ isEmpty(DEFAULT_CHANNEL_MSG_TTL) {
     message("cumbia-http.pro: change it executing qmake DEFAULT_CHANNEL_MSG_TTL=X")
 }
 
-PKGCONFIG -= cumbia-http$${QTVER_SUFFIX}
-
 TARGET = cumbia-http$${QTVER_SUFFIX}
 TEMPLATE = lib
 
@@ -145,12 +143,10 @@ android-g++|wasm-emscripten {
 }
     INSTALLS += target inc other_inst
 
-    !android-g++ {
-    message("-----------------------------------")
-    message(" ----- doc install disabled ------ ")
-    message("-----------------------------------")
-    #        INSTALLS += doc
-    }
+   # message("-----------------------------------")
+   # message(" ----- doc install disabled ------ ")
+   # message("-----------------------------------")
+    INSTALLS += doc
 
 android-g++|wasm-emscripten {
 } else {
@@ -172,6 +168,6 @@ wasm-emscripten {
 CONFIG += create_prl
 }
 
-LIBS -= -lcumbia-http$${QTVER_SUFFIX}
-
-LIBS += -lcumbia-qtcontrols$${QTVER_SUFFIX}
+# remove ourselves from link args
+#
+LIBS -= -l$${cumbia_http_LIB}

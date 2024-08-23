@@ -63,21 +63,32 @@ linux|freebsd|openbsd{
     PKGCONFIG += tango
     PKGCONFIG += x11
 
-    packagesExist(cumbia) {
-        PKGCONFIG += cumbia
+    exists($${INSTALL_ROOT}/include/cumbia) {
+        INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia
+        LIBS += -L$${INSTALL_ROOT}/lib -lcumbia
+    } else {
+        error("cumbia installation not found under $${INSTALL_ROOT}")
+    }
+    # libs at this point contain $${INSTALL_ROOT}/lib
+
+    exists($${INSTALL_ROOT}/include/cumbia-tango) {
+        INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia-tango
+        LIBS += -lcumbia-tango
+    } else {
+        error("cumbia-tango installation not found under $${INSTALL_ROOT}")
     }
 
-    packagesExist(cumbia-tango) {
-        PKGCONFIG += cumbia-tango
+    exists($${INSTALL_ROOT}/include/cumbia-qtcontrols) {
+        INCLUDEPATH += $${INSTALL_ROOT}/include/cumbia-qtcontrols
+        LIBS += -lcumbia-qtcontrols
+    } else {
+        error("cumbia-qtcontrols installation not found under $${INSTALL_ROOT}")
     }
 
-    packagesExist(cumbia-qtcontrols$${QTVER_SUFFIX}) {
-     PKGCONFIG += cumbia-qtcontrols$${QTVER_SUFFIX}
-    }
-
-    packagesExist(qumbia-tango-controls$${QTVER_SUFFIX}) {
-     PKGCONFIG += qumbia-tango-controls$${QTVER_SUFFIX}
-    }
+    exists($${INSTALL_ROOT}/include/qumbia-tango-controls) {
+        INCLUDEPATH += $${INSTALL_ROOT}/include/qumbia-tango-controls
+        LIBS += -l$${QUMBIA_TANGO_CONTROLS_LIB}
+    } # else: do not output an error here: lib build would fail
 
     TEMPLATE = app
     QT +=  core gui widgets
