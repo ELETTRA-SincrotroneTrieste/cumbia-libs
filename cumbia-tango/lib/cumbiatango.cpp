@@ -61,8 +61,10 @@ CumbiaTango::~CumbiaTango()
     CuActionFactoryService *af =
             static_cast<CuActionFactoryService *>(getServiceProvider()->get(static_cast<CuServices::Type> (CuActionFactoryService::CuActionFactoryServiceType)));
     af->cleanup();
-    // call ApiUtil::cleanup to shutdown the ORB
-    CuTangoWorld().orb_cleanup();
+    // do not call ApiUtil::cleanup to shutdown the ORB here
+    // ORB could be shut down while some activities are still running
+    // for example unsubscribing events in their threads
+    // CuTangoWorld().orb_cleanup();
     delete d;
 }
 
