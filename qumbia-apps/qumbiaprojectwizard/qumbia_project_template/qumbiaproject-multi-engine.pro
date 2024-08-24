@@ -1,6 +1,12 @@
-isEmpty(CUMBIA_ROOT) {
-    CUMBIA_ROOT=/usr/local/cumbia-libs
+ROOT_DIRS = /runtime \
+    /usr/local/cumbia-libs
+
+for(ROOT_DIR, ROOT_DIRS) {
+    isEmpty(CUMBIA_ROOT):exists($${ROOT_DIR}/include/quapps/quapps.pri) {
+        CUMBIA_ROOT = $${ROOT_DIR}
+    }
 }
+
 include($${CUMBIA_ROOT}/include/quapps/quapps.pri)
 
 # CONFIG += debug | release
