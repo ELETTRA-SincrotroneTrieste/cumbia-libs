@@ -6,7 +6,7 @@
 ##
 ## below and comment `epics_gcc_compiler_specific=...'
 
-project('cumbia-epics', 'cpp', version : '2.1.7',
+project('cumbia-epics', 'cpp', version : '2.1.8',
     default_options : ['c_std=c11', 'cpp_std=c++11'])
 
 project_description = 'C++ library based on cumbia and the Tango control system'
