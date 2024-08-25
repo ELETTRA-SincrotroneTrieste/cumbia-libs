@@ -140,7 +140,8 @@ INSTALLS = target templates doc
 
 DISTFILES += \
     qumbia_project_template/qtango.keywords.json \
-    qumbia_project_template/cppinstantiationexp.json
+    qumbia_project_template/cppinstantiationexp.json \
+    set_pro_cu_root.sh
 
 SUBDIRS += \
     qumbia_project_template/qumbiaprojectqml-multi-engine.pro
