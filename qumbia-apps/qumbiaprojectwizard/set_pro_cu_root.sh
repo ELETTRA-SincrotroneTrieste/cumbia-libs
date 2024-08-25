@@ -8,23 +8,31 @@ fi
 
 # Assign the argument to a variable
 replacement=$1
+in_directory=templates.in
+output_directory=qumbia_project_template
 
-# Iterate over each *.pro.in file in the directory
-for file in "qumbia_project_template/*.pro.in; do
+# Iterate over each *.pro.in file in the in_directory
+for file in "$in_directory"/*.pro.in; do
     # Check if the file exists (to avoid issues if no files match the pattern)
+
     if [ -f "$file" ]; then
 
         # Determine the output file name by replacing .pro.in with .pro
-        output_file="${file%.pro.in}.pro"
+        output_file="$output_directory/$(basename "${file%.pro.in}.pro")"
 
-        echo "Processing file: $file"
+        echo ""
+        echo "$file --> $output_file setting CUMBIA_ROOT"
+        echo " >>> $replacement"
+        echo ""
         # Use sed to replace the string and save the output to file.pro
+
         sed "s|%CUMBIA_ROOT%|$replacement|g" "$file" > "$output_file"
-        # You can perform any operation on the file here
+
+        echo "Replacement done. Saved as $output_file"
+
     else
-        echo "No .pro.in files found in $directory"
+        echo "No .pro.in files found in $in_directory"
     fi
 done
 
 
-echo "Replacement done. Saved as file.pro"

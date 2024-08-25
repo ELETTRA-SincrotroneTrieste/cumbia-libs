@@ -125,6 +125,9 @@ FORMS    += qumbiaprojectwizard.ui
 target.path = $${INSTALL_ROOT}/bin
 target.files = $${TARGET}
 
+templates.commands = \
+    ./set_pro_cu_root.sh $${prefix};
+
 templates.path = $${TEMPLATES_INSTALLDIR}
 templates.files =  qumbia_project_template/*
 
